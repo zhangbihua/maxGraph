@@ -5,6 +5,13 @@ Looking for maintainers
 
 If you are interested in becoming a maintainer of mxGraph please comment on issue #1 https://github.com/jsGraph/mxgraph/issues/1 
 
+Initial objectives:
+
+* The first priority is to maintain a working version of mxGraph and its **npm package**
+* The ambitious stretch goal is to refactor the codebase to create a modern modular, tree shakable, version of mxGraph to reduce the whole package size.
+
+-- Colin Claverie
+
 
 Original Readme below
 ====
