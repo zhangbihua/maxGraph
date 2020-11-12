@@ -3,7 +3,7 @@ Looking for maintainers
 
 12 Nov 2020.
 
-If you are interested in becoming a maintainer of mxGraph please comment on issue #1 
+If you are interested in becoming a maintainer of mxGraph please comment on issue #1 https://github.com/jsGraph/mxgraph/issues/1 
 
 
 Original Readme below
