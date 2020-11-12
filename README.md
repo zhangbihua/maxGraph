@@ -1,3 +1,14 @@
+Looking for maintainers
+===
+
+12 Nov 2020.
+
+If you are interested in becoming a maintainer of mxGraph please comment on issue #1 
+
+
+Original Readme below
+====
+
 *NOTE 09.11.2020* : Development on mxGraph has now stopped, this repo is effectively end of life.
 
 mxGraph
