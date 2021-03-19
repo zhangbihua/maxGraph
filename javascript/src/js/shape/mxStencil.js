@@ -471,7 +471,7 @@ class mxStencil extends mxShape {
     var sx = w / this.w0;
     var sy = h / this.h0;
 
-    var inverse = (direction == mxConstants.DIRECTION_NORTH || direction == mxConstants.DIRECTION_SOUTH);
+    var inverse = (direction === mxConstants.DIRECTION_NORTH || direction === mxConstants.DIRECTION_SOUTH);
 
     if (inverse) {
       sy = w / this.h0;
@@ -483,7 +483,7 @@ class mxStencil extends mxShape {
       y0 -= delta;
     }
 
-    if (this.aspect == 'fixed') {
+    if (this.aspect === 'fixed') {
       sy = Math.min(sx, sy);
       sx = sy;
 
@@ -594,7 +594,7 @@ class mxStencil extends mxShape {
             y0 + Number(node.getAttribute('y1')) * sy,
             x0 + Number(node.getAttribute('x2')) * sx,
             y0 + Number(node.getAttribute('y2')) * sy);
-      } else if (name == 'curve') {
+      } else if (name === 'curve') {
         canvas.curveTo(x0 + Number(node.getAttribute('x1')) * sx,
             y0 + Number(node.getAttribute('y1')) * sy,
             x0 + Number(node.getAttribute('x2')) * sx,

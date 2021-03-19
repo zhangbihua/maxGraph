@@ -8,6 +8,28 @@ import mxDictionary from "FIXME";
 
 class mxGraphLayout {
   /**
+   * Variable: graph
+   *
+   * Reference to the enclosing <mxGraph>.
+   */
+  graph = null;
+
+  /**
+   * Variable: useBoundingBox
+   *
+   * Boolean indicating if the bounding box of the label should be used if
+   * its available. Default is true.
+   */
+  useBoundingBox = true;
+
+  /**
+   * Variable: parent
+   *
+   * The parent cell of the layout, if any
+   */
+  parent = null;
+
+  /**
    * Class: mxGraphLayout
    *
    * Base class for all layout algorithms in mxGraph. Main public functions are
@@ -31,28 +53,6 @@ class mxGraphLayout {
   constructor(graph) {
     this.graph = graph;
   };
-
-  /**
-   * Variable: graph
-   *
-   * Reference to the enclosing <mxGraph>.
-   */
-  graph = null;
-
-  /**
-   * Variable: useBoundingBox
-   *
-   * Boolean indicating if the bounding box of the label should be used if
-   * its available. Default is true.
-   */
-  useBoundingBox = true;
-
-  /**
-   * Variable: parent
-   *
-   * The parent cell of the layout, if any
-   */
-  parent = null;
 
   /**
    * Function: moveCell
