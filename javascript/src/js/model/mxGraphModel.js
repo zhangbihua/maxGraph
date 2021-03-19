@@ -94,14 +94,14 @@
  * edit.notify = ()=>
  * {
  *   edit.source.fireEvent(new mxEventObject(mxEvent.CHANGE,
- *   	'edit', edit, 'changes', edit.changes));
+ *     'edit', edit, 'changes', edit.changes));
  *   edit.source.fireEvent(new mxEventObject(mxEvent.NOTIFY,
- *   	'edit', edit, 'changes', edit.changes));
+ *     'edit', edit, 'changes', edit.changes));
  * }
  * 
  * model.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
  * model.fireEvent(new mxEventObject(mxEvent.CHANGE,
- * 		'edit', edit, 'changes', changes));
+ *     'edit', edit, 'changes', changes));
  * (end)
  *
  * Event: mxEvent.CHANGE
@@ -195,16 +195,16 @@
  */
 function mxGraphModel(root)
 {
-	this.currentEdit = this.createUndoableEdit();
-	
-	if (root != null)
-	{
-		this.setRoot(root);
-	}
-	else
-	{
-		this.clear();
-	}
+  this.currentEdit = this.createUndoableEdit();
+  
+  if (root != null)
+  {
+    this.setRoot(root);
+  }
+  else
+  {
+    this.clear();
+  }
 };
 
 /**
@@ -307,7 +307,7 @@ endingUpdate = false;
  */
 clear = ()=>
 {
-	this.setRoot(this.createRoot());
+  this.setRoot(this.createRoot());
 };
 
 /**
@@ -317,7 +317,7 @@ clear = ()=>
  */
 isCreateIds = ()=>
 {
-	return this.createIds;
+  return this.createIds;
 };
 
 /**
@@ -327,7 +327,7 @@ isCreateIds = ()=>
  */
 setCreateIds = (value)=>
 {
-	this.createIds = value;
+  this.createIds = value;
 };
 
 /**
@@ -337,10 +337,10 @@ setCreateIds = (value)=>
  */
 createRoot = ()=>
 {
-	var cell = new mxCell();
-	cell.insert(new mxCell());
-	
-	return cell;
+  var cell = new mxCell();
+  cell.insert(new mxCell());
+  
+  return cell;
 };
 
 /**
@@ -355,7 +355,7 @@ createRoot = ()=>
  */
 getCell = (id)=>
 {
-	return (this.cells != null) ? this.cells[id] : null;
+  return (this.cells != null) ? this.cells[id] : null;
 };
 
 /**
@@ -366,22 +366,22 @@ getCell = (id)=>
  */
 filterCells = (cells, filter)=>
 {
-	var result = null;
-	
-	if (cells != null)
-	{
-		result = [];
-		
-		for (var i = 0; i < cells.length; i++)
-		{
-			if (filter(cells[i]))
-			{
-				result.push(cells[i]);
-			}
-		}
-	}
-	
-	return result;
+  var result = null;
+  
+  if (cells != null)
+  {
+    result = [];
+    
+    for (var i = 0; i < cells.length; i++)
+    {
+      if (filter(cells[i]))
+      {
+        result.push(cells[i]);
+      }
+    }
+  }
+  
+  return result;
 };
 
 /**
@@ -395,7 +395,7 @@ filterCells = (cells, filter)=>
  */
 getDescendants = (parent)=>
 {
-	return this.filterDescendants(null, parent);
+  return this.filterDescendants(null, parent);
 };
 
 /**
@@ -411,7 +411,7 @@ getDescendants = (parent)=>
  * (code)
  * var filter = (cell)=>
  * {
- * 	return model.isVertex(cell);
+ *   return model.isVertex(cell);
  * }
  * var vertices = model.filterDescendants(filter);
  * (end)
@@ -424,29 +424,29 @@ getDescendants = (parent)=>
  */
 filterDescendants = (filter, parent)=>
 {
-	// Creates a new array for storing the result
-	var result = [];
+  // Creates a new array for storing the result
+  var result = [];
 
-	// Recursion starts at the root of the model
-	parent = parent || this.getRoot();
-	
-	// Checks if the filter returns true for the cell
-	// and adds it to the result array
-	if (filter == null || filter(parent))
-	{
-		result.push(parent);
-	}
-	
-	// Visits the children of the cell
-	var childCount = this.getChildCount(parent);
-	
-	for (var i = 0; i < childCount; i++)
-	{
-		var child = this.getChildAt(parent, i);
-		result = result.concat(this.filterDescendants(filter, child));
-	}
+  // Recursion starts at the root of the model
+  parent = parent || this.getRoot();
+  
+  // Checks if the filter returns true for the cell
+  // and adds it to the result array
+  if (filter == null || filter(parent))
+  {
+    result.push(parent);
+  }
+  
+  // Visits the children of the cell
+  var childCount = this.getChildCount(parent);
+  
+  for (var i = 0; i < childCount; i++)
+  {
+    var child = this.getChildAt(parent, i);
+    result = result.concat(this.filterDescendants(filter, child));
+  }
 
-	return result;
+  return result;
 };
 
 /**
@@ -460,18 +460,18 @@ filterDescendants = (filter, parent)=>
  */
 getRoot = (cell)=>
 {
-	var root = cell || this.root;
-	
-	if (cell != null)
-	{
-		while (cell != null)
-		{
-			root = cell;
-			cell = this.getParent(cell);
-		}
-	}
-	
-	return root;
+  var root = cell || this.root;
+  
+  if (cell != null)
+  {
+    while (cell != null)
+    {
+      root = cell;
+      cell = this.getParent(cell);
+    }
+  }
+  
+  return root;
 };
 
 /**
@@ -496,9 +496,9 @@ getRoot = (cell)=>
  */
 setRoot = (root)=>
 {
-	this.execute(new mxRootChange(this, root));
-	
-	return root;
+  this.execute(new mxRootChange(this, root));
+  
+  return root;
 };
 
 /**
@@ -513,15 +513,15 @@ setRoot = (root)=>
  */
 rootChanged = (root)=>
 {
-	var oldRoot = this.root;
-	this.root = root;
-	
-	// Resets counters and datastructures
-	this.nextId = 0;
-	this.cells = null;
-	this.cellAdded(root);
-	
-	return oldRoot;
+  var oldRoot = this.root;
+  this.root = root;
+  
+  // Resets counters and datastructures
+  this.nextId = 0;
+  this.cells = null;
+  this.cellAdded(root);
+  
+  return oldRoot;
 };
 
 /**
@@ -536,7 +536,7 @@ rootChanged = (root)=>
  */
 isRoot = (cell)=>
 {
-	return cell != null && this.root == cell;
+  return cell != null && this.root == cell;
 };
 
 /**
@@ -550,7 +550,7 @@ isRoot = (cell)=>
  */
 isLayer = (cell)=>
 {
-	return this.isRoot(this.getParent(cell));
+  return this.isRoot(this.getParent(cell));
 };
 
 /**
@@ -566,12 +566,12 @@ isLayer = (cell)=>
  */
 isAncestor = (parent, child)=>
 {
-	while (child != null && child != parent)
-	{
-		child = this.getParent(child);
-	}
-	
-	return child == parent;
+  while (child != null && child != parent)
+  {
+    child = this.getParent(child);
+  }
+  
+  return child == parent;
 };
 
 /**
@@ -585,7 +585,7 @@ isAncestor = (parent, child)=>
  */
 contains = (cell)=>
 {
-	return this.isAncestor(this.root, cell);
+  return this.isAncestor(this.root, cell);
 };
 
 /**
@@ -599,7 +599,7 @@ contains = (cell)=>
  */
 getParent = (cell)=>
 {
-	return (cell != null) ? cell.getParent() : null;
+  return (cell != null) ? cell.getParent() : null;
 };
 
 /**
@@ -618,26 +618,26 @@ getParent = (cell)=>
  */
 add = (parent, child, index)=>
 {
-	if (child != parent && parent != null && child != null)
-	{	
-		// Appends the child if no index was specified
-		if (index == null)
-		{
-			index = this.getChildCount(parent);
-		}
-		
-		var parentChanged = parent != this.getParent(child);
-		this.execute(new mxChildChange(this, parent, child, index));
+  if (child != parent && parent != null && child != null)
+  {  
+    // Appends the child if no index was specified
+    if (index == null)
+    {
+      index = this.getChildCount(parent);
+    }
+    
+    var parentChanged = parent != this.getParent(child);
+    this.execute(new mxChildChange(this, parent, child, index));
 
-		// Maintains the edges parents by moving the edges
-		// into the nearest common ancestor of its terminals
-		if (this.maintainEdgeParent && parentChanged)
-		{
-			this.updateEdgeParents(child);
-		}
-	}
-	
-	return child;
+    // Maintains the edges parents by moving the edges
+    // into the nearest common ancestor of its terminals
+    if (this.maintainEdgeParent && parentChanged)
+    {
+      this.updateEdgeParents(child);
+    }
+  }
+  
+  return child;
 };
 
 /**
@@ -664,52 +664,52 @@ add = (parent, child, index)=>
  */
 cellAdded = (cell)=>
 {
-	if (cell != null)
-	{
-		// Creates an Id for the cell if not Id exists
-		if (cell.getId() == null && this.createIds)
-		{
-			cell.setId(this.createId(cell));
-		}
-		
-		if (cell.getId() != null)
-		{
-			var collision = this.getCell(cell.getId());
-			
-			if (collision != cell)
-			{	
-				// Creates new Id for the cell
-				// as long as there is a collision
-				while (collision != null)
-				{
-					cell.setId(this.createId(cell));
-					collision = this.getCell(cell.getId());
-				}
-				
-				// Lazily creates the cells dictionary
-				if (this.cells == null)
-				{
-					this.cells = new Object();
-				}
-				
-				this.cells[cell.getId()] = cell;
-			}
-		}
-		
-		// Makes sure IDs of deleted cells are not reused
-		if (mxUtils.isNumeric(cell.getId()))
-		{
-			this.nextId = Math.max(this.nextId, cell.getId());
-		}
-		
-		// Recursively processes child cells
-		var childCount = this.getChildCount(cell);
-		
-		for (var i=0; i<childCount; i++)
-		{
-			this.cellAdded(this.getChildAt(cell, i));
-		}
-	}
+  if (cell != null)
+  {
+    // Creates an Id for the cell if not Id exists
+    if (cell.getId() == null && this.createIds)
+    {
+      cell.setId(this.createId(cell));
+    }
+    
+    if (cell.getId() != null)
+    {
+      var collision = this.getCell(cell.getId());
+      
+      if (collision != cell)
+      {  
+        // Creates new Id for the cell
+        // as long as there is a collision
+        while (collision != null)
+        {
+          cell.setId(this.createId(cell));
+          collision = this.getCell(cell.getId());
+        }
+        
+        // Lazily creates the cells dictionary
+        if (this.cells == null)
+        {
+          this.cells = new Object();
+        }
+        
+        this.cells[cell.getId()] = cell;
+      }
+    }
+    
+    // Makes sure IDs of deleted cells are not reused
+    if (mxUtils.isNumeric(cell.getId()))
+    {
+      this.nextId = Math.max(this.nextId, cell.getId());
+    }
+    
+    // Recursively processes child cells
+    var childCount = this.getChildCount(cell);
+    
+    for (var i=0; i<childCount; i++)
+    {
+      this.cellAdded(this.getChildAt(cell, i));
+    }
+  }
 };
 
 /**
@@ -726,10 +726,10 @@ cellAdded = (cell)=>
  */
 createId = (cell)=>
 {
-	var id = this.nextId;
-	this.nextId++;
-	
-	return this.prefix + id + this.postfix;
+  var id = this.nextId;
+  this.nextId++;
+  
+  return this.prefix + id + this.postfix;
 };
 
 /**
@@ -740,39 +740,39 @@ createId = (cell)=>
  */
 updateEdgeParents = (cell, root)=>
 {
-	// Gets the topmost node of the hierarchy
-	root = root || this.getRoot(cell);
-	
-	// Updates edges on children first
-	var childCount = this.getChildCount(cell);
-	
-	for (var i = 0; i < childCount; i++)
-	{
-		var child = this.getChildAt(cell, i);
-		this.updateEdgeParents(child, root);
-	}
-	
-	// Updates the parents of all connected edges
-	var edgeCount = this.getEdgeCount(cell);
-	var edges = [];
+  // Gets the topmost node of the hierarchy
+  root = root || this.getRoot(cell);
+  
+  // Updates edges on children first
+  var childCount = this.getChildCount(cell);
+  
+  for (var i = 0; i < childCount; i++)
+  {
+    var child = this.getChildAt(cell, i);
+    this.updateEdgeParents(child, root);
+  }
+  
+  // Updates the parents of all connected edges
+  var edgeCount = this.getEdgeCount(cell);
+  var edges = [];
 
-	for (var i = 0; i < edgeCount; i++)
-	{
-		edges.push(this.getEdgeAt(cell, i));
-	}
-	
-	for (var i = 0; i < edges.length; i++)
-	{
-		var edge = edges[i];
-		
-		// Updates edge parent if edge and child have
-		// a common root node (does not need to be the
-		// model root node)
-		if (this.isAncestor(root, edge))
-		{
-			this.updateEdgeParent(edge, root);
-		}
-	}
+  for (var i = 0; i < edgeCount; i++)
+  {
+    edges.push(this.getEdgeAt(cell, i));
+  }
+  
+  for (var i = 0; i < edges.length; i++)
+  {
+    var edge = edges[i];
+    
+    // Updates edge parent if edge and child have
+    // a common root node (does not need to be the
+    // model root node)
+    if (this.isAncestor(root, edge))
+    {
+      this.updateEdgeParent(edge, root);
+    }
+  }
 };
 
 /**
@@ -788,57 +788,57 @@ updateEdgeParents = (cell, root)=>
  */
 updateEdgeParent = (edge, root)=>
 {
-	var source = this.getTerminal(edge, true);
-	var target = this.getTerminal(edge, false);
-	var cell = null;
-	
-	// Uses the first non-relative descendants of the source terminal
-	while (source != null && !this.isEdge(source) &&
-		source.geometry != null && source.geometry.relative)
-	{
-		source = this.getParent(source);
-	}
-	
-	// Uses the first non-relative descendants of the target terminal
-	while (target != null && this.ignoreRelativeEdgeParent &&
-		!this.isEdge(target) && target.geometry != null && 
-		target.geometry.relative)
-	{
-		target = this.getParent(target);
-	}
-	
-	if (this.isAncestor(root, source) && this.isAncestor(root, target))
-	{
-		if (source == target)
-		{
-			cell = this.getParent(source);
-		}
-		else
-		{
-			cell = this.getNearestCommonAncestor(source, target);
-		}
+  var source = this.getTerminal(edge, true);
+  var target = this.getTerminal(edge, false);
+  var cell = null;
+  
+  // Uses the first non-relative descendants of the source terminal
+  while (source != null && !this.isEdge(source) &&
+    source.geometry != null && source.geometry.relative)
+  {
+    source = this.getParent(source);
+  }
+  
+  // Uses the first non-relative descendants of the target terminal
+  while (target != null && this.ignoreRelativeEdgeParent &&
+    !this.isEdge(target) && target.geometry != null && 
+    target.geometry.relative)
+  {
+    target = this.getParent(target);
+  }
+  
+  if (this.isAncestor(root, source) && this.isAncestor(root, target))
+  {
+    if (source == target)
+    {
+      cell = this.getParent(source);
+    }
+    else
+    {
+      cell = this.getNearestCommonAncestor(source, target);
+    }
 
-		if (cell != null && (this.getParent(cell) != this.root ||
-			this.isAncestor(cell, edge)) && this.getParent(edge) != cell)
-		{
-			var geo = this.getGeometry(edge);
-			
-			if (geo != null)
-			{
-				var origin1 = this.getOrigin(this.getParent(edge));
-				var origin2 = this.getOrigin(cell);
-				
-				var dx = origin2.x - origin1.x;
-				var dy = origin2.y - origin1.y;
-				
-				geo = geo.clone();
-				geo.translate(-dx, -dy);
-				this.setGeometry(edge, geo);
-			}
+    if (cell != null && (this.getParent(cell) != this.root ||
+      this.isAncestor(cell, edge)) && this.getParent(edge) != cell)
+    {
+      var geo = this.getGeometry(edge);
+      
+      if (geo != null)
+      {
+        var origin1 = this.getOrigin(this.getParent(edge));
+        var origin2 = this.getOrigin(cell);
+        
+        var dx = origin2.x - origin1.x;
+        var dy = origin2.y - origin1.y;
+        
+        geo = geo.clone();
+        geo.translate(-dx, -dy);
+        this.setGeometry(edge, geo);
+      }
 
-			this.add(cell, edge, this.getChildCount(cell));
-		}
-	}
+      this.add(cell, edge, this.getChildCount(cell));
+    }
+  }
 };
 
 /**
@@ -849,29 +849,29 @@ updateEdgeParent = (edge, root)=>
  */
 getOrigin = (cell)=>
 {
-	var result = null;
-	
-	if (cell != null)
-	{
-		result = this.getOrigin(this.getParent(cell));
-		
-		if (!this.isEdge(cell))
-		{
-			var geo = this.getGeometry(cell);
-			
-			if (geo != null)
-			{
-				result.x += geo.x;
-				result.y += geo.y;
-			}
-		}
-	}
-	else
-	{
-		result = new mxPoint();
-	}
-	
-	return result;
+  var result = null;
+  
+  if (cell != null)
+  {
+    result = this.getOrigin(this.getParent(cell));
+    
+    if (!this.isEdge(cell))
+    {
+      var geo = this.getGeometry(cell);
+      
+      if (geo != null)
+      {
+        result.x += geo.x;
+        result.y += geo.y;
+      }
+    }
+  }
+  else
+  {
+    result = new mxPoint();
+  }
+  
+  return result;
 };
 
 /**
@@ -886,44 +886,44 @@ getOrigin = (cell)=>
  */
 getNearestCommonAncestor = (cell1, cell2)=>
 {
-	if (cell1 != null && cell2 != null)
-	{		
-		// Creates the cell path for the second cell
-		var path = mxCellPath.create(cell2);
+  if (cell1 != null && cell2 != null)
+  {    
+    // Creates the cell path for the second cell
+    var path = mxCellPath.create(cell2);
 
-		if (path != null && path.length > 0)
-		{
-			// Bubbles through the ancestors of the first
-			// cell to find the nearest common ancestor.
-			var cell = cell1;
-			var current = mxCellPath.create(cell);
-			
-			// Inverts arguments
-			if (path.length < current.length)
-			{
-				cell = cell2;
-				var tmp = current;
-				current = path;
-				path = tmp;
-			}
-			
-			while (cell != null)
-			{
-				var parent = this.getParent(cell);
-				
-				// Checks if the cell path is equal to the beginning of the given cell path
-				if (path.indexOf(current + mxCellPath.PATH_SEPARATOR) == 0 && parent != null)
-				{
-					return cell;
-				}
-				
-				current = mxCellPath.getParentPath(current);
-				cell = parent;
-			}
-		}
-	}
-	
-	return null;
+    if (path != null && path.length > 0)
+    {
+      // Bubbles through the ancestors of the first
+      // cell to find the nearest common ancestor.
+      var cell = cell1;
+      var current = mxCellPath.create(cell);
+      
+      // Inverts arguments
+      if (path.length < current.length)
+      {
+        cell = cell2;
+        var tmp = current;
+        current = path;
+        path = tmp;
+      }
+      
+      while (cell != null)
+      {
+        var parent = this.getParent(cell);
+        
+        // Checks if the cell path is equal to the beginning of the given cell path
+        if (path.indexOf(current + mxCellPath.PATH_SEPARATOR) == 0 && parent != null)
+        {
+          return cell;
+        }
+        
+        current = mxCellPath.getParentPath(current);
+        cell = parent;
+      }
+    }
+  }
+  
+  return null;
 };
 
 /**
@@ -939,16 +939,16 @@ getNearestCommonAncestor = (cell1, cell2)=>
  */
 remove = (cell)=>
 {
-	if (cell == this.root)
-	{
-		this.setRoot(null);
-	}
-	else if (this.getParent(cell) != null)
-	{
-		this.execute(new mxChildChange(this, null, cell));
-	}
-	
-	return cell;
+  if (cell == this.root)
+  {
+    this.setRoot(null);
+  }
+  else if (this.getParent(cell) != null)
+  {
+    this.execute(new mxChildChange(this, null, cell));
+  }
+  
+  return cell;
 };
 
 /**
@@ -962,22 +962,22 @@ remove = (cell)=>
  */
 cellRemoved = (cell)=>
 {
-	if (cell != null && this.cells != null)
-	{
-		// Recursively processes child cells
-		var childCount = this.getChildCount(cell);
-		
-		for (var i = childCount - 1; i >= 0; i--)
-		{
-			this.cellRemoved(this.getChildAt(cell, i));
-		}
-		
-		// Removes the dictionary entry for the cell
-		if (this.cells != null && cell.getId() != null)
-		{
-			delete this.cells[cell.getId()];
-		}
-	}
+  if (cell != null && this.cells != null)
+  {
+    // Recursively processes child cells
+    var childCount = this.getChildCount(cell);
+    
+    for (var i = childCount - 1; i >= 0; i--)
+    {
+      this.cellRemoved(this.getChildAt(cell, i));
+    }
+    
+    // Removes the dictionary entry for the cell
+    if (this.cells != null && cell.getId() != null)
+    {
+      delete this.cells[cell.getId()];
+    }
+  }
 };
 
 /**
@@ -995,35 +995,35 @@ cellRemoved = (cell)=>
  */
 parentForCellChanged = (cell, parent, index)=>
 {
-	var previous = this.getParent(cell);
-	
-	if (parent != null)
-	{
-		if (parent != previous || previous.getIndex(cell) != index)
-		{
-			parent.insert(cell, index);
-		}
-	}
-	else if (previous != null)
-	{
-		var oldIndex = previous.getIndex(cell);
-		previous.remove(oldIndex);
-	}
-	
-	// Adds or removes the cell from the model
-	var par = this.contains(parent);
-	var pre = this.contains(previous);
-	
-	if (par && !pre)
-	{
-		this.cellAdded(cell);
-	}
-	else if (pre && !par)
-	{
-		this.cellRemoved(cell);
-	}
-	
-	return previous;
+  var previous = this.getParent(cell);
+  
+  if (parent != null)
+  {
+    if (parent != previous || previous.getIndex(cell) != index)
+    {
+      parent.insert(cell, index);
+    }
+  }
+  else if (previous != null)
+  {
+    var oldIndex = previous.getIndex(cell);
+    previous.remove(oldIndex);
+  }
+  
+  // Adds or removes the cell from the model
+  var par = this.contains(parent);
+  var pre = this.contains(previous);
+  
+  if (par && !pre)
+  {
+    this.cellAdded(cell);
+  }
+  else if (pre && !par)
+  {
+    this.cellRemoved(cell);
+  }
+  
+  return previous;
 };
 
 /**
@@ -1037,7 +1037,7 @@ parentForCellChanged = (cell, parent, index)=>
  */
 getChildCount = (cell)=>
 {
-	return (cell != null) ? cell.getChildCount() : 0;
+  return (cell != null) ? cell.getChildCount() : 0;
 };
 
 /**
@@ -1052,7 +1052,7 @@ getChildCount = (cell)=>
  */
 getChildAt = (cell, index)=>
 {
-	return (cell != null) ? cell.getChildAt(index) : null;
+  return (cell != null) ? cell.getChildAt(index) : null;
 };
 
 /**
@@ -1067,9 +1067,9 @@ getChildAt = (cell, index)=>
  */
 getChildren = (cell)=>
 {
-	return (cell != null) ? cell.children : null;
+  return (cell != null) ? cell.children : null;
 };
-	
+  
 /**
  * Function: getChildVertices
  * 
@@ -1081,9 +1081,9 @@ getChildren = (cell)=>
  */
 getChildVertices = (parent)=>
 {
-	return this.getChildCells(parent, true, false);
+  return this.getChildCells(parent, true, false);
 };
-		
+    
 /**
  * Function: getChildEdges
  * 
@@ -1095,7 +1095,7 @@ getChildVertices = (parent)=>
  */
 getChildEdges = (parent)=>
 {
-	return this.getChildCells(parent, false, true);
+  return this.getChildCells(parent, false, true);
 };
 
 /**
@@ -1114,26 +1114,26 @@ getChildEdges = (parent)=>
  */
 getChildCells = (parent, vertices, edges)=>
 {
-	vertices = (vertices != null) ? vertices : false;
-	edges = (edges != null) ? edges : false;
-	
-	var childCount = this.getChildCount(parent);
-	var result = [];
+  vertices = (vertices != null) ? vertices : false;
+  edges = (edges != null) ? edges : false;
+  
+  var childCount = this.getChildCount(parent);
+  var result = [];
 
-	for (var i = 0; i < childCount; i++)
-	{
-		var child = this.getChildAt(parent, i);
+  for (var i = 0; i < childCount; i++)
+  {
+    var child = this.getChildAt(parent, i);
 
-		if ((!edges && !vertices) || (edges && this.isEdge(child)) ||
-			(vertices && this.isVertex(child)))
-		{
-			result.push(child);
-		}
-	}
+    if ((!edges && !vertices) || (edges && this.isEdge(child)) ||
+      (vertices && this.isVertex(child)))
+    {
+      result.push(child);
+    }
+  }
 
-	return result;
+  return result;
 };
-		
+    
 /**
  * Function: getTerminal
  * 
@@ -1147,7 +1147,7 @@ getChildCells = (parent, vertices, edges)=>
  */
 getTerminal = (edge, isSource)=>
 {
-	return (edge != null) ? edge.getTerminal(isSource) : null;
+  return (edge != null) ? edge.getTerminal(isSource) : null;
 };
 
 /**
@@ -1167,17 +1167,17 @@ getTerminal = (edge, isSource)=>
  */
 setTerminal = (edge, terminal, isSource)=>
 {
-	var terminalChanged = terminal != this.getTerminal(edge, isSource);
-	this.execute(new mxTerminalChange(this, edge, terminal, isSource));
-	
-	if (this.maintainEdgeParent && terminalChanged)
-	{
-		this.updateEdgeParent(edge, this.getRoot());
-	}
-	
-	return terminal;
+  var terminalChanged = terminal != this.getTerminal(edge, isSource);
+  this.execute(new mxTerminalChange(this, edge, terminal, isSource));
+  
+  if (this.maintainEdgeParent && terminalChanged)
+  {
+    this.updateEdgeParent(edge, this.getRoot());
+  }
+  
+  return terminal;
 };
-	
+  
 /**
  * Function: setTerminals
  * 
@@ -1192,16 +1192,16 @@ setTerminal = (edge, terminal, isSource)=>
  */
 setTerminals = (edge, source, target)=>
 {
-	this.beginUpdate();
-	try
-	{
-		this.setTerminal(edge, source, true);
-		this.setTerminal(edge, target, false);
-	}
-	finally
-	{
-		this.endUpdate();
-	}
+  this.beginUpdate();
+  try
+  {
+    this.setTerminal(edge, source, true);
+    this.setTerminal(edge, target, false);
+  }
+  finally
+  {
+    this.endUpdate();
+  }
 };
 
 /**
@@ -1219,18 +1219,18 @@ setTerminals = (edge, source, target)=>
  */
 terminalForCellChanged = (edge, terminal, isSource)=>
 {
-	var previous = this.getTerminal(edge, isSource);
-	
-	if (terminal != null)
-	{
-		terminal.insertEdge(edge, isSource);
-	}
-	else if (previous != null)
-	{
-		previous.removeEdge(edge, isSource);
-	}
-	
-	return previous;
+  var previous = this.getTerminal(edge, isSource);
+  
+  if (terminal != null)
+  {
+    terminal.insertEdge(edge, isSource);
+  }
+  else if (previous != null)
+  {
+    previous.removeEdge(edge, isSource);
+  }
+  
+  return previous;
 };
 
 /**
@@ -1244,7 +1244,7 @@ terminalForCellChanged = (edge, terminal, isSource)=>
  */
 getEdgeCount = (cell)=>
 {
-	return (cell != null) ? cell.getEdgeCount() : 0;
+  return (cell != null) ? cell.getEdgeCount() : 0;
 };
 
 /**
@@ -1260,9 +1260,9 @@ getEdgeCount = (cell)=>
  */
 getEdgeAt = (cell, index)=>
 {
-	return (cell != null) ? cell.getEdgeAt(index) : null;
+  return (cell != null) ? cell.getEdgeAt(index) : null;
 };
-	
+  
 /**
  * Function: getDirectedEdgeCount
  * 
@@ -1278,20 +1278,20 @@ getEdgeAt = (cell, index)=>
  */
 getDirectedEdgeCount = (cell, outgoing, ignoredEdge)=>
 {
-	var count = 0;
-	var edgeCount = this.getEdgeCount(cell);
+  var count = 0;
+  var edgeCount = this.getEdgeCount(cell);
 
-	for (var i = 0; i < edgeCount; i++)
-	{
-		var edge = this.getEdgeAt(cell, i);
+  for (var i = 0; i < edgeCount; i++)
+  {
+    var edge = this.getEdgeAt(cell, i);
 
-		if (edge != ignoredEdge && this.getTerminal(edge, outgoing) == cell)
-		{
-			count++;
-		}
-	}
+    if (edge != ignoredEdge && this.getTerminal(edge, outgoing) == cell)
+    {
+      count++;
+    }
+  }
 
-	return count;
+  return count;
 };
 
 /**
@@ -1306,7 +1306,7 @@ getDirectedEdgeCount = (cell, outgoing, ignoredEdge)=>
  */
 getConnections = (cell)=>
 {
-	return this.getEdges(cell, true, true, false);
+  return this.getEdges(cell, true, true, false);
 };
 
 /**
@@ -1321,7 +1321,7 @@ getConnections = (cell)=>
  */
 getIncomingEdges = (cell)=>
 {
-	return this.getEdges(cell, true, false, false);
+  return this.getEdges(cell, true, false, false);
 };
 
 /**
@@ -1336,7 +1336,7 @@ getIncomingEdges = (cell)=>
  */
 getOutgoingEdges = (cell)=>
 {
-	return this.getEdges(cell, false, true, false);
+  return this.getEdges(cell, false, true, false);
 };
 
 /**
@@ -1359,27 +1359,27 @@ getOutgoingEdges = (cell)=>
  */
 getEdges = (cell, incoming, outgoing, includeLoops)=>
 {
-	incoming = (incoming != null) ? incoming : true;
-	outgoing = (outgoing != null) ? outgoing : true;
-	includeLoops = (includeLoops != null) ? includeLoops : true;
-	
-	var edgeCount = this.getEdgeCount(cell);
-	var result = [];
+  incoming = (incoming != null) ? incoming : true;
+  outgoing = (outgoing != null) ? outgoing : true;
+  includeLoops = (includeLoops != null) ? includeLoops : true;
+  
+  var edgeCount = this.getEdgeCount(cell);
+  var result = [];
 
-	for (var i = 0; i < edgeCount; i++)
-	{
-		var edge = this.getEdgeAt(cell, i);
-		var source = this.getTerminal(edge, true);
-		var target = this.getTerminal(edge, false);
+  for (var i = 0; i < edgeCount; i++)
+  {
+    var edge = this.getEdgeAt(cell, i);
+    var source = this.getTerminal(edge, true);
+    var target = this.getTerminal(edge, false);
 
-		if ((includeLoops && source == target) || ((source != target) && ((incoming && target == cell) ||
-			(outgoing && source == cell))))
-		{
-			result.push(edge);
-		}
-	}
+    if ((includeLoops && source == target) || ((source != target) && ((incoming && target == cell) ||
+      (outgoing && source == cell))))
+    {
+      result.push(edge);
+    }
+  }
 
-	return result;
+  return result;
 };
 
 /**
@@ -1400,42 +1400,42 @@ getEdges = (cell, incoming, outgoing, includeLoops)=>
  */
 getEdgesBetween = (source, target, directed)=>
 {
-	directed = (directed != null) ? directed : false;
-	
-	var tmp1 = this.getEdgeCount(source);
-	var tmp2 = this.getEdgeCount(target);
-	
-	// Assumes the source has less connected edges
-	var terminal = source;
-	var edgeCount = tmp1;
-	
-	// Uses the smaller array of connected edges
-	// for searching the edge
-	if (tmp2 < tmp1)
-	{
-		edgeCount = tmp2;
-		terminal = target;
-	}
-	
-	var result = [];
-	
-	// Checks if the edge is connected to the correct
-	// cell and returns the first match
-	for (var i = 0; i < edgeCount; i++)
-	{
-		var edge = this.getEdgeAt(terminal, i);
-		var src = this.getTerminal(edge, true);
-		var trg = this.getTerminal(edge, false);
-		var directedMatch = (src == source) && (trg == target);
-		var oppositeMatch = (trg == source) && (src == target);
+  directed = (directed != null) ? directed : false;
+  
+  var tmp1 = this.getEdgeCount(source);
+  var tmp2 = this.getEdgeCount(target);
+  
+  // Assumes the source has less connected edges
+  var terminal = source;
+  var edgeCount = tmp1;
+  
+  // Uses the smaller array of connected edges
+  // for searching the edge
+  if (tmp2 < tmp1)
+  {
+    edgeCount = tmp2;
+    terminal = target;
+  }
+  
+  var result = [];
+  
+  // Checks if the edge is connected to the correct
+  // cell and returns the first match
+  for (var i = 0; i < edgeCount; i++)
+  {
+    var edge = this.getEdgeAt(terminal, i);
+    var src = this.getTerminal(edge, true);
+    var trg = this.getTerminal(edge, false);
+    var directedMatch = (src == source) && (trg == target);
+    var oppositeMatch = (trg == source) && (src == target);
 
-		if (directedMatch || (!directed && oppositeMatch))
-		{
-			result.push(edge);
-		}
-	}
-	
-	return result;
+    if (directedMatch || (!directed && oppositeMatch))
+    {
+      result.push(edge);
+    }
+  }
+  
+  return result;
 };
 
 /**
@@ -1456,37 +1456,37 @@ getEdgesBetween = (source, target, directed)=>
  */
 getOpposites = (edges, terminal, sources, targets)=>
 {
-	sources = (sources != null) ? sources : true;
-	targets = (targets != null) ? targets : true;
-	
-	var terminals = [];
-	
-	if (edges != null)
-	{
-		for (var i = 0; i < edges.length; i++)
-		{
-			var source = this.getTerminal(edges[i], true);
-			var target = this.getTerminal(edges[i], false);
-			
-			// Checks if the terminal is the source of
-			// the edge and if the target should be
-			// stored in the result
-			if (source == terminal && target != null && target != terminal && targets)
-			{
-				terminals.push(target);
-			}
-			
-			// Checks if the terminal is the taget of
-			// the edge and if the source should be
-			// stored in the result
-			else if (target == terminal && source != null && source != terminal && sources)
-			{
-				terminals.push(source);
-			}
-		}
-	}
-	
-	return terminals;
+  sources = (sources != null) ? sources : true;
+  targets = (targets != null) ? targets : true;
+  
+  var terminals = [];
+  
+  if (edges != null)
+  {
+    for (var i = 0; i < edges.length; i++)
+    {
+      var source = this.getTerminal(edges[i], true);
+      var target = this.getTerminal(edges[i], false);
+      
+      // Checks if the terminal is the source of
+      // the edge and if the target should be
+      // stored in the result
+      if (source == terminal && target != null && target != terminal && targets)
+      {
+        terminals.push(target);
+      }
+      
+      // Checks if the terminal is the taget of
+      // the edge and if the source should be
+      // stored in the result
+      else if (target == terminal && source != null && source != terminal && sources)
+      {
+        terminals.push(source);
+      }
+    }
+  }
+  
+  return terminals;
 };
 
 /**
@@ -1502,38 +1502,38 @@ getOpposites = (edges, terminal, sources, targets)=>
  */
 getTopmostCells = (cells)=>
 {
-	var dict = new mxDictionary();
-	var tmp = [];
-	
-	for (var i = 0; i < cells.length; i++)
-	{
-		dict.put(cells[i], true);
-	}
-	
-	for (var i = 0; i < cells.length; i++)
-	{
-		var cell = cells[i];
-		var topmost = true;
-		var parent = this.getParent(cell);
-		
-		while (parent != null)
-		{
-			if (dict.get(parent))
-			{
-				topmost = false;
-				break;
-			}
-			
-			parent = this.getParent(parent);
-		}
-		
-		if (topmost)
-		{
-			tmp.push(cell);
-		}
-	}
-	
-	return tmp;
+  var dict = new mxDictionary();
+  var tmp = [];
+  
+  for (var i = 0; i < cells.length; i++)
+  {
+    dict.put(cells[i], true);
+  }
+  
+  for (var i = 0; i < cells.length; i++)
+  {
+    var cell = cells[i];
+    var topmost = true;
+    var parent = this.getParent(cell);
+    
+    while (parent != null)
+    {
+      if (dict.get(parent))
+      {
+        topmost = false;
+        break;
+      }
+      
+      parent = this.getParent(parent);
+    }
+    
+    if (topmost)
+    {
+      tmp.push(cell);
+    }
+  }
+  
+  return tmp;
 };
 
 /**
@@ -1547,7 +1547,7 @@ getTopmostCells = (cells)=>
  */
 isVertex = (cell)=>
 {
-	return (cell != null) ? cell.isVertex() : false;
+  return (cell != null) ? cell.isVertex() : false;
 };
 
 /**
@@ -1561,7 +1561,7 @@ isVertex = (cell)=>
  */
 isEdge = (cell)=>
 {
-	return (cell != null) ? cell.isEdge() : false;
+  return (cell != null) ? cell.isEdge() : false;
 };
 
 /**
@@ -1577,7 +1577,7 @@ isEdge = (cell)=>
  */
 isConnectable = (cell)=>
 {
-	return (cell != null) ? cell.isConnectable() : false;
+  return (cell != null) ? cell.isConnectable() : false;
 };
 
 /**
@@ -1591,7 +1591,7 @@ isConnectable = (cell)=>
  */
 getValue = (cell)=>
 {
-	return (cell != null) ? cell.getValue() : null;
+  return (cell != null) ? cell.getValue() : null;
 };
 
 /**
@@ -1607,9 +1607,9 @@ getValue = (cell)=>
  */
 setValue = (cell, value)=>
 {
-	this.execute(new mxValueChange(this, cell, value));
-	
-	return value;
+  this.execute(new mxValueChange(this, cell, value));
+  
+  return value;
 };
 
 /**
@@ -1634,7 +1634,7 @@ setValue = (cell, value)=>
  */
 valueForCellChanged = (cell, value)=>
 {
-	return cell.valueChanged(value);
+  return cell.valueChanged(value);
 };
 
 /**
@@ -1648,7 +1648,7 @@ valueForCellChanged = (cell, value)=>
  */
 getGeometry = (cell)=>
 {
-	return (cell != null) ? cell.getGeometry() : null;
+  return (cell != null) ? cell.getGeometry() : null;
 };
 
 /**
@@ -1665,12 +1665,12 @@ getGeometry = (cell)=>
  */
 setGeometry = (cell, geometry)=>
 {
-	if (geometry != this.getGeometry(cell))
-	{
-		this.execute(new mxGeometryChange(this, cell, geometry));
-	}
-	
-	return geometry;
+  if (geometry != this.getGeometry(cell))
+  {
+    this.execute(new mxGeometryChange(this, cell, geometry));
+  }
+  
+  return geometry;
 };
 
 /**
@@ -1681,10 +1681,10 @@ setGeometry = (cell, geometry)=>
  */
 geometryForCellChanged = (cell, geometry)=>
 {
-	var previous = this.getGeometry(cell);
-	cell.setGeometry(geometry);
-	
-	return previous;
+  var previous = this.getGeometry(cell);
+  cell.setGeometry(geometry);
+  
+  return previous;
 };
 
 /**
@@ -1698,7 +1698,7 @@ geometryForCellChanged = (cell, geometry)=>
  */
 getStyle = (cell)=>
 {
-	return (cell != null) ? cell.getStyle() : null;
+  return (cell != null) ? cell.getStyle() : null;
 };
 
 /**
@@ -1715,12 +1715,12 @@ getStyle = (cell)=>
  */
 setStyle = (cell, style)=>
 {
-	if (style != this.getStyle(cell))
-	{
-		this.execute(new mxStyleChange(this, cell, style));
-	}
-	
-	return style;
+  if (style != this.getStyle(cell))
+  {
+    this.execute(new mxStyleChange(this, cell, style));
+  }
+  
+  return style;
 };
 
 /**
@@ -1737,10 +1737,10 @@ setStyle = (cell, style)=>
  */
 styleForCellChanged = (cell, style)=>
 {
-	var previous = this.getStyle(cell);
-	cell.setStyle(style);
-	
-	return previous;
+  var previous = this.getStyle(cell);
+  cell.setStyle(style);
+  
+  return previous;
 };
 
 /**
@@ -1754,7 +1754,7 @@ styleForCellChanged = (cell, style)=>
  */
 isCollapsed = (cell)=>
 {
-	return (cell != null) ? cell.isCollapsed() : false;
+  return (cell != null) ? cell.isCollapsed() : false;
 };
 
 /**
@@ -1770,14 +1770,14 @@ isCollapsed = (cell)=>
  */
 setCollapsed = (cell, collapsed)=>
 {
-	if (collapsed != this.isCollapsed(cell))
-	{
-		this.execute(new mxCollapseChange(this, cell, collapsed));
-	}
-	
-	return collapsed;
+  if (collapsed != this.isCollapsed(cell))
+  {
+    this.execute(new mxCollapseChange(this, cell, collapsed));
+  }
+  
+  return collapsed;
 };
-	
+  
 /**
  * Function: collapsedStateForCellChanged
  *
@@ -1792,10 +1792,10 @@ setCollapsed = (cell, collapsed)=>
  */
 collapsedStateForCellChanged = (cell, collapsed)=>
 {
-	var previous = this.isCollapsed(cell);
-	cell.setCollapsed(collapsed);
-	
-	return previous;
+  var previous = this.isCollapsed(cell);
+  cell.setCollapsed(collapsed);
+  
+  return previous;
 };
 
 /**
@@ -1809,7 +1809,7 @@ collapsedStateForCellChanged = (cell, collapsed)=>
  */
 isVisible = (cell)=>
 {
-	return (cell != null) ? cell.isVisible() : false;
+  return (cell != null) ? cell.isVisible() : false;
 };
 
 /**
@@ -1825,14 +1825,14 @@ isVisible = (cell)=>
  */
 setVisible = (cell, visible)=>
 {
-	if (visible != this.isVisible(cell))
-	{
-		this.execute(new mxVisibleChange(this, cell, visible));
-	}
-	
-	return visible;
+  if (visible != this.isVisible(cell))
+  {
+    this.execute(new mxVisibleChange(this, cell, visible));
+  }
+  
+  return visible;
 };
-	
+  
 /**
  * Function: visibleStateForCellChanged
  *
@@ -1847,10 +1847,10 @@ setVisible = (cell, visible)=>
  */
 visibleStateForCellChanged = (cell, visible)=>
 {
-	var previous = this.isVisible(cell);
-	cell.setVisible(visible);
-	
-	return previous;
+  var previous = this.isVisible(cell);
+  cell.setVisible(visible);
+  
+  return previous;
 };
 
 /**
@@ -1870,13 +1870,13 @@ visibleStateForCellChanged = (cell, visible)=>
  */
 execute = (change)=>
 {
-	change.execute();
-	this.beginUpdate();
-	this.currentEdit.add(change);
-	this.fireEvent(new mxEventObject(mxEvent.EXECUTE, 'change', change));
-	// New global executed event
-	this.fireEvent(new mxEventObject(mxEvent.EXECUTED, 'change', change));
-	this.endUpdate();
+  change.execute();
+  this.beginUpdate();
+  this.currentEdit.add(change);
+  this.fireEvent(new mxEventObject(mxEvent.EXECUTE, 'change', change));
+  // New global executed event
+  this.fireEvent(new mxEventObject(mxEvent.EXECUTED, 'change', change));
+  this.endUpdate();
 };
 
 /**
@@ -1920,13 +1920,13 @@ execute = (change)=>
  */
 beginUpdate = ()=>
 {
-	this.updateLevel++;
-	this.fireEvent(new mxEventObject(mxEvent.BEGIN_UPDATE));
-	
-	if (this.updateLevel == 1)
-	{
-		this.fireEvent(new mxEventObject(mxEvent.START_EDIT));
-	}
+  this.updateLevel++;
+  this.fireEvent(new mxEventObject(mxEvent.BEGIN_UPDATE));
+  
+  if (this.updateLevel == 1)
+  {
+    this.fireEvent(new mxEventObject(mxEvent.START_EDIT));
+  }
 };
 
 /**
@@ -1945,34 +1945,34 @@ beginUpdate = ()=>
  */
 endUpdate = ()=>
 {
-	this.updateLevel--;
-	
-	if (this.updateLevel == 0)
-	{
-		this.fireEvent(new mxEventObject(mxEvent.END_EDIT));
-	}
-	
-	if (!this.endingUpdate)
-	{
-		this.endingUpdate = this.updateLevel == 0;
-		this.fireEvent(new mxEventObject(mxEvent.END_UPDATE, 'edit', this.currentEdit));
+  this.updateLevel--;
+  
+  if (this.updateLevel == 0)
+  {
+    this.fireEvent(new mxEventObject(mxEvent.END_EDIT));
+  }
+  
+  if (!this.endingUpdate)
+  {
+    this.endingUpdate = this.updateLevel == 0;
+    this.fireEvent(new mxEventObject(mxEvent.END_UPDATE, 'edit', this.currentEdit));
 
-		try
-		{		
-			if (this.endingUpdate && !this.currentEdit.isEmpty())
-			{
-				this.fireEvent(new mxEventObject(mxEvent.BEFORE_UNDO, 'edit', this.currentEdit));
-				var tmp = this.currentEdit;
-				this.currentEdit = this.createUndoableEdit();
-				tmp.notify();
-				this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', tmp));
-			}
-		}
-		finally
-		{
-			this.endingUpdate = false;
-		}
-	}
+    try
+    {    
+      if (this.endingUpdate && !this.currentEdit.isEmpty())
+      {
+        this.fireEvent(new mxEventObject(mxEvent.BEFORE_UNDO, 'edit', this.currentEdit));
+        var tmp = this.currentEdit;
+        this.currentEdit = this.createUndoableEdit();
+        tmp.notify();
+        this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', tmp));
+      }
+    }
+    finally
+    {
+      this.endingUpdate = false;
+    }
+  }
 };
 
 /**
@@ -1989,18 +1989,18 @@ endUpdate = ()=>
  */
 createUndoableEdit = (significant)=>
 {
-	var edit = new mxUndoableEdit(this, (significant != null) ? significant : true);
-	
-	edit.notify = ()=>
-	{
-		// LATER: Remove changes property (deprecated)
-		edit.source.fireEvent(new mxEventObject(mxEvent.CHANGE,
-			'edit', edit, 'changes', edit.changes));
-		edit.source.fireEvent(new mxEventObject(mxEvent.NOTIFY,
-			'edit', edit, 'changes', edit.changes));
-	};
-	
-	return edit;
+  var edit = new mxUndoableEdit(this, (significant != null) ? significant : true);
+  
+  edit.notify = ()=>
+  {
+    // LATER: Remove changes property (deprecated)
+    edit.source.fireEvent(new mxEventObject(mxEvent.CHANGE,
+      'edit', edit, 'changes', edit.changes));
+    edit.source.fireEvent(new mxEventObject(mxEvent.NOTIFY,
+      'edit', edit, 'changes', edit.changes));
+  };
+  
+  return edit;
 };
 
 /**
@@ -2017,41 +2017,41 @@ createUndoableEdit = (significant)=>
  */
 mergeChildren = (from, to, cloneAllEdges)=>
 {
-	cloneAllEdges = (cloneAllEdges != null) ? cloneAllEdges : true;
-	
-	this.beginUpdate();
-	try
-	{
-		var mapping = new Object();
-		this.mergeChildrenImpl(from, to, cloneAllEdges, mapping);
-		
-		// Post-processes all edges in the mapping and
-		// reconnects the terminals to the corresponding
-		// cells in the target model
-		for (var key in mapping)
-		{
-			var cell = mapping[key];
-			var terminal = this.getTerminal(cell, true);
+  cloneAllEdges = (cloneAllEdges != null) ? cloneAllEdges : true;
+  
+  this.beginUpdate();
+  try
+  {
+    var mapping = new Object();
+    this.mergeChildrenImpl(from, to, cloneAllEdges, mapping);
+    
+    // Post-processes all edges in the mapping and
+    // reconnects the terminals to the corresponding
+    // cells in the target model
+    for (var key in mapping)
+    {
+      var cell = mapping[key];
+      var terminal = this.getTerminal(cell, true);
 
-			if (terminal != null)
-			{
-				terminal = mapping[mxCellPath.create(terminal)];
-				this.setTerminal(cell, terminal, true);
-			}
-			
-			terminal = this.getTerminal(cell, false);
-			
-			if (terminal != null)
-			{
-				terminal = mapping[mxCellPath.create(terminal)];
-				this.setTerminal(cell, terminal, false);
-			}
-		}
-	}
-	finally
-	{
-		this.endUpdate();
-	}
+      if (terminal != null)
+      {
+        terminal = mapping[mxCellPath.create(terminal)];
+        this.setTerminal(cell, terminal, true);
+      }
+      
+      terminal = this.getTerminal(cell, false);
+      
+      if (terminal != null)
+      {
+        terminal = mapping[mxCellPath.create(terminal)];
+        this.setTerminal(cell, terminal, false);
+      }
+    }
+  }
+  finally
+  {
+    this.endUpdate();
+  }
 };
 
 /**
@@ -2064,51 +2064,51 @@ mergeChildren = (from, to, cloneAllEdges)=>
  */
 mergeChildrenImpl = (from, to, cloneAllEdges, mapping)=>
 {
-	this.beginUpdate();
-	try
-	{
-		var childCount = from.getChildCount();
-		
-		for (var i = 0; i < childCount; i++)
-		{
-			var cell = from.getChildAt(i);
-			
-			if (typeof(cell.getId) == 'function')
-			{
-				var id = cell.getId();
-				var target = (id != null && (!this.isEdge(cell) || !cloneAllEdges)) ?
-						this.getCell(id) : null;
-				
-				// Clones and adds the child if no cell exists for the id
-				if (target == null)
-				{
-					var clone = cell.clone();
-					clone.setId(id);
-					
-					// Sets the terminals from the original cell to the clone
-					// because the lookup uses strings not cells in JS
-					clone.setTerminal(cell.getTerminal(true), true);
-					clone.setTerminal(cell.getTerminal(false), false);
-					
-					// Do *NOT* use model.add as this will move the edge away
-					// from the parent in updateEdgeParent if maintainEdgeParent
-					// is enabled in the target model
-					target = to.insert(clone);
-					this.cellAdded(target);
-				}
-				
-				// Stores the mapping for later reconnecting edges
-				mapping[mxCellPath.create(cell)] = target;
-				
-				// Recurses
-				this.mergeChildrenImpl(cell, target, cloneAllEdges, mapping);
-			}
-		}
-	}
-	finally
-	{
-		this.endUpdate();
-	}
+  this.beginUpdate();
+  try
+  {
+    var childCount = from.getChildCount();
+    
+    for (var i = 0; i < childCount; i++)
+    {
+      var cell = from.getChildAt(i);
+      
+      if (typeof(cell.getId) == 'function')
+      {
+        var id = cell.getId();
+        var target = (id != null && (!this.isEdge(cell) || !cloneAllEdges)) ?
+            this.getCell(id) : null;
+        
+        // Clones and adds the child if no cell exists for the id
+        if (target == null)
+        {
+          var clone = cell.clone();
+          clone.setId(id);
+          
+          // Sets the terminals from the original cell to the clone
+          // because the lookup uses strings not cells in JS
+          clone.setTerminal(cell.getTerminal(true), true);
+          clone.setTerminal(cell.getTerminal(false), false);
+          
+          // Do *NOT* use model.add as this will move the edge away
+          // from the parent in updateEdgeParent if maintainEdgeParent
+          // is enabled in the target model
+          target = to.insert(clone);
+          this.cellAdded(target);
+        }
+        
+        // Stores the mapping for later reconnecting edges
+        mapping[mxCellPath.create(cell)] = target;
+        
+        // Recurses
+        this.mergeChildrenImpl(cell, target, cloneAllEdges, mapping);
+      }
+    }
+  }
+  finally
+  {
+    this.endUpdate();
+  }
 };
 
 /**
@@ -2123,25 +2123,25 @@ mergeChildrenImpl = (from, to, cloneAllEdges, mapping)=>
  */
 getParents = (cells)=>
 {
-	var parents = [];
-	
-	if (cells != null)
-	{
-		var dict = new mxDictionary();
-		
-		for (var i = 0; i < cells.length; i++)
-		{
-			var parent = this.getParent(cells[i]);
-			
-			if (parent != null && !dict.get(parent))
-			{
-				dict.put(parent, true);
-				parents.push(parent);
-			}
-		}
-	}
-	
-	return parents;
+  var parents = [];
+  
+  if (cells != null)
+  {
+    var dict = new mxDictionary();
+    
+    for (var i = 0; i < cells.length; i++)
+    {
+      var parent = this.getParent(cells[i]);
+      
+      if (parent != null && !dict.get(parent))
+      {
+        dict.put(parent, true);
+        parents.push(parent);
+      }
+    }
+  }
+  
+  return parents;
 };
 
 //
@@ -2162,12 +2162,12 @@ getParents = (cells)=>
  */
 cloneCell = (cell, includeChildren)=>
 {
-	if (cell != null)
-	{
-		return this.cloneCells([cell], includeChildren)[0];
-	}
-	
-	return null;
+  if (cell != null)
+  {
+    return this.cloneCells([cell], includeChildren)[0];
+  }
+  
+  return null;
 };
 
 /**
@@ -2187,33 +2187,33 @@ cloneCell = (cell, includeChildren)=>
  */
 cloneCells = (cells, includeChildren, mapping)=>
 {
-	includeChildren = (includeChildren != null) ? includeChildren : true;
-	mapping = (mapping != null) ? mapping : new Object();
-	var clones = [];
-	
-	for (var i = 0; i < cells.length; i++)
-	{
-		if (cells[i] != null)
-		{
-			clones.push(this.cloneCellImpl(cells[i], mapping, includeChildren));
-		}
-		else
-		{
-			clones.push(null);
-		}
-	}
-	
-	for (var i = 0; i < clones.length; i++)
-	{
-		if (clones[i] != null)
-		{
-			this.restoreClone(clones[i], cells[i], mapping);
-		}
-	}
-	
-	return clones;
+  includeChildren = (includeChildren != null) ? includeChildren : true;
+  mapping = (mapping != null) ? mapping : new Object();
+  var clones = [];
+  
+  for (var i = 0; i < cells.length; i++)
+  {
+    if (cells[i] != null)
+    {
+      clones.push(this.cloneCellImpl(cells[i], mapping, includeChildren));
+    }
+    else
+    {
+      clones.push(null);
+    }
+  }
+  
+  for (var i = 0; i < clones.length; i++)
+  {
+    if (clones[i] != null)
+    {
+      this.restoreClone(clones[i], cells[i], mapping);
+    }
+  }
+  
+  return clones;
 };
-			
+      
 /**
  * Function: cloneCellImpl
  * 
@@ -2221,28 +2221,28 @@ cloneCells = (cells, includeChildren, mapping)=>
  */
 cloneCellImpl = (cell, mapping, includeChildren)=>
 {
-	var ident = mxObjectIdentity.get(cell);
-	var clone = mapping[ident];
-	
-	if (clone == null)
-	{
-		clone = this.cellCloned(cell);
-		mapping[ident] = clone;
+  var ident = mxObjectIdentity.get(cell);
+  var clone = mapping[ident];
+  
+  if (clone == null)
+  {
+    clone = this.cellCloned(cell);
+    mapping[ident] = clone;
 
-		if (includeChildren)
-		{
-			var childCount = this.getChildCount(cell);
-			
-			for (var i = 0; i < childCount; i++)
-			{
-				var cloneChild = this.cloneCellImpl(
-					this.getChildAt(cell, i), mapping, true);
-				clone.insert(cloneChild);
-			}
-		}
-	}
-	
-	return clone;
+    if (includeChildren)
+    {
+      var childCount = this.getChildCount(cell);
+      
+      for (var i = 0; i < childCount; i++)
+      {
+        var cloneChild = this.cloneCellImpl(
+          this.getChildAt(cell, i), mapping, true);
+        clone.insert(cloneChild);
+      }
+    }
+  }
+  
+  return clone;
 };
 
 /**
@@ -2253,7 +2253,7 @@ cloneCellImpl = (cell, mapping, includeChildren)=>
  */
 cellCloned = (cell)=>
 {
-	return cell.clone();
+  return cell.clone();
 };
 
 /**
@@ -2264,37 +2264,37 @@ cellCloned = (cell)=>
  */
 restoreClone = (clone, cell, mapping)=>
 {
-	var source = this.getTerminal(cell, true);
-	
-	if (source != null)
-	{
-		var tmp = mapping[mxObjectIdentity.get(source)];
-		
-		if (tmp != null)
-		{
-			tmp.insertEdge(clone, true);
-		}
-	}
-	
-	var target = this.getTerminal(cell, false);
-	
-	if (target != null)
-	{
-		var tmp = mapping[mxObjectIdentity.get(target)];
-		
-		if (tmp != null)
-		{	
-			tmp.insertEdge(clone, false);
-		}
-	}
-	
-	var childCount = this.getChildCount(clone);
-	
-	for (var i = 0; i < childCount; i++)
-	{
-		this.restoreClone(this.getChildAt(clone, i),
-			this.getChildAt(cell, i), mapping);
-	}
+  var source = this.getTerminal(cell, true);
+  
+  if (source != null)
+  {
+    var tmp = mapping[mxObjectIdentity.get(source)];
+    
+    if (tmp != null)
+    {
+      tmp.insertEdge(clone, true);
+    }
+  }
+  
+  var target = this.getTerminal(cell, false);
+  
+  if (target != null)
+  {
+    var tmp = mapping[mxObjectIdentity.get(target)];
+    
+    if (tmp != null)
+    {  
+      tmp.insertEdge(clone, false);
+    }
+  }
+  
+  var childCount = this.getChildCount(clone);
+  
+  for (var i = 0; i < childCount; i++)
+  {
+    this.restoreClone(this.getChildAt(clone, i),
+      this.getChildAt(cell, i), mapping);
+  }
 };
 
 //
@@ -2313,9 +2313,9 @@ restoreClone = (clone, cell, mapping)=>
  */
 function mxRootChange(model, root)
 {
-	this.model = model;
-	this.root = root;
-	this.previous = root;
+  this.model = model;
+  this.root = root;
+  this.previous = root;
 };
 
 /**
@@ -2326,8 +2326,8 @@ function mxRootChange(model, root)
  */
 execute = ()=>
 {
-	this.root = this.previous;
-	this.previous = this.model.rootChanged(this.previous);
+  this.root = this.previous;
+  this.previous = this.model.rootChanged(this.previous);
 };
 
 /**
@@ -2342,12 +2342,12 @@ execute = ()=>
  */
 function mxChildChange(model, parent, child, index)
 {
-	this.model = model;
-	this.parent = parent;
-	this.previous = parent;
-	this.child = child;
-	this.index = index;
-	this.previousIndex = index;
+  this.model = model;
+  this.parent = parent;
+  this.previous = parent;
+  this.child = child;
+  this.index = index;
+  this.previousIndex = index;
 };
 
 /**
@@ -2360,29 +2360,29 @@ function mxChildChange(model, parent, child, index)
  */
 execute = ()=>
 {
-	if (this.child != null)
-	{
-		var tmp = this.model.getParent(this.child);
-		var tmp2 = (tmp != null) ? tmp.getIndex(this.child) : 0;
-		
-		if (this.previous == null)
-		{
-			this.connect(this.child, false);
-		}
-		
-		tmp = this.model.parentForCellChanged(
-			this.child, this.previous, this.previousIndex);
-			
-		if (this.previous != null)
-		{
-			this.connect(this.child, true);
-		}
-		
-		this.parent = this.previous;
-		this.previous = tmp;
-		this.index = this.previousIndex;
-		this.previousIndex = tmp2;
-	}
+  if (this.child != null)
+  {
+    var tmp = this.model.getParent(this.child);
+    var tmp2 = (tmp != null) ? tmp.getIndex(this.child) : 0;
+    
+    if (this.previous == null)
+    {
+      this.connect(this.child, false);
+    }
+    
+    tmp = this.model.parentForCellChanged(
+      this.child, this.previous, this.previousIndex);
+      
+    if (this.previous != null)
+    {
+      this.connect(this.child, true);
+    }
+    
+    this.parent = this.previous;
+    this.previous = tmp;
+    this.index = this.previousIndex;
+    this.previousIndex = tmp2;
+  }
 };
 
 /**
@@ -2394,44 +2394,44 @@ execute = ()=>
  */
 connect = (cell, isConnect)=>
 {
-	isConnect = (isConnect != null) ? isConnect : true;
-	
-	var source = cell.getTerminal(true);
-	var target = cell.getTerminal(false);
-	
-	if (source != null)
-	{
-		if (isConnect)
-		{
-			this.model.terminalForCellChanged(cell, source, true);
-		}
-		else
-		{
-			this.model.terminalForCellChanged(cell, null, true);
-		}
-	}
-	
-	if (target != null)
-	{
-		if (isConnect)
-		{
-			this.model.terminalForCellChanged(cell, target, false);
-		}
-		else
-		{
-			this.model.terminalForCellChanged(cell, null, false);
-		}
-	}
-	
-	cell.setTerminal(source, true);
-	cell.setTerminal(target, false);
-	
-	var childCount = this.model.getChildCount(cell);
-	
-	for (var i=0; i<childCount; i++)
-	{
-		this.connect(this.model.getChildAt(cell, i), isConnect);
-	}
+  isConnect = (isConnect != null) ? isConnect : true;
+  
+  var source = cell.getTerminal(true);
+  var target = cell.getTerminal(false);
+  
+  if (source != null)
+  {
+    if (isConnect)
+    {
+      this.model.terminalForCellChanged(cell, source, true);
+    }
+    else
+    {
+      this.model.terminalForCellChanged(cell, null, true);
+    }
+  }
+  
+  if (target != null)
+  {
+    if (isConnect)
+    {
+      this.model.terminalForCellChanged(cell, target, false);
+    }
+    else
+    {
+      this.model.terminalForCellChanged(cell, null, false);
+    }
+  }
+  
+  cell.setTerminal(source, true);
+  cell.setTerminal(target, false);
+  
+  var childCount = this.model.getChildCount(cell);
+  
+  for (var i=0; i<childCount; i++)
+  {
+    this.connect(this.model.getChildAt(cell, i), isConnect);
+  }
 };
 
 /**
@@ -2446,11 +2446,11 @@ connect = (cell, isConnect)=>
  */
 function mxTerminalChange(model, cell, terminal, source)
 {
-	this.model = model;
-	this.cell = cell;
-	this.terminal = terminal;
-	this.previous = terminal;
-	this.source = source;
+  this.model = model;
+  this.cell = cell;
+  this.terminal = terminal;
+  this.previous = terminal;
+  this.source = source;
 };
 
 /**
@@ -2461,12 +2461,12 @@ function mxTerminalChange(model, cell, terminal, source)
  */
 execute = ()=>
 {
-	if (this.cell != null)
-	{
-		this.terminal = this.previous;
-		this.previous = this.model.terminalForCellChanged(
-			this.cell, this.previous, this.source);
-	}
+  if (this.cell != null)
+  {
+    this.terminal = this.previous;
+    this.previous = this.model.terminalForCellChanged(
+      this.cell, this.previous, this.source);
+  }
 };
 
 /**
@@ -2481,10 +2481,10 @@ execute = ()=>
  */
 function mxValueChange(model, cell, value)
 {
-	this.model = model;
-	this.cell = cell;
-	this.value = value;
-	this.previous = value;
+  this.model = model;
+  this.cell = cell;
+  this.value = value;
+  this.previous = value;
 };
 
 /**
@@ -2495,12 +2495,12 @@ function mxValueChange(model, cell, value)
  */
 execute = ()=>
 {
-	if (this.cell != null)
-	{
-		this.value = this.previous;
-		this.previous = this.model.valueForCellChanged(
-			this.cell, this.previous);
-	}
+  if (this.cell != null)
+  {
+    this.value = this.previous;
+    this.previous = this.model.valueForCellChanged(
+      this.cell, this.previous);
+  }
 };
 
 /**
@@ -2515,10 +2515,10 @@ execute = ()=>
  */
 function mxStyleChange(model, cell, style)
 {
-	this.model = model;
-	this.cell = cell;
-	this.style = style;
-	this.previous = style;
+  this.model = model;
+  this.cell = cell;
+  this.style = style;
+  this.previous = style;
 };
 
 /**
@@ -2529,12 +2529,12 @@ function mxStyleChange(model, cell, style)
  */
 execute = ()=>
 {
-	if (this.cell != null)
-	{
-		this.style = this.previous;
-		this.previous = this.model.styleForCellChanged(
-			this.cell, this.previous);
-	}
+  if (this.cell != null)
+  {
+    this.style = this.previous;
+    this.previous = this.model.styleForCellChanged(
+      this.cell, this.previous);
+  }
 };
 
 /**
@@ -2549,10 +2549,10 @@ execute = ()=>
  */
 function mxGeometryChange(model, cell, geometry)
 {
-	this.model = model;
-	this.cell = cell;
-	this.geometry = geometry;
-	this.previous = geometry;
+  this.model = model;
+  this.cell = cell;
+  this.geometry = geometry;
+  this.previous = geometry;
 };
 
 /**
@@ -2563,12 +2563,12 @@ function mxGeometryChange(model, cell, geometry)
  */
 execute = ()=>
 {
-	if (this.cell != null)
-	{
-		this.geometry = this.previous;
-		this.previous = this.model.geometryForCellChanged(
-			this.cell, this.previous);
-	}
+  if (this.cell != null)
+  {
+    this.geometry = this.previous;
+    this.previous = this.model.geometryForCellChanged(
+      this.cell, this.previous);
+  }
 };
 
 /**
@@ -2583,10 +2583,10 @@ execute = ()=>
  */
 function mxCollapseChange(model, cell, collapsed)
 {
-	this.model = model;
-	this.cell = cell;
-	this.collapsed = collapsed;
-	this.previous = collapsed;
+  this.model = model;
+  this.cell = cell;
+  this.collapsed = collapsed;
+  this.previous = collapsed;
 };
 
 /**
@@ -2597,12 +2597,12 @@ function mxCollapseChange(model, cell, collapsed)
  */
 execute = ()=>
 {
-	if (this.cell != null)
-	{
-		this.collapsed = this.previous;
-		this.previous = this.model.collapsedStateForCellChanged(
-			this.cell, this.previous);
-	}
+  if (this.cell != null)
+  {
+    this.collapsed = this.previous;
+    this.previous = this.model.collapsedStateForCellChanged(
+      this.cell, this.previous);
+  }
 };
 
 /**
@@ -2617,10 +2617,10 @@ execute = ()=>
  */
 function mxVisibleChange(model, cell, visible)
 {
-	this.model = model;
-	this.cell = cell;
-	this.visible = visible;
-	this.previous = visible;
+  this.model = model;
+  this.cell = cell;
+  this.visible = visible;
+  this.previous = visible;
 };
 
 /**
@@ -2631,12 +2631,12 @@ function mxVisibleChange(model, cell, visible)
  */
 execute = ()=>
 {
-	if (this.cell != null)
-	{
-		this.visible = this.previous;
-		this.previous = this.model.visibleStateForCellChanged(
-			this.cell, this.previous);
-	}
+  if (this.cell != null)
+  {
+    this.visible = this.previous;
+    this.previous = this.model.visibleStateForCellChanged(
+      this.cell, this.previous);
+  }
 };
 
 /**
@@ -2673,10 +2673,10 @@ execute = ()=>
  */
 function mxCellAttributeChange(cell, attribute, value)
 {
-	this.cell = cell;
-	this.attribute = attribute;
-	this.value = value;
-	this.previous = value;
+  this.cell = cell;
+  this.attribute = attribute;
+  this.value = value;
+  this.previous = value;
 };
 
 /**
@@ -2687,19 +2687,19 @@ function mxCellAttributeChange(cell, attribute, value)
  */
 execute = ()=>
 {
-	if (this.cell != null)
-	{
-		var tmp = this.cell.getAttribute(this.attribute);
-		
-		if (this.previous == null)
-		{
-			this.cell.value.removeAttribute(this.attribute);
-		}
-		else
-		{
-			this.cell.setAttribute(this.attribute, this.previous);
-		}
-		
-		this.previous = tmp;
-	}
+  if (this.cell != null)
+  {
+    var tmp = this.cell.getAttribute(this.attribute);
+    
+    if (this.previous == null)
+    {
+      this.cell.value.removeAttribute(this.attribute);
+    }
+    else
+    {
+      this.cell.setAttribute(this.attribute, this.previous);
+    }
+    
+    this.previous = tmp;
+  }
 };

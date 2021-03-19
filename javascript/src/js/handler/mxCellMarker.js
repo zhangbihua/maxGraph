@@ -44,17 +44,17 @@
  */
 function mxCellMarker(graph, validColor, invalidColor, hotspot)
 {
-	mxEventSource.call(this);
-	
-	if (graph != null)
-	{
-		this.graph = graph;
-		this.validColor = (validColor != null) ? validColor : mxConstants.DEFAULT_VALID_COLOR;
-		this.invalidColor = (invalidColor != null) ? invalidColor : mxConstants.DEFAULT_INVALID_COLOR;
-		this.hotspot = (hotspot != null) ? hotspot : mxConstants.DEFAULT_HOTSPOT;
-		
-		this.highlight = new mxCellHighlight(graph);
-	}
+  mxEventSource.call(this);
+  
+  if (graph != null)
+  {
+    this.graph = graph;
+    this.validColor = (validColor != null) ? validColor : mxConstants.DEFAULT_VALID_COLOR;
+    this.invalidColor = (invalidColor != null) ? invalidColor : mxConstants.DEFAULT_INVALID_COLOR;
+    this.hotspot = (hotspot != null) ? hotspot : mxConstants.DEFAULT_HOTSPOT;
+    
+    this.highlight = new mxCellHighlight(graph);
+  }
 };
 
 /**
@@ -140,7 +140,7 @@ markedState = null;
  */
 setEnabled = (enabled)=>
 {
-	this.enabled = enabled;
+  this.enabled = enabled;
 };
 
 /**
@@ -151,7 +151,7 @@ setEnabled = (enabled)=>
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
 
 /**
@@ -161,7 +161,7 @@ isEnabled = ()=>
  */
 setHotspot = (hotspot)=>
 {
-	this.hotspot = hotspot;
+  this.hotspot = hotspot;
 };
 
 /**
@@ -171,7 +171,7 @@ setHotspot = (hotspot)=>
  */
 getHotspot = ()=>
 {
-	return this.hotspot;
+  return this.hotspot;
 };
 
 /**
@@ -181,7 +181,7 @@ getHotspot = ()=>
  */
 setHotspotEnabled = (enabled)=>
 {
-	this.hotspotEnabled = enabled;
+  this.hotspotEnabled = enabled;
 };
 
 /**
@@ -191,7 +191,7 @@ setHotspotEnabled = (enabled)=>
  */
 isHotspotEnabled = ()=>
 {
-	return this.hotspotEnabled;
+  return this.hotspotEnabled;
 };
 
 /**
@@ -201,7 +201,7 @@ isHotspotEnabled = ()=>
  */
 hasValidState = ()=>
 {
-	return this.validState != null;
+  return this.validState != null;
 };
 
 /**
@@ -211,7 +211,7 @@ hasValidState = ()=>
  */
 getValidState = ()=>
 {
-	return this.validState;
+  return this.validState;
 };
 
 /**
@@ -221,7 +221,7 @@ getValidState = ()=>
  */
 getMarkedState = ()=>
 {
-	return this.markedState;
+  return this.markedState;
 };
 
 /**
@@ -231,13 +231,13 @@ getMarkedState = ()=>
  */
 reset = ()=>
 {
-	this.validState = null;
-	
-	if (this.markedState != null)
-	{
-		this.markedState = null;
-		this.unmark();
-	}
+  this.validState = null;
+  
+  if (this.markedState != null)
+  {
+    this.markedState = null;
+    this.unmark();
+  }
 };
 
 /**
@@ -252,15 +252,15 @@ reset = ()=>
  */
 process = (me)=>
 {
-	var state = null;
-	
-	if (this.isEnabled())
-	{
-		state = this.getState(me);
-		this.setCurrentState(state, me);
-	}
-	
-	return state;
+  var state = null;
+  
+  if (this.isEnabled())
+  {
+    state = this.getState(me);
+    this.setCurrentState(state, me);
+  }
+  
+  return state;
 };
 
 /**
@@ -270,33 +270,33 @@ process = (me)=>
  */
 setCurrentState = (state, me, color)=>
 {
-	var isValid = (state != null) ? this.isValidState(state) : false;
-	color = (color != null) ? color : this.getMarkerColor(me.getEvent(), state, isValid);
-	
-	if (isValid)
-	{
-		this.validState = state;
-	}
-	else
-	{
-		this.validState = null;
-	}
-	
-	if (state != this.markedState || color != this.currentColor)
-	{
-		this.currentColor = color;
-		
-		if (state != null && this.currentColor != null)
-		{
-			this.markedState = state;
-			this.mark();		
-		}
-		else if (this.markedState != null)
-		{
-			this.markedState = null;
-			this.unmark();
-		}
-	}
+  var isValid = (state != null) ? this.isValidState(state) : false;
+  color = (color != null) ? color : this.getMarkerColor(me.getEvent(), state, isValid);
+  
+  if (isValid)
+  {
+    this.validState = state;
+  }
+  else
+  {
+    this.validState = null;
+  }
+  
+  if (state != this.markedState || color != this.currentColor)
+  {
+    this.currentColor = color;
+    
+    if (state != null && this.currentColor != null)
+    {
+      this.markedState = state;
+      this.mark();    
+    }
+    else if (this.markedState != null)
+    {
+      this.markedState = null;
+      this.unmark();
+    }
+  }
 };
 
 /**
@@ -306,14 +306,14 @@ setCurrentState = (state, me, color)=>
  */
 markCell = (cell, color)=>
 {
-	var state = this.graph.getView().getState(cell);
-	
-	if (state != null)
-	{
-		this.currentColor = (color != null) ? color : this.validColor;
-		this.markedState = state;
-		this.mark();
-	}
+  var state = this.graph.getView().getState(cell);
+  
+  if (state != null)
+  {
+    this.currentColor = (color != null) ? color : this.validColor;
+    this.markedState = state;
+    this.mark();
+  }
 };
 
 /**
@@ -323,9 +323,9 @@ markCell = (cell, color)=>
  */
 mark = ()=>
 {
-	this.highlight.setHighlightColor(this.currentColor);
-	this.highlight.highlight(this.markedState);
-	this.fireEvent(new mxEventObject(mxEvent.MARK, 'state', this.markedState));
+  this.highlight.setHighlightColor(this.currentColor);
+  this.highlight.highlight(this.markedState);
+  this.fireEvent(new mxEventObject(mxEvent.MARK, 'state', this.markedState));
 };
 
 /**
@@ -335,7 +335,7 @@ mark = ()=>
  */
 unmark = ()=>
 {
-	this.mark();
+  this.mark();
 };
 
 /**
@@ -347,7 +347,7 @@ unmark = ()=>
  */
 isValidState = (state)=>
 {
-	return true;
+  return true;
 };
 
 /**
@@ -358,7 +358,7 @@ isValidState = (state)=>
  */
 getMarkerColor = (evt, state, isValid)=>
 {
-	return (isValid) ? this.validColor : this.invalidColor;
+  return (isValid) ? this.validColor : this.invalidColor;
 };
 
 /**
@@ -369,11 +369,11 @@ getMarkerColor = (evt, state, isValid)=>
  */
 getState = (me)=>
 {
-	var view = this.graph.getView();
-	var cell = this.getCell(me);
-	var state = this.getStateToMark(view.getState(cell));
+  var view = this.graph.getView();
+  var cell = this.getCell(me);
+  var state = this.getStateToMark(view.getState(cell));
 
-	return (state != null && this.intersects(state, me)) ? state : null;
+  return (state != null && this.intersects(state, me)) ? state : null;
 };
 
 /**
@@ -384,7 +384,7 @@ getState = (me)=>
  */
 getCell = (me)=>
 {
-	return me.getCell();
+  return me.getCell();
 };
 
 /**
@@ -395,7 +395,7 @@ getCell = (me)=>
  */
 getStateToMark = (state)=>
 {
-	return state;
+  return state;
 };
 
 /**
@@ -407,14 +407,14 @@ getStateToMark = (state)=>
  */
 intersects = (state, me)=>
 {
-	if (this.hotspotEnabled)
-	{
-		return mxUtils.intersectsHotspot(state, me.getGraphX(), me.getGraphY(),
-			this.hotspot, mxConstants.MIN_HOTSPOT_SIZE,
-			mxConstants.MAX_HOTSPOT_SIZE);
-	}
-	
-	return true;
+  if (this.hotspotEnabled)
+  {
+    return mxUtils.intersectsHotspot(state, me.getGraphX(), me.getGraphY(),
+      this.hotspot, mxConstants.MIN_HOTSPOT_SIZE,
+      mxConstants.MAX_HOTSPOT_SIZE);
+  }
+  
+  return true;
 };
 
 /**
@@ -424,7 +424,7 @@ intersects = (state, me)=>
  */
 destroy = ()=>
 {
-	this.graph.getView().removeListener(this.resetHandler);
-	this.graph.getModel().removeListener(this.resetHandler);
-	this.highlight.destroy();
+  this.graph.getView().removeListener(this.resetHandler);
+  this.graph.getModel().removeListener(this.resetHandler);
+  this.highlight.destroy();
 };

@@ -72,8 +72,8 @@
  */
 function mxUndoManager(size)
 {
-	this.size = (size != null) ? size : 100;
-	this.clear();
+  this.size = (size != null) ? size : 100;
+  this.clear();
 };
 
 /**
@@ -111,7 +111,7 @@ indexOfNextAdd = 0;
  */
 isEmpty = ()=>
 {
-	return this.history.length == 0;
+  return this.history.length == 0;
 };
 
 /**
@@ -121,9 +121,9 @@ isEmpty = ()=>
  */
 clear = ()=>
 {
-	this.history = [];
-	this.indexOfNextAdd = 0;
-	this.fireEvent(new mxEventObject(mxEvent.CLEAR));
+  this.history = [];
+  this.indexOfNextAdd = 0;
+  this.fireEvent(new mxEventObject(mxEvent.CLEAR));
 };
 
 /**
@@ -133,7 +133,7 @@ clear = ()=>
  */
 canUndo = ()=>
 {
-	return this.indexOfNextAdd > 0;
+  return this.indexOfNextAdd > 0;
 };
 
 /**
@@ -148,9 +148,9 @@ undo = ()=>
         var edit = this.history[--this.indexOfNextAdd];
         edit.undo();
 
-		if (edit.isSignificant())
+    if (edit.isSignificant())
         {
-        	this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
+          this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
             break;
         }
     }
@@ -163,7 +163,7 @@ undo = ()=>
  */
 canRedo = ()=>
 {
-	return this.indexOfNextAdd < this.history.length;
+  return this.indexOfNextAdd < this.history.length;
 };
 
 /**
@@ -182,7 +182,7 @@ redo = ()=>
         
         if (edit.isSignificant())
         {
-        	this.fireEvent(new mxEventObject(mxEvent.REDO, 'edit', edit));
+          this.fireEvent(new mxEventObject(mxEvent.REDO, 'edit', edit));
             break;
         }
     }
@@ -195,17 +195,17 @@ redo = ()=>
  */
 undoableEditHappened = (undoableEdit)=>
 {
-	this.trim();
-	
-	if (this.size > 0 &&
-		this.size == this.history.length)
-	{
-		this.history.shift();
-	}
-	
-	this.history.push(undoableEdit);
-	this.indexOfNextAdd = this.history.length;
-	this.fireEvent(new mxEventObject(mxEvent.ADD, 'edit', undoableEdit));
+  this.trim();
+
+  if (this.size > 0 &&
+    this.size == this.history.length)
+  {
+    this.history.shift();
+  }
+
+  this.history.push(undoableEdit);
+  this.indexOfNextAdd = this.history.length;
+  this.fireEvent(new mxEventObject(mxEvent.ADD, 'edit', undoableEdit));
 };
 
 /**
@@ -216,14 +216,14 @@ undoableEditHappened = (undoableEdit)=>
  */
 trim = ()=>
 {
-	if (this.history.length > this.indexOfNextAdd)
-	{
-		var edits = this.history.splice(this.indexOfNextAdd,
-			this.history.length - this.indexOfNextAdd);
-			
-		for (var i = 0; i < edits.length; i++)
-		{
-			edits[i].die();
-		}
-	}
+  if (this.history.length > this.indexOfNextAdd)
+  {
+    var edits = this.history.splice(this.indexOfNextAdd,
+      this.history.length - this.indexOfNextAdd);
+
+    for (var i = 0; i < edits.length; i++)
+    {
+      edits[i].die();
+    }
+  }
 };

@@ -30,17 +30,17 @@
  */
 function mxXmlCanvas2D(root)
 {
-	mxAbstractCanvas2D.call(this);
+  mxAbstractCanvas2D.call(this);
 
-	/**
-	 * Variable: root
-	 * 
-	 * Reference to the container for the SVG content.
-	 */
-	this.root = root;
+  /**
+   * Variable: root
+   * 
+   * Reference to the container for the SVG content.
+   */
+  this.root = root;
 
-	// Writes default settings;
-	this.writeDefaults();
+  // Writes default settings;
+  this.writeDefaults();
 };
 
 /**
@@ -70,30 +70,30 @@ mxXmlCanvas2compressed = true;
  */
 mxXmlCanvas2writeDefaults = ()=>
 {
-	var elem;
-	
-	// Writes font defaults
-	elem = this.createElement('fontfamily');
-	elem.setAttribute('family', mxConstants.DEFAULT_FONTFAMILY);
-	this.root.appendChild(elem);
-	
-	elem = this.createElement('fontsize');
-	elem.setAttribute('size', mxConstants.DEFAULT_FONTSIZE);
-	this.root.appendChild(elem);
-	
-	// Writes shadow defaults
-	elem = this.createElement('shadowcolor');
-	elem.setAttribute('color', mxConstants.SHADOWCOLOR);
-	this.root.appendChild(elem);
-	
-	elem = this.createElement('shadowalpha');
-	elem.setAttribute('alpha', mxConstants.SHADOW_OPACITY);
-	this.root.appendChild(elem);
-	
-	elem = this.createElement('shadowoffset');
-	elem.setAttribute('dx', mxConstants.SHADOW_OFFSET_X);
-	elem.setAttribute('dy', mxConstants.SHADOW_OFFSET_Y);
-	this.root.appendChild(elem);
+  var elem;
+  
+  // Writes font defaults
+  elem = this.createElement('fontfamily');
+  elem.setAttribute('family', mxConstants.DEFAULT_FONTFAMILY);
+  this.root.appendChild(elem);
+  
+  elem = this.createElement('fontsize');
+  elem.setAttribute('size', mxConstants.DEFAULT_FONTSIZE);
+  this.root.appendChild(elem);
+  
+  // Writes shadow defaults
+  elem = this.createElement('shadowcolor');
+  elem.setAttribute('color', mxConstants.SHADOWCOLOR);
+  this.root.appendChild(elem);
+  
+  elem = this.createElement('shadowalpha');
+  elem.setAttribute('alpha', mxConstants.SHADOW_OPACITY);
+  this.root.appendChild(elem);
+  
+  elem = this.createElement('shadowoffset');
+  elem.setAttribute('dx', mxConstants.SHADOW_OFFSET_X);
+  elem.setAttribute('dy', mxConstants.SHADOW_OFFSET_Y);
+  this.root.appendChild(elem);
 };
 
 /**
@@ -103,7 +103,7 @@ mxXmlCanvas2writeDefaults = ()=>
  */
 mxXmlCanvas2format = (value)=>
 {
-	return parseFloat(parseFloat(value).toFixed(2));
+  return parseFloat(parseFloat(value).toFixed(2));
 };
 
 /**
@@ -113,7 +113,7 @@ mxXmlCanvas2format = (value)=>
  */
 mxXmlCanvas2createElement = (name)=>
 {
-	return this.root.ownerDocument.createElement(name);
+  return this.root.ownerDocument.createElement(name);
 };
 
 /**
@@ -123,12 +123,12 @@ mxXmlCanvas2createElement = (name)=>
  */
 mxXmlCanvas2save = ()=>
 {
-	if (this.compressed)
-	{
-		mxAbstractCanvas2save.apply(this, arguments);
-	}
-	
-	this.root.appendChild(this.createElement('save'));
+  if (this.compressed)
+  {
+    mxAbstractCanvas2save.apply(this, arguments);
+  }
+  
+  this.root.appendChild(this.createElement('save'));
 };
 
 /**
@@ -138,12 +138,12 @@ mxXmlCanvas2save = ()=>
  */
 mxXmlCanvas2restore = ()=>
 {
-	if (this.compressed)
-	{
-		mxAbstractCanvas2restore.apply(this, arguments);
-	}
-	
-	this.root.appendChild(this.createElement('restore'));
+  if (this.compressed)
+  {
+    mxAbstractCanvas2restore.apply(this, arguments);
+  }
+  
+  this.root.appendChild(this.createElement('restore'));
 };
 
 /**
@@ -174,10 +174,10 @@ mxXmlCanvas2scale = (value)=>
  */
 mxXmlCanvas2translate = (dx, dy)=>
 {
-	var elem = this.createElement('translate');
-	elem.setAttribute('dx', this.format(dx));
-	elem.setAttribute('dy', this.format(dy));
-	this.root.appendChild(elem);
+  var elem = this.createElement('translate');
+  elem.setAttribute('dx', this.format(dx));
+  elem.setAttribute('dy', this.format(dy));
+  this.root.appendChild(elem);
 };
 
 /**
@@ -196,17 +196,17 @@ mxXmlCanvas2translate = (dx, dy)=>
  */
 mxXmlCanvas2rotate = (theta, flipH, flipV, cx, cy)=>
 {
-	var elem = this.createElement('rotate');
-	
-	if (theta != 0 || flipH || flipV)
-	{
-		elem.setAttribute('theta', this.format(theta));
-		elem.setAttribute('flipH', (flipH) ? '1' : '0');
-		elem.setAttribute('flipV', (flipV) ? '1' : '0');
-		elem.setAttribute('cx', this.format(cx));
-		elem.setAttribute('cy', this.format(cy));
-		this.root.appendChild(elem);
-	}
+  var elem = this.createElement('rotate');
+  
+  if (theta != 0 || flipH || flipV)
+  {
+    elem.setAttribute('theta', this.format(theta));
+    elem.setAttribute('flipH', (flipH) ? '1' : '0');
+    elem.setAttribute('flipV', (flipV) ? '1' : '0');
+    elem.setAttribute('cx', this.format(cx));
+    elem.setAttribute('cy', this.format(cy));
+    this.root.appendChild(elem);
+  }
 };
 
 /**
@@ -221,19 +221,19 @@ mxXmlCanvas2rotate = (theta, flipH, flipV, cx, cy)=>
  */
 mxXmlCanvas2setAlpha = (value)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.alpha == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setAlpha.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('alpha');
-	elem.setAttribute('alpha', this.format(value));
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (this.state.alpha == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setAlpha.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('alpha');
+  elem.setAttribute('alpha', this.format(value));
+  this.root.appendChild(elem);
 };
 
 /**
@@ -248,19 +248,19 @@ mxXmlCanvas2setAlpha = (value)=>
  */
 mxXmlCanvas2setFillAlpha = (value)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.fillAlpha == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setFillAlpha.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('fillalpha');
-	elem.setAttribute('alpha', this.format(value));
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (this.state.fillAlpha == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setFillAlpha.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('fillalpha');
+  elem.setAttribute('alpha', this.format(value));
+  this.root.appendChild(elem);
 };
 
 /**
@@ -275,19 +275,19 @@ mxXmlCanvas2setFillAlpha = (value)=>
  */
 mxXmlCanvas2setStrokeAlpha = (value)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.strokeAlpha == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setStrokeAlpha.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('strokealpha');
-	elem.setAttribute('alpha', this.format(value));
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (this.state.strokeAlpha == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setStrokeAlpha.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('strokealpha');
+  elem.setAttribute('alpha', this.format(value));
+  this.root.appendChild(elem);
 };
 
 /**
@@ -301,24 +301,24 @@ mxXmlCanvas2setStrokeAlpha = (value)=>
  */
 mxXmlCanvas2setFillColor = (value)=>
 {
-	if (value == mxConstants.NONE)
-	{
-		value = null;
-	}
-	
-	if (this.compressed)
-	{
-		if (this.state.fillColor == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setFillColor.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('fillcolor');
-	elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
-	this.root.appendChild(elem);
+  if (value == mxConstants.NONE)
+  {
+    value = null;
+  }
+  
+  if (this.compressed)
+  {
+    if (this.state.fillColor == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setFillColor.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('fillcolor');
+  elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
+  this.root.appendChild(elem);
 };
 
 /**
@@ -343,36 +343,36 @@ mxXmlCanvas2setFillColor = (value)=>
  */
 mxXmlCanvas2setGradient = (color1, color2, x, y, w, h, direction, alpha1, alpha2)=>
 {
-	if (color1 != null && color2 != null)
-	{
-		mxAbstractCanvas2setGradient.apply(this, arguments);
-		
-		var elem = this.createElement('gradient');
-		elem.setAttribute('c1', color1);
-		elem.setAttribute('c2', color2);
-		elem.setAttribute('x', this.format(x));
-		elem.setAttribute('y', this.format(y));
-		elem.setAttribute('w', this.format(w));
-		elem.setAttribute('h', this.format(h));
-		
-		// Default direction is south
-		if (direction != null)
-		{
-			elem.setAttribute('direction', direction);
-		}
-		
-		if (alpha1 != null)
-		{
-			elem.setAttribute('alpha1', alpha1);
-		}
-		
-		if (alpha2 != null)
-		{
-			elem.setAttribute('alpha2', alpha2);
-		}
-		
-		this.root.appendChild(elem);
-	}
+  if (color1 != null && color2 != null)
+  {
+    mxAbstractCanvas2setGradient.apply(this, arguments);
+    
+    var elem = this.createElement('gradient');
+    elem.setAttribute('c1', color1);
+    elem.setAttribute('c2', color2);
+    elem.setAttribute('x', this.format(x));
+    elem.setAttribute('y', this.format(y));
+    elem.setAttribute('w', this.format(w));
+    elem.setAttribute('h', this.format(h));
+    
+    // Default direction is south
+    if (direction != null)
+    {
+      elem.setAttribute('direction', direction);
+    }
+    
+    if (alpha1 != null)
+    {
+      elem.setAttribute('alpha1', alpha1);
+    }
+    
+    if (alpha2 != null)
+    {
+      elem.setAttribute('alpha2', alpha2);
+    }
+    
+    this.root.appendChild(elem);
+  }
 };
 
 /**
@@ -386,24 +386,24 @@ mxXmlCanvas2setGradient = (color1, color2, x, y, w, h, direction, alpha1, alpha2
  */
 mxXmlCanvas2setStrokeColor = (value)=>
 {
-	if (value == mxConstants.NONE)
-	{
-		value = null;
-	}
-	
-	if (this.compressed)
-	{
-		if (this.state.strokeColor == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setStrokeColor.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('strokecolor');
-	elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
-	this.root.appendChild(elem);
+  if (value == mxConstants.NONE)
+  {
+    value = null;
+  }
+  
+  if (this.compressed)
+  {
+    if (this.state.strokeColor == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setStrokeColor.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('strokecolor');
+  elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
+  this.root.appendChild(elem);
 };
 
 /**
@@ -417,19 +417,19 @@ mxXmlCanvas2setStrokeColor = (value)=>
  */
 mxXmlCanvas2setStrokeWidth = (value)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.strokeWidth == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setStrokeWidth.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('strokewidth');
-	elem.setAttribute('width', this.format(value));
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (this.state.strokeWidth == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setStrokeWidth.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('strokewidth');
+  elem.setAttribute('width', this.format(value));
+  this.root.appendChild(elem);
 };
 
 /**
@@ -445,25 +445,25 @@ mxXmlCanvas2setStrokeWidth = (value)=>
  */
 mxXmlCanvas2setDashed = (value, fixDash)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.dashed == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setDashed.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('dashed');
-	elem.setAttribute('dashed', (value) ? '1' : '0');
-	
-	if (fixDash != null)
-	{
-		elem.setAttribute('fixDash', (fixDash) ? '1' : '0');
-	}
-	
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (this.state.dashed == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setDashed.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('dashed');
+  elem.setAttribute('dashed', (value) ? '1' : '0');
+  
+  if (fixDash != null)
+  {
+    elem.setAttribute('fixDash', (fixDash) ? '1' : '0');
+  }
+  
+  this.root.appendChild(elem);
 };
 
 /**
@@ -480,19 +480,19 @@ mxXmlCanvas2setDashed = (value, fixDash)=>
  */
 mxXmlCanvas2setDashPattern = (value)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.dashPattern == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setDashPattern.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('dashpattern');
-	elem.setAttribute('pattern', value);
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (this.state.dashPattern == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setDashPattern.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('dashpattern');
+  elem.setAttribute('pattern', value);
+  this.root.appendChild(elem);
 };
 
 /**
@@ -507,19 +507,19 @@ mxXmlCanvas2setDashPattern = (value)=>
  */
 mxXmlCanvas2setLineCap = (value)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.lineCap == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setLineCap.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('linecap');
-	elem.setAttribute('cap', value);
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (this.state.lineCap == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setLineCap.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('linecap');
+  elem.setAttribute('cap', value);
+  this.root.appendChild(elem);
 };
 
 /**
@@ -534,19 +534,19 @@ mxXmlCanvas2setLineCap = (value)=>
  */
 mxXmlCanvas2setLineJoin = (value)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.lineJoin == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setLineJoin.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('linejoin');
-	elem.setAttribute('join', value);
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (this.state.lineJoin == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setLineJoin.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('linejoin');
+  elem.setAttribute('join', value);
+  this.root.appendChild(elem);
 };
 
 /**
@@ -560,19 +560,19 @@ mxXmlCanvas2setLineJoin = (value)=>
  */
 mxXmlCanvas2setMiterLimit = (value)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.miterLimit == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setMiterLimit.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('miterlimit');
-	elem.setAttribute('limit', value);
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (this.state.miterLimit == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setMiterLimit.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('miterlimit');
+  elem.setAttribute('limit', value);
+  this.root.appendChild(elem);
 };
 
 /**
@@ -586,27 +586,27 @@ mxXmlCanvas2setMiterLimit = (value)=>
  */
 mxXmlCanvas2setFontColor = (value)=>
 {
-	if (this.textEnabled)
-	{
-		if (value == mxConstants.NONE)
-		{
-			value = null;
-		}
-		
-		if (this.compressed)
-		{
-			if (this.state.fontColor == value)
-			{
-				return;
-			}
-			
-			mxAbstractCanvas2setFontColor.apply(this, arguments);
-		}
-		
-		var elem = this.createElement('fontcolor');
-		elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
-		this.root.appendChild(elem);
-	}
+  if (this.textEnabled)
+  {
+    if (value == mxConstants.NONE)
+    {
+      value = null;
+    }
+    
+    if (this.compressed)
+    {
+      if (this.state.fontColor == value)
+      {
+        return;
+      }
+      
+      mxAbstractCanvas2setFontColor.apply(this, arguments);
+    }
+    
+    var elem = this.createElement('fontcolor');
+    elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
+    this.root.appendChild(elem);
+  }
 };
 
 /**
@@ -620,27 +620,27 @@ mxXmlCanvas2setFontColor = (value)=>
  */
 mxXmlCanvas2setFontBackgroundColor = (value)=>
 {
-	if (this.textEnabled)
-	{
-		if (value == mxConstants.NONE)
-		{
-			value = null;
-		}
-		
-		if (this.compressed)
-		{
-			if (this.state.fontBackgroundColor == value)
-			{
-				return;
-			}
-			
-			mxAbstractCanvas2setFontBackgroundColor.apply(this, arguments);
-		}
+  if (this.textEnabled)
+  {
+    if (value == mxConstants.NONE)
+    {
+      value = null;
+    }
+    
+    if (this.compressed)
+    {
+      if (this.state.fontBackgroundColor == value)
+      {
+        return;
+      }
+      
+      mxAbstractCanvas2setFontBackgroundColor.apply(this, arguments);
+    }
 
-		var elem = this.createElement('fontbackgroundcolor');
-		elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
-		this.root.appendChild(elem);
-	}
+    var elem = this.createElement('fontbackgroundcolor');
+    elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
+    this.root.appendChild(elem);
+  }
 };
 
 /**
@@ -654,27 +654,27 @@ mxXmlCanvas2setFontBackgroundColor = (value)=>
  */
 mxXmlCanvas2setFontBorderColor = (value)=>
 {
-	if (this.textEnabled)
-	{
-		if (value == mxConstants.NONE)
-		{
-			value = null;
-		}
-		
-		if (this.compressed)
-		{
-			if (this.state.fontBorderColor == value)
-			{
-				return;
-			}
-			
-			mxAbstractCanvas2setFontBorderColor.apply(this, arguments);
-		}
-		
-		var elem = this.createElement('fontbordercolor');
-		elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
-		this.root.appendChild(elem);
-	}
+  if (this.textEnabled)
+  {
+    if (value == mxConstants.NONE)
+    {
+      value = null;
+    }
+    
+    if (this.compressed)
+    {
+      if (this.state.fontBorderColor == value)
+      {
+        return;
+      }
+      
+      mxAbstractCanvas2setFontBorderColor.apply(this, arguments);
+    }
+    
+    var elem = this.createElement('fontbordercolor');
+    elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
+    this.root.appendChild(elem);
+  }
 };
 
 /**
@@ -688,22 +688,22 @@ mxXmlCanvas2setFontBorderColor = (value)=>
  */
 mxXmlCanvas2setFontSize = (value)=>
 {
-	if (this.textEnabled)
-	{
-		if (this.compressed)
-		{
-			if (this.state.fontSize == value)
-			{
-				return;
-			}
-			
-			mxAbstractCanvas2setFontSize.apply(this, arguments);
-		}
-		
-		var elem = this.createElement('fontsize');
-		elem.setAttribute('size', value);
-		this.root.appendChild(elem);
-	}
+  if (this.textEnabled)
+  {
+    if (this.compressed)
+    {
+      if (this.state.fontSize == value)
+      {
+        return;
+      }
+      
+      mxAbstractCanvas2setFontSize.apply(this, arguments);
+    }
+    
+    var elem = this.createElement('fontsize');
+    elem.setAttribute('size', value);
+    this.root.appendChild(elem);
+  }
 };
 
 /**
@@ -718,22 +718,22 @@ mxXmlCanvas2setFontSize = (value)=>
  */
 mxXmlCanvas2setFontFamily = (value)=>
 {
-	if (this.textEnabled)
-	{
-		if (this.compressed)
-		{
-			if (this.state.fontFamily == value)
-			{
-				return;
-			}
-			
-			mxAbstractCanvas2setFontFamily.apply(this, arguments);
-		}
-		
-		var elem = this.createElement('fontfamily');
-		elem.setAttribute('family', value);
-		this.root.appendChild(elem);
-	}
+  if (this.textEnabled)
+  {
+    if (this.compressed)
+    {
+      if (this.state.fontFamily == value)
+      {
+        return;
+      }
+      
+      mxAbstractCanvas2setFontFamily.apply(this, arguments);
+    }
+    
+    var elem = this.createElement('fontfamily');
+    elem.setAttribute('family', value);
+    this.root.appendChild(elem);
+  }
 };
 
 /**
@@ -748,27 +748,27 @@ mxXmlCanvas2setFontFamily = (value)=>
  */
 mxXmlCanvas2setFontStyle = (value)=>
 {
-	if (this.textEnabled)
-	{
-		if (value == null)
-		{
-			value = 0;
-		}
-		
-		if (this.compressed)
-		{
-			if (this.state.fontStyle == value)
-			{
-				return;
-			}
-			
-			mxAbstractCanvas2setFontStyle.apply(this, arguments);
-		}
-		
-		var elem = this.createElement('fontstyle');
-		elem.setAttribute('style', value);
-		this.root.appendChild(elem);
-	}
+  if (this.textEnabled)
+  {
+    if (value == null)
+    {
+      value = 0;
+    }
+    
+    if (this.compressed)
+    {
+      if (this.state.fontStyle == value)
+      {
+        return;
+      }
+      
+      mxAbstractCanvas2setFontStyle.apply(this, arguments);
+    }
+    
+    var elem = this.createElement('fontstyle');
+    elem.setAttribute('style', value);
+    this.root.appendChild(elem);
+  }
 };
 
 /**
@@ -782,19 +782,19 @@ mxXmlCanvas2setFontStyle = (value)=>
  */
 mxXmlCanvas2setShadow = (value)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.shadow == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setShadow.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('shadow');
-	elem.setAttribute('enabled', (value) ? '1' : '0');
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (this.state.shadow == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setShadow.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('shadow');
+  elem.setAttribute('enabled', (value) ? '1' : '0');
+  this.root.appendChild(elem);
 };
 
 /**
@@ -808,24 +808,24 @@ mxXmlCanvas2setShadow = (value)=>
  */
 mxXmlCanvas2setShadowColor = (value)=>
 {
-	if (this.compressed)
-	{
-		if (value == mxConstants.NONE)
-		{
-			value = null;
-		}
-		
-		if (this.state.shadowColor == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setShadowColor.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('shadowcolor');
-	elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
-	this.root.appendChild(elem);
+  if (this.compressed)
+  {
+    if (value == mxConstants.NONE)
+    {
+      value = null;
+    }
+    
+    if (this.state.shadowColor == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setShadowColor.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('shadowcolor');
+  elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
+  this.root.appendChild(elem);
 };
 
 /**
@@ -840,20 +840,20 @@ mxXmlCanvas2setShadowColor = (value)=>
  */
 mxXmlCanvas2setShadowAlpha = (value)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.shadowAlpha == value)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setShadowAlpha.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('shadowalpha');
-	elem.setAttribute('alpha', value);
-	this.root.appendChild(elem);
-	
+  if (this.compressed)
+  {
+    if (this.state.shadowAlpha == value)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setShadowAlpha.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('shadowalpha');
+  elem.setAttribute('alpha', value);
+  this.root.appendChild(elem);
+  
 };
 
 /**
@@ -868,21 +868,21 @@ mxXmlCanvas2setShadowAlpha = (value)=>
  */
 mxXmlCanvas2setShadowOffset = (dx, dy)=>
 {
-	if (this.compressed)
-	{
-		if (this.state.shadowDx == dx && this.state.shadowDy == dy)
-		{
-			return;
-		}
-		
-		mxAbstractCanvas2setShadowOffset.apply(this, arguments);
-	}
-	
-	var elem = this.createElement('shadowoffset');
-	elem.setAttribute('dx', dx);
-	elem.setAttribute('dy', dy);
-	this.root.appendChild(elem);
-	
+  if (this.compressed)
+  {
+    if (this.state.shadowDx == dx && this.state.shadowDy == dy)
+    {
+      return;
+    }
+    
+    mxAbstractCanvas2setShadowOffset.apply(this, arguments);
+  }
+  
+  var elem = this.createElement('shadowoffset');
+  elem.setAttribute('dx', dx);
+  elem.setAttribute('dy', dy);
+  this.root.appendChild(elem);
+  
 };
 
 /**
@@ -899,12 +899,12 @@ mxXmlCanvas2setShadowOffset = (dx, dy)=>
  */
 mxXmlCanvas2rect = (x, y, w, h)=>
 {
-	var elem = this.createElement('rect');
-	elem.setAttribute('x', this.format(x));
-	elem.setAttribute('y', this.format(y));
-	elem.setAttribute('w', this.format(w));
-	elem.setAttribute('h', this.format(h));
-	this.root.appendChild(elem);
+  var elem = this.createElement('rect');
+  elem.setAttribute('x', this.format(x));
+  elem.setAttribute('y', this.format(y));
+  elem.setAttribute('w', this.format(w));
+  elem.setAttribute('h', this.format(h));
+  this.root.appendChild(elem);
 };
 
 /**
@@ -923,14 +923,14 @@ mxXmlCanvas2rect = (x, y, w, h)=>
  */
 mxXmlCanvas2roundrect = (x, y, w, h, dx, dy)=>
 {
-	var elem = this.createElement('roundrect');
-	elem.setAttribute('x', this.format(x));
-	elem.setAttribute('y', this.format(y));
-	elem.setAttribute('w', this.format(w));
-	elem.setAttribute('h', this.format(h));
-	elem.setAttribute('dx', this.format(dx));
-	elem.setAttribute('dy', this.format(dy));
-	this.root.appendChild(elem);
+  var elem = this.createElement('roundrect');
+  elem.setAttribute('x', this.format(x));
+  elem.setAttribute('y', this.format(y));
+  elem.setAttribute('w', this.format(w));
+  elem.setAttribute('h', this.format(h));
+  elem.setAttribute('dx', this.format(dx));
+  elem.setAttribute('dy', this.format(dy));
+  this.root.appendChild(elem);
 };
 
 /**
@@ -947,12 +947,12 @@ mxXmlCanvas2roundrect = (x, y, w, h, dx, dy)=>
  */
 mxXmlCanvas2ellipse = (x, y, w, h)=>
 {
-	var elem = this.createElement('ellipse');
-	elem.setAttribute('x', this.format(x));
-	elem.setAttribute('y', this.format(y));
-	elem.setAttribute('w', this.format(w));
-	elem.setAttribute('h', this.format(h));
-	this.root.appendChild(elem);
+  var elem = this.createElement('ellipse');
+  elem.setAttribute('x', this.format(x));
+  elem.setAttribute('y', this.format(y));
+  elem.setAttribute('w', this.format(w));
+  elem.setAttribute('h', this.format(h));
+  this.root.appendChild(elem);
 };
 
 /**
@@ -973,19 +973,19 @@ mxXmlCanvas2ellipse = (x, y, w, h)=>
  */
 mxXmlCanvas2image = (x, y, w, h, src, aspect, flipH, flipV)=>
 {
-	src = this.converter.convert(src);
-	
-	// LATER: Add option for embedding images as base64.
-	var elem = this.createElement('image');
-	elem.setAttribute('x', this.format(x));
-	elem.setAttribute('y', this.format(y));
-	elem.setAttribute('w', this.format(w));
-	elem.setAttribute('h', this.format(h));
-	elem.setAttribute('src', src);
-	elem.setAttribute('aspect', (aspect) ? '1' : '0');
-	elem.setAttribute('flipH', (flipH) ? '1' : '0');
-	elem.setAttribute('flipV', (flipV) ? '1' : '0');
-	this.root.appendChild(elem);
+  src = this.converter.convert(src);
+  
+  // LATER: Add option for embedding images as base64.
+  var elem = this.createElement('image');
+  elem.setAttribute('x', this.format(x));
+  elem.setAttribute('y', this.format(y));
+  elem.setAttribute('w', this.format(w));
+  elem.setAttribute('h', this.format(h));
+  elem.setAttribute('src', src);
+  elem.setAttribute('aspect', (aspect) ? '1' : '0');
+  elem.setAttribute('flipH', (flipH) ? '1' : '0');
+  elem.setAttribute('flipV', (flipV) ? '1' : '0');
+  this.root.appendChild(elem);
 };
 
 /**
@@ -995,9 +995,9 @@ mxXmlCanvas2image = (x, y, w, h, src, aspect, flipH, flipV)=>
  */
 mxXmlCanvas2begin = ()=>
 {
-	this.root.appendChild(this.createElement('begin'));
-	this.lastX = 0;
-	this.lastY = 0;
+  this.root.appendChild(this.createElement('begin'));
+  this.lastX = 0;
+  this.lastY = 0;
 };
 
 /**
@@ -1012,12 +1012,12 @@ mxXmlCanvas2begin = ()=>
  */
 mxXmlCanvas2moveTo = (x, y)=>
 {
-	var elem = this.createElement('move');
-	elem.setAttribute('x', this.format(x));
-	elem.setAttribute('y', this.format(y));
-	this.root.appendChild(elem);
-	this.lastX = x;
-	this.lastY = y;
+  var elem = this.createElement('move');
+  elem.setAttribute('x', this.format(x));
+  elem.setAttribute('y', this.format(y));
+  this.root.appendChild(elem);
+  this.lastX = x;
+  this.lastY = y;
 };
 
 /**
@@ -1032,12 +1032,12 @@ mxXmlCanvas2moveTo = (x, y)=>
  */
 mxXmlCanvas2lineTo = (x, y)=>
 {
-	var elem = this.createElement('line');
-	elem.setAttribute('x', this.format(x));
-	elem.setAttribute('y', this.format(y));
-	this.root.appendChild(elem);
-	this.lastX = x;
-	this.lastY = y;
+  var elem = this.createElement('line');
+  elem.setAttribute('x', this.format(x));
+  elem.setAttribute('y', this.format(y));
+  this.root.appendChild(elem);
+  this.lastX = x;
+  this.lastY = y;
 };
 
 /**
@@ -1054,14 +1054,14 @@ mxXmlCanvas2lineTo = (x, y)=>
  */
 mxXmlCanvas2quadTo = (x1, y1, x2, y2)=>
 {
-	var elem = this.createElement('quad');
-	elem.setAttribute('x1', this.format(x1));
-	elem.setAttribute('y1', this.format(y1));
-	elem.setAttribute('x2', this.format(x2));
-	elem.setAttribute('y2', this.format(y2));
-	this.root.appendChild(elem);
-	this.lastX = x2;
-	this.lastY = y2;
+  var elem = this.createElement('quad');
+  elem.setAttribute('x1', this.format(x1));
+  elem.setAttribute('y1', this.format(y1));
+  elem.setAttribute('x2', this.format(x2));
+  elem.setAttribute('y2', this.format(y2));
+  this.root.appendChild(elem);
+  this.lastX = x2;
+  this.lastY = y2;
 };
 
 /**
@@ -1080,16 +1080,16 @@ mxXmlCanvas2quadTo = (x1, y1, x2, y2)=>
  */
 mxXmlCanvas2curveTo = (x1, y1, x2, y2, x3, y3)=>
 {
-	var elem = this.createElement('curve');
-	elem.setAttribute('x1', this.format(x1));
-	elem.setAttribute('y1', this.format(y1));
-	elem.setAttribute('x2', this.format(x2));
-	elem.setAttribute('y2', this.format(y2));
-	elem.setAttribute('x3', this.format(x3));
-	elem.setAttribute('y3', this.format(y3));
-	this.root.appendChild(elem);
-	this.lastX = x3;
-	this.lastY = y3;
+  var elem = this.createElement('curve');
+  elem.setAttribute('x1', this.format(x1));
+  elem.setAttribute('y1', this.format(y1));
+  elem.setAttribute('x2', this.format(x2));
+  elem.setAttribute('y2', this.format(y2));
+  elem.setAttribute('x3', this.format(x3));
+  elem.setAttribute('y3', this.format(y3));
+  this.root.appendChild(elem);
+  this.lastX = x3;
+  this.lastY = y3;
 };
 
 /**
@@ -1099,7 +1099,7 @@ mxXmlCanvas2curveTo = (x1, y1, x2, y2, x3, y3)=>
  */
 mxXmlCanvas2close = ()=>
 {
-	this.root.appendChild(this.createElement('close'));
+  this.root.appendChild(this.createElement('close'));
 };
 
 /**
@@ -1129,61 +1129,61 @@ mxXmlCanvas2close = ()=>
  */
 mxXmlCanvas2text = (x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir)=>
 {
-	if (this.textEnabled && str != null)
-	{
-		if (mxUtils.isNode(str))
-		{
-			str = mxUtils.getOuterHtml(str);
-		}
-		
-		var elem = this.createElement('text');
-		elem.setAttribute('x', this.format(x));
-		elem.setAttribute('y', this.format(y));
-		elem.setAttribute('w', this.format(w));
-		elem.setAttribute('h', this.format(h));
-		elem.setAttribute('str', str);
-		
-		if (align != null)
-		{
-			elem.setAttribute('align', align);
-		}
-		
-		if (valign != null)
-		{
-			elem.setAttribute('valign', valign);
-		}
-		
-		elem.setAttribute('wrap', (wrap) ? '1' : '0');
-		
-		if (format == null)
-		{
-			format = '';
-		}
-		
-		elem.setAttribute('format', format);
-		
-		if (overflow != null)
-		{
-			elem.setAttribute('overflow', overflow);
-		}
-		
-		if (clip != null)
-		{
-			elem.setAttribute('clip', (clip) ? '1' : '0');
-		}
-		
-		if (rotation != null)
-		{
-			elem.setAttribute('rotation', rotation);
-		}
-		
-		if (dir != null)
-		{
-			elem.setAttribute('dir', dir);
-		}
-		
-		this.root.appendChild(elem);
-	}
+  if (this.textEnabled && str != null)
+  {
+    if (mxUtils.isNode(str))
+    {
+      str = mxUtils.getOuterHtml(str);
+    }
+    
+    var elem = this.createElement('text');
+    elem.setAttribute('x', this.format(x));
+    elem.setAttribute('y', this.format(y));
+    elem.setAttribute('w', this.format(w));
+    elem.setAttribute('h', this.format(h));
+    elem.setAttribute('str', str);
+    
+    if (align != null)
+    {
+      elem.setAttribute('align', align);
+    }
+    
+    if (valign != null)
+    {
+      elem.setAttribute('valign', valign);
+    }
+    
+    elem.setAttribute('wrap', (wrap) ? '1' : '0');
+    
+    if (format == null)
+    {
+      format = '';
+    }
+    
+    elem.setAttribute('format', format);
+    
+    if (overflow != null)
+    {
+      elem.setAttribute('overflow', overflow);
+    }
+    
+    if (clip != null)
+    {
+      elem.setAttribute('clip', (clip) ? '1' : '0');
+    }
+    
+    if (rotation != null)
+    {
+      elem.setAttribute('rotation', rotation);
+    }
+    
+    if (dir != null)
+    {
+      elem.setAttribute('dir', dir);
+    }
+    
+    this.root.appendChild(elem);
+  }
 };
 
 /**
@@ -1193,7 +1193,7 @@ mxXmlCanvas2text = (x, y, w, h, str, align, valign, wrap, format, overflow, clip
  */
 mxXmlCanvas2stroke = ()=>
 {
-	this.root.appendChild(this.createElement('stroke'));
+  this.root.appendChild(this.createElement('stroke'));
 };
 
 /**
@@ -1203,7 +1203,7 @@ mxXmlCanvas2stroke = ()=>
  */
 mxXmlCanvas2fill = ()=>
 {
-	this.root.appendChild(this.createElement('fill'));
+  this.root.appendChild(this.createElement('fill'));
 };
 
 /**
@@ -1213,5 +1213,5 @@ mxXmlCanvas2fill = ()=>
  */
 mxXmlCanvas2fillAndStroke = ()=>
 {
-	this.root.appendChild(this.createElement('fillstroke'));
+  this.root.appendChild(this.createElement('fillstroke'));
 };

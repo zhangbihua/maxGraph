@@ -24,8 +24,8 @@
  * 
  * var xml = mxUtils.getXml(root);
  * new mxXmlRequest('export', 'format=png&w=' + w +
- * 		'&h=' + h + '&bg=#F9F7ED&xml=' + encodeURIComponent(xml))
- * 		.simulate(document, '_blank');
+ *     '&h=' + h + '&bg=#F9F7ED&xml=' + encodeURIComponent(xml))
+ *     .simulate(document, '_blank');
  * (end)
  * 
  * Constructor: mxImageExport
@@ -48,22 +48,22 @@ includeOverlays = false;
  */
 drawState = (state, canvas)=>
 {
-	if (state != null)
-	{
-		this.visitStatesRecursive(state, canvas, mxUtils.bind(this, ()=>
-		{
-			this.drawCellState.apply(this, arguments);
-		}));
-				
-		// Paints the overlays
-		if (this.includeOverlays)
-		{
-			this.visitStatesRecursive(state, canvas, mxUtils.bind(this, ()=>
-			{
-				this.drawOverlays.apply(this, arguments);
-			}));
-		}
-	}
+  if (state != null)
+  {
+    this.visitStatesRecursive(state, canvas, mxUtils.bind(this, ()=>
+    {
+      this.drawCellState.apply(this, arguments);
+    }));
+        
+    // Paints the overlays
+    if (this.includeOverlays)
+    {
+      this.visitStatesRecursive(state, canvas, mxUtils.bind(this, ()=>
+      {
+        this.drawOverlays.apply(this, arguments);
+      }));
+    }
+  }
 };
 
 /**
@@ -73,19 +73,19 @@ drawState = (state, canvas)=>
  */
 visitStatesRecursive = (state, canvas, visitor)=>
 {
-	if (state != null)
-	{
-		visitor(state, canvas);
-		
-		var graph = state.view.graph;
-		var childCount = graph.model.getChildCount(state.cell);
-		
-		for (var i = 0; i < childCount; i++)
-		{
-			var childState = graph.view.getState(graph.model.getChildAt(state.cell, i));
-			this.visitStatesRecursive(childState, canvas, visitor);
-		}
-	}
+  if (state != null)
+  {
+    visitor(state, canvas);
+    
+    var graph = state.view.graph;
+    var childCount = graph.model.getChildCount(state.cell);
+    
+    for (var i = 0; i < childCount; i++)
+    {
+      var childState = graph.view.getState(graph.model.getChildAt(state.cell, i));
+      this.visitStatesRecursive(childState, canvas, visitor);
+    }
+  }
 };
 
 /**
@@ -95,7 +95,7 @@ visitStatesRecursive = (state, canvas, visitor)=>
  */
 getLinkForCellState = (state, canvas)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -105,22 +105,22 @@ getLinkForCellState = (state, canvas)=>
  */
 drawCellState = (state, canvas)=>
 {
-	// Experimental feature
-	var link = this.getLinkForCellState(state, canvas);
-	
-	if (link != null)
-	{
-		canvas.setLink(link);
-	}
-	
-	// Paints the shape and text
-	this.drawShape(state, canvas);
-	this.drawText(state, canvas);
+  // Experimental feature
+  var link = this.getLinkForCellState(state, canvas);
+  
+  if (link != null)
+  {
+    canvas.setLink(link);
+  }
+  
+  // Paints the shape and text
+  this.drawShape(state, canvas);
+  this.drawText(state, canvas);
 
-	if (link != null)
-	{
-		canvas.setLink(null);
-	}
+  if (link != null)
+  {
+    canvas.setLink(null);
+  }
 };
 
 /**
@@ -130,16 +130,16 @@ drawCellState = (state, canvas)=>
  */
 drawShape = (state, canvas)=>
 {
-	if (state.shape instanceof mxShape && state.shape.checkBounds())
-	{
-		canvas.save();
-		
-		state.shape.beforePaint(canvas);
-		state.shape.paint(canvas);
-		state.shape.afterPaint(canvas);
-		
-		canvas.restore();
-	}
+  if (state.shape instanceof mxShape && state.shape.checkBounds())
+  {
+    canvas.save();
+    
+    state.shape.beforePaint(canvas);
+    state.shape.paint(canvas);
+    state.shape.afterPaint(canvas);
+    
+    canvas.restore();
+  }
 };
 
 /**
@@ -149,16 +149,16 @@ drawShape = (state, canvas)=>
  */
 drawText = (state, canvas)=>
 {
-	if (state.text != null && state.text.checkBounds())
-	{
-		canvas.save();
-		
-		state.text.beforePaint(canvas);
-		state.text.paint(canvas);
-		state.text.afterPaint(canvas);
-		
-		canvas.restore();
-	}
+  if (state.text != null && state.text.checkBounds())
+  {
+    canvas.save();
+    
+    state.text.beforePaint(canvas);
+    state.text.paint(canvas);
+    state.text.afterPaint(canvas);
+    
+    canvas.restore();
+  }
 };
 
 /**
@@ -169,15 +169,15 @@ drawText = (state, canvas)=>
  */
 drawOverlays = (state, canvas)=>
 {
-	if (state.overlays != null)
-	{
-		state.overlays.visit((id, shape)=>
-		{
-			if (shape instanceof mxShape)
-			{
-				shape.paint(canvas);
-			}
-		});
-	}
+  if (state.overlays != null)
+  {
+    state.overlays.visit((id, shape)=>
+    {
+      if (shape instanceof mxShape)
+      {
+        shape.paint(canvas);
+      }
+    });
+  }
 };
 

@@ -32,9 +32,9 @@
  */
 function mxCompositeLayout(graph, layouts, master)
 {
-	mxGraphLayout.call(this, graph);
-	this.layouts = layouts;
-	this.master = master;
+  mxGraphLayout.call(this, graph);
+  this.layouts = layouts;
+  this.master = master;
 };
 
 /**
@@ -42,7 +42,7 @@ function mxCompositeLayout(graph, layouts, master)
  */
 mxCompositeLayout.prototype = new mxGraphLayout();
 constructor = mxCompositeLayout;
-	
+  
 /**
  * Variable: layouts
  * 
@@ -66,14 +66,14 @@ master = null;
  */
 moveCell = (cell, x, y)=>
 {
-	if (this.master != null)
-	{
-		this.master.moveCell.apply(this.master, arguments);
-	}
-	else
-	{
-		this.layouts[0].moveCell.apply(this.layouts[0], arguments);
-	}
+  if (this.master != null)
+  {
+    this.master.moveCell.apply(this.master, arguments);
+  }
+  else
+  {
+    this.layouts[0].moveCell.apply(this.layouts[0], arguments);
+  }
 };
 
 /**
@@ -84,18 +84,18 @@ moveCell = (cell, x, y)=>
  */
 execute = (parent)=>
 {
-	var model = this.graph.getModel();
-	
-	model.beginUpdate();
-	try
-	{
-		for (var i = 0; i < this.layouts.length; i++)
-		{
-			this.layouts[i].execute.apply(this.layouts[i], arguments);
-		}
-	}
-	finally
-	{
-		model.endUpdate();
-	}
+  var model = this.graph.getModel();
+  
+  model.beginUpdate();
+  try
+  {
+    for (var i = 0; i < this.layouts.length; i++)
+    {
+      this.layouts[i].execute.apply(this.layouts[i], arguments);
+    }
+  }
+  finally
+  {
+    model.endUpdate();
+  }
 };

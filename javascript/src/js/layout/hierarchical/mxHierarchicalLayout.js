@@ -21,17 +21,17 @@
  */
 function mxHierarchicalLayout(graph, orientation, deterministic)
 {
-	mxGraphLayout.call(this, graph);
-	this.orientation = (orientation != null) ? orientation : mxConstants.DIRECTION_NORTH;
-	this.deterministic = (deterministic != null) ? deterministic : true;
+  mxGraphLayout.call(this, graph);
+  this.orientation = (orientation != null) ? orientation : mxConstants.DIRECTION_NORTH;
+  this.deterministic = (deterministic != null) ? deterministic : true;
 };
 
 var mxHierarchicalEdgeStyle =
 {
-	ORTHOGONAL: 1,
-	POLYLINE: 2,
-	STRAIGHT: 3,
-	CURVE: 4
+  ORTHOGONAL: 1,
+  POLYLINE: 2,
+  STRAIGHT: 3,
+  CURVE: 4
 };
 
 /**
@@ -195,7 +195,7 @@ edgeStyle = mxHierarchicalEdgeStyle.POLYLINE;
  */
 getModel = ()=>
 {
-	return this.model;
+  return this.model;
 };
 
 /**
@@ -210,90 +210,90 @@ getModel = ()=>
  */
 execute = (parent, roots)=>
 {
-	this.parent = parent;
-	var model = this.graph.model;
-	this.edgesCache = new mxDictionary();
-	this.edgeSourceTermCache = new mxDictionary();
-	this.edgesTargetTermCache = new mxDictionary();
+  this.parent = parent;
+  var model = this.graph.model;
+  this.edgesCache = new mxDictionary();
+  this.edgeSourceTermCache = new mxDictionary();
+  this.edgesTargetTermCache = new mxDictionary();
 
-	if (roots != null && !(roots instanceof Array))
-	{
-		roots = [roots];
-	}
-	
-	// If the roots are set and the parent is set, only
-	// use the roots that are some dependent of the that
-	// parent.
-	// If just the root are set, use them as-is
-	// If just the parent is set use it's immediate
-	// children as the initial set
+  if (roots != null && !(roots instanceof Array))
+  {
+    roots = [roots];
+  }
 
-	if (roots == null && parent == null)
-	{
-		// TODO indicate the problem
-		return;
-	}
-	
-	//  Maintaining parent location
-	this.parentX = null;
-	this.parentY = null;
-	
-	if (parent != this.root && model.isVertex(parent) != null && this.maintainParentLocation)
-	{
-		var geo = this.graph.getCellGeometry(parent);
-		
-		if (geo != null)
-		{
-			this.parentX = geo.x;
-			this.parentY = geo.y;
-		}
-	}
-	
-	if (roots != null)
-	{
-		var rootsCopy = [];
+  // If the roots are set and the parent is set, only
+  // use the roots that are some dependent of the that
+  // parent.
+  // If just the root are set, use them as-is
+  // If just the parent is set use it's immediate
+  // children as the initial set
 
-		for (var i = 0; i < roots.length; i++)
-		{
-			var ancestor = parent != null ? model.isAncestor(parent, roots[i]) : true;
-			
-			if (ancestor && model.isVertex(roots[i]))
-			{
-				rootsCopy.push(roots[i]);
-			}
-		}
+  if (roots == null && parent == null)
+  {
+    // TODO indicate the problem
+    return;
+  }
 
-		this.roots = rootsCopy;
-	}
-	
-	model.beginUpdate();
-	try
-	{
-		this.run(parent);
-		
-		if (this.resizeParent && !this.graph.isCellCollapsed(parent))
-		{
-			this.graph.updateGroupBounds([parent], this.parentBorder, this.moveParent);
-		}
-		
-		// Maintaining parent location
-		if (this.parentX != null && this.parentY != null)
-		{
-			var geo = this.graph.getCellGeometry(parent);
-			
-			if (geo != null)
-			{
-				geo = geo.clone();
-				geo.x = this.parentX;
-				geo.y = this.parentY;
-				model.setGeometry(parent, geo);
-			}
-		}
-	}
-	finally
-	{
-		model.endUpdate();
-	}
+  //  Maintaining parent location
+  this.parentX = null;
+  this.parentY = null;
+
+  if (parent != this.root && model.isVertex(parent) != null && this.maintainParentLocation)
+  {
+    var geo = this.graph.getCellGeometry(parent);
+
+    if (geo != null)
+    {
+      this.parentX = geo.x;
+      this.parentY = geo.y;
+    }
+  }
+
+  if (roots != null)
+  {
+    var rootsCopy = [];
+
+    for (var i = 0; i < roots.length; i++)
+    {
+      var ancestor = parent != null ? model.isAncestor(parent, roots[i]) : true;
+
+      if (ancestor && model.isVertex(roots[i]))
+      {
+        rootsCopy.push(roots[i]);
+      }
+    }
+
+    this.roots = rootsCopy;
+  }
+
+  model.beginUpdate();
+  try
+  {
+    this.run(parent);
+
+    if (this.resizeParent && !this.graph.isCellCollapsed(parent))
+    {
+      this.graph.updateGroupBounds([parent], this.parentBorder, this.moveParent);
+    }
+
+    // Maintaining parent location
+    if (this.parentX != null && this.parentY != null)
+    {
+      var geo = this.graph.getCellGeometry(parent);
+
+      if (geo != null)
+      {
+        geo = geo.clone();
+        geo.x = this.parentX;
+        geo.y = this.parentY;
+        model.setGeometry(parent, geo);
+      }
+    }
+  }
+  finally
+  {
+    model.endUpdate();
+  }
 };
 
 /**
@@ -312,60 +312,60 @@ execute = (parent, roots)=>
  */
 findRoots = (parent, vertices)=>
 {
-	var roots = [];
-	
-	if (parent != null && vertices != null)
-	{
-		var model = this.graph.model;
-		var best = null;
-		var maxDiff = -100000;
-		
-		for (var i in vertices)
-		{
-			var cell = vertices[i];
+  var roots = [];
 
-			if (model.isVertex(cell) && this.graph.isCellVisible(cell))
-			{
-				var conns = this.getEdges(cell);
-				var fanOut = 0;
-				var fanIn = 0;
+  if (parent != null && vertices != null)
+  {
+    var model = this.graph.model;
+    var best = null;
+    var maxDiff = -100000;
 
-				for (var k = 0; k < conns.length; k++)
-				{
-					var src = this.getVisibleTerminal(conns[k], true);
+    for (var i in vertices)
+    {
+      var cell = vertices[i];
 
-					if (src == cell)
-					{
-						fanOut++;
-					}
-					else
-					{
-						fanIn++;
-					}
-				}
+      if (model.isVertex(cell) && this.graph.isCellVisible(cell))
+      {
+        var conns = this.getEdges(cell);
+        var fanOut = 0;
+        var fanIn = 0;
 
-				if (fanIn == 0 && fanOut > 0)
-				{
-					roots.push(cell);
-				}
+        for (var k = 0; k < conns.length; k++)
+        {
+          var src = this.getVisibleTerminal(conns[k], true);
 
-				var diff = fanOut - fanIn;
+          if (src == cell)
+          {
+            fanOut++;
+          }
+          else
+          {
+            fanIn++;
+          }
+        }
 
-				if (diff > maxDiff)
-				{
-					maxDiff = diff;
-					best = cell;
-				}
-			}
-		}
-		
-		if (roots.length == 0 && best != null)
-		{
-			roots.push(best);
-		}
-	}
-	
-	return roots;
+        if (fanIn == 0 && fanOut > 0)
+        {
+          roots.push(cell);
+        }
+
+        var diff = fanOut - fanIn;
+
+        if (diff > maxDiff)
+        {
+          maxDiff = diff;
+          best = cell;
+        }
+      }
+    }
+
+    if (roots.length == 0 && best != null)
+    {
+      roots.push(best);
+    }
+  }
+
+  return roots;
 };
 
 /**
@@ -379,52 +379,52 @@ findRoots = (parent, vertices)=>
  */
 getEdges = (cell)=>
 {
-	var cachedEdges = this.edgesCache.get(cell);
-	
-	if (cachedEdges != null)
-	{
-		return cachedEdges;
-	}
+  var cachedEdges = this.edgesCache.get(cell);
 
-	var model = this.graph.model;
-	var edges = [];
-	var isCollapsed = this.graph.isCellCollapsed(cell);
-	var childCount = model.getChildCount(cell);
+  if (cachedEdges != null)
+  {
+    return cachedEdges;
+  }
 
-	for (var i = 0; i < childCount; i++)
-	{
-		var child = model.getChildAt(cell, i);
+  var model = this.graph.model;
+  var edges = [];
+  var isCollapsed = this.graph.isCellCollapsed(cell);
+  var childCount = model.getChildCount(cell);
 
-		if (this.isPort(child))
-		{
-			edges = edges.concat(model.getEdges(child, true, true));
-		}
-		else if (isCollapsed || !this.graph.isCellVisible(child))
-		{
-			edges = edges.concat(model.getEdges(child, true, true));
-		}
-	}
+  for (var i = 0; i < childCount; i++)
+  {
+    var child = model.getChildAt(cell, i);
 
-	edges = edges.concat(model.getEdges(cell, true, true));
-	var result = [];
-	
-	for (var i = 0; i < edges.length; i++)
-	{
-		var source = this.getVisibleTerminal(edges[i], true);
-		var target = this.getVisibleTerminal(edges[i], false);
-		
-		if ((source == target) ||
-				((source != target) &&
-						((target == cell && (this.parent == null || this.isAncestor(this.parent, source, this.traverseAncestors))) ||
-						 	(source == cell && (this.parent == null || this.isAncestor(this.parent, target, this.traverseAncestors))))))
-		{
-			result.push(edges[i]);
-		}
-	}
+    if (this.isPort(child))
+    {
+      edges = edges.concat(model.getEdges(child, true, true));
+    }
+    else if (isCollapsed || !this.graph.isCellVisible(child))
+    {
+      edges = edges.concat(model.getEdges(child, true, true));
+    }
+  }
 
-	this.edgesCache.put(cell, result);
+  edges = edges.concat(model.getEdges(cell, true, true));
+  var result = [];
 
-	return result;
+  for (var i = 0; i < edges.length; i++)
+  {
+    var source = this.getVisibleTerminal(edges[i], true);
+    var target = this.getVisibleTerminal(edges[i], false);
+
+    if ((source == target) ||
+        ((source != target) &&
+            ((target == cell && (this.parent == null || this.isAncestor(this.parent, source, this.traverseAncestors))) ||
+               (source == cell && (this.parent == null || this.isAncestor(this.parent, target, this.traverseAncestors))))))
+    {
+      result.push(edges[i]);
+    }
+  }
+
+  this.edgesCache.put(cell, result);
+
+  return result;
 };
 
 /**
@@ -439,40 +439,40 @@ getEdges = (cell)=>
  */
 getVisibleTerminal = (edge, source)=>
 {
-	var terminalCache = this.edgesTargetTermCache;
-	
-	if (source)
-	{
-		terminalCache = this.edgeSourceTermCache;
-	}
+  var terminalCache = this.edgesTargetTermCache;
 
-	var term = terminalCache.get(edge);
+  if (source)
+  {
+    terminalCache = this.edgeSourceTermCache;
+  }
 
-	if (term != null)
-	{
-		return term;
-	}
+  var term = terminalCache.get(edge);
 
-	var state = this.graph.view.getState(edge);
-	
-	var terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
-	
-	if (terminal == null)
-	{
-		terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
-	}
+  if (term != null)
+  {
+    return term;
+  }
 
-	if (terminal != null)
-	{
-		if (this.isPort(terminal))
-		{
-			terminal = this.graph.model.getParent(terminal);
-		}
-		
-		terminalCache.put(edge, terminal);
-	}
+  var state = this.graph.view.getState(edge);
 
-	return terminal;
+  var terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
+
+  if (terminal == null)
+  {
+    terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
+  }
+
+  if (terminal != null)
+  {
+    if (this.isPort(terminal))
+    {
+      terminal = this.graph.model.getParent(terminal);
+    }
+
+    terminalCache.put(edge, terminal);
+  }
+
+  return terminal;
 };
 
 /**
@@ -485,103 +485,103 @@ getVisibleTerminal = (edge, source)=>
  */
 run = (parent)=>
 {
-	// Separate out unconnected hierarchies
-	var hierarchyVertices = [];
-	var allVertexSet = [];
+  // Separate out unconnected hierarchies
+  var hierarchyVertices = [];
+  var allVertexSet = [];
 
-	if (this.roots == null && parent != null)
-	{
-		var filledVertexSet = Object();
-		this.filterDescendants(parent, filledVertexSet);
+  if (this.roots == null && parent != null)
+  {
+    var filledVertexSet = Object();
+    this.filterDescendants(parent, filledVertexSet);
 
-		this.roots = [];
-		var filledVertexSetEmpty = true;
+    this.roots = [];
+    var filledVertexSetEmpty = true;
 
-		// Poor man's isSetEmpty
-		for (var key in filledVertexSet)
-		{
-			if (filledVertexSet[key] != null)
-			{
-				filledVertexSetEmpty = false;
-				break;
-			}
-		}
+    // Poor man's isSetEmpty
+    for (var key in filledVertexSet)
+    {
+      if (filledVertexSet[key] != null)
+      {
+        filledVertexSetEmpty = false;
+        break;
+      }
+    }
 
-		while (!filledVertexSetEmpty)
-		{
-			var candidateRoots = this.findRoots(parent, filledVertexSet);
-			
-			// If the candidate root is an unconnected group cell, remove it from
-			// the layout. We may need a custom set that holds such groups and forces
-			// them to be processed for resizing and/or moving.
-			
+    while (!filledVertexSetEmpty)
+    {
+      var candidateRoots = this.findRoots(parent, filledVertexSet);
 
-			for (var i = 0; i < candidateRoots.length; i++)
-			{
-				var vertexSet = Object();
-				hierarchyVertices.push(vertexSet);
+      // If the candidate root is an unconnected group cell, remove it from
+      // the layout. We may need a custom set that holds such groups and forces
+      // them to be processed for resizing and/or moving.
 
-				this.traverse(candidateRoots[i], true, null, allVertexSet, vertexSet,
-						hierarchyVertices, filledVertexSet);
-			}
 
-			for (var i = 0; i < candidateRoots.length; i++)
-			{
-				this.roots.push(candidateRoots[i]);
-			}
-			
-			filledVertexSetEmpty = true;
-			
-			// Poor man's isSetEmpty
-			for (var key in filledVertexSet)
-			{
-				if (filledVertexSet[key] != null)
-				{
-					filledVertexSetEmpty = false;
-					break;
-				}
-			}
-		}
-	}
-	else
-	{
-		// Find vertex set as directed traversal from roots
+      for (var i = 0; i < candidateRoots.length; i++)
+      {
+        var vertexSet = Object();
+        hierarchyVertices.push(vertexSet);
 
-		for (var i = 0; i < this.roots.length; i++)
-		{
-			var vertexSet = Object();
-			hierarchyVertices.push(vertexSet);
+        this.traverse(candidateRoots[i], true, null, allVertexSet, vertexSet,
+            hierarchyVertices, filledVertexSet);
+      }
 
-			this.traverse(this.roots[i], true, null, allVertexSet, vertexSet,
-					hierarchyVertices, null);
-		}
-	}
+      for (var i = 0; i < candidateRoots.length; i++)
+      {
+        this.roots.push(candidateRoots[i]);
+      }
 
-	// Iterate through the result removing parents who have children in this layout
-	
-	// Perform a layout for each seperate hierarchy
-	// Track initial coordinate x-positioning
-	var initialX = 0;
+      filledVertexSetEmpty = true;
 
-	for (var i = 0; i < hierarchyVertices.length; i++)
-	{
-		var vertexSet = hierarchyVertices[i];
-		var tmp = [];
-		
-		for (var key in vertexSet)
-		{
-			tmp.push(vertexSet[key]);
-		}
-		
-		this.model = new mxGraphHierarchyModel(this, tmp, this.roots,
-			parent, this.tightenToSource);
+      // Poor man's isSetEmpty
+      for (var key in filledVertexSet)
+      {
+        if (filledVertexSet[key] != null)
+        {
+          filledVertexSetEmpty = false;
+          break;
+        }
+      }
+    }
+  }
+  else
+  {
+    // Find vertex set as directed traversal from roots
 
-		this.cycleStage(parent);
-		this.layeringStage();
-		
-		this.crossingStage(parent);
-		initialX = this.placementStage(initialX, parent);
-	}
+    for (var i = 0; i < this.roots.length; i++)
+    {
+      var vertexSet = Object();
+      hierarchyVertices.push(vertexSet);
+
+      this.traverse(this.roots[i], true, null, allVertexSet, vertexSet,
+          hierarchyVertices, null);
+    }
+  }
+
+  // Iterate through the result removing parents who have children in this layout
+
+  // Perform a layout for each seperate hierarchy
+  // Track initial coordinate x-positioning
+  var initialX = 0;
+
+  for (var i = 0; i < hierarchyVertices.length; i++)
+  {
+    var vertexSet = hierarchyVertices[i];
+    var tmp = [];
+
+    for (var key in vertexSet)
+    {
+      tmp.push(vertexSet[key]);
+    }
+
+    this.model = new mxGraphHierarchyModel(this, tmp, this.roots,
+      parent, this.tightenToSource);
+
+    this.cycleStage(parent);
+    this.layeringStage();
+
+    this.crossingStage(parent);
+    initialX = this.placementStage(initialX, parent);
+  }
 };
 
 /**
@@ -591,30 +591,30 @@ run = (parent)=>
  */
 filterDescendants = (cell, result)=>
 {
-	var model = this.graph.model;
+  var model = this.graph.model;
 
-	if (model.isVertex(cell) && cell != this.parent && this.graph.isCellVisible(cell))
-	{
-		result[mxObjectIdentity.get(cell)] = cell;
-	}
+  if (model.isVertex(cell) && cell != this.parent && this.graph.isCellVisible(cell))
+  {
+    result[mxObjectIdentity.get(cell)] = cell;
+  }
 
-	if (this.traverseAncestors || cell == this.parent
-			&& this.graph.isCellVisible(cell))
-	{
-		var childCount = model.getChildCount(cell);
+  if (this.traverseAncestors || cell == this.parent
+      && this.graph.isCellVisible(cell))
+  {
+    var childCount = model.getChildCount(cell);
 
-		for (var i = 0; i < childCount; i++)
-		{
-			var child = model.getChildAt(cell, i);
-			
-			// Ignore ports in the layout vertex list, they are dealt with
-			// in the traversal mechanisms
-			if (!this.isPort(child))
-			{
-				this.filterDescendants(child, result);
-			}
-		}
-	}
+    for (var i = 0; i < childCount; i++)
+    {
+      var child = model.getChildAt(cell, i);
+
+      // Ignore ports in the layout vertex list, they are dealt with
+      // in the traversal mechanisms
+      if (!this.isPort(child))
+      {
+        this.filterDescendants(child, result);
+      }
+    }
+  }
 };
 
 /**
@@ -629,14 +629,14 @@ filterDescendants = (cell, result)=>
  */
 isPort = (cell)=>
 {
-	if (cell != null && cell.geometry != null)
-	{
-		return cell.geometry.relative;
-	}
-	else
-	{
-		return false;
-	}
+  if (cell != null && cell.geometry != null)
+  {
+    return cell.geometry.relative;
+  }
+  else
+  {
+    return false;
+  }
 };
 
 /**
@@ -653,24 +653,24 @@ isPort = (cell)=>
  */
 getEdgesBetween = (source, target, directed)=>
 {
-	directed = (directed != null) ? directed : false;
-	var edges = this.getEdges(source);
-	var result = [];
+  directed = (directed != null) ? directed : false;
+  var edges = this.getEdges(source);
+  var result = [];
 
-	// Checks if the edge is connected to the correct
-	// cell and returns the first match
-	for (var i = 0; i < edges.length; i++)
-	{
-		var src = this.getVisibleTerminal(edges[i], true);
-		var trg = this.getVisibleTerminal(edges[i], false);
+  // Checks if the edge is connected to the correct
+  // cell and returns the first match
+  for (var i = 0; i < edges.length; i++)
+  {
+    var src = this.getVisibleTerminal(edges[i], true);
+    var trg = this.getVisibleTerminal(edges[i], false);
 
-		if ((src == source && trg == target) || (!directed && src == target && trg == source))
-		{
-			result.push(edges[i]);
-		}
-	}
+    if ((src == source && trg == target) || (!directed && src == target && trg == source))
+    {
+      result.push(edges[i]);
+    }
+  }
 
-	return result;
+  return result;
 };
 
 /**
@@ -690,115 +690,115 @@ getEdgesBetween = (source, target, directed)=>
  * allVertices - Array of cell paths for the visited cells.
  */
 traverse = function(vertex, directed, edge, allVertices, currentComp,
-											hierarchyVertices, filledVertexSet)
+                      hierarchyVertices, filledVertexSet)
 {
-	if (vertex != null && allVertices != null)
-	{
-		// Has this vertex been seen before in any traversal
-		// And if the filled vertex set is populated, only 
-		// process vertices in that it contains
-		var vertexID = mxObjectIdentity.get(vertex);
-		
-		if ((allVertices[vertexID] == null)
-				&& (filledVertexSet == null ? true : filledVertexSet[vertexID] != null))
-		{
-			if (currentComp[vertexID] == null)
-			{
-				currentComp[vertexID] = vertex;
-			}
-			if (allVertices[vertexID] == null)
-			{
-				allVertices[vertexID] = vertex;
-			}
+  if (vertex != null && allVertices != null)
+  {
+    // Has this vertex been seen before in any traversal
+    // And if the filled vertex set is populated, only
+    // process vertices in that it contains
+    var vertexID = mxObjectIdentity.get(vertex);
 
-			if (filledVertexSet !== null)
-			{
-				delete filledVertexSet[vertexID];
-			}
+    if ((allVertices[vertexID] == null)
+        && (filledVertexSet == null ? true : filledVertexSet[vertexID] != null))
+    {
+      if (currentComp[vertexID] == null)
+      {
+        currentComp[vertexID] = vertex;
+      }
+      if (allVertices[vertexID] == null)
+      {
+        allVertices[vertexID] = vertex;
+      }
 
-			var edges = this.getEdges(vertex);
-			var edgeIsSource = [];
+      if (filledVertexSet !== null)
+      {
+        delete filledVertexSet[vertexID];
+      }
 
-			for (var i = 0; i < edges.length; i++)
-			{
-				edgeIsSource[i] = (this.getVisibleTerminal(edges[i], true) == vertex);
-			}
+      var edges = this.getEdges(vertex);
+      var edgeIsSource = [];
 
-			for (var i = 0; i < edges.length; i++)
-			{
-				if (!directed || edgeIsSource[i])
-				{
-					var next = this.getVisibleTerminal(edges[i], !edgeIsSource[i]);
-					
-					// Check whether there are more edges incoming from the target vertex than outgoing
-					// The hierarchical model treats bi-directional parallel edges as being sourced
-					// from the more "sourced" terminal. If the directions are equal in number, the direction
-					// is that of the natural direction from the roots of the layout.
-					// The checks below are slightly more verbose than need be for performance reasons
-					var netCount = 1;
+      for (var i = 0; i < edges.length; i++)
+      {
+        edgeIsSource[i] = (this.getVisibleTerminal(edges[i], true) == vertex);
+      }
 
-					for (var j = 0; j < edges.length; j++)
-					{
-						if (j == i)
-						{
-							continue;
-						}
-						else
-						{
-							var isSource2 = edgeIsSource[j];
-							var otherTerm = this.getVisibleTerminal(edges[j], !isSource2);
-							
-							if (otherTerm == next)
-							{
-								if (isSource2)
-								{
-									netCount++;
-								}
-								else
-								{
-									netCount--;
-								}
-							}
-						}
-					}
+      for (var i = 0; i < edges.length; i++)
+      {
+        if (!directed || edgeIsSource[i])
+        {
+          var next = this.getVisibleTerminal(edges[i], !edgeIsSource[i]);
 
-					if (netCount >= 0)
-					{
-						currentComp = this.traverse(next, directed, edges[i], allVertices,
-							currentComp, hierarchyVertices,
-							filledVertexSet);
-					}
-				}
-			}
-		}
-		else
-		{
-			if (currentComp[vertexID] == null)
-			{
-				// We've seen this vertex before, but not in the current component
-				// This component and the one it's in need to be merged
+          // Check whether there are more edges incoming from the target vertex than outgoing
+          // The hierarchical model treats bi-directional parallel edges as being sourced
+          // from the more "sourced" terminal. If the directions are equal in number, the direction
+          // is that of the natural direction from the roots of the layout.
+          // The checks below are slightly more verbose than need be for performance reasons
+          var netCount = 1;
 
-				for (var i = 0; i < hierarchyVertices.length; i++)
-				{
-					var comp = hierarchyVertices[i];
+          for (var j = 0; j < edges.length; j++)
+          {
+            if (j == i)
+            {
+              continue;
+            }
+            else
+            {
+              var isSource2 = edgeIsSource[j];
+              var otherTerm = this.getVisibleTerminal(edges[j], !isSource2);
 
-					if (comp[vertexID] != null)
-					{
-						for (var key in comp)
-						{
-							currentComp[key] = comp[key];
-						}
-						
-						// Remove the current component from the hierarchy set
-						hierarchyVertices.splice(i, 1);
-						return currentComp;
-					}
-				}
-			}
-		}
-	}
-	
-	return currentComp;
+              if (otherTerm == next)
+              {
+                if (isSource2)
+                {
+                  netCount++;
+                }
+                else
+                {
+                  netCount--;
+                }
+              }
+            }
+          }
+
+          if (netCount >= 0)
+          {
+            currentComp = this.traverse(next, directed, edges[i], allVertices,
+              currentComp, hierarchyVertices,
+              filledVertexSet);
+          }
+        }
+      }
+    }
+    else
+    {
+      if (currentComp[vertexID] == null)
+      {
+        // We've seen this vertex before, but not in the current component
+        // This component and the one it's in need to be merged
+
+        for (var i = 0; i < hierarchyVertices.length; i++)
+        {
+          var comp = hierarchyVertices[i];
+
+          if (comp[vertexID] != null)
+          {
+            for (var key in comp)
+            {
+              currentComp[key] = comp[key];
+            }
+
+            // Remove the current component from the hierarchy set
+            hierarchyVertices.splice(i, 1);
+            return currentComp;
+          }
+        }
+      }
+    }
+  }
+
+  return currentComp;
 };
 
 /**
@@ -808,8 +808,8 @@ traverse = function(vertex, directed, edge, allVertices, currentComp,
  */
 cycleStage = (parent)=>
 {
-	var cycleStage = new mxMinimumCycleRemover(this);
-	cycleStage.execute(parent);
+  var cycleStage = new mxMinimumCycleRemover(this);
+  cycleStage.execute(parent);
 };
 
 /**
@@ -819,8 +819,8 @@ cycleStage = (parent)=>
  */
 layeringStage = ()=>
 {
-	this.model.initialRank();
-	this.model.fixRanks();
+  this.model.initialRank();
+  this.model.fixRanks();
 };
 
 /**
@@ -830,8 +830,8 @@ layeringStage = ()=>
  */
 crossingStage = (parent)=>
 {
-	var crossingStage = new mxMedianHybridCrossingReduction(this);
-	crossingStage.execute(parent);
+  var crossingStage = new mxMedianHybridCrossingReduction(this);
+  crossingStage.execute(parent);
 };
 
 /**
@@ -841,11 +841,11 @@ crossingStage = (parent)=>
  */
 placementStage = (initialX, parent)=>
 {
-	var placementStage = new mxCoordinateAssignment(this, this.intraCellSpacing,
-			this.interRankCellSpacing, this.orientation, initialX,
-			this.parallelEdgeSpacing);
-	placementStage.fineTuning = this.fineTuning;
-	placementStage.execute(parent);
-	
-	return placementStage.limitX + this.interHierarchySpacing;
+  var placementStage = new mxCoordinateAssignment(this, this.intraCellSpacing,
+      this.interRankCellSpacing, this.orientation, initialX,
+      this.parallelEdgeSpacing);
+  placementStage.fineTuning = this.fineTuning;
+  placementStage.execute(parent);
+
+  return placementStage.limitX + this.interHierarchySpacing;
 };

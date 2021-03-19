@@ -72,7 +72,7 @@
  */
 function mxGeometry(x, y, width, height)
 {
-	mxRectangle.call(this, x, y, width, height);
+  mxRectangle.call(this, x, y, width, height);
 };
 
 /**
@@ -165,18 +165,18 @@ relative = false;
  */
 swap = ()=>
 {
-	if (this.alternateBounds != null)
-	{
-		var old = new mxRectangle(
-			this.x, this.y, this.width, this.height);
+  if (this.alternateBounds != null)
+  {
+    var old = new mxRectangle(
+      this.x, this.y, this.width, this.height);
 
-		this.x = this.alternateBounds.x;
-		this.y = this.alternateBounds.y;
-		this.width = this.alternateBounds.width;
-		this.height = this.alternateBounds.height;
+    this.x = this.alternateBounds.x;
+    this.y = this.alternateBounds.y;
+    this.width = this.alternateBounds.width;
+    this.height = this.alternateBounds.height;
 
-		this.alternateBounds = old;
-	}
+    this.alternateBounds = old;
+  }
 };
 
 /**
@@ -192,7 +192,7 @@ swap = ()=>
  */
 getTerminalPoint = (isSource)=>
 {
-	return (isSource) ? this.sourcePoint : this.targetPoint;
+  return (isSource) ? this.sourcePoint : this.targetPoint;
 };
 
 /**
@@ -209,16 +209,16 @@ getTerminalPoint = (isSource)=>
  */
 setTerminalPoint = (point, isSource)=>
 {
-	if (isSource)
-	{
-		this.sourcePoint = point;
-	}
-	else
-	{
-		this.targetPoint = point;
-	}
-	
-	return point;
+  if (isSource)
+  {
+    this.sourcePoint = point;
+  }
+  else
+  {
+    this.targetPoint = point;
+  }
+  
+  return point;
 };
 
 /**
@@ -236,49 +236,49 @@ setTerminalPoint = (point, isSource)=>
  */
 rotate = (angle, cx)=>
 {
-	var rad = mxUtils.toRadians(angle);
-	var cos = Math.cos(rad);
-	var sin = Math.sin(rad);
-	
-	// Rotates the geometry
-	if (!this.relative)
-	{
-		var ct = new mxPoint(this.getCenterX(), this.getCenterY());
-		var pt = mxUtils.getRotatedPoint(ct, cos, sin, cx);
-		
-		this.x = Math.round(pt.x - this.width / 2);
-		this.y = Math.round(pt.y - this.height / 2);
-	}
+  var rad = mxUtils.toRadians(angle);
+  var cos = Math.cos(rad);
+  var sin = Math.sin(rad);
+  
+  // Rotates the geometry
+  if (!this.relative)
+  {
+    var ct = new mxPoint(this.getCenterX(), this.getCenterY());
+    var pt = mxUtils.getRotatedPoint(ct, cos, sin, cx);
+    
+    this.x = Math.round(pt.x - this.width / 2);
+    this.y = Math.round(pt.y - this.height / 2);
+  }
 
-	// Rotates the source point
-	if (this.sourcePoint != null)
-	{
-		var pt = mxUtils.getRotatedPoint(this.sourcePoint, cos, sin, cx);
-		this.sourcePoint.x = Math.round(pt.x);
-		this.sourcePoint.y = Math.round(pt.y);
-	}
-	
-	// Translates the target point
-	if (this.targetPoint != null)
-	{
-		var pt = mxUtils.getRotatedPoint(this.targetPoint, cos, sin, cx);
-		this.targetPoint.x = Math.round(pt.x);
-		this.targetPoint.y = Math.round(pt.y);	
-	}
-	
-	// Translate the control points
-	if (this.points != null)
-	{
-		for (var i = 0; i < this.points.length; i++)
-		{
-			if (this.points[i] != null)
-			{
-				var pt = mxUtils.getRotatedPoint(this.points[i], cos, sin, cx);
-				this.points[i].x = Math.round(pt.x);
-				this.points[i].y = Math.round(pt.y);
-			}
-		}
-	}
+  // Rotates the source point
+  if (this.sourcePoint != null)
+  {
+    var pt = mxUtils.getRotatedPoint(this.sourcePoint, cos, sin, cx);
+    this.sourcePoint.x = Math.round(pt.x);
+    this.sourcePoint.y = Math.round(pt.y);
+  }
+  
+  // Translates the target point
+  if (this.targetPoint != null)
+  {
+    var pt = mxUtils.getRotatedPoint(this.targetPoint, cos, sin, cx);
+    this.targetPoint.x = Math.round(pt.x);
+    this.targetPoint.y = Math.round(pt.y);  
+  }
+  
+  // Translate the control points
+  if (this.points != null)
+  {
+    for (var i = 0; i < this.points.length; i++)
+    {
+      if (this.points[i] != null)
+      {
+        var pt = mxUtils.getRotatedPoint(this.points[i], cos, sin, cx);
+        this.points[i].x = Math.round(pt.x);
+        this.points[i].y = Math.round(pt.y);
+      }
+    }
+  }
 };
 
 /**
@@ -297,42 +297,42 @@ rotate = (angle, cx)=>
  */
 translate = (dx, dy)=>
 {
-	dx = parseFloat(dx);
-	dy = parseFloat(dy);
-	
-	// Translates the geometry
-	if (!this.relative)
-	{
-		this.x = parseFloat(this.x) + dx;
-		this.y = parseFloat(this.y) + dy;
-	}
+  dx = parseFloat(dx);
+  dy = parseFloat(dy);
+  
+  // Translates the geometry
+  if (!this.relative)
+  {
+    this.x = parseFloat(this.x) + dx;
+    this.y = parseFloat(this.y) + dy;
+  }
 
-	// Translates the source point
-	if (this.sourcePoint != null)
-	{
-		this.sourcePoint.x = parseFloat(this.sourcePoint.x) + dx;
-		this.sourcePoint.y = parseFloat(this.sourcePoint.y) + dy;
-	}
-	
-	// Translates the target point
-	if (this.targetPoint != null)
-	{
-		this.targetPoint.x = parseFloat(this.targetPoint.x) + dx;
-		this.targetPoint.y = parseFloat(this.targetPoint.y) + dy;		
-	}
+  // Translates the source point
+  if (this.sourcePoint != null)
+  {
+    this.sourcePoint.x = parseFloat(this.sourcePoint.x) + dx;
+    this.sourcePoint.y = parseFloat(this.sourcePoint.y) + dy;
+  }
+  
+  // Translates the target point
+  if (this.targetPoint != null)
+  {
+    this.targetPoint.x = parseFloat(this.targetPoint.x) + dx;
+    this.targetPoint.y = parseFloat(this.targetPoint.y) + dy;    
+  }
 
-	// Translate the control points
-	if (this.TRANSLATE_CONTROL_POINTS && this.points != null)
-	{
-		for (var i = 0; i < this.points.length; i++)
-		{
-			if (this.points[i] != null)
-			{
-				this.points[i].x = parseFloat(this.points[i].x) + dx;
-				this.points[i].y = parseFloat(this.points[i].y) + dy;
-			}
-		}
-	}
+  // Translate the control points
+  if (this.TRANSLATE_CONTROL_POINTS && this.points != null)
+  {
+    for (var i = 0; i < this.points.length; i++)
+    {
+      if (this.points[i] != null)
+      {
+        this.points[i].x = parseFloat(this.points[i].x) + dx;
+        this.points[i].y = parseFloat(this.points[i].y) + dy;
+      }
+    }
+  }
 };
 
 /**
@@ -352,50 +352,50 @@ translate = (dx, dy)=>
  */
 scale = (sx, sy, fixedAspect)=>
 {
-	sx = parseFloat(sx);
-	sy = parseFloat(sy);
+  sx = parseFloat(sx);
+  sy = parseFloat(sy);
 
-	// Translates the source point
-	if (this.sourcePoint != null)
-	{
-		this.sourcePoint.x = parseFloat(this.sourcePoint.x) * sx;
-		this.sourcePoint.y = parseFloat(this.sourcePoint.y) * sy;
-	}
-	
-	// Translates the target point
-	if (this.targetPoint != null)
-	{
-		this.targetPoint.x = parseFloat(this.targetPoint.x) * sx;
-		this.targetPoint.y = parseFloat(this.targetPoint.y) * sy;		
-	}
+  // Translates the source point
+  if (this.sourcePoint != null)
+  {
+    this.sourcePoint.x = parseFloat(this.sourcePoint.x) * sx;
+    this.sourcePoint.y = parseFloat(this.sourcePoint.y) * sy;
+  }
+  
+  // Translates the target point
+  if (this.targetPoint != null)
+  {
+    this.targetPoint.x = parseFloat(this.targetPoint.x) * sx;
+    this.targetPoint.y = parseFloat(this.targetPoint.y) * sy;    
+  }
 
-	// Translate the control points
-	if (this.points != null)
-	{
-		for (var i = 0; i < this.points.length; i++)
-		{
-			if (this.points[i] != null)
-			{
-				this.points[i].x = parseFloat(this.points[i].x) * sx;
-				this.points[i].y = parseFloat(this.points[i].y) * sy;
-			}
-		}
-	}
-	
-	// Translates the geometry
-	if (!this.relative)
-	{
-		this.x = parseFloat(this.x) * sx;
-		this.y = parseFloat(this.y) * sy;
+  // Translate the control points
+  if (this.points != null)
+  {
+    for (var i = 0; i < this.points.length; i++)
+    {
+      if (this.points[i] != null)
+      {
+        this.points[i].x = parseFloat(this.points[i].x) * sx;
+        this.points[i].y = parseFloat(this.points[i].y) * sy;
+      }
+    }
+  }
+  
+  // Translates the geometry
+  if (!this.relative)
+  {
+    this.x = parseFloat(this.x) * sx;
+    this.y = parseFloat(this.y) * sy;
 
-		if (fixedAspect)
-		{
-			sy = sx = Math.min(sx, sy);
-		}
-		
-		this.width = parseFloat(this.width) * sx;
-		this.height = parseFloat(this.height) * sy;
-	}
+    if (fixedAspect)
+    {
+      sy = sx = Math.min(sx, sy);
+    }
+    
+    this.width = parseFloat(this.width) * sx;
+    this.height = parseFloat(this.height) * sy;
+  }
 };
 
 /**
@@ -405,11 +405,11 @@ scale = (sx, sy, fixedAspect)=>
  */
 equals = (obj)=>
 {
-	return equals.apply(this, arguments) &&
-		this.relative == obj.relative &&
-		((this.sourcePoint == null && obj.sourcePoint == null) || (this.sourcePoint != null && this.sourcePoint.equals(obj.sourcePoint))) &&
-		((this.targetPoint == null && obj.targetPoint == null) || (this.targetPoint != null && this.targetPoint.equals(obj.targetPoint))) &&
-		((this.points == null && obj.points == null) || (this.points != null && mxUtils.equalPoints(this.points, obj.points))) &&
-		((this.alternateBounds == null && obj.alternateBounds == null) || (this.alternateBounds != null && this.alternateBounds.equals(obj.alternateBounds))) &&
-		((this.offset == null && obj.offset == null) || (this.offset != null && this.offset.equals(obj.offset)));
+  return equals.apply(this, arguments) &&
+    this.relative == obj.relative &&
+    ((this.sourcePoint == null && obj.sourcePoint == null) || (this.sourcePoint != null && this.sourcePoint.equals(obj.sourcePoint))) &&
+    ((this.targetPoint == null && obj.targetPoint == null) || (this.targetPoint != null && this.targetPoint.equals(obj.targetPoint))) &&
+    ((this.points == null && obj.points == null) || (this.points != null && mxUtils.equalPoints(this.points, obj.points))) &&
+    ((this.alternateBounds == null && obj.alternateBounds == null) || (this.alternateBounds != null && this.alternateBounds.equals(obj.alternateBounds))) &&
+    ((this.offset == null && obj.offset == null) || (this.offset != null && this.offset.equals(obj.offset)));
 };

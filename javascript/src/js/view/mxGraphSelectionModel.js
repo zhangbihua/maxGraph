@@ -43,8 +43,8 @@
  */
 function mxGraphSelectionModel(graph)
 {
-	this.graph = graph;
-	this.cells = [];
+  this.graph = graph;
+  this.cells = [];
 };
 
 /**
@@ -93,7 +93,7 @@ singleSelection = false;
  */
 isSingleSelection = ()=>
 {
-	return this.singleSelection;
+  return this.singleSelection;
 };
 
 /**
@@ -108,7 +108,7 @@ isSingleSelection = ()=>
  */
 setSingleSelection = (singleSelection)=>
 {
-	this.singleSelection = singleSelection;
+  this.singleSelection = singleSelection;
 };
 
 /**
@@ -118,12 +118,12 @@ setSingleSelection = (singleSelection)=>
  */
 isSelected = (cell)=>
 {
-	if (cell != null)
-	{
-		return mxUtils.indexOf(this.cells, cell) >= 0;
-	}
-	
-	return false;
+  if (cell != null)
+  {
+    return mxUtils.indexOf(this.cells, cell) >= 0;
+  }
+  
+  return false;
 };
 
 /**
@@ -133,7 +133,7 @@ isSelected = (cell)=>
  */
 isEmpty = ()=>
 {
-	return this.cells.length == 0;
+  return this.cells.length == 0;
 };
 
 /**
@@ -144,7 +144,7 @@ isEmpty = ()=>
  */
 clear = ()=>
 {
-	this.changeSelection(null, this.cells);
+  this.changeSelection(null, this.cells);
 };
 
 /**
@@ -158,10 +158,10 @@ clear = ()=>
  */
 setCell = (cell)=>
 {
-	if (cell != null)
-	{
-		this.setCells([cell]);
-	}
+  if (cell != null)
+  {
+    this.setCells([cell]);
+  }
 };
 
 /**
@@ -175,25 +175,25 @@ setCell = (cell)=>
  */
 setCells = (cells)=>
 {
-	if (cells != null)
-	{
-		if (this.singleSelection)
-		{
-			cells = [this.getFirstSelectableCell(cells)];
-		}
-	
-		var tmp = [];
-		
-		for (var i = 0; i < cells.length; i++)
-		{
-			if (this.graph.isCellSelectable(cells[i]))
-			{
-				tmp.push(cells[i]);
-			}	
-		}
+  if (cells != null)
+  {
+    if (this.singleSelection)
+    {
+      cells = [this.getFirstSelectableCell(cells)];
+    }
+  
+    var tmp = [];
+    
+    for (var i = 0; i < cells.length; i++)
+    {
+      if (this.graph.isCellSelectable(cells[i]))
+      {
+        tmp.push(cells[i]);
+      }  
+    }
 
-		this.changeSelection(tmp, this.cells);
-	}
+    this.changeSelection(tmp, this.cells);
+  }
 };
 
 /**
@@ -203,18 +203,18 @@ setCells = (cells)=>
  */
 getFirstSelectableCell = (cells)=>
 {
-	if (cells != null)
-	{
-		for (var i = 0; i < cells.length; i++)
-		{
-			if (this.graph.isCellSelectable(cells[i]))
-			{
-				return cells[i];
-			}
-		}
-	}
-	
-	return null;
+  if (cells != null)
+  {
+    for (var i = 0; i < cells.length; i++)
+    {
+      if (this.graph.isCellSelectable(cells[i]))
+      {
+        return cells[i];
+      }
+    }
+  }
+  
+  return null;
 };
 
 /**
@@ -228,10 +228,10 @@ getFirstSelectableCell = (cells)=>
  */
 addCell = (cell)=>
 {
-	if (cell != null)
-	{
-		this.addCells([cell]);
-	}
+  if (cell != null)
+  {
+    this.addCells([cell]);
+  }
 };
 
 /**
@@ -246,29 +246,29 @@ addCell = (cell)=>
  */
 addCells = (cells)=>
 {
-	if (cells != null)
-	{
-		var remove = null;
-		
-		if (this.singleSelection)
-		{
-			remove = this.cells;
-			cells = [this.getFirstSelectableCell(cells)];
-		}
+  if (cells != null)
+  {
+    var remove = null;
+    
+    if (this.singleSelection)
+    {
+      remove = this.cells;
+      cells = [this.getFirstSelectableCell(cells)];
+    }
 
-		var tmp = [];
-		
-		for (var i = 0; i < cells.length; i++)
-		{
-			if (!this.isSelected(cells[i]) &&
-				this.graph.isCellSelectable(cells[i]))
-			{
-				tmp.push(cells[i]);
-			}	
-		}
+    var tmp = [];
+    
+    for (var i = 0; i < cells.length; i++)
+    {
+      if (!this.isSelected(cells[i]) &&
+        this.graph.isCellSelectable(cells[i]))
+      {
+        tmp.push(cells[i]);
+      }  
+    }
 
-		this.changeSelection(tmp, remove);
-	}
+    this.changeSelection(tmp, remove);
+  }
 };
 
 /**
@@ -283,10 +283,10 @@ addCells = (cells)=>
  */
 removeCell = (cell)=>
 {
-	if (cell != null)
-	{
-		this.removeCells([cell]);
-	}
+  if (cell != null)
+  {
+    this.removeCells([cell]);
+  }
 };
 
 /**
@@ -294,20 +294,20 @@ removeCell = (cell)=>
  */
 removeCells = (cells)=>
 {
-	if (cells != null)
-	{
-		var tmp = [];
-		
-		for (var i = 0; i < cells.length; i++)
-		{
-			if (this.isSelected(cells[i]))
-			{
-				tmp.push(cells[i]);
-			}
-		}
-		
-		this.changeSelection(null, tmp);	
-	}
+  if (cells != null)
+  {
+    var tmp = [];
+    
+    for (var i = 0; i < cells.length; i++)
+    {
+      if (this.isSelected(cells[i]))
+      {
+        tmp.push(cells[i]);
+      }
+    }
+    
+    this.changeSelection(null, tmp);  
+  }
 };
 
 /**
@@ -322,19 +322,19 @@ removeCells = (cells)=>
  */
 changeSelection = (added, removed)=>
 {
-	if ((added != null &&
-		added.length > 0 &&
-		added[0] != null) ||
-		(removed != null &&
-		removed.length > 0 &&
-		removed[0] != null))
-	{
-		var change = new mxSelectionChange(this, added, removed);
-		change.execute();
-		var edit = new mxUndoableEdit(this, false);
-		edit.add(change);
-		this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
-	}
+  if ((added != null &&
+    added.length > 0 &&
+    added[0] != null) ||
+    (removed != null &&
+    removed.length > 0 &&
+    removed[0] != null))
+  {
+    var change = new mxSelectionChange(this, added, removed);
+    change.execute();
+    var edit = new mxUndoableEdit(this, false);
+    edit.add(change);
+    this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
+  }
 };
 
 /**
@@ -349,11 +349,11 @@ changeSelection = (added, removed)=>
  */
 cellAdded = (cell)=>
 {
-	if (cell != null &&
-		!this.isSelected(cell))
-	{
-		this.cells.push(cell);
-	}
+  if (cell != null &&
+    !this.isSelected(cell))
+  {
+    this.cells.push(cell);
+  }
 };
 
 /**
@@ -368,15 +368,15 @@ cellAdded = (cell)=>
  */
 cellRemoved = (cell)=>
 {
-	if (cell != null)
-	{
-		var index = mxUtils.indexOf(this.cells, cell);
-		
-		if (index >= 0)
-		{
-			this.cells.splice(index, 1);
-		}
-	}
+  if (cell != null)
+  {
+    var index = mxUtils.indexOf(this.cells, cell);
+    
+    if (index >= 0)
+    {
+      this.cells.splice(index, 1);
+    }
+  }
 };
 
 /**
@@ -390,9 +390,9 @@ cellRemoved = (cell)=>
  */
 function mxSelectionChange(selectionModel, added, removed)
 {
-	this.selectionModel = selectionModel;
-	this.added = (added != null) ? added.slice() : null;
-	this.removed = (removed != null) ? removed.slice() : null;
+  this.selectionModel = selectionModel;
+  this.added = (added != null) ? added.slice() : null;
+  this.removed = (removed != null) ? removed.slice() : null;
 };
 
 /**
@@ -402,35 +402,35 @@ function mxSelectionChange(selectionModel, added, removed)
  */
 execute = ()=>
 {
-	var t0 = mxLog.enter('mxSelectionChange.execute');
-	window.status = mxResources.get(
-		this.selectionModel.updatingSelectionResource) ||
-		this.selectionModel.updatingSelectionResource;
+  var t0 = mxLog.enter('mxSelectionChange.execute');
+  window.status = mxResources.get(
+    this.selectionModel.updatingSelectionResource) ||
+    this.selectionModel.updatingSelectionResource;
 
-	if (this.removed != null)
-	{
-		for (var i = 0; i < this.removed.length; i++)
-		{
-			this.selectionModel.cellRemoved(this.removed[i]);
-		}
-	}
+  if (this.removed != null)
+  {
+    for (var i = 0; i < this.removed.length; i++)
+    {
+      this.selectionModel.cellRemoved(this.removed[i]);
+    }
+  }
 
-	if (this.added != null)
-	{
-		for (var i = 0; i < this.added.length; i++)
-		{
-			this.selectionModel.cellAdded(this.added[i]);
-		}
-	}
-	
-	var tmp = this.added;
-	this.added = this.removed;
-	this.removed = tmp;
+  if (this.added != null)
+  {
+    for (var i = 0; i < this.added.length; i++)
+    {
+      this.selectionModel.cellAdded(this.added[i]);
+    }
+  }
+  
+  var tmp = this.added;
+  this.added = this.removed;
+  this.removed = tmp;
 
-	window.status = mxResources.get(this.selectionModel.doneResource) ||
-		this.selectionModel.doneResource;
-	mxLog.leave('mxSelectionChange.execute', t0);
-	
-	this.selectionModel.fireEvent(new mxEventObject(mxEvent.CHANGE,
-			'added', this.added, 'removed', this.removed));
+  window.status = mxResources.get(this.selectionModel.doneResource) ||
+    this.selectionModel.doneResource;
+  mxLog.leave('mxSelectionChange.execute', t0);
+  
+  this.selectionModel.fireEvent(new mxEventObject(mxEvent.CHANGE,
+      'added', this.added, 'removed', this.removed));
 };

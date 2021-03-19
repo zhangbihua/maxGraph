@@ -29,16 +29,16 @@
  */
 function mxAutoSaveManager(graph)
 {
-	// Notifies the manager of a change
-	this.changeHandler = mxUtils.bind(this, (sender, evt)=>
-	{
-		if (this.isEnabled())
-		{
-			this.graphModelChanged(evt.getProperty('edit').changes);
-		}
-	});
+  // Notifies the manager of a change
+  this.changeHandler = mxUtils.bind(this, (sender, evt)=>
+  {
+    if (this.isEnabled())
+    {
+      this.graphModelChanged(evt.getProperty('edit').changes);
+    }
+  });
 
-	this.setGraph(graph);
+  this.setGraph(graph);
 };
 
 /**
@@ -119,7 +119,7 @@ changeHandler = null;
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
 
 /**
@@ -134,7 +134,7 @@ isEnabled = ()=>
  */
 setEnabled = (value)=>
 {
-	this.enabled = value;
+  this.enabled = value;
 };
 
 /**
@@ -144,17 +144,17 @@ setEnabled = (value)=>
  */
 setGraph = (graph)=>
 {
-	if (this.graph != null)
-	{
-		this.graph.getModel().removeListener(this.changeHandler);
-	}
-	
-	this.graph = graph;
-	
-	if (this.graph != null)
-	{
-		this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
-	}
+  if (this.graph != null)
+  {
+    this.graph.getModel().removeListener(this.changeHandler);
+  }
+
+  this.graph = graph;
+
+  if (this.graph != null)
+  {
+    this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
+  }
 };
 
 /**
@@ -164,7 +164,7 @@ setGraph = (graph)=>
  */
 save = ()=>
 {
-	// empty
+  // empty
 };
 
 /**
@@ -174,21 +174,21 @@ save = ()=>
  */
 graphModelChanged = (changes)=>
 {
-	var now = new Date().getTime();
-	var dt = (now - this.lastSnapshot) / 1000;
-	
-	if (dt > this.autoSaveDelay ||
-		(this.ignoredChanges >= this.autoSaveThreshold &&
-		 dt > this.autoSaveThrottle))
-	{
-		this.save();
-		this.reset();
-	}
-	else
-	{
-		// Increments the number of ignored changes
-		this.ignoredChanges++;
-	}
+  var now = new Date().getTime();
+  var dt = (now - this.lastSnapshot) / 1000;
+
+  if (dt > this.autoSaveDelay ||
+    (this.ignoredChanges >= this.autoSaveThreshold &&
+     dt > this.autoSaveThrottle))
+  {
+    this.save();
+    this.reset();
+  }
+  else
+  {
+    // Increments the number of ignored changes
+    this.ignoredChanges++;
+  }
 };
 
 /**
@@ -198,8 +198,8 @@ graphModelChanged = (changes)=>
  */
 reset = ()=>
 {
-	this.lastSnapshot = new Date().getTime();
-	this.ignoredChanges = 0;
+  this.lastSnapshot = new Date().getTime();
+  this.ignoredChanges = 0;
 };
 
 /**
@@ -209,5 +209,5 @@ reset = ()=>
  */
 destroy = ()=>
 {
-	this.setGraph(null);
+  this.setGraph(null);
 };

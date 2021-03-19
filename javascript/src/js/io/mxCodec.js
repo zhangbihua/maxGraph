@@ -113,8 +113,8 @@
  */
 function mxCodec(document)
 {
-	this.document = document || mxUtils.createXmlDocument();
-	this.objects = [];
+  this.document = document || mxUtils.createXmlDocument();
+  this.objects = [];
 };
 
 /**
@@ -158,9 +158,9 @@ encodeDefaults = false;
  */
 putObject = (id, obj)=>
 {
-	this.objects[id] = obj;
-	
-	return obj;
+  this.objects[id] = obj;
+  
+  return obj;
 };
 
 /**
@@ -173,29 +173,29 @@ putObject = (id, obj)=>
  */
 getObject = (id)=>
 {
-	var obj = null;
+  var obj = null;
 
-	if (id != null)
-	{
-		obj = this.objects[id];
-		
-		if (obj == null)
-		{
-			obj = this.lookup(id);
-			
-			if (obj == null)
-			{
-				var node = this.getElementById(id);
-				
-				if (node != null)
-				{
-					obj = this.decode(node);
-				}
-			}
-		}
-	}
-	
-	return obj;
+  if (id != null)
+  {
+    obj = this.objects[id];
+    
+    if (obj == null)
+    {
+      obj = this.lookup(id);
+      
+      if (obj == null)
+      {
+        var node = this.getElementById(id);
+        
+        if (node != null)
+        {
+          obj = this.decode(node);
+        }
+      }
+    }
+  }
+  
+  return obj;
 };
 
 /**
@@ -220,7 +220,7 @@ getObject = (id)=>
  */
 lookup = (id)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -234,9 +234,9 @@ lookup = (id)=>
  */
 getElementById = (id)=>
 {
-	this.updateElements();
-	
-	return this.elements[id];
+  this.updateElements();
+  
+  return this.elements[id];
 };
 
 /**
@@ -250,15 +250,15 @@ getElementById = (id)=>
  */
 updateElements = ()=>
 {
-	if (this.elements == null)
-	{
-		this.elements = new Object();
-		
-		if (this.document.documentElement != null)
-		{
-			this.addElement(this.document.documentElement);
-		}
-	}
+  if (this.elements == null)
+  {
+    this.elements = new Object();
+    
+    if (this.document.documentElement != null)
+    {
+      this.addElement(this.document.documentElement);
+    }
+  }
 };
 
 /**
@@ -268,30 +268,30 @@ updateElements = ()=>
  */
 addElement = (node)=>
 {
-	if (node.nodeType == mxConstants.NODETYPE_ELEMENT)
-	{
-		var id = node.getAttribute('id');
-		
-		if (id != null)
-		{
-			if (this.elements[id] == null)
-			{
-				this.elements[id] = node;
-			}
-			else if (this.elements[id] != node)
-			{
-				throw new Error(id + ': Duplicate ID');
-			}
-		}
-	}
-	
-	node = node.firstChild;
-	
-	while (node != null)
-	{
-		this.addElement(node);
-		node = node.nextSibling;
-	}
+  if (node.nodeType == mxConstants.NODETYPE_ELEMENT)
+  {
+    var id = node.getAttribute('id');
+    
+    if (id != null)
+    {
+      if (this.elements[id] == null)
+      {
+        this.elements[id] = node;
+      }
+      else if (this.elements[id] != node)
+      {
+        throw new Error(id + ': Duplicate ID');
+      }
+    }
+  }
+  
+  node = node.firstChild;
+  
+  while (node != null)
+  {
+    this.addElement(node);
+    node = node.nextSibling;
+  }
 };
 
 /**
@@ -309,30 +309,30 @@ addElement = (node)=>
  */
 getId = (obj)=>
 {
-	var id = null;
-	
-	if (obj != null)
-	{
-		id = this.reference(obj);
-		
-		if (id == null && obj instanceof mxCell)
-		{
-			id = obj.getId();
-			
-			if (id == null)
-			{
-				// Uses an on-the-fly Id
-				id = mxCellPath.create(obj);
-				
-				if (id.length == 0)
-				{
-					id = 'root';
-				}
-			}
-		}
-	}
-	
-	return id;
+  var id = null;
+  
+  if (obj != null)
+  {
+    id = this.reference(obj);
+    
+    if (id == null && obj instanceof mxCell)
+    {
+      id = obj.getId();
+      
+      if (id == null)
+      {
+        // Uses an on-the-fly Id
+        id = mxCellPath.create(obj);
+        
+        if (id.length == 0)
+        {
+          id = 'root';
+        }
+      }
+    }
+  }
+  
+  return id;
 };
 
 /**
@@ -358,7 +358,7 @@ getId = (obj)=>
  */
 reference = (obj)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -373,30 +373,30 @@ reference = (obj)=>
  */
 encode = (obj)=>
 {
-	var node = null;
-	
-	if (obj != null && obj.constructor != null)
-	{
-		var enc = mxCodecRegistry.getCodec(obj.constructor);
-		
-		if (enc != null)
-		{
-			node = enc.encode(this, obj);
-		}
-		else
-		{
-			if (mxUtils.isNode(obj))
-			{
-				node = mxUtils.importNode(this.document, obj, true);
-			}
-			else
-			{
-	    		mxLog.warn('mxCodec.encode: No codec for ' + mxUtils.getFunctionName(obj.constructor));
-			}
-		}
-	}
-	
-	return node;
+  var node = null;
+  
+  if (obj != null && obj.constructor != null)
+  {
+    var enc = mxCodecRegistry.getCodec(obj.constructor);
+    
+    if (enc != null)
+    {
+      node = enc.encode(this, obj);
+    }
+    else
+    {
+      if (mxUtils.isNode(obj))
+      {
+        node = mxUtils.importNode(this.document, obj, true);
+      }
+      else
+      {
+          mxLog.warn('mxCodec.encode: No codec for ' + mxUtils.getFunctionName(obj.constructor));
+      }
+    }
+  }
+  
+  return node;
 };
 
 /**
@@ -417,36 +417,36 @@ encode = (obj)=>
  */
 decode = (node, into)=>
 {
-	this.updateElements();
-	var obj = null;
-	
-	if (node != null && node.nodeType == mxConstants.NODETYPE_ELEMENT)
-	{
-		var ctor = null;
-		
-		try
-		{
-			ctor = window[node.nodeName];
-		}
-		catch (err)
-		{
-			// ignore
-		}
-		
-		var dec = mxCodecRegistry.getCodec(ctor);
-		
-		if (dec != null)
-		{
-			obj = dec.decode(this, node, into);
-		}
-		else
-		{
-			obj = node.cloneNode(true);
-			obj.removeAttribute('as');
-		}
-	}
-	
-	return obj;
+  this.updateElements();
+  var obj = null;
+  
+  if (node != null && node.nodeType == mxConstants.NODETYPE_ELEMENT)
+  {
+    var ctor = null;
+    
+    try
+    {
+      ctor = window[node.nodeName];
+    }
+    catch (err)
+    {
+      // ignore
+    }
+    
+    var dec = mxCodecRegistry.getCodec(ctor);
+    
+    if (dec != null)
+    {
+      obj = dec.decode(this, node, into);
+    }
+    else
+    {
+      obj = node.cloneNode(true);
+      obj.removeAttribute('as');
+    }
+  }
+  
+  return obj;
 };
 
 /**
@@ -471,17 +471,17 @@ decode = (node, into)=>
  */
 encodeCell = (cell, node, includeChildren)=>
 {
-	node.appendChild(this.encode(cell));
-	
-	if (includeChildren == null || includeChildren)
-	{
-		var childCount = cell.getChildCount();
-		
-		for (var i = 0; i < childCount; i++)
-		{
-			this.encodeCell(cell.getChildAt(i), node);
-		}
-	}
+  node.appendChild(this.encode(cell));
+  
+  if (includeChildren == null || includeChildren)
+  {
+    var childCount = cell.getChildCount();
+    
+    for (var i = 0; i < childCount; i++)
+    {
+      this.encodeCell(cell.getChildAt(i), node);
+    }
+  }
 };
 
 /**
@@ -493,12 +493,12 @@ encodeCell = (cell, node, includeChildren)=>
  */
 isCellCodec = (codec)=>
 {
-	if (codec != null && typeof(codec.isCellCodec) == 'function')
-	{
-		return codec.isCellCodec();
-	}
-	
-	return false;
+  if (codec != null && typeof(codec.isCellCodec) == 'function')
+  {
+    return codec.isCellCodec();
+  }
+  
+  return false;
 };
 
 /**
@@ -520,44 +520,44 @@ isCellCodec = (codec)=>
  */
 decodeCell = (node, restoreStructures)=>
 {
-	restoreStructures = (restoreStructures != null) ? restoreStructures : true;
-	var cell = null;
-	
-	if (node != null && node.nodeType == mxConstants.NODETYPE_ELEMENT)
-	{
-		// Tries to find a codec for the given node name. If that does
-		// not return a codec then the node is the user object (an XML node
-		// that contains the mxCell, aka inversion).
-		var decoder = mxCodecRegistry.getCodec(node.nodeName);
-		
-		// Tries to find the codec for the cell inside the user object.
-		// This assumes all node names inside the user object are either
-		// not registered or they correspond to a class for cells.
-		if (!this.isCellCodec(decoder))
-		{
-			var child = node.firstChild;
-			
-			while (child != null && !this.isCellCodec(decoder))
-			{
-				decoder = mxCodecRegistry.getCodec(child.nodeName);
-				child = child.nextSibling;
-			}
-		}
-		
-		if (!this.isCellCodec(decoder))
-		{
-			decoder = mxCodecRegistry.getCodec(mxCell);
-		}
+  restoreStructures = (restoreStructures != null) ? restoreStructures : true;
+  var cell = null;
+  
+  if (node != null && node.nodeType == mxConstants.NODETYPE_ELEMENT)
+  {
+    // Tries to find a codec for the given node name. If that does
+    // not return a codec then the node is the user object (an XML node
+    // that contains the mxCell, aka inversion).
+    var decoder = mxCodecRegistry.getCodec(node.nodeName);
+    
+    // Tries to find the codec for the cell inside the user object.
+    // This assumes all node names inside the user object are either
+    // not registered or they correspond to a class for cells.
+    if (!this.isCellCodec(decoder))
+    {
+      var child = node.firstChild;
+      
+      while (child != null && !this.isCellCodec(decoder))
+      {
+        decoder = mxCodecRegistry.getCodec(child.nodeName);
+        child = child.nextSibling;
+      }
+    }
+    
+    if (!this.isCellCodec(decoder))
+    {
+      decoder = mxCodecRegistry.getCodec(mxCell);
+    }
 
-		cell = decoder.decode(this, node);
-		
-		if (restoreStructures)
-		{
-			this.insertIntoGraph(cell);
-		}
-	}
-	
-	return cell;
+    cell = decoder.decode(this, node);
+    
+    if (restoreStructures)
+    {
+      this.insertIntoGraph(cell);
+    }
+  }
+  
+  return cell;
 };
 
 /**
@@ -567,36 +567,36 @@ decodeCell = (node, restoreStructures)=>
  */
 insertIntoGraph = (cell)=>
 {
-	var parent = cell.parent;
-	var source = cell.getTerminal(true);
-	var target = cell.getTerminal(false);
+  var parent = cell.parent;
+  var source = cell.getTerminal(true);
+  var target = cell.getTerminal(false);
 
-	// Fixes possible inconsistencies during insert into graph
-	cell.setTerminal(null, false);
-	cell.setTerminal(null, true);
-	cell.parent = null;
-	
-	if (parent != null)
-	{
-		if (parent == cell)
-		{
-			throw new Error(parent.id + ': Self Reference');
-		}
-		else
-		{
-			parent.insert(cell);
-		}
-	}
+  // Fixes possible inconsistencies during insert into graph
+  cell.setTerminal(null, false);
+  cell.setTerminal(null, true);
+  cell.parent = null;
+  
+  if (parent != null)
+  {
+    if (parent == cell)
+    {
+      throw new Error(parent.id + ': Self Reference');
+    }
+    else
+    {
+      parent.insert(cell);
+    }
+  }
 
-	if (source != null)
-	{
-		source.insertEdge(cell, true);
-	}
+  if (source != null)
+  {
+    source.insertEdge(cell, true);
+  }
 
-	if (target != null)
-	{
-		target.insertEdge(cell, false);
-	}
+  if (target != null)
+  {
+    target.insertEdge(cell, false);
+  }
 };
 
 /**
@@ -614,8 +614,8 @@ insertIntoGraph = (cell)=>
  */
 setAttribute = (node, attribute, value)=>
 {
-	if (attribute != null && value != null)
-	{
-		node.setAttribute(attribute, value);
-	}
+  if (attribute != null && value != null)
+  {
+    node.setAttribute(attribute, value);
+  }
 };

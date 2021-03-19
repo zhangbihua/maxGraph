@@ -205,7 +205,7 @@ class mxEditor extends mxEventSource {
    * (code)
    * <mxEditor>
    *   <mxDefaultPopupMenu as="popupHandler">
-   * 		<add as="cut" action="cut" icon="images/cut.gif"/>
+   *     <add as="cut" action="cut" icon="images/cut.gif"/>
    *      ...
    * (end)
    *
@@ -339,7 +339,7 @@ class mxEditor extends mxEventSource {
    *
    *   if (editor.graph.isCellEditable(vertex))
    *   {
-   *   	editor.graph.startEditingAtCell(vertex);
+   *     editor.graph.startEditingAtCell(vertex);
    *   }
    * });
    * (end)
@@ -1417,7 +1417,7 @@ class mxEditor extends mxEventSource {
    * (code)
    * editor.addAction('test', (editor, cell)=>
    * {
-   * 		mxUtils.alert("test "+cell);
+   *     mxUtils.alert("test "+cell);
    * });
    * (end)
    */

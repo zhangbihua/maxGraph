@@ -48,9 +48,9 @@
  */
 function mxUndoableEdit(source, significant)
 {
-	this.source = source;
-	this.changes = [];
-	this.significant = (significant != null) ? significant : true;
+  this.source = source;
+  this.changes = [];
+  this.significant = (significant != null) ? significant : true;
 };
 
 /**
@@ -98,7 +98,7 @@ redone = false;
  */
 isEmpty = ()=>
 {
-	return this.changes.length == 0;
+  return this.changes.length == 0;
 };
 
 /**
@@ -108,7 +108,7 @@ isEmpty = ()=>
  */
 isSignificant = ()=>
 {
-	return this.significant;
+  return this.significant;
 };
 
 /**
@@ -119,7 +119,7 @@ isSignificant = ()=>
  */
 add = (change)=>
 {
-	this.changes.push(change);
+  this.changes.push(change);
 };
 
 /**
@@ -145,34 +145,34 @@ die = ()=> { };
  */
 undo = ()=>
 {
-	if (!this.undone)
-	{
-		this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
-		var count = this.changes.length;
-		
-		for (var i = count - 1; i >= 0; i--)
-		{
-			var change = this.changes[i];
-			
-			if (change.execute != null)
-			{
-				change.execute();
-			}
-			else if (change.undo != null)
-			{
-				change.undo();
-			}
-			
-			// New global executed event
-			this.source.fireEvent(new mxEventObject(mxEvent.EXECUTED, 'change', change));
-		}
-		
-		this.undone = true;
-		this.redone = false;
-		this.source.fireEvent(new mxEventObject(mxEvent.END_EDIT));
-	}
-	
-	this.notify();
+  if (!this.undone)
+  {
+    this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
+    var count = this.changes.length;
+    
+    for (var i = count - 1; i >= 0; i--)
+    {
+      var change = this.changes[i];
+      
+      if (change.execute != null)
+      {
+        change.execute();
+      }
+      else if (change.undo != null)
+      {
+        change.undo();
+      }
+      
+      // New global executed event
+      this.source.fireEvent(new mxEventObject(mxEvent.EXECUTED, 'change', change));
+    }
+    
+    this.undone = true;
+    this.redone = false;
+    this.source.fireEvent(new mxEventObject(mxEvent.END_EDIT));
+  }
+  
+  this.notify();
 };
 
 /**
@@ -182,32 +182,32 @@ undo = ()=>
  */
 redo = ()=>
 {
-	if (!this.redone)
-	{
-		this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
-		var count = this.changes.length;
-		
-		for (var i = 0; i < count; i++)
-		{
-			var change = this.changes[i];
-			
-			if (change.execute != null)
-			{
-				change.execute();
-			}
-			else if (change.redo != null)
-			{
-				change.redo();
-			}
-			
-			// New global executed event
-			this.source.fireEvent(new mxEventObject(mxEvent.EXECUTED, 'change', change));
-		}
-		
-		this.undone = false;
-		this.redone = true;
-		this.source.fireEvent(new mxEventObject(mxEvent.END_EDIT));
-	}
-	
-	this.notify();
+  if (!this.redone)
+  {
+    this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
+    var count = this.changes.length;
+    
+    for (var i = 0; i < count; i++)
+    {
+      var change = this.changes[i];
+      
+      if (change.execute != null)
+      {
+        change.execute();
+      }
+      else if (change.redo != null)
+      {
+        change.redo();
+      }
+      
+      // New global executed event
+      this.source.fireEvent(new mxEventObject(mxEvent.EXECUTED, 'change', change));
+    }
+    
+    this.undone = false;
+    this.redone = true;
+    this.source.fireEvent(new mxEventObject(mxEvent.END_EDIT));
+  }
+  
+  this.notify();
 };

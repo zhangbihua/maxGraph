@@ -18,7 +18,7 @@
  */
 function mxAnimation(delay)
 {
-	this.delay = (delay != null) ? delay : 20;
+  this.delay = (delay != null) ? delay : 20;
 };
 
 /**
@@ -48,7 +48,7 @@ thread = null;
  */
 isRunning = ()=>
 {
-	return this.thread != null;
+  return this.thread != null;
 };
 
 /**
@@ -58,10 +58,10 @@ isRunning = ()=>
  */
 startAnimation = ()=>
 {
-	if (this.thread == null)
-	{
-		this.thread = window.setInterval(mxUtils.bind(this, this.updateAnimation), this.delay);
-	}
+  if (this.thread == null)
+  {
+    this.thread = window.setInterval(mxUtils.bind(this, this.updateAnimation), this.delay);
+  }
 };
 
 /**
@@ -73,7 +73,7 @@ startAnimation = ()=>
  */
 updateAnimation = ()=>
 {
-	this.fireEvent(new mxEventObject(mxEvent.EXECUTE));
+  this.fireEvent(new mxEventObject(mxEvent.EXECUTE));
 };
 
 /**
@@ -83,10 +83,10 @@ updateAnimation = ()=>
  */
 stopAnimation = ()=>
 {
-	if (this.thread != null)
-	{
-		window.clearInterval(this.thread);
-		this.thread = null;
-		this.fireEvent(new mxEventObject(mxEvent.DONE));
-	}
+  if (this.thread != null)
+  {
+    window.clearInterval(this.thread);
+    this.thread = null;
+    this.fireEvent(new mxEventObject(mxEvent.DONE));
+  }
 };

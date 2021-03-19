@@ -74,23 +74,23 @@
  */
 function mxCellTracker(graph, color, funct)
 {
-	mxCellMarker.call(this, graph, color);
+  mxCellMarker.call(this, graph, color);
 
-	this.graph.addMouseListener(this);
-	
-	if (funct != null)
-	{
-		this.getCell = funct;
-	}
-	
-	// Automatic deallocation of memory
-	if (mxClient.IS_IE)
-	{
-		mxEvent.addListener(window, 'unload', mxUtils.bind(this, ()=>
-		{
-			this.destroy();
-		}));
-	}
+  this.graph.addMouseListener(this);
+  
+  if (funct != null)
+  {
+    this.getCell = funct;
+  }
+  
+  // Automatic deallocation of memory
+  if (mxClient.IS_IE)
+  {
+    mxEvent.addListener(window, 'unload', mxUtils.bind(this, ()=>
+    {
+      this.destroy();
+    }));
+  }
 };
 
 /**
@@ -113,10 +113,10 @@ mouseDown = (sender, me)=> { };
  */
 mouseMove = (sender, me)=>
 {
-	if (this.isEnabled())
-	{
-		this.process(me);
-	}
+  if (this.isEnabled())
+  {
+    this.process(me);
+  }
 };
 
 /**
@@ -135,11 +135,11 @@ mouseUp = (sender, me)=> { };
  */
 destroy = ()=>
 {
-	if (!this.destroyed)
-	{
-		this.destroyed = true;
+  if (!this.destroyed)
+  {
+    this.destroyed = true;
 
-		this.graph.removeMouseListener(this);
-		destroy.apply(this);
-	}
+    this.graph.removeMouseListener(this);
+    destroy.apply(this);
+  }
 };

@@ -13,22 +13,22 @@
  */
 function mxPopupMenuHandler(graph, factoryMethod)
 {
-	if (graph != null)
-	{
-		this.graph = graph;
-		this.factoryMethod = factoryMethod;
-		this.graph.addMouseListener(this);
-		
-		// Does not show menu if any touch gestures take place after the trigger
-		this.gestureHandler = mxUtils.bind(this, (sender, eo)=>
-		{
-			this.inTolerance = false;
-		});
-		
-		this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
-		
-		this.init();
-	}
+  if (graph != null)
+  {
+    this.graph = graph;
+    this.factoryMethod = factoryMethod;
+    this.graph.addMouseListener(this);
+    
+    // Does not show menu if any touch gestures take place after the trigger
+    this.gestureHandler = mxUtils.bind(this, (sender, eo)=>
+    {
+      this.inTolerance = false;
+    });
+    
+    this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
+    
+    this.init();
+  }
 };
 
 /**
@@ -95,15 +95,15 @@ screenY = null;
  */
 init = ()=>
 {
-	// Supercall
-	init.apply(this);
+  // Supercall
+  init.apply(this);
 
-	// Hides the tooltip if the mouse is over
-	// the context menu
-	mxEvent.addGestureListeners(this.div, mxUtils.bind(this, (evt)=>
-	{
-		this.graph.tooltipHandler.hide();
-	}));
+  // Hides the tooltip if the mouse is over
+  // the context menu
+  mxEvent.addGestureListeners(this.div, mxUtils.bind(this, (evt)=>
+  {
+    this.graph.tooltipHandler.hide();
+  }));
 };
 
 /**
@@ -114,7 +114,7 @@ init = ()=>
  */
 isSelectOnPopup = (me)=>
 {
-	return this.selectOnPopup;
+  return this.selectOnPopup;
 };
 
 /**
@@ -125,17 +125,17 @@ isSelectOnPopup = (me)=>
  */
 mouseDown = (sender, me)=>
 {
-	if (this.isEnabled() && !mxEvent.isMultiTouchEvent(me.getEvent()))
-	{
-		// Hides the popupmenu if is is being displayed
-		this.hideMenu();
-		this.triggerX = me.getGraphX();
-		this.triggerY = me.getGraphY();
-		this.screenX = mxEvent.getMainEvent(me.getEvent()).screenX;
-		this.screenY = mxEvent.getMainEvent(me.getEvent()).screenY;
-		this.popupTrigger = this.isPopupTrigger(me);
-		this.inTolerance = true;
-	}
+  if (this.isEnabled() && !mxEvent.isMultiTouchEvent(me.getEvent()))
+  {
+    // Hides the popupmenu if is is being displayed
+    this.hideMenu();
+    this.triggerX = me.getGraphX();
+    this.triggerY = me.getGraphY();
+    this.screenX = mxEvent.getMainEvent(me.getEvent()).screenX;
+    this.screenY = mxEvent.getMainEvent(me.getEvent()).screenY;
+    this.popupTrigger = this.isPopupTrigger(me);
+    this.inTolerance = true;
+  }
 };
 
 /**
@@ -145,15 +145,15 @@ mouseDown = (sender, me)=>
  */
 mouseMove = (sender, me)=>
 {
-	// Popup trigger may change on mouseUp so ignore it
-	if (this.inTolerance && this.screenX != null && this.screenY != null)
-	{
-		if (Math.abs(mxEvent.getMainEvent(me.getEvent()).screenX - this.screenX) > this.graph.tolerance ||
-			Math.abs(mxEvent.getMainEvent(me.getEvent()).screenY - this.screenY) > this.graph.tolerance)
-		{
-			this.inTolerance = false;
-		}
-	}
+  // Popup trigger may change on mouseUp so ignore it
+  if (this.inTolerance && this.screenX != null && this.screenY != null)
+  {
+    if (Math.abs(mxEvent.getMainEvent(me.getEvent()).screenX - this.screenX) > this.graph.tolerance ||
+      Math.abs(mxEvent.getMainEvent(me.getEvent()).screenY - this.screenY) > this.graph.tolerance)
+    {
+      this.inTolerance = false;
+    }
+  }
 };
 
 /**
@@ -164,33 +164,33 @@ mouseMove = (sender, me)=>
  */
 mouseUp = (sender, me)=>
 {
-	if (this.popupTrigger && this.inTolerance && this.triggerX != null && this.triggerY != null)
-	{
-		var cell = this.getCellForPopupEvent(me);
+  if (this.popupTrigger && this.inTolerance && this.triggerX != null && this.triggerY != null)
+  {
+    var cell = this.getCellForPopupEvent(me);
 
-		// Selects the cell for which the context menu is being displayed
-		if (this.graph.isEnabled() && this.isSelectOnPopup(me) &&
-			cell != null && !this.graph.isCellSelected(cell))
-		{
-			this.graph.setSelectionCell(cell);
-		}
-		else if (this.clearSelectionOnBackground && cell == null)
-		{
-			this.graph.clearSelection();
-		}
-		
-		// Hides the tooltip if there is one
-		this.graph.tooltipHandler.hide();
+    // Selects the cell for which the context menu is being displayed
+    if (this.graph.isEnabled() && this.isSelectOnPopup(me) &&
+      cell != null && !this.graph.isCellSelected(cell))
+    {
+      this.graph.setSelectionCell(cell);
+    }
+    else if (this.clearSelectionOnBackground && cell == null)
+    {
+      this.graph.clearSelection();
+    }
+    
+    // Hides the tooltip if there is one
+    this.graph.tooltipHandler.hide();
 
-		// Menu is shifted by 1 pixel so that the mouse up event
-		// is routed via the underlying shape instead of the DIV
-		var origin = mxUtils.getScrollOrigin();
-		this.popup(me.getX() + origin.x + 1, me.getY() + origin.y + 1, cell, me.getEvent());
-		me.consume();
-	}
-	
-	this.popupTrigger = false;
-	this.inTolerance = false;
+    // Menu is shifted by 1 pixel so that the mouse up event
+    // is routed via the underlying shape instead of the DIV
+    var origin = mxUtils.getScrollOrigin();
+    this.popup(me.getX() + origin.x + 1, me.getY() + origin.y + 1, cell, me.getEvent());
+    me.consume();
+  }
+  
+  this.popupTrigger = false;
+  this.inTolerance = false;
 };
 
 /**
@@ -200,7 +200,7 @@ mouseUp = (sender, me)=>
  */
 getCellForPopupEvent = (me)=>
 {
-	return me.getCell();
+  return me.getCell();
 };
 
 /**
@@ -210,9 +210,9 @@ getCellForPopupEvent = (me)=>
  */
 destroy = ()=>
 {
-	this.graph.removeMouseListener(this);
-	this.graph.removeListener(this.gestureHandler);
-	
-	// Supercall
-	destroy.apply(this);
+  this.graph.removeMouseListener(this);
+  this.graph.removeListener(this.gestureHandler);
+  
+  // Supercall
+  destroy.apply(this);
 };

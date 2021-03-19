@@ -14,7 +14,7 @@
  */
 function mxDictionary()
 {
-	this.clear();
+  this.clear();
 };
 
 /**
@@ -31,7 +31,7 @@ map = null;
  */
 clear = ()=>
 {
-	this.map = {};
+  this.map = {};
 };
 
 /**
@@ -41,9 +41,9 @@ clear = ()=>
  */
 get = (key)=>
 {
-	var id = mxObjectIdentity.get(key);
-	
-	return this.map[id];
+  var id = mxObjectIdentity.get(key);
+
+  return this.map[id];
 };
 
 /**
@@ -54,11 +54,11 @@ get = (key)=>
  */
 put = (key, value)=>
 {
-	var id = mxObjectIdentity.get(key);
-	var previous = this.map[id];
-	this.map[id] = value;
-	
-	return previous;
+  var id = mxObjectIdentity.get(key);
+  var previous = this.map[id];
+  this.map[id] = value;
+
+  return previous;
 };
 
 /**
@@ -69,11 +69,11 @@ put = (key, value)=>
  */
 remove = (key)=>
 {
-	var id = mxObjectIdentity.get(key);
-	var previous = this.map[id];
-	delete this.map[id];
-	
-	return previous;
+  var id = mxObjectIdentity.get(key);
+  var previous = this.map[id];
+  delete this.map[id];
+
+  return previous;
 };
 
 /**
@@ -83,14 +83,14 @@ remove = (key)=>
  */
 getKeys = ()=>
 {
-	var result = [];
-	
-	for (var key in this.map)
-	{
-		result.push(key);
-	}
-	
-	return result;
+  var result = [];
+
+  for (var key in this.map)
+  {
+    result.push(key);
+  }
+
+  return result;
 };
 
 /**
@@ -100,14 +100,14 @@ getKeys = ()=>
  */
 getValues = ()=>
 {
-	var result = [];
-	
-	for (var key in this.map)
-	{
-		result.push(this.map[key]);
-	}
-	
-	return result;
+  var result = [];
+
+  for (var key in this.map)
+  {
+    result.push(this.map[key]);
+  }
+
+  return result;
 };
 
 /**
@@ -123,8 +123,8 @@ getValues = ()=>
  */
 visit = (visitor)=>
 {
-	for (var key in this.map)
-	{
-		visitor(key, this.map[key]);
-	}
+  for (var key in this.map)
+  {
+    visitor(key, this.map[key]);
+  }
 };

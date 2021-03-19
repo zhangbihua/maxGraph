@@ -13,11 +13,11 @@
  */
 function mxForm(className)
 {
-	this.table = document.createElement('table');
-	this.table.className = className;
-	this.body = document.createElement('tbody');
-	
-	this.table.appendChild(this.body);
+  this.table = document.createElement('table');
+  this.table.className = className;
+  this.body = document.createElement('tbody');
+  
+  this.table.appendChild(this.body);
 };
 
 /**
@@ -42,7 +42,7 @@ body = false;
  */
 getTable = ()=>
 {
-	return this.table;
+  return this.table;
 };
 
 /**
@@ -53,33 +53,33 @@ getTable = ()=>
  */
 addButtons = (okFunct, cancelFunct)=>
 {
-	var tr = document.createElement('tr');
-	var td = document.createElement('td');
-	tr.appendChild(td);
-	td = document.createElement('td');
+  var tr = document.createElement('tr');
+  var td = document.createElement('td');
+  tr.appendChild(td);
+  td = document.createElement('td');
 
-	// Adds the ok button
-	var button = document.createElement('button');
-	mxUtils.write(button, mxResources.get('ok') || 'OK');
-	td.appendChild(button);
+  // Adds the ok button
+  var button = document.createElement('button');
+  mxUtils.write(button, mxResources.get('ok') || 'OK');
+  td.appendChild(button);
 
-	mxEvent.addListener(button, 'click', ()=>
-	{
-		okFunct();
-	});
-	
-	// Adds the cancel button
-	button = document.createElement('button');
-	mxUtils.write(button, mxResources.get('cancel') || 'Cancel');
-	td.appendChild(button);
-	
-	mxEvent.addListener(button, 'click', ()=>
-	{
-		cancelFunct();
-	});
-	
-	tr.appendChild(td);
-	this.body.appendChild(tr);
+  mxEvent.addListener(button, 'click', ()=>
+  {
+    okFunct();
+  });
+  
+  // Adds the cancel button
+  button = document.createElement('button');
+  mxUtils.write(button, mxResources.get('cancel') || 'Cancel');
+  td.appendChild(button);
+  
+  mxEvent.addListener(button, 'click', ()=>
+  {
+    cancelFunct();
+  });
+  
+  tr.appendChild(td);
+  this.body.appendChild(tr);
 };
 
 /**
@@ -89,12 +89,12 @@ addButtons = (okFunct, cancelFunct)=>
  */
 addText = (name, value, type)=>
 {
-	var input = document.createElement('input');
-	
-	input.setAttribute('type', type || 'text');
-	input.value = value;
-	
-	return this.addField(name, input);
+  var input = document.createElement('input');
+  
+  input.setAttribute('type', type || 'text');
+  input.value = value;
+  
+  return this.addField(name, input);
 };
 
 /**
@@ -104,18 +104,18 @@ addText = (name, value, type)=>
  */
 addCheckbox = (name, value)=>
 {
-	var input = document.createElement('input');
-	
-	input.setAttribute('type', 'checkbox');
-	this.addField(name, input);
+  var input = document.createElement('input');
+  
+  input.setAttribute('type', 'checkbox');
+  this.addField(name, input);
 
-	// IE can only change the checked value if the input is inside the DOM
-	if (value)
-	{
-		input.checked = true;
-	}
+  // IE can only change the checked value if the input is inside the DOM
+  if (value)
+  {
+    input.checked = true;
+  }
 
-	return input;
+  return input;
 };
 
 /**
@@ -125,17 +125,17 @@ addCheckbox = (name, value)=>
  */
 addTextarea = (name, value, rows)=>
 {
-	var input = document.createElement('textarea');
-	
-	if (mxClient.IS_NS)
-	{
-		rows--;
-	}
-	
-	input.setAttribute('rows', rows || 2);
-	input.value = value;
-	
-	return this.addField(name, input);
+  var input = document.createElement('textarea');
+  
+  if (mxClient.IS_NS)
+  {
+    rows--;
+  }
+  
+  input.setAttribute('rows', rows || 2);
+  input.value = value;
+  
+  return this.addField(name, input);
 };
 
 /**
@@ -145,19 +145,19 @@ addTextarea = (name, value, rows)=>
  */
 addCombo = (name, isMultiSelect, size)=>
 {
-	var select = document.createElement('select');
-	
-	if (size != null)
-	{
-		select.setAttribute('size', size);
-	}
-	
-	if (isMultiSelect)
-	{
-		select.setAttribute('multiple', 'true');
-	}
-	
-	return this.addField(name, select);
+  var select = document.createElement('select');
+  
+  if (size != null)
+  {
+    select.setAttribute('size', size);
+  }
+  
+  if (isMultiSelect)
+  {
+    select.setAttribute('multiple', 'true');
+  }
+  
+  return this.addField(name, select);
 };
 
 /**
@@ -167,17 +167,17 @@ addCombo = (name, isMultiSelect, size)=>
  */
 addOption = (combo, label, value, isSelected)=>
 {
-	var option = document.createElement('option');
-	
-	mxUtils.writeln(option, label);
-	option.setAttribute('value', value);
-	
-	if (isSelected)
-	{
-		option.setAttribute('selected', isSelected);
-	}
-	
-	combo.appendChild(option);
+  var option = document.createElement('option');
+  
+  mxUtils.writeln(option, label);
+  option.setAttribute('value', value);
+  
+  if (isSelected)
+  {
+    option.setAttribute('selected', isSelected);
+  }
+  
+  combo.appendChild(option);
 };
 
 /**
@@ -188,15 +188,15 @@ addOption = (combo, label, value, isSelected)=>
  */
 addField = (name, input)=>
 {
-	var tr = document.createElement('tr');
-	var td = document.createElement('td');
-	mxUtils.write(td, name);
-	tr.appendChild(td);
-	
-	td = document.createElement('td');
-	td.appendChild(input);
-	tr.appendChild(td);
-	this.body.appendChild(tr);
-	
-	return input;
+  var tr = document.createElement('tr');
+  var td = document.createElement('td');
+  mxUtils.write(td, name);
+  tr.appendChild(td);
+  
+  td = document.createElement('td');
+  td.appendChild(input);
+  tr.appendChild(td);
+  this.body.appendChild(tr);
+  
+  return input;
 };

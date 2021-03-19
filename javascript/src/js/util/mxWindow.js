@@ -187,32 +187,32 @@
  */
 function mxWindow(title, content, x, y, width, height, minimizable, movable, replaceNode, style)
 {
-	if (content != null)
-	{
-		minimizable = (minimizable != null) ? minimizable : true;
-		this.content = content;
-		this.init(x, y, width, height, style);
-		
-		this.installMaximizeHandler();
-		this.installMinimizeHandler();
-		this.installCloseHandler();
-		this.setMinimizable(minimizable);
-		this.setTitle(title);
-		
-		if (movable == null || movable)
-		{
-			this.installMoveHandler();
-		}
+  if (content != null)
+  {
+    minimizable = (minimizable != null) ? minimizable : true;
+    this.content = content;
+    this.init(x, y, width, height, style);
+    
+    this.installMaximizeHandler();
+    this.installMinimizeHandler();
+    this.installCloseHandler();
+    this.setMinimizable(minimizable);
+    this.setTitle(title);
+    
+    if (movable == null || movable)
+    {
+      this.installMoveHandler();
+    }
 
-		if (replaceNode != null && replaceNode.parentNode != null)
-		{
-			replaceNode.parentNode.replaceChild(this.div, replaceNode);
-		}
-		else
-		{
-			document.body.appendChild(this.div);
-		}
-	}
+    if (replaceNode != null && replaceNode.parentNode != null)
+    {
+      replaceNode.parentNode.replaceChild(this.div, replaceNode);
+    }
+    else
+    {
+      document.body.appendChild(this.div);
+    }
+  }
 };
 
 /**
@@ -234,14 +234,14 @@ closeImage = mxClient.imageBasePath + '/close.gif';
  * URL of the image to be used for the minimize icon in the titlebar.
  */
 minimizeImage = mxClient.imageBasePath + '/minimize.gif';
-	
+  
 /**
  * Variable: normalizeImage
  * 
  * URL of the image to be used for the normalize icon in the titlebar.
  */
 normalizeImage = mxClient.imageBasePath + '/normalize.gif';
-	
+  
 /**
  * Variable: maximizeImage
  * 
@@ -308,99 +308,99 @@ content = null;
  */
 init = (x, y, width, height, style)=>
 {
-	style = (style != null) ? style : 'mxWindow';
-	
-	this.div = document.createElement('div');
-	this.div.className = style;
+  style = (style != null) ? style : 'mxWindow';
+  
+  this.div = document.createElement('div');
+  this.div.className = style;
 
-	this.div.style.left = x + 'px';
-	this.div.style.top = y + 'px';
-	this.table = document.createElement('table');
-	this.table.className = style;
+  this.div.style.left = x + 'px';
+  this.div.style.top = y + 'px';
+  this.table = document.createElement('table');
+  this.table.className = style;
 
-	// Disables built-in pan and zoom in IE10 and later
-	if (mxClient.IS_POINTER)
-	{
-		this.div.style.touchAction = 'none';
-	}
-	
-	// Workaround for table size problems in FF
-	if (width != null)
-	{
-		if (!mxClient.IS_QUIRKS)
-		{
-			this.div.style.width = width + 'px'; 
-		}
-		
-		this.table.style.width = width + 'px';
-	} 
-	
-	if (height != null)
-	{
-		if (!mxClient.IS_QUIRKS)
-		{
-			this.div.style.height = height + 'px';
-		}
-		
-		this.table.style.height = height + 'px';
-	}		
-	
-	// Creates title row
-	var tbody = document.createElement('tbody');
-	var tr = document.createElement('tr');
-	
-	this.title = document.createElement('td');
-	this.title.className = style + 'Title';
-	
-	this.buttons = document.createElement('div');
-	this.buttons.style.position = 'absolute';
-	this.buttons.style.display = 'inline-block';
-	this.buttons.style.right = '4px';
-	this.buttons.style.top = '5px';
-	this.title.appendChild(this.buttons);
-	
-	tr.appendChild(this.title);
-	tbody.appendChild(tr);
-	
-	// Creates content row and table cell
-	tr = document.createElement('tr');
-	this.td = document.createElement('td');
-	this.td.className = style + 'Pane';
-	
-	if (document.documentMode == 7)
-	{
-		this.td.style.height = '100%';
-	}
+  // Disables built-in pan and zoom in IE10 and later
+  if (mxClient.IS_POINTER)
+  {
+    this.div.style.touchAction = 'none';
+  }
+  
+  // Workaround for table size problems in FF
+  if (width != null)
+  {
+    if (!mxClient.IS_QUIRKS)
+    {
+      this.div.style.width = width + 'px'; 
+    }
+    
+    this.table.style.width = width + 'px';
+  } 
+  
+  if (height != null)
+  {
+    if (!mxClient.IS_QUIRKS)
+    {
+      this.div.style.height = height + 'px';
+    }
+    
+    this.table.style.height = height + 'px';
+  }    
+  
+  // Creates title row
+  var tbody = document.createElement('tbody');
+  var tr = document.createElement('tr');
+  
+  this.title = document.createElement('td');
+  this.title.className = style + 'Title';
+  
+  this.buttons = document.createElement('div');
+  this.buttons.style.position = 'absolute';
+  this.buttons.style.display = 'inline-block';
+  this.buttons.style.right = '4px';
+  this.buttons.style.top = '5px';
+  this.title.appendChild(this.buttons);
+  
+  tr.appendChild(this.title);
+  tbody.appendChild(tr);
+  
+  // Creates content row and table cell
+  tr = document.createElement('tr');
+  this.td = document.createElement('td');
+  this.td.className = style + 'Pane';
+  
+  if (document.documentMode == 7)
+  {
+    this.td.style.height = '100%';
+  }
 
-	this.contentWrapper = document.createElement('div');
-	this.contentWrapper.className = style + 'Pane';
-	this.contentWrapper.style.width = '100%';
-	this.contentWrapper.appendChild(this.content);
+  this.contentWrapper = document.createElement('div');
+  this.contentWrapper.className = style + 'Pane';
+  this.contentWrapper.style.width = '100%';
+  this.contentWrapper.appendChild(this.content);
 
-	// Workaround for div around div restricts height
-	// of inner div if outerdiv has hidden overflow
-	if (mxClient.IS_QUIRKS || this.content.nodeName.toUpperCase() != 'DIV')
-	{
-		this.contentWrapper.style.height = '100%';
-	}
+  // Workaround for div around div restricts height
+  // of inner div if outerdiv has hidden overflow
+  if (mxClient.IS_QUIRKS || this.content.nodeName.toUpperCase() != 'DIV')
+  {
+    this.contentWrapper.style.height = '100%';
+  }
 
-	// Puts all content into the DOM
-	this.td.appendChild(this.contentWrapper);
-	tr.appendChild(this.td);
-	tbody.appendChild(tr);
-	this.table.appendChild(tbody);
-	this.div.appendChild(this.table);
-	
-	// Puts the window on top of other windows when clicked
-	var activator = mxUtils.bind(this, (evt)=>
-	{
-		this.activate();
-	});
-	
-	mxEvent.addGestureListeners(this.title, activator);
-	mxEvent.addGestureListeners(this.table, activator);
+  // Puts all content into the DOM
+  this.td.appendChild(this.contentWrapper);
+  tr.appendChild(this.td);
+  tbody.appendChild(tr);
+  this.table.appendChild(tbody);
+  this.div.appendChild(this.table);
+  
+  // Puts the window on top of other windows when clicked
+  var activator = mxUtils.bind(this, (evt)=>
+  {
+    this.activate();
+  });
+  
+  mxEvent.addGestureListeners(this.title, activator);
+  mxEvent.addGestureListeners(this.table, activator);
 
-	this.hide();
+  this.hide();
 };
 
 /**
@@ -411,23 +411,23 @@ init = (x, y, width, height, style)=>
  */
 setTitle = (title)=>
 {
-	// Removes all text content nodes (normally just one)
-	var child = this.title.firstChild;
-	
-	while (child != null)
-	{
-		var next = child.nextSibling;
-		
-		if (child.nodeType == mxConstants.NODETYPE_TEXT)
-		{
-			child.parentNode.removeChild(child);
-		}
-		
-		child = next;
-	}
-	
-	mxUtils.write(this.title, title || '');
-	this.title.appendChild(this.buttons);
+  // Removes all text content nodes (normally just one)
+  var child = this.title.firstChild;
+  
+  while (child != null)
+  {
+    var next = child.nextSibling;
+    
+    if (child.nodeType == mxConstants.NODETYPE_TEXT)
+    {
+      child.parentNode.removeChild(child);
+    }
+    
+    child = next;
+  }
+  
+  mxUtils.write(this.title, title || '');
+  this.title.appendChild(this.buttons);
 };
 
 /**
@@ -437,19 +437,19 @@ setTitle = (title)=>
  */
 setScrollable = (scrollable)=>
 {
-	// Workaround for hang in Presto 2.5.22 (Opera 10.5)
-	if (navigator.userAgent == null ||
-		navigator.userAgent.indexOf('Presto/2.5') < 0)
-	{
-		if (scrollable)
-		{
-			this.contentWrapper.style.overflow = 'auto';
-		}
-		else
-		{
-			this.contentWrapper.style.overflow = 'hidden';
-		}
-	}
+  // Workaround for hang in Presto 2.5.22 (Opera 10.5)
+  if (navigator.userAgent == null ||
+    navigator.userAgent.indexOf('Presto/2.5') < 0)
+  {
+    if (scrollable)
+    {
+      this.contentWrapper.style.overflow = 'auto';
+    }
+    else
+    {
+      this.contentWrapper.style.overflow = 'hidden';
+    }
+  }
 };
 
 /**
@@ -459,27 +459,27 @@ setScrollable = (scrollable)=>
  */
 activate = ()=>
 {
-	if (mxWindow.activeWindow != this)
-	{
-		var style = mxUtils.getCurrentStyle(this.getElement());
-		var index = (style != null) ? style.zIndex : 3;
+  if (mxWindow.activeWindow != this)
+  {
+    var style = mxUtils.getCurrentStyle(this.getElement());
+    var index = (style != null) ? style.zIndex : 3;
 
-		if (mxWindow.activeWindow)
-		{
-			var elt = mxWindow.activeWindow.getElement();
-			
-			if (elt != null && elt.style != null)
-			{
-				elt.style.zIndex = index;
-			}
-		}
-		
-		var previousWindow = mxWindow.activeWindow;
-		this.getElement().style.zIndex = parseInt(index) + 1;
-		mxWindow.activeWindow = this;
-		
-		this.fireEvent(new mxEventObject(mxEvent.ACTIVATE, 'previousWindow', previousWindow));
-	}
+    if (mxWindow.activeWindow)
+    {
+      var elt = mxWindow.activeWindow.getElement();
+      
+      if (elt != null && elt.style != null)
+      {
+        elt.style.zIndex = index;
+      }
+    }
+    
+    var previousWindow = mxWindow.activeWindow;
+    this.getElement().style.zIndex = parseInt(index) + 1;
+    mxWindow.activeWindow = this;
+    
+    this.fireEvent(new mxEventObject(mxEvent.ACTIVATE, 'previousWindow', previousWindow));
+  }
 };
 
 /**
@@ -489,7 +489,7 @@ activate = ()=>
  */
 getElement = ()=>
 {
-	return this.div;
+  return this.div;
 };
 
 /**
@@ -499,7 +499,7 @@ getElement = ()=>
  */
 fit = ()=>
 {
-	mxUtils.fit(this.div);
+  mxUtils.fit(this.div);
 };
 
 /**
@@ -509,12 +509,12 @@ fit = ()=>
  */
 isResizable = ()=>
 {
-	if (this.resize != null)
-	{
-		return this.resize.style.display != 'none';
-	}
-	
-	return false;
+  if (this.resize != null)
+  {
+    return this.resize.style.display != 'none';
+  }
+  
+  return false;
 };
 
 /**
@@ -533,82 +533,82 @@ isResizable = ()=>
  */
 setResizable = (resizable)=>
 {
-	if (resizable)
-	{
-		if (this.resize == null)
-		{
-			this.resize = document.createElement('img');
-			this.resize.style.position = 'absolute';
-			this.resize.style.bottom = '2px';
-			this.resize.style.right = '2px';
+  if (resizable)
+  {
+    if (this.resize == null)
+    {
+      this.resize = document.createElement('img');
+      this.resize.style.position = 'absolute';
+      this.resize.style.bottom = '2px';
+      this.resize.style.right = '2px';
 
-			this.resize.setAttribute('src', this.resizeImage);
-			this.resize.style.cursor = 'nw-resize';
-			
-			var startX = null;
-			var startY = null;
-			var width = null;
-			var height = null;
-			
-			var start = mxUtils.bind(this, (evt)=>
-			{
-				// LATER: pointerdown starting on border of resize does start
-				// the drag operation but does not fire consecutive events via
-				// one of the listeners below (does pan instead).
-				// Workaround: document.body.style.msTouchAction = 'none'
-				this.activate();
-				startX = mxEvent.getClientX(evt);
-				startY = mxEvent.getClientY(evt);
-				width = this.div.offsetWidth;
-				height = this.div.offsetHeight;
-				
-				mxEvent.addGestureListeners(document, null, dragHandler, dropHandler);
-				this.fireEvent(new mxEventObject(mxEvent.RESIZE_START, 'event', evt));
-				mxEvent.consume(evt);
-			});
+      this.resize.setAttribute('src', this.resizeImage);
+      this.resize.style.cursor = 'nw-resize';
+      
+      var startX = null;
+      var startY = null;
+      var width = null;
+      var height = null;
+      
+      var start = mxUtils.bind(this, (evt)=>
+      {
+        // LATER: pointerdown starting on border of resize does start
+        // the drag operation but does not fire consecutive events via
+        // one of the listeners below (does pan instead).
+        // Workaround: document.body.style.msTouchAction = 'none'
+        this.activate();
+        startX = mxEvent.getClientX(evt);
+        startY = mxEvent.getClientY(evt);
+        width = this.div.offsetWidth;
+        height = this.div.offsetHeight;
+        
+        mxEvent.addGestureListeners(document, null, dragHandler, dropHandler);
+        this.fireEvent(new mxEventObject(mxEvent.RESIZE_START, 'event', evt));
+        mxEvent.consume(evt);
+      });
 
-			// Adds a temporary pair of listeners to intercept
-			// the gesture event in the document
-			var dragHandler = mxUtils.bind(this, (evt)=>
-			{
-				if (startX != null && startY != null)
-				{
-					var dx = mxEvent.getClientX(evt) - startX;
-					var dy = mxEvent.getClientY(evt) - startY;
-	
-					this.setSize(width + dx, height + dy);
-	
-					this.fireEvent(new mxEventObject(mxEvent.RESIZE, 'event', evt));
-					mxEvent.consume(evt);
-				}
-			});
-			
-			var dropHandler = mxUtils.bind(this, (evt)=>
-			{
-				if (startX != null && startY != null)
-				{
-					startX = null;
-					startY = null;
-					mxEvent.removeGestureListeners(document, null, dragHandler, dropHandler);
-					this.fireEvent(new mxEventObject(mxEvent.RESIZE_END, 'event', evt));
-					mxEvent.consume(evt);
-				}
-			});
-			
-			mxEvent.addGestureListeners(this.resize, start, dragHandler, dropHandler);
-			this.div.appendChild(this.resize);
-		}
-		else 
-		{
-			this.resize.style.display = 'inline';
-		}
-	}
-	else if (this.resize != null)
-	{
-		this.resize.style.display = 'none';
-	}
+      // Adds a temporary pair of listeners to intercept
+      // the gesture event in the document
+      var dragHandler = mxUtils.bind(this, (evt)=>
+      {
+        if (startX != null && startY != null)
+        {
+          var dx = mxEvent.getClientX(evt) - startX;
+          var dy = mxEvent.getClientY(evt) - startY;
+  
+          this.setSize(width + dx, height + dy);
+  
+          this.fireEvent(new mxEventObject(mxEvent.RESIZE, 'event', evt));
+          mxEvent.consume(evt);
+        }
+      });
+      
+      var dropHandler = mxUtils.bind(this, (evt)=>
+      {
+        if (startX != null && startY != null)
+        {
+          startX = null;
+          startY = null;
+          mxEvent.removeGestureListeners(document, null, dragHandler, dropHandler);
+          this.fireEvent(new mxEventObject(mxEvent.RESIZE_END, 'event', evt));
+          mxEvent.consume(evt);
+        }
+      });
+      
+      mxEvent.addGestureListeners(this.resize, start, dragHandler, dropHandler);
+      this.div.appendChild(this.resize);
+    }
+    else 
+    {
+      this.resize.style.display = 'inline';
+    }
+  }
+  else if (this.resize != null)
+  {
+    this.resize.style.display = 'none';
+  }
 };
-	
+  
 /**
  * Function: setSize
  * 
@@ -616,26 +616,26 @@ setResizable = (resizable)=>
  */
 setSize = (width, height)=>
 {
-	width = Math.max(this.minimumSize.width, width);
-	height = Math.max(this.minimumSize.height, height);
+  width = Math.max(this.minimumSize.width, width);
+  height = Math.max(this.minimumSize.height, height);
 
-	// Workaround for table size problems in FF
-	if (!mxClient.IS_QUIRKS)
-	{
-		this.div.style.width =  width + 'px';
-		this.div.style.height = height + 'px';
-	}
-	
-	this.table.style.width =  width + 'px';
-	this.table.style.height = height + 'px';
+  // Workaround for table size problems in FF
+  if (!mxClient.IS_QUIRKS)
+  {
+    this.div.style.width =  width + 'px';
+    this.div.style.height = height + 'px';
+  }
+  
+  this.table.style.width =  width + 'px';
+  this.table.style.height = height + 'px';
 
-	if (!mxClient.IS_QUIRKS)
-	{
-		this.contentWrapper.style.height = (this.div.offsetHeight -
-			this.title.offsetHeight - this.contentHeightCorrection) + 'px';
-	}
+  if (!mxClient.IS_QUIRKS)
+  {
+    this.contentWrapper.style.height = (this.div.offsetHeight -
+      this.title.offsetHeight - this.contentHeightCorrection) + 'px';
+  }
 };
-	
+  
 /**
  * Function: setMinimizable
  * 
@@ -643,7 +643,7 @@ setSize = (width, height)=>
  */
 setMinimizable = (minimizable)=>
 {
-	this.minimize.style.display = (minimizable) ? '' : 'none';
+  this.minimize.style.display = (minimizable) ? '' : 'none';
 };
 
 /**
@@ -655,7 +655,7 @@ setMinimizable = (minimizable)=>
  */
 getMinimumSize = ()=>
 {
-	return new mxRectangle(0, 0, 0, this.title.offsetHeight);
+  return new mxRectangle(0, 0, 0, this.title.offsetHeight);
 };
 
 /**
@@ -665,95 +665,95 @@ getMinimumSize = ()=>
  */
 installMinimizeHandler = ()=>
 {
-	this.minimize = document.createElement('img');
-	
-	this.minimize.setAttribute('src', this.minimizeImage);
-	this.minimize.setAttribute('title', 'Minimize');
-	this.minimize.style.cursor = 'pointer';
-	this.minimize.style.marginLeft = '2px';
-	this.minimize.style.display = 'none';
-	
-	this.buttons.appendChild(this.minimize);
-	
-	var minimized = false;
-	var maxDisplay = null;
-	var height = null;
+  this.minimize = document.createElement('img');
+  
+  this.minimize.setAttribute('src', this.minimizeImage);
+  this.minimize.setAttribute('title', 'Minimize');
+  this.minimize.style.cursor = 'pointer';
+  this.minimize.style.marginLeft = '2px';
+  this.minimize.style.display = 'none';
+  
+  this.buttons.appendChild(this.minimize);
+  
+  var minimized = false;
+  var maxDisplay = null;
+  var height = null;
 
-	var funct = mxUtils.bind(this, (evt)=>
-	{
-		this.activate();
-		
-		if (!minimized)
-		{
-			minimized = true;
-			
-			this.minimize.setAttribute('src', this.normalizeImage);
-			this.minimize.setAttribute('title', 'Normalize');
-			this.contentWrapper.style.display = 'none';
-			maxDisplay = this.maximize.style.display;
-			
-			this.maximize.style.display = 'none';
-			height = this.table.style.height;
-			
-			var minSize = this.getMinimumSize();
-			
-			if (minSize.height > 0)
-			{
-				if (!mxClient.IS_QUIRKS)
-				{
-					this.div.style.height = minSize.height + 'px';
-				}
-				
-				this.table.style.height = minSize.height + 'px';
-			}
-			
-			if (minSize.width > 0)
-			{
-				if (!mxClient.IS_QUIRKS)
-				{
-					this.div.style.width = minSize.width + 'px';
-				}
-				
-				this.table.style.width = minSize.width + 'px';
-			}
-			
-			if (this.resize != null)
-			{
-				this.resize.style.visibility = 'hidden';
-			}
-			
-			this.fireEvent(new mxEventObject(mxEvent.MINIMIZE, 'event', evt));
-		}
-		else
-		{
-			minimized = false;
-			
-			this.minimize.setAttribute('src', this.minimizeImage);
-			this.minimize.setAttribute('title', 'Minimize');
-			this.contentWrapper.style.display = ''; // default
-			this.maximize.style.display = maxDisplay;
-			
-			if (!mxClient.IS_QUIRKS)
-			{
-				this.div.style.height = height;
-			}
-			
-			this.table.style.height = height;
+  var funct = mxUtils.bind(this, (evt)=>
+  {
+    this.activate();
+    
+    if (!minimized)
+    {
+      minimized = true;
+      
+      this.minimize.setAttribute('src', this.normalizeImage);
+      this.minimize.setAttribute('title', 'Normalize');
+      this.contentWrapper.style.display = 'none';
+      maxDisplay = this.maximize.style.display;
+      
+      this.maximize.style.display = 'none';
+      height = this.table.style.height;
+      
+      var minSize = this.getMinimumSize();
+      
+      if (minSize.height > 0)
+      {
+        if (!mxClient.IS_QUIRKS)
+        {
+          this.div.style.height = minSize.height + 'px';
+        }
+        
+        this.table.style.height = minSize.height + 'px';
+      }
+      
+      if (minSize.width > 0)
+      {
+        if (!mxClient.IS_QUIRKS)
+        {
+          this.div.style.width = minSize.width + 'px';
+        }
+        
+        this.table.style.width = minSize.width + 'px';
+      }
+      
+      if (this.resize != null)
+      {
+        this.resize.style.visibility = 'hidden';
+      }
+      
+      this.fireEvent(new mxEventObject(mxEvent.MINIMIZE, 'event', evt));
+    }
+    else
+    {
+      minimized = false;
+      
+      this.minimize.setAttribute('src', this.minimizeImage);
+      this.minimize.setAttribute('title', 'Minimize');
+      this.contentWrapper.style.display = ''; // default
+      this.maximize.style.display = maxDisplay;
+      
+      if (!mxClient.IS_QUIRKS)
+      {
+        this.div.style.height = height;
+      }
+      
+      this.table.style.height = height;
 
-			if (this.resize != null)
-			{
-				this.resize.style.visibility = '';
-			}
-			
-			this.fireEvent(new mxEventObject(mxEvent.NORMALIZE, 'event', evt));
-		}
-		
-		mxEvent.consume(evt);
-	});
-	
-	mxEvent.addGestureListeners(this.minimize, funct);
+      if (this.resize != null)
+      {
+        this.resize.style.visibility = '';
+      }
+      
+      this.fireEvent(new mxEventObject(mxEvent.NORMALIZE, 'event', evt));
+    }
+    
+    mxEvent.consume(evt);
+  });
+  
+  mxEvent.addGestureListeners(this.minimize, funct);
 };
-	
+  
 /**
  * Function: setMaximizable
  * 
@@ -761,7 +761,7 @@ installMinimizeHandler = ()=>
  */
 setMaximizable = (maximizable)=>
 {
-	this.maximize.style.display = (maximizable) ? '' : 'none';
+  this.maximize.style.display = (maximizable) ? '' : 'none';
 };
 
 /**
@@ -771,123 +771,123 @@ setMaximizable = (maximizable)=>
  */
 installMaximizeHandler = ()=>
 {
-	this.maximize = document.createElement('img');
-	
-	this.maximize.setAttribute('src', this.maximizeImage);
-	this.maximize.setAttribute('title', 'Maximize');
-	this.maximize.style.cursor = 'default';
-	this.maximize.style.marginLeft = '2px';
-	this.maximize.style.cursor = 'pointer';
-	this.maximize.style.display = 'none';
-	
-	this.buttons.appendChild(this.maximize);
-	
-	var maximized = false;
-	var x = null;
-	var y = null;
-	var height = null;
-	var width = null;
-	var minDisplay = null;
+  this.maximize = document.createElement('img');
+  
+  this.maximize.setAttribute('src', this.maximizeImage);
+  this.maximize.setAttribute('title', 'Maximize');
+  this.maximize.style.cursor = 'default';
+  this.maximize.style.marginLeft = '2px';
+  this.maximize.style.cursor = 'pointer';
+  this.maximize.style.display = 'none';
+  
+  this.buttons.appendChild(this.maximize);
+  
+  var maximized = false;
+  var x = null;
+  var y = null;
+  var height = null;
+  var width = null;
+  var minDisplay = null;
 
-	var funct = mxUtils.bind(this, (evt)=>
-	{
-		this.activate();
-		
-		if (this.maximize.style.display != 'none')
-		{
-			if (!maximized)
-			{
-				maximized = true;
-				
-				this.maximize.setAttribute('src', this.normalizeImage);
-				this.maximize.setAttribute('title', 'Normalize');
-				this.contentWrapper.style.display = '';
-				minDisplay = this.minimize.style.display;
-				this.minimize.style.display = 'none';
-				
-				// Saves window state
-				x = parseInt(this.div.style.left);
-				y = parseInt(this.div.style.top);
-				height = this.table.style.height;
-				width = this.table.style.width;
+  var funct = mxUtils.bind(this, (evt)=>
+  {
+    this.activate();
+    
+    if (this.maximize.style.display != 'none')
+    {
+      if (!maximized)
+      {
+        maximized = true;
+        
+        this.maximize.setAttribute('src', this.normalizeImage);
+        this.maximize.setAttribute('title', 'Normalize');
+        this.contentWrapper.style.display = '';
+        minDisplay = this.minimize.style.display;
+        this.minimize.style.display = 'none';
+        
+        // Saves window state
+        x = parseInt(this.div.style.left);
+        y = parseInt(this.div.style.top);
+        height = this.table.style.height;
+        width = this.table.style.width;
 
-				this.div.style.left = '0px';
-				this.div.style.top = '0px';
-				var docHeight = Math.max(document.body.clientHeight || 0, document.documentElement.clientHeight || 0);
+        this.div.style.left = '0px';
+        this.div.style.top = '0px';
+        var docHeight = Math.max(document.body.clientHeight || 0, document.documentElement.clientHeight || 0);
 
-				if (!mxClient.IS_QUIRKS)
-				{
-					this.div.style.width = (document.body.clientWidth - 2) + 'px';
-					this.div.style.height = (docHeight - 2) + 'px';
-				}
+        if (!mxClient.IS_QUIRKS)
+        {
+          this.div.style.width = (document.body.clientWidth - 2) + 'px';
+          this.div.style.height = (docHeight - 2) + 'px';
+        }
 
-				this.table.style.width = (document.body.clientWidth - 2) + 'px';
-				this.table.style.height = (docHeight - 2) + 'px';
-				
-				if (this.resize != null)
-				{
-					this.resize.style.visibility = 'hidden';
-				}
+        this.table.style.width = (document.body.clientWidth - 2) + 'px';
+        this.table.style.height = (docHeight - 2) + 'px';
+        
+        if (this.resize != null)
+        {
+          this.resize.style.visibility = 'hidden';
+        }
 
-				if (!mxClient.IS_QUIRKS)
-				{
-					var style = mxUtils.getCurrentStyle(this.contentWrapper);
-		
-					if (style.overflow == 'auto' || this.resize != null)
-					{
-						this.contentWrapper.style.height = (this.div.offsetHeight -
-							this.title.offsetHeight - this.contentHeightCorrection) + 'px';
-					}
-				}
+        if (!mxClient.IS_QUIRKS)
+        {
+          var style = mxUtils.getCurrentStyle(this.contentWrapper);
+    
+          if (style.overflow == 'auto' || this.resize != null)
+          {
+            this.contentWrapper.style.height = (this.div.offsetHeight -
+              this.title.offsetHeight - this.contentHeightCorrection) + 'px';
+          }
+        }
 
-				this.fireEvent(new mxEventObject(mxEvent.MAXIMIZE, 'event', evt));
-			}
-			else
-			{
-				maximized = false;
-				
-				this.maximize.setAttribute('src', this.maximizeImage);
-				this.maximize.setAttribute('title', 'Maximize');
-				this.contentWrapper.style.display = '';
-				this.minimize.style.display = minDisplay;
+        this.fireEvent(new mxEventObject(mxEvent.MAXIMIZE, 'event', evt));
+      }
+      else
+      {
+        maximized = false;
+        
+        this.maximize.setAttribute('src', this.maximizeImage);
+        this.maximize.setAttribute('title', 'Maximize');
+        this.contentWrapper.style.display = '';
+        this.minimize.style.display = minDisplay;
 
-				// Restores window state
-				this.div.style.left = x+'px';
-				this.div.style.top = y+'px';
-				
-				if (!mxClient.IS_QUIRKS)
-				{
-					this.div.style.height = height;
-					this.div.style.width = width;
+        // Restores window state
+        this.div.style.left = x+'px';
+        this.div.style.top = y+'px';
+        
+        if (!mxClient.IS_QUIRKS)
+        {
+          this.div.style.height = height;
+          this.div.style.width = width;
 
-					var style = mxUtils.getCurrentStyle(this.contentWrapper);
-		
-					if (style.overflow == 'auto' || this.resize != null)
-					{
-						this.contentWrapper.style.height = (this.div.offsetHeight -
-							this.title.offsetHeight - this.contentHeightCorrection) + 'px';
-					}
-				}
-				
-				this.table.style.height = height;
-				this.table.style.width = width;
+          var style = mxUtils.getCurrentStyle(this.contentWrapper);
+    
+          if (style.overflow == 'auto' || this.resize != null)
+          {
+            this.contentWrapper.style.height = (this.div.offsetHeight -
+              this.title.offsetHeight - this.contentHeightCorrection) + 'px';
+          }
+        }
+        
+        this.table.style.height = height;
+        this.table.style.width = width;
 
-				if (this.resize != null)
-				{
-					this.resize.style.visibility = '';
-				}
-				
-				this.fireEvent(new mxEventObject(mxEvent.NORMALIZE, 'event', evt));
-			}
-			
-			mxEvent.consume(evt);
-		}
-	});
-	
-	mxEvent.addGestureListeners(this.maximize, funct);
-	mxEvent.addListener(this.title, 'dblclick', funct);
+        if (this.resize != null)
+        {
+          this.resize.style.visibility = '';
+        }
+        
+        this.fireEvent(new mxEventObject(mxEvent.NORMALIZE, 'event', evt));
+      }
+      
+      mxEvent.consume(evt);
+    }
+  });
+  
+  mxEvent.addGestureListeners(this.maximize, funct);
+  mxEvent.addListener(this.title, 'dblclick', funct);
 };
-	
+  
 /**
  * Function: installMoveHandler
  * 
@@ -895,44 +895,44 @@ installMaximizeHandler = ()=>
  */
 installMoveHandler = ()=>
 {
-	this.title.style.cursor = 'move';
-	
-	mxEvent.addGestureListeners(this.title,
-		mxUtils.bind(this, (evt)=>
-		{
-			var startX = mxEvent.getClientX(evt);
-			var startY = mxEvent.getClientY(evt);
-			var x = this.getX();
-			var y = this.getY();
-						
-			// Adds a temporary pair of listeners to intercept
-			// the gesture event in the document
-			var dragHandler = mxUtils.bind(this, (evt)=>
-			{
-				var dx = mxEvent.getClientX(evt) - startX;
-				var dy = mxEvent.getClientY(evt) - startY;
-				this.setLocation(x + dx, y + dy);
-				this.fireEvent(new mxEventObject(mxEvent.MOVE, 'event', evt));
-				mxEvent.consume(evt);
-			});
-			
-			var dropHandler = mxUtils.bind(this, (evt)=>
-			{
-				mxEvent.removeGestureListeners(document, null, dragHandler, dropHandler);
-				this.fireEvent(new mxEventObject(mxEvent.MOVE_END, 'event', evt));
-				mxEvent.consume(evt);
-			});
-			
-			mxEvent.addGestureListeners(document, null, dragHandler, dropHandler);
-			this.fireEvent(new mxEventObject(mxEvent.MOVE_START, 'event', evt));
-			mxEvent.consume(evt);
-		}));
-	
-	// Disables built-in pan and zoom in IE10 and later
-	if (mxClient.IS_POINTER)
-	{
-		this.title.style.touchAction = 'none';
-	}
+  this.title.style.cursor = 'move';
+  
+  mxEvent.addGestureListeners(this.title,
+    mxUtils.bind(this, (evt)=>
+    {
+      var startX = mxEvent.getClientX(evt);
+      var startY = mxEvent.getClientY(evt);
+      var x = this.getX();
+      var y = this.getY();
+            
+      // Adds a temporary pair of listeners to intercept
+      // the gesture event in the document
+      var dragHandler = mxUtils.bind(this, (evt)=>
+      {
+        var dx = mxEvent.getClientX(evt) - startX;
+        var dy = mxEvent.getClientY(evt) - startY;
+        this.setLocation(x + dx, y + dy);
+        this.fireEvent(new mxEventObject(mxEvent.MOVE, 'event', evt));
+        mxEvent.consume(evt);
+      });
+      
+      var dropHandler = mxUtils.bind(this, (evt)=>
+      {
+        mxEvent.removeGestureListeners(document, null, dragHandler, dropHandler);
+        this.fireEvent(new mxEventObject(mxEvent.MOVE_END, 'event', evt));
+        mxEvent.consume(evt);
+      });
+      
+      mxEvent.addGestureListeners(document, null, dragHandler, dropHandler);
+      this.fireEvent(new mxEventObject(mxEvent.MOVE_START, 'event', evt));
+      mxEvent.consume(evt);
+    }));
+  
+  // Disables built-in pan and zoom in IE10 and later
+  if (mxClient.IS_POINTER)
+  {
+    this.title.style.touchAction = 'none';
+  }
 };
 
 /**
@@ -942,8 +942,8 @@ installMoveHandler = ()=>
  */
  setLocation = (x, y)=>
  {
-	this.div.style.left = x + 'px';
-	this.div.style.top = y + 'px';
+  this.div.style.left = x + 'px';
+  this.div.style.top = y + 'px';
  };
 
 /**
@@ -953,7 +953,7 @@ installMoveHandler = ()=>
  */
 getX = ()=>
 {
-	return parseInt(this.div.style.left);
+  return parseInt(this.div.style.left);
 };
 
 /**
@@ -963,7 +963,7 @@ getX = ()=>
  */
 getY = ()=>
 {
-	return parseInt(this.div.style.top);
+  return parseInt(this.div.style.top);
 };
 
 /**
@@ -974,32 +974,32 @@ getY = ()=>
  */
 installCloseHandler = ()=>
 {
-	this.closeImg = document.createElement('img');
-	
-	this.closeImg.setAttribute('src', this.closeImage);
-	this.closeImg.setAttribute('title', 'Close');
-	this.closeImg.style.marginLeft = '2px';
-	this.closeImg.style.cursor = 'pointer';
-	this.closeImg.style.display = 'none';
-	
-	this.buttons.appendChild(this.closeImg);
+  this.closeImg = document.createElement('img');
+  
+  this.closeImg.setAttribute('src', this.closeImage);
+  this.closeImg.setAttribute('title', 'Close');
+  this.closeImg.style.marginLeft = '2px';
+  this.closeImg.style.cursor = 'pointer';
+  this.closeImg.style.display = 'none';
+  
+  this.buttons.appendChild(this.closeImg);
 
-	mxEvent.addGestureListeners(this.closeImg,
-		mxUtils.bind(this, (evt)=>
-		{
-			this.fireEvent(new mxEventObject(mxEvent.CLOSE, 'event', evt));
-			
-			if (this.destroyOnClose)
-			{
-				this.destroy();
-			}
-			else
-			{
-				this.setVisible(false);
-			}
-			
-			mxEvent.consume(evt);
-		}));
+  mxEvent.addGestureListeners(this.closeImg,
+    mxUtils.bind(this, (evt)=>
+    {
+      this.fireEvent(new mxEventObject(mxEvent.CLOSE, 'event', evt));
+      
+      if (this.destroyOnClose)
+      {
+        this.destroy();
+      }
+      else
+      {
+        this.setVisible(false);
+      }
+      
+      mxEvent.consume(evt);
+    }));
 };
 
 /**
@@ -1013,14 +1013,14 @@ installCloseHandler = ()=>
  */
 setImage = (image)=>
 {
-	this.image = document.createElement('img');
-	this.image.setAttribute('src', image);
-	this.image.setAttribute('align', 'left');
-	this.image.style.marginRight = '4px';
-	this.image.style.marginLeft = '0px';
-	this.image.style.marginTop = '-2px';
-	
-	this.title.insertBefore(this.image, this.title.firstChild);
+  this.image = document.createElement('img');
+  this.image.setAttribute('src', image);
+  this.image.setAttribute('align', 'left');
+  this.image.style.marginRight = '4px';
+  this.image.style.marginLeft = '0px';
+  this.image.style.marginTop = '-2px';
+  
+  this.title.insertBefore(this.image, this.title.firstChild);
 };
 
 /**
@@ -1034,7 +1034,7 @@ setImage = (image)=>
  */
 setClosable = (closable)=>
 {
-	this.closeImg.style.display = (closable) ? '' : 'none';
+  this.closeImg.style.display = (closable) ? '' : 'none';
 };
 
 /**
@@ -1044,12 +1044,12 @@ setClosable = (closable)=>
  */
 isVisible = ()=>
 {
-	if (this.div != null)
-	{
-		return this.div.style.display != 'none';
-	}
-	
-	return false;
+  if (this.div != null)
+  {
+    return this.div.style.display != 'none';
+  }
+  
+  return false;
 };
 
 /**
@@ -1063,17 +1063,17 @@ isVisible = ()=>
  */
 setVisible = (visible)=>
 {
-	if (this.div != null && this.isVisible() != visible)
-	{
-		if (visible)
-		{
-			this.show();
-		}
-		else
-		{
-			this.hide();
-		}
-	}
+  if (this.div != null && this.isVisible() != visible)
+  {
+    if (visible)
+    {
+      this.show();
+    }
+    else
+    {
+      this.hide();
+    }
+  }
 };
 
 /**
@@ -1083,19 +1083,19 @@ setVisible = (visible)=>
  */
 show = ()=>
 {
-	this.div.style.display = '';
-	this.activate();
-	
-	var style = mxUtils.getCurrentStyle(this.contentWrapper);
-	
-	if (!mxClient.IS_QUIRKS && (style.overflow == 'auto' || this.resize != null) &&
-		this.contentWrapper.style.display != 'none')
-	{
-		this.contentWrapper.style.height = (this.div.offsetHeight -
-				this.title.offsetHeight - this.contentHeightCorrection) + 'px';
-	}
-	
-	this.fireEvent(new mxEventObject(mxEvent.SHOW));
+  this.div.style.display = '';
+  this.activate();
+  
+  var style = mxUtils.getCurrentStyle(this.contentWrapper);
+  
+  if (!mxClient.IS_QUIRKS && (style.overflow == 'auto' || this.resize != null) &&
+    this.contentWrapper.style.display != 'none')
+  {
+    this.contentWrapper.style.height = (this.div.offsetHeight -
+        this.title.offsetHeight - this.contentHeightCorrection) + 'px';
+  }
+  
+  this.fireEvent(new mxEventObject(mxEvent.SHOW));
 };
 
 /**
@@ -1105,8 +1105,8 @@ show = ()=>
  */
 hide = ()=>
 {
-	this.div.style.display = 'none';
-	this.fireEvent(new mxEventObject(mxEvent.HIDE));
+  this.div.style.display = 'none';
+  this.fireEvent(new mxEventObject(mxEvent.HIDE));
 };
 
 /**
@@ -1117,16 +1117,16 @@ hide = ()=>
  */
 destroy = ()=>
 {
-	this.fireEvent(new mxEventObject(mxEvent.DESTROY));
-	
-	if (this.div != null)
-	{
-		mxEvent.release(this.div);
-		this.div.parentNode.removeChild(this.div);
-		this.div = null;
-	}
-	
-	this.title = null;
-	this.content = null;
-	this.contentWrapper = null;
+  this.fireEvent(new mxEventObject(mxEvent.DESTROY));
+  
+  if (this.div != null)
+  {
+    mxEvent.release(this.div);
+    this.div.parentNode.removeChild(this.div);
+    this.div = null;
+  }
+  
+  this.title = null;
+  this.content = null;
+  this.contentWrapper = null;
 };

@@ -27,16 +27,16 @@
  */
 function mxEventObject(name)
 {
-	this.name = name;
-	this.properties = [];
-	
-	for (var i = 1; i < arguments.length; i += 2)
-	{
-		if (arguments[i + 1] != null)
-		{
-			this.properties[arguments[i]] = arguments[i + 1];
-		}
-	}
+  this.name = name;
+  this.properties = [];
+
+  for (var i = 1; i < arguments.length; i += 2)
+  {
+    if (arguments[i + 1] != null)
+    {
+      this.properties[arguments[i]] = arguments[i + 1];
+    }
+  }
 };
 
 /**
@@ -67,7 +67,7 @@ consumed = false;
  */
 getName = ()=>
 {
-	return this.name;
+  return this.name;
 };
 
 /**
@@ -77,7 +77,7 @@ getName = ()=>
  */
 getProperties = ()=>
 {
-	return this.properties;
+  return this.properties;
 };
 
 /**
@@ -87,7 +87,7 @@ getProperties = ()=>
  */
 getProperty = (key)=>
 {
-	return this.properties[key];
+  return this.properties[key];
 };
 
 /**
@@ -97,7 +97,7 @@ getProperty = (key)=>
  */
 isConsumed = ()=>
 {
-	return this.consumed;
+  return this.consumed;
 };
 
 /**
@@ -107,5 +107,5 @@ isConsumed = ()=>
  */
 consume = ()=>
 {
-	this.consumed = true;
+  this.consumed = true;
 };

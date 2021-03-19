@@ -26,11 +26,11 @@
  */
 function mxCylinder(bounds, fill, stroke, strokewidth)
 {
-	mxShape.call(this);
-	this.bounds = bounds;
-	this.fill = fill;
-	this.stroke = stroke;
-	this.strokewidth = (strokewidth != null) ? strokewidth : 1;
+  mxShape.call(this);
+  this.bounds = bounds;
+  this.fill = fill;
+  this.stroke = stroke;
+  this.strokewidth = (strokewidth != null) ? strokewidth : 1;
 };
 
 /**
@@ -60,19 +60,19 @@ svgStrokeTolerance = 0;
  */
 paintVertexShape = (c, x, y, w, h)=>
 {
-	c.translate(x, y);
-	c.begin();
-	this.redrawPath(c, x, y, w, h, false);
-	c.fillAndStroke();
-	
-	if (!this.outline || this.style == null || mxUtils.getValue(
-		this.style, mxConstants.STYLE_BACKGROUND_OUTLINE, 0) == 0)
-	{
-		c.setShadow(false);
-		c.begin();
-		this.redrawPath(c, x, y, w, h, true);
-		c.stroke();
-	}
+  c.translate(x, y);
+  c.begin();
+  this.redrawPath(c, x, y, w, h, false);
+  c.fillAndStroke();
+  
+  if (!this.outline || this.style == null || mxUtils.getValue(
+    this.style, mxConstants.STYLE_BACKGROUND_OUTLINE, 0) == 0)
+  {
+    c.setShadow(false);
+    c.begin();
+    this.redrawPath(c, x, y, w, h, true);
+    c.stroke();
+  }
 };
 
 /**
@@ -82,7 +82,7 @@ paintVertexShape = (c, x, y, w, h)=>
  */
 getCylinderSize = (x, y, w, h)=>
 {
-	return Math.min(this.maxHeight, Math.round(h / 5));
+  return Math.min(this.maxHeight, Math.round(h / 5));
 };
 
 /**
@@ -92,27 +92,27 @@ getCylinderSize = (x, y, w, h)=>
  */
 redrawPath = (c, x, y, w, h, isForeground)=>
 {
-	var dy = this.getCylinderSize(x, y, w, h);
-	
-	if ((isForeground && this.fill != null) || (!isForeground && this.fill == null))
-	{
-		c.moveTo(0, dy);
-		c.curveTo(0, 2 * dy, w, 2 * dy, w, dy);
-		
-		// Needs separate shapes for correct hit-detection
-		if (!isForeground)
-		{
-			c.stroke();
-			c.begin();
-		}
-	}
-	
-	if (!isForeground)
-	{
-		c.moveTo(0, dy);
-		c.curveTo(0, -dy / 3, w, -dy / 3, w, dy);
-		c.lineTo(w, h - dy);
-		c.curveTo(w, h + dy / 3, 0, h + dy / 3, 0, h - dy);
-		c.close();
-	}
+  var dy = this.getCylinderSize(x, y, w, h);
+  
+  if ((isForeground && this.fill != null) || (!isForeground && this.fill == null))
+  {
+    c.moveTo(0, dy);
+    c.curveTo(0, 2 * dy, w, 2 * dy, w, dy);
+    
+    // Needs separate shapes for correct hit-detection
+    if (!isForeground)
+    {
+      c.stroke();
+      c.begin();
+    }
+  }
+  
+  if (!isForeground)
+  {
+    c.moveTo(0, dy);
+    c.curveTo(0, -dy / 3, w, -dy / 3, w, dy);
+    c.lineTo(w, h - dy);
+    c.curveTo(w, h + dy / 3, 0, h + dy / 3, 0, h - dy);
+    c.close();
+  }
 };

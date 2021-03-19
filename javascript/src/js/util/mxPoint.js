@@ -14,8 +14,8 @@
  */
 function mxPoint(x, y)
 {
-	this.x = (x != null) ? x : 0;
-	this.y = (y != null) ? y : 0;
+  this.x = (x != null) ? x : 0;
+  this.y = (y != null) ? y : 0;
 };
 
 /**
@@ -39,7 +39,7 @@ y = null;
  */
 equals = (obj)=>
 {
-	return obj != null && obj.x == this.x && obj.y == this.y;
+  return obj != null && obj.x == this.x && obj.y == this.y;
 };
 
 /**
@@ -49,6 +49,6 @@ equals = (obj)=>
  */
 clone = ()=>
 {
-	// Handles subclasses as well
-	return mxUtils.clone(this);
+  // Handles subclasses as well
+  return mxUtils.clone(this);
 };

@@ -87,12 +87,12 @@
  */
 function mxXmlRequest(url, params, method, async, username, password)
 {
-	this.url = url;
-	this.params = params;
-	this.method = method || 'POST';
-	this.async = (async != null) ? async : true;
-	this.username = username;
-	this.password = password;
+  this.url = url;
+  this.params = params;
+  this.method = method || 'POST';
+  this.async = (async != null) ? async : true;
+  this.username = username;
+  this.password = password;
 };
 
 /**
@@ -178,7 +178,7 @@ decodeSimulateValues = false;
  */
 isBinary = ()=>
 {
-	return this.binary;
+  return this.binary;
 };
 
 /**
@@ -188,7 +188,7 @@ isBinary = ()=>
  */
 setBinary = (value)=>
 {
-	this.binary = value;
+  this.binary = value;
 };
 
 /**
@@ -198,7 +198,7 @@ setBinary = (value)=>
  */
 getText = ()=>
 {
-	return this.request.responseText;
+  return this.request.responseText;
 };
 
 /**
@@ -208,7 +208,7 @@ getText = ()=>
  */
 isReady = ()=>
 {
-	return this.request.readyState == 4;
+  return this.request.readyState == 4;
 };
 
 /**
@@ -218,14 +218,14 @@ isReady = ()=>
  */
 getDocumentElement = ()=>
 {
-	var doc = this.getXml();
-	
-	if (doc != null)
-	{
-		return doc.documentElement;
-	}
-	
-	return null;
+  var doc = this.getXml();
+
+  if (doc != null)
+  {
+    return doc.documentElement;
+  }
+
+  return null;
 };
 
 /**
@@ -236,19 +236,19 @@ getDocumentElement = ()=>
  */
 getXml = ()=>
 {
-	var xml = this.request.responseXML;
-	
-	// Handles missing response headers in IE, the first condition handles
-	// the case where responseXML is there, but using its nodes leads to
-	// type errors in the mxCellCodec when putting the nodes into a new
-	// document. This happens in IE9 standards mode and with XML user
-	// objects only, as they are used directly as values in cells.
-	if (document.documentMode >= 9 || xml == null || xml.documentElement == null)
-	{
-		xml = mxUtils.parseXml(this.request.responseText);
-	}
-	
-	return xml;
+  var xml = this.request.responseXML;
+
+  // Handles missing response headers in IE, the first condition handles
+  // the case where responseXML is there, but using its nodes leads to
+  // type errors in the mxCellCodec when putting the nodes into a new
+  // document. This happens in IE9 standards mode and with XML user
+  // objects only, as they are used directly as values in cells.
+  if (document.documentMode >= 9 || xml == null || xml.documentElement == null)
+  {
+    xml = mxUtils.parseXml(this.request.responseText);
+  }
+
+  return xml;
 };
 
 /**
@@ -259,7 +259,7 @@ getXml = ()=>
  */
 getStatus = ()=>
 {
-	return (this.request != null) ? this.request.status : null;
+  return (this.request != null) ? this.request.status : null;
 };
 
 /**
@@ -269,29 +269,29 @@ getStatus = ()=>
  */
 create = ()=>
 {
-	if (window.XMLHttpRequest)
-	{
-		return ()=>
-		{
-			var req = new XMLHttpRequest();
-			
-			// TODO: Check for overrideMimeType required here?
-			if (this.isBinary() && req.overrideMimeType)
-			{
-				req.overrideMimeType('text/plain; charset=x-user-defined');
-			}
+  if (window.XMLHttpRequest)
+  {
+    return ()=>
+    {
+      var req = new XMLHttpRequest();
 
-			return req;
-		};
-	}
-	else if (typeof(ActiveXObject) != 'undefined')
-	{
-		return ()=>
-		{
-			// TODO: Implement binary option
-			return new ActiveXObject('Microsoft.XMLHTTP');
-		};
-	}
+      // TODO: Check for overrideMimeType required here?
+      if (this.isBinary() && req.overrideMimeType)
+      {
+        req.overrideMimeType('text/plain; charset=x-user-defined');
+      }
+
+      return req;
+    };
+  }
+  else if (typeof(ActiveXObject) != 'undefined')
+  {
+    return ()=>
+    {
+      // TODO: Implement binary option
+      return new ActiveXObject('Microsoft.XMLHTTP');
+    };
+  }
 }();
 
 /**
@@ -311,40 +311,40 @@ create = ()=>
  */
 send = (onload, onerror, timeout, ontimeout)=>
 {
-	this.request = this.create();
-	
-	if (this.request != null)
-	{
-		if (onload != null)
-		{
-			this.request.onreadystatechange = mxUtils.bind(this, ()=>
-			{
-				if (this.isReady())
-				{
-					onload(this);
-					this.request.onreadystatechange = null;
-				}
-			});
-		}
+  this.request = this.create();
 
-		this.request.open(this.method, this.url, this.async,
-			this.username, this.password);
-		this.setRequestHeaders(this.request, this.params);
-		
-		if (window.XMLHttpRequest && this.withCredentials)
-		{
-			this.request.withCredentials = 'true';
-		}
-		
-		if (!mxClient.IS_QUIRKS && (document.documentMode == null || document.documentMode > 9) &&
-			window.XMLHttpRequest && timeout != null && ontimeout != null)
-		{
-			this.request.timeout = timeout;
-			this.request.ontimeout = ontimeout;
-		}
-				
-		this.request.send(this.params);
-	}
+  if (this.request != null)
+  {
+    if (onload != null)
+    {
+      this.request.onreadystatechange = mxUtils.bind(this, ()=>
+      {
+        if (this.isReady())
+        {
+          onload(this);
+          this.request.onreadystatechange = null;
+        }
+      });
+    }
+
+    this.request.open(this.method, this.url, this.async,
+      this.username, this.password);
+    this.setRequestHeaders(this.request, this.params);
+
+    if (window.XMLHttpRequest && this.withCredentials)
+    {
+      this.request.withCredentials = 'true';
+    }
+
+    if (!mxClient.IS_QUIRKS && (document.documentMode == null || document.documentMode > 9) &&
+      window.XMLHttpRequest && timeout != null && ontimeout != null)
+    {
+      this.request.timeout = timeout;
+      this.request.ontimeout = ontimeout;
+    }
+
+    this.request.send(this.params);
+  }
 };
 
 /**
@@ -373,10 +373,10 @@ send = (onload, onerror, timeout, ontimeout)=>
  */
 setRequestHeaders = (request, params)=>
 {
-	if (params != null)
-	{
-		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	}
+  if (params != null)
+  {
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  }
 };
 
 /**
@@ -392,64 +392,64 @@ setRequestHeaders = (request, params)=>
  */
 simulate = (doc, target)=>
 {
-	doc = doc || document;
-	var old = null;
+  doc = doc || document;
+  var old = null;
 
-	if (doc == document)
-	{
-		old = window.onbeforeunload;		
-		window.onbeforeunload = null;
-	}
-			
-	var form = doc.createElement('form');
-	form.setAttribute('method', this.method);
-	form.setAttribute('action', this.url);
+  if (doc == document)
+  {
+    old = window.onbeforeunload;
+    window.onbeforeunload = null;
+  }
 
-	if (target != null)
-	{
-		form.setAttribute('target', target);
-	}
+  var form = doc.createElement('form');
+  form.setAttribute('method', this.method);
+  form.setAttribute('action', this.url);
 
-	form.style.display = 'none';
-	form.style.visibility = 'hidden';
-	
-	var pars = (this.params.indexOf('&') > 0) ?
-		this.params.split('&') :
-		this.params.split();
+  if (target != null)
+  {
+    form.setAttribute('target', target);
+  }
 
-	// Adds the parameters as textareas to the form
-	for (var i=0; i<pars.length; i++)
-	{
-		var pos = pars[i].indexOf('=');
-		
-		if (pos > 0)
-		{
-			var name = pars[i].substring(0, pos);
-			var value = pars[i].substring(pos+1);
-			
-			if (this.decodeSimulateValues)
-			{
-				value = decodeURIComponent(value);
-			}
-			
-			var textarea = doc.createElement('textarea');
-			textarea.setAttribute('wrap', 'off');
-			textarea.setAttribute('name', name);
-			mxUtils.write(textarea, value);
-			form.appendChild(textarea);
-		}
-	}
-	
-	doc.body.appendChild(form);
-	form.submit();
-	
-	if (form.parentNode != null)
-	{
-		form.parentNode.removeChild(form);
-	}
+  form.style.display = 'none';
+  form.style.visibility = 'hidden';
 
-	if (old != null)
-	{		
-		window.onbeforeunload = old;
-	}
+  var pars = (this.params.indexOf('&') > 0) ?
+    this.params.split('&') :
+    this.params.split();
+
+  // Adds the parameters as textareas to the form
+  for (var i=0; i<pars.length; i++)
+  {
+    var pos = pars[i].indexOf('=');
+
+    if (pos > 0)
+    {
+      var name = pars[i].substring(0, pos);
+      var value = pars[i].substring(pos+1);
+
+      if (this.decodeSimulateValues)
+      {
+        value = decodeURIComponent(value);
+      }
+
+      var textarea = doc.createElement('textarea');
+      textarea.setAttribute('wrap', 'off');
+      textarea.setAttribute('name', name);
+      mxUtils.write(textarea, value);
+      form.appendChild(textarea);
+    }
+  }
+
+  doc.body.appendChild(form);
+  form.submit();
+
+  if (form.parentNode != null)
+  {
+    form.parentNode.removeChild(form);
+  }
+
+  if (old != null)
+  {
+    window.onbeforeunload = old;
+  }
 };

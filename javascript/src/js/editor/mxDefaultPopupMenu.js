@@ -106,10 +106,10 @@ class mxDefaultPopupMenu {
    * (code)
    * <mxDefaultPopupMenu as="popupHandler">
    *   <add as="action1"><![CDATA[
-   *		function (editor, cell, evt)
-   *		{
-   *			editor.execute('action1', cell, 'myArg');
-   *		}
+   *    function (editor, cell, evt)
+   *    {
+   *      editor.execute('action1', cell, 'myArg');
+   *    }
    *   ]]></add>
    * </mxDefaultPopupMenu>
    * (end)

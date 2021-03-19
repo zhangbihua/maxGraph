@@ -26,27 +26,27 @@
  */
 function mxSelectionCellsHandler(graph)
 {
-	mxEventSource.call(this);
-	
-	this.graph = graph;
-	this.handlers = new mxDictionary();
-	this.graph.addMouseListener(this);
-	
-	this.refreshHandler = mxUtils.bind(this, (sender, evt)=>
-	{
-		if (this.isEnabled())
-		{
-			this.refresh();
-		}
-	});
-	
-	this.graph.getSelectionModel().addListener(mxEvent.CHANGE, this.refreshHandler);
-	this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
-	this.graph.getView().addListener(mxEvent.SCALE, this.refreshHandler);
-	this.graph.getView().addListener(mxEvent.TRANSLATE, this.refreshHandler);
-	this.graph.getView().addListener(mxEvent.SCALE_AND_TRANSLATE, this.refreshHandler);
-	this.graph.getView().addListener(mxEvent.DOWN, this.refreshHandler);
-	this.graph.getView().addListener(mxEvent.UP, this.refreshHandler);
+  mxEventSource.call(this);
+  
+  this.graph = graph;
+  this.handlers = new mxDictionary();
+  this.graph.addMouseListener(this);
+  
+  this.refreshHandler = mxUtils.bind(this, (sender, evt)=>
+  {
+    if (this.isEnabled())
+    {
+      this.refresh();
+    }
+  });
+  
+  this.graph.getSelectionModel().addListener(mxEvent.CHANGE, this.refreshHandler);
+  this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
+  this.graph.getView().addListener(mxEvent.SCALE, this.refreshHandler);
+  this.graph.getView().addListener(mxEvent.TRANSLATE, this.refreshHandler);
+  this.graph.getView().addListener(mxEvent.SCALE_AND_TRANSLATE, this.refreshHandler);
+  this.graph.getView().addListener(mxEvent.DOWN, this.refreshHandler);
+  this.graph.getView().addListener(mxEvent.UP, this.refreshHandler);
 };
 
 /**
@@ -96,7 +96,7 @@ handlers = null;
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
 
 /**
@@ -106,7 +106,7 @@ isEnabled = ()=>
  */
 setEnabled = (value)=>
 {
-	this.enabled = value;
+  this.enabled = value;
 };
 
 /**
@@ -116,7 +116,7 @@ setEnabled = (value)=>
  */
 getHandler = (cell)=>
 {
-	return this.handlers.get(cell);
+  return this.handlers.get(cell);
 };
 
 /**
@@ -126,7 +126,7 @@ getHandler = (cell)=>
  */
 isHandled = (cell)=>
 {
-	return this.getHandler(cell) != null;
+  return this.getHandler(cell) != null;
 };
 
 /**
@@ -136,10 +136,10 @@ isHandled = (cell)=>
  */
 reset = ()=>
 {
-	this.handlers.visit((key, handler)=>
-	{
-		handler.reset.apply(handler);
-	});
+  this.handlers.visit((key, handler)=>
+  {
+    handler.reset.apply(handler);
+  });
 };
 
 /**
@@ -149,7 +149,7 @@ reset = ()=>
  */
 getHandledSelectionCells = ()=>
 {
-	return this.graph.getSelectionCells();
+  return this.graph.getSelectionCells();
 };
 
 /**
@@ -159,75 +159,75 @@ getHandledSelectionCells = ()=>
  */
 refresh = ()=>
 {
-	// Removes all existing handlers
-	var oldHandlers = this.handlers;
-	this.handlers = new mxDictionary();
-	
-	// Creates handles for all selection cells
-	var tmp = mxUtils.sortCells(this.getHandledSelectionCells(), false);
+  // Removes all existing handlers
+  var oldHandlers = this.handlers;
+  this.handlers = new mxDictionary();
+  
+  // Creates handles for all selection cells
+  var tmp = mxUtils.sortCells(this.getHandledSelectionCells(), false);
 
-	// Destroys or updates old handlers
-	for (var i = 0; i < tmp.length; i++)
-	{
-		var state = this.graph.view.getState(tmp[i]);
+  // Destroys or updates old handlers
+  for (var i = 0; i < tmp.length; i++)
+  {
+    var state = this.graph.view.getState(tmp[i]);
 
-		if (state != null)
-		{
-			var handler = oldHandlers.remove(tmp[i]);
+    if (state != null)
+    {
+      var handler = oldHandlers.remove(tmp[i]);
 
-			if (handler != null)
-			{
-				if (handler.state != state)
-				{
-					handler.destroy();
-					handler = null;
-				}
-				else if (!this.isHandlerActive(handler))
-				{
-					if (handler.refresh != null)
-					{
-						handler.refresh();
-					}
-					
-					handler.redraw();
-				}
-			}
-			
-			if (handler != null)
-			{
-				this.handlers.put(tmp[i], handler);
-			}
-		}
-	}
-	
-	// Destroys unused handlers
-	oldHandlers.visit(mxUtils.bind(this, (key, handler)=>
-	{
-		this.fireEvent(new mxEventObject(mxEvent.REMOVE, 'state', handler.state));
-		handler.destroy();
-	}));
-	
-	// Creates new handlers and updates parent highlight on existing handlers
-	for (var i = 0; i < tmp.length; i++)
-	{
-		var state = this.graph.view.getState(tmp[i]);
+      if (handler != null)
+      {
+        if (handler.state != state)
+        {
+          handler.destroy();
+          handler = null;
+        }
+        else if (!this.isHandlerActive(handler))
+        {
+          if (handler.refresh != null)
+          {
+            handler.refresh();
+          }
+          
+          handler.redraw();
+        }
+      }
+      
+      if (handler != null)
+      {
+        this.handlers.put(tmp[i], handler);
+      }
+    }
+  }
+  
+  // Destroys unused handlers
+  oldHandlers.visit(mxUtils.bind(this, (key, handler)=>
+  {
+    this.fireEvent(new mxEventObject(mxEvent.REMOVE, 'state', handler.state));
+    handler.destroy();
+  }));
+  
+  // Creates new handlers and updates parent highlight on existing handlers
+  for (var i = 0; i < tmp.length; i++)
+  {
+    var state = this.graph.view.getState(tmp[i]);
 
-		if (state != null)
-		{
-			var handler = this.handlers.get(tmp[i]);
+    if (state != null)
+    {
+      var handler = this.handlers.get(tmp[i]);
 
-			if (handler == null)
-			{
-				handler = this.graph.createHandler(state);
-				this.fireEvent(new mxEventObject(mxEvent.ADD, 'state', state));
-				this.handlers.put(tmp[i], handler);
-			}
-			else
-			{
-				handler.updateParentHighlight();
-			}
-		}
-	}
+      if (handler == null)
+      {
+        handler = this.graph.createHandler(state);
+        this.fireEvent(new mxEventObject(mxEvent.ADD, 'state', state));
+        this.handlers.put(tmp[i], handler);
+      }
+      else
+      {
+        handler.updateParentHighlight();
+      }
+    }
+  }
 };
 
 /**
@@ -237,7 +237,7 @@ refresh = ()=>
  */
 isHandlerActive = (handler)=>
 {
-	return handler.index != null;
+  return handler.index != null;
 };
 
 /**
@@ -247,28 +247,28 @@ isHandlerActive = (handler)=>
  */
 updateHandler = (state)=>
 {
-	var handler = this.handlers.remove(state.cell);
-	
-	if (handler != null)
-	{
-		// Transfers the current state to the new handler
-		var index = handler.index;
-		var x = handler.startX;
-		var y = handler.startY;
-		
-		handler.destroy();
-		handler = this.graph.createHandler(state);
+  var handler = this.handlers.remove(state.cell);
+  
+  if (handler != null)
+  {
+    // Transfers the current state to the new handler
+    var index = handler.index;
+    var x = handler.startX;
+    var y = handler.startY;
+    
+    handler.destroy();
+    handler = this.graph.createHandler(state);
 
-		if (handler != null)
-		{
-			this.handlers.put(state.cell, handler);
-			
-			if (index != null && x != null && y != null)
-			{
-				handler.start(x, y, index);
-			}
-		}
-	}
+    if (handler != null)
+    {
+      this.handlers.put(state.cell, handler);
+      
+      if (index != null && x != null && y != null)
+      {
+        handler.start(x, y, index);
+      }
+    }
+  }
 };
 
 /**
@@ -278,15 +278,15 @@ updateHandler = (state)=>
  */
 mouseDown = (sender, me)=>
 {
-	if (this.graph.isEnabled() && this.isEnabled())
-	{
-		var args = [sender, me];
+  if (this.graph.isEnabled() && this.isEnabled())
+  {
+    var args = [sender, me];
 
-		this.handlers.visit((key, handler)=>
-		{
-			handler.mouseDown.apply(handler, args);
-		});
-	}
+    this.handlers.visit((key, handler)=>
+    {
+      handler.mouseDown.apply(handler, args);
+    });
+  }
 };
 
 /**
@@ -296,15 +296,15 @@ mouseDown = (sender, me)=>
  */
 mouseMove = (sender, me)=>
 {
-	if (this.graph.isEnabled() && this.isEnabled())
-	{
-		var args = [sender, me];
+  if (this.graph.isEnabled() && this.isEnabled())
+  {
+    var args = [sender, me];
 
-		this.handlers.visit((key, handler)=>
-		{
-			handler.mouseMove.apply(handler, args);
-		});
-	}
+    this.handlers.visit((key, handler)=>
+    {
+      handler.mouseMove.apply(handler, args);
+    });
+  }
 };
 
 /**
@@ -314,15 +314,15 @@ mouseMove = (sender, me)=>
  */
 mouseUp = (sender, me)=>
 {
-	if (this.graph.isEnabled() && this.isEnabled())
-	{
-		var args = [sender, me];
+  if (this.graph.isEnabled() && this.isEnabled())
+  {
+    var args = [sender, me];
 
-		this.handlers.visit((key, handler)=>
-		{
-			handler.mouseUp.apply(handler, args);
-		});
-	}
+    this.handlers.visit((key, handler)=>
+    {
+      handler.mouseUp.apply(handler, args);
+    });
+  }
 };
 
 /**
@@ -332,13 +332,13 @@ mouseUp = (sender, me)=>
  */
 destroy = ()=>
 {
-	this.graph.removeMouseListener(this);
-	
-	if (this.refreshHandler != null)
-	{
-		this.graph.getSelectionModel().removeListener(this.refreshHandler);
-		this.graph.getModel().removeListener(this.refreshHandler);
-		this.graph.getView().removeListener(this.refreshHandler);
-		this.refreshHandler = null;
-	}
+  this.graph.removeMouseListener(this);
+  
+  if (this.refreshHandler != null)
+  {
+    this.graph.getSelectionModel().removeListener(this.refreshHandler);
+    this.graph.getModel().removeListener(this.refreshHandler);
+    this.graph.getView().removeListener(this.refreshHandler);
+    this.refreshHandler = null;
+  }
 };

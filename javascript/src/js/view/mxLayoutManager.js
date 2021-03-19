@@ -35,35 +35,35 @@
  */
 function mxLayoutManager(graph)
 {
-	// Executes the layout before the changes are dispatched
-	this.undoHandler = mxUtils.bind(this, (sender, evt)=>
-	{
-		if (this.isEnabled())
-		{
-			this.beforeUndo(evt.getProperty('edit'));
-		}
-	});
-	
-	// Notifies the layout of a move operation inside a parent
-	this.moveHandler = mxUtils.bind(this, (sender, evt)=>
-	{
-		if (this.isEnabled())
-		{
-			this.cellsMoved(evt.getProperty('cells'), evt.getProperty('event'));
-		}
-	});
-		
-	// Notifies the layout of a move operation inside a parent
-	this.resizeHandler = mxUtils.bind(this, (sender, evt)=>
-	{
-		if (this.isEnabled())
-		{
-			this.cellsResized(evt.getProperty('cells'), evt.getProperty('bounds'),
-				evt.getProperty('previous'));
-		}
-	});
-	
-	this.setGraph(graph);
+  // Executes the layout before the changes are dispatched
+  this.undoHandler = mxUtils.bind(this, (sender, evt)=>
+  {
+    if (this.isEnabled())
+    {
+      this.beforeUndo(evt.getProperty('edit'));
+    }
+  });
+  
+  // Notifies the layout of a move operation inside a parent
+  this.moveHandler = mxUtils.bind(this, (sender, evt)=>
+  {
+    if (this.isEnabled())
+    {
+      this.cellsMoved(evt.getProperty('cells'), evt.getProperty('event'));
+    }
+  });
+    
+  // Notifies the layout of a move operation inside a parent
+  this.resizeHandler = mxUtils.bind(this, (sender, evt)=>
+  {
+    if (this.isEnabled())
+    {
+      this.cellsResized(evt.getProperty('cells'), evt.getProperty('bounds'),
+        evt.getProperty('previous'));
+    }
+  });
+  
+  this.setGraph(graph);
 };
 
 /**
@@ -123,7 +123,7 @@ resizeHandler = null;
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
 
 /**
@@ -138,7 +138,7 @@ isEnabled = ()=>
  */
 setEnabled = (enabled)=>
 {
-	this.enabled = enabled;
+  this.enabled = enabled;
 };
 
 /**
@@ -150,7 +150,7 @@ setEnabled = (enabled)=>
  */
 isBubbling = ()=>
 {
-	return this.bubbling;
+  return this.bubbling;
 };
 
 /**
@@ -160,7 +160,7 @@ isBubbling = ()=>
  */
 setBubbling = (value)=>
 {
-	this.bubbling = value;
+  this.bubbling = value;
 };
 
 /**
@@ -170,7 +170,7 @@ setBubbling = (value)=>
  */
 getGraph = ()=>
 {
-	return this.graph;
+  return this.graph;
 };
 
 /**
@@ -180,23 +180,23 @@ getGraph = ()=>
  */
 setGraph = (graph)=>
 {
-	if (this.graph != null)
-	{
-		var model = this.graph.getModel();		
-		model.removeListener(this.undoHandler);
-		this.graph.removeListener(this.moveHandler);
-		this.graph.removeListener(this.resizeHandler);
-	}
-	
-	this.graph = graph;
-	
-	if (this.graph != null)
-	{
-		var model = this.graph.getModel();	
-		model.addListener(mxEvent.BEFORE_UNDO, this.undoHandler);
-		this.graph.addListener(mxEvent.MOVE_CELLS, this.moveHandler);
-		this.graph.addListener(mxEvent.RESIZE_CELLS, this.resizeHandler);
-	}
+  if (this.graph != null)
+  {
+    var model = this.graph.getModel();    
+    model.removeListener(this.undoHandler);
+    this.graph.removeListener(this.moveHandler);
+    this.graph.removeListener(this.resizeHandler);
+  }
+  
+  this.graph = graph;
+  
+  if (this.graph != null)
+  {
+    var model = this.graph.getModel();  
+    model.addListener(mxEvent.BEFORE_UNDO, this.undoHandler);
+    this.graph.addListener(mxEvent.MOVE_CELLS, this.moveHandler);
+    this.graph.addListener(mxEvent.RESIZE_CELLS, this.resizeHandler);
+  }
 };
 
 /**
@@ -210,7 +210,7 @@ setGraph = (graph)=>
  */
 hasLayout = (cell)=>
 {
-	return this.getLayout(cell, mxEvent.LAYOUT_CELLS);
+  return this.getLayout(cell, mxEvent.LAYOUT_CELLS);
 };
 
 /**
@@ -226,7 +226,7 @@ hasLayout = (cell)=>
  */
 getLayout = (cell, eventName)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -241,7 +241,7 @@ getLayout = (cell, eventName)=>
  */
 beforeUndo = (undoableEdit)=>
 {
-	this.executeLayoutForCells(this.getCellsForChanges(undoableEdit.changes));
+  this.executeLayoutForCells(this.getCellsForChanges(undoableEdit.changes));
 };
 
 /**
@@ -256,22 +256,22 @@ beforeUndo = (undoableEdit)=>
  */
 cellsMoved = (cells, evt)=>
 {
-	if (cells != null && evt != null)
-	{
-		var point = mxUtils.convertPoint(this.getGraph().container,
-			mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-		var model = this.getGraph().getModel();
-		
-		for (var i = 0; i < cells.length; i++)
-		{
-			var layout = this.getLayout(model.getParent(cells[i]), mxEvent.MOVE_CELLS);
+  if (cells != null && evt != null)
+  {
+    var point = mxUtils.convertPoint(this.getGraph().container,
+      mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+    var model = this.getGraph().getModel();
+    
+    for (var i = 0; i < cells.length; i++)
+    {
+      var layout = this.getLayout(model.getParent(cells[i]), mxEvent.MOVE_CELLS);
 
-			if (layout != null)
-			{
-				layout.moveCell(cells[i], point.x, point.y);
-			}
-		}
-	}
+      if (layout != null)
+      {
+        layout.moveCell(cells[i], point.x, point.y);
+      }
+    }
+  }
 };
 
 /**
@@ -286,20 +286,20 @@ cellsMoved = (cells, evt)=>
  */
 cellsResized = (cells, bounds, prev)=>
 {
-	if (cells != null && bounds != null)
-	{
-		var model = this.getGraph().getModel();
-		
-		for (var i = 0; i < cells.length; i++)
-		{
-			var layout = this.getLayout(model.getParent(cells[i]), mxEvent.RESIZE_CELLS);
+  if (cells != null && bounds != null)
+  {
+    var model = this.getGraph().getModel();
+    
+    for (var i = 0; i < cells.length; i++)
+    {
+      var layout = this.getLayout(model.getParent(cells[i]), mxEvent.RESIZE_CELLS);
 
-			if (layout != null)
-			{
-				layout.resizeCell(cells[i], bounds[i], prev[i]);
-			}
-		}
-	}
+      if (layout != null)
+      {
+        layout.resizeCell(cells[i], bounds[i], prev[i]);
+      }
+    }
+  }
 };
 
 /**
@@ -309,23 +309,23 @@ cellsResized = (cells, bounds, prev)=>
  */
 getCellsForChanges = (changes)=>
 {
-	var result = [];
-	
-	for (var i = 0; i < changes.length; i++)
-	{
-		var change = changes[i];
-		
-		if (change instanceof mxRootChange)
-		{
-			return [];
-		}
-		else
-		{
-			result = result.concat(this.getCellsForChange(change));
-		}
-	}
-	
-	return result;
+  var result = [];
+  
+  for (var i = 0; i < changes.length; i++)
+  {
+    var change = changes[i];
+    
+    if (change instanceof mxRootChange)
+    {
+      return [];
+    }
+    else
+    {
+      result = result.concat(this.getCellsForChange(change));
+    }
+  }
+  
+  return result;
 };
 
 /**
@@ -336,23 +336,23 @@ getCellsForChanges = (changes)=>
  */
 getCellsForChange = (change)=>
 {
-	if (change instanceof mxChildChange)
-	{
-		return this.addCellsWithLayout(change.child,
-			this.addCellsWithLayout(change.previous));
-	}
-	else if (change instanceof mxTerminalChange ||
-		change instanceof mxGeometryChange)
-	{
-		return this.addCellsWithLayout(change.cell);
-	}
-	else if (change instanceof mxVisibleChange ||
-		change instanceof mxStyleChange)
-	{
-		return this.addCellsWithLayout(change.cell);
-	}
-	
-	return [];
+  if (change instanceof mxChildChange)
+  {
+    return this.addCellsWithLayout(change.child,
+      this.addCellsWithLayout(change.previous));
+  }
+  else if (change instanceof mxTerminalChange ||
+    change instanceof mxGeometryChange)
+  {
+    return this.addCellsWithLayout(change.cell);
+  }
+  else if (change instanceof mxVisibleChange ||
+    change instanceof mxStyleChange)
+  {
+    return this.addCellsWithLayout(change.cell);
+  }
+  
+  return [];
 };
 
 /**
@@ -362,8 +362,8 @@ getCellsForChange = (change)=>
  */
 addCellsWithLayout = (cell, result)=>
 {
-	return this.addDescendantsWithLayout(cell,
-		this.addAncestorsWithLayout(cell, result));
+  return this.addDescendantsWithLayout(cell,
+    this.addAncestorsWithLayout(cell, result));
 };
 
 /**
@@ -373,26 +373,26 @@ addCellsWithLayout = (cell, result)=>
  */
 addAncestorsWithLayout = (cell, result)=>
 {
-	result = (result != null) ? result : [];
-	
-	if (cell != null)
-	{
-		var layout = this.hasLayout(cell);
-		
-		if (layout != null)
-		{
-			result.push(cell);
-		}
-		
-		if (this.isBubbling())
-		{
-			var model = this.getGraph().getModel();
-			this.addAncestorsWithLayout(
-				model.getParent(cell), result);
-		}
-	}
-	
-	return result;
+  result = (result != null) ? result : [];
+  
+  if (cell != null)
+  {
+    var layout = this.hasLayout(cell);
+    
+    if (layout != null)
+    {
+      result.push(cell);
+    }
+    
+    if (this.isBubbling())
+    {
+      var model = this.getGraph().getModel();
+      this.addAncestorsWithLayout(
+        model.getParent(cell), result);
+    }
+  }
+  
+  return result;
 };
 
 /**
@@ -402,25 +402,25 @@ addAncestorsWithLayout = (cell, result)=>
  */
 addDescendantsWithLayout = (cell, result)=>
 {
-	result = (result != null) ? result : [];
-	
-	if (cell != null && this.hasLayout(cell))
-	{
-		var model = this.getGraph().getModel();
-		
-		for (var i = 0; i < model.getChildCount(cell); i++)
-		{
-			var child = model.getChildAt(cell, i);
-			
-			if (this.hasLayout(child))
-			{
-				result.push(child);
-				this.addDescendantsWithLayout(child, result);
-			}
-		}
-	}
-	
-	return result;
+  result = (result != null) ? result : [];
+  
+  if (cell != null && this.hasLayout(cell))
+  {
+    var model = this.getGraph().getModel();
+    
+    for (var i = 0; i < model.getChildCount(cell); i++)
+    {
+      var child = model.getChildAt(cell, i);
+      
+      if (this.hasLayout(child))
+      {
+        result.push(child);
+        this.addDescendantsWithLayout(child, result);
+      }
+    }
+  }
+  
+  return result;
 };
 
 /**
@@ -433,9 +433,9 @@ addDescendantsWithLayout = (cell, result)=>
  */
 executeLayoutForCells = (cells)=>
 {
-	var sorted = mxUtils.sortCells(cells, false);
-	this.layoutCells(sorted, true);
-	this.layoutCells(sorted.reverse(), false);
+  var sorted = mxUtils.sortCells(cells, false);
+  this.layoutCells(sorted, true);
+  this.layoutCells(sorted.reverse(), false);
 };
 
 /**
@@ -445,32 +445,32 @@ executeLayoutForCells = (cells)=>
  */
 layoutCells = (cells, bubble)=>
 {
-	if (cells.length > 0)
-	{
-		// Invokes the layouts while removing duplicates
-		var model = this.getGraph().getModel();
-		
-		model.beginUpdate();
-		try 
-		{
-			var last = null;
-			
-			for (var i = 0; i < cells.length; i++)
-			{
-				if (cells[i] != model.getRoot() && cells[i] != last)
-				{
-					this.executeLayout(cells[i], bubble);
-					last = cells[i];
-				}
-			}
-			
-			this.fireEvent(new mxEventObject(mxEvent.LAYOUT_CELLS, 'cells', cells));
-		}
-		finally
-		{
-			model.endUpdate();
-		}
-	}
+  if (cells.length > 0)
+  {
+    // Invokes the layouts while removing duplicates
+    var model = this.getGraph().getModel();
+    
+    model.beginUpdate();
+    try 
+    {
+      var last = null;
+      
+      for (var i = 0; i < cells.length; i++)
+      {
+        if (cells[i] != model.getRoot() && cells[i] != last)
+        {
+          this.executeLayout(cells[i], bubble);
+          last = cells[i];
+        }
+      }
+      
+      this.fireEvent(new mxEventObject(mxEvent.LAYOUT_CELLS, 'cells', cells));
+    }
+    finally
+    {
+      model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -480,13 +480,13 @@ layoutCells = (cells, bubble)=>
  */
 executeLayout = (cell, bubble)=>
 {
-	var layout = this.getLayout(cell, (bubble) ?
-		mxEvent.BEGIN_UPDATE : mxEvent.END_UPDATE);
+  var layout = this.getLayout(cell, (bubble) ?
+    mxEvent.BEGIN_UPDATE : mxEvent.END_UPDATE);
 
-	if (layout != null)
-	{
-		layout.execute(cell);
-	}
+  if (layout != null)
+  {
+    layout.execute(cell);
+  }
 };
 
 /**
@@ -496,5 +496,5 @@ executeLayout = (cell, bubble)=>
  */
 destroy = ()=>
 {
-	this.setGraph(null);
+  this.setGraph(null);
 };

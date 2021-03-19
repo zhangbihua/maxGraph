@@ -110,30 +110,30 @@
  */
 function mxCellEditor(graph)
 {
-	this.graph = graph;
-	
-	// Stops editing after zoom changes
-	this.zoomHandler = mxUtils.bind(this, ()=>
-	{
-		if (this.graph.isEditing())
-		{
-			this.resize();
-		}
-	});
-	
-	this.graph.view.addListener(mxEvent.SCALE, this.zoomHandler);
-	this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.zoomHandler);
-	
-	// Adds handling of deleted cells while editing
-	this.changeHandler = mxUtils.bind(this, (sender)=>
-	{
-		if (this.editingCell != null && this.graph.getView().getState(this.editingCell) == null)
-		{
-			this.stopEditing(true);
-		}
-	});
+  this.graph = graph;
+  
+  // Stops editing after zoom changes
+  this.zoomHandler = mxUtils.bind(this, ()=>
+  {
+    if (this.graph.isEditing())
+    {
+      this.resize();
+    }
+  });
+  
+  this.graph.view.addListener(mxEvent.SCALE, this.zoomHandler);
+  this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.zoomHandler);
+  
+  // Adds handling of deleted cells while editing
+  this.changeHandler = mxUtils.bind(this, (sender)=>
+  {
+    if (this.editingCell != null && this.graph.getView().getState(this.editingCell) == null)
+    {
+      this.stopEditing(true);
+    }
+  });
 
-	this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
+  this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
 };
 
 /**
@@ -268,18 +268,18 @@ align = null;
  */
 init = function ()
 {
-	this.textarea = document.createElement('div');
-	this.textarea.className = 'mxCellEditor mxPlainTextEditor';
-	this.textarea.contentEditable = true;
-	
-	// Workaround for selection outside of DIV if height is 0
-	if (mxClient.IS_GC)
-	{
-		this.textarea.style.minHeight = '1em';
-	}
+  this.textarea = document.createElement('div');
+  this.textarea.className = 'mxCellEditor mxPlainTextEditor';
+  this.textarea.contentEditable = true;
+  
+  // Workaround for selection outside of DIV if height is 0
+  if (mxClient.IS_GC)
+  {
+    this.textarea.style.minHeight = '1em';
+  }
 
-	this.textarea.style.position = ((this.isLegacyEditor())) ? 'absolute' : 'relative';
-	this.installListeners(this.textarea);
+  this.textarea.style.position = ((this.isLegacyEditor())) ? 'absolute' : 'relative';
+  this.installListeners(this.textarea);
 };
 
 /**
@@ -289,7 +289,7 @@ init = function ()
  */
 applyValue = (state, value)=>
 {
-	this.graph.labelChanged(state.cell, value, this.trigger);
+  this.graph.labelChanged(state.cell, value, this.trigger);
 };
 
 /**
@@ -299,13 +299,13 @@ applyValue = (state, value)=>
  */
 setAlign = function (align)
 {
-	if (this.textarea != null)
-	{
-		this.textarea.style.textAlign = align;
-	}
-	
-	this.align = align;
-	this.resize();
+  if (this.textarea != null)
+  {
+    this.textarea.style.textAlign = align;
+  }
+  
+  this.align = align;
+  this.resize();
 };
 
 /**
@@ -315,14 +315,14 @@ setAlign = function (align)
  */
 getInitialValue = (state, trigger)=>
 {
-	var result = mxUtils.htmlEntities(this.graph.getEditingValue(state.cell, trigger), false);
-	
+  var result = mxUtils.htmlEntities(this.graph.getEditingValue(state.cell, trigger), false);
+  
     // Workaround for trailing line breaks being ignored in the editor
-	if (!mxClient.IS_QUIRKS && document.documentMode != 8 && document.documentMode != 9 &&
-		document.documentMode != 10)
-	{
-		result = mxUtils.replaceTrailingNewlines(result, '<div><br></div>');
-	}
+  if (!mxClient.IS_QUIRKS && document.documentMode != 8 && document.documentMode != 9 &&
+    document.documentMode != 10)
+  {
+    result = mxUtils.replaceTrailingNewlines(result, '<div><br></div>');
+  }
     
     return result.replace(/\n/g, '<br>');
 };
@@ -334,7 +334,7 @@ getInitialValue = (state, trigger)=>
  */
 getCurrentValue = (state)=>
 {
-	return mxUtils.extractTextWithWhitespace(this.textarea.childNodes);
+  return mxUtils.extractTextWithWhitespace(this.textarea.childNodes);
 };
 
 /**
@@ -345,7 +345,7 @@ getCurrentValue = (state)=>
  */
 isCancelEditingKeyEvent = (evt)=>
 {
-	return this.escapeCancelsEditing || mxEvent.isShiftDown(evt) || mxEvent.isControlDown(evt) || mxEvent.isMetaDown(evt);
+  return this.escapeCancelsEditing || mxEvent.isShiftDown(evt) || mxEvent.isControlDown(evt) || mxEvent.isMetaDown(evt);
 };
 
 /**
@@ -355,120 +355,120 @@ isCancelEditingKeyEvent = (evt)=>
  */
 installListeners = (elt)=>
 {
-	// Applies value if text is dragged
-	// LATER: Gesture mouse events ignored for starting move
-	mxEvent.addListener(elt, 'dragstart', mxUtils.bind(this, (evt)=>
-	{
-		this.graph.stopEditing(false);
-		mxEvent.consume(evt);
-	}));
+  // Applies value if text is dragged
+  // LATER: Gesture mouse events ignored for starting move
+  mxEvent.addListener(elt, 'dragstart', mxUtils.bind(this, (evt)=>
+  {
+    this.graph.stopEditing(false);
+    mxEvent.consume(evt);
+  }));
 
-	// Applies value if focus is lost
-	mxEvent.addListener(elt, 'blur', mxUtils.bind(this, (evt)=>
-	{
-		if (this.blurEnabled)
-		{
-			this.focusLost(evt);
-		}
-	}));
+  // Applies value if focus is lost
+  mxEvent.addListener(elt, 'blur', mxUtils.bind(this, (evt)=>
+  {
+    if (this.blurEnabled)
+    {
+      this.focusLost(evt);
+    }
+  }));
 
-	// Updates modified state and handles placeholder text
-	mxEvent.addListener(elt, 'keydown', mxUtils.bind(this, (evt)=>
-	{
-		if (!mxEvent.isConsumed(evt))
-		{
-			if (this.isStopEditingEvent(evt))
-			{
-				this.graph.stopEditing(false);
-				mxEvent.consume(evt);
-			}
-			else if (evt.keyCode == 27 /* Escape */)
-			{
-				this.graph.stopEditing(this.isCancelEditingKeyEvent(evt));
-				mxEvent.consume(evt);
-			}
-		}
-	}));
+  // Updates modified state and handles placeholder text
+  mxEvent.addListener(elt, 'keydown', mxUtils.bind(this, (evt)=>
+  {
+    if (!mxEvent.isConsumed(evt))
+    {
+      if (this.isStopEditingEvent(evt))
+      {
+        this.graph.stopEditing(false);
+        mxEvent.consume(evt);
+      }
+      else if (evt.keyCode == 27 /* Escape */)
+      {
+        this.graph.stopEditing(this.isCancelEditingKeyEvent(evt));
+        mxEvent.consume(evt);
+      }
+    }
+  }));
 
-	// Keypress only fires if printable key was pressed and handles removing the empty placeholder
-	var keypressHandler = mxUtils.bind(this, (evt)=>
-	{
-		if (this.editingCell != null)
-		{
-			// Clears the initial empty label on the first keystroke
-			// and workaround for FF which fires keypress for delete and backspace
-			if (this.clearOnChange && elt.innerHTML == this.getEmptyLabelText() &&
-				(!mxClient.IS_FF || (evt.keyCode != 8 /* Backspace */ && evt.keyCode != 46 /* Delete */)))
-			{
-				this.clearOnChange = false;
-				elt.innerHTML = '';
-			}
-		}
-	});
+  // Keypress only fires if printable key was pressed and handles removing the empty placeholder
+  var keypressHandler = mxUtils.bind(this, (evt)=>
+  {
+    if (this.editingCell != null)
+    {
+      // Clears the initial empty label on the first keystroke
+      // and workaround for FF which fires keypress for delete and backspace
+      if (this.clearOnChange && elt.innerHTML == this.getEmptyLabelText() &&
+        (!mxClient.IS_FF || (evt.keyCode != 8 /* Backspace */ && evt.keyCode != 46 /* Delete */)))
+      {
+        this.clearOnChange = false;
+        elt.innerHTML = '';
+      }
+    }
+  });
 
-	mxEvent.addListener(elt, 'keypress', keypressHandler);
-	mxEvent.addListener(elt, 'paste', keypressHandler);
-	
-	// Handler for updating the empty label text value after a change
-	var keyupHandler = mxUtils.bind(this, (evt)=>
-	{
-		if (this.editingCell != null)
-		{
-			// Uses an optional text value for sempty labels which is cleared
-			// when the first keystroke appears. This makes it easier to see
-			// that a label is being edited even if the label is empty.
-			// In Safari and FF, an empty text is represented by <BR> which isn't enough to force a valid size
-			if (this.textarea.innerHTML.length == 0 || this.textarea.innerHTML == '<br>')
-			{
-				this.textarea.innerHTML = this.getEmptyLabelText();
-				this.clearOnChange = this.textarea.innerHTML.length > 0;
-			}
-			else
-			{
-				this.clearOnChange = false;
-			}
-		}
-	});
+  mxEvent.addListener(elt, 'keypress', keypressHandler);
+  mxEvent.addListener(elt, 'paste', keypressHandler);
+  
+  // Handler for updating the empty label text value after a change
+  var keyupHandler = mxUtils.bind(this, (evt)=>
+  {
+    if (this.editingCell != null)
+    {
+      // Uses an optional text value for sempty labels which is cleared
+      // when the first keystroke appears. This makes it easier to see
+      // that a label is being edited even if the label is empty.
+      // In Safari and FF, an empty text is represented by <BR> which isn't enough to force a valid size
+      if (this.textarea.innerHTML.length == 0 || this.textarea.innerHTML == '<br>')
+      {
+        this.textarea.innerHTML = this.getEmptyLabelText();
+        this.clearOnChange = this.textarea.innerHTML.length > 0;
+      }
+      else
+      {
+        this.clearOnChange = false;
+      }
+    }
+  });
 
-	mxEvent.addListener(elt, (!mxClient.IS_IE11 && !mxClient.IS_IE) ? 'input' : 'keyup', keyupHandler);
-	mxEvent.addListener(elt, 'cut', keyupHandler);
-	mxEvent.addListener(elt, 'paste', keyupHandler);
+  mxEvent.addListener(elt, (!mxClient.IS_IE11 && !mxClient.IS_IE) ? 'input' : 'keyup', keyupHandler);
+  mxEvent.addListener(elt, 'cut', keyupHandler);
+  mxEvent.addListener(elt, 'paste', keyupHandler);
 
-	// Adds automatic resizing of the textbox while typing using input, keyup and/or DOM change events
-	var evtName = (!mxClient.IS_IE11 && !mxClient.IS_IE) ? 'input' : 'keydown';
-	
-	var resizeHandler = mxUtils.bind(this, (evt)=>
-	{
-		if (this.editingCell != null && this.autoSize && !mxEvent.isConsumed(evt))
-		{
-			// Asynchronous is needed for keydown and shows better results for input events overall
-			// (ie non-blocking and cases where the offsetWidth/-Height was wrong at this time)
-			if (this.resizeThread != null)
-			{
-				window.clearTimeout(this.resizeThread);
-			}
-			
-			this.resizeThread = window.setTimeout(mxUtils.bind(this, ()=>
-			{
-				this.resizeThread = null;
-				this.resize();
-			}), 0);
-		}
-	});
-	
-	mxEvent.addListener(elt, evtName, resizeHandler);
-	mxEvent.addListener(window, 'resize', resizeHandler);
+  // Adds automatic resizing of the textbox while typing using input, keyup and/or DOM change events
+  var evtName = (!mxClient.IS_IE11 && !mxClient.IS_IE) ? 'input' : 'keydown';
+  
+  var resizeHandler = mxUtils.bind(this, (evt)=>
+  {
+    if (this.editingCell != null && this.autoSize && !mxEvent.isConsumed(evt))
+    {
+      // Asynchronous is needed for keydown and shows better results for input events overall
+      // (ie non-blocking and cases where the offsetWidth/-Height was wrong at this time)
+      if (this.resizeThread != null)
+      {
+        window.clearTimeout(this.resizeThread);
+      }
+      
+      this.resizeThread = window.setTimeout(mxUtils.bind(this, ()=>
+      {
+        this.resizeThread = null;
+        this.resize();
+      }), 0);
+    }
+  });
+  
+  mxEvent.addListener(elt, evtName, resizeHandler);
+  mxEvent.addListener(window, 'resize', resizeHandler);
 
-	if (document.documentMode >= 9)
-	{
-		mxEvent.addListener(elt, 'DOMNodeRemoved', resizeHandler);
-		mxEvent.addListener(elt, 'DOMNodeInserted', resizeHandler);
-	}
-	else
-	{
-		mxEvent.addListener(elt, 'cut', resizeHandler);
-		mxEvent.addListener(elt, 'paste', resizeHandler);
-	}
+  if (document.documentMode >= 9)
+  {
+    mxEvent.addListener(elt, 'DOMNodeRemoved', resizeHandler);
+    mxEvent.addListener(elt, 'DOMNodeInserted', resizeHandler);
+  }
+  else
+  {
+    mxEvent.addListener(elt, 'cut', resizeHandler);
+    mxEvent.addListener(elt, 'paste', resizeHandler);
+  }
 };
 
 /**
@@ -480,9 +480,9 @@ installListeners = (elt)=>
  */
 isStopEditingEvent = (evt)=>
 {
-	return evt.keyCode == 113 /* F2 */ || (this.graph.isEnterStopsCellEditing() &&
-		evt.keyCode == 13 /* Enter */ && !mxEvent.isControlDown(evt) &&
-		!mxEvent.isShiftDown(evt));
+  return evt.keyCode == 113 /* F2 */ || (this.graph.isEnterStopsCellEditing() &&
+    evt.keyCode == 13 /* Enter */ && !mxEvent.isControlDown(evt) &&
+    !mxEvent.isShiftDown(evt));
 };
 
 /**
@@ -492,7 +492,7 @@ isStopEditingEvent = (evt)=>
  */
 isEventSource = (evt)=>
 {
-	return mxEvent.getSource(evt) == this.textarea;
+  return mxEvent.getSource(evt) == this.textarea;
 };
 
 /**
@@ -502,198 +502,198 @@ isEventSource = (evt)=>
  */
 resize = ()=>
 {
-	var state = this.graph.getView().getState(this.editingCell);
-	
-	if (state == null)
-	{
-		this.stopEditing(true);
-	}
-	else if (this.textarea != null)
-	{
-		var isEdge = this.graph.getModel().isEdge(state.cell);
- 		var scale = this.graph.getView().scale;
- 		var m = null;
-		
-		if (!this.autoSize || (state.style[mxConstants.STYLE_OVERFLOW] == 'fill'))
-		{
-			// Specifies the bounds of the editor box
-			this.bounds = this.getEditorBounds(state);
-			this.textarea.style.width = Math.round(this.bounds.width / scale) + 'px';
-			this.textarea.style.height = Math.round(this.bounds.height / scale) + 'px';
-			
-			// FIXME: Offset when scaled
-			if (document.documentMode == 8 || mxClient.IS_QUIRKS)
-			{
-				this.textarea.style.left = Math.round(this.bounds.x) + 'px';
-				this.textarea.style.top = Math.round(this.bounds.y) + 'px';
-			}
-			else
-			{
-				this.textarea.style.left = Math.max(0, Math.round(this.bounds.x + 1)) + 'px';
-				this.textarea.style.top = Math.max(0, Math.round(this.bounds.y + 1)) + 'px';
-			}
-			
-			// Installs native word wrapping and avoids word wrap for empty label placeholder
-			if (this.graph.isWrapping(state.cell) && (this.bounds.width >= 2 || this.bounds.height >= 2) &&
-				this.textarea.innerHTML != this.getEmptyLabelText())
-			{
-				this.textarea.style.wordWrap = mxConstants.WORD_WRAP;
-				this.textarea.style.whiteSpace = 'normal';
-				
-				if (state.style[mxConstants.STYLE_OVERFLOW] != 'fill')
-				{
-					this.textarea.style.width = Math.round(this.bounds.width / scale) + this.wordWrapPadding + 'px';
-				}
-			}
-			else
-			{
-				this.textarea.style.whiteSpace = 'nowrap';
-				
-				if (state.style[mxConstants.STYLE_OVERFLOW] != 'fill')
-				{
-					this.textarea.style.width = '';
-				}
-			}
-		}
-		else
-	 	{
-	 		var lw = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_WIDTH, null);
-			m = (state.text != null && this.align == null) ? state.text.margin : null;
-			
-			if (m == null)
-			{
-				m = mxUtils.getAlignmentAsPoint(this.align || mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER),
-						mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE));
-			}
-			
-	 		if (isEdge)
-			{
-				this.bounds = new mxRectangle(state.absoluteOffset.x, state.absoluteOffset.y, 0, 0);
-				
-				if (lw != null)
-			 	{
-					var tmp = (parseFloat(lw) + 2) * scale;
-					this.bounds.width = tmp;
-					this.bounds.x += m.x * tmp;
-			 	}
-			}
-			else
-			{
-				var bds = mxRectangle.fromRectangle(state);
-				var hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
-				var vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+  var state = this.graph.getView().getState(this.editingCell);
+  
+  if (state == null)
+  {
+    this.stopEditing(true);
+  }
+  else if (this.textarea != null)
+  {
+    var isEdge = this.graph.getModel().isEdge(state.cell);
+     var scale = this.graph.getView().scale;
+     var m = null;
+    
+    if (!this.autoSize || (state.style[mxConstants.STYLE_OVERFLOW] == 'fill'))
+    {
+      // Specifies the bounds of the editor box
+      this.bounds = this.getEditorBounds(state);
+      this.textarea.style.width = Math.round(this.bounds.width / scale) + 'px';
+      this.textarea.style.height = Math.round(this.bounds.height / scale) + 'px';
+      
+      // FIXME: Offset when scaled
+      if (document.documentMode == 8 || mxClient.IS_QUIRKS)
+      {
+        this.textarea.style.left = Math.round(this.bounds.x) + 'px';
+        this.textarea.style.top = Math.round(this.bounds.y) + 'px';
+      }
+      else
+      {
+        this.textarea.style.left = Math.max(0, Math.round(this.bounds.x + 1)) + 'px';
+        this.textarea.style.top = Math.max(0, Math.round(this.bounds.y + 1)) + 'px';
+      }
+      
+      // Installs native word wrapping and avoids word wrap for empty label placeholder
+      if (this.graph.isWrapping(state.cell) && (this.bounds.width >= 2 || this.bounds.height >= 2) &&
+        this.textarea.innerHTML != this.getEmptyLabelText())
+      {
+        this.textarea.style.wordWrap = mxConstants.WORD_WRAP;
+        this.textarea.style.whiteSpace = 'normal';
+        
+        if (state.style[mxConstants.STYLE_OVERFLOW] != 'fill')
+        {
+          this.textarea.style.width = Math.round(this.bounds.width / scale) + this.wordWrapPadding + 'px';
+        }
+      }
+      else
+      {
+        this.textarea.style.whiteSpace = 'nowrap';
+        
+        if (state.style[mxConstants.STYLE_OVERFLOW] != 'fill')
+        {
+          this.textarea.style.width = '';
+        }
+      }
+    }
+    else
+     {
+       var lw = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_WIDTH, null);
+      m = (state.text != null && this.align == null) ? state.text.margin : null;
+      
+      if (m == null)
+      {
+        m = mxUtils.getAlignmentAsPoint(this.align || mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER),
+            mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE));
+      }
+      
+       if (isEdge)
+      {
+        this.bounds = new mxRectangle(state.absoluteOffset.x, state.absoluteOffset.y, 0, 0);
+        
+        if (lw != null)
+         {
+          var tmp = (parseFloat(lw) + 2) * scale;
+          this.bounds.width = tmp;
+          this.bounds.x += m.x * tmp;
+         }
+      }
+      else
+      {
+        var bds = mxRectangle.fromRectangle(state);
+        var hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
+        var vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
 
-				bds = (state.shape != null && hpos == mxConstants.ALIGN_CENTER && vpos == mxConstants.ALIGN_MIDDLE) ? state.shape.getLabelBounds(bds) : bds;
-			 	
-			 	if (lw != null)
-			 	{
-			 		bds.width = parseFloat(lw) * scale;
-			 	}
-			 	
-			 	if (!state.view.graph.cellRenderer.legacySpacing || state.style[mxConstants.STYLE_OVERFLOW] != 'width')
-			 	{
-					var spacing = parseInt(state.style[mxConstants.STYLE_SPACING] || 2) * scale;
-					var spacingTop = (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) + baseSpacingTop) * scale + spacing;
-					var spacingRight = (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) + baseSpacingRight) * scale + spacing;
-					var spacingBottom = (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) + baseSpacingBottom) * scale + spacing;
-					var spacingLeft = (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) + baseSpacingLeft) * scale + spacing;
-					
-					var hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
-					var vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+        bds = (state.shape != null && hpos == mxConstants.ALIGN_CENTER && vpos == mxConstants.ALIGN_MIDDLE) ? state.shape.getLabelBounds(bds) : bds;
+         
+         if (lw != null)
+         {
+           bds.width = parseFloat(lw) * scale;
+         }
+         
+         if (!state.view.graph.cellRenderer.legacySpacing || state.style[mxConstants.STYLE_OVERFLOW] != 'width')
+         {
+          var spacing = parseInt(state.style[mxConstants.STYLE_SPACING] || 2) * scale;
+          var spacingTop = (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) + baseSpacingTop) * scale + spacing;
+          var spacingRight = (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) + baseSpacingRight) * scale + spacing;
+          var spacingBottom = (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) + baseSpacingBottom) * scale + spacing;
+          var spacingLeft = (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) + baseSpacingLeft) * scale + spacing;
+          
+          var hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
+          var vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
 
-					bds = new mxRectangle(bds.x + spacingLeft, bds.y + spacingTop,
-						bds.width - ((hpos == mxConstants.ALIGN_CENTER && lw == null) ? (spacingLeft + spacingRight) : 0),
-						bds.height - ((vpos == mxConstants.ALIGN_MIDDLE) ? (spacingTop + spacingBottom) : 0));
-			 	}
+          bds = new mxRectangle(bds.x + spacingLeft, bds.y + spacingTop,
+            bds.width - ((hpos == mxConstants.ALIGN_CENTER && lw == null) ? (spacingLeft + spacingRight) : 0),
+            bds.height - ((vpos == mxConstants.ALIGN_MIDDLE) ? (spacingTop + spacingBottom) : 0));
+         }
 
-				this.bounds = new mxRectangle(bds.x + state.absoluteOffset.x, bds.y + state.absoluteOffset.y, bds.width, bds.height);
-			}
+        this.bounds = new mxRectangle(bds.x + state.absoluteOffset.x, bds.y + state.absoluteOffset.y, bds.width, bds.height);
+      }
 
-			// Needed for word wrap inside text blocks with oversize lines to match the final result where
-	 		// the width of the longest line is used as the reference for text alignment in the cell
-	 		// TODO: Fix word wrapping preview for edge labels in helloworld.html
-			if (this.graph.isWrapping(state.cell) && (this.bounds.width >= 2 || this.bounds.height >= 2) &&
-				this.textarea.innerHTML != this.getEmptyLabelText())
-			{
-				this.textarea.style.wordWrap = mxConstants.WORD_WRAP;
-				this.textarea.style.whiteSpace = 'normal';
-				
-		 		// Forces automatic reflow if text is removed from an oversize label and normal word wrap
-				var tmp = Math.round(this.bounds.width / ((document.documentMode == 8) ? scale : scale)) + this.wordWrapPadding;
+      // Needed for word wrap inside text blocks with oversize lines to match the final result where
+       // the width of the longest line is used as the reference for text alignment in the cell
+       // TODO: Fix word wrapping preview for edge labels in helloworld.html
+      if (this.graph.isWrapping(state.cell) && (this.bounds.width >= 2 || this.bounds.height >= 2) &&
+        this.textarea.innerHTML != this.getEmptyLabelText())
+      {
+        this.textarea.style.wordWrap = mxConstants.WORD_WRAP;
+        this.textarea.style.whiteSpace = 'normal';
+        
+         // Forces automatic reflow if text is removed from an oversize label and normal word wrap
+        var tmp = Math.round(this.bounds.width / ((document.documentMode == 8) ? scale : scale)) + this.wordWrapPadding;
 
-				if (this.textarea.style.position != 'relative')
-				{
-					this.textarea.style.width = tmp + 'px';
-					
-					if (this.textarea.scrollWidth > tmp)
-					{
-						this.textarea.style.width = this.textarea.scrollWidth + 'px';
-					}
-				}
-				else
-				{
-					this.textarea.style.maxWidth = tmp + 'px';
-				}
-			}
-			else
-			{
-				// KNOWN: Trailing cursor in IE9 quirks mode is not visible
-				this.textarea.style.whiteSpace = 'nowrap';
-				this.textarea.style.width = '';
-			}
-			
-			// LATER: Keep in visible area, add fine tuning for pixel precision
-			// Workaround for wrong measuring in IE8 standards
-			if (document.documentMode == 8)
-			{
-				this.textarea.style.zoom = '1';
-				this.textarea.style.height = 'auto';
-			}
-			
-			var ow = this.textarea.scrollWidth;
-			var oh = this.textarea.scrollHeight;
-			
-			// TODO: Update CSS width and height if smaller than minResize or remove minResize
-			//if (this.minResize != null)
-			//{
-			//	ow = Math.max(ow, this.minResize.width);
-			//	oh = Math.max(oh, this.minResize.height);
-			//}
-			
-			// LATER: Keep in visible area, add fine tuning for pixel precision
-			if (document.documentMode == 8)
-			{
-				// LATER: Scaled wrapping and position is wrong in IE8
-				this.textarea.style.left = Math.max(0, Math.ceil((this.bounds.x - m.x * (this.bounds.width - (ow + 1) * scale) + ow * (scale - 1) * 0 + (m.x + 0.5) * 2) / scale)) + 'px';
-				this.textarea.style.top = Math.max(0, Math.ceil((this.bounds.y - m.y * (this.bounds.height - (oh + 0.5) * scale) + oh * (scale - 1) * 0 + Math.abs(m.y + 0.5) * 1) / scale)) + 'px';
-				// Workaround for wrong event handling width and height
-				this.textarea.style.width = Math.round(ow * scale) + 'px';
-				this.textarea.style.height = Math.round(oh * scale) + 'px';
-			}
-			else if (mxClient.IS_QUIRKS)
-			{			
-				this.textarea.style.left = Math.max(0, Math.ceil(this.bounds.x - m.x * (this.bounds.width - (ow + 1) * scale) + ow * (scale - 1) * 0 + (m.x + 0.5) * 2)) + 'px';
-				this.textarea.style.top = Math.max(0, Math.ceil(this.bounds.y - m.y * (this.bounds.height - (oh + 0.5) * scale) + oh * (scale - 1) * 0 + Math.abs(m.y + 0.5) * 1)) + 'px';
-			}
-			else
-			{
-				this.textarea.style.left = Math.max(0, Math.round(this.bounds.x - m.x * (this.bounds.width - 2)) + 1) + 'px';
-				this.textarea.style.top = Math.max(0, Math.round(this.bounds.y - m.y * (this.bounds.height - 4) + ((m.y == -1) ? 3 : 0)) + 1) + 'px';
-			}
-	 	}
+        if (this.textarea.style.position != 'relative')
+        {
+          this.textarea.style.width = tmp + 'px';
+          
+          if (this.textarea.scrollWidth > tmp)
+          {
+            this.textarea.style.width = this.textarea.scrollWidth + 'px';
+          }
+        }
+        else
+        {
+          this.textarea.style.maxWidth = tmp + 'px';
+        }
+      }
+      else
+      {
+        // KNOWN: Trailing cursor in IE9 quirks mode is not visible
+        this.textarea.style.whiteSpace = 'nowrap';
+        this.textarea.style.width = '';
+      }
+      
+      // LATER: Keep in visible area, add fine tuning for pixel precision
+      // Workaround for wrong measuring in IE8 standards
+      if (document.documentMode == 8)
+      {
+        this.textarea.style.zoom = '1';
+        this.textarea.style.height = 'auto';
+      }
+      
+      var ow = this.textarea.scrollWidth;
+      var oh = this.textarea.scrollHeight;
+      
+      // TODO: Update CSS width and height if smaller than minResize or remove minResize
+      //if (this.minResize != null)
+      //{
+      //  ow = Math.max(ow, this.minResize.width);
+      //  oh = Math.max(oh, this.minResize.height);
+      //}
+      
+      // LATER: Keep in visible area, add fine tuning for pixel precision
+      if (document.documentMode == 8)
+      {
+        // LATER: Scaled wrapping and position is wrong in IE8
+        this.textarea.style.left = Math.max(0, Math.ceil((this.bounds.x - m.x * (this.bounds.width - (ow + 1) * scale) + ow * (scale - 1) * 0 + (m.x + 0.5) * 2) / scale)) + 'px';
+        this.textarea.style.top = Math.max(0, Math.ceil((this.bounds.y - m.y * (this.bounds.height - (oh + 0.5) * scale) + oh * (scale - 1) * 0 + Math.abs(m.y + 0.5) * 1) / scale)) + 'px';
+        // Workaround for wrong event handling width and height
+        this.textarea.style.width = Math.round(ow * scale) + 'px';
+        this.textarea.style.height = Math.round(oh * scale) + 'px';
+      }
+      else if (mxClient.IS_QUIRKS)
+      {      
+        this.textarea.style.left = Math.max(0, Math.ceil(this.bounds.x - m.x * (this.bounds.width - (ow + 1) * scale) + ow * (scale - 1) * 0 + (m.x + 0.5) * 2)) + 'px';
+        this.textarea.style.top = Math.max(0, Math.ceil(this.bounds.y - m.y * (this.bounds.height - (oh + 0.5) * scale) + oh * (scale - 1) * 0 + Math.abs(m.y + 0.5) * 1)) + 'px';
+      }
+      else
+      {
+        this.textarea.style.left = Math.max(0, Math.round(this.bounds.x - m.x * (this.bounds.width - 2)) + 1) + 'px';
+        this.textarea.style.top = Math.max(0, Math.round(this.bounds.y - m.y * (this.bounds.height - 4) + ((m.y == -1) ? 3 : 0)) + 1) + 'px';
+      }
+     }
 
-		if (mxClient.IS_VML)
-		{
-			this.textarea.style.zoom = scale;
-		}
-		else
-		{
-			mxUtils.setPrefixedStyle(this.textarea.style, 'transformOrigin', '0px 0px');
-			mxUtils.setPrefixedStyle(this.textarea.style, 'transform',
-				'scale(' + scale + ',' + scale + ')' + ((m == null) ? '' :
-				' translate(' + (m.x * 100) + '%,' + (m.y * 100) + '%)'));
-		}
-	}
+    if (mxClient.IS_VML)
+    {
+      this.textarea.style.zoom = scale;
+    }
+    else
+    {
+      mxUtils.setPrefixedStyle(this.textarea.style, 'transformOrigin', '0px 0px');
+      mxUtils.setPrefixedStyle(this.textarea.style, 'transform',
+        'scale(' + scale + ',' + scale + ')' + ((m == null) ? '' :
+        ' translate(' + (m.x * 100) + '%,' + (m.y * 100) + '%)'));
+    }
+  }
 };
 
 /**
@@ -703,7 +703,7 @@ resize = ()=>
  */
 focusLost = ()=>
 {
-	this.stopEditing(!this.graph.isInvokesStopCellEditing());
+  this.stopEditing(!this.graph.isInvokesStopCellEditing());
 };
 
 /**
@@ -714,7 +714,7 @@ focusLost = ()=>
  */
 getBackgroundColor = (state)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -729,31 +729,31 @@ getBackgroundColor = (state)=>
  */
 isLegacyEditor = ()=>
 {
-	if (mxClient.IS_VML)
-	{
-		return true;
-	}
-	else
-	{
-		var absoluteRoot = false;
-		
-		if (mxClient.IS_SVG)
-		{
-			var root = this.graph.view.getDrawPane().ownerSVGElement;
-			
-			if (root != null)
-			{
-				var css = mxUtils.getCurrentStyle(root);
-				
-				if (css != null)
-				{				
-					absoluteRoot = css.position == 'absolute';
-				}
-			}
-		}
-		
-		return !absoluteRoot;
-	}
+  if (mxClient.IS_VML)
+  {
+    return true;
+  }
+  else
+  {
+    var absoluteRoot = false;
+    
+    if (mxClient.IS_SVG)
+    {
+      var root = this.graph.view.getDrawPane().ownerSVGElement;
+      
+      if (root != null)
+      {
+        var css = mxUtils.getCurrentStyle(root);
+        
+        if (css != null)
+        {        
+          absoluteRoot = css.position == 'absolute';
+        }
+      }
+    }
+    
+    return !absoluteRoot;
+  }
 };
 
 /**
@@ -768,138 +768,138 @@ isLegacyEditor = ()=>
  */
 startEditing = (cell, trigger)=>
 {
-	this.stopEditing(true);
-	this.align = null;
-	
-	// Creates new textarea instance
-	if (this.textarea == null)
-	{
-		this.init();
-	}
-	
-	if (this.graph.tooltipHandler != null)
-	{
-		this.graph.tooltipHandler.hideTooltip();
-	}
-	
-	var state = this.graph.getView().getState(cell);
-	
-	if (state != null)
-	{
-		// Configures the style of the in-place editor
-		var scale = this.graph.getView().scale;
-		var size = mxUtils.getValue(state.style, mxConstants.STYLE_FONTSIZE, mxConstants.DEFAULT_FONTSIZE);
-		var family = mxUtils.getValue(state.style, mxConstants.STYLE_FONTFAMILY, mxConstants.DEFAULT_FONTFAMILY);
-		var color = mxUtils.getValue(state.style, mxConstants.STYLE_FONTCOLOR, 'black');
-		var align = mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
-		var bold = (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-				mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD;
-		var italic = (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-				mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC;
-		var txtDecor = [];
-		
-		if ((mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-				mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
-		{
-			txtDecor.push('underline');
-		}
-		
-		if ((mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-				mxConstants.FONT_STRIKETHROUGH) == mxConstants.FONT_STRIKETHROUGH)
-		{
-			txtDecor.push('line-through');
-		}
-		
-		this.textarea.style.lineHeight = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? Math.round(size * mxConstants.LINE_HEIGHT) + 'px' : mxConstants.LINE_HEIGHT;
-		this.textarea.style.backgroundColor = this.getBackgroundColor(state);
-		this.textarea.style.textDecoration = txtDecor.join(' ');
-		this.textarea.style.fontWeight = (bold) ? 'bold' : 'normal';
-		this.textarea.style.fontStyle = (italic) ? 'italic' : '';
-		this.textarea.style.fontSize = Math.round(size) + 'px';
-		this.textarea.style.zIndex = this.zIndex;
-		this.textarea.style.fontFamily = family;
-		this.textarea.style.textAlign = align;
-		this.textarea.style.outline = 'none';
-		this.textarea.style.color = color;
-		
-		var dir = this.textDirection = mxUtils.getValue(state.style, mxConstants.STYLE_TEXT_DIRECTION, mxConstants.DEFAULT_TEXT_DIRECTION);
-		
-		if (dir == mxConstants.TEXT_DIRECTION_AUTO)
-		{
-			if (state != null && state.text != null && state.text.dialect != mxConstants.DIALECT_STRICTHTML &&
-				!mxUtils.isNode(state.text.value))
-			{
-				dir = state.text.getAutoDirection();
-			}
-		}
-		
-		if (dir == mxConstants.TEXT_DIRECTION_LTR || dir == mxConstants.TEXT_DIRECTION_RTL)
-		{
-			this.textarea.setAttribute('dir', dir);
-		}
-		else
-		{
-			this.textarea.removeAttribute('dir');
-		}
+  this.stopEditing(true);
+  this.align = null;
+  
+  // Creates new textarea instance
+  if (this.textarea == null)
+  {
+    this.init();
+  }
+  
+  if (this.graph.tooltipHandler != null)
+  {
+    this.graph.tooltipHandler.hideTooltip();
+  }
+  
+  var state = this.graph.getView().getState(cell);
+  
+  if (state != null)
+  {
+    // Configures the style of the in-place editor
+    var scale = this.graph.getView().scale;
+    var size = mxUtils.getValue(state.style, mxConstants.STYLE_FONTSIZE, mxConstants.DEFAULT_FONTSIZE);
+    var family = mxUtils.getValue(state.style, mxConstants.STYLE_FONTFAMILY, mxConstants.DEFAULT_FONTFAMILY);
+    var color = mxUtils.getValue(state.style, mxConstants.STYLE_FONTCOLOR, 'black');
+    var align = mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
+    var bold = (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+        mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD;
+    var italic = (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+        mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC;
+    var txtDecor = [];
+    
+    if ((mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+        mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
+    {
+      txtDecor.push('underline');
+    }
+    
+    if ((mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+        mxConstants.FONT_STRIKETHROUGH) == mxConstants.FONT_STRIKETHROUGH)
+    {
+      txtDecor.push('line-through');
+    }
+    
+    this.textarea.style.lineHeight = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? Math.round(size * mxConstants.LINE_HEIGHT) + 'px' : mxConstants.LINE_HEIGHT;
+    this.textarea.style.backgroundColor = this.getBackgroundColor(state);
+    this.textarea.style.textDecoration = txtDecor.join(' ');
+    this.textarea.style.fontWeight = (bold) ? 'bold' : 'normal';
+    this.textarea.style.fontStyle = (italic) ? 'italic' : '';
+    this.textarea.style.fontSize = Math.round(size) + 'px';
+    this.textarea.style.zIndex = this.zIndex;
+    this.textarea.style.fontFamily = family;
+    this.textarea.style.textAlign = align;
+    this.textarea.style.outline = 'none';
+    this.textarea.style.color = color;
+    
+    var dir = this.textDirection = mxUtils.getValue(state.style, mxConstants.STYLE_TEXT_DIRECTION, mxConstants.DEFAULT_TEXT_DIRECTION);
+    
+    if (dir == mxConstants.TEXT_DIRECTION_AUTO)
+    {
+      if (state != null && state.text != null && state.text.dialect != mxConstants.DIALECT_STRICTHTML &&
+        !mxUtils.isNode(state.text.value))
+      {
+        dir = state.text.getAutoDirection();
+      }
+    }
+    
+    if (dir == mxConstants.TEXT_DIRECTION_LTR || dir == mxConstants.TEXT_DIRECTION_RTL)
+    {
+      this.textarea.setAttribute('dir', dir);
+    }
+    else
+    {
+      this.textarea.removeAttribute('dir');
+    }
 
-		// Sets the initial editing value
-		this.textarea.innerHTML = this.getInitialValue(state, trigger) || '';
-		this.initialValue = this.textarea.innerHTML;
+    // Sets the initial editing value
+    this.textarea.innerHTML = this.getInitialValue(state, trigger) || '';
+    this.initialValue = this.textarea.innerHTML;
 
-		// Uses an optional text value for empty labels which is cleared
-		// when the first keystroke appears. This makes it easier to see
-		// that a label is being edited even if the label is empty.
-		if (this.textarea.innerHTML.length == 0 || this.textarea.innerHTML == '<br>')
-		{
-			this.textarea.innerHTML = this.getEmptyLabelText();
-			this.clearOnChange = true;
-		}
-		else
-		{
-			this.clearOnChange = this.textarea.innerHTML == this.getEmptyLabelText();
-		}
+    // Uses an optional text value for empty labels which is cleared
+    // when the first keystroke appears. This makes it easier to see
+    // that a label is being edited even if the label is empty.
+    if (this.textarea.innerHTML.length == 0 || this.textarea.innerHTML == '<br>')
+    {
+      this.textarea.innerHTML = this.getEmptyLabelText();
+      this.clearOnChange = true;
+    }
+    else
+    {
+      this.clearOnChange = this.textarea.innerHTML == this.getEmptyLabelText();
+    }
 
-		this.graph.container.appendChild(this.textarea);
-		
-		// Update this after firing all potential events that could update the cleanOnChange flag
-		this.editingCell = cell;
-		this.trigger = trigger;
-		this.textNode = null;
+    this.graph.container.appendChild(this.textarea);
+    
+    // Update this after firing all potential events that could update the cleanOnChange flag
+    this.editingCell = cell;
+    this.trigger = trigger;
+    this.textNode = null;
 
-		if (state.text != null && this.isHideLabel(state))
-		{
-			this.textNode = state.text.node;
-			this.textNode.style.visibility = 'hidden';
-		}
+    if (state.text != null && this.isHideLabel(state))
+    {
+      this.textNode = state.text.node;
+      this.textNode.style.visibility = 'hidden';
+    }
 
-		// Workaround for initial offsetHeight not ready for heading in markup
-		if (this.autoSize && (this.graph.model.isEdge(state.cell) || state.style[mxConstants.STYLE_OVERFLOW] != 'fill'))
-		{
-			window.setTimeout(mxUtils.bind(this, ()=>
-			{
-				this.resize();
-			}), 0);
-		}
-		
-		this.resize();
-		
-		// Workaround for NS_ERROR_FAILURE in FF
-		try
-		{
-			// Prefers blinking cursor over no selected text if empty
-			this.textarea.focus();
-			
-			if (this.isSelectText() && this.textarea.innerHTML.length > 0 &&
-				(this.textarea.innerHTML != this.getEmptyLabelText() || !this.clearOnChange))
-			{
-				document.execCommand('selectAll', false, null);
-			}
-		}
-		catch (e)
-		{
-			// ignore
-		}
-	}
+    // Workaround for initial offsetHeight not ready for heading in markup
+    if (this.autoSize && (this.graph.model.isEdge(state.cell) || state.style[mxConstants.STYLE_OVERFLOW] != 'fill'))
+    {
+      window.setTimeout(mxUtils.bind(this, ()=>
+      {
+        this.resize();
+      }), 0);
+    }
+    
+    this.resize();
+    
+    // Workaround for NS_ERROR_FAILURE in FF
+    try
+    {
+      // Prefers blinking cursor over no selected text if empty
+      this.textarea.focus();
+      
+      if (this.isSelectText() && this.textarea.innerHTML.length > 0 &&
+        (this.textarea.innerHTML != this.getEmptyLabelText() || !this.clearOnChange))
+      {
+        document.execCommand('selectAll', false, null);
+      }
+    }
+    catch (e)
+    {
+      // ignore
+    }
+  }
 };
 
 /**
@@ -909,7 +909,7 @@ startEditing = (cell, trigger)=>
  */
 isSelectText = ()=>
 {
-	return this.selectText;
+  return this.selectText;
 };
 
 /**
@@ -919,28 +919,28 @@ isSelectText = ()=>
  */
 clearSelection = ()=>
 {
-	var selection = null;
-	
-	if (window.getSelection)
-	{
-		selection = window.getSelection();
-	}
-	else if (document.selection)
-	{
-		selection = document.selection;
-	}
-	
-	if (selection != null)
-	{
-		if (selection.empty)
-		{
-			selection.empty();
-		}
-		else if (selection.removeAllRanges)
-		{
-			selection.removeAllRanges();
-		}
-	}
+  var selection = null;
+  
+  if (window.getSelection)
+  {
+    selection = window.getSelection();
+  }
+  else if (document.selection)
+  {
+    selection = document.selection;
+  }
+  
+  if (selection != null)
+  {
+    if (selection.empty)
+    {
+      selection.empty();
+    }
+    else if (selection.removeAllRanges)
+    {
+      selection.removeAllRanges();
+    }
+  }
 };
 
 /**
@@ -950,66 +950,66 @@ clearSelection = ()=>
  */
 stopEditing = (cancel)=>
 {
-	cancel = cancel || false;
-	
-	if (this.editingCell != null)
-	{
-		if (this.textNode != null)
-		{
-			this.textNode.style.visibility = 'visible';
-			this.textNode = null;
-		}
+  cancel = cancel || false;
+  
+  if (this.editingCell != null)
+  {
+    if (this.textNode != null)
+    {
+      this.textNode.style.visibility = 'visible';
+      this.textNode = null;
+    }
 
-		var state = (!cancel) ? this.graph.view.getState(this.editingCell) : null;
+    var state = (!cancel) ? this.graph.view.getState(this.editingCell) : null;
 
-		var initial = this.initialValue;
-		this.initialValue = null;
-		this.editingCell = null;
-		this.trigger = null;
-		this.bounds = null;
-		this.textarea.blur();
-		this.clearSelection();
-		
-		if (this.textarea.parentNode != null)
-		{
-			this.textarea.parentNode.removeChild(this.textarea);
-		}
-		
-		if (this.clearOnChange && this.textarea.innerHTML == this.getEmptyLabelText())
-		{
-			this.textarea.innerHTML = '';
-			this.clearOnChange = false;
-		}
+    var initial = this.initialValue;
+    this.initialValue = null;
+    this.editingCell = null;
+    this.trigger = null;
+    this.bounds = null;
+    this.textarea.blur();
+    this.clearSelection();
+    
+    if (this.textarea.parentNode != null)
+    {
+      this.textarea.parentNode.removeChild(this.textarea);
+    }
+    
+    if (this.clearOnChange && this.textarea.innerHTML == this.getEmptyLabelText())
+    {
+      this.textarea.innerHTML = '';
+      this.clearOnChange = false;
+    }
 
-		if (state != null && (this.textarea.innerHTML != initial || this.align != null))
-		{
-			this.prepareTextarea();
-			var value = this.getCurrentValue(state);
-			
-			this.graph.getModel().beginUpdate();
-			try
-			{
-				if (value != null)
-				{
-					this.applyValue(state, value);
-				}
-				
-				if (this.align != null)
-				{
-					this.graph.setCellStyles(mxConstants.STYLE_ALIGN, this.align, [state.cell]);
-				}
-			}
-			finally
-			{
-				this.graph.getModel().endUpdate();
-			}
-		}
-		
-		// Forces new instance on next edit for undo history reset
-		mxEvent.release(this.textarea);
-		this.textarea = null;
-		this.align = null;
-	}
+    if (state != null && (this.textarea.innerHTML != initial || this.align != null))
+    {
+      this.prepareTextarea();
+      var value = this.getCurrentValue(state);
+      
+      this.graph.getModel().beginUpdate();
+      try
+      {
+        if (value != null)
+        {
+          this.applyValue(state, value);
+        }
+        
+        if (this.align != null)
+        {
+          this.graph.setCellStyles(mxConstants.STYLE_ALIGN, this.align, [state.cell]);
+        }
+      }
+      finally
+      {
+        this.graph.getModel().endUpdate();
+      }
+    }
+    
+    // Forces new instance on next edit for undo history reset
+    mxEvent.release(this.textarea);
+    this.textarea = null;
+    this.align = null;
+  }
 };
 
 /**
@@ -1020,11 +1020,11 @@ stopEditing = (cancel)=>
  */
 prepareTextarea = ()=>
 {
-	if (this.textarea.lastChild != null &&
-		this.textarea.lastChild.nodeName == 'BR')
-	{
-		this.textarea.removeChild(this.textarea.lastChild);
-	}
+  if (this.textarea.lastChild != null &&
+    this.textarea.lastChild.nodeName == 'BR')
+  {
+    this.textarea.removeChild(this.textarea.lastChild);
+  }
 };
 
 /**
@@ -1035,7 +1035,7 @@ prepareTextarea = ()=>
  */
 isHideLabel = (state)=>
 {
-	return true;
+  return true;
 };
 
 /**
@@ -1045,10 +1045,10 @@ isHideLabel = (state)=>
  */
 getMinimumSize = (state)=>
 {
-	var scale = this.graph.getView().scale;
-	
-	return new mxRectangle(0, 0, (state.text == null) ? 30 : state.text.size * scale + 20,
-			(this.textarea.style.textAlign == 'left') ? 120 : 40);
+  var scale = this.graph.getView().scale;
+  
+  return new mxRectangle(0, 0, (state.text == null) ? 30 : state.text.size * scale + 20,
+      (this.textarea.style.textAlign == 'left') ? 120 : 40);
 };
 
 /**
@@ -1058,104 +1058,104 @@ getMinimumSize = (state)=>
  */
 getEditorBounds = (state)=>
 {
-	var isEdge = this.graph.getModel().isEdge(state.cell);
-	var scale = this.graph.getView().scale;
-	var minSize = this.getMinimumSize(state);
-	var minWidth = minSize.width;
- 	var minHeight = minSize.height;
- 	var result = null;
- 	
- 	if (!isEdge && state.view.graph.cellRenderer.legacySpacing && state.style[mxConstants.STYLE_OVERFLOW] == 'fill')
- 	{
- 		result = state.shape.getLabelBounds(mxRectangle.fromRectangle(state));
- 	}
- 	else
- 	{
-		var spacing = parseInt(state.style[mxConstants.STYLE_SPACING] || 0) * scale;
-		var spacingTop = (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) + baseSpacingTop) * scale + spacing;
-		var spacingRight = (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) + baseSpacingRight) * scale + spacing;
-		var spacingBottom = (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) + baseSpacingBottom) * scale + spacing;
-		var spacingLeft = (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) + baseSpacingLeft) * scale + spacing;
-	
-	 	result = new mxRectangle(state.x, state.y,
-	 		 Math.max(minWidth, state.width - spacingLeft - spacingRight),
-	 		 Math.max(minHeight, state.height - spacingTop - spacingBottom));
-		var hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
-		var vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
-		
-		result = (state.shape != null && hpos == mxConstants.ALIGN_CENTER && vpos == mxConstants.ALIGN_MIDDLE) ? state.shape.getLabelBounds(result) : result;
-	
-		if (isEdge)
-		{
-			result.x = state.absoluteOffset.x;
-			result.y = state.absoluteOffset.y;
-	
-			if (state.text != null && state.text.boundingBox != null)
-			{
-				// Workaround for label containing just spaces in which case
-				// the bounding box location contains negative numbers 
-				if (state.text.boundingBox.x > 0)
-				{
-					result.x = state.text.boundingBox.x;
-				}
-				
-				if (state.text.boundingBox.y > 0)
-				{
-					result.y = state.text.boundingBox.y;
-				}
-			}
-		}
-		else if (state.text != null && state.text.boundingBox != null)
-		{
-			result.x = Math.min(result.x, state.text.boundingBox.x);
-			result.y = Math.min(result.y, state.text.boundingBox.y);
-		}
-	
-		result.x += spacingLeft;
-		result.y += spacingTop;
-	
-		if (state.text != null && state.text.boundingBox != null)
-		{
-			if (!isEdge)
-			{
-				result.width = Math.max(result.width, state.text.boundingBox.width);
-				result.height = Math.max(result.height, state.text.boundingBox.height);
-			}
-			else
-			{
-				result.width = Math.max(minWidth, state.text.boundingBox.width);
-				result.height = Math.max(minHeight, state.text.boundingBox.height);
-			}
-		}
-		
-		// Applies the horizontal and vertical label positions
-		if (this.graph.getModel().isVertex(state.cell))
-		{
-			var horizontal = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
-	
-			if (horizontal == mxConstants.ALIGN_LEFT)
-			{
-				result.x -= state.width;
-			}
-			else if (horizontal == mxConstants.ALIGN_RIGHT)
-			{
-				result.x += state.width;
-			}
-	
-			var vertical = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
-	
-			if (vertical == mxConstants.ALIGN_TOP)
-			{
-				result.y -= state.height;
-			}
-			else if (vertical == mxConstants.ALIGN_BOTTOM)
-			{
-				result.y += state.height;
-			}
-		}
- 	}
- 	
- 	return new mxRectangle(Math.round(result.x), Math.round(result.y), Math.round(result.width), Math.round(result.height));
+  var isEdge = this.graph.getModel().isEdge(state.cell);
+  var scale = this.graph.getView().scale;
+  var minSize = this.getMinimumSize(state);
+  var minWidth = minSize.width;
+   var minHeight = minSize.height;
+   var result = null;
+   
+   if (!isEdge && state.view.graph.cellRenderer.legacySpacing && state.style[mxConstants.STYLE_OVERFLOW] == 'fill')
+   {
+     result = state.shape.getLabelBounds(mxRectangle.fromRectangle(state));
+   }
+   else
+   {
+    var spacing = parseInt(state.style[mxConstants.STYLE_SPACING] || 0) * scale;
+    var spacingTop = (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) + baseSpacingTop) * scale + spacing;
+    var spacingRight = (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) + baseSpacingRight) * scale + spacing;
+    var spacingBottom = (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) + baseSpacingBottom) * scale + spacing;
+    var spacingLeft = (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) + baseSpacingLeft) * scale + spacing;
+  
+     result = new mxRectangle(state.x, state.y,
+        Math.max(minWidth, state.width - spacingLeft - spacingRight),
+        Math.max(minHeight, state.height - spacingTop - spacingBottom));
+    var hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
+    var vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+    
+    result = (state.shape != null && hpos == mxConstants.ALIGN_CENTER && vpos == mxConstants.ALIGN_MIDDLE) ? state.shape.getLabelBounds(result) : result;
+  
+    if (isEdge)
+    {
+      result.x = state.absoluteOffset.x;
+      result.y = state.absoluteOffset.y;
+  
+      if (state.text != null && state.text.boundingBox != null)
+      {
+        // Workaround for label containing just spaces in which case
+        // the bounding box location contains negative numbers 
+        if (state.text.boundingBox.x > 0)
+        {
+          result.x = state.text.boundingBox.x;
+        }
+        
+        if (state.text.boundingBox.y > 0)
+        {
+          result.y = state.text.boundingBox.y;
+        }
+      }
+    }
+    else if (state.text != null && state.text.boundingBox != null)
+    {
+      result.x = Math.min(result.x, state.text.boundingBox.x);
+      result.y = Math.min(result.y, state.text.boundingBox.y);
+    }
+  
+    result.x += spacingLeft;
+    result.y += spacingTop;
+  
+    if (state.text != null && state.text.boundingBox != null)
+    {
+      if (!isEdge)
+      {
+        result.width = Math.max(result.width, state.text.boundingBox.width);
+        result.height = Math.max(result.height, state.text.boundingBox.height);
+      }
+      else
+      {
+        result.width = Math.max(minWidth, state.text.boundingBox.width);
+        result.height = Math.max(minHeight, state.text.boundingBox.height);
+      }
+    }
+    
+    // Applies the horizontal and vertical label positions
+    if (this.graph.getModel().isVertex(state.cell))
+    {
+      var horizontal = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
+  
+      if (horizontal == mxConstants.ALIGN_LEFT)
+      {
+        result.x -= state.width;
+      }
+      else if (horizontal == mxConstants.ALIGN_RIGHT)
+      {
+        result.x += state.width;
+      }
+  
+      var vertical = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+  
+      if (vertical == mxConstants.ALIGN_TOP)
+      {
+        result.y -= state.height;
+      }
+      else if (vertical == mxConstants.ALIGN_BOTTOM)
+      {
+        result.y += state.height;
+      }
+    }
+   }
+   
+   return new mxRectangle(Math.round(result.x), Math.round(result.y), Math.round(result.width), Math.round(result.height));
 };
 
 /**
@@ -1172,7 +1172,7 @@ getEditorBounds = (state)=>
  */
 getEmptyLabelText = function (cell)
 {
-	return this.emptyLabelText;
+  return this.emptyLabelText;
 };
 
 /**
@@ -1183,7 +1183,7 @@ getEmptyLabelText = function (cell)
  */
 getEditingCell = function ()
 {
-	return this.editingCell;
+  return this.editingCell;
 };
 
 /**
@@ -1193,28 +1193,28 @@ getEditingCell = function ()
  */
 destroy = function ()
 {
-	if (this.textarea != null)
-	{
-		mxEvent.release(this.textarea);
-		
-		if (this.textarea.parentNode != null)
-		{
-			this.textarea.parentNode.removeChild(this.textarea);
-		}
-		
-		this.textarea = null;
+  if (this.textarea != null)
+  {
+    mxEvent.release(this.textarea);
+    
+    if (this.textarea.parentNode != null)
+    {
+      this.textarea.parentNode.removeChild(this.textarea);
+    }
+    
+    this.textarea = null;
 
-	}
-			
-	if (this.changeHandler != null)
-	{
-		this.graph.getModel().removeListener(this.changeHandler);
-		this.changeHandler = null;
-	}
+  }
+      
+  if (this.changeHandler != null)
+  {
+    this.graph.getModel().removeListener(this.changeHandler);
+    this.changeHandler = null;
+  }
 
-	if (this.zoomHandler)
-	{
-		this.graph.view.removeListener(this.zoomHandler);
-		this.zoomHandler = null;
-	}
+  if (this.zoomHandler)
+  {
+    this.graph.view.removeListener(this.zoomHandler);
+    this.zoomHandler = null;
+  }
 };

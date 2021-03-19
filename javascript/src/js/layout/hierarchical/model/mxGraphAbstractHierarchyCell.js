@@ -13,9 +13,9 @@
  */
 function mxGraphAbstractHierarchyCell()
 {
-	this.x = [];
-	this.y = [];
-	this.temp = [];
+  this.x = [];
+  this.y = [];
+  this.temp = [];
 };
 
 /**
@@ -93,7 +93,7 @@ temp = null;
  */
 getNextLayerConnectedCells = (layer)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -103,7 +103,7 @@ getNextLayerConnectedCells = (layer)=>
  */
 getPreviousLayerConnectedCells = (layer)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -113,7 +113,7 @@ getPreviousLayerConnectedCells = (layer)=>
  */
 isEdge = ()=>
 {
-	return false;
+  return false;
 };
 
 /**
@@ -123,7 +123,7 @@ isEdge = ()=>
  */
 isVertex = ()=>
 {
-	return false;
+  return false;
 };
 
 /**
@@ -133,7 +133,7 @@ isVertex = ()=>
  */
 getGeneralPurposeVariable = (layer)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -143,7 +143,7 @@ getGeneralPurposeVariable = (layer)=>
  */
 setGeneralPurposeVariable = (layer, value)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -153,14 +153,14 @@ setGeneralPurposeVariable = (layer, value)=>
  */
 setX = (layer, value)=>
 {
-	if (this.isVertex())
-	{
-		this.x[0] = value;
-	}
-	else if (this.isEdge())
-	{
-		this.x[layer - this.minRank - 1] = value;
-	}
+  if (this.isVertex())
+  {
+    this.x[0] = value;
+  }
+  else if (this.isEdge())
+  {
+    this.x[layer - this.minRank - 1] = value;
+  }
 };
 
 /**
@@ -170,16 +170,16 @@ setX = (layer, value)=>
  */
 getX = (layer)=>
 {
-	if (this.isVertex())
-	{
-		return this.x[0];
-	}
-	else if (this.isEdge())
-	{
-		return this.x[layer - this.minRank - 1];
-	}
+  if (this.isVertex())
+  {
+    return this.x[0];
+  }
+  else if (this.isEdge())
+  {
+    return this.x[layer - this.minRank - 1];
+  }
 
-	return 0.0;
+  return 0.0;
 };
 
 /**
@@ -189,12 +189,12 @@ getX = (layer)=>
  */
 setY = (layer, value)=>
 {
-	if (this.isVertex())
-	{
-		this.y[0] = value;
-	}
-	else if (this.isEdge())
-	{
-		this.y[layer -this. minRank - 1] = value;
-	}
+  if (this.isVertex())
+  {
+    this.y[0] = value;
+  }
+  else if (this.isEdge())
+  {
+    this.y[layer -this. minRank - 1] = value;
+  }
 };

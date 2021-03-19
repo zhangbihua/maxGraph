@@ -15,10 +15,10 @@
  */
 function mxRectangle(x, y, width, height)
 {
-	mxPoint.call(this, x, y);
+  mxPoint.call(this, x, y);
 
-	this.width = (width != null) ? width : 0;
-	this.height = (height != null) ? height : 0;
+  this.width = (width != null) ? width : 0;
+  this.height = (height != null) ? height : 0;
 };
 
 /**
@@ -61,7 +61,7 @@ setRect = (x, y, w, h)=>
  */
 getCenterX = function ()
 {
-	return this.x + this.width/2;
+  return this.x + this.width/2;
 };
 
 /**
@@ -71,7 +71,7 @@ getCenterX = function ()
  */
 getCenterY = function ()
 {
-	return this.y + this.height/2;
+  return this.y + this.height/2;
 };
 
 /**
@@ -81,18 +81,18 @@ getCenterY = function ()
  */
 add = (rect)=>
 {
-	if (rect != null)
-	{
-		var minX = Math.min(this.x, rect.x);
-		var minY = Math.min(this.y, rect.y);
-		var maxX = Math.max(this.x + this.width, rect.x + rect.width);
-		var maxY = Math.max(this.y + this.height, rect.y + rect.height);
-		
-		this.x = minX;
-		this.y = minY;
-		this.width = maxX - minX;
-		this.height = maxY - minY;
-	}
+  if (rect != null)
+  {
+    var minX = Math.min(this.x, rect.x);
+    var minY = Math.min(this.y, rect.y);
+    var maxX = Math.max(this.x + this.width, rect.x + rect.width);
+    var maxY = Math.max(this.y + this.height, rect.y + rect.height);
+    
+    this.x = minX;
+    this.y = minY;
+    this.width = maxX - minX;
+    this.height = maxY - minY;
+  }
 };
 
 /**
@@ -102,19 +102,19 @@ add = (rect)=>
  */
 intersect = (rect)=>
 {
-	if (rect != null)
-	{
-		var r1 = this.x + this.width;
-		var r2 = rect.x + rect.width;
-		
-		var b1 = this.y + this.height;
-		var b2 = rect.y + rect.height;
-		
-		this.x = Math.max(this.x, rect.x);
-		this.y = Math.max(this.y, rect.y);
-		this.width = Math.min(r1, r2) - this.x;
-		this.height = Math.min(b1, b2) - this.y;
-	}
+  if (rect != null)
+  {
+    var r1 = this.x + this.width;
+    var r2 = rect.x + rect.width;
+    
+    var b1 = this.y + this.height;
+    var b2 = rect.y + rect.height;
+    
+    this.x = Math.max(this.x, rect.x);
+    this.y = Math.max(this.y, rect.y);
+    this.width = Math.min(r1, r2) - this.x;
+    this.height = Math.min(b1, b2) - this.y;
+  }
 };
 
 /**
@@ -126,12 +126,12 @@ intersect = (rect)=>
  */
 grow = (amount)=>
 {
-	this.x -= amount;
-	this.y -= amount;
-	this.width += 2 * amount;
-	this.height += 2 * amount;
-	
-	return this;
+  this.x -= amount;
+  this.y -= amount;
+  this.width += 2 * amount;
+  this.height += 2 * amount;
+  
+  return this;
 };
 
 /**
@@ -141,7 +141,7 @@ grow = (amount)=>
  */
 getPoint = ()=>
 {
-	return new mxPoint(this.x, this.y);
+  return new mxPoint(this.x, this.y);
 };
 
 /**
@@ -151,12 +151,12 @@ getPoint = ()=>
  */
 rotate90 = ()=>
 {
-	var t = (this.width - this.height) / 2;
-	this.x += t;
-	this.y -= t;
-	var tmp = this.width;
-	this.width = this.height;
-	this.height = tmp;
+  var t = (this.width - this.height) / 2;
+  this.x += t;
+  this.y -= t;
+  var tmp = this.width;
+  this.width = this.height;
+  this.height = tmp;
 };
 
 /**
@@ -166,8 +166,8 @@ rotate90 = ()=>
  */
 equals = (obj)=>
 {
-	return obj != null && obj.x == this.x && obj.y == this.y &&
-		obj.width == this.width && obj.height == this.height;
+  return obj != null && obj.x == this.x && obj.y == this.y &&
+    obj.width == this.width && obj.height == this.height;
 };
 
 /**
@@ -177,5 +177,5 @@ equals = (obj)=>
  */
 mxRectangle.fromRectangle = (rect)=>
 {
-	return new mxRectangle(rect.x, rect.y, rect.width, rect.height);
+  return new mxRectangle(rect.x, rect.y, rect.width, rect.height);
 };

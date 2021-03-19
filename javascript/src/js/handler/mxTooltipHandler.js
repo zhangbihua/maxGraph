@@ -28,12 +28,12 @@
  */
 function mxTooltipHandler(graph, delay)
 {
-	if (graph != null)
-	{
-		this.graph = graph;
-		this.delay = delay || 500;
-		this.graph.addMouseListener(this);
-	}
+  if (graph != null)
+  {
+    this.graph = graph;
+    this.delay = delay || 500;
+    this.graph.addMouseListener(this);
+  }
 };
 
 /**
@@ -94,7 +94,7 @@ enabled = true;
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
 
 /**
@@ -105,7 +105,7 @@ isEnabled = ()=>
  */
 setEnabled = (enabled)=>
 {
-	this.enabled = enabled;
+  this.enabled = enabled;
 };
 
 /**
@@ -115,7 +115,7 @@ setEnabled = (enabled)=>
  */
 isHideOnHover = ()=>
 {
-	return this.hideOnHover;
+  return this.hideOnHover;
 };
 
 /**
@@ -125,7 +125,7 @@ isHideOnHover = ()=>
  */
 setHideOnHover = (value)=>
 {
-	this.hideOnHover = value;
+  this.hideOnHover = value;
 };
 
 /**
@@ -135,24 +135,24 @@ setHideOnHover = (value)=>
  */
 init = ()=>
 {
-	if (document.body != null)
-	{
-		this.div = document.createElement('div');
-		this.div.className = 'mxTooltip';
-		this.div.style.visibility = 'hidden';
+  if (document.body != null)
+  {
+    this.div = document.createElement('div');
+    this.div.className = 'mxTooltip';
+    this.div.style.visibility = 'hidden';
 
-		document.body.appendChild(this.div);
+    document.body.appendChild(this.div);
 
-		mxEvent.addGestureListeners(this.div, mxUtils.bind(this, (evt)=>
-		{
-			var source = mxEvent.getSource(evt);
-			
-			if (source.nodeName != 'A')
-			{
-				this.hideTooltip();
-			}
-		}));
-	}
+    mxEvent.addGestureListeners(this.div, mxUtils.bind(this, (evt)=>
+    {
+      var source = mxEvent.getSource(evt);
+      
+      if (source.nodeName != 'A')
+      {
+        this.hideTooltip();
+      }
+    }));
+  }
 };
 
 /**
@@ -162,7 +162,7 @@ init = ()=>
  */
 getStateForEvent = (me)=>
 {
-	return me.getState();
+  return me.getState();
 };
 
 /**
@@ -174,8 +174,8 @@ getStateForEvent = (me)=>
  */
 mouseDown = (sender, me)=>
 {
-	this.reset(me, false);
-	this.hideTooltip();
+  this.reset(me, false);
+  this.hideTooltip();
 };
 
 /**
@@ -185,21 +185,21 @@ mouseDown = (sender, me)=>
  */
 mouseMove = (sender, me)=>
 {
-	if (me.getX() != this.lastX || me.getY() != this.lastY)
-	{
-		this.reset(me, true);
-		var state = this.getStateForEvent(me);
-		
-		if (this.isHideOnHover() || state != this.state || (me.getSource() != this.node &&
-			(!this.stateSource || (state != null && this.stateSource ==
-			(me.isSource(state.shape) || !me.isSource(state.text))))))
-		{
-			this.hideTooltip();
-		}
-	}
-	
-	this.lastX = me.getX();
-	this.lastY = me.getY();
+  if (me.getX() != this.lastX || me.getY() != this.lastY)
+  {
+    this.reset(me, true);
+    var state = this.getStateForEvent(me);
+    
+    if (this.isHideOnHover() || state != this.state || (me.getSource() != this.node &&
+      (!this.stateSource || (state != null && this.stateSource ==
+      (me.isSource(state.shape) || !me.isSource(state.text))))))
+    {
+      this.hideTooltip();
+    }
+  }
+  
+  this.lastX = me.getX();
+  this.lastY = me.getY();
 };
 
 /**
@@ -210,8 +210,8 @@ mouseMove = (sender, me)=>
  */
 mouseUp = (sender, me)=>
 {
-	this.reset(me, true);
-	this.hideTooltip();
+  this.reset(me, true);
+  this.hideTooltip();
 };
 
 
@@ -222,11 +222,11 @@ mouseUp = (sender, me)=>
  */
 resetTimer = ()=>
 {
-	if (this.thread != null)
-	{
-		window.clearTimeout(this.thread);
-		this.thread = null;
-	}
+  if (this.thread != null)
+  {
+    window.clearTimeout(this.thread);
+    this.thread = null;
+  }
 };
 
 /**
@@ -236,35 +236,35 @@ resetTimer = ()=>
  */
 reset = (me, restart, state)=>
 {
-	if (!this.ignoreTouchEvents || mxEvent.isMouseEvent(me.getEvent()))
-	{
-		this.resetTimer();
-		state = (state != null) ? state : this.getStateForEvent(me);
-		
-		if (restart && this.isEnabled() && state != null && (this.div == null ||
-			this.div.style.visibility == 'hidden'))
-		{
-			var node = me.getSource();
-			var x = me.getX();
-			var y = me.getY();
-			var stateSource = me.isSource(state.shape) || me.isSource(state.text);
-	
-			this.thread = window.setTimeout(mxUtils.bind(this, ()=>
-			{
-				if (!this.graph.isEditing() && !this.graph.popupMenuHandler.isMenuShowing() && !this.graph.isMouseDown)
-				{
-					// Uses information from inside event cause using the event at
-					// this (delayed) point in time is not possible in IE as it no
-					// longer contains the required information (member not found)
-					var tip = this.graph.getTooltip(state, node, x, y);
-					this.show(tip, x, y);
-					this.state = state;
-					this.node = node;
-					this.stateSource = stateSource;
-				}
-			}), this.delay);
-		}
-	}
+  if (!this.ignoreTouchEvents || mxEvent.isMouseEvent(me.getEvent()))
+  {
+    this.resetTimer();
+    state = (state != null) ? state : this.getStateForEvent(me);
+    
+    if (restart && this.isEnabled() && state != null && (this.div == null ||
+      this.div.style.visibility == 'hidden'))
+    {
+      var node = me.getSource();
+      var x = me.getX();
+      var y = me.getY();
+      var stateSource = me.isSource(state.shape) || me.isSource(state.text);
+  
+      this.thread = window.setTimeout(mxUtils.bind(this, ()=>
+      {
+        if (!this.graph.isEditing() && !this.graph.popupMenuHandler.isMenuShowing() && !this.graph.isMouseDown)
+        {
+          // Uses information from inside event cause using the event at
+          // this (delayed) point in time is not possible in IE as it no
+          // longer contains the required information (member not found)
+          var tip = this.graph.getTooltip(state, node, x, y);
+          this.show(tip, x, y);
+          this.state = state;
+          this.node = node;
+          this.stateSource = stateSource;
+        }
+      }), this.delay);
+    }
+  }
 };
 
 /**
@@ -274,8 +274,8 @@ reset = (me, restart, state)=>
  */
 hide = ()=>
 {
-	this.resetTimer();
-	this.hideTooltip();
+  this.resetTimer();
+  this.hideTooltip();
 };
 
 /**
@@ -285,11 +285,11 @@ hide = ()=>
  */
 hideTooltip = ()=>
 {
-	if (this.div != null)
-	{
-		this.div.style.visibility = 'hidden';
-		this.div.innerHTML = '';
-	}
+  if (this.div != null)
+  {
+    this.div.style.visibility = 'hidden';
+    this.div.innerHTML = '';
+  }
 };
 
 /**
@@ -300,34 +300,34 @@ hideTooltip = ()=>
  */
 show = (tip, x, y)=>
 {
-	if (!this.destroyed && tip != null && tip.length > 0)
-	{
-		// Initializes the DOM nodes if required
-		if (this.div == null)
-		{
-			this.init();
-		}
-		
-		var origin = mxUtils.getScrollOrigin();
+  if (!this.destroyed && tip != null && tip.length > 0)
+  {
+    // Initializes the DOM nodes if required
+    if (this.div == null)
+    {
+      this.init();
+    }
+    
+    var origin = mxUtils.getScrollOrigin();
 
-		this.div.style.zIndex = this.zIndex;
-		this.div.style.left = (x + origin.x) + 'px';
-		this.div.style.top = (y + mxConstants.TOOLTIP_VERTICAL_OFFSET +
-			origin.y) + 'px';
+    this.div.style.zIndex = this.zIndex;
+    this.div.style.left = (x + origin.x) + 'px';
+    this.div.style.top = (y + mxConstants.TOOLTIP_VERTICAL_OFFSET +
+      origin.y) + 'px';
 
-		if (!mxUtils.isNode(tip))
-		{	
-			this.div.innerHTML = tip.replace(/\n/g, '<br>');
-		}
-		else
-		{
-			this.div.innerHTML = '';
-			this.div.appendChild(tip);
-		}
-		
-		this.div.style.visibility = '';
-		mxUtils.fit(this.div);
-	}
+    if (!mxUtils.isNode(tip))
+    {  
+      this.div.innerHTML = tip.replace(/\n/g, '<br>');
+    }
+    else
+    {
+      this.div.innerHTML = '';
+      this.div.appendChild(tip);
+    }
+    
+    this.div.style.visibility = '';
+    mxUtils.fit(this.div);
+  }
 };
 
 /**
@@ -337,17 +337,17 @@ show = (tip, x, y)=>
  */
 destroy = ()=>
 {
-	if (!this.destroyed)
-	{
-		this.graph.removeMouseListener(this);
-		mxEvent.release(this.div);
-		
-		if (this.div != null && this.div.parentNode != null)
-		{
-			this.div.parentNode.removeChild(this.div);
-		}
-		
-		this.destroyed = true;
-		this.div = null;
-	}
+  if (!this.destroyed)
+  {
+    this.graph.removeMouseListener(this);
+    mxEvent.release(this.div);
+    
+    if (this.div != null && this.div.parentNode != null)
+    {
+      this.div.parentNode.removeChild(this.div);
+    }
+    
+    this.destroyed = true;
+    this.div = null;
+  }
 };

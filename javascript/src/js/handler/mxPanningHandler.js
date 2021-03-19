@@ -33,71 +33,71 @@
  */
 function mxPanningHandler(graph)
 {
-	if (graph != null)
-	{
-		this.graph = graph;
-		this.graph.addMouseListener(this);
+  if (graph != null)
+  {
+    this.graph = graph;
+    this.graph.addMouseListener(this);
 
-		// Handles force panning event
-		this.forcePanningHandler = mxUtils.bind(this, (sender, evt)=>
-		{
-			var evtName = evt.getProperty('eventName');
-			var me = evt.getProperty('event');
-			
-			if (evtName == mxEvent.MOUSE_DOWN && this.isForcePanningEvent(me))
-			{
-				this.start(me);
-				this.active = true;
-				this.fireEvent(new mxEventObject(mxEvent.PAN_START, 'event', me));
-				me.consume();
-			}
-		});
+    // Handles force panning event
+    this.forcePanningHandler = mxUtils.bind(this, (sender, evt)=>
+    {
+      var evtName = evt.getProperty('eventName');
+      var me = evt.getProperty('event');
 
-		this.graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.forcePanningHandler);
-		
-		// Handles pinch gestures
-		this.gestureHandler = mxUtils.bind(this, (sender, eo)=>
-		{
-			if (this.isPinchEnabled())
-			{
-				var evt = eo.getProperty('event');
-				
-				if (!mxEvent.isConsumed(evt) && evt.type == 'gesturestart')
-				{
-					this.initialScale = this.graph.view.scale;
-				
-					// Forces start of panning when pinch gesture starts
-					if (!this.active && this.mouseDownEvent != null)
-					{
-						this.start(this.mouseDownEvent);
-						this.mouseDownEvent = null;
-					}
-				}
-				else if (evt.type == 'gestureend' && this.initialScale != null)
-				{
-					this.initialScale = null;
-				}
-				
-				if (this.initialScale != null)
-				{
-					this.zoomGraph(evt);
-				}
-			}
-		});
-		
-		this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
-		
-		this.mouseUpListener = mxUtils.bind(this, ()=>
-		{
-	    	if (this.active)
-	    	{
-	    		this.reset();
-	    	}
-		});
-		
-		// Stops scrolling on every mouseup anywhere in the document
-		mxEvent.addListener(document, 'mouseup', this.mouseUpListener);
-	}
+      if (evtName == mxEvent.MOUSE_DOWN && this.isForcePanningEvent(me))
+      {
+        this.start(me);
+        this.active = true;
+        this.fireEvent(new mxEventObject(mxEvent.PAN_START, 'event', me));
+        me.consume();
+      }
+    });
+
+    this.graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.forcePanningHandler);
+
+    // Handles pinch gestures
+    this.gestureHandler = mxUtils.bind(this, (sender, eo)=>
+    {
+      if (this.isPinchEnabled())
+      {
+        var evt = eo.getProperty('event');
+
+        if (!mxEvent.isConsumed(evt) && evt.type == 'gesturestart')
+        {
+          this.initialScale = this.graph.view.scale;
+
+          // Forces start of panning when pinch gesture starts
+          if (!this.active && this.mouseDownEvent != null)
+          {
+            this.start(this.mouseDownEvent);
+            this.mouseDownEvent = null;
+          }
+        }
+        else if (evt.type == 'gestureend' && this.initialScale != null)
+        {
+          this.initialScale = null;
+        }
+
+        if (this.initialScale != null)
+        {
+          this.zoomGraph(evt);
+        }
+      }
+    });
+
+    this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
+
+    this.mouseUpListener = mxUtils.bind(this, ()=>
+    {
+        if (this.active)
+        {
+          this.reset();
+        }
+    });
+
+    // Stops scrolling on every mouseup anywhere in the document
+    mxEvent.addListener(document, 'mouseup', this.mouseUpListener);
+  }
 };
 
 /**
@@ -214,7 +214,7 @@ startY = 0;
  */
 isActive = ()=>
 {
-	return this.active || this.initialScale != null;
+  return this.active || this.initialScale != null;
 };
 
 /**
@@ -224,7 +224,7 @@ isActive = ()=>
  */
 isPanningEnabled = ()=>
 {
-	return this.panningEnabled;
+  return this.panningEnabled;
 };
 
 /**
@@ -234,7 +234,7 @@ isPanningEnabled = ()=>
  */
 setPanningEnabled = (value)=>
 {
-	this.panningEnabled = value;
+  this.panningEnabled = value;
 };
 
 /**
@@ -244,7 +244,7 @@ setPanningEnabled = (value)=>
  */
 isPinchEnabled = ()=>
 {
-	return this.pinchEnabled;
+  return this.pinchEnabled;
 };
 
 /**
@@ -254,7 +254,7 @@ isPinchEnabled = ()=>
  */
 setPinchEnabled = (value)=>
 {
-	this.pinchEnabled = value;
+  this.pinchEnabled = value;
 };
 
 /**
@@ -266,11 +266,11 @@ setPinchEnabled = (value)=>
  */
 isPanningTrigger = (me)=>
 {
-	var evt = me.getEvent();
-	
-	return (this.useLeftButtonForPanning && me.getState() == null &&
-			mxEvent.isLeftMouseButton(evt)) || (mxEvent.isControlDown(evt) &&
-			mxEvent.isShiftDown(evt)) || (this.usePopupTrigger && mxEvent.isPopupTrigger(evt));
+  var evt = me.getEvent();
+
+  return (this.useLeftButtonForPanning && me.getState() == null &&
+      mxEvent.isLeftMouseButton(evt)) || (mxEvent.isControlDown(evt) &&
+      mxEvent.isShiftDown(evt)) || (this.usePopupTrigger && mxEvent.isPopupTrigger(evt));
 };
 
 /**
@@ -282,7 +282,7 @@ isPanningTrigger = (me)=>
  */
 isForcePanningEvent = (me)=>
 {
-	return this.ignoreCell || mxEvent.isMultiTouchEvent(me.getEvent());
+  return this.ignoreCell || mxEvent.isMultiTouchEvent(me.getEvent());
 };
 
 /**
@@ -293,13 +293,13 @@ isForcePanningEvent = (me)=>
  */
 mouseDown = (sender, me)=>
 {
-	this.mouseDownEvent = me;
-	
-	if (!me.isConsumed() && this.isPanningEnabled() && !this.active && this.isPanningTrigger(me))
-	{
-		this.start(me);
-		this.consumePanningTrigger(me);
-	}
+  this.mouseDownEvent = me;
+
+  if (!me.isConsumed() && this.isPanningEnabled() && !this.active && this.isPanningTrigger(me))
+  {
+    this.start(me);
+    this.consumePanningTrigger(me);
+  }
 };
 
 /**
@@ -309,16 +309,16 @@ mouseDown = (sender, me)=>
  */
 start = (me)=>
 {
-	this.dx0 = -this.graph.container.scrollLeft;
-	this.dy0 = -this.graph.container.scrollTop;
+  this.dx0 = -this.graph.container.scrollLeft;
+  this.dy0 = -this.graph.container.scrollTop;
 
-	// Stores the location of the trigger event
-	this.startX = me.getX();
-	this.startY = me.getY();
-	this.dx = null;
-	this.dy = null;
-	
-	this.panningTrigger = true;
+  // Stores the location of the trigger event
+  this.startX = me.getX();
+  this.startY = me.getY();
+  this.dx = null;
+  this.dy = null;
+
+  this.panningTrigger = true;
 };
 
 /**
@@ -351,7 +351,7 @@ start = (me)=>
  */
 consumePanningTrigger = (me)=>
 {
-	me.consume();
+  me.consume();
 };
 
 /**
@@ -361,43 +361,43 @@ consumePanningTrigger = (me)=>
  */
 mouseMove = (sender, me)=>
 {
-	this.dx = me.getX() - this.startX;
-	this.dy = me.getY() - this.startY;
-	
-	if (this.active)
-	{
-		if (this.previewEnabled)
-		{
-			// Applies the grid to the panning steps
-			if (this.useGrid)
-			{
-				this.dx = this.graph.snap(this.dx);
-				this.dy = this.graph.snap(this.dy);
-			}
-			
-			this.graph.panGraph(this.dx + this.dx0, this.dy + this.dy0);
-		}
+  this.dx = me.getX() - this.startX;
+  this.dy = me.getY() - this.startY;
 
-		this.fireEvent(new mxEventObject(mxEvent.PAN, 'event', me));
-	}
-	else if (this.panningTrigger)
-	{
-		var tmp = this.active;
+  if (this.active)
+  {
+    if (this.previewEnabled)
+    {
+      // Applies the grid to the panning steps
+      if (this.useGrid)
+      {
+        this.dx = this.graph.snap(this.dx);
+        this.dy = this.graph.snap(this.dy);
+      }
 
-		// Panning is activated only if the mouse is moved
-		// beyond the graph tolerance
-		this.active = Math.abs(this.dx) > this.graph.tolerance || Math.abs(this.dy) > this.graph.tolerance;
+      this.graph.panGraph(this.dx + this.dx0, this.dy + this.dy0);
+    }
 
-		if (!tmp && this.active)
-		{
-			this.fireEvent(new mxEventObject(mxEvent.PAN_START, 'event', me));
-		}
-	}
-	
-	if (this.active || this.panningTrigger)
-	{
-		me.consume();
-	}
+    this.fireEvent(new mxEventObject(mxEvent.PAN, 'event', me));
+  }
+  else if (this.panningTrigger)
+  {
+    var tmp = this.active;
+
+    // Panning is activated only if the mouse is moved
+    // beyond the graph tolerance
+    this.active = Math.abs(this.dx) > this.graph.tolerance || Math.abs(this.dy) > this.graph.tolerance;
+
+    if (!tmp && this.active)
+    {
+      this.fireEvent(new mxEventObject(mxEvent.PAN_START, 'event', me));
+    }
+  }
+
+  if (this.active || this.panningTrigger)
+  {
+    me.consume();
+  }
 };
 
 /**
@@ -408,26 +408,26 @@ mouseMove = (sender, me)=>
  */
 mouseUp = (sender, me)=>
 {
-	if (this.active)
-	{
-		if (this.dx != null && this.dy != null)
-		{
-			// Ignores if scrollbars have been used for panning
-			if (!this.graph.useScrollbarsForPanning || !mxUtils.hasScrollbars(this.graph.container))
-			{
-				var scale = this.graph.getView().scale;
-				var t = this.graph.getView().translate;
-				this.graph.panGraph(0, 0);
-				this.panGraph(t.x + this.dx / scale, t.y + this.dy / scale);
-			}
-			
-			me.consume();
-		}
-		
-		this.fireEvent(new mxEventObject(mxEvent.PAN_END, 'event', me));
-	}
-	
-	this.reset();
+  if (this.active)
+  {
+    if (this.dx != null && this.dy != null)
+    {
+      // Ignores if scrollbars have been used for panning
+      if (!this.graph.useScrollbarsForPanning || !mxUtils.hasScrollbars(this.graph.container))
+      {
+        var scale = this.graph.getView().scale;
+        var t = this.graph.getView().translate;
+        this.graph.panGraph(0, 0);
+        this.panGraph(t.x + this.dx / scale, t.y + this.dy / scale);
+      }
+
+      me.consume();
+    }
+
+    this.fireEvent(new mxEventObject(mxEvent.PAN_END, 'event', me));
+  }
+
+  this.reset();
 };
 
 /**
@@ -437,23 +437,23 @@ mouseUp = (sender, me)=>
  */
 zoomGraph = (evt)=>
 {
-	var value = Math.round(this.initialScale * evt.scale * 100) / 100;
-	
-	if (this.minScale != null)
-	{
-		value = Math.max(this.minScale, value);
-	}
-	
-	if (this.maxScale != null)
-	{
-		value = Math.min(this.maxScale, value);
-	}
+  var value = Math.round(this.initialScale * evt.scale * 100) / 100;
 
-	if (this.graph.view.scale != value)
-	{
-		this.graph.zoomTo(value);
-		mxEvent.consume(evt);
-	}
+  if (this.minScale != null)
+  {
+    value = Math.max(this.minScale, value);
+  }
+
+  if (this.maxScale != null)
+  {
+    value = Math.min(this.maxScale, value);
+  }
+
+  if (this.graph.view.scale != value)
+  {
+    this.graph.zoomTo(value);
+    mxEvent.consume(evt);
+  }
 };
 
 /**
@@ -463,11 +463,11 @@ zoomGraph = (evt)=>
  */
 reset = ()=>
 {
-	this.panningTrigger = false;
-	this.mouseDownEvent = null;
-	this.active = false;
-	this.dx = null;
-	this.dy = null;
+  this.panningTrigger = false;
+  this.mouseDownEvent = null;
+  this.active = false;
+  this.dx = null;
+  this.dy = null;
 };
 
 /**
@@ -477,7 +477,7 @@ reset = ()=>
  */
 panGraph = (dx, dy)=>
 {
-	this.graph.getView().setTranslate(dx, dy);
+  this.graph.getView().setTranslate(dx, dy);
 };
 
 /**
@@ -487,8 +487,8 @@ panGraph = (dx, dy)=>
  */
 destroy = ()=>
 {
-	this.graph.removeMouseListener(this);
-	this.graph.removeListener(this.forcePanningHandler);
-	this.graph.removeListener(this.gestureHandler);
-	mxEvent.removeListener(document, 'mouseup', this.mouseUpListener);
+  this.graph.removeMouseListener(this);
+  this.graph.removeListener(this.forcePanningHandler);
+  this.graph.removeListener(this.gestureHandler);
+  mxEvent.removeListener(document, 'mouseup', this.mouseUpListener);
 };

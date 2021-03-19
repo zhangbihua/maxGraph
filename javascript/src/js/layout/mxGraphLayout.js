@@ -25,7 +25,7 @@
  */
 function mxGraphLayout(graph)
 {
-	this.graph = graph;
+  this.graph = graph;
 };
 
 /**
@@ -101,7 +101,7 @@ execute = (parent)=> { };
  */
 getGraph = ()=>
 {
-	return this.graph;
+  return this.graph;
 };
 
 /**
@@ -123,7 +123,7 @@ getGraph = ()=>
  */
 getConstraint = (key, cell, edge, source)=>
 {
-	return this.graph.getCurrentCellStyle(cell)[key]
+  return this.graph.getCurrentCellStyle(cell)[key]
 };
 
 /**
@@ -159,37 +159,37 @@ getConstraint = (key, cell, edge, source)=>
  */
 mxGraphLayout.traverse = (vertex, directed, func, edge, visited)=>
 {
-	if (func != null && vertex != null)
-	{
-		directed = (directed != null) ? directed : true;
-		visited = visited || new mxDictionary();
-		
-		if (!visited.get(vertex))
-		{
-			visited.put(vertex, true);
-			var result = func(vertex, edge);
-			
-			if (result == null || result)
-			{
-				var edgeCount = this.graph.model.getEdgeCount(vertex);
-				
-				if (edgeCount > 0)
-				{
-					for (var i = 0; i < edgeCount; i++)
-					{
-						var e = this.graph.model.getEdgeAt(vertex, i);
-						var isSource = this.graph.model.getTerminal(e, true) == vertex;
-												
-						if (!directed || isSource)
-						{
-							var next = this.graph.view.getVisibleTerminal(e, !isSource);
-							this.traverse(next, directed, func, e, visited);
-						}
-					}
-				}
-			}
-		}
-	}
+  if (func != null && vertex != null)
+  {
+    directed = (directed != null) ? directed : true;
+    visited = visited || new mxDictionary();
+    
+    if (!visited.get(vertex))
+    {
+      visited.put(vertex, true);
+      var result = func(vertex, edge);
+      
+      if (result == null || result)
+      {
+        var edgeCount = this.graph.model.getEdgeCount(vertex);
+        
+        if (edgeCount > 0)
+        {
+          for (var i = 0; i < edgeCount; i++)
+          {
+            var e = this.graph.model.getEdgeAt(vertex, i);
+            var isSource = this.graph.model.getTerminal(e, true) == vertex;
+                        
+            if (!directed || isSource)
+            {
+              var next = this.graph.view.getVisibleTerminal(e, !isSource);
+              this.traverse(next, directed, func, e, visited);
+            }
+          }
+        }
+      }
+    }
+  }
 };
 
 /**
@@ -205,22 +205,22 @@ mxGraphLayout.traverse = (vertex, directed, func, edge, visited)=>
  */
 isAncestor = (parent, child, traverseAncestors)=>
 {
-	if (!traverseAncestors)
-	{
-		return (this.graph.model.getParent(child) == parent);
-	}	
-	
-	if (child == parent)
-	{
-		return false;
-	}
+  if (!traverseAncestors)
+  {
+    return (this.graph.model.getParent(child) == parent);
+  }  
+  
+  if (child == parent)
+  {
+    return false;
+  }
 
-	while (child != null && child != parent)
-	{
-		child = this.graph.model.getParent(child);
-	}
-	
-	return child == parent;
+  while (child != null && child != parent)
+  {
+    child = this.graph.model.getParent(child);
+  }
+  
+  return child == parent;
 };
 
 /**
@@ -236,7 +236,7 @@ isAncestor = (parent, child, traverseAncestors)=>
  */
 isVertexMovable = (cell)=>
 {
-	return this.graph.isCellMovable(cell);
+  return this.graph.isCellMovable(cell);
 };
 
 /**
@@ -251,8 +251,8 @@ isVertexMovable = (cell)=>
  */
 isVertexIgnored = (vertex)=>
 {
-	return !this.graph.getModel().isVertex(vertex) ||
-		!this.graph.isCellVisible(vertex);
+  return !this.graph.getModel().isVertex(vertex) ||
+    !this.graph.isCellVisible(vertex);
 };
 
 /**
@@ -267,12 +267,12 @@ isVertexIgnored = (vertex)=>
  */
 isEdgeIgnored = (edge)=>
 {
-	var model = this.graph.getModel();
-	
-	return !model.isEdge(edge) ||
-		!this.graph.isCellVisible(edge) ||
-		model.getTerminal(edge, true) == null ||
-		model.getTerminal(edge, false) == null;
+  var model = this.graph.getModel();
+  
+  return !model.isEdge(edge) ||
+    !this.graph.isCellVisible(edge) ||
+    model.getTerminal(edge, true) == null ||
+    model.getTerminal(edge, false) == null;
 };
 
 /**
@@ -282,8 +282,8 @@ isEdgeIgnored = (edge)=>
  */
 setEdgeStyleEnabled = (edge, value)=>
 {
-	this.graph.setCellStyles(mxConstants.STYLE_NOEDGESTYLE,
-			(value) ? '0' : '1', [edge]);
+  this.graph.setCellStyles(mxConstants.STYLE_NOEDGESTYLE,
+      (value) ? '0' : '1', [edge]);
 };
 
 /**
@@ -293,8 +293,8 @@ setEdgeStyleEnabled = (edge, value)=>
  */
 setOrthogonalEdge = (edge, value)=>
 {
-	this.graph.setCellStyles(mxConstants.STYLE_ORTHOGONAL,
-			(value) ? '1' : '0', [edge]);
+  this.graph.setCellStyles(mxConstants.STYLE_ORTHOGONAL,
+      (value) ? '1' : '0', [edge]);
 };
 
 /**
@@ -305,28 +305,28 @@ setOrthogonalEdge = (edge, value)=>
  */
 getParentOffset = (parent)=>
 {
-	var result = new mxPoint();
+  var result = new mxPoint();
 
-	if (parent != null && parent != this.parent)
-	{
-		var model = this.graph.getModel();
+  if (parent != null && parent != this.parent)
+  {
+    var model = this.graph.getModel();
 
-		if (model.isAncestor(this.parent, parent))
-		{
-			var parentGeo = model.getGeometry(parent);
+    if (model.isAncestor(this.parent, parent))
+    {
+      var parentGeo = model.getGeometry(parent);
 
-			while (parent != this.parent)
-			{
-				result.x = result.x + parentGeo.x;
-				result.y = result.y + parentGeo.y;
+      while (parent != this.parent)
+      {
+        result.x = result.x + parentGeo.x;
+        result.y = result.y + parentGeo.y;
 
-				parent = model.getParent(parent);;
-				parentGeo = model.getGeometry(parent);
-			}
-		}
-	}
+        parent = model.getParent(parent);;
+        parentGeo = model.getGeometry(parent);
+      }
+    }
+  }
 
-	return result;
+  return result;
 };
 
 /**
@@ -337,37 +337,37 @@ getParentOffset = (parent)=>
  */
 setEdgePoints = (edge, points)=>
 {
-	if (edge != null)
-	{
-		var model = this.graph.model;
-		var geometry = model.getGeometry(edge);
+  if (edge != null)
+  {
+    var model = this.graph.model;
+    var geometry = model.getGeometry(edge);
 
-		if (geometry == null)
-		{
-			geometry = new mxGeometry();
-			geometry.setRelative(true);
-		}
-		else
-		{
-			geometry = geometry.clone();
-		}
+    if (geometry == null)
+    {
+      geometry = new mxGeometry();
+      geometry.setRelative(true);
+    }
+    else
+    {
+      geometry = geometry.clone();
+    }
 
-		if (this.parent != null && points != null)
-		{
-			var parent = model.getParent(edge);
+    if (this.parent != null && points != null)
+    {
+      var parent = model.getParent(edge);
 
-			var parentOffset = this.getParentOffset(parent);
+      var parentOffset = this.getParentOffset(parent);
 
-			for (var i = 0; i < points.length; i++)
-			{
-				points[i].x = points[i].x - parentOffset.x;
-				points[i].y = points[i].y - parentOffset.y;
-			}
-		}
+      for (var i = 0; i < points.length; i++)
+      {
+        points[i].x = points[i].x - parentOffset.x;
+        points[i].y = points[i].y - parentOffset.y;
+      }
+    }
 
-		geometry.points = points;
-		model.setGeometry(edge, geometry);
-	}
+    geometry.points = points;
+    model.setGeometry(edge, geometry);
+  }
 };
 
 /**
@@ -387,63 +387,63 @@ setEdgePoints = (edge, points)=>
  */
 setVertexLocation = (cell, x, y)=>
 {
-	var model = this.graph.getModel();
-	var geometry = model.getGeometry(cell);
-	var result = null;
-	
-	if (geometry != null)
-	{
-		result = new mxRectangle(x, y, geometry.width, geometry.height);
-		
-		// Checks for oversize labels and shifts the result
-		// TODO: Use mxUtils.getStringSize for label bounds
-		if (this.useBoundingBox)
-		{
-			var state = this.graph.getView().getState(cell);
-			
-			if (state != null && state.text != null && state.text.boundingBox != null)
-			{
-				var scale = this.graph.getView().scale;
-				var box = state.text.boundingBox;
-				
-				if (state.text.boundingBox.x < state.x)
-				{
-					x += (state.x - box.x) / scale;
-					result.width = box.width;
-				}
-				
-				if (state.text.boundingBox.y < state.y)
-				{
-					y += (state.y - box.y) / scale;
-					result.height = box.height;
-				}
-			}
-		}
+  var model = this.graph.getModel();
+  var geometry = model.getGeometry(cell);
+  var result = null;
+  
+  if (geometry != null)
+  {
+    result = new mxRectangle(x, y, geometry.width, geometry.height);
+    
+    // Checks for oversize labels and shifts the result
+    // TODO: Use mxUtils.getStringSize for label bounds
+    if (this.useBoundingBox)
+    {
+      var state = this.graph.getView().getState(cell);
+      
+      if (state != null && state.text != null && state.text.boundingBox != null)
+      {
+        var scale = this.graph.getView().scale;
+        var box = state.text.boundingBox;
+        
+        if (state.text.boundingBox.x < state.x)
+        {
+          x += (state.x - box.x) / scale;
+          result.width = box.width;
+        }
+        
+        if (state.text.boundingBox.y < state.y)
+        {
+          y += (state.y - box.y) / scale;
+          result.height = box.height;
+        }
+      }
+    }
 
-		if (this.parent != null)
-		{
-			var parent = model.getParent(cell);
+    if (this.parent != null)
+    {
+      var parent = model.getParent(cell);
 
-			if (parent != null && parent != this.parent)
-			{
-				var parentOffset = this.getParentOffset(parent);
+      if (parent != null && parent != this.parent)
+      {
+        var parentOffset = this.getParentOffset(parent);
 
-				x = x - parentOffset.x;
-				y = y - parentOffset.y;
-			}
-		}
+        x = x - parentOffset.x;
+        y = y - parentOffset.y;
+      }
+    }
 
-		if (geometry.x != x || geometry.y != y)
-		{
-			geometry = geometry.clone();
-			geometry.x = x;
-			geometry.y = y;
-			
-			model.setGeometry(cell, geometry);
-		}
-	}
-	
-	return result;
+    if (geometry.x != x || geometry.y != y)
+    {
+      geometry = geometry.clone();
+      geometry.x = x;
+      geometry.y = y;
+      
+      model.setGeometry(cell, geometry);
+    }
+  }
+  
+  return result;
 };
 
 /**
@@ -454,43 +454,43 @@ setVertexLocation = (cell, x, y)=>
  */
 getVertexBounds = (cell)=>
 {
-	var geo = this.graph.getModel().getGeometry(cell);
+  var geo = this.graph.getModel().getGeometry(cell);
 
-	// Checks for oversize label bounding box and corrects
-	// the return value accordingly
-	// TODO: Use mxUtils.getStringSize for label bounds
-	if (this.useBoundingBox)
-	{
-		var state = this.graph.getView().getState(cell);
+  // Checks for oversize label bounding box and corrects
+  // the return value accordingly
+  // TODO: Use mxUtils.getStringSize for label bounds
+  if (this.useBoundingBox)
+  {
+    var state = this.graph.getView().getState(cell);
 
-		if (state != null && state.text != null && state.text.boundingBox != null)
-		{
-			var scale = this.graph.getView().scale;
-			var tmp = state.text.boundingBox;
+    if (state != null && state.text != null && state.text.boundingBox != null)
+    {
+      var scale = this.graph.getView().scale;
+      var tmp = state.text.boundingBox;
 
-			var dx0 = Math.max(state.x - tmp.x, 0) / scale;
-			var dy0 = Math.max(state.y - tmp.y, 0) / scale;
-			var dx1 = Math.max((tmp.x + tmp.width) - (state.x + state.width), 0) / scale;
-  			var dy1 = Math.max((tmp.y + tmp.height) - (state.y + state.height), 0) / scale;
+      var dx0 = Math.max(state.x - tmp.x, 0) / scale;
+      var dy0 = Math.max(state.y - tmp.y, 0) / scale;
+      var dx1 = Math.max((tmp.x + tmp.width) - (state.x + state.width), 0) / scale;
+        var dy1 = Math.max((tmp.y + tmp.height) - (state.y + state.height), 0) / scale;
 
-			geo = new mxRectangle(geo.x - dx0, geo.y - dy0, geo.width + dx0 + dx1, geo.height + dy0 + dy1);
-		}
-	}
+      geo = new mxRectangle(geo.x - dx0, geo.y - dy0, geo.width + dx0 + dx1, geo.height + dy0 + dy1);
+    }
+  }
 
-	if (this.parent != null)
-	{
-		var parent = this.graph.getModel().getParent(cell);
-		geo = geo.clone();
+  if (this.parent != null)
+  {
+    var parent = this.graph.getModel().getParent(cell);
+    geo = geo.clone();
 
-		if (parent != null && parent != this.parent)
-		{
-			var parentOffset = this.getParentOffset(parent);
-			geo.x = geo.x + parentOffset.x;
-			geo.y = geo.y + parentOffset.y;
-		}
-	}
+    if (parent != null && parent != this.parent)
+    {
+      var parentOffset = this.getParentOffset(parent);
+      geo.x = geo.x + parentOffset.x;
+      geo.y = geo.y + parentOffset.y;
+    }
+  }
 
-	return new mxRectangle(geo.x, geo.y, geo.width, geo.height);
+  return new mxRectangle(geo.x, geo.y, geo.width, geo.height);
 };
 
 /**
@@ -500,7 +500,7 @@ getVertexBounds = (cell)=>
  */
 arrangeGroups = (cells, border, topBorder, rightBorder, bottomBorder, leftBorder)=>
 {
-	return this.graph.updateGroupBounds(cells, border, true, topBorder, rightBorder, bottomBorder, leftBorder);
+  return this.graph.updateGroupBounds(cells, border, true, topBorder, rightBorder, bottomBorder, leftBorder);
 };
 
 /**
@@ -516,8 +516,8 @@ arrangeGroups = (cells, border, topBorder, rightBorder, bottomBorder, leftBorder
  */
 function WeightedCellSorter(cell, weightedValue)
 {
-	this.cell = cell;
-	this.weightedValue = weightedValue;
+  this.cell = cell;
+  this.weightedValue = weightedValue;
 };
 
 /**
@@ -562,30 +562,30 @@ cell = null;
  */
 compare = (a, b)=>
 {
-	if (a != null && b != null)
-	{
-		if (b.weightedValue > a.weightedValue)
-		{
-			return -1;
-		}
-		else if (b.weightedValue < a.weightedValue)
-		{
-			return 1;
-		}
-		else
-		{
-			if (b.nudge)
-			{
-				return -1;
-			}
-			else
-			{
-				return 1;
-			}
-		}
-	}
-	else
-	{
-		return 0;
-	}
+  if (a != null && b != null)
+  {
+    if (b.weightedValue > a.weightedValue)
+    {
+      return -1;
+    }
+    else if (b.weightedValue < a.weightedValue)
+    {
+      return 1;
+    }
+    else
+    {
+      if (b.nudge)
+      {
+        return -1;
+      }
+      else
+      {
+        return 1;
+      }
+    }
+  }
+  else
+  {
+    return 0;
+  }
 };

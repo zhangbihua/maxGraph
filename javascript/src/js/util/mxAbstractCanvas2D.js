@@ -14,14 +14,14 @@
  */
 function mxAbstractCanvas2D()
 {
-	/**
-	 * Variable: converter
-	 * 
-	 * Holds the <mxUrlConverter> to convert image URLs.
-	 */
-	this.converter = this.createUrlConverter();
-	
-	this.reset();
+  /**
+   * Variable: converter
+   * 
+   * Holds the <mxUrlConverter> to convert image URLs.
+   */
+  this.converter = this.createUrlConverter();
+  
+  this.reset();
 };
 
 /**
@@ -115,7 +115,7 @@ mxAbstractCanvas2pointerEvents = false;
  */
 mxAbstractCanvas2createUrlConverter = ()=>
 {
-	return new mxUrlConverter();
+  return new mxUrlConverter();
 };
 
 /**
@@ -125,8 +125,8 @@ mxAbstractCanvas2createUrlConverter = ()=>
  */
 mxAbstractCanvas2reset = ()=>
 {
-	this.state = this.createState();
-	this.states = [];
+  this.state = this.createState();
+  this.states = [];
 };
 
 /**
@@ -136,41 +136,41 @@ mxAbstractCanvas2reset = ()=>
  */
 mxAbstractCanvas2createState = ()=>
 {
-	return {
-		dx: 0,
-		dy: 0,
-		scale: 1,
-		alpha: 1,
-		fillAlpha: 1,
-		strokeAlpha: 1,
-		fillColor: null,
-		gradientFillAlpha: 1,
-		gradientColor: null,
-		gradientAlpha: 1,
-		gradientDirection: null,
-		strokeColor: null,
-		strokeWidth: 1,
-		dashed: false,
-		dashPattern: '3 3',
-		fixDash: false,
-		lineCap: 'flat',
-		lineJoin: 'miter',
-		miterLimit: 10,
-		fontColor: '#000000',
-		fontBackgroundColor: null,
-		fontBorderColor: null,
-		fontSize: mxConstants.DEFAULT_FONTSIZE,
-		fontFamily: mxConstants.DEFAULT_FONTFAMILY,
-		fontStyle: 0,
-		shadow: false,
-		shadowColor: mxConstants.SHADOWCOLOR,
-		shadowAlpha: mxConstants.SHADOW_OPACITY,
-		shadowDx: mxConstants.SHADOW_OFFSET_X,
-		shadowDy: mxConstants.SHADOW_OFFSET_Y,
-		rotation: 0,
-		rotationCx: 0,
-		rotationCy: 0
-	};
+  return {
+    dx: 0,
+    dy: 0,
+    scale: 1,
+    alpha: 1,
+    fillAlpha: 1,
+    strokeAlpha: 1,
+    fillColor: null,
+    gradientFillAlpha: 1,
+    gradientColor: null,
+    gradientAlpha: 1,
+    gradientDirection: null,
+    strokeColor: null,
+    strokeWidth: 1,
+    dashed: false,
+    dashPattern: '3 3',
+    fixDash: false,
+    lineCap: 'flat',
+    lineJoin: 'miter',
+    miterLimit: 10,
+    fontColor: '#000000',
+    fontBackgroundColor: null,
+    fontBorderColor: null,
+    fontSize: mxConstants.DEFAULT_FONTSIZE,
+    fontFamily: mxConstants.DEFAULT_FONTFAMILY,
+    fontStyle: 0,
+    shadow: false,
+    shadowColor: mxConstants.SHADOWCOLOR,
+    shadowAlpha: mxConstants.SHADOW_OPACITY,
+    shadowDx: mxConstants.SHADOW_OFFSET_X,
+    shadowDy: mxConstants.SHADOW_OFFSET_Y,
+    rotation: 0,
+    rotationCx: 0,
+    rotationCy: 0
+  };
 };
 
 /**
@@ -180,7 +180,7 @@ mxAbstractCanvas2createState = ()=>
  */
 mxAbstractCanvas2format = (value)=>
 {
-	return Math.round(parseFloat(value));
+  return Math.round(parseFloat(value));
 };
 
 /**
@@ -190,24 +190,24 @@ mxAbstractCanvas2format = (value)=>
  */
 mxAbstractCanvas2addOp = ()=>
 {
-	if (this.path != null)
-	{
-		this.path.push(arguments[0]);
-		
-		if (arguments.length > 2)
-		{
-			var s = this.state;
+  if (this.path != null)
+  {
+    this.path.push(arguments[0]);
+    
+    if (arguments.length > 2)
+    {
+      var s = this.state;
 
-			for (var i = 2; i < arguments.length; i += 2)
-			{
-				this.lastX = arguments[i - 1];
-				this.lastY = arguments[i];
-				
-				this.path.push(this.format((this.lastX + s.dx) * s.scale));
-				this.path.push(this.format((this.lastY + s.dy) * s.scale));
-			}
-		}
-	}
+      for (var i = 2; i < arguments.length; i += 2)
+      {
+        this.lastX = arguments[i - 1];
+        this.lastY = arguments[i];
+        
+        this.path.push(this.format((this.lastX + s.dx) * s.scale));
+        this.path.push(this.format((this.lastY + s.dy) * s.scale));
+      }
+    }
+  }
 };
 
 /**
@@ -217,10 +217,10 @@ mxAbstractCanvas2addOp = ()=>
  */
 mxAbstractCanvas2rotatePoint = (x, y, theta, cx, cy)=>
 {
-	var rad = theta * (Math.PI / 180);
-	
-	return mxUtils.getRotatedPoint(new mxPoint(x, y), Math.cos(rad),
-		Math.sin(rad), new mxPoint(cx, cy));
+  var rad = theta * (Math.PI / 180);
+  
+  return mxUtils.getRotatedPoint(new mxPoint(x, y), Math.cos(rad),
+    Math.sin(rad), new mxPoint(cx, cy));
 };
 
 /**
@@ -230,8 +230,8 @@ mxAbstractCanvas2rotatePoint = (x, y, theta, cx, cy)=>
  */
 mxAbstractCanvas2save = ()=>
 {
-	this.states.push(this.state);
-	this.state = mxUtils.clone(this.state);
+  this.states.push(this.state);
+  this.state = mxUtils.clone(this.state);
 };
 
 /**
@@ -241,10 +241,10 @@ mxAbstractCanvas2save = ()=>
  */
 mxAbstractCanvas2restore = ()=>
 {
-	if (this.states.length > 0)
-	{
-		this.state = this.states.pop();
-	}
+  if (this.states.length > 0)
+  {
+    this.state = this.states.pop();
+  }
 };
 
 /**
@@ -254,7 +254,7 @@ mxAbstractCanvas2restore = ()=>
  */
 mxAbstractCanvas2setLink = (link)=>
 {
-	// nop
+  // nop
 };
 
 /**
@@ -264,8 +264,8 @@ mxAbstractCanvas2setLink = (link)=>
  */
 mxAbstractCanvas2scale = (value)=>
 {
-	this.state.scale *= value;
-	this.state.strokeWidth *= value;
+  this.state.scale *= value;
+  this.state.strokeWidth *= value;
 };
 
 /**
@@ -275,8 +275,8 @@ mxAbstractCanvas2scale = (value)=>
  */
 mxAbstractCanvas2translate = (dx, dy)=>
 {
-	this.state.dx += dx;
-	this.state.dy += dy;
+  this.state.dx += dx;
+  this.state.dy += dy;
 };
 
 /**
@@ -286,7 +286,7 @@ mxAbstractCanvas2translate = (dx, dy)=>
  */
 mxAbstractCanvas2rotate = (theta, flipH, flipV, cx, cy)=>
 {
-	// nop
+  // nop
 };
 
 /**
@@ -296,7 +296,7 @@ mxAbstractCanvas2rotate = (theta, flipH, flipV, cx, cy)=>
  */
 mxAbstractCanvas2setAlpha = (value)=>
 {
-	this.state.alpha = value;
+  this.state.alpha = value;
 };
 
 /**
@@ -306,7 +306,7 @@ mxAbstractCanvas2setAlpha = (value)=>
  */
 mxAbstractCanvas2setFillAlpha = (value)=>
 {
-	this.state.fillAlpha = value;
+  this.state.fillAlpha = value;
 };
 
 /**
@@ -316,7 +316,7 @@ mxAbstractCanvas2setFillAlpha = (value)=>
  */
 mxAbstractCanvas2setStrokeAlpha = (value)=>
 {
-	this.state.strokeAlpha = value;
+  this.state.strokeAlpha = value;
 };
 
 /**
@@ -326,13 +326,13 @@ mxAbstractCanvas2setStrokeAlpha = (value)=>
  */
 mxAbstractCanvas2setFillColor = (value)=>
 {
-	if (value == mxConstants.NONE)
-	{
-		value = null;
-	}
-	
-	this.state.fillColor = value;
-	this.state.gradientColor = null;
+  if (value == mxConstants.NONE)
+  {
+    value = null;
+  }
+  
+  this.state.fillColor = value;
+  this.state.gradientColor = null;
 };
 
 /**
@@ -342,12 +342,12 @@ mxAbstractCanvas2setFillColor = (value)=>
  */
 mxAbstractCanvas2setGradient = (color1, color2, x, y, w, h, direction, alpha1, alpha2)=>
 {
-	var s = this.state;
-	s.fillColor = color1;
-	s.gradientFillAlpha = (alpha1 != null) ? alpha1 : 1;
-	s.gradientColor = color2;
-	s.gradientAlpha = (alpha2 != null) ? alpha2 : 1;
-	s.gradientDirection = direction;
+  var s = this.state;
+  s.fillColor = color1;
+  s.gradientFillAlpha = (alpha1 != null) ? alpha1 : 1;
+  s.gradientColor = color2;
+  s.gradientAlpha = (alpha2 != null) ? alpha2 : 1;
+  s.gradientDirection = direction;
 };
 
 /**
@@ -357,12 +357,12 @@ mxAbstractCanvas2setGradient = (color1, color2, x, y, w, h, direction, alpha1, a
  */
 mxAbstractCanvas2setStrokeColor = (value)=>
 {
-	if (value == mxConstants.NONE)
-	{
-		value = null;
-	}
-	
-	this.state.strokeColor = value;
+  if (value == mxConstants.NONE)
+  {
+    value = null;
+  }
+  
+  this.state.strokeColor = value;
 };
 
 /**
@@ -372,7 +372,7 @@ mxAbstractCanvas2setStrokeColor = (value)=>
  */
 mxAbstractCanvas2setStrokeWidth = (value)=>
 {
-	this.state.strokeWidth = value;
+  this.state.strokeWidth = value;
 };
 
 /**
@@ -382,8 +382,8 @@ mxAbstractCanvas2setStrokeWidth = (value)=>
  */
 mxAbstractCanvas2setDashed = (value, fixDash)=>
 {
-	this.state.dashed = value;
-	this.state.fixDash = fixDash;
+  this.state.dashed = value;
+  this.state.fixDash = fixDash;
 };
 
 /**
@@ -393,7 +393,7 @@ mxAbstractCanvas2setDashed = (value, fixDash)=>
  */
 mxAbstractCanvas2setDashPattern = (value)=>
 {
-	this.state.dashPattern = value;
+  this.state.dashPattern = value;
 };
 
 /**
@@ -403,7 +403,7 @@ mxAbstractCanvas2setDashPattern = (value)=>
  */
 mxAbstractCanvas2setLineCap = (value)=>
 {
-	this.state.lineCap = value;
+  this.state.lineCap = value;
 };
 
 /**
@@ -413,7 +413,7 @@ mxAbstractCanvas2setLineCap = (value)=>
  */
 mxAbstractCanvas2setLineJoin = (value)=>
 {
-	this.state.lineJoin = value;
+  this.state.lineJoin = value;
 };
 
 /**
@@ -423,7 +423,7 @@ mxAbstractCanvas2setLineJoin = (value)=>
  */
 mxAbstractCanvas2setMiterLimit = (value)=>
 {
-	this.state.miterLimit = value;
+  this.state.miterLimit = value;
 };
 
 /**
@@ -433,12 +433,12 @@ mxAbstractCanvas2setMiterLimit = (value)=>
  */
 mxAbstractCanvas2setFontColor = (value)=>
 {
-	if (value == mxConstants.NONE)
-	{
-		value = null;
-	}
-	
-	this.state.fontColor = value;
+  if (value == mxConstants.NONE)
+  {
+    value = null;
+  }
+  
+  this.state.fontColor = value;
 };
 
 /**
@@ -448,12 +448,12 @@ mxAbstractCanvas2setFontColor = (value)=>
  */
 mxAbstractCanvas2setFontBackgroundColor = (value)=>
 {
-	if (value == mxConstants.NONE)
-	{
-		value = null;
-	}
-	
-	this.state.fontBackgroundColor = value;
+  if (value == mxConstants.NONE)
+  {
+    value = null;
+  }
+  
+  this.state.fontBackgroundColor = value;
 };
 
 /**
@@ -463,12 +463,12 @@ mxAbstractCanvas2setFontBackgroundColor = (value)=>
  */
 mxAbstractCanvas2setFontBorderColor = (value)=>
 {
-	if (value == mxConstants.NONE)
-	{
-		value = null;
-	}
-	
-	this.state.fontBorderColor = value;
+  if (value == mxConstants.NONE)
+  {
+    value = null;
+  }
+  
+  this.state.fontBorderColor = value;
 };
 
 /**
@@ -478,7 +478,7 @@ mxAbstractCanvas2setFontBorderColor = (value)=>
  */
 mxAbstractCanvas2setFontSize = (value)=>
 {
-	this.state.fontSize = parseFloat(value);
+  this.state.fontSize = parseFloat(value);
 };
 
 /**
@@ -488,7 +488,7 @@ mxAbstractCanvas2setFontSize = (value)=>
  */
 mxAbstractCanvas2setFontFamily = (value)=>
 {
-	this.state.fontFamily = value;
+  this.state.fontFamily = value;
 };
 
 /**
@@ -498,12 +498,12 @@ mxAbstractCanvas2setFontFamily = (value)=>
  */
 mxAbstractCanvas2setFontStyle = (value)=>
 {
-	if (value == null)
-	{
-		value = 0;
-	}
-	
-	this.state.fontStyle = value;
+  if (value == null)
+  {
+    value = 0;
+  }
+  
+  this.state.fontStyle = value;
 };
 
 /**
@@ -513,7 +513,7 @@ mxAbstractCanvas2setFontStyle = (value)=>
  */
 mxAbstractCanvas2setShadow = (enabled)=>
 {
-	this.state.shadow = enabled;
+  this.state.shadow = enabled;
 };
 
 /**
@@ -523,12 +523,12 @@ mxAbstractCanvas2setShadow = (enabled)=>
  */
 mxAbstractCanvas2setShadowColor = (value)=>
 {
-	if (value == mxConstants.NONE)
-	{
-		value = null;
-	}
-	
-	this.state.shadowColor = value;
+  if (value == mxConstants.NONE)
+  {
+    value = null;
+  }
+  
+  this.state.shadowColor = value;
 };
 
 /**
@@ -538,7 +538,7 @@ mxAbstractCanvas2setShadowColor = (value)=>
  */
 mxAbstractCanvas2setShadowAlpha = (value)=>
 {
-	this.state.shadowAlpha = value;
+  this.state.shadowAlpha = value;
 };
 
 /**
@@ -548,8 +548,8 @@ mxAbstractCanvas2setShadowAlpha = (value)=>
  */
 mxAbstractCanvas2setShadowOffset = (dx, dy)=>
 {
-	this.state.shadowDx = dx;
-	this.state.shadowDy = dy;
+  this.state.shadowDx = dx;
+  this.state.shadowDy = dy;
 };
 
 /**
@@ -559,9 +559,9 @@ mxAbstractCanvas2setShadowOffset = (dx, dy)=>
  */
 mxAbstractCanvas2begin = ()=>
 {
-	this.lastX = 0;
-	this.lastY = 0;
-	this.path = [];
+  this.lastX = 0;
+  this.lastY = 0;
+  this.path = [];
 };
 
 /**
@@ -571,7 +571,7 @@ mxAbstractCanvas2begin = ()=>
  */
 mxAbstractCanvas2moveTo = (x, y)=>
 {
-	this.addOp(this.moveOp, x, y);
+  this.addOp(this.moveOp, x, y);
 };
 
 /**
@@ -581,7 +581,7 @@ mxAbstractCanvas2moveTo = (x, y)=>
  */
 mxAbstractCanvas2lineTo = (x, y)=>
 {
-	this.addOp(this.lineOp, x, y);
+  this.addOp(this.lineOp, x, y);
 };
 
 /**
@@ -591,7 +591,7 @@ mxAbstractCanvas2lineTo = (x, y)=>
  */
 mxAbstractCanvas2quadTo = (x1, y1, x2, y2)=>
 {
-	this.addOp(this.quadOp, x1, y1, x2, y2);
+  this.addOp(this.quadOp, x1, y1, x2, y2);
 };
 
 /**
@@ -601,7 +601,7 @@ mxAbstractCanvas2quadTo = (x1, y1, x2, y2)=>
  */
 mxAbstractCanvas2curveTo = (x1, y1, x2, y2, x3, y3)=>
 {
-	this.addOp(this.curveOp, x1, y1, x2, y2, x3, y3);
+  this.addOp(this.curveOp, x1, y1, x2, y2, x3, y3);
 };
 
 /**
@@ -612,16 +612,16 @@ mxAbstractCanvas2curveTo = (x1, y1, x2, y2, x3, y3)=>
  */
 mxAbstractCanvas2arcTo = (rx, ry, angle, largeArcFlag, sweepFlag, x, y)=>
 {
-	var curves = mxUtils.arcToCurves(this.lastX, this.lastY, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
-	
-	if (curves != null)
-	{
-		for (var i = 0; i < curves.length; i += 6) 
-		{
-			this.curveTo(curves[i], curves[i + 1], curves[i + 2],
-				curves[i + 3], curves[i + 4], curves[i + 5]);
-		}
-	}
+  var curves = mxUtils.arcToCurves(this.lastX, this.lastY, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
+  
+  if (curves != null)
+  {
+    for (var i = 0; i < curves.length; i += 6) 
+    {
+      this.curveTo(curves[i], curves[i + 1], curves[i + 2],
+        curves[i + 3], curves[i + 4], curves[i + 5]);
+    }
+  }
 };
 
 /**
@@ -631,7 +631,7 @@ mxAbstractCanvas2arcTo = (rx, ry, angle, largeArcFlag, sweepFlag, x, y)=>
  */
 mxAbstractCanvas2close = (x1, y1, x2, y2, x3, y3)=>
 {
-	this.addOp(this.closeOp);
+  this.addOp(this.closeOp);
 };
 
 /**

@@ -49,8 +49,8 @@
  */
 function mxImageBundle(alt)
 {
-	this.images = [];
-	this.alt = (alt != null) ? alt : false;
+  this.images = [];
+  this.alt = (alt != null) ? alt : false;
 };
 
 /**
@@ -75,7 +75,7 @@ alt = null;
  */
 putImage = (key, value, fallback)=>
 {
-	this.images[key] = {value: value, fallback: fallback};
+  this.images[key] = {value: value, fallback: fallback};
 };
 
 /**
@@ -87,17 +87,17 @@ putImage = (key, value, fallback)=>
  */
 getImage = (key)=>
 {
-	var result = null;
-	
-	if (key != null)
-	{
-		var img = this.images[key];
-		
-		if (img != null)
-		{
-			result = (this.alt) ? img.fallback : img.value;
-		}
-	}
-	
-	return result;
+  var result = null;
+  
+  if (key != null)
+  {
+    var img = this.images[key];
+    
+    if (img != null)
+    {
+      result = (this.alt) ? img.fallback : img.value;
+    }
+  }
+  
+  return result;
 };

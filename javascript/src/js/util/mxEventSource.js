@@ -26,7 +26,7 @@
  */
 function mxEventSource(eventSource)
 {
-	this.setEventSource(eventSource);
+  this.setEventSource(eventSource);
 };
 
 /**
@@ -59,7 +59,7 @@ eventSource = null;
  */
 isEventsEnabled = ()=>
 {
-	return this.eventsEnabled;
+  return this.eventsEnabled;
 };
 
 /**
@@ -69,7 +69,7 @@ isEventsEnabled = ()=>
  */
 setEventsEnabled = (value)=>
 {
-	this.eventsEnabled = value;
+  this.eventsEnabled = value;
 };
 
 /**
@@ -79,7 +79,7 @@ setEventsEnabled = (value)=>
  */
 getEventSource = ()=>
 {
-	return this.eventSource;
+  return this.eventSource;
 };
 
 /**
@@ -89,7 +89,7 @@ getEventSource = ()=>
  */
 setEventSource = (value)=>
 {
-	this.eventSource = value;
+  this.eventSource = value;
 };
 
 /**
@@ -102,13 +102,13 @@ setEventSource = (value)=>
  */
 addListener = (name, funct)=>
 {
-	if (this.eventListeners == null)
-	{
-		this.eventListeners = [];
-	}
-	
-	this.eventListeners.push(name);
-	this.eventListeners.push(funct);
+  if (this.eventListeners == null)
+  {
+    this.eventListeners = [];
+  }
+  
+  this.eventListeners.push(name);
+  this.eventListeners.push(funct);
 };
 
 /**
@@ -118,22 +118,22 @@ addListener = (name, funct)=>
  */
 removeListener = (funct)=>
 {
-	if (this.eventListeners != null)
-	{
-		var i = 0;
-		
-		while (i < this.eventListeners.length)
-		{
-			if (this.eventListeners[i+1] == funct)
-			{
-				this.eventListeners.splice(i, 2);
-			}
-			else
-			{
-				i += 2;
-			}
-		}
-	}
+  if (this.eventListeners != null)
+  {
+    var i = 0;
+    
+    while (i < this.eventListeners.length)
+    {
+      if (this.eventListeners[i+1] == funct)
+      {
+        this.eventListeners.splice(i, 2);
+      }
+      else
+      {
+        i += 2;
+      }
+    }
+  }
 };
 
 /**
@@ -157,33 +157,33 @@ removeListener = (funct)=>
  */
 fireEvent = (evt, sender)=>
 {
-	if (this.eventListeners != null && this.isEventsEnabled())
-	{
-		if (evt == null)
-		{
-			evt = new mxEventObject();
-		}
-		
-		if (sender == null)
-		{
-			sender = this.getEventSource();
-		}
+  if (this.eventListeners != null && this.isEventsEnabled())
+  {
+    if (evt == null)
+    {
+      evt = new mxEventObject();
+    }
+    
+    if (sender == null)
+    {
+      sender = this.getEventSource();
+    }
 
-		if (sender == null)
-		{
-			sender = this;
-		}
+    if (sender == null)
+    {
+      sender = this;
+    }
 
-		var args = [sender, evt];
-		
-		for (var i = 0; i < this.eventListeners.length; i += 2)
-		{
-			var listen = this.eventListeners[i];
-			
-			if (listen == null || listen == evt.getName())
-			{
-				this.eventListeners[i+1].apply(this, args);
-			}
-		}
-	}
+    var args = [sender, evt];
+    
+    for (var i = 0; i < this.eventListeners.length; i += 2)
+    {
+      var listen = this.eventListeners[i];
+      
+      if (listen == null || listen == evt.getName())
+      {
+        this.eventListeners[i+1].apply(this, args);
+      }
+    }
+  }
 };

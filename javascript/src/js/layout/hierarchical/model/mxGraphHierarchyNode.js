@@ -17,11 +17,11 @@
  */
 function mxGraphHierarchyNode(cell)
 {
-	mxGraphAbstractHierarchyCell.apply(this, arguments);
-	this.cell = cell;
-	this.id = mxObjectIdentity.get(cell);
-	this.connectsAsTarget = [];
-	this.connectsAsSource = [];
+  mxGraphAbstractHierarchyCell.apply(this, arguments);
+  this.cell = cell;
+  this.id = mxObjectIdentity.get(cell);
+  this.connectsAsTarget = [];
+  this.connectsAsSource = [];
 };
 
 /**
@@ -73,7 +73,7 @@ hashCode = false;
  */
 getRankValue = (layer)=>
 {
-	return this.maxRank;
+  return this.maxRank;
 };
 
 /**
@@ -83,30 +83,30 @@ getRankValue = (layer)=>
  */
 getNextLayerConnectedCells = (layer)=>
 {
-	if (this.nextLayerConnectedCells == null)
-	{
-		this.nextLayerConnectedCells = [];
-		this.nextLayerConnectedCells[0] = [];
-		
-		for (var i = 0; i < this.connectsAsTarget.length; i++)
-		{
-			var edge = this.connectsAsTarget[i];
+  if (this.nextLayerConnectedCells == null)
+  {
+    this.nextLayerConnectedCells = [];
+    this.nextLayerConnectedCells[0] = [];
+    
+    for (var i = 0; i < this.connectsAsTarget.length; i++)
+    {
+      var edge = this.connectsAsTarget[i];
 
-			if (edge.maxRank == -1 || edge.maxRank == layer + 1)
-			{
-				// Either edge is not in any rank or
-				// no dummy nodes in edge, add node of other side of edge
-				this.nextLayerConnectedCells[0].push(edge.source);
-			}
-			else
-			{
-				// Edge spans at least two layers, add edge
-				this.nextLayerConnectedCells[0].push(edge);
-			}
-		}
-	}
+      if (edge.maxRank == -1 || edge.maxRank == layer + 1)
+      {
+        // Either edge is not in any rank or
+        // no dummy nodes in edge, add node of other side of edge
+        this.nextLayerConnectedCells[0].push(edge.source);
+      }
+      else
+      {
+        // Edge spans at least two layers, add edge
+        this.nextLayerConnectedCells[0].push(edge);
+      }
+    }
+  }
 
-	return this.nextLayerConnectedCells[0];
+  return this.nextLayerConnectedCells[0];
 };
 
 /**
@@ -116,29 +116,29 @@ getNextLayerConnectedCells = (layer)=>
  */
 getPreviousLayerConnectedCells = (layer)=>
 {
-	if (this.previousLayerConnectedCells == null)
-	{
-		this.previousLayerConnectedCells = [];
-		this.previousLayerConnectedCells[0] = [];
-		
-		for (var i = 0; i < this.connectsAsSource.length; i++)
-		{
-			var edge = this.connectsAsSource[i];
+  if (this.previousLayerConnectedCells == null)
+  {
+    this.previousLayerConnectedCells = [];
+    this.previousLayerConnectedCells[0] = [];
+    
+    for (var i = 0; i < this.connectsAsSource.length; i++)
+    {
+      var edge = this.connectsAsSource[i];
 
-			if (edge.minRank == -1 || edge.minRank == layer - 1)
-			{
-				// No dummy nodes in edge, add node of other side of edge
-				this.previousLayerConnectedCells[0].push(edge.target);
-			}
-			else
-			{
-				// Edge spans at least two layers, add edge
-				this.previousLayerConnectedCells[0].push(edge);
-			}
-		}
-	}
+      if (edge.minRank == -1 || edge.minRank == layer - 1)
+      {
+        // No dummy nodes in edge, add node of other side of edge
+        this.previousLayerConnectedCells[0].push(edge.target);
+      }
+      else
+      {
+        // Edge spans at least two layers, add edge
+        this.previousLayerConnectedCells[0].push(edge);
+      }
+    }
+  }
 
-	return this.previousLayerConnectedCells[0];
+  return this.previousLayerConnectedCells[0];
 };
 
 /**
@@ -148,7 +148,7 @@ getPreviousLayerConnectedCells = (layer)=>
  */
 isVertex = ()=>
 {
-	return true;
+  return true;
 };
 
 /**
@@ -158,7 +158,7 @@ isVertex = ()=>
  */
 getGeneralPurposeVariable = (layer)=>
 {
-	return this.temp[0];
+  return this.temp[0];
 };
 
 /**
@@ -168,7 +168,7 @@ getGeneralPurposeVariable = (layer)=>
  */
 setGeneralPurposeVariable = (layer, value)=>
 {
-	this.temp[0] = value;
+  this.temp[0] = value;
 };
 
 /**
@@ -176,37 +176,37 @@ setGeneralPurposeVariable = (layer, value)=>
  */
 isAncestor = (otherNode)=>
 {
-	// Firstly, the hash code of this node needs to be shorter than the
-	// other node
-	if (otherNode != null && this.hashCode != null && otherNode.hashCode != null
-			&& this.hashCode.length < otherNode.hashCode.length)
-	{
-		if (this.hashCode == otherNode.hashCode)
-		{
-			return true;
-		}
-		
-		if (this.hashCode == null || this.hashCode == null)
-		{
-			return false;
-		}
-		
-		// Secondly, this hash code must match the start of the other
-		// node's hash code. Arrays.equals cannot be used here since
-		// the arrays are different length, and we do not want to
-		// perform another array copy.
-		for (var i = 0; i < this.hashCode.length; i++)
-		{
-			if (this.hashCode[i] != otherNode.hashCode[i])
-			{
-				return false;
-			}
-		}
+  // Firstly, the hash code of this node needs to be shorter than the
+  // other node
+  if (otherNode != null && this.hashCode != null && otherNode.hashCode != null
+      && this.hashCode.length < otherNode.hashCode.length)
+  {
+    if (this.hashCode == otherNode.hashCode)
+    {
+      return true;
+    }
+    
+    if (this.hashCode == null || this.hashCode == null)
+    {
+      return false;
+    }
+    
+    // Secondly, this hash code must match the start of the other
+    // node's hash code. Arrays.equals cannot be used here since
+    // the arrays are different length, and we do not want to
+    // perform another array copy.
+    for (var i = 0; i < this.hashCode.length; i++)
+    {
+      if (this.hashCode[i] != otherNode.hashCode[i])
+      {
+        return false;
+      }
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	return false;
+  return false;
 };
 
 /**
@@ -216,5 +216,5 @@ isAncestor = (otherNode)=>
  */
 getCoreCell = ()=>
 {
-	return this.cell;
+  return this.cell;
 };

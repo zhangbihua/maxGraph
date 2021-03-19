@@ -21,60 +21,60 @@
  */
 function mxRubberband(graph)
 {
-	if (graph != null)
-	{
-		this.graph = graph;
-		this.graph.addMouseListener(this);
+  if (graph != null)
+  {
+    this.graph = graph;
+    this.graph.addMouseListener(this);
 
-		// Handles force rubberband event
-		this.forceRubberbandHandler = mxUtils.bind(this, (sender, evt)=>
-		{
-			var evtName = evt.getProperty('eventName');
-			var me = evt.getProperty('event');
-			
-			if (evtName == mxEvent.MOUSE_DOWN && this.isForceRubberbandEvent(me))
-			{
-				var offset = mxUtils.getOffset(this.graph.container);
-				var origin = mxUtils.getScrollOrigin(this.graph.container);
-				origin.x -= offset.x;
-				origin.y -= offset.y;
-				this.start(me.getX() + origin.x, me.getY() + origin.y);
-				me.consume(false);
-			}
-		});
-		
-		this.graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.forceRubberbandHandler);
-		
-		// Repaints the marquee after autoscroll
-		this.panHandler = mxUtils.bind(this, ()=>
-		{
-			this.repaint();
-		});
-		
-		this.graph.addListener(mxEvent.PAN, this.panHandler);
-		
-		// Does not show menu if any touch gestures take place after the trigger
-		this.gestureHandler = mxUtils.bind(this, (sender, eo)=>
-		{
-			if (this.first != null)
-			{
-				this.reset();
-			}
-		});
-		
-		this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
-		
-		// Automatic deallocation of memory
-		if (mxClient.IS_IE)
-		{
-			mxEvent.addListener(window, 'unload',
-				mxUtils.bind(this, ()=>
-				{
-					this.destroy();
-				})
-			);
-		}
-	}
+    // Handles force rubberband event
+    this.forceRubberbandHandler = mxUtils.bind(this, (sender, evt)=>
+    {
+      var evtName = evt.getProperty('eventName');
+      var me = evt.getProperty('event');
+
+      if (evtName == mxEvent.MOUSE_DOWN && this.isForceRubberbandEvent(me))
+      {
+        var offset = mxUtils.getOffset(this.graph.container);
+        var origin = mxUtils.getScrollOrigin(this.graph.container);
+        origin.x -= offset.x;
+        origin.y -= offset.y;
+        this.start(me.getX() + origin.x, me.getY() + origin.y);
+        me.consume(false);
+      }
+    });
+
+    this.graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.forceRubberbandHandler);
+
+    // Repaints the marquee after autoscroll
+    this.panHandler = mxUtils.bind(this, ()=>
+    {
+      this.repaint();
+    });
+
+    this.graph.addListener(mxEvent.PAN, this.panHandler);
+
+    // Does not show menu if any touch gestures take place after the trigger
+    this.gestureHandler = mxUtils.bind(this, (sender, eo)=>
+    {
+      if (this.first != null)
+      {
+        this.reset();
+      }
+    });
+
+    this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
+
+    // Automatic deallocation of memory
+    if (mxClient.IS_IE)
+    {
+      mxEvent.addListener(window, 'unload',
+        mxUtils.bind(this, ()=>
+        {
+          this.destroy();
+        })
+      );
+    }
+  }
 };
 
 /**
@@ -135,9 +135,9 @@ fadeOut = false;
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
-		
+
 /**
  * Function: setEnabled
  * 
@@ -146,7 +146,7 @@ isEnabled = ()=>
  */
 setEnabled = (enabled)=>
 {
-	this.enabled = enabled;
+  this.enabled = enabled;
 };
 
 /**
@@ -157,7 +157,7 @@ setEnabled = (enabled)=>
  */
 isForceRubberbandEvent = (me)=>
 {
-	return mxEvent.isAltDown(me.getEvent());
+  return mxEvent.isAltDown(me.getEvent());
 };
 
 /**
@@ -169,22 +169,22 @@ isForceRubberbandEvent = (me)=>
  */
 mouseDown = (sender, me)=>
 {
-	if (!me.isConsumed() && this.isEnabled() && this.graph.isEnabled() &&
-		me.getState() == null && !mxEvent.isMultiTouchEvent(me.getEvent()))
-	{
-		var offset = mxUtils.getOffset(this.graph.container);
-		var origin = mxUtils.getScrollOrigin(this.graph.container);
-		origin.x -= offset.x;
-		origin.y -= offset.y;
-		this.start(me.getX() + origin.x, me.getY() + origin.y);
+  if (!me.isConsumed() && this.isEnabled() && this.graph.isEnabled() &&
+    me.getState() == null && !mxEvent.isMultiTouchEvent(me.getEvent()))
+  {
+    var offset = mxUtils.getOffset(this.graph.container);
+    var origin = mxUtils.getScrollOrigin(this.graph.container);
+    origin.x -= offset.x;
+    origin.y -= offset.y;
+    this.start(me.getX() + origin.x, me.getY() + origin.y);
 
-		// Does not prevent the default for this event so that the
-		// event processing chain is still executed even if we start
-		// rubberbanding. This is required eg. in ExtJs to hide the
-		// current context menu. In mouseMove we'll make sure we're
-		// not selecting anything while we're rubberbanding.
-		me.consume(false);
-	}
+    // Does not prevent the default for this event so that the
+    // event processing chain is still executed even if we start
+    // rubberbanding. This is required eg. in ExtJs to hide the
+    // current context menu. In mouseMove we'll make sure we're
+    // not selecting anything while we're rubberbanding.
+    me.consume(false);
+  }
 };
 
 /**
@@ -194,36 +194,36 @@ mouseDown = (sender, me)=>
  */
 start = (x, y)=>
 {
-	this.first = new mxPoint(x, y);
+  this.first = new mxPoint(x, y);
 
-	var container = this.graph.container;
-	
-	function createMouseEvent(evt)
-	{
-		var me = new mxMouseEvent(evt);
-		var pt = mxUtils.convertPoint(container, me.getX(), me.getY());
-		
-		me.graphX = pt.x;
-		me.graphY = pt.y;
-		
-		return me;
-	};
+  var container = this.graph.container;
 
-	this.dragHandler = mxUtils.bind(this, (evt)=>
-	{
-		this.mouseMove(this.graph, createMouseEvent(evt));
-	});
+  function createMouseEvent(evt)
+  {
+    var me = new mxMouseEvent(evt);
+    var pt = mxUtils.convertPoint(container, me.getX(), me.getY());
 
-	this.dropHandler = mxUtils.bind(this, (evt)=>
-	{
-		this.mouseUp(this.graph, createMouseEvent(evt));
-	});
+    me.graphX = pt.x;
+    me.graphY = pt.y;
 
-	// Workaround for rubberband stopping if the mouse leaves the container in Firefox
-	if (mxClient.IS_FF)
-	{
-		mxEvent.addGestureListeners(document, null, this.dragHandler, this.dropHandler);
-	}
+    return me;
+  };
+
+  this.dragHandler = mxUtils.bind(this, (evt)=>
+  {
+    this.mouseMove(this.graph, createMouseEvent(evt));
+  });
+
+  this.dropHandler = mxUtils.bind(this, (evt)=>
+  {
+    this.mouseUp(this.graph, createMouseEvent(evt));
+  });
+
+  // Workaround for rubberband stopping if the mouse leaves the container in Firefox
+  if (mxClient.IS_FF)
+  {
+    mxEvent.addGestureListeners(document, null, this.dragHandler, this.dropHandler);
+  }
 };
 
 /**
@@ -233,33 +233,33 @@ start = (x, y)=>
  */
 mouseMove = (sender, me)=>
 {
-	if (!me.isConsumed() && this.first != null)
-	{
-		var origin = mxUtils.getScrollOrigin(this.graph.container);
-		var offset = mxUtils.getOffset(this.graph.container);
-		origin.x -= offset.x;
-		origin.y -= offset.y;
-		var x = me.getX() + origin.x;
-		var y = me.getY() + origin.y;
-		var dx = this.first.x - x;
-		var dy = this.first.y - y;
-		var tol = this.graph.tolerance;
-		
-		if (this.div != null || Math.abs(dx) > tol ||  Math.abs(dy) > tol)
-		{
-			if (this.div == null)
-			{
-				this.div = this.createShape();
-			}
-			
-			// Clears selection while rubberbanding. This is required because
-			// the event is not consumed in mouseDown.
-			mxUtils.clearSelection();
-			
-			this.update(x, y);
-			me.consume();
-		}
-	}
+  if (!me.isConsumed() && this.first != null)
+  {
+    var origin = mxUtils.getScrollOrigin(this.graph.container);
+    var offset = mxUtils.getOffset(this.graph.container);
+    origin.x -= offset.x;
+    origin.y -= offset.y;
+    var x = me.getX() + origin.x;
+    var y = me.getY() + origin.y;
+    var dx = this.first.x - x;
+    var dy = this.first.y - y;
+    var tol = this.graph.tolerance;
+
+    if (this.div != null || Math.abs(dx) > tol ||  Math.abs(dy) > tol)
+    {
+      if (this.div == null)
+      {
+        this.div = this.createShape();
+      }
+
+      // Clears selection while rubberbanding. This is required because
+      // the event is not consumed in mouseDown.
+      mxUtils.clearSelection();
+
+      this.update(x, y);
+      me.consume();
+    }
+  }
 };
 
 /**
@@ -269,22 +269,22 @@ mouseMove = (sender, me)=>
  */
 createShape = ()=>
 {
-	if (this.sharedDiv == null)
-	{
-		this.sharedDiv = document.createElement('div');
-		this.sharedDiv.className = 'mxRubberband';
-		mxUtils.setOpacity(this.sharedDiv, this.defaultOpacity);
-	}
+  if (this.sharedDiv == null)
+  {
+    this.sharedDiv = document.createElement('div');
+    this.sharedDiv.className = 'mxRubberband';
+    mxUtils.setOpacity(this.sharedDiv, this.defaultOpacity);
+  }
 
-	this.graph.container.appendChild(this.sharedDiv);
-	var result = this.sharedDiv;
-	
-	if (mxClient.IS_SVG && (!mxClient.IS_IE || document.documentMode >= 10) && this.fadeOut)
-	{
-		this.sharedDiv = null;
-	}
-		
-	return result;
+  this.graph.container.appendChild(this.sharedDiv);
+  var result = this.sharedDiv;
+
+  if (mxClient.IS_SVG && (!mxClient.IS_IE || document.documentMode >= 10) && this.fadeOut)
+  {
+    this.sharedDiv = null;
+  }
+
+  return result;
 };
 
 /**
@@ -294,7 +294,7 @@ createShape = ()=>
  */
 isActive = (sender, me)=>
 {
-	return this.div != null && this.div.style.display != 'none';
+  return this.div != null && this.div.style.display != 'none';
 };
 
 /**
@@ -305,14 +305,14 @@ isActive = (sender, me)=>
  */
 mouseUp = (sender, me)=>
 {
-	var active = this.isActive();
-	this.reset();
-	
-	if (active)
-	{
-		this.execute(me.getEvent());
-		me.consume();
-	}
+  var active = this.isActive();
+  this.reset();
+
+  if (active)
+  {
+    this.execute(me.getEvent());
+    me.consume();
+  }
 };
 
 /**
@@ -323,8 +323,8 @@ mouseUp = (sender, me)=>
  */
 execute = (evt)=>
 {
-	var rect = new mxRectangle(this.x, this.y, this.width, this.height);
-	this.graph.selectRegion(rect, evt);
+  var rect = new mxRectangle(this.x, this.y, this.width, this.height);
+  this.graph.selectRegion(rect, evt);
 };
 
 /**
@@ -334,34 +334,34 @@ execute = (evt)=>
  */
 reset = ()=>
 {
-	if (this.div != null)
-	{
-		if (mxClient.IS_SVG && (!mxClient.IS_IE || document.documentMode >= 10) && this.fadeOut)
-		{
-			var temp = this.div;
-			mxUtils.setPrefixedStyle(temp.style, 'transition', 'all 0.2s linear');
-			temp.style.pointerEvents = 'none';
-			temp.style.opacity = 0;
-		    
-		    window.setTimeout(()=>
-		    	{
-		    		temp.parentNode.removeChild(temp);
-		    	}, 200);	
-		}
-		else
-		{
-			this.div.parentNode.removeChild(this.div);
-		}
-	}
+  if (this.div != null)
+  {
+    if (mxClient.IS_SVG && (!mxClient.IS_IE || document.documentMode >= 10) && this.fadeOut)
+    {
+      var temp = this.div;
+      mxUtils.setPrefixedStyle(temp.style, 'transition', 'all 0.2s linear');
+      temp.style.pointerEvents = 'none';
+      temp.style.opacity = 0;
 
-	mxEvent.removeGestureListeners(document, null, this.dragHandler, this.dropHandler);
-	this.dragHandler = null;
-	this.dropHandler = null;
-	
-	this.currentX = 0;
-	this.currentY = 0;
-	this.first = null;
-	this.div = null;
+        window.setTimeout(()=>
+          {
+            temp.parentNode.removeChild(temp);
+          }, 200);
+    }
+    else
+    {
+      this.div.parentNode.removeChild(this.div);
+    }
+  }
+
+  mxEvent.removeGestureListeners(document, null, this.dragHandler, this.dropHandler);
+  this.dragHandler = null;
+  this.dropHandler = null;
+
+  this.currentX = 0;
+  this.currentY = 0;
+  this.first = null;
+  this.div = null;
 };
 
 /**
@@ -371,10 +371,10 @@ reset = ()=>
  */
 update = (x, y)=>
 {
-	this.currentX = x;
-	this.currentY = y;
-	
-	this.repaint();
+  this.currentX = x;
+  this.currentY = y;
+
+  this.repaint();
 };
 
 /**
@@ -384,24 +384,24 @@ update = (x, y)=>
  */
 repaint = ()=>
 {
-	if (this.div != null)
-	{
-		var x = this.currentX - this.graph.panDx;
-		var y = this.currentY - this.graph.panDy;
-		
-		this.x = Math.min(this.first.x, x);
-		this.y = Math.min(this.first.y, y);
-		this.width = Math.max(this.first.x, x) - this.x;
-		this.height =  Math.max(this.first.y, y) - this.y;
+  if (this.div != null)
+  {
+    var x = this.currentX - this.graph.panDx;
+    var y = this.currentY - this.graph.panDy;
 
-		var dx = (mxClient.IS_VML) ? this.graph.panDx : 0;
-		var dy = (mxClient.IS_VML) ? this.graph.panDy : 0;
-		
-		this.div.style.left = (this.x + dx) + 'px';
-		this.div.style.top = (this.y + dy) + 'px';
-		this.div.style.width = Math.max(1, this.width) + 'px';
-		this.div.style.height = Math.max(1, this.height) + 'px';
-	}
+    this.x = Math.min(this.first.x, x);
+    this.y = Math.min(this.first.y, y);
+    this.width = Math.max(this.first.x, x) - this.x;
+    this.height =  Math.max(this.first.y, y) - this.y;
+
+    var dx = (mxClient.IS_VML) ? this.graph.panDx : 0;
+    var dy = (mxClient.IS_VML) ? this.graph.panDy : 0;
+
+    this.div.style.left = (this.x + dx) + 'px';
+    this.div.style.top = (this.y + dy) + 'px';
+    this.div.style.width = Math.max(1, this.width) + 'px';
+    this.div.style.height = Math.max(1, this.height) + 'px';
+  }
 };
 
 /**
@@ -413,17 +413,17 @@ repaint = ()=>
  */
 destroy = ()=>
 {
-	if (!this.destroyed)
-	{
-		this.destroyed = true;
-		this.graph.removeMouseListener(this);
-		this.graph.removeListener(this.forceRubberbandHandler);
-		this.graph.removeListener(this.panHandler);
-		this.reset();
-		
-		if (this.sharedDiv != null)
-		{
-			this.sharedDiv = null;
-		}
-	}
+  if (!this.destroyed)
+  {
+    this.destroyed = true;
+    this.graph.removeMouseListener(this);
+    this.graph.removeListener(this.forceRubberbandHandler);
+    this.graph.removeListener(this.panHandler);
+    this.reset();
+
+    if (this.sharedDiv != null)
+    {
+      this.sharedDiv = null;
+    }
+  }
 };

@@ -38,9 +38,9 @@
  */
 function mxMouseEvent(evt, state)
 {
-	this.evt = evt;
-	this.state = state;
-	this.sourceState = state;
+  this.evt = evt;
+  this.state = state;
+  this.sourceState = state;
 };
 
 /**
@@ -95,7 +95,7 @@ sourceState = null;
  */
 getEvent = ()=>
 {
-	return this.evt;
+  return this.evt;
 };
 
 /**
@@ -105,7 +105,7 @@ getEvent = ()=>
  */
 getSource = ()=>
 {
-	return mxEvent.getSource(this.evt);
+  return mxEvent.getSource(this.evt);
 };
 
 /**
@@ -115,12 +115,12 @@ getSource = ()=>
  */
 isSource = (shape)=>
 {
-	if (shape != null)
-	{
-		return mxUtils.isAncestorNode(shape.node, this.getSource());
-	}
-	
-	return false;
+  if (shape != null)
+  {
+    return mxUtils.isAncestorNode(shape.node, this.getSource());
+  }
+
+  return false;
 };
 
 /**
@@ -130,7 +130,7 @@ isSource = (shape)=>
  */
 getX = ()=>
 {
-	return mxEvent.getClientX(this.getEvent());
+  return mxEvent.getClientX(this.getEvent());
 };
 
 /**
@@ -140,7 +140,7 @@ getX = ()=>
  */
 getY = ()=>
 {
-	return mxEvent.getClientY(this.getEvent());
+  return mxEvent.getClientY(this.getEvent());
 };
 
 /**
@@ -150,7 +150,7 @@ getY = ()=>
  */
 getGraphX = ()=>
 {
-	return this.graphX;
+  return this.graphX;
 };
 
 /**
@@ -160,7 +160,7 @@ getGraphX = ()=>
  */
 getGraphY = ()=>
 {
-	return this.graphY;
+  return this.graphY;
 };
 
 /**
@@ -170,7 +170,7 @@ getGraphY = ()=>
  */
 getState = ()=>
 {
-	return this.state;
+  return this.state;
 };
 
 /**
@@ -180,14 +180,14 @@ getState = ()=>
  */
 getCell = ()=>
 {
-	var state = this.getState();
-	
-	if (state != null)
-	{
-		return state.cell;
-	}
-	
-	return null;
+  var state = this.getState();
+
+  if (state != null)
+  {
+    return state.cell;
+  }
+
+  return null;
 };
 
 /**
@@ -197,7 +197,7 @@ getCell = ()=>
  */
 isPopupTrigger = ()=>
 {
-	return mxEvent.isPopupTrigger(this.getEvent());
+  return mxEvent.isPopupTrigger(this.getEvent());
 };
 
 /**
@@ -207,7 +207,7 @@ isPopupTrigger = ()=>
  */
 isConsumed = ()=>
 {
-	return this.consumed;
+  return this.consumed;
 };
 
 /**
@@ -225,21 +225,21 @@ isConsumed = ()=>
  */
 consume = (preventDefault)=>
 {
-	preventDefault = (preventDefault != null) ? preventDefault :
-		(this.evt.touches != null || mxEvent.isMouseEvent(this.evt));
-	
-	if (preventDefault && this.evt.preventDefault)
-	{
-		this.evt.preventDefault();
-	}
+  preventDefault = (preventDefault != null) ? preventDefault :
+    (this.evt.touches != null || mxEvent.isMouseEvent(this.evt));
 
-	// Workaround for images being dragged in IE
-	// Does not change returnValue in Opera
-	if (mxClient.IS_IE)
-	{
-		this.evt.returnValue = true;
-	}
+  if (preventDefault && this.evt.preventDefault)
+  {
+    this.evt.preventDefault();
+  }
 
-	// Sets local consumed state
-	this.consumed = true;
+  // Workaround for images being dragged in IE
+  // Does not change returnValue in Opera
+  if (mxClient.IS_IE)
+  {
+    this.evt.returnValue = true;
+  }
+
+  // Sets local consumed state
+  this.consumed = true;
 };

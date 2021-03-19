@@ -10,7 +10,7 @@
  */
 var mxUrlConverter = ()=>
 {
-	// Empty constructor
+  // Empty constructor
 };
 
 /**
@@ -41,15 +41,15 @@ baseDomain = null;
  */
 updateBaseUrl = ()=>
 {
-	this.baseDomain = location.protocol + '//' + location.host;
-	this.baseUrl = this.baseDomain + location.pathname;
-	var tmp = this.baseUrl.lastIndexOf('/');
-	
-	// Strips filename etc
-	if (tmp > 0)
-	{
-		this.baseUrl = this.baseUrl.substring(0, tmp + 1);
-	}
+  this.baseDomain = location.protocol + '//' + location.host;
+  this.baseUrl = this.baseDomain + location.pathname;
+  var tmp = this.baseUrl.lastIndexOf('/');
+  
+  // Strips filename etc
+  if (tmp > 0)
+  {
+    this.baseUrl = this.baseUrl.substring(0, tmp + 1);
+  }
 };
 
 /**
@@ -59,7 +59,7 @@ updateBaseUrl = ()=>
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
 
 /**
@@ -69,7 +69,7 @@ isEnabled = ()=>
  */
 setEnabled = (value)=>
 {
-	this.enabled = value;
+  this.enabled = value;
 };
 
 /**
@@ -79,7 +79,7 @@ setEnabled = (value)=>
  */
 getBaseUrl = ()=>
 {
-	return this.baseUrl;
+  return this.baseUrl;
 };
 
 /**
@@ -89,7 +89,7 @@ getBaseUrl = ()=>
  */
 setBaseUrl = (value)=>
 {
-	this.baseUrl = value;
+  this.baseUrl = value;
 };
 
 /**
@@ -99,7 +99,7 @@ setBaseUrl = (value)=>
  */
 getBaseDomain = ()=>
 {
-	return this.baseDomain;
+  return this.baseDomain;
 };
 
 /**
@@ -109,7 +109,7 @@ getBaseDomain = ()=>
  */
 setBaseDomain = (value)=>
 {
-	this.baseDomain = value;
+  this.baseDomain = value;
 };
 
 /**
@@ -119,9 +119,9 @@ setBaseDomain = (value)=>
  */
 isRelativeUrl = (url)=>
 {
-	return url != null && url.substring(0, 2) != '//' && url.substring(0, 7) != 'http://' &&
-		url.substring(0, 8) != 'https://' && url.substring(0, 10) != 'data:image' &&
-		url.substring(0, 7) != 'file://';
+  return url != null && url.substring(0, 2) != '//' && url.substring(0, 7) != 'http://' &&
+    url.substring(0, 8) != 'https://' && url.substring(0, 10) != 'data:image' &&
+    url.substring(0, 7) != 'file://';
 };
 
 /**
@@ -132,22 +132,22 @@ isRelativeUrl = (url)=>
  */
 convert = (url)=>
 {
-	if (this.isEnabled() && this.isRelativeUrl(url))
-	{
-		if (this.getBaseUrl() == null)
-		{
-			this.updateBaseUrl();
-		}
-		
-		if (url.charAt(0) == '/')
-		{
-			url = this.getBaseDomain() + url;
-		}
-		else
-		{
-			url = this.getBaseUrl() + url;
-		}
-	}
-	
-	return url;
+  if (this.isEnabled() && this.isRelativeUrl(url))
+  {
+    if (this.getBaseUrl() == null)
+    {
+      this.updateBaseUrl();
+    }
+    
+    if (url.charAt(0) == '/')
+    {
+      url = this.getBaseDomain() + url;
+    }
+    else
+    {
+      url = this.getBaseUrl() + url;
+    }
+  }
+  
+  return url;
 };

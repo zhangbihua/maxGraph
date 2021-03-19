@@ -65,36 +65,36 @@
  */
 function mxKeyHandler(graph, target)
 {
-	if (graph != null)
-	{
-		this.graph = graph;
-		this.target = target || document.documentElement;
-		
-		// Creates the arrays to map from keycodes to functions
-		this.normalKeys = [];
-		this.shiftKeys = [];
-		this.controlKeys = [];
-		this.controlShiftKeys = [];
-		
-		this.keydownHandler = mxUtils.bind(this, (evt)=>
-		{
-			this.keyDown(evt);
-		});
+  if (graph != null)
+  {
+    this.graph = graph;
+    this.target = target || document.documentElement;
+    
+    // Creates the arrays to map from keycodes to functions
+    this.normalKeys = [];
+    this.shiftKeys = [];
+    this.controlKeys = [];
+    this.controlShiftKeys = [];
+    
+    this.keydownHandler = mxUtils.bind(this, (evt)=>
+    {
+      this.keyDown(evt);
+    });
 
-		// Installs the keystroke listener in the target
-		mxEvent.addListener(this.target, 'keydown', this.keydownHandler);
-		
-		// Automatically deallocates memory in IE
-		if (mxClient.IS_IE)
-		{
-			mxEvent.addListener(window, 'unload',
-				mxUtils.bind(this, ()=>
-				{
-					this.destroy();
-				})
-			);
-		}
-	}
+    // Installs the keystroke listener in the target
+    mxEvent.addListener(this.target, 'keydown', this.keydownHandler);
+    
+    // Automatically deallocates memory in IE
+    if (mxClient.IS_IE)
+    {
+      mxEvent.addListener(window, 'unload',
+        mxUtils.bind(this, ()=>
+        {
+          this.destroy();
+        })
+      );
+    }
+  }
 };
 
 /**
@@ -155,7 +155,7 @@ enabled = true;
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
 
 /**
@@ -169,7 +169,7 @@ isEnabled = ()=>
  */
 setEnabled = (enabled)=>
 {
-	this.enabled = enabled;
+  this.enabled = enabled;
 };
 
 /**
@@ -185,7 +185,7 @@ setEnabled = (enabled)=>
  */
 bindKey = (code, funct)=>
 {
-	this.normalKeys[code] = funct;
+  this.normalKeys[code] = funct;
 };
 
 /**
@@ -201,7 +201,7 @@ bindKey = (code, funct)=>
  */
 bindShiftKey = (code, funct)=>
 {
-	this.shiftKeys[code] = funct;
+  this.shiftKeys[code] = funct;
 };
 
 /**
@@ -217,7 +217,7 @@ bindShiftKey = (code, funct)=>
  */
 bindControlKey = (code, funct)=>
 {
-	this.controlKeys[code] = funct;
+  this.controlKeys[code] = funct;
 };
 
 /**
@@ -233,7 +233,7 @@ bindControlKey = (code, funct)=>
  */
 bindControlShiftKey = (code, funct)=>
 {
-	this.controlShiftKeys[code] = funct;
+  this.controlShiftKeys[code] = funct;
 };
 
 /**
@@ -247,7 +247,7 @@ bindControlShiftKey = (code, funct)=>
  */
 isControlDown = (evt)=>
 {
-	return mxEvent.isControlDown(evt);
+  return mxEvent.isControlDown(evt);
 };
 
 /**
@@ -262,35 +262,35 @@ isControlDown = (evt)=>
  */
 getFunction = (evt)=>
 {
-	if (evt != null && !mxEvent.isAltDown(evt))
-	{
-		if (this.isControlDown(evt))
-		{
-			if (mxEvent.isShiftDown(evt))
-			{
-				return this.controlShiftKeys[evt.keyCode];
-			}
-			else
-			{
-				return this.controlKeys[evt.keyCode];
-			}
-		}
-		else
-		{
-			if (mxEvent.isShiftDown(evt))
-			{
-				return this.shiftKeys[evt.keyCode];
-			}
-			else
-			{
-				return this.normalKeys[evt.keyCode];
-			}
-		}
-	}
-	
-	return null;
+  if (evt != null && !mxEvent.isAltDown(evt))
+  {
+    if (this.isControlDown(evt))
+    {
+      if (mxEvent.isShiftDown(evt))
+      {
+        return this.controlShiftKeys[evt.keyCode];
+      }
+      else
+      {
+        return this.controlKeys[evt.keyCode];
+      }
+    }
+    else
+    {
+      if (mxEvent.isShiftDown(evt))
+      {
+        return this.shiftKeys[evt.keyCode];
+      }
+      else
+      {
+        return this.normalKeys[evt.keyCode];
+      }
+    }
+  }
+  
+  return null;
 };
-	
+  
 /**
  * Function: isGraphEvent
  * 
@@ -305,18 +305,18 @@ getFunction = (evt)=>
  */
 isGraphEvent = (evt)=>
 {
-	var source = mxEvent.getSource(evt);
-	
-	// Accepts events from the target object or
-	// in-place editing inside graph
-	if ((source == this.target || source.parentNode == this.target) ||
-		(this.graph.cellEditor != null && this.graph.cellEditor.isEventSource(evt)))
-	{
-		return true;
-	}
-	
-	// Accepts events from inside the container
-	return mxUtils.isAncestorNode(this.graph.container, source);
+  var source = mxEvent.getSource(evt);
+  
+  // Accepts events from the target object or
+  // in-place editing inside graph
+  if ((source == this.target || source.parentNode == this.target) ||
+    (this.graph.cellEditor != null && this.graph.cellEditor.isEventSource(evt)))
+  {
+    return true;
+  }
+  
+  // Accepts events from inside the container
+  return mxUtils.isAncestorNode(this.graph.container, source);
 };
 
 /**
@@ -333,26 +333,26 @@ isGraphEvent = (evt)=>
  */
 keyDown = (evt)=>
 {
-	if (this.isEnabledForEvent(evt))
-	{
-		// Cancels the editing if escape is pressed
-		if (evt.keyCode == 27 /* Escape */)
-		{
-			this.escape(evt);
-		}
-		
-		// Invokes the function for the keystroke
-		else if (!this.isEventIgnored(evt))
-		{
-			var boundFunction = this.getFunction(evt);
-			
-			if (boundFunction != null)
-			{
-				boundFunction(evt);
-				mxEvent.consume(evt);
-			}
-		}
-	}
+  if (this.isEnabledForEvent(evt))
+  {
+    // Cancels the editing if escape is pressed
+    if (evt.keyCode == 27 /* Escape */)
+    {
+      this.escape(evt);
+    }
+    
+    // Invokes the function for the keystroke
+    else if (!this.isEventIgnored(evt))
+    {
+      var boundFunction = this.getFunction(evt);
+      
+      if (boundFunction != null)
+      {
+        boundFunction(evt);
+        mxEvent.consume(evt);
+      }
+    }
+  }
 };
 
 /**
@@ -370,8 +370,8 @@ keyDown = (evt)=>
  */
 isEnabledForEvent = (evt)=>
 {
-	return (this.graph.isEnabled() && !mxEvent.isConsumed(evt) &&
-		this.isGraphEvent(evt) && this.isEnabled());
+  return (this.graph.isEnabled() && !mxEvent.isConsumed(evt) &&
+    this.isGraphEvent(evt) && this.isEnabled());
 };
 
 /**
@@ -386,7 +386,7 @@ isEnabledForEvent = (evt)=>
  */
 isEventIgnored = (evt)=>
 {
-	return this.graph.isEditing();
+  return this.graph.isEditing();
 };
 
 /**
@@ -403,10 +403,10 @@ isEventIgnored = (evt)=>
  */
 escape = (evt)=>
 {
-	if (this.graph.isEscapeEnabled())
-	{
-		this.graph.escape(evt);
-	}
+  if (this.graph.isEscapeEnabled())
+  {
+    this.graph.escape(evt);
+  }
 };
 
 /**
@@ -418,11 +418,11 @@ escape = (evt)=>
  */
 destroy = ()=>
 {
-	if (this.target != null && this.keydownHandler != null)
-	{
-		mxEvent.removeListener(this.target, 'keydown', this.keydownHandler);
-		this.keydownHandler = null;
-	}
-	
-	this.target = null;
+  if (this.target != null && this.keydownHandler != null)
+  {
+    mxEvent.removeListener(this.target, 'keydown', this.keydownHandler);
+    this.keydownHandler = null;
+  }
+  
+  this.target = null;
 };

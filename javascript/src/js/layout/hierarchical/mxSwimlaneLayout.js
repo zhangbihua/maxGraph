@@ -21,9 +21,9 @@
  */
 function mxSwimlaneLayout(graph, orientation, deterministic)
 {
-	mxGraphLayout.call(this, graph);
-	this.orientation = (orientation != null) ? orientation : mxConstants.DIRECTION_NORTH;
-	this.deterministic = (deterministic != null) ? deterministic : true;
+  mxGraphLayout.call(this, graph);
+  this.orientation = (orientation != null) ? orientation : mxConstants.DIRECTION_NORTH;
+  this.deterministic = (deterministic != null) ? deterministic : true;
 };
 
 /**
@@ -200,7 +200,7 @@ edgeStyle = mxHierarchicalEdgeStyle.POLYLINE;
  */
 getModel = ()=>
 {
-	return this.model;
+  return this.model;
 };
 
 /**
@@ -215,90 +215,90 @@ getModel = ()=>
  */
 execute = (parent, swimlanes)=>
 {
-	this.parent = parent;
-	var model = this.graph.model;
-	this.edgesCache = new mxDictionary();
-	this.edgeSourceTermCache = new mxDictionary();
-	this.edgesTargetTermCache = new mxDictionary();
+  this.parent = parent;
+  var model = this.graph.model;
+  this.edgesCache = new mxDictionary();
+  this.edgeSourceTermCache = new mxDictionary();
+  this.edgesTargetTermCache = new mxDictionary();
 
-	// If the roots are set and the parent is set, only
-	// use the roots that are some dependent of the that
-	// parent.
-	// If just the root are set, use them as-is
-	// If just the parent is set use it's immediate
-	// children as the initial set
+  // If the roots are set and the parent is set, only
+  // use the roots that are some dependent of the that
+  // parent.
+  // If just the root are set, use them as-is
+  // If just the parent is set use it's immediate
+  // children as the initial set
 
-	if (swimlanes == null || swimlanes.length < 1)
-	{
-		// TODO indicate the problem
-		return;
-	}
+  if (swimlanes == null || swimlanes.length < 1)
+  {
+    // TODO indicate the problem
+    return;
+  }
 
-	if (parent == null)
-	{
-		parent = model.getParent(swimlanes[0]);
-	}
+  if (parent == null)
+  {
+    parent = model.getParent(swimlanes[0]);
+  }
 
-	//  Maintaining parent location
-	this.parentX = null;
-	this.parentY = null;
-	
-	if (parent != this.root && model.isVertex(parent) != null && this.maintainParentLocation)
-	{
-		var geo = this.graph.getCellGeometry(parent);
-		
-		if (geo != null)
-		{
-			this.parentX = geo.x;
-			this.parentY = geo.y;
-		}
-	}
+  //  Maintaining parent location
+  this.parentX = null;
+  this.parentY = null;
+  
+  if (parent != this.root && model.isVertex(parent) != null && this.maintainParentLocation)
+  {
+    var geo = this.graph.getCellGeometry(parent);
+    
+    if (geo != null)
+    {
+      this.parentX = geo.x;
+      this.parentY = geo.y;
+    }
+  }
 
-	this.swimlanes = swimlanes;
-	var dummyVertices = [];
-	// Check the swimlanes all have vertices
-	// in them
-	for (var i = 0; i < swimlanes.length; i++)
-	{
-		var children = this.graph.getChildCells(swimlanes[i]);
-		
-		if (children == null || children.length == 0)
-		{
-			var vertex = this.graph.insertVertex(swimlanes[i], null, null, 0, 0, this.dummyVertexWidth, 0);
-			dummyVertices.push(vertex);
-		}
-	}
-	
-	model.beginUpdate();
-	try
-	{
-		this.run(parent);
-		
-		if (this.resizeParent && !this.graph.isCellCollapsed(parent))
-		{
-			this.graph.updateGroupBounds([parent], this.parentBorder, this.moveParent);
-		}
-		
-		// Maintaining parent location
-		if (this.parentX != null && this.parentY != null)
-		{
-			var geo = this.graph.getCellGeometry(parent);
-			
-			if (geo != null)
-			{
-				geo = geo.clone();
-				geo.x = this.parentX;
-				geo.y = this.parentY;
-				model.setGeometry(parent, geo);
-			}
-		}
+  this.swimlanes = swimlanes;
+  var dummyVertices = [];
+  // Check the swimlanes all have vertices
+  // in them
+  for (var i = 0; i < swimlanes.length; i++)
+  {
+    var children = this.graph.getChildCells(swimlanes[i]);
+    
+    if (children == null || children.length == 0)
+    {
+      var vertex = this.graph.insertVertex(swimlanes[i], null, null, 0, 0, this.dummyVertexWidth, 0);
+      dummyVertices.push(vertex);
+    }
+  }
+  
+  model.beginUpdate();
+  try
+  {
+    this.run(parent);
+    
+    if (this.resizeParent && !this.graph.isCellCollapsed(parent))
+    {
+      this.graph.updateGroupBounds([parent], this.parentBorder, this.moveParent);
+    }
+    
+    // Maintaining parent location
+    if (this.parentX != null && this.parentY != null)
+    {
+      var geo = this.graph.getCellGeometry(parent);
+      
+      if (geo != null)
+      {
+        geo = geo.clone();
+        geo.x = this.parentX;
+        geo.y = this.parentY;
+        model.setGeometry(parent, geo);
+      }
+    }
 
-		this.graph.removeCells(dummyVertices);
-	}
-	finally
-	{
-		model.endUpdate();
-	}
+    this.graph.removeCells(dummyVertices);
+  }
+  finally
+  {
+    model.endUpdate();
+  }
 };
 
 /**
@@ -310,83 +310,83 @@ execute = (parent, swimlanes)=>
  */
 updateGroupBounds = ()=>
 {
-	// Get all vertices and edge in the layout
-	var cells = [];
-	var model = this.model;
-	
-	for (var key in model.edgeMapper)
-	{
-		var edge = model.edgeMapper[key];
-		
-		for (var i = 0; i < edge.edges.length; i++)
-		{
-			cells.push(edge.edges[i]);
-		}
-	}
-	
-	var layoutBounds = this.graph.getBoundingBoxFromGeometry(cells, true);
-	var childBounds = [];
+  // Get all vertices and edge in the layout
+  var cells = [];
+  var model = this.model;
+  
+  for (var key in model.edgeMapper)
+  {
+    var edge = model.edgeMapper[key];
+    
+    for (var i = 0; i < edge.edges.length; i++)
+    {
+      cells.push(edge.edges[i]);
+    }
+  }
+  
+  var layoutBounds = this.graph.getBoundingBoxFromGeometry(cells, true);
+  var childBounds = [];
 
-	for (var i = 0; i < this.swimlanes.length; i++)
-	{
-		var lane = this.swimlanes[i];
-		var geo = this.graph.getCellGeometry(lane);
-		
-		if (geo != null)
-		{
-			var children = this.graph.getChildCells(lane);
-			
-			var size = (this.graph.isSwimlane(lane)) ?
-					this.graph.getStartSize(lane) : new mxRectangle();
+  for (var i = 0; i < this.swimlanes.length; i++)
+  {
+    var lane = this.swimlanes[i];
+    var geo = this.graph.getCellGeometry(lane);
+    
+    if (geo != null)
+    {
+      var children = this.graph.getChildCells(lane);
+      
+      var size = (this.graph.isSwimlane(lane)) ?
+          this.graph.getStartSize(lane) : new mxRectangle();
 
-			var bounds = this.graph.getBoundingBoxFromGeometry(children);
-			childBounds[i] = bounds;
-			var childrenY = bounds.y + geo.y - size.height - this.parentBorder;
-			var maxChildrenY = bounds.y + geo.y + bounds.height;
+      var bounds = this.graph.getBoundingBoxFromGeometry(children);
+      childBounds[i] = bounds;
+      var childrenY = bounds.y + geo.y - size.height - this.parentBorder;
+      var maxChildrenY = bounds.y + geo.y + bounds.height;
 
-			if (layoutBounds == null)
-			{
-				layoutBounds = new mxRectangle(0, childrenY, 0, maxChildrenY - childrenY);
-			}
-			else
-			{
-				layoutBounds.y = Math.min(layoutBounds.y, childrenY);
-				var maxY = Math.max(layoutBounds.y + layoutBounds.height, maxChildrenY);
-				layoutBounds.height = maxY - layoutBounds.y;
-			}
-		}
-	}
+      if (layoutBounds == null)
+      {
+        layoutBounds = new mxRectangle(0, childrenY, 0, maxChildrenY - childrenY);
+      }
+      else
+      {
+        layoutBounds.y = Math.min(layoutBounds.y, childrenY);
+        var maxY = Math.max(layoutBounds.y + layoutBounds.height, maxChildrenY);
+        layoutBounds.height = maxY - layoutBounds.y;
+      }
+    }
+  }
 
-	
-	for (var i = 0; i < this.swimlanes.length; i++)
-	{
-		var lane = this.swimlanes[i];
-		var geo = this.graph.getCellGeometry(lane);
-		
-		if (geo != null)
-		{
-			var children = this.graph.getChildCells(lane);
-			
-			var size = (this.graph.isSwimlane(lane)) ?
-					this.graph.getStartSize(lane) : new mxRectangle();
+  
+  for (var i = 0; i < this.swimlanes.length; i++)
+  {
+    var lane = this.swimlanes[i];
+    var geo = this.graph.getCellGeometry(lane);
+    
+    if (geo != null)
+    {
+      var children = this.graph.getChildCells(lane);
+      
+      var size = (this.graph.isSwimlane(lane)) ?
+          this.graph.getStartSize(lane) : new mxRectangle();
 
-			var newGeo = geo.clone();
-			
-			var leftGroupBorder = (i == 0) ? this.parentBorder : this.interRankCellSpacing/2;
-			var w = size.width + leftGroupBorder;
-			var x = childBounds[i].x - w;
-			var y = layoutBounds.y - this.parentBorder;
+      var newGeo = geo.clone();
+      
+      var leftGroupBorder = (i == 0) ? this.parentBorder : this.interRankCellSpacing/2;
+      var w = size.width + leftGroupBorder;
+      var x = childBounds[i].x - w;
+      var y = layoutBounds.y - this.parentBorder;
 
-			newGeo.x += x;
-			newGeo.y = y;
-			
-			newGeo.width = childBounds[i].width + w + this.interRankCellSpacing/2;
-			newGeo.height = layoutBounds.height + size.height + 2 * this.parentBorder;
-			
-			this.graph.model.setGeometry(lane, newGeo);
-			this.graph.moveCells(children, -x, geo.y - y);
-		}
-	}
+      newGeo.x += x;
+      newGeo.y = y;
+      
+      newGeo.width = childBounds[i].width + w + this.interRankCellSpacing/2;
+      newGeo.height = layoutBounds.height + size.height + 2 * this.parentBorder;
+      
+      this.graph.model.setGeometry(lane, newGeo);
+      this.graph.moveCells(children, -x, geo.y - y);
+    }
+  }
 };
 
 /**
@@ -405,66 +405,66 @@ updateGroupBounds = ()=>
  */
 findRoots = (parent, vertices)=>
 {
-	var roots = [];
-	
-	if (parent != null && vertices != null)
-	{
-		var model = this.graph.model;
-		var best = null;
-		var maxDiff = -100000;
-		
-		for (var i in vertices)
-		{
-			var cell = vertices[i];
+  var roots = [];
+  
+  if (parent != null && vertices != null)
+  {
+    var model = this.graph.model;
+    var best = null;
+    var maxDiff = -100000;
+    
+    for (var i in vertices)
+    {
+      var cell = vertices[i];
 
-			if (cell != null && model.isVertex(cell) && this.graph.isCellVisible(cell) && model.isAncestor(parent, cell))
-			{
-				var conns = this.getEdges(cell);
-				var fanOut = 0;
-				var fanIn = 0;
+      if (cell != null && model.isVertex(cell) && this.graph.isCellVisible(cell) && model.isAncestor(parent, cell))
+      {
+        var conns = this.getEdges(cell);
+        var fanOut = 0;
+        var fanIn = 0;
 
-				for (var k = 0; k < conns.length; k++)
-				{
-					var src = this.getVisibleTerminal(conns[k], true);
+        for (var k = 0; k < conns.length; k++)
+        {
+          var src = this.getVisibleTerminal(conns[k], true);
 
-					if (src == cell)
-					{
-						// Only count connection within this swimlane
-						var other = this.getVisibleTerminal(conns[k], false);
-						
-						if (model.isAncestor(parent, other))
-						{
-							fanOut++;
-						}
-					}
-					else if (model.isAncestor(parent, src))
-					{
-						fanIn++;
-					}
-				}
+          if (src == cell)
+          {
+            // Only count connection within this swimlane
+            var other = this.getVisibleTerminal(conns[k], false);
+            
+            if (model.isAncestor(parent, other))
+            {
+              fanOut++;
+            }
+          }
+          else if (model.isAncestor(parent, src))
+          {
+            fanIn++;
+          }
+        }
 
-				if (fanIn == 0 && fanOut > 0)
-				{
-					roots.push(cell);
-				}
+        if (fanIn == 0 && fanOut > 0)
+        {
+          roots.push(cell);
+        }
 
-				var diff = fanOut - fanIn;
+        var diff = fanOut - fanIn;
 
-				if (diff > maxDiff)
-				{
-					maxDiff = diff;
-					best = cell;
-				}
-			}
-		}
-		
-		if (roots.length == 0 && best != null)
-		{
-			roots.push(best);
-		}
-	}
-	
-	return roots;
+        if (diff > maxDiff)
+        {
+          maxDiff = diff;
+          best = cell;
+        }
+      }
+    }
+    
+    if (roots.length == 0 && best != null)
+    {
+      roots.push(best);
+    }
+  }
+  
+  return roots;
 };
 
 /**
@@ -478,51 +478,51 @@ findRoots = (parent, vertices)=>
  */
 getEdges = (cell)=>
 {
-	var cachedEdges = this.edgesCache.get(cell);
-	
-	if (cachedEdges != null)
-	{
-		return cachedEdges;
-	}
+  var cachedEdges = this.edgesCache.get(cell);
+  
+  if (cachedEdges != null)
+  {
+    return cachedEdges;
+  }
 
-	var model = this.graph.model;
-	var edges = [];
-	var isCollapsed = this.graph.isCellCollapsed(cell);
-	var childCount = model.getChildCount(cell);
+  var model = this.graph.model;
+  var edges = [];
+  var isCollapsed = this.graph.isCellCollapsed(cell);
+  var childCount = model.getChildCount(cell);
 
-	for (var i = 0; i < childCount; i++)
-	{
-		var child = model.getChildAt(cell, i);
+  for (var i = 0; i < childCount; i++)
+  {
+    var child = model.getChildAt(cell, i);
 
-		if (this.isPort(child))
-		{
-			edges = edges.concat(model.getEdges(child, true, true));
-		}
-		else if (isCollapsed || !this.graph.isCellVisible(child))
-		{
-			edges = edges.concat(model.getEdges(child, true, true));
-		}
-	}
+    if (this.isPort(child))
+    {
+      edges = edges.concat(model.getEdges(child, true, true));
+    }
+    else if (isCollapsed || !this.graph.isCellVisible(child))
+    {
+      edges = edges.concat(model.getEdges(child, true, true));
+    }
+  }
 
-	edges = edges.concat(model.getEdges(cell, true, true));
-	var result = [];
-	
-	for (var i = 0; i < edges.length; i++)
-	{
-		var source = this.getVisibleTerminal(edges[i], true);
-		var target = this.getVisibleTerminal(edges[i], false);
-		
-		if ((source == target) || ((source != target) && ((target == cell && (this.parent == null || this.graph.isValidAncestor(source, this.parent, this.traverseAncestors))) ||
-			(source == cell && (this.parent == null ||
-					this.graph.isValidAncestor(target, this.parent, this.traverseAncestors))))))
-		{
-			result.push(edges[i]);
-		}
-	}
+  edges = edges.concat(model.getEdges(cell, true, true));
+  var result = [];
+  
+  for (var i = 0; i < edges.length; i++)
+  {
+    var source = this.getVisibleTerminal(edges[i], true);
+    var target = this.getVisibleTerminal(edges[i], false);
+    
+    if ((source == target) || ((source != target) && ((target == cell && (this.parent == null || this.graph.isValidAncestor(source, this.parent, this.traverseAncestors))) ||
+      (source == cell && (this.parent == null ||
+          this.graph.isValidAncestor(target, this.parent, this.traverseAncestors))))))
+    {
+      result.push(edges[i]);
+    }
+  }
 
-	this.edgesCache.put(cell, result);
+  this.edgesCache.put(cell, result);
 
-	return result;
+  return result;
 };
 
 /**
@@ -537,40 +537,40 @@ getEdges = (cell)=>
  */
 getVisibleTerminal = (edge, source)=>
 {
-	var terminalCache = this.edgesTargetTermCache;
-	
-	if (source)
-	{
-		terminalCache = this.edgeSourceTermCache;
-	}
+  var terminalCache = this.edgesTargetTermCache;
+  
+  if (source)
+  {
+    terminalCache = this.edgeSourceTermCache;
+  }
 
-	var term = terminalCache.get(edge);
+  var term = terminalCache.get(edge);
 
-	if (term != null)
-	{
-		return term;
-	}
+  if (term != null)
+  {
+    return term;
+  }
 
-	var state = this.graph.view.getState(edge);
-	
-	var terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
-	
-	if (terminal == null)
-	{
-		terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
-	}
+  var state = this.graph.view.getState(edge);
+  
+  var terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
+  
+  if (terminal == null)
+  {
+    terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
+  }
 
-	if (terminal != null)
-	{
-		if (this.isPort(terminal))
-		{
-			terminal = this.graph.model.getParent(terminal);
-		}
-		
-		terminalCache.put(edge, terminal);
-	}
+  if (terminal != null)
+  {
+    if (this.isPort(terminal))
+    {
+      terminal = this.graph.model.getParent(terminal);
+    }
+    
+    terminalCache.put(edge, terminal);
+  }
 
-	return terminal;
+  return terminal;
 };
 
 /**
@@ -583,104 +583,104 @@ getVisibleTerminal = (edge, source)=>
  */
 run = (parent)=>
 {
-	// Separate out unconnected hierarchies
-	var hierarchyVertices = [];
-	var allVertexSet = Object();
+  // Separate out unconnected hierarchies
+  var hierarchyVertices = [];
+  var allVertexSet = Object();
 
-	if (this.swimlanes != null && this.swimlanes.length > 0 && parent != null)
-	{
-		var filledVertexSet = Object();
-		
-		for (var i = 0; i < this.swimlanes.length; i++)
-		{
-			this.filterDescendants(this.swimlanes[i], filledVertexSet);
-		}
+  if (this.swimlanes != null && this.swimlanes.length > 0 && parent != null)
+  {
+    var filledVertexSet = Object();
+    
+    for (var i = 0; i < this.swimlanes.length; i++)
+    {
+      this.filterDescendants(this.swimlanes[i], filledVertexSet);
+    }
 
-		this.roots = [];
-		var filledVertexSetEmpty = true;
+    this.roots = [];
+    var filledVertexSetEmpty = true;
 
-		// Poor man's isSetEmpty
-		for (var key in filledVertexSet)
-		{
-			if (filledVertexSet[key] != null)
-			{
-				filledVertexSetEmpty = false;
-				break;
-			}
-		}
+    // Poor man's isSetEmpty
+    for (var key in filledVertexSet)
+    {
+      if (filledVertexSet[key] != null)
+      {
+        filledVertexSetEmpty = false;
+        break;
+      }
+    }
 
-		// Only test for candidates in each swimlane in order
-		var laneCounter = 0;
+    // Only test for candidates in each swimlane in order
+    var laneCounter = 0;
 
-		while (!filledVertexSetEmpty && laneCounter < this.swimlanes.length)
-		{
-			var candidateRoots = this.findRoots(this.swimlanes[laneCounter], filledVertexSet);
-			
-			if (candidateRoots.length == 0)
-			{
-				laneCounter++;
-				continue;
-			}
-			
-			// If the candidate root is an unconnected group cell, remove it from
-			// the layout. We may need a custom set that holds such groups and forces
-			// them to be processed for resizing and/or moving.
-			for (var i = 0; i < candidateRoots.length; i++)
-			{
-				var vertexSet = Object();
-				hierarchyVertices.push(vertexSet);
+    while (!filledVertexSetEmpty && laneCounter < this.swimlanes.length)
+    {
+      var candidateRoots = this.findRoots(this.swimlanes[laneCounter], filledVertexSet);
+      
+      if (candidateRoots.length == 0)
+      {
+        laneCounter++;
+        continue;
+      }
+      
+      // If the candidate root is an unconnected group cell, remove it from
+      // the layout. We may need a custom set that holds such groups and forces
+      // them to be processed for resizing and/or moving.
+      for (var i = 0; i < candidateRoots.length; i++)
+      {
+        var vertexSet = Object();
+        hierarchyVertices.push(vertexSet);
 
-				this.traverse(candidateRoots[i], true, null, allVertexSet, vertexSet,
-						hierarchyVertices, filledVertexSet, laneCounter);
-			}
+        this.traverse(candidateRoots[i], true, null, allVertexSet, vertexSet,
+            hierarchyVertices, filledVertexSet, laneCounter);
+      }
 
-			for (var i = 0; i < candidateRoots.length; i++)
-			{
-				this.roots.push(candidateRoots[i]);
-			}
-			
-			filledVertexSetEmpty = true;
-			
-			// Poor man's isSetEmpty
-			for (var key in filledVertexSet)
-			{
-				if (filledVertexSet[key] != null)
-				{
-					filledVertexSetEmpty = false;
-					break;
-				}
-			}
-		}
-	}
-	else
-	{
-		// Find vertex set as directed traversal from roots
+      for (var i = 0; i < candidateRoots.length; i++)
+      {
+        this.roots.push(candidateRoots[i]);
+      }
+      
+      filledVertexSetEmpty = true;
+      
+      // Poor man's isSetEmpty
+      for (var key in filledVertexSet)
+      {
+        if (filledVertexSet[key] != null)
+        {
+          filledVertexSetEmpty = false;
+          break;
+        }
+      }
+    }
+  }
+  else
+  {
+    // Find vertex set as directed traversal from roots
 
-		for (var i = 0; i < this.roots.length; i++)
-		{
-			var vertexSet = Object();
-			hierarchyVertices.push(vertexSet);
+    for (var i = 0; i < this.roots.length; i++)
+    {
+      var vertexSet = Object();
+      hierarchyVertices.push(vertexSet);
 
-			this.traverse(this.roots[i], true, null, allVertexSet, vertexSet,
-					hierarchyVertices, null);
-		}
-	}
+      this.traverse(this.roots[i], true, null, allVertexSet, vertexSet,
+          hierarchyVertices, null);
+    }
+  }
 
-	var tmp = [];
-	
-	for (var key in allVertexSet)
-	{
-		tmp.push(allVertexSet[key]);
-	}
-	
-	this.model = new mxSwimlaneModel(this, tmp, this.roots,
-		parent, this.tightenToSource);
+  var tmp = [];
+  
+  for (var key in allVertexSet)
+  {
+    tmp.push(allVertexSet[key]);
+  }
+  
+  this.model = new mxSwimlaneModel(this, tmp, this.roots,
+    parent, this.tightenToSource);
 
-	this.cycleStage(parent);
-	this.layeringStage();
-	
-	this.crossingStage(parent);
-	this.placementStage(0, parent);
+  this.cycleStage(parent);
+  this.layeringStage();
+  
+  this.crossingStage(parent);
+  this.placementStage(0, parent);
 };
 
 /**
@@ -690,30 +690,30 @@ run = (parent)=>
  */
 filterDescendants = (cell, result)=>
 {
-	var model = this.graph.model;
+  var model = this.graph.model;
 
-	if (model.isVertex(cell) && cell != this.parent && model.getParent(cell) != this.parent && this.graph.isCellVisible(cell))
-	{
-		result[mxObjectIdentity.get(cell)] = cell;
-	}
+  if (model.isVertex(cell) && cell != this.parent && model.getParent(cell) != this.parent && this.graph.isCellVisible(cell))
+  {
+    result[mxObjectIdentity.get(cell)] = cell;
+  }
 
-	if (this.traverseAncestors || cell == this.parent
-			&& this.graph.isCellVisible(cell))
-	{
-		var childCount = model.getChildCount(cell);
+  if (this.traverseAncestors || cell == this.parent
+      && this.graph.isCellVisible(cell))
+  {
+    var childCount = model.getChildCount(cell);
 
-		for (var i = 0; i < childCount; i++)
-		{
-			var child = model.getChildAt(cell, i);
-			
-			// Ignore ports in the layout vertex list, they are dealt with
-			// in the traversal mechanisms
-			if (!this.isPort(child))
-			{
-				this.filterDescendants(child, result);
-			}
-		}
-	}
+    for (var i = 0; i < childCount; i++)
+    {
+      var child = model.getChildAt(cell, i);
+      
+      // Ignore ports in the layout vertex list, they are dealt with
+      // in the traversal mechanisms
+      if (!this.isPort(child))
+      {
+        this.filterDescendants(child, result);
+      }
+    }
+  }
 };
 
 /**
@@ -728,12 +728,12 @@ filterDescendants = (cell, result)=>
  */
 isPort = (cell)=>
 {
-	if (cell.geometry.relative)
-	{
-		return true;
-	}
-	
-	return false;
+  if (cell.geometry.relative)
+  {
+    return true;
+  }
+  
+  return false;
 };
 
 /**
@@ -750,24 +750,24 @@ isPort = (cell)=>
  */
 getEdgesBetween = (source, target, directed)=>
 {
-	directed = (directed != null) ? directed : false;
-	var edges = this.getEdges(source);
-	var result = [];
+  directed = (directed != null) ? directed : false;
+  var edges = this.getEdges(source);
+  var result = [];
 
-	// Checks if the edge is connected to the correct
-	// cell and returns the first match
-	for (var i = 0; i < edges.length; i++)
-	{
-		var src = this.getVisibleTerminal(edges[i], true);
-		var trg = this.getVisibleTerminal(edges[i], false);
+  // Checks if the edge is connected to the correct
+  // cell and returns the first match
+  for (var i = 0; i < edges.length; i++)
+  {
+    var src = this.getVisibleTerminal(edges[i], true);
+    var trg = this.getVisibleTerminal(edges[i], false);
 
-		if ((src == source && trg == target) || (!directed && src == target && trg == source))
-		{
-			result.push(edges[i]);
-		}
-	}
+    if ((src == source && trg == target) || (!directed && src == target && trg == source))
+    {
+      result.push(edges[i]);
+    }
+  }
 
-	return result;
+  return result;
 };
 
 /**
@@ -788,99 +788,99 @@ getEdgesBetween = (source, target, directed)=>
  * swimlaneIndex - the laid out order index of the swimlane vertex is contained in
  */
 traverse = function(vertex, directed, edge, allVertices, currentComp,
-											hierarchyVertices, filledVertexSet, swimlaneIndex)
+                      hierarchyVertices, filledVertexSet, swimlaneIndex)
 {
-	if (vertex != null && allVertices != null)
-	{
-		// Has this vertex been seen before in any traversal
-		// And if the filled vertex set is populated, only 
-		// process vertices in that it contains
-		var vertexID = mxObjectIdentity.get(vertex);
-		
-		if ((allVertices[vertexID] == null)
-				&& (filledVertexSet == null ? true : filledVertexSet[vertexID] != null))
-		{
-			if (currentComp[vertexID] == null)
-			{
-				currentComp[vertexID] = vertex;
-			}
-			if (allVertices[vertexID] == null)
-			{
-				allVertices[vertexID] = vertex;
-			}
+  if (vertex != null && allVertices != null)
+  {
+    // Has this vertex been seen before in any traversal
+    // And if the filled vertex set is populated, only 
+    // process vertices in that it contains
+    var vertexID = mxObjectIdentity.get(vertex);
+    
+    if ((allVertices[vertexID] == null)
+        && (filledVertexSet == null ? true : filledVertexSet[vertexID] != null))
+    {
+      if (currentComp[vertexID] == null)
+      {
+        currentComp[vertexID] = vertex;
+      }
+      if (allVertices[vertexID] == null)
+      {
+        allVertices[vertexID] = vertex;
+      }
 
-			if (filledVertexSet !== null)
-			{
-				delete filledVertexSet[vertexID];
-			}
+      if (filledVertexSet !== null)
+      {
+        delete filledVertexSet[vertexID];
+      }
 
-			var edges = this.getEdges(vertex);
-			var model = this.graph.model;
+      var edges = this.getEdges(vertex);
+      var model = this.graph.model;
 
-			for (var i = 0; i < edges.length; i++)
-			{
-				var otherVertex = this.getVisibleTerminal(edges[i], true);
-				var isSource = otherVertex == vertex;
-				
-				if (isSource)
-				{
-					otherVertex = this.getVisibleTerminal(edges[i], false);
-				}
+      for (var i = 0; i < edges.length; i++)
+      {
+        var otherVertex = this.getVisibleTerminal(edges[i], true);
+        var isSource = otherVertex == vertex;
+        
+        if (isSource)
+        {
+          otherVertex = this.getVisibleTerminal(edges[i], false);
+        }
 
-				var otherIndex = 0;
-				// Get the swimlane index of the other terminal
-				for (otherIndex = 0; otherIndex < this.swimlanes.length; otherIndex++)
-				{
-					if (model.isAncestor(this.swimlanes[otherIndex], otherVertex))
-					{
-						break;
-					}
-				}
-				
-				if (otherIndex >= this.swimlanes.length)
-				{
-					continue;
-				}
+        var otherIndex = 0;
+        // Get the swimlane index of the other terminal
+        for (otherIndex = 0; otherIndex < this.swimlanes.length; otherIndex++)
+        {
+          if (model.isAncestor(this.swimlanes[otherIndex], otherVertex))
+          {
+            break;
+          }
+        }
+        
+        if (otherIndex >= this.swimlanes.length)
+        {
+          continue;
+        }
 
-				// Traverse if the other vertex is within the same swimlane as
-				// as the current vertex, or if the swimlane index of the other
-				// vertex is greater than that of this vertex
-				if ((otherIndex > swimlaneIndex) ||
-						((!directed || isSource) && otherIndex == swimlaneIndex))
-				{
-					currentComp = this.traverse(otherVertex, directed, edges[i], allVertices,
-							currentComp, hierarchyVertices,
-							filledVertexSet, otherIndex);
-				}
-			}
-		}
-		else
-		{
-			if (currentComp[vertexID] == null)
-			{
-				// We've seen this vertex before, but not in the current component
-				// This component and the one it's in need to be merged
-				for (var i = 0; i < hierarchyVertices.length; i++)
-				{
-					var comp = hierarchyVertices[i];
+        // Traverse if the other vertex is within the same swimlane as
+        // as the current vertex, or if the swimlane index of the other
+        // vertex is greater than that of this vertex
+        if ((otherIndex > swimlaneIndex) ||
+            ((!directed || isSource) && otherIndex == swimlaneIndex))
+        {
+          currentComp = this.traverse(otherVertex, directed, edges[i], allVertices,
+              currentComp, hierarchyVertices,
+              filledVertexSet, otherIndex);
+        }
+      }
+    }
+    else
+    {
+      if (currentComp[vertexID] == null)
+      {
+        // We've seen this vertex before, but not in the current component
+        // This component and the one it's in need to be merged
+        for (var i = 0; i < hierarchyVertices.length; i++)
+        {
+          var comp = hierarchyVertices[i];
 
-					if (comp[vertexID] != null)
-					{
-						for (var key in comp)
-						{
-							currentComp[key] = comp[key];
-						}
-						
-						// Remove the current component from the hierarchy set
-						hierarchyVertices.splice(i, 1);
-						return currentComp;
-					}
-				}
-			}
-		}
-	}
-	
-	return currentComp;
+          if (comp[vertexID] != null)
+          {
+            for (var key in comp)
+            {
+              currentComp[key] = comp[key];
+            }
+            
+            // Remove the current component from the hierarchy set
+            hierarchyVertices.splice(i, 1);
+            return currentComp;
+          }
+        }
+      }
+    }
+  }
+  
+  return currentComp;
 };
 
 /**
@@ -890,8 +890,8 @@ traverse = function(vertex, directed, edge, allVertices, currentComp,
  */
 cycleStage = (parent)=>
 {
-	var cycleStage = new mxSwimlaneOrdering(this);
-	cycleStage.execute(parent);
+  var cycleStage = new mxSwimlaneOrdering(this);
+  cycleStage.execute(parent);
 };
 
 /**
@@ -901,8 +901,8 @@ cycleStage = (parent)=>
  */
 layeringStage = ()=>
 {
-	this.model.initialRank();
-	this.model.fixRanks();
+  this.model.initialRank();
+  this.model.fixRanks();
 };
 
 /**
@@ -912,8 +912,8 @@ layeringStage = ()=>
  */
 crossingStage = (parent)=>
 {
-	var crossingStage = new mxMedianHybridCrossingReduction(this);
-	crossingStage.execute(parent);
+  var crossingStage = new mxMedianHybridCrossingReduction(this);
+  crossingStage.execute(parent);
 };
 
 /**
@@ -923,11 +923,11 @@ crossingStage = (parent)=>
  */
 placementStage = (initialX, parent)=>
 {
-	var placementStage = new mxCoordinateAssignment(this, this.intraCellSpacing,
-			this.interRankCellSpacing, this.orientation, initialX,
-			this.parallelEdgeSpacing);
-	placementStage.fineTuning = this.fineTuning;
-	placementStage.execute(parent);
-	
-	return placementStage.limitX + this.interHierarchySpacing;
+  var placementStage = new mxCoordinateAssignment(this, this.intraCellSpacing,
+      this.interRankCellSpacing, this.orientation, initialX,
+      this.parallelEdgeSpacing);
+  placementStage.fineTuning = this.fineTuning;
+  placementStage.execute(parent);
+  
+  return placementStage.limitX + this.interHierarchySpacing;
 };

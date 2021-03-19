@@ -13,9 +13,9 @@
  */
 function mxImage(src, width, height)
 {
-	this.src = src;
-	this.width = width;
-	this.height = height;
+  this.src = src;
+  this.width = width;
+  this.height = height;
 };
 
 /**

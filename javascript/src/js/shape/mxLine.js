@@ -24,11 +24,11 @@
  */
 function mxLine(bounds, stroke, strokewidth, vertical)
 {
-	mxShape.call(this);
-	this.bounds = bounds;
-	this.stroke = stroke;
-	this.strokewidth = (strokewidth != null) ? strokewidth : 1;
-	this.vertical = (vertical != null) ? vertical : this.vertical;
+  mxShape.call(this);
+  this.bounds = bounds;
+  this.stroke = stroke;
+  this.strokewidth = (strokewidth != null) ? strokewidth : 1;
+  this.vertical = (vertical != null) ? vertical : this.vertical;
 };
 
 /**
@@ -50,20 +50,20 @@ vertical = false;
  */
 paintVertexShape = (c, x, y, w, h)=>
 {
-	c.begin();
+  c.begin();
 
-	if (this.vertical)
-	{
-		var mid = x + w / 2;
-		c.moveTo(mid, y);
-		c.lineTo(mid, y + h);
-	}
-	else
-	{
-		var mid = y + h / 2;
-		c.moveTo(x, mid);
-		c.lineTo(x + w, mid);
-	}
+  if (this.vertical)
+  {
+    var mid = x + w / 2;
+    c.moveTo(mid, y);
+    c.lineTo(mid, y + h);
+  }
+  else
+  {
+    var mid = y + h / 2;
+    c.moveTo(x, mid);
+    c.lineTo(x + w, mid);
+  }
 
-	c.stroke();
+  c.stroke();
 };

@@ -174,15 +174,15 @@
  */
 function mxPrintPreview(graph, scale, pageFormat, border, x0, y0, borderColor, title, pageSelector)
 {
-	this.graph = graph;
-	this.scale = (scale != null) ? scale : 1 / graph.pageScale;
-	this.border = (border != null) ? border : 0;
-	this.pageFormat = mxRectangle.fromRectangle((pageFormat != null) ? pageFormat : graph.pageFormat);
-	this.title = (title != null) ? title : 'Printer-friendly version';
-	this.x0 = (x0 != null) ? x0 : 0;
-	this.y0 = (y0 != null) ? y0 : 0;
-	this.borderColor = borderColor;
-	this.pageSelector = (pageSelector != null) ? pageSelector : true;
+  this.graph = graph;
+  this.scale = (scale != null) ? scale : 1 / graph.pageScale;
+  this.border = (border != null) ? border : 0;
+  this.pageFormat = mxRectangle.fromRectangle((pageFormat != null) ? pageFormat : graph.pageFormat);
+  this.title = (title != null) ? title : 'Printer-friendly version';
+  this.x0 = (x0 != null) ? x0 : 0;
+  this.y0 = (y0 != null) ? y0 : 0;
+  this.borderColor = borderColor;
+  this.pageSelector = (pageSelector != null) ? pageSelector : true;
 };
 
 /**
@@ -339,7 +339,7 @@ clipping = true;
  */
 getWindow = ()=>
 {
-	return this.wnd;
+  return this.wnd;
 };
 
 /**
@@ -351,23 +351,23 @@ getWindow = ()=>
  */
 getDoctype = ()=>
 {
-	var dt = '';
-	
-	if (document.documentMode == 5)
-	{
-		dt = '<meta http-equiv="X-UA-Compatible" content="IE=5">';
-	}
-	else if (document.documentMode == 8)
-	{
-		dt = '<meta http-equiv="X-UA-Compatible" content="IE=8">';
-	}
-	else if (document.documentMode > 8)
-	{
-		// Comment needed to make standards doctype apply in IE
-		dt = '<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->';
-	}
-	
-	return dt;
+  var dt = '';
+
+  if (document.documentMode == 5)
+  {
+    dt = '<meta http-equiv="X-UA-Compatible" content="IE=5">';
+  }
+  else if (document.documentMode == 8)
+  {
+    dt = '<meta http-equiv="X-UA-Compatible" content="IE=8">';
+  }
+  else if (document.documentMode > 8)
+  {
+    // Comment needed to make standards doctype apply in IE
+    dt = '<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->';
+  }
+
+  return dt;
 };
 
 /**
@@ -383,11 +383,11 @@ getDoctype = ()=>
  */
 appendGraph = (graph, scale, x0, y0, forcePageBreaks, keepOpen)=>
 {
-	this.graph = graph;
-	this.scale = (scale != null) ? scale : 1 / graph.pageScale;
-	this.x0 = x0;
-	this.y0 = y0;
-	this.open(null, null, forcePageBreaks, keepOpen);
+  this.graph = graph;
+  this.scale = (scale != null) ? scale : 1 / graph.pageScale;
+  this.x0 = x0;
+  this.y0 = y0;
+  this.open(null, null, forcePageBreaks, keepOpen);
 };
 
 /**
@@ -404,269 +404,269 @@ appendGraph = (graph, scale, x0, y0, forcePageBreaks, keepOpen)=>
  */
 open = (css, targetWindow, forcePageBreaks, keepOpen)=>
 {
-	// Closing the window while the page is being rendered may cause an
-	// exception in IE. This and any other exceptions are simply ignored.
-	var previousInitializeOverlay = this.graph.cellRenderer.initializeOverlay;
-	var div = null;
-	
-	try
-	{
-		// Temporarily overrides the method to redirect rendering of overlays
-		// to the draw pane so that they are visible in the printout
-		if (this.printOverlays)
-		{
-			this.graph.cellRenderer.initializeOverlay = (state, overlay)=>
-			{
-				overlay.init(state.view.getDrawPane());
-			};
-		}
-		
-		if (this.printControls)
-		{
-			this.graph.cellRenderer.initControl = (state, control, handleEvents, clickHandler)=>
-			{
-				control.dialect = state.view.graph.dialect;
-				control.init(state.view.getDrawPane());
-			};
-		}
-		
-		this.wnd = (targetWindow != null) ? targetWindow : this.wnd;
-		var isNewWindow = false;
-		
-		if (this.wnd == null)
-		{
-			isNewWindow = true;
-			this.wnd = window.open();
-		}
-		
-		var doc = this.wnd.document;
-		
-		if (isNewWindow)
-		{
-			var dt = this.getDoctype();
-			
-			if (dt != null && dt.length > 0)
-			{
-				doc.writeln(dt);
-			}
-			
-			if (mxClient.IS_VML)
-			{
-				doc.writeln('<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">');
-			}
-			else
-			{
-				if (document.compatMode === 'CSS1Compat')
-				{
-					doc.writeln('<!DOCTYPE html>');
-				}
-				
-				doc.writeln('<html>');
-			}
-			
-			doc.writeln('<head>');
-			this.writeHead(doc, css);
-			doc.writeln('</head>');
-			doc.writeln('<body class="mxPage">');
-		}
+  // Closing the window while the page is being rendered may cause an
+  // exception in IE. This and any other exceptions are simply ignored.
+  var previousInitializeOverlay = this.graph.cellRenderer.initializeOverlay;
+  var div = null;
 
-		// Computes the horizontal and vertical page count
-		var bounds = this.graph.getGraphBounds().clone();
-		var currentScale = this.graph.getView().getScale();
-		var sc = currentScale / this.scale;
-		var tr = this.graph.getView().getTranslate();
-		
-		// Uses the absolute origin with no offset for all printing
-		if (!this.autoOrigin)
-		{
-			this.x0 -= tr.x * this.scale;
-			this.y0 -= tr.y * this.scale;
-			bounds.width += bounds.x;
-			bounds.height += bounds.y;
-			bounds.x = 0;
-			bounds.y = 0;
-			this.border = 0;
-		}
-		
-		// Store the available page area
-		var availableWidth = this.pageFormat.width - (this.border * 2);
-		var availableHeight = this.pageFormat.height - (this.border * 2);
-	
-		// Adds margins to page format
-		this.pageFormat.height += this.marginTop + this.marginBottom;
+  try
+  {
+    // Temporarily overrides the method to redirect rendering of overlays
+    // to the draw pane so that they are visible in the printout
+    if (this.printOverlays)
+    {
+      this.graph.cellRenderer.initializeOverlay = (state, overlay)=>
+      {
+        overlay.init(state.view.getDrawPane());
+      };
+    }
 
-		// Compute the unscaled, untranslated bounds to find
-		// the number of vertical and horizontal pages
-		bounds.width /= sc;
-		bounds.height /= sc;
+    if (this.printControls)
+    {
+      this.graph.cellRenderer.initControl = (state, control, handleEvents, clickHandler)=>
+      {
+        control.dialect = state.view.graph.dialect;
+        control.init(state.view.getDrawPane());
+      };
+    }
 
-		var hpages = Math.max(1, Math.ceil((bounds.width + this.x0) / availableWidth));
-		var vpages = Math.max(1, Math.ceil((bounds.height + this.y0) / availableHeight));
-		this.pageCount = hpages * vpages;
-		
-		var writePageSelector = mxUtils.bind(this, ()=>
-		{
-			if (this.pageSelector && (vpages > 1 || hpages > 1))
-			{
-				var table = this.createPageSelector(vpages, hpages);
-				doc.body.appendChild(table);
-				
-				// Implements position: fixed in IE quirks mode
-				if (mxClient.IS_IE && doc.documentMode == null || doc.documentMode == 5 || doc.documentMode == 8 || doc.documentMode == 7)
-				{
-					table.style.position = 'absolute';
-					
-					var update = ()=>
-					{
-						table.style.top = ((doc.body.scrollTop || doc.documentElement.scrollTop) + 10) + 'px';
-					};
-					
-					mxEvent.addListener(this.wnd, 'scroll', (evt)=>
-					{
-						update();
-					});
-					
-					mxEvent.addListener(this.wnd, 'resize', (evt)=>
-					{
-						update();
-					});
-				}
-			}
-		});
-		
-		var addPage = mxUtils.bind(this, (div, addBreak)=>
-		{
-			// Border of the DIV (aka page) inside the document
-			if (this.borderColor != null)
-			{
-				div.style.borderColor = this.borderColor;
-				div.style.borderStyle = 'solid';
-				div.style.borderWidth = '1px';
-			}
-			
-			// Needs to be assigned directly because IE doesn't support
-			// child selectors, eg. body > div { background: white; }
-			div.style.background = this.backgroundColor;
-			
-			if (forcePageBreaks || addBreak)
-			{
-				div.style.pageBreakAfter = 'always';
-			}
+    this.wnd = (targetWindow != null) ? targetWindow : this.wnd;
+    var isNewWindow = false;
 
-			// NOTE: We are dealing with cross-window DOM here, which
-			// is a problem in IE, so we copy the HTML markup instead.
-			// The underlying problem is that the graph display markup
-			// creation (in mxShape, mxGraphView) is hardwired to using
-			// document.createElement and hence we must use this document
-			// to create the complete page and then copy it over to the
-			// new window.document. This can be fixed later by using the
-			// ownerDocument of the container in mxShape and mxGraphView.
-			if (isNewWindow && (mxClient.IS_IE || document.documentMode >= 11 || mxClient.IS_EDGE))
-			{
-				// For some obscure reason, removing the DIV from the
-				// parent before fetching its outerHTML has missing
-				// fillcolor properties and fill children, so the div
-				// must be removed afterwards to keep the fillcolors.
-				doc.writeln(div.outerHTML);
-				div.parentNode.removeChild(div);
-			}
-			else if (mxClient.IS_IE || document.documentMode >= 11 || mxClient.IS_EDGE)
-			{
-				var clone = doc.createElement('div');
-				clone.innerHTML = div.outerHTML;
-				clone = clone.getElementsByTagName('div')[0];
-				doc.body.appendChild(clone);
-				div.parentNode.removeChild(div);
-			}
-			else
-			{
-				div.parentNode.removeChild(div);
-				doc.body.appendChild(div);
-			}
+    if (this.wnd == null)
+    {
+      isNewWindow = true;
+      this.wnd = window.open();
+    }
 
-			if (forcePageBreaks || addBreak)
-			{
-				this.addPageBreak(doc);
-			}
-		});
-		
-		var cov = this.getCoverPages(this.pageFormat.width, this.pageFormat.height);
-		
-		if (cov != null)
-		{
-			for (var i = 0; i < cov.length; i++)
-			{
-				addPage(cov[i], true);
-			}
-		}
-		
-		var apx = this.getAppendices(this.pageFormat.width, this.pageFormat.height);
-		
-		// Appends each page to the page output for printing, making
-		// sure there will be a page break after each page (ie. div)
-		for (var i = 0; i < vpages; i++)
-		{
-			var dy = i * availableHeight / this.scale - this.y0 / this.scale +
-					(bounds.y - tr.y * currentScale) / currentScale;
-			
-			for (var j = 0; j < hpages; j++)
-			{
-				if (this.wnd == null)
-				{
-					return null;
-				}
-				
-				var dx = j * availableWidth / this.scale - this.x0 / this.scale +
-						(bounds.x - tr.x * currentScale) / currentScale;
-				var pageNum = i * hpages + j + 1;
-				var clip = new mxRectangle(dx, dy, availableWidth, availableHeight);
-				div = this.renderPage(this.pageFormat.width, this.pageFormat.height, 0, 0, mxUtils.bind(this, (div)=>
-				{
-					this.addGraphFragment(-dx, -dy, this.scale, pageNum, div, clip);
-					
-					if (this.printBackgroundImage)
-					{
-						this.insertBackgroundImage(div, -dx, -dy);
-					}
-				}), pageNum);
+    var doc = this.wnd.document;
 
-				// Gives the page a unique ID for later accessing the page
-				div.setAttribute('id', 'mxPage-'+pageNum);
+    if (isNewWindow)
+    {
+      var dt = this.getDoctype();
 
-				addPage(div, apx != null || i < vpages - 1 || j < hpages - 1);
-			}
-		}
+      if (dt != null && dt.length > 0)
+      {
+        doc.writeln(dt);
+      }
 
-		if (apx != null)
-		{
-			for (var i = 0; i < apx.length; i++)
-			{
-				addPage(apx[i], i < apx.length - 1);
-			}
-		}
+      if (mxClient.IS_VML)
+      {
+        doc.writeln('<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">');
+      }
+      else
+      {
+        if (document.compatMode === 'CSS1Compat')
+        {
+          doc.writeln('<!DOCTYPE html>');
+        }
 
-		if (isNewWindow && !keepOpen)
-		{
-			this.closeDocument();
-			writePageSelector();
-		}
-		
-		this.wnd.focus();
-	}
-	catch (e)
-	{
-		// Removes the DIV from the document in case of an error
-		if (div != null && div.parentNode != null)
-		{
-			div.parentNode.removeChild(div);
-		}
-	}
-	finally
-	{
-		this.graph.cellRenderer.initializeOverlay = previousInitializeOverlay;
-	}
+        doc.writeln('<html>');
+      }
 
-	return this.wnd;
+      doc.writeln('<head>');
+      this.writeHead(doc, css);
+      doc.writeln('</head>');
+      doc.writeln('<body class="mxPage">');
+    }
+
+    // Computes the horizontal and vertical page count
+    var bounds = this.graph.getGraphBounds().clone();
+    var currentScale = this.graph.getView().getScale();
+    var sc = currentScale / this.scale;
+    var tr = this.graph.getView().getTranslate();
+
+    // Uses the absolute origin with no offset for all printing
+    if (!this.autoOrigin)
+    {
+      this.x0 -= tr.x * this.scale;
+      this.y0 -= tr.y * this.scale;
+      bounds.width += bounds.x;
+      bounds.height += bounds.y;
+      bounds.x = 0;
+      bounds.y = 0;
+      this.border = 0;
+    }
+
+    // Store the available page area
+    var availableWidth = this.pageFormat.width - (this.border * 2);
+    var availableHeight = this.pageFormat.height - (this.border * 2);
+
+    // Adds margins to page format
+    this.pageFormat.height += this.marginTop + this.marginBottom;
+
+    // Compute the unscaled, untranslated bounds to find
+    // the number of vertical and horizontal pages
+    bounds.width /= sc;
+    bounds.height /= sc;
+
+    var hpages = Math.max(1, Math.ceil((bounds.width + this.x0) / availableWidth));
+    var vpages = Math.max(1, Math.ceil((bounds.height + this.y0) / availableHeight));
+    this.pageCount = hpages * vpages;
+
+    var writePageSelector = mxUtils.bind(this, ()=>
+    {
+      if (this.pageSelector && (vpages > 1 || hpages > 1))
+      {
+        var table = this.createPageSelector(vpages, hpages);
+        doc.body.appendChild(table);
+
+        // Implements position: fixed in IE quirks mode
+        if (mxClient.IS_IE && doc.documentMode == null || doc.documentMode == 5 || doc.documentMode == 8 || doc.documentMode == 7)
+        {
+          table.style.position = 'absolute';
+
+          var update = ()=>
+          {
+            table.style.top = ((doc.body.scrollTop || doc.documentElement.scrollTop) + 10) + 'px';
+          };
+
+          mxEvent.addListener(this.wnd, 'scroll', (evt)=>
+          {
+            update();
+          });
+
+          mxEvent.addListener(this.wnd, 'resize', (evt)=>
+          {
+            update();
+          });
+        }
+      }
+    });
+
+    var addPage = mxUtils.bind(this, (div, addBreak)=>
+    {
+      // Border of the DIV (aka page) inside the document
+      if (this.borderColor != null)
+      {
+        div.style.borderColor = this.borderColor;
+        div.style.borderStyle = 'solid';
+        div.style.borderWidth = '1px';
+      }
+
+      // Needs to be assigned directly because IE doesn't support
+      // child selectors, eg. body > div { background: white; }
+      div.style.background = this.backgroundColor;
+
+      if (forcePageBreaks || addBreak)
+      {
+        div.style.pageBreakAfter = 'always';
+      }
+
+      // NOTE: We are dealing with cross-window DOM here, which
+      // is a problem in IE, so we copy the HTML markup instead.
+      // The underlying problem is that the graph display markup
+      // creation (in mxShape, mxGraphView) is hardwired to using
+      // document.createElement and hence we must use this document
+      // to create the complete page and then copy it over to the
+      // new window.document. This can be fixed later by using the
+      // ownerDocument of the container in mxShape and mxGraphView.
+      if (isNewWindow && (mxClient.IS_IE || document.documentMode >= 11 || mxClient.IS_EDGE))
+      {
+        // For some obscure reason, removing the DIV from the
+        // parent before fetching its outerHTML has missing
+        // fillcolor properties and fill children, so the div
+        // must be removed afterwards to keep the fillcolors.
+        doc.writeln(div.outerHTML);
+        div.parentNode.removeChild(div);
+      }
+      else if (mxClient.IS_IE || document.documentMode >= 11 || mxClient.IS_EDGE)
+      {
+        var clone = doc.createElement('div');
+        clone.innerHTML = div.outerHTML;
+        clone = clone.getElementsByTagName('div')[0];
+        doc.body.appendChild(clone);
+        div.parentNode.removeChild(div);
+      }
+      else
+      {
+        div.parentNode.removeChild(div);
+        doc.body.appendChild(div);
+      }
+
+      if (forcePageBreaks || addBreak)
+      {
+        this.addPageBreak(doc);
+      }
+    });
+
+    var cov = this.getCoverPages(this.pageFormat.width, this.pageFormat.height);
+
+    if (cov != null)
+    {
+      for (var i = 0; i < cov.length; i++)
+      {
+        addPage(cov[i], true);
+      }
+    }
+
+    var apx = this.getAppendices(this.pageFormat.width, this.pageFormat.height);
+
+    // Appends each page to the page output for printing, making
+    // sure there will be a page break after each page (ie. div)
+    for (var i = 0; i < vpages; i++)
+    {
+      var dy = i * availableHeight / this.scale - this.y0 / this.scale +
+          (bounds.y - tr.y * currentScale) / currentScale;
+
+      for (var j = 0; j < hpages; j++)
+      {
+        if (this.wnd == null)
+        {
+          return null;
+        }
+
+        var dx = j * availableWidth / this.scale - this.x0 / this.scale +
+            (bounds.x - tr.x * currentScale) / currentScale;
+        var pageNum = i * hpages + j + 1;
+        var clip = new mxRectangle(dx, dy, availableWidth, availableHeight);
+        div = this.renderPage(this.pageFormat.width, this.pageFormat.height, 0, 0, mxUtils.bind(this, (div)=>
+        {
+          this.addGraphFragment(-dx, -dy, this.scale, pageNum, div, clip);
+
+          if (this.printBackgroundImage)
+          {
+            this.insertBackgroundImage(div, -dx, -dy);
+          }
+        }), pageNum);
+
+        // Gives the page a unique ID for later accessing the page
+        div.setAttribute('id', 'mxPage-'+pageNum);
+
+        addPage(div, apx != null || i < vpages - 1 || j < hpages - 1);
+      }
+    }
+
+    if (apx != null)
+    {
+      for (var i = 0; i < apx.length; i++)
+      {
+        addPage(apx[i], i < apx.length - 1);
+      }
+    }
+
+    if (isNewWindow && !keepOpen)
+    {
+      this.closeDocument();
+      writePageSelector();
+    }
+
+    this.wnd.focus();
+  }
+  catch (e)
+  {
+    // Removes the DIV from the document in case of an error
+    if (div != null && div.parentNode != null)
+    {
+      div.parentNode.removeChild(div);
+    }
+  }
+  finally
+  {
+    this.graph.cellRenderer.initializeOverlay = previousInitializeOverlay;
+  }
+
+  return this.wnd;
 };
 
 /**
@@ -676,9 +676,9 @@ open = (css, targetWindow, forcePageBreaks, keepOpen)=>
  */
 addPageBreak = (doc)=>
 {
-	var hr = doc.createElement('hr');
-	hr.className = 'mxPageBreak';
-	doc.body.appendChild(hr);
+  var hr = doc.createElement('hr');
+  hr.className = 'mxPageBreak';
+  doc.body.appendChild(hr);
 };
 
 /**
@@ -688,25 +688,25 @@ addPageBreak = (doc)=>
  */
 closeDocument = ()=>
 {
-	try
-	{
-		if (this.wnd != null && this.wnd.document != null)
-		{
-			var doc = this.wnd.document;
-			
-			this.writePostfix(doc);
-			doc.writeln('</body>');
-			doc.writeln('</html>');
-			doc.close();
-			
-			// Removes all event handlers in the print output
-			mxEvent.release(doc.body);
-		}
-	}
-	catch (e)
-	{
-		// ignore any errors resulting from wnd no longer being available
-	}
+  try
+  {
+    if (this.wnd != null && this.wnd.document != null)
+    {
+      var doc = this.wnd.document;
+
+      this.writePostfix(doc);
+      doc.writeln('</body>');
+      doc.writeln('</html>');
+      doc.close();
+
+      // Removes all event handlers in the print output
+      mxEvent.release(doc.body);
+    }
+  }
+  catch (e)
+  {
+    // ignore any errors resulting from wnd no longer being available
+  }
 };
 
 /**
@@ -717,44 +717,44 @@ closeDocument = ()=>
  */
 writeHead = (doc, css)=>
 {
-	if (this.title != null)
-	{
-		doc.writeln('<title>' + this.title + '</title>');
-	}
-	
-	// Adds required namespaces
-	if (mxClient.IS_VML)
-	{
-		doc.writeln('<style type="text/css">v\\:*{behavior:url(#default#VML)}o\\:*{behavior:url(#default#VML)}</style>');
-	}
+  if (this.title != null)
+  {
+    doc.writeln('<title>' + this.title + '</title>');
+  }
 
-	// Adds all required stylesheets
-	mxClient.link('stylesheet', mxClient.basePath + '/css/common.css', doc);
+  // Adds required namespaces
+  if (mxClient.IS_VML)
+  {
+    doc.writeln('<style type="text/css">v\\:*{behavior:url(#default#VML)}o\\:*{behavior:url(#default#VML)}</style>');
+  }
 
-	// Removes horizontal rules and page selector from print output
-	doc.writeln('<style type="text/css">');
-	doc.writeln('@media print {');
-	doc.writeln('  * { -webkit-print-color-adjust: exact; }');
-	doc.writeln('  table.mxPageSelector { display: none; }');
-	doc.writeln('  hr.mxPageBreak { display: none; }');
-	doc.writeln('}');
-	doc.writeln('@media screen {');
-	
-	// NOTE: position: fixed is not supported in IE, so the page selector
-	// position (absolute) needs to be updated in IE (see below)
-	doc.writeln('  table.mxPageSelector { position: fixed; right: 10px; top: 10px;' +
-			'font-family: Arial; font-size:10pt; border: solid 1px darkgray;' +
-			'background: white; border-collapse:collapse; }');
-	doc.writeln('  table.mxPageSelector td { border: solid 1px gray; padding:4px; }');
-	doc.writeln('  body.mxPage { background: gray; }');
-	doc.writeln('}');
-	
-	if (css != null)
-	{
-		doc.writeln(css);
-	}
-	
-	doc.writeln('</style>');
+  // Adds all required stylesheets
+  mxClient.link('stylesheet', mxClient.basePath + '/css/common.css', doc);
+
+  // Removes horizontal rules and page selector from print output
+  doc.writeln('<style type="text/css">');
+  doc.writeln('@media print {');
+  doc.writeln('  * { -webkit-print-color-adjust: exact; }');
+  doc.writeln('  table.mxPageSelector { display: none; }');
+  doc.writeln('  hr.mxPageBreak { display: none; }');
+  doc.writeln('}');
+  doc.writeln('@media screen {');
+
+  // NOTE: position: fixed is not supported in IE, so the page selector
+  // position (absolute) needs to be updated in IE (see below)
+  doc.writeln('  table.mxPageSelector { position: fixed; right: 10px; top: 10px;' +
+      'font-family: Arial; font-size:10pt; border: solid 1px darkgray;' +
+      'background: white; border-collapse:collapse; }');
+  doc.writeln('  table.mxPageSelector td { border: solid 1px gray; padding:4px; }');
+  doc.writeln('  body.mxPage { background: gray; }');
+  doc.writeln('}');
+
+  if (css != null)
+  {
+    doc.writeln(css);
+  }
+
+  doc.writeln('</style>');
 };
 
 /**
@@ -764,7 +764,7 @@ writeHead = (doc, css)=>
  */
 writePostfix = (doc)=>
 {
-	// empty
+  // empty
 };
 
 /**
@@ -774,42 +774,42 @@ writePostfix = (doc)=>
  */
 createPageSelector = (vpages, hpages)=>
 {
-	var doc = this.wnd.document;
-	var table = doc.createElement('table');
-	table.className = 'mxPageSelector';
-	table.setAttribute('border', '0');
+  var doc = this.wnd.document;
+  var table = doc.createElement('table');
+  table.className = 'mxPageSelector';
+  table.setAttribute('border', '0');
 
-	var tbody = doc.createElement('tbody');
-	
-	for (var i = 0; i < vpages; i++)
-	{
-		var row = doc.createElement('tr');
-		
-		for (var j = 0; j < hpages; j++)
-		{
-			var pageNum = i * hpages + j + 1;
-			var cell = doc.createElement('td');
-			var a = doc.createElement('a');
-			a.setAttribute('href', '#mxPage-' + pageNum);
+  var tbody = doc.createElement('tbody');
 
-			// Workaround for FF where the anchor is appended to the URL of the original document
-			if (mxClient.IS_NS && !mxClient.IS_SF && !mxClient.IS_GC)
-			{
-				var js = 'var page = document.getElementById(\'mxPage-' + pageNum + '\');page.scrollIntoView(true);event.preventDefault();';
-				a.setAttribute('onclick', js);
-			}
-			
-			mxUtils.write(a, pageNum, doc);
-			cell.appendChild(a);
-			row.appendChild(cell);
-		}
-		
-		tbody.appendChild(row);
-	}
-	
-	table.appendChild(tbody);
-	
-	return table;
+  for (var i = 0; i < vpages; i++)
+  {
+    var row = doc.createElement('tr');
+
+    for (var j = 0; j < hpages; j++)
+    {
+      var pageNum = i * hpages + j + 1;
+      var cell = doc.createElement('td');
+      var a = doc.createElement('a');
+      a.setAttribute('href', '#mxPage-' + pageNum);
+
+      // Workaround for FF where the anchor is appended to the URL of the original document
+      if (mxClient.IS_NS && !mxClient.IS_SF && !mxClient.IS_GC)
+      {
+        var js = 'var page = document.getElementById(\'mxPage-' + pageNum + '\');page.scrollIntoView(true);event.preventDefault();';
+        a.setAttribute('onclick', js);
+      }
+
+      mxUtils.write(a, pageNum, doc);
+      cell.appendChild(a);
+      row.appendChild(cell);
+    }
+
+    tbody.appendChild(row);
+  }
+
+  table.appendChild(tbody);
+
+  return table;
 };
 
 /**
@@ -831,104 +831,104 @@ createPageSelector = (vpages, hpages)=>
  */
 renderPage = (w, h, dx, dy, content, pageNumber)=>
 {
-	var doc = this.wnd.document;
-	var div = document.createElement('div');
-	var arg = null;
+  var doc = this.wnd.document;
+  var div = document.createElement('div');
+  var arg = null;
 
-	try
-	{
-		// Workaround for ignored clipping in IE 9 standards
-		// when printing with page breaks and HTML labels.
-		if (dx != 0 || dy != 0)
-		{
-			div.style.position = 'relative';
-			div.style.width = w + 'px';
-			div.style.height = h + 'px';
-			div.style.pageBreakInside = 'avoid';
-			
-			var innerDiv = document.createElement('div');
-			innerDiv.style.position = 'relative';
-			innerDiv.style.top = this.border + 'px';
-			innerDiv.style.left = this.border + 'px';
-			innerDiv.style.width = (w - 2 * this.border) + 'px';
-			innerDiv.style.height = (h - 2 * this.border) + 'px';
-			innerDiv.style.overflow = 'hidden';
-			
-			var viewport = document.createElement('div');
-			viewport.style.position = 'relative';
-			viewport.style.marginLeft = dx + 'px';
-			viewport.style.marginTop = dy + 'px';
+  try
+  {
+    // Workaround for ignored clipping in IE 9 standards
+    // when printing with page breaks and HTML labels.
+    if (dx != 0 || dy != 0)
+    {
+      div.style.position = 'relative';
+      div.style.width = w + 'px';
+      div.style.height = h + 'px';
+      div.style.pageBreakInside = 'avoid';
 
-			// FIXME: IE8 standards output problems
-			if (doc.documentMode == 8)
-			{
-				innerDiv.style.position = 'absolute';
-				viewport.style.position = 'absolute';
-			}
-		
-			if (doc.documentMode == 10)
-			{
-				viewport.style.width = '100%';
-				viewport.style.height = '100%';
-			}
-			
-			innerDiv.appendChild(viewport);
-			div.appendChild(innerDiv);
-			document.body.appendChild(div);
-			arg = viewport;
-		}
-		// FIXME: IE10/11 too many pages
-		else
-		{
-			div.style.width = w + 'px';
-			div.style.height = h + 'px';
-			div.style.overflow = 'hidden';
-			div.style.pageBreakInside = 'avoid';
-			
-			// IE8 uses above branch currently
-			if (doc.documentMode == 8)
-			{
-				div.style.position = 'relative';
-			}
-			
-			var innerDiv = document.createElement('div');
-			innerDiv.style.width = (w - 2 * this.border) + 'px';
-			innerDiv.style.height = (h - 2 * this.border) + 'px';
-			innerDiv.style.overflow = 'hidden';
+      var innerDiv = document.createElement('div');
+      innerDiv.style.position = 'relative';
+      innerDiv.style.top = this.border + 'px';
+      innerDiv.style.left = this.border + 'px';
+      innerDiv.style.width = (w - 2 * this.border) + 'px';
+      innerDiv.style.height = (h - 2 * this.border) + 'px';
+      innerDiv.style.overflow = 'hidden';
 
-			if (mxClient.IS_IE && (doc.documentMode == null || doc.documentMode == 5 ||
-				doc.documentMode == 8 || doc.documentMode == 7))
-			{
-				innerDiv.style.marginTop = this.border + 'px';
-				innerDiv.style.marginLeft = this.border + 'px';	
-			}
-			else
-			{
-				innerDiv.style.top = this.border + 'px';
-				innerDiv.style.left = this.border + 'px';
-			}
-	
-			if (this.graph.dialect == mxConstants.DIALECT_VML)
-			{
-				innerDiv.style.position = 'absolute';
-			}
+      var viewport = document.createElement('div');
+      viewport.style.position = 'relative';
+      viewport.style.marginLeft = dx + 'px';
+      viewport.style.marginTop = dy + 'px';
 
-			div.appendChild(innerDiv);
-			document.body.appendChild(div);
-			arg = innerDiv;
-		}
-	}
-	catch (e)
-	{
-		div.parentNode.removeChild(div);
-		div = null;
-		
-		throw e;
-	}
+      // FIXME: IE8 standards output problems
+      if (doc.documentMode == 8)
+      {
+        innerDiv.style.position = 'absolute';
+        viewport.style.position = 'absolute';
+      }
 
-	content(arg);
-	 
-	return div;
+      if (doc.documentMode == 10)
+      {
+        viewport.style.width = '100%';
+        viewport.style.height = '100%';
+      }
+
+      innerDiv.appendChild(viewport);
+      div.appendChild(innerDiv);
+      document.body.appendChild(div);
+      arg = viewport;
+    }
+    // FIXME: IE10/11 too many pages
+    else
+    {
+      div.style.width = w + 'px';
+      div.style.height = h + 'px';
+      div.style.overflow = 'hidden';
+      div.style.pageBreakInside = 'avoid';
+
+      // IE8 uses above branch currently
+      if (doc.documentMode == 8)
+      {
+        div.style.position = 'relative';
+      }
+
+      var innerDiv = document.createElement('div');
+      innerDiv.style.width = (w - 2 * this.border) + 'px';
+      innerDiv.style.height = (h - 2 * this.border) + 'px';
+      innerDiv.style.overflow = 'hidden';
+
+      if (mxClient.IS_IE && (doc.documentMode == null || doc.documentMode == 5 ||
+        doc.documentMode == 8 || doc.documentMode == 7))
+      {
+        innerDiv.style.marginTop = this.border + 'px';
+        innerDiv.style.marginLeft = this.border + 'px';
+      }
+      else
+      {
+        innerDiv.style.top = this.border + 'px';
+        innerDiv.style.left = this.border + 'px';
+      }
+
+      if (this.graph.dialect == mxConstants.DIALECT_VML)
+      {
+        innerDiv.style.position = 'absolute';
+      }
+
+      div.appendChild(innerDiv);
+      document.body.appendChild(div);
+      arg = innerDiv;
+    }
+  }
+  catch (e)
+  {
+    div.parentNode.removeChild(div);
+    div = null;
+
+    throw e;
+  }
+
+  content(arg);
+
+  return div;
 };
 
 /**
@@ -938,14 +938,14 @@ renderPage = (w, h, dx, dy, content, pageNumber)=>
  */
 getRoot = ()=>
 {
-	var root = this.graph.view.currentRoot;
-	
-	if (root == null)
-	{
-		root = this.graph.getModel().getRoot();
-	}
-	
-	return root;
+  var root = this.graph.view.currentRoot;
+
+  if (root == null)
+  {
+    root = this.graph.getModel().getRoot();
+  }
+
+  return root;
 };
 
 /**
@@ -957,7 +957,7 @@ getRoot = ()=>
  */
 useCssTransforms = ()=>
 {
-	return !mxClient.NO_FO && !mxClient.IS_SF;
+  return !mxClient.NO_FO && !mxClient.IS_SF;
 };
 
 /**
@@ -976,175 +976,175 @@ useCssTransforms = ()=>
  */
 addGraphFragment = (dx, dy, scale, pageNumber, div, clip)=>
 {
-	var view = this.graph.getView();
-	var previousContainer = this.graph.container;
-	this.graph.container = div;
-	
-	var canvas = view.getCanvas();
-	var backgroundPane = view.getBackgroundPane();
-	var drawPane = view.getDrawPane();
-	var overlayPane = view.getOverlayPane();
-	var realScale = scale;
+  var view = this.graph.getView();
+  var previousContainer = this.graph.container;
+  this.graph.container = div;
 
-	if (this.graph.dialect == mxConstants.DIALECT_SVG)
-	{
-		view.createSvg();
-		
-		// Uses CSS transform for scaling
-		if (this.useCssTransforms())
-		{
-			var g = view.getDrawPane().parentNode;
-			var prev = g.getAttribute('transform');
-			g.setAttribute('transformOrigin', '0 0');
-			g.setAttribute('transform', 'scale(' + scale + ',' + scale + ')' +
-				'translate(' + dx + ',' + dy + ')');
-			
-			scale = 1;
-			dx = 0;
-			dy = 0;
-		}
-	}
-	else if (this.graph.dialect == mxConstants.DIALECT_VML)
-	{
-		view.createVml();
-	}
-	else
-	{
-		view.createHtml();
-	}
-	
-	// Disables events on the view
-	var eventsEnabled = view.isEventsEnabled();
-	view.setEventsEnabled(false);
-	
-	// Disables the graph to avoid cursors
-	var graphEnabled = this.graph.isEnabled();
-	this.graph.setEnabled(false);
+  var canvas = view.getCanvas();
+  var backgroundPane = view.getBackgroundPane();
+  var drawPane = view.getDrawPane();
+  var overlayPane = view.getOverlayPane();
+  var realScale = scale;
 
-	// Resets the translation
-	var translate = view.getTranslate();
-	view.translate = new mxPoint(dx, dy);
-	
-	// Redraws only states that intersect the clip
-	var redraw = this.graph.cellRenderer.redraw;
-	var states = view.states;
-	var s = view.scale;
+  if (this.graph.dialect == mxConstants.DIALECT_SVG)
+  {
+    view.createSvg();
 
-	// Gets the transformed clip for intersection check below
-	if (this.clipping)
-	{
-		var tempClip = new mxRectangle((clip.x + translate.x) * s, (clip.y + translate.y) * s,
-				clip.width * s / realScale, clip.height * s / realScale);
+    // Uses CSS transform for scaling
+    if (this.useCssTransforms())
+    {
+      var g = view.getDrawPane().parentNode;
+      var prev = g.getAttribute('transform');
+      g.setAttribute('transformOrigin', '0 0');
+      g.setAttribute('transform', 'scale(' + scale + ',' + scale + ')' +
+        'translate(' + dx + ',' + dy + ')');
 
-		// Checks clipping rectangle for speedup
-		// Must create terminal states for edge clipping even if terminal outside of clip
-		this.graph.cellRenderer.redraw = (state, force, rendering)=>
-		{
-			if (state != null)
-			{
-				// Gets original state from graph to find bounding box
-				var orig = states.get(state.cell);
-				
-				if (orig != null)
-				{
-					var bbox = view.getBoundingBox(orig, false);
-					
-					// Stops rendering if outside clip for speedup but ignores
-					// edge labels where width and height is set to 0
-					if (bbox != null && bbox.width > 0 && bbox.height > 0 &&
-						!mxUtils.intersects(tempClip, bbox))
-					{
-						return;
-					}
-				}
-			}
-			
-			redraw.apply(this, arguments);
-		};
-	}
-	
-	var temp = null;
-	
-	try
-	{
-		// Creates the temporary cell states in the view and
-		// draws them onto the temporary DOM nodes in the view
-		var cells = [this.getRoot()];
-		temp = new mxTemporaryCellStates(view, scale, cells, null, mxUtils.bind(this, (state)=>
-		{
-			return this.getLinkForCellState(state);
-		}));
-	}
-	finally
-	{
-		// Removes overlay pane with selection handles
-		// controls and icons from the print output
-		if (mxClient.IS_IE)
-		{
-			view.overlayPane.innerHTML = '';
-			view.canvas.style.overflow = 'hidden';
-			view.canvas.style.position = 'relative';
-			view.canvas.style.top = this.marginTop + 'px';
-			view.canvas.style.width = clip.width + 'px';
-			view.canvas.style.height = clip.height + 'px';
-		}
-		else
-		{
-			// Removes everything but the SVG node
-			var tmp = div.firstChild;
+      scale = 1;
+      dx = 0;
+      dy = 0;
+    }
+  }
+  else if (this.graph.dialect == mxConstants.DIALECT_VML)
+  {
+    view.createVml();
+  }
+  else
+  {
+    view.createHtml();
+  }
 
-			while (tmp != null)
-			{
-				var next = tmp.nextSibling;
-				var name = tmp.nodeName.toLowerCase();
+  // Disables events on the view
+  var eventsEnabled = view.isEventsEnabled();
+  view.setEventsEnabled(false);
 
-				// Note: Width and height are required in FF 11
-				if (name == 'svg')
-				{
-					tmp.style.overflow = 'hidden';
-					tmp.style.position = 'relative';
-					tmp.style.top = this.marginTop + 'px';
-					tmp.setAttribute('width', clip.width);
-					tmp.setAttribute('height', clip.height);
-					tmp.style.width = '';
-					tmp.style.height = '';
-				}
-				// Tries to fetch all text labels and only text labels
-				else if (tmp.style.cursor != 'default' && name != 'div')
-				{
-					tmp.parentNode.removeChild(tmp);
-				}
-				
-				tmp = next;
-			}
-		}
-		
-		// Puts background image behind SVG output
-		if (this.printBackgroundImage)
-		{
-			var svgs = div.getElementsByTagName('svg');
-			
-			if (svgs.length > 0)
-			{
-				svgs[0].style.position = 'absolute';
-			}
-		}
-		
-		// Completely removes the overlay pane to remove more handles
-		view.overlayPane.parentNode.removeChild(view.overlayPane);
+  // Disables the graph to avoid cursors
+  var graphEnabled = this.graph.isEnabled();
+  this.graph.setEnabled(false);
 
-		// Restores the state of the view
-		this.graph.setEnabled(graphEnabled);
-		this.graph.container = previousContainer;
-		this.graph.cellRenderer.redraw = redraw;
-		view.canvas = canvas;
-		view.backgroundPane = backgroundPane;
-		view.drawPane = drawPane;
-		view.overlayPane = overlayPane;
-		view.translate = translate;
-		temp.destroy();
-		view.setEventsEnabled(eventsEnabled);
-	}
+  // Resets the translation
+  var translate = view.getTranslate();
+  view.translate = new mxPoint(dx, dy);
+
+  // Redraws only states that intersect the clip
+  var redraw = this.graph.cellRenderer.redraw;
+  var states = view.states;
+  var s = view.scale;
+
+  // Gets the transformed clip for intersection check below
+  if (this.clipping)
+  {
+    var tempClip = new mxRectangle((clip.x + translate.x) * s, (clip.y + translate.y) * s,
+        clip.width * s / realScale, clip.height * s / realScale);
+
+    // Checks clipping rectangle for speedup
+    // Must create terminal states for edge clipping even if terminal outside of clip
+    this.graph.cellRenderer.redraw = (state, force, rendering)=>
+    {
+      if (state != null)
+      {
+        // Gets original state from graph to find bounding box
+        var orig = states.get(state.cell);
+
+        if (orig != null)
+        {
+          var bbox = view.getBoundingBox(orig, false);
+
+          // Stops rendering if outside clip for speedup but ignores
+          // edge labels where width and height is set to 0
+          if (bbox != null && bbox.width > 0 && bbox.height > 0 &&
+            !mxUtils.intersects(tempClip, bbox))
+          {
+            return;
+          }
+        }
+      }
+
+      redraw.apply(this, arguments);
+    };
+  }
+
+  var temp = null;
+
+  try
+  {
+    // Creates the temporary cell states in the view and
+    // draws them onto the temporary DOM nodes in the view
+    var cells = [this.getRoot()];
+    temp = new mxTemporaryCellStates(view, scale, cells, null, mxUtils.bind(this, (state)=>
+    {
+      return this.getLinkForCellState(state);
+    }));
+  }
+  finally
+  {
+    // Removes overlay pane with selection handles
+    // controls and icons from the print output
+    if (mxClient.IS_IE)
+    {
+      view.overlayPane.innerHTML = '';
+      view.canvas.style.overflow = 'hidden';
+      view.canvas.style.position = 'relative';
+      view.canvas.style.top = this.marginTop + 'px';
+      view.canvas.style.width = clip.width + 'px';
+      view.canvas.style.height = clip.height + 'px';
+    }
+    else
+    {
+      // Removes everything but the SVG node
+      var tmp = div.firstChild;
+
+      while (tmp != null)
+      {
+        var next = tmp.nextSibling;
+        var name = tmp.nodeName.toLowerCase();
+
+        // Note: Width and height are required in FF 11
+        if (name == 'svg')
+        {
+          tmp.style.overflow = 'hidden';
+          tmp.style.position = 'relative';
+          tmp.style.top = this.marginTop + 'px';
+          tmp.setAttribute('width', clip.width);
+          tmp.setAttribute('height', clip.height);
+          tmp.style.width = '';
+          tmp.style.height = '';
+        }
+        // Tries to fetch all text labels and only text labels
+        else if (tmp.style.cursor != 'default' && name != 'div')
+        {
+          tmp.parentNode.removeChild(tmp);
+        }
+
+        tmp = next;
+      }
+    }
+
+    // Puts background image behind SVG output
+    if (this.printBackgroundImage)
+    {
+      var svgs = div.getElementsByTagName('svg');
+
+      if (svgs.length > 0)
+      {
+        svgs[0].style.position = 'absolute';
+      }
+    }
+
+    // Completely removes the overlay pane to remove more handles
+    view.overlayPane.parentNode.removeChild(view.overlayPane);
+
+    // Restores the state of the view
+    this.graph.setEnabled(graphEnabled);
+    this.graph.container = previousContainer;
+    this.graph.cellRenderer.redraw = redraw;
+    view.canvas = canvas;
+    view.backgroundPane = backgroundPane;
+    view.drawPane = drawPane;
+    view.overlayPane = overlayPane;
+    view.translate = translate;
+    temp.destroy();
+    view.setEventsEnabled(eventsEnabled);
+  }
 };
 
 /**
@@ -1154,7 +1154,7 @@ addGraphFragment = (dx, dy, scale, pageNumber, div, clip)=>
  */
 getLinkForCellState = (state)=>
 {
-	return this.graph.getLinkForCell(state.cell);
+  return this.graph.getLinkForCell(state.cell);
 };
 
 /**
@@ -1164,20 +1164,20 @@ getLinkForCellState = (state)=>
  */
 insertBackgroundImage = (div, dx, dy)=>
 {
-	var bg = this.graph.backgroundImage;
-	
-	if (bg != null)
-	{
-		var img = document.createElement('img');
-		img.style.position = 'absolute';
-		img.style.marginLeft = Math.round(dx * this.scale) + 'px';
-		img.style.marginTop = Math.round(dy * this.scale) + 'px';
-		img.setAttribute('width', Math.round(this.scale * bg.width));
-		img.setAttribute('height', Math.round(this.scale * bg.height));
-		img.src = bg.src;
-		
-		div.insertBefore(img, div.firstChild);
-	}
+  var bg = this.graph.backgroundImage;
+
+  if (bg != null)
+  {
+    var img = document.createElement('img');
+    img.style.position = 'absolute';
+    img.style.marginLeft = Math.round(dx * this.scale) + 'px';
+    img.style.marginTop = Math.round(dy * this.scale) + 'px';
+    img.setAttribute('width', Math.round(this.scale * bg.width));
+    img.setAttribute('height', Math.round(this.scale * bg.height));
+    img.src = bg.src;
+
+    div.insertBefore(img, div.firstChild);
+  }
 };
 
 /**
@@ -1187,7 +1187,7 @@ insertBackgroundImage = (div, dx, dy)=>
  */
 getCoverPages = ()=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -1197,7 +1197,7 @@ getCoverPages = ()=>
  */
 getAppendices = ()=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -1211,12 +1211,12 @@ getAppendices = ()=>
  */
 print = (css)=>
 {
-	var wnd = this.open(css);
-	
-	if (wnd != null)
-	{
-		wnd.print();
-	}
+  var wnd = this.open(css);
+
+  if (wnd != null)
+  {
+    wnd.print();
+  }
 };
 
 /**
@@ -1226,9 +1226,9 @@ print = (css)=>
  */
 close = ()=>
 {
-	if (this.wnd != null)
-	{
-		this.wnd.close();
-		this.wnd = null;
-	}
+  if (this.wnd != null)
+  {
+    this.wnd.close();
+    this.wnd = null;
+  }
 };

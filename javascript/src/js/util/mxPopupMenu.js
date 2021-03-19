@@ -30,12 +30,12 @@
  */
 function mxPopupMenu(factoryMethod)
 {
-	this.factoryMethod = factoryMethod;
-	
-	if (factoryMethod != null)
-	{
-		this.init();
-	}
+  this.factoryMethod = factoryMethod;
+
+  if (factoryMethod != null)
+  {
+    this.init();
+  }
 };
 
 /**
@@ -118,22 +118,22 @@ labels = true;
  */
 init = ()=>
 {
-	// Adds the inner table
-	this.table = document.createElement('table');
-	this.table.className = 'mxPopupMenu';
-	
-	this.tbody = document.createElement('tbody');
-	this.table.appendChild(this.tbody);
+  // Adds the inner table
+  this.table = document.createElement('table');
+  this.table.className = 'mxPopupMenu';
 
-	// Adds the outer div
-	this.div = document.createElement('div');
-	this.div.className = 'mxPopupMenu';
-	this.div.style.display = 'inline';
-	this.div.style.zIndex = this.zIndex;
-	this.div.appendChild(this.table);
+  this.tbody = document.createElement('tbody');
+  this.table.appendChild(this.tbody);
 
-	// Disables the context menu on the outer div
-	mxEvent.disableContextMenu(this.div);
+  // Adds the outer div
+  this.div = document.createElement('div');
+  this.div.className = 'mxPopupMenu';
+  this.div.style.display = 'inline';
+  this.div.style.zIndex = this.zIndex;
+  this.div.appendChild(this.table);
+
+  // Disables the context menu on the outer div
+  mxEvent.disableContextMenu(this.div);
 };
 
 /**
@@ -144,9 +144,9 @@ init = ()=>
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
-	
+
 /**
  * Function: setEnabled
  * 
@@ -155,7 +155,7 @@ isEnabled = ()=>
  */
 setEnabled = (enabled)=>
 {
-	this.enabled = enabled;
+  this.enabled = enabled;
 };
 
 /**
@@ -170,7 +170,7 @@ setEnabled = (enabled)=>
  */
 isPopupTrigger = (me)=>
 {
-	return me.isPopupTrigger() || (this.useLeftButtonForPopup && mxEvent.isLeftMouseButton(me.getEvent()));
+  return me.isPopupTrigger() || (this.useLeftButtonForPopup && mxEvent.isLeftMouseButton(me.getEvent()));
 };
 
 /**
@@ -196,172 +196,172 @@ isPopupTrigger = (me)=>
  */
 addItem = (title, image, funct, parent, iconCls, enabled, active, noHover)=>
 {
-	parent = parent || this;
-	this.itemCount++;
-	
-	// Smart separators only added if element contains items
-	if (parent.willAddSeparator)
-	{
-		if (parent.containsItems)
-		{
-			this.addSeparator(parent, true);
-		}
+  parent = parent || this;
+  this.itemCount++;
 
-		parent.willAddSeparator = false;
-	}
+  // Smart separators only added if element contains items
+  if (parent.willAddSeparator)
+  {
+    if (parent.containsItems)
+    {
+      this.addSeparator(parent, true);
+    }
 
-	parent.containsItems = true;
-	var tr = document.createElement('tr');
-	tr.className = 'mxPopupMenuItem';
-	var col1 = document.createElement('td');
-	col1.className = 'mxPopupMenuIcon';
+    parent.willAddSeparator = false;
+  }
 
-	// Adds the given image into the first column
-	if (image != null)
-	{
-		var img = document.createElement('img');
-		img.src = image;
-		col1.appendChild(img);
-	}
-	else if (iconCls != null)
-	{
-		var div = document.createElement('div');
-		div.className = iconCls;
-		col1.appendChild(div);
-	}
-	
-	tr.appendChild(col1);
-	
-	if (this.labels)
-	{
-		var col2 = document.createElement('td');
-		col2.className = 'mxPopupMenuItem' +
-			((enabled != null && !enabled) ? ' mxDisabled' : '');
-		
-		mxUtils.write(col2, title);
-		col2.align = 'left';
-		tr.appendChild(col2);
-	
-		var col3 = document.createElement('td');
-		col3.className = 'mxPopupMenuItem' +
-			((enabled != null && !enabled) ? ' mxDisabled' : '');
-		col3.style.paddingRight = '6px';
-		col3.style.textAlign = 'right';
-		
-		tr.appendChild(col3);
-		
-		if (parent.div == null)
-		{
-			this.createSubmenu(parent);
-		}
-	}
-	
-	parent.tbody.appendChild(tr);
+  parent.containsItems = true;
+  var tr = document.createElement('tr');
+  tr.className = 'mxPopupMenuItem';
+  var col1 = document.createElement('td');
+  col1.className = 'mxPopupMenuIcon';
 
-	if (active != false && enabled != false)
-	{
-		var currentSelection = null;
-		
-		mxEvent.addGestureListeners(tr,
-			mxUtils.bind(this, (evt)=>
-			{
-				this.eventReceiver = tr;
-				
-				if (parent.activeRow != tr && parent.activeRow != parent)
-				{
-					if (parent.activeRow != null && parent.activeRow.div.parentNode != null)
-					{
-						this.hideSubmenu(parent);
-					}
-					
-					if (tr.div != null)
-					{
-						this.showSubmenu(parent, tr);
-						parent.activeRow = tr;
-					}
-				}
-				
-				// Workaround for lost current selection in page because of focus in IE
-				if (document.selection != null && (mxClient.IS_QUIRKS || document.documentMode == 8))
-				{
-					currentSelection = document.selection.createRange();
-				}
-				
-				mxEvent.consume(evt);
-			}),
-			mxUtils.bind(this, (evt)=>
-			{
-				if (parent.activeRow != tr && parent.activeRow != parent)
-				{
-					if (parent.activeRow != null && parent.activeRow.div.parentNode != null)
-					{
-						this.hideSubmenu(parent);
-					}
-					
-					if (this.autoExpand && tr.div != null)
-					{
-						this.showSubmenu(parent, tr);
-						parent.activeRow = tr;
-					}
-				}
-		
-				// Sets hover style because TR in IE doesn't have hover
-				if (!noHover)
-				{
-					tr.className = 'mxPopupMenuItemHover';
-				}
-			}),
-			mxUtils.bind(this, (evt)=>
-			{
-				// EventReceiver avoids clicks on a submenu item
-				// which has just been shown in the mousedown
-				if (this.eventReceiver == tr)
-				{
-					if (parent.activeRow != tr)
-					{
-						this.hideMenu();
-					}
-					
-					// Workaround for lost current selection in page because of focus in IE
-					if (currentSelection != null)
-					{
-						// Workaround for "unspecified error" in IE8 standards
-						try
-						{
-							currentSelection.select();
-						}
-						catch (e)
-						{
-							// ignore
-						}
+  // Adds the given image into the first column
+  if (image != null)
+  {
+    var img = document.createElement('img');
+    img.src = image;
+    col1.appendChild(img);
+  }
+  else if (iconCls != null)
+  {
+    var div = document.createElement('div');
+    div.className = iconCls;
+    col1.appendChild(div);
+  }
 
-						currentSelection = null;
-					}
-					
-					if (funct != null)
-					{
-						funct(evt);
-					}
-				}
-				
-				this.eventReceiver = null;
-				mxEvent.consume(evt);
-			})
-		);
-	
-		// Resets hover style because TR in IE doesn't have hover
-		if (!noHover)
-		{
-			mxEvent.addListener(tr, 'mouseout',
-				mxUtils.bind(this, (evt)=>
-				{
-					tr.className = 'mxPopupMenuItem';
-				})
-			);
-		}
-	}
-	
-	return tr;
+  tr.appendChild(col1);
+
+  if (this.labels)
+  {
+    var col2 = document.createElement('td');
+    col2.className = 'mxPopupMenuItem' +
+      ((enabled != null && !enabled) ? ' mxDisabled' : '');
+
+    mxUtils.write(col2, title);
+    col2.align = 'left';
+    tr.appendChild(col2);
+
+    var col3 = document.createElement('td');
+    col3.className = 'mxPopupMenuItem' +
+      ((enabled != null && !enabled) ? ' mxDisabled' : '');
+    col3.style.paddingRight = '6px';
+    col3.style.textAlign = 'right';
+
+    tr.appendChild(col3);
+
+    if (parent.div == null)
+    {
+      this.createSubmenu(parent);
+    }
+  }
+
+  parent.tbody.appendChild(tr);
+
+  if (active != false && enabled != false)
+  {
+    var currentSelection = null;
+
+    mxEvent.addGestureListeners(tr,
+      mxUtils.bind(this, (evt)=>
+      {
+        this.eventReceiver = tr;
+
+        if (parent.activeRow != tr && parent.activeRow != parent)
+        {
+          if (parent.activeRow != null && parent.activeRow.div.parentNode != null)
+          {
+            this.hideSubmenu(parent);
+          }
+
+          if (tr.div != null)
+          {
+            this.showSubmenu(parent, tr);
+            parent.activeRow = tr;
+          }
+        }
+
+        // Workaround for lost current selection in page because of focus in IE
+        if (document.selection != null && (mxClient.IS_QUIRKS || document.documentMode == 8))
+        {
+          currentSelection = document.selection.createRange();
+        }
+
+        mxEvent.consume(evt);
+      }),
+      mxUtils.bind(this, (evt)=>
+      {
+        if (parent.activeRow != tr && parent.activeRow != parent)
+        {
+          if (parent.activeRow != null && parent.activeRow.div.parentNode != null)
+          {
+            this.hideSubmenu(parent);
+          }
+
+          if (this.autoExpand && tr.div != null)
+          {
+            this.showSubmenu(parent, tr);
+            parent.activeRow = tr;
+          }
+        }
+
+        // Sets hover style because TR in IE doesn't have hover
+        if (!noHover)
+        {
+          tr.className = 'mxPopupMenuItemHover';
+        }
+      }),
+      mxUtils.bind(this, (evt)=>
+      {
+        // EventReceiver avoids clicks on a submenu item
+        // which has just been shown in the mousedown
+        if (this.eventReceiver == tr)
+        {
+          if (parent.activeRow != tr)
+          {
+            this.hideMenu();
+          }
+
+          // Workaround for lost current selection in page because of focus in IE
+          if (currentSelection != null)
+          {
+            // Workaround for "unspecified error" in IE8 standards
+            try
+            {
+              currentSelection.select();
+            }
+            catch (e)
+            {
+              // ignore
+            }
+
+            currentSelection = null;
+          }
+
+          if (funct != null)
+          {
+            funct(evt);
+          }
+        }
+
+        this.eventReceiver = null;
+        mxEvent.consume(evt);
+      })
+    );
+
+    // Resets hover style because TR in IE doesn't have hover
+    if (!noHover)
+    {
+      mxEvent.addListener(tr, 'mouseout',
+        mxUtils.bind(this, (evt)=>
+        {
+          tr.className = 'mxPopupMenuItem';
+        })
+      );
+    }
+  }
+
+  return tr;
 };
 
 /**
@@ -369,10 +369,10 @@ addItem = (title, image, funct, parent, iconCls, enabled, active, noHover)=>
  */
 addCheckmark = (item, img)=>
 {
-	var td = item.firstChild.nextSibling;
-	td.style.backgroundImage = 'url(\'' + img + '\')';
-	td.style.backgroundRepeat = 'no-repeat';
-	td.style.backgroundPosition = '2px 50%';
+  var td = item.firstChild.nextSibling;
+  td.style.backgroundImage = 'url(\'' + img + '\')';
+  td.style.backgroundRepeat = 'no-repeat';
+  td.style.backgroundPosition = '2px 50%';
 };
 
 /**
@@ -388,27 +388,27 @@ addCheckmark = (item, img)=>
  */
 createSubmenu = (parent)=>
 {
-	parent.table = document.createElement('table');
-	parent.table.className = 'mxPopupMenu';
+  parent.table = document.createElement('table');
+  parent.table.className = 'mxPopupMenu';
 
-	parent.tbody = document.createElement('tbody');
-	parent.table.appendChild(parent.tbody);
+  parent.tbody = document.createElement('tbody');
+  parent.table.appendChild(parent.tbody);
 
-	parent.div = document.createElement('div');
-	parent.div.className = 'mxPopupMenu';
+  parent.div = document.createElement('div');
+  parent.div.className = 'mxPopupMenu';
 
-	parent.div.style.position = 'absolute';
-	parent.div.style.display = 'inline';
-	parent.div.style.zIndex = this.zIndex;
-	
-	parent.div.appendChild(parent.table);
-	
-	var img = document.createElement('img');
-	img.setAttribute('src', this.submenuImage);
-	
-	// Last column of the submenu item in the parent menu
-	td = parent.firstChild.nextSibling.nextSibling;
-	td.appendChild(img);
+  parent.div.style.position = 'absolute';
+  parent.div.style.display = 'inline';
+  parent.div.style.zIndex = this.zIndex;
+
+  parent.div.appendChild(parent.table);
+
+  var img = document.createElement('img');
+  img.setAttribute('src', this.submenuImage);
+
+  // Last column of the submenu item in the parent menu
+  td = parent.firstChild.nextSibling.nextSibling;
+  td.appendChild(img);
 };
 
 /**
@@ -418,30 +418,30 @@ createSubmenu = (parent)=>
  */
 showSubmenu = (parent, row)=>
 {
-	if (row.div != null)
-	{
-		row.div.style.left = (parent.div.offsetLeft +
-			row.offsetLeft+row.offsetWidth - 1) + 'px';
-		row.div.style.top = (parent.div.offsetTop+row.offsetTop) + 'px';
-		document.body.appendChild(row.div);
-		
-		// Moves the submenu to the left side if there is no space
-		var left = parseInt(row.div.offsetLeft);
-		var width = parseInt(row.div.offsetWidth);
-		var offset = mxUtils.getDocumentScrollOrigin(document);
-		
-		var b = document.body;
-		var d = document.documentElement;
-		
-		var right = offset.x + (b.clientWidth || d.clientWidth);
-		
-		if (left + width > right)
-		{
-			row.div.style.left = Math.max(0, (parent.div.offsetLeft - width + ((mxClient.IS_IE) ? 6 : -6))) + 'px';
-		}
-		
-		mxUtils.fit(row.div);
-	}
+  if (row.div != null)
+  {
+    row.div.style.left = (parent.div.offsetLeft +
+      row.offsetLeft+row.offsetWidth - 1) + 'px';
+    row.div.style.top = (parent.div.offsetTop+row.offsetTop) + 'px';
+    document.body.appendChild(row.div);
+
+    // Moves the submenu to the left side if there is no space
+    var left = parseInt(row.div.offsetLeft);
+    var width = parseInt(row.div.offsetWidth);
+    var offset = mxUtils.getDocumentScrollOrigin(document);
+
+    var b = document.body;
+    var d = document.documentElement;
+
+    var right = offset.x + (b.clientWidth || d.clientWidth);
+
+    if (left + width > right)
+    {
+      row.div.style.left = Math.max(0, (parent.div.offsetLeft - width + ((mxClient.IS_IE) ? 6 : -6))) + 'px';
+    }
+
+    mxUtils.fit(row.div);
+  }
 };
 
 /**
@@ -457,35 +457,35 @@ showSubmenu = (parent, row)=>
  */
 addSeparator = (parent, force)=>
 {
-	parent = parent || this;
-	
-	if (this.smartSeparators && !force)
-	{
-		parent.willAddSeparator = true;
-	}
-	else if (parent.tbody != null)
-	{
-		parent.willAddSeparator = false;
-		var tr = document.createElement('tr');
-		
-		var col1 = document.createElement('td');
-		col1.className = 'mxPopupMenuIcon';
-		col1.style.padding = '0 0 0 0px';
-		
-		tr.appendChild(col1);
-		
-		var col2 = document.createElement('td');
-		col2.style.padding = '0 0 0 0px';
-		col2.setAttribute('colSpan', '2');
-	
-		var hr = document.createElement('hr');
-		hr.setAttribute('size', '1');
-		col2.appendChild(hr);
-		
-		tr.appendChild(col2);
-		
-		parent.tbody.appendChild(tr);
-	}
+  parent = parent || this;
+
+  if (this.smartSeparators && !force)
+  {
+    parent.willAddSeparator = true;
+  }
+  else if (parent.tbody != null)
+  {
+    parent.willAddSeparator = false;
+    var tr = document.createElement('tr');
+
+    var col1 = document.createElement('td');
+    col1.className = 'mxPopupMenuIcon';
+    col1.style.padding = '0 0 0 0px';
+
+    tr.appendChild(col1);
+
+    var col2 = document.createElement('td');
+    col2.style.padding = '0 0 0 0px';
+    col2.setAttribute('colSpan', '2');
+
+    var hr = document.createElement('hr');
+    hr.setAttribute('size', '1');
+    col2.appendChild(hr);
+
+    tr.appendChild(col2);
+
+    parent.tbody.appendChild(tr);
+  }
 };
 
 /**
@@ -504,27 +504,27 @@ addSeparator = (parent, force)=>
  */
 popup = (x, y, cell, evt)=>
 {
-	if (this.div != null && this.tbody != null && this.factoryMethod != null)
-	{
-		this.div.style.left = x + 'px';
-		this.div.style.top = y + 'px';
-		
-		// Removes all child nodes from the existing menu
-		while (this.tbody.firstChild != null)
-		{
-			mxEvent.release(this.tbody.firstChild);
-			this.tbody.removeChild(this.tbody.firstChild);
-		}
-		
-		this.itemCount = 0;
-		this.factoryMethod(this, cell, evt);
-		
-		if (this.itemCount > 0)
-		{
-			this.showMenu();
-			this.fireEvent(new mxEventObject(mxEvent.SHOW));
-		}
-	}
+  if (this.div != null && this.tbody != null && this.factoryMethod != null)
+  {
+    this.div.style.left = x + 'px';
+    this.div.style.top = y + 'px';
+
+    // Removes all child nodes from the existing menu
+    while (this.tbody.firstChild != null)
+    {
+      mxEvent.release(this.tbody.firstChild);
+      this.tbody.removeChild(this.tbody.firstChild);
+    }
+
+    this.itemCount = 0;
+    this.factoryMethod(this, cell, evt);
+
+    if (this.itemCount > 0)
+    {
+      this.showMenu();
+      this.fireEvent(new mxEventObject(mxEvent.SHOW));
+    }
+  }
 };
 
 /**
@@ -534,7 +534,7 @@ popup = (x, y, cell, evt)=>
  */
 isMenuShowing = ()=>
 {
-	return this.div != null && this.div.parentNode == document.body;
+  return this.div != null && this.div.parentNode == document.body;
 };
 
 /**
@@ -544,15 +544,15 @@ isMenuShowing = ()=>
  */
 showMenu = ()=>
 {
-	// Disables filter-based shadow in IE9 standards mode
-	if (document.documentMode >= 9)
-	{
-		this.div.style.filter = 'none';
-	}
-	
-	// Fits the div inside the viewport
-	document.body.appendChild(this.div);
-	mxUtils.fit(this.div);
+  // Disables filter-based shadow in IE9 standards mode
+  if (document.documentMode >= 9)
+  {
+    this.div.style.filter = 'none';
+  }
+
+  // Fits the div inside the viewport
+  document.body.appendChild(this.div);
+  mxUtils.fit(this.div);
 };
 
 /**
@@ -562,17 +562,17 @@ showMenu = ()=>
  */
 hideMenu = ()=>
 {
-	if (this.div != null)
-	{
-		if (this.div.parentNode != null)
-		{
-			this.div.parentNode.removeChild(this.div);
-		}
-		
-		this.hideSubmenu(this);
-		this.containsItems = false;
-		this.fireEvent(new mxEventObject(mxEvent.HIDE));
-	}
+  if (this.div != null)
+  {
+    if (this.div.parentNode != null)
+    {
+      this.div.parentNode.removeChild(this.div);
+    }
+
+    this.hideSubmenu(this);
+    this.containsItems = false;
+    this.fireEvent(new mxEventObject(mxEvent.HIDE));
+  }
 };
 
 /**
@@ -586,17 +586,17 @@ hideMenu = ()=>
  */
 hideSubmenu = (parent)=>
 {
-	if (parent.activeRow != null)
-	{
-		this.hideSubmenu(parent.activeRow);
-		
-		if (parent.activeRow.div.parentNode != null)
-		{
-			parent.activeRow.div.parentNode.removeChild(parent.activeRow.div);
-		}
-		
-		parent.activeRow = null;
-	}
+  if (parent.activeRow != null)
+  {
+    this.hideSubmenu(parent.activeRow);
+
+    if (parent.activeRow.div.parentNode != null)
+    {
+      parent.activeRow.div.parentNode.removeChild(parent.activeRow.div);
+    }
+
+    parent.activeRow = null;
+  }
 };
 
 /**
@@ -606,15 +606,15 @@ hideSubmenu = (parent)=>
  */
 destroy = ()=>
 {
-	if (this.div != null)
-	{
-		mxEvent.release(this.div);
-		
-		if (this.div.parentNode != null)
-		{
-			this.div.parentNode.removeChild(this.div);
-		}
-		
-		this.div = null;
-	}
+  if (this.div != null)
+  {
+    mxEvent.release(this.div);
+
+    if (this.div.parentNode != null)
+    {
+      this.div.parentNode.removeChild(this.div);
+    }
+
+    this.div = null;
+  }
 };

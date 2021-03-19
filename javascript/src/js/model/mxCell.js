@@ -66,14 +66,14 @@
  */
 function mxCell(value, geometry, style)
 {
-	this.value = value;
-	this.setGeometry(geometry);
-	this.setStyle(style);
-	
-	if (this.onInit != null)
-	{
-		this.onInit();
-	}
+  this.value = value;
+  this.setGeometry(geometry);
+  this.setStyle(style);
+
+  if (this.onInit != null)
+  {
+    this.onInit();
+  }
 };
 
 /**
@@ -194,9 +194,9 @@ mxTransient = ['id', 'value', 'parent', 'source',
  */
 getId = ()=>
 {
-	return this.id;
+  return this.id;
 };
-		
+
 /**
  * Function: setId
  *
@@ -204,7 +204,7 @@ getId = ()=>
  */
 setId = (id)=>
 {
-	this.id = id;
+  this.id = id;
 };
 
 /**
@@ -215,9 +215,9 @@ setId = (id)=>
  */
 getValue = ()=>
 {
-	return this.value;
+  return this.value;
 };
-		
+
 /**
  * Function: setValue
  *
@@ -226,7 +226,7 @@ getValue = ()=>
  */
 setValue = (value)=>
 {
-	this.value = value;
+  this.value = value;
 };
 
 /**
@@ -239,10 +239,10 @@ setValue = (value)=>
  */
 valueChanged = (newValue)=>
 {
-	var previous = this.getValue();
-	this.setValue(newValue);
-	
-	return previous;
+  var previous = this.getValue();
+  this.setValue(newValue);
+
+  return previous;
 };
 
 /**
@@ -252,7 +252,7 @@ valueChanged = (newValue)=>
  */
 getGeometry = ()=>
 {
-	return this.geometry;
+  return this.geometry;
 };
 
 /**
@@ -262,7 +262,7 @@ getGeometry = ()=>
  */
 setGeometry = (geometry)=>
 {
-	this.geometry = geometry;
+  this.geometry = geometry;
 };
 
 /**
@@ -272,7 +272,7 @@ setGeometry = (geometry)=>
  */
 getStyle = ()=>
 {
-	return this.style;
+  return this.style;
 };
 
 /**
@@ -282,7 +282,7 @@ getStyle = ()=>
  */
 setStyle = (style)=>
 {
-	this.style = style;
+  this.style = style;
 };
 
 /**
@@ -292,7 +292,7 @@ setStyle = (style)=>
  */
 isVertex = ()=>
 {
-	return this.vertex != 0;
+  return this.vertex != 0;
 };
 
 /**
@@ -307,7 +307,7 @@ isVertex = ()=>
  */
 setVertex = (vertex)=>
 {
-	this.vertex = vertex;
+  this.vertex = vertex;
 };
 
 /**
@@ -317,9 +317,9 @@ setVertex = (vertex)=>
  */
 isEdge = ()=>
 {
-	return this.edge != 0;
+  return this.edge != 0;
 };
-	
+
 /**
  * Function: setEdge
  * 
@@ -332,7 +332,7 @@ isEdge = ()=>
  */
 setEdge = (edge)=>
 {
-	this.edge = edge;
+  this.edge = edge;
 };
 
 /**
@@ -342,7 +342,7 @@ setEdge = (edge)=>
  */
 isConnectable = ()=>
 {
-	return this.connectable != 0;
+  return this.connectable != 0;
 };
 
 /**
@@ -356,7 +356,7 @@ isConnectable = ()=>
  */
 setConnectable = (connectable)=>
 {
-	this.connectable = connectable;
+  this.connectable = connectable;
 };
 
 /**
@@ -366,7 +366,7 @@ setConnectable = (connectable)=>
  */
 isVisible = ()=>
 {
-	return this.visible != 0;
+  return this.visible != 0;
 };
 
 /**
@@ -380,7 +380,7 @@ isVisible = ()=>
  */
 setVisible = (visible)=>
 {
-	this.visible = visible;
+  this.visible = visible;
 };
 
 /**
@@ -390,7 +390,7 @@ setVisible = (visible)=>
  */
 isCollapsed = ()=>
 {
-	return this.collapsed != 0;
+  return this.collapsed != 0;
 };
 
 /**
@@ -404,7 +404,7 @@ isCollapsed = ()=>
  */
 setCollapsed = (collapsed)=>
 {
-	this.collapsed = collapsed;
+  this.collapsed = collapsed;
 };
 
 /**
@@ -414,7 +414,7 @@ setCollapsed = (collapsed)=>
  */
 getParent = ()=>
 {
-	return this.parent;
+  return this.parent;
 };
 
 /**
@@ -428,7 +428,7 @@ getParent = ()=>
  */
 setParent = (parent)=>
 {
-	this.parent = parent;
+  this.parent = parent;
 };
 
 /**
@@ -443,7 +443,7 @@ setParent = (parent)=>
  */
 getTerminal = (source)=>
 {
-	return (source) ? this.source : this.target;
+  return (source) ? this.source : this.target;
 };
 
 /**
@@ -459,16 +459,16 @@ getTerminal = (source)=>
  */
 setTerminal = (terminal, isSource)=>
 {
-	if (isSource)
-	{
-		this.source = terminal;
-	}
-	else
-	{
-		this.target = terminal;
-	}
-	
-	return terminal;
+  if (isSource)
+  {
+    this.source = terminal;
+  }
+  else
+  {
+    this.target = terminal;
+  }
+
+  return terminal;
 };
 
 /**
@@ -478,7 +478,7 @@ setTerminal = (terminal, isSource)=>
  */
 getChildCount = ()=>
 {
-	return (this.children == null) ? 0 : this.children.length;
+  return (this.children == null) ? 0 : this.children.length;
 };
 
 /**
@@ -492,7 +492,7 @@ getChildCount = ()=>
  */
 getIndex = (child)=>
 {
-	return mxUtils.indexOf(this.children, child);
+  return mxUtils.indexOf(this.children, child);
 };
 
 /**
@@ -506,7 +506,7 @@ getIndex = (child)=>
  */
 getChildAt = (index)=>
 {
-	return (this.children == null) ? null : this.children[index];
+  return (this.children == null) ? null : this.children[index];
 };
 
 /**
@@ -525,33 +525,33 @@ getChildAt = (index)=>
  */
 insert = (child, index)=>
 {
-	if (child != null)
-	{
-		if (index == null)
-		{
-			index = this.getChildCount();
-			
-			if (child.getParent() == this)
-			{
-				index--;
-			}
-		}
+  if (child != null)
+  {
+    if (index == null)
+    {
+      index = this.getChildCount();
 
-		child.removeFromParent();
-		child.setParent(this);
-		
-		if (this.children == null)
-		{
-			this.children = [];
-			this.children.push(child);
-		}
-		else
-		{
-			this.children.splice(index, 0, child);
-		}
-	}
-	
-	return child;
+      if (child.getParent() == this)
+      {
+        index--;
+      }
+    }
+
+    child.removeFromParent();
+    child.setParent(this);
+
+    if (this.children == null)
+    {
+      this.children = [];
+      this.children.push(child);
+    }
+    else
+    {
+      this.children.splice(index, 0, child);
+    }
+  }
+
+  return child;
 };
 
 /**
@@ -568,20 +568,20 @@ insert = (child, index)=>
  */
 remove = (index)=>
 {
-	var child = null;
-	
-	if (this.children != null && index >= 0)
-	{
-		child = this.getChildAt(index);
-		
-		if (child != null)
-		{
-			this.children.splice(index, 1);
-			child.setParent(null);
-		}
-	}
-	
-	return child;
+  var child = null;
+
+  if (this.children != null && index >= 0)
+  {
+    child = this.getChildAt(index);
+
+    if (child != null)
+    {
+      this.children.splice(index, 1);
+      child.setParent(null);
+    }
+  }
+
+  return child;
 };
 
 /**
@@ -591,11 +591,11 @@ remove = (index)=>
  */
 removeFromParent = ()=>
 {
-	if (this.parent != null)
-	{
-		var index = this.parent.getIndex(this);
-		this.parent.remove(index);
-	}
+  if (this.parent != null)
+  {
+    var index = this.parent.getIndex(this);
+    this.parent.remove(index);
+  }
 };
 
 /**
@@ -605,7 +605,7 @@ removeFromParent = ()=>
  */
 getEdgeCount = ()=>
 {
-	return (this.edges == null) ? 0 : this.edges.length;
+  return (this.edges == null) ? 0 : this.edges.length;
 };
 
 /**
@@ -619,7 +619,7 @@ getEdgeCount = ()=>
  */
 getEdgeIndex = (edge)=>
 {
-	return mxUtils.indexOf(this.edges, edge);
+  return mxUtils.indexOf(this.edges, edge);
 };
 
 /**
@@ -633,7 +633,7 @@ getEdgeIndex = (edge)=>
  */
 getEdgeAt = (index)=>
 {
-	return (this.edges == null) ? null : this.edges[index];
+  return (this.edges == null) ? null : this.edges[index];
 };
 
 /**
@@ -649,25 +649,25 @@ getEdgeAt = (index)=>
  */
 insertEdge = (edge, isOutgoing)=>
 {
-	if (edge != null)
-	{
-		edge.removeFromTerminal(isOutgoing);
-		edge.setTerminal(this, isOutgoing);
-		
-		if (this.edges == null ||
-			edge.getTerminal(!isOutgoing) != this ||
-			mxUtils.indexOf(this.edges, edge) < 0)
-		{
-			if (this.edges == null)
-			{
-				this.edges = [];
-			}
-			
-			this.edges.push(edge);
-		}
-	}
-	
-	return edge;
+  if (edge != null)
+  {
+    edge.removeFromTerminal(isOutgoing);
+    edge.setTerminal(this, isOutgoing);
+
+    if (this.edges == null ||
+      edge.getTerminal(!isOutgoing) != this ||
+      mxUtils.indexOf(this.edges, edge) < 0)
+    {
+      if (this.edges == null)
+      {
+        this.edges = [];
+      }
+
+      this.edges.push(edge);
+    }
+  }
+
+  return edge;
 };
 
 /**
@@ -683,23 +683,23 @@ insertEdge = (edge, isOutgoing)=>
  */
 removeEdge = (edge, isOutgoing)=>
 {
-	if (edge != null)
-	{
-		if (edge.getTerminal(!isOutgoing) != this &&
-			this.edges != null)
-		{
-			var index = this.getEdgeIndex(edge);
-			
-			if (index >= 0)
-			{
-				this.edges.splice(index, 1);
-			}
-		}
-		
-		edge.setTerminal(null, isOutgoing);
-	}
-	
-	return edge;
+  if (edge != null)
+  {
+    if (edge.getTerminal(!isOutgoing) != this &&
+      this.edges != null)
+    {
+      var index = this.getEdgeIndex(edge);
+
+      if (index >= 0)
+      {
+        this.edges.splice(index, 1);
+      }
+    }
+
+    edge.setTerminal(null, isOutgoing);
+  }
+
+  return edge;
 };
 
 /**
@@ -714,12 +714,12 @@ removeEdge = (edge, isOutgoing)=>
  */
 removeFromTerminal = (isSource)=>
 {
-	var terminal = this.getTerminal(isSource);
-	
-	if (terminal != null)
-	{
-		terminal.removeEdge(this, isSource);
-	}
+  var terminal = this.getTerminal(isSource);
+
+  if (terminal != null)
+  {
+    terminal.removeEdge(this, isSource);
+  }
 };
 
 /**
@@ -734,11 +734,11 @@ removeFromTerminal = (isSource)=>
  */
 hasAttribute = (name)=>
 {
-	var userObject = this.getValue();
-	
-	return (userObject != null &&
-		userObject.nodeType == mxConstants.NODETYPE_ELEMENT && userObject.hasAttribute) ?
-		userObject.hasAttribute(name) : userObject.getAttribute(name) != null;
+  var userObject = this.getValue();
+
+  return (userObject != null &&
+    userObject.nodeType == mxConstants.NODETYPE_ELEMENT && userObject.hasAttribute) ?
+    userObject.hasAttribute(name) : userObject.getAttribute(name) != null;
 };
 
 /**
@@ -755,13 +755,13 @@ hasAttribute = (name)=>
  */
 getAttribute = (name, defaultValue)=>
 {
-	var userObject = this.getValue();
-	
-	var val = (userObject != null &&
-		userObject.nodeType == mxConstants.NODETYPE_ELEMENT) ?
-		userObject.getAttribute(name) : null;
-		
-	return (val != null) ? val : defaultValue;
+  var userObject = this.getValue();
+
+  var val = (userObject != null &&
+    userObject.nodeType == mxConstants.NODETYPE_ELEMENT) ?
+    userObject.getAttribute(name) : null;
+
+  return (val != null) ? val : defaultValue;
 };
 
 /**
@@ -776,13 +776,13 @@ getAttribute = (name, defaultValue)=>
  */
 setAttribute = (name, value)=>
 {
-	var userObject = this.getValue();
-	
-	if (userObject != null &&
-		userObject.nodeType == mxConstants.NODETYPE_ELEMENT)
-	{
-		userObject.setAttribute(name, value);
-	}
+  var userObject = this.getValue();
+
+  if (userObject != null &&
+    userObject.nodeType == mxConstants.NODETYPE_ELEMENT)
+  {
+    userObject.setAttribute(name, value);
+  }
 };
 
 /**
@@ -794,10 +794,10 @@ setAttribute = (name, value)=>
  */
 clone = ()=>
 {
-	var clone = mxUtils.clone(this, this.mxTransient);
-	clone.setValue(this.cloneValue());
-	
-	return clone;
+  var clone = mxUtils.clone(this, this.mxTransient);
+  clone.setValue(this.cloneValue());
+
+  return clone;
 };
 
 /**
@@ -807,19 +807,19 @@ clone = ()=>
  */
 cloneValue = ()=>
 {
-	var value = this.getValue();
-	
-	if (value != null)
-	{
-		if (typeof(value.clone) == 'function')
-		{
-			value = value.clone();
-		}
-		else if (!isNaN(value.nodeType))
-		{
-			value = value.cloneNode(true);
-		}
-	}
-	
-	return value;
+  var value = this.getValue();
+
+  if (value != null)
+  {
+    if (typeof(value.clone) == 'function')
+    {
+      value = value.clone();
+    }
+    else if (!isNaN(value.nodeType))
+    {
+      value = value.cloneNode(true);
+    }
+  }
+
+  return value;
 };

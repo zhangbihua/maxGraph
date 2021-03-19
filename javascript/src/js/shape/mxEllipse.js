@@ -24,11 +24,11 @@
  */
 function mxEllipse(bounds, fill, stroke, strokewidth)
 {
-	mxShape.call(this);
-	this.bounds = bounds;
-	this.fill = fill;
-	this.stroke = stroke;
-	this.strokewidth = (strokewidth != null) ? strokewidth : 1;
+  mxShape.call(this);
+  this.bounds = bounds;
+  this.fill = fill;
+  this.stroke = stroke;
+  this.strokewidth = (strokewidth != null) ? strokewidth : 1;
 };
 
 /**
@@ -43,6 +43,6 @@ mxUtils.extend(mxEllipse, mxShape);
  */
 paintVertexShape = (c, x, y, w, h)=>
 {
-	c.ellipse(x, y, w, h);
-	c.fillAndStroke();
+  c.ellipse(x, y, w, h);
+  c.fillAndStroke();
 };

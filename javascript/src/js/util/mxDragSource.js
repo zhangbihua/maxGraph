@@ -17,31 +17,31 @@
  */
 function mxDragSource(element, dropHandler)
 {
-	this.element = element;
-	this.dropHandler = dropHandler;
-	
-	// Handles a drag gesture on the element
-	mxEvent.addGestureListeners(element, mxUtils.bind(this, (evt)=>
-	{
-		this.mouseDown(evt);
-	}));
-	
-	// Prevents native drag and drop
-	mxEvent.addListener(element, 'dragstart', (evt)=>
-	{
-		mxEvent.consume(evt);
-	});
-	
-	this.eventConsumer = (sender, evt)=>
-	{
-		var evtName = evt.getProperty('eventName');
-		var me = evt.getProperty('event');
-		
-		if (evtName != mxEvent.MOUSE_DOWN)
-		{
-			me.consume();
-		}
-	};
+  this.element = element;
+  this.dropHandler = dropHandler;
+  
+  // Handles a drag gesture on the element
+  mxEvent.addGestureListeners(element, mxUtils.bind(this, (evt)=>
+  {
+    this.mouseDown(evt);
+  }));
+  
+  // Prevents native drag and drop
+  mxEvent.addListener(element, 'dragstart', (evt)=>
+  {
+    mxEvent.consume(evt);
+  });
+  
+  this.eventConsumer = (sender, evt)=>
+  {
+    var evtName = evt.getProperty('eventName');
+    var me = evt.getProperty('event');
+    
+    if (evtName != mxEvent.MOUSE_DOWN)
+    {
+      me.consume();
+    }
+  };
 };
 
 /**
@@ -187,7 +187,7 @@ checkEventSource = true;
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
 
 /**
@@ -197,7 +197,7 @@ isEnabled = ()=>
  */
 setEnabled = (value)=>
 {
-	this.enabled = value;
+  this.enabled = value;
 };
 
 /**
@@ -207,7 +207,7 @@ setEnabled = (value)=>
  */
 isGuidesEnabled = ()=>
 {
-	return this.guidesEnabled;
+  return this.guidesEnabled;
 };
 
 /**
@@ -217,7 +217,7 @@ isGuidesEnabled = ()=>
  */
 setGuidesEnabled = (value)=>
 {
-	this.guidesEnabled = value;
+  this.guidesEnabled = value;
 };
 
 /**
@@ -227,7 +227,7 @@ setGuidesEnabled = (value)=>
  */
 isGridEnabled = ()=>
 {
-	return this.gridEnabled;
+  return this.gridEnabled;
 };
 
 /**
@@ -237,7 +237,7 @@ isGridEnabled = ()=>
  */
 setGridEnabled = (value)=>
 {
-	this.gridEnabled = value;
+  this.gridEnabled = value;
 };
 
 /**
@@ -248,7 +248,7 @@ setGridEnabled = (value)=>
  */
 getGraphForEvent = (evt)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -259,7 +259,7 @@ getGraphForEvent = (evt)=>
  */
 getDropTarget = (graph, x, y, evt)=>
 {
-	return graph.getCellAt(x, y);
+  return graph.getCellAt(x, y);
 };
 
 /**
@@ -270,7 +270,7 @@ getDropTarget = (graph, x, y, evt)=>
  */
 createDragElement = (evt)=>
 {
-	return this.element.cloneNode(true);
+  return this.element.cloneNode(true);
 };
 
 /**
@@ -281,7 +281,7 @@ createDragElement = (evt)=>
  */
 createPreviewElement = (graph)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -291,7 +291,7 @@ createPreviewElement = (graph)=>
  */
 isActive = ()=>
 {
-	return this.mouseMoveHandler != null;
+  return this.mouseMoveHandler != null;
 };
 
 /**
@@ -301,15 +301,15 @@ isActive = ()=>
  */
 reset = ()=>
 {
-	if (this.currentGraph != null)
-	{
-		this.dragExit(this.currentGraph);
-		this.currentGraph = null;
-	}
-	
-	this.removeDragElement();
-	this.removeListeners();
-	this.stopDrag();
+  if (this.currentGraph != null)
+  {
+    this.dragExit(this.currentGraph);
+    this.currentGraph = null;
+  }
+  
+  this.removeDragElement();
+  this.removeListeners();
+  this.stopDrag();
 };
 
 /**
@@ -335,19 +335,19 @@ reset = ()=>
  */
 mouseDown = (evt)=>
 {
-	if (this.enabled && !mxEvent.isConsumed(evt) && this.mouseMoveHandler == null)
-	{
-		this.startDrag(evt);
-		this.mouseMoveHandler = mxUtils.bind(this, this.mouseMove);
-		this.mouseUpHandler = mxUtils.bind(this, this.mouseUp);		
-		mxEvent.addGestureListeners(document, null, this.mouseMoveHandler, this.mouseUpHandler);
-		
-		if (mxClient.IS_TOUCH && !mxEvent.isMouseEvent(evt))
-		{
-			this.eventSource = mxEvent.getSource(evt);
-			mxEvent.addGestureListeners(this.eventSource, null, this.mouseMoveHandler, this.mouseUpHandler);
-		}
-	}
+  if (this.enabled && !mxEvent.isConsumed(evt) && this.mouseMoveHandler == null)
+  {
+    this.startDrag(evt);
+    this.mouseMoveHandler = mxUtils.bind(this, this.mouseMove);
+    this.mouseUpHandler = mxUtils.bind(this, this.mouseUp);    
+    mxEvent.addGestureListeners(document, null, this.mouseMoveHandler, this.mouseUpHandler);
+    
+    if (mxClient.IS_TOUCH && !mxEvent.isMouseEvent(evt))
+    {
+      this.eventSource = mxEvent.getSource(evt);
+      mxEvent.addGestureListeners(this.eventSource, null, this.mouseMoveHandler, this.mouseUpHandler);
+    }
+  }
 };
 
 /**
@@ -357,15 +357,15 @@ mouseDown = (evt)=>
  */
 startDrag = (evt)=>
 {
-	this.dragElement = this.createDragElement(evt);
-	this.dragElement.style.position = 'absolute';
-	this.dragElement.style.zIndex = this.dragElementZIndex;
-	mxUtils.setOpacity(this.dragElement, this.dragElementOpacity);
+  this.dragElement = this.createDragElement(evt);
+  this.dragElement.style.position = 'absolute';
+  this.dragElement.style.zIndex = this.dragElementZIndex;
+  mxUtils.setOpacity(this.dragElement, this.dragElementOpacity);
 
-	if (this.checkEventSource && mxClient.IS_SVG)
-	{
-		this.dragElement.style.pointerEvents = 'none';
-	}
+  if (this.checkEventSource && mxClient.IS_SVG)
+  {
+    this.dragElement.style.pointerEvents = 'none';
+  }
 };
 
 /**
@@ -375,10 +375,10 @@ startDrag = (evt)=>
  */
 stopDrag = ()=>
 {
-	// LATER: This used to have a mouse event. If that is still needed we need to add another
-	// final call to the DnD protocol to add a cleanup step in the case of escape press, which
-	// is not associated with a mouse event and which currently calles this method.
-	this.removeDragElement();
+  // LATER: This used to have a mouse event. If that is still needed we need to add another
+  // final call to the DnD protocol to add a cleanup step in the case of escape press, which
+  // is not associated with a mouse event and which currently calles this method.
+  this.removeDragElement();
 };
 
 /**
@@ -388,15 +388,15 @@ stopDrag = ()=>
  */
 removeDragElement = ()=>
 {
-	if (this.dragElement != null)
-	{
-		if (this.dragElement.parentNode != null)
-		{
-			this.dragElement.parentNode.removeChild(this.dragElement);
-		}
-		
-		this.dragElement = null;
-	}
+  if (this.dragElement != null)
+  {
+    if (this.dragElement.parentNode != null)
+    {
+      this.dragElement.parentNode.removeChild(this.dragElement);
+    }
+    
+    this.dragElement = null;
+  }
 };
 
 /**
@@ -406,9 +406,9 @@ removeDragElement = ()=>
  */
 getElementForEvent = (evt)=>
 {
-	return ((mxEvent.isTouchEvent(evt) || mxEvent.isPenEvent(evt)) ?
-			document.elementFromPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt)) :
-				mxEvent.getSource(evt));
+  return ((mxEvent.isTouchEvent(evt) || mxEvent.isPenEvent(evt)) ?
+      document.elementFromPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt)) :
+        mxEvent.getSource(evt));
 };
 
 /**
@@ -418,24 +418,24 @@ getElementForEvent = (evt)=>
  */
 graphContainsEvent = (graph, evt)=>
 {
-	var x = mxEvent.getClientX(evt);
-	var y = mxEvent.getClientY(evt);
-	var offset = mxUtils.getOffset(graph.container);
-	var origin = mxUtils.getScrollOrigin();
-	var elt = this.getElementForEvent(evt);
-	
-	if (this.checkEventSource)
-	{
-		while (elt != null && elt != graph.container)
-		{
-			elt = elt.parentNode;
-		}
-	}
+  var x = mxEvent.getClientX(evt);
+  var y = mxEvent.getClientY(evt);
+  var offset = mxUtils.getOffset(graph.container);
+  var origin = mxUtils.getScrollOrigin();
+  var elt = this.getElementForEvent(evt);
+  
+  if (this.checkEventSource)
+  {
+    while (elt != null && elt != graph.container)
+    {
+      elt = elt.parentNode;
+    }
+  }
 
-	// Checks if event is inside the bounds of the graph container
-	return elt != null && x >= offset.x - origin.x && y >= offset.y - origin.y &&
-		x <= offset.x - origin.x + graph.container.offsetWidth &&
-		y <= offset.y - origin.y + graph.container.offsetHeight;
+  // Checks if event is inside the bounds of the graph container
+  return elt != null && x >= offset.x - origin.x && y >= offset.y - origin.y &&
+    x <= offset.x - origin.x + graph.container.offsetWidth &&
+    y <= offset.y - origin.y + graph.container.offsetHeight;
 };
 
 /**
@@ -447,63 +447,63 @@ graphContainsEvent = (graph, evt)=>
  */
 mouseMove = (evt)=>
 {
-	var graph = this.getGraphForEvent(evt);
-	
-	// Checks if event is inside the bounds of the graph container
-	if (graph != null && !this.graphContainsEvent(graph, evt))
-	{
-		graph = null;
-	}
+  var graph = this.getGraphForEvent(evt);
+  
+  // Checks if event is inside the bounds of the graph container
+  if (graph != null && !this.graphContainsEvent(graph, evt))
+  {
+    graph = null;
+  }
 
-	if (graph != this.currentGraph)
-	{
-		if (this.currentGraph != null)
-		{
-			this.dragExit(this.currentGraph, evt);
-		}
-		
-		this.currentGraph = graph;
-		
-		if (this.currentGraph != null)
-		{
-			this.dragEnter(this.currentGraph, evt);
-		}
-	}
-	
-	if (this.currentGraph != null)
-	{
-		this.dragOver(this.currentGraph, evt);
-	}
+  if (graph != this.currentGraph)
+  {
+    if (this.currentGraph != null)
+    {
+      this.dragExit(this.currentGraph, evt);
+    }
+    
+    this.currentGraph = graph;
+    
+    if (this.currentGraph != null)
+    {
+      this.dragEnter(this.currentGraph, evt);
+    }
+  }
+  
+  if (this.currentGraph != null)
+  {
+    this.dragOver(this.currentGraph, evt);
+  }
 
-	if (this.dragElement != null && (this.previewElement == null || this.previewElement.style.visibility != 'visible'))
-	{
-		var x = mxEvent.getClientX(evt);
-		var y = mxEvent.getClientY(evt);
-		
-		if (this.dragElement.parentNode == null)
-		{
-			document.body.appendChild(this.dragElement);
-		}
+  if (this.dragElement != null && (this.previewElement == null || this.previewElement.style.visibility != 'visible'))
+  {
+    var x = mxEvent.getClientX(evt);
+    var y = mxEvent.getClientY(evt);
+    
+    if (this.dragElement.parentNode == null)
+    {
+      document.body.appendChild(this.dragElement);
+    }
 
-		this.dragElement.style.visibility = 'visible';
-		
-		if (this.dragOffset != null)
-		{
-			x += this.dragOffset.x;
-			y += this.dragOffset.y;
-		}
-		
-		var offset = mxUtils.getDocumentScrollOrigin(document);
-		
-		this.dragElement.style.left = (x + offset.x) + 'px';
-		this.dragElement.style.top = (y + offset.y) + 'px';
-	}
-	else if (this.dragElement != null)
-	{
-		this.dragElement.style.visibility = 'hidden';
-	}
-	
-	mxEvent.consume(evt);
+    this.dragElement.style.visibility = 'visible';
+    
+    if (this.dragOffset != null)
+    {
+      x += this.dragOffset.x;
+      y += this.dragOffset.y;
+    }
+    
+    var offset = mxUtils.getDocumentScrollOrigin(document);
+    
+    this.dragElement.style.left = (x + offset.x) + 'px';
+    this.dragElement.style.top = (y + offset.y) + 'px';
+  }
+  else if (this.dragElement != null)
+  {
+    this.dragElement.style.visibility = 'hidden';
+  }
+  
+  mxEvent.consume(evt);
 };
 
 /**
@@ -514,27 +514,27 @@ mouseMove = (evt)=>
  */
 mouseUp = (evt)=>
 {
-	if (this.currentGraph != null)
-	{
-		if (this.currentPoint != null && (this.previewElement == null ||
-			this.previewElement.style.visibility != 'hidden'))
-		{
-			var scale = this.currentGraph.view.scale;
-			var tr = this.currentGraph.view.translate;
-			var x = this.currentPoint.x / scale - tr.x;
-			var y = this.currentPoint.y / scale - tr.y;
-			
-			this.drop(this.currentGraph, evt, this.currentDropTarget, x, y);
-		}
-		
-		this.dragExit(this.currentGraph);
-		this.currentGraph = null;
-	}
+  if (this.currentGraph != null)
+  {
+    if (this.currentPoint != null && (this.previewElement == null ||
+      this.previewElement.style.visibility != 'hidden'))
+    {
+      var scale = this.currentGraph.view.scale;
+      var tr = this.currentGraph.view.translate;
+      var x = this.currentPoint.x / scale - tr.x;
+      var y = this.currentPoint.y / scale - tr.y;
+      
+      this.drop(this.currentGraph, evt, this.currentDropTarget, x, y);
+    }
+    
+    this.dragExit(this.currentGraph);
+    this.currentGraph = null;
+  }
 
-	this.stopDrag();
-	this.removeListeners();
-	
-	mxEvent.consume(evt);
+  this.stopDrag();
+  this.removeListeners();
+  
+  mxEvent.consume(evt);
 };
 
 /**
@@ -544,15 +544,15 @@ mouseUp = (evt)=>
  */
 removeListeners = ()=>
 {
-	if (this.eventSource != null)
-	{
-		mxEvent.removeGestureListeners(this.eventSource, null, this.mouseMoveHandler, this.mouseUpHandler);
-		this.eventSource = null;
-	}
-	
-	mxEvent.removeGestureListeners(document, null, this.mouseMoveHandler, this.mouseUpHandler);
-	this.mouseMoveHandler = null;
-	this.mouseUpHandler = null;
+  if (this.eventSource != null)
+  {
+    mxEvent.removeGestureListeners(this.eventSource, null, this.mouseMoveHandler, this.mouseUpHandler);
+    this.eventSource = null;
+  }
+  
+  mxEvent.removeGestureListeners(document, null, this.mouseMoveHandler, this.mouseUpHandler);
+  this.mouseMoveHandler = null;
+  this.mouseUpHandler = null;
 };
 
 /**
@@ -562,28 +562,28 @@ removeListeners = ()=>
  */
 dragEnter = (graph, evt)=>
 {
-	graph.isMouseDown = true;
-	graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
-	this.previewElement = this.createPreviewElement(graph);
-	
-	if (this.previewElement != null && this.checkEventSource && mxClient.IS_SVG)
-	{
-		this.previewElement.style.pointerEvents = 'none';
-	}
-	
-	// Guide is only needed if preview element is used
-	if (this.isGuidesEnabled() && this.previewElement != null)
-	{
-		this.currentGuide = new mxGuide(graph, graph.graphHandler.getGuideStates());
-	}
-	
-	if (this.highlightDropTargets)
-	{
-		this.currentHighlight = new mxCellHighlight(graph, mxConstants.DROP_TARGET_COLOR);
-	}
-	
-	// Consumes all events in the current graph before they are fired
-	graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.eventConsumer);
+  graph.isMouseDown = true;
+  graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
+  this.previewElement = this.createPreviewElement(graph);
+  
+  if (this.previewElement != null && this.checkEventSource && mxClient.IS_SVG)
+  {
+    this.previewElement.style.pointerEvents = 'none';
+  }
+  
+  // Guide is only needed if preview element is used
+  if (this.isGuidesEnabled() && this.previewElement != null)
+  {
+    this.currentGuide = new mxGuide(graph, graph.graphHandler.getGuideStates());
+  }
+  
+  if (this.highlightDropTargets)
+  {
+    this.currentHighlight = new mxCellHighlight(graph, mxConstants.DROP_TARGET_COLOR);
+  }
+  
+  // Consumes all events in the current graph before they are fired
+  graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.eventConsumer);
 };
 
 /**
@@ -593,34 +593,34 @@ dragEnter = (graph, evt)=>
  */
 dragExit = (graph, evt)=>
 {
-	this.currentDropTarget = null;
-	this.currentPoint = null;
-	graph.isMouseDown = false;
-	
-	// Consumes all events in the current graph before they are fired
-	graph.removeListener(this.eventConsumer);
-	
-	if (this.previewElement != null)
-	{
-		if (this.previewElement.parentNode != null)
-		{
-			this.previewElement.parentNode.removeChild(this.previewElement);
-		}
-		
-		this.previewElement = null;
-	}
-	
-	if (this.currentGuide != null)
-	{
-		this.currentGuide.destroy();
-		this.currentGuide = null;
-	}
-	
-	if (this.currentHighlight != null)
-	{
-		this.currentHighlight.destroy();
-		this.currentHighlight = null;
-	}
+  this.currentDropTarget = null;
+  this.currentPoint = null;
+  graph.isMouseDown = false;
+  
+  // Consumes all events in the current graph before they are fired
+  graph.removeListener(this.eventConsumer);
+  
+  if (this.previewElement != null)
+  {
+    if (this.previewElement.parentNode != null)
+    {
+      this.previewElement.parentNode.removeChild(this.previewElement);
+    }
+    
+    this.previewElement = null;
+  }
+  
+  if (this.currentGuide != null)
+  {
+    this.currentGuide.destroy();
+    this.currentGuide = null;
+  }
+  
+  if (this.currentHighlight != null)
+  {
+    this.currentHighlight.destroy();
+    this.currentHighlight = null;
+  }
 };
 
 /**
@@ -631,77 +631,77 @@ dragExit = (graph, evt)=>
  */
 dragOver = (graph, evt)=>
 {
-	var offset = mxUtils.getOffset(graph.container);
-	var origin = mxUtils.getScrollOrigin(graph.container);
-	var x = mxEvent.getClientX(evt) - offset.x + origin.x - graph.panDx;
-	var y = mxEvent.getClientY(evt) - offset.y + origin.y - graph.panDy;
+  var offset = mxUtils.getOffset(graph.container);
+  var origin = mxUtils.getScrollOrigin(graph.container);
+  var x = mxEvent.getClientX(evt) - offset.x + origin.x - graph.panDx;
+  var y = mxEvent.getClientY(evt) - offset.y + origin.y - graph.panDy;
 
-	if (graph.autoScroll && (this.autoscroll == null || this.autoscroll))
-	{
-		graph.scrollPointToVisible(x, y, graph.autoExtend);
-	}
+  if (graph.autoScroll && (this.autoscroll == null || this.autoscroll))
+  {
+    graph.scrollPointToVisible(x, y, graph.autoExtend);
+  }
 
-	// Highlights the drop target under the mouse
-	if (this.currentHighlight != null && graph.isDropEnabled())
-	{
-		this.currentDropTarget = this.getDropTarget(graph, x, y, evt);
-		var state = graph.getView().getState(this.currentDropTarget);
-		this.currentHighlight.highlight(state);
-	}
+  // Highlights the drop target under the mouse
+  if (this.currentHighlight != null && graph.isDropEnabled())
+  {
+    this.currentDropTarget = this.getDropTarget(graph, x, y, evt);
+    var state = graph.getView().getState(this.currentDropTarget);
+    this.currentHighlight.highlight(state);
+  }
 
-	// Updates the location of the preview
-	if (this.previewElement != null)
-	{
-		if (this.previewElement.parentNode == null)
-		{
-			graph.container.appendChild(this.previewElement);
-			
-			this.previewElement.style.zIndex = '3';
-			this.previewElement.style.position = 'absolute';
-		}
-		
-		var gridEnabled = this.isGridEnabled() && graph.isGridEnabledEvent(evt);
-		var hideGuide = true;
+  // Updates the location of the preview
+  if (this.previewElement != null)
+  {
+    if (this.previewElement.parentNode == null)
+    {
+      graph.container.appendChild(this.previewElement);
+      
+      this.previewElement.style.zIndex = '3';
+      this.previewElement.style.position = 'absolute';
+    }
+    
+    var gridEnabled = this.isGridEnabled() && graph.isGridEnabledEvent(evt);
+    var hideGuide = true;
 
-		// Grid and guides
-		if (this.currentGuide != null && this.currentGuide.isEnabledForEvent(evt))
-		{
-			// LATER: HTML preview appears smaller than SVG preview
-			var w = parseInt(this.previewElement.style.width);
-			var h = parseInt(this.previewElement.style.height);
-			var bounds = new mxRectangle(0, 0, w, h);
-			var delta = new mxPoint(x, y);
-			delta = this.currentGuide.move(bounds, delta, gridEnabled, true);
-			hideGuide = false;
-			x = delta.x;
-			y = delta.y;
-		}
-		else if (gridEnabled)
-		{
-			var scale = graph.view.scale;
-			var tr = graph.view.translate;
-			var off = graph.gridSize / 2;
-			x = (graph.snap(x / scale - tr.x - off) + tr.x) * scale;
-			y = (graph.snap(y / scale - tr.y - off) + tr.y) * scale;
-		}
-		
-		if (this.currentGuide != null && hideGuide)
-		{
-			this.currentGuide.hide();
-		}
-		
-		if (this.previewOffset != null)
-		{
-			x += this.previewOffset.x;
-			y += this.previewOffset.y;
-		}
+    // Grid and guides
+    if (this.currentGuide != null && this.currentGuide.isEnabledForEvent(evt))
+    {
+      // LATER: HTML preview appears smaller than SVG preview
+      var w = parseInt(this.previewElement.style.width);
+      var h = parseInt(this.previewElement.style.height);
+      var bounds = new mxRectangle(0, 0, w, h);
+      var delta = new mxPoint(x, y);
+      delta = this.currentGuide.move(bounds, delta, gridEnabled, true);
+      hideGuide = false;
+      x = delta.x;
+      y = delta.y;
+    }
+    else if (gridEnabled)
+    {
+      var scale = graph.view.scale;
+      var tr = graph.view.translate;
+      var off = graph.gridSize / 2;
+      x = (graph.snap(x / scale - tr.x - off) + tr.x) * scale;
+      y = (graph.snap(y / scale - tr.y - off) + tr.y) * scale;
+    }
+    
+    if (this.currentGuide != null && hideGuide)
+    {
+      this.currentGuide.hide();
+    }
+    
+    if (this.previewOffset != null)
+    {
+      x += this.previewOffset.x;
+      y += this.previewOffset.y;
+    }
 
-		this.previewElement.style.left = Math.round(x) + 'px';
-		this.previewElement.style.top = Math.round(y) + 'px';
-		this.previewElement.style.visibility = 'visible';
-	}
-	
-	this.currentPoint = new mxPoint(x, y);
+    this.previewElement.style.left = Math.round(x) + 'px';
+    this.previewElement.style.top = Math.round(y) + 'px';
+    this.previewElement.style.visibility = 'visible';
+  }
+  
+  this.currentPoint = new mxPoint(x, y);
 };
 
 /**
@@ -712,14 +712,14 @@ dragOver = (graph, evt)=>
  */
 drop = (graph, evt, dropTarget, x, y)=>
 {
-	this.dropHandler.apply(this, arguments);
-	
-	// Had to move this to after the insert because it will
-	// affect the scrollbars of the window in IE to try and
-	// make the complete container visible.
-	// LATER: Should be made optional.
-	if (graph.container.style.visibility != 'hidden')
-	{
-		graph.container.focus();
-	}
+  this.dropHandler.apply(this, arguments);
+  
+  // Had to move this to after the insert because it will
+  // affect the scrollbars of the window in IE to try and
+  // make the complete container visible.
+  // LATER: Should be made optional.
+  if (graph.container.style.visibility != 'hidden')
+  {
+    graph.container.focus();
+  }
 };

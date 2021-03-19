@@ -174,11 +174,11 @@
  * must be used in the stylesheet. There are three ways of doing this:
  * 
  *   - By changing the default style, so that all vertices will use the new
- * 		shape
+ *     shape
  *   - By defining a new style, so that only vertices with the respective
- * 		cellstyle will use the new shape
+ *     cellstyle will use the new shape
  *   - By using shape=box in the cellstyle's optional list of key, value pairs
- * 		to be overridden
+ *     to be overridden
  *
  * In the first case, the code to fetch and modify the default style for
  * vertices is as follows:
@@ -211,7 +211,7 @@
  * 
  * (code)
  * var vertex = graph.insertVertex(parent, null, 'Hello, World!', 20, 20, 80, 20,
- * 				'boxstyle');
+ *         'boxstyle');
  * (end)
  * 
  * To summarize, each new shape must be registered in the <mxCellRenderer> with
@@ -635,63 +635,63 @@
  */
 function mxGraph(container, model, renderHint, stylesheet)
 {
-	// Initializes the variable in case the prototype has been
-	// modified to hold some listeners (which is possible because
-	// the createHandlers call is executed regardless of the
-	// arguments passed into the ctor).
-	this.mouseListeners = null;
-	
-	// Converts the renderHint into a dialect
-	this.renderHint = renderHint;
+  // Initializes the variable in case the prototype has been
+  // modified to hold some listeners (which is possible because
+  // the createHandlers call is executed regardless of the
+  // arguments passed into the ctor).
+  this.mouseListeners = null;
 
-	if (mxClient.IS_SVG)
-	{
-		this.dialect = mxConstants.DIALECT_SVG;
-	}
-	else if (renderHint == mxConstants.RENDERING_HINT_EXACT && mxClient.IS_VML)
-	{
-		this.dialect = mxConstants.DIALECT_VML;
-	}
-	else if (renderHint == mxConstants.RENDERING_HINT_FASTEST)
-	{
-		this.dialect = mxConstants.DIALECT_STRICTHTML;
-	}
-	else if (renderHint == mxConstants.RENDERING_HINT_FASTER)
-	{
-		this.dialect = mxConstants.DIALECT_PREFERHTML;
-	}
-	else // default for VML
-	{
-		this.dialect = mxConstants.DIALECT_MIXEDHTML;
-	}
-	
-	// Initializes the main members that do not require a container
-	this.model = (model != null) ? model : new mxGraphModel();
-	this.multiplicities = [];
-	this.imageBundles = [];
-	this.cellRenderer = this.createCellRenderer();
-	this.setSelectionModel(this.createSelectionModel());
-	this.setStylesheet((stylesheet != null) ? stylesheet : this.createStylesheet());
-	this.view = this.createGraphView();
-	
-	// Adds a graph model listener to update the view
-	this.graphModelChangeListener = mxUtils.bind(this, (sender, evt)=>
-	{
-		this.graphModelChanged(evt.getProperty('edit').changes);
-	});
-	
-	this.model.addListener(mxEvent.CHANGE, this.graphModelChangeListener);
+  // Converts the renderHint into a dialect
+  this.renderHint = renderHint;
 
-	// Installs basic event handlers with disabled default settings.
-	this.createHandlers();
-	
-	// Initializes the display if a container was specified
-	if (container != null)
-	{
-		this.init(container);
-	}
-	
-	this.view.revalidate();
+  if (mxClient.IS_SVG)
+  {
+    this.dialect = mxConstants.DIALECT_SVG;
+  }
+  else if (renderHint == mxConstants.RENDERING_HINT_EXACT && mxClient.IS_VML)
+  {
+    this.dialect = mxConstants.DIALECT_VML;
+  }
+  else if (renderHint == mxConstants.RENDERING_HINT_FASTEST)
+  {
+    this.dialect = mxConstants.DIALECT_STRICTHTML;
+  }
+  else if (renderHint == mxConstants.RENDERING_HINT_FASTER)
+  {
+    this.dialect = mxConstants.DIALECT_PREFERHTML;
+  }
+  else // default for VML
+  {
+    this.dialect = mxConstants.DIALECT_MIXEDHTML;
+  }
+
+  // Initializes the main members that do not require a container
+  this.model = (model != null) ? model : new mxGraphModel();
+  this.multiplicities = [];
+  this.imageBundles = [];
+  this.cellRenderer = this.createCellRenderer();
+  this.setSelectionModel(this.createSelectionModel());
+  this.setStylesheet((stylesheet != null) ? stylesheet : this.createStylesheet());
+  this.view = this.createGraphView();
+
+  // Adds a graph model listener to update the view
+  this.graphModelChangeListener = mxUtils.bind(this, (sender, evt)=>
+  {
+    this.graphModelChanged(evt.getProperty('edit').changes);
+  });
+
+  this.model.addListener(mxEvent.CHANGE, this.graphModelChangeListener);
+
+  // Installs basic event handlers with disabled default settings.
+  this.createHandlers();
+
+  // Initializes the display if a container was specified
+  if (container != null)
+  {
+    this.init(container);
+  }
+
+  this.view.revalidate();
 };
 
 /**
@@ -700,11 +700,11 @@ function mxGraph(container, model, renderHint, stylesheet)
  */
 if (mxLoadResources)
 {
-	mxResources.add(mxClient.basePath + '/resources/graph');
+  mxResources.add(mxClient.basePath + '/resources/graph');
 }
 else
 {
-	mxClient.defaultBundles.push(mxClient.basePath + '/resources/graph');
+  mxClient.defaultBundles.push(mxClient.basePath + '/resources/graph');
 }
 
 /**
@@ -763,7 +763,7 @@ view = null;
  * (end)
  */
 stylesheet = null;
-	
+
 /**
  * Variable: selectionModel
  * 
@@ -814,7 +814,7 @@ dialect = null;
  * Specifies the grid size. Default is 10.
  */
 gridSize = 10;
-	
+
 /**
  * Variable: gridEnabled
  * 
@@ -1130,7 +1130,7 @@ foldingEnabled = true;
  * Specifies the return value for <isCellEditable>. Default is true.
  */
 cellsEditable = true;
-		
+
 /**
  * Variable: cellsDeletable
  * 
@@ -1144,14 +1144,14 @@ cellsDeletable = true;
  * Specifies the return value for <isCellMovable>. Default is true.
  */
 cellsMovable = true;
-	
+
 /**
  * Variable: edgeLabelsMovable
  * 
  * Specifies the return value for edges in <isLabelMovable>. Default is true.
  */
 edgeLabelsMovable = true;
-	
+
 /**
  * Variable: vertexLabelsMovable
  * 
@@ -1305,7 +1305,7 @@ minimumGraphSize = null;
  * <resizeContainer> is true.
  */
 minimumContainerSize = null;
-		
+
 /**
  * Variable: maximumContainerSize
  * 
@@ -1329,7 +1329,7 @@ resizeContainer = false;
  * being resized after the graph has been changed. Default is 0.
  */
 border = 0;
-		
+
 /**
  * Variable: keepEdgesInForeground
  * 
@@ -1474,7 +1474,7 @@ resetEdgesOnConnect = true;
  * Specifies if loops (aka self-references) are allowed. Default is false.
  */
 allowLoops = false;
-	
+
 /**
  * Variable: defaultLoopStyle
  * 
@@ -1530,7 +1530,7 @@ disconnectOnMove = true;
  * is true.
  */
 labelsVisible = true;
-	
+
 /**
  * Variable: htmlLabels
  * 
@@ -1552,7 +1552,7 @@ swimlaneSelectionEnabled = true;
  * Specifies if nesting of swimlanes is allowed. Default is true.
  */
 swimlaneNesting = true;
-	
+
 /**
  * Variable: swimlaneIndicatorColorAttribute
  * 
@@ -1623,7 +1623,7 @@ expandedImage = new mxImage(mxClient.imageBasePath + '/expanded.gif', 9, 9);
  * '.png' on the Mac and '.gif' on all other platforms.
  */
 warningImage = new mxImage(mxClient.imageBasePath + '/warning'+
-	((mxClient.IS_MAC) ? '.png' : '.gif'), 16, 16);
+  ((mxClient.IS_MAC) ? '.png' : '.gif'), 16, 16);
 
 /**
  * Variable: alreadyConnectedResource
@@ -1665,51 +1665,51 @@ collapseExpandResource = (mxClient.language != 'none') ? 'collapse-expand' : '';
  */
 init = (container)=>
 {
-	this.container = container;
-	
-	// Initializes the in-place editor
-	this.cellEditor = this.createCellEditor();	
+  this.container = container;
 
-	// Initializes the container using the view
-	this.view.init();
-	
-	// Updates the size of the container for the current graph
-	this.sizeDidChange();
-	
-	// Hides tooltips and resets tooltip timer if mouse leaves container
-	mxEvent.addListener(container, 'mouseleave', mxUtils.bind(this, (evt)=>
-	{
-		if (this.tooltipHandler != null && this.tooltipHandler.div != null &&
-			this.tooltipHandler.div != evt.relatedTarget)
-		{
-			this.tooltipHandler.hide();
-		}
-	}));
+  // Initializes the in-place editor
+  this.cellEditor = this.createCellEditor();
 
-	// Automatic deallocation of memory
-	if (mxClient.IS_IE)
-	{
-		mxEvent.addListener(window, 'unload', mxUtils.bind(this, ()=>
-		{
-			this.destroy();
-		}));
-		
-		// Disable shift-click for text
-		mxEvent.addListener(container, 'selectstart',
-			mxUtils.bind(this, (evt)=>
-			{
-				return this.isEditing() || (!this.isMouseDown && !mxEvent.isShiftDown(evt));
-			})
-		);
-	}
-	
-	// Workaround for missing last shape and connect preview in IE8 standards
-	// mode if no initial graph displayed or no label for shape defined
-	if (document.documentMode == 8)
-	{
-		container.insertAdjacentHTML('beforeend', '<' + mxClient.VML_PREFIX + ':group' +
-			' style="DISPLAY: none;"></' + mxClient.VML_PREFIX + ':group>');
-	}
+  // Initializes the container using the view
+  this.view.init();
+
+  // Updates the size of the container for the current graph
+  this.sizeDidChange();
+
+  // Hides tooltips and resets tooltip timer if mouse leaves container
+  mxEvent.addListener(container, 'mouseleave', mxUtils.bind(this, (evt)=>
+  {
+    if (this.tooltipHandler != null && this.tooltipHandler.div != null &&
+      this.tooltipHandler.div != evt.relatedTarget)
+    {
+      this.tooltipHandler.hide();
+    }
+  }));
+
+  // Automatic deallocation of memory
+  if (mxClient.IS_IE)
+  {
+    mxEvent.addListener(window, 'unload', mxUtils.bind(this, ()=>
+    {
+      this.destroy();
+    }));
+
+    // Disable shift-click for text
+    mxEvent.addListener(container, 'selectstart',
+      mxUtils.bind(this, (evt)=>
+      {
+        return this.isEditing() || (!this.isMouseDown && !mxEvent.isShiftDown(evt));
+      })
+    );
+  }
+
+  // Workaround for missing last shape and connect preview in IE8 standards
+  // mode if no initial graph displayed or no label for shape defined
+  if (document.documentMode == 8)
+  {
+    container.insertAdjacentHTML('beforeend', '<' + mxClient.VML_PREFIX + ':group' +
+      ' style="DISPLAY: none;"></' + mxClient.VML_PREFIX + ':group>');
+  }
 };
 
 /**
@@ -1720,15 +1720,15 @@ init = (container)=>
  */
 createHandlers = ()=>
 {
-	this.tooltipHandler = this.createTooltipHandler();
-	this.tooltipHandler.setEnabled(false);
-	this.selectionCellsHandler = this.createSelectionCellsHandler();
-	this.connectionHandler = this.createConnectionHandler();
-	this.connectionHandler.setEnabled(false);
-	this.graphHandler = this.createGraphHandler();
-	this.panningHandler = this.createPanningHandler();
-	this.panningHandler.panningEnabled = false;
-	this.popupMenuHandler = this.createPopupMenuHandler();
+  this.tooltipHandler = this.createTooltipHandler();
+  this.tooltipHandler.setEnabled(false);
+  this.selectionCellsHandler = this.createSelectionCellsHandler();
+  this.connectionHandler = this.createConnectionHandler();
+  this.connectionHandler.setEnabled(false);
+  this.graphHandler = this.createGraphHandler();
+  this.panningHandler = this.createPanningHandler();
+  this.panningHandler.panningEnabled = false;
+  this.popupMenuHandler = this.createPopupMenuHandler();
 };
 
 /**
@@ -1738,7 +1738,7 @@ createHandlers = ()=>
  */
 createTooltipHandler = ()=>
 {
-	return new mxTooltipHandler(this);
+  return new mxTooltipHandler(this);
 };
 
 /**
@@ -1748,7 +1748,7 @@ createTooltipHandler = ()=>
  */
 createSelectionCellsHandler = ()=>
 {
-	return new mxSelectionCellsHandler(this);
+  return new mxSelectionCellsHandler(this);
 };
 
 /**
@@ -1758,7 +1758,7 @@ createSelectionCellsHandler = ()=>
  */
 createConnectionHandler = ()=>
 {
-	return new mxConnectionHandler(this);
+  return new mxConnectionHandler(this);
 };
 
 /**
@@ -1768,7 +1768,7 @@ createConnectionHandler = ()=>
  */
 createGraphHandler = ()=>
 {
-	return new mxGraphHandler(this);
+  return new mxGraphHandler(this);
 };
 
 /**
@@ -1778,7 +1778,7 @@ createGraphHandler = ()=>
  */
 createPanningHandler = ()=>
 {
-	return new mxPanningHandler(this);
+  return new mxPanningHandler(this);
 };
 
 /**
@@ -1788,7 +1788,7 @@ createPanningHandler = ()=>
  */
 createPopupMenuHandler = ()=>
 {
-	return new mxPopupMenuHandler(this);
+  return new mxPopupMenuHandler(this);
 };
 
 /**
@@ -1798,7 +1798,7 @@ createPopupMenuHandler = ()=>
  */
 createSelectionModel = ()=>
 {
-	return new mxGraphSelectionModel(this);
+  return new mxGraphSelectionModel(this);
 };
 
 /**
@@ -1808,7 +1808,7 @@ createSelectionModel = ()=>
  */
 createStylesheet = ()=>
 {
-	return new mxStylesheet();
+  return new mxStylesheet();
 };
 
 /**
@@ -1818,7 +1818,7 @@ createStylesheet = ()=>
  */
 createGraphView = ()=>
 {
-	return new mxGraphView(this);
+  return new mxGraphView(this);
 };
  
 /**
@@ -1828,7 +1828,7 @@ createGraphView = ()=>
  */
 createCellRenderer = ()=>
 {
-	return new mxCellRenderer();
+  return new mxCellRenderer();
 };
 
 /**
@@ -1838,7 +1838,7 @@ createCellRenderer = ()=>
  */
 createCellEditor = ()=>
 {
-	return new mxCellEditor(this);
+  return new mxCellEditor(this);
 };
 
 /**
@@ -1848,7 +1848,7 @@ createCellEditor = ()=>
  */
 getModel = ()=>
 {
-	return this.model;
+  return this.model;
 };
 
 /**
@@ -1858,7 +1858,7 @@ getModel = ()=>
  */
 getView = ()=>
 {
-	return this.view;
+  return this.view;
 };
 
 /**
@@ -1868,7 +1868,7 @@ getView = ()=>
  */
 getStylesheet = ()=>
 {
-	return this.stylesheet;
+  return this.stylesheet;
 };
 
 /**
@@ -1878,7 +1878,7 @@ getStylesheet = ()=>
  */
 setStylesheet = (stylesheet)=>
 {
-	this.stylesheet = stylesheet;
+  this.stylesheet = stylesheet;
 };
 
 /**
@@ -1888,7 +1888,7 @@ setStylesheet = (stylesheet)=>
  */
 getSelectionModel = ()=>
 {
-	return this.selectionModel;
+  return this.selectionModel;
 };
 
 /**
@@ -1898,7 +1898,7 @@ getSelectionModel = ()=>
  */
 setSelectionModel = (selectionModel)=>
 {
-	this.selectionModel = selectionModel;
+  this.selectionModel = selectionModel;
 };
 
 /**
@@ -1914,57 +1914,57 @@ setSelectionModel = (selectionModel)=>
  */
 getSelectionCellsForChanges = (changes, ignoreFn)=>
 {
-	var dict = new mxDictionary();
-	var cells = [];
-	
-	var addCell = mxUtils.bind(this, (cell)=>
-	{
-		if (!dict.get(cell) && this.model.contains(cell))
-		{
-			if (this.model.isEdge(cell) || this.model.isVertex(cell))
-			{
-				dict.put(cell, true);
-				cells.push(cell);
-			}
-			else
-			{
-				var childCount = this.model.getChildCount(cell);
-				
-				for (var i = 0; i < childCount; i++)
-				{
-					addCell(this.model.getChildAt(cell, i));
-				}
-			}
-		}
-	});
+  var dict = new mxDictionary();
+  var cells = [];
 
-	for (var i = 0; i < changes.length; i++)
-	{
-		var change = changes[i];
-		
-		if (change.constructor != mxRootChange &&
-			(ignoreFn == null || !ignoreFn(change)))
-		{
-			var cell = null;
+  var addCell = mxUtils.bind(this, (cell)=>
+  {
+    if (!dict.get(cell) && this.model.contains(cell))
+    {
+      if (this.model.isEdge(cell) || this.model.isVertex(cell))
+      {
+        dict.put(cell, true);
+        cells.push(cell);
+      }
+      else
+      {
+        var childCount = this.model.getChildCount(cell);
 
-			if (change instanceof mxChildChange)
-			{
-				cell = change.child;
-			}
-			else if (change.cell != null &&
-				change.cell instanceof mxCell)
-			{
-				cell = change.cell;
-			}
-			
-			if (cell != null)
-			{
-				addCell(cell);
-			}
-		}
-	}
-	
-	return cells;
+        for (var i = 0; i < childCount; i++)
+        {
+          addCell(this.model.getChildAt(cell, i));
+        }
+      }
+    }
+  });
+
+  for (var i = 0; i < changes.length; i++)
+  {
+    var change = changes[i];
+
+    if (change.constructor != mxRootChange &&
+      (ignoreFn == null || !ignoreFn(change)))
+    {
+      var cell = null;
+
+      if (change instanceof mxChildChange)
+      {
+        cell = change.child;
+      }
+      else if (change.cell != null &&
+        change.cell instanceof mxCell)
+      {
+        cell = change.cell;
+      }
+
+      if (cell != null)
+      {
+        addCell(cell);
+      }
+    }
+  }
+
+  return cells;
 };
 
 /**
@@ -1979,14 +1979,14 @@ getSelectionCellsForChanges = (changes, ignoreFn)=>
  */
 graphModelChanged = (changes)=>
 {
-	for (var i = 0; i < changes.length; i++)
-	{
-		this.processChange(changes[i]);
-	}
+  for (var i = 0; i < changes.length; i++)
+  {
+    this.processChange(changes[i]);
+  }
 
-	this.updateSelection();
-	this.view.validate();
-	this.sizeDidChange();
+  this.updateSelection();
+  this.view.validate();
+  this.sizeDidChange();
 };
 
 /**
@@ -1996,33 +1996,33 @@ graphModelChanged = (changes)=>
  */
 updateSelection = ()=>
 {
-	var cells = this.getSelectionCells();
-	var removed = [];
-	
-	for (var i = 0; i < cells.length; i++)
-	{
-		if (!this.model.contains(cells[i]) || !this.isCellVisible(cells[i]))
-		{
-			removed.push(cells[i]);
-		}
-		else
-		{
-			var par = this.model.getParent(cells[i]);
-			
-			while (par != null && par != this.view.currentRoot)
-			{
-				if (this.isCellCollapsed(par) || !this.isCellVisible(par))
-				{
-					removed.push(cells[i]);
-					break;
-				}
-				
-				par = this.model.getParent(par);
-			}
-		}
-	}
-	
-	this.removeSelectionCells(removed);
+  var cells = this.getSelectionCells();
+  var removed = [];
+
+  for (var i = 0; i < cells.length; i++)
+  {
+    if (!this.model.contains(cells[i]) || !this.isCellVisible(cells[i]))
+    {
+      removed.push(cells[i]);
+    }
+    else
+    {
+      var par = this.model.getParent(cells[i]);
+
+      while (par != null && par != this.view.currentRoot)
+      {
+        if (this.isCellCollapsed(par) || !this.isCellVisible(par))
+        {
+          removed.push(cells[i]);
+          break;
+        }
+
+        par = this.model.getParent(par);
+      }
+    }
+  }
+
+  this.removeSelectionCells(removed);
 };
 
 /**
@@ -2038,95 +2038,95 @@ updateSelection = ()=>
  */
 processChange = (change)=>
 {
-	// Resets the view settings, removes all cells and clears
-	// the selection if the root changes.
-	if (change instanceof mxRootChange)
-	{
-		this.clearSelection();
-		this.setDefaultParent(null);
-		this.removeStateForCell(change.previous);
-		
-		if (this.resetViewOnRootChange)
-		{
-			this.view.scale = 1;
-			this.view.translate.x = 0;
-			this.view.translate.y = 0;
-		}
+  // Resets the view settings, removes all cells and clears
+  // the selection if the root changes.
+  if (change instanceof mxRootChange)
+  {
+    this.clearSelection();
+    this.setDefaultParent(null);
+    this.removeStateForCell(change.previous);
 
-		this.fireEvent(new mxEventObject(mxEvent.ROOT));
-	}
-	
-	// Adds or removes a child to the view by online invaliding
-	// the minimal required portions of the cache, namely, the
-	// old and new parent and the child.
-	else if (change instanceof mxChildChange)
-	{
-		var newParent = this.model.getParent(change.child);
-		this.view.invalidate(change.child, true, true);
-		
-		if (!this.model.contains(newParent) || this.isCellCollapsed(newParent))
-		{
-			this.view.invalidate(change.child, true, true);
-			this.removeStateForCell(change.child);
-			
-			// Handles special case of current root of view being removed
-			if (this.view.currentRoot == change.child)
-			{
-				this.home();
-			}
-		}
+    if (this.resetViewOnRootChange)
+    {
+      this.view.scale = 1;
+      this.view.translate.x = 0;
+      this.view.translate.y = 0;
+    }
+
+    this.fireEvent(new mxEventObject(mxEvent.ROOT));
+  }
+
+  // Adds or removes a child to the view by online invaliding
+  // the minimal required portions of the cache, namely, the
+  // old and new parent and the child.
+  else if (change instanceof mxChildChange)
+  {
+    var newParent = this.model.getParent(change.child);
+    this.view.invalidate(change.child, true, true);
+
+    if (!this.model.contains(newParent) || this.isCellCollapsed(newParent))
+    {
+      this.view.invalidate(change.child, true, true);
+      this.removeStateForCell(change.child);
+
+      // Handles special case of current root of view being removed
+      if (this.view.currentRoot == change.child)
+      {
+        this.home();
+      }
+    }
  
-		if (newParent != change.previous)
-		{
-			// Refreshes the collapse/expand icons on the parents
-			if (newParent != null)
-			{
-				this.view.invalidate(newParent, false, false);
-			}
-			
-			if (change.previous != null)
-			{
-				this.view.invalidate(change.previous, false, false);
-			}
-		}
-	}
+    if (newParent != change.previous)
+    {
+      // Refreshes the collapse/expand icons on the parents
+      if (newParent != null)
+      {
+        this.view.invalidate(newParent, false, false);
+      }
 
-	// Handles two special cases where the shape does not need to be
-	// recreated from scratch, it only needs to be invalidated.
-	else if (change instanceof mxTerminalChange || change instanceof mxGeometryChange)
-	{
-		// Checks if the geometry has changed to avoid unnessecary revalidation
-		if (change instanceof mxTerminalChange || ((change.previous == null && change.geometry != null) ||
-			(change.previous != null && !change.previous.equals(change.geometry))))
-		{
-			this.view.invalidate(change.cell);
-		}
-	}
+      if (change.previous != null)
+      {
+        this.view.invalidate(change.previous, false, false);
+      }
+    }
+  }
 
-	// Handles two special cases where only the shape, but no
-	// descendants need to be recreated
-	else if (change instanceof mxValueChange)
-	{
-		this.view.invalidate(change.cell, false, false);
-	}
-	
-	// Requires a new mxShape in JavaScript
-	else if (change instanceof mxStyleChange)
-	{
-		this.view.invalidate(change.cell, true, true);
-		var state = this.view.getState(change.cell);
-		
-		if (state != null)
-		{
-			state.invalidStyle = true;
-		}
-	}
-	
-	// Removes the state from the cache by default
-	else if (change.cell != null && change.cell instanceof mxCell)
-	{
-		this.removeStateForCell(change.cell);
-	}
+  // Handles two special cases where the shape does not need to be
+  // recreated from scratch, it only needs to be invalidated.
+  else if (change instanceof mxTerminalChange || change instanceof mxGeometryChange)
+  {
+    // Checks if the geometry has changed to avoid unnessecary revalidation
+    if (change instanceof mxTerminalChange || ((change.previous == null && change.geometry != null) ||
+      (change.previous != null && !change.previous.equals(change.geometry))))
+    {
+      this.view.invalidate(change.cell);
+    }
+  }
+
+  // Handles two special cases where only the shape, but no
+  // descendants need to be recreated
+  else if (change instanceof mxValueChange)
+  {
+    this.view.invalidate(change.cell, false, false);
+  }
+
+  // Requires a new mxShape in JavaScript
+  else if (change instanceof mxStyleChange)
+  {
+    this.view.invalidate(change.cell, true, true);
+    var state = this.view.getState(change.cell);
+
+    if (state != null)
+    {
+      state.invalidStyle = true;
+    }
+  }
+
+  // Removes the state from the cache by default
+  else if (change.cell != null && change.cell instanceof mxCell)
+  {
+    this.removeStateForCell(change.cell);
+  }
 };
 
 /**
@@ -2141,15 +2141,15 @@ processChange = (change)=>
  */
 removeStateForCell = (cell)=>
 {
-	var childCount = this.model.getChildCount(cell);
-	
-	for (var i = 0; i < childCount; i++)
-	{
-		this.removeStateForCell(this.model.getChildAt(cell, i));
-	}
+  var childCount = this.model.getChildCount(cell);
 
-	this.view.invalidate(cell, false, true);
-	this.view.removeState(cell);
+  for (var i = 0; i < childCount; i++)
+  {
+    this.removeStateForCell(this.model.getChildAt(cell, i));
+  }
+
+  this.view.invalidate(cell, false, true);
+  this.view.removeState(cell);
 };
 
 /**
@@ -2169,25 +2169,25 @@ removeStateForCell = (cell)=>
  */
 addCellOverlay = (cell, overlay)=>
 {
-	if (cell.overlays == null)
-	{
-		cell.overlays = [];
-	}
-	
-	cell.overlays.push(overlay);
+  if (cell.overlays == null)
+  {
+    cell.overlays = [];
+  }
 
-	var state = this.view.getState(cell);
+  cell.overlays.push(overlay);
 
-	// Immediately updates the cell display if the state exists
-	if (state != null)
-	{
-		this.cellRenderer.redraw(state);
-	}
-	
-	this.fireEvent(new mxEventObject(mxEvent.ADD_OVERLAY,
-			'cell', cell, 'overlay', overlay));
-	
-	return overlay;
+  var state = this.view.getState(cell);
+
+  // Immediately updates the cell display if the state exists
+  if (state != null)
+  {
+    this.cellRenderer.redraw(state);
+  }
+
+  this.fireEvent(new mxEventObject(mxEvent.ADD_OVERLAY,
+      'cell', cell, 'overlay', overlay));
+
+  return overlay;
 };
 
 /**
@@ -2202,7 +2202,7 @@ addCellOverlay = (cell, overlay)=>
  */
 getCellOverlays = (cell)=>
 {
-	return cell.overlays;
+  return cell.overlays;
 };
 
 /**
@@ -2219,41 +2219,41 @@ getCellOverlays = (cell)=>
  */
 removeCellOverlay = (cell, overlay)=>
 {
-	if (overlay == null)
-	{
-		this.removeCellOverlays(cell);
-	}
-	else
-	{
-		var index = mxUtils.indexOf(cell.overlays, overlay);
-		
-		if (index >= 0)
-		{
-			cell.overlays.splice(index, 1);
-			
-			if (cell.overlays.length == 0)
-			{
-				cell.overlays = null;
-			}
-			
-			// Immediately updates the cell display if the state exists
-			var state = this.view.getState(cell);
-			
-			if (state != null)
-			{
-				this.cellRenderer.redraw(state);
-			}
-			
-			this.fireEvent(new mxEventObject(mxEvent.REMOVE_OVERLAY,
-					'cell', cell, 'overlay', overlay));	
-		}
-		else
-		{
-			overlay = null;
-		}
-	}
-	
-	return overlay;
+  if (overlay == null)
+  {
+    this.removeCellOverlays(cell);
+  }
+  else
+  {
+    var index = mxUtils.indexOf(cell.overlays, overlay);
+
+    if (index >= 0)
+    {
+      cell.overlays.splice(index, 1);
+
+      if (cell.overlays.length == 0)
+      {
+        cell.overlays = null;
+      }
+
+      // Immediately updates the cell display if the state exists
+      var state = this.view.getState(cell);
+
+      if (state != null)
+      {
+        this.cellRenderer.redraw(state);
+      }
+
+      this.fireEvent(new mxEventObject(mxEvent.REMOVE_OVERLAY,
+          'cell', cell, 'overlay', overlay));
+    }
+    else
+    {
+      overlay = null;
+    }
+  }
+
+  return overlay;
 };
 
 /**
@@ -2269,28 +2269,28 @@ removeCellOverlay = (cell, overlay)=>
  */
 removeCellOverlays = (cell)=>
 {
-	var overlays = cell.overlays;
-	
-	if (overlays != null)
-	{
-		cell.overlays = null;
-		
-		// Immediately updates the cell display if the state exists
-		var state = this.view.getState(cell);
-		
-		if (state != null)
-		{
-			this.cellRenderer.redraw(state);
-		}
-		
-		for (var i = 0; i < overlays.length; i++)
-		{
-			this.fireEvent(new mxEventObject(mxEvent.REMOVE_OVERLAY,
-					'cell', cell, 'overlay', overlays[i]));
-		}
-	}
-	
-	return overlays;
+  var overlays = cell.overlays;
+
+  if (overlays != null)
+  {
+    cell.overlays = null;
+
+    // Immediately updates the cell display if the state exists
+    var state = this.view.getState(cell);
+
+    if (state != null)
+    {
+      this.cellRenderer.redraw(state);
+    }
+
+    for (var i = 0; i < overlays.length; i++)
+    {
+      this.fireEvent(new mxEventObject(mxEvent.REMOVE_OVERLAY,
+          'cell', cell, 'overlay', overlays[i]));
+    }
+  }
+
+  return overlays;
 };
 
 /**
@@ -2308,17 +2308,17 @@ removeCellOverlays = (cell)=>
  */
 clearCellOverlays = (cell)=>
 {
-	cell = (cell != null) ? cell : this.model.getRoot();
-	this.removeCellOverlays(cell);
-	
-	// Recursively removes all overlays from the children
-	var childCount = this.model.getChildCount(cell);
-	
-	for (var i = 0; i < childCount; i++)
-	{
-		var child = this.model.getChildAt(cell, i);
-		this.clearCellOverlays(child); // recurse
-	}
+  cell = (cell != null) ? cell : this.model.getRoot();
+  this.removeCellOverlays(cell);
+
+  // Recursively removes all overlays from the children
+  var childCount = this.model.getChildCount(cell);
+
+  for (var i = 0; i < childCount; i++)
+  {
+    var child = this.model.getChildAt(cell, i);
+    this.clearCellOverlays(child); // recurse
+  }
 };
 
 /**
@@ -2347,37 +2347,37 @@ clearCellOverlays = (cell)=>
  */
 setCellWarning = (cell, warning, img, isSelect)=>
 {
-	if (warning != null && warning.length > 0)
-	{
-		img = (img != null) ? img : this.warningImage;
-		
-		// Creates the overlay with the image and warning
-		var overlay = new mxCellOverlay(img,
-			'<font color=red>'+warning+'</font>');
-		
-		// Adds a handler for single mouseclicks to select the cell
-		if (isSelect)
-		{
-			overlay.addListener(mxEvent.CLICK,
-				mxUtils.bind(this, (sender, evt)=>
-				{
-					if (this.isEnabled())
-					{
-						this.setSelectionCell(cell);
-					}
-				})
-			);
-		}
-		
-		// Sets and returns the overlay in the graph
-		return this.addCellOverlay(cell, overlay);
-	}
-	else
-	{
-		this.removeCellOverlays(cell);
-	}
-	
-	return null;
+  if (warning != null && warning.length > 0)
+  {
+    img = (img != null) ? img : this.warningImage;
+
+    // Creates the overlay with the image and warning
+    var overlay = new mxCellOverlay(img,
+      '<font color=red>'+warning+'</font>');
+
+    // Adds a handler for single mouseclicks to select the cell
+    if (isSelect)
+    {
+      overlay.addListener(mxEvent.CLICK,
+        mxUtils.bind(this, (sender, evt)=>
+        {
+          if (this.isEnabled())
+          {
+            this.setSelectionCell(cell);
+          }
+        })
+      );
+    }
+
+    // Sets and returns the overlay in the graph
+    return this.addCellOverlay(cell, overlay);
+  }
+  else
+  {
+    this.removeCellOverlays(cell);
+  }
+
+  return null;
 };
 
 /**
@@ -2396,7 +2396,7 @@ setCellWarning = (cell, warning, img, isSelect)=>
  */
 startEditing = (evt)=>
 {
-	this.startEditingAtCell(null, evt);
+  this.startEditingAtCell(null, evt);
 };
 
 /**
@@ -2413,27 +2413,27 @@ startEditing = (evt)=>
  */
 startEditingAtCell = (cell, evt)=>
 {
-	if (evt == null || !mxEvent.isMultiTouchEvent(evt))
-	{
-		if (cell == null)
-		{
-			cell = this.getSelectionCell();
-			
-			if (cell != null && !this.isCellEditable(cell))
-			{
-				cell = null;
-			}
-		}
-	
-		if (cell != null)
-		{
-			this.fireEvent(new mxEventObject(mxEvent.START_EDITING,
-					'cell', cell, 'event', evt));
-			this.cellEditor.startEditing(cell, evt);
-			this.fireEvent(new mxEventObject(mxEvent.EDITING_STARTED,
-					'cell', cell, 'event', evt));
-		}
-	}
+  if (evt == null || !mxEvent.isMultiTouchEvent(evt))
+  {
+    if (cell == null)
+    {
+      cell = this.getSelectionCell();
+
+      if (cell != null && !this.isCellEditable(cell))
+      {
+        cell = null;
+      }
+    }
+
+    if (cell != null)
+    {
+      this.fireEvent(new mxEventObject(mxEvent.START_EDITING,
+          'cell', cell, 'event', evt));
+      this.cellEditor.startEditing(cell, evt);
+      this.fireEvent(new mxEventObject(mxEvent.EDITING_STARTED,
+          'cell', cell, 'event', evt));
+    }
+  }
 };
 
 /**
@@ -2451,7 +2451,7 @@ startEditingAtCell = (cell, evt)=>
  */
 getEditingValue = (cell, evt)=>
 {
-	return this.convertValueToString(cell);
+  return this.convertValueToString(cell);
 };
 
 /**
@@ -2466,8 +2466,8 @@ getEditingValue = (cell, evt)=>
  */
 stopEditing = (cancel)=>
 {
-	this.cellEditor.stopEditing(cancel);
-	this.fireEvent(new mxEventObject(mxEvent.EDITING_STOPPED, 'cancel', cancel));
+  this.cellEditor.stopEditing(cancel);
+  this.fireEvent(new mxEventObject(mxEvent.EDITING_STOPPED, 'cancel', cancel));
 };
 
 /**
@@ -2485,20 +2485,20 @@ stopEditing = (cancel)=>
  */
 labelChanged = (cell, value, evt)=>
 {
-	this.model.beginUpdate();
-	try
-	{
-		var old = cell.value;
-		this.cellLabelChanged(cell, value, this.isAutoSizeCell(cell));
-		this.fireEvent(new mxEventObject(mxEvent.LABEL_CHANGED,
-			'cell', cell, 'value', value, 'old', old, 'event', evt));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
-	
-	return cell;
+  this.model.beginUpdate();
+  try
+  {
+    var old = cell.value;
+    this.cellLabelChanged(cell, value, this.isAutoSizeCell(cell));
+    this.fireEvent(new mxEventObject(mxEvent.LABEL_CHANGED,
+      'cell', cell, 'value', value, 'old', old, 'event', evt));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
+
+  return cell;
 };
 
 /**
@@ -2517,8 +2517,8 @@ labelChanged = (cell, value, evt)=>
  * var graphCellLabelChanged = graph.cellLabelChanged;
  * graph.cellLabelChanged = (cell, newValue, autoSize)=>
  * {
- * 	// Cloned for correct undo/redo
- * 	var elt = cell.value.cloneNode(true);
+ *   // Cloned for correct undo/redo
+ *   var elt = cell.value.cloneNode(true);
  *  elt.setAttribute('label', newValue);
  *  
  *  newValue = elt;
@@ -2534,20 +2534,20 @@ labelChanged = (cell, value, evt)=>
  */
 cellLabelChanged = (cell, value, autoSize)=>
 {
-	this.model.beginUpdate();
-	try
-	{
-		this.model.setValue(cell, value);
-		
-		if (autoSize)
-		{
-			this.cellSizeUpdated(cell, false);
-		}
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
+  this.model.beginUpdate();
+  try
+  {
+    this.model.setValue(cell, value);
+
+    if (autoSize)
+    {
+      this.cellSizeUpdated(cell, false);
+    }
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
 };
 
 /**
@@ -2565,7 +2565,7 @@ cellLabelChanged = (cell, value, autoSize)=>
  */
 escape = (evt)=>
 {
-	this.fireEvent(new mxEventObject(mxEvent.ESCAPE, 'event', evt));
+  this.fireEvent(new mxEventObject(mxEvent.ESCAPE, 'event', evt));
 };
 
 /**
@@ -2600,90 +2600,90 @@ escape = (evt)=>
  */
 click = (me)=>
 {
-	var evt = me.getEvent();
-	var cell = me.getCell();
-	var mxe = new mxEventObject(mxEvent.CLICK, 'event', evt, 'cell', cell);
-	
-	if (me.isConsumed())
-	{
-		mxe.consume();
-	}
-	
-	this.fireEvent(mxe);
-	
-	if (this.isEnabled() && !mxEvent.isConsumed(evt) && !mxe.isConsumed())
-	{
-		if (cell != null)
-		{
-			if (this.isTransparentClickEvent(evt))
-			{
-				var active = false;
-				
-				var tmp = this.getCellAt(me.graphX, me.graphY, null, null, null,
-					mxUtils.bind(this, (state)=>
-				{
-					var selected = this.isCellSelected(state.cell);
-					active = active || selected;
-					
-					return !active || selected || (state.cell != cell &&
-						this.model.isAncestor(state.cell, cell));
-				}));
-				
-				if (tmp != null)
-				{
-					cell = tmp;
-				}
-			}
-		}
-		else if (this.isSwimlaneSelectionEnabled())
-		{
-			cell = this.getSwimlaneAt(me.getGraphX(), me.getGraphY());
-				
-			if (cell != null && (!this.isToggleEvent(evt) ||
-				!mxEvent.isAltDown(evt)))
-			{
-				var temp = cell;
-				var swimlanes = [];
-				
-				while (temp != null)
-				{
-					temp = this.model.getParent(temp);
-					var state = this.view.getState(temp);
-					
-					if (this.isSwimlane(temp) && state != null)
-					{
-						swimlanes.push(temp);
-					}
-				}
-				
-				// Selects ancestors for selected swimlanes
-				if (swimlanes.length > 0)
-				{
-					swimlanes = swimlanes.reverse();
-					swimlanes.splice(0, 0, cell);
-					swimlanes.push(cell);
-					
-					for (var i = 0; i < swimlanes.length - 1; i++)
-					{
-						if (this.isCellSelected(swimlanes[i]))
-						{
-							cell = swimlanes[(this.isToggleEvent(evt)) ?
-								i : i + 1];
-						}
-					}
-				}
-			}
-		}
-			
-		if (cell != null)
-		{
-			this.selectCellForEvent(cell, evt);
-		}
-		else if (!this.isToggleEvent(evt))
-		{
-			this.clearSelection();
-		}
-	}
+  var evt = me.getEvent();
+  var cell = me.getCell();
+  var mxe = new mxEventObject(mxEvent.CLICK, 'event', evt, 'cell', cell);
+
+  if (me.isConsumed())
+  {
+    mxe.consume();
+  }
+
+  this.fireEvent(mxe);
+
+  if (this.isEnabled() && !mxEvent.isConsumed(evt) && !mxe.isConsumed())
+  {
+    if (cell != null)
+    {
+      if (this.isTransparentClickEvent(evt))
+      {
+        var active = false;
+
+        var tmp = this.getCellAt(me.graphX, me.graphY, null, null, null,
+          mxUtils.bind(this, (state)=>
+        {
+          var selected = this.isCellSelected(state.cell);
+          active = active || selected;
+
+          return !active || selected || (state.cell != cell &&
+            this.model.isAncestor(state.cell, cell));
+        }));
+
+        if (tmp != null)
+        {
+          cell = tmp;
+        }
+      }
+    }
+    else if (this.isSwimlaneSelectionEnabled())
+    {
+      cell = this.getSwimlaneAt(me.getGraphX(), me.getGraphY());
+
+      if (cell != null && (!this.isToggleEvent(evt) ||
+        !mxEvent.isAltDown(evt)))
+      {
+        var temp = cell;
+        var swimlanes = [];
+
+        while (temp != null)
+        {
+          temp = this.model.getParent(temp);
+          var state = this.view.getState(temp);
+
+          if (this.isSwimlane(temp) && state != null)
+          {
+            swimlanes.push(temp);
+          }
+        }
+
+        // Selects ancestors for selected swimlanes
+        if (swimlanes.length > 0)
+        {
+          swimlanes = swimlanes.reverse();
+          swimlanes.splice(0, 0, cell);
+          swimlanes.push(cell);
+
+          for (var i = 0; i < swimlanes.length - 1; i++)
+          {
+            if (this.isCellSelected(swimlanes[i]))
+            {
+              cell = swimlanes[(this.isToggleEvent(evt)) ?
+                i : i + 1];
+            }
+          }
+        }
+      }
+    }
+
+    if (cell != null)
+    {
+      this.selectCellForEvent(cell, evt);
+    }
+    else if (!this.isToggleEvent(evt))
+    {
+      this.clearSelection();
+    }
+  }
 };
 
 /**
@@ -2693,21 +2693,21 @@ click = (me)=>
  */
 isSiblingSelected = (cell)=>
 {
-	var model = this.model;
-	var parent = model.getParent(cell);
-	var childCount = model.getChildCount(parent);
-	
-	for (var i = 0; i < childCount; i++)
-	{
-		var child = model.getChildAt(parent, i);
-		
-		if (cell != child && this.isCellSelected(child))
-		{
-			return true;
-		}
-	}
-	
-	return false;
+  var model = this.model;
+  var parent = model.getParent(cell);
+  var childCount = model.getChildCount(parent);
+
+  for (var i = 0; i < childCount; i++)
+  {
+    var child = model.getChildAt(parent, i);
+
+    if (cell != child && this.isCellSelected(child))
+    {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 
@@ -2729,7 +2729,7 @@ isSiblingSelected = (cell)=>
  *   
  *   if (this.isEnabled() && !mxEvent.isConsumed(evt) && !mxe.isConsumed())
  *   {
- * 	   mxUtils.alert('Hello, World!');
+ *      mxUtils.alert('Hello, World!');
  *     mxe.consume();
  *   }
  * }
@@ -2753,16 +2753,16 @@ isSiblingSelected = (cell)=>
  */
 dblClick = (evt, cell)=>
 {
-	var mxe = new mxEventObject(mxEvent.DOUBLE_CLICK, 'event', evt, 'cell', cell);
-	this.fireEvent(mxe);
-	
-	// Handles the event if it has not been consumed
-	if (this.isEnabled() && !mxEvent.isConsumed(evt) && !mxe.isConsumed() &&
-		cell != null && this.isCellEditable(cell) && !this.isEditing(cell))
-	{
-		this.startEditingAtCell(cell, evt);
-		mxEvent.consume(evt);
-	}
+  var mxe = new mxEventObject(mxEvent.DOUBLE_CLICK, 'event', evt, 'cell', cell);
+  this.fireEvent(mxe);
+
+  // Handles the event if it has not been consumed
+  if (this.isEnabled() && !mxEvent.isConsumed(evt) && !mxe.isConsumed() &&
+    cell != null && this.isCellEditable(cell) && !this.isEditing(cell))
+  {
+    this.startEditingAtCell(cell, evt);
+    mxEvent.consume(evt);
+  }
 };
 
 /**
@@ -2777,35 +2777,35 @@ dblClick = (evt, cell)=>
  */
 tapAndHold = (me)=>
 {
-	var evt = me.getEvent();
-	var mxe = new mxEventObject(mxEvent.TAP_AND_HOLD, 'event', evt, 'cell', me.getCell());
+  var evt = me.getEvent();
+  var mxe = new mxEventObject(mxEvent.TAP_AND_HOLD, 'event', evt, 'cell', me.getCell());
 
-	// LATER: Check if event should be consumed if me is consumed
-	this.fireEvent(mxe);
+  // LATER: Check if event should be consumed if me is consumed
+  this.fireEvent(mxe);
 
-	if (mxe.isConsumed())
-	{
-		// Resets the state of the panning handler
-		this.panningHandler.panningTrigger = false;
-	}
-	
-	// Handles the event if it has not been consumed
-	if (this.isEnabled() && !mxEvent.isConsumed(evt) && !mxe.isConsumed() && this.connectionHandler.isEnabled())
-	{
-		var state = this.view.getState(this.connectionHandler.marker.getCell(me));
+  if (mxe.isConsumed())
+  {
+    // Resets the state of the panning handler
+    this.panningHandler.panningTrigger = false;
+  }
 
-		if (state != null)
-		{
-			this.connectionHandler.marker.currentColor = this.connectionHandler.marker.validColor;
-			this.connectionHandler.marker.markedState = state;
-			this.connectionHandler.marker.mark();
-			
-			this.connectionHandler.first = new mxPoint(me.getGraphX(), me.getGraphY());
-			this.connectionHandler.edgeState = this.connectionHandler.createEdgeState(me);
-			this.connectionHandler.previous = state;
-			this.connectionHandler.fireEvent(new mxEventObject(mxEvent.START, 'state', this.connectionHandler.previous));
-		}
-	}
+  // Handles the event if it has not been consumed
+  if (this.isEnabled() && !mxEvent.isConsumed(evt) && !mxe.isConsumed() && this.connectionHandler.isEnabled())
+  {
+    var state = this.view.getState(this.connectionHandler.marker.getCell(me));
+
+    if (state != null)
+    {
+      this.connectionHandler.marker.currentColor = this.connectionHandler.marker.validColor;
+      this.connectionHandler.marker.markedState = state;
+      this.connectionHandler.marker.mark();
+
+      this.connectionHandler.first = new mxPoint(me.getGraphX(), me.getGraphY());
+      this.connectionHandler.edgeState = this.connectionHandler.createEdgeState(me);
+      this.connectionHandler.previous = state;
+      this.connectionHandler.fireEvent(new mxEventObject(mxEvent.START, 'state', this.connectionHandler.previous));
+    }
+  }
 };
 
 /**
@@ -2816,103 +2816,103 @@ tapAndHold = (me)=>
  */
 scrollPointToVisible = (x, y, extend, border)=>
 {
-	if (!this.timerAutoScroll && (this.ignoreScrollbars || mxUtils.hasScrollbars(this.container)))
-	{
-		var c = this.container;
-		border = (border != null) ? border : 20;
-		
-		if (x >= c.scrollLeft && y >= c.scrollTop && x <= c.scrollLeft + c.clientWidth &&
-			y <= c.scrollTop + c.clientHeight)
-		{
-			var dx = c.scrollLeft + c.clientWidth - x;
-			
-			if (dx < border)
-			{
-				var old = c.scrollLeft;
-				c.scrollLeft += border - dx;
+  if (!this.timerAutoScroll && (this.ignoreScrollbars || mxUtils.hasScrollbars(this.container)))
+  {
+    var c = this.container;
+    border = (border != null) ? border : 20;
 
-				// Automatically extends the canvas size to the bottom, right
-				// if the event is outside of the canvas and the edge of the
-				// canvas has been reached. Notes: Needs fix for IE.
-				if (extend && old == c.scrollLeft)
-				{
-					if (this.dialect == mxConstants.DIALECT_SVG)
-					{
-						var root = this.view.getDrawPane().ownerSVGElement;
-						var width = this.container.scrollWidth + border - dx;
-						
-						// Updates the clipping region. This is an expensive
-						// operation that should not be executed too often.
-						root.style.width = width + 'px';
-					}
-					else
-					{
-						var width = Math.max(c.clientWidth, c.scrollWidth) + border - dx;
-						var canvas = this.view.getCanvas();
-						canvas.style.width = width + 'px';
-					}
-					
-					c.scrollLeft += border - dx;
-				}
-			}
-			else
-			{
-				dx = x - c.scrollLeft;
-				
-				if (dx < border)
-				{
-					c.scrollLeft -= border - dx;
-				}
-			}
-			
-			var dy = c.scrollTop + c.clientHeight - y;
-			
-			if (dy < border)
-			{
-				var old = c.scrollTop;
-				c.scrollTop += border - dy;
+    if (x >= c.scrollLeft && y >= c.scrollTop && x <= c.scrollLeft + c.clientWidth &&
+      y <= c.scrollTop + c.clientHeight)
+    {
+      var dx = c.scrollLeft + c.clientWidth - x;
 
-				if (old == c.scrollTop && extend)
-				{
-					if (this.dialect == mxConstants.DIALECT_SVG)
-					{
-						var root = this.view.getDrawPane().ownerSVGElement;
-						var height = this.container.scrollHeight + border - dy;
-						
-						// Updates the clipping region. This is an expensive
-						// operation that should not be executed too often.
-						root.style.height = height + 'px';
-					}
-					else
-					{
-						var height = Math.max(c.clientHeight, c.scrollHeight) + border - dy;
-						var canvas = this.view.getCanvas();
-						canvas.style.height = height + 'px';
-					}
-					
-					c.scrollTop += border - dy;
-				}
-			}
-			else
-			{
-				dy = y - c.scrollTop;
-				
-				if (dy < border)
-				{
-					c.scrollTop -= border - dy;
-				}
-			}
-		}
-	}
-	else if (this.allowAutoPanning && !this.panningHandler.isActive())
-	{
-		if (this.panningManager == null)
-		{
-			this.panningManager = this.createPanningManager();
-		}
+      if (dx < border)
+      {
+        var old = c.scrollLeft;
+        c.scrollLeft += border - dx;
 
-		this.panningManager.panTo(x + this.panDx, y + this.panDy);
-	}
+        // Automatically extends the canvas size to the bottom, right
+        // if the event is outside of the canvas and the edge of the
+        // canvas has been reached. Notes: Needs fix for IE.
+        if (extend && old == c.scrollLeft)
+        {
+          if (this.dialect == mxConstants.DIALECT_SVG)
+          {
+            var root = this.view.getDrawPane().ownerSVGElement;
+            var width = this.container.scrollWidth + border - dx;
+
+            // Updates the clipping region. This is an expensive
+            // operation that should not be executed too often.
+            root.style.width = width + 'px';
+          }
+          else
+          {
+            var width = Math.max(c.clientWidth, c.scrollWidth) + border - dx;
+            var canvas = this.view.getCanvas();
+            canvas.style.width = width + 'px';
+          }
+
+          c.scrollLeft += border - dx;
+        }
+      }
+      else
+      {
+        dx = x - c.scrollLeft;
+
+        if (dx < border)
+        {
+          c.scrollLeft -= border - dx;
+        }
+      }
+
+      var dy = c.scrollTop + c.clientHeight - y;
+
+      if (dy < border)
+      {
+        var old = c.scrollTop;
+        c.scrollTop += border - dy;
+
+        if (old == c.scrollTop && extend)
+        {
+          if (this.dialect == mxConstants.DIALECT_SVG)
+          {
+            var root = this.view.getDrawPane().ownerSVGElement;
+            var height = this.container.scrollHeight + border - dy;
+
+            // Updates the clipping region. This is an expensive
+            // operation that should not be executed too often.
+            root.style.height = height + 'px';
+          }
+          else
+          {
+            var height = Math.max(c.clientHeight, c.scrollHeight) + border - dy;
+            var canvas = this.view.getCanvas();
+            canvas.style.height = height + 'px';
+          }
+
+          c.scrollTop += border - dy;
+        }
+      }
+      else
+      {
+        dy = y - c.scrollTop;
+
+        if (dy < border)
+        {
+          c.scrollTop -= border - dy;
+        }
+      }
+    }
+  }
+  else if (this.allowAutoPanning && !this.panningHandler.isActive())
+  {
+    if (this.panningManager == null)
+    {
+      this.panningManager = this.createPanningManager();
+    }
+
+    this.panningManager.panTo(x + this.panDx, y + this.panDy);
+  }
 };
 
 
@@ -2923,7 +2923,7 @@ scrollPointToVisible = (x, y, extend, border)=>
  */
 createPanningManager = ()=>
 {
-	return new mxPanningManager(this);
+  return new mxPanningManager(this);
 };
 
 /**
@@ -2935,16 +2935,16 @@ createPanningManager = ()=>
  */
 getBorderSizes = ()=>
 {
-	var css = mxUtils.getCurrentStyle(this.container);
-	
-	return new mxRectangle(mxUtils.parseCssNumber(css.paddingLeft) +
-			((css.borderLeftStyle != 'none') ? mxUtils.parseCssNumber(css.borderLeftWidth) : 0),
-		mxUtils.parseCssNumber(css.paddingTop) +
-			((css.borderTopStyle != 'none') ? mxUtils.parseCssNumber(css.borderTopWidth) : 0),
-		mxUtils.parseCssNumber(css.paddingRight) +
-			((css.borderRightStyle != 'none') ? mxUtils.parseCssNumber(css.borderRightWidth) : 0),
-		mxUtils.parseCssNumber(css.paddingBottom) +
-			((css.borderBottomStyle != 'none') ? mxUtils.parseCssNumber(css.borderBottomWidth) : 0));
+  var css = mxUtils.getCurrentStyle(this.container);
+
+  return new mxRectangle(mxUtils.parseCssNumber(css.paddingLeft) +
+      ((css.borderLeftStyle != 'none') ? mxUtils.parseCssNumber(css.borderLeftWidth) : 0),
+    mxUtils.parseCssNumber(css.paddingTop) +
+      ((css.borderTopStyle != 'none') ? mxUtils.parseCssNumber(css.borderTopWidth) : 0),
+    mxUtils.parseCssNumber(css.paddingRight) +
+      ((css.borderRightStyle != 'none') ? mxUtils.parseCssNumber(css.borderRightWidth) : 0),
+    mxUtils.parseCssNumber(css.paddingBottom) +
+      ((css.borderBottomStyle != 'none') ? mxUtils.parseCssNumber(css.borderBottomWidth) : 0));
 };
 
 /**
@@ -2954,16 +2954,16 @@ getBorderSizes = ()=>
  */
 getPreferredPageSize = (bounds, width, height)=>
 {
-	var scale = this.view.scale;
-	var tr = this.view.translate;
-	var fmt = this.pageFormat;
-	var ps = this.pageScale;
-	var page = new mxRectangle(0, 0, Math.ceil(fmt.width * ps), Math.ceil(fmt.height * ps));
-	
-	var hCount = (this.pageBreaksVisible) ? Math.ceil(width / page.width) : 1;
-	var vCount = (this.pageBreaksVisible) ? Math.ceil(height / page.height) : 1;
-	
-	return new mxRectangle(0, 0, hCount * page.width + 2 + tr.x, vCount * page.height + 2 + tr.y);
+  var scale = this.view.scale;
+  var tr = this.view.translate;
+  var fmt = this.pageFormat;
+  var ps = this.pageScale;
+  var page = new mxRectangle(0, 0, Math.ceil(fmt.width * ps), Math.ceil(fmt.height * ps));
+
+  var hCount = (this.pageBreaksVisible) ? Math.ceil(width / page.width) : 1;
+  var vCount = (this.pageBreaksVisible) ? Math.ceil(height / page.height) : 1;
+
+  return new mxRectangle(0, 0, hCount * page.width + 2 + tr.x, vCount * page.height + 2 + tr.y);
 };
 
 /**
@@ -3014,102 +3014,102 @@ getPreferredPageSize = (bounds, width, height)=>
  */
 fit = (border, keepOrigin, margin, enabled, ignoreWidth, ignoreHeight, maxHeight)=>
 {
-	if (this.container != null)
-	{
-		border = (border != null) ? border : this.getBorder();
-		keepOrigin = (keepOrigin != null) ? keepOrigin : false;
-		margin = (margin != null) ? margin : 0;
-		enabled = (enabled != null) ? enabled : true;
-		ignoreWidth = (ignoreWidth != null) ? ignoreWidth : false;
-		ignoreHeight = (ignoreHeight != null) ? ignoreHeight : false;
-		
-		// Adds spacing and border from css
-		var cssBorder = this.getBorderSizes();
-		var w1 = this.container.offsetWidth - cssBorder.x - cssBorder.width - 1;
-		var h1 = (maxHeight != null) ? maxHeight : this.container.offsetHeight - cssBorder.y - cssBorder.height - 1;
-		var bounds = this.view.getGraphBounds();
-		
-		if (bounds.width > 0 && bounds.height > 0)
-		{
-			if (keepOrigin && bounds.x != null && bounds.y != null)
-			{
-				bounds = bounds.clone();
-				bounds.width += bounds.x;
-				bounds.height += bounds.y;
-				bounds.x = 0;
-				bounds.y = 0;
-			}
-			
-			// LATER: Use unscaled bounding boxes to fix rounding errors
-			var s = this.view.scale;
-			var w2 = bounds.width / s;
-			var h2 = bounds.height / s;
-			
-			// Fits to the size of the background image if required
-			if (this.backgroundImage != null)
-			{
-				w2 = Math.max(w2, this.backgroundImage.width - bounds.x / s);
-				h2 = Math.max(h2, this.backgroundImage.height - bounds.y / s);
-			}
-			
-			var b = ((keepOrigin) ? border : 2 * border) + margin + 1;
+  if (this.container != null)
+  {
+    border = (border != null) ? border : this.getBorder();
+    keepOrigin = (keepOrigin != null) ? keepOrigin : false;
+    margin = (margin != null) ? margin : 0;
+    enabled = (enabled != null) ? enabled : true;
+    ignoreWidth = (ignoreWidth != null) ? ignoreWidth : false;
+    ignoreHeight = (ignoreHeight != null) ? ignoreHeight : false;
 
-			w1 -= b;
-			h1 -= b;
-			
-			var s2 = (((ignoreWidth) ? h1 / h2 : (ignoreHeight) ? w1 / w2 :
-				Math.min(w1 / w2, h1 / h2)));
-			
-			if (this.minFitScale != null)
-			{
-				s2 = Math.max(s2, this.minFitScale);
-			}
-			
-			if (this.maxFitScale != null)
-			{
-				s2 = Math.min(s2, this.maxFitScale);
-			}
-	
-			if (enabled)
-			{
-				if (!keepOrigin)
-				{
-					if (!mxUtils.hasScrollbars(this.container))
-					{
-						var x0 = (bounds.x != null) ? Math.floor(this.view.translate.x - bounds.x / s + border / s2 + margin / 2) : border;
-						var y0 = (bounds.y != null) ? Math.floor(this.view.translate.y - bounds.y / s + border / s2 + margin / 2) : border;
+    // Adds spacing and border from css
+    var cssBorder = this.getBorderSizes();
+    var w1 = this.container.offsetWidth - cssBorder.x - cssBorder.width - 1;
+    var h1 = (maxHeight != null) ? maxHeight : this.container.offsetHeight - cssBorder.y - cssBorder.height - 1;
+    var bounds = this.view.getGraphBounds();
 
-						this.view.scaleAndTranslate(s2, x0, y0);
-					}
-					else
-					{
-						this.view.setScale(s2);
-						var b2 = this.getGraphBounds();
-						
-						if (b2.x != null)
-						{
-							this.container.scrollLeft = b2.x;
-						}
-						
-						if (b2.y != null)
-						{
-							this.container.scrollTop = b2.y;
-						}
-					}
-				}
-				else if (this.view.scale != s2)
-				{
-					this.view.setScale(s2);
-				}
-			}
-			else
-			{
-				return s2;
-			}
-		}
-	}
+    if (bounds.width > 0 && bounds.height > 0)
+    {
+      if (keepOrigin && bounds.x != null && bounds.y != null)
+      {
+        bounds = bounds.clone();
+        bounds.width += bounds.x;
+        bounds.height += bounds.y;
+        bounds.x = 0;
+        bounds.y = 0;
+      }
 
-	return this.view.scale;
+      // LATER: Use unscaled bounding boxes to fix rounding errors
+      var s = this.view.scale;
+      var w2 = bounds.width / s;
+      var h2 = bounds.height / s;
+
+      // Fits to the size of the background image if required
+      if (this.backgroundImage != null)
+      {
+        w2 = Math.max(w2, this.backgroundImage.width - bounds.x / s);
+        h2 = Math.max(h2, this.backgroundImage.height - bounds.y / s);
+      }
+
+      var b = ((keepOrigin) ? border : 2 * border) + margin + 1;
+
+      w1 -= b;
+      h1 -= b;
+
+      var s2 = (((ignoreWidth) ? h1 / h2 : (ignoreHeight) ? w1 / w2 :
+        Math.min(w1 / w2, h1 / h2)));
+
+      if (this.minFitScale != null)
+      {
+        s2 = Math.max(s2, this.minFitScale);
+      }
+
+      if (this.maxFitScale != null)
+      {
+        s2 = Math.min(s2, this.maxFitScale);
+      }
+
+      if (enabled)
+      {
+        if (!keepOrigin)
+        {
+          if (!mxUtils.hasScrollbars(this.container))
+          {
+            var x0 = (bounds.x != null) ? Math.floor(this.view.translate.x - bounds.x / s + border / s2 + margin / 2) : border;
+            var y0 = (bounds.y != null) ? Math.floor(this.view.translate.y - bounds.y / s + border / s2 + margin / 2) : border;
+
+            this.view.scaleAndTranslate(s2, x0, y0);
+          }
+          else
+          {
+            this.view.setScale(s2);
+            var b2 = this.getGraphBounds();
+
+            if (b2.x != null)
+            {
+              this.container.scrollLeft = b2.x;
+            }
+
+            if (b2.y != null)
+            {
+              this.container.scrollTop = b2.y;
+            }
+          }
+        }
+        else if (this.view.scale != s2)
+        {
+          this.view.setScale(s2);
+        }
+      }
+      else
+      {
+        return s2;
+      }
+    }
+  }
+
+  return this.view.scale;
 };
 
 /**
@@ -3121,76 +3121,76 @@ fit = (border, keepOrigin, margin, enabled, ignoreWidth, ignoreHeight, maxHeight
  */
 sizeDidChange = ()=>
 {
-	var bounds = this.getGraphBounds();
-	
-	if (this.container != null)
-	{
-		var border = this.getBorder();
-		
-		var width = Math.max(0, bounds.x) + bounds.width + 2 * border;
-		var height = Math.max(0, bounds.y) + bounds.height + 2 * border;
-		
-		if (this.minimumContainerSize != null)
-		{
-			width = Math.max(width, this.minimumContainerSize.width);
-			height = Math.max(height, this.minimumContainerSize.height);
-		}
+  var bounds = this.getGraphBounds();
 
-		if (this.resizeContainer)
-		{
-			this.doResizeContainer(width, height);
-		}
+  if (this.container != null)
+  {
+    var border = this.getBorder();
 
-		if (this.preferPageSize || (!mxClient.IS_IE && this.pageVisible))
-		{
-			var size = this.getPreferredPageSize(bounds, Math.max(1, width), Math.max(1, height));
-			
-			if (size != null)
-			{
-				width = size.width * this.view.scale;
-				height = size.height * this.view.scale;
-			}
-		}
-		
-		if (this.minimumGraphSize != null)
-		{
-			width = Math.max(width, this.minimumGraphSize.width * this.view.scale);
-			height = Math.max(height, this.minimumGraphSize.height * this.view.scale);
-		}
+    var width = Math.max(0, bounds.x) + bounds.width + 2 * border;
+    var height = Math.max(0, bounds.y) + bounds.height + 2 * border;
 
-		width = Math.ceil(width);
-		height = Math.ceil(height);
+    if (this.minimumContainerSize != null)
+    {
+      width = Math.max(width, this.minimumContainerSize.width);
+      height = Math.max(height, this.minimumContainerSize.height);
+    }
 
-		if (this.dialect == mxConstants.DIALECT_SVG)
-		{
-			var root = this.view.getDrawPane().ownerSVGElement;
-			
-			if (root != null)
-			{
-				root.style.minWidth = Math.max(1, width) + 'px';
-				root.style.minHeight = Math.max(1, height) + 'px';
-				root.style.width = '100%';
-				root.style.height = '100%';
-			}
-		}
-		else
-		{
-			if (mxClient.IS_QUIRKS)
-			{
-				// Quirks mode does not support minWidth/-Height
-				this.view.updateHtmlCanvasSize(Math.max(1, width), Math.max(1, height));
-			}
-			else
-			{
-				this.view.canvas.style.minWidth = Math.max(1, width) + 'px';
-				this.view.canvas.style.minHeight = Math.max(1, height) + 'px';
-			}
-		}
-		
-		this.updatePageBreaks(this.pageBreaksVisible, width, height);
-	}
+    if (this.resizeContainer)
+    {
+      this.doResizeContainer(width, height);
+    }
 
-	this.fireEvent(new mxEventObject(mxEvent.SIZE, 'bounds', bounds));
+    if (this.preferPageSize || (!mxClient.IS_IE && this.pageVisible))
+    {
+      var size = this.getPreferredPageSize(bounds, Math.max(1, width), Math.max(1, height));
+
+      if (size != null)
+      {
+        width = size.width * this.view.scale;
+        height = size.height * this.view.scale;
+      }
+    }
+
+    if (this.minimumGraphSize != null)
+    {
+      width = Math.max(width, this.minimumGraphSize.width * this.view.scale);
+      height = Math.max(height, this.minimumGraphSize.height * this.view.scale);
+    }
+
+    width = Math.ceil(width);
+    height = Math.ceil(height);
+
+    if (this.dialect == mxConstants.DIALECT_SVG)
+    {
+      var root = this.view.getDrawPane().ownerSVGElement;
+
+      if (root != null)
+      {
+        root.style.minWidth = Math.max(1, width) + 'px';
+        root.style.minHeight = Math.max(1, height) + 'px';
+        root.style.width = '100%';
+        root.style.height = '100%';
+      }
+    }
+    else
+    {
+      if (mxClient.IS_QUIRKS)
+      {
+        // Quirks mode does not support minWidth/-Height
+        this.view.updateHtmlCanvasSize(Math.max(1, width), Math.max(1, height));
+      }
+      else
+      {
+        this.view.canvas.style.minWidth = Math.max(1, width) + 'px';
+        this.view.canvas.style.minHeight = Math.max(1, height) + 'px';
+      }
+    }
+
+    this.updatePageBreaks(this.pageBreaksVisible, width, height);
+  }
+
+  this.fireEvent(new mxEventObject(mxEvent.SIZE, 'bounds', bounds));
 };
 
 /**
@@ -3200,14 +3200,14 @@ sizeDidChange = ()=>
  */
 doResizeContainer = (width, height)=>
 {
-	if (this.maximumContainerSize != null)
-	{
-		width = Math.min(this.maximumContainerSize.width, width);
-		height = Math.min(this.maximumContainerSize.height, height);
-	}
+  if (this.maximumContainerSize != null)
+  {
+    width = Math.min(this.maximumContainerSize.width, width);
+    height = Math.min(this.maximumContainerSize.height, height);
+  }
 
-	this.container.style.width = Math.ceil(width) + 'px';
-	this.container.style.height = Math.ceil(height) + 'px';
+  this.container.style.width = Math.ceil(width) + 'px';
+  this.container.style.height = Math.ceil(height) + 'px';
 };
 
 /**
@@ -3223,83 +3223,83 @@ doResizeContainer = (width, height)=>
  */
 updatePageBreaks = (visible, width, height)=>
 {
-	var scale = this.view.scale;
-	var tr = this.view.translate;
-	var fmt = this.pageFormat;
-	var ps = scale * this.pageScale;
-	var bounds = new mxRectangle(0, 0, fmt.width * ps, fmt.height * ps);
+  var scale = this.view.scale;
+  var tr = this.view.translate;
+  var fmt = this.pageFormat;
+  var ps = scale * this.pageScale;
+  var bounds = new mxRectangle(0, 0, fmt.width * ps, fmt.height * ps);
 
-	var gb = mxRectangle.fromRectangle(this.getGraphBounds());
-	gb.width = Math.max(1, gb.width);
-	gb.height = Math.max(1, gb.height);
-	
-	bounds.x = Math.floor((gb.x - tr.x * scale) / bounds.width) * bounds.width + tr.x * scale;
-	bounds.y = Math.floor((gb.y - tr.y * scale) / bounds.height) * bounds.height + tr.y * scale;
-	
-	gb.width = Math.ceil((gb.width + (gb.x - bounds.x)) / bounds.width) * bounds.width;
-	gb.height = Math.ceil((gb.height + (gb.y - bounds.y)) / bounds.height) * bounds.height;
-	
-	// Does not show page breaks if the scale is too small
-	visible = visible && Math.min(bounds.width, bounds.height) > this.minPageBreakDist;
+  var gb = mxRectangle.fromRectangle(this.getGraphBounds());
+  gb.width = Math.max(1, gb.width);
+  gb.height = Math.max(1, gb.height);
 
-	var horizontalCount = (visible) ? Math.ceil(gb.height / bounds.height) + 1 : 0;
-	var verticalCount = (visible) ? Math.ceil(gb.width / bounds.width) + 1 : 0;
-	var right = (verticalCount - 1) * bounds.width;
-	var bottom = (horizontalCount - 1) * bounds.height;
-	
-	if (this.horizontalPageBreaks == null && horizontalCount > 0)
-	{
-		this.horizontalPageBreaks = [];
-	}
+  bounds.x = Math.floor((gb.x - tr.x * scale) / bounds.width) * bounds.width + tr.x * scale;
+  bounds.y = Math.floor((gb.y - tr.y * scale) / bounds.height) * bounds.height + tr.y * scale;
 
-	if (this.verticalPageBreaks == null && verticalCount > 0)
-	{
-		this.verticalPageBreaks = [];
-	}
-	
-	var drawPageBreaks = mxUtils.bind(this, (breaks)=>
-	{
-		if (breaks != null)
-		{
-			var count = (breaks == this.horizontalPageBreaks) ? horizontalCount : verticalCount; 
-			
-			for (var i = 0; i <= count; i++)
-			{
-				var pts = (breaks == this.horizontalPageBreaks) ?
-					[new mxPoint(Math.round(bounds.x), Math.round(bounds.y + i * bounds.height)),
-			         new mxPoint(Math.round(bounds.x + right), Math.round(bounds.y + i * bounds.height))] :
-			        [new mxPoint(Math.round(bounds.x + i * bounds.width), Math.round(bounds.y)),
-			         new mxPoint(Math.round(bounds.x + i * bounds.width), Math.round(bounds.y + bottom))];
+  gb.width = Math.ceil((gb.width + (gb.x - bounds.x)) / bounds.width) * bounds.width;
+  gb.height = Math.ceil((gb.height + (gb.y - bounds.y)) / bounds.height) * bounds.height;
 
-				if (breaks[i] != null)
-				{
-					breaks[i].points = pts;
-					breaks[i].redraw();
-				}
-				else
-				{
-					var pageBreak = new mxPolyline(pts, this.pageBreakColor);
-					pageBreak.dialect = this.dialect;
-					pageBreak.pointerEvents = false;
-					pageBreak.isDashed = this.pageBreakDashed;
-					pageBreak.init(this.view.backgroundPane);
-					pageBreak.redraw();
-					
-					breaks[i] = pageBreak;
-				}
-			}
-			
-			for (var i = count; i < breaks.length; i++)
-			{
-				breaks[i].destroy();
-			}
-			
-			breaks.splice(count, breaks.length - count);
-		}
-	});
-	
-	drawPageBreaks(this.horizontalPageBreaks);
-	drawPageBreaks(this.verticalPageBreaks);
+  // Does not show page breaks if the scale is too small
+  visible = visible && Math.min(bounds.width, bounds.height) > this.minPageBreakDist;
+
+  var horizontalCount = (visible) ? Math.ceil(gb.height / bounds.height) + 1 : 0;
+  var verticalCount = (visible) ? Math.ceil(gb.width / bounds.width) + 1 : 0;
+  var right = (verticalCount - 1) * bounds.width;
+  var bottom = (horizontalCount - 1) * bounds.height;
+
+  if (this.horizontalPageBreaks == null && horizontalCount > 0)
+  {
+    this.horizontalPageBreaks = [];
+  }
+
+  if (this.verticalPageBreaks == null && verticalCount > 0)
+  {
+    this.verticalPageBreaks = [];
+  }
+
+  var drawPageBreaks = mxUtils.bind(this, (breaks)=>
+  {
+    if (breaks != null)
+    {
+      var count = (breaks == this.horizontalPageBreaks) ? horizontalCount : verticalCount;
+
+      for (var i = 0; i <= count; i++)
+      {
+        var pts = (breaks == this.horizontalPageBreaks) ?
+          [new mxPoint(Math.round(bounds.x), Math.round(bounds.y + i * bounds.height)),
+               new mxPoint(Math.round(bounds.x + right), Math.round(bounds.y + i * bounds.height))] :
+              [new mxPoint(Math.round(bounds.x + i * bounds.width), Math.round(bounds.y)),
+               new mxPoint(Math.round(bounds.x + i * bounds.width), Math.round(bounds.y + bottom))];
+
+        if (breaks[i] != null)
+        {
+          breaks[i].points = pts;
+          breaks[i].redraw();
+        }
+        else
+        {
+          var pageBreak = new mxPolyline(pts, this.pageBreakColor);
+          pageBreak.dialect = this.dialect;
+          pageBreak.pointerEvents = false;
+          pageBreak.isDashed = this.pageBreakDashed;
+          pageBreak.init(this.view.backgroundPane);
+          pageBreak.redraw();
+
+          breaks[i] = pageBreak;
+        }
+      }
+
+      for (var i = count; i < breaks.length; i++)
+      {
+        breaks[i].destroy();
+      }
+
+      breaks.splice(count, breaks.length - count);
+    }
+  });
+
+  drawPageBreaks(this.horizontalPageBreaks);
+  drawPageBreaks(this.verticalPageBreaks);
 };
 
 /**
@@ -3319,9 +3319,9 @@ updatePageBreaks = (visible, width, height)=>
  */
 getCurrentCellStyle = (cell, ignoreState)=>
 {
-	var state = (ignoreState) ? null : this.view.getState(cell);
-	
-	return (state != null) ? state.style : this.getCellStyle(cell);
+  var state = (ignoreState) ? null : this.view.getState(cell);
+
+  return (state != null) ? state.style : this.getCellStyle(cell);
 };
 
 /**
@@ -3340,32 +3340,32 @@ getCurrentCellStyle = (cell, ignoreState)=>
  */
 getCellStyle = (cell)=>
 {
-	var stylename = this.model.getStyle(cell);
-	var style = null;
-	
-	// Gets the default style for the cell
-	if (this.model.isEdge(cell))
-	{
-		style = this.stylesheet.getDefaultEdgeStyle();
-	}
-	else
-	{
-		style = this.stylesheet.getDefaultVertexStyle();
-	}
-	
-	// Resolves the stylename using the above as the default
-	if (stylename != null)
-	{
-		style = this.postProcessCellStyle(this.stylesheet.getCellStyle(stylename, style));
-	}
-	
-	// Returns a non-null value if no style can be found
-	if (style == null)
-	{
-		style = new Object();
-	}
-	
-	return style;
+  var stylename = this.model.getStyle(cell);
+  var style = null;
+
+  // Gets the default style for the cell
+  if (this.model.isEdge(cell))
+  {
+    style = this.stylesheet.getDefaultEdgeStyle();
+  }
+  else
+  {
+    style = this.stylesheet.getDefaultVertexStyle();
+  }
+
+  // Resolves the stylename using the above as the default
+  if (stylename != null)
+  {
+    style = this.postProcessCellStyle(this.stylesheet.getCellStyle(stylename, style));
+  }
+
+  // Returns a non-null value if no style can be found
+  if (style == null)
+  {
+    style = new Object();
+  }
+
+  return style;
 };
 
 /**
@@ -3377,45 +3377,45 @@ getCellStyle = (cell)=>
  */
 postProcessCellStyle = (style)=>
 {
-	if (style != null)
-	{
-		var key = style[mxConstants.STYLE_IMAGE];
-		var image = this.getImageFromBundles(key);
+  if (style != null)
+  {
+    var key = style[mxConstants.STYLE_IMAGE];
+    var image = this.getImageFromBundles(key);
 
-		if (image != null)
-		{
-			style[mxConstants.STYLE_IMAGE] = image;
-		}
-		else
-		{
-			image = key;
-		}
-		
-		// Converts short data uris to normal data uris
-		if (image != null && image.substring(0, 11) == 'data:image/')
-		{
-			if (image.substring(0, 20) == 'data:image/svg+xml,<')
-			{
-				// Required for FF and IE11
-				image = image.substring(0, 19) + encodeURIComponent(image.substring(19));
-			}
-			else if (image.substring(0, 22) != 'data:image/svg+xml,%3C')
-			{
-				var comma = image.indexOf(',');
-				
-				// Adds base64 encoding prefix if needed
-				if (comma > 0 && image.substring(comma - 7, comma + 1) != ';base64,')
-				{
-					image = image.substring(0, comma) + ';base64,'
-						+ image.substring(comma + 1);
-				}
-			}
-			
-			style[mxConstants.STYLE_IMAGE] = image;
-		}
-	}
+    if (image != null)
+    {
+      style[mxConstants.STYLE_IMAGE] = image;
+    }
+    else
+    {
+      image = key;
+    }
 
-	return style;
+    // Converts short data uris to normal data uris
+    if (image != null && image.substring(0, 11) == 'data:image/')
+    {
+      if (image.substring(0, 20) == 'data:image/svg+xml,<')
+      {
+        // Required for FF and IE11
+        image = image.substring(0, 19) + encodeURIComponent(image.substring(19));
+      }
+      else if (image.substring(0, 22) != 'data:image/svg+xml,%3C')
+      {
+        var comma = image.indexOf(',');
+
+        // Adds base64 encoding prefix if needed
+        if (comma > 0 && image.substring(comma - 7, comma + 1) != ';base64,')
+        {
+          image = image.substring(0, comma) + ';base64,'
+            + image.substring(comma + 1);
+        }
+      }
+
+      style[mxConstants.STYLE_IMAGE] = image;
+    }
+  }
+
+  return style;
 };
 
 /**
@@ -3432,23 +3432,23 @@ postProcessCellStyle = (style)=>
  */
 setCellStyle = (style, cells)=>
 {
-	cells = cells || this.getSelectionCells();
-	
-	if (cells != null)
-	{
-		this.model.beginUpdate();
-		try
-		{
-			for (var i = 0; i < cells.length; i++)
-			{
-				this.model.setStyle(cells[i], style);
-			}
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+  cells = cells || this.getSelectionCells();
+
+  if (cells != null)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      for (var i = 0; i < cells.length; i++)
+      {
+        this.model.setStyle(cells[i], style);
+      }
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -3468,9 +3468,9 @@ setCellStyle = (style, cells)=>
  */
 toggleCellStyle = (key, defaultValue, cell)=>
 {
-	cell = cell || this.getSelectionCell();
-	
-	return this.toggleCellStyles(key, defaultValue, [cell]);
+  cell = cell || this.getSelectionCell();
+
+  return this.toggleCellStyles(key, defaultValue, [cell]);
 };
 
 /**
@@ -3491,18 +3491,18 @@ toggleCellStyle = (key, defaultValue, cell)=>
  */
 toggleCellStyles = (key, defaultValue, cells)=>
 {
-	defaultValue = (defaultValue != null) ? defaultValue : false;
-	cells = cells || this.getSelectionCells();
-	var value = null;
-	
-	if (cells != null && cells.length > 0)
-	{
-		var style = this.getCurrentCellStyle(cells[0]);
-		value = (mxUtils.getValue(style, key, defaultValue)) ? 0 : 1;
-		this.setCellStyles(key, value, cells);
-	}
-	
-	return value;
+  defaultValue = (defaultValue != null) ? defaultValue : false;
+  cells = cells || this.getSelectionCells();
+  var value = null;
+
+  if (cells != null && cells.length > 0)
+  {
+    var style = this.getCurrentCellStyle(cells[0]);
+    value = (mxUtils.getValue(style, key, defaultValue)) ? 0 : 1;
+    this.setCellStyles(key, value, cells);
+  }
+
+  return value;
 };
 
 /**
@@ -3523,8 +3523,8 @@ toggleCellStyles = (key, defaultValue, cells)=>
  */
 setCellStyles = (key, value, cells)=>
 {
-	cells = cells || this.getSelectionCells();
-	mxUtils.setCellStyles(this.model, cells, key, value);
+  cells = cells || this.getSelectionCells();
+  mxUtils.setCellStyles(this.model, cells, key, value);
 };
 
 /**
@@ -3542,7 +3542,7 @@ setCellStyles = (key, value, cells)=>
  */
 toggleCellStyleFlags = (key, flag, cells)=>
 {
-	this.setCellStyleFlags(key, flag, null, cells);
+  this.setCellStyleFlags(key, flag, null, cells);
 };
 
 /**
@@ -3561,19 +3561,19 @@ toggleCellStyleFlags = (key, flag, cells)=>
  */
 setCellStyleFlags = (key, flag, value, cells)=>
 {
-	cells = cells || this.getSelectionCells();
-	
-	if (cells != null && cells.length > 0)
-	{
-		if (value == null)
-		{
-			var style = this.getCurrentCellStyle(cells[0]);
-			var current = parseInt(style[key] || 0);
-			value = !((current & flag) == flag);
-		}
+  cells = cells || this.getSelectionCells();
 
-		mxUtils.setCellStyleFlags(this.model, cells, key, flag, value);
-	}
+  if (cells != null && cells.length > 0)
+  {
+    if (value == null)
+    {
+      var style = this.getCurrentCellStyle(cells[0]);
+      var current = parseInt(style[key] || 0);
+      value = !((current & flag) == flag);
+    }
+
+    mxUtils.setCellStyleFlags(this.model, cells, key, flag, value);
+  }
 };
 
 /**
@@ -3595,135 +3595,135 @@ setCellStyleFlags = (key, flag, value, cells)=>
  */
 alignCells = (align, cells, param)=>
 {
-	if (cells == null)
-	{
-		cells = this.getSelectionCells();
-	}
-	
-	if (cells != null && cells.length > 1)
-	{
-		// Finds the required coordinate for the alignment
-		if (param == null)
-		{
-			for (var i = 0; i < cells.length; i++)
-			{
-				var state = this.view.getState(cells[i]);
-				
-				if (state != null && !this.model.isEdge(cells[i]))
-				{
-					if (param == null)
-					{
-						if (align == mxConstants.ALIGN_CENTER)
-						{
-							param = state.x + state.width / 2;
-							break;
-						}
-						else if (align == mxConstants.ALIGN_RIGHT)
-						{
-							param = state.x + state.width;
-						}
-						else if (align == mxConstants.ALIGN_TOP)
-						{
-							param = state.y;
-						}
-						else if (align == mxConstants.ALIGN_MIDDLE)
-						{
-							param = state.y + state.height / 2;
-							break;
-						}
-						else if (align == mxConstants.ALIGN_BOTTOM)
-						{
-							param = state.y + state.height;
-						}
-						else
-						{
-							param = state.x;
-						}
-					}
-					else
-					{
-						if (align == mxConstants.ALIGN_RIGHT)
-						{
-							param = Math.max(param, state.x + state.width);
-						}
-						else if (align == mxConstants.ALIGN_TOP)
-						{
-							param = Math.min(param, state.y);
-						}
-						else if (align == mxConstants.ALIGN_BOTTOM)
-						{
-							param = Math.max(param, state.y + state.height);
-						}
-						else
-						{
-							param = Math.min(param, state.x);
-						}
-					}
-				}
-			}
-		}
+  if (cells == null)
+  {
+    cells = this.getSelectionCells();
+  }
 
-		// Aligns the cells to the coordinate
-		if (param != null)
-		{
-			var s = this.view.scale;
+  if (cells != null && cells.length > 1)
+  {
+    // Finds the required coordinate for the alignment
+    if (param == null)
+    {
+      for (var i = 0; i < cells.length; i++)
+      {
+        var state = this.view.getState(cells[i]);
 
-			this.model.beginUpdate();
-			try
-			{
-				for (var i = 0; i < cells.length; i++)
-				{
-					var state = this.view.getState(cells[i]);
-					
-					if (state != null)
-					{
-						var geo = this.getCellGeometry(cells[i]);
-						
-						if (geo != null && !this.model.isEdge(cells[i]))
-						{
-							geo = geo.clone();
-							
-							if (align == mxConstants.ALIGN_CENTER)
-							{
-								geo.x += (param - state.x - state.width / 2) / s;
-							}
-							else if (align == mxConstants.ALIGN_RIGHT)
-							{
-								geo.x += (param - state.x - state.width) / s;
-							}
-							else if (align == mxConstants.ALIGN_TOP)
-							{
-								geo.y += (param - state.y) / s;
-							}
-							else if (align == mxConstants.ALIGN_MIDDLE)
-							{
-								geo.y += (param - state.y - state.height / 2) / s;
-							}
-							else if (align == mxConstants.ALIGN_BOTTOM)
-							{
-								geo.y += (param - state.y - state.height) / s;
-							}
-							else
-							{
-								geo.x += (param - state.x) / s;
-							}
-							
-							this.resizeCell(cells[i], geo);
-						}
-					}
-				}
-				
-				this.fireEvent(new mxEventObject(mxEvent.ALIGN_CELLS,
-						'align', align, 'cells', cells));
-			}
-			finally
-			{
-				this.model.endUpdate();
-			}
-		}
-	}
-	
-	return cells;
+        if (state != null && !this.model.isEdge(cells[i]))
+        {
+          if (param == null)
+          {
+            if (align == mxConstants.ALIGN_CENTER)
+            {
+              param = state.x + state.width / 2;
+              break;
+            }
+            else if (align == mxConstants.ALIGN_RIGHT)
+            {
+              param = state.x + state.width;
+            }
+            else if (align == mxConstants.ALIGN_TOP)
+            {
+              param = state.y;
+            }
+            else if (align == mxConstants.ALIGN_MIDDLE)
+            {
+              param = state.y + state.height / 2;
+              break;
+            }
+            else if (align == mxConstants.ALIGN_BOTTOM)
+            {
+              param = state.y + state.height;
+            }
+            else
+            {
+              param = state.x;
+            }
+          }
+          else
+          {
+            if (align == mxConstants.ALIGN_RIGHT)
+            {
+              param = Math.max(param, state.x + state.width);
+            }
+            else if (align == mxConstants.ALIGN_TOP)
+            {
+              param = Math.min(param, state.y);
+            }
+            else if (align == mxConstants.ALIGN_BOTTOM)
+            {
+              param = Math.max(param, state.y + state.height);
+            }
+            else
+            {
+              param = Math.min(param, state.x);
+            }
+          }
+        }
+      }
+    }
+
+    // Aligns the cells to the coordinate
+    if (param != null)
+    {
+      var s = this.view.scale;
+
+      this.model.beginUpdate();
+      try
+      {
+        for (var i = 0; i < cells.length; i++)
+        {
+          var state = this.view.getState(cells[i]);
+
+          if (state != null)
+          {
+            var geo = this.getCellGeometry(cells[i]);
+
+            if (geo != null && !this.model.isEdge(cells[i]))
+            {
+              geo = geo.clone();
+
+              if (align == mxConstants.ALIGN_CENTER)
+              {
+                geo.x += (param - state.x - state.width / 2) / s;
+              }
+              else if (align == mxConstants.ALIGN_RIGHT)
+              {
+                geo.x += (param - state.x - state.width) / s;
+              }
+              else if (align == mxConstants.ALIGN_TOP)
+              {
+                geo.y += (param - state.y) / s;
+              }
+              else if (align == mxConstants.ALIGN_MIDDLE)
+              {
+                geo.y += (param - state.y - state.height / 2) / s;
+              }
+              else if (align == mxConstants.ALIGN_BOTTOM)
+              {
+                geo.y += (param - state.y - state.height) / s;
+              }
+              else
+              {
+                geo.x += (param - state.x) / s;
+              }
+
+              this.resizeCell(cells[i], geo);
+            }
+          }
+        }
+
+        this.fireEvent(new mxEventObject(mxEvent.ALIGN_CELLS,
+            'align', align, 'cells', cells));
+      }
+      finally
+      {
+        this.model.endUpdate();
+      }
+    }
+  }
+
+  return cells;
 };
 
 /**
@@ -3757,34 +3757,34 @@ alignCells = (align, cells, param)=>
  */
 flipEdge = (edge)=>
 {
-	if (edge != null &&
-		this.alternateEdgeStyle != null)
-	{
-		this.model.beginUpdate();
-		try
-		{
-			var style = this.model.getStyle(edge);
+  if (edge != null &&
+    this.alternateEdgeStyle != null)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      var style = this.model.getStyle(edge);
 
-			if (style == null || style.length == 0)
-			{
-				this.model.setStyle(edge, this.alternateEdgeStyle);
-			}
-			else
-			{
-				this.model.setStyle(edge, null);
-			}
+      if (style == null || style.length == 0)
+      {
+        this.model.setStyle(edge, this.alternateEdgeStyle);
+      }
+      else
+      {
+        this.model.setStyle(edge, null);
+      }
 
-			// Removes all existing control points
-			this.resetEdge(edge);
-			this.fireEvent(new mxEventObject(mxEvent.FLIP_EDGE, 'edge', edge));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+      // Removes all existing control points
+      this.resetEdge(edge);
+      this.fireEvent(new mxEventObject(mxEvent.FLIP_EDGE, 'edge', edge));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 
-	return edge;
+  return edge;
 };
 
 /**
@@ -3794,7 +3794,7 @@ flipEdge = (edge)=>
  */
 addImageBundle = (bundle)=>
 {
-	this.imageBundles.push(bundle);
+  this.imageBundles.push(bundle);
 };
 
 /**
@@ -3804,17 +3804,17 @@ addImageBundle = (bundle)=>
  */
 removeImageBundle = (bundle)=>
 {
-	var tmp = [];
-	
-	for (var i = 0; i < this.imageBundles.length; i++)
-	{
-		if (this.imageBundles[i] != bundle)
-		{
-			tmp.push(this.imageBundles[i]);
-		}
-	}
-	
-	this.imageBundles = tmp;
+  var tmp = [];
+
+  for (var i = 0; i < this.imageBundles.length; i++)
+  {
+    if (this.imageBundles[i] != bundle)
+    {
+      tmp.push(this.imageBundles[i]);
+    }
+  }
+
+  this.imageBundles = tmp;
 };
 
 /**
@@ -3825,20 +3825,20 @@ removeImageBundle = (bundle)=>
  */
 getImageFromBundles = (key)=>
 {
-	if (key != null)
-	{
-		for (var i = 0; i < this.imageBundles.length; i++)
-		{
-			var image = this.imageBundles[i].getImage(key);
-			
-			if (image != null)
-			{
-				return image;
-			}
-		}
-	}
-	
-	return null;
+  if (key != null)
+  {
+    for (var i = 0; i < this.imageBundles.length; i++)
+    {
+      var image = this.imageBundles[i].getImage(key);
+
+      if (image != null)
+      {
+        return image;
+      }
+    }
+  }
+
+  return null;
 };
 
 /**
@@ -3860,24 +3860,24 @@ getImageFromBundles = (key)=>
  */
 orderCells = (back, cells)=>
 {
-	if (cells == null)
-	{
-		cells = mxUtils.sortCells(this.getSelectionCells(), true);
-	}
+  if (cells == null)
+  {
+    cells = mxUtils.sortCells(this.getSelectionCells(), true);
+  }
 
-	this.model.beginUpdate();
-	try
-	{
-		this.cellsOrdered(cells, back);
-		this.fireEvent(new mxEventObject(mxEvent.ORDER_CELLS,
-				'back', back, 'cells', cells));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
+  this.model.beginUpdate();
+  try
+  {
+    this.cellsOrdered(cells, back);
+    this.fireEvent(new mxEventObject(mxEvent.ORDER_CELLS,
+        'back', back, 'cells', cells));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
 
-	return cells;
+  return cells;
 };
 
 /**
@@ -3893,34 +3893,34 @@ orderCells = (back, cells)=>
  */
 cellsOrdered = (cells, back)=>
 {
-	if (cells != null)
-	{
-		this.model.beginUpdate();
-		try
-		{
-			for (var i = 0; i < cells.length; i++)
-			{
-				var parent = this.model.getParent(cells[i]);
+  if (cells != null)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      for (var i = 0; i < cells.length; i++)
+      {
+        var parent = this.model.getParent(cells[i]);
 
-				if (back)
-				{
-					this.model.add(parent, cells[i], i);
-				}
-				else
-				{
-					this.model.add(parent, cells[i],
-							this.model.getChildCount(parent) - 1);
-				}
-			}
-			
-			this.fireEvent(new mxEventObject(mxEvent.CELLS_ORDERED,
-					'back', back, 'cells', cells));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+        if (back)
+        {
+          this.model.add(parent, cells[i], i);
+        }
+        else
+        {
+          this.model.add(parent, cells[i],
+              this.model.getChildCount(parent) - 1);
+        }
+      }
+
+      this.fireEvent(new mxEventObject(mxEvent.CELLS_ORDERED,
+          'back', back, 'cells', cells));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -3947,62 +3947,62 @@ cellsOrdered = (cells, back)=>
  */
 groupCells = (group, border, cells)=>
 {
-	if (cells == null)
-	{
-		cells = mxUtils.sortCells(this.getSelectionCells(), true);
-	}
+  if (cells == null)
+  {
+    cells = mxUtils.sortCells(this.getSelectionCells(), true);
+  }
 
-	cells = this.getCellsForGroup(cells);
+  cells = this.getCellsForGroup(cells);
 
-	if (group == null)
-	{
-		group = this.createGroupCell(cells);
-	}
+  if (group == null)
+  {
+    group = this.createGroupCell(cells);
+  }
 
-	var bounds = this.getBoundsForGroup(group, cells, border);
+  var bounds = this.getBoundsForGroup(group, cells, border);
 
-	if (cells.length > 1 && bounds != null)
-	{
-		// Uses parent of group or previous parent of first child
-		var parent = this.model.getParent(group);
-		
-		if (parent == null)
-		{
-			parent = this.model.getParent(cells[0]);
-		}
+  if (cells.length > 1 && bounds != null)
+  {
+    // Uses parent of group or previous parent of first child
+    var parent = this.model.getParent(group);
 
-		this.model.beginUpdate();
-		try
-		{
-			// Checks if the group has a geometry and
-			// creates one if one does not exist
-			if (this.getCellGeometry(group) == null)
-			{
-				this.model.setGeometry(group, new mxGeometry());
-			}
+    if (parent == null)
+    {
+      parent = this.model.getParent(cells[0]);
+    }
 
-			// Adds the group into the parent
-			var index = this.model.getChildCount(parent);
-			this.cellsAdded([group], parent, index, null, null, false, false, false);
+    this.model.beginUpdate();
+    try
+    {
+      // Checks if the group has a geometry and
+      // creates one if one does not exist
+      if (this.getCellGeometry(group) == null)
+      {
+        this.model.setGeometry(group, new mxGeometry());
+      }
 
-			// Adds the children into the group and moves
-			index = this.model.getChildCount(group);
-			this.cellsAdded(cells, group, index, null, null, false, false, false);
-			this.cellsMoved(cells, -bounds.x, -bounds.y, false, false, false);
+      // Adds the group into the parent
+      var index = this.model.getChildCount(parent);
+      this.cellsAdded([group], parent, index, null, null, false, false, false);
 
-			// Resizes the group
-			this.cellsResized([group], [bounds], false);
+      // Adds the children into the group and moves
+      index = this.model.getChildCount(group);
+      this.cellsAdded(cells, group, index, null, null, false, false, false);
+      this.cellsMoved(cells, -bounds.x, -bounds.y, false, false, false);
 
-			this.fireEvent(new mxEventObject(mxEvent.GROUP_CELLS,
-					'group', group, 'border', border, 'cells', cells));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+      // Resizes the group
+      this.cellsResized([group], [bounds], false);
 
-	return group;
+      this.fireEvent(new mxEventObject(mxEvent.GROUP_CELLS,
+          'group', group, 'border', border, 'cells', cells));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
+
+  return group;
 };
 
 /**
@@ -4013,24 +4013,24 @@ groupCells = (group, border, cells)=>
  */
 getCellsForGroup = (cells)=>
 {
-	var result = [];
+  var result = [];
 
-	if (cells != null && cells.length > 0)
-	{
-		var parent = this.model.getParent(cells[0]);
-		result.push(cells[0]);
+  if (cells != null && cells.length > 0)
+  {
+    var parent = this.model.getParent(cells[0]);
+    result.push(cells[0]);
 
-		// Filters selection cells with the same parent
-		for (var i = 1; i < cells.length; i++)
-		{
-			if (this.model.getParent(cells[i]) == parent)
-			{
-				result.push(cells[i]);
-			}
-		}
-	}
+    // Filters selection cells with the same parent
+    for (var i = 1; i < cells.length; i++)
+    {
+      if (this.model.getParent(cells[i]) == parent)
+      {
+        result.push(cells[i]);
+      }
+    }
+  }
 
-	return result;
+  return result;
 };
 
 /**
@@ -4040,31 +4040,31 @@ getCellsForGroup = (cells)=>
  */
 getBoundsForGroup = (group, children, border)=>
 {
-	var result = this.getBoundingBoxFromGeometry(children, true);
-	
-	if (result != null)
-	{
-		if (this.isSwimlane(group))
-		{
-			var size = this.getStartSize(group);
-			
-			result.x -= size.width;
-			result.y -= size.height;
-			result.width += size.width;
-			result.height += size.height;
-		}
-		
-		// Adds the border
-		if (border != null)
-		{
-			result.x -= border;
-			result.y -= border;
-			result.width += 2 * border;
-			result.height += 2 * border;
-		}
-	}			
-	
-	return result;
+  var result = this.getBoundingBoxFromGeometry(children, true);
+
+  if (result != null)
+  {
+    if (this.isSwimlane(group))
+    {
+      var size = this.getStartSize(group);
+
+      result.x -= size.width;
+      result.y -= size.height;
+      result.width += size.width;
+      result.height += size.height;
+    }
+
+    // Adds the border
+    if (border != null)
+    {
+      result.x -= border;
+      result.y -= border;
+      result.width += 2 * border;
+      result.height += 2 * border;
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -4087,11 +4087,11 @@ getBoundsForGroup = (group, children, border)=>
  */
 createGroupCell = (cells)=>
 {
-	var group = new mxCell('');
-	group.setVertex(true);
-	group.setConnectable(false);
-	
-	return group;
+  var group = new mxCell('');
+  group.setVertex(true);
+  group.setConnectable(false);
+
+  return group;
 };
 
 /**
@@ -4108,60 +4108,60 @@ createGroupCell = (cells)=>
  */
 ungroupCells = (cells)=>
 {
-	var result = [];
-	
-	if (cells == null)
-	{
-		cells = this.getCellsForUngroup();
-	}
-	
-	if (cells != null && cells.length > 0)
-	{
-		this.model.beginUpdate();
-		try
-		{
-			for (var i = 0; i < cells.length; i++)
-			{
-				var children = this.model.getChildren(cells[i]);
-				
-				if (children != null && children.length > 0)
-				{
-					children = children.slice();
-					var parent = this.model.getParent(cells[i]);
-					var index = this.model.getChildCount(parent);
+  var result = [];
 
-					this.cellsAdded(children, parent, index, null, null, true);
-					result = result.concat(children);
-					
-					// Fix relative child cells
-					for (var j = 0; j < children.length; j++)
-					{
-						var state = this.view.getState(children[j]);
-						var geo = this.getCellGeometry(children[j]);
-						
-						if (state != null && geo != null && geo.relative)
-						{
-							geo = geo.clone();
-							geo.x = state.origin.x;
-							geo.y = state.origin.y;
-							geo.relative = false;
-							
-							this.model.setGeometry(children[j], geo);
-						}
-					}
-				}
-			}
+  if (cells == null)
+  {
+    cells = this.getCellsForUngroup();
+  }
 
-			this.removeCellsAfterUngroup(cells);
-			this.fireEvent(new mxEventObject(mxEvent.UNGROUP_CELLS, 'cells', cells));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
-	
-	return result;
+  if (cells != null && cells.length > 0)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      for (var i = 0; i < cells.length; i++)
+      {
+        var children = this.model.getChildren(cells[i]);
+
+        if (children != null && children.length > 0)
+        {
+          children = children.slice();
+          var parent = this.model.getParent(cells[i]);
+          var index = this.model.getChildCount(parent);
+
+          this.cellsAdded(children, parent, index, null, null, true);
+          result = result.concat(children);
+
+          // Fix relative child cells
+          for (var j = 0; j < children.length; j++)
+          {
+            var state = this.view.getState(children[j]);
+            var geo = this.getCellGeometry(children[j]);
+
+            if (state != null && geo != null && geo.relative)
+            {
+              geo = geo.clone();
+              geo.x = state.origin.x;
+              geo.y = state.origin.y;
+              geo.relative = false;
+
+              this.model.setGeometry(children[j], geo);
+            }
+          }
+        }
+      }
+
+      this.removeCellsAfterUngroup(cells);
+      this.fireEvent(new mxEventObject(mxEvent.UNGROUP_CELLS, 'cells', cells));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -4171,21 +4171,21 @@ ungroupCells = (cells)=>
  */
 getCellsForUngroup = ()=>
 {
-	var cells = this.getSelectionCells();
+  var cells = this.getSelectionCells();
 
-	// Finds the cells with children
-	var tmp = [];
-	
-	for (var i = 0; i < cells.length; i++)
-	{
-		if (this.model.isVertex(cells[i]) &&
-			this.model.getChildCount(cells[i]) > 0)
-		{
-			tmp.push(cells[i]);
-		}
-	}
+  // Finds the cells with children
+  var tmp = [];
 
-	return tmp;
+  for (var i = 0; i < cells.length; i++)
+  {
+    if (this.model.isVertex(cells[i]) &&
+      this.model.getChildCount(cells[i]) > 0)
+    {
+      tmp.push(cells[i]);
+    }
+  }
+
+  return tmp;
 };
 
 /**
@@ -4199,7 +4199,7 @@ getCellsForUngroup = ()=>
  */
 removeCellsAfterUngroup = (cells)=>
 {
-	this.cellsRemoved(this.addAllEdges(cells));
+  this.cellsRemoved(this.addAllEdges(cells));
 };
 
 /**
@@ -4214,26 +4214,26 @@ removeCellsAfterUngroup = (cells)=>
  */
 removeCellsFromParent = (cells)=>
 {
-	if (cells == null)
-	{
-		cells = this.getSelectionCells();
-	}
-	
-	this.model.beginUpdate();
-	try
-	{
-		var parent = this.getDefaultParent();
-		var index = this.model.getChildCount(parent);
+  if (cells == null)
+  {
+    cells = this.getSelectionCells();
+  }
 
-		this.cellsAdded(cells, parent, index, null, null, true);
-		this.fireEvent(new mxEventObject(mxEvent.REMOVE_CELLS_FROM_PARENT, 'cells', cells));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
+  this.model.beginUpdate();
+  try
+  {
+    var parent = this.getDefaultParent();
+    var index = this.model.getChildCount(parent);
 
-	return cells;
+    this.cellsAdded(cells, parent, index, null, null, true);
+    this.fireEvent(new mxEventObject(mxEvent.REMOVE_CELLS_FROM_PARENT, 'cells', cells));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
+
+  return cells;
 };
 
 /**
@@ -4258,63 +4258,63 @@ removeCellsFromParent = (cells)=>
  */
 updateGroupBounds = (cells, border, moveGroup, topBorder, rightBorder, bottomBorder, leftBorder)=>
 {
-	if (cells == null)
-	{
-		cells = this.getSelectionCells();
-	}
-	
-	border = (border != null) ? border : 0;
-	moveGroup = (moveGroup != null) ? moveGroup : false;
-	topBorder = (topBorder != null) ? topBorder : 0;
-	rightBorder = (rightBorder != null) ? rightBorder : 0;
-	bottomBorder = (bottomBorder != null) ? bottomBorder : 0;
-	leftBorder = (leftBorder != null) ? leftBorder : 0;
+  if (cells == null)
+  {
+    cells = this.getSelectionCells();
+  }
 
-	this.model.beginUpdate();
-	try
-	{
-		for (var i = cells.length - 1; i >= 0; i--)
-		{
-			var geo = this.getCellGeometry(cells[i]);
-			
-			if (geo != null)
-			{
-				var children = this.getChildCells(cells[i]);
-				
-				if (children != null && children.length > 0)
-				{
-					var bounds = this.getBoundingBoxFromGeometry(children, true);
-					
-					if (bounds != null && bounds.width > 0 && bounds.height > 0)
-					{
-						// Adds the size of the title area for swimlanes
-						var size = (this.isSwimlane(cells[i])) ?
-							this.getActualStartSize(cells[i], true) : new mxRectangle();
-						geo = geo.clone();
-						
-						if (moveGroup)
-						{
-							geo.x = Math.round(geo.x + bounds.x - border - size.x - leftBorder);
-							geo.y = Math.round(geo.y + bounds.y - border - size.y - topBorder);
-						}
-						
-						geo.width = Math.round(bounds.width + 2 * border + size.x + leftBorder + rightBorder + size.width);
-						geo.height = Math.round(bounds.height + 2 * border + size.y + topBorder + bottomBorder + size.height);
-						
-						this.model.setGeometry(cells[i], geo);
-						this.moveCells(children, border + size.x - bounds.x + leftBorder,
-								border + size.y - bounds.y + topBorder);
-					}
-				}
-			}
-		}
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
+  border = (border != null) ? border : 0;
+  moveGroup = (moveGroup != null) ? moveGroup : false;
+  topBorder = (topBorder != null) ? topBorder : 0;
+  rightBorder = (rightBorder != null) ? rightBorder : 0;
+  bottomBorder = (bottomBorder != null) ? bottomBorder : 0;
+  leftBorder = (leftBorder != null) ? leftBorder : 0;
 
-	return cells;
+  this.model.beginUpdate();
+  try
+  {
+    for (var i = cells.length - 1; i >= 0; i--)
+    {
+      var geo = this.getCellGeometry(cells[i]);
+
+      if (geo != null)
+      {
+        var children = this.getChildCells(cells[i]);
+
+        if (children != null && children.length > 0)
+        {
+          var bounds = this.getBoundingBoxFromGeometry(children, true);
+
+          if (bounds != null && bounds.width > 0 && bounds.height > 0)
+          {
+            // Adds the size of the title area for swimlanes
+            var size = (this.isSwimlane(cells[i])) ?
+              this.getActualStartSize(cells[i], true) : new mxRectangle();
+            geo = geo.clone();
+
+            if (moveGroup)
+            {
+              geo.x = Math.round(geo.x + bounds.x - border - size.x - leftBorder);
+              geo.y = Math.round(geo.y + bounds.y - border - size.y - topBorder);
+            }
+
+            geo.width = Math.round(bounds.width + 2 * border + size.x + leftBorder + rightBorder + size.width);
+            geo.height = Math.round(bounds.height + 2 * border + size.y + topBorder + bottomBorder + size.height);
+
+            this.model.setGeometry(cells[i], geo);
+            this.moveCells(children, border + size.x - bounds.x + leftBorder,
+                border + size.y - bounds.y + topBorder);
+          }
+        }
+      }
+    }
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
+
+  return cells;
 };
 
 /**
@@ -4329,32 +4329,32 @@ updateGroupBounds = (cells, border, moveGroup, topBorder, rightBorder, bottomBor
  */
 getBoundingBox = (cells)=>
 {
-	var result = null;
-	
-	if (cells != null && cells.length > 0)
-	{
-		for (var i = 0; i < cells.length; i++)
-		{
-			if (this.model.isVertex(cells[i]) || this.model.isEdge(cells[i]))
-			{
-				var bbox = this.view.getBoundingBox(this.view.getState(cells[i]), true);
-			
-				if (bbox != null)
-				{
-					if (result == null)
-					{
-						result = mxRectangle.fromRectangle(bbox);
-					}
-					else
-					{
-						result.add(bbox);
-					}
-				}
-			}
-		}
-	}
-	
-	return result;
+  var result = null;
+
+  if (cells != null && cells.length > 0)
+  {
+    for (var i = 0; i < cells.length; i++)
+    {
+      if (this.model.isVertex(cells[i]) || this.model.isEdge(cells[i]))
+      {
+        var bbox = this.view.getBoundingBox(this.view.getState(cells[i]), true);
+
+        if (bbox != null)
+        {
+          if (result == null)
+          {
+            result = mxRectangle.fromRectangle(bbox);
+          }
+          else
+          {
+            result.add(bbox);
+          }
+        }
+      }
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -4377,7 +4377,7 @@ getBoundingBox = (cells)=>
  */
 cloneCell = (cell, allowInvalidEdges, mapping, keepPosition)=>
 {
-	return this.cloneCells([cell], allowInvalidEdges, mapping, keepPosition)[0];
+  return this.cloneCells([cell], allowInvalidEdges, mapping, keepPosition)[0];
 };
 
 /**
@@ -4399,117 +4399,117 @@ cloneCell = (cell, allowInvalidEdges, mapping, keepPosition)=>
  */
 cloneCells = (cells, allowInvalidEdges, mapping, keepPosition)=>
 {
-	allowInvalidEdges = (allowInvalidEdges != null) ? allowInvalidEdges : true;
-	var clones = null;
-	
-	if (cells != null)
-	{
-		// Creates a dictionary for fast lookups
-		var dict = new mxDictionary();
-		var tmp = [];
-		
-		for (var i = 0; i < cells.length; i++)
-		{
-			dict.put(cells[i], true);
-			tmp.push(cells[i]);
-		}
-		
-		if (tmp.length > 0)
-		{
-			var scale = this.view.scale;
-			var trans = this.view.translate;
-			clones = this.model.cloneCells(cells, true, mapping);
-		
-			for (var i = 0; i < cells.length; i++)
-			{
-				if (!allowInvalidEdges && this.model.isEdge(clones[i]) &&
-					this.getEdgeValidationError(clones[i],
-						this.model.getTerminal(clones[i], true),
-						this.model.getTerminal(clones[i], false)) != null)
-				{
-					clones[i] = null;
-				}
-				else
-				{
-					var g = this.model.getGeometry(clones[i]);
-					
-					if (g != null)
-					{
-						var state = this.view.getState(cells[i]);
-						var pstate = this.view.getState(this.model.getParent(cells[i]));
-						
-						if (state != null && pstate != null)
-						{
-							var dx = (keepPosition) ? 0 : pstate.origin.x;
-							var dy = (keepPosition) ? 0 : pstate.origin.y;
-							
-							if (this.model.isEdge(clones[i]))
-							{
-								var pts = state.absolutePoints;
-								
-								if (pts != null)
-								{
-									// Checks if the source is cloned or sets the terminal point
-									var src = this.model.getTerminal(cells[i], true);
-									
-									while (src != null && !dict.get(src))
-									{
-										src = this.model.getParent(src);
-									}
-									
-									if (src == null && pts[0] != null)
-									{
-										g.setTerminalPoint(
-											new mxPoint(pts[0].x / scale - trans.x,
-												pts[0].y / scale - trans.y), true);
-									}
-									
-									// Checks if the target is cloned or sets the terminal point
-									var trg = this.model.getTerminal(cells[i], false);
-									
-									while (trg != null && !dict.get(trg))
-									{
-										trg = this.model.getParent(trg);
-									}
+  allowInvalidEdges = (allowInvalidEdges != null) ? allowInvalidEdges : true;
+  var clones = null;
 
-									var n = pts.length - 1;
-									
-									if (trg == null && pts[n] != null)
-									{
-										g.setTerminalPoint(
-											new mxPoint(pts[n].x / scale - trans.x,
-												pts[n].y / scale - trans.y), false);
-									}
-									
-									// Translates the control points
-									var points = g.points;
-									
-									if (points != null)
-									{
-										for (var j = 0; j < points.length; j++)
-										{
-											points[j].x += dx;
-											points[j].y += dy;
-										}
-									}
-								}
-							}
-							else
-							{
-								g.translate(dx, dy);
-							}
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			clones = [];
-		}
-	}
-	
-	return clones;
+  if (cells != null)
+  {
+    // Creates a dictionary for fast lookups
+    var dict = new mxDictionary();
+    var tmp = [];
+
+    for (var i = 0; i < cells.length; i++)
+    {
+      dict.put(cells[i], true);
+      tmp.push(cells[i]);
+    }
+
+    if (tmp.length > 0)
+    {
+      var scale = this.view.scale;
+      var trans = this.view.translate;
+      clones = this.model.cloneCells(cells, true, mapping);
+
+      for (var i = 0; i < cells.length; i++)
+      {
+        if (!allowInvalidEdges && this.model.isEdge(clones[i]) &&
+          this.getEdgeValidationError(clones[i],
+            this.model.getTerminal(clones[i], true),
+            this.model.getTerminal(clones[i], false)) != null)
+        {
+          clones[i] = null;
+        }
+        else
+        {
+          var g = this.model.getGeometry(clones[i]);
+
+          if (g != null)
+          {
+            var state = this.view.getState(cells[i]);
+            var pstate = this.view.getState(this.model.getParent(cells[i]));
+
+            if (state != null && pstate != null)
+            {
+              var dx = (keepPosition) ? 0 : pstate.origin.x;
+              var dy = (keepPosition) ? 0 : pstate.origin.y;
+
+              if (this.model.isEdge(clones[i]))
+              {
+                var pts = state.absolutePoints;
+
+                if (pts != null)
+                {
+                  // Checks if the source is cloned or sets the terminal point
+                  var src = this.model.getTerminal(cells[i], true);
+
+                  while (src != null && !dict.get(src))
+                  {
+                    src = this.model.getParent(src);
+                  }
+
+                  if (src == null && pts[0] != null)
+                  {
+                    g.setTerminalPoint(
+                      new mxPoint(pts[0].x / scale - trans.x,
+                        pts[0].y / scale - trans.y), true);
+                  }
+
+                  // Checks if the target is cloned or sets the terminal point
+                  var trg = this.model.getTerminal(cells[i], false);
+
+                  while (trg != null && !dict.get(trg))
+                  {
+                    trg = this.model.getParent(trg);
+                  }
+
+                  var n = pts.length - 1;
+
+                  if (trg == null && pts[n] != null)
+                  {
+                    g.setTerminalPoint(
+                      new mxPoint(pts[n].x / scale - trans.x,
+                        pts[n].y / scale - trans.y), false);
+                  }
+
+                  // Translates the control points
+                  var points = g.points;
+
+                  if (points != null)
+                  {
+                    for (var j = 0; j < points.length; j++)
+                    {
+                      points[j].x += dx;
+                      points[j].y += dy;
+                    }
+                  }
+                }
+              }
+              else
+              {
+                g.translate(dx, dy);
+              }
+            }
+          }
+        }
+      }
+    }
+    else
+    {
+      clones = [];
+    }
+  }
+
+  return clones;
 };
 
 /**
@@ -4529,7 +4529,7 @@ cloneCells = (cells, allowInvalidEdges, mapping, keepPosition)=>
  * var pt = graph.getPointForEvent(evt);
  * var parent = graph.getDefaultParent();
  * graph.insertVertex(parent, null,
- * 			'Hello, World!', x, y, 220, 30);
+ *       'Hello, World!', x, y, 220, 30);
  * (end)
  * 
  * For adding image cells, the style parameter can be assigned as
@@ -4554,11 +4554,11 @@ cloneCells = (cells, allowInvalidEdges, mapping, keepPosition)=>
  * Default is false.
  */
 insertVertex = function(parent, id, value,
-	x, y, width, height, style, relative)
+  x, y, width, height, style, relative)
 {
-	var vertex = this.createVertex(parent, id, value, x, y, width, height, style, relative);
+  var vertex = this.createVertex(parent, id, value, x, y, width, height, style, relative);
 
-	return this.addCell(vertex, parent);
+  return this.addCell(vertex, parent);
 };
 
 /**
@@ -4567,21 +4567,21 @@ insertVertex = function(parent, id, value,
  * Hook method that creates the new vertex for <insertVertex>.
  */
 createVertex = function(parent, id, value,
-		x, y, width, height, style, relative)
+    x, y, width, height, style, relative)
 {
-	// Creates the geometry for the vertex
-	var geometry = new mxGeometry(x, y, width, height);
-	geometry.relative = (relative != null) ? relative : false;
-	
-	// Creates the vertex
-	var vertex = new mxCell(value, geometry, style);
-	vertex.setId(id);
-	vertex.setVertex(true);
-	vertex.setConnectable(true);
-	
-	return vertex;
+  // Creates the geometry for the vertex
+  var geometry = new mxGeometry(x, y, width, height);
+  geometry.relative = (relative != null) ? relative : false;
+
+  // Creates the vertex
+  var vertex = new mxCell(value, geometry, style);
+  vertex.setId(id);
+  vertex.setVertex(true);
+  vertex.setConnectable(true);
+
+  return vertex;
 };
-	
+
 /**
  * Function: insertEdge
  * 
@@ -4601,9 +4601,9 @@ createVertex = function(parent, id, value,
  */
 insertEdge = (parent, id, value, source, target, style)=>
 {
-	var edge = this.createEdge(parent, id, value, source, target, style);
-	
-	return this.addEdge(edge, parent, source, target);
+  var edge = this.createEdge(parent, id, value, source, target, style);
+
+  return this.addEdge(edge, parent, source, target);
 };
 
 /**
@@ -4616,13 +4616,13 @@ insertEdge = (parent, id, value, source, target, style)=>
  */
 createEdge = (parent, id, value, source, target, style)=>
 {
-	// Creates the edge
-	var edge = new mxCell(value, new mxGeometry(), style);
-	edge.setId(id);
-	edge.setEdge(true);
-	edge.geometry.relative = true;
-	
-	return edge;
+  // Creates the edge
+  var edge = new mxCell(value, new mxGeometry(), style);
+  edge.setId(id);
+  edge.setEdge(true);
+  edge.geometry.relative = true;
+
+  return edge;
 };
 
 /**
@@ -4643,7 +4643,7 @@ createEdge = (parent, id, value, source, target, style)=>
  */
 addEdge = (edge, parent, source, target, index)=>
 {
-	return this.addCell(edge, parent, index, source, target);
+  return this.addCell(edge, parent, index, source, target);
 };
 
 /**
@@ -4664,7 +4664,7 @@ addEdge = (edge, parent, source, target, index)=>
  */
 addCell = (cell, parent, index, source, target)=>
 {
-	return this.addCells([cell], parent, index, source, target)[0];
+  return this.addCells([cell], parent, index, source, target)[0];
 };
 
 /**
@@ -4688,29 +4688,29 @@ addCell = (cell, parent, index, source, target)=>
  */
 addCells = (cells, parent, index, source, target, absolute)=>
 {
-	if (parent == null)
-	{
-		parent = this.getDefaultParent();
-	}
-	
-	if (index == null)
-	{
-		index = this.model.getChildCount(parent);
-	}
-	
-	this.model.beginUpdate();
-	try
-	{
-		this.cellsAdded(cells, parent, index, source, target, (absolute != null) ? absolute : false, true);
-		this.fireEvent(new mxEventObject(mxEvent.ADD_CELLS, 'cells', cells,
-				'parent', parent, 'index', index, 'source', source, 'target', target));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
+  if (parent == null)
+  {
+    parent = this.getDefaultParent();
+  }
 
-	return cells;
+  if (index == null)
+  {
+    index = this.model.getChildCount(parent);
+  }
+
+  this.model.beginUpdate();
+  try
+  {
+    this.cellsAdded(cells, parent, index, source, target, (absolute != null) ? absolute : false, true);
+    this.fireEvent(new mxEventObject(mxEvent.ADD_CELLS, 'cells', cells,
+        'parent', parent, 'index', index, 'source', source, 'target', target));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
+
+  return cells;
 };
 
 /**
@@ -4721,103 +4721,103 @@ addCells = (cells, parent, index, source, target, absolute)=>
  */
 cellsAdded = (cells, parent, index, source, target, absolute, constrain, extend)=>
 {
-	if (cells != null && parent != null && index != null)
-	{
-		this.model.beginUpdate();
-		try
-		{
-			var parentState = (absolute) ? this.view.getState(parent) : null;
-			var o1 = (parentState != null) ? parentState.origin : null;
-			var zero = new mxPoint(0, 0);
+  if (cells != null && parent != null && index != null)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      var parentState = (absolute) ? this.view.getState(parent) : null;
+      var o1 = (parentState != null) ? parentState.origin : null;
+      var zero = new mxPoint(0, 0);
 
-			for (var i = 0; i < cells.length; i++)
-			{
-				if (cells[i] == null)
-				{
-					index--;
-				}
-				else
-				{
-					var previous = this.model.getParent(cells[i]);
-	
-					// Keeps the cell at its absolute location
-					if (o1 != null && cells[i] != parent && parent != previous)
-					{
-						var oldState = this.view.getState(previous);
-						var o2 = (oldState != null) ? oldState.origin : zero;
-						var geo = this.model.getGeometry(cells[i]);
-	
-						if (geo != null)
-						{
-							var dx = o2.x - o1.x;
-							var dy = o2.y - o1.y;
-	
-							// FIXME: Cells should always be inserted first before any other edit
-							// to avoid forward references in sessions.
-							geo = geo.clone();
-							geo.translate(dx, dy);
-							
-							if (!geo.relative && this.model.isVertex(cells[i]) &&
-								!this.isAllowNegativeCoordinates())
-							{
-								geo.x = Math.max(0, geo.x);
-								geo.y = Math.max(0, geo.y);
-							}
-							
-							this.model.setGeometry(cells[i], geo);
-						}
-					}
-	
-					// Decrements all following indices
-					// if cell is already in parent
-					if (parent == previous && index + i > this.model.getChildCount(parent))
-					{
-						index--;
-					}
+      for (var i = 0; i < cells.length; i++)
+      {
+        if (cells[i] == null)
+        {
+          index--;
+        }
+        else
+        {
+          var previous = this.model.getParent(cells[i]);
 
-					this.model.add(parent, cells[i], index + i);
-					
-					if (this.autoSizeCellsOnAdd)
-					{
-						this.autoSizeCell(cells[i], true);
-					}
+          // Keeps the cell at its absolute location
+          if (o1 != null && cells[i] != parent && parent != previous)
+          {
+            var oldState = this.view.getState(previous);
+            var o2 = (oldState != null) ? oldState.origin : zero;
+            var geo = this.model.getGeometry(cells[i]);
 
-					// Extends the parent or constrains the child
-					if ((extend == null || extend) &&
-						this.isExtendParentsOnAdd(cells[i]) && this.isExtendParent(cells[i]))
-					{
-						this.extendParent(cells[i]);
-					}
-					
-					// Additionally constrains the child after extending the parent
-					if (constrain == null || constrain)
-					{
-						this.constrainChild(cells[i]);
-					}
-					
-					// Sets the source terminal
-					if (source != null)
-					{
-						this.cellConnected(cells[i], source, true);
-					}
-					
-					// Sets the target terminal
-					if (target != null)
-					{
-						this.cellConnected(cells[i], target, false);
-					}
-				}
-			}
-			
-			this.fireEvent(new mxEventObject(mxEvent.CELLS_ADDED, 'cells', cells,
-				'parent', parent, 'index', index, 'source', source, 'target', target,
-				'absolute', absolute));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+            if (geo != null)
+            {
+              var dx = o2.x - o1.x;
+              var dy = o2.y - o1.y;
+
+              // FIXME: Cells should always be inserted first before any other edit
+              // to avoid forward references in sessions.
+              geo = geo.clone();
+              geo.translate(dx, dy);
+
+              if (!geo.relative && this.model.isVertex(cells[i]) &&
+                !this.isAllowNegativeCoordinates())
+              {
+                geo.x = Math.max(0, geo.x);
+                geo.y = Math.max(0, geo.y);
+              }
+
+              this.model.setGeometry(cells[i], geo);
+            }
+          }
+
+          // Decrements all following indices
+          // if cell is already in parent
+          if (parent == previous && index + i > this.model.getChildCount(parent))
+          {
+            index--;
+          }
+
+          this.model.add(parent, cells[i], index + i);
+
+          if (this.autoSizeCellsOnAdd)
+          {
+            this.autoSizeCell(cells[i], true);
+          }
+
+          // Extends the parent or constrains the child
+          if ((extend == null || extend) &&
+            this.isExtendParentsOnAdd(cells[i]) && this.isExtendParent(cells[i]))
+          {
+            this.extendParent(cells[i]);
+          }
+
+          // Additionally constrains the child after extending the parent
+          if (constrain == null || constrain)
+          {
+            this.constrainChild(cells[i]);
+          }
+
+          // Sets the source terminal
+          if (source != null)
+          {
+            this.cellConnected(cells[i], source, true);
+          }
+
+          // Sets the target terminal
+          if (target != null)
+          {
+            this.cellConnected(cells[i], target, false);
+          }
+        }
+      }
+
+      this.fireEvent(new mxEventObject(mxEvent.CELLS_ADDED, 'cells', cells,
+        'parent', parent, 'index', index, 'source', source, 'target', target,
+        'absolute', absolute));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -4833,22 +4833,22 @@ cellsAdded = (cells, parent, index, source, target, absolute, constrain, extend)
  */
 autoSizeCell = (cell, recurse)=>
 {
-	recurse = (recurse != null) ? recurse : true;
-	
-	if (recurse)
-	{
-		var childCount = this.model.getChildCount(cell);
-		
-		for (var i = 0; i < childCount; i++)
-		{
-			this.autoSizeCell(this.model.getChildAt(cell, i));
-		}
-	}
+  recurse = (recurse != null) ? recurse : true;
 
-	if (this.getModel().isVertex(cell) && this.isAutoSizeCell(cell))
-	{
-		this.updateCellSize(cell);
-	}
+  if (recurse)
+  {
+    var childCount = this.model.getChildCount(cell);
+
+    for (var i = 0; i < childCount; i++)
+    {
+      this.autoSizeCell(this.model.getChildAt(cell, i));
+    }
+  }
+
+  if (this.getModel().isVertex(cell) && this.isAutoSizeCell(cell))
+  {
+    this.updateCellSize(cell);
+  }
 };
 
 /**
@@ -4868,58 +4868,58 @@ autoSizeCell = (cell, recurse)=>
  */
 removeCells = (cells, includeEdges)=>
 {
-	includeEdges = (includeEdges != null) ? includeEdges : true;
-	
-	if (cells == null)
-	{
-		cells = this.getDeletableCells(this.getSelectionCells());
-	}
+  includeEdges = (includeEdges != null) ? includeEdges : true;
 
-	// Adds all edges to the cells
-	if (includeEdges)
-	{
-		// FIXME: Remove duplicate cells in result or do not add if
-		// in cells or descendant of cells
-		cells = this.getDeletableCells(this.addAllEdges(cells));
-	}
-	else
-	{
-		cells = cells.slice();
-		
-		// Removes edges that are currently not
-		// visible as those cannot be updated
-		var edges = this.getDeletableCells(this.getAllEdges(cells));
-		var dict = new mxDictionary();
-		
-		for (var i = 0; i < cells.length; i++)
-		{
-			dict.put(cells[i], true);
-		}
-		
-		for (var i = 0; i < edges.length; i++)
-		{
-			if (this.view.getState(edges[i]) == null &&
-				!dict.get(edges[i]))
-			{
-				dict.put(edges[i], true);
-				cells.push(edges[i]);
-			}
-		}
-	}
+  if (cells == null)
+  {
+    cells = this.getDeletableCells(this.getSelectionCells());
+  }
 
-	this.model.beginUpdate();
-	try
-	{
-		this.cellsRemoved(cells);
-		this.fireEvent(new mxEventObject(mxEvent.REMOVE_CELLS, 
-				'cells', cells, 'includeEdges', includeEdges));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
-	
-	return cells;
+  // Adds all edges to the cells
+  if (includeEdges)
+  {
+    // FIXME: Remove duplicate cells in result or do not add if
+    // in cells or descendant of cells
+    cells = this.getDeletableCells(this.addAllEdges(cells));
+  }
+  else
+  {
+    cells = cells.slice();
+
+    // Removes edges that are currently not
+    // visible as those cannot be updated
+    var edges = this.getDeletableCells(this.getAllEdges(cells));
+    var dict = new mxDictionary();
+
+    for (var i = 0; i < cells.length; i++)
+    {
+      dict.put(cells[i], true);
+    }
+
+    for (var i = 0; i < edges.length; i++)
+    {
+      if (this.view.getState(edges[i]) == null &&
+        !dict.get(edges[i]))
+      {
+        dict.put(edges[i], true);
+        cells.push(edges[i]);
+      }
+    }
+  }
+
+  this.model.beginUpdate();
+  try
+  {
+    this.cellsRemoved(cells);
+    this.fireEvent(new mxEventObject(mxEvent.REMOVE_CELLS,
+        'cells', cells, 'includeEdges', includeEdges));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
+
+  return cells;
 };
 
 /**
@@ -4934,106 +4934,106 @@ removeCells = (cells, includeEdges)=>
  */
 cellsRemoved = (cells)=>
 {
-	if (cells != null && cells.length > 0)
-	{
-		var scale = this.view.scale;
-		var tr = this.view.translate;
-		
-		this.model.beginUpdate();
-		try
-		{
-			// Creates hashtable for faster lookup
-			var dict = new mxDictionary();
-			
-			for (var i = 0; i < cells.length; i++)
-			{
-				dict.put(cells[i], true);
-			}
-			
-			for (var i = 0; i < cells.length; i++)
-			{
-				// Disconnects edges which are not being removed
-				var edges = this.getAllEdges([cells[i]]);
-				
-				var disconnectTerminal = mxUtils.bind(this, (edge, source)=>
-				{
-					var geo = this.model.getGeometry(edge);
+  if (cells != null && cells.length > 0)
+  {
+    var scale = this.view.scale;
+    var tr = this.view.translate;
 
-					if (geo != null)
-					{
-						// Checks if terminal is being removed
-						var terminal = this.model.getTerminal(edge, source);
-						var connected = false;
-						var tmp = terminal;
-						
-						while (tmp != null)
-						{
-							if (cells[i] == tmp)
-							{
-								connected = true;
-								break;
-							}
-							
-							tmp = this.model.getParent(tmp);
-						}
+    this.model.beginUpdate();
+    try
+    {
+      // Creates hashtable for faster lookup
+      var dict = new mxDictionary();
 
-						if (connected)
-						{
-							geo = geo.clone();
-							var state = this.view.getState(edge);
+      for (var i = 0; i < cells.length; i++)
+      {
+        dict.put(cells[i], true);
+      }
 
-							if (state != null && state.absolutePoints != null)
-							{
-								var pts = state.absolutePoints;
-								var n = (source) ? 0 : pts.length - 1;
+      for (var i = 0; i < cells.length; i++)
+      {
+        // Disconnects edges which are not being removed
+        var edges = this.getAllEdges([cells[i]]);
 
-								geo.setTerminalPoint(new mxPoint(
-									pts[n].x / scale - tr.x - state.origin.x,
-									pts[n].y / scale - tr.y - state.origin.y), source);
-							}
-							else
-							{
-								// Fallback to center of terminal if routing
-								// points are not available to add new point
-								// KNOWN: Should recurse to find parent offset
-								// of edge for nested groups but invisible edges
-								// should be removed in removeCells step
-								var tstate = this.view.getState(terminal);
-								
-								if (tstate != null)
-								{
-									geo.setTerminalPoint(new mxPoint(
-										tstate.getCenterX() / scale - tr.x,
-										tstate.getCenterY() / scale - tr.y), source);
-								}
-							}
+        var disconnectTerminal = mxUtils.bind(this, (edge, source)=>
+        {
+          var geo = this.model.getGeometry(edge);
 
-							this.model.setGeometry(edge, geo);
-							this.model.setTerminal(edge, null, source);
-						}
-					}
-				});
-				
-				for (var j = 0; j < edges.length; j++)
-				{
-					if (!dict.get(edges[j]))
-					{
-						dict.put(edges[j], true);
-						disconnectTerminal(edges[j], true);
-						disconnectTerminal(edges[j], false);
-					}
-				}
+          if (geo != null)
+          {
+            // Checks if terminal is being removed
+            var terminal = this.model.getTerminal(edge, source);
+            var connected = false;
+            var tmp = terminal;
 
-				this.model.remove(cells[i]);
-			}
-			
-			this.fireEvent(new mxEventObject(mxEvent.CELLS_REMOVED, 'cells', cells));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+            while (tmp != null)
+            {
+              if (cells[i] == tmp)
+              {
+                connected = true;
+                break;
+              }
+
+              tmp = this.model.getParent(tmp);
+            }
+
+            if (connected)
+            {
+              geo = geo.clone();
+              var state = this.view.getState(edge);
+
+              if (state != null && state.absolutePoints != null)
+              {
+                var pts = state.absolutePoints;
+                var n = (source) ? 0 : pts.length - 1;
+
+                geo.setTerminalPoint(new mxPoint(
+                  pts[n].x / scale - tr.x - state.origin.x,
+                  pts[n].y / scale - tr.y - state.origin.y), source);
+              }
+              else
+              {
+                // Fallback to center of terminal if routing
+                // points are not available to add new point
+                // KNOWN: Should recurse to find parent offset
+                // of edge for nested groups but invisible edges
+                // should be removed in removeCells step
+                var tstate = this.view.getState(terminal);
+
+                if (tstate != null)
+                {
+                  geo.setTerminalPoint(new mxPoint(
+                    tstate.getCenterX() / scale - tr.x,
+                    tstate.getCenterY() / scale - tr.y), source);
+                }
+              }
+
+              this.model.setGeometry(edge, geo);
+              this.model.setTerminal(edge, null, source);
+            }
+          }
+        });
+
+        for (var j = 0; j < edges.length; j++)
+        {
+          if (!dict.get(edges[j]))
+          {
+            dict.put(edges[j], true);
+            disconnectTerminal(edges[j], true);
+            disconnectTerminal(edges[j], false);
+          }
+        }
+
+        this.model.remove(cells[i]);
+      }
+
+      this.fireEvent(new mxEventObject(mxEvent.CELLS_REMOVED, 'cells', cells));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -5058,56 +5058,56 @@ cellsRemoved = (cells)=>
  */
 splitEdge = (edge, cells, newEdge, dx, dy, x, y, parent)=>
 {
-	dx = dx || 0;
-	dy = dy || 0;
+  dx = dx || 0;
+  dy = dy || 0;
 
-	parent = (parent != null) ? parent : this.model.getParent(edge);
-	var source = this.model.getTerminal(edge, true);
-	
-	this.model.beginUpdate();
-	try
-	{
-		if (newEdge == null)
-		{
-			newEdge = this.cloneCell(edge);
-			
-			// Removes waypoints before/after new cell
-			var state = this.view.getState(edge);
-			var geo = this.getCellGeometry(newEdge);
-			
-			if (geo != null && geo.points != null && state != null)
-			{
-				var t = this.view.translate;
-				var s = this.view.scale;
-				var idx = mxUtils.findNearestSegment(state, (dx + t.x) * s, (dy + t.y) * s);
-				geo.points = geo.points.slice(0, idx);
-								
-				geo = this.getCellGeometry(edge);
-				
-				if (geo != null && geo.points != null)
-				{
-					geo = geo.clone();
-					geo.points = geo.points.slice(idx);
-					this.model.setGeometry(edge, geo);
-				}
-			}
-		}
-		
-		this.cellsMoved(cells, dx, dy, false, false);
-		this.cellsAdded(cells, parent, this.model.getChildCount(parent), null, null,
-				true);
-		this.cellsAdded([newEdge], parent, this.model.getChildCount(parent),
-				source, cells[0], false);
-		this.cellConnected(edge, cells[0], true);
-		this.fireEvent(new mxEventObject(mxEvent.SPLIT_EDGE, 'edge', edge,
-				'cells', cells, 'newEdge', newEdge, 'dx', dx, 'dy', dy));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
+  parent = (parent != null) ? parent : this.model.getParent(edge);
+  var source = this.model.getTerminal(edge, true);
 
-	return newEdge;
+  this.model.beginUpdate();
+  try
+  {
+    if (newEdge == null)
+    {
+      newEdge = this.cloneCell(edge);
+
+      // Removes waypoints before/after new cell
+      var state = this.view.getState(edge);
+      var geo = this.getCellGeometry(newEdge);
+
+      if (geo != null && geo.points != null && state != null)
+      {
+        var t = this.view.translate;
+        var s = this.view.scale;
+        var idx = mxUtils.findNearestSegment(state, (dx + t.x) * s, (dy + t.y) * s);
+        geo.points = geo.points.slice(0, idx);
+
+        geo = this.getCellGeometry(edge);
+
+        if (geo != null && geo.points != null)
+        {
+          geo = geo.clone();
+          geo.points = geo.points.slice(idx);
+          this.model.setGeometry(edge, geo);
+        }
+      }
+    }
+
+    this.cellsMoved(cells, dx, dy, false, false);
+    this.cellsAdded(cells, parent, this.model.getChildCount(parent), null, null,
+        true);
+    this.cellsAdded([newEdge], parent, this.model.getChildCount(parent),
+        source, cells[0], false);
+    this.cellConnected(edge, cells[0], true);
+    this.fireEvent(new mxEventObject(mxEvent.SPLIT_EDGE, 'edge', edge,
+        'cells', cells, 'newEdge', newEdge, 'dx', dx, 'dy', dy));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
+
+  return newEdge;
 };
 
 /**
@@ -5132,30 +5132,30 @@ splitEdge = (edge, cells, newEdge, dx, dy, x, y, parent)=>
  */
 toggleCells = (show, cells, includeEdges)=>
 {
-	if (cells == null)
-	{
-		cells = this.getSelectionCells();
-	}
+  if (cells == null)
+  {
+    cells = this.getSelectionCells();
+  }
 
-	// Adds all connected edges recursively
-	if (includeEdges)
-	{
-		cells = this.addAllEdges(cells);
-	}
+  // Adds all connected edges recursively
+  if (includeEdges)
+  {
+    cells = this.addAllEdges(cells);
+  }
 
-	this.model.beginUpdate();
-	try
-	{
-		this.cellsToggled(cells, show);
-		this.fireEvent(new mxEventObject(mxEvent.TOGGLE_CELLS,
-			'show', show, 'cells', cells, 'includeEdges', includeEdges));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
+  this.model.beginUpdate();
+  try
+  {
+    this.cellsToggled(cells, show);
+    this.fireEvent(new mxEventObject(mxEvent.TOGGLE_CELLS,
+      'show', show, 'cells', cells, 'includeEdges', includeEdges));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
 
-	return cells;
+  return cells;
 };
 
 /**
@@ -5170,21 +5170,21 @@ toggleCells = (show, cells, includeEdges)=>
  */
 cellsToggled = (cells, show)=>
 {
-	if (cells != null && cells.length > 0)
-	{
-		this.model.beginUpdate();
-		try
-		{
-			for (var i = 0; i < cells.length; i++)
-			{
-				this.model.setVisible(cells[i], show);
-			}
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+  if (cells != null && cells.length > 0)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      for (var i = 0; i < cells.length; i++)
+      {
+        this.model.setVisible(cells[i], show);
+      }
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -5212,28 +5212,28 @@ cellsToggled = (cells, show)=>
  */
 foldCells = (collapse, recurse, cells, checkFoldable, evt)=>
 {
-	recurse = (recurse != null) ? recurse : false;
-	
-	if (cells == null)
-	{
-		cells = this.getFoldableCells(this.getSelectionCells(), collapse);
-	}
+  recurse = (recurse != null) ? recurse : false;
 
-	this.stopEditing(false);
+  if (cells == null)
+  {
+    cells = this.getFoldableCells(this.getSelectionCells(), collapse);
+  }
 
-	this.model.beginUpdate();
-	try
-	{
-		this.cellsFolded(cells, collapse, recurse, checkFoldable);
-		this.fireEvent(new mxEventObject(mxEvent.FOLD_CELLS,
-			'collapse', collapse, 'recurse', recurse, 'cells', cells));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
+  this.stopEditing(false);
 
-	return cells;
+  this.model.beginUpdate();
+  try
+  {
+    this.cellsFolded(cells, collapse, recurse, checkFoldable);
+    this.fireEvent(new mxEventObject(mxEvent.FOLD_CELLS,
+      'collapse', collapse, 'recurse', recurse, 'cells', cells));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
+
+  return cells;
 };
 
 /**
@@ -5254,42 +5254,42 @@ foldCells = (collapse, recurse, cells, checkFoldable, evt)=>
  */
 cellsFolded = (cells, collapse, recurse, checkFoldable)=>
 {
-	if (cells != null && cells.length > 0)
-	{
-		this.model.beginUpdate();
-		try
-		{
-			for (var i = 0; i < cells.length; i++)
-			{
-				if ((!checkFoldable || this.isCellFoldable(cells[i], collapse)) &&
-					collapse != this.isCellCollapsed(cells[i]))
-				{
-					this.model.setCollapsed(cells[i], collapse);
-					this.swapBounds(cells[i], collapse);
+  if (cells != null && cells.length > 0)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      for (var i = 0; i < cells.length; i++)
+      {
+        if ((!checkFoldable || this.isCellFoldable(cells[i], collapse)) &&
+          collapse != this.isCellCollapsed(cells[i]))
+        {
+          this.model.setCollapsed(cells[i], collapse);
+          this.swapBounds(cells[i], collapse);
 
-					if (this.isExtendParent(cells[i]))
-					{
-						this.extendParent(cells[i]);
-					}
+          if (this.isExtendParent(cells[i]))
+          {
+            this.extendParent(cells[i]);
+          }
 
-					if (recurse)
-					{
-						var children = this.model.getChildren(cells[i]);
-						this.cellsFolded(children, collapse, recurse);
-					}
-					
-					this.constrainChild(cells[i]);
-				}
-			}
-			
-			this.fireEvent(new mxEventObject(mxEvent.CELLS_FOLDED,
-				'cells', cells, 'collapse', collapse, 'recurse', recurse));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+          if (recurse)
+          {
+            var children = this.model.getChildren(cells[i]);
+            this.cellsFolded(children, collapse, recurse);
+          }
+
+          this.constrainChild(cells[i]);
+        }
+      }
+
+      this.fireEvent(new mxEventObject(mxEvent.CELLS_FOLDED,
+        'cells', cells, 'collapse', collapse, 'recurse', recurse));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -5305,20 +5305,20 @@ cellsFolded = (cells, collapse, recurse, checkFoldable)=>
  */
 swapBounds = (cell, willCollapse)=>
 {
-	if (cell != null)
-	{
-		var geo = this.model.getGeometry(cell);
-		
-		if (geo != null)
-		{
-			geo = geo.clone();
-			
-			this.updateAlternateBounds(cell, geo, willCollapse);
-			geo.swap();
-			
-			this.model.setGeometry(cell, geo);
-		}
-	}
+  if (cell != null)
+  {
+    var geo = this.model.getGeometry(cell);
+
+    if (geo != null)
+    {
+      geo = geo.clone();
+
+      this.updateAlternateBounds(cell, geo, willCollapse);
+      geo.swap();
+
+      this.model.setGeometry(cell, geo);
+    }
+  }
 };
 
 /**
@@ -5339,57 +5339,57 @@ swapBounds = (cell, willCollapse)=>
  */
 updateAlternateBounds = (cell, geo, willCollapse)=>
 {
-	if (cell != null && geo != null)
-	{
-		var style = this.getCurrentCellStyle(cell);
+  if (cell != null && geo != null)
+  {
+    var style = this.getCurrentCellStyle(cell);
 
-		if (geo.alternateBounds == null)
-		{
-			var bounds = geo;
-			
-			if (this.collapseToPreferredSize)
-			{
-				var tmp = this.getPreferredSizeForCell(cell);
-				
-				if (tmp != null)
-				{
-					bounds = tmp;
+    if (geo.alternateBounds == null)
+    {
+      var bounds = geo;
 
-					var startSize = mxUtils.getValue(style, mxConstants.STYLE_STARTSIZE);
+      if (this.collapseToPreferredSize)
+      {
+        var tmp = this.getPreferredSizeForCell(cell);
 
-					if (startSize > 0)
-					{
-						bounds.height = Math.max(bounds.height, startSize);
-					}
-				}
-			}
-			
-			geo.alternateBounds = new mxRectangle(0, 0, bounds.width, bounds.height);
-		}
-		
-		if (geo.alternateBounds != null)
-		{
-			geo.alternateBounds.x = geo.x;
-			geo.alternateBounds.y = geo.y;
-			
-			var alpha = mxUtils.toRadians(style[mxConstants.STYLE_ROTATION] || 0);
-			
-			if (alpha != 0)
-			{
-				var dx = geo.alternateBounds.getCenterX() - geo.getCenterX();
-				var dy = geo.alternateBounds.getCenterY() - geo.getCenterY();
-	
-				var cos = Math.cos(alpha);
-				var sin = Math.sin(alpha);
-	
-				var dx2 = cos * dx - sin * dy;
-				var dy2 = sin * dx + cos * dy;
-				
-				geo.alternateBounds.x += dx2 - dx;
-				geo.alternateBounds.y += dy2 - dy;
-			}
-		}
-	}
+        if (tmp != null)
+        {
+          bounds = tmp;
+
+          var startSize = mxUtils.getValue(style, mxConstants.STYLE_STARTSIZE);
+
+          if (startSize > 0)
+          {
+            bounds.height = Math.max(bounds.height, startSize);
+          }
+        }
+      }
+
+      geo.alternateBounds = new mxRectangle(0, 0, bounds.width, bounds.height);
+    }
+
+    if (geo.alternateBounds != null)
+    {
+      geo.alternateBounds.x = geo.x;
+      geo.alternateBounds.y = geo.y;
+
+      var alpha = mxUtils.toRadians(style[mxConstants.STYLE_ROTATION] || 0);
+
+      if (alpha != 0)
+      {
+        var dx = geo.alternateBounds.getCenterX() - geo.getCenterX();
+        var dy = geo.alternateBounds.getCenterY() - geo.getCenterY();
+
+        var cos = Math.cos(alpha);
+        var sin = Math.sin(alpha);
+
+        var dx2 = cos * dx - sin * dy;
+        var dy2 = sin * dx + cos * dy;
+
+        geo.alternateBounds.x += dx2 - dx;
+        geo.alternateBounds.y += dy2 - dy;
+      }
+    }
+  }
 };
 
 /**
@@ -5400,9 +5400,9 @@ updateAlternateBounds = (cell, geo, willCollapse)=>
  */
 addAllEdges = (cells)=>
 {
-	var allCells = cells.slice();
-	
-	return mxUtils.removeDuplicates(allCells.concat(this.getAllEdges(cells)));
+  var allCells = cells.slice();
+
+  return mxUtils.removeDuplicates(allCells.concat(this.getAllEdges(cells)));
 };
 
 /**
@@ -5412,26 +5412,26 @@ addAllEdges = (cells)=>
  */
 getAllEdges = (cells)=>
 {
-	var edges = [];
-	
-	if (cells != null)
-	{
-		for (var i = 0; i < cells.length; i++)
-		{
-			var edgeCount = this.model.getEdgeCount(cells[i]);
-			
-			for (var j = 0; j < edgeCount; j++)
-			{
-				edges.push(this.model.getEdgeAt(cells[i], j));
-			}
+  var edges = [];
 
-			// Recurses
-			var children = this.model.getChildren(cells[i]);
-			edges = edges.concat(this.getAllEdges(children));
-		}
-	}
-	
-	return edges;
+  if (cells != null)
+  {
+    for (var i = 0; i < cells.length; i++)
+    {
+      var edgeCount = this.model.getEdgeCount(cells[i]);
+
+      for (var j = 0; j < edgeCount; j++)
+      {
+        edges.push(this.model.getEdgeAt(cells[i], j));
+      }
+
+      // Recurses
+      var children = this.model.getChildren(cells[i]);
+      edges = edges.concat(this.getAllEdges(children));
+    }
+  }
+
+  return edges;
 };
 
 /**
@@ -5451,21 +5451,21 @@ getAllEdges = (cells)=>
  */
 updateCellSize = (cell, ignoreChildren)=>
 {
-	ignoreChildren = (ignoreChildren != null) ? ignoreChildren : false;
-	
-	this.model.beginUpdate();				
-	try
-	{
-		this.cellSizeUpdated(cell, ignoreChildren);
-		this.fireEvent(new mxEventObject(mxEvent.UPDATE_CELL_SIZE,
-				'cell', cell, 'ignoreChildren', ignoreChildren));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
-	
-	return cell;
+  ignoreChildren = (ignoreChildren != null) ? ignoreChildren : false;
+
+  this.model.beginUpdate();
+  try
+  {
+    this.cellSizeUpdated(cell, ignoreChildren);
+    this.fireEvent(new mxEventObject(mxEvent.UPDATE_CELL_SIZE,
+        'cell', cell, 'ignoreChildren', ignoreChildren));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
+
+  return cell;
 };
 
 /**
@@ -5480,110 +5480,110 @@ updateCellSize = (cell, ignoreChildren)=>
  */
 cellSizeUpdated = (cell, ignoreChildren)=>
 {
-	if (cell != null)
-	{
-		this.model.beginUpdate();				
-		try
-		{
-			var size = this.getPreferredSizeForCell(cell);
-			var geo = this.model.getGeometry(cell);
-			
-			if (size != null && geo != null)
-			{
-				var collapsed = this.isCellCollapsed(cell);
-				geo = geo.clone();
+  if (cell != null)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      var size = this.getPreferredSizeForCell(cell);
+      var geo = this.model.getGeometry(cell);
 
-				if (this.isSwimlane(cell))
-				{
-					var style = this.getCellStyle(cell);
-					var cellStyle = this.model.getStyle(cell);
+      if (size != null && geo != null)
+      {
+        var collapsed = this.isCellCollapsed(cell);
+        geo = geo.clone();
 
-					if (cellStyle == null)
-					{
-						cellStyle = '';
-					}
+        if (this.isSwimlane(cell))
+        {
+          var style = this.getCellStyle(cell);
+          var cellStyle = this.model.getStyle(cell);
 
-					if (mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true))
-					{
-						cellStyle = mxUtils.setStyle(cellStyle,
-								mxConstants.STYLE_STARTSIZE, size.height + 8);
+          if (cellStyle == null)
+          {
+            cellStyle = '';
+          }
 
-						if (collapsed)
-						{
-							geo.height = size.height + 8;
-						}
+          if (mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true))
+          {
+            cellStyle = mxUtils.setStyle(cellStyle,
+                mxConstants.STYLE_STARTSIZE, size.height + 8);
 
-						geo.width = size.width;
-					}
-					else
-					{
-						cellStyle = mxUtils.setStyle(cellStyle,
-								mxConstants.STYLE_STARTSIZE, size.width + 8);
+            if (collapsed)
+            {
+              geo.height = size.height + 8;
+            }
 
-						if (collapsed)
-						{
-							geo.width = size.width + 8;
-						}
+            geo.width = size.width;
+          }
+          else
+          {
+            cellStyle = mxUtils.setStyle(cellStyle,
+                mxConstants.STYLE_STARTSIZE, size.width + 8);
 
-						geo.height = size.height;
-					}
+            if (collapsed)
+            {
+              geo.width = size.width + 8;
+            }
 
-					this.model.setStyle(cell, cellStyle);
-				}
-				else
-				{
-					var state = this.view.createState(cell);
-					var align = (state.style[mxConstants.STYLE_ALIGN] || mxConstants.ALIGN_CENTER);
-					
-					if (align == mxConstants.ALIGN_RIGHT)
-					{
-						geo.x += geo.width - size.width;
-					}
-					else if (align == mxConstants.ALIGN_CENTER)
-					{
-						geo.x += Math.round((geo.width - size.width) / 2);
-					}
+            geo.height = size.height;
+          }
 
-					var valign = this.getVerticalAlign(state);
-					
-					if (valign == mxConstants.ALIGN_BOTTOM)
-					{
-						geo.y += geo.height - size.height;
-					}
-					else if (valign == mxConstants.ALIGN_MIDDLE)
-					{
-						geo.y += Math.round((geo.height - size.height) / 2);
-					}
+          this.model.setStyle(cell, cellStyle);
+        }
+        else
+        {
+          var state = this.view.createState(cell);
+          var align = (state.style[mxConstants.STYLE_ALIGN] || mxConstants.ALIGN_CENTER);
 
-					geo.width = size.width;
-					geo.height = size.height;
-				}
+          if (align == mxConstants.ALIGN_RIGHT)
+          {
+            geo.x += geo.width - size.width;
+          }
+          else if (align == mxConstants.ALIGN_CENTER)
+          {
+            geo.x += Math.round((geo.width - size.width) / 2);
+          }
 
-				if (!ignoreChildren && !collapsed)
-				{
-					var bounds = this.view.getBounds(this.model.getChildren(cell));
+          var valign = this.getVerticalAlign(state);
 
-					if (bounds != null)
-					{
-						var tr = this.view.translate;
-						var scale = this.view.scale;
+          if (valign == mxConstants.ALIGN_BOTTOM)
+          {
+            geo.y += geo.height - size.height;
+          }
+          else if (valign == mxConstants.ALIGN_MIDDLE)
+          {
+            geo.y += Math.round((geo.height - size.height) / 2);
+          }
 
-						var width = (bounds.x + bounds.width) / scale - geo.x - tr.x;
-						var height = (bounds.y + bounds.height) / scale - geo.y - tr.y;
+          geo.width = size.width;
+          geo.height = size.height;
+        }
 
-						geo.width = Math.max(geo.width, width);
-						geo.height = Math.max(geo.height, height);
-					}
-				}
+        if (!ignoreChildren && !collapsed)
+        {
+          var bounds = this.view.getBounds(this.model.getChildren(cell));
 
-				this.cellsResized([cell], [geo], false);
-			}
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+          if (bounds != null)
+          {
+            var tr = this.view.translate;
+            var scale = this.view.scale;
+
+            var width = (bounds.x + bounds.width) / scale - geo.x - tr.x;
+            var height = (bounds.y + bounds.height) / scale - geo.y - tr.y;
+
+            geo.width = Math.max(geo.width, width);
+            geo.height = Math.max(geo.height, height);
+          }
+        }
+
+        this.cellsResized([cell], [geo], false);
+      }
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -5616,98 +5616,98 @@ cellSizeUpdated = (cell, ignoreChildren)=>
  */
 getPreferredSizeForCell = (cell, textWidth)=>
 {
-	var result = null;
-	
-	if (cell != null)
-	{
-		var state = this.view.createState(cell);
-		var style = state.style;
+  var result = null;
 
-		if (!this.model.isEdge(cell))
-		{
-			var fontSize = style[mxConstants.STYLE_FONTSIZE] || mxConstants.DEFAULT_FONTSIZE;
-			var dx = 0;
-			var dy = 0;
-			
-			// Adds dimension of image if shape is a label
-			if (this.getImage(state) != null || style[mxConstants.STYLE_IMAGE] != null)
-			{
-				if (style[mxConstants.STYLE_SHAPE] == mxConstants.SHAPE_LABEL)
-				{
-					if (style[mxConstants.STYLE_VERTICAL_ALIGN] == mxConstants.ALIGN_MIDDLE)
-					{
-						dx += parseFloat(style[mxConstants.STYLE_IMAGE_WIDTH]) || imageSize;
-					}
-					
-					if (style[mxConstants.STYLE_ALIGN] != mxConstants.ALIGN_CENTER)
-					{
-						dy += parseFloat(style[mxConstants.STYLE_IMAGE_HEIGHT]) || imageSize;
-					}
-				}
-			}
+  if (cell != null)
+  {
+    var state = this.view.createState(cell);
+    var style = state.style;
 
-			// Adds spacings
-			dx += 2 * (style[mxConstants.STYLE_SPACING] || 0);
-			dx += style[mxConstants.STYLE_SPACING_LEFT] || 0;
-			dx += style[mxConstants.STYLE_SPACING_RIGHT] || 0;
+    if (!this.model.isEdge(cell))
+    {
+      var fontSize = style[mxConstants.STYLE_FONTSIZE] || mxConstants.DEFAULT_FONTSIZE;
+      var dx = 0;
+      var dy = 0;
 
-			dy += 2 * (style[mxConstants.STYLE_SPACING] || 0);
-			dy += style[mxConstants.STYLE_SPACING_TOP] || 0;
-			dy += style[mxConstants.STYLE_SPACING_BOTTOM] || 0;
-			
-			// Add spacing for collapse/expand icon
-			// LATER: Check alignment and use constants
-			// for image spacing
-			var image = this.getFoldingImage(state);
-			
-			if (image != null)
-			{
-				dx += image.width + 8;
-			}
+      // Adds dimension of image if shape is a label
+      if (this.getImage(state) != null || style[mxConstants.STYLE_IMAGE] != null)
+      {
+        if (style[mxConstants.STYLE_SHAPE] == mxConstants.SHAPE_LABEL)
+        {
+          if (style[mxConstants.STYLE_VERTICAL_ALIGN] == mxConstants.ALIGN_MIDDLE)
+          {
+            dx += parseFloat(style[mxConstants.STYLE_IMAGE_WIDTH]) || imageSize;
+          }
 
-			// Adds space for label
-			var value = this.cellRenderer.getLabelValue(state);
+          if (style[mxConstants.STYLE_ALIGN] != mxConstants.ALIGN_CENTER)
+          {
+            dy += parseFloat(style[mxConstants.STYLE_IMAGE_HEIGHT]) || imageSize;
+          }
+        }
+      }
 
-			if (value != null && value.length > 0)
-			{
-				if (!this.isHtmlLabel(state.cell))
-				{
-					value = mxUtils.htmlEntities(value, false);
-				}
-				
-				value = value.replace(/\n/g, '<br>');
-				
-				var size = mxUtils.getSizeForString(value, fontSize,
-					style[mxConstants.STYLE_FONTFAMILY], textWidth,
-					style[mxConstants.STYLE_FONTSTYLE]);
-				var width = size.width + dx;
-				var height = size.height + dy;
-				
-				if (!mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true))
-				{
-					var tmp = height;
-					
-					height = width;
-					width = tmp;
-				}
-			
-				if (this.gridEnabled)
-				{
-					width = this.snap(width + this.gridSize / 2);
-					height = this.snap(height + this.gridSize / 2);
-				}
+      // Adds spacings
+      dx += 2 * (style[mxConstants.STYLE_SPACING] || 0);
+      dx += style[mxConstants.STYLE_SPACING_LEFT] || 0;
+      dx += style[mxConstants.STYLE_SPACING_RIGHT] || 0;
 
-				result = new mxRectangle(0, 0, width, height);
-			}
-			else
-			{
-				var gs2 = 4 * this.gridSize;
-				result = new mxRectangle(0, 0, gs2, gs2);
-			}
-		}
-	}
-	
-	return result;
+      dy += 2 * (style[mxConstants.STYLE_SPACING] || 0);
+      dy += style[mxConstants.STYLE_SPACING_TOP] || 0;
+      dy += style[mxConstants.STYLE_SPACING_BOTTOM] || 0;
+
+      // Add spacing for collapse/expand icon
+      // LATER: Check alignment and use constants
+      // for image spacing
+      var image = this.getFoldingImage(state);
+
+      if (image != null)
+      {
+        dx += image.width + 8;
+      }
+
+      // Adds space for label
+      var value = this.cellRenderer.getLabelValue(state);
+
+      if (value != null && value.length > 0)
+      {
+        if (!this.isHtmlLabel(state.cell))
+        {
+          value = mxUtils.htmlEntities(value, false);
+        }
+
+        value = value.replace(/\n/g, '<br>');
+
+        var size = mxUtils.getSizeForString(value, fontSize,
+          style[mxConstants.STYLE_FONTFAMILY], textWidth,
+          style[mxConstants.STYLE_FONTSTYLE]);
+        var width = size.width + dx;
+        var height = size.height + dy;
+
+        if (!mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true))
+        {
+          var tmp = height;
+
+          height = width;
+          width = tmp;
+        }
+
+        if (this.gridEnabled)
+        {
+          width = this.snap(width + this.gridSize / 2);
+          height = this.snap(height + this.gridSize / 2);
+        }
+
+        result = new mxRectangle(0, 0, width, height);
+      }
+      else
+      {
+        var gs2 = 4 * this.gridSize;
+        result = new mxRectangle(0, 0, gs2, gs2);
+      }
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -5723,7 +5723,7 @@ getPreferredSizeForCell = (cell, textWidth)=>
  */
 resizeCell = (cell, bounds, recurse)=>
 {
-	return this.resizeCells([cell], [bounds], recurse)[0];
+  return this.resizeCells([cell], [bounds], recurse)[0];
 };
 
 /**
@@ -5740,21 +5740,21 @@ resizeCell = (cell, bounds, recurse)=>
  */
 resizeCells = (cells, bounds, recurse)=>
 {
-	recurse = (recurse != null) ? recurse : this.isRecursiveResize();
-	
-	this.model.beginUpdate();
-	try
-	{
-		var prev = this.cellsResized(cells, bounds, recurse);
-		this.fireEvent(new mxEventObject(mxEvent.RESIZE_CELLS,
-			'cells', cells, 'bounds', bounds, 'previous', prev));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
+  recurse = (recurse != null) ? recurse : this.isRecursiveResize();
 
-	return cells;
+  this.model.beginUpdate();
+  try
+  {
+    var prev = this.cellsResized(cells, bounds, recurse);
+    this.fireEvent(new mxEventObject(mxEvent.RESIZE_CELLS,
+      'cells', cells, 'bounds', bounds, 'previous', prev));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
+
+  return cells;
 };
 
 /**
@@ -5805,41 +5805,41 @@ resizeCells = (cells, bounds, recurse)=>
  */
 cellsResized = (cells, bounds, recurse)=>
 {
-	recurse = (recurse != null) ? recurse : false;
-	var prev = [];
+  recurse = (recurse != null) ? recurse : false;
+  var prev = [];
 
-	if (cells != null && bounds != null && cells.length == bounds.length)
-	{
-		this.model.beginUpdate();
-		try
-		{
-			for (var i = 0; i < cells.length; i++)
-			{
-				prev.push(this.cellResized(cells[i], bounds[i], false, recurse));
+  if (cells != null && bounds != null && cells.length == bounds.length)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      for (var i = 0; i < cells.length; i++)
+      {
+        prev.push(this.cellResized(cells[i], bounds[i], false, recurse));
 
-				if (this.isExtendParent(cells[i]))
-				{
-					this.extendParent(cells[i]);
-				}
-				
-				this.constrainChild(cells[i]);
-			}
+        if (this.isExtendParent(cells[i]))
+        {
+          this.extendParent(cells[i]);
+        }
 
-			if (this.resetEdgesOnResize)
-			{
-				this.resetEdges(cells);
-			}
-			
-			this.fireEvent(new mxEventObject(mxEvent.CELLS_RESIZED,
-				'cells', cells, 'bounds', bounds, 'previous', prev));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
-	
-	return prev;
+        this.constrainChild(cells[i]);
+      }
+
+      if (this.resetEdgesOnResize)
+      {
+        this.resetEdges(cells);
+      }
+
+      this.fireEvent(new mxEventObject(mxEvent.CELLS_RESIZED,
+        'cells', cells, 'bounds', bounds, 'previous', prev));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
+
+  return prev;
 };
 
 /**
@@ -5857,56 +5857,56 @@ cellsResized = (cells, bounds, recurse)=>
  */
 cellResized = (cell, bounds, ignoreRelative, recurse)=>
 {
-	var prev = this.model.getGeometry(cell);
+  var prev = this.model.getGeometry(cell);
 
-	if (prev != null && (prev.x != bounds.x || prev.y != bounds.y ||
-		prev.width != bounds.width || prev.height != bounds.height))
-	{
-		var geo = prev.clone();
+  if (prev != null && (prev.x != bounds.x || prev.y != bounds.y ||
+    prev.width != bounds.width || prev.height != bounds.height))
+  {
+    var geo = prev.clone();
 
-		if (!ignoreRelative && geo.relative)
-		{
-			var offset = geo.offset;
+    if (!ignoreRelative && geo.relative)
+    {
+      var offset = geo.offset;
 
-			if (offset != null)
-			{
-				offset.x += bounds.x - geo.x;
-				offset.y += bounds.y - geo.y;
-			}
-		}
-		else
-		{
-			geo.x = bounds.x;
-			geo.y = bounds.y;
-		}
+      if (offset != null)
+      {
+        offset.x += bounds.x - geo.x;
+        offset.y += bounds.y - geo.y;
+      }
+    }
+    else
+    {
+      geo.x = bounds.x;
+      geo.y = bounds.y;
+    }
 
-		geo.width = bounds.width;
-		geo.height = bounds.height;
+    geo.width = bounds.width;
+    geo.height = bounds.height;
 
-		if (!geo.relative && this.model.isVertex(cell) && !this.isAllowNegativeCoordinates())
-		{
-			geo.x = Math.max(0, geo.x);
-			geo.y = Math.max(0, geo.y);
-		}
+    if (!geo.relative && this.model.isVertex(cell) && !this.isAllowNegativeCoordinates())
+    {
+      geo.x = Math.max(0, geo.x);
+      geo.y = Math.max(0, geo.y);
+    }
 
-		this.model.beginUpdate();
-		try
-		{
-			if (recurse)
-			{
-				this.resizeChildCells(cell, geo);
-			}
-						
-			this.model.setGeometry(cell, geo);
-			this.constrainChildCells(cell);
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
-	
-	return prev;
+    this.model.beginUpdate();
+    try
+    {
+      if (recurse)
+      {
+        this.resizeChildCells(cell, geo);
+      }
+
+      this.model.setGeometry(cell, geo);
+      this.constrainChildCells(cell);
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
+
+  return prev;
 };
 
 /**
@@ -5922,15 +5922,15 @@ cellResized = (cell, bounds, ignoreRelative, recurse)=>
  */
 resizeChildCells = (cell, newGeo)=>
 {
-	var geo = this.model.getGeometry(cell);
-	var dx = (geo.width != 0) ? newGeo.width / geo.width : 1;
-	var dy = (geo.height != 0) ? newGeo.height / geo.height : 1;
-	var childCount = this.model.getChildCount(cell);
-	
-	for (var i = 0; i < childCount; i++)
-	{
-		this.scaleCell(this.model.getChildAt(cell, i), dx, dy, true);
-	}
+  var geo = this.model.getGeometry(cell);
+  var dx = (geo.width != 0) ? newGeo.width / geo.width : 1;
+  var dy = (geo.height != 0) ? newGeo.height / geo.height : 1;
+  var childCount = this.model.getChildCount(cell);
+
+  for (var i = 0; i < childCount; i++)
+  {
+    this.scaleCell(this.model.getChildAt(cell, i), dx, dy, true);
+  }
 };
 
 /**
@@ -5944,12 +5944,12 @@ resizeChildCells = (cell, newGeo)=>
  */
 constrainChildCells = (cell)=>
 {
-	var childCount = this.model.getChildCount(cell);
-	
-	for (var i = 0; i < childCount; i++)
-	{
-		this.constrainChild(this.model.getChildAt(cell, i));
-	}
+  var childCount = this.model.getChildCount(cell);
+
+  for (var i = 0; i < childCount; i++)
+  {
+    this.constrainChild(this.model.getChildAt(cell, i));
+  }
 };
 
 /**
@@ -5967,60 +5967,60 @@ constrainChildCells = (cell)=>
  */
 scaleCell = (cell, dx, dy, recurse)=>
 {
-	var geo = this.model.getGeometry(cell);
-	
-	if (geo != null)
-	{
-		var style = this.getCurrentCellStyle(cell);
-		geo = geo.clone();
-		
-		// Stores values for restoring based on style
-		var x = geo.x;
-		var y = geo.y
-		var w = geo.width;
-		var h = geo.height;
-		
-		geo.scale(dx, dy, style[mxConstants.STYLE_ASPECT] == 'fixed');
-		
-		if (style[mxConstants.STYLE_RESIZE_WIDTH] == '1')
-		{
-			geo.width = w * dx;
-		}
-		else if (style[mxConstants.STYLE_RESIZE_WIDTH] == '0')
-		{
-			geo.width = w;
-		}
-		
-		if (style[mxConstants.STYLE_RESIZE_HEIGHT] == '1')
-		{
-			geo.height = h * dy;
-		}
-		else if (style[mxConstants.STYLE_RESIZE_HEIGHT] == '0')
-		{
-			geo.height = h;
-		}
-		
-		if (!this.isCellMovable(cell))
-		{
-			geo.x = x;
-			geo.y = y;
-		}
-		
-		if (!this.isCellResizable(cell))
-		{
-			geo.width = w;
-			geo.height = h;
-		}
+  var geo = this.model.getGeometry(cell);
 
-		if (this.model.isVertex(cell))
-		{
-			this.cellResized(cell, geo, true, recurse);
-		}
-		else
-		{
-			this.model.setGeometry(cell, geo);
-		}
-	}
+  if (geo != null)
+  {
+    var style = this.getCurrentCellStyle(cell);
+    geo = geo.clone();
+
+    // Stores values for restoring based on style
+    var x = geo.x;
+    var y = geo.y
+    var w = geo.width;
+    var h = geo.height;
+
+    geo.scale(dx, dy, style[mxConstants.STYLE_ASPECT] == 'fixed');
+
+    if (style[mxConstants.STYLE_RESIZE_WIDTH] == '1')
+    {
+      geo.width = w * dx;
+    }
+    else if (style[mxConstants.STYLE_RESIZE_WIDTH] == '0')
+    {
+      geo.width = w;
+    }
+
+    if (style[mxConstants.STYLE_RESIZE_HEIGHT] == '1')
+    {
+      geo.height = h * dy;
+    }
+    else if (style[mxConstants.STYLE_RESIZE_HEIGHT] == '0')
+    {
+      geo.height = h;
+    }
+
+    if (!this.isCellMovable(cell))
+    {
+      geo.x = x;
+      geo.y = y;
+    }
+
+    if (!this.isCellResizable(cell))
+    {
+      geo.width = w;
+      geo.height = h;
+    }
+
+    if (this.model.isVertex(cell))
+    {
+      this.cellResized(cell, geo, true, recurse);
+    }
+    else
+    {
+      this.model.setGeometry(cell, geo);
+    }
+  }
 };
 
 /**
@@ -6035,28 +6035,28 @@ scaleCell = (cell, dx, dy, recurse)=>
  */
 extendParent = (cell)=>
 {
-	if (cell != null)
-	{
-		var parent = this.model.getParent(cell);
-		var p = this.getCellGeometry(parent);
-		
-		if (parent != null && p != null && !this.isCellCollapsed(parent))
-		{
-			var geo = this.getCellGeometry(cell);
-			
-			if (geo != null && !geo.relative &&
-				(p.width < geo.x + geo.width ||
-				p.height < geo.y + geo.height))
-			{
-				p = p.clone();
-				
-				p.width = Math.max(p.width, geo.x + geo.width);
-				p.height = Math.max(p.height, geo.y + geo.height);
-				
-				this.cellsResized([parent], [p], false);
-			}
-		}
-	}
+  if (cell != null)
+  {
+    var parent = this.model.getParent(cell);
+    var p = this.getCellGeometry(parent);
+
+    if (parent != null && p != null && !this.isCellCollapsed(parent))
+    {
+      var geo = this.getCellGeometry(cell);
+
+      if (geo != null && !geo.relative &&
+        (p.width < geo.x + geo.width ||
+        p.height < geo.y + geo.height))
+      {
+        p = p.clone();
+
+        p.width = Math.max(p.width, geo.x + geo.width);
+        p.height = Math.max(p.height, geo.y + geo.height);
+
+        this.cellsResized([parent], [p], false);
+      }
+    }
+  }
 };
 
 /**
@@ -6080,8 +6080,8 @@ extendParent = (cell)=>
  * mapping - Optional mapping for existing clones.
  */
 importCells = (cells, dx, dy, target, evt, mapping)=>
-{	
-	return this.moveCells(cells, dx, dy, true, target, evt, mapping);
+{
+  return this.moveCells(cells, dx, dy, true, target, evt, mapping);
 };
 
 /**
@@ -6111,122 +6111,122 @@ importCells = (cells, dx, dy, target, evt, mapping)=>
  */
 moveCells = (cells, dx, dy, clone, target, evt, mapping)=>
 {
-	dx = (dx != null) ? dx : 0;
-	dy = (dy != null) ? dy : 0;
-	clone = (clone != null) ? clone : false;
-	
-	if (cells != null && (dx != 0 || dy != 0 || clone || target != null))
-	{
-		// Removes descendants with ancestors in cells to avoid multiple moving
-		cells = this.model.getTopmostCells(cells);
-		var origCells = cells;
-		
-		this.model.beginUpdate();
-		try
-		{
-			// Faster cell lookups to remove relative edge labels with selected
-			// terminals to avoid explicit and implicit move at same time
-			var dict = new mxDictionary();
-			
-			for (var i = 0; i < cells.length; i++)
-			{
-				dict.put(cells[i], true);
-			}
-			
-			var isSelected = mxUtils.bind(this, (cell)=>
-			{
-				while (cell != null)
-				{
-					if (dict.get(cell))
-					{
-						return true;
-					}
-					
-					cell = this.model.getParent(cell);
-				}
-				
-				return false;
-			});
-			
-			// Removes relative edge labels with selected terminals
-			var checked = [];
-			
-			for (var i = 0; i < cells.length; i++)
-			{
-				var geo = this.getCellGeometry(cells[i]);
-				var parent = this.model.getParent(cells[i]);
-		
-				if ((geo == null || !geo.relative) || !this.model.isEdge(parent) ||
-					(!isSelected(this.model.getTerminal(parent, true)) &&
-					!isSelected(this.model.getTerminal(parent, false))))
-				{
-					checked.push(cells[i]);
-				}
-			}
+  dx = (dx != null) ? dx : 0;
+  dy = (dy != null) ? dy : 0;
+  clone = (clone != null) ? clone : false;
 
-			cells = checked;
-			
-			if (clone)
-			{
-				cells = this.cloneCells(cells, this.isCloneInvalidEdges(), mapping);
+  if (cells != null && (dx != 0 || dy != 0 || clone || target != null))
+  {
+    // Removes descendants with ancestors in cells to avoid multiple moving
+    cells = this.model.getTopmostCells(cells);
+    var origCells = cells;
 
-				if (target == null)
-				{
-					target = this.getDefaultParent();
-				}
-			}
+    this.model.beginUpdate();
+    try
+    {
+      // Faster cell lookups to remove relative edge labels with selected
+      // terminals to avoid explicit and implicit move at same time
+      var dict = new mxDictionary();
 
-			// FIXME: Cells should always be inserted first before any other edit
-			// to avoid forward references in sessions.
-			// Need to disable allowNegativeCoordinates if target not null to
-			// allow for temporary negative numbers until cellsAdded is called.
-			var previous = this.isAllowNegativeCoordinates();
-			
-			if (target != null)
-			{
-				this.setAllowNegativeCoordinates(true);
-			}
-			
-			this.cellsMoved(cells, dx, dy, !clone && this.isDisconnectOnMove()
-					&& this.isAllowDanglingEdges(), target == null,
-					this.isExtendParentsOnMove() && target == null);
-			
-			this.setAllowNegativeCoordinates(previous);
+      for (var i = 0; i < cells.length; i++)
+      {
+        dict.put(cells[i], true);
+      }
 
-			if (target != null)
-			{
-				var index = this.model.getChildCount(target);
-				this.cellsAdded(cells, target, index, null, null, true);
-				
-				// Restores parent edge on cloned edge labels
-				if (clone)
-				{
-					for (var i = 0; i < cells.length; i++)
-					{
-						var geo = this.getCellGeometry(cells[i]);
-						var parent = this.model.getParent(origCells[i]);
-						
-						if (geo != null && geo.relative &&
-							this.model.isEdge(parent) &&
-							this.model.contains(parent))
-						{
-							this.model.add(parent, cells[i]);
-						}
-					}
-				}
-			}
+      var isSelected = mxUtils.bind(this, (cell)=>
+      {
+        while (cell != null)
+        {
+          if (dict.get(cell))
+          {
+            return true;
+          }
 
-			// Dispatches a move event
-			this.fireEvent(new mxEventObject(mxEvent.MOVE_CELLS, 'cells', cells,
-				'dx', dx, 'dy', dy, 'clone', clone, 'target', target, 'event', evt));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+          cell = this.model.getParent(cell);
+        }
 
-	return cells;
+        return false;
+      });
+
+      // Removes relative edge labels with selected terminals
+      var checked = [];
+
+      for (var i = 0; i < cells.length; i++)
+      {
+        var geo = this.getCellGeometry(cells[i]);
+        var parent = this.model.getParent(cells[i]);
+
+        if ((geo == null || !geo.relative) || !this.model.isEdge(parent) ||
+          (!isSelected(this.model.getTerminal(parent, true)) &&
+          !isSelected(this.model.getTerminal(parent, false))))
+        {
+          checked.push(cells[i]);
+        }
+      }
+
+      cells = checked;
+
+      if (clone)
+      {
+        cells = this.cloneCells(cells, this.isCloneInvalidEdges(), mapping);
+
+        if (target == null)
+        {
+          target = this.getDefaultParent();
+        }
+      }
+
+      // FIXME: Cells should always be inserted first before any other edit
+      // to avoid forward references in sessions.
+      // Need to disable allowNegativeCoordinates if target not null to
+      // allow for temporary negative numbers until cellsAdded is called.
+      var previous = this.isAllowNegativeCoordinates();
+
+      if (target != null)
+      {
+        this.setAllowNegativeCoordinates(true);
+      }
+
+      this.cellsMoved(cells, dx, dy, !clone && this.isDisconnectOnMove()
+          && this.isAllowDanglingEdges(), target == null,
+          this.isExtendParentsOnMove() && target == null);
+
+      this.setAllowNegativeCoordinates(previous);
+
+      if (target != null)
+      {
+        var index = this.model.getChildCount(target);
+        this.cellsAdded(cells, target, index, null, null, true);
+
+        // Restores parent edge on cloned edge labels
+        if (clone)
+        {
+          for (var i = 0; i < cells.length; i++)
+          {
+            var geo = this.getCellGeometry(cells[i]);
+            var parent = this.model.getParent(origCells[i]);
+
+            if (geo != null && geo.relative &&
+              this.model.isEdge(parent) &&
+              this.model.contains(parent))
+            {
+              this.model.add(parent, cells[i]);
+            }
+          }
+        }
+      }
+
+      // Dispatches a move event
+      this.fireEvent(new mxEventObject(mxEvent.MOVE_CELLS, 'cells', cells,
+        'dx', dx, 'dy', dy, 'clone', clone, 'target', target, 'event', evt));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
+
+  return cells;
 };
 
 /**
@@ -6238,45 +6238,45 @@ moveCells = (cells, dx, dy, clone, target, evt, mapping)=>
  */
 cellsMoved = (cells, dx, dy, disconnect, constrain, extend)=>
 {
-	if (cells != null && (dx != 0 || dy != 0))
-	{
-		extend = (extend != null) ? extend : false;
+  if (cells != null && (dx != 0 || dy != 0))
+  {
+    extend = (extend != null) ? extend : false;
 
-		this.model.beginUpdate();
-		try
-		{
-			if (disconnect)
-			{
-				this.disconnectGraph(cells);
-			}
+    this.model.beginUpdate();
+    try
+    {
+      if (disconnect)
+      {
+        this.disconnectGraph(cells);
+      }
 
-			for (var i = 0; i < cells.length; i++)
-			{
-				this.translateCell(cells[i], dx, dy);
-				
-				if (extend && this.isExtendParent(cells[i]))
-				{
-					this.extendParent(cells[i]);
-				}
-				else if (constrain)
-				{
-					this.constrainChild(cells[i]);
-				}
-			}
+      for (var i = 0; i < cells.length; i++)
+      {
+        this.translateCell(cells[i], dx, dy);
 
-			if (this.resetEdgesOnMove)
-			{
-				this.resetEdges(cells);
-			}
-			
-			this.fireEvent(new mxEventObject(mxEvent.CELLS_MOVED,
-				'cells', cells, 'dx', dx, 'dy', dy, 'disconnect', disconnect));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+        if (extend && this.isExtendParent(cells[i]))
+        {
+          this.extendParent(cells[i]);
+        }
+        else if (constrain)
+        {
+          this.constrainChild(cells[i]);
+        }
+      }
+
+      if (this.resetEdgesOnMove)
+      {
+        this.resetEdges(cells);
+      }
+
+      this.fireEvent(new mxEventObject(mxEvent.CELLS_MOVED,
+        'cells', cells, 'dx', dx, 'dy', dy, 'disconnect', disconnect));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -6287,55 +6287,55 @@ cellsMoved = (cells, dx, dy, disconnect, constrain, extend)=>
  */
 translateCell = (cell, dx, dy)=>
 {
-	var geo = this.model.getGeometry(cell);
+  var geo = this.model.getGeometry(cell);
 
-	if (geo != null)
-	{
-		dx = parseFloat(dx);
-		dy = parseFloat(dy);
-		geo = geo.clone();
-		geo.translate(dx, dy);
+  if (geo != null)
+  {
+    dx = parseFloat(dx);
+    dy = parseFloat(dy);
+    geo = geo.clone();
+    geo.translate(dx, dy);
 
-		if (!geo.relative && this.model.isVertex(cell) && !this.isAllowNegativeCoordinates())
-		{
-			geo.x = Math.max(0, parseFloat(geo.x));
-			geo.y = Math.max(0, parseFloat(geo.y));
-		}
-		
-		if (geo.relative && !this.model.isEdge(cell))
-		{
-			var parent = this.model.getParent(cell);
-			var angle = 0;
-			
-			if (this.model.isVertex(parent))
-			{
-				var style = this.getCurrentCellStyle(parent);
-				angle = mxUtils.getValue(style, mxConstants.STYLE_ROTATION, 0);
-			}
-			
-			if (angle != 0)
-			{
-				var rad = mxUtils.toRadians(-angle);
-				var cos = Math.cos(rad);
-				var sin = Math.sin(rad);
-				var pt = mxUtils.getRotatedPoint(new mxPoint(dx, dy), cos, sin, new mxPoint(0, 0));
-				dx = pt.x;
-				dy = pt.y;
-			}
-			
-			if (geo.offset == null)
-			{
-				geo.offset = new mxPoint(dx, dy);
-			}
-			else
-			{
-				geo.offset.x = parseFloat(geo.offset.x) + dx;
-				geo.offset.y = parseFloat(geo.offset.y) + dy;
-			}
-		}
+    if (!geo.relative && this.model.isVertex(cell) && !this.isAllowNegativeCoordinates())
+    {
+      geo.x = Math.max(0, parseFloat(geo.x));
+      geo.y = Math.max(0, parseFloat(geo.y));
+    }
 
-		this.model.setGeometry(cell, geo);
-	}
+    if (geo.relative && !this.model.isEdge(cell))
+    {
+      var parent = this.model.getParent(cell);
+      var angle = 0;
+
+      if (this.model.isVertex(parent))
+      {
+        var style = this.getCurrentCellStyle(parent);
+        angle = mxUtils.getValue(style, mxConstants.STYLE_ROTATION, 0);
+      }
+
+      if (angle != 0)
+      {
+        var rad = mxUtils.toRadians(-angle);
+        var cos = Math.cos(rad);
+        var sin = Math.sin(rad);
+        var pt = mxUtils.getRotatedPoint(new mxPoint(dx, dy), cos, sin, new mxPoint(0, 0));
+        dx = pt.x;
+        dy = pt.y;
+      }
+
+      if (geo.offset == null)
+      {
+        geo.offset = new mxPoint(dx, dy);
+      }
+      else
+      {
+        geo.offset.x = parseFloat(geo.offset.x) + dx;
+        geo.offset.y = parseFloat(geo.offset.y) + dy;
+      }
+    }
+
+    this.model.setGeometry(cell, geo);
+  }
 };
 
 /**
@@ -6349,53 +6349,53 @@ translateCell = (cell, dx, dy)=>
  */
 getCellContainmentArea = (cell)=>
 {
-	if (cell != null && !this.model.isEdge(cell))
-	{
-		var parent = this.model.getParent(cell);
-		
-		if (parent != null && parent != this.getDefaultParent())
-		{
-			var g = this.model.getGeometry(parent);
-			
-			if (g != null)
-			{
-				var x = 0;
-				var y = 0;
-				var w = g.width;
-				var h = g.height;
-				
-				if (this.isSwimlane(parent))
-				{
-					var size = this.getStartSize(parent);
-					var style = this.getCurrentCellStyle(parent);
-					var dir = mxUtils.getValue(style, mxConstants.STYLE_DIRECTION, mxConstants.DIRECTION_EAST);
-					var flipH = mxUtils.getValue(style, mxConstants.STYLE_FLIPH, 0) == 1;
-					var flipV = mxUtils.getValue(style, mxConstants.STYLE_FLIPV, 0) == 1;
-					
-					if (dir == mxConstants.DIRECTION_SOUTH || dir == mxConstants.DIRECTION_NORTH)
-					{
-						var tmp = size.width;
-						size.width = size.height;
-						size.height = tmp;
-					}
-					
-					if ((dir == mxConstants.DIRECTION_EAST && !flipV) || (dir == mxConstants.DIRECTION_NORTH && !flipH) ||
-						(dir == mxConstants.DIRECTION_WEST && flipV) || (dir == mxConstants.DIRECTION_SOUTH && flipH))
-					{
-						x = size.width;
-						y = size.height;
-					}
+  if (cell != null && !this.model.isEdge(cell))
+  {
+    var parent = this.model.getParent(cell);
 
-					w -= size.width;
-					h -= size.height;
-				}
-				
-				return new mxRectangle(x, y, w, h);
-			}
-		}
-	}
-	
-	return null;
+    if (parent != null && parent != this.getDefaultParent())
+    {
+      var g = this.model.getGeometry(parent);
+
+      if (g != null)
+      {
+        var x = 0;
+        var y = 0;
+        var w = g.width;
+        var h = g.height;
+
+        if (this.isSwimlane(parent))
+        {
+          var size = this.getStartSize(parent);
+          var style = this.getCurrentCellStyle(parent);
+          var dir = mxUtils.getValue(style, mxConstants.STYLE_DIRECTION, mxConstants.DIRECTION_EAST);
+          var flipH = mxUtils.getValue(style, mxConstants.STYLE_FLIPH, 0) == 1;
+          var flipV = mxUtils.getValue(style, mxConstants.STYLE_FLIPV, 0) == 1;
+
+          if (dir == mxConstants.DIRECTION_SOUTH || dir == mxConstants.DIRECTION_NORTH)
+          {
+            var tmp = size.width;
+            size.width = size.height;
+            size.height = tmp;
+          }
+
+          if ((dir == mxConstants.DIRECTION_EAST && !flipV) || (dir == mxConstants.DIRECTION_NORTH && !flipH) ||
+            (dir == mxConstants.DIRECTION_WEST && flipV) || (dir == mxConstants.DIRECTION_SOUTH && flipH))
+          {
+            x = size.width;
+            y = size.height;
+          }
+
+          w -= size.width;
+          h -= size.height;
+        }
+
+        return new mxRectangle(x, y, w, h);
+      }
+    }
+  }
+
+  return null;
 };
 
 /**
@@ -6406,7 +6406,7 @@ getCellContainmentArea = (cell)=>
  */
 getMaximumGraphBounds = ()=>
 {
-	return this.maximumGraphBounds;
+  return this.maximumGraphBounds;
 };
 
 /**
@@ -6424,149 +6424,149 @@ getMaximumGraphBounds = ()=>
  */
 constrainChild = (cell, sizeFirst)=>
 {
-	sizeFirst = (sizeFirst != null) ? sizeFirst : true;
-	
-	if (cell != null)
-	{
-		var geo = this.getCellGeometry(cell);
-		
-		if (geo != null && (this.isConstrainRelativeChildren() || !geo.relative))
-		{
-			var parent = this.model.getParent(cell);
-			var pgeo = this.getCellGeometry(parent);
-			var max = this.getMaximumGraphBounds();
-			
-			// Finds parent offset
-			if (max != null)
-			{
-				var off = this.getBoundingBoxFromGeometry([parent], false);
-				
-				if (off != null)
-				{
-					max = mxRectangle.fromRectangle(max);
-					
-					max.x -= off.x;
-					max.y -= off.y;
-				}
-			}
-			
-			if (this.isConstrainChild(cell))
-			{
-				var tmp = this.getCellContainmentArea(cell);
-				
-				if (tmp != null)
-				{
-					var overlap = this.getOverlap(cell);
-	
-					if (overlap > 0)
-					{
-						tmp = mxRectangle.fromRectangle(tmp);
-						
-						tmp.x -= tmp.width * overlap;
-						tmp.y -= tmp.height * overlap;
-						tmp.width += 2 * tmp.width * overlap;
-						tmp.height += 2 * tmp.height * overlap;
-					}
-					
-					// Find the intersection between max and tmp
-					if (max == null)
-					{
-						max = tmp;
-					}
-					else
-					{
-						max = mxRectangle.fromRectangle(max);
-						max.intersect(tmp);
-					}
-				}
-			}
-			
-			if (max != null)
-			{
-				var cells = [cell];
-				
-				if (!this.isCellCollapsed(cell))
-				{
-					var desc = this.model.getDescendants(cell);
-					
-					for (var i = 0; i < desc.length; i++)
-					{
-						if (this.isCellVisible(desc[i]))
-						{
-							cells.push(desc[i]);
-						}
-					}
-				}
-				
-				var bbox = this.getBoundingBoxFromGeometry(cells, false);
-				
-				if (bbox != null)
-				{
-					geo = geo.clone();
-					
-					// Cumulative horizontal movement
-					var dx = 0;
-					
-					if (geo.width > max.width)
-					{
-						dx = geo.width - max.width;
-						geo.width -= dx;
-					}
-					
-					if (bbox.x + bbox.width > max.x + max.width)
-					{
-						dx -= bbox.x + bbox.width - max.x - max.width - dx;
-					}
-					
-					// Cumulative vertical movement
-					var dy = 0;
-					
-					if (geo.height > max.height)
-					{
-						dy = geo.height - max.height;
-						geo.height -= dy;
-					}
-					
-					if (bbox.y + bbox.height > max.y + max.height)
-					{
-						dy -= bbox.y + bbox.height - max.y - max.height - dy;
-					}
-					
-					if (bbox.x < max.x)
-					{
-						dx -= bbox.x - max.x;
-					}
-					
-					if (bbox.y < max.y)
-					{
-						dy -= bbox.y - max.y;
-					}
-					
-					if (dx != 0 || dy != 0)
-					{
-						if (geo.relative)
-						{
-							// Relative geometries are moved via absolute offset
-							if (geo.offset == null)
-							{
-								geo.offset = new mxPoint();
-							}
-						
-							geo.offset.x += dx;
-							geo.offset.y += dy;
-						}
-						else
-						{
-							geo.x += dx;
-							geo.y += dy;
-						}
-					}
-					
-					this.model.setGeometry(cell, geo);
-				}
-			}
-		}
-	}
+  sizeFirst = (sizeFirst != null) ? sizeFirst : true;
+
+  if (cell != null)
+  {
+    var geo = this.getCellGeometry(cell);
+
+    if (geo != null && (this.isConstrainRelativeChildren() || !geo.relative))
+    {
+      var parent = this.model.getParent(cell);
+      var pgeo = this.getCellGeometry(parent);
+      var max = this.getMaximumGraphBounds();
+
+      // Finds parent offset
+      if (max != null)
+      {
+        var off = this.getBoundingBoxFromGeometry([parent], false);
+
+        if (off != null)
+        {
+          max = mxRectangle.fromRectangle(max);
+
+          max.x -= off.x;
+          max.y -= off.y;
+        }
+      }
+
+      if (this.isConstrainChild(cell))
+      {
+        var tmp = this.getCellContainmentArea(cell);
+
+        if (tmp != null)
+        {
+          var overlap = this.getOverlap(cell);
+
+          if (overlap > 0)
+          {
+            tmp = mxRectangle.fromRectangle(tmp);
+
+            tmp.x -= tmp.width * overlap;
+            tmp.y -= tmp.height * overlap;
+            tmp.width += 2 * tmp.width * overlap;
+            tmp.height += 2 * tmp.height * overlap;
+          }
+
+          // Find the intersection between max and tmp
+          if (max == null)
+          {
+            max = tmp;
+          }
+          else
+          {
+            max = mxRectangle.fromRectangle(max);
+            max.intersect(tmp);
+          }
+        }
+      }
+
+      if (max != null)
+      {
+        var cells = [cell];
+
+        if (!this.isCellCollapsed(cell))
+        {
+          var desc = this.model.getDescendants(cell);
+
+          for (var i = 0; i < desc.length; i++)
+          {
+            if (this.isCellVisible(desc[i]))
+            {
+              cells.push(desc[i]);
+            }
+          }
+        }
+
+        var bbox = this.getBoundingBoxFromGeometry(cells, false);
+
+        if (bbox != null)
+        {
+          geo = geo.clone();
+
+          // Cumulative horizontal movement
+          var dx = 0;
+
+          if (geo.width > max.width)
+          {
+            dx = geo.width - max.width;
+            geo.width -= dx;
+          }
+
+          if (bbox.x + bbox.width > max.x + max.width)
+          {
+            dx -= bbox.x + bbox.width - max.x - max.width - dx;
+          }
+
+          // Cumulative vertical movement
+          var dy = 0;
+
+          if (geo.height > max.height)
+          {
+            dy = geo.height - max.height;
+            geo.height -= dy;
+          }
+
+          if (bbox.y + bbox.height > max.y + max.height)
+          {
+            dy -= bbox.y + bbox.height - max.y - max.height - dy;
+          }
+
+          if (bbox.x < max.x)
+          {
+            dx -= bbox.x - max.x;
+          }
+
+          if (bbox.y < max.y)
+          {
+            dy -= bbox.y - max.y;
+          }
+
+          if (dx != 0 || dy != 0)
+          {
+            if (geo.relative)
+            {
+              // Relative geometries are moved via absolute offset
+              if (geo.offset == null)
+              {
+                geo.offset = new mxPoint();
+              }
+
+              geo.offset.x += dx;
+              geo.offset.y += dy;
+            }
+            else
+            {
+              geo.x += dx;
+              geo.y += dy;
+            }
+          }
+
+          this.model.setGeometry(cell, geo);
+        }
+      }
+    }
+  }
 };
 
 /**
@@ -6582,48 +6582,48 @@ constrainChild = (cell, sizeFirst)=>
  */
 resetEdges = (cells)=>
 {
-	if (cells != null)
-	{
-		// Prepares faster cells lookup
-		var dict = new mxDictionary();
-		
-		for (var i = 0; i < cells.length; i++)
-		{
-			dict.put(cells[i], true);
-		}
-		
-		this.model.beginUpdate();
-		try
-		{
-			for (var i = 0; i < cells.length; i++)
-			{
-				var edges = this.model.getEdges(cells[i]);
-				
-				if (edges != null)
-				{
-					for (var j = 0; j < edges.length; j++)
-					{
-						var state = this.view.getState(edges[j]);
-						
-						var source = (state != null) ? state.getVisibleTerminal(true) : this.view.getVisibleTerminal(edges[j], true);
-						var target = (state != null) ? state.getVisibleTerminal(false) : this.view.getVisibleTerminal(edges[j], false);
-						
-						// Checks if one of the terminals is not in the given array
-						if (!dict.get(source) || !dict.get(target))
-						{
-							this.resetEdge(edges[j]);
-						}
-					}
-				}
-				
-				this.resetEdges(this.model.getChildren(cells[i]));
-			}
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+  if (cells != null)
+  {
+    // Prepares faster cells lookup
+    var dict = new mxDictionary();
+
+    for (var i = 0; i < cells.length; i++)
+    {
+      dict.put(cells[i], true);
+    }
+
+    this.model.beginUpdate();
+    try
+    {
+      for (var i = 0; i < cells.length; i++)
+      {
+        var edges = this.model.getEdges(cells[i]);
+
+        if (edges != null)
+        {
+          for (var j = 0; j < edges.length; j++)
+          {
+            var state = this.view.getState(edges[j]);
+
+            var source = (state != null) ? state.getVisibleTerminal(true) : this.view.getVisibleTerminal(edges[j], true);
+            var target = (state != null) ? state.getVisibleTerminal(false) : this.view.getVisibleTerminal(edges[j], false);
+
+            // Checks if one of the terminals is not in the given array
+            if (!dict.get(source) || !dict.get(target))
+            {
+              this.resetEdge(edges[j]);
+            }
+          }
+        }
+
+        this.resetEdges(this.model.getChildren(cells[i]));
+      }
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -6637,17 +6637,17 @@ resetEdges = (cells)=>
  */
 resetEdge = (edge)=>
 {
-	var geo = this.model.getGeometry(edge);
-	
-	// Resets the control points
-	if (geo != null && geo.points != null && geo.points.length > 0)
-	{
-		geo = geo.clone();
-		geo.points = [];
-		this.model.setGeometry(edge, geo);
-	}
-	
-	return edge;
+  var geo = this.model.getGeometry(edge);
+
+  // Resets the control points
+  if (geo != null && geo.points != null && geo.points.length > 0)
+  {
+    geo = geo.clone();
+    geo.points = [];
+    this.model.setGeometry(edge, geo);
+  }
+
+  return edge;
 };
 
 /**
@@ -6661,78 +6661,78 @@ resetEdge = (edge)=>
  */
 getOutlineConstraint = (point, terminalState, me)=>
 {
-	if (terminalState.shape != null)
-	{
-		var bounds = this.view.getPerimeterBounds(terminalState);
-		var direction = terminalState.style[mxConstants.STYLE_DIRECTION];
-		
-		if (direction == mxConstants.DIRECTION_NORTH || direction == mxConstants.DIRECTION_SOUTH)
-		{
-			bounds.x += bounds.width / 2 - bounds.height / 2;
-			bounds.y += bounds.height / 2 - bounds.width / 2;
-			var tmp = bounds.width;
-			bounds.width = bounds.height;
-			bounds.height = tmp;
-		}
-	
-		var alpha = mxUtils.toRadians(terminalState.shape.getShapeRotation());
-		
-		if (alpha != 0)
-		{
-			var cos = Math.cos(-alpha);
-			var sin = Math.sin(-alpha);
-	
-			var ct = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
-			point = mxUtils.getRotatedPoint(point, cos, sin, ct);
-		}
+  if (terminalState.shape != null)
+  {
+    var bounds = this.view.getPerimeterBounds(terminalState);
+    var direction = terminalState.style[mxConstants.STYLE_DIRECTION];
 
-		var sx = 1;
-		var sy = 1;
-		var dx = 0;
-		var dy = 0;
-		
-		// LATER: Add flipping support for image shapes
-		if (this.getModel().isVertex(terminalState.cell))
-		{
-			var flipH = terminalState.style[mxConstants.STYLE_FLIPH];
-			var flipV = terminalState.style[mxConstants.STYLE_FLIPV];
-			
-			// Legacy support for stencilFlipH/V
-			if (terminalState.shape != null && terminalState.shape.stencil != null)
-			{
-				flipH = mxUtils.getValue(terminalState.style, 'stencilFlipH', 0) == 1 || flipH;
-				flipV = mxUtils.getValue(terminalState.style, 'stencilFlipV', 0) == 1 || flipV;
-			}
-			
-			if (direction == mxConstants.DIRECTION_NORTH || direction == mxConstants.DIRECTION_SOUTH)
-			{
-				var tmp = flipH;
-				flipH = flipV;
-				flipV = tmp;
-			}
-			
-			if (flipH)
-			{
-				sx = -1;
-				dx = -bounds.width;
-			}
-			
-			if (flipV)
-			{
-				sy = -1;
-				dy = -bounds.height ;
-			}
-		}
-		
-		point = new mxPoint((point.x - bounds.x) * sx - dx + bounds.x, (point.y - bounds.y) * sy - dy + bounds.y);
-		
-		var x = (bounds.width == 0) ? 0 : Math.round((point.x - bounds.x) * 1000 / bounds.width) / 1000;
-		var y = (bounds.height == 0) ? 0 : Math.round((point.y - bounds.y) * 1000 / bounds.height) / 1000;
-		
-		return new mxConnectionConstraint(new mxPoint(x, y), false);
-	}
-	
-	return null;
+    if (direction == mxConstants.DIRECTION_NORTH || direction == mxConstants.DIRECTION_SOUTH)
+    {
+      bounds.x += bounds.width / 2 - bounds.height / 2;
+      bounds.y += bounds.height / 2 - bounds.width / 2;
+      var tmp = bounds.width;
+      bounds.width = bounds.height;
+      bounds.height = tmp;
+    }
+
+    var alpha = mxUtils.toRadians(terminalState.shape.getShapeRotation());
+
+    if (alpha != 0)
+    {
+      var cos = Math.cos(-alpha);
+      var sin = Math.sin(-alpha);
+
+      var ct = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
+      point = mxUtils.getRotatedPoint(point, cos, sin, ct);
+    }
+
+    var sx = 1;
+    var sy = 1;
+    var dx = 0;
+    var dy = 0;
+
+    // LATER: Add flipping support for image shapes
+    if (this.getModel().isVertex(terminalState.cell))
+    {
+      var flipH = terminalState.style[mxConstants.STYLE_FLIPH];
+      var flipV = terminalState.style[mxConstants.STYLE_FLIPV];
+
+      // Legacy support for stencilFlipH/V
+      if (terminalState.shape != null && terminalState.shape.stencil != null)
+      {
+        flipH = mxUtils.getValue(terminalState.style, 'stencilFlipH', 0) == 1 || flipH;
+        flipV = mxUtils.getValue(terminalState.style, 'stencilFlipV', 0) == 1 || flipV;
+      }
+
+      if (direction == mxConstants.DIRECTION_NORTH || direction == mxConstants.DIRECTION_SOUTH)
+      {
+        var tmp = flipH;
+        flipH = flipV;
+        flipV = tmp;
+      }
+
+      if (flipH)
+      {
+        sx = -1;
+        dx = -bounds.width;
+      }
+
+      if (flipV)
+      {
+        sy = -1;
+        dy = -bounds.height ;
+      }
+    }
+
+    point = new mxPoint((point.x - bounds.x) * sx - dx + bounds.x, (point.y - bounds.y) * sy - dy + bounds.y);
+
+    var x = (bounds.width == 0) ? 0 : Math.round((point.x - bounds.x) * 1000 / bounds.width) / 1000;
+    var y = (bounds.height == 0) ? 0 : Math.round((point.y - bounds.y) * 1000 / bounds.height) / 1000;
+
+    return new mxConnectionConstraint(new mxPoint(x, y), false);
+  }
+
+  return null;
 };
 
 /**
@@ -6749,12 +6749,12 @@ getOutlineConstraint = (point, terminalState, me)=>
  */
 getAllConnectionConstraints = (terminal, source)=>
 {
-	if (terminal != null && terminal.shape != null && terminal.shape.stencil != null)
-	{
-		return terminal.shape.stencil.constraints;
-	}
+  if (terminal != null && terminal.shape != null && terminal.shape.stencil != null)
+  {
+    return terminal.shape.stencil.constraints;
+  }
 
-	return null;
+  return null;
 };
 
 /**
@@ -6771,36 +6771,36 @@ getAllConnectionConstraints = (terminal, source)=>
  */
 getConnectionConstraint = (edge, terminal, source)=>
 {
-	var point = null;
-	var x = edge.style[(source) ? mxConstants.STYLE_EXIT_X : mxConstants.STYLE_ENTRY_X];
+  var point = null;
+  var x = edge.style[(source) ? mxConstants.STYLE_EXIT_X : mxConstants.STYLE_ENTRY_X];
 
-	if (x != null)
-	{
-		var y = edge.style[(source) ? mxConstants.STYLE_EXIT_Y : mxConstants.STYLE_ENTRY_Y];
-		
-		if (y != null)
-		{
-			point = new mxPoint(parseFloat(x), parseFloat(y));
-		}
-	}
-	
-	var perimeter = false;
-	var dx = 0, dy = 0;
-	
-	if (point != null)
-	{
-		perimeter = mxUtils.getValue(edge.style, (source) ? mxConstants.STYLE_EXIT_PERIMETER :
-			mxConstants.STYLE_ENTRY_PERIMETER, true);
+  if (x != null)
+  {
+    var y = edge.style[(source) ? mxConstants.STYLE_EXIT_Y : mxConstants.STYLE_ENTRY_Y];
 
-		//Add entry/exit offset
-		dx = parseFloat(edge.style[(source) ? mxConstants.STYLE_EXIT_DX : mxConstants.STYLE_ENTRY_DX]);
-		dy = parseFloat(edge.style[(source) ? mxConstants.STYLE_EXIT_DY : mxConstants.STYLE_ENTRY_DY]);
-		
-		dx = isFinite(dx)? dx : 0;
-		dy = isFinite(dy)? dy : 0;
-	}
+    if (y != null)
+    {
+      point = new mxPoint(parseFloat(x), parseFloat(y));
+    }
+  }
 
-	return new mxConnectionConstraint(point, perimeter, null, dx, dy);
+  var perimeter = false;
+  var dx = 0, dy = 0;
+
+  if (point != null)
+  {
+    perimeter = mxUtils.getValue(edge.style, (source) ? mxConstants.STYLE_EXIT_PERIMETER :
+      mxConstants.STYLE_ENTRY_PERIMETER, true);
+
+    //Add entry/exit offset
+    dx = parseFloat(edge.style[(source) ? mxConstants.STYLE_EXIT_DX : mxConstants.STYLE_ENTRY_DX]);
+    dy = parseFloat(edge.style[(source) ? mxConstants.STYLE_EXIT_DY : mxConstants.STYLE_ENTRY_DY]);
+
+    dx = isFinite(dx)? dx : 0;
+    dy = isFinite(dy)? dy : 0;
+  }
+
+  return new mxConnectionConstraint(point, perimeter, null, dx, dy);
 };
 
 /**
@@ -6820,54 +6820,54 @@ getConnectionConstraint = (edge, terminal, source)=>
  */
 setConnectionConstraint = (edge, terminal, source, constraint)=>
 {
-	if (constraint != null)
-	{
-		this.model.beginUpdate();
-		
-		try
-		{
-			if (constraint == null || constraint.point == null)
-			{
-				this.setCellStyles((source) ? mxConstants.STYLE_EXIT_X :
-					mxConstants.STYLE_ENTRY_X, null, [edge]);
-				this.setCellStyles((source) ? mxConstants.STYLE_EXIT_Y :
-					mxConstants.STYLE_ENTRY_Y, null, [edge]);
-				this.setCellStyles((source) ? mxConstants.STYLE_EXIT_DX :
-					mxConstants.STYLE_ENTRY_DX, null, [edge]);
-				this.setCellStyles((source) ? mxConstants.STYLE_EXIT_DY :
-					mxConstants.STYLE_ENTRY_DY, null, [edge]);
-				this.setCellStyles((source) ? mxConstants.STYLE_EXIT_PERIMETER :
-					mxConstants.STYLE_ENTRY_PERIMETER, null, [edge]);
-			}
-			else if (constraint.point != null)
-			{
-				this.setCellStyles((source) ? mxConstants.STYLE_EXIT_X :
-					mxConstants.STYLE_ENTRY_X, constraint.point.x, [edge]);
-				this.setCellStyles((source) ? mxConstants.STYLE_EXIT_Y :
-					mxConstants.STYLE_ENTRY_Y, constraint.point.y, [edge]);
-				this.setCellStyles((source) ? mxConstants.STYLE_EXIT_DX :
-					mxConstants.STYLE_ENTRY_DX, constraint.dx, [edge]);
-				this.setCellStyles((source) ? mxConstants.STYLE_EXIT_DY :
-					mxConstants.STYLE_ENTRY_DY, constraint.dy, [edge]);
-				
-				// Only writes 0 since 1 is default
-				if (!constraint.perimeter)
-				{
-					this.setCellStyles((source) ? mxConstants.STYLE_EXIT_PERIMETER :
-						mxConstants.STYLE_ENTRY_PERIMETER, '0', [edge]);
-				}
-				else
-				{
-					this.setCellStyles((source) ? mxConstants.STYLE_EXIT_PERIMETER :
-						mxConstants.STYLE_ENTRY_PERIMETER, null, [edge]);
-				}
-			}
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+  if (constraint != null)
+  {
+    this.model.beginUpdate();
+
+    try
+    {
+      if (constraint == null || constraint.point == null)
+      {
+        this.setCellStyles((source) ? mxConstants.STYLE_EXIT_X :
+          mxConstants.STYLE_ENTRY_X, null, [edge]);
+        this.setCellStyles((source) ? mxConstants.STYLE_EXIT_Y :
+          mxConstants.STYLE_ENTRY_Y, null, [edge]);
+        this.setCellStyles((source) ? mxConstants.STYLE_EXIT_DX :
+          mxConstants.STYLE_ENTRY_DX, null, [edge]);
+        this.setCellStyles((source) ? mxConstants.STYLE_EXIT_DY :
+          mxConstants.STYLE_ENTRY_DY, null, [edge]);
+        this.setCellStyles((source) ? mxConstants.STYLE_EXIT_PERIMETER :
+          mxConstants.STYLE_ENTRY_PERIMETER, null, [edge]);
+      }
+      else if (constraint.point != null)
+      {
+        this.setCellStyles((source) ? mxConstants.STYLE_EXIT_X :
+          mxConstants.STYLE_ENTRY_X, constraint.point.x, [edge]);
+        this.setCellStyles((source) ? mxConstants.STYLE_EXIT_Y :
+          mxConstants.STYLE_ENTRY_Y, constraint.point.y, [edge]);
+        this.setCellStyles((source) ? mxConstants.STYLE_EXIT_DX :
+          mxConstants.STYLE_ENTRY_DX, constraint.dx, [edge]);
+        this.setCellStyles((source) ? mxConstants.STYLE_EXIT_DY :
+          mxConstants.STYLE_ENTRY_DY, constraint.dy, [edge]);
+
+        // Only writes 0 since 1 is default
+        if (!constraint.perimeter)
+        {
+          this.setCellStyles((source) ? mxConstants.STYLE_EXIT_PERIMETER :
+            mxConstants.STYLE_ENTRY_PERIMETER, '0', [edge]);
+        }
+        else
+        {
+          this.setCellStyles((source) ? mxConstants.STYLE_EXIT_PERIMETER :
+            mxConstants.STYLE_ENTRY_PERIMETER, null, [edge]);
+        }
+      }
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -6884,128 +6884,128 @@ setConnectionConstraint = (edge, terminal, source, constraint)=>
  */
 getConnectionPoint = (vertex, constraint, round)=>
 {
-	round = (round != null) ? round : true;
-	var point = null;
-	
-	if (vertex != null && constraint.point != null)
-	{
-		var bounds = this.view.getPerimeterBounds(vertex);
+  round = (round != null) ? round : true;
+  var point = null;
+
+  if (vertex != null && constraint.point != null)
+  {
+    var bounds = this.view.getPerimeterBounds(vertex);
         var cx = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
-		var direction = vertex.style[mxConstants.STYLE_DIRECTION];
-		var r1 = 0;
-		
-		// Bounds need to be rotated by 90 degrees for further computation
-		if (direction != null && mxUtils.getValue(vertex.style,
-			mxConstants.STYLE_ANCHOR_POINT_DIRECTION, 1) == 1)
-		{
-			if (direction == mxConstants.DIRECTION_NORTH)
-			{
-				r1 += 270;
-			}
-			else if (direction == mxConstants.DIRECTION_WEST)
-			{
-				r1 += 180;
-			}
-			else if (direction == mxConstants.DIRECTION_SOUTH)
-			{
-				r1 += 90;
-			}
+    var direction = vertex.style[mxConstants.STYLE_DIRECTION];
+    var r1 = 0;
 
-			// Bounds need to be rotated by 90 degrees for further computation
-			if (direction == mxConstants.DIRECTION_NORTH ||
-				direction == mxConstants.DIRECTION_SOUTH)
-			{
-				bounds.rotate90();
-			}
-		}
+    // Bounds need to be rotated by 90 degrees for further computation
+    if (direction != null && mxUtils.getValue(vertex.style,
+      mxConstants.STYLE_ANCHOR_POINT_DIRECTION, 1) == 1)
+    {
+      if (direction == mxConstants.DIRECTION_NORTH)
+      {
+        r1 += 270;
+      }
+      else if (direction == mxConstants.DIRECTION_WEST)
+      {
+        r1 += 180;
+      }
+      else if (direction == mxConstants.DIRECTION_SOUTH)
+      {
+        r1 += 90;
+      }
 
-		var scale = this.view.scale;
-		point = new mxPoint(bounds.x + constraint.point.x * bounds.width + constraint.dx * scale,
-				bounds.y + constraint.point.y * bounds.height + constraint.dy * scale);
-		
-		// Rotation for direction before projection on perimeter
-		var r2 = vertex.style[mxConstants.STYLE_ROTATION] || 0;
-		
-		if (constraint.perimeter)
-		{
-			if (r1 != 0)
-			{
-				// Only 90 degrees steps possible here so no trig needed
-				var cos = 0;
-				var sin = 0;
-				
-				if (r1 == 90)
-				{
-					sin = 1;
-				}
-				else if (r1 == 180)
-				{
-					cos = -1;
-				}
-				else if (r1 == 270)
-				{
-					sin = -1;
-				}
-				
-		        point = mxUtils.getRotatedPoint(point, cos, sin, cx);
-			}
-	
-			point = this.view.getPerimeterPoint(vertex, point, false);
-		}
-		else
-		{
-			r2 += r1;
-			
-			if (this.getModel().isVertex(vertex.cell))
-			{
-				var flipH = vertex.style[mxConstants.STYLE_FLIPH] == 1;
-				var flipV = vertex.style[mxConstants.STYLE_FLIPV] == 1;
-				
-				// Legacy support for stencilFlipH/V
-				if (vertex.shape != null && vertex.shape.stencil != null)
-				{
-					flipH = (mxUtils.getValue(vertex.style, 'stencilFlipH', 0) == 1) || flipH;
-					flipV = (mxUtils.getValue(vertex.style, 'stencilFlipV', 0) == 1) || flipV;
-				}
-				
-				if (direction == mxConstants.DIRECTION_NORTH ||
-					direction == mxConstants.DIRECTION_SOUTH)
-				{
-					var temp = flipH;
-					flipH = flipV
-					flipV = temp;
-				}
-				
-				if (flipH)
-				{
-					point.x = 2 * bounds.getCenterX() - point.x;
-				}
-				
-				if (flipV)
-				{
-					point.y = 2 * bounds.getCenterY() - point.y;
-				}
-			}
-		}
+      // Bounds need to be rotated by 90 degrees for further computation
+      if (direction == mxConstants.DIRECTION_NORTH ||
+        direction == mxConstants.DIRECTION_SOUTH)
+      {
+        bounds.rotate90();
+      }
+    }
 
-		// Generic rotation after projection on perimeter
-		if (r2 != 0 && point != null)
-		{
-	        var rad = mxUtils.toRadians(r2);
-	        var cos = Math.cos(rad);
-	        var sin = Math.sin(rad);
-	        
-	        point = mxUtils.getRotatedPoint(point, cos, sin, cx);
-		}
-	}
-	
-	if (round && point != null)
-	{
-		point.x = Math.round(point.x);
-		point.y = Math.round(point.y);
-	}
+    var scale = this.view.scale;
+    point = new mxPoint(bounds.x + constraint.point.x * bounds.width + constraint.dx * scale,
+        bounds.y + constraint.point.y * bounds.height + constraint.dy * scale);
 
-	return point;
+    // Rotation for direction before projection on perimeter
+    var r2 = vertex.style[mxConstants.STYLE_ROTATION] || 0;
+
+    if (constraint.perimeter)
+    {
+      if (r1 != 0)
+      {
+        // Only 90 degrees steps possible here so no trig needed
+        var cos = 0;
+        var sin = 0;
+
+        if (r1 == 90)
+        {
+          sin = 1;
+        }
+        else if (r1 == 180)
+        {
+          cos = -1;
+        }
+        else if (r1 == 270)
+        {
+          sin = -1;
+        }
+
+            point = mxUtils.getRotatedPoint(point, cos, sin, cx);
+      }
+
+      point = this.view.getPerimeterPoint(vertex, point, false);
+    }
+    else
+    {
+      r2 += r1;
+
+      if (this.getModel().isVertex(vertex.cell))
+      {
+        var flipH = vertex.style[mxConstants.STYLE_FLIPH] == 1;
+        var flipV = vertex.style[mxConstants.STYLE_FLIPV] == 1;
+
+        // Legacy support for stencilFlipH/V
+        if (vertex.shape != null && vertex.shape.stencil != null)
+        {
+          flipH = (mxUtils.getValue(vertex.style, 'stencilFlipH', 0) == 1) || flipH;
+          flipV = (mxUtils.getValue(vertex.style, 'stencilFlipV', 0) == 1) || flipV;
+        }
+
+        if (direction == mxConstants.DIRECTION_NORTH ||
+          direction == mxConstants.DIRECTION_SOUTH)
+        {
+          var temp = flipH;
+          flipH = flipV
+          flipV = temp;
+        }
+
+        if (flipH)
+        {
+          point.x = 2 * bounds.getCenterX() - point.x;
+        }
+
+        if (flipV)
+        {
+          point.y = 2 * bounds.getCenterY() - point.y;
+        }
+      }
+    }
+
+    // Generic rotation after projection on perimeter
+    if (r2 != 0 && point != null)
+    {
+          var rad = mxUtils.toRadians(r2);
+          var cos = Math.cos(rad);
+          var sin = Math.sin(rad);
+
+          point = mxUtils.getRotatedPoint(point, cos, sin, cx);
+    }
+  }
+
+  if (round && point != null)
+  {
+    point.x = Math.round(point.x);
+    point.y = Math.round(point.y);
+  }
+
+  return point;
 };
 
 /**
@@ -7025,21 +7025,21 @@ getConnectionPoint = (vertex, constraint, round)=>
  */
 connectCell = (edge, terminal, source, constraint)=>
 {
-	this.model.beginUpdate();
-	try
-	{
-		var previous = this.model.getTerminal(edge, source);
-		this.cellConnected(edge, terminal, source, constraint);
-		this.fireEvent(new mxEventObject(mxEvent.CONNECT_CELL,
-			'edge', edge, 'terminal', terminal, 'source', source,
-			'previous', previous));
-	}
-	finally
-	{
-		this.model.endUpdate();
-	}
+  this.model.beginUpdate();
+  try
+  {
+    var previous = this.model.getTerminal(edge, source);
+    this.cellConnected(edge, terminal, source, constraint);
+    this.fireEvent(new mxEventObject(mxEvent.CONNECT_CELL,
+      'edge', edge, 'terminal', terminal, 'source', source,
+      'previous', previous));
+  }
+  finally
+  {
+    this.model.endUpdate();
+  }
 
-	return edge;
+  return edge;
 };
 
 /**
@@ -7058,50 +7058,50 @@ connectCell = (edge, terminal, source, constraint)=>
  */
 cellConnected = (edge, terminal, source, constraint)=>
 {
-	if (edge != null)
-	{
-		this.model.beginUpdate();
-		try
-		{
-			var previous = this.model.getTerminal(edge, source);
+  if (edge != null)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      var previous = this.model.getTerminal(edge, source);
 
-			// Updates the constraint
-			this.setConnectionConstraint(edge, terminal, source, constraint);
-			
-			// Checks if the new terminal is a port, uses the ID of the port in the
-			// style and the parent of the port as the actual terminal of the edge.
-			if (this.isPortsEnabled())
-			{
-				var id = null;
-	
-				if (this.isPort(terminal))
-				{
-					id = terminal.getId();
-					terminal = this.getTerminalForPort(terminal, source);
-				}
-				
-				// Sets or resets all previous information for connecting to a child port
-				var key = (source) ? mxConstants.STYLE_SOURCE_PORT :
-					mxConstants.STYLE_TARGET_PORT;
-				this.setCellStyles(key, id, [edge]);
-			}
-			
-			this.model.setTerminal(edge, terminal, source);
-			
-			if (this.resetEdgesOnConnect)
-			{
-				this.resetEdge(edge);
-			}
+      // Updates the constraint
+      this.setConnectionConstraint(edge, terminal, source, constraint);
 
-			this.fireEvent(new mxEventObject(mxEvent.CELL_CONNECTED,
-				'edge', edge, 'terminal', terminal, 'source', source,
-				'previous', previous));
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+      // Checks if the new terminal is a port, uses the ID of the port in the
+      // style and the parent of the port as the actual terminal of the edge.
+      if (this.isPortsEnabled())
+      {
+        var id = null;
+
+        if (this.isPort(terminal))
+        {
+          id = terminal.getId();
+          terminal = this.getTerminalForPort(terminal, source);
+        }
+
+        // Sets or resets all previous information for connecting to a child port
+        var key = (source) ? mxConstants.STYLE_SOURCE_PORT :
+          mxConstants.STYLE_TARGET_PORT;
+        this.setCellStyles(key, id, [edge]);
+      }
+
+      this.model.setTerminal(edge, terminal, source);
+
+      if (this.resetEdgesOnConnect)
+      {
+        this.resetEdge(edge);
+      }
+
+      this.fireEvent(new mxEventObject(mxEvent.CELL_CONNECTED,
+        'edge', edge, 'terminal', terminal, 'source', source,
+        'previous', previous));
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -7116,91 +7116,91 @@ cellConnected = (edge, terminal, source, constraint)=>
  */
 disconnectGraph = (cells)=>
 {
-	if (cells != null)
-	{
-		this.model.beginUpdate();
-		try
-		{							
-			var scale = this.view.scale;
-			var tr = this.view.translate;
-			
-			// Fast lookup for finding cells in array
-			var dict = new mxDictionary();
-			
-			for (var i = 0; i < cells.length; i++)
-			{
-				dict.put(cells[i], true);
-			}
-			
-			for (var i = 0; i < cells.length; i++)
-			{
-				if (this.model.isEdge(cells[i]))
-				{
-					var geo = this.model.getGeometry(cells[i]);
-					
-					if (geo != null)
-					{
-						var state = this.view.getState(cells[i]);
-						var pstate = this.view.getState(
-							this.model.getParent(cells[i]));
-						
-						if (state != null &&
-							pstate != null)
-						{
-							geo = geo.clone();
-							
-							var dx = -pstate.origin.x;
-							var dy = -pstate.origin.y;
-							var pts = state.absolutePoints;
+  if (cells != null)
+  {
+    this.model.beginUpdate();
+    try
+    {
+      var scale = this.view.scale;
+      var tr = this.view.translate;
 
-							var src = this.model.getTerminal(cells[i], true);
-							
-							if (src != null && this.isCellDisconnectable(cells[i], src, true))
-							{
-								while (src != null && !dict.get(src))
-								{
-									src = this.model.getParent(src);
-								}
-								
-								if (src == null)
-								{
-									geo.setTerminalPoint(
-										new mxPoint(pts[0].x / scale - tr.x + dx,
-											pts[0].y / scale - tr.y + dy), true);
-									this.model.setTerminal(cells[i], null, true);
-								}
-							}
-							
-							var trg = this.model.getTerminal(cells[i], false);
-							
-							if (trg != null && this.isCellDisconnectable(cells[i], trg, false))
-							{
-								while (trg != null && !dict.get(trg))
-								{
-									trg = this.model.getParent(trg);
-								}
-								
-								if (trg == null)
-								{
-									var n = pts.length - 1;
-									geo.setTerminalPoint(
-										new mxPoint(pts[n].x / scale - tr.x + dx,
-											pts[n].y / scale - tr.y + dy), false);
-									this.model.setTerminal(cells[i], null, false);
-								}
-							}
+      // Fast lookup for finding cells in array
+      var dict = new mxDictionary();
 
-							this.model.setGeometry(cells[i], geo);
-						}
-					}
-				}
-			}
-		}
-		finally
-		{
-			this.model.endUpdate();
-		}
-	}
+      for (var i = 0; i < cells.length; i++)
+      {
+        dict.put(cells[i], true);
+      }
+
+      for (var i = 0; i < cells.length; i++)
+      {
+        if (this.model.isEdge(cells[i]))
+        {
+          var geo = this.model.getGeometry(cells[i]);
+
+          if (geo != null)
+          {
+            var state = this.view.getState(cells[i]);
+            var pstate = this.view.getState(
+              this.model.getParent(cells[i]));
+
+            if (state != null &&
+              pstate != null)
+            {
+              geo = geo.clone();
+
+              var dx = -pstate.origin.x;
+              var dy = -pstate.origin.y;
+              var pts = state.absolutePoints;
+
+              var src = this.model.getTerminal(cells[i], true);
+
+              if (src != null && this.isCellDisconnectable(cells[i], src, true))
+              {
+                while (src != null && !dict.get(src))
+                {
+                  src = this.model.getParent(src);
+                }
+
+                if (src == null)
+                {
+                  geo.setTerminalPoint(
+                    new mxPoint(pts[0].x / scale - tr.x + dx,
+                      pts[0].y / scale - tr.y + dy), true);
+                  this.model.setTerminal(cells[i], null, true);
+                }
+              }
+
+              var trg = this.model.getTerminal(cells[i], false);
+
+              if (trg != null && this.isCellDisconnectable(cells[i], trg, false))
+              {
+                while (trg != null && !dict.get(trg))
+                {
+                  trg = this.model.getParent(trg);
+                }
+
+                if (trg == null)
+                {
+                  var n = pts.length - 1;
+                  geo.setTerminalPoint(
+                    new mxPoint(pts[n].x / scale - tr.x + dx,
+                      pts[n].y / scale - tr.y + dy), false);
+                  this.model.setTerminal(cells[i], null, false);
+                }
+              }
+
+              this.model.setGeometry(cells[i], geo);
+            }
+          }
+        }
+      }
+    }
+    finally
+    {
+      this.model.endUpdate();
+    }
+  }
 };
 
 /**
@@ -7215,7 +7215,7 @@ disconnectGraph = (cells)=>
  */
 getCurrentRoot = ()=>
 {
-	return this.view.currentRoot;
+  return this.view.currentRoot;
 };
  
 /**
@@ -7254,7 +7254,7 @@ getCurrentRoot = ()=>
  */
 getTranslateForRoot = (cell)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -7284,7 +7284,7 @@ getTranslateForRoot = (cell)=>
  */
 isPort = (cell)=>
 {
-	return false;
+  return false;
 };
 
 /**
@@ -7300,7 +7300,7 @@ isPort = (cell)=>
  */
 getTerminalForPort = (cell, source)=>
 {
-	return this.model.getParent(cell);
+  return this.model.getParent(cell);
 };
 
 /**
@@ -7319,7 +7319,7 @@ getTerminalForPort = (cell, source)=>
  */
 getChildOffsetForCell = (cell)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -7336,13 +7336,13 @@ getChildOffsetForCell = (cell)=>
  */
 enterGroup = (cell)=>
 {
-	cell = cell || this.getSelectionCell();
-	
-	if (cell != null && this.isValidRoot(cell))
-	{
-		this.view.setCurrentRoot(cell);
-		this.clearSelection();
-	}
+  cell = cell || this.getSelectionCell();
+
+  if (cell != null && this.isValidRoot(cell))
+  {
+    this.view.setCurrentRoot(cell);
+    this.clearSelection();
+  }
 };
 
 /**
@@ -7353,39 +7353,39 @@ enterGroup = (cell)=>
  */
 exitGroup = ()=>
 {
-	var root = this.model.getRoot();
-	var current = this.getCurrentRoot();
-	
-	if (current != null)
-	{
-		var next = this.model.getParent(current);
-		
-		// Finds the next valid root in the hierarchy
-		while (next != root && !this.isValidRoot(next) &&
-				this.model.getParent(next) != root)
-		{
-			next = this.model.getParent(next);
-		}
-		
-		// Clears the current root if the new root is
-		// the model's root or one of the layers.
-		if (next == root || this.model.getParent(next) == root)
-		{
-			this.view.setCurrentRoot(null);
-		}
-		else
-		{
-			this.view.setCurrentRoot(next);
-		}
-		
-		var state = this.view.getState(current);
-		
-		// Selects the previous root in the graph
-		if (state != null)
-		{
-			this.setSelectionCell(current);
-		}
-	}
+  var root = this.model.getRoot();
+  var current = this.getCurrentRoot();
+
+  if (current != null)
+  {
+    var next = this.model.getParent(current);
+
+    // Finds the next valid root in the hierarchy
+    while (next != root && !this.isValidRoot(next) &&
+        this.model.getParent(next) != root)
+    {
+      next = this.model.getParent(next);
+    }
+
+    // Clears the current root if the new root is
+    // the model's root or one of the layers.
+    if (next == root || this.model.getParent(next) == root)
+    {
+      this.view.setCurrentRoot(null);
+    }
+    else
+    {
+      this.view.setCurrentRoot(next);
+    }
+
+    var state = this.view.getState(current);
+
+    // Selects the previous root in the graph
+    if (state != null)
+    {
+      this.setSelectionCell(current);
+    }
+  }
 };
 
 /**
@@ -7396,18 +7396,18 @@ exitGroup = ()=>
  */
 home = ()=>
 {
-	var current = this.getCurrentRoot();
-	
-	if (current != null)
-	{
-		this.view.setCurrentRoot(null);
-		var state = this.view.getState(current);
-		
-		if (state != null)
-		{
-			this.setSelectionCell(current);
-		}
-	}
+  var current = this.getCurrentRoot();
+
+  if (current != null)
+  {
+    this.view.setCurrentRoot(null);
+    var state = this.view.getState(current);
+
+    if (state != null)
+    {
+      this.setSelectionCell(current);
+    }
+  }
 };
 
 /**
@@ -7422,7 +7422,7 @@ home = ()=>
  */
 isValidRoot = (cell)=>
 {
-	return (cell != null);
+  return (cell != null);
 };
 
 /**
@@ -7437,7 +7437,7 @@ isValidRoot = (cell)=>
  */
  getGraphBounds = ()=>
  {
- 	return this.view.getGraphBounds();
+   return this.view.getGraphBounds();
  };
 
 /**
@@ -7456,38 +7456,38 @@ isValidRoot = (cell)=>
  */
 getCellBounds = (cell, includeEdges, includeDescendants)=>
 {
-	var cells = [cell];
-	
-	// Includes all connected edges
-	if (includeEdges)
-	{
-		cells = cells.concat(this.model.getEdges(cell));
-	}
-	
-	var result = this.view.getBounds(cells);
-	
-	// Recursively includes the bounds of the children
-	if (includeDescendants)
-	{
-		var childCount = this.model.getChildCount(cell);
-		
-		for (var i = 0; i < childCount; i++)
-		{
-			var tmp = this.getCellBounds(this.model.getChildAt(cell, i),
-				includeEdges, true);
+  var cells = [cell];
 
-			if (result != null)
-			{
-				result.add(tmp);
-			}
-			else
-			{
-				result = tmp;
-			}
-		}
-	}
-	
-	return result;
+  // Includes all connected edges
+  if (includeEdges)
+  {
+    cells = cells.concat(this.model.getEdges(cell));
+  }
+
+  var result = this.view.getBounds(cells);
+
+  // Recursively includes the bounds of the children
+  if (includeDescendants)
+  {
+    var childCount = this.model.getChildCount(cell);
+
+    for (var i = 0; i < childCount; i++)
+    {
+      var tmp = this.getCellBounds(this.model.getChildAt(cell, i),
+        includeEdges, true);
+
+      if (result != null)
+      {
+        result.add(tmp);
+      }
+      else
+      {
+        result = tmp;
+      }
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -7528,137 +7528,137 @@ getCellBounds = (cell, includeEdges, includeDescendants)=>
  */
 getBoundingBoxFromGeometry = (cells, includeEdges)=>
 {
-	includeEdges = (includeEdges != null) ? includeEdges : false;
-	var result = null;
-	
-	if (cells != null)
-	{
-		for (var i = 0; i < cells.length; i++)
-		{
-			if (includeEdges || this.model.isVertex(cells[i]))
-			{
-				// Computes the bounding box for the points in the geometry
-				var geo = this.getCellGeometry(cells[i]);
-				
-				if (geo != null)
-				{
-					var bbox = null;
-					
-					if (this.model.isEdge(cells[i]))
-					{
-						var addPoint = (pt)=>
-						{
-							if (pt != null)
-							{
-								if (tmp == null)
-								{
-									tmp = new mxRectangle(pt.x, pt.y, 0, 0);
-								}
-								else
-								{
-									tmp.add(new mxRectangle(pt.x, pt.y, 0, 0));
-								}
-							}
-						};
-						
-						if (this.model.getTerminal(cells[i], true) == null)
-						{
-							addPoint(geo.getTerminalPoint(true));
-						}
-						
-						if (this.model.getTerminal(cells[i], false) == null)
-						{
-							addPoint(geo.getTerminalPoint(false));
-						}
-												
-						var pts = geo.points;
-						
-						if (pts != null && pts.length > 0)
-						{
-							var tmp = new mxRectangle(pts[0].x, pts[0].y, 0, 0);
+  includeEdges = (includeEdges != null) ? includeEdges : false;
+  var result = null;
 
-							for (var j = 1; j < pts.length; j++)
-							{
-								addPoint(pts[j]);
-							}
-						}
-						
-						bbox = tmp;
-					}
-					else
-					{
-						var parent = this.model.getParent(cells[i]);
-						
-						if (geo.relative)
-						{
-							if (this.model.isVertex(parent) && parent != this.view.currentRoot)
-							{
-								var tmp = this.getBoundingBoxFromGeometry([parent], false);
-								
-								if (tmp != null)
-								{
-									bbox = new mxRectangle(geo.x * tmp.width, geo.y * tmp.height, geo.width, geo.height);
-									
-									if (mxUtils.indexOf(cells, parent) >= 0)
-									{
-										bbox.x += tmp.x;
-										bbox.y += tmp.y;
-									}
-								}
-							}
-						}
-						else
-						{
-							bbox = mxRectangle.fromRectangle(geo);
-							
-							if (this.model.isVertex(parent) && mxUtils.indexOf(cells, parent) >= 0)
-							{
-								var tmp = this.getBoundingBoxFromGeometry([parent], false);
+  if (cells != null)
+  {
+    for (var i = 0; i < cells.length; i++)
+    {
+      if (includeEdges || this.model.isVertex(cells[i]))
+      {
+        // Computes the bounding box for the points in the geometry
+        var geo = this.getCellGeometry(cells[i]);
 
-								if (tmp != null)
-								{
-									bbox.x += tmp.x;
-									bbox.y += tmp.y;
-								}
-							}
-						}
-						
-						if (bbox != null && geo.offset != null)
-						{
-							bbox.x += geo.offset.x;
-							bbox.y += geo.offset.y;
-						}
+        if (geo != null)
+        {
+          var bbox = null;
 
-						var style = this.getCurrentCellStyle(cells[i]);
-						
-						if (bbox != null)
-						{
-							var angle = mxUtils.getValue(style, mxConstants.STYLE_ROTATION, 0);
-							
-							if (angle != 0)
-							{
-								bbox = mxUtils.getBoundingBox(bbox, angle);
-							}
-						}
-					}
-					
-					if (bbox != null)
-					{
-						if (result == null)
-						{
-							result = mxRectangle.fromRectangle(bbox);
-						}
-						else
-						{
-							result.add(bbox);
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	return result;
+          if (this.model.isEdge(cells[i]))
+          {
+            var addPoint = (pt)=>
+            {
+              if (pt != null)
+              {
+                if (tmp == null)
+                {
+                  tmp = new mxRectangle(pt.x, pt.y, 0, 0);
+                }
+                else
+                {
+                  tmp.add(new mxRectangle(pt.x, pt.y, 0, 0));
+                }
+              }
+            };
+
+            if (this.model.getTerminal(cells[i], true) == null)
+            {
+              addPoint(geo.getTerminalPoint(true));
+            }
+
+            if (this.model.getTerminal(cells[i], false) == null)
+            {
+              addPoint(geo.getTerminalPoint(false));
+            }
+
+            var pts = geo.points;
+
+            if (pts != null && pts.length > 0)
+            {
+              var tmp = new mxRectangle(pts[0].x, pts[0].y, 0, 0);
+
+              for (var j = 1; j < pts.length; j++)
+              {
+                addPoint(pts[j]);
+              }
+            }
+
+            bbox = tmp;
+          }
+          else
+          {
+            var parent = this.model.getParent(cells[i]);
+
+            if (geo.relative)
+            {
+              if (this.model.isVertex(parent) && parent != this.view.currentRoot)
+              {
+                var tmp = this.getBoundingBoxFromGeometry([parent], false);
+
+                if (tmp != null)
+                {
+                  bbox = new mxRectangle(geo.x * tmp.width, geo.y * tmp.height, geo.width, geo.height);
+
+                  if (mxUtils.indexOf(cells, parent) >= 0)
+                  {
+                    bbox.x += tmp.x;
+                    bbox.y += tmp.y;
+                  }
+                }
+              }
+            }
+            else
+            {
+              bbox = mxRectangle.fromRectangle(geo);
+
+              if (this.model.isVertex(parent) && mxUtils.indexOf(cells, parent) >= 0)
+              {
+                var tmp = this.getBoundingBoxFromGeometry([parent], false);
+
+                if (tmp != null)
+                {
+                  bbox.x += tmp.x;
+                  bbox.y += tmp.y;
+                }
+              }
+            }
+
+            if (bbox != null && geo.offset != null)
+            {
+              bbox.x += geo.offset.x;
+              bbox.y += geo.offset.y;
+            }
+
+            var style = this.getCurrentCellStyle(cells[i]);
+
+            if (bbox != null)
+            {
+              var angle = mxUtils.getValue(style, mxConstants.STYLE_ROTATION, 0);
+
+              if (angle != 0)
+              {
+                bbox = mxUtils.getBoundingBox(bbox, angle);
+              }
+            }
+          }
+
+          if (bbox != null)
+          {
+            if (result == null)
+            {
+              result = mxRectangle.fromRectangle(bbox);
+            }
+            else
+            {
+              result.add(bbox);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -7674,10 +7674,10 @@ getBoundingBoxFromGeometry = (cells, includeEdges)=>
  */
 refresh = (cell)=>
 {
-	this.view.clear(cell, cell == null);
-	this.view.validate();
-	this.sizeDidChange();
-	this.fireEvent(new mxEventObject(mxEvent.REFRESH));
+  this.view.clear(cell, cell == null);
+  this.view.validate();
+  this.sizeDidChange();
+  this.fireEvent(new mxEventObject(mxEvent.REFRESH));
 };
 
 /**
@@ -7691,12 +7691,12 @@ refresh = (cell)=>
  */
 snap = (value)=>
 {
-	if (this.gridEnabled)
-	{
-		value = Math.round(value / this.gridSize ) * this.gridSize;
-	}
-	
-	return value;
+  if (this.gridEnabled)
+  {
+    value = Math.round(value / this.gridSize ) * this.gridSize;
+  }
+
+  return value;
 };
 
 /**
@@ -7706,75 +7706,75 @@ snap = (value)=>
  */
 snapDelta = (delta, bounds, ignoreGrid, ignoreHorizontal, ignoreVertical)=>
 {
-	var t = this.view.translate;
-	var s = this.view.scale;
-	
-	if (!ignoreGrid && this.gridEnabled)
-	{
-		var tol = this.gridSize * s * 0.5;
-		
-		if (!ignoreHorizontal)
-		{
-			var tx = bounds.x - (this.snap(bounds.x / s - t.x) + t.x) * s;
-			
-			if (Math.abs(delta.x- tx) < tol)
-			{
-				delta.x = 0;
-			}
-			else
-			{
-				delta.x = this.snap(delta.x / s) * s - tx;
-			}
-		}
-		
-		if (!ignoreVertical)
-		{
-			var ty = bounds.y - (this.snap(bounds.y / s - t.y) + t.y) * s;
-				
-			if (Math.abs(delta.y - ty) < tol)
-			{
-				delta.y = 0;
-			}
-			else
-			{
-				delta.y = this.snap(delta.y / s) * s - ty;
-			}
-		}
-	}
-	else
-	{
-		var tol = 0.5 * s;
-		
-		if (!ignoreHorizontal)
-		{
-			var tx = bounds.x - (Math.round(bounds.x / s - t.x) + t.x) * s;
-			
-			if (Math.abs(delta.x - tx) < tol)
-			{
-				delta.x = 0;
-			}
-			else
-			{
-				delta.x = Math.round(delta.x / s) * s - tx;
-			}
-		}
-		
-		if (!ignoreVertical)
-		{		
-			var ty = bounds.y - (Math.round(bounds.y / s - t.y) + t.y) * s;
-			
-			if (Math.abs(delta.y - ty) < tol)
-			{
-				delta.y = 0;
-			}
-			else
-			{
-				delta.y = Math.round(delta.y / s) * s - ty;
-			}
-		}
-	}
-	
-	return delta;
+  var t = this.view.translate;
+  var s = this.view.scale;
+
+  if (!ignoreGrid && this.gridEnabled)
+  {
+    var tol = this.gridSize * s * 0.5;
+
+    if (!ignoreHorizontal)
+    {
+      var tx = bounds.x - (this.snap(bounds.x / s - t.x) + t.x) * s;
+
+      if (Math.abs(delta.x- tx) < tol)
+      {
+        delta.x = 0;
+      }
+      else
+      {
+        delta.x = this.snap(delta.x / s) * s - tx;
+      }
+    }
+
+    if (!ignoreVertical)
+    {
+      var ty = bounds.y - (this.snap(bounds.y / s - t.y) + t.y) * s;
+
+      if (Math.abs(delta.y - ty) < tol)
+      {
+        delta.y = 0;
+      }
+      else
+      {
+        delta.y = this.snap(delta.y / s) * s - ty;
+      }
+    }
+  }
+  else
+  {
+    var tol = 0.5 * s;
+
+    if (!ignoreHorizontal)
+    {
+      var tx = bounds.x - (Math.round(bounds.x / s - t.x) + t.x) * s;
+
+      if (Math.abs(delta.x - tx) < tol)
+      {
+        delta.x = 0;
+      }
+      else
+      {
+        delta.x = Math.round(delta.x / s) * s - tx;
+      }
+    }
+
+    if (!ignoreVertical)
+    {
+      var ty = bounds.y - (Math.round(bounds.y / s - t.y) + t.y) * s;
+
+      if (Math.abs(delta.y - ty) < tol)
+      {
+        delta.y = 0;
+      }
+      else
+      {
+        delta.y = Math.round(delta.y / s) * s - ty;
+      }
+    }
+  }
+
+  return delta;
 };
 
 /**
@@ -7791,132 +7791,132 @@ snapDelta = (delta, bounds, ignoreGrid, ignoreHorizontal, ignoreVertical)=>
  */
 panGraph = (dx, dy)=>
 {
-	if (this.useScrollbarsForPanning && mxUtils.hasScrollbars(this.container))
-	{
-		this.container.scrollLeft = -dx;
-		this.container.scrollTop = -dy;
-	}
-	else
-	{
-		var canvas = this.view.getCanvas();
-		
-		if (this.dialect == mxConstants.DIALECT_SVG)
-		{
-			// Puts everything inside the container in a DIV so that it
-			// can be moved without changing the state of the container
-			if (dx == 0 && dy == 0)
-			{
-				// Workaround for ignored removeAttribute on SVG element in IE9 standards
-				if (mxClient.IS_IE)
-				{
-					canvas.setAttribute('transform', 'translate(' + dx + ',' + dy + ')');
-				}
-				else
-				{
-					canvas.removeAttribute('transform');
-				}
-				
-				if (this.shiftPreview1 != null)
-				{
-					var child = this.shiftPreview1.firstChild;
-					
-					while (child != null)
-					{
-						var next = child.nextSibling;
-						this.container.appendChild(child);
-						child = next;
-					}
+  if (this.useScrollbarsForPanning && mxUtils.hasScrollbars(this.container))
+  {
+    this.container.scrollLeft = -dx;
+    this.container.scrollTop = -dy;
+  }
+  else
+  {
+    var canvas = this.view.getCanvas();
 
-					if (this.shiftPreview1.parentNode != null)
-					{
-						this.shiftPreview1.parentNode.removeChild(this.shiftPreview1);
-					}
-					
-					this.shiftPreview1 = null;
-					
-					this.container.appendChild(canvas.parentNode);
-					
-					child = this.shiftPreview2.firstChild;
-					
-					while (child != null)
-					{
-						var next = child.nextSibling;
-						this.container.appendChild(child);
-						child = next;
-					}
+    if (this.dialect == mxConstants.DIALECT_SVG)
+    {
+      // Puts everything inside the container in a DIV so that it
+      // can be moved without changing the state of the container
+      if (dx == 0 && dy == 0)
+      {
+        // Workaround for ignored removeAttribute on SVG element in IE9 standards
+        if (mxClient.IS_IE)
+        {
+          canvas.setAttribute('transform', 'translate(' + dx + ',' + dy + ')');
+        }
+        else
+        {
+          canvas.removeAttribute('transform');
+        }
 
-					if (this.shiftPreview2.parentNode != null)
-					{
-						this.shiftPreview2.parentNode.removeChild(this.shiftPreview2);
-					}
-					
-					this.shiftPreview2 = null;
-				}
-			}
-			else
-			{
-				canvas.setAttribute('transform', 'translate(' + dx + ',' + dy + ')');
-				
-				if (this.shiftPreview1 == null)
-				{
-					// Needs two divs for stuff before and after the SVG element
-					this.shiftPreview1 = document.createElement('div');
-					this.shiftPreview1.style.position = 'absolute';
-					this.shiftPreview1.style.overflow = 'visible';
-					
-					this.shiftPreview2 = document.createElement('div');
-					this.shiftPreview2.style.position = 'absolute';
-					this.shiftPreview2.style.overflow = 'visible';
+        if (this.shiftPreview1 != null)
+        {
+          var child = this.shiftPreview1.firstChild;
 
-					var current = this.shiftPreview1;
-					var child = this.container.firstChild;
-					
-					while (child != null)
-					{
-						var next = child.nextSibling;
-						
-						// SVG element is moved via transform attribute
-						if (child != canvas.parentNode)
-						{
-							current.appendChild(child);
-						}
-						else
-						{
-							current = this.shiftPreview2;
-						}
-						
-						child = next;
-					}
-					
-					// Inserts elements only if not empty
-					if (this.shiftPreview1.firstChild != null)
-					{
-						this.container.insertBefore(this.shiftPreview1, canvas.parentNode);
-					}
-					
-					if (this.shiftPreview2.firstChild != null)
-					{
-						this.container.appendChild(this.shiftPreview2);
-					}
-				}
-				
-				this.shiftPreview1.style.left = dx + 'px';
-				this.shiftPreview1.style.top = dy + 'px';
-				this.shiftPreview2.style.left = dx + 'px';
-				this.shiftPreview2.style.top = dy + 'px';
-			}
-		}
-		else
-		{
-			canvas.style.left = dx + 'px';
-			canvas.style.top = dy + 'px';
-		}
-		
-		this.panDx = dx;
-		this.panDy = dy;
+          while (child != null)
+          {
+            var next = child.nextSibling;
+            this.container.appendChild(child);
+            child = next;
+          }
 
-		this.fireEvent(new mxEventObject(mxEvent.PAN));
-	}
+          if (this.shiftPreview1.parentNode != null)
+          {
+            this.shiftPreview1.parentNode.removeChild(this.shiftPreview1);
+          }
+
+          this.shiftPreview1 = null;
+
+          this.container.appendChild(canvas.parentNode);
+
+          child = this.shiftPreview2.firstChild;
+
+          while (child != null)
+          {
+            var next = child.nextSibling;
+            this.container.appendChild(child);
+            child = next;
+          }
+
+          if (this.shiftPreview2.parentNode != null)
+          {
+            this.shiftPreview2.parentNode.removeChild(this.shiftPreview2);
+          }
+
+          this.shiftPreview2 = null;
+        }
+      }
+      else
+      {
+        canvas.setAttribute('transform', 'translate(' + dx + ',' + dy + ')');
+
+        if (this.shiftPreview1 == null)
+        {
+          // Needs two divs for stuff before and after the SVG element
+          this.shiftPreview1 = document.createElement('div');
+          this.shiftPreview1.style.position = 'absolute';
+          this.shiftPreview1.style.overflow = 'visible';
+
+          this.shiftPreview2 = document.createElement('div');
+          this.shiftPreview2.style.position = 'absolute';
+          this.shiftPreview2.style.overflow = 'visible';
+
+          var current = this.shiftPreview1;
+          var child = this.container.firstChild;
+
+          while (child != null)
+          {
+            var next = child.nextSibling;
+
+            // SVG element is moved via transform attribute
+            if (child != canvas.parentNode)
+            {
+              current.appendChild(child);
+            }
+            else
+            {
+              current = this.shiftPreview2;
+            }
+
+            child = next;
+          }
+
+          // Inserts elements only if not empty
+          if (this.shiftPreview1.firstChild != null)
+          {
+            this.container.insertBefore(this.shiftPreview1, canvas.parentNode);
+          }
+
+          if (this.shiftPreview2.firstChild != null)
+          {
+            this.container.appendChild(this.shiftPreview2);
+          }
+        }
+
+        this.shiftPreview1.style.left = dx + 'px';
+        this.shiftPreview1.style.top = dy + 'px';
+        this.shiftPreview2.style.left = dx + 'px';
+        this.shiftPreview2.style.top = dy + 'px';
+      }
+    }
+    else
+    {
+      canvas.style.left = dx + 'px';
+      canvas.style.top = dy + 'px';
+    }
+
+    this.panDx = dx;
+    this.panDy = dy;
+
+    this.fireEvent(new mxEventObject(mxEvent.PAN));
+  }
 };
 
 /**
@@ -7926,7 +7926,7 @@ panGraph = (dx, dy)=>
  */
 zoomIn = ()=>
 {
-	this.zoom(this.zoomFactor);
+  this.zoom(this.zoomFactor);
 };
 
 /**
@@ -7936,7 +7936,7 @@ zoomIn = ()=>
  */
 zoomOut = ()=>
 {
-	this.zoom(1 / this.zoomFactor);
+  this.zoom(1 / this.zoomFactor);
 };
 
 /**
@@ -7946,17 +7946,17 @@ zoomOut = ()=>
  */
 zoomActual = ()=>
 {
-	if (this.view.scale == 1)
-	{
-		this.view.setTranslate(0, 0);
-	}
-	else
-	{
-		this.view.translate.x = 0;
-		this.view.translate.y = 0;
+  if (this.view.scale == 1)
+  {
+    this.view.setTranslate(0, 0);
+  }
+  else
+  {
+    this.view.translate.x = 0;
+    this.view.translate.y = 0;
 
-		this.view.setScale(1);
-	}
+    this.view.setScale(1);
+  }
 };
 
 /**
@@ -7967,7 +7967,7 @@ zoomActual = ()=>
  */
 zoomTo = (scale, center)=>
 {
-	this.zoom(scale / this.view.scale, center);
+  this.zoom(scale / this.view.scale, center);
 };
 
 /**
@@ -7986,50 +7986,50 @@ zoomTo = (scale, center)=>
  */
 center = (horizontal, vertical, cx, cy)=>
 {
-	horizontal = (horizontal != null) ? horizontal : true;
-	vertical = (vertical != null) ? vertical : true;
-	cx = (cx != null) ? cx : 0.5;
-	cy = (cy != null) ? cy : 0.5;
-	
-	var hasScrollbars = mxUtils.hasScrollbars(this.container);
-	var padding = 2 * this.getBorder();
-	var cw = this.container.clientWidth - padding;
-	var ch = this.container.clientHeight - padding;
-	var bounds = this.getGraphBounds();
+  horizontal = (horizontal != null) ? horizontal : true;
+  vertical = (vertical != null) ? vertical : true;
+  cx = (cx != null) ? cx : 0.5;
+  cy = (cy != null) ? cy : 0.5;
 
-	var t = this.view.translate;
-	var s = this.view.scale;
+  var hasScrollbars = mxUtils.hasScrollbars(this.container);
+  var padding = 2 * this.getBorder();
+  var cw = this.container.clientWidth - padding;
+  var ch = this.container.clientHeight - padding;
+  var bounds = this.getGraphBounds();
 
-	var dx = (horizontal) ? cw - bounds.width : 0;
-	var dy = (vertical) ? ch - bounds.height : 0;
-	
-	if (!hasScrollbars)
-	{
-		this.view.setTranslate((horizontal) ? Math.floor(t.x - bounds.x / s + dx * cx / s) : t.x,
-			(vertical) ? Math.floor(t.y - bounds.y / s + dy * cy / s) : t.y);
-	}
-	else
-	{
-		bounds.x -= t.x;
-		bounds.y -= t.y;
-	
-		var sw = this.container.scrollWidth;
-		var sh = this.container.scrollHeight;
-		
-		if (sw > cw)
-		{
-			dx = 0;
-		}
-		
-		if (sh > ch)
-		{
-			dy = 0;
-		}
+  var t = this.view.translate;
+  var s = this.view.scale;
 
-		this.view.setTranslate(Math.floor(dx / 2 - bounds.x), Math.floor(dy / 2 - bounds.y));
-		this.container.scrollLeft = (sw - cw) / 2;
-		this.container.scrollTop = (sh - ch) / 2;
-	}
+  var dx = (horizontal) ? cw - bounds.width : 0;
+  var dy = (vertical) ? ch - bounds.height : 0;
+
+  if (!hasScrollbars)
+  {
+    this.view.setTranslate((horizontal) ? Math.floor(t.x - bounds.x / s + dx * cx / s) : t.x,
+      (vertical) ? Math.floor(t.y - bounds.y / s + dy * cy / s) : t.y);
+  }
+  else
+  {
+    bounds.x -= t.x;
+    bounds.y -= t.y;
+
+    var sw = this.container.scrollWidth;
+    var sh = this.container.scrollHeight;
+
+    if (sw > cw)
+    {
+      dx = 0;
+    }
+
+    if (sh > ch)
+    {
+      dy = 0;
+    }
+
+    this.view.setTranslate(Math.floor(dx / 2 - bounds.x), Math.floor(dy / 2 - bounds.y));
+    this.container.scrollLeft = (sw - cw) / 2;
+    this.container.scrollTop = (sh - ch) / 2;
+  }
 };
 
 /**
@@ -8041,79 +8041,79 @@ center = (horizontal, vertical, cx, cy)=>
  */
 zoom = (factor, center)=>
 {
-	center = (center != null) ? center : this.centerZoom;
-	var scale = Math.round(this.view.scale * factor * 100) / 100;
-	var state = this.view.getState(this.getSelectionCell());
-	factor = scale / this.view.scale;
-	
-	if (this.keepSelectionVisibleOnZoom && state != null)
-	{
-		var rect = new mxRectangle(state.x * factor, state.y * factor,
-			state.width * factor, state.height * factor);
-		
-		// Refreshes the display only once if a scroll is carried out
-		this.view.scale = scale;
-		
-		if (!this.scrollRectToVisible(rect))
-		{
-			this.view.revalidate();
-			
-			// Forces an event to be fired but does not revalidate again
-			this.view.setScale(scale);
-		}
-	}
-	else
-	{
-		var hasScrollbars = mxUtils.hasScrollbars(this.container);
-		
-		if (center && !hasScrollbars)
-		{
-			var dx = this.container.offsetWidth;
-			var dy = this.container.offsetHeight;
-			
-			if (factor > 1)
-			{
-				var f = (factor - 1) / (scale * 2);
-				dx *= -f;
-				dy *= -f;
-			}
-			else
-			{
-				var f = (1 / factor - 1) / (this.view.scale * 2);
-				dx *= f;
-				dy *= f;
-			}
+  center = (center != null) ? center : this.centerZoom;
+  var scale = Math.round(this.view.scale * factor * 100) / 100;
+  var state = this.view.getState(this.getSelectionCell());
+  factor = scale / this.view.scale;
 
-			this.view.scaleAndTranslate(scale,
-				this.view.translate.x + dx,
-				this.view.translate.y + dy);
-		}
-		else
-		{
-			// Allows for changes of translate and scrollbars during setscale
-			var tx = this.view.translate.x;
-			var ty = this.view.translate.y;
-			var sl = this.container.scrollLeft;
-			var st = this.container.scrollTop;
-			
-			this.view.setScale(scale);
-			
-			if (hasScrollbars)
-			{
-				var dx = 0;
-				var dy = 0;
-				
-				if (center)
-				{
-					dx = this.container.offsetWidth * (factor - 1) / 2;
-					dy = this.container.offsetHeight * (factor - 1) / 2;
-				}
-				
-				this.container.scrollLeft = (this.view.translate.x - tx) * this.view.scale + Math.round(sl * factor + dx);
-				this.container.scrollTop = (this.view.translate.y - ty) * this.view.scale + Math.round(st * factor + dy);
-			}
-		}
-	}
+  if (this.keepSelectionVisibleOnZoom && state != null)
+  {
+    var rect = new mxRectangle(state.x * factor, state.y * factor,
+      state.width * factor, state.height * factor);
+
+    // Refreshes the display only once if a scroll is carried out
+    this.view.scale = scale;
+
+    if (!this.scrollRectToVisible(rect))
+    {
+      this.view.revalidate();
+
+      // Forces an event to be fired but does not revalidate again
+      this.view.setScale(scale);
+    }
+  }
+  else
+  {
+    var hasScrollbars = mxUtils.hasScrollbars(this.container);
+
+    if (center && !hasScrollbars)
+    {
+      var dx = this.container.offsetWidth;
+      var dy = this.container.offsetHeight;
+
+      if (factor > 1)
+      {
+        var f = (factor - 1) / (scale * 2);
+        dx *= -f;
+        dy *= -f;
+      }
+      else
+      {
+        var f = (1 / factor - 1) / (this.view.scale * 2);
+        dx *= f;
+        dy *= f;
+      }
+
+      this.view.scaleAndTranslate(scale,
+        this.view.translate.x + dx,
+        this.view.translate.y + dy);
+    }
+    else
+    {
+      // Allows for changes of translate and scrollbars during setscale
+      var tx = this.view.translate.x;
+      var ty = this.view.translate.y;
+      var sl = this.container.scrollLeft;
+      var st = this.container.scrollTop;
+
+      this.view.setScale(scale);
+
+      if (hasScrollbars)
+      {
+        var dx = 0;
+        var dy = 0;
+
+        if (center)
+        {
+          dx = this.container.offsetWidth * (factor - 1) / 2;
+          dy = this.container.offsetHeight * (factor - 1) / 2;
+        }
+
+        this.container.scrollLeft = (this.view.translate.x - tx) * this.view.scale + Math.round(sl * factor + dx);
+        this.container.scrollTop = (this.view.translate.y - ty) * this.view.scale + Math.round(st * factor + dy);
+      }
+    }
+  }
 };
 
 /**
@@ -8132,67 +8132,67 @@ zoom = (factor, center)=>
  */
 zoomToRect = (rect)=>
 {
-	var scaleX = this.container.clientWidth / rect.width;
-	var scaleY = this.container.clientHeight / rect.height;
-	var aspectFactor = scaleX / scaleY;
+  var scaleX = this.container.clientWidth / rect.width;
+  var scaleY = this.container.clientHeight / rect.height;
+  var aspectFactor = scaleX / scaleY;
 
-	// Remove any overlap of the rect outside the client area
-	rect.x = Math.max(0, rect.x);
-	rect.y = Math.max(0, rect.y);
-	var rectRight = Math.min(this.container.scrollWidth, rect.x + rect.width);
-	var rectBottom = Math.min(this.container.scrollHeight, rect.y + rect.height);
-	rect.width = rectRight - rect.x;
-	rect.height = rectBottom - rect.y;
+  // Remove any overlap of the rect outside the client area
+  rect.x = Math.max(0, rect.x);
+  rect.y = Math.max(0, rect.y);
+  var rectRight = Math.min(this.container.scrollWidth, rect.x + rect.width);
+  var rectBottom = Math.min(this.container.scrollHeight, rect.y + rect.height);
+  rect.width = rectRight - rect.x;
+  rect.height = rectBottom - rect.y;
 
-	// The selection area has to be increased to the same aspect
-	// ratio as the container, centred around the centre point of the 
-	// original rect passed in.
-	if (aspectFactor < 1.0)
-	{
-		// Height needs increasing
-		var newHeight = rect.height / aspectFactor;
-		var deltaHeightBuffer = (newHeight - rect.height) / 2.0;
-		rect.height = newHeight;
-		
-		// Assign up to half the buffer to the upper part of the rect, not crossing 0
-		// put the rest on the bottom
-		var upperBuffer = Math.min(rect.y , deltaHeightBuffer);
-		rect.y = rect.y - upperBuffer;
-		
-		// Check if the bottom has extended too far
-		rectBottom = Math.min(this.container.scrollHeight, rect.y + rect.height);
-		rect.height = rectBottom - rect.y;
-	}
-	else
-	{
-		// Width needs increasing
-		var newWidth = rect.width * aspectFactor;
-		var deltaWidthBuffer = (newWidth - rect.width) / 2.0;
-		rect.width = newWidth;
-		
-		// Assign up to half the buffer to the upper part of the rect, not crossing 0
-		// put the rest on the bottom
-		var leftBuffer = Math.min(rect.x , deltaWidthBuffer);
-		rect.x = rect.x - leftBuffer;
-		
-		// Check if the right hand side has extended too far
-		rectRight = Math.min(this.container.scrollWidth, rect.x + rect.width);
-		rect.width = rectRight - rect.x;
-	}
+  // The selection area has to be increased to the same aspect
+  // ratio as the container, centred around the centre point of the
+  // original rect passed in.
+  if (aspectFactor < 1.0)
+  {
+    // Height needs increasing
+    var newHeight = rect.height / aspectFactor;
+    var deltaHeightBuffer = (newHeight - rect.height) / 2.0;
+    rect.height = newHeight;
 
-	var scale = this.container.clientWidth / rect.width;
-	var newScale = this.view.scale * scale;
+    // Assign up to half the buffer to the upper part of the rect, not crossing 0
+    // put the rest on the bottom
+    var upperBuffer = Math.min(rect.y , deltaHeightBuffer);
+    rect.y = rect.y - upperBuffer;
 
-	if (!mxUtils.hasScrollbars(this.container))
-	{
-		this.view.scaleAndTranslate(newScale, (this.view.translate.x - rect.x / this.view.scale), (this.view.translate.y - rect.y / this.view.scale));
-	}
-	else
-	{
-		this.view.setScale(newScale);
-		this.container.scrollLeft = Math.round(rect.x * scale);
-		this.container.scrollTop = Math.round(rect.y * scale);
-	}
+    // Check if the bottom has extended too far
+    rectBottom = Math.min(this.container.scrollHeight, rect.y + rect.height);
+    rect.height = rectBottom - rect.y;
+  }
+  else
+  {
+    // Width needs increasing
+    var newWidth = rect.width * aspectFactor;
+    var deltaWidthBuffer = (newWidth - rect.width) / 2.0;
+    rect.width = newWidth;
+
+    // Assign up to half the buffer to the upper part of the rect, not crossing 0
+    // put the rest on the bottom
+    var leftBuffer = Math.min(rect.x , deltaWidthBuffer);
+    rect.x = rect.x - leftBuffer;
+
+    // Check if the right hand side has extended too far
+    rectRight = Math.min(this.container.scrollWidth, rect.x + rect.width);
+    rect.width = rectRight - rect.x;
+  }
+
+  var scale = this.container.clientWidth / rect.width;
+  var newScale = this.view.scale * scale;
+
+  if (!mxUtils.hasScrollbars(this.container))
+  {
+    this.view.scaleAndTranslate(newScale, (this.view.translate.x - rect.x / this.view.scale), (this.view.translate.y - rect.y / this.view.scale));
+  }
+  else
+  {
+    this.view.setScale(newScale);
+    this.container.scrollLeft = Math.round(rect.x * scale);
+    this.container.scrollTop = Math.round(rect.y * scale);
+  }
 };
 
 /**
@@ -8206,7 +8206,7 @@ zoomToRect = (rect)=>
  * [code]
  * var bounds = graph.getGraphBounds();
  * graph.view.setTranslate(-bounds.x - (bounds.width - container.clientWidth) / 2,
- * 						   -bounds.y - (bounds.height - container.clientHeight) / 2);
+ *                -bounds.y - (bounds.height - container.clientHeight) / 2);
  * [/code]
  * 
  * Parameters:
@@ -8216,38 +8216,38 @@ zoomToRect = (rect)=>
  */
 scrollCellToVisible = (cell, center)=>
 {
-	var x = -this.view.translate.x;
-	var y = -this.view.translate.y;
+  var x = -this.view.translate.x;
+  var y = -this.view.translate.y;
 
-	var state = this.view.getState(cell);
+  var state = this.view.getState(cell);
 
-	if (state != null)
-	{
-		var bounds = new mxRectangle(x + state.x, y + state.y, state.width,
-			state.height);
+  if (state != null)
+  {
+    var bounds = new mxRectangle(x + state.x, y + state.y, state.width,
+      state.height);
 
-		if (center && this.container != null)
-		{
-			var w = this.container.clientWidth;
-			var h = this.container.clientHeight;
+    if (center && this.container != null)
+    {
+      var w = this.container.clientWidth;
+      var h = this.container.clientHeight;
 
-			bounds.x = bounds.getCenterX() - w / 2;
-			bounds.width = w;
-			bounds.y = bounds.getCenterY() - h / 2;
-			bounds.height = h;
-		}
-		
-		var tr = new mxPoint(this.view.translate.x, this.view.translate.y);
+      bounds.x = bounds.getCenterX() - w / 2;
+      bounds.width = w;
+      bounds.y = bounds.getCenterY() - h / 2;
+      bounds.height = h;
+    }
 
-		if (this.scrollRectToVisible(bounds))
-		{
-			// Triggers an update via the view's event source
-			var tr2 = new mxPoint(this.view.translate.x, this.view.translate.y);
-			this.view.translate.x = tr.x;
-			this.view.translate.y = tr.y;
-			this.view.setTranslate(tr2.x, tr2.y);
-		}
-	}
+    var tr = new mxPoint(this.view.translate.x, this.view.translate.y);
+
+    if (this.scrollRectToVisible(bounds))
+    {
+      // Triggers an update via the view's event source
+      var tr2 = new mxPoint(this.view.translate.x, this.view.translate.y);
+      this.view.translate.x = tr.x;
+      this.view.translate.y = tr.y;
+      this.view.setTranslate(tr2.x, tr2.y);
+    }
+  }
 };
 
 /**
@@ -8261,105 +8261,105 @@ scrollCellToVisible = (cell, center)=>
  */
 scrollRectToVisible = (rect)=>
 {
-	var isChanged = false;
-	
-	if (rect != null)
-	{
-		var w = this.container.offsetWidth;
-		var h = this.container.offsetHeight;
+  var isChanged = false;
+
+  if (rect != null)
+  {
+    var w = this.container.offsetWidth;
+    var h = this.container.offsetHeight;
 
         var widthLimit = Math.min(w, rect.width);
         var heightLimit = Math.min(h, rect.height);
 
-		if (mxUtils.hasScrollbars(this.container))
-		{
-			var c = this.container;
-			rect.x += this.view.translate.x;
-			rect.y += this.view.translate.y;
-			var dx = c.scrollLeft - rect.x;
-			var ddx = Math.max(dx - c.scrollLeft, 0);
+    if (mxUtils.hasScrollbars(this.container))
+    {
+      var c = this.container;
+      rect.x += this.view.translate.x;
+      rect.y += this.view.translate.y;
+      var dx = c.scrollLeft - rect.x;
+      var ddx = Math.max(dx - c.scrollLeft, 0);
 
-			if (dx > 0)
-			{
-				c.scrollLeft -= dx + 2;
-			}
-			else
-			{
-				dx = rect.x + widthLimit - c.scrollLeft - c.clientWidth;
+      if (dx > 0)
+      {
+        c.scrollLeft -= dx + 2;
+      }
+      else
+      {
+        dx = rect.x + widthLimit - c.scrollLeft - c.clientWidth;
 
-				if (dx > 0)
-				{
-					c.scrollLeft += dx + 2;
-				}
-			}
+        if (dx > 0)
+        {
+          c.scrollLeft += dx + 2;
+        }
+      }
 
-			var dy = c.scrollTop - rect.y;
-			var ddy = Math.max(0, dy - c.scrollTop);
+      var dy = c.scrollTop - rect.y;
+      var ddy = Math.max(0, dy - c.scrollTop);
 
-			if (dy > 0)
-			{
-				c.scrollTop -= dy + 2;
-			}
-			else
-			{
-				dy = rect.y + heightLimit - c.scrollTop - c.clientHeight;
+      if (dy > 0)
+      {
+        c.scrollTop -= dy + 2;
+      }
+      else
+      {
+        dy = rect.y + heightLimit - c.scrollTop - c.clientHeight;
 
-				if (dy > 0)
-				{
-					c.scrollTop += dy + 2;
-				}
-			}
+        if (dy > 0)
+        {
+          c.scrollTop += dy + 2;
+        }
+      }
 
-			if (!this.useScrollbarsForPanning && (ddx != 0 || ddy != 0))
-			{
-				this.view.setTranslate(ddx, ddy);
-			}
-		}
-		else
-		{
-			var x = -this.view.translate.x;
-			var y = -this.view.translate.y;
+      if (!this.useScrollbarsForPanning && (ddx != 0 || ddy != 0))
+      {
+        this.view.setTranslate(ddx, ddy);
+      }
+    }
+    else
+    {
+      var x = -this.view.translate.x;
+      var y = -this.view.translate.y;
 
-			var s = this.view.scale;
+      var s = this.view.scale;
 
-			if (rect.x + widthLimit > x + w)
-			{
-				this.view.translate.x -= (rect.x + widthLimit - w - x) / s;
-				isChanged = true;
-			}
+      if (rect.x + widthLimit > x + w)
+      {
+        this.view.translate.x -= (rect.x + widthLimit - w - x) / s;
+        isChanged = true;
+      }
 
-			if (rect.y + heightLimit > y + h)
-			{
-				this.view.translate.y -= (rect.y + heightLimit - h - y) / s;
-				isChanged = true;
-			}
+      if (rect.y + heightLimit > y + h)
+      {
+        this.view.translate.y -= (rect.y + heightLimit - h - y) / s;
+        isChanged = true;
+      }
 
-			if (rect.x < x)
-			{
-				this.view.translate.x += (x - rect.x) / s;
-				isChanged = true;
-			}
+      if (rect.x < x)
+      {
+        this.view.translate.x += (x - rect.x) / s;
+        isChanged = true;
+      }
 
-			if (rect.y  < y)
-			{
-				this.view.translate.y += (y - rect.y) / s;
-				isChanged = true;
-			}
+      if (rect.y  < y)
+      {
+        this.view.translate.y += (y - rect.y) / s;
+        isChanged = true;
+      }
 
-			if (isChanged)
-			{
-				this.view.refresh();
-				
-				// Repaints selection marker (ticket 18)
-				if (this.selectionCellsHandler != null)
-				{
-					this.selectionCellsHandler.refresh();
-				}
-			}
-		}
-	}
+      if (isChanged)
+      {
+        this.view.refresh();
 
-	return isChanged;
+        // Repaints selection marker (ticket 18)
+        if (this.selectionCellsHandler != null)
+        {
+          this.selectionCellsHandler.refresh();
+        }
+      }
+    }
+  }
+
+  return isChanged;
 };
 
 /**
@@ -8376,7 +8376,7 @@ scrollRectToVisible = (rect)=>
  */
 getCellGeometry = (cell)=>
 {
-	return this.model.getGeometry(cell);
+  return this.model.getGeometry(cell);
 };
 
 /**
@@ -8396,7 +8396,7 @@ getCellGeometry = (cell)=>
  */
 isCellVisible = (cell)=>
 {
-	return this.model.isVisible(cell);
+  return this.model.isVisible(cell);
 };
 
 /**
@@ -8416,7 +8416,7 @@ isCellVisible = (cell)=>
  */
 isCellCollapsed = (cell)=>
 {
-	return this.model.isCollapsed(cell);
+  return this.model.isCollapsed(cell);
 };
 
 /**
@@ -8433,7 +8433,7 @@ isCellCollapsed = (cell)=>
  */
 isCellConnectable = (cell)=>
 {
-	return this.model.isConnectable(cell);
+  return this.model.isConnectable(cell);
 };
 
 /**
@@ -8448,21 +8448,21 @@ isCellConnectable = (cell)=>
  */
 isOrthogonal = (edge)=>
 {
-	var orthogonal = edge.style[mxConstants.STYLE_ORTHOGONAL];
-	
-	if (orthogonal != null)
-	{
-		return orthogonal;
-	}
-	
-	var tmp = this.view.getEdgeStyle(edge);
-	
-	return tmp == mxEdgeStyle.SegmentConnector ||
-		tmp == mxEdgeStyle.ElbowConnector ||
-		tmp == mxEdgeStyle.SideToSide ||
-		tmp == mxEdgeStyle.TopToBottom ||
-		tmp == mxEdgeStyle.EntityRelation ||
-		tmp == mxEdgeStyle.OrthConnector;
+  var orthogonal = edge.style[mxConstants.STYLE_ORTHOGONAL];
+
+  if (orthogonal != null)
+  {
+    return orthogonal;
+  }
+
+  var tmp = this.view.getEdgeStyle(edge);
+
+  return tmp == mxEdgeStyle.SegmentConnector ||
+    tmp == mxEdgeStyle.ElbowConnector ||
+    tmp == mxEdgeStyle.SideToSide ||
+    tmp == mxEdgeStyle.TopToBottom ||
+    tmp == mxEdgeStyle.EntityRelation ||
+    tmp == mxEdgeStyle.OrthConnector;
 };
 
 /**
@@ -8476,10 +8476,10 @@ isOrthogonal = (edge)=>
  */
 isLoop = (state)=>
 {
-	var src = state.getVisibleTerminalState(true);
-	var trg = state.getVisibleTerminalState(false);
-	
-	return (src != null && src == trg);
+  var src = state.getVisibleTerminalState(true);
+  var trg = state.getVisibleTerminalState(false);
+
+  return (src != null && src == trg);
 };
 
 /**
@@ -8490,7 +8490,7 @@ isLoop = (state)=>
  */
 isCloneEvent = (evt)=>
 {
-	return mxEvent.isControlDown(evt);
+  return mxEvent.isControlDown(evt);
 };
 
 /**
@@ -8502,7 +8502,7 @@ isCloneEvent = (evt)=>
  */
 isTransparentClickEvent = (evt)=>
 {
-	return false;
+  return false;
 };
 
 /**
@@ -8514,7 +8514,7 @@ isTransparentClickEvent = (evt)=>
  */
 isToggleEvent = (evt)=>
 {
-	return (mxClient.IS_MAC) ? mxEvent.isMetaDown(evt) : mxEvent.isControlDown(evt);
+  return (mxClient.IS_MAC) ? mxEvent.isMetaDown(evt) : mxEvent.isControlDown(evt);
 };
 
 /**
@@ -8524,7 +8524,7 @@ isToggleEvent = (evt)=>
  */
 isGridEnabledEvent = (evt)=>
 {
-	return evt != null && !mxEvent.isAltDown(evt);
+  return evt != null && !mxEvent.isAltDown(evt);
 };
 
 /**
@@ -8534,7 +8534,7 @@ isGridEnabledEvent = (evt)=>
  */
 isConstrainedEvent = (evt)=>
 {
-	return mxEvent.isShiftDown(evt);
+  return mxEvent.isShiftDown(evt);
 };
 
 /**
@@ -8545,7 +8545,7 @@ isConstrainedEvent = (evt)=>
  */
 isIgnoreTerminalEvent = (evt)=>
 {
-	return false;
+  return false;
 };
 
 /**
@@ -8560,7 +8560,7 @@ isIgnoreTerminalEvent = (evt)=>
  */
 validationAlert = (message)=>
 {
-	mxUtils.alert(message);
+  mxUtils.alert(message);
 };
 
 /**
@@ -8577,7 +8577,7 @@ validationAlert = (message)=>
  */
 isEdgeValid = (edge, source, target)=>
 {
-	return this.getEdgeValidationError(edge, source, target) == null;
+  return this.getEdgeValidationError(edge, source, target) == null;
 };
 
 /**
@@ -8623,80 +8623,80 @@ isEdgeValid = (edge, source, target)=>
  */
 getEdgeValidationError = (edge, source, target)=>
 {
-	if (edge != null && !this.isAllowDanglingEdges() && (source == null || target == null))
-	{
-		return '';
-	}
-	
-	if (edge != null && this.model.getTerminal(edge, true) == null &&
-		this.model.getTerminal(edge, false) == null)	
-	{
-		return null;
-	}
-	
-	// Checks if we're dealing with a loop
-	if (!this.allowLoops && source == target && source != null)
-	{
-		return '';
-	}
-	
-	// Checks if the connection is generally allowed
-	if (!this.isValidConnection(source, target))
-	{
-		return '';
-	}
+  if (edge != null && !this.isAllowDanglingEdges() && (source == null || target == null))
+  {
+    return '';
+  }
 
-	if (source != null && target != null)
-	{
-		var error = '';
+  if (edge != null && this.model.getTerminal(edge, true) == null &&
+    this.model.getTerminal(edge, false) == null)
+  {
+    return null;
+  }
 
-		// Checks if the cells are already connected
-		// and adds an error message if required			
-		if (!this.multigraph)
-		{
-			var tmp = this.model.getEdgesBetween(source, target, true);
-			
-			// Checks if the source and target are not connected by another edge
-			if (tmp.length > 1 || (tmp.length == 1 && tmp[0] != edge))
-			{
-				error += (mxResources.get(this.alreadyConnectedResource) ||
-					this.alreadyConnectedResource)+'\n';
-			}
-		}
+  // Checks if we're dealing with a loop
+  if (!this.allowLoops && source == target && source != null)
+  {
+    return '';
+  }
 
-		// Gets the number of outgoing edges from the source
-		// and the number of incoming edges from the target
-		// without counting the edge being currently changed.
-		var sourceOut = this.model.getDirectedEdgeCount(source, true, edge);
-		var targetIn = this.model.getDirectedEdgeCount(target, false, edge);
+  // Checks if the connection is generally allowed
+  if (!this.isValidConnection(source, target))
+  {
+    return '';
+  }
 
-		// Checks the change against each multiplicity rule
-		if (this.multiplicities != null)
-		{
-			for (var i = 0; i < this.multiplicities.length; i++)
-			{
-				var err = this.multiplicities[i].check(this, edge, source,
-					target, sourceOut, targetIn);
-				
-				if (err != null)
-				{
-					error += err;
-				}
-			}
-		}
+  if (source != null && target != null)
+  {
+    var error = '';
 
-		// Validates the source and target terminals independently
-		var err = this.validateEdge(edge, source, target);
-		
-		if (err != null)
-		{
-			error += err;
-		}
-		
-		return (error.length > 0) ? error : null;
-	}
-	
-	return (this.allowDanglingEdges) ? null : '';
+    // Checks if the cells are already connected
+    // and adds an error message if required
+    if (!this.multigraph)
+    {
+      var tmp = this.model.getEdgesBetween(source, target, true);
+
+      // Checks if the source and target are not connected by another edge
+      if (tmp.length > 1 || (tmp.length == 1 && tmp[0] != edge))
+      {
+        error += (mxResources.get(this.alreadyConnectedResource) ||
+          this.alreadyConnectedResource)+'\n';
+      }
+    }
+
+    // Gets the number of outgoing edges from the source
+    // and the number of incoming edges from the target
+    // without counting the edge being currently changed.
+    var sourceOut = this.model.getDirectedEdgeCount(source, true, edge);
+    var targetIn = this.model.getDirectedEdgeCount(target, false, edge);
+
+    // Checks the change against each multiplicity rule
+    if (this.multiplicities != null)
+    {
+      for (var i = 0; i < this.multiplicities.length; i++)
+      {
+        var err = this.multiplicities[i].check(this, edge, source,
+          target, sourceOut, targetIn);
+
+        if (err != null)
+        {
+          error += err;
+        }
+      }
+    }
+
+    // Validates the source and target terminals independently
+    var err = this.validateEdge(edge, source, target);
+
+    if (err != null)
+    {
+      error += err;
+    }
+
+    return (error.length > 0) ? error : null;
+  }
+
+  return (this.allowDanglingEdges) ? null : '';
 };
 
 /**
@@ -8713,7 +8713,7 @@ getEdgeValidationError = (edge, source, target)=>
  */
 validateEdge = (edge, source, target)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -8734,75 +8734,75 @@ validateEdge = (edge, source, target)=>
  */
 validateGraph = (cell, context)=>
 {
-	cell = (cell != null) ? cell : this.model.getRoot();
-	context = (context != null) ? context : new Object();
-	
-	var isValid = true;
-	var childCount = this.model.getChildCount(cell);
-	
-	for (var i = 0; i < childCount; i++)
-	{
-		var tmp = this.model.getChildAt(cell, i);
-		var ctx = context;
-		
-		if (this.isValidRoot(tmp))
-		{
-			ctx = new Object();
-		}
-		
-		var warn = this.validateGraph(tmp, ctx);
-		
-		if (warn != null)
-		{
-			this.setCellWarning(tmp, warn.replace(/\n/g, '<br>'));
-		}
-		else
-		{
-			this.setCellWarning(tmp, null);
-		}
-		
-		isValid = isValid && warn == null;
-	}
-	
-	var warning = '';
-	
-	// Adds error for invalid children if collapsed (children invisible)
-	if (this.isCellCollapsed(cell) && !isValid)
-	{
-		warning += (mxResources.get(this.containsValidationErrorsResource) ||
-			this.containsValidationErrorsResource) + '\n';
-	}
-	
-	// Checks edges and cells using the defined multiplicities
-	if (this.model.isEdge(cell))
-	{
-		warning += this.getEdgeValidationError(cell,
-		this.model.getTerminal(cell, true),
-		this.model.getTerminal(cell, false)) || '';
-	}
-	else
-	{
-		warning += this.getCellValidationError(cell) || '';
-	}
-	
-	// Checks custom validation rules
-	var err = this.validateCell(cell, context);
-	
-	if (err != null)
-	{
-		warning += err;
-	}
-	
-	// Updates the display with the warning icons
-	// before any potential alerts are displayed.
-	// LATER: Move this into addCellOverlay. Redraw
-	// should check if overlay was added or removed.
-	if (this.model.getParent(cell) == null)
-	{
-		this.view.validate();
-	}
+  cell = (cell != null) ? cell : this.model.getRoot();
+  context = (context != null) ? context : new Object();
 
-	return (warning.length > 0 || !isValid) ? warning : null;
+  var isValid = true;
+  var childCount = this.model.getChildCount(cell);
+
+  for (var i = 0; i < childCount; i++)
+  {
+    var tmp = this.model.getChildAt(cell, i);
+    var ctx = context;
+
+    if (this.isValidRoot(tmp))
+    {
+      ctx = new Object();
+    }
+
+    var warn = this.validateGraph(tmp, ctx);
+
+    if (warn != null)
+    {
+      this.setCellWarning(tmp, warn.replace(/\n/g, '<br>'));
+    }
+    else
+    {
+      this.setCellWarning(tmp, null);
+    }
+
+    isValid = isValid && warn == null;
+  }
+
+  var warning = '';
+
+  // Adds error for invalid children if collapsed (children invisible)
+  if (this.isCellCollapsed(cell) && !isValid)
+  {
+    warning += (mxResources.get(this.containsValidationErrorsResource) ||
+      this.containsValidationErrorsResource) + '\n';
+  }
+
+  // Checks edges and cells using the defined multiplicities
+  if (this.model.isEdge(cell))
+  {
+    warning += this.getEdgeValidationError(cell,
+    this.model.getTerminal(cell, true),
+    this.model.getTerminal(cell, false)) || '';
+  }
+  else
+  {
+    warning += this.getCellValidationError(cell) || '';
+  }
+
+  // Checks custom validation rules
+  var err = this.validateCell(cell, context);
+
+  if (err != null)
+  {
+    warning += err;
+  }
+
+  // Updates the display with the warning icons
+  // before any potential alerts are displayed.
+  // LATER: Move this into addCellOverlay. Redraw
+  // should check if overlay was added or removed.
+  if (this.model.getParent(cell) == null)
+  {
+    this.view.validate();
+  }
+
+  return (warning.length > 0 || !isValid) ? warning : null;
 };
 
 /**
@@ -8818,33 +8818,33 @@ validateGraph = (cell, context)=>
  */
 getCellValidationError = (cell)=>
 {
-	var outCount = this.model.getDirectedEdgeCount(cell, true);
-	var inCount = this.model.getDirectedEdgeCount(cell, false);
-	var value = this.model.getValue(cell);
-	var error = '';
+  var outCount = this.model.getDirectedEdgeCount(cell, true);
+  var inCount = this.model.getDirectedEdgeCount(cell, false);
+  var value = this.model.getValue(cell);
+  var error = '';
 
-	if (this.multiplicities != null)
-	{
-		for (var i = 0; i < this.multiplicities.length; i++)
-		{
-			var rule = this.multiplicities[i];
-			
-			if (rule.source && mxUtils.isNode(value, rule.type,
-				rule.attr, rule.value) && (outCount > rule.max ||
-				outCount < rule.min))
-			{
-				error += rule.countError + '\n';
-			}
-			else if (!rule.source && mxUtils.isNode(value, rule.type,
-					rule.attr, rule.value) && (inCount > rule.max ||
-					inCount < rule.min))
-			{
-				error += rule.countError + '\n';
-			}
-		}
-	}
+  if (this.multiplicities != null)
+  {
+    for (var i = 0; i < this.multiplicities.length; i++)
+    {
+      var rule = this.multiplicities[i];
 
-	return (error.length > 0) ? error : null;
+      if (rule.source && mxUtils.isNode(value, rule.type,
+        rule.attr, rule.value) && (outCount > rule.max ||
+        outCount < rule.min))
+      {
+        error += rule.countError + '\n';
+      }
+      else if (!rule.source && mxUtils.isNode(value, rule.type,
+          rule.attr, rule.value) && (inCount > rule.max ||
+          inCount < rule.min))
+      {
+        error += rule.countError + '\n';
+      }
+    }
+  }
+
+  return (error.length > 0) ? error : null;
 };
 
 /**
@@ -8861,7 +8861,7 @@ getCellValidationError = (cell)=>
  */
 validateCell = (cell, context)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -8875,7 +8875,7 @@ validateCell = (cell, context)=>
  */
 getBackgroundImage = ()=>
 {
-	return this.backgroundImage;
+  return this.backgroundImage;
 };
 
 /**
@@ -8889,7 +8889,7 @@ getBackgroundImage = ()=>
  */
 setBackgroundImage = (image)=>
 {
-	this.backgroundImage = image;
+  this.backgroundImage = image;
 };
 
 /**
@@ -8900,17 +8900,17 @@ setBackgroundImage = (image)=>
  */
 getFoldingImage = (state)=>
 {
-	if (state != null && this.foldingEnabled && !this.getModel().isEdge(state.cell))
-	{
-		var tmp = this.isCellCollapsed(state.cell);
-		
-		if (this.isCellFoldable(state.cell, !tmp))
-		{
-			return (tmp) ? this.collapsedImage : this.expandedImage;
-		}
-	}
-	
-	return null;
+  if (state != null && this.foldingEnabled && !this.getModel().isEdge(state.cell))
+  {
+    var tmp = this.isCellCollapsed(state.cell);
+
+    if (this.isCellFoldable(state.cell, !tmp))
+    {
+      return (tmp) ? this.collapsedImage : this.expandedImage;
+    }
+  }
+
+  return null;
 };
 
 /**
@@ -8928,7 +8928,7 @@ getFoldingImage = (state)=>
  * (code)
  * graph.convertValueToString = (cell)=>
  * {
- * 	return cell.getAttribute('label');
+ *   return cell.getAttribute('label');
  * }
  * (end)
  * 
@@ -8940,21 +8940,21 @@ getFoldingImage = (state)=>
  */
 convertValueToString = (cell)=>
 {
-	var value = this.model.getValue(cell);
-	
-	if (value != null)
-	{
-		if (mxUtils.isNode(value))
-		{
-			return value.nodeName;
-		}
-		else if (typeof(value.toString) == 'function')
-		{
-			return value.toString();
-		}
-	}
-	
-	return '';
+  var value = this.model.getValue(cell);
+
+  if (value != null)
+  {
+    if (mxUtils.isNode(value))
+    {
+      return value.nodeName;
+    }
+    else if (typeof(value.toString) == 'function')
+    {
+      return value.toString();
+    }
+  }
+
+  return '';
 };
 
 /**
@@ -9011,19 +9011,19 @@ convertValueToString = (cell)=>
  */
 getLabel = (cell)=>
 {
-	var result = '';
-	
-	if (this.labelsVisible && cell != null)
-	{
-		var style = this.getCurrentCellStyle(cell);
-		
-		if (!mxUtils.getValue(style, mxConstants.STYLE_NOLABEL, false))
-		{
-			result = this.convertValueToString(cell);
-		}
-	}
-	
-	return result;
+  var result = '';
+
+  if (this.labelsVisible && cell != null)
+  {
+    var style = this.getCurrentCellStyle(cell);
+
+    if (!mxUtils.getValue(style, mxConstants.STYLE_NOLABEL, false))
+    {
+      result = this.convertValueToString(cell);
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -9038,7 +9038,7 @@ getLabel = (cell)=>
  */
 isHtmlLabel = (cell)=>
 {
-	return this.isHtmlLabels();
+  return this.isHtmlLabels();
 };
  
 /**
@@ -9048,7 +9048,7 @@ isHtmlLabel = (cell)=>
  */
 isHtmlLabels = ()=>
 {
-	return this.htmlLabels;
+  return this.htmlLabels;
 };
  
 /**
@@ -9058,7 +9058,7 @@ isHtmlLabels = ()=>
  */
 setHtmlLabels = (value)=>
 {
-	this.htmlLabels = value;
+  this.htmlLabels = value;
 };
 
 /**
@@ -9094,7 +9094,7 @@ setHtmlLabels = (value)=>
  * 
  * graph.isWrapping = (state)=>
  * {
- * 	 return this.model.isEdge(state.cell);
+ *    return this.model.isEdge(state.cell);
  * }
  * (end)
  * 
@@ -9108,7 +9108,7 @@ setHtmlLabels = (value)=>
  */
 isWrapping = (cell)=>
 {
-	return this.getCurrentCellStyle(cell)[mxConstants.STYLE_WHITE_SPACE] == 'wrap';
+  return this.getCurrentCellStyle(cell)[mxConstants.STYLE_WHITE_SPACE] == 'wrap';
 };
 
 /**
@@ -9125,7 +9125,7 @@ isWrapping = (cell)=>
  */
 isLabelClipped = (cell)=>
 {
-	return this.getCurrentCellStyle(cell)[mxConstants.STYLE_OVERFLOW] == 'hidden';
+  return this.getCurrentCellStyle(cell)[mxConstants.STYLE_OVERFLOW] == 'hidden';
 };
 
 /**
@@ -9149,47 +9149,47 @@ isLabelClipped = (cell)=>
  */
 getTooltip = (state, node, x, y)=>
 {
-	var tip = null;
-	
-	if (state != null)
-	{
-		// Checks if the mouse is over the folding icon
-		if (state.control != null && (node == state.control.node ||
-			node.parentNode == state.control.node))
-		{
-			tip = this.collapseExpandResource;
-			tip = mxUtils.htmlEntities(mxResources.get(tip) || tip).replace(/\\n/g, '<br>');
-		}
+  var tip = null;
 
-		if (tip == null && state.overlays != null)
-		{
-			state.overlays.visit((id, shape)=>
-			{
-				// LATER: Exit loop if tip is not null
-				if (tip == null && (node == shape.node || node.parentNode == shape.node))
-				{
-					tip = shape.overlay.toString();
-				}
-			});
-		}
-		
-		if (tip == null)
-		{
-			var handler = this.selectionCellsHandler.getHandler(state.cell);
-			
-			if (handler != null && typeof(handler.getTooltipForNode) == 'function')
-			{
-				tip = handler.getTooltipForNode(node);
-			}
-		}
-		
-		if (tip == null)
-		{
-			tip = this.getTooltipForCell(state.cell);
-		}
-	}
-	
-	return tip;
+  if (state != null)
+  {
+    // Checks if the mouse is over the folding icon
+    if (state.control != null && (node == state.control.node ||
+      node.parentNode == state.control.node))
+    {
+      tip = this.collapseExpandResource;
+      tip = mxUtils.htmlEntities(mxResources.get(tip) || tip).replace(/\\n/g, '<br>');
+    }
+
+    if (tip == null && state.overlays != null)
+    {
+      state.overlays.visit((id, shape)=>
+      {
+        // LATER: Exit loop if tip is not null
+        if (tip == null && (node == shape.node || node.parentNode == shape.node))
+        {
+          tip = shape.overlay.toString();
+        }
+      });
+    }
+
+    if (tip == null)
+    {
+      var handler = this.selectionCellsHandler.getHandler(state.cell);
+
+      if (handler != null && typeof(handler.getTooltipForNode) == 'function')
+      {
+        tip = handler.getTooltipForNode(node);
+      }
+    }
+
+    if (tip == null)
+    {
+      tip = this.getTooltipForCell(state.cell);
+    }
+  }
+
+  return tip;
 };
 
 /**
@@ -9216,18 +9216,18 @@ getTooltip = (state, node, x, y)=>
  */
 getTooltipForCell = (cell)=>
 {
-	var tip = null;
-	
-	if (cell != null && cell.getTooltip != null)
-	{
-		tip = cell.getTooltip();
-	}
-	else
-	{
-		tip = this.convertValueToString(cell);
-	}
-	
-	return tip;
+  var tip = null;
+
+  if (cell != null && cell.getTooltip != null)
+  {
+    tip = cell.getTooltip();
+  }
+  else
+  {
+    tip = this.convertValueToString(cell);
+  }
+
+  return tip;
 };
 
 /**
@@ -9242,7 +9242,7 @@ getTooltipForCell = (cell)=>
  */
 getLinkForCell = (cell)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -9257,7 +9257,7 @@ getLinkForCell = (cell)=>
  */
 getCursorForMouseEvent = (me)=>
 {
-	return this.getCursorForCell(me.getCell());
+  return this.getCursorForCell(me.getCell());
 };
 
 /**
@@ -9272,7 +9272,7 @@ getCursorForMouseEvent = (me)=>
  */
 getCursorForCell = (cell)=>
 {
-	return null;
+  return null;
 };
 
 /**
@@ -9290,21 +9290,21 @@ getCursorForCell = (cell)=>
  */
 getStartSize = (swimlane, ignoreState)=>
 {
-	var result = new mxRectangle();
-	var style = this.getCurrentCellStyle(swimlane, ignoreState);
-	var size = parseInt(mxUtils.getValue(style,
-		mxConstants.STYLE_STARTSIZE, mxConstants.DEFAULT_STARTSIZE));
-	
-	if (mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true))
-	{
-		result.height = size;
-	}
-	else
-	{
-		result.width = size;
-	}
-	
-	return result;
+  var result = new mxRectangle();
+  var style = this.getCurrentCellStyle(swimlane, ignoreState);
+  var size = parseInt(mxUtils.getValue(style,
+    mxConstants.STYLE_STARTSIZE, mxConstants.DEFAULT_STARTSIZE));
+
+  if (mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true))
+  {
+    result.height = size;
+  }
+  else
+  {
+    result.width = size;
+  }
+
+  return result;
 };
 
 /**
@@ -9314,40 +9314,40 @@ getStartSize = (swimlane, ignoreState)=>
  */
 getSwimlaneDirection = (style)=>
 {
-	var dir = mxUtils.getValue(style, mxConstants.STYLE_DIRECTION, mxConstants.DIRECTION_EAST);
-	var flipH = mxUtils.getValue(style, mxConstants.STYLE_FLIPH, 0) == 1;
-	var flipV = mxUtils.getValue(style, mxConstants.STYLE_FLIPV, 0) == 1;
-	var h = mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true);
-	var n = (h) ? 0 : 3;
-	
-	if (dir == mxConstants.DIRECTION_NORTH)
-	{
-		n--;
-	}
-	else if (dir == mxConstants.DIRECTION_WEST)
-	{
-		n += 2;
-	}
-	else if (dir == mxConstants.DIRECTION_SOUTH)
-	{
-		n += 1;
-	}
-	
-	var mod = mxUtils.mod(n, 2);
-	
-	if (flipH && mod == 1)
-	{
-		n += 2;
-	}
-	
-	if (flipV && mod == 0)
-	{
-		n += 2;
-	}
-	
-	return [mxConstants.DIRECTION_NORTH, mxConstants.DIRECTION_EAST,
-		mxConstants.DIRECTION_SOUTH, mxConstants.DIRECTION_WEST]
-		[mxUtils.mod(n, 4)];
+  var dir = mxUtils.getValue(style, mxConstants.STYLE_DIRECTION, mxConstants.DIRECTION_EAST);
+  var flipH = mxUtils.getValue(style, mxConstants.STYLE_FLIPH, 0) == 1;
+  var flipV = mxUtils.getValue(style, mxConstants.STYLE_FLIPV, 0) == 1;
+  var h = mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true);
+  var n = (h) ? 0 : 3;
+
+  if (dir == mxConstants.DIRECTION_NORTH)
+  {
+    n--;
+  }
+  else if (dir == mxConstants.DIRECTION_WEST)
+  {
+    n += 2;
+  }
+  else if (dir == mxConstants.DIRECTION_SOUTH)
+  {
+    n += 1;
+  }
+
+  var mod = mxUtils.mod(n, 2);
+
+  if (flipH && mod == 1)
+  {
+    n += 2;
+  }
+
+  if (flipV && mod == 0)
+  {
+    n += 2;
+  }
+
+  return [mxConstants.DIRECTION_NORTH, mxConstants.DIRECTION_EAST,
+    mxConstants.DIRECTION_SOUTH, mxConstants.DIRECTION_WEST]
+    [mxUtils.mod(n, 4)];
 };
 
 /**
@@ -9365,34 +9365,34 @@ getSwimlaneDirection = (style)=>
  */
 getActualStartSize = (swimlane, ignoreState)=>
 {
-	var result = new mxRectangle();
-	
-	if (this.isSwimlane(swimlane, ignoreState))
-	{
-		var style = this.getCurrentCellStyle(swimlane, ignoreState);
-		var size = parseInt(mxUtils.getValue(style, mxConstants.STYLE_STARTSIZE,
-			mxConstants.DEFAULT_STARTSIZE));
-		var dir = this.getSwimlaneDirection(style);
-		
-		if (dir == mxConstants.DIRECTION_NORTH)
-		{
-			result.y = size;
-		}
-		else if (dir == mxConstants.DIRECTION_WEST)
-		{
-			result.x = size;
-		}
-		else if (dir == mxConstants.DIRECTION_SOUTH)
-		{
-			result.height = size;
-		}
-		else
-		{
-			result.width = size;
-		}
-	}
-	
-	return result;
+  var result = new mxRectangle();
+
+  if (this.isSwimlane(swimlane, ignoreState))
+  {
+    var style = this.getCurrentCellStyle(swimlane, ignoreState);
+    var size = parseInt(mxUtils.getValue(style, mxConstants.STYLE_STARTSIZE,
+      mxConstants.DEFAULT_STARTSIZE));
+    var dir = this.getSwimlaneDirection(style);
+
+    if (dir == mxConstants.DIRECTION_NORTH)
+    {
+      result.y = size;
+    }
+    else if (dir == mxConstants.DIRECTION_WEST)
+    {
+      result.x = size;
+    }
+    else if (dir == mxConstants.DIRECTION_SOUTH)
+    {
+      result.height = size;
+    }
+    else
+    {
+      result.width = size;
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -9408,7 +9408,7 @@ getActualStartSize = (swimlane, ignoreState)=>
  */
 getImage = (state)=>
 {
-	return (state != null && state.style != null) ? state.style[mxConstants.STYLE_IMAGE] : null;
+  return (state != null && state.style != null) ? state.style[mxConstants.STYLE_IMAGE] : null;
 };
 
 /**
@@ -9422,18 +9422,18 @@ getImage = (state)=>
  */
 isTransparentState = (state)=>
 {
-	var result = false;
-	
-	if (state != null)
-	{
-		var stroke = mxUtils.getValue(state.style, mxConstants.STYLE_STROKECOLOR, mxConstants.NONE);
-		var fill = mxUtils.getValue(state.style, mxConstants.STYLE_FILLCOLOR, mxConstants.NONE);
-		
-		result = stroke == mxConstants.NONE && fill == mxConstants.NONE && this.getImage(state) == null;
-		
-	}
-	
-	return result;
+  var result = false;
+
+  if (state != null)
+  {
+    var stroke = mxUtils.getValue(state.style, mxConstants.STYLE_STROKECOLOR, mxConstants.NONE);
+    var fill = mxUtils.getValue(state.style, mxConstants.STYLE_FILLCOLOR, mxConstants.NONE);
+
+    result = stroke == mxConstants.NONE && fill == mxConstants.NONE && this.getImage(state) == null;
+
+  }
+
+  return result;
 };
 
 /**
@@ -9450,9 +9450,9 @@ isTransparentState = (state)=>
  */
 getVerticalAlign = (state)=>
 {
-	return (state != null && state.style != null) ?
-		(state.style[mxConstants.STYLE_VERTICAL_ALIGN] ||
-		mxConstants.ALIGN_MIDDLE) : null;
+  return (state != null && state.style != null) ?
+    (state.style[mxConstants.STYLE_VERTICAL_ALIGN] ||
+    mxConstants.ALIGN_MIDDLE) : null;
 };
 
 /**
@@ -9469,7 +9469,7 @@ getVerticalAlign = (state)=>
  */
 getIndicatorColor = (state)=>
 {
-	return (state != null && state.style != null) ? state.style[mxConstants.STYLE_INDICATOR_COLOR] : null;
+  return (state != null && state.style != null) ? state.style[mxConstants.STYLE_INDICATOR_COLOR] : null;
 };
 
 /**
@@ -9486,7 +9486,7 @@ getIndicatorColor = (state)=>
  */
 getIndicatorGradientColor = (state)=>
 {
-	return (state != null && state.style != null) ? state.style[mxConstants.STYLE_INDICATOR_GRADIENTCOLOR] : null;
+  return (state != null && state.style != null) ? state.style[mxConstants.STYLE_INDICATOR_GRADIENTCOLOR] : null;
 };
 
 /**
@@ -9502,7 +9502,7 @@ getIndicatorGradientColor = (state)=>
  */
 getIndicatorShape = (state)=>
 {
-	return (state != null && state.style != null) ? state.style[mxConstants.STYLE_INDICATOR_SHAPE] : null;
+  return (state != null && state.style != null) ? state.style[mxConstants.STYLE_INDICATOR_SHAPE] : null;
 };
 
 /**
@@ -9518,7 +9518,7 @@ getIndicatorShape = (state)=>
  */
 getIndicatorImage = (state)=>
 {
-	return (state != null && state.style != null) ? state.style[mxConstants.STYLE_INDICATOR_IMAGE] : null;
+  return (state != null && state.style != null) ? state.style[mxConstants.STYLE_INDICATOR_IMAGE] : null;
 };
 
 /**
@@ -9528,7 +9528,7 @@ getIndicatorImage = (state)=>
  */
 getBorder = ()=>
 {
-	return this.border;
+  return this.border;
 };
 
 /**
@@ -9542,7 +9542,7 @@ getBorder = ()=>
  */
 setBorder = (value)=>
 {
-	this.border = value;
+  this.border = value;
 };
 
 /**
@@ -9559,14 +9559,14 @@ setBorder = (value)=>
  */
 isSwimlane = (cell, ignoreState)=>
 {
-	if (cell != null && this.model.getParent(cell) != this.model.getRoot() &&
-		!this.model.isEdge(cell))
-	{
-		return this.getCurrentCellStyle(cell, ignoreState)
-			[mxConstants.STYLE_SHAPE] == mxConstants.SHAPE_SWIMLANE;
-	}
-	
-	return false;
+  if (cell != null && this.model.getParent(cell) != this.model.getRoot() &&
+    !this.model.isEdge(cell))
+  {
+    return this.getCurrentCellStyle(cell, ignoreState)
+      [mxConstants.STYLE_SHAPE] == mxConstants.SHAPE_SWIMLANE;
+  }
+
+  return false;
 };
 
 /**
@@ -9580,7 +9580,7 @@ isSwimlane = (cell, ignoreState)=>
  */
 isResizeContainer = ()=>
 {
-	return this.resizeContainer;
+  return this.resizeContainer;
 };
 
 /**
@@ -9594,7 +9594,7 @@ isResizeContainer = ()=>
  */
 setResizeContainer = (value)=>
 {
-	this.resizeContainer = value;
+  this.resizeContainer = value;
 };
 
 /**
@@ -9604,7 +9604,7 @@ setResizeContainer = (value)=>
  */
 isEnabled = ()=>
 {
-	return this.enabled;
+  return this.enabled;
 };
 
 /**
@@ -9619,7 +9619,7 @@ isEnabled = ()=>
  */
 setEnabled = (value)=>
 {
-	this.enabled = value;
+  this.enabled = value;
 };
 
 /**
@@ -9629,7 +9629,7 @@ setEnabled = (value)=>
  */
 isEscapeEnabled = ()=>
 {
-	return this.escapeEnabled;
+  return this.escapeEnabled;
 };
 
 /**
@@ -9643,7 +9643,7 @@ isEscapeEnabled = ()=>
  */
 setEscapeEnabled = (value)=>
 {
-	this.escapeEnabled = value;
+  this.escapeEnabled = value;
 };
 
 /**
@@ -9653,7 +9653,7 @@ setEscapeEnabled = (value)=>
  */
 isInvokesStopCellEditing = ()=>
 {
-	return this.invokesStopCellEditing;
+  return this.invokesStopCellEditing;
 };
 
 /**
@@ -9663,7 +9663,7 @@ isInvokesStopCellEditing = ()=>
  */
 setInvokesStopCellEditing = (value)=>
 {
-	this.invokesStopCellEditing = value;
+  this.invokesStopCellEditing = value;
 };
 
 /**
@@ -9673,7 +9673,7 @@ setInvokesStopCellEditing = (value)=>
  */
 isEnterStopsCellEditing = ()=>
 {
-	return this.enterStopsCellEditing;
+  return this.enterStopsCellEditing;
 };
 
 /**
@@ -9683,7 +9683,7 @@ isEnterStopsCellEditing = ()=>
  */
 setEnterStopsCellEditing = (value)=>
 {
-	this.enterStopsCellEditing = value;
+  this.enterStopsCellEditing = value;
 };
 
 /**
@@ -9699,9 +9699,9 @@ setEnterStopsCellEditing = (value)=>
  */
 isCellLocked = (cell)=>
 {
-	var geometry = this.model.getGeometry(cell);
-	
-	return this.isCellsLocked() || (geometry != null && this.model.isVertex(cell) && geometry.relative);
+  var geometry = this.model.getGeometry(cell);
+
+  return this.isCellsLocked() || (geometry != null && this.model.isVertex(cell) && geometry.relative);
 };
 
 /**
@@ -9717,7 +9717,7 @@ isCellLocked = (cell)=>
  */
 isCellsLocked = ()=>
 {
-	return this.cellsLocked;
+  return this.cellsLocked;
 };
 
 /**
@@ -9732,7 +9732,7 @@ isCellsLocked = ()=>
  */
 setCellsLocked = (value)=>
 {
-	this.cellsLocked = value;
+  this.cellsLocked = value;
 };
 
 /**
@@ -9742,10 +9742,10 @@ setCellsLocked = (value)=>
  */
 getCloneableCells = (cells)=>
 {
-	return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
-	{
-		return this.isCellCloneable(cell);
-	}));
+  return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
+  {
+    return this.isCellCloneable(cell);
+  }));
 };
 
 /**
@@ -9761,9 +9761,9 @@ getCloneableCells = (cells)=>
  */
 isCellCloneable = (cell)=>
 {
-	var style = this.getCurrentCellStyle(cell);
+  var style = this.getCurrentCellStyle(cell);
 
-	return this.isCellsCloneable() && style[mxConstants.STYLE_CLONEABLE] != 0;
+  return this.isCellsCloneable() && style[mxConstants.STYLE_CLONEABLE] != 0;
 };
 
 /**
@@ -9774,7 +9774,7 @@ isCellCloneable = (cell)=>
  */
 isCellsCloneable = ()=>
 {
-	return this.cellsCloneable;
+  return this.cellsCloneable;
 };
 
 /**
@@ -9790,7 +9790,7 @@ isCellsCloneable = ()=>
  */
 setCellsCloneable = (value)=>
 {
-	this.cellsCloneable = value;
+  this.cellsCloneable = value;
 };
 
 /**
@@ -9800,10 +9800,10 @@ setCellsCloneable = (value)=>
  */
 getExportableCells = (cells)=>
 {
-	return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
-	{
-		return this.canExportCell(cell);
-	}));
+  return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
+  {
+    return this.canExportCell(cell);
+  }));
 };
 
 /**
@@ -9818,7 +9818,7 @@ getExportableCells = (cells)=>
  */
 canExportCell = (cell)=>
 {
-	return this.exportEnabled;
+  return this.exportEnabled;
 };
 
 /**
@@ -9828,10 +9828,10 @@ canExportCell = (cell)=>
  */
 getImportableCells = (cells)=>
 {
-	return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
-	{
-		return this.canImportCell(cell);
-	}));
+  return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
+  {
+    return this.canImportCell(cell);
+  }));
 };
 
 /**
@@ -9846,7 +9846,7 @@ getImportableCells = (cells)=>
  */
 canImportCell = (cell)=>
 {
-	return this.importEnabled;
+  return this.importEnabled;
 };
 
 /**
@@ -9878,7 +9878,7 @@ canImportCell = (cell)=>
  */
 isCellSelectable = (cell)=>
 {
-	return this.isCellsSelectable();
+  return this.isCellsSelectable();
 };
 
 /**
@@ -9888,7 +9888,7 @@ isCellSelectable = (cell)=>
  */
 isCellsSelectable = ()=>
 {
-	return this.cellsSelectable;
+  return this.cellsSelectable;
 };
 
 /**
@@ -9898,7 +9898,7 @@ isCellsSelectable = ()=>
  */
 setCellsSelectable = (value)=>
 {
-	this.cellsSelectable = value;
+  this.cellsSelectable = value;
 };
 
 /**
@@ -9908,10 +9908,10 @@ setCellsSelectable = (value)=>
  */
 getDeletableCells = (cells)=>
 {
-	return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
-	{
-		return this.isCellDeletable(cell);
-	}));
+  return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
+  {
+    return this.isCellDeletable(cell);
+  }));
 };
 
 /**
@@ -9927,9 +9927,9 @@ getDeletableCells = (cells)=>
  */
 isCellDeletable = (cell)=>
 {
-	var style = this.getCurrentCellStyle(cell);
-	
-	return this.isCellsDeletable() && style[mxConstants.STYLE_DELETABLE] != 0;
+  var style = this.getCurrentCellStyle(cell);
+
+  return this.isCellsDeletable() && style[mxConstants.STYLE_DELETABLE] != 0;
 };
 
 /**
@@ -9939,7 +9939,7 @@ isCellDeletable = (cell)=>
  */
 isCellsDeletable = ()=>
 {
-	return this.cellsDeletable;
+  return this.cellsDeletable;
 };
 
 /**
@@ -9953,7 +9953,7 @@ isCellsDeletable = ()=>
  */
 setCellsDeletable = (value)=>
 {
-	this.cellsDeletable = value;
+  this.cellsDeletable = value;
 };
 
 /**
@@ -9969,9 +9969,9 @@ setCellsDeletable = (value)=>
  */
 isLabelMovable = (cell)=>
 {
-	return !this.isCellLocked(cell) &&
-		((this.model.isEdge(cell) && this.edgeLabelsMovable) ||
-		(this.model.isVertex(cell) && this.vertexLabelsMovable));
+  return !this.isCellLocked(cell) &&
+    ((this.model.isEdge(cell) && this.edgeLabelsMovable) ||
+    (this.model.isVertex(cell) && this.vertexLabelsMovable));
 };
 
 /**
@@ -9986,9 +9986,9 @@ isLabelMovable = (cell)=>
  */
 isCellRotatable = (cell)=>
 {
-	var style = this.getCurrentCellStyle(cell);
-	
-	return style[mxConstants.STYLE_ROTATABLE] != 0;
+  var style = this.getCurrentCellStyle(cell);
+
+  return style[mxConstants.STYLE_ROTATABLE] != 0;
 };
 
 /**
@@ -9998,10 +9998,10 @@ isCellRotatable = (cell)=>
  */
 getMovableCells = (cells)=>
 {
-	return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
-	{
-		return this.isCellMovable(cell);
-	}));
+  return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
+  {
+    return this.isCellMovable(cell);
+  }));
 };
 
 /**
@@ -10017,9 +10017,9 @@ getMovableCells = (cells)=>
  */
 isCellMovable = (cell)=>
 {
-	var style = this.getCurrentCellStyle(cell);
-	
-	return this.isCellsMovable() && !this.isCellLocked(cell) && style[mxConstants.STYLE_MOVABLE] != 0;
+  var style = this.getCurrentCellStyle(cell);
+
+  return this.isCellsMovable() && !this.isCellLocked(cell) && style[mxConstants.STYLE_MOVABLE] != 0;
 };
 
 /**
@@ -10029,7 +10029,7 @@ isCellMovable = (cell)=>
  */
 isCellsMovable = ()=>
 {
-	return this.cellsMovable;
+  return this.cellsMovable;
 };
 
 /**
@@ -10044,7 +10044,7 @@ isCellsMovable = ()=>
  */
 setCellsMovable = (value)=>
 {
-	this.cellsMovable = value;
+  this.cellsMovable = value;
 };
 
 /**
@@ -10054,7 +10054,7 @@ setCellsMovable = (value)=>
  */
 isGridEnabled = ()=>
 {
-	return this.gridEnabled;
+  return this.gridEnabled;
 };
 
 /**
@@ -10068,7 +10068,7 @@ isGridEnabled = ()=>
  */
 setGridEnabled = (value)=>
 {
-	this.gridEnabled = value;
+  this.gridEnabled = value;
 };
 
 /**
@@ -10078,7 +10078,7 @@ setGridEnabled = (value)=>
  */
 isPortsEnabled = ()=>
 {
-	return this.portsEnabled;
+  return this.portsEnabled;
 };
 
 /**
@@ -10092,7 +10092,7 @@ isPortsEnabled = ()=>
  */
 setPortsEnabled = (value)=>
 {
-	this.portsEnabled = value;
+  this.portsEnabled = value;
 };
 
 /**
@@ -10102,7 +10102,7 @@ setPortsEnabled = (value)=>
  */
 getGridSize = ()=>
 {
-	return this.gridSize;
+  return this.gridSize;
 };
 
 /**
@@ -10112,7 +10112,7 @@ getGridSize = ()=>
  */
 setGridSize = (value)=>
 {
-	this.gridSize = value;
+  this.gridSize = value;
 };
 
 /**
@@ -10122,7 +10122,7 @@ setGridSize = (value)=>
  */
 getTolerance = ()=>
 {
-	return this.tolerance;
+  return this.tolerance;
 };
 
 /**
@@ -10132,7 +10132,7 @@ getTolerance = ()=>
  */
 setTolerance = (value)=>
 {
-	this.tolerance = value;
+  this.tolerance = value;
 };
 
 /**
@@ -10142,7 +10142,7 @@ setTolerance = (value)=>
  */
 isVertexLabelsMovable = ()=>
 {
-	return this.vertexLabelsMovable;
+  return this.vertexLabelsMovable;
 };
 
 /**
@@ -10152,7 +10152,7 @@ isVertexLabelsMovable = ()=>
  */
 setVertexLabelsMovable = (value)=>
 {
-	this.vertexLabelsMovable = value;
+  this.vertexLabelsMovable = value;
 };
 
 /**
@@ -10162,7 +10162,7 @@ setVertexLabelsMovable = (value)=>
  */
 isEdgeLabelsMovable = ()=>
 {
-	return this.edgeLabelsMovable;
+  return this.edgeLabelsMovable;
 };
 
 /**
@@ -10172,7 +10172,7 @@ isEdgeLabelsMovable = ()=>
  */
 setEdgeLabelsMovable = (value)=>
 {
-	this.edgeLabelsMovable = value;
+  this.edgeLabelsMovable = value;
 };
 
 /**
@@ -10182,7 +10182,7 @@ setEdgeLabelsMovable = (value)=>
  */
 isSwimlaneNesting = ()=>
 {
-	return this.swimlaneNesting;
+  return this.swimlaneNesting;
 };
 
 /**
@@ -10197,7 +10197,7 @@ isSwimlaneNesting = ()=>
  */
 setSwimlaneNesting = (value)=>
 {
-	this.swimlaneNesting = value;
+  this.swimlaneNesting = value;
 };
 
 /**
@@ -10207,7 +10207,7 @@ setSwimlaneNesting = (value)=>
  */
 isSwimlaneSelectionEnabled = ()=>
 {
-	return this.swimlaneSelectionEnabled;
+  return this.swimlaneSelectionEnabled;
 };
 
 /**
@@ -10223,7 +10223,7 @@ isSwimlaneSelectionEnabled = ()=>
  */
 setSwimlaneSelectionEnabled = (value)=>
 {
-	this.swimlaneSelectionEnabled = value;
+  this.swimlaneSelectionEnabled = value;
 };
 
 /**
@@ -10233,7 +10233,7 @@ setSwimlaneSelectionEnabled = (value)=>
  */
 isMultigraph = ()=>
 {
-	return this.multigraph;
+  return this.multigraph;
 };
 
 /**
@@ -10249,7 +10249,7 @@ isMultigraph = ()=>
  */
 setMultigraph = (value)=>
 {
-	this.multigraph = value;
+  this.multigraph = value;
 };
 
 /**
@@ -10259,7 +10259,7 @@ setMultigraph = (value)=>
  */
 isAllowLoops = ()=>
 {
-	return this.allowLoops;
+  return this.allowLoops;
 };
 
 /**
@@ -10274,7 +10274,7 @@ isAllowLoops = ()=>
  */
 setAllowDanglingEdges = (value)=>
 {
-	this.allowDanglingEdges = value;
+  this.allowDanglingEdges = value;
 };
 
 /**
@@ -10284,7 +10284,7 @@ setAllowDanglingEdges = (value)=>
  */
 isAllowDanglingEdges = ()=>
 {
-	return this.allowDanglingEdges;
+  return this.allowDanglingEdges;
 };
 
 /**
@@ -10298,7 +10298,7 @@ isAllowDanglingEdges = ()=>
  */
 setConnectableEdges = (value)=>
 {
-	this.connectableEdges = value;
+  this.connectableEdges = value;
 };
 
 /**
@@ -10308,7 +10308,7 @@ setConnectableEdges = (value)=>
  */
 isConnectableEdges = ()=>
 {
-	return this.connectableEdges;
+  return this.connectableEdges;
 };
 
 /**
@@ -10324,7 +10324,7 @@ isConnectableEdges = ()=>
  */
 setCloneInvalidEdges = (value)=>
 {
-	this.cloneInvalidEdges = value;
+  this.cloneInvalidEdges = value;
 };
 
 /**
@@ -10334,7 +10334,7 @@ setCloneInvalidEdges = (value)=>
  */
 isCloneInvalidEdges = ()=>
 {
-	return this.cloneInvalidEdges;
+  return this.cloneInvalidEdges;
 };
 
 /**
@@ -10348,7 +10348,7 @@ isCloneInvalidEdges = ()=>
  */
 setAllowLoops = (value)=>
 {
-	this.allowLoops = value;
+  this.allowLoops = value;
 };
 
 /**
@@ -10358,7 +10358,7 @@ setAllowLoops = (value)=>
  */
 isDisconnectOnMove = ()=>
 {
-	return this.disconnectOnMove;
+  return this.disconnectOnMove;
 };
 
 /**
@@ -10374,7 +10374,7 @@ isDisconnectOnMove = ()=>
  */
 setDisconnectOnMove = (value)=>
 {
-	this.disconnectOnMove = value;
+  this.disconnectOnMove = value;
 };
 
 /**
@@ -10384,7 +10384,7 @@ setDisconnectOnMove = (value)=>
  */
 isDropEnabled = ()=>
 {
-	return this.dropEnabled;
+  return this.dropEnabled;
 };
 
 /**
@@ -10400,7 +10400,7 @@ isDropEnabled = ()=>
  */
 setDropEnabled = (value)=>
 {
-	this.dropEnabled = value;
+  this.dropEnabled = value;
 };
 
 /**
@@ -10410,7 +10410,7 @@ setDropEnabled = (value)=>
  */
 isSplitEnabled = ()=>
 {
-	return this.splitEnabled;
+  return this.splitEnabled;
 };
 
 /**
@@ -10426,7 +10426,7 @@ isSplitEnabled = ()=>
  */
 setSplitEnabled = (value)=>
 {
-	this.splitEnabled = value;
+  this.splitEnabled = value;
 };
 
 /**
@@ -10443,10 +10443,10 @@ setSplitEnabled = (value)=>
  */
 isCellResizable = (cell)=>
 {
-	var style = this.getCurrentCellStyle(cell);
+  var style = this.getCurrentCellStyle(cell);
 
-	return this.isCellsResizable() && !this.isCellLocked(cell) &&
-		mxUtils.getValue(style, mxConstants.STYLE_RESIZABLE, '1') != '0';
+  return this.isCellsResizable() && !this.isCellLocked(cell) &&
+    mxUtils.getValue(style, mxConstants.STYLE_RESIZABLE, '1') != '0';
 };
 
 /**
@@ -10456,7 +10456,7 @@ isCellResizable = (cell)=>
  */
 isCellsResizable = ()=>
 {
-	return this.cellsResizable;
+  return this.cellsResizable;
 };
 
 /**
@@ -10472,7 +10472,7 @@ isCellsResizable = ()=>
  */
 setCellsResizable = (value)=>
 {
-	this.cellsResizable = value;
+  this.cellsResizable = value;
 };
 
 /**
@@ -10491,7 +10491,7 @@ setCellsResizable = (value)=>
  */
 isTerminalPointMovable = (cell, source)=>
 {
-	return true;
+  return true;
 };
 
 /**
@@ -10507,9 +10507,9 @@ isTerminalPointMovable = (cell, source)=>
  */
 isCellBendable = (cell)=>
 {
-	var style = this.getCurrentCellStyle(cell);
-	
-	return this.isCellsBendable() && !this.isCellLocked(cell) && style[mxConstants.STYLE_BENDABLE] != 0;
+  var style = this.getCurrentCellStyle(cell);
+
+  return this.isCellsBendable() && !this.isCellLocked(cell) && style[mxConstants.STYLE_BENDABLE] != 0;
 };
 
 /**
@@ -10519,7 +10519,7 @@ isCellBendable = (cell)=>
  */
 isCellsBendable = ()=>
 {
-	return this.cellsBendable;
+  return this.cellsBendable;
 };
 
 /**
@@ -10535,7 +10535,7 @@ isCellsBendable = ()=>
  */
 setCellsBendable = (value)=>
 {
-	this.cellsBendable = value;
+  this.cellsBendable = value;
 };
 
 /**
@@ -10551,9 +10551,9 @@ setCellsBendable = (value)=>
  */
 isCellEditable = (cell)=>
 {
-	var style = this.getCurrentCellStyle(cell);
-	
-	return this.isCellsEditable() && !this.isCellLocked(cell) && style[mxConstants.STYLE_EDITABLE] != 0;
+  var style = this.getCurrentCellStyle(cell);
+
+  return this.isCellsEditable() && !this.isCellLocked(cell) && style[mxConstants.STYLE_EDITABLE] != 0;
 };
 
 /**
@@ -10563,7 +10563,7 @@ isCellEditable = (cell)=>
  */
 isCellsEditable = ()=>
 {
-	return this.cellsEditable;
+  return this.cellsEditable;
 };
 
 /**
@@ -10579,7 +10579,7 @@ isCellsEditable = ()=>
  */
 setCellsEditable = (value)=>
 {
-	this.cellsEditable = value;
+  this.cellsEditable = value;
 };
 
 /**
@@ -10598,7 +10598,7 @@ setCellsEditable = (value)=>
  */
 isCellDisconnectable = (cell, terminal, source)=>
 {
-	return this.isCellsDisconnectable() && !this.isCellLocked(cell);
+  return this.isCellsDisconnectable() && !this.isCellLocked(cell);
 };
 
 /**
@@ -10608,7 +10608,7 @@ isCellDisconnectable = (cell, terminal, source)=>
  */
 isCellsDisconnectable = ()=>
 {
-	return this.cellsDisconnectable;
+  return this.cellsDisconnectable;
 };
 
 /**
@@ -10618,7 +10618,7 @@ isCellsDisconnectable = ()=>
  */
 setCellsDisconnectable = (value)=>
 {
-	this.cellsDisconnectable = value;
+  this.cellsDisconnectable = value;
 };
 
 /**
@@ -10634,11 +10634,11 @@ setCellsDisconnectable = (value)=>
  */
 isValidSource = (cell)=>
 {
-	return (cell == null && this.allowDanglingEdges) ||
-		(cell != null && (!this.model.isEdge(cell) ||
-		this.connectableEdges) && this.isCellConnectable(cell));
+  return (cell == null && this.allowDanglingEdges) ||
+    (cell != null && (!this.model.isEdge(cell) ||
+    this.connectableEdges) && this.isCellConnectable(cell));
 };
-	
+
 /**
  * Function: isValidTarget
  * 
@@ -10651,7 +10651,7 @@ isValidSource = (cell)=>
  */
 isValidTarget = (cell)=>
 {
-	return this.isValidSource(cell);
+  return this.isValidSource(cell);
 };
 
 /**
@@ -10670,7 +10670,7 @@ isValidTarget = (cell)=>
  */
 isValidConnection = (source, target)=>
 {
-	return this.isValidSource(source) && this.isValidTarget(target);
+  return this.isValidSource(source) && this.isValidTarget(target);
 };
 
 /**
@@ -10685,9 +10685,9 @@ isValidConnection = (source, target)=>
  */
 setConnectable = (connectable)=>
 {
-	this.connectionHandler.setEnabled(connectable);
+  this.connectionHandler.setEnabled(connectable);
 };
-	
+
 /**
  * Function: isConnectable
  * 
@@ -10695,7 +10695,7 @@ setConnectable = (connectable)=>
  */
 isConnectable = ()=>
 {
-	return this.connectionHandler.isEnabled();
+  return this.connectionHandler.isEnabled();
 };
 
 /**
@@ -10710,7 +10710,7 @@ isConnectable = ()=>
  */
 setTooltips = function (enabled)
 {
-	this.tooltipHandler.setEnabled(enabled);
+  this.tooltipHandler.setEnabled(enabled);
 };
 
 /**
@@ -10725,7 +10725,7 @@ setTooltips = function (enabled)
  */
 setPanning = (enabled)=>
 {
-	this.panningHandler.panningEnabled = enabled;
+  this.panningHandler.panningEnabled = enabled;
 };
 
 /**
@@ -10741,14 +10741,14 @@ setPanning = (enabled)=>
  */
 isEditing = (cell)=>
 {
-	if (this.cellEditor != null)
-	{
-		var editingCell = this.cellEditor.getEditingCell();
-		
-		return (cell == null) ? editingCell != null : cell == editingCell;
-	}
-	
-	return false;
+  if (this.cellEditor != null)
+  {
+    var editingCell = this.cellEditor.getEditingCell();
+
+    return (cell == null) ? editingCell != null : cell == editingCell;
+  }
+
+  return false;
 };
 
 /**
@@ -10765,9 +10765,9 @@ isEditing = (cell)=>
  */
 isAutoSizeCell = (cell)=>
 {
-	var style = this.getCurrentCellStyle(cell);
-	
-	return this.isAutoSizeCells() || style[mxConstants.STYLE_AUTOSIZE] == 1;
+  var style = this.getCurrentCellStyle(cell);
+
+  return this.isAutoSizeCells() || style[mxConstants.STYLE_AUTOSIZE] == 1;
 };
 
 /**
@@ -10777,7 +10777,7 @@ isAutoSizeCell = (cell)=>
  */
 isAutoSizeCells = ()=>
 {
-	return this.autoSizeCells;
+  return this.autoSizeCells;
 };
 
 /**
@@ -10795,7 +10795,7 @@ isAutoSizeCells = ()=>
  */
 setAutoSizeCells = (value)=>
 {
-	this.autoSizeCells = value;
+  this.autoSizeCells = value;
 };
 
 /**
@@ -10811,7 +10811,7 @@ setAutoSizeCells = (value)=>
  */
 isExtendParent = (cell)=>
 {
-	return !this.getModel().isEdge(cell) && this.isExtendParents();
+  return !this.getModel().isEdge(cell) && this.isExtendParents();
 };
 
 /**
@@ -10821,7 +10821,7 @@ isExtendParent = (cell)=>
  */
 isExtendParents = ()=>
 {
-	return this.extendParents;
+  return this.extendParents;
 };
 
 /**
@@ -10835,7 +10835,7 @@ isExtendParents = ()=>
  */
 setExtendParents = (value)=>
 {
-	this.extendParents = value;
+  this.extendParents = value;
 };
 
 /**
@@ -10845,7 +10845,7 @@ setExtendParents = (value)=>
  */
 isExtendParentsOnAdd = (cell)=>
 {
-	return this.extendParentsOnAdd;
+  return this.extendParentsOnAdd;
 };
 
 /**
@@ -10859,7 +10859,7 @@ isExtendParentsOnAdd = (cell)=>
  */
 setExtendParentsOnAdd = (value)=>
 {
-	this.extendParentsOnAdd = value;
+  this.extendParentsOnAdd = value;
 };
 
 /**
@@ -10869,7 +10869,7 @@ setExtendParentsOnAdd = (value)=>
  */
 isExtendParentsOnMove = ()=>
 {
-	return this.extendParentsOnMove;
+  return this.extendParentsOnMove;
 };
 
 /**
@@ -10883,7 +10883,7 @@ isExtendParentsOnMove = ()=>
  */
 setExtendParentsOnMove = (value)=>
 {
-	this.extendParentsOnMove = value;
+  this.extendParentsOnMove = value;
 };
 
 /**
@@ -10897,7 +10897,7 @@ setExtendParentsOnMove = (value)=>
  */
 isRecursiveResize = (state)=>
 {
-	return this.recursiveResize;
+  return this.recursiveResize;
 };
 
 /**
@@ -10911,7 +10911,7 @@ isRecursiveResize = (state)=>
  */
 setRecursiveResize = (value)=>
 {
-	this.recursiveResize = value;
+  this.recursiveResize = value;
 };
 
 /**
@@ -10928,7 +10928,7 @@ setRecursiveResize = (value)=>
  */
 isConstrainChild = (cell)=>
 {
-	return this.isConstrainChildren() && !this.getModel().isEdge(this.getModel().getParent(cell));
+  return this.isConstrainChildren() && !this.getModel().isEdge(this.getModel().getParent(cell));
 };
 
 /**
@@ -10938,7 +10938,7 @@ isConstrainChild = (cell)=>
  */
 isConstrainChildren = ()=>
 {
-	return this.constrainChildren;
+  return this.constrainChildren;
 };
 
 /**
@@ -10948,7 +10948,7 @@ isConstrainChildren = ()=>
  */
 setConstrainChildren = (value)=>
 {
-	this.constrainChildren = value;
+  this.constrainChildren = value;
 };
 
 /**
@@ -10958,7 +10958,7 @@ setConstrainChildren = (value)=>
  */
 isConstrainRelativeChildren = ()=>
 {
-	return this.constrainRelativeChildren;
+  return this.constrainRelativeChildren;
 };
 
 /**
@@ -10968,7 +10968,7 @@ isConstrainRelativeChildren = ()=>
  */
 setConstrainRelativeChildren = (value)=>
 {
-	this.constrainRelativeChildren = value;
+  this.constrainRelativeChildren = value;
 };
 
 /**
@@ -10978,7 +10978,7 @@ setConstrainRelativeChildren = (value)=>
  */
 isAllowNegativeCoordinates = ()=>
 {
-	return this.allowNegativeCoordinates;
+  return this.allowNegativeCoordinates;
 };
 
 /**
@@ -10988,7 +10988,7 @@ isAllowNegativeCoordinates = ()=>
  */
 setAllowNegativeCoordinates = (value)=>
 {
-	this.allowNegativeCoordinates = value;
+  this.allowNegativeCoordinates = value;
 };
 
 /**
@@ -11007,9 +11007,9 @@ setAllowNegativeCoordinates = (value)=>
  */
 getOverlap = (cell)=>
 {
-	return (this.isAllowOverlapParent(cell)) ? this.defaultOverlap : 0;
+  return (this.isAllowOverlapParent(cell)) ? this.defaultOverlap : 0;
 };
-	
+
 /**
  * Function: isAllowOverlapParent
  * 
@@ -11022,7 +11022,7 @@ getOverlap = (cell)=>
  */
 isAllowOverlapParent = (cell)=>
 {
-	return false;
+  return false;
 };
 
 /**
@@ -11032,10 +11032,10 @@ isAllowOverlapParent = (cell)=>
  */
 getFoldableCells = (cells, collapse)=>
 {
-	return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
-	{
-		return this.isCellFoldable(cell, collapse);
-	}));
+  return this.model.filterCells(cells, mxUtils.bind(this, (cell)=>
+  {
+    return this.isCellFoldable(cell, collapse);
+  }));
 };
 
 /**
@@ -11051,9 +11051,9 @@ getFoldableCells = (cells, collapse)=>
  */
 isCellFoldable = (cell, collapse)=>
 {
-	var style = this.getCurrentCellStyle(cell);
-	
-	return this.model.getChildCount(cell) > 0 && style[mxConstants.STYLE_FOLDABLE] != 0;
+  var style = this.getCurrentCellStyle(cell);
+
+  return this.model.getChildCount(cell) > 0 && style[mxConstants.STYLE_FOLDABLE] != 0;
 };
 
 /**
@@ -11072,10 +11072,10 @@ isCellFoldable = (cell, collapse)=>
  */
 isValidDropTarget = (cell, cells, evt)=>
 {
-	return cell != null && ((this.isSplitEnabled() &&
-		this.isSplitTarget(cell, cells, evt)) || (!this.model.isEdge(cell) &&
-		(this.isSwimlane(cell) || (this.model.getChildCount(cell) > 0 &&
-		!this.isCellCollapsed(cell)))));
+  return cell != null && ((this.isSplitEnabled() &&
+    this.isSplitTarget(cell, cells, evt)) || (!this.model.isEdge(cell) &&
+    (this.isSwimlane(cell) || (this.model.getChildCount(cell) > 0 &&
+    !this.isCellCollapsed(cell)))));
 };
 
 /**
@@ -11092,18 +11092,18 @@ isValidDropTarget = (cell, cells, evt)=>
  */
 isSplitTarget = (target, cells, evt)=>
 {
-	if (this.model.isEdge(target) && cells != null && cells.length == 1 &&
-		this.isCellConnectable(cells[0]) && this.getEdgeValidationError(target,
-			this.model.getTerminal(target, true), cells[0]) == null)
-	{
-		var src = this.model.getTerminal(target, true);
-		var trg = this.model.getTerminal(target, false);
+  if (this.model.isEdge(target) && cells != null && cells.length == 1 &&
+    this.isCellConnectable(cells[0]) && this.getEdgeValidationError(target,
+      this.model.getTerminal(target, true), cells[0]) == null)
+  {
+    var src = this.model.getTerminal(target, true);
+    var trg = this.model.getTerminal(target, false);
 
-		return (!this.model.isAncestor(cells[0], src) &&
-				!this.model.isAncestor(cells[0], trg));
-	}
+    return (!this.model.isAncestor(cells[0], src) &&
+        !this.model.isAncestor(cells[0], trg));
+  }
 
-	return false;
+  return false;
 };
 
 /**
@@ -11126,62 +11126,62 @@ isSplitTarget = (target, cells, evt)=>
  */
 getDropTarget = (cells, evt, cell, clone)=>
 {
-	if (!this.isSwimlaneNesting())
-	{
-		for (var i = 0; i < cells.length; i++)
-		{
-			if (this.isSwimlane(cells[i]))
-			{
-				return null;
-			}
-		}
-	}
+  if (!this.isSwimlaneNesting())
+  {
+    for (var i = 0; i < cells.length; i++)
+    {
+      if (this.isSwimlane(cells[i]))
+      {
+        return null;
+      }
+    }
+  }
 
-	var pt = mxUtils.convertPoint(this.container,
-		mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-	pt.x -= this.panDx;
-	pt.y -= this.panDy;
-	var swimlane = this.getSwimlaneAt(pt.x, pt.y);
-	
-	if (cell == null)
-	{
-		cell = swimlane;
-	}
-	else if (swimlane != null)
-	{
-		// Checks if the cell is an ancestor of the swimlane
-		// under the mouse and uses the swimlane in that case
-		var tmp = this.model.getParent(swimlane);
-		
-		while (tmp != null && this.isSwimlane(tmp) && tmp != cell)
-		{
-			tmp = this.model.getParent(tmp);
-		}
-		
-		if (tmp == cell)
-		{
-			cell = swimlane;
-		}
-	}
-	
-	while (cell != null && !this.isValidDropTarget(cell, cells, evt) &&
-		!this.model.isLayer(cell))
-	{
-		cell = this.model.getParent(cell);
-	}
-	
-	// Checks if parent is dropped into child if not cloning
-	if (clone == null || !clone)
-	{
-		var parent = cell;
-		
-		while (parent != null && mxUtils.indexOf(cells, parent) < 0)
-		{
-			parent = this.model.getParent(parent);
-		}
-	}
+  var pt = mxUtils.convertPoint(this.container,
+    mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+  pt.x -= this.panDx;
+  pt.y -= this.panDy;
+  var swimlane = this.getSwimlaneAt(pt.x, pt.y);
 
-	return (!this.model.isLayer(cell) && parent == null) ? cell : null;
+  if (cell == null)
+  {
+    cell = swimlane;
+  }
+  else if (swimlane != null)
+  {
+    // Checks if the cell is an ancestor of the swimlane
+    // under the mouse and uses the swimlane in that case
+    var tmp = this.model.getParent(swimlane);
+
+    while (tmp != null && this.isSwimlane(tmp) && tmp != cell)
+    {
+      tmp = this.model.getParent(tmp);
+    }
+
+    if (tmp == cell)
+    {
+      cell = swimlane;
+    }
+  }
+
+  while (cell != null && !this.isValidDropTarget(cell, cells, evt) &&
+    !this.model.isLayer(cell))
+  {
+    cell = this.model.getParent(cell);
+  }
+
+  // Checks if parent is dropped into child if not cloning
+  if (clone == null || !clone)
+  {
+    var parent = cell;
+
+    while (parent != null && mxUtils.indexOf(cells, parent) < 0)
+    {
+      parent = this.model.getParent(parent);
+    }
+  }
+
+  return (!this.model.isLayer(cell) && parent == null) ? cell : null;
 };
 
 /**
@@ -11198,20 +11198,20 @@ getDropTarget = (cells, evt, cell, clone)=>
  */
 getDefaultParent = ()=>
 {
-	var parent = this.getCurrentRoot();
-	
-	if (parent == null)
-	{
-		parent = this.defaultParent;
-		
-		if (parent == null)
-		{
-			var root = this.model.getRoot();
-			parent = this.model.getChildAt(root, 0);
-		}
-	}
-	
-	return parent;
+  var parent = this.getCurrentRoot();
+
+  if (parent == null)
+  {
+    parent = this.defaultParent;
+
+    if (parent == null)
+    {
+      var root = this.model.getRoot();
+      parent = this.model.getChildAt(root, 0);
+    }
+  }
+
+  return parent;
 };
 
 /**
@@ -11222,7 +11222,7 @@ getDefaultParent = ()=>
  */
 setDefaultParent = (cell)=>
 {
-	this.defaultParent = cell;
+  this.defaultParent = cell;
 };
 
 /**
@@ -11237,12 +11237,12 @@ setDefaultParent = (cell)=>
  */
 getSwimlane = (cell)=>
 {
-	while (cell != null && !this.isSwimlane(cell))
-	{
-		cell = this.model.getParent(cell);
-	}
-	
-	return cell;
+  while (cell != null && !this.isSwimlane(cell))
+  {
+    cell = this.model.getParent(cell);
+  }
+
+  return cell;
 };
 
 /**
@@ -11260,46 +11260,46 @@ getSwimlane = (cell)=>
  */
 getSwimlaneAt = function (x, y, parent)
 {
-	if (parent == null)
-	{
-		parent = this.getCurrentRoot();
-		
-		if (parent == null)
-		{
-			parent = this.model.getRoot();
-		}
-	}
-	
-	if (parent != null)
-	{
-		var childCount = this.model.getChildCount(parent);
-		
-		for (var i = 0; i < childCount; i++)
-		{
-			var child = this.model.getChildAt(parent, i);
-			
-			if (child != null)
-			{
-				var result = this.getSwimlaneAt(x, y, child);
-				
-				if (result != null)
-				{
-					return result;
-				}
-				else if (this.isCellVisible(child) && this.isSwimlane(child))
-				{
-					var state = this.view.getState(child);
-					
-					if (this.intersects(state, x, y))
-					{
-						return child;
-					}
-				}
-			}
-		}
-	}
-	
-	return null;
+  if (parent == null)
+  {
+    parent = this.getCurrentRoot();
+
+    if (parent == null)
+    {
+      parent = this.model.getRoot();
+    }
+  }
+
+  if (parent != null)
+  {
+    var childCount = this.model.getChildCount(parent);
+
+    for (var i = 0; i < childCount; i++)
+    {
+      var child = this.model.getChildAt(parent, i);
+
+      if (child != null)
+      {
+        var result = this.getSwimlaneAt(x, y, child);
+
+        if (result != null)
+        {
+          return result;
+        }
+        else if (this.isCellVisible(child) && this.isSwimlane(child))
+        {
+          var state = this.view.getState(child);
+
+          if (this.intersects(state, x, y))
+          {
+            return child;
+          }
+        }
+      }
+    }
+  }
+
+  return null;
 };
 
 /**
@@ -11327,47 +11327,47 @@ getSwimlaneAt = function (x, y, parent)
  */
 getCellAt = (x, y, parent, vertices, edges, ignoreFn)=>
 {
-	vertices = (vertices != null) ? vertices : true;
-	edges = (edges != null) ? edges : true;
+  vertices = (vertices != null) ? vertices : true;
+  edges = (edges != null) ? edges : true;
 
-	if (parent == null)
-	{
-		parent = this.getCurrentRoot();
-		
-		if (parent == null)
-		{
-			parent = this.getModel().getRoot();
-		}
-	}
+  if (parent == null)
+  {
+    parent = this.getCurrentRoot();
 
-	if (parent != null)
-	{
-		var childCount = this.model.getChildCount(parent);
-		
-		for (var i = childCount - 1; i >= 0; i--)
-		{
-			var cell = this.model.getChildAt(parent, i);
-			var result = this.getCellAt(x, y, cell, vertices, edges, ignoreFn);
-			
-			if (result != null)
-			{
-				return result;
-			}
-			else if (this.isCellVisible(cell) && (edges && this.model.isEdge(cell) ||
-				vertices && this.model.isVertex(cell)))
-			{
-				var state = this.view.getState(cell);
+    if (parent == null)
+    {
+      parent = this.getModel().getRoot();
+    }
+  }
 
-				if (state != null && (ignoreFn == null || !ignoreFn(state, x, y)) &&
-					this.intersects(state, x, y))
-				{
-					return cell;
-				}
-			}
-		}
-	}
-	
-	return null;
+  if (parent != null)
+  {
+    var childCount = this.model.getChildCount(parent);
+
+    for (var i = childCount - 1; i >= 0; i--)
+    {
+      var cell = this.model.getChildAt(parent, i);
+      var result = this.getCellAt(x, y, cell, vertices, edges, ignoreFn);
+
+      if (result != null)
+      {
+        return result;
+      }
+      else if (this.isCellVisible(cell) && (edges && this.model.isEdge(cell) ||
+        vertices && this.model.isVertex(cell)))
+      {
+        var state = this.view.getState(cell);
+
+        if (state != null && (ignoreFn == null || !ignoreFn(state, x, y)) &&
+          this.intersects(state, x, y))
+        {
+          return cell;
+        }
+      }
+    }
+  }
+
+  return null;
 };
 
 /**
@@ -11384,50 +11384,50 @@ getCellAt = (x, y, parent, vertices, edges, ignoreFn)=>
  */
 intersects = (state, x, y)=>
 {
-	if (state != null)
-	{
-		var pts = state.absolutePoints;
+  if (state != null)
+  {
+    var pts = state.absolutePoints;
 
-		if (pts != null)
-		{
-			var t2 = this.tolerance * this.tolerance;
-			var pt = pts[0];
-			
-			for (var i = 1; i < pts.length; i++)
-			{
-				var next = pts[i];
-				var dist = mxUtils.ptSegDistSq(pt.x, pt.y, next.x, next.y, x, y);
-				
-				if (dist <= t2)
-				{
-					return true;
-				}
-				
-				pt = next;
-			}
-		}
-		else
-		{
-			var alpha = mxUtils.toRadians(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0);
-			
-			if (alpha != 0)
-			{
-				var cos = Math.cos(-alpha);
-				var sin = Math.sin(-alpha);
-				var cx = new mxPoint(state.getCenterX(), state.getCenterY());
-				var pt = mxUtils.getRotatedPoint(new mxPoint(x, y), cos, sin, cx);
-				x = pt.x;
-				y = pt.y;
-			}
-			
-			if (mxUtils.contains(state, x, y))
-			{
-				return true;
-			}
-		}
-	}
-	
-	return false;
+    if (pts != null)
+    {
+      var t2 = this.tolerance * this.tolerance;
+      var pt = pts[0];
+
+      for (var i = 1; i < pts.length; i++)
+      {
+        var next = pts[i];
+        var dist = mxUtils.ptSegDistSq(pt.x, pt.y, next.x, next.y, x, y);
+
+        if (dist <= t2)
+        {
+          return true;
+        }
+
+        pt = next;
+      }
+    }
+    else
+    {
+      var alpha = mxUtils.toRadians(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0);
+
+      if (alpha != 0)
+      {
+        var cos = Math.cos(-alpha);
+        var sin = Math.sin(-alpha);
+        var cx = new mxPoint(state.getCenterX(), state.getCenterY());
+        var pt = mxUtils.getRotatedPoint(new mxPoint(x, y), cos, sin, cx);
+        x = pt.x;
+        y = pt.y;
+      }
+
+      if (mxUtils.contains(state, x, y))
+      {
+        return true;
+      }
+    }
+  }
+
+  return false;
 };
 
 /**
@@ -11444,26 +11444,26 @@ intersects = (state, x, y)=>
  */
 hitsSwimlaneContent = (swimlane, x, y)=>
 {
-	var state = this.getView().getState(swimlane);
-	var size = this.getStartSize(swimlane);
-	
-	if (state != null)
-	{
-		var scale = this.getView().getScale();
-		x -= state.x;
-		y -= state.y;
-		
-		if (size.width > 0 && x > 0 && x > size.width * scale)
-		{
-			return true;
-		}
-		else if (size.height > 0 && y > 0 && y > size.height * scale)
-		{
-			return true;
-		}
-	}
-	
-	return false;
+  var state = this.getView().getState(swimlane);
+  var size = this.getStartSize(swimlane);
+
+  if (state != null)
+  {
+    var scale = this.getView().getScale();
+    x -= state.x;
+    y -= state.y;
+
+    if (size.width > 0 && x > 0 && x > size.width * scale)
+    {
+      return true;
+    }
+    else if (size.height > 0 && y > 0 && y > size.height * scale)
+    {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 /**
@@ -11477,9 +11477,9 @@ hitsSwimlaneContent = (swimlane, x, y)=>
  */
 getChildVertices = (parent)=>
 {
-	return this.getChildCells(parent, true, false);
+  return this.getChildCells(parent, true, false);
 };
-	
+
 /**
  * Function: getChildEdges
  * 
@@ -11491,7 +11491,7 @@ getChildVertices = (parent)=>
  */
 getChildEdges = (parent)=>
 {
-	return this.getChildCells(parent, false, true);
+  return this.getChildCells(parent, false, true);
 };
 
 /**
@@ -11510,25 +11510,25 @@ getChildEdges = (parent)=>
  */
 getChildCells = (parent, vertices, edges)=>
 {
-	parent = (parent != null) ? parent : this.getDefaultParent();
-	vertices = (vertices != null) ? vertices : false;
-	edges = (edges != null) ? edges : false;
+  parent = (parent != null) ? parent : this.getDefaultParent();
+  vertices = (vertices != null) ? vertices : false;
+  edges = (edges != null) ? edges : false;
 
-	var cells = this.model.getChildCells(parent, vertices, edges);
-	var result = [];
+  var cells = this.model.getChildCells(parent, vertices, edges);
+  var result = [];
 
-	// Filters out the non-visible child cells
-	for (var i = 0; i < cells.length; i++)
-	{
-		if (this.isCellVisible(cells[i]))
-		{
-			result.push(cells[i]);
-		}
-	}
+  // Filters out the non-visible child cells
+  for (var i = 0; i < cells.length; i++)
+  {
+    if (this.isCellVisible(cells[i]))
+    {
+      result.push(cells[i]);
+    }
+  }
 
-	return result;
+  return result;
 };
-	
+
 /**
  * Function: getConnections
  * 
@@ -11542,9 +11542,9 @@ getChildCells = (parent, vertices, edges)=>
  */
 getConnections = (cell, parent)=>
 {
-	return this.getEdges(cell, parent, true, true, false);
+  return this.getEdges(cell, parent, true, true, false);
 };
-	
+
 /**
  * Function: getIncomingEdges
  * 
@@ -11560,9 +11560,9 @@ getConnections = (cell, parent)=>
  */
 getIncomingEdges = (cell, parent)=>
 {
-	return this.getEdges(cell, parent, true, false, false);
+  return this.getEdges(cell, parent, true, false, false);
 };
-	
+
 /**
  * Function: getOutgoingEdges
  * 
@@ -11578,9 +11578,9 @@ getIncomingEdges = (cell, parent)=>
  */
 getOutgoingEdges = (cell, parent)=>
 {
-	return this.getEdges(cell, parent, false, true, false);
+  return this.getEdges(cell, parent, false, true, false);
 };
-	
+
 /**
  * Function: getEdges
  * 
@@ -11607,45 +11607,45 @@ getOutgoingEdges = (cell, parent)=>
  */
 getEdges = (cell, parent, incoming, outgoing, includeLoops, recurse)=>
 {
-	incoming = (incoming != null) ? incoming : true;
-	outgoing = (outgoing != null) ? outgoing : true;
-	includeLoops = (includeLoops != null) ? includeLoops : true;
-	recurse = (recurse != null) ? recurse : false;
-	
-	var edges = [];
-	var isCollapsed = this.isCellCollapsed(cell);
-	var childCount = this.model.getChildCount(cell);
+  incoming = (incoming != null) ? incoming : true;
+  outgoing = (outgoing != null) ? outgoing : true;
+  includeLoops = (includeLoops != null) ? includeLoops : true;
+  recurse = (recurse != null) ? recurse : false;
 
-	for (var i = 0; i < childCount; i++)
-	{
-		var child = this.model.getChildAt(cell, i);
+  var edges = [];
+  var isCollapsed = this.isCellCollapsed(cell);
+  var childCount = this.model.getChildCount(cell);
 
-		if (isCollapsed || !this.isCellVisible(child))
-		{
-			edges = edges.concat(this.model.getEdges(child, incoming, outgoing));
-		}
-	}
+  for (var i = 0; i < childCount; i++)
+  {
+    var child = this.model.getChildAt(cell, i);
 
-	edges = edges.concat(this.model.getEdges(cell, incoming, outgoing));
-	var result = [];
-	
-	for (var i = 0; i < edges.length; i++)
-	{
-		var state = this.view.getState(edges[i]);
-		
-		var source = (state != null) ? state.getVisibleTerminal(true) : this.view.getVisibleTerminal(edges[i], true);
-		var target = (state != null) ? state.getVisibleTerminal(false) : this.view.getVisibleTerminal(edges[i], false);
+    if (isCollapsed || !this.isCellVisible(child))
+    {
+      edges = edges.concat(this.model.getEdges(child, incoming, outgoing));
+    }
+  }
 
-		if ((includeLoops && source == target) || ((source != target) && ((incoming &&
-			target == cell && (parent == null || this.isValidAncestor(source, parent, recurse))) ||
-			(outgoing && source == cell && (parent == null ||
-					this.isValidAncestor(target, parent, recurse))))))
-		{
-			result.push(edges[i]);
-		}
-	}
+  edges = edges.concat(this.model.getEdges(cell, incoming, outgoing));
+  var result = [];
 
-	return result;
+  for (var i = 0; i < edges.length; i++)
+  {
+    var state = this.view.getState(edges[i]);
+
+    var source = (state != null) ? state.getVisibleTerminal(true) : this.view.getVisibleTerminal(edges[i], true);
+    var target = (state != null) ? state.getVisibleTerminal(false) : this.view.getVisibleTerminal(edges[i], false);
+
+    if ((includeLoops && source == target) || ((source != target) && ((incoming &&
+      target == cell && (parent == null || this.isValidAncestor(source, parent, recurse))) ||
+      (outgoing && source == cell && (parent == null ||
+          this.isValidAncestor(target, parent, recurse))))))
+    {
+      result.push(edges[i]);
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -11663,8 +11663,8 @@ getEdges = (cell, parent, incoming, outgoing, includeLoops, recurse)=>
  */
 isValidAncestor = (cell, parent, recurse)=>
 {
-	return (recurse ? this.model.isAncestor(parent, cell) : this.model
-			.getParent(cell) == parent);
+  return (recurse ? this.model.isAncestor(parent, cell) : this.model
+      .getParent(cell) == parent);
 };
 
 /**
@@ -11686,48 +11686,48 @@ isValidAncestor = (cell, parent, recurse)=>
  */
 getOpposites = (edges, terminal, sources, targets)=>
 {
-	sources = (sources != null) ? sources : true;
-	targets = (targets != null) ? targets : true;
-	
-	var terminals = [];
-	
-	// Fast lookup to avoid duplicates in terminals array
-	var dict = new mxDictionary();
-	
-	if (edges != null)
-	{
-		for (var i = 0; i < edges.length; i++)
-		{
-			var state = this.view.getState(edges[i]);
-			
-			var source = (state != null) ? state.getVisibleTerminal(true) : this.view.getVisibleTerminal(edges[i], true);
-			var target = (state != null) ? state.getVisibleTerminal(false) : this.view.getVisibleTerminal(edges[i], false);
-			
-			// Checks if the terminal is the source of the edge and if the
-			// target should be stored in the result
-			if (source == terminal && target != null && target != terminal && targets)
-			{
-				if (!dict.get(target))
-				{
-					dict.put(target, true);
-					terminals.push(target);
-				}
-			}
-			
-			// Checks if the terminal is the taget of the edge and if the
-			// source should be stored in the result
-			else if (target == terminal && source != null && source != terminal && sources)
-			{
-				if (!dict.get(source))
-				{
-					dict.put(source, true);
-					terminals.push(source);
-				}
-			}
-		}
-	}
-	
-	return terminals;
+  sources = (sources != null) ? sources : true;
+  targets = (targets != null) ? targets : true;
+
+  var terminals = [];
+
+  // Fast lookup to avoid duplicates in terminals array
+  var dict = new mxDictionary();
+
+  if (edges != null)
+  {
+    for (var i = 0; i < edges.length; i++)
+    {
+      var state = this.view.getState(edges[i]);
+
+      var source = (state != null) ? state.getVisibleTerminal(true) : this.view.getVisibleTerminal(edges[i], true);
+      var target = (state != null) ? state.getVisibleTerminal(false) : this.view.getVisibleTerminal(edges[i], false);
+
+      // Checks if the terminal is the source of the edge and if the
+      // target should be stored in the result
+      if (source == terminal && target != null && target != terminal && targets)
+      {
+        if (!dict.get(target))
+        {
+          dict.put(target, true);
+          terminals.push(target);
+        }
+      }
+
+      // Checks if the terminal is the taget of the edge and if the
+      // source should be stored in the result
+      else if (target == terminal && source != null && source != terminal && sources)
+      {
+        if (!dict.get(source))
+        {
+          dict.put(source, true);
+          terminals.push(source);
+        }
+      }
+    }
+  }
+
+  return terminals;
 };
 
 /**
@@ -11745,26 +11745,26 @@ getOpposites = (edges, terminal, sources, targets)=>
  */
 getEdgesBetween = (source, target, directed)=>
 {
-	directed = (directed != null) ? directed : false;
-	var edges = this.getEdges(source);
-	var result = [];
+  directed = (directed != null) ? directed : false;
+  var edges = this.getEdges(source);
+  var result = [];
 
-	// Checks if the edge is connected to the correct
-	// cell and returns the first match
-	for (var i = 0; i < edges.length; i++)
-	{
-		var state = this.view.getState(edges[i]);
-		
-		var src = (state != null) ? state.getVisibleTerminal(true) : this.view.getVisibleTerminal(edges[i], true);
-		var trg = (state != null) ? state.getVisibleTerminal(false) : this.view.getVisibleTerminal(edges[i], false);
+  // Checks if the edge is connected to the correct
+  // cell and returns the first match
+  for (var i = 0; i < edges.length; i++)
+  {
+    var state = this.view.getState(edges[i]);
 
-		if ((src == source && trg == target) || (!directed && src == target && trg == source))
-		{
-			result.push(edges[i]);
-		}
-	}
+    var src = (state != null) ? state.getVisibleTerminal(true) : this.view.getVisibleTerminal(edges[i], true);
+    var trg = (state != null) ? state.getVisibleTerminal(false) : this.view.getVisibleTerminal(edges[i], false);
 
-	return result;
+    if ((src == source && trg == target) || (!directed && src == target && trg == source))
+    {
+      result.push(edges[i]);
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -11781,17 +11781,17 @@ getEdgesBetween = (source, target, directed)=>
  */
  getPointForEvent = (evt, addOffset)=>
  {
-	var p = mxUtils.convertPoint(this.container,
-		mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-	
-	var s = this.view.scale;
-	var tr = this.view.translate;
-	var off = (addOffset != false) ? this.gridSize / 2 : 0;
-	
-	p.x = this.snap(p.x / s - tr.x - off);
-	p.y = this.snap(p.y / s - tr.y - off);
-	
-	return p;
+  var p = mxUtils.convertPoint(this.container,
+    mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+
+  var s = this.view.scale;
+  var tr = this.view.translate;
+  var off = (addOffset != false) ? this.gridSize / 2 : 0;
+
+  p.x = this.snap(p.x / s - tr.x - off);
+  p.y = this.snap(p.y / s - tr.y - off);
+
+  return p;
 };
 
 /**
@@ -11818,64 +11818,64 @@ getEdgesBetween = (source, target, directed)=>
  */
 getCells = (x, y, width, height, parent, result, intersection, ignoreFn, includeDescendants)=>
 {
-	result = (result != null) ? result : [];
-	
-	if (width > 0 || height > 0 || intersection != null)
-	{
-		var model = this.getModel();
-		var right = x + width;
-		var bottom = y + height;
+  result = (result != null) ? result : [];
 
-		if (parent == null)
-		{
-			parent = this.getCurrentRoot();
-			
-			if (parent == null)
-			{
-				parent = model.getRoot();
-			}
-		}
-		
-		if (parent != null)
-		{
-			var childCount = model.getChildCount(parent);
-			
-			for (var i = 0; i < childCount; i++)
-			{
-				var cell = model.getChildAt(parent, i);
-				var state = this.view.getState(cell);
-				
-				if (state != null && this.isCellVisible(cell) &&
-					(ignoreFn == null || !ignoreFn(state)))
-				{
-					var deg = mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0;
-					var box = state;
-					
-					if (deg != 0)
-					{
-						box = mxUtils.getBoundingBox(box, deg);
-					}
-					
-					var hit = (intersection != null && model.isVertex(cell) && mxUtils.intersects(intersection, box)) ||
-						(intersection == null && (model.isEdge(cell) || model.isVertex(cell)) &&
-						box.x >= x && box.y + box.height <= bottom &&
-						box.y >= y && box.x + box.width <= right);
-					
-					if (hit)
-					{
-						result.push(cell);
-					}
-					
-					if (!hit || includeDescendants)
-					{
-						this.getCells(x, y, width, height, cell, result, intersection, ignoreFn, includeDescendants);
-					}
-				}
-			}
-		}
-	}
-	
-	return result;
+  if (width > 0 || height > 0 || intersection != null)
+  {
+    var model = this.getModel();
+    var right = x + width;
+    var bottom = y + height;
+
+    if (parent == null)
+    {
+      parent = this.getCurrentRoot();
+
+      if (parent == null)
+      {
+        parent = model.getRoot();
+      }
+    }
+
+    if (parent != null)
+    {
+      var childCount = model.getChildCount(parent);
+
+      for (var i = 0; i < childCount; i++)
+      {
+        var cell = model.getChildAt(parent, i);
+        var state = this.view.getState(cell);
+
+        if (state != null && this.isCellVisible(cell) &&
+          (ignoreFn == null || !ignoreFn(state)))
+        {
+          var deg = mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0;
+          var box = state;
+
+          if (deg != 0)
+          {
+            box = mxUtils.getBoundingBox(box, deg);
+          }
+
+          var hit = (intersection != null && model.isVertex(cell) && mxUtils.intersects(intersection, box)) ||
+            (intersection == null && (model.isEdge(cell) || model.isVertex(cell)) &&
+            box.x >= x && box.y + box.height <= bottom &&
+            box.y >= y && box.x + box.width <= right);
+
+          if (hit)
+          {
+            result.push(cell);
+          }
+
+          if (!hit || includeDescendants)
+          {
+            this.getCells(x, y, width, height, cell, result, intersection, ignoreFn, includeDescendants);
+          }
+        }
+      }
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -11898,37 +11898,37 @@ getCells = (x, y, width, height, parent, result, intersection, ignoreFn, include
  */
 getCellsBeyond = (x0, y0, parent, rightHalfpane, bottomHalfpane)=>
 {
-	var result = [];
-	
-	if (rightHalfpane || bottomHalfpane)
-	{
-		if (parent == null)
-		{
-			parent = this.getDefaultParent();
-		}
-		
-		if (parent != null)
-		{
-			var childCount = this.model.getChildCount(parent);
-			
-			for (var i = 0; i < childCount; i++)
-			{
-				var child = this.model.getChildAt(parent, i);
-				var state = this.view.getState(child);
-				
-				if (this.isCellVisible(child) && state != null)
-				{
-					if ((!rightHalfpane || state.x >= x0) &&
-						(!bottomHalfpane || state.y >= y0))
-					{
-						result.push(child);
-					}
-				}
-			}
-		}
-	}
-	
-	return result;
+  var result = [];
+
+  if (rightHalfpane || bottomHalfpane)
+  {
+    if (parent == null)
+    {
+      parent = this.getDefaultParent();
+    }
+
+    if (parent != null)
+    {
+      var childCount = this.model.getChildCount(parent);
+
+      for (var i = 0; i < childCount; i++)
+      {
+        var child = this.model.getChildAt(parent, i);
+        var state = this.view.getState(child);
+
+        if (this.isCellVisible(child) && state != null)
+        {
+          if ((!rightHalfpane || state.x >= x0) &&
+            (!bottomHalfpane || state.y >= y0))
+          {
+            result.push(child);
+          }
+        }
+      }
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -11950,30 +11950,30 @@ getCellsBeyond = (x0, y0, parent, rightHalfpane, bottomHalfpane)=>
  */
 findTreeRoots = (parent, isolate, invert)=>
 {
-	isolate = (isolate != null) ? isolate : false;
-	invert = (invert != null) ? invert : false;
-	var roots = [];
-	
-	if (parent != null)
-	{
-		var model = this.getModel();
-		var childCount = model.getChildCount(parent);
-		var best = null;
-		var maxDiff = 0;
-		
-		for (var i=0; i<childCount; i++)
-		{
-			var cell = model.getChildAt(parent, i);
-			
-			if (this.model.isVertex(cell) && this.isCellVisible(cell))
-			{
-				var conns = this.getConnections(cell, (isolate) ? parent : null);
-				var fanOut = 0;
-				var fanIn = 0;
-				
-				for (var j = 0; j < conns.length; j++)
-				{
-					var src = this.view.getVisibleTerminal(conns[j], true);
+  isolate = (isolate != null) ? isolate : false;
+  invert = (invert != null) ? invert : false;
+  var roots = [];
+
+  if (parent != null)
+  {
+    var model = this.getModel();
+    var childCount = model.getChildCount(parent);
+    var best = null;
+    var maxDiff = 0;
+
+    for (var i=0; i<childCount; i++)
+    {
+      var cell = model.getChildAt(parent, i);
+
+      if (this.model.isVertex(cell) && this.isCellVisible(cell))
+      {
+        var conns = this.getConnections(cell, (isolate) ? parent : null);
+        var fanOut = 0;
+        var fanIn = 0;
+
+        for (var j = 0; j < conns.length; j++)
+        {
+          var src = this.view.getVisibleTerminal(conns[j], true);
 
                     if (src == cell)
                     {
@@ -11983,31 +11983,31 @@ findTreeRoots = (parent, isolate, invert)=>
                     {
                         fanIn++;
                     }
-				}
-				
-				if ((invert && fanOut == 0 && fanIn > 0) ||
-					(!invert && fanIn == 0 && fanOut > 0))
-				{
-					roots.push(cell);
-				}
-				
-				var diff = (invert) ? fanIn - fanOut : fanOut - fanIn;
-				
-				if (diff > maxDiff)
-				{
-					maxDiff = diff;
-					best = cell;
-				}
-			}
-		}
-		
-		if (roots.length == 0 && best != null)
-		{
-			roots.push(best);
-		}
-	}
-	
-	return roots;
+        }
+
+        if ((invert && fanOut == 0 && fanIn > 0) ||
+          (!invert && fanIn == 0 && fanOut > 0))
+        {
+          roots.push(cell);
+        }
+
+        var diff = (invert) ? fanIn - fanOut : fanOut - fanIn;
+
+        if (diff > maxDiff)
+        {
+          maxDiff = diff;
+          best = cell;
+        }
+      }
+    }
+
+    if (roots.length == 0 && best != null)
+    {
+      roots.push(best);
+    }
+  }
+
+  return roots;
 };
 
 /**
@@ -12045,38 +12045,38 @@ findTreeRoots = (parent, isolate, invert)=>
  */
 traverse = (vertex, directed, func, edge, visited, inverse)=>
 {
-	if (func != null && vertex != null)
-	{
-		directed = (directed != null) ? directed : true;
-		inverse = (inverse != null) ? inverse : false;
-		visited = visited || new mxDictionary();
-		
-		if (!visited.get(vertex))
-		{
-			visited.put(vertex, true);
-			var result = func(vertex, edge);
-			
-			if (result == null || result)
-			{
-				var edgeCount = this.model.getEdgeCount(vertex);
-				
-				if (edgeCount > 0)
-				{
-					for (var i = 0; i < edgeCount; i++)
-					{
-						var e = this.model.getEdgeAt(vertex, i);
-						var isSource = this.model.getTerminal(e, true) == vertex;
-						
-						if (!directed || (!inverse == isSource))
-						{
-							var next = this.model.getTerminal(e, !isSource);
-							this.traverse(next, directed, func, e, visited, inverse);
-						}
-					}
-				}
-			}
-		}
-	}
+  if (func != null && vertex != null)
+  {
+    directed = (directed != null) ? directed : true;
+    inverse = (inverse != null) ? inverse : false;
+    visited = visited || new mxDictionary();
+
+    if (!visited.get(vertex))
+    {
+      visited.put(vertex, true);
+      var result = func(vertex, edge);
+
+      if (result == null || result)
+      {
+        var edgeCount = this.model.getEdgeCount(vertex);
+
+        if (edgeCount > 0)
+        {
+          for (var i = 0; i < edgeCount; i++)
+          {
+            var e = this.model.getEdgeAt(vertex, i);
+            var isSource = this.model.getTerminal(e, true) == vertex;
+
+            if (!directed || (!inverse == isSource))
+            {
+              var next = this.model.getTerminal(e, !isSource);
+              this.traverse(next, directed, func, e, visited, inverse);
+            }
+          }
+        }
+      }
+    }
+  }
 };
 
 /**
@@ -12094,7 +12094,7 @@ traverse = (vertex, directed, func, edge, visited, inverse)=>
  */
 isCellSelected = (cell)=>
 {
-	return this.getSelectionModel().isSelected(cell);
+  return this.getSelectionModel().isSelected(cell);
 };
 
 /**
@@ -12104,7 +12104,7 @@ isCellSelected = (cell)=>
  */
 isSelectionEmpty = ()=>
 {
-	return this.getSelectionModel().isEmpty();
+  return this.getSelectionModel().isEmpty();
 };
 
 /**
@@ -12114,7 +12114,7 @@ isSelectionEmpty = ()=>
  */
 clearSelection = ()=>
 {
-	return this.getSelectionModel().clear();
+  return this.getSelectionModel().clear();
 };
 
 /**
@@ -12124,9 +12124,9 @@ clearSelection = ()=>
  */
 getSelectionCount = ()=>
 {
-	return this.getSelectionModel().cells.length;
+  return this.getSelectionModel().cells.length;
 };
-	
+
 /**
  * Function: getSelectionCell
  * 
@@ -12134,7 +12134,7 @@ getSelectionCount = ()=>
  */
 getSelectionCell = ()=>
 {
-	return this.getSelectionModel().cells[0];
+  return this.getSelectionModel().cells[0];
 };
 
 /**
@@ -12144,7 +12144,7 @@ getSelectionCell = ()=>
  */
 getSelectionCells = ()=>
 {
-	return this.getSelectionModel().cells.slice();
+  return this.getSelectionModel().cells.slice();
 };
 
 /**
@@ -12158,7 +12158,7 @@ getSelectionCells = ()=>
  */
 setSelectionCell = (cell)=>
 {
-	this.getSelectionModel().setCell(cell);
+  this.getSelectionModel().setCell(cell);
 };
 
 /**
@@ -12172,7 +12172,7 @@ setSelectionCell = (cell)=>
  */
 setSelectionCells = (cells)=>
 {
-	this.getSelectionModel().setCells(cells);
+  this.getSelectionModel().setCells(cells);
 };
 
 /**
@@ -12186,7 +12186,7 @@ setSelectionCells = (cells)=>
  */
 addSelectionCell = (cell)=>
 {
-	this.getSelectionModel().addCell(cell);
+  this.getSelectionModel().addCell(cell);
 };
 
 /**
@@ -12200,7 +12200,7 @@ addSelectionCell = (cell)=>
  */
 addSelectionCells = (cells)=>
 {
-	this.getSelectionModel().addCells(cells);
+  this.getSelectionModel().addCells(cells);
 };
 
 /**
@@ -12214,7 +12214,7 @@ addSelectionCells = (cells)=>
  */
 removeSelectionCell = (cell)=>
 {
-	this.getSelectionModel().removeCell(cell);
+  this.getSelectionModel().removeCell(cell);
 };
 
 /**
@@ -12228,7 +12228,7 @@ removeSelectionCell = (cell)=>
  */
 removeSelectionCells = (cells)=>
 {
-	this.getSelectionModel().removeCells(cells);
+  this.getSelectionModel().removeCells(cells);
 };
 
 /**
@@ -12244,10 +12244,10 @@ removeSelectionCells = (cells)=>
  */
 selectRegion = (rect, evt)=>
 {
-	var cells = this.getCells(rect.x, rect.y, rect.width, rect.height);
-	this.selectCellsForEvent(cells, evt);
-	
-	return cells;
+  var cells = this.getCells(rect.x, rect.y, rect.width, rect.height);
+  this.selectCellsForEvent(cells, evt);
+
+  return cells;
 };
 
 /**
@@ -12257,7 +12257,7 @@ selectRegion = (rect, evt)=>
  */
 selectNextCell = ()=>
 {
-	this.selectCell(true);
+  this.selectCell(true);
 };
 
 /**
@@ -12267,7 +12267,7 @@ selectNextCell = ()=>
  */
 selectPreviousCell = ()=>
 {
-	this.selectCell();
+  this.selectCell();
 };
 
 /**
@@ -12277,7 +12277,7 @@ selectPreviousCell = ()=>
  */
 selectParentCell = ()=>
 {
-	this.selectCell(false, true);
+  this.selectCell(false, true);
 };
 
 /**
@@ -12287,7 +12287,7 @@ selectParentCell = ()=>
  */
 selectChildCell = ()=>
 {
-	this.selectCell(false, false, true);
+  this.selectCell(false, false, true);
 };
 
 /**
@@ -12304,62 +12304,62 @@ selectChildCell = ()=>
  */
 selectCell = (isNext, isParent, isChild)=>
 {
-	var sel = this.selectionModel;
-	var cell = (sel.cells.length > 0) ? sel.cells[0] : null;
-	
-	if (sel.cells.length > 1)
-	{
-		sel.clear();
-	}
-	
-	var parent = (cell != null) ?
-		this.model.getParent(cell) :
-		this.getDefaultParent();
-	
-	var childCount = this.model.getChildCount(parent);
-	
-	if (cell == null && childCount > 0)
-	{
-		var child = this.model.getChildAt(parent, 0);
-		this.setSelectionCell(child);
-	}
-	else if ((cell == null || isParent) &&
-		this.view.getState(parent) != null &&
-		this.model.getGeometry(parent) != null)
-	{
-		if (this.getCurrentRoot() != parent)
-		{
-			this.setSelectionCell(parent);
-		}
-	}
-	else if (cell != null && isChild)
-	{
-		var tmp = this.model.getChildCount(cell);
-		
-		if (tmp > 0)
-		{
-			var child = this.model.getChildAt(cell, 0);
-			this.setSelectionCell(child);
-		}
-	}
-	else if (childCount > 0)
-	{
-		var i = parent.getIndex(cell);
-		
-		if (isNext)
-		{
-			i++;
-			var child = this.model.getChildAt(parent, i % childCount);
-			this.setSelectionCell(child);
-		}
-		else
-		{
-			i--;
-			var index =  (i < 0) ? childCount - 1 : i;
-			var child = this.model.getChildAt(parent, index);
-			this.setSelectionCell(child);
-		}
-	}
+  var sel = this.selectionModel;
+  var cell = (sel.cells.length > 0) ? sel.cells[0] : null;
+
+  if (sel.cells.length > 1)
+  {
+    sel.clear();
+  }
+
+  var parent = (cell != null) ?
+    this.model.getParent(cell) :
+    this.getDefaultParent();
+
+  var childCount = this.model.getChildCount(parent);
+
+  if (cell == null && childCount > 0)
+  {
+    var child = this.model.getChildAt(parent, 0);
+    this.setSelectionCell(child);
+  }
+  else if ((cell == null || isParent) &&
+    this.view.getState(parent) != null &&
+    this.model.getGeometry(parent) != null)
+  {
+    if (this.getCurrentRoot() != parent)
+    {
+      this.setSelectionCell(parent);
+    }
+  }
+  else if (cell != null && isChild)
+  {
+    var tmp = this.model.getChildCount(cell);
+
+    if (tmp > 0)
+    {
+      var child = this.model.getChildAt(cell, 0);
+      this.setSelectionCell(child);
+    }
+  }
+  else if (childCount > 0)
+  {
+    var i = parent.getIndex(cell);
+
+    if (isNext)
+    {
+      i++;
+      var child = this.model.getChildAt(parent, i % childCount);
+      this.setSelectionCell(child);
+    }
+    else
+    {
+      i--;
+      var index =  (i < 0) ? childCount - 1 : i;
+      var child = this.model.getChildAt(parent, index);
+      this.setSelectionCell(child);
+    }
+  }
 };
 
 /**
@@ -12378,17 +12378,17 @@ selectCell = (isNext, isParent, isChild)=>
  */
 selectAll = (parent, descendants)=>
 {
-	parent = parent || this.getDefaultParent();
-	
-	var cells = (descendants) ? this.model.filterDescendants(mxUtils.bind(this, (cell)=>
-	{
-		return cell != parent && this.view.getState(cell) != null;
-	}), parent) : this.model.getChildren(parent);
-	
-	if (cells != null)
-	{
-		this.setSelectionCells(cells);
-	}
+  parent = parent || this.getDefaultParent();
+
+  var cells = (descendants) ? this.model.filterDescendants(mxUtils.bind(this, (cell)=>
+  {
+    return cell != parent && this.view.getState(cell) != null;
+  }), parent) : this.model.getChildren(parent);
+
+  if (cells != null)
+  {
+    this.setSelectionCells(cells);
+  }
 };
 
 /**
@@ -12398,7 +12398,7 @@ selectAll = (parent, descendants)=>
  */
 selectVertices = (parent, selectGroups)=>
 {
-	this.selectCells(true, false, parent, selectGroups);
+  this.selectCells(true, false, parent, selectGroups);
 };
 
 /**
@@ -12408,7 +12408,7 @@ selectVertices = (parent, selectGroups)=>
  */
 selectEdges = (parent)=>
 {
-	this.selectCells(false, true, parent);
+  this.selectCells(false, true, parent);
 };
 
 /**
@@ -12430,23 +12430,23 @@ selectEdges = (parent)=>
  */
 selectCells = (vertices, edges, parent, selectGroups)=>
 {
-	parent = parent || this.getDefaultParent();
-	
-	var filter = mxUtils.bind(this, (cell)=>
-	{
-		return this.view.getState(cell) != null &&
-			(((selectGroups || this.model.getChildCount(cell) == 0) &&
-			this.model.isVertex(cell) && vertices
-			&& !this.model.isEdge(this.model.getParent(cell))) ||
-			(this.model.isEdge(cell) && edges));
-	});
-	
-	var cells = this.model.filterDescendants(filter, parent);
-	
-	if (cells != null)
-	{
-		this.setSelectionCells(cells);
-	}
+  parent = parent || this.getDefaultParent();
+
+  var filter = mxUtils.bind(this, (cell)=>
+  {
+    return this.view.getState(cell) != null &&
+      (((selectGroups || this.model.getChildCount(cell) == 0) &&
+      this.model.isVertex(cell) && vertices
+      && !this.model.isEdge(this.model.getParent(cell))) ||
+      (this.model.isEdge(cell) && edges));
+  });
+
+  var cells = this.model.filterDescendants(filter, parent);
+
+  if (cells != null)
+  {
+    this.setSelectionCells(cells);
+  }
 };
 
 /**
@@ -12463,23 +12463,23 @@ selectCells = (vertices, edges, parent, selectGroups)=>
  */
 selectCellForEvent = (cell, evt)=>
 {
-	var isSelected = this.isCellSelected(cell);
-	
-	if (this.isToggleEvent(evt))
-	{
-		if (isSelected)
-		{
-			this.removeSelectionCell(cell);
-		}
-		else
-		{
-			this.addSelectionCell(cell);
-		}
-	}
-	else if (!isSelected || this.getSelectionCount() != 1)
-	{
-		this.setSelectionCell(cell);
-	}
+  var isSelected = this.isCellSelected(cell);
+
+  if (this.isToggleEvent(evt))
+  {
+    if (isSelected)
+    {
+      this.removeSelectionCell(cell);
+    }
+    else
+    {
+      this.addSelectionCell(cell);
+    }
+  }
+  else if (!isSelected || this.getSelectionCount() != 1)
+  {
+    this.setSelectionCell(cell);
+  }
 };
 
 /**
@@ -12496,14 +12496,14 @@ selectCellForEvent = (cell, evt)=>
  */
 selectCellsForEvent = (cells, evt)=>
 {
-	if (this.isToggleEvent(evt))
-	{
-		this.addSelectionCells(cells);
-	}
-	else
-	{
-		this.setSelectionCells(cells);
-	}
+  if (this.isToggleEvent(evt))
+  {
+    this.addSelectionCells(cells);
+  }
+  else
+  {
+    this.setSelectionCells(cells);
+  }
 };
 
 /**
@@ -12523,26 +12523,26 @@ selectCellsForEvent = (cells, evt)=>
  */
 createHandler = (state)=>
 {
-	var result = null;
-	
-	if (state != null)
-	{
-		if (this.model.isEdge(state.cell))
-		{
-			var source = state.getVisibleTerminalState(true);
-			var target = state.getVisibleTerminalState(false);
-			var geo = this.getCellGeometry(state.cell);
-			
-			var edgeStyle = this.view.getEdgeStyle(state, (geo != null) ? geo.points : null, source, target);
-			result = this.createEdgeHandler(state, edgeStyle);
-		}
-		else
-		{
-			result = this.createVertexHandler(state);
-		}
-	}
-	
-	return result;
+  var result = null;
+
+  if (state != null)
+  {
+    if (this.model.isEdge(state.cell))
+    {
+      var source = state.getVisibleTerminalState(true);
+      var target = state.getVisibleTerminalState(false);
+      var geo = this.getCellGeometry(state.cell);
+
+      var edgeStyle = this.view.getEdgeStyle(state, (geo != null) ? geo.points : null, source, target);
+      result = this.createEdgeHandler(state, edgeStyle);
+    }
+    else
+    {
+      result = this.createVertexHandler(state);
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -12556,7 +12556,7 @@ createHandler = (state)=>
  */
 createVertexHandler = (state)=>
 {
-	return new mxVertexHandler(state);
+  return new mxVertexHandler(state);
 };
 
 /**
@@ -12570,26 +12570,26 @@ createVertexHandler = (state)=>
  */
 createEdgeHandler = (state, edgeStyle)=>
 {
-	var result = null;
-	
-	if (edgeStyle == mxEdgeStyle.Loop ||
-		edgeStyle == mxEdgeStyle.ElbowConnector ||
-		edgeStyle == mxEdgeStyle.SideToSide ||
-		edgeStyle == mxEdgeStyle.TopToBottom)
-	{
-		result = this.createElbowEdgeHandler(state);
-	}
-	else if (edgeStyle == mxEdgeStyle.SegmentConnector || 
-			edgeStyle == mxEdgeStyle.OrthConnector)
-	{
-		result = this.createEdgeSegmentHandler(state);
-	}
-	else
-	{
-		result = new mxEdgeHandler(state);
-	}
-	
-	return result;
+  var result = null;
+
+  if (edgeStyle == mxEdgeStyle.Loop ||
+    edgeStyle == mxEdgeStyle.ElbowConnector ||
+    edgeStyle == mxEdgeStyle.SideToSide ||
+    edgeStyle == mxEdgeStyle.TopToBottom)
+  {
+    result = this.createElbowEdgeHandler(state);
+  }
+  else if (edgeStyle == mxEdgeStyle.SegmentConnector ||
+      edgeStyle == mxEdgeStyle.OrthConnector)
+  {
+    result = this.createEdgeSegmentHandler(state);
+  }
+  else
+  {
+    result = new mxEdgeHandler(state);
+  }
+
+  return result;
 };
 
 /**
@@ -12603,7 +12603,7 @@ createEdgeHandler = (state, edgeStyle)=>
  */
 createEdgeSegmentHandler = (state)=>
 {
-	return new mxEdgeSegmentHandler(state);
+  return new mxEdgeSegmentHandler(state);
 };
 
 /**
@@ -12617,7 +12617,7 @@ createEdgeSegmentHandler = (state)=>
  */
 createElbowEdgeHandler = (state)=>
 {
-	return new mxElbowEdgeHandler(state);
+  return new mxElbowEdgeHandler(state);
 };
 
 /**
@@ -12637,12 +12637,12 @@ createElbowEdgeHandler = (state)=>
  */
 addMouseListener = (listener)=>
 {
-	if (this.mouseListeners == null)
-	{
-		this.mouseListeners = [];
-	}
-	
-	this.mouseListeners.push(listener);
+  if (this.mouseListeners == null)
+  {
+    this.mouseListeners = [];
+  }
+
+  this.mouseListeners.push(listener);
 };
 
 /**
@@ -12656,17 +12656,17 @@ addMouseListener = (listener)=>
  */
 removeMouseListener = (listener)=>
 {
-	if (this.mouseListeners != null)
-	{
-		for (var i = 0; i < this.mouseListeners.length; i++)
-		{
-			if (this.mouseListeners[i] == listener)
-			{
-				this.mouseListeners.splice(i, 1);
-				break;
-			}
-		}
-	}
+  if (this.mouseListeners != null)
+  {
+    for (var i = 0; i < this.mouseListeners.length; i++)
+    {
+      if (this.mouseListeners[i] == listener)
+      {
+        this.mouseListeners.splice(i, 1);
+        break;
+      }
+    }
+  }
 };
 
 /**
@@ -12682,26 +12682,26 @@ removeMouseListener = (listener)=>
  */
 updateMouseEvent = (me, evtName)=>
 {
-	if (me.graphX == null || me.graphY == null)
-	{
-		var pt = mxUtils.convertPoint(this.container, me.getX(), me.getY());
-		
-		me.graphX = pt.x - this.panDx;
-		me.graphY = pt.y - this.panDy;
-		
-		// Searches for rectangles using method if native hit detection is disabled on shape
-		if (me.getCell() == null && this.isMouseDown && evtName == mxEvent.MOUSE_MOVE)
-		{
-			me.state = this.view.getState(this.getCellAt(pt.x, pt.y, null, null, null, (state)=>
-			{
-				return state.shape == null || state.shape.paintBackground != paintBackground ||
-					mxUtils.getValue(state.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1' ||
-					(state.shape.fill != null && state.shape.fill != mxConstants.NONE);
-			}));
-		}
-	}
-	
-	return me;
+  if (me.graphX == null || me.graphY == null)
+  {
+    var pt = mxUtils.convertPoint(this.container, me.getX(), me.getY());
+
+    me.graphX = pt.x - this.panDx;
+    me.graphY = pt.y - this.panDy;
+
+    // Searches for rectangles using method if native hit detection is disabled on shape
+    if (me.getCell() == null && this.isMouseDown && evtName == mxEvent.MOUSE_MOVE)
+    {
+      me.state = this.view.getState(this.getCellAt(pt.x, pt.y, null, null, null, (state)=>
+      {
+        return state.shape == null || state.shape.paintBackground != paintBackground ||
+          mxUtils.getValue(state.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1' ||
+          (state.shape.fill != null && state.shape.fill != mxConstants.NONE);
+      }));
+    }
+  }
+
+  return me;
 };
 
 /**
@@ -12711,14 +12711,14 @@ updateMouseEvent = (me, evtName)=>
  */
 getStateForTouchEvent = (evt)=>
 {
-	var x = mxEvent.getClientX(evt);
-	var y = mxEvent.getClientY(evt);
-	
-	// Dispatches the drop event to the graph which
-	// consumes and executes the source function
-	var pt = mxUtils.convertPoint(this.container, x, y);
+  var x = mxEvent.getClientX(evt);
+  var y = mxEvent.getClientY(evt);
 
-	return this.view.getState(this.getCellAt(pt.x, pt.y));
+  // Dispatches the drop event to the graph which
+  // consumes and executes the source function
+  var pt = mxUtils.convertPoint(this.container, x, y);
+
+  return this.view.getState(this.getCellAt(pt.x, pt.y));
 };
 
 /**
@@ -12728,90 +12728,90 @@ getStateForTouchEvent = (evt)=>
  */
 isEventIgnored = (evtName, me, sender)=>
 {
-	var mouseEvent = mxEvent.isMouseEvent(me.getEvent());
-	var result = false;
+  var mouseEvent = mxEvent.isMouseEvent(me.getEvent());
+  var result = false;
 
-	// Drops events that are fired more than once
-	if (me.getEvent() == this.lastEvent)
-	{
-		result = true;
-	}
-	else
-	{
-		this.lastEvent = me.getEvent();
-	}
+  // Drops events that are fired more than once
+  if (me.getEvent() == this.lastEvent)
+  {
+    result = true;
+  }
+  else
+  {
+    this.lastEvent = me.getEvent();
+  }
 
-	// Installs event listeners to capture the complete gesture from the event source
-	// for non-MS touch events as a workaround for all events for the same geture being
-	// fired from the event source even if that was removed from the DOM.
-	if (this.eventSource != null && evtName != mxEvent.MOUSE_MOVE)
-	{
-		mxEvent.removeGestureListeners(this.eventSource, null, this.mouseMoveRedirect, this.mouseUpRedirect);
-		this.mouseMoveRedirect = null;
-		this.mouseUpRedirect = null;
-		this.eventSource = null;
-	}
-	else if (!mxClient.IS_GC && this.eventSource != null && me.getSource() != this.eventSource)
-	{
-		result = true;
-	}
-	else if (mxClient.IS_TOUCH && evtName == mxEvent.MOUSE_DOWN &&
-			!mouseEvent && !mxEvent.isPenEvent(me.getEvent()))
-	{
-		this.eventSource = me.getSource();
+  // Installs event listeners to capture the complete gesture from the event source
+  // for non-MS touch events as a workaround for all events for the same geture being
+  // fired from the event source even if that was removed from the DOM.
+  if (this.eventSource != null && evtName != mxEvent.MOUSE_MOVE)
+  {
+    mxEvent.removeGestureListeners(this.eventSource, null, this.mouseMoveRedirect, this.mouseUpRedirect);
+    this.mouseMoveRedirect = null;
+    this.mouseUpRedirect = null;
+    this.eventSource = null;
+  }
+  else if (!mxClient.IS_GC && this.eventSource != null && me.getSource() != this.eventSource)
+  {
+    result = true;
+  }
+  else if (mxClient.IS_TOUCH && evtName == mxEvent.MOUSE_DOWN &&
+      !mouseEvent && !mxEvent.isPenEvent(me.getEvent()))
+  {
+    this.eventSource = me.getSource();
 
-		this.mouseMoveRedirect = mxUtils.bind(this, (evt)=>
-		{
-			this.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt, this.getStateForTouchEvent(evt)));
-		});
-		this.mouseUpRedirect = mxUtils.bind(this, (evt)=>
-		{
-			this.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt, this.getStateForTouchEvent(evt)));
-		});
-		
-		mxEvent.addGestureListeners(this.eventSource, null, this.mouseMoveRedirect, this.mouseUpRedirect);
-	}
+    this.mouseMoveRedirect = mxUtils.bind(this, (evt)=>
+    {
+      this.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt, this.getStateForTouchEvent(evt)));
+    });
+    this.mouseUpRedirect = mxUtils.bind(this, (evt)=>
+    {
+      this.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt, this.getStateForTouchEvent(evt)));
+    });
 
-	// Factored out the workarounds for FF to make it easier to override/remove
-	// Note this method has side-effects!
-	if (this.isSyntheticEventIgnored(evtName, me, sender))
-	{
-		result = true;
-	}
+    mxEvent.addGestureListeners(this.eventSource, null, this.mouseMoveRedirect, this.mouseUpRedirect);
+  }
 
-	// Never fires mouseUp/-Down for double clicks
-	if (!mxEvent.isPopupTrigger(this.lastEvent) && evtName != mxEvent.MOUSE_MOVE && this.lastEvent.detail == 2)
-	{
-		return true;
-	}
-	
-	// Filters out of sequence events or mixed event types during a gesture
-	if (evtName == mxEvent.MOUSE_UP && this.isMouseDown)
-	{
-		this.isMouseDown = false;
-	}
-	else if (evtName == mxEvent.MOUSE_DOWN && !this.isMouseDown)
-	{
-		this.isMouseDown = true;
-		this.isMouseTrigger = mouseEvent;
-	}
-	// Drops mouse events that are fired during touch gestures as a workaround for Webkit
-	// and mouse events that are not in sync with the current internal button state
-	else if (!result && (((!mxClient.IS_FF || evtName != mxEvent.MOUSE_MOVE) &&
-		this.isMouseDown && this.isMouseTrigger != mouseEvent) ||
-		(evtName == mxEvent.MOUSE_DOWN && this.isMouseDown) ||
-		(evtName == mxEvent.MOUSE_UP && !this.isMouseDown)))
-	{
-		result = true;
-	}
-	
-	if (!result && evtName == mxEvent.MOUSE_DOWN)
-	{
-		this.lastMouseX = me.getX();
-		this.lastMouseY = me.getY();
-	}
+  // Factored out the workarounds for FF to make it easier to override/remove
+  // Note this method has side-effects!
+  if (this.isSyntheticEventIgnored(evtName, me, sender))
+  {
+    result = true;
+  }
 
-	return result;
+  // Never fires mouseUp/-Down for double clicks
+  if (!mxEvent.isPopupTrigger(this.lastEvent) && evtName != mxEvent.MOUSE_MOVE && this.lastEvent.detail == 2)
+  {
+    return true;
+  }
+
+  // Filters out of sequence events or mixed event types during a gesture
+  if (evtName == mxEvent.MOUSE_UP && this.isMouseDown)
+  {
+    this.isMouseDown = false;
+  }
+  else if (evtName == mxEvent.MOUSE_DOWN && !this.isMouseDown)
+  {
+    this.isMouseDown = true;
+    this.isMouseTrigger = mouseEvent;
+  }
+  // Drops mouse events that are fired during touch gestures as a workaround for Webkit
+  // and mouse events that are not in sync with the current internal button state
+  else if (!result && (((!mxClient.IS_FF || evtName != mxEvent.MOUSE_MOVE) &&
+    this.isMouseDown && this.isMouseTrigger != mouseEvent) ||
+    (evtName == mxEvent.MOUSE_DOWN && this.isMouseDown) ||
+    (evtName == mxEvent.MOUSE_UP && !this.isMouseDown)))
+  {
+    result = true;
+  }
+
+  if (!result && evtName == mxEvent.MOUSE_DOWN)
+  {
+    this.lastMouseX = me.getX();
+    this.lastMouseY = me.getY();
+  }
+
+  return result;
 };
 
 /**
@@ -12821,21 +12821,21 @@ isEventIgnored = (evtName, me, sender)=>
  */
 isSyntheticEventIgnored = (evtName, me, sender)=>
 {
-	var result = false;
-	var mouseEvent = mxEvent.isMouseEvent(me.getEvent());
-	
-	// LATER: This does not cover all possible cases that can go wrong in FF
-	if (this.ignoreMouseEvents && mouseEvent && evtName != mxEvent.MOUSE_MOVE)
-	{
-		this.ignoreMouseEvents = evtName != mxEvent.MOUSE_UP;
-		result = true;
-	}
-	else if (mxClient.IS_FF && !mouseEvent && evtName == mxEvent.MOUSE_UP)
-	{
-		this.ignoreMouseEvents = true;
-	}
-	
-	return result;
+  var result = false;
+  var mouseEvent = mxEvent.isMouseEvent(me.getEvent());
+
+  // LATER: This does not cover all possible cases that can go wrong in FF
+  if (this.ignoreMouseEvents && mouseEvent && evtName != mxEvent.MOUSE_MOVE)
+  {
+    this.ignoreMouseEvents = evtName != mxEvent.MOUSE_UP;
+    result = true;
+  }
+  else if (mxClient.IS_FF && !mouseEvent && evtName == mxEvent.MOUSE_UP)
+  {
+    this.ignoreMouseEvents = true;
+  }
+
+  return result;
 };
 
 /**
@@ -12853,13 +12853,13 @@ isSyntheticEventIgnored = (evtName, me, sender)=>
  */
 isEventSourceIgnored = (evtName, me)=>
 {
-	var source = me.getSource();
-	var name = (source.nodeName != null) ? source.nodeName.toLowerCase() : '';
-	var candidate = !mxEvent.isMouseEvent(me.getEvent()) || mxEvent.isLeftMouseButton(me.getEvent());
-	
-	return evtName == mxEvent.MOUSE_DOWN && candidate && (name == 'select' || name == 'option' ||
-		(name == 'input' && source.type != 'checkbox' && source.type != 'radio' &&
-		source.type != 'button' && source.type != 'submit' && source.type != 'file'));
+  var source = me.getSource();
+  var name = (source.nodeName != null) ? source.nodeName.toLowerCase() : '';
+  var candidate = !mxEvent.isMouseEvent(me.getEvent()) || mxEvent.isLeftMouseButton(me.getEvent());
+
+  return evtName == mxEvent.MOUSE_DOWN && candidate && (name == 'select' || name == 'option' ||
+    (name == 'input' && source.type != 'checkbox' && source.type != 'radio' &&
+    source.type != 'button' && source.type != 'submit' && source.type != 'file'));
 };
 
 /**
@@ -12874,7 +12874,7 @@ isEventSourceIgnored = (evtName, me)=>
  */
 getEventState = (state)=>
 {
-	return state;
+  return state;
 };
 
 /**
@@ -12893,222 +12893,222 @@ getEventState = (state)=>
  */
 fireMouseEvent = (evtName, me, sender)=>
 {
-	if (this.isEventSourceIgnored(evtName, me))
-	{
-		if (this.tooltipHandler != null)
-		{
-			this.tooltipHandler.hide();
-		}
-		
-		return;
-	}
-	
-	if (sender == null)
-	{
-		sender = this;
-	}
+  if (this.isEventSourceIgnored(evtName, me))
+  {
+    if (this.tooltipHandler != null)
+    {
+      this.tooltipHandler.hide();
+    }
 
-	// Updates the graph coordinates in the event
-	me = this.updateMouseEvent(me, evtName);
+    return;
+  }
 
-	// Detects and processes double taps for touch-based devices which do not have native double click events
-	// or where detection of double click is not always possible (quirks, IE10+). Note that this can only handle
-	// double clicks on cells because the sequence of events in IE prevents detection on the background, it fires
-	// two mouse ups, one of which without a cell but no mousedown for the second click which means we cannot
-	// detect which mouseup(s) are part of the first click, ie we do not know when the first click ends.
-	if ((!this.nativeDblClickEnabled && !mxEvent.isPopupTrigger(me.getEvent())) || (this.doubleTapEnabled &&
-		mxClient.IS_TOUCH && (mxEvent.isTouchEvent(me.getEvent()) || mxEvent.isPenEvent(me.getEvent()))))
-	{
-		var currentTime = new Date().getTime();
-		
-		// NOTE: Second mouseDown for double click missing in quirks mode
-		if ((!mxClient.IS_QUIRKS && evtName == mxEvent.MOUSE_DOWN) || (mxClient.IS_QUIRKS && evtName == mxEvent.MOUSE_UP && !this.fireDoubleClick))
-		{
-			if (this.lastTouchEvent != null && this.lastTouchEvent != me.getEvent() &&
-				currentTime - this.lastTouchTime < this.doubleTapTimeout &&
-				Math.abs(this.lastTouchX - me.getX()) < this.doubleTapTolerance &&
-				Math.abs(this.lastTouchY - me.getY()) < this.doubleTapTolerance &&
-				this.doubleClickCounter < 2)
-			{
-				this.doubleClickCounter++;
-				var doubleClickFired = false;
-				
-				if (evtName == mxEvent.MOUSE_UP)
-				{
-					if (me.getCell() == this.lastTouchCell && this.lastTouchCell != null)
-					{
-						this.lastTouchTime = 0;
-						var cell = this.lastTouchCell;
-						this.lastTouchCell = null;
+  if (sender == null)
+  {
+    sender = this;
+  }
 
-						// Fires native dblclick event via event source
-						// NOTE: This fires two double click events on edges in quirks mode. While
-						// trying to fix this, we realized that nativeDoubleClick can be disabled for
-						// quirks and IE10+ (or we didn't find the case mentioned above where it
-						// would not work), ie. all double clicks seem to be working without this.
-						if (mxClient.IS_QUIRKS)
-						{
-							me.getSource().fireEvent('ondblclick');
-						}
-						
-						this.dblClick(me.getEvent(), cell);
-						doubleClickFired = true;
-					}
-				}
-				else
-				{
-					this.fireDoubleClick = true;
-					this.lastTouchTime = 0;
-				}
+  // Updates the graph coordinates in the event
+  me = this.updateMouseEvent(me, evtName);
 
-				// Do not ignore mouse up in quirks in this case
-				if (!mxClient.IS_QUIRKS || doubleClickFired)
-				{
-					mxEvent.consume(me.getEvent());
-					return;
-				}
-			}
-			else if (this.lastTouchEvent == null || this.lastTouchEvent != me.getEvent())
-			{
-				this.lastTouchCell = me.getCell();
-				this.lastTouchX = me.getX();
-				this.lastTouchY = me.getY();
-				this.lastTouchTime = currentTime;
-				this.lastTouchEvent = me.getEvent();
-				this.doubleClickCounter = 0;
-			}
-		}
-		else if ((this.isMouseDown || evtName == mxEvent.MOUSE_UP) && this.fireDoubleClick)
-		{
-			this.fireDoubleClick = false;
-			var cell = this.lastTouchCell;
-			this.lastTouchCell = null;
-			this.isMouseDown = false;
-			
-			// Workaround for Chrome/Safari not firing native double click events for double touch on background
-			var valid = (cell != null) || ((mxEvent.isTouchEvent(me.getEvent()) || mxEvent.isPenEvent(me.getEvent())) &&
-				(mxClient.IS_GC || mxClient.IS_SF));
-			
-			if (valid && Math.abs(this.lastTouchX - me.getX()) < this.doubleTapTolerance &&
-				Math.abs(this.lastTouchY - me.getY()) < this.doubleTapTolerance)
-			{
-				this.dblClick(me.getEvent(), cell);
-			}
-			else
-			{
-				mxEvent.consume(me.getEvent());
-			}
-			
-			return;
-		}
-	}
+  // Detects and processes double taps for touch-based devices which do not have native double click events
+  // or where detection of double click is not always possible (quirks, IE10+). Note that this can only handle
+  // double clicks on cells because the sequence of events in IE prevents detection on the background, it fires
+  // two mouse ups, one of which without a cell but no mousedown for the second click which means we cannot
+  // detect which mouseup(s) are part of the first click, ie we do not know when the first click ends.
+  if ((!this.nativeDblClickEnabled && !mxEvent.isPopupTrigger(me.getEvent())) || (this.doubleTapEnabled &&
+    mxClient.IS_TOUCH && (mxEvent.isTouchEvent(me.getEvent()) || mxEvent.isPenEvent(me.getEvent()))))
+  {
+    var currentTime = new Date().getTime();
 
-	if (!this.isEventIgnored(evtName, me, sender))
-	{
-		// Updates the event state via getEventState
-		me.state = this.getEventState(me.getState());
-		this.fireEvent(new mxEventObject(mxEvent.FIRE_MOUSE_EVENT, 'eventName', evtName, 'event', me));
-		
-		if ((mxClient.IS_OP || mxClient.IS_SF || mxClient.IS_GC || mxClient.IS_IE11 ||
-			(mxClient.IS_IE && mxClient.IS_SVG) || me.getEvent().target != this.container))
-		{
-			if (evtName == mxEvent.MOUSE_MOVE && this.isMouseDown && this.autoScroll && !mxEvent.isMultiTouchEvent(me.getEvent))
-			{
-				this.scrollPointToVisible(me.getGraphX(), me.getGraphY(), this.autoExtend);
-			}
-			else if (evtName == mxEvent.MOUSE_UP && this.ignoreScrollbars && this.translateToScrollPosition &&
-					(this.container.scrollLeft != 0 || this.container.scrollTop != 0))
-			{
-				var s = this.view.scale;
-				var tr = this.view.translate;
-				this.view.setTranslate(tr.x - this.container.scrollLeft / s, tr.y - this.container.scrollTop / s);
-				this.container.scrollLeft = 0;
-				this.container.scrollTop = 0;
-			}
-			
-			if (this.mouseListeners != null)
-			{
-				var args = [sender, me];
-	
-				// Does not change returnValue in Opera
-				if (!me.getEvent().preventDefault)
-				{
-					me.getEvent().returnValue = true;
-				}
-				
-				for (var i = 0; i < this.mouseListeners.length; i++)
-				{
-					var l = this.mouseListeners[i];
-					
-					if (evtName == mxEvent.MOUSE_DOWN)
-					{
-						l.mouseDown.apply(l, args);
-					}
-					else if (evtName == mxEvent.MOUSE_MOVE)
-					{
-						l.mouseMove.apply(l, args);
-					}
-					else if (evtName == mxEvent.MOUSE_UP)
-					{
-						l.mouseUp.apply(l, args);
-					}
-				}
-			}
-			
-			// Invokes the click handler
-			if (evtName == mxEvent.MOUSE_UP)
-			{
-				this.click(me);
-			}
-		}
-		
-		// Detects tapAndHold events using a timer
-		if ((mxEvent.isTouchEvent(me.getEvent()) || mxEvent.isPenEvent(me.getEvent())) &&
-			evtName == mxEvent.MOUSE_DOWN && this.tapAndHoldEnabled && !this.tapAndHoldInProgress)
-		{
-			this.tapAndHoldInProgress = true;
-			this.initialTouchX = me.getGraphX();
-			this.initialTouchY = me.getGraphY();
-			
-			var handler = ()=>
-			{
-				if (this.tapAndHoldValid)
-				{
-					this.tapAndHold(me);
-				}
-				
-				this.tapAndHoldInProgress = false;
-				this.tapAndHoldValid = false;
-			};
-			
-			if (this.tapAndHoldThread)
-			{
-				window.clearTimeout(this.tapAndHoldThread);
-			}
-	
-			this.tapAndHoldThread = window.setTimeout(mxUtils.bind(this, handler), this.tapAndHoldDelay);
-			this.tapAndHoldValid = true;
-		}
-		else if (evtName == mxEvent.MOUSE_UP)
-		{
-			this.tapAndHoldInProgress = false;
-			this.tapAndHoldValid = false;
-		}
-		else if (this.tapAndHoldValid)
-		{
-			this.tapAndHoldValid =
-				Math.abs(this.initialTouchX - me.getGraphX()) < this.tolerance &&
-				Math.abs(this.initialTouchY - me.getGraphY()) < this.tolerance;
-		}
+    // NOTE: Second mouseDown for double click missing in quirks mode
+    if ((!mxClient.IS_QUIRKS && evtName == mxEvent.MOUSE_DOWN) || (mxClient.IS_QUIRKS && evtName == mxEvent.MOUSE_UP && !this.fireDoubleClick))
+    {
+      if (this.lastTouchEvent != null && this.lastTouchEvent != me.getEvent() &&
+        currentTime - this.lastTouchTime < this.doubleTapTimeout &&
+        Math.abs(this.lastTouchX - me.getX()) < this.doubleTapTolerance &&
+        Math.abs(this.lastTouchY - me.getY()) < this.doubleTapTolerance &&
+        this.doubleClickCounter < 2)
+      {
+        this.doubleClickCounter++;
+        var doubleClickFired = false;
 
-		// Stops editing for all events other than from cellEditor
-		if (evtName == mxEvent.MOUSE_DOWN && this.isEditing() && !this.cellEditor.isEventSource(me.getEvent()))
-		{
-			this.stopEditing(!this.isInvokesStopCellEditing());
-		}
+        if (evtName == mxEvent.MOUSE_UP)
+        {
+          if (me.getCell() == this.lastTouchCell && this.lastTouchCell != null)
+          {
+            this.lastTouchTime = 0;
+            var cell = this.lastTouchCell;
+            this.lastTouchCell = null;
 
-		this.consumeMouseEvent(evtName, me, sender);
-	}
+            // Fires native dblclick event via event source
+            // NOTE: This fires two double click events on edges in quirks mode. While
+            // trying to fix this, we realized that nativeDoubleClick can be disabled for
+            // quirks and IE10+ (or we didn't find the case mentioned above where it
+            // would not work), ie. all double clicks seem to be working without this.
+            if (mxClient.IS_QUIRKS)
+            {
+              me.getSource().fireEvent('ondblclick');
+            }
+
+            this.dblClick(me.getEvent(), cell);
+            doubleClickFired = true;
+          }
+        }
+        else
+        {
+          this.fireDoubleClick = true;
+          this.lastTouchTime = 0;
+        }
+
+        // Do not ignore mouse up in quirks in this case
+        if (!mxClient.IS_QUIRKS || doubleClickFired)
+        {
+          mxEvent.consume(me.getEvent());
+          return;
+        }
+      }
+      else if (this.lastTouchEvent == null || this.lastTouchEvent != me.getEvent())
+      {
+        this.lastTouchCell = me.getCell();
+        this.lastTouchX = me.getX();
+        this.lastTouchY = me.getY();
+        this.lastTouchTime = currentTime;
+        this.lastTouchEvent = me.getEvent();
+        this.doubleClickCounter = 0;
+      }
+    }
+    else if ((this.isMouseDown || evtName == mxEvent.MOUSE_UP) && this.fireDoubleClick)
+    {
+      this.fireDoubleClick = false;
+      var cell = this.lastTouchCell;
+      this.lastTouchCell = null;
+      this.isMouseDown = false;
+
+      // Workaround for Chrome/Safari not firing native double click events for double touch on background
+      var valid = (cell != null) || ((mxEvent.isTouchEvent(me.getEvent()) || mxEvent.isPenEvent(me.getEvent())) &&
+        (mxClient.IS_GC || mxClient.IS_SF));
+
+      if (valid && Math.abs(this.lastTouchX - me.getX()) < this.doubleTapTolerance &&
+        Math.abs(this.lastTouchY - me.getY()) < this.doubleTapTolerance)
+      {
+        this.dblClick(me.getEvent(), cell);
+      }
+      else
+      {
+        mxEvent.consume(me.getEvent());
+      }
+
+      return;
+    }
+  }
+
+  if (!this.isEventIgnored(evtName, me, sender))
+  {
+    // Updates the event state via getEventState
+    me.state = this.getEventState(me.getState());
+    this.fireEvent(new mxEventObject(mxEvent.FIRE_MOUSE_EVENT, 'eventName', evtName, 'event', me));
+
+    if ((mxClient.IS_OP || mxClient.IS_SF || mxClient.IS_GC || mxClient.IS_IE11 ||
+      (mxClient.IS_IE && mxClient.IS_SVG) || me.getEvent().target != this.container))
+    {
+      if (evtName == mxEvent.MOUSE_MOVE && this.isMouseDown && this.autoScroll && !mxEvent.isMultiTouchEvent(me.getEvent))
+      {
+        this.scrollPointToVisible(me.getGraphX(), me.getGraphY(), this.autoExtend);
+      }
+      else if (evtName == mxEvent.MOUSE_UP && this.ignoreScrollbars && this.translateToScrollPosition &&
+          (this.container.scrollLeft != 0 || this.container.scrollTop != 0))
+      {
+        var s = this.view.scale;
+        var tr = this.view.translate;
+        this.view.setTranslate(tr.x - this.container.scrollLeft / s, tr.y - this.container.scrollTop / s);
+        this.container.scrollLeft = 0;
+        this.container.scrollTop = 0;
+      }
+
+      if (this.mouseListeners != null)
+      {
+        var args = [sender, me];
+
+        // Does not change returnValue in Opera
+        if (!me.getEvent().preventDefault)
+        {
+          me.getEvent().returnValue = true;
+        }
+
+        for (var i = 0; i < this.mouseListeners.length; i++)
+        {
+          var l = this.mouseListeners[i];
+
+          if (evtName == mxEvent.MOUSE_DOWN)
+          {
+            l.mouseDown.apply(l, args);
+          }
+          else if (evtName == mxEvent.MOUSE_MOVE)
+          {
+            l.mouseMove.apply(l, args);
+          }
+          else if (evtName == mxEvent.MOUSE_UP)
+          {
+            l.mouseUp.apply(l, args);
+          }
+        }
+      }
+
+      // Invokes the click handler
+      if (evtName == mxEvent.MOUSE_UP)
+      {
+        this.click(me);
+      }
+    }
+
+    // Detects tapAndHold events using a timer
+    if ((mxEvent.isTouchEvent(me.getEvent()) || mxEvent.isPenEvent(me.getEvent())) &&
+      evtName == mxEvent.MOUSE_DOWN && this.tapAndHoldEnabled && !this.tapAndHoldInProgress)
+    {
+      this.tapAndHoldInProgress = true;
+      this.initialTouchX = me.getGraphX();
+      this.initialTouchY = me.getGraphY();
+
+      var handler = ()=>
+      {
+        if (this.tapAndHoldValid)
+        {
+          this.tapAndHold(me);
+        }
+
+        this.tapAndHoldInProgress = false;
+        this.tapAndHoldValid = false;
+      };
+
+      if (this.tapAndHoldThread)
+      {
+        window.clearTimeout(this.tapAndHoldThread);
+      }
+
+      this.tapAndHoldThread = window.setTimeout(mxUtils.bind(this, handler), this.tapAndHoldDelay);
+      this.tapAndHoldValid = true;
+    }
+    else if (evtName == mxEvent.MOUSE_UP)
+    {
+      this.tapAndHoldInProgress = false;
+      this.tapAndHoldValid = false;
+    }
+    else if (this.tapAndHoldValid)
+    {
+      this.tapAndHoldValid =
+        Math.abs(this.initialTouchX - me.getGraphX()) < this.tolerance &&
+        Math.abs(this.initialTouchY - me.getGraphY()) < this.tolerance;
+    }
+
+    // Stops editing for all events other than from cellEditor
+    if (evtName == mxEvent.MOUSE_DOWN && this.isEditing() && !this.cellEditor.isEventSource(me.getEvent()))
+    {
+      this.stopEditing(!this.isInvokesStopCellEditing());
+    }
+
+    this.consumeMouseEvent(evtName, me, sender);
+  }
 };
 
 /**
@@ -13118,11 +13118,11 @@ fireMouseEvent = (evtName, me, sender)=>
  */
 consumeMouseEvent = (evtName, me, sender)=>
 {
-	// Workaround for duplicate click in Windows 8 with Chrome/FF/Opera with touch
-	if (evtName == mxEvent.MOUSE_DOWN && mxEvent.isTouchEvent(me.getEvent()))
-	{
-		me.consume(false);
-	}
+  // Workaround for duplicate click in Windows 8 with Chrome/FF/Opera with touch
+  if (evtName == mxEvent.MOUSE_DOWN && mxEvent.isTouchEvent(me.getEvent()))
+  {
+    me.consume(false);
+  }
 };
 
 /**
@@ -13148,7 +13148,7 @@ consumeMouseEvent = (evtName, me, sender)=>
  *     var y = state.y - (h - state.height) / 2;
  *     
  *     var bounds = new mxRectangle(graph.snap(x / scale) - tr.x,
- *     		graph.snap(y / scale) - tr.y, graph.snap(w / scale), graph.snap(h / scale));
+ *         graph.snap(y / scale) - tr.y, graph.snap(w / scale), graph.snap(h / scale));
  *     graph.resizeCell(state.cell, bounds);
  *     eo.consume();
  *   }
@@ -13162,9 +13162,9 @@ consumeMouseEvent = (evtName, me, sender)=>
  */
 fireGestureEvent = (evt, cell)=>
 {
-	// Resets double tap event handling when gestures take place
-	this.lastTouchTime = 0;
-	this.fireEvent(new mxEventObject(mxEvent.GESTURE, 'event', evt, 'cell', cell));
+  // Resets double tap event handling when gestures take place
+  this.lastTouchTime = 0;
+  this.fireEvent(new mxEventObject(mxEvent.GESTURE, 'event', evt, 'cell', cell));
 };
 
 /**
@@ -13174,56 +13174,56 @@ fireGestureEvent = (evt, cell)=>
  */
 destroy = ()=>
 {
-	if (!this.destroyed)
-	{
-		this.destroyed = true;
-		
-		if (this.tooltipHandler != null)
-		{
-			this.tooltipHandler.destroy();
-		}
-		
-		if (this.selectionCellsHandler != null)
-		{
-			this.selectionCellsHandler.destroy();
-		}
+  if (!this.destroyed)
+  {
+    this.destroyed = true;
 
-		if (this.panningHandler != null)
-		{
-			this.panningHandler.destroy();
-		}
+    if (this.tooltipHandler != null)
+    {
+      this.tooltipHandler.destroy();
+    }
 
-		if (this.popupMenuHandler != null)
-		{
-			this.popupMenuHandler.destroy();
-		}
-		
-		if (this.connectionHandler != null)
-		{
-			this.connectionHandler.destroy();
-		}
-		
-		if (this.graphHandler != null)
-		{
-			this.graphHandler.destroy();
-		}
-		
-		if (this.cellEditor != null)
-		{
-			this.cellEditor.destroy();
-		}
-		
-		if (this.view != null)
-		{
-			this.view.destroy();
-		}
+    if (this.selectionCellsHandler != null)
+    {
+      this.selectionCellsHandler.destroy();
+    }
 
-		if (this.model != null && this.graphModelChangeListener != null)
-		{
-			this.model.removeListener(this.graphModelChangeListener);
-			this.graphModelChangeListener = null;
-		}
+    if (this.panningHandler != null)
+    {
+      this.panningHandler.destroy();
+    }
 
-		this.container = null;
-	}
+    if (this.popupMenuHandler != null)
+    {
+      this.popupMenuHandler.destroy();
+    }
+
+    if (this.connectionHandler != null)
+    {
+      this.connectionHandler.destroy();
+    }
+
+    if (this.graphHandler != null)
+    {
+      this.graphHandler.destroy();
+    }
+
+    if (this.cellEditor != null)
+    {
+      this.cellEditor.destroy();
+    }
+
+    if (this.view != null)
+    {
+      this.view.destroy();
+    }
+
+    if (this.model != null && this.graphModelChangeListener != null)
+    {
+      this.model.removeListener(this.graphModelChangeListener);
+      this.graphModelChangeListener = null;
+    }
+
+    this.container = null;
+  }
 };

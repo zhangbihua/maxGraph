@@ -26,7 +26,7 @@
  */
 function mxConnector(points, stroke, strokewidth)
 {
-	mxPolyline.call(this, points, stroke, strokewidth);
+  mxPolyline.call(this, points, stroke, strokewidth);
 };
 
 /**
@@ -42,8 +42,8 @@ mxUtils.extend(mxConnector, mxPolyline);
  */
 updateBoundingBox = ()=>
 {
-	this.useSvgBoundingBox = this.style != null && this.style[mxConstants.STYLE_CURVED] == 1;
-	updateBoundingBox.apply(this, arguments);
+  this.useSvgBoundingBox = this.style != null && this.style[mxConstants.STYLE_CURVED] == 1;
+  updateBoundingBox.apply(this, arguments);
 };
 
 /**
@@ -53,28 +53,28 @@ updateBoundingBox = ()=>
  */
 paintEdgeShape = (c, pts)=>
 {
-	// The indirection via functions for markers is needed in
-	// order to apply the offsets before painting the line and
-	// paint the markers after painting the line.
-	var sourceMarker = this.createMarker(c, pts, true);
-	var targetMarker = this.createMarker(c, pts, false);
+  // The indirection via functions for markers is needed in
+  // order to apply the offsets before painting the line and
+  // paint the markers after painting the line.
+  var sourceMarker = this.createMarker(c, pts, true);
+  var targetMarker = this.createMarker(c, pts, false);
 
-	paintEdgeShape.apply(this, arguments);
-	
-	// Disables shadows, dashed styles and fixes fill color for markers
-	c.setFillColor(this.stroke);
-	c.setShadow(false);
-	c.setDashed(false);
-	
-	if (sourceMarker != null)
-	{
-		sourceMarker();
-	}
-	
-	if (targetMarker != null)
-	{
-		targetMarker();
-	}
+  paintEdgeShape.apply(this, arguments);
+
+  // Disables shadows, dashed styles and fixes fill color for markers
+  c.setFillColor(this.stroke);
+  c.setShadow(false);
+  c.setDashed(false);
+
+  if (sourceMarker != null)
+  {
+    sourceMarker();
+  }
+
+  if (targetMarker != null)
+  {
+    targetMarker();
+  }
 };
 
 /**
@@ -85,42 +85,42 @@ paintEdgeShape = (c, pts)=>
  */
 createMarker = (c, pts, source)=>
 {
-	var result = null;
-	var n = pts.length;
-	var type = mxUtils.getValue(this.style, (source) ? mxConstants.STYLE_STARTARROW : mxConstants.STYLE_ENDARROW);
-	var p0 = (source) ? pts[1] : pts[n - 2];
-	var pe = (source) ? pts[0] : pts[n - 1];
-	
-	if (type != null && p0 != null && pe != null)
-	{
-		var count = 1;
-		
-		// Uses next non-overlapping point
-		while (count < n - 1 && Math.round(p0.x - pe.x) == 0 && Math.round(p0.y - pe.y) == 0)
-		{
-			p0 = (source) ? pts[1 + count] : pts[n - 2 - count];
-			count++;
-		}
-	
-		// Computes the norm and the inverse norm
-		var dx = pe.x - p0.x;
-		var dy = pe.y - p0.y;
-	
-		var dist = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-		
-		var unitX = dx / dist;
-		var unitY = dy / dist;
-	
-		var size = mxUtils.getNumber(this.style, (source) ? mxConstants.STYLE_STARTSIZE : mxConstants.STYLE_ENDSIZE, mxConstants.DEFAULT_MARKERSIZE);
-		
-		// Allow for stroke width in the end point used and the 
-		// orthogonal vectors describing the direction of the marker
-		var filled = this.style[(source) ? mxConstants.STYLE_STARTFILL : mxConstants.STYLE_ENDFILL] != 0;
-		
-		result = mxMarker.createMarker(c, this, type, pe, unitX, unitY, size, source, this.strokewidth, filled);
-	}
-	
-	return result;
+  var result = null;
+  var n = pts.length;
+  var type = mxUtils.getValue(this.style, (source) ? mxConstants.STYLE_STARTARROW : mxConstants.STYLE_ENDARROW);
+  var p0 = (source) ? pts[1] : pts[n - 2];
+  var pe = (source) ? pts[0] : pts[n - 1];
+
+  if (type != null && p0 != null && pe != null)
+  {
+    var count = 1;
+
+    // Uses next non-overlapping point
+    while (count < n - 1 && Math.round(p0.x - pe.x) == 0 && Math.round(p0.y - pe.y) == 0)
+    {
+      p0 = (source) ? pts[1 + count] : pts[n - 2 - count];
+      count++;
+    }
+
+    // Computes the norm and the inverse norm
+    var dx = pe.x - p0.x;
+    var dy = pe.y - p0.y;
+
+    var dist = Math.max(1, Math.sqrt(dx * dx + dy * dy));
+
+    var unitX = dx / dist;
+    var unitY = dy / dist;
+
+    var size = mxUtils.getNumber(this.style, (source) ? mxConstants.STYLE_STARTSIZE : mxConstants.STYLE_ENDSIZE, mxConstants.DEFAULT_MARKERSIZE);
+
+    // Allow for stroke width in the end point used and the
+    // orthogonal vectors describing the direction of the marker
+    var filled = this.style[(source) ? mxConstants.STYLE_STARTFILL : mxConstants.STYLE_ENDFILL] != 0;
+
+    result = mxMarker.createMarker(c, this, type, pe, unitX, unitY, size, source, this.strokewidth, filled);
+  }
+
+  return result;
 };
 
 /**
@@ -130,20 +130,20 @@ createMarker = (c, pts, source)=>
  */
 augmentBoundingBox = (bbox)=>
 {
-	augmentBoundingBox.apply(this, arguments);
-	
-	// Adds marker sizes
-	var size = 0;
-	
-	if (mxUtils.getValue(this.style, mxConstants.STYLE_STARTARROW, mxConstants.NONE) != mxConstants.NONE)
-	{
-		size = mxUtils.getNumber(this.style, mxConstants.STYLE_STARTSIZE, mxConstants.DEFAULT_MARKERSIZE) + 1;
-	}
-	
-	if (mxUtils.getValue(this.style, mxConstants.STYLE_ENDARROW, mxConstants.NONE) != mxConstants.NONE)
-	{
-		size = Math.max(size, mxUtils.getNumber(this.style, mxConstants.STYLE_ENDSIZE, mxConstants.DEFAULT_MARKERSIZE)) + 1;
-	}
-	
-	bbox.grow(size * this.scale);
+  augmentBoundingBox.apply(this, arguments);
+
+  // Adds marker sizes
+  var size = 0;
+
+  if (mxUtils.getValue(this.style, mxConstants.STYLE_STARTARROW, mxConstants.NONE) != mxConstants.NONE)
+  {
+    size = mxUtils.getNumber(this.style, mxConstants.STYLE_STARTSIZE, mxConstants.DEFAULT_MARKERSIZE) + 1;
+  }
+
+  if (mxUtils.getValue(this.style, mxConstants.STYLE_ENDARROW, mxConstants.NONE) != mxConstants.NONE)
+  {
+    size = Math.max(size, mxUtils.getNumber(this.style, mxConstants.STYLE_ENDSIZE, mxConstants.DEFAULT_MARKERSIZE)) + 1;
+  }
+
+  bbox.grow(size * this.scale);
 };
