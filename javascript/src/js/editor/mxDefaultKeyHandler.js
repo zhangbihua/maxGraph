@@ -6,47 +6,6 @@
 import mxKeyHandler from "../handler/mxKeyHandler";
 import mxEventObject from "../util/mxEventObject";
 
-/**
- * Class: mxDefaultKeyHandler
- *
- * Binds keycodes to actionnames in an editor. This aggregates an internal
- * <handler> and extends the implementation of <mxKeyHandler.escape> to not
- * only cancel the editing, but also hide the properties dialog and fire an
- * <mxEditor.escape> event via <editor>. An instance of this class is created
- * by <mxEditor> and stored in <mxEditor.keyHandler>.
- *
- * Example:
- *
- * Bind the delete key to the delete action in an existing editor.
- *
- * (code)
- * let keyHandler = new mxDefaultKeyHandler(editor);
- * keyHandler.bindAction(46, 'delete');
- * (end)
- *
- * Codec:
- *
- * This class uses the <mxDefaultKeyHandlerCodec> to read configuration
- * data into an existing instance. See <mxDefaultKeyHandlerCodec> for a
- * description of the configuration format.
- *
- * Keycodes:
- *
- * See <mxKeyHandler>.
- *
- * An <mxEvent.ESCAPE> event is fired via the editor if the escape key is
- * pressed.
- *
- * Constructor: mxDefaultKeyHandler
- *
- * Constructs a new default key handler for the <mxEditor.graph> in the
- * given <mxEditor>. (The editor may be null if a prototypical instance for
- * a <mxDefaultKeyHandlerCodec> is created.)
- *
- * Parameters:
- *
- * editor - Reference to the enclosing <mxEditor>.
- */
 class mxDefaultKeyHandler {
   /**
    * Variable: editor
@@ -62,6 +21,47 @@ class mxDefaultKeyHandler {
    */
   handler = null;
 
+  /**
+   * Class: mxDefaultKeyHandler
+   *
+   * Binds keycodes to actionnames in an editor. This aggregates an internal
+   * <handler> and extends the implementation of <mxKeyHandler.escape> to not
+   * only cancel the editing, but also hide the properties dialog and fire an
+   * <mxEditor.escape> event via <editor>. An instance of this class is created
+   * by <mxEditor> and stored in <mxEditor.keyHandler>.
+   *
+   * Example:
+   *
+   * Bind the delete key to the delete action in an existing editor.
+   *
+   * (code)
+   * let keyHandler = new mxDefaultKeyHandler(editor);
+   * keyHandler.bindAction(46, 'delete');
+   * (end)
+   *
+   * Codec:
+   *
+   * This class uses the <mxDefaultKeyHandlerCodec> to read configuration
+   * data into an existing instance. See <mxDefaultKeyHandlerCodec> for a
+   * description of the configuration format.
+   *
+   * Keycodes:
+   *
+   * See <mxKeyHandler>.
+   *
+   * An <mxEvent.ESCAPE> event is fired via the editor if the escape key is
+   * pressed.
+   *
+   * Constructor: mxDefaultKeyHandler
+   *
+   * Constructs a new default key handler for the <mxEditor.graph> in the
+   * given <mxEditor>. (The editor may be null if a prototypical instance for
+   * a <mxDefaultKeyHandlerCodec> is created.)
+   *
+   * Parameters:
+   *
+   * editor - Reference to the enclosing <mxEditor>.
+   */
   constructor(editor) {
     if (editor != null) {
       this.editor = editor;

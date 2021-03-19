@@ -146,12 +146,12 @@ var mxCellPath =
     }
 
     // Compares path length if both paths are equal to this point
-    if (comp == 0)
+    if (comp === 0)
     {
       var t1 = p1.length;
       var t2 = p2.length;
 
-      if (t1 != t2)
+      if (t1 !== t2)
       {
         comp = (t1 > t2) ? 1 : -1;
       }
@@ -161,3 +161,5 @@ var mxCellPath =
   }
 
 };
+
+export default mxCellPath;

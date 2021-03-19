@@ -51,3 +51,5 @@ var mxStencilRegistry =
   }
 
 };
+
+export default mxStencilRegistry;
