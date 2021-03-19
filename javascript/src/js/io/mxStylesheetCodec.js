@@ -9,7 +9,7 @@
  * dynamically at load time and used implicitly via <mxCodec>
  * and the <mxCodecRegistry>.
  */
-var mxStylesheetCodec = mxCodecRegistry.register(function()
+var mxStylesheetCodec = mxCodecRegistry.register(()=>
 {
 	var codec = new mxObjectCodec(new mxStylesheet());
 
@@ -19,7 +19,7 @@ var mxStylesheetCodec = mxCodecRegistry.register(function()
 	 * Encodes a stylesheet. See <decode> for a description of the
 	 * format.
 	 */
-	codec.encode = function(enc, obj)
+	codec.encode = (enc, obj)=>
 	{
 		var node = enc.document.createElement(this.getName());
 		
@@ -60,7 +60,7 @@ var mxStylesheetCodec = mxCodecRegistry.register(function()
 	 *
 	 * Returns the string for encoding the given value.
 	 */
-	codec.getStringValue = function(key, value)
+	codec.getStringValue = (key, value)=>
 	{
 		var type = typeof(value);
 		
@@ -117,7 +117,7 @@ var mxStylesheetCodec = mxCodecRegistry.register(function()
 	 * </mxStylesheet>
 	 * (end)
 	 */
-	codec.decode = function(dec, node, into)
+	codec.decode = (dec, node, into)=>
 	{
 		var obj = into || new this.template.constructor();
 		var id = node.getAttribute('id');

@@ -30,28 +30,28 @@ function mxSwimlaneLayout(graph, orientation, deterministic)
  * Extends mxGraphLayout.
  */
 mxSwimlaneLayout.prototype = new mxGraphLayout();
-mxSwimlaneLayout.prototype.constructor = mxSwimlaneLayout;
+constructor = mxSwimlaneLayout;
 
 /**
  * Variable: roots
  * 
  * Holds the array of <mxCell> that this layout contains.
  */
-mxSwimlaneLayout.prototype.roots = null;
+roots = null;
 
 /**
  * Variable: swimlanes
  * 
  * Holds the array of <mxCell> of the ordered swimlanes to lay out
  */
-mxSwimlaneLayout.prototype.swimlanes = null;
+swimlanes = null;
 
 /**
  * Variable: dummyVertexWidth
  * 
  * The cell width of any dummy vertices inserted
  */
-mxSwimlaneLayout.prototype.dummyVertexWidth = 50;
+dummyVertexWidth = 50;
 
 /**
  * Variable: resizeParent
@@ -59,7 +59,7 @@ mxSwimlaneLayout.prototype.dummyVertexWidth = 50;
  * Specifies if the parent should be resized after the layout so that it
  * contains all the child cells. Default is false. See also <parentBorder>.
  */
-mxSwimlaneLayout.prototype.resizeParent = false;
+resizeParent = false;
 
 /**
  * Variable: maintainParentLocation
@@ -68,7 +68,7 @@ mxSwimlaneLayout.prototype.resizeParent = false;
  * top, left corner stays the same before and after execution of
  * the layout. Default is false for backwards compatibility.
  */
-mxSwimlaneLayout.prototype.maintainParentLocation = false;
+maintainParentLocation = false;
 
 /**
  * Variable: moveParent
@@ -76,7 +76,7 @@ mxSwimlaneLayout.prototype.maintainParentLocation = false;
  * Specifies if the parent should be moved if <resizeParent> is enabled.
  * Default is false.
  */
-mxSwimlaneLayout.prototype.moveParent = false;
+moveParent = false;
 
 /**
  * Variable: parentBorder
@@ -84,28 +84,28 @@ mxSwimlaneLayout.prototype.moveParent = false;
  * The border to be added around the children if the parent is to be
  * resized using <resizeParent>. Default is 30.
  */
-mxSwimlaneLayout.prototype.parentBorder = 30;
+parentBorder = 30;
 
 /**
  * Variable: intraCellSpacing
  * 
  * The spacing buffer added between cells on the same layer. Default is 30.
  */
-mxSwimlaneLayout.prototype.intraCellSpacing = 30;
+intraCellSpacing = 30;
 
 /**
  * Variable: interRankCellSpacing
  * 
  * The spacing buffer added between cell on adjacent layers. Default is 100.
  */
-mxSwimlaneLayout.prototype.interRankCellSpacing = 100;
+interRankCellSpacing = 100;
 
 /**
  * Variable: interHierarchySpacing
  * 
  * The spacing buffer between unconnected hierarchies. Default is 60.
  */
-mxSwimlaneLayout.prototype.interHierarchySpacing = 60;
+interHierarchySpacing = 60;
 
 /**
  * Variable: parallelEdgeSpacing
@@ -113,7 +113,7 @@ mxSwimlaneLayout.prototype.interHierarchySpacing = 60;
  * The distance between each parallel edge on each ranks for long edges.
  * Default is 10.
  */
-mxSwimlaneLayout.prototype.parallelEdgeSpacing = 10;
+parallelEdgeSpacing = 10;
 
 /**
  * Variable: orientation
@@ -121,7 +121,7 @@ mxSwimlaneLayout.prototype.parallelEdgeSpacing = 10;
  * The position of the root node(s) relative to the laid out graph in.
  * Default is <mxConstants.DIRECTION_NORTH>.
  */
-mxSwimlaneLayout.prototype.orientation = mxConstants.DIRECTION_NORTH;
+orientation = mxConstants.DIRECTION_NORTH;
 
 /**
  * Variable: fineTuning
@@ -129,7 +129,7 @@ mxSwimlaneLayout.prototype.orientation = mxConstants.DIRECTION_NORTH;
  * Whether or not to perform local optimisations and iterate multiple times
  * through the algorithm. Default is true.
  */
-mxSwimlaneLayout.prototype.fineTuning = true;
+fineTuning = true;
 
 /**
  * Variable: tightenToSource
@@ -137,7 +137,7 @@ mxSwimlaneLayout.prototype.fineTuning = true;
  * Whether or not to tighten the assigned ranks of vertices up towards
  * the source cells. Default is true.
  */
-mxSwimlaneLayout.prototype.tightenToSource = true;
+tightenToSource = true;
 
 /**
  * Variable: disableEdgeStyle
@@ -145,7 +145,7 @@ mxSwimlaneLayout.prototype.tightenToSource = true;
  * Specifies if the STYLE_NOEDGESTYLE flag should be set on edges that are
  * modified by the result. Default is true.
  */
-mxSwimlaneLayout.prototype.disableEdgeStyle = true;
+disableEdgeStyle = true;
 
 /**
  * Variable: traverseAncestors
@@ -155,35 +155,35 @@ mxSwimlaneLayout.prototype.disableEdgeStyle = true;
  * terminal vertices have different parents but are in the same
  * ancestry chain. Default is true.
  */
-mxSwimlaneLayout.prototype.traverseAncestors = true;
+traverseAncestors = true;
 
 /**
  * Variable: model
  * 
  * The internal <mxSwimlaneModel> formed of the layout.
  */
-mxSwimlaneLayout.prototype.model = null;
+model = null;
 
 /**
  * Variable: edgesSet
  * 
  * A cache of edges whose source terminal is the key
  */
-mxSwimlaneLayout.prototype.edgesCache = null;
+edgesCache = null;
 
 /**
  * Variable: edgesSet
  * 
  * A cache of edges whose source terminal is the key
  */
-mxHierarchicalLayout.prototype.edgeSourceTermCache = null;
+edgeSourceTermCache = null;
 
 /**
  * Variable: edgesSet
  * 
  * A cache of edges whose source terminal is the key
  */
-mxHierarchicalLayout.prototype.edgesTargetTermCache = null;
+edgesTargetTermCache = null;
 
 /**
  * Variable: edgeStyle
@@ -191,14 +191,14 @@ mxHierarchicalLayout.prototype.edgesTargetTermCache = null;
  * The style to apply between cell layers to edge segments.
  * Default is <mxHierarchicalEdgeStyle.POLYLINE>.
  */
-mxHierarchicalLayout.prototype.edgeStyle = mxHierarchicalEdgeStyle.POLYLINE;
+edgeStyle = mxHierarchicalEdgeStyle.POLYLINE;
 
 /**
  * Function: getModel
  * 
  * Returns the internal <mxSwimlaneModel> for this layout algorithm.
  */
-mxSwimlaneLayout.prototype.getModel = function()
+getModel = ()=>
 {
 	return this.model;
 };
@@ -213,7 +213,7 @@ mxSwimlaneLayout.prototype.getModel = function()
  * parent - Parent <mxCell> that contains the children to be laid out.
  * swimlanes - Ordered array of swimlanes to be laid out
  */
-mxSwimlaneLayout.prototype.execute = function(parent, swimlanes)
+execute = (parent, swimlanes)=>
 {
 	this.parent = parent;
 	var model = this.graph.model;
@@ -308,7 +308,7 @@ mxSwimlaneLayout.prototype.execute = function(parent, swimlanes)
  * all child vertices.
  * 
  */
-mxSwimlaneLayout.prototype.updateGroupBounds = function()
+updateGroupBounds = ()=>
 {
 	// Get all vertices and edge in the layout
 	var cells = [];
@@ -403,7 +403,7 @@ mxSwimlaneLayout.prototype.updateGroupBounds = function()
  * parent - <mxCell> whose children should be checked.
  * vertices - array of vertices to limit search to
  */
-mxSwimlaneLayout.prototype.findRoots = function(parent, vertices)
+findRoots = (parent, vertices)=>
 {
 	var roots = [];
 	
@@ -476,7 +476,7 @@ mxSwimlaneLayout.prototype.findRoots = function(parent, vertices)
  * 
  * cell - <mxCell> whose edges should be returned.
  */
-mxSwimlaneLayout.prototype.getEdges = function(cell)
+getEdges = (cell)=>
 {
 	var cachedEdges = this.edgesCache.get(cell);
 	
@@ -535,7 +535,7 @@ mxSwimlaneLayout.prototype.getEdges = function(cell)
  * edge - <mxCell> whose edges should be returned.
  * source - Boolean that specifies whether the source or target terminal is to be returned
  */
-mxSwimlaneLayout.prototype.getVisibleTerminal = function(edge, source)
+getVisibleTerminal = (edge, source)=>
 {
 	var terminalCache = this.edgesTargetTermCache;
 	
@@ -581,7 +581,7 @@ mxSwimlaneLayout.prototype.getVisibleTerminal = function(edge, source)
  * routing changes made. It runs each stage of the layout that has been
  * created.
  */
-mxSwimlaneLayout.prototype.run = function(parent)
+run = (parent)=>
 {
 	// Separate out unconnected hierarchies
 	var hierarchyVertices = [];
@@ -688,7 +688,7 @@ mxSwimlaneLayout.prototype.run = function(parent)
  * 
  * Creates an array of descendant cells
  */
-mxSwimlaneLayout.prototype.filterDescendants = function(cell, result)
+filterDescendants = (cell, result)=>
 {
 	var model = this.graph.model;
 
@@ -726,7 +726,7 @@ mxSwimlaneLayout.prototype.filterDescendants = function(cell, result)
  * 
  * cell - <mxCell> that represents the port.
  */
-mxSwimlaneLayout.prototype.isPort = function(cell)
+isPort = (cell)=>
 {
 	if (cell.geometry.relative)
 	{
@@ -748,7 +748,7 @@ mxSwimlaneLayout.prototype.isPort = function(cell)
  * target -
  * directed -
  */
-mxSwimlaneLayout.prototype.getEdgesBetween = function(source, target, directed)
+getEdgesBetween = (source, target, directed)=>
 {
 	directed = (directed != null) ? directed : false;
 	var edges = this.getEdges(source);
@@ -787,7 +787,7 @@ mxSwimlaneLayout.prototype.getEdgesBetween = function(source, target, directed)
  * allVertices - Array of cell paths for the visited cells.
  * swimlaneIndex - the laid out order index of the swimlane vertex is contained in
  */
-mxSwimlaneLayout.prototype.traverse = function(vertex, directed, edge, allVertices, currentComp,
+traverse = function(vertex, directed, edge, allVertices, currentComp,
 											hierarchyVertices, filledVertexSet, swimlaneIndex)
 {
 	if (vertex != null && allVertices != null)
@@ -888,7 +888,7 @@ mxSwimlaneLayout.prototype.traverse = function(vertex, directed, edge, allVertic
  * 
  * Executes the cycle stage using mxMinimumCycleRemover.
  */
-mxSwimlaneLayout.prototype.cycleStage = function(parent)
+cycleStage = (parent)=>
 {
 	var cycleStage = new mxSwimlaneOrdering(this);
 	cycleStage.execute(parent);
@@ -899,7 +899,7 @@ mxSwimlaneLayout.prototype.cycleStage = function(parent)
  * 
  * Implements first stage of a Sugiyama layout.
  */
-mxSwimlaneLayout.prototype.layeringStage = function()
+layeringStage = ()=>
 {
 	this.model.initialRank();
 	this.model.fixRanks();
@@ -910,7 +910,7 @@ mxSwimlaneLayout.prototype.layeringStage = function()
  * 
  * Executes the crossing stage using mxMedianHybridCrossingReduction.
  */
-mxSwimlaneLayout.prototype.crossingStage = function(parent)
+crossingStage = (parent)=>
 {
 	var crossingStage = new mxMedianHybridCrossingReduction(this);
 	crossingStage.execute(parent);
@@ -921,7 +921,7 @@ mxSwimlaneLayout.prototype.crossingStage = function(parent)
  * 
  * Executes the placement stage using mxCoordinateAssignment.
  */
-mxSwimlaneLayout.prototype.placementStage = function(initialX, parent)
+placementStage = (initialX, parent)=>
 {
 	var placementStage = new mxCoordinateAssignment(this, this.intraCellSpacing,
 			this.interRankCellSpacing, this.orientation, initialX,

@@ -27,7 +27,7 @@ var mxCellPath =
 	 * 
 	 * cell - Cell whose path should be returned.
 	 */
-	create: function(cell)
+	create: (cell)=>
 	{
 		var result = '';
 		
@@ -66,7 +66,7 @@ var mxCellPath =
 	 * 
 	 * path - Path whose parent path should be returned.
 	 */
-	getParentPath: function(path)
+	getParentPath: (path)=>
 	{
 		if (path != null)
 		{
@@ -96,7 +96,7 @@ var mxCellPath =
 	 * root - Root cell of the path to be resolved.
 	 * path - String that defines the path.
 	 */
-	resolve: function(root, path)
+	resolve: (root, path)=>
 	{
 		var parent = root;
 		
@@ -119,7 +119,7 @@ var mxCellPath =
 	 * Compares the given cell paths and returns -1 if p1 is smaller, 0 if
 	 * p1 is equal and 1 if p1 is greater than p2.
 	 */
-	compare: function(p1, p2)
+	compare: (p1, p2)=>
 	{
 		var min = Math.min(p1.length, p2.length);
 		var comp = 0;

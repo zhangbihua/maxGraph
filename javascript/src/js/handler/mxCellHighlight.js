@@ -27,7 +27,7 @@ function mxCellHighlight(graph, highlightColor, strokeWidth, dashed)
 		this.opacity = mxConstants.HIGHLIGHT_OPACITY;
 
 		// Updates the marker if the graph changes
-		this.repaintHandler = mxUtils.bind(this, function()
+		this.repaintHandler = mxUtils.bind(this, ()=>{
 		{
 			// Updates reference to state
 			if (this.state != null)
@@ -52,7 +52,7 @@ function mxCellHighlight(graph, highlightColor, strokeWidth, dashed)
 		this.graph.getModel().addListener(mxEvent.CHANGE, this.repaintHandler);
 		
 		// Hides the marker if the current root changes
-		this.resetHandler = mxUtils.bind(this, function()
+		this.resetHandler = mxUtils.bind(this, ()=>{
 		{
 			this.hide();
 		});
@@ -68,21 +68,21 @@ function mxCellHighlight(graph, highlightColor, strokeWidth, dashed)
  * Specifies if the highlights should appear on top of everything
  * else in the overlay pane. Default is false.
  */
-mxCellHighlight.prototype.keepOnTop = false;
+keepOnTop = false;
 
 /**
  * Variable: graph
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxCellHighlight.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: state
  * 
  * Reference to the <mxCellState>.
  */
-mxCellHighlight.prototype.state = null;
+state = null;
 
 /**
  * Variable: spacing
@@ -90,7 +90,7 @@ mxCellHighlight.prototype.state = null;
  * Specifies the spacing between the highlight for vertices and the vertex.
  * Default is 2.
  */
-mxCellHighlight.prototype.spacing = 2;
+spacing = 2;
 
 /**
  * Variable: resetHandler
@@ -98,7 +98,7 @@ mxCellHighlight.prototype.spacing = 2;
  * Holds the handler that automatically invokes reset if the highlight
  * should be hidden.
  */
-mxCellHighlight.prototype.resetHandler = null;
+resetHandler = null;
 
 /**
  * Function: setHighlightColor
@@ -109,7 +109,7 @@ mxCellHighlight.prototype.resetHandler = null;
  * 
  * color - String that represents the new highlight color.
  */
-mxCellHighlight.prototype.setHighlightColor = function(color)
+setHighlightColor = (color)=>{
 {
 	this.highlightColor = color;
 	
@@ -124,7 +124,7 @@ mxCellHighlight.prototype.setHighlightColor = function(color)
  * 
  * Creates and returns the highlight shape for the given state.
  */
-mxCellHighlight.prototype.drawHighlight = function()
+drawHighlight = ()=>{
 {
 	this.shape = this.createShape();
 	this.repaint();
@@ -140,7 +140,7 @@ mxCellHighlight.prototype.drawHighlight = function()
  * 
  * Creates and returns the highlight shape for the given state.
  */
-mxCellHighlight.prototype.createShape = function()
+createShape = ()=>{
 {
 	var shape = this.graph.cellRenderer.createShape(this.state);
 	
@@ -173,7 +173,7 @@ mxCellHighlight.prototype.createShape = function()
  * 
  * Returns the stroke width.
  */
-mxCellHighlight.prototype.getStrokeWidth = function(state)
+getStrokeWidth = (state)=>{
 {
 	return this.strokeWidth;
 };
@@ -183,7 +183,7 @@ mxCellHighlight.prototype.getStrokeWidth = function(state)
  * 
  * Updates the highlight after a change of the model or view.
  */
-mxCellHighlight.prototype.repaint = function()
+repaint = ()=>{
 {
 	if (this.state != null && this.shape != null)
 	{
@@ -237,7 +237,7 @@ mxCellHighlight.prototype.repaint = function()
  * 
  * Resets the state of the cell marker.
  */
-mxCellHighlight.prototype.hide = function()
+hide = ()=>{
 {
 	this.highlight(null);
 };
@@ -247,7 +247,7 @@ mxCellHighlight.prototype.hide = function()
  * 
  * Marks the <markedState> and fires a <mark> event.
  */
-mxCellHighlight.prototype.highlight = function(state)
+highlight = (state)=>{
 {
 	if (this.state != state)
 	{
@@ -271,7 +271,7 @@ mxCellHighlight.prototype.highlight = function(state)
  * 
  * Returns true if this highlight is at the given position.
  */
-mxCellHighlight.prototype.isHighlightAt = function(x, y)
+isHighlightAt = (x, y)=>{
 {
 	var hit = false;
 	
@@ -300,7 +300,7 @@ mxCellHighlight.prototype.isHighlightAt = function(x, y)
  * 
  * Destroys the handler and all its resources and DOM nodes.
  */
-mxCellHighlight.prototype.destroy = function()
+destroy = ()=>{
 {
 	this.graph.getView().removeListener(this.resetHandler);
 	this.graph.getView().removeListener(this.repaintHandler);

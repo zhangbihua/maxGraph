@@ -31,7 +31,7 @@ function mxGraphHierarchyEdge(edges)
  * Extends mxGraphAbstractHierarchyCell.
  */
 mxGraphHierarchyEdge.prototype = new mxGraphAbstractHierarchyCell();
-mxGraphHierarchyEdge.prototype.constructor = mxGraphHierarchyEdge;
+constructor = mxGraphHierarchyEdge;
 
 /**
  * Variable: edges
@@ -39,28 +39,28 @@ mxGraphHierarchyEdge.prototype.constructor = mxGraphHierarchyEdge;
  * The graph edge(s) this object represents. Parallel edges are all grouped
  * together within one hierarchy edge.
  */
-mxGraphHierarchyEdge.prototype.edges = null;
+edges = null;
 
 /**
  * Variable: ids
  * 
  * The object identities of the wrapped cells
  */
-mxGraphHierarchyEdge.prototype.ids = null;
+ids = null;
 
 /**
  * Variable: source
  * 
  * The node this edge is sourced at
  */
-mxGraphHierarchyEdge.prototype.source = null;
+source = null;
 
 /**
  * Variable: target
  * 
  * The node this edge targets
  */
-mxGraphHierarchyEdge.prototype.target = null;
+target = null;
 
 /**
  * Variable: isReversed
@@ -68,14 +68,14 @@ mxGraphHierarchyEdge.prototype.target = null;
  * Whether or not the direction of this edge has been reversed
  * internally to create a DAG for the hierarchical layout
  */
-mxGraphHierarchyEdge.prototype.isReversed = false;
+isReversed = false;
 
 /**
  * Function: invert
  * 
  * Inverts the direction of this internal edge(s)
  */
-mxGraphHierarchyEdge.prototype.invert = function(layer)
+invert = (layer)=>
 {
 	var temp = this.source;
 	this.source = this.target;
@@ -88,7 +88,7 @@ mxGraphHierarchyEdge.prototype.invert = function(layer)
  * 
  * Returns the cells this cell connects to on the next layer up
  */
-mxGraphHierarchyEdge.prototype.getNextLayerConnectedCells = function(layer)
+getNextLayerConnectedCells = (layer)=>
 {
 	if (this.nextLayerConnectedCells == null)
 	{
@@ -117,7 +117,7 @@ mxGraphHierarchyEdge.prototype.getNextLayerConnectedCells = function(layer)
  * 
  * Returns the cells this cell connects to on the next layer down
  */
-mxGraphHierarchyEdge.prototype.getPreviousLayerConnectedCells = function(layer)
+getPreviousLayerConnectedCells = (layer)=>
 {
 	if (this.previousLayerConnectedCells == null)
 	{
@@ -146,7 +146,7 @@ mxGraphHierarchyEdge.prototype.getPreviousLayerConnectedCells = function(layer)
  * 
  * Returns true.
  */
-mxGraphHierarchyEdge.prototype.isEdge = function()
+isEdge = ()=>
 {
 	return true;
 };
@@ -156,7 +156,7 @@ mxGraphHierarchyEdge.prototype.isEdge = function()
  * 
  * Gets the value of temp for the specified layer
  */
-mxGraphHierarchyEdge.prototype.getGeneralPurposeVariable = function(layer)
+getGeneralPurposeVariable = (layer)=>
 {
 	return this.temp[layer - this.minRank - 1];
 };
@@ -166,7 +166,7 @@ mxGraphHierarchyEdge.prototype.getGeneralPurposeVariable = function(layer)
  * 
  * Set the value of temp for the specified layer
  */
-mxGraphHierarchyEdge.prototype.setGeneralPurposeVariable = function(layer, value)
+setGeneralPurposeVariable = (layer, value)=>
 {
 	this.temp[layer - this.minRank - 1] = value;
 };
@@ -176,7 +176,7 @@ mxGraphHierarchyEdge.prototype.setGeneralPurposeVariable = function(layer, value
  * 
  * Gets the first core edge associated with this wrapper
  */
-mxGraphHierarchyEdge.prototype.getCoreCell = function()
+getCoreCell = ()=>
 {
 	if (this.edges != null && this.edges.length > 0)
 	{

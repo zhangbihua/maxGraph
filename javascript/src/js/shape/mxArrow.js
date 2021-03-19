@@ -52,9 +52,9 @@ mxUtils.extend(mxArrow, mxShape);
  *
  * Augments the bounding box with the edge width and markers.
  */
-mxArrow.prototype.augmentBoundingBox = function(bbox)
+augmentBoundingBox = (bbox)=>
 {
-	mxShape.prototype.augmentBoundingBox.apply(this, arguments);
+	augmentBoundingBox.apply(this, arguments);
 	
 	var w = Math.max(this.arrowWidth, this.endSize);
 	bbox.grow((w / 2 + this.strokewidth) * this.scale);
@@ -65,7 +65,7 @@ mxArrow.prototype.augmentBoundingBox = function(bbox)
  * 
  * Paints the line shape.
  */
-mxArrow.prototype.paintEdgeShape = function(c, pts)
+paintEdgeShape = (c, pts)=>
 {
 	// Geometry of arrow
 	var spacing =  mxConstants.ARROW_SPACING;

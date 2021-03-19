@@ -80,8 +80,8 @@
  * encoded objects:
  * 
  * (code)
- * var oldEncode = mxCodec.prototype.encode;
- * mxCodec.prototype.encode = function(obj)
+ * var oldEncode = encode;
+ * encode = (obj)=>
  * {
  *   mxLog.show();
  *   mxLog.debug('mxCodec.encode: obj='+mxUtils.getFunctionName(obj.constructor));
@@ -94,7 +94,7 @@
  * decoding those objects, the constructor should be written as follows:
  * 
  * (code)
- * var MyObj = function(name)
+ * var MyObj = (name)=>
  * {
  *   // ...
  * };
@@ -122,28 +122,28 @@ function mxCodec(document)
  *
  * The owner document of the codec.
  */
-mxCodec.prototype.document = null;
+document = null;
 
 /**
  * Variable: objects
  *
  * Maps from IDs to objects.
  */
-mxCodec.prototype.objects = null;
+objects = null;
 
 /**
  * Variable: elements
  * 
  * Lookup table for resolving IDs to elements.
  */
-mxCodec.prototype.elements = null;
+elements = null;
 
 /**
  * Variable: encodeDefaults
  *
  * Specifies if default values should be encoded. Default is false.
  */
-mxCodec.prototype.encodeDefaults = false;
+encodeDefaults = false;
 
 
 /**
@@ -156,7 +156,7 @@ mxCodec.prototype.encodeDefaults = false;
  * id - ID for the object to be associated with.
  * obj - Object to be associated with the ID.
  */
-mxCodec.prototype.putObject = function(id, obj)
+putObject = (id, obj)=>
 {
 	this.objects[id] = obj;
 	
@@ -171,7 +171,7 @@ mxCodec.prototype.putObject = function(id, obj)
  * object. If no object is found, then the element with the respective ID
  * from the document is parsed using <decode>.
  */
-mxCodec.prototype.getObject = function(id)
+getObject = (id)=>
 {
 	var obj = null;
 
@@ -208,7 +208,7 @@ mxCodec.prototype.getObject = function(id)
  *
  * (code)
  * var codec = new mxCodec();
- * codec.lookup = function(id)
+ * codec.lookup = (id)=>
  * {
  *   return model.getCell(id);
  * };
@@ -218,7 +218,7 @@ mxCodec.prototype.getObject = function(id)
  *
  * id - ID of the object to be returned.
  */
-mxCodec.prototype.lookup = function(id)
+lookup = (id)=>
 {
 	return null;
 };
@@ -232,7 +232,7 @@ mxCodec.prototype.lookup = function(id)
  *
  * id - String that contains the ID.
  */
-mxCodec.prototype.getElementById = function(id)
+getElementById = (id)=>
 {
 	this.updateElements();
 	
@@ -248,7 +248,7 @@ mxCodec.prototype.getElementById = function(id)
  *
  * id - String that contains the ID.
  */
-mxCodec.prototype.updateElements = function()
+updateElements = ()=>
 {
 	if (this.elements == null)
 	{
@@ -266,7 +266,7 @@ mxCodec.prototype.updateElements = function()
  *
  * Adds the given element to <elements> if it has an ID.
  */
-mxCodec.prototype.addElement = function(node)
+addElement = (node)=>
 {
 	if (node.nodeType == mxConstants.NODETYPE_ELEMENT)
 	{
@@ -307,7 +307,7 @@ mxCodec.prototype.addElement = function(node)
  *
  * obj - Object to return the ID for.
  */
-mxCodec.prototype.getId = function(obj)
+getId = (obj)=>
 {
 	var id = null;
 	
@@ -346,7 +346,7 @@ mxCodec.prototype.getId = function(obj)
  *
  * (code)
  * var codec = new mxCodec();
- * codec.reference = function(obj)
+ * codec.reference = (obj)=>
  * {
  *   return obj.getCustomId();
  * };
@@ -356,7 +356,7 @@ mxCodec.prototype.getId = function(obj)
  *
  * obj - Object whose ID should be returned.
  */
-mxCodec.prototype.reference = function(obj)
+reference = (obj)=>
 {
 	return null;
 };
@@ -371,7 +371,7 @@ mxCodec.prototype.reference = function(obj)
  *
  * obj - Object to be encoded. 
  */
-mxCodec.prototype.encode = function(obj)
+encode = (obj)=>
 {
 	var node = null;
 	
@@ -415,7 +415,7 @@ mxCodec.prototype.encode = function(obj)
  * node - XML node to be decoded.
  * into - Optional object to be decodec into.
  */
-mxCodec.prototype.decode = function(node, into)
+decode = (node, into)=>
 {
 	this.updateElements();
 	var obj = null;
@@ -469,7 +469,7 @@ mxCodec.prototype.decode = function(node, into)
  * includeChildren - Optional boolean indicating if the
  * function should include all descendents. Default is true. 
  */
-mxCodec.prototype.encodeCell = function(cell, node, includeChildren)
+encodeCell = (cell, node, includeChildren)=>
 {
 	node.appendChild(this.encode(cell));
 	
@@ -491,7 +491,7 @@ mxCodec.prototype.encodeCell = function(cell, node, includeChildren)
  * <mxCellCodec.isCellCodec> to check if the codec is of the
  * given type.
  */
-mxCodec.prototype.isCellCodec = function(codec)
+isCellCodec = (codec)=>
 {
 	if (codec != null && typeof(codec.isCellCodec) == 'function')
 	{
@@ -518,7 +518,7 @@ mxCodec.prototype.isCellCodec = function(codec)
  * and insertEdge on the parent and terminals, respectively.
  * Default is true.
  */
-mxCodec.prototype.decodeCell = function(node, restoreStructures)
+decodeCell = (node, restoreStructures)=>
 {
 	restoreStructures = (restoreStructures != null) ? restoreStructures : true;
 	var cell = null;
@@ -565,7 +565,7 @@ mxCodec.prototype.decodeCell = function(node, restoreStructures)
  *
  * Inserts the given cell into its parent and terminal cells.
  */
-mxCodec.prototype.insertIntoGraph = function(cell)
+insertIntoGraph = (cell)=>
 {
 	var parent = cell.parent;
 	var source = cell.getTerminal(true);
@@ -612,7 +612,7 @@ mxCodec.prototype.insertIntoGraph = function(cell)
  * attributes - Attributename to be set.
  * value - New value of the attribute.
  */
-mxCodec.prototype.setAttribute = function(node, attribute, value)
+setAttribute = (node, attribute, value)=>
 {
 	if (attribute != null && value != null)
 	{

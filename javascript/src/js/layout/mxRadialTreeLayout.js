@@ -35,42 +35,42 @@ mxUtils.extend(mxRadialTreeLayout, mxCompactTreeLayout);
  *
  * The initial offset to compute the angle position.
  */
-mxRadialTreeLayout.prototype.angleOffset = 0.5;
+angleOffset = 0.5;
 
 /**
  * Variable: rootx
  *
  * The X co-ordinate of the root cell
  */
-mxRadialTreeLayout.prototype.rootx = 0;
+rootx = 0;
 
 /**
  * Variable: rooty
  *
  * The Y co-ordinate of the root cell
  */
-mxRadialTreeLayout.prototype.rooty = 0;
+rooty = 0;
 
 /**
  * Variable: levelDistance
  *
  * Holds the levelDistance. Default is 120.
  */
-mxRadialTreeLayout.prototype.levelDistance = 120;
+levelDistance = 120;
 
 /**
  * Variable: nodeDistance
  *
  * Holds the nodeDistance. Default is 10.
  */
-mxRadialTreeLayout.prototype.nodeDistance = 10;
+nodeDistance = 10;
 
 /**
  * Variable: autoRadius
  * 
  * Specifies if the radios should be computed automatically
  */
-mxRadialTreeLayout.prototype.autoRadius = false;
+autoRadius = false;
 
 /**
  * Variable: sortEdges
@@ -78,49 +78,49 @@ mxRadialTreeLayout.prototype.autoRadius = false;
  * Specifies if edges should be sorted according to the order of their
  * opposite terminal cell in the model.
  */
-mxRadialTreeLayout.prototype.sortEdges = false;
+sortEdges = false;
 
 /**
  * Variable: rowMinX
  * 
  * Array of leftmost x coordinate of each row
  */
-mxRadialTreeLayout.prototype.rowMinX = [];
+rowMinX = [];
 
 /**
  * Variable: rowMaxX
  * 
  * Array of rightmost x coordinate of each row
  */
-mxRadialTreeLayout.prototype.rowMaxX = [];
+rowMaxX = [];
 
 /**
  * Variable: rowMinCenX
  * 
  * Array of x coordinate of leftmost vertex of each row
  */
-mxRadialTreeLayout.prototype.rowMinCenX = [];
+rowMinCenX = [];
 
 /**
  * Variable: rowMaxCenX
  * 
  * Array of x coordinate of rightmost vertex of each row
  */
-mxRadialTreeLayout.prototype.rowMaxCenX = [];
+rowMaxCenX = [];
 
 /**
  * Variable: rowRadi
  * 
  * Array of y deltas of each row behind root vertex, also the radius in the tree
  */
-mxRadialTreeLayout.prototype.rowRadi = [];
+rowRadi = [];
 
 /**
  * Variable: row
  * 
  * Array of vertices on each row
  */
-mxRadialTreeLayout.prototype.row = [];
+row = [];
 
 /**
  * Function: isVertexIgnored
@@ -132,9 +132,9 @@ mxRadialTreeLayout.prototype.row = [];
  * 
  * vertex - <mxCell> whose ignored state should be returned.
  */
-mxRadialTreeLayout.prototype.isVertexIgnored = function(vertex)
+isVertexIgnored = (vertex)=>
 {
-	return mxGraphLayout.prototype.isVertexIgnored.apply(this, arguments) ||
+	return isVertexIgnored.apply(this, arguments) ||
 		this.graph.getConnections(vertex).length == 0;
 };
 
@@ -152,7 +152,7 @@ mxRadialTreeLayout.prototype.isVertexIgnored = function(vertex)
  * parent - <mxCell> whose children should be laid out.
  * root - Optional <mxCell> that will be used as the root of the tree.
  */
-mxRadialTreeLayout.prototype.execute = function(parent, root)
+execute = (parent, root)=>
 {
 	this.parent = parent;
 	
@@ -160,7 +160,7 @@ mxRadialTreeLayout.prototype.execute = function(parent, root)
 	this.edgeRouting = false;
 	//this.horizontal = false;
 
-	mxCompactTreeLayout.prototype.execute.apply(this, arguments);
+	execute.apply(this, arguments);
 	
 	var bounds = null;
 	var rootBounds = this.getVertexBounds(this.root);
@@ -270,7 +270,7 @@ mxRadialTreeLayout.prototype.execute = function(parent, root)
  * row - Array of internal nodes, the children of which are to be processed.
  * rowNum - Integer indicating which row is being processed.
  */
-mxRadialTreeLayout.prototype.calcRowDims = function(row, rowNum)
+calcRowDims = (row, rowNum)=>
 {
 	if (row == null || row.length == 0)
 	{

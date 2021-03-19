@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(function()
+mxCodecRegistry.register(()=>
 {
 	/**
 	 * Class: mxRootChangeCodec
@@ -25,7 +25,7 @@ mxCodecRegistry.register(function()
 	 *
 	 * Encodes the child recursively.
 	 */
-	codec.afterEncode = function(enc, obj, node)
+	codec.afterEncode = (enc, obj, node)=>
 	{
 		enc.encodeCell(obj.root, node);
 		
@@ -38,7 +38,7 @@ mxCodecRegistry.register(function()
 	 * Decodes the optional children as cells
 	 * using the respective decoder.
 	 */
-	codec.beforeDecode = function(dec, node, obj)
+	codec.beforeDecode = (dec, node, obj)=>
 	{
 		if (node.firstChild != null &&
 			node.firstChild.nodeType == mxConstants.NODETYPE_ELEMENT)
@@ -70,7 +70,7 @@ mxCodecRegistry.register(function()
 	 *
 	 * Restores the state by assigning the previous value.
 	 */
-	codec.afterDecode = function(dec, node, obj)
+	codec.afterDecode = (dec, node, obj)=>
 	{
 		obj.previous = obj.root;
 		

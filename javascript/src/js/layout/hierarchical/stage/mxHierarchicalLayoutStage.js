@@ -22,4 +22,4 @@ function mxHierarchicalLayoutStage() { };
  * and creates the resulting laid out graph within that facade for further
  * use.
  */
-mxHierarchicalLayoutStage.prototype.execute = function(parent) { };
+execute = (parent)=> { };

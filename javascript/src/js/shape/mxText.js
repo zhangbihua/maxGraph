@@ -9,7 +9,7 @@
  * bottom to top to top to bottom, the following code can be used:
  * 
  * (code)
- * mxText.prototype.verticalTextRotation = 90;
+ * verticalTextRotation = 90;
  * (end)
  * 
  * Constructor: mxText
@@ -98,7 +98,7 @@ mxUtils.extend(mxText, mxShape);
  * Specifies the spacing to be added to the top spacing. Default is 0. Use the
  * value 5 here to get the same label positions as in mxGraph 1.x.
  */
-mxText.prototype.baseSpacingTop = 0;
+baseSpacingTop = 0;
 
 /**
  * Variable: baseSpacingBottom
@@ -106,21 +106,21 @@ mxText.prototype.baseSpacingTop = 0;
  * Specifies the spacing to be added to the bottom spacing. Default is 0. Use the
  * value 1 here to get the same label positions as in mxGraph 1.x.
  */
-mxText.prototype.baseSpacingBottom = 0;
+baseSpacingBottom = 0;
 
 /**
  * Variable: baseSpacingLeft
  * 
  * Specifies the spacing to be added to the left spacing. Default is 0.
  */
-mxText.prototype.baseSpacingLeft = 0;
+baseSpacingLeft = 0;
 
 /**
  * Variable: baseSpacingRight
  * 
  * Specifies the spacing to be added to the right spacing. Default is 0.
  */
-mxText.prototype.baseSpacingRight = 0;
+baseSpacingRight = 0;
 
 /**
  * Variable: replaceLinefeeds
@@ -128,14 +128,14 @@ mxText.prototype.baseSpacingRight = 0;
  * Specifies if linefeeds in HTML labels should be replaced with BR tags.
  * Default is true.
  */
-mxText.prototype.replaceLinefeeds = true;
+replaceLinefeeds = true;
 
 /**
  * Variable: verticalTextRotation
  * 
  * Rotation for vertical text. Default is -90 (bottom to top).
  */
-mxText.prototype.verticalTextRotation = -90;
+verticalTextRotation = -90;
 
 /**
  * Variable: ignoreClippedStringSize
@@ -145,7 +145,7 @@ mxText.prototype.verticalTextRotation = -90;
  * true, then the bounding box will be set to <bounds>. Default is true.
  * <ignoreStringSize> has precedence over this switch.
  */
-mxText.prototype.ignoreClippedStringSize = true;
+ignoreClippedStringSize = true;
 
 /**
  * Variable: ignoreStringSize
@@ -154,7 +154,7 @@ mxText.prototype.ignoreClippedStringSize = true;
  * boundingBox will not ignore the actual size of the string, otherwise
  * <bounds> will be used instead. Default is false.
  */
-mxText.prototype.ignoreStringSize = false;
+ignoreStringSize = false;
 
 /**
  * Variable: textWidthPadding
@@ -163,21 +163,21 @@ mxText.prototype.ignoreStringSize = false;
  * This is needed to make sure no clipping is applied to borders. Default is 4
  * for IE 8 standards mode and 3 for all others.
  */
-mxText.prototype.textWidthPadding = (document.documentMode == 8 && !mxClient.IS_EM) ? 4 : 3;
+textWidthPadding = (document.documentMode == 8 && !mxClient.IS_EM) ? 4 : 3;
 
 /**
  * Variable: lastValue
  * 
  * Contains the last rendered text value. Used for caching.
  */
-mxText.prototype.lastValue = null;
+lastValue = null;
 
 /**
  * Variable: cacheEnabled
  * 
  * Specifies if caching for HTML labels should be enabled. Default is true.
  */
-mxText.prototype.cacheEnabled = true;
+cacheEnabled = true;
 
 /**
  * Function: isParseVml
@@ -185,7 +185,7 @@ mxText.prototype.cacheEnabled = true;
  * Text shapes do not contain VML markup and do not need to be parsed. This
  * method returns false to speed up rendering in IE8.
  */
-mxText.prototype.isParseVml = function()
+isParseVml = ()=>
 {
 	return false;
 };
@@ -196,7 +196,7 @@ mxText.prototype.isParseVml = function()
  * Returns true if HTML is allowed for this shape. This implementation returns
  * true if the browser is not in IE8 standards mode.
  */
-mxText.prototype.isHtmlAllowed = function()
+isHtmlAllowed = ()=>
 {
 	return document.documentMode != 8 || mxClient.IS_EM;
 };
@@ -206,7 +206,7 @@ mxText.prototype.isHtmlAllowed = function()
  * 
  * Disables offset in IE9 for crisper image output.
  */
-mxText.prototype.getSvgScreenOffset = function()
+getSvgScreenOffset = ()=>
 {
 	return 0;
 };
@@ -216,7 +216,7 @@ mxText.prototype.getSvgScreenOffset = function()
  * 
  * Returns true if the bounds are not null and all of its variables are numeric.
  */
-mxText.prototype.checkBounds = function()
+checkBounds = ()=>
 {
 	return (!isNaN(this.scale) && isFinite(this.scale) && this.scale > 0 &&
 			this.bounds != null && !isNaN(this.bounds.x) && !isNaN(this.bounds.y) &&
@@ -228,7 +228,7 @@ mxText.prototype.checkBounds = function()
  * 
  * Generic rendering code.
  */
-mxText.prototype.paint = function(c, update)
+paint = (c, update)=>
 {
 	// Scale is passed-through to canvas
 	var s = this.scale;
@@ -290,7 +290,7 @@ mxText.prototype.paint = function(c, update)
  * 
  * Renders the text using the given DOM nodes.
  */
-mxText.prototype.redraw = function()
+redraw = ()=>
 {
 	if (this.visible && this.checkBounds() && this.cacheEnabled && this.lastValue == this.value &&
 		(mxUtils.isNode(this.value) || this.dialect == mxConstants.DIALECT_STRICTHTML))
@@ -333,13 +333,13 @@ mxText.prototype.redraw = function()
 			else
 			{
 				// Fallback if canvas does not support updateText (VML)
-				mxShape.prototype.redraw.apply(this, arguments);
+				redraw.apply(this, arguments);
 			}
 		}
 	}
 	else
 	{
-		mxShape.prototype.redraw.apply(this, arguments);
+		redraw.apply(this, arguments);
 		
 		if (mxUtils.isNode(this.value) || this.dialect == mxConstants.DIALECT_STRICTHTML)
 		{
@@ -357,9 +357,9 @@ mxText.prototype.redraw = function()
  * 
  * Resets all styles.
  */
-mxText.prototype.resetStyles = function()
+resetStyles = ()=>
 {
-	mxShape.prototype.resetStyles.apply(this, arguments);
+	resetStyles.apply(this, arguments);
 	
 	this.color = 'black';
 	this.align = mxConstants.ALIGN_CENTER;
@@ -388,10 +388,10 @@ mxText.prototype.resetStyles = function()
  *
  * state - <mxCellState> of the corresponding cell.
  */
-mxText.prototype.apply = function(state)
+apply = (state)=>
 {
 	var old = this.spacing;
-	mxShape.prototype.apply.apply(this, arguments);
+	apply.apply(this, arguments);
 	
 	if (this.style != null)
 	{
@@ -426,7 +426,7 @@ mxText.prototype.apply = function(state)
  * depending on the contents of <value>. This is not invoked for HTML, wrapped
  * content or if <value> is a DOM node.
  */
-mxText.prototype.getAutoDirection = function()
+getAutoDirection = ()=>
 {
 	// Looks for strong (directional) characters
 	var tmp = /[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(this.value);
@@ -441,7 +441,7 @@ mxText.prototype.getAutoDirection = function()
  * 
  * Returns the node that contains the rendered input.
  */
-mxText.prototype.getContentNode = function()
+getContentNode = ()=>
 {
 	var result = this.node;
 	
@@ -467,7 +467,7 @@ mxText.prototype.getContentNode = function()
  *
  * Updates the <boundingBox> for this shape using the given node and position.
  */
-mxText.prototype.updateBoundingBox = function()
+updateBoundingBox = ()=>
 {
 	var node = this.node;
 	this.boundingBox = this.bounds.clone();
@@ -646,7 +646,7 @@ mxText.prototype.updateBoundingBox = function()
  * 
  * Returns 0 to avoid using rotation in the canvas via updateTransform.
  */
-mxText.prototype.getShapeRotation = function()
+getShapeRotation = ()=>
 {
 	return 0;
 };
@@ -656,7 +656,7 @@ mxText.prototype.getShapeRotation = function()
  * 
  * Returns the rotation for the text label of the corresponding shape.
  */
-mxText.prototype.getTextRotation = function()
+getTextRotation = ()=>
 {
 	return (this.state != null && this.state.shape != null) ? this.state.shape.getTextRotation() : 0;
 };
@@ -667,7 +667,7 @@ mxText.prototype.getTextRotation = function()
  * Inverts the bounds if <mxShape.isBoundsInverted> returns true or if the
  * horizontal style is false.
  */
-mxText.prototype.isPaintBoundsInverted = function()
+isPaintBoundsInverted = ()=>
 {
 	return !this.horizontal && this.state != null && this.state.view.graph.model.isVertex(this.state.cell);
 };
@@ -677,9 +677,9 @@ mxText.prototype.isPaintBoundsInverted = function()
  * 
  * Sets the state of the canvas for drawing the shape.
  */
-mxText.prototype.configureCanvas = function(c, x, y, w, h)
+configureCanvas = (c, x, y, w, h)=>
 {
-	mxShape.prototype.configureCanvas.apply(this, arguments);
+	configureCanvas.apply(this, arguments);
 	
 	c.setFontColor(this.color);
 	c.setFontBackgroundColor(this.background);
@@ -694,7 +694,7 @@ mxText.prototype.configureCanvas = function(c, x, y, w, h)
  * 
  * Sets the width and height of the container to 1px.
  */
-mxText.prototype.updateVmlContainer = function()
+updateVmlContainer = ()=>
 {
 	this.node.style.left = Math.round(this.bounds.x) + 'px';
 	this.node.style.top = Math.round(this.bounds.y) + 'px';
@@ -708,7 +708,7 @@ mxText.prototype.updateVmlContainer = function()
  * 
  * Private helper function to create SVG elements
  */
-mxText.prototype.getHtmlValue = function()
+getHtmlValue = ()=>
 {
 	var val = this.value;
 	
@@ -729,7 +729,7 @@ mxText.prototype.getHtmlValue = function()
  * 
  * Private helper function to create SVG elements
  */
-mxText.prototype.getTextCss = function()
+getTextCss = ()=>
 {
 	var lh = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? (this.size * mxConstants.LINE_HEIGHT) + 'px' :
 		mxConstants.LINE_HEIGHT;
@@ -773,7 +773,7 @@ mxText.prototype.getTextCss = function()
  *
  * Updates the HTML node(s) to reflect the latest bounds and scale.
  */
-mxText.prototype.redrawHtmlShape = function()
+redrawHtmlShape = ()=>
 {
 	if (mxClient.IS_SVG)
 	{
@@ -812,7 +812,7 @@ mxText.prototype.redrawHtmlShape = function()
  *
  * Updates the HTML node(s) to reflect the latest bounds and scale.
  */
-mxText.prototype.redrawHtmlShapeWithCss3 = function()
+redrawHtmlShapeWithCss3 = ()=>
 {
 	var w = Math.max(0, Math.round(this.bounds.width / this.scale));
 	var h = Math.max(0, Math.round(this.bounds.height / this.scale));
@@ -823,7 +823,7 @@ mxText.prototype.redrawHtmlShapeWithCss3 = function()
 	mxSvgCanvas2D.createCss(w + 2, h, this.align, this.valign, this.wrap, this.overflow, this.clipped,
 		(this.background != null) ? mxUtils.htmlEntities(this.background) : null,
 		(this.border != null) ? mxUtils.htmlEntities(this.border) : null,
-		flex, block, this.scale, mxUtils.bind(this, function(dx, dy, flex, item, block, ofl)
+		flex, block, this.scale, mxUtils.bind(this, (dx, dy, flex, item, block, ofl)=>
 	{
 		var r = this.getTextRotation();
 		var tr = ((this.scale != 1) ? 'scale(' + this.scale + ') ' : '') +
@@ -876,7 +876,7 @@ mxText.prototype.redrawHtmlShapeWithCss3 = function()
  *
  * Returns the spacing as an <mxPoint>.
  */
-mxText.prototype.updateHtmlTransform = function()
+updateHtmlTransform = ()=>
 {
 	var theta = this.getTextRotation();
 	var style = this.node.style;
@@ -915,7 +915,7 @@ mxText.prototype.updateHtmlTransform = function()
  * 
  * Sets the inner HTML of the given element to the <value>.
  */
-mxText.prototype.updateInnerHtml = function(elt)
+updateInnerHtml = (elt)=>
 {
 	if (mxUtils.isNode(this.value))
 	{
@@ -945,7 +945,7 @@ mxText.prototype.updateInnerHtml = function(elt)
  *
  * Rotated text rendering quality is bad for IE9 quirks/IE8 standards
  */
-mxText.prototype.updateHtmlFilter = function()
+updateHtmlFilter = ()=>
 {
 	var style = this.node.style;
 	var dx = this.margin.x;
@@ -1154,7 +1154,7 @@ mxText.prototype.updateHtmlFilter = function()
  *
  * Updates the HTML node(s) to reflect the latest bounds and scale.
  */
-mxText.prototype.updateValue = function()
+updateValue = ()=>
 {
 	if (mxUtils.isNode(this.value))
 	{
@@ -1242,7 +1242,7 @@ mxText.prototype.updateValue = function()
  *
  * Updates the HTML node(s) to reflect the latest bounds and scale.
  */
-mxText.prototype.updateFont = function(node)
+updateFont = (node)=>
 {
 	var style = node.style;
 	
@@ -1303,7 +1303,7 @@ mxText.prototype.updateFont = function(node)
  *
  * Updates the HTML node(s) to reflect the latest bounds and scale.
  */
-mxText.prototype.updateSize = function(node, enableWrap)
+updateSize = (node, enableWrap)=>
 {
 	var w = Math.max(0, Math.round(this.bounds.width / this.scale));
 	var h = Math.max(0, Math.round(this.bounds.height / this.scale));
@@ -1392,7 +1392,7 @@ mxText.prototype.updateSize = function(node, enableWrap)
  *
  * Returns the spacing as an <mxPoint>.
  */
-mxText.prototype.updateMargin = function()
+updateMargin = ()=>
 {
 	this.margin = mxUtils.getAlignmentAsPoint(this.align, this.valign);
 };
@@ -1402,7 +1402,7 @@ mxText.prototype.updateMargin = function()
  *
  * Returns the spacing as an <mxPoint>.
  */
-mxText.prototype.getSpacing = function()
+getSpacing = ()=>
 {
 	var dx = 0;
 	var dy = 0;

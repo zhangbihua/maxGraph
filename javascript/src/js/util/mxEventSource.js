@@ -12,7 +12,7 @@
  * function MyClass() { };
  *
  * MyClass.prototype = new mxEventSource();
- * MyClass.prototype.constructor = MyClass;
+ * constructor = MyClass;
  * (end)
  *
  * Known Subclasses:
@@ -36,28 +36,28 @@ function mxEventSource(eventSource)
  * contains the event name followed by the respective listener for each
  * registered listener.
  */
-mxEventSource.prototype.eventListeners = null;
+eventListeners = null;
 
 /**
  * Variable: eventsEnabled
  *
  * Specifies if events can be fired. Default is true.
  */
-mxEventSource.prototype.eventsEnabled = true;
+eventsEnabled = true;
 
 /**
  * Variable: eventSource
  *
  * Optional source for events. Default is null.
  */
-mxEventSource.prototype.eventSource = null;
+eventSource = null;
 
 /**
  * Function: isEventsEnabled
  * 
  * Returns <eventsEnabled>.
  */
-mxEventSource.prototype.isEventsEnabled = function()
+isEventsEnabled = ()=>
 {
 	return this.eventsEnabled;
 };
@@ -67,7 +67,7 @@ mxEventSource.prototype.isEventsEnabled = function()
  * 
  * Sets <eventsEnabled>.
  */
-mxEventSource.prototype.setEventsEnabled = function(value)
+setEventsEnabled = (value)=>
 {
 	this.eventsEnabled = value;
 };
@@ -77,7 +77,7 @@ mxEventSource.prototype.setEventsEnabled = function(value)
  * 
  * Returns <eventSource>.
  */
-mxEventSource.prototype.getEventSource = function()
+getEventSource = ()=>
 {
 	return this.eventSource;
 };
@@ -87,7 +87,7 @@ mxEventSource.prototype.getEventSource = function()
  * 
  * Sets <eventSource>.
  */
-mxEventSource.prototype.setEventSource = function(value)
+setEventSource = (value)=>
 {
 	this.eventSource = value;
 };
@@ -100,7 +100,7 @@ mxEventSource.prototype.setEventSource = function(value)
  * 
  * The parameters of the listener are the sender and an <mxEventObject>.
  */
-mxEventSource.prototype.addListener = function(name, funct)
+addListener = (name, funct)=>
 {
 	if (this.eventListeners == null)
 	{
@@ -116,7 +116,7 @@ mxEventSource.prototype.addListener = function(name, funct)
  *
  * Removes all occurrences of the given listener from <eventListeners>.
  */
-mxEventSource.prototype.removeListener = function(funct)
+removeListener = (funct)=>
 {
 	if (this.eventListeners != null)
 	{
@@ -155,7 +155,7 @@ mxEventSource.prototype.removeListener = function(funct)
  * sender - Optional sender to be passed to the listener. Default value is
  * the return value of <getEventSource>.
  */
-mxEventSource.prototype.fireEvent = function(evt, sender)
+fireEvent = (evt, sender)=>
 {
 	if (this.eventListeners != null && this.isEventsEnabled())
 	{

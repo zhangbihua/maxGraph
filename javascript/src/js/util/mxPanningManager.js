@@ -23,9 +23,9 @@ function mxPanningManager(graph)
 	
 	this.mouseListener =
 	{
-	    mouseDown: function(sender, me) { },
-	    mouseMove: function(sender, me) { },
-	    mouseUp: mxUtils.bind(this, function(sender, me)
+	    mouseDown: (sender, me)=> { },
+	    mouseMove: (sender, me)=> { },
+	    mouseUp: mxUtils.bind(this, (sender, me)=>
 	    {
 	    	if (this.active)
 	    	{
@@ -36,7 +36,7 @@ function mxPanningManager(graph)
 	
 	graph.addMouseListener(this.mouseListener);
 	
-	this.mouseUpListener = mxUtils.bind(this, function()
+	this.mouseUpListener = mxUtils.bind(this, ()=>
 	{
 	    	if (this.active)
 	    	{
@@ -47,13 +47,13 @@ function mxPanningManager(graph)
 	// Stops scrolling on every mouseup anywhere in the document
 	mxEvent.addListener(document, 'mouseup', this.mouseUpListener);
 	
-	var createThread = mxUtils.bind(this, function()
+	var createThread = mxUtils.bind(this, ()=>
 	{
 	    	this.scrollbars = mxUtils.hasScrollbars(graph.container);
 	    	this.scrollLeft = graph.container.scrollLeft;
 	    	this.scrollTop = graph.container.scrollTop;
 	
-	    	return window.setInterval(mxUtils.bind(this, function()
+	    	return window.setInterval(mxUtils.bind(this, ()=>
 		{
 			this.tdx -= this.dx;
 			this.tdy -= this.dy;
@@ -75,29 +75,29 @@ function mxPanningManager(graph)
 		}), this.delay);
 	});
 	
-	this.isActive = function()
+	this.isActive = ()=>
 	{
 		return active;
 	};
 	
-	this.getDx = function()
+	this.getDx = ()=>
 	{
 		return Math.round(this.tdx);
 	};
 	
-	this.getDy = function()
+	this.getDy = ()=>
 	{
 		return Math.round(this.tdy);
 	};
 	
-	this.start = function()
+	this.start = ()=>
 	{
 		this.t0x = graph.view.translate.x;
 		this.t0y = graph.view.translate.y;
 		this.active = true;
 	};
 	
-	this.panTo = function(x, y, w, h)
+	this.panTo = (x, y, w, h)=>
 	{
 		if (!this.active)
 		{
@@ -194,7 +194,7 @@ function mxPanningManager(graph)
 		}
 	};
 	
-	this.stop = function()
+	this.stop = ()=>
 	{
 		if (this.active)
 		{
@@ -229,7 +229,7 @@ function mxPanningManager(graph)
 		}
 	};
 	
-	this.destroy = function()
+	this.destroy = ()=>
 	{
 		graph.removeMouseListener(this.mouseListener);
 		mxEvent.removeListener(document, 'mouseup', this.mouseUpListener);
@@ -241,25 +241,25 @@ function mxPanningManager(graph)
  * 
  * Damper value for the panning. Default is 1/6.
  */
-mxPanningManager.prototype.damper = 1/6;
+damper = 1/6;
 
 /**
  * Variable: delay
  * 
  * Delay in milliseconds for the panning. Default is 10.
  */
-mxPanningManager.prototype.delay = 10;
+delay = 10;
 
 /**
  * Variable: handleMouseOut
  * 
  * Specifies if mouse events outside of the component should be handled. Default is true. 
  */
-mxPanningManager.prototype.handleMouseOut = true;
+handleMouseOut = true;
 
 /**
  * Variable: border
  * 
  * Border to handle automatic panning inside the component. Default is 0 (disabled).
  */
-mxPanningManager.prototype.border = 0;
+border = 0;

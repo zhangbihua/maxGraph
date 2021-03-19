@@ -44,28 +44,28 @@ function mxEventObject(name)
  *
  * Holds the name.
  */
-mxEventObject.prototype.name = null;
+name = null;
 
 /**
  * Variable: properties
  *
  * Holds the properties as an associative array.
  */
-mxEventObject.prototype.properties = null;
+properties = null;
 
 /**
  * Variable: consumed
  *
  * Holds the consumed state. Default is false.
  */
-mxEventObject.prototype.consumed = false;
+consumed = false;
 
 /**
  * Function: getName
  * 
  * Returns <name>.
  */
-mxEventObject.prototype.getName = function()
+getName = ()=>
 {
 	return this.name;
 };
@@ -75,7 +75,7 @@ mxEventObject.prototype.getName = function()
  * 
  * Returns <properties>.
  */
-mxEventObject.prototype.getProperties = function()
+getProperties = ()=>
 {
 	return this.properties;
 };
@@ -85,7 +85,7 @@ mxEventObject.prototype.getProperties = function()
  * 
  * Returns the property for the given key.
  */
-mxEventObject.prototype.getProperty = function(key)
+getProperty = (key)=>
 {
 	return this.properties[key];
 };
@@ -95,7 +95,7 @@ mxEventObject.prototype.getProperty = function(key)
  *
  * Returns true if the event has been consumed.
  */
-mxEventObject.prototype.isConsumed = function()
+isConsumed = ()=>
 {
 	return this.consumed;
 };
@@ -105,7 +105,7 @@ mxEventObject.prototype.isConsumed = function()
  *
  * Consumes the event.
  */
-mxEventObject.prototype.consume = function()
+consume = ()=>
 {
 	this.consumed = true;
 };

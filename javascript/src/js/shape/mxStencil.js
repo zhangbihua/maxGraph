@@ -235,63 +235,63 @@ mxStencil.allowEval = false;
  *
  * Holds the XML node with the stencil description.
  */
-mxStencil.prototype.desc = null;
+desc = null;
 
 /**
  * Variable: constraints
  * 
  * Holds an array of <mxConnectionConstraints> as defined in the shape.
  */
-mxStencil.prototype.constraints = null;
+constraints = null;
 
 /**
  * Variable: aspect
  *
  * Holds the aspect of the shape. Default is 'auto'.
  */
-mxStencil.prototype.aspect = null;
+aspect = null;
 
 /**
  * Variable: w0
  *
  * Holds the width of the shape. Default is 100.
  */
-mxStencil.prototype.w0 = null;
+w0 = null;
 
 /**
  * Variable: h0
  *
  * Holds the height of the shape. Default is 100.
  */
-mxStencil.prototype.h0 = null;
+h0 = null;
 
 /**
  * Variable: bgNodes
  *
  * Holds the XML node with the stencil description.
  */
-mxStencil.prototype.bgNode = null;
+bgNode = null;
 
 /**
  * Variable: fgNodes
  *
  * Holds the XML node with the stencil description.
  */
-mxStencil.prototype.fgNode = null;
+fgNode = null;
 
 /**
  * Variable: strokewidth
  *
  * Holds the strokewidth direction from the description.
  */
-mxStencil.prototype.strokewidth = null;
+strokewidth = null;
 
 /**
  * Function: parseDescription
  *
  * Reads <w0>, <h0>, <aspect>, <bgNodes> and <fgNodes> from <desc>.
  */
-mxStencil.prototype.parseDescription = function()
+parseDescription = ()=>
 {
 	// LATER: Preprocess nodes for faster painting
 	this.fgNode = this.desc.getElementsByTagName('foreground')[0];
@@ -319,7 +319,7 @@ mxStencil.prototype.parseDescription = function()
  * Reads the constraints from <desc> into <constraints> using
  * <parseConstraint>.
  */
-mxStencil.prototype.parseConstraints = function()
+parseConstraints = ()=>
 {
 	var conns = this.desc.getElementsByTagName('connections')[0];
 	
@@ -344,7 +344,7 @@ mxStencil.prototype.parseConstraints = function()
  *
  * Parses the given XML node and returns its <mxConnectionConstraint>.
  */
-mxStencil.prototype.parseConstraint = function(node)
+parseConstraint = (node)=>
 {
 	var x = Number(node.getAttribute('x'));
 	var y = Number(node.getAttribute('y'));
@@ -361,7 +361,7 @@ mxStencil.prototype.parseConstraint = function(node)
  * is used as a key to <mxResources.get> if the localized attribute in the text
  * node is 1 or if <defaultLocalized> is true.
  */
-mxStencil.prototype.evaluateTextAttribute = function(node, attribute, shape)
+evaluateTextAttribute = (node, attribute, shape)=>
 {
 	var result = this.evaluateAttribute(node, attribute, shape);
 	var loc = node.getAttribute('localized');
@@ -382,7 +382,7 @@ mxStencil.prototype.evaluateTextAttribute = function(node, attribute, shape)
  * a function it is invoked with <shape> as the only argument and the return
  * value is used as the attribute value to be returned.
  */
-mxStencil.prototype.evaluateAttribute = function(node, attribute, shape)
+evaluateAttribute = (node, attribute, shape)=>
 {
 	var result = node.getAttribute(attribute);
 	
@@ -409,7 +409,7 @@ mxStencil.prototype.evaluateAttribute = function(node, attribute, shape)
  *
  * Draws this stencil inside the given bounds.
  */
-mxStencil.prototype.drawShape = function(canvas, shape, x, y, w, h)
+drawShape = (canvas, shape, x, y, w, h)=>
 {
 	var stack = canvas.states.slice();
 	
@@ -453,7 +453,7 @@ mxStencil.prototype.drawShape = function(canvas, shape, x, y, w, h)
  *
  * Draws this stencil inside the given bounds.
  */
-mxStencil.prototype.drawChildren = function(canvas, shape, x, y, w, h, node, aspect, disableShadow, paint)
+drawChildren = (canvas, shape, x, y, w, h, node, aspect, disableShadow, paint)=>
 {
 	if (node != null && w > 0 && h > 0)
 	{
@@ -484,7 +484,7 @@ mxStencil.prototype.drawChildren = function(canvas, shape, x, y, w, h, node, asp
  * bounds - <mxRectangle> that should contain the stencil.
  * direction - Optional direction of the shape to be darwn.
  */
-mxStencil.prototype.computeAspect = function(shape, x, y, w, h, direction)
+computeAspect = (shape, x, y, w, h, direction)=>
 {
 	var x0 = x;
 	var y0 = y;
@@ -530,7 +530,7 @@ mxStencil.prototype.computeAspect = function(shape, x, y, w, h, direction)
  *
  * Draws this stencil inside the given bounds.
  */
-mxStencil.prototype.drawNode = function(canvas, shape, node, aspect, disableShadow, paint)
+drawNode = (canvas, shape, node, aspect, disableShadow, paint)=>
 {
 	var name = node.nodeName;
 	var x0 = aspect.x;

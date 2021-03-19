@@ -265,7 +265,7 @@ var mxClient =
 	 * }
 	 * (end)
 	 */
-	isBrowserSupported: function()
+	isBrowserSupported: ()=>
 	{
 		return mxClient.IS_VML || mxClient.IS_SVG;
 	},
@@ -290,7 +290,7 @@ var mxClient =
 	 * doc - Optional parent document of the link node.
 	 * id - unique id for the link element to check if it already exists
 	 */
-	link: function(rel, href, doc, id)
+	link: (rel, href, doc, id)=>
 	{
 		doc = doc || document;
 
@@ -328,7 +328,7 @@ var mxClient =
 	 * fn - Function to call after all resources have been loaded.
 	 * lan - Optional string to pass to <mxResources.add>.
 	 */
-	loadResources: function(fn, lan)
+	loadResources: (fn, lan)=>
 	{
 		var pending = mxClient.defaultBundles.length;
 		
@@ -356,7 +356,7 @@ var mxClient =
 	 * function should only be used in development environments, but not in
 	 * production systems.
 	 */
-	include: function(src)
+	include: (src)=>
 	{
 		document.write('<script src="'+src+'"></script>');
 	}
@@ -624,7 +624,7 @@ if (mxClient.IS_VML)
 		// Workaround for limited number of stylesheets in IE (does not work in standards mode)
 		if (mxClient.IS_QUIRKS && document.styleSheets.length >= 30)
 		{
-			(function()
+			(()=>
 			{
 				var node = document.createElement('style');
 				node.type = 'text/css';

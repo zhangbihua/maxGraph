@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(function()
+mxCodecRegistry.register(()=>
 {
 	/**
 	 * Class: mxEditorCodec
@@ -78,7 +78,7 @@ mxCodecRegistry.register(function()
 	 * </ui>
 	 * (end)
 	 */
-	codec.afterDecode = function(dec, node, obj)
+	codec.afterDecode = (dec, node, obj)=>
 	{
 		// Assigns the specified templates for edges
 		var defaultEdge = node.getAttribute('defaultEdge');
@@ -106,7 +106,7 @@ mxCodecRegistry.register(function()
 	 * 
 	 * Overrides decode child to handle special child nodes.
 	 */	
-	codec.decodeChild = function(dec, child, obj)
+	codec.decodeChild = (dec, child, obj)=>
 	{
 		if (child.nodeName == 'Array')
 		{
@@ -124,7 +124,7 @@ mxCodecRegistry.register(function()
 			return;
 		}
 		
-		mxObjectCodec.prototype.decodeChild.apply(this, arguments);
+		decodeChild.apply(this, arguments);
 	};
 		
 	/**
@@ -132,7 +132,7 @@ mxCodecRegistry.register(function()
 	 *
 	 * Decodes the ui elements from the given node.
 	 */
-	codec.decodeUi = function(dec, node, editor)
+	codec.decodeUi = (dec, node, editor)=>
 	{
 		var tmp = node.firstChild;
 		while (tmp != null)
@@ -209,7 +209,7 @@ mxCodecRegistry.register(function()
 	 *
 	 * Decodes the cells from the given node as templates.
 	 */
-	codec.decodeTemplates = function(dec, node, editor)
+	codec.decodeTemplates = (dec, node, editor)=>
 	{
 		if (editor.templates == null)
 		{

@@ -53,7 +53,7 @@ var mxLog =
 	 * point to a non-null value. This is called from within <setVisible> if the
 	 * log has not yet been initialized.
 	 */
-	init: function()
+	init: ()=>
 	{
 		if (mxLog.window == null && document.body != null)
 		{
@@ -185,7 +185,7 @@ var mxLog =
 			{
 				var elt = mxLog.window.getElement();
 				
-				var resizeHandler = function(sender, evt)
+				var resizeHandler = (sender, evt)=>
 				{
 					mxLog.textarea.style.height = Math.max(0, elt.offsetHeight - 70) + 'px';
 				}; 
@@ -204,7 +204,7 @@ var mxLog =
 	 * 
 	 * Writes the current navigator information to the console.
 	 */
-	info: function()
+	info: ()=>
 	{
 		mxLog.writeln(mxUtils.toString(navigator));
 	},
@@ -214,7 +214,7 @@ var mxLog =
 	 * 
 	 * Adds a button to the console using the given label and function.
 	 */
-	addButton: function(lab, funct)
+	addButton: (lab, funct)=>
 	{
 		var button = document.createElement('button');
 		mxUtils.write(button, lab);
@@ -227,7 +227,7 @@ var mxLog =
 	 * 
 	 * Returns true if the console is visible.
 	 */
-	isVisible: function()
+	isVisible: ()=>
 	{
 		if (mxLog.window != null)
 		{
@@ -243,7 +243,7 @@ var mxLog =
 	 * 
 	 * Shows the console.
 	 */
-	show: function()
+	show: ()=>
 	{
 		mxLog.setVisible(true);
 	},
@@ -253,7 +253,7 @@ var mxLog =
 	 * 
 	 * Shows or hides the console.
 	 */
-	setVisible: function(visible)
+	setVisible: (visible)=>
 	{
 		if (mxLog.window == null)
 		{
@@ -282,7 +282,7 @@ var mxLog =
 	 * mxLog.leave('World!', t0);
 	 * (end)
 	 */
-	enter: function(string)
+	enter: (string)=>
 	{
 		if (mxLog.TRACE)
 		{
@@ -300,7 +300,7 @@ var mxLog =
 	 * between the current time and t0 in milliseconds.
 	 * See <enter> for an example.
 	 */
-	leave: function(string, t0)
+	leave: (string, t0)=>
 	{
 		if (mxLog.TRACE)
 		{
@@ -321,7 +321,7 @@ var mxLog =
 	 * mxLog.debug('Hello, World!');
 	 * (end)
 	 */
-	debug: function()
+	debug: ()=>
 	{
 		if (mxLog.DEBUG)
 		{
@@ -341,7 +341,7 @@ var mxLog =
 	 * mxLog.warn('Hello, World!');
 	 * (end)
 	 */
-	warn: function()
+	warn: ()=>
 	{
 		if (mxLog.WARN)
 		{
@@ -354,7 +354,7 @@ var mxLog =
 	 * 
 	 * Adds the specified strings to the console.
 	 */
-	write: function()
+	write: ()=>
 	{
 		var string = '';
 		
@@ -394,7 +394,7 @@ var mxLog =
 	 * Adds the specified strings to the console, appending a linefeed at the
 	 * end of each string.
 	 */
-	writeln: function()
+	writeln: ()=>
 	{
 		var string = '';
 		

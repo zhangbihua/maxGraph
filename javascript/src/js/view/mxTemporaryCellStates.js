@@ -24,11 +24,11 @@ function mxTemporaryCellStates(view, scale, cells, isCellVisibleFn, getLinkForCe
 	// Overrides doRedrawShape and paint shape to add links on shapes
 	if (getLinkForCellState != null)
 	{
-		view.graph.cellRenderer.doRedrawShape = function(state)
+		view.graph.cellRenderer.doRedrawShape = (state)=>
 		{
 			var oldPaint = state.shape.paint;
 			
-			state.shape.paint = function(c)
+			state.shape.paint = (c)=>
 			{
 				var link = getLinkForCellState(state);
 				
@@ -51,7 +51,7 @@ function mxTemporaryCellStates(view, scale, cells, isCellVisibleFn, getLinkForCe
 	}
 
 	// Overrides validateCellState to ignore invisible cells
-	view.validateCellState = function(cell, resurse)
+	view.validateCellState = (cell, resurse)=>
 	{
 		if (cell == null || isCellVisibleFn == null || isCellVisibleFn(cell))
 		{
@@ -95,35 +95,35 @@ function mxTemporaryCellStates(view, scale, cells, isCellVisibleFn, getLinkForCe
  *
  * Holds the width of the rectangle. Default is 0.
  */
-mxTemporaryCellStates.prototype.view = null;
+view = null;
 
 /**
  * Variable: oldStates
  *
  * Holds the height of the rectangle. Default is 0.
  */
-mxTemporaryCellStates.prototype.oldStates = null;
+oldStates = null;
 
 /**
  * Variable: oldBounds
  *
  * Holds the height of the rectangle. Default is 0.
  */
-mxTemporaryCellStates.prototype.oldBounds = null;
+oldBounds = null;
 
 /**
  * Variable: oldScale
  *
  * Holds the height of the rectangle. Default is 0.
  */
-mxTemporaryCellStates.prototype.oldScale = null;
+oldScale = null;
 
 /**
  * Function: destroy
  * 
  * Returns the top, left corner as a new <mxPoint>.
  */
-mxTemporaryCellStates.prototype.destroy = function()
+destroy = ()=>
 {
 	this.view.setScale(this.oldScale);
 	this.view.setStates(this.oldStates);

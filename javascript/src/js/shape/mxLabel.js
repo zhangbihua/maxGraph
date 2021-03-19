@@ -38,37 +38,37 @@ mxUtils.extend(mxLabel, mxRectangleShape);
  * Default width and height for the image. Default is
  * <mxConstants.DEFAULT_IMAGESIZE>.
  */
-mxLabel.prototype.imageSize = mxConstants.DEFAULT_IMAGESIZE;
+imageSize = mxConstants.DEFAULT_IMAGESIZE;
 
 /**
  * Variable: spacing
  *
  * Default value for image spacing. Default is 2.
  */
-mxLabel.prototype.spacing = 2;
+spacing = 2;
 
 /**
  * Variable: indicatorSize
  *
  * Default width and height for the indicicator. Default is 10.
  */
-mxLabel.prototype.indicatorSize = 10;
+indicatorSize = 10;
 
 /**
  * Variable: indicatorSpacing
  *
  * Default spacing between image and indicator. Default is 2.
  */
-mxLabel.prototype.indicatorSpacing = 2;
+indicatorSpacing = 2;
 
 /**
  * Function: init
  *
  * Initializes the shape and the <indicator>.
  */
-mxLabel.prototype.init = function(container)
+init = (container)=>
 {
-	mxShape.prototype.init.apply(this, arguments);
+	init.apply(this, arguments);
 
 	if (this.indicatorShape != null)
 	{
@@ -84,7 +84,7 @@ mxLabel.prototype.init = function(container)
  * Reconfigures this shape. This will update the colors of the indicator
  * and reconfigure it if required.
  */
-mxLabel.prototype.redraw = function()
+redraw = ()=>
 {
 	if (this.indicator != null)
 	{
@@ -95,7 +95,7 @@ mxLabel.prototype.redraw = function()
 		this.indicator.redraw();
 	}
 	
-	mxShape.prototype.redraw.apply(this, arguments);
+	redraw.apply(this, arguments);
 };
 
 /**
@@ -104,9 +104,9 @@ mxLabel.prototype.redraw = function()
  * Returns true for non-rounded, non-rotated shapes with no glass gradient and
  * no indicator shape.
  */
-mxLabel.prototype.isHtmlAllowed = function()
+isHtmlAllowed = ()=>
 {
-	return mxRectangleShape.prototype.isHtmlAllowed.apply(this, arguments) &&
+	return isHtmlAllowed.apply(this, arguments) &&
 		this.indicatorColor == null && this.indicatorShape == null;
 };
 
@@ -115,12 +115,12 @@ mxLabel.prototype.isHtmlAllowed = function()
  * 
  * Generic background painting implementation.
  */
-mxLabel.prototype.paintForeground = function(c, x, y, w, h)
+paintForeground = (c, x, y, w, h)=>
 {
 	this.paintImage(c, x, y, w, h);
 	this.paintIndicator(c, x, y, w, h);
 	
-	mxRectangleShape.prototype.paintForeground.apply(this, arguments);
+	paintForeground.apply(this, arguments);
 };
 
 /**
@@ -128,7 +128,7 @@ mxLabel.prototype.paintForeground = function(c, x, y, w, h)
  * 
  * Generic background painting implementation.
  */
-mxLabel.prototype.paintImage = function(c, x, y, w, h)
+paintImage = (c, x, y, w, h)=>
 {
 	if (this.image != null)
 	{
@@ -142,7 +142,7 @@ mxLabel.prototype.paintImage = function(c, x, y, w, h)
  * 
  * Generic background painting implementation.
  */
-mxLabel.prototype.getImageBounds = function(x, y, w, h)
+getImageBounds = (x, y, w, h)=>
 {
 	var align = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_ALIGN, mxConstants.ALIGN_LEFT);
 	var valign = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
@@ -184,7 +184,7 @@ mxLabel.prototype.getImageBounds = function(x, y, w, h)
  * 
  * Generic background painting implementation.
  */
-mxLabel.prototype.paintIndicator = function(c, x, y, w, h)
+paintIndicator = (c, x, y, w, h)=>
 {
 	if (this.indicator != null)
 	{
@@ -203,7 +203,7 @@ mxLabel.prototype.paintIndicator = function(c, x, y, w, h)
  * 
  * Generic background painting implementation.
  */
-mxLabel.prototype.getIndicatorBounds = function(x, y, w, h)
+getIndicatorBounds = (x, y, w, h)=>
 {
 	var align = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_ALIGN, mxConstants.ALIGN_LEFT);
 	var valign = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
@@ -244,9 +244,9 @@ mxLabel.prototype.getIndicatorBounds = function(x, y, w, h)
  * 
  * Generic background painting implementation.
  */
-mxLabel.prototype.redrawHtmlShape = function()
+redrawHtmlShape = ()=>
 {
-	mxRectangleShape.prototype.redrawHtmlShape.apply(this, arguments);
+	redrawHtmlShape.apply(this, arguments);
 	
 	// Removes all children
 	while(this.node.hasChildNodes())

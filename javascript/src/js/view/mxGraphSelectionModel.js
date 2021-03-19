@@ -9,7 +9,7 @@
  * all removed selection cells.
  * 
  * (code)
- * graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
+ * graph.getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt)=>
  * {
  *   var cells = evt.getProperty('added');
  *   
@@ -51,7 +51,7 @@ function mxGraphSelectionModel(graph)
  * Extends mxEventSource.
  */
 mxGraphSelectionModel.prototype = new mxEventSource();
-mxGraphSelectionModel.prototype.constructor = mxGraphSelectionModel;
+constructor = mxGraphSelectionModel;
 
 /**
  * Variable: doneResource
@@ -60,7 +60,7 @@ mxGraphSelectionModel.prototype.constructor = mxGraphSelectionModel;
  * If the resource for this key does not exist then the value is used as
  * the status message. Default is 'done'.
  */
-mxGraphSelectionModel.prototype.doneResource = (mxClient.language != 'none') ? 'done' : '';
+doneResource = (mxClient.language != 'none') ? 'done' : '';
 
 /**
  * Variable: updatingSelectionResource
@@ -69,14 +69,14 @@ mxGraphSelectionModel.prototype.doneResource = (mxClient.language != 'none') ? '
  * being updated. If the resource for this key does not exist then the
  * value is used as the status message. Default is 'updatingSelection'.
  */
-mxGraphSelectionModel.prototype.updatingSelectionResource = (mxClient.language != 'none') ? 'updatingSelection' : '';
+updatingSelectionResource = (mxClient.language != 'none') ? 'updatingSelection' : '';
 
 /**
  * Variable: graph
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxGraphSelectionModel.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: singleSelection
@@ -84,14 +84,14 @@ mxGraphSelectionModel.prototype.graph = null;
  * Specifies if only one selected item at a time is allowed.
  * Default is false.
  */
-mxGraphSelectionModel.prototype.singleSelection = false;
+singleSelection = false;
 
 /**
  * Function: isSingleSelection
  *
  * Returns <singleSelection> as a boolean.
  */
-mxGraphSelectionModel.prototype.isSingleSelection = function()
+isSingleSelection = ()=>
 {
 	return this.singleSelection;
 };
@@ -106,7 +106,7 @@ mxGraphSelectionModel.prototype.isSingleSelection = function()
  * singleSelection - Boolean that specifies the new value for
  * <singleSelection>.
  */
-mxGraphSelectionModel.prototype.setSingleSelection = function(singleSelection)
+setSingleSelection = (singleSelection)=>
 {
 	this.singleSelection = singleSelection;
 };
@@ -116,7 +116,7 @@ mxGraphSelectionModel.prototype.setSingleSelection = function(singleSelection)
  *
  * Returns true if the given <mxCell> is selected.
  */
-mxGraphSelectionModel.prototype.isSelected = function(cell)
+isSelected = (cell)=>
 {
 	if (cell != null)
 	{
@@ -131,7 +131,7 @@ mxGraphSelectionModel.prototype.isSelected = function(cell)
  *
  * Returns true if no cells are currently selected.
  */
-mxGraphSelectionModel.prototype.isEmpty = function()
+isEmpty = ()=>
 {
 	return this.cells.length == 0;
 };
@@ -142,7 +142,7 @@ mxGraphSelectionModel.prototype.isEmpty = function()
  * Clears the selection and fires a <change> event if the selection was not
  * empty.
  */
-mxGraphSelectionModel.prototype.clear = function()
+clear = ()=>
 {
 	this.changeSelection(null, this.cells);
 };
@@ -156,7 +156,7 @@ mxGraphSelectionModel.prototype.clear = function()
  * 
  * cell - <mxCell> to be selected.
  */
-mxGraphSelectionModel.prototype.setCell = function(cell)
+setCell = (cell)=>
 {
 	if (cell != null)
 	{
@@ -173,7 +173,7 @@ mxGraphSelectionModel.prototype.setCell = function(cell)
  * 
  * cells - Array of <mxCells> to be selected.
  */
-mxGraphSelectionModel.prototype.setCells = function(cells)
+setCells = (cells)=>
 {
 	if (cells != null)
 	{
@@ -201,7 +201,7 @@ mxGraphSelectionModel.prototype.setCells = function(cells)
  *
  * Returns the first selectable cell in the given array of cells.
  */
-mxGraphSelectionModel.prototype.getFirstSelectableCell = function(cells)
+getFirstSelectableCell = (cells)=>
 {
 	if (cells != null)
 	{
@@ -226,7 +226,7 @@ mxGraphSelectionModel.prototype.getFirstSelectableCell = function(cells)
  * 
  * cell - <mxCell> to add to the selection.
  */
-mxGraphSelectionModel.prototype.addCell = function(cell)
+addCell = (cell)=>
 {
 	if (cell != null)
 	{
@@ -244,7 +244,7 @@ mxGraphSelectionModel.prototype.addCell = function(cell)
  * 
  * cells - Array of <mxCells> to add to the selection.
  */
-mxGraphSelectionModel.prototype.addCells = function(cells)
+addCells = (cells)=>
 {
 	if (cells != null)
 	{
@@ -281,7 +281,7 @@ mxGraphSelectionModel.prototype.addCells = function(cells)
  * 
  * cell - <mxCell> to remove from the selection.
  */
-mxGraphSelectionModel.prototype.removeCell = function(cell)
+removeCell = (cell)=>
 {
 	if (cell != null)
 	{
@@ -292,7 +292,7 @@ mxGraphSelectionModel.prototype.removeCell = function(cell)
 /**
  * Function: removeCells
  */
-mxGraphSelectionModel.prototype.removeCells = function(cells)
+removeCells = (cells)=>
 {
 	if (cells != null)
 	{
@@ -320,7 +320,7 @@ mxGraphSelectionModel.prototype.removeCells = function(cells)
  * added - Array of <mxCell> to add to the selection.
  * remove - Array of <mxCell> to remove from the selection.
  */
-mxGraphSelectionModel.prototype.changeSelection = function(added, removed)
+changeSelection = (added, removed)=>
 {
 	if ((added != null &&
 		added.length > 0 &&
@@ -347,7 +347,7 @@ mxGraphSelectionModel.prototype.changeSelection = function(added, removed)
  * 
  * cell - <mxCell> to add to the selection.
  */
-mxGraphSelectionModel.prototype.cellAdded = function(cell)
+cellAdded = (cell)=>
 {
 	if (cell != null &&
 		!this.isSelected(cell))
@@ -366,7 +366,7 @@ mxGraphSelectionModel.prototype.cellAdded = function(cell)
  * 
  * cell - <mxCell> to remove from the selection.
  */
-mxGraphSelectionModel.prototype.cellRemoved = function(cell)
+cellRemoved = (cell)=>
 {
 	if (cell != null)
 	{
@@ -400,7 +400,7 @@ function mxSelectionChange(selectionModel, added, removed)
  *
  * Changes the current root of the view.
  */
-mxSelectionChange.prototype.execute = function()
+execute = ()=>
 {
 	var t0 = mxLog.enter('mxSelectionChange.execute');
 	window.status = mxResources.get(

@@ -22,8 +22,8 @@ var mxCodecRegistry =
 	 * objects.
 	 *
 	 * (code)
-	 * codec.encode = function(enc, obj) { ... }
-	 * codec.decode = function(dec, node, into) { ... }
+	 * codec.encode = (enc, obj)=> { ... }
+	 * codec.decode = (dec, node, into)=> { ... }
 	 * (end)
 	 *
 	 * 3. Register the codec in the <mxCodecRegistry>.
@@ -61,7 +61,7 @@ var mxCodecRegistry =
 	 *
 	 * codec - <mxObjectCodec> to be registered.
 	 */
-	register: function(codec)
+	register: (codec)=>
 	{
 		if (codec != null)
 		{
@@ -84,7 +84,7 @@ var mxCodecRegistry =
 	 *
 	 * Adds an alias for mapping a classname to a codecname.
 	 */
-	addAlias: function(classname, codecname)
+	addAlias: (classname, codecname)=>
 	{
 		mxCodecRegistry.aliases[classname] = codecname;
 	},
@@ -99,7 +99,7 @@ var mxCodecRegistry =
 	 *
 	 * ctor - JavaScript constructor function. 
 	 */
-	getCodec: function(ctor)
+	getCodec: (ctor)=>
 	{
 		var codec = null;
 		

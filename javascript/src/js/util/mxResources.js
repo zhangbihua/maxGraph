@@ -104,7 +104,7 @@ var mxResources =
 	 *
 	 * lan - The current language.
 	 */
-	isLanguageSupported: function(lan)
+	isLanguageSupported: (lan)=>
 	{
 		if (mxClient.languages != null)
 		{
@@ -126,7 +126,7 @@ var mxResources =
 	 * basename - The basename for which the file should be loaded.
 	 * lan - The current language.
 	 */
-	getDefaultBundle: function(basename, lan)
+	getDefaultBundle: (basename, lan)=>
 	{
 		if (mxResources.loadDefaultBundle || !mxResources.isLanguageSupported(lan))
 		{
@@ -158,7 +158,7 @@ var mxResources =
 	 * basename - The basename for which the file should be loaded.
 	 * lan - The language for which the file should be loaded.
 	 */
-	getSpecialBundle: function(basename, lan)
+	getSpecialBundle: (basename, lan)=>
 	{
 		if (mxClient.languages == null || !this.isLanguageSupported(lan))
 		{
@@ -202,7 +202,7 @@ var mxResources =
 	 * lan - The language for which the file should be loaded.
 	 * callback - Optional callback for asynchronous loading.
 	 */
-	add: function(basename, lan, callback)
+	add: (basename, lan, callback)=>
 	{
 		lan = (lan != null) ? lan : ((mxClient.language != null) ?
 			mxClient.language.toLowerCase() : mxConstants.NONE);
@@ -212,17 +212,17 @@ var mxResources =
 			var defaultBundle = mxResources.getDefaultBundle(basename, lan);
 			var specialBundle = mxResources.getSpecialBundle(basename, lan);
 			
-			var loadSpecialBundle = function()
+			var loadSpecialBundle = ()=>
 			{
 				if (specialBundle != null)
 				{
 					if (callback)
 					{
-						mxUtils.get(specialBundle, function(req)
+						mxUtils.get(specialBundle, (req)=>
 						{
 							mxResources.parse(req.getText());
 							callback();
-						}, function()
+						}, ()=>
 						{
 							callback();
 						});
@@ -254,11 +254,11 @@ var mxResources =
 			{
 				if (callback)
 				{
-					mxUtils.get(defaultBundle, function(req)
+					mxUtils.get(defaultBundle, (req)=>
 					{
 						mxResources.parse(req.getText());
 						loadSpecialBundle();
-					}, function()
+					}, ()=>
 					{
 						loadSpecialBundle();
 					});
@@ -296,7 +296,7 @@ var mxResources =
 	 * Parses the key, value pairs in the specified
 	 * text and stores them as local resources.
 	 */
-	parse: function(text)
+	parse: (text)=>
 	{
 		if (text != null)
 		{
@@ -362,7 +362,7 @@ var mxResources =
 	 * to be replaced with in the resulting string.
 	 * defaultValue - Optional string that specifies the default return value.
 	 */
-	get: function(key, params, defaultValue)
+	get: (key, params, defaultValue)=>
 	{
 		var value = mxResources.resources[key];
 		
@@ -392,7 +392,7 @@ var mxResources =
 	 * params - Array of the values for the placeholders of the form {1}...{n}
 	 * to be replaced with in the resulting string.
 	 */
-	replacePlaceholders: function(value, params)
+	replacePlaceholders: (value, params)=>
 	{
 		var result = [];
 		var index = null;
@@ -439,9 +439,9 @@ var mxResources =
 	 * 
 	 * callback - Callback function for asynchronous loading.
 	 */
-	loadResources: function(callback)
+	loadResources: (callback)=>
 	{
-		mxResources.add(mxClient.basePath+'/resources/editor', null, function()
+		mxResources.add(mxClient.basePath+'/resources/editor', null, ()=>
 		{
 			mxResources.add(mxClient.basePath+'/resources/graph', null, callback);
 		});

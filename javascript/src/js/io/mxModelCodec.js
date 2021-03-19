@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(function()
+mxCodecRegistry.register(()=>
 {
 	/**
 	 * Class: mxModelCodec
@@ -20,7 +20,7 @@ mxCodecRegistry.register(function()
 	 * cell nodes as produced by the <mxCellCodec>. The sequence is
 	 * wrapped-up in a node with the name root.
 	 */
-	codec.encodeObject = function(enc, obj, node)
+	codec.encodeObject = (enc, obj, node)=>
 	{
 		var rootNode = enc.document.createElement('root');
 		enc.encodeCell(obj.getRoot(), rootNode);
@@ -32,7 +32,7 @@ mxCodecRegistry.register(function()
 	 * 
 	 * Overrides decode child to handle special child nodes.
 	 */	
-	codec.decodeChild = function(dec, child, obj)
+	codec.decodeChild = (dec, child, obj)=>
 	{
 		if (child.nodeName == 'root')
 		{
@@ -40,7 +40,7 @@ mxCodecRegistry.register(function()
 		}
 		else
 		{
-			mxObjectCodec.prototype.decodeChild.apply(this, arguments);
+			decodeChild.apply(this, arguments);
 		}
 	};
 
@@ -50,7 +50,7 @@ mxCodecRegistry.register(function()
 	 * Reads the cells into the graph model. All cells
 	 * are children of the root element in the node.
 	 */
-	codec.decodeRoot = function(dec, root, model)
+	codec.decodeRoot = (dec, root, model)=>
 	{
 		var rootCell = null;
 		var tmp = root.firstChild;

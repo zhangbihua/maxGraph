@@ -333,7 +333,7 @@ class mxEditor extends mxEventSource {
    * graph, the following code can be used.
    *
    * (code)
-   * editor.addListener(mxEvent.AFTER_ADD_VERTEX, function(sender, evt)
+   * editor.addListener(mxEvent.AFTER_ADD_VERTEX, (sender, evt)=>
    * {
    *   var vertex = evt.getProperty('vertex');
    *
@@ -561,7 +561,7 @@ class mxEditor extends mxEventSource {
    * To handle a singleclick, use the following code.
    *
    * (code)
-   * editor.graph.addListener(mxEvent.CLICK, function(sender, evt)
+   * editor.graph.addListener(mxEvent.CLICK, (sender, evt)=>
    * {
    *   var e = evt.getProperty('event');
    *   var cell = evt.getProperty('cell');
@@ -1415,7 +1415,7 @@ class mxEditor extends mxEventSource {
    *
    * Example:
    * (code)
-   * editor.addAction('test', function(editor, cell)
+   * editor.addAction('test', (editor, cell)=>
    * {
    * 		mxUtils.alert("test "+cell);
    * });
@@ -2094,7 +2094,7 @@ class mxEditor extends mxEventSource {
    * following code.
    *
    * (code)
-   * editor.addListener(mxEvent.POST, function(sender, evt)
+   * editor.addListener(mxEvent.POST, (sender, evt)=>
    * {
    *   // Process response (replace diagram)
    *   var req = evt.getProperty('request');
@@ -2400,7 +2400,7 @@ class mxEditor extends mxEventSource {
    *
    * (code)
    * var oldShowTasks = showTasks;
-   * showTasks = function()
+   * showTasks = ()=>
    * {
    *   oldShowTasks.apply(this, arguments); // "supercall"
    *

@@ -16,7 +16,7 @@
  *   this.previous = name;
  * };
  * 
- * CustomChange.prototype.execute = function()
+ * execute = ()=>
  * {
  *   var tmp = this.model.name;
  *   this.model.name = this.previous;
@@ -58,7 +58,7 @@ function mxUndoableEdit(source, significant)
  * 
  * Specifies the source of the edit.
  */
-mxUndoableEdit.prototype.source = null;
+source = null;
 
 /**
  * Variable: changes
@@ -67,7 +67,7 @@ mxUndoableEdit.prototype.source = null;
  * expected to either have an undo and redo function, or an execute
  * function. Default is an empty array.
  */
-mxUndoableEdit.prototype.changes = null;
+changes = null;
 
 /**
  * Variable: significant
@@ -75,28 +75,28 @@ mxUndoableEdit.prototype.changes = null;
  * Specifies if the undoable change is significant.
  * Default is true.
  */
-mxUndoableEdit.prototype.significant = null;
+significant = null;
 
 /**
  * Variable: undone
  * 
  * Specifies if this edit has been undone. Default is false.
  */
-mxUndoableEdit.prototype.undone = false;
+undone = false;
 
 /**
  * Variable: redone
  * 
  * Specifies if this edit has been redone. Default is false.
  */
-mxUndoableEdit.prototype.redone = false;
+redone = false;
 
 /**
  * Function: isEmpty
  * 
  * Returns true if the this edit contains no changes.
  */
-mxUndoableEdit.prototype.isEmpty = function()
+isEmpty = ()=>
 {
 	return this.changes.length == 0;
 };
@@ -106,7 +106,7 @@ mxUndoableEdit.prototype.isEmpty = function()
  * 
  * Returns <significant>.
  */
-mxUndoableEdit.prototype.isSignificant = function()
+isSignificant = ()=>
 {
 	return this.significant;
 };
@@ -117,7 +117,7 @@ mxUndoableEdit.prototype.isSignificant = function()
  * Adds the specified change to this edit. The change is an object that is
  * expected to either have an undo and redo, or an execute function.
  */
-mxUndoableEdit.prototype.add = function(change)
+add = (change)=>
 {
 	this.changes.push(change);
 };
@@ -128,7 +128,7 @@ mxUndoableEdit.prototype.add = function(change)
  * Hook to notify any listeners of the changes after an <undo> or <redo>
  * has been carried out. This implementation is empty.
  */
-mxUndoableEdit.prototype.notify = function() { };
+notify = ()=> { };
 
 /**
  * Function: die
@@ -136,14 +136,14 @@ mxUndoableEdit.prototype.notify = function() { };
  * Hook to free resources after the edit has been removed from the command
  * history. This implementation is empty.
  */
-mxUndoableEdit.prototype.die = function() { };
+die = ()=> { };
 
 /**
  * Function: undo
  * 
  * Undoes all changes in this edit.
  */
-mxUndoableEdit.prototype.undo = function()
+undo = ()=>
 {
 	if (!this.undone)
 	{
@@ -180,7 +180,7 @@ mxUndoableEdit.prototype.undo = function()
  * 
  * Redoes all changes in this edit.
  */
-mxUndoableEdit.prototype.redo = function()
+redo = ()=>
 {
 	if (!this.redone)
 	{

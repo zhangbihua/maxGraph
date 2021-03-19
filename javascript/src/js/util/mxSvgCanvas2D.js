@@ -143,27 +143,27 @@ mxUtils.extend(mxSvgCanvas2D, mxAbstractCanvas2D);
 /**
  * Capability check for DOM parser and checks if base tag is used.
  */
-(function()
+(()=>
 {
-	mxSvgCanvas2D.prototype.useDomParser = !mxClient.IS_IE && typeof DOMParser === 'function' && typeof XMLSerializer === 'function';
+	mxSvgCanvas2useDomParser = !mxClient.IS_IE && typeof DOMParser === 'function' && typeof XMLSerializer === 'function';
 	
-	if (mxSvgCanvas2D.prototype.useDomParser)
+	if (mxSvgCanvas2useDomParser)
 	{
 		// Checks using a generic test text if the parsing actually works. This is a workaround
 		// for older browsers where the capability check returns true but the parsing fails.
 		try
 		{
 			var doc = new DOMParser().parseFromString('test text', 'text/html');
-			mxSvgCanvas2D.prototype.useDomParser = doc != null;
+			mxSvgCanvas2useDomParser = doc != null;
 		}
 		catch (e)
 		{
-			mxSvgCanvas2D.prototype.useDomParser = false;
+			mxSvgCanvas2useDomParser = false;
 		}
 	}
 	
 	// Activates workaround for gradient ID resolution if base tag is used.
-	mxSvgCanvas2D.prototype.useAbsoluteIds = !mxClient.IS_CHROMEAPP && !mxClient.IS_IE && !mxClient.IS_IE11 &&
+	mxSvgCanvas2useAbsoluteIds = !mxClient.IS_CHROMEAPP && !mxClient.IS_IE && !mxClient.IS_IE11 &&
 		!mxClient.IS_EDGE && document.getElementsByTagName('base').length > 0;
 })();
 
@@ -172,7 +172,7 @@ mxUtils.extend(mxSvgCanvas2D, mxAbstractCanvas2D);
  * 
  * Holds the current DOM node.
  */
-mxSvgCanvas2D.prototype.node = null;
+mxSvgCanvas2node = null;
 
 /**
  * Variable: matchHtmlAlignment
@@ -180,21 +180,21 @@ mxSvgCanvas2D.prototype.node = null;
  * Specifies if plain text output should match the vertical HTML alignment.
  * Defaul is true.
  */
-mxSvgCanvas2D.prototype.matchHtmlAlignment = true;
+mxSvgCanvas2matchHtmlAlignment = true;
 
 /**
  * Variable: textEnabled
  * 
  * Specifies if text output should be enabled. Default is true.
  */
-mxSvgCanvas2D.prototype.textEnabled = true;
+mxSvgCanvas2textEnabled = true;
 
 /**
  * Variable: foEnabled
  * 
  * Specifies if use of foreignObject for HTML markup is allowed. Default is true.
  */
-mxSvgCanvas2D.prototype.foEnabled = true;
+mxSvgCanvas2foEnabled = true;
 
 /**
  * Variable: foAltText
@@ -203,63 +203,63 @@ mxSvgCanvas2D.prototype.foEnabled = true;
  * documents. Default is '[Object]'. If this is set to null then no fallback
  * text is added to the exported document.
  */
-mxSvgCanvas2D.prototype.foAltText = '[Object]';
+mxSvgCanvas2foAltText = '[Object]';
 
 /**
  * Variable: foOffset
  * 
  * Offset to be used for foreignObjects.
  */
-mxSvgCanvas2D.prototype.foOffset = 0;
+mxSvgCanvas2foOffset = 0;
 
 /**
  * Variable: textOffset
  * 
  * Offset to be used for text elements.
  */
-mxSvgCanvas2D.prototype.textOffset = 0;
+mxSvgCanvas2textOffset = 0;
 
 /**
  * Variable: imageOffset
  * 
  * Offset to be used for image elements.
  */
-mxSvgCanvas2D.prototype.imageOffset = 0;
+mxSvgCanvas2imageOffset = 0;
 
 /**
  * Variable: strokeTolerance
  * 
  * Adds transparent paths for strokes.
  */
-mxSvgCanvas2D.prototype.strokeTolerance = 0;
+mxSvgCanvas2strokeTolerance = 0;
 
 /**
  * Variable: minStrokeWidth
  * 
  * Minimum stroke width for output.
  */
-mxSvgCanvas2D.prototype.minStrokeWidth = 1;
+mxSvgCanvas2minStrokeWidth = 1;
 
 /**
  * Variable: refCount
  * 
  * Local counter for references in SVG export.
  */
-mxSvgCanvas2D.prototype.refCount = 0;
+mxSvgCanvas2refCount = 0;
 
 /**
  * Variable: lineHeightCorrection
  * 
  * Correction factor for <mxConstants.LINE_HEIGHT> in HTML output. Default is 1.
  */
-mxSvgCanvas2D.prototype.lineHeightCorrection = 1;
+mxSvgCanvas2lineHeightCorrection = 1;
 
 /**
  * Variable: pointerEventsValue
  * 
  * Default value for active pointer events. Default is all.
  */
-mxSvgCanvas2D.prototype.pointerEventsValue = 'all';
+mxSvgCanvas2pointerEventsValue = 'all';
 
 /**
  * Variable: fontMetricsPadding
@@ -267,7 +267,7 @@ mxSvgCanvas2D.prototype.pointerEventsValue = 'all';
  * Padding to be added for text that is not wrapped to account for differences
  * in font metrics on different platforms in pixels. Default is 10.
  */
-mxSvgCanvas2D.prototype.fontMetricsPadding = 10;
+mxSvgCanvas2fontMetricsPadding = 10;
 
 /**
  * Variable: cacheOffsetSize
@@ -275,14 +275,14 @@ mxSvgCanvas2D.prototype.fontMetricsPadding = 10;
  * Specifies if offsetWidth and offsetHeight should be cached. Default is true.
  * This is used to speed up repaint of text in <updateText>.
  */
-mxSvgCanvas2D.prototype.cacheOffsetSize = true;
+mxSvgCanvas2cacheOffsetSize = true;
 
 /**
  * Function: format
  * 
  * Rounds all numbers to 2 decimal points.
  */
-mxSvgCanvas2D.prototype.format = function(value)
+mxSvgCanvas2format = (value)=>
 {
 	return parseFloat(parseFloat(value).toFixed(2));
 };
@@ -295,7 +295,7 @@ mxSvgCanvas2D.prototype.format = function(value)
  * workaround for the fact that window.location.search is empty if there is
  * no search string behind the question mark.
  */
-mxSvgCanvas2D.prototype.getBaseUrl = function()
+mxSvgCanvas2getBaseUrl = ()=>
 {
 	var href = window.location.href;
 	var hash = href.lastIndexOf('#');
@@ -313,9 +313,9 @@ mxSvgCanvas2D.prototype.getBaseUrl = function()
  * 
  * Returns any offsets for rendering pixels.
  */
-mxSvgCanvas2D.prototype.reset = function()
+mxSvgCanvas2reset = ()=>
 {
-	mxAbstractCanvas2D.prototype.reset.apply(this, arguments);
+	mxAbstractCanvas2reset.apply(this, arguments);
 	this.gradients = [];
 };
 
@@ -324,7 +324,7 @@ mxSvgCanvas2D.prototype.reset = function()
  * 
  * Creates the optional style section.
  */
-mxSvgCanvas2D.prototype.createStyle = function(x)
+mxSvgCanvas2createStyle = (x)=>
 {
 	var style = this.createElement('style');
 	style.setAttribute('type', 'text/css');
@@ -340,7 +340,7 @@ mxSvgCanvas2D.prototype.createStyle = function(x)
  * 
  * Private helper function to create SVG elements
  */
-mxSvgCanvas2D.prototype.createElement = function(tagName, namespace)
+mxSvgCanvas2createElement = (tagName, namespace)=>
 {
 	if (this.root.ownerDocument.createElementNS != null)
 	{
@@ -364,7 +364,7 @@ mxSvgCanvas2D.prototype.createElement = function(tagName, namespace)
  * 
  * Returns the alternate text string for the given foreignObject.
  */
-mxSvgCanvas2D.prototype.getAlternateText = function(fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation)
+mxSvgCanvas2getAlternateText = (fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation)=>
 {
 	return (str != null) ? this.foAltText : null;
 };
@@ -374,7 +374,7 @@ mxSvgCanvas2D.prototype.getAlternateText = function(fo, x, y, w, h, str, align, 
  * 
  * Returns the alternate content for the given foreignObject.
  */
-mxSvgCanvas2D.prototype.createAlternateContent = function(fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation)
+mxSvgCanvas2createAlternateContent = (fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation)=>
 {
 	var text = this.getAlternateText(fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation);
 	var s = this.state;
@@ -442,7 +442,7 @@ mxSvgCanvas2D.prototype.createAlternateContent = function(fo, x, y, w, h, str, a
  * 
  * Private helper function to create SVG elements
  */
-mxSvgCanvas2D.prototype.createGradientId = function(start, end, alpha1, alpha2, direction)
+mxSvgCanvas2createGradientId = (start, end, alpha1, alpha2, direction)=>
 {
 	// Removes illegal characters from gradient ID
 	if (start.charAt(0) == '#')
@@ -495,7 +495,7 @@ mxSvgCanvas2D.prototype.createGradientId = function(start, end, alpha1, alpha2, 
  * 
  * Private helper function to create SVG elements
  */
-mxSvgCanvas2D.prototype.getSvgGradient = function(start, end, alpha1, alpha2, direction)
+mxSvgCanvas2getSvgGradient = (start, end, alpha1, alpha2, direction)=>
 {
 	var id = this.createGradientId(start, end, alpha1, alpha2, direction);
 	var gradient = this.gradients[id];
@@ -549,7 +549,7 @@ mxSvgCanvas2D.prototype.getSvgGradient = function(start, end, alpha1, alpha2, di
  * 
  * Creates the given SVG gradient.
  */
-mxSvgCanvas2D.prototype.createSvgGradient = function(start, end, alpha1, alpha2, direction)
+mxSvgCanvas2createSvgGradient = (start, end, alpha1, alpha2, direction)=>
 {
 	var gradient = this.createElement('linearGradient');
 	gradient.setAttribute('x1', '0%');
@@ -596,7 +596,7 @@ mxSvgCanvas2D.prototype.createSvgGradient = function(start, end, alpha1, alpha2,
  * 
  * Private helper function to create SVG elements
  */
-mxSvgCanvas2D.prototype.addNode = function(filled, stroked)
+mxSvgCanvas2addNode = (filled, stroked)=>
 {
 	var node = this.node;
 	var s = this.state;
@@ -690,7 +690,7 @@ mxSvgCanvas2D.prototype.addNode = function(filled, stroked)
  * 
  * Transfers the stroke attributes from <state> to <node>.
  */
-mxSvgCanvas2D.prototype.updateFill = function()
+mxSvgCanvas2updateFill = ()=>
 {
 	var s = this.state;
 	
@@ -729,7 +729,7 @@ mxSvgCanvas2D.prototype.updateFill = function()
  * 
  * Returns the current stroke width (>= 1), ie. max(1, this.format(this.state.strokeWidth * this.state.scale)).
  */
-mxSvgCanvas2D.prototype.getCurrentStrokeWidth = function()
+mxSvgCanvas2getCurrentStrokeWidth = ()=>
 {
 	return Math.max(this.minStrokeWidth, Math.max(0.01, this.format(this.state.strokeWidth * this.state.scale)));
 };
@@ -739,7 +739,7 @@ mxSvgCanvas2D.prototype.getCurrentStrokeWidth = function()
  * 
  * Transfers the stroke attributes from <state> to <node>.
  */
-mxSvgCanvas2D.prototype.updateStroke = function()
+mxSvgCanvas2updateStroke = ()=>
 {
 	var s = this.state;
 
@@ -774,7 +774,7 @@ mxSvgCanvas2D.prototype.updateStroke = function()
  * 
  * Transfers the stroke attributes from <state> to <node>.
  */
-mxSvgCanvas2D.prototype.updateStrokeAttributes = function()
+mxSvgCanvas2updateStrokeAttributes = ()=>
 {
 	var s = this.state;
 	
@@ -813,7 +813,7 @@ mxSvgCanvas2D.prototype.updateStrokeAttributes = function()
  * 
  * Creates the SVG dash pattern for the given state.
  */
-mxSvgCanvas2D.prototype.createDashPattern = function(scale)
+mxSvgCanvas2createDashPattern = (scale)=>
 {
 	var pat = [];
 	
@@ -838,7 +838,7 @@ mxSvgCanvas2D.prototype.createDashPattern = function(scale)
  * 
  * Creates a hit detection tolerance shape for the given node.
  */
-mxSvgCanvas2D.prototype.createTolerance = function(node)
+mxSvgCanvas2createTolerance = (node)=>
 {
 	var tol = node.cloneNode(true);
 	var sw = parseFloat(tol.getAttribute('stroke-width') || 1) + this.strokeTolerance;
@@ -862,7 +862,7 @@ mxSvgCanvas2D.prototype.createTolerance = function(node)
  * 
  * Creates a shadow for the given node.
  */
-mxSvgCanvas2D.prototype.createShadow = function(node)
+mxSvgCanvas2createShadow = (node)=>
 {
 	var shadow = node.cloneNode(true);
 	var s = this.state;
@@ -890,7 +890,7 @@ mxSvgCanvas2D.prototype.createShadow = function(node)
  * 
  * Experimental implementation for hyperlinks.
  */
-mxSvgCanvas2D.prototype.setLink = function(link)
+mxSvgCanvas2setLink = (link)=>
 {
 	if (link == null)
 	{
@@ -923,7 +923,7 @@ mxSvgCanvas2D.prototype.setLink = function(link)
  * 
  * Sets the rotation of the canvas. Note that rotation cannot be concatenated.
  */
-mxSvgCanvas2D.prototype.rotate = function(theta, flipH, flipV, cx, cy)
+mxSvgCanvas2rotate = (theta, flipH, flipV, cx, cy)=>
 {
 	if (theta != 0 || flipH || flipV)
 	{
@@ -976,9 +976,9 @@ mxSvgCanvas2D.prototype.rotate = function(theta, flipH, flipV, cx, cy)
  * 
  * Extends superclass to create path.
  */
-mxSvgCanvas2D.prototype.begin = function()
+mxSvgCanvas2begin = ()=>
 {
-	mxAbstractCanvas2D.prototype.begin.apply(this, arguments);
+	mxAbstractCanvas2begin.apply(this, arguments);
 	this.node = this.createElement('path');
 };
 
@@ -987,7 +987,7 @@ mxSvgCanvas2D.prototype.begin = function()
  * 
  * Private helper function to create SVG elements
  */
-mxSvgCanvas2D.prototype.rect = function(x, y, w, h)
+mxSvgCanvas2rect = (x, y, w, h)=>
 {
 	var s = this.state;
 	var n = this.createElement('rect');
@@ -1004,7 +1004,7 @@ mxSvgCanvas2D.prototype.rect = function(x, y, w, h)
  * 
  * Private helper function to create SVG elements
  */
-mxSvgCanvas2D.prototype.roundrect = function(x, y, w, h, dx, dy)
+mxSvgCanvas2roundrect = (x, y, w, h, dx, dy)=>
 {
 	this.rect(x, y, w, h);
 	
@@ -1024,7 +1024,7 @@ mxSvgCanvas2D.prototype.roundrect = function(x, y, w, h, dx, dy)
  * 
  * Private helper function to create SVG elements
  */
-mxSvgCanvas2D.prototype.ellipse = function(x, y, w, h)
+mxSvgCanvas2ellipse = (x, y, w, h)=>
 {
 	var s = this.state;
 	var n = this.createElement('ellipse');
@@ -1041,7 +1041,7 @@ mxSvgCanvas2D.prototype.ellipse = function(x, y, w, h)
  * 
  * Private helper function to create SVG elements
  */
-mxSvgCanvas2D.prototype.image = function(x, y, w, h, src, aspect, flipH, flipV)
+mxSvgCanvas2image = (x, y, w, h, src, aspect, flipH, flipV)=>
 {
 	src = this.converter.convert(src);
 	
@@ -1123,7 +1123,7 @@ mxSvgCanvas2D.prototype.image = function(x, y, w, h, src, aspect, flipH, flipV)
  * 
  * Converts the given HTML string to XHTML.
  */
-mxSvgCanvas2D.prototype.convertHtml = function(val)
+mxSvgCanvas2convertHtml = (val)=>
 {
 	if (this.useDomParser)
 	{
@@ -1189,7 +1189,7 @@ mxSvgCanvas2D.prototype.convertHtml = function(val)
  * 
  * Private helper function to create SVG elements
  */
-mxSvgCanvas2D.prototype.createDiv = function(str)
+mxSvgCanvas2createDiv = (str)=>
 {
 	var val = str;
 	
@@ -1245,7 +1245,7 @@ mxSvgCanvas2D.prototype.createDiv = function(str)
 /**
  * Updates existing DOM nodes for text rendering. LATER: Merge common parts with text function below.
  */
-mxSvgCanvas2D.prototype.updateText = function(x, y, w, h, align, valign, wrap, overflow, clip, rotation, node)
+mxSvgCanvas2updateText = (x, y, w, h, align, valign, wrap, overflow, clip, rotation, node)=>
 {
 	if (node != null && node.firstChild != null && node.firstChild.firstChild != null)
 	{
@@ -1258,7 +1258,7 @@ mxSvgCanvas2D.prototype.updateText = function(x, y, w, h, align, valign, wrap, o
  * 
  * Creates a foreignObject for the given string and adds it to the given root.
  */
-mxSvgCanvas2D.prototype.addForeignObject = function(x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir, div, root)
+mxSvgCanvas2addForeignObject = (x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir, div, root)=>
 {
 	var group = this.createElement('g');
 	var fo = this.createElement('foreignObject');
@@ -1299,7 +1299,7 @@ mxSvgCanvas2D.prototype.addForeignObject = function(x, y, w, h, str, align, vali
 /**
  * Updates existing DOM nodes for text rendering.
  */
-mxSvgCanvas2D.prototype.updateTextNodes = function(x, y, w, h, align, valign, wrap, overflow, clip, rotation, g)
+mxSvgCanvas2updateTextNodes = (x, y, w, h, align, valign, wrap, overflow, clip, rotation, g)=>
 {
 	var s = this.state.scale;
 
@@ -1311,7 +1311,7 @@ mxSvgCanvas2D.prototype.updateTextNodes = function(x, y, w, h, align, valign, wr
 		((valign == mxConstants.ALIGN_BOTTOM) ? 'flex-end' : 'center'))  + '; ' +
 		'justify-content: unsafe ' + ((align == mxConstants.ALIGN_LEFT) ? 'flex-start' :
 		((align == mxConstants.ALIGN_RIGHT) ? 'flex-end' : 'center'))  + '; ',
-		this.getTextCss(), s, mxUtils.bind(this, function(dx, dy, flex, item, block)
+		this.getTextCss(), s, mxUtils.bind(this, (dx, dy, flex, item, block)=>
 	{
 		x += this.state.dx;
 		y += this.state.dy;
@@ -1378,7 +1378,7 @@ mxSvgCanvas2D.prototype.updateTextNodes = function(x, y, w, h, align, valign, wr
 /**
  * Updates existing DOM nodes for text rendering.
  */
-mxSvgCanvas2D.createCss = function(w, h, align, valign, wrap, overflow, clip, bg, border, flex, block, s, callback)
+mxSvgCanvas2D.createCss = (w, h, align, valign, wrap, overflow, clip, bg, border, flex, block, s, callback)=>
 {
 	var item = 'box-sizing: border-box; font-size: 0; text-align: ' + ((align == mxConstants.ALIGN_LEFT) ? 'left' :
 		((align == mxConstants.ALIGN_RIGHT) ? 'right' : 'center')) + '; ';
@@ -1469,7 +1469,7 @@ mxSvgCanvas2D.createCss = function(w, h, align, valign, wrap, overflow, clip, bg
  * 
  * Private helper function to create SVG elements
  */
-mxSvgCanvas2D.prototype.getTextCss = function()
+mxSvgCanvas2getTextCss = ()=>
 {
 	var s = this.state;
 	var lh = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? (s.fontSize * mxConstants.LINE_HEIGHT) + 'px' :
@@ -1516,7 +1516,7 @@ mxSvgCanvas2D.prototype.getTextCss = function()
  * foreignObject is supported and <foEnabled> is true. (This means IE9 and later
  * does currently not support HTML text as part of shapes.)
  */
-mxSvgCanvas2D.prototype.text = function(x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir)
+mxSvgCanvas2text = (x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir)=>
 {
 	if (this.textEnabled && str != null)
 	{
@@ -1551,7 +1551,7 @@ mxSvgCanvas2D.prototype.text = function(x, y, w, h, str, align, valign, wrap, fo
  * 
  * Creates a clip for the given coordinates.
  */
-mxSvgCanvas2D.prototype.createClip = function(x, y, w, h)
+mxSvgCanvas2createClip = (x, y, w, h)=>
 {
 	x = Math.round(x);
 	y = Math.round(y);
@@ -1589,7 +1589,7 @@ mxSvgCanvas2D.prototype.createClip = function(x, y, w, h)
  * Paints the given text. Possible values for format are empty string for
  * plain text and html for HTML markup.
  */
-mxSvgCanvas2D.prototype.plainText = function(x, y, w, h, str, align, valign, wrap, overflow, clip, rotation, dir)
+mxSvgCanvas2plainText = (x, y, w, h, str, align, valign, wrap, overflow, clip, rotation, dir)=>
 {
 	rotation = (rotation != null) ? rotation : 0;
 	var s = this.state;
@@ -1751,7 +1751,7 @@ mxSvgCanvas2D.prototype.plainText = function(x, y, w, h, str, align, valign, wra
  * Updates the text properties for the given node. (NOTE: For this to work in
  * IE, the given node must be a text or tspan element.)
  */
-mxSvgCanvas2D.prototype.updateFont = function(node)
+mxSvgCanvas2updateFont = (node)=>
 {
 	var s = this.state;
 
@@ -1795,7 +1795,7 @@ mxSvgCanvas2D.prototype.updateFont = function(node)
  * 
  * Background color and border
  */
-mxSvgCanvas2D.prototype.addTextBackground = function(node, str, x, y, w, h, align, valign, overflow)
+mxSvgCanvas2addTextBackground = (node, str, x, y, w, h, align, valign, overflow)=>
 {
 	var s = this.state;
 
@@ -1923,7 +1923,7 @@ mxSvgCanvas2D.prototype.addTextBackground = function(node, str, x, y, w, h, alig
  * 
  * Paints the outline of the current path.
  */
-mxSvgCanvas2D.prototype.stroke = function()
+mxSvgCanvas2stroke = ()=>
 {
 	this.addNode(false, true);
 };
@@ -1933,7 +1933,7 @@ mxSvgCanvas2D.prototype.stroke = function()
  * 
  * Fills the current path.
  */
-mxSvgCanvas2D.prototype.fill = function()
+mxSvgCanvas2fill = ()=>
 {
 	this.addNode(true, false);
 };
@@ -1943,7 +1943,7 @@ mxSvgCanvas2D.prototype.fill = function()
  * 
  * Fills and paints the outline of the current path.
  */
-mxSvgCanvas2D.prototype.fillAndStroke = function()
+mxSvgCanvas2fillAndStroke = ()=>
 {
 	this.addNode(true, true);
 };

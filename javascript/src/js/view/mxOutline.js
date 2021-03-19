@@ -69,56 +69,56 @@ function mxOutline(source, container)
  * 
  * Reference to the source <mxGraph>.
  */
-mxOutline.prototype.source = null;
+source = null;
 
 /**
  * Function: outline
  * 
  * Reference to the <mxGraph> that renders the outline.
  */
-mxOutline.prototype.outline = null;
+outline = null;
 
 /**
  * Function: graphRenderHint
  * 
  * Renderhint to be used for the outline graph. Default is faster.
  */
-mxOutline.prototype.graphRenderHint = mxConstants.RENDERING_HINT_FASTER;
+graphRenderHint = mxConstants.RENDERING_HINT_FASTER;
 
 /**
  * Variable: enabled
  * 
  * Specifies if events are handled. Default is true.
  */
-mxOutline.prototype.enabled = true;
+enabled = true;
 
 /**
  * Variable: showViewport
  * 
  * Specifies a viewport rectangle should be shown. Default is true.
  */
-mxOutline.prototype.showViewport = true;
+showViewport = true;
 
 /**
  * Variable: border
  * 
  * Border to be added at the bottom and right. Default is 10.
  */
-mxOutline.prototype.border = 10;
+border = 10;
 
 /**
  * Variable: enabled
  * 
  * Specifies the size of the sizer handler. Default is 8.
  */
-mxOutline.prototype.sizerSize = 8;
+sizerSize = 8;
 
 /**
  * Variable: labelsVisible
  * 
  * Specifies if labels should be visible in the outline. Default is false.
  */
-mxOutline.prototype.labelsVisible = false;
+labelsVisible = false;
 
 /**
  * Variable: updateOnPan
@@ -126,21 +126,21 @@ mxOutline.prototype.labelsVisible = false;
  * Specifies if <update> should be called for <mxEvent.PAN> in the source
  * graph. Default is false.
  */
-mxOutline.prototype.updateOnPan = false;
+updateOnPan = false;
 
 /**
  * Variable: sizerImage
  * 
  * Optional <mxImage> to be used for the sizer. Default is null.
  */
-mxOutline.prototype.sizerImage = null;
+sizerImage = null;
 
 /**
  * Variable: minScale
  * 
  * Minimum scale to be used. Default is 0.0001.
  */
-mxOutline.prototype.minScale = 0.0001;
+minScale = 0.0001;
 
 /**
  * Variable: suspended
@@ -158,7 +158,7 @@ mxOutline.prototype.minScale = 0.0001;
  * }
  * (end)
  */
-mxOutline.prototype.suspended = false;
+suspended = false;
 
 /**
  * Variable: forceVmlHandles
@@ -168,14 +168,14 @@ mxOutline.prototype.suspended = false;
  * This is a workaround for rendering issues of HTML elements over elements
  * with filters in IE 8 standards mode.
  */
-mxOutline.prototype.forceVmlHandles = document.documentMode == 8;
+forceVmlHandles = document.documentMode == 8;
 
 /**
  * Function: createGraph
  * 
  * Creates the <mxGraph> used in the outline.
  */
-mxOutline.prototype.createGraph = function(container)
+createGraph = (container)=>
 {
 	var graph = new mxGraph(container, this.source.getModel(), this.graphRenderHint, this.source.getStylesheet());
 	graph.foldingEnabled = false;
@@ -189,13 +189,13 @@ mxOutline.prototype.createGraph = function(container)
  * 
  * Initializes the outline inside the given container.
  */
-mxOutline.prototype.init = function(container)
+init = (container)=>
 {
 	this.outline = this.createGraph(container);
 	
 	// Do not repaint when suspended
 	var outlineGraphModelChanged = this.outline.graphModelChanged;
-	this.outline.graphModelChanged = mxUtils.bind(this, function(changes)
+	this.outline.graphModelChanged = mxUtils.bind(this, (changes)=>
 	{
 		if (!this.suspended && this.outline != null)
 		{
@@ -215,7 +215,7 @@ mxOutline.prototype.init = function(container)
 	this.outline.labelsVisible = this.labelsVisible;
 	this.outline.setEnabled(false);
 	
-	this.updateHandler = mxUtils.bind(this, function(sender, evt)
+	this.updateHandler = mxUtils.bind(this, (sender, evt)=>
 	{
 		if (!this.suspended && !this.active)
 		{
@@ -238,7 +238,7 @@ mxOutline.prototype.init = function(container)
 	// Updates blue rectangle on scroll
 	mxEvent.addListener(this.source.container, 'scroll', this.updateHandler);
 	
-	this.panHandler = mxUtils.bind(this, function(sender)
+	this.panHandler = mxUtils.bind(this, (sender)=>
 	{
 		if (this.updateOnPan)
 		{
@@ -248,7 +248,7 @@ mxOutline.prototype.init = function(container)
 	this.source.addListener(mxEvent.PAN, this.panHandler);
 	
 	// Refreshes the graph in the outline after a refresh of the main graph
-	this.refreshHandler = mxUtils.bind(this, function(sender)
+	this.refreshHandler = mxUtils.bind(this, (sender)=>
 	{
 		this.outline.setStylesheet(this.source.getStylesheet());
 		this.outline.refresh();
@@ -263,7 +263,7 @@ mxOutline.prototype.init = function(container)
 
 	if (this.forceVmlHandles)
 	{
-		this.selectionBorder.isHtmlAllowed = function()
+		this.selectionBorder.isHtmlAllowed = ()=>
 		{
 			return false;
 		};
@@ -275,16 +275,16 @@ mxOutline.prototype.init = function(container)
 	// complete gesture on the event target. This is needed because all the events
 	// are routed via the initial element even if that element is removed from the
 	// DOM, which happens when we repaint the selection border and zoom handles.
-	var handler = mxUtils.bind(this, function(evt)
+	var handler = mxUtils.bind(this, (evt)=>
 	{
 		var t = mxEvent.getSource(evt);
 		
-		var redirect = mxUtils.bind(this, function(evt)
+		var redirect = mxUtils.bind(this, (evt)=>
 		{
 			this.outline.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt));
 		});
 		
-		var redirect2 = mxUtils.bind(this, function(evt)
+		var redirect2 = mxUtils.bind(this, (evt)=>
 		{
 			mxEvent.removeGestureListeners(t, null, redirect, redirect2);
 			this.outline.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
@@ -301,7 +301,7 @@ mxOutline.prototype.init = function(container)
 	
 	if (this.forceVmlHandles)
 	{
-		this.sizer.isHtmlAllowed = function()
+		this.sizer.isHtmlAllowed = ()=>
 		{
 			return false;
 		};
@@ -329,7 +329,7 @@ mxOutline.prototype.init = function(container)
  * Returns true if events are handled. This implementation
  * returns <enabled>.
  */
-mxOutline.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -344,7 +344,7 @@ mxOutline.prototype.isEnabled = function()
  * 
  * value - Boolean that specifies the new enabled state.
  */
-mxOutline.prototype.setEnabled = function(value)
+setEnabled = (value)=>
 {
 	this.enabled = value;
 };
@@ -359,7 +359,7 @@ mxOutline.prototype.setEnabled = function(value)
  * 
  * value - Boolean that specifies the new enabled state.
  */
-mxOutline.prototype.setZoomEnabled = function(value)
+setZoomEnabled = (value)=>
 {
 	this.sizer.node.style.visibility = (value) ? 'visible' : 'hidden';
 };
@@ -369,7 +369,7 @@ mxOutline.prototype.setZoomEnabled = function(value)
  * 
  * Invokes <update> and revalidate the outline. This method is deprecated.
  */
-mxOutline.prototype.refresh = function()
+refresh = ()=>
 {
 	this.update(true);
 };
@@ -379,7 +379,7 @@ mxOutline.prototype.refresh = function()
  * 
  * Creates the shape used as the sizer.
  */
-mxOutline.prototype.createSizer = function()
+createSizer = ()=>
 {
 	if (this.sizerImage != null)
 	{
@@ -403,7 +403,7 @@ mxOutline.prototype.createSizer = function()
  * 
  * Returns the size of the source container.
  */
-mxOutline.prototype.getSourceContainerSize = function()
+getSourceContainerSize = ()=>
 {
 	return new mxRectangle(0, 0, this.source.container.scrollWidth, this.source.container.scrollHeight);
 };
@@ -413,7 +413,7 @@ mxOutline.prototype.getSourceContainerSize = function()
  * 
  * Returns the offset for drawing the outline graph.
  */
-mxOutline.prototype.getOutlineOffset = function(scale)
+getOutlineOffset = (scale)=>
 {
 	return null;
 };
@@ -423,7 +423,7 @@ mxOutline.prototype.getOutlineOffset = function(scale)
  * 
  * Returns the graph bound boxing of the source.
  */
-mxOutline.prototype.getSourceGraphBounds = function()
+getSourceGraphBounds = ()=>
 {
 	return this.source.getGraphBounds();
 };
@@ -433,7 +433,7 @@ mxOutline.prototype.getSourceGraphBounds = function()
  * 
  * Updates the outline.
  */
-mxOutline.prototype.update = function(revalidate)
+update = (revalidate)=>
 {
 	if (this.source != null && this.source.container != null &&
 		this.outline != null && this.outline.container != null)
@@ -560,7 +560,7 @@ mxOutline.prototype.update = function(revalidate)
  * 
  * Handles the event by starting a translation or zoom.
  */
-mxOutline.prototype.mouseDown = function(sender, me)
+mouseDown = (sender, me)=>
 {
 	if (this.enabled && this.showViewport)
 	{
@@ -593,7 +593,7 @@ mxOutline.prototype.mouseDown = function(sender, me)
  * Handles the event by previewing the viewrect in <graph> and updating the
  * rectangle that represents the viewrect in the outline.
  */
-mxOutline.prototype.mouseMove = function(sender, me)
+mouseMove = (sender, me)=>
 {
 	if (this.active)
 	{
@@ -657,7 +657,7 @@ mxOutline.prototype.mouseMove = function(sender, me)
  * the outline to stay within positive coordinates:
  * 
  * (code)
- * outline.getTranslateForEvent = function(me)
+ * outline.getTranslateForEvent = (me)=>
  * {
  *   var pt = new mxPoint(me.getX() - this.startX, me.getY() - this.startY);
  *   
@@ -672,7 +672,7 @@ mxOutline.prototype.mouseMove = function(sender, me)
  * };
  * (end)
  */
-mxOutline.prototype.getTranslateForEvent = function(me)
+getTranslateForEvent = (me)=>
 {
 	return new mxPoint(me.getX() - this.startX, me.getY() - this.startY);
 };
@@ -682,7 +682,7 @@ mxOutline.prototype.getTranslateForEvent = function(me)
  * 
  * Handles the event by applying the translation or zoom to <graph>.
  */
-mxOutline.prototype.mouseUp = function(sender, me)
+mouseUp = (sender, me)=>
 {
 	if (this.active)
 	{
@@ -729,7 +729,7 @@ mxOutline.prototype.mouseUp = function(sender, me)
  * 
  * Destroy this outline and removes all listeners from <source>.
  */
-mxOutline.prototype.destroy = function()
+destroy = ()=>
 {
 	if (this.source != null)
 	{

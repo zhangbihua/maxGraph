@@ -65,14 +65,15 @@ function mxStylesheet()
  * Maps from names to cell styles. Each cell style is a map of key,
  * value pairs.
  */
-mxStylesheet.prototype.styles;
+styles;
+FIXME;
 
 /**
  * Function: createDefaultVertexStyle
  *
  * Creates and returns the default vertex style.
  */
-mxStylesheet.prototype.createDefaultVertexStyle = function()
+createDefaultVertexStyle = ()=>
 {
 	var style = new Object();
 
@@ -92,7 +93,7 @@ mxStylesheet.prototype.createDefaultVertexStyle = function()
  *
  * Creates and returns the default edge style.
  */
-mxStylesheet.prototype.createDefaultEdgeStyle = function()
+createDefaultEdgeStyle = ()=>
 {
 	var style = new Object();
 
@@ -115,7 +116,7 @@ mxStylesheet.prototype.createDefaultEdgeStyle = function()
  * Parameters:
  * style - Key, value pairs that define the style.
  */
-mxStylesheet.prototype.putDefaultVertexStyle = function(style)
+putDefaultVertexStyle = (style)=>
 {
 	this.putCellStyle('defaultVertex', style);
 };
@@ -125,7 +126,7 @@ mxStylesheet.prototype.putDefaultVertexStyle = function(style)
  *
  * Sets the default style for edges using defaultEdge as the stylename.
  */
-mxStylesheet.prototype.putDefaultEdgeStyle = function(style)
+putDefaultEdgeStyle = (style)=>
 {
 	this.putCellStyle('defaultEdge', style);
 };
@@ -135,7 +136,7 @@ mxStylesheet.prototype.putDefaultEdgeStyle = function(style)
  *
  * Returns the default style for vertices.
  */
-mxStylesheet.prototype.getDefaultVertexStyle = function()
+getDefaultVertexStyle = ()=>
 {
 	return this.styles['defaultVertex'];
 };
@@ -145,7 +146,7 @@ mxStylesheet.prototype.getDefaultVertexStyle = function()
  *
  * Sets the default style for edges.
  */
-mxStylesheet.prototype.getDefaultEdgeStyle = function()
+getDefaultEdgeStyle = ()=>
 {
 	return this.styles['defaultEdge'];
 };
@@ -187,7 +188,7 @@ mxStylesheet.prototype.getDefaultEdgeStyle = function()
  * name - Name for the style to be stored.
  * style - Key, value pairs that define the style.
  */
-mxStylesheet.prototype.putCellStyle = function(name, style)
+putCellStyle = (name, style)=>
 {
 	this.styles[name] = style;
 };
@@ -204,7 +205,7 @@ mxStylesheet.prototype.putCellStyle = function(name, style)
  * style.
  * defaultStyle - Default style to be returned if no style can be found.
  */
-mxStylesheet.prototype.getCellStyle = function(name, defaultStyle)
+getCellStyle = (name, defaultStyle)=>
 {
 	var style = defaultStyle;
 

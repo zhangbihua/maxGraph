@@ -29,7 +29,7 @@
  * obj - An instance of the change object.
  * variable - The fieldname for the change data.
  */
-var mxGenericChangeCodec = function(obj, variable)
+var mxGenericChangeCodec = (obj, variable)=>
 {
 	var codec = new mxObjectCodec(obj,  ['model', 'previous'], ['cell']);
 
@@ -38,7 +38,7 @@ var mxGenericChangeCodec = function(obj, variable)
 	 *
 	 * Restores the state by assigning the previous value.
 	 */
-	codec.afterDecode = function(dec, node, obj)
+	codec.afterDecode = (dec, node, obj)=>
 	{
 		// Allows forward references in sessions. This is a workaround
 		// for the sequence of edits in mxGraph.moveCells and cellsAdded.

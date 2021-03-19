@@ -29,7 +29,7 @@ function mxFastOrganicLayout(graph)
  * Extends mxGraphLayout.
  */
 mxFastOrganicLayout.prototype = new mxGraphLayout();
-mxFastOrganicLayout.prototype.constructor = mxFastOrganicLayout;
+constructor = mxFastOrganicLayout;
 
 /**
  * Variable: useInputOrigin
@@ -37,7 +37,7 @@ mxFastOrganicLayout.prototype.constructor = mxFastOrganicLayout;
  * Specifies if the top left corner of the input cells should be the origin
  * of the layout result. Default is true.
  */
-mxFastOrganicLayout.prototype.useInputOrigin = true;
+useInputOrigin = true;
 
 /**
  * Variable: resetEdges
@@ -45,7 +45,7 @@ mxFastOrganicLayout.prototype.useInputOrigin = true;
  * Specifies if all edge points of traversed edges should be removed.
  * Default is true.
  */
-mxFastOrganicLayout.prototype.resetEdges = true;
+resetEdges = true;
 
 /**
  * Variable: disableEdgeStyle
@@ -53,7 +53,7 @@ mxFastOrganicLayout.prototype.resetEdges = true;
  * Specifies if the STYLE_NOEDGESTYLE flag should be set on edges that are
  * modified by the result. Default is true.
  */
-mxFastOrganicLayout.prototype.disableEdgeStyle = true;
+disableEdgeStyle = true;
 
 /**
  * Variable: forceConstant
@@ -62,14 +62,14 @@ mxFastOrganicLayout.prototype.disableEdgeStyle = true;
  * replusive forces are multiple by the square of. The value equates to the
  * average radius there is of free space around each node. Default is 50.
  */
-mxFastOrganicLayout.prototype.forceConstant = 50;
+forceConstant = 50;
 
 /**
  * Variable: forceConstantSquared
  * 
  * Cache of <forceConstant>^2 for performance.
  */
-mxFastOrganicLayout.prototype.forceConstantSquared = 0;
+forceConstantSquared = 0;
 
 /**
  * Variable: minDistanceLimit
@@ -77,7 +77,7 @@ mxFastOrganicLayout.prototype.forceConstantSquared = 0;
  * Minimal distance limit. Default is 2. Prevents of
  * dividing by zero.
  */
-mxFastOrganicLayout.prototype.minDistanceLimit = 2;
+minDistanceLimit = 2;
 
 /**
  * Variable: maxDistanceLimit
@@ -85,105 +85,105 @@ mxFastOrganicLayout.prototype.minDistanceLimit = 2;
  * Maximal distance limit. Default is 500. Prevents of
  * dividing by zero.
  */
-mxFastOrganicLayout.prototype.maxDistanceLimit = 500;
+maxDistanceLimit = 500;
 
 /**
  * Variable: minDistanceLimitSquared
  * 
  * Cached version of <minDistanceLimit> squared.
  */
-mxFastOrganicLayout.prototype.minDistanceLimitSquared = 4;
+minDistanceLimitSquared = 4;
 
 /**
  * Variable: initialTemp
  * 
  * Start value of temperature. Default is 200.
  */
-mxFastOrganicLayout.prototype.initialTemp = 200;
+initialTemp = 200;
 
 /**
  * Variable: temperature
  * 
  * Temperature to limit displacement at later stages of layout.
  */
-mxFastOrganicLayout.prototype.temperature = 0;
+temperature = 0;
 
 /**
  * Variable: maxIterations
  * 
  * Total number of iterations to run the layout though.
  */
-mxFastOrganicLayout.prototype.maxIterations = 0;
+maxIterations = 0;
 
 /**
  * Variable: iteration
  * 
  * Current iteration count.
  */
-mxFastOrganicLayout.prototype.iteration = 0;
+iteration = 0;
 
 /**
  * Variable: vertexArray
  * 
  * An array of all vertices to be laid out.
  */
-mxFastOrganicLayout.prototype.vertexArray;
+vertexArray;
 
 /**
  * Variable: dispX
  * 
  * An array of locally stored X co-ordinate displacements for the vertices.
  */
-mxFastOrganicLayout.prototype.dispX;
+dispX;
 
 /**
  * Variable: dispY
  * 
  * An array of locally stored Y co-ordinate displacements for the vertices.
  */
-mxFastOrganicLayout.prototype.dispY;
+dispY;
 
 /**
  * Variable: cellLocation
  * 
  * An array of locally stored co-ordinate positions for the vertices.
  */
-mxFastOrganicLayout.prototype.cellLocation;
+cellLocation;
 
 /**
  * Variable: radius
  * 
  * The approximate radius of each cell, nodes only.
  */
-mxFastOrganicLayout.prototype.radius;
+radius;
 
 /**
  * Variable: radiusSquared
  * 
  * The approximate radius squared of each cell, nodes only.
  */
-mxFastOrganicLayout.prototype.radiusSquared;
+radiusSquared;
 
 /**
  * Variable: isMoveable
  * 
  * Array of booleans representing the movable states of the vertices.
  */
-mxFastOrganicLayout.prototype.isMoveable;
+isMoveable;
 
 /**
  * Variable: neighbours
  * 
  * Local copy of cell neighbours.
  */
-mxFastOrganicLayout.prototype.neighbours;
+neighbours;
 
 /**
  * Variable: indices
  * 
  * Hashtable from cells to local indices.
  */
-mxFastOrganicLayout.prototype.indices;
+indices;
 
 /**
  * Variable: allowedToRun
@@ -191,7 +191,7 @@ mxFastOrganicLayout.prototype.indices;
  * Boolean flag that specifies if the layout is allowed to run. If this is
  * set to false, then the layout exits in the following iteration.
  */
-mxFastOrganicLayout.prototype.allowedToRun = true;
+allowedToRun = true;
 
 /**
  * Function: isVertexIgnored
@@ -203,9 +203,9 @@ mxFastOrganicLayout.prototype.allowedToRun = true;
  * 
  * vertex - <mxCell> whose ignored state should be returned.
  */
-mxFastOrganicLayout.prototype.isVertexIgnored = function(vertex)
+isVertexIgnored = (vertex)=>
 {
-	return mxGraphLayout.prototype.isVertexIgnored.apply(this, arguments) ||
+	return isVertexIgnored.apply(this, arguments) ||
 		this.graph.getConnections(vertex).length == 0;
 };
 
@@ -215,7 +215,7 @@ mxFastOrganicLayout.prototype.isVertexIgnored = function(vertex)
  * Implements <mxGraphLayout.execute>. This operates on all children of the
  * given parent where <isVertexIgnored> returns false.
  */
-mxFastOrganicLayout.prototype.execute = function(parent)
+execute = (parent)=>
 {
 	var model = this.graph.getModel();
 	this.vertexArray = [];
@@ -426,7 +426,7 @@ mxFastOrganicLayout.prototype.execute = function(parent)
  * local cache of cell positions. Limits the displacement to the current
  * temperature.
  */
-mxFastOrganicLayout.prototype.calcPositions = function()
+calcPositions = ()=>
 {
 	for (var index = 0; index < this.vertexArray.length; index++)
 	{
@@ -467,7 +467,7 @@ mxFastOrganicLayout.prototype.calcPositions = function()
  * Calculates the attractive forces between all laid out nodes linked by
  * edges
  */
-mxFastOrganicLayout.prototype.calcAttraction = function()
+calcAttraction = ()=>
 {
 	// Check the neighbours of each vertex and calculate the attractive
 	// force of the edge connecting them
@@ -516,7 +516,7 @@ mxFastOrganicLayout.prototype.calcAttraction = function()
  * 
  * Calculates the repulsive forces between all laid out nodes
  */
-mxFastOrganicLayout.prototype.calcRepulsion = function()
+calcRepulsion = ()=>
 {
 	var vertexCount = this.vertexArray.length;
 
@@ -585,7 +585,7 @@ mxFastOrganicLayout.prototype.calcRepulsion = function()
  * Reduces the temperature of the layout from an initial setting in a linear
  * fashion to zero.
  */
-mxFastOrganicLayout.prototype.reduceTemperature = function()
+reduceTemperature = ()=>
 {
 	this.temperature = this.initialTemp * (1.0 - this.iteration / this.maxIterations);
 };

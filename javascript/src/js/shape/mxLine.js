@@ -41,14 +41,14 @@ mxUtils.extend(mxLine, mxShape);
  * 
  * Whether to paint a vertical line.
  */
-mxLine.prototype.vertical = false;
+vertical = false;
 
 /**
  * Function: paintVertexShape
  * 
  * Redirects to redrawPath for subclasses to work.
  */
-mxLine.prototype.paintVertexShape = function(c, x, y, w, h)
+paintVertexShape = (c, x, y, w, h)=>
 {
 	c.begin();
 

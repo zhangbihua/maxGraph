@@ -58,14 +58,14 @@ function mxImageBundle(alt)
  * 
  * Maps from keys to images.
  */
-mxImageBundle.prototype.images = null;
+images = null;
 
 /**
  * Variable: alt
  * 
  * Specifies if the fallback representation should be returned.
  */
-mxImageBundle.prototype.alt = null;
+alt = null;
 
 /**
  * Function: putImage
@@ -73,7 +73,7 @@ mxImageBundle.prototype.alt = null;
  * Adds the specified entry to the map. The entry is an object with a value and
  * fallback property as specified in the arguments.
  */
-mxImageBundle.prototype.putImage = function(key, value, fallback)
+putImage = (key, value, fallback)=>
 {
 	this.images[key] = {value: value, fallback: fallback};
 };
@@ -85,7 +85,7 @@ mxImageBundle.prototype.putImage = function(key, value, fallback)
  * or fallback, depending on <alt>. The fallback is returned if
  * <alt> is true, the value is returned otherwise.
  */
-mxImageBundle.prototype.getImage = function(key)
+getImage = (key)=>
 {
 	var result = null;
 	

@@ -11,15 +11,15 @@
  * (code)
  * graph.addMouseListener(
  * {
- *   mouseDown: function(sender, evt)
+ *   mouseDown: (sender, evt)=>
  *   {
  *     mxLog.debug('mouseDown');
  *   },
- *   mouseMove: function(sender, evt)
+ *   mouseMove: (sender, evt)=>
  *   {
  *     mxLog.debug('mouseMove');
  *   },
- *   mouseUp: function(sender, evt)
+ *   mouseUp: (sender, evt)=>
  *   {
  *     mxLog.debug('mouseUp');
  *   }
@@ -48,14 +48,14 @@ function mxMouseEvent(evt, state)
  *
  * Holds the consumed state of this event.
  */
-mxMouseEvent.prototype.consumed = false;
+consumed = false;
 
 /**
  * Variable: evt
  *
  * Holds the inner event object.
  */
-mxMouseEvent.prototype.evt = null;
+evt = null;
 
 /**
  * Variable: graphX
@@ -63,7 +63,7 @@ mxMouseEvent.prototype.evt = null;
  * Holds the x-coordinate of the event in the graph. This value is set in
  * <mxGraph.fireMouseEvent>.
  */
-mxMouseEvent.prototype.graphX = null;
+graphX = null;
 
 /**
  * Variable: graphY
@@ -71,14 +71,14 @@ mxMouseEvent.prototype.graphX = null;
  * Holds the y-coordinate of the event in the graph. This value is set in
  * <mxGraph.fireMouseEvent>.
  */
-mxMouseEvent.prototype.graphY = null;
+graphY = null;
 
 /**
  * Variable: state
  *
  * Holds the optional <mxCellState> associated with this event.
  */
-mxMouseEvent.prototype.state = null;
+state = null;
 
 /**
  * Variable: sourceState
@@ -86,14 +86,14 @@ mxMouseEvent.prototype.state = null;
  * Holds the <mxCellState> that was passed to the constructor. This can be
  * different from <state> depending on the result of <mxGraph.getEventState>.
  */
-mxMouseEvent.prototype.sourceState = null;
+sourceState = null;
 
 /**
  * Function: getEvent
  * 
  * Returns <evt>.
  */
-mxMouseEvent.prototype.getEvent = function()
+getEvent = ()=>
 {
 	return this.evt;
 };
@@ -103,7 +103,7 @@ mxMouseEvent.prototype.getEvent = function()
  * 
  * Returns the target DOM element using <mxEvent.getSource> for <evt>.
  */
-mxMouseEvent.prototype.getSource = function()
+getSource = ()=>
 {
 	return mxEvent.getSource(this.evt);
 };
@@ -113,7 +113,7 @@ mxMouseEvent.prototype.getSource = function()
  * 
  * Returns true if the given <mxShape> is the source of <evt>.
  */
-mxMouseEvent.prototype.isSource = function(shape)
+isSource = (shape)=>
 {
 	if (shape != null)
 	{
@@ -128,7 +128,7 @@ mxMouseEvent.prototype.isSource = function(shape)
  * 
  * Returns <evt.clientX>.
  */
-mxMouseEvent.prototype.getX = function()
+getX = ()=>
 {
 	return mxEvent.getClientX(this.getEvent());
 };
@@ -138,7 +138,7 @@ mxMouseEvent.prototype.getX = function()
  * 
  * Returns <evt.clientY>.
  */
-mxMouseEvent.prototype.getY = function()
+getY = ()=>
 {
 	return mxEvent.getClientY(this.getEvent());
 };
@@ -148,7 +148,7 @@ mxMouseEvent.prototype.getY = function()
  * 
  * Returns <graphX>.
  */
-mxMouseEvent.prototype.getGraphX = function()
+getGraphX = ()=>
 {
 	return this.graphX;
 };
@@ -158,7 +158,7 @@ mxMouseEvent.prototype.getGraphX = function()
  * 
  * Returns <graphY>.
  */
-mxMouseEvent.prototype.getGraphY = function()
+getGraphY = ()=>
 {
 	return this.graphY;
 };
@@ -168,7 +168,7 @@ mxMouseEvent.prototype.getGraphY = function()
  * 
  * Returns <state>.
  */
-mxMouseEvent.prototype.getState = function()
+getState = ()=>
 {
 	return this.state;
 };
@@ -178,7 +178,7 @@ mxMouseEvent.prototype.getState = function()
  * 
  * Returns the <mxCell> in <state> is not null.
  */
-mxMouseEvent.prototype.getCell = function()
+getCell = ()=>
 {
 	var state = this.getState();
 	
@@ -195,7 +195,7 @@ mxMouseEvent.prototype.getCell = function()
  *
  * Returns true if the event is a popup trigger.
  */
-mxMouseEvent.prototype.isPopupTrigger = function()
+isPopupTrigger = ()=>
 {
 	return mxEvent.isPopupTrigger(this.getEvent());
 };
@@ -205,7 +205,7 @@ mxMouseEvent.prototype.isPopupTrigger = function()
  *
  * Returns <consumed>.
  */
-mxMouseEvent.prototype.isConsumed = function()
+isConsumed = ()=>
 {
 	return this.consumed;
 };
@@ -223,7 +223,7 @@ mxMouseEvent.prototype.isConsumed = function()
  * preventDefault - Specifies if the native event should be canceled. Default
  * is true.
  */
-mxMouseEvent.prototype.consume = function(preventDefault)
+consume = (preventDefault)=>
 {
 	preventDefault = (preventDefault != null) ? preventDefault :
 		(this.evt.touches != null || mxEvent.isMouseEvent(this.evt));

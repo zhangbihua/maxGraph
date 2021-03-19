@@ -38,14 +38,14 @@ var mxHierarchicalEdgeStyle =
  * Extends mxGraphLayout.
  */
 mxHierarchicalLayout.prototype = new mxGraphLayout();
-mxHierarchicalLayout.prototype.constructor = mxHierarchicalLayout;
+constructor = mxHierarchicalLayout;
 
 /**
  * Variable: roots
  * 
  * Holds the array of <mxCell> that this layout contains.
  */
-mxHierarchicalLayout.prototype.roots = null;
+roots = null;
 
 /**
  * Variable: resizeParent
@@ -53,7 +53,7 @@ mxHierarchicalLayout.prototype.roots = null;
  * Specifies if the parent should be resized after the layout so that it
  * contains all the child cells. Default is false. See also <parentBorder>.
  */
-mxHierarchicalLayout.prototype.resizeParent = false;
+resizeParent = false;
 
 /**
  * Variable: maintainParentLocation
@@ -62,7 +62,7 @@ mxHierarchicalLayout.prototype.resizeParent = false;
  * top, left corner stays the same before and after execution of
  * the layout. Default is false for backwards compatibility.
  */
-mxHierarchicalLayout.prototype.maintainParentLocation = false;
+maintainParentLocation = false;
 
 /**
  * Variable: moveParent
@@ -70,7 +70,7 @@ mxHierarchicalLayout.prototype.maintainParentLocation = false;
  * Specifies if the parent should be moved if <resizeParent> is enabled.
  * Default is false.
  */
-mxHierarchicalLayout.prototype.moveParent = false;
+moveParent = false;
 
 /**
  * Variable: parentBorder
@@ -78,28 +78,28 @@ mxHierarchicalLayout.prototype.moveParent = false;
  * The border to be added around the children if the parent is to be
  * resized using <resizeParent>. Default is 0.
  */
-mxHierarchicalLayout.prototype.parentBorder = 0;
+parentBorder = 0;
 
 /**
  * Variable: intraCellSpacing
  * 
  * The spacing buffer added between cells on the same layer. Default is 30.
  */
-mxHierarchicalLayout.prototype.intraCellSpacing = 30;
+intraCellSpacing = 30;
 
 /**
  * Variable: interRankCellSpacing
  * 
  * The spacing buffer added between cell on adjacent layers. Default is 100.
  */
-mxHierarchicalLayout.prototype.interRankCellSpacing = 100;
+interRankCellSpacing = 100;
 
 /**
  * Variable: interHierarchySpacing
  * 
  * The spacing buffer between unconnected hierarchies. Default is 60.
  */
-mxHierarchicalLayout.prototype.interHierarchySpacing = 60;
+interHierarchySpacing = 60;
 
 /**
  * Variable: parallelEdgeSpacing
@@ -107,7 +107,7 @@ mxHierarchicalLayout.prototype.interHierarchySpacing = 60;
  * The distance between each parallel edge on each ranks for long edges.
  * Default is 10.
  */
-mxHierarchicalLayout.prototype.parallelEdgeSpacing = 10;
+parallelEdgeSpacing = 10;
 
 /**
  * Variable: orientation
@@ -115,7 +115,7 @@ mxHierarchicalLayout.prototype.parallelEdgeSpacing = 10;
  * The position of the root node(s) relative to the laid out graph in.
  * Default is <mxConstants.DIRECTION_NORTH>.
  */
-mxHierarchicalLayout.prototype.orientation = mxConstants.DIRECTION_NORTH;
+orientation = mxConstants.DIRECTION_NORTH;
 
 /**
  * Variable: fineTuning
@@ -123,7 +123,7 @@ mxHierarchicalLayout.prototype.orientation = mxConstants.DIRECTION_NORTH;
  * Whether or not to perform local optimisations and iterate multiple times
  * through the algorithm. Default is true.
  */
-mxHierarchicalLayout.prototype.fineTuning = true;
+fineTuning = true;
 
 /**
  * 
@@ -132,7 +132,7 @@ mxHierarchicalLayout.prototype.fineTuning = true;
  * Whether or not to tighten the assigned ranks of vertices up towards
  * the source cells. Default is true.
  */
-mxHierarchicalLayout.prototype.tightenToSource = true;
+tightenToSource = true;
 
 /**
  * Variable: disableEdgeStyle
@@ -140,7 +140,7 @@ mxHierarchicalLayout.prototype.tightenToSource = true;
  * Specifies if the STYLE_NOEDGESTYLE flag should be set on edges that are
  * modified by the result. Default is true.
  */
-mxHierarchicalLayout.prototype.disableEdgeStyle = true;
+disableEdgeStyle = true;
 
 /**
  * Variable: traverseAncestors
@@ -150,35 +150,35 @@ mxHierarchicalLayout.prototype.disableEdgeStyle = true;
  * terminal vertices have different parents but are in the same 
  * ancestry chain. Default is true.
  */
-mxHierarchicalLayout.prototype.traverseAncestors = true;
+traverseAncestors = true;
 
 /**
  * Variable: model
  * 
  * The internal <mxGraphHierarchyModel> formed of the layout.
  */
-mxHierarchicalLayout.prototype.model = null;
+model = null;
 
 /**
  * Variable: edgesSet
  * 
  * A cache of edges whose source terminal is the key
  */
-mxHierarchicalLayout.prototype.edgesCache = null;
+edgesCache = null;
 
 /**
  * Variable: edgesSet
  * 
  * A cache of edges whose source terminal is the key
  */
-mxHierarchicalLayout.prototype.edgeSourceTermCache = null;
+edgeSourceTermCache = null;
 
 /**
  * Variable: edgesSet
  * 
  * A cache of edges whose source terminal is the key
  */
-mxHierarchicalLayout.prototype.edgesTargetTermCache = null;
+edgesTargetTermCache = null;
 
 /**
  * Variable: edgeStyle
@@ -186,14 +186,14 @@ mxHierarchicalLayout.prototype.edgesTargetTermCache = null;
  * The style to apply between cell layers to edge segments.
  * Default is <mxHierarchicalEdgeStyle.POLYLINE>.
  */
-mxHierarchicalLayout.prototype.edgeStyle = mxHierarchicalEdgeStyle.POLYLINE;
+edgeStyle = mxHierarchicalEdgeStyle.POLYLINE;
 
 /**
  * Function: getModel
  * 
  * Returns the internal <mxGraphHierarchyModel> for this layout algorithm.
  */
-mxHierarchicalLayout.prototype.getModel = function()
+getModel = ()=>
 {
 	return this.model;
 };
@@ -208,7 +208,7 @@ mxHierarchicalLayout.prototype.getModel = function()
  * parent - Parent <mxCell> that contains the children to be laid out.
  * roots - Optional starting roots of the layout.
  */
-mxHierarchicalLayout.prototype.execute = function(parent, roots)
+execute = (parent, roots)=>
 {
 	this.parent = parent;
 	var model = this.graph.model;
@@ -310,7 +310,7 @@ mxHierarchicalLayout.prototype.execute = function(parent, roots)
  * parent - <mxCell> whose children should be checked.
  * vertices - array of vertices to limit search to
  */
-mxHierarchicalLayout.prototype.findRoots = function(parent, vertices)
+findRoots = (parent, vertices)=>
 {
 	var roots = [];
 	
@@ -377,7 +377,7 @@ mxHierarchicalLayout.prototype.findRoots = function(parent, vertices)
  * 
  * cell - <mxCell> whose edges should be returned.
  */
-mxHierarchicalLayout.prototype.getEdges = function(cell)
+getEdges = (cell)=>
 {
 	var cachedEdges = this.edgesCache.get(cell);
 	
@@ -437,7 +437,7 @@ mxHierarchicalLayout.prototype.getEdges = function(cell)
  * edge - <mxCell> whose edges should be returned.
  * source - Boolean that specifies whether the source or target terminal is to be returned
  */
-mxHierarchicalLayout.prototype.getVisibleTerminal = function(edge, source)
+getVisibleTerminal = (edge, source)=>
 {
 	var terminalCache = this.edgesTargetTermCache;
 	
@@ -483,7 +483,7 @@ mxHierarchicalLayout.prototype.getVisibleTerminal = function(edge, source)
  * routing changes made. It runs each stage of the layout that has been
  * created.
  */
-mxHierarchicalLayout.prototype.run = function(parent)
+run = (parent)=>
 {
 	// Separate out unconnected hierarchies
 	var hierarchyVertices = [];
@@ -589,7 +589,7 @@ mxHierarchicalLayout.prototype.run = function(parent)
  * 
  * Creates an array of descendant cells
  */
-mxHierarchicalLayout.prototype.filterDescendants = function(cell, result)
+filterDescendants = (cell, result)=>
 {
 	var model = this.graph.model;
 
@@ -627,7 +627,7 @@ mxHierarchicalLayout.prototype.filterDescendants = function(cell, result)
  * 
  * cell - <mxCell> that represents the port.
  */
-mxHierarchicalLayout.prototype.isPort = function(cell)
+isPort = (cell)=>
 {
 	if (cell != null && cell.geometry != null)
 	{
@@ -651,7 +651,7 @@ mxHierarchicalLayout.prototype.isPort = function(cell)
  * target -
  * directed -
  */
-mxHierarchicalLayout.prototype.getEdgesBetween = function(source, target, directed)
+getEdgesBetween = (source, target, directed)=>
 {
 	directed = (directed != null) ? directed : false;
 	var edges = this.getEdges(source);
@@ -689,7 +689,7 @@ mxHierarchicalLayout.prototype.getEdgesBetween = function(source, target, direct
  * null for the first step of the traversal.
  * allVertices - Array of cell paths for the visited cells.
  */
-mxHierarchicalLayout.prototype.traverse = function(vertex, directed, edge, allVertices, currentComp,
+traverse = function(vertex, directed, edge, allVertices, currentComp,
 											hierarchyVertices, filledVertexSet)
 {
 	if (vertex != null && allVertices != null)
@@ -806,7 +806,7 @@ mxHierarchicalLayout.prototype.traverse = function(vertex, directed, edge, allVe
  * 
  * Executes the cycle stage using mxMinimumCycleRemover.
  */
-mxHierarchicalLayout.prototype.cycleStage = function(parent)
+cycleStage = (parent)=>
 {
 	var cycleStage = new mxMinimumCycleRemover(this);
 	cycleStage.execute(parent);
@@ -817,7 +817,7 @@ mxHierarchicalLayout.prototype.cycleStage = function(parent)
  * 
  * Implements first stage of a Sugiyama layout.
  */
-mxHierarchicalLayout.prototype.layeringStage = function()
+layeringStage = ()=>
 {
 	this.model.initialRank();
 	this.model.fixRanks();
@@ -828,7 +828,7 @@ mxHierarchicalLayout.prototype.layeringStage = function()
  * 
  * Executes the crossing stage using mxMedianHybridCrossingReduction.
  */
-mxHierarchicalLayout.prototype.crossingStage = function(parent)
+crossingStage = (parent)=>
 {
 	var crossingStage = new mxMedianHybridCrossingReduction(this);
 	crossingStage.execute(parent);
@@ -839,7 +839,7 @@ mxHierarchicalLayout.prototype.crossingStage = function(parent)
  * 
  * Executes the placement stage using mxCoordinateAssignment.
  */
-mxHierarchicalLayout.prototype.placementStage = function(initialX, parent)
+placementStage = (initialX, parent)=>
 {
 	var placementStage = new mxCoordinateAssignment(this, this.intraCellSpacing,
 			this.interRankCellSpacing, this.orientation, initialX,

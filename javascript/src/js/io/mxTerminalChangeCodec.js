@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(function()
+mxCodecRegistry.register(()=>
 {
 	/**
 	 * Class: mxTerminalChangeCodec
@@ -29,7 +29,7 @@ mxCodecRegistry.register(function()
 	 *
 	 * Restores the state by assigning the previous value.
 	 */
-	codec.afterDecode = function(dec, node, obj)
+	codec.afterDecode = (dec, node, obj)=>
 	{
 		obj.previous = obj.terminal;
 		

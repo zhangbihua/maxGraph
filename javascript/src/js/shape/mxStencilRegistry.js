@@ -35,7 +35,7 @@ var mxStencilRegistry =
 	 * 
 	 * Adds the given <mxStencil>.
 	 */
-	addStencil: function(name, stencil)
+	addStencil: (name, stencil)=>
 	{
 		mxStencilRegistry.stencils[name] = stencil;
 	},
@@ -45,7 +45,7 @@ var mxStencilRegistry =
 	 * 
 	 * Returns the <mxStencil> for the given name.
 	 */
-	getStencil: function(name)
+	getStencil: (name)=>
 	{
 		return mxStencilRegistry.stencils[name];
 	}

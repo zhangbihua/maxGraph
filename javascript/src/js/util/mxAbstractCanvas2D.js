@@ -29,91 +29,91 @@ function mxAbstractCanvas2D()
  * 
  * Holds the current state.
  */
-mxAbstractCanvas2D.prototype.state = null;
+mxAbstractCanvas2state = null;
 
 /**
  * Variable: states
  * 
  * Stack of states.
  */
-mxAbstractCanvas2D.prototype.states = null;
+mxAbstractCanvas2states = null;
 
 /**
  * Variable: path
  * 
  * Holds the current path as an array.
  */
-mxAbstractCanvas2D.prototype.path = null;
+mxAbstractCanvas2path = null;
 
 /**
  * Variable: rotateHtml
  * 
  * Switch for rotation of HTML. Default is false.
  */
-mxAbstractCanvas2D.prototype.rotateHtml = true;
+mxAbstractCanvas2rotateHtml = true;
 
 /**
  * Variable: lastX
  * 
  * Holds the last x coordinate.
  */
-mxAbstractCanvas2D.prototype.lastX = 0;
+mxAbstractCanvas2lastX = 0;
 
 /**
  * Variable: lastY
  * 
  * Holds the last y coordinate.
  */
-mxAbstractCanvas2D.prototype.lastY = 0;
+mxAbstractCanvas2lastY = 0;
 
 /**
  * Variable: moveOp
  * 
  * Contains the string used for moving in paths. Default is 'M'.
  */
-mxAbstractCanvas2D.prototype.moveOp = 'M';
+mxAbstractCanvas2moveOp = 'M';
 
 /**
  * Variable: lineOp
  * 
  * Contains the string used for moving in paths. Default is 'L'.
  */
-mxAbstractCanvas2D.prototype.lineOp = 'L';
+mxAbstractCanvas2lineOp = 'L';
 
 /**
  * Variable: quadOp
  * 
  * Contains the string used for quadratic paths. Default is 'Q'.
  */
-mxAbstractCanvas2D.prototype.quadOp = 'Q';
+mxAbstractCanvas2quadOp = 'Q';
 
 /**
  * Variable: curveOp
  * 
  * Contains the string used for bezier curves. Default is 'C'.
  */
-mxAbstractCanvas2D.prototype.curveOp = 'C';
+mxAbstractCanvas2curveOp = 'C';
 
 /**
  * Variable: closeOp
  * 
  * Holds the operator for closing curves. Default is 'Z'.
  */
-mxAbstractCanvas2D.prototype.closeOp = 'Z';
+mxAbstractCanvas2closeOp = 'Z';
 
 /**
  * Variable: pointerEvents
  * 
  * Boolean value that specifies if events should be handled. Default is false.
  */
-mxAbstractCanvas2D.prototype.pointerEvents = false;
+mxAbstractCanvas2pointerEvents = false;
 
 /**
  * Function: createUrlConverter
  * 
  * Create a new <mxUrlConverter> and returns it.
  */
-mxAbstractCanvas2D.prototype.createUrlConverter = function()
+mxAbstractCanvas2createUrlConverter = ()=>
 {
 	return new mxUrlConverter();
 };
@@ -123,7 +123,7 @@ mxAbstractCanvas2D.prototype.createUrlConverter = function()
  * 
  * Resets the state of this canvas.
  */
-mxAbstractCanvas2D.prototype.reset = function()
+mxAbstractCanvas2reset = ()=>
 {
 	this.state = this.createState();
 	this.states = [];
@@ -134,7 +134,7 @@ mxAbstractCanvas2D.prototype.reset = function()
  * 
  * Creates the state of the this canvas.
  */
-mxAbstractCanvas2D.prototype.createState = function()
+mxAbstractCanvas2createState = ()=>
 {
 	return {
 		dx: 0,
@@ -178,7 +178,7 @@ mxAbstractCanvas2D.prototype.createState = function()
  * 
  * Rounds all numbers to integers.
  */
-mxAbstractCanvas2D.prototype.format = function(value)
+mxAbstractCanvas2format = (value)=>
 {
 	return Math.round(parseFloat(value));
 };
@@ -188,7 +188,7 @@ mxAbstractCanvas2D.prototype.format = function(value)
  * 
  * Adds the given operation to the path.
  */
-mxAbstractCanvas2D.prototype.addOp = function()
+mxAbstractCanvas2addOp = ()=>
 {
 	if (this.path != null)
 	{
@@ -215,7 +215,7 @@ mxAbstractCanvas2D.prototype.addOp = function()
  * 
  * Rotates the given point and returns the result as an <mxPoint>.
  */
-mxAbstractCanvas2D.prototype.rotatePoint = function(x, y, theta, cx, cy)
+mxAbstractCanvas2rotatePoint = (x, y, theta, cx, cy)=>
 {
 	var rad = theta * (Math.PI / 180);
 	
@@ -228,7 +228,7 @@ mxAbstractCanvas2D.prototype.rotatePoint = function(x, y, theta, cx, cy)
  * 
  * Saves the current state.
  */
-mxAbstractCanvas2D.prototype.save = function()
+mxAbstractCanvas2save = ()=>
 {
 	this.states.push(this.state);
 	this.state = mxUtils.clone(this.state);
@@ -239,7 +239,7 @@ mxAbstractCanvas2D.prototype.save = function()
  * 
  * Restores the current state.
  */
-mxAbstractCanvas2D.prototype.restore = function()
+mxAbstractCanvas2restore = ()=>
 {
 	if (this.states.length > 0)
 	{
@@ -252,7 +252,7 @@ mxAbstractCanvas2D.prototype.restore = function()
  * 
  * Sets the current link. Hook for subclassers.
  */
-mxAbstractCanvas2D.prototype.setLink = function(link)
+mxAbstractCanvas2setLink = (link)=>
 {
 	// nop
 };
@@ -262,7 +262,7 @@ mxAbstractCanvas2D.prototype.setLink = function(link)
  * 
  * Scales the current state.
  */
-mxAbstractCanvas2D.prototype.scale = function(value)
+mxAbstractCanvas2scale = (value)=>
 {
 	this.state.scale *= value;
 	this.state.strokeWidth *= value;
@@ -273,7 +273,7 @@ mxAbstractCanvas2D.prototype.scale = function(value)
  * 
  * Translates the current state.
  */
-mxAbstractCanvas2D.prototype.translate = function(dx, dy)
+mxAbstractCanvas2translate = (dx, dy)=>
 {
 	this.state.dx += dx;
 	this.state.dy += dy;
@@ -284,7 +284,7 @@ mxAbstractCanvas2D.prototype.translate = function(dx, dy)
  * 
  * Rotates the current state.
  */
-mxAbstractCanvas2D.prototype.rotate = function(theta, flipH, flipV, cx, cy)
+mxAbstractCanvas2rotate = (theta, flipH, flipV, cx, cy)=>
 {
 	// nop
 };
@@ -294,7 +294,7 @@ mxAbstractCanvas2D.prototype.rotate = function(theta, flipH, flipV, cx, cy)
  * 
  * Sets the current alpha.
  */
-mxAbstractCanvas2D.prototype.setAlpha = function(value)
+mxAbstractCanvas2setAlpha = (value)=>
 {
 	this.state.alpha = value;
 };
@@ -304,7 +304,7 @@ mxAbstractCanvas2D.prototype.setAlpha = function(value)
  * 
  * Sets the current solid fill alpha.
  */
-mxAbstractCanvas2D.prototype.setFillAlpha = function(value)
+mxAbstractCanvas2setFillAlpha = (value)=>
 {
 	this.state.fillAlpha = value;
 };
@@ -314,7 +314,7 @@ mxAbstractCanvas2D.prototype.setFillAlpha = function(value)
  * 
  * Sets the current stroke alpha.
  */
-mxAbstractCanvas2D.prototype.setStrokeAlpha = function(value)
+mxAbstractCanvas2setStrokeAlpha = (value)=>
 {
 	this.state.strokeAlpha = value;
 };
@@ -324,7 +324,7 @@ mxAbstractCanvas2D.prototype.setStrokeAlpha = function(value)
  * 
  * Sets the current fill color.
  */
-mxAbstractCanvas2D.prototype.setFillColor = function(value)
+mxAbstractCanvas2setFillColor = (value)=>
 {
 	if (value == mxConstants.NONE)
 	{
@@ -340,7 +340,7 @@ mxAbstractCanvas2D.prototype.setFillColor = function(value)
  * 
  * Sets the current gradient.
  */
-mxAbstractCanvas2D.prototype.setGradient = function(color1, color2, x, y, w, h, direction, alpha1, alpha2)
+mxAbstractCanvas2setGradient = (color1, color2, x, y, w, h, direction, alpha1, alpha2)=>
 {
 	var s = this.state;
 	s.fillColor = color1;
@@ -355,7 +355,7 @@ mxAbstractCanvas2D.prototype.setGradient = function(color1, color2, x, y, w, h, 
  * 
  * Sets the current stroke color.
  */
-mxAbstractCanvas2D.prototype.setStrokeColor = function(value)
+mxAbstractCanvas2setStrokeColor = (value)=>
 {
 	if (value == mxConstants.NONE)
 	{
@@ -370,7 +370,7 @@ mxAbstractCanvas2D.prototype.setStrokeColor = function(value)
  * 
  * Sets the current stroke width.
  */
-mxAbstractCanvas2D.prototype.setStrokeWidth = function(value)
+mxAbstractCanvas2setStrokeWidth = (value)=>
 {
 	this.state.strokeWidth = value;
 };
@@ -380,7 +380,7 @@ mxAbstractCanvas2D.prototype.setStrokeWidth = function(value)
  * 
  * Enables or disables dashed lines.
  */
-mxAbstractCanvas2D.prototype.setDashed = function(value, fixDash)
+mxAbstractCanvas2setDashed = (value, fixDash)=>
 {
 	this.state.dashed = value;
 	this.state.fixDash = fixDash;
@@ -391,7 +391,7 @@ mxAbstractCanvas2D.prototype.setDashed = function(value, fixDash)
  * 
  * Sets the current dash pattern.
  */
-mxAbstractCanvas2D.prototype.setDashPattern = function(value)
+mxAbstractCanvas2setDashPattern = (value)=>
 {
 	this.state.dashPattern = value;
 };
@@ -401,7 +401,7 @@ mxAbstractCanvas2D.prototype.setDashPattern = function(value)
  * 
  * Sets the current line cap.
  */
-mxAbstractCanvas2D.prototype.setLineCap = function(value)
+mxAbstractCanvas2setLineCap = (value)=>
 {
 	this.state.lineCap = value;
 };
@@ -411,7 +411,7 @@ mxAbstractCanvas2D.prototype.setLineCap = function(value)
  * 
  * Sets the current line join.
  */
-mxAbstractCanvas2D.prototype.setLineJoin = function(value)
+mxAbstractCanvas2setLineJoin = (value)=>
 {
 	this.state.lineJoin = value;
 };
@@ -421,7 +421,7 @@ mxAbstractCanvas2D.prototype.setLineJoin = function(value)
  * 
  * Sets the current miter limit.
  */
-mxAbstractCanvas2D.prototype.setMiterLimit = function(value)
+mxAbstractCanvas2setMiterLimit = (value)=>
 {
 	this.state.miterLimit = value;
 };
@@ -431,7 +431,7 @@ mxAbstractCanvas2D.prototype.setMiterLimit = function(value)
  * 
  * Sets the current font color.
  */
-mxAbstractCanvas2D.prototype.setFontColor = function(value)
+mxAbstractCanvas2setFontColor = (value)=>
 {
 	if (value == mxConstants.NONE)
 	{
@@ -446,7 +446,7 @@ mxAbstractCanvas2D.prototype.setFontColor = function(value)
  * 
  * Sets the current font background color.
  */
-mxAbstractCanvas2D.prototype.setFontBackgroundColor = function(value)
+mxAbstractCanvas2setFontBackgroundColor = (value)=>
 {
 	if (value == mxConstants.NONE)
 	{
@@ -461,7 +461,7 @@ mxAbstractCanvas2D.prototype.setFontBackgroundColor = function(value)
  * 
  * Sets the current font border color.
  */
-mxAbstractCanvas2D.prototype.setFontBorderColor = function(value)
+mxAbstractCanvas2setFontBorderColor = (value)=>
 {
 	if (value == mxConstants.NONE)
 	{
@@ -476,7 +476,7 @@ mxAbstractCanvas2D.prototype.setFontBorderColor = function(value)
  * 
  * Sets the current font size.
  */
-mxAbstractCanvas2D.prototype.setFontSize = function(value)
+mxAbstractCanvas2setFontSize = (value)=>
 {
 	this.state.fontSize = parseFloat(value);
 };
@@ -486,7 +486,7 @@ mxAbstractCanvas2D.prototype.setFontSize = function(value)
  * 
  * Sets the current font family.
  */
-mxAbstractCanvas2D.prototype.setFontFamily = function(value)
+mxAbstractCanvas2setFontFamily = (value)=>
 {
 	this.state.fontFamily = value;
 };
@@ -496,7 +496,7 @@ mxAbstractCanvas2D.prototype.setFontFamily = function(value)
  * 
  * Sets the current font style.
  */
-mxAbstractCanvas2D.prototype.setFontStyle = function(value)
+mxAbstractCanvas2setFontStyle = (value)=>
 {
 	if (value == null)
 	{
@@ -511,7 +511,7 @@ mxAbstractCanvas2D.prototype.setFontStyle = function(value)
  * 
  * Enables or disables and configures the current shadow.
  */
-mxAbstractCanvas2D.prototype.setShadow = function(enabled)
+mxAbstractCanvas2setShadow = (enabled)=>
 {
 	this.state.shadow = enabled;
 };
@@ -521,7 +521,7 @@ mxAbstractCanvas2D.prototype.setShadow = function(enabled)
  * 
  * Enables or disables and configures the current shadow.
  */
-mxAbstractCanvas2D.prototype.setShadowColor = function(value)
+mxAbstractCanvas2setShadowColor = (value)=>
 {
 	if (value == mxConstants.NONE)
 	{
@@ -536,7 +536,7 @@ mxAbstractCanvas2D.prototype.setShadowColor = function(value)
  * 
  * Enables or disables and configures the current shadow.
  */
-mxAbstractCanvas2D.prototype.setShadowAlpha = function(value)
+mxAbstractCanvas2setShadowAlpha = (value)=>
 {
 	this.state.shadowAlpha = value;
 };
@@ -546,7 +546,7 @@ mxAbstractCanvas2D.prototype.setShadowAlpha = function(value)
  * 
  * Enables or disables and configures the current shadow.
  */
-mxAbstractCanvas2D.prototype.setShadowOffset = function(dx, dy)
+mxAbstractCanvas2setShadowOffset = (dx, dy)=>
 {
 	this.state.shadowDx = dx;
 	this.state.shadowDy = dy;
@@ -557,7 +557,7 @@ mxAbstractCanvas2D.prototype.setShadowOffset = function(dx, dy)
  * 
  * Starts a new path.
  */
-mxAbstractCanvas2D.prototype.begin = function()
+mxAbstractCanvas2begin = ()=>
 {
 	this.lastX = 0;
 	this.lastY = 0;
@@ -569,7 +569,7 @@ mxAbstractCanvas2D.prototype.begin = function()
  * 
  *  Moves the current path the given coordinates.
  */
-mxAbstractCanvas2D.prototype.moveTo = function(x, y)
+mxAbstractCanvas2moveTo = (x, y)=>
 {
 	this.addOp(this.moveOp, x, y);
 };
@@ -579,7 +579,7 @@ mxAbstractCanvas2D.prototype.moveTo = function(x, y)
  * 
  * Draws a line to the given coordinates. Uses moveTo with the op argument.
  */
-mxAbstractCanvas2D.prototype.lineTo = function(x, y)
+mxAbstractCanvas2lineTo = (x, y)=>
 {
 	this.addOp(this.lineOp, x, y);
 };
@@ -589,7 +589,7 @@ mxAbstractCanvas2D.prototype.lineTo = function(x, y)
  * 
  * Adds a quadratic curve to the current path.
  */
-mxAbstractCanvas2D.prototype.quadTo = function(x1, y1, x2, y2)
+mxAbstractCanvas2quadTo = (x1, y1, x2, y2)=>
 {
 	this.addOp(this.quadOp, x1, y1, x2, y2);
 };
@@ -599,7 +599,7 @@ mxAbstractCanvas2D.prototype.quadTo = function(x1, y1, x2, y2)
  * 
  * Adds a bezier curve to the current path.
  */
-mxAbstractCanvas2D.prototype.curveTo = function(x1, y1, x2, y2, x3, y3)
+mxAbstractCanvas2curveTo = (x1, y1, x2, y2, x3, y3)=>
 {
 	this.addOp(this.curveOp, x1, y1, x2, y2, x3, y3);
 };
@@ -610,7 +610,7 @@ mxAbstractCanvas2D.prototype.curveTo = function(x1, y1, x2, y2, x3, y3)
  * Adds the given arc to the current path. This is a synthetic operation that
  * is broken down into curves.
  */
-mxAbstractCanvas2D.prototype.arcTo = function(rx, ry, angle, largeArcFlag, sweepFlag, x, y)
+mxAbstractCanvas2arcTo = (rx, ry, angle, largeArcFlag, sweepFlag, x, y)=>
 {
 	var curves = mxUtils.arcToCurves(this.lastX, this.lastY, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
 	
@@ -629,7 +629,7 @@ mxAbstractCanvas2D.prototype.arcTo = function(rx, ry, angle, largeArcFlag, sweep
  * 
  * Closes the current path.
  */
-mxAbstractCanvas2D.prototype.close = function(x1, y1, x2, y2, x3, y3)
+mxAbstractCanvas2close = (x1, y1, x2, y2, x3, y3)=>
 {
 	this.addOp(this.closeOp);
 };
@@ -639,4 +639,4 @@ mxAbstractCanvas2D.prototype.close = function(x1, y1, x2, y2, x3, y3)
  * 
  * Empty implementation for backwards compatibility. This will be removed.
  */
-mxAbstractCanvas2D.prototype.end = function() { };
+mxAbstractCanvas2end = ()=> { };

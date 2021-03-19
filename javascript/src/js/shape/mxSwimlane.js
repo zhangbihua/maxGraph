@@ -47,14 +47,14 @@ mxUtils.extend(mxSwimlane, mxShape);
  * Default imagewidth and imageheight if an image but no imagewidth
  * and imageheight are defined in the style. Value is 16.
  */
-mxSwimlane.prototype.imageSize = 16;
+imageSize = 16;
 
 /**
  * Function: isRoundable
  * 
  * Adds roundable support.
  */
-mxSwimlane.prototype.isRoundable = function(c, x, y, w, h)
+isRoundable = (c, x, y, w, h)=>
 {
 	return true;
 };
@@ -64,7 +64,7 @@ mxSwimlane.prototype.isRoundable = function(c, x, y, w, h)
  * 
  * Returns the title size.
  */
-mxSwimlane.prototype.getTitleSize = function()
+getTitleSize = ()=>
 {
 	return Math.max(0, mxUtils.getValue(this.style, mxConstants.STYLE_STARTSIZE, mxConstants.DEFAULT_STARTSIZE));
 };
@@ -74,7 +74,7 @@ mxSwimlane.prototype.getTitleSize = function()
  * 
  * Returns the bounding box for the label.
  */
-mxSwimlane.prototype.getLabelBounds = function(rect)
+getLabelBounds = (rect)=>
 {
 	var start = this.getTitleSize();
 	var bounds = new mxRectangle(rect.x, rect.y, rect.width, rect.height);
@@ -125,7 +125,7 @@ mxSwimlane.prototype.getLabelBounds = function(rect)
  * 
  * Returns the bounding box for the gradient box for this shape.
  */
-mxSwimlane.prototype.getGradientBounds = function(c, x, y, w, h)
+getGradientBounds = (c, x, y, w, h)=>
 {
 	var start = this.getTitleSize();
 	
@@ -146,7 +146,7 @@ mxSwimlane.prototype.getGradientBounds = function(c, x, y, w, h)
  * 
  * Returns the arcsize for the swimlane.
  */
-mxSwimlane.prototype.getSwimlaneArcSize = function(w, h, start)
+getSwimlaneArcSize = (w, h, start)=>
 {
 	if (mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1')
 	{
@@ -166,7 +166,7 @@ mxSwimlane.prototype.getSwimlaneArcSize = function(w, h, start)
  *
  * Paints the swimlane vertex shape.
  */
-mxSwimlane.prototype.isHorizontal = function()
+isHorizontal = ()=>
 {
 	return mxUtils.getValue(this.style, mxConstants.STYLE_HORIZONTAL, 1) == 1;
 };
@@ -176,7 +176,7 @@ mxSwimlane.prototype.isHorizontal = function()
  *
  * Paints the swimlane vertex shape.
  */
-mxSwimlane.prototype.paintVertexShape = function(c, x, y, w, h)
+paintVertexShape = (c, x, y, w, h)=>
 {
 	var start = this.getTitleSize();
 	var fill = mxUtils.getValue(this.style, mxConstants.STYLE_SWIMLANE_FILLCOLOR, mxConstants.NONE);
@@ -227,7 +227,7 @@ mxSwimlane.prototype.paintVertexShape = function(c, x, y, w, h)
  *
  * Paints the swimlane vertex shape.
  */
-mxSwimlane.prototype.paintSwimlane = function(c, x, y, w, h, start, fill, swimlaneLine)
+paintSwimlane = (c, x, y, w, h, start, fill, swimlaneLine)=>
 {
 	c.begin();
 	
@@ -327,7 +327,7 @@ mxSwimlane.prototype.paintSwimlane = function(c, x, y, w, h, start, fill, swimla
  *
  * Paints the swimlane vertex shape.
  */
-mxSwimlane.prototype.paintRoundedSwimlane = function(c, x, y, w, h, start, r, fill, swimlaneLine)
+paintRoundedSwimlane = (c, x, y, w, h, start, r, fill, swimlaneLine)=>
 {
 	c.begin();
 	
@@ -435,7 +435,7 @@ mxSwimlane.prototype.paintRoundedSwimlane = function(c, x, y, w, h, start, r, fi
  *
  * Paints the divider between swimlane title and content area.
  */
-mxSwimlane.prototype.paintDivider = function(c, x, y, w, h, start, shadow)
+paintDivider = (c, x, y, w, h, start, shadow)=>
 {
 	if (!shadow)
 	{
@@ -463,7 +463,7 @@ mxSwimlane.prototype.paintDivider = function(c, x, y, w, h, start, shadow)
  *
  * Paints the vertical or horizontal separator line between swimlanes.
  */
-mxSwimlane.prototype.paintSeparator = function(c, x, y, w, h, start, color)
+paintSeparator = (c, x, y, w, h, start, color)=>
 {
 	if (color != mxConstants.NONE)
 	{
@@ -492,7 +492,7 @@ mxSwimlane.prototype.paintSeparator = function(c, x, y, w, h, start, color)
  *
  * Paints the swimlane vertex shape.
  */
-mxSwimlane.prototype.getImageBounds = function(x, y, w, h)
+getImageBounds = (x, y, w, h)=>
 {
 	if (this.isHorizontal())
 	{

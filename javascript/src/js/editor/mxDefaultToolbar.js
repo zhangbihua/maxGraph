@@ -470,7 +470,7 @@ class mxDefaultToolbar {
     sprite.setAttribute('src', img.getAttribute('src'));
 
     // Handles delayed loading of the images
-    let loader = mxUtils.bind(this, function(evt) {
+    let loader = mxUtils.bind(this, (evt)=> {
       // Preview uses the image node with double size. Later this can be
       // changed to use a separate preview and guides, but for this the
       // dropHandler must use the additional x- and y-arguments and the

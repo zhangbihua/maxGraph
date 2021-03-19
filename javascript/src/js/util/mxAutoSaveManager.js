@@ -12,7 +12,7 @@
  * 
  * (code)
  * var mgr = new mxAutoSaveManager(editor.graph);
- * mgr.save = function()
+ * mgr.save = ()=>
  * {
  *   mxLog.show();
  *   mxLog.debug('save');
@@ -30,7 +30,7 @@
 function mxAutoSaveManager(graph)
 {
 	// Notifies the manager of a change
-	this.changeHandler = mxUtils.bind(this, function(sender, evt)
+	this.changeHandler = mxUtils.bind(this, (sender, evt)=>
 	{
 		if (this.isEnabled())
 		{
@@ -45,14 +45,14 @@ function mxAutoSaveManager(graph)
  * Extends mxEventSource.
  */
 mxAutoSaveManager.prototype = new mxEventSource();
-mxAutoSaveManager.prototype.constructor = mxAutoSaveManager;
+constructor = mxAutoSaveManager;
 
 /**
  * Variable: graph
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxAutoSaveManager.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: autoSaveDelay
@@ -61,7 +61,7 @@ mxAutoSaveManager.prototype.graph = null;
  * value of 1 (s) means the graph is not stored more than once per second.
  * Default is 10.
  */
-mxAutoSaveManager.prototype.autoSaveDelay = 10;
+autoSaveDelay = 10;
 
 /**
  * Variable: autoSaveThrottle
@@ -72,7 +72,7 @@ mxAutoSaveManager.prototype.autoSaveDelay = 10;
  * stored more than once per second even if there are more than
  * <autoSaveThreshold> changes within that timespan. Default is 2.
  */
-mxAutoSaveManager.prototype.autoSaveThrottle = 2;
+autoSaveThrottle = 2;
 
 /**
  * Variable: autoSaveThreshold
@@ -81,35 +81,35 @@ mxAutoSaveManager.prototype.autoSaveThrottle = 2;
  * means after 2 change of the graph model the autosave will trigger if the
  * condition below is true. Default is 5.
  */
-mxAutoSaveManager.prototype.autoSaveThreshold = 5;
+autoSaveThreshold = 5;
 
 /**
  * Variable: ignoredChanges
  * 
  * Counter for ignored changes in autosave.
  */
-mxAutoSaveManager.prototype.ignoredChanges = 0;
+ignoredChanges = 0;
 
 /**
  * Variable: lastSnapshot
  * 
  * Used for autosaving. See <autosave>.
  */
-mxAutoSaveManager.prototype.lastSnapshot = 0;
+lastSnapshot = 0;
 
 /**
  * Variable: enabled
  * 
  * Specifies if event handling is enabled. Default is true.
  */
-mxAutoSaveManager.prototype.enabled = true;
+enabled = true;
 
 /**
  * Variable: changeHandler
  * 
  * Holds the function that handles graph model changes.
  */
-mxAutoSaveManager.prototype.changeHandler = null;
+changeHandler = null;
 
 /**
  * Function: isEnabled
@@ -117,7 +117,7 @@ mxAutoSaveManager.prototype.changeHandler = null;
  * Returns true if events are handled. This implementation
  * returns <enabled>.
  */
-mxAutoSaveManager.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -132,7 +132,7 @@ mxAutoSaveManager.prototype.isEnabled = function()
  * 
  * enabled - Boolean that specifies the new enabled state.
  */
-mxAutoSaveManager.prototype.setEnabled = function(value)
+setEnabled = (value)=>
 {
 	this.enabled = value;
 };
@@ -142,7 +142,7 @@ mxAutoSaveManager.prototype.setEnabled = function(value)
  * 
  * Sets the graph that the layouts operate on.
  */
-mxAutoSaveManager.prototype.setGraph = function(graph)
+setGraph = (graph)=>
 {
 	if (this.graph != null)
 	{
@@ -162,7 +162,7 @@ mxAutoSaveManager.prototype.setGraph = function(graph)
  * 
  * Empty hook that is called if the graph should be saved.
  */
-mxAutoSaveManager.prototype.save = function()
+save = ()=>
 {
 	// empty
 };
@@ -172,7 +172,7 @@ mxAutoSaveManager.prototype.save = function()
  * 
  * Invoked when the graph model has changed.
  */
-mxAutoSaveManager.prototype.graphModelChanged = function(changes)
+graphModelChanged = (changes)=>
 {
 	var now = new Date().getTime();
 	var dt = (now - this.lastSnapshot) / 1000;
@@ -196,7 +196,7 @@ mxAutoSaveManager.prototype.graphModelChanged = function(changes)
  * 
  * Resets all counters.
  */
-mxAutoSaveManager.prototype.reset = function()
+reset = ()=>
 {
 	this.lastSnapshot = new Date().getTime();
 	this.ignoredChanges = 0;
@@ -207,7 +207,7 @@ mxAutoSaveManager.prototype.reset = function()
  * 
  * Removes all handlers from the <graph> and deletes the reference to it.
  */
-mxAutoSaveManager.prototype.destroy = function()
+destroy = ()=>
 {
 	this.setGraph(null);
 };

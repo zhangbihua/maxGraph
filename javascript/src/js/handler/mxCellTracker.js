@@ -20,8 +20,8 @@
  * graph.addMouseListener(
  * {
  *   cell: null,
- *   mouseDown: function(sender, me) { },
- *   mouseMove: function(sender, me)
+ *   mouseDown: (sender, me)=> { },
+ *   mouseMove: (sender, me)=>
  *   {
  *     var tmp = me.getCell();
  *     
@@ -45,16 +45,16 @@
  *       this.dragOver(me.getEvent(), this.cell);
  *     }
  *   },
- *   mouseUp: function(sender, me) { },
- *   dragEnter: function(evt, cell)
+ *   mouseUp: (sender, me)=> { },
+ *   dragEnter: (evt, cell)=>
  *   {
  *     mxLog.debug('dragEnter', cell.value);
  *   },
- *   dragOver: function(evt, cell)
+ *   dragOver: (evt, cell)=>
  *   {
  *     mxLog.debug('dragOver', cell.value);
  *   },
- *   dragLeave: function(evt, cell)
+ *   dragLeave: (evt, cell)=>
  *   {
  *     mxLog.debug('dragLeave', cell.value);
  *   }
@@ -86,7 +86,7 @@ function mxCellTracker(graph, color, funct)
 	// Automatic deallocation of memory
 	if (mxClient.IS_IE)
 	{
-		mxEvent.addListener(window, 'unload', mxUtils.bind(this, function()
+		mxEvent.addListener(window, 'unload', mxUtils.bind(this, ()=>
 		{
 			this.destroy();
 		}));
@@ -103,7 +103,7 @@ mxUtils.extend(mxCellTracker, mxCellMarker);
  * 
  * Ignores the event. The event is not consumed.
  */
-mxCellTracker.prototype.mouseDown = function(sender, me) { };
+mouseDown = (sender, me)=> { };
 
 /**
  * Function: mouseMove
@@ -111,7 +111,7 @@ mxCellTracker.prototype.mouseDown = function(sender, me) { };
  * Handles the event by highlighting the cell under the mousepointer if it
  * is over the hotspot region of the cell.
  */
-mxCellTracker.prototype.mouseMove = function(sender, me)
+mouseMove = (sender, me)=>
 {
 	if (this.isEnabled())
 	{
@@ -124,7 +124,7 @@ mxCellTracker.prototype.mouseMove = function(sender, me)
  * 
  * Handles the event by reseting the highlight.
  */
-mxCellTracker.prototype.mouseUp = function(sender, me) { };
+mouseUp = (sender, me)=> { };
 
 /**
  * Function: destroy
@@ -133,13 +133,13 @@ mxCellTracker.prototype.mouseUp = function(sender, me) { };
  * normally need to be called. It is called automatically when the window
  * unloads.
  */
-mxCellTracker.prototype.destroy = function()
+destroy = ()=>
 {
 	if (!this.destroyed)
 	{
 		this.destroyed = true;
 
 		this.graph.removeMouseListener(this);
-		mxCellMarker.prototype.destroy.apply(this);
+		destroy.apply(this);
 	}
 };

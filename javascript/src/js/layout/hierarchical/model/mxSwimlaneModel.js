@@ -112,28 +112,28 @@ function mxSwimlaneModel(layout, vertices, roots, parent, tightenToSource)
  *
  * Stores the largest rank number allocated
  */
-mxSwimlaneModel.prototype.maxRank = null;
+maxRank = null;
 
 /**
  * Variable: vertexMapper
  *
  * Map from graph vertices to internal model nodes.
  */
-mxSwimlaneModel.prototype.vertexMapper = null;
+vertexMapper = null;
 
 /**
  * Variable: edgeMapper
  *
  * Map from graph edges to internal model edges
  */
-mxSwimlaneModel.prototype.edgeMapper = null;
+edgeMapper = null;
 
 /**
  * Variable: ranks
  *
  * Mapping from rank number to actual rank
  */
-mxSwimlaneModel.prototype.ranks = null;
+ranks = null;
 
 /**
  * Variable: roots
@@ -141,28 +141,28 @@ mxSwimlaneModel.prototype.ranks = null;
  * Store of roots of this hierarchy model, these are real graph cells, not
  * internal cells
  */
-mxSwimlaneModel.prototype.roots = null;
+roots = null;
 
 /**
  * Variable: parent
  *
  * The parent cell whose children are being laid out
  */
-mxSwimlaneModel.prototype.parent = null;
+parent = null;
 
 /**
  * Variable: dfsCount
  *
  * Count of the number of times the ancestor dfs has been used.
  */
-mxSwimlaneModel.prototype.dfsCount = 0;
+dfsCount = 0;
 
 /**
  * Variable: SOURCESCANSTARTRANK
  *
  * High value to start source layering scan rank value from.
  */
-mxSwimlaneModel.prototype.SOURCESCANSTARTRANK = 100000000;
+SOURCESCANSTARTRANK = 100000000;
 
 /**
  * Variable: tightenToSource
@@ -170,14 +170,14 @@ mxSwimlaneModel.prototype.SOURCESCANSTARTRANK = 100000000;
  * Whether or not to tighten the assigned ranks of vertices up towards
  * the source cells.
  */
-mxSwimlaneModel.prototype.tightenToSource = false;
+tightenToSource = false;
 
 /**
  * Variable: ranksPerGroup
  *
  * An array of the number of ranks within each swimlane
  */
-mxSwimlaneModel.prototype.ranksPerGroup = null;
+ranksPerGroup = null;
 
 /**
  * Function: createInternalCells
@@ -192,7 +192,7 @@ mxSwimlaneModel.prototype.ranksPerGroup = null;
  * internalVertices - The array of <mxGraphHierarchyNodes> to have their
  * information filled in using the real vertices.
  */
-mxSwimlaneModel.prototype.createInternalCells = function(layout, vertices, internalVertices)
+createInternalCells = (layout, vertices, internalVertices)=>
 {
 	var graph = layout.getGraph();
 	var swimlanes = layout.swimlanes;
@@ -292,7 +292,7 @@ mxSwimlaneModel.prototype.createInternalCells = function(layout, vertices, inter
  * or sinks and working through each node in the relevant edge direction.
  * Starting at the sinks is basically a longest path layering algorithm.
 */
-mxSwimlaneModel.prototype.initialRank = function()
+initialRank = ()=>
 {
 	this.ranksPerGroup = [];
 	
@@ -483,7 +483,7 @@ mxSwimlaneModel.prototype.initialRank = function()
  * chainCount - the number of edges in the chain of vertices going through
  * the current swimlane
  */
-mxSwimlaneModel.prototype.maxChainDfs = function(parent, root, connectingEdge, seen, chainCount)
+maxChainDfs = (parent, root, connectingEdge, seen, chainCount)=>
 {
 	if (root != null)
 	{
@@ -529,7 +529,7 @@ mxSwimlaneModel.prototype.maxChainDfs = function(parent, root, connectingEdge, s
  * Fixes the layer assignments to the values stored in the nodes. Also needs
  * to create dummy nodes for edges that cross layers.
  */
-mxSwimlaneModel.prototype.fixRanks = function()
+fixRanks = ()=>
 {
 	var rankList = [];
 	this.ranks = [];
@@ -558,7 +558,7 @@ mxSwimlaneModel.prototype.fixRanks = function()
 		}
 	}
 
-	this.visit(function(parent, node, edge, layer, seen)
+	this.visit((parent, node, edge, layer, seen)=>
 	{
 		if (seen == 0 && node.maxRank < 0 && node.minRank < 0)
 		{
@@ -607,7 +607,7 @@ mxSwimlaneModel.prototype.fixRanks = function()
  * trackAncestors - Whether or not the search is to keep track all nodes
  * directly above this one in the search path.
  */
-mxSwimlaneModel.prototype.visit = function(visitor, dfsRoots, trackAncestors, seenNodes)
+visit = (visitor, dfsRoots, trackAncestors, seenNodes)=>
 {
 	// Run dfs through on all roots
 	if (dfsRoots != null)
@@ -659,7 +659,7 @@ mxSwimlaneModel.prototype.visit = function(visitor, dfsRoots, trackAncestors, se
  * ancestor node of the current node
  * layer - the layer on the dfs tree ( not the same as the model ranks )
  */
-mxSwimlaneModel.prototype.dfs = function(parent, root, connectingEdge, visitor, seen, layer)
+dfs = (parent, root, connectingEdge, visitor, seen, layer)=>
 {
 	if (root != null)
 	{
@@ -712,7 +712,7 @@ mxSwimlaneModel.prototype.dfs = function(parent, root, connectingEdge, visitor, 
  * childHash - the new hash code for this node
  * layer - the layer on the dfs tree ( not the same as the model ranks )
  */
-mxSwimlaneModel.prototype.extendedDfs = function(parent, root, connectingEdge, visitor, seen, ancestors, childHash, layer)
+extendedDfs = (parent, root, connectingEdge, visitor, seen, ancestors, childHash, layer)=>
 {
 	// Explanation of custom hash set. Previously, the ancestors variable
 	// was passed through the dfs as a HashSet. The ancestors were copied

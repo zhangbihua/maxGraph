@@ -34,7 +34,7 @@ function mxConnectionConstraint(point, perimeter, name, dx, dy)
  * 
  * <mxPoint> that specifies the fixed location of the connection point.
  */
-mxConnectionConstraint.prototype.point = null;
+point = null;
 
 /**
  * Variable: perimeter
@@ -42,26 +42,26 @@ mxConnectionConstraint.prototype.point = null;
  * Boolean that specifies if the point should be projected onto the perimeter
  * of the terminal.
  */
-mxConnectionConstraint.prototype.perimeter = null;
+perimeter = null;
 
 /**
  * Variable: name
  * 
  * Optional string that specifies the name of the constraint.
  */
-mxConnectionConstraint.prototype.name = null;
+name = null;
 
 /**
  * Variable: dx
  * 
  * Optional float that specifies the horizontal offset of the constraint.
  */
-mxConnectionConstraint.prototype.dx = null;
+dx = null;
 
 /**
  * Variable: dy
  * 
  * Optional float that specifies the vertical offset of the constraint.
  */
-mxConnectionConstraint.prototype.dy = null;
+dy = null;
 

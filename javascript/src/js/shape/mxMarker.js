@@ -22,7 +22,7 @@ var mxMarker =
 	 * Adds a factory method that updates a given endpoint and returns a
 	 * function to paint the marker onto the given canvas.
 	 */
-	addMarker: function(type, funct)
+	addMarker: (type, funct)=>
 	{
 		mxMarker.markers[type] = funct;
 	},
@@ -32,7 +32,7 @@ var mxMarker =
 	 * 
 	 * Returns a function to paint the given marker.
 	 */
-	createMarker: function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
+	createMarker: (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)=>
 	{
 		var funct = mxMarker.markers[type];
 		
@@ -44,13 +44,13 @@ var mxMarker =
 /**
  * Adds the classic and block marker factory method.
  */
-(function()
+(()=>
 {
 	function createArrow(widthFactor)
 	{
 		widthFactor = (widthFactor != null) ? widthFactor : 2;
 		
-		return function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
+		return (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)=>
 		{
 			// The angle of the forward facing arrow sides against the x axis is
 			// 26.565 degrees, 1/sin(26.565) = 2.236 / 2 = 1.118 ( / 2 allows for
@@ -69,7 +69,7 @@ var mxMarker =
 			pe.x += -unitX * f - endOffsetX;
 			pe.y += -unitY * f - endOffsetY;
 			
-			return function()
+			return ()=>
 			{
 				canvas.begin();
 				canvas.moveTo(pt.x, pt.y);
@@ -104,7 +104,7 @@ var mxMarker =
 	{
 		widthFactor = (widthFactor != null) ? widthFactor : 2;
 		
-		return function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
+		return (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)=>
 		{
 			// The angle of the forward facing arrow sides against the x axis is
 			// 26.565 degrees, 1/sin(26.565) = 2.236 / 2 = 1.118 ( / 2 allows for
@@ -122,7 +122,7 @@ var mxMarker =
 			pe.x += -endOffsetX * 2;
 			pe.y += -endOffsetY * 2;
 
-			return function()
+			return ()=>
 			{
 				canvas.begin();
 				canvas.moveTo(pt.x - unitX - unitY / widthFactor, pt.y - unitY + unitX / widthFactor);
@@ -136,7 +136,7 @@ var mxMarker =
 	mxMarker.addMarker('open', createOpenArrow(2));
 	mxMarker.addMarker('openThin', createOpenArrow(3));
 	
-	mxMarker.addMarker('oval', function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
+	mxMarker.addMarker('oval', (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)=>
 	{
 		var a = size / 2;
 		
@@ -144,7 +144,7 @@ var mxMarker =
 		pe.x -= unitX * a;
 		pe.y -= unitY * a;
 
-		return function()
+		return ()=>
 		{
 			canvas.ellipse(pt.x - a, pt.y - a, size, size);
 						
@@ -183,7 +183,7 @@ var mxMarker =
 		// thickness factor for diamond
 		var tk = ((type == mxConstants.ARROW_DIAMOND) ?  2 : 3.4);
 		
-		return function()
+		return ()=>
 		{
 			canvas.begin();
 			canvas.moveTo(pt.x, pt.y);

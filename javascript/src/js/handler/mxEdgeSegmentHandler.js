@@ -17,7 +17,7 @@ mxUtils.extend(mxEdgeSegmentHandler, mxElbowEdgeHandler);
  * 
  * Returns the current absolute points.
  */
-mxEdgeSegmentHandler.prototype.getCurrentPoints = function()
+getCurrentPoints = ()=>
 {
 	var pts = this.state.absolutePoints;
 	
@@ -45,11 +45,11 @@ mxEdgeSegmentHandler.prototype.getCurrentPoints = function()
  * 
  * Updates the given preview state taking into account the state of the constraint handler.
  */
-mxEdgeSegmentHandler.prototype.getPreviewPoints = function(point)
+getPreviewPoints = (point)=>
 {
 	if (this.isSource || this.isTarget)
 	{
-		return mxElbowEdgeHandler.prototype.getPreviewPoints.apply(this, arguments);
+		return getPreviewPoints.apply(this, arguments);
 	}
 	else
 	{
@@ -112,9 +112,9 @@ mxEdgeSegmentHandler.prototype.getPreviewPoints = function(point)
  * 
  * Overridden to perform optimization of the edge style result.
  */
-mxEdgeSegmentHandler.prototype.updatePreviewState = function(edge, point, terminalState, me)
+updatePreviewState = (edge, point, terminalState, me)=>
 {
-	mxEdgeHandler.prototype.updatePreviewState.apply(this, arguments);
+	updatePreviewState.apply(this, arguments);
 
 	// Checks and corrects preview by running edge style again
 	if (!this.isSource && !this.isTarget)
@@ -206,7 +206,7 @@ mxEdgeSegmentHandler.prototype.updatePreviewState = function(edge, point, termin
 /**
  * Overriden to merge edge segments.
  */
-mxEdgeSegmentHandler.prototype.connect = function(edge, terminal, isSource, isClone, me)
+connect = (edge, terminal, isSource, isClone, me)=>
 {
 	var model = this.graph.getModel();
 	var geo = model.getGeometry(edge);
@@ -252,7 +252,7 @@ mxEdgeSegmentHandler.prototype.connect = function(edge, terminal, isSource, isCl
 			}
 		}
 		
-		edge = mxEdgeHandler.prototype.connect.apply(this, arguments);
+		edge = connect.apply(this, arguments);
 	}
 	finally
 	{
@@ -267,7 +267,7 @@ mxEdgeSegmentHandler.prototype.connect = function(edge, terminal, isSource, isCl
  * 
  * Returns no tooltips.
  */
-mxEdgeSegmentHandler.prototype.getTooltipForNode = function(node)
+getTooltipForNode = (node)=>
 {
 	return null;
 };
@@ -277,9 +277,9 @@ mxEdgeSegmentHandler.prototype.getTooltipForNode = function(node)
  * 
  * Starts the handling of the mouse gesture.
  */
-mxEdgeSegmentHandler.prototype.start = function(x, y, index)
+start = (x, y, index)=>
 {
-	mxEdgeHandler.prototype.start.apply(this, arguments);
+	start.apply(this, arguments);
 	
 	if (this.bends != null && this.bends[index] != null &&
 		!this.isSource && !this.isTarget)
@@ -293,7 +293,7 @@ mxEdgeSegmentHandler.prototype.start = function(x, y, index)
  * 
  * Adds custom bends for the center of each segment.
  */
-mxEdgeSegmentHandler.prototype.createBends = function()
+createBends = ()=>
 {
 	var bends = [];
 	
@@ -344,10 +344,10 @@ mxEdgeSegmentHandler.prototype.createBends = function()
  * 
  * Overridden to invoke <refresh> before the redraw.
  */
-mxEdgeSegmentHandler.prototype.redraw = function()
+redraw = ()=>
 {
 	this.refresh();
-	mxEdgeHandler.prototype.redraw.apply(this, arguments);
+	redraw.apply(this, arguments);
 };
 
 /**
@@ -355,7 +355,7 @@ mxEdgeSegmentHandler.prototype.redraw = function()
  * 
  * Updates the position of the custom bends.
  */
-mxEdgeSegmentHandler.prototype.redrawInnerBends = function(p0, pe)
+redrawInnerBends = (p0, pe)=>
 {
 	if (this.graph.isCellBendable(this.state.cell))
 	{

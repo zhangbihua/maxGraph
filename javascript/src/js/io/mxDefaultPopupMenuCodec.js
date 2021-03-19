@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(function()
+mxCodecRegistry.register(()=>
 {
 	/**
 	 * Class: mxDefaultPopupMenuCodec
@@ -22,7 +22,7 @@ mxCodecRegistry.register(function()
 	 *
 	 * Returns null.
 	 */
-	codec.encode = function(enc, obj)
+	codec.encode = (enc, obj)=>
 	{
 		return null;
 	};
@@ -32,7 +32,7 @@ mxCodecRegistry.register(function()
 	 *
 	 * Uses the given node as the config for <mxDefaultPopupMenu>.
 	 */
-	codec.decode = function(dec, node, into)
+	codec.decode = (dec, node, into)=>
 	{
 		var inc = node.getElementsByTagName('include')[0];
 		

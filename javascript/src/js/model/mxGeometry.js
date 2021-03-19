@@ -79,14 +79,14 @@ function mxGeometry(x, y, width, height)
  * Extends mxRectangle.
  */
 mxGeometry.prototype = new mxRectangle();
-mxGeometry.prototype.constructor = mxGeometry;
+constructor = mxGeometry;
 
 /**
  * Variable: TRANSLATE_CONTROL_POINTS
  * 
  * Global switch to translate the points in translate. Default is true.
  */
-mxGeometry.prototype.TRANSLATE_CONTROL_POINTS = true;
+TRANSLATE_CONTROL_POINTS = true;
 
 /**
  * Variable: alternateBounds
@@ -94,7 +94,7 @@ mxGeometry.prototype.TRANSLATE_CONTROL_POINTS = true;
  * Stores alternate values for x, y, width and height in a rectangle. See
  * <swap> to exchange the values. Default is null.
  */
-mxGeometry.prototype.alternateBounds = null;
+alternateBounds = null;
 
 /**
  * Variable: sourcePoint
@@ -103,7 +103,7 @@ mxGeometry.prototype.alternateBounds = null;
  * corresponding edge does not have a source vertex. Otherwise it is
  * ignored. Default is  null.
  */
-mxGeometry.prototype.sourcePoint = null;
+sourcePoint = null;
 
 /**
  * Variable: targetPoint
@@ -112,7 +112,7 @@ mxGeometry.prototype.sourcePoint = null;
  * corresponding edge does not have a target vertex. Otherwise it is
  * ignored. Default is null.
  */
-mxGeometry.prototype.targetPoint = null;
+targetPoint = null;
 
 /**
  * Variable: points
@@ -122,7 +122,7 @@ mxGeometry.prototype.targetPoint = null;
  * use <targetPoint> and <sourcePoint> or set the terminals of the edge to
  * a non-null value. Default is null.
  */
-mxGeometry.prototype.points = null;
+points = null;
 
 /**
  * Variable: offset
@@ -133,7 +133,7 @@ mxGeometry.prototype.points = null;
  * coordinates. For absolute geometries (for vertices), this defines the
  * offset for the label. Default is null.
  */
-mxGeometry.prototype.offset = null;
+offset = null;
 
 /**
  * Variable: relative
@@ -150,7 +150,7 @@ mxGeometry.prototype.offset = null;
  * 
  * Default is false.
  */
-mxGeometry.prototype.relative = false;
+relative = false;
 
 /**
  * Function: swap
@@ -163,7 +163,7 @@ mxGeometry.prototype.relative = false;
  * calling this method and setting the geometry of the cell using
  * <mxGraphModel.setGeometry>.
  */
-mxGeometry.prototype.swap = function()
+swap = ()=>
 {
 	if (this.alternateBounds != null)
 	{
@@ -190,7 +190,7 @@ mxGeometry.prototype.swap = function()
  * isSource - Boolean that specifies if the source or target point
  * should be returned.
  */
-mxGeometry.prototype.getTerminalPoint = function(isSource)
+getTerminalPoint = (isSource)=>
 {
 	return (isSource) ? this.sourcePoint : this.targetPoint;
 };
@@ -207,7 +207,7 @@ mxGeometry.prototype.getTerminalPoint = function(isSource)
  * isSource - Boolean that specifies if the source or target point
  * should be set.
  */
-mxGeometry.prototype.setTerminalPoint = function(point, isSource)
+setTerminalPoint = (point, isSource)=>
 {
 	if (isSource)
 	{
@@ -234,7 +234,7 @@ mxGeometry.prototype.setTerminalPoint = function(point, isSource)
  * angle - Number that specifies the rotation angle in degrees.
  * cx - <mxPoint> that specifies the center of the rotation.
  */
-mxGeometry.prototype.rotate = function(angle, cx)
+rotate = (angle, cx)=>
 {
 	var rad = mxUtils.toRadians(angle);
 	var cos = Math.cos(rad);
@@ -295,7 +295,7 @@ mxGeometry.prototype.rotate = function(angle, cx)
  * dx - Number that specifies the x-coordinate of the translation.
  * dy - Number that specifies the y-coordinate of the translation.
  */
-mxGeometry.prototype.translate = function(dx, dy)
+translate = (dx, dy)=>
 {
 	dx = parseFloat(dx);
 	dy = parseFloat(dy);
@@ -350,7 +350,7 @@ mxGeometry.prototype.translate = function(dx, dy)
  * sy - Number that specifies the vertical scale factor.
  * fixedAspect - Optional boolean to keep the aspect ratio fixed.
  */
-mxGeometry.prototype.scale = function(sx, sy, fixedAspect)
+scale = (sx, sy, fixedAspect)=>
 {
 	sx = parseFloat(sx);
 	sy = parseFloat(sy);
@@ -403,9 +403,9 @@ mxGeometry.prototype.scale = function(sx, sy, fixedAspect)
  * 
  * Returns true if the given object equals this geometry.
  */
-mxGeometry.prototype.equals = function(obj)
+equals = (obj)=>
 {
-	return mxRectangle.prototype.equals.apply(this, arguments) &&
+	return equals.apply(this, arguments) &&
 		this.relative == obj.relative &&
 		((this.sourcePoint == null && obj.sourcePoint == null) || (this.sourcePoint != null && this.sourcePoint.equals(obj.sourcePoint))) &&
 		((this.targetPoint == null && obj.targetPoint == null) || (this.targetPoint != null && this.targetPoint.equals(obj.targetPoint))) &&

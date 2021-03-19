@@ -41,21 +41,21 @@ function mxCellState(view, cell, style)
  * Extends mxRectangle.
  */
 mxCellState.prototype = new mxRectangle();
-mxCellState.prototype.constructor = mxCellState;
+constructor = mxCellState;
 
 /**
  * Variable: view
  * 
  * Reference to the enclosing <mxGraphView>.
  */
-mxCellState.prototype.view = null;
+view = null;
 
 /**
  * Variable: cell
  *
  * Reference to the <mxCell> that is represented by this state.
  */
-mxCellState.prototype.cell = null;
+cell = null;
 
 /**
  * Variable: style
@@ -63,21 +63,21 @@ mxCellState.prototype.cell = null;
  * Contains an array of key, value pairs that represent the style of the
  * cell.
  */
-mxCellState.prototype.style = null;
+style = null;
 
 /**
  * Variable: invalidStyle
  * 
  * Specifies if the style is invalid. Default is false.
  */
-mxCellState.prototype.invalidStyle = false;
+invalidStyle = false;
 
 /**
  * Variable: invalid
  * 
  * Specifies if the state is invalid. Default is true.
  */
-mxCellState.prototype.invalid = true;
+invalid = true;
 
 /**
  * Variable: origin
@@ -85,7 +85,7 @@ mxCellState.prototype.invalid = true;
  * <mxPoint> that holds the origin for all child cells. Default is a new
  * empty <mxPoint>.
  */
-mxCellState.prototype.origin = null;
+origin = null;
 
 /**
  * Variable: absolutePoints
@@ -93,7 +93,7 @@ mxCellState.prototype.origin = null;
  * Holds an array of <mxPoints> that represent the absolute points of an
  * edge.
  */
-mxCellState.prototype.absolutePoints = null;
+absolutePoints = null;
 
 /**
  * Variable: absoluteOffset
@@ -102,35 +102,35 @@ mxCellState.prototype.absolutePoints = null;
  * absolute coordinates of the label position. For vertices, this is the
  * offset of the label relative to the top, left corner of the vertex. 
  */
-mxCellState.prototype.absoluteOffset = null;
+absoluteOffset = null;
 
 /**
  * Variable: visibleSourceState
  * 
  * Caches the visible source terminal state.
  */
-mxCellState.prototype.visibleSourceState = null;
+visibleSourceState = null;
 
 /**
  * Variable: visibleTargetState
  * 
  * Caches the visible target terminal state.
  */
-mxCellState.prototype.visibleTargetState = null;
+visibleTargetState = null;
 
 /**
  * Variable: terminalDistance
  * 
  * Caches the distance between the end points for an edge.
  */
-mxCellState.prototype.terminalDistance = 0;
+terminalDistance = 0;
 
 /**
  * Variable: length
  *
  * Caches the length of an edge.
  */
-mxCellState.prototype.length = 0;
+length = 0;
 
 /**
  * Variable: segments
@@ -138,14 +138,14 @@ mxCellState.prototype.length = 0;
  * Array of numbers that represent the cached length of each segment of the
  * edge.
  */
-mxCellState.prototype.segments = null;
+segments = null;
 
 /**
  * Variable: shape
  * 
  * Holds the <mxShape> that represents the cell graphically.
  */
-mxCellState.prototype.shape = null;
+shape = null;
 
 /**
  * Variable: text
@@ -153,21 +153,21 @@ mxCellState.prototype.shape = null;
  * Holds the <mxText> that represents the label of the cell. Thi smay be
  * null if the cell has no label.
  */
-mxCellState.prototype.text = null;
+text = null;
 
 /**
  * Variable: unscaledWidth
  * 
  * Holds the unscaled width of the state.
  */
-mxCellState.prototype.unscaledWidth = null;
+unscaledWidth = null;
 
 /**
  * Variable: unscaledHeight
  * 
  * Holds the unscaled height of the state.
  */
-mxCellState.prototype.unscaledHeight = null;
+unscaledHeight = null;
 
 /**
  * Function: getPerimeterBounds
@@ -180,7 +180,7 @@ mxCellState.prototype.unscaledHeight = null;
  * border - Optional border to be added around the perimeter bounds.
  * bounds - Optional <mxRectangle> to be used as the initial bounds.
  */
-mxCellState.prototype.getPerimeterBounds = function(border, bounds)
+getPerimeterBounds = (border, bounds)=>
 {
 	border = border || 0;
 	bounds = (bounds != null) ? bounds : new mxRectangle(this.x, this.y, this.width, this.height);
@@ -214,7 +214,7 @@ mxCellState.prototype.getPerimeterBounds = function(border, bounds)
  * isSource - Boolean that specifies if the first or last point should
  * be assigned.
  */
-mxCellState.prototype.setAbsoluteTerminalPoint = function(point, isSource)
+setAbsoluteTerminalPoint = (point, isSource)=>
 {
 	if (isSource)
 	{
@@ -256,7 +256,7 @@ mxCellState.prototype.setAbsoluteTerminalPoint = function(point, isSource)
  * 
  * Sets the given cursor on the shape and text shape.
  */
-mxCellState.prototype.setCursor = function(cursor)
+setCursor = (cursor)=>
 {
 	if (this.shape != null)
 	{
@@ -279,7 +279,7 @@ mxCellState.prototype.setCursor = function(cursor)
  * source - Boolean that specifies if the source or target cell should be
  * returned.
  */
-mxCellState.prototype.getVisibleTerminal = function(source)
+getVisibleTerminal = (source)=>
 {
 	var tmp = this.getVisibleTerminalState(source);
 	
@@ -296,7 +296,7 @@ mxCellState.prototype.getVisibleTerminal = function(source)
  * source - Boolean that specifies if the source or target state should be
  * returned.
  */
-mxCellState.prototype.getVisibleTerminalState = function(source)
+getVisibleTerminalState = (source)=>
 {
 	return (source) ? this.visibleSourceState : this.visibleTargetState;
 };
@@ -311,7 +311,7 @@ mxCellState.prototype.getVisibleTerminalState = function(source)
  * terminalState - <mxCellState> that represents the terminal.
  * source - Boolean that specifies if the source or target state should be set.
  */
-mxCellState.prototype.setVisibleTerminalState = function(terminalState, source)
+setVisibleTerminalState = (terminalState, source)=>
 {
 	if (source)
 	{
@@ -328,7 +328,7 @@ mxCellState.prototype.setVisibleTerminalState = function(terminalState, source)
  * 
  * Returns the unscaled, untranslated bounds.
  */
-mxCellState.prototype.getCellBounds = function()
+getCellBounds = ()=>
 {
 	return this.cellBounds;
 };
@@ -340,7 +340,7 @@ mxCellState.prototype.getCellBounds = function()
  * <getCellBounds> but with a 90 degree rotation if the shape's
  * isPaintBoundsInverted returns true.
  */
-mxCellState.prototype.getPaintBounds = function()
+getPaintBounds = ()=>
 {
 	return this.paintBounds;
 };
@@ -350,7 +350,7 @@ mxCellState.prototype.getPaintBounds = function()
  * 
  * Updates the cellBounds and paintBounds.
  */
-mxCellState.prototype.updateCachedBounds = function()
+updateCachedBounds = ()=>
 {
 	var tr = this.view.translate;
 	var s = this.view.scale;
@@ -368,7 +368,7 @@ mxCellState.prototype.updateCachedBounds = function()
  * 
  * Copies all fields from the given state to this state.
  */
-mxCellState.prototype.setState = function(state)
+setState = (state)=>
 {
 	this.view = state.view;
 	this.cell = state.cell;
@@ -393,7 +393,7 @@ mxCellState.prototype.setState = function(state)
  *
  * Returns a clone of this <mxPoint>.
  */
-mxCellState.prototype.clone = function()
+clone = ()=>
 {
  	var clone = new mxCellState(this.view, this.cell, this.style);
 
@@ -441,7 +441,7 @@ mxCellState.prototype.clone = function()
  * 
  * Destroys the state and all associated resources.
  */
-mxCellState.prototype.destroy = function()
+destroy = ()=>
 {
 	this.view.graph.cellRenderer.destroy(this);
 };

@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(function()
+mxCodecRegistry.register(()=>
 {
 	/**
 	 * Class: mxGraphViewCodec
@@ -23,7 +23,7 @@ mxCodecRegistry.register(function()
 	 * starting at the model's root. This returns the
 	 * top-level graph node of the recursive encoding.
 	 */
-	codec.encode = function(enc, view)
+	codec.encode = (enc, view)=>
 	{
 		return this.encodeCell(enc, view,
 			view.graph.getModel().getRoot());
@@ -49,7 +49,7 @@ mxCodecRegistry.register(function()
 	 * values from the cell style are added as attribute
 	 * values to the node. 
 	 */
-	codec.encodeCell = function(enc, view, cell)
+	codec.encodeCell = (enc, view, cell)=>
 	{
 		var model = view.graph.getModel();
 		var state = view.getState(cell);

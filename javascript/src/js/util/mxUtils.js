@@ -54,7 +54,7 @@ var mxUtils =
 	 * 
 	 * element - DOM node to remove the cursor style from.
 	 */
-	removeCursors: function(element)
+	removeCursors: (element)=>
 	{
 		if (element.style != null)
 		{
@@ -83,18 +83,18 @@ var mxUtils =
 	 * 
 	 * element - DOM node whose current style should be returned.
 	 */
-	getCurrentStyle: function()
+	getCurrentStyle: ()=>
 	{
 		if (mxClient.IS_IE && (document.documentMode == null || document.documentMode < 9))
 		{
-			return function(element)
+			return (element)=>
 			{
 				return (element != null) ? element.currentStyle : null;
 			};
 		}
 		else
 		{
-			return function(element)
+			return (element)=>
 			{
 				return (element != null) ?
 					window.getComputedStyle(element, '') :
@@ -109,7 +109,7 @@ var mxUtils =
 	 * Parses the given CSS numeric value adding handling for the values thin,
 	 * medium and thick (2, 4 and 6).
 	 */
-	parseCssNumber: function(value)
+	parseCssNumber: (value)=>
 	{
 		if (value == 'thin')
 		{
@@ -144,7 +144,7 @@ var mxUtils =
 	 * mxUtils.setPrefixedStyle(node.style, 'transformOrigin', '0% 0%');
 	 * (end)
 	 */
-	setPrefixedStyle: function()
+	setPrefixedStyle: ()=>
 	{
 		var prefix = null;
 		
@@ -165,7 +165,7 @@ var mxUtils =
 			prefix = 'ms';
 		}
 
-		return function(style, name, value)
+		return (style, name, value)=>
 		{
 			style[name] = value;
 			
@@ -187,7 +187,7 @@ var mxUtils =
 	 * 
 	 * node - DOM node whose style should be checked for scrollbars.
 	 */
-	hasScrollbars: function(node)
+	hasScrollbars: (node)=>
 	{
 		var style = mxUtils.getCurrentStyle(node);
 
@@ -201,9 +201,9 @@ var mxUtils =
 	 * function to the specified scope. Inside funct, the "this" keyword
 	 * becomes a reference to that scope.
 	 */
-	bind: function(scope, funct)
+	bind: (scope, funct)=>
 	{
-		return function()
+		return ()=>
 		{
 			return funct.apply(scope, arguments);
 		};
@@ -221,7 +221,7 @@ var mxUtils =
 	 * 
 	 * expr - A string that represents a JavaScript expression.
 	 */
-	eval: function(expr)
+	eval: (expr)=>
 	{
 		var result = null;
 
@@ -260,7 +260,7 @@ var mxUtils =
 	 * Returns the first node where attr equals value.
 	 * This implementation does not use XPath.
 	 */
-	findNode: function(node, attr, value)
+	findNode: (node, attr, value)=>
 	{
 		if (node.nodeType == mxConstants.NODETYPE_ELEMENT)
 		{
@@ -298,7 +298,7 @@ var mxUtils =
 	 * 
 	 * f - JavaScript object that represents a function.
 	 */
-	getFunctionName: function(f)
+	getFunctionName: (f)=>
 	{
 		var str = null;
 
@@ -339,7 +339,7 @@ var mxUtils =
 	 * array - Array to check for the given obj.
 	 * obj - Object to find in the given array.
 	 */
-	indexOf: function(array, obj)
+	indexOf: (array, obj)=>
 	{
 		if (array != null && obj != null)
 		{
@@ -366,7 +366,7 @@ var mxUtils =
 	 * array - Array that contains the elements.
 	 * fn - Function to be called for each object.
 	 */
-	forEach: function(array, fn)
+	forEach: (array, fn)=>
 	{
 		if (array != null && fn != null)
 		{
@@ -396,7 +396,7 @@ var mxUtils =
 	 * obj - Object to find in the given array.
 	 * array - Array to check for the given obj.
 	 */
-	remove: function(obj, array)
+	remove: (obj, array)=>
 	{
 		var result = null;
 		
@@ -441,7 +441,7 @@ var mxUtils =
 	 * attributeName - Optional attribute name to check.
 	 * attributeValue - Optional attribute value to check.
 	 */
-	 isNode: function(value, nodeName, attributeName, attributeValue)
+	 isNode: (value, nodeName, attributeName, attributeValue)=>
 	 {
 	 	if (value != null && !isNaN(value.nodeType) && (nodeName == null ||
 	 		value.nodeName.toLowerCase() == nodeName.toLowerCase()))
@@ -465,7 +465,7 @@ var mxUtils =
 	 * ancestor - DOM node that represents the ancestor.
 	 * child - DOM node that represents the child.
 	 */
-	 isAncestorNode: function(ancestor, child)
+	 isAncestorNode: (ancestor, child)=>
 	 {
 	 	var parent = child;
 	 	
@@ -493,7 +493,7 @@ var mxUtils =
 	 * nodeType - Optional node type to return. Default is
 	 * <mxConstants.NODETYPE_ELEMENT>.
 	 */
-	getChildNodes: function(node, nodeType)
+	getChildNodes: (node, nodeType)=>
 	{
 		nodeType = nodeType || mxConstants.NODETYPE_ELEMENT;
 		
@@ -526,7 +526,7 @@ var mxUtils =
 	 * node - Node to be imported.
 	 * allChildren - If all children should be imported.
 	 */
-	importNode: function(doc, node, allChildren)
+	importNode: (doc, node, allChildren)=>
 	{
 		if (mxClient.IS_IE && (document.documentMode == null || document.documentMode < 10))
 		{
@@ -549,7 +549,7 @@ var mxUtils =
 	 * node - Node to be imported.
 	 * allChildren - If all children should be imported.
 	 */
-	importNodeImplementation: function(doc, node, allChildren)
+	importNodeImplementation: (doc, node, allChildren)=>
 	{
 		switch (node.nodeType)
 		{
@@ -592,7 +592,7 @@ var mxUtils =
 	 * 
 	 * Returns a new, empty XML document.
 	 */
-	createXmlDocument: function()
+	createXmlDocument: ()=>
 	{
 		var doc = null;
 		
@@ -613,7 +613,7 @@ var mxUtils =
 	 * 
 	 * Returns a new, empty Microsoft.XMLDOM document using ActiveXObject.
 	 */
-	createMsXmlDocument: function()
+	createMsXmlDocument: ()=>
 	{
 		var doc = new ActiveXObject('Microsoft.XMLDOM');
 		doc.async = false;
@@ -646,11 +646,11 @@ var mxUtils =
 	 * 
 	 * xml - String that contains the XML data.
 	 */
-	parseXml: function()
+	parseXml: ()=>
 	{
 		if (window.DOMParser)
 		{
-			return function(xml)
+			return (xml)=>
 			{
 				var parser = new DOMParser();
 				
@@ -659,7 +659,7 @@ var mxUtils =
 		}
 		else // IE<=9
 		{
-			return function(xml)
+			return (xml)=>
 			{
 				var doc = mxUtils.createMsXmlDocument();
 				doc.loadXML(xml);
@@ -674,18 +674,18 @@ var mxUtils =
 	 * 
 	 * Clears the current selection in the page.
 	 */
-	clearSelection: function()
+	clearSelection: ()=>
 	{
 		if (document.selection)
 		{
-			return function()
+			return ()=>
 			{
 				document.selection.empty();
 			};
 		}
 		else if (window.getSelection)
 		{
-			return function()
+			return ()=>
 			{
 				if (window.getSelection().empty)
 				{
@@ -699,7 +699,7 @@ var mxUtils =
 		}
 		else
 		{
-			return function() { };
+			return ()=> { };
 		}
 	}(),
 
@@ -714,7 +714,7 @@ var mxUtils =
 	 * node - DOM node whose siblings should be removed.
 	 * before - Optional boolean that specifies the direction of the traversal.
 	 */
-	removeWhitespace: function(node, before)
+	removeWhitespace: (node, before)=>
 	{
 		var tmp = (before) ? node.previousSibling : node.nextSibling;
 		
@@ -743,7 +743,7 @@ var mxUtils =
 	 * s - String that contains the characters to be converted.
 	 * newline - If newlines should be replaced. Default is true.
 	 */
-	htmlEntities: function(s, newline)
+	htmlEntities: (s, newline)=>
 	{
 		s = String(s || '');
 		
@@ -770,7 +770,7 @@ var mxUtils =
 	 * 
 	 * node - DOM node whose tag urn should be checked.
 	 */
-	isVml: function(node)
+	isVml: (node)=>
 	{
 		return node != null && node.tagUrn == 'urn:schemas-microsoft-com:vml';
 	},
@@ -789,7 +789,7 @@ var mxUtils =
 	 * linefeed - Optional string that linefeeds are converted into. Default is
 	 * &#xa;
 	 */
-	getXml: function(node, linefeed)
+	getXml: (node, linefeed)=>
 	{
 		var xml = '';
 		
@@ -832,7 +832,7 @@ var mxUtils =
 	 * Default is an empty string.
 	 * newline - Option string that represents a linefeed. Default is '\n'.
 	 */
-	getPrettyXml: function(node, tab, indent, newline, ns)
+	getPrettyXml: (node, tab, indent, newline, ns)=>
 	{
 		var result = [];
 		
@@ -948,7 +948,7 @@ var mxUtils =
 	 * 
 	 * elems - DOM nodes to return the text for.
 	 */
-	extractTextWithWhitespace: function(elems)
+	extractTextWithWhitespace: (elems)=>
 	{
 	    // Known block elements for handling linefeeds (list is not complete)
 		var blocks = ['BLOCKQUOTE', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'OL', 'P', 'PRE', 'TABLE', 'UL'];
@@ -1006,7 +1006,7 @@ var mxUtils =
 	 * 
 	 * Replaces each trailing newline with the given pattern.
 	 */
-	replaceTrailingNewlines: function(str, pattern)
+	replaceTrailingNewlines: (str, pattern)=>
 	{
 		// LATER: Check is this can be done with a regular expression
 		var postfix = '';
@@ -1029,7 +1029,7 @@ var mxUtils =
 	 * 
 	 * node - DOM node to return the text content for.
 	 */
-	getTextContent: function(node)
+	getTextContent: (node)=>
 	{
 		// Only IE10-
 		if (mxClient.IS_IE && node.innerText !== undefined)
@@ -1052,7 +1052,7 @@ var mxUtils =
 	 * node - DOM node to set the text content for.
 	 * text - String that represents the text content.
 	 */
-	setTextContent: function(node, text)
+	setTextContent: (node, text)=>
 	{
 		if (node.innerText !== undefined)
 		{
@@ -1075,11 +1075,11 @@ var mxUtils =
 	 * 
 	 * node - DOM node to return the inner HTML for.
 	 */
-	getInnerHtml: function()
+	getInnerHtml: ()=>
 	{
 		if (mxClient.IS_IE)
 		{
-			return function(node)
+			return (node)=>
 			{
 				if (node != null)
 				{
@@ -1091,7 +1091,7 @@ var mxUtils =
 		}
 		else
 		{
-			return function(node)
+			return (node)=>
 			{
 				if (node != null)
 				{
@@ -1115,11 +1115,11 @@ var mxUtils =
 	 * 
 	 * node - DOM node to return the outer HTML for.
 	 */
-	getOuterHtml: function()
+	getOuterHtml: ()=>
 	{
 		if (mxClient.IS_IE)
 		{
-			return function(node)
+			return (node)=>
 			{
 				if (node != null)
 				{
@@ -1171,7 +1171,7 @@ var mxUtils =
 		}
 		else
 		{
-			return function(node)
+			return (node)=>
 			{
 				if (node != null)
 				{
@@ -1195,7 +1195,7 @@ var mxUtils =
 	 * parent - DOM node to append the text node to.
 	 * text - String representing the text to be added.
 	 */
-	write: function(parent, text)
+	write: (parent, text)=>
 	{
 		var doc = parent.ownerDocument;
 		var node = doc.createTextNode(text);
@@ -1219,7 +1219,7 @@ var mxUtils =
 	 * parent - DOM node to append the text node to.
 	 * text - String representing the text to be added.
 	 */
-	writeln: function(parent, text)
+	writeln: (parent, text)=>
 	{
 		var doc = parent.ownerDocument;
 		var node = doc.createTextNode(text);
@@ -1242,7 +1242,7 @@ var mxUtils =
 	 * 
 	 * parent - DOM node to append the linebreak to.
 	 */
-	br: function(parent, count)
+	br: (parent, count)=>
 	{
 		count = count || 1;
 		var br = null;
@@ -1266,7 +1266,7 @@ var mxUtils =
 	 * event handler.
 	 * 
 	 * (code)
-	 * document.body.appendChild(mxUtils.button('Test', function(evt)
+	 * document.body.appendChild(mxUtils.button('Test', (evt)=>
 	 * {
 	 *   alert('Hello, World!');
 	 * }));
@@ -1279,14 +1279,14 @@ var mxUtils =
 	 * doc - Optional document to be used for creating the button. Default is the
 	 * current document.
 	 */
-	button: function(label, funct, doc)
+	button: (label, funct, doc)=>
 	{
 		doc = (doc != null) ? doc : document;
 		
 		var button = doc.createElement('button');
 		mxUtils.write(button, label);
 
-		mxEvent.addListener(button, 'click', function(evt)
+		mxEvent.addListener(button, 'click', (evt)=>
 		{
 			funct(evt);
 		});
@@ -1305,7 +1305,7 @@ var mxUtils =
 	 * parent - DOM node to append the text node to.
 	 * text - String representing the text for the new paragraph.
 	 */
-	para: function(parent, text)
+	para: (parent, text)=>
 	{
 		var p = document.createElement('p');
 		mxUtils.write(p, text);
@@ -1325,7 +1325,7 @@ var mxUtils =
 	 * background can be used in IE8 standards mode (native IE8 only) to pass
 	 * events through the node.
 	 */
-	addTransparentBackgroundFilter: function(node)
+	addTransparentBackgroundFilter: (node)=>
 	{
 		node.style.filter += 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'' +
 			mxClient.imageBasePath + '/transparent.gif\', sizingMethod=\'scale\')';
@@ -1345,9 +1345,9 @@ var mxUtils =
 	 * action - String that defines the name of the action to be executed.
 	 * pad - Optional left-padding for the link. Default is 0.
 	 */
-	linkAction: function(parent, text, editor, action, pad)
+	linkAction: (parent, text, editor, action, pad)=>
 	{
-		return mxUtils.link(parent, text, function()
+		return mxUtils.link(parent, text, ()=>
 		{
 			editor.execute(action);
 		}, pad);
@@ -1370,9 +1370,9 @@ var mxUtils =
 	 * arg - Object that represents the argument to the function.
 	 * pad - Optional left-padding for the link. Default is 0.
 	 */
-	linkInvoke: function(parent, text, editor, functName, arg, pad)
+	linkInvoke: (parent, text, editor, functName, arg, pad)=>
 	{
-		return mxUtils.link(parent, text, function()
+		return mxUtils.link(parent, text, ()=>
 		{
 			editor[functName](arg);
 		}, pad);
@@ -1391,7 +1391,7 @@ var mxUtils =
 	 * funct - Function to execute when the link is clicked.
 	 * pad - Optional left-padding for the link. Default is 0.
 	 */
-	link: function(parent, text, funct, pad)
+	link: (parent, text, funct, pad)=>
 	{
 		var a = document.createElement('span');
 		
@@ -1420,7 +1420,7 @@ var mxUtils =
 	 * 
 	 * Returns the client size for the current document as an <mxRectangle>.
 	 */
-	getDocumentSize: function()
+	getDocumentSize: ()=>
 	{
 		var b = document.body;
 		var d = document.documentElement;
@@ -1441,7 +1441,7 @@ var mxUtils =
 	 * Makes sure the given node is inside the visible area of the window. This
 	 * is done by setting the left and top in the style. 
 	 */
-	fit: function(node)
+	fit: (node)=>
 	{
 		var ds = mxUtils.getDocumentSize();
 		var left = parseInt(node.offsetLeft);
@@ -1497,7 +1497,7 @@ var mxUtils =
 	 * 
 	 * url - URL to get the data from.
 	 */
-	load: function(url)
+	load: (url)=>
 	{
 		var req = new mxXmlRequest(url, null, 'GET', false);
 		req.send();
@@ -1516,7 +1516,7 @@ var mxUtils =
 	 * Example:
 	 * 
 	 * (code)
-	 * mxUtils.get(url, function(req)
+	 * mxUtils.get(url, (req)=>
 	 * {
 	 *    var node = req.getDocumentElement();
 	 *    // Process XML DOM...
@@ -1527,7 +1527,7 @@ var mxUtils =
 	 * following code is used.
 	 * 
 	 * (code)
-	 * mxUtils.get(url, function(req)
+	 * mxUtils.get(url, (req)=>
 	 * {
 	 *   var node = req.getDocumentElement();
 	 *   var dec = new mxCodec(node.ownerDocument);
@@ -1546,14 +1546,14 @@ var mxUtils =
 	 * ontimeout - Optional function to execute on timeout.
 	 * headers - Optional with headers, eg. {'Authorization': 'token xyz'}
 	 */
-	get: function(url, onload, onerror, binary, timeout, ontimeout, headers)
+	get: (url, onload, onerror, binary, timeout, ontimeout, headers)=>
 	{
 		var req = new mxXmlRequest(url, null, 'GET');
 		var setRequestHeaders = req.setRequestHeaders;
 		
 		if (headers)
 		{
-			req.setRequestHeaders = function(request, params)
+			req.setRequestHeaders = (request, params)=>
 			{
 				setRequestHeaders.apply(this, arguments);
 				
@@ -1587,12 +1587,12 @@ var mxUtils =
 	 * onload - Callback with array of <mxXmlRequests>.
 	 * onerror - Optional function to execute on error.
 	 */
-	getAll: function(urls, onload, onerror)
+	getAll: (urls, onload, onerror)=>
 	{
 		var remain = urls.length;
 		var result = [];
 		var errors = 0;
-		var err = function()
+		var err = ()=>
 		{
 			if (errors == 0 && onerror != null)
 			{
@@ -1604,9 +1604,9 @@ var mxUtils =
 		
 		for (var i = 0; i < urls.length; i++)
 		{
-			(function(url, index)
+			((url, index)=>
 			{
-				mxUtils.get(url, function(req)
+				mxUtils.get(url, (req)=>
 				{
 					var status = req.getStatus();
 					
@@ -1646,7 +1646,7 @@ var mxUtils =
 	 * Example:
 	 * 
 	 * (code)
-	 * mxUtils.post(url, 'key=value', function(req)
+	 * mxUtils.post(url, 'key=value', (req)=>
 	 * {
 	 * 	mxUtils.alert('Ready: '+req.isReady()+' Status: '+req.getStatus());
 	 *  // Process req.getDocumentElement() using DOM API if OK...
@@ -1660,7 +1660,7 @@ var mxUtils =
 	 * onload - Optional function to execute for a successful response.
 	 * onerror - Optional function to execute on error.
 	 */
-	post: function(url, params, onload, onerror)
+	post: (url, params, onload, onerror)=>
 	{
 		return new mxXmlRequest(url, params).send(onload, onerror);
 	},
@@ -1680,7 +1680,7 @@ var mxUtils =
 	 * doc - Document to create the form in.
 	 * target - Target to send the form result to.
 	 */
-	submit: function(url, params, doc, target)
+	submit: (url, params, doc, target)=>
 	{
 		return new mxXmlRequest(url, params).simulate(doc, target);
 	},
@@ -1698,7 +1698,7 @@ var mxUtils =
 	 * doc - The document to load the URL into.
 	 * onload - Function to execute when the URL has been loaded.
 	 */
-	loadInto: function(url, doc, onload)
+	loadInto: (url, doc, onload)=>
 	{
 		if (mxClient.IS_IE)
 		{
@@ -1731,7 +1731,7 @@ var mxUtils =
 	 * defaultValue - Value to be returned if the value for the given
 	 * key is null.
 	 */
-	getValue: function(array, key, defaultValue)
+	getValue: (array, key, defaultValue)=>
 	{
 		var value = (array != null) ? array[key] : null;
 
@@ -1757,7 +1757,7 @@ var mxUtils =
 	 * defaultValue - Value to be returned if the value for the given
 	 * key is null. Default is 0.
 	 */
-	getNumber: function(array, key, defaultValue)
+	getNumber: (array, key, defaultValue)=>
 	{
 		var value = (array != null) ? array[key] : null;
 
@@ -1783,7 +1783,7 @@ var mxUtils =
 	 * defaultValue - Value to be returned if the value for the given
 	 * key is null. Default is null.
 	 */
-	getColor: function(array, key, defaultValue)
+	getColor: (array, key, defaultValue)=>
 	{
 		var value = (array != null) ? array[key] : null;
 
@@ -1816,7 +1816,7 @@ var mxUtils =
 	 * in other words, one where only atomic (strings, numbers) values are
 	 * cloned. Default is false.
 	 */
-	clone: function(obj, transients, shallow)
+	clone: (obj, transients, shallow)=>
 	{
 		shallow = (shallow != null) ? shallow : false;
 		var clone = null;
@@ -1855,7 +1855,7 @@ var mxUtils =
 	 * a - Array of <mxPoints> to be compared.
 	 * b - Array of <mxPoints> to be compared.
 	 */
-	equalPoints: function(a, b)
+	equalPoints: (a, b)=>
 	{
 		if ((a == null && b != null) || (a != null && b == null) ||
 			(a != null && b != null && a.length != b.length))
@@ -1890,7 +1890,7 @@ var mxUtils =
 	 * a - First object to be compared.
 	 * b - Second object to be compared.
 	 */
-	equalEntries: function(a, b)
+	equalEntries: (a, b)=>
 	{
 		// Counts keys in b to check if all values have been compared
 		var count = 0;
@@ -1926,7 +1926,7 @@ var mxUtils =
 	 * 
 	 * Removes all duplicates from the given array.
 	 */
-	removeDuplicates: function(arr)
+	removeDuplicates: (arr)=>
 	{
 		var dict = new mxDictionary();
 		var result = [];
@@ -1948,7 +1948,7 @@ var mxUtils =
 	 *
 	 * Returns true if the given value is of type number and isNaN returns true.
 	 */
-	isNaN: function(value)
+	isNaN: (value)=>
 	{
 		return typeof(value) == 'number' && isNaN(value);
 	},
@@ -1962,7 +1962,7 @@ var mxUtils =
 	 * subclass constructor. Below is an example.
 	 * 
 	 * (code)
-	 * MyGraph = function(container, model, renderHint, stylesheet)
+	 * MyGraph = (container, model, renderHint, stylesheet)=>
 	 * {
 	 *   mxGraph.call(this, container, model, renderHint, stylesheet);
 	 * }
@@ -1975,13 +1975,13 @@ var mxUtils =
 	 * ctor - Constructor of the subclass.
 	 * superCtor - Constructor of the superclass.
 	 */
-	extend: function(ctor, superCtor)
+	extend: (ctor, superCtor)=>
 	{
-		var f = function() {};
+		var f = ()=> {};
 		f.prototype = superCtor.prototype;
 		
 		ctor.prototype = new f();
-		ctor.prototype.constructor = ctor;
+		constructor = ctor;
 	},
 
 	/**
@@ -1993,7 +1993,7 @@ var mxUtils =
 	 * 
 	 * obj - Object to return the string representation for.
 	 */
-	toString: function(obj)
+	toString: (obj)=>
 	{
 	    var output = '';
 	    
@@ -2033,7 +2033,7 @@ var mxUtils =
 	 * 
 	 * Converts the given degree to radians.
 	 */
-	toRadians: function(deg)
+	toRadians: (deg)=>
 	{
 		return Math.PI * deg / 180;
 	},
@@ -2043,7 +2043,7 @@ var mxUtils =
 	 * 
 	 * Converts the given radians to degree.
 	 */
-	toDegree: function(rad)
+	toDegree: (rad)=>
 	{
 		return rad * 180 / Math.PI;
 	},
@@ -2053,7 +2053,7 @@ var mxUtils =
 	 * 
 	 * Converts the given arc to a series of curves.
 	 */
-	arcToCurves: function(x0, y0, r1, r2, angle, largeArcFlag, sweepFlag, x, y)
+	arcToCurves: (x0, y0, r1, r2, angle, largeArcFlag, sweepFlag, x, y)=>
 	{
 		x -= x0;
 		y -= y0;
@@ -2172,7 +2172,7 @@ var mxUtils =
 	 * cx - Optional <mxPoint> that represents the rotation center. If no
 	 * rotation center is given then the center of rect is used.
 	 */
-	getBoundingBox: function(rect, rotation, cx)
+	getBoundingBox: (rect, rotation, cx)=>
 	{
         var result = null;
 
@@ -2208,7 +2208,7 @@ var mxUtils =
 	 * 
 	 * Rotates the given point by the given cos and sin.
 	 */
-	getRotatedPoint: function(pt, cos, sin, c)
+	getRotatedPoint: (pt, cos, sin, c)=>
 	{
 		c = (c != null) ? c : new mxPoint();
 		var x = pt.x - c.x;
@@ -2233,7 +2233,7 @@ var mxUtils =
 	 * source - Boolean that specifies if the terminal is the source terminal.
 	 * defaultValue - Default value to be returned.
 	 */
-	getPortConstraints: function(terminal, edge, source, defaultValue)
+	getPortConstraints: (terminal, edge, source, defaultValue)=>
 	{
 		var value = mxUtils.getValue(terminal.style, mxConstants.STYLE_PORT_CONSTRAINT,
 			mxUtils.getValue(edge.style, (source) ? mxConstants.STYLE_SOURCE_PORT_CONSTRAINT :
@@ -2359,7 +2359,7 @@ var mxUtils =
 	 * Reverse the port constraint bitmask. For example, north | east
 	 * becomes south | west
 	 */
-	reversePortConstraints: function(constraint)
+	reversePortConstraints: (constraint)=>
 	{
 		var result = 0;
 		
@@ -2377,7 +2377,7 @@ var mxUtils =
 	 * Finds the index of the nearest segment on the given cell state for
 	 * the specified coordinate pair.
 	 */
-	findNearestSegment: function(state, x, y)
+	findNearestSegment: (state, x, y)=>
 	{
 		var index = -1;
 		
@@ -2507,7 +2507,7 @@ var mxUtils =
 	 * p1 - <mxPoint> that represents the first point of the segment.
 	 * p2 - <mxPoint> that represents the second point of the segment.
 	 */
-	rectangleIntersectsSegment: function(bounds, p1, p2)
+	rectangleIntersectsSegment: (bounds, p1, p2)=>
 	{
 		var top = bounds.y;
 		var left = bounds.x;
@@ -2590,7 +2590,7 @@ var mxUtils =
 	 * x - X-coordinate of the point.
 	 * y - Y-coordinate of the point.
 	 */
-	contains: function(bounds, x, y)
+	contains: (bounds, x, y)=>
 	{
 		return (bounds.x <= x && bounds.x + bounds.width >= x &&
 				bounds.y <= y && bounds.y + bounds.height >= y);
@@ -2606,7 +2606,7 @@ var mxUtils =
 	 * a - <mxRectangle> to be checked for intersection.
 	 * b - <mxRectangle> to be checked for intersection.
 	 */
-	intersects: function(a, b)
+	intersects: (a, b)=>
 	{
 		var tw = a.width;
 		var th = a.height;
@@ -2648,7 +2648,7 @@ var mxUtils =
 	 * min - Optional min size of the hostpot.
 	 * max - Optional max size of the hostpot.
 	 */
-	intersectsHotspot: function(state, x, y, hotspot, min, max)
+	intersectsHotspot: (state, x, y, hotspot, min, max)=>
 	{
 		hotspot = (hotspot != null) ? hotspot : 1;
 		min = (min != null) ? min : 0;
@@ -2718,7 +2718,7 @@ var mxUtils =
 	 * scollOffset - Optional boolean to add the scroll offset of the document.
 	 * Default is false.
 	 */
-	getOffset: function(container, scrollOffset)
+	getOffset: (container, scrollOffset)=>
 	{
 		var offsetLeft = 0;
 		var offsetTop = 0;
@@ -2765,7 +2765,7 @@ var mxUtils =
 	 * Returns the scroll origin of the given document or the current document
 	 * if no document is given.
 	 */
-	getDocumentScrollOrigin: function(doc)
+	getDocumentScrollOrigin: (doc)=>
 	{
 		if (mxClient.IS_QUIRKS)
 		{
@@ -2795,7 +2795,7 @@ var mxUtils =
 	 * includeDocument - Whether the scroll origin of the document should be
 	 * included. Default is true.
 	 */
-	getScrollOrigin: function(node, includeAncestors, includeDocument)
+	getScrollOrigin: (node, includeAncestors, includeDocument)=>
 	{
 		includeAncestors = (includeAncestors != null) ? includeAncestors : false;
 		includeDocument = (includeDocument != null) ? includeDocument : true;
@@ -2852,7 +2852,7 @@ var mxUtils =
 	 * x - X-coordinate of the point to be converted.
 	 * y - Y-coordinate of the point to be converted.
 	 */
-	convertPoint: function(container, x, y)
+	convertPoint: (container, x, y)=>
 	{
 		var origin = mxUtils.getScrollOrigin(container, false);
 		var offset = mxUtils.getOffset(container);
@@ -2876,7 +2876,7 @@ var mxUtils =
 	 * - "\0" (ASCII 0 (0x00)), the NUL-byte
 	 * - "\x0B" (ASCII 11 (0x0B)), a vertical tab
 	 */
-	ltrim: function(str, chars)
+	ltrim: (str, chars)=>
 	{
 		chars = chars || "\\s";
 		
@@ -2896,7 +2896,7 @@ var mxUtils =
 	 * - "\0" (ASCII 0 (0x00)), the NUL-byte
 	 * - "\x0B" (ASCII 11 (0x0B)), a vertical tab
 	 */
-	rtrim: function(str, chars)
+	rtrim: (str, chars)=>
 	{
 		chars = chars || "\\s";
 		
@@ -2917,7 +2917,7 @@ var mxUtils =
 	 * - "\0" (ASCII 0 (0x00)), the NUL-byte
 	 * - "\x0B" (ASCII 11 (0x0B)), a vertical tab
 	 */
-	trim: function(str, chars)
+	trim: (str, chars)=>
 	{
 		return mxUtils.ltrim(mxUtils.rtrim(str, chars), chars);
 	},
@@ -2932,7 +2932,7 @@ var mxUtils =
 	 * 
 	 * n - String representing the possibly numeric value.
 	 */
-	isNumeric: function(n)
+	isNumeric: (n)=>
 	{
 		return !isNaN(parseFloat(n)) && isFinite(n) && (typeof(n) != 'string' || n.toLowerCase().indexOf('0x') < 0);
 	},
@@ -2946,7 +2946,7 @@ var mxUtils =
 	 * 
 	 * n - String representing the possibly numeric value.
 	 */
-	isInteger: function(n)
+	isInteger: (n)=>
 	{
 		return String(parseInt(n)) === String(n);
 	},
@@ -2958,7 +2958,7 @@ var mxUtils =
 	 * of the built-in operation as the built-in operation does not properly
 	 * handle negative numbers.
 	 */
-	mod: function(n, m)
+	mod: (n, m)=>
 	{
 		return ((n % m) + m) % m;
 	},
@@ -3017,7 +3017,7 @@ var mxUtils =
 	 * px - X-coordinate of the point.
 	 * py - Y-coordinate of the point.
 	 */
-	ptSegDistSq: function(x1, y1, x2, y2, px, py)
+	ptSegDistSq: (x1, y1, x2, y2, px, py)=>
     {
 		x2 -= x1;
 		y2 -= y1;
@@ -3074,7 +3074,7 @@ var mxUtils =
 	 * px - X-coordinate of the point.
 	 * py - Y-coordinate of the point.
 	 */
-    ptLineDist: function(x1, y1, x2, y2, px, py)
+    ptLineDist: (x1, y1, x2, y2, px, py)=>
     {
 		return Math.abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1) /
 			Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
@@ -3095,7 +3095,7 @@ var mxUtils =
 	 * px - X-coordinate of the point.
 	 * py - Y-coordinate of the point.
 	 */
-	relativeCcw: function(x1, y1, x2, y2, px, py)
+	relativeCcw: (x1, y1, x2, y2, px, py)=>
     {
 		x2 -= x1;
 		y2 -= y1;
@@ -3129,7 +3129,7 @@ var mxUtils =
 	 * See <mxEffects.animateChanges>. This is for backwards compatibility and
 	 * will be removed later.
 	 */
-	animateChanges: function(graph, changes)
+	animateChanges: (graph, changes)=>
 	{
 		// LATER: Deprecated, remove this function
     	mxEffects.animateChanges.apply(this, arguments);
@@ -3141,7 +3141,7 @@ var mxUtils =
 	 * See <mxEffects.cascadeOpacity>. This is for backwards compatibility and
 	 * will be removed later.
 	 */
-    cascadeOpacity: function(graph, cell, opacity)
+    cascadeOpacity: (graph, cell, opacity)=>
 	{
 		mxEffects.cascadeOpacity.apply(this, arguments);
 	},
@@ -3152,7 +3152,7 @@ var mxUtils =
 	 * See <mxEffects.fadeOut>. This is for backwards compatibility and
 	 * will be removed later.
 	 */
-	fadeOut: function(node, from, remove, step, delay, isEnabled)
+	fadeOut: (node, from, remove, step, delay, isEnabled)=>
 	{
 		mxEffects.fadeOut.apply(this, arguments);
 	},
@@ -3167,7 +3167,7 @@ var mxUtils =
 	 * node - DOM node to set the opacity for.
 	 * value - Opacity in %. Possible values are between 0 and 100.
 	 */
-	setOpacity: function(node, value)
+	setOpacity: (node, value)=>
 	{
 		if (mxUtils.isVml(node))
 		{
@@ -3208,7 +3208,7 @@ var mxUtils =
 	 * 
 	 * src - URL that points to the image to be displayed.
 	 */
-	createImage: function(src)
+	createImage: (src)=>
 	{
         var imageNode = null;
         
@@ -3234,11 +3234,11 @@ var mxUtils =
 	 * Sorts the given cells according to the order in the cell hierarchy.
 	 * Ascending is optional and defaults to true.
 	 */
-	sortCells: function(cells, ascending)
+	sortCells: (cells, ascending)=>
 	{
 		ascending = (ascending != null) ? ascending : true;
 		var lookup = new mxDictionary();
-		cells.sort(function(o1, o2)
+		cells.sort((o1, o2)=>
 		{
 			var p1 = lookup.get(o1);
 			
@@ -3274,7 +3274,7 @@ var mxUtils =
 	 * 
 	 * style - String of the form [(stylename|key=value);].
 	 */
-	getStylename: function(style)
+	getStylename: (style)=>
 	{
 		if (style != null)
 		{
@@ -3300,7 +3300,7 @@ var mxUtils =
 	 * 
 	 * style - String of the form [(stylename|key=value);].
 	 */
-	getStylenames: function(style)
+	getStylenames: (style)=>
 	{
 		var result = [];
 		
@@ -3327,7 +3327,7 @@ var mxUtils =
 	 * returns -1 if the given stylename does not occur (as a stylename) in the
 	 * given style, otherwise it returns the index of the first character.
 	 */
-	indexOfStylename: function(style, stylename)
+	indexOfStylename: (style, stylename)=>
 	{
 		if (style != null && stylename != null)
 		{
@@ -3354,7 +3354,7 @@ var mxUtils =
 	 * Adds the specified stylename to the given style if it does not already
 	 * contain the stylename.
 	 */
-	addStylename: function(style, stylename)
+	addStylename: (style, stylename)=>
 	{
 		if (mxUtils.indexOfStylename(style, stylename) < 0)
 		{
@@ -3379,7 +3379,7 @@ var mxUtils =
 	 * Removes all occurrences of the specified stylename in the given style
 	 * and returns the updated style. Trailing semicolons are not preserved.
 	 */
-	removeStylename: function(style, stylename)
+	removeStylename: (style, stylename)=>
 	{
 		var result = [];
 		
@@ -3405,7 +3405,7 @@ var mxUtils =
 	 * Removes all stylenames from the given style and returns the updated
 	 * style.
 	 */
-	removeAllStylenames: function(style)
+	removeAllStylenames: (style)=>
 	{
 		var result = [];
 		
@@ -3439,7 +3439,7 @@ var mxUtils =
 	 * key - Key of the style to be changed.
 	 * value - New value for the given key.
 	 */
-	setCellStyles: function(model, cells, key, value)
+	setCellStyles: (model, cells, key, value)=>
 	{
 		if (cells != null && cells.length > 0)
 		{
@@ -3475,7 +3475,7 @@ var mxUtils =
 	 * key - Key of the style to be changed.
 	 * value - New value for the given key.
 	 */
-	setStyle: function(style, key, value)
+	setStyle: (style, key, value)=>
 	{
 		var isValue = value != null && (typeof(value.length) == 'undefined' || value.length > 0);
 		
@@ -3558,7 +3558,7 @@ var mxUtils =
 	 * flag - Integer for the bit to be changed.
 	 * value - Optional boolean value for the flag.
 	 */
-	setCellStyleFlags: function(model, cells, key, flag, value)
+	setCellStyleFlags: (model, cells, key, flag, value)=>
 	{
 		if (cells != null && cells.length > 0)
 		{
@@ -3596,7 +3596,7 @@ var mxUtils =
 	 * flag - Integer for the bit to be changed.
 	 * value - Optional boolean value for the given flag.
 	 */
-	setStyleFlag: function(style, key, flag, value)
+	setStyleFlag: (style, key, flag, value)=>
 	{
 		if (style == null || style.length == 0)
 		{
@@ -3669,7 +3669,7 @@ var mxUtils =
 	 * left alignment. Y is -0.5 for middle, -1 for bottom and 0 for top
 	 * alignment. Default values for missing arguments is top, left.
 	 */
-	getAlignmentAsPoint: function(align, valign)
+	getAlignmentAsPoint: (align, valign)=>
 	{
 		var dx = -0.5;
 		var dy = -0.5;
@@ -3722,7 +3722,7 @@ var mxUtils =
 	 * textWidth - Optional width for text wrapping.
 	 * fontStyle - Optional font style.
 	 */
-	getSizeForString: function(text, fontSize, fontFamily, textWidth, fontStyle)
+	getSizeForString: (text, fontSize, fontFamily, textWidth, fontStyle)=>
 	{
 		fontSize = (fontSize != null) ? fontSize : mxConstants.DEFAULT_FONTSIZE;
 		fontFamily = (fontFamily != null) ? fontFamily : mxConstants.DEFAULT_FONTFAMILY;
@@ -3794,7 +3794,7 @@ var mxUtils =
 	/**
 	 * Function: getViewXml
 	 */
-	getViewXml: function(graph, scale, cells, x0, y0)
+	getViewXml: (graph, scale, cells, x0, y0)=>
 	{
 		x0 = (x0 != null) ? x0 : 0;
 		y0 = (y0 != null) ? y0 : 0;
@@ -3880,7 +3880,7 @@ var mxUtils =
 	 * Default is <mxConstants.PAGE_FORMAT_A4_PORTRAIT>.
 	 * border - The border along each side of every page.
 	 */
-	getScaleForPageCount: function(pageCount, graph, pageFormat, border)
+	getScaleForPageCount: (pageCount, graph, pageFormat, border)=>
 	{
 		if (pageCount < 1)
 		{
@@ -4024,7 +4024,7 @@ var mxUtils =
 	 * w - Optional width of the graph view.
 	 * h - Optional height of the graph view.
 	 */
-	show: function(graph, doc, x0, y0, w, h)
+	show: (graph, doc, x0, y0, w, h)=>
 	{
 		x0 = (x0 != null) ? x0 : 0;
 		y0 = (y0 != null) ? y0 : 0;
@@ -4191,13 +4191,13 @@ var mxUtils =
 	 * 
 	 * graph - <mxGraph> to be printed.
 	 */
-	printScreen: function(graph)
+	printScreen: (graph)=>
 	{
 		var wnd = window.open();
 		var bounds = graph.getGraphBounds();
 		mxUtils.show(graph, wnd.document);
 		
-		var print = function()
+		var print = ()=>
 		{
 			wnd.focus();
 			wnd.print();
@@ -4228,7 +4228,7 @@ var mxUtils =
 	 * isInternalWindow - Optional boolean indicating if an mxWindow should be
 	 * used instead of a new browser window. Default is false.
 	 */
-	popup: function(content, isInternalWindow)
+	popup: (content, isInternalWindow)=>
 	{
 	   	if (isInternalWindow)
 	   	{
@@ -4283,7 +4283,7 @@ var mxUtils =
 	 * 
 	 * message - String specifying the message to be displayed.
 	 */
-	alert: function(message)
+	alert: (message)=>
 	{
 		alert(message);
 	},
@@ -4299,7 +4299,7 @@ var mxUtils =
 	 * message - String specifying the message to be displayed.
 	 * defaultValue - Optional string specifying the default value.
 	 */
-	prompt: function(message, defaultValue)
+	prompt: (message, defaultValue)=>
 	{
 		return prompt(message, (defaultValue != null) ? defaultValue : '');
 	},
@@ -4314,7 +4314,7 @@ var mxUtils =
 	 * 
 	 * message - String specifying the message to be displayed.
 	 */
-	confirm: function(message)
+	confirm: (message)=>
 	{
 		return confirm(message);
 	},
@@ -4334,7 +4334,7 @@ var mxUtils =
 	 * close - Optional boolean indicating whether to add a close button.
 	 * icon - Optional icon for the window decoration.
 	 */
-	error: function(message, width, close, icon)
+	error: (message, width, close, icon)=>
 	{
 		var div = document.createElement('div');
 		div.style.padding = '20px';
@@ -4372,7 +4372,7 @@ var mxUtils =
 				button.setAttribute('style', 'float:right');
 			}
 
-			mxEvent.addListener(button, 'click', function(evt)
+			mxEvent.addListener(button, 'click', (evt)=>
 			{
 				warn.destroy();
 			});
@@ -4404,7 +4404,7 @@ var mxUtils =
 	 * Example:
 	 * 
 	 * (code)
-	 * var funct = function(graph, evt, cell, x, y)
+	 * var funct = (graph, evt, cell, x, y)=>
 	 * {
 	 *   if (graph.canImportCell(cell))
 	 *   {
@@ -4485,7 +4485,7 @@ var mxUtils =
 		}
 		
 		// Overrides function to get current graph
-		dragSource.getGraphForEvent = function(evt)
+		dragSource.getGraphForEvent = (evt)=>
 		{
 			return (typeof(graphF) == 'function') ? graphF(evt) : graphF;
 		};
@@ -4493,14 +4493,14 @@ var mxUtils =
 		// Translates switches into dragSource customizations
 		if (dragElement != null)
 		{
-			dragSource.createDragElement = function()
+			dragSource.createDragElement = ()=>
 			{
 				return dragElement.cloneNode(true);
 			};
 			
 			if (scalePreview)
 			{
-				dragSource.createPreviewElement = function(graph)
+				dragSource.createPreviewElement = (graph)=>
 				{
 					var elt = dragElement.cloneNode(true);
 

@@ -30,49 +30,49 @@ function mxHandle(state, cursor, image, shape)
  * 
  * Specifies the cursor to be used for this handle. Default is 'default'.
  */
-mxHandle.prototype.cursor = 'default';
+cursor = 'default';
 
 /**
  * Variable: image
  * 
  * Specifies the <mxImage> to be used to render the handle. Default is null.
  */
-mxHandle.prototype.image = null;
+image = null;
 
 /**
  * Variable: ignoreGrid
  * 
  * Default is false.
  */
-mxHandle.prototype.ignoreGrid = false;
+ignoreGrid = false;
 
 /**
  * Function: getPosition
  * 
  * Hook for subclassers to return the current position of the handle.
  */
-mxHandle.prototype.getPosition = function(bounds) { };
+getPosition = (bounds)=> { };
 
 /**
  * Function: setPosition
  * 
  * Hooks for subclassers to update the style in the <state>.
  */
-mxHandle.prototype.setPosition = function(bounds, pt, me) { };
+setPosition = (bounds, pt, me)=> { };
 
 /**
  * Function: execute
  * 
  * Hook for subclassers to execute the handle.
  */
-mxHandle.prototype.execute = function(me) { };
+execute = (me)=> { };
 
 /**
  * Function: copyStyle
  * 
  * Sets the cell style with the given name to the corresponding value in <state>.
  */
-mxHandle.prototype.copyStyle = function(key)
+copyStyle = (key)=>
 {
 	this.graph.setCellStyles(key, this.state.style[key], [this.state.cell]);
 };
@@ -82,7 +82,7 @@ mxHandle.prototype.copyStyle = function(key)
  * 
  * Processes the given <mxMouseEvent> and invokes <setPosition>.
  */
-mxHandle.prototype.processEvent = function(me)
+processEvent = (me)=>
 {
 	var scale = this.graph.view.scale;
 	var tr = this.graph.view.translate;
@@ -110,7 +110,7 @@ mxHandle.prototype.processEvent = function(me)
  * Should be called after <setPosition> in <processEvent>.
  * This repaints the state using <mxCellRenderer>.
  */
-mxHandle.prototype.positionChanged = function()
+positionChanged = ()=>
 {
 	if (this.state.text != null)
 	{
@@ -130,7 +130,7 @@ mxHandle.prototype.positionChanged = function()
  * 
  * Returns the rotation defined in the style of the cell.
  */
-mxHandle.prototype.getRotation = function()
+getRotation = ()=>
 {
 	if (this.state.shape != null)
 	{
@@ -146,7 +146,7 @@ mxHandle.prototype.getRotation = function()
  * Returns the rotation from the style and the rotation from the direction of
  * the cell.
  */
-mxHandle.prototype.getTotalRotation = function()
+getTotalRotation = ()=>
 {
 	if (this.state.shape != null)
 	{
@@ -161,7 +161,7 @@ mxHandle.prototype.getTotalRotation = function()
  * 
  * Creates and initializes the shapes required for this handle.
  */
-mxHandle.prototype.init = function()
+init = ()=>
 {
 	var html = this.isHtmlRequired();
 	
@@ -183,7 +183,7 @@ mxHandle.prototype.init = function()
  * 
  * Creates and returns the shape for this handle.
  */
-mxHandle.prototype.createShape = function(html)
+createShape = (html)=>
 {
 	var bounds = new mxRectangle(0, 0, mxConstants.HANDLE_SIZE, mxConstants.HANDLE_SIZE);
 	
@@ -195,7 +195,7 @@ mxHandle.prototype.createShape = function(html)
  * 
  * Initializes <shape> and sets its cursor.
  */
-mxHandle.prototype.initShape = function(html)
+initShape = (html)=>
 {
 	if (html && this.shape.isHtmlAllowed())
 	{
@@ -222,7 +222,7 @@ mxHandle.prototype.initShape = function(html)
  * 
  * Renders the shape for this handle.
  */
-mxHandle.prototype.redraw = function()
+redraw = ()=>
 {
 	if (this.shape != null && this.state.shape != null)
 	{
@@ -250,7 +250,7 @@ mxHandle.prototype.redraw = function()
  * Returns true if this handle should be rendered in HTML. This returns true if
  * the text node is in the graph container.
  */
-mxHandle.prototype.isHtmlRequired = function()
+isHtmlRequired = ()=>
 {
 	return this.state.text != null && this.state.text.node.parentNode == this.graph.container;
 };
@@ -260,7 +260,7 @@ mxHandle.prototype.isHtmlRequired = function()
  * 
  * Rotates the point by the given angle.
  */
-mxHandle.prototype.rotatePoint = function(pt, alpha)
+rotatePoint = (pt, alpha)=>
 {
 	var bounds = this.state.getCellBounds();
 	var cx = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
@@ -275,7 +275,7 @@ mxHandle.prototype.rotatePoint = function(pt, alpha)
  * 
  * Flips the given point vertically and/or horizontally.
  */
-mxHandle.prototype.flipPoint = function(pt)
+flipPoint = (pt)=>
 {
 	if (this.state.shape != null)
 	{
@@ -301,7 +301,7 @@ mxHandle.prototype.flipPoint = function(pt)
  * Snaps the given point to the grid if ignore is false. This modifies
  * the given point in-place and also returns it.
  */
-mxHandle.prototype.snapPoint = function(pt, ignore)
+snapPoint = (pt, ignore)=>
 {
 	if (!ignore)
 	{
@@ -317,7 +317,7 @@ mxHandle.prototype.snapPoint = function(pt, ignore)
  * 
  * Shows or hides this handle.
  */
-mxHandle.prototype.setVisible = function(visible)
+setVisible = (visible)=>
 {
 	if (this.shape != null && this.shape.node != null)
 	{
@@ -330,7 +330,7 @@ mxHandle.prototype.setVisible = function(visible)
  * 
  * Resets the state of this handle by setting its visibility to true.
  */
-mxHandle.prototype.reset = function()
+reset = ()=>
 {
 	this.setVisible(true);
 	this.state.style = this.graph.getCellStyle(this.state.cell);
@@ -342,7 +342,7 @@ mxHandle.prototype.reset = function()
  * 
  * Destroys this handle.
  */
-mxHandle.prototype.destroy = function()
+destroy = ()=>
 {
 	if (this.shape != null)
 	{

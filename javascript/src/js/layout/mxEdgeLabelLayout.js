@@ -34,14 +34,14 @@ function mxEdgeLabelLayout(graph, radius)
  * Extends mxGraphLayout.
  */
 mxEdgeLabelLayout.prototype = new mxGraphLayout();
-mxEdgeLabelLayout.prototype.constructor = mxEdgeLabelLayout;
+constructor = mxEdgeLabelLayout;
 
 /**
  * Function: execute
  * 
  * Implements <mxGraphLayout.execute>.
  */
-mxEdgeLabelLayout.prototype.execute = function(parent)
+execute = (parent)=>
 {
 	var view = this.graph.view;
 	var model = this.graph.getModel();
@@ -77,7 +77,7 @@ mxEdgeLabelLayout.prototype.execute = function(parent)
  * 
  * Places the labels of the given edges.
  */
-mxEdgeLabelLayout.prototype.placeLabels = function(v, e)
+placeLabels = (v, e)=>
 {
 	var model = this.graph.getModel();
 	
@@ -117,7 +117,7 @@ mxEdgeLabelLayout.prototype.placeLabels = function(v, e)
  * 
  * Places the labels of the given edges.
  */
-mxEdgeLabelLayout.prototype.avoid = function(edge, vertex)
+avoid = (edge, vertex)=>
 {
 	var model = this.graph.getModel();
 	var labRect = edge.text.boundingBox;

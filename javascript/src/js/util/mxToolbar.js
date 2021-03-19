@@ -30,21 +30,21 @@ function mxToolbar(container)
  * Extends mxEventSource.
  */
 mxToolbar.prototype = new mxEventSource();
-mxToolbar.prototype.constructor = mxToolbar;
+constructor = mxToolbar;
 
 /**
  * Variable: container
  * 
  * Reference to the DOM nodes that contains the toolbar.
  */
-mxToolbar.prototype.container = null;
+container = null;
 
 /**
  * Variable: enabled
  * 
  * Specifies if events are handled. Default is true.
  */
-mxToolbar.prototype.enabled = true;
+enabled = true;
 
 /**
  * Variable: noReset
@@ -54,7 +54,7 @@ mxToolbar.prototype.enabled = true;
  * if the toolbar item is double clicked to avoid a reset after a single
  * use of the item.
  */
-mxToolbar.prototype.noReset = false;
+noReset = false;
 
 /**
  * Variable: updateDefaultMode
@@ -67,7 +67,7 @@ mxToolbar.prototype.noReset = false;
  * of what was last selected. Otherwise, the selected item after a reset is
  * the previously selected item.
  */
-mxToolbar.prototype.updateDefaultMode = true;
+updateDefaultMode = true;
 
 /**
  * Function: addItem
@@ -85,9 +85,9 @@ mxToolbar.prototype.updateDefaultMode = true;
  * background.
  * style - Optional style classname. Default is mxToolbarItem.
  * factoryMethod - Optional factory method for popup menu, eg.
- * function(menu, evt, cell) { menu.addItem('Hello, World!'); }
+ * (menu, evt, cell)=> { menu.addItem('Hello, World!'); }
  */
-mxToolbar.prototype.addItem = function(title, icon, funct, pressedIcon, style, factoryMethod)
+addItem = (title, icon, funct, pressedIcon, style, factoryMethod)=>
 {
 	var img = document.createElement((icon != null) ? 'img' : 'button');
 	var initialClassName = style || ((factoryMethod != null) ?
@@ -120,7 +120,7 @@ mxToolbar.prototype.addItem = function(title, icon, funct, pressedIcon, style, f
 		}
 	}
 
-	var mouseHandler = mxUtils.bind(this, function(evt)
+	var mouseHandler = mxUtils.bind(this, (evt)=>
 	{
 		if (pressedIcon != null)
 		{
@@ -134,7 +134,7 @@ mxToolbar.prototype.addItem = function(title, icon, funct, pressedIcon, style, f
 
 	// Highlights the toolbar item with a gray background
 	// while it is being clicked with the mouse
-	mxEvent.addGestureListeners(img, mxUtils.bind(this, function(evt)
+	mxEvent.addGestureListeners(img, mxUtils.bind(this, (evt)=>
 	{
 		if (pressedIcon != null)
 		{
@@ -177,9 +177,9 @@ mxToolbar.prototype.addItem = function(title, icon, funct, pressedIcon, style, f
 				{
 					img.className = initialClassName + 'Selected';
 					
-					this.menu.hideMenu = function()
+					this.menu.hideMenu = ()=>
 					{
-						mxPopupMenu.prototype.hideMenu.apply(this);
+						hideMenu.apply(this);
 						img.className = initialClassName;
 						this.currentImg = null;
 					};
@@ -203,7 +203,7 @@ mxToolbar.prototype.addItem = function(title, icon, funct, pressedIcon, style, f
  * 
  * style - Optional style classname. Default is mxToolbarCombo.
  */
-mxToolbar.prototype.addCombo = function(style)
+addCombo = (style)=>
 {
 	var div = document.createElement('div');
 	div.style.display = 'inline';
@@ -230,13 +230,13 @@ mxToolbar.prototype.addCombo = function(style)
  * title - String that specifies the title of the default element.
  * style - Optional style classname. Default is mxToolbarCombo.
  */
-mxToolbar.prototype.addActionCombo = function(title, style)
+addActionCombo = (title, style)=>
 {
 	var select = document.createElement('select');
 	select.className = style || 'mxToolbarCombo';
 	this.addOption(select, title, null);
 	
-	mxEvent.addListener(select, 'change', function(evt)
+	mxEvent.addListener(select, 'change', (evt)=>
 	{
 		var value = select.options[select.selectedIndex];
 		select.selectedIndex = 0;
@@ -265,7 +265,7 @@ mxToolbar.prototype.addActionCombo = function(title, style)
  * title - String that specifies the title of the option.
  * value - Specifies the value associated with this option.
  */
-mxToolbar.prototype.addOption = function(combo, title, value)
+addOption = (combo, title, value)=>
 {
 	var option = document.createElement('option');
 	mxUtils.writeln(option, title);
@@ -291,7 +291,7 @@ mxToolbar.prototype.addOption = function(combo, title, value)
  * be selected at a time. The currently selected item is the default item
  * after a reset of the toolbar.
  */
-mxToolbar.prototype.addSwitchMode = function(title, icon, funct, pressedIcon, style)
+addSwitchMode = (title, icon, funct, pressedIcon, style)=>
 {
 	var img = document.createElement('img');
 	img.initialClassName = style || 'mxToolbarMode';
@@ -304,7 +304,7 @@ mxToolbar.prototype.addSwitchMode = function(title, icon, funct, pressedIcon, st
 		img.setAttribute('title', title);
 	}
 	
-	mxEvent.addListener(img, 'click', mxUtils.bind(this, function(evt)
+	mxEvent.addListener(img, 'click', mxUtils.bind(this, (evt)=>
 	{
 		var tmp = this.selectedMode.altIcon;
 		
@@ -366,7 +366,7 @@ mxToolbar.prototype.addSwitchMode = function(title, icon, funct, pressedIcon, st
  * The function argument uses the following signature: funct(evt, cell) where
  * evt is the native mouse event and cell is the cell under the mouse.
  */
-mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style, toggle)
+addMode = (title, icon, funct, pressedIcon, style, toggle)=>
 {
 	toggle = (toggle != null) ? toggle : true;
 	var img = document.createElement((icon != null) ? 'img' : 'button');
@@ -383,13 +383,13 @@ mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style, t
 	
 	if (this.enabled && toggle)
 	{
-		mxEvent.addListener(img, 'click', mxUtils.bind(this, function(evt)
+		mxEvent.addListener(img, 'click', mxUtils.bind(this, (evt)=>
 		{
 			this.selectMode(img, funct);
 			this.noReset = false;
 		}));
 		
-		mxEvent.addListener(img, 'dblclick', mxUtils.bind(this, function(evt)
+		mxEvent.addListener(img, 'dblclick', mxUtils.bind(this, (evt)=>
 		{
 			this.selectMode(img, funct);
 			this.noReset = true;
@@ -415,7 +415,7 @@ mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style, t
  * DOM node as selected. This function fires a select event with the given
  * function as a parameter.
  */
-mxToolbar.prototype.selectMode = function(domNode, funct)
+selectMode = (domNode, funct)=>
 {
 	if (this.selectedMode != domNode)
 	{
@@ -457,7 +457,7 @@ mxToolbar.prototype.selectMode = function(domNode, funct)
  * Selects the default mode and resets the state of the previously selected
  * mode.
  */
-mxToolbar.prototype.resetMode = function(forced)
+resetMode = (forced)=>
 {
 	if ((forced || !this.noReset) && this.selectedMode != this.defaultMode)
 	{
@@ -477,7 +477,7 @@ mxToolbar.prototype.resetMode = function(forced)
  * 
  * icon - URL of the separator icon.
  */
-mxToolbar.prototype.addSeparator = function(icon)
+addSeparator = (icon)=>
 {
 	return this.addItem(null, icon, null);
 };
@@ -487,7 +487,7 @@ mxToolbar.prototype.addSeparator = function(icon)
  * 
  * Adds a break to the container.
  */
-mxToolbar.prototype.addBreak = function()
+addBreak = ()=>
 {
 	mxUtils.br(this.container);
 };
@@ -497,7 +497,7 @@ mxToolbar.prototype.addBreak = function()
  * 
  * Adds a horizontal line to the container.
  */
-mxToolbar.prototype.addLine = function()
+addLine = ()=>
 {
 	var hr = document.createElement('hr');
 	
@@ -512,7 +512,7 @@ mxToolbar.prototype.addLine = function()
  * 
  * Removes the toolbar and all its associated resources.
  */
-mxToolbar.prototype.destroy = function ()
+destroy = function ()
 {
 	mxEvent.release(this.container);
 	this.container = null;

@@ -22,63 +22,63 @@ function mxGuide(graph, states)
  *
  * Reference to the enclosing <mxGraph> instance.
  */
-mxGuide.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: states
  * 
  * Contains the <mxCellStates> that are used for alignment.
  */
-mxGuide.prototype.states = null;
+states = null;
 
 /**
  * Variable: horizontal
  *
  * Specifies if horizontal guides are enabled. Default is true.
  */
-mxGuide.prototype.horizontal = true;
+horizontal = true;
 
 /**
  * Variable: vertical
  *
  * Specifies if vertical guides are enabled. Default is true.
  */
-mxGuide.prototype.vertical = true;
+vertical = true;
 
 /**
  * Variable: guideX
  *
  * Holds the <mxShape> for the horizontal guide.
  */
-mxGuide.prototype.guideX = null;
+guideX = null;
 
 /**
  * Variable: guideY
  *
  * Holds the <mxShape> for the vertical guide.
  */
-mxGuide.prototype.guideY = null;
+guideY = null;
 
 /**
  * Variable: rounded
  *
  * Specifies if rounded coordinates should be used. Default is false.
  */
-mxGuide.prototype.rounded = false;
+rounded = false;
 
 /**
  * Variable: tolerance
  * 
  * Default tolerance in px if grid is disabled. Default is 2.
  */
-mxGuide.prototype.tolerance = 2;
+tolerance = 2;
 
 /**
  * Function: setStates
  * 
  * Sets the <mxCellStates> that should be used for alignment.
  */
-mxGuide.prototype.setStates = function(states)
+setStates = (states)=>
 {
 	this.states = states;
 };
@@ -89,7 +89,7 @@ mxGuide.prototype.setStates = function(states)
  * Returns true if the guide should be enabled for the given native event. This
  * implementation always returns true.
  */
-mxGuide.prototype.isEnabledForEvent = function(evt)
+isEnabledForEvent = (evt)=>
 {
 	return true;
 };
@@ -99,7 +99,7 @@ mxGuide.prototype.isEnabledForEvent = function(evt)
  * 
  * Returns the tolerance for the guides. Default value is gridSize / 2.
  */
-mxGuide.prototype.getGuideTolerance = function(gridEnabled)
+getGuideTolerance = (gridEnabled)=>
 {
 	return (gridEnabled && this.graph.gridEnabled) ? this.graph.gridSize / 2 : this.tolerance;
 };
@@ -115,7 +115,7 @@ mxGuide.prototype.getGuideTolerance = function(gridEnabled)
  * 
  * horizontal - Boolean that specifies which guide should be created.
  */
-mxGuide.prototype.createGuideShape = function(horizontal)
+createGuideShape = (horizontal)=>
 {
 	var guide = new mxPolyline([], mxConstants.GUIDE_COLOR, mxConstants.GUIDE_STROKEWIDTH);
 	guide.isDashed = true;
@@ -128,7 +128,7 @@ mxGuide.prototype.createGuideShape = function(horizontal)
  * 
  * Returns true if the given state should be ignored.
  */
-mxGuide.prototype.isStateIgnored = function(state)
+isStateIgnored = (state)=>
 {
 	return false;
 };
@@ -138,7 +138,7 @@ mxGuide.prototype.isStateIgnored = function(state)
  * 
  * Moves the <bounds> by the given <mxPoint> and returnt the snapped point.
  */
-mxGuide.prototype.move = function(bounds, delta, gridEnabled, clone)
+move = (bounds, delta, gridEnabled, clone)=>
 {
 	if (this.states != null && (this.horizontal || this.vertical) && bounds != null && delta != null)
 	{
@@ -372,7 +372,7 @@ mxGuide.prototype.move = function(bounds, delta, gridEnabled, clone)
  * 
  * Rounds to pixels for virtual states (eg. page guides)
  */
-mxGuide.prototype.getDelta = function(bounds, stateX, dx, stateY, dy)
+getDelta = (bounds, stateX, dx, stateY, dy)=>
 {
 	var s = this.graph.view.scale;
 	
@@ -394,7 +394,7 @@ mxGuide.prototype.getDelta = function(bounds, stateX, dx, stateY, dy)
  * 
  * Returns the color for the given state.
  */
-mxGuide.prototype.getGuideColor = function(state, horizontal)
+getGuideColor = (state, horizontal)=>
 {
 	return mxConstants.GUIDE_COLOR;
 };
@@ -404,7 +404,7 @@ mxGuide.prototype.getGuideColor = function(state, horizontal)
  * 
  * Hides all current guides.
  */
-mxGuide.prototype.hide = function()
+hide = ()=>
 {
 	this.setVisible(false);
 };
@@ -414,7 +414,7 @@ mxGuide.prototype.hide = function()
  * 
  * Shows or hides the current guides.
  */
-mxGuide.prototype.setVisible = function(visible)
+setVisible = (visible)=>
 {
 	if (this.guideX != null)
 	{
@@ -432,7 +432,7 @@ mxGuide.prototype.setVisible = function(visible)
  * 
  * Destroys all resources that this object uses.
  */
-mxGuide.prototype.destroy = function()
+destroy = ()=>
 {
 	if (this.guideX != null)
 	{

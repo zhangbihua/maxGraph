@@ -13,11 +13,11 @@
  * 
  * (code)
  * var resizer = new mxDivResizer(background);
- * resizer.getDocumentHeight = function()
+ * resizer.getDocumentHeight = ()=>
  * {
  *   return document.body.scrollHeight;
  * }
- * resizer.getDocumentWidth = function()
+ * resizer.getDocumentWidth = ()=>
  * {
  *   return document.body.scrollWidth;
  * }
@@ -56,7 +56,7 @@ function mxDivResizer(div, container)
 		}
 		
 		mxEvent.addListener(container, 'resize',
-			mxUtils.bind(this, function(evt)
+			mxUtils.bind(this, (evt)=>
 			{
 				if (!this.handlingResize)
 				{
@@ -76,28 +76,28 @@ function mxDivResizer(div, container)
  * 
  * Boolean specifying if the width should be updated.
  */
-mxDivResizer.prototype.resizeWidth = true;
+resizeWidth = true;
 
 /**
  * Function: resizeHeight
  * 
  * Boolean specifying if the height should be updated.
  */
-mxDivResizer.prototype.resizeHeight = true;
+resizeHeight = true;
 
 /**
  * Function: handlingResize
  * 
  * Boolean specifying if the width should be updated.
  */
-mxDivResizer.prototype.handlingResize = false;
+handlingResize = false;
 
 /**
  * Function: resize
  * 
  * Updates the style of the DIV after the window has been resized.
  */
-mxDivResizer.prototype.resize = function()
+resize = ()=>
 {
 	var w = this.getDocumentWidth();
 	var h = this.getDocumentHeight();
@@ -134,7 +134,7 @@ mxDivResizer.prototype.resize = function()
  * Hook for subclassers to return the width of the document (without
  * scrollbars).
  */
-mxDivResizer.prototype.getDocumentWidth = function()
+getDocumentWidth = ()=>
 {
 	return document.body.clientWidth;
 };
@@ -145,7 +145,7 @@ mxDivResizer.prototype.getDocumentWidth = function()
  * Hook for subclassers to return the height of the document (without
  * scrollbars).
  */
-mxDivResizer.prototype.getDocumentHeight = function()
+getDocumentHeight = ()=>
 {
 	return document.body.clientHeight;
 };

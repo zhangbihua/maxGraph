@@ -41,28 +41,28 @@ function mxTooltipHandler(graph, delay)
  * 
  * Specifies the zIndex for the tooltip and its shadow. Default is 10005.
  */
-mxTooltipHandler.prototype.zIndex = 10005;
+zIndex = 10005;
 
 /**
  * Variable: graph
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxTooltipHandler.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: delay
  * 
  * Delay to show the tooltip in milliseconds. Default is 500.
  */
-mxTooltipHandler.prototype.delay = null;
+delay = null;
 
 /**
  * Variable: ignoreTouchEvents
  * 
  * Specifies if touch and pen events should be ignored. Default is true.
  */
-mxTooltipHandler.prototype.ignoreTouchEvents = true;
+ignoreTouchEvents = true;
 
 /**
  * Variable: hideOnHover
@@ -70,21 +70,21 @@ mxTooltipHandler.prototype.ignoreTouchEvents = true;
  * Specifies if the tooltip should be hidden if the mouse is moved over the
  * current cell. Default is false.
  */
-mxTooltipHandler.prototype.hideOnHover = false;
+hideOnHover = false;
 
 /**
  * Variable: destroyed
  * 
  * True if this handler was destroyed using <destroy>.
  */
-mxTooltipHandler.prototype.destroyed = false;
+destroyed = false;
 
 /**
  * Variable: enabled
  * 
  * Specifies if events are handled. Default is true.
  */
-mxTooltipHandler.prototype.enabled = true;
+enabled = true;
 
 /**
  * Function: isEnabled
@@ -92,7 +92,7 @@ mxTooltipHandler.prototype.enabled = true;
  * Returns true if events are handled. This implementation
  * returns <enabled>.
  */
-mxTooltipHandler.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -103,7 +103,7 @@ mxTooltipHandler.prototype.isEnabled = function()
  * Enables or disables event handling. This implementation
  * updates <enabled>.
  */
-mxTooltipHandler.prototype.setEnabled = function(enabled)
+setEnabled = (enabled)=>
 {
 	this.enabled = enabled;
 };
@@ -113,7 +113,7 @@ mxTooltipHandler.prototype.setEnabled = function(enabled)
  * 
  * Returns <hideOnHover>.
  */
-mxTooltipHandler.prototype.isHideOnHover = function()
+isHideOnHover = ()=>
 {
 	return this.hideOnHover;
 };
@@ -123,7 +123,7 @@ mxTooltipHandler.prototype.isHideOnHover = function()
  * 
  * Sets <hideOnHover>.
  */
-mxTooltipHandler.prototype.setHideOnHover = function(value)
+setHideOnHover = (value)=>
 {
 	this.hideOnHover = value;
 };
@@ -133,7 +133,7 @@ mxTooltipHandler.prototype.setHideOnHover = function(value)
  * 
  * Initializes the DOM nodes required for this tooltip handler.
  */
-mxTooltipHandler.prototype.init = function()
+init = ()=>
 {
 	if (document.body != null)
 	{
@@ -143,7 +143,7 @@ mxTooltipHandler.prototype.init = function()
 
 		document.body.appendChild(this.div);
 
-		mxEvent.addGestureListeners(this.div, mxUtils.bind(this, function(evt)
+		mxEvent.addGestureListeners(this.div, mxUtils.bind(this, (evt)=>
 		{
 			var source = mxEvent.getSource(evt);
 			
@@ -160,7 +160,7 @@ mxTooltipHandler.prototype.init = function()
  * 
  * Returns the <mxCellState> to be used for showing a tooltip for this event.
  */
-mxTooltipHandler.prototype.getStateForEvent = function(me)
+getStateForEvent = (me)=>
 {
 	return me.getState();
 };
@@ -172,7 +172,7 @@ mxTooltipHandler.prototype.getStateForEvent = function(me)
  * event all subsequent events of the gesture are redirected to this
  * handler.
  */
-mxTooltipHandler.prototype.mouseDown = function(sender, me)
+mouseDown = (sender, me)=>
 {
 	this.reset(me, false);
 	this.hideTooltip();
@@ -183,7 +183,7 @@ mxTooltipHandler.prototype.mouseDown = function(sender, me)
  * 
  * Handles the event by updating the rubberband selection.
  */
-mxTooltipHandler.prototype.mouseMove = function(sender, me)
+mouseMove = (sender, me)=>
 {
 	if (me.getX() != this.lastX || me.getY() != this.lastY)
 	{
@@ -208,7 +208,7 @@ mxTooltipHandler.prototype.mouseMove = function(sender, me)
  * Handles the event by resetting the tooltip timer or hiding the existing
  * tooltip.
  */
-mxTooltipHandler.prototype.mouseUp = function(sender, me)
+mouseUp = (sender, me)=>
 {
 	this.reset(me, true);
 	this.hideTooltip();
@@ -220,7 +220,7 @@ mxTooltipHandler.prototype.mouseUp = function(sender, me)
  * 
  * Resets the timer.
  */
-mxTooltipHandler.prototype.resetTimer = function()
+resetTimer = ()=>
 {
 	if (this.thread != null)
 	{
@@ -234,7 +234,7 @@ mxTooltipHandler.prototype.resetTimer = function()
  * 
  * Resets and/or restarts the timer to trigger the display of the tooltip.
  */
-mxTooltipHandler.prototype.reset = function(me, restart, state)
+reset = (me, restart, state)=>
 {
 	if (!this.ignoreTouchEvents || mxEvent.isMouseEvent(me.getEvent()))
 	{
@@ -249,7 +249,7 @@ mxTooltipHandler.prototype.reset = function(me, restart, state)
 			var y = me.getY();
 			var stateSource = me.isSource(state.shape) || me.isSource(state.text);
 	
-			this.thread = window.setTimeout(mxUtils.bind(this, function()
+			this.thread = window.setTimeout(mxUtils.bind(this, ()=>
 			{
 				if (!this.graph.isEditing() && !this.graph.popupMenuHandler.isMenuShowing() && !this.graph.isMouseDown)
 				{
@@ -272,7 +272,7 @@ mxTooltipHandler.prototype.reset = function(me, restart, state)
  * 
  * Hides the tooltip and resets the timer.
  */
-mxTooltipHandler.prototype.hide = function()
+hide = ()=>
 {
 	this.resetTimer();
 	this.hideTooltip();
@@ -283,7 +283,7 @@ mxTooltipHandler.prototype.hide = function()
  * 
  * Hides the tooltip.
  */
-mxTooltipHandler.prototype.hideTooltip = function()
+hideTooltip = ()=>
 {
 	if (this.div != null)
 	{
@@ -298,7 +298,7 @@ mxTooltipHandler.prototype.hideTooltip = function()
  * Shows the tooltip for the specified cell and optional index at the
  * specified location (with a vertical offset of 10 pixels).
  */
-mxTooltipHandler.prototype.show = function(tip, x, y)
+show = (tip, x, y)=>
 {
 	if (!this.destroyed && tip != null && tip.length > 0)
 	{
@@ -335,7 +335,7 @@ mxTooltipHandler.prototype.show = function(tip, x, y)
  * 
  * Destroys the handler and all its resources and DOM nodes.
  */
-mxTooltipHandler.prototype.destroy = function()
+destroy = ()=>
 {
 	if (!this.destroyed)
 	{

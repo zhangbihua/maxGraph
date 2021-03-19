@@ -23,56 +23,56 @@ function mxGraphAbstractHierarchyCell()
  * 
  * The maximum rank this cell occupies. Default is -1.
  */
-mxGraphAbstractHierarchyCell.prototype.maxRank = -1;
+maxRank = -1;
 
 /**
  * Variable: minRank
  * 
  * The minimum rank this cell occupies. Default is -1.
  */
-mxGraphAbstractHierarchyCell.prototype.minRank = -1;
+minRank = -1;
 
 /**
  * Variable: x
  * 
  * The x position of this cell for each layer it occupies
  */
-mxGraphAbstractHierarchyCell.prototype.x = null;
+x = null;
 
 /**
  * Variable: y
  * 
  * The y position of this cell for each layer it occupies
  */
-mxGraphAbstractHierarchyCell.prototype.y = null;
+y = null;
 
 /**
  * Variable: width
  * 
  * The width of this cell. Default is 0.
  */
-mxGraphAbstractHierarchyCell.prototype.width = 0;
+width = 0;
 
 /**
  * Variable: height
  * 
  * The height of this cell. Default is 0.
  */
-mxGraphAbstractHierarchyCell.prototype.height = 0;
+height = 0;
 
 /**
  * Variable: nextLayerConnectedCells
  * 
  * A cached version of the cells this cell connects to on the next layer up
  */
-mxGraphAbstractHierarchyCell.prototype.nextLayerConnectedCells = null;
+nextLayerConnectedCells = null;
 
 /**
  * Variable: previousLayerConnectedCells
  * 
  * A cached version of the cells this cell connects to on the next layer down
  */
-mxGraphAbstractHierarchyCell.prototype.previousLayerConnectedCells = null;
+previousLayerConnectedCells = null;
 
 /**
  * Variable: temp
@@ -84,14 +84,14 @@ mxGraphAbstractHierarchyCell.prototype.previousLayerConnectedCells = null;
  * be used for hashing the nodes in the model dfs and so hashCode
  * was created
  */
-mxGraphAbstractHierarchyCell.prototype.temp = null;
+temp = null;
 
 /**
  * Function: getNextLayerConnectedCells
  * 
  * Returns the cells this cell connects to on the next layer up
  */
-mxGraphAbstractHierarchyCell.prototype.getNextLayerConnectedCells = function(layer)
+getNextLayerConnectedCells = (layer)=>
 {
 	return null;
 };
@@ -101,7 +101,7 @@ mxGraphAbstractHierarchyCell.prototype.getNextLayerConnectedCells = function(lay
  * 
  * Returns the cells this cell connects to on the next layer down
  */
-mxGraphAbstractHierarchyCell.prototype.getPreviousLayerConnectedCells = function(layer)
+getPreviousLayerConnectedCells = (layer)=>
 {
 	return null;
 };
@@ -111,7 +111,7 @@ mxGraphAbstractHierarchyCell.prototype.getPreviousLayerConnectedCells = function
  * 
  * Returns whether or not this cell is an edge
  */
-mxGraphAbstractHierarchyCell.prototype.isEdge = function()
+isEdge = ()=>
 {
 	return false;
 };
@@ -121,7 +121,7 @@ mxGraphAbstractHierarchyCell.prototype.isEdge = function()
  * 
  * Returns whether or not this cell is a node
  */
-mxGraphAbstractHierarchyCell.prototype.isVertex = function()
+isVertex = ()=>
 {
 	return false;
 };
@@ -131,7 +131,7 @@ mxGraphAbstractHierarchyCell.prototype.isVertex = function()
  * 
  * Gets the value of temp for the specified layer
  */
-mxGraphAbstractHierarchyCell.prototype.getGeneralPurposeVariable = function(layer)
+getGeneralPurposeVariable = (layer)=>
 {
 	return null;
 };
@@ -141,7 +141,7 @@ mxGraphAbstractHierarchyCell.prototype.getGeneralPurposeVariable = function(laye
  * 
  * Set the value of temp for the specified layer
  */
-mxGraphAbstractHierarchyCell.prototype.setGeneralPurposeVariable = function(layer, value)
+setGeneralPurposeVariable = (layer, value)=>
 {
 	return null;
 };
@@ -151,7 +151,7 @@ mxGraphAbstractHierarchyCell.prototype.setGeneralPurposeVariable = function(laye
  * 
  * Set the value of x for the specified layer
  */
-mxGraphAbstractHierarchyCell.prototype.setX = function(layer, value)
+setX = (layer, value)=>
 {
 	if (this.isVertex())
 	{
@@ -168,7 +168,7 @@ mxGraphAbstractHierarchyCell.prototype.setX = function(layer, value)
  * 
  * Gets the value of x on the specified layer
  */
-mxGraphAbstractHierarchyCell.prototype.getX = function(layer)
+getX = (layer)=>
 {
 	if (this.isVertex())
 	{
@@ -187,7 +187,7 @@ mxGraphAbstractHierarchyCell.prototype.getX = function(layer)
  * 
  * Set the value of y for the specified layer
  */
-mxGraphAbstractHierarchyCell.prototype.setY = function(layer, value)
+setY = (layer, value)=>
 {
 	if (this.isVertex())
 	{

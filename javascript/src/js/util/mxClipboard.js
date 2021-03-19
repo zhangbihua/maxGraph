@@ -26,7 +26,7 @@ var mxClipboard =
 	 * <copy> and <paste> can be changed as follows.
 	 * 
 	 * (code)
-	 * mxClipboard.copy = function(graph, cells)
+	 * mxClipboard.copy = (graph, cells)=>
 	 * {
 	 *   cells = cells || graph.getSelectionCells();
 	 *   var result = graph.getExportableCells(cells);
@@ -44,7 +44,7 @@ var mxClipboard =
 	 *   return result;
 	 * };
 	 * 
-	 * mxClipboard.paste = function(graph)
+	 * mxClipboard.paste = (graph)=>
 	 * {
 	 *   if (!mxClipboard.isEmpty())
 	 *   {
@@ -100,7 +100,7 @@ var mxClipboard =
 	 * 
 	 * Sets the cells in the clipboard. Fires a <mxEvent.CHANGE> event.
 	 */
-	setCells: function(cells)
+	setCells: (cells)=>
 	{
 		mxClipboard.cells = cells;
 	},
@@ -110,7 +110,7 @@ var mxClipboard =
 	 * 
 	 * Returns  the cells in the clipboard.
 	 */
-	getCells: function()
+	getCells: ()=>
 	{
 		return mxClipboard.cells;
 	},
@@ -120,7 +120,7 @@ var mxClipboard =
 	 * 
 	 * Returns true if the clipboard currently has not data stored.
 	 */
-	isEmpty: function()
+	isEmpty: ()=>
 	{
 		return mxClipboard.getCells() == null;
 	},
@@ -137,7 +137,7 @@ var mxClipboard =
 	 * graph - <mxGraph> that contains the cells to be cut.
 	 * cells - Optional array of <mxCells> to be cut.
 	 */
-	cut: function(graph, cells)
+	cut: (graph, cells)=>
 	{
 		cells = mxClipboard.copy(graph, cells);
 		mxClipboard.insertCount = 0;
@@ -157,7 +157,7 @@ var mxClipboard =
 	 * graph - <mxGraph> that contains the cells to be cut.
 	 * cells - Array of <mxCells> to be cut.
 	 */
-	removeCells: function(graph, cells)
+	removeCells: (graph, cells)=>
 	{
 		graph.removeCells(cells);
 	},
@@ -174,7 +174,7 @@ var mxClipboard =
 	 * graph - <mxGraph> that contains the cells to be copied.
 	 * cells - Optional array of <mxCells> to be copied.
 	 */
-	copy: function(graph, cells)
+	copy: (graph, cells)=>
 	{
 		cells = cells || graph.getSelectionCells();
 		var result = graph.getExportableCells(graph.model.getTopmostCells(cells));
@@ -199,7 +199,7 @@ var mxClipboard =
 	 * 
 	 * graph - <mxGraph> to paste the <cells> into.
 	 */
-	paste: function(graph)
+	paste: (graph)=>
 	{
 		var cells = null;
 		

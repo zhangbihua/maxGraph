@@ -9,8 +9,8 @@
  * following code can be used.
  * 
  * (code)
- * var mxPopupMenuShowMenu = mxPopupMenu.prototype.showMenu;
- * mxPopupMenu.prototype.showMenu = function()
+ * var mxPopupMenuShowMenu = showMenu;
+ * showMenu = ()=>
  * {
  *   mxPopupMenuShowMenu.apply(this, arguments);
  *   
@@ -42,21 +42,21 @@ function mxPopupMenu(factoryMethod)
  * Extends mxEventSource.
  */
 mxPopupMenu.prototype = new mxEventSource();
-mxPopupMenu.prototype.constructor = mxPopupMenu;
+constructor = mxPopupMenu;
 
 /**
  * Variable: submenuImage
  * 
  * URL of the image to be used for the submenu icon.
  */
-mxPopupMenu.prototype.submenuImage = mxClient.imageBasePath + '/submenu.gif';
+submenuImage = mxClient.imageBasePath + '/submenu.gif';
 
 /**
  * Variable: zIndex
  * 
  * Specifies the zIndex for the popupmenu and its shadow. Default is 10006.
  */
-mxPopupMenu.prototype.zIndex = 10006;
+zIndex = 10006;
 
 /**
  * Variable: factoryMethod
@@ -65,7 +65,7 @@ mxPopupMenu.prototype.zIndex = 10006;
  * current panning handler, the <mxCell> under the mouse and the mouse
  * event that triggered the call as arguments.
  */
-mxPopupMenu.prototype.factoryMethod = null;
+factoryMethod = null;
 
 /**
  * Variable: useLeftButtonForPopup
@@ -73,28 +73,28 @@ mxPopupMenu.prototype.factoryMethod = null;
  * Specifies if popupmenus should be activated by clicking the left mouse
  * button. Default is false.
  */
-mxPopupMenu.prototype.useLeftButtonForPopup = false;
+useLeftButtonForPopup = false;
 
 /**
  * Variable: enabled
  * 
  * Specifies if events are handled. Default is true.
  */
-mxPopupMenu.prototype.enabled = true;
+enabled = true;
 
 /**
  * Variable: itemCount
  * 
  * Contains the number of times <addItem> has been called for a new menu.
  */
-mxPopupMenu.prototype.itemCount = 0;
+itemCount = 0;
 
 /**
  * Variable: autoExpand
  * 
  * Specifies if submenus should be expanded on mouseover. Default is false.
  */
-mxPopupMenu.prototype.autoExpand = false;
+autoExpand = false;
 
 /**
  * Variable: smartSeparators
@@ -102,21 +102,21 @@ mxPopupMenu.prototype.autoExpand = false;
  * Specifies if separators should only be added if a menu item follows them.
  * Default is false.
  */
-mxPopupMenu.prototype.smartSeparators = false;
+smartSeparators = false;
 
 /**
  * Variable: labels
  * 
  * Specifies if any labels should be visible. Default is true.
  */
-mxPopupMenu.prototype.labels = true;
+labels = true;
 
 /**
  * Function: init
  * 
  * Initializes the shapes required for this vertex handler.
  */
-mxPopupMenu.prototype.init = function()
+init = ()=>
 {
 	// Adds the inner table
 	this.table = document.createElement('table');
@@ -142,7 +142,7 @@ mxPopupMenu.prototype.init = function()
  * Returns true if events are handled. This implementation
  * returns <enabled>.
  */
-mxPopupMenu.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -153,7 +153,7 @@ mxPopupMenu.prototype.isEnabled = function()
  * Enables or disables event handling. This implementation
  * updates <enabled>.
  */
-mxPopupMenu.prototype.setEnabled = function(enabled)
+setEnabled = (enabled)=>
 {
 	this.enabled = enabled;
 };
@@ -168,7 +168,7 @@ mxPopupMenu.prototype.setEnabled = function(enabled)
  * 
  * me - <mxMouseEvent> that represents the mouse event.
  */
-mxPopupMenu.prototype.isPopupTrigger = function(me)
+isPopupTrigger = (me)=>
 {
 	return me.isPopupTrigger() || (this.useLeftButtonForPopup && mxEvent.isLeftMouseButton(me.getEvent()));
 };
@@ -194,7 +194,7 @@ mxPopupMenu.prototype.isPopupTrigger = function(me)
  * Default is true.
  * noHover - Optional boolean to disable hover state.
  */
-mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, enabled, active, noHover)
+addItem = (title, image, funct, parent, iconCls, enabled, active, noHover)=>
 {
 	parent = parent || this;
 	this.itemCount++;
@@ -263,7 +263,7 @@ mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, e
 		var currentSelection = null;
 		
 		mxEvent.addGestureListeners(tr,
-			mxUtils.bind(this, function(evt)
+			mxUtils.bind(this, (evt)=>
 			{
 				this.eventReceiver = tr;
 				
@@ -289,7 +289,7 @@ mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, e
 				
 				mxEvent.consume(evt);
 			}),
-			mxUtils.bind(this, function(evt)
+			mxUtils.bind(this, (evt)=>
 			{
 				if (parent.activeRow != tr && parent.activeRow != parent)
 				{
@@ -311,7 +311,7 @@ mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, e
 					tr.className = 'mxPopupMenuItemHover';
 				}
 			}),
-			mxUtils.bind(this, function(evt)
+			mxUtils.bind(this, (evt)=>
 			{
 				// EventReceiver avoids clicks on a submenu item
 				// which has just been shown in the mousedown
@@ -353,7 +353,7 @@ mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, e
 		if (!noHover)
 		{
 			mxEvent.addListener(tr, 'mouseout',
-				mxUtils.bind(this, function(evt)
+				mxUtils.bind(this, (evt)=>
 				{
 					tr.className = 'mxPopupMenuItem';
 				})
@@ -367,7 +367,7 @@ mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, e
 /**
  * Adds a checkmark to the given menuitem.
  */
-mxPopupMenu.prototype.addCheckmark = function(item, img)
+addCheckmark = (item, img)=>
 {
 	var td = item.firstChild.nextSibling;
 	td.style.backgroundImage = 'url(\'' + img + '\')';
@@ -386,7 +386,7 @@ mxPopupMenu.prototype.addCheckmark = function(item, img)
  * 
  * parent - An item returned by <addItem>.
  */
-mxPopupMenu.prototype.createSubmenu = function(parent)
+createSubmenu = (parent)=>
 {
 	parent.table = document.createElement('table');
 	parent.table.className = 'mxPopupMenu';
@@ -416,7 +416,7 @@ mxPopupMenu.prototype.createSubmenu = function(parent)
  * 
  * Shows the submenu inside the given parent row.
  */
-mxPopupMenu.prototype.showSubmenu = function(parent, row)
+showSubmenu = (parent, row)=>
 {
 	if (row.div != null)
 	{
@@ -455,7 +455,7 @@ mxPopupMenu.prototype.showSubmenu = function(parent, row)
  * parent - Optional item returned by <addItem>.
  * force - Optional boolean to ignore <smartSeparators>. Default is false.
  */
-mxPopupMenu.prototype.addSeparator = function(parent, force)
+addSeparator = (parent, force)=>
 {
 	parent = parent || this;
 	
@@ -496,13 +496,13 @@ mxPopupMenu.prototype.addSeparator = function(parent, force)
  * Example:
  * 
  * (code)
- * graph.panningHandler.popup = function(x, y, cell, evt)
+ * graph.panningHandler.popup = (x, y, cell, evt)=>
  * {
  *   mxUtils.alert('Hello, World!');
  * }
  * (end)
  */
-mxPopupMenu.prototype.popup = function(x, y, cell, evt)
+popup = (x, y, cell, evt)=>
 {
 	if (this.div != null && this.tbody != null && this.factoryMethod != null)
 	{
@@ -532,7 +532,7 @@ mxPopupMenu.prototype.popup = function(x, y, cell, evt)
  * 
  * Returns true if the menu is showing.
  */
-mxPopupMenu.prototype.isMenuShowing = function()
+isMenuShowing = ()=>
 {
 	return this.div != null && this.div.parentNode == document.body;
 };
@@ -542,7 +542,7 @@ mxPopupMenu.prototype.isMenuShowing = function()
  * 
  * Shows the menu.
  */
-mxPopupMenu.prototype.showMenu = function()
+showMenu = ()=>
 {
 	// Disables filter-based shadow in IE9 standards mode
 	if (document.documentMode >= 9)
@@ -560,7 +560,7 @@ mxPopupMenu.prototype.showMenu = function()
  * 
  * Removes the menu and all submenus.
  */
-mxPopupMenu.prototype.hideMenu = function()
+hideMenu = ()=>
 {
 	if (this.div != null)
 	{
@@ -584,7 +584,7 @@ mxPopupMenu.prototype.hideMenu = function()
  * 
  * parent - An item returned by <addItem>.
  */
-mxPopupMenu.prototype.hideSubmenu = function(parent)
+hideSubmenu = (parent)=>
 {
 	if (parent.activeRow != null)
 	{
@@ -604,7 +604,7 @@ mxPopupMenu.prototype.hideSubmenu = function(parent)
  * 
  * Destroys the handler and all its resources and DOM nodes.
  */
-mxPopupMenu.prototype.destroy = function()
+destroy = ()=>
 {
 	if (this.div != null)
 	{

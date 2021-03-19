@@ -39,7 +39,7 @@ function mxPanningHandler(graph)
 		this.graph.addMouseListener(this);
 
 		// Handles force panning event
-		this.forcePanningHandler = mxUtils.bind(this, function(sender, evt)
+		this.forcePanningHandler = mxUtils.bind(this, (sender, evt)=>
 		{
 			var evtName = evt.getProperty('eventName');
 			var me = evt.getProperty('event');
@@ -56,7 +56,7 @@ function mxPanningHandler(graph)
 		this.graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.forcePanningHandler);
 		
 		// Handles pinch gestures
-		this.gestureHandler = mxUtils.bind(this, function(sender, eo)
+		this.gestureHandler = mxUtils.bind(this, (sender, eo)=>
 		{
 			if (this.isPinchEnabled())
 			{
@@ -87,7 +87,7 @@ function mxPanningHandler(graph)
 		
 		this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
 		
-		this.mouseUpListener = mxUtils.bind(this, function()
+		this.mouseUpListener = mxUtils.bind(this, ()=>
 		{
 	    	if (this.active)
 	    	{
@@ -104,14 +104,14 @@ function mxPanningHandler(graph)
  * Extends mxEventSource.
  */
 mxPanningHandler.prototype = new mxEventSource();
-mxPanningHandler.prototype.constructor = mxPanningHandler;
+constructor = mxPanningHandler;
 
 /**
  * Variable: graph
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxPanningHandler.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: useLeftButtonForPanning
@@ -119,14 +119,14 @@ mxPanningHandler.prototype.graph = null;
  * Specifies if panning should be active for the left mouse button.
  * Setting this to true may conflict with <mxRubberband>. Default is false.
  */
-mxPanningHandler.prototype.useLeftButtonForPanning = false;
+useLeftButtonForPanning = false;
 
 /**
  * Variable: usePopupTrigger
  * 
  * Specifies if <mxEvent.isPopupTrigger> should also be used for panning.
  */
-mxPanningHandler.prototype.usePopupTrigger = true;
+usePopupTrigger = true;
 
 /**
  * Variable: ignoreCell
@@ -134,14 +134,14 @@ mxPanningHandler.prototype.usePopupTrigger = true;
  * Specifies if panning should be active even if there is a cell under the
  * mousepointer. Default is false.
  */
-mxPanningHandler.prototype.ignoreCell = false;
+ignoreCell = false;
 
 /**
  * Variable: previewEnabled
  * 
  * Specifies if the panning should be previewed. Default is true.
  */
-mxPanningHandler.prototype.previewEnabled = true;
+previewEnabled = true;
 
 /**
  * Variable: useGrid
@@ -149,70 +149,70 @@ mxPanningHandler.prototype.previewEnabled = true;
  * Specifies if the panning steps should be aligned to the grid size.
  * Default is false.
  */
-mxPanningHandler.prototype.useGrid = false;
+useGrid = false;
 
 /**
  * Variable: panningEnabled
  * 
  * Specifies if panning should be enabled. Default is true.
  */
-mxPanningHandler.prototype.panningEnabled = true;
+panningEnabled = true;
 
 /**
  * Variable: pinchEnabled
  * 
  * Specifies if pinch gestures should be handled as zoom. Default is true.
  */
-mxPanningHandler.prototype.pinchEnabled = true;
+pinchEnabled = true;
 
 /**
  * Variable: maxScale
  * 
  * Specifies the maximum scale. Default is 8.
  */
-mxPanningHandler.prototype.maxScale = 8;
+maxScale = 8;
 
 /**
  * Variable: minScale
  * 
  * Specifies the minimum scale. Default is 0.01.
  */
-mxPanningHandler.prototype.minScale = 0.01;
+minScale = 0.01;
 
 /**
  * Variable: dx
  * 
  * Holds the current horizontal offset.
  */
-mxPanningHandler.prototype.dx = null;
+dx = null;
 
 /**
  * Variable: dy
  * 
  * Holds the current vertical offset.
  */
-mxPanningHandler.prototype.dy = null;
+dy = null;
 
 /**
  * Variable: startX
  * 
  * Holds the x-coordinate of the start point.
  */
-mxPanningHandler.prototype.startX = 0;
+startX = 0;
 
 /**
  * Variable: startY
  * 
  * Holds the y-coordinate of the start point.
  */
-mxPanningHandler.prototype.startY = 0;
+startY = 0;
 
 /**
  * Function: isActive
  * 
  * Returns true if the handler is currently active.
  */
-mxPanningHandler.prototype.isActive = function()
+isActive = ()=>
 {
 	return this.active || this.initialScale != null;
 };
@@ -222,7 +222,7 @@ mxPanningHandler.prototype.isActive = function()
  * 
  * Returns <panningEnabled>.
  */
-mxPanningHandler.prototype.isPanningEnabled = function()
+isPanningEnabled = ()=>
 {
 	return this.panningEnabled;
 };
@@ -232,7 +232,7 @@ mxPanningHandler.prototype.isPanningEnabled = function()
  * 
  * Sets <panningEnabled>.
  */
-mxPanningHandler.prototype.setPanningEnabled = function(value)
+setPanningEnabled = (value)=>
 {
 	this.panningEnabled = value;
 };
@@ -242,7 +242,7 @@ mxPanningHandler.prototype.setPanningEnabled = function(value)
  * 
  * Returns <pinchEnabled>.
  */
-mxPanningHandler.prototype.isPinchEnabled = function()
+isPinchEnabled = ()=>
 {
 	return this.pinchEnabled;
 };
@@ -252,7 +252,7 @@ mxPanningHandler.prototype.isPinchEnabled = function()
  * 
  * Sets <pinchEnabled>.
  */
-mxPanningHandler.prototype.setPinchEnabled = function(value)
+setPinchEnabled = (value)=>
 {
 	this.pinchEnabled = value;
 };
@@ -264,7 +264,7 @@ mxPanningHandler.prototype.setPinchEnabled = function(value)
  * given cell. This returns true if control-shift is pressed or if
  * <usePopupTrigger> is true and the event is a popup trigger.
  */
-mxPanningHandler.prototype.isPanningTrigger = function(me)
+isPanningTrigger = (me)=>
 {
 	var evt = me.getEvent();
 	
@@ -280,7 +280,7 @@ mxPanningHandler.prototype.isPanningTrigger = function(me)
  * implementation always returns true if <ignoreCell> is true or for
  * multi touch events.
  */
-mxPanningHandler.prototype.isForcePanningEvent = function(me)
+isForcePanningEvent = (me)=>
 {
 	return this.ignoreCell || mxEvent.isMultiTouchEvent(me.getEvent());
 };
@@ -291,7 +291,7 @@ mxPanningHandler.prototype.isForcePanningEvent = function(me)
  * Handles the event by initiating the panning. By consuming the event all
  * subsequent events of the gesture are redirected to this handler.
  */
-mxPanningHandler.prototype.mouseDown = function(sender, me)
+mouseDown = (sender, me)=>
 {
 	this.mouseDownEvent = me;
 	
@@ -307,7 +307,7 @@ mxPanningHandler.prototype.mouseDown = function(sender, me)
  * 
  * Starts panning at the given event.
  */
-mxPanningHandler.prototype.start = function(me)
+start = (me)=>
 {
 	this.dx0 = -this.graph.container.scrollLeft;
 	this.dy0 = -this.graph.container.scrollTop;
@@ -331,7 +331,7 @@ mxPanningHandler.prototype.start = function(me)
  * Safari and/or on the Mac, then use the following code:
  * 
  * (code)
- * mxPanningHandler.prototype.consumePanningTrigger = function(me)
+ * consumePanningTrigger = (me)=>
  * {
  *   if (me.evt.preventDefault)
  *   {
@@ -349,7 +349,7 @@ mxPanningHandler.prototype.start = function(me)
  * };
  * (end)
  */
-mxPanningHandler.prototype.consumePanningTrigger = function(me)
+consumePanningTrigger = (me)=>
 {
 	me.consume();
 };
@@ -359,7 +359,7 @@ mxPanningHandler.prototype.consumePanningTrigger = function(me)
  * 
  * Handles the event by updating the panning on the graph.
  */
-mxPanningHandler.prototype.mouseMove = function(sender, me)
+mouseMove = (sender, me)=>
 {
 	this.dx = me.getX() - this.startX;
 	this.dy = me.getY() - this.startY;
@@ -406,7 +406,7 @@ mxPanningHandler.prototype.mouseMove = function(sender, me)
  * Handles the event by setting the translation on the view or showing the
  * popupmenu.
  */
-mxPanningHandler.prototype.mouseUp = function(sender, me)
+mouseUp = (sender, me)=>
 {
 	if (this.active)
 	{
@@ -435,7 +435,7 @@ mxPanningHandler.prototype.mouseUp = function(sender, me)
  * 
  * Zooms the graph to the given value and consumed the event if needed.
  */
-mxPanningHandler.prototype.zoomGraph = function(evt)
+zoomGraph = (evt)=>
 {
 	var value = Math.round(this.initialScale * evt.scale * 100) / 100;
 	
@@ -461,7 +461,7 @@ mxPanningHandler.prototype.zoomGraph = function(evt)
  * 
  * Resets the state of this handler.
  */
-mxPanningHandler.prototype.reset = function()
+reset = ()=>
 {
 	this.panningTrigger = false;
 	this.mouseDownEvent = null;
@@ -475,7 +475,7 @@ mxPanningHandler.prototype.reset = function()
  * 
  * Pans <graph> by the given amount.
  */
-mxPanningHandler.prototype.panGraph = function(dx, dy)
+panGraph = (dx, dy)=>
 {
 	this.graph.getView().setTranslate(dx, dy);
 };
@@ -485,7 +485,7 @@ mxPanningHandler.prototype.panGraph = function(dx, dy)
  * 
  * Destroys the handler and all its resources and DOM nodes.
  */
-mxPanningHandler.prototype.destroy = function()
+destroy = ()=>
 {
 	this.graph.removeMouseListener(this);
 	this.graph.removeListener(this.forcePanningHandler);

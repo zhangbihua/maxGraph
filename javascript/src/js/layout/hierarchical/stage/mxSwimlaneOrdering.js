@@ -21,14 +21,14 @@ function mxSwimlaneOrdering(layout)
  * Extends mxHierarchicalLayoutStage.
  */
 mxSwimlaneOrdering.prototype = new mxHierarchicalLayoutStage();
-mxSwimlaneOrdering.prototype.constructor = mxSwimlaneOrdering;
+constructor = mxSwimlaneOrdering;
 
 /**
  * Variable: layout
  * 
  * Reference to the enclosing <mxHierarchicalLayout>.
  */
-mxSwimlaneOrdering.prototype.layout = null;
+layout = null;
 
 /**
  * Function: execute
@@ -37,7 +37,7 @@ mxSwimlaneOrdering.prototype.layout = null;
  * and creates the resulting laid out graph within that facade for further
  * use.
  */
-mxSwimlaneOrdering.prototype.execute = function(parent)
+execute = (parent)=>
 {
 	var model = this.layout.getModel();
 	var seenNodes = new Object();
@@ -58,7 +58,7 @@ mxSwimlaneOrdering.prototype.execute = function(parent)
 		}
 	}
 
-	model.visit(function(parent, node, connectingEdge, layer, seen)
+	model.visit((parent, node, connectingEdge, layer, seen)=>
 	{
 		// Check if the cell is in it's own ancestor list, if so
 		// invert the connecting edge and reverse the target/source

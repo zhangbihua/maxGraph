@@ -41,7 +41,7 @@ mxUtils.extend(mxEllipse, mxShape);
  * 
  * Paints the ellipse shape.
  */
-mxEllipse.prototype.paintVertexShape = function(c, x, y, w, h)
+paintVertexShape = (c, x, y, w, h)=>
 {
 	c.ellipse(x, y, w, h);
 	c.fillAndStroke();

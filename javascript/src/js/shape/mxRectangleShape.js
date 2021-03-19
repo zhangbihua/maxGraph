@@ -41,7 +41,7 @@ mxUtils.extend(mxRectangleShape, mxShape);
  *
  * Returns true for non-rounded, non-rotated shapes with no glass gradient.
  */
-mxRectangleShape.prototype.isHtmlAllowed = function()
+isHtmlAllowed = ()=>
 {
 	var events = true;
 	
@@ -59,7 +59,7 @@ mxRectangleShape.prototype.isHtmlAllowed = function()
  * 
  * Generic background painting implementation.
  */
-mxRectangleShape.prototype.paintBackground = function(c, x, y, w, h)
+paintBackground = (c, x, y, w, h)=>
 {
 	var events = true;
 	
@@ -108,7 +108,7 @@ mxRectangleShape.prototype.paintBackground = function(c, x, y, w, h)
  * 
  * Adds roundable support.
  */
-mxRectangleShape.prototype.isRoundable = function(c, x, y, w, h)
+isRoundable = (c, x, y, w, h)=>
 {
 	return true;
 };
@@ -118,7 +118,7 @@ mxRectangleShape.prototype.isRoundable = function(c, x, y, w, h)
  * 
  * Generic background painting implementation.
  */
-mxRectangleShape.prototype.paintForeground = function(c, x, y, w, h)
+paintForeground = (c, x, y, w, h)=>
 {
 	if (this.glass && !this.outline && this.fill != null && this.fill != mxConstants.NONE)
 	{

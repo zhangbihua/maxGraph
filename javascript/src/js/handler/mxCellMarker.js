@@ -13,12 +13,12 @@
  * (code)
  * var marker = new mxCellMarker(graph);
  * graph.addMouseListener({
- *   mouseDown: function() {},
- *   mouseMove: function(sender, me)
+ *   mouseDown: ()=> {},
+ *   mouseMove: (sender, me)=>
  *   {
  *     marker.process(me);
  *   },
- *   mouseUp: function() {}
+ *   mouseUp: ()=> {}
  * });
  * (end)
  *
@@ -67,14 +67,14 @@ mxUtils.extend(mxCellMarker, mxEventSource);
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxCellMarker.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: enabled
  * 
  * Specifies if the marker is enabled. Default is true.
  */
-mxCellMarker.prototype.enabled = true;
+enabled = true;
 
 /**
  * Variable: hotspot
@@ -84,49 +84,49 @@ mxCellMarker.prototype.enabled = true;
  * as the hotspot. Possible values are between 0 and 1. Default is
  * mxConstants.DEFAULT_HOTSPOT.
  */
-mxCellMarker.prototype.hotspot = mxConstants.DEFAULT_HOTSPOT; 
+hotspot = mxConstants.DEFAULT_HOTSPOT; 
 
 /**
  * Variable: hotspotEnabled
  * 
  * Specifies if the hotspot is enabled. Default is false.
  */
-mxCellMarker.prototype.hotspotEnabled = false;
+hotspotEnabled = false;
 
 /**
  * Variable: validColor
  * 
  * Holds the valid marker color.
  */
-mxCellMarker.prototype.validColor = null;
+validColor = null;
 
 /**
  * Variable: invalidColor
  * 
  * Holds the invalid marker color.
  */
-mxCellMarker.prototype.invalidColor = null;
+invalidColor = null;
 
 /**
  * Variable: currentColor
  * 
  * Holds the current marker color.
  */
-mxCellMarker.prototype.currentColor = null;
+currentColor = null;
 
 /**
  * Variable: validState
  * 
  * Holds the marked <mxCellState> if it is valid.
  */
-mxCellMarker.prototype.validState = null; 
+validState = null; 
 
 /**
  * Variable: markedState
  * 
  * Holds the marked <mxCellState>.
  */
-mxCellMarker.prototype.markedState = null;
+markedState = null;
 
 /**
  * Function: setEnabled
@@ -138,7 +138,7 @@ mxCellMarker.prototype.markedState = null;
  * 
  * enabled - Boolean that specifies the new enabled state.
  */
-mxCellMarker.prototype.setEnabled = function(enabled)
+setEnabled = (enabled)=>
 {
 	this.enabled = enabled;
 };
@@ -149,7 +149,7 @@ mxCellMarker.prototype.setEnabled = function(enabled)
  * Returns true if events are handled. This implementation
  * returns <enabled>.
  */
-mxCellMarker.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -159,7 +159,7 @@ mxCellMarker.prototype.isEnabled = function()
  * 
  * Sets the <hotspot>.
  */
-mxCellMarker.prototype.setHotspot = function(hotspot)
+setHotspot = (hotspot)=>
 {
 	this.hotspot = hotspot;
 };
@@ -169,7 +169,7 @@ mxCellMarker.prototype.setHotspot = function(hotspot)
  * 
  * Returns the <hotspot>.
  */
-mxCellMarker.prototype.getHotspot = function()
+getHotspot = ()=>
 {
 	return this.hotspot;
 };
@@ -179,7 +179,7 @@ mxCellMarker.prototype.getHotspot = function()
  * 
  * Specifies whether the hotspot should be used in <intersects>.
  */
-mxCellMarker.prototype.setHotspotEnabled = function(enabled)
+setHotspotEnabled = (enabled)=>
 {
 	this.hotspotEnabled = enabled;
 };
@@ -189,7 +189,7 @@ mxCellMarker.prototype.setHotspotEnabled = function(enabled)
  * 
  * Returns true if hotspot is used in <intersects>.
  */
-mxCellMarker.prototype.isHotspotEnabled = function()
+isHotspotEnabled = ()=>
 {
 	return this.hotspotEnabled;
 };
@@ -199,7 +199,7 @@ mxCellMarker.prototype.isHotspotEnabled = function()
  * 
  * Returns true if <validState> is not null.
  */
-mxCellMarker.prototype.hasValidState = function()
+hasValidState = ()=>
 {
 	return this.validState != null;
 };
@@ -209,7 +209,7 @@ mxCellMarker.prototype.hasValidState = function()
  * 
  * Returns the <validState>.
  */
-mxCellMarker.prototype.getValidState = function()
+getValidState = ()=>
 {
 	return this.validState;
 };
@@ -219,7 +219,7 @@ mxCellMarker.prototype.getValidState = function()
  * 
  * Returns the <markedState>.
  */
-mxCellMarker.prototype.getMarkedState = function()
+getMarkedState = ()=>
 {
 	return this.markedState;
 };
@@ -229,7 +229,7 @@ mxCellMarker.prototype.getMarkedState = function()
  * 
  * Resets the state of the cell marker.
  */
-mxCellMarker.prototype.reset = function()
+reset = ()=>
 {
 	this.validState = null;
 	
@@ -250,7 +250,7 @@ mxCellMarker.prototype.reset = function()
  * regardless of the marker color. The state is returned regardless of the
  * marker color and valid state. 
  */
-mxCellMarker.prototype.process = function(me)
+process = (me)=>
 {
 	var state = null;
 	
@@ -268,7 +268,7 @@ mxCellMarker.prototype.process = function(me)
  * 
  * Sets and marks the current valid state.
  */
-mxCellMarker.prototype.setCurrentState = function(state, me, color)
+setCurrentState = (state, me, color)=>
 {
 	var isValid = (state != null) ? this.isValidState(state) : false;
 	color = (color != null) ? color : this.getMarkerColor(me.getEvent(), state, isValid);
@@ -304,7 +304,7 @@ mxCellMarker.prototype.setCurrentState = function(state, me, color)
  * 
  * Marks the given cell using the given color, or <validColor> if no color is specified.
  */
-mxCellMarker.prototype.markCell = function(cell, color)
+markCell = (cell, color)=>
 {
 	var state = this.graph.getView().getState(cell);
 	
@@ -321,7 +321,7 @@ mxCellMarker.prototype.markCell = function(cell, color)
  * 
  * Marks the <markedState> and fires a <mark> event.
  */
-mxCellMarker.prototype.mark = function()
+mark = ()=>
 {
 	this.highlight.setHighlightColor(this.currentColor);
 	this.highlight.highlight(this.markedState);
@@ -333,7 +333,7 @@ mxCellMarker.prototype.mark = function()
  * 
  * Hides the marker and fires a <mark> event.
  */
-mxCellMarker.prototype.unmark = function()
+unmark = ()=>
 {
 	this.mark();
 };
@@ -345,7 +345,7 @@ mxCellMarker.prototype.unmark = function()
  * returns true, then the state is stored in <validState>. The return value
  * of this method is used as the argument for <getMarkerColor>.
  */
-mxCellMarker.prototype.isValidState = function(state)
+isValidState = (state)=>
 {
 	return true;
 };
@@ -356,7 +356,7 @@ mxCellMarker.prototype.isValidState = function(state)
  * Returns the valid- or invalidColor depending on the value of isValid.
  * The given <mxCellState> is ignored by this implementation.
  */
-mxCellMarker.prototype.getMarkerColor = function(evt, state, isValid)
+getMarkerColor = (evt, state, isValid)=>
 {
 	return (isValid) ? this.validColor : this.invalidColor;
 };
@@ -367,7 +367,7 @@ mxCellMarker.prototype.getMarkerColor = function(evt, state, isValid)
  * Uses <getCell>, <getStateToMark> and <intersects> to return the
  * <mxCellState> for the given <mxMouseEvent>.
  */
-mxCellMarker.prototype.getState = function(me)
+getState = (me)=>
 {
 	var view = this.graph.getView();
 	var cell = this.getCell(me);
@@ -382,7 +382,7 @@ mxCellMarker.prototype.getState = function(me)
  * Returns the <mxCell> for the given event and cell. This returns the
  * given cell.
  */
-mxCellMarker.prototype.getCell = function(me)
+getCell = (me)=>
 {
 	return me.getCell();
 };
@@ -393,7 +393,7 @@ mxCellMarker.prototype.getCell = function(me)
  * Returns the <mxCellState> to be marked for the given <mxCellState> under
  * the mouse. This returns the given state.
  */
-mxCellMarker.prototype.getStateToMark = function(state)
+getStateToMark = (state)=>
 {
 	return state;
 };
@@ -405,7 +405,7 @@ mxCellMarker.prototype.getStateToMark = function(state)
  * This returns true if the <hotspot> is 0 or the coordinates are inside
  * the hotspot for the given cell state.
  */
-mxCellMarker.prototype.intersects = function(state, me)
+intersects = (state, me)=>
 {
 	if (this.hotspotEnabled)
 	{
@@ -422,7 +422,7 @@ mxCellMarker.prototype.intersects = function(state, me)
  * 
  * Destroys the handler and all its resources and DOM nodes.
  */
-mxCellMarker.prototype.destroy = function()
+destroy = ()=>
 {
 	this.graph.getView().removeListener(this.resetHandler);
 	this.graph.getModel().removeListener(this.resetHandler);

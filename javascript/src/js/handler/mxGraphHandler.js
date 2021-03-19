@@ -28,7 +28,7 @@ function mxGraphHandler(graph)
 	this.graph.addMouseListener(this);
 	
 	// Repaints the handler after autoscroll
-	this.panHandler = mxUtils.bind(this, function()
+	this.panHandler = mxUtils.bind(this, ()=>
 	{
 		if (!this.suspended)
 		{
@@ -40,7 +40,7 @@ function mxGraphHandler(graph)
 	this.graph.addListener(mxEvent.PAN, this.panHandler);
 	
 	// Handles escape keystrokes
-	this.escapeHandler = mxUtils.bind(this, function(sender, evt)
+	this.escapeHandler = mxUtils.bind(this, (sender, evt)=>
 	{
 		this.reset();
 	});
@@ -48,7 +48,7 @@ function mxGraphHandler(graph)
 	this.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
 	
 	// Updates the preview box for remote changes
-	this.refreshHandler = mxUtils.bind(this, function(sender, evt)
+	this.refreshHandler = mxUtils.bind(this, (sender, evt)=>
 	{
 		// Merges multiple pending calls
 		if (this.refreshThread)
@@ -57,7 +57,7 @@ function mxGraphHandler(graph)
 		}
 
 		// Waits for the states and handlers to be updated
-		this.refreshThread = window.setTimeout(mxUtils.bind(this, function()
+		this.refreshThread = window.setTimeout(mxUtils.bind(this, ()=>
 		{
 			this.refreshThread = null;
 			
@@ -100,7 +100,7 @@ function mxGraphHandler(graph)
 	this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
 	this.graph.addListener(mxEvent.REFRESH, this.refreshHandler);
 	
-	this.keyHandler = mxUtils.bind(this, function(e)
+	this.keyHandler = mxUtils.bind(this, (e)=>
 	{
 		if (this.graph.container != null && this.graph.container.style.visibility != 'hidden' &&
 			this.first != null && !this.suspended)
@@ -127,7 +127,7 @@ function mxGraphHandler(graph)
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxGraphHandler.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: maxCells
@@ -139,14 +139,14 @@ mxGraphHandler.prototype.graph = null;
  * cells in the graph is limited to a small number, eg.
  * 500.
  */
-mxGraphHandler.prototype.maxCells = (mxClient.IS_IE) ? 20 : 50;
+maxCells = (mxClient.IS_IE) ? 20 : 50;
 
 /**
  * Variable: enabled
  * 
  * Specifies if events are handled. Default is true.
  */
-mxGraphHandler.prototype.enabled = true;
+enabled = true;
 
 /**
  * Variable: highlightEnabled
@@ -154,21 +154,21 @@ mxGraphHandler.prototype.enabled = true;
  * Specifies if drop targets under the mouse should be enabled. Default is
  * true.
  */
-mxGraphHandler.prototype.highlightEnabled = true;
+highlightEnabled = true;
 
 /**
  * Variable: cloneEnabled
  * 
  * Specifies if cloning by control-drag is enabled. Default is true.
  */
-mxGraphHandler.prototype.cloneEnabled = true;
+cloneEnabled = true;
 
 /**
  * Variable: moveEnabled
  * 
  * Specifies if moving is enabled. Default is true.
  */
-mxGraphHandler.prototype.moveEnabled = true;
+moveEnabled = true;
 
 /**
  * Variable: guidesEnabled
@@ -176,35 +176,35 @@ mxGraphHandler.prototype.moveEnabled = true;
  * Specifies if other cells should be used for snapping the right, center or
  * left side of the current selection. Default is false.
  */
-mxGraphHandler.prototype.guidesEnabled = false;
+guidesEnabled = false;
 
 /**
  * Variable: handlesVisible
  * 
  * Whether the handles of the selection are currently visible.
  */
-mxGraphHandler.prototype.handlesVisible = true;
+handlesVisible = true;
 
 /**
  * Variable: guide
  * 
  * Holds the <mxGuide> instance that is used for alignment.
  */
-mxGraphHandler.prototype.guide = null;
+guide = null;
 
 /**
  * Variable: currentDx
  * 
  * Stores the x-coordinate of the current mouse move.
  */
-mxGraphHandler.prototype.currentDx = null;
+currentDx = null;
 
 /**
  * Variable: currentDy
  * 
  * Stores the y-coordinate of the current mouse move.
  */
-mxGraphHandler.prototype.currentDy = null;
+currentDy = null;
 
 /**
  * Variable: updateCursor
@@ -212,21 +212,21 @@ mxGraphHandler.prototype.currentDy = null;
  * Specifies if a move cursor should be shown if the mouse is over a movable
  * cell. Default is true.
  */
-mxGraphHandler.prototype.updateCursor = true;
+updateCursor = true;
 
 /**
  * Variable: selectEnabled
  * 
  * Specifies if selecting is enabled. Default is true.
  */
-mxGraphHandler.prototype.selectEnabled = true;
+selectEnabled = true;
 
 /**
  * Variable: removeCellsFromParent
  * 
  * Specifies if cells may be moved out of their parents. Default is true.
  */
-mxGraphHandler.prototype.removeCellsFromParent = true;
+removeCellsFromParent = true;
 
 /**
  * Variable: removeEmptyParents
@@ -234,7 +234,7 @@ mxGraphHandler.prototype.removeCellsFromParent = true;
  * If empty parents should be removed from the model after all child cells
  * have been moved out. Default is true.
  */
-mxGraphHandler.prototype.removeEmptyParents = false;
+removeEmptyParents = false;
 
 /**
  * Variable: connectOnDrop
@@ -242,7 +242,7 @@ mxGraphHandler.prototype.removeEmptyParents = false;
  * Specifies if drop events are interpreted as new connections if no other
  * drop action is defined. Default is false.
  */
-mxGraphHandler.prototype.connectOnDrop = false;
+connectOnDrop = false;
 
 /**
  * Variable: scrollOnMove
@@ -250,7 +250,7 @@ mxGraphHandler.prototype.connectOnDrop = false;
  * Specifies if the view should be scrolled so that a moved cell is
  * visible. Default is true.
  */
-mxGraphHandler.prototype.scrollOnMove = true;
+scrollOnMove = true;
 
 /**
  * Variable: minimumSize
@@ -258,14 +258,14 @@ mxGraphHandler.prototype.scrollOnMove = true;
  * Specifies the minimum number of pixels for the width and height of a
  * selection border. Default is 6.
  */
-mxGraphHandler.prototype.minimumSize = 6;
+minimumSize = 6;
 
 /**
  * Variable: previewColor
  * 
  * Specifies the color of the preview shape. Default is black.
  */
-mxGraphHandler.prototype.previewColor = 'black';
+previewColor = 'black';
 
 /**
  * Variable: htmlPreview
@@ -274,28 +274,28 @@ mxGraphHandler.prototype.previewColor = 'black';
  * then drop target detection relies entirely on <mxGraph.getCellAt> because
  * the HTML preview does not "let events through". Default is false.
  */
-mxGraphHandler.prototype.htmlPreview = false;
+htmlPreview = false;
 
 /**
  * Variable: shape
  * 
  * Reference to the <mxShape> that represents the preview.
  */
-mxGraphHandler.prototype.shape = null;
+shape = null;
 
 /**
  * Variable: scaleGrid
  * 
  * Specifies if the grid should be scaled. Default is false.
  */
-mxGraphHandler.prototype.scaleGrid = false;
+scaleGrid = false;
 
 /**
  * Variable: rotationEnabled
  * 
  * Specifies if the bounding box should allow for rotation. Default is true.
  */
-mxGraphHandler.prototype.rotationEnabled = true;
+rotationEnabled = true;
 
 /**
  * Variable: maxLivePreview
@@ -303,7 +303,7 @@ mxGraphHandler.prototype.rotationEnabled = true;
  * Maximum number of cells for which live preview should be used. Default is 0
  * which means no live preview.
  */
-mxGraphHandler.prototype.maxLivePreview = 0;
+maxLivePreview = 0;
 
 /**
  * Variable: allowLivePreview
@@ -311,14 +311,14 @@ mxGraphHandler.prototype.maxLivePreview = 0;
  * If live preview is allowed on this system. Default is true for systems with
  * SVG support.
  */
-mxGraphHandler.prototype.allowLivePreview = mxClient.IS_SVG;
+allowLivePreview = mxClient.IS_SVG;
 
 /**
  * Function: isEnabled
  * 
  * Returns <enabled>.
  */
-mxGraphHandler.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -328,7 +328,7 @@ mxGraphHandler.prototype.isEnabled = function()
  * 
  * Sets <enabled>.
  */
-mxGraphHandler.prototype.setEnabled = function(value)
+setEnabled = (value)=>
 {
 	this.enabled = value;
 };
@@ -338,7 +338,7 @@ mxGraphHandler.prototype.setEnabled = function(value)
  * 
  * Returns <cloneEnabled>.
  */
-mxGraphHandler.prototype.isCloneEnabled = function()
+isCloneEnabled = ()=>
 {
 	return this.cloneEnabled;
 };
@@ -352,7 +352,7 @@ mxGraphHandler.prototype.isCloneEnabled = function()
  * 
  * value - Boolean that specifies the new clone enabled state.
  */
-mxGraphHandler.prototype.setCloneEnabled = function(value)
+setCloneEnabled = (value)=>
 {
 	this.cloneEnabled = value;
 };
@@ -362,7 +362,7 @@ mxGraphHandler.prototype.setCloneEnabled = function(value)
  * 
  * Returns <moveEnabled>.
  */
-mxGraphHandler.prototype.isMoveEnabled = function()
+isMoveEnabled = ()=>
 {
 	return this.moveEnabled;
 };
@@ -372,7 +372,7 @@ mxGraphHandler.prototype.isMoveEnabled = function()
  * 
  * Sets <moveEnabled>.
  */
-mxGraphHandler.prototype.setMoveEnabled = function(value)
+setMoveEnabled = (value)=>
 {
 	this.moveEnabled = value;
 };
@@ -382,7 +382,7 @@ mxGraphHandler.prototype.setMoveEnabled = function(value)
  * 
  * Returns <selectEnabled>.
  */
-mxGraphHandler.prototype.isSelectEnabled = function()
+isSelectEnabled = ()=>
 {
 	return this.selectEnabled;
 };
@@ -392,7 +392,7 @@ mxGraphHandler.prototype.isSelectEnabled = function()
  * 
  * Sets <selectEnabled>.
  */
-mxGraphHandler.prototype.setSelectEnabled = function(value)
+setSelectEnabled = (value)=>
 {
 	this.selectEnabled = value;
 };
@@ -402,7 +402,7 @@ mxGraphHandler.prototype.setSelectEnabled = function(value)
  * 
  * Returns <removeCellsFromParent>.
  */
-mxGraphHandler.prototype.isRemoveCellsFromParent = function()
+isRemoveCellsFromParent = ()=>
 {
 	return this.removeCellsFromParent;
 };
@@ -412,7 +412,7 @@ mxGraphHandler.prototype.isRemoveCellsFromParent = function()
  * 
  * Sets <removeCellsFromParent>.
  */
-mxGraphHandler.prototype.setRemoveCellsFromParent = function(value)
+setRemoveCellsFromParent = (value)=>
 {
 	this.removeCellsFromParent = value;
 };
@@ -423,7 +423,7 @@ mxGraphHandler.prototype.setRemoveCellsFromParent = function(value)
  * Returns true if the given cell and parent should propagate
  * selection state to the parent.
  */
-mxGraphHandler.prototype.isPropagateSelectionCell = function(cell, immediate, me)
+isPropagateSelectionCell = (cell, immediate, me)=>
 {
 	var parent = this.graph.model.getParent(cell);
 
@@ -454,7 +454,7 @@ mxGraphHandler.prototype.isPropagateSelectionCell = function(cell, immediate, me
  * Hook to return initial cell for the given event. This returns
  * the topmost cell that is not a swimlane or is selected.
  */
-mxGraphHandler.prototype.getInitialCellForEvent = function(me)
+getInitialCellForEvent = (me)=>
 {
 	var state = me.getState();
 	
@@ -481,7 +481,7 @@ mxGraphHandler.prototype.getInitialCellForEvent = function(me)
  * 
  * Returns true if the cell or one of its ancestors is selected.
  */
-mxGraphHandler.prototype.isDelayedSelection = function(cell, me)
+isDelayedSelection = (cell, me)=>
 {
 	if (!this.graph.isToggleEvent(me.getEvent()) || !mxEvent.isAltDown(me.getEvent()))
 	{
@@ -504,7 +504,7 @@ mxGraphHandler.prototype.isDelayedSelection = function(cell, me)
  * 
  * Implements the delayed selection for the given mouse event.
  */
-mxGraphHandler.prototype.selectDelayed = function(me)
+selectDelayed = (me)=>
 {
 	if (!this.graph.popupMenuHandler.isPopupTrigger(me))
 	{
@@ -524,7 +524,7 @@ mxGraphHandler.prototype.selectDelayed = function(me)
  * 
  * Selects the given cell for the given <mxMouseEvent>.
  */
-mxGraphHandler.prototype.selectCellForEvent = function(cell, me)
+selectCellForEvent = (cell, me)=>
 {
 	var state = this.graph.view.getState(cell);
 	
@@ -566,7 +566,7 @@ mxGraphHandler.prototype.selectCellForEvent = function(cell, me)
  * touchStart disables firing the subsequent click event on the link.
  * 
  * <code>
- * mxGraphHandler.prototype.consumeMouseEvent = function(evtName, me)
+ * consumeMouseEvent = (evtName, me)=>
  * {
  *   var source = mxEvent.getSource(me.getEvent());
  *   
@@ -577,7 +577,7 @@ mxGraphHandler.prototype.selectCellForEvent = function(cell, me)
  * }
  * </code>
  */
-mxGraphHandler.prototype.consumeMouseEvent = function(evtName, me)
+consumeMouseEvent = (evtName, me)=>
 {
 	me.consume();
 };
@@ -589,7 +589,7 @@ mxGraphHandler.prototype.consumeMouseEvent = function(evtName, me)
  * it. By consuming the event all subsequent events of the gesture are
  * redirected to this handler.
  */
-mxGraphHandler.prototype.mouseDown = function(sender, me)
+mouseDown = (sender, me)=>
 {
 	if (!me.isConsumed() && this.isEnabled() && this.graph.isEnabled() &&
 		me.getState() != null && !mxEvent.isMultiTouchEvent(me.getEvent()))
@@ -631,12 +631,12 @@ mxGraphHandler.prototype.mouseDown = function(sender, me)
  * 
  * Creates an array of cell states which should be used as guides.
  */
-mxGraphHandler.prototype.getGuideStates = function()
+getGuideStates = ()=>
 {
 	var parent = this.graph.getDefaultParent();
 	var model = this.graph.getModel();
 	
-	var filter = mxUtils.bind(this, function(cell)
+	var filter = mxUtils.bind(this, (cell)=>
 	{
 		return this.graph.view.getState(cell) != null &&
 			model.isVertex(cell) &&
@@ -659,7 +659,7 @@ mxGraphHandler.prototype.getGuideStates = function()
  * 
  * initialCell - <mxCell> that triggered this handler.
  */
-mxGraphHandler.prototype.getCells = function(initialCell)
+getCells = (initialCell)=>
 {
 	if (!this.delayedSelection && this.graph.isCellMovable(initialCell))
 	{
@@ -677,7 +677,7 @@ mxGraphHandler.prototype.getCells = function(initialCell)
  * Returns the <mxRectangle> used as the preview bounds for
  * moving the given cells.
  */
-mxGraphHandler.prototype.getPreviewBounds = function(cells)
+getPreviewBounds = (cells)=>
 {
 	var bounds = this.getBoundingBox(cells);
 	
@@ -731,7 +731,7 @@ mxGraphHandler.prototype.getPreviewBounds = function(cells)
  *
  * cells - Array of <mxCells> whose bounding box should be returned.
  */
-mxGraphHandler.prototype.getBoundingBox = function(cells)
+getBoundingBox = (cells)=>
 {
 	var result = null;
 	
@@ -775,7 +775,7 @@ mxGraphHandler.prototype.getBoundingBox = function(cells)
  * 
  * Creates the shape used to draw the preview for the given bounds.
  */
-mxGraphHandler.prototype.createPreviewShape = function(bounds)
+createPreviewShape = (bounds)=>
 {
 	var shape = new mxRectangleShape(bounds, null, this.previewColor);
 	shape.isDashed = true;
@@ -798,7 +798,7 @@ mxGraphHandler.prototype.createPreviewShape = function(bounds)
 		// Workaround for artifacts on iOS
 		if (mxClient.IS_IOS)
 		{
-			shape.getSvgScreenOffset = function()
+			shape.getSvgScreenOffset = ()=>
 			{
 				return 0;
 			};
@@ -813,7 +813,7 @@ mxGraphHandler.prototype.createPreviewShape = function(bounds)
  * 
  * Starts the handling of the mouse gesture.
  */
-mxGraphHandler.prototype.start = function(cell, x, y, cells)
+start = (cell, x, y, cells)=>
 {
 	this.cell = cell;
 	this.first = mxUtils.convertPoint(this.graph.container, x, y);
@@ -849,7 +849,7 @@ mxGraphHandler.prototype.start = function(cell, x, y, cells)
 			}
 		}
 
-		this.guide.isStateIgnored = mxUtils.bind(this, function(state)
+		this.guide.isStateIgnored = mxUtils.bind(this, (state)=>
 		{
 			var p = this.graph.model.getParent(state.cell);
 			
@@ -868,7 +868,7 @@ mxGraphHandler.prototype.start = function(cell, x, y, cells)
  * 
  * Adds the states for the given cell recursively to the given dictionary.
  */
-mxGraphHandler.prototype.addStates = function(cell, dict)
+addStates = (cell, dict)=>
 {
 	var state = this.graph.view.getState(cell);
 	var count = 0;
@@ -894,7 +894,7 @@ mxGraphHandler.prototype.addStates = function(cell, dict)
  * 
  * Returns true if the given cell is currently being moved.
  */
-mxGraphHandler.prototype.isCellMoving = function(cell)
+isCellMoving = (cell)=>
 {
 	return this.allCells.get(cell) != null;
 };
@@ -905,7 +905,7 @@ mxGraphHandler.prototype.isCellMoving = function(cell)
  * Returns true if the guides should be used for the given <mxMouseEvent>.
  * This implementation returns <mxGuide.isEnabledForEvent>.
  */
-mxGraphHandler.prototype.useGuidesForEvent = function(me)
+useGuidesForEvent = (me)=>
 {
 	return (this.guide != null) ? this.guide.isEnabledForEvent(me.getEvent()) &&
 		!this.graph.isConstrainedEvent(me.getEvent()) : true;
@@ -917,7 +917,7 @@ mxGraphHandler.prototype.useGuidesForEvent = function(me)
  * 
  * Snaps the given vector to the grid and returns the given mxPoint instance.
  */
-mxGraphHandler.prototype.snap = function(vector)
+snap = (vector)=>
 {
 	var scale = (this.scaleGrid) ? this.graph.view.scale : 1;
 	
@@ -933,7 +933,7 @@ mxGraphHandler.prototype.snap = function(vector)
  * Returns an <mxPoint> that represents the vector for moving the cells
  * for the given <mxMouseEvent>.
  */
-mxGraphHandler.prototype.getDelta = function(me)
+getDelta = (me)=>
 {
 	var point = mxUtils.convertPoint(this.graph.container, me.getX(), me.getY());
 	
@@ -946,14 +946,14 @@ mxGraphHandler.prototype.getDelta = function(me)
  * 
  * Hook for subclassers do show details while the handler is active.
  */
-mxGraphHandler.prototype.updateHint = function(me) { };
+updateHint = (me)=> { };
 
 /**
  * Function: removeHint
  * 
  * Hooks for subclassers to hide details when the handler gets inactive.
  */
-mxGraphHandler.prototype.removeHint = function() { };
+removeHint = ()=> { };
 
 /**
  * Function: roundLength
@@ -962,7 +962,7 @@ mxGraphHandler.prototype.removeHint = function() { };
  * numbers coming in should be rounded if no half steps are allowed (ie for non
  * aligned standard moving where pixel steps should be preferred).
  */
-mxGraphHandler.prototype.roundLength = function(length)
+roundLength = (length)=>
 {
 	return Math.round(length * 100) / 100;
 };
@@ -972,7 +972,7 @@ mxGraphHandler.prototype.roundLength = function(length)
  * 
  * Returns true if the given cell is a valid drop target.
  */
-mxGraphHandler.prototype.isValidDropTarget = function(target, me)
+isValidDropTarget = (target, me)=>
 {
 	return this.graph.model.getParent(this.cell) != target;
 };
@@ -982,7 +982,7 @@ mxGraphHandler.prototype.isValidDropTarget = function(target, me)
  * 
  * Updates the preview if cloning state has changed.
  */
-mxGraphHandler.prototype.checkPreview = function()
+checkPreview = ()=>
 {
 	if (this.livePreviewActive && this.cloning)
 	{
@@ -1009,7 +1009,7 @@ mxGraphHandler.prototype.checkPreview = function()
  * Handles the event by highlighting possible drop targets and updating the
  * preview.
  */
-mxGraphHandler.prototype.mouseMove = function(sender, me)
+mouseMove = (sender, me)=>
 {
 	var graph = this.graph;
 
@@ -1168,7 +1168,7 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
  * 
  * Updates the bounds of the preview shape.
  */
-mxGraphHandler.prototype.updatePreview = function(remote)
+updatePreview = (remote)=>
 {
 	if (this.livePreviewUsed && !remote)
 	{
@@ -1191,7 +1191,7 @@ mxGraphHandler.prototype.updatePreview = function(remote)
  * 
  * Updates the bounds of the preview shape.
  */
-mxGraphHandler.prototype.updatePreviewShape = function()
+updatePreviewShape = ()=>
 {
 	if (this.shape != null && this.pBounds != null)
 	{
@@ -1206,7 +1206,7 @@ mxGraphHandler.prototype.updatePreviewShape = function()
  * 
  * Updates the bounds of the preview shape.
  */
-mxGraphHandler.prototype.updateLivePreview = function(dx, dy)
+updateLivePreview = (dx, dy)=>
 {
 	if (!this.suspended)
 	{
@@ -1214,7 +1214,7 @@ mxGraphHandler.prototype.updateLivePreview = function(dx, dy)
 		
 		if (this.allCells != null)
 		{
-			this.allCells.visit(mxUtils.bind(this, function(key, state)
+			this.allCells.visit(mxUtils.bind(this, (key, state)=>
 			{
 				var realState = this.graph.view.getState(state.cell);
 				
@@ -1392,7 +1392,7 @@ mxGraphHandler.prototype.updateLivePreview = function(dx, dy)
  * 
  * Redraws the preview shape for the given states array.
  */
-mxGraphHandler.prototype.redrawHandles = function(states)
+redrawHandles = (states)=>
 {
 	for (var i = 0; i < states.length; i++)
 	{
@@ -1410,7 +1410,7 @@ mxGraphHandler.prototype.redrawHandles = function(states)
  * 
  * Resets the given preview states array.
  */
-mxGraphHandler.prototype.resetPreviewStates = function(states)
+resetPreviewStates = (states)=>
 {
 	for (var i = 0; i < states.length; i++)
 	{
@@ -1423,7 +1423,7 @@ mxGraphHandler.prototype.resetPreviewStates = function(states)
  * 
  * Suspends the livew preview.
  */
-mxGraphHandler.prototype.suspend = function()
+suspend = ()=>
 {
 	if (!this.suspended)
 	{
@@ -1451,7 +1451,7 @@ mxGraphHandler.prototype.suspend = function()
  * 
  * Suspends the livew preview.
  */
-mxGraphHandler.prototype.resume = function()
+resume = ()=>
 {
 	if (this.suspended)
 	{
@@ -1479,11 +1479,11 @@ mxGraphHandler.prototype.resume = function()
  * 
  * Resets the livew preview.
  */
-mxGraphHandler.prototype.resetLivePreview = function()
+resetLivePreview = ()=>
 {
 	if (this.allCells != null)
 	{
-		this.allCells.visit(mxUtils.bind(this, function(key, state)
+		this.allCells.visit(mxUtils.bind(this, (key, state)=>
 		{
 			// Restores event handling
 			if (state.shape != null && state.shape.originalPointerEvents != null)
@@ -1537,7 +1537,7 @@ mxGraphHandler.prototype.resetLivePreview = function()
  * visible - Boolean that specifies if the handles should be visible.
  * force - Forces an update of the handler regardless of the last used value.
  */
-mxGraphHandler.prototype.setHandlesVisibleForCells = function(cells, visible, force)
+setHandlesVisibleForCells = (cells, visible, force)=>
 {
 	if (force || this.handlesVisible != visible)
 	{
@@ -1569,7 +1569,7 @@ mxGraphHandler.prototype.setHandlesVisibleForCells = function(cells, visible, fo
  * 
  * color - String that represents the new highlight color.
  */
-mxGraphHandler.prototype.setHighlightColor = function(color)
+setHighlightColor = (color)=>
 {
 	if (this.highlight != null)
 	{
@@ -1582,7 +1582,7 @@ mxGraphHandler.prototype.setHighlightColor = function(color)
  * 
  * Handles the event by applying the changes to the selection cells.
  */
-mxGraphHandler.prototype.mouseUp = function(sender, me)
+mouseUp = (sender, me)=>
 {
 	if (!me.isConsumed())
 	{
@@ -1641,7 +1641,7 @@ mxGraphHandler.prototype.mouseUp = function(sender, me)
  * 
  * Resets the state of this handler.
  */
-mxGraphHandler.prototype.reset = function()
+reset = ()=>
 {
 	if (this.livePreviewUsed)
 	{
@@ -1678,7 +1678,7 @@ mxGraphHandler.prototype.reset = function()
  * Returns true if the given cells should be removed from the parent for the specified
  * mousereleased event.
  */
-mxGraphHandler.prototype.shouldRemoveCellsFromParent = function(parent, cells, evt)
+shouldRemoveCellsFromParent = (parent, cells, evt)=>
 {
 	if (this.graph.getModel().isVertex(parent))
 	{
@@ -1710,7 +1710,7 @@ mxGraphHandler.prototype.shouldRemoveCellsFromParent = function(parent, cells, e
  * 
  * Moves the given cells by the specified amount.
  */
-mxGraphHandler.prototype.moveCells = function(cells, dx, dy, clone, target, evt)
+moveCells = (cells, dx, dy, clone, target, evt)=>
 {
 	if (clone)
 	{
@@ -1797,7 +1797,7 @@ mxGraphHandler.prototype.moveCells = function(cells, dx, dy, clone, target, evt)
  * 
  * Returns true if the given parent should be removed after removal of child cells.
  */
-mxGraphHandler.prototype.shouldRemoveParent = function(parent)
+shouldRemoveParent = (parent)=>
 {
 	var state = this.graph.view.getState(parent);
 	
@@ -1811,7 +1811,7 @@ mxGraphHandler.prototype.shouldRemoveParent = function(parent)
  * 
  * Destroy the preview and highlight shapes.
  */
-mxGraphHandler.prototype.destroyShapes = function()
+destroyShapes = ()=>
 {
 	// Destroys the preview dashed rectangle
 	if (this.shape != null)
@@ -1839,7 +1839,7 @@ mxGraphHandler.prototype.destroyShapes = function()
  * 
  * Destroys the handler and all its resources and DOM nodes.
  */
-mxGraphHandler.prototype.destroy = function()
+destroy = ()=>
 {
 	this.graph.removeMouseListener(this);
 	this.graph.removeListener(this.panHandler);

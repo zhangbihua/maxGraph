@@ -42,7 +42,7 @@ mxUtils.extend(mxCloud, mxActor);
  *
  * Draws the path for this shape.
  */
-mxCloud.prototype.redrawPath = function(c, x, y, w, h)
+redrawPath = (c, x, y, w, h)=>
 {
 	c.moveTo(0.25 * w, 0.25 * h);
 	c.curveTo(0.05 * w, 0.25 * h, 0, 0.5 * h, 0.16 * w, 0.55 * h);

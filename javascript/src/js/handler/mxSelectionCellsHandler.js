@@ -32,7 +32,7 @@ function mxSelectionCellsHandler(graph)
 	this.handlers = new mxDictionary();
 	this.graph.addMouseListener(this);
 	
-	this.refreshHandler = mxUtils.bind(this, function(sender, evt)
+	this.refreshHandler = mxUtils.bind(this, (sender, evt)=>
 	{
 		if (this.isEnabled())
 		{
@@ -59,42 +59,42 @@ mxUtils.extend(mxSelectionCellsHandler, mxEventSource);
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxSelectionCellsHandler.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: enabled
  * 
  * Specifies if events are handled. Default is true.
  */
-mxSelectionCellsHandler.prototype.enabled = true;
+enabled = true;
 
 /**
  * Variable: refreshHandler
  * 
  * Keeps a reference to an event listener for later removal.
  */
-mxSelectionCellsHandler.prototype.refreshHandler = null;
+refreshHandler = null;
 
 /**
  * Variable: maxHandlers
  * 
  * Defines the maximum number of handlers to paint individually. Default is 100.
  */
-mxSelectionCellsHandler.prototype.maxHandlers = 100;
+maxHandlers = 100;
 
 /**
  * Variable: handlers
  * 
  * <mxDictionary> that maps from cells to handlers.
  */
-mxSelectionCellsHandler.prototype.handlers = null;
+handlers = null;
 
 /**
  * Function: isEnabled
  * 
  * Returns <enabled>.
  */
-mxSelectionCellsHandler.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -104,7 +104,7 @@ mxSelectionCellsHandler.prototype.isEnabled = function()
  * 
  * Sets <enabled>.
  */
-mxSelectionCellsHandler.prototype.setEnabled = function(value)
+setEnabled = (value)=>
 {
 	this.enabled = value;
 };
@@ -114,7 +114,7 @@ mxSelectionCellsHandler.prototype.setEnabled = function(value)
  * 
  * Returns the handler for the given cell.
  */
-mxSelectionCellsHandler.prototype.getHandler = function(cell)
+getHandler = (cell)=>
 {
 	return this.handlers.get(cell);
 };
@@ -124,7 +124,7 @@ mxSelectionCellsHandler.prototype.getHandler = function(cell)
  * 
  * Returns true if the given cell has a handler.
  */
-mxSelectionCellsHandler.prototype.isHandled = function(cell)
+isHandled = (cell)=>
 {
 	return this.getHandler(cell) != null;
 };
@@ -134,9 +134,9 @@ mxSelectionCellsHandler.prototype.isHandled = function(cell)
  * 
  * Resets all handlers.
  */
-mxSelectionCellsHandler.prototype.reset = function()
+reset = ()=>
 {
-	this.handlers.visit(function(key, handler)
+	this.handlers.visit((key, handler)=>
 	{
 		handler.reset.apply(handler);
 	});
@@ -147,7 +147,7 @@ mxSelectionCellsHandler.prototype.reset = function()
  * 
  * Reloads or updates all handlers.
  */
-mxSelectionCellsHandler.prototype.getHandledSelectionCells = function()
+getHandledSelectionCells = ()=>
 {
 	return this.graph.getSelectionCells();
 };
@@ -157,7 +157,7 @@ mxSelectionCellsHandler.prototype.getHandledSelectionCells = function()
  * 
  * Reloads or updates all handlers.
  */
-mxSelectionCellsHandler.prototype.refresh = function()
+refresh = ()=>
 {
 	// Removes all existing handlers
 	var oldHandlers = this.handlers;
@@ -201,7 +201,7 @@ mxSelectionCellsHandler.prototype.refresh = function()
 	}
 	
 	// Destroys unused handlers
-	oldHandlers.visit(mxUtils.bind(this, function(key, handler)
+	oldHandlers.visit(mxUtils.bind(this, (key, handler)=>
 	{
 		this.fireEvent(new mxEventObject(mxEvent.REMOVE, 'state', handler.state));
 		handler.destroy();
@@ -235,7 +235,7 @@ mxSelectionCellsHandler.prototype.refresh = function()
  * 
  * Returns true if the given handler is active and should not be redrawn.
  */
-mxSelectionCellsHandler.prototype.isHandlerActive = function(handler)
+isHandlerActive = (handler)=>
 {
 	return handler.index != null;
 };
@@ -245,7 +245,7 @@ mxSelectionCellsHandler.prototype.isHandlerActive = function(handler)
  * 
  * Updates the handler for the given shape if one exists.
  */
-mxSelectionCellsHandler.prototype.updateHandler = function(state)
+updateHandler = (state)=>
 {
 	var handler = this.handlers.remove(state.cell);
 	
@@ -276,13 +276,13 @@ mxSelectionCellsHandler.prototype.updateHandler = function(state)
  * 
  * Redirects the given event to the handlers.
  */
-mxSelectionCellsHandler.prototype.mouseDown = function(sender, me)
+mouseDown = (sender, me)=>
 {
 	if (this.graph.isEnabled() && this.isEnabled())
 	{
 		var args = [sender, me];
 
-		this.handlers.visit(function(key, handler)
+		this.handlers.visit((key, handler)=>
 		{
 			handler.mouseDown.apply(handler, args);
 		});
@@ -294,13 +294,13 @@ mxSelectionCellsHandler.prototype.mouseDown = function(sender, me)
  * 
  * Redirects the given event to the handlers.
  */
-mxSelectionCellsHandler.prototype.mouseMove = function(sender, me)
+mouseMove = (sender, me)=>
 {
 	if (this.graph.isEnabled() && this.isEnabled())
 	{
 		var args = [sender, me];
 
-		this.handlers.visit(function(key, handler)
+		this.handlers.visit((key, handler)=>
 		{
 			handler.mouseMove.apply(handler, args);
 		});
@@ -312,13 +312,13 @@ mxSelectionCellsHandler.prototype.mouseMove = function(sender, me)
  * 
  * Redirects the given event to the handlers.
  */
-mxSelectionCellsHandler.prototype.mouseUp = function(sender, me)
+mouseUp = (sender, me)=>
 {
 	if (this.graph.isEnabled() && this.isEnabled())
 	{
 		var args = [sender, me];
 
-		this.handlers.visit(function(key, handler)
+		this.handlers.visit((key, handler)=>
 		{
 			handler.mouseUp.apply(handler, args);
 		});
@@ -330,7 +330,7 @@ mxSelectionCellsHandler.prototype.mouseUp = function(sender, me)
  * 
  * Destroys the handler and all its resources and DOM nodes.
  */
-mxSelectionCellsHandler.prototype.destroy = function()
+destroy = ()=>
 {
 	this.graph.removeMouseListener(this);
 	

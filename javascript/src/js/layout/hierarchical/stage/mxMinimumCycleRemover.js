@@ -21,14 +21,14 @@ function mxMinimumCycleRemover(layout)
  * Extends mxHierarchicalLayoutStage.
  */
 mxMinimumCycleRemover.prototype = new mxHierarchicalLayoutStage();
-mxMinimumCycleRemover.prototype.constructor = mxMinimumCycleRemover;
+constructor = mxMinimumCycleRemover;
 
 /**
  * Variable: layout
  * 
  * Reference to the enclosing <mxHierarchicalLayout>.
  */
-mxMinimumCycleRemover.prototype.layout = null;
+layout = null;
 
 /**
  * Function: execute
@@ -37,7 +37,7 @@ mxMinimumCycleRemover.prototype.layout = null;
  * and creates the resulting laid out graph within that facade for further
  * use.
  */
-mxMinimumCycleRemover.prototype.execute = function(parent)
+execute = (parent)=>
 {
 	var model = this.layout.getModel();
 	var seenNodes = new Object();
@@ -64,7 +64,7 @@ mxMinimumCycleRemover.prototype.execute = function(parent)
 		}
 	}
 
-	model.visit(function(parent, node, connectingEdge, layer, seen)
+	model.visit((parent, node, connectingEdge, layer, seen)=>
 	{
 		// Check if the cell is in it's own ancestor list, if so
 		// invert the connecting edge and reverse the target/source
@@ -88,7 +88,7 @@ mxMinimumCycleRemover.prototype.execute = function(parent)
 	var seenNodesCopy = mxUtils.clone(seenNodes, null, true);
 
 	// Pick a random cell and dfs from it
-	model.visit(function(parent, node, connectingEdge, layer, seen)
+	model.visit((parent, node, connectingEdge, layer, seen)=>
 	{
 		// Check if the cell is in it's own ancestor list, if so
 		// invert the connecting edge and reverse the target/source

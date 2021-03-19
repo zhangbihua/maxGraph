@@ -25,7 +25,7 @@ function mxConstraintHandler(graph)
 	this.graph = graph;
 	
 	// Adds a graph model listener to update the current focus on changes
-	this.resetHandler = mxUtils.bind(this, function(sender, evt)
+	this.resetHandler = mxUtils.bind(this, (sender, evt)=>
 	{
 		if (this.currentFocus != null && this.graph.view.getState(this.currentFocus.cell) == null)
 		{
@@ -49,28 +49,28 @@ function mxConstraintHandler(graph)
  * 
  * <mxImage> to be used as the image for fixed connection points.
  */
-mxConstraintHandler.prototype.pointImage = new mxImage(mxClient.imageBasePath + '/point.gif', 5, 5);
+pointImage = new mxImage(mxClient.imageBasePath + '/point.gif', 5, 5);
 
 /**
  * Variable: graph
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxConstraintHandler.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: enabled
  * 
  * Specifies if events are handled. Default is true.
  */
-mxConstraintHandler.prototype.enabled = true;
+enabled = true;
 
 /**
  * Variable: highlightColor
  * 
  * Specifies the color for the highlight. Default is <mxConstants.DEFAULT_VALID_COLOR>.
  */
-mxConstraintHandler.prototype.highlightColor = mxConstants.DEFAULT_VALID_COLOR;
+highlightColor = mxConstants.DEFAULT_VALID_COLOR;
 
 /**
  * Function: isEnabled
@@ -78,7 +78,7 @@ mxConstraintHandler.prototype.highlightColor = mxConstants.DEFAULT_VALID_COLOR;
  * Returns true if events are handled. This implementation
  * returns <enabled>.
  */
-mxConstraintHandler.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -93,7 +93,7 @@ mxConstraintHandler.prototype.isEnabled = function()
  * 
  * enabled - Boolean that specifies the new enabled state.
  */
-mxConstraintHandler.prototype.setEnabled = function(enabled)
+setEnabled = (enabled)=>
 {
 	this.enabled = enabled;
 };
@@ -103,7 +103,7 @@ mxConstraintHandler.prototype.setEnabled = function(enabled)
  * 
  * Resets the state of this handler.
  */
-mxConstraintHandler.prototype.reset = function()
+reset = ()=>
 {
 	if (this.focusIcons != null)
 	{
@@ -138,7 +138,7 @@ mxConstraintHandler.prototype.reset = function()
  * 
  * me - <mxMouseEvent> whose tolerance should be returned.
  */
-mxConstraintHandler.prototype.getTolerance = function(me)
+getTolerance = (me)=>
 {
 	return this.graph.getTolerance();
 };
@@ -148,7 +148,7 @@ mxConstraintHandler.prototype.getTolerance = function(me)
  * 
  * Returns the tolerance to be used for intersecting connection points.
  */
-mxConstraintHandler.prototype.getImageForConstraint = function(state, constraint, point)
+getImageForConstraint = (state, constraint, point)=>
 {
 	return this.pointImage;
 };
@@ -159,7 +159,7 @@ mxConstraintHandler.prototype.getImageForConstraint = function(state, constraint
  * Returns true if the given <mxMouseEvent> should be ignored in <update>. This
  * implementation always returns false.
  */
-mxConstraintHandler.prototype.isEventIgnored = function(me, source)
+isEventIgnored = (me, source)=>
 {
 	return false;
 };
@@ -169,7 +169,7 @@ mxConstraintHandler.prototype.isEventIgnored = function(me, source)
  * 
  * Returns true if the given state should be ignored. This always returns false.
  */
-mxConstraintHandler.prototype.isStateIgnored = function(state, source)
+isStateIgnored = (state, source)=>
 {
 	return false;
 };
@@ -179,7 +179,7 @@ mxConstraintHandler.prototype.isStateIgnored = function(state, source)
  * 
  * Destroys the <focusIcons> if they exist.
  */
-mxConstraintHandler.prototype.destroyIcons = function()
+destroyIcons = ()=>
 {
 	if (this.focusIcons != null)
 	{
@@ -198,7 +198,7 @@ mxConstraintHandler.prototype.destroyIcons = function()
  * 
  * Destroys the <focusHighlight> if one exists.
  */
-mxConstraintHandler.prototype.destroyFocusHighlight = function()
+destroyFocusHighlight = ()=>
 {
 	if (this.focusHighlight != null)
 	{
@@ -213,7 +213,7 @@ mxConstraintHandler.prototype.destroyFocusHighlight = function()
  * Returns true if the current focused state should not be changed for the given event.
  * This returns true if shift and alt are pressed.
  */
-mxConstraintHandler.prototype.isKeepFocusEvent = function(me)
+isKeepFocusEvent = (me)=>
 {
 	return mxEvent.isShiftDown(me.getEvent());
 };
@@ -223,7 +223,7 @@ mxConstraintHandler.prototype.isKeepFocusEvent = function(me)
  * 
  * Returns the cell for the given event.
  */
-mxConstraintHandler.prototype.getCellForEvent = function(me, point)
+getCellForEvent = (me, point)=>
 {
 	var cell = me.getCell();
 	
@@ -253,14 +253,14 @@ mxConstraintHandler.prototype.getCellForEvent = function(me, point)
  * Updates the state of this handler based on the given <mxMouseEvent>.
  * Source is a boolean indicating if the cell is a source or target.
  */
-mxConstraintHandler.prototype.update = function(me, source, existingEdge, point)
+update = (me, source, existingEdge, point)=>
 {
 	if (this.isEnabled() && !this.isEventIgnored(me))
 	{
 		// Lazy installation of mouseleave handler
 		if (this.mouseleaveHandler == null && this.graph.container != null)
 		{
-			this.mouseleaveHandler = mxUtils.bind(this, function()
+			this.mouseleaveHandler = mxUtils.bind(this, ()=>
 			{
 				this.reset();
 			});
@@ -324,7 +324,7 @@ mxConstraintHandler.prototype.update = function(me, source, existingEdge, point)
 						hl.init(this.graph.getView().getOverlayPane());
 						this.focusHighlight = hl;
 						
-						var getState = mxUtils.bind(this, function()
+						var getState = mxUtils.bind(this, ()=>
 						{
 							return (this.currentFocus != null) ? this.currentFocus : state;
 						});
@@ -358,7 +358,7 @@ mxConstraintHandler.prototype.update = function(me, source, existingEdge, point)
  * the handler is not enabled then the outline is painted, but the constraints
  * are ignored.
  */
-mxConstraintHandler.prototype.redraw = function()
+redraw = ()=>
 {
 	if (this.currentFocus != null && this.constraints != null && this.focusIcons != null)
 	{
@@ -388,7 +388,7 @@ mxConstraintHandler.prototype.redraw = function()
  * the handler is not enabled then the outline is painted, but the constraints
  * are ignored.
  */
-mxConstraintHandler.prototype.setFocus = function(me, state, source)
+setFocus = (me, state, source)=>
 {
 	this.constraints = (state != null && !this.isStateIgnored(state, source) &&
 		this.graph.isCellConnectable(state.cell)) ? ((this.isEnabled()) ?
@@ -431,7 +431,7 @@ mxConstraintHandler.prototype.setFocus = function(me, state, source)
 			// Fixes lost event tracking for images in quirks / IE8 standards
 			if (mxClient.IS_QUIRKS || document.documentMode == 8)
 			{
-				mxEvent.addListener(icon.node, 'dragstart', function(evt)
+				mxEvent.addListener(icon.node, 'dragstart', (evt)=>
 				{
 					mxEvent.consume(evt);
 					
@@ -445,7 +445,7 @@ mxConstraintHandler.prototype.setFocus = function(me, state, source)
 				icon.node.parentNode.insertBefore(icon.node, icon.node.parentNode.firstChild);
 			}
 
-			var getState = mxUtils.bind(this, function()
+			var getState = mxUtils.bind(this, ()=>
 			{
 				return (this.currentFocus != null) ? this.currentFocus : state;
 			});
@@ -474,7 +474,7 @@ mxConstraintHandler.prototype.setFocus = function(me, state, source)
  * 
  * Returns true if the given icon intersects the given point.
  */
-mxConstraintHandler.prototype.createHighlightShape = function()
+createHighlightShape = ()=>
 {
 	var hl = new mxRectangleShape(null, this.highlightColor, this.highlightColor, mxConstants.HIGHLIGHT_STROKEWIDTH);
 	hl.opacity = mxConstants.HIGHLIGHT_OPACITY;
@@ -487,7 +487,7 @@ mxConstraintHandler.prototype.createHighlightShape = function()
  * 
  * Returns true if the given icon intersects the given rectangle.
  */
-mxConstraintHandler.prototype.intersects = function(icon, mouse, source, existingEdge)
+intersects = (icon, mouse, source, existingEdge)=>
 {
 	return mxUtils.intersects(icon.bounds, mouse);
 };
@@ -497,7 +497,7 @@ mxConstraintHandler.prototype.intersects = function(icon, mouse, source, existin
  * 
  * Destroy this handler.
  */
-mxConstraintHandler.prototype.destroy = function()
+destroy = ()=>
 {
 	this.reset();
 	

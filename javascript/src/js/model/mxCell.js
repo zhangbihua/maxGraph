@@ -26,7 +26,7 @@
  * <mxGraph.cellLabelChanged> should be overridden as follows:
  * 
  * (code)
- * graph.convertValueToString = function(cell)
+ * graph.convertValueToString = (cell)=>
  * {
  *   if (mxUtils.isNode(cell.value))
  *   {
@@ -35,7 +35,7 @@
  * };
  * 
  * var cellLabelChanged = graph.cellLabelChanged;
- * graph.cellLabelChanged = function(cell, newValue, autoSize)
+ * graph.cellLabelChanged = (cell, newValue, autoSize)=>
  * {
  *   if (mxUtils.isNode(cell.value))
  *   {
@@ -81,21 +81,21 @@ function mxCell(value, geometry, style)
  *
  * Holds the Id. Default is null.
  */
-mxCell.prototype.id = null;
+id = null;
 
 /**
  * Variable: value
  *
  * Holds the user object. Default is null.
  */
-mxCell.prototype.value = null;
+value = null;
 
 /**
  * Variable: geometry
  *
  * Holds the <mxGeometry>. Default is null.
  */
-mxCell.prototype.geometry = null;
+geometry = null;
 
 /**
  * Variable: style
@@ -103,77 +103,77 @@ mxCell.prototype.geometry = null;
  * Holds the style as a string of the form [(stylename|key=value);]. Default is
  * null.
  */
-mxCell.prototype.style = null;
+style = null;
 
 /**
  * Variable: vertex
  *
  * Specifies whether the cell is a vertex. Default is false.
  */
-mxCell.prototype.vertex = false;
+vertex = false;
 
 /**
  * Variable: edge
  *
  * Specifies whether the cell is an edge. Default is false.
  */
-mxCell.prototype.edge = false;
+edge = false;
 
 /**
  * Variable: connectable
  *
  * Specifies whether the cell is connectable. Default is true.
  */
-mxCell.prototype.connectable = true;
+connectable = true;
 
 /**
  * Variable: visible
  *
  * Specifies whether the cell is visible. Default is true.
  */
-mxCell.prototype.visible = true;
+visible = true;
 
 /**
  * Variable: collapsed
  *
  * Specifies whether the cell is collapsed. Default is false.
  */
-mxCell.prototype.collapsed = false;
+collapsed = false;
 
 /**
  * Variable: parent
  *
  * Reference to the parent cell.
  */
-mxCell.prototype.parent = null;
+parent = null;
 
 /**
  * Variable: source
  *
  * Reference to the source terminal.
  */
-mxCell.prototype.source = null;
+source = null;
 
 /**
  * Variable: target
  *
  * Reference to the target terminal.
  */
-mxCell.prototype.target = null;
+target = null;
 
 /**
  * Variable: children
  *
  * Holds the child cells.
  */
-mxCell.prototype.children = null;
+children = null;
 
 /**
  * Variable: edges
  *
  * Holds the edges.
  */
-mxCell.prototype.edges = null;
+edges = null;
 
 /**
  * Variable: mxTransient
@@ -184,7 +184,7 @@ mxCell.prototype.edges = null;
  * to mark transient fields since transient modifiers are not supported by
  * the language.
  */
-mxCell.prototype.mxTransient = ['id', 'value', 'parent', 'source',
+mxTransient = ['id', 'value', 'parent', 'source',
                                 'target', 'children', 'edges'];
 
 /**
@@ -192,7 +192,7 @@ mxCell.prototype.mxTransient = ['id', 'value', 'parent', 'source',
  *
  * Returns the Id of the cell as a string.
  */
-mxCell.prototype.getId = function()
+getId = ()=>
 {
 	return this.id;
 };
@@ -202,7 +202,7 @@ mxCell.prototype.getId = function()
  *
  * Sets the Id of the cell to the given string.
  */
-mxCell.prototype.setId = function(id)
+setId = (id)=>
 {
 	this.id = id;
 };
@@ -213,7 +213,7 @@ mxCell.prototype.setId = function(id)
  * Returns the user object of the cell. The user
  * object is stored in <value>.
  */
-mxCell.prototype.getValue = function()
+getValue = ()=>
 {
 	return this.value;
 };
@@ -224,7 +224,7 @@ mxCell.prototype.getValue = function()
  * Sets the user object of the cell. The user object
  * is stored in <value>.
  */
-mxCell.prototype.setValue = function(value)
+setValue = (value)=>
 {
 	this.value = value;
 };
@@ -237,7 +237,7 @@ mxCell.prototype.setValue = function(value)
  * replaces the user object with the given value and
  * returns the old user object.
  */
-mxCell.prototype.valueChanged = function(newValue)
+valueChanged = (newValue)=>
 {
 	var previous = this.getValue();
 	this.setValue(newValue);
@@ -250,7 +250,7 @@ mxCell.prototype.valueChanged = function(newValue)
  *
  * Returns the <mxGeometry> that describes the <geometry>.
  */
-mxCell.prototype.getGeometry = function()
+getGeometry = ()=>
 {
 	return this.geometry;
 };
@@ -260,7 +260,7 @@ mxCell.prototype.getGeometry = function()
  *
  * Sets the <mxGeometry> to be used as the <geometry>.
  */
-mxCell.prototype.setGeometry = function(geometry)
+setGeometry = (geometry)=>
 {
 	this.geometry = geometry;
 };
@@ -270,7 +270,7 @@ mxCell.prototype.setGeometry = function(geometry)
  *
  * Returns a string that describes the <style>.
  */
-mxCell.prototype.getStyle = function()
+getStyle = ()=>
 {
 	return this.style;
 };
@@ -280,7 +280,7 @@ mxCell.prototype.getStyle = function()
  *
  * Sets the string to be used as the <style>.
  */
-mxCell.prototype.setStyle = function(style)
+setStyle = (style)=>
 {
 	this.style = style;
 };
@@ -290,7 +290,7 @@ mxCell.prototype.setStyle = function(style)
  *
  * Returns true if the cell is a vertex.
  */
-mxCell.prototype.isVertex = function()
+isVertex = ()=>
 {
 	return this.vertex != 0;
 };
@@ -305,7 +305,7 @@ mxCell.prototype.isVertex = function()
  * 
  * vertex - Boolean that specifies if the cell is a vertex.
  */
-mxCell.prototype.setVertex = function(vertex)
+setVertex = (vertex)=>
 {
 	this.vertex = vertex;
 };
@@ -315,7 +315,7 @@ mxCell.prototype.setVertex = function(vertex)
  *
  * Returns true if the cell is an edge.
  */
-mxCell.prototype.isEdge = function()
+isEdge = ()=>
 {
 	return this.edge != 0;
 };
@@ -330,7 +330,7 @@ mxCell.prototype.isEdge = function()
  * 
  * edge - Boolean that specifies if the cell is an edge.
  */
-mxCell.prototype.setEdge = function(edge)
+setEdge = (edge)=>
 {
 	this.edge = edge;
 };
@@ -340,7 +340,7 @@ mxCell.prototype.setEdge = function(edge)
  *
  * Returns true if the cell is connectable.
  */
-mxCell.prototype.isConnectable = function()
+isConnectable = ()=>
 {
 	return this.connectable != 0;
 };
@@ -354,7 +354,7 @@ mxCell.prototype.isConnectable = function()
  * 
  * connectable - Boolean that specifies the new connectable state.
  */
-mxCell.prototype.setConnectable = function(connectable)
+setConnectable = (connectable)=>
 {
 	this.connectable = connectable;
 };
@@ -364,7 +364,7 @@ mxCell.prototype.setConnectable = function(connectable)
  *
  * Returns true if the cell is visibile.
  */
-mxCell.prototype.isVisible = function()
+isVisible = ()=>
 {
 	return this.visible != 0;
 };
@@ -378,7 +378,7 @@ mxCell.prototype.isVisible = function()
  * 
  * visible - Boolean that specifies the new visible state.
  */
-mxCell.prototype.setVisible = function(visible)
+setVisible = (visible)=>
 {
 	this.visible = visible;
 };
@@ -388,7 +388,7 @@ mxCell.prototype.setVisible = function(visible)
  *
  * Returns true if the cell is collapsed.
  */
-mxCell.prototype.isCollapsed = function()
+isCollapsed = ()=>
 {
 	return this.collapsed != 0;
 };
@@ -402,7 +402,7 @@ mxCell.prototype.isCollapsed = function()
  * 
  * collapsed - Boolean that specifies the new collapsed state.
  */
-mxCell.prototype.setCollapsed = function(collapsed)
+setCollapsed = (collapsed)=>
 {
 	this.collapsed = collapsed;
 };
@@ -412,7 +412,7 @@ mxCell.prototype.setCollapsed = function(collapsed)
  *
  * Returns the cell's parent.
  */
-mxCell.prototype.getParent = function()
+getParent = ()=>
 {
 	return this.parent;
 };
@@ -426,7 +426,7 @@ mxCell.prototype.getParent = function()
  * 
  * parent - <mxCell> that represents the new parent.
  */
-mxCell.prototype.setParent = function(parent)
+setParent = (parent)=>
 {
 	this.parent = parent;
 };
@@ -441,7 +441,7 @@ mxCell.prototype.setParent = function(parent)
  * source - Boolean that specifies if the source terminal should be
  * returned.
  */
-mxCell.prototype.getTerminal = function(source)
+getTerminal = (source)=>
 {
 	return (source) ? this.source : this.target;
 };
@@ -457,7 +457,7 @@ mxCell.prototype.getTerminal = function(source)
  * isSource - Boolean that specifies if the source or target terminal
  * should be set.
  */
-mxCell.prototype.setTerminal = function(terminal, isSource)
+setTerminal = (terminal, isSource)=>
 {
 	if (isSource)
 	{
@@ -476,7 +476,7 @@ mxCell.prototype.setTerminal = function(terminal, isSource)
  *
  * Returns the number of child cells.
  */
-mxCell.prototype.getChildCount = function()
+getChildCount = ()=>
 {
 	return (this.children == null) ? 0 : this.children.length;
 };
@@ -490,7 +490,7 @@ mxCell.prototype.getChildCount = function()
  * 
  * child - Child whose index should be returned.
  */
-mxCell.prototype.getIndex = function(child)
+getIndex = (child)=>
 {
 	return mxUtils.indexOf(this.children, child);
 };
@@ -504,7 +504,7 @@ mxCell.prototype.getIndex = function(child)
  * 
  * index - Integer that specifies the child to be returned.
  */
-mxCell.prototype.getChildAt = function(index)
+getChildAt = (index)=>
 {
 	return (this.children == null) ? null : this.children[index];
 };
@@ -523,7 +523,7 @@ mxCell.prototype.getChildAt = function(index)
  * index - Optional integer that specifies the index at which the child
  * should be inserted into the child array.
  */
-mxCell.prototype.insert = function(child, index)
+insert = (child, index)=>
 {
 	if (child != null)
 	{
@@ -566,7 +566,7 @@ mxCell.prototype.insert = function(child, index)
  * index - Integer that specifies the index of the child to be
  * removed.
  */
-mxCell.prototype.remove = function(index)
+remove = (index)=>
 {
 	var child = null;
 	
@@ -589,7 +589,7 @@ mxCell.prototype.remove = function(index)
  *
  * Removes the cell from its parent.
  */
-mxCell.prototype.removeFromParent = function()
+removeFromParent = ()=>
 {
 	if (this.parent != null)
 	{
@@ -603,7 +603,7 @@ mxCell.prototype.removeFromParent = function()
  *
  * Returns the number of edges in the edge array.
  */
-mxCell.prototype.getEdgeCount = function()
+getEdgeCount = ()=>
 {
 	return (this.edges == null) ? 0 : this.edges.length;
 };
@@ -617,7 +617,7 @@ mxCell.prototype.getEdgeCount = function()
  * 
  * edge - <mxCell> whose index in <edges> should be returned.
  */
-mxCell.prototype.getEdgeIndex = function(edge)
+getEdgeIndex = (edge)=>
 {
 	return mxUtils.indexOf(this.edges, edge);
 };
@@ -631,7 +631,7 @@ mxCell.prototype.getEdgeIndex = function(edge)
  * 
  * index - Integer that specifies the index of the edge to be returned.
  */
-mxCell.prototype.getEdgeAt = function(index)
+getEdgeAt = (index)=>
 {
 	return (this.edges == null) ? null : this.edges[index];
 };
@@ -647,7 +647,7 @@ mxCell.prototype.getEdgeAt = function(index)
  * edge - <mxCell> to be inserted into the edge array.
  * isOutgoing - Boolean that specifies if the edge is outgoing.
  */
-mxCell.prototype.insertEdge = function(edge, isOutgoing)
+insertEdge = (edge, isOutgoing)=>
 {
 	if (edge != null)
 	{
@@ -681,7 +681,7 @@ mxCell.prototype.insertEdge = function(edge, isOutgoing)
  * edge - <mxCell> to be removed from the edge array.
  * isOutgoing - Boolean that specifies if the edge is outgoing.
  */
-mxCell.prototype.removeEdge = function(edge, isOutgoing)
+removeEdge = (edge, isOutgoing)=>
 {
 	if (edge != null)
 	{
@@ -712,7 +712,7 @@ mxCell.prototype.removeEdge = function(edge, isOutgoing)
  * isSource - Boolean that specifies if the edge should be removed from its
  * source or target terminal.
  */
-mxCell.prototype.removeFromTerminal = function(isSource)
+removeFromTerminal = (isSource)=>
 {
 	var terminal = this.getTerminal(isSource);
 	
@@ -732,7 +732,7 @@ mxCell.prototype.removeFromTerminal = function(isSource)
  * 
  * name - Name of the attribute.
  */
-mxCell.prototype.hasAttribute = function(name)
+hasAttribute = (name)=>
 {
 	var userObject = this.getValue();
 	
@@ -753,7 +753,7 @@ mxCell.prototype.hasAttribute = function(name)
  * defaultValue - Optional default value to use if the attribute has no
  * value.
  */
-mxCell.prototype.getAttribute = function(name, defaultValue)
+getAttribute = (name, defaultValue)=>
 {
 	var userObject = this.getValue();
 	
@@ -774,7 +774,7 @@ mxCell.prototype.getAttribute = function(name, defaultValue)
  * name - Name of the attribute whose value should be set.
  * value - New value of the attribute.
  */
-mxCell.prototype.setAttribute = function(name, value)
+setAttribute = (name, value)=>
 {
 	var userObject = this.getValue();
 	
@@ -792,7 +792,7 @@ mxCell.prototype.setAttribute = function(name, value)
  * the user object. All fields in <mxTransient> are ignored
  * during the cloning.
  */
-mxCell.prototype.clone = function()
+clone = ()=>
 {
 	var clone = mxUtils.clone(this, this.mxTransient);
 	clone.setValue(this.cloneValue());
@@ -805,7 +805,7 @@ mxCell.prototype.clone = function()
  *
  * Returns a clone of the cell's user object.
  */
-mxCell.prototype.cloneValue = function()
+cloneValue = ()=>
 {
 	var value = this.getValue();
 	

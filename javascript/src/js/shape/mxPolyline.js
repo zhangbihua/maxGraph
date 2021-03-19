@@ -40,7 +40,7 @@ mxUtils.extend(mxPolyline, mxShape);
  * 
  * Returns 0.
  */
-mxPolyline.prototype.getRotation = function()
+getRotation = ()=>
 {
 	return 0;
 };
@@ -50,7 +50,7 @@ mxPolyline.prototype.getRotation = function()
  * 
  * Returns 0.
  */
-mxPolyline.prototype.getShapeRotation = function()
+getShapeRotation = ()=>
 {
 	return 0;
 };
@@ -60,7 +60,7 @@ mxPolyline.prototype.getShapeRotation = function()
  * 
  * Returns false.
  */
-mxPolyline.prototype.isPaintBoundsInverted = function()
+isPaintBoundsInverted = ()=>
 {
 	return false;
 };
@@ -70,7 +70,7 @@ mxPolyline.prototype.isPaintBoundsInverted = function()
  * 
  * Paints the line shape.
  */
-mxPolyline.prototype.paintEdgeShape = function(c, pts)
+paintEdgeShape = (c, pts)=>
 {
 	var prev = c.pointerEventsValue;
 	c.pointerEventsValue = 'stroke';
@@ -92,7 +92,7 @@ mxPolyline.prototype.paintEdgeShape = function(c, pts)
  * 
  * Paints the line shape.
  */
-mxPolyline.prototype.paintLine = function(c, pts, rounded)
+paintLine = (c, pts, rounded)=>
 {
 	var arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
 	c.begin();
@@ -105,7 +105,7 @@ mxPolyline.prototype.paintLine = function(c, pts, rounded)
  * 
  * Paints a curved line.
  */
-mxPolyline.prototype.paintCurvedLine = function(c, pts)
+paintCurvedLine = (c, pts)=>
 {
 	c.begin();
 	

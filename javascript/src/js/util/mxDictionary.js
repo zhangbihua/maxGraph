@@ -22,14 +22,14 @@ function mxDictionary()
  *
  * Stores the (key, value) pairs in this dictionary.
  */
-mxDictionary.prototype.map = null;
+map = null;
 
 /**
  * Function: clear
  *
  * Clears the dictionary.
  */
-mxDictionary.prototype.clear = function()
+clear = ()=>
 {
 	this.map = {};
 };
@@ -39,7 +39,7 @@ mxDictionary.prototype.clear = function()
  *
  * Returns the value for the given key.
  */
-mxDictionary.prototype.get = function(key)
+get = (key)=>
 {
 	var id = mxObjectIdentity.get(key);
 	
@@ -52,7 +52,7 @@ mxDictionary.prototype.get = function(key)
  * Stores the value under the given key and returns the previous
  * value for that key.
  */
-mxDictionary.prototype.put = function(key, value)
+put = (key, value)=>
 {
 	var id = mxObjectIdentity.get(key);
 	var previous = this.map[id];
@@ -67,7 +67,7 @@ mxDictionary.prototype.put = function(key, value)
  * Removes the value for the given key and returns the value that
  * has been removed.
  */
-mxDictionary.prototype.remove = function(key)
+remove = (key)=>
 {
 	var id = mxObjectIdentity.get(key);
 	var previous = this.map[id];
@@ -81,7 +81,7 @@ mxDictionary.prototype.remove = function(key)
  *
  * Returns all keys as an array.
  */
-mxDictionary.prototype.getKeys = function()
+getKeys = ()=>
 {
 	var result = [];
 	
@@ -98,7 +98,7 @@ mxDictionary.prototype.getKeys = function()
  *
  * Returns all values as an array.
  */
-mxDictionary.prototype.getValues = function()
+getValues = ()=>
 {
 	var result = [];
 	
@@ -114,14 +114,14 @@ mxDictionary.prototype.getValues = function()
  * Function: visit
  *
  * Visits all entries in the dictionary using the given function with the
- * following signature: function(key, value) where key is a string and
+ * following signature: (key, value)=> where key is a string and
  * value is an object.
  * 
  * Parameters:
  * 
  * visitor - A function that takes the key and value as arguments.
  */
-mxDictionary.prototype.visit = function(visitor)
+visit = (visitor)=>
 {
 	for (var key in this.map)
 	{

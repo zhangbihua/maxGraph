@@ -14,10 +14,10 @@
  * function SampleShape() { }
  * 
  * SampleShape.prototype = new mxActor();
- * SampleShape.prototype.constructor = vsAseShape;
+ * constructor = vsAseShape;
  * 
  * mxCellRenderer.registerShape('sample', SampleShape);
- * SampleShape.prototype.redrawPath = function(path, x, y, w, h)
+ * redrawPath = (path, x, y, w, h)=>
  * {
  *   path.moveTo(0, 0);
  *   path.lineTo(w, h);
@@ -61,7 +61,7 @@ mxUtils.extend(mxActor, mxShape);
  * 
  * Redirects to redrawPath for subclasses to work.
  */
-mxActor.prototype.paintVertexShape = function(c, x, y, w, h)
+paintVertexShape = (c, x, y, w, h)=>
 {
 	c.translate(x, y);
 	c.begin();
@@ -74,7 +74,7 @@ mxActor.prototype.paintVertexShape = function(c, x, y, w, h)
  *
  * Draws the path for this shape.
  */
-mxActor.prototype.redrawPath = function(c, x, y, w, h)
+redrawPath = (c, x, y, w, h)=>
 {
 	var width = w/3;
 	c.moveTo(0, h);

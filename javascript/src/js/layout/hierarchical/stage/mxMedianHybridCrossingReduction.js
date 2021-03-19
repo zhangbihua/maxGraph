@@ -29,14 +29,14 @@ function mxMedianHybridCrossingReduction(layout)
  * Extends mxMedianHybridCrossingReduction.
  */
 mxMedianHybridCrossingReduction.prototype = new mxHierarchicalLayoutStage();
-mxMedianHybridCrossingReduction.prototype.constructor = mxMedianHybridCrossingReduction;
+constructor = mxMedianHybridCrossingReduction;
 
 /**
  * Variable: layout
  * 
  * Reference to the enclosing <mxHierarchicalLayout>.
  */
-mxMedianHybridCrossingReduction.prototype.layout = null;
+layout = null;
 
 /**
  * Variable: maxIterations
@@ -44,7 +44,7 @@ mxMedianHybridCrossingReduction.prototype.layout = null;
  * The maximum number of iterations to perform whilst reducing edge
  * crossings. Default is 24.
  */
-mxMedianHybridCrossingReduction.prototype.maxIterations = 24;
+maxIterations = 24;
 
 /**
  * Variable: nestedBestRanks
@@ -52,28 +52,28 @@ mxMedianHybridCrossingReduction.prototype.maxIterations = 24;
  * Stores each rank as a collection of cells in the best order found for
  * each layer so far
  */
-mxMedianHybridCrossingReduction.prototype.nestedBestRanks = null;
+nestedBestRanks = null;
 
 /**
  * Variable: currentBestCrossings
  * 
  * The total number of crossings found in the best configuration so far
  */
-mxMedianHybridCrossingReduction.prototype.currentBestCrossings = 0;
+currentBestCrossings = 0;
 
 /**
  * Variable: iterationsWithoutImprovement
  * 
  * The total number of crossings found in the best configuration so far
  */
-mxMedianHybridCrossingReduction.prototype.iterationsWithoutImprovement = 0;
+iterationsWithoutImprovement = 0;
 
 /**
  * Variable: maxNoImprovementIterations
  * 
  * The total number of crossings found in the best configuration so far
  */
-mxMedianHybridCrossingReduction.prototype.maxNoImprovementIterations = 2;
+maxNoImprovementIterations = 2;
 
 /**
  * Function: execute
@@ -81,7 +81,7 @@ mxMedianHybridCrossingReduction.prototype.maxNoImprovementIterations = 2;
  * Performs a vertex ordering within ranks as described by Gansner et al
  * 1993
  */
-mxMedianHybridCrossingReduction.prototype.execute = function(parent)
+execute = (parent)=>
 {
 	var model = this.layout.getModel();
 
@@ -179,7 +179,7 @@ mxMedianHybridCrossingReduction.prototype.execute = function(parent)
  * 
  * model - the internal model describing the hierarchy
  */
-mxMedianHybridCrossingReduction.prototype.calculateCrossings = function(model)
+calculateCrossings = (model)=>
 {
 	var numRanks = model.ranks.length;
 	var totalCrossings = 0;
@@ -204,7 +204,7 @@ mxMedianHybridCrossingReduction.prototype.calculateCrossings = function(model)
  * i -  the topmost rank of the pair ( higher rank value )
  * model - the internal model describing the hierarchy
  */
-mxMedianHybridCrossingReduction.prototype.calculateRankCrossing = function(i, model)
+calculateRankCrossing = (i, model)=>
 {
 	var totalCrossings = 0;
 	var rank = model.ranks[i];
@@ -227,7 +227,7 @@ mxMedianHybridCrossingReduction.prototype.calculateRankCrossing = function(i, mo
 			nodeIndices.push(otherCellRankPosition);
 		}
 		
-		nodeIndices.sort(function(x, y) { return x - y; });
+		nodeIndices.sort((x, y)=> { return x - y; });
 		tmpIndices[rankPosition] = nodeIndices;
 	}
 	
@@ -287,7 +287,7 @@ mxMedianHybridCrossingReduction.prototype.calculateRankCrossing = function(i, mo
  * mainLoopIteration - the iteration number of the main loop
  * model - the internal model describing the hierarchy
  */
-mxMedianHybridCrossingReduction.prototype.transpose = function(mainLoopIteration, model)
+transpose = (mainLoopIteration, model)=>
 {
 	var improved = true;
 
@@ -467,7 +467,7 @@ mxMedianHybridCrossingReduction.prototype.transpose = function(mainLoopIteration
  * iteration - the iteration number of the main loop
  * model - the internal model describing the hierarchy
  */
-mxMedianHybridCrossingReduction.prototype.weightedMedian = function(iteration, model)
+weightedMedian = (iteration, model)=>
 {
 	// Reverse sweep direction each time through this method
 	var downwardSweep = (iteration % 2 == 0);
@@ -498,7 +498,7 @@ mxMedianHybridCrossingReduction.prototype.weightedMedian = function(iteration, m
  * rankValue - the layer number of this rank
  * downwardSweep - whether or not this is a downward sweep through the graph
  */
-mxMedianHybridCrossingReduction.prototype.medianRank = function(rankValue, downwardSweep)
+medianRank = (rankValue, downwardSweep)=>
 {
 	var numCellsForRank = this.nestedBestRanks[rankValue].length;
 	var medianValues = [];
@@ -553,7 +553,7 @@ mxMedianHybridCrossingReduction.prototype.medianRank = function(rankValue, downw
 		}
 	}
 	
-	medianValues.sort(MedianCellSorter.prototype.compare);
+	medianValues.sort(compare);
 	
 	// Set the new position of each node within the rank using
 	// its temp variable
@@ -580,7 +580,7 @@ mxMedianHybridCrossingReduction.prototype.medianRank = function(rankValue, downw
  * specified cell
  * rankValue - the rank that the connected cell lie upon
  */
-mxMedianHybridCrossingReduction.prototype.medianValue = function(connectedCells, rankValue)
+medianValue = (connectedCells, rankValue)=>
 {
 	var medianValues = [];
 	var arrayCount = 0;
@@ -593,7 +593,7 @@ mxMedianHybridCrossingReduction.prototype.medianValue = function(connectedCells,
 
 	// Sort() sorts lexicographically by default (i.e. 11 before 9) so force
 	// numerical order sort
-	medianValues.sort(function(a,b){return a - b;});
+	medianValues.sort((a,b)=>{return a - b;});
 	
 	if (arrayCount % 2 == 1)
 	{
@@ -637,21 +637,21 @@ function MedianCellSorter()
  * 
  * The weighted value of the cell stored.
  */
-MedianCellSorter.prototype.medianValue = 0;
+medianValue = 0;
 
 /**
  * Variable: cell
  * 
  * The cell whose median value is being calculated
  */
-MedianCellSorter.prototype.cell = false;
+cell = false;
 
 /**
  * Function: compare
  * 
  * Compares two MedianCellSorters.
  */
-MedianCellSorter.prototype.compare = function(a, b)
+compare = (a, b)=>
 {
 	if (a != null && b != null)
 	{

@@ -49,7 +49,7 @@
  * each change from the given array of changes.
  * 
  * (code)
- * model.addListener(mxEvent.CHANGE, function(sender, evt)
+ * model.addListener(mxEvent.CHANGE, (sender, evt)=>
  * {
  *   var changes = evt.getProperty('edit').changes;
  *   var nodes = [];
@@ -68,7 +68,7 @@
  * 
  * (code)
  * var codec = new mxCodec();
- * codec.lookup = function(id)
+ * codec.lookup = (id)=>
  * {
  *   return model.getCell(id);
  * }
@@ -91,7 +91,7 @@
  * var edit = new mxUndoableEdit(model, false);
  * edit.changes = changes;
  * 
- * edit.notify = function()
+ * edit.notify = ()=>
  * {
  *   edit.source.fireEvent(new mxEventObject(mxEvent.CHANGE,
  *   	'edit', edit, 'changes', edit.changes));
@@ -116,7 +116,7 @@
  * For finding newly inserted cells, the following code can be used:
  * 
  * (code)
- * graph.model.addListener(mxEvent.CHANGE, function(sender, evt)
+ * graph.model.addListener(mxEvent.CHANGE, (sender, evt)=>
  * {
  *   var changes = evt.getProperty('edit').changes;
  * 
@@ -211,7 +211,7 @@ function mxGraphModel(root)
  * Extends mxEventSource.
  */
 mxGraphModel.prototype = new mxEventSource();
-mxGraphModel.prototype.constructor = mxGraphModel;
+constructor = mxGraphModel;
 
 /**
  * Variable: root
@@ -220,14 +220,14 @@ mxGraphModel.prototype.constructor = mxGraphModel;
  * layers of the diagram as child cells. That is, the actual elements of the
  * diagram are supposed to live in the third generation of cells and below.
  */
-mxGraphModel.prototype.root = null;
+root = null;
 
 /**
  * Variable: cells
  * 
  * Maps from Ids to cells.
  */
-mxGraphModel.prototype.cells = null;
+cells = null;
 
 /**
  * Variable: maintainEdgeParent
@@ -235,7 +235,7 @@ mxGraphModel.prototype.cells = null;
  * Specifies if edges should automatically be moved into the nearest common
  * ancestor of their terminals. Default is true.
  */
-mxGraphModel.prototype.maintainEdgeParent = true;
+maintainEdgeParent = true;
 
 /**
  * Variable: ignoreRelativeEdgeParent
@@ -243,7 +243,7 @@ mxGraphModel.prototype.maintainEdgeParent = true;
  * Specifies if relative edge parents should be ignored for finding the nearest
  * common ancestors of an edge's terminals. Default is true.
  */
-mxGraphModel.prototype.ignoreRelativeEdgeParent = true;
+ignoreRelativeEdgeParent = true;
 
 /**
  * Variable: createIds
@@ -251,28 +251,28 @@ mxGraphModel.prototype.ignoreRelativeEdgeParent = true;
  * Specifies if the model should automatically create Ids for new cells.
  * Default is true.
  */
-mxGraphModel.prototype.createIds = true;
+createIds = true;
 
 /**
  * Variable: prefix
  * 
  * Defines the prefix of new Ids. Default is an empty string.
  */
-mxGraphModel.prototype.prefix = '';
+prefix = '';
 
 /**
  * Variable: postfix
  * 
  * Defines the postfix of new Ids. Default is an empty string.
  */
-mxGraphModel.prototype.postfix = '';
+postfix = '';
 
 /**
  * Variable: nextId
  * 
  * Specifies the next Id to be created. Initial value is 0.
  */
-mxGraphModel.prototype.nextId = 0;
+nextId = 0;
 
 /**
  * Variable: currentEdit
@@ -281,7 +281,7 @@ mxGraphModel.prototype.nextId = 0;
  * closed then a new object is created for this variable using
  * <createUndoableEdit>.
  */
-mxGraphModel.prototype.currentEdit = null;
+currentEdit = null;
 
 /**
  * Variable: updateLevel
@@ -291,21 +291,21 @@ mxGraphModel.prototype.currentEdit = null;
  * it. When the counter reaches 0, the transaction is closed and the
  * respective events are fired. Initial value is 0.
  */
-mxGraphModel.prototype.updateLevel = 0;
+updateLevel = 0;
 
 /**
  * Variable: endingUpdate
  * 
  * True if the program flow is currently inside endUpdate.
  */
-mxGraphModel.prototype.endingUpdate = false;
+endingUpdate = false;
 
 /**
  * Function: clear
  *
  * Sets a new root using <createRoot>.
  */
-mxGraphModel.prototype.clear = function()
+clear = ()=>
 {
 	this.setRoot(this.createRoot());
 };
@@ -315,7 +315,7 @@ mxGraphModel.prototype.clear = function()
  *
  * Returns <createIds>.
  */
-mxGraphModel.prototype.isCreateIds = function()
+isCreateIds = ()=>
 {
 	return this.createIds;
 };
@@ -325,7 +325,7 @@ mxGraphModel.prototype.isCreateIds = function()
  *
  * Sets <createIds>.
  */
-mxGraphModel.prototype.setCreateIds = function(value)
+setCreateIds = (value)=>
 {
 	this.createIds = value;
 };
@@ -335,7 +335,7 @@ mxGraphModel.prototype.setCreateIds = function(value)
  *
  * Creates a new root cell with a default layer (child 0).
  */
-mxGraphModel.prototype.createRoot = function()
+createRoot = ()=>
 {
 	var cell = new mxCell();
 	cell.insert(new mxCell());
@@ -353,7 +353,7 @@ mxGraphModel.prototype.createRoot = function()
  * 
  * id - A string representing the Id of the cell.
  */
-mxGraphModel.prototype.getCell = function(id)
+getCell = (id)=>
 {
 	return (this.cells != null) ? this.cells[id] : null;
 };
@@ -364,7 +364,7 @@ mxGraphModel.prototype.getCell = function(id)
  * Returns the cells from the given array where the given filter function
  * returns true.
  */
-mxGraphModel.prototype.filterCells = function(cells, filter)
+filterCells = (cells, filter)=>
 {
 	var result = null;
 	
@@ -393,7 +393,7 @@ mxGraphModel.prototype.filterCells = function(cells, filter)
  * 
  * parent - <mxCell> whose descendants should be returned.
  */
-mxGraphModel.prototype.getDescendants = function(parent)
+getDescendants = (parent)=>
 {
 	return this.filterDescendants(null, parent);
 };
@@ -409,7 +409,7 @@ mxGraphModel.prototype.getDescendants = function(parent)
  * Example:
  * The following example extracts all vertices from a given model:
  * (code)
- * var filter = function(cell)
+ * var filter = (cell)=>
  * {
  * 	return model.isVertex(cell);
  * }
@@ -422,7 +422,7 @@ mxGraphModel.prototype.getDescendants = function(parent)
  * and returns a boolean.
  * parent - Optional <mxCell> that is used as the root of the recursion.
  */
-mxGraphModel.prototype.filterDescendants = function(filter, parent)
+filterDescendants = (filter, parent)=>
 {
 	// Creates a new array for storing the result
 	var result = [];
@@ -458,7 +458,7 @@ mxGraphModel.prototype.filterDescendants = function(filter, parent)
  * 
  * cell - Optional <mxCell> that specifies the child.
  */
-mxGraphModel.prototype.getRoot = function(cell)
+getRoot = (cell)=>
 {
 	var root = cell || this.root;
 	
@@ -494,7 +494,7 @@ mxGraphModel.prototype.getRoot = function(cell)
  * 
  * root - <mxCell> that specifies the new root.
  */
-mxGraphModel.prototype.setRoot = function(root)
+setRoot = (root)=>
 {
 	this.execute(new mxRootChange(this, root));
 	
@@ -511,7 +511,7 @@ mxGraphModel.prototype.setRoot = function(root)
  * 
  * root - <mxCell> that specifies the new root.
  */
-mxGraphModel.prototype.rootChanged = function(root)
+rootChanged = (root)=>
 {
 	var oldRoot = this.root;
 	this.root = root;
@@ -534,7 +534,7 @@ mxGraphModel.prototype.rootChanged = function(root)
  * 
  * cell - <mxCell> that represents the possible root.
  */
-mxGraphModel.prototype.isRoot = function(cell)
+isRoot = (cell)=>
 {
 	return cell != null && this.root == cell;
 };
@@ -548,7 +548,7 @@ mxGraphModel.prototype.isRoot = function(cell)
  * 
  * cell - <mxCell> that represents the possible layer.
  */
-mxGraphModel.prototype.isLayer = function(cell)
+isLayer = (cell)=>
 {
 	return this.isRoot(this.getParent(cell));
 };
@@ -564,7 +564,7 @@ mxGraphModel.prototype.isLayer = function(cell)
  * parent - <mxCell> that specifies the parent.
  * child - <mxCell> that specifies the child.
  */
-mxGraphModel.prototype.isAncestor = function(parent, child)
+isAncestor = (parent, child)=>
 {
 	while (child != null && child != parent)
 	{
@@ -583,7 +583,7 @@ mxGraphModel.prototype.isAncestor = function(parent, child)
  * 
  * cell - <mxCell> that specifies the cell.
  */
-mxGraphModel.prototype.contains = function(cell)
+contains = (cell)=>
 {
 	return this.isAncestor(this.root, cell);
 };
@@ -597,7 +597,7 @@ mxGraphModel.prototype.contains = function(cell)
  * 
  * cell - <mxCell> whose parent should be returned.
  */
-mxGraphModel.prototype.getParent = function(cell)
+getParent = (cell)=>
 {
 	return (cell != null) ? cell.getParent() : null;
 };
@@ -616,7 +616,7 @@ mxGraphModel.prototype.getParent = function(cell)
  * child - <mxCell> that specifies the child to be inserted.
  * index - Optional integer that specifies the index of the child.
  */
-mxGraphModel.prototype.add = function(parent, child, index)
+add = (parent, child, index)=>
 {
 	if (child != parent && parent != null && child != null)
 	{	
@@ -662,7 +662,7 @@ mxGraphModel.prototype.add = function(parent, child, index)
  * 
  * cell - <mxCell> that specifies the cell that has been added.
  */
-mxGraphModel.prototype.cellAdded = function(cell)
+cellAdded = (cell)=>
 {
 	if (cell != null)
 	{
@@ -724,7 +724,7 @@ mxGraphModel.prototype.cellAdded = function(cell)
  *
  * cell - <mxCell> to create the Id for.
  */
-mxGraphModel.prototype.createId = function(cell)
+createId = (cell)=>
 {
 	var id = this.nextId;
 	this.nextId++;
@@ -738,7 +738,7 @@ mxGraphModel.prototype.createId = function(cell)
  * Updates the parent for all edges that are connected to cell or one of
  * its descendants using <updateEdgeParent>.
  */
-mxGraphModel.prototype.updateEdgeParents = function(cell, root)
+updateEdgeParents = (cell, root)=>
 {
 	// Gets the topmost node of the hierarchy
 	root = root || this.getRoot(cell);
@@ -786,7 +786,7 @@ mxGraphModel.prototype.updateEdgeParents = function(cell, root)
  * edge - <mxCell> that specifies the edge.
  * root - <mxCell> that represents the current root of the model.
  */
-mxGraphModel.prototype.updateEdgeParent = function(edge, root)
+updateEdgeParent = (edge, root)=>
 {
 	var source = this.getTerminal(edge, true);
 	var target = this.getTerminal(edge, false);
@@ -847,7 +847,7 @@ mxGraphModel.prototype.updateEdgeParent = function(edge, root)
  * Returns the absolute, accumulated origin for the children inside the
  * given parent as an <mxPoint>.
  */
-mxGraphModel.prototype.getOrigin = function(cell)
+getOrigin = (cell)=>
 {
 	var result = null;
 	
@@ -884,7 +884,7 @@ mxGraphModel.prototype.getOrigin = function(cell)
  * cell1 - <mxCell> that specifies the first cell in the tree.
  * cell2 - <mxCell> that specifies the second cell in the tree.
  */
-mxGraphModel.prototype.getNearestCommonAncestor = function(cell1, cell2)
+getNearestCommonAncestor = (cell1, cell2)=>
 {
 	if (cell1 != null && cell2 != null)
 	{		
@@ -937,7 +937,7 @@ mxGraphModel.prototype.getNearestCommonAncestor = function(cell1, cell2)
  * 
  * cell - <mxCell> that should be removed.
  */
-mxGraphModel.prototype.remove = function(cell)
+remove = (cell)=>
 {
 	if (cell == this.root)
 	{
@@ -960,7 +960,7 @@ mxGraphModel.prototype.remove = function(cell)
  * 
  * cell - <mxCell> that specifies the cell that has been removed.
  */
-mxGraphModel.prototype.cellRemoved = function(cell)
+cellRemoved = (cell)=>
 {
 	if (cell != null && this.cells != null)
 	{
@@ -993,7 +993,7 @@ mxGraphModel.prototype.cellRemoved = function(cell)
  * index - Optional integer that defines the index of the child
  * in the parent's child array.
  */
-mxGraphModel.prototype.parentForCellChanged = function(cell, parent, index)
+parentForCellChanged = (cell, parent, index)=>
 {
 	var previous = this.getParent(cell);
 	
@@ -1035,7 +1035,7 @@ mxGraphModel.prototype.parentForCellChanged = function(cell, parent, index)
  * 
  * cell - <mxCell> whose number of children should be returned.
  */
-mxGraphModel.prototype.getChildCount = function(cell)
+getChildCount = (cell)=>
 {
 	return (cell != null) ? cell.getChildCount() : 0;
 };
@@ -1050,7 +1050,7 @@ mxGraphModel.prototype.getChildCount = function(cell)
  * cell - <mxCell> that represents the parent.
  * index - Integer that specifies the index of the child to be returned.
  */
-mxGraphModel.prototype.getChildAt = function(cell, index)
+getChildAt = (cell, index)=>
 {
 	return (cell != null) ? cell.getChildAt(index) : null;
 };
@@ -1065,7 +1065,7 @@ mxGraphModel.prototype.getChildAt = function(cell, index)
  * 
  * cell - <mxCell> the represents the parent.
  */
-mxGraphModel.prototype.getChildren = function(cell)
+getChildren = (cell)=>
 {
 	return (cell != null) ? cell.children : null;
 };
@@ -1079,7 +1079,7 @@ mxGraphModel.prototype.getChildren = function(cell)
  * 
  * cell - <mxCell> whose child vertices should be returned.
  */
-mxGraphModel.prototype.getChildVertices = function(parent)
+getChildVertices = (parent)=>
 {
 	return this.getChildCells(parent, true, false);
 };
@@ -1093,7 +1093,7 @@ mxGraphModel.prototype.getChildVertices = function(parent)
  * 
  * cell - <mxCell> whose child edges should be returned.
  */
-mxGraphModel.prototype.getChildEdges = function(parent)
+getChildEdges = (parent)=>
 {
 	return this.getChildCells(parent, false, true);
 };
@@ -1112,7 +1112,7 @@ mxGraphModel.prototype.getChildEdges = function(parent)
  * edges - Boolean indicating if child edges should be returned.
  * Default is false.
  */
-mxGraphModel.prototype.getChildCells = function(parent, vertices, edges)
+getChildCells = (parent, vertices, edges)=>
 {
 	vertices = (vertices != null) ? vertices : false;
 	edges = (edges != null) ? edges : false;
@@ -1145,7 +1145,7 @@ mxGraphModel.prototype.getChildCells = function(parent, vertices, edges)
  * edge - <mxCell> that specifies the edge.
  * isSource - Boolean indicating which end of the edge should be returned.
  */
-mxGraphModel.prototype.getTerminal = function(edge, isSource)
+getTerminal = (edge, isSource)=>
 {
 	return (edge != null) ? edge.getTerminal(isSource) : null;
 };
@@ -1165,7 +1165,7 @@ mxGraphModel.prototype.getTerminal = function(edge, isSource)
  * isSource - Boolean indicating if the terminal is the new source or
  * target terminal of the edge.
  */
-mxGraphModel.prototype.setTerminal = function(edge, terminal, isSource)
+setTerminal = (edge, terminal, isSource)=>
 {
 	var terminalChanged = terminal != this.getTerminal(edge, isSource);
 	this.execute(new mxTerminalChange(this, edge, terminal, isSource));
@@ -1190,7 +1190,7 @@ mxGraphModel.prototype.setTerminal = function(edge, terminal, isSource)
  * source - <mxCell> that specifies the new source terminal.
  * target - <mxCell> that specifies the new target terminal.
  */
-mxGraphModel.prototype.setTerminals = function(edge, source, target)
+setTerminals = (edge, source, target)=>
 {
 	this.beginUpdate();
 	try
@@ -1217,7 +1217,7 @@ mxGraphModel.prototype.setTerminals = function(edge, source, target)
  * isSource - Boolean indicating if the terminal is the new source or
  * target terminal of the edge.
  */
-mxGraphModel.prototype.terminalForCellChanged = function(edge, terminal, isSource)
+terminalForCellChanged = (edge, terminal, isSource)=>
 {
 	var previous = this.getTerminal(edge, isSource);
 	
@@ -1242,7 +1242,7 @@ mxGraphModel.prototype.terminalForCellChanged = function(edge, terminal, isSourc
  * 
  * cell - <mxCell> that represents the vertex.
  */
-mxGraphModel.prototype.getEdgeCount = function(cell)
+getEdgeCount = (cell)=>
 {
 	return (cell != null) ? cell.getEdgeCount() : 0;
 };
@@ -1258,7 +1258,7 @@ mxGraphModel.prototype.getEdgeCount = function(cell)
  * index - Integer that specifies the index of the edge
  * to return.
  */
-mxGraphModel.prototype.getEdgeAt = function(cell, index)
+getEdgeAt = (cell, index)=>
 {
 	return (cell != null) ? cell.getEdgeAt(index) : null;
 };
@@ -1276,7 +1276,7 @@ mxGraphModel.prototype.getEdgeAt = function(cell, index)
  * incoming edges should be returned.
  * ignoredEdge - <mxCell> that represents an edge to be ignored.
  */
-mxGraphModel.prototype.getDirectedEdgeCount = function(cell, outgoing, ignoredEdge)
+getDirectedEdgeCount = (cell, outgoing, ignoredEdge)=>
 {
 	var count = 0;
 	var edgeCount = this.getEdgeCount(cell);
@@ -1304,7 +1304,7 @@ mxGraphModel.prototype.getDirectedEdgeCount = function(cell, outgoing, ignoredEd
  * cell - <mxCell> whose edges should be returned.
  * 
  */
-mxGraphModel.prototype.getConnections = function(cell)
+getConnections = (cell)=>
 {
 	return this.getEdges(cell, true, true, false);
 };
@@ -1319,7 +1319,7 @@ mxGraphModel.prototype.getConnections = function(cell)
  * cell - <mxCell> whose incoming edges should be returned.
  * 
  */
-mxGraphModel.prototype.getIncomingEdges = function(cell)
+getIncomingEdges = (cell)=>
 {
 	return this.getEdges(cell, true, false, false);
 };
@@ -1334,7 +1334,7 @@ mxGraphModel.prototype.getIncomingEdges = function(cell)
  * cell - <mxCell> whose outgoing edges should be returned.
  * 
  */
-mxGraphModel.prototype.getOutgoingEdges = function(cell)
+getOutgoingEdges = (cell)=>
 {
 	return this.getEdges(cell, false, true, false);
 };
@@ -1357,7 +1357,7 @@ mxGraphModel.prototype.getOutgoingEdges = function(cell)
  * includeLoops - Optional boolean that specifies if loops should be returned.
  * Default is true. 
  */
-mxGraphModel.prototype.getEdges = function(cell, incoming, outgoing, includeLoops)
+getEdges = (cell, incoming, outgoing, includeLoops)=>
 {
 	incoming = (incoming != null) ? incoming : true;
 	outgoing = (outgoing != null) ? outgoing : true;
@@ -1398,7 +1398,7 @@ mxGraphModel.prototype.getEdges = function(cell, incoming, outgoing, includeLoop
  * directed - Optional boolean that specifies if the direction of the
  * edge should be taken into account. Default is false.
  */
-mxGraphModel.prototype.getEdgesBetween = function(source, target, directed)
+getEdgesBetween = (source, target, directed)=>
 {
 	directed = (directed != null) ? directed : false;
 	
@@ -1454,7 +1454,7 @@ mxGraphModel.prototype.getEdgesBetween = function(source, target, directed)
  * targets - Boolean that specifies if target terminals should be contained
  * in the result. Default is true.
  */
-mxGraphModel.prototype.getOpposites = function(edges, terminal, sources, targets)
+getOpposites = (edges, terminal, sources, targets)=>
 {
 	sources = (sources != null) ? sources : true;
 	targets = (targets != null) ? targets : true;
@@ -1500,7 +1500,7 @@ mxGraphModel.prototype.getOpposites = function(edges, terminal, sources, targets
  * 
  * cells - Array of <mxCells> whose topmost ancestors should be returned.
  */
-mxGraphModel.prototype.getTopmostCells = function(cells)
+getTopmostCells = (cells)=>
 {
 	var dict = new mxDictionary();
 	var tmp = [];
@@ -1545,7 +1545,7 @@ mxGraphModel.prototype.getTopmostCells = function(cells)
  * 
  * cell - <mxCell> that represents the possible vertex.
  */
-mxGraphModel.prototype.isVertex = function(cell)
+isVertex = (cell)=>
 {
 	return (cell != null) ? cell.isVertex() : false;
 };
@@ -1559,7 +1559,7 @@ mxGraphModel.prototype.isVertex = function(cell)
  * 
  * cell - <mxCell> that represents the possible edge.
  */
-mxGraphModel.prototype.isEdge = function(cell)
+isEdge = (cell)=>
 {
 	return (cell != null) ? cell.isEdge() : false;
 };
@@ -1575,7 +1575,7 @@ mxGraphModel.prototype.isEdge = function(cell)
  * 
  * cell - <mxCell> whose connectable state should be returned.
  */
-mxGraphModel.prototype.isConnectable = function(cell)
+isConnectable = (cell)=>
 {
 	return (cell != null) ? cell.isConnectable() : false;
 };
@@ -1589,7 +1589,7 @@ mxGraphModel.prototype.isConnectable = function(cell)
  * 
  * cell - <mxCell> whose user object should be returned.
  */
-mxGraphModel.prototype.getValue = function(cell)
+getValue = (cell)=>
 {
 	return (cell != null) ? cell.getValue() : null;
 };
@@ -1605,7 +1605,7 @@ mxGraphModel.prototype.getValue = function(cell)
  * cell - <mxCell> whose user object should be changed.
  * value - Object that defines the new user object.
  */
-mxGraphModel.prototype.setValue = function(cell, value)
+setValue = (cell, value)=>
 {
 	this.execute(new mxValueChange(this, cell, value));
 	
@@ -1623,7 +1623,7 @@ mxGraphModel.prototype.setValue = function(cell, value)
  * used.
  * 
  * (code)
- * graph.getModel().valueForCellChanged = function(cell, value)
+ * graph.getModel().valueForCellChanged = (cell, value)=>
  * {
  *   var previous = cell.value.getAttribute('label');
  *   cell.value.setAttribute('label', value);
@@ -1632,7 +1632,7 @@ mxGraphModel.prototype.setValue = function(cell, value)
  * };
  * (end) 
  */
-mxGraphModel.prototype.valueForCellChanged = function(cell, value)
+valueForCellChanged = (cell, value)=>
 {
 	return cell.valueChanged(value);
 };
@@ -1646,7 +1646,7 @@ mxGraphModel.prototype.valueForCellChanged = function(cell, value)
  * 
  * cell - <mxCell> whose geometry should be returned.
  */
-mxGraphModel.prototype.getGeometry = function(cell)
+getGeometry = (cell)=>
 {
 	return (cell != null) ? cell.getGeometry() : null;
 };
@@ -1663,7 +1663,7 @@ mxGraphModel.prototype.getGeometry = function(cell)
  * cell - <mxCell> whose geometry should be changed.
  * geometry - <mxGeometry> that defines the new geometry.
  */
-mxGraphModel.prototype.setGeometry = function(cell, geometry)
+setGeometry = (cell, geometry)=>
 {
 	if (geometry != this.getGeometry(cell))
 	{
@@ -1679,7 +1679,7 @@ mxGraphModel.prototype.setGeometry = function(cell, geometry)
  * Inner callback to update the <mxGeometry> of the given <mxCell> using
  * <mxCell.setGeometry> and return the previous <mxGeometry>.
  */
-mxGraphModel.prototype.geometryForCellChanged = function(cell, geometry)
+geometryForCellChanged = (cell, geometry)=>
 {
 	var previous = this.getGeometry(cell);
 	cell.setGeometry(geometry);
@@ -1696,7 +1696,7 @@ mxGraphModel.prototype.geometryForCellChanged = function(cell, geometry)
  * 
  * cell - <mxCell> whose style should be returned.
  */
-mxGraphModel.prototype.getStyle = function(cell)
+getStyle = (cell)=>
 {
 	return (cell != null) ? cell.getStyle() : null;
 };
@@ -1713,7 +1713,7 @@ mxGraphModel.prototype.getStyle = function(cell)
  * style - String of the form [stylename;|key=value;] to specify
  * the new cell style.
  */
-mxGraphModel.prototype.setStyle = function(cell, style)
+setStyle = (cell, style)=>
 {
 	if (style != this.getStyle(cell))
 	{
@@ -1735,7 +1735,7 @@ mxGraphModel.prototype.setStyle = function(cell, style)
  * style - String of the form [stylename;|key=value;] to specify
  * the new cell style.
  */
-mxGraphModel.prototype.styleForCellChanged = function(cell, style)
+styleForCellChanged = (cell, style)=>
 {
 	var previous = this.getStyle(cell);
 	cell.setStyle(style);
@@ -1752,7 +1752,7 @@ mxGraphModel.prototype.styleForCellChanged = function(cell, style)
  * 
  * cell - <mxCell> whose collapsed state should be returned.
  */
-mxGraphModel.prototype.isCollapsed = function(cell)
+isCollapsed = (cell)=>
 {
 	return (cell != null) ? cell.isCollapsed() : false;
 };
@@ -1768,7 +1768,7 @@ mxGraphModel.prototype.isCollapsed = function(cell)
  * cell - <mxCell> whose collapsed state should be changed.
  * collapsed - Boolean that specifies the new collpased state.
  */
-mxGraphModel.prototype.setCollapsed = function(cell, collapsed)
+setCollapsed = (cell, collapsed)=>
 {
 	if (collapsed != this.isCollapsed(cell))
 	{
@@ -1790,7 +1790,7 @@ mxGraphModel.prototype.setCollapsed = function(cell, collapsed)
  * cell - <mxCell> that specifies the cell to be updated.
  * collapsed - Boolean that specifies the new collpased state.
  */
-mxGraphModel.prototype.collapsedStateForCellChanged = function(cell, collapsed)
+collapsedStateForCellChanged = (cell, collapsed)=>
 {
 	var previous = this.isCollapsed(cell);
 	cell.setCollapsed(collapsed);
@@ -1807,7 +1807,7 @@ mxGraphModel.prototype.collapsedStateForCellChanged = function(cell, collapsed)
  * 
  * cell - <mxCell> whose visible state should be returned.
  */
-mxGraphModel.prototype.isVisible = function(cell)
+isVisible = (cell)=>
 {
 	return (cell != null) ? cell.isVisible() : false;
 };
@@ -1823,7 +1823,7 @@ mxGraphModel.prototype.isVisible = function(cell)
  * cell - <mxCell> whose visible state should be changed.
  * visible - Boolean that specifies the new visible state.
  */
-mxGraphModel.prototype.setVisible = function(cell, visible)
+setVisible = (cell, visible)=>
 {
 	if (visible != this.isVisible(cell))
 	{
@@ -1845,7 +1845,7 @@ mxGraphModel.prototype.setVisible = function(cell, visible)
  * cell - <mxCell> that specifies the cell to be updated.
  * visible - Boolean that specifies the new visible state.
  */
-mxGraphModel.prototype.visibleStateForCellChanged = function(cell, visible)
+visibleStateForCellChanged = (cell, visible)=>
 {
 	var previous = this.isVisible(cell);
 	cell.setVisible(visible);
@@ -1868,7 +1868,7 @@ mxGraphModel.prototype.visibleStateForCellChanged = function(cell, visible)
  * 
  * change - Object that described the change.
  */
-mxGraphModel.prototype.execute = function(change)
+execute = (change)=>
 {
 	change.execute();
 	this.beginUpdate();
@@ -1918,7 +1918,7 @@ mxGraphModel.prototype.execute = function(change)
  * graph.addCells([v1, v2]).
  * (end)
  */
-mxGraphModel.prototype.beginUpdate = function()
+beginUpdate = ()=>
 {
 	this.updateLevel++;
 	this.fireEvent(new mxEventObject(mxEvent.BEGIN_UPDATE));
@@ -1943,7 +1943,7 @@ mxGraphModel.prototype.beginUpdate = function()
  * function is invoked, that is, on undo and redo of
  * the edit.
  */
-mxGraphModel.prototype.endUpdate = function()
+endUpdate = ()=>
 {
 	this.updateLevel--;
 	
@@ -1987,11 +1987,11 @@ mxGraphModel.prototype.endUpdate = function()
  * significant - Optional boolean that specifies if the edit to be created is
  * significant. Default is true.
  */
-mxGraphModel.prototype.createUndoableEdit = function(significant)
+createUndoableEdit = (significant)=>
 {
 	var edit = new mxUndoableEdit(this, (significant != null) ? significant : true);
 	
-	edit.notify = function()
+	edit.notify = ()=>
 	{
 		// LATER: Remove changes property (deprecated)
 		edit.source.fireEvent(new mxEventObject(mxEvent.CHANGE,
@@ -2015,7 +2015,7 @@ mxGraphModel.prototype.createUndoableEdit = function(significant)
  * id in the target model are reconnected to reflect the terminals of the
  * source edges.
  */
-mxGraphModel.prototype.mergeChildren = function(from, to, cloneAllEdges)
+mergeChildren = (from, to, cloneAllEdges)=>
 {
 	cloneAllEdges = (cloneAllEdges != null) ? cloneAllEdges : true;
 	
@@ -2062,7 +2062,7 @@ mxGraphModel.prototype.mergeChildren = function(from, to, cloneAllEdges)
  * cell to the target cell with the same id or the clone of the source cell
  * that was inserted into this model.
  */
-mxGraphModel.prototype.mergeChildrenImpl = function(from, to, cloneAllEdges, mapping)
+mergeChildrenImpl = (from, to, cloneAllEdges, mapping)=>
 {
 	this.beginUpdate();
 	try
@@ -2121,7 +2121,7 @@ mxGraphModel.prototype.mergeChildrenImpl = function(from, to, cloneAllEdges, map
  * 
  * cells - Array of cells whose parents should be returned.
  */
-mxGraphModel.prototype.getParents = function(cells)
+getParents = (cells)=>
 {
 	var parents = [];
 	
@@ -2160,7 +2160,7 @@ mxGraphModel.prototype.getParents = function(cells)
  * includeChildren - Optional boolean indicating if the cells should be cloned
  * with all descendants. Default is true.
  */
-mxGraphModel.prototype.cloneCell = function(cell, includeChildren)
+cloneCell = (cell, includeChildren)=>
 {
 	if (cell != null)
 	{
@@ -2185,7 +2185,7 @@ mxGraphModel.prototype.cloneCell = function(cell, includeChildren)
  * with all descendants. Default is true.
  * mapping - Optional mapping for existing clones.
  */
-mxGraphModel.prototype.cloneCells = function(cells, includeChildren, mapping)
+cloneCells = (cells, includeChildren, mapping)=>
 {
 	includeChildren = (includeChildren != null) ? includeChildren : true;
 	mapping = (mapping != null) ? mapping : new Object();
@@ -2219,7 +2219,7 @@ mxGraphModel.prototype.cloneCells = function(cells, includeChildren, mapping)
  * 
  * Inner helper method for cloning cells recursively.
  */
-mxGraphModel.prototype.cloneCellImpl = function(cell, mapping, includeChildren)
+cloneCellImpl = (cell, mapping, includeChildren)=>
 {
 	var ident = mxObjectIdentity.get(cell);
 	var clone = mapping[ident];
@@ -2251,7 +2251,7 @@ mxGraphModel.prototype.cloneCellImpl = function(cell, mapping, includeChildren)
  * Hook for cloning the cell. This returns cell.clone() or
  * any possible exceptions.
  */
-mxGraphModel.prototype.cellCloned = function(cell)
+cellCloned = (cell)=>
 {
 	return cell.clone();
 };
@@ -2262,7 +2262,7 @@ mxGraphModel.prototype.cellCloned = function(cell)
  * Inner helper method for restoring the connections in
  * a network of cloned cells.
  */
-mxGraphModel.prototype.restoreClone = function(clone, cell, mapping)
+restoreClone = (clone, cell, mapping)=>
 {
 	var source = this.getTerminal(cell, true);
 	
@@ -2324,7 +2324,7 @@ function mxRootChange(model, root)
  * Carries out a change of the root using
  * <mxGraphModel.rootChanged>.
  */
-mxRootChange.prototype.execute = function()
+execute = ()=>
 {
 	this.root = this.previous;
 	this.previous = this.model.rootChanged(this.previous);
@@ -2358,7 +2358,7 @@ function mxChildChange(model, parent, child, index)
  * removes or restores the cell's
  * connections.
  */
-mxChildChange.prototype.execute = function()
+execute = ()=>
 {
 	if (this.child != null)
 	{
@@ -2392,7 +2392,7 @@ mxChildChange.prototype.execute = function()
  * terminals and stores the previous terminal in the
  * cell's terminals.
  */
-mxChildChange.prototype.connect = function(cell, isConnect)
+connect = (cell, isConnect)=>
 {
 	isConnect = (isConnect != null) ? isConnect : true;
 	
@@ -2459,7 +2459,7 @@ function mxTerminalChange(model, cell, terminal, source)
  * Changes the terminal of <cell> to <previous> using
  * <mxGraphModel.terminalForCellChanged>.
  */
-mxTerminalChange.prototype.execute = function()
+execute = ()=>
 {
 	if (this.cell != null)
 	{
@@ -2493,7 +2493,7 @@ function mxValueChange(model, cell, value)
  * Changes the value of <cell> to <previous> using
  * <mxGraphModel.valueForCellChanged>.
  */
-mxValueChange.prototype.execute = function()
+execute = ()=>
 {
 	if (this.cell != null)
 	{
@@ -2527,7 +2527,7 @@ function mxStyleChange(model, cell, style)
  * Changes the style of <cell> to <previous> using
  * <mxGraphModel.styleForCellChanged>.
  */
-mxStyleChange.prototype.execute = function()
+execute = ()=>
 {
 	if (this.cell != null)
 	{
@@ -2561,7 +2561,7 @@ function mxGeometryChange(model, cell, geometry)
  * Changes the geometry of <cell> ro <previous> using
  * <mxGraphModel.geometryForCellChanged>.
  */
-mxGeometryChange.prototype.execute = function()
+execute = ()=>
 {
 	if (this.cell != null)
 	{
@@ -2595,7 +2595,7 @@ function mxCollapseChange(model, cell, collapsed)
  * Changes the collapsed state of <cell> to <previous> using
  * <mxGraphModel.collapsedStateForCellChanged>.
  */
-mxCollapseChange.prototype.execute = function()
+execute = ()=>
 {
 	if (this.cell != null)
 	{
@@ -2629,7 +2629,7 @@ function mxVisibleChange(model, cell, visible)
  * Changes the visible state of <cell> to <previous> using
  * <mxGraphModel.visibleStateForCellChanged>.
  */
-mxVisibleChange.prototype.execute = function()
+execute = ()=>
 {
 	if (this.cell != null)
 	{
@@ -2685,7 +2685,7 @@ function mxCellAttributeChange(cell, attribute, value)
  * Changes the attribute of the cell's user object by
  * using <mxCell.setAttribute>.
  */
-mxCellAttributeChange.prototype.execute = function()
+execute = ()=>
 {
 	if (this.cell != null)
 	{

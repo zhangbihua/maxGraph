@@ -25,28 +25,28 @@ function mxRectangle(x, y, width, height)
  * Extends mxPoint.
  */
 mxRectangle.prototype = new mxPoint();
-mxRectangle.prototype.constructor = mxRectangle;
+constructor = mxRectangle;
 
 /**
  * Variable: width
  *
  * Holds the width of the rectangle. Default is 0.
  */
-mxRectangle.prototype.width = null;
+width = null;
 
 /**
  * Variable: height
  *
  * Holds the height of the rectangle. Default is 0.
  */
-mxRectangle.prototype.height = null;
+height = null;
 
 /**
  * Function: setRect
  * 
  * Sets this rectangle to the specified values
  */
-mxRectangle.prototype.setRect = function(x, y, w, h)
+setRect = (x, y, w, h)=>
 {
     this.x = x;
     this.y = y;
@@ -59,7 +59,7 @@ mxRectangle.prototype.setRect = function(x, y, w, h)
  * 
  * Returns the x-coordinate of the center point.
  */
-mxRectangle.prototype.getCenterX = function ()
+getCenterX = function ()
 {
 	return this.x + this.width/2;
 };
@@ -69,7 +69,7 @@ mxRectangle.prototype.getCenterX = function ()
  * 
  * Returns the y-coordinate of the center point.
  */
-mxRectangle.prototype.getCenterY = function ()
+getCenterY = function ()
 {
 	return this.y + this.height/2;
 };
@@ -79,7 +79,7 @@ mxRectangle.prototype.getCenterY = function ()
  *
  * Adds the given rectangle to this rectangle.
  */
-mxRectangle.prototype.add = function(rect)
+add = (rect)=>
 {
 	if (rect != null)
 	{
@@ -100,7 +100,7 @@ mxRectangle.prototype.add = function(rect)
  * 
  * Changes this rectangle to where it overlaps with the given rectangle.
  */
-mxRectangle.prototype.intersect = function(rect)
+intersect = (rect)=>
 {
 	if (rect != null)
 	{
@@ -124,7 +124,7 @@ mxRectangle.prototype.intersect = function(rect)
  * the given amount from the x- and y-coordinates and adds twice the amount
  * to the width and height.
  */
-mxRectangle.prototype.grow = function(amount)
+grow = (amount)=>
 {
 	this.x -= amount;
 	this.y -= amount;
@@ -139,7 +139,7 @@ mxRectangle.prototype.grow = function(amount)
  * 
  * Returns the top, left corner as a new <mxPoint>.
  */
-mxRectangle.prototype.getPoint = function()
+getPoint = ()=>
 {
 	return new mxPoint(this.x, this.y);
 };
@@ -149,7 +149,7 @@ mxRectangle.prototype.getPoint = function()
  * 
  * Rotates this rectangle by 90 degree around its center point.
  */
-mxRectangle.prototype.rotate90 = function()
+rotate90 = ()=>
 {
 	var t = (this.width - this.height) / 2;
 	this.x += t;
@@ -164,7 +164,7 @@ mxRectangle.prototype.rotate90 = function()
  * 
  * Returns true if the given object equals this rectangle.
  */
-mxRectangle.prototype.equals = function(obj)
+equals = (obj)=>
 {
 	return obj != null && obj.x == this.x && obj.y == this.y &&
 		obj.width == this.width && obj.height == this.height;
@@ -175,7 +175,7 @@ mxRectangle.prototype.equals = function(obj)
  * 
  * Returns a new <mxRectangle> which is a copy of the given rectangle.
  */
-mxRectangle.fromRectangle = function(rect)
+mxRectangle.fromRectangle = (rect)=>
 {
 	return new mxRectangle(rect.x, rect.y, rect.width, rect.height);
 };

@@ -33,7 +33,7 @@ function mxGraphLayout(graph)
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxGraphLayout.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: useBoundingBox
@@ -41,14 +41,14 @@ mxGraphLayout.prototype.graph = null;
  * Boolean indicating if the bounding box of the label should be used if
  * its available. Default is true.
  */
-mxGraphLayout.prototype.useBoundingBox = true;
+useBoundingBox = true;
 
 /**
  * Variable: parent
  *
  * The parent cell of the layout, if any
  */
-mxGraphLayout.prototype.parent = null;
+parent = null;
 
 /**
  * Function: moveCell
@@ -66,7 +66,7 @@ mxGraphLayout.prototype.parent = null;
  * x - X-coordinate of the new cell location.
  * y - Y-coordinate of the new cell location.
  */
-mxGraphLayout.prototype.moveCell = function(cell, x, y) { };
+moveCell = (cell, x, y)=> { };
 
 /**
  * Function: resizeCell
@@ -81,7 +81,7 @@ mxGraphLayout.prototype.moveCell = function(cell, x, y) { };
  * cell - <mxCell> which has been moved.
  * bounds - <mxRectangle> that represents the new cell bounds.
  */
-mxGraphLayout.prototype.resizeCell = function(cell, bounds) { };
+resizeCell = (cell, bounds)=> { };
 
 /**
  * Function: execute
@@ -92,14 +92,14 @@ mxGraphLayout.prototype.resizeCell = function(cell, bounds) { };
  * 
  * parent - <mxCell> whose children should be layed out.
  */
-mxGraphLayout.prototype.execute = function(parent) { };
+execute = (parent)=> { };
 
 /**
  * Function: getGraph
  * 
  * Returns the graph that this layout operates on.
  */
-mxGraphLayout.prototype.getGraph = function()
+getGraph = ()=>
 {
 	return this.graph;
 };
@@ -121,7 +121,7 @@ mxGraphLayout.prototype.getGraph = function()
  * source - Optional boolean that specifies if the connection is incoming
  * or outgoing. Default is null.
  */
-mxGraphLayout.prototype.getConstraint = function(key, cell, edge, source)
+getConstraint = (key, cell, edge, source)=>
 {
 	return this.graph.getCurrentCellStyle(cell)[key]
 };
@@ -140,7 +140,7 @@ mxGraphLayout.prototype.getConstraint = function(key, cell, edge, source)
  * (code)
  * mxLog.show();
  * var cell = graph.getSelectionCell();
- * graph.traverse(cell, false, function(vertex, edge)
+ * graph.traverse(cell, false, (vertex, edge)=>
  * {
  *   mxLog.debug(graph.getLabel(vertex));
  * });
@@ -157,7 +157,7 @@ mxGraphLayout.prototype.getConstraint = function(key, cell, edge, source)
  * null for the first step of the traversal.
  * visited - Optional <mxDictionary> of cell paths for the visited cells.
  */
-mxGraphLayout.traverse = function(vertex, directed, func, edge, visited)
+mxGraphLayout.traverse = (vertex, directed, func, edge, visited)=>
 {
 	if (func != null && vertex != null)
 	{
@@ -203,7 +203,7 @@ mxGraphLayout.traverse = function(vertex, directed, func, edge, visited)
  * child - <mxCell> that specifies the child.
  * traverseAncestors - boolean whether to 
  */
-mxGraphLayout.prototype.isAncestor = function(parent, child, traverseAncestors)
+isAncestor = (parent, child, traverseAncestors)=>
 {
 	if (!traverseAncestors)
 	{
@@ -234,7 +234,7 @@ mxGraphLayout.prototype.isAncestor = function(parent, child, traverseAncestors)
  * 
  * cell - <mxCell> whose movable state should be returned.
  */
-mxGraphLayout.prototype.isVertexMovable = function(cell)
+isVertexMovable = (cell)=>
 {
 	return this.graph.isCellMovable(cell);
 };
@@ -249,7 +249,7 @@ mxGraphLayout.prototype.isVertexMovable = function(cell)
  * 
  * vertex - <mxCell> whose ignored state should be returned.
  */
-mxGraphLayout.prototype.isVertexIgnored = function(vertex)
+isVertexIgnored = (vertex)=>
 {
 	return !this.graph.getModel().isVertex(vertex) ||
 		!this.graph.isCellVisible(vertex);
@@ -265,7 +265,7 @@ mxGraphLayout.prototype.isVertexIgnored = function(vertex)
  * 
  * cell - <mxCell> whose ignored state should be returned.
  */
-mxGraphLayout.prototype.isEdgeIgnored = function(edge)
+isEdgeIgnored = (edge)=>
 {
 	var model = this.graph.getModel();
 	
@@ -280,7 +280,7 @@ mxGraphLayout.prototype.isEdgeIgnored = function(edge)
  * 
  * Disables or enables the edge style of the given edge.
  */
-mxGraphLayout.prototype.setEdgeStyleEnabled = function(edge, value)
+setEdgeStyleEnabled = (edge, value)=>
 {
 	this.graph.setCellStyles(mxConstants.STYLE_NOEDGESTYLE,
 			(value) ? '0' : '1', [edge]);
@@ -291,7 +291,7 @@ mxGraphLayout.prototype.setEdgeStyleEnabled = function(edge, value)
  * 
  * Disables or enables orthogonal end segments of the given edge.
  */
-mxGraphLayout.prototype.setOrthogonalEdge = function(edge, value)
+setOrthogonalEdge = (edge, value)=>
 {
 	this.graph.setCellStyles(mxConstants.STYLE_ORTHOGONAL,
 			(value) ? '1' : '0', [edge]);
@@ -303,7 +303,7 @@ mxGraphLayout.prototype.setOrthogonalEdge = function(edge, value)
  * Determines the offset of the given parent to the parent
  * of the layout
  */
-mxGraphLayout.prototype.getParentOffset = function(parent)
+getParentOffset = (parent)=>
 {
 	var result = new mxPoint();
 
@@ -335,7 +335,7 @@ mxGraphLayout.prototype.getParentOffset = function(parent)
  * Replaces the array of mxPoints in the geometry of the given edge
  * with the given array of mxPoints.
  */
-mxGraphLayout.prototype.setEdgePoints = function(edge, points)
+setEdgePoints = (edge, points)=>
 {
 	if (edge != null)
 	{
@@ -385,7 +385,7 @@ mxGraphLayout.prototype.setEdgePoints = function(edge, points)
  * x - Integer that defines the x-coordinate of the new location.
  * y - Integer that defines the y-coordinate of the new location.
  */
-mxGraphLayout.prototype.setVertexLocation = function(cell, x, y)
+setVertexLocation = (cell, x, y)=>
 {
 	var model = this.graph.getModel();
 	var geometry = model.getGeometry(cell);
@@ -452,7 +452,7 @@ mxGraphLayout.prototype.setVertexLocation = function(cell, x, y)
  * Returns an <mxRectangle> that defines the bounds of the given cell or
  * the bounding box if <useBoundingBox> is true.
  */
-mxGraphLayout.prototype.getVertexBounds = function(cell)
+getVertexBounds = (cell)=>
 {
 	var geo = this.graph.getModel().getGeometry(cell);
 
@@ -498,7 +498,7 @@ mxGraphLayout.prototype.getVertexBounds = function(cell)
  * 
  * Shortcut to <mxGraph.updateGroupBounds> with moveGroup set to true.
  */
-mxGraphLayout.prototype.arrangeGroups = function(cells, border, topBorder, rightBorder, bottomBorder, leftBorder)
+arrangeGroups = (cells, border, topBorder, rightBorder, bottomBorder, leftBorder)=>
 {
 	return this.graph.updateGroupBounds(cells, border, true, topBorder, rightBorder, bottomBorder, leftBorder);
 };
@@ -525,42 +525,42 @@ function WeightedCellSorter(cell, weightedValue)
  * 
  * The weighted value of the cell stored.
  */
-WeightedCellSorter.prototype.weightedValue = 0;
+weightedValue = 0;
 
 /**
  * Variable: nudge
  * 
  * Whether or not to flip equal weight values.
  */
-WeightedCellSorter.prototype.nudge = false;
+nudge = false;
 
 /**
  * Variable: visited
  * 
  * Whether or not this cell has been visited in the current assignment.
  */
-WeightedCellSorter.prototype.visited = false;
+visited = false;
 
 /**
  * Variable: rankIndex
  * 
  * The index this cell is in the model rank.
  */
-WeightedCellSorter.prototype.rankIndex = null;
+rankIndex = null;
 
 /**
  * Variable: cell
  * 
  * The cell whose median value is being calculated.
  */
-WeightedCellSorter.prototype.cell = null;
+cell = null;
 
 /**
  * Function: compare
  * 
  * Compares two WeightedCellSorters.
  */
-WeightedCellSorter.prototype.compare = function(a, b)
+compare = (a, b)=>
 {
 	if (a != null && b != null)
 	{

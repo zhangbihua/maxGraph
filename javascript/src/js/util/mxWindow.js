@@ -36,18 +36,18 @@
  * the top, left corner the following method can be overridden (recommended):
  * 
  * (code)
- * wnd.setLocation = function(x, y)
+ * wnd.setLocation = (x, y)=>
  * {
  *   x = Math.max(0, x);
  *   y = Math.max(0, y);
- *   mxWindow.prototype.setLocation.apply(this, arguments);
+ *   setLocation.apply(this, arguments);
  * };
  * (end)
  * 
  * Or the following event handler can be used:
  * 
  * (code)
- * wnd.addListener(mxEvent.MOVE, function(e)
+ * wnd.addListener(mxEvent.MOVE, (e)=>
  * {
  *   wnd.setLocation(Math.max(0, wnd.getX()), Math.max(0, wnd.getY()));
  * });
@@ -56,7 +56,7 @@
  * To keep a window inside the current window:
  * 
  * (code)
- * mxEvent.addListener(window, 'resize', mxUtils.bind(this, function()
+ * mxEvent.addListener(window, 'resize', mxUtils.bind(this, ()=>
  * {
  *   var iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
  *   var ih = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -219,49 +219,49 @@ function mxWindow(title, content, x, y, width, height, minimizable, movable, rep
  * Extends mxEventSource.
  */
 mxWindow.prototype = new mxEventSource();
-mxWindow.prototype.constructor = mxWindow;
+constructor = mxWindow;
 
 /**
  * Variable: closeImage
  * 
  * URL of the image to be used for the close icon in the titlebar.
  */
-mxWindow.prototype.closeImage = mxClient.imageBasePath + '/close.gif';
+closeImage = mxClient.imageBasePath + '/close.gif';
 
 /**
  * Variable: minimizeImage
  * 
  * URL of the image to be used for the minimize icon in the titlebar.
  */
-mxWindow.prototype.minimizeImage = mxClient.imageBasePath + '/minimize.gif';
+minimizeImage = mxClient.imageBasePath + '/minimize.gif';
 	
 /**
  * Variable: normalizeImage
  * 
  * URL of the image to be used for the normalize icon in the titlebar.
  */
-mxWindow.prototype.normalizeImage = mxClient.imageBasePath + '/normalize.gif';
+normalizeImage = mxClient.imageBasePath + '/normalize.gif';
 	
 /**
  * Variable: maximizeImage
  * 
  * URL of the image to be used for the maximize icon in the titlebar.
  */
-mxWindow.prototype.maximizeImage = mxClient.imageBasePath + '/maximize.gif';
+maximizeImage = mxClient.imageBasePath + '/maximize.gif';
 
 /**
  * Variable: resizeImage
  * 
  * URL of the image to be used for the resize icon.
  */
-mxWindow.prototype.resizeImage = mxClient.imageBasePath + '/resize.gif';
+resizeImage = mxClient.imageBasePath + '/resize.gif';
 
 /**
  * Variable: visible
  * 
  * Boolean flag that represents the visible state of the window.
  */
-mxWindow.prototype.visible = false;
+visible = false;
 
 /**
  * Variable: minimumSize
@@ -269,7 +269,7 @@ mxWindow.prototype.visible = false;
  * <mxRectangle> that specifies the minimum width and height of the window.
  * Default is (50, 40).
  */
-mxWindow.prototype.minimumSize = new mxRectangle(0, 0, 50, 40);
+minimumSize = new mxRectangle(0, 0, 50, 40);
 
 /**
  * Variable: destroyOnClose
@@ -277,7 +277,7 @@ mxWindow.prototype.minimumSize = new mxRectangle(0, 0, 50, 40);
  * Specifies if the window should be destroyed when it is closed. If this
  * is false then the window is hidden using <setVisible>. Default is true.
  */
-mxWindow.prototype.destroyOnClose = true;
+destroyOnClose = true;
 
 /**
  * Variable: contentHeightCorrection
@@ -285,28 +285,28 @@ mxWindow.prototype.destroyOnClose = true;
  * Defines the correction factor for computing the height of the contentWrapper.
  * Default is 6 for IE 7/8 standards mode and 2 for all other browsers and modes.
  */
-mxWindow.prototype.contentHeightCorrection = (document.documentMode == 8 || document.documentMode == 7) ? 6 : 2;
+contentHeightCorrection = (document.documentMode == 8 || document.documentMode == 7) ? 6 : 2;
 
 /**
  * Variable: title
  * 
  * Reference to the DOM node (TD) that contains the title.
  */
-mxWindow.prototype.title = null;
+title = null;
 
 /**
  * Variable: content
  * 
  * Reference to the DOM node that represents the window content.
  */
-mxWindow.prototype.content = null;
+content = null;
 
 /**
  * Function: init
  * 
  * Initializes the DOM tree that represents the window.
  */
-mxWindow.prototype.init = function(x, y, width, height, style)
+init = (x, y, width, height, style)=>
 {
 	style = (style != null) ? style : 'mxWindow';
 	
@@ -392,7 +392,7 @@ mxWindow.prototype.init = function(x, y, width, height, style)
 	this.div.appendChild(this.table);
 	
 	// Puts the window on top of other windows when clicked
-	var activator = mxUtils.bind(this, function(evt)
+	var activator = mxUtils.bind(this, (evt)=>
 	{
 		this.activate();
 	});
@@ -409,7 +409,7 @@ mxWindow.prototype.init = function(x, y, width, height, style)
  * Sets the window title to the given string. HTML markup inside the title
  * will be escaped.
  */
-mxWindow.prototype.setTitle = function(title)
+setTitle = (title)=>
 {
 	// Removes all text content nodes (normally just one)
 	var child = this.title.firstChild;
@@ -435,7 +435,7 @@ mxWindow.prototype.setTitle = function(title)
  * 
  * Sets if the window contents should be scrollable.
  */
-mxWindow.prototype.setScrollable = function(scrollable)
+setScrollable = (scrollable)=>
 {
 	// Workaround for hang in Presto 2.5.22 (Opera 10.5)
 	if (navigator.userAgent == null ||
@@ -457,7 +457,7 @@ mxWindow.prototype.setScrollable = function(scrollable)
  * 
  * Puts the window on top of all other windows.
  */
-mxWindow.prototype.activate = function()
+activate = ()=>
 {
 	if (mxWindow.activeWindow != this)
 	{
@@ -487,7 +487,7 @@ mxWindow.prototype.activate = function()
  * 
  * Returuns the outermost DOM node that makes up the window.
  */
-mxWindow.prototype.getElement = function()
+getElement = ()=>
 {
 	return this.div;
 };
@@ -497,7 +497,7 @@ mxWindow.prototype.getElement = function()
  * 
  * Makes sure the window is inside the client area of the window.
  */
-mxWindow.prototype.fit = function()
+fit = ()=>
 {
 	mxUtils.fit(this.div);
 };
@@ -507,7 +507,7 @@ mxWindow.prototype.fit = function()
  * 
  * Returns true if the window is resizable.
  */
-mxWindow.prototype.isResizable = function()
+isResizable = ()=>
 {
 	if (this.resize != null)
 	{
@@ -531,7 +531,7 @@ mxWindow.prototype.isResizable = function()
  * }
  * (end)
  */
-mxWindow.prototype.setResizable = function(resizable)
+setResizable = (resizable)=>
 {
 	if (resizable)
 	{
@@ -550,7 +550,7 @@ mxWindow.prototype.setResizable = function(resizable)
 			var width = null;
 			var height = null;
 			
-			var start = mxUtils.bind(this, function(evt)
+			var start = mxUtils.bind(this, (evt)=>
 			{
 				// LATER: pointerdown starting on border of resize does start
 				// the drag operation but does not fire consecutive events via
@@ -569,7 +569,7 @@ mxWindow.prototype.setResizable = function(resizable)
 
 			// Adds a temporary pair of listeners to intercept
 			// the gesture event in the document
-			var dragHandler = mxUtils.bind(this, function(evt)
+			var dragHandler = mxUtils.bind(this, (evt)=>
 			{
 				if (startX != null && startY != null)
 				{
@@ -583,7 +583,7 @@ mxWindow.prototype.setResizable = function(resizable)
 				}
 			});
 			
-			var dropHandler = mxUtils.bind(this, function(evt)
+			var dropHandler = mxUtils.bind(this, (evt)=>
 			{
 				if (startX != null && startY != null)
 				{
@@ -614,7 +614,7 @@ mxWindow.prototype.setResizable = function(resizable)
  * 
  * Sets the size of the window.
  */
-mxWindow.prototype.setSize = function(width, height)
+setSize = (width, height)=>
 {
 	width = Math.max(this.minimumSize.width, width);
 	height = Math.max(this.minimumSize.height, height);
@@ -641,7 +641,7 @@ mxWindow.prototype.setSize = function(width, height)
  * 
  * Sets if the window is minimizable.
  */
-mxWindow.prototype.setMinimizable = function(minimizable)
+setMinimizable = (minimizable)=>
 {
 	this.minimize.style.display = (minimizable) ? '' : 'none';
 };
@@ -653,7 +653,7 @@ mxWindow.prototype.setMinimizable = function(minimizable)
  * A width or height of 0 means keep the existing width or height. This
  * implementation returns the height of the window title and keeps the width.
  */
-mxWindow.prototype.getMinimumSize = function()
+getMinimumSize = ()=>
 {
 	return new mxRectangle(0, 0, 0, this.title.offsetHeight);
 };
@@ -663,7 +663,7 @@ mxWindow.prototype.getMinimumSize = function()
  * 
  * Installs the event listeners required for minimizing the window.
  */
-mxWindow.prototype.installMinimizeHandler = function()
+installMinimizeHandler = ()=>
 {
 	this.minimize = document.createElement('img');
 	
@@ -679,7 +679,7 @@ mxWindow.prototype.installMinimizeHandler = function()
 	var maxDisplay = null;
 	var height = null;
 
-	var funct = mxUtils.bind(this, function(evt)
+	var funct = mxUtils.bind(this, (evt)=>
 	{
 		this.activate();
 		
@@ -759,7 +759,7 @@ mxWindow.prototype.installMinimizeHandler = function()
  * 
  * Sets if the window is maximizable.
  */
-mxWindow.prototype.setMaximizable = function(maximizable)
+setMaximizable = (maximizable)=>
 {
 	this.maximize.style.display = (maximizable) ? '' : 'none';
 };
@@ -769,7 +769,7 @@ mxWindow.prototype.setMaximizable = function(maximizable)
  * 
  * Installs the event listeners required for maximizing the window.
  */
-mxWindow.prototype.installMaximizeHandler = function()
+installMaximizeHandler = ()=>
 {
 	this.maximize = document.createElement('img');
 	
@@ -789,7 +789,7 @@ mxWindow.prototype.installMaximizeHandler = function()
 	var width = null;
 	var minDisplay = null;
 
-	var funct = mxUtils.bind(this, function(evt)
+	var funct = mxUtils.bind(this, (evt)=>
 	{
 		this.activate();
 		
@@ -893,12 +893,12 @@ mxWindow.prototype.installMaximizeHandler = function()
  * 
  * Installs the event listeners required for moving the window.
  */
-mxWindow.prototype.installMoveHandler = function()
+installMoveHandler = ()=>
 {
 	this.title.style.cursor = 'move';
 	
 	mxEvent.addGestureListeners(this.title,
-		mxUtils.bind(this, function(evt)
+		mxUtils.bind(this, (evt)=>
 		{
 			var startX = mxEvent.getClientX(evt);
 			var startY = mxEvent.getClientY(evt);
@@ -907,7 +907,7 @@ mxWindow.prototype.installMoveHandler = function()
 						
 			// Adds a temporary pair of listeners to intercept
 			// the gesture event in the document
-			var dragHandler = mxUtils.bind(this, function(evt)
+			var dragHandler = mxUtils.bind(this, (evt)=>
 			{
 				var dx = mxEvent.getClientX(evt) - startX;
 				var dy = mxEvent.getClientY(evt) - startY;
@@ -916,7 +916,7 @@ mxWindow.prototype.installMoveHandler = function()
 				mxEvent.consume(evt);
 			});
 			
-			var dropHandler = mxUtils.bind(this, function(evt)
+			var dropHandler = mxUtils.bind(this, (evt)=>
 			{
 				mxEvent.removeGestureListeners(document, null, dragHandler, dropHandler);
 				this.fireEvent(new mxEventObject(mxEvent.MOVE_END, 'event', evt));
@@ -940,7 +940,7 @@ mxWindow.prototype.installMoveHandler = function()
  * 
  * Sets the upper, left corner of the window.
  */
- mxWindow.prototype.setLocation = function(x, y)
+ setLocation = (x, y)=>
  {
 	this.div.style.left = x + 'px';
 	this.div.style.top = y + 'px';
@@ -951,7 +951,7 @@ mxWindow.prototype.installMoveHandler = function()
  *
  * Returns the current position on the x-axis.
  */
-mxWindow.prototype.getX = function()
+getX = ()=>
 {
 	return parseInt(this.div.style.left);
 };
@@ -961,7 +961,7 @@ mxWindow.prototype.getX = function()
  *
  * Returns the current position on the y-axis.
  */
-mxWindow.prototype.getY = function()
+getY = ()=>
 {
 	return parseInt(this.div.style.top);
 };
@@ -972,7 +972,7 @@ mxWindow.prototype.getY = function()
  * Adds the <closeImage> as a new image node in <closeImg> and installs the
  * <close> event.
  */
-mxWindow.prototype.installCloseHandler = function()
+installCloseHandler = ()=>
 {
 	this.closeImg = document.createElement('img');
 	
@@ -985,7 +985,7 @@ mxWindow.prototype.installCloseHandler = function()
 	this.buttons.appendChild(this.closeImg);
 
 	mxEvent.addGestureListeners(this.closeImg,
-		mxUtils.bind(this, function(evt)
+		mxUtils.bind(this, (evt)=>
 		{
 			this.fireEvent(new mxEventObject(mxEvent.CLOSE, 'event', evt));
 			
@@ -1011,7 +1011,7 @@ mxWindow.prototype.installCloseHandler = function()
  * 
  * image - URL of the image to be used.
  */
-mxWindow.prototype.setImage = function(image)
+setImage = (image)=>
 {
 	this.image = document.createElement('img');
 	this.image.setAttribute('src', image);
@@ -1032,7 +1032,7 @@ mxWindow.prototype.setImage = function(image)
  * 
  * closable - Boolean specifying if the window should be closable.
  */
-mxWindow.prototype.setClosable = function(closable)
+setClosable = (closable)=>
 {
 	this.closeImg.style.display = (closable) ? '' : 'none';
 };
@@ -1042,7 +1042,7 @@ mxWindow.prototype.setClosable = function(closable)
  * 
  * Returns true if the window is visible.
  */
-mxWindow.prototype.isVisible = function()
+isVisible = ()=>
 {
 	if (this.div != null)
 	{
@@ -1061,7 +1061,7 @@ mxWindow.prototype.isVisible = function()
  * 
  * visible - Boolean indicating if the window should be made visible.
  */
-mxWindow.prototype.setVisible = function(visible)
+setVisible = (visible)=>
 {
 	if (this.div != null && this.isVisible() != visible)
 	{
@@ -1081,7 +1081,7 @@ mxWindow.prototype.setVisible = function(visible)
  *
  * Shows the window.
  */
-mxWindow.prototype.show = function()
+show = ()=>
 {
 	this.div.style.display = '';
 	this.activate();
@@ -1103,7 +1103,7 @@ mxWindow.prototype.show = function()
  *
  * Hides the window.
  */
-mxWindow.prototype.hide = function()
+hide = ()=>
 {
 	this.div.style.display = 'none';
 	this.fireEvent(new mxEventObject(mxEvent.HIDE));
@@ -1115,7 +1115,7 @@ mxWindow.prototype.hide = function()
  * Destroys the window and removes all associated resources. Fires a
  * <destroy> event prior to destroying the window.
  */
-mxWindow.prototype.destroy = function()
+destroy = ()=>
 {
 	this.fireEvent(new mxEventObject(mxEvent.DESTROY));
 	

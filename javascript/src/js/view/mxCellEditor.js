@@ -15,9 +15,9 @@
  * <getEditorBounds> as follows:
  * 
  * (code)
- * graph.cellEditor.getEditorBounds = function(state)
+ * graph.cellEditor.getEditorBounds = (state)=>
  * {
- *   var result = mxCellEditor.prototype.getEditorBounds.apply(this, arguments);
+ *   var result = getEditorBounds.apply(this, arguments);
  *   
  *   if (this.graph.getModel().isEdge(state.cell))
  *   {
@@ -68,7 +68,7 @@
  * key press handler as follows.
  * 
  * (code)
- * mxEvent.addListener(graph.container, 'keypress', mxUtils.bind(this, function(evt)
+ * mxEvent.addListener(graph.container, 'keypress', mxUtils.bind(this, (evt)=>
  * {
  *   if (!graph.isEditing() && !graph.isSelectionEmpty() && evt.which !== 0 &&
  *       !mxEvent.isAltDown(evt) && !mxEvent.isControlDown(evt) && !mxEvent.isMetaDown(evt))
@@ -89,7 +89,7 @@
  * 
  * (code)
  * var graphFireMouseEvent = graph.fireMouseEvent;
- * graph.fireMouseEvent = function(evtName, me, sender)
+ * graph.fireMouseEvent = (evtName, me, sender)=>
  * {
  *   if (evtName == mxEvent.MOUSE_DOWN)
  *   {
@@ -113,7 +113,7 @@ function mxCellEditor(graph)
 	this.graph = graph;
 	
 	// Stops editing after zoom changes
-	this.zoomHandler = mxUtils.bind(this, function()
+	this.zoomHandler = mxUtils.bind(this, ()=>
 	{
 		if (this.graph.isEditing())
 		{
@@ -125,7 +125,7 @@ function mxCellEditor(graph)
 	this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.zoomHandler);
 	
 	// Adds handling of deleted cells while editing
-	this.changeHandler = mxUtils.bind(this, function(sender)
+	this.changeHandler = mxUtils.bind(this, (sender)=>
 	{
 		if (this.editingCell != null && this.graph.getView().getState(this.editingCell) == null)
 		{
@@ -141,7 +141,7 @@ function mxCellEditor(graph)
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxCellEditor.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: textarea
@@ -149,28 +149,28 @@ mxCellEditor.prototype.graph = null;
  * Holds the DIV that is used for text editing. Note that this may be null before the first
  * edit. Instantiated in <init>.
  */
-mxCellEditor.prototype.textarea = null;
+textarea = null;
 
 /**
  * Variable: editingCell
  * 
  * Reference to the <mxCell> that is currently being edited.
  */
-mxCellEditor.prototype.editingCell = null;
+editingCell = null;
 
 /**
  * Variable: trigger
  * 
  * Reference to the event that was used to start editing.
  */
-mxCellEditor.prototype.trigger = null;
+trigger = null;
 
 /**
  * Variable: modified
  * 
  * Specifies if the label has been modified.
  */
-mxCellEditor.prototype.modified = false;
+modified = false;
 
 /**
  * Variable: autoSize
@@ -178,7 +178,7 @@ mxCellEditor.prototype.modified = false;
  * Specifies if the textarea should be resized while the text is being edited.
  * Default is true.
  */
-mxCellEditor.prototype.autoSize = true;
+autoSize = true;
 
 /**
  * Variable: selectText
@@ -186,7 +186,7 @@ mxCellEditor.prototype.autoSize = true;
  * Specifies if the text should be selected when editing starts. Default is
  * true.
  */
-mxCellEditor.prototype.selectText = true;
+selectText = true;
 
 /**
  * Variable: emptyLabelText
@@ -197,7 +197,7 @@ mxCellEditor.prototype.selectText = true;
  * value is only displayed before the first keystroke and is never used as the
  * actual editing value.
  */
-mxCellEditor.prototype.emptyLabelText = (mxClient.IS_FF) ? '<br>' : '';
+emptyLabelText = (mxClient.IS_FF) ? '<br>' : '';
 
 /**
  * Variable: escapeCancelsEditing
@@ -206,28 +206,28 @@ mxCellEditor.prototype.emptyLabelText = (mxClient.IS_FF) ? '<br>' : '';
  * value. Change this to false to accept the new value on escape, and cancel
  * editing on Shift+Escape instead. Default is true.
  */
-mxCellEditor.prototype.escapeCancelsEditing = true;
+escapeCancelsEditing = true;
 
 /**
  * Variable: textNode
  * 
  * Reference to the label DOM node that has been hidden.
  */
-mxCellEditor.prototype.textNode = '';
+textNode = '';
 
 /**
  * Variable: zIndex
  * 
  * Specifies the zIndex for the textarea. Default is 5.
  */
-mxCellEditor.prototype.zIndex = 5;
+zIndex = 5;
 
 /**
  * Variable: minResize
  * 
  * Defines the minimum width and height to be used in <resize>. Default is 0x20px.
  */
-mxCellEditor.prototype.minResize = new mxRectangle(0, 20);
+minResize = new mxRectangle(0, 20);
 
 /**
  * Variable: wordWrapPadding
@@ -235,21 +235,21 @@ mxCellEditor.prototype.minResize = new mxRectangle(0, 20);
  * Correction factor for word wrapping width. Default is 2 in quirks, 0 in IE
  * 11 and 1 in all other browsers and modes.
  */
-mxCellEditor.prototype.wordWrapPadding = (mxClient.IS_QUIRKS) ? 2 : (!mxClient.IS_IE11) ? 1 : 0;
+wordWrapPadding = (mxClient.IS_QUIRKS) ? 2 : (!mxClient.IS_IE11) ? 1 : 0;
 
 /**
  * Variable: blurEnabled
  *
  * If <focusLost> should be called if <textarea> loses the focus. Default is false.
  */
-mxCellEditor.prototype.blurEnabled = false;
+blurEnabled = false;
 
 /**
  * Variable: initialValue
  * 
  * Holds the initial editing value to check if the current value was modified.
  */
-mxCellEditor.prototype.initialValue = null;
+initialValue = null;
 
 /**
  * Variable: align
@@ -258,7 +258,7 @@ mxCellEditor.prototype.initialValue = null;
  * is modified then the current text alignment is changed and the cell style is
  * updated when the value is applied.
  */
-mxCellEditor.prototype.align = null;
+align = null;
 
 /**
  * Function: init
@@ -266,7 +266,7 @@ mxCellEditor.prototype.align = null;
  * Creates the <textarea> and installs the event listeners. The key handler
  * updates the <modified> state.
  */
-mxCellEditor.prototype.init = function ()
+init = function ()
 {
 	this.textarea = document.createElement('div');
 	this.textarea.className = 'mxCellEditor mxPlainTextEditor';
@@ -287,7 +287,7 @@ mxCellEditor.prototype.init = function ()
  * 
  * Called in <stopEditing> if cancel is false to invoke <mxGraph.labelChanged>.
  */
-mxCellEditor.prototype.applyValue = function(state, value)
+applyValue = (state, value)=>
 {
 	this.graph.labelChanged(state.cell, value, this.trigger);
 };
@@ -297,7 +297,7 @@ mxCellEditor.prototype.applyValue = function(state, value)
  * 
  * Sets the temporary horizontal alignment for the current editing session.
  */
-mxCellEditor.prototype.setAlign = function (align)
+setAlign = function (align)
 {
 	if (this.textarea != null)
 	{
@@ -313,7 +313,7 @@ mxCellEditor.prototype.setAlign = function (align)
  * 
  * Gets the initial editing value for the given cell.
  */
-mxCellEditor.prototype.getInitialValue = function(state, trigger)
+getInitialValue = (state, trigger)=>
 {
 	var result = mxUtils.htmlEntities(this.graph.getEditingValue(state.cell, trigger), false);
 	
@@ -332,7 +332,7 @@ mxCellEditor.prototype.getInitialValue = function(state, trigger)
  * 
  * Returns the current editing value.
  */
-mxCellEditor.prototype.getCurrentValue = function(state)
+getCurrentValue = (state)=>
 {
 	return mxUtils.extractTextWithWhitespace(this.textarea.childNodes);
 };
@@ -343,7 +343,7 @@ mxCellEditor.prototype.getCurrentValue = function(state)
  * Returns true if <escapeCancelsEditing> is true and shift, control and meta
  * are not pressed.
  */
-mxCellEditor.prototype.isCancelEditingKeyEvent = function(evt)
+isCancelEditingKeyEvent = (evt)=>
 {
 	return this.escapeCancelsEditing || mxEvent.isShiftDown(evt) || mxEvent.isControlDown(evt) || mxEvent.isMetaDown(evt);
 };
@@ -353,18 +353,18 @@ mxCellEditor.prototype.isCancelEditingKeyEvent = function(evt)
  * 
  * Installs listeners for focus, change and standard key event handling.
  */
-mxCellEditor.prototype.installListeners = function(elt)
+installListeners = (elt)=>
 {
 	// Applies value if text is dragged
 	// LATER: Gesture mouse events ignored for starting move
-	mxEvent.addListener(elt, 'dragstart', mxUtils.bind(this, function(evt)
+	mxEvent.addListener(elt, 'dragstart', mxUtils.bind(this, (evt)=>
 	{
 		this.graph.stopEditing(false);
 		mxEvent.consume(evt);
 	}));
 
 	// Applies value if focus is lost
-	mxEvent.addListener(elt, 'blur', mxUtils.bind(this, function(evt)
+	mxEvent.addListener(elt, 'blur', mxUtils.bind(this, (evt)=>
 	{
 		if (this.blurEnabled)
 		{
@@ -373,7 +373,7 @@ mxCellEditor.prototype.installListeners = function(elt)
 	}));
 
 	// Updates modified state and handles placeholder text
-	mxEvent.addListener(elt, 'keydown', mxUtils.bind(this, function(evt)
+	mxEvent.addListener(elt, 'keydown', mxUtils.bind(this, (evt)=>
 	{
 		if (!mxEvent.isConsumed(evt))
 		{
@@ -391,7 +391,7 @@ mxCellEditor.prototype.installListeners = function(elt)
 	}));
 
 	// Keypress only fires if printable key was pressed and handles removing the empty placeholder
-	var keypressHandler = mxUtils.bind(this, function(evt)
+	var keypressHandler = mxUtils.bind(this, (evt)=>
 	{
 		if (this.editingCell != null)
 		{
@@ -410,7 +410,7 @@ mxCellEditor.prototype.installListeners = function(elt)
 	mxEvent.addListener(elt, 'paste', keypressHandler);
 	
 	// Handler for updating the empty label text value after a change
-	var keyupHandler = mxUtils.bind(this, function(evt)
+	var keyupHandler = mxUtils.bind(this, (evt)=>
 	{
 		if (this.editingCell != null)
 		{
@@ -437,7 +437,7 @@ mxCellEditor.prototype.installListeners = function(elt)
 	// Adds automatic resizing of the textbox while typing using input, keyup and/or DOM change events
 	var evtName = (!mxClient.IS_IE11 && !mxClient.IS_IE) ? 'input' : 'keydown';
 	
-	var resizeHandler = mxUtils.bind(this, function(evt)
+	var resizeHandler = mxUtils.bind(this, (evt)=>
 	{
 		if (this.editingCell != null && this.autoSize && !mxEvent.isConsumed(evt))
 		{
@@ -448,7 +448,7 @@ mxCellEditor.prototype.installListeners = function(elt)
 				window.clearTimeout(this.resizeThread);
 			}
 			
-			this.resizeThread = window.setTimeout(mxUtils.bind(this, function()
+			this.resizeThread = window.setTimeout(mxUtils.bind(this, ()=>
 			{
 				this.resizeThread = null;
 				this.resize();
@@ -478,7 +478,7 @@ mxCellEditor.prototype.installListeners = function(elt)
  * returns true if F2 is pressed of if <mxGraph.enterStopsCellEditing> is true
  * and enter is pressed without control or shift.
  */
-mxCellEditor.prototype.isStopEditingEvent = function(evt)
+isStopEditingEvent = (evt)=>
 {
 	return evt.keyCode == 113 /* F2 */ || (this.graph.isEnterStopsCellEditing() &&
 		evt.keyCode == 13 /* Enter */ && !mxEvent.isControlDown(evt) &&
@@ -490,7 +490,7 @@ mxCellEditor.prototype.isStopEditingEvent = function(evt)
  * 
  * Returns true if this editor is the source for the given native event.
  */
-mxCellEditor.prototype.isEventSource = function(evt)
+isEventSource = (evt)=>
 {
 	return mxEvent.getSource(evt) == this.textarea;
 };
@@ -500,7 +500,7 @@ mxCellEditor.prototype.isEventSource = function(evt)
  * 
  * Returns <modified>.
  */
-mxCellEditor.prototype.resize = function()
+resize = ()=>
 {
 	var state = this.graph.getView().getState(this.editingCell);
 	
@@ -593,10 +593,10 @@ mxCellEditor.prototype.resize = function()
 			 	if (!state.view.graph.cellRenderer.legacySpacing || state.style[mxConstants.STYLE_OVERFLOW] != 'width')
 			 	{
 					var spacing = parseInt(state.style[mxConstants.STYLE_SPACING] || 2) * scale;
-					var spacingTop = (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) + mxText.prototype.baseSpacingTop) * scale + spacing;
-					var spacingRight = (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) + mxText.prototype.baseSpacingRight) * scale + spacing;
-					var spacingBottom = (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) + mxText.prototype.baseSpacingBottom) * scale + spacing;
-					var spacingLeft = (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) + mxText.prototype.baseSpacingLeft) * scale + spacing;
+					var spacingTop = (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) + baseSpacingTop) * scale + spacing;
+					var spacingRight = (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) + baseSpacingRight) * scale + spacing;
+					var spacingBottom = (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) + baseSpacingBottom) * scale + spacing;
+					var spacingLeft = (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) + baseSpacingLeft) * scale + spacing;
 					
 					var hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
 					var vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
@@ -701,7 +701,7 @@ mxCellEditor.prototype.resize = function()
  *
  * Called if the textarea has lost focus.
  */
-mxCellEditor.prototype.focusLost = function()
+focusLost = ()=>
 {
 	this.stopEditing(!this.graph.isInvokesStopCellEditing());
 };
@@ -712,7 +712,7 @@ mxCellEditor.prototype.focusLost = function()
  * Returns the background color for the in-place editor. This implementation
  * always returns null.
  */
-mxCellEditor.prototype.getBackgroundColor = function(state)
+getBackgroundColor = (state)=>
 {
 	return null;
 };
@@ -727,7 +727,7 @@ mxCellEditor.prototype.getBackgroundColor = function(state)
  * implementation returns true for IE8- and quirks mode or if the CSS position
  * of the SVG element is not absolute.
  */
-mxCellEditor.prototype.isLegacyEditor = function()
+isLegacyEditor = ()=>
 {
 	if (mxClient.IS_VML)
 	{
@@ -766,7 +766,7 @@ mxCellEditor.prototype.isLegacyEditor = function()
  * cell - <mxCell> to start editing.
  * trigger - Optional mouse event that triggered the editor.
  */
-mxCellEditor.prototype.startEditing = function(cell, trigger)
+startEditing = (cell, trigger)=>
 {
 	this.stopEditing(true);
 	this.align = null;
@@ -875,7 +875,7 @@ mxCellEditor.prototype.startEditing = function(cell, trigger)
 		// Workaround for initial offsetHeight not ready for heading in markup
 		if (this.autoSize && (this.graph.model.isEdge(state.cell) || state.style[mxConstants.STYLE_OVERFLOW] != 'fill'))
 		{
-			window.setTimeout(mxUtils.bind(this, function()
+			window.setTimeout(mxUtils.bind(this, ()=>
 			{
 				this.resize();
 			}), 0);
@@ -907,7 +907,7 @@ mxCellEditor.prototype.startEditing = function(cell, trigger)
  * 
  * Returns <selectText>.
  */
-mxCellEditor.prototype.isSelectText = function()
+isSelectText = ()=>
 {
 	return this.selectText;
 };
@@ -917,7 +917,7 @@ mxCellEditor.prototype.isSelectText = function()
  * 
  * Clears the selection.
  */
-mxCellEditor.prototype.clearSelection = function()
+clearSelection = ()=>
 {
 	var selection = null;
 	
@@ -948,7 +948,7 @@ mxCellEditor.prototype.clearSelection = function()
  *
  * Stops the editor and applies the value if cancel is false.
  */
-mxCellEditor.prototype.stopEditing = function(cancel)
+stopEditing = (cancel)=>
 {
 	cancel = cancel || false;
 	
@@ -1018,7 +1018,7 @@ mxCellEditor.prototype.stopEditing = function(cancel)
  * Prepares the textarea for getting its value in <stopEditing>.
  * This implementation removes the extra trailing linefeed in Firefox.
  */
-mxCellEditor.prototype.prepareTextarea = function()
+prepareTextarea = ()=>
 {
 	if (this.textarea.lastChild != null &&
 		this.textarea.lastChild.nodeName == 'BR')
@@ -1033,7 +1033,7 @@ mxCellEditor.prototype.prepareTextarea = function()
  * Returns true if the label should be hidden while the cell is being
  * edited.
  */
-mxCellEditor.prototype.isHideLabel = function(state)
+isHideLabel = (state)=>
 {
 	return true;
 };
@@ -1043,7 +1043,7 @@ mxCellEditor.prototype.isHideLabel = function(state)
  * 
  * Returns the minimum width and height for editing the given state.
  */
-mxCellEditor.prototype.getMinimumSize = function(state)
+getMinimumSize = (state)=>
 {
 	var scale = this.graph.getView().scale;
 	
@@ -1056,7 +1056,7 @@ mxCellEditor.prototype.getMinimumSize = function(state)
  * 
  * Returns the <mxRectangle> that defines the bounds of the editor.
  */
-mxCellEditor.prototype.getEditorBounds = function(state)
+getEditorBounds = (state)=>
 {
 	var isEdge = this.graph.getModel().isEdge(state.cell);
 	var scale = this.graph.getView().scale;
@@ -1072,10 +1072,10 @@ mxCellEditor.prototype.getEditorBounds = function(state)
  	else
  	{
 		var spacing = parseInt(state.style[mxConstants.STYLE_SPACING] || 0) * scale;
-		var spacingTop = (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) + mxText.prototype.baseSpacingTop) * scale + spacing;
-		var spacingRight = (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) + mxText.prototype.baseSpacingRight) * scale + spacing;
-		var spacingBottom = (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) + mxText.prototype.baseSpacingBottom) * scale + spacing;
-		var spacingLeft = (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) + mxText.prototype.baseSpacingLeft) * scale + spacing;
+		var spacingTop = (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) + baseSpacingTop) * scale + spacing;
+		var spacingRight = (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) + baseSpacingRight) * scale + spacing;
+		var spacingBottom = (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) + baseSpacingBottom) * scale + spacing;
+		var spacingLeft = (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) + baseSpacingLeft) * scale + spacing;
 	
 	 	result = new mxRectangle(state.x, state.y,
 	 		 Math.max(minWidth, state.width - spacingLeft - spacingRight),
@@ -1170,7 +1170,7 @@ mxCellEditor.prototype.getEditorBounds = function(state)
  * cell - <mxCell> for which a text for an empty editing box should be
  * returned.
  */
-mxCellEditor.prototype.getEmptyLabelText = function (cell)
+getEmptyLabelText = function (cell)
 {
 	return this.emptyLabelText;
 };
@@ -1181,7 +1181,7 @@ mxCellEditor.prototype.getEmptyLabelText = function (cell)
  * Returns the cell that is currently being edited or null if no cell is
  * being edited.
  */
-mxCellEditor.prototype.getEditingCell = function ()
+getEditingCell = function ()
 {
 	return this.editingCell;
 };
@@ -1191,7 +1191,7 @@ mxCellEditor.prototype.getEditingCell = function ()
  *
  * Destroys the editor and removes all associated resources.
  */
-mxCellEditor.prototype.destroy = function ()
+destroy = function ()
 {
 	if (this.textarea != null)
 	{

@@ -27,28 +27,28 @@ function mxCellStatePreview(graph)
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxCellStatePreview.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: deltas
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxCellStatePreview.prototype.deltas = null;
+deltas = null;
 
 /**
  * Variable: count
  * 
  * Contains the number of entries in the map.
  */
-mxCellStatePreview.prototype.count = 0;
+count = 0;
 
 /**
  * Function: isEmpty
  * 
  * Returns true if this contains no entries.
  */
-mxCellStatePreview.prototype.isEmpty = function()
+isEmpty = ()=>
 {
 	return this.count == 0;
 };
@@ -56,7 +56,7 @@ mxCellStatePreview.prototype.isEmpty = function()
 /**
  * Function: moveState
  */
-mxCellStatePreview.prototype.moveState = function(state, dx, dy, add, includeEdges)
+moveState = (state, dx, dy, add, includeEdges)=>
 {
 	add = (add != null) ? add : true;
 	includeEdges = (includeEdges != null) ? includeEdges : true;
@@ -92,14 +92,14 @@ mxCellStatePreview.prototype.moveState = function(state, dx, dy, add, includeEdg
 /**
  * Function: show
  */
-mxCellStatePreview.prototype.show = function(visitor)
+show = (visitor)=>
 {
-	this.deltas.visit(mxUtils.bind(this, function(key, delta)
+	this.deltas.visit(mxUtils.bind(this, (key, delta)=>
 	{
 		this.translateState(delta.state, delta.point.x, delta.point.y);
 	}));
 	
-	this.deltas.visit(mxUtils.bind(this, function(key, delta)
+	this.deltas.visit(mxUtils.bind(this, (key, delta)=>
 	{
 		this.revalidateState(delta.state, delta.point.x, delta.point.y, visitor);
 	}));
@@ -108,7 +108,7 @@ mxCellStatePreview.prototype.show = function(visitor)
 /**
  * Function: translateState
  */
-mxCellStatePreview.prototype.translateState = function(state, dx, dy)
+translateState = (state, dx, dy)=>
 {
 	if (state != null)
 	{
@@ -141,7 +141,7 @@ mxCellStatePreview.prototype.translateState = function(state, dx, dy)
 /**
  * Function: revalidateState
  */
-mxCellStatePreview.prototype.revalidateState = function(state, dx, dy, visitor)
+revalidateState = (state, dx, dy, visitor)=>
 {
 	if (state != null)
 	{
@@ -186,7 +186,7 @@ mxCellStatePreview.prototype.revalidateState = function(state, dx, dy, visitor)
 /**
  * Function: addEdges
  */
-mxCellStatePreview.prototype.addEdges = function(state)
+addEdges = (state)=>
 {
 	var model = this.graph.getModel();
 	var edgeCount = model.getEdgeCount(state.cell);

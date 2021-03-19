@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(function()
+mxCodecRegistry.register(()=>
 {
 	/**
 	 * Class: mxChildChangeCodec
@@ -34,7 +34,7 @@ mxCodecRegistry.register(function()
 	 * child as an attribute rather than a child node, in
 	 * which case it's always a reference.
 	 */
-	codec.isReference = function(obj, attr, value, isWrite)
+	codec.isReference = (obj, attr, value, isWrite)=>
 	{
 		if (attr == 'child' && (!isWrite || obj.model.contains(obj.previous)))
 		{
@@ -49,9 +49,9 @@ mxCodecRegistry.register(function()
 	 *
 	 * Excludes references to parent or previous if not in the model.
 	 */
-  	codec.isExcluded = function(obj, attr, value, write)
+  	codec.isExcluded = (obj, attr, value, write)=>
   	{
-  		return mxObjectCodec.prototype.isExcluded.apply(this, arguments) ||
+  		return isExcluded.apply(this, arguments) ||
   			(write && value != null && (attr == 'previous' ||
   			attr == 'parent') && !obj.model.contains(value));
   	};
@@ -62,7 +62,7 @@ mxCodecRegistry.register(function()
 	 * Encodes the child recusively and adds the result
 	 * to the given node.
 	 */
-	codec.afterEncode = function(enc, obj, node)
+	codec.afterEncode = (enc, obj, node)=>
 	{
 		if (this.isReference(obj, 'child', obj.child, true))
 		{
@@ -88,7 +88,7 @@ mxCodecRegistry.register(function()
 	 * Decodes the any child nodes as using the respective
 	 * codec from the registry.
 	 */
-	codec.beforeDecode = function(dec, node, obj)
+	codec.beforeDecode = (dec, node, obj)=>
 	{
 		if (node.firstChild != null &&
 			node.firstChild.nodeType == mxConstants.NODETYPE_ELEMENT)
@@ -140,7 +140,7 @@ mxCodecRegistry.register(function()
 	 *
 	 * Restores object state in the child change.
 	 */
-	codec.afterDecode = function(dec, node, obj)
+	codec.afterDecode = (dec, node, obj)=>
 	{
 		// Cells are decoded here after a complete transaction so the previous
 		// parent must be restored on the cell for the case where the cell was

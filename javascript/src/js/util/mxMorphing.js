@@ -19,7 +19,7 @@
  * finally
  * {
  *   var morph = new mxMorphing(graph);
- *   morph.addListener(mxEvent.DONE, function()
+ *   morph.addListener(mxEvent.DONE, ()=>
  *   {
  *     graph.getModel().endUpdate();
  *   });
@@ -51,28 +51,28 @@ function mxMorphing(graph, steps, ease, delay)
  * Extends mxEventSource.
  */
 mxMorphing.prototype = new mxAnimation();
-mxMorphing.prototype.constructor = mxMorphing;
+constructor = mxMorphing;
 
 /**
  * Variable: graph
  * 
  * Specifies the delay between the animation steps. Defaul is 30ms.
  */
-mxMorphing.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: steps
  * 
  * Specifies the maximum number of steps for the morphing.
  */
-mxMorphing.prototype.steps = null;
+steps = null;
 
 /**
  * Variable: step
  * 
  * Contains the current step.
  */
-mxMorphing.prototype.step = 0;
+step = 0;
 
 /**
  * Variable: ease
@@ -80,7 +80,7 @@ mxMorphing.prototype.step = 0;
  * Ease-off for movement towards the given vector. Larger values are
  * slower and smoother. Default is 4.
  */
-mxMorphing.prototype.ease = null;
+ease = null;
 
 /**
  * Variable: cells
@@ -89,16 +89,16 @@ mxMorphing.prototype.ease = null;
  * then all cells are checked and animated if they have been moved
  * in the current transaction.
  */
-mxMorphing.prototype.cells = null;
+cells = null;
 
 /**
  * Function: updateAnimation
  *
  * Animation step.
  */
-mxMorphing.prototype.updateAnimation = function()
+updateAnimation = ()=>
 {
-	mxAnimation.prototype.updateAnimation.apply(this, arguments);
+	updateAnimation.apply(this, arguments);
 	var move = new mxCellStatePreview(this.graph);
 
 	if (this.cells != null)
@@ -129,7 +129,7 @@ mxMorphing.prototype.updateAnimation = function()
  *
  * Shows the changes in the given <mxCellStatePreview>.
  */
-mxMorphing.prototype.show = function(move)
+show = (move)=>
 {
 	move.show();
 };
@@ -139,7 +139,7 @@ mxMorphing.prototype.show = function(move)
  *
  * Animates the given cell state using <mxCellStatePreview.moveState>.
  */
-mxMorphing.prototype.animateCell = function(cell, move, recurse)
+animateCell = (cell, move, recurse)=>
 {
 	var state = this.graph.getView().getState(cell);
 	var delta = null;
@@ -179,7 +179,7 @@ mxMorphing.prototype.animateCell = function(cell, move, recurse)
  * Returns true if the animation should not recursively find more
  * deltas for children if the given parent state has been animated.
  */
-mxMorphing.prototype.stopRecursion = function(state, delta)
+stopRecursion = (state, delta)=>
 {
 	return delta != null && (delta.x != 0 || delta.y != 0);
 };
@@ -190,7 +190,7 @@ mxMorphing.prototype.stopRecursion = function(state, delta)
  * Returns the vector between the current rendered state and the future
  * location of the state after the display will be updated.
  */
-mxMorphing.prototype.getDelta = function(state)
+getDelta = (state)=>
 {
 	var origin = this.getOriginForCell(state.cell);
 	var translate = this.graph.getView().getTranslate();
@@ -208,7 +208,7 @@ mxMorphing.prototype.getDelta = function(state)
  * by using caching inside this method as the result per cell never changes
  * during the lifecycle of this object.
  */
-mxMorphing.prototype.getOriginForCell = function(cell)
+getOriginForCell = (cell)=>
 {
 	var result = null;
 	

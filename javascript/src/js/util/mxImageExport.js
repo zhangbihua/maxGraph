@@ -39,18 +39,18 @@ function mxImageExport() { };
  * 
  * Specifies if overlays should be included in the export. Default is false.
  */
-mxImageExport.prototype.includeOverlays = false;
+includeOverlays = false;
 
 /**
  * Function: drawState
  * 
  * Draws the given state and all its descendants to the given canvas.
  */
-mxImageExport.prototype.drawState = function(state, canvas)
+drawState = (state, canvas)=>
 {
 	if (state != null)
 	{
-		this.visitStatesRecursive(state, canvas, mxUtils.bind(this, function()
+		this.visitStatesRecursive(state, canvas, mxUtils.bind(this, ()=>
 		{
 			this.drawCellState.apply(this, arguments);
 		}));
@@ -58,7 +58,7 @@ mxImageExport.prototype.drawState = function(state, canvas)
 		// Paints the overlays
 		if (this.includeOverlays)
 		{
-			this.visitStatesRecursive(state, canvas, mxUtils.bind(this, function()
+			this.visitStatesRecursive(state, canvas, mxUtils.bind(this, ()=>
 			{
 				this.drawOverlays.apply(this, arguments);
 			}));
@@ -71,7 +71,7 @@ mxImageExport.prototype.drawState = function(state, canvas)
  * 
  * Visits the given state and all its descendants to the given canvas recursively.
  */
-mxImageExport.prototype.visitStatesRecursive = function(state, canvas, visitor)
+visitStatesRecursive = (state, canvas, visitor)=>
 {
 	if (state != null)
 	{
@@ -93,7 +93,7 @@ mxImageExport.prototype.visitStatesRecursive = function(state, canvas, visitor)
  * 
  * Returns the link for the given cell state and canvas. This returns null.
  */
-mxImageExport.prototype.getLinkForCellState = function(state, canvas)
+getLinkForCellState = (state, canvas)=>
 {
 	return null;
 };
@@ -103,7 +103,7 @@ mxImageExport.prototype.getLinkForCellState = function(state, canvas)
  * 
  * Draws the given state to the given canvas.
  */
-mxImageExport.prototype.drawCellState = function(state, canvas)
+drawCellState = (state, canvas)=>
 {
 	// Experimental feature
 	var link = this.getLinkForCellState(state, canvas);
@@ -128,7 +128,7 @@ mxImageExport.prototype.drawCellState = function(state, canvas)
  * 
  * Draws the shape of the given state.
  */
-mxImageExport.prototype.drawShape = function(state, canvas)
+drawShape = (state, canvas)=>
 {
 	if (state.shape instanceof mxShape && state.shape.checkBounds())
 	{
@@ -147,7 +147,7 @@ mxImageExport.prototype.drawShape = function(state, canvas)
  * 
  * Draws the text of the given state.
  */
-mxImageExport.prototype.drawText = function(state, canvas)
+drawText = (state, canvas)=>
 {
 	if (state.text != null && state.text.checkBounds())
 	{
@@ -167,11 +167,11 @@ mxImageExport.prototype.drawText = function(state, canvas)
  * Draws the overlays for the given state. This is called if <includeOverlays>
  * is true.
  */
-mxImageExport.prototype.drawOverlays = function(state, canvas)
+drawOverlays = (state, canvas)=>
 {
 	if (state.overlays != null)
 	{
-		state.overlays.visit(function(id, shape)
+		state.overlays.visit((id, shape)=>
 		{
 			if (shape instanceof mxShape)
 			{

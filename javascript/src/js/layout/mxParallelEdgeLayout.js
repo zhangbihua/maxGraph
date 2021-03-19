@@ -22,14 +22,14 @@
  * (code)
  * var layout = new mxParallelEdgeLayout(graph);
  * 
- * graph.addListener(mxEvent.CELL_CONNECTED, function(sender, evt)
+ * graph.addListener(mxEvent.CELL_CONNECTED, (sender, evt)=>
  * {
  *   var model = graph.getModel();
  *   var edge = evt.getProperty('edge');
  *   var src = model.getTerminal(edge, true);
  *   var trg = model.getTerminal(edge, false);
  *   
- *   layout.isEdgeIgnored = function(edge2)
+ *   layout.isEdgeIgnored = (edge2)=>
  *   {
  *     var src2 = model.getTerminal(edge2, true);
  *     var trg2 = model.getTerminal(edge2, false);
@@ -54,14 +54,14 @@ function mxParallelEdgeLayout(graph)
  * Extends mxGraphLayout.
  */
 mxParallelEdgeLayout.prototype = new mxGraphLayout();
-mxParallelEdgeLayout.prototype.constructor = mxParallelEdgeLayout;
+constructor = mxParallelEdgeLayout;
 
 /**
  * Variable: spacing
  * 
  * Defines the spacing between the parallels. Default is 20.
  */
-mxParallelEdgeLayout.prototype.spacing = 20;
+spacing = 20;
 
 /**
  * Variable: checkOverlap
@@ -69,14 +69,14 @@ mxParallelEdgeLayout.prototype.spacing = 20;
  * Specifies if only overlapping edges should be considered
  * parallel. Default is false.
  */
-mxParallelEdgeLayout.prototype.checkOverlap = false;
+checkOverlap = false;
 
 /**
  * Function: execute
  * 
  * Implements <mxGraphLayout.execute>.
  */
-mxParallelEdgeLayout.prototype.execute = function(parent, cells)
+execute = (parent, cells)=>
 {
 	var lookup = this.findParallels(parent, cells);
 	
@@ -104,11 +104,11 @@ mxParallelEdgeLayout.prototype.execute = function(parent, cells)
  * 
  * Finds the parallel edges in the given parent.
  */
-mxParallelEdgeLayout.prototype.findParallels = function(parent, cells)
+findParallels = (parent, cells)=>
 {
 	var lookup = [];
 	
-	var addCell = mxUtils.bind(this, function(cell)
+	var addCell = mxUtils.bind(this, (cell)=>
 	{
 		if (!this.isEdgeIgnored(cell))
 		{
@@ -154,7 +154,7 @@ mxParallelEdgeLayout.prototype.findParallels = function(parent, cells)
  * edge direction and is built using the visible terminal of the given
  * edge.
  */
-mxParallelEdgeLayout.prototype.getEdgeId = function(edge)
+getEdgeId = (edge)=>
 {
 	var view = this.graph.getView();
 	
@@ -201,7 +201,7 @@ mxParallelEdgeLayout.prototype.getEdgeId = function(edge)
  * 
  * Lays out the parallel edges in the given array.
  */
-mxParallelEdgeLayout.prototype.layout = function(parallels)
+layout = (parallels)=>
 {
 	var edge = parallels[0];
 	var view = this.graph.getView();
@@ -261,7 +261,7 @@ mxParallelEdgeLayout.prototype.layout = function(parallels)
  * 
  * Routes the given edge via the given point.
  */
-mxParallelEdgeLayout.prototype.route = function(edge, x, y)
+route = (edge, x, y)=>
 {
 	if (this.graph.isCellMovable(edge))
 	{

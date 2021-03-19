@@ -11,7 +11,7 @@
  * 
  * (code)
  * var layoutMgr = new mxLayoutManager(graph);
- * layoutMgr.getLayout = function(cell, eventName)
+ * layoutMgr.getLayout = (cell, eventName)=>
  * {
  *   return layout;
  * };
@@ -36,7 +36,7 @@
 function mxLayoutManager(graph)
 {
 	// Executes the layout before the changes are dispatched
-	this.undoHandler = mxUtils.bind(this, function(sender, evt)
+	this.undoHandler = mxUtils.bind(this, (sender, evt)=>
 	{
 		if (this.isEnabled())
 		{
@@ -45,7 +45,7 @@ function mxLayoutManager(graph)
 	});
 	
 	// Notifies the layout of a move operation inside a parent
-	this.moveHandler = mxUtils.bind(this, function(sender, evt)
+	this.moveHandler = mxUtils.bind(this, (sender, evt)=>
 	{
 		if (this.isEnabled())
 		{
@@ -54,7 +54,7 @@ function mxLayoutManager(graph)
 	});
 		
 	// Notifies the layout of a move operation inside a parent
-	this.resizeHandler = mxUtils.bind(this, function(sender, evt)
+	this.resizeHandler = mxUtils.bind(this, (sender, evt)=>
 	{
 		if (this.isEnabled())
 		{
@@ -70,14 +70,14 @@ function mxLayoutManager(graph)
  * Extends mxEventSource.
  */
 mxLayoutManager.prototype = new mxEventSource();
-mxLayoutManager.prototype.constructor = mxLayoutManager;
+constructor = mxLayoutManager;
 
 /**
  * Variable: graph
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxLayoutManager.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: bubbling
@@ -85,35 +85,35 @@ mxLayoutManager.prototype.graph = null;
  * Specifies if the layout should bubble along
  * the cell hierarchy. Default is true.
  */
-mxLayoutManager.prototype.bubbling = true;
+bubbling = true;
 
 /**
  * Variable: enabled
  * 
  * Specifies if event handling is enabled. Default is true.
  */
-mxLayoutManager.prototype.enabled = true;
+enabled = true;
 
 /**
  * Variable: undoHandler
  * 
  * Holds the function that handles the endUpdate event.
  */
-mxLayoutManager.prototype.undoHandler = null;
+undoHandler = null;
 
 /**
  * Variable: moveHandler
  * 
  * Holds the function that handles the move event.
  */
-mxLayoutManager.prototype.moveHandler = null;
+moveHandler = null;
 
 /**
  * Variable: resizeHandler
  * 
  * Holds the function that handles the resize event.
  */
-mxLayoutManager.prototype.resizeHandler = null;
+resizeHandler = null;
 
 /**
  * Function: isEnabled
@@ -121,7 +121,7 @@ mxLayoutManager.prototype.resizeHandler = null;
  * Returns true if events are handled. This implementation
  * returns <enabled>.
  */
-mxLayoutManager.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -136,7 +136,7 @@ mxLayoutManager.prototype.isEnabled = function()
  * 
  * enabled - Boolean that specifies the new enabled state.
  */
-mxLayoutManager.prototype.setEnabled = function(enabled)
+setEnabled = (enabled)=>
 {
 	this.enabled = enabled;
 };
@@ -148,7 +148,7 @@ mxLayoutManager.prototype.setEnabled = function(enabled)
  * should be executed whenever a cell layout (layout of the children of
  * a cell) has been executed. This implementation returns <bubbling>.
  */
-mxLayoutManager.prototype.isBubbling = function()
+isBubbling = ()=>
 {
 	return this.bubbling;
 };
@@ -158,7 +158,7 @@ mxLayoutManager.prototype.isBubbling = function()
  * 
  * Sets <bubbling>.
  */
-mxLayoutManager.prototype.setBubbling = function(value)
+setBubbling = (value)=>
 {
 	this.bubbling = value;
 };
@@ -168,7 +168,7 @@ mxLayoutManager.prototype.setBubbling = function(value)
  * 
  * Returns the graph that this layout operates on.
  */
-mxLayoutManager.prototype.getGraph = function()
+getGraph = ()=>
 {
 	return this.graph;
 };
@@ -178,7 +178,7 @@ mxLayoutManager.prototype.getGraph = function()
  * 
  * Sets the graph that the layouts operate on.
  */
-mxLayoutManager.prototype.setGraph = function(graph)
+setGraph = (graph)=>
 {
 	if (this.graph != null)
 	{
@@ -208,7 +208,7 @@ mxLayoutManager.prototype.setGraph = function(graph)
  * <getLayout> will return a layout for the given cell for
  * <mxEvent.BEGIN_UPDATE> or <mxEvent.END_UPDATE>.
  */
-mxLayoutManager.prototype.hasLayout = function(cell)
+hasLayout = (cell)=>
 {
 	return this.getLayout(cell, mxEvent.LAYOUT_CELLS);
 };
@@ -224,7 +224,7 @@ mxLayoutManager.prototype.hasLayout = function(cell)
  * check if a layout exists for the given cell. This is called
  * from <hasLayout>.
  */
-mxLayoutManager.prototype.getLayout = function(cell, eventName)
+getLayout = (cell, eventName)=>
 {
 	return null;
 };
@@ -239,7 +239,7 @@ mxLayoutManager.prototype.getLayout = function(cell, eventName)
  * cell - Array of <mxCells> that have been moved.
  * evt - Mouse event that represents the mousedown.
  */
-mxLayoutManager.prototype.beforeUndo = function(undoableEdit)
+beforeUndo = (undoableEdit)=>
 {
 	this.executeLayoutForCells(this.getCellsForChanges(undoableEdit.changes));
 };
@@ -254,7 +254,7 @@ mxLayoutManager.prototype.beforeUndo = function(undoableEdit)
  * cell - Array of <mxCells> that have been moved.
  * evt - Mouse event that represents the mousedown.
  */
-mxLayoutManager.prototype.cellsMoved = function(cells, evt)
+cellsMoved = (cells, evt)=>
 {
 	if (cells != null && evt != null)
 	{
@@ -284,7 +284,7 @@ mxLayoutManager.prototype.cellsMoved = function(cells, evt)
  * cell - Array of <mxCells> that have been resized.
  * bounds - <mxRectangle> taht represents the new bounds.
  */
-mxLayoutManager.prototype.cellsResized = function(cells, bounds, prev)
+cellsResized = (cells, bounds, prev)=>
 {
 	if (cells != null && bounds != null)
 	{
@@ -307,7 +307,7 @@ mxLayoutManager.prototype.cellsResized = function(cells, bounds, prev)
  * 
  * Returns the cells for which a layout should be executed.
  */
-mxLayoutManager.prototype.getCellsForChanges = function(changes)
+getCellsForChanges = (changes)=>
 {
 	var result = [];
 	
@@ -334,7 +334,7 @@ mxLayoutManager.prototype.getCellsForChanges = function(changes)
  * Executes all layouts which have been scheduled during the
  * changes.
  */
-mxLayoutManager.prototype.getCellsForChange = function(change)
+getCellsForChange = (change)=>
 {
 	if (change instanceof mxChildChange)
 	{
@@ -360,7 +360,7 @@ mxLayoutManager.prototype.getCellsForChange = function(change)
  * 
  * Adds all ancestors of the given cell that have a layout.
  */
-mxLayoutManager.prototype.addCellsWithLayout = function(cell, result)
+addCellsWithLayout = (cell, result)=>
 {
 	return this.addDescendantsWithLayout(cell,
 		this.addAncestorsWithLayout(cell, result));
@@ -371,7 +371,7 @@ mxLayoutManager.prototype.addCellsWithLayout = function(cell, result)
  * 
  * Adds all ancestors of the given cell that have a layout.
  */
-mxLayoutManager.prototype.addAncestorsWithLayout = function(cell, result)
+addAncestorsWithLayout = (cell, result)=>
 {
 	result = (result != null) ? result : [];
 	
@@ -400,7 +400,7 @@ mxLayoutManager.prototype.addAncestorsWithLayout = function(cell, result)
  * 
  * Adds all descendants of the given cell that have a layout.
  */
-mxLayoutManager.prototype.addDescendantsWithLayout = function(cell, result)
+addDescendantsWithLayout = (cell, result)=>
 {
 	result = (result != null) ? result : [];
 	
@@ -431,7 +431,7 @@ mxLayoutManager.prototype.addDescendantsWithLayout = function(cell, result)
  * <mxEvent.BEGIN_UPDATE>, in the second phase layouts for parent cells are
  * executed before layouts for child cells with <mxEvent.END_UPDATE>.
  */
-mxLayoutManager.prototype.executeLayoutForCells = function(cells)
+executeLayoutForCells = (cells)=>
 {
 	var sorted = mxUtils.sortCells(cells, false);
 	this.layoutCells(sorted, true);
@@ -443,7 +443,7 @@ mxLayoutManager.prototype.executeLayoutForCells = function(cells)
  * 
  * Executes all layouts which have been scheduled during the changes.
  */
-mxLayoutManager.prototype.layoutCells = function(cells, bubble)
+layoutCells = (cells, bubble)=>
 {
 	if (cells.length > 0)
 	{
@@ -478,7 +478,7 @@ mxLayoutManager.prototype.layoutCells = function(cells, bubble)
  * 
  * Executes the given layout on the given parent.
  */
-mxLayoutManager.prototype.executeLayout = function(cell, bubble)
+executeLayout = (cell, bubble)=>
 {
 	var layout = this.getLayout(cell, (bubble) ?
 		mxEvent.BEGIN_UPDATE : mxEvent.END_UPDATE);
@@ -494,7 +494,7 @@ mxLayoutManager.prototype.executeLayout = function(cell, bubble)
  * 
  * Removes all handlers from the <graph> and deletes the reference to it.
  */
-mxLayoutManager.prototype.destroy = function()
+destroy = ()=>
 {
 	this.setGraph(null);
 };

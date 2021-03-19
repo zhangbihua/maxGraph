@@ -23,18 +23,18 @@ function mxImage(src, width, height)
  *
  * String that specifies the URL of the image.
  */
-mxImage.prototype.src = null;
+src = null;
 
 /**
  * Variable: width
  *
  * Integer that specifies the width of the image.
  */
-mxImage.prototype.width = null;
+width = null;
 
 /**
  * Variable: height
  *
  * Integer that specifies the height of the image.
  */
-mxImage.prototype.height = null;
+height = null;

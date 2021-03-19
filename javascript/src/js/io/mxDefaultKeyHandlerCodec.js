@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(function()
+mxCodecRegistry.register(()=>
 {
 	/**
 	 * Class: mxDefaultKeyHandlerCodec
@@ -19,7 +19,7 @@ mxCodecRegistry.register(function()
 	 *
 	 * Returns null.
 	 */
-	codec.encode = function(enc, obj)
+	codec.encode = (enc, obj)=>
 	{
 		return null;
 	};
@@ -56,7 +56,7 @@ mxCodecRegistry.register(function()
 	 * See also: <mxDefaultKeyHandler.bindAction>,
 	 * http://www.js-examples.com/page/tutorials__key_codes.html
 	 */
-	codec.decode = function(dec, node, into)
+	codec.decode = (dec, node, into)=>
 	{
 		if (into != null)
 		{

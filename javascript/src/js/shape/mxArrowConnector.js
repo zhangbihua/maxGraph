@@ -54,14 +54,14 @@ mxUtils.extend(mxArrowConnector, mxShape);
  * Allows to use the SVG bounding box in SVG. Default is false for performance
  * reasons.
  */
-mxArrowConnector.prototype.useSvgBoundingBox = true;
+useSvgBoundingBox = true;
 
 /**
  * Function: isRoundable
  * 
  * Hook for subclassers.
  */
-mxArrowConnector.prototype.isRoundable = function()
+isRoundable = ()=>
 {
 	return true;
 };
@@ -71,9 +71,9 @@ mxArrowConnector.prototype.isRoundable = function()
  * 
  * Overrides mxShape to reset spacing.
  */
-mxArrowConnector.prototype.resetStyles = function()
+resetStyles = ()=>
 {
-	mxShape.prototype.resetStyles.apply(this, arguments);
+	resetStyles.apply(this, arguments);
 	
 	this.arrowSpacing = mxConstants.ARROW_SPACING;
 };
@@ -81,9 +81,9 @@ mxArrowConnector.prototype.resetStyles = function()
 /**
  * Overrides apply to get smooth transition from default start- and endsize.
  */
-mxArrowConnector.prototype.apply = function(state)
+apply = (state)=>
 {
-	mxShape.prototype.apply.apply(this, arguments);
+	apply.apply(this, arguments);
 
 	if (this.style != null)
 	{
@@ -97,9 +97,9 @@ mxArrowConnector.prototype.apply = function(state)
  *
  * Augments the bounding box with the edge width and markers.
  */
-mxArrowConnector.prototype.augmentBoundingBox = function(bbox)
+augmentBoundingBox = (bbox)=>
 {
-	mxShape.prototype.augmentBoundingBox.apply(this, arguments);
+	augmentBoundingBox.apply(this, arguments);
 	
 	var w = this.getEdgeWidth();
 	
@@ -121,7 +121,7 @@ mxArrowConnector.prototype.augmentBoundingBox = function(bbox)
  * 
  * Paints the line shape.
  */
-mxArrowConnector.prototype.paintEdgeShape = function(c, pts)
+paintEdgeShape = (c, pts)=>
 {
 	// Geometry of arrow
 	var strokeWidth = this.strokewidth;
@@ -203,7 +203,7 @@ mxArrowConnector.prototype.paintEdgeShape = function(c, pts)
 		{
 			c.moveTo(outStartX, outStartY);
 			
-			fns.push(function()
+			fns.push(()=>
 			{
 				c.lineTo(inEndX, inEndY);
 			});
@@ -263,9 +263,9 @@ mxArrowConnector.prototype.paintEdgeShape = function(c, pts)
 					// just draw straight to the intersection point
 					c.lineTo(outX, outY);
 					
-					(function(x, y)
+					((x, y)=>
 					{
-						fns.push(function()
+						fns.push(()=>
 						{
 							c.lineTo(x, y);
 						});
@@ -280,9 +280,9 @@ mxArrowConnector.prototype.paintEdgeShape = function(c, pts)
 					c.lineTo(c1x, c1y);
 					c.quadTo(outX, outY, c2x, c2y);
 					
-					(function(x, y)
+					((x, y)=>
 					{
-						fns.push(function()
+						fns.push(()=>
 						{
 							c.lineTo(x, y);
 						});
@@ -292,18 +292,18 @@ mxArrowConnector.prototype.paintEdgeShape = function(c, pts)
 				{
 					c.lineTo(outX, outY);
 					
-					(function(x, y)
+					((x, y)=>
 					{
 						var c1x = outX - ny * edgeWidth;
 						var c1y = outY + nx * edgeWidth;
 						var c2x = outX - ny1 * edgeWidth;
 						var c2y = outY + nx1 * edgeWidth;
 						
-						fns.push(function()
+						fns.push(()=>
 						{
 							c.quadTo(x, y, c1x, c1y);
 						});
-						fns.push(function()
+						fns.push(()=>
 						{
 							c.lineTo(c2x, c2y);
 						});
@@ -338,7 +338,7 @@ mxArrowConnector.prototype.paintEdgeShape = function(c, pts)
 		{
 			c.moveTo(inStartX, inStartY);
 			
-			fns.splice(0, 0, function()
+			fns.splice(0, 0, ()=>
 			{
 				c.moveTo(inStartX, inStartY);
 			});
@@ -400,7 +400,7 @@ mxArrowConnector.prototype.paintEdgeShape = function(c, pts)
  * 
  * Paints the marker.
  */
-mxArrowConnector.prototype.paintMarker = function(c, ptX, ptY, nx, ny, size, arrowWidth, edgeWidth, spacing, initialMove)
+paintMarker = (c, ptX, ptY, nx, ny, size, arrowWidth, edgeWidth, spacing, initialMove)=>
 {
 	var widthArrowRatio = edgeWidth / arrowWidth;
 	var orthx = edgeWidth * ny / 2;
@@ -429,7 +429,7 @@ mxArrowConnector.prototype.paintMarker = function(c, ptX, ptY, nx, ny, size, arr
  * 
  * Returns wether the arrow is rounded
  */
-mxArrowConnector.prototype.isArrowRounded = function()
+isArrowRounded = ()=>
 {
 	return this.isRounded;
 };
@@ -439,7 +439,7 @@ mxArrowConnector.prototype.isArrowRounded = function()
  * 
  * Returns the width of the start arrow
  */
-mxArrowConnector.prototype.getStartArrowWidth = function()
+getStartArrowWidth = ()=>
 {
 	return mxConstants.ARROW_WIDTH;
 };
@@ -449,7 +449,7 @@ mxArrowConnector.prototype.getStartArrowWidth = function()
  * 
  * Returns the width of the end arrow
  */
-mxArrowConnector.prototype.getEndArrowWidth = function()
+getEndArrowWidth = ()=>
 {
 	return mxConstants.ARROW_WIDTH;
 };
@@ -459,7 +459,7 @@ mxArrowConnector.prototype.getEndArrowWidth = function()
  * 
  * Returns the width of the body of the edge
  */
-mxArrowConnector.prototype.getEdgeWidth = function()
+getEdgeWidth = ()=>
 {
 	return mxConstants.ARROW_WIDTH / 3;
 };
@@ -469,7 +469,7 @@ mxArrowConnector.prototype.getEdgeWidth = function()
  * 
  * Returns whether the ends of the shape are drawn
  */
-mxArrowConnector.prototype.isOpenEnded = function()
+isOpenEnded = ()=>
 {
 	return false;
 };
@@ -479,7 +479,7 @@ mxArrowConnector.prototype.isOpenEnded = function()
  * 
  * Returns whether the start marker is drawn
  */
-mxArrowConnector.prototype.isMarkerStart = function()
+isMarkerStart = ()=>
 {
 	return (mxUtils.getValue(this.style, mxConstants.STYLE_STARTARROW, mxConstants.NONE) != mxConstants.NONE);
 };
@@ -489,7 +489,7 @@ mxArrowConnector.prototype.isMarkerStart = function()
  * 
  * Returns whether the end marker is drawn
  */
-mxArrowConnector.prototype.isMarkerEnd = function()
+isMarkerEnd = ()=>
 {
 	return (mxUtils.getValue(this.style, mxConstants.STYLE_ENDARROW, mxConstants.NONE) != mxConstants.NONE);
 };

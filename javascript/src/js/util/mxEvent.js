@@ -25,9 +25,9 @@ var mxEvent =
 	 * <mxUtils.bind> in order to bind the "this" keyword inside the function
 	 * to a given execution scope.
 	 */
-	addListener: function()
+	addListener: ()=>
 	{
-		var updateListenerList = function(element, eventName, funct)
+		var updateListenerList = (element, eventName, funct)=>
 		{
 			if (element.mxListenerList == null)
 			{
@@ -46,8 +46,8 @@ var mxEvent =
 			
 			try
 			{
-				document.addEventListener('test', function() {}, Object.defineProperty &&
-					Object.defineProperty({}, 'passive', {get: function()
+				document.addEventListener('test', ()=> {}, Object.defineProperty &&
+					Object.defineProperty({}, 'passive', {get: ()=>
 					{supportsPassive = true;}}));
 			}
 			catch (e)
@@ -55,7 +55,7 @@ var mxEvent =
 				// ignore
 			}
 			
-			return function(element, eventName, funct)
+			return (element, eventName, funct)=>
 			{
 				element.addEventListener(eventName, funct,
 					(supportsPassive) ?
@@ -65,7 +65,7 @@ var mxEvent =
 		}
 		else
 		{
-			return function(element, eventName, funct)
+			return (element, eventName, funct)=>
 			{
 				element.attachEvent('on' + eventName, funct);
 				updateListenerList(element, eventName, funct);				
@@ -78,9 +78,9 @@ var mxEvent =
 	 *
 	 * Removes the specified listener from the given element.
 	 */
-	removeListener: function()
+	removeListener: ()=>
 	{
-		var updateListener = function(element, eventName, funct)
+		var updateListener = (element, eventName, funct)=>
 		{
 			if (element.mxListenerList != null)
 			{
@@ -106,7 +106,7 @@ var mxEvent =
 		
 		if (window.removeEventListener)
 		{
-			return function(element, eventName, funct)
+			return (element, eventName, funct)=>
 			{
 				element.removeEventListener(eventName, funct, false);
 				updateListener(element, eventName, funct);
@@ -114,7 +114,7 @@ var mxEvent =
 		}
 		else
 		{
-			return function(element, eventName, funct)
+			return (element, eventName, funct)=>
 			{
 				element.detachEvent('on' + eventName, funct);
 				updateListener(element, eventName, funct);
@@ -127,7 +127,7 @@ var mxEvent =
 	 * 
 	 * Removes all listeners from the given element.
 	 */
-	removeAllListeners: function(element)
+	removeAllListeners: (element)=>
 	{
 		var list = element.mxListenerList;
 
@@ -150,7 +150,7 @@ var mxEvent =
 	 * is false and <mxClient.IS_TOUCH> is true then the respective touch events
 	 * will be registered as well as the mouse events.
 	 */
-	addGestureListeners: function(node, startListener, moveListener, endListener)
+	addGestureListeners: (node, startListener, moveListener, endListener)=>
 	{
 		if (startListener != null)
 		{
@@ -192,7 +192,7 @@ var mxEvent =
 	 * Removes the given listeners from mousedown, mousemove, mouseup and the
 	 * respective touch events if <mxClient.IS_TOUCH> is true.
 	 */
-	removeGestureListeners: function(node, startListener, moveListener, endListener)
+	removeGestureListeners: (node, startListener, moveListener, endListener)=>
 	{
 		if (startListener != null)
 		{
@@ -238,9 +238,9 @@ var mxEvent =
 	 * functions that take the trigger event as arguments and replace the
 	 * default behaviour.
 	 */
-	redirectMouseEvents: function(node, graph, state, down, move, up, dblClick)
+	redirectMouseEvents: (node, graph, state, down, move, up, dblClick)=>
 	{
-		var getState = function(evt)
+		var getState = (evt)=>
 		{
 			return (typeof(state) == 'function') ? state(evt) : state;
 		};
@@ -302,7 +302,7 @@ var mxEvent =
 	 * 
 	 * element - DOM node to remove the listeners from.
 	 */
-	release: function(element)
+	release: (element)=>
 	{
 		try
 		{
@@ -357,11 +357,11 @@ var mxEvent =
 	 * target - Target for installing the listener in Google Chrome. See 
 	 * https://www.chromestatus.com/features/6662647093133312.
 	 */
-	addMouseWheelListener: function(funct, target)
+	addMouseWheelListener: (funct, target)=>
 	{
 		if (funct != null)
 		{
-			var wheelHandler = function(evt)
+			var wheelHandler = (evt)=>
 			{
 				// IE does not give an event object but the
 				// global event object is the mousewheel event
@@ -390,13 +390,13 @@ var mxEvent =
 			{
 				var scale = 1;
 				
-				mxEvent.addListener(target, 'gesturestart', function(evt)
+				mxEvent.addListener(target, 'gesturestart', (evt)=>
 				{
 					mxEvent.consume(evt);
 					scale = 1;
 				});
 				
-				mxEvent.addListener(target, 'gesturechange', function(evt)
+				mxEvent.addListener(target, 'gesturechange', (evt)=>
 				{
 					mxEvent.consume(evt);
 					var diff = scale - evt.scale;
@@ -408,7 +408,7 @@ var mxEvent =
 					}
 				});
 
-				mxEvent.addListener(target, 'gestureend', function(evt)
+				mxEvent.addListener(target, 'gestureend', (evt)=>
 				{
 					mxEvent.consume(evt);
 				});
@@ -420,14 +420,14 @@ var mxEvent =
 				var dy0 = 0;
 				
 				// Adds basic listeners for graph event dispatching
-				mxEvent.addGestureListeners(target, mxUtils.bind(this, function(evt)
+				mxEvent.addGestureListeners(target, mxUtils.bind(this, (evt)=>
 				{
 					if (!mxEvent.isMouseEvent(evt) && evt.pointerId != null)
 					{
 						evtCache.push(evt);
 					}
 				}),
-				mxUtils.bind(this, function(evt)
+				mxUtils.bind(this, (evt)=>
 				{
 					if (!mxEvent.isMouseEvent(evt) && evtCache.length == 2)
 					{
@@ -460,7 +460,7 @@ var mxEvent =
 						}
 					}
 				}),
-				mxUtils.bind(this, function(evt)
+				mxUtils.bind(this, (evt)=>
 				{
 					evtCache = [];
 					dx0 = 0;
@@ -477,9 +477,9 @@ var mxEvent =
 	 *
 	 * Disables the context menu for the given element.
 	 */
-	disableContextMenu: function(element)
+	disableContextMenu: (element)=>
 	{
-		mxEvent.addListener(element, 'contextmenu', function(evt)
+		mxEvent.addListener(element, 'contextmenu', (evt)=>
 		{
 			if (evt.preventDefault)
 			{
@@ -495,7 +495,7 @@ var mxEvent =
 	 * 
 	 * Returns the event's target or srcElement depending on the browser.
 	 */
-	getSource: function(evt)
+	getSource: (evt)=>
 	{
 		return (evt.srcElement != null) ? evt.srcElement : evt.target;
 	},
@@ -505,7 +505,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the event has been consumed using <consume>.
 	 */
-	isConsumed: function(evt)
+	isConsumed: (evt)=>
 	{
 		return evt.isConsumed != null && evt.isConsumed;
 	},
@@ -515,7 +515,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the event was generated using a touch device (not a pen or mouse).
 	 */
-	isTouchEvent: function(evt)
+	isTouchEvent: (evt)=>
 	{
 		return (evt.pointerType != null) ? (evt.pointerType == 'touch' || evt.pointerType ===
 			evt.MSPOINTER_TYPE_TOUCH) : ((evt.mozInputSource != null) ?
@@ -527,7 +527,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the event was generated using a pen (not a touch device or mouse).
 	 */
-	isPenEvent: function(evt)
+	isPenEvent: (evt)=>
 	{
 		return (evt.pointerType != null) ? (evt.pointerType == 'pen' || evt.pointerType ===
 			evt.MSPOINTER_TYPE_PEN) : ((evt.mozInputSource != null) ?
@@ -539,7 +539,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the event was generated using a touch device (not a pen or mouse).
 	 */
-	isMultiTouchEvent: function(evt)
+	isMultiTouchEvent: (evt)=>
 	{
 		return (evt.type != null && evt.type.indexOf('touch') == 0 && evt.touches != null && evt.touches.length > 1);
 	},
@@ -549,7 +549,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the event was generated using a mouse (not a pen or touch device).
 	 */
-	isMouseEvent: function(evt)
+	isMouseEvent: (evt)=>
 	{
 		return (evt.pointerType != null) ? (evt.pointerType == 'mouse' || evt.pointerType ===
 			evt.MSPOINTER_TYPE_MOUSE) : ((evt.mozInputSource != null) ?
@@ -564,7 +564,7 @@ var mxEvent =
 	 * <mxGraph.isMouseDown> property. Note that this returns true in Firefox
 	 * for control+left-click on the Mac.
 	 */
-	isLeftMouseButton: function(evt)
+	isLeftMouseButton: (evt)=>
 	{
 		// Special case for mousemove and mousedown we check the buttons
 		// if it exists because which is 0 even if no button is pressed
@@ -589,7 +589,7 @@ var mxEvent =
 	 * To check if a button is pressed during a mouseMove you should use the
 	 * <mxGraph.isMouseDown> property.
 	 */
-	isMiddleMouseButton: function(evt)
+	isMiddleMouseButton: (evt)=>
 	{
 		if ('which' in evt)
 		{
@@ -608,7 +608,7 @@ var mxEvent =
 	 * button might not be available on some systems. For handling a popup
 	 * trigger <isPopupTrigger> should be used.
 	 */
-	isRightMouseButton: function(evt)
+	isRightMouseButton: (evt)=>
 	{
 		if ('which' in evt)
 		{
@@ -627,7 +627,7 @@ var mxEvent =
 	 * returns true if the right button or the left button and control was
 	 * pressed on a Mac.
 	 */
-	isPopupTrigger: function(evt)
+	isPopupTrigger: (evt)=>
 	{
 		return mxEvent.isRightMouseButton(evt) || (mxClient.IS_MAC && mxEvent.isControlDown(evt) &&
 			!mxEvent.isShiftDown(evt) && !mxEvent.isMetaDown(evt) && !mxEvent.isAltDown(evt));
@@ -638,7 +638,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the shift key is pressed for the given event.
 	 */
-	isShiftDown: function(evt)
+	isShiftDown: (evt)=>
 	{
 		return (evt != null) ? evt.shiftKey : false;
 	},
@@ -648,7 +648,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the alt key is pressed for the given event.
 	 */
-	isAltDown: function(evt)
+	isAltDown: (evt)=>
 	{
 		return (evt != null) ? evt.altKey : false;
 	},
@@ -658,7 +658,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the control key is pressed for the given event.
 	 */
-	isControlDown: function(evt)
+	isControlDown: (evt)=>
 	{
 		return (evt != null) ? evt.ctrlKey : false;
 	},
@@ -668,7 +668,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the meta key is pressed for the given event.
 	 */
-	isMetaDown: function(evt)
+	isMetaDown: (evt)=>
 	{
 		return (evt != null) ? evt.metaKey : false;
 	},
@@ -678,7 +678,7 @@ var mxEvent =
 	 * 
 	 * Returns the touch or mouse event that contains the mouse coordinates.
 	 */
-	getMainEvent: function(e)
+	getMainEvent: (e)=>
 	{
 		if ((e.type == 'touchstart' || e.type == 'touchmove') && e.touches != null && e.touches[0] != null)
 		{
@@ -697,7 +697,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the meta key is pressed for the given event.
 	 */
-	getClientX: function(e)
+	getClientX: (e)=>
 	{
 		return mxEvent.getMainEvent(e).clientX;
 	},
@@ -707,7 +707,7 @@ var mxEvent =
 	 * 
 	 * Returns true if the meta key is pressed for the given event.
 	 */
-	getClientY: function(e)
+	getClientY: (e)=>
 	{
 		return mxEvent.getMainEvent(e).clientY;
 	},
@@ -725,7 +725,7 @@ var mxEvent =
 	 * stopPropagation - Option boolean to stop event propagation. Default is
 	 * true.
 	 */
-	consume: function(evt, preventDefault, stopPropagation)
+	consume: (evt, preventDefault, stopPropagation)=>
 	{
 		preventDefault = (preventDefault != null) ? preventDefault : true;
 		stopPropagation = (stopPropagation != null) ? stopPropagation : true;

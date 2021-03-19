@@ -32,7 +32,7 @@ mxUtils.extend(mxElbowEdgeHandler, mxEdgeHandler);
  * Specifies if a double click on the middle handle should call
  * <mxGraph.flipEdge>. Default is true.
  */
-mxElbowEdgeHandler.prototype.flipEnabled = true;
+flipEnabled = true;
 
 /**
  * Variable: doubleClickOrientationResource
@@ -42,7 +42,7 @@ mxElbowEdgeHandler.prototype.flipEnabled = true;
  * exist then the value is used as the error message. Default is
  * 'doubleClickOrientation'.
  */
-mxElbowEdgeHandler.prototype.doubleClickOrientationResource =
+doubleClickOrientationResource =
 	(mxClient.language != 'none') ? 'doubleClickOrientation' : '';
 
 /**
@@ -50,7 +50,7 @@ mxElbowEdgeHandler.prototype.doubleClickOrientationResource =
  * 
  * Overrides <mxEdgeHandler.createBends> to create custom bends.
  */
- mxElbowEdgeHandler.prototype.createBends = function()
+ createBends = ()=>
  {
 	var bends = [];
 	
@@ -61,7 +61,7 @@ mxElbowEdgeHandler.prototype.doubleClickOrientationResource =
 	bends.push(bend);
 
 	// Virtual
-	bends.push(this.createVirtualBend(mxUtils.bind(this, function(evt)
+	bends.push(this.createVirtualBend(mxUtils.bind(this, (evt)=>
 	{
 		if (!mxEvent.isConsumed(evt) && this.flipEnabled)
 		{
@@ -87,7 +87,7 @@ mxElbowEdgeHandler.prototype.doubleClickOrientationResource =
  * Creates a virtual bend that supports double clicking and calls
  * <mxGraph.flipEdge>.
  */
-mxElbowEdgeHandler.prototype.createVirtualBend = function(dblClickHandler)
+createVirtualBend = (dblClickHandler)=>
 {
 	var bend = this.createHandleShape();
 	this.initBend(bend, dblClickHandler);
@@ -107,7 +107,7 @@ mxElbowEdgeHandler.prototype.createVirtualBend = function(dblClickHandler)
  * 
  * Returns the cursor to be used for the bend.
  */
-mxElbowEdgeHandler.prototype.getCursorForBend = function()
+getCursorForBend = ()=>
 {
 	return (this.state.style[mxConstants.STYLE_EDGE] == mxEdgeStyle.TopToBottom ||
 		this.state.style[mxConstants.STYLE_EDGE] == mxConstants.EDGESTYLE_TOPTOBOTTOM ||
@@ -122,7 +122,7 @@ mxElbowEdgeHandler.prototype.getCursorForBend = function()
  * 
  * Returns the tooltip for the given node.
  */
-mxElbowEdgeHandler.prototype.getTooltipForNode = function(node)
+getTooltipForNode = (node)=>
 {
 	var tip = null;
 	
@@ -147,7 +147,7 @@ mxElbowEdgeHandler.prototype.getTooltipForNode = function(node)
  * point - <mxPoint> to be converted.
  * gridEnabled - Boolean that specifies if the grid should be applied.
  */
-mxElbowEdgeHandler.prototype.convertPoint = function(point, gridEnabled)
+convertPoint = (point, gridEnabled)=>
 {
 	var scale = this.graph.getView().getScale();
 	var tr = this.graph.getView().getTranslate();
@@ -175,7 +175,7 @@ mxElbowEdgeHandler.prototype.convertPoint = function(point, gridEnabled)
  * p0 - <mxPoint> that represents the location of the first point.
  * pe - <mxPoint> that represents the location of the last point.
  */
-mxElbowEdgeHandler.prototype.redrawInnerBends = function(p0, pe)
+redrawInnerBends = (p0, pe)=>
 {
 	var g = this.graph.getModel().getGeometry(this.state.cell);
 	var pts = this.state.absolutePoints;

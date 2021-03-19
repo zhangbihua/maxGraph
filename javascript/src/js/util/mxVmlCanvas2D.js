@@ -10,8 +10,8 @@
  * fallback for SVG images which are not supported in VML-based browsers.
  * 
  * (code)
- * var mxVmlCanvas2DImage = mxVmlCanvas2D.prototype.image;
- * mxVmlCanvas2D.prototype.image = function(x, y, w, h, src, aspect, flipH, flipV)
+ * var mxVmlCanvas2DImage = mxVmlCanvas2image;
+ * mxVmlCanvas2image = (x, y, w, h, src, aspect, flipH, flipV)=>
  * {
  *   if (src.substring(src.length - 4, src.length) == '.svg')
  *   {
@@ -33,7 +33,7 @@
  * bounding box of rotated shapes, not the actual bounds of the shape. See
  * also <text> for plain text label restrictions in shapes for VML.
  */
-var mxVmlCanvas2D = function(root)
+var mxVmlCanvas2D = (root)=>
 {
 	mxAbstractCanvas2D.call(this);
 
@@ -55,42 +55,42 @@ mxUtils.extend(mxVmlCanvas2D, mxAbstractCanvas2D);
  * 
  * Holds the current DOM node.
  */
-mxVmlCanvas2D.prototype.node = null;
+mxVmlCanvas2node = null;
 
 /**
  * Variable: textEnabled
  * 
  * Specifies if text output should be enabledetB. Default is true.
  */
-mxVmlCanvas2D.prototype.textEnabled = true;
+mxVmlCanvas2textEnabled = true;
 
 /**
  * Variable: moveOp
  * 
  * Contains the string used for moving in paths. Default is 'm'.
  */
-mxVmlCanvas2D.prototype.moveOp = 'm';
+mxVmlCanvas2moveOp = 'm';
 
 /**
  * Variable: lineOp
  * 
  * Contains the string used for moving in paths. Default is 'l'.
  */
-mxVmlCanvas2D.prototype.lineOp = 'l';
+mxVmlCanvas2lineOp = 'l';
 
 /**
  * Variable: curveOp
  * 
  * Contains the string used for bezier curves. Default is 'c'.
  */
-mxVmlCanvas2D.prototype.curveOp = 'c';
+mxVmlCanvas2curveOp = 'c';
 
 /**
  * Variable: closeOp
  * 
  * Holds the operator for closing curves. Default is 'x e'.
  */
-mxVmlCanvas2D.prototype.closeOp = 'x';
+mxVmlCanvas2closeOp = 'x';
 
 /**
  * Variable: rotatedHtmlBackground
@@ -98,21 +98,21 @@ mxVmlCanvas2D.prototype.closeOp = 'x';
  * Background color for rotated HTML. Default is ''. This can be set to eg.
  * white to improve rendering of rotated text in VML for IE9.
  */
-mxVmlCanvas2D.prototype.rotatedHtmlBackground = '';
+mxVmlCanvas2rotatedHtmlBackground = '';
 
 /**
  * Variable: vmlScale
  * 
  * Specifies the scale used to draw VML shapes.
  */
-mxVmlCanvas2D.prototype.vmlScale = 1;
+mxVmlCanvas2vmlScale = 1;
 
 /**
  * Function: createElement
  * 
  * Creates the given element using the document.
  */
-mxVmlCanvas2D.prototype.createElement = function(name)
+mxVmlCanvas2createElement = (name)=>
 {
 	return document.createElement(name);
 };
@@ -123,7 +123,7 @@ mxVmlCanvas2D.prototype.createElement = function(name)
  * Creates a new element using <createElement> and prefixes the given name with
  * <mxClient.VML_PREFIX>.
  */
-mxVmlCanvas2D.prototype.createVmlElement = function(name)
+mxVmlCanvas2createVmlElement = (name)=>
 {
 	return this.createElement(mxClient.VML_PREFIX + ':' + name);
 };
@@ -133,7 +133,7 @@ mxVmlCanvas2D.prototype.createVmlElement = function(name)
  * 
  * Adds the current node to the <root>.
  */
-mxVmlCanvas2D.prototype.addNode = function(filled, stroked)
+mxVmlCanvas2addNode = (filled, stroked)=>
 {
 	var node = this.node;
 	var s = this.state;
@@ -201,7 +201,7 @@ mxVmlCanvas2D.prototype.addNode = function(filled, stroked)
  * 
  * Creates a transparent fill.
  */
-mxVmlCanvas2D.prototype.createTransparentFill = function()
+mxVmlCanvas2createTransparentFill = ()=>
 {
 	var fill = this.createVmlElement('fill');
 	fill.src = mxClient.imageBasePath + '/transparent.gif';
@@ -215,7 +215,7 @@ mxVmlCanvas2D.prototype.createTransparentFill = function()
  * 
  * Creates a fill for the current state.
  */
-mxVmlCanvas2D.prototype.createFill = function()
+mxVmlCanvas2createFill = ()=>
 {
 	var s = this.state;
 	
@@ -270,7 +270,7 @@ mxVmlCanvas2D.prototype.createFill = function()
  * 
  * Creates a fill for the current state.
  */
-mxVmlCanvas2D.prototype.createStroke = function()
+mxVmlCanvas2createStroke = ()=>
 {
 	var s = this.state;
 	var stroke = this.createVmlElement('stroke');
@@ -297,7 +297,7 @@ mxVmlCanvas2D.prototype.createStroke = function()
  * Returns a VML dash pattern for the current dashPattern.
  * See http://msdn.microsoft.com/en-us/library/bb264085(v=vs.85).aspx
  */
-mxVmlCanvas2D.prototype.getVmlDashStyle = function()
+mxVmlCanvas2getVmlDashStyle = ()=>
 {
 	var result = 'dash';
 	
@@ -319,7 +319,7 @@ mxVmlCanvas2D.prototype.getVmlDashStyle = function()
  * 
  * Creates a shadow for the given node.
  */
-mxVmlCanvas2D.prototype.createShadow = function(node, filled, stroked)
+mxVmlCanvas2createShadow = (node, filled, stroked)=>
 {
 	var s = this.state;
 	var rad = -s.rotation * (Math.PI / 180);
@@ -383,7 +383,7 @@ mxVmlCanvas2D.prototype.createShadow = function(node, filled, stroked)
  * 
  * Creates the fill for the shadow.
  */
-mxVmlCanvas2D.prototype.createShadowFill = function()
+mxVmlCanvas2createShadowFill = ()=>
 {
 	var fill = this.createVmlElement('fill');
 	fill.color = this.state.shadowColor;
@@ -397,7 +397,7 @@ mxVmlCanvas2D.prototype.createShadowFill = function()
  * 
  * Creates the stroke for the shadow.
  */
-mxVmlCanvas2D.prototype.createShadowStroke = function()
+mxVmlCanvas2createShadowStroke = ()=>
 {
 	var stroke = this.createStroke();
 	stroke.opacity = (this.state.alpha * this.state.shadowAlpha * 100) + '%';
@@ -410,7 +410,7 @@ mxVmlCanvas2D.prototype.createShadowStroke = function()
  * 
  * Sets the rotation of the canvas. Note that rotation cannot be concatenated.
  */
-mxVmlCanvas2D.prototype.rotate = function(theta, flipH, flipV, cx, cy)
+mxVmlCanvas2rotate = (theta, flipH, flipV, cx, cy)=>
 {
 	if (flipH && flipV)
 	{
@@ -441,9 +441,9 @@ mxVmlCanvas2D.prototype.rotate = function(theta, flipH, flipV, cx, cy)
  * 
  * Extends superclass to create path.
  */
-mxVmlCanvas2D.prototype.begin = function()
+mxVmlCanvas2begin = ()=>
 {
-	mxAbstractCanvas2D.prototype.begin.apply(this, arguments);
+	mxAbstractCanvas2begin.apply(this, arguments);
 	this.node = this.createVmlElement('shape');
 	this.node.style.position = 'absolute';
 };
@@ -453,7 +453,7 @@ mxVmlCanvas2D.prototype.begin = function()
  * 
  * Replaces quadratic curve with bezier curve in VML.
  */
-mxVmlCanvas2D.prototype.quadTo = function(x1, y1, x2, y2)
+mxVmlCanvas2quadTo = (x1, y1, x2, y2)=>
 {
 	var s = this.state;
 
@@ -483,7 +483,7 @@ mxVmlCanvas2D.prototype.quadTo = function(x1, y1, x2, y2)
  * 
  * Sets the glass gradient.
  */
-mxVmlCanvas2D.prototype.createRect = function(nodeName, x, y, w, h)
+mxVmlCanvas2createRect = (nodeName, x, y, w, h)=>
 {
 	var s = this.state;
 	var n = this.createVmlElement(nodeName);
@@ -501,7 +501,7 @@ mxVmlCanvas2D.prototype.createRect = function(nodeName, x, y, w, h)
  * 
  * Sets the current path to a rectangle.
  */
-mxVmlCanvas2D.prototype.rect = function(x, y, w, h)
+mxVmlCanvas2rect = (x, y, w, h)=>
 {
 	this.node = this.createRect('rect', x, y, w, h);
 };
@@ -511,7 +511,7 @@ mxVmlCanvas2D.prototype.rect = function(x, y, w, h)
  * 
  * Sets the current path to a rounded rectangle.
  */
-mxVmlCanvas2D.prototype.roundrect = function(x, y, w, h, dx, dy)
+mxVmlCanvas2roundrect = (x, y, w, h, dx, dy)=>
 {
 	this.node = this.createRect('roundrect', x, y, w, h);
 	// SetAttribute needed here for IE8
@@ -523,7 +523,7 @@ mxVmlCanvas2D.prototype.roundrect = function(x, y, w, h, dx, dy)
  * 
  * Sets the current path to an ellipse.
  */
-mxVmlCanvas2D.prototype.ellipse = function(x, y, w, h)
+mxVmlCanvas2ellipse = (x, y, w, h)=>
 {
 	this.node = this.createRect('oval', x, y, w, h);
 };
@@ -533,7 +533,7 @@ mxVmlCanvas2D.prototype.ellipse = function(x, y, w, h)
  * 
  * Paints an image.
  */
-mxVmlCanvas2D.prototype.image = function(x, y, w, h, src, aspect, flipH, flipV)
+mxVmlCanvas2image = (x, y, w, h, src, aspect, flipH, flipV)=>
 {
 	var node = null;
 	
@@ -586,7 +586,7 @@ mxVmlCanvas2D.prototype.image = function(x, y, w, h, src, aspect, flipH, flipV)
  * 
  * Creates the innermost element that contains the HTML text.
  */
-mxVmlCanvas2D.prototype.createDiv = function(str, align, valign, overflow)
+mxVmlCanvas2createDiv = (str, align, valign, overflow)=>
 {
 	var div = this.createElement('div');
 	var state = this.state;
@@ -660,7 +660,7 @@ mxVmlCanvas2D.prototype.createDiv = function(str, align, valign, overflow)
  * text and html for HTML markup. Clipping, text background and border are not
  * supported for plain text in VML.
  */
-mxVmlCanvas2D.prototype.text = function(x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir)
+mxVmlCanvas2text = (x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir)=>
 {
 	if (this.textEnabled && str != null)
 	{
@@ -983,7 +983,7 @@ mxVmlCanvas2D.prototype.text = function(x, y, w, h, str, align, valign, wrap, fo
  * 
  * Paints the outline of the current path.
  */
-mxVmlCanvas2D.prototype.plainText = function(x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir)
+mxVmlCanvas2plainText = (x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir)=>
 {
 	// TextDirection is ignored since this code is not used (format is always HTML in the text function)
 	var s = this.state;
@@ -1076,7 +1076,7 @@ mxVmlCanvas2D.prototype.plainText = function(x, y, w, h, str, align, valign, wra
  * 
  * Paints the outline of the current path.
  */
-mxVmlCanvas2D.prototype.stroke = function()
+mxVmlCanvas2stroke = ()=>
 {
 	this.addNode(false, true);
 };
@@ -1086,7 +1086,7 @@ mxVmlCanvas2D.prototype.stroke = function()
  * 
  * Fills the current path.
  */
-mxVmlCanvas2D.prototype.fill = function()
+mxVmlCanvas2fill = ()=>
 {
 	this.addNode(true, false);
 };
@@ -1096,7 +1096,7 @@ mxVmlCanvas2D.prototype.fill = function()
  * 
  * Fills and paints the outline of the current path.
  */
-mxVmlCanvas2D.prototype.fillAndStroke = function()
+mxVmlCanvas2fillAndStroke = ()=>
 {
 	this.addNode(true, true);
 };

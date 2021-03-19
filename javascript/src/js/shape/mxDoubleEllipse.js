@@ -10,7 +10,7 @@
  * Use the following override to only fill the inner ellipse in this shape:
  * 
  * (code)
- * mxDoubleEllipse.prototype.paintVertexShape = function(c, x, y, w, h)
+ * paintVertexShape = (c, x, y, w, h)=>
  * {
  *   c.ellipse(x, y, w, h);
  *   c.stroke();
@@ -62,14 +62,14 @@ mxUtils.extend(mxDoubleEllipse, mxShape);
  * 
  * Scale for improving the precision of VML rendering. Default is 10.
  */
-mxDoubleEllipse.prototype.vmlScale = 10;
+vmlScale = 10;
 
 /**
  * Function: paintBackground
  * 
  * Paints the background.
  */
-mxDoubleEllipse.prototype.paintBackground = function(c, x, y, w, h)
+paintBackground = (c, x, y, w, h)=>
 {
 	c.ellipse(x, y, w, h);
 	c.fillAndStroke();
@@ -80,7 +80,7 @@ mxDoubleEllipse.prototype.paintBackground = function(c, x, y, w, h)
  * 
  * Paints the foreground.
  */
-mxDoubleEllipse.prototype.paintForeground = function(c, x, y, w, h)
+paintForeground = (c, x, y, w, h)=>
 {
 	if (!this.outline)
 	{
@@ -105,7 +105,7 @@ mxDoubleEllipse.prototype.paintForeground = function(c, x, y, w, h)
  * 
  * Returns the bounds for the label.
  */
-mxDoubleEllipse.prototype.getLabelBounds = function(rect)
+getLabelBounds = (rect)=>
 {
 	var margin = (mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth,
 			Math.min(rect.width / 5 / this.scale, rect.height / 5 / this.scale)))) * this.scale;

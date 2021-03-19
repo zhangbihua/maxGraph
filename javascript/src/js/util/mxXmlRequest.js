@@ -21,12 +21,12 @@
  * Example:
  * 
  * (code)
- * var onload = function(req)
+ * var onload = (req)=>
  * {
  *   mxUtils.alert(req.getDocumentElement());
  * }
  * 
- * var onerror = function(req)
+ * var onerror = (req)=>
  * {
  *   mxUtils.alert('Error');
  * }
@@ -100,14 +100,14 @@ function mxXmlRequest(url, params, method, async, username, password)
  * 
  * Holds the target URL of the request.
  */
-mxXmlRequest.prototype.url = null;
+url = null;
 
 /**
  * Variable: params
  * 
  * Holds the form encoded data for the POST request.
  */
-mxXmlRequest.prototype.params = null;
+params = null;
 
 /**
  * Variable: method
@@ -115,14 +115,14 @@ mxXmlRequest.prototype.params = null;
  * Specifies the request method. Possible values are POST and GET. Default
  * is POST.
  */
-mxXmlRequest.prototype.method = null;
+method = null;
 
 /**
  * Variable: async
  * 
  * Boolean indicating if the request is asynchronous.
  */
-mxXmlRequest.prototype.async = null;
+async = null;
 
 /**
  * Variable: binary
@@ -131,7 +131,7 @@ mxXmlRequest.prototype.async = null;
  * In all other browsers the requested mime type is set to
  * text/plain; charset=x-user-defined. Default is false.
  */
-mxXmlRequest.prototype.binary = false;
+binary = false;
 
 /**
  * Variable: withCredentials
@@ -139,28 +139,28 @@ mxXmlRequest.prototype.binary = false;
  * Specifies if withCredentials should be used in HTML5-compliant browsers. Default is
  * false.
  */
-mxXmlRequest.prototype.withCredentials = false;
+withCredentials = false;
 
 /**
  * Variable: username
  * 
  * Specifies the username to be used for authentication.
  */
-mxXmlRequest.prototype.username = null;
+username = null;
 
 /**
  * Variable: password
  * 
  * Specifies the password to be used for authentication.
  */
-mxXmlRequest.prototype.password = null;
+password = null;
 
 /**
  * Variable: request
  * 
  * Holds the inner, browser-specific request object.
  */
-mxXmlRequest.prototype.request = null;
+request = null;
 
 /**
  * Variable: decodeSimulateValues
@@ -169,14 +169,14 @@ mxXmlRequest.prototype.request = null;
  * textarea value in <simulate>. Defaults to false for backwards compatibility,
  * to avoid another decode on the server this should be set to true.
  */
-mxXmlRequest.prototype.decodeSimulateValues = false;
+decodeSimulateValues = false;
 
 /**
  * Function: isBinary
  * 
  * Returns <binary>.
  */
-mxXmlRequest.prototype.isBinary = function()
+isBinary = ()=>
 {
 	return this.binary;
 };
@@ -186,7 +186,7 @@ mxXmlRequest.prototype.isBinary = function()
  * 
  * Sets <binary>.
  */
-mxXmlRequest.prototype.setBinary = function(value)
+setBinary = (value)=>
 {
 	this.binary = value;
 };
@@ -196,7 +196,7 @@ mxXmlRequest.prototype.setBinary = function(value)
  * 
  * Returns the response as a string.
  */
-mxXmlRequest.prototype.getText = function()
+getText = ()=>
 {
 	return this.request.responseText;
 };
@@ -206,7 +206,7 @@ mxXmlRequest.prototype.getText = function()
  * 
  * Returns true if the response is ready.
  */
-mxXmlRequest.prototype.isReady = function()
+isReady = ()=>
 {
 	return this.request.readyState == 4;
 };
@@ -216,7 +216,7 @@ mxXmlRequest.prototype.isReady = function()
  * 
  * Returns the document element of the response XML document.
  */
-mxXmlRequest.prototype.getDocumentElement = function()
+getDocumentElement = ()=>
 {
 	var doc = this.getXml();
 	
@@ -234,7 +234,7 @@ mxXmlRequest.prototype.getDocumentElement = function()
  * Returns the response as an XML document. Use <getDocumentElement> to get
  * the document element of the XML document.
  */
-mxXmlRequest.prototype.getXml = function()
+getXml = ()=>
 {
 	var xml = this.request.responseXML;
 	
@@ -257,7 +257,7 @@ mxXmlRequest.prototype.getXml = function()
  * Returns the status as a number, eg. 404 for "Not found" or 200 for "OK".
  * Note: The NS_ERROR_NOT_AVAILABLE for invalid responses cannot be cought.
  */
-mxXmlRequest.prototype.getStatus = function()
+getStatus = ()=>
 {
 	return (this.request != null) ? this.request.status : null;
 };
@@ -267,11 +267,11 @@ mxXmlRequest.prototype.getStatus = function()
  * 
  * Creates and returns the inner <request> object.
  */
-mxXmlRequest.prototype.create = function()
+create = ()=>
 {
 	if (window.XMLHttpRequest)
 	{
-		return function()
+		return ()=>
 		{
 			var req = new XMLHttpRequest();
 			
@@ -286,7 +286,7 @@ mxXmlRequest.prototype.create = function()
 	}
 	else if (typeof(ActiveXObject) != 'undefined')
 	{
-		return function()
+		return ()=>
 		{
 			// TODO: Implement binary option
 			return new ActiveXObject('Microsoft.XMLHTTP');
@@ -309,7 +309,7 @@ mxXmlRequest.prototype.create = function()
  * timeout - Optional timeout in ms before calling ontimeout.
  * ontimeout - Optional function to execute on timeout.
  */
-mxXmlRequest.prototype.send = function(onload, onerror, timeout, ontimeout)
+send = (onload, onerror, timeout, ontimeout)=>
 {
 	this.request = this.create();
 	
@@ -317,7 +317,7 @@ mxXmlRequest.prototype.send = function(onload, onerror, timeout, ontimeout)
 	{
 		if (onload != null)
 		{
-			this.request.onreadystatechange = mxUtils.bind(this, function()
+			this.request.onreadystatechange = mxUtils.bind(this, ()=>
 			{
 				if (this.isReady())
 				{
@@ -356,7 +356,7 @@ mxXmlRequest.prototype.send = function(onload, onerror, timeout, ontimeout)
  * Example:
  * 
  * (code)
- * request.setRequestHeaders = function(request, params)
+ * request.setRequestHeaders = (request, params)=>
  * {
  *   if (params != null)
  *   {
@@ -371,7 +371,7 @@ mxXmlRequest.prototype.send = function(onload, onerror, timeout, ontimeout)
  * Use the code above before calling <send> if you require a
  * multipart/form-data request.   
  */
-mxXmlRequest.prototype.setRequestHeaders = function(request, params)
+setRequestHeaders = (request, params)=>
 {
 	if (params != null)
 	{
@@ -390,7 +390,7 @@ mxXmlRequest.prototype.setRequestHeaders = function(request, params)
  * docs - Document that contains the form element.
  * target - Target to send the form result to.
  */
-mxXmlRequest.prototype.simulate = function(doc, target)
+simulate = (doc, target)=>
 {
 	doc = doc || document;
 	var old = null;

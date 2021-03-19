@@ -25,28 +25,28 @@ function mxAnimation(delay)
  * Extends mxEventSource.
  */
 mxAnimation.prototype = new mxEventSource();
-mxAnimation.prototype.constructor = mxAnimation;
+constructor = mxAnimation;
 
 /**
  * Variable: delay
  * 
  * Specifies the delay between the animation steps. Defaul is 30ms.
  */
-mxAnimation.prototype.delay = null;
+delay = null;
 
 /**
  * Variable: thread
  * 
  * Reference to the thread while the animation is running.
  */
-mxAnimation.prototype.thread = null;
+thread = null;
 
 /**
  * Function: isRunning
  * 
  * Returns true if the animation is running.
  */
-mxAnimation.prototype.isRunning = function()
+isRunning = ()=>
 {
 	return this.thread != null;
 };
@@ -56,7 +56,7 @@ mxAnimation.prototype.isRunning = function()
  *
  * Starts the animation by repeatedly invoking updateAnimation.
  */
-mxAnimation.prototype.startAnimation = function()
+startAnimation = ()=>
 {
 	if (this.thread == null)
 	{
@@ -71,7 +71,7 @@ mxAnimation.prototype.startAnimation = function()
  * when finished, startAnimation to resume. This is called whenever the
  * timer fires and fires an mxEvent.EXECUTE event with no properties.
  */
-mxAnimation.prototype.updateAnimation = function()
+updateAnimation = ()=>
 {
 	this.fireEvent(new mxEventObject(mxEvent.EXECUTE));
 };
@@ -81,7 +81,7 @@ mxAnimation.prototype.updateAnimation = function()
  *
  * Stops the animation by deleting the timer and fires an <mxEvent.DONE>.
  */
-mxAnimation.prototype.stopAnimation = function()
+stopAnimation = ()=>
 {
 	if (this.thread != null)
 	{

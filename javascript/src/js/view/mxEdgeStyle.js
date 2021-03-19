@@ -25,7 +25,7 @@ var mxEdgeStyle =
 	 * object as follows:
 	 * 
 	 * (code)
-	 * mxEdgeStyle.MyStyle = function(state, source, target, points, result)
+	 * mxEdgeStyle.MyStyle = (state, source, target, points, result)=>
 	 * {
 	 *   if (source != null && target != null)
 	 *   {
@@ -95,7 +95,7 @@ var mxEdgeStyle =
 	 * result - Array of <mxPoints> that represent the actual points of the
 	 * edge.
 	 */
-	 EntityRelation: function(state, source, target, points, result)
+	 EntityRelation: (state, source, target, points, result)=>
 	 {
 		var view = state.view;
 	 	var graph = view.graph;
@@ -225,7 +225,7 @@ var mxEdgeStyle =
 	 * 
 	 * Implements a self-reference, aka. loop.
 	 */
-	Loop: function(state, source, target, points, result)
+	Loop: (state, source, target, points, result)=>
 	{
 		var pts = state.absolutePoints;
 		
@@ -335,7 +335,7 @@ var mxEdgeStyle =
 	 * unspecified. See <EntityRelation> for a description of the
 	 * parameters.
 	 */
-	ElbowConnector: function(state, source, target, points, result)
+	ElbowConnector: (state, source, target, points, result)=>
 	{
 		var pt = (points != null && points.length > 0) ? points[0] : null;
 
@@ -395,7 +395,7 @@ var mxEdgeStyle =
 	 * Implements a vertical elbow edge. See <EntityRelation> for a description
 	 * of the parameters.
 	 */
-	SideToSide: function(state, source, target, points, result)
+	SideToSide: (state, source, target, points, result)=>
 	{
 		var view = state.view;
 		var pt = (points != null && points.length > 0) ? points[0] : null;
@@ -486,7 +486,7 @@ var mxEdgeStyle =
 	 * Implements a horizontal elbow edge. See <EntityRelation> for a
 	 * description of the parameters.
 	 */
-	TopToBottom: function(state, source, target, points, result)
+	TopToBottom: (state, source, target, points, result)=>
 	{
 		var view = state.view;
 		var pt = (points != null && points.length > 0) ? points[0] : null;
@@ -589,7 +589,7 @@ var mxEdgeStyle =
 	 * edge.
 	 *
 	 */
-	SegmentConnector: function(state, sourceScaled, targetScaled, controlHints, result)
+	SegmentConnector: (state, sourceScaled, targetScaled, controlHints, result)=>
 	{
 		// Creates array of all way- and terminalpoints
 		var pts = mxEdgeStyle.scalePointArray(state.absolutePoints, state.view.scale);
@@ -940,7 +940,7 @@ var mxEdgeStyle =
 	VERTEX_MASK: 3072,
 	// mxEdgeStyle.SOURCE_MASK | mxEdgeStyle.TARGET_MASK,
 	
-	getJettySize: function(state, isSource)
+	getJettySize: (state, isSource)=>
 	{
 		var value = mxUtils.getValue(state.style, (isSource) ? mxConstants.STYLE_SOURCE_JETTY_SIZE :
 			mxConstants.STYLE_TARGET_JETTY_SIZE, mxUtils.getValue(state.style,
@@ -976,7 +976,7 @@ var mxEdgeStyle =
 	 * scale - the scaling to divide by
 	 * 
 	 */
-	scalePointArray: function(points, scale)
+	scalePointArray: (points, scale)=>
 	{
 		var result = [];
 
@@ -1015,7 +1015,7 @@ var mxEdgeStyle =
 	 * scale - the scaling to divide by
 	 * 
 	 */
-	scaleCellState: function(state, scale)
+	scaleCellState: (state, scale)=>
 	{
 		var result = null;
 
@@ -1051,7 +1051,7 @@ var mxEdgeStyle =
 	 * edge.
 	 * 
 	 */
-	OrthConnector: function(state, sourceScaled, targetScaled, controlHints, result)
+	OrthConnector: (state, sourceScaled, targetScaled, controlHints, result)=>
 	{
 		var graph = state.view.graph;
 		var sourceEdge = source == null ? false : graph.getModel().isEdge(source.cell);
@@ -1619,7 +1619,7 @@ var mxEdgeStyle =
 		}
 	},
 	
-	getRoutePattern: function(dir, quad, dx, dy)
+	getRoutePattern: (dir, quad, dx, dy)=>
 	{
 		var sourceIndex = dir[0] == mxConstants.DIRECTION_MASK_EAST ? 3
 				: dir[0];

@@ -41,7 +41,7 @@ mxUtils.extend(mxRhombus, mxShape);
  * 
  * Adds roundable support.
  */
-mxRhombus.prototype.isRoundable = function()
+isRoundable = ()=>
 {
 	return true;
 };
@@ -51,7 +51,7 @@ mxRhombus.prototype.isRoundable = function()
  * 
  * Generic painting implementation.
  */
-mxRhombus.prototype.paintVertexShape = function(c, x, y, w, h)
+paintVertexShape = (c, x, y, w, h)=>
 {
 	var hw = w / 2;
 	var hh = h / 2;

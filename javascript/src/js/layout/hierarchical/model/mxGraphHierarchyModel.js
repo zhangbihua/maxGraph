@@ -112,28 +112,28 @@ function mxGraphHierarchyModel(layout, vertices, roots, parent, tightenToSource)
  *
  * Stores the largest rank number allocated
  */
-mxGraphHierarchyModel.prototype.maxRank = null;
+maxRank = null;
 
 /**
  * Variable: vertexMapper
  *
  * Map from graph vertices to internal model nodes.
  */
-mxGraphHierarchyModel.prototype.vertexMapper = null;
+vertexMapper = null;
 
 /**
  * Variable: edgeMapper
  *
  * Map from graph edges to internal model edges
  */
-mxGraphHierarchyModel.prototype.edgeMapper = null;
+edgeMapper = null;
 
 /**
  * Variable: ranks
  *
  * Mapping from rank number to actual rank
  */
-mxGraphHierarchyModel.prototype.ranks = null;
+ranks = null;
 
 /**
  * Variable: roots
@@ -141,28 +141,28 @@ mxGraphHierarchyModel.prototype.ranks = null;
  * Store of roots of this hierarchy model, these are real graph cells, not
  * internal cells
  */
-mxGraphHierarchyModel.prototype.roots = null;
+roots = null;
 
 /**
  * Variable: parent
  *
  * The parent cell whose children are being laid out
  */
-mxGraphHierarchyModel.prototype.parent = null;
+parent = null;
 
 /**
  * Variable: dfsCount
  *
  * Count of the number of times the ancestor dfs has been used.
  */
-mxGraphHierarchyModel.prototype.dfsCount = 0;
+dfsCount = 0;
 
 /**
  * Variable: SOURCESCANSTARTRANK
  *
  * High value to start source layering scan rank value from.
  */
-mxGraphHierarchyModel.prototype.SOURCESCANSTARTRANK = 100000000;
+SOURCESCANSTARTRANK = 100000000;
 
 /**
  * Variable: tightenToSource
@@ -170,7 +170,7 @@ mxGraphHierarchyModel.prototype.SOURCESCANSTARTRANK = 100000000;
  * Whether or not to tighten the assigned ranks of vertices up towards
  * the source cells.
  */
-mxGraphHierarchyModel.prototype.tightenToSource = false;
+tightenToSource = false;
 
 /**
  * Function: createInternalCells
@@ -185,7 +185,7 @@ mxGraphHierarchyModel.prototype.tightenToSource = false;
  * internalVertices - The array of <mxGraphHierarchyNodes> to have their
  * information filled in using the real vertices.
  */
-mxGraphHierarchyModel.prototype.createInternalCells = function(layout, vertices, internalVertices)
+createInternalCells = (layout, vertices, internalVertices)=>
 {
 	var graph = layout.getGraph();
 
@@ -274,7 +274,7 @@ mxGraphHierarchyModel.prototype.createInternalCells = function(layout, vertices,
  * or sinks and working through each node in the relevant edge direction.
  * Starting at the sinks is basically a longest path layering algorithm.
 */
-mxGraphHierarchyModel.prototype.initialRank = function()
+initialRank = ()=>
 {
 	var startNodes = [];
 
@@ -428,7 +428,7 @@ mxGraphHierarchyModel.prototype.initialRank = function()
  * Fixes the layer assignments to the values stored in the nodes. Also needs
  * to create dummy nodes for edges that cross layers.
  */
-mxGraphHierarchyModel.prototype.fixRanks = function()
+fixRanks = ()=>
 {
 	var rankList = [];
 	this.ranks = [];
@@ -457,7 +457,7 @@ mxGraphHierarchyModel.prototype.fixRanks = function()
 		}
 	}
 
-	this.visit(function(parent, node, edge, layer, seen)
+	this.visit((parent, node, edge, layer, seen)=>
 	{
 		if (seen == 0 && node.maxRank < 0 && node.minRank < 0)
 		{
@@ -506,7 +506,7 @@ mxGraphHierarchyModel.prototype.fixRanks = function()
  * trackAncestors - Whether or not the search is to keep track all nodes
  * directly above this one in the search path.
  */
-mxGraphHierarchyModel.prototype.visit = function(visitor, dfsRoots, trackAncestors, seenNodes)
+visit = (visitor, dfsRoots, trackAncestors, seenNodes)=>
 {
 	// Run dfs through on all roots
 	if (dfsRoots != null)
@@ -558,7 +558,7 @@ mxGraphHierarchyModel.prototype.visit = function(visitor, dfsRoots, trackAncesto
  * ancestor node of the current node
  * layer - the layer on the dfs tree ( not the same as the model ranks )
  */
-mxGraphHierarchyModel.prototype.dfs = function(parent, root, connectingEdge, visitor, seen, layer)
+dfs = (parent, root, connectingEdge, visitor, seen, layer)=>
 {
 	if (root != null)
 	{
@@ -611,7 +611,7 @@ mxGraphHierarchyModel.prototype.dfs = function(parent, root, connectingEdge, vis
  * childHash - the new hash code for this node
  * layer - the layer on the dfs tree ( not the same as the model ranks )
  */
-mxGraphHierarchyModel.prototype.extendedDfs = function(parent, root, connectingEdge, visitor, seen, ancestors, childHash, layer)
+extendedDfs = (parent, root, connectingEdge, visitor, seen, ancestors, childHash, layer)=>
 {
 	// Explanation of custom hash set. Previously, the ancestors variable
 	// was passed through the dfs as a HashSet. The ancestors were copied

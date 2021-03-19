@@ -33,7 +33,7 @@
  *
  * (code)
  * var undoManager = new mxUndoManager();
- * var listener = function(sender, evt)
+ * var listener = (sender, evt)=>
  * {
  *   undoManager.undoableEditHappened(evt.getProperty('edit'));
  * };
@@ -80,7 +80,7 @@ function mxUndoManager(size)
  * Extends mxEventSource.
  */
 mxUndoManager.prototype = new mxEventSource();
-mxUndoManager.prototype.constructor = mxUndoManager;
+constructor = mxUndoManager;
 
 /**
  * Variable: size
@@ -88,28 +88,28 @@ mxUndoManager.prototype.constructor = mxUndoManager;
  * Maximum command history size. 0 means unlimited history. Default is
  * 100.
  */
-mxUndoManager.prototype.size = null;
+size = null;
 
 /**
  * Variable: history
  * 
  * Array that contains the steps of the command history.
  */
-mxUndoManager.prototype.history = null;
+history = null;
 
 /**
  * Variable: indexOfNextAdd
  * 
  * Index of the element to be added next.
  */
-mxUndoManager.prototype.indexOfNextAdd = 0;
+indexOfNextAdd = 0;
 
 /**
  * Function: isEmpty
  * 
  * Returns true if the history is empty.
  */
-mxUndoManager.prototype.isEmpty = function()
+isEmpty = ()=>
 {
 	return this.history.length == 0;
 };
@@ -119,7 +119,7 @@ mxUndoManager.prototype.isEmpty = function()
  * 
  * Clears the command history.
  */
-mxUndoManager.prototype.clear = function()
+clear = ()=>
 {
 	this.history = [];
 	this.indexOfNextAdd = 0;
@@ -131,7 +131,7 @@ mxUndoManager.prototype.clear = function()
  * 
  * Returns true if an undo is possible.
  */
-mxUndoManager.prototype.canUndo = function()
+canUndo = ()=>
 {
 	return this.indexOfNextAdd > 0;
 };
@@ -141,7 +141,7 @@ mxUndoManager.prototype.canUndo = function()
  * 
  * Undoes the last change.
  */
-mxUndoManager.prototype.undo = function()
+undo = ()=>
 {
     while (this.indexOfNextAdd > 0)
     {
@@ -161,7 +161,7 @@ mxUndoManager.prototype.undo = function()
  * 
  * Returns true if a redo is possible.
  */
-mxUndoManager.prototype.canRedo = function()
+canRedo = ()=>
 {
 	return this.indexOfNextAdd < this.history.length;
 };
@@ -171,7 +171,7 @@ mxUndoManager.prototype.canRedo = function()
  * 
  * Redoes the last change.
  */
-mxUndoManager.prototype.redo = function()
+redo = ()=>
 {
     var n = this.history.length;
     
@@ -193,7 +193,7 @@ mxUndoManager.prototype.redo = function()
  * 
  * Method to be called to add new undoable edits to the <history>.
  */
-mxUndoManager.prototype.undoableEditHappened = function(undoableEdit)
+undoableEditHappened = (undoableEdit)=>
 {
 	this.trim();
 	
@@ -214,7 +214,7 @@ mxUndoManager.prototype.undoableEditHappened = function(undoableEdit)
  * Removes all pending steps after <indexOfNextAdd> from the history,
  * invoking die on each edit. This is called from <undoableEditHappened>.
  */
-mxUndoManager.prototype.trim = function()
+trim = ()=>
 {
 	if (this.history.length > this.indexOfNextAdd)
 	{

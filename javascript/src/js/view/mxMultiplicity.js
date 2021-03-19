@@ -69,7 +69,7 @@ function mxMultiplicity(source, type, attr, value, min, max,
  * passed to <mxUtils.isNode> together with the source or target vertex
  * value as the first argument.
  */
-mxMultiplicity.prototype.type = null;
+type = null;
 
 /**
  * Variable: attr
@@ -77,7 +77,7 @@ mxMultiplicity.prototype.type = null;
  * Optional string that specifies the attributename to be passed to
  * <mxUtils.isNode> to check if the rule applies to a cell.
  */
-mxMultiplicity.prototype.attr = null;
+attr = null;
 
 /**
  * Variable: value
@@ -85,7 +85,7 @@ mxMultiplicity.prototype.attr = null;
  * Optional string that specifies the value of the attribute to be passed
  * to <mxUtils.isNode> to check if the rule applies to a cell.
  */
-mxMultiplicity.prototype.value = null;
+value = null;
 
 /**
  * Variable: source
@@ -93,7 +93,7 @@ mxMultiplicity.prototype.value = null;
  * Boolean that specifies if the rule is applied to the source or target
  * terminal of an edge.
  */
-mxMultiplicity.prototype.source = null;
+source = null;
 
 /**
  * Variable: min
@@ -101,7 +101,7 @@ mxMultiplicity.prototype.source = null;
  * Defines the minimum number of connections for which this rule applies.
  * Default is 0.
  */
-mxMultiplicity.prototype.min = null;
+min = null;
 
 /**
  * Variable: max
@@ -109,7 +109,7 @@ mxMultiplicity.prototype.min = null;
  * Defines the maximum number of connections for which this rule applies.
  * A value of 'n' means unlimited times. Default is 'n'. 
  */
-mxMultiplicity.prototype.max = null;
+max = null;
 
 /**
  * Variable: validNeighbors
@@ -118,7 +118,7 @@ mxMultiplicity.prototype.max = null;
  * this rule applies. The strings are used in <mxCell.is> on the opposite
  * terminal to check if the rule applies to the connection.
  */
-mxMultiplicity.prototype.validNeighbors = null;
+validNeighbors = null;
 
 /**
  * Variable: validNeighborsAllowed
@@ -126,7 +126,7 @@ mxMultiplicity.prototype.validNeighbors = null;
  * Boolean indicating if the list of validNeighbors are those that are allowed
  * for this rule or those that are not allowed for this rule.
  */
-mxMultiplicity.prototype.validNeighborsAllowed = true;
+validNeighborsAllowed = true;
 
 /**
  * Variable: countError
@@ -135,7 +135,7 @@ mxMultiplicity.prototype.validNeighborsAllowed = true;
  * connections for which the rule applies is smaller than <min> or greater
  * than <max>.
  */
-mxMultiplicity.prototype.countError = null;
+countError = null;
 
 /**
  * Variable: typeError
@@ -143,7 +143,7 @@ mxMultiplicity.prototype.countError = null;
  * Holds the localized error message to be displayed if the type of the
  * neighbor for a connection does not match the rule.
  */
-mxMultiplicity.prototype.typeError = null;
+typeError = null;
 
 /**
  * Function: check
@@ -160,7 +160,7 @@ mxMultiplicity.prototype.typeError = null;
  * sourceOut - Number of outgoing edges from the source terminal.
  * targetIn - Number of incoming edges for the target terminal.
  */
-mxMultiplicity.prototype.check = function(graph, edge, source, target, sourceOut, targetIn)
+check = (graph, edge, source, target, sourceOut, targetIn)=>
 {
 	var error = '';
 
@@ -194,7 +194,7 @@ mxMultiplicity.prototype.check = function(graph, edge, source, target, sourceOut
  * Checks if there are any valid neighbours in <validNeighbors>. This is only
  * called if <validNeighbors> is a non-empty array.
  */
-mxMultiplicity.prototype.checkNeighbors = function(graph, edge, source, target)
+checkNeighbors = (graph, edge, source, target)=>
 {
 	var sourceValue = graph.model.getValue(source);
 	var targetValue = graph.model.getValue(target);
@@ -227,7 +227,7 @@ mxMultiplicity.prototype.checkNeighbors = function(graph, edge, source, target)
  * given cell is the source or target of the given edge, depending on
  * <source>. This implementation uses <checkType> on the terminal's value.
  */
-mxMultiplicity.prototype.checkTerminal = function(graph, terminal, edge)
+checkTerminal = (graph, terminal, edge)=>
 {
 	var value = graph.model.getValue(terminal);
 	
@@ -239,7 +239,7 @@ mxMultiplicity.prototype.checkTerminal = function(graph, terminal, edge)
  * 
  * Checks the type of the given value.
  */
-mxMultiplicity.prototype.checkType = function(graph, value, type, attr, attrValue)
+checkType = (graph, value, type, attr, attrValue)=>
 {
 	if (value != null)
 	{

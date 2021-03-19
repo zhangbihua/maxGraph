@@ -21,7 +21,7 @@ var mxStyleRegistry =
 	 *
 	 * Puts the given object into the registry under the given name.
 	 */
-	putValue: function(name, obj)
+	putValue: (name, obj)=>
 	{
 		mxStyleRegistry.values[name] = obj;
 	},
@@ -31,7 +31,7 @@ var mxStyleRegistry =
 	 *
 	 * Returns the value associated with the given name.
 	 */
-	getValue: function(name)
+	getValue: (name)=>
 	{
 		return mxStyleRegistry.values[name];
 	},
@@ -41,7 +41,7 @@ var mxStyleRegistry =
 	 * 
 	 * Returns the name for the given value.
 	 */
-	getName: function(value)
+	getName: (value)=>
 	{
 		for (var key in mxStyleRegistry.values)
 		{

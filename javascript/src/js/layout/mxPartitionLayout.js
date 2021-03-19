@@ -36,7 +36,7 @@ function mxPartitionLayout(graph, horizontal, spacing, border)
  * Extends mxGraphLayout.
  */
 mxPartitionLayout.prototype = new mxGraphLayout();
-mxPartitionLayout.prototype.constructor = mxPartitionLayout;
+constructor = mxPartitionLayout;
 
 /**
  * Variable: horizontal
@@ -44,7 +44,7 @@ mxPartitionLayout.prototype.constructor = mxPartitionLayout;
  * Boolean indicating the direction in which the space is partitioned.
  * Default is true.
  */
-mxPartitionLayout.prototype.horizontal = null;
+horizontal = null;
 
 /**
  * Variable: spacing
@@ -52,7 +52,7 @@ mxPartitionLayout.prototype.horizontal = null;
  * Integer that specifies the absolute spacing in pixels between the
  * children. Default is 0.
  */
-mxPartitionLayout.prototype.spacing = null;
+spacing = null;
 
 /**
  * Variable: border
@@ -60,21 +60,21 @@ mxPartitionLayout.prototype.spacing = null;
  * Integer that specifies the absolute inset in pixels for the parent that
  * contains the children. Default is 0.
  */
-mxPartitionLayout.prototype.border = null;
+border = null;
 
 /**
  * Variable: resizeVertices
  * 
  * Boolean that specifies if vertices should be resized. Default is true.
  */
-mxPartitionLayout.prototype.resizeVertices = true;
+resizeVertices = true;
 
 /**
  * Function: isHorizontal
  * 
  * Returns <horizontal>.
  */
-mxPartitionLayout.prototype.isHorizontal = function()
+isHorizontal = ()=>
 {
 	return this.horizontal;
 };
@@ -84,7 +84,7 @@ mxPartitionLayout.prototype.isHorizontal = function()
  * 
  * Implements <mxGraphLayout.moveCell>.
  */
-mxPartitionLayout.prototype.moveCell = function(cell, x, y)
+moveCell = (cell, x, y)=>
 {
 	var model = this.graph.getModel();
 	var parent = model.getParent(cell);
@@ -130,7 +130,7 @@ mxPartitionLayout.prototype.moveCell = function(cell, x, y)
  * Implements <mxGraphLayout.execute>. All children where <isVertexIgnored>
  * returns false and <isVertexMovable> returns true are modified.
  */
-mxPartitionLayout.prototype.execute = function(parent)
+execute = (parent)=>
 {
 	var horizontal = this.isHorizontal();
 	var model = this.graph.getModel();

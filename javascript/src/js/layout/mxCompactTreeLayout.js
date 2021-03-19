@@ -32,21 +32,21 @@ function mxCompactTreeLayout(graph, horizontal, invert)
  * Extends mxGraphLayout.
  */
 mxCompactTreeLayout.prototype = new mxGraphLayout();
-mxCompactTreeLayout.prototype.constructor = mxCompactTreeLayout;
+constructor = mxCompactTreeLayout;
 
 /**
  * Variable: horizontal
  *
  * Specifies the orientation of the layout. Default is true.
  */
-mxCompactTreeLayout.prototype.horizontal = null;	 
+horizontal = null;
 
 /**
  * Variable: invert
  *
  * Specifies if edge directions should be inverted. Default is false.
  */
-mxCompactTreeLayout.prototype.invert = null;	 
+invert = null;
 
 /**
  * Variable: resizeParent
@@ -54,7 +54,7 @@ mxCompactTreeLayout.prototype.invert = null;
  * If the parents should be resized to match the width/height of the
  * children. Default is true.
  */
-mxCompactTreeLayout.prototype.resizeParent = true;
+resizeParent = true;
 
 /**
  * Variable: maintainParentLocation
@@ -63,42 +63,42 @@ mxCompactTreeLayout.prototype.resizeParent = true;
  * top, left corner stays the same before and after execution of
  * the layout. Default is false for backwards compatibility.
  */
-mxCompactTreeLayout.prototype.maintainParentLocation = false;
+maintainParentLocation = false;
 
 /**
  * Variable: groupPadding
  * 
  * Padding added to resized parents. Default is 10.
  */
-mxCompactTreeLayout.prototype.groupPadding = 10;
+groupPadding = 10;
 
 /**
  * Variable: groupPaddingTop
  * 
  * Top padding added to resized parents. Default is 0.
  */
-mxCompactTreeLayout.prototype.groupPaddingTop = 0;
+groupPaddingTop = 0;
 
 /**
  * Variable: groupPaddingRight
  * 
  * Right padding added to resized parents. Default is 0.
  */
-mxCompactTreeLayout.prototype.groupPaddingRight = 0;
+groupPaddingRight = 0;
 
 /**
  * Variable: groupPaddingBottom
  * 
  * Bottom padding added to resized parents. Default is 0.
  */
-mxCompactTreeLayout.prototype.groupPaddingBottom = 0;
+groupPaddingBottom = 0;
 
 /**
  * Variable: groupPaddingLeft
  * 
  * Left padding added to resized parents. Default is 0.
  */
-mxCompactTreeLayout.prototype.groupPaddingLeft = 0;
+groupPaddingLeft = 0;
 
 /**
  * Variable: parentsChanged
@@ -106,7 +106,7 @@ mxCompactTreeLayout.prototype.groupPaddingLeft = 0;
  * A set of the parents that need updating based on children
  * process as part of the layout.
  */
-mxCompactTreeLayout.prototype.parentsChanged = null;
+parentsChanged = null;
 
 /**
  * Variable: moveTree
@@ -114,7 +114,7 @@ mxCompactTreeLayout.prototype.parentsChanged = null;
  * Specifies if the tree should be moved to the top, left corner
  * if it is inside a top-level layer. Default is false.
  */
-mxCompactTreeLayout.prototype.moveTree = false;
+moveTree = false;
 
 /**
  * Variable: visited
@@ -122,21 +122,21 @@ mxCompactTreeLayout.prototype.moveTree = false;
  * Specifies if the tree should be moved to the top, left corner
  * if it is inside a top-level layer. Default is false.
  */
-mxCompactTreeLayout.prototype.visited = null;
+visited = null;
 
 /**
  * Variable: levelDistance
  *
  * Holds the levelDistance. Default is 10.
  */
-mxCompactTreeLayout.prototype.levelDistance = 10;
+levelDistance = 10;
 
 /**
  * Variable: nodeDistance
  *
  * Holds the nodeDistance. Default is 20.
  */
-mxCompactTreeLayout.prototype.nodeDistance = 20;
+nodeDistance = 20;
 
 /**
  * Variable: resetEdges
@@ -144,28 +144,28 @@ mxCompactTreeLayout.prototype.nodeDistance = 20;
  * Specifies if all edge points of traversed edges should be removed.
  * Default is true.
  */
-mxCompactTreeLayout.prototype.resetEdges = true;
+resetEdges = true;
 
 /**
  * Variable: prefHozEdgeSep
  * 
  * The preferred horizontal distance between edges exiting a vertex.
  */
-mxCompactTreeLayout.prototype.prefHozEdgeSep = 5;
+prefHozEdgeSep = 5;
 
 /**
  * Variable: prefVertEdgeOff
  * 
  * The preferred vertical offset between edges exiting a vertex.
  */
-mxCompactTreeLayout.prototype.prefVertEdgeOff = 4;
+prefVertEdgeOff = 4;
 
 /**
  * Variable: minEdgeJetty
  * 
  * The minimum distance for an edge jetty from a vertex.
  */
-mxCompactTreeLayout.prototype.minEdgeJetty = 8;
+minEdgeJetty = 8;
 
 /**
  * Variable: channelBuffer
@@ -173,14 +173,14 @@ mxCompactTreeLayout.prototype.minEdgeJetty = 8;
  * The size of the vertical buffer in the center of inter-rank channels
  * where edge control points should not be placed.
  */
-mxCompactTreeLayout.prototype.channelBuffer = 4;
+channelBuffer = 4;
 
 /**
  * Variable: edgeRouting
  * 
  * Whether or not to apply the internal tree edge routing.
  */
-mxCompactTreeLayout.prototype.edgeRouting = true;
+edgeRouting = true;
 
 /**
  * Variable: sortEdges
@@ -188,7 +188,7 @@ mxCompactTreeLayout.prototype.edgeRouting = true;
  * Specifies if edges should be sorted according to the order of their
  * opposite terminal cell in the model.
  */
-mxCompactTreeLayout.prototype.sortEdges = false;
+sortEdges = false;
 
 /**
  * Variable: alignRanks
@@ -196,7 +196,7 @@ mxCompactTreeLayout.prototype.sortEdges = false;
  * Whether or not the tops of cells in each rank should be aligned
  * across the rank
  */
-mxCompactTreeLayout.prototype.alignRanks = false;
+alignRanks = false;
 
 /**
  * Variable: maxRankHeight
@@ -204,14 +204,14 @@ mxCompactTreeLayout.prototype.alignRanks = false;
  * An array of the maximum height of cells (relative to the layout direction)
  * per rank
  */
-mxCompactTreeLayout.prototype.maxRankHeight = null;
+maxRankHeight = null;
 
 /**
  * Variable: root
  * 
  * The cell to use as the root of the tree
  */
-mxCompactTreeLayout.prototype.root = null;
+root = null;
 
 /**
  * Variable: node
@@ -219,7 +219,7 @@ mxCompactTreeLayout.prototype.root = null;
  * The internal node representation of the root cell. Do not set directly
  * , this value is only exposed to assist with post-processing functionality
  */
-mxCompactTreeLayout.prototype.node = null;
+node = null;
 
 /**
  * Function: isVertexIgnored
@@ -231,9 +231,9 @@ mxCompactTreeLayout.prototype.node = null;
  * 
  * vertex - <mxCell> whose ignored state should be returned.
  */
-mxCompactTreeLayout.prototype.isVertexIgnored = function(vertex)
+isVertexIgnored = (vertex)=>
 {
-	return mxGraphLayout.prototype.isVertexIgnored.apply(this, arguments) ||
+	return isVertexIgnored.apply(this, arguments) ||
 		this.graph.getConnections(vertex).length == 0;
 };
 
@@ -242,7 +242,7 @@ mxCompactTreeLayout.prototype.isVertexIgnored = function(vertex)
  * 
  * Returns <horizontal>.
  */
-mxCompactTreeLayout.prototype.isHorizontal = function()
+isHorizontal = ()=>
 {
 	return this.horizontal;
 };
@@ -262,7 +262,7 @@ mxCompactTreeLayout.prototype.isHorizontal = function()
  * root - Optional <mxCell> that will be used as the root of the tree.
  * Overrides <root> if specified.
  */
-mxCompactTreeLayout.prototype.execute = function(parent, root)
+execute = (parent, root)=>
 {
 	this.parent = parent;
 	var model = this.graph.getModel();
@@ -429,7 +429,7 @@ mxCompactTreeLayout.prototype.execute = function(parent, root)
  * 
  * Moves the specified node and all of its children by the given amount.
  */
-mxCompactTreeLayout.prototype.moveNode = function(node, dx, dy)
+moveNode = (node, dx, dy)=>
 {
 	node.x += dx;
 	node.y += dy;
@@ -450,11 +450,11 @@ mxCompactTreeLayout.prototype.moveNode = function(node, dx, dy)
  * 
  * Called if <sortEdges> is true to sort the array of outgoing edges in place.
  */
-mxCompactTreeLayout.prototype.sortOutgoingEdges = function(source, edges)
+sortOutgoingEdges = (source, edges)=>
 {
 	var lookup = new mxDictionary();
 	
-	edges.sort(function(e1, e2)
+	edges.sort((e1, e2)=>
 	{
 		var end1 = e1.getTerminal(e1.getTerminal(false) == source);
 		var p1 = lookup.get(end1);
@@ -484,7 +484,7 @@ mxCompactTreeLayout.prototype.sortOutgoingEdges = function(source, edges)
  * Stores the maximum height (relative to the layout
  * direction) of cells in each rank
  */
-mxCompactTreeLayout.prototype.findRankHeights = function(node, rank)
+findRankHeights = (node, rank)=>
 {
 	if (this.maxRankHeight[rank] == null || this.maxRankHeight[rank] < node.height)
 	{
@@ -506,7 +506,7 @@ mxCompactTreeLayout.prototype.findRankHeights = function(node, rank)
  * Set the cells heights (relative to the layout
  * direction) when the tops of each rank are to be aligned
  */
-mxCompactTreeLayout.prototype.setCellHeights = function(node, rank)
+setCellHeights = (node, rank)=>
 {
 	if (this.maxRankHeight[rank] != null && this.maxRankHeight[rank] > node.height)
 	{
@@ -529,7 +529,7 @@ mxCompactTreeLayout.prototype.setCellHeights = function(node, rank)
  * Makes sure the specified parent is never left by the
  * algorithm.
  */
-mxCompactTreeLayout.prototype.dfs = function(cell, parent)
+dfs = (cell, parent)=>
 {
 	var id = mxCellPath.create(cell);
 	var node = null;
@@ -598,7 +598,7 @@ mxCompactTreeLayout.prototype.dfs = function(cell, parent)
  * Starts the actual compact tree layout algorithm
  * at the given node.
  */
-mxCompactTreeLayout.prototype.layout = function(node)
+layout = (node)=>
 {
 	if (node != null)
 	{
@@ -624,7 +624,7 @@ mxCompactTreeLayout.prototype.layout = function(node)
 /**
  * Function: horizontalLayout
  */
-mxCompactTreeLayout.prototype.horizontalLayout = function(node, x0, y0, bounds)
+horizontalLayout = (node, x0, y0, bounds)=>
 {
 	node.x += x0 + node.offsetX;
 	node.y += y0 + node.offsetY;
@@ -651,7 +651,7 @@ mxCompactTreeLayout.prototype.horizontalLayout = function(node, x0, y0, bounds)
 /**
  * Function: verticalLayout
  */
-mxCompactTreeLayout.prototype.verticalLayout = function(node, parent, x0, y0, bounds)
+verticalLayout = (node, parent, x0, y0, bounds)=>
 {
 	node.x += x0 + node.offsetY;
 	node.y += y0 + node.offsetX;
@@ -678,7 +678,7 @@ mxCompactTreeLayout.prototype.verticalLayout = function(node, parent, x0, y0, bo
 /**
  * Function: attachParent
  */
-mxCompactTreeLayout.prototype.attachParent = function(node, height)
+attachParent = (node, height)=>
 {
 	var x = this.nodeDistance + this.levelDistance;
 	var y2 = (height - node.width) / 2 - this.nodeDistance;
@@ -696,7 +696,7 @@ mxCompactTreeLayout.prototype.attachParent = function(node, height)
 /**
  * Function: layoutLeaf
  */
-mxCompactTreeLayout.prototype.layoutLeaf = function(node)
+layoutLeaf = (node)=>
 {
 	var dist = 2 * this.nodeDistance;
 	
@@ -712,7 +712,7 @@ mxCompactTreeLayout.prototype.layoutLeaf = function(node)
 /**
  * Function: join
  */
-mxCompactTreeLayout.prototype.join = function(node)
+join = (node)=>
 {
 	var dist = 2 * this.nodeDistance;
 	
@@ -738,7 +738,7 @@ mxCompactTreeLayout.prototype.join = function(node)
 /**
  * Function: merge
  */
-mxCompactTreeLayout.prototype.merge = function(p1, p2)
+merge = (p1, p2)=>
 {
 	var x = 0;
 	var y = 0;
@@ -792,7 +792,7 @@ mxCompactTreeLayout.prototype.merge = function(p1, p2)
 /**
  * Function: offset
  */
-mxCompactTreeLayout.prototype.offset = function(p1, p2, a1, a2, b1, b2)
+offset = (p1, p2, a1, a2, b1, b2)=>
 {
 	var d = 0;
 	
@@ -848,7 +848,7 @@ mxCompactTreeLayout.prototype.offset = function(p1, p2, a1, a2, b1, b2)
 /**
  * Function: bridge
  */
-mxCompactTreeLayout.prototype.bridge = function(line1, x1, y1, line2, x2, y2)
+bridge = (line1, x1, y1, line2, x2, y2)=>
 {
 	var dx = x2 + line2.dx - x1;
 	var dy = 0;
@@ -873,7 +873,7 @@ mxCompactTreeLayout.prototype.bridge = function(line1, x1, y1, line2, x2, y2)
 /**
  * Function: createNode
  */
-mxCompactTreeLayout.prototype.createNode = function(cell)
+createNode = (cell)=>
 {
 	var node = new Object();
 	node.cell = cell;
@@ -908,7 +908,7 @@ mxCompactTreeLayout.prototype.createNode = function(cell)
 /**
  * Function: apply
  */
-mxCompactTreeLayout.prototype.apply = function(node, bounds)
+apply = (node, bounds)=>
 {
 	var model = this.graph.getModel();
 	var cell = node.cell;
@@ -952,7 +952,7 @@ mxCompactTreeLayout.prototype.apply = function(node, bounds)
 /**
  * Function: createLine
  */
-mxCompactTreeLayout.prototype.createLine = function(dx, dy, next)
+createLine = (dx, dy, next)=>
 {
 	var line = new Object();
 	line.dx = dx;
@@ -969,7 +969,7 @@ mxCompactTreeLayout.prototype.createLine = function(dx, dy, next)
  * implementation adjusts the group to just fit around the children with 
  * a padding.
  */
-mxCompactTreeLayout.prototype.adjustParents = function()
+adjustParents = ()=>
 {
 	var tmp = [];
 	
@@ -987,7 +987,7 @@ mxCompactTreeLayout.prototype.adjustParents = function()
  *
  * Moves the specified node and all of its children by the given amount.
  */
-mxCompactTreeLayout.prototype.localEdgeProcessing = function(node)
+localEdgeProcessing = (node)=>
 {
 	this.processNodeOutgoing(node);
 	var child = node.child;
@@ -1004,7 +1004,7 @@ mxCompactTreeLayout.prototype.localEdgeProcessing = function(node)
  *
  * Separates the x position of edges as they connect to vertices
  */
-mxCompactTreeLayout.prototype.processNodeOutgoing = function(node)
+processNodeOutgoing = (node)=>
 {
 	var child = node.child;
 	var parentCell = node.cell;
@@ -1027,7 +1027,7 @@ mxCompactTreeLayout.prototype.processNodeOutgoing = function(node)
 		child = child.next;
 	}
 
-	sortedCells.sort(WeightedCellSorter.prototype.compare);
+	sortedCells.sort(compare);
 
 	var availableWidth = node.width;
 

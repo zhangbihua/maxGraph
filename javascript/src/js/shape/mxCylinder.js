@@ -44,21 +44,21 @@ mxUtils.extend(mxCylinder, mxShape);
  * Defines the maximum height of the top and bottom part
  * of the cylinder shape.
  */
-mxCylinder.prototype.maxHeight = 40;
+maxHeight = 40;
 
 /**
  * Variable: svgStrokeTolerance
  *
  * Sets stroke tolerance to 0 for SVG.
  */
-mxCylinder.prototype.svgStrokeTolerance = 0;
+svgStrokeTolerance = 0;
 
 /**
  * Function: paintVertexShape
  * 
  * Redirects to redrawPath for subclasses to work.
  */
-mxCylinder.prototype.paintVertexShape = function(c, x, y, w, h)
+paintVertexShape = (c, x, y, w, h)=>
 {
 	c.translate(x, y);
 	c.begin();
@@ -80,7 +80,7 @@ mxCylinder.prototype.paintVertexShape = function(c, x, y, w, h)
  *
  * Returns the cylinder size.
  */
-mxCylinder.prototype.getCylinderSize = function(x, y, w, h)
+getCylinderSize = (x, y, w, h)=>
 {
 	return Math.min(this.maxHeight, Math.round(h / 5));
 };
@@ -90,7 +90,7 @@ mxCylinder.prototype.getCylinderSize = function(x, y, w, h)
  *
  * Draws the path for this shape.
  */
-mxCylinder.prototype.redrawPath = function(c, x, y, w, h, isForeground)
+redrawPath = (c, x, y, w, h, isForeground)=>
 {
 	var dy = this.getCylinderSize(x, y, w, h);
 	

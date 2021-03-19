@@ -44,14 +44,14 @@ mxUtils.extend(mxImageShape, mxRectangleShape);
  *
  * Switch to preserve image aspect. Default is true.
  */
-mxImageShape.prototype.preserveImageAspect = true;
+preserveImageAspect = true;
 
 /**
  * Function: getSvgScreenOffset
  * 
  * Disables offset in IE9 for crisper image output.
  */
-mxImageShape.prototype.getSvgScreenOffset = function()
+getSvgScreenOffset = ()=>
 {
 	return 0;
 };
@@ -73,9 +73,9 @@ mxImageShape.prototype.getSvgScreenOffset = function()
  *
  * state - <mxCellState> of the corresponding cell.
  */
-mxImageShape.prototype.apply = function(state)
+apply = (state)=>
 {
-	mxShape.prototype.apply.apply(this, arguments);
+	apply.apply(this, arguments);
 	
 	this.fill = null;
 	this.stroke = null;
@@ -97,7 +97,7 @@ mxImageShape.prototype.apply = function(state)
  * Returns true if HTML is allowed for this shape. This implementation always
  * returns false.
  */
-mxImageShape.prototype.isHtmlAllowed = function()
+isHtmlAllowed = ()=>
 {
 	return !this.preserveImageAspect;
 };
@@ -109,7 +109,7 @@ mxImageShape.prototype.isHtmlAllowed = function()
  * this shape. This implementation falls back to <createVml>
  * so that the HTML creation is optional.
  */
-mxImageShape.prototype.createHtml = function()
+createHtml = ()=>
 {
 	var node = document.createElement('div');
 	node.style.position = 'absolute';
@@ -122,7 +122,7 @@ mxImageShape.prototype.createHtml = function()
  * 
  * Disables inherited roundable support.
  */
-mxImageShape.prototype.isRoundable = function(c, x, y, w, h)
+isRoundable = (c, x, y, w, h)=>
 {
 	return false;
 };
@@ -132,7 +132,7 @@ mxImageShape.prototype.isRoundable = function(c, x, y, w, h)
  * 
  * Generic background painting implementation.
  */
-mxImageShape.prototype.paintVertexShape = function(c, x, y, w, h)
+paintVertexShape = (c, x, y, w, h)=>
 {
 	if (this.image != null)
 	{
@@ -163,7 +163,7 @@ mxImageShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	}
 	else
 	{
-		mxRectangleShape.prototype.paintBackground.apply(this, arguments);
+		paintBackground.apply(this, arguments);
 	}
 };
 
@@ -172,7 +172,7 @@ mxImageShape.prototype.paintVertexShape = function(c, x, y, w, h)
  * 
  * Overrides <mxShape.redraw> to preserve the aspect ratio of images.
  */
-mxImageShape.prototype.redrawHtmlShape = function()
+redrawHtmlShape = ()=>
 {
 	this.node.style.left = Math.round(this.bounds.x) + 'px';
 	this.node.style.top = Math.round(this.bounds.y) + 'px';

@@ -25,7 +25,7 @@
  * (code)
  * var overlay = new mxCellOverlay(img, html);
  * graph.addCellOverlay(vertex, overlay);
- * overlay.addListener(mxEvent.CLICK, function(sender, evt)
+ * overlay.addListener(mxEvent.CLICK, (sender, evt)=>
  * {
  *   var cell = evt.getProperty('cell');
  *   graph.setSelectionCell(cell);
@@ -70,21 +70,21 @@ function mxCellOverlay(image, tooltip, align, verticalAlign, offset, cursor)
  * Extends mxEventSource.
  */
 mxCellOverlay.prototype = new mxEventSource();
-mxCellOverlay.prototype.constructor = mxCellOverlay;
+constructor = mxCellOverlay;
 
 /**
  * Variable: image
  *
  * Holds the <mxImage> to be used as the icon.
  */
-mxCellOverlay.prototype.image = null;
+image = null;
 
 /**
  * Variable: tooltip
  * 
  * Holds the optional string to be used as the tooltip.
  */
-mxCellOverlay.prototype.tooltip = null;
+tooltip = null;
 
 /**
  * Variable: align
@@ -93,7 +93,7 @@ mxCellOverlay.prototype.tooltip = null;
  * <mxConstants.ALIGN_RIGHT>. For edges, the overlay always appears in the
  * center of the edge.
  */
-mxCellOverlay.prototype.align = mxConstants.ALIGN_RIGHT;
+align = mxConstants.ALIGN_RIGHT;
 
 /**
  * Variable: verticalAlign
@@ -102,7 +102,7 @@ mxCellOverlay.prototype.align = mxConstants.ALIGN_RIGHT;
  * <mxConstants.ALIGN_BOTTOM>. For edges, the overlay always appears in the
  * center of the edge.
  */
-mxCellOverlay.prototype.verticalAlign = mxConstants.ALIGN_BOTTOM;
+verticalAlign = mxConstants.ALIGN_BOTTOM;
 
 /**
  * Variable: offset
@@ -110,14 +110,14 @@ mxCellOverlay.prototype.verticalAlign = mxConstants.ALIGN_BOTTOM;
  * Holds the offset as an <mxPoint>. The offset will be scaled according to the
  * current scale.
  */
-mxCellOverlay.prototype.offset = null;
+offset = null;
 
 /**
  * Variable: cursor
  * 
  * Holds the cursor for the overlay. Default is 'help'.
  */
-mxCellOverlay.prototype.cursor = null;
+cursor = null;
 
 /**
  * Variable: defaultOverlap
@@ -125,7 +125,7 @@ mxCellOverlay.prototype.cursor = null;
  * Defines the overlapping for the overlay, that is, the proportional distance
  * from the origin to the point defined by the alignment. Default is 0.5.
  */
-mxCellOverlay.prototype.defaultOverlap = 0.5;
+defaultOverlap = 0.5;
 
 /**
  * Function: getBounds
@@ -139,9 +139,9 @@ mxCellOverlay.prototype.defaultOverlap = 0.5;
  * orthogonal offset in px).
  * 
  * (code)
- * overlay.getBounds = function(state)
+ * overlay.getBounds = (state)=>
  * {
- *   var bounds = mxCellOverlay.prototype.getBounds.apply(this, arguments);
+ *   var bounds = getBounds.apply(this, arguments);
  *   
  *   if (state.view.graph.getModel().isEdge(state.cell))
  *   {
@@ -160,7 +160,7 @@ mxCellOverlay.prototype.defaultOverlap = 0.5;
  * state - <mxCellState> that represents the current state of the
  * associated cell.
  */
-mxCellOverlay.prototype.getBounds = function(state)
+getBounds = (state)=>
 {
 	var isEdge = state.view.graph.getModel().isEdge(state.cell);
 	var s = state.view.scale;
@@ -227,7 +227,7 @@ mxCellOverlay.prototype.getBounds = function(state)
  * Returns the textual representation of the overlay to be used as the
  * tooltip. This implementation returns <tooltip>.
  */
-mxCellOverlay.prototype.toString = function()
+toString = ()=>
 {
 	return this.tooltip;
 };

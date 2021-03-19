@@ -23,21 +23,21 @@ function mxPoint(x, y)
  *
  * Holds the x-coordinate of the point. Default is 0.
  */
-mxPoint.prototype.x = null;
+x = null;
 
 /**
  * Variable: y
  *
  * Holds the y-coordinate of the point. Default is 0.
  */
-mxPoint.prototype.y = null;
+y = null;
 
 /**
  * Function: equals
  * 
  * Returns true if the given object equals this point.
  */
-mxPoint.prototype.equals = function(obj)
+equals = (obj)=>
 {
 	return obj != null && obj.x == this.x && obj.y == this.y;
 };
@@ -47,7 +47,7 @@ mxPoint.prototype.equals = function(obj)
  *
  * Returns a clone of this <mxPoint>.
  */
-mxPoint.prototype.clone = function()
+clone = ()=>
 {
 	// Handles subclasses as well
 	return mxUtils.clone(this);

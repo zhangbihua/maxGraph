@@ -41,14 +41,14 @@ function mxCompositeLayout(graph, layouts, master)
  * Extends mxGraphLayout.
  */
 mxCompositeLayout.prototype = new mxGraphLayout();
-mxCompositeLayout.prototype.constructor = mxCompositeLayout;
+constructor = mxCompositeLayout;
 	
 /**
  * Variable: layouts
  * 
  * Holds the array of <mxGraphLayouts> that this layout contains.
  */
-mxCompositeLayout.prototype.layouts = null;
+layouts = null;
 
 /**
  * Variable: master
@@ -56,7 +56,7 @@ mxCompositeLayout.prototype.layouts = null;
  * Reference to the <mxGraphLayouts> that handles moves. If this is null
  * then the first layout in <layouts> is used.
  */
-mxCompositeLayout.prototype.master = null;
+master = null;
 
 /**
  * Function: moveCell
@@ -64,7 +64,7 @@ mxCompositeLayout.prototype.master = null;
  * Implements <mxGraphLayout.moveCell> by calling move on <master> or the first
  * layout in <layouts>.
  */
-mxCompositeLayout.prototype.moveCell = function(cell, x, y)
+moveCell = (cell, x, y)=>
 {
 	if (this.master != null)
 	{
@@ -82,7 +82,7 @@ mxCompositeLayout.prototype.moveCell = function(cell, x, y)
  * Implements <mxGraphLayout.execute> by executing all <layouts> in a
  * single transaction.
  */
-mxCompositeLayout.prototype.execute = function(parent)
+execute = (parent)=>
 {
 	var model = this.graph.getModel();
 	

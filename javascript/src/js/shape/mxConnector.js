@@ -40,10 +40,10 @@ mxUtils.extend(mxConnector, mxPolyline);
  * Updates the <boundingBox> for this shape using <createBoundingBox> and
  * <augmentBoundingBox> and stores the result in <boundingBox>.
  */
-mxConnector.prototype.updateBoundingBox = function()
+updateBoundingBox = ()=>
 {
 	this.useSvgBoundingBox = this.style != null && this.style[mxConstants.STYLE_CURVED] == 1;
-	mxShape.prototype.updateBoundingBox.apply(this, arguments);
+	updateBoundingBox.apply(this, arguments);
 };
 
 /**
@@ -51,7 +51,7 @@ mxConnector.prototype.updateBoundingBox = function()
  * 
  * Paints the line shape.
  */
-mxConnector.prototype.paintEdgeShape = function(c, pts)
+paintEdgeShape = (c, pts)=>
 {
 	// The indirection via functions for markers is needed in
 	// order to apply the offsets before painting the line and
@@ -59,7 +59,7 @@ mxConnector.prototype.paintEdgeShape = function(c, pts)
 	var sourceMarker = this.createMarker(c, pts, true);
 	var targetMarker = this.createMarker(c, pts, false);
 
-	mxPolyline.prototype.paintEdgeShape.apply(this, arguments);
+	paintEdgeShape.apply(this, arguments);
 	
 	// Disables shadows, dashed styles and fixes fill color for markers
 	c.setFillColor(this.stroke);
@@ -83,7 +83,7 @@ mxConnector.prototype.paintEdgeShape = function(c, pts)
  * Prepares the marker by adding offsets in pts and returning a function to
  * paint the marker.
  */
-mxConnector.prototype.createMarker = function(c, pts, source)
+createMarker = (c, pts, source)=>
 {
 	var result = null;
 	var n = pts.length;
@@ -128,9 +128,9 @@ mxConnector.prototype.createMarker = function(c, pts, source)
  *
  * Augments the bounding box with the strokewidth and shadow offsets.
  */
-mxConnector.prototype.augmentBoundingBox = function(bbox)
+augmentBoundingBox = (bbox)=>
 {
-	mxShape.prototype.augmentBoundingBox.apply(this, arguments);
+	augmentBoundingBox.apply(this, arguments);
 	
 	// Adds marker sizes
 	var size = 0;

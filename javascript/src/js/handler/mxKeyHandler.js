@@ -21,7 +21,7 @@
  * 
  * (code)
  * var keyHandler = new mxKeyHandler(graph);
- * keyHandler.bindKey(46, function(evt)
+ * keyHandler.bindKey(46, (evt)=>
  * {
  *   if (graph.isEnabled())
  *   {
@@ -40,7 +40,7 @@
  * code can be used.
  *
  * (code)
- * keyHandler.getFunction = function(evt)
+ * keyHandler.getFunction = (evt)=>
  * {
  *   if (evt != null)
  *   {
@@ -76,7 +76,7 @@ function mxKeyHandler(graph, target)
 		this.controlKeys = [];
 		this.controlShiftKeys = [];
 		
-		this.keydownHandler = mxUtils.bind(this, function(evt)
+		this.keydownHandler = mxUtils.bind(this, (evt)=>
 		{
 			this.keyDown(evt);
 		});
@@ -88,7 +88,7 @@ function mxKeyHandler(graph, target)
 		if (mxClient.IS_IE)
 		{
 			mxEvent.addListener(window, 'unload',
-				mxUtils.bind(this, function()
+				mxUtils.bind(this, ()=>
 				{
 					this.destroy();
 				})
@@ -102,7 +102,7 @@ function mxKeyHandler(graph, target)
  * 
  * Reference to the <mxGraph> associated with this handler.
  */
-mxKeyHandler.prototype.graph = null;
+graph = null;
 
 /**
  * Variable: target
@@ -110,42 +110,42 @@ mxKeyHandler.prototype.graph = null;
  * Reference to the target DOM, that is, the DOM node where the key event
  * listeners are installed.
  */
-mxKeyHandler.prototype.target = null;
+target = null;
 
 /**
  * Variable: normalKeys
  * 
  * Maps from keycodes to functions for non-pressed control keys.
  */
-mxKeyHandler.prototype.normalKeys = null;
+normalKeys = null;
 
 /**
  * Variable: shiftKeys
  * 
  * Maps from keycodes to functions for pressed shift keys.
  */
-mxKeyHandler.prototype.shiftKeys = null;
+shiftKeys = null;
 
 /**
  * Variable: controlKeys
  * 
  * Maps from keycodes to functions for pressed control keys.
  */
-mxKeyHandler.prototype.controlKeys = null;
+controlKeys = null;
 
 /**
  * Variable: controlShiftKeys
  * 
  * Maps from keycodes to functions for pressed control and shift keys.
  */
-mxKeyHandler.prototype.controlShiftKeys = null;
+controlShiftKeys = null;
 
 /**
  * Variable: enabled
  * 
  * Specifies if events are handled. Default is true.
  */
-mxKeyHandler.prototype.enabled = true;
+enabled = true;
 
 /**
  * Function: isEnabled
@@ -153,7 +153,7 @@ mxKeyHandler.prototype.enabled = true;
  * Returns true if events are handled. This implementation returns
  * <enabled>.
  */
-mxKeyHandler.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -167,7 +167,7 @@ mxKeyHandler.prototype.isEnabled = function()
  * 
  * enabled - Boolean that specifies the new enabled state.
  */
-mxKeyHandler.prototype.setEnabled = function(enabled)
+setEnabled = (enabled)=>
 {
 	this.enabled = enabled;
 };
@@ -183,7 +183,7 @@ mxKeyHandler.prototype.setEnabled = function(enabled)
  * code - Integer that specifies the keycode.
  * funct - JavaScript function that takes the key event as an argument.
  */
-mxKeyHandler.prototype.bindKey = function(code, funct)
+bindKey = (code, funct)=>
 {
 	this.normalKeys[code] = funct;
 };
@@ -199,7 +199,7 @@ mxKeyHandler.prototype.bindKey = function(code, funct)
  * code - Integer that specifies the keycode.
  * funct - JavaScript function that takes the key event as an argument.
  */
-mxKeyHandler.prototype.bindShiftKey = function(code, funct)
+bindShiftKey = (code, funct)=>
 {
 	this.shiftKeys[code] = funct;
 };
@@ -215,7 +215,7 @@ mxKeyHandler.prototype.bindShiftKey = function(code, funct)
  * code - Integer that specifies the keycode.
  * funct - JavaScript function that takes the key event as an argument.
  */
-mxKeyHandler.prototype.bindControlKey = function(code, funct)
+bindControlKey = (code, funct)=>
 {
 	this.controlKeys[code] = funct;
 };
@@ -231,7 +231,7 @@ mxKeyHandler.prototype.bindControlKey = function(code, funct)
  * code - Integer that specifies the keycode.
  * funct - JavaScript function that takes the key event as an argument.
  */
-mxKeyHandler.prototype.bindControlShiftKey = function(code, funct)
+bindControlShiftKey = (code, funct)=>
 {
 	this.controlShiftKeys[code] = funct;
 };
@@ -245,7 +245,7 @@ mxKeyHandler.prototype.bindControlShiftKey = function(code, funct)
  * 
  * evt - Key event whose control key pressed state should be returned.
  */
-mxKeyHandler.prototype.isControlDown = function(evt)
+isControlDown = (evt)=>
 {
 	return mxEvent.isControlDown(evt);
 };
@@ -260,7 +260,7 @@ mxKeyHandler.prototype.isControlDown = function(evt)
  * 
  * evt - Key event whose associated function should be returned.
  */
-mxKeyHandler.prototype.getFunction = function(evt)
+getFunction = (evt)=>
 {
 	if (evt != null && !mxEvent.isAltDown(evt))
 	{
@@ -303,7 +303,7 @@ mxKeyHandler.prototype.getFunction = function(evt)
  * 
  * evt - Key event that represents the keystroke.
  */
-mxKeyHandler.prototype.isGraphEvent = function(evt)
+isGraphEvent = (evt)=>
 {
 	var source = mxEvent.getSource(evt);
 	
@@ -331,7 +331,7 @@ mxKeyHandler.prototype.isGraphEvent = function(evt)
  * 
  * evt - Key event that represents the keystroke.
  */
-mxKeyHandler.prototype.keyDown = function(evt)
+keyDown = (evt)=>
 {
 	if (this.isEnabledForEvent(evt))
 	{
@@ -368,7 +368,7 @@ mxKeyHandler.prototype.keyDown = function(evt)
  * 
  * evt - Key event that represents the keystroke.
  */
-mxKeyHandler.prototype.isEnabledForEvent = function(evt)
+isEnabledForEvent = (evt)=>
 {
 	return (this.graph.isEnabled() && !mxEvent.isConsumed(evt) &&
 		this.isGraphEvent(evt) && this.isEnabled());
@@ -384,7 +384,7 @@ mxKeyHandler.prototype.isEnabledForEvent = function(evt)
  * 
  * evt - Key event that represents the keystroke.
  */
-mxKeyHandler.prototype.isEventIgnored = function(evt)
+isEventIgnored = (evt)=>
 {
 	return this.graph.isEditing();
 };
@@ -401,7 +401,7 @@ mxKeyHandler.prototype.isEventIgnored = function(evt)
  * evt - Key event that represents the keystroke. Possible keycode in this
  * case is 27 (ESCAPE).
  */
-mxKeyHandler.prototype.escape = function(evt)
+escape = (evt)=>
 {
 	if (this.graph.isEscapeEnabled())
 	{
@@ -416,7 +416,7 @@ mxKeyHandler.prototype.escape = function(evt)
  * normally not need to be called, it is called automatically when the
  * window unloads (in IE).
  */
-mxKeyHandler.prototype.destroy = function()
+destroy = ()=>
 {
 	if (this.target != null && this.keydownHandler != null)
 	{

@@ -19,7 +19,7 @@ var mxEffects =
 	 * Example:
 	 * 
 	 * (code)
-	 * graph.model.addListener(mxEvent.CHANGE, function(sender, evt)
+	 * graph.model.addListener(mxEvent.CHANGE, (sender, evt)=>
 	 * {
 	 *   var changes = evt.getProperty('edit').changes;
 	 * 
@@ -37,12 +37,12 @@ var mxEffects =
 	 * done - Optional function argument that is invoked after the
 	 * last step of the animation.
 	 */
-	animateChanges: function(graph, changes, done)
+	animateChanges: (graph, changes, done)=>
 	{
 		var maxStep = 10;
 		var step = 0;
 
-		var animate = function() 
+		var animate = ()=> 
 		{
 			var isRequired = false;
 			
@@ -126,7 +126,7 @@ var mxEffects =
 	 * cell - <mxCell> to set the opacity for.
 	 * opacity - New value for the opacity in %.
 	 */
-    cascadeOpacity: function(graph, cell, opacity)
+    cascadeOpacity: (graph, cell, opacity)=>
 	{
 		// Fades all children
 		var childCount = graph.model.getChildCount(cell);
@@ -165,7 +165,7 @@ var mxEffects =
 	 * 
 	 * Asynchronous fade-out operation.
 	 */
-	fadeOut: function(node, from, remove, step, delay, isEnabled)
+	fadeOut: (node, from, remove, step, delay, isEnabled)=>
 	{
 		step = step || 40;
 		delay = delay || 30;
@@ -176,7 +176,7 @@ var mxEffects =
 		
 		if (isEnabled || isEnabled == null)
 		{
-			var f = function()
+			var f = ()=>
 			{
 			    opacity = Math.max(opacity-step, 0);
 				mxUtils.setOpacity(node, opacity);

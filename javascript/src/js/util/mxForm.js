@@ -25,7 +25,7 @@ function mxForm(className)
  * 
  * Holds the DOM node that represents the table.
  */
-mxForm.prototype.table = null;
+table = null;
 
 /**
  * Variable: body
@@ -33,14 +33,14 @@ mxForm.prototype.table = null;
  * Holds the DOM node that represents the tbody (table body). New rows
  * can be added to this object using DOM API.
  */
-mxForm.prototype.body = false;
+body = false;
 
 /**
  * Function: getTable
  * 
  * Returns the table that contains this form.
  */
-mxForm.prototype.getTable = function()
+getTable = ()=>
 {
 	return this.table;
 };
@@ -51,7 +51,7 @@ mxForm.prototype.getTable = function()
  * Helper method to add an OK and Cancel button using the respective
  * functions.
  */
-mxForm.prototype.addButtons = function(okFunct, cancelFunct)
+addButtons = (okFunct, cancelFunct)=>
 {
 	var tr = document.createElement('tr');
 	var td = document.createElement('td');
@@ -63,7 +63,7 @@ mxForm.prototype.addButtons = function(okFunct, cancelFunct)
 	mxUtils.write(button, mxResources.get('ok') || 'OK');
 	td.appendChild(button);
 
-	mxEvent.addListener(button, 'click', function()
+	mxEvent.addListener(button, 'click', ()=>
 	{
 		okFunct();
 	});
@@ -73,7 +73,7 @@ mxForm.prototype.addButtons = function(okFunct, cancelFunct)
 	mxUtils.write(button, mxResources.get('cancel') || 'Cancel');
 	td.appendChild(button);
 	
-	mxEvent.addListener(button, 'click', function()
+	mxEvent.addListener(button, 'click', ()=>
 	{
 		cancelFunct();
 	});
@@ -87,7 +87,7 @@ mxForm.prototype.addButtons = function(okFunct, cancelFunct)
  * 
  * Adds an input for the given name, type and value and returns it.
  */
-mxForm.prototype.addText = function(name, value, type)
+addText = (name, value, type)=>
 {
 	var input = document.createElement('input');
 	
@@ -102,7 +102,7 @@ mxForm.prototype.addText = function(name, value, type)
  * 
  * Adds a checkbox for the given name and value and returns the textfield.
  */
-mxForm.prototype.addCheckbox = function(name, value)
+addCheckbox = (name, value)=>
 {
 	var input = document.createElement('input');
 	
@@ -123,7 +123,7 @@ mxForm.prototype.addCheckbox = function(name, value)
  * 
  * Adds a textarea for the given name and value and returns the textarea.
  */
-mxForm.prototype.addTextarea = function(name, value, rows)
+addTextarea = (name, value, rows)=>
 {
 	var input = document.createElement('textarea');
 	
@@ -143,7 +143,7 @@ mxForm.prototype.addTextarea = function(name, value, rows)
  * 
  * Adds a combo for the given name and returns the combo.
  */
-mxForm.prototype.addCombo = function(name, isMultiSelect, size)
+addCombo = (name, isMultiSelect, size)=>
 {
 	var select = document.createElement('select');
 	
@@ -165,7 +165,7 @@ mxForm.prototype.addCombo = function(name, isMultiSelect, size)
  * 
  * Adds an option for the given label to the specified combo.
  */
-mxForm.prototype.addOption = function(combo, label, value, isSelected)
+addOption = (combo, label, value, isSelected)=>
 {
 	var option = document.createElement('option');
 	
@@ -186,7 +186,7 @@ mxForm.prototype.addOption = function(combo, label, value, isSelected)
  * Adds a new row with the name and the input field in two columns and
  * returns the given input.
  */
-mxForm.prototype.addField = function(name, input)
+addField = (name, input)=>
 {
 	var tr = document.createElement('tr');
 	var td = document.createElement('td');

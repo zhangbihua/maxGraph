@@ -35,70 +35,70 @@ function mxStackLayout(graph, horizontal, spacing, x0, y0, border)
  * Extends mxGraphLayout.
  */
 mxStackLayout.prototype = new mxGraphLayout();
-mxStackLayout.prototype.constructor = mxStackLayout;
+constructor = mxStackLayout;
 
 /**
  * Variable: horizontal
  *
  * Specifies the orientation of the layout. Default is true.
  */
-mxStackLayout.prototype.horizontal = null;
+horizontal = null;
 
 /**
  * Variable: spacing
  *
  * Specifies the spacing between the cells. Default is 0.
  */
-mxStackLayout.prototype.spacing = null;
+spacing = null;
 
 /**
  * Variable: x0
  *
  * Specifies the horizontal origin of the layout. Default is 0.
  */
-mxStackLayout.prototype.x0 = null;
+x0 = null;
 
 /**
  * Variable: y0
  *
  * Specifies the vertical origin of the layout. Default is 0.
  */
-mxStackLayout.prototype.y0 = null;
+y0 = null;
 
 /**
  * Variable: border
  *
  * Border to be added if fill is true. Default is 0.
  */
-mxStackLayout.prototype.border = 0;
+border = 0;
 
 /**
  * Variable: marginTop
  * 
  * Top margin for the child area. Default is 0.
  */
-mxStackLayout.prototype.marginTop = 0;
+marginTop = 0;
 
 /**
  * Variable: marginLeft
  * 
  * Top margin for the child area. Default is 0.
  */
-mxStackLayout.prototype.marginLeft = 0;
+marginLeft = 0;
 
 /**
  * Variable: marginRight
  * 
  * Top margin for the child area. Default is 0.
  */
-mxStackLayout.prototype.marginRight = 0;
+marginRight = 0;
 
 /**
  * Variable: marginBottom
  * 
  * Top margin for the child area. Default is 0.
  */
-mxStackLayout.prototype.marginBottom = 0;
+marginBottom = 0;
 
 /**
  * Variable: keepFirstLocation
@@ -106,7 +106,7 @@ mxStackLayout.prototype.marginBottom = 0;
  * Boolean indicating if the location of the first cell should be
  * kept, that is, it will not be moved to x0 or y0. Default is false.
  */
-mxStackLayout.prototype.keepFirstLocation = false;
+keepFirstLocation = false;
 
 /**
  * Variable: fill
@@ -114,7 +114,7 @@ mxStackLayout.prototype.keepFirstLocation = false;
  * Boolean indicating if dimension should be changed to fill out the parent
  * cell. Default is false.
  */
-mxStackLayout.prototype.fill = false;
+fill = false;
 	
 /**
  * Variable: resizeParent
@@ -122,7 +122,7 @@ mxStackLayout.prototype.fill = false;
  * If the parent should be resized to match the width/height of the
  * stack. Default is false.
  */
-mxStackLayout.prototype.resizeParent = false;
+resizeParent = false;
 
 /**
  * Variable: resizeParentMax
@@ -130,7 +130,7 @@ mxStackLayout.prototype.resizeParent = false;
  * Use maximum of existing value and new value for resize of parent.
  * Default is false.
  */
-mxStackLayout.prototype.resizeParentMax = false;
+resizeParentMax = false;
 
 /**
  * Variable: resizeLast
@@ -138,42 +138,42 @@ mxStackLayout.prototype.resizeParentMax = false;
  * If the last element should be resized to fill out the parent. Default is
  * false. If <resizeParent> is true then this is ignored.
  */
-mxStackLayout.prototype.resizeLast = false;
+resizeLast = false;
 
 /**
  * Variable: wrap
  * 
  * Value at which a new column or row should be created. Default is null.
  */
-mxStackLayout.prototype.wrap = null;
+wrap = null;
 
 /**
  * Variable: borderCollapse
  * 
  * If the strokeWidth should be ignored. Default is true.
  */
-mxStackLayout.prototype.borderCollapse = true;
+borderCollapse = true;
 
 /**
  * Variable: allowGaps
  * 
  * If gaps should be allowed in the stack. Default is false.
  */
-mxStackLayout.prototype.allowGaps = false;
+allowGaps = false;
 
 /**
  * Variable: gridSize
  * 
  * Grid size for alignment of position and size. Default is 0.
  */
-mxStackLayout.prototype.gridSize = 0;
+gridSize = 0;
 
 /**
  * Function: isHorizontal
  * 
  * Returns <horizontal>.
  */
-mxStackLayout.prototype.isHorizontal = function()
+isHorizontal = ()=>
 {
 	return this.horizontal;
 };
@@ -183,7 +183,7 @@ mxStackLayout.prototype.isHorizontal = function()
  * 
  * Implements <mxGraphLayout.moveCell>.
  */
-mxStackLayout.prototype.moveCell = function(cell, x, y)
+moveCell = (cell, x, y)=>
 {
 	var model = this.graph.getModel();
 	var parent = model.getParent(cell);
@@ -242,7 +242,7 @@ mxStackLayout.prototype.moveCell = function(cell, x, y)
  * Returns the size for the parent container or the size of the graph
  * container if the parent is a layer or the root of the model.
  */
-mxStackLayout.prototype.getParentSize = function(parent)
+getParentSize = (parent)=>
 {
 	var model = this.graph.getModel();			
 	var pgeo = model.getGeometry(parent);
@@ -266,7 +266,7 @@ mxStackLayout.prototype.getParentSize = function(parent)
  * 
  * Returns the cells to be layouted.
  */
-mxStackLayout.prototype.getLayoutCells = function(parent)
+getLayoutCells = (parent)=>
 {
 	var model = this.graph.getModel();
 	var childCount = model.getChildCount(parent);
@@ -284,7 +284,7 @@ mxStackLayout.prototype.getLayoutCells = function(parent)
 	
 	if (this.allowGaps)
 	{
-		cells.sort(mxUtils.bind(this, function(c1, c2)
+		cells.sort(mxUtils.bind(this, (c1, c2)=>
 		{
 			var geo1 = this.graph.getCellGeometry(c1);
 			var geo2 = this.graph.getCellGeometry(c2);
@@ -303,7 +303,7 @@ mxStackLayout.prototype.getLayoutCells = function(parent)
  * 
  * Snaps the given value to the grid size.
  */
-mxStackLayout.prototype.snap = function(value)
+snap = (value)=>
 {
 	if (this.gridSize != null && this.gridSize > 0)
 	{
@@ -327,7 +327,7 @@ mxStackLayout.prototype.snap = function(value)
  * Only children where <isVertexIgnored> returns false are taken into
  * account.
  */
-mxStackLayout.prototype.execute = function(parent)
+execute = (parent)=>
 {
 	if (parent != null)
 	{
@@ -539,7 +539,7 @@ mxStackLayout.prototype.execute = function(parent)
  * child - The given child of <mxCell>.
  * geo - The specific geometry of <mxGeometry>.
  */
-mxStackLayout.prototype.setChildGeometry = function(child, geo)
+setChildGeometry = (child, geo)=>
 {
 	var geo2 = this.graph.getCellGeometry(child);
 	
@@ -561,7 +561,7 @@ mxStackLayout.prototype.setChildGeometry = function(child, geo)
  * pgeo - The new <mxGeometry> for parent.
  * last - The last <mxGeometry>.
  */
-mxStackLayout.prototype.updateParentGeometry = function(parent, pgeo, last)
+updateParentGeometry = (parent, pgeo, last)=>
 {
 	var horizontal = this.isHorizontal();
 	var model = this.graph.getModel();	

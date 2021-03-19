@@ -34,7 +34,7 @@
  * function CustomShape() { }
  * 
  * CustomShape.prototype = new mxShape();
- * CustomShape.prototype.constructor = CustomShape; 
+ * constructor = CustomShape; 
  * (end)
  *
  * To register a custom shape in an existing graph instance,
@@ -72,63 +72,63 @@ function mxShape(stencil)
  * Holds the dialect in which the shape is to be painted.
  * This can be one of the DIALECT constants in <mxConstants>.
  */
-mxShape.prototype.dialect = null;
+dialect = null;
 
 /**
  * Variable: scale
  *
  * Holds the scale in which the shape is being painted.
  */
-mxShape.prototype.scale = 1;
+scale = 1;
 
 /**
  * Variable: antiAlias
  * 
  * Rendering hint for configuring the canvas.
  */
-mxShape.prototype.antiAlias = true;
+antiAlias = true;
 
 /**
  * Variable: minSvgStrokeWidth
  * 
  * Minimum stroke width for SVG output.
  */
-mxShape.prototype.minSvgStrokeWidth = 1;
+minSvgStrokeWidth = 1;
 
 /**
  * Variable: bounds
  *
  * Holds the <mxRectangle> that specifies the bounds of this shape.
  */
-mxShape.prototype.bounds = null;
+bounds = null;
 
 /**
  * Variable: points
  *
  * Holds the array of <mxPoints> that specify the points of this shape.
  */
-mxShape.prototype.points = null;
+points = null;
 
 /**
  * Variable: node
  *
  * Holds the outermost DOM node that represents this shape.
  */
-mxShape.prototype.node = null;
+node = null;
  
 /**
  * Variable: state
  * 
  * Optional reference to the corresponding <mxCellState>.
  */
-mxShape.prototype.state = null;
+state = null;
 
 /**
  * Variable: style
  *
  * Optional reference to the style of the corresponding <mxCellState>.
  */
-mxShape.prototype.style = null;
+style = null;
 
 /**
  * Variable: boundingBox
@@ -136,14 +136,14 @@ mxShape.prototype.style = null;
  * Contains the bounding box of the shape, that is, the smallest rectangle
  * that includes all pixels of the shape.
  */
-mxShape.prototype.boundingBox = null;
+boundingBox = null;
 
 /**
  * Variable: stencil
  *
  * Holds the <mxStencil> that defines the shape.
  */
-mxShape.prototype.stencil = null;
+stencil = null;
 
 /**
  * Variable: svgStrokeTolerance
@@ -151,21 +151,21 @@ mxShape.prototype.stencil = null;
  * Event-tolerance for SVG strokes (in px). Default is 8. This is only passed
  * to the canvas in <createSvgCanvas> if <pointerEvents> is true.
  */
-mxShape.prototype.svgStrokeTolerance = 8;
+svgStrokeTolerance = 8;
 
 /**
  * Variable: pointerEvents
  * 
  * Specifies if pointer events should be handled. Default is true.
  */
-mxShape.prototype.pointerEvents = true;
+pointerEvents = true;
 
 /**
  * Variable: svgPointerEvents
  * 
  * Specifies if pointer events should be handled. Default is true.
  */
-mxShape.prototype.svgPointerEvents = 'all';
+svgPointerEvents = 'all';
 
 /**
  * Variable: shapePointerEvents
@@ -173,7 +173,7 @@ mxShape.prototype.svgPointerEvents = 'all';
  * Specifies if pointer events outside of shape should be handled. Default
  * is false.
  */
-mxShape.prototype.shapePointerEvents = false;
+shapePointerEvents = false;
 
 /**
  * Variable: stencilPointerEvents
@@ -181,14 +181,14 @@ mxShape.prototype.shapePointerEvents = false;
  * Specifies if pointer events outside of stencils should be handled. Default
  * is false. Set this to true for backwards compatibility with the 1.x branch.
  */
-mxShape.prototype.stencilPointerEvents = false;
+stencilPointerEvents = false;
 
 /**
  * Variable: vmlScale
  * 
  * Scale for improving the precision of VML rendering. Default is 1.
  */
-mxShape.prototype.vmlScale = 1;
+vmlScale = 1;
 
 /**
  * Variable: outline
@@ -198,14 +198,14 @@ mxShape.prototype.vmlScale = 1;
  * not be painted for outlines. Default is false. This should be set before
  * calling <apply>.
  */
-mxShape.prototype.outline = false;
+outline = false;
 
 /**
  * Variable: visible
  * 
  * Specifies if the shape is visible. Default is true.
  */
-mxShape.prototype.visible = true;
+visible = true;
 
 /**
  * Variable: useSvgBoundingBox
@@ -213,7 +213,7 @@ mxShape.prototype.visible = true;
  * Allows to use the SVG bounding box in SVG. Default is false for performance
  * reasons.
  */
-mxShape.prototype.useSvgBoundingBox = false;
+useSvgBoundingBox = false;
 
 /**
  * Function: init
@@ -225,7 +225,7 @@ mxShape.prototype.useSvgBoundingBox = false;
  *
  * container - DOM node that will contain the shape.
  */
-mxShape.prototype.init = function(container)
+init = (container)=>
 {
 	if (this.node == null)
 	{
@@ -243,7 +243,7 @@ mxShape.prototype.init = function(container)
  *
  * Sets the styles to their default values.
  */
-mxShape.prototype.initStyles = function(container)
+initStyles = (container)=>
 {
 	this.strokewidth = 1;
 	this.rotation = 0;
@@ -261,7 +261,7 @@ mxShape.prototype.initStyles = function(container)
  * is only needed in IE8 and only if the shape contains VML markup. This method
  * returns true.
  */
-mxShape.prototype.isParseVml = function()
+isParseVml = ()=>
 {
 	return true;
 };
@@ -272,7 +272,7 @@ mxShape.prototype.isParseVml = function()
  * Returns true if HTML is allowed for this shape. This implementation always
  * returns false.
  */
-mxShape.prototype.isHtmlAllowed = function()
+isHtmlAllowed = ()=>
 {
 	return false;
 };
@@ -282,7 +282,7 @@ mxShape.prototype.isHtmlAllowed = function()
  * 
  * Returns 0, or 0.5 if <strokewidth> % 2 == 1.
  */
-mxShape.prototype.getSvgScreenOffset = function()
+getSvgScreenOffset = ()=>
 {
 	var sw = this.stencil && this.stencil.strokewidth != 'inherit' ? Number(this.stencil.strokewidth) : this.strokewidth;
 	
@@ -301,7 +301,7 @@ mxShape.prototype.getSvgScreenOffset = function()
  *
  * container - DOM node that will contain the shape.
  */
-mxShape.prototype.create = function(container)
+create = (container)=>
 {
 	var node = null;
 	
@@ -327,7 +327,7 @@ mxShape.prototype.create = function(container)
  *
  * Creates and returns the SVG node(s) to represent this shape.
  */
-mxShape.prototype.createSvg = function()
+createSvg = ()=>
 {
 	return document.createElementNS(mxConstants.NS_SVG, 'g');
 };
@@ -337,7 +337,7 @@ mxShape.prototype.createSvg = function()
  *
  * Creates and returns the VML node to represent this shape.
  */
-mxShape.prototype.createVml = function()
+createVml = ()=>
 {
 	var node = document.createElement(mxClient.VML_PREFIX + ':group');
 	node.style.position = 'absolute';
@@ -352,7 +352,7 @@ mxShape.prototype.createVml = function()
  * this shape. This implementation falls back to <createVml>
  * so that the HTML creation is optional.
  */
-mxShape.prototype.createHtml = function()
+createHtml = ()=>
 {
 	var node = document.createElement('div');
 	node.style.position = 'absolute';
@@ -366,7 +366,7 @@ mxShape.prototype.createHtml = function()
  * Reconfigures this shape. This will update the colors etc in
  * addition to the bounds or points.
  */
-mxShape.prototype.reconfigure = function()
+reconfigure = ()=>
 {
 	this.redraw();
 };
@@ -376,7 +376,7 @@ mxShape.prototype.reconfigure = function()
  *
  * Creates and returns the SVG node(s) to represent this shape.
  */
-mxShape.prototype.redraw = function()
+redraw = ()=>
 {
 	this.updateBoundsFromPoints();
 	
@@ -408,7 +408,7 @@ mxShape.prototype.redraw = function()
  * 
  * Removes all child nodes and resets all CSS.
  */
-mxShape.prototype.clear = function()
+clear = ()=>
 {
 	if (this.node.ownerSVGElement != null)
 	{
@@ -430,7 +430,7 @@ mxShape.prototype.clear = function()
  * 
  * Updates the bounds based on the points.
  */
-mxShape.prototype.updateBoundsFromPoints = function()
+updateBoundsFromPoints = ()=>
 {
 	var pts = this.points;
 	
@@ -455,7 +455,7 @@ mxShape.prototype.updateBoundsFromPoints = function()
  * given scaled and translated bounds of the shape. This method should not
  * change the rectangle in-place. This implementation returns the given rect.
  */
-mxShape.prototype.getLabelBounds = function(rect)
+getLabelBounds = (rect)=>
 {
 	var d = mxUtils.getValue(this.style, mxConstants.STYLE_DIRECTION, mxConstants.DIRECTION_EAST);
 	var bounds = rect;
@@ -506,7 +506,7 @@ mxShape.prototype.getLabelBounds = function(rect)
  * computing the label bounds as an <mxRectangle>, where the bottom and right
  * margin are defined in the width and height of the rectangle, respectively.
  */
-mxShape.prototype.getLabelMargins= function(rect)
+getLabelMargins= (rect)=>
 {
 	return null;
 };
@@ -516,7 +516,7 @@ mxShape.prototype.getLabelMargins= function(rect)
  * 
  * Returns true if the bounds are not null and all of its variables are numeric.
  */
-mxShape.prototype.checkBounds = function()
+checkBounds = ()=>
 {
 	return (!isNaN(this.scale) && isFinite(this.scale) && this.scale > 0 &&
 			this.bounds != null && !isNaN(this.bounds.x) && !isNaN(this.bounds.y) &&
@@ -529,7 +529,7 @@ mxShape.prototype.checkBounds = function()
  *
  * Returns the temporary element used for rendering in IE8 standards mode.
  */
-mxShape.prototype.createVmlGroup = function()
+createVmlGroup = ()=>
 {
 	var node = document.createElement(mxClient.VML_PREFIX + ':group');
 	node.style.position = 'absolute';
@@ -544,7 +544,7 @@ mxShape.prototype.createVmlGroup = function()
  *
  * Updates the SVG or VML shape.
  */
-mxShape.prototype.redrawShape = function()
+redrawShape = ()=>
 {
 	var canvas = this.createCanvas();
 	
@@ -583,7 +583,7 @@ mxShape.prototype.redrawShape = function()
  * 
  * Creates a new canvas for drawing this shape. May return null.
  */
-mxShape.prototype.createCanvas = function()
+createCanvas = ()=>
 {
 	var canvas = null;
 	
@@ -608,12 +608,12 @@ mxShape.prototype.createCanvas = function()
 			canvas.setDashed(this.isDashed);
 		}
 		
-		canvas.setStrokeWidth = function() {};
-		canvas.setStrokeColor = function() {};
-		canvas.setFillColor = function() {};
-		canvas.setGradient = function() {};
-		canvas.setDashed = function() {};
-		canvas.text = function() {};
+		canvas.setStrokeWidth = ()=> {};
+		canvas.setStrokeColor = ()=> {};
+		canvas.setFillColor = ()=> {};
+		canvas.setGradient = ()=> {};
+		canvas.setDashed = ()=> {};
+		canvas.text = ()=> {};
 	}
 
 	return canvas;
@@ -624,7 +624,7 @@ mxShape.prototype.createCanvas = function()
  * 
  * Creates and returns an <mxSvgCanvas2D> for rendering this shape.
  */
-mxShape.prototype.createSvgCanvas = function()
+createSvgCanvas = ()=>
 {
 	var canvas = new mxSvgCanvas2D(this.node, false);
 	canvas.strokeTolerance = (this.pointerEvents) ? this.svgStrokeTolerance : 0;
@@ -645,7 +645,7 @@ mxShape.prototype.createSvgCanvas = function()
 	if (!this.antiAlias)
 	{
 		// Rounds all numbers in the SVG output to integers
-		canvas.format = function(value)
+		canvas.format = (value)=>
 		{
 			return Math.round(parseFloat(value));
 		};
@@ -659,7 +659,7 @@ mxShape.prototype.createSvgCanvas = function()
  * 
  * Creates and returns an <mxVmlCanvas2D> for rendering this shape.
  */
-mxShape.prototype.createVmlCanvas = function()
+createVmlCanvas = ()=>
 {
 	// Workaround for VML rendering bug in IE8 standards mode
 	var node = (document.documentMode == 8 && this.isParseVml()) ? this.createVmlGroup() : this.node;
@@ -686,7 +686,7 @@ mxShape.prototype.createVmlCanvas = function()
  * 
  * Updates the bounds of the VML container.
  */
-mxShape.prototype.updateVmlContainer = function()
+updateVmlContainer = ()=>
 {
 	this.node.style.left = Math.round(this.bounds.x) + 'px';
 	this.node.style.top = Math.round(this.bounds.y) + 'px';
@@ -702,7 +702,7 @@ mxShape.prototype.updateVmlContainer = function()
  *
  * Allow optimization by replacing VML with HTML.
  */
-mxShape.prototype.redrawHtmlShape = function()
+redrawHtmlShape = ()=>
 {
 	// LATER: Refactor methods
 	this.updateHtmlBounds(this.node);
@@ -715,7 +715,7 @@ mxShape.prototype.redrawHtmlShape = function()
  *
  * Allow optimization by replacing VML with HTML.
  */
-mxShape.prototype.updateHtmlFilters = function(node)
+updateHtmlFilters = (node)=>
 {
 	var f = '';
 	
@@ -778,7 +778,7 @@ mxShape.prototype.updateHtmlFilters = function(node)
  *
  * Allow optimization by replacing VML with HTML.
  */
-mxShape.prototype.updateHtmlColors = function(node)
+updateHtmlColors = (node)=>
 {
 	var color = this.stroke;
 	
@@ -828,7 +828,7 @@ mxShape.prototype.updateHtmlColors = function(node)
  *
  * Allow optimization by replacing VML with HTML.
  */
-mxShape.prototype.updateHtmlBounds = function(node)
+updateHtmlBounds = (node)=>
 {
 	var sw = (document.documentMode >= 9) ? 0 : Math.ceil(this.strokewidth * this.scale);
 	node.style.borderWidth = Math.max(1, sw) + 'px';
@@ -852,7 +852,7 @@ mxShape.prototype.updateHtmlBounds = function(node)
  * Destroys the given canvas which was used for drawing. This implementation
  * increments the reference counts on all shared gradients used in the canvas.
  */
-mxShape.prototype.destroyCanvas = function(canvas)
+destroyCanvas = (canvas)=>
 {
 	// Manages reference counts
 	if (canvas instanceof mxSvgCanvas2D)
@@ -878,21 +878,21 @@ mxShape.prototype.destroyCanvas = function(canvas)
  * 
  * Invoked before paint is called.
  */
-mxShape.prototype.beforePaint = function(c) { }
+beforePaint = (c)=> { }
 
 /**
  * Function: afterPaint
  * 
  * Invokes after paint was called.
  */
-mxShape.prototype.afterPaint = function(c) { }
+afterPaint = (c)=> { }
 
 /**
  * Function: paint
  * 
  * Generic rendering code.
  */
-mxShape.prototype.paint = function(c)
+paint = (c)=>
 {
 	var strokeDrawn = false;
 	
@@ -900,7 +900,7 @@ mxShape.prototype.paint = function(c)
 	{
 		var stroke = c.stroke;
 		
-		c.stroke = function()
+		c.stroke = ()=>
 		{
 			strokeDrawn = true;
 			stroke.apply(this, arguments);
@@ -908,7 +908,7 @@ mxShape.prototype.paint = function(c)
 
 		var fillAndStroke = c.fillAndStroke;
 		
-		c.fillAndStroke = function()
+		c.fillAndStroke = ()=>
 		{
 			strokeDrawn = true;
 			fillAndStroke.apply(this, arguments);
@@ -1006,7 +1006,7 @@ mxShape.prototype.paint = function(c)
  * 
  * Sets the state of the canvas for drawing the shape.
  */
-mxShape.prototype.configureCanvas = function(c, x, y, w, h)
+configureCanvas = (c, x, y, w, h)=>
 {
 	var dash = null;
 	
@@ -1055,7 +1055,7 @@ mxShape.prototype.configureCanvas = function(c, x, y, w, h)
  * 
  * Returns the bounding box for the gradient box for this shape.
  */
-mxShape.prototype.getGradientBounds = function(c, x, y, w, h)
+getGradientBounds = (c, x, y, w, h)=>
 {
 	return new mxRectangle(x, y, w, h);
 };
@@ -1065,7 +1065,7 @@ mxShape.prototype.getGradientBounds = function(c, x, y, w, h)
  * 
  * Sets the scale and rotation on the given canvas.
  */
-mxShape.prototype.updateTransform = function(c, x, y, w, h)
+updateTransform = (c, x, y, w, h)=>
 {
 	// NOTE: Currently, scale is implemented in state and canvas. This will
 	// move to canvas in a later version, so that the states are unscaled
@@ -1079,7 +1079,7 @@ mxShape.prototype.updateTransform = function(c, x, y, w, h)
  * 
  * Paints the vertex shape.
  */
-mxShape.prototype.paintVertexShape = function(c, x, y, w, h)
+paintVertexShape = (c, x, y, w, h)=>
 {
 	this.paintBackground(c, x, y, w, h);
 	
@@ -1096,28 +1096,28 @@ mxShape.prototype.paintVertexShape = function(c, x, y, w, h)
  * 
  * Hook for subclassers. This implementation is empty.
  */
-mxShape.prototype.paintBackground = function(c, x, y, w, h) { };
+paintBackground = (c, x, y, w, h)=> { };
 
 /**
  * Function: paintForeground
  * 
  * Hook for subclassers. This implementation is empty.
  */
-mxShape.prototype.paintForeground = function(c, x, y, w, h) { };
+paintForeground = (c, x, y, w, h)=> { };
 
 /**
  * Function: paintEdgeShape
  * 
  * Hook for subclassers. This implementation is empty.
  */
-mxShape.prototype.paintEdgeShape = function(c, pts) { };
+paintEdgeShape = (c, pts)=> { };
 
 /**
  * Function: getArcSize
  * 
  * Returns the arc size for the given dimension.
  */
-mxShape.prototype.getArcSize = function(w, h)
+getArcSize = (w, h)=>
 {
 	var r = 0;
 	
@@ -1141,7 +1141,7 @@ mxShape.prototype.getArcSize = function(w, h)
  * 
  * Paints the glass gradient effect.
  */
-mxShape.prototype.paintGlassEffect = function(c, x, y, w, h, arc)
+paintGlassEffect = (c, x, y, w, h, arc)=>
 {
 	var sw = Math.ceil(this.strokewidth / 2);
 	var size = 0.4;
@@ -1176,7 +1176,7 @@ mxShape.prototype.paintGlassEffect = function(c, x, y, w, h, arc)
  * 
  * Paints the given points with rounded corners.
  */
-mxShape.prototype.addPoints = function(c, pts, rounded, arcSize, close, exclude, initialMove)
+addPoints = (c, pts, rounded, arcSize, close, exclude, initialMove)=>
 {
 	if (pts != null && pts.length > 0)
 	{
@@ -1274,7 +1274,7 @@ mxShape.prototype.addPoints = function(c, pts, rounded, arcSize, close, exclude,
  * 
  * Resets all styles.
  */
-mxShape.prototype.resetStyles = function()
+resetStyles = ()=>
 {
 	this.initStyles();
 
@@ -1330,7 +1330,7 @@ mxShape.prototype.resetStyles = function()
  *
  * state - <mxCellState> of the corresponding cell.
  */
-mxShape.prototype.apply = function(state)
+apply = (state)=>
 {
 	this.state = state;
 	this.style = state.style;
@@ -1400,7 +1400,7 @@ mxShape.prototype.apply = function(state)
  *
  * cursor - The cursor to be used.
  */
-mxShape.prototype.setCursor = function(cursor)
+setCursor = (cursor)=>
 {
 	if (cursor == null)
 	{
@@ -1420,7 +1420,7 @@ mxShape.prototype.setCursor = function(cursor)
  * 
  * Returns the current cursor.
  */
-mxShape.prototype.getCursor = function()
+getCursor = ()=>
 {
 	return this.cursor;
 };
@@ -1430,7 +1430,7 @@ mxShape.prototype.getCursor = function()
  * 
  * Hook for subclassers.
  */
-mxShape.prototype.isRoundable = function()
+isRoundable = ()=>
 {
 	return false;
 };
@@ -1441,7 +1441,7 @@ mxShape.prototype.isRoundable = function()
  * Updates the <boundingBox> for this shape using <createBoundingBox> and
  * <augmentBoundingBox> and stores the result in <boundingBox>.
  */
-mxShape.prototype.updateBoundingBox = function()
+updateBoundingBox = ()=>
 {
 	// Tries to get bounding box from SVG subsystem
 	// LATER: Use getBoundingClientRect for fallback in VML
@@ -1492,7 +1492,7 @@ mxShape.prototype.updateBoundingBox = function()
  * Returns a new rectangle that represents the bounding box of the bare shape
  * with no shadows or strokewidths.
  */
-mxShape.prototype.createBoundingBox = function()
+createBoundingBox = ()=>
 {
 	var bb = this.bounds.clone();
 
@@ -1510,7 +1510,7 @@ mxShape.prototype.createBoundingBox = function()
  *
  * Augments the bounding box with the strokewidth and shadow offsets.
  */
-mxShape.prototype.augmentBoundingBox = function(bbox)
+augmentBoundingBox = (bbox)=>
 {
 	if (this.isShadow)
 	{
@@ -1527,7 +1527,7 @@ mxShape.prototype.augmentBoundingBox = function(bbox)
  * 
  * Returns true if the bounds should be inverted.
  */
-mxShape.prototype.isPaintBoundsInverted = function()
+isPaintBoundsInverted = ()=>
 {
 	// Stencil implements inversion via aspect
 	return this.stencil == null && (this.direction == mxConstants.DIRECTION_NORTH ||
@@ -1539,7 +1539,7 @@ mxShape.prototype.isPaintBoundsInverted = function()
  * 
  * Returns the rotation from the style.
  */
-mxShape.prototype.getRotation = function()
+getRotation = ()=>
 {
 	return (this.rotation != null) ? this.rotation : 0;
 };
@@ -1549,13 +1549,13 @@ mxShape.prototype.getRotation = function()
  * 
  * Returns the rotation for the text label.
  */
-mxShape.prototype.getTextRotation = function()
+getTextRotation = ()=>
 {
 	var rot = this.getRotation();
 	
 	if (mxUtils.getValue(this.style, mxConstants.STYLE_HORIZONTAL, 1) != 1)
 	{
-		rot += mxText.prototype.verticalTextRotation;
+		rot += verticalTextRotation;
 	}
 	
 	return rot;
@@ -1566,7 +1566,7 @@ mxShape.prototype.getTextRotation = function()
  * 
  * Returns the actual rotation of the shape.
  */
-mxShape.prototype.getShapeRotation = function()
+getShapeRotation = ()=>
 {
 	var rot = this.getRotation();
 	
@@ -1594,7 +1594,7 @@ mxShape.prototype.getShapeRotation = function()
  * 
  * Adds a transparent rectangle that catches all events.
  */
-mxShape.prototype.createTransparentSvgRectangle = function(x, y, w, h)
+createTransparentSvgRectangle = (x, y, w, h)=>
 {
 	var rect = document.createElementNS(mxConstants.NS_SVG, 'rect');
 	rect.setAttribute('x', x);
@@ -1615,7 +1615,7 @@ mxShape.prototype.createTransparentSvgRectangle = function(x, y, w, h)
  * 
  * Paints the line shape.
  */
-mxShape.prototype.setTransparentBackgroundImage = function(node)
+setTransparentBackgroundImage = (node)=>
 {
 	node.style.backgroundImage = 'url(\'' + mxClient.imageBasePath + '/transparent.gif\')';
 };
@@ -1625,7 +1625,7 @@ mxShape.prototype.setTransparentBackgroundImage = function(node)
  * 
  * Paints the line shape.
  */
-mxShape.prototype.releaseSvgGradients = function(grads)
+releaseSvgGradients = (grads)=>
 {
 	if (grads != null)
 	{
@@ -1652,7 +1652,7 @@ mxShape.prototype.releaseSvgGradients = function(grads)
  * Destroys the shape by removing it from the DOM and releasing the DOM
  * node associated with the shape using <mxEvent.release>.
  */
-mxShape.prototype.destroy = function()
+destroy = ()=>
 {
 	if (this.node != null)
 	{

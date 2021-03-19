@@ -107,17 +107,17 @@ Built-in Images:
   which you can change to reflect your environment. The image variables can 
   also be changed individually.
   
-  - mxGraph.prototype.collapsedImage
-  - mxGraph.prototype.expandedImage
-  - mxGraph.prototype.warningImage
-  - mxWindow.prototype.closeImage
-  - mxWindow.prototype.minimizeImage
-  - mxWindow.prototype.normalizeImage
-  - mxWindow.prototype.maximizeImage
-  - mxWindow.prototype.resizeImage
-  - mxPopupMenu.prototype.submenuImage
+  - collapsedImage
+  - expandedImage
+  - warningImage
+  - closeImage
+  - minimizeImage
+  - normalizeImage
+  - maximizeImage
+  - resizeImage
+  - submenuImage
   - mxUtils.errorImage
-  - mxConstraintHandler.prototype.pointImage
+  - pointImage
 
   The basename of the warning image (images/warning without extension) used in 
   <mxGraph.setCellWarning> is defined in <mxGraph.warningImage>.
@@ -204,8 +204,8 @@ Subclassing:
   represented in JavaScript by first "inheriting" all fields and methods from
   the superclass by assigning the prototype to an instance of the superclass,
   eg. mxEditor.prototype = new mxEventSource() and redefining the constructor
-  field using mxEditor.prototype.constructor = mxEditor. The latter rule is
-  applied so that the type of an object can be retrieved via the name of it’s
+  field using constructor = mxEditor. The latter rule is
+  applied so that the type of an object can be retrieved via the name of itï¿½s
   constructor using mxUtils.getFunctionName(obj.constructor).
 
 Constructor:
@@ -228,7 +228,7 @@ Constructor:
 
   (code)
   MyGraph.prototype = new mxGraph();
-  MyGraph.prototype.constructor = MyGraph;
+  constructor = MyGraph;
   (end)
   
   You may want to define the codec associated for the class after the above
@@ -247,9 +247,9 @@ Functions:
   follows.
   
   (code)
-  MyGraph.prototype.isCellSelectable = function(cell)
+  isCellSelectable = (cell)=>
   {
-    var selectable = mxGraph.prototype.isSelectable.apply(this, arguments);
+    var selectable = isSelectable.apply(this, arguments);
 
     var geo = this.model.getGeometry(cell);
     return selectable && (geo == null || !geo.relative);
@@ -260,10 +260,10 @@ Functions:
   function on the isSelectable function object of the mxGraph prototype, using
   the special this and arguments variables as parameters. Calls to the
   superclass function are only possible if the function is not replaced in the
-  superclass as follows, which is another way of “subclassing” in JavaScript.
+  superclass as follows, which is another way of ï¿½subclassingï¿½ in JavaScript.
 
   (code)
-  mxGraph.prototype.isCellSelectable = function(cell)
+  isCellSelectable = (cell)=>
   {
     var geo = this.model.getGeometry(cell);
     return selectable &&
@@ -280,7 +280,7 @@ Functions:
   representation of the graph model:
 
   (code)
-  MyGraph.prototype.getXml = function()
+  getXml = ()=>
   {
     var enc = new mxCodec();
     return enc.encode(this.getModel());
@@ -292,7 +292,7 @@ Variables:
   Likewise, a new field is declared and defined as follows.
 
   (code)
-  MyGraph.prototype.myField = 'Hello, World!';
+  myField = 'Hello, World!';
   (end)
   
   Note that the value assigned to myField is created only once, that is, all

@@ -26,7 +26,7 @@ mxUtils.extend(mxHexagon, mxActor);
  *
  * Draws the path for this shape.
  */
-mxHexagon.prototype.redrawPath = function(c, x, y, w, h)
+redrawPath = (c, x, y, w, h)=>
 {
 	var arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
 	this.addPoints(c, [new mxPoint(0.25 * w, 0), new mxPoint(0.75 * w, 0), new mxPoint(w, 0.5 * h), new mxPoint(0.75 * w, h),

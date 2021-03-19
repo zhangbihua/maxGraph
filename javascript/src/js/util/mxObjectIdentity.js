@@ -33,7 +33,7 @@ var mxObjectIdentity =
 	 * Returns the ID for the given object or function or null if no object
 	 * is specified.
 	 */
-	get: function(obj)
+	get: (obj)=>
 	{
 		if (obj != null)
 		{
@@ -61,7 +61,7 @@ var mxObjectIdentity =
 	 * 
 	 * Deletes the ID from the given object or function.
 	 */
-	clear: function(obj)
+	clear: (obj)=>
 	{
 		if (typeof(obj) === 'object' || typeof obj === 'function')
 		{

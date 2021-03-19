@@ -53,7 +53,7 @@ mxUtils.extend(mxXmlCanvas2D, mxAbstractCanvas2D);
  * 
  * Specifies if text output should be enabled. Default is true.
  */
-mxXmlCanvas2D.prototype.textEnabled = true;
+mxXmlCanvas2textEnabled = true;
 
 /**
  * Variable: compressed
@@ -61,14 +61,14 @@ mxXmlCanvas2D.prototype.textEnabled = true;
  * Specifies if the output should be compressed by removing redundant calls.
  * Default is true.
  */
-mxXmlCanvas2D.prototype.compressed = true;
+mxXmlCanvas2compressed = true;
 
 /**
  * Function: writeDefaults
  * 
  * Writes the rendering defaults to <root>:
  */
-mxXmlCanvas2D.prototype.writeDefaults = function()
+mxXmlCanvas2writeDefaults = ()=>
 {
 	var elem;
 	
@@ -101,7 +101,7 @@ mxXmlCanvas2D.prototype.writeDefaults = function()
  * 
  * Returns a formatted number with 2 decimal places.
  */
-mxXmlCanvas2D.prototype.format = function(value)
+mxXmlCanvas2format = (value)=>
 {
 	return parseFloat(parseFloat(value).toFixed(2));
 };
@@ -111,7 +111,7 @@ mxXmlCanvas2D.prototype.format = function(value)
  * 
  * Creates the given element using the owner document of <root>.
  */
-mxXmlCanvas2D.prototype.createElement = function(name)
+mxXmlCanvas2createElement = (name)=>
 {
 	return this.root.ownerDocument.createElement(name);
 };
@@ -121,11 +121,11 @@ mxXmlCanvas2D.prototype.createElement = function(name)
  * 
  * Saves the drawing state.
  */
-mxXmlCanvas2D.prototype.save = function()
+mxXmlCanvas2save = ()=>
 {
 	if (this.compressed)
 	{
-		mxAbstractCanvas2D.prototype.save.apply(this, arguments);
+		mxAbstractCanvas2save.apply(this, arguments);
 	}
 	
 	this.root.appendChild(this.createElement('save'));
@@ -136,11 +136,11 @@ mxXmlCanvas2D.prototype.save = function()
  * 
  * Restores the drawing state.
  */
-mxXmlCanvas2D.prototype.restore = function()
+mxXmlCanvas2restore = ()=>
 {
 	if (this.compressed)
 	{
-		mxAbstractCanvas2D.prototype.restore.apply(this, arguments);
+		mxAbstractCanvas2restore.apply(this, arguments);
 	}
 	
 	this.root.appendChild(this.createElement('restore'));
@@ -155,7 +155,7 @@ mxXmlCanvas2D.prototype.restore = function()
  * 
  * scale - Number that represents the scale where 1 is equal to 100%.
  */
-mxXmlCanvas2D.prototype.scale = function(value)
+mxXmlCanvas2scale = (value)=>
 {
         var elem = this.createElement('scale');
         elem.setAttribute('scale', value);
@@ -172,7 +172,7 @@ mxXmlCanvas2D.prototype.scale = function(value)
  * dx - Number that specifies the horizontal translation.
  * dy - Number that specifies the vertical translation.
  */
-mxXmlCanvas2D.prototype.translate = function(dx, dy)
+mxXmlCanvas2translate = (dx, dy)=>
 {
 	var elem = this.createElement('translate');
 	elem.setAttribute('dx', this.format(dx));
@@ -194,7 +194,7 @@ mxXmlCanvas2D.prototype.translate = function(dx, dy)
  * cx - Number that represents the x-coordinate of the rotation center.
  * cy - Number that represents the y-coordinate of the rotation center.
  */
-mxXmlCanvas2D.prototype.rotate = function(theta, flipH, flipV, cx, cy)
+mxXmlCanvas2rotate = (theta, flipH, flipV, cx, cy)=>
 {
 	var elem = this.createElement('rotate');
 	
@@ -219,7 +219,7 @@ mxXmlCanvas2D.prototype.rotate = function(theta, flipH, flipV, cx, cy)
  * value - Number that represents the new alpha. Possible values are between
  * 1 (opaque) and 0 (transparent).
  */
-mxXmlCanvas2D.prototype.setAlpha = function(value)
+mxXmlCanvas2setAlpha = (value)=>
 {
 	if (this.compressed)
 	{
@@ -228,7 +228,7 @@ mxXmlCanvas2D.prototype.setAlpha = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setAlpha.apply(this, arguments);
+		mxAbstractCanvas2setAlpha.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('alpha');
@@ -246,7 +246,7 @@ mxXmlCanvas2D.prototype.setAlpha = function(value)
  * value - Number that represents the new fill alpha. Possible values are between
  * 1 (opaque) and 0 (transparent).
  */
-mxXmlCanvas2D.prototype.setFillAlpha = function(value)
+mxXmlCanvas2setFillAlpha = (value)=>
 {
 	if (this.compressed)
 	{
@@ -255,7 +255,7 @@ mxXmlCanvas2D.prototype.setFillAlpha = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setFillAlpha.apply(this, arguments);
+		mxAbstractCanvas2setFillAlpha.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('fillalpha');
@@ -273,7 +273,7 @@ mxXmlCanvas2D.prototype.setFillAlpha = function(value)
  * value - Number that represents the new stroke alpha. Possible values are between
  * 1 (opaque) and 0 (transparent).
  */
-mxXmlCanvas2D.prototype.setStrokeAlpha = function(value)
+mxXmlCanvas2setStrokeAlpha = (value)=>
 {
 	if (this.compressed)
 	{
@@ -282,7 +282,7 @@ mxXmlCanvas2D.prototype.setStrokeAlpha = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setStrokeAlpha.apply(this, arguments);
+		mxAbstractCanvas2setStrokeAlpha.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('strokealpha');
@@ -299,7 +299,7 @@ mxXmlCanvas2D.prototype.setStrokeAlpha = function(value)
  * 
  * value - Hexadecimal representation of the color or 'none'.
  */
-mxXmlCanvas2D.prototype.setFillColor = function(value)
+mxXmlCanvas2setFillColor = (value)=>
 {
 	if (value == mxConstants.NONE)
 	{
@@ -313,7 +313,7 @@ mxXmlCanvas2D.prototype.setFillColor = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setFillColor.apply(this, arguments);
+		mxAbstractCanvas2setFillColor.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('fillcolor');
@@ -341,11 +341,11 @@ mxXmlCanvas2D.prototype.setFillColor = function(value)
  * alpha2 - Optional alpha of the end color. Default is 1. Possible values
  * are between 1 (opaque) and 0 (transparent).
  */
-mxXmlCanvas2D.prototype.setGradient = function(color1, color2, x, y, w, h, direction, alpha1, alpha2)
+mxXmlCanvas2setGradient = (color1, color2, x, y, w, h, direction, alpha1, alpha2)=>
 {
 	if (color1 != null && color2 != null)
 	{
-		mxAbstractCanvas2D.prototype.setGradient.apply(this, arguments);
+		mxAbstractCanvas2setGradient.apply(this, arguments);
 		
 		var elem = this.createElement('gradient');
 		elem.setAttribute('c1', color1);
@@ -384,7 +384,7 @@ mxXmlCanvas2D.prototype.setGradient = function(color1, color2, x, y, w, h, direc
  * 
  * value - Hexadecimal representation of the color or 'none'.
  */
-mxXmlCanvas2D.prototype.setStrokeColor = function(value)
+mxXmlCanvas2setStrokeColor = (value)=>
 {
 	if (value == mxConstants.NONE)
 	{
@@ -398,7 +398,7 @@ mxXmlCanvas2D.prototype.setStrokeColor = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setStrokeColor.apply(this, arguments);
+		mxAbstractCanvas2setStrokeColor.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('strokecolor');
@@ -415,7 +415,7 @@ mxXmlCanvas2D.prototype.setStrokeColor = function(value)
  * 
  * value - Numeric representation of the stroke width.
  */
-mxXmlCanvas2D.prototype.setStrokeWidth = function(value)
+mxXmlCanvas2setStrokeWidth = (value)=>
 {
 	if (this.compressed)
 	{
@@ -424,7 +424,7 @@ mxXmlCanvas2D.prototype.setStrokeWidth = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setStrokeWidth.apply(this, arguments);
+		mxAbstractCanvas2setStrokeWidth.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('strokewidth');
@@ -443,7 +443,7 @@ mxXmlCanvas2D.prototype.setStrokeWidth = function(value)
  * value - Boolean that specifies if the stroke width should be ignored
  * for the dash pattern. Default is false.
  */
-mxXmlCanvas2D.prototype.setDashed = function(value, fixDash)
+mxXmlCanvas2setDashed = (value, fixDash)=>
 {
 	if (this.compressed)
 	{
@@ -452,7 +452,7 @@ mxXmlCanvas2D.prototype.setDashed = function(value, fixDash)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setDashed.apply(this, arguments);
+		mxAbstractCanvas2setDashed.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('dashed');
@@ -478,7 +478,7 @@ mxXmlCanvas2D.prototype.setDashed = function(value, fixDash)
  * between the dashes. The lengths are relative to the line width - a length
  * of 1 is equals to the line width.
  */
-mxXmlCanvas2D.prototype.setDashPattern = function(value)
+mxXmlCanvas2setDashPattern = (value)=>
 {
 	if (this.compressed)
 	{
@@ -487,7 +487,7 @@ mxXmlCanvas2D.prototype.setDashPattern = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setDashPattern.apply(this, arguments);
+		mxAbstractCanvas2setDashPattern.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('dashpattern');
@@ -505,7 +505,7 @@ mxXmlCanvas2D.prototype.setDashPattern = function(value)
  * value - String that represents the line cap. Possible values are flat, round
  * and square.
  */
-mxXmlCanvas2D.prototype.setLineCap = function(value)
+mxXmlCanvas2setLineCap = (value)=>
 {
 	if (this.compressed)
 	{
@@ -514,7 +514,7 @@ mxXmlCanvas2D.prototype.setLineCap = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setLineCap.apply(this, arguments);
+		mxAbstractCanvas2setLineCap.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('linecap');
@@ -532,7 +532,7 @@ mxXmlCanvas2D.prototype.setLineCap = function(value)
  * value - String that represents the line join. Possible values are miter,
  * round and bevel.
  */
-mxXmlCanvas2D.prototype.setLineJoin = function(value)
+mxXmlCanvas2setLineJoin = (value)=>
 {
 	if (this.compressed)
 	{
@@ -541,7 +541,7 @@ mxXmlCanvas2D.prototype.setLineJoin = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setLineJoin.apply(this, arguments);
+		mxAbstractCanvas2setLineJoin.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('linejoin');
@@ -558,7 +558,7 @@ mxXmlCanvas2D.prototype.setLineJoin = function(value)
  * 
  * value - Number that represents the miter limit.
  */
-mxXmlCanvas2D.prototype.setMiterLimit = function(value)
+mxXmlCanvas2setMiterLimit = (value)=>
 {
 	if (this.compressed)
 	{
@@ -567,7 +567,7 @@ mxXmlCanvas2D.prototype.setMiterLimit = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setMiterLimit.apply(this, arguments);
+		mxAbstractCanvas2setMiterLimit.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('miterlimit');
@@ -584,7 +584,7 @@ mxXmlCanvas2D.prototype.setMiterLimit = function(value)
  * 
  * value - Hexadecimal representation of the color or 'none'.
  */
-mxXmlCanvas2D.prototype.setFontColor = function(value)
+mxXmlCanvas2setFontColor = (value)=>
 {
 	if (this.textEnabled)
 	{
@@ -600,7 +600,7 @@ mxXmlCanvas2D.prototype.setFontColor = function(value)
 				return;
 			}
 			
-			mxAbstractCanvas2D.prototype.setFontColor.apply(this, arguments);
+			mxAbstractCanvas2setFontColor.apply(this, arguments);
 		}
 		
 		var elem = this.createElement('fontcolor');
@@ -618,7 +618,7 @@ mxXmlCanvas2D.prototype.setFontColor = function(value)
  * 
  * value - Hexadecimal representation of the color or 'none'.
  */
-mxXmlCanvas2D.prototype.setFontBackgroundColor = function(value)
+mxXmlCanvas2setFontBackgroundColor = (value)=>
 {
 	if (this.textEnabled)
 	{
@@ -634,7 +634,7 @@ mxXmlCanvas2D.prototype.setFontBackgroundColor = function(value)
 				return;
 			}
 			
-			mxAbstractCanvas2D.prototype.setFontBackgroundColor.apply(this, arguments);
+			mxAbstractCanvas2setFontBackgroundColor.apply(this, arguments);
 		}
 
 		var elem = this.createElement('fontbackgroundcolor');
@@ -652,7 +652,7 @@ mxXmlCanvas2D.prototype.setFontBackgroundColor = function(value)
  * 
  * value - Hexadecimal representation of the color or 'none'.
  */
-mxXmlCanvas2D.prototype.setFontBorderColor = function(value)
+mxXmlCanvas2setFontBorderColor = (value)=>
 {
 	if (this.textEnabled)
 	{
@@ -668,7 +668,7 @@ mxXmlCanvas2D.prototype.setFontBorderColor = function(value)
 				return;
 			}
 			
-			mxAbstractCanvas2D.prototype.setFontBorderColor.apply(this, arguments);
+			mxAbstractCanvas2setFontBorderColor.apply(this, arguments);
 		}
 		
 		var elem = this.createElement('fontbordercolor');
@@ -686,7 +686,7 @@ mxXmlCanvas2D.prototype.setFontBorderColor = function(value)
  * 
  * value - Numeric representation of the font size.
  */
-mxXmlCanvas2D.prototype.setFontSize = function(value)
+mxXmlCanvas2setFontSize = (value)=>
 {
 	if (this.textEnabled)
 	{
@@ -697,7 +697,7 @@ mxXmlCanvas2D.prototype.setFontSize = function(value)
 				return;
 			}
 			
-			mxAbstractCanvas2D.prototype.setFontSize.apply(this, arguments);
+			mxAbstractCanvas2setFontSize.apply(this, arguments);
 		}
 		
 		var elem = this.createElement('fontsize');
@@ -716,7 +716,7 @@ mxXmlCanvas2D.prototype.setFontSize = function(value)
  * value - String representation of the font family. This handles the same
  * values as the CSS font-family property.
  */
-mxXmlCanvas2D.prototype.setFontFamily = function(value)
+mxXmlCanvas2setFontFamily = (value)=>
 {
 	if (this.textEnabled)
 	{
@@ -727,7 +727,7 @@ mxXmlCanvas2D.prototype.setFontFamily = function(value)
 				return;
 			}
 			
-			mxAbstractCanvas2D.prototype.setFontFamily.apply(this, arguments);
+			mxAbstractCanvas2setFontFamily.apply(this, arguments);
 		}
 		
 		var elem = this.createElement('fontfamily');
@@ -746,7 +746,7 @@ mxXmlCanvas2D.prototype.setFontFamily = function(value)
  * value - Numeric representation of the font family. This is the sum of the
  * font styles from <mxConstants>.
  */
-mxXmlCanvas2D.prototype.setFontStyle = function(value)
+mxXmlCanvas2setFontStyle = (value)=>
 {
 	if (this.textEnabled)
 	{
@@ -762,7 +762,7 @@ mxXmlCanvas2D.prototype.setFontStyle = function(value)
 				return;
 			}
 			
-			mxAbstractCanvas2D.prototype.setFontStyle.apply(this, arguments);
+			mxAbstractCanvas2setFontStyle.apply(this, arguments);
 		}
 		
 		var elem = this.createElement('fontstyle');
@@ -780,7 +780,7 @@ mxXmlCanvas2D.prototype.setFontStyle = function(value)
  * 
  * value - Boolean that specifies if shadows should be enabled.
  */
-mxXmlCanvas2D.prototype.setShadow = function(value)
+mxXmlCanvas2setShadow = (value)=>
 {
 	if (this.compressed)
 	{
@@ -789,7 +789,7 @@ mxXmlCanvas2D.prototype.setShadow = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setShadow.apply(this, arguments);
+		mxAbstractCanvas2setShadow.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('shadow');
@@ -806,7 +806,7 @@ mxXmlCanvas2D.prototype.setShadow = function(value)
  * 
  * value - Hexadecimal representation of the color or 'none'.
  */
-mxXmlCanvas2D.prototype.setShadowColor = function(value)
+mxXmlCanvas2setShadowColor = (value)=>
 {
 	if (this.compressed)
 	{
@@ -820,7 +820,7 @@ mxXmlCanvas2D.prototype.setShadowColor = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setShadowColor.apply(this, arguments);
+		mxAbstractCanvas2setShadowColor.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('shadowcolor');
@@ -838,7 +838,7 @@ mxXmlCanvas2D.prototype.setShadowColor = function(value)
  * value - Number that represents the new alpha. Possible values are between
  * 1 (opaque) and 0 (transparent).
  */
-mxXmlCanvas2D.prototype.setShadowAlpha = function(value)
+mxXmlCanvas2setShadowAlpha = (value)=>
 {
 	if (this.compressed)
 	{
@@ -847,7 +847,7 @@ mxXmlCanvas2D.prototype.setShadowAlpha = function(value)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setShadowAlpha.apply(this, arguments);
+		mxAbstractCanvas2setShadowAlpha.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('shadowalpha');
@@ -866,7 +866,7 @@ mxXmlCanvas2D.prototype.setShadowAlpha = function(value)
  * dx - Number that represents the horizontal offset of the shadow.
  * dy - Number that represents the vertical offset of the shadow.
  */
-mxXmlCanvas2D.prototype.setShadowOffset = function(dx, dy)
+mxXmlCanvas2setShadowOffset = (dx, dy)=>
 {
 	if (this.compressed)
 	{
@@ -875,7 +875,7 @@ mxXmlCanvas2D.prototype.setShadowOffset = function(dx, dy)
 			return;
 		}
 		
-		mxAbstractCanvas2D.prototype.setShadowOffset.apply(this, arguments);
+		mxAbstractCanvas2setShadowOffset.apply(this, arguments);
 	}
 	
 	var elem = this.createElement('shadowoffset');
@@ -897,7 +897,7 @@ mxXmlCanvas2D.prototype.setShadowOffset = function(dx, dy)
  * w - Number that represents the width of the rectangle.
  * h - Number that represents the height of the rectangle.
  */
-mxXmlCanvas2D.prototype.rect = function(x, y, w, h)
+mxXmlCanvas2rect = (x, y, w, h)=>
 {
 	var elem = this.createElement('rect');
 	elem.setAttribute('x', this.format(x));
@@ -921,7 +921,7 @@ mxXmlCanvas2D.prototype.rect = function(x, y, w, h)
  * dx - Number that represents the horizontal rounding.
  * dy - Number that represents the vertical rounding.
  */
-mxXmlCanvas2D.prototype.roundrect = function(x, y, w, h, dx, dy)
+mxXmlCanvas2roundrect = (x, y, w, h, dx, dy)=>
 {
 	var elem = this.createElement('roundrect');
 	elem.setAttribute('x', this.format(x));
@@ -945,7 +945,7 @@ mxXmlCanvas2D.prototype.roundrect = function(x, y, w, h, dx, dy)
  * w - Number that represents the width of the ellipse.
  * h - Number that represents the height of the ellipse.
  */
-mxXmlCanvas2D.prototype.ellipse = function(x, y, w, h)
+mxXmlCanvas2ellipse = (x, y, w, h)=>
 {
 	var elem = this.createElement('ellipse');
 	elem.setAttribute('x', this.format(x));
@@ -971,7 +971,7 @@ mxXmlCanvas2D.prototype.ellipse = function(x, y, w, h)
  * flipH - Boolean indicating if the image should be flipped horizontally.
  * flipV - Boolean indicating if the image should be flipped vertically.
  */
-mxXmlCanvas2D.prototype.image = function(x, y, w, h, src, aspect, flipH, flipV)
+mxXmlCanvas2image = (x, y, w, h, src, aspect, flipH, flipV)=>
 {
 	src = this.converter.convert(src);
 	
@@ -993,7 +993,7 @@ mxXmlCanvas2D.prototype.image = function(x, y, w, h, src, aspect, flipH, flipV)
  * 
  * Starts a new path and puts it into the drawing buffer.
  */
-mxXmlCanvas2D.prototype.begin = function()
+mxXmlCanvas2begin = ()=>
 {
 	this.root.appendChild(this.createElement('begin'));
 	this.lastX = 0;
@@ -1010,7 +1010,7 @@ mxXmlCanvas2D.prototype.begin = function()
  * x - Number that represents the x-coordinate of the point.
  * y - Number that represents the y-coordinate of the point.
  */
-mxXmlCanvas2D.prototype.moveTo = function(x, y)
+mxXmlCanvas2moveTo = (x, y)=>
 {
 	var elem = this.createElement('move');
 	elem.setAttribute('x', this.format(x));
@@ -1030,7 +1030,7 @@ mxXmlCanvas2D.prototype.moveTo = function(x, y)
  * x - Number that represents the x-coordinate of the endpoint.
  * y - Number that represents the y-coordinate of the endpoint.
  */
-mxXmlCanvas2D.prototype.lineTo = function(x, y)
+mxXmlCanvas2lineTo = (x, y)=>
 {
 	var elem = this.createElement('line');
 	elem.setAttribute('x', this.format(x));
@@ -1052,7 +1052,7 @@ mxXmlCanvas2D.prototype.lineTo = function(x, y)
  * x2 - Number that represents the x-coordinate of the endpoint.
  * y2 - Number that represents the y-coordinate of the endpoint.
  */
-mxXmlCanvas2D.prototype.quadTo = function(x1, y1, x2, y2)
+mxXmlCanvas2quadTo = (x1, y1, x2, y2)=>
 {
 	var elem = this.createElement('quad');
 	elem.setAttribute('x1', this.format(x1));
@@ -1078,7 +1078,7 @@ mxXmlCanvas2D.prototype.quadTo = function(x1, y1, x2, y2)
  * x3 - Number that represents the x-coordinate of the endpoint.
  * y3 - Number that represents the y-coordinate of the endpoint.
  */
-mxXmlCanvas2D.prototype.curveTo = function(x1, y1, x2, y2, x3, y3)
+mxXmlCanvas2curveTo = (x1, y1, x2, y2, x3, y3)=>
 {
 	var elem = this.createElement('curve');
 	elem.setAttribute('x1', this.format(x1));
@@ -1097,7 +1097,7 @@ mxXmlCanvas2D.prototype.curveTo = function(x1, y1, x2, y2, x3, y3)
  * 
  * Closes the current path.
  */
-mxXmlCanvas2D.prototype.close = function()
+mxXmlCanvas2close = ()=>
 {
 	this.root.appendChild(this.createElement('close'));
 };
@@ -1127,7 +1127,7 @@ mxXmlCanvas2D.prototype.close = function()
  * rotation - Number that specifies the angle of the rotation around the anchor point of the text.
  * dir - Optional string that specifies the text direction. Possible values are rtl and lrt.
  */
-mxXmlCanvas2D.prototype.text = function(x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir)
+mxXmlCanvas2text = (x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir)=>
 {
 	if (this.textEnabled && str != null)
 	{
@@ -1191,7 +1191,7 @@ mxXmlCanvas2D.prototype.text = function(x, y, w, h, str, align, valign, wrap, fo
  * 
  * Paints the outline of the current drawing buffer.
  */
-mxXmlCanvas2D.prototype.stroke = function()
+mxXmlCanvas2stroke = ()=>
 {
 	this.root.appendChild(this.createElement('stroke'));
 };
@@ -1201,7 +1201,7 @@ mxXmlCanvas2D.prototype.stroke = function()
  * 
  * Fills the current drawing buffer.
  */
-mxXmlCanvas2D.prototype.fill = function()
+mxXmlCanvas2fill = ()=>
 {
 	this.root.appendChild(this.createElement('fill'));
 };
@@ -1211,7 +1211,7 @@ mxXmlCanvas2D.prototype.fill = function()
  * 
  * Fills the current drawing buffer and its outline.
  */
-mxXmlCanvas2D.prototype.fillAndStroke = function()
+mxXmlCanvas2fillAndStroke = ()=>
 {
 	this.root.appendChild(this.createElement('fillstroke'));
 };

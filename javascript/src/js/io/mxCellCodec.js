@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(function()
+mxCodecRegistry.register(()=>
 {
 	/**
 	 * Class: mxCellCodec
@@ -52,7 +52,7 @@ mxCodecRegistry.register(function()
 	 *
 	 * Returns true since this is a cell codec.
 	 */
-	codec.isCellCodec = function()
+	codec.isCellCodec = ()=>
 	{
 		return true;
 	};
@@ -60,9 +60,9 @@ mxCodecRegistry.register(function()
 	/**
 	 * Overidden to disable conversion of value to number.
 	 */
-	codec.isNumericAttribute = function(dec, attr, obj)
+	codec.isNumericAttribute = (dec, attr, obj)=>
 	{
-		return attr.nodeName !== 'value' && mxObjectCodec.prototype.isNumericAttribute.apply(this, arguments);
+		return attr.nodeName !== 'value' && isNumericAttribute.apply(this, arguments);
 	};
 	
 	/**
@@ -70,9 +70,9 @@ mxCodecRegistry.register(function()
 	 *
 	 * Excludes user objects that are XML nodes.
 	 */ 
-	codec.isExcluded = function(obj, attr, value, isWrite)
+	codec.isExcluded = (obj, attr, value, isWrite)=>
 	{
-		return mxObjectCodec.prototype.isExcluded.apply(this, arguments) ||
+		return isExcluded.apply(this, arguments) ||
 			(isWrite && attr == 'value' &&
 			value.nodeType == mxConstants.NODETYPE_ELEMENT);
 	};
@@ -83,7 +83,7 @@ mxCodecRegistry.register(function()
 	 * Encodes an <mxCell> and wraps the XML up inside the
 	 * XML of the user object (inversion).
 	 */
-	codec.afterEncode = function(enc, obj, node)
+	codec.afterEncode = (enc, obj, node)=>
 	{
 		if (obj.value != null && obj.value.nodeType == mxConstants.NODETYPE_ELEMENT)
 		{
@@ -110,7 +110,7 @@ mxCodecRegistry.register(function()
 	 * Decodes an <mxCell> and uses the enclosing XML node as
 	 * the user object for the cell (inversion).
 	 */
-	codec.beforeDecode = function(dec, node, obj)
+	codec.beforeDecode = (dec, node, obj)=>
 	{
 		var inner = node.cloneNode(true);
 		var classname = this.getName();

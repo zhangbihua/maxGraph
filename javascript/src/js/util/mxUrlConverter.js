@@ -8,7 +8,7 @@
  * 
  * Converts relative and absolute URLs to absolute URLs with protocol and domain.
  */
-var mxUrlConverter = function()
+var mxUrlConverter = ()=>
 {
 	// Empty constructor
 };
@@ -18,28 +18,28 @@ var mxUrlConverter = function()
  * 
  * Specifies if the converter is enabled. Default is true.
  */
-mxUrlConverter.prototype.enabled = true;
+enabled = true;
 
 /**
  * Variable: baseUrl
  * 
  * Specifies the base URL to be used as a prefix for relative URLs.
  */
-mxUrlConverter.prototype.baseUrl = null;
+baseUrl = null;
 
 /**
  * Variable: baseDomain
  * 
  * Specifies the base domain to be used as a prefix for absolute URLs.
  */
-mxUrlConverter.prototype.baseDomain = null;
+baseDomain = null;
 
 /**
  * Function: updateBaseUrl
  * 
  * Private helper function to update the base URL.
  */
-mxUrlConverter.prototype.updateBaseUrl = function()
+updateBaseUrl = ()=>
 {
 	this.baseDomain = location.protocol + '//' + location.host;
 	this.baseUrl = this.baseDomain + location.pathname;
@@ -57,7 +57,7 @@ mxUrlConverter.prototype.updateBaseUrl = function()
  * 
  * Returns <enabled>.
  */
-mxUrlConverter.prototype.isEnabled = function()
+isEnabled = ()=>
 {
 	return this.enabled;
 };
@@ -67,7 +67,7 @@ mxUrlConverter.prototype.isEnabled = function()
  * 
  * Sets <enabled>.
  */
-mxUrlConverter.prototype.setEnabled = function(value)
+setEnabled = (value)=>
 {
 	this.enabled = value;
 };
@@ -77,7 +77,7 @@ mxUrlConverter.prototype.setEnabled = function(value)
  * 
  * Returns <baseUrl>.
  */
-mxUrlConverter.prototype.getBaseUrl = function()
+getBaseUrl = ()=>
 {
 	return this.baseUrl;
 };
@@ -87,7 +87,7 @@ mxUrlConverter.prototype.getBaseUrl = function()
  * 
  * Sets <baseUrl>.
  */
-mxUrlConverter.prototype.setBaseUrl = function(value)
+setBaseUrl = (value)=>
 {
 	this.baseUrl = value;
 };
@@ -97,7 +97,7 @@ mxUrlConverter.prototype.setBaseUrl = function(value)
  * 
  * Returns <baseDomain>.
  */
-mxUrlConverter.prototype.getBaseDomain = function()
+getBaseDomain = ()=>
 {
 	return this.baseDomain;
 };
@@ -107,7 +107,7 @@ mxUrlConverter.prototype.getBaseDomain = function()
  * 
  * Sets <baseDomain>.
  */
-mxUrlConverter.prototype.setBaseDomain = function(value)
+setBaseDomain = (value)=>
 {
 	this.baseDomain = value;
 };
@@ -117,7 +117,7 @@ mxUrlConverter.prototype.setBaseDomain = function(value)
  * 
  * Returns true if the given URL is relative.
  */
-mxUrlConverter.prototype.isRelativeUrl = function(url)
+isRelativeUrl = (url)=>
 {
 	return url != null && url.substring(0, 2) != '//' && url.substring(0, 7) != 'http://' &&
 		url.substring(0, 8) != 'https://' && url.substring(0, 10) != 'data:image' &&
@@ -130,7 +130,7 @@ mxUrlConverter.prototype.isRelativeUrl = function(url)
  * Converts the given URL to an absolute URL with protol and domain.
  * Relative URLs are first converted to absolute URLs.
  */
-mxUrlConverter.prototype.convert = function(url)
+convert = (url)=>
 {
 	if (this.isEnabled() && this.isRelativeUrl(url))
 	{

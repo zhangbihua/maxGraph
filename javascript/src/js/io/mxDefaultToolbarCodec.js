@@ -10,7 +10,7 @@
  * <mxCodec> and the <mxCodecRegistry>. This codec only reads configuration
  * data for existing toolbars handlers, it does not encode or create toolbars.
  */
-var mxDefaultToolbarCodec = mxCodecRegistry.register(function()
+var mxDefaultToolbarCodec = mxCodecRegistry.register(()=>
 {
 	var codec = new mxObjectCodec(new mxDefaultToolbar());
 
@@ -19,7 +19,7 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(function()
 	 *
 	 * Returns null.
 	 */
-	codec.encode = function(enc, obj)
+	codec.encode = (enc, obj)=>
 	{
 		return null;
 	};
@@ -116,7 +116,7 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(function()
 	 * </mxDefaultToolbar>
 	 * (end)
 	 */
-	codec.decode = function(dec, node, into)
+	codec.decode = (dec, node, into)=>
 	{
 		if (into != null)
 		{
@@ -212,7 +212,7 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(function()
 									else
 									{
 										var select = null;
-										var create = function()
+										var create = ()=>
 										{
 											var template = editor.templates[select.value];
 											
@@ -241,9 +241,9 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(function()
 										
 										// Selects the toolbar icon if a selection change
 										// is made in the corresponding combobox.
-										mxEvent.addListener(select, 'change', function()
+										mxEvent.addListener(select, 'change', ()=>
 										{
-											into.toolbar.selectMode(img, function(evt)
+											into.toolbar.selectMode(img, (evt)=>
 											{
 												var pt = mxUtils.convertPoint(editor.graph.container,
 													mxEvent.getClientX(evt), mxEvent.getClientY(evt));
