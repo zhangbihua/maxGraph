@@ -4,33 +4,9 @@
  */
 
 import mxDictionary from "FIXME";
+import mxPoint from "FIXME";
 
 class mxCompactTreeLayout extends mxGraphLayout {
-  /**
-   * Class: mxCompactTreeLayout
-   *
-   * Extends <mxGraphLayout> to implement a compact tree (Moen) algorithm. This
-   * layout is suitable for graphs that have no cycles (trees). Vertices that are
-   * not connected to the tree will be ignored by this layout.
-   *
-   * Example:
-   *
-   * (code)
-   * var layout = new mxCompactTreeLayout(graph);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * Constructor: mxCompactTreeLayout
-   *
-   * Constructs a new compact tree layout for the specified graph
-   * and orientation.
-   */
-  constructor(graph, horizontal, invert) {
-    super(graph);
-    this.horizontal = (horizontal != null) ? horizontal : true;
-    this.invert = (invert != null) ? invert : false;
-  };
-
   /**
    * Variable: horizontal
    *
@@ -217,6 +193,31 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * , this value is only exposed to assist with post-processing functionality
    */
   node = null;
+
+  /**
+   * Class: mxCompactTreeLayout
+   *
+   * Extends <mxGraphLayout> to implement a compact tree (Moen) algorithm. This
+   * layout is suitable for graphs that have no cycles (trees). Vertices that are
+   * not connected to the tree will be ignored by this layout.
+   *
+   * Example:
+   *
+   * (code)
+   * var layout = new mxCompactTreeLayout(graph);
+   * layout.execute(graph.getDefaultParent());
+   * (end)
+   *
+   * Constructor: mxCompactTreeLayout
+   *
+   * Constructs a new compact tree layout for the specified graph
+   * and orientation.
+   */
+  constructor(graph, horizontal, invert) {
+    super(graph);
+    this.horizontal = (horizontal != null) ? horizontal : true;
+    this.invert = (invert != null) ? invert : false;
+  };
 
   /**
    * Function: isVertexIgnored
