@@ -2,8 +2,10 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(()=>
-{
+
+import mxRootChange from "FIXME";
+
+class mxRootChangeCodec extends mxObjectCodec {
   /**
    * Class: mxRootChangeCodec
    *
@@ -17,16 +19,16 @@ mxCodecRegistry.register(()=>
    * - previous
    * - root
    */
-  var codec = new mxObjectCodec(new mxRootChange(),
-    ['model', 'previous', 'root']);
+  constructor() {
+    super(new mxRootChange(), ['model', 'previous', 'root']);
+  }
 
   /**
    * Function: onEncode
    *
    * Encodes the child recursively.
    */
-  codec.afterEncode = (enc, obj, node)=>
-  {
+  afterEncode = (enc, obj, node) => {
     enc.encodeCell(obj.root, node);
 
     return node;
@@ -38,11 +40,9 @@ mxCodecRegistry.register(()=>
    * Decodes the optional children as cells
    * using the respective decoder.
    */
-  codec.beforeDecode = (dec, node, obj)=>
-  {
+  beforeDecode = (dec, node, obj) => {
     if (node.firstChild != null &&
-      node.firstChild.nodeType == mxConstants.NODETYPE_ELEMENT)
-    {
+        node.firstChild.nodeType === mxConstants.NODETYPE_ELEMENT) {
       // Makes sure the original node isn't modified
       node = node.cloneNode(true);
 
@@ -53,8 +53,7 @@ mxCodecRegistry.register(()=>
       tmp.parentNode.removeChild(tmp);
       tmp = tmp2;
 
-      while (tmp != null)
-      {
+      while (tmp != null) {
         tmp2 = tmp.nextSibling;
         dec.decodeCell(tmp);
         tmp.parentNode.removeChild(tmp);
@@ -70,14 +69,12 @@ mxCodecRegistry.register(()=>
    *
    * Restores the state by assigning the previous value.
    */
-  codec.afterDecode = (dec, node, obj)=>
-  {
+  afterDecode = (dec, node, obj) => {
     obj.previous = obj.root;
 
     return obj;
   };
+}
 
-  // Returns the codec into the registry
-  return codec;
-
-}());
+mxCodecRegistry.register(new mxRootChangeCodec());
+export default mxRootChangeCodec;

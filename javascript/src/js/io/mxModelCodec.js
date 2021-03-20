@@ -2,8 +2,8 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(()=>
-{
+
+class mxModelCodec extends mxObjectCodec {
   /**
    * Class: mxModelCodec
    *
@@ -11,7 +11,9 @@ mxCodecRegistry.register(()=>
    * dynamically at load time and used implicitly via <mxCodec>
    * and the <mxCodecRegistry>.
    */
-  var codec = new mxObjectCodec(new mxGraphModel());
+  constructor() {
+    super(new mxGraphModel());
+  }
 
   /**
    * Function: encodeObject
@@ -20,8 +22,7 @@ mxCodecRegistry.register(()=>
    * cell nodes as produced by the <mxCellCodec>. The sequence is
    * wrapped-up in a node with the name root.
    */
-  codec.encodeObject = (enc, obj, node)=>
-  {
+  encodeObject = (enc, obj, node) => {
     var rootNode = enc.document.createElement('root');
     enc.encodeCell(obj.getRoot(), rootNode);
     node.appendChild(rootNode);
@@ -29,17 +30,13 @@ mxCodecRegistry.register(()=>
 
   /**
    * Function: decodeChild
-   * 
+   *
    * Overrides decode child to handle special child nodes.
-   */  
-  codec.decodeChild = (dec, child, obj)=>
-  {
-    if (child.nodeName == 'root')
-    {
+   */
+  decodeChild = (dec, child, obj) => {
+    if (child.nodeName === 'root') {
       this.decodeRoot(dec, child, obj);
-    }
-    else
-    {
+    } else {
       decodeChild.apply(this, arguments);
     }
   };
@@ -50,31 +47,27 @@ mxCodecRegistry.register(()=>
    * Reads the cells into the graph model. All cells
    * are children of the root element in the node.
    */
-  codec.decodeRoot = (dec, root, model)=>
-  {
+  decodeRoot = (dec, root, model) => {
     var rootCell = null;
     var tmp = root.firstChild;
-    
-    while (tmp != null)
-    {
+
+    while (tmp != null) {
       var cell = dec.decodeCell(tmp);
-      
-      if (cell != null && cell.getParent() == null)
-      {
+
+      if (cell != null && cell.getParent() == null) {
         rootCell = cell;
       }
-      
+
       tmp = tmp.nextSibling;
     }
 
     // Sets the root on the model if one has been decoded
-    if (rootCell != null)
-    {
+    if (rootCell != null) {
       model.setRoot(rootCell);
     }
   };
+}
 
-  // Returns the codec into the registry
-  return codec;
+mxCodecRegistry.register(new mxModelCodec());
+export default mxModelCodec;
 
-}());

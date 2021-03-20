@@ -2,28 +2,29 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-/**
- * Class: mxDefaultToolbarCodec
- *
- * Custom codec for configuring <mxDefaultToolbar>s. This class is created
- * and registered dynamically at load time and used implicitly via
- * <mxCodec> and the <mxCodecRegistry>. This codec only reads configuration
- * data for existing toolbars handlers, it does not encode or create toolbars.
- */
-var mxDefaultToolbarCodec = mxCodecRegistry.register(()=>
-{
-  var codec = new mxObjectCodec(new mxDefaultToolbar());
+
+class mxDefaultToolbarCodec extends mxObjectCodec {
+  /**
+   * Class: mxDefaultToolbarCodec
+   *
+   * Custom codec for configuring <mxDefaultToolbar>s. This class is created
+   * and registered dynamically at load time and used implicitly via
+   * <mxCodec> and the <mxCodecRegistry>. This codec only reads configuration
+   * data for existing toolbars handlers, it does not encode or create toolbars.
+   */
+  constructor() {
+    super(new mxDefaultToolbar());
+  }
 
   /**
    * Function: encode
    *
    * Returns null.
    */
-  codec.encode = (enc, obj)=>
-  {
+  encode = (enc, obj) => {
     return null;
   };
-  
+
   /**
    * Function: decode
    *
@@ -35,7 +36,7 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(()=>
    * add - Adds a new item to the toolbar. See below for attributes.
    * separator - Adds a vertical separator. No attributes.
    * hr - Adds a horizontal separator. No attributes.
-   * br - Adds a linefeed. No attributes. 
+   * br - Adds a linefeed. No attributes.
    *
    * Attributes:
    *
@@ -56,11 +57,11 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(()=>
    * to create a combo box in the toolbar. If the icon is specified then
    * a list of the child node is expected to have its template attribute
    * set and the action is ignored instead.
-   * 
+   *
    * Nodes with a specified template may define a function to be used for
    * inserting the cloned template into the graph. Here is an example of such
    * a node:
-   * 
+   *
    * (code)
    * <add as="Swimlane" template="swimlane" icon="images/swimlane.gif"><![CDATA[
    *   function (editor, cell, evt, targetCell)
@@ -72,7 +73,7 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(()=>
    *   }
    * ]]></add>
    * (end)
-   * 
+   *
    * In the above function, editor is the enclosing <mxEditor> instance, cell
    * is the clone of the template, evt is the mouse event that represents the
    * drop and targetCell is the cell under the mousepointer where the drop
@@ -94,7 +95,7 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(()=>
    *   }
    * ]]></add>
    * (end)
-   * 
+   *
    * Both functions require <mxDefaultToolbarCodec.allowEval> to be set to true.
    *
    * Modes:
@@ -106,7 +107,7 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(()=>
    * Example:
    *
    * To add items to the toolbar:
-   * 
+   *
    * (code)
    * <mxDefaultToolbar as="toolbar">
    *   <add as="save" action="save" icon="images/save.gif"/>
@@ -116,33 +117,21 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(()=>
    * </mxDefaultToolbar>
    * (end)
    */
-  codec.decode = (dec, node, into)=>
-  {
-    if (into != null)
-    {
+  decode = (dec, node, into) => {
+    if (into != null) {
       var editor = into.editor;
       node = node.firstChild;
-      
-      while (node != null)
-      {
-        if (node.nodeType == mxConstants.NODETYPE_ELEMENT)
-        {
-          if (!this.processInclude(dec, node, into))
-          {
-            if (node.nodeName == 'separator')
-            {
+
+      while (node != null) {
+        if (node.nodeType === mxConstants.NODETYPE_ELEMENT) {
+          if (!this.processInclude(dec, node, into)) {
+            if (node.nodeName === 'separator') {
               into.addSeparator();
-            }
-            else if (node.nodeName == 'br')
-            {
+            } else if (node.nodeName === 'br') {
               into.toolbar.addBreak();
-            }
-            else if (node.nodeName == 'hr')
-            {
+            } else if (node.nodeName === 'hr') {
               into.toolbar.addLine();
-            }
-            else if (node.nodeName == 'add')
-            {
+            } else if (node.nodeName === 'add') {
               var as = node.getAttribute('as');
               as = mxResources.get(as) || as;
               var icon = node.getAttribute('icon');
@@ -154,159 +143,119 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(()=>
               var text = mxUtils.getTextContent(node);
               var elt = null;
 
-              if (action != null)
-              {
+              if (action != null) {
                 elt = into.addItem(as, icon, action, pressedIcon);
-              }
-              else if (mode != null)
-              {
+              } else if (mode != null) {
                 var funct = (mxDefaultToolbarCodec.allowEval) ? mxUtils.eval(text) : null;
                 elt = into.addMode(as, icon, mode, pressedIcon, funct);
-              }
-              else if (template != null || (text != null && text.length > 0))
-              {
+              } else if (template != null || (text != null && text.length > 0)) {
                 var cell = editor.templates[template];
                 var style = node.getAttribute('style');
-                
-                if (cell != null && style != null)
-                {
+
+                if (cell != null && style != null) {
                   cell = editor.graph.cloneCell(cell);
                   cell.setStyle(style);
                 }
-                
+
                 var insertFunction = null;
-                
-                if (text != null && text.length > 0 && mxDefaultToolbarCodec.allowEval)
-                {
+
+                if (text != null && text.length > 0 && mxDefaultToolbarCodec.allowEval) {
                   insertFunction = mxUtils.eval(text);
                 }
-                
+
                 elt = into.addPrototype(as, icon, cell, pressedIcon, insertFunction, toggle);
-              }
-              else
-              {
+              } else {
                 var children = mxUtils.getChildNodes(node);
-                
-                if (children.length > 0)
-                {
-                  if (icon == null)
-                  {
+
+                if (children.length > 0) {
+                  if (icon == null) {
                     var combo = into.addActionCombo(as);
-                    
-                    for (var i=0; i<children.length; i++)
-                    {
+
+                    for (var i = 0; i < children.length; i++) {
                       var child = children[i];
-                      
-                      if (child.nodeName == 'separator')
-                      {
+
+                      if (child.nodeName === 'separator') {
                         into.addOption(combo, '---');
-                      }
-                      else if (child.nodeName == 'add')
-                      {
+                      } else if (child.nodeName === 'add') {
                         var lab = child.getAttribute('as');
                         var act = child.getAttribute('action');
                         into.addActionOption(combo, lab, act);
                       }
                     }
-                  }
-                  else
-                  {
+                  } else {
                     var select = null;
-                    var create = ()=>
-                    {
+                    var create = () => {
                       var template = editor.templates[select.value];
-                      
-                      if (template != null)
-                      {
+
+                      if (template != null) {
                         var clone = template.clone();
                         var style = select.options[select.selectedIndex].cellStyle;
-                        
-                        if (style != null)
-                        {
+
+                        if (style != null) {
                           clone.setStyle(style);
                         }
-                        
+
                         return clone;
+                      } else {
+                        mxLog.warn('Template ' + template + ' not found');
                       }
-                      else
-                      {
-                        mxLog.warn('Template '+template+' not found');
-                      }
-                      
+
                       return null;
                     };
-                    
+
                     var img = into.addPrototype(as, icon, create, null, null, toggle);
                     select = into.addCombo();
-                    
+
                     // Selects the toolbar icon if a selection change
                     // is made in the corresponding combobox.
-                    mxEvent.addListener(select, 'change', ()=>
-                    {
-                      into.toolbar.selectMode(img, (evt)=>
-                      {
+                    mxEvent.addListener(select, 'change', () => {
+                      into.toolbar.selectMode(img, (evt) => {
                         var pt = mxUtils.convertPoint(editor.graph.container,
-                          mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-                        
+                            mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+
                         return editor.addVertex(null, funct(), pt.x, pt.y);
                       });
-                      
+
                       into.toolbar.noReset = false;
                     });
-                    
+
                     // Adds the entries to the combobox
-                    for (var i=0; i<children.length; i++)
-                    {
+                    for (var i = 0; i < children.length; i++) {
                       var child = children[i];
-                      
-                      if (child.nodeName == 'separator')
-                      {
+
+                      if (child.nodeName === 'separator') {
                         into.addOption(select, '---');
-                      }
-                      else if (child.nodeName == 'add')
-                      {
+                      } else if (child.nodeName === 'add') {
                         var lab = child.getAttribute('as');
                         var tmp = child.getAttribute('template');
                         var option = into.addOption(select, lab, tmp || template);
                         option.cellStyle = child.getAttribute('style');
                       }
                     }
-                    
+
                   }
                 }
               }
-              
+
               // Assigns an ID to the created element to access it later.
-              if (elt != null)
-              {
+              if (elt != null) {
                 var id = node.getAttribute('id');
-                
-                if (id != null && id.length > 0)
-                {
+
+                if (id != null && id.length > 0) {
                   elt.setAttribute('id', id);
                 }
               }
             }
           }
         }
-        
+
         node = node.nextSibling;
       }
     }
-    
+
     return into;
   };
-  
-  // Returns the codec into the registry
-  return codec;
+}
 
-}());
-
-/**
- * Variable: allowEval
- * 
- * Static global switch that specifies if the use of eval is allowed for
- * evaluating text content. Default is true. Set this to false if stylesheets
- * may contain user input
- */
-mxDefaultToolbarCodec.allowEval = true;
+mxCodecRegistry.register(new mxDefaultToolbarCodec());
+export default mxDefaultToolbarCodec;
