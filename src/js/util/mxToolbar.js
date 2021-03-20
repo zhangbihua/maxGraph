@@ -4,6 +4,7 @@
  */
 
 import mxUtils from "./mxUtils";
+import mxEvent from "./mxEvent";
 import mxPoint from "./mxPoint";
 import mxPopupMenu from "./mxPopupMenu";
 import mxEventSource from "./mxEventSource";
@@ -67,6 +68,7 @@ class mxToolbar extends mxEventSource {
    * container - DOM node that contains the toolbar.
    */
   constructor(container) {
+    super();
     this.container = container;
   };
 

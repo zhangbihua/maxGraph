@@ -71,6 +71,8 @@ class mxSwimlaneManager extends mxEventSource {
    * graph - Reference to the enclosing graph.
    */
   constructor(graph, horizontal, addEnabled, resizeEnabled) {
+    super();
+
     this.horizontal = (horizontal != null) ? horizontal : true;
     this.addEnabled = (addEnabled != null) ? addEnabled : true;
     this.resizeEnabled = (resizeEnabled != null) ? resizeEnabled : true;

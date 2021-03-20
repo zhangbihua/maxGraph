@@ -4,6 +4,7 @@
  */
 
 import mxUtils from "../util/mxUtils";
+import mxCellPath from "../model/mxCellPath";
 
 class mxCodec {
   /**

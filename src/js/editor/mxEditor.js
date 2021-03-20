@@ -3,13 +3,23 @@
  * Copyright (c) 2006-2019, draw.io AG
  */
 
-import mxDefaultPopupMenu from "FIXME";
+import mxDefaultPopupMenu from "./mxDefaultPopupMenu";
 import mxUndoManager from "../util/mxUndoManager";
-import mxDefaultKeyHandler from "FIXME";
+import mxDefaultKeyHandler from "./mxDefaultKeyHandler";
 import mxEventSource from "../util/mxEventSource";
 import mxResources from "../util/mxResources";
 import mxClient from "../mxClient";
-import mxDivResizer from "FIXME";
+import mxCompactTreeLayout from "../layout/mxCompactTreeLayout";
+import mxDefaultToolbar from "./mxDefaultToolbar";
+import mxStackLayout from "../layout/mxStackLayout";
+import mxEventObject from "../util/mxEventObject";
+import mxUtils from "../util/mxUtils";
+import mxCodec from "../io/mxCodec";
+import mxWindow from "../util/mxWindow";
+import mxForm from "../util/mxForm";
+import mxOutline from "../view/mxOutline";
+import mxCell from "../model/mxCell";
+import mxGeometry from "../model/mxGeometry";
 
 /**
  * Installs the required language resources at class
@@ -366,6 +376,8 @@ class mxEditor extends mxEventSource {
    * config - Optional XML node that contains the configuration.
    */
   constructor(config) {
+    super();
+
     this.actions = [];
     this.addActions();
 
@@ -1557,7 +1569,7 @@ class mxEditor extends mxEventSource {
     var layoutMgr = new mxLayoutManager(graph);
 
     var self = this; // closure
-    layoutMgr.getLayout=(cell) {
+    layoutMgr.getLayout=(cell)=>{
       var layout = null;
       var model = self.graph.getModel();
 
@@ -1653,7 +1665,7 @@ class mxEditor extends mxEventSource {
     graph.getView().addListener(mxEvent.UNDO, listener);
 
     // Keeps the selection state in sync
-    var undoHandler=(sender, evt) {
+    var undoHandler=(sender, evt)=>{
       var changes = evt.getProperty('edit').changes;
       graph.setSelectionCells(graph.getSelectionCellsForChanges(changes));
     };
@@ -1768,7 +1780,7 @@ class mxEditor extends mxEventSource {
         this.swimlaneSpacing, 2 * gs, 2 * gs);
 
     // Overrides isIgnored to only take into account swimlanes
-    layout.isVertexIgnored=(cell) {
+    layout.isVertexIgnored=(cell)=>{
       return !layout.graph.isSwimlane(cell);
     };
 
@@ -2483,7 +2495,7 @@ class mxEditor extends mxEventSource {
 
       // Workaround for ignored iframe height 100% in FF
       if (mxClient.IS_NS) {
-        var handler=(sender) {
+        var handler=(sender)=>{
           var h = wnd.div.offsetHeight;
           frame.setAttribute('height', (h - 26) + 'px');
         };

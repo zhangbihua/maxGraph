@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
+import mxPopupMenu from "../util/mxPopupMenu";
 
 class mxPopupMenuHandler extends mxPopupMenu {
   /**
@@ -65,7 +66,8 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Constructs an event handler that creates a <mxPopupMenu>.
    */
   constructor(graph, factoryMethod) {
-    // super not called
+    //super();
+
     if (graph != null) {
       this.graph = graph;
       this.factoryMethod = factoryMethod;

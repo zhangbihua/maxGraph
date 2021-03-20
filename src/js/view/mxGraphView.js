@@ -191,6 +191,8 @@ class mxGraphView extends mxEventSource {
    * graph - Reference to the enclosing <mxGraph>.
    */
   constructor(graph) {
+    super();
+
     this.graph = graph;
     this.translate = new mxPoint();
     this.graphBounds = new mxRectangle();

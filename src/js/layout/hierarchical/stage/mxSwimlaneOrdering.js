@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
+import mxHierarchicalLayoutStage from "./mxHierarchicalLayoutStage";
 
 class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
   /**
@@ -22,7 +23,8 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
    * Creates a cycle remover for the given internal model.
    */
   constructor(layout) {
-    // super not called
+    super();
+
     this.layout = layout;
   };
 

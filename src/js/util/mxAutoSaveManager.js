@@ -96,6 +96,8 @@ class mxAutoSaveManager extends mxEventSource {
    * graph - Reference to the enclosing graph.
    */
   constructor(graph) {
+    super();
+
     // Notifies the manager of a change
     this.changeHandler = mxUtils.bind(this, (sender, evt) => {
       if (this.isEnabled()) {

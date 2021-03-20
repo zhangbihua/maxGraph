@@ -2,30 +2,10 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
+import mxGraphLayout from "./mxGraphLayout";
+import mxObjectIdentity from "FIXME";
 
 class mxFastOrganicLayout extends mxGraphLayout {
-  /**
-   * Class: mxFastOrganicLayout
-   *
-   * Extends <mxGraphLayout> to implement a fast organic layout algorithm.
-   * The vertices need to be connected for this layout to work, vertices
-   * with no connections are ignored.
-   *
-   * Example:
-   *
-   * (code)
-   * var layout = new mxFastOrganicLayout(graph);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * Constructor: mxCompactTreeLayout
-   *
-   * Constructs a new fast organic layout for the specified graph.
-   */
-  constructor(graph) {
-    super(graph);
-  };
-
   /**
    * Variable: useInputOrigin
    *
@@ -189,6 +169,28 @@ class mxFastOrganicLayout extends mxGraphLayout {
   allowedToRun = true;
 
   /**
+   * Class: mxFastOrganicLayout
+   *
+   * Extends <mxGraphLayout> to implement a fast organic layout algorithm.
+   * The vertices need to be connected for this layout to work, vertices
+   * with no connections are ignored.
+   *
+   * Example:
+   *
+   * (code)
+   * var layout = new mxFastOrganicLayout(graph);
+   * layout.execute(graph.getDefaultParent());
+   * (end)
+   *
+   * Constructor: mxCompactTreeLayout
+   *
+   * Constructs a new fast organic layout for the specified graph.
+   */
+  constructor(graph) {
+    super(graph);
+  };
+
+  /**
    * Function: isVertexIgnored
    *
    * Returns a boolean indicating if the given <mxCell> should be ignored as a
@@ -199,7 +201,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * vertex - <mxCell> whose ignored state should be returned.
    */
   isVertexIgnored = (vertex) => {
-    return isVertexIgnored.apply(this, arguments) ||
+    return super.isVertexIgnored(vertex) ||
         this.graph.getConnections(vertex).length == 0;
   };
 

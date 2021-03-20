@@ -2,6 +2,9 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
+import mxEventSource from "../util/mxEventSource";
+import mxUtils from "../util/mxUtils";
+import mxEventObject from "../util/mxEventObject";
 
 class mxPanningHandler extends mxEventSource {
   /**
@@ -135,7 +138,8 @@ class mxPanningHandler extends mxEventSource {
    * <code>event</code> property contains the corresponding <mxMouseEvent>.
    */
   constructor(graph) {
-    // super not called
+    super();
+
     if (graph != null) {
       this.graph = graph;
       this.graph.addMouseListener(this);
@@ -160,7 +164,7 @@ class mxPanningHandler extends mxEventSource {
         if (this.isPinchEnabled()) {
           var evt = eo.getProperty('event');
 
-          if (!mxEvent.isConsumed(evt) && evt.type == 'gesturestart') {
+          if (!mxEvent.isConsumed(evt) && evt.type === 'gesturestart') {
             this.initialScale = this.graph.view.scale;
 
             // Forces start of panning when pinch gesture starts
@@ -168,7 +172,7 @@ class mxPanningHandler extends mxEventSource {
               this.start(this.mouseDownEvent);
               this.mouseDownEvent = null;
             }
-          } else if (evt.type == 'gestureend' && this.initialScale != null) {
+          } else if (evt.type === 'gestureend' && this.initialScale != null) {
             this.initialScale = null;
           }
 

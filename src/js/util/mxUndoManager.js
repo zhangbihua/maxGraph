@@ -3,6 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
+import mxEvent from "./mxEvent";
 import mxEventObject from "./mxEventObject";
 import mxEventSource from "./mxEventSource";
 
@@ -98,6 +99,7 @@ class mxUndoManager extends mxEventSource {
    * size is given, then a default size of 100 steps is used.
    */
   constructor(size) {
+    super();
     this.size = (size != null) ? size : 100;
     this.clear();
   };

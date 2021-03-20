@@ -81,6 +81,8 @@ class mxGraphSelectionModel extends mxEventSource {
    * graph - Reference to the enclosing <mxGraph>.
    */
   constructor(graph) {
+    super();
+
     this.graph = graph;
     this.cells = [];
   };

@@ -3,8 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
+import mxClient from "../mxClient";
 import mxToolbar from "../util/mxToolbar";
 import mxGeometry from "../model/mxGeometry";
+import mxUtils from "../util/mxUtils";
 
 class mxDefaultToolbar {
   /**

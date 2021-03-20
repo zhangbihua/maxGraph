@@ -36,6 +36,7 @@ class mxAnimation extends mxEventSource {
    * graph - Reference to the enclosing <mxGraph>.
    */
   constructor(delay) {
+    super();
     this.delay = (delay != null) ? delay : 20;
   };
 

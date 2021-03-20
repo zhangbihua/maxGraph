@@ -2,9 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-var mxCellPath =
-{
-
+var mxCellPath = {
   /**
    * Class: mxCellPath
    *
@@ -27,16 +25,13 @@ var mxCellPath =
    *
    * cell - Cell whose path should be returned.
    */
-  create: (cell)=>
-  {
+  create: (cell) => {
     var result = '';
 
-    if (cell != null)
-    {
+    if (cell != null) {
       var parent = cell.getParent();
 
-      while (parent != null)
-      {
+      while (parent != null) {
         var index = parent.getIndex(cell);
         result = index + mxCellPath.PATH_SEPARATOR + result;
 
@@ -48,8 +43,7 @@ var mxCellPath =
     // Removes trailing separator
     var n = result.length;
 
-    if (n > 1)
-    {
+    if (n > 1) {
       result = result.substring(0, n - 1);
     }
 
@@ -66,18 +60,13 @@ var mxCellPath =
    *
    * path - Path whose parent path should be returned.
    */
-  getParentPath: (path)=>
-  {
-    if (path != null)
-    {
+  getParentPath: (path) => {
+    if (path != null) {
       var index = path.lastIndexOf(mxCellPath.PATH_SEPARATOR);
 
-      if (index >= 0)
-      {
+      if (index >= 0) {
         return path.substring(0, index);
-      }
-      else if (path.length > 0)
-      {
+      } else if (path.length > 0) {
         return '';
       }
     }
@@ -96,16 +85,13 @@ var mxCellPath =
    * root - Root cell of the path to be resolved.
    * path - String that defines the path.
    */
-  resolve: (root, path)=>
-  {
+  resolve: (root, path) => {
     var parent = root;
 
-    if (path != null)
-    {
+    if (path != null) {
       var tokens = path.split(mxCellPath.PATH_SEPARATOR);
 
-      for (var i=0; i<tokens.length; i++)
-      {
+      for (var i = 0; i < tokens.length; i++) {
         parent = parent.getChildAt(parseInt(tokens[i]));
       }
     }
@@ -119,22 +105,16 @@ var mxCellPath =
    * Compares the given cell paths and returns -1 if p1 is smaller, 0 if
    * p1 is equal and 1 if p1 is greater than p2.
    */
-  compare: (p1, p2)=>
-  {
+  compare: (p1, p2) => {
     var min = Math.min(p1.length, p2.length);
     var comp = 0;
 
-    for (var i = 0; i < min; i++)
-    {
-      if (p1[i] != p2[i])
-      {
+    for (var i = 0; i < min; i++) {
+      if (p1[i] != p2[i]) {
         if (p1[i].length == 0 ||
-          p2[i].length == 0)
-        {
+            p2[i].length == 0) {
           comp = (p1[i] == p2[i]) ? 0 : ((p1[i] > p2[i]) ? 1 : -1);
-        }
-        else
-        {
+        } else {
           var t1 = parseInt(p1[i]);
           var t2 = parseInt(p2[i]);
 
@@ -146,20 +126,17 @@ var mxCellPath =
     }
 
     // Compares path length if both paths are equal to this point
-    if (comp === 0)
-    {
+    if (comp === 0) {
       var t1 = p1.length;
       var t2 = p2.length;
 
-      if (t1 !== t2)
-      {
+      if (t1 !== t2) {
         comp = (t1 > t2) ? 1 : -1;
       }
     }
 
     return comp;
   }
-
 };
 
 export default mxCellPath;

@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
-import mxObjectCodec from "FIXME";
+import mxObjectCodec from "./mxObjectCodec";
 import mxChildChange from "FIXME";
 import mxCodecRegistry from "./mxCodecRegistry";
 

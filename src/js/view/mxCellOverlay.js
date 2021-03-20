@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
-import mxPoint from "FIXME";
+import mxPoint from "../util/mxPoint";
 import mxRectangle from "../util/mxRectangle";
 
 class mxCellOverlay extends mxEventSource {
@@ -117,7 +117,8 @@ class mxCellOverlay extends mxEventSource {
    * (default).
    */
   constructor(image, tooltip, align, verticalAlign, offset, cursor) {
-    // no super
+    super();
+
     this.image = image;
     this.tooltip = tooltip;
     this.align = (align != null) ? align : this.align;

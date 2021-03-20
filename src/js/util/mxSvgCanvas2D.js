@@ -5,6 +5,7 @@
 
 import mxUtils from "./mxUtils";
 import mxConstants from "./mxConstants";
+import mxAbstractCanvas2D from "./mxAbstractCanvas2D";
 
 /**
  * Capability check for DOM parser and checks if base tag is used.
@@ -28,7 +29,6 @@ let mxSvgCanvas2useAbsoluteIds = !mxClient.IS_CHROMEAPP &&
   !mxClient.IS_EDGE && document.getElementsByTagName('base').length > 0;
 */
 
- */
 class mxSvgCanvas2D extends mxAbstractCanvas2D {
   /**
    * Variable: path
@@ -1181,9 +1181,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   /**
    * Updates existing DOM nodes for text rendering.
    */
-  mxSvgCanvas2D
-.
-  createCss = (w, h, align, valign, wrap, overflow, clip, bg, border, flex, block, s, callback) => {
+  static createCss = (w, h, align, valign, wrap, overflow, clip, bg, border, flex, block, s, callback) => {
     var item = 'box-sizing: border-box; font-size: 0; text-align: ' + ((align == mxConstants.ALIGN_LEFT) ? 'left' :
         ((align == mxConstants.ALIGN_RIGHT) ? 'right' : 'center')) + '; ';
     var pt = mxUtils.getAlignmentAsPoint(align, valign);

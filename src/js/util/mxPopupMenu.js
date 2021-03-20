@@ -34,6 +34,7 @@ class mxPopupMenu extends mxEventSource {
    * Fires after the menu has been shown in <popup>.
    */
   constructor(factoryMethod) {
+    super();
     this.factoryMethod = factoryMethod;
 
     if (factoryMethod != null) {

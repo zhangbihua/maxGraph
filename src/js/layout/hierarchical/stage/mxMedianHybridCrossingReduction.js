@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
+import mxHierarchicalLayoutStage from "./mxHierarchicalLayoutStage";
 
 class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
   /**
@@ -23,7 +24,8 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * initialX - the leftmost coordinate node placement starts at
    */
   constructor(layout) {
-    // super not called
+    super();
+
     this.layout = layout;
   };
 

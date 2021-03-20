@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2018, JGraph Ltd
  * Copyright (c) 2006-2018, Gaudenz Alder
  */
+import mxHierarchicalLayoutStage from "./mxHierarchicalLayoutStage";
 
 class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
   /**
@@ -202,7 +203,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    */
   constructor(layout, intraCellSpacing, interRankCellSpacing,
               orientation, initialX, parallelEdgeSpacing) {
-    // super not called
+    super();
+
     this.layout = layout;
     this.intraCellSpacing = intraCellSpacing;
     this.interRankCellSpacing = interRankCellSpacing;

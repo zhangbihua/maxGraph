@@ -81,6 +81,8 @@ class mxLayoutManager extends mxEventSource {
    * graph - Reference to the enclosing graph.
    */
   constructor(graph) {
+    super();
+
     // Executes the layout before the changes are dispatched
     this.undoHandler = (sender, evt) => {
       if (this.isEnabled()) {

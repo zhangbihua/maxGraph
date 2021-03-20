@@ -265,6 +265,8 @@ class mxWindow extends mxEventSource {
    * mxWindow.
    */
   constructor(title, content, x, y, width, height, minimizable, movable, replaceNode, style) {
+    super();
+
     if (content != null) {
       minimizable = (minimizable != null) ? minimizable : true;
       this.content = content;

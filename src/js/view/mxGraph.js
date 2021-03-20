@@ -1487,6 +1487,8 @@ class mxGraph extends mxEventSource {
    * stylesheet - Optional <mxStylesheet> to be used in the graph.
    */
   constructor(container, model, renderHint, stylesheet) {
+    super();
+
     // Initializes the variable in case the prototype has been
     // modified to hold some listeners (which is possible because
     // the createHandlers call is executed regardless of the
