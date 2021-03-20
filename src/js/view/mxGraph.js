@@ -1686,23 +1686,6 @@ init = (container)=>
     }
   }));
 
-  // Automatic deallocation of memory
-  if (mxClient.IS_IE)
-  {
-    mxEvent.addListener(window, 'unload', mxUtils.bind(this, ()=>
-    {
-      this.destroy();
-    }));
-
-    // Disable shift-click for text
-    mxEvent.addListener(container, 'selectstart',
-      mxUtils.bind(this, (evt)=>
-      {
-        return this.isEditing() || (!this.isMouseDown && !mxEvent.isShiftDown(evt));
-      })
-    );
-  }
-
   // Workaround for missing last shape and connect preview in IE8 standards
   // mode if no initial graph displayed or no label for shape defined
   if (document.documentMode == 8)
@@ -3141,7 +3124,7 @@ sizeDidChange = ()=>
       this.doResizeContainer(width, height);
     }
 
-    if (this.preferPageSize || (!mxClient.IS_IE && this.pageVisible))
+    if (this.preferPageSize || this.pageVisible)
     {
       var size = this.getPreferredPageSize(bounds, Math.max(1, width), Math.max(1, height));
 
@@ -7806,15 +7789,7 @@ panGraph = (dx, dy)=>
       // can be moved without changing the state of the container
       if (dx == 0 && dy == 0)
       {
-        // Workaround for ignored removeAttribute on SVG element in IE9 standards
-        if (mxClient.IS_IE)
-        {
-          canvas.setAttribute('transform', 'translate(' + dx + ',' + dy + ')');
-        }
-        else
-        {
-          canvas.removeAttribute('transform');
-        }
+        canvas.removeAttribute('transform');
 
         if (this.shiftPreview1 != null)
         {
@@ -13009,8 +12984,7 @@ fireMouseEvent = (evtName, me, sender)=>
     me.state = this.getEventState(me.getState());
     this.fireEvent(new mxEventObject(mxEvent.FIRE_MOUSE_EVENT, 'eventName', evtName, 'event', me));
 
-    if ((mxClient.IS_OP || mxClient.IS_SF || mxClient.IS_GC || mxClient.IS_IE11 ||
-      (mxClient.IS_IE && mxClient.IS_SVG) || me.getEvent().target != this.container))
+    if ((mxClient.IS_SF || mxClient.IS_GC || me.getEvent().target != this.container))
     {
       if (evtName == mxEvent.MOUSE_MOVE && this.isMouseDown && this.autoScroll && !mxEvent.isMultiTouchEvent(me.getEvent))
       {

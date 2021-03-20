@@ -121,15 +121,8 @@ EditorUi = function(editor, container, lightbox)
 				return textEditing(evt);
 			};
 			
-			if (mxClient.IS_IE && (typeof(document.documentMode) === 'undefined' || document.documentMode < 9))
-			{
-				mxEvent.addListener(this.diagramContainer, 'contextmenu', linkHandler);
-			}
-			else
-			{
-				// Allows browser context menu outside of diagram and sidebar
-				this.diagramContainer.oncontextmenu = linkHandler;
-			}
+			// Allows browser context menu outside of diagram and sidebar
+			this.diagramContainer.oncontextmenu = linkHandler;
 		}
 		else
 		{
@@ -3585,7 +3578,7 @@ EditorUi.prototype.refresh = function(sizeDidChange)
 {
 	sizeDidChange = (sizeDidChange != null) ? sizeDidChange : true;
 	
-	var quirks = mxClient.IS_IE && (document.documentMode == null || document.documentMode == 5);
+	var quirks = false;
 	var w = this.container.clientWidth;
 	var h = this.container.clientHeight;
 

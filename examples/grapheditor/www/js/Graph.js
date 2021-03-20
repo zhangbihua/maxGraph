@@ -4226,36 +4226,11 @@ HoverIcons.prototype.isResetEvent = function(evt, allowShift)
 HoverIcons.prototype.createArrow = function(img, tooltip)
 {
 	var arrow = null;
-	
-	if (mxClient.IS_IE && !mxClient.IS_SVG)
-	{
-		// Workaround for PNG images in IE6
-		if (mxClient.IS_IE6 && document.compatMode != 'CSS1Compat')
-		{
-			arrow = document.createElement(mxClient.VML_PREFIX + ':image');
-			arrow.setAttribute('src', img.src);
-			arrow.style.borderStyle = 'none';
-		}
-		else
-		{
-			arrow = document.createElement('div');
-			arrow.style.backgroundImage = 'url(' + img.src + ')';
-			arrow.style.backgroundPosition = 'center';
-			arrow.style.backgroundRepeat = 'no-repeat';
-		}
-		
-		arrow.style.width = (img.width + 4) + 'px';
-		arrow.style.height = (img.height + 4) + 'px';
-		arrow.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
-	}
-	else
-	{
-		arrow = mxUtils.createImage(img.src);
-		arrow.style.width = img.width + 'px';
-		arrow.style.height = img.height + 'px';
-		arrow.style.padding = this.tolerance + 'px';
-	}
-	
+	arrow = mxUtils.createImage(img.src);
+	arrow.style.width = img.width + 'px';
+	arrow.style.height = img.height + 'px';
+	arrow.style.padding = this.tolerance + 'px';
+
 	if (tooltip != null)
 	{
 		arrow.setAttribute('title', tooltip);
@@ -9648,13 +9623,8 @@ if (typeof mxVertexHandler != 'undefined')
 			if ((this.graph.getModel().isEdge(parent) && geo != null && geo.relative) ||
 				this.graph.getModel().isEdge(cell))
 			{
-				// Quirks does not support outline at all so use border instead
-				if (mxClient.IS_QUIRKS)
-				{
-					this.textarea.style.border = 'gray dotted 1px';
-				}
-				// IE>8 and FF on Windows uses outline default of none
-				else if (mxClient.IS_IE || mxClient.IS_IE11 || (mxClient.IS_FF && mxClient.IS_WIN))
+				// FF on Windows uses outline default of none
+				if (mxClient.IS_FF && mxClient.IS_WIN)
 				{
 					this.textarea.style.outline = 'gray dotted 1px';
 				}
@@ -9662,11 +9632,6 @@ if (typeof mxVertexHandler != 'undefined')
 				{
 					this.textarea.style.outline = '';
 				}
-			}
-			else if (mxClient.IS_QUIRKS)
-			{
-				this.textarea.style.outline = 'none';
-				this.textarea.style.border = '';
 			}
 		}
 

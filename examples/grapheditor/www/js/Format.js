@@ -3129,7 +3129,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	{
 		// IE does not support containsNode
 		// KNOWN: Fixes font size issues but bypasses undo
-		if (window.getSelection && !mxClient.IS_IE && !mxClient.IS_IE11)
+		if (window.getSelection)
 		{
 			var selection = window.getSelection();
 			var container = (selection.rangeCount > 0) ? selection.getRangeAt(0).commonAncestorContainer :
@@ -3821,15 +3821,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	
 	function setSelected(elt, selected)
 	{
-		if (mxClient.IS_IE && (mxClient.IS_QUIRKS || document.documentMode < 10))
-		{
-			elt.style.filter = (selected) ? 'progid:DXImageTransform.Microsoft.Gradient('+
-            	'StartColorStr=\'#c5ecff\', EndColorStr=\'#87d4fb\', GradientType=0)' : '';
-		}
-		else
-		{
-			elt.style.backgroundImage = (selected) ? 'linear-gradient(#c5ecff 0px,#87d4fb 100%)' : '';
-		}
+		elt.style.backgroundImage = (selected) ? 'linear-gradient(#c5ecff 0px,#87d4fb 100%)' : '';
 	};
 	
 	var listener = mxUtils.bind(this, function(sender, evt, force)
@@ -4022,7 +4014,7 @@ TextFormatPanel.prototype.addFont = function(container)
 						var elts = node.getElementsByTagName('*');
 
 						// IE does not support containsNode
-						if (elts.length > 0 && window.getSelection && !mxClient.IS_IE && !mxClient.IS_IE11)
+						if (elts.length > 0 && window.getSelection)
 						{
 							var selection = window.getSelection();
 
@@ -4207,7 +4199,7 @@ TextFormatPanel.prototype.addFont = function(container)
 			}
 		};
 		
-		if (mxClient.IS_FF || mxClient.IS_EDGE || mxClient.IS_IE || mxClient.IS_IE11)
+		if (mxClient.IS_FF || mxClient.IS_EDGE)
 		{
 			mxEvent.addListener(graph.cellEditor.textarea, 'DOMSubtreeModified', updateCssHandler);
 		}

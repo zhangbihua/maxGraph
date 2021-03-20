@@ -2042,8 +2042,7 @@ var FilenameDialog = function(editorUi, filename, buttonText, fn, label, validat
 				
 				mxEvent.addListener(dlg, 'dragover', mxUtils.bind(this, function(evt)
 				{
-					// IE 10 does not implement pointer-events so it can't have a drop highlight
-					if (dropElt == null && (!mxClient.IS_IE || document.documentMode > 10))
+					if (dropElt == null)
 					{
 						dropElt = nameInput;
 						dropElt.style.backgroundColor = '#ebf2f9';

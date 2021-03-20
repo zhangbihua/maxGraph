@@ -298,20 +298,13 @@
 					}
 				});
 
-				if (mxClient.IS_IE)
-				{
-					mxEvent.addListener(input, 'focusout', applyHandler);
-				}
-				else
-				{
-					// Note: Known problem is the blurring of fields in
-					// Firefox by changing the selection, in which case
-					// no event is fired in FF and the change is lost.
-					// As a workaround you should use a local variable
-					// that stores the focused field and invoke blur
-					// explicitely where we do the graph.focus above.
-					mxEvent.addListener(input, 'blur', applyHandler);
-				}
+				// Note: Known problem is the blurring of fields in
+				// Firefox by changing the selection, in which case
+				// no event is fired in FF and the change is lost.
+				// As a workaround you should use a local variable
+				// that stores the focused field and invoke blur
+				// explicitely where we do the graph.focus above.
+				mxEvent.addListener(input, 'blur', applyHandler);
 			}
 		};
 	</script>

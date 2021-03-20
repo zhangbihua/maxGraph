@@ -131,13 +131,6 @@
 					}
 
 					textNode.originalValue = null;
-					
-					// Makes sure nothing is selected in IE
-					if (mxClient.IS_IE)
-					{
-						mxUtils.clearSelection();
-					}
-
 					textNode.style.display = 'none';
 
 					// Moves the focus back to the graph

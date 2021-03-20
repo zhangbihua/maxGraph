@@ -510,27 +510,6 @@ open = (css, targetWindow, forcePageBreaks, keepOpen)=>
       {
         var table = this.createPageSelector(vpages, hpages);
         doc.body.appendChild(table);
-
-        // Implements position: fixed in IE quirks mode
-        if (mxClient.IS_IE && doc.documentMode == null || doc.documentMode == 5 || doc.documentMode == 8 || doc.documentMode == 7)
-        {
-          table.style.position = 'absolute';
-
-          var update = ()=>
-          {
-            table.style.top = ((doc.body.scrollTop || doc.documentElement.scrollTop) + 10) + 'px';
-          };
-
-          mxEvent.addListener(this.wnd, 'scroll', (evt)=>
-          {
-            update();
-          });
-
-          mxEvent.addListener(this.wnd, 'resize', (evt)=>
-          {
-            update();
-          });
-        }
       }
     });
 
@@ -561,7 +540,7 @@ open = (css, targetWindow, forcePageBreaks, keepOpen)=>
       // to create the complete page and then copy it over to the
       // new window.document. This can be fixed later by using the
       // ownerDocument of the container in mxShape and mxGraphView.
-      if (isNewWindow && (mxClient.IS_IE || document.documentMode >= 11 || mxClient.IS_EDGE))
+      if (isNewWindow && (document.documentMode >= 11 || mxClient.IS_EDGE))
       {
         // For some obscure reason, removing the DIV from the
         // parent before fetching its outerHTML has missing
@@ -570,7 +549,7 @@ open = (css, targetWindow, forcePageBreaks, keepOpen)=>
         doc.writeln(div.outerHTML);
         div.parentNode.removeChild(div);
       }
-      else if (mxClient.IS_IE || document.documentMode >= 11 || mxClient.IS_EDGE)
+      else if (document.documentMode >= 11 || mxClient.IS_EDGE)
       {
         var clone = doc.createElement('div');
         clone.innerHTML = div.outerHTML;
@@ -896,17 +875,8 @@ renderPage = (w, h, dx, dy, content, pageNumber)=>
       innerDiv.style.height = (h - 2 * this.border) + 'px';
       innerDiv.style.overflow = 'hidden';
 
-      if (mxClient.IS_IE && (doc.documentMode == null || doc.documentMode == 5 ||
-        doc.documentMode == 8 || doc.documentMode == 7))
-      {
-        innerDiv.style.marginTop = this.border + 'px';
-        innerDiv.style.marginLeft = this.border + 'px';
-      }
-      else
-      {
-        innerDiv.style.top = this.border + 'px';
-        innerDiv.style.left = this.border + 'px';
-      }
+      innerDiv.style.top = this.border + 'px';
+      innerDiv.style.left = this.border + 'px';
 
       if (this.graph.dialect == mxConstants.DIALECT_VML)
       {
@@ -1077,46 +1047,32 @@ addGraphFragment = (dx, dy, scale, pageNumber, div, clip)=>
   }
   finally
   {
-    // Removes overlay pane with selection handles
-    // controls and icons from the print output
-    if (mxClient.IS_IE)
-    {
-      view.overlayPane.innerHTML = '';
-      view.canvas.style.overflow = 'hidden';
-      view.canvas.style.position = 'relative';
-      view.canvas.style.top = this.marginTop + 'px';
-      view.canvas.style.width = clip.width + 'px';
-      view.canvas.style.height = clip.height + 'px';
-    }
-    else
-    {
-      // Removes everything but the SVG node
-      var tmp = div.firstChild;
+    // Removes everything but the SVG node
+    var tmp = div.firstChild;
 
-      while (tmp != null)
+    while (tmp != null)
+    {
+      var next = tmp.nextSibling;
+      var name = tmp.nodeName.toLowerCase();
+
+      // Note: Width and height are required in FF 11
+      if (name == 'svg')
       {
-        var next = tmp.nextSibling;
-        var name = tmp.nodeName.toLowerCase();
-
-        // Note: Width and height are required in FF 11
-        if (name == 'svg')
-        {
-          tmp.style.overflow = 'hidden';
-          tmp.style.position = 'relative';
-          tmp.style.top = this.marginTop + 'px';
-          tmp.setAttribute('width', clip.width);
-          tmp.setAttribute('height', clip.height);
-          tmp.style.width = '';
-          tmp.style.height = '';
-        }
-        // Tries to fetch all text labels and only text labels
-        else if (tmp.style.cursor != 'default' && name != 'div')
-        {
-          tmp.parentNode.removeChild(tmp);
-        }
-
-        tmp = next;
+        tmp.style.overflow = 'hidden';
+        tmp.style.position = 'relative';
+        tmp.style.top = this.marginTop + 'px';
+        tmp.setAttribute('width', clip.width);
+        tmp.setAttribute('height', clip.height);
+        tmp.style.width = '';
+        tmp.style.height = '';
       }
+      // Tries to fetch all text labels and only text labels
+      else if (tmp.style.cursor != 'default' && name != 'div')
+      {
+        tmp.parentNode.removeChild(tmp);
+      }
+
+      tmp = next;
     }
 
     // Puts background image behind SVG output

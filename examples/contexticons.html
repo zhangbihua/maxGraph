@@ -45,20 +45,7 @@
 			// Workaround for event redirection via image tag in quirks and IE8
 			function createImage(src)
 			{
-				if (mxClient.IS_IE && !mxClient.IS_SVG)
-				{
-					var img = document.createElement('div');
-					img.style.backgroundImage = 'url(' + src + ')';
-					img.style.backgroundPosition = 'center';
-					img.style.backgroundRepeat = 'no-repeat';
-					img.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
-					
-					return img;
-				}
-				else
-				{
-					return mxUtils.createImage(src);
-				}
+				return mxUtils.createImage(src);
 			};
 
 			// Delete

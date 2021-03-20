@@ -437,7 +437,7 @@ showSubmenu = (parent, row)=>
 
     if (left + width > right)
     {
-      row.div.style.left = Math.max(0, (parent.div.offsetLeft - width + ((mxClient.IS_IE) ? 6 : -6))) + 'px';
+      row.div.style.left = Math.max(0, (parent.div.offsetLeft - width-6)) + 'px';
     }
 
     mxUtils.fit(row.div);

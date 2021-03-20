@@ -35,13 +35,6 @@ var ColorDialog = function(editorUi, color, apply, cancelFn)
 	input.style.marginBottom = '10px';
 	input.style.width = '216px';
 	
-	// Required for picker to render in IE
-	if (mxClient.IS_IE)
-	{
-		input.style.marginTop = '10px';
-		document.body.appendChild(input);
-	}
-	
 	var applyFunction = (apply != null) ? apply : this.createApplyFunction();
 	
 	function doApply()
@@ -1320,7 +1313,7 @@ var EditDataDialog = function(ui, cell)
 		var img = mxUtils.createImage(Dialog.prototype.closeImage);
 		img.style.height = '9px';
 		img.style.fontSize = '9px';
-		img.style.marginBottom = (mxClient.IS_IE11) ? '-1px' : '5px';
+		img.style.marginBottom = '5px';
 		
 		removeAttr.className = 'geButton';
 		removeAttr.setAttribute('title', mxResources.get('delete'));
@@ -1443,7 +1436,7 @@ var EditDataDialog = function(ui, cell)
 	var nameInput = document.createElement('input');
 	nameInput.setAttribute('placeholder', mxResources.get('enterPropertyName'));
 	nameInput.setAttribute('type', 'text');
-	nameInput.setAttribute('size', (mxClient.IS_IE || mxClient.IS_IE11) ? '36' : '40');
+	nameInput.setAttribute('size', '40');
 	nameInput.style.boxSizing = 'border-box';
 	nameInput.style.marginLeft = '2px';
 	nameInput.style.width = '100%';
@@ -1635,7 +1628,7 @@ var EditDataDialog = function(ui, cell)
 			icon.style.width = '16px';
 			icon.setAttribute('border', '0');
 			icon.setAttribute('valign', 'middle');
-			icon.style.marginTop = (mxClient.IS_IE11) ? '0px' : '-4px';
+			icon.style.marginTop = '-4px';
 			icon.setAttribute('src', Editor.helpImage);
 			link.appendChild(icon);
 			
@@ -2360,8 +2353,7 @@ var LayersWindow = function(editorUi, x, y, w, h)
 			if (graph.isEnabled())
 			{
 				// Fallback if no drag and drop is available
-				if (mxClient.IS_TOUCH || mxClient.IS_POINTER || mxClient.IS_VML ||
-					(mxClient.IS_IE && document.documentMode < 10))
+				if (mxClient.IS_TOUCH || mxClient.IS_POINTER)
 				{
 					var right = document.createElement('div');
 					right.style.display = 'block';
@@ -2429,7 +2421,7 @@ var LayersWindow = function(editorUi, x, y, w, h)
 					ldiv.appendChild(right);
 				}
 				
-				if (mxClient.IS_SVG && (!mxClient.IS_IE || document.documentMode >= 10))
+				if (mxClient.IS_SVG)
 				{
 					ldiv.setAttribute('draggable', 'true');
 					ldiv.style.cursor = 'move';

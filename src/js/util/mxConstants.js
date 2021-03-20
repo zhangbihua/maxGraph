@@ -470,7 +470,7 @@
    * Defines the strokewidth to be used for the outline rectangle
    * stroke width. Default is 3.
    */
-  OUTLINE_STROKEWIDTH: (mxClient.IS_IE) ? 2 : 3,
+  OUTLINE_STROKEWIDTH: 3,
 
   /**
    * Variable: HANDLE_SIZE

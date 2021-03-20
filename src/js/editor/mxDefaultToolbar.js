@@ -483,12 +483,6 @@ class mxDefaultToolbar {
           sprite);
       mxEvent.removeListener(sprite, 'load', loader);
     });
-
-    if (mxClient.IS_IE) {
-      loader();
-    } else {
-      mxEvent.addListener(sprite, 'load', loader);
-    }
   };
 
   /**

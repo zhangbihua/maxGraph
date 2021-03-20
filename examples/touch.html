@@ -74,15 +74,7 @@
 
 				container.onselectstart = textEditing;
 				container.onmousedown = textEditing;
-
-				if (mxClient.IS_IE && (typeof(document.documentMode) === 'undefined' || document.documentMode < 9))
-				{
-					mxEvent.addListener(container, 'contextmenu', textEditing);
-				}
-				else
-				{
-					container.oncontextmenu = textEditing;
-				}
+				container.oncontextmenu = textEditing;
 
 				// Creates the graph inside the given container
 				var graph = new mxGraph(container);

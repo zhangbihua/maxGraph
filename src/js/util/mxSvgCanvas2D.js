@@ -145,7 +145,7 @@ mxUtils.extend(mxSvgCanvas2D, mxAbstractCanvas2D);
  */
 (()=>
 {
-  mxSvgCanvas2useDomParser = !mxClient.IS_IE && typeof DOMParser === 'function' && typeof XMLSerializer === 'function';
+  mxSvgCanvas2useDomParser = typeof DOMParser === 'function' && typeof XMLSerializer === 'function';
   
   if (mxSvgCanvas2useDomParser)
   {
@@ -163,7 +163,7 @@ mxUtils.extend(mxSvgCanvas2D, mxAbstractCanvas2D);
   }
   
   // Activates workaround for gradient ID resolution if base tag is used.
-  mxSvgCanvas2useAbsoluteIds = !mxClient.IS_CHROMEAPP && !mxClient.IS_IE && !mxClient.IS_IE11 &&
+  mxSvgCanvas2useAbsoluteIds = !mxClient.IS_CHROMEAPP &&
     !mxClient.IS_EDGE && document.getElementsByTagName('base').length > 0;
 })();
 
@@ -847,13 +847,7 @@ mxSvgCanvas2createTolerance = (node)=>
   tol.removeAttribute('stroke-dasharray');
   tol.setAttribute('stroke-width', sw);
   tol.setAttribute('fill', 'none');
-  
-  // Workaround for Opera ignoring the visiblity attribute above while
-  // other browsers need a stroke color to perform the hit-detection but
-  // do not ignore the visibility attribute. Side-effect is that Opera's
-  // hit detection for horizontal/vertical edges seems to ignore the tol.
-  tol.setAttribute('stroke', (mxClient.IS_OT) ? 'none' : 'white');
-  
+  tol.setAttribute('stroke', 'white');
   return tol;
 };
 
@@ -1198,8 +1192,7 @@ mxSvgCanvas2createDiv = (str)=>
     val = '<div><div>' + this.convertHtml(val) + '</div></div>';
   }
 
-  // IE uses this code for export as it cannot render foreignObjects
-  if (!mxClient.IS_IE && !mxClient.IS_IE11 && document.createElementNS)
+  if (document.createElementNS)
   {
     var div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
     
@@ -1654,8 +1647,7 @@ mxSvgCanvas2plainText = (x, y, w, h, str, align, valign, wrap, overflow, clip, r
       this.root.appendChild(c);
     }
     
-    if (!mxClient.IS_CHROMEAPP && !mxClient.IS_IE && !mxClient.IS_IE11 &&
-      !mxClient.IS_EDGE && this.root.ownerDocument == document)
+    if (!mxClient.IS_CHROMEAPP && !mxClient.IS_EDGE && this.root.ownerDocument == document)
     {
       // Workaround for potential base tag
       var base = this.getBaseUrl().replace(/([\(\)])/g, '\\$1');
@@ -1831,8 +1823,7 @@ mxSvgCanvas2addTextBackground = (node, str, x, y, w, h, align, valign, overflow)
       try
       {
         bbox = node.getBBox();
-        var ie = mxClient.IS_IE && mxClient.IS_SVG;
-        bbox = new mxRectangle(bbox.x, bbox.y + ((ie) ? 0 : 1), bbox.width, bbox.height + ((ie) ? 1 : 0));
+        bbox = new mxRectangle(bbox.x, bbox.y + 1, bbox.width, bbox.height + 0);
       }
       catch (e)
       {

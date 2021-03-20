@@ -179,7 +179,7 @@ var mxLog =
       mxLog.window.destroyOnClose = false;
       
       // Workaround for ignored textarea height in various setups
-      if (((mxClient.IS_NS || mxClient.IS_IE) && !mxClient.IS_GC &&
+      if ((mxClient.IS_NS && !mxClient.IS_GC &&
         !mxClient.IS_SF && document.compatMode != 'BackCompat') ||
         document.documentMode == 11)
       {

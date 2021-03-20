@@ -396,13 +396,6 @@ class mxEditor extends mxEventSource {
         // Invokes the <onInit> hook
         this.onInit();
       }
-
-      // Automatic deallocation of memory
-      if (mxClient.IS_IE) {
-        mxEvent.addListener(window, 'unload', mxUtils.bind(this, ()=>{
-          this.destroy();
-        }));
-      }
     }
   };
 
@@ -417,7 +410,7 @@ class mxEditor extends mxEventSource {
    * key does not exist then the value is used as the error message. Default
    * is 'askZoom'.
    */
-  askZoomResource = (mxClient.language != 'none') ? 'askZoom' : '';
+  askZoomResource = (mxClient.language !== 'none') ? 'askZoom' : '';
 
   /**
    * Variable: lastSavedResource
@@ -426,7 +419,7 @@ class mxEditor extends mxEventSource {
    * this key does not exist then the value is used as the error message.
    * Default is 'lastSaved'.
    */
-  lastSavedResource = (mxClient.language != 'none') ? 'lastSaved' : '';
+  lastSavedResource = (mxClient.language !== 'none') ? 'lastSaved' : '';
 
   /**
    * Variable: currentFileResource
@@ -435,7 +428,7 @@ class mxEditor extends mxEventSource {
    * this key does not exist then the value is used as the error message.
    * Default is 'currentFile'.
    */
-  currentFileResource = (mxClient.language != 'none') ? 'currentFile' : '';
+  currentFileResource = (mxClient.language !== 'none') ? 'currentFile' : '';
 
   /**
    * Variable: propertiesResource
@@ -444,7 +437,7 @@ class mxEditor extends mxEventSource {
    * resource for this key does not exist then the value is used as the
    * error message. Default is 'properties'.
    */
-  propertiesResource = (mxClient.language != 'none') ? 'properties' : '';
+  propertiesResource = (mxClient.language !== 'none') ? 'properties' : '';
 
   /**
    * Variable: tasksResource
@@ -453,7 +446,7 @@ class mxEditor extends mxEventSource {
    * resource for this key does not exist then the value is used as the
    * error message. Default is 'tasks'.
    */
-  tasksResource = (mxClient.language != 'none') ? 'tasks' : '';
+  tasksResource = (mxClient.language !== 'none') ? 'tasks' : '';
 
   /**
    * Variable: helpResource
@@ -462,7 +455,7 @@ class mxEditor extends mxEventSource {
    * resource for this key does not exist then the value is used as the
    * error message. Default is 'help'.
    */
-  helpResource = (mxClient.language != 'none') ? 'help' : '';
+  helpResource = (mxClient.language !== 'none') ? 'help' : '';
 
   /**
    * Variable: outlineResource
@@ -471,7 +464,7 @@ class mxEditor extends mxEventSource {
    * resource for this key does not exist then the value is used as the
    * error message. Default is 'outline'.
    */
-  outlineResource = (mxClient.language != 'none') ? 'outline' : '';
+  outlineResource = (mxClient.language !== 'none') ? 'outline' : '';
 
   /**
    * Variable: outline

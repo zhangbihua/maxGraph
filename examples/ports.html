@@ -414,12 +414,7 @@
 			background.style.background = 'black';
 			mxUtils.setOpacity(background, 50);
 			document.body.appendChild(background);
-			
-			if (mxClient.IS_IE)
-			{
-				new mxDivResizer(background);
-			}
-			
+
 			var x = Math.max(0, document.body.scrollWidth/2-width/2);
 			var y = Math.max(10, (document.body.scrollHeight ||
 						document.documentElement.scrollHeight)/2-height*2/3);

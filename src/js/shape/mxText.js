@@ -283,11 +283,7 @@ class mxText extends mxShape {
         } else {
           this.updateSize(this.node, (this.state == null || this.state.view.textDiv == null));
 
-          if (mxClient.IS_IE && (document.documentMode == null || document.documentMode <= 8)) {
-            this.updateHtmlFilter();
-          } else {
-            this.updateHtmlTransform();
-          }
+          this.updateHtmlTransform();
         }
 
         this.updateBoundingBox();
@@ -697,11 +693,7 @@ class mxText extends mxShape {
       this.offsetWidth = null;
       this.offsetHeight = null;
 
-      if (mxClient.IS_IE && (document.documentMode == null || document.documentMode <= 8)) {
-        this.updateHtmlFilter();
-      } else {
-        this.updateHtmlTransform();
-      }
+      this.updateHtmlTransform();
     }
   };
 

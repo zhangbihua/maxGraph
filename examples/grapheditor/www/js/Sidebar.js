@@ -2560,11 +2560,6 @@ Sidebar.prototype.createThumb = function(cells, width, height, parent, title, sh
 		div.style.color = '#303030';
 		div.style.textAlign = 'center';
 		div.style.whiteSpace = 'nowrap';
-		
-		if (mxClient.IS_IE)
-		{
-			div.style.height = (this.sidebarTitleSize + 12) + 'px';
-		}
 
 		div.style.paddingTop = '4px';
 		mxUtils.write(div, title);
@@ -3286,35 +3281,10 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 	function createArrow(img, tooltip)
 	{
 		var arrow = null;
-		
-		if (mxClient.IS_IE && !mxClient.IS_SVG)
-		{
-			// Workaround for PNG images in IE6
-			if (mxClient.IS_IE6 && document.compatMode != 'CSS1Compat')
-			{
-				arrow = document.createElement(mxClient.VML_PREFIX + ':image');
-				arrow.setAttribute('src', img.src);
-				arrow.style.borderStyle = 'none';
-			}
-			else
-			{
-				arrow = document.createElement('div');
-				arrow.style.backgroundImage = 'url(' + img.src + ')';
-				arrow.style.backgroundPosition = 'center';
-				arrow.style.backgroundRepeat = 'no-repeat';
-			}
-			
-			arrow.style.width = (img.width + 4) + 'px';
-			arrow.style.height = (img.height + 4) + 'px';
-			arrow.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
-		}
-		else
-		{
-			arrow = mxUtils.createImage(img.src);
-			arrow.style.width = img.width + 'px';
-			arrow.style.height = img.height + 'px';
-		}
-		
+		arrow = mxUtils.createImage(img.src);
+		arrow.style.width = img.width + 'px';
+		arrow.style.height = img.height + 'px';
+
 		if (tooltip != null)
 		{
 			arrow.setAttribute('title', tooltip);
@@ -4163,13 +4133,8 @@ Sidebar.prototype.addFoldingHandler = function(title, content, funct)
 {
 	var initialized = false;
 
-	// Avoids mixed content warning in IE6-8
-	if (!mxClient.IS_IE || document.documentMode >= 8)
-	{
-		title.style.backgroundImage = (content.style.display == 'none') ?
-			'url(\'' + this.collapsedImage + '\')' : 'url(\'' + this.expandedImage + '\')';
-	}
-	
+	title.style.backgroundImage = (content.style.display == 'none') ?
+		'url(\'' + this.collapsedImage + '\')' : 'url(\'' + this.expandedImage + '\')';
 	title.style.backgroundRepeat = 'no-repeat';
 	title.style.backgroundPosition = '0% 50%';
 

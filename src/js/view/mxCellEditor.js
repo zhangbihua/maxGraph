@@ -235,7 +235,7 @@ minResize = new mxRectangle(0, 20);
  * Correction factor for word wrapping width. Default is 2 in quirks, 0 in IE
  * 11 and 1 in all other browsers and modes.
  */
-wordWrapPadding = (mxClient.IS_QUIRKS) ? 2 : (!mxClient.IS_IE11) ? 1 : 0;
+wordWrapPadding = 0;
 
 /**
  * Variable: blurEnabled
@@ -430,12 +430,12 @@ installListeners = (elt)=>
     }
   });
 
-  mxEvent.addListener(elt, (!mxClient.IS_IE11 && !mxClient.IS_IE) ? 'input' : 'keyup', keyupHandler);
+  mxEvent.addListener(elt, 'input', keyupHandler);
   mxEvent.addListener(elt, 'cut', keyupHandler);
   mxEvent.addListener(elt, 'paste', keyupHandler);
 
   // Adds automatic resizing of the textbox while typing using input, keyup and/or DOM change events
-  var evtName = (!mxClient.IS_IE11 && !mxClient.IS_IE) ? 'input' : 'keydown';
+  var evtName = 'input';
   
   var resizeHandler = mxUtils.bind(this, (evt)=>
   {

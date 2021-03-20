@@ -65,8 +65,7 @@
 						// Condition to avoid scrollbar events starting a rubberband
 						// selection
 						else if (this.isContainerEvent(evt) &&
-							((!mxClient.IS_IE && 
-							!mxClient.IS_GC && !mxClient.IS_OP && !mxClient.IS_SF) ||
+							((!mxClient.IS_GC && !mxClient.IS_SF) ||
 							!this.isScrollEvent(evt)))
 						{
 							graph.fireMouseEvent(mxEvent.MOUSE_DOWN,
@@ -222,27 +221,6 @@
 						{
 							var image =new Image();
 
-							// Disable DnD events on images in IE. FIXME: Rubberband
-							// events are ignored in IE when starting on the image.
-							if (mxClient.IS_IE)
-							{
-								graph.view.isContainerEvent = function(evt)
-								{
-									var source = mxEvent.getSource(evt);
-					
-									return (source == image ||
-										source == this.graph.container ||
-										source.parentNode == this.backgroundPane ||
-										(source.parentNode != null &&
-										source.parentNode.parentNode == this.backgroundPane) ||
-										source == this.canvas.parentNode ||
-										source == this.canvas ||
-										source == this.backgroundPane ||
-										source == this.drawPane ||
-										source == this.overlayPane);
-								};
-							}
-							
 							// Less flickering if the old image is removed after
 							// the new image was received from the server
 							image.onload = function()
