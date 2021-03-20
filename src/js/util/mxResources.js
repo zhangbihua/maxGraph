@@ -448,3 +448,5 @@ var mxResources =
   }
 
 };
+
+export default mxResources;

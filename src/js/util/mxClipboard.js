@@ -2,8 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-var mxClipboard =
-{
+var mxClipboard = {
   /**
    * Class: mxClipboard
    * 
@@ -217,5 +216,6 @@ var mxClipboard =
     
     return cells;
   }
-
 };
+
+export default mxClipboard;

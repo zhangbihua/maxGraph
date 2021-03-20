@@ -2,8 +2,8 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
- var mxConstants =
- {
+
+var mxConstants = {
   /**
    * Class: mxConstants
    * 
@@ -2336,3 +2336,5 @@
    */
   PERIMETER_TRIANGLE: 'trianglePerimeter'
 };
+
+export default mxConstants;

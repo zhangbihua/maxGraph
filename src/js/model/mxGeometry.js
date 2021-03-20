@@ -4,7 +4,7 @@
  */
 
 import mxPoint from "FIXME";
-import mxRectangle from "FIXME";
+import mxRectangle from "../util/mxRectangle";
 
 class mxGeometry extends mxRectangle {
   /**

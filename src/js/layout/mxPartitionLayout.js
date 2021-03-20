@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
-import mxRectangle from "FIXME";
+import mxRectangle from "../util/mxRectangle";
 
 class mxPartitionLayout extends mxGraphLayout {
   /**

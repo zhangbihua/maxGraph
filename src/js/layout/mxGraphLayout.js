@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2018, Gaudenz Alder
  */
 
-import mxRectangle from "FIXME";
+import mxRectangle from "../util/mxRectangle";
 import mxDictionary from "FIXME";
 
 class mxGraphLayout {

@@ -12,119 +12,113 @@
  *
  * Constructs a new dictionary which allows object to be used as keys.
  */
-function mxDictionary()
-{
-  this.clear();
-};
 
-/**
- * Function: map
- *
- * Stores the (key, value) pairs in this dictionary.
- */
-map = null;
+class mxDictionary {
+  constructor() {
+    this.clear();
+  };
 
-/**
- * Function: clear
- *
- * Clears the dictionary.
- */
-clear = ()=>
-{
-  this.map = {};
-};
+  /**
+   * Function: map
+   *
+   * Stores the (key, value) pairs in this dictionary.
+   */
+  map = null;
 
-/**
- * Function: get
- *
- * Returns the value for the given key.
- */
-get = (key)=>
-{
-  var id = mxObjectIdentity.get(key);
+  /**
+   * Function: clear
+   *
+   * Clears the dictionary.
+   */
+  clear = () => {
+    this.map = {};
+  };
 
-  return this.map[id];
-};
+  /**
+   * Function: get
+   *
+   * Returns the value for the given key.
+   */
+  get = (key) => {
+    var id = mxObjectIdentity.get(key);
 
-/**
- * Function: put
- *
- * Stores the value under the given key and returns the previous
- * value for that key.
- */
-put = (key, value)=>
-{
-  var id = mxObjectIdentity.get(key);
-  var previous = this.map[id];
-  this.map[id] = value;
+    return this.map[id];
+  };
 
-  return previous;
-};
+  /**
+   * Function: put
+   *
+   * Stores the value under the given key and returns the previous
+   * value for that key.
+   */
+  put = (key, value) => {
+    var id = mxObjectIdentity.get(key);
+    var previous = this.map[id];
+    this.map[id] = value;
 
-/**
- * Function: remove
- *
- * Removes the value for the given key and returns the value that
- * has been removed.
- */
-remove = (key)=>
-{
-  var id = mxObjectIdentity.get(key);
-  var previous = this.map[id];
-  delete this.map[id];
+    return previous;
+  };
 
-  return previous;
-};
+  /**
+   * Function: remove
+   *
+   * Removes the value for the given key and returns the value that
+   * has been removed.
+   */
+  remove = (key) => {
+    var id = mxObjectIdentity.get(key);
+    var previous = this.map[id];
+    delete this.map[id];
 
-/**
- * Function: getKeys
- *
- * Returns all keys as an array.
- */
-getKeys = ()=>
-{
-  var result = [];
+    return previous;
+  };
 
-  for (var key in this.map)
-  {
-    result.push(key);
-  }
+  /**
+   * Function: getKeys
+   *
+   * Returns all keys as an array.
+   */
+  getKeys = () => {
+    var result = [];
 
-  return result;
-};
+    for (var key in this.map) {
+      result.push(key);
+    }
 
-/**
- * Function: getValues
- *
- * Returns all values as an array.
- */
-getValues = ()=>
-{
-  var result = [];
+    return result;
+  };
 
-  for (var key in this.map)
-  {
-    result.push(this.map[key]);
-  }
+  /**
+   * Function: getValues
+   *
+   * Returns all values as an array.
+   */
+  getValues = () => {
+    var result = [];
 
-  return result;
-};
+    for (var key in this.map) {
+      result.push(this.map[key]);
+    }
 
-/**
- * Function: visit
- *
- * Visits all entries in the dictionary using the given function with the
- * following signature: (key, value)=> where key is a string and
- * value is an object.
- * 
- * Parameters:
- * 
- * visitor - A function that takes the key and value as arguments.
- */
-visit = (visitor)=>
-{
-  for (var key in this.map)
-  {
-    visitor(key, this.map[key]);
-  }
-};
+    return result;
+  };
+
+  /**
+   * Function: visit
+   *
+   * Visits all entries in the dictionary using the given function with the
+   * following signature: (key, value)=> where key is a string and
+   * value is an object.
+   *
+   * Parameters:
+   *
+   * visitor - A function that takes the key and value as arguments.
+   */
+  visit = (visitor) => {
+    for (var key in this.map) {
+      visitor(key, this.map[key]);
+    }
+  };
+}
+
+export default mxDictionary;
