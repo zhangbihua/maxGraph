@@ -352,21 +352,6 @@ getWindow = ()=>
 getDoctype = ()=>
 {
   var dt = '';
-
-  if (document.documentMode == 5)
-  {
-    dt = '<meta http-equiv="X-UA-Compatible" content="IE=5">';
-  }
-  else if (document.documentMode == 8)
-  {
-    dt = '<meta http-equiv="X-UA-Compatible" content="IE=8">';
-  }
-  else if (document.documentMode > 8)
-  {
-    // Comment needed to make standards doctype apply in IE
-    dt = '<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->';
-  }
-
   return dt;
 };
 
@@ -533,7 +518,7 @@ open = (css, targetWindow, forcePageBreaks, keepOpen)=>
       // to create the complete page and then copy it over to the
       // new window.document. This can be fixed later by using the
       // ownerDocument of the container in mxShape and mxGraphView.
-      if (isNewWindow && (document.documentMode >= 11 || mxClient.IS_EDGE))
+      if (isNewWindow && mxClient.IS_EDGE)
       {
         // For some obscure reason, removing the DIV from the
         // parent before fetching its outerHTML has missing
@@ -542,7 +527,7 @@ open = (css, targetWindow, forcePageBreaks, keepOpen)=>
         doc.writeln(div.outerHTML);
         div.parentNode.removeChild(div);
       }
-      else if (document.documentMode >= 11 || mxClient.IS_EDGE)
+      else if (mxClient.IS_EDGE)
       {
         var clone = doc.createElement('div');
         clone.innerHTML = div.outerHTML;
@@ -825,19 +810,6 @@ renderPage = (w, h, dx, dy, content, pageNumber)=>
       viewport.style.marginLeft = dx + 'px';
       viewport.style.marginTop = dy + 'px';
 
-      // FIXME: IE8 standards output problems
-      if (doc.documentMode == 8)
-      {
-        innerDiv.style.position = 'absolute';
-        viewport.style.position = 'absolute';
-      }
-
-      if (doc.documentMode == 10)
-      {
-        viewport.style.width = '100%';
-        viewport.style.height = '100%';
-      }
-
       innerDiv.appendChild(viewport);
       div.appendChild(innerDiv);
       document.body.appendChild(div);
@@ -850,12 +822,6 @@ renderPage = (w, h, dx, dy, content, pageNumber)=>
       div.style.height = h + 'px';
       div.style.overflow = 'hidden';
       div.style.pageBreakInside = 'avoid';
-
-      // IE8 uses above branch currently
-      if (doc.documentMode == 8)
-      {
-        div.style.position = 'relative';
-      }
 
       var innerDiv = document.createElement('div');
       innerDiv.style.width = (w - 2 * this.border) + 'px';

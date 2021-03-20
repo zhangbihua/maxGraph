@@ -474,7 +474,7 @@ class mxShape {
   /**
    * Function: redrawShape
    *
-   * Updates the SVG or VML shape.
+   * Updates the SVG shape.
    */
   redrawShape = () => {
     var canvas = this.createCanvas();
@@ -490,16 +490,6 @@ class mxShape {
       if (this.node != canvas.root) {
         // Forces parsing in IE8 standards mode - slow! avoid
         this.node.insertAdjacentHTML('beforeend', canvas.root.outerHTML);
-      }
-
-      if (this.node.nodeName === 'DIV' && document.documentMode === 8) {
-        // Makes DIV transparent to events for IE8 in IE8 standards
-        // mode (Note: Does not work for IE9 in IE8 standards mode
-        // and not for IE11 in enterprise mode)
-        this.node.style.filter = '';
-
-        // Adds event transparency in IE8 standards
-        mxUtils.addTransparentBackgroundFilter(this.node);
       }
 
       this.destroyCanvas(canvas);
@@ -571,46 +561,6 @@ class mxShape {
     }
 
     return canvas;
-  };
-
-  /**
-   * Function: createVmlCanvas
-   *
-   * Creates and returns an <mxVmlCanvas2D> for rendering this shape.
-   */
-  createVmlCanvas = () => {
-    // Workaround for VML rendering bug in IE8 standards mode
-    var node = (document.documentMode === 8 && this.isParseVml()) ? this.createVmlGroup() : this.node;
-    var canvas = new mxVmlCanvas2D(node, false);
-
-    if (node.tagUrn != '') {
-      var w = Math.max(1, Math.round(this.bounds.width));
-      var h = Math.max(1, Math.round(this.bounds.height));
-      node.coordsize = (w * this.vmlScale) + ',' + (h * this.vmlScale);
-      canvas.scale(this.vmlScale);
-      canvas.vmlScale = this.vmlScale;
-    }
-
-    // Painting relative to top, left shape corner
-    var s = this.scale;
-    canvas.translate(-Math.round(this.bounds.x / s), -Math.round(this.bounds.y / s));
-
-    return canvas;
-  };
-
-  /**
-   * Function: updateVmlContainer
-   *
-   * Updates the bounds of the VML container.
-   */
-  updateVmlContainer = () => {
-    this.node.style.left = Math.round(this.bounds.x) + 'px';
-    this.node.style.top = Math.round(this.bounds.y) + 'px';
-    var w = Math.max(1, Math.round(this.bounds.width));
-    var h = Math.max(1, Math.round(this.bounds.height));
-    this.node.style.width = w + 'px';
-    this.node.style.height = h + 'px';
-    this.node.style.overflow = 'visible';
   };
 
   /**

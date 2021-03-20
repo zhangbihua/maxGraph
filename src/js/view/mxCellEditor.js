@@ -451,17 +451,8 @@ installListeners = (elt)=>
   
   mxEvent.addListener(elt, evtName, resizeHandler);
   mxEvent.addListener(window, 'resize', resizeHandler);
-
-  if (document.documentMode >= 9)
-  {
-    mxEvent.addListener(elt, 'DOMNodeRemoved', resizeHandler);
-    mxEvent.addListener(elt, 'DOMNodeInserted', resizeHandler);
-  }
-  else
-  {
-    mxEvent.addListener(elt, 'cut', resizeHandler);
-    mxEvent.addListener(elt, 'paste', resizeHandler);
-  }
+  mxEvent.addListener(elt, 'cut', resizeHandler);
+  mxEvent.addListener(elt, 'paste', resizeHandler);
 };
 
 /**
@@ -604,7 +595,7 @@ resize = ()=>
         this.textarea.style.whiteSpace = 'normal';
         
          // Forces automatic reflow if text is removed from an oversize label and normal word wrap
-        var tmp = Math.round(this.bounds.width / ((document.documentMode == 8) ? scale : scale)) + this.wordWrapPadding;
+        var tmp = Math.round(this.bounds.width / scale) + this.wordWrapPadding;
 
         if (this.textarea.style.position != 'relative')
         {

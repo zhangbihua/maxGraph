@@ -805,7 +805,7 @@ BaseFormatPanel.prototype.createStepper = function(input, update, step, height, 
 	step = (step != null) ? step : 1;
 	height = (height != null) ? height : 8;
 	
-	if (mxClient.IS_MT || document.documentMode >= 8)
+	if (mxClient.IS_MT)
 	{
 		height = height + 1;
 	} 
@@ -6154,7 +6154,7 @@ DiagramFormatPanel.prototype.addView = function(div)
 			btn.style.position = 'absolute';
 			btn.className = 'geColorBtn';
 			btn.style.marginTop = '-4px';
-			btn.style.paddingBottom = (document.documentMode == 11 || mxClient.IS_MT) ? '0px' : '2px';
+			btn.style.paddingBottom = mxClient.IS_MT ? '0px' : '2px';
 			btn.style.height = '22px';
 			btn.style.right = '72px';
 			btn.style.width = '56px';

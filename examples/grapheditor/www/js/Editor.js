@@ -366,9 +366,7 @@ Editor.prototype.editAsNew = function(xml, title)
 		p += ((p.length > 0) ? '&' : '?') + 'ui=' + urlParams['ui'];
 	}
 	
-	if (typeof window.postMessage !== 'undefined' &&
-		(document.documentMode == null ||
-		document.documentMode >= 10))
+	if (typeof window.postMessage !== 'undefined' )
 	{
 		var wnd = null;
 		
@@ -385,11 +383,6 @@ Editor.prototype.editAsNew = function(xml, title)
 		wnd = this.graph.openLink(this.getEditBlankUrl(
 			p + ((p.length > 0) ? '&' : '?') +
 			'client=1'), null, true);
-	}
-	else
-	{
-		this.graph.openLink(this.getEditBlankUrl(p) +
-			'#R' + encodeURIComponent(xml));
 	}
 };
 

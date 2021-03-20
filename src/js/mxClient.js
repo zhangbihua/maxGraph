@@ -31,21 +31,6 @@ var mxClient = {
   IS_EDGE: navigator.userAgent != null && !!navigator.userAgent.match(/Edge\//),
 
   /**
-   * Variable: IS_QUIRKS
-   *
-   * True if the current browser is Internet Explorer and it is in quirks mode.
-   */
-  IS_QUIRKS: navigator.userAgent != null && navigator.userAgent.indexOf('MSIE') >= 0 &&
-      (document.documentMode == null || document.documentMode == 5),
-
-  /**
-   * Variable: IS_EM
-   *
-   * True if the browser is IE11 in enterprise mode (IE8 standards mode).
-   */
-  IS_EM: 'spellcheck' in document.createElement('textarea') && document.documentMode == 8,
-
-  /**
    * Variable: IS_NS
    *
    * True if the current browser is Netscape (including Firefox).

@@ -482,37 +482,7 @@ class mxText extends mxShape {
 
           var sizeDiv = node;
 
-          if (document.documentMode == 8 && !mxClient.IS_EM) {
-            var w = Math.round(this.bounds.width / this.scale);
-
-            if (this.wrap && w > 0) {
-              node.style.wordWrap = mxConstants.WORD_WRAP;
-              node.style.whiteSpace = 'normal';
-
-              if (node.style.wordWrap != 'break-word') {
-                // Innermost DIV is used for measuring text
-                var divs = sizeDiv.getElementsByTagName('div');
-
-                if (divs.length > 0) {
-                  sizeDiv = divs[divs.length - 1];
-                }
-
-                ow = sizeDiv.offsetWidth + 2;
-                divs = this.node.getElementsByTagName('div');
-
-                if (this.clipped) {
-                  ow = Math.min(w, ow);
-                }
-
-                // Second last DIV width must be updated in DOM tree
-                if (divs.length > 1) {
-                  divs[divs.length - 2].style.width = ow + 'px';
-                }
-              }
-            } else {
-              node.style.whiteSpace = 'nowrap';
-            }
-          } else if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName == 'DIV') {
+          if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName == 'DIV') {
             sizeDiv = sizeDiv.firstChild;
           }
 

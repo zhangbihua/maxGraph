@@ -2519,10 +2519,6 @@ class mxEditor extends mxEventSource {
       div.style.background = 'white';
       div.style.cursor = 'move';
 
-      if (document.documentMode == 8) {
-        div.style.filter = 'progid:DXImageTransform.Microsoft.alpha(opacity=100)';
-      }
-
       var wnd = new mxWindow(
           mxResources.get(this.outlineResource) ||
           this.outlineResource,

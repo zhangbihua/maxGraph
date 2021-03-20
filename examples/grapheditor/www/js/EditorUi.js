@@ -1789,12 +1789,7 @@ EditorUi.prototype.initCanvas = function()
                 var st = graph.container.scrollTop;
                 var sl = graph.container.scrollLeft;
                 var sb = 14;
-                
-                if (document.documentMode == 8 || document.documentMode == 9)
-                {
-                    sb += 3;
-                }
-                
+
                 var cw = graph.container.offsetWidth - sb;
                 var ch = graph.container.offsetHeight - sb;
                 
@@ -4214,18 +4209,11 @@ EditorUi.prototype.extractGraphModelFromEvent = function(evt)
 		
 		if (provider != null)
 		{
-			if (document.documentMode == 10 || document.documentMode == 11)
+			data = (mxUtils.indexOf(provider.types, 'text/html') >= 0) ? provider.getData('text/html') : null;
+
+			if (mxUtils.indexOf(provider.types, 'text/plain' && (data == null || data.length == 0)))
 			{
-				data = provider.getData('Text');
-			}
-			else
-			{
-				data = (mxUtils.indexOf(provider.types, 'text/html') >= 0) ? provider.getData('text/html') : null;
-			
-				if (mxUtils.indexOf(provider.types, 'text/plain' && (data == null || data.length == 0)))
-				{
-					data = provider.getData('text/plain');
-				}
+				data = provider.getData('text/plain');
 			}
 
 			if (data != null)

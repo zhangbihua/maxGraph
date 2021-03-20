@@ -161,16 +161,6 @@ minScale = 0.0001;
 suspended = false;
 
 /**
- * Variable: forceVmlHandles
- * 
- * Specifies if VML should be used to render the handles in this control. This
- * is true for IE8 standards mode and false for all other browsers and modes.
- * This is a workaround for rendering issues of HTML elements over elements
- * with filters in IE 8 standards mode.
- */
-forceVmlHandles = document.documentMode == 8;
-
-/**
  * Function: createGraph
  * 
  * Creates the <mxGraph> used in the outline.

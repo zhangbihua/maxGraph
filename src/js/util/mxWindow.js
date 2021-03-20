@@ -280,14 +280,6 @@ minimumSize = new mxRectangle(0, 0, 50, 40);
 destroyOnClose = true;
 
 /**
- * Variable: contentHeightCorrection
- * 
- * Defines the correction factor for computing the height of the contentWrapper.
- * Default is 6 for IE 7/8 standards mode and 2 for all other browsers and modes.
- */
-contentHeightCorrection = (document.documentMode == 8 || document.documentMode == 7) ? 6 : 2;
-
-/**
  * Variable: title
  * 
  * Reference to the DOM node (TD) that contains the title.
@@ -358,11 +350,6 @@ init = (x, y, width, height, style)=>
   tr = document.createElement('tr');
   this.td = document.createElement('td');
   this.td.className = style + 'Pane';
-  
-  if (document.documentMode == 7)
-  {
-    this.td.style.height = '100%';
-  }
 
   this.contentWrapper = document.createElement('div');
   this.contentWrapper.className = style + 'Pane';

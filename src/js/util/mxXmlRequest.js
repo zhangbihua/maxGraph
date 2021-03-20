@@ -243,7 +243,7 @@ getXml = ()=>
   // type errors in the mxCellCodec when putting the nodes into a new
   // document. This happens in IE9 standards mode and with XML user
   // objects only, as they are used directly as values in cells.
-  if (document.documentMode >= 9 || xml == null || xml.documentElement == null)
+  if (xml == null || xml.documentElement == null)
   {
     xml = mxUtils.parseXml(this.request.responseText);
   }
@@ -336,7 +336,7 @@ send = (onload, onerror, timeout, ontimeout)=>
       this.request.withCredentials = 'true';
     }
 
-    if ((document.documentMode == null || document.documentMode > 9) &&
+    if ((document.documentMode == null) &&
       window.XMLHttpRequest && timeout != null && ontimeout != null)
     {
       this.request.timeout = timeout;

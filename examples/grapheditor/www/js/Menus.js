@@ -1264,20 +1264,10 @@ Menus.prototype.menuCreated = function(menu, elt, className)
 			if (!menu.enabled)
 			{
 				elt.className = className + ' mxDisabled';
-				
-				if (document.documentMode == 8)
-				{
-					elt.style.color = '#c3c3c3';
-				}
 			}
 			else
 			{
 				elt.className = className;
-				
-				if (document.documentMode == 8)
-				{
-					elt.style.color = '';
-				}
 			}
 		});
 	}

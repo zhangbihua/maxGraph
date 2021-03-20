@@ -898,7 +898,7 @@ mxSvgCanvas2setLink = (link)=>
     
     // Workaround for implicit namespace handling in HTML5 export, IE adds NS1 namespace so use code below
     // in all IE versions except quirks mode. KNOWN: Adds xlink namespace to each image tag in output.
-    if (node.setAttributeNS == null || (this.root.ownerDocument != document && document.documentMode == null))
+    if (node.setAttributeNS == null || (this.root.ownerDocument != document))
     {
       node.setAttribute('xlink:href', link);
     }

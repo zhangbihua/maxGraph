@@ -538,12 +538,6 @@ isMenuShowing = ()=>
  */
 showMenu = ()=>
 {
-  // Disables filter-based shadow in IE9 standards mode
-  if (document.documentMode >= 9)
-  {
-    this.div.style.filter = 'none';
-  }
-
   // Fits the div inside the viewport
   document.body.appendChild(this.div);
   mxUtils.fit(this.div);

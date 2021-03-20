@@ -180,8 +180,7 @@ var mxLog =
       
       // Workaround for ignored textarea height in various setups
       if ((mxClient.IS_NS && !mxClient.IS_GC &&
-        !mxClient.IS_SF && document.compatMode != 'BackCompat') ||
-        document.documentMode == 11)
+        !mxClient.IS_SF && document.compatMode != 'BackCompat'))
       {
         var elt = mxLog.window.getElement();
         
