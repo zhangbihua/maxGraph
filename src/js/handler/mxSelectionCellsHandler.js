@@ -68,11 +68,11 @@ class mxSelectionCellsHandler extends mxEventSource {
     this.handlers = new mxDictionary();
     this.graph.addMouseListener(this);
 
-    this.refreshHandler = mxUtils.bind(this, (sender, evt) => {
+    this.refreshHandler = (sender, evt) => {
       if (this.isEnabled()) {
         this.refresh();
       }
-    });
+    };
 
     this.graph.getSelectionModel().addListener(mxEvent.CHANGE, this.refreshHandler);
     this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);

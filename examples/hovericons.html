@@ -39,8 +39,7 @@
 			img.style.top = (state.y + state.height) + 'px';
 			
 			mxEvent.addGestureListeners(img,
-				mxUtils.bind(this, function(evt)
-				{
+				(evt) => {
 					var s = graph.gridSize;
 					graph.setSelectionCells(graph.moveCells([state.cell], s, s, true));
 					mxEvent.consume(evt);
@@ -62,20 +61,18 @@
 			img.style.top = (state.y - 16) + 'px';
 			
 			mxEvent.addGestureListeners(img,
-				mxUtils.bind(this, function(evt)
-				{
+				(evt) => {
 					// Disables dragging the image
 					mxEvent.consume(evt);
-				})
+				}
 			);
 			
 			mxEvent.addListener(img, 'click',
-				mxUtils.bind(this, function(evt)
-				{
+				(evt) => {
 					graph.removeCells([state.cell]);
 					mxEvent.consume(evt);
 					this.destroy();
-				})
+				}
 			);
 			
 			state.view.graph.container.appendChild(img);

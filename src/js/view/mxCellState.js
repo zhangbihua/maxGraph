@@ -158,8 +158,12 @@ class mxCellState extends mxRectangle {
    * cell - <mxCell> that this state represents.
    * style - Array of key, value pairs that constitute the style.
    */
-  constructor(view, cell, style) {
-    // no super
+  constructor(...args) {
+    super(...args)
+  }
+
+  _constructor(view, cell, style) {
+    // replace super of mxPoint/mxRectangle
     this.view = view;
     this.cell = cell;
     this.style = (style != null) ? style : {};

@@ -77,7 +77,7 @@ class mxRubberband {
       this.graph.addMouseListener(this);
 
       // Handles force rubberband event
-      this.forceRubberbandHandler = mxUtils.bind(this, (sender, evt) => {
+      this.forceRubberbandHandler = (sender, evt) => {
         var evtName = evt.getProperty('eventName');
         var me = evt.getProperty('event');
 
@@ -89,7 +89,7 @@ class mxRubberband {
           this.start(me.getX() + origin.x, me.getY() + origin.y);
           me.consume(false);
         }
-      });
+      };
 
       this.graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.forceRubberbandHandler);
 
@@ -101,11 +101,11 @@ class mxRubberband {
       this.graph.addListener(mxEvent.PAN, this.panHandler);
 
       // Does not show menu if any touch gestures take place after the trigger
-      this.gestureHandler = mxUtils.bind(this, (sender, eo) => {
+      this.gestureHandler = (sender, eo) => {
         if (this.first != null) {
           this.reset();
         }
-      });
+      };
 
       this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
     }
@@ -190,9 +190,9 @@ class mxRubberband {
       this.mouseMove(this.graph, createMouseEvent(evt));
     });
 
-    this.dropHandler = mxUtils.bind(this, (evt) => {
+    this.dropHandler = (evt) => {
       this.mouseUp(this.graph, createMouseEvent(evt));
-    });
+    };
 
     // Workaround for rubberband stopping if the mouse leaves the container in Firefox
     if (mxClient.IS_FF) {

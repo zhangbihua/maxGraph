@@ -473,14 +473,14 @@ class mxPrintPreview {
       var vpages = Math.max(1, Math.ceil((bounds.height + this.y0) / availableHeight));
       this.pageCount = hpages * vpages;
 
-      var writePageSelector = mxUtils.bind(this, () => {
+      var writePageSelector = () => {
         if (this.pageSelector && (vpages > 1 || hpages > 1)) {
           var table = this.createPageSelector(vpages, hpages);
           doc.body.appendChild(table);
         }
-      });
+      };
 
-      var addPage = mxUtils.bind(this, (div, addBreak) => {
+      var addPage =  (div, addBreak) => {
         // Border of the DIV (aka page) inside the document
         if (this.borderColor != null) {
           div.style.borderColor = this.borderColor;
@@ -525,7 +525,7 @@ class mxPrintPreview {
         if (forcePageBreaks || addBreak) {
           this.addPageBreak(doc);
         }
-      });
+      };
 
       var cov = this.getCoverPages(this.pageFormat.width, this.pageFormat.height);
 
@@ -921,9 +921,9 @@ class mxPrintPreview {
       // Creates the temporary cell states in the view and
       // draws them onto the temporary DOM nodes in the view
       var cells = [this.getRoot()];
-      temp = new mxTemporaryCellStates(view, scale, cells, null, mxUtils.bind(this, (state) => {
+      temp = new mxTemporaryCellStates(view, scale, cells, null, (state) => {
         return this.getLinkForCellState(state);
-      }));
+      });
     } finally {
       // Removes everything but the SVG node
       var tmp = div.firstChild;

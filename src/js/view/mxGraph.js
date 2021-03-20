@@ -1519,9 +1519,9 @@ class mxGraph extends mxEventSource {
     this.view = this.createGraphView();
 
     // Adds a graph model listener to update the view
-    this.graphModelChangeListener = mxUtils.bind(this, (sender, evt) => {
+    this.graphModelChangeListener = (sender, evt) => {
       this.graphModelChanged(evt.getProperty('edit').changes);
-    });
+    };
 
     this.model.addListener(mxEvent.CHANGE, this.graphModelChangeListener);
 
@@ -1752,7 +1752,7 @@ class mxGraph extends mxEventSource {
     var dict = new mxDictionary();
     var cells = [];
 
-    var addCell = mxUtils.bind(this, (cell) => {
+    var addCell = (cell) => {
       if (!dict.get(cell) && this.model.contains(cell)) {
         if (this.model.isEdge(cell) || this.model.isVertex(cell)) {
           dict.put(cell, true);
@@ -1765,7 +1765,7 @@ class mxGraph extends mxEventSource {
           }
         }
       }
-    });
+    };
 
     for (var i = 0; i < changes.length; i++) {
       var change = changes[i];
@@ -2134,11 +2134,11 @@ class mxGraph extends mxEventSource {
       // Adds a handler for single mouseclicks to select the cell
       if (isSelect) {
         overlay.addListener(mxEvent.CLICK,
-            mxUtils.bind(this, (sender, evt) => {
+            (sender, evt) => {
               if (this.isEnabled()) {
                 this.setSelectionCell(cell);
               }
-            })
+            }
         );
       }
 
@@ -2368,13 +2368,13 @@ class mxGraph extends mxEventSource {
           var active = false;
 
           var tmp = this.getCellAt(me.graphX, me.graphY, null, null, null,
-              mxUtils.bind(this, (state) => {
+              (state) => {
                 var selected = this.isCellSelected(state.cell);
                 active = active || selected;
 
                 return !active || selected || (state.cell != cell &&
                     this.model.isAncestor(state.cell, cell));
-              }));
+              });
 
           if (tmp != null) {
             cell = tmp;
@@ -2916,7 +2916,7 @@ class mxGraph extends mxEventSource {
       this.verticalPageBreaks = [];
     }
 
-    var drawPageBreaks = mxUtils.bind(this, (breaks) => {
+    var drawPageBreaks = (breaks) => {
       if (breaks != null) {
         var count = (breaks == this.horizontalPageBreaks) ? horizontalCount : verticalCount;
 
@@ -2948,7 +2948,7 @@ class mxGraph extends mxEventSource {
 
         breaks.splice(count, breaks.length - count);
       }
-    });
+    };
 
     drawPageBreaks(this.horizontalPageBreaks);
     drawPageBreaks(this.verticalPageBreaks);

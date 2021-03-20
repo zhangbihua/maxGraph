@@ -109,18 +109,18 @@ class mxDefaultToolbar {
 
       // Installs the insert function in the editor if an item is
       // selected in the toolbar
-      this.toolbar.addListener(mxEvent.SELECT, mxUtils.bind(this, (sender, evt) => {
+      this.toolbar.addListener(mxEvent.SELECT, (sender, evt) => {
         let funct = evt.getProperty('function');
 
         if (funct != null) {
-          this.editor.insertFunction = mxUtils.bind(this, () => {
+          this.editor.insertFunction = () => {
             funct.apply(this, arguments);
             this.toolbar.resetMode();
-          });
+          };
         } else {
           this.editor.insertFunction = null;
         }
-      }));
+      });
 
       // Resets the selected tool after a doubleclick or escape keystroke
       this.resetHandler = mxUtils.bind(this, () => {
@@ -148,12 +148,11 @@ class mxDefaultToolbar {
    * pressed - Optional URL of the icon for the pressed state.
    */
   addItem = (title, icon, action, pressed) => {
-    let clickHandler = mxUtils.bind(this, () => {
+    let clickHandler = () => {
       if (action != null && action.length > 0) {
         this.editor.execute(action);
       }
-    });
-
+    };
     return this.toolbar.addItem(title, icon, clickHandler, pressed);
   };
 
@@ -251,14 +250,13 @@ class mxDefaultToolbar {
    * selected.
    */
   addMode = (title, icon, mode, pressed, funct) => {
-    let clickHandler = mxUtils.bind(this, () => {
+    let clickHandler = () => {
       this.editor.setMode(mode);
 
       if (funct != null) {
         funct(this.editor);
       }
-    });
-
+    };
     return this.toolbar.addSwitchMode(title, icon, clickHandler, pressed);
   };
 
@@ -298,7 +296,7 @@ class mxDefaultToolbar {
 
     // Defines the function for a click event on the graph
     // after this item has been selected in the toolbar
-    let clickHandler = mxUtils.bind(this, (evt, cell) => {
+    let clickHandler = (evt, cell) => {
       if (typeof (insert) == 'function') {
         insert(this.editor, factory(), evt, cell);
       } else {
@@ -307,7 +305,7 @@ class mxDefaultToolbar {
 
       this.toolbar.resetMode();
       mxEvent.consume(evt);
-    });
+    };
 
     let img = this.toolbar.addMode(title, icon, clickHandler, pressed, null, toggle);
 

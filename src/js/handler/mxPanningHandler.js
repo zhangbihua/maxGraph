@@ -145,7 +145,7 @@ class mxPanningHandler extends mxEventSource {
       this.graph.addMouseListener(this);
 
       // Handles force panning event
-      this.forcePanningHandler = mxUtils.bind(this, (sender, evt) => {
+      this.forcePanningHandler = (sender, evt) => {
         var evtName = evt.getProperty('eventName');
         var me = evt.getProperty('event');
 
@@ -155,7 +155,7 @@ class mxPanningHandler extends mxEventSource {
           this.fireEvent(new mxEventObject(mxEvent.PAN_START, 'event', me));
           me.consume();
         }
-      });
+      };
 
       this.graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.forcePanningHandler);
 
@@ -184,11 +184,11 @@ class mxPanningHandler extends mxEventSource {
 
       this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
 
-      this.mouseUpListener = mxUtils.bind(this, () => {
+      this.mouseUpListener = () => {
         if (this.active) {
           this.reset();
         }
-      });
+      };
 
       // Stops scrolling on every mouseup anywhere in the document
       mxEvent.addListener(document, 'mouseup', this.mouseUpListener);

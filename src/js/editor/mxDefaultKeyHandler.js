@@ -95,9 +95,9 @@ class mxDefaultKeyHandler {
    * Default is false.
    */
   bindAction = (code, action, control) => {
-    let keyHandler = mxUtils.bind(this, () => {
+    let keyHandler = () => {
       this.editor.execute(action);
-    });
+    };
 
     if (control) {
       // Binds the function to control-down keycode

@@ -374,9 +374,9 @@ class mxConnectionHandler extends mxEventSource {
       this.init();
 
       // Handles escape keystrokes
-      this.escapeHandler = mxUtils.bind(this, (sender, evt) => {
+      this.escapeHandler = (sender, evt) => {
         this.reset();
-      });
+      };
 
       this.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
     }
@@ -499,9 +499,9 @@ class mxConnectionHandler extends mxEventSource {
     this.graph.getView().addListener(mxEvent.SCALE_AND_TRANSLATE, this.changeHandler);
 
     // Removes the icon if we step into/up or start editing
-    this.drillHandler = mxUtils.bind(this, (sender) => {
+    this.drillHandler = (sender) => {
       this.reset();
-    });
+    };
 
     this.graph.addListener(mxEvent.START_EDITING, this.drillHandler);
     this.graph.getView().addListener(mxEvent.DOWN, this.drillHandler);
@@ -579,31 +579,30 @@ class mxConnectionHandler extends mxEventSource {
     });
 
     // Sets the highlight color according to validateConnection
-    marker.isValidState = mxUtils.bind(this, (state) => {
+    marker.isValidState = (state) => {
       if (this.isConnecting()) {
         return this.error == null;
       } else {
         return isValidState.apply(marker, arguments);
       }
-    });
+    };
 
     // Overrides to use marker color only in highlight mode or for
     // target selection
     marker.getMarkerColor = mxUtils.bind(this, (evt, state, isValid) => {
       return (this.connectImage == null || this.isConnecting()) ?
-          getMarkerColor.apply(marker, arguments) :
+          super.getMarkerColor(evt, state, isValid) :
           null;
     });
 
     // Overrides to use hotspot only for source selection otherwise
     // intersects always returns true when over a cell
-    marker.intersects = mxUtils.bind(this, (state, evt) => {
+    marker.intersects = (state, evt) => {
       if (this.connectImage != null || this.isConnecting()) {
         return true;
       }
-
-      return intersects.apply(marker, arguments);
-    });
+      return super.intersects(state, evt);
+    };
 
     return marker;
   };
@@ -759,18 +758,18 @@ class mxConnectionHandler extends mxEventSource {
       icon.node.style.cursor = mxConstants.CURSOR_CONNECT;
 
       // Events transparency
-      var getState = mxUtils.bind(this, () => {
+      var getState = () => {
         return (this.currentState != null) ? this.currentState : state;
-      });
+      };
 
       // Updates the local icon before firing the mouse down event.
-      var mouseDown = mxUtils.bind(this, (evt) => {
+      var mouseDown = (evt) => {
         if (!mxEvent.isConsumed(evt)) {
           this.icon = icon;
           this.graph.fireMouseEvent(mxEvent.MOUSE_DOWN,
               new mxMouseEvent(evt, getState()));
         }
-      });
+      };
 
       mxEvent.redirectMouseEvents(icon.node, this.graph, getState, mouseDown);
 

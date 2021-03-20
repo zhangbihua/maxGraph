@@ -233,14 +233,14 @@ class mxEdgeHandler {
       this.init();
 
       // Handles escape keystrokes
-      this.escapeHandler = mxUtils.bind(this, (sender, evt) => {
+      this.escapeHandler = (sender, evt) => {
         var dirty = this.index != null;
         this.reset();
 
         if (dirty) {
           this.graph.cellRenderer.redraw(this.state, false, state.view.isRendering());
         }
-      });
+      };
 
       this.state.view.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
     }
@@ -554,13 +554,13 @@ class mxEdgeHandler {
         var terminal = source || target;
 
         if (terminal || this.graph.isCellBendable(cell)) {
-          (mxUtils.bind(this, (index) => {
+          ((index) => {
             var bend = this.createHandleShape(index);
-            this.initBend(bend, mxUtils.bind(this, mxUtils.bind(this, () => {
+            this.initBend(bend, () => {
               if (this.dblClickRemoveEnabled) {
                 this.removePoint(this.state, index);
               }
-            })));
+            });
 
             if (this.isHandleEnabled(i)) {
               bend.setCursor((terminal) ? mxConstants.CURSOR_TERMINAL_HANDLE : mxConstants.CURSOR_BEND_HANDLE);
@@ -572,7 +572,7 @@ class mxEdgeHandler {
               this.points.push(new mxPoint(0, 0));
               bend.node.style.visibility = 'hidden';
             }
-          }))(i);
+          })(i);
         }
       }
     }

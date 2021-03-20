@@ -72,13 +72,13 @@ class mxDivResizer {
       }
 
       mxEvent.addListener(container, 'resize',
-          mxUtils.bind(this, (evt) => {
+          (evt) => {
             if (!this.handlingResize) {
               this.handlingResize = true;
               this.resize();
               this.handlingResize = false;
             }
-          })
+          }
       );
 
       this.resize();

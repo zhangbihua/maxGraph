@@ -1470,16 +1470,16 @@ class mxEditor extends mxEventSource {
     // Redirects the function for creating the
     // popupmenu items
     graph.popupMenuHandler.factoryMethod =
-        mxUtils.bind(this, (menu, cell, evt) => {
+        (menu, cell, evt) => {
           return this.createPopupMenu(menu, cell, evt);
-        });
+        };
 
     // Redirects the function for creating
     // new connections in the diagram
     graph.connectionHandler.factoryMethod =
-        mxUtils.bind(this, (source, target) => {
+        (source, target) => {
           return this.createEdge(source, target);
-        });
+        };
 
     // Maintains swimlanes and installs autolayout
     this.createSwimlaneManager(graph);
@@ -1500,9 +1500,9 @@ class mxEditor extends mxEventSource {
       return this.horizontalFlow;
     });
 
-    swimlaneMgr.isEnabled = mxUtils.bind(this, () => {
+    swimlaneMgr.isEnabled = () => {
       return this.maintainSwimlanes;
-    });
+    };
 
     return swimlaneMgr;
   };
@@ -1604,10 +1604,10 @@ class mxEditor extends mxEventSource {
    * Adds the <undoManager> to the graph model and the view.
    */
   installUndoHandler = (graph) => {
-    var listener = mxUtils.bind(this, (sender, evt) => {
+    var listener = (sender, evt) => {
       var edit = evt.getProperty('edit');
       this.undoManager.undoableEditHappened(edit);
-    });
+    };
 
     graph.getModel().addListener(mxEvent.UNDO, listener);
     graph.getView().addListener(mxEvent.UNDO, listener);
@@ -1644,7 +1644,7 @@ class mxEditor extends mxEventSource {
    * fires a <root> event.
    */
   installChangeHandler = (graph) => {
-    var listener = mxUtils.bind(this, (sender, evt) => {
+    var listener = (sender, evt) => {
       // Updates the modified state
       this.setModified(true);
 
@@ -1669,7 +1669,7 @@ class mxEditor extends mxEventSource {
           break;
         }
       }
-    });
+    };
 
     graph.getModel().addListener(mxEvent.CHANGE, listener);
   };
@@ -1790,10 +1790,10 @@ class mxEditor extends mxEventSource {
 
       // Updates the statusbar to display the filename
       // when new files are opened
-      this.addListener(mxEvent.OPEN, mxUtils.bind(this, () => {
+      this.addListener(mxEvent.OPEN, () => {
         this.setStatus((mxResources.get(this.currentFileResource) ||
             this.currentFileResource) + ': ' + this.filename);
-      }));
+      });
     }
   };
 
@@ -2042,10 +2042,10 @@ class mxEditor extends mxEventSource {
     }
 
     mxUtils.post(url, this.postParameterName + '=' + data,
-        mxUtils.bind(this, (req) => {
+        (req) => {
           this.fireEvent(new mxEventObject(mxEvent.POST,
               'request', req, 'url', url, 'data', data));
-        })
+        }
     );
   };
 
@@ -2297,10 +2297,10 @@ class mxEditor extends mxEventSource {
 
       // Defines the function to be executed when the
       // Cancel button is pressed in the dialog
-      var cancelFunction = mxUtils.bind(this, () => {
+      var cancelFunction = () => {
         // Hides the dialog
         this.hideProperties();
-      });
+      };
 
       form.addButtons(okFunction, cancelFunction);
 

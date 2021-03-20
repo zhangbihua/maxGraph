@@ -66,7 +66,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Constructs an event handler that creates a <mxPopupMenu>.
    */
   constructor(graph, factoryMethod) {
-    //super();
+    super();
 
     if (graph != null) {
       this.graph = graph;
@@ -74,9 +74,9 @@ class mxPopupMenuHandler extends mxPopupMenu {
       this.graph.addMouseListener(this);
 
       // Does not show menu if any touch gestures take place after the trigger
-      this.gestureHandler = mxUtils.bind(this, (sender, eo) => {
+      this.gestureHandler = (sender, eo) => {
         this.inTolerance = false;
-      });
+      };
 
       this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
 

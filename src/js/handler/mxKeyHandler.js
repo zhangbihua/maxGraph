@@ -126,9 +126,9 @@ class mxKeyHandler {
       this.controlKeys = [];
       this.controlShiftKeys = [];
 
-      this.keydownHandler = mxUtils.bind(this, (evt) => {
+      this.keydownHandler = (evt) => {
         this.keyDown(evt);
-      });
+      };
 
       // Installs the keystroke listener in the target
       mxEvent.addListener(this.target, 'keydown', this.keydownHandler);

@@ -54,13 +54,13 @@ class mxConstraintHandler {
     this.graph = graph;
 
     // Adds a graph model listener to update the current focus on changes
-    this.resetHandler = mxUtils.bind(this, (sender, evt) => {
+    this.resetHandler = (sender, evt) => {
       if (this.currentFocus != null && this.graph.view.getState(this.currentFocus.cell) == null) {
         this.reset();
       } else {
         this.redraw();
       }
-    });
+    };
 
     this.graph.model.addListener(mxEvent.CHANGE, this.resetHandler);
     this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.resetHandler);
@@ -292,9 +292,9 @@ class mxConstraintHandler {
               hl.init(this.graph.getView().getOverlayPane());
               this.focusHighlight = hl;
 
-              var getState = mxUtils.bind(this, () => {
+              var getState = () => {
                 return (this.currentFocus != null) ? this.currentFocus : state;
-              });
+              };
 
               mxEvent.redirectMouseEvents(hl.node, this.graph, getState);
             }

@@ -370,12 +370,12 @@ var mxEvent =
       var dy0 = 0;
 
       // Adds basic listeners for graph event dispatching
-      mxEvent.addGestureListeners(target, mxUtils.bind(this, (evt) => {
+      mxEvent.addGestureListeners(target, (evt) => {
             if (!mxEvent.isMouseEvent(evt) && evt.pointerId != null) {
               evtCache.push(evt);
             }
-          }),
-          mxUtils.bind(this, (evt) => {
+          },
+          (evt) => {
             if (!mxEvent.isMouseEvent(evt) && evtCache.length == 2) {
               // Find this event in the cache and update its record with this event
               for (var i = 0; i < evtCache.length; i++) {
@@ -402,12 +402,12 @@ var mxEvent =
                 dy0 = dy;
               }
             }
-          }),
-          mxUtils.bind(this, (evt) => {
+          },
+          (evt) => {
             evtCache = [];
             dx0 = 0;
             dy0 = 0;
-          }));
+          });
     }
 
     mxEvent.addListener(target, 'wheel', wheelHandler);

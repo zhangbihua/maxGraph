@@ -682,7 +682,7 @@ class mxText extends mxShape {
     mxSvgCanvas2D.createCss(w + 2, h, this.align, this.valign, this.wrap, this.overflow, this.clipped,
         (this.background != null) ? mxUtils.htmlEntities(this.background) : null,
         (this.border != null) ? mxUtils.htmlEntities(this.border) : null,
-        flex, block, this.scale, mxUtils.bind(this, (dx, dy, flex, item, block, ofl) => {
+        flex, block, this.scale, (dx, dy, flex, item, block, ofl) => {
           var r = this.getTextRotation();
           var tr = ((this.scale != 1) ? 'scale(' + this.scale + ') ' : '') +
               ((r != 0) ? 'rotate(' + r + 'deg) ' : '') +
@@ -719,7 +719,7 @@ class mxText extends mxShape {
 
           this.node.firstChild.firstChild.setAttribute('style', block);
           this.node.firstChild.setAttribute('style', item);
-        }));
+        });
   };
 
   /**

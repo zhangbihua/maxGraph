@@ -220,12 +220,12 @@ class mxGraphHandler {
     this.graph.addMouseListener(this);
 
     // Repaints the handler after autoscroll
-    this.panHandler = mxUtils.bind(this, () => {
+    this.panHandler = () => {
       if (!this.suspended) {
         this.updatePreview();
         this.updateHint();
       }
-    });
+    };
 
     this.graph.addListener(mxEvent.PAN, this.panHandler);
 
@@ -237,7 +237,7 @@ class mxGraphHandler {
     this.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
 
     // Updates the preview box for remote changes
-    this.refreshHandler = mxUtils.bind(this, (sender, evt) => {
+    this.refreshHandler = (sender, evt) => {
       // Merges multiple pending calls
       if (this.refreshThread) {
         window.clearTimeout(this.refreshThread);
@@ -275,12 +275,12 @@ class mxGraphHandler {
           }
         }
       }), 0);
-    });
+    };
 
     this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
     this.graph.addListener(mxEvent.REFRESH, this.refreshHandler);
 
-    this.keyHandler = mxUtils.bind(this, (e) => {
+    this.keyHandler = (e) => {
       if (this.graph.container != null && this.graph.container.style.visibility != 'hidden' &&
           this.first != null && !this.suspended) {
         var clone = this.graph.isCloneEvent(e) &&
@@ -293,7 +293,7 @@ class mxGraphHandler {
           this.updatePreview();
         }
       }
-    });
+    };
 
     mxEvent.addListener(document, 'keydown', this.keyHandler);
     mxEvent.addListener(document, 'keyup', this.keyHandler);
@@ -762,7 +762,7 @@ class mxGraphHandler {
         }
       }
 
-      this.guide.isStateIgnored = mxUtils.bind(this, (state) => {
+      this.guide.isStateIgnored = (state) => {
         var p = this.graph.model.getParent(state.cell);
 
         return state.cell != null && ((!this.cloning &&
@@ -771,7 +771,7 @@ class mxGraphHandler {
                 !connected.get(state) &&
                 (this.target == null || this.graph.model.getChildCount(
                     this.target) >= 2) && p != (this.target || parent)));
-      });
+      };
     }
   };
 
@@ -1291,7 +1291,7 @@ class mxGraphHandler {
    */
   resetLivePreview = () => {
     if (this.allCells != null) {
-      this.allCells.visit(mxUtils.bind(this, (key, state) => {
+      this.allCells.visit((key, state) => {
         // Restores event handling
         if (state.shape != null && state.shape.originalPointerEvents != null) {
           state.shape.pointerEvents = state.shape.originalPointerEvents;
@@ -1321,7 +1321,7 @@ class mxGraphHandler {
 
         // Forces repaint of connected edges
         state.view.invalidate(state.cell);
-      }));
+      });
 
       // Repaints all invalid states
       this.graph.view.validate();

@@ -30,11 +30,15 @@ class mxRectangle extends mxPoint {
    */
   height = null;
 
-  constructor(x, y, width, height) {
-    super(x, y);
+  constructor(...args) {
+    super(...args);
+  };
+
+  _constructor(x, y, width, height) {
+    // replace super of mxPoint
     this.width = (width != null) ? width : 0;
     this.height = (height != null) ? height : 0;
-  };
+  }
 
   /**
    * Function: fromRectangle

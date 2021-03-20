@@ -55,12 +55,12 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
     bends.push(bend);
 
     // Virtual
-    bends.push(this.createVirtualBend(mxUtils.bind(this, (evt) => {
+    bends.push(this.createVirtualBend((evt) => {
       if (!mxEvent.isConsumed(evt) && this.flipEnabled) {
         this.graph.flipEdge(this.state.cell, evt);
         mxEvent.consume(evt);
       }
-    })));
+    }));
 
     this.points.push(new mxPoint(0, 0));
 

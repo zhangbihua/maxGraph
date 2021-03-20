@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2020, JGraph Ltd
  * Copyright (c) 2006-2020, draw.io AG
  */
+import mxUtils from "./mxUtils";
 
 class mxXmlRequest {
   /**
@@ -205,7 +206,7 @@ class mxXmlRequest {
    * Returns true if the response is ready.
    */
   isReady = () => {
-    return this.request.readyState == 4;
+    return this.request.readyState === 4;
   };
 
   /**
@@ -260,26 +261,15 @@ class mxXmlRequest {
    * Creates and returns the inner <request> object.
    */
   create = () => {
-    if (window.XMLHttpRequest) {
-      return () => {
-        var req = new XMLHttpRequest();
+    var req = new XMLHttpRequest();
 
-        // TODO: Check for overrideMimeType required here?
-        if (this.isBinary() && req.overrideMimeType) {
-          req.overrideMimeType('text/plain; charset=x-user-defined');
-        }
-
-        return req;
-      };
-    } else if (typeof (ActiveXObject) != 'undefined') {
-      return () => {
-        // TODO: Implement binary option
-        return new ActiveXObject('Microsoft.XMLHTTP');
-      };
+    // TODO: Check for overrideMimeType required here?
+    if (this.isBinary() && req.overrideMimeType) {
+      req.overrideMimeType('text/plain; charset=x-user-defined');
     }
-  }
-()
-  ;
+
+    return req;
+  };
 
   /**
    * Function: send
@@ -372,7 +362,7 @@ class mxXmlRequest {
     doc = doc || document;
     var old = null;
 
-    if (doc == document) {
+    if (doc === document) {
       old = window.onbeforeunload;
       window.onbeforeunload = null;
     }
