@@ -3,6 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
+import mxUtils from "../util/mxUtils";
+import mxCodecRegistry from "./mxCodecRegistry";
+import mxStylesheet from "FIXME";
+
 class mxStylesheetCodec extends mxObjectCodec {
   /**
    * Variable: allowEval
@@ -142,7 +146,7 @@ class mxStylesheetCodec extends mxObjectCodec {
                   extend + ' not found to extend');
             }
 
-            style = new Object();
+            style = {};
           }
 
           var entry = node.firstChild;

@@ -3,6 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
+import mxGraphModel from "FIXME";
+import mxObjectCodec from "FIXME";
+import mxCodecRegistry from "./mxCodecRegistry";
+
 class mxModelCodec extends mxObjectCodec {
   /**
    * Class: mxModelCodec
@@ -70,4 +74,3 @@ class mxModelCodec extends mxObjectCodec {
 
 mxCodecRegistry.register(new mxModelCodec());
 export default mxModelCodec;
-

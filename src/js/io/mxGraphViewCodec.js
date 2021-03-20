@@ -2,8 +2,12 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(()=>
-{
+
+import mxGraphView from "FIXME";
+import mxObjectCodec from "FIXME";
+import mxCodecRegistry from "./mxCodecRegistry";
+
+class mxGraphViewCodec extends mxObjectCodec {
   /**
    * Class: mxGraphViewCodec
    *
@@ -14,7 +18,9 @@ mxCodecRegistry.register(()=>
    * the graph, that is, it contains absolute coordinates with
    * computed perimeters, edge styles and cell styles.
    */
-  var codec = new mxObjectCodec(new mxGraphView());
+  constructor() {
+    super(new mxGraphView())
+  }
 
   /**
    * Function: encode
@@ -23,10 +29,9 @@ mxCodecRegistry.register(()=>
    * starting at the model's root. This returns the
    * top-level graph node of the recursive encoding.
    */
-  codec.encode = (enc, view)=>
-  {
+  encode = (enc, view) => {
     return this.encodeCell(enc, view,
-      view.graph.getModel().getRoot());
+        view.graph.getModel().getRoot());
   };
 
   /**
@@ -49,60 +54,44 @@ mxCodecRegistry.register(()=>
    * values from the cell style are added as attribute
    * values to the node.
    */
-  codec.encodeCell = (enc, view, cell)=>
-  {
+  encodeCell = (enc, view, cell) => {
     var model = view.graph.getModel();
     var state = view.getState(cell);
     var parent = model.getParent(cell);
 
-    if (parent == null || state != null)
-    {
+    if (parent == null || state != null) {
       var childCount = model.getChildCount(cell);
       var geo = view.graph.getCellGeometry(cell);
       var name = null;
 
-      if (parent == model.getRoot())
-      {
+      if (parent === model.getRoot()) {
         name = 'layer';
-      }
-      else if (parent == null)
-      {
+      } else if (parent == null) {
         name = 'graph';
-      }
-      else if (model.isEdge(cell))
-      {
+      } else if (model.isEdge(cell)) {
         name = 'edge';
-      }
-      else if (childCount > 0 && geo != null)
-      {
+      } else if (childCount > 0 && geo != null) {
         name = 'group';
-      }
-      else if (model.isVertex(cell))
-      {
+      } else if (model.isVertex(cell)) {
         name = 'vertex';
       }
 
-      if (name != null)
-      {
+      if (name != null) {
         var node = enc.document.createElement(name);
         var lab = view.graph.getLabel(cell);
 
-        if (lab != null)
-        {
+        if (lab != null) {
           node.setAttribute('label', view.graph.getLabel(cell));
 
-          if (view.graph.isHtmlLabel(cell))
-          {
+          if (view.graph.isHtmlLabel(cell)) {
             node.setAttribute('html', true);
           }
         }
 
-        if (parent == null)
-        {
+        if (parent == null) {
           var bounds = view.getGraphBounds();
 
-          if (bounds != null)
-          {
+          if (bounds != null) {
             node.setAttribute('x', Math.round(bounds.x));
             node.setAttribute('y', Math.round(bounds.y));
             node.setAttribute('width', Math.round(bounds.width));
@@ -110,48 +99,40 @@ mxCodecRegistry.register(()=>
           }
 
           node.setAttribute('scale', view.scale);
-        }
-        else if (state != null && geo != null)
-        {
+        } else if (state != null && geo != null) {
           // Writes each key, value in the style pair to an attribute
-            for (var i in state.style)
-            {
-              var value = state.style[i];
+          for (var i in state.style) {
+            var value = state.style[i];
 
-              // Tries to turn objects and functions into strings
-              if (typeof(value) == 'function' &&
-              typeof(value) == 'object')
-            {
-                value = mxStyleRegistry.getName(value);
-                }
-
-              if (value != null &&
-                typeof(value) != 'function' &&
-              typeof(value) != 'object')
-            {
-              node.setAttribute(i, value);
-                }
+            // Tries to turn objects and functions into strings
+            if (typeof (value) == 'function' &&
+                typeof (value) == 'object') {
+              value = mxStyleRegistry.getName(value);
             }
+
+            if (value != null &&
+                typeof (value) != 'function' &&
+                typeof (value) != 'object') {
+              node.setAttribute(i, value);
+            }
+          }
 
           var abs = state.absolutePoints;
 
           // Writes the list of points into one attribute
-          if (abs != null && abs.length > 0)
-          {
+          if (abs != null && abs.length > 0) {
             var pts = Math.round(abs[0].x) + ',' + Math.round(abs[0].y);
 
-            for (var i=1; i<abs.length; i++)
-            {
+            for (var i = 1; i < abs.length; i++) {
               pts += ' ' + Math.round(abs[i].x) + ',' +
-                Math.round(abs[i].y);
+                  Math.round(abs[i].y);
             }
 
             node.setAttribute('points', pts);
           }
 
           // Writes the bounds into 4 attributes
-          else
-          {
+          else {
             node.setAttribute('x', Math.round(state.x));
             node.setAttribute('y', Math.round(state.y));
             node.setAttribute('width', Math.round(state.width));
@@ -161,37 +142,30 @@ mxCodecRegistry.register(()=>
           var offset = state.absoluteOffset;
 
           // Writes the offset into 2 attributes
-          if (offset != null)
-          {
-            if (offset.x != 0)
-            {
+          if (offset != null) {
+            if (offset.x !== 0) {
               node.setAttribute('dx', Math.round(offset.x));
             }
 
-            if (offset.y != 0)
-            {
+            if (offset.y !== 0) {
               node.setAttribute('dy', Math.round(offset.y));
             }
           }
         }
 
-        for (var i=0; i<childCount; i++)
-        {
+        for (var i = 0; i < childCount; i++) {
           var childNode = this.encodeCell(enc,
               view, model.getChildAt(cell, i));
 
-          if (childNode != null)
-          {
+          if (childNode != null) {
             node.appendChild(childNode);
           }
         }
       }
     }
-
     return node;
   };
+}
 
-  // Returns the codec into the registry
-  return codec;
-
-}());
+mxCodecRegistry.register(new mxGraphViewCodec());
+export default mxGraphViewCodec;

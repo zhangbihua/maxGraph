@@ -35,9 +35,9 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
    */
   execute = (parent) => {
     var model = this.layout.getModel();
-    var seenNodes = new Object();
+    var seenNodes = {};
     var unseenNodesArray = model.vertexMapper.getValues();
-    var unseenNodes = new Object();
+    var unseenNodes = {};
 
     for (var i = 0; i < unseenNodesArray.length; i++) {
       unseenNodes[unseenNodesArray[i].id] = unseenNodesArray[i];

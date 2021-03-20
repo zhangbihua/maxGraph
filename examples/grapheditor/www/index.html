@@ -14,7 +14,7 @@
 		// - chrome=0: Chromeless mode.
 		var urlParams = (function(url)
 		{
-			var result = new Object();
+			var result = {};
 			var idx = url.lastIndexOf('?');
 	
 			if (idx > 0)
@@ -95,7 +95,7 @@
 				mxResources.parse(xhr[0].getText());
 				
 				// Configures the default graph theme
-				var themes = new Object();
+				var themes = {};
 				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement(); 
 				
 				// Main

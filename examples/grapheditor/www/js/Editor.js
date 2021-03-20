@@ -1697,7 +1697,7 @@ PageSetupDialog.addPageFormatPanel = function(div, namePostfix, pageFormat, page
 	formatDiv.style.display = 'none';
 	customDiv.style.display = 'none';
 	
-	var pf = new Object();
+	var pf = {};
 	var formats = PageSetupDialog.getFormats();
 	
 	for (var i = 0; i < formats.length; i++)

@@ -2,8 +2,11 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-var mxCodecRegistry =
-{
+
+import mxUtils from "../util/mxUtils";
+import mxObjectCodec from "./mxObjectCodec";
+
+var mxCodecRegistry = {
   /**
    * Class: mxCodecRegistry
    *
@@ -11,7 +14,7 @@ var mxCodecRegistry =
    *
    * Adding an <mxCodec>:
    *
-   * 1. Define a default codec with a new instance of the 
+   * 1. Define a default codec with a new instance of the
    * object to be handled.
    *
    * (code)
@@ -32,18 +35,18 @@ var mxCodecRegistry =
    * mxCodecRegistry.register(codec);
    * (end)
    *
-   * <mxObjectCodec.decode> may be used to either create a new 
-   * instance of an object or to configure an existing instance, 
+   * <mxObjectCodec.decode> may be used to either create a new
+   * instance of an object or to configure an existing instance,
    * in which case the into argument points to the existing
    * object. In this case, we say the codec "configures" the
    * object.
-   * 
+   *
    * Variable: codecs
    *
    * Maps from constructor names to codecs.
    */
   codecs: [],
-  
+
   /**
    * Variable: aliases
    *
@@ -61,17 +64,14 @@ var mxCodecRegistry =
    *
    * codec - <mxObjectCodec> to be registered.
    */
-  register: (codec)=>
-  {
-    if (codec != null)
-    {
+  register: (codec) => {
+    if (codec != null) {
       var name = codec.getName();
       mxCodecRegistry.codecs[name] = codec;
-      
+
       var classname = mxUtils.getFunctionName(codec.template.constructor);
 
-      if (classname != name)
-      {
+      if (classname !== name) {
         mxCodecRegistry.addAlias(classname, name);
       }
     }
@@ -84,8 +84,7 @@ var mxCodecRegistry =
    *
    * Adds an alias for mapping a classname to a codecname.
    */
-  addAlias: (classname, codecname)=>
-  {
+  addAlias: (classname, codecname) => {
     mxCodecRegistry.aliases[classname] = codecname;
   },
 
@@ -97,41 +96,35 @@ var mxCodecRegistry =
    *
    * Parameters:
    *
-   * ctor - JavaScript constructor function. 
+   * ctor - JavaScript constructor function.
    */
-  getCodec: (ctor)=>
-  {
+  getCodec: (ctor) => {
     var codec = null;
-    
-    if (ctor != null)
-    {
+
+    if (ctor != null) {
       var name = mxUtils.getFunctionName(ctor);
       var tmp = mxCodecRegistry.aliases[name];
-      
-      if (tmp != null)
-      {
+
+      if (tmp != null) {
         name = tmp;
       }
-      
+
       codec = mxCodecRegistry.codecs[name];
-      
+
       // Registers a new default codec for the given constructor
       // if no codec has been previously defined.
-      if (codec == null)
-      {
-        try
-        {
+      if (codec == null) {
+        try {
           codec = new mxObjectCodec(new ctor());
           mxCodecRegistry.register(codec);
-        }
-        catch (e)
-        {
+        } catch (e) {
           // ignore
         }
       }
     }
-    
+
     return codec;
   }
-
 };
+
+export default mxCodecRegistry;

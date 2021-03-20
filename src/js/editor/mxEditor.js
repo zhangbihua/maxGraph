@@ -250,7 +250,7 @@ class mxEditor extends mxEventSource {
    * the following code can be used. This requires an reference to the editor.
    *
    * (code)
-   * var userObject = new Object();
+   * var userObject = {};
    * var parent = editor.graph.getDefaultParent();
    * var model = editor.graph.model;
    * model.beginUpdate();

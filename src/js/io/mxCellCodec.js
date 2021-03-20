@@ -3,8 +3,12 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
+import mxCell from "FIXME";
+import mxObjectCodec from "./mxObjectCodec";
+import mxCodecRegistry from "./mxCodecRegistry";
 
-/**
+class mxCellCodec extends mxObjectCodec {
+  /**
    * Class: mxCellCodec
    *
    * Codec for <mxCell>s. This class is created and registered
@@ -43,26 +47,27 @@
    * mxCodecRegistry.addAlias('CustomCell', 'mxCell');
    * (end)
    */
-  var codec = new mxObjectCodec(new mxCell(),
-    ['children', 'edges', 'overlays', 'mxTransient'],
-    ['parent', 'source', 'target']);
+  constructor() {
+    super(new mxCell(),
+        ['children', 'edges', 'overlays', 'mxTransient'],
+        ['parent', 'source', 'target']);
+  }
 
   /**
    * Function: isCellCodec
    *
    * Returns true since this is a cell codec.
    */
-  codec.isCellCodec = ()=>
-  {
+  isCellCodec = () => {
     return true;
   };
 
   /**
    * Overidden to disable conversion of value to number.
    */
-  codec.isNumericAttribute = (dec, attr, obj)=>
-  {
-    return attr.nodeName !== 'value' && isNumericAttribute.apply(this, arguments);
+  isNumericAttribute = (dec, attr, obj) => {
+    return attr.nodeName !== 'value' &&
+        super.isNumericAttribute(dec, attr, obj);
   };
 
   /**
@@ -70,11 +75,10 @@
    *
    * Excludes user objects that are XML nodes.
    */
-  codec.isExcluded = (obj, attr, value, isWrite)=>
-  {
-    return isExcluded.apply(this, arguments) ||
-      (isWrite && attr == 'value' &&
-      value.nodeType == mxConstants.NODETYPE_ELEMENT);
+  isExcluded = (obj, attr, value, isWrite) => {
+    return super.isExcluded(obj, attr, value, isWrite) ||
+        (isWrite && attr === 'value' &&
+            value.nodeType === mxConstants.NODETYPE_ELEMENT);
   };
 
   /**
@@ -83,10 +87,8 @@
    * Encodes an <mxCell> and wraps the XML up inside the
    * XML of the user object (inversion).
    */
-  codec.afterEncode = (enc, obj, node)=>
-  {
-    if (obj.value != null && obj.value.nodeType == mxConstants.NODETYPE_ELEMENT)
-    {
+  afterEncode = (enc, obj, node) => {
+    if (obj.value != null && obj.value.nodeType === mxConstants.NODETYPE_ELEMENT) {
       // Wraps the graphical annotation up in the user object (inversion)
       // by putting the result of the default encoding into a clone of the
       // user object (node type 1) and returning this cloned user object.
@@ -110,26 +112,21 @@
    * Decodes an <mxCell> and uses the enclosing XML node as
    * the user object for the cell (inversion).
    */
-  codec.beforeDecode = (dec, node, obj)=>
-  {
+  beforeDecode = (dec, node, obj) => {
     var inner = node.cloneNode(true);
     var classname = this.getName();
 
-    if (node.nodeName != classname)
-    {
+    if (node.nodeName !== classname) {
       // Passes the inner graphical annotation node to the
       // object codec for further processing of the cell.
       var tmp = node.getElementsByTagName(classname)[0];
 
-      if (tmp != null && tmp.parentNode == node)
-      {
+      if (tmp != null && tmp.parentNode === node) {
         mxUtils.removeWhitespace(tmp, true);
         mxUtils.removeWhitespace(tmp, false);
         tmp.parentNode.removeChild(tmp);
         inner = tmp;
-      }
-      else
-      {
+      } else {
         inner = null;
       }
 
@@ -137,39 +134,31 @@
       obj.value = node.cloneNode(true);
       var id = obj.value.getAttribute('id');
 
-      if (id != null)
-      {
+      if (id != null) {
         obj.setId(id);
         obj.value.removeAttribute('id');
       }
-    }
-    else
-    {
+    } else {
       // Uses ID from XML file as ID for cell in model
       obj.setId(node.getAttribute('id'));
     }
 
     // Preprocesses and removes all Id-references in order to use the
     // correct encoder (this) for the known references to cells (all).
-    if (inner != null)
-    {
-      for (var i = 0; i < this.idrefs.length; i++)
-      {
+    if (inner != null) {
+      for (var i = 0; i < this.idrefs.length; i++) {
         var attr = this.idrefs[i];
         var ref = inner.getAttribute(attr);
 
-        if (ref != null)
-        {
+        if (ref != null) {
           inner.removeAttribute(attr);
           var object = dec.objects[ref] || dec.lookup(ref);
 
-          if (object == null)
-          {
+          if (object == null) {
             // Needs to decode forward reference
             var element = dec.getElementById(ref);
 
-            if (element != null)
-            {
+            if (element != null) {
               var decoder = mxCodecRegistry.codecs[element.nodeName] || this;
               object = decoder.decode(dec, element);
             }
@@ -182,6 +171,7 @@
 
     return inner;
   };
+}
 
 mxCodecRegistry.register(new mxCellCodec());
 export default mxCellCodec;

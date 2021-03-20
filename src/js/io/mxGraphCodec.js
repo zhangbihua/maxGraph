@@ -2,8 +2,11 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(()=>
-{
+
+import mxGraph from "FIXME";
+import mxCodecRegistry from "./mxCodecRegistry";
+
+class mxGraphCodec extends mxObjectCodec {
   /**
    * Class: mxGraphCodec
    *
@@ -21,8 +24,11 @@ mxCodecRegistry.register(()=>
    * - editor
    * - selection
    */
-  return new mxObjectCodec(new mxGraph(),
-    ['graphListeners', 'eventListeners', 'view', 'container',
-    'cellRenderer', 'editor', 'selection']);
+  constructor() {
+    super(new mxGraph(), ['graphListeners', 'eventListeners', 'view', 'container',
+                          'cellRenderer', 'editor', 'selection']);
+  }
+}
 
-}());
+mxCodecRegistry.register(new mxGraphCodec());
+export default mxGraphCodec;

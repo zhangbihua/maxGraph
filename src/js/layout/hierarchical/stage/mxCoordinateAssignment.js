@@ -492,7 +492,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     // , the order is given by the weighted sum of the in or out edges,
     // depending on whether we're traveling up or down the hierarchy.
     var weightedValues = [];
-    var cellMap = new Object();
+    var cellMap = {};
 
     for (var i = 0; i < rank.length; i++) {
       var currentCell = rank[i];

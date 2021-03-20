@@ -31,7 +31,7 @@ var mxClipboard =
    *   cells = cells || graph.getSelectionCells();
    *   var result = graph.getExportableCells(cells);
    *   
-   *   mxClipboard.parents = new Object();
+   *   mxClipboard.parents = {};
    *   
    *   for (var i = 0; i < result.length; i++)
    *   {

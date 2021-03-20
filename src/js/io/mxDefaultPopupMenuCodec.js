@@ -3,6 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
+import mxDefaultPopupMenu from "FIXME";
+import mxCodecRegistry from "./mxCodecRegistry";
+
 class mxDefaultPopupMenuCodec extends mxObjectCodec {
   /**
    * Class: mxDefaultPopupMenuCodec

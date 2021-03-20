@@ -3,6 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
+import mxObjectCodec from "FIXME";
+import mxChildChange from "FIXME";
+import mxCodecRegistry from "./mxCodecRegistry";
+
 class mxChildChangeCodec extends mxObjectCodec {
   /**
    * Class: mxChildChangeCodec
@@ -48,7 +52,7 @@ class mxChildChangeCodec extends mxObjectCodec {
    * Excludes references to parent or previous if not in the model.
    */
   isExcluded = (obj, attr, value, write) => {
-    return isExcluded.apply(this, arguments) ||
+    return super.isExcluded(obj, attr, value, write) ||
         (write && value != null && (attr === 'previous' ||
             attr === 'parent') && !obj.model.contains(value));
   };

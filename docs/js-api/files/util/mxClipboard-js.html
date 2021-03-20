@@ -17,7 +17,7 @@ mxClipboard.paste(graph2);</pre></blockquote><p>This copies the selection cells 
   cells = cells || graph.getSelectionCells();
   var result = graph.getExportableCells(cells);
 
-  mxClipboard.parents = new Object();
+  mxClipboard.parents = {};
 
   for (var i = 0; i &lt; result.length; i++)
   {

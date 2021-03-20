@@ -2,8 +2,11 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(()=>
-{
+
+import mxObjectCodec from "FIXME";
+import mxTerminalChange from "FIXME";
+
+class mxTerminalChangeCodec extends mxObjectCodec {
   /**
    * Class: mxTerminalChangeCodec
    *
@@ -21,22 +24,21 @@ mxCodecRegistry.register(()=>
    * - cell
    * - terminal
    */
-  var codec = new mxObjectCodec(new mxTerminalChange(),
-    ['model', 'previous'], ['cell', 'terminal']);
+  constructor() {
+    super(new mxTerminalChange(), ['model', 'previous'], ['cell', 'terminal']);
+  }
 
   /**
    * Function: afterDecode
    *
    * Restores the state by assigning the previous value.
    */
-  codec.afterDecode = (dec, node, obj)=>
-  {
+  afterDecode = (dec, node, obj) => {
     obj.previous = obj.terminal;
-    
+
     return obj;
   };
+}
 
-  // Returns the codec into the registry
-  return codec;
-
-}());
+mxCodecRegistry.register(new mxTerminalChangeCodec());
+export default mxTerminalChangeCodec;

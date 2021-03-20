@@ -62,7 +62,7 @@ class mxObjectCodec {
    * Consider the following example.
    *
    * (code)
-   * var obj = new Object();
+   * var obj = {};
    * obj.foo = "Foo";
    * obj.bar = "Bar";
    * (end)
@@ -232,7 +232,7 @@ class mxObjectCodec {
    * The argument is created as follows:
    *
    * (code)
-   * var mapping = new Object();
+   * var mapping = {};
    * mapping['variableName'] = 'attribute-name';
    * (end)
    *
@@ -252,7 +252,7 @@ class mxObjectCodec {
     this.idrefs = (idrefs != null) ? idrefs : [];
     this.mapping = (mapping != null) ? mapping : [];
 
-    this.reverse = new Object();
+    this.reverse = {};
 
     for (var i in this.mapping) {
       this.reverse[this.mapping[i]] = i;
@@ -616,11 +616,11 @@ class mxObjectCodec {
    */
   isNumericAttribute = (dec, attr, obj) => {
     // Handles known numeric attributes for generic objects
-    var result = (obj.constructor == mxGeometry &&
-        (attr.name == 'x' || attr.name == 'y' ||
-            attr.name == 'width' || attr.name == 'height')) ||
-        (obj.constructor == mxPoint &&
-            (attr.name == 'x' || attr.name == 'y')) ||
+    var result = (obj.constructor === mxGeometry &&
+        (attr.name === 'x' || attr.name === 'y' ||
+            attr.name === 'width' || attr.name === 'height')) ||
+        (obj.constructor === mxPoint &&
+            (attr.name === 'x' || attr.name === 'y')) ||
         mxUtils.isNumeric(attr.value);
 
     return result;
@@ -787,7 +787,7 @@ class mxObjectCodec {
    * obj - Objec to encode the attribute into.
    */
   isIgnoredAttribute = (dec, attr, obj) => {
-    return attr.nodeName == 'as' || attr.nodeName == 'id';
+    return attr.nodeName === 'as' || attr.nodeName === 'id';
   };
 
   /**
@@ -875,7 +875,7 @@ class mxObjectCodec {
       var template = this.getFieldTemplate(obj, fieldname, child);
       var value = null;
 
-      if (child.nodeName == 'add') {
+      if (child.nodeName === 'add') {
         value = child.getAttribute('value');
 
         if (value == null && mxObjectCodec.allowEval) {
@@ -925,7 +925,7 @@ class mxObjectCodec {
    * override this with the correct code to add an entry to an object.
    */
   addObjectValue = (obj, fieldname, value, template) => {
-    if (value != null && value != template) {
+    if (value != null && value !== template) {
       if (fieldname != null && fieldname.length > 0) {
         obj[fieldname] = value;
       } else {
@@ -949,7 +949,7 @@ class mxObjectCodec {
    * into - Optional object to pass-thru to the codec.
    */
   processInclude = (dec, node, into) => {
-    if (node.nodeName == 'include') {
+    if (node.nodeName === 'include') {
       var name = node.getAttribute('name');
 
       if (name != null) {

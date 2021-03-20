@@ -199,7 +199,7 @@
  * shapename and the stylename we'll use boxstyle for the stylename:
  * 
  * (code)
- * var style = new Object();
+ * var style = {};
  * style[mxConstants.STYLE_SHAPE] = 'box';
  * style[mxConstants.STYLE_STROKECOLOR] = '#000000';
  * style[mxConstants.STYLE_FONTCOLOR] = '#000000';
@@ -3325,7 +3325,7 @@ getCellStyle = (cell)=>
   // Returns a non-null value if no style can be found
   if (style == null)
   {
-    style = new Object();
+    style = {};
   }
 
   return style;
@@ -8690,7 +8690,7 @@ validateEdge = (edge, source, target)=>
 validateGraph = (cell, context)=>
 {
   cell = (cell != null) ? cell : this.model.getRoot();
-  context = (context != null) ? context : new Object();
+  context = (context != null) ? context : {};
 
   var isValid = true;
   var childCount = this.model.getChildCount(cell);
@@ -8702,7 +8702,7 @@ validateGraph = (cell, context)=>
 
     if (this.isValidRoot(tmp))
     {
-      ctx = new Object();
+      ctx = {};
     }
 
     var warn = this.validateGraph(tmp, ctx);

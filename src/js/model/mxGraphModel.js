@@ -646,7 +646,7 @@ class mxGraphModel extends mxEventSource {
 
           // Lazily creates the cells dictionary
           if (this.cells == null) {
-            this.cells = new Object();
+            this.cells = {};
           }
 
           this.cells[cell.getId()] = cell;
@@ -1853,7 +1853,7 @@ class mxGraphModel extends mxEventSource {
 
     this.beginUpdate();
     try {
-      var mapping = new Object();
+      var mapping = {};
       this.mergeChildrenImpl(from, to, cloneAllEdges, mapping);
 
       // Post-processes all edges in the mapping and
@@ -2000,7 +2000,7 @@ class mxGraphModel extends mxEventSource {
    */
   cloneCells = (cells, includeChildren, mapping) => {
     includeChildren = (includeChildren != null) ? includeChildren : true;
-    mapping = (mapping != null) ? mapping : new Object();
+    mapping = (mapping != null) ? mapping : {};
     var clones = [];
 
     for (var i = 0; i < cells.length; i++) {

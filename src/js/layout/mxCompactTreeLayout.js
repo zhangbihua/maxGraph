@@ -291,7 +291,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
 
     if (this.root != null) {
       if (this.resizeParent) {
-        this.parentsChanged = new Object();
+        this.parentsChanged = {};
       } else {
         this.parentsChanged = null;
       }
@@ -312,7 +312,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
       model.beginUpdate();
 
       try {
-        this.visited = new Object();
+        this.visited = {};
         this.node = this.dfs(this.root, parent);
 
         if (this.alignRanks) {
@@ -768,7 +768,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * Function: createNode
    */
   createNode = (cell) => {
-    var node = new Object();
+    var node = {};
     node.cell = cell;
     node.x = 0;
     node.y = 0;
@@ -789,7 +789,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
 
     node.offsetX = 0;
     node.offsetY = 0;
-    node.contour = new Object();
+    node.contour = {};
 
     return node;
   };
@@ -834,7 +834,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * Function: createLine
    */
   createLine = (dx, dy, next) => {
-    var line = new Object();
+    var line = {};
     line.dx = dx;
     line.dy = dy;
     line.next = next;

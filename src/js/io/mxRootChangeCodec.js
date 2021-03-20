@@ -4,6 +4,7 @@
  */
 
 import mxRootChange from "FIXME";
+import mxCodecRegistry from "./mxCodecRegistry";
 
 class mxRootChangeCodec extends mxObjectCodec {
   /**

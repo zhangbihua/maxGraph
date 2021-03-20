@@ -7,7 +7,7 @@
 Menus = function(editorUi)
 {
 	this.editorUi = editorUi;
-	this.menus = new Object();
+	this.menus = {};
 	this.init();
 	
 	// Pre-fetches checkmark image

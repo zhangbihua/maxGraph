@@ -472,7 +472,7 @@ class mxGraphHierarchyModel {
 
         if (internalNode != null) {
           if (seenNodes == null) {
-            seenNodes = new Object();
+            seenNodes = {};
           }
 
           if (trackAncestors) {

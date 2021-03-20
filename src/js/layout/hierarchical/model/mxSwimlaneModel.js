@@ -279,7 +279,7 @@ class mxSwimlaneModel {
     this.ranksPerGroup = [];
 
     var startNodes = [];
-    var seen = new Object();
+    var seen = {};
 
     if (this.roots != null) {
       for (var i = 0; i < this.roots.length; i++) {
@@ -559,7 +559,7 @@ class mxSwimlaneModel {
 
         if (internalNode != null) {
           if (seenNodes == null) {
-            seenNodes = new Object();
+            seenNodes = {};
           }
 
           if (trackAncestors) {

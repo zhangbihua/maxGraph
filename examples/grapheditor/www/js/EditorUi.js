@@ -1626,7 +1626,7 @@ EditorUi.prototype.initClipboard = function()
 			result = result || graph.getSelectionCells();
 			result = graph.getExportableCells(graph.model.getTopmostCells(result));
 			
-			var cloneMap = new Object();
+			var cloneMap = {};
 			var lookup = graph.createCellLookup(result);
 			var clones = graph.cloneCells(result, null, cloneMap);
 			

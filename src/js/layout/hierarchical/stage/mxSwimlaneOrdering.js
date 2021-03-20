@@ -35,7 +35,7 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
    */
   execute = (parent) => {
     var model = this.layout.getModel();
-    var seenNodes = new Object();
+    var seenNodes = {};
     var unseenNodes = mxUtils.clone(model.vertexMapper, null, true);
 
     // Perform a dfs through the internal model. If a cycle is found,

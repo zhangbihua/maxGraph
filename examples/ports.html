@@ -493,7 +493,7 @@
 		
 		function configureStylesheet(graph)
 		{
-			var style = new Object();
+			var style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 			style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
@@ -512,7 +512,7 @@
 
 			// NOTE: Alternative vertex style for non-HTML labels should be as
 			// follows. This repaces the above style for HTML labels.
-			/*var style = new Object();
+			/*var style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_LABEL;
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 			style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
@@ -533,7 +533,7 @@
 			style[mxConstants.STYLE_OPACITY] = '80';
 			graph.getStylesheet().putDefaultVertexStyle(style);*/
 
-			style = new Object();
+			style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 			style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
@@ -549,7 +549,7 @@
 			style[mxConstants.STYLE_FONTSTYLE] = 1;
 			graph.getStylesheet().putCellStyle('group', style);
 			
-			style = new Object();
+			style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
 			style[mxConstants.STYLE_FONTCOLOR] = '#774400';
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;

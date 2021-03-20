@@ -628,7 +628,7 @@
 		
 		function configureStylesheet(graph)
 		{
-			var style = new Object();
+			var style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 			style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
@@ -641,7 +641,7 @@
 			style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
 			graph.getStylesheet().putDefaultVertexStyle(style);
 
-			style = new Object();
+			style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 			style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;

@@ -3,6 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
+import mxObjectCodec from "FIXME";
+import mxDefaultToolbar from "FIXME";
+import mxCodecRegistry from "./mxCodecRegistry";
+
 class mxDefaultToolbarCodec extends mxObjectCodec {
   /**
    * Class: mxDefaultToolbarCodec

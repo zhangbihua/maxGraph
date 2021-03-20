@@ -2,8 +2,13 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(()=>
-{
+
+import mxEditor from "FIXME";
+import mxWindow from "FIXME";
+import mxObjectCodec from "FIXME";
+import mxCodecRegistry from "./mxCodecRegistry";
+
+class mxEditorCodec extends mxObjectCodec {
   /**
    * Class: mxEditorCodec
    *
@@ -20,9 +25,11 @@ mxCodecRegistry.register(()=>
    * - graphContainer
    * - toolbarContainer
    */
-  var codec = new mxObjectCodec(new mxEditor(),
-    ['modified', 'lastSnapshot', 'ignoredChanges',
-    'undoManager', 'graphContainer', 'toolbarContainer']);
+  constructor() {
+    super(new mxEditor(),
+        ['modified', 'lastSnapshot', 'ignoredChanges',
+          'undoManager', 'graphContainer', 'toolbarContainer']);
+  }
 
   /**
    * Function: beforeDecode
@@ -78,13 +85,11 @@ mxCodecRegistry.register(()=>
    * </ui>
    * (end)
    */
-  codec.afterDecode = (dec, node, obj)=>
-  {
+  afterDecode = (dec, node, obj) => {
     // Assigns the specified templates for edges
     var defaultEdge = node.getAttribute('defaultEdge');
 
-    if (defaultEdge != null)
-    {
+    if (defaultEdge != null) {
       node.removeAttribute('defaultEdge');
       obj.defaultEdge = obj.templates[defaultEdge];
     }
@@ -92,8 +97,7 @@ mxCodecRegistry.register(()=>
     // Assigns the specified templates for groups
     var defaultGroup = node.getAttribute('defaultGroup');
 
-    if (defaultGroup != null)
-    {
+    if (defaultGroup != null) {
       node.removeAttribute('defaultGroup');
       obj.defaultGroup = obj.templates[defaultGroup];
     }
@@ -106,20 +110,15 @@ mxCodecRegistry.register(()=>
    *
    * Overrides decode child to handle special child nodes.
    */
-  codec.decodeChild = (dec, child, obj)=>
-  {
-    if (child.nodeName == 'Array')
-    {
+  decodeChild = (dec, child, obj) => {
+    if (child.nodeName === 'Array') {
       var role = child.getAttribute('as');
 
-      if (role == 'templates')
-      {
+      if (role === 'templates') {
         this.decodeTemplates(dec, child, obj);
         return;
       }
-    }
-    else if (child.nodeName == 'ui')
-    {
+    } else if (child.nodeName === 'ui') {
       this.decodeUi(dec, child, obj);
       return;
     }
@@ -132,29 +131,22 @@ mxCodecRegistry.register(()=>
    *
    * Decodes the ui elements from the given node.
    */
-  codec.decodeUi = (dec, node, editor)=>
-  {
+  decodeUi = (dec, node, editor) => {
     var tmp = node.firstChild;
-    while (tmp != null)
-    {
-      if (tmp.nodeName == 'add')
-      {
+    while (tmp != null) {
+      if (tmp.nodeName === 'add') {
         var as = tmp.getAttribute('as');
         var elt = tmp.getAttribute('element');
         var style = tmp.getAttribute('style');
         var element = null;
 
-        if (elt != null)
-        {
+        if (elt != null) {
           element = document.getElementById(elt);
 
-          if (element != null && style != null)
-          {
+          if (element != null && style != null) {
             element.style.cssText += ';' + style;
           }
-        }
-        else
-        {
+        } else {
           var x = parseInt(tmp.getAttribute('x'));
           var y = parseInt(tmp.getAttribute('y'));
           var width = tmp.getAttribute('width');
@@ -165,38 +157,25 @@ mxCodecRegistry.register(()=>
           element.style.cssText = style;
 
           var wnd = new mxWindow(mxResources.get(as) || as,
-            element, x, y, width, height, false, true);
+              element, x, y, width, height, false, true);
           wnd.setVisible(true);
         }
 
         // TODO: Make more generic
-        if (as == 'graph')
-        {
+        if (as === 'graph') {
           editor.setGraphContainer(element);
-        }
-        else if (as == 'toolbar')
-        {
+        } else if (as === 'toolbar') {
           editor.setToolbarContainer(element);
-        }
-        else if (as == 'title')
-        {
+        } else if (as === 'title') {
           editor.setTitleContainer(element);
-        }
-        else if (as == 'status')
-        {
+        } else if (as === 'status') {
           editor.setStatusContainer(element);
-        }
-        else if (as == 'map')
-        {
+        } else if (as === 'map') {
           editor.setMapContainer(element);
         }
-      }
-      else if (tmp.nodeName == 'resource')
-      {
+      } else if (tmp.nodeName === 'resource') {
         mxResources.add(tmp.getAttribute('basename'));
-      }
-      else if (tmp.nodeName == 'stylesheet')
-      {
+      } else if (tmp.nodeName === 'stylesheet') {
         mxClient.link('stylesheet', tmp.getAttribute('name'));
       }
 
@@ -209,26 +188,21 @@ mxCodecRegistry.register(()=>
    *
    * Decodes the cells from the given node as templates.
    */
-  codec.decodeTemplates = (dec, node, editor)=>
-  {
-    if (editor.templates == null)
-    {
+  decodeTemplates = (dec, node, editor) => {
+    if (editor.templates == null) {
       editor.templates = [];
     }
 
     var children = mxUtils.getChildNodes(node);
-    for (var j=0; j<children.length; j++)
-    {
+    for (var j = 0; j < children.length; j++) {
       var name = children[j].getAttribute('as');
       var child = children[j].firstChild;
 
-      while (child != null && child.nodeType != 1)
-      {
+      while (child != null && child.nodeType !== 1) {
         child = child.nextSibling;
       }
 
-      if (child != null)
-      {
+      if (child != null) {
         // LATER: Only single cells means you need
         // to group multiple cells within another
         // cell. This should be changed to support
@@ -238,8 +212,7 @@ mxCodecRegistry.register(()=>
       }
     }
   };
+}
 
-  // Returns the codec into the registry
-  return codec;
-
-}());
+mxCodecRegistry.register(new mxEditorCodec());
+export default mxEditorCodec;

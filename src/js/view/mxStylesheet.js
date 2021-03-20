@@ -53,7 +53,7 @@
  */
 function mxStylesheet()
 {
-  this.styles = new Object();
+  this.styles = {};
 
   this.putDefaultVertexStyle(this.createDefaultVertexStyle());
   this.putDefaultEdgeStyle(this.createDefaultEdgeStyle());
@@ -75,7 +75,7 @@ FIXME;
  */
 createDefaultVertexStyle = ()=>
 {
-  var style = new Object();
+  var style = {};
 
   style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
   style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
@@ -95,7 +95,7 @@ createDefaultVertexStyle = ()=>
  */
 createDefaultEdgeStyle = ()=>
 {
-  var style = new Object();
+  var style = {};
 
   style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
   style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
@@ -163,7 +163,7 @@ getDefaultEdgeStyle = ()=>
  * existing stylesheet:
  *
  * (code)
- * var style = new Object();
+ * var style = {};
  * style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
  * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
  * style[mxConstants.STYLE_ROUNDED] = true;
@@ -220,7 +220,7 @@ getCellStyle = (name, defaultStyle)=>
     }
     else
     {
-      style = new Object();
+      style = {};
     }
 
     // Parses each key, value pair into the existing style

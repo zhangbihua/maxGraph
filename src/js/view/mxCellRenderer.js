@@ -41,7 +41,7 @@ function mxCellRenderer() { };
  * known to all instances of this class. For adding new shapes you should
  * use the static <mxCellRenderer.registerShape> function.
  */
-mxCellRenderer.defaultShapes = new Object();
+mxCellRenderer.defaultShapes = {};
 
 /**
  * Variable: defaultEdgeShape

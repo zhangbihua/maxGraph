@@ -6356,7 +6356,7 @@ if (typeof mxVertexHandler != 'undefined')
 		 */
 		Graph.prototype.createCellLookup = function(cells, lookup)
 		{
-			lookup = (lookup != null) ? lookup : new Object();
+			lookup = (lookup != null) ? lookup : {};
 			
 			for (var i = 0; i < cells.length; i++)
 			{
@@ -6380,7 +6380,7 @@ if (typeof mxVertexHandler != 'undefined')
 		 */
 		Graph.prototype.createCellMapping = function(mapping, lookup, cellMapping)
 		{
-			cellMapping = (cellMapping != null) ? cellMapping : new Object();
+			cellMapping = (cellMapping != null) ? cellMapping : {};
 			
 			for (var objectId in mapping)
 			{
@@ -6411,8 +6411,8 @@ if (typeof mxVertexHandler != 'undefined')
 			var cells = []
 			
 			// Clones cells to remove invalid edges
-			var cloneMap = new Object();
-			var cellMapping = new Object();
+			var cloneMap = {};
+			var cellMapping = {};
 			var layers = tempModel.getChildren(this.cloneCell(tempModel.root,
 				this.isCloneInvalidEdges(), cloneMap));
 			
@@ -6496,7 +6496,7 @@ if (typeof mxVertexHandler != 'undefined')
 		 */
 		Graph.prototype.encodeCells = function(cells)
 		{
-			var cloneMap = new Object();
+			var cloneMap = {};
 			var clones = this.cloneCells(cells, null, cloneMap);
 			
 			// Creates a dictionary for fast lookups
@@ -6664,7 +6664,7 @@ if (typeof mxVertexHandler != 'undefined')
 		var graphMoveCells = Graph.prototype.moveCells;
 		Graph.prototype.moveCells = function(cells, dx, dy, clone, target, evt, mapping)
 		{
-			mapping = (mapping != null) ? mapping : new Object();
+			mapping = (mapping != null) ? mapping : {};
 			
 			// Replaces source tables with rows
 			if (this.isTable(target))
