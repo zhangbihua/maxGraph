@@ -41,7 +41,7 @@ class mxGenericChangeCodec extends mxObjectCodec {
    * variable - The fieldname for the change data.
    */
   constructor(obj, variable) {
-    super(obj,  ['model', 'previous'], ['cell']);
+    super(obj, ['model', 'previous'], ['cell']);
     this.variable = variable;
   }
 

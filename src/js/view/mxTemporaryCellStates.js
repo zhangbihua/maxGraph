@@ -4,7 +4,7 @@
  */
 /**
  * Class: mxTemporaryCellStates
- * 
+ *
  * Creates a temporary set of cell states.
  */
 

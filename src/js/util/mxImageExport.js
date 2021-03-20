@@ -41,7 +41,8 @@ class mxImageExport {
    *
    * Constructs a new image export.
    */
-  constructor() {}
+  constructor() {
+  }
 
   /**
    * Function: drawState

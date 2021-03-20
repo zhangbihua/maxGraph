@@ -6,6 +6,68 @@ import mxHierarchicalLayoutStage from "./mxHierarchicalLayoutStage";
 
 class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
   /**
+   * Variable: layout
+   *
+   * Reference to the enclosing <mxHierarchicalLayout>.
+   */
+  layout = null;
+  /**
+   * Variable: maxIterations
+   *
+   * The maximum number of iterations to perform whilst reducing edge
+   * crossings. Default is 24.
+   */
+  maxIterations = 24;
+  /**
+   * Variable: nestedBestRanks
+   *
+   * Stores each rank as a collection of cells in the best order found for
+   * each layer so far
+   */
+  nestedBestRanks = null;
+  /**
+   * Variable: currentBestCrossings
+   *
+   * The total number of crossings found in the best configuration so far
+   */
+  currentBestCrossings = 0;
+  /**
+   * Variable: iterationsWithoutImprovement
+   *
+   * The total number of crossings found in the best configuration so far
+   */
+  iterationsWithoutImprovement = 0;
+  /**
+   * Variable: maxNoImprovementIterations
+   *
+   * The total number of crossings found in the best configuration so far
+   */
+  maxNoImprovementIterations = 2;
+  /**
+   * Class: MedianCellSorter
+   *
+   * A utility class used to track cells whilst sorting occurs on the median
+   * values. Does not violate (x.compareTo(y)==0) == (x.equals(y))
+   *
+   * Constructor: MedianCellSorter
+   *
+   * Constructs a new median cell sorter.
+   */
+  function
+  /**
+   * Variable: medianValue
+   *
+   * The weighted value of the cell stored.
+   */
+  medianValue = 0;
+  /**
+   * Variable: cell
+   *
+   * The cell whose median value is being calculated
+   */
+  cell = false;
+
+  /**
    * Class: mxMedianHybridCrossingReduction
    *
    * Sets the horizontal locations of node and edge dummy nodes on each layer.
@@ -28,50 +90,6 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
 
     this.layout = layout;
   };
-
-  /**
-   * Variable: layout
-   *
-   * Reference to the enclosing <mxHierarchicalLayout>.
-   */
-  layout = null;
-
-  /**
-   * Variable: maxIterations
-   *
-   * The maximum number of iterations to perform whilst reducing edge
-   * crossings. Default is 24.
-   */
-  maxIterations = 24;
-
-  /**
-   * Variable: nestedBestRanks
-   *
-   * Stores each rank as a collection of cells in the best order found for
-   * each layer so far
-   */
-  nestedBestRanks = null;
-
-  /**
-   * Variable: currentBestCrossings
-   *
-   * The total number of crossings found in the best configuration so far
-   */
-  currentBestCrossings = 0;
-
-  /**
-   * Variable: iterationsWithoutImprovement
-   *
-   * The total number of crossings found in the best configuration so far
-   */
-  iterationsWithoutImprovement = 0;
-
-  /**
-   * Variable: maxNoImprovementIterations
-   *
-   * The total number of crossings found in the best configuration so far
-   */
-  maxNoImprovementIterations = 2;
 
   /**
    * Function: execute
@@ -150,7 +168,6 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
 
     model.ranks = ranks;
   };
-
 
   /**
    * Function: calculateCrossings
@@ -545,35 +562,9 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     }
   };
 
-  /**
-   * Class: MedianCellSorter
-   *
-   * A utility class used to track cells whilst sorting occurs on the median
-   * values. Does not violate (x.compareTo(y)==0) == (x.equals(y))
-   *
-   * Constructor: MedianCellSorter
-   *
-   * Constructs a new median cell sorter.
-   */
-  function
-
   MedianCellSorter() {
     // empty
   };
-
-  /**
-   * Variable: medianValue
-   *
-   * The weighted value of the cell stored.
-   */
-  medianValue = 0;
-
-  /**
-   * Variable: cell
-   *
-   * The cell whose median value is being calculated
-   */
-  cell = false;
 
   /**
    * Function: compare

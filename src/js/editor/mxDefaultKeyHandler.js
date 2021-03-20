@@ -72,7 +72,7 @@ class mxDefaultKeyHandler {
       // the escape event via the editor instance
       let old = this.handler.escape;
 
-      this.handler.escape = (evt)=>{
+      this.handler.escape = (evt) => {
         old.apply(this, arguments);
         editor.hideProperties();
         editor.fireEvent(new mxEventObject(mxEvent.ESCAPE, 'event', evt));
@@ -94,8 +94,8 @@ class mxDefaultKeyHandler {
    * control - Optional boolean that specifies if control must be pressed.
    * Default is false.
    */
-  bindAction=(code, action, control)=>{
-    let keyHandler = mxUtils.bind(this, ()=>{
+  bindAction = (code, action, control) => {
+    let keyHandler = mxUtils.bind(this, () => {
       this.editor.execute(action);
     });
 
@@ -115,7 +115,7 @@ class mxDefaultKeyHandler {
    * not need to be called, the <handler> is destroyed automatically when the
    * window unloads (in IE) by <mxEditor>.
    */
-  destroy=()=>{
+  destroy = () => {
     this.handler.destroy();
     this.handler = null;
   };

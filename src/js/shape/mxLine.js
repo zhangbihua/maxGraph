@@ -5,6 +5,13 @@
 
 class mxLine extends mxShape {
   /**
+   * Function: vertical
+   *
+   * Whether to paint a vertical line.
+   */
+  vertical = false;
+
+  /**
    * Class: mxLine
    *
    * Extends <mxShape> to implement a horizontal line shape.
@@ -31,13 +38,6 @@ class mxLine extends mxShape {
     this.strokewidth = (strokewidth != null) ? strokewidth : 1;
     this.vertical = (vertical != null) ? vertical : this.vertical;
   }
-
-  /**
-   * Function: vertical
-   *
-   * Whether to paint a vertical line.
-   */
-  vertical = false;
 
   /**
    * Function: paintVertexShape

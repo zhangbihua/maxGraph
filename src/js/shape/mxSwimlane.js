@@ -5,6 +5,14 @@
 
 class mxSwimlane extends mxShape {
   /**
+   * Variable: imageSize
+   *
+   * Default imagewidth and imageheight if an image but no imagewidth
+   * and imageheight are defined in the style. Value is 16.
+   */
+  imageSize = 16;
+
+  /**
    * Class: mxSwimlane
    *
    * Extends <mxShape> to implement a swimlane shape. This shape is registered
@@ -36,14 +44,6 @@ class mxSwimlane extends mxShape {
     this.stroke = stroke;
     this.strokewidth = (strokewidth != null) ? strokewidth : 1;
   };
-
-  /**
-   * Variable: imageSize
-   *
-   * Default imagewidth and imageheight if an image but no imagewidth
-   * and imageheight are defined in the style. Value is 16.
-   */
-  imageSize = 16;
 
   /**
    * Function: isRoundable

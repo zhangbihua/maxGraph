@@ -6,72 +6,65 @@
  * Class: mxGuide
  *
  * Implements the alignment of selection cells to other cells in the graph.
- * 
+ *
  * Constructor: mxGuide
- * 
+ *
  * Constructs a new guide object.
  */
 class mxGuide {
-  constructor(graph, states) {
-    this.graph = graph;
-    this.setStates(states);
-  };
-
   /**
    * Variable: graph
    *
    * Reference to the enclosing <mxGraph> instance.
    */
   graph = null;
-
   /**
    * Variable: states
    *
    * Contains the <mxCellStates> that are used for alignment.
    */
   states = null;
-
   /**
    * Variable: horizontal
    *
    * Specifies if horizontal guides are enabled. Default is true.
    */
   horizontal = true;
-
   /**
    * Variable: vertical
    *
    * Specifies if vertical guides are enabled. Default is true.
    */
   vertical = true;
-
   /**
    * Variable: guideX
    *
    * Holds the <mxShape> for the horizontal guide.
    */
   guideX = null;
-
   /**
    * Variable: guideY
    *
    * Holds the <mxShape> for the vertical guide.
    */
   guideY = null;
-
   /**
    * Variable: rounded
    *
    * Specifies if rounded coordinates should be used. Default is false.
    */
   rounded = false;
-
   /**
    * Variable: tolerance
    *
    * Default tolerance in px if grid is disabled. Default is 2.
    */
   tolerance = 2;
+
+  constructor(graph, states) {
+    this.graph = graph;
+    this.setStates(states);
+  };
 
   /**
    * Function: setStates
@@ -193,7 +186,7 @@ class mxGuide {
         }
 
         overrideX = overrideX || override;
-      };
+      }
 
       // Snaps the top, middle or bottom to the given y-coordinate
       function snapY(y, state, centerAlign) {
@@ -233,7 +226,7 @@ class mxGuide {
         }
 
         overrideY = overrideY || override;
-      };
+      }
 
       for (var i = 0; i < this.states.length; i++) {
         var state = this.states[i];

@@ -154,7 +154,7 @@ class mxDefaultPopupMenu {
    * cell - Optional <mxCell> which is under the mousepointer.
    * evt - Optional mouse event which triggered the menu.
    */
-  createMenu=(editor, menu, cell, evt)=>{
+  createMenu = (editor, menu, cell, evt) => {
     if (this.config != null) {
       let conditions = this.createConditions(editor, cell, evt);
       let item = this.config.firstChild;
@@ -178,7 +178,7 @@ class mxDefaultPopupMenu {
    * item - XML node that represents the current menu item.
    * parent - DOM node that represents the parent menu item.
    */
-  addItems=(editor, menu, cell, evt, conditions, item, parent)=>{
+  addItems = (editor, menu, cell, evt, conditions, item, parent) => {
     let addSeparator = false;
 
     while (item != null) {
@@ -236,9 +236,9 @@ class mxDefaultPopupMenu {
    * enabled - Optional boolean that specifies if the menu item is enabled.
    * Default is true.
    */
-  addAction=(menu, editor, lab, icon, funct, action, cell, parent, iconCls, enabled)=>{
-    let clickHandler=(evt)=>{
-      if (typeof(funct) == 'function') {
+  addAction = (menu, editor, lab, icon, funct, action, cell, parent, iconCls, enabled) => {
+    let clickHandler = (evt) => {
+      if (typeof (funct) == 'function') {
         funct.call(editor, editor, cell, evt);
       }
       if (action != null) {
@@ -253,7 +253,7 @@ class mxDefaultPopupMenu {
    *
    * Evaluates the default conditions for the given context.
    */
-  createConditions=(editor, cell, evt)=>{
+  createConditions = (editor, cell, evt) => {
     // Creates array with conditions
     let model = editor.graph.getModel();
     let childCount = model.getChildCount(cell);
@@ -276,11 +276,11 @@ class mxDefaultPopupMenu {
     // Evaluates dynamic conditions from config file
     let condNodes = this.config.getElementsByTagName('condition');
 
-    for (let i=0; i<condNodes.length; i++) {
+    for (let i = 0; i < condNodes.length; i++) {
       let funct = mxUtils.eval(mxUtils.getTextContent(condNodes[i]));
       let name = condNodes[i].getAttribute('name');
 
-      if (name != null && typeof(funct) == 'function') {
+      if (name != null && typeof (funct) == 'function') {
         conditions[name] = funct(editor, cell, evt);
       }
     }

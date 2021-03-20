@@ -8,6 +8,65 @@ import mxEventObject from "./mxEventObject";
 
 class mxPopupMenu extends mxEventSource {
   /**
+   * Variable: submenuImage
+   *
+   * URL of the image to be used for the submenu icon.
+   */
+  submenuImage = mxClient.imageBasePath + '/submenu.gif';
+  /**
+   * Variable: zIndex
+   *
+   * Specifies the zIndex for the popupmenu and its shadow. Default is 10006.
+   */
+  zIndex = 10006;
+  /**
+   * Variable: factoryMethod
+   *
+   * Function that is used to create the popup menu. The function takes the
+   * current panning handler, the <mxCell> under the mouse and the mouse
+   * event that triggered the call as arguments.
+   */
+  factoryMethod = null;
+  /**
+   * Variable: useLeftButtonForPopup
+   *
+   * Specifies if popupmenus should be activated by clicking the left mouse
+   * button. Default is false.
+   */
+  useLeftButtonForPopup = false;
+  /**
+   * Variable: enabled
+   *
+   * Specifies if events are handled. Default is true.
+   */
+  enabled = true;
+  /**
+   * Variable: itemCount
+   *
+   * Contains the number of times <addItem> has been called for a new menu.
+   */
+  itemCount = 0;
+  /**
+   * Variable: autoExpand
+   *
+   * Specifies if submenus should be expanded on mouseover. Default is false.
+   */
+  autoExpand = false;
+  /**
+   * Variable: smartSeparators
+   *
+   * Specifies if separators should only be added if a menu item follows them.
+   * Default is false.
+   */
+  smartSeparators = false;
+  /**
+   * Variable: labels
+   *
+   * Specifies if any labels should be visible. Default is true.
+   */
+  labels = true;
+
+  /**
    * Class: mxPopupMenu
    *
    * Basic popup menu. To add a vertical scrollbar to a given submenu, the
@@ -41,73 +100,6 @@ class mxPopupMenu extends mxEventSource {
       this.init();
     }
   };
-
-  /**
-   * Variable: submenuImage
-   *
-   * URL of the image to be used for the submenu icon.
-   */
-  submenuImage = mxClient.imageBasePath + '/submenu.gif';
-
-  /**
-   * Variable: zIndex
-   *
-   * Specifies the zIndex for the popupmenu and its shadow. Default is 10006.
-   */
-  zIndex = 10006;
-
-  /**
-   * Variable: factoryMethod
-   *
-   * Function that is used to create the popup menu. The function takes the
-   * current panning handler, the <mxCell> under the mouse and the mouse
-   * event that triggered the call as arguments.
-   */
-  factoryMethod = null;
-
-  /**
-   * Variable: useLeftButtonForPopup
-   *
-   * Specifies if popupmenus should be activated by clicking the left mouse
-   * button. Default is false.
-   */
-  useLeftButtonForPopup = false;
-
-  /**
-   * Variable: enabled
-   *
-   * Specifies if events are handled. Default is true.
-   */
-  enabled = true;
-
-  /**
-   * Variable: itemCount
-   *
-   * Contains the number of times <addItem> has been called for a new menu.
-   */
-  itemCount = 0;
-
-  /**
-   * Variable: autoExpand
-   *
-   * Specifies if submenus should be expanded on mouseover. Default is false.
-   */
-  autoExpand = false;
-
-  /**
-   * Variable: smartSeparators
-   *
-   * Specifies if separators should only be added if a menu item follows them.
-   * Default is false.
-   */
-  smartSeparators = false;
-
-  /**
-   * Variable: labels
-   *
-   * Specifies if any labels should be visible. Default is true.
-   */
-  labels = true;
 
   /**
    * Function: init

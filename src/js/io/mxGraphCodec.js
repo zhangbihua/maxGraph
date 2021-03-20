@@ -26,7 +26,7 @@ class mxGraphCodec extends mxObjectCodec {
    */
   constructor() {
     super(new mxGraph(), ['graphListeners', 'eventListeners', 'view', 'container',
-                          'cellRenderer', 'editor', 'selection']);
+      'cellRenderer', 'editor', 'selection']);
   }
 }
 

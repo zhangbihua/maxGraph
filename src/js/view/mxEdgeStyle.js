@@ -529,7 +529,7 @@ var mxEdgeStyle = {
       }
 
       return lastPushed;
-    };
+    }
 
     // Adds the first point
     var pt = pts[0];

@@ -5,6 +5,25 @@
 
 class mxUrlConverter {
   /**
+   * Variable: enabled
+   *
+   * Specifies if the converter is enabled. Default is true.
+   */
+  enabled = true;
+  /**
+   * Variable: baseUrl
+   *
+   * Specifies the base URL to be used as a prefix for relative URLs.
+   */
+  baseUrl = null;
+  /**
+   * Variable: baseDomain
+   *
+   * Specifies the base domain to be used as a prefix for absolute URLs.
+   */
+  baseDomain = null;
+
+  /**
    *
    * Class: mxUrlConverter
    *
@@ -13,27 +32,6 @@ class mxUrlConverter {
   constructor() {
     // Empty constructor
   };
-
-  /**
-   * Variable: enabled
-   *
-   * Specifies if the converter is enabled. Default is true.
-   */
-  enabled = true;
-
-  /**
-   * Variable: baseUrl
-   *
-   * Specifies the base URL to be used as a prefix for relative URLs.
-   */
-  baseUrl = null;
-
-  /**
-   * Variable: baseDomain
-   *
-   * Specifies the base domain to be used as a prefix for absolute URLs.
-   */
-  baseDomain = null;
 
   /**
    * Function: updateBaseUrl

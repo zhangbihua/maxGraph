@@ -12,6 +12,91 @@ import mxGraph from "./mxGraph";
 
 class mxOutline {
   /**
+   * Function: source
+   *
+   * Reference to the source <mxGraph>.
+   */
+  source = null;
+  /**
+   * Function: outline
+   *
+   * Reference to the <mxGraph> that renders the outline.
+   */
+  outline = null;
+  /**
+   * Function: graphRenderHint
+   *
+   * Renderhint to be used for the outline graph. Default is faster.
+   */
+  graphRenderHint = mxConstants.RENDERING_HINT_FASTER;
+  /**
+   * Variable: enabled
+   *
+   * Specifies if events are handled. Default is true.
+   */
+  enabled = true;
+  /**
+   * Variable: showViewport
+   *
+   * Specifies a viewport rectangle should be shown. Default is true.
+   */
+  showViewport = true;
+  /**
+   * Variable: border
+   *
+   * Border to be added at the bottom and right. Default is 10.
+   */
+  border = 10;
+  /**
+   * Variable: enabled
+   *
+   * Specifies the size of the sizer handler. Default is 8.
+   */
+  sizerSize = 8;
+  /**
+   * Variable: labelsVisible
+   *
+   * Specifies if labels should be visible in the outline. Default is false.
+   */
+  labelsVisible = false;
+  /**
+   * Variable: updateOnPan
+   *
+   * Specifies if <update> should be called for <mxEvent.PAN> in the source
+   * graph. Default is false.
+   */
+  updateOnPan = false;
+  /**
+   * Variable: sizerImage
+   *
+   * Optional <mxImage> to be used for the sizer. Default is null.
+   */
+  sizerImage = null;
+  /**
+   * Variable: minScale
+   *
+   * Minimum scale to be used. Default is 0.0001.
+   */
+  minScale = 0.0001;
+  /**
+   * Variable: suspended
+   *
+   * Optional boolean flag to suspend updates. Default is false. This flag will
+   * also suspend repaints of the outline. To toggle this switch, use the
+   * following code.
+   *
+   * (code)
+   * nav.suspended = !nav.suspended;
+   *
+   * if (!nav.suspended)
+   * {
+   *   nav.update(true);
+   * }
+   * (end)
+   */
+  suspended = false;
+
+  /**
    * Class: mxOutline
    *
    * Implements an outline (aka overview) for a graph. Set <updateOnPan> to true
@@ -70,102 +155,6 @@ class mxOutline {
       this.init(container);
     }
   };
-
-  /**
-   * Function: source
-   *
-   * Reference to the source <mxGraph>.
-   */
-  source = null;
-
-  /**
-   * Function: outline
-   *
-   * Reference to the <mxGraph> that renders the outline.
-   */
-  outline = null;
-
-  /**
-   * Function: graphRenderHint
-   *
-   * Renderhint to be used for the outline graph. Default is faster.
-   */
-  graphRenderHint = mxConstants.RENDERING_HINT_FASTER;
-
-  /**
-   * Variable: enabled
-   *
-   * Specifies if events are handled. Default is true.
-   */
-  enabled = true;
-
-  /**
-   * Variable: showViewport
-   *
-   * Specifies a viewport rectangle should be shown. Default is true.
-   */
-  showViewport = true;
-
-  /**
-   * Variable: border
-   *
-   * Border to be added at the bottom and right. Default is 10.
-   */
-  border = 10;
-
-  /**
-   * Variable: enabled
-   *
-   * Specifies the size of the sizer handler. Default is 8.
-   */
-  sizerSize = 8;
-
-  /**
-   * Variable: labelsVisible
-   *
-   * Specifies if labels should be visible in the outline. Default is false.
-   */
-  labelsVisible = false;
-
-  /**
-   * Variable: updateOnPan
-   *
-   * Specifies if <update> should be called for <mxEvent.PAN> in the source
-   * graph. Default is false.
-   */
-  updateOnPan = false;
-
-  /**
-   * Variable: sizerImage
-   *
-   * Optional <mxImage> to be used for the sizer. Default is null.
-   */
-  sizerImage = null;
-
-  /**
-   * Variable: minScale
-   *
-   * Minimum scale to be used. Default is 0.0001.
-   */
-  minScale = 0.0001;
-
-  /**
-   * Variable: suspended
-   *
-   * Optional boolean flag to suspend updates. Default is false. This flag will
-   * also suspend repaints of the outline. To toggle this switch, use the
-   * following code.
-   *
-   * (code)
-   * nav.suspended = !nav.suspended;
-   *
-   * if (!nav.suspended)
-   * {
-   *   nav.update(true);
-   * }
-   * (end)
-   */
-  suspended = false;
 
   /**
    * Function: createGraph

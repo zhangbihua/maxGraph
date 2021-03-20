@@ -5,6 +5,50 @@
 
 class mxTooltipHandler {
   /**
+   * Variable: zIndex
+   *
+   * Specifies the zIndex for the tooltip and its shadow. Default is 10005.
+   */
+  zIndex = 10005;
+  /**
+   * Variable: graph
+   *
+   * Reference to the enclosing <mxGraph>.
+   */
+  graph = null;
+  /**
+   * Variable: delay
+   *
+   * Delay to show the tooltip in milliseconds. Default is 500.
+   */
+  delay = null;
+  /**
+   * Variable: ignoreTouchEvents
+   *
+   * Specifies if touch and pen events should be ignored. Default is true.
+   */
+  ignoreTouchEvents = true;
+  /**
+   * Variable: hideOnHover
+   *
+   * Specifies if the tooltip should be hidden if the mouse is moved over the
+   * current cell. Default is false.
+   */
+  hideOnHover = false;
+  /**
+   * Variable: destroyed
+   *
+   * True if this handler was destroyed using <destroy>.
+   */
+  destroyed = false;
+  /**
+   * Variable: enabled
+   *
+   * Specifies if events are handled. Default is true.
+   */
+  enabled = true;
+
+  /**
    * Class: mxTooltipHandler
    *
    * Graph event handler that displays tooltips. <mxGraph.getTooltip> is used to
@@ -35,56 +79,6 @@ class mxTooltipHandler {
       this.graph.addMouseListener(this);
     }
   };
-
-  /**
-   * Variable: zIndex
-   *
-   * Specifies the zIndex for the tooltip and its shadow. Default is 10005.
-   */
-  zIndex = 10005;
-
-  /**
-   * Variable: graph
-   *
-   * Reference to the enclosing <mxGraph>.
-   */
-  graph = null;
-
-  /**
-   * Variable: delay
-   *
-   * Delay to show the tooltip in milliseconds. Default is 500.
-   */
-  delay = null;
-
-  /**
-   * Variable: ignoreTouchEvents
-   *
-   * Specifies if touch and pen events should be ignored. Default is true.
-   */
-  ignoreTouchEvents = true;
-
-  /**
-   * Variable: hideOnHover
-   *
-   * Specifies if the tooltip should be hidden if the mouse is moved over the
-   * current cell. Default is false.
-   */
-  hideOnHover = false;
-
-  /**
-   * Variable: destroyed
-   *
-   * True if this handler was destroyed using <destroy>.
-   */
-  destroyed = false;
-
-  /**
-   * Variable: enabled
-   *
-   * Specifies if events are handled. Default is true.
-   */
-  enabled = true;
 
   /**
    * Function: isEnabled

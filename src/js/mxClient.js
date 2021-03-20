@@ -247,20 +247,6 @@ var mxClient = {
     for (var i = 0; i < mxClient.defaultBundles.length; i++) {
       mxResources.add(mxClient.defaultBundles[i], lan, callback);
     }
-  },
-
-  /**
-   * Function: include
-   *
-   * Dynamically adds a script node to the document header.
-   *
-   * In production environments, the includes are resolved in the mxClient.js
-   * file to reduce the number of requests required for client startup. This
-   * function should only be used in development environments, but not in
-   * production systems.
-   */
-  include: (src) => {
-    document.write('<script src="' + src + '"></script>');
   }
 };
 
@@ -355,13 +341,11 @@ if (typeof(mxLoadStylesheets) == 'undefined') {
  */
 if (typeof(mxBasePath) != 'undefined' && mxBasePath.length > 0) {
   // Adds a trailing slash if required
-  if (mxBasePath.substring(mxBasePath.length - 1) == '/') {
+  if (mxBasePath.substring(mxBasePath.length - 1) === '/') {
     mxBasePath = mxBasePath.substring(0, mxBasePath.length - 1);
   }
-
   mxClient.basePath = mxBasePath;
-}
-else {
+} else {
   mxClient.basePath = '.';
 }
 
@@ -384,13 +368,11 @@ else {
  */
 if (typeof(mxImageBasePath) != 'undefined' && mxImageBasePath.length > 0) {
   // Adds a trailing slash if required
-  if (mxImageBasePath.substring(mxImageBasePath.length - 1) == '/') {
+  if (mxImageBasePath.substring(mxImageBasePath.length - 1) === '/') {
     mxImageBasePath = mxImageBasePath.substring(0, mxImageBasePath.length - 1);
   }
-
   mxClient.imageBasePath = mxImageBasePath;
-}
-else {
+} else {
   mxClient.imageBasePath = mxClient.basePath + '/images';
 }
 
@@ -451,8 +433,7 @@ else {
  */
 if (typeof(mxDefaultLanguage) != 'undefined' && mxDefaultLanguage != null) {
   mxClient.defaultLanguage = mxDefaultLanguage;
-}
-else {
+} else {
   mxClient.defaultLanguage = 'en';
 }
 
@@ -481,153 +462,3 @@ if (mxLoadStylesheets) {
 if (typeof(mxLanguages) != 'undefined' && mxLanguages != null) {
   mxClient.languages = mxLanguages;
 }
-
-// PREPROCESSOR-REMOVE-START
-// If script is loaded via CommonJS, do not write <script> tags to the page
-// for dependencies. These are already included in the build.
-if (mxForceIncludes || !(typeof module === 'object' && module.exports != null))
-{
-// PREPROCESSOR-REMOVE-END
-  mxClient.include(mxClient.basePath+'/js/util/mxLog.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxObjectIdentity.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxDictionary.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxResources.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxPoint.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxRectangle.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxEffects.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxUtils.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxConstants.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxEventObject.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxMouseEvent.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxEventSource.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxEvent.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxXmlRequest.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxClipboard.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxWindow.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxForm.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxImage.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxDivResizer.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxDragSource.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxToolbar.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxUndoableEdit.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxUndoManager.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxUrlConverter.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxPanningManager.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxPopupMenu.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxAutoSaveManager.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxAnimation.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxMorphing.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxImageBundle.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxImageExport.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxAbstractCanvas2D.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxXmlCanvas2D.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxSvgCanvas2D.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxVmlCanvas2D.js');
-  mxClient.include(mxClient.basePath+'/js/util/mxGuide.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxShape.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxStencil.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxStencilRegistry.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxMarker.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxActor.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxCloud.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxRectangleShape.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxEllipse.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxDoubleEllipse.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxRhombus.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxPolyline.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxArrow.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxArrowConnector.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxText.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxTriangle.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxHexagon.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxLine.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxImageShape.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxLabel.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxCylinder.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxConnector.js');
-  mxClient.include(mxClient.basePath+'/js/shape/mxSwimlane.js');
-  mxClient.include(mxClient.basePath+'/js/layout/mxGraphLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/mxStackLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/mxPartitionLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/mxCompactTreeLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/mxRadialTreeLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/mxFastOrganicLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/mxCircleLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/mxParallelEdgeLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/mxCompositeLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/mxEdgeLabelLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/model/mxGraphAbstractHierarchyCell.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/model/mxGraphHierarchyNode.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/model/mxGraphHierarchyEdge.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/model/mxGraphHierarchyModel.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/model/mxSwimlaneModel.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/stage/mxHierarchicalLayoutStage.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/stage/mxMedianHybridCrossingReduction.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/stage/mxMinimumCycleRemover.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/stage/mxCoordinateAssignment.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/stage/mxSwimlaneOrdering.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/mxHierarchicalLayout.js');
-  mxClient.include(mxClient.basePath+'/js/layout/hierarchical/mxSwimlaneLayout.js');
-  mxClient.include(mxClient.basePath+'/js/model/mxGraphModel.js');
-  mxClient.include(mxClient.basePath+'/js/model/mxCell.js');
-  mxClient.include(mxClient.basePath+'/js/model/mxGeometry.js');
-  mxClient.include(mxClient.basePath+'/js/model/mxCellPath.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxPerimeter.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxPrintPreview.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxStylesheet.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxCellState.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxGraphSelectionModel.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxCellEditor.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxCellRenderer.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxEdgeStyle.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxStyleRegistry.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxGraphView.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxGraph.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxCellOverlay.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxOutline.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxMultiplicity.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxLayoutManager.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxSwimlaneManager.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxTemporaryCellStates.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxCellStatePreview.js');
-  mxClient.include(mxClient.basePath+'/js/view/mxConnectionConstraint.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxGraphHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxPanningHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxPopupMenuHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxCellMarker.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxSelectionCellsHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxConnectionHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxConstraintHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxRubberband.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxHandle.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxVertexHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxEdgeHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxElbowEdgeHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxEdgeSegmentHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxKeyHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxTooltipHandler.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxCellTracker.js');
-  mxClient.include(mxClient.basePath+'/js/handler/mxCellHighlight.js');
-  mxClient.include(mxClient.basePath+'/js/editor/mxDefaultKeyHandler.js');
-  mxClient.include(mxClient.basePath+'/js/editor/mxDefaultPopupMenu.js');
-  mxClient.include(mxClient.basePath+'/js/editor/mxDefaultToolbar.js');
-  mxClient.include(mxClient.basePath+'/js/editor/mxEditor.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxCodecRegistry.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxObjectCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxCellCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxModelCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxRootChangeCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxChildChangeCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxTerminalChangeCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxGenericChangeCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxGraphCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxGraphViewCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxStylesheetCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxDefaultKeyHandlerCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxDefaultToolbarCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxDefaultPopupMenuCodec.js');
-  mxClient.include(mxClient.basePath+'/js/io/mxEditorCodec.js');
-// PREPROCESSOR-REMOVE-START
-}
-// PREPROCESSOR-REMOVE-END

@@ -1146,7 +1146,7 @@ class mxText extends mxShape {
       dy = (this.spacingTop - this.spacingBottom) / 2;
     } else if (this.valign == mxConstants.ALIGN_BOTTOM) {
       dy = -this.spacingBottom - this.baseSpacingBottom;
-      ;
+
     } else {
       dy = this.spacingTop + this.baseSpacingTop;
     }

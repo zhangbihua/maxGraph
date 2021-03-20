@@ -306,7 +306,7 @@ class mxGraphLayout {
           result.y = result.y + parentGeo.y;
 
           parent = model.getParent(parent);
-          ;
+
           parentGeo = model.getGeometry(parent);
         }
       }

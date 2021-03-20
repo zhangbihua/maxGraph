@@ -484,7 +484,7 @@ var mxUtils = {
         break;
       }
     }
-    ;
+
   },
 
   /**
@@ -800,7 +800,7 @@ var mxUtils = {
           }
         }
       }
-    };
+    }
 
     doExtract(elems);
 

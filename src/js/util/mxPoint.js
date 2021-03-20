@@ -7,6 +7,19 @@ import mxUtils from "../util/mxUtils";
 
 class mxPoint {
   /**
+   * Variable: x
+   *
+   * Holds the x-coordinate of the point. Default is 0.
+   */
+  x = null;
+  /**
+   * Variable: y
+   *
+   * Holds the y-coordinate of the point. Default is 0.
+   */
+  y = null;
+
+  /**
    * Class: mxPoint
    *
    * Implements a 2-dimensional vector with double precision coordinates.
@@ -20,20 +33,6 @@ class mxPoint {
     this.x = (x != null) ? x : 0;
     this.y = (y != null) ? y : 0;
   };
-
-  /**
-   * Variable: x
-   *
-   * Holds the x-coordinate of the point. Default is 0.
-   */
-  x = null;
-
-  /**
-   * Variable: y
-   *
-   * Holds the y-coordinate of the point. Default is 0.
-   */
-  y = null;
 
   /**
    * Function: equals

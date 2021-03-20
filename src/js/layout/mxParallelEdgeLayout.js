@@ -164,7 +164,7 @@ class mxParallelEdgeLayout extends mxGraphLayout {
           pts = tmp.join(',');
         }
       }
-      ;
+
 
       return ((src > trg) ? trg + '-' + src : src + '-' + trg) + pts;
     }

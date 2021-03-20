@@ -7,7 +7,7 @@
  *
  * Extends <mxPoint> to implement a 2-dimensional rectangle with double
  * precision coordinates.
- * 
+ *
  * Constructor: mxRectangle
  *
  * Constructs a new rectangle for the optional parameters. If no parameters
@@ -17,6 +17,19 @@
 import mxPoint from "./mxPoint";
 
 class mxRectangle extends mxPoint {
+  /**
+   * Variable: width
+   *
+   * Holds the width of the rectangle. Default is 0.
+   */
+  width = null;
+  /**
+   * Variable: height
+   *
+   * Holds the height of the rectangle. Default is 0.
+   */
+  height = null;
+
   constructor(x, y, width, height) {
     super(x, y);
     this.width = (width != null) ? width : 0;
@@ -24,18 +37,13 @@ class mxRectangle extends mxPoint {
   };
 
   /**
-   * Variable: width
+   * Function: fromRectangle
    *
-   * Holds the width of the rectangle. Default is 0.
+   * Returns a new <mxRectangle> which is a copy of the given rectangle.
    */
-  width = null;
-
-  /**
-   * Variable: height
-   *
-   * Holds the height of the rectangle. Default is 0.
-   */
-  height = null;
+  static fromRectangle = (rect) => {
+    return new mxRectangle(rect.x, rect.y, rect.width, rect.height);
+  };
 
   /**
    * Function: setRect
@@ -153,15 +161,6 @@ class mxRectangle extends mxPoint {
   equals = (obj) => {
     return obj != null && obj.x == this.x && obj.y == this.y &&
         obj.width == this.width && obj.height == this.height;
-  };
-
-  /**
-   * Function: fromRectangle
-   *
-   * Returns a new <mxRectangle> which is a copy of the given rectangle.
-   */
-  static fromRectangle = (rect) => {
-    return new mxRectangle(rect.x, rect.y, rect.width, rect.height);
   };
 }
 

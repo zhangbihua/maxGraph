@@ -651,7 +651,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
             for (var j = 0; j < edges.length; j++) {
               if (j == i) {
-                continue;
+
               } else {
                 var isSource2 = edgeIsSource[j];
                 var otherTerm = this.getVisibleTerminal(edges[j], !isSource2);

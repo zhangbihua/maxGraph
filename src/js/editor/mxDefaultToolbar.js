@@ -103,17 +103,17 @@ class mxDefaultToolbar {
    *
    * container - DOM node that contains the toolbar.
    */
-  init=(container)=>{
+  init = (container) => {
     if (container != null) {
       this.toolbar = new mxToolbar(container);
 
       // Installs the insert function in the editor if an item is
       // selected in the toolbar
-      this.toolbar.addListener(mxEvent.SELECT, mxUtils.bind(this, (sender, evt)=>{
+      this.toolbar.addListener(mxEvent.SELECT, mxUtils.bind(this, (sender, evt) => {
         let funct = evt.getProperty('function');
 
         if (funct != null) {
-          this.editor.insertFunction = mxUtils.bind(this, ()=>{
+          this.editor.insertFunction = mxUtils.bind(this, () => {
             funct.apply(this, arguments);
             this.toolbar.resetMode();
           });
@@ -123,7 +123,7 @@ class mxDefaultToolbar {
       }));
 
       // Resets the selected tool after a doubleclick or escape keystroke
-      this.resetHandler = mxUtils.bind(this, ()=>{
+      this.resetHandler = mxUtils.bind(this, () => {
         if (this.toolbar != null) {
           this.toolbar.resetMode(true);
         }
@@ -147,8 +147,8 @@ class mxDefaultToolbar {
    * action - Name of the action to execute when the item is clicked.
    * pressed - Optional URL of the icon for the pressed state.
    */
-  addItem=(title, icon, action, pressed)=>{
-    let clickHandler = mxUtils.bind(this, ()=>{
+  addItem = (title, icon, action, pressed) => {
+    let clickHandler = mxUtils.bind(this, () => {
       if (action != null && action.length > 0) {
         this.editor.execute(action);
       }
@@ -167,7 +167,7 @@ class mxDefaultToolbar {
    * icon - Optional URL of the icon that represents the vertical separator.
    * Default is <mxClient.imageBasePath> + '/separator.gif'.
    */
-  addSeparator=(icon)=>{
+  addSeparator = (icon) => {
     icon = icon || mxClient.imageBasePath + '/separator.gif';
     this.toolbar.addSeparator(icon);
   };
@@ -178,7 +178,7 @@ class mxDefaultToolbar {
    * Helper method to invoke <mxToolbar.addCombo> on <toolbar> and return the
    * resulting DOM node.
    */
-  addCombo=()=>{
+  addCombo = () => {
     return this.toolbar.addCombo();
   };
 
@@ -192,7 +192,7 @@ class mxDefaultToolbar {
    *
    * title - String that represents the title of the combo.
    */
-  addActionCombo=(title)=>{
+  addActionCombo = (title) => {
     return this.toolbar.addActionCombo(title);
   };
 
@@ -209,8 +209,8 @@ class mxDefaultToolbar {
    * title - String that represents the title of the combo.
    * action - Name of the action to execute in <editor>.
    */
-  addActionOption=(combo, title, action)=>{
-    let clickHandler = mxUtils.bind(this, ()=>{
+  addActionOption = (combo, title, action) => {
+    let clickHandler = mxUtils.bind(this, () => {
       this.editor.execute(action);
     });
 
@@ -229,7 +229,7 @@ class mxDefaultToolbar {
    * title - String that represents the title of the combo.
    * value - Object that represents the value of the option.
    */
-  addOption=(combo, title, value)=>{
+  addOption = (combo, title, value) => {
     return this.toolbar.addOption(combo, title, value);
   };
 
@@ -250,8 +250,8 @@ class mxDefaultToolbar {
    * first and only argument that is executed after the mode has been
    * selected.
    */
-  addMode=(title, icon, mode, pressed, funct)=>{
-    let clickHandler = mxUtils.bind(this, ()=>{
+  addMode = (title, icon, mode, pressed, funct) => {
+    let clickHandler = mxUtils.bind(this, () => {
       this.editor.setMode(mode);
 
       if (funct != null) {
@@ -283,14 +283,13 @@ class mxDefaultToolbar {
    * toggle - Optional boolean that specifies if the item can be toggled.
    * Default is true.
    */
-  addPrototype=(title, icon, ptype, pressed, insert, toggle)=>{
+  addPrototype = (title, icon, ptype, pressed, insert, toggle) => {
     // Creates a wrapper function that is in charge of constructing
     // the new cell instance to be inserted into the graph
-    let factory = mxUtils.bind(this, ()=>{
-      if (typeof(ptype) == 'function') {
+    let factory = mxUtils.bind(this, () => {
+      if (typeof (ptype) == 'function') {
         return ptype();
-      }
-      else if (ptype != null) {
+      } else if (ptype != null) {
         return this.editor.graph.cloneCell(ptype);
       }
 
@@ -299,8 +298,8 @@ class mxDefaultToolbar {
 
     // Defines the function for a click event on the graph
     // after this item has been selected in the toolbar
-    let clickHandler = mxUtils.bind(this, (evt, cell)=>{
-      if (typeof(insert) == 'function') {
+    let clickHandler = mxUtils.bind(this, (evt, cell) => {
+      if (typeof (insert) == 'function') {
         insert(this.editor, factory(), evt, cell);
       } else {
         this.drop(factory(), evt, cell);
@@ -314,7 +313,7 @@ class mxDefaultToolbar {
 
     // Creates a wrapper function that calls the click handler without
     // the graph argument
-    let dropHandler=(graph, evt, cell)=>{
+    let dropHandler = (graph, evt, cell) => {
       clickHandler(evt, cell);
     };
 
@@ -336,7 +335,7 @@ class mxDefaultToolbar {
    * evt - Mouse event that represents the drop.
    * target - Optional <mxCell> that represents the drop target.
    */
-  drop=(vertex, evt, target)=>{
+  drop = (vertex, evt, target) => {
     let graph = this.editor.graph;
     let model = graph.getModel();
 
@@ -346,7 +345,7 @@ class mxDefaultToolbar {
         !graph.isCellConnectable(target)) {
 
       while (target != null &&
-             !graph.isValidDropTarget(target, [vertex], evt)) {
+      !graph.isValidDropTarget(target, [vertex], evt)) {
         target = model.getParent(target);
       }
       this.insert(vertex, evt, target);
@@ -368,7 +367,7 @@ class mxDefaultToolbar {
    * evt - Mouse event that represents the drop.
    * parent - Optional <mxCell> that represents the parent.
    */
-  insert=(vertex, evt, target)=>{
+  insert = (vertex, evt, target) => {
     let graph = this.editor.graph;
 
     if (graph.canImportCell(vertex)) {
@@ -397,7 +396,7 @@ class mxDefaultToolbar {
    * evt - Mouse event that represents the drop.
    * source - Optional <mxCell> that represents the source terminal.
    */
-  connect=(vertex, evt, source)=>{
+  connect = (vertex, evt, source) => {
     let graph = this.editor.graph;
     let model = graph.getModel();
 
@@ -446,7 +445,7 @@ class mxDefaultToolbar {
         }
 
         graph.addEdge(edge, parent, source, vertex);
-      
+
       } finally {
         model.endUpdate();
       }
@@ -467,12 +466,12 @@ class mxDefaultToolbar {
    * img - DOM node that represents the image.
    * dropHandler - Function that handles a drop of the image.
    */
-  installDropHandler=(img, dropHandler)=>{
+  installDropHandler = (img, dropHandler) => {
     let sprite = document.createElement('img');
     sprite.setAttribute('src', img.getAttribute('src'));
 
     // Handles delayed loading of the images
-    let loader = mxUtils.bind(this, (evt)=> {
+    let loader = mxUtils.bind(this, (evt) => {
       // Preview uses the image node with double size. Later this can be
       // changed to use a separate preview and guides, but for this the
       // dropHandler must use the additional x- and y-arguments and the
@@ -495,7 +494,7 @@ class mxDefaultToolbar {
    * <toolbar> is destroyed automatically when the window unloads (in IE) by
    * <mxEditor>.
    */
-  destroy=()=>{
+  destroy = () => {
     if (this.resetHandler != null) {
       this.editor.graph.removeListener('dblclick', this.resetHandler);
       this.editor.removeListener('escape', this.resetHandler);

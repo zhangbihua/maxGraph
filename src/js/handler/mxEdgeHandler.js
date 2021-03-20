@@ -188,6 +188,19 @@ class mxEdgeHandler {
    * handle. Uses <checkLabelHandle> for checking and moving. Default is false.
    */
   manageLabelHandle = false;
+  /**
+   * Function: isParentHighlightVisible
+   *
+   * Returns true if the parent highlight should be visible. This implementation
+   * always returns true.
+   */
+  isParentHighlightVisible = isParentHighlightVisible;
+  /**
+   * Function: updateParentHighlight
+   *
+   * Updates the highlight of the parent if <parentHighlightEnabled> is true.
+   */
+  updateParentHighlight = updateParentHighlight;
 
   /**
    * Class: mxEdgeHandler
@@ -304,22 +317,6 @@ class mxEdgeHandler {
     this.updateParentHighlight();
     this.redraw();
   };
-
-
-  /**
-   * Function: isParentHighlightVisible
-   *
-   * Returns true if the parent highlight should be visible. This implementation
-   * always returns true.
-   */
-  isParentHighlightVisible = isParentHighlightVisible;
-
-  /**
-   * Function: updateParentHighlight
-   *
-   * Updates the highlight of the parent if <parentHighlightEnabled> is true.
-   */
-  updateParentHighlight = updateParentHighlight;
 
   /**
    * Function: createCustomHandles
@@ -956,7 +953,7 @@ class mxEdgeHandler {
           snapToPoint.call(this, new mxPoint(view.getRoutingCenterX(terminal),
               view.getRoutingCenterY(terminal)));
         }
-      };
+      }
 
       snapToTerminal.call(this, this.state.getVisibleTerminalState(true));
       snapToTerminal.call(this, this.state.getVisibleTerminalState(false));
@@ -1125,7 +1122,7 @@ class mxEdgeHandler {
                 points.splice(idx - 1, 1);
                 result = points;
               }
-            };
+            }
 
             // LATER: Check if other points can be removed if a segment is made straight
             checkRemove(this.index, pt);

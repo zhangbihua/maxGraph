@@ -5,6 +5,13 @@
 
 class mxImageShape extends mxRectangleShape {
   /**
+   * Variable: preserveImageAspect
+   *
+   * Switch to preserve image aspect. Default is true.
+   */
+  preserveImageAspect = true;
+
+  /**
    * Class: mxImageShape
    *
    * Extends <mxShape> to implement an image shape. This shape is registered
@@ -34,13 +41,6 @@ class mxImageShape extends mxRectangleShape {
     this.strokewidth = (strokewidth != null) ? strokewidth : 1;
     this.shadow = false;
   };
-
-  /**
-   * Variable: preserveImageAspect
-   *
-   * Switch to preserve image aspect. Default is true.
-   */
-  preserveImageAspect = true;
 
   /**
    * Function: getSvgScreenOffset

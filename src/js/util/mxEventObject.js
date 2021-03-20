@@ -5,6 +5,25 @@
 
 class mxEventObject {
   /**
+   * Variable: name
+   *
+   * Holds the name.
+   */
+  name = null;
+  /**
+   * Variable: properties
+   *
+   * Holds the properties as an associative array.
+   */
+  properties = null;
+  /**
+   * Variable: consumed
+   *
+   * Holds the consumed state. Default is false.
+   */
+  consumed = false;
+
+  /**
    * Class: mxEventObject
    *
    * The mxEventObject is a wrapper for all properties of a single event.
@@ -37,27 +56,6 @@ class mxEventObject {
       }
     }
   };
-
-  /**
-   * Variable: name
-   *
-   * Holds the name.
-   */
-  name = null;
-
-  /**
-   * Variable: properties
-   *
-   * Holds the properties as an associative array.
-   */
-  properties = null;
-
-  /**
-   * Variable: consumed
-   *
-   * Holds the consumed state. Default is false.
-   */
-  consumed = false;
 
   /**
    * Function: getName

@@ -10,6 +10,7 @@ import mxAbstractCanvas2D from "./mxAbstractCanvas2D";
 /**
  * Capability check for DOM parser and checks if base tag is used.
  */
+
 /*
 let mxSvgCanvas2useDomParser = typeof DOMParser === 'function' && typeof XMLSerializer === 'function';
 
@@ -261,6 +262,76 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         this.defs.appendChild(this.createStyle());
       }
     }
+  };
+
+  /**
+   * Updates existing DOM nodes for text rendering.
+   */
+  static createCss = (w, h, align, valign, wrap, overflow, clip, bg, border, flex, block, s, callback) => {
+    var item = 'box-sizing: border-box; font-size: 0; text-align: ' + ((align == mxConstants.ALIGN_LEFT) ? 'left' :
+        ((align == mxConstants.ALIGN_RIGHT) ? 'right' : 'center')) + '; ';
+    var pt = mxUtils.getAlignmentAsPoint(align, valign);
+    var ofl = 'overflow: hidden; ';
+    var fw = 'width: 1px; ';
+    var fh = 'height: 1px; ';
+    var dx = pt.x * w;
+    var dy = pt.y * h;
+
+    if (clip) {
+      fw = 'width: ' + Math.round(w) + 'px; ';
+      item += 'max-height: ' + Math.round(h) + 'px; ';
+      dy = 0;
+    } else if (overflow == 'fill') {
+      fw = 'width: ' + Math.round(w) + 'px; ';
+      fh = 'height: ' + Math.round(h) + 'px; ';
+      block += 'width: 100%; height: 100%; ';
+      item += fw + fh;
+    } else if (overflow == 'width') {
+      fw = 'width: ' + Math.round(w) + 'px; ';
+      block += 'width: 100%; ';
+      item += fw;
+      dy = 0;
+
+      if (h > 0) {
+        item += 'max-height: ' + Math.round(h) + 'px; ';
+      }
+    } else {
+      ofl = '';
+      dy = 0;
+    }
+
+    var bgc = '';
+
+    if (bg != null) {
+      bgc += 'background-color: ' + bg + '; ';
+    }
+
+    if (border != null) {
+      bgc += 'border: 1px solid ' + border + '; ';
+    }
+
+    if (ofl == '' || clip) {
+      block += bgc;
+    } else {
+      item += bgc;
+    }
+
+    if (wrap && w > 0) {
+      block += 'white-space: normal; word-wrap: ' + mxConstants.WORD_WRAP + '; ';
+      fw = 'width: ' + Math.round(w) + 'px; ';
+
+      if (ofl != '' && overflow != 'fill') {
+        dy = 0;
+      }
+    } else {
+      block += 'white-space: nowrap; ';
+
+      if (ofl == '') {
+        dx = 0;
+      }
+    }
+
+    callback(dx, dy, flex + fw + fh, item + ofl, block, ofl);
   };
 
   /**
@@ -1176,76 +1247,6 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
             g.removeAttribute('opacity');
           }
         }));
-  };
-
-  /**
-   * Updates existing DOM nodes for text rendering.
-   */
-  static createCss = (w, h, align, valign, wrap, overflow, clip, bg, border, flex, block, s, callback) => {
-    var item = 'box-sizing: border-box; font-size: 0; text-align: ' + ((align == mxConstants.ALIGN_LEFT) ? 'left' :
-        ((align == mxConstants.ALIGN_RIGHT) ? 'right' : 'center')) + '; ';
-    var pt = mxUtils.getAlignmentAsPoint(align, valign);
-    var ofl = 'overflow: hidden; ';
-    var fw = 'width: 1px; ';
-    var fh = 'height: 1px; ';
-    var dx = pt.x * w;
-    var dy = pt.y * h;
-
-    if (clip) {
-      fw = 'width: ' + Math.round(w) + 'px; ';
-      item += 'max-height: ' + Math.round(h) + 'px; ';
-      dy = 0;
-    } else if (overflow == 'fill') {
-      fw = 'width: ' + Math.round(w) + 'px; ';
-      fh = 'height: ' + Math.round(h) + 'px; ';
-      block += 'width: 100%; height: 100%; ';
-      item += fw + fh;
-    } else if (overflow == 'width') {
-      fw = 'width: ' + Math.round(w) + 'px; ';
-      block += 'width: 100%; ';
-      item += fw;
-      dy = 0;
-
-      if (h > 0) {
-        item += 'max-height: ' + Math.round(h) + 'px; ';
-      }
-    } else {
-      ofl = '';
-      dy = 0;
-    }
-
-    var bgc = '';
-
-    if (bg != null) {
-      bgc += 'background-color: ' + bg + '; ';
-    }
-
-    if (border != null) {
-      bgc += 'border: 1px solid ' + border + '; ';
-    }
-
-    if (ofl == '' || clip) {
-      block += bgc;
-    } else {
-      item += bgc;
-    }
-
-    if (wrap && w > 0) {
-      block += 'white-space: normal; word-wrap: ' + mxConstants.WORD_WRAP + '; ';
-      fw = 'width: ' + Math.round(w) + 'px; ';
-
-      if (ofl != '' && overflow != 'fill') {
-        dy = 0;
-      }
-    } else {
-      block += 'white-space: nowrap; ';
-
-      if (ofl == '') {
-        dx = 0;
-      }
-    }
-
-    callback(dx, dy, flex + fw + fh, item + ofl, block, ofl);
   };
 
   /**

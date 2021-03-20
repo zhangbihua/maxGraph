@@ -184,7 +184,7 @@ class mxRubberband {
       me.graphY = pt.y;
 
       return me;
-    };
+    }
 
     this.dragHandler = mxUtils.bind(this, (evt) => {
       this.mouseMove(this.graph, createMouseEvent(evt));

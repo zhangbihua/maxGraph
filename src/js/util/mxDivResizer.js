@@ -4,13 +4,13 @@
  */
 /**
  * Class: mxDivResizer
- * 
+ *
  * Maintains the size of a div element in Internet Explorer. This is a
  * workaround for the right and bottom style being ignored in IE.
- * 
+ *
  * If you need a div to cover the scrollwidth and -height of a document,
  * then you can use this class as follows:
- * 
+ *
  * (code)
  * var resizer = new mxDivResizer(background);
  * resizer.getDocumentHeight = ()=>
@@ -23,21 +23,40 @@
  * }
  * resizer.resize();
  * (end)
- * 
+ *
  * Constructor: mxDivResizer
- * 
+ *
  * Constructs an object that maintains the size of a div
  * element when the window is being resized. This is only
  * required for Internet Explorer as it ignores the respective
  * stylesheet information for DIV elements.
- * 
+ *
  * Parameters:
- * 
+ *
  * div - Reference to the DOM node whose size should be maintained.
  * container - Optional Container that contains the div. Default is the
  * window.
  */
 class mxDivResizer {
+  /**
+   * Function: resizeWidth
+   *
+   * Boolean specifying if the width should be updated.
+   */
+  resizeWidth = true;
+  /**
+   * Function: resizeHeight
+   *
+   * Boolean specifying if the height should be updated.
+   */
+  resizeHeight = true;
+  /**
+   * Function: handlingResize
+   *
+   * Boolean specifying if the width should be updated.
+   */
+  handlingResize = false;
+
   constructor(div, container) {
     if (div.nodeName.toLowerCase() == 'div') {
       if (container == null) {
@@ -65,27 +84,6 @@ class mxDivResizer {
       this.resize();
     }
   };
-
-  /**
-   * Function: resizeWidth
-   *
-   * Boolean specifying if the width should be updated.
-   */
-  resizeWidth = true;
-
-  /**
-   * Function: resizeHeight
-   *
-   * Boolean specifying if the height should be updated.
-   */
-  resizeHeight = true;
-
-  /**
-   * Function: handlingResize
-   *
-   * Boolean specifying if the width should be updated.
-   */
-  handlingResize = false;
 
   /**
    * Function: resize

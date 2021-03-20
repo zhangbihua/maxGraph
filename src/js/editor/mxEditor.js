@@ -33,6 +33,460 @@ if (mxLoadResources) {
 
 class mxEditor extends mxEventSource {
   /**
+   * Variable: askZoomResource
+   *
+   * Specifies the resource key for the zoom dialog. If the resource for this
+   * key does not exist then the value is used as the error message. Default
+   * is 'askZoom'.
+   */
+  askZoomResource = (mxClient.language !== 'none') ? 'askZoom' : '';
+
+  /**
+   * Group: Controls and Handlers
+   */
+  /**
+   * Variable: lastSavedResource
+   *
+   * Specifies the resource key for the last saved info. If the resource for
+   * this key does not exist then the value is used as the error message.
+   * Default is 'lastSaved'.
+   */
+  lastSavedResource = (mxClient.language !== 'none') ? 'lastSaved' : '';
+  /**
+   * Variable: currentFileResource
+   *
+   * Specifies the resource key for the current file info. If the resource for
+   * this key does not exist then the value is used as the error message.
+   * Default is 'currentFile'.
+   */
+  currentFileResource = (mxClient.language !== 'none') ? 'currentFile' : '';
+  /**
+   * Variable: propertiesResource
+   *
+   * Specifies the resource key for the properties window title. If the
+   * resource for this key does not exist then the value is used as the
+   * error message. Default is 'properties'.
+   */
+  propertiesResource = (mxClient.language !== 'none') ? 'properties' : '';
+  /**
+   * Variable: tasksResource
+   *
+   * Specifies the resource key for the tasks window title. If the
+   * resource for this key does not exist then the value is used as the
+   * error message. Default is 'tasks'.
+   */
+  tasksResource = (mxClient.language !== 'none') ? 'tasks' : '';
+  /**
+   * Variable: helpResource
+   *
+   * Specifies the resource key for the help window title. If the
+   * resource for this key does not exist then the value is used as the
+   * error message. Default is 'help'.
+   */
+  helpResource = (mxClient.language !== 'none') ? 'help' : '';
+  /**
+   * Variable: outlineResource
+   *
+   * Specifies the resource key for the outline window title. If the
+   * resource for this key does not exist then the value is used as the
+   * error message. Default is 'outline'.
+   */
+  outlineResource = (mxClient.language !== 'none') ? 'outline' : '';
+  /**
+   * Variable: outline
+   *
+   * Reference to the <mxWindow> that contains the outline. The <mxOutline>
+   * is stored in outline.outline.
+   */
+  outline = null;
+  /**
+   * Variable: graph
+   *
+   * Holds a <mxGraph> for displaying the diagram. The graph
+   * is created in <setGraphContainer>.
+   */
+  graph = null;
+  /**
+   * Variable: graphRenderHint
+   *
+   * Holds the render hint used for creating the
+   * graph in <setGraphContainer>. See <mxGraph>.
+   * Default is null.
+   */
+  graphRenderHint = null;
+  /**
+   * Variable: toolbar
+   *
+   * Holds a <mxDefaultToolbar> for displaying the toolbar. The
+   * toolbar is created in <setToolbarContainer>.
+   */
+  toolbar = null;
+  /**
+   * Variable: status
+   *
+   * DOM container that holds the statusbar. Default is null.
+   * Use <setStatusContainer> to set this value.
+   */
+  status = null;
+  /**
+   * Variable: popupHandler
+   *
+   * Holds a <mxDefaultPopupMenu> for displaying
+   * popupmenus.
+   */
+  popupHandler = null;
+  /**
+   * Variable: undoManager
+   *
+   * Holds an <mxUndoManager> for the command history.
+   */
+  undoManager = null;
+  /**
+   * Variable: keyHandler
+   *
+   * Holds a <mxDefaultKeyHandler> for handling keyboard events.
+   * The handler is created in <setGraphContainer>.
+   */
+  keyHandler = null;
+  /**
+   * Variable: actions
+   *
+   * Maps from actionnames to actions, which are functions taking
+   * the editor and the cell as arguments. Use <addAction>
+   * to add or replace an action and <execute> to execute an action
+   * by name, passing the cell to be operated upon as the second
+   * argument.
+   */
+  actions = null;
+
+  /**
+   * Group: Actions and Options
+   */
+  /**
+   * Variable: dblClickAction
+   *
+   * Specifies the name of the action to be executed
+   * when a cell is double clicked. Default is 'edit'.
+   *
+   * To handle a singleclick, use the following code.
+   *
+   * (code)
+   * editor.graph.addListener(mxEvent.CLICK, (sender, evt)=>
+   * {
+   *   var e = evt.getProperty('event');
+   *   var cell = evt.getProperty('cell');
+   *
+   *   if (cell != null && !e.isConsumed())
+   *   {
+   *     // Do something useful with cell...
+   *     e.consume();
+   *   }
+   * });
+   * (end)
+   */
+  dblClickAction = 'edit';
+  /**
+   * Variable: swimlaneRequired
+   *
+   * Specifies if new cells must be inserted
+   * into an existing swimlane. Otherwise, cells
+   * that are not swimlanes can be inserted as
+   * top-level cells. Default is false.
+   */
+  swimlaneRequired = false;
+  /**
+   * Variable: disableContextMenu
+   *
+   * Specifies if the context menu should be disabled in the graph container.
+   * Default is true.
+   */
+  disableContextMenu = true;
+  /**
+   * Variable: insertFunction
+   *
+   * Specifies the function to be used for inserting new
+   * cells into the graph. This is assigned from the
+   * <mxDefaultToolbar> if a vertex-tool is clicked.
+   */
+  insertFunction = null;
+
+  /**
+   * Group: Templates
+   */
+  /**
+   * Variable: forcedInserting
+   *
+   * Specifies if a new cell should be inserted on a single
+   * click even using <insertFunction> if there is a cell
+   * under the mousepointer, otherwise the cell under the
+   * mousepointer is selected. Default is false.
+   */
+  forcedInserting = false;
+  /**
+   * Variable: templates
+   *
+   * Maps from names to protoype cells to be used
+   * in the toolbar for inserting new cells into
+   * the diagram.
+   */
+  templates = null;
+  /**
+   * Variable: defaultEdge
+   *
+   * Prototype edge cell that is used for creating
+   * new edges.
+   */
+  defaultEdge = null;
+  /**
+   * Variable: defaultEdgeStyle
+   *
+   * Specifies the edge style to be returned in <getEdgeStyle>.
+   * Default is null.
+   */
+  defaultEdgeStyle = null;
+  /**
+   * Variable: defaultGroup
+   *
+   * Prototype group cell that is used for creating
+   * new groups.
+   */
+  defaultGroup = null;
+  /**
+   * Variable: groupBorderSize
+   *
+   * Default size for the border of new groups. If null,
+   * then then <mxGraph.gridSize> is used. Default is
+   * null.
+   */
+  groupBorderSize = null;
+  /**
+   * Variable: filename
+   *
+   * Contains the URL of the last opened file as a string.
+   * Default is null.
+   */
+  filename = null;
+
+  /**
+   * Group: Backend Integration
+   */
+  /**
+   * Variable: lineFeed
+   *
+   * Character to be used for encoding linefeeds in <save>. Default is '&#xa;'.
+   */
+  linefeed = '&#xa;';
+  /**
+   * Variable: postParameterName
+   *
+   * Specifies if the name of the post parameter that contains the diagram
+   * data in a post request to the server. Default is 'xml'.
+   */
+  postParameterName = 'xml';
+  /**
+   * Variable: escapePostData
+   *
+   * Specifies if the data in the post request for saving a diagram
+   * should be converted using encodeURIComponent. Default is true.
+   */
+  escapePostData = true;
+  /**
+   * Variable: urlPost
+   *
+   * Specifies the URL to be used for posting the diagram
+   * to a backend in <save>.
+   */
+  urlPost = null;
+  /**
+   * Variable: urlImage
+   *
+   * Specifies the URL to be used for creating a bitmap of
+   * the graph in the image action.
+   */
+  urlImage = null;
+  /**
+   * Variable: horizontalFlow
+   *
+   * Specifies the direction of the flow
+   * in the diagram. This is used in the
+   * layout algorithms. Default is false,
+   * ie. vertical flow.
+   */
+  horizontalFlow = false;
+
+  /**
+   * Group: Autolayout
+   */
+  /**
+   * Variable: layoutDiagram
+   *
+   * Specifies if the top-level elements in the
+   * diagram should be layed out using a vertical
+   * or horizontal stack depending on the setting
+   * of <horizontalFlow>. The spacing between the
+   * swimlanes is specified by <swimlaneSpacing>.
+   * Default is false.
+   *
+   * If the top-level elements are swimlanes, then
+   * the intra-swimlane layout is activated by
+   * the <layoutSwimlanes> switch.
+   */
+  layoutDiagram = false;
+  /**
+   * Variable: swimlaneSpacing
+   *
+   * Specifies the spacing between swimlanes if
+   * automatic layout is turned on in
+   * <layoutDiagram>. Default is 0.
+   */
+  swimlaneSpacing = 0;
+  /**
+   * Variable: maintainSwimlanes
+   *
+   * Specifies if the swimlanes should be kept at the same
+   * width or height depending on the setting of
+   * <horizontalFlow>.  Default is false.
+   *
+   * For horizontal flows, all swimlanes
+   * have the same height and for vertical flows, all swimlanes
+   * have the same width. Furthermore, the swimlanes are
+   * automatically "stacked" if <layoutDiagram> is true.
+   */
+  maintainSwimlanes = false;
+  /**
+   * Variable: layoutSwimlanes
+   *
+   * Specifies if the children of swimlanes should
+   * be layed out, either vertically or horizontally
+   * depending on <horizontalFlow>.
+   * Default is false.
+   */
+  layoutSwimlanes = false;
+  /**
+   * Variable: cycleAttributeValues
+   *
+   * Specifies the attribute values to be cycled when
+   * inserting new swimlanes. Default is an empty
+   * array.
+   */
+  cycleAttributeValues = null;
+
+  /**
+   * Group: Attribute Cycling
+   */
+  /**
+   * Variable: cycleAttributeIndex
+   *
+   * Index of the last consumed attribute index. If a new
+   * swimlane is inserted, then the <cycleAttributeValues>
+   * at this index will be used as the value for
+   * <cycleAttributeName>. Default is 0.
+   */
+  cycleAttributeIndex = 0;
+  /**
+   * Variable: cycleAttributeName
+   *
+   * Name of the attribute to be assigned a <cycleAttributeValues>
+   * when inserting new swimlanes. Default is 'fillColor'.
+   */
+  cycleAttributeName = 'fillColor';
+  /**
+   * Variable: tasks
+   *
+   * Holds the <mxWindow> created in <showTasks>.
+   */
+  tasks = null;
+
+  /**
+   * Group: Windows
+   */
+  /**
+   * Variable: tasksWindowImage
+   *
+   * Icon for the tasks window.
+   */
+  tasksWindowImage = null;
+  /**
+   * Variable: tasksTop
+   *
+   * Specifies the top coordinate of the tasks window in pixels.
+   * Default is 20.
+   */
+  tasksTop = 20;
+  /**
+   * Variable: help
+   *
+   * Holds the <mxWindow> created in <showHelp>.
+   */
+  help = null;
+  /**
+   * Variable: helpWindowImage
+   *
+   * Icon for the help window.
+   */
+  helpWindowImage = null;
+  /**
+   * Variable: urlHelp
+   *
+   * Specifies the URL to be used for the contents of the
+   * Online Help window. This is usually specified in the
+   * resources file under urlHelp for language-specific
+   * online help support.
+   */
+  urlHelp = null;
+  /**
+   * Variable: helpWidth
+   *
+   * Specifies the width of the help window in pixels.
+   * Default is 300.
+   */
+  helpWidth = 300;
+  /**
+   * Variable: helpHeight
+   *
+   * Specifies the height of the help window in pixels.
+   * Default is 260.
+   */
+  helpHeight = 260;
+  /**
+   * Variable: propertiesWidth
+   *
+   * Specifies the width of the properties window in pixels.
+   * Default is 240.
+   */
+  propertiesWidth = 240;
+  /**
+   * Variable: propertiesHeight
+   *
+   * Specifies the height of the properties window in pixels.
+   * If no height is specified then the window will be automatically
+   * sized to fit its contents. Default is null.
+   */
+  propertiesHeight = null;
+  /**
+   * Variable: movePropertiesDialog
+   *
+   * Specifies if the properties dialog should be automatically
+   * moved near the cell it is displayed for, otherwise the
+   * dialog is not moved. This value is only taken into
+   * account if the dialog is already visible. Default is false.
+   */
+  movePropertiesDialog = false;
+  /**
+   * Variable: validating
+   *
+   * Specifies if <mxGraph.validateGraph> should automatically be invoked after
+   * each change. Default is false.
+   */
+  validating = false;
+  /**
+   * Variable: modified
+   *
+   * True if the graph has been modified since it was last saved.
+   */
+  modified = false;
+
+  /**
    * Class: mxEditor
    *
    * Extends <mxEventSource> to implement an application wrapper for a graph that
@@ -412,517 +866,11 @@ class mxEditor extends mxEventSource {
   };
 
   /**
-   * Group: Controls and Handlers
-   */
-
-  /**
-   * Variable: askZoomResource
-   *
-   * Specifies the resource key for the zoom dialog. If the resource for this
-   * key does not exist then the value is used as the error message. Default
-   * is 'askZoom'.
-   */
-  askZoomResource = (mxClient.language !== 'none') ? 'askZoom' : '';
-
-  /**
-   * Variable: lastSavedResource
-   *
-   * Specifies the resource key for the last saved info. If the resource for
-   * this key does not exist then the value is used as the error message.
-   * Default is 'lastSaved'.
-   */
-  lastSavedResource = (mxClient.language !== 'none') ? 'lastSaved' : '';
-
-  /**
-   * Variable: currentFileResource
-   *
-   * Specifies the resource key for the current file info. If the resource for
-   * this key does not exist then the value is used as the error message.
-   * Default is 'currentFile'.
-   */
-  currentFileResource = (mxClient.language !== 'none') ? 'currentFile' : '';
-
-  /**
-   * Variable: propertiesResource
-   *
-   * Specifies the resource key for the properties window title. If the
-   * resource for this key does not exist then the value is used as the
-   * error message. Default is 'properties'.
-   */
-  propertiesResource = (mxClient.language !== 'none') ? 'properties' : '';
-
-  /**
-   * Variable: tasksResource
-   *
-   * Specifies the resource key for the tasks window title. If the
-   * resource for this key does not exist then the value is used as the
-   * error message. Default is 'tasks'.
-   */
-  tasksResource = (mxClient.language !== 'none') ? 'tasks' : '';
-
-  /**
-   * Variable: helpResource
-   *
-   * Specifies the resource key for the help window title. If the
-   * resource for this key does not exist then the value is used as the
-   * error message. Default is 'help'.
-   */
-  helpResource = (mxClient.language !== 'none') ? 'help' : '';
-
-  /**
-   * Variable: outlineResource
-   *
-   * Specifies the resource key for the outline window title. If the
-   * resource for this key does not exist then the value is used as the
-   * error message. Default is 'outline'.
-   */
-  outlineResource = (mxClient.language !== 'none') ? 'outline' : '';
-
-  /**
-   * Variable: outline
-   *
-   * Reference to the <mxWindow> that contains the outline. The <mxOutline>
-   * is stored in outline.outline.
-   */
-  outline = null;
-
-  /**
-   * Variable: graph
-   *
-   * Holds a <mxGraph> for displaying the diagram. The graph
-   * is created in <setGraphContainer>.
-   */
-  graph = null;
-
-  /**
-   * Variable: graphRenderHint
-   *
-   * Holds the render hint used for creating the
-   * graph in <setGraphContainer>. See <mxGraph>.
-   * Default is null.
-   */
-  graphRenderHint = null;
-
-  /**
-   * Variable: toolbar
-   *
-   * Holds a <mxDefaultToolbar> for displaying the toolbar. The
-   * toolbar is created in <setToolbarContainer>.
-   */
-  toolbar = null;
-
-  /**
-   * Variable: status
-   *
-   * DOM container that holds the statusbar. Default is null.
-   * Use <setStatusContainer> to set this value.
-   */
-  status = null;
-
-  /**
-   * Variable: popupHandler
-   *
-   * Holds a <mxDefaultPopupMenu> for displaying
-   * popupmenus.
-   */
-  popupHandler = null;
-
-  /**
-   * Variable: undoManager
-   *
-   * Holds an <mxUndoManager> for the command history.
-   */
-  undoManager = null;
-
-  /**
-   * Variable: keyHandler
-   *
-   * Holds a <mxDefaultKeyHandler> for handling keyboard events.
-   * The handler is created in <setGraphContainer>.
-   */
-  keyHandler = null;
-
-  /**
-   * Group: Actions and Options
-   */
-
-  /**
-   * Variable: actions
-   *
-   * Maps from actionnames to actions, which are functions taking
-   * the editor and the cell as arguments. Use <addAction>
-   * to add or replace an action and <execute> to execute an action
-   * by name, passing the cell to be operated upon as the second
-   * argument.
-   */
-  actions = null;
-
-  /**
-   * Variable: dblClickAction
-   *
-   * Specifies the name of the action to be executed
-   * when a cell is double clicked. Default is 'edit'.
-   *
-   * To handle a singleclick, use the following code.
-   *
-   * (code)
-   * editor.graph.addListener(mxEvent.CLICK, (sender, evt)=>
-   * {
-   *   var e = evt.getProperty('event');
-   *   var cell = evt.getProperty('cell');
-   *
-   *   if (cell != null && !e.isConsumed())
-   *   {
-   *     // Do something useful with cell...
-   *     e.consume();
-   *   }
-   * });
-   * (end)
-   */
-  dblClickAction = 'edit';
-
-  /**
-   * Variable: swimlaneRequired
-   *
-   * Specifies if new cells must be inserted
-   * into an existing swimlane. Otherwise, cells
-   * that are not swimlanes can be inserted as
-   * top-level cells. Default is false.
-   */
-  swimlaneRequired = false;
-
-  /**
-   * Variable: disableContextMenu
-   *
-   * Specifies if the context menu should be disabled in the graph container.
-   * Default is true.
-   */
-  disableContextMenu = true;
-
-  /**
-   * Group: Templates
-   */
-
-  /**
-   * Variable: insertFunction
-   *
-   * Specifies the function to be used for inserting new
-   * cells into the graph. This is assigned from the
-   * <mxDefaultToolbar> if a vertex-tool is clicked.
-   */
-  insertFunction = null;
-
-  /**
-   * Variable: forcedInserting
-   *
-   * Specifies if a new cell should be inserted on a single
-   * click even using <insertFunction> if there is a cell
-   * under the mousepointer, otherwise the cell under the
-   * mousepointer is selected. Default is false.
-   */
-  forcedInserting = false;
-
-  /**
-   * Variable: templates
-   *
-   * Maps from names to protoype cells to be used
-   * in the toolbar for inserting new cells into
-   * the diagram.
-   */
-  templates = null;
-
-  /**
-   * Variable: defaultEdge
-   *
-   * Prototype edge cell that is used for creating
-   * new edges.
-   */
-  defaultEdge = null;
-
-  /**
-   * Variable: defaultEdgeStyle
-   *
-   * Specifies the edge style to be returned in <getEdgeStyle>.
-   * Default is null.
-   */
-  defaultEdgeStyle = null;
-
-  /**
-   * Variable: defaultGroup
-   *
-   * Prototype group cell that is used for creating
-   * new groups.
-   */
-  defaultGroup = null;
-
-  /**
-   * Variable: groupBorderSize
-   *
-   * Default size for the border of new groups. If null,
-   * then then <mxGraph.gridSize> is used. Default is
-   * null.
-   */
-  groupBorderSize = null;
-
-  /**
-   * Group: Backend Integration
-   */
-
-  /**
-   * Variable: filename
-   *
-   * Contains the URL of the last opened file as a string.
-   * Default is null.
-   */
-  filename = null;
-
-  /**
-   * Variable: lineFeed
-   *
-   * Character to be used for encoding linefeeds in <save>. Default is '&#xa;'.
-   */
-  linefeed = '&#xa;';
-
-  /**
-   * Variable: postParameterName
-   *
-   * Specifies if the name of the post parameter that contains the diagram
-   * data in a post request to the server. Default is 'xml'.
-   */
-  postParameterName = 'xml';
-
-  /**
-   * Variable: escapePostData
-   *
-   * Specifies if the data in the post request for saving a diagram
-   * should be converted using encodeURIComponent. Default is true.
-   */
-  escapePostData = true;
-
-  /**
-   * Variable: urlPost
-   *
-   * Specifies the URL to be used for posting the diagram
-   * to a backend in <save>.
-   */
-  urlPost = null;
-
-  /**
-   * Variable: urlImage
-   *
-   * Specifies the URL to be used for creating a bitmap of
-   * the graph in the image action.
-   */
-  urlImage = null;
-
-  /**
-   * Group: Autolayout
-   */
-
-  /**
-   * Variable: horizontalFlow
-   *
-   * Specifies the direction of the flow
-   * in the diagram. This is used in the
-   * layout algorithms. Default is false,
-   * ie. vertical flow.
-   */
-  horizontalFlow = false;
-
-  /**
-   * Variable: layoutDiagram
-   *
-   * Specifies if the top-level elements in the
-   * diagram should be layed out using a vertical
-   * or horizontal stack depending on the setting
-   * of <horizontalFlow>. The spacing between the
-   * swimlanes is specified by <swimlaneSpacing>.
-   * Default is false.
-   *
-   * If the top-level elements are swimlanes, then
-   * the intra-swimlane layout is activated by
-   * the <layoutSwimlanes> switch.
-   */
-  layoutDiagram = false;
-
-  /**
-   * Variable: swimlaneSpacing
-   *
-   * Specifies the spacing between swimlanes if
-   * automatic layout is turned on in
-   * <layoutDiagram>. Default is 0.
-   */
-  swimlaneSpacing = 0;
-
-  /**
-   * Variable: maintainSwimlanes
-   *
-   * Specifies if the swimlanes should be kept at the same
-   * width or height depending on the setting of
-   * <horizontalFlow>.  Default is false.
-   *
-   * For horizontal flows, all swimlanes
-   * have the same height and for vertical flows, all swimlanes
-   * have the same width. Furthermore, the swimlanes are
-   * automatically "stacked" if <layoutDiagram> is true.
-   */
-  maintainSwimlanes = false;
-
-  /**
-   * Variable: layoutSwimlanes
-   *
-   * Specifies if the children of swimlanes should
-   * be layed out, either vertically or horizontally
-   * depending on <horizontalFlow>.
-   * Default is false.
-   */
-  layoutSwimlanes = false;
-
-  /**
-   * Group: Attribute Cycling
-   */
-
-  /**
-   * Variable: cycleAttributeValues
-   *
-   * Specifies the attribute values to be cycled when
-   * inserting new swimlanes. Default is an empty
-   * array.
-   */
-  cycleAttributeValues = null;
-
-  /**
-   * Variable: cycleAttributeIndex
-   *
-   * Index of the last consumed attribute index. If a new
-   * swimlane is inserted, then the <cycleAttributeValues>
-   * at this index will be used as the value for
-   * <cycleAttributeName>. Default is 0.
-   */
-  cycleAttributeIndex = 0;
-
-  /**
-   * Variable: cycleAttributeName
-   *
-   * Name of the attribute to be assigned a <cycleAttributeValues>
-   * when inserting new swimlanes. Default is 'fillColor'.
-   */
-  cycleAttributeName = 'fillColor';
-
-  /**
-   * Group: Windows
-   */
-
-  /**
-   * Variable: tasks
-   *
-   * Holds the <mxWindow> created in <showTasks>.
-   */
-  tasks = null;
-
-  /**
-   * Variable: tasksWindowImage
-   *
-   * Icon for the tasks window.
-   */
-  tasksWindowImage = null;
-
-  /**
-   * Variable: tasksTop
-   *
-   * Specifies the top coordinate of the tasks window in pixels.
-   * Default is 20.
-   */
-  tasksTop = 20;
-
-  /**
-   * Variable: help
-   *
-   * Holds the <mxWindow> created in <showHelp>.
-   */
-  help = null;
-
-  /**
-   * Variable: helpWindowImage
-   *
-   * Icon for the help window.
-   */
-  helpWindowImage = null;
-
-  /**
-   * Variable: urlHelp
-   *
-   * Specifies the URL to be used for the contents of the
-   * Online Help window. This is usually specified in the
-   * resources file under urlHelp for language-specific
-   * online help support.
-   */
-  urlHelp = null;
-
-  /**
-   * Variable: helpWidth
-   *
-   * Specifies the width of the help window in pixels.
-   * Default is 300.
-   */
-  helpWidth = 300;
-
-  /**
-   * Variable: helpHeight
-   *
-   * Specifies the height of the help window in pixels.
-   * Default is 260.
-   */
-  helpHeight = 260;
-
-  /**
-   * Variable: propertiesWidth
-   *
-   * Specifies the width of the properties window in pixels.
-   * Default is 240.
-   */
-  propertiesWidth = 240;
-
-  /**
-   * Variable: propertiesHeight
-   *
-   * Specifies the height of the properties window in pixels.
-   * If no height is specified then the window will be automatically
-   * sized to fit its contents. Default is null.
-   */
-  propertiesHeight = null;
-
-  /**
-   * Variable: movePropertiesDialog
-   *
-   * Specifies if the properties dialog should be automatically
-   * moved near the cell it is displayed for, otherwise the
-   * dialog is not moved. This value is only taken into
-   * account if the dialog is already visible. Default is false.
-   */
-  movePropertiesDialog = false;
-
-  /**
-   * Variable: validating
-   *
-   * Specifies if <mxGraph.validateGraph> should automatically be invoked after
-   * each change. Default is false.
-   */
-  validating = false;
-
-  /**
-   * Variable: modified
-   *
-   * True if the graph has been modified since it was last saved.
-   */
-  modified = false;
-
-  /**
    * Function: isModified
    *
    * Returns <modified>.
    */
-  isModified=()=>{
+  isModified = () => {
     return this.modified;
   };
 
@@ -931,7 +879,7 @@ class mxEditor extends mxEventSource {
    *
    * Sets <modified> to the specified boolean value.
    */
-  setModified=(value)=>{
+  setModified = (value) => {
     this.modified = value;
   };
 
@@ -994,21 +942,21 @@ class mxEditor extends mxEventSource {
    * toggleOutline - Shows or hides the outline window.
    * toggleConsole - Shows or hides the console window.
    */
-  addActions=()=>{
-    this.addAction('save', (editor)=>{
+  addActions = () => {
+    this.addAction('save', (editor) => {
       editor.save();
     });
 
-    this.addAction('print', (editor)=>{
+    this.addAction('print', (editor) => {
       var preview = new mxPrintPreview(editor.graph, 1);
       preview.open();
     });
 
-    this.addAction('show', (editor)=>{
+    this.addAction('show', (editor) => {
       mxUtils.show(editor.graph, null, 10, 10);
     });
 
-    this.addAction('exportImage', (editor)=>{
+    this.addAction('exportImage', (editor) => {
       var url = editor.getUrlImage();
 
       if (url == null || mxClient.IS_LOCAL) {
@@ -1022,190 +970,190 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('refresh', (editor)=>{
+    this.addAction('refresh', (editor) => {
       editor.graph.refresh();
     });
 
-    this.addAction('cut', (editor)=>{
+    this.addAction('cut', (editor) => {
       if (editor.graph.isEnabled()) {
         mxClipboard.cut(editor.graph);
       }
     });
 
-    this.addAction('copy', (editor)=>{
+    this.addAction('copy', (editor) => {
       if (editor.graph.isEnabled()) {
         mxClipboard.copy(editor.graph);
       }
     });
 
-    this.addAction('paste', (editor)=>{
+    this.addAction('paste', (editor) => {
       if (editor.graph.isEnabled()) {
         mxClipboard.paste(editor.graph);
       }
     });
 
-    this.addAction('delete', (editor)=>{
+    this.addAction('delete', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.removeCells();
       }
     });
 
-    this.addAction('group', (editor)=>{
+    this.addAction('group', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.setSelectionCell(editor.groupCells());
       }
     });
 
-    this.addAction('ungroup', (editor)=>{
+    this.addAction('ungroup', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.setSelectionCells(editor.graph.ungroupCells());
       }
     });
 
-    this.addAction('removeFromParent', (editor)=>{
+    this.addAction('removeFromParent', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.removeCellsFromParent();
       }
     });
 
-    this.addAction('undo', (editor)=>{
+    this.addAction('undo', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.undo();
       }
     });
 
-    this.addAction('redo', (editor)=>{
+    this.addAction('redo', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.redo();
       }
     });
 
-    this.addAction('zoomIn', (editor)=>{
+    this.addAction('zoomIn', (editor) => {
       editor.graph.zoomIn();
     });
 
-    this.addAction('zoomOut', (editor)=>{
+    this.addAction('zoomOut', (editor) => {
       editor.graph.zoomOut();
     });
 
-    this.addAction('actualSize', (editor)=>{
+    this.addAction('actualSize', (editor) => {
       editor.graph.zoomActual();
     });
 
-    this.addAction('fit', (editor)=>{
+    this.addAction('fit', (editor) => {
       editor.graph.fit();
     });
 
-    this.addAction('showProperties', (editor, cell)=>{
+    this.addAction('showProperties', (editor, cell) => {
       editor.showProperties(cell);
     });
 
-    this.addAction('selectAll', (editor)=>{
+    this.addAction('selectAll', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectAll();
       }
     });
 
-    this.addAction('selectNone', (editor)=>{
+    this.addAction('selectNone', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.clearSelection();
       }
     });
 
-    this.addAction('selectVertices', (editor)=>{
+    this.addAction('selectVertices', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectVertices();
       }
     });
 
-    this.addAction('selectEdges', (editor)=>{
+    this.addAction('selectEdges', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectEdges();
       }
     });
 
-    this.addAction('edit', (editor, cell)=>{
+    this.addAction('edit', (editor, cell) => {
       if (editor.graph.isEnabled() &&
           editor.graph.isCellEditable(cell)) {
         editor.graph.startEditingAtCell(cell);
       }
     });
 
-    this.addAction('toBack', (editor, cell)=>{
+    this.addAction('toBack', (editor, cell) => {
       if (editor.graph.isEnabled()) {
         editor.graph.orderCells(true);
       }
     });
 
-    this.addAction('toFront', (editor, cell)=>{
+    this.addAction('toFront', (editor, cell) => {
       if (editor.graph.isEnabled()) {
         editor.graph.orderCells(false);
       }
     });
 
-    this.addAction('enterGroup', (editor, cell)=>{
+    this.addAction('enterGroup', (editor, cell) => {
       editor.graph.enterGroup(cell);
     });
 
-    this.addAction('exitGroup', (editor)=>{
+    this.addAction('exitGroup', (editor) => {
       editor.graph.exitGroup();
     });
 
-    this.addAction('home', (editor)=>{
+    this.addAction('home', (editor) => {
       editor.graph.home();
     });
 
-    this.addAction('selectPrevious', (editor)=>{
+    this.addAction('selectPrevious', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectPreviousCell();
       }
     });
 
-    this.addAction('selectNext', (editor)=>{
+    this.addAction('selectNext', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectNextCell();
       }
     });
 
-    this.addAction('selectParent', (editor)=>{
+    this.addAction('selectParent', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectParentCell();
       }
     });
 
-    this.addAction('selectChild', (editor)=>{
+    this.addAction('selectChild', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectChildCell();
       }
     });
 
-    this.addAction('collapse', (editor)=>{
+    this.addAction('collapse', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.foldCells(true);
       }
     });
 
-    this.addAction('collapseAll', (editor)=>{
+    this.addAction('collapseAll', (editor) => {
       if (editor.graph.isEnabled()) {
         var cells = editor.graph.getChildVertices();
         editor.graph.foldCells(true, false, cells);
       }
     });
 
-    this.addAction('expand', (editor)=>{
+    this.addAction('expand', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.foldCells(false);
       }
     });
 
-    this.addAction('expandAll', (editor)=>{
+    this.addAction('expandAll', (editor) => {
       if (editor.graph.isEnabled()) {
         var cells = editor.graph.getChildVertices();
         editor.graph.foldCells(false, false, cells);
       }
     });
 
-    this.addAction('bold', (editor)=>{
+    this.addAction('bold', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.toggleCellStyleFlags(
             mxConstants.STYLE_FONTSTYLE,
@@ -1213,7 +1161,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('italic', (editor)=>{
+    this.addAction('italic', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.toggleCellStyleFlags(
             mxConstants.STYLE_FONTSTYLE,
@@ -1221,7 +1169,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('underline', (editor)=>{
+    this.addAction('underline', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.toggleCellStyleFlags(
             mxConstants.STYLE_FONTSTYLE,
@@ -1229,50 +1177,50 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('alignCellsLeft', (editor)=>{
+    this.addAction('alignCellsLeft', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.alignCells(mxConstants.ALIGN_LEFT);
       }
     });
 
-    this.addAction('alignCellsCenter', (editor)=>{
+    this.addAction('alignCellsCenter', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.alignCells(mxConstants.ALIGN_CENTER);
       }
     });
 
-    this.addAction('alignCellsRight', (editor)=>{
+    this.addAction('alignCellsRight', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.alignCells(mxConstants.ALIGN_RIGHT);
       }
     });
 
-    this.addAction('alignCellsTop', (editor)=>{
+    this.addAction('alignCellsTop', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.alignCells(mxConstants.ALIGN_TOP);
       }
     });
 
-    this.addAction('alignCellsMiddle', (editor)=>{
+    this.addAction('alignCellsMiddle', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.alignCells(mxConstants.ALIGN_MIDDLE);
       }
     });
 
-    this.addAction('alignCellsBottom', (editor)=>{
+    this.addAction('alignCellsBottom', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.alignCells(mxConstants.ALIGN_BOTTOM);
       }
     });
 
-    this.addAction('alignFontLeft', (editor)=>{
+    this.addAction('alignFontLeft', (editor) => {
 
       editor.graph.setCellStyles(
           mxConstants.STYLE_ALIGN,
           mxConstants.ALIGN_LEFT);
     });
 
-    this.addAction('alignFontCenter', (editor)=>{
+    this.addAction('alignFontCenter', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.setCellStyles(
             mxConstants.STYLE_ALIGN,
@@ -1280,7 +1228,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('alignFontRight', (editor)=>{
+    this.addAction('alignFontRight', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.setCellStyles(
             mxConstants.STYLE_ALIGN,
@@ -1288,7 +1236,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('alignFontTop', (editor)=>{
+    this.addAction('alignFontTop', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.setCellStyles(
             mxConstants.STYLE_VERTICAL_ALIGN,
@@ -1296,7 +1244,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('alignFontMiddle', (editor)=>{
+    this.addAction('alignFontMiddle', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.setCellStyles(
             mxConstants.STYLE_VERTICAL_ALIGN,
@@ -1304,7 +1252,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('alignFontBottom', (editor)=>{
+    this.addAction('alignFontBottom', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.setCellStyles(
             mxConstants.STYLE_VERTICAL_ALIGN,
@@ -1312,7 +1260,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('zoom', (editor)=>{
+    this.addAction('zoom', (editor) => {
       var current = editor.graph.getView().scale * 100;
       var scale = parseFloat(mxUtils.prompt(
           mxResources.get(editor.askZoomResource) ||
@@ -1324,7 +1272,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('toggleTasks', (editor)=>{
+    this.addAction('toggleTasks', (editor) => {
       if (editor.tasks != null) {
         editor.tasks.setVisible(!editor.tasks.isVisible());
       } else {
@@ -1332,7 +1280,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('toggleHelp', (editor)=>{
+    this.addAction('toggleHelp', (editor) => {
       if (editor.help != null) {
         editor.help.setVisible(!editor.help.isVisible());
       } else {
@@ -1340,7 +1288,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('toggleOutline', (editor)=>{
+    this.addAction('toggleOutline', (editor) => {
       if (editor.outline == null) {
         editor.showOutline();
       } else {
@@ -1348,7 +1296,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('toggleConsole', (editor)=>{
+    this.addAction('toggleConsole', (editor) => {
       mxLog.setVisible(!mxLog.isVisible());
     });
   };
@@ -1368,7 +1316,7 @@ class mxEditor extends mxEventSource {
    *
    * node - XML node that contains the configuration.
    */
-  configure=(node)=>{
+  configure = (node) => {
     if (node != null) {
       // Creates a decoder for the XML data
       // and uses it to configure the editor
@@ -1387,7 +1335,7 @@ class mxEditor extends mxEventSource {
    * Resets the cookie that is used to remember if the editor has already
    * been used.
    */
-  resetFirstTime=()=>{
+  resetFirstTime = () => {
     document.cookie =
         'mxgraph=seen; expires=Fri, 27 Jul 2001 02:47:11 UTC; path=/';
   };
@@ -1397,7 +1345,7 @@ class mxEditor extends mxEventSource {
    *
    * Resets the command history, modified state and counters.
    */
-  resetHistory=()=>{
+  resetHistory = () => {
     this.lastSnapshot = new Date().getTime();
     this.undoManager.clear();
     this.ignoredChanges = 0;
@@ -1426,7 +1374,7 @@ class mxEditor extends mxEventSource {
    * });
    * (end)
    */
-  addAction=(actionname, funct)=>{
+  addAction = (actionname, funct) => {
     this.actions[actionname] = funct;
   };
 
@@ -1446,7 +1394,7 @@ class mxEditor extends mxEventSource {
    * editor.execute("showProperties", cell);
    * (end)
    */
-  execute=(actionname, cell, evt)=>{
+  execute = (actionname, cell, evt) => {
     var action = this.actions[actionname];
 
     if (action != null) {
@@ -1474,7 +1422,7 @@ class mxEditor extends mxEventSource {
    *
    * Adds the specified template under the given name in <templates>.
    */
-  addTemplate=(name, template)=>{
+  addTemplate = (name, template) => {
     this.templates[name] = template;
   };
 
@@ -1483,7 +1431,7 @@ class mxEditor extends mxEventSource {
    *
    * Returns the template for the given name.
    */
-  getTemplate=(name)=>{
+  getTemplate = (name) => {
     return this.templates[name];
   };
 
@@ -1493,7 +1441,7 @@ class mxEditor extends mxEventSource {
    * Creates the <graph> for the editor. The graph is created with no
    * container and is initialized from <setGraphContainer>.
    */
-  createGraph=()=>{
+  createGraph = () => {
     var graph = new mxGraph(null, null, this.graphRenderHint);
 
     // Enables rubberband, tooltips, panning
@@ -1522,14 +1470,14 @@ class mxEditor extends mxEventSource {
     // Redirects the function for creating the
     // popupmenu items
     graph.popupMenuHandler.factoryMethod =
-        mxUtils.bind(this, (menu, cell, evt)=>{
+        mxUtils.bind(this, (menu, cell, evt) => {
           return this.createPopupMenu(menu, cell, evt);
         });
 
     // Redirects the function for creating
     // new connections in the diagram
     graph.connectionHandler.factoryMethod =
-        mxUtils.bind(this, (source, target)=>{
+        mxUtils.bind(this, (source, target) => {
           return this.createEdge(source, target);
         });
 
@@ -1545,14 +1493,14 @@ class mxEditor extends mxEventSource {
    *
    * Sets the graph's container using <mxGraph.init>.
    */
-  createSwimlaneManager=(graph)=>{
+  createSwimlaneManager = (graph) => {
     var swimlaneMgr = new mxSwimlaneManager(graph, false);
 
-    swimlaneMgr.isHorizontal = mxUtils.bind(this, ()=>{
+    swimlaneMgr.isHorizontal = mxUtils.bind(this, () => {
       return this.horizontalFlow;
     });
 
-    swimlaneMgr.isEnabled = mxUtils.bind(this, ()=>{
+    swimlaneMgr.isEnabled = mxUtils.bind(this, () => {
       return this.maintainSwimlanes;
     });
 
@@ -1565,11 +1513,11 @@ class mxEditor extends mxEventSource {
    * Creates a layout manager for the swimlane and diagram layouts, that
    * is, the locally defined inter- and intraswimlane layouts.
    */
-  createLayoutManager=(graph)=>{
+  createLayoutManager = (graph) => {
     var layoutMgr = new mxLayoutManager(graph);
 
     var self = this; // closure
-    layoutMgr.getLayout=(cell)=>{
+    layoutMgr.getLayout = (cell) => {
       var layout = null;
       var model = self.graph.getModel();
 
@@ -1611,7 +1559,7 @@ class mxEditor extends mxEventSource {
    *
    * Sets the graph's container using <mxGraph.init>.
    */
-  setGraphContainer=(container)=>{
+  setGraphContainer = (container) => {
     if (this.graph.container == null) {
       // Creates the graph instance inside the given container and render hint
       //this.graph = new mxGraph(container, null, this.graphRenderHint);
@@ -1634,10 +1582,10 @@ class mxEditor extends mxEventSource {
    * Overrides <mxGraph.dblClick> to invoke <dblClickAction>
    * on a cell and reset the selection tool in the toolbar.
    */
-  installDblClickHandler=(graph)=>{
+  installDblClickHandler = (graph) => {
     // Installs a listener for double click events
     graph.addListener(mxEvent.DOUBLE_CLICK,
-        mxUtils.bind(this, (sender, evt)=>{
+        mxUtils.bind(this, (sender, evt) => {
           var cell = evt.getProperty('cell');
 
           if (cell != null &&
@@ -1655,8 +1603,8 @@ class mxEditor extends mxEventSource {
    *
    * Adds the <undoManager> to the graph model and the view.
    */
-  installUndoHandler=(graph)=>{
-    var listener = mxUtils.bind(this, (sender, evt)=>{
+  installUndoHandler = (graph) => {
+    var listener = mxUtils.bind(this, (sender, evt) => {
       var edit = evt.getProperty('edit');
       this.undoManager.undoableEditHappened(edit);
     });
@@ -1665,7 +1613,7 @@ class mxEditor extends mxEventSource {
     graph.getView().addListener(mxEvent.UNDO, listener);
 
     // Keeps the selection state in sync
-    var undoHandler=(sender, evt)=>{
+    var undoHandler = (sender, evt) => {
       var changes = evt.getProperty('edit').changes;
       graph.setSelectionCells(graph.getSelectionCellsForChanges(changes));
     };
@@ -1679,8 +1627,8 @@ class mxEditor extends mxEventSource {
    *
    * Installs listeners for dispatching the <root> event.
    */
-  installDrillHandler=(graph)=>{
-    var listener = mxUtils.bind(this, (sender)=>{
+  installDrillHandler = (graph) => {
+    var listener = mxUtils.bind(this, (sender) => {
       this.fireEvent(new mxEventObject(mxEvent.ROOT));
     });
 
@@ -1695,8 +1643,8 @@ class mxEditor extends mxEventSource {
    * the graph. On each change of the root, this implementation
    * fires a <root> event.
    */
-  installChangeHandler=(graph)=>{
-    var listener = mxUtils.bind(this, (sender, evt)=>{
+  installChangeHandler = (graph) => {
+    var listener = mxUtils.bind(this, (sender, evt) => {
       // Updates the modified state
       this.setModified(true);
 
@@ -1732,11 +1680,11 @@ class mxEditor extends mxEventSource {
    * Installs the handler for invoking <insertFunction> if
    * one is defined.
    */
-  installInsertHandler=(graph)=>{
+  installInsertHandler = (graph) => {
     var self = this; // closure
     var insertHandler =
         {
-          mouseDown: (sender, me)=>{
+          mouseDown: (sender, me) => {
             if (self.insertFunction != null &&
                 !me.isPopupTrigger() &&
                 (self.forcedInserting ||
@@ -1751,13 +1699,13 @@ class mxEditor extends mxEventSource {
             }
           },
 
-          mouseMove: (sender, me)=>{
+          mouseMove: (sender, me) => {
             if (this.isActive) {
               me.consume();
             }
           },
 
-          mouseUp: (sender, me)=>{
+          mouseUp: (sender, me) => {
             if (this.isActive) {
               this.isActive = false;
               me.consume();
@@ -1774,13 +1722,13 @@ class mxEditor extends mxEventSource {
    * Creates the layout instance used to layout the
    * swimlanes in the diagram.
    */
-  createDiagramLayout=()=>{
+  createDiagramLayout = () => {
     var gs = this.graph.gridSize;
     var layout = new mxStackLayout(this.graph, !this.horizontalFlow,
         this.swimlaneSpacing, 2 * gs, 2 * gs);
 
     // Overrides isIgnored to only take into account swimlanes
-    layout.isVertexIgnored=(cell)=>{
+    layout.isVertexIgnored = (cell) => {
       return !layout.graph.isSwimlane(cell);
     };
 
@@ -1793,7 +1741,7 @@ class mxEditor extends mxEventSource {
    * Creates the layout instance used to layout the
    * children of each swimlane.
    */
-  createSwimlaneLayout=()=>{
+  createSwimlaneLayout = () => {
     return new mxCompactTreeLayout(this.graph, this.horizontalFlow);
   };
 
@@ -1802,7 +1750,7 @@ class mxEditor extends mxEventSource {
    *
    * Creates the <toolbar> with no container.
    */
-  createToolbar=()=>{
+  createToolbar = () => {
     return new mxDefaultToolbar(null, this);
   };
 
@@ -1811,7 +1759,7 @@ class mxEditor extends mxEventSource {
    *
    * Initializes the toolbar for the given container.
    */
-  setToolbarContainer=(container)=>{
+  setToolbarContainer = (container) => {
     this.toolbar.init(container);
   };
 
@@ -1828,13 +1776,13 @@ class mxEditor extends mxEventSource {
    *
    * container - DOM node that will contain the statusbar.
    */
-  setStatusContainer=(container)=>{
+  setStatusContainer = (container) => {
     if (this.status == null) {
       this.status = container;
 
       // Prints the last saved time in the status bar
       // when files are saved
-      this.addListener(mxEvent.SAVE, mxUtils.bind(this, ()=>{
+      this.addListener(mxEvent.SAVE, mxUtils.bind(this, () => {
         var tstamp = new Date().toLocaleString();
         this.setStatus((mxResources.get(this.lastSavedResource) ||
             this.lastSavedResource) + ': ' + tstamp);
@@ -1842,7 +1790,7 @@ class mxEditor extends mxEventSource {
 
       // Updates the statusbar to display the filename
       // when new files are opened
-      this.addListener(mxEvent.OPEN, mxUtils.bind(this, ()=>{
+      this.addListener(mxEvent.OPEN, mxUtils.bind(this, () => {
         this.setStatus((mxResources.get(this.currentFileResource) ||
             this.currentFileResource) + ': ' + this.filename);
       }));
@@ -1859,7 +1807,7 @@ class mxEditor extends mxEventSource {
    * message - String the specified the message to
    * be displayed.
    */
-  setStatus=(message)=>{
+  setStatus = (message) => {
     if (this.status != null && message != null) {
       this.status.innerHTML = message;
     }
@@ -1875,8 +1823,8 @@ class mxEditor extends mxEventSource {
    *
    * container - DOM node that will contain the title.
    */
-  setTitleContainer=(container)=>{
-    this.addListener(mxEvent.ROOT, mxUtils.bind(this, (sender)=>{
+  setTitleContainer = (container) => {
+    this.addListener(mxEvent.ROOT, mxUtils.bind(this, (sender) => {
       container.innerHTML = this.getTitle();
     }));
   };
@@ -1894,7 +1842,7 @@ class mxEditor extends mxEventSource {
    * horizontal - Optional boolean to specify the tree's
    * orientation. Default is true.
    */
-  treeLayout=(cell, horizontal)=>{
+  treeLayout = (cell, horizontal) => {
     if (cell != null) {
       var layout = new mxCompactTreeLayout(this.graph, horizontal);
       layout.execute(cell);
@@ -1907,7 +1855,7 @@ class mxEditor extends mxEventSource {
    * Returns the string value for the current root of the
    * diagram.
    */
-  getTitle=()=>{
+  getTitle = () => {
     var title = '';
     var graph = this.graph;
     var cell = graph.getCurrentRoot();
@@ -1935,7 +1883,7 @@ class mxEditor extends mxEventSource {
    * Returns the string value of the root cell in
    * <mxGraph.model>.
    */
-  getRootTitle=()=>{
+  getRootTitle = () => {
     var root = this.graph.getModel().getRoot();
     return this.graph.convertValueToString(root);
   };
@@ -1945,7 +1893,7 @@ class mxEditor extends mxEventSource {
    *
    * Undo the last change in <graph>.
    */
-  undo=()=>{
+  undo = () => {
     this.undoManager.undo();
   };
 
@@ -1954,7 +1902,7 @@ class mxEditor extends mxEventSource {
    *
    * Redo the last change in <graph>.
    */
-  redo=()=>{
+  redo = () => {
     this.undoManager.redo();
   };
 
@@ -1965,7 +1913,7 @@ class mxEditor extends mxEventSource {
    * <mxGraph.groupCells>, using the grid size of the graph as the spacing
    * in the group's content area.
    */
-  groupCells=()=>{
+  groupCells = () => {
     var border = (this.groupBorderSize != null) ?
         this.groupBorderSize :
         this.graph.gridSize;
@@ -1978,7 +1926,7 @@ class mxEditor extends mxEventSource {
    * Creates and returns a clone of <defaultGroup> to be used
    * as a new group cell in <group>.
    */
-  createGroup=()=>{
+  createGroup = () => {
     var model = this.graph.getModel();
 
     return model.cloneCell(this.defaultGroup);
@@ -2007,7 +1955,7 @@ class mxEditor extends mxEventSource {
    *
    * filename - URL of the file to be opened.
    */
-  open=(filename)=>{
+  open = (filename) => {
     if (filename != null) {
       var xml = mxUtils.load(filename).getXml();
       this.readGraphModel(xml.documentElement);
@@ -2023,7 +1971,7 @@ class mxEditor extends mxEventSource {
    * Reads the specified XML node into the existing graph model and resets
    * the command history and modified state.
    */
-  readGraphModel=(node)=>{
+  readGraphModel = (node) => {
     var dec = new mxCodec(node.ownerDocument);
     dec.decode(node, this.graph.getModel());
     this.resetHistory();
@@ -2049,7 +1997,7 @@ class mxEditor extends mxEventSource {
    * }
    * (end)
    */
-  save=(url, linefeed)=>{
+  save = (url, linefeed) => {
     // Gets the URL to post the data to
     url = url || this.getUrlPost();
 
@@ -2088,13 +2036,13 @@ class mxEditor extends mxEventSource {
    * });
    * (end)
    */
-  postDiagram=(url, data)=>{
+  postDiagram = (url, data) => {
     if (this.escapePostData) {
       data = encodeURIComponent(data);
     }
 
     mxUtils.post(url, this.postParameterName + '=' + data,
-        mxUtils.bind(this, (req)=>{
+        mxUtils.bind(this, (req) => {
           this.fireEvent(new mxEventObject(mxEvent.POST,
               'request', req, 'url', url, 'data', data));
         })
@@ -2119,7 +2067,7 @@ class mxEditor extends mxEventSource {
    * linefeed - Optional character to be used as the linefeed. Default is
    * <linefeed>.
    */
-  writeGraphModel=(linefeed)=>{
+  writeGraphModel = (linefeed) => {
     linefeed = (linefeed != null) ? linefeed : this.linefeed;
     var enc = new mxCodec();
     var node = enc.encode(this.graph.getModel());
@@ -2134,7 +2082,7 @@ class mxEditor extends mxEventSource {
    * in <save>. The default implementation returns <urlPost>,
    * adding <code>?draft=true</code>.
    */
-  getUrlPost=()=>{
+  getUrlPost = () => {
     return this.urlPost;
   };
 
@@ -2147,7 +2095,7 @@ class mxEditor extends mxEventSource {
    * in the image action to create an image. This implementation
    * returns <urlImage>.
    */
-  getUrlImage=()=>{
+  getUrlImage = () => {
     return this.urlImage;
   };
 
@@ -2157,7 +2105,7 @@ class mxEditor extends mxEventSource {
    * Swaps the styles for the given names in the graph's
    * stylesheet and refreshes the graph.
    */
-  swapStyles=(first, second)=>{
+  swapStyles = (first, second) => {
     var style = this.graph.getStylesheet().styles[second];
     this.graph.getView().getStylesheet().putCellStyle(
         second, this.graph.getStylesheet().styles[first]);
@@ -2172,7 +2120,7 @@ class mxEditor extends mxEventSource {
    * cell. The content area of the dialog is created using
    * <createProperties>.
    */
-  showProperties=(cell)=>{
+  showProperties = (cell) => {
     cell = cell || this.graph.getSelectionCell();
 
     // Uses the root node for the properties dialog
@@ -2232,7 +2180,7 @@ class mxEditor extends mxEventSource {
    *
    * Returns true if the properties dialog is currently visible.
    */
-  isPropertiesVisible=()=>{
+  isPropertiesVisible = () => {
     return this.properties != null;
   };
 
@@ -2244,7 +2192,7 @@ class mxEditor extends mxEventSource {
    * works for user objects that are XML nodes and display all the
    * node attributes in a form.
    */
-  createProperties=(cell)=>{
+  createProperties = (cell) => {
     var model = this.graph.getModel();
     var value = model.getValue(cell);
 
@@ -2298,7 +2246,7 @@ class mxEditor extends mxEventSource {
 
       // Defines the function to be executed when the
       // OK button is pressed in the dialog
-      var okFunction = mxUtils.bind(this, ()=>{
+      var okFunction = mxUtils.bind(this, () => {
         // Hides the dialog
         this.hideProperties();
 
@@ -2349,7 +2297,7 @@ class mxEditor extends mxEventSource {
 
       // Defines the function to be executed when the
       // Cancel button is pressed in the dialog
-      var cancelFunction = mxUtils.bind(this, ()=>{
+      var cancelFunction = mxUtils.bind(this, () => {
         // Hides the dialog
         this.hideProperties();
       });
@@ -2367,7 +2315,7 @@ class mxEditor extends mxEventSource {
    *
    * Hides the properties dialog.
    */
-  hideProperties=()=>{
+  hideProperties = () => {
     if (this.properties != null) {
       this.properties.destroy();
       this.properties = null;
@@ -2396,7 +2344,7 @@ class mxEditor extends mxEventSource {
    * };
    * (end)
    */
-  showTasks=()=>{
+  showTasks = () => {
     if (this.tasks == null) {
       var div = document.createElement('div');
       div.style.padding = '4px';
@@ -2412,7 +2360,7 @@ class mxEditor extends mxEventSource {
       // Installs a function to update the contents
       // of the tasks window on every change of the
       // model, selection or root.
-      var funct = mxUtils.bind(this, (sender)=>{
+      var funct = mxUtils.bind(this, (sender) => {
         mxEvent.release(div);
         div.innerHTML = '';
         this.createTasks(div);
@@ -2439,7 +2387,7 @@ class mxEditor extends mxEventSource {
    *
    * Updates the contents of the tasks window using <createTasks>.
    */
-  refreshTasks=(div)=>{
+  refreshTasks = (div) => {
     if (this.tasks != null) {
       var div = this.tasks.content;
       mxEvent.release(div);
@@ -2457,7 +2405,7 @@ class mxEditor extends mxEventSource {
    * is a possible change of state in the editor.
    * Default implementation is empty.
    */
-  createTasks=(div)=>{
+  createTasks = (div) => {
     // override
   };
 
@@ -2469,7 +2417,7 @@ class mxEditor extends mxEventSource {
    * for the <code>urlHelp</code> key or <urlHelp> if the resource
    * is undefined.
    */
-  showHelp=(tasks)=>{
+  showHelp = (tasks) => {
     if (this.help == null) {
       var frame = document.createElement('iframe');
       frame.setAttribute('src', mxResources.get('urlHelp') || this.urlHelp);
@@ -2495,7 +2443,7 @@ class mxEditor extends mxEventSource {
 
       // Workaround for ignored iframe height 100% in FF
       if (mxClient.IS_NS) {
-        var handler=(sender)=>{
+        var handler = (sender) => {
           var h = wnd.div.offsetHeight;
           frame.setAttribute('height', (h - 26) + 'px');
         };
@@ -2518,7 +2466,7 @@ class mxEditor extends mxEventSource {
    * Shows the outline window. If the window does not exist, then it is
    * created using an <mxOutline>.
    */
-  showOutline=()=>{
+  showOutline = () => {
     var create = this.outline == null;
 
     if (create) {
@@ -2543,7 +2491,7 @@ class mxEditor extends mxEventSource {
       wnd.setResizable(true);
       wnd.destroyOnClose = false;
 
-      wnd.addListener(mxEvent.RESIZE_END, ()=>{
+      wnd.addListener(mxEvent.RESIZE_END, () => {
         outline.update();
       });
 
@@ -2568,7 +2516,7 @@ class mxEditor extends mxEventSource {
    * connections if mouse over cell hotspot. See <mxConnectionHandler>.
    * pan - Pans using the left mouse button, new connections are disabled.
    */
-  setMode=(modename)=>{
+  setMode = (modename) => {
     if (modename === 'select') {
       this.graph.panningHandler.useLeftButtonForPanning = false;
       this.graph.setConnectable(false);
@@ -2588,7 +2536,7 @@ class mxEditor extends mxEventSource {
    * panning handler. The redirection is setup in
    * <setToolbarContainer>.
    */
-  createPopupMenu=(menu, cell, evt)=>{
+  createPopupMenu = (menu, cell, evt) => {
     this.popupHandler.createMenu(this, menu, cell, evt);
   };
 
@@ -2600,7 +2548,7 @@ class mxEditor extends mxEventSource {
    * edge will be overridden with the value returned by
    * <getEdgeStyle>.
    */
-  createEdge=(source, target)=>{
+  createEdge = (source, target) => {
     // Clones the defaultedge prototype
     var e = null;
 
@@ -2633,7 +2581,7 @@ class mxEditor extends mxEventSource {
    * The function is used in <createEdge> when new edges
    * are created in the graph.
    */
-  getEdgeStyle=()=>{
+  getEdgeStyle = () => {
     return this.defaultEdgeStyle;
   };
 
@@ -2644,7 +2592,7 @@ class mxEditor extends mxEventSource {
    * or null, if not attribute should be used in the
    * specified cell.
    */
-  consumeCycleAttribute=(cell)=>{
+  consumeCycleAttribute = (cell) => {
     return (this.cycleAttributeValues != null &&
         this.cycleAttributeValues.length > 0 &&
         this.graph.isSwimlane(cell)) ?
@@ -2659,7 +2607,7 @@ class mxEditor extends mxEventSource {
    * as the value for the <cycleAttributeName> key in
    * the given cell's style.
    */
-  cycleAttribute=(cell)=>{
+  cycleAttribute = (cell) => {
     if (this.cycleAttributeName != null) {
       var value = this.consumeCycleAttribute(cell);
 
@@ -2676,7 +2624,7 @@ class mxEditor extends mxEventSource {
    * Adds the given vertex as a child of parent at the specified
    * x and y coordinate and fires an <addVertex> event.
    */
-  addVertex=(parent, vertex, x, y)=>{
+  addVertex = (parent, vertex, x, y) => {
     var model = this.graph.getModel();
 
     while (parent != null && !this.graph.isValidDropTarget(parent)) {
@@ -2769,7 +2717,7 @@ class mxEditor extends mxEventSource {
    * normally need to be called, it is called automatically when the window
    * unloads.
    */
-  destroy=()=>{
+  destroy = () => {
     if (!this.destroyed) {
       this.destroyed = true;
 

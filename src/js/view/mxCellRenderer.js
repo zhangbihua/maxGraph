@@ -20,8 +20,8 @@ import mxSwimlane from "FIXME";
 import mxImageShape from "FIXME";
 import mxLabel from "FIXME";
 import mxText from "FIXME";
-import mxUtils from "../util/mxUtils";
 import mxConstants from "FIXME";
+import mxUtils from "../util/mxUtils";
 
 class mxCellRenderer {
   /**
@@ -32,50 +32,24 @@ class mxCellRenderer {
    * use the static <mxCellRenderer.registerShape> function.
    */
   static defaultShapes = {};
-
-  /**
-   * Function: registerShape
-   *
-   * Registers the given constructor under the specified key in this instance
-   * of the renderer.
-   *
-   * Example:
-   *
-   * (code)
-   * mxCellRenderer.registerShape(mxConstants.SHAPE_RECTANGLE, mxRectangleShape);
-   * (end)
-   *
-   * Parameters:
-   *
-   * key - String representing the shape name.
-   * shape - Constructor of the <mxShape> subclass.
-   */
-  static registerShape = (key, shape) =>
-  {
-    mxCellRenderer.defaultShapes[key] = shape;
-  };
-
   /**
    * Variable: defaultEdgeShape
    *
    * Defines the default shape for edges. Default is <mxConnector>.
    */
   defaultEdgeShape = mxConnector;
-
   /**
    * Variable: defaultVertexShape
    *
    * Defines the default shape for vertices. Default is <mxRectangleShape>.
    */
   defaultVertexShape = mxRectangleShape;
-
   /**
    * Variable: defaultTextShape
    *
    * Defines the default shape for labels. Default is <mxText>.
    */
   defaultTextShape = mxText;
-
   /**
    * Variable: legacyControlPosition
    *
@@ -83,7 +57,6 @@ class mxCellRenderer {
    * orientation of a swimlane. Default is true.
    */
   legacyControlPosition = true;
-
   /**
    * Variable: legacySpacing
    *
@@ -91,21 +64,18 @@ class mxCellRenderer {
    * fill or width. Default is true for backwards compatiblity.
    */
   legacySpacing = true;
-
   /**
    * Variable: antiAlias
    *
    * Anti-aliasing option for new shapes. Default is true.
    */
   antiAlias = true;
-
   /**
    * Variable: minSvgStrokeWidth
    *
    * Minimum stroke width for SVG output.
    */
   minSvgStrokeWidth = 1;
-
   /**
    * Variable: forceControlClickHandler
    *
@@ -144,7 +114,29 @@ class mxCellRenderer {
    * arrow, rectangle, ellipse, rhombus, image, line, label, cylinder,
    * swimlane, connector, actor and cloud.
    */
-  constructor() {}
+  constructor() {
+  }
+
+  /**
+   * Function: registerShape
+   *
+   * Registers the given constructor under the specified key in this instance
+   * of the renderer.
+   *
+   * Example:
+   *
+   * (code)
+   * mxCellRenderer.registerShape(mxConstants.SHAPE_RECTANGLE, mxRectangleShape);
+   * (end)
+   *
+   * Parameters:
+   *
+   * key - String representing the shape name.
+   * shape - Constructor of the <mxShape> subclass.
+   */
+  static registerShape = (key, shape) => {
+    mxCellRenderer.defaultShapes[key] = shape;
+  };
 
   /**
    * Function: initializeShape
@@ -892,7 +884,7 @@ class mxCellRenderer {
       }
 
       return result;
-    };
+    }
 
     return check('fontStyle', mxConstants.STYLE_FONTSTYLE, mxConstants.DEFAULT_FONTSTYLE) ||
         check('family', mxConstants.STYLE_FONTFAMILY, mxConstants.DEFAULT_FONTFAMILY) ||

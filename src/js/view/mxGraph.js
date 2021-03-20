@@ -7,6 +7,7 @@ import mxImage from "../util/mxImage";
 import mxEventObject from "../util/mxEventObject";
 import mxEventSource from "../util/mxEventSource";
 import mxEvent from "FIXME";
+import mxEdgeStyle from "FIXME";
 import mxRectangle from "../util/mxRectangle";
 import mxPanningManager from "../util/mxPanningManager";
 import mxTooltipHandler from "../util/mxTooltipHandler";
@@ -25,7 +26,6 @@ import mxCellOverlay from "./mxCellOverlay";
 import mxPoint from "../util/mxPoint";
 import mxUtils from "../util/mxUtils";
 import mxConnectionConstraint from "./mxConnectionConstraint";
-import mxEdgeStyle from "FIXME";
 
 class mxGraph extends mxEventSource {
   /**

@@ -51,13 +51,12 @@
  *
  * Constructs a new stylesheet and assigns default styles.
  */
-function mxStylesheet()
-{
+function mxStylesheet() {
   this.styles = {};
 
   this.putDefaultVertexStyle(this.createDefaultVertexStyle());
   this.putDefaultEdgeStyle(this.createDefaultEdgeStyle());
-};
+}
 
 /**
  * Function: styles
@@ -73,8 +72,7 @@ FIXME;
  *
  * Creates and returns the default vertex style.
  */
-createDefaultVertexStyle = ()=>
-{
+createDefaultVertexStyle = () => {
   var style = {};
 
   style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
@@ -93,8 +91,7 @@ createDefaultVertexStyle = ()=>
  *
  * Creates and returns the default edge style.
  */
-createDefaultEdgeStyle = ()=>
-{
+createDefaultEdgeStyle = () => {
   var style = {};
 
   style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
@@ -116,8 +113,7 @@ createDefaultEdgeStyle = ()=>
  * Parameters:
  * style - Key, value pairs that define the style.
  */
-putDefaultVertexStyle = (style)=>
-{
+putDefaultVertexStyle = (style) => {
   this.putCellStyle('defaultVertex', style);
 };
 
@@ -126,8 +122,7 @@ putDefaultVertexStyle = (style)=>
  *
  * Sets the default style for edges using defaultEdge as the stylename.
  */
-putDefaultEdgeStyle = (style)=>
-{
+putDefaultEdgeStyle = (style) => {
   this.putCellStyle('defaultEdge', style);
 };
 
@@ -136,8 +131,7 @@ putDefaultEdgeStyle = (style)=>
  *
  * Returns the default style for vertices.
  */
-getDefaultVertexStyle = ()=>
-{
+getDefaultVertexStyle = () => {
   return this.styles['defaultVertex'];
 };
 
@@ -146,8 +140,7 @@ getDefaultVertexStyle = ()=>
  *
  * Sets the default style for edges.
  */
-getDefaultEdgeStyle = ()=>
-{
+getDefaultEdgeStyle = () => {
   return this.styles['defaultEdge'];
 };
 
@@ -188,8 +181,7 @@ getDefaultEdgeStyle = ()=>
  * name - Name for the style to be stored.
  * style - Key, value pairs that define the style.
  */
-putCellStyle = (name, style)=>
-{
+putCellStyle = (name, style) => {
   this.styles[name] = style;
 };
 
@@ -205,61 +197,45 @@ putCellStyle = (name, style)=>
  * style.
  * defaultStyle - Default style to be returned if no style can be found.
  */
-getCellStyle = (name, defaultStyle)=>
-{
+getCellStyle = (name, defaultStyle) => {
   var style = defaultStyle;
 
-  if (name != null && name.length > 0)
-  {
+  if (name != null && name.length > 0) {
     var pairs = name.split(';');
 
     if (style != null &&
-      name.charAt(0) != ';')
-    {
+        name.charAt(0) != ';') {
       style = mxUtils.clone(style);
-    }
-    else
-    {
+    } else {
       style = {};
     }
 
     // Parses each key, value pair into the existing style
-     for (var i = 0; i < pairs.length; i++)
-     {
-       var tmp = pairs[i];
-       var pos = tmp.indexOf('=');
+    for (var i = 0; i < pairs.length; i++) {
+      var tmp = pairs[i];
+      var pos = tmp.indexOf('=');
 
-       if (pos >= 0)
-       {
-         var key = tmp.substring(0, pos);
-         var value = tmp.substring(pos + 1);
+      if (pos >= 0) {
+        var key = tmp.substring(0, pos);
+        var value = tmp.substring(pos + 1);
 
-         if (value == mxConstants.NONE)
-         {
-           delete style[key];
-         }
-         else if (mxUtils.isNumeric(value))
-         {
-           style[key] = parseFloat(value);
-         }
-         else
-         {
-           style[key] = value;
-         }
-      }
-       else
-       {
-         // Merges the entries from a named style
+        if (value == mxConstants.NONE) {
+          delete style[key];
+        } else if (mxUtils.isNumeric(value)) {
+          style[key] = parseFloat(value);
+        } else {
+          style[key] = value;
+        }
+      } else {
+        // Merges the entries from a named style
         var tmpStyle = this.styles[tmp];
 
-        if (tmpStyle != null)
-        {
-          for (var key in tmpStyle)
-          {
+        if (tmpStyle != null) {
+          for (var key in tmpStyle) {
             style[key] = tmpStyle[key];
           }
         }
-       }
+      }
     }
   }
 

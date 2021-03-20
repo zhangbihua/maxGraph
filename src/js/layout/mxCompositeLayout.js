@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
 
-class mxCompositeLayout extends mxGraphLayout{
+class mxCompositeLayout extends mxGraphLayout {
   /**
    * Variable: layouts
    *
@@ -59,7 +59,7 @@ class mxCompositeLayout extends mxGraphLayout{
    * Implements <mxGraphLayout.moveCell> by calling move on <master> or the first
    * layout in <layouts>.
    */
-  moveCell=(cell, x, y)=>{
+  moveCell = (cell, x, y) => {
     if (this.master != null) {
       this.master.moveCell.apply(this.master, arguments);
     } else {
@@ -73,7 +73,7 @@ class mxCompositeLayout extends mxGraphLayout{
    * Implements <mxGraphLayout.execute> by executing all <layouts> in a
    * single transaction.
    */
-  execute=(parent)=>{
+  execute = (parent) => {
     var model = this.graph.getModel();
 
     model.beginUpdate();
