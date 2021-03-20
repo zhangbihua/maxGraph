@@ -783,13 +783,6 @@ function Dialog(editorUi, elt, w, h, modal, closable, onClose, noScroll, transpa
 {
 	var dx = 0;
 	
-	if (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8))
-	{
-		// Adds padding as a workaround for box model in older IE versions
-		// This needs to match the total padding of geDialog in CSS
-		dx = 80;
-	}
-	
 	w += dx;
 	h += dx;
 	

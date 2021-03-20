@@ -7667,8 +7667,7 @@ if (typeof mxVertexHandler != 'undefined')
 					pt.x, pt.y) && !mxUtils.isAncestorNode(state.text.node, mxEvent.getSource(evt))))) &&
 					((state == null && !this.isCellLocked(this.getDefaultParent())) ||
 					(state != null && !this.isCellLocked(state.cell))) &&
-					(state != null || (mxClient.IS_VML && src == this.view.getCanvas()) ||
-					(mxClient.IS_SVG && src == this.view.getCanvas().ownerSVGElement)))
+					(state != null || (mxClient.IS_SVG && src == this.view.getCanvas().ownerSVGElement)))
 				{
 					if (state == null)
 					{
@@ -9932,14 +9931,7 @@ if (typeof mxVertexHandler != 'undefined')
 					this.textarea.style.left = Math.round(this.bounds.x) + 'px';
 					this.textarea.style.top = Math.round(this.bounds.y) + 'px';
 		
-					if (mxClient.IS_VML)
-					{
-						this.textarea.style.zoom = scale;
-					}
-					else
-					{
-						mxUtils.setPrefixedStyle(this.textarea.style, 'transform', 'scale(' + scale + ',' + scale + ')');	
-					}
+					mxUtils.setPrefixedStyle(this.textarea.style, 'transform', 'scale(' + scale + ',' + scale + ')');
 				}
 				else
 				{

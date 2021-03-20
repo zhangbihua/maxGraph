@@ -1875,12 +1875,9 @@ EditorUi.prototype.initCanvas = function()
 			this.chromelessToolbar.style.padding = '10px 10px 8px 10px';
 			this.chromelessToolbar.style.left = (graph.isViewer()) ? '0' : '50%';
 			
-			if (!mxClient.IS_VML)
-			{
-				mxUtils.setPrefixedStyle(this.chromelessToolbar.style, 'borderRadius', '20px');
-				mxUtils.setPrefixedStyle(this.chromelessToolbar.style, 'transition', 'opacity 600ms ease-in-out');
-			}
-			
+			mxUtils.setPrefixedStyle(this.chromelessToolbar.style, 'borderRadius', '20px');
+			mxUtils.setPrefixedStyle(this.chromelessToolbar.style, 'transition', 'opacity 600ms ease-in-out');
+
 			var updateChromelessToolbarPosition = mxUtils.bind(this, function()
 			{
 				var css = mxUtils.getCurrentStyle(graph.container);

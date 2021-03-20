@@ -2530,13 +2530,7 @@ Sidebar.prototype.createThumb = function(cells, width, height, parent, title, sh
 	
 	this.graph.getModel().clear();
 	mxClient.NO_FO = fo;
-	
-	// Catch-all event handling
-	if (mxClient.IS_IE6)
-	{
-		parent.style.backgroundImage = 'url(' + this.editorUi.editor.transparentImage + ')';
-	}
-	
+
 	node.style.position = 'relative';
 	node.style.overflow = 'hidden';
 	node.style.left = this.thumbBorder + 'px';
@@ -2581,12 +2575,7 @@ Sidebar.prototype.createItem = function(cells, title, showLabel, showTitle, widt
 	elt.style.width = (this.thumbWidth + border) + 'px';
 	elt.style.height = (this.thumbHeight + border) + 'px';
 	elt.style.padding = this.thumbPadding + 'px';
-	
-	if (mxClient.IS_IE6)
-	{
-		elt.style.border = 'none';
-	}
-	
+
 	// Blocks default click action
 	mxEvent.addListener(elt, 'click', function(evt)
 	{

@@ -450,19 +450,12 @@ open = (css, targetWindow, forcePageBreaks, keepOpen)=>
         doc.writeln(dt);
       }
 
-      if (mxClient.IS_VML)
+      if (document.compatMode === 'CSS1Compat')
       {
-        doc.writeln('<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">');
+        doc.writeln('<!DOCTYPE html>');
       }
-      else
-      {
-        if (document.compatMode === 'CSS1Compat')
-        {
-          doc.writeln('<!DOCTYPE html>');
-        }
 
-        doc.writeln('<html>');
-      }
+      doc.writeln('<html>');
 
       doc.writeln('<head>');
       this.writeHead(doc, css);
@@ -699,12 +692,6 @@ writeHead = (doc, css)=>
   if (this.title != null)
   {
     doc.writeln('<title>' + this.title + '</title>');
-  }
-
-  // Adds required namespaces
-  if (mxClient.IS_VML)
-  {
-    doc.writeln('<style type="text/css">v\\:*{behavior:url(#default#VML)}o\\:*{behavior:url(#default#VML)}</style>');
   }
 
   // Adds all required stylesheets

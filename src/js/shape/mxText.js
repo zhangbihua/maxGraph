@@ -277,7 +277,7 @@ class mxText extends mxShape {
   redraw = () => {
     if (this.visible && this.checkBounds() && this.cacheEnabled && this.lastValue == this.value &&
         (mxUtils.isNode(this.value) || this.dialect == mxConstants.DIALECT_STRICTHTML)) {
-      if (this.node.nodeName == 'DIV' && (this.isHtmlAllowed() || !mxClient.IS_VML)) {
+      if (this.node.nodeName === 'DIV') {
         if (mxClient.IS_SVG) {
           this.redrawHtmlShapeWithCss3();
         } else {

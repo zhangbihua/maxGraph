@@ -300,11 +300,8 @@ class mxShape {
 
     if (container != null && container.ownerSVGElement != null) {
       node = this.createSvg(container);
-    } else if (document.documentMode === 8 || !mxClient.IS_VML ||
-        (this.dialect !== mxConstants.DIALECT_VML && this.isHtmlAllowed())) {
-      node = this.createHtml(container);
     } else {
-      node = this.createVml(container);
+      node = this.createHtml(container);
     }
 
     return node;
@@ -367,7 +364,7 @@ class mxShape {
       this.node.style.visibility = 'visible';
       this.clear();
 
-      if (this.node.nodeName === 'DIV' && (this.isHtmlAllowed() || !mxClient.IS_VML)) {
+      if (this.node.nodeName === 'DIV') {
         this.redrawHtmlShape();
       } else {
         this.redrawShape();
@@ -546,9 +543,6 @@ class mxShape {
     // LATER: Check if reusing existing DOM nodes improves performance
     if (this.node.ownerSVGElement != null) {
       canvas = this.createSvgCanvas();
-    } else if (mxClient.IS_VML) {
-      this.updateVmlContainer();
-      canvas = this.createVmlCanvas();
     }
 
     if (canvas != null && this.outline) {

@@ -2682,17 +2682,9 @@ var mxUtils = {
    */
   createImage: (src) => {
     var imageNode = null;
-
-    if (mxClient.IS_IE6 && document.compatMode != 'CSS1Compat') {
-      imageNode = document.createElement(mxClient.VML_PREFIX + ':image');
-      imageNode.setAttribute('src', src);
-      imageNode.style.borderStyle = 'none';
-    } else {
-      imageNode = document.createElement('img');
-      imageNode.setAttribute('src', src);
-      imageNode.setAttribute('border', '0');
-    }
-
+    imageNode = document.createElement('img');
+    imageNode.setAttribute('src', src);
+    imageNode.setAttribute('border', '0');
     return imageNode;
   },
 

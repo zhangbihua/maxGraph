@@ -682,17 +682,10 @@ resize = ()=>
       }
      }
 
-    if (mxClient.IS_VML)
-    {
-      this.textarea.style.zoom = scale;
-    }
-    else
-    {
-      mxUtils.setPrefixedStyle(this.textarea.style, 'transformOrigin', '0px 0px');
-      mxUtils.setPrefixedStyle(this.textarea.style, 'transform',
-        'scale(' + scale + ',' + scale + ')' + ((m == null) ? '' :
-        ' translate(' + (m.x * 100) + '%,' + (m.y * 100) + '%)'));
-    }
+    mxUtils.setPrefixedStyle(this.textarea.style, 'transformOrigin', '0px 0px');
+    mxUtils.setPrefixedStyle(this.textarea.style, 'transform',
+      'scale(' + scale + ',' + scale + ')' + ((m == null) ? '' :
+      ' translate(' + (m.x * 100) + '%,' + (m.y * 100) + '%)'));
   }
 };
 
@@ -729,31 +722,24 @@ getBackgroundColor = (state)=>
  */
 isLegacyEditor = ()=>
 {
-  if (mxClient.IS_VML)
+  var absoluteRoot = false;
+
+  if (mxClient.IS_SVG)
   {
-    return true;
-  }
-  else
-  {
-    var absoluteRoot = false;
-    
-    if (mxClient.IS_SVG)
+    var root = this.graph.view.getDrawPane().ownerSVGElement;
+
+    if (root != null)
     {
-      var root = this.graph.view.getDrawPane().ownerSVGElement;
-      
-      if (root != null)
+      var css = mxUtils.getCurrentStyle(root);
+
+      if (css != null)
       {
-        var css = mxUtils.getCurrentStyle(root);
-        
-        if (css != null)
-        {        
-          absoluteRoot = css.position == 'absolute';
-        }
+        absoluteRoot = css.position == 'absolute';
       }
     }
-    
-    return !absoluteRoot;
   }
+
+  return !absoluteRoot;
 };
 
 /**

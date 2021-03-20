@@ -648,10 +648,6 @@ function mxGraph(container, model, renderHint, stylesheet)
   {
     this.dialect = mxConstants.DIALECT_SVG;
   }
-  else if (renderHint == mxConstants.RENDERING_HINT_EXACT && mxClient.IS_VML)
-  {
-    this.dialect = mxConstants.DIALECT_VML;
-  }
   else if (renderHint == mxConstants.RENDERING_HINT_FASTEST)
   {
     this.dialect = mxConstants.DIALECT_STRICTHTML;

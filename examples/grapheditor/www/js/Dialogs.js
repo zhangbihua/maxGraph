@@ -15,7 +15,7 @@ var OpenDialog = function()
 	iframe.frameBorder = '0';
 	
 	// Adds padding as a workaround for box model in older IE versions
-	var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
+	var dx = 0;
 	
 	iframe.setAttribute('width', (((Editor.useLocalStorage) ? 640 : 320) + dx) + 'px');
 	iframe.setAttribute('height', (((Editor.useLocalStorage) ? 480 : 220) + dx) + 'px');
@@ -1688,12 +1688,8 @@ var LinkDialog = function(editorUi, initialValue, btnLabel, fn)
 	inner.style.whiteSpace = 'nowrap';
 	inner.style.textOverflow = 'clip';
 	inner.style.cursor = 'default';
-	
-	if (!mxClient.IS_VML)
-	{
-		inner.style.paddingRight = '20px';
-	}
-	
+	inner.style.paddingRight = '20px';
+
 	var linkInput = document.createElement('input');
 	linkInput.setAttribute('value', initialValue);
 	linkInput.setAttribute('placeholder', 'http://www.example.com/');
@@ -1712,10 +1708,8 @@ var LinkDialog = function(editorUi, initialValue, btnLabel, fn)
 	cross.style.width = '12px';
 	cross.style.height = '14px';
 	cross.style.cursor = 'pointer';
-
-	// Workaround for inline-block not supported in IE
-	cross.style.display = (mxClient.IS_VML) ? 'inline' : 'inline-block';
-	cross.style.top = ((mxClient.IS_VML) ? 0 : 3) + 'px';
+	cross.style.display = 'inline-block';
+	cross.style.top = '3px';
 	
 	// Needed to block event transparency in IE
 	cross.style.background = 'url(' + IMAGE_PATH + '/transparent.gif)';

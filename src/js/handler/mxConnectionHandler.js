@@ -352,9 +352,9 @@ mouseDownCounter = 0;
  * 
  * Switch to enable moving the preview away from the mousepointer. This is required in browsers
  * where the preview cannot be made transparent to events and if the built-in hit detection on
- * the HTML elements in the page should be used. Default is the value of <mxClient.IS_VML>.
+ * the HTML elements in the page should be used. Default is false.
  */
-movePreviewAway = mxClient.IS_VML;
+movePreviewAway = false;
 
 /**
  * Variable: outlineConnect

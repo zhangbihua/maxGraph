@@ -24,13 +24,6 @@ var mxClient = {
   VERSION: '4.2.2',
 
   /**
-   * Variable: IS_IE6
-   *
-   * True if the current browser is Internet Explorer 6.x.
-   */
-  IS_IE6: navigator.userAgent != null && navigator.userAgent.indexOf('MSIE 6') >= 0,
-
-  /**
    * Variable: IS_EDGE
    *
    * True if the current browser is Microsoft Edge.
@@ -137,13 +130,6 @@ var mxClient = {
           navigator.userAgent.indexOf('Iceape/1.') < 0),
 
   /**
-   * Variable: IS_VML
-   *
-   * True if the browser supports VML.
-   */
-  IS_VML: navigator.appName.toUpperCase() == 'MICROSOFT INTERNET EXPLORER',
-
-  /**
    * Variable: IS_SVG
    *
    * True if the browser supports SVG.
@@ -214,7 +200,7 @@ var mxClient = {
    * Function: isBrowserSupported
    *
    * Returns true if the current browser is supported, that is, if
-   * <mxClient.IS_VML> or <mxClient.IS_SVG> is true.
+   * <mxClient.IS_SVG> is true.
    *
    * Example:
    *
@@ -253,23 +239,19 @@ var mxClient = {
     doc = doc || document;
 
     // Workaround for Operation Aborted in IE6 if base tag is used in head
-    if (mxClient.IS_IE6) {
-      doc.write('<link rel="' + rel + '" href="' + href + '" charset="UTF-8" type="text/css"/>');
-    } else {
-      var link = doc.createElement('link');
+    var link = doc.createElement('link');
 
-      link.setAttribute('rel', rel);
-      link.setAttribute('href', href);
-      link.setAttribute('charset', 'UTF-8');
-      link.setAttribute('type', 'text/css');
+    link.setAttribute('rel', rel);
+    link.setAttribute('href', href);
+    link.setAttribute('charset', 'UTF-8');
+    link.setAttribute('type', 'text/css');
 
-      if (id) {
-        link.setAttribute('id', id);
-      }
-
-      var head = doc.getElementsByTagName('head')[0];
-      head.appendChild(link);
+    if (id) {
+      link.setAttribute('id', id);
     }
+
+    var head = doc.getElementsByTagName('head')[0];
+    head.appendChild(link);
   },
 
   /**
@@ -527,43 +509,6 @@ if (mxLoadStylesheets) {
  */
 if (typeof(mxLanguages) != 'undefined' && mxLanguages != null) {
   mxClient.languages = mxLanguages;
-}
-
-// Adds required namespaces, stylesheets and memory handling for older IE browsers
-if (mxClient.IS_VML) {
-  if (mxClient.IS_SVG) {
-    mxClient.IS_VML = false;
-  } else {
-    // Enables support for IE8 standards mode. Note that this requires all attributes for VML
-    // elements to be set using direct notation, ie. node.attr = value, not setAttribute.
-    if (document.namespaces != null) {
-      if (document.documentMode == 8) {
-        document.namespaces.add(mxClient.VML_PREFIX, 'urn:schemas-microsoft-com:vml', '#default#VML');
-        document.namespaces.add(mxClient.OFFICE_PREFIX, 'urn:schemas-microsoft-com:office:office', '#default#VML');
-      } else {
-        document.namespaces.add(mxClient.VML_PREFIX, 'urn:schemas-microsoft-com:vml');
-        document.namespaces.add(mxClient.OFFICE_PREFIX, 'urn:schemas-microsoft-com:office:office');
-      }
-    }
-
-    // Workaround for limited number of stylesheets in IE (does not work in standards mode)
-    if (mxClient.IS_QUIRKS && document.styleSheets.length >= 30) {
-      (() => {
-        var node = document.createElement('style');
-        node.type = 'text/css';
-        node.styleSheet.cssText = mxClient.VML_PREFIX + '\\:*{behavior:url(#default#VML)}' +
-            mxClient.OFFICE_PREFIX + '\\:*{behavior:url(#default#VML)}';
-        document.getElementsByTagName('head')[0].appendChild(node);
-      })();
-    } else {
-      document.createStyleSheet().cssText = mxClient.VML_PREFIX + '\\:*{behavior:url(#default#VML)}' +
-          mxClient.OFFICE_PREFIX + '\\:*{behavior:url(#default#VML)}';
-    }
-
-    if (mxLoadStylesheets) {
-      mxClient.link('stylesheet', mxClient.basePath + '/css/explorer.css');
-    }
-  }
 }
 
 // PREPROCESSOR-REMOVE-START
