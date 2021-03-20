@@ -62,18 +62,7 @@
 
 				var checkImage = new Image();
 				checkImage.src = "images/check.png";
-				
-				// Workaround for Internet Explorer ignoring certain CSS directives
-				if (mxClient.IS_QUIRKS)
-				{
-					document.body.style.overflow = 'hidden';
-					new mxDivResizer(container);
-					new mxDivResizer(outline);
-					new mxDivResizer(toolbar);
-					new mxDivResizer(sidebar);
-					new mxDivResizer(status);
-				}
-				
+
 				// Creates the graph inside the given container. The
 				// editor is used to create certain functionality for the
 				// graph, such as the rubberband selection, but most parts
@@ -499,12 +488,7 @@
 			background.style.background = 'black';
 			mxUtils.setOpacity(background, 50);
 			document.body.appendChild(background);
-			
-			if (mxClient.IS_QUIRKS)
-			{
-				new mxDivResizer(background);
-			}
-			
+
 			var x = Math.max(0, document.body.scrollWidth/2-width/2);
 			var y = Math.max(10, (document.body.scrollHeight ||
 						document.documentElement.scrollHeight)/2-height*2/3);

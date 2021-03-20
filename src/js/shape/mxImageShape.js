@@ -170,8 +170,7 @@ class mxImageShape extends mxRectangleShape {
       this.node.style.borderColor = stroke;
 
       // VML image supports PNG in IE6
-      var useVml = false;
-      var img = document.createElement((useVml) ? mxClient.VML_PREFIX + ':image' : 'img');
+      var img = document.createElement('img');
       img.setAttribute('border', '0');
       img.style.position = 'absolute';
       img.src = this.image;

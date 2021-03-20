@@ -46,20 +46,6 @@ var mxClient = {
   IS_EM: 'spellcheck' in document.createElement('textarea') && document.documentMode == 8,
 
   /**
-   * Variable: VML_PREFIX
-   *
-   * Prefix for VML namespace in node names. Default is 'v'.
-   */
-  VML_PREFIX: 'v',
-
-  /**
-   * Variable: OFFICE_PREFIX
-   *
-   * Prefix for VML office namespace in node names. Default is 'o'.
-   */
-  OFFICE_PREFIX: 'o',
-
-  /**
    * Variable: IS_NS
    *
    * True if the current browser is Netscape (including Firefox).

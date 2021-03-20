@@ -318,16 +318,7 @@ Sidebar.prototype.showTooltip = function(elt, cells, w, h, title, showLabel)
 				var width = bounds.width + 2 * this.tooltipBorder + 4;
 				var height = bounds.height + 2 * this.tooltipBorder;
 				
-				if (mxClient.IS_QUIRKS)
-				{
-					height += 4;
-					this.tooltip.style.overflow = 'hidden';
-				}
-				else
-				{
-					this.tooltip.style.overflow = 'visible';
-				}
-
+				this.tooltip.style.overflow = 'visible';
 				this.tooltip.style.width = width + 'px';
 				var w2 = width;
 				
@@ -745,16 +736,7 @@ Sidebar.prototype.addSearchPalette = function(expand)
 	cross.setAttribute('title', mxResources.get('search'));
 	cross.style.position = 'relative';
 	cross.style.left = '-18px';
-	
-	if (mxClient.IS_QUIRKS)
-	{
-		input.style.height = '28px';
-		cross.style.top = '-4px';
-	}
-	else
-	{
-		cross.style.top = '1px';
-	}
+	cross.style.top = '1px';
 
 	// Needed to block event transparency in IE
 	cross.style.background = 'url(\'' + this.editorUi.editor.transparentImage + '\')';
@@ -2520,12 +2502,6 @@ Sidebar.prototype.createThumb = function(cells, width, height, parent, title, sh
 	{
 		node = this.graph.container.cloneNode(false);
 		node.innerHTML = this.graph.container.innerHTML;
-		
-		// Workaround for clipping in older IE versions
-		if (mxClient.IS_QUIRKS || document.documentMode == 8)
-		{
-			node.firstChild.style.overflow = 'visible';
-		}
 	}
 	
 	this.graph.getModel().clear();
@@ -2546,7 +2522,7 @@ Sidebar.prototype.createThumb = function(cells, width, height, parent, title, sh
 	// Adds title for sidebar entries
 	if (this.sidebarTitles && title != null && showTitle != false)
 	{
-		var border = (mxClient.IS_QUIRKS) ? 2 * this.thumbPadding + 2: 0;
+		var border = 0;
 		parent.style.height = (this.thumbHeight + border + this.sidebarTitleSize + 8) + 'px';
 		
 		var div = document.createElement('div');
@@ -2571,7 +2547,7 @@ Sidebar.prototype.createItem = function(cells, title, showLabel, showTitle, widt
 	var elt = document.createElement('a');
 	elt.className = 'geItem';
 	elt.style.overflow = 'hidden';
-	var border = (mxClient.IS_QUIRKS) ? 8 + 2 * this.thumbPadding : 2 * this.thumbBorder;
+	var border = 2 * this.thumbBorder;
 	elt.style.width = (this.thumbWidth + border) + 'px';
 	elt.style.height = (this.thumbHeight + border) + 'px';
 	elt.style.padding = this.thumbPadding + 'px';
@@ -4176,14 +4152,11 @@ Sidebar.prototype.addFoldingHandler = function(title, content, funct)
 	}));
 	
 	// Prevents focus
-	if (!mxClient.IS_QUIRKS)
+	mxEvent.addListener(title, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown',
+		mxUtils.bind(this, function(evt)
 	{
-	    mxEvent.addListener(title, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown',
-	    	mxUtils.bind(this, function(evt)
-		{
-			evt.preventDefault();
-		}));
-	}
+		evt.preventDefault();
+	}));
 };
 
 /**

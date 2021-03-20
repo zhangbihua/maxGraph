@@ -63,17 +63,6 @@
 				// Enables snapping waypoints to terminals
 				mxEdgeHandler.prototype.snapToTerminals = true;
 
-				// Workaround for Internet Explorer ignoring certain CSS directives
-				if (mxClient.IS_QUIRKS)
-				{
-					document.body.style.overflow = 'hidden';
-					new mxDivResizer(container);
-					new mxDivResizer(outline);
-					new mxDivResizer(toolbar);
-					new mxDivResizer(sidebar);
-					new mxDivResizer(status);
-				}
-				
 				// Creates a wrapper editor with a graph inside the given container.
 				// The editor is used to create certain functionality for the
 				// graph, such as the rubberband selection, but most parts

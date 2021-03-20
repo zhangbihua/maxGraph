@@ -1728,7 +1728,7 @@ var LinkDialog = function(editorUi, initialValue, btnLabel, fn)
 	{
 		linkInput.focus();
 		
-		if (mxClient.IS_GC || mxClient.IS_FF || document.documentMode >= 5 || mxClient.IS_QUIRKS)
+		if (mxClient.IS_GC || mxClient.IS_FF)
 		{
 			linkInput.select();
 		}
@@ -2010,20 +2010,10 @@ var LayersWindow = function(editorUi, x, y, w, h)
 	ldiv.style.borderStyle = 'solid';
 	ldiv.style.display = 'block';
 	ldiv.style.whiteSpace = 'nowrap';
-	
-	if (mxClient.IS_QUIRKS)
-	{
-		ldiv.style.filter = 'none';
-	}
-	
+
 	var link = document.createElement('a');
 	link.className = 'geButton';
-	
-	if (mxClient.IS_QUIRKS)
-	{
-		link.style.filter = 'none';
-	}
-	
+
 	var removeLink = link.cloneNode();
 	removeLink.innerHTML = '<div class="geSprite geSprite-delete" style="display:inline-block;"></div>';
 

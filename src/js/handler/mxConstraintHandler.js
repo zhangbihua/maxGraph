@@ -428,17 +428,6 @@ setFocus = (me, state, source)=>
       icon.preserveImageAspect = false;
       icon.init(this.graph.getView().getDecoratorPane());
       
-      // Fixes lost event tracking for images in quirks / IE8 standards
-      if (mxClient.IS_QUIRKS || document.documentMode == 8)
-      {
-        mxEvent.addListener(icon.node, 'dragstart', (evt)=>
-        {
-          mxEvent.consume(evt);
-          
-          return false;
-        });
-      }
-      
       // Move the icon behind all other overlays
       if (icon.node.previousSibling != null)
       {

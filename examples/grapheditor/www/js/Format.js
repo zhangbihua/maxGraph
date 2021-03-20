@@ -385,8 +385,8 @@ Format.prototype.refresh = function()
 	label.style.fontSize = '13px';
 	label.style.borderWidth = '0px 0px 1px 1px';
 	label.style.borderStyle = 'solid';
-	label.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
-	label.style.height = (mxClient.IS_QUIRKS) ? '34px' : '25px';
+	label.style.display = 'inline-block';
+	label.style.height = '25px';
 	label.style.overflow = 'hidden';
 	label.style.width = '100%';
 	this.container.appendChild(div);
@@ -805,11 +805,7 @@ BaseFormatPanel.prototype.createStepper = function(input, update, step, height, 
 	step = (step != null) ? step : 1;
 	height = (height != null) ? height : 8;
 	
-	if (mxClient.IS_QUIRKS)
-	{
-		height = height - 2;
-	}
-	else if (mxClient.IS_MT || document.documentMode >= 8)
+	if (mxClient.IS_MT || document.documentMode >= 8)
 	{
 		height = height + 1;
 	} 
@@ -887,12 +883,6 @@ BaseFormatPanel.prototype.createStepper = function(input, update, step, height, 
 		mxEvent.addGestureListeners(stepper,
 			function(evt)
 			{
-				// Workaround for lost current selection in page because of focus in IE
-				if (mxClient.IS_QUIRKS || document.documentMode == 8)
-				{
-					currentSelection = document.selection.createRange();
-				}
-				
 				mxEvent.consume(evt);
 			},
 			null,
@@ -930,7 +920,7 @@ BaseFormatPanel.prototype.createOption = function(label, isCheckedFn, setChecked
 	div.style.whiteSpace = 'nowrap';
 	div.style.overflow = 'hidden';
 	div.style.width = '200px';
-	div.style.height = (mxClient.IS_QUIRKS) ? '27px' : '18px';
+	div.style.height = '18px';
 	
 	var cb = document.createElement('input');
 	cb.setAttribute('type', 'checkbox');
@@ -1099,7 +1089,7 @@ BaseFormatPanel.prototype.createColorOption = function(label, getColorFn, setCol
 	div.style.whiteSpace = 'nowrap';
 	div.style.overflow = 'hidden';
 	div.style.width = '200px';
-	div.style.height = (mxClient.IS_QUIRKS) ? '27px' : '18px';
+	div.style.height = '18px';
 	
 	var cb = document.createElement('input');
 	cb.setAttribute('type', 'checkbox');
@@ -1124,17 +1114,11 @@ BaseFormatPanel.prototype.createColorOption = function(label, getColorFn, setCol
 		{
 			applying = true;
 			color = (/(^#?[a-zA-Z0-9]*$)/.test(color)) ? color : defaultColor;
-			btn.innerHTML = '<div style="width:' + ((mxClient.IS_QUIRKS) ? '30' : '36') +
+			btn.innerHTML = '<div style="width:36' +
 				'px;height:12px;margin:3px;border:1px solid black;background-color:' +
 				mxUtils.htmlEntities((color != null && color != mxConstants.NONE) ?
 				color : defaultColor) + ';"></div>';
-			
-			// Fine-tuning in Firefox, quirks mode and IE8 standards
-			if (mxClient.IS_QUIRKS || document.documentMode == 8)
-			{
-				btn.firstChild.style.margin = '0px';
-			}
-			
+
 			if (color != null && color != mxConstants.NONE)
 			{
 				cb.setAttribute('checked', 'checked');
@@ -1181,7 +1165,7 @@ BaseFormatPanel.prototype.createColorOption = function(label, getColorFn, setCol
 	
 	btn.style.position = 'absolute';
 	btn.style.marginTop = '-4px';
-	btn.style.right = (mxClient.IS_QUIRKS) ? '0px' : '20px';
+	btn.style.right = '20px';
 	btn.style.height = '22px';
 	btn.className = 'geColorBtn';
 	btn.style.display = (cb.checked || hideCheckbox) ? '' : 'none';
@@ -1293,7 +1277,7 @@ BaseFormatPanel.prototype.addArrow = function(elt, height)
 	height = (height != null) ? height : 10;
 	
 	var arrow = document.createElement('div');
-	arrow.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
+	arrow.style.display = 'inline-block';
 	arrow.style.padding = '6px';
 	arrow.style.paddingRight = '4px';
 	
@@ -1325,7 +1309,7 @@ BaseFormatPanel.prototype.addArrow = function(elt, height)
 		symbol.style.paddingRight = '6px';
 		symbol.style.marginLeft = '4px';
 		symbol.style.marginTop = '-1px';
-		symbol.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
+		symbol.style.display = 'inline-block';
 		mxUtils.setOpacity(symbol, 60);
 	}
 
@@ -1911,12 +1895,7 @@ ArrangePanel.prototype.addAlign = function(div)
 	stylePanel.style.paddingLeft = '0px';
 	stylePanel.style.borderWidth = '0px';
 	stylePanel.className = 'geToolbarContainer';
-	
-	if (mxClient.IS_QUIRKS)
-	{
-		div.style.height = '60px';
-	}
-	
+
 	var left = this.editorUi.toolbar.addButton('geSprite-alignleft', mxResources.get('left'),
 		function() { graph.alignCells(mxConstants.ALIGN_LEFT); }, stylePanel);
 	var center = this.editorUi.toolbar.addButton('geSprite-aligncenter', mxResources.get('center'),
@@ -2778,11 +2757,6 @@ TextFormatPanel.prototype.addFont = function(container)
 	stylePanel.style.marginLeft = '-2px';
 	stylePanel.style.borderWidth = '0px';
 	stylePanel.className = 'geToolbarContainer';
-	
-	if (mxClient.IS_QUIRKS)
-	{
-		stylePanel.style.display = 'block';
-	}
 
 	if (graph.cellEditor.isContentEditing())
 	{
@@ -2830,12 +2804,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	fontStyleItems[2].setAttribute('title', mxResources.get('underline') + ' (' + this.editorUi.actions.get('underline').shortcut + ')');
 	
 	var verticalItem = this.editorUi.toolbar.addItems(['vertical'], stylePanel2, true)[0];
-	
-	if (mxClient.IS_QUIRKS)
-	{
-		mxUtils.br(container);
-	}
-	
+
 	container.appendChild(stylePanel2);
 
 	this.styleButtons(fontStyleItems);
@@ -2901,12 +2870,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		callFn(this.editorUi.menus.createStyleChangeFunction([mxConstants.STYLE_VERTICAL_ALIGN], [mxConstants.ALIGN_BOTTOM])), stylePanel3);
 	
 	this.styleButtons([top, middle, bottom]);
-	
-	if (mxClient.IS_QUIRKS)
-	{
-		mxUtils.br(container);
-	}
-	
+
 	container.appendChild(stylePanel3);
 	
 	// Hack for updating UI state below based on current text selection
@@ -2979,13 +2943,7 @@ TextFormatPanel.prototype.addFont = function(container)
 				}, tmp)];
 		this.styleButtons(btns);
 		btns[btns.length - 2].style.marginLeft = '9px';
-		
-		if (mxClient.IS_QUIRKS)
-		{
-			mxUtils.br(container);
-			tmp.style.height = '40';
-		}
-		
+
 		container.appendChild(tmp);
 	}
 	else
@@ -3109,15 +3067,10 @@ TextFormatPanel.prototype.addFont = function(container)
 	var input = document.createElement('input');
 	input.style.textAlign = 'right';
 	input.style.marginTop = '4px';
-	
-	if (!mxClient.IS_QUIRKS)
-	{
-		input.style.position = 'absolute';
-		input.style.right = '32px';
-	}
-	
+	input.style.position = 'absolute';
+	input.style.right = '32px';
 	input.style.width = '40px';
-	input.style.height = (mxClient.IS_QUIRKS) ? '21px' : '17px';
+	input.style.height = '17px';
 	stylePanel2.appendChild(input);
 	
 	// Workaround for font size 4 if no text is selected is update font size below
@@ -3258,12 +3211,8 @@ TextFormatPanel.prototype.addFont = function(container)
 	var stepper = this.createStepper(input, inputUpdate, 1, 10, true, Menus.prototype.defaultFontSize);
 	stepper.style.display = input.style.display;
 	stepper.style.marginTop = '4px';
-	
-	if (!mxClient.IS_QUIRKS)
-	{
-		stepper.style.right = '20px';
-	}
-	
+	stepper.style.right = '20px';
+
 	stylePanel2.appendChild(stepper);
 	
 	var arrow = fontMenu.getElementsByTagName('div')[0];
@@ -3574,11 +3523,6 @@ TextFormatPanel.prototype.addFont = function(container)
 		wrapper2.appendChild(insertPanel);
 		container.appendChild(wrapper2);
 		
-		if (mxClient.IS_QUIRKS)
-		{
-			wrapper2.style.height = '70';
-		}
-		
 		var tablePanel = stylePanel.cloneNode(false);
 		tablePanel.style.paddingLeft = '0px';
 		
@@ -3681,12 +3625,6 @@ TextFormatPanel.prototype.addFont = function(container)
 		wrapper3.style.paddingBottom = '10px';
 		wrapper3.appendChild(this.createTitle(mxResources.get('table')));
 		wrapper3.appendChild(tablePanel);
-
-		if (mxClient.IS_QUIRKS)
-		{
-			mxUtils.br(container);
-			wrapper3.style.height = '70';
-		}
 		
 		var tablePanel2 = stylePanel.cloneNode(false);
 		tablePanel2.style.paddingLeft = '0px';
@@ -3806,12 +3744,6 @@ TextFormatPanel.prototype.addFont = function(container)
 				}, tablePanel2)];
 		this.styleButtons(btns);
 		btns[2].style.marginRight = '9px';
-		
-		if (mxClient.IS_QUIRKS)
-		{
-			mxUtils.br(wrapper3);
-			mxUtils.br(wrapper3);
-		}
 		
 		wrapper3.appendChild(tablePanel2);
 		container.appendChild(wrapper3);
@@ -4473,7 +4405,7 @@ StyleFormatPanel.prototype.addFill = function(container)
 	var gradientSelect = document.createElement('select');
 	gradientSelect.style.position = 'absolute';
 	gradientSelect.style.marginTop = '-2px';
-	gradientSelect.style.right = (mxClient.IS_QUIRKS) ? '52px' : '72px';
+	gradientSelect.style.right = '72px';
 	gradientSelect.style.width = '70px';
 	
 	var fillStyleSelect = gradientSelect.cloneNode(false);
@@ -4822,36 +4754,22 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	altStepper.style.marginTop = '2px';
 	altStylePanel.appendChild(altStepper);
 	
-	if (!mxClient.IS_QUIRKS)
-	{
-		input.style.position = 'absolute';
-		input.style.height = '15px';
-		input.style.left = '141px';
-		stepper.style.left = '190px';
+	input.style.position = 'absolute';
+	input.style.height = '15px';
+	input.style.left = '141px';
+	stepper.style.left = '190px';
 
-		altInput.style.position = 'absolute';
-		altInput.style.left = '141px';
-		altInput.style.height = '15px';
-		altStepper.style.left = '190px';
-	}
-	else
-	{
-		input.style.height = '17px';
-		altInput.style.height = '17px';
-	}
-	
+	altInput.style.position = 'absolute';
+	altInput.style.left = '141px';
+	altInput.style.height = '15px';
+	altStepper.style.left = '190px';
+
 	mxEvent.addListener(input, 'blur', update);
 	mxEvent.addListener(input, 'change', update);
 
 	mxEvent.addListener(altInput, 'blur', altUpdate);
 	mxEvent.addListener(altInput, 'change', altUpdate);
-	
-	if (mxClient.IS_QUIRKS)
-	{
-		mxUtils.br(stylePanel2);
-		mxUtils.br(stylePanel2);
-	}
-	
+
 	var edgeStyle = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-orthogonal', mxResources.get('waypoints'), false, mxUtils.bind(this, function(menu)
 	{
 		if (ss.style.shape != 'arrow')
@@ -5089,22 +5007,10 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	if (ss.edges.length == graph.getSelectionCount())
 	{
 		container.appendChild(stylePanel2);
-		
-		if (mxClient.IS_QUIRKS)
-		{
-			mxUtils.br(container);
-			mxUtils.br(container);
-		}
-		
 		container.appendChild(arrowPanel);
 	}
 	else if (ss.vertices.length == graph.getSelectionCount())
 	{
-		if (mxClient.IS_QUIRKS)
-		{
-			mxUtils.br(container);
-		}
-		
 		container.appendChild(perimeterPanel);
 	}
 	
@@ -5454,11 +5360,6 @@ StyleFormatPanel.prototype.addEffects = function(div)
 
 	var table = document.createElement('table');
 
-	if (mxClient.IS_QUIRKS)
-	{
-		table.style.fontSize = '1em';
-	}
-
 	table.style.width = '100%';
 	table.style.fontWeight = 'bold';
 	table.style.paddingRight = '20px';
@@ -5593,12 +5494,6 @@ DiagramStylePanel.prototype.addView = function(div)
 	div.style.paddingTop = '8px';
 	
 	var table = document.createElement('table');
-
-	if (mxClient.IS_QUIRKS)
-	{
-		table.style.fontSize = '1em';
-	}
-
 	table.style.width = '100%';
 	table.style.fontWeight = 'bold';
 	
@@ -6261,7 +6156,7 @@ DiagramFormatPanel.prototype.addView = function(div)
 			btn.style.marginTop = '-4px';
 			btn.style.paddingBottom = (document.documentMode == 11 || mxClient.IS_MT) ? '0px' : '2px';
 			btn.style.height = '22px';
-			btn.style.right = (mxClient.IS_QUIRKS) ? '52px' : '72px';
+			btn.style.right = '72px';
 			btn.style.width = '56px';
 		
 			bg.appendChild(btn);

@@ -63,15 +63,7 @@
 				container.style.background = 'url("editors/images/grid.gif")';
 
 				document.body.appendChild(container);
-				
-				// Workaround for Internet Explorer ignoring certain styles
-				if (mxClient.IS_QUIRKS)
-				{
-					document.body.style.overflow = 'hidden';
-					new mxDivResizer(tbContainer);
-					new mxDivResizer(container);
-				}
-	
+
 				// Creates the model and the graph inside the container
 				// using the fastest rendering available on the browser
 				var model = new mxGraphModel();

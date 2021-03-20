@@ -316,15 +316,8 @@ setAlign = function (align)
 getInitialValue = (state, trigger)=>
 {
   var result = mxUtils.htmlEntities(this.graph.getEditingValue(state.cell, trigger), false);
-  
-    // Workaround for trailing line breaks being ignored in the editor
-  if (!mxClient.IS_QUIRKS && document.documentMode != 8 && document.documentMode != 9 &&
-    document.documentMode != 10)
-  {
-    result = mxUtils.replaceTrailingNewlines(result, '<div><br></div>');
-  }
-    
-    return result.replace(/\n/g, '<br>');
+  result = mxUtils.replaceTrailingNewlines(result, '<div><br></div>');
+  return result.replace(/\n/g, '<br>');
 };
 
 /**
@@ -522,17 +515,9 @@ resize = ()=>
       this.textarea.style.height = Math.round(this.bounds.height / scale) + 'px';
       
       // FIXME: Offset when scaled
-      if (document.documentMode == 8 || mxClient.IS_QUIRKS)
-      {
-        this.textarea.style.left = Math.round(this.bounds.x) + 'px';
-        this.textarea.style.top = Math.round(this.bounds.y) + 'px';
-      }
-      else
-      {
-        this.textarea.style.left = Math.max(0, Math.round(this.bounds.x + 1)) + 'px';
-        this.textarea.style.top = Math.max(0, Math.round(this.bounds.y + 1)) + 'px';
-      }
-      
+      this.textarea.style.left = Math.max(0, Math.round(this.bounds.x + 1)) + 'px';
+      this.textarea.style.top = Math.max(0, Math.round(this.bounds.y + 1)) + 'px';
+
       // Installs native word wrapping and avoids word wrap for empty label placeholder
       if (this.graph.isWrapping(state.cell) && (this.bounds.width >= 2 || this.bounds.height >= 2) &&
         this.textarea.innerHTML != this.getEmptyLabelText())
@@ -641,15 +626,7 @@ resize = ()=>
         this.textarea.style.whiteSpace = 'nowrap';
         this.textarea.style.width = '';
       }
-      
-      // LATER: Keep in visible area, add fine tuning for pixel precision
-      // Workaround for wrong measuring in IE8 standards
-      if (document.documentMode == 8)
-      {
-        this.textarea.style.zoom = '1';
-        this.textarea.style.height = 'auto';
-      }
-      
+
       var ow = this.textarea.scrollWidth;
       var oh = this.textarea.scrollHeight;
       
@@ -661,25 +638,8 @@ resize = ()=>
       //}
       
       // LATER: Keep in visible area, add fine tuning for pixel precision
-      if (document.documentMode == 8)
-      {
-        // LATER: Scaled wrapping and position is wrong in IE8
-        this.textarea.style.left = Math.max(0, Math.ceil((this.bounds.x - m.x * (this.bounds.width - (ow + 1) * scale) + ow * (scale - 1) * 0 + (m.x + 0.5) * 2) / scale)) + 'px';
-        this.textarea.style.top = Math.max(0, Math.ceil((this.bounds.y - m.y * (this.bounds.height - (oh + 0.5) * scale) + oh * (scale - 1) * 0 + Math.abs(m.y + 0.5) * 1) / scale)) + 'px';
-        // Workaround for wrong event handling width and height
-        this.textarea.style.width = Math.round(ow * scale) + 'px';
-        this.textarea.style.height = Math.round(oh * scale) + 'px';
-      }
-      else if (mxClient.IS_QUIRKS)
-      {      
-        this.textarea.style.left = Math.max(0, Math.ceil(this.bounds.x - m.x * (this.bounds.width - (ow + 1) * scale) + ow * (scale - 1) * 0 + (m.x + 0.5) * 2)) + 'px';
-        this.textarea.style.top = Math.max(0, Math.ceil(this.bounds.y - m.y * (this.bounds.height - (oh + 0.5) * scale) + oh * (scale - 1) * 0 + Math.abs(m.y + 0.5) * 1)) + 'px';
-      }
-      else
-      {
-        this.textarea.style.left = Math.max(0, Math.round(this.bounds.x - m.x * (this.bounds.width - 2)) + 1) + 'px';
-        this.textarea.style.top = Math.max(0, Math.round(this.bounds.y - m.y * (this.bounds.height - 4) + ((m.y == -1) ? 3 : 0)) + 1) + 'px';
-      }
+      this.textarea.style.left = Math.max(0, Math.round(this.bounds.x - m.x * (this.bounds.width - 2)) + 1) + 'px';
+      this.textarea.style.top = Math.max(0, Math.round(this.bounds.y - m.y * (this.bounds.height - 4) + ((m.y == -1) ? 3 : 0)) + 1) + 'px';
      }
 
     mxUtils.setPrefixedStyle(this.textarea.style, 'transformOrigin', '0px 0px');

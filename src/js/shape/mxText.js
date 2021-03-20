@@ -873,9 +873,6 @@ class mxText extends mxShape {
 
       oh = sizeDiv.offsetHeight + 2;
 
-      if (mxClient.IS_QUIRKS && this.border != null && this.border != mxConstants.NONE) {
-        oh += 3;
-      }
     } else if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName == 'DIV') {
       sizeDiv = sizeDiv.firstChild;
       oh = sizeDiv.offsetHeight;
@@ -903,13 +900,7 @@ class mxText extends mxShape {
     this.offsetWidth = ow;
     this.offsetHeight = oh;
 
-    // Simulates max-height CSS in quirks mode
-    if (mxClient.IS_QUIRKS && (this.clipped || (this.overflow == 'width' && h > 0))) {
-      h = Math.min(h, oh);
-      style.height = Math.round(h) + 'px';
-    } else {
-      h = oh;
-    }
+    h = oh;
 
     if (this.overflow != 'fill' && this.overflow != 'width') {
       if (this.clipped) {
@@ -917,11 +908,6 @@ class mxText extends mxShape {
       }
 
       w = ow;
-
-      // Simulates max-width CSS in quirks mode
-      if ((mxClient.IS_QUIRKS && this.clipped) || this.wrap) {
-        style.width = Math.round(w) + 'px';
-      }
     }
 
     h *= s;
@@ -968,16 +954,6 @@ class mxText extends mxShape {
 
     // Workaround for rendering offsets
     var dy = 0;
-
-    if (this.overflow != 'fill' && mxClient.IS_QUIRKS) {
-      if (this.valign == mxConstants.ALIGN_TOP) {
-        dy -= 1;
-      } else if (this.valign == mxConstants.ALIGN_BOTTOM) {
-        dy += 2;
-      } else {
-        dy += 1;
-      }
-    }
 
     style.zoom = s;
     style.left = Math.round(this.bounds.x + left_fix - w / 2) + 'px';
@@ -1117,12 +1093,8 @@ class mxText extends mxShape {
     if (this.clipped) {
       style.overflow = 'hidden';
 
-      if (!mxClient.IS_QUIRKS) {
-        style.maxHeight = h + 'px';
-        style.maxWidth = w + 'px';
-      } else {
-        style.width = w + 'px';
-      }
+      style.maxHeight = h + 'px';
+      style.maxWidth = w + 'px';
     } else if (this.overflow == 'fill') {
       style.width = (w + 1) + 'px';
       style.height = (h + 1) + 'px';

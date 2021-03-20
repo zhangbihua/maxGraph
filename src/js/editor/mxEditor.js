@@ -1613,11 +1613,6 @@ class mxEditor extends mxEventSource {
       if (this.disableContextMenu) {
         mxEvent.disableContextMenu(container);
       }
-
-      // Workaround for stylesheet directives in IE
-      if (mxClient.IS_QUIRKS) {
-        new mxDivResizer(container);
-      }
     }
   };
 
@@ -1806,11 +1801,6 @@ class mxEditor extends mxEventSource {
    */
   setToolbarContainer=(container)=>{
     this.toolbar.init(container);
-
-    // Workaround for stylesheet directives in IE
-    if (mxClient.IS_QUIRKS) {
-      new mxDivResizer(container);
-    }
   };
 
   /**
@@ -1844,11 +1834,6 @@ class mxEditor extends mxEventSource {
         this.setStatus((mxResources.get(this.currentFileResource) ||
             this.currentFileResource) + ': ' + this.filename);
       }));
-
-      // Workaround for stylesheet directives in IE
-      if (mxClient.IS_QUIRKS) {
-        new mxDivResizer(container);
-      }
     }
   };
 
@@ -1882,11 +1867,6 @@ class mxEditor extends mxEventSource {
     this.addListener(mxEvent.ROOT, mxUtils.bind(this, (sender)=>{
       container.innerHTML = this.getTitle();
     }));
-
-    // Workaround for stylesheet directives in IE
-    if (mxClient.IS_QUIRKS) {
-      new mxDivResizer(container);
-    }
   };
 
   /**

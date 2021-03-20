@@ -554,53 +554,12 @@ validate = (cell)=>
     this.updatingDocumentResource;
   
   this.resetValidationState();
-  
-  // Improves IE rendering speed by minimizing reflows
-  var prevDisplay = null;
-  
-  if (this.optimizeVmlReflows && this.canvas != null && this.textDiv == null &&
-    ((document.documentMode == 8 && !mxClient.IS_EM) || mxClient.IS_QUIRKS))
-  {
-    // Placeholder keeps scrollbar positions when canvas is hidden
-    this.placeholder = document.createElement('div');
-    this.placeholder.style.position = 'absolute';
-    this.placeholder.style.width = this.canvas.clientWidth + 'px';
-    this.placeholder.style.height = this.canvas.clientHeight + 'px';
-    this.canvas.parentNode.appendChild(this.placeholder);
 
-    prevDisplay = this.drawPane.style.display;
-    this.canvas.style.display = 'none';
-    
-    // Creates temporary DIV used for text measuring in mxText.updateBoundingBox
-    this.textDiv = document.createElement('div');
-    this.textDiv.style.position = 'absolute';
-    this.textDiv.style.whiteSpace = 'nowrap';
-    this.textDiv.style.visibility = 'hidden';
-    this.textDiv.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
-    this.textDiv.style.zoom = '1';
-    
-    document.body.appendChild(this.textDiv);
-  }
-  
   var graphBounds = this.getBoundingBox(this.validateCellState(
     this.validateCell(cell || ((this.currentRoot != null) ?
       this.currentRoot : this.graph.getModel().getRoot()))));
   this.setGraphBounds((graphBounds != null) ? graphBounds : this.getEmptyBounds());
   this.validateBackground();
-  
-  if (prevDisplay != null)
-  {
-    this.canvas.style.display = prevDisplay;
-    this.textDiv.parentNode.removeChild(this.textDiv);
-    
-    if (this.placeholder != null)
-    {
-      this.placeholder.parentNode.removeChild(this.placeholder);
-    }
-        
-    // Textdiv cannot be reused
-    this.textDiv = null;
-  }
   
   this.resetValidationState();
   
@@ -2721,21 +2680,6 @@ createHtml = ()=>
 
     container.appendChild(this.canvas);
     this.updateContainerStyle(container);
-    
-    // Implements minWidth/minHeight in quirks mode
-    if (mxClient.IS_QUIRKS)
-    {
-      var onResize = mxUtils.bind(this, (evt)=>
-      {
-        var bounds = this.getGraphBounds();
-        var width = bounds.x + bounds.width + this.graph.border;
-        var height = bounds.y + bounds.height + this.graph.border;
-        
-        this.updateHtmlCanvasSize(width, height);
-      });
-      
-      mxEvent.addListener(window, 'resize', onResize);
-    }
   }
 };
 
@@ -2825,30 +2769,6 @@ createVml = ()=>
     
     container.appendChild(this.canvas);
   }
-};
-
-/**
- * Function: createVmlPane
- * 
- * Creates a drawing pane in VML (group).
- */
-createVmlPane = (width, height)=>
-{
-  var pane = document.createElement(mxClient.VML_PREFIX + ':group');
-  
-  // At this point the width and height are potentially
-  // uninitialized. That's OK.
-  pane.style.position = 'absolute';
-  pane.style.left = '0px';
-  pane.style.top = '0px';
-
-  pane.style.width = width + 'px';
-  pane.style.height = height + 'px';
-
-  pane.setAttribute('coordsize', width + ',' + height);
-  pane.setAttribute('coordorigin', '0,0');
-  
-  return pane;
 };
 
 /**

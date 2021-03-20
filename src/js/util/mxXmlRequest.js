@@ -336,7 +336,7 @@ send = (onload, onerror, timeout, ontimeout)=>
       this.request.withCredentials = 'true';
     }
 
-    if (!mxClient.IS_QUIRKS && (document.documentMode == null || document.documentMode > 9) &&
+    if ((document.documentMode == null || document.documentMode > 9) &&
       window.XMLHttpRequest && timeout != null && ontimeout != null)
     {
       this.request.timeout = timeout;

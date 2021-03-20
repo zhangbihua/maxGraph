@@ -1788,7 +1788,7 @@ EditorUi.prototype.initCanvas = function()
                 
                 var st = graph.container.scrollTop;
                 var sl = graph.container.scrollLeft;
-                var sb = (mxClient.IS_QUIRKS || document.documentMode >= 8) ? 20 : 14;
+                var sb = 14;
                 
                 if (document.documentMode == 8 || document.documentMode == 9)
                 {
@@ -3615,7 +3615,7 @@ EditorUi.prototype.refresh = function(sizeDidChange)
 		tmp += this.toolbarHeight;
 	}
 	
-	if (tmp > 0 && !mxClient.IS_QUIRKS)
+	if (tmp > 0)
 	{
 		tmp += 1;
 	}

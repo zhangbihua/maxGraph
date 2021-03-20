@@ -317,18 +317,6 @@ class mxShape {
   };
 
   /**
-   * Function: createVml
-   *
-   * Creates and returns the VML node to represent this shape.
-   */
-  createVml = () => {
-    var node = document.createElement(mxClient.VML_PREFIX + ':group');
-    node.style.position = 'absolute';
-
-    return node;
-  };
-
-  /**
    * Function: createHtml
    *
    * Creates and returns the HTML DOM node(s) to represent
@@ -481,20 +469,6 @@ class mxShape {
         this.bounds != null && !isNaN(this.bounds.x) && !isNaN(this.bounds.y) &&
         !isNaN(this.bounds.width) && !isNaN(this.bounds.height) &&
         this.bounds.width > 0 && this.bounds.height > 0);
-  };
-
-  /**
-   * Function: createVmlGroup
-   *
-   * Returns the temporary element used for rendering in IE8 standards mode.
-   */
-  createVmlGroup = () => {
-    var node = document.createElement(mxClient.VML_PREFIX + ':group');
-    node.style.position = 'absolute';
-    node.style.width = this.node.style.width;
-    node.style.height = this.node.style.height;
-
-    return node;
   };
 
   /**

@@ -46,14 +46,7 @@
 				container.style.background = 'url("editors/images/grid.gif")';
 				
 				document.body.appendChild(container);
-				
-				// Workaround for Internet Explorer ignoring certain styles
-				if (mxClient.IS_QUIRKS)
-				{
-					document.body.style.overflow = 'hidden';
-					new mxDivResizer(container);
-				}
-				
+
 				// Creates the graph inside the given container
 				var graph = new mxGraph(container);
 				

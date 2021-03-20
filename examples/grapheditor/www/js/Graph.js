@@ -9734,32 +9734,29 @@ if (typeof mxVertexHandler != 'undefined')
 			
 			// Handles paste from Word, Excel etc by removing styles, classnames and unused nodes
 			// LATER: Fix undo/redo for paste
-			if (!mxClient.IS_QUIRKS && document.documentMode !== 7 && document.documentMode !== 8)
+			mxEvent.addListener(this.textarea, 'paste', mxUtils.bind(this, function(evt)
 			{
-				mxEvent.addListener(this.textarea, 'paste', mxUtils.bind(this, function(evt)
+				var clone = reference(this.textarea, this.textarea.cloneNode(true));
+
+				window.setTimeout(mxUtils.bind(this, function()
 				{
-					var clone = reference(this.textarea, this.textarea.cloneNode(true));
-	
-					window.setTimeout(mxUtils.bind(this, function()
+					if (this.textarea != null)
 					{
-						if (this.textarea != null)
+						// Paste from Word or Excel
+						if (this.textarea.innerHTML.indexOf('<o:OfficeDocumentSettings>') >= 0 ||
+							this.textarea.innerHTML.indexOf('<!--[if !mso]>') >= 0)
 						{
-							// Paste from Word or Excel
-							if (this.textarea.innerHTML.indexOf('<o:OfficeDocumentSettings>') >= 0 ||
-								this.textarea.innerHTML.indexOf('<!--[if !mso]>') >= 0)
-							{
-								checkNode(this.textarea, clone);
-							}
-							else
-							{
-								Graph.removePasteFormatting(this.textarea);
-							}
+							checkNode(this.textarea, clone);
 						}
-					}), 0);
-				}));
-			}
+						else
+						{
+							Graph.removePasteFormatting(this.textarea);
+						}
+					}
+				}), 0);
+			}));
 		};
-		
+
 		mxCellEditor.prototype.toggleViewMode = function()
 		{
 			var state = this.graph.view.getState(this.editingCell);
@@ -9783,11 +9780,8 @@ if (typeof mxVertexHandler != 'undefined')
 					var content = mxUtils.htmlEntities(this.textarea.innerHTML);
 		
 				    // Workaround for trailing line breaks being ignored in the editor
-					if (!mxClient.IS_QUIRKS && document.documentMode != 8)
-					{
-						content = mxUtils.replaceTrailingNewlines(content, '<div><br></div>');
-					}
-					
+					content = mxUtils.replaceTrailingNewlines(content, '<div><br></div>');
+
 				    content = this.graph.sanitizeHtml((nl2Br) ? content.replace(/\n/g, '').replace(/&lt;br\s*.?&gt;/g, '<br>') : content, true);
 					this.textarea.className = 'mxCellEditor mxPlainTextEditor';
 					

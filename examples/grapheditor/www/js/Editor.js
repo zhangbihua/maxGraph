@@ -800,13 +800,8 @@ function Dialog(editorUi, elt, w, h, modal, closable, onClose, noScroll, transpa
 	var dh = ds.height;
 	var left = Math.max(1, Math.round((ds.width - w - 64) / 2));
 	var top = Math.max(1, Math.round((dh - h - editorUi.footerHeight) / 3));
-	
-	// Keeps window size inside available space
-	if (!mxClient.IS_QUIRKS)
-	{
-		elt.style.maxHeight = '100%';
-	}
-	
+	elt.style.maxHeight = '100%';
+
 	w = (document.body != null) ? Math.min(w, document.body.scrollWidth - 64) : w;
 	h = Math.min(h, dh - 64);
 	
@@ -826,11 +821,6 @@ function Dialog(editorUi, elt, w, h, modal, closable, onClose, noScroll, transpa
 		this.bg.style.zIndex = this.zIndex - 2;
 		
 		mxUtils.setOpacity(this.bg, this.bgOpacity);
-		
-		if (mxClient.IS_QUIRKS)
-		{
-			new mxDivResizer(this.bg);
-		}
 	}
 	
 	var origin = mxUtils.getDocumentScrollOrigin(document);
@@ -2001,7 +1991,7 @@ var FilenameDialog = function(editorUi, filename, buttonText, fn, label, validat
 		
 		nameInput.focus();
 		
-		if (mxClient.IS_GC || mxClient.IS_FF || document.documentMode >= 5 || mxClient.IS_QUIRKS)
+		if (mxClient.IS_GC || mxClient.IS_FF)
 		{
 			nameInput.select();
 		}
@@ -2320,7 +2310,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 						
 						// Shadow filter causes problems in outline window in quirks mode. IE8 standards
 						// also has known rendering issues inside mxWindow but not using shadow is worse.
-						this.backgroundPageShape.isShadow = !mxClient.IS_QUIRKS;
+						this.backgroundPageShape.isShadow = true;
 						this.backgroundPageShape.dialect = mxConstants.DIALECT_STRICTHTML;
 						this.backgroundPageShape.init(graph.container);
 	

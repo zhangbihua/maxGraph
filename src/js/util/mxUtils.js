@@ -2299,16 +2299,12 @@ var mxUtils = {
    * if no document is given.
    */
   getDocumentScrollOrigin: (doc) => {
-    if (mxClient.IS_QUIRKS) {
-      return new mxPoint(doc.body.scrollLeft, doc.body.scrollTop);
-    } else {
-      var wnd = doc.defaultView || doc.parentWindow;
+    var wnd = doc.defaultView || doc.parentWindow;
 
-      var x = (wnd != null && window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
-      var y = (wnd != null && window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    var x = (wnd != null && window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
+    var y = (wnd != null && window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
 
-      return new mxPoint(x, y);
-    }
+    return new mxPoint(x, y);
   },
 
   /**
@@ -3132,8 +3128,7 @@ var mxUtils = {
     // Disables block layout and outside wrapping and hides the div
     div.style.position = 'absolute';
     div.style.visibility = 'hidden';
-    div.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
-    div.style.zoom = '1';
+    div.style.display = 'inline-block';
 
     if (textWidth != null) {
       div.style.width = textWidth + 'px';

@@ -1843,9 +1843,8 @@ mxSvgCanvas2addTextBackground = (node, str, x, y, w, h, align, valign, overflow)
       div.style.whiteSpace = 'nowrap';
       div.style.position = 'absolute';
       div.style.visibility = 'hidden';
-      div.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
-      div.style.zoom = '1';
-      
+      div.style.display = 'inline-block';
+
       if ((s.fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD)
       {
         div.style.fontWeight = 'bold';

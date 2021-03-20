@@ -53,13 +53,6 @@
 				// Disables built-in context menu
 				mxEvent.disableContextMenu(container);
 
-				// Workaround for Internet Explorer ignoring certain styles
-				if (mxClient.IS_QUIRKS)
-				{
-					document.body.style.overflow = 'hidden';
-					new mxDivResizer(container);
-				}
-
 				document.body.appendChild(container);
 			
 				// Creates the graph inside the DOM node.

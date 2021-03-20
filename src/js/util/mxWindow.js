@@ -327,21 +327,13 @@ init = (x, y, width, height, style)=>
   // Workaround for table size problems in FF
   if (width != null)
   {
-    if (!mxClient.IS_QUIRKS)
-    {
-      this.div.style.width = width + 'px'; 
-    }
-    
+    this.div.style.width = width + 'px';
     this.table.style.width = width + 'px';
   } 
   
   if (height != null)
   {
-    if (!mxClient.IS_QUIRKS)
-    {
-      this.div.style.height = height + 'px';
-    }
-    
+    this.div.style.height = height + 'px';
     this.table.style.height = height + 'px';
   }    
   
@@ -379,7 +371,7 @@ init = (x, y, width, height, style)=>
 
   // Workaround for div around div restricts height
   // of inner div if outerdiv has hidden overflow
-  if (mxClient.IS_QUIRKS || this.content.nodeName.toUpperCase() != 'DIV')
+  if (this.content.nodeName.toUpperCase() != 'DIV')
   {
     this.contentWrapper.style.height = '100%';
   }
@@ -620,20 +612,14 @@ setSize = (width, height)=>
   height = Math.max(this.minimumSize.height, height);
 
   // Workaround for table size problems in FF
-  if (!mxClient.IS_QUIRKS)
-  {
-    this.div.style.width =  width + 'px';
-    this.div.style.height = height + 'px';
-  }
-  
+  this.div.style.width =  width + 'px';
+  this.div.style.height = height + 'px';
+
   this.table.style.width =  width + 'px';
   this.table.style.height = height + 'px';
 
-  if (!mxClient.IS_QUIRKS)
-  {
-    this.contentWrapper.style.height = (this.div.offsetHeight -
-      this.title.offsetHeight - this.contentHeightCorrection) + 'px';
-  }
+  this.contentWrapper.style.height = (this.div.offsetHeight -
+    this.title.offsetHeight - this.contentHeightCorrection) + 'px';
 };
   
 /**
@@ -699,21 +685,13 @@ installMinimizeHandler = ()=>
       
       if (minSize.height > 0)
       {
-        if (!mxClient.IS_QUIRKS)
-        {
-          this.div.style.height = minSize.height + 'px';
-        }
-        
+        this.div.style.height = minSize.height + 'px';
         this.table.style.height = minSize.height + 'px';
       }
       
       if (minSize.width > 0)
       {
-        if (!mxClient.IS_QUIRKS)
-        {
-          this.div.style.width = minSize.width + 'px';
-        }
-        
+        this.div.style.width = minSize.width + 'px';
         this.table.style.width = minSize.width + 'px';
       }
       
@@ -732,12 +710,7 @@ installMinimizeHandler = ()=>
       this.minimize.setAttribute('title', 'Minimize');
       this.contentWrapper.style.display = ''; // default
       this.maximize.style.display = maxDisplay;
-      
-      if (!mxClient.IS_QUIRKS)
-      {
-        this.div.style.height = height;
-      }
-      
+      this.div.style.height = height;
       this.table.style.height = height;
 
       if (this.resize != null)
@@ -815,11 +788,8 @@ installMaximizeHandler = ()=>
         this.div.style.top = '0px';
         var docHeight = Math.max(document.body.clientHeight || 0, document.documentElement.clientHeight || 0);
 
-        if (!mxClient.IS_QUIRKS)
-        {
-          this.div.style.width = (document.body.clientWidth - 2) + 'px';
-          this.div.style.height = (docHeight - 2) + 'px';
-        }
+        this.div.style.width = (document.body.clientWidth - 2) + 'px';
+        this.div.style.height = (docHeight - 2) + 'px';
 
         this.table.style.width = (document.body.clientWidth - 2) + 'px';
         this.table.style.height = (docHeight - 2) + 'px';
@@ -829,15 +799,12 @@ installMaximizeHandler = ()=>
           this.resize.style.visibility = 'hidden';
         }
 
-        if (!mxClient.IS_QUIRKS)
+        var style = mxUtils.getCurrentStyle(this.contentWrapper);
+
+        if (style.overflow == 'auto' || this.resize != null)
         {
-          var style = mxUtils.getCurrentStyle(this.contentWrapper);
-    
-          if (style.overflow == 'auto' || this.resize != null)
-          {
-            this.contentWrapper.style.height = (this.div.offsetHeight -
-              this.title.offsetHeight - this.contentHeightCorrection) + 'px';
-          }
+          this.contentWrapper.style.height = (this.div.offsetHeight -
+            this.title.offsetHeight - this.contentHeightCorrection) + 'px';
         }
 
         this.fireEvent(new mxEventObject(mxEvent.MAXIMIZE, 'event', evt));
@@ -855,20 +822,17 @@ installMaximizeHandler = ()=>
         this.div.style.left = x+'px';
         this.div.style.top = y+'px';
         
-        if (!mxClient.IS_QUIRKS)
-        {
-          this.div.style.height = height;
-          this.div.style.width = width;
+        this.div.style.height = height;
+        this.div.style.width = width;
 
-          var style = mxUtils.getCurrentStyle(this.contentWrapper);
-    
-          if (style.overflow == 'auto' || this.resize != null)
-          {
-            this.contentWrapper.style.height = (this.div.offsetHeight -
-              this.title.offsetHeight - this.contentHeightCorrection) + 'px';
-          }
+        var style = mxUtils.getCurrentStyle(this.contentWrapper);
+
+        if (style.overflow == 'auto' || this.resize != null)
+        {
+          this.contentWrapper.style.height = (this.div.offsetHeight -
+            this.title.offsetHeight - this.contentHeightCorrection) + 'px';
         }
-        
+
         this.table.style.height = height;
         this.table.style.width = width;
 
@@ -1088,7 +1052,7 @@ show = ()=>
   
   var style = mxUtils.getCurrentStyle(this.contentWrapper);
   
-  if (!mxClient.IS_QUIRKS && (style.overflow == 'auto' || this.resize != null) &&
+  if ((style.overflow == 'auto' || this.resize != null) &&
     this.contentWrapper.style.display != 'none')
   {
     this.contentWrapper.style.height = (this.div.offsetHeight -

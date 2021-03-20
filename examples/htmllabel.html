@@ -90,7 +90,7 @@
 						}
 						
 						// Writes back to cell if checkbox is clicked
-						mxEvent.addListener(checkbox, (mxClient.IS_QUIRKS) ? 'click' : 'change', function(evt)
+						mxEvent.addListener(checkbox, 'change', function(evt)
 						{
 							var elt = cell.value.cloneNode(true);
 							elt.setAttribute('checked', (checkbox.checked) ? 'true' : 'false');

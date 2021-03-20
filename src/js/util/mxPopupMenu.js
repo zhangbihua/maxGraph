@@ -281,12 +281,6 @@ addItem = (title, image, funct, parent, iconCls, enabled, active, noHover)=>
           }
         }
 
-        // Workaround for lost current selection in page because of focus in IE
-        if (document.selection != null && (mxClient.IS_QUIRKS || document.documentMode == 8))
-        {
-          currentSelection = document.selection.createRange();
-        }
-
         mxEvent.consume(evt);
       }),
       mxUtils.bind(this, (evt)=>

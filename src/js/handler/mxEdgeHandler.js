@@ -758,17 +758,6 @@ initBend = (bend, dblClick)=>
   mxEvent.redirectMouseEvents(bend.node, this.graph, this.state,
       null, null, null, dblClick);
   
-  // Fixes lost event tracking for images in quirks / IE8 standards
-  if (mxClient.IS_QUIRKS || document.documentMode == 8)
-  {
-    mxEvent.addListener(bend.node, 'dragstart', (evt)=>
-    {
-      mxEvent.consume(evt);
-      
-      return false;
-    });
-  }
-  
   if (mxClient.IS_TOUCH)
   {
     bend.node.setAttribute('pointer-events', 'none');

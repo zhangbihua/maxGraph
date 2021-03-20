@@ -49,13 +49,6 @@
 
 				mxEvent.disableContextMenu(container);
 
-				if (mxClient.IS_QUIRKS)
-				{
-					document.body.style.overflow = 'hidden';
-					new mxDivResizer(container);
-					new mxDivResizer(outline);
-				}
-
 				// Sets a gradient background
 			    if (mxClient.IS_GC || mxClient.IS_SF)
 			    {

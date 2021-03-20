@@ -118,12 +118,6 @@
 						mxUtils.alert('Show properties for cell '+(cell.customId || cell.getId()));
 					}
 				};
-
-				if (mxClient.IS_QUIRKS)
-				{
-					document.body.style.overflow = 'hidden';
-					new mxDivResizer(container);
-				}
 			}
 		};
 		
