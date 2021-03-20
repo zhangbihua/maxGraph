@@ -4022,9 +4022,31 @@ class mxGraph extends mxEventSource {
    * Default is false.
    */
   insertVertex = function (parent, id, value,
-                           x, y, width, height, style, relative) {
-    var vertex = this.createVertex(parent, id, value, x, y, width, height, style, relative);
+                           x, y, width, height,
+                           style, relative) {
 
+    if (arguments.length === 1) {
+      // If only a single parameter, treat as an object
+      // This syntax can be more readable
+      let params = arguments[0];
+      parent = params.parent;
+      id = params.id;
+      value = params.value;
+
+      x = 'x' in params ? params.x : params.position[0];
+      y = 'y' in params ? params.y : params.position[1];
+      width = 'width' in params ? params.width : params.size[0];
+      height = 'height' in params ? params.height : params.size[1];
+
+      style = params.style;
+      relative = params.relative;
+    }
+
+    var vertex = this.createVertex(
+        parent, id, value,
+        x, y, width, height,
+        style, relative
+    );
     return this.addCell(vertex, parent);
   };
 
