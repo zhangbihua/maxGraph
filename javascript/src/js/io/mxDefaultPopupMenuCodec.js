@@ -2,8 +2,8 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(()=>
-{
+
+class mxDefaultPopupMenuCodec extends mxObjectCodec {
   /**
    * Class: mxDefaultPopupMenuCodec
    *
@@ -15,40 +15,36 @@ mxCodecRegistry.register(()=>
    * which uses the config to dynamically create menus. See
    * <mxDefaultPopupMenu.createMenu>.
    */
-  var codec = new mxObjectCodec(new mxDefaultPopupMenu());
+  constructor() {
+    super(new mxDefaultPopupMenu());
+  }
 
   /**
    * Function: encode
    *
    * Returns null.
    */
-  codec.encode = (enc, obj)=>
-  {
+  encode = (enc, obj) => {
     return null;
   };
-  
+
   /**
    * Function: decode
    *
    * Uses the given node as the config for <mxDefaultPopupMenu>.
    */
-  codec.decode = (dec, node, into)=>
-  {
+  decode = (dec, node, into) => {
     var inc = node.getElementsByTagName('include')[0];
-    
-    if (inc != null)
-    {
+
+    if (inc != null) {
       this.processInclude(dec, inc, into);
-    }
-    else if (into != null)
-    {
+    } else if (into != null) {
       into.config = node;
     }
-    
+
     return into;
   };
-  
-  // Returns the codec into the registry
-  return codec;
+}
 
-}());
+mxCodecRegistry.register(new mxDefaultPopupMenuCodec());
+export default mxDefaultPopupMenuCodec;

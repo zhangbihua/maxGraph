@@ -2,9 +2,9 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(()=>
-{
-  /**
+
+
+/**
    * Class: mxCellCodec
    *
    * Codec for <mxCell>s. This class is created and registered
@@ -23,22 +23,22 @@ mxCodecRegistry.register(()=>
    * - parent
    * - source
    * - target
-   * 
+   *
    * Transient fields can be added using the following code:
-   * 
+   *
    * mxCodecRegistry.getCodec(mxCell).exclude.push('name_of_field');
-   * 
+   *
    * To subclass <mxCell>, replace the template and add an alias as
    * follows.
-   * 
+   *
    * (code)
    * function CustomCell(value, geometry, style)
    * {
    *   mxCell.apply(this, arguments);
    * }
-   * 
+   *
    * mxUtils.extend(CustomCell, mxCell);
-   * 
+   *
    * mxCodecRegistry.getCodec(mxCell).template = new CustomCell();
    * mxCodecRegistry.addAlias('CustomCell', 'mxCell');
    * (end)
@@ -64,19 +64,19 @@ mxCodecRegistry.register(()=>
   {
     return attr.nodeName !== 'value' && isNumericAttribute.apply(this, arguments);
   };
-  
+
   /**
    * Function: isExcluded
    *
    * Excludes user objects that are XML nodes.
-   */ 
+   */
   codec.isExcluded = (obj, attr, value, isWrite)=>
   {
     return isExcluded.apply(this, arguments) ||
       (isWrite && attr == 'value' &&
       value.nodeType == mxConstants.NODETYPE_ELEMENT);
   };
-  
+
   /**
    * Function: afterEncode
    *
@@ -93,7 +93,7 @@ mxCodecRegistry.register(()=>
       var tmp = node;
       node = mxUtils.importNode(enc.document, obj.value, true);
       node.appendChild(tmp);
-      
+
       // Moves the id attribute to the outermost XML node, namely the
       // node which denotes the object boundaries in the file.
       var id = tmp.getAttribute('id');
@@ -114,13 +114,13 @@ mxCodecRegistry.register(()=>
   {
     var inner = node.cloneNode(true);
     var classname = this.getName();
-    
+
     if (node.nodeName != classname)
     {
       // Passes the inner graphical annotation node to the
       // object codec for further processing of the cell.
       var tmp = node.getElementsByTagName(classname)[0];
-      
+
       if (tmp != null && tmp.parentNode == node)
       {
         mxUtils.removeWhitespace(tmp, true);
@@ -132,11 +132,11 @@ mxCodecRegistry.register(()=>
       {
         inner = null;
       }
-      
+
       // Creates the user object out of the XML node
       obj.value = node.cloneNode(true);
       var id = obj.value.getAttribute('id');
-      
+
       if (id != null)
       {
         obj.setId(id);
@@ -148,7 +148,7 @@ mxCodecRegistry.register(()=>
       // Uses ID from XML file as ID for cell in model
       obj.setId(node.getAttribute('id'));
     }
-      
+
     // Preprocesses and removes all Id-references in order to use the
     // correct encoder (this) for the known references to cells (all).
     if (inner != null)
@@ -157,33 +157,31 @@ mxCodecRegistry.register(()=>
       {
         var attr = this.idrefs[i];
         var ref = inner.getAttribute(attr);
-        
+
         if (ref != null)
         {
           inner.removeAttribute(attr);
           var object = dec.objects[ref] || dec.lookup(ref);
-          
+
           if (object == null)
           {
             // Needs to decode forward reference
             var element = dec.getElementById(ref);
-            
+
             if (element != null)
             {
               var decoder = mxCodecRegistry.codecs[element.nodeName] || this;
               object = decoder.decode(dec, element);
             }
           }
-          
+
           obj[attr] = object;
         }
       }
     }
-    
+
     return inner;
   };
 
-  // Returns the codec into the registry
-  return codec;
-
-}());
+mxCodecRegistry.register(new mxCellCodec());
+export default mxCellCodec;

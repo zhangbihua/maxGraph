@@ -2,8 +2,8 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  */
-mxCodecRegistry.register(()=>
-{
+
+class mxDefaultKeyHandlerCodec extends mxObjectCodec {
   /**
    * Class: mxDefaultKeyHandlerCodec
    *
@@ -12,18 +12,19 @@ mxCodecRegistry.register(()=>
    * <mxCodec> and the <mxCodecRegistry>. This codec only reads configuration
    * data for existing key handlers, it does not encode or create key handlers.
    */
-  var codec = new mxObjectCodec(new mxDefaultKeyHandler());
+  constructor() {
+    super(new mxDefaultKeyHandler());
+  }
 
   /**
    * Function: encode
    *
    * Returns null.
    */
-  codec.encode = (enc, obj)=>
-  {
+  encode = (enc, obj) => {
     return null;
   };
-  
+
   /**
    * Function: decode
    *
@@ -56,33 +57,28 @@ mxCodecRegistry.register(()=>
    * See also: <mxDefaultKeyHandler.bindAction>,
    * http://www.js-examples.com/page/tutorials__key_codes.html
    */
-  codec.decode = (dec, node, into)=>
-  {
-    if (into != null)
-    {
+  decode = (dec, node, into) => {
+    if (into != null) {
       var editor = into.editor;
       node = node.firstChild;
-      
-      while (node != null)
-      {
+
+      while (node != null) {
         if (!this.processInclude(dec, node, into) &&
-          node.nodeName == 'add')
-        {
+            node.nodeName === 'add') {
           var as = node.getAttribute('as');
           var action = node.getAttribute('action');
           var control = node.getAttribute('control');
-          
+
           into.bindAction(as, action, control);
         }
-        
+
         node = node.nextSibling;
       }
     }
-    
+
     return into;
   };
+}
 
-  // Returns the codec into the registry
-  return codec;
-
-}());
+mxCodecRegistry.register(new mxDefaultKeyHandlerCodec());
+export default mxDefaultKeyHandlerCodec;
