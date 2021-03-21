@@ -3,25 +3,26 @@
  * Copyright (c) 2006-2017, Gaudenz Alder
  */
 
-import mxRectangleShape from "FIXME";
-import mxEllipse from "FIXME";
-import mxRhombus from "FIXME";
-import mxCylinder from "FIXME";
-import mxConnector from "FIXME";
-import mxActor from "FIXME";
-import mxTriangle from "FIXME";
-import mxHexagon from "FIXME";
-import mxCloud from "FIXME";
-import mxLine from "FIXME";
-import mxArrow from "FIXME";
-import mxArrowConnector from "FIXME";
-import mxDoubleEllipse from "FIXME";
-import mxSwimlane from "FIXME";
-import mxImageShape from "FIXME";
-import mxLabel from "FIXME";
-import mxText from "FIXME";
-import mxConstants from "FIXME";
+import mxRectangleShape from "../shape/mxRectangleShape";
+import mxEllipse from "../shape/mxEllipse";
+import mxRhombus from "../shape/mxRhombus";
+import mxCylinder from "../shape/mxCylinder";
+import mxConnector from "../shape/mxConnector";
+import mxActor from "../shape/mxActor";
+import mxTriangle from "../shape/mxTriangle";
+import mxHexagon from "../shape/mxHexagon";
+import mxCloud from "../shape/mxCloud";
+import mxLine from "../shape/mxLine";
+import mxArrow from "../shape/mxArrow";
+import mxArrowConnector from "../shape/mxArrowConnector";
+import mxDoubleEllipse from "../shape/mxDoubleEllipse";
+import mxSwimlane from "../shape/mxSwimlane";
+import mxImageShape from "../shape/mxImageShape";
+import mxLabel from "../shape/mxLabel";
+import mxText from "../shape/mxText";
+import mxConstants from "../util/mxConstants";
 import mxUtils from "../util/mxUtils";
+import mxRectangle from "../util/mxRectangle";
 
 class mxCellRenderer {
   /**
@@ -840,9 +841,9 @@ class mxCellRenderer {
       let nextScale = this.getTextScale(state);
       this.resolveColor(state, 'color', mxConstants.STYLE_FONTCOLOR);
 
-      if (forced || state.text.value != value || state.text.isWrapping != wrapping ||
-          state.text.overflow != overflow || state.text.isClipping != clipping ||
-          state.text.scale != nextScale || state.text.dialect != dialect ||
+      if (forced || state.text.value !== value || state.text.isWrapping !== wrapping ||
+          state.text.overflow !== overflow || state.text.isClipping !== clipping ||
+          state.text.scale !== nextScale || state.text.dialect !== dialect ||
           state.text.bounds == null || !state.text.bounds.equals(bounds)) {
         state.text.dialect = dialect;
         state.text.value = value;
@@ -875,12 +876,12 @@ class mxCellRenderer {
       let result = false;
 
       // Workaround for spacing added to directional spacing
-      if (stylename == 'spacingTop' || stylename == 'spacingRight' ||
-          stylename == 'spacingBottom' || stylename == 'spacingLeft') {
-        result = parseFloat(shape[property]) - parseFloat(shape.spacing) !=
+      if (stylename === 'spacingTop' || stylename === 'spacingRight' ||
+          stylename === 'spacingBottom' || stylename === 'spacingLeft') {
+        result = parseFloat(shape[property]) - parseFloat(shape.spacing) !==
             (state.style[stylename] || defaultValue);
       } else {
-        result = shape[property] != (state.style[stylename] || defaultValue);
+        result = shape[property] !== (state.style[stylename] || defaultValue);
       }
 
       return result;
@@ -987,7 +988,7 @@ class mxCellRenderer {
       let hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
       let vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
 
-      if (hpos == mxConstants.ALIGN_CENTER && vpos == mxConstants.ALIGN_MIDDLE) {
+      if (hpos === mxConstants.ALIGN_CENTER && vpos === mxConstants.ALIGN_MIDDLE) {
         bounds = state.shape.getLabelBounds(bounds);
       }
     }
@@ -1021,7 +1022,7 @@ class mxCellRenderer {
     bounds.y -= state.text.margin.y * bounds.height;
     bounds.x -= state.text.margin.x * bounds.width;
 
-    if (!this.legacySpacing || (state.style[mxConstants.STYLE_OVERFLOW] != 'fill' && state.style[mxConstants.STYLE_OVERFLOW] != 'width')) {
+    if (!this.legacySpacing || (state.style[mxConstants.STYLE_OVERFLOW] !== 'fill' && state.style[mxConstants.STYLE_OVERFLOW] !== 'width')) {
       let s = state.view.scale;
       let spacing = state.text.getSpacing();
       bounds.x += spacing.x * s;
@@ -1031,18 +1032,18 @@ class mxCellRenderer {
       let vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
       let lw = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_WIDTH, null);
 
-      bounds.width = Math.max(0, bounds.width - ((hpos == mxConstants.ALIGN_CENTER && lw == null) ? (state.text.spacingLeft * s + state.text.spacingRight * s) : 0));
-      bounds.height = Math.max(0, bounds.height - ((vpos == mxConstants.ALIGN_MIDDLE) ? (state.text.spacingTop * s + state.text.spacingBottom * s) : 0));
+      bounds.width = Math.max(0, bounds.width - ((hpos === mxConstants.ALIGN_CENTER && lw == null) ? (state.text.spacingLeft * s + state.text.spacingRight * s) : 0));
+      bounds.height = Math.max(0, bounds.height - ((vpos === mxConstants.ALIGN_MIDDLE) ? (state.text.spacingTop * s + state.text.spacingBottom * s) : 0));
     }
 
     let theta = state.text.getTextRotation();
 
     // Only needed if rotated around another center
-    if (theta != 0 && state != null && state.view.graph.model.isVertex(state.cell)) {
+    if (theta !== 0 && state != null && state.view.graph.model.isVertex(state.cell)) {
       let cx = state.getCenterX();
       let cy = state.getCenterY();
 
-      if (bounds.x != cx || bounds.y != cy) {
+      if (bounds.x !== cx || bounds.y !== cy) {
         let rad = theta * (Math.PI / 180);
         let pt = mxUtils.getRotatedPoint(new mxPoint(bounds.x, bounds.y),
             Math.cos(rad), Math.sin(rad), new mxPoint(cx, cy));
@@ -1391,7 +1392,7 @@ class mxCellRenderer {
    * Returns true if the given shape must be repainted.
    */
   isShapeInvalid = (state, shape) => {
-    return shape.bounds == null || shape.scale != state.view.scale ||
+    return shape.bounds == null || shape.scale !== state.view.scale ||
         (state.absolutePoints == null && !shape.bounds.equals(state)) ||
         (state.absolutePoints != null && !mxUtils.equalPoints(shape.points, state.absolutePoints))
   };

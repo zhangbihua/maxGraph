@@ -4,7 +4,10 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from "FIXME";
+import mxPoint from "../util/mxPoint";
+import mxActor from "./mxActor";
+import mxUtils from "../util/mxUtils";
+import mxConstants from "../util/mxConstants";
 
 class mxTriangle extends mxActor {
   /**

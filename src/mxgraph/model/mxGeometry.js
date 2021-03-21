@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from "FIXME";
+import mxPoint from "../util/mxPoint";
 import mxRectangle from "../util/mxRectangle";
 
 class mxGeometry extends mxRectangle {

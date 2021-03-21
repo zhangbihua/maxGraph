@@ -3,6 +3,11 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxPoint from "../util/mxPoint";
+import mxConstants from "../util/mxConstants";
+import mxRectangle from "../util/mxRectangle";
+import mxUtils from "../util/mxUtils";
+import mxElbowEdgeHandler from "./mxElbowEdgeHandler";
 
 class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
   constructor(state) {
@@ -22,7 +27,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
       // Special case for straight edges where we add a virtual middle handle for moving the edge
       let tol = Math.max(1, this.graph.view.scale);
 
-      if (pts.length == 2 || (pts.length == 3 &&
+      if (pts.length === 2 || (pts.length === 3 &&
           (Math.abs(pts[0].x - pts[1].x) < tol && Math.abs(pts[1].x - pts[2].x) < tol ||
               Math.abs(pts[0].y - pts[1].y) < tol && Math.abs(pts[1].y - pts[2].y) < tol))) {
         let cx = pts[0].x + (pts[pts.length - 1].x - pts[0].x) / 2;
@@ -72,7 +77,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
       }
 
       // Replaces single point that intersects with source or target
-      if (result.length == 1) {
+      if (result.length === 1) {
         let source = this.state.getVisibleTerminalState(true);
         let target = this.state.getVisibleTerminalState(false);
         let scale = this.state.view.getScale();
@@ -126,13 +131,13 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
       let rpts = this.state.absolutePoints;
 
       // A straight line is represented by 3 handles
-      if (result.length == 0 && (Math.round(pts[0].x - pts[pts.length - 1].x) == 0 ||
-          Math.round(pts[0].y - pts[pts.length - 1].y) == 0)) {
+      if (result.length === 0 && (Math.round(pts[0].x - pts[pts.length - 1].x) === 0 ||
+          Math.round(pts[0].y - pts[pts.length - 1].y) === 0)) {
         result = [point, point];
       }
       // Handles special case of transitions from straight vertical to routed
-      else if (pts.length == 5 && result.length == 2 && source != null && target != null &&
-          rpts != null && Math.round(rpts[0].x - rpts[rpts.length - 1].x) == 0) {
+      else if (pts.length === 5 && result.length === 2 && source != null && target != null &&
+          rpts != null && Math.round(rpts[0].x - rpts[rpts.length - 1].x) === 0) {
         let view = this.graph.getView();
         let scale = view.getScale();
         let tr = view.getTranslate();
@@ -196,8 +201,8 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
         var pt2 = pts[i];
 
         // Merges adjacent segments only if more than 2 to allow for straight edges
-        if ((Math.round(pt0.x - pt1.x) != 0 || Math.round(pt1.x - pt2.x) != 0) &&
-            (Math.round(pt0.y - pt1.y) != 0 || Math.round(pt1.y - pt2.y) != 0)) {
+        if ((Math.round(pt0.x - pt1.x) !== 0 || Math.round(pt1.x - pt2.x) !== 0) &&
+            (Math.round(pt0.y - pt1.y) !== 0 || Math.round(pt1.y - pt2.y) !== 0)) {
           result.push(this.convertPoint(pt1.clone(), false));
         }
 
@@ -275,11 +280,11 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
       for (let i = 0; i < pts.length - 1; i++) {
         bend = this.createVirtualBend();
         bends.push(bend);
-        let horizontal = Math.round(pts[i].x - pts[i + 1].x) == 0;
+        let horizontal = Math.round(pts[i].x - pts[i + 1].x) === 0;
 
         // Special case where dy is 0 as well
-        if (Math.round(pts[i].y - pts[i + 1].y) == 0 && i < pts.length - 2) {
-          horizontal = Math.round(pts[i].x - pts[i + 2].x) == 0;
+        if (Math.round(pts[i].y - pts[i + 1].y) === 0 && i < pts.length - 2) {
+          horizontal = Math.round(pts[i].x - pts[i + 2].x) === 0;
         }
 
         bend.setCursor((horizontal) ? 'col-resize' : 'row-resize');
@@ -288,7 +293,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
     }
 
     // Target
-    let bend = this.createHandleShape(pts.length);
+    bend = this.createHandleShape(pts.length);
     this.initBend(bend);
     bend.setCursor(mxConstants.CURSOR_TERMINAL_HANDLE);
     bends.push(bend);
@@ -319,10 +324,10 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
         let straight = false;
 
         // Puts handle in the center of straight edges
-        if (pts.length == 4 && Math.round(pts[1].x - pts[2].x) == 0 && Math.round(pts[1].y - pts[2].y) == 0) {
+        if (pts.length === 4 && Math.round(pts[1].x - pts[2].x) === 0 && Math.round(pts[1].y - pts[2].y) === 0) {
           straight = true;
 
-          if (Math.round(pts[0].y - pts[pts.length - 1].y) == 0) {
+          if (Math.round(pts[0].y - pts[pts.length - 1].y) === 0) {
             let cx = pts[0].x + (pts[pts.length - 1].x - pts[0].x) / 2;
             pts[1] = new mxPoint(cx, pts[1].y);
             pts[2] = new mxPoint(cx, pts[2].y);
@@ -335,7 +340,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
 
         for (let i = 0; i < pts.length - 1; i++) {
           if (this.bends[i + 1] != null) {
-            var p0 = pts[i];
+            let p0 = pts[i];
             let pe = pts[i + 1];
             let pt = new mxPoint(p0.x + (pe.x - p0.x) / 2, p0.y + (pe.y - p0.y) / 2);
             let b = this.bends[i + 1].bounds;

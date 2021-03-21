@@ -6,7 +6,7 @@
 
 import mxUtils from "../util/mxUtils"
 import mxRectangle from "../util/mxRectangle";
-import mxEvent from "FIXME";
+import mxEvent from "../util/mxEvent";
 
 class mxCellEditor {
   /**

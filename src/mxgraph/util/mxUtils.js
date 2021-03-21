@@ -5,6 +5,7 @@
  */
 import mxEffects from "./mxEffects";
 import mxXmlRequest from "./mxXmlRequest";
+import mxClient from "../mxClient";
 
 let mxUtils = {
   /**
@@ -95,11 +96,11 @@ let mxUtils = {
    * medium and thick (2, 4 and 6).
    */
   parseCssNumber: (value) => {
-    if (value == 'thin') {
+    if (value === 'thin') {
       value = '2';
-    } else if (value == 'medium') {
+    } else if (value === 'medium') {
       value = '4';
-    } else if (value == 'thick') {
+    } else if (value === 'thick') {
       value = '6';
     }
 

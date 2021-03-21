@@ -930,7 +930,7 @@ class mxText extends mxShape {
     }
 
     // Workaround for rendering offsets
-    let dy = 0;
+    dy = 0;
 
     style.zoom = s;
     style.left = Math.round(this.bounds.x + left_fix - w / 2) + 'px';

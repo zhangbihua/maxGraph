@@ -1601,7 +1601,7 @@ class mxEdgeHandler {
         // Resets the offset inside the geometry to find the offset
         // from the resulting point
         geometry.offset = new mxPoint(0, 0);
-        let pt = this.graph.view.getPoint(edgeState, geometry);
+        pt = this.graph.view.getPoint(edgeState, geometry);
         geometry.offset = new mxPoint(Math.round((x - pt.x) / scale), Math.round((y - pt.y) / scale));
       } else {
         let points = edgeState.absolutePoints;

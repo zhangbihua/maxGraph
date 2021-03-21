@@ -977,8 +977,8 @@ class mxVertexHandler {
 
     var c2 = new mxPoint(this.bounds.getCenterX(), this.bounds.getCenterY());
 
-    let dx = c2.x - ct.x;
-    let dy = c2.y - ct.y;
+    dx = c2.x - ct.x;
+    dy = c2.y - ct.y;
 
     var dx2 = cos * dx - sin * dy;
     var dy2 = sin * dx + cos * dy;
