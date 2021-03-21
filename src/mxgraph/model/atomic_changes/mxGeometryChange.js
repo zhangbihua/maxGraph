@@ -14,7 +14,7 @@ class mxGeometryChange {
     this.cell = cell;
     this.geometry = geometry;
     this.previous = geometry;
-  };
+  }
 
   /**
    * Function: execute
@@ -26,7 +26,9 @@ class mxGeometryChange {
     if (this.cell != null) {
       this.geometry = this.previous;
       this.previous = this.model.geometryForCellChanged(
-          this.cell, this.previous);
+        this.cell,
+        this.previous
+      );
     }
   };
 }

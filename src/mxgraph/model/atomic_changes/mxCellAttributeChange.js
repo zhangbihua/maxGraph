@@ -36,7 +36,7 @@ class mxCellAttributeChange {
     this.attribute = attribute;
     this.value = value;
     this.previous = value;
-  };
+  }
 
   /**
    * Function: execute
@@ -46,7 +46,7 @@ class mxCellAttributeChange {
    */
   execute = () => {
     if (this.cell != null) {
-      let tmp = this.cell.getAttribute(this.attribute);
+      const tmp = this.cell.getAttribute(this.attribute);
 
       if (this.previous == null) {
         this.cell.value.removeAttribute(this.attribute);

@@ -4,11 +4,11 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "../util/mxUtils"
-import mxRectangle from "../util/mxRectangle";
-import mxEvent from "../util/mxEvent";
-import mxClient from "../mxClient";
-import mxConstants from "../util/mxConstants";
+import mxUtils from '../util/mxUtils';
+import mxRectangle from '../util/mxRectangle';
+import mxEvent from '../util/mxEvent';
+import mxClient from '../mxClient';
+import mxConstants from '../util/mxConstants';
 
 class mxCellEditor {
   /**
@@ -72,7 +72,7 @@ class mxCellEditor {
    * value is only displayed before the first keystroke and is never used as the
    * actual editing value.
    */
-  emptyLabelText = (mxClient.IS_FF) ? '<br>' : '';
+  emptyLabelText = mxClient.IS_FF ? '<br>' : '';
 
   /**
    * Variable: escapeCancelsEditing
@@ -255,14 +255,17 @@ class mxCellEditor {
     this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.zoomHandler);
 
     // Adds handling of deleted cells while editing
-    this.changeHandler = mxUtils.bind(this, (sender) => {
-      if (this.editingCell != null && this.graph.getView().getState(this.editingCell) == null) {
+    this.changeHandler = mxUtils.bind(this, sender => {
+      if (
+        this.editingCell != null &&
+        this.graph.getView().getState(this.editingCell) == null
+      ) {
         this.stopEditing(true);
       }
     });
 
     this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
-  };
+  }
 
   /**
    * Function: init
@@ -280,7 +283,9 @@ class mxCellEditor {
       this.textarea.style.minHeight = '1em';
     }
 
-    this.textarea.style.position = ((this.isLegacyEditor())) ? 'absolute' : 'relative';
+    this.textarea.style.position = this.isLegacyEditor()
+      ? 'absolute'
+      : 'relative';
     this.installListeners(this.textarea);
   };
 
@@ -298,7 +303,7 @@ class mxCellEditor {
    *
    * Sets the temporary horizontal alignment for the current editing session.
    */
-  setAlign = (align) => {
+  setAlign = align => {
     if (this.textarea != null) {
       this.textarea.style.textAlign = align;
     }
@@ -313,7 +318,10 @@ class mxCellEditor {
    * Gets the initial editing value for the given cell.
    */
   getInitialValue = (state, trigger) => {
-    let result = mxUtils.htmlEntities(this.graph.getEditingValue(state.cell, trigger), false);
+    let result = mxUtils.htmlEntities(
+      this.graph.getEditingValue(state.cell, trigger),
+      false
+    );
     result = mxUtils.replaceTrailingNewlines(result, '<div><br></div>');
     return result.replace(/\n/g, '<br>');
   };
@@ -323,7 +331,7 @@ class mxCellEditor {
    *
    * Returns the current editing value.
    */
-  getCurrentValue = (state) => {
+  getCurrentValue = state => {
     return mxUtils.extractTextWithWhitespace(this.textarea.childNodes);
   };
 
@@ -333,8 +341,13 @@ class mxCellEditor {
    * Returns true if <escapeCancelsEditing> is true and shift, control and meta
    * are not pressed.
    */
-  isCancelEditingKeyEvent = (evt) => {
-    return this.escapeCancelsEditing || mxEvent.isShiftDown(evt) || mxEvent.isControlDown(evt) || mxEvent.isMetaDown(evt);
+  isCancelEditingKeyEvent = evt => {
+    return (
+      this.escapeCancelsEditing ||
+      mxEvent.isShiftDown(evt) ||
+      mxEvent.isControlDown(evt) ||
+      mxEvent.isMetaDown(evt)
+    );
   };
 
   /**
@@ -342,41 +355,58 @@ class mxCellEditor {
    *
    * Installs listeners for focus, change and standard key event handling.
    */
-  installListeners = (elt) => {
+  installListeners = elt => {
     // Applies value if text is dragged
     // LATER: Gesture mouse events ignored for starting move
-    mxEvent.addListener(elt, 'dragstart', mxUtils.bind(this, (evt) => {
-      this.graph.stopEditing(false);
-      mxEvent.consume(evt);
-    }));
+    mxEvent.addListener(
+      elt,
+      'dragstart',
+      mxUtils.bind(this, evt => {
+        this.graph.stopEditing(false);
+        mxEvent.consume(evt);
+      })
+    );
 
     // Applies value if focus is lost
-    mxEvent.addListener(elt, 'blur', mxUtils.bind(this, (evt) => {
-      if (this.blurEnabled) {
-        this.focusLost(evt);
-      }
-    }));
+    mxEvent.addListener(
+      elt,
+      'blur',
+      mxUtils.bind(this, evt => {
+        if (this.blurEnabled) {
+          this.focusLost(evt);
+        }
+      })
+    );
 
     // Updates modified state and handles placeholder text
-    mxEvent.addListener(elt, 'keydown', mxUtils.bind(this, (evt) => {
-      if (!mxEvent.isConsumed(evt)) {
-        if (this.isStopEditingEvent(evt)) {
-          this.graph.stopEditing(false);
-          mxEvent.consume(evt);
-        } else if (evt.keyCode === 27 /* Escape */) {
-          this.graph.stopEditing(this.isCancelEditingKeyEvent(evt));
-          mxEvent.consume(evt);
+    mxEvent.addListener(
+      elt,
+      'keydown',
+      mxUtils.bind(this, evt => {
+        if (!mxEvent.isConsumed(evt)) {
+          if (this.isStopEditingEvent(evt)) {
+            this.graph.stopEditing(false);
+            mxEvent.consume(evt);
+          } else if (evt.keyCode === 27 /* Escape */) {
+            this.graph.stopEditing(this.isCancelEditingKeyEvent(evt));
+            mxEvent.consume(evt);
+          }
         }
-      }
-    }));
+      })
+    );
 
     // Keypress only fires if printable key was pressed and handles removing the empty placeholder
-    let keypressHandler = mxUtils.bind(this, (evt) => {
+    const keypressHandler = mxUtils.bind(this, evt => {
       if (this.editingCell != null) {
         // Clears the initial empty label on the first keystroke
         // and workaround for FF which fires keypress for delete and backspace
-        if (this.clearOnChange && elt.innerHTML === this.getEmptyLabelText() &&
-            (!mxClient.IS_FF || (evt.keyCode !== 8 /* Backspace */ && evt.keyCode !== 46 /* Delete */))) {
+        if (
+          this.clearOnChange &&
+          elt.innerHTML === this.getEmptyLabelText() &&
+          (!mxClient.IS_FF ||
+            (evt.keyCode !== 8 /* Backspace */ &&
+              evt.keyCode !== 46)) /* Delete */
+        ) {
           this.clearOnChange = false;
           elt.innerHTML = '';
         }
@@ -387,13 +417,16 @@ class mxCellEditor {
     mxEvent.addListener(elt, 'paste', keypressHandler);
 
     // Handler for updating the empty label text value after a change
-    let keyupHandler = mxUtils.bind(this, (evt) => {
+    const keyupHandler = mxUtils.bind(this, evt => {
       if (this.editingCell != null) {
         // Uses an optional text value for sempty labels which is cleared
         // when the first keystroke appears. This makes it easier to see
         // that a label is being edited even if the label is empty.
         // In Safari and FF, an empty text is represented by <BR> which isn't enough to force a valid size
-        if (this.textarea.innerHTML.length === 0 || this.textarea.innerHTML === '<br>') {
+        if (
+          this.textarea.innerHTML.length === 0 ||
+          this.textarea.innerHTML === '<br>'
+        ) {
           this.textarea.innerHTML = this.getEmptyLabelText();
           this.clearOnChange = this.textarea.innerHTML.length > 0;
         } else {
@@ -407,20 +440,27 @@ class mxCellEditor {
     mxEvent.addListener(elt, 'paste', keyupHandler);
 
     // Adds automatic resizing of the textbox while typing using input, keyup and/or DOM change events
-    let evtName = 'input';
+    const evtName = 'input';
 
-    let resizeHandler = mxUtils.bind(this, (evt) => {
-      if (this.editingCell != null && this.autoSize && !mxEvent.isConsumed(evt)) {
+    const resizeHandler = mxUtils.bind(this, evt => {
+      if (
+        this.editingCell != null &&
+        this.autoSize &&
+        !mxEvent.isConsumed(evt)
+      ) {
         // Asynchronous is needed for keydown and shows better results for input events overall
         // (ie non-blocking and cases where the offsetWidth/-Height was wrong at this time)
         if (this.resizeThread != null) {
           window.clearTimeout(this.resizeThread);
         }
 
-        this.resizeThread = window.setTimeout(mxUtils.bind(this, () => {
-          this.resizeThread = null;
-          this.resize();
-        }), 0);
+        this.resizeThread = window.setTimeout(
+          mxUtils.bind(this, () => {
+            this.resizeThread = null;
+            this.resize();
+          }),
+          0
+        );
       }
     });
 
@@ -437,10 +477,14 @@ class mxCellEditor {
    * returns true if F2 is pressed of if <mxGraph.enterStopsCellEditing> is true
    * and enter is pressed without control or shift.
    */
-  isStopEditingEvent = (evt) => {
-    return evt.keyCode === 113 /* F2 */ || (this.graph.isEnterStopsCellEditing() &&
-        evt.keyCode === 13 /* Enter */ && !mxEvent.isControlDown(evt) &&
-        !mxEvent.isShiftDown(evt));
+  isStopEditingEvent = evt => {
+    return (
+      evt.keyCode === 113 /* F2 */ ||
+      (this.graph.isEnterStopsCellEditing() &&
+      evt.keyCode === 13 /* Enter */ &&
+        !mxEvent.isControlDown(evt) &&
+        !mxEvent.isShiftDown(evt))
+    );
   };
 
   /**
@@ -448,7 +492,7 @@ class mxCellEditor {
    *
    * Returns true if this editor is the source for the given native event.
    */
-  isEventSource = (evt) => {
+  isEventSource = evt => {
     return mxEvent.getSource(evt) === this.textarea;
   };
 
@@ -458,33 +502,51 @@ class mxCellEditor {
    * Returns <modified>.
    */
   resize = () => {
-    let state = this.graph.getView().getState(this.editingCell);
+    const state = this.graph.getView().getState(this.editingCell);
 
     if (state == null) {
       this.stopEditing(true);
     } else if (this.textarea != null) {
-      let isEdge = this.graph.getModel().isEdge(state.cell);
-      let scale = this.graph.getView().scale;
+      const isEdge = this.graph.getModel().isEdge(state.cell);
+      const { scale } = this.graph.getView();
       let m = null;
 
-      if (!this.autoSize || (state.style[mxConstants.STYLE_OVERFLOW] === 'fill')) {
+      if (
+        !this.autoSize ||
+        state.style[mxConstants.STYLE_OVERFLOW] === 'fill'
+      ) {
         // Specifies the bounds of the editor box
         this.bounds = this.getEditorBounds(state);
-        this.textarea.style.width = Math.round(this.bounds.width / scale) + 'px';
-        this.textarea.style.height = Math.round(this.bounds.height / scale) + 'px';
+        this.textarea.style.width = `${Math.round(
+          this.bounds.width / scale
+        )}px`;
+        this.textarea.style.height = `${Math.round(
+          this.bounds.height / scale
+        )}px`;
 
         // FIXME: Offset when scaled
-        this.textarea.style.left = Math.max(0, Math.round(this.bounds.x + 1)) + 'px';
-        this.textarea.style.top = Math.max(0, Math.round(this.bounds.y + 1)) + 'px';
+        this.textarea.style.left = `${Math.max(
+          0,
+          Math.round(this.bounds.x + 1)
+        )}px`;
+        this.textarea.style.top = `${Math.max(
+          0,
+          Math.round(this.bounds.y + 1)
+        )}px`;
 
         // Installs native word wrapping and avoids word wrap for empty label placeholder
-        if (this.graph.isWrapping(state.cell) && (this.bounds.width >= 2 || this.bounds.height >= 2) &&
-            this.textarea.innerHTML !== this.getEmptyLabelText()) {
+        if (
+          this.graph.isWrapping(state.cell) &&
+          (this.bounds.width >= 2 || this.bounds.height >= 2) &&
+          this.textarea.innerHTML !== this.getEmptyLabelText()
+        ) {
           this.textarea.style.wordWrap = mxConstants.WORD_WRAP;
           this.textarea.style.whiteSpace = 'normal';
 
           if (state.style[mxConstants.STYLE_OVERFLOW] !== 'fill') {
-            this.textarea.style.width = Math.round(this.bounds.width / scale) + this.wordWrapPadding + 'px';
+            this.textarea.style.width = `${Math.round(
+              this.bounds.width / scale
+            ) + this.wordWrapPadding}px`;
           }
         } else {
           this.textarea.style.whiteSpace = 'nowrap';
@@ -494,70 +556,149 @@ class mxCellEditor {
           }
         }
       } else {
-        let lw = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_WIDTH, null);
-        m = (state.text != null && this.align == null) ? state.text.margin : null;
+        const lw = mxUtils.getValue(
+          state.style,
+          mxConstants.STYLE_LABEL_WIDTH,
+          null
+        );
+        m = state.text != null && this.align == null ? state.text.margin : null;
 
         if (m == null) {
-          m = mxUtils.getAlignmentAsPoint(this.align || mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER),
-              mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE));
+          m = mxUtils.getAlignmentAsPoint(
+            this.align ||
+              mxUtils.getValue(
+                state.style,
+                mxConstants.STYLE_ALIGN,
+                mxConstants.ALIGN_CENTER
+              ),
+            mxUtils.getValue(
+              state.style,
+              mxConstants.STYLE_VERTICAL_ALIGN,
+              mxConstants.ALIGN_MIDDLE
+            )
+          );
         }
 
         if (isEdge) {
-          this.bounds = new mxRectangle(state.absoluteOffset.x, state.absoluteOffset.y, 0, 0);
+          this.bounds = new mxRectangle(
+            state.absoluteOffset.x,
+            state.absoluteOffset.y,
+            0,
+            0
+          );
 
           if (lw != null) {
-            let tmp = (parseFloat(lw) + 2) * scale;
+            const tmp = (parseFloat(lw) + 2) * scale;
             this.bounds.width = tmp;
             this.bounds.x += m.x * tmp;
           }
         } else {
           let bds = mxRectangle.fromRectangle(state);
-          let hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
-          let vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+          const hpos = mxUtils.getValue(
+            state.style,
+            mxConstants.STYLE_LABEL_POSITION,
+            mxConstants.ALIGN_CENTER
+          );
+          const vpos = mxUtils.getValue(
+            state.style,
+            mxConstants.STYLE_VERTICAL_LABEL_POSITION,
+            mxConstants.ALIGN_MIDDLE
+          );
 
-          bds = (state.shape != null && hpos === mxConstants.ALIGN_CENTER && vpos === mxConstants.ALIGN_MIDDLE) ? state.shape.getLabelBounds(bds) : bds;
+          bds =
+            state.shape != null &&
+            hpos === mxConstants.ALIGN_CENTER &&
+            vpos === mxConstants.ALIGN_MIDDLE
+              ? state.shape.getLabelBounds(bds)
+              : bds;
 
           if (lw != null) {
             bds.width = parseFloat(lw) * scale;
           }
 
-          if (!state.view.graph.cellRenderer.legacySpacing || state.style[mxConstants.STYLE_OVERFLOW] !== 'width') {
-            let spacing = parseInt(state.style[mxConstants.STYLE_SPACING] || 2) * scale;
-            let spacingTop = (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) + this.baseSpacingTop) * scale + spacing;
-            let spacingRight = (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) + this.baseSpacingRight) * scale + spacing;
-            let spacingBottom = (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) + this.baseSpacingBottom) * scale + spacing;
-            let spacingLeft = (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) + this.baseSpacingLeft) * scale + spacing;
+          if (
+            !state.view.graph.cellRenderer.legacySpacing ||
+            state.style[mxConstants.STYLE_OVERFLOW] !== 'width'
+          ) {
+            const spacing =
+              parseInt(state.style[mxConstants.STYLE_SPACING] || 2) * scale;
+            const spacingTop =
+              (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) +
+                this.baseSpacingTop) *
+                scale +
+              spacing;
+            const spacingRight =
+              (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) +
+                this.baseSpacingRight) *
+                scale +
+              spacing;
+            const spacingBottom =
+              (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) +
+                this.baseSpacingBottom) *
+                scale +
+              spacing;
+            const spacingLeft =
+              (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) +
+                this.baseSpacingLeft) *
+                scale +
+              spacing;
 
-            let hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
-            let vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+            const hpos = mxUtils.getValue(
+              state.style,
+              mxConstants.STYLE_LABEL_POSITION,
+              mxConstants.ALIGN_CENTER
+            );
+            const vpos = mxUtils.getValue(
+              state.style,
+              mxConstants.STYLE_VERTICAL_LABEL_POSITION,
+              mxConstants.ALIGN_MIDDLE
+            );
 
-            bds = new mxRectangle(bds.x + spacingLeft, bds.y + spacingTop,
-                bds.width - ((hpos === mxConstants.ALIGN_CENTER && lw == null) ? (spacingLeft + spacingRight) : 0),
-                bds.height - ((vpos === mxConstants.ALIGN_MIDDLE) ? (spacingTop + spacingBottom) : 0));
+            bds = new mxRectangle(
+              bds.x + spacingLeft,
+              bds.y + spacingTop,
+              bds.width -
+                (hpos === mxConstants.ALIGN_CENTER && lw == null
+                  ? spacingLeft + spacingRight
+                  : 0),
+              bds.height -
+                (vpos === mxConstants.ALIGN_MIDDLE
+                  ? spacingTop + spacingBottom
+                  : 0)
+            );
           }
 
-          this.bounds = new mxRectangle(bds.x + state.absoluteOffset.x, bds.y + state.absoluteOffset.y, bds.width, bds.height);
+          this.bounds = new mxRectangle(
+            bds.x + state.absoluteOffset.x,
+            bds.y + state.absoluteOffset.y,
+            bds.width,
+            bds.height
+          );
         }
 
         // Needed for word wrap inside text blocks with oversize lines to match the final result where
         // the width of the longest line is used as the reference for text alignment in the cell
         // TODO: Fix word wrapping preview for edge labels in helloworld.html
-        if (this.graph.isWrapping(state.cell) && (this.bounds.width >= 2 || this.bounds.height >= 2) &&
-            this.textarea.innerHTML !== this.getEmptyLabelText()) {
+        if (
+          this.graph.isWrapping(state.cell) &&
+          (this.bounds.width >= 2 || this.bounds.height >= 2) &&
+          this.textarea.innerHTML !== this.getEmptyLabelText()
+        ) {
           this.textarea.style.wordWrap = mxConstants.WORD_WRAP;
           this.textarea.style.whiteSpace = 'normal';
 
           // Forces automatic reflow if text is removed from an oversize label and normal word wrap
-          let tmp = Math.round(this.bounds.width / scale) + this.wordWrapPadding;
+          const tmp =
+            Math.round(this.bounds.width / scale) + this.wordWrapPadding;
 
           if (this.textarea.style.position !== 'relative') {
-            this.textarea.style.width = tmp + 'px';
+            this.textarea.style.width = `${tmp}px`;
 
             if (this.textarea.scrollWidth > tmp) {
-              this.textarea.style.width = this.textarea.scrollWidth + 'px';
+              this.textarea.style.width = `${this.textarea.scrollWidth}px`;
             }
           } else {
-            this.textarea.style.maxWidth = tmp + 'px';
+            this.textarea.style.maxWidth = `${tmp}px`;
           }
         } else {
           // KNOWN: Trailing cursor in IE9 quirks mode is not visible
@@ -565,25 +706,43 @@ class mxCellEditor {
           this.textarea.style.width = '';
         }
 
-        let ow = this.textarea.scrollWidth;
-        let oh = this.textarea.scrollHeight;
+        const ow = this.textarea.scrollWidth;
+        const oh = this.textarea.scrollHeight;
 
         // TODO: Update CSS width and height if smaller than minResize or remove minResize
-        //if (this.minResize != null)
-        //{
+        // if (this.minResize != null)
+        // {
         //  ow = Math.max(ow, this.minResize.width);
         //  oh = Math.max(oh, this.minResize.height);
-        //}
+        // }
 
         // LATER: Keep in visible area, add fine tuning for pixel precision
-        this.textarea.style.left = Math.max(0, Math.round(this.bounds.x - m.x * (this.bounds.width - 2)) + 1) + 'px';
-        this.textarea.style.top = Math.max(0, Math.round(this.bounds.y - m.y * (this.bounds.height - 4) + ((m.y === -1) ? 3 : 0)) + 1) + 'px';
+        this.textarea.style.left = `${Math.max(
+          0,
+          Math.round(this.bounds.x - m.x * (this.bounds.width - 2)) + 1
+        )}px`;
+        this.textarea.style.top = `${Math.max(
+          0,
+          Math.round(
+            this.bounds.y -
+              m.y * (this.bounds.height - 4) +
+              (m.y === -1 ? 3 : 0)
+          ) + 1
+        )}px`;
       }
 
-      mxUtils.setPrefixedStyle(this.textarea.style, 'transformOrigin', '0px 0px');
-      mxUtils.setPrefixedStyle(this.textarea.style, 'transform',
-          'scale(' + scale + ',' + scale + ')' + ((m == null) ? '' :
-          ' translate(' + (m.x * 100) + '%,' + (m.y * 100) + '%)'));
+      mxUtils.setPrefixedStyle(
+        this.textarea.style,
+        'transformOrigin',
+        '0px 0px'
+      );
+      mxUtils.setPrefixedStyle(
+        this.textarea.style,
+        'transform',
+        `scale(${scale},${scale})${
+          m == null ? '' : ` translate(${m.x * 100}%,${m.y * 100}%)`
+        }`
+      );
     }
   };
 
@@ -602,7 +761,7 @@ class mxCellEditor {
    * Returns the background color for the in-place editor. This implementation
    * always returns null.
    */
-  getBackgroundColor = (state) => {
+  getBackgroundColor = state => {
     return null;
   };
 
@@ -620,10 +779,10 @@ class mxCellEditor {
     let absoluteRoot = false;
 
     if (mxClient.IS_SVG) {
-      let root = this.graph.view.getDrawPane().ownerSVGElement;
+      const root = this.graph.view.getDrawPane().ownerSVGElement;
 
       if (root != null) {
-        let css = mxUtils.getCurrentStyle(root);
+        const css = mxUtils.getCurrentStyle(root);
 
         if (css != null) {
           absoluteRoot = css.position === 'absolute';
@@ -657,53 +816,92 @@ class mxCellEditor {
       this.graph.tooltipHandler.hideTooltip();
     }
 
-    let state = this.graph.getView().getState(cell);
+    const state = this.graph.getView().getState(cell);
 
     if (state != null) {
       // Configures the style of the in-place editor
-      let scale = this.graph.getView().scale;
-      let size = mxUtils.getValue(state.style, mxConstants.STYLE_FONTSIZE, mxConstants.DEFAULT_FONTSIZE);
-      let family = mxUtils.getValue(state.style, mxConstants.STYLE_FONTFAMILY, mxConstants.DEFAULT_FONTFAMILY);
-      let color = mxUtils.getValue(state.style, mxConstants.STYLE_FONTCOLOR, 'black');
-      let align = mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
-      let bold = (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-          mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD;
-      let italic = (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-          mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC;
-      let txtDecor = [];
+      const { scale } = this.graph.getView();
+      const size = mxUtils.getValue(
+        state.style,
+        mxConstants.STYLE_FONTSIZE,
+        mxConstants.DEFAULT_FONTSIZE
+      );
+      const family = mxUtils.getValue(
+        state.style,
+        mxConstants.STYLE_FONTFAMILY,
+        mxConstants.DEFAULT_FONTFAMILY
+      );
+      const color = mxUtils.getValue(
+        state.style,
+        mxConstants.STYLE_FONTCOLOR,
+        'black'
+      );
+      const align = mxUtils.getValue(
+        state.style,
+        mxConstants.STYLE_ALIGN,
+        mxConstants.ALIGN_LEFT
+      );
+      const bold =
+        (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+          mxConstants.FONT_BOLD) ==
+        mxConstants.FONT_BOLD;
+      const italic =
+        (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+          mxConstants.FONT_ITALIC) ==
+        mxConstants.FONT_ITALIC;
+      const txtDecor = [];
 
-      if ((mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-          mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE) {
+      if (
+        (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+          mxConstants.FONT_UNDERLINE) ==
+        mxConstants.FONT_UNDERLINE
+      ) {
         txtDecor.push('underline');
       }
 
-      if ((mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-          mxConstants.FONT_STRIKETHROUGH) == mxConstants.FONT_STRIKETHROUGH) {
+      if (
+        (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+          mxConstants.FONT_STRIKETHROUGH) ==
+        mxConstants.FONT_STRIKETHROUGH
+      ) {
         txtDecor.push('line-through');
       }
 
-      this.textarea.style.lineHeight = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? Math.round(size * mxConstants.LINE_HEIGHT) + 'px' : mxConstants.LINE_HEIGHT;
+      this.textarea.style.lineHeight = mxConstants.ABSOLUTE_LINE_HEIGHT
+        ? `${Math.round(size * mxConstants.LINE_HEIGHT)}px`
+        : mxConstants.LINE_HEIGHT;
       this.textarea.style.backgroundColor = this.getBackgroundColor(state);
       this.textarea.style.textDecoration = txtDecor.join(' ');
-      this.textarea.style.fontWeight = (bold) ? 'bold' : 'normal';
-      this.textarea.style.fontStyle = (italic) ? 'italic' : '';
-      this.textarea.style.fontSize = Math.round(size) + 'px';
+      this.textarea.style.fontWeight = bold ? 'bold' : 'normal';
+      this.textarea.style.fontStyle = italic ? 'italic' : '';
+      this.textarea.style.fontSize = `${Math.round(size)}px`;
       this.textarea.style.zIndex = this.zIndex;
       this.textarea.style.fontFamily = family;
       this.textarea.style.textAlign = align;
       this.textarea.style.outline = 'none';
       this.textarea.style.color = color;
 
-      let dir = this.textDirection = mxUtils.getValue(state.style, mxConstants.STYLE_TEXT_DIRECTION, mxConstants.DEFAULT_TEXT_DIRECTION);
+      let dir = (this.textDirection = mxUtils.getValue(
+        state.style,
+        mxConstants.STYLE_TEXT_DIRECTION,
+        mxConstants.DEFAULT_TEXT_DIRECTION
+      ));
 
       if (dir === mxConstants.TEXT_DIRECTION_AUTO) {
-        if (state != null && state.text != null && state.text.dialect !== mxConstants.DIALECT_STRICTHTML &&
-            !mxUtils.isNode(state.text.value)) {
+        if (
+          state != null &&
+          state.text != null &&
+          state.text.dialect !== mxConstants.DIALECT_STRICTHTML &&
+          !mxUtils.isNode(state.text.value)
+        ) {
           dir = state.text.getAutoDirection();
         }
       }
 
-      if (dir === mxConstants.TEXT_DIRECTION_LTR || dir === mxConstants.TEXT_DIRECTION_RTL) {
+      if (
+        dir === mxConstants.TEXT_DIRECTION_LTR ||
+        dir === mxConstants.TEXT_DIRECTION_RTL
+      ) {
         this.textarea.setAttribute('dir', dir);
       } else {
         this.textarea.removeAttribute('dir');
@@ -716,11 +914,15 @@ class mxCellEditor {
       // Uses an optional text value for empty labels which is cleared
       // when the first keystroke appears. This makes it easier to see
       // that a label is being edited even if the label is empty.
-      if (this.textarea.innerHTML.length === 0 || this.textarea.innerHTML === '<br>') {
+      if (
+        this.textarea.innerHTML.length === 0 ||
+        this.textarea.innerHTML === '<br>'
+      ) {
         this.textarea.innerHTML = this.getEmptyLabelText();
         this.clearOnChange = true;
       } else {
-        this.clearOnChange = this.textarea.innerHTML == this.getEmptyLabelText();
+        this.clearOnChange =
+          this.textarea.innerHTML == this.getEmptyLabelText();
       }
 
       this.graph.container.appendChild(this.textarea);
@@ -736,10 +938,17 @@ class mxCellEditor {
       }
 
       // Workaround for initial offsetHeight not ready for heading in markup
-      if (this.autoSize && (this.graph.model.isEdge(state.cell) || state.style[mxConstants.STYLE_OVERFLOW] !== 'fill')) {
-        window.setTimeout(mxUtils.bind(this, () => {
-          this.resize();
-        }), 0);
+      if (
+        this.autoSize &&
+        (this.graph.model.isEdge(state.cell) ||
+          state.style[mxConstants.STYLE_OVERFLOW] !== 'fill')
+      ) {
+        window.setTimeout(
+          mxUtils.bind(this, () => {
+            this.resize();
+          }),
+          0
+        );
       }
 
       this.resize();
@@ -749,8 +958,12 @@ class mxCellEditor {
         // Prefers blinking cursor over no selected text if empty
         this.textarea.focus();
 
-        if (this.isSelectText() && this.textarea.innerHTML.length > 0 &&
-            (this.textarea.innerHTML !== this.getEmptyLabelText() || !this.clearOnChange)) {
+        if (
+          this.isSelectText() &&
+          this.textarea.innerHTML.length > 0 &&
+          (this.textarea.innerHTML !== this.getEmptyLabelText() ||
+            !this.clearOnChange)
+        ) {
           document.execCommand('selectAll', false, null);
         }
       } catch (e) {
@@ -796,7 +1009,7 @@ class mxCellEditor {
    *
    * Stops the editor and applies the value if cancel is false.
    */
-  stopEditing = (cancel) => {
+  stopEditing = cancel => {
     cancel = cancel || false;
 
     if (this.editingCell != null) {
@@ -805,9 +1018,9 @@ class mxCellEditor {
         this.textNode = null;
       }
 
-      let state = (!cancel) ? this.graph.view.getState(this.editingCell) : null;
+      const state = !cancel ? this.graph.view.getState(this.editingCell) : null;
 
-      let initial = this.initialValue;
+      const initial = this.initialValue;
       this.initialValue = null;
       this.editingCell = null;
       this.trigger = null;
@@ -819,14 +1032,20 @@ class mxCellEditor {
         this.textarea.parentNode.removeChild(this.textarea);
       }
 
-      if (this.clearOnChange && this.textarea.innerHTML == this.getEmptyLabelText()) {
+      if (
+        this.clearOnChange &&
+        this.textarea.innerHTML == this.getEmptyLabelText()
+      ) {
         this.textarea.innerHTML = '';
         this.clearOnChange = false;
       }
 
-      if (state != null && (this.textarea.innerHTML != initial || this.align != null)) {
+      if (
+        state != null &&
+        (this.textarea.innerHTML != initial || this.align != null)
+      ) {
         this.prepareTextarea();
-        let value = this.getCurrentValue(state);
+        const value = this.getCurrentValue(state);
 
         this.graph.getModel().beginUpdate();
         try {
@@ -835,7 +1054,9 @@ class mxCellEditor {
           }
 
           if (this.align != null) {
-            this.graph.setCellStyles(mxConstants.STYLE_ALIGN, this.align, [state.cell]);
+            this.graph.setCellStyles(mxConstants.STYLE_ALIGN, this.align, [
+              state.cell,
+            ]);
           }
         } finally {
           this.graph.getModel().endUpdate();
@@ -856,8 +1077,10 @@ class mxCellEditor {
    * This implementation removes the extra trailing linefeed in Firefox.
    */
   prepareTextarea = () => {
-    if (this.textarea.lastChild != null &&
-        this.textarea.lastChild.nodeName === 'BR') {
+    if (
+      this.textarea.lastChild != null &&
+      this.textarea.lastChild.nodeName === 'BR'
+    ) {
       this.textarea.removeChild(this.textarea.lastChild);
     }
   };
@@ -868,7 +1091,7 @@ class mxCellEditor {
    * Returns true if the label should be hidden while the cell is being
    * edited.
    */
-  isHideLabel = (state) => {
+  isHideLabel = state => {
     return true;
   };
 
@@ -877,11 +1100,15 @@ class mxCellEditor {
    *
    * Returns the minimum width and height for editing the given state.
    */
-  getMinimumSize = (state) => {
-    let scale = this.graph.getView().scale;
+  getMinimumSize = state => {
+    const { scale } = this.graph.getView();
 
-    return new mxRectangle(0, 0, (state.text == null) ? 30 : state.text.size * scale + 20,
-        (this.textarea.style.textAlign === 'left') ? 120 : 40);
+    return new mxRectangle(
+      0,
+      0,
+      state.text == null ? 30 : state.text.size * scale + 20,
+      this.textarea.style.textAlign === 'left' ? 120 : 40
+    );
   };
 
   /**
@@ -889,30 +1116,67 @@ class mxCellEditor {
    *
    * Returns the <mxRectangle> that defines the bounds of the editor.
    */
-  getEditorBounds = (state) => {
-    let isEdge = this.graph.getModel().isEdge(state.cell);
-    let scale = this.graph.getView().scale;
-    let minSize = this.getMinimumSize(state);
-    let minWidth = minSize.width;
-    let minHeight = minSize.height;
+  getEditorBounds = state => {
+    const isEdge = this.graph.getModel().isEdge(state.cell);
+    const { scale } = this.graph.getView();
+    const minSize = this.getMinimumSize(state);
+    const minWidth = minSize.width;
+    const minHeight = minSize.height;
     let result = null;
 
-    if (!isEdge && state.view.graph.cellRenderer.legacySpacing && state.style[mxConstants.STYLE_OVERFLOW] === 'fill') {
+    if (
+      !isEdge &&
+      state.view.graph.cellRenderer.legacySpacing &&
+      state.style[mxConstants.STYLE_OVERFLOW] === 'fill'
+    ) {
       result = state.shape.getLabelBounds(mxRectangle.fromRectangle(state));
     } else {
-      let spacing = parseInt(state.style[mxConstants.STYLE_SPACING] || 0) * scale;
-      let spacingTop = (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) + baseSpacingTop) * scale + spacing;
-      let spacingRight = (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) + baseSpacingRight) * scale + spacing;
-      let spacingBottom = (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) + baseSpacingBottom) * scale + spacing;
-      let spacingLeft = (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) + baseSpacingLeft) * scale + spacing;
+      const spacing =
+        parseInt(state.style[mxConstants.STYLE_SPACING] || 0) * scale;
+      const spacingTop =
+        (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) +
+          baseSpacingTop) *
+          scale +
+        spacing;
+      const spacingRight =
+        (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) +
+          baseSpacingRight) *
+          scale +
+        spacing;
+      const spacingBottom =
+        (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) +
+          baseSpacingBottom) *
+          scale +
+        spacing;
+      const spacingLeft =
+        (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) +
+          baseSpacingLeft) *
+          scale +
+        spacing;
 
-      result = new mxRectangle(state.x, state.y,
-          Math.max(minWidth, state.width - spacingLeft - spacingRight),
-          Math.max(minHeight, state.height - spacingTop - spacingBottom));
-      let hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
-      let vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+      result = new mxRectangle(
+        state.x,
+        state.y,
+        Math.max(minWidth, state.width - spacingLeft - spacingRight),
+        Math.max(minHeight, state.height - spacingTop - spacingBottom)
+      );
+      const hpos = mxUtils.getValue(
+        state.style,
+        mxConstants.STYLE_LABEL_POSITION,
+        mxConstants.ALIGN_CENTER
+      );
+      const vpos = mxUtils.getValue(
+        state.style,
+        mxConstants.STYLE_VERTICAL_LABEL_POSITION,
+        mxConstants.ALIGN_MIDDLE
+      );
 
-      result = (state.shape != null && hpos === mxConstants.ALIGN_CENTER && vpos === mxConstants.ALIGN_MIDDLE) ? state.shape.getLabelBounds(result) : result;
+      result =
+        state.shape != null &&
+        hpos === mxConstants.ALIGN_CENTER &&
+        vpos === mxConstants.ALIGN_MIDDLE
+          ? state.shape.getLabelBounds(result)
+          : result;
 
       if (isEdge) {
         result.x = state.absoluteOffset.x;
@@ -940,7 +1204,10 @@ class mxCellEditor {
       if (state.text != null && state.text.boundingBox != null) {
         if (!isEdge) {
           result.width = Math.max(result.width, state.text.boundingBox.width);
-          result.height = Math.max(result.height, state.text.boundingBox.height);
+          result.height = Math.max(
+            result.height,
+            state.text.boundingBox.height
+          );
         } else {
           result.width = Math.max(minWidth, state.text.boundingBox.width);
           result.height = Math.max(minHeight, state.text.boundingBox.height);
@@ -949,7 +1216,11 @@ class mxCellEditor {
 
       // Applies the horizontal and vertical label positions
       if (this.graph.getModel().isVertex(state.cell)) {
-        let horizontal = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
+        const horizontal = mxUtils.getValue(
+          state.style,
+          mxConstants.STYLE_LABEL_POSITION,
+          mxConstants.ALIGN_CENTER
+        );
 
         if (horizontal === mxConstants.ALIGN_LEFT) {
           result.x -= state.width;
@@ -957,7 +1228,11 @@ class mxCellEditor {
           result.x += state.width;
         }
 
-        let vertical = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+        const vertical = mxUtils.getValue(
+          state.style,
+          mxConstants.STYLE_VERTICAL_LABEL_POSITION,
+          mxConstants.ALIGN_MIDDLE
+        );
 
         if (vertical === mxConstants.ALIGN_TOP) {
           result.y -= state.height;
@@ -967,7 +1242,12 @@ class mxCellEditor {
       }
     }
 
-    return new mxRectangle(Math.round(result.x), Math.round(result.y), Math.round(result.width), Math.round(result.height));
+    return new mxRectangle(
+      Math.round(result.x),
+      Math.round(result.y),
+      Math.round(result.width),
+      Math.round(result.height)
+    );
   };
 
   /**
@@ -982,7 +1262,7 @@ class mxCellEditor {
    * cell - <mxCell> for which a text for an empty editing box should be
    * returned.
    */
-  getEmptyLabelText = (cell) => {
+  getEmptyLabelText = cell => {
     return this.emptyLabelText;
   };
 
@@ -1010,7 +1290,6 @@ class mxCellEditor {
       }
 
       this.textarea = null;
-
     }
 
     if (this.changeHandler != null) {

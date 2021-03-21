@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "../util/mxUtils";
-import mxConstants from "./mxConstants";
+import mxUtils from './mxUtils';
+import mxConstants from './mxConstants';
 
 class mxPoint {
   /**
@@ -14,6 +14,7 @@ class mxPoint {
    * Holds the x-coordinate of the point. Default is 0.
    */
   x = null;
+
   /**
    * Variable: y
    *
@@ -33,17 +34,17 @@ class mxPoint {
    */
   constructor(x, y) {
     if (x !== mxConstants.DO_NOTHING) {
-      this.x = (x != null) ? x : 0;
-      this.y = (y != null) ? y : 0;
+      this.x = x != null ? x : 0;
+      this.y = y != null ? y : 0;
     }
-  };
+  }
 
   /**
    * Function: equals
    *
    * Returns true if the given object equals this point.
    */
-  equals = (obj) => {
+  equals = obj => {
     return obj != null && obj.x == this.x && obj.y == this.y;
   };
 

@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxShape from "./mxShape";
+import mxShape from './mxShape';
 
 class mxArrow extends mxShape {
   /**
@@ -39,21 +39,21 @@ class mxArrow extends mxShape {
     this.points = points;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = (strokewidth != null) ? strokewidth : 1;
-    this.arrowWidth = (arrowWidth != null) ? arrowWidth : mxConstants.ARROW_WIDTH;
-    this.spacing = (spacing != null) ? spacing : mxConstants.ARROW_SPACING;
-    this.endSize = (endSize != null) ? endSize : mxConstants.ARROW_SIZE;
-  };
+    this.strokewidth = strokewidth != null ? strokewidth : 1;
+    this.arrowWidth = arrowWidth != null ? arrowWidth : mxConstants.ARROW_WIDTH;
+    this.spacing = spacing != null ? spacing : mxConstants.ARROW_SPACING;
+    this.endSize = endSize != null ? endSize : mxConstants.ARROW_SIZE;
+  }
 
   /**
    * Function: augmentBoundingBox
    *
    * Augments the bounding box with the edge width and markers.
    */
-  augmentBoundingBox = (bbox) => {
+  augmentBoundingBox = bbox => {
     super.augmentBoundingBox.apply(bbox);
 
-    let w = Math.max(this.arrowWidth, this.endSize);
+    const w = Math.max(this.arrowWidth, this.endSize);
     bbox.grow((w / 2 + this.strokewidth) * this.scale);
   };
 
@@ -64,38 +64,38 @@ class mxArrow extends mxShape {
    */
   paintEdgeShape = (c, pts) => {
     // Geometry of arrow
-    let spacing = mxConstants.ARROW_SPACING;
-    let width = mxConstants.ARROW_WIDTH;
-    let arrow = mxConstants.ARROW_SIZE;
+    const spacing = mxConstants.ARROW_SPACING;
+    const width = mxConstants.ARROW_WIDTH;
+    const arrow = mxConstants.ARROW_SIZE;
 
     // Base vector (between end points)
-    var p0 = pts[0];
-    let pe = pts[pts.length - 1];
-    let dx = pe.x - p0.x;
-    let dy = pe.y - p0.y;
-    let dist = Math.sqrt(dx * dx + dy * dy);
-    let length = dist - 2 * spacing - arrow;
+    const p0 = pts[0];
+    const pe = pts[pts.length - 1];
+    const dx = pe.x - p0.x;
+    const dy = pe.y - p0.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const length = dist - 2 * spacing - arrow;
 
     // Computes the norm and the inverse norm
-    let nx = dx / dist;
-    let ny = dy / dist;
-    let basex = length * nx;
-    let basey = length * ny;
-    let floorx = width * ny / 3;
-    let floory = -width * nx / 3;
+    const nx = dx / dist;
+    const ny = dy / dist;
+    const basex = length * nx;
+    const basey = length * ny;
+    const floorx = (width * ny) / 3;
+    const floory = (-width * nx) / 3;
 
     // Computes points
-    var p0x = p0.x - floorx / 2 + spacing * nx;
-    var p0y = p0.y - floory / 2 + spacing * ny;
-    var p1x = p0x + floorx;
-    var p1y = p0y + floory;
-    var p2x = p1x + basex;
-    var p2y = p1y + basey;
-    var p3x = p2x + floorx;
-    var p3y = p2y + floory;
+    const p0x = p0.x - floorx / 2 + spacing * nx;
+    const p0y = p0.y - floory / 2 + spacing * ny;
+    const p1x = p0x + floorx;
+    const p1y = p0y + floory;
+    const p2x = p1x + basex;
+    const p2y = p1y + basey;
+    const p3x = p2x + floorx;
+    const p3y = p2y + floory;
     // p4 not necessary
-    var p5x = p3x - 3 * floorx;
-    var p5y = p3y - 3 * floory;
+    const p5x = p3x - 3 * floorx;
+    const p5y = p3y - 3 * floory;
 
     c.begin();
     c.moveTo(p0x, p0y);

@@ -4,10 +4,10 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxEditor from "FIXME";
-import mxWindow from "FIXME";
-import mxObjectCodec from "FIXME";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxEditor from 'FIXME';
+import mxWindow from 'FIXME';
+import mxObjectCodec from 'FIXME';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxEditorCodec extends mxObjectCodec {
   /**
@@ -27,9 +27,14 @@ class mxEditorCodec extends mxObjectCodec {
    * - toolbarContainer
    */
   constructor() {
-    super(new mxEditor(),
-        ['modified', 'lastSnapshot', 'ignoredChanges',
-          'undoManager', 'graphContainer', 'toolbarContainer']);
+    super(new mxEditor(), [
+      'modified',
+      'lastSnapshot',
+      'ignoredChanges',
+      'undoManager',
+      'graphContainer',
+      'toolbarContainer',
+    ]);
   }
 
   /**
@@ -88,7 +93,7 @@ class mxEditorCodec extends mxObjectCodec {
    */
   afterDecode = (dec, node, obj) => {
     // Assigns the specified templates for edges
-    let defaultEdge = node.getAttribute('defaultEdge');
+    const defaultEdge = node.getAttribute('defaultEdge');
 
     if (defaultEdge != null) {
       node.removeAttribute('defaultEdge');
@@ -96,7 +101,7 @@ class mxEditorCodec extends mxObjectCodec {
     }
 
     // Assigns the specified templates for groups
-    let defaultGroup = node.getAttribute('defaultGroup');
+    const defaultGroup = node.getAttribute('defaultGroup');
 
     if (defaultGroup != null) {
       node.removeAttribute('defaultGroup');
@@ -113,7 +118,7 @@ class mxEditorCodec extends mxObjectCodec {
    */
   decodeChild = (dec, child, obj) => {
     if (child.nodeName === 'Array') {
-      let role = child.getAttribute('as');
+      const role = child.getAttribute('as');
 
       if (role === 'templates') {
         this.decodeTemplates(dec, child, obj);
@@ -136,29 +141,37 @@ class mxEditorCodec extends mxObjectCodec {
     let tmp = node.firstChild;
     while (tmp != null) {
       if (tmp.nodeName === 'add') {
-        let as = tmp.getAttribute('as');
-        let elt = tmp.getAttribute('element');
-        let style = tmp.getAttribute('style');
+        const as = tmp.getAttribute('as');
+        const elt = tmp.getAttribute('element');
+        const style = tmp.getAttribute('style');
         let element = null;
 
         if (elt != null) {
           element = document.getElementById(elt);
 
           if (element != null && style != null) {
-            element.style.cssText += ';' + style;
+            element.style.cssText += `;${style}`;
           }
         } else {
-          let x = parseInt(tmp.getAttribute('x'));
-          let y = parseInt(tmp.getAttribute('y'));
-          let width = tmp.getAttribute('width');
-          let height = tmp.getAttribute('height');
+          const x = parseInt(tmp.getAttribute('x'));
+          const y = parseInt(tmp.getAttribute('y'));
+          const width = tmp.getAttribute('width');
+          const height = tmp.getAttribute('height');
 
           // Creates a new window around the element
           element = document.createElement('div');
           element.style.cssText = style;
 
-          let wnd = new mxWindow(mxResources.get(as) || as,
-              element, x, y, width, height, false, true);
+          const wnd = new mxWindow(
+            mxResources.get(as) || as,
+            element,
+            x,
+            y,
+            width,
+            height,
+            false,
+            true
+          );
           wnd.setVisible(true);
         }
 
@@ -194,9 +207,9 @@ class mxEditorCodec extends mxObjectCodec {
       editor.templates = [];
     }
 
-    let children = mxUtils.getChildNodes(node);
+    const children = mxUtils.getChildNodes(node);
     for (let j = 0; j < children.length; j++) {
-      let name = children[j].getAttribute('as');
+      const name = children[j].getAttribute('as');
       let child = children[j].firstChild;
 
       while (child != null && child.nodeType !== 1) {

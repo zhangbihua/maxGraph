@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "../util/mxUtils";
-import mxCodecRegistry from "./mxCodecRegistry";
-import mxStylesheet from "FIXME";
+import mxStylesheet from 'FIXME';
+import mxUtils from '../util/mxUtils';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxStylesheetCodec extends mxObjectCodec {
   /**
@@ -36,20 +36,20 @@ class mxStylesheetCodec extends mxObjectCodec {
    * format.
    */
   encode = (enc, obj) => {
-    let node = enc.document.createElement(this.getName());
+    const node = enc.document.createElement(this.getName());
 
-    for (var i in obj.styles) {
-      let style = obj.styles[i];
-      let styleNode = enc.document.createElement('add');
+    for (const i in obj.styles) {
+      const style = obj.styles[i];
+      const styleNode = enc.document.createElement('add');
 
       if (i != null) {
         styleNode.setAttribute('as', i);
 
-        for (var j in style) {
-          let value = this.getStringValue(j, style[j]);
+        for (const j in style) {
+          const value = this.getStringValue(j, style[j]);
 
           if (value != null) {
-            let entry = enc.document.createElement('add');
+            const entry = enc.document.createElement('add');
             entry.setAttribute('value', value);
             entry.setAttribute('as', j);
             styleNode.appendChild(entry);
@@ -71,7 +71,7 @@ class mxStylesheetCodec extends mxObjectCodec {
    * Returns the string for encoding the given value.
    */
   getStringValue = (key, value) => {
-    let type = typeof (value);
+    const type = typeof value;
 
     if (type === 'function') {
       value = mxStyleRegistry.getName(value);
@@ -124,8 +124,8 @@ class mxStylesheetCodec extends mxObjectCodec {
    * (end)
    */
   decode = (dec, node, into) => {
-    let obj = into || new this.template.constructor();
-    let id = node.getAttribute('id');
+    const obj = into || new this.template.constructor();
+    const id = node.getAttribute('id');
 
     if (id != null) {
       dec.objects[id] = obj;
@@ -135,16 +135,17 @@ class mxStylesheetCodec extends mxObjectCodec {
 
     while (node != null) {
       if (!this.processInclude(dec, node, obj) && node.nodeName === 'add') {
-        let as = node.getAttribute('as');
+        const as = node.getAttribute('as');
 
         if (as != null) {
-          let extend = node.getAttribute('extend');
-          let style = (extend != null) ? mxUtils.clone(obj.styles[extend]) : null;
+          const extend = node.getAttribute('extend');
+          let style = extend != null ? mxUtils.clone(obj.styles[extend]) : null;
 
           if (style == null) {
             if (extend != null) {
-              mxLog.warn('mxStylesheetCodec.decode: stylesheet ' +
-                  extend + ' not found to extend');
+              mxLog.warn(
+                `mxStylesheetCodec.decode: stylesheet ${extend} not found to extend`
+              );
             }
 
             style = {};
@@ -154,13 +155,17 @@ class mxStylesheetCodec extends mxObjectCodec {
 
           while (entry != null) {
             if (entry.nodeType === mxConstants.NODETYPE_ELEMENT) {
-              let key = entry.getAttribute('as');
+              const key = entry.getAttribute('as');
 
               if (entry.nodeName === 'add') {
-                let text = mxUtils.getTextContent(entry);
+                const text = mxUtils.getTextContent(entry);
                 let value = null;
 
-                if (text != null && text.length > 0 && mxStylesheetCodec.allowEval) {
+                if (
+                  text != null &&
+                  text.length > 0 &&
+                  mxStylesheetCodec.allowEval
+                ) {
                   value = mxUtils.eval(text);
                 } else {
                   value = entry.getAttribute('value');

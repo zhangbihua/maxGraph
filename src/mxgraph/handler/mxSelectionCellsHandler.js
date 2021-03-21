@@ -3,11 +3,11 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEventSource from "../util/mxEventSource";
-import mxDictionary from "../util/mxDictionary";
-import mxEventObject from "../util/mxEventObject";
-import mxEvent from "../util/mxEvent";
-import mxUtils from "../util/mxUtils";
+import mxEventSource from '../util/mxEventSource';
+import mxDictionary from '../util/mxDictionary';
+import mxEventObject from '../util/mxEventObject';
+import mxEvent from '../util/mxEvent';
+import mxUtils from '../util/mxUtils';
 
 class mxSelectionCellsHandler extends mxEventSource {
   /**
@@ -80,14 +80,18 @@ class mxSelectionCellsHandler extends mxEventSource {
       }
     };
 
-    this.graph.getSelectionModel().addListener(mxEvent.CHANGE, this.refreshHandler);
+    this.graph
+      .getSelectionModel()
+      .addListener(mxEvent.CHANGE, this.refreshHandler);
     this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
     this.graph.getView().addListener(mxEvent.SCALE, this.refreshHandler);
     this.graph.getView().addListener(mxEvent.TRANSLATE, this.refreshHandler);
-    this.graph.getView().addListener(mxEvent.SCALE_AND_TRANSLATE, this.refreshHandler);
+    this.graph
+      .getView()
+      .addListener(mxEvent.SCALE_AND_TRANSLATE, this.refreshHandler);
     this.graph.getView().addListener(mxEvent.DOWN, this.refreshHandler);
     this.graph.getView().addListener(mxEvent.UP, this.refreshHandler);
-  };
+  }
 
   /**
    * Function: isEnabled
@@ -103,7 +107,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Sets <enabled>.
    */
-  setEnabled = (value) => {
+  setEnabled = value => {
     this.enabled = value;
   };
 
@@ -112,7 +116,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Returns the handler for the given cell.
    */
-  getHandler = (cell) => {
+  getHandler = cell => {
     return this.handlers.get(cell);
   };
 
@@ -121,7 +125,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Returns true if the given cell has a handler.
    */
-  isHandled = (cell) => {
+  isHandled = cell => {
     return this.getHandler(cell) != null;
   };
 
@@ -152,15 +156,15 @@ class mxSelectionCellsHandler extends mxEventSource {
    */
   refresh = () => {
     // Removes all existing handlers
-    let oldHandlers = this.handlers;
+    const oldHandlers = this.handlers;
     this.handlers = new mxDictionary();
 
     // Creates handles for all selection cells
-    let tmp = mxUtils.sortCells(this.getHandledSelectionCells(), false);
+    const tmp = mxUtils.sortCells(this.getHandledSelectionCells(), false);
 
     // Destroys or updates old handlers
     for (let i = 0; i < tmp.length; i++) {
-      let state = this.graph.view.getState(tmp[i]);
+      const state = this.graph.view.getState(tmp[i]);
 
       if (state != null) {
         let handler = oldHandlers.remove(tmp[i]);
@@ -185,14 +189,18 @@ class mxSelectionCellsHandler extends mxEventSource {
     }
 
     // Destroys unused handlers
-    oldHandlers.visit(mxUtils.bind(this, (key, handler) => {
-      this.fireEvent(new mxEventObject(mxEvent.REMOVE, 'state', handler.state));
-      handler.destroy();
-    }));
+    oldHandlers.visit(
+      mxUtils.bind(this, (key, handler) => {
+        this.fireEvent(
+          new mxEventObject(mxEvent.REMOVE, 'state', handler.state)
+        );
+        handler.destroy();
+      })
+    );
 
     // Creates new handlers and updates parent highlight on existing handlers
     for (let i = 0; i < tmp.length; i++) {
-      let state = this.graph.view.getState(tmp[i]);
+      const state = this.graph.view.getState(tmp[i]);
 
       if (state != null) {
         let handler = this.handlers.get(tmp[i]);
@@ -213,7 +221,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Returns true if the given handler is active and should not be redrawn.
    */
-  isHandlerActive = (handler) => {
+  isHandlerActive = handler => {
     return handler.index != null;
   };
 
@@ -222,14 +230,14 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Updates the handler for the given shape if one exists.
    */
-  updateHandler = (state) => {
+  updateHandler = state => {
     let handler = this.handlers.remove(state.cell);
 
     if (handler != null) {
       // Transfers the current state to the new handler
-      let index = handler.index;
-      let x = handler.startX;
-      let y = handler.startY;
+      const { index } = handler;
+      const x = handler.startX;
+      const y = handler.startY;
 
       handler.destroy();
       handler = this.graph.createHandler(state);
@@ -251,7 +259,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    */
   mouseDown = (sender, me) => {
     if (this.graph.isEnabled() && this.isEnabled()) {
-      let args = [sender, me];
+      const args = [sender, me];
 
       this.handlers.visit((key, handler) => {
         handler.mouseDown.apply(handler, args);
@@ -266,7 +274,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    */
   mouseMove = (sender, me) => {
     if (this.graph.isEnabled() && this.isEnabled()) {
-      let args = [sender, me];
+      const args = [sender, me];
 
       this.handlers.visit((key, handler) => {
         handler.mouseMove.apply(handler, args);
@@ -281,7 +289,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    */
   mouseUp = (sender, me) => {
     if (this.graph.isEnabled() && this.isEnabled()) {
-      let args = [sender, me];
+      const args = [sender, me];
 
       this.handlers.visit((key, handler) => {
         handler.mouseUp.apply(handler, args);

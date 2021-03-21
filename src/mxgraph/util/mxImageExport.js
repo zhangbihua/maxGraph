@@ -42,8 +42,7 @@ class mxImageExport {
    *
    * Constructs a new image export.
    */
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * Function: drawState
@@ -74,11 +73,13 @@ class mxImageExport {
     if (state != null) {
       visitor(state, canvas);
 
-      let graph = state.view.graph;
-      let childCount = graph.model.getChildCount(state.cell);
+      const { graph } = state.view;
+      const childCount = graph.model.getChildCount(state.cell);
 
       for (let i = 0; i < childCount; i++) {
-        let childState = graph.view.getState(graph.model.getChildAt(state.cell, i));
+        const childState = graph.view.getState(
+          graph.model.getChildAt(state.cell, i)
+        );
         this.visitStatesRecursive(childState, canvas, visitor);
       }
     }
@@ -100,7 +101,7 @@ class mxImageExport {
    */
   drawCellState = (state, canvas) => {
     // Experimental feature
-    let link = this.getLinkForCellState(state, canvas);
+    const link = this.getLinkForCellState(state, canvas);
 
     if (link != null) {
       canvas.setLink(link);

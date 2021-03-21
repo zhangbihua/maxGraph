@@ -3,9 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxShape from "./mxShape";
-import mxConstants from "../util/mxConstants";
-import mxUtils from "../util/mxUtils";
+import mxShape from './mxShape';
+import mxConstants from '../util/mxConstants';
+import mxUtils from '../util/mxUtils';
 
 class mxPolyline extends mxShape {
   /**
@@ -32,8 +32,8 @@ class mxPolyline extends mxShape {
     super();
     this.points = points;
     this.stroke = stroke;
-    this.strokewidth = (strokewidth != null) ? strokewidth : 1;
-  };
+    this.strokewidth = strokewidth != null ? strokewidth : 1;
+  }
 
   /**
    * Function: getRotation
@@ -68,7 +68,7 @@ class mxPolyline extends mxShape {
    * Paints the line shape.
    */
   paintEdgeShape(c, pts) {
-    let prev = c.pointerEventsValue;
+    const prev = c.pointerEventsValue;
     c.pointerEventsValue = 'stroke';
 
     if (this.style == null || this.style[mxConstants.STYLE_CURVED] != 1) {
@@ -78,7 +78,7 @@ class mxPolyline extends mxShape {
     }
 
     c.pointerEventsValue = prev;
-  };
+  }
 
   /**
    * Function: paintLine
@@ -86,7 +86,12 @@ class mxPolyline extends mxShape {
    * Paints the line shape.
    */
   paintLine = (c, pts, rounded) => {
-    let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+    const arcSize =
+      mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_ARCSIZE,
+        mxConstants.LINE_ARCSIZE
+      ) / 2;
     c.begin();
     this.addPoints(c, pts, rounded, arcSize, false);
     c.stroke();
@@ -100,16 +105,16 @@ class mxPolyline extends mxShape {
   paintCurvedLine = (c, pts) => {
     c.begin();
 
-    let pt = pts[0];
-    let n = pts.length;
+    const pt = pts[0];
+    const n = pts.length;
 
     c.moveTo(pt.x, pt.y);
 
     for (let i = 1; i < n - 2; i++) {
       var p0 = pts[i];
       var p1 = pts[i + 1];
-      let ix = (p0.x + p1.x) / 2;
-      let iy = (p0.y + p1.y) / 2;
+      const ix = (p0.x + p1.x) / 2;
+      const iy = (p0.y + p1.y) / 2;
 
       c.quadTo(p0.x, p0.y, ix, iy);
     }

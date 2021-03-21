@@ -77,8 +77,8 @@ class mxCircleLayout extends mxGraphLayout {
    */
   constructor(graph, radius) {
     super(graph);
-    //mxGraphLayout.call(this, graph);
-    this.radius = (radius != null) ? radius : 100;
+    // mxGraphLayout.call(this, graph);
+    this.radius = radius != null ? radius : 100;
   }
 
   /**
@@ -86,8 +86,8 @@ class mxCircleLayout extends mxGraphLayout {
    *
    * Implements <mxGraphLayout.execute>.
    */
-  execute = (parent) => {
-    let model = this.graph.getModel();
+  execute = parent => {
+    const model = this.graph.getModel();
 
     // Moves the vertices to build a circle. Makes sure the
     // radius is large enough for the vertices to not
@@ -100,15 +100,15 @@ class mxCircleLayout extends mxGraphLayout {
       let max = 0;
       let top = null;
       let left = null;
-      let vertices = [];
-      let childCount = model.getChildCount(parent);
+      const vertices = [];
+      const childCount = model.getChildCount(parent);
 
       for (let i = 0; i < childCount; i++) {
-        let cell = model.getChildAt(parent, i);
+        const cell = model.getChildAt(parent, i);
 
         if (!this.isVertexIgnored(cell)) {
           vertices.push(cell);
-          let bounds = this.getVertexBounds(cell);
+          const bounds = this.getVertexBounds(cell);
 
           if (top == null) {
             top = bounds.y;
@@ -135,7 +135,7 @@ class mxCircleLayout extends mxGraphLayout {
         }
       }
 
-      let r = this.getRadius(vertices.length, max);
+      const r = this.getRadius(vertices.length, max);
       if (this.moveCircle) {
         // Moves the circle to the specified origin
         left = this.x0;
@@ -154,7 +154,7 @@ class mxCircleLayout extends mxGraphLayout {
    * width or height of all vertices in the layout.
    */
   getRadius = (count, max) => {
-    return Math.max(count * max / Math.PI, this.radius);
+    return Math.max((count * max) / Math.PI, this.radius);
   };
 
   /**
@@ -165,14 +165,16 @@ class mxCircleLayout extends mxGraphLayout {
    * <execute>.
    */
   circle = (vertices, r, left, top) => {
-    let vertexCount = vertices.length;
-    let phi = 2 * Math.PI / vertexCount;
+    const vertexCount = vertices.length;
+    const phi = (2 * Math.PI) / vertexCount;
 
     for (let i = 0; i < vertexCount; i++) {
       if (this.isVertexMovable(vertices[i])) {
-        this.setVertexLocation(vertices[i],
-            Math.round(left + r + r * Math.sin(i * phi)),
-            Math.round(top + r + r * Math.cos(i * phi)));
+        this.setVertexLocation(
+          vertices[i],
+          Math.round(left + r + r * Math.sin(i * phi)),
+          Math.round(top + r + r * Math.cos(i * phi))
+        );
       }
     }
   };

@@ -4,10 +4,10 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxRectangle from "../util/mxRectangle";
-import mxShape from "./mxShape";
-import mxConstants from "../util/mxConstants";
-import mxUtils from "../util/mxUtils";
+import mxRectangle from '../util/mxRectangle';
+import mxShape from './mxShape';
+import mxConstants from '../util/mxConstants';
+import mxUtils from '../util/mxUtils';
 
 class mxDoubleEllipse extends mxShape {
   /**
@@ -63,8 +63,8 @@ class mxDoubleEllipse extends mxShape {
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = (strokewidth != null) ? strokewidth : 1;
-  };
+    this.strokewidth = strokewidth != null ? strokewidth : 1;
+  }
 
   /**
    * Function: paintBackground
@@ -83,7 +83,11 @@ class mxDoubleEllipse extends mxShape {
    */
   paintForeground = (c, x, y, w, h) => {
     if (!this.outline) {
-      let margin = mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));
+      const margin = mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_MARGIN,
+        Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5))
+      );
       x += margin;
       y += margin;
       w -= 2 * margin;
@@ -103,11 +107,23 @@ class mxDoubleEllipse extends mxShape {
    *
    * Returns the bounds for the label.
    */
-  getLabelBounds = (rect) => {
-    let margin = (mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth,
-        Math.min(rect.width / 5 / this.scale, rect.height / 5 / this.scale)))) * this.scale;
+  getLabelBounds = rect => {
+    const margin =
+      mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_MARGIN,
+        Math.min(
+          3 + this.strokewidth,
+          Math.min(rect.width / 5 / this.scale, rect.height / 5 / this.scale)
+        )
+      ) * this.scale;
 
-    return new mxRectangle(rect.x + margin, rect.y + margin, rect.width - 2 * margin, rect.height - 2 * margin);
+    return new mxRectangle(
+      rect.x + margin,
+      rect.y + margin,
+      rect.width - 2 * margin,
+      rect.height - 2 * margin
+    );
   };
 }
 

@@ -19,42 +19,49 @@ class mxGuide {
    * Reference to the enclosing <mxGraph> instance.
    */
   graph = null;
+
   /**
    * Variable: states
    *
    * Contains the <mxCellStates> that are used for alignment.
    */
   states = null;
+
   /**
    * Variable: horizontal
    *
    * Specifies if horizontal guides are enabled. Default is true.
    */
   horizontal = true;
+
   /**
    * Variable: vertical
    *
    * Specifies if vertical guides are enabled. Default is true.
    */
   vertical = true;
+
   /**
    * Variable: guideX
    *
    * Holds the <mxShape> for the horizontal guide.
    */
   guideX = null;
+
   /**
    * Variable: guideY
    *
    * Holds the <mxShape> for the vertical guide.
    */
   guideY = null;
+
   /**
    * Variable: rounded
    *
    * Specifies if rounded coordinates should be used. Default is false.
    */
   rounded = false;
+
   /**
    * Variable: tolerance
    *
@@ -65,14 +72,14 @@ class mxGuide {
   constructor(graph, states) {
     this.graph = graph;
     this.setStates(states);
-  };
+  }
 
   /**
    * Function: setStates
    *
    * Sets the <mxCellStates> that should be used for alignment.
    */
-  setStates = (states) => {
+  setStates = states => {
     this.states = states;
   };
 
@@ -82,7 +89,7 @@ class mxGuide {
    * Returns true if the guide should be enabled for the given native event. This
    * implementation always returns true.
    */
-  isEnabledForEvent = (evt) => {
+  isEnabledForEvent = evt => {
     return true;
   };
 
@@ -91,8 +98,10 @@ class mxGuide {
    *
    * Returns the tolerance for the guides. Default value is gridSize / 2.
    */
-  getGuideTolerance = (gridEnabled) => {
-    return (gridEnabled && this.graph.gridEnabled) ? this.graph.gridSize / 2 : this.tolerance;
+  getGuideTolerance = gridEnabled => {
+    return gridEnabled && this.graph.gridEnabled
+      ? this.graph.gridSize / 2
+      : this.tolerance;
   };
 
   /**
@@ -106,8 +115,12 @@ class mxGuide {
    *
    * horizontal - Boolean that specifies which guide should be created.
    */
-  createGuideShape = (horizontal) => {
-    let guide = new mxPolyline([], mxConstants.GUIDE_COLOR, mxConstants.GUIDE_STROKEWIDTH);
+  createGuideShape = horizontal => {
+    const guide = new mxPolyline(
+      [],
+      mxConstants.GUIDE_COLOR,
+      mxConstants.GUIDE_STROKEWIDTH
+    );
     guide.isDashed = true;
 
     return guide;
@@ -118,7 +131,7 @@ class mxGuide {
    *
    * Returns true if the given state should be ignored.
    */
-  isStateIgnored = (state) => {
+  isStateIgnored = state => {
     return false;
   };
 
@@ -128,10 +141,15 @@ class mxGuide {
    * Moves the <bounds> by the given <mxPoint> and returnt the snapped point.
    */
   move = (bounds, delta, gridEnabled, clone) => {
-    if (this.states != null && (this.horizontal || this.vertical) && bounds != null && delta != null) {
-      let scale = this.graph.getView().scale;
-      let tt = this.getGuideTolerance(gridEnabled) * scale;
-      let b = bounds.clone();
+    if (
+      this.states != null &&
+      (this.horizontal || this.vertical) &&
+      bounds != null &&
+      delta != null
+    ) {
+      const { scale } = this.graph.getView();
+      const tt = this.getGuideTolerance(gridEnabled) * scale;
+      const b = bounds.clone();
       b.x += delta.x;
       b.y += delta.y;
       let overrideX = false;
@@ -142,12 +160,12 @@ class mxGuide {
       let valueY = null;
       let ttX = tt;
       let ttY = tt;
-      let left = b.x;
-      let right = b.x + b.width;
-      let center = b.getCenterX();
-      let top = b.y;
-      let bottom = b.y + b.height;
-      let middle = b.getCenterY();
+      const left = b.x;
+      const right = b.x + b.width;
+      const center = b.getCenterX();
+      const top = b.y;
+      const bottom = b.y + b.height;
+      const middle = b.getCenterY();
 
       // Snaps the left, center and right to the given x-coordinate
       function snapX(x, state, centerAlign) {
@@ -179,8 +197,10 @@ class mxGuide {
             // Makes sure to use either VML or SVG shapes in order to implement
             // event-transparency on the background area of the rectangle since
             // HTML shapes do not let mouseevents through even when transparent
-            this.guideX.dialect = (this.graph.dialect != mxConstants.DIALECT_SVG) ?
-                mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
+            this.guideX.dialect =
+              this.graph.dialect != mxConstants.DIALECT_SVG
+                ? mxConstants.DIALECT_VML
+                : mxConstants.DIALECT_SVG;
             this.guideX.pointerEvents = false;
             this.guideX.init(this.graph.getView().getOverlayPane());
           }
@@ -219,8 +239,10 @@ class mxGuide {
             // Makes sure to use either VML or SVG shapes in order to implement
             // event-transparency on the background area of the rectangle since
             // HTML shapes do not let mouseevents through even when transparent
-            this.guideY.dialect = (this.graph.dialect != mxConstants.DIALECT_SVG) ?
-                mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
+            this.guideY.dialect =
+              this.graph.dialect != mxConstants.DIALECT_SVG
+                ? mxConstants.DIALECT_VML
+                : mxConstants.DIALECT_SVG;
             this.guideY.pointerEvents = false;
             this.guideY.init(this.graph.getView().getOverlayPane());
           }
@@ -230,7 +252,7 @@ class mxGuide {
       }
 
       for (let i = 0; i < this.states.length; i++) {
-        let state = this.states[i];
+        const state = this.states[i];
 
         if (state != null && !this.isStateIgnored(state)) {
           // Align x
@@ -261,10 +283,10 @@ class mxGuide {
 
       // Moves cells to the raster if not aligned
       this.graph.snapDelta(delta, bounds, !gridEnabled, overrideX, overrideY);
-      delta = this.getDelta(bounds, stateX, delta.x, stateY, delta.y)
+      delta = this.getDelta(bounds, stateX, delta.x, stateY, delta.y);
 
       // Redraws the guides
-      let c = this.graph.container;
+      const c = this.graph.container;
 
       if (!overrideX && this.guideX != null) {
         this.guideX.node.style.visibility = 'hidden';
@@ -274,14 +296,22 @@ class mxGuide {
 
         if (stateX != null && bounds != null) {
           minY = Math.min(bounds.y + delta.y - this.graph.panDy, stateX.y);
-          maxY = Math.max(bounds.y + bounds.height + delta.y - this.graph.panDy, stateX.y + stateX.height);
+          maxY = Math.max(
+            bounds.y + bounds.height + delta.y - this.graph.panDy,
+            stateX.y + stateX.height
+          );
         }
 
         if (minY != null && maxY != null) {
-          this.guideX.points = [new mxPoint(valueX, minY), new mxPoint(valueX, maxY)];
+          this.guideX.points = [
+            new mxPoint(valueX, minY),
+            new mxPoint(valueX, maxY),
+          ];
         } else {
-          this.guideX.points = [new mxPoint(valueX, -this.graph.panDy),
-            new mxPoint(valueX, c.scrollHeight - 3 - this.graph.panDy)];
+          this.guideX.points = [
+            new mxPoint(valueX, -this.graph.panDy),
+            new mxPoint(valueX, c.scrollHeight - 3 - this.graph.panDy),
+          ];
         }
 
         this.guideX.stroke = this.getGuideColor(stateX, true);
@@ -297,14 +327,22 @@ class mxGuide {
 
         if (stateY != null && bounds != null) {
           minX = Math.min(bounds.x + delta.x - this.graph.panDx, stateY.x);
-          maxX = Math.max(bounds.x + bounds.width + delta.x - this.graph.panDx, stateY.x + stateY.width);
+          maxX = Math.max(
+            bounds.x + bounds.width + delta.x - this.graph.panDx,
+            stateY.x + stateY.width
+          );
         }
 
         if (minX != null && maxX != null) {
-          this.guideY.points = [new mxPoint(minX, valueY), new mxPoint(maxX, valueY)];
+          this.guideY.points = [
+            new mxPoint(minX, valueY),
+            new mxPoint(maxX, valueY),
+          ];
         } else {
-          this.guideY.points = [new mxPoint(-this.graph.panDx, valueY),
-            new mxPoint(c.scrollWidth - 3 - this.graph.panDx, valueY)];
+          this.guideY.points = [
+            new mxPoint(-this.graph.panDx, valueY),
+            new mxPoint(c.scrollWidth - 3 - this.graph.panDx, valueY),
+          ];
         }
 
         this.guideY.stroke = this.getGuideColor(stateY, false);
@@ -322,7 +360,7 @@ class mxGuide {
    * Rounds to pixels for virtual states (eg. page guides)
    */
   getDelta = (bounds, stateX, dx, stateY, dy) => {
-    let s = this.graph.view.scale;
+    const s = this.graph.view.scale;
 
     if (this.rounded || (stateX != null && stateX.cell == null)) {
       dx = Math.round((bounds.x + dx) / s) * s - bounds.x;
@@ -358,13 +396,13 @@ class mxGuide {
    *
    * Shows or hides the current guides.
    */
-  setVisible = (visible) => {
+  setVisible = visible => {
     if (this.guideX != null) {
-      this.guideX.node.style.visibility = (visible) ? 'visible' : 'hidden';
+      this.guideX.node.style.visibility = visible ? 'visible' : 'hidden';
     }
 
     if (this.guideY != null) {
-      this.guideY.node.style.visibility = (visible) ? 'visible' : 'hidden';
+      this.guideY.node.style.visibility = visible ? 'visible' : 'hidden';
     }
   };
 

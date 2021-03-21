@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDefaultPopupMenu from "FIXME";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxDefaultPopupMenu from 'FIXME';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxDefaultPopupMenuCodec extends mxObjectCodec {
   /**
@@ -38,7 +38,7 @@ class mxDefaultPopupMenuCodec extends mxObjectCodec {
    * Uses the given node as the config for <mxDefaultPopupMenu>.
    */
   decode = (dec, node, into) => {
-    let inc = node.getElementsByTagName('include')[0];
+    const inc = node.getElementsByTagName('include')[0];
 
     if (inc != null) {
       this.processInclude(dec, inc, into);

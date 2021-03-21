@@ -14,7 +14,7 @@ class mxStyleChange {
     this.cell = cell;
     this.style = style;
     this.previous = style;
-  };
+  }
 
   /**
    * Function: execute
@@ -25,8 +25,7 @@ class mxStyleChange {
   execute = () => {
     if (this.cell != null) {
       this.style = this.previous;
-      this.previous = this.model.styleForCellChanged(
-          this.cell, this.previous);
+      this.previous = this.model.styleForCellChanged(this.cell, this.previous);
     }
   };
 }

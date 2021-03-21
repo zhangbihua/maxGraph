@@ -16,7 +16,7 @@ class mxChildChange {
     this.child = child;
     this.index = index;
     this.previousIndex = index;
-  };
+  }
 
   /**
    * Function: execute
@@ -29,14 +29,17 @@ class mxChildChange {
   execute = () => {
     if (this.child != null) {
       let tmp = this.model.getParent(this.child);
-      var tmp2 = (tmp != null) ? tmp.getIndex(this.child) : 0;
+      const tmp2 = tmp != null ? tmp.getIndex(this.child) : 0;
 
       if (this.previous == null) {
         this.connect(this.child, false);
       }
 
       tmp = this.model.parentForCellChanged(
-          this.child, this.previous, this.previousIndex);
+        this.child,
+        this.previous,
+        this.previousIndex
+      );
 
       if (this.previous != null) {
         this.connect(this.child, true);
@@ -57,10 +60,10 @@ class mxChildChange {
    * cell's terminals.
    */
   connect = (cell, isConnect) => {
-    isConnect = (isConnect != null) ? isConnect : true;
+    isConnect = isConnect != null ? isConnect : true;
 
-    let source = cell.getTerminal(true);
-    let target = cell.getTerminal(false);
+    const source = cell.getTerminal(true);
+    const target = cell.getTerminal(false);
 
     if (source != null) {
       if (isConnect) {
@@ -81,7 +84,7 @@ class mxChildChange {
     cell.setTerminal(source, true);
     cell.setTerminal(target, false);
 
-    let childCount = this.model.getChildCount(cell);
+    const childCount = this.model.getChildCount(cell);
 
     for (let i = 0; i < childCount; i++) {
       this.connect(this.model.getChildAt(cell, i), isConnect);

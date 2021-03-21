@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxEventSource from "../util/mxEventSource";
+import mxEventSource from '../util/mxEventSource';
 
 class mxLayoutManager extends mxEventSource {
   /**
@@ -101,13 +101,16 @@ class mxLayoutManager extends mxEventSource {
     // Notifies the layout of a move operation inside a parent
     this.resizeHandler = (sender, evt) => {
       if (this.isEnabled()) {
-        this.cellsResized(evt.getProperty('cells'), evt.getProperty('bounds'),
-            evt.getProperty('previous'));
+        this.cellsResized(
+          evt.getProperty('cells'),
+          evt.getProperty('bounds'),
+          evt.getProperty('previous')
+        );
       }
     };
 
     this.setGraph(graph);
-  };
+  }
 
   /**
    * Function: isEnabled
@@ -129,7 +132,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * enabled - Boolean that specifies the new enabled state.
    */
-  setEnabled = (enabled) => {
+  setEnabled = enabled => {
     this.enabled = enabled;
   };
 
@@ -149,7 +152,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * Sets <bubbling>.
    */
-  setBubbling = (value) => {
+  setBubbling = value => {
     this.bubbling = value;
   };
 
@@ -167,9 +170,9 @@ class mxLayoutManager extends mxEventSource {
    *
    * Sets the graph that the layouts operate on.
    */
-  setGraph = (graph) => {
+  setGraph = graph => {
     if (this.graph != null) {
-      let model = this.graph.getModel();
+      const model = this.graph.getModel();
       model.removeListener(this.undoHandler);
       this.graph.removeListener(this.moveHandler);
       this.graph.removeListener(this.resizeHandler);
@@ -178,7 +181,7 @@ class mxLayoutManager extends mxEventSource {
     this.graph = graph;
 
     if (this.graph != null) {
-      let model = this.graph.getModel();
+      const model = this.graph.getModel();
       model.addListener(mxEvent.BEFORE_UNDO, this.undoHandler);
       this.graph.addListener(mxEvent.MOVE_CELLS, this.moveHandler);
       this.graph.addListener(mxEvent.RESIZE_CELLS, this.resizeHandler);
@@ -194,7 +197,7 @@ class mxLayoutManager extends mxEventSource {
    * <getLayout> will return a layout for the given cell for
    * <mxEvent.BEGIN_UPDATE> or <mxEvent.END_UPDATE>.
    */
-  hasLayout = (cell) => {
+  hasLayout = cell => {
     return this.getLayout(cell, mxEvent.LAYOUT_CELLS);
   };
 
@@ -223,7 +226,7 @@ class mxLayoutManager extends mxEventSource {
    * cell - Array of <mxCells> that have been moved.
    * evt - Mouse event that represents the mousedown.
    */
-  beforeUndo = (undoableEdit) => {
+  beforeUndo = undoableEdit => {
     this.executeLayoutForCells(this.getCellsForChanges(undoableEdit.changes));
   };
 
@@ -239,12 +242,18 @@ class mxLayoutManager extends mxEventSource {
    */
   cellsMoved = (cells, evt) => {
     if (cells != null && evt != null) {
-      let point = mxUtils.convertPoint(this.getGraph().container,
-          mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-      let model = this.getGraph().getModel();
+      const point = mxUtils.convertPoint(
+        this.getGraph().container,
+        mxEvent.getClientX(evt),
+        mxEvent.getClientY(evt)
+      );
+      const model = this.getGraph().getModel();
 
       for (let i = 0; i < cells.length; i++) {
-        let layout = this.getLayout(model.getParent(cells[i]), mxEvent.MOVE_CELLS);
+        const layout = this.getLayout(
+          model.getParent(cells[i]),
+          mxEvent.MOVE_CELLS
+        );
 
         if (layout != null) {
           layout.moveCell(cells[i], point.x, point.y);
@@ -265,10 +274,13 @@ class mxLayoutManager extends mxEventSource {
    */
   cellsResized = (cells, bounds, prev) => {
     if (cells != null && bounds != null) {
-      let model = this.getGraph().getModel();
+      const model = this.getGraph().getModel();
 
       for (let i = 0; i < cells.length; i++) {
-        let layout = this.getLayout(model.getParent(cells[i]), mxEvent.RESIZE_CELLS);
+        const layout = this.getLayout(
+          model.getParent(cells[i]),
+          mxEvent.RESIZE_CELLS
+        );
 
         if (layout != null) {
           layout.resizeCell(cells[i], bounds[i], prev[i]);
@@ -282,17 +294,16 @@ class mxLayoutManager extends mxEventSource {
    *
    * Returns the cells for which a layout should be executed.
    */
-  getCellsForChanges = (changes) => {
+  getCellsForChanges = changes => {
     let result = [];
 
     for (let i = 0; i < changes.length; i++) {
-      let change = changes[i];
+      const change = changes[i];
 
       if (change instanceof mxRootChange) {
         return [];
-      } else {
-        result = result.concat(this.getCellsForChange(change));
       }
+      result = result.concat(this.getCellsForChange(change));
     }
 
     return result;
@@ -304,15 +315,20 @@ class mxLayoutManager extends mxEventSource {
    * Executes all layouts which have been scheduled during the
    * changes.
    */
-  getCellsForChange = (change) => {
+  getCellsForChange = change => {
     if (change instanceof mxChildChange) {
-      return this.addCellsWithLayout(change.child,
-          this.addCellsWithLayout(change.previous));
-    } else if (change instanceof mxTerminalChange ||
-        change instanceof mxGeometryChange) {
+      return this.addCellsWithLayout(
+        change.child,
+        this.addCellsWithLayout(change.previous)
+      );
+    }
+    if (
+      change instanceof mxTerminalChange ||
+      change instanceof mxGeometryChange
+    ) {
       return this.addCellsWithLayout(change.cell);
-    } else if (change instanceof mxVisibleChange ||
-        change instanceof mxStyleChange) {
+    }
+    if (change instanceof mxVisibleChange || change instanceof mxStyleChange) {
       return this.addCellsWithLayout(change.cell);
     }
 
@@ -325,8 +341,10 @@ class mxLayoutManager extends mxEventSource {
    * Adds all ancestors of the given cell that have a layout.
    */
   addCellsWithLayout = (cell, result) => {
-    return this.addDescendantsWithLayout(cell,
-        this.addAncestorsWithLayout(cell, result));
+    return this.addDescendantsWithLayout(
+      cell,
+      this.addAncestorsWithLayout(cell, result)
+    );
   };
 
   /**
@@ -335,19 +353,18 @@ class mxLayoutManager extends mxEventSource {
    * Adds all ancestors of the given cell that have a layout.
    */
   addAncestorsWithLayout = (cell, result) => {
-    result = (result != null) ? result : [];
+    result = result != null ? result : [];
 
     if (cell != null) {
-      let layout = this.hasLayout(cell);
+      const layout = this.hasLayout(cell);
 
       if (layout != null) {
         result.push(cell);
       }
 
       if (this.isBubbling()) {
-        let model = this.getGraph().getModel();
-        this.addAncestorsWithLayout(
-            model.getParent(cell), result);
+        const model = this.getGraph().getModel();
+        this.addAncestorsWithLayout(model.getParent(cell), result);
       }
     }
 
@@ -360,13 +377,13 @@ class mxLayoutManager extends mxEventSource {
    * Adds all descendants of the given cell that have a layout.
    */
   addDescendantsWithLayout = (cell, result) => {
-    result = (result != null) ? result : [];
+    result = result != null ? result : [];
 
     if (cell != null && this.hasLayout(cell)) {
-      let model = this.getGraph().getModel();
+      const model = this.getGraph().getModel();
 
       for (let i = 0; i < model.getChildCount(cell); i++) {
-        let child = model.getChildAt(cell, i);
+        const child = model.getChildAt(cell, i);
 
         if (this.hasLayout(child)) {
           result.push(child);
@@ -386,8 +403,8 @@ class mxLayoutManager extends mxEventSource {
    * <mxEvent.BEGIN_UPDATE>, in the second phase layouts for parent cells are
    * executed before layouts for child cells with <mxEvent.END_UPDATE>.
    */
-  executeLayoutForCells = (cells) => {
-    let sorted = mxUtils.sortCells(cells, false);
+  executeLayoutForCells = cells => {
+    const sorted = mxUtils.sortCells(cells, false);
     this.layoutCells(sorted, true);
     this.layoutCells(sorted.reverse(), false);
   };
@@ -400,7 +417,7 @@ class mxLayoutManager extends mxEventSource {
   layoutCells = (cells, bubble) => {
     if (cells.length > 0) {
       // Invokes the layouts while removing duplicates
-      let model = this.getGraph().getModel();
+      const model = this.getGraph().getModel();
 
       model.beginUpdate();
       try {
@@ -426,8 +443,10 @@ class mxLayoutManager extends mxEventSource {
    * Executes the given layout on the given parent.
    */
   executeLayout = (cell, bubble) => {
-    let layout = this.getLayout(cell, (bubble) ?
-        mxEvent.BEGIN_UPDATE : mxEvent.END_UPDATE);
+    const layout = this.getLayout(
+      cell,
+      bubble ? mxEvent.BEGIN_UPDATE : mxEvent.END_UPDATE
+    );
 
     if (layout != null) {
       layout.execute(cell);

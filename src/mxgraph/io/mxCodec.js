@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "../util/mxUtils";
-import mxCellPath from "../model/mxCellPath";
+import mxUtils from '../util/mxUtils';
+import mxCellPath from '../model/mxCellPath';
 
 class mxCodec {
   /**
@@ -148,7 +148,7 @@ class mxCodec {
   constructor(document) {
     this.document = document || mxUtils.createXmlDocument();
     this.objects = [];
-  };
+  }
 
   /**
    * Function: putObject
@@ -174,7 +174,7 @@ class mxCodec {
    * object. If no object is found, then the element with the respective ID
    * from the document is parsed using <decode>.
    */
-  getObject = (id) => {
+  getObject = id => {
     let obj = null;
 
     if (id != null) {
@@ -184,7 +184,7 @@ class mxCodec {
         obj = this.lookup(id);
 
         if (obj == null) {
-          let node = this.getElementById(id);
+          const node = this.getElementById(id);
 
           if (node != null) {
             obj = this.decode(node);
@@ -216,7 +216,7 @@ class mxCodec {
    *
    * id - ID of the object to be returned.
    */
-  lookup = (id) => {
+  lookup = id => {
     return null;
   };
 
@@ -229,7 +229,7 @@ class mxCodec {
    *
    * id - String that contains the ID.
    */
-  getElementById = (id) => {
+  getElementById = id => {
     this.updateElements();
 
     return this.elements[id];
@@ -259,15 +259,15 @@ class mxCodec {
    *
    * Adds the given element to <elements> if it has an ID.
    */
-  addElement = (node) => {
+  addElement = node => {
     if (node.nodeType === mxConstants.NODETYPE_ELEMENT) {
-      let id = node.getAttribute('id');
+      const id = node.getAttribute('id');
 
       if (id != null) {
         if (this.elements[id] == null) {
           this.elements[id] = node;
         } else if (this.elements[id] !== node) {
-          throw new Error(id + ': Duplicate ID');
+          throw new Error(`${id}: Duplicate ID`);
         }
       }
     }
@@ -293,7 +293,7 @@ class mxCodec {
    *
    * obj - Object to return the ID for.
    */
-  getId = (obj) => {
+  getId = obj => {
     let id = null;
 
     if (obj != null) {
@@ -337,7 +337,7 @@ class mxCodec {
    *
    * obj - Object whose ID should be returned.
    */
-  reference = (obj) => {
+  reference = obj => {
     return null;
   };
 
@@ -351,20 +351,22 @@ class mxCodec {
    *
    * obj - Object to be encoded.
    */
-  encode = (obj) => {
+  encode = obj => {
     let node = null;
 
     if (obj != null && obj.constructor != null) {
-      let enc = mxCodecRegistry.getCodec(obj.constructor);
+      const enc = mxCodecRegistry.getCodec(obj.constructor);
 
       if (enc != null) {
         node = enc.encode(this, obj);
+      } else if (mxUtils.isNode(obj)) {
+        node = mxUtils.importNode(this.document, obj, true);
       } else {
-        if (mxUtils.isNode(obj)) {
-          node = mxUtils.importNode(this.document, obj, true);
-        } else {
-          mxLog.warn('mxCodec.encode: No codec for ' + mxUtils.getFunctionName(obj.constructor));
-        }
+        mxLog.warn(
+          `mxCodec.encode: No codec for ${mxUtils.getFunctionName(
+            obj.constructor
+          )}`
+        );
       }
     }
 
@@ -400,7 +402,7 @@ class mxCodec {
         // ignore
       }
 
-      let dec = mxCodecRegistry.getCodec(ctor);
+      const dec = mxCodecRegistry.getCodec(ctor);
 
       if (dec != null) {
         obj = dec.decode(this, node, into);
@@ -437,7 +439,7 @@ class mxCodec {
     node.appendChild(this.encode(cell));
 
     if (includeChildren == null || includeChildren) {
-      let childCount = cell.getChildCount();
+      const childCount = cell.getChildCount();
 
       for (let i = 0; i < childCount; i++) {
         this.encodeCell(cell.getChildAt(i), node);
@@ -452,8 +454,8 @@ class mxCodec {
    * <mxCellCodec.isCellCodec> to check if the codec is of the
    * given type.
    */
-  isCellCodec = (codec) => {
-    if (codec != null && typeof (codec.isCellCodec) == 'function') {
+  isCellCodec = codec => {
+    if (codec != null && typeof codec.isCellCodec === 'function') {
       return codec.isCellCodec();
     }
 
@@ -478,7 +480,7 @@ class mxCodec {
    * Default is true.
    */
   decodeCell = (node, restoreStructures) => {
-    restoreStructures = (restoreStructures != null) ? restoreStructures : true;
+    restoreStructures = restoreStructures != null ? restoreStructures : true;
     let cell = null;
 
     if (node != null && node.nodeType === mxConstants.NODETYPE_ELEMENT) {
@@ -518,10 +520,10 @@ class mxCodec {
    *
    * Inserts the given cell into its parent and terminal cells.
    */
-  insertIntoGraph = (cell) => {
-    let parent = cell.parent;
-    let source = cell.getTerminal(true);
-    let target = cell.getTerminal(false);
+  insertIntoGraph = cell => {
+    const { parent } = cell;
+    const source = cell.getTerminal(true);
+    const target = cell.getTerminal(false);
 
     // Fixes possible inconsistencies during insert into graph
     cell.setTerminal(null, false);
@@ -530,7 +532,7 @@ class mxCodec {
 
     if (parent != null) {
       if (parent === cell) {
-        throw new Error(parent.id + ': Self Reference');
+        throw new Error(`${parent.id}: Self Reference`);
       } else {
         parent.insert(cell);
       }

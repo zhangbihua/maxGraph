@@ -3,9 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxShape from "./mxShape";
-import mxConstants from "../util/mxConstants";
-import mxUtils from "../util/mxUtils";
+import mxShape from './mxShape';
+import mxConstants from '../util/mxConstants';
+import mxUtils from '../util/mxUtils';
 
 class mxCylinder extends mxShape {
   /**
@@ -50,8 +50,8 @@ class mxCylinder extends mxShape {
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = (strokewidth != null) ? strokewidth : 1;
-  };
+    this.strokewidth = strokewidth != null ? strokewidth : 1;
+  }
 
   /**
    * Function: paintVertexShape
@@ -64,8 +64,11 @@ class mxCylinder extends mxShape {
     this.redrawPath(c, x, y, w, h, false);
     c.fillAndStroke();
 
-    if (!this.outline || this.style == null || mxUtils.getValue(
-        this.style, mxConstants.STYLE_BACKGROUND_OUTLINE, 0) == 0) {
+    if (
+      !this.outline ||
+      this.style == null ||
+      mxUtils.getValue(this.style, mxConstants.STYLE_BACKGROUND_OUTLINE, 0) == 0
+    ) {
       c.setShadow(false);
       c.begin();
       this.redrawPath(c, x, y, w, h, true);
@@ -88,9 +91,12 @@ class mxCylinder extends mxShape {
    * Draws the path for this shape.
    */
   redrawPath = (c, x, y, w, h, isForeground) => {
-    let dy = this.getCylinderSize(x, y, w, h);
+    const dy = this.getCylinderSize(x, y, w, h);
 
-    if ((isForeground && this.fill != null) || (!isForeground && this.fill == null)) {
+    if (
+      (isForeground && this.fill != null) ||
+      (!isForeground && this.fill == null)
+    ) {
       c.moveTo(0, dy);
       c.curveTo(0, 2 * dy, w, 2 * dy, w, dy);
 

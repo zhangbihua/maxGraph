@@ -3,15 +3,15 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEffects from "./mxEffects";
-import mxXmlRequest from "./mxXmlRequest";
-import mxClient from "../mxClient";
-import mxConstants from "./mxConstants";
-import mxObjectIdentity from "./mxObjectIdentity";
-import mxPoint from "./mxPoint";
-import mxDictionary from "./mxDictionary";
+import mxEffects from './mxEffects';
+import mxXmlRequest from './mxXmlRequest';
+import mxClient from '../mxClient';
+import mxConstants from './mxConstants';
+import mxObjectIdentity from './mxObjectIdentity';
+import mxPoint from './mxPoint';
+import mxDictionary from './mxDictionary';
 
-let mxUtils = {
+const mxUtils = {
   /**
    * Class: mxUtils
    *
@@ -50,7 +50,7 @@ let mxUtils = {
    *
    * Defines the image used for error dialogs.
    */
-  errorImage: '/error.gif', //mxClient.imageBasePath + '/error.gif',
+  errorImage: '/error.gif', // mxClient.imageBasePath + '/error.gif',
 
   /**
    * Function: removeCursors
@@ -62,15 +62,15 @@ let mxUtils = {
    *
    * element - DOM node to remove the cursor style from.
    */
-  removeCursors: (element) => {
+  removeCursors: element => {
     if (element.style != null) {
       element.style.cursor = '';
     }
 
-    let children = element.childNodes;
+    const children = element.childNodes;
 
     if (children != null) {
-      let childCount = children.length;
+      const childCount = children.length;
 
       for (let i = 0; i < childCount; i += 1) {
         mxUtils.removeCursors(children[i]);
@@ -87,10 +87,8 @@ let mxUtils = {
    *
    * element - DOM node whose current style should be returned.
    */
-  getCurrentStyle: (element) => {
-    return (element != null) ?
-        window.getComputedStyle(element, '') :
-        null;
+  getCurrentStyle: element => {
+    return element != null ? window.getComputedStyle(element, '') : null;
   },
 
   /**
@@ -99,7 +97,7 @@ let mxUtils = {
    * Parses the given CSS numeric value adding handling for the values thin,
    * medium and thick (2, 4 and 6).
    */
-  parseCssNumber: (value) => {
+  parseCssNumber: value => {
     if (value === 'thin') {
       value = '2';
     } else if (value === 'medium') {
@@ -154,10 +152,13 @@ let mxUtils = {
    *
    * node - DOM node whose style should be checked for scrollbars.
    */
-  hasScrollbars: (node) => {
-    let style = mxUtils.getCurrentStyle(node);
+  hasScrollbars: node => {
+    const style = mxUtils.getCurrentStyle(node);
 
-    return style != null && (style.overflow === 'scroll' || style.overflow === 'auto');
+    return (
+      style != null &&
+      (style.overflow === 'scroll' || style.overflow === 'auto')
+    );
   },
 
   /**
@@ -183,23 +184,23 @@ let mxUtils = {
    *
    * expr - A string that represents a JavaScript expression.
    */
-  eval: (expr) => {
+  eval: expr => {
     let result = null;
 
     if (expr.indexOf('function') >= 0) {
       try {
-        eval('var _mxJavaScriptExpression=' + expr);
+        eval(`var _mxJavaScriptExpression=${expr}`);
         result = _mxJavaScriptExpression;
         // TODO: Use delete here?
         _mxJavaScriptExpression = null;
       } catch (e) {
-        mxLog.warn(e.message + ' while evaluating ' + expr);
+        mxLog.warn(`${e.message} while evaluating ${expr}`);
       }
     } else {
       try {
         result = eval(expr);
       } catch (e) {
-        mxLog.warn(e.message + ' while evaluating ' + expr);
+        mxLog.warn(`${e.message} while evaluating ${expr}`);
       }
     }
 
@@ -214,7 +215,7 @@ let mxUtils = {
    */
   findNode: (node, attr, value) => {
     if (node.nodeType === mxConstants.NODETYPE_ELEMENT) {
-      let tmp = node.getAttribute(attr);
+      const tmp = node.getAttribute(attr);
 
       if (tmp != null && tmp == value) {
         return node;
@@ -224,7 +225,7 @@ let mxUtils = {
     node = node.firstChild;
 
     while (node != null) {
-      let result = mxUtils.findNode(node, attr, value);
+      const result = mxUtils.findNode(node, attr, value);
 
       if (result != null) {
         return result;
@@ -245,7 +246,7 @@ let mxUtils = {
    *
    * f - JavaScript object that represents a function.
    */
-  getFunctionName: (f) => {
+  getFunctionName: f => {
     let str = null;
 
     if (f != null) {
@@ -256,7 +257,7 @@ let mxUtils = {
 
         if (/^function\s/.test(str)) {
           str = mxUtils.ltrim(str.substring(9));
-          var idx2 = str.indexOf('(');
+          const idx2 = str.indexOf('(');
 
           if (idx2 > 0) {
             str = str.substring(0, idx2);
@@ -332,7 +333,7 @@ let mxUtils = {
   remove: (obj, array) => {
     let result = null;
 
-    if (typeof (array) == 'object') {
+    if (typeof array === 'object') {
       let index = mxUtils.indexOf(array, obj);
 
       while (index >= 0) {
@@ -342,7 +343,7 @@ let mxUtils = {
       }
     }
 
-    for (var key in array) {
+    for (const key in array) {
       if (array[key] == obj) {
         delete array[key];
         result = obj;
@@ -370,10 +371,16 @@ let mxUtils = {
    * attributeValue - Optional attribute value to check.
    */
   isNode: (value, nodeName, attributeName, attributeValue) => {
-    if (value != null && !isNaN(value.nodeType) && (nodeName == null ||
-        value.nodeName.toLowerCase() == nodeName.toLowerCase())) {
-      return attributeName == null ||
-          value.getAttribute(attributeName) == attributeValue;
+    if (
+      value != null &&
+      !isNaN(value.nodeType) &&
+      (nodeName == null ||
+        value.nodeName.toLowerCase() == nodeName.toLowerCase())
+    ) {
+      return (
+        attributeName == null ||
+        value.getAttribute(attributeName) == attributeValue
+      );
     }
 
     return false;
@@ -419,7 +426,7 @@ let mxUtils = {
   getChildNodes: (node, nodeType) => {
     nodeType = nodeType || mxConstants.NODETYPE_ELEMENT;
 
-    let children = [];
+    const children = [];
     let tmp = node.firstChild;
 
     while (tmp != null) {
@@ -463,20 +470,27 @@ let mxUtils = {
    */
   importNodeImplementation: (doc, node, allChildren) => {
     switch (node.nodeType) {
-      case 1: /* element */
-      {
-        let newNode = doc.createElement(node.nodeName);
+      case 1 /* element */: {
+        const newNode = doc.createElement(node.nodeName);
 
         if (node.attributes && node.attributes.length > 0) {
           for (let i = 0; i < node.attributes.length; i++) {
-            newNode.setAttribute(node.attributes[i].nodeName,
-                node.getAttribute(node.attributes[i].nodeName));
+            newNode.setAttribute(
+              node.attributes[i].nodeName,
+              node.getAttribute(node.attributes[i].nodeName)
+            );
           }
         }
 
         if (allChildren && node.childNodes && node.childNodes.length > 0) {
           for (let i = 0; i < node.childNodes.length; i++) {
-            newNode.appendChild(mxUtils.importNodeImplementation(doc, node.childNodes[i], allChildren));
+            newNode.appendChild(
+              mxUtils.importNodeImplementation(
+                doc,
+                node.childNodes[i],
+                allChildren
+              )
+            );
           }
         }
 
@@ -485,13 +499,13 @@ let mxUtils = {
       }
       case 3: /* text */
       case 4: /* cdata-section */
-      case 8: /* comment */
-      {
-        return doc.createTextNode((node.nodeValue != null) ? node.nodeValue : node.value);
+      case 8 /* comment */: {
+        return doc.createTextNode(
+          node.nodeValue != null ? node.nodeValue : node.value
+        );
         break;
       }
     }
-
   },
 
   /**
@@ -504,7 +518,7 @@ let mxUtils = {
 
     if (document.implementation && document.implementation.createDocument) {
       doc = document.implementation.createDocument('', '', null);
-    } else if ("ActiveXObject" in window) {
+    } else if ('ActiveXObject' in window) {
       doc = mxUtils.createMsXmlDocument();
     }
 
@@ -517,7 +531,7 @@ let mxUtils = {
    * Returns a new, empty Microsoft.XMLDOM document using ActiveXObject.
    */
   createMsXmlDocument: () => {
-    let doc = new ActiveXObject('Microsoft.XMLDOM');
+    const doc = new ActiveXObject('Microsoft.XMLDOM');
     doc.async = false;
 
     // Workaround for parsing errors with SVG DTD
@@ -548,8 +562,8 @@ let mxUtils = {
    *
    * xml - String that contains the XML data.
    */
-  parseXml: (xml) => {
-    let parser = new DOMParser();
+  parseXml: xml => {
+    const parser = new DOMParser();
     return parser.parseFromString(xml, 'text/xml');
   },
 
@@ -582,11 +596,11 @@ let mxUtils = {
    * before - Optional boolean that specifies the direction of the traversal.
    */
   removeWhitespace: (node, before) => {
-    let tmp = (before) ? node.previousSibling : node.nextSibling;
+    let tmp = before ? node.previousSibling : node.nextSibling;
 
     while (tmp != null && tmp.nodeType === mxConstants.NODETYPE_TEXT) {
-      let next = (before) ? tmp.previousSibling : tmp.nextSibling;
-      let text = mxUtils.getTextContent(tmp);
+      const next = before ? tmp.previousSibling : tmp.nextSibling;
+      const text = mxUtils.getTextContent(tmp);
 
       if (mxUtils.trim(text).length === 0) {
         tmp.parentNode.removeChild(tmp);
@@ -632,7 +646,7 @@ let mxUtils = {
    *
    * node - DOM node whose tag urn should be checked.
    */
-  isVml: (node) => {
+  isVml: node => {
     return node != null && node.tagUrn == 'urn:schemas-microsoft-com:vml';
   },
 
@@ -654,10 +668,13 @@ let mxUtils = {
     let xml = '';
 
     if (window.XMLSerializer != null) {
-      let xmlSerializer = new XMLSerializer();
+      const xmlSerializer = new XMLSerializer();
       xml = xmlSerializer.serializeToString(node);
     } else if (node.xml != null) {
-      xml = node.xml.replace(/\r\n\t[\t]*/g, '').replace(/>\r\n/g, '>').replace(/\r\n/g, '\n');
+      xml = node.xml
+        .replace(/\r\n\t[\t]*/g, '')
+        .replace(/>\r\n/g, '>')
+        .replace(/\r\n/g, '\n');
     }
 
     // Replaces linefeeds with HTML Entities.
@@ -684,12 +701,12 @@ let mxUtils = {
    * newline - Option string that represents a linefeed. Default is '\n'.
    */
   getPrettyXml: (node, tab, indent, newline, ns) => {
-    let result = [];
+    const result = [];
 
     if (node != null) {
-      tab = (tab != null) ? tab : '  ';
-      indent = (indent != null) ? indent : '';
-      newline = (newline != null) ? newline : '\n';
+      tab = tab != null ? tab : '  ';
+      indent = indent != null ? indent : '';
+      newline = newline != null ? newline : '\n';
 
       if (node.namespaceURI != null && node.namespaceURI !== ns) {
         ns = node.namespaceURI;
@@ -700,7 +717,9 @@ let mxUtils = {
       }
 
       if (node.nodeType === mxConstants.NODETYPE_DOCUMENT) {
-        result.push(mxUtils.getPrettyXml(node.documentElement, tab, indent, newline, ns));
+        result.push(
+          mxUtils.getPrettyXml(node.documentElement, tab, indent, newline, ns)
+        );
       } else if (node.nodeType === mxConstants.NODETYPE_DOCUMENT_FRAGMENT) {
         let tmp = node.firstChild;
 
@@ -711,34 +730,34 @@ let mxUtils = {
           }
         }
       } else if (node.nodeType === mxConstants.NODETYPE_COMMENT) {
-        let value = mxUtils.getTextContent(node);
+        const value = mxUtils.getTextContent(node);
 
         if (value.length > 0) {
-          result.push(indent + '<!--' + value + '-->' + newline);
+          result.push(`${indent}<!--${value}-->${newline}`);
         }
       } else if (node.nodeType === mxConstants.NODETYPE_TEXT) {
-        let value = mxUtils.trim(mxUtils.getTextContent(node));
+        const value = mxUtils.trim(mxUtils.getTextContent(node));
 
         if (value.length > 0) {
           result.push(indent + mxUtils.htmlEntities(value, false) + newline);
         }
       } else if (node.nodeType === mxConstants.NODETYPE_CDATA) {
-        let value = mxUtils.getTextContent(node);
+        const value = mxUtils.getTextContent(node);
 
         if (value.length > 0) {
-          result.push(indent + '<![CDATA[' + value + ']]' + newline);
+          result.push(`${indent}<![CDATA[${value}]]${newline}`);
         }
       } else {
-        result.push(indent + '<' + node.nodeName);
+        result.push(`${indent}<${node.nodeName}`);
 
         // Creates the string with the node attributes
         // and converts all HTML entities in the values
-        let attrs = node.attributes;
+        const attrs = node.attributes;
 
         if (attrs != null) {
           for (let i = 0; i < attrs.length; i++) {
-            let val = mxUtils.htmlEntities(attrs[i].value);
-            result.push(' ' + attrs[i].nodeName + '="' + val + '"');
+            const val = mxUtils.htmlEntities(attrs[i].value);
+            result.push(` ${attrs[i].nodeName}="${val}"`);
           }
         }
 
@@ -747,16 +766,18 @@ let mxUtils = {
         let tmp = node.firstChild;
 
         if (tmp != null) {
-          result.push('>' + newline);
+          result.push(`>${newline}`);
 
           while (tmp != null) {
-            result.push(mxUtils.getPrettyXml(tmp, tab, indent + tab, newline, ns));
+            result.push(
+              mxUtils.getPrettyXml(tmp, tab, indent + tab, newline, ns)
+            );
             tmp = tmp.nextSibling;
           }
 
-          result.push(indent + '</' + node.nodeName + '>' + newline);
+          result.push(`${indent}</${node.nodeName}>${newline}`);
         } else {
-          result.push(' />' + newline);
+          result.push(` />${newline}`);
         }
       }
     }
@@ -773,25 +794,45 @@ let mxUtils = {
    *
    * elems - DOM nodes to return the text for.
    */
-  extractTextWithWhitespace: (elems) => {
+  extractTextWithWhitespace: elems => {
     // Known block elements for handling linefeeds (list is not complete)
-    let blocks = ['BLOCKQUOTE', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'OL', 'P', 'PRE', 'TABLE', 'UL'];
-    let ret = [];
+    const blocks = [
+      'BLOCKQUOTE',
+      'DIV',
+      'H1',
+      'H2',
+      'H3',
+      'H4',
+      'H5',
+      'H6',
+      'OL',
+      'P',
+      'PRE',
+      'TABLE',
+      'UL',
+    ];
+    const ret = [];
 
     function doExtract(elts) {
       // Single break should be ignored
-      if (elts.length == 1 && (elts[0].nodeName == 'BR' ||
-          elts[0].innerHTML == '\n')) {
+      if (
+        elts.length == 1 &&
+        (elts[0].nodeName == 'BR' || elts[0].innerHTML == '\n')
+      ) {
         return;
       }
 
       for (let i = 0; i < elts.length; i++) {
-        let elem = elts[i];
+        const elem = elts[i];
 
         // DIV with a br or linefeed forces a linefeed
-        if (elem.nodeName == 'BR' || elem.innerHTML == '\n' ||
-            ((elts.length == 1 || i == 0) && (elem.nodeName == 'DIV' &&
-                elem.innerHTML.toLowerCase() == '<br>'))) {
+        if (
+          elem.nodeName == 'BR' ||
+          elem.innerHTML == '\n' ||
+          ((elts.length == 1 || i == 0) &&
+            elem.nodeName == 'DIV' &&
+            elem.innerHTML.toLowerCase() == '<br>')
+        ) {
           ret.push('\n');
         } else {
           if (elem.nodeType === 3 || elem.nodeType === 4) {
@@ -802,7 +843,10 @@ let mxUtils = {
             doExtract(elem.childNodes);
           }
 
-          if (i < elts.length - 1 && mxUtils.indexOf(blocks, elts[i + 1].nodeName) >= 0) {
+          if (
+            i < elts.length - 1 &&
+            mxUtils.indexOf(blocks, elts[i + 1].nodeName) >= 0
+          ) {
             ret.push('\n');
           }
         }
@@ -840,8 +884,10 @@ let mxUtils = {
    *
    * node - DOM node to return the text content for.
    */
-  getTextContent: (node) => {
-    return (node != null) ? node[(node.textContent === undefined) ? 'text' : 'textContent'] : '';
+  getTextContent: node => {
+    return node != null
+      ? node[node.textContent === undefined ? 'text' : 'textContent']
+      : '';
   },
 
   /**
@@ -858,7 +904,7 @@ let mxUtils = {
     if (node.innerText !== undefined) {
       node.innerText = text;
     } else {
-      node[(node.textContent === undefined) ? 'text' : 'textContent'] = text;
+      node[node.textContent === undefined ? 'text' : 'textContent'] = text;
     }
   },
 
@@ -873,9 +919,9 @@ let mxUtils = {
    *
    * node - DOM node to return the inner HTML for.
    */
-  getInnerHtml: (node) => {
+  getInnerHtml: node => {
     if (node != null) {
-      let serializer = new XMLSerializer();
+      const serializer = new XMLSerializer();
       return serializer.serializeToString(node);
     }
 
@@ -893,9 +939,9 @@ let mxUtils = {
    *
    * node - DOM node to return the outer HTML for.
    */
-  getOuterHtml: (node) => {
+  getOuterHtml: node => {
     if (node != null) {
-      let serializer = new XMLSerializer();
+      const serializer = new XMLSerializer();
       return serializer.serializeToString(node);
     }
 
@@ -914,8 +960,8 @@ let mxUtils = {
    * text - String representing the text to be added.
    */
   write: (parent, text) => {
-    let doc = parent.ownerDocument;
-    let node = doc.createTextNode(text);
+    const doc = parent.ownerDocument;
+    const node = doc.createTextNode(text);
 
     if (parent != null) {
       parent.appendChild(node);
@@ -936,8 +982,8 @@ let mxUtils = {
    * text - String representing the text to be added.
    */
   writeln: (parent, text) => {
-    let doc = parent.ownerDocument;
-    let node = doc.createTextNode(text);
+    const doc = parent.ownerDocument;
+    const node = doc.createTextNode(text);
 
     if (parent != null) {
       parent.appendChild(node);
@@ -991,12 +1037,12 @@ let mxUtils = {
    * current document.
    */
   button: (label, funct, doc) => {
-    doc = (doc != null) ? doc : document;
+    doc = doc != null ? doc : document;
 
-    let button = doc.createElement('button');
+    const button = doc.createElement('button');
     mxUtils.write(button, label);
 
-    mxEvent.addListener(button, 'click', (evt) => {
+    mxEvent.addListener(button, 'click', evt => {
       funct(evt);
     });
 
@@ -1015,7 +1061,7 @@ let mxUtils = {
    * text - String representing the text for the new paragraph.
    */
   para: (parent, text) => {
-    let p = document.createElement('p');
+    const p = document.createElement('p');
     mxUtils.write(p, text);
 
     if (parent != null) {
@@ -1032,9 +1078,8 @@ let mxUtils = {
    * background can be used in IE8 standards mode (native IE8 only) to pass
    * events through the node.
    */
-  addTransparentBackgroundFilter: (node) => {
-    node.style.filter += 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'' +
-        mxClient.imageBasePath + '/transparent.gif\', sizingMethod=\'scale\')';
+  addTransparentBackgroundFilter: node => {
+    node.style.filter += `progid:DXImageTransform.Microsoft.AlphaImageLoader(src='${mxClient.imageBasePath}/transparent.gif', sizingMethod='scale')`;
   },
 
   /**
@@ -1052,9 +1097,14 @@ let mxUtils = {
    * pad - Optional left-padding for the link. Default is 0.
    */
   linkAction: (parent, text, editor, action, pad) => {
-    return mxUtils.link(parent, text, () => {
-      editor.execute(action);
-    }, pad);
+    return mxUtils.link(
+      parent,
+      text,
+      () => {
+        editor.execute(action);
+      },
+      pad
+    );
   },
 
   /**
@@ -1075,9 +1125,14 @@ let mxUtils = {
    * pad - Optional left-padding for the link. Default is 0.
    */
   linkInvoke: (parent, text, editor, functName, arg, pad) => {
-    return mxUtils.link(parent, text, () => {
-      editor[functName](arg);
-    }, pad);
+    return mxUtils.link(
+      parent,
+      text,
+      () => {
+        editor[functName](arg);
+      },
+      pad
+    );
   },
 
   /**
@@ -1094,14 +1149,14 @@ let mxUtils = {
    * pad - Optional left-padding for the link. Default is 0.
    */
   link: (parent, text, funct, pad) => {
-    let a = document.createElement('span');
+    const a = document.createElement('span');
 
     a.style.color = 'blue';
     a.style.textDecoration = 'underline';
     a.style.cursor = 'pointer';
 
     if (pad != null) {
-      a.style.paddingLeft = pad + 'px';
+      a.style.paddingLeft = `${pad}px`;
     }
 
     mxEvent.addListener(a, 'click', funct);
@@ -1120,11 +1175,16 @@ let mxUtils = {
    * Returns the client size for the current document as an <mxRectangle>.
    */
   getDocumentSize: () => {
-    let b = document.body;
-    let d = document.documentElement;
+    const b = document.body;
+    const d = document.documentElement;
 
     try {
-      return new mxRectangle(0, 0, b.clientWidth || d.clientWidth, Math.max(b.clientHeight || 0, d.clientHeight));
+      return new mxRectangle(
+        0,
+        0,
+        b.clientWidth || d.clientWidth,
+        Math.max(b.clientHeight || 0, d.clientHeight)
+      );
     } catch (e) {
       return new mxRectangle();
     }
@@ -1136,30 +1196,30 @@ let mxUtils = {
    * Makes sure the given node is inside the visible area of the window. This
    * is done by setting the left and top in the style.
    */
-  fit: (node) => {
-    let ds = mxUtils.getDocumentSize();
-    let left = parseInt(node.offsetLeft);
-    let width = parseInt(node.offsetWidth);
+  fit: node => {
+    const ds = mxUtils.getDocumentSize();
+    const left = parseInt(node.offsetLeft);
+    const width = parseInt(node.offsetWidth);
 
-    let offset = mxUtils.getDocumentScrollOrigin(node.ownerDocument);
-    let sl = offset.x;
-    let st = offset.y;
+    const offset = mxUtils.getDocumentScrollOrigin(node.ownerDocument);
+    const sl = offset.x;
+    const st = offset.y;
 
-    let b = document.body;
-    let d = document.documentElement;
-    let right = (sl) + ds.width;
+    const b = document.body;
+    const d = document.documentElement;
+    const right = sl + ds.width;
 
     if (left + width > right) {
-      node.style.left = Math.max(sl, right - width) + 'px';
+      node.style.left = `${Math.max(sl, right - width)}px`;
     }
 
-    let top = parseInt(node.offsetTop);
-    let height = parseInt(node.offsetHeight);
+    const top = parseInt(node.offsetTop);
+    const height = parseInt(node.offsetHeight);
 
-    let bottom = st + ds.height;
+    const bottom = st + ds.height;
 
     if (top + height > bottom) {
-      node.style.top = Math.max(st, bottom - height) + 'px';
+      node.style.top = `${Math.max(st, bottom - height)}px`;
     }
   },
 
@@ -1189,8 +1249,8 @@ let mxUtils = {
    *
    * url - URL to get the data from.
    */
-  load: (url) => {
-    let req = new mxXmlRequest(url, null, 'GET', false);
+  load: url => {
+    const req = new mxXmlRequest(url, null, 'GET', false);
     req.send();
 
     return req;
@@ -1238,14 +1298,22 @@ let mxUtils = {
    * headers - Optional with headers, eg. {'Authorization': 'token xyz'}
    */
   get: (url, onload, onerror, binary, timeout, ontimeout, headers) => {
-    let req = new mxXmlRequest(url, null, 'GET');
-    let setRequestHeaders = req.setRequestHeaders;
+    const req = new mxXmlRequest(url, null, 'GET');
+    const { setRequestHeaders } = req;
 
     if (headers) {
       req.setRequestHeaders = (request, params) => {
-        setRequestHeaders.apply(this, [url, onload, onerror, binary, timeout, ontimeout, headers]);
+        setRequestHeaders.apply(this, [
+          url,
+          onload,
+          onerror,
+          binary,
+          timeout,
+          ontimeout,
+          headers,
+        ]);
 
-        for (var key in headers) {
+        for (const key in headers) {
           request.setRequestHeader(key, headers[key]);
         }
       };
@@ -1275,9 +1343,9 @@ let mxUtils = {
    */
   getAll: (urls, onload, onerror) => {
     let remain = urls.length;
-    let result = [];
+    const result = [];
     let errors = 0;
-    let err = () => {
+    const err = () => {
       if (errors == 0 && onerror != null) {
         onerror();
       }
@@ -1287,20 +1355,24 @@ let mxUtils = {
 
     for (let i = 0; i < urls.length; i++) {
       ((url, index) => {
-        mxUtils.get(url, (req) => {
-          let status = req.getStatus();
+        mxUtils.get(
+          url,
+          req => {
+            const status = req.getStatus();
 
-          if (status < 200 || status > 299) {
-            err();
-          } else {
-            result[index] = req;
-            remain--;
+            if (status < 200 || status > 299) {
+              err();
+            } else {
+              result[index] = req;
+              remain--;
 
-            if (remain == 0) {
-              onload(result);
+              if (remain == 0) {
+                onload(result);
+              }
             }
-          }
-        }, err);
+          },
+          err
+        );
       })(urls[i], i);
     }
 
@@ -1390,7 +1462,7 @@ let mxUtils = {
    * key is null.
    */
   getValue: (array, key, defaultValue) => {
-    let value = (array != null) ? array[key] : null;
+    let value = array != null ? array[key] : null;
 
     if (value == null) {
       value = defaultValue;
@@ -1414,7 +1486,7 @@ let mxUtils = {
    * key is null. Default is 0.
    */
   getNumber: (array, key, defaultValue) => {
-    let value = (array != null) ? array[key] : null;
+    let value = array != null ? array[key] : null;
 
     if (value == null) {
       value = defaultValue || 0;
@@ -1438,7 +1510,7 @@ let mxUtils = {
    * key is null. Default is null.
    */
   getColor: (array, key, defaultValue) => {
-    let value = (array != null) ? array[key] : null;
+    let value = array != null ? array[key] : null;
 
     if (value == null) {
       value = defaultValue;
@@ -1467,16 +1539,18 @@ let mxUtils = {
    * cloned. Default is false.
    */
   clone: (obj, transients, shallow) => {
-    shallow = (shallow != null) ? shallow : false;
+    shallow = shallow != null ? shallow : false;
     let clone = null;
 
-    if (obj != null && typeof (obj.constructor) == 'function') {
+    if (obj != null && typeof obj.constructor === 'function') {
       clone = new obj.constructor();
 
-      for (var i in obj) {
-        if (i != mxObjectIdentity.FIELD_NAME && (transients == null ||
-            mxUtils.indexOf(transients, i) < 0)) {
-          if (!shallow && typeof (obj[i]) == 'object') {
+      for (const i in obj) {
+        if (
+          i != mxObjectIdentity.FIELD_NAME &&
+          (transients == null || mxUtils.indexOf(transients, i) < 0)
+        ) {
+          if (!shallow && typeof obj[i] === 'object') {
             clone[i] = mxUtils.clone(obj[i]);
           } else {
             clone[i] = obj[i];
@@ -1499,15 +1573,22 @@ let mxUtils = {
    * b - Array of <mxPoints> to be compared.
    */
   equalPoints: (a, b) => {
-    if ((a == null && b != null) || (a != null && b == null) ||
-        (a != null && b != null && a.length != b.length)) {
+    if (
+      (a == null && b != null) ||
+      (a != null && b == null) ||
+      (a != null && b != null && a.length != b.length)
+    ) {
       return false;
-    } else if (a != null && b != null) {
+    }
+    if (a != null && b != null) {
       for (let i = 0; i < a.length; i++) {
-        if ((a[i] != null && b[i] == null) ||
-            (a[i] == null && b[i] != null) ||
-            (a[i] != null && b[i] != null &&
-                (a[i].x != b[i].x || a[i].y != b[i].y))) {
+        if (
+          (a[i] != null && b[i] == null) ||
+          (a[i] == null && b[i] != null) ||
+          (a[i] != null &&
+            b[i] != null &&
+            (a[i].x != b[i].x || a[i].y != b[i].y))
+        ) {
           return false;
         }
       }
@@ -1531,18 +1612,25 @@ let mxUtils = {
     // Counts keys in b to check if all values have been compared
     let count = 0;
 
-    if ((a == null && b != null) || (a != null && b == null) ||
-        (a != null && b != null && a.length != b.length)) {
+    if (
+      (a == null && b != null) ||
+      (a != null && b == null) ||
+      (a != null && b != null && a.length != b.length)
+    ) {
       return false;
-    } else if (a != null && b != null) {
+    }
+    if (a != null && b != null) {
       for (var key in b) {
         count++;
       }
 
       for (var key in a) {
-        count--
+        count--;
 
-        if ((!mxUtils.isNaN(a[key]) || !mxUtils.isNaN(b[key])) && a[key] != b[key]) {
+        if (
+          (!mxUtils.isNaN(a[key]) || !mxUtils.isNaN(b[key])) &&
+          a[key] != b[key]
+        ) {
           return false;
         }
       }
@@ -1556,9 +1644,9 @@ let mxUtils = {
    *
    * Removes all duplicates from the given array.
    */
-  removeDuplicates: (arr) => {
-    let dict = new mxDictionary();
-    let result = [];
+  removeDuplicates: arr => {
+    const dict = new mxDictionary();
+    const result = [];
 
     for (let i = 0; i < arr.length; i++) {
       if (!dict.get(arr[i])) {
@@ -1575,8 +1663,8 @@ let mxUtils = {
    *
    * Returns true if the given value is of type number and isNaN returns true.
    */
-  isNaN: (value) => {
-    return typeof (value) == 'number' && isNaN(value);
+  isNaN: value => {
+    return typeof value === 'number' && isNaN(value);
   },
 
   /**
@@ -1588,23 +1676,23 @@ let mxUtils = {
    *
    * obj - Object to return the string representation for.
    */
-  toString: (obj) => {
+  toString: obj => {
     let output = '';
 
-    for (var i in obj) {
+    for (const i in obj) {
       try {
         if (obj[i] == null) {
-          output += i + ' = [null]\n';
-        } else if (typeof (obj[i]) == 'function') {
-          output += i + ' => [Function]\n';
-        } else if (typeof (obj[i]) == 'object') {
-          let ctor = mxUtils.getFunctionName(obj[i].constructor);
-          output += i + ' => [' + ctor + ']\n';
+          output += `${i} = [null]\n`;
+        } else if (typeof obj[i] === 'function') {
+          output += `${i} => [Function]\n`;
+        } else if (typeof obj[i] === 'object') {
+          const ctor = mxUtils.getFunctionName(obj[i].constructor);
+          output += `${i} => [${ctor}]\n`;
         } else {
-          output += i + ' = ' + obj[i] + '\n';
+          output += `${i} = ${obj[i]}\n`;
         }
       } catch (e) {
-        output += i + '=' + e.message;
+        output += `${i}=${e.message}`;
       }
     }
 
@@ -1616,8 +1704,8 @@ let mxUtils = {
    *
    * Converts the given degree to radians.
    */
-  toRadians: (deg) => {
-    return Math.PI * deg / 180;
+  toRadians: deg => {
+    return (Math.PI * deg) / 180;
   },
 
   /**
@@ -1625,8 +1713,8 @@ let mxUtils = {
    *
    * Converts the given radians to degree.
    */
-  toDegree: (rad) => {
-    return rad * 180 / Math.PI;
+  toDegree: rad => {
+    return (rad * 180) / Math.PI;
   },
 
   /**
@@ -1642,22 +1730,22 @@ let mxUtils = {
       return result;
     }
 
-    let fS = sweepFlag;
-    let psai = angle;
+    const fS = sweepFlag;
+    const psai = angle;
     r1 = Math.abs(r1);
     r2 = Math.abs(r2);
-    let ctx = -x / 2;
-    let cty = -y / 2;
-    let cpsi = Math.cos(psai * Math.PI / 180);
-    let spsi = Math.sin(psai * Math.PI / 180);
-    let rxd = cpsi * ctx + spsi * cty;
-    let ryd = -1 * spsi * ctx + cpsi * cty;
-    let rxdd = rxd * rxd;
-    let rydd = ryd * ryd;
-    var r1x = r1 * r1;
-    var r2y = r2 * r2;
-    let lamda = rxdd / r1x + rydd / r2y;
-    var sds;
+    const ctx = -x / 2;
+    const cty = -y / 2;
+    const cpsi = Math.cos((psai * Math.PI) / 180);
+    const spsi = Math.sin((psai * Math.PI) / 180);
+    const rxd = cpsi * ctx + spsi * cty;
+    const ryd = -1 * spsi * ctx + cpsi * cty;
+    const rxdd = rxd * rxd;
+    const rydd = ryd * ryd;
+    const r1x = r1 * r1;
+    const r2y = r2 * r2;
+    const lamda = rxdd / r1x + rydd / r2y;
+    let sds;
 
     if (lamda > 1) {
       r1 = Math.sqrt(lamda) * r1;
@@ -1670,17 +1758,23 @@ let mxUtils = {
         seif = -1;
       }
 
-      sds = seif * Math.sqrt((r1x * r2y - r1x * rydd - r2y * rxdd) / (r1x * rydd + r2y * rxdd));
+      sds =
+        seif *
+        Math.sqrt(
+          (r1x * r2y - r1x * rydd - r2y * rxdd) / (r1x * rydd + r2y * rxdd)
+        );
     }
 
-    let txd = sds * r1 * ryd / r2;
-    let tyd = -1 * sds * r2 * rxd / r1;
-    let tx = cpsi * txd - spsi * tyd + x / 2;
-    let ty = spsi * txd + cpsi * tyd + y / 2;
+    const txd = (sds * r1 * ryd) / r2;
+    const tyd = (-1 * sds * r2 * rxd) / r1;
+    const tx = cpsi * txd - spsi * tyd + x / 2;
+    const ty = spsi * txd + cpsi * tyd + y / 2;
     let rad = Math.atan2((ryd - tyd) / r2, (rxd - txd) / r1) - Math.atan2(0, 1);
-    var s1 = (rad >= 0) ? rad : 2 * Math.PI + rad;
-    rad = Math.atan2((-ryd - tyd) / r2, (-rxd - txd) / r1) - Math.atan2((ryd - tyd) / r2, (rxd - txd) / r1);
-    let dr = (rad >= 0) ? rad : 2 * Math.PI + rad;
+    let s1 = rad >= 0 ? rad : 2 * Math.PI + rad;
+    rad =
+      Math.atan2((-ryd - tyd) / r2, (-rxd - txd) / r1) -
+      Math.atan2((ryd - tyd) / r2, (rxd - txd) / r1);
+    let dr = rad >= 0 ? rad : 2 * Math.PI + rad;
 
     if (fS == 0 && dr > 0) {
       dr -= 2 * Math.PI;
@@ -1688,20 +1782,21 @@ let mxUtils = {
       dr += 2 * Math.PI;
     }
 
-    let sse = dr * 2 / Math.PI;
-    let seg = Math.ceil(sse < 0 ? -1 * sse : sse);
-    let segr = dr / seg;
-    let t = 8 / 3 * Math.sin(segr / 4) * Math.sin(segr / 4) / Math.sin(segr / 2);
-    var cpsir1 = cpsi * r1;
-    var cpsir2 = cpsi * r2;
-    var spsir1 = spsi * r1;
-    var spsir2 = spsi * r2;
+    const sse = (dr * 2) / Math.PI;
+    const seg = Math.ceil(sse < 0 ? -1 * sse : sse);
+    const segr = dr / seg;
+    const t =
+      ((8 / 3) * Math.sin(segr / 4) * Math.sin(segr / 4)) / Math.sin(segr / 2);
+    const cpsir1 = cpsi * r1;
+    const cpsir2 = cpsi * r2;
+    const spsir1 = spsi * r1;
+    const spsir2 = spsi * r2;
     let mc = Math.cos(s1);
     let ms = Math.sin(s1);
-    var x2 = -t * (cpsir1 * ms + spsir2 * mc);
-    var y2 = -t * (spsir1 * ms - cpsir2 * mc);
-    var x3 = 0;
-    var y3 = 0;
+    let x2 = -t * (cpsir1 * ms + spsir2 * mc);
+    let y2 = -t * (spsir1 * ms - cpsir2 * mc);
+    let x3 = 0;
+    let y3 = 0;
 
     let result = [];
 
@@ -1712,11 +1807,11 @@ let mxUtils = {
 
       x3 = cpsir1 * mc - spsir2 * ms + tx;
       y3 = spsir1 * mc + cpsir2 * ms + ty;
-      let dx = -t * (cpsir1 * ms + spsir2 * mc);
-      let dy = -t * (spsir1 * ms - cpsir2 * mc);
+      const dx = -t * (cpsir1 * ms + spsir2 * mc);
+      const dy = -t * (spsir1 * ms - cpsir2 * mc);
 
       // CurveTo updates x0, y0 so need to restore it
-      let index = n * 6;
+      const index = n * 6;
       result[index] = Number(x2 + x0);
       result[index + 1] = Number(y2 + y0);
       result[index + 2] = Number(x3 - dx + x0);
@@ -1747,16 +1842,19 @@ let mxUtils = {
     let result = null;
 
     if (rect != null && rotation != null && rotation != 0) {
-      let rad = mxUtils.toRadians(rotation);
-      let cos = Math.cos(rad);
-      let sin = Math.sin(rad);
+      const rad = mxUtils.toRadians(rotation);
+      const cos = Math.cos(rad);
+      const sin = Math.sin(rad);
 
-      cx = (cx != null) ? cx : new mxPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
+      cx =
+        cx != null
+          ? cx
+          : new mxPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
 
-      var p1 = new mxPoint(rect.x, rect.y);
-      var p2 = new mxPoint(rect.x + rect.width, rect.y);
-      var p3 = new mxPoint(p2.x, rect.y + rect.height);
-      var p4 = new mxPoint(rect.x, p3.y);
+      let p1 = new mxPoint(rect.x, rect.y);
+      let p2 = new mxPoint(rect.x + rect.width, rect.y);
+      let p3 = new mxPoint(p2.x, rect.y + rect.height);
+      let p4 = new mxPoint(rect.x, p3.y);
 
       p1 = mxUtils.getRotatedPoint(p1, cos, sin, cx);
       p2 = mxUtils.getRotatedPoint(p2, cos, sin, cx);
@@ -1778,12 +1876,12 @@ let mxUtils = {
    * Rotates the given point by the given cos and sin.
    */
   getRotatedPoint: (pt, cos, sin, c) => {
-    c = (c != null) ? c : new mxPoint();
-    let x = pt.x - c.x;
-    let y = pt.y - c.y;
+    c = c != null ? c : new mxPoint();
+    const x = pt.x - c.x;
+    const y = pt.y - c.y;
 
-    var x1 = x * cos - y * sin;
-    var y1 = y * cos + x * sin;
+    const x1 = x * cos - y * sin;
+    const y1 = y * cos + x * sin;
 
     return new mxPoint(x1 + c.x, y1 + c.y);
   },
@@ -1802,105 +1900,120 @@ let mxUtils = {
    * defaultValue - Default value to be returned.
    */
   getPortConstraints: (terminal, edge, source, defaultValue) => {
-    let value = mxUtils.getValue(terminal.style, mxConstants.STYLE_PORT_CONSTRAINT,
-        mxUtils.getValue(edge.style, (source) ? mxConstants.STYLE_SOURCE_PORT_CONSTRAINT :
-            mxConstants.STYLE_TARGET_PORT_CONSTRAINT, null));
+    const value = mxUtils.getValue(
+      terminal.style,
+      mxConstants.STYLE_PORT_CONSTRAINT,
+      mxUtils.getValue(
+        edge.style,
+        source
+          ? mxConstants.STYLE_SOURCE_PORT_CONSTRAINT
+          : mxConstants.STYLE_TARGET_PORT_CONSTRAINT,
+        null
+      )
+    );
 
     if (value == null) {
       return defaultValue;
-    } else {
-      let directions = value.toString();
-      let returnValue = mxConstants.DIRECTION_MASK_NONE;
-      let constraintRotationEnabled = mxUtils.getValue(terminal.style, mxConstants.STYLE_PORT_CONSTRAINT_ROTATION, 0);
-      let rotation = 0;
-
-      if (constraintRotationEnabled == 1) {
-        rotation = mxUtils.getValue(terminal.style, mxConstants.STYLE_ROTATION, 0);
-      }
-
-      let quad = 0;
-
-      if (rotation > 45) {
-        quad = 1;
-
-        if (rotation >= 135) {
-          quad = 2;
-        }
-      } else if (rotation < -45) {
-        quad = 3;
-
-        if (rotation <= -135) {
-          quad = 2;
-        }
-      }
-
-      if (directions.indexOf(mxConstants.DIRECTION_NORTH) >= 0) {
-        switch (quad) {
-          case 0:
-            returnValue |= mxConstants.DIRECTION_MASK_NORTH;
-            break;
-          case 1:
-            returnValue |= mxConstants.DIRECTION_MASK_EAST;
-            break;
-          case 2:
-            returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
-            break;
-          case 3:
-            returnValue |= mxConstants.DIRECTION_MASK_WEST;
-            break;
-        }
-      }
-      if (directions.indexOf(mxConstants.DIRECTION_WEST) >= 0) {
-        switch (quad) {
-          case 0:
-            returnValue |= mxConstants.DIRECTION_MASK_WEST;
-            break;
-          case 1:
-            returnValue |= mxConstants.DIRECTION_MASK_NORTH;
-            break;
-          case 2:
-            returnValue |= mxConstants.DIRECTION_MASK_EAST;
-            break;
-          case 3:
-            returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
-            break;
-        }
-      }
-      if (directions.indexOf(mxConstants.DIRECTION_SOUTH) >= 0) {
-        switch (quad) {
-          case 0:
-            returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
-            break;
-          case 1:
-            returnValue |= mxConstants.DIRECTION_MASK_WEST;
-            break;
-          case 2:
-            returnValue |= mxConstants.DIRECTION_MASK_NORTH;
-            break;
-          case 3:
-            returnValue |= mxConstants.DIRECTION_MASK_EAST;
-            break;
-        }
-      }
-      if (directions.indexOf(mxConstants.DIRECTION_EAST) >= 0) {
-        switch (quad) {
-          case 0:
-            returnValue |= mxConstants.DIRECTION_MASK_EAST;
-            break;
-          case 1:
-            returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
-            break;
-          case 2:
-            returnValue |= mxConstants.DIRECTION_MASK_WEST;
-            break;
-          case 3:
-            returnValue |= mxConstants.DIRECTION_MASK_NORTH;
-            break;
-        }
-      }
-
-      return returnValue;
     }
+    const directions = value.toString();
+    let returnValue = mxConstants.DIRECTION_MASK_NONE;
+    const constraintRotationEnabled = mxUtils.getValue(
+      terminal.style,
+      mxConstants.STYLE_PORT_CONSTRAINT_ROTATION,
+      0
+    );
+    let rotation = 0;
+
+    if (constraintRotationEnabled == 1) {
+      rotation = mxUtils.getValue(
+        terminal.style,
+        mxConstants.STYLE_ROTATION,
+        0
+      );
+    }
+
+    let quad = 0;
+
+    if (rotation > 45) {
+      quad = 1;
+
+      if (rotation >= 135) {
+        quad = 2;
+      }
+    } else if (rotation < -45) {
+      quad = 3;
+
+      if (rotation <= -135) {
+        quad = 2;
+      }
+    }
+
+    if (directions.indexOf(mxConstants.DIRECTION_NORTH) >= 0) {
+      switch (quad) {
+        case 0:
+          returnValue |= mxConstants.DIRECTION_MASK_NORTH;
+          break;
+        case 1:
+          returnValue |= mxConstants.DIRECTION_MASK_EAST;
+          break;
+        case 2:
+          returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
+          break;
+        case 3:
+          returnValue |= mxConstants.DIRECTION_MASK_WEST;
+          break;
+      }
+    }
+    if (directions.indexOf(mxConstants.DIRECTION_WEST) >= 0) {
+      switch (quad) {
+        case 0:
+          returnValue |= mxConstants.DIRECTION_MASK_WEST;
+          break;
+        case 1:
+          returnValue |= mxConstants.DIRECTION_MASK_NORTH;
+          break;
+        case 2:
+          returnValue |= mxConstants.DIRECTION_MASK_EAST;
+          break;
+        case 3:
+          returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
+          break;
+      }
+    }
+    if (directions.indexOf(mxConstants.DIRECTION_SOUTH) >= 0) {
+      switch (quad) {
+        case 0:
+          returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
+          break;
+        case 1:
+          returnValue |= mxConstants.DIRECTION_MASK_WEST;
+          break;
+        case 2:
+          returnValue |= mxConstants.DIRECTION_MASK_NORTH;
+          break;
+        case 3:
+          returnValue |= mxConstants.DIRECTION_MASK_EAST;
+          break;
+      }
+    }
+    if (directions.indexOf(mxConstants.DIRECTION_EAST) >= 0) {
+      switch (quad) {
+        case 0:
+          returnValue |= mxConstants.DIRECTION_MASK_EAST;
+          break;
+        case 1:
+          returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
+          break;
+        case 2:
+          returnValue |= mxConstants.DIRECTION_MASK_WEST;
+          break;
+        case 3:
+          returnValue |= mxConstants.DIRECTION_MASK_NORTH;
+          break;
+      }
+    }
+
+    return returnValue;
   },
 
   /**
@@ -1909,7 +2022,7 @@ let mxUtils = {
    * Reverse the port constraint bitmask. For example, north | east
    * becomes south | west
    */
-  reversePortConstraints: (constraint) => {
+  reversePortConstraints: constraint => {
     let result = 0;
 
     result = (constraint & mxConstants.DIRECTION_MASK_WEST) << 3;
@@ -1934,9 +2047,15 @@ let mxUtils = {
       let min = null;
 
       for (let i = 1; i < state.absolutePoints.length; i++) {
-        let current = state.absolutePoints[i];
-        let dist = mxUtils.ptSegDistSq(last.x, last.y,
-            current.x, current.y, x, y);
+        const current = state.absolutePoints[i];
+        const dist = mxUtils.ptSegDistSq(
+          last.x,
+          last.y,
+          current.x,
+          current.y,
+          x,
+          y
+        );
 
         if (min == null || dist < min) {
           min = dist;
@@ -1956,31 +2075,51 @@ let mxUtils = {
    * Adds the given margins to the given rectangle and rotates and flips the
    * rectangle according to the respective styles in style.
    */
-  getDirectedBounds: function (rect, m, style, flipH, flipV) {
-    let d = mxUtils.getValue(style, mxConstants.STYLE_DIRECTION, mxConstants.DIRECTION_EAST);
-    flipH = (flipH != null) ? flipH : mxUtils.getValue(style, mxConstants.STYLE_FLIPH, false);
-    flipV = (flipV != null) ? flipV : mxUtils.getValue(style, mxConstants.STYLE_FLIPV, false);
+  getDirectedBounds(rect, m, style, flipH, flipV) {
+    const d = mxUtils.getValue(
+      style,
+      mxConstants.STYLE_DIRECTION,
+      mxConstants.DIRECTION_EAST
+    );
+    flipH =
+      flipH != null
+        ? flipH
+        : mxUtils.getValue(style, mxConstants.STYLE_FLIPH, false);
+    flipV =
+      flipV != null
+        ? flipV
+        : mxUtils.getValue(style, mxConstants.STYLE_FLIPV, false);
 
     m.x = Math.round(Math.max(0, Math.min(rect.width, m.x)));
     m.y = Math.round(Math.max(0, Math.min(rect.height, m.y)));
     m.width = Math.round(Math.max(0, Math.min(rect.width, m.width)));
     m.height = Math.round(Math.max(0, Math.min(rect.height, m.height)));
 
-    if ((flipV && (d == mxConstants.DIRECTION_SOUTH || d == mxConstants.DIRECTION_NORTH)) ||
-        (flipH && (d == mxConstants.DIRECTION_EAST || d == mxConstants.DIRECTION_WEST))) {
-      let tmp = m.x;
+    if (
+      (flipV &&
+        (d == mxConstants.DIRECTION_SOUTH ||
+          d == mxConstants.DIRECTION_NORTH)) ||
+      (flipH &&
+        (d == mxConstants.DIRECTION_EAST || d == mxConstants.DIRECTION_WEST))
+    ) {
+      const tmp = m.x;
       m.x = m.width;
       m.width = tmp;
     }
 
-    if ((flipH && (d == mxConstants.DIRECTION_SOUTH || d == mxConstants.DIRECTION_NORTH)) ||
-        (flipV && (d == mxConstants.DIRECTION_EAST || d == mxConstants.DIRECTION_WEST))) {
-      let tmp = m.y;
+    if (
+      (flipH &&
+        (d == mxConstants.DIRECTION_SOUTH ||
+          d == mxConstants.DIRECTION_NORTH)) ||
+      (flipV &&
+        (d == mxConstants.DIRECTION_EAST || d == mxConstants.DIRECTION_WEST))
+    ) {
+      const tmp = m.y;
       m.y = m.height;
       m.height = tmp;
     }
 
-    var m2 = mxRectangle.fromRectangle(m);
+    const m2 = mxRectangle.fromRectangle(m);
 
     if (d == mxConstants.DIRECTION_SOUTH) {
       m2.y = m.x;
@@ -1999,7 +2138,12 @@ let mxUtils = {
       m2.height = m.x;
     }
 
-    return new mxRectangle(rect.x + m2.x, rect.y + m2.y, rect.width - m2.width - m2.x, rect.height - m2.height - m2.y);
+    return new mxRectangle(
+      rect.x + m2.x,
+      rect.y + m2.y,
+      rect.width - m2.width - m2.x,
+      rect.height - m2.height - m2.y
+    );
   },
 
   /**
@@ -2008,17 +2152,25 @@ let mxUtils = {
    * Returns the intersection between the polygon defined by the array of
    * points and the line between center and point.
    */
-  getPerimeterPoint: function (pts, center, point) {
+  getPerimeterPoint(pts, center, point) {
     let min = null;
 
     for (let i = 0; i < pts.length - 1; i++) {
-      let pt = mxUtils.intersection(pts[i].x, pts[i].y, pts[i + 1].x, pts[i + 1].y,
-          center.x, center.y, point.x, point.y);
+      const pt = mxUtils.intersection(
+        pts[i].x,
+        pts[i].y,
+        pts[i + 1].x,
+        pts[i + 1].y,
+        center.x,
+        center.y,
+        point.x,
+        point.y
+      );
 
       if (pt != null) {
-        let dx = point.x - pt.x;
-        let dy = point.y - pt.y;
-        let ip = {p: pt, distSq: dy * dy + dx * dx};
+        const dx = point.x - pt.x;
+        const dy = point.y - pt.y;
+        const ip = { p: pt, distSq: dy * dy + dx * dx };
 
         if (ip != null && (min == null || min.distSq > ip.distSq)) {
           min = ip;
@@ -2026,7 +2178,7 @@ let mxUtils = {
       }
     }
 
-    return (min != null) ? min.p : null;
+    return min != null ? min.p : null;
   },
 
   /**
@@ -2041,10 +2193,10 @@ let mxUtils = {
    * p2 - <mxPoint> that represents the second point of the segment.
    */
   rectangleIntersectsSegment: (bounds, p1, p2) => {
-    let top = bounds.y;
-    let left = bounds.x;
-    let bottom = top + bounds.height;
-    let right = left + bounds.width;
+    const top = bounds.y;
+    const left = bounds.x;
+    const bottom = top + bounds.height;
+    const right = left + bounds.width;
 
     // Find min and max X for the segment
     let minX = p1.x;
@@ -2064,25 +2216,25 @@ let mxUtils = {
       minX = left;
     }
 
-    if (minX > maxX) // If their projections do not intersect return false
-    {
+    if (minX > maxX) {
+      // If their projections do not intersect return false
       return false;
     }
 
     // Find corresponding min and max Y for min and max X we found before
     let minY = p1.y;
     let maxY = p2.y;
-    let dx = p2.x - p1.x;
+    const dx = p2.x - p1.x;
 
     if (Math.abs(dx) > 0.0000001) {
-      let a = (p2.y - p1.y) / dx;
-      let b = p1.y - a * p1.x;
+      const a = (p2.y - p1.y) / dx;
+      const b = p1.y - a * p1.x;
       minY = a * minX + b;
       maxY = a * maxX + b;
     }
 
     if (minY > maxY) {
-      let tmp = maxY;
+      const tmp = maxY;
       maxY = minY;
       minY = tmp;
     }
@@ -2096,8 +2248,8 @@ let mxUtils = {
       minY = top;
     }
 
-    if (minY > maxY) // If Y-projections do not intersect return false
-    {
+    if (minY > maxY) {
+      // If Y-projections do not intersect return false
       return false;
     }
 
@@ -2116,8 +2268,12 @@ let mxUtils = {
    * y - Y-coordinate of the point.
    */
   contains: (bounds, x, y) => {
-    return (bounds.x <= x && bounds.x + bounds.width >= x &&
-        bounds.y <= y && bounds.y + bounds.height >= y);
+    return (
+      bounds.x <= x &&
+      bounds.x + bounds.width >= x &&
+      bounds.y <= y &&
+      bounds.y + bounds.height >= y
+    );
   },
 
   /**
@@ -2140,20 +2296,22 @@ let mxUtils = {
       return false;
     }
 
-    let tx = a.x;
-    let ty = a.y;
-    let rx = b.x;
-    let ry = b.y;
+    const tx = a.x;
+    const ty = a.y;
+    const rx = b.x;
+    const ry = b.y;
 
     rw += rx;
     rh += ry;
     tw += tx;
     th += ty;
 
-    return ((rw < rx || rw > tx) &&
-        (rh < ry || rh > ty) &&
-        (tw < tx || tw > rx) &&
-        (th < ty || th > ry));
+    return (
+      (rw < rx || rw > tx) &&
+      (rh < ry || rh > ty) &&
+      (tw < tx || tw > rx) &&
+      (th < ty || th > ry)
+    );
   },
 
   /**
@@ -2171,9 +2329,9 @@ let mxUtils = {
    * max - Optional max size of the hostpot.
    */
   intersectsHotspot: (state, x, y, hotspot, min, max) => {
-    hotspot = (hotspot != null) ? hotspot : 1;
-    min = (min != null) ? min : 0;
-    max = (max != null) ? max : 0;
+    hotspot = hotspot != null ? hotspot : 1;
+    min = min != null ? min : 0;
+    max = max != null ? max : 0;
 
     if (hotspot > 0) {
       let cx = state.getCenterX();
@@ -2181,7 +2339,9 @@ let mxUtils = {
       let w = state.width;
       let h = state.height;
 
-      let start = mxUtils.getValue(state.style, mxConstants.STYLE_STARTSIZE) * state.view.scale;
+      const start =
+        mxUtils.getValue(state.style, mxConstants.STYLE_STARTSIZE) *
+        state.view.scale;
 
       if (start > 0) {
         if (mxUtils.getValue(state.style, mxConstants.STYLE_HORIZONTAL, true)) {
@@ -2201,14 +2361,16 @@ let mxUtils = {
         h = Math.min(h, max);
       }
 
-      let rect = new mxRectangle(cx - w / 2, cy - h / 2, w, h);
-      let alpha = mxUtils.toRadians(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0);
+      const rect = new mxRectangle(cx - w / 2, cy - h / 2, w, h);
+      const alpha = mxUtils.toRadians(
+        mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0
+      );
 
       if (alpha != 0) {
-        let cos = Math.cos(-alpha);
-        let sin = Math.sin(-alpha);
-        let cx = new mxPoint(state.getCenterX(), state.getCenterY());
-        let pt = mxUtils.getRotatedPoint(new mxPoint(x, y), cos, sin, cx);
+        const cos = Math.cos(-alpha);
+        const sin = Math.sin(-alpha);
+        const cx = new mxPoint(state.getCenterX(), state.getCenterY());
+        const pt = mxUtils.getRotatedPoint(new mxPoint(x, y), cos, sin, cx);
         x = pt.x;
         y = pt.y;
       }
@@ -2239,11 +2401,11 @@ let mxUtils = {
     // Ignores document scroll origin for fixed elements
     let fixed = false;
     let node = container;
-    let b = document.body;
-    let d = document.documentElement;
+    const b = document.body;
+    const d = document.documentElement;
 
     while (node != null && node != b && node != d && !fixed) {
-      let style = mxUtils.getCurrentStyle(node);
+      const style = mxUtils.getCurrentStyle(node);
 
       if (style != null) {
         fixed = fixed || style.position == 'fixed';
@@ -2253,12 +2415,12 @@ let mxUtils = {
     }
 
     if (!scrollOffset && !fixed) {
-      let offset = mxUtils.getDocumentScrollOrigin(container.ownerDocument);
+      const offset = mxUtils.getDocumentScrollOrigin(container.ownerDocument);
       offsetLeft += offset.x;
       offsetTop += offset.y;
     }
 
-    let r = container.getBoundingClientRect();
+    const r = container.getBoundingClientRect();
 
     if (r != null) {
       offsetLeft += r.left;
@@ -2274,11 +2436,25 @@ let mxUtils = {
    * Returns the scroll origin of the given document or the current document
    * if no document is given.
    */
-  getDocumentScrollOrigin: (doc) => {
-    let wnd = doc.defaultView || doc.parentWindow;
+  getDocumentScrollOrigin: doc => {
+    const wnd = doc.defaultView || doc.parentWindow;
 
-    let x = (wnd != null && window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
-    let y = (wnd != null && window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    const x =
+      wnd != null && window.pageXOffset !== undefined
+        ? window.pageXOffset
+        : (
+            document.documentElement ||
+            document.body.parentNode ||
+            document.body
+          ).scrollLeft;
+    const y =
+      wnd != null && window.pageYOffset !== undefined
+        ? window.pageYOffset
+        : (
+            document.documentElement ||
+            document.body.parentNode ||
+            document.body
+          ).scrollTop;
 
     return new mxPoint(x, y);
   },
@@ -2297,13 +2473,13 @@ let mxUtils = {
    * included. Default is true.
    */
   getScrollOrigin: (node, includeAncestors, includeDocument) => {
-    includeAncestors = (includeAncestors != null) ? includeAncestors : false;
-    includeDocument = (includeDocument != null) ? includeDocument : true;
+    includeAncestors = includeAncestors != null ? includeAncestors : false;
+    includeDocument = includeDocument != null ? includeDocument : true;
 
-    let doc = (node != null) ? node.ownerDocument : document;
-    let b = doc.body;
-    let d = doc.documentElement;
-    let result = new mxPoint();
+    const doc = node != null ? node.ownerDocument : document;
+    const b = doc.body;
+    const d = doc.documentElement;
+    const result = new mxPoint();
     let fixed = false;
 
     while (node != null && node != b && node != d) {
@@ -2312,17 +2488,17 @@ let mxUtils = {
         result.y += node.scrollTop;
       }
 
-      let style = mxUtils.getCurrentStyle(node);
+      const style = mxUtils.getCurrentStyle(node);
 
       if (style != null) {
         fixed = fixed || style.position == 'fixed';
       }
 
-      node = (includeAncestors) ? node.parentNode : null;
+      node = includeAncestors ? node.parentNode : null;
     }
 
     if (!fixed && includeDocument) {
-      let origin = mxUtils.getDocumentScrollOrigin(doc);
+      const origin = mxUtils.getDocumentScrollOrigin(doc);
 
       result.x += origin.x;
       result.y += origin.y;
@@ -2349,8 +2525,8 @@ let mxUtils = {
    * y - Y-coordinate of the point to be converted.
    */
   convertPoint: (container, x, y) => {
-    let origin = mxUtils.getScrollOrigin(container, false);
-    let offset = mxUtils.getOffset(container);
+    const origin = mxUtils.getScrollOrigin(container, false);
+    const offset = mxUtils.getOffset(container);
 
     offset.x -= origin.x;
     offset.y -= origin.y;
@@ -2372,9 +2548,11 @@ let mxUtils = {
    * - "\x0B" (ASCII 11 (0x0B)), a vertical tab
    */
   ltrim: (str, chars) => {
-    chars = chars || "\\s";
+    chars = chars || '\\s';
 
-    return (str != null) ? str.replace(new RegExp("^[" + chars + "]+", "g"), "") : null;
+    return str != null
+      ? str.replace(new RegExp(`^[${chars}]+`, 'g'), '')
+      : null;
   },
 
   /**
@@ -2391,9 +2569,11 @@ let mxUtils = {
    * - "\x0B" (ASCII 11 (0x0B)), a vertical tab
    */
   rtrim: (str, chars) => {
-    chars = chars || "\\s";
+    chars = chars || '\\s';
 
-    return (str != null) ? str.replace(new RegExp("[" + chars + "]+$", "g"), "") : null;
+    return str != null
+      ? str.replace(new RegExp(`[${chars}]+$`, 'g'), '')
+      : null;
   },
 
   /**
@@ -2424,8 +2604,12 @@ let mxUtils = {
    *
    * n - String representing the possibly numeric value.
    */
-  isNumeric: (n) => {
-    return !isNaN(parseFloat(n)) && isFinite(n) && (typeof (n) != 'string' || n.toLowerCase().indexOf('0x') < 0);
+  isNumeric: n => {
+    return (
+      !isNaN(parseFloat(n)) &&
+      isFinite(n) &&
+      (typeof n !== 'string' || n.toLowerCase().indexOf('0x') < 0)
+    );
   },
 
   /**
@@ -2437,7 +2621,7 @@ let mxUtils = {
    *
    * n - String representing the possibly numeric value.
    */
-  isInteger: (n) => {
+  isInteger: n => {
     return String(parseInt(n)) === String(n);
   },
 
@@ -2468,18 +2652,18 @@ let mxUtils = {
    * x3 - X-coordinate of the second line's endpoint.
    * y3 - Y-coordinate of the second line's endpoint.
    */
-  intersection: function (x0, y0, x1, y1, x2, y2, x3, y3) {
-    let denom = ((y3 - y2) * (x1 - x0)) - ((x3 - x2) * (y1 - y0));
-    let nume_a = ((x3 - x2) * (y0 - y2)) - ((y3 - y2) * (x0 - x2));
-    let nume_b = ((x1 - x0) * (y0 - y2)) - ((y1 - y0) * (x0 - x2));
+  intersection(x0, y0, x1, y1, x2, y2, x3, y3) {
+    const denom = (y3 - y2) * (x1 - x0) - (x3 - x2) * (y1 - y0);
+    const nume_a = (x3 - x2) * (y0 - y2) - (y3 - y2) * (x0 - x2);
+    const nume_b = (x1 - x0) * (y0 - y2) - (y1 - y0) * (x0 - x2);
 
-    let ua = nume_a / denom;
-    let ub = nume_b / denom;
+    const ua = nume_a / denom;
+    const ub = nume_b / denom;
 
     if (ua >= 0.0 && ua <= 1.0 && ub >= 0.0 && ub <= 1.0) {
       // Get the intersection point
-      let x = x0 + ua * (x1 - x0);
-      let y = y0 + ua * (y1 - y0);
+      const x = x0 + ua * (x1 - x0);
+      const y = y0 + ua * (y1 - y0);
 
       return new mxPoint(x, y);
     }
@@ -2512,7 +2696,7 @@ let mxUtils = {
     py -= y1;
 
     let dotprod = px * x2 + py * y2;
-    var projlenSq;
+    let projlenSq;
 
     if (dotprod <= 0.0) {
       projlenSq = 0.0;
@@ -2524,7 +2708,7 @@ let mxUtils = {
       if (dotprod <= 0.0) {
         projlenSq = 0.0;
       } else {
-        projlenSq = dotprod * dotprod / (x2 * x2 + y2 * y2);
+        projlenSq = (dotprod * dotprod) / (x2 * x2 + y2 * y2);
       }
     }
 
@@ -2554,8 +2738,10 @@ let mxUtils = {
    * py - Y-coordinate of the point.
    */
   ptLineDist: (x1, y1, x2, y2, px, py) => {
-    return Math.abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1) /
-        Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+    return (
+      Math.abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1) /
+      Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1))
+    );
   },
 
   /**
@@ -2594,7 +2780,7 @@ let mxUtils = {
       }
     }
 
-    return (ccw < 0.0) ? -1 : ((ccw > 0.0) ? 1 : 0);
+    return ccw < 0.0 ? -1 : ccw > 0.0 ? 1 : 0;
   },
 
   /**
@@ -2639,7 +2825,7 @@ let mxUtils = {
    * value - Opacity in %. Possible values are between 0 and 100.
    */
   setOpacity: (node, value) => {
-    node.style.opacity = (value / 100);
+    node.style.opacity = value / 100;
   },
 
   /**
@@ -2652,7 +2838,7 @@ let mxUtils = {
    *
    * src - URL that points to the image to be displayed.
    */
-  createImage: (src) => {
+  createImage: src => {
     let imageNode = null;
     imageNode = document.createElement('img');
     imageNode.setAttribute('src', src);
@@ -2667,26 +2853,26 @@ let mxUtils = {
    * Ascending is optional and defaults to true.
    */
   sortCells: (cells, ascending) => {
-    ascending = (ascending != null) ? ascending : true;
-    let lookup = new mxDictionary();
+    ascending = ascending != null ? ascending : true;
+    const lookup = new mxDictionary();
     cells.sort((o1, o2) => {
-      var p1 = lookup.get(o1);
+      let p1 = lookup.get(o1);
 
       if (p1 == null) {
         p1 = mxCellPath.create(o1).split(mxCellPath.PATH_SEPARATOR);
         lookup.put(o1, p1);
       }
 
-      var p2 = lookup.get(o2);
+      let p2 = lookup.get(o2);
 
       if (p2 == null) {
         p2 = mxCellPath.create(o2).split(mxCellPath.PATH_SEPARATOR);
         lookup.put(o2, p2);
       }
 
-      let comp = mxCellPath.compare(p1, p2);
+      const comp = mxCellPath.compare(p1, p2);
 
-      return (comp == 0) ? 0 : (((comp > 0) == ascending) ? 1 : -1);
+      return comp == 0 ? 0 : comp > 0 == ascending ? 1 : -1;
     });
 
     return cells;
@@ -2702,10 +2888,10 @@ let mxUtils = {
    *
    * style - String of the form [(stylename|key=value);].
    */
-  getStylename: (style) => {
+  getStylename: style => {
     if (style != null) {
-      let pairs = style.split(';');
-      let stylename = pairs[0];
+      const pairs = style.split(';');
+      const stylename = pairs[0];
 
       if (stylename.indexOf('=') < 0) {
         return stylename;
@@ -2725,11 +2911,11 @@ let mxUtils = {
    *
    * style - String of the form [(stylename|key=value);].
    */
-  getStylenames: (style) => {
-    let result = [];
+  getStylenames: style => {
+    const result = [];
 
     if (style != null) {
-      let pairs = style.split(';');
+      const pairs = style.split(';');
 
       for (let i = 0; i < pairs.length; i++) {
         if (pairs[i].indexOf('=') < 0) {
@@ -2750,7 +2936,7 @@ let mxUtils = {
    */
   indexOfStylename: (style, stylename) => {
     if (style != null && stylename != null) {
-      let tokens = style.split(';');
+      const tokens = style.split(';');
       let pos = 0;
 
       for (let i = 0; i < tokens.length; i++) {
@@ -2792,10 +2978,10 @@ let mxUtils = {
    * and returns the updated style. Trailing semicolons are not preserved.
    */
   removeStylename: (style, stylename) => {
-    let result = [];
+    const result = [];
 
     if (style != null) {
-      let tokens = style.split(';');
+      const tokens = style.split(';');
 
       for (let i = 0; i < tokens.length; i++) {
         if (tokens[i] != stylename) {
@@ -2813,11 +2999,11 @@ let mxUtils = {
    * Removes all stylenames from the given style and returns the updated
    * style.
    */
-  removeAllStylenames: (style) => {
-    let result = [];
+  removeAllStylenames: style => {
+    const result = [];
 
     if (style != null) {
-      let tokens = style.split(';');
+      const tokens = style.split(';');
 
       for (let i = 0; i < tokens.length; i++) {
         // Keeps the key, value assignments
@@ -2849,7 +3035,11 @@ let mxUtils = {
       try {
         for (let i = 0; i < cells.length; i++) {
           if (cells[i] != null) {
-            let style = mxUtils.setStyle(model.getStyle(cells[i]), key, value);
+            const style = mxUtils.setStyle(
+              model.getStyle(cells[i]),
+              key,
+              value
+            );
             model.setStyle(cells[i], style);
           }
         }
@@ -2873,37 +3063,42 @@ let mxUtils = {
    * value - New value for the given key.
    */
   setStyle: (style, key, value) => {
-    let isValue = value != null && (typeof (value.length) == 'undefined' || value.length > 0);
+    const isValue =
+      value != null &&
+      (typeof value.length === 'undefined' || value.length > 0);
 
     if (style == null || style.length == 0) {
       if (isValue) {
-        style = key + '=' + value + ';';
+        style = `${key}=${value};`;
+      }
+    } else if (style.substring(0, key.length + 1) == `${key}=`) {
+      const next = style.indexOf(';');
+
+      if (isValue) {
+        style = `${key}=${value}${next < 0 ? ';' : style.substring(next)}`;
+      } else {
+        style =
+          next < 0 || next == style.length - 1 ? '' : style.substring(next + 1);
       }
     } else {
-      if (style.substring(0, key.length + 1) == key + '=') {
-        let next = style.indexOf(';');
+      const index = style.indexOf(`;${key}=`);
 
+      if (index < 0) {
         if (isValue) {
-          style = key + '=' + value + ((next < 0) ? ';' : style.substring(next));
-        } else {
-          style = (next < 0 || next == style.length - 1) ? '' : style.substring(next + 1);
+          const sep = style.charAt(style.length - 1) == ';' ? '' : ';';
+          style = `${style + sep + key}=${value};`;
         }
       } else {
-        let index = style.indexOf(';' + key + '=');
+        const next = style.indexOf(';', index + 1);
 
-        if (index < 0) {
-          if (isValue) {
-            let sep = (style.charAt(style.length - 1) == ';') ? '' : ';';
-            style = style + sep + key + '=' + value + ';';
-          }
+        if (isValue) {
+          style = `${style.substring(0, index + 1) + key}=${value}${
+            next < 0 ? ';' : style.substring(next)
+          }`;
         } else {
-          let next = style.indexOf(';', index + 1);
-
-          if (isValue) {
-            style = style.substring(0, index + 1) + key + '=' + value + ((next < 0) ? ';' : style.substring(next));
-          } else {
-            style = style.substring(0, index) + ((next < 0) ? ';' : style.substring(next));
-          }
+          style =
+            style.substring(0, index) +
+            (next < 0 ? ';' : style.substring(next));
         }
       }
     }
@@ -2943,9 +3138,12 @@ let mxUtils = {
       try {
         for (let i = 0; i < cells.length; i++) {
           if (cells[i] != null) {
-            let style = mxUtils.setStyleFlag(
-                model.getStyle(cells[i]),
-                key, flag, value);
+            const style = mxUtils.setStyleFlag(
+              model.getStyle(cells[i]),
+              key,
+              flag,
+              value
+            );
             model.setStyle(cells[i], style);
           }
         }
@@ -2971,23 +3169,23 @@ let mxUtils = {
   setStyleFlag: (style, key, flag, value) => {
     if (style == null || style.length == 0) {
       if (value || value == null) {
-        style = key + '=' + flag;
+        style = `${key}=${flag}`;
       } else {
-        style = key + '=0';
+        style = `${key}=0`;
       }
     } else {
-      let index = style.indexOf(key + '=');
+      const index = style.indexOf(`${key}=`);
 
       if (index < 0) {
-        let sep = (style.charAt(style.length - 1) == ';') ? '' : ';';
+        const sep = style.charAt(style.length - 1) == ';' ? '' : ';';
 
         if (value || value == null) {
-          style = style + sep + key + '=' + flag;
+          style = `${style + sep + key}=${flag}`;
         } else {
-          style = style + sep + key + '=0';
+          style = `${style + sep + key}=0`;
         }
       } else {
-        let cont = style.indexOf(';', index);
+        const cont = style.indexOf(';', index);
         let tmp = '';
 
         if (cont < 0) {
@@ -3004,8 +3202,9 @@ let mxUtils = {
           tmp = parseInt(tmp) & ~flag;
         }
 
-        style = style.substring(0, index) + key + '=' + tmp +
-            ((cont >= 0) ? style.substring(cont) : '');
+        style = `${style.substring(0, index) + key}=${tmp}${
+          cont >= 0 ? style.substring(cont) : ''
+        }`;
       }
     }
 
@@ -3067,14 +3266,17 @@ let mxUtils = {
    * fontStyle - Optional font style.
    */
   getSizeForString: (text, fontSize, fontFamily, textWidth, fontStyle) => {
-    fontSize = (fontSize != null) ? fontSize : mxConstants.DEFAULT_FONTSIZE;
-    fontFamily = (fontFamily != null) ? fontFamily : mxConstants.DEFAULT_FONTFAMILY;
-    let div = document.createElement('div');
+    fontSize = fontSize != null ? fontSize : mxConstants.DEFAULT_FONTSIZE;
+    fontFamily =
+      fontFamily != null ? fontFamily : mxConstants.DEFAULT_FONTFAMILY;
+    const div = document.createElement('div');
 
     // Sets the font size and family
     div.style.fontFamily = fontFamily;
-    div.style.fontSize = Math.round(fontSize) + 'px';
-    div.style.lineHeight = Math.round(fontSize * mxConstants.LINE_HEIGHT) + 'px';
+    div.style.fontSize = `${Math.round(fontSize)}px`;
+    div.style.lineHeight = `${Math.round(
+      fontSize * mxConstants.LINE_HEIGHT
+    )}px`;
 
     // Sets the font style
     if (fontStyle != null) {
@@ -3086,13 +3288,19 @@ let mxUtils = {
         div.style.fontStyle = 'italic';
       }
 
-      let txtDecor = [];
+      const txtDecor = [];
 
-      if ((fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE) {
+      if (
+        (fontStyle & mxConstants.FONT_UNDERLINE) ==
+        mxConstants.FONT_UNDERLINE
+      ) {
         txtDecor.push('underline');
       }
 
-      if ((fontStyle & mxConstants.FONT_STRIKETHROUGH) == mxConstants.FONT_STRIKETHROUGH) {
+      if (
+        (fontStyle & mxConstants.FONT_STRIKETHROUGH) ==
+        mxConstants.FONT_STRIKETHROUGH
+      ) {
         txtDecor.push('line-through');
       }
 
@@ -3107,7 +3315,7 @@ let mxUtils = {
     div.style.display = 'inline-block';
 
     if (textWidth != null) {
-      div.style.width = textWidth + 'px';
+      div.style.width = `${textWidth}px`;
       div.style.whiteSpace = 'normal';
     } else {
       div.style.whiteSpace = 'nowrap';
@@ -3118,7 +3326,7 @@ let mxUtils = {
     document.body.appendChild(div);
 
     // Gets the size and removes from DOM
-    let size = new mxRectangle(0, 0, div.offsetWidth, div.offsetHeight);
+    const size = new mxRectangle(0, 0, div.offsetWidth, div.offsetHeight);
     document.body.removeChild(div);
 
     return size;
@@ -3128,27 +3336,27 @@ let mxUtils = {
    * Function: getViewXml
    */
   getViewXml: (graph, scale, cells, x0, y0) => {
-    x0 = (x0 != null) ? x0 : 0;
-    y0 = (y0 != null) ? y0 : 0;
-    scale = (scale != null) ? scale : 1;
+    x0 = x0 != null ? x0 : 0;
+    y0 = y0 != null ? y0 : 0;
+    scale = scale != null ? scale : 1;
 
     if (cells == null) {
-      let model = graph.getModel();
+      const model = graph.getModel();
       cells = [model.getRoot()];
     }
 
-    let view = graph.getView();
+    const view = graph.getView();
     let result = null;
 
     // Disables events on the view
-    let eventsEnabled = view.isEventsEnabled();
+    const eventsEnabled = view.isEventsEnabled();
     view.setEventsEnabled(false);
 
     // Workaround for label bounds not taken into account for image export.
     // Creates a temporary draw pane which is used for rendering the text.
     // Text rendering is required for finding the bounds of the labels.
-    let drawPane = view.drawPane;
-    let overlayPane = view.overlayPane;
+    const { drawPane } = view;
+    const { overlayPane } = view;
 
     if (graph.dialect == mxConstants.DIALECT_SVG) {
       view.drawPane = document.createElementNS(mxConstants.NS_SVG, 'g');
@@ -3167,14 +3375,14 @@ let mxUtils = {
     }
 
     // Resets the translation
-    let translate = view.getTranslate();
+    const translate = view.getTranslate();
     view.translate = new mxPoint(x0, y0);
 
     // Creates the temporary cell states in the view
-    let temp = new mxTemporaryCellStates(graph.getView(), scale, cells);
+    const temp = new mxTemporaryCellStates(graph.getView(), scale, cells);
 
     try {
-      let enc = new mxCodec();
+      const enc = new mxCodec();
       result = enc.encode(graph.getView());
     } finally {
       temp.destroy();
@@ -3212,38 +3420,39 @@ let mxUtils = {
       return 1;
     }
 
-    pageFormat = (pageFormat != null) ? pageFormat : mxConstants.PAGE_FORMAT_A4_PORTRAIT;
-    border = (border != null) ? border : 0;
+    pageFormat =
+      pageFormat != null ? pageFormat : mxConstants.PAGE_FORMAT_A4_PORTRAIT;
+    border = border != null ? border : 0;
 
-    let availablePageWidth = pageFormat.width - (border * 2);
-    let availablePageHeight = pageFormat.height - (border * 2);
+    const availablePageWidth = pageFormat.width - border * 2;
+    const availablePageHeight = pageFormat.height - border * 2;
 
     // Work out the number of pages required if the
     // graph is not scaled.
-    let graphBounds = graph.getGraphBounds().clone();
-    let sc = graph.getView().getScale();
+    const graphBounds = graph.getGraphBounds().clone();
+    const sc = graph.getView().getScale();
     graphBounds.width /= sc;
     graphBounds.height /= sc;
-    let graphWidth = graphBounds.width;
-    let graphHeight = graphBounds.height;
+    const graphWidth = graphBounds.width;
+    const graphHeight = graphBounds.height;
 
     let scale = 1;
 
     // The ratio of the width/height for each printer page
-    let pageFormatAspectRatio = availablePageWidth / availablePageHeight;
+    const pageFormatAspectRatio = availablePageWidth / availablePageHeight;
     // The ratio of the width/height for the graph to be printer
-    let graphAspectRatio = graphWidth / graphHeight;
+    const graphAspectRatio = graphWidth / graphHeight;
 
     // The ratio of horizontal pages / vertical pages for this
     // graph to maintain its aspect ratio on this page format
-    let pagesAspectRatio = graphAspectRatio / pageFormatAspectRatio;
+    const pagesAspectRatio = graphAspectRatio / pageFormatAspectRatio;
 
     // Factor the square root of the page count up and down
     // by the pages aspect ratio to obtain a horizontal and
     // vertical page count that adds up to the page count
     // and has the correct aspect ratio
-    let pageRoot = Math.sqrt(pageCount);
-    let pagesAspectRatioSqrt = Math.sqrt(pagesAspectRatio);
+    const pageRoot = Math.sqrt(pageCount);
+    const pagesAspectRatioSqrt = Math.sqrt(pagesAspectRatio);
     let numRowPages = pageRoot * pagesAspectRatioSqrt;
     let numColumnPages = pageRoot / pagesAspectRatioSqrt;
 
@@ -3253,13 +3462,13 @@ let mxUtils = {
     // In this case, just change that value to be the page count, since
     // we know the other value is 1
     if (numRowPages < 1 && numColumnPages > pageCount) {
-      let scaleChange = numColumnPages / pageCount;
+      const scaleChange = numColumnPages / pageCount;
       numColumnPages = pageCount;
       numRowPages /= scaleChange;
     }
 
     if (numColumnPages < 1 && numRowPages > pageCount) {
-      let scaleChange = numRowPages / pageCount;
+      const scaleChange = numRowPages / pageCount;
       numRowPages = pageCount;
       numColumnPages /= scaleChange;
     }
@@ -3277,7 +3486,8 @@ let mxUtils = {
       // page area by the least possible amount
 
       let roundRowDownProportion = Math.floor(numRowPages) / numRowPages;
-      let roundColumnDownProportion = Math.floor(numColumnPages) / numColumnPages;
+      let roundColumnDownProportion =
+        Math.floor(numColumnPages) / numColumnPages;
 
       // If the round down proportion is, work out the proportion to
       // round down to 1 page less
@@ -3285,7 +3495,8 @@ let mxUtils = {
         roundRowDownProportion = Math.floor(numRowPages - 1) / numRowPages;
       }
       if (roundColumnDownProportion == 1) {
-        roundColumnDownProportion = Math.floor(numColumnPages - 1) / numColumnPages;
+        roundColumnDownProportion =
+          Math.floor(numColumnPages - 1) / numColumnPages;
       }
 
       // Check which rounding down is smaller, but in the case of very small roundings
@@ -3299,8 +3510,8 @@ let mxUtils = {
         scaleChange = roundColumnDownProportion;
       }
 
-      numRowPages = numRowPages * scaleChange;
-      numColumnPages = numColumnPages * scaleChange;
+      numRowPages *= scaleChange;
+      numColumnPages *= scaleChange;
       currentTotalPages = Math.ceil(numRowPages) * Math.ceil(numColumnPages);
 
       numLoops++;
@@ -3312,7 +3523,7 @@ let mxUtils = {
 
     // Work out the scale from the number of row pages required
     // The column pages will give the same value
-    let posterWidth = availablePageWidth * numRowPages;
+    const posterWidth = availablePageWidth * numRowPages;
     scale = posterWidth / graphWidth;
 
     // Allow for rounding errors
@@ -3339,43 +3550,47 @@ let mxUtils = {
    * h - Optional height of the graph view.
    */
   show: (graph, doc, x0, y0, w, h) => {
-    x0 = (x0 != null) ? x0 : 0;
-    y0 = (y0 != null) ? y0 : 0;
+    x0 = x0 != null ? x0 : 0;
+    y0 = y0 != null ? y0 : 0;
 
     if (doc == null) {
-      let wnd = window.open();
+      const wnd = window.open();
       doc = wnd.document;
     } else {
       doc.open();
     }
 
-    let bounds = graph.getGraphBounds();
-    let dx = Math.ceil(x0 - bounds.x);
-    let dy = Math.ceil(y0 - bounds.y);
+    const bounds = graph.getGraphBounds();
+    const dx = Math.ceil(x0 - bounds.x);
+    const dy = Math.ceil(y0 - bounds.y);
 
     if (w == null) {
-      w = Math.ceil(bounds.width + x0) + Math.ceil(Math.ceil(bounds.x) - bounds.x);
+      w =
+        Math.ceil(bounds.width + x0) +
+        Math.ceil(Math.ceil(bounds.x) - bounds.x);
     }
 
     if (h == null) {
-      h = Math.ceil(bounds.height + y0) + Math.ceil(Math.ceil(bounds.y) - bounds.y);
+      h =
+        Math.ceil(bounds.height + y0) +
+        Math.ceil(Math.ceil(bounds.y) - bounds.y);
     }
 
     doc.writeln('<html><head>');
 
-    let base = document.getElementsByTagName('base');
+    const base = document.getElementsByTagName('base');
 
     for (let i = 0; i < base.length; i++) {
       doc.writeln(mxUtils.getOuterHtml(base[i]));
     }
 
-    let links = document.getElementsByTagName('link');
+    const links = document.getElementsByTagName('link');
 
     for (let i = 0; i < links.length; i++) {
       doc.writeln(mxUtils.getOuterHtml(links[i]));
     }
 
-    let styles = document.getElementsByTagName('style');
+    const styles = document.getElementsByTagName('style');
 
     for (let i = 0; i < styles.length; i++) {
       doc.writeln(mxUtils.getOuterHtml(styles[i]));
@@ -3384,23 +3599,23 @@ let mxUtils = {
     doc.writeln('</head><body style="margin:0px;"></body></html>');
     doc.close();
 
-    let outer = doc.createElement('div');
+    const outer = doc.createElement('div');
     outer.position = 'absolute';
     outer.overflow = 'hidden';
-    outer.style.width = w + 'px';
-    outer.style.height = h + 'px';
+    outer.style.width = `${w}px`;
+    outer.style.height = `${h}px`;
 
     // Required for HTML labels if foreignObjects are disabled
-    let div = doc.createElement('div');
+    const div = doc.createElement('div');
     div.style.position = 'absolute';
-    div.style.left = dx + 'px';
-    div.style.top = dy + 'px';
+    div.style.left = `${dx}px`;
+    div.style.top = `${dy}px`;
 
     let node = graph.container.firstChild;
     let svg = null;
 
     while (node != null) {
-      let clone = node.cloneNode(true);
+      const clone = node.cloneNode(true);
 
       if (node == graph.view.drawPane.ownerSVGElement) {
         outer.appendChild(clone);
@@ -3421,7 +3636,7 @@ let mxUtils = {
     if (svg != null) {
       svg.style.minWidth = '';
       svg.style.minHeight = '';
-      svg.firstChild.setAttribute('transform', 'translate(' + dx + ',' + dy + ')');
+      svg.firstChild.setAttribute('transform', `translate(${dx},${dy})`);
     }
 
     mxUtils.removeCursors(doc.body);
@@ -3441,12 +3656,12 @@ let mxUtils = {
    *
    * graph - <mxGraph> to be printed.
    */
-  printScreen: (graph) => {
-    let wnd = window.open();
-    let bounds = graph.getGraphBounds();
+  printScreen: graph => {
+    const wnd = window.open();
+    const bounds = graph.getGraphBounds();
     mxUtils.show(graph, wnd.document);
 
-    let print = () => {
+    const print = () => {
       wnd.focus();
       wnd.print();
       wnd.close();
@@ -3475,34 +3690,51 @@ let mxUtils = {
    */
   popup: (content, isInternalWindow) => {
     if (isInternalWindow) {
-      let div = document.createElement('div');
+      const div = document.createElement('div');
 
       div.style.overflow = 'scroll';
       div.style.width = '636px';
       div.style.height = '460px';
 
-      let pre = document.createElement('pre');
-      pre.innerHTML = mxUtils.htmlEntities(content, false).replace(/\n/g, '<br>').replace(/ /g, '&nbsp;');
+      const pre = document.createElement('pre');
+      pre.innerHTML = mxUtils
+        .htmlEntities(content, false)
+        .replace(/\n/g, '<br>')
+        .replace(/ /g, '&nbsp;');
 
       div.appendChild(pre);
 
-      let w = document.body.clientWidth;
-      let h = Math.max(document.body.clientHeight || 0, document.documentElement.clientHeight)
-      let wnd = new mxWindow('Popup Window', div,
-          w / 2 - 320, h / 2 - 240, 640, 480, false, true);
+      const w = document.body.clientWidth;
+      const h = Math.max(
+        document.body.clientHeight || 0,
+        document.documentElement.clientHeight
+      );
+      const wnd = new mxWindow(
+        'Popup Window',
+        div,
+        w / 2 - 320,
+        h / 2 - 240,
+        640,
+        480,
+        false,
+        true
+      );
 
       wnd.setClosable(true);
       wnd.setVisible(true);
     } else {
       // Wraps up the XML content in a textarea
       if (mxClient.IS_NS) {
-        let wnd = window.open();
-        wnd.document.writeln('<pre>' + mxUtils.htmlEntities(content) + '</pre');
+        const wnd = window.open();
+        wnd.document.writeln(`<pre>${mxUtils.htmlEntities(content)}</pre`);
         wnd.document.close();
       } else {
-        let wnd = window.open();
-        let pre = wnd.document.createElement('pre');
-        pre.innerHTML = mxUtils.htmlEntities(content, false).replace(/\n/g, '<br>').replace(/ /g, '&nbsp;');
+        const wnd = window.open();
+        const pre = wnd.document.createElement('pre');
+        pre.innerHTML = mxUtils
+          .htmlEntities(content, false)
+          .replace(/\n/g, '<br>')
+          .replace(/ /g, '&nbsp;');
         wnd.document.body.appendChild(pre);
       }
     }
@@ -3519,7 +3751,7 @@ let mxUtils = {
    *
    * message - String specifying the message to be displayed.
    */
-  alert: (message) => {
+  alert: message => {
     alert(message);
   },
 
@@ -3535,7 +3767,7 @@ let mxUtils = {
    * defaultValue - Optional string specifying the default value.
    */
   prompt: (message, defaultValue) => {
-    return prompt(message, (defaultValue != null) ? defaultValue : '');
+    return prompt(message, defaultValue != null ? defaultValue : '');
   },
 
   /**
@@ -3548,7 +3780,7 @@ let mxUtils = {
    *
    * message - String specifying the message to be displayed.
    */
-  confirm: (message) => {
+  confirm: message => {
     return confirm(message);
   },
 
@@ -3568,10 +3800,10 @@ let mxUtils = {
    * icon - Optional icon for the window decoration.
    */
   error: (message, width, close, icon) => {
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     div.style.padding = '20px';
 
-    let img = document.createElement('img');
+    const img = document.createElement('img');
     img.setAttribute('src', icon || mxUtils.errorImage);
     img.setAttribute('valign', 'bottom');
     img.style.verticalAlign = 'middle';
@@ -3582,26 +3814,36 @@ let mxUtils = {
     div.appendChild(document.createTextNode('\u00a0')); // &nbsp;
     mxUtils.write(div, message);
 
-    let w = document.body.clientWidth;
-    let h = (document.body.clientHeight || document.documentElement.clientHeight);
-    let warn = new mxWindow(mxResources.get(mxUtils.errorResource) ||
-        mxUtils.errorResource, div, (w - width) / 2, h / 4, width, null,
-        false, true);
+    const w = document.body.clientWidth;
+    const h =
+      document.body.clientHeight || document.documentElement.clientHeight;
+    const warn = new mxWindow(
+      mxResources.get(mxUtils.errorResource) || mxUtils.errorResource,
+      div,
+      (w - width) / 2,
+      h / 4,
+      width,
+      null,
+      false,
+      true
+    );
 
     if (close) {
       mxUtils.br(div);
 
-      let tmp = document.createElement('p');
-      let button = document.createElement('button');
+      const tmp = document.createElement('p');
+      const button = document.createElement('button');
 
       button.setAttribute('style', 'float:right');
 
-      mxEvent.addListener(button, 'click', (evt) => {
+      mxEvent.addListener(button, 'click', evt => {
         warn.destroy();
       });
 
-      mxUtils.write(button, mxResources.get(mxUtils.closeResource) ||
-          mxUtils.closeResource);
+      mxUtils.write(
+        button,
+        mxResources.get(mxUtils.closeResource) || mxUtils.closeResource
+      );
 
       tmp.appendChild(button);
       div.appendChild(tmp);
@@ -3684,11 +3926,23 @@ let mxUtils = {
    * getDropTarget - Optional function to return the drop target for a given
    * location (x, y). Default is mxGraph.getCellAt.
    */
-  makeDraggable: function (element, graphF, funct, dragElement, dx, dy, autoscroll,
-                           scalePreview, highlightDropTargets, getDropTarget) {
-    let dragSource = new mxDragSource(element, funct);
-    dragSource.dragOffset = new mxPoint((dx != null) ? dx : 0,
-        (dy != null) ? dy : mxConstants.TOOLTIP_VERTICAL_OFFSET);
+  makeDraggable(
+    element,
+    graphF,
+    funct,
+    dragElement,
+    dx,
+    dy,
+    autoscroll,
+    scalePreview,
+    highlightDropTargets,
+    getDropTarget
+  ) {
+    const dragSource = new mxDragSource(element, funct);
+    dragSource.dragOffset = new mxPoint(
+      dx != null ? dx : 0,
+      dy != null ? dy : mxConstants.TOOLTIP_VERTICAL_OFFSET
+    );
     dragSource.autoscroll = autoscroll;
 
     // Cannot enable this by default. This needs to be enabled in the caller
@@ -3705,8 +3959,8 @@ let mxUtils = {
     }
 
     // Overrides function to get current graph
-    dragSource.getGraphForEvent = (evt) => {
-      return (typeof (graphF) == 'function') ? graphF(evt) : graphF;
+    dragSource.getGraphForEvent = evt => {
+      return typeof graphF === 'function' ? graphF(evt) : graphF;
     };
 
     // Translates switches into dragSource customizations
@@ -3716,13 +3970,13 @@ let mxUtils = {
       };
 
       if (scalePreview) {
-        dragSource.createPreviewElement = (graph) => {
-          let elt = dragElement.cloneNode(true);
+        dragSource.createPreviewElement = graph => {
+          const elt = dragElement.cloneNode(true);
 
-          let w = parseInt(elt.style.width);
-          let h = parseInt(elt.style.height);
-          elt.style.width = Math.round(w * graph.view.scale) + 'px';
-          elt.style.height = Math.round(h * graph.view.scale) + 'px';
+          const w = parseInt(elt.style.width);
+          const h = parseInt(elt.style.height);
+          elt.style.width = `${Math.round(w * graph.view.scale)}px`;
+          elt.style.height = `${Math.round(h * graph.view.scale)}px`;
 
           return elt;
         };
@@ -3730,7 +3984,7 @@ let mxUtils = {
     }
 
     return dragSource;
-  }
+  },
 };
 
 export default mxUtils;

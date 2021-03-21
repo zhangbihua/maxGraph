@@ -4,16 +4,16 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxClient from "../mxClient";
-import mxEvent from "../util/mxEvent";
-import mxUtils from "../util/mxUtils";
-import mxRectangleShape from "../shape/mxRectangleShape";
-import mxGuide from "../util/mxGuide";
-import mxPoint from "../util/mxPoint";
-import mxConstants from "../util/mxConstants";
-import mxDictionary from "../util/mxDictionary";
-import mxCellHighlight from "./mxCellHighlight";
-import mxRectangle from "../util/mxRectangle";
+import mxClient from '../mxClient';
+import mxEvent from '../util/mxEvent';
+import mxUtils from '../util/mxUtils';
+import mxRectangleShape from '../shape/mxRectangleShape';
+import mxGuide from '../util/mxGuide';
+import mxPoint from '../util/mxPoint';
+import mxConstants from '../util/mxConstants';
+import mxDictionary from '../util/mxDictionary';
+import mxCellHighlight from './mxCellHighlight';
+import mxRectangle from '../util/mxRectangle';
 
 class mxGraphHandler {
   /**
@@ -256,48 +256,59 @@ class mxGraphHandler {
       }
 
       // Waits for the states and handlers to be updated
-      this.refreshThread = window.setTimeout(mxUtils.bind(this, () => {
-        this.refreshThread = null;
+      this.refreshThread = window.setTimeout(
+        mxUtils.bind(this, () => {
+          this.refreshThread = null;
 
-        if (this.first != null && !this.suspended) {
-          // Updates preview with no translate to compute bounding box
-          let dx = this.currentDx;
-          let dy = this.currentDy;
-          this.currentDx = 0;
-          this.currentDy = 0;
-          this.updatePreview();
-          this.bounds = this.graph.getView().getBounds(this.cells);
-          this.pBounds = this.getPreviewBounds(this.cells);
-
-          if (this.pBounds == null && !this.livePreviewUsed) {
-            this.reset();
-          } else {
-            // Restores translate and updates preview
-            this.currentDx = dx;
-            this.currentDy = dy;
+          if (this.first != null && !this.suspended) {
+            // Updates preview with no translate to compute bounding box
+            const dx = this.currentDx;
+            const dy = this.currentDy;
+            this.currentDx = 0;
+            this.currentDy = 0;
             this.updatePreview();
-            this.updateHint();
+            this.bounds = this.graph.getView().getBounds(this.cells);
+            this.pBounds = this.getPreviewBounds(this.cells);
 
-            if (this.livePreviewUsed) {
-              // Forces update to ignore last visible state
-              this.setHandlesVisibleForCells(
-                  this.graph.selectionCellsHandler.getHandledSelectionCells(), false, true);
+            if (this.pBounds == null && !this.livePreviewUsed) {
+              this.reset();
+            } else {
+              // Restores translate and updates preview
+              this.currentDx = dx;
+              this.currentDy = dy;
               this.updatePreview();
+              this.updateHint();
+
+              if (this.livePreviewUsed) {
+                // Forces update to ignore last visible state
+                this.setHandlesVisibleForCells(
+                  this.graph.selectionCellsHandler.getHandledSelectionCells(),
+                  false,
+                  true
+                );
+                this.updatePreview();
+              }
             }
           }
-        }
-      }), 0);
+        }),
+        0
+      );
     };
 
     this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
     this.graph.addListener(mxEvent.REFRESH, this.refreshHandler);
 
-    this.keyHandler = (e) => {
-      if (this.graph.container != null && this.graph.container.style.visibility !== 'hidden' &&
-          this.first != null && !this.suspended) {
-        let clone = this.graph.isCloneEvent(e) &&
-            this.graph.isCellsCloneable() &&
-            this.isCloneEnabled();
+    this.keyHandler = e => {
+      if (
+        this.graph.container != null &&
+        this.graph.container.style.visibility !== 'hidden' &&
+        this.first != null &&
+        !this.suspended
+      ) {
+        const clone =
+          this.graph.isCloneEvent(e) &&
+          this.graph.isCellsCloneable() &&
+          this.isCloneEnabled();
 
         if (clone !== this.cloning) {
           this.cloning = clone;
@@ -309,7 +320,7 @@ class mxGraphHandler {
 
     mxEvent.addListener(document, 'keydown', this.keyHandler);
     mxEvent.addListener(document, 'keyup', this.keyHandler);
-  };
+  }
 
   /**
    * Function: isEnabled
@@ -325,7 +336,7 @@ class mxGraphHandler {
    *
    * Sets <enabled>.
    */
-  setEnabled = (value) => {
+  setEnabled = value => {
     this.enabled = value;
   };
 
@@ -347,7 +358,7 @@ class mxGraphHandler {
    *
    * value - Boolean that specifies the new clone enabled state.
    */
-  setCloneEnabled = (value) => {
+  setCloneEnabled = value => {
     this.cloneEnabled = value;
   };
 
@@ -365,7 +376,7 @@ class mxGraphHandler {
    *
    * Sets <moveEnabled>.
    */
-  setMoveEnabled = (value) => {
+  setMoveEnabled = value => {
     this.moveEnabled = value;
   };
 
@@ -383,7 +394,7 @@ class mxGraphHandler {
    *
    * Sets <selectEnabled>.
    */
-  setSelectEnabled = (value) => {
+  setSelectEnabled = value => {
     this.selectEnabled = value;
   };
 
@@ -401,7 +412,7 @@ class mxGraphHandler {
    *
    * Sets <removeCellsFromParent>.
    */
-  setRemoveCellsFromParent = (value) => {
+  setRemoveCellsFromParent = value => {
     this.removeCellsFromParent = value;
   };
 
@@ -412,24 +423,27 @@ class mxGraphHandler {
    * selection state to the parent.
    */
   isPropagateSelectionCell = (cell, immediate, me) => {
-    let parent = this.graph.model.getParent(cell);
+    const parent = this.graph.model.getParent(cell);
 
     if (immediate) {
-      let geo = (this.graph.model.isEdge(cell)) ? null :
-          this.graph.getCellGeometry(cell);
+      const geo = this.graph.model.isEdge(cell)
+        ? null
+        : this.graph.getCellGeometry(cell);
 
-      return !this.graph.isSiblingSelected(cell) &&
-          ((geo != null && geo.relative) ||
-              !this.graph.isSwimlane(parent));
-    } else {
-      return (!this.graph.isToggleEvent(me.getEvent()) ||
-          (!this.graph.isSiblingSelected(cell) &&
-              !this.graph.isCellSelected(cell) &&
-              (!this.graph.isSwimlane(parent)) ||
-              this.graph.isCellSelected(parent))) &&
-          (this.graph.isToggleEvent(me.getEvent()) ||
-              !this.graph.isCellSelected(parent));
+      return (
+        !this.graph.isSiblingSelected(cell) &&
+        ((geo != null && geo.relative) || !this.graph.isSwimlane(parent))
+      );
     }
+    return (
+      (!this.graph.isToggleEvent(me.getEvent()) ||
+        (!this.graph.isSiblingSelected(cell) &&
+          !this.graph.isCellSelected(cell) &&
+          !this.graph.isSwimlane(parent)) ||
+        this.graph.isCellSelected(parent)) &&
+      (this.graph.isToggleEvent(me.getEvent()) ||
+        !this.graph.isCellSelected(parent))
+    );
   };
 
   /**
@@ -438,23 +452,32 @@ class mxGraphHandler {
    * Hook to return initial cell for the given event. This returns
    * the topmost cell that is not a swimlane or is selected.
    */
-  getInitialCellForEvent = (me) => {
+  getInitialCellForEvent = me => {
     let state = me.getState();
 
-    if ((!this.graph.isToggleEvent(me.getEvent()) || !mxEvent.isAltDown(me.getEvent())) &&
-        state != null && !this.graph.isCellSelected(state.cell)) {
-      let model = this.graph.model;
+    if (
+      (!this.graph.isToggleEvent(me.getEvent()) ||
+        !mxEvent.isAltDown(me.getEvent())) &&
+      state != null &&
+      !this.graph.isCellSelected(state.cell)
+    ) {
+      const { model } = this.graph;
       let next = this.graph.view.getState(model.getParent(state.cell));
 
-      while (next != null && !this.graph.isCellSelected(next.cell) &&
-      (model.isVertex(next.cell) || model.isEdge(next.cell)) &&
-      this.isPropagateSelectionCell(state.cell, true, me)) {
+      while (
+        next != null &&
+        !this.graph.isCellSelected(next.cell) &&
+        (model.isVertex(next.cell) || model.isEdge(next.cell)) &&
+        this.isPropagateSelectionCell(state.cell, true, me)
+      ) {
         state = next;
-        next = this.graph.view.getState(this.graph.getModel().getParent(state.cell));
+        next = this.graph.view.getState(
+          this.graph.getModel().getParent(state.cell)
+        );
       }
     }
 
-    return (state != null) ? state.cell : null;
+    return state != null ? state.cell : null;
   };
 
   /**
@@ -463,7 +486,10 @@ class mxGraphHandler {
    * Returns true if the cell or one of its ancestors is selected.
    */
   isDelayedSelection = (cell, me) => {
-    if (!this.graph.isToggleEvent(me.getEvent()) || !mxEvent.isAltDown(me.getEvent())) {
+    if (
+      !this.graph.isToggleEvent(me.getEvent()) ||
+      !mxEvent.isAltDown(me.getEvent())
+    ) {
       while (cell != null) {
         if (this.graph.selectionCellsHandler.isHandled(cell)) {
           return this.graph.cellEditor.getEditingCell() != cell;
@@ -473,7 +499,10 @@ class mxGraphHandler {
       }
     }
 
-    return this.graph.isToggleEvent(me.getEvent()) && !mxEvent.isAltDown(me.getEvent());
+    return (
+      this.graph.isToggleEvent(me.getEvent()) &&
+      !mxEvent.isAltDown(me.getEvent())
+    );
   };
 
   /**
@@ -481,7 +510,7 @@ class mxGraphHandler {
    *
    * Implements the delayed selection for the given mouse event.
    */
-  selectDelayed = (me) => {
+  selectDelayed = me => {
     if (!this.graph.popupMenuHandler.isPopupTrigger(me)) {
       let cell = me.getCell();
 
@@ -499,20 +528,24 @@ class mxGraphHandler {
    * Selects the given cell for the given <mxMouseEvent>.
    */
   selectCellForEvent = (cell, me) => {
-    let state = this.graph.view.getState(cell);
+    const state = this.graph.view.getState(cell);
 
     if (state != null) {
       if (me.isSource(state.control)) {
         this.graph.selectCellForEvent(cell, me.getEvent());
       } else {
-        if (!this.graph.isToggleEvent(me.getEvent()) ||
-            !mxEvent.isAltDown(me.getEvent())) {
-          let model = this.graph.getModel();
+        if (
+          !this.graph.isToggleEvent(me.getEvent()) ||
+          !mxEvent.isAltDown(me.getEvent())
+        ) {
+          const model = this.graph.getModel();
           let parent = model.getParent(cell);
 
-          while (this.graph.view.getState(parent) != null &&
-          (model.isVertex(parent) || model.isEdge(parent)) &&
-          this.isPropagateSelectionCell(cell, false, me)) {
+          while (
+            this.graph.view.getState(parent) != null &&
+            (model.isVertex(parent) || model.isEdge(parent)) &&
+            this.isPropagateSelectionCell(cell, false, me)
+          ) {
             cell = parent;
             parent = model.getParent(cell);
           }
@@ -556,9 +589,14 @@ class mxGraphHandler {
    * redirected to this handler.
    */
   mouseDown = (sender, me) => {
-    if (!me.isConsumed() && this.isEnabled() && this.graph.isEnabled() &&
-        me.getState() != null && !mxEvent.isMultiTouchEvent(me.getEvent())) {
-      let cell = this.getInitialCellForEvent(me);
+    if (
+      !me.isConsumed() &&
+      this.isEnabled() &&
+      this.graph.isEnabled() &&
+      me.getState() != null &&
+      !mxEvent.isMultiTouchEvent(me.getEvent())
+    ) {
+      const cell = this.getInitialCellForEvent(me);
       this.delayedSelection = this.isDelayedSelection(cell, me);
       this.cell = null;
 
@@ -567,13 +605,20 @@ class mxGraphHandler {
       }
 
       if (this.isMoveEnabled()) {
-        let model = this.graph.model;
-        let geo = model.getGeometry(cell);
+        const { model } = this.graph;
+        const geo = model.getGeometry(cell);
 
-        if (this.graph.isCellMovable(cell) && ((!model.isEdge(cell) || this.graph.getSelectionCount() > 1 ||
-            (geo.points != null && geo.points.length > 0) || model.getTerminal(cell, true) == null ||
-            model.getTerminal(cell, false) == null) || this.graph.allowDanglingEdges ||
-            (this.graph.isCloneEvent(me.getEvent()) && this.graph.isCellsCloneable()))) {
+        if (
+          this.graph.isCellMovable(cell) &&
+          (!model.isEdge(cell) ||
+            this.graph.getSelectionCount() > 1 ||
+            (geo.points != null && geo.points.length > 0) ||
+            model.getTerminal(cell, true) == null ||
+            model.getTerminal(cell, false) == null ||
+            this.graph.allowDanglingEdges ||
+            (this.graph.isCloneEvent(me.getEvent()) &&
+              this.graph.isCellsCloneable()))
+        ) {
           this.start(cell, me.getX(), me.getY());
         } else if (this.delayedSelection) {
           this.cell = cell;
@@ -591,17 +636,21 @@ class mxGraphHandler {
    * Creates an array of cell states which should be used as guides.
    */
   getGuideStates = () => {
-    let parent = this.graph.getDefaultParent();
-    let model = this.graph.getModel();
+    const parent = this.graph.getDefaultParent();
+    const model = this.graph.getModel();
 
-    let filter = mxUtils.bind(this, (cell) => {
-      return this.graph.view.getState(cell) != null &&
-          model.isVertex(cell) &&
-          model.getGeometry(cell) != null &&
-          !model.getGeometry(cell).relative;
+    const filter = mxUtils.bind(this, cell => {
+      return (
+        this.graph.view.getState(cell) != null &&
+        model.isVertex(cell) &&
+        model.getGeometry(cell) != null &&
+        !model.getGeometry(cell).relative
+      );
     });
 
-    return this.graph.view.getCellStates(model.filterDescendants(filter, parent));
+    return this.graph.view.getCellStates(
+      model.filterDescendants(filter, parent)
+    );
   };
 
   /**
@@ -616,12 +665,11 @@ class mxGraphHandler {
    *
    * initialCell - <mxCell> that triggered this handler.
    */
-  getCells = (initialCell) => {
+  getCells = initialCell => {
     if (!this.delayedSelection && this.graph.isCellMovable(initialCell)) {
       return [initialCell];
-    } else {
-      return this.graph.getMovableCells(this.graph.getSelectionCells());
     }
+    return this.graph.getMovableCells(this.graph.getSelectionCells());
   };
 
   /**
@@ -630,8 +678,8 @@ class mxGraphHandler {
    * Returns the <mxRectangle> used as the preview bounds for
    * moving the given cells.
    */
-  getPreviewBounds = (cells) => {
-    let bounds = this.getBoundingBox(cells);
+  getPreviewBounds = cells => {
+    const bounds = this.getBoundingBox(cells);
 
     if (bounds != null) {
       // Corrects width and height
@@ -639,7 +687,7 @@ class mxGraphHandler {
       bounds.height = Math.max(0, bounds.height - 1);
 
       if (bounds.width < this.minimumSize) {
-        let dx = this.minimumSize - bounds.width;
+        const dx = this.minimumSize - bounds.width;
         bounds.x -= dx / 2;
         bounds.width = this.minimumSize;
       } else {
@@ -647,11 +695,11 @@ class mxGraphHandler {
         bounds.width = Math.ceil(bounds.width);
       }
 
-      let tr = this.graph.view.translate;
-      let s = this.graph.view.scale;
+      const tr = this.graph.view.translate;
+      const s = this.graph.view.scale;
 
       if (bounds.height < this.minimumSize) {
-        let dy = this.minimumSize - bounds.height;
+        const dy = this.minimumSize - bounds.height;
         bounds.y -= dy / 2;
         bounds.height = this.minimumSize;
       } else {
@@ -676,20 +724,24 @@ class mxGraphHandler {
    *
    * cells - Array of <mxCells> whose bounding box should be returned.
    */
-  getBoundingBox = (cells) => {
+  getBoundingBox = cells => {
     let result = null;
 
     if (cells != null && cells.length > 0) {
-      let model = this.graph.getModel();
+      const model = this.graph.getModel();
 
       for (let i = 0; i < cells.length; i++) {
         if (model.isVertex(cells[i]) || model.isEdge(cells[i])) {
-          let state = this.graph.view.getState(cells[i]);
+          const state = this.graph.view.getState(cells[i]);
 
           if (state != null) {
             let bbox = state;
 
-            if (model.isVertex(cells[i]) && state.shape != null && state.shape.boundingBox != null) {
+            if (
+              model.isVertex(cells[i]) &&
+              state.shape != null &&
+              state.shape.boundingBox != null
+            ) {
               bbox = state.shape.boundingBox;
             }
 
@@ -711,8 +763,8 @@ class mxGraphHandler {
    *
    * Creates the shape used to draw the preview for the given bounds.
    */
-  createPreviewShape = (bounds) => {
-    let shape = new mxRectangleShape(bounds, null, this.previewColor);
+  createPreviewShape = bounds => {
+    const shape = new mxRectangleShape(bounds, null, this.previewColor);
     shape.isDashed = true;
 
     if (this.htmlPreview) {
@@ -722,8 +774,10 @@ class mxGraphHandler {
       // Makes sure to use either VML or SVG shapes in order to implement
       // event-transparency on the background area of the rectangle since
       // HTML shapes do not let mouseevents through even when transparent
-      shape.dialect = (this.graph.dialect !== mxConstants.DIALECT_SVG) ?
-          mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
+      shape.dialect =
+        this.graph.dialect !== mxConstants.DIALECT_SVG
+          ? mxConstants.DIALECT_VML
+          : mxConstants.DIALECT_SVG;
       shape.init(this.graph.getView().getOverlayPane());
       shape.pointerEvents = false;
 
@@ -746,7 +800,7 @@ class mxGraphHandler {
   start = (cell, x, y, cells) => {
     this.cell = cell;
     this.first = mxUtils.convertPoint(this.graph.container, x, y);
-    this.cells = (cells != null) ? cells : this.getCells(this.cell);
+    this.cells = cells != null ? cells : this.getCells(this.cell);
     this.bounds = this.graph.getView().getBounds(this.cells);
     this.pBounds = this.getPreviewBounds(this.cells);
     this.allCells = new mxDictionary();
@@ -759,30 +813,37 @@ class mxGraphHandler {
 
     if (this.guidesEnabled) {
       this.guide = new mxGuide(this.graph, this.getGuideStates());
-      let parent = this.graph.model.getParent(cell);
-      let ignore = this.graph.model.getChildCount(parent) < 2;
+      const parent = this.graph.model.getParent(cell);
+      const ignore = this.graph.model.getChildCount(parent) < 2;
 
       // Uses connected states as guides
-      let connected = new mxDictionary();
-      let opps = this.graph.getOpposites(this.graph.getEdges(this.cell), this.cell);
+      const connected = new mxDictionary();
+      const opps = this.graph.getOpposites(
+        this.graph.getEdges(this.cell),
+        this.cell
+      );
 
       for (let i = 0; i < opps.length; i++) {
-        let state = this.graph.view.getState(opps[i]);
+        const state = this.graph.view.getState(opps[i]);
 
         if (state != null && !connected.get(state)) {
           connected.put(state, true);
         }
       }
 
-      this.guide.isStateIgnored = (state) => {
-        let p = this.graph.model.getParent(state.cell);
+      this.guide.isStateIgnored = state => {
+        const p = this.graph.model.getParent(state.cell);
 
-        return state.cell != null && ((!this.cloning &&
-            this.isCellMoving(state.cell)) ||
-            (state.cell != (this.target || parent) && !ignore &&
-                !connected.get(state) &&
-                (this.target == null || this.graph.model.getChildCount(
-                    this.target) >= 2) && p != (this.target || parent)));
+        return (
+          state.cell != null &&
+          ((!this.cloning && this.isCellMoving(state.cell)) ||
+            (state.cell != (this.target || parent) &&
+              !ignore &&
+              !connected.get(state) &&
+              (this.target == null ||
+                this.graph.model.getChildCount(this.target) >= 2) &&
+              p != (this.target || parent)))
+        );
       };
     }
   };
@@ -793,14 +854,14 @@ class mxGraphHandler {
    * Adds the states for the given cell recursively to the given dictionary.
    */
   addStates = (cell, dict) => {
-    let state = this.graph.view.getState(cell);
+    const state = this.graph.view.getState(cell);
     let count = 0;
 
     if (state != null && dict.get(cell) == null) {
       dict.put(cell, state);
       count++;
 
-      let childCount = this.graph.model.getChildCount(cell);
+      const childCount = this.graph.model.getChildCount(cell);
 
       for (let i = 0; i < childCount; i++) {
         count += this.addStates(this.graph.model.getChildAt(cell, i), dict);
@@ -815,7 +876,7 @@ class mxGraphHandler {
    *
    * Returns true if the given cell is currently being moved.
    */
-  isCellMoving = (cell) => {
+  isCellMoving = cell => {
     return this.allCells.get(cell) != null;
   };
 
@@ -825,19 +886,20 @@ class mxGraphHandler {
    * Returns true if the guides should be used for the given <mxMouseEvent>.
    * This implementation returns <mxGuide.isEnabledForEvent>.
    */
-  useGuidesForEvent = (me) => {
-    return (this.guide != null) ? this.guide.isEnabledForEvent(me.getEvent()) &&
-        !this.graph.isConstrainedEvent(me.getEvent()) : true;
+  useGuidesForEvent = me => {
+    return this.guide != null
+      ? this.guide.isEnabledForEvent(me.getEvent()) &&
+          !this.graph.isConstrainedEvent(me.getEvent())
+      : true;
   };
-
 
   /**
    * Function: snap
    *
    * Snaps the given vector to the grid and returns the given mxPoint instance.
    */
-  snap = (vector) => {
-    let scale = (this.scaleGrid) ? this.graph.view.scale : 1;
+  snap = vector => {
+    const scale = this.scaleGrid ? this.graph.view.scale : 1;
 
     vector.x = this.graph.snap(vector.x / scale) * scale;
     vector.y = this.graph.snap(vector.y / scale) * scale;
@@ -851,11 +913,17 @@ class mxGraphHandler {
    * Returns an <mxPoint> that represents the vector for moving the cells
    * for the given <mxMouseEvent>.
    */
-  getDelta = (me) => {
-    let point = mxUtils.convertPoint(this.graph.container, me.getX(), me.getY());
+  getDelta = me => {
+    const point = mxUtils.convertPoint(
+      this.graph.container,
+      me.getX(),
+      me.getY()
+    );
 
-    return new mxPoint(point.x - this.first.x - this.graph.panDx,
-        point.y - this.first.y - this.graph.panDy);
+    return new mxPoint(
+      point.x - this.first.x - this.graph.panDx,
+      point.y - this.first.y - this.graph.panDy
+    );
   };
 
   /**
@@ -863,16 +931,14 @@ class mxGraphHandler {
    *
    * Hook for subclassers do show details while the handler is active.
    */
-  updateHint = (me) => {
-  };
+  updateHint = me => {};
 
   /**
    * Function: removeHint
    *
    * Hooks for subclassers to hide details when the handler gets inactive.
    */
-  removeHint = () => {
-  };
+  removeHint = () => {};
 
   /**
    * Function: roundLength
@@ -881,7 +947,7 @@ class mxGraphHandler {
    * numbers coming in should be rounded if no half steps are allowed (ie for non
    * aligned standard moving where pixel steps should be preferred).
    */
-  roundLength = (length) => {
+  roundLength = length => {
     return Math.round(length * 100) / 100;
   };
 
@@ -903,7 +969,11 @@ class mxGraphHandler {
     if (this.livePreviewActive && this.cloning) {
       this.resetLivePreview();
       this.livePreviewActive = false;
-    } else if (this.maxLivePreview >= this.cellCount && !this.livePreviewActive && this.allowLivePreview) {
+    } else if (
+      this.maxLivePreview >= this.cellCount &&
+      !this.livePreviewActive &&
+      this.allowLivePreview
+    ) {
       if (!this.cloning || !this.livePreviewActive) {
         this.livePreviewActive = true;
         this.livePreviewUsed = true;
@@ -920,10 +990,16 @@ class mxGraphHandler {
    * preview.
    */
   mouseMove = (sender, me) => {
-    let graph = this.graph;
+    const { graph } = this;
 
-    if (!me.isConsumed() && graph.isMouseDown && this.cell != null &&
-        this.first != null && this.bounds != null && !this.suspended) {
+    if (
+      !me.isConsumed() &&
+      graph.isMouseDown &&
+      this.cell != null &&
+      this.first != null &&
+      this.bounds != null &&
+      !this.suspended
+    ) {
       // Stops moving if a multi touch event is received
       if (mxEvent.isMultiTouchEvent(me.getEvent())) {
         this.reset();
@@ -931,18 +1007,29 @@ class mxGraphHandler {
       }
 
       let delta = this.getDelta(me);
-      let tol = graph.tolerance;
+      const tol = graph.tolerance;
 
-      if (this.shape != null || this.livePreviewActive || Math.abs(delta.x) > tol || Math.abs(delta.y) > tol) {
+      if (
+        this.shape != null ||
+        this.livePreviewActive ||
+        Math.abs(delta.x) > tol ||
+        Math.abs(delta.y) > tol
+      ) {
         // Highlight is used for highlighting drop targets
         if (this.highlight == null) {
-          this.highlight = new mxCellHighlight(this.graph,
-              mxConstants.DROP_TARGET_COLOR, 3);
+          this.highlight = new mxCellHighlight(
+            this.graph,
+            mxConstants.DROP_TARGET_COLOR,
+            3
+          );
         }
 
-        let clone = graph.isCloneEvent(me.getEvent()) && graph.isCellsCloneable() && this.isCloneEnabled();
-        let gridEnabled = graph.isGridEnabledEvent(me.getEvent());
-        let cell = me.getCell();
+        const clone =
+          graph.isCloneEvent(me.getEvent()) &&
+          graph.isCellsCloneable() &&
+          this.isCloneEnabled();
+        const gridEnabled = graph.isGridEnabledEvent(me.getEvent());
+        const cell = me.getCell();
         let hideGuide = true;
         let target = null;
         this.cloning = clone;
@@ -965,15 +1052,21 @@ class mxGraphHandler {
         } else {
           this.target = null;
 
-          if (this.connectOnDrop && cell != null && this.cells.length == 1 &&
-              graph.getModel().isVertex(cell) && graph.isCellConnectable(cell)) {
+          if (
+            this.connectOnDrop &&
+            cell != null &&
+            this.cells.length == 1 &&
+            graph.getModel().isVertex(cell) &&
+            graph.isCellConnectable(cell)
+          ) {
             state = graph.getView().getState(cell);
 
             if (state != null) {
-              let error = graph.getEdgeValidationError(null, this.cell, cell);
-              let color = (error == null) ?
-                  mxConstants.VALID_COLOR :
-                  mxConstants.INVALID_CONNECT_TARGET_COLOR;
+              const error = graph.getEdgeValidationError(null, this.cell, cell);
+              const color =
+                error == null
+                  ? mxConstants.VALID_COLOR
+                  : mxConstants.INVALID_CONNECT_TARGET_COLOR;
               this.setHighlightColor(color);
               highlight = true;
             }
@@ -990,7 +1083,13 @@ class mxGraphHandler {
           delta = this.guide.move(this.bounds, delta, gridEnabled, clone);
           hideGuide = false;
         } else {
-          delta = this.graph.snapDelta(delta, this.bounds, !gridEnabled, false, false);
+          delta = this.graph.snapDelta(
+            delta,
+            this.bounds,
+            !gridEnabled,
+            false,
+            false
+          );
         }
 
         if (this.guide != null && hideGuide) {
@@ -1022,11 +1121,20 @@ class mxGraphHandler {
       // that the droptarget is not reset due to an mouseMove
       // fired on the container with no associated state.
       mxEvent.consume(me.getEvent());
-    } else if ((this.isMoveEnabled() || this.isCloneEnabled()) && this.updateCursor && !me.isConsumed() &&
-        (me.getState() != null || me.sourceState != null) && !graph.isMouseDown) {
+    } else if (
+      (this.isMoveEnabled() || this.isCloneEnabled()) &&
+      this.updateCursor &&
+      !me.isConsumed() &&
+      (me.getState() != null || me.sourceState != null) &&
+      !graph.isMouseDown
+    ) {
       let cursor = graph.getCursorForMouseEvent(me);
 
-      if (cursor == null && graph.isEnabled() && graph.isCellMovable(me.getCell())) {
+      if (
+        cursor == null &&
+        graph.isEnabled() &&
+        graph.isCellMovable(me.getCell())
+      ) {
         if (graph.getModel().isEdge(me.getCell())) {
           cursor = mxConstants.CURSOR_MOVABLE_EDGE;
         } else {
@@ -1047,11 +1155,13 @@ class mxGraphHandler {
    *
    * Updates the bounds of the preview shape.
    */
-  updatePreview = (remote) => {
+  updatePreview = remote => {
     if (this.livePreviewUsed && !remote) {
       if (this.cells != null) {
         this.setHandlesVisibleForCells(
-            this.graph.selectionCellsHandler.getHandledSelectionCells(), false);
+          this.graph.selectionCellsHandler.getHandledSelectionCells(),
+          false
+        );
         this.updateLivePreview(this.currentDx, this.currentDy);
       }
     } else {
@@ -1066,8 +1176,12 @@ class mxGraphHandler {
    */
   updatePreviewShape = () => {
     if (this.shape != null && this.pBounds != null) {
-      this.shape.bounds = new mxRectangle(Math.round(this.pBounds.x + this.currentDx),
-          Math.round(this.pBounds.y + this.currentDy), this.pBounds.width, this.pBounds.height);
+      this.shape.bounds = new mxRectangle(
+        Math.round(this.pBounds.x + this.currentDx),
+        Math.round(this.pBounds.y + this.currentDy),
+        this.pBounds.width,
+        this.pBounds.height
+      );
       this.shape.redraw();
     }
   };
@@ -1079,84 +1193,86 @@ class mxGraphHandler {
    */
   updateLivePreview = (dx, dy) => {
     if (!this.suspended) {
-      let states = [];
+      const states = [];
 
       if (this.allCells != null) {
-        this.allCells.visit(mxUtils.bind(this, (key, state) => {
-          let realState = this.graph.view.getState(state.cell);
+        this.allCells.visit(
+          mxUtils.bind(this, (key, state) => {
+            const realState = this.graph.view.getState(state.cell);
 
-          // Checks if cell was removed or replaced
-          if (realState != state) {
-            state.destroy();
+            // Checks if cell was removed or replaced
+            if (realState != state) {
+              state.destroy();
 
-            if (realState != null) {
-              this.allCells.put(state.cell, realState);
-            } else {
-              this.allCells.remove(state.cell);
+              if (realState != null) {
+                this.allCells.put(state.cell, realState);
+              } else {
+                this.allCells.remove(state.cell);
+              }
+
+              state = realState;
             }
 
-            state = realState;
-          }
+            if (state != null) {
+              // Saves current state
+              const tempState = state.clone();
+              states.push([state, tempState]);
 
-          if (state != null) {
-            // Saves current state
-            let tempState = state.clone();
-            states.push([state, tempState]);
-
-            // Makes transparent for events to detect drop targets
-            if (state.shape != null) {
-              if (state.shape.originalPointerEvents == null) {
-                state.shape.originalPointerEvents = state.shape.pointerEvents;
-              }
-
-              state.shape.pointerEvents = false;
-
-              if (state.text != null) {
-                if (state.text.originalPointerEvents == null) {
-                  state.text.originalPointerEvents = state.text.pointerEvents;
+              // Makes transparent for events to detect drop targets
+              if (state.shape != null) {
+                if (state.shape.originalPointerEvents == null) {
+                  state.shape.originalPointerEvents = state.shape.pointerEvents;
                 }
 
-                state.text.pointerEvents = false;
-              }
-            }
+                state.shape.pointerEvents = false;
 
-            // Temporarily changes position
-            if (this.graph.model.isVertex(state.cell)) {
-              state.x += dx;
-              state.y += dy;
+                if (state.text != null) {
+                  if (state.text.originalPointerEvents == null) {
+                    state.text.originalPointerEvents = state.text.pointerEvents;
+                  }
 
-              // Draws the live preview
-              if (!this.cloning) {
-                state.view.graph.cellRenderer.redraw(state, true);
-
-                // Forces redraw of connected edges after all states
-                // have been updated but avoids update of state
-                state.view.invalidate(state.cell);
-                state.invalid = false;
-
-                // Hides folding icon
-                if (state.control != null && state.control.node != null) {
-                  state.control.node.style.visibility = 'hidden';
+                  state.text.pointerEvents = false;
                 }
               }
-              // Clone live preview may use text bounds
-              else if (state.text != null) {
-                state.text.updateBoundingBox();
 
-                // Fixes preview box for edge labels
-                if (state.text.boundingBox != null) {
-                  state.text.boundingBox.x += dx;
-                  state.text.boundingBox.y += dy;
+              // Temporarily changes position
+              if (this.graph.model.isVertex(state.cell)) {
+                state.x += dx;
+                state.y += dy;
+
+                // Draws the live preview
+                if (!this.cloning) {
+                  state.view.graph.cellRenderer.redraw(state, true);
+
+                  // Forces redraw of connected edges after all states
+                  // have been updated but avoids update of state
+                  state.view.invalidate(state.cell);
+                  state.invalid = false;
+
+                  // Hides folding icon
+                  if (state.control != null && state.control.node != null) {
+                    state.control.node.style.visibility = 'hidden';
+                  }
                 }
+                // Clone live preview may use text bounds
+                else if (state.text != null) {
+                  state.text.updateBoundingBox();
 
-                if (state.text.unrotatedBoundingBox != null) {
-                  state.text.unrotatedBoundingBox.x += dx;
-                  state.text.unrotatedBoundingBox.y += dy;
+                  // Fixes preview box for edge labels
+                  if (state.text.boundingBox != null) {
+                    state.text.boundingBox.x += dx;
+                    state.text.boundingBox.y += dy;
+                  }
+
+                  if (state.text.unrotatedBoundingBox != null) {
+                    state.text.unrotatedBoundingBox.x += dx;
+                    state.text.unrotatedBoundingBox.y += dy;
+                  }
                 }
               }
             }
-          }
-        }));
+          })
+        );
       }
 
       // Resets the handler if everything was removed
@@ -1164,45 +1280,62 @@ class mxGraphHandler {
         this.reset();
       } else {
         // Redraws connected edges
-        let s = this.graph.view.scale;
+        const s = this.graph.view.scale;
 
         for (let i = 0; i < states.length; i++) {
-          let state = states[i][0];
+          const state = states[i][0];
 
           if (this.graph.model.isEdge(state.cell)) {
-            let geometry = this.graph.getCellGeometry(state.cell);
-            let points = [];
+            const geometry = this.graph.getCellGeometry(state.cell);
+            const points = [];
 
             if (geometry != null && geometry.points != null) {
               for (let j = 0; j < geometry.points.length; j++) {
                 if (geometry.points[j] != null) {
-                  points.push(new mxPoint(
+                  points.push(
+                    new mxPoint(
                       geometry.points[j].x + dx / s,
-                      geometry.points[j].y + dy / s));
+                      geometry.points[j].y + dy / s
+                    )
+                  );
                 }
               }
             }
 
             let source = state.visibleSourceState;
             let target = state.visibleTargetState;
-            let pts = states[i][1].absolutePoints;
+            const pts = states[i][1].absolutePoints;
 
             if (source == null || !this.isCellMoving(source.cell)) {
-              var pt0 = pts[0];
-              state.setAbsoluteTerminalPoint(new mxPoint(pt0.x + dx, pt0.y + dy), true);
+              const pt0 = pts[0];
+              state.setAbsoluteTerminalPoint(
+                new mxPoint(pt0.x + dx, pt0.y + dy),
+                true
+              );
               source = null;
             } else {
-              state.view.updateFixedTerminalPoint(state, source, true,
-                  this.graph.getConnectionConstraint(state, source, true));
+              state.view.updateFixedTerminalPoint(
+                state,
+                source,
+                true,
+                this.graph.getConnectionConstraint(state, source, true)
+              );
             }
 
             if (target == null || !this.isCellMoving(target.cell)) {
-              let ptn = pts[pts.length - 1];
-              state.setAbsoluteTerminalPoint(new mxPoint(ptn.x + dx, ptn.y + dy), false);
+              const ptn = pts[pts.length - 1];
+              state.setAbsoluteTerminalPoint(
+                new mxPoint(ptn.x + dx, ptn.y + dy),
+                false
+              );
               target = null;
             } else {
-              state.view.updateFixedTerminalPoint(state, target, false,
-                  this.graph.getConnectionConstraint(state, target, false));
+              state.view.updateFixedTerminalPoint(
+                state,
+                target,
+                false,
+                this.graph.getConnectionConstraint(state, target, false)
+              );
             }
 
             state.view.updatePoints(state, points, source, target);
@@ -1229,9 +1362,11 @@ class mxGraphHandler {
    *
    * Redraws the preview shape for the given states array.
    */
-  redrawHandles = (states) => {
+  redrawHandles = states => {
     for (let i = 0; i < states.length; i++) {
-      let handler = this.graph.selectionCellsHandler.getHandler(states[i][0].cell);
+      const handler = this.graph.selectionCellsHandler.getHandler(
+        states[i][0].cell
+      );
 
       if (handler != null) {
         handler.redraw(true);
@@ -1244,7 +1379,7 @@ class mxGraphHandler {
    *
    * Resets the given preview states array.
    */
-  resetPreviewStates = (states) => {
+  resetPreviewStates = states => {
     for (let i = 0; i < states.length; i++) {
       states[i][0].setState(states[i][1]);
     }
@@ -1319,8 +1454,11 @@ class mxGraphHandler {
         }
 
         // Shows folding icon
-        if (state.control != null && state.control.node != null &&
-            state.control.node.style.visibility == 'hidden') {
+        if (
+          state.control != null &&
+          state.control.node != null &&
+          state.control.node.style.visibility == 'hidden'
+        ) {
           state.control.node.style.visibility = '';
         }
 
@@ -1356,7 +1494,7 @@ class mxGraphHandler {
       this.handlesVisible = visible;
 
       for (let i = 0; i < cells.length; i++) {
-        let handler = this.graph.selectionCellsHandler.getHandler(cells[i]);
+        const handler = this.graph.selectionCellsHandler.getHandler(cells[i]);
 
         if (handler != null) {
           handler.setHandlesVisible(visible);
@@ -1378,7 +1516,7 @@ class mxGraphHandler {
    *
    * color - String that represents the new highlight color.
    */
-  setHighlightColor = (color) => {
+  setHighlightColor = color => {
     if (this.highlight != null) {
       this.highlight.setHighlightColor(color);
     }
@@ -1395,29 +1533,64 @@ class mxGraphHandler {
         this.resetLivePreview();
       }
 
-      if (this.cell != null && this.first != null && (this.shape != null || this.livePreviewUsed) &&
-          this.currentDx != null && this.currentDy != null) {
-        let graph = this.graph;
-        let cell = me.getCell();
+      if (
+        this.cell != null &&
+        this.first != null &&
+        (this.shape != null || this.livePreviewUsed) &&
+        this.currentDx != null &&
+        this.currentDy != null
+      ) {
+        const { graph } = this;
+        const cell = me.getCell();
 
-        if (this.connectOnDrop && this.target == null && cell != null && graph.getModel().isVertex(cell) &&
-            graph.isCellConnectable(cell) && graph.isEdgeValid(null, this.cell, cell)) {
+        if (
+          this.connectOnDrop &&
+          this.target == null &&
+          cell != null &&
+          graph.getModel().isVertex(cell) &&
+          graph.isCellConnectable(cell) &&
+          graph.isEdgeValid(null, this.cell, cell)
+        ) {
           graph.connectionHandler.connect(this.cell, cell, me.getEvent());
         } else {
-          let clone = graph.isCloneEvent(me.getEvent()) && graph.isCellsCloneable() && this.isCloneEnabled();
-          let scale = graph.getView().scale;
-          let dx = this.roundLength(this.currentDx / scale);
-          let dy = this.roundLength(this.currentDy / scale);
-          let target = this.target;
+          const clone =
+            graph.isCloneEvent(me.getEvent()) &&
+            graph.isCellsCloneable() &&
+            this.isCloneEnabled();
+          const { scale } = graph.getView();
+          const dx = this.roundLength(this.currentDx / scale);
+          const dy = this.roundLength(this.currentDy / scale);
+          const { target } = this;
 
-          if (graph.isSplitEnabled() && graph.isSplitTarget(target, this.cells, me.getEvent())) {
-            graph.splitEdge(target, this.cells, null, dx, dy,
-                me.getGraphX(), me.getGraphY());
+          if (
+            graph.isSplitEnabled() &&
+            graph.isSplitTarget(target, this.cells, me.getEvent())
+          ) {
+            graph.splitEdge(
+              target,
+              this.cells,
+              null,
+              dx,
+              dy,
+              me.getGraphX(),
+              me.getGraphY()
+            );
           } else {
-            this.moveCells(this.cells, dx, dy, clone, this.target, me.getEvent());
+            this.moveCells(
+              this.cells,
+              dx,
+              dy,
+              clone,
+              this.target,
+              me.getEvent()
+            );
           }
         }
-      } else if (this.isSelectEnabled() && this.delayedSelection && this.cell != null) {
+      } else if (
+        this.isSelectEnabled() &&
+        this.delayedSelection &&
+        this.cell != null
+      ) {
         this.selectDelayed(me);
       }
     }
@@ -1439,7 +1612,9 @@ class mxGraphHandler {
     if (this.livePreviewUsed) {
       this.resetLivePreview();
       this.setHandlesVisibleForCells(
-          this.graph.selectionCellsHandler.getHandledSelectionCells(), true);
+        this.graph.selectionCellsHandler.getHandledSelectionCells(),
+        true
+      );
     }
 
     this.destroyShapes();
@@ -1471,17 +1646,22 @@ class mxGraphHandler {
    */
   shouldRemoveCellsFromParent = (parent, cells, evt) => {
     if (this.graph.getModel().isVertex(parent)) {
-      let pState = this.graph.getView().getState(parent);
+      const pState = this.graph.getView().getState(parent);
 
       if (pState != null) {
-        let pt = mxUtils.convertPoint(this.graph.container,
-            mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-        let alpha = mxUtils.toRadians(mxUtils.getValue(pState.style, mxConstants.STYLE_ROTATION) || 0);
+        let pt = mxUtils.convertPoint(
+          this.graph.container,
+          mxEvent.getClientX(evt),
+          mxEvent.getClientY(evt)
+        );
+        const alpha = mxUtils.toRadians(
+          mxUtils.getValue(pState.style, mxConstants.STYLE_ROTATION) || 0
+        );
 
         if (alpha != 0) {
-          let cos = Math.cos(-alpha);
-          let sin = Math.sin(-alpha);
-          let cx = new mxPoint(pState.getCenterX(), pState.getCenterY());
+          const cos = Math.cos(-alpha);
+          const sin = Math.sin(-alpha);
+          const cx = new mxPoint(pState.getCenterX(), pState.getCenterY());
           pt = mxUtils.getRotatedPoint(pt, cos, sin, cx);
         }
 
@@ -1503,24 +1683,29 @@ class mxGraphHandler {
     }
 
     // Removes cells from parent
-    let parent = this.graph.getModel().getParent(this.cell);
+    const parent = this.graph.getModel().getParent(this.cell);
 
-    if (target == null && this.isRemoveCellsFromParent() &&
-        this.shouldRemoveCellsFromParent(parent, cells, evt)) {
+    if (
+      target == null &&
+      this.isRemoveCellsFromParent() &&
+      this.shouldRemoveCellsFromParent(parent, cells, evt)
+    ) {
       target = this.graph.getDefaultParent();
     }
 
     // Cloning into locked cells is not allowed
-    clone = clone && !this.graph.isCellLocked(target || this.graph.getDefaultParent());
+    clone =
+      clone &&
+      !this.graph.isCellLocked(target || this.graph.getDefaultParent());
 
     this.graph.getModel().beginUpdate();
     try {
-      let parents = [];
+      const parents = [];
 
       // Removes parent if all child cells are removed
       if (!clone && target != null && this.removeEmptyParents) {
         // Collects all non-selected parents
-        let dict = new mxDictionary();
+        const dict = new mxDictionary();
 
         for (let i = 0; i < cells.length; i++) {
           dict.put(cells[i], true);
@@ -1528,7 +1713,7 @@ class mxGraphHandler {
 
         // LATER: Recurse up the cell hierarchy
         for (let i = 0; i < cells.length; i++) {
-          let par = this.graph.model.getParent(cells[i]);
+          const par = this.graph.model.getParent(cells[i]);
 
           if (par != null && !dict.get(par)) {
             dict.put(par, true);
@@ -1542,7 +1727,7 @@ class mxGraphHandler {
       cells = this.graph.moveCells(cells, dx, dy, clone, target, evt);
 
       // Removes parent if all child cells are removed
-      let temp = [];
+      const temp = [];
 
       for (let i = 0; i < parents.length; i++) {
         if (this.shouldRemoveParent(parents[i])) {
@@ -1570,12 +1755,17 @@ class mxGraphHandler {
    *
    * Returns true if the given parent should be removed after removal of child cells.
    */
-  shouldRemoveParent = (parent) => {
-    let state = this.graph.view.getState(parent);
+  shouldRemoveParent = parent => {
+    const state = this.graph.view.getState(parent);
 
-    return state != null && (this.graph.model.isEdge(state.cell) || this.graph.model.isVertex(state.cell)) &&
-        this.graph.isCellDeletable(state.cell) && this.graph.model.getChildCount(state.cell) == 0 &&
-        this.graph.isTransparentState(state);
+    return (
+      state != null &&
+      (this.graph.model.isEdge(state.cell) ||
+        this.graph.model.isVertex(state.cell)) &&
+      this.graph.isCellDeletable(state.cell) &&
+      this.graph.model.getChildCount(state.cell) == 0 &&
+      this.graph.isTransparentState(state)
+    );
   };
 
   /**

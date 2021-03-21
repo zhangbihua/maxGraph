@@ -74,8 +74,8 @@ class mxCompositeLayout extends mxGraphLayout {
    * Implements <mxGraphLayout.execute> by executing all <layouts> in a
    * single transaction.
    */
-  execute = (parent) => {
-    let model = this.graph.getModel();
+  execute = parent => {
+    const model = this.graph.getModel();
 
     model.beginUpdate();
     try {

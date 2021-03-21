@@ -39,7 +39,7 @@ class mxImage {
     this.src = src;
     this.width = width;
     this.height = height;
-  };
+  }
 }
 
 export default mxImage;

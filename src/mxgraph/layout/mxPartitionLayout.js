@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxRectangle from "../util/mxRectangle";
+import mxRectangle from '../util/mxRectangle';
 
 class mxPartitionLayout extends mxGraphLayout {
   /**
@@ -62,10 +62,10 @@ class mxPartitionLayout extends mxGraphLayout {
    */
   constructor(graph, horizontal, spacing, border) {
     super(graph);
-    this.horizontal = (horizontal != null) ? horizontal : true;
+    this.horizontal = horizontal != null ? horizontal : true;
     this.spacing = spacing || 0;
     this.border = border || 0;
-  };
+  }
 
   /**
    * Function: isHorizontal
@@ -82,23 +82,22 @@ class mxPartitionLayout extends mxGraphLayout {
    * Implements <mxGraphLayout.moveCell>.
    */
   moveCell = (cell, x, y) => {
-    let model = this.graph.getModel();
-    let parent = model.getParent(cell);
+    const model = this.graph.getModel();
+    const parent = model.getParent(cell);
 
-    if (cell != null &&
-        parent != null) {
+    if (cell != null && parent != null) {
       let i = 0;
       let last = 0;
-      let childCount = model.getChildCount(parent);
+      const childCount = model.getChildCount(parent);
 
       // Finds index of the closest swimlane
       // TODO: Take into account the orientation
       for (i = 0; i < childCount; i++) {
-        let child = model.getChildAt(parent, i);
-        let bounds = this.getVertexBounds(child);
+        const child = model.getChildAt(parent, i);
+        const bounds = this.getVertexBounds(child);
 
         if (bounds != null) {
-          let tmp = bounds.x + bounds.width / 2;
+          const tmp = bounds.x + bounds.width / 2;
 
           if (last < x && tmp > x) {
             break;
@@ -110,7 +109,7 @@ class mxPartitionLayout extends mxGraphLayout {
 
       // Changes child order in parent
       let idx = parent.getIndex(cell);
-      idx = Math.max(0, i - ((i > idx) ? 1 : 0));
+      idx = Math.max(0, i - (i > idx ? 1 : 0));
 
       model.add(parent, cell, idx);
     }
@@ -122,56 +121,56 @@ class mxPartitionLayout extends mxGraphLayout {
    * Implements <mxGraphLayout.execute>. All children where <isVertexIgnored>
    * returns false and <isVertexMovable> returns true are modified.
    */
-  execute = (parent) => {
-    let horizontal = this.isHorizontal();
-    let model = this.graph.getModel();
+  execute = parent => {
+    const horizontal = this.isHorizontal();
+    const model = this.graph.getModel();
     let pgeo = model.getGeometry(parent);
 
     // Handles special case where the parent is either a layer with no
     // geometry or the current root of the view in which case the size
     // of the graph's container will be used.
-    if (this.graph.container != null &&
-        ((pgeo == null &&
-            model.isLayer(parent)) ||
-            parent == this.graph.getView().currentRoot)) {
-      let width = this.graph.container.offsetWidth - 1;
-      let height = this.graph.container.offsetHeight - 1;
+    if (
+      this.graph.container != null &&
+      ((pgeo == null && model.isLayer(parent)) ||
+        parent == this.graph.getView().currentRoot)
+    ) {
+      const width = this.graph.container.offsetWidth - 1;
+      const height = this.graph.container.offsetHeight - 1;
       pgeo = new mxRectangle(0, 0, width, height);
     }
 
     if (pgeo != null) {
-      let children = [];
-      let childCount = model.getChildCount(parent);
+      const children = [];
+      const childCount = model.getChildCount(parent);
 
       for (let i = 0; i < childCount; i++) {
-        let child = model.getChildAt(parent, i);
+        const child = model.getChildAt(parent, i);
 
-        if (!this.isVertexIgnored(child) &&
-            this.isVertexMovable(child)) {
+        if (!this.isVertexIgnored(child) && this.isVertexMovable(child)) {
           children.push(child);
         }
       }
 
-      let n = children.length;
+      const n = children.length;
 
       if (n > 0) {
-        var x0 = this.border;
-        var y0 = this.border;
-        let other = (horizontal) ? pgeo.height : pgeo.width;
+        let x0 = this.border;
+        let y0 = this.border;
+        let other = horizontal ? pgeo.height : pgeo.width;
         other -= 2 * this.border;
 
-        let size = (this.graph.isSwimlane(parent)) ?
-            this.graph.getStartSize(parent) :
-            new mxRectangle();
+        const size = this.graph.isSwimlane(parent)
+          ? this.graph.getStartSize(parent)
+          : new mxRectangle();
 
-        other -= (horizontal) ? size.height : size.width;
-        x0 = x0 + size.width;
-        y0 = y0 + size.height;
+        other -= horizontal ? size.height : size.width;
+        x0 += size.width;
+        y0 += size.height;
 
-        let tmp = this.border + (n - 1) * this.spacing;
-        let value = (horizontal) ?
-            ((pgeo.width - x0 - tmp) / n) :
-            ((pgeo.height - y0 - tmp) / n);
+        const tmp = this.border + (n - 1) * this.spacing;
+        const value = horizontal
+          ? (pgeo.width - x0 - tmp) / n
+          : (pgeo.height - y0 - tmp) / n;
 
         // Avoids negative values, that is values where the sum of the
         // spacing plus the border is larger then the available space
@@ -179,7 +178,7 @@ class mxPartitionLayout extends mxGraphLayout {
           model.beginUpdate();
           try {
             for (let i = 0; i < n; i++) {
-              let child = children[i];
+              const child = children[i];
               let geo = model.getGeometry(child);
 
               if (geo != null) {

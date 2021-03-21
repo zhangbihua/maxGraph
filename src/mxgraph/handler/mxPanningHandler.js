@@ -3,10 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEventSource from "../util/mxEventSource";
-import mxUtils from "../util/mxUtils";
-import mxEventObject from "../util/mxEventObject";
-import mxEvent from "../util/mxEvent";
+import mxEventSource from '../util/mxEventSource';
+import mxUtils from '../util/mxUtils';
+import mxEventObject from '../util/mxEventObject';
+import mxEvent from '../util/mxEvent';
 
 class mxPanningHandler extends mxEventSource {
   /**
@@ -148,8 +148,8 @@ class mxPanningHandler extends mxEventSource {
 
       // Handles force panning event
       this.forcePanningHandler = (sender, evt) => {
-        let evtName = evt.getProperty('eventName');
-        let me = evt.getProperty('event');
+        const evtName = evt.getProperty('eventName');
+        const me = evt.getProperty('event');
 
         if (evtName == mxEvent.MOUSE_DOWN && this.isForcePanningEvent(me)) {
           this.start(me);
@@ -159,12 +159,15 @@ class mxPanningHandler extends mxEventSource {
         }
       };
 
-      this.graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.forcePanningHandler);
+      this.graph.addListener(
+        mxEvent.FIRE_MOUSE_EVENT,
+        this.forcePanningHandler
+      );
 
       // Handles pinch gestures
       this.gestureHandler = mxUtils.bind(this, (sender, eo) => {
         if (this.isPinchEnabled()) {
-          let evt = eo.getProperty('event');
+          const evt = eo.getProperty('event');
 
           if (!mxEvent.isConsumed(evt) && evt.type === 'gesturestart') {
             this.initialScale = this.graph.view.scale;
@@ -195,7 +198,7 @@ class mxPanningHandler extends mxEventSource {
       // Stops scrolling on every mouseup anywhere in the document
       mxEvent.addListener(document, 'mouseup', this.mouseUpListener);
     }
-  };
+  }
 
   /**
    * Function: isActive
@@ -220,7 +223,7 @@ class mxPanningHandler extends mxEventSource {
    *
    * Sets <panningEnabled>.
    */
-  setPanningEnabled = (value) => {
+  setPanningEnabled = value => {
     this.panningEnabled = value;
   };
 
@@ -238,7 +241,7 @@ class mxPanningHandler extends mxEventSource {
    *
    * Sets <pinchEnabled>.
    */
-  setPinchEnabled = (value) => {
+  setPinchEnabled = value => {
     this.pinchEnabled = value;
   };
 
@@ -249,12 +252,16 @@ class mxPanningHandler extends mxEventSource {
    * given cell. This returns true if control-shift is pressed or if
    * <usePopupTrigger> is true and the event is a popup trigger.
    */
-  isPanningTrigger = (me) => {
-    let evt = me.getEvent();
+  isPanningTrigger = me => {
+    const evt = me.getEvent();
 
-    return (this.useLeftButtonForPanning && me.getState() == null &&
-        mxEvent.isLeftMouseButton(evt)) || (mxEvent.isControlDown(evt) &&
-        mxEvent.isShiftDown(evt)) || (this.usePopupTrigger && mxEvent.isPopupTrigger(evt));
+    return (
+      (this.useLeftButtonForPanning &&
+        me.getState() == null &&
+        mxEvent.isLeftMouseButton(evt)) ||
+      (mxEvent.isControlDown(evt) && mxEvent.isShiftDown(evt)) ||
+      (this.usePopupTrigger && mxEvent.isPopupTrigger(evt))
+    );
   };
 
   /**
@@ -264,7 +271,7 @@ class mxPanningHandler extends mxEventSource {
    * implementation always returns true if <ignoreCell> is true or for
    * multi touch events.
    */
-  isForcePanningEvent = (me) => {
+  isForcePanningEvent = me => {
     return this.ignoreCell || mxEvent.isMultiTouchEvent(me.getEvent());
   };
 
@@ -277,7 +284,12 @@ class mxPanningHandler extends mxEventSource {
   mouseDown = (sender, me) => {
     this.mouseDownEvent = me;
 
-    if (!me.isConsumed() && this.isPanningEnabled() && !this.active && this.isPanningTrigger(me)) {
+    if (
+      !me.isConsumed() &&
+      this.isPanningEnabled() &&
+      !this.active &&
+      this.isPanningTrigger(me)
+    ) {
       this.start(me);
       this.consumePanningTrigger(me);
     }
@@ -288,7 +300,7 @@ class mxPanningHandler extends mxEventSource {
    *
    * Starts panning at the given event.
    */
-  start = (me) => {
+  start = me => {
     this.dx0 = -this.graph.container.scrollLeft;
     this.dy0 = -this.graph.container.scrollTop;
 
@@ -329,7 +341,7 @@ class mxPanningHandler extends mxEventSource {
    * };
    * (end)
    */
-  consumePanningTrigger = (me) => {
+  consumePanningTrigger = me => {
     me.consume();
   };
 
@@ -355,11 +367,13 @@ class mxPanningHandler extends mxEventSource {
 
       this.fireEvent(new mxEventObject(mxEvent.PAN, 'event', me));
     } else if (this.panningTrigger) {
-      let tmp = this.active;
+      const tmp = this.active;
 
       // Panning is activated only if the mouse is moved
       // beyond the graph tolerance
-      this.active = Math.abs(this.dx) > this.graph.tolerance || Math.abs(this.dy) > this.graph.tolerance;
+      this.active =
+        Math.abs(this.dx) > this.graph.tolerance ||
+        Math.abs(this.dy) > this.graph.tolerance;
 
       if (!tmp && this.active) {
         this.fireEvent(new mxEventObject(mxEvent.PAN_START, 'event', me));
@@ -381,9 +395,12 @@ class mxPanningHandler extends mxEventSource {
     if (this.active) {
       if (this.dx != null && this.dy != null) {
         // Ignores if scrollbars have been used for panning
-        if (!this.graph.useScrollbarsForPanning || !mxUtils.hasScrollbars(this.graph.container)) {
-          let scale = this.graph.getView().scale;
-          let t = this.graph.getView().translate;
+        if (
+          !this.graph.useScrollbarsForPanning ||
+          !mxUtils.hasScrollbars(this.graph.container)
+        ) {
+          const { scale } = this.graph.getView();
+          const t = this.graph.getView().translate;
           this.graph.panGraph(0, 0);
           this.panGraph(t.x + this.dx / scale, t.y + this.dy / scale);
         }
@@ -402,7 +419,7 @@ class mxPanningHandler extends mxEventSource {
    *
    * Zooms the graph to the given value and consumed the event if needed.
    */
-  zoomGraph = (evt) => {
+  zoomGraph = evt => {
     let value = Math.round(this.initialScale * evt.scale * 100) / 100;
 
     if (this.minScale != null) {

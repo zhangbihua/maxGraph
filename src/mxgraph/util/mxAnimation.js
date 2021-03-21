@@ -3,10 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxUtils from "./mxUtils";
-import mxEventSource from "./mxEventSource";
-import mxEventObject from "./mxEventObject";
-import mxEvent from "./mxEvent";
+import mxUtils from './mxUtils';
+import mxEventSource from './mxEventSource';
+import mxEventObject from './mxEventObject';
+import mxEvent from './mxEvent';
 
 class mxAnimation extends mxEventSource {
   /**
@@ -39,8 +39,8 @@ class mxAnimation extends mxEventSource {
    */
   constructor(delay) {
     super();
-    this.delay = (delay != null) ? delay : 20;
-  };
+    this.delay = delay != null ? delay : 20;
+  }
 
   /**
    * Function: isRunning
@@ -58,7 +58,10 @@ class mxAnimation extends mxEventSource {
    */
   startAnimation = () => {
     if (this.thread == null) {
-      this.thread = window.setInterval(this.updateAnimation.bind(this), this.delay);
+      this.thread = window.setInterval(
+        this.updateAnimation.bind(this),
+        this.delay
+      );
     }
   };
 

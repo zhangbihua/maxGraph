@@ -83,15 +83,14 @@ class mxCellTracker extends mxCellMarker {
     if (funct != null) {
       this.getCell = funct;
     }
-  };
+  }
 
   /**
    * Function: mouseDown
    *
    * Ignores the event. The event is not consumed.
    */
-  mouseDown = (sender, me) => {
-  };
+  mouseDown = (sender, me) => {};
 
   /**
    * Function: mouseMove
@@ -110,8 +109,7 @@ class mxCellTracker extends mxCellMarker {
    *
    * Handles the event by reseting the highlight.
    */
-  mouseUp = (sender, me) => {
-  };
+  mouseUp = (sender, me) => {};
 
   /**
    * Function: destroy

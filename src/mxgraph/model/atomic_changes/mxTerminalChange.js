@@ -15,7 +15,7 @@ class mxTerminalChange {
     this.terminal = terminal;
     this.previous = terminal;
     this.source = source;
-  };
+  }
 
   /**
    * Function: execute
@@ -27,7 +27,10 @@ class mxTerminalChange {
     if (this.cell != null) {
       this.terminal = this.previous;
       this.previous = this.model.terminalForCellChanged(
-          this.cell, this.previous, this.source);
+        this.cell,
+        this.previous,
+        this.source
+      );
     }
   };
 }

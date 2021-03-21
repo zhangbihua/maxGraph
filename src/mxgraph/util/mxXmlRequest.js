@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2020, JGraph Ltd
  * Copyright (c) 2006-2020, draw.io AG
  */
-import mxUtils from "./mxUtils";
+import mxUtils from './mxUtils';
 
 class mxXmlRequest {
   /**
@@ -168,10 +168,10 @@ class mxXmlRequest {
     this.url = url;
     this.params = params;
     this.method = method || 'POST';
-    this.async = (async != null) ? async : true;
+    this.async = async != null ? async : true;
     this.username = username;
     this.password = password;
-  };
+  }
 
   /**
    * Function: isBinary
@@ -187,7 +187,7 @@ class mxXmlRequest {
    *
    * Sets <binary>.
    */
-  setBinary = (value) => {
+  setBinary = value => {
     this.binary = value;
   };
 
@@ -215,7 +215,7 @@ class mxXmlRequest {
    * Returns the document element of the response XML document.
    */
   getDocumentElement = () => {
-    let doc = this.getXml();
+    const doc = this.getXml();
 
     if (doc != null) {
       return doc.documentElement;
@@ -252,7 +252,7 @@ class mxXmlRequest {
    * Note: The NS_ERROR_NOT_AVAILABLE for invalid responses cannot be cought.
    */
   getStatus = () => {
-    return (this.request != null) ? this.request.status : null;
+    return this.request != null ? this.request.status : null;
   };
 
   /**
@@ -261,7 +261,7 @@ class mxXmlRequest {
    * Creates and returns the inner <request> object.
    */
   create = () => {
-    let req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
 
     // TODO: Check for overrideMimeType required here?
     if (this.isBinary() && req.overrideMimeType) {
@@ -299,16 +299,25 @@ class mxXmlRequest {
         };
       }
 
-      this.request.open(this.method, this.url, this.async,
-          this.username, this.password);
+      this.request.open(
+        this.method,
+        this.url,
+        this.async,
+        this.username,
+        this.password
+      );
       this.setRequestHeaders(this.request, this.params);
 
       if (window.XMLHttpRequest && this.withCredentials) {
         this.request.withCredentials = 'true';
       }
 
-      if ((document.documentMode == null) &&
-          window.XMLHttpRequest && timeout != null && ontimeout != null) {
+      if (
+        document.documentMode == null &&
+        window.XMLHttpRequest &&
+        timeout != null &&
+        ontimeout != null
+      ) {
         this.request.timeout = timeout;
         this.request.ontimeout = ontimeout;
       }
@@ -343,7 +352,10 @@ class mxXmlRequest {
    */
   setRequestHeaders = (request, params) => {
     if (params != null) {
-      request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      request.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+      );
     }
   };
 
@@ -367,7 +379,7 @@ class mxXmlRequest {
       window.onbeforeunload = null;
     }
 
-    let form = doc.createElement('form');
+    const form = doc.createElement('form');
     form.setAttribute('method', this.method);
     form.setAttribute('action', this.url);
 
@@ -378,23 +390,24 @@ class mxXmlRequest {
     form.style.display = 'none';
     form.style.visibility = 'hidden';
 
-    let pars = (this.params.indexOf('&') > 0) ?
-        this.params.split('&') :
-        this.params.split();
+    const pars =
+      this.params.indexOf('&') > 0
+        ? this.params.split('&')
+        : this.params.split();
 
     // Adds the parameters as textareas to the form
     for (let i = 0; i < pars.length; i++) {
-      let pos = pars[i].indexOf('=');
+      const pos = pars[i].indexOf('=');
 
       if (pos > 0) {
-        let name = pars[i].substring(0, pos);
+        const name = pars[i].substring(0, pos);
         let value = pars[i].substring(pos + 1);
 
         if (this.decodeSimulateValues) {
           value = decodeURIComponent(value);
         }
 
-        let textarea = doc.createElement('textarea');
+        const textarea = doc.createElement('textarea');
         textarea.setAttribute('wrap', 'off');
         textarea.setAttribute('name', name);
         mxUtils.write(textarea, value);

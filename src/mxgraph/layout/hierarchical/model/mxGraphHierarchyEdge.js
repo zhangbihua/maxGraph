@@ -63,15 +63,15 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
     for (let i = 0; i < edges.length; i++) {
       this.ids.push(mxObjectIdentity.get(edges[i]));
     }
-  };
+  }
 
   /**
    * Function: invert
    *
    * Inverts the direction of this internal edge(s)
    */
-  invert = (layer) => {
-    let temp = this.source;
+  invert = layer => {
+    const temp = this.source;
     this.source = this.target;
     this.target = temp;
     this.isReversed = !this.isReversed;
@@ -82,7 +82,7 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
    *
    * Returns the cells this cell connects to on the next layer up
    */
-  getNextLayerConnectedCells = (layer) => {
+  getNextLayerConnectedCells = layer => {
     if (this.nextLayerConnectedCells == null) {
       this.nextLayerConnectedCells = [];
 
@@ -105,7 +105,7 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
    *
    * Returns the cells this cell connects to on the next layer down
    */
-  getPreviousLayerConnectedCells = (layer) => {
+  getPreviousLayerConnectedCells = layer => {
     if (this.previousLayerConnectedCells == null) {
       this.previousLayerConnectedCells = [];
 
@@ -137,7 +137,7 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
    *
    * Gets the value of temp for the specified layer
    */
-  getGeneralPurposeVariable = (layer) => {
+  getGeneralPurposeVariable = layer => {
     return this.temp[layer - this.minRank - 1];
   };
 

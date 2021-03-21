@@ -3,8 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxConstants from "../util/mxConstants";
-import mxEvent from "../util/mxEvent";
+import mxConstants from '../util/mxConstants';
+import mxEvent from '../util/mxEvent';
 
 class mxCellHighlight {
   /**
@@ -62,16 +62,20 @@ class mxCellHighlight {
   constructor(graph, highlightColor, strokeWidth, dashed) {
     if (graph != null) {
       this.graph = graph;
-      this.highlightColor = (highlightColor != null) ? highlightColor : mxConstants.DEFAULT_VALID_COLOR;
-      this.strokeWidth = (strokeWidth != null) ? strokeWidth : mxConstants.HIGHLIGHT_STROKEWIDTH;
-      this.dashed = (dashed != null) ? dashed : false;
+      this.highlightColor =
+        highlightColor != null
+          ? highlightColor
+          : mxConstants.DEFAULT_VALID_COLOR;
+      this.strokeWidth =
+        strokeWidth != null ? strokeWidth : mxConstants.HIGHLIGHT_STROKEWIDTH;
+      this.dashed = dashed != null ? dashed : false;
       this.opacity = mxConstants.HIGHLIGHT_OPACITY;
 
       // Updates the marker if the graph changes
       this.repaintHandler = () => {
         // Updates reference to state
         if (this.state != null) {
-          let tmp = this.graph.view.getState(this.state.cell);
+          const tmp = this.graph.view.getState(this.state.cell);
 
           if (tmp == null) {
             this.hide();
@@ -84,7 +88,9 @@ class mxCellHighlight {
 
       this.graph.getView().addListener(mxEvent.SCALE, this.repaintHandler);
       this.graph.getView().addListener(mxEvent.TRANSLATE, this.repaintHandler);
-      this.graph.getView().addListener(mxEvent.SCALE_AND_TRANSLATE, this.repaintHandler);
+      this.graph
+        .getView()
+        .addListener(mxEvent.SCALE_AND_TRANSLATE, this.repaintHandler);
       this.graph.getModel().addListener(mxEvent.CHANGE, this.repaintHandler);
 
       // Hides the marker if the current root changes
@@ -106,7 +112,7 @@ class mxCellHighlight {
    *
    * color - String that represents the new highlight color.
    */
-  setHighlightColor = (color) => {
+  setHighlightColor = color => {
     this.highlightColor = color;
 
     if (this.shape != null) {
@@ -123,8 +129,14 @@ class mxCellHighlight {
     this.shape = this.createShape();
     this.repaint();
 
-    if (!this.keepOnTop && this.shape.node.parentNode.firstChild != this.shape.node) {
-      this.shape.node.parentNode.insertBefore(this.shape.node, this.shape.node.parentNode.firstChild);
+    if (
+      !this.keepOnTop &&
+      this.shape.node.parentNode.firstChild != this.shape.node
+    ) {
+      this.shape.node.parentNode.insertBefore(
+        this.shape.node,
+        this.shape.node.parentNode.firstChild
+      );
     }
   };
 
@@ -134,7 +146,7 @@ class mxCellHighlight {
    * Creates and returns the highlight shape for the given state.
    */
   createShape = () => {
-    let shape = this.graph.cellRenderer.createShape(this.state);
+    const shape = this.graph.cellRenderer.createShape(this.state);
 
     shape.svgStrokeTolerance = this.graph.tolerance;
     shape.points = this.state.absolutePoints;
@@ -144,7 +156,10 @@ class mxCellHighlight {
     shape.isDashed = this.dashed;
     shape.isShadow = false;
 
-    shape.dialect = (this.graph.dialect != mxConstants.DIALECT_SVG) ? mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
+    shape.dialect =
+      this.graph.dialect != mxConstants.DIALECT_SVG
+        ? mxConstants.DIALECT_VML
+        : mxConstants.DIALECT_SVG;
     shape.init(this.graph.getView().getOverlayPane());
     mxEvent.redirectMouseEvents(shape.node, this.graph, this.state);
 
@@ -162,7 +177,7 @@ class mxCellHighlight {
    *
    * Returns the stroke width.
    */
-  getStrokeWidth = (state) => {
+  getStrokeWidth = state => {
     return this.strokeWidth;
   };
 
@@ -180,9 +195,15 @@ class mxCellHighlight {
         this.shape.points = this.state.absolutePoints;
         this.shape.outline = false;
       } else {
-        this.shape.bounds = new mxRectangle(this.state.x - this.spacing, this.state.y - this.spacing,
-            this.state.width + 2 * this.spacing, this.state.height + 2 * this.spacing);
-        this.shape.rotation = Number(this.state.style[mxConstants.STYLE_ROTATION] || '0');
+        this.shape.bounds = new mxRectangle(
+          this.state.x - this.spacing,
+          this.state.y - this.spacing,
+          this.state.width + 2 * this.spacing,
+          this.state.height + 2 * this.spacing
+        );
+        this.shape.rotation = Number(
+          this.state.style[mxConstants.STYLE_ROTATION] || '0'
+        );
         this.shape.strokewidth = this.getStrokeWidth() / this.state.view.scale;
         this.shape.outline = true;
       }
@@ -210,7 +231,7 @@ class mxCellHighlight {
    *
    * Marks the <markedState> and fires a <mark> event.
    */
-  highlight = (state) => {
+  highlight = state => {
     if (this.state != state) {
       if (this.shape != null) {
         this.shape.destroy();
@@ -263,7 +284,7 @@ class mxCellHighlight {
       this.shape.destroy();
       this.shape = null;
     }
-  }
+  };
 }
 
 export default mxCellHighlight;

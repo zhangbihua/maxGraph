@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectIdentity from "./mxObjectIdentity";
+import mxObjectIdentity from './mxObjectIdentity';
 
 class mxDictionary {
   /**
@@ -26,7 +26,7 @@ class mxDictionary {
    */
   constructor() {
     this.clear();
-  };
+  }
 
   /**
    * Function: clear
@@ -42,8 +42,8 @@ class mxDictionary {
    *
    * Returns the value for the given key.
    */
-  get = (key) => {
-    let id = mxObjectIdentity.get(key);
+  get = key => {
+    const id = mxObjectIdentity.get(key);
 
     return this.map[id];
   };
@@ -55,8 +55,8 @@ class mxDictionary {
    * value for that key.
    */
   put = (key, value) => {
-    let id = mxObjectIdentity.get(key);
-    let previous = this.map[id];
+    const id = mxObjectIdentity.get(key);
+    const previous = this.map[id];
     this.map[id] = value;
 
     return previous;
@@ -68,9 +68,9 @@ class mxDictionary {
    * Removes the value for the given key and returns the value that
    * has been removed.
    */
-  remove = (key) => {
-    let id = mxObjectIdentity.get(key);
-    let previous = this.map[id];
+  remove = key => {
+    const id = mxObjectIdentity.get(key);
+    const previous = this.map[id];
     delete this.map[id];
 
     return previous;
@@ -82,9 +82,9 @@ class mxDictionary {
    * Returns all keys as an array.
    */
   getKeys = () => {
-    let result = [];
+    const result = [];
 
-    for (var key in this.map) {
+    for (const key in this.map) {
       result.push(key);
     }
 
@@ -97,9 +97,9 @@ class mxDictionary {
    * Returns all values as an array.
    */
   getValues = () => {
-    let result = [];
+    const result = [];
 
-    for (var key in this.map) {
+    for (const key in this.map) {
       result.push(this.map[key]);
     }
 
@@ -117,8 +117,8 @@ class mxDictionary {
    *
    * visitor - A function that takes the key and value as arguments.
    */
-  visit = (visitor) => {
-    for (var key in this.map) {
+  visit = visitor => {
+    for (const key in this.map) {
       visitor(key, this.map[key]);
     }
   };

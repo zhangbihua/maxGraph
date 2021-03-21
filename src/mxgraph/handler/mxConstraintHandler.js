@@ -3,10 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxImage from "../util/mxImage";
-import mxClient from "../mxClient";
-import mxConstants from "../util/mxConstants";
-import mxEvent from "../util/mxEvent";
+import mxImage from '../util/mxImage';
+import mxClient from '../mxClient';
+import mxConstants from '../util/mxConstants';
+import mxEvent from '../util/mxEvent';
 
 class mxConstraintHandler {
   /**
@@ -14,7 +14,7 @@ class mxConstraintHandler {
    *
    * <mxImage> to be used as the image for fixed connection points.
    */
-  pointImage = new mxImage(mxClient.imageBasePath + '/point.gif', 5, 5);
+  pointImage = new mxImage(`${mxClient.imageBasePath}/point.gif`, 5, 5);
 
   /**
    * Variable: graph
@@ -60,7 +60,10 @@ class mxConstraintHandler {
 
     // Adds a graph model listener to update the current focus on changes
     this.resetHandler = (sender, evt) => {
-      if (this.currentFocus != null && this.graph.view.getState(this.currentFocus.cell) == null) {
+      if (
+        this.currentFocus != null &&
+        this.graph.view.getState(this.currentFocus.cell) == null
+      ) {
         this.reset();
       } else {
         this.redraw();
@@ -72,7 +75,7 @@ class mxConstraintHandler {
     this.graph.view.addListener(mxEvent.TRANSLATE, this.resetHandler);
     this.graph.view.addListener(mxEvent.SCALE, this.resetHandler);
     this.graph.addListener(mxEvent.ROOT, this.resetHandler);
-  };
+  }
 
   /**
    * Function: isEnabled
@@ -94,7 +97,7 @@ class mxConstraintHandler {
    *
    * enabled - Boolean that specifies the new enabled state.
    */
-  setEnabled = (enabled) => {
+  setEnabled = enabled => {
     this.enabled = enabled;
   };
 
@@ -134,7 +137,7 @@ class mxConstraintHandler {
    *
    * me - <mxMouseEvent> whose tolerance should be returned.
    */
-  getTolerance = (me) => {
+  getTolerance = me => {
     return this.graph.getTolerance();
   };
 
@@ -200,7 +203,7 @@ class mxConstraintHandler {
    * Returns true if the current focused state should not be changed for the given event.
    * This returns true if shift and alt are pressed.
    */
-  isKeepFocusEvent = (me) => {
+  isKeepFocusEvent = me => {
     return mxEvent.isShiftDown(me.getEvent());
   };
 
@@ -213,20 +216,27 @@ class mxConstraintHandler {
     let cell = me.getCell();
 
     // Gets cell under actual point if different from event location
-    if (cell == null && point != null && (me.getGraphX() != point.x || me.getGraphY() != point.y)) {
+    if (
+      cell == null &&
+      point != null &&
+      (me.getGraphX() != point.x || me.getGraphY() != point.y)
+    ) {
       cell = this.graph.getCellAt(point.x, point.y);
     }
 
     // Uses connectable parent vertex if one exists
     if (cell != null && !this.graph.isCellConnectable(cell)) {
-      let parent = this.graph.getModel().getParent(cell);
+      const parent = this.graph.getModel().getParent(cell);
 
-      if (this.graph.getModel().isVertex(parent) && this.graph.isCellConnectable(parent)) {
+      if (
+        this.graph.getModel().isVertex(parent) &&
+        this.graph.isCellConnectable(parent)
+      ) {
         cell = parent;
       }
     }
 
-    return (this.graph.isCellLocked(cell)) ? null : cell;
+    return this.graph.isCellLocked(cell) ? null : cell;
   };
 
   /**
@@ -243,20 +253,35 @@ class mxConstraintHandler {
           this.reset();
         });
 
-        mxEvent.addListener(this.graph.container, 'mouseleave', this.resetHandler);
+        mxEvent.addListener(
+          this.graph.container,
+          'mouseleave',
+          this.resetHandler
+        );
       }
 
-      let tol = this.getTolerance(me);
-      let x = (point != null) ? point.x : me.getGraphX();
-      let y = (point != null) ? point.y : me.getGraphY();
-      let grid = new mxRectangle(x - tol, y - tol, 2 * tol, 2 * tol);
-      let mouse = new mxRectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol);
-      let state = this.graph.view.getState(this.getCellForEvent(me, point));
+      const tol = this.getTolerance(me);
+      const x = point != null ? point.x : me.getGraphX();
+      const y = point != null ? point.y : me.getGraphY();
+      const grid = new mxRectangle(x - tol, y - tol, 2 * tol, 2 * tol);
+      const mouse = new mxRectangle(
+        me.getGraphX() - tol,
+        me.getGraphY() - tol,
+        2 * tol,
+        2 * tol
+      );
+      const state = this.graph.view.getState(this.getCellForEvent(me, point));
 
       // Keeps focus icons visible while over vertex bounds and no other cell under mouse or shift is pressed
-      if (!this.isKeepFocusEvent(me) && (this.currentFocusArea == null || this.currentFocus == null ||
-          (state != null) || !this.graph.getModel().isVertex(this.currentFocus.cell) ||
-          !mxUtils.intersects(this.currentFocusArea, mouse)) && (state != this.currentFocus)) {
+      if (
+        !this.isKeepFocusEvent(me) &&
+        (this.currentFocusArea == null ||
+          this.currentFocus == null ||
+          state != null ||
+          !this.graph.getModel().isVertex(this.currentFocus.cell) ||
+          !mxUtils.intersects(this.currentFocusArea, mouse)) &&
+        state != this.currentFocus
+      ) {
         this.currentFocusArea = null;
         this.currentFocus = null;
         this.setFocus(me, state, source);
@@ -266,19 +291,30 @@ class mxConstraintHandler {
       this.currentPoint = null;
       let minDistSq = null;
 
-      if (this.focusIcons != null && this.constraints != null &&
-          (state == null || this.currentFocus == state)) {
-        let cx = mouse.getCenterX();
-        let cy = mouse.getCenterY();
+      if (
+        this.focusIcons != null &&
+        this.constraints != null &&
+        (state == null || this.currentFocus == state)
+      ) {
+        const cx = mouse.getCenterX();
+        const cy = mouse.getCenterY();
 
         for (let i = 0; i < this.focusIcons.length; i++) {
-          let dx = cx - this.focusIcons[i].bounds.getCenterX();
-          let dy = cy - this.focusIcons[i].bounds.getCenterY();
-          let tmp = dx * dx + dy * dy;
+          const dx = cx - this.focusIcons[i].bounds.getCenterX();
+          const dy = cy - this.focusIcons[i].bounds.getCenterY();
+          const tmp = dx * dx + dy * dy;
 
-          if ((this.intersects(this.focusIcons[i], mouse, source, existingEdge) || (point != null &&
-              this.intersects(this.focusIcons[i], grid, source, existingEdge))) &&
-              (minDistSq == null || tmp < minDistSq)) {
+          if (
+            (this.intersects(this.focusIcons[i], mouse, source, existingEdge) ||
+              (point != null &&
+                this.intersects(
+                  this.focusIcons[i],
+                  grid,
+                  source,
+                  existingEdge
+                ))) &&
+            (minDistSq == null || tmp < minDistSq)
+          ) {
             this.currentConstraint = this.constraints[i];
             this.currentPoint = this.focusPoints[i];
             minDistSq = tmp;
@@ -289,16 +325,18 @@ class mxConstraintHandler {
             tmp.height -= 1;
 
             if (this.focusHighlight == null) {
-              let hl = this.createHighlightShape();
-              hl.dialect = (this.graph.dialect == mxConstants.DIALECT_SVG) ?
-                  mxConstants.DIALECT_SVG : mxConstants.DIALECT_VML;
+              const hl = this.createHighlightShape();
+              hl.dialect =
+                this.graph.dialect == mxConstants.DIALECT_SVG
+                  ? mxConstants.DIALECT_SVG
+                  : mxConstants.DIALECT_VML;
               hl.pointerEvents = false;
 
               hl.init(this.graph.getView().getOverlayPane());
               this.focusHighlight = hl;
 
-              let getState = () => {
-                return (this.currentFocus != null) ? this.currentFocus : state;
+              const getState = () => {
+                return this.currentFocus != null ? this.currentFocus : state;
               };
 
               mxEvent.redirectMouseEvents(hl.node, this.graph, getState);
@@ -328,17 +366,30 @@ class mxConstraintHandler {
    * are ignored.
    */
   redraw = () => {
-    if (this.currentFocus != null && this.constraints != null && this.focusIcons != null) {
-      let state = this.graph.view.getState(this.currentFocus.cell);
+    if (
+      this.currentFocus != null &&
+      this.constraints != null &&
+      this.focusIcons != null
+    ) {
+      const state = this.graph.view.getState(this.currentFocus.cell);
       this.currentFocus = state;
-      this.currentFocusArea = new mxRectangle(state.x, state.y, state.width, state.height);
+      this.currentFocusArea = new mxRectangle(
+        state.x,
+        state.y,
+        state.width,
+        state.height
+      );
 
       for (let i = 0; i < this.constraints.length; i++) {
-        let cp = this.graph.getConnectionPoint(state, this.constraints[i]);
-        let img = this.getImageForConstraint(state, this.constraints[i], cp);
+        const cp = this.graph.getConnectionPoint(state, this.constraints[i]);
+        const img = this.getImageForConstraint(state, this.constraints[i], cp);
 
-        let bounds = new mxRectangle(Math.round(cp.x - img.width / 2),
-            Math.round(cp.y - img.height / 2), img.width, img.height);
+        const bounds = new mxRectangle(
+          Math.round(cp.x - img.width / 2),
+          Math.round(cp.y - img.height / 2),
+          img.width,
+          img.height
+        );
         this.focusIcons[i].bounds = bounds;
         this.focusIcons[i].redraw();
         this.currentFocusArea.add(this.focusIcons[i].bounds);
@@ -355,14 +406,24 @@ class mxConstraintHandler {
    * are ignored.
    */
   setFocus = (me, state, source) => {
-    this.constraints = (state != null && !this.isStateIgnored(state, source) &&
-        this.graph.isCellConnectable(state.cell)) ? ((this.isEnabled()) ?
-        (this.graph.getAllConnectionConstraints(state, source) || []) : []) : null;
+    this.constraints =
+      state != null &&
+      !this.isStateIgnored(state, source) &&
+      this.graph.isCellConnectable(state.cell)
+        ? this.isEnabled()
+          ? this.graph.getAllConnectionConstraints(state, source) || []
+          : []
+        : null;
 
     // Only uses cells which have constraints
     if (this.constraints != null) {
       this.currentFocus = state;
-      this.currentFocusArea = new mxRectangle(state.x, state.y, state.width, state.height);
+      this.currentFocusArea = new mxRectangle(
+        state.x,
+        state.y,
+        state.width,
+        state.height
+      );
 
       if (this.focusIcons != null) {
         for (let i = 0; i < this.focusIcons.length; i++) {
@@ -377,25 +438,34 @@ class mxConstraintHandler {
       this.focusIcons = [];
 
       for (let i = 0; i < this.constraints.length; i++) {
-        let cp = this.graph.getConnectionPoint(state, this.constraints[i]);
-        let img = this.getImageForConstraint(state, this.constraints[i], cp);
+        const cp = this.graph.getConnectionPoint(state, this.constraints[i]);
+        const img = this.getImageForConstraint(state, this.constraints[i], cp);
 
-        let src = img.src;
-        let bounds = new mxRectangle(Math.round(cp.x - img.width / 2),
-            Math.round(cp.y - img.height / 2), img.width, img.height);
-        let icon = new mxImageShape(bounds, src);
-        icon.dialect = (this.graph.dialect != mxConstants.DIALECT_SVG) ?
-            mxConstants.DIALECT_MIXEDHTML : mxConstants.DIALECT_SVG;
+        const { src } = img;
+        const bounds = new mxRectangle(
+          Math.round(cp.x - img.width / 2),
+          Math.round(cp.y - img.height / 2),
+          img.width,
+          img.height
+        );
+        const icon = new mxImageShape(bounds, src);
+        icon.dialect =
+          this.graph.dialect != mxConstants.DIALECT_SVG
+            ? mxConstants.DIALECT_MIXEDHTML
+            : mxConstants.DIALECT_SVG;
         icon.preserveImageAspect = false;
         icon.init(this.graph.getView().getDecoratorPane());
 
         // Move the icon behind all other overlays
         if (icon.node.previousSibling != null) {
-          icon.node.parentNode.insertBefore(icon.node, icon.node.parentNode.firstChild);
+          icon.node.parentNode.insertBefore(
+            icon.node,
+            icon.node.parentNode.firstChild
+          );
         }
 
-        let getState = mxUtils.bind(this, () => {
-          return (this.currentFocus != null) ? this.currentFocus : state;
+        const getState = mxUtils.bind(this, () => {
+          return this.currentFocus != null ? this.currentFocus : state;
         });
 
         icon.redraw();
@@ -421,7 +491,12 @@ class mxConstraintHandler {
    * Returns true if the given icon intersects the given point.
    */
   createHighlightShape = () => {
-    let hl = new mxRectangleShape(null, this.highlightColor, this.highlightColor, mxConstants.HIGHLIGHT_STROKEWIDTH);
+    const hl = new mxRectangleShape(
+      null,
+      this.highlightColor,
+      this.highlightColor,
+      mxConstants.HIGHLIGHT_STROKEWIDTH
+    );
     hl.opacity = mxConstants.HIGHLIGHT_OPACITY;
 
     return hl;
@@ -452,7 +527,11 @@ class mxConstraintHandler {
     }
 
     if (this.mouseleaveHandler != null && this.graph.container != null) {
-      mxEvent.removeListener(this.graph.container, 'mouseleave', this.mouseleaveHandler);
+      mxEvent.removeListener(
+        this.graph.container,
+        'mouseleave',
+        this.mouseleaveHandler
+      );
       this.mouseleaveHandler = null;
     }
   };

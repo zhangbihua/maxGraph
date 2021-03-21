@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "../util/mxUtils";
-import mxConstants from "../util/mxConstants";
-import mxRectangleShape from "./mxRectangleShape";
+import mxUtils from '../util/mxUtils';
+import mxConstants from '../util/mxConstants';
+import mxRectangleShape from './mxRectangleShape';
 
 class mxImageShape extends mxRectangleShape {
   /**
@@ -43,9 +43,9 @@ class mxImageShape extends mxRectangleShape {
     this.image = image;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = (strokewidth != null) ? strokewidth : 1;
+    this.strokewidth = strokewidth != null ? strokewidth : 1;
     this.shadow = false;
-  };
+  }
 
   /**
    * Function: getSvgScreenOffset
@@ -73,7 +73,7 @@ class mxImageShape extends mxRectangleShape {
    *
    * state - <mxCellState> of the corresponding cell.
    */
-  apply = (state) => {
+  apply = state => {
     super.apply(state);
 
     this.fill = null;
@@ -81,11 +81,14 @@ class mxImageShape extends mxRectangleShape {
     this.gradient = null;
 
     if (this.style != null) {
-      this.preserveImageAspect = mxUtils.getNumber(this.style, mxConstants.STYLE_IMAGE_ASPECT, 1) === 1;
+      this.preserveImageAspect =
+        mxUtils.getNumber(this.style, mxConstants.STYLE_IMAGE_ASPECT, 1) === 1;
 
       // Legacy support for imageFlipH/V
-      this.flipH = this.flipH || mxUtils.getValue(this.style, 'imageFlipH', 0) === 1;
-      this.flipV = this.flipV || mxUtils.getValue(this.style, 'imageFlipV', 0) === 1;
+      this.flipH =
+        this.flipH || mxUtils.getValue(this.style, 'imageFlipH', 0) === 1;
+      this.flipV =
+        this.flipV || mxUtils.getValue(this.style, 'imageFlipV', 0) === 1;
     }
   };
 
@@ -107,7 +110,7 @@ class mxImageShape extends mxRectangleShape {
    * so that the HTML creation is optional.
    */
   createHtml = () => {
-    let node = document.createElement('div');
+    const node = document.createElement('div');
     node.style.position = 'absolute';
 
     return node;
@@ -129,8 +132,16 @@ class mxImageShape extends mxRectangleShape {
    */
   paintVertexShape = (c, x, y, w, h) => {
     if (this.image != null) {
-      let fill = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BACKGROUND, null);
-      let stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, null);
+      const fill = mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_IMAGE_BACKGROUND,
+        null
+      );
+      let stroke = mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_IMAGE_BORDER,
+        null
+      );
 
       if (fill != null) {
         // Stroke rendering required for shadow
@@ -143,7 +154,11 @@ class mxImageShape extends mxRectangleShape {
       // FlipH/V are implicit via mxShape.updateTransform
       c.image(x, y, w, h, this.image, this.preserveImageAspect, false, false);
 
-      stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, null);
+      stroke = mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_IMAGE_BORDER,
+        null
+      );
 
       if (stroke != null) {
         c.setShadow(false);
@@ -162,25 +177,33 @@ class mxImageShape extends mxRectangleShape {
    * Overrides <mxShape.redraw> to preserve the aspect ratio of images.
    */
   redrawHtmlShape = () => {
-    this.node.style.left = Math.round(this.bounds.x) + 'px';
-    this.node.style.top = Math.round(this.bounds.y) + 'px';
-    this.node.style.width = Math.max(0, Math.round(this.bounds.width)) + 'px';
-    this.node.style.height = Math.max(0, Math.round(this.bounds.height)) + 'px';
+    this.node.style.left = `${Math.round(this.bounds.x)}px`;
+    this.node.style.top = `${Math.round(this.bounds.y)}px`;
+    this.node.style.width = `${Math.max(0, Math.round(this.bounds.width))}px`;
+    this.node.style.height = `${Math.max(0, Math.round(this.bounds.height))}px`;
     this.node.innerHTML = '';
 
     if (this.image != null) {
-      let fill = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BACKGROUND, '');
-      let stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, '');
+      const fill = mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_IMAGE_BACKGROUND,
+        ''
+      );
+      const stroke = mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_IMAGE_BORDER,
+        ''
+      );
       this.node.style.backgroundColor = fill;
       this.node.style.borderColor = stroke;
 
       // VML image supports PNG in IE6
-      let img = document.createElement('img');
+      const img = document.createElement('img');
       img.setAttribute('border', '0');
       img.style.position = 'absolute';
       img.src = this.image;
 
-      let filter = (this.opacity < 100) ? 'alpha(opacity=' + this.opacity + ')' : '';
+      let filter = this.opacity < 100 ? `alpha(opacity=${this.opacity})` : '';
       this.node.style.filter = filter;
 
       if (this.flipH && this.flipV) {
@@ -188,7 +211,8 @@ class mxImageShape extends mxRectangleShape {
       } else if (this.flipH) {
         filter += 'progid:DXImageTransform.Microsoft.BasicImage(mirror=1)';
       } else if (this.flipV) {
-        filter += 'progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)';
+        filter +=
+          'progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)';
       }
 
       if (img.style.filter != filter) {
@@ -199,7 +223,11 @@ class mxImageShape extends mxRectangleShape {
         img.style.rotation = this.rotation;
       } else if (this.rotation !== 0) {
         // LATER: Add flipV/H support
-        mxUtils.setPrefixedStyle(img.style, 'transform', 'rotate(' + this.rotation + 'deg)');
+        mxUtils.setPrefixedStyle(
+          img.style,
+          'transform',
+          `rotate(${this.rotation}deg)`
+        );
       } else {
         mxUtils.setPrefixedStyle(img.style, 'transform', '');
       }

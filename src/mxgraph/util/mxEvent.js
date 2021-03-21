@@ -3,8 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxMouseEvent from "./mxMouseEvent";
-import mxClient from "../mxClient";
+import mxMouseEvent from './mxMouseEvent';
+import mxClient from '../mxClient';
 
 // Checks if passive event listeners are supported
 // see https://github.com/Modernizr/Modernizr/issues/1894
@@ -12,22 +12,20 @@ let supportsPassive = false;
 
 try {
   document.addEventListener(
-      'test',
-      () => {
-      },
-      Object.defineProperty && Object.defineProperty(
-      {}, 'passive', {
+    'test',
+    () => {},
+    Object.defineProperty &&
+      Object.defineProperty({}, 'passive', {
         get: () => {
           supportsPassive = true;
-        }
-      }
-      )
+        },
+      })
   );
 } catch (e) {
   // ignore
 }
 
-let mxEvent = {
+const mxEvent = {
   /**
    * Class: mxEvent
    *
@@ -50,13 +48,14 @@ let mxEvent = {
    */
   addListener: (element, eventName, funct) => {
     element.addEventListener(
-        eventName, funct,
-        (supportsPassive) ? {passive: false} : false
+      eventName,
+      funct,
+      supportsPassive ? { passive: false } : false
     );
     if (element.mxListenerList == null) {
       element.mxListenerList = [];
     }
-    let entry = {name: eventName, f: funct};
+    const entry = { name: eventName, f: funct };
     element.mxListenerList.push(entry);
   },
 
@@ -69,10 +68,10 @@ let mxEvent = {
     element.removeEventListener(eventName, funct, false);
 
     if (element.mxListenerList != null) {
-      let listenerCount = element.mxListenerList.length;
+      const listenerCount = element.mxListenerList.length;
 
       for (let i = 0; i < listenerCount; i++) {
-        let entry = element.mxListenerList[i];
+        const entry = element.mxListenerList[i];
 
         if (entry.f === funct) {
           element.mxListenerList.splice(i, 1);
@@ -90,12 +89,12 @@ let mxEvent = {
    *
    * Removes all listeners from the given element.
    */
-  removeAllListeners: (element) => {
-    let list = element.mxListenerList;
+  removeAllListeners: element => {
+    const list = element.mxListenerList;
 
     if (list != null) {
       while (list.length > 0) {
-        let entry = list[0];
+        const entry = list[0];
         mxEvent.removeListener(element, entry.name, entry.f);
       }
     }
@@ -112,15 +111,27 @@ let mxEvent = {
    */
   addGestureListeners: (node, startListener, moveListener, endListener) => {
     if (startListener != null) {
-      mxEvent.addListener(node, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown', startListener);
+      mxEvent.addListener(
+        node,
+        mxClient.IS_POINTER ? 'pointerdown' : 'mousedown',
+        startListener
+      );
     }
 
     if (moveListener != null) {
-      mxEvent.addListener(node, (mxClient.IS_POINTER) ? 'pointermove' : 'mousemove', moveListener);
+      mxEvent.addListener(
+        node,
+        mxClient.IS_POINTER ? 'pointermove' : 'mousemove',
+        moveListener
+      );
     }
 
     if (endListener != null) {
-      mxEvent.addListener(node, (mxClient.IS_POINTER) ? 'pointerup' : 'mouseup', endListener);
+      mxEvent.addListener(
+        node,
+        mxClient.IS_POINTER ? 'pointerup' : 'mouseup',
+        endListener
+      );
     }
 
     if (!mxClient.IS_POINTER && mxClient.IS_TOUCH) {
@@ -146,15 +157,27 @@ let mxEvent = {
    */
   removeGestureListeners: (node, startListener, moveListener, endListener) => {
     if (startListener != null) {
-      mxEvent.removeListener(node, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown', startListener);
+      mxEvent.removeListener(
+        node,
+        mxClient.IS_POINTER ? 'pointerdown' : 'mousedown',
+        startListener
+      );
     }
 
     if (moveListener != null) {
-      mxEvent.removeListener(node, (mxClient.IS_POINTER) ? 'pointermove' : 'mousemove', moveListener);
+      mxEvent.removeListener(
+        node,
+        mxClient.IS_POINTER ? 'pointermove' : 'mousemove',
+        moveListener
+      );
     }
 
     if (endListener != null) {
-      mxEvent.removeListener(node, (mxClient.IS_POINTER) ? 'pointerup' : 'mouseup', endListener);
+      mxEvent.removeListener(
+        node,
+        mxClient.IS_POINTER ? 'pointerup' : 'mouseup',
+        endListener
+      );
     }
 
     if (!mxClient.IS_POINTER && mxClient.IS_TOUCH) {
@@ -183,39 +206,50 @@ let mxEvent = {
    * default behaviour.
    */
   redirectMouseEvents: (node, graph, state, down, move, up, dblClick) => {
-    let getState = (evt) => {
-      return (typeof (state) == 'function') ? state(evt) : state;
+    const getState = evt => {
+      return typeof state === 'function' ? state(evt) : state;
     };
 
-    mxEvent.addGestureListeners(node,
-        (evt) => {
-          if (down != null) {
-            down(evt);
-          } else if (!mxEvent.isConsumed(evt)) {
-            graph.fireMouseEvent(mxEvent.MOUSE_DOWN, new mxMouseEvent(evt, getState(evt)));
-          }
-        },
-        (evt) => {
-          if (move != null) {
-            move(evt);
-          } else if (!mxEvent.isConsumed(evt)) {
-            graph.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt, getState(evt)));
-          }
-        },
-        (evt) => {
-          if (up != null) {
-            up(evt);
-          } else if (!mxEvent.isConsumed(evt)) {
-            graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt, getState(evt)));
-          }
-        });
+    mxEvent.addGestureListeners(
+      node,
+      evt => {
+        if (down != null) {
+          down(evt);
+        } else if (!mxEvent.isConsumed(evt)) {
+          graph.fireMouseEvent(
+            mxEvent.MOUSE_DOWN,
+            new mxMouseEvent(evt, getState(evt))
+          );
+        }
+      },
+      evt => {
+        if (move != null) {
+          move(evt);
+        } else if (!mxEvent.isConsumed(evt)) {
+          graph.fireMouseEvent(
+            mxEvent.MOUSE_MOVE,
+            new mxMouseEvent(evt, getState(evt))
+          );
+        }
+      },
+      evt => {
+        if (up != null) {
+          up(evt);
+        } else if (!mxEvent.isConsumed(evt)) {
+          graph.fireMouseEvent(
+            mxEvent.MOUSE_UP,
+            new mxMouseEvent(evt, getState(evt))
+          );
+        }
+      }
+    );
 
-    mxEvent.addListener(node, 'dblclick', (evt) => {
+    mxEvent.addListener(node, 'dblclick', evt => {
       if (dblClick != null) {
         dblClick(evt);
       } else if (!mxEvent.isConsumed(evt)) {
-        let tmp = getState(evt);
-        graph.dblClick(evt, (tmp != null) ? tmp.cell : null);
+        const tmp = getState(evt);
+        graph.dblClick(evt, tmp != null ? tmp.cell : null);
       }
     });
   },
@@ -229,14 +263,14 @@ let mxEvent = {
    *
    * element - DOM node to remove the listeners from.
    */
-  release: (element) => {
+  release: element => {
     try {
       if (element != null) {
         mxEvent.removeAllListeners(element);
 
-        let children = element.childNodes;
+        const children = element.childNodes;
         if (children != null) {
-          let childCount = children.length;
+          const childCount = children.length;
           for (let i = 0; i < childCount; i += 1) {
             mxEvent.release(children[i]);
           }
@@ -277,7 +311,7 @@ let mxEvent = {
    */
   addMouseWheelListener: (funct, target) => {
     if (funct != null) {
-      let wheelHandler = (evt) => {
+      const wheelHandler = evt => {
         // IE does not give an event object but the
         // global event object is the mousewheel event
         // at this point in time.
@@ -285,14 +319,14 @@ let mxEvent = {
           evt = window.event;
         }
 
-        //To prevent window zoom on trackpad pinch
+        // To prevent window zoom on trackpad pinch
         if (evt.ctrlKey) {
           evt.preventDefault();
         }
 
         // Handles the event using the given function
         if (Math.abs(evt.deltaX) > 0.5 || Math.abs(evt.deltaY) > 0.5) {
-          funct(evt, (evt.deltaY == 0) ? -evt.deltaX > 0 : -evt.deltaY > 0);
+          funct(evt, evt.deltaY == 0 ? -evt.deltaX > 0 : -evt.deltaY > 0);
         }
       };
 
@@ -301,14 +335,14 @@ let mxEvent = {
       if (mxClient.IS_SF && !mxClient.IS_TOUCH) {
         let scale = 1;
 
-        mxEvent.addListener(target, 'gesturestart', (evt) => {
+        mxEvent.addListener(target, 'gesturestart', evt => {
           mxEvent.consume(evt);
           scale = 1;
         });
 
-        mxEvent.addListener(target, 'gesturechange', (evt) => {
+        mxEvent.addListener(target, 'gesturechange', evt => {
           mxEvent.consume(evt);
-          let diff = scale - evt.scale;
+          const diff = scale - evt.scale;
 
           if (Math.abs(diff) > 0.2) {
             funct(evt, diff < 0, true);
@@ -316,53 +350,63 @@ let mxEvent = {
           }
         });
 
-        mxEvent.addListener(target, 'gestureend', (evt) => {
+        mxEvent.addListener(target, 'gestureend', evt => {
           mxEvent.consume(evt);
         });
       } else {
         let evtCache = [];
-        var dx0 = 0;
-        var dy0 = 0;
+        let dx0 = 0;
+        let dy0 = 0;
 
         // Adds basic listeners for graph event dispatching
-        mxEvent.addGestureListeners(target, (evt) => {
-              if (!mxEvent.isMouseEvent(evt) && evt.pointerId != null) {
-                evtCache.push(evt);
-              }
-            },
-            (evt) => {
-              if (!mxEvent.isMouseEvent(evt) && evtCache.length == 2) {
-                // Find this event in the cache and update its record with this event
-                for (let i = 0; i < evtCache.length; i++) {
-                  if (evt.pointerId == evtCache[i].pointerId) {
-                    evtCache[i] = evt;
-                    break;
-                  }
-                }
-
-                // Calculate the distance between the two pointers
-                let dx = Math.abs(evtCache[0].clientX - evtCache[1].clientX);
-                let dy = Math.abs(evtCache[0].clientY - evtCache[1].clientY);
-                let tx = Math.abs(dx - dx0);
-                let ty = Math.abs(dy - dy0);
-
-                if (tx > mxEvent.PINCH_THRESHOLD || ty > mxEvent.PINCH_THRESHOLD) {
-                  let cx = evtCache[0].clientX + (evtCache[1].clientX - evtCache[0].clientX) / 2;
-                  let cy = evtCache[0].clientY + (evtCache[1].clientY - evtCache[0].clientY) / 2;
-
-                  funct(evtCache[0], (tx > ty) ? dx > dx0 : dy > dy0, true, cx, cy);
-
-                  // Cache the distance for the next move event
-                  dx0 = dx;
-                  dy0 = dy;
+        mxEvent.addGestureListeners(
+          target,
+          evt => {
+            if (!mxEvent.isMouseEvent(evt) && evt.pointerId != null) {
+              evtCache.push(evt);
+            }
+          },
+          evt => {
+            if (!mxEvent.isMouseEvent(evt) && evtCache.length == 2) {
+              // Find this event in the cache and update its record with this event
+              for (let i = 0; i < evtCache.length; i++) {
+                if (evt.pointerId == evtCache[i].pointerId) {
+                  evtCache[i] = evt;
+                  break;
                 }
               }
-            },
-            (evt) => {
-              evtCache = [];
-              dx0 = 0;
-              dy0 = 0;
-            });
+
+              // Calculate the distance between the two pointers
+              const dx = Math.abs(evtCache[0].clientX - evtCache[1].clientX);
+              const dy = Math.abs(evtCache[0].clientY - evtCache[1].clientY);
+              const tx = Math.abs(dx - dx0);
+              const ty = Math.abs(dy - dy0);
+
+              if (
+                tx > mxEvent.PINCH_THRESHOLD ||
+                ty > mxEvent.PINCH_THRESHOLD
+              ) {
+                const cx =
+                  evtCache[0].clientX +
+                  (evtCache[1].clientX - evtCache[0].clientX) / 2;
+                const cy =
+                  evtCache[0].clientY +
+                  (evtCache[1].clientY - evtCache[0].clientY) / 2;
+
+                funct(evtCache[0], tx > ty ? dx > dx0 : dy > dy0, true, cx, cy);
+
+                // Cache the distance for the next move event
+                dx0 = dx;
+                dy0 = dy;
+              }
+            }
+          },
+          evt => {
+            evtCache = [];
+            dx0 = 0;
+            dy0 = 0;
+          }
+        );
       }
 
       mxEvent.addListener(target, 'wheel', wheelHandler);
@@ -374,8 +418,8 @@ let mxEvent = {
    *
    * Disables the context menu for the given element.
    */
-  disableContextMenu: (element) => {
-    mxEvent.addListener(element, 'contextmenu', (evt) => {
+  disableContextMenu: element => {
+    mxEvent.addListener(element, 'contextmenu', evt => {
       if (evt.preventDefault) {
         evt.preventDefault();
       }
@@ -388,8 +432,8 @@ let mxEvent = {
    *
    * Returns the event's target or srcElement depending on the browser.
    */
-  getSource: (evt) => {
-    return (evt.srcElement != null) ? evt.srcElement : evt.target;
+  getSource: evt => {
+    return evt.srcElement != null ? evt.srcElement : evt.target;
   },
 
   /**
@@ -397,7 +441,7 @@ let mxEvent = {
    *
    * Returns true if the event has been consumed using <consume>.
    */
-  isConsumed: (evt) => {
+  isConsumed: evt => {
     return evt.isConsumed != null && evt.isConsumed;
   },
 
@@ -406,10 +450,13 @@ let mxEvent = {
    *
    * Returns true if the event was generated using a touch device (not a pen or mouse).
    */
-  isTouchEvent: (evt) => {
-    return (evt.pointerType != null) ? (evt.pointerType == 'touch' || evt.pointerType ===
-        evt.MSPOINTER_TYPE_TOUCH) : ((evt.mozInputSource != null) ?
-        evt.mozInputSource == 5 : evt.type.indexOf('touch') == 0);
+  isTouchEvent: evt => {
+    return evt.pointerType != null
+      ? evt.pointerType == 'touch' ||
+          evt.pointerType === evt.MSPOINTER_TYPE_TOUCH
+      : evt.mozInputSource != null
+      ? evt.mozInputSource == 5
+      : evt.type.indexOf('touch') == 0;
   },
 
   /**
@@ -417,10 +464,12 @@ let mxEvent = {
    *
    * Returns true if the event was generated using a pen (not a touch device or mouse).
    */
-  isPenEvent: (evt) => {
-    return (evt.pointerType != null) ? (evt.pointerType == 'pen' || evt.pointerType ===
-        evt.MSPOINTER_TYPE_PEN) : ((evt.mozInputSource != null) ?
-        evt.mozInputSource == 2 : evt.type.indexOf('pen') == 0);
+  isPenEvent: evt => {
+    return evt.pointerType != null
+      ? evt.pointerType == 'pen' || evt.pointerType === evt.MSPOINTER_TYPE_PEN
+      : evt.mozInputSource != null
+      ? evt.mozInputSource == 2
+      : evt.type.indexOf('pen') == 0;
   },
 
   /**
@@ -428,8 +477,13 @@ let mxEvent = {
    *
    * Returns true if the event was generated using a touch device (not a pen or mouse).
    */
-  isMultiTouchEvent: (evt) => {
-    return (evt.type != null && evt.type.indexOf('touch') == 0 && evt.touches != null && evt.touches.length > 1);
+  isMultiTouchEvent: evt => {
+    return (
+      evt.type != null &&
+      evt.type.indexOf('touch') == 0 &&
+      evt.touches != null &&
+      evt.touches.length > 1
+    );
   },
 
   /**
@@ -437,10 +491,13 @@ let mxEvent = {
    *
    * Returns true if the event was generated using a mouse (not a pen or touch device).
    */
-  isMouseEvent: (evt) => {
-    return (evt.pointerType != null) ? (evt.pointerType == 'mouse' || evt.pointerType ===
-        evt.MSPOINTER_TYPE_MOUSE) : ((evt.mozInputSource != null) ?
-        evt.mozInputSource == 1 : evt.type.indexOf('mouse') == 0);
+  isMouseEvent: evt => {
+    return evt.pointerType != null
+      ? evt.pointerType == 'mouse' ||
+          evt.pointerType === evt.MSPOINTER_TYPE_MOUSE
+      : evt.mozInputSource != null
+      ? evt.mozInputSource == 1
+      : evt.type.indexOf('mouse') == 0;
   },
 
   /**
@@ -451,16 +508,19 @@ let mxEvent = {
    * <mxGraph.isMouseDown> property. Note that this returns true in Firefox
    * for control+left-click on the Mac.
    */
-  isLeftMouseButton: (evt) => {
+  isLeftMouseButton: evt => {
     // Special case for mousemove and mousedown we check the buttons
     // if it exists because which is 0 even if no button is pressed
-    if ('buttons' in evt && (evt.type == 'mousedown' || evt.type == 'mousemove')) {
+    if (
+      'buttons' in evt &&
+      (evt.type == 'mousedown' || evt.type == 'mousemove')
+    ) {
       return evt.buttons == 1;
-    } else if ('which' in evt) {
-      return evt.which === 1;
-    } else {
-      return evt.button === 1;
     }
+    if ('which' in evt) {
+      return evt.which === 1;
+    }
+    return evt.button === 1;
   },
 
   /**
@@ -470,12 +530,11 @@ let mxEvent = {
    * To check if a button is pressed during a mouseMove you should use the
    * <mxGraph.isMouseDown> property.
    */
-  isMiddleMouseButton: (evt) => {
+  isMiddleMouseButton: evt => {
     if ('which' in evt) {
       return evt.which === 2;
-    } else {
-      return evt.button === 4;
     }
+    return evt.button === 4;
   },
 
   /**
@@ -485,12 +544,11 @@ let mxEvent = {
    * button might not be available on some systems. For handling a popup
    * trigger <isPopupTrigger> should be used.
    */
-  isRightMouseButton: (evt) => {
+  isRightMouseButton: evt => {
     if ('which' in evt) {
       return evt.which === 3;
-    } else {
-      return evt.button === 2;
     }
+    return evt.button === 2;
   },
 
   /**
@@ -500,9 +558,15 @@ let mxEvent = {
    * returns true if the right button or the left button and control was
    * pressed on a Mac.
    */
-  isPopupTrigger: (evt) => {
-    return mxEvent.isRightMouseButton(evt) || (mxClient.IS_MAC && mxEvent.isControlDown(evt) &&
-        !mxEvent.isShiftDown(evt) && !mxEvent.isMetaDown(evt) && !mxEvent.isAltDown(evt));
+  isPopupTrigger: evt => {
+    return (
+      mxEvent.isRightMouseButton(evt) ||
+      (mxClient.IS_MAC &&
+        mxEvent.isControlDown(evt) &&
+        !mxEvent.isShiftDown(evt) &&
+        !mxEvent.isMetaDown(evt) &&
+        !mxEvent.isAltDown(evt))
+    );
   },
 
   /**
@@ -510,8 +574,8 @@ let mxEvent = {
    *
    * Returns true if the shift key is pressed for the given event.
    */
-  isShiftDown: (evt) => {
-    return (evt != null) ? evt.shiftKey : false;
+  isShiftDown: evt => {
+    return evt != null ? evt.shiftKey : false;
   },
 
   /**
@@ -519,8 +583,8 @@ let mxEvent = {
    *
    * Returns true if the alt key is pressed for the given event.
    */
-  isAltDown: (evt) => {
-    return (evt != null) ? evt.altKey : false;
+  isAltDown: evt => {
+    return evt != null ? evt.altKey : false;
   },
 
   /**
@@ -528,8 +592,8 @@ let mxEvent = {
    *
    * Returns true if the control key is pressed for the given event.
    */
-  isControlDown: (evt) => {
-    return (evt != null) ? evt.ctrlKey : false;
+  isControlDown: evt => {
+    return evt != null ? evt.ctrlKey : false;
   },
 
   /**
@@ -537,8 +601,8 @@ let mxEvent = {
    *
    * Returns true if the meta key is pressed for the given event.
    */
-  isMetaDown: (evt) => {
-    return (evt != null) ? evt.metaKey : false;
+  isMetaDown: evt => {
+    return evt != null ? evt.metaKey : false;
   },
 
   /**
@@ -546,10 +610,18 @@ let mxEvent = {
    *
    * Returns the touch or mouse event that contains the mouse coordinates.
    */
-  getMainEvent: (e) => {
-    if ((e.type == 'touchstart' || e.type == 'touchmove') && e.touches != null && e.touches[0] != null) {
+  getMainEvent: e => {
+    if (
+      (e.type == 'touchstart' || e.type == 'touchmove') &&
+      e.touches != null &&
+      e.touches[0] != null
+    ) {
       e = e.touches[0];
-    } else if (e.type == 'touchend' && e.changedTouches != null && e.changedTouches[0] != null) {
+    } else if (
+      e.type == 'touchend' &&
+      e.changedTouches != null &&
+      e.changedTouches[0] != null
+    ) {
       e = e.changedTouches[0];
     }
     return e;
@@ -560,7 +632,7 @@ let mxEvent = {
    *
    * Returns true if the meta key is pressed for the given event.
    */
-  getClientX: (e) => {
+  getClientX: e => {
     return mxEvent.getMainEvent(e).clientX;
   },
 
@@ -569,7 +641,7 @@ let mxEvent = {
    *
    * Returns true if the meta key is pressed for the given event.
    */
-  getClientY: (e) => {
+  getClientY: e => {
     return mxEvent.getMainEvent(e).clientY;
   },
 
@@ -587,8 +659,8 @@ let mxEvent = {
    * true.
    */
   consume: (evt, preventDefault, stopPropagation) => {
-    preventDefault = (preventDefault != null) ? preventDefault : true;
-    stopPropagation = (stopPropagation != null) ? stopPropagation : true;
+    preventDefault = preventDefault != null ? preventDefault : true;
+    stopPropagation = stopPropagation != null ? stopPropagation : true;
 
     if (preventDefault) {
       if (evt.preventDefault) {
@@ -1236,8 +1308,7 @@ let mxEvent = {
    * Threshold for pinch gestures to fire a mouse wheel event.
    * Default value is 10.
    */
-  PINCH_THRESHOLD: 10
-}
+  PINCH_THRESHOLD: 10,
+};
 
 export default mxEvent;
-

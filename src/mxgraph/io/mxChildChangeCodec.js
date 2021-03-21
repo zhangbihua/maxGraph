@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectCodec from "./mxObjectCodec";
-import mxChildChange from "FIXME";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxChildChange from 'FIXME';
+import mxObjectCodec from './mxObjectCodec';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxChildChangeCodec extends mxObjectCodec {
   /**
@@ -28,7 +28,11 @@ class mxChildChangeCodec extends mxObjectCodec {
    * - parent
    */
   constructor() {
-    super(new mxChildChange(), ['model', 'child', 'previousIndex'], ['parent', 'previous']);
+    super(
+      new mxChildChange(),
+      ['model', 'child', 'previousIndex'],
+      ['parent', 'previous']
+    );
   }
 
   /**
@@ -53,9 +57,13 @@ class mxChildChangeCodec extends mxObjectCodec {
    * Excludes references to parent or previous if not in the model.
    */
   isExcluded = (obj, attr, value, write) => {
-    return super.isExcluded(obj, attr, value, write) ||
-        (write && value != null && (attr === 'previous' ||
-            attr === 'parent') && !obj.model.contains(value));
+    return (
+      super.isExcluded(obj, attr, value, write) ||
+      (write &&
+        value != null &&
+        (attr === 'previous' || attr === 'parent') &&
+        !obj.model.contains(value))
+    );
   };
 
   /**
@@ -87,15 +95,17 @@ class mxChildChangeCodec extends mxObjectCodec {
    * codec from the registry.
    */
   beforeDecode = (dec, node, obj) => {
-    if (node.firstChild != null &&
-        node.firstChild.nodeType === mxConstants.NODETYPE_ELEMENT) {
+    if (
+      node.firstChild != null &&
+      node.firstChild.nodeType === mxConstants.NODETYPE_ELEMENT
+    ) {
       // Makes sure the original node isn't modified
       node = node.cloneNode(true);
 
       let tmp = node.firstChild;
       obj.child = dec.decodeCell(tmp, false);
 
-      var tmp2 = tmp.nextSibling;
+      let tmp2 = tmp.nextSibling;
       tmp.parentNode.removeChild(tmp);
       tmp = tmp2;
 
@@ -108,7 +118,7 @@ class mxChildChangeCodec extends mxObjectCodec {
           // of these cells contains the new parent, this would leave
           // to an inconsistent state on the model (ie. a parent
           // change without a call to parentForCellChanged).
-          let id = tmp.getAttribute('id');
+          const id = tmp.getAttribute('id');
 
           if (dec.lookup(id) == null) {
             dec.decodeCell(tmp);
@@ -119,7 +129,7 @@ class mxChildChangeCodec extends mxObjectCodec {
         tmp = tmp2;
       }
     } else {
-      let childRef = node.getAttribute('child');
+      const childRef = node.getAttribute('child');
       obj.child = dec.getObject(childRef);
     }
 
@@ -137,8 +147,11 @@ class mxChildChangeCodec extends mxObjectCodec {
     // added. This is needed for the local model to identify the cell as a
     // new cell and register the ID.
     if (obj.child != null) {
-      if (obj.child.parent != null && obj.previous != null &&
-          obj.child.parent !== obj.previous) {
+      if (
+        obj.child.parent != null &&
+        obj.previous != null &&
+        obj.child.parent !== obj.previous
+      ) {
         obj.previous = obj.child.parent;
       }
 

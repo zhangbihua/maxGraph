@@ -66,8 +66,8 @@ class mxImageBundle {
    */
   constructor(alt) {
     this.images = [];
-    this.alt = (alt != null) ? alt : false;
-  };
+    this.alt = alt != null ? alt : false;
+  }
 
   /**
    * Function: putImage
@@ -76,7 +76,7 @@ class mxImageBundle {
    * fallback property as specified in the arguments.
    */
   putImage = (key, value, fallback) => {
-    this.images[key] = {value: value, fallback: fallback};
+    this.images[key] = { value, fallback };
   };
 
   /**
@@ -86,14 +86,14 @@ class mxImageBundle {
    * or fallback, depending on <alt>. The fallback is returned if
    * <alt> is true, the value is returned otherwise.
    */
-  getImage = (key) => {
+  getImage = key => {
     let result = null;
 
     if (key != null) {
-      let img = this.images[key];
+      const img = this.images[key];
 
       if (img != null) {
-        result = (this.alt) ? img.fallback : img.value;
+        result = this.alt ? img.fallback : img.value;
       }
     }
 

@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxEvent from "./mxEvent";
-import mxEventObject from "./mxEventObject";
+import mxEvent from './mxEvent';
+import mxEventObject from './mxEventObject';
 
 class mxUndoableEdit {
   /**
@@ -93,8 +93,8 @@ class mxUndoableEdit {
   constructor(source, significant) {
     this.source = source;
     this.changes = [];
-    this.significant = (significant != null) ? significant : true;
-  };
+    this.significant = significant != null ? significant : true;
+  }
 
   /**
    * Function: isEmpty
@@ -120,7 +120,7 @@ class mxUndoableEdit {
    * Adds the specified change to this edit. The change is an object that is
    * expected to either have an undo and redo, or an execute function.
    */
-  add = (change) => {
+  add = change => {
     this.changes.push(change);
   };
 
@@ -130,8 +130,7 @@ class mxUndoableEdit {
    * Hook to notify any listeners of the changes after an <undo> or <redo>
    * has been carried out. This implementation is empty.
    */
-  notify = () => {
-  };
+  notify = () => {};
 
   /**
    * Function: die
@@ -139,8 +138,7 @@ class mxUndoableEdit {
    * Hook to free resources after the edit has been removed from the command
    * history. This implementation is empty.
    */
-  die = () => {
-  };
+  die = () => {};
 
   /**
    * Function: undo
@@ -150,10 +148,10 @@ class mxUndoableEdit {
   undo = () => {
     if (!this.undone) {
       this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
-      let count = this.changes.length;
+      const count = this.changes.length;
 
       for (let i = count - 1; i >= 0; i--) {
-        let change = this.changes[i];
+        const change = this.changes[i];
 
         if (change.execute != null) {
           change.execute();
@@ -162,7 +160,9 @@ class mxUndoableEdit {
         }
 
         // New global executed event
-        this.source.fireEvent(new mxEventObject(mxEvent.EXECUTED, 'change', change));
+        this.source.fireEvent(
+          new mxEventObject(mxEvent.EXECUTED, 'change', change)
+        );
       }
 
       this.undone = true;
@@ -181,10 +181,10 @@ class mxUndoableEdit {
   redo = () => {
     if (!this.redone) {
       this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
-      let count = this.changes.length;
+      const count = this.changes.length;
 
       for (let i = 0; i < count; i++) {
-        let change = this.changes[i];
+        const change = this.changes[i];
 
         if (change.execute != null) {
           change.execute();
@@ -193,7 +193,9 @@ class mxUndoableEdit {
         }
 
         // New global executed event
-        this.source.fireEvent(new mxEventObject(mxEvent.EXECUTED, 'change', change));
+        this.source.fireEvent(
+          new mxEventObject(mxEvent.EXECUTED, 'change', change)
+        );
       }
 
       this.undone = false;

@@ -4,11 +4,11 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxRectangle from "./mxRectangle";
-import mxEventObject from "./mxEventObject";
-import mxEventSource from "./mxEventSource";
-import mxUtils from "./mxUtils";
-import mxEvent from "./mxEvent";
+import mxRectangle from './mxRectangle';
+import mxEventObject from './mxEventObject';
+import mxEventSource from './mxEventSource';
+import mxUtils from './mxUtils';
+import mxEvent from './mxEvent';
 
 class mxWindow extends mxEventSource {
   /**
@@ -16,35 +16,35 @@ class mxWindow extends mxEventSource {
    *
    * URL of the image to be used for the close icon in the titlebar.
    */
-  closeImage = mxClient.imageBasePath + '/close.gif';
+  closeImage = `${mxClient.imageBasePath}/close.gif`;
 
   /**
    * Variable: minimizeImage
    *
    * URL of the image to be used for the minimize icon in the titlebar.
    */
-  minimizeImage = mxClient.imageBasePath + '/minimize.gif';
+  minimizeImage = `${mxClient.imageBasePath}/minimize.gif`;
 
   /**
    * Variable: normalizeImage
    *
    * URL of the image to be used for the normalize icon in the titlebar.
    */
-  normalizeImage = mxClient.imageBasePath + '/normalize.gif';
+  normalizeImage = `${mxClient.imageBasePath}/normalize.gif`;
 
   /**
    * Variable: maximizeImage
    *
    * URL of the image to be used for the maximize icon in the titlebar.
    */
-  maximizeImage = mxClient.imageBasePath + '/maximize.gif';
+  maximizeImage = `${mxClient.imageBasePath}/maximize.gif`;
 
   /**
    * Variable: resizeImage
    *
    * URL of the image to be used for the resize icon.
    */
-  resizeImage = mxClient.imageBasePath + '/resize.gif';
+  resizeImage = `${mxClient.imageBasePath}/resize.gif`;
 
   /**
    * Variable: visible
@@ -266,11 +266,22 @@ class mxWindow extends mxEventSource {
    * style - Optional base classname for the window elements. Default is
    * mxWindow.
    */
-  constructor(title, content, x, y, width, height, minimizable, movable, replaceNode, style) {
+  constructor(
+    title,
+    content,
+    x,
+    y,
+    width,
+    height,
+    minimizable,
+    movable,
+    replaceNode,
+    style
+  ) {
     super();
 
     if (content != null) {
-      minimizable = (minimizable != null) ? minimizable : true;
+      minimizable = minimizable != null ? minimizable : true;
       this.content = content;
       this.init(x, y, width, height, style);
 
@@ -290,7 +301,7 @@ class mxWindow extends mxEventSource {
         document.body.appendChild(this.div);
       }
     }
-  };
+  }
 
   /**
    * Function: init
@@ -298,13 +309,13 @@ class mxWindow extends mxEventSource {
    * Initializes the DOM tree that represents the window.
    */
   init = (x, y, width, height, style) => {
-    style = (style != null) ? style : 'mxWindow';
+    style = style != null ? style : 'mxWindow';
 
     this.div = document.createElement('div');
     this.div.className = style;
 
-    this.div.style.left = x + 'px';
-    this.div.style.top = y + 'px';
+    this.div.style.left = `${x}px`;
+    this.div.style.top = `${y}px`;
     this.table = document.createElement('table');
     this.table.className = style;
 
@@ -315,21 +326,21 @@ class mxWindow extends mxEventSource {
 
     // Workaround for table size problems in FF
     if (width != null) {
-      this.div.style.width = width + 'px';
-      this.table.style.width = width + 'px';
+      this.div.style.width = `${width}px`;
+      this.table.style.width = `${width}px`;
     }
 
     if (height != null) {
-      this.div.style.height = height + 'px';
-      this.table.style.height = height + 'px';
+      this.div.style.height = `${height}px`;
+      this.table.style.height = `${height}px`;
     }
 
     // Creates title row
-    let tbody = document.createElement('tbody');
+    const tbody = document.createElement('tbody');
     let tr = document.createElement('tr');
 
     this.title = document.createElement('td');
-    this.title.className = style + 'Title';
+    this.title.className = `${style}Title`;
 
     this.buttons = document.createElement('div');
     this.buttons.style.position = 'absolute';
@@ -344,10 +355,10 @@ class mxWindow extends mxEventSource {
     // Creates content row and table cell
     tr = document.createElement('tr');
     this.td = document.createElement('td');
-    this.td.className = style + 'Pane';
+    this.td.className = `${style}Pane`;
 
     this.contentWrapper = document.createElement('div');
-    this.contentWrapper.className = style + 'Pane';
+    this.contentWrapper.className = `${style}Pane`;
     this.contentWrapper.style.width = '100%';
     this.contentWrapper.appendChild(this.content);
 
@@ -365,7 +376,7 @@ class mxWindow extends mxEventSource {
     this.div.appendChild(this.table);
 
     // Puts the window on top of other windows when clicked
-    let activator = (evt) => {
+    const activator = evt => {
       this.activate();
     };
 
@@ -381,12 +392,12 @@ class mxWindow extends mxEventSource {
    * Sets the window title to the given string. HTML markup inside the title
    * will be escaped.
    */
-  setTitle = (title) => {
+  setTitle = title => {
     // Removes all text content nodes (normally just one)
     let child = this.title.firstChild;
 
     while (child != null) {
-      let next = child.nextSibling;
+      const next = child.nextSibling;
 
       if (child.nodeType === mxConstants.NODETYPE_TEXT) {
         child.parentNode.removeChild(child);
@@ -404,10 +415,12 @@ class mxWindow extends mxEventSource {
    *
    * Sets if the window contents should be scrollable.
    */
-  setScrollable = (scrollable) => {
+  setScrollable = scrollable => {
     // Workaround for hang in Presto 2.5.22 (Opera 10.5)
-    if (navigator.userAgent == null ||
-        navigator.userAgent.indexOf('Presto/2.5') < 0) {
+    if (
+      navigator.userAgent == null ||
+      navigator.userAgent.indexOf('Presto/2.5') < 0
+    ) {
       if (scrollable) {
         this.contentWrapper.style.overflow = 'auto';
       } else {
@@ -423,22 +436,24 @@ class mxWindow extends mxEventSource {
    */
   activate = () => {
     if (mxWindow.activeWindow !== this) {
-      let style = mxUtils.getCurrentStyle(this.getElement());
-      let index = (style != null) ? style.zIndex : 3;
+      const style = mxUtils.getCurrentStyle(this.getElement());
+      const index = style != null ? style.zIndex : 3;
 
       if (mxWindow.activeWindow) {
-        let elt = mxWindow.activeWindow.getElement();
+        const elt = mxWindow.activeWindow.getElement();
 
         if (elt != null && elt.style != null) {
           elt.style.zIndex = index;
         }
       }
 
-      let previousWindow = mxWindow.activeWindow;
+      const previousWindow = mxWindow.activeWindow;
       this.getElement().style.zIndex = parseInt(index) + 1;
       mxWindow.activeWindow = this;
 
-      this.fireEvent(new mxEventObject(mxEvent.ACTIVATE, 'previousWindow', previousWindow));
+      this.fireEvent(
+        new mxEventObject(mxEvent.ACTIVATE, 'previousWindow', previousWindow)
+      );
     }
   };
 
@@ -487,7 +502,7 @@ class mxWindow extends mxEventSource {
    * }
    * (end)
    */
-  setResizable = (resizable) => {
+  setResizable = resizable => {
     if (resizable) {
       if (this.resize == null) {
         this.resize = document.createElement('img');
@@ -503,7 +518,7 @@ class mxWindow extends mxEventSource {
         let width = null;
         let height = null;
 
-        let start = (evt) => {
+        const start = evt => {
           // LATER: pointerdown starting on border of resize does start
           // the drag operation but does not fire consecutive events via
           // one of the listeners below (does pan instead).
@@ -521,10 +536,10 @@ class mxWindow extends mxEventSource {
 
         // Adds a temporary pair of listeners to intercept
         // the gesture event in the document
-        let dragHandler = (evt) => {
+        let dragHandler = evt => {
           if (startX != null && startY != null) {
-            let dx = mxEvent.getClientX(evt) - startX;
-            let dy = mxEvent.getClientY(evt) - startY;
+            const dx = mxEvent.getClientX(evt) - startX;
+            const dy = mxEvent.getClientY(evt) - startY;
 
             this.setSize(width + dx, height + dy);
 
@@ -533,17 +548,27 @@ class mxWindow extends mxEventSource {
           }
         };
 
-        let dropHandler = (evt) => {
+        let dropHandler = evt => {
           if (startX != null && startY != null) {
             startX = null;
             startY = null;
-            mxEvent.removeGestureListeners(document, null, dragHandler, dropHandler);
+            mxEvent.removeGestureListeners(
+              document,
+              null,
+              dragHandler,
+              dropHandler
+            );
             this.fireEvent(new mxEventObject(mxEvent.RESIZE_END, 'event', evt));
             mxEvent.consume(evt);
           }
         };
 
-        mxEvent.addGestureListeners(this.resize, start, dragHandler, dropHandler);
+        mxEvent.addGestureListeners(
+          this.resize,
+          start,
+          dragHandler,
+          dropHandler
+        );
         this.div.appendChild(this.resize);
       } else {
         this.resize.style.display = 'inline';
@@ -563,14 +588,15 @@ class mxWindow extends mxEventSource {
     height = Math.max(this.minimumSize.height, height);
 
     // Workaround for table size problems in FF
-    this.div.style.width = width + 'px';
-    this.div.style.height = height + 'px';
+    this.div.style.width = `${width}px`;
+    this.div.style.height = `${height}px`;
 
-    this.table.style.width = width + 'px';
-    this.table.style.height = height + 'px';
+    this.table.style.width = `${width}px`;
+    this.table.style.height = `${height}px`;
 
-    this.contentWrapper.style.height = (this.div.offsetHeight -
-        this.title.offsetHeight - this.contentHeightCorrection) + 'px';
+    this.contentWrapper.style.height = `${this.div.offsetHeight -
+      this.title.offsetHeight -
+      this.contentHeightCorrection}px`;
   };
 
   /**
@@ -578,8 +604,8 @@ class mxWindow extends mxEventSource {
    *
    * Sets if the window is minimizable.
    */
-  setMinimizable = (minimizable) => {
-    this.minimize.style.display = (minimizable) ? '' : 'none';
+  setMinimizable = minimizable => {
+    this.minimize.style.display = minimizable ? '' : 'none';
   };
 
   /**
@@ -613,7 +639,7 @@ class mxWindow extends mxEventSource {
     let maxDisplay = null;
     let height = null;
 
-    let funct = (evt) => {
+    const funct = evt => {
       this.activate();
 
       if (!minimized) {
@@ -627,16 +653,16 @@ class mxWindow extends mxEventSource {
         this.maximize.style.display = 'none';
         height = this.table.style.height;
 
-        let minSize = this.getMinimumSize();
+        const minSize = this.getMinimumSize();
 
         if (minSize.height > 0) {
-          this.div.style.height = minSize.height + 'px';
-          this.table.style.height = minSize.height + 'px';
+          this.div.style.height = `${minSize.height}px`;
+          this.table.style.height = `${minSize.height}px`;
         }
 
         if (minSize.width > 0) {
-          this.div.style.width = minSize.width + 'px';
-          this.table.style.width = minSize.width + 'px';
+          this.div.style.width = `${minSize.width}px`;
+          this.table.style.width = `${minSize.width}px`;
         }
 
         if (this.resize != null) {
@@ -672,8 +698,8 @@ class mxWindow extends mxEventSource {
    *
    * Sets if the window is maximizable.
    */
-  setMaximizable = (maximizable) => {
-    this.maximize.style.display = (maximizable) ? '' : 'none';
+  setMaximizable = maximizable => {
+    this.maximize.style.display = maximizable ? '' : 'none';
   };
 
   /**
@@ -700,7 +726,7 @@ class mxWindow extends mxEventSource {
     let width = null;
     let minDisplay = null;
 
-    let funct = (evt) => {
+    const funct = evt => {
       this.activate();
 
       if (this.maximize.style.display != 'none') {
@@ -721,23 +747,27 @@ class mxWindow extends mxEventSource {
 
           this.div.style.left = '0px';
           this.div.style.top = '0px';
-          let docHeight = Math.max(document.body.clientHeight || 0, document.documentElement.clientHeight || 0);
+          const docHeight = Math.max(
+            document.body.clientHeight || 0,
+            document.documentElement.clientHeight || 0
+          );
 
-          this.div.style.width = (document.body.clientWidth - 2) + 'px';
-          this.div.style.height = (docHeight - 2) + 'px';
+          this.div.style.width = `${document.body.clientWidth - 2}px`;
+          this.div.style.height = `${docHeight - 2}px`;
 
-          this.table.style.width = (document.body.clientWidth - 2) + 'px';
-          this.table.style.height = (docHeight - 2) + 'px';
+          this.table.style.width = `${document.body.clientWidth - 2}px`;
+          this.table.style.height = `${docHeight - 2}px`;
 
           if (this.resize != null) {
             this.resize.style.visibility = 'hidden';
           }
 
-          let style = mxUtils.getCurrentStyle(this.contentWrapper);
+          const style = mxUtils.getCurrentStyle(this.contentWrapper);
 
           if (style.overflow == 'auto' || this.resize != null) {
-            this.contentWrapper.style.height = (this.div.offsetHeight -
-                this.title.offsetHeight - this.contentHeightCorrection) + 'px';
+            this.contentWrapper.style.height = `${this.div.offsetHeight -
+              this.title.offsetHeight -
+              this.contentHeightCorrection}px`;
           }
 
           this.fireEvent(new mxEventObject(mxEvent.MAXIMIZE, 'event', evt));
@@ -750,17 +780,18 @@ class mxWindow extends mxEventSource {
           this.minimize.style.display = minDisplay;
 
           // Restores window state
-          this.div.style.left = x + 'px';
-          this.div.style.top = y + 'px';
+          this.div.style.left = `${x}px`;
+          this.div.style.top = `${y}px`;
 
           this.div.style.height = height;
           this.div.style.width = width;
 
-          let style = mxUtils.getCurrentStyle(this.contentWrapper);
+          const style = mxUtils.getCurrentStyle(this.contentWrapper);
 
           if (style.overflow == 'auto' || this.resize != null) {
-            this.contentWrapper.style.height = (this.div.offsetHeight -
-                this.title.offsetHeight - this.contentHeightCorrection) + 'px';
+            this.contentWrapper.style.height = `${this.div.offsetHeight -
+              this.title.offsetHeight -
+              this.contentHeightCorrection}px`;
           }
 
           this.table.style.height = height;
@@ -789,33 +820,37 @@ class mxWindow extends mxEventSource {
   installMoveHandler = () => {
     this.title.style.cursor = 'move';
 
-    mxEvent.addGestureListeners(this.title,
-        (evt) => {
-          let startX = mxEvent.getClientX(evt);
-          let startY = mxEvent.getClientY(evt);
-          let x = this.getX();
-          let y = this.getY();
+    mxEvent.addGestureListeners(this.title, evt => {
+      const startX = mxEvent.getClientX(evt);
+      const startY = mxEvent.getClientY(evt);
+      const x = this.getX();
+      const y = this.getY();
 
-          // Adds a temporary pair of listeners to intercept
-          // the gesture event in the document
-          let dragHandler = (evt) => {
-            let dx = mxEvent.getClientX(evt) - startX;
-            let dy = mxEvent.getClientY(evt) - startY;
-            this.setLocation(x + dx, y + dy);
-            this.fireEvent(new mxEventObject(mxEvent.MOVE, 'event', evt));
-            mxEvent.consume(evt);
-          };
+      // Adds a temporary pair of listeners to intercept
+      // the gesture event in the document
+      const dragHandler = evt => {
+        const dx = mxEvent.getClientX(evt) - startX;
+        const dy = mxEvent.getClientY(evt) - startY;
+        this.setLocation(x + dx, y + dy);
+        this.fireEvent(new mxEventObject(mxEvent.MOVE, 'event', evt));
+        mxEvent.consume(evt);
+      };
 
-          let dropHandler = (evt) => {
-            mxEvent.removeGestureListeners(document, null, dragHandler, dropHandler);
-            this.fireEvent(new mxEventObject(mxEvent.MOVE_END, 'event', evt));
-            mxEvent.consume(evt);
-          };
+      const dropHandler = evt => {
+        mxEvent.removeGestureListeners(
+          document,
+          null,
+          dragHandler,
+          dropHandler
+        );
+        this.fireEvent(new mxEventObject(mxEvent.MOVE_END, 'event', evt));
+        mxEvent.consume(evt);
+      };
 
-          mxEvent.addGestureListeners(document, null, dragHandler, dropHandler);
-          this.fireEvent(new mxEventObject(mxEvent.MOVE_START, 'event', evt));
-          mxEvent.consume(evt);
-        });
+      mxEvent.addGestureListeners(document, null, dragHandler, dropHandler);
+      this.fireEvent(new mxEventObject(mxEvent.MOVE_START, 'event', evt));
+      mxEvent.consume(evt);
+    });
 
     // Disables built-in pan and zoom in IE10 and later
     if (mxClient.IS_POINTER) {
@@ -829,8 +864,8 @@ class mxWindow extends mxEventSource {
    * Sets the upper, left corner of the window.
    */
   setLocation = (x, y) => {
-    this.div.style.left = x + 'px';
-    this.div.style.top = y + 'px';
+    this.div.style.left = `${x}px`;
+    this.div.style.top = `${y}px`;
   };
 
   /**
@@ -868,18 +903,17 @@ class mxWindow extends mxEventSource {
 
     this.buttons.appendChild(this.closeImg);
 
-    mxEvent.addGestureListeners(this.closeImg,
-        (evt) => {
-          this.fireEvent(new mxEventObject(mxEvent.CLOSE, 'event', evt));
+    mxEvent.addGestureListeners(this.closeImg, evt => {
+      this.fireEvent(new mxEventObject(mxEvent.CLOSE, 'event', evt));
 
-          if (this.destroyOnClose) {
-            this.destroy();
-          } else {
-            this.setVisible(false);
-          }
+      if (this.destroyOnClose) {
+        this.destroy();
+      } else {
+        this.setVisible(false);
+      }
 
-          mxEvent.consume(evt);
-        });
+      mxEvent.consume(evt);
+    });
   };
 
   /**
@@ -891,7 +925,7 @@ class mxWindow extends mxEventSource {
    *
    * image - URL of the image to be used.
    */
-  setImage = (image) => {
+  setImage = image => {
     this.image = document.createElement('img');
     this.image.setAttribute('src', image);
     this.image.setAttribute('align', 'left');
@@ -911,8 +945,8 @@ class mxWindow extends mxEventSource {
    *
    * closable - Boolean specifying if the window should be closable.
    */
-  setClosable = (closable) => {
-    this.closeImg.style.display = (closable) ? '' : 'none';
+  setClosable = closable => {
+    this.closeImg.style.display = closable ? '' : 'none';
   };
 
   /**
@@ -937,7 +971,7 @@ class mxWindow extends mxEventSource {
    *
    * visible - Boolean indicating if the window should be made visible.
    */
-  setVisible = (visible) => {
+  setVisible = visible => {
     if (this.div != null && this.isVisible() != visible) {
       if (visible) {
         this.show();
@@ -956,12 +990,15 @@ class mxWindow extends mxEventSource {
     this.div.style.display = '';
     this.activate();
 
-    let style = mxUtils.getCurrentStyle(this.contentWrapper);
+    const style = mxUtils.getCurrentStyle(this.contentWrapper);
 
-    if ((style.overflow == 'auto' || this.resize != null) &&
-        this.contentWrapper.style.display != 'none') {
-      this.contentWrapper.style.height = (this.div.offsetHeight -
-          this.title.offsetHeight - this.contentHeightCorrection) + 'px';
+    if (
+      (style.overflow == 'auto' || this.resize != null) &&
+      this.contentWrapper.style.display != 'none'
+    ) {
+      this.contentWrapper.style.height = `${this.div.offsetHeight -
+        this.title.offsetHeight -
+        this.contentHeightCorrection}px`;
     }
 
     this.fireEvent(new mxEventObject(mxEvent.SHOW));

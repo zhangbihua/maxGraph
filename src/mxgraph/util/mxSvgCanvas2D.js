@@ -4,19 +4,18 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "./mxUtils";
-import mxClient from "../mxClient";
-import mxConstants from "./mxConstants";
-import mxRectangle from "./mxRectangle";
-import mxAbstractCanvas2D from "./mxAbstractCanvas2D";
+import mxUtils from './mxUtils';
+import mxClient from '../mxClient';
+import mxConstants from './mxConstants';
+import mxRectangle from './mxRectangle';
+import mxAbstractCanvas2D from './mxAbstractCanvas2D';
 
 // Activates workaround for gradient ID resolution if base tag is used.
-let useAbsoluteIds = (
-    typeof DOMParser === 'function' &&
-    !mxClient.IS_CHROMEAPP &&
-    !mxClient.IS_EDGE &&
-    document.getElementsByTagName('base').length > 0
-);
+const useAbsoluteIds =
+  typeof DOMParser === 'function' &&
+  !mxClient.IS_CHROMEAPP &&
+  !mxClient.IS_EDGE &&
+  document.getElementsByTagName('base').length > 0;
 
 class mxSvgCanvas2D extends mxAbstractCanvas2D {
   /**
@@ -210,7 +209,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
      *
      * Stores the value of styleEnabled passed to the constructor.
      */
-    this.styleEnabled = (styleEnabled != null) ? styleEnabled : false;
+    this.styleEnabled = styleEnabled != null ? styleEnabled : false;
 
     let svg = null;
 
@@ -228,7 +227,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
 
     if (svg != null) {
       // Tries to get existing defs section
-      let tmp = svg.getElementsByTagName('defs');
+      const tmp = svg.getElementsByTagName('defs');
 
       if (tmp.length > 0) {
         this.defs = svg.getElementsByTagName('defs')[0];
@@ -250,15 +249,34 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         this.defs.appendChild(this.createStyle());
       }
     }
-  };
+  }
 
   /**
    * Updates existing DOM nodes for text rendering.
    */
-  static createCss = (w, h, align, valign, wrap, overflow, clip, bg, border, flex, block, s, callback) => {
-    let item = 'box-sizing: border-box; font-size: 0; text-align: ' + ((align === mxConstants.ALIGN_LEFT) ? 'left' :
-        ((align === mxConstants.ALIGN_RIGHT) ? 'right' : 'center')) + '; ';
-    let pt = mxUtils.getAlignmentAsPoint(align, valign);
+  static createCss = (
+    w,
+    h,
+    align,
+    valign,
+    wrap,
+    overflow,
+    clip,
+    bg,
+    border,
+    flex,
+    block,
+    s,
+    callback
+  ) => {
+    let item = `box-sizing: border-box; font-size: 0; text-align: ${
+      align === mxConstants.ALIGN_LEFT
+        ? 'left'
+        : align === mxConstants.ALIGN_RIGHT
+        ? 'right'
+        : 'center'
+    }; `;
+    const pt = mxUtils.getAlignmentAsPoint(align, valign);
     let ofl = 'overflow: hidden; ';
     let fw = 'width: 1px; ';
     let fh = 'height: 1px; ';
@@ -266,22 +284,22 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     let dy = pt.y * h;
 
     if (clip) {
-      fw = 'width: ' + Math.round(w) + 'px; ';
-      item += 'max-height: ' + Math.round(h) + 'px; ';
+      fw = `width: ${Math.round(w)}px; `;
+      item += `max-height: ${Math.round(h)}px; `;
       dy = 0;
     } else if (overflow === 'fill') {
-      fw = 'width: ' + Math.round(w) + 'px; ';
-      fh = 'height: ' + Math.round(h) + 'px; ';
+      fw = `width: ${Math.round(w)}px; `;
+      fh = `height: ${Math.round(h)}px; `;
       block += 'width: 100%; height: 100%; ';
       item += fw + fh;
     } else if (overflow === 'width') {
-      fw = 'width: ' + Math.round(w) + 'px; ';
+      fw = `width: ${Math.round(w)}px; `;
       block += 'width: 100%; ';
       item += fw;
       dy = 0;
 
       if (h > 0) {
-        item += 'max-height: ' + Math.round(h) + 'px; ';
+        item += `max-height: ${Math.round(h)}px; `;
       }
     } else {
       ofl = '';
@@ -291,11 +309,11 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     let bgc = '';
 
     if (bg != null) {
-      bgc += 'background-color: ' + bg + '; ';
+      bgc += `background-color: ${bg}; `;
     }
 
     if (border != null) {
-      bgc += 'border: 1px solid ' + border + '; ';
+      bgc += `border: 1px solid ${border}; `;
     }
 
     if (ofl == '' || clip) {
@@ -305,8 +323,8 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     if (wrap && w > 0) {
-      block += 'white-space: normal; word-wrap: ' + mxConstants.WORD_WRAP + '; ';
-      fw = 'width: ' + Math.round(w) + 'px; ';
+      block += `white-space: normal; word-wrap: ${mxConstants.WORD_WRAP}; `;
+      fw = `width: ${Math.round(w)}px; `;
 
       if (ofl != '' && overflow !== 'fill') {
         dy = 0;
@@ -327,7 +345,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Rounds all numbers to 2 decimal points.
    */
-  format = (value) => {
+  format = value => {
     return parseFloat(parseFloat(value).toFixed(2));
   };
 
@@ -340,8 +358,8 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * no search string behind the question mark.
    */
   getBaseUrl = () => {
-    let href = window.location.href;
-    let hash = href.lastIndexOf('#');
+    let { href } = window.location;
+    const hash = href.lastIndexOf('#');
 
     if (hash > 0) {
       href = href.substring(0, hash);
@@ -365,12 +383,13 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Creates the optional style section.
    */
-  createStyle = (x) => {
-    let style = this.createElement('style');
+  createStyle = x => {
+    const style = this.createElement('style');
     style.setAttribute('type', 'text/css');
-    mxUtils.write(style, 'svg{font-family:' + mxConstants.DEFAULT_FONTFAMILY +
-        ';font-size:' + mxConstants.DEFAULT_FONTSIZE +
-        ';fill:none;stroke-miterlimit:10}');
+    mxUtils.write(
+      style,
+      `svg{font-family:${mxConstants.DEFAULT_FONTFAMILY};font-size:${mxConstants.DEFAULT_FONTSIZE};fill:none;stroke-miterlimit:10}`
+    );
 
     return style;
   };
@@ -382,16 +401,18 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    */
   createElement = (tagName, namespace) => {
     if (this.root.ownerDocument.createElementNS != null) {
-      return this.root.ownerDocument.createElementNS(namespace || mxConstants.NS_SVG, tagName);
-    } else {
-      let elt = this.root.ownerDocument.createElement(tagName);
-
-      if (namespace != null) {
-        elt.setAttribute('xmlns', namespace);
-      }
-
-      return elt;
+      return this.root.ownerDocument.createElementNS(
+        namespace || mxConstants.NS_SVG,
+        tagName
+      );
     }
+    const elt = this.root.ownerDocument.createElement(tagName);
+
+    if (namespace != null) {
+      elt.setAttribute('xmlns', namespace);
+    }
+
+    return elt;
   };
 
   /**
@@ -399,8 +420,22 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Returns the alternate text string for the given foreignObject.
    */
-  getAlternateText = (fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation) => {
-    return (str != null) ? this.foAltText : null;
+  getAlternateText = (
+    fo,
+    x,
+    y,
+    w,
+    h,
+    str,
+    align,
+    valign,
+    wrap,
+    format,
+    overflow,
+    clip,
+    rotation
+  ) => {
+    return str != null ? this.foAltText : null;
   };
 
   /**
@@ -408,23 +443,58 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Returns the alternate content for the given foreignObject.
    */
-  createAlternateContent = (fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation) => {
-    let text = this.getAlternateText(fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation);
-    let s = this.state;
+  createAlternateContent = (
+    fo,
+    x,
+    y,
+    w,
+    h,
+    str,
+    align,
+    valign,
+    wrap,
+    format,
+    overflow,
+    clip,
+    rotation
+  ) => {
+    const text = this.getAlternateText(
+      fo,
+      x,
+      y,
+      w,
+      h,
+      str,
+      align,
+      valign,
+      wrap,
+      format,
+      overflow,
+      clip,
+      rotation
+    );
+    const s = this.state;
 
     if (text != null && s.fontSize > 0) {
-      let dy = (valign === mxConstants.ALIGN_TOP) ? 1 :
-          (valign === mxConstants.ALIGN_BOTTOM) ? 0 : 0.3;
-      let anchor = (align === mxConstants.ALIGN_RIGHT) ? 'end' :
-          (align === mxConstants.ALIGN_LEFT) ? 'start' :
-              'middle';
+      const dy =
+        valign === mxConstants.ALIGN_TOP
+          ? 1
+          : valign === mxConstants.ALIGN_BOTTOM
+          ? 0
+          : 0.3;
+      const anchor =
+        align === mxConstants.ALIGN_RIGHT
+          ? 'end'
+          : align === mxConstants.ALIGN_LEFT
+          ? 'start'
+          : 'middle';
 
-      let alt = this.createElement('text');
+      const alt = this.createElement('text');
       alt.setAttribute('x', Math.round(x + s.dx));
       alt.setAttribute('y', Math.round(y + s.dy + dy * s.fontSize));
       alt.setAttribute('fill', s.fontColor || 'black');
       alt.setAttribute('font-family', s.fontFamily);
-      alt.setAttribute('font-size', Math.round(s.fontSize) + 'px');
+      alt.setAttribute('font-size', `${Math.round(s.fontSize)}px`);
 
       // Text-anchor start is default in SVG
       if (anchor !== 'start') {
@@ -439,13 +509,19 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         alt.setAttribute('font-style', 'italic');
       }
 
-      let txtDecor = [];
+      const txtDecor = [];
 
-      if ((s.fontStyle & mxConstants.FONT_UNDERLINE) === mxConstants.FONT_UNDERLINE) {
+      if (
+        (s.fontStyle & mxConstants.FONT_UNDERLINE) ===
+        mxConstants.FONT_UNDERLINE
+      ) {
         txtDecor.push('underline');
       }
 
-      if ((s.fontStyle & mxConstants.FONT_STRIKETHROUGH) === mxConstants.FONT_STRIKETHROUGH) {
+      if (
+        (s.fontStyle & mxConstants.FONT_STRIKETHROUGH) ===
+        mxConstants.FONT_STRIKETHROUGH
+      ) {
         txtDecor.push('line-through');
       }
 
@@ -456,9 +532,8 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       mxUtils.write(alt, text);
 
       return alt;
-    } else {
-      return null;
     }
+    return null;
   };
 
   /**
@@ -478,8 +553,8 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
 
     // Workaround for gradient IDs not working in Safari 5 / Chrome 6
     // if they contain uppercase characters
-    start = start.toLowerCase() + '-' + alpha1;
-    end = end.toLowerCase() + '-' + alpha2;
+    start = `${start.toLowerCase()}-${alpha1}`;
+    end = `${end.toLowerCase()}-${alpha2}`;
 
     // Wrong gradient directions possible?
     let dir = null;
@@ -489,7 +564,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     } else if (direction === mxConstants.DIRECTION_EAST) {
       dir = 'e';
     } else {
-      let tmp = start;
+      const tmp = start;
       start = end;
       end = tmp;
 
@@ -500,7 +575,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       }
     }
 
-    return 'mx-gradient-' + start + '-' + end + '-' + dir;
+    return `mx-gradient-${start}-${end}-${dir}`;
   };
 
   /**
@@ -509,29 +584,35 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Private helper function to create SVG elements
    */
   getSvgGradient = (start, end, alpha1, alpha2, direction) => {
-    let id = this.createGradientId(start, end, alpha1, alpha2, direction);
+    const id = this.createGradientId(start, end, alpha1, alpha2, direction);
     let gradient = this.gradients[id];
 
     if (gradient == null) {
-      let svg = this.root.ownerSVGElement;
+      const svg = this.root.ownerSVGElement;
 
       let counter = 0;
-      let tmpId = id + '-' + counter;
+      let tmpId = `${id}-${counter}`;
 
       if (svg != null) {
         gradient = svg.ownerDocument.getElementById(tmpId);
 
         while (gradient != null && gradient.ownerSVGElement !== svg) {
-          tmpId = id + '-' + counter++;
+          tmpId = `${id}-${counter++}`;
           gradient = svg.ownerDocument.getElementById(tmpId);
         }
       } else {
         // Uses shorter IDs for export
-        tmpId = 'id' + (++this.refCount);
+        tmpId = `id${++this.refCount}`;
       }
 
       if (gradient == null) {
-        gradient = this.createSvgGradient(start, end, alpha1, alpha2, direction);
+        gradient = this.createSvgGradient(
+          start,
+          end,
+          alpha1,
+          alpha2,
+          direction
+        );
         gradient.setAttribute('id', tmpId);
 
         if (this.defs != null) {
@@ -553,7 +634,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Creates the given SVG gradient.
    */
   createSvgGradient = (start, end, alpha1, alpha2, direction) => {
-    let gradient = this.createElement('linearGradient');
+    const gradient = this.createElement('linearGradient');
     gradient.setAttribute('x1', '0%');
     gradient.setAttribute('y1', '0%');
     gradient.setAttribute('x2', '0%');
@@ -569,18 +650,18 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       gradient.setAttribute('x1', '100%');
     }
 
-    let op = (alpha1 < 1) ? ';stop-opacity:' + alpha1 : '';
+    let op = alpha1 < 1 ? `;stop-opacity:${alpha1}` : '';
 
     let stop = this.createElement('stop');
     stop.setAttribute('offset', '0%');
-    stop.setAttribute('style', 'stop-color:' + start + op);
+    stop.setAttribute('style', `stop-color:${start}${op}`);
     gradient.appendChild(stop);
 
-    op = (alpha2 < 1) ? ';stop-opacity:' + alpha2 : '';
+    op = alpha2 < 1 ? `;stop-opacity:${alpha2}` : '';
 
     stop = this.createElement('stop');
     stop.setAttribute('offset', '100%');
-    stop.setAttribute('style', 'stop-color:' + end + op);
+    stop.setAttribute('style', `stop-color:${end}${op}`);
     gradient.appendChild(stop);
 
     return gradient;
@@ -592,8 +673,8 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Private helper function to create SVG elements
    */
   addNode = (filled, stroked) => {
-    let node = this.node;
-    let s = this.state;
+    const { node } = this;
+    const s = this.state;
 
     if (node != null) {
       if (node.nodeName === 'path') {
@@ -648,9 +729,15 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       }
 
       // Removes invisible nodes from output if they don't handle events
-      if ((node.nodeName !== 'rect' && node.nodeName !== 'path' && node.nodeName !== 'ellipse') ||
-          (node.getAttribute('fill') !== 'none' && node.getAttribute('fill') !== 'transparent') ||
-          node.getAttribute('stroke') !== 'none' || node.getAttribute('pointer-events') !== 'none') {
+      if (
+        (node.nodeName !== 'rect' &&
+          node.nodeName !== 'path' &&
+          node.nodeName !== 'ellipse') ||
+        (node.getAttribute('fill') !== 'none' &&
+          node.getAttribute('fill') !== 'transparent') ||
+        node.getAttribute('stroke') !== 'none' ||
+        node.getAttribute('pointer-events') !== 'none'
+      ) {
         // LATER: Update existing DOM for performance
         this.root.appendChild(node);
       }
@@ -665,7 +752,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Transfers the stroke attributes from <state> to <node>.
    */
   updateFill = () => {
-    let s = this.state;
+    const s = this.state;
 
     if (s.alpha < 1 || s.fillAlpha < 1) {
       this.node.setAttribute('fill-opacity', s.alpha * s.fillAlpha);
@@ -673,15 +760,20 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
 
     if (s.fillColor != null) {
       if (s.gradientColor != null) {
-        let id = this.getSvgGradient(String(s.fillColor), String(s.gradientColor),
-            s.gradientFillAlpha, s.gradientAlpha, s.gradientDirection);
+        const id = this.getSvgGradient(
+          String(s.fillColor),
+          String(s.gradientColor),
+          s.gradientFillAlpha,
+          s.gradientAlpha,
+          s.gradientDirection
+        );
 
         if (this.root.ownerDocument === document && useAbsoluteIds) {
           // Workaround for no fill with base tag in page (escape brackets)
-          let base = this.getBaseUrl().replace(/([\(\)])/g, '\\$1');
-          this.node.setAttribute('fill', 'url(' + base + '#' + id + ')');
+          const base = this.getBaseUrl().replace(/([\(\)])/g, '\\$1');
+          this.node.setAttribute('fill', `url(${base}#${id})`);
         } else {
-          this.node.setAttribute('fill', 'url(#' + id + ')');
+          this.node.setAttribute('fill', `url(#${id})`);
         }
       } else {
         this.node.setAttribute('fill', String(s.fillColor).toLowerCase());
@@ -695,7 +787,10 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Returns the current stroke width (>= 1), ie. max(1, this.format(this.state.strokeWidth * this.state.scale)).
    */
   getCurrentStrokeWidth = () => {
-    return Math.max(this.minStrokeWidth, Math.max(0.01, this.format(this.state.strokeWidth * this.state.scale)));
+    return Math.max(
+      this.minStrokeWidth,
+      Math.max(0.01, this.format(this.state.strokeWidth * this.state.scale))
+    );
   };
 
   /**
@@ -704,7 +799,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Transfers the stroke attributes from <state> to <node>.
    */
   updateStroke = () => {
-    let s = this.state;
+    const s = this.state;
 
     this.node.setAttribute('stroke', String(s.strokeColor).toLowerCase());
 
@@ -712,7 +807,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       this.node.setAttribute('stroke-opacity', s.alpha * s.strokeAlpha);
     }
 
-    let sw = this.getCurrentStrokeWidth();
+    const sw = this.getCurrentStrokeWidth();
 
     if (sw !== 1) {
       this.node.setAttribute('stroke-width', sw);
@@ -723,8 +818,10 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     if (s.dashed) {
-      this.node.setAttribute('stroke-dasharray', this.createDashPattern(
-          ((s.fixDash) ? 1 : s.strokeWidth) * s.scale));
+      this.node.setAttribute(
+        'stroke-dasharray',
+        this.createDashPattern((s.fixDash ? 1 : s.strokeWidth) * s.scale)
+      );
     }
   };
 
@@ -734,7 +831,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Transfers the stroke attributes from <state> to <node>.
    */
   updateStrokeAttributes = () => {
-    let s = this.state;
+    const s = this.state;
 
     // Linejoin miter is default in SVG
     if (s.lineJoin != null && s.lineJoin !== 'miter') {
@@ -766,11 +863,11 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Creates the SVG dash pattern for the given state.
    */
-  createDashPattern = (scale) => {
-    let pat = [];
+  createDashPattern = scale => {
+    const pat = [];
 
-    if (typeof (this.state.dashPattern) === 'string') {
-      let dash = this.state.dashPattern.split(' ');
+    if (typeof this.state.dashPattern === 'string') {
+      const dash = this.state.dashPattern.split(' ');
 
       if (dash.length > 0) {
         for (let i = 0; i < dash.length; i++) {
@@ -787,9 +884,10 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Creates a hit detection tolerance shape for the given node.
    */
-  createTolerance = (node) => {
-    let tol = node.cloneNode(true);
-    let sw = parseFloat(tol.getAttribute('stroke-width') || 1) + this.strokeTolerance;
+  createTolerance = node => {
+    const tol = node.cloneNode(true);
+    const sw =
+      parseFloat(tol.getAttribute('stroke-width') || 1) + this.strokeTolerance;
     tol.setAttribute('pointer-events', 'stroke');
     tol.setAttribute('visibility', 'hidden');
     tol.removeAttribute('stroke-dasharray');
@@ -804,12 +902,15 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Creates a shadow for the given node.
    */
-  createShadow = (node) => {
-    let shadow = node.cloneNode(true);
-    let s = this.state;
+  createShadow = node => {
+    const shadow = node.cloneNode(true);
+    const s = this.state;
 
     // Firefox uses transparent for no fill in ellipses
-    if (shadow.getAttribute('fill') !== 'none' && (!mxClient.IS_FF || shadow.getAttribute('fill') !== 'transparent')) {
+    if (
+      shadow.getAttribute('fill') !== 'none' &&
+      (!mxClient.IS_FF || shadow.getAttribute('fill') !== 'transparent')
+    ) {
       shadow.setAttribute('fill', s.shadowColor);
     }
 
@@ -817,8 +918,12 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       shadow.setAttribute('stroke', s.shadowColor);
     }
 
-    shadow.setAttribute('transform', 'translate(' + this.format(s.shadowDx * s.scale) +
-        ',' + this.format(s.shadowDy * s.scale) + ')' + (s.transform || ''));
+    shadow.setAttribute(
+      'transform',
+      `translate(${this.format(s.shadowDx * s.scale)},${this.format(
+        s.shadowDy * s.scale
+      )})${s.transform || ''}`
+    );
     shadow.setAttribute('opacity', s.shadowAlpha);
 
     return shadow;
@@ -829,17 +934,17 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Experimental implementation for hyperlinks.
    */
-  setLink = (link) => {
+  setLink = link => {
     if (link == null) {
       this.root = this.originalRoot;
     } else {
       this.originalRoot = this.root;
 
-      let node = this.createElement('a');
+      const node = this.createElement('a');
 
       // Workaround for implicit namespace handling in HTML5 export, IE adds NS1 namespace so use code below
       // in all IE versions except quirks mode. KNOWN: Adds xlink namespace to each image tag in output.
-      if (node.setAttributeNS == null || (this.root.ownerDocument !== document)) {
+      if (node.setAttributeNS == null || this.root.ownerDocument !== document) {
         node.setAttribute('xlink:href', link);
       } else {
         node.setAttributeNS(mxConstants.NS_XLINK, 'xlink:href', link);
@@ -857,7 +962,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    */
   rotate = (theta, flipH, flipV, cx, cy) => {
     if (theta !== 0 || flipH || flipV) {
-      let s = this.state;
+      const s = this.state;
       cx += s.dx;
       cy += s.dy;
 
@@ -871,15 +976,16 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       if (flipH && flipV) {
         theta += 180;
       } else if (flipH !== flipV) {
-        let tx = (flipH) ? cx : 0;
-        let sx = (flipH) ? -1 : 1;
+        const tx = flipH ? cx : 0;
+        const sx = flipH ? -1 : 1;
 
-        let ty = (flipV) ? cy : 0;
-        let sy = (flipV) ? -1 : 1;
+        const ty = flipV ? cy : 0;
+        const sy = flipV ? -1 : 1;
 
-        s.transform += 'translate(' + this.format(tx) + ',' + this.format(ty) + ')' +
-            'scale(' + this.format(sx) + ',' + this.format(sy) + ')' +
-            'translate(' + this.format(-tx) + ',' + this.format(-ty) + ')';
+        s.transform +=
+          `translate(${this.format(tx)},${this.format(ty)})` +
+          `scale(${this.format(sx)},${this.format(sy)})` +
+          `translate(${this.format(-tx)},${this.format(-ty)})`;
       }
 
       if (flipH ? !flipV : flipV) {
@@ -887,10 +993,12 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       }
 
       if (theta !== 0) {
-        s.transform += 'rotate(' + this.format(theta) + ',' + this.format(cx) + ',' + this.format(cy) + ')';
+        s.transform += `rotate(${this.format(theta)},${this.format(
+          cx
+        )},${this.format(cy)})`;
       }
 
-      s.rotation = s.rotation + theta;
+      s.rotation += theta;
       s.rotationCx = cx;
       s.rotationCy = cy;
     }
@@ -912,8 +1020,8 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Private helper function to create SVG elements
    */
   rect = (x, y, w, h) => {
-    let s = this.state;
-    let n = this.createElement('rect');
+    const s = this.state;
+    const n = this.createElement('rect');
     n.setAttribute('x', this.format((x + s.dx) * s.scale));
     n.setAttribute('y', this.format((y + s.dy) * s.scale));
     n.setAttribute('width', this.format(w * s.scale));
@@ -945,13 +1053,13 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Private helper function to create SVG elements
    */
   ellipse = (x, y, w, h) => {
-    let s = this.state;
-    let n = this.createElement('ellipse');
+    const s = this.state;
+    const n = this.createElement('ellipse');
     // No rounding for consistent output with 1.x
     n.setAttribute('cx', this.format((x + w / 2 + s.dx) * s.scale));
     n.setAttribute('cy', this.format((y + h / 2 + s.dy) * s.scale));
-    n.setAttribute('rx', w / 2 * s.scale);
-    n.setAttribute('ry', h / 2 * s.scale);
+    n.setAttribute('rx', (w / 2) * s.scale);
+    n.setAttribute('ry', (h / 2) * s.scale);
     this.node = n;
   };
 
@@ -964,15 +1072,15 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     src = this.converter.convert(src);
 
     // LATER: Add option for embedding images as base64.
-    aspect = (aspect != null) ? aspect : true;
-    flipH = (flipH != null) ? flipH : false;
-    flipV = (flipV != null) ? flipV : false;
+    aspect = aspect != null ? aspect : true;
+    flipH = flipH != null ? flipH : false;
+    flipV = flipV != null ? flipV : false;
 
-    let s = this.state;
+    const s = this.state;
     x += s.dx;
     y += s.dy;
 
-    let node = this.createElement('image');
+    const node = this.createElement('image');
     node.setAttribute('x', this.format(x * s.scale) + this.imageOffset);
     node.setAttribute('y', this.format(y * s.scale) + this.imageOffset);
     node.setAttribute('width', this.format(w * s.scale));
@@ -1012,7 +1120,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       }
 
       // Adds image tansformation to existing transform
-      tr += 'scale(' + sx + ',' + sy + ')translate(' + (dx * s.scale) + ',' + (dy * s.scale) + ')';
+      tr += `scale(${sx},${sy})translate(${dx * s.scale},${dy * s.scale})`;
     }
 
     if (tr.length > 0) {
@@ -1031,8 +1139,8 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Converts the given HTML string to XHTML.
    */
-  convertHtml = (val) => {
-    let doc = new DOMParser().parseFromString(val, 'text/html');
+  convertHtml = val => {
+    const doc = new DOMParser().parseFromString(val, 'text/html');
 
     if (doc != null) {
       val = new XMLSerializer().serializeToString(doc.body);
@@ -1055,19 +1163,22 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Private helper function to create SVG elements
    */
-  createDiv = (str) => {
+  createDiv = str => {
     let val = str;
 
     if (!mxUtils.isNode(val)) {
-      val = '<div><div>' + this.convertHtml(val) + '</div></div>';
+      val = `<div><div>${this.convertHtml(val)}</div></div>`;
     }
 
     if (document.createElementNS) {
-      let div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+      const div = document.createElementNS(
+        'http://www.w3.org/1999/xhtml',
+        'div'
+      );
 
       if (mxUtils.isNode(val)) {
-        var div2 = document.createElement('div');
-        var div3 = div2.cloneNode(false);
+        const div2 = document.createElement('div');
+        const div3 = div2.cloneNode(false);
 
         // Creates a copy for export
         if (this.root.ownerDocument !== document) {
@@ -1083,24 +1194,51 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       }
 
       return div;
-    } else {
-      if (mxUtils.isNode(val)) {
-        val = '<div><div>' + mxUtils.getXml(val) + '</div></div>';
-      }
-
-      val = '<div xmlns="http://www.w3.org/1999/xhtml">' + val + '</div>';
-
-      // NOTE: FF 3.6 crashes if content CSS contains "height:100%"
-      return mxUtils.parseXml(val).documentElement;
     }
+    if (mxUtils.isNode(val)) {
+      val = `<div><div>${mxUtils.getXml(val)}</div></div>`;
+    }
+
+    val = `<div xmlns="http://www.w3.org/1999/xhtml">${val}</div>`;
+
+    // NOTE: FF 3.6 crashes if content CSS contains "height:100%"
+    return mxUtils.parseXml(val).documentElement;
   };
 
   /**
    * Updates existing DOM nodes for text rendering. LATER: Merge common parts with text function below.
    */
-  updateText = (x, y, w, h, align, valign, wrap, overflow, clip, rotation, node) => {
-    if (node != null && node.firstChild != null && node.firstChild.firstChild != null) {
-      this.updateTextNodes(x, y, w, h, align, valign, wrap, overflow, clip, rotation, node.firstChild);
+  updateText = (
+    x,
+    y,
+    w,
+    h,
+    align,
+    valign,
+    wrap,
+    overflow,
+    clip,
+    rotation,
+    node
+  ) => {
+    if (
+      node != null &&
+      node.firstChild != null &&
+      node.firstChild.firstChild != null
+    ) {
+      this.updateTextNodes(
+        x,
+        y,
+        w,
+        h,
+        align,
+        valign,
+        wrap,
+        overflow,
+        clip,
+        rotation,
+        node.firstChild
+      );
     }
   };
 
@@ -1109,9 +1247,25 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Creates a foreignObject for the given string and adds it to the given root.
    */
-  addForeignObject = (x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir, div, root) => {
-    let group = this.createElement('g');
-    let fo = this.createElement('foreignObject');
+  addForeignObject = (
+    x,
+    y,
+    w,
+    h,
+    str,
+    align,
+    valign,
+    wrap,
+    format,
+    overflow,
+    clip,
+    rotation,
+    dir,
+    div,
+    root
+  ) => {
+    const group = this.createElement('g');
+    const fo = this.createElement('foreignObject');
 
     // Workarounds for print clipping and static position in Safari
     fo.setAttribute('style', 'overflow: visible; text-align: left;');
@@ -1125,15 +1279,44 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     fo.appendChild(div);
     group.appendChild(fo);
 
-    this.updateTextNodes(x, y, w, h, align, valign, wrap, overflow, clip, rotation, group);
+    this.updateTextNodes(
+      x,
+      y,
+      w,
+      h,
+      align,
+      valign,
+      wrap,
+      overflow,
+      clip,
+      rotation,
+      group
+    );
 
     // Alternate content if foreignObject not supported
     if (this.root.ownerDocument !== document) {
-      let alt = this.createAlternateContent(fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation);
+      const alt = this.createAlternateContent(
+        fo,
+        x,
+        y,
+        w,
+        h,
+        str,
+        align,
+        valign,
+        wrap,
+        format,
+        overflow,
+        clip,
+        rotation
+      );
 
       if (alt != null) {
-        fo.setAttribute('requiredFeatures', 'http://www.w3.org/TR/SVG11/feature#Extensibility');
-        let sw = this.createElement('switch');
+        fo.setAttribute(
+          'requiredFeatures',
+          'http://www.w3.org/TR/SVG11/feature#Extensibility'
+        );
+        const sw = this.createElement('switch');
         sw.appendChild(fo);
         sw.appendChild(alt);
         group.appendChild(sw);
@@ -1146,69 +1329,109 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   /**
    * Updates existing DOM nodes for text rendering.
    */
-  updateTextNodes = (x, y, w, h, align, valign, wrap, overflow, clip, rotation, g) => {
-    let s = this.state.scale;
+  updateTextNodes = (
+    x,
+    y,
+    w,
+    h,
+    align,
+    valign,
+    wrap,
+    overflow,
+    clip,
+    rotation,
+    g
+  ) => {
+    const s = this.state.scale;
 
-    D.createCss(w + 2, h, align, valign, wrap, overflow, clip,
-        (this.state.fontBackgroundColor != null) ? this.state.fontBackgroundColor : null,
-        (this.state.fontBorderColor != null) ? this.state.fontBorderColor : null,
-        'display: flex; align-items: unsafe ' +
-        ((valign === mxConstants.ALIGN_TOP) ? 'flex-start' :
-            ((valign === mxConstants.ALIGN_BOTTOM) ? 'flex-end' : 'center')) + '; ' +
-        'justify-content: unsafe ' + ((align === mxConstants.ALIGN_LEFT) ? 'flex-start' :
-        ((align === mxConstants.ALIGN_RIGHT) ? 'flex-end' : 'center')) + '; ',
-        this.getTextCss(), s, (dx, dy, flex, item, block) => {
-          x += this.state.dx;
-          y += this.state.dy;
+    D.createCss(
+      w + 2,
+      h,
+      align,
+      valign,
+      wrap,
+      overflow,
+      clip,
+      this.state.fontBackgroundColor != null
+        ? this.state.fontBackgroundColor
+        : null,
+      this.state.fontBorderColor != null ? this.state.fontBorderColor : null,
+      `display: flex; align-items: unsafe ${
+        valign === mxConstants.ALIGN_TOP
+          ? 'flex-start'
+          : valign === mxConstants.ALIGN_BOTTOM
+          ? 'flex-end'
+          : 'center'
+      }; ` +
+        `justify-content: unsafe ${
+          align === mxConstants.ALIGN_LEFT
+            ? 'flex-start'
+            : align === mxConstants.ALIGN_RIGHT
+            ? 'flex-end'
+            : 'center'
+        }; `,
+      this.getTextCss(),
+      s,
+      (dx, dy, flex, item, block) => {
+        x += this.state.dx;
+        y += this.state.dy;
 
-          let fo = g.firstChild;
-          let div = fo.firstChild;
-          let box = div.firstChild;
-          let text = box.firstChild;
-          let r = ((this.rotateHtml) ? this.state.rotation : 0) + ((rotation != null) ? rotation : 0);
-          let t = ((this.foOffset !== 0) ? 'translate(' + this.foOffset + ' ' + this.foOffset + ')' : '') +
-              ((s !== 1) ? 'scale(' + s + ')' : '');
+        const fo = g.firstChild;
+        const div = fo.firstChild;
+        const box = div.firstChild;
+        const text = box.firstChild;
+        const r =
+          (this.rotateHtml ? this.state.rotation : 0) +
+          (rotation != null ? rotation : 0);
+        let t =
+          (this.foOffset !== 0
+            ? `translate(${this.foOffset} ${this.foOffset})`
+            : '') + (s !== 1 ? `scale(${s})` : '');
 
-          text.setAttribute('style', block);
-          box.setAttribute('style', item);
+        text.setAttribute('style', block);
+        box.setAttribute('style', item);
 
-          // Workaround for clipping in Webkit with scrolling and zoom
-          fo.setAttribute('width', Math.ceil(1 / Math.min(1, s) * 100) + '%');
-          fo.setAttribute('height', Math.ceil(1 / Math.min(1, s) * 100) + '%');
-          let yp = Math.round(y + dy);
+        // Workaround for clipping in Webkit with scrolling and zoom
+        fo.setAttribute('width', `${Math.ceil((1 / Math.min(1, s)) * 100)}%`);
+        fo.setAttribute('height', `${Math.ceil((1 / Math.min(1, s)) * 100)}%`);
+        const yp = Math.round(y + dy);
 
-          // Allows for negative values which are causing problems with
-          // transformed content where the top edge of the foreignObject
-          // limits the text box being moved further up in the diagram.
-          // KNOWN: Possible clipping problems with zoom and scrolling
-          // but this is normally not used with scrollbars as the
-          // coordinates are always positive with scrollbars.
-          // Margin-top is ignored in Safari and no negative values allowed
-          // for padding.
-          if (yp < 0) {
-            fo.setAttribute('y', yp);
-          } else {
-            fo.removeAttribute('y');
-            flex += 'padding-top: ' + yp + 'px; ';
-          }
+        // Allows for negative values which are causing problems with
+        // transformed content where the top edge of the foreignObject
+        // limits the text box being moved further up in the diagram.
+        // KNOWN: Possible clipping problems with zoom and scrolling
+        // but this is normally not used with scrollbars as the
+        // coordinates are always positive with scrollbars.
+        // Margin-top is ignored in Safari and no negative values allowed
+        // for padding.
+        if (yp < 0) {
+          fo.setAttribute('y', yp);
+        } else {
+          fo.removeAttribute('y');
+          flex += `padding-top: ${yp}px; `;
+        }
 
-          div.setAttribute('style', flex + 'margin-left: ' + Math.round(x + dx) + 'px;');
-          t += ((r !== 0) ? ('rotate(' + r + ' ' + x + ' ' + y + ')') : '');
+        div.setAttribute(
+          'style',
+          `${flex}margin-left: ${Math.round(x + dx)}px;`
+        );
+        t += r !== 0 ? `rotate(${r} ${x} ${y})` : '';
 
-          // Output allows for reflow but Safari cannot use absolute position,
-          // transforms or opacity. https://bugs.webkit.org/show_bug.cgi?id=23113
-          if (t !== '') {
-            g.setAttribute('transform', t);
-          } else {
-            g.removeAttribute('transform');
-          }
+        // Output allows for reflow but Safari cannot use absolute position,
+        // transforms or opacity. https://bugs.webkit.org/show_bug.cgi?id=23113
+        if (t !== '') {
+          g.setAttribute('transform', t);
+        } else {
+          g.removeAttribute('transform');
+        }
 
-          if (this.state.alpha !== 1) {
-            g.setAttribute('opacity', this.state.alpha);
-          } else {
-            g.removeAttribute('opacity');
-          }
-        });
+        if (this.state.alpha !== 1) {
+          g.setAttribute('opacity', this.state.alpha);
+        } else {
+          g.removeAttribute('opacity');
+        }
+      }
+    );
   };
 
   /**
@@ -1217,12 +1440,17 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Private helper function to create SVG elements
    */
   getTextCss = () => {
-    let s = this.state;
-    let lh = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? (s.fontSize * mxConstants.LINE_HEIGHT) + 'px' :
-        (mxConstants.LINE_HEIGHT * this.lineHeightCorrection);
-    let css = 'display: inline-block; font-size: ' + s.fontSize + 'px; ' +
-        'font-family: ' + s.fontFamily + '; color: ' + s.fontColor + '; line-height: ' + lh +
-        '; pointer-events: ' + ((this.pointerEvents) ? this.pointerEventsValue : 'none') + '; ';
+    const s = this.state;
+    const lh = mxConstants.ABSOLUTE_LINE_HEIGHT
+      ? `${s.fontSize * mxConstants.LINE_HEIGHT}px`
+      : mxConstants.LINE_HEIGHT * this.lineHeightCorrection;
+    let css =
+      `display: inline-block; font-size: ${s.fontSize}px; ` +
+      `font-family: ${s.fontFamily}; color: ${
+        s.fontColor
+      }; line-height: ${lh}; pointer-events: ${
+        this.pointerEvents ? this.pointerEventsValue : 'none'
+      }; `;
 
     if ((s.fontStyle & mxConstants.FONT_BOLD) === mxConstants.FONT_BOLD) {
       css += 'font-weight: bold; ';
@@ -1232,18 +1460,24 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       css += 'font-style: italic; ';
     }
 
-    let deco = [];
+    const deco = [];
 
-    if ((s.fontStyle & mxConstants.FONT_UNDERLINE) === mxConstants.FONT_UNDERLINE) {
+    if (
+      (s.fontStyle & mxConstants.FONT_UNDERLINE) ===
+      mxConstants.FONT_UNDERLINE
+    ) {
       deco.push('underline');
     }
 
-    if ((s.fontStyle & mxConstants.FONT_STRIKETHROUGH) === mxConstants.FONT_STRIKETHROUGH) {
+    if (
+      (s.fontStyle & mxConstants.FONT_STRIKETHROUGH) ===
+      mxConstants.FONT_STRIKETHROUGH
+    ) {
       deco.push('line-through');
     }
 
     if (deco.length > 0) {
-      css += 'text-decoration: ' + deco.join(' ') + '; ';
+      css += `text-decoration: ${deco.join(' ')}; `;
     }
 
     return css;
@@ -1257,12 +1491,26 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * foreignObject is supported and <foEnabled> is true. (This means IE9 and later
    * does currently not support HTML text as part of shapes.)
    */
-  text = (x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir) => {
+  text = (
+    x,
+    y,
+    w,
+    h,
+    str,
+    align,
+    valign,
+    wrap,
+    format,
+    overflow,
+    clip,
+    rotation,
+    dir
+  ) => {
     if (this.textEnabled && str != null) {
-      rotation = (rotation != null) ? rotation : 0;
+      rotation = rotation != null ? rotation : 0;
 
       if (this.foEnabled && format === 'html') {
-        let div = this.createDiv(str);
+        const div = this.createDiv(str);
 
         // Ignores invalid XHTML labels
         if (div != null) {
@@ -1270,12 +1518,39 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
             div.setAttribute('dir', dir);
           }
 
-          this.addForeignObject(x, y, w, h, str, align, valign, wrap,
-              format, overflow, clip, rotation, dir, div, this.root);
+          this.addForeignObject(
+            x,
+            y,
+            w,
+            h,
+            str,
+            align,
+            valign,
+            wrap,
+            format,
+            overflow,
+            clip,
+            rotation,
+            dir,
+            div,
+            this.root
+          );
         }
       } else {
-        this.plainText(x + this.state.dx, y + this.state.dy, w, h, str,
-            align, valign, wrap, overflow, clip, rotation, dir);
+        this.plainText(
+          x + this.state.dx,
+          y + this.state.dy,
+          w,
+          h,
+          str,
+          align,
+          valign,
+          wrap,
+          overflow,
+          clip,
+          rotation,
+          dir
+        );
       }
     }
   };
@@ -1291,20 +1566,20 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     w = Math.round(w);
     h = Math.round(h);
 
-    let id = 'mx-clip-' + x + '-' + y + '-' + w + '-' + h;
+    const id = `mx-clip-${x}-${y}-${w}-${h}`;
 
     let counter = 0;
-    let tmp = id + '-' + counter;
+    let tmp = `${id}-${counter}`;
 
     // Resolves ID conflicts
     while (document.getElementById(tmp) != null) {
-      tmp = id + '-' + (++counter);
+      tmp = `${id}-${++counter}`;
     }
 
     clip = this.createElement('clipPath');
     clip.setAttribute('id', tmp);
 
-    let rect = this.createElement('rect');
+    const rect = this.createElement('rect');
     rect.setAttribute('x', x);
     rect.setAttribute('y', y);
     rect.setAttribute('width', w);
@@ -1321,11 +1596,24 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Paints the given text. Possible values for format are empty string for
    * plain text and html for HTML markup.
    */
-  plainText = (x, y, w, h, str, align, valign, wrap, overflow, clip, rotation, dir) => {
-    rotation = (rotation != null) ? rotation : 0;
-    let s = this.state;
-    let size = s.fontSize;
-    let node = this.createElement('g');
+  plainText = (
+    x,
+    y,
+    w,
+    h,
+    str,
+    align,
+    valign,
+    wrap,
+    overflow,
+    clip,
+    rotation,
+    dir
+  ) => {
+    rotation = rotation != null ? rotation : 0;
+    const s = this.state;
+    const size = s.fontSize;
+    const node = this.createElement('g');
     let tr = s.transform || '';
     this.updateFont(node);
 
@@ -1336,7 +1624,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
 
     // Non-rotated text
     if (rotation !== 0) {
-      tr += 'rotate(' + rotation + ',' + this.format(x * s.scale) + ',' + this.format(y * s.scale) + ')';
+      tr += `rotate(${rotation},${this.format(x * s.scale)},${this.format(
+        y * s.scale
+      )})`;
     }
 
     if (dir != null) {
@@ -1362,7 +1652,12 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       }
 
       // LATER: Remove spacing from clip rectangle
-      let c = this.createClip(cx * s.scale - 2, cy * s.scale - 2, w * s.scale + 4, h * s.scale + 4);
+      const c = this.createClip(
+        cx * s.scale - 2,
+        cy * s.scale - 2,
+        w * s.scale + 4,
+        h * s.scale + 4
+      );
 
       if (this.defs != null) {
         this.defs.appendChild(c);
@@ -1371,19 +1666,26 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         this.root.appendChild(c);
       }
 
-      if (!mxClient.IS_CHROMEAPP && !mxClient.IS_EDGE && this.root.ownerDocument === document) {
+      if (
+        !mxClient.IS_CHROMEAPP &&
+        !mxClient.IS_EDGE &&
+        this.root.ownerDocument === document
+      ) {
         // Workaround for potential base tag
-        let base = this.getBaseUrl().replace(/([\(\)])/g, '\\$1');
-        node.setAttribute('clip-path', 'url(' + base + '#' + c.getAttribute('id') + ')');
+        const base = this.getBaseUrl().replace(/([\(\)])/g, '\\$1');
+        node.setAttribute('clip-path', `url(${base}#${c.getAttribute('id')})`);
       } else {
-        node.setAttribute('clip-path', 'url(#' + c.getAttribute('id') + ')');
+        node.setAttribute('clip-path', `url(#${c.getAttribute('id')})`);
       }
     }
 
     // Default is left
-    let anchor = (align === mxConstants.ALIGN_RIGHT) ? 'end' :
-        (align === mxConstants.ALIGN_CENTER) ? 'middle' :
-            'start';
+    const anchor =
+      align === mxConstants.ALIGN_RIGHT
+        ? 'end'
+        : align === mxConstants.ALIGN_CENTER
+        ? 'middle'
+        : 'start';
 
     // Text-anchor start is default in SVG
     if (anchor !== 'start') {
@@ -1391,7 +1693,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     if (!this.styleEnabled || size !== mxConstants.DEFAULT_FONTSIZE) {
-      node.setAttribute('font-size', (size * s.scale) + 'px');
+      node.setAttribute('font-size', `${size * s.scale}px`);
     }
 
     if (tr.length > 0) {
@@ -1402,9 +1704,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       node.setAttribute('opacity', s.alpha);
     }
 
-    let lines = str.split('\n');
-    let lh = Math.round(size * mxConstants.LINE_HEIGHT);
-    let textHeight = size + (lines.length - 1) * lh;
+    const lines = str.split('\n');
+    const lh = Math.round(size * mxConstants.LINE_HEIGHT);
+    const textHeight = size + (lines.length - 1) * lh;
 
     let cy = y + size - 1;
 
@@ -1412,14 +1714,20 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       if (overflow === 'fill') {
         cy -= h / 2;
       } else {
-        let dy = ((this.matchHtmlAlignment && clip && h > 0) ? Math.min(textHeight, h) : textHeight) / 2;
+        const dy =
+          (this.matchHtmlAlignment && clip && h > 0
+            ? Math.min(textHeight, h)
+            : textHeight) / 2;
         cy -= dy;
       }
     } else if (valign === mxConstants.ALIGN_BOTTOM) {
       if (overflow === 'fill') {
         cy -= h;
       } else {
-        let dy = (this.matchHtmlAlignment && clip && h > 0) ? Math.min(textHeight, h) : textHeight;
+        const dy =
+          this.matchHtmlAlignment && clip && h > 0
+            ? Math.min(textHeight, h)
+            : textHeight;
         cy -= dy + 1;
       }
     }
@@ -1427,7 +1735,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     for (let i = 0; i < lines.length; i++) {
       // Workaround for bounding box of empty lines and spaces
       if (lines[i].length > 0 && mxUtils.trim(lines[i]).length > 0) {
-        let text = this.createElement('text');
+        const text = this.createElement('text');
         // LATER: Match horizontal HTML alignment
         text.setAttribute('x', this.format(x * s.scale) + this.textOffset);
         text.setAttribute('y', this.format(cy * s.scale) + this.textOffset);
@@ -1440,7 +1748,17 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     this.root.appendChild(node);
-    this.addTextBackground(node, str, x, y, w, (overflow === 'fill') ? h : textHeight, align, valign, overflow);
+    this.addTextBackground(
+      node,
+      str,
+      x,
+      y,
+      w,
+      overflow === 'fill' ? h : textHeight,
+      align,
+      valign,
+      overflow
+    );
   };
 
   /**
@@ -1449,8 +1767,8 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Updates the text properties for the given node. (NOTE: For this to work in
    * IE, the given node must be a text or tspan element.)
    */
-  updateFont = (node) => {
-    let s = this.state;
+  updateFont = node => {
+    const s = this.state;
 
     node.setAttribute('fill', s.fontColor);
 
@@ -1466,13 +1784,19 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       node.setAttribute('font-style', 'italic');
     }
 
-    let txtDecor = [];
+    const txtDecor = [];
 
-    if ((s.fontStyle & mxConstants.FONT_UNDERLINE) === mxConstants.FONT_UNDERLINE) {
+    if (
+      (s.fontStyle & mxConstants.FONT_UNDERLINE) ===
+      mxConstants.FONT_UNDERLINE
+    ) {
       txtDecor.push('underline');
     }
 
-    if ((s.fontStyle & mxConstants.FONT_STRIKETHROUGH) === mxConstants.FONT_STRIKETHROUGH) {
+    if (
+      (s.fontStyle & mxConstants.FONT_STRIKETHROUGH) ===
+      mxConstants.FONT_STRIKETHROUGH
+    ) {
       txtDecor.push('line-through');
     }
 
@@ -1487,7 +1811,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Background color and border
    */
   addTextBackground = (node, str, x, y, w, h, align, valign, overflow) => {
-    let s = this.state;
+    const s = this.state;
 
     if (s.fontBackgroundColor != null || s.fontBorderColor != null) {
       let bbox = null;
@@ -1505,12 +1829,22 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
           y -= h;
         }
 
-        bbox = new mxRectangle((x + 1) * s.scale, y * s.scale, (w - 2) * s.scale, (h + 2) * s.scale);
+        bbox = new mxRectangle(
+          (x + 1) * s.scale,
+          y * s.scale,
+          (w - 2) * s.scale,
+          (h + 2) * s.scale
+        );
       } else if (node.getBBox != null && this.root.ownerDocument === document) {
         // Uses getBBox only if inside document for correct size
         try {
           bbox = node.getBBox();
-          bbox = new mxRectangle(bbox.x, bbox.y + 1, bbox.width, bbox.height + 0);
+          bbox = new mxRectangle(
+            bbox.x,
+            bbox.y + 1,
+            bbox.width,
+            bbox.height + 0
+          );
         } catch (e) {
           // Ignores NS_ERROR_FAILURE in FF if container display is none.
         }
@@ -1518,11 +1852,13 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
 
       if (bbox == null || bbox.width === 0 || bbox.height === 0) {
         // Computes size if not in document or no getBBox available
-        let div = document.createElement('div');
+        const div = document.createElement('div');
 
         // Wrapping and clipping can be ignored here
-        div.style.lineHeight = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? (s.fontSize * mxConstants.LINE_HEIGHT) + 'px' : mxConstants.LINE_HEIGHT;
-        div.style.fontSize = s.fontSize + 'px';
+        div.style.lineHeight = mxConstants.ABSOLUTE_LINE_HEIGHT
+          ? `${s.fontSize * mxConstants.LINE_HEIGHT}px`
+          : mxConstants.LINE_HEIGHT;
+        div.style.fontSize = `${s.fontSize}px`;
         div.style.fontFamily = s.fontFamily;
         div.style.whiteSpace = 'nowrap';
         div.style.position = 'absolute';
@@ -1533,7 +1869,10 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
           div.style.fontWeight = 'bold';
         }
 
-        if ((s.fontStyle & mxConstants.FONT_ITALIC) === mxConstants.FONT_ITALIC) {
+        if (
+          (s.fontStyle & mxConstants.FONT_ITALIC) ===
+          mxConstants.FONT_ITALIC
+        ) {
           div.style.fontStyle = 'italic';
         }
 
@@ -1541,8 +1880,8 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         div.innerHTML = str.replace(/\n/g, '<br/>');
 
         document.body.appendChild(div);
-        let w = div.offsetWidth;
-        let h = div.offsetHeight;
+        const w = div.offsetWidth;
+        const h = div.offsetHeight;
         div.parentNode.removeChild(div);
 
         if (align === mxConstants.ALIGN_CENTER) {
@@ -1557,11 +1896,16 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
           y -= h;
         }
 
-        bbox = new mxRectangle((x + 1) * s.scale, (y + 2) * s.scale, w * s.scale, (h + 1) * s.scale);
+        bbox = new mxRectangle(
+          (x + 1) * s.scale,
+          (y + 2) * s.scale,
+          w * s.scale,
+          (h + 1) * s.scale
+        );
       }
 
       if (bbox != null) {
-        let n = this.createElement('rect');
+        const n = this.createElement('rect');
         n.setAttribute('fill', s.fontBackgroundColor || 'none');
         n.setAttribute('stroke', s.fontBorderColor || 'none');
         n.setAttribute('x', Math.floor(bbox.x - 1));
@@ -1569,7 +1913,8 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         n.setAttribute('width', Math.ceil(bbox.width + 2));
         n.setAttribute('height', Math.ceil(bbox.height));
 
-        let sw = (s.fontBorderColor != null) ? Math.max(1, this.format(s.scale)) : 0;
+        const sw =
+          s.fontBorderColor != null ? Math.max(1, this.format(s.scale)) : 0;
         n.setAttribute('stroke-width', sw);
 
         // Workaround for crisp rendering - only required if not exporting

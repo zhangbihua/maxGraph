@@ -4,14 +4,14 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectCodec from "FIXME";
-import mxValueChange from "FIXME";
-import mxStyleChange from "FIXME";
-import mxGeometryChange from "FIXME";
-import mxCollapseChange from "FIXME";
-import mxVisibleChange from "FIXME";
-import mxCellAttributeChange from "FIXME";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxObjectCodec from 'FIXME';
+import mxValueChange from 'FIXME';
+import mxStyleChange from 'FIXME';
+import mxGeometryChange from 'FIXME';
+import mxCollapseChange from 'FIXME';
+import mxVisibleChange from 'FIXME';
+import mxCellAttributeChange from 'FIXME';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxGenericChangeCodec extends mxObjectCodec {
   /**
@@ -66,7 +66,15 @@ class mxGenericChangeCodec extends mxObjectCodec {
 // Registers the codecs
 mxCodecRegistry.register(mxGenericChangeCodec(new mxValueChange(), 'value'));
 mxCodecRegistry.register(mxGenericChangeCodec(new mxStyleChange(), 'style'));
-mxCodecRegistry.register(mxGenericChangeCodec(new mxGeometryChange(), 'geometry'));
-mxCodecRegistry.register(mxGenericChangeCodec(new mxCollapseChange(), 'collapsed'));
-mxCodecRegistry.register(mxGenericChangeCodec(new mxVisibleChange(), 'visible'));
-mxCodecRegistry.register(mxGenericChangeCodec(new mxCellAttributeChange(), 'value'));
+mxCodecRegistry.register(
+  mxGenericChangeCodec(new mxGeometryChange(), 'geometry')
+);
+mxCodecRegistry.register(
+  mxGenericChangeCodec(new mxCollapseChange(), 'collapsed')
+);
+mxCodecRegistry.register(
+  mxGenericChangeCodec(new mxVisibleChange(), 'visible')
+);
+mxCodecRegistry.register(
+  mxGenericChangeCodec(new mxCellAttributeChange(), 'value')
+);

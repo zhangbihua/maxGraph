@@ -35,7 +35,7 @@ class mxForm {
     this.body = document.createElement('tbody');
 
     this.table.appendChild(this.body);
-  };
+  }
 
   /**
    * Function: getTable
@@ -53,7 +53,7 @@ class mxForm {
    * functions.
    */
   addButtons = (okFunct, cancelFunct) => {
-    let tr = document.createElement('tr');
+    const tr = document.createElement('tr');
     let td = document.createElement('td');
     tr.appendChild(td);
     td = document.createElement('td');
@@ -86,7 +86,7 @@ class mxForm {
    * Adds an input for the given name, type and value and returns it.
    */
   addText = (name, value, type) => {
-    let input = document.createElement('input');
+    const input = document.createElement('input');
 
     input.setAttribute('type', type || 'text');
     input.value = value;
@@ -100,7 +100,7 @@ class mxForm {
    * Adds a checkbox for the given name and value and returns the textfield.
    */
   addCheckbox = (name, value) => {
-    let input = document.createElement('input');
+    const input = document.createElement('input');
 
     input.setAttribute('type', 'checkbox');
     this.addField(name, input);
@@ -119,7 +119,7 @@ class mxForm {
    * Adds a textarea for the given name and value and returns the textarea.
    */
   addTextarea = (name, value, rows) => {
-    let input = document.createElement('textarea');
+    const input = document.createElement('textarea');
 
     if (mxClient.IS_NS) {
       rows--;
@@ -137,7 +137,7 @@ class mxForm {
    * Adds a combo for the given name and returns the combo.
    */
   addCombo = (name, isMultiSelect, size) => {
-    let select = document.createElement('select');
+    const select = document.createElement('select');
 
     if (size != null) {
       select.setAttribute('size', size);
@@ -156,7 +156,7 @@ class mxForm {
    * Adds an option for the given label to the specified combo.
    */
   addOption = (combo, label, value, isSelected) => {
-    let option = document.createElement('option');
+    const option = document.createElement('option');
 
     mxUtils.writeln(option, label);
     option.setAttribute('value', value);
@@ -175,7 +175,7 @@ class mxForm {
    * returns the given input.
    */
   addField = (name, input) => {
-    let tr = document.createElement('tr');
+    const tr = document.createElement('tr');
     let td = document.createElement('td');
     mxUtils.write(td, name);
     tr.appendChild(td);

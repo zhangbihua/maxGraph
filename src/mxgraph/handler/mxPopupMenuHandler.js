@@ -3,9 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxPopupMenu from "../util/mxPopupMenu";
-import mxEvent from "../util/mxEvent";
-import mxUtils from "../util/mxUtils";
+import mxPopupMenu from '../util/mxPopupMenu';
+import mxEvent from '../util/mxEvent';
+import mxUtils from '../util/mxUtils';
 
 class mxPopupMenuHandler extends mxPopupMenu {
   /**
@@ -85,7 +85,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
 
       this.init();
     }
-  };
+  }
 
   /**
    * Function: init
@@ -98,9 +98,12 @@ class mxPopupMenuHandler extends mxPopupMenu {
 
     // Hides the tooltip if the mouse is over
     // the context menu
-    mxEvent.addGestureListeners(this.div, mxUtils.bind(this, (evt) => {
-      this.graph.tooltipHandler.hide();
-    }));
+    mxEvent.addGestureListeners(
+      this.div,
+      mxUtils.bind(this, evt => {
+        this.graph.tooltipHandler.hide();
+      })
+    );
   };
 
   /**
@@ -109,7 +112,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Hook for returning if a cell should be selected for a given <mxMouseEvent>.
    * This implementation returns <selectOnPopup>.
    */
-  isSelectOnPopup = (me) => {
+  isSelectOnPopup = me => {
     return this.selectOnPopup;
   };
 
@@ -140,8 +143,12 @@ class mxPopupMenuHandler extends mxPopupMenu {
   mouseMove = (sender, me) => {
     // Popup trigger may change on mouseUp so ignore it
     if (this.inTolerance && this.screenX != null && this.screenY != null) {
-      if (Math.abs(mxEvent.getMainEvent(me.getEvent()).screenX - this.screenX) > this.graph.tolerance ||
-          Math.abs(mxEvent.getMainEvent(me.getEvent()).screenY - this.screenY) > this.graph.tolerance) {
+      if (
+        Math.abs(mxEvent.getMainEvent(me.getEvent()).screenX - this.screenX) >
+          this.graph.tolerance ||
+        Math.abs(mxEvent.getMainEvent(me.getEvent()).screenY - this.screenY) >
+          this.graph.tolerance
+      ) {
         this.inTolerance = false;
       }
     }
@@ -154,12 +161,21 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * popupmenu.
    */
   mouseUp = (sender, me) => {
-    if (this.popupTrigger && this.inTolerance && this.triggerX != null && this.triggerY != null) {
-      let cell = this.getCellForPopupEvent(me);
+    if (
+      this.popupTrigger &&
+      this.inTolerance &&
+      this.triggerX != null &&
+      this.triggerY != null
+    ) {
+      const cell = this.getCellForPopupEvent(me);
 
       // Selects the cell for which the context menu is being displayed
-      if (this.graph.isEnabled() && this.isSelectOnPopup(me) &&
-          cell != null && !this.graph.isCellSelected(cell)) {
+      if (
+        this.graph.isEnabled() &&
+        this.isSelectOnPopup(me) &&
+        cell != null &&
+        !this.graph.isCellSelected(cell)
+      ) {
         this.graph.setSelectionCell(cell);
       } else if (this.clearSelectionOnBackground && cell == null) {
         this.graph.clearSelection();
@@ -170,8 +186,13 @@ class mxPopupMenuHandler extends mxPopupMenu {
 
       // Menu is shifted by 1 pixel so that the mouse up event
       // is routed via the underlying shape instead of the DIV
-      let origin = mxUtils.getScrollOrigin();
-      this.popup(me.getX() + origin.x + 1, me.getY() + origin.y + 1, cell, me.getEvent());
+      const origin = mxUtils.getScrollOrigin();
+      this.popup(
+        me.getX() + origin.x + 1,
+        me.getY() + origin.y + 1,
+        cell,
+        me.getEvent()
+      );
       me.consume();
     }
 
@@ -184,7 +205,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * Hook to return the cell for the mouse up popup trigger handling.
    */
-  getCellForPopupEvent = (me) => {
+  getCellForPopupEvent = me => {
     return me.getCell();
   };
 

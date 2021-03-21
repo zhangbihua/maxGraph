@@ -4,10 +4,10 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from "../util/mxPoint";
-import mxActor from "./mxActor";
-import mxUtils from "../util/mxUtils";
-import mxConstants from "../util/mxConstants";
+import mxPoint from '../util/mxPoint';
+import mxActor from './mxActor';
+import mxUtils from '../util/mxUtils';
+import mxConstants from '../util/mxConstants';
 
 class mxTriangle extends mxActor {
   /**
@@ -38,8 +38,19 @@ class mxTriangle extends mxActor {
    * Draws the path for this shape.
    */
   redrawPath = (c, x, y, w, h) => {
-    let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
-    this.addPoints(c, [new mxPoint(0, 0), new mxPoint(w, 0.5 * h), new mxPoint(0, h)], this.isRounded, arcSize, true);
+    const arcSize =
+      mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_ARCSIZE,
+        mxConstants.LINE_ARCSIZE
+      ) / 2;
+    this.addPoints(
+      c,
+      [new mxPoint(0, 0), new mxPoint(w, 0.5 * h), new mxPoint(0, h)],
+      this.isRounded,
+      arcSize,
+      true
+    );
   };
 }
 

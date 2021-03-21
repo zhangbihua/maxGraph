@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxGraphView from "FIXME";
-import mxObjectCodec from "FIXME";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxGraphView from 'FIXME';
+import mxObjectCodec from 'FIXME';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxGraphViewCodec extends mxObjectCodec {
   /**
@@ -20,7 +20,7 @@ class mxGraphViewCodec extends mxObjectCodec {
    * computed perimeters, edge styles and cell styles.
    */
   constructor() {
-    super(new mxGraphView())
+    super(new mxGraphView());
   }
 
   /**
@@ -31,8 +31,7 @@ class mxGraphViewCodec extends mxObjectCodec {
    * top-level graph node of the recursive encoding.
    */
   encode = (enc, view) => {
-    return this.encodeCell(enc, view,
-        view.graph.getModel().getRoot());
+    return this.encodeCell(enc, view, view.graph.getModel().getRoot());
   };
 
   /**
@@ -56,13 +55,13 @@ class mxGraphViewCodec extends mxObjectCodec {
    * values to the node.
    */
   encodeCell = (enc, view, cell) => {
-    let model = view.graph.getModel();
-    let state = view.getState(cell);
-    let parent = model.getParent(cell);
+    const model = view.graph.getModel();
+    const state = view.getState(cell);
+    const parent = model.getParent(cell);
 
     if (parent == null || state != null) {
-      let childCount = model.getChildCount(cell);
-      let geo = view.graph.getCellGeometry(cell);
+      const childCount = model.getChildCount(cell);
+      const geo = view.graph.getCellGeometry(cell);
       let name = null;
 
       if (parent === model.getRoot()) {
@@ -78,8 +77,8 @@ class mxGraphViewCodec extends mxObjectCodec {
       }
 
       if (name != null) {
-        let node = enc.document.createElement(name);
-        let lab = view.graph.getLabel(cell);
+        const node = enc.document.createElement(name);
+        const lab = view.graph.getLabel(cell);
 
         if (lab != null) {
           node.setAttribute('label', view.graph.getLabel(cell));
@@ -90,7 +89,7 @@ class mxGraphViewCodec extends mxObjectCodec {
         }
 
         if (parent == null) {
-          let bounds = view.getGraphBounds();
+          const bounds = view.getGraphBounds();
 
           if (bounds != null) {
             node.setAttribute('x', Math.round(bounds.x));
@@ -102,31 +101,31 @@ class mxGraphViewCodec extends mxObjectCodec {
           node.setAttribute('scale', view.scale);
         } else if (state != null && geo != null) {
           // Writes each key, value in the style pair to an attribute
-          for (var i in state.style) {
+          for (const i in state.style) {
             let value = state.style[i];
 
             // Tries to turn objects and functions into strings
-            if (typeof (value) == 'function' &&
-                typeof (value) == 'object') {
+            if (typeof value === 'function' && typeof value === 'object') {
               value = mxStyleRegistry.getName(value);
             }
 
-            if (value != null &&
-                typeof (value) != 'function' &&
-                typeof (value) != 'object') {
+            if (
+              value != null &&
+              typeof value !== 'function' &&
+              typeof value !== 'object'
+            ) {
               node.setAttribute(i, value);
             }
           }
 
-          let abs = state.absolutePoints;
+          const abs = state.absolutePoints;
 
           // Writes the list of points into one attribute
           if (abs != null && abs.length > 0) {
-            let pts = Math.round(abs[0].x) + ',' + Math.round(abs[0].y);
+            let pts = `${Math.round(abs[0].x)},${Math.round(abs[0].y)}`;
 
             for (let i = 1; i < abs.length; i++) {
-              pts += ' ' + Math.round(abs[i].x) + ',' +
-                  Math.round(abs[i].y);
+              pts += ` ${Math.round(abs[i].x)},${Math.round(abs[i].y)}`;
             }
 
             node.setAttribute('points', pts);
@@ -140,7 +139,7 @@ class mxGraphViewCodec extends mxObjectCodec {
             node.setAttribute('height', Math.round(state.height));
           }
 
-          let offset = state.absoluteOffset;
+          const offset = state.absoluteOffset;
 
           // Writes the offset into 2 attributes
           if (offset != null) {
@@ -155,8 +154,11 @@ class mxGraphViewCodec extends mxObjectCodec {
         }
 
         for (let i = 0; i < childCount; i++) {
-          let childNode = this.encodeCell(enc,
-              view, model.getChildAt(cell, i));
+          const childNode = this.encodeCell(
+            enc,
+            view,
+            model.getChildAt(cell, i)
+          );
 
           if (childNode != null) {
             node.appendChild(childNode);

@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxGraph from "FIXME";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxGraph from 'FIXME';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxGraphCodec extends mxObjectCodec {
   /**
@@ -26,8 +26,15 @@ class mxGraphCodec extends mxObjectCodec {
    * - selection
    */
   constructor() {
-    super(new mxGraph(), ['graphListeners', 'eventListeners', 'view', 'container',
-      'cellRenderer', 'editor', 'selection']);
+    super(new mxGraph(), [
+      'graphListeners',
+      'eventListeners',
+      'view',
+      'container',
+      'cellRenderer',
+      'editor',
+      'selection',
+    ]);
   }
 }
 

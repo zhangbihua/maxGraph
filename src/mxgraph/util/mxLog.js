@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-let mxLog = {
+const mxLog = {
   /**
    * Class: mxLog
    *
@@ -56,16 +56,16 @@ let mxLog = {
    */
   init: () => {
     if (mxLog.window == null && document.body != null) {
-      let title = mxLog.consoleName + ' - mxGraph ' + mxClient.VERSION;
+      const title = `${mxLog.consoleName} - mxGraph ${mxClient.VERSION}`;
 
       // Creates a table that maintains the layout
-      let table = document.createElement('table');
+      const table = document.createElement('table');
       table.setAttribute('width', '100%');
       table.setAttribute('height', '100%');
 
-      let tbody = document.createElement('tbody');
+      const tbody = document.createElement('tbody');
       let tr = document.createElement('tr');
-      let td = document.createElement('td');
+      const td = document.createElement('td');
       td.style.verticalAlign = 'top';
 
       // Adds the actual console as a textarea
@@ -98,16 +98,16 @@ let mxLog = {
       table.appendChild(tbody);
 
       // Adds various debugging buttons
-      mxLog.addButton('Info', function (evt) {
+      mxLog.addButton('Info', function(evt) {
         mxLog.info();
       });
 
-      mxLog.addButton('DOM', function (evt) {
-        let content = mxUtils.getInnerHtml(document.body);
+      mxLog.addButton('DOM', function(evt) {
+        const content = mxUtils.getInnerHtml(document.body);
         mxLog.debug(content);
       });
 
-      mxLog.addButton('Trace', function (evt) {
+      mxLog.addButton('Trace', function(evt) {
         mxLog.TRACE = !mxLog.TRACE;
 
         if (mxLog.TRACE) {
@@ -117,7 +117,7 @@ let mxLog = {
         }
       });
 
-      mxLog.addButton('Copy', function (evt) {
+      mxLog.addButton('Copy', function(evt) {
         try {
           mxUtils.copy(mxLog.textarea.value);
         } catch (err) {
@@ -125,7 +125,7 @@ let mxLog = {
         }
       });
 
-      mxLog.addButton('Show', function (evt) {
+      mxLog.addButton('Show', function(evt) {
         try {
           mxUtils.popup(mxLog.textarea.value);
         } catch (err) {
@@ -133,7 +133,7 @@ let mxLog = {
         }
       });
 
-      mxLog.addButton('Clear', function (evt) {
+      mxLog.addButton('Clear', function(evt) {
         mxLog.textarea.value = '';
       });
 
@@ -141,15 +141,22 @@ let mxLog = {
       let h = 0;
       let w = 0;
 
-      if (typeof (window.innerWidth) === 'number') {
+      if (typeof window.innerWidth === 'number') {
         h = window.innerHeight;
         w = window.innerWidth;
       } else {
-        h = (document.documentElement.clientHeight || document.body.clientHeight);
+        h = document.documentElement.clientHeight || document.body.clientHeight;
         w = document.body.clientWidth;
       }
 
-      mxLog.window = new mxWindow(title, table, Math.max(0, w - 320), Math.max(0, h - 210), 300, 160);
+      mxLog.window = new mxWindow(
+        title,
+        table,
+        Math.max(0, w - 320),
+        Math.max(0, h - 210),
+        300,
+        160
+      );
       mxLog.window.setMaximizable(true);
       mxLog.window.setScrollable(false);
       mxLog.window.setResizable(true);
@@ -157,12 +164,19 @@ let mxLog = {
       mxLog.window.destroyOnClose = false;
 
       // Workaround for ignored textarea height in various setups
-      if ((mxClient.IS_NS && !mxClient.IS_GC &&
-          !mxClient.IS_SF && document.compatMode != 'BackCompat')) {
-        let elt = mxLog.window.getElement();
+      if (
+        mxClient.IS_NS &&
+        !mxClient.IS_GC &&
+        !mxClient.IS_SF &&
+        document.compatMode != 'BackCompat'
+      ) {
+        const elt = mxLog.window.getElement();
 
-        let resizeHandler = (sender, evt) => {
-          mxLog.textarea.style.height = Math.max(0, elt.offsetHeight - 70) + 'px';
+        const resizeHandler = (sender, evt) => {
+          mxLog.textarea.style.height = `${Math.max(
+            0,
+            elt.offsetHeight - 70
+          )}px`;
         };
 
         mxLog.window.addListener(mxEvent.RESIZE_END, resizeHandler);
@@ -189,7 +203,7 @@ let mxLog = {
    * Adds a button to the console using the given label and function.
    */
   addButton: (lab, funct) => {
-    let button = document.createElement('button');
+    const button = document.createElement('button');
     mxUtils.write(button, lab);
     mxEvent.addListener(button, 'click', funct);
     mxLog.td.appendChild(button);
@@ -208,7 +222,6 @@ let mxLog = {
     return false;
   },
 
-
   /**
    * Function: show
    *
@@ -223,7 +236,7 @@ let mxLog = {
    *
    * Shows or hides the console.
    */
-  setVisible: (visible) => {
+  setVisible: visible => {
     if (mxLog.window == null) {
       mxLog.init();
     }
@@ -249,9 +262,9 @@ let mxLog = {
    * mxLog.leave('World!', t0);
    * (end)
    */
-  enter: (string) => {
+  enter: string => {
     if (mxLog.TRACE) {
-      mxLog.writeln('Entering ' + string);
+      mxLog.writeln(`Entering ${string}`);
 
       return new Date().getTime();
     }
@@ -267,8 +280,8 @@ let mxLog = {
    */
   leave: (string, t0) => {
     if (mxLog.TRACE) {
-      let dt = (t0 != 0) ? ' (' + (new Date().getTime() - t0) + ' ms)' : '';
-      mxLog.writeln('Leaving ' + string + dt);
+      const dt = t0 != 0 ? ` (${new Date().getTime() - t0} ms)` : '';
+      mxLog.writeln(`Leaving ${string}${dt}`);
     }
   },
 
@@ -284,7 +297,7 @@ let mxLog = {
    * mxLog.debug('Hello, World!');
    * (end)
    */
-  debug: function() {
+  debug() {
     if (mxLog.DEBUG) {
       mxLog.writeln.apply(this, arguments);
     }
@@ -302,7 +315,7 @@ let mxLog = {
    * mxLog.warn('Hello, World!');
    * (end)
    */
-  warn: function() {
+  warn() {
     if (mxLog.WARN) {
       mxLog.writeln.apply(this, arguments);
     }
@@ -313,7 +326,7 @@ let mxLog = {
    *
    * Adds the specified strings to the console.
    */
-  write: function() {
+  write() {
     let string = '';
 
     for (let i = 0; i < arguments.length; i++) {
@@ -328,8 +341,10 @@ let mxLog = {
       mxLog.textarea.value = mxLog.textarea.value + string;
 
       // Workaround for no update in Presto 2.5.22 (Opera 10.5)
-      if (navigator.userAgent != null &&
-          navigator.userAgent.indexOf('Presto/2.5') >= 0) {
+      if (
+        navigator.userAgent != null &&
+        navigator.userAgent.indexOf('Presto/2.5') >= 0
+      ) {
         mxLog.textarea.style.visibility = 'hidden';
         mxLog.textarea.style.visibility = 'visible';
       }
@@ -346,7 +361,7 @@ let mxLog = {
    * Adds the specified strings to the console, appending a linefeed at the
    * end of each string.
    */
-  writeln: function() {
+  writeln() {
     let string = '';
 
     for (let i = 0; i < arguments.length; i++) {
@@ -357,8 +372,8 @@ let mxLog = {
       }
     }
 
-    mxLog.write(string + '\n');
-  }
+    mxLog.write(`${string}\n`);
+  },
 };
 
 export default mxLog;

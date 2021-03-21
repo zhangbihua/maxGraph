@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxRootChange from "FIXME";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxRootChange from 'FIXME';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxRootChangeCodec extends mxObjectCodec {
   /**
@@ -43,15 +43,17 @@ class mxRootChangeCodec extends mxObjectCodec {
    * using the respective decoder.
    */
   beforeDecode = (dec, node, obj) => {
-    if (node.firstChild != null &&
-        node.firstChild.nodeType === mxConstants.NODETYPE_ELEMENT) {
+    if (
+      node.firstChild != null &&
+      node.firstChild.nodeType === mxConstants.NODETYPE_ELEMENT
+    ) {
       // Makes sure the original node isn't modified
       node = node.cloneNode(true);
 
       let tmp = node.firstChild;
       obj.root = dec.decodeCell(tmp, false);
 
-      var tmp2 = tmp.nextSibling;
+      let tmp2 = tmp.nextSibling;
       tmp.parentNode.removeChild(tmp);
       tmp = tmp2;
 

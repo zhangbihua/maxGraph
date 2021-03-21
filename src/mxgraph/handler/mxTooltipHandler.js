@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEvent from "../util/mxEvent";
+import mxEvent from '../util/mxEvent';
 
 class mxTooltipHandler {
   /**
@@ -12,24 +12,28 @@ class mxTooltipHandler {
    * Specifies the zIndex for the tooltip and its shadow. Default is 10005.
    */
   zIndex = 10005;
+
   /**
    * Variable: graph
    *
    * Reference to the enclosing <mxGraph>.
    */
   graph = null;
+
   /**
    * Variable: delay
    *
    * Delay to show the tooltip in milliseconds. Default is 500.
    */
   delay = null;
+
   /**
    * Variable: ignoreTouchEvents
    *
    * Specifies if touch and pen events should be ignored. Default is true.
    */
   ignoreTouchEvents = true;
+
   /**
    * Variable: hideOnHover
    *
@@ -37,12 +41,14 @@ class mxTooltipHandler {
    * current cell. Default is false.
    */
   hideOnHover = false;
+
   /**
    * Variable: destroyed
    *
    * True if this handler was destroyed using <destroy>.
    */
   destroyed = false;
+
   /**
    * Variable: enabled
    *
@@ -80,7 +86,7 @@ class mxTooltipHandler {
       this.delay = delay || 500;
       this.graph.addMouseListener(this);
     }
-  };
+  }
 
   /**
    * Function: isEnabled
@@ -98,7 +104,7 @@ class mxTooltipHandler {
    * Enables or disables event handling. This implementation
    * updates <enabled>.
    */
-  setEnabled = (enabled) => {
+  setEnabled = enabled => {
     this.enabled = enabled;
   };
 
@@ -116,7 +122,7 @@ class mxTooltipHandler {
    *
    * Sets <hideOnHover>.
    */
-  setHideOnHover = (value) => {
+  setHideOnHover = value => {
     this.hideOnHover = value;
   };
 
@@ -133,8 +139,8 @@ class mxTooltipHandler {
 
       document.body.appendChild(this.div);
 
-      mxEvent.addGestureListeners(this.div, (evt) => {
-        let source = mxEvent.getSource(evt);
+      mxEvent.addGestureListeners(this.div, evt => {
+        const source = mxEvent.getSource(evt);
 
         if (source.nodeName != 'A') {
           this.hideTooltip();
@@ -148,7 +154,7 @@ class mxTooltipHandler {
    *
    * Returns the <mxCellState> to be used for showing a tooltip for this event.
    */
-  getStateForEvent = (me) => {
+  getStateForEvent = me => {
     return me.getState();
   };
 
@@ -172,11 +178,17 @@ class mxTooltipHandler {
   mouseMove = (sender, me) => {
     if (me.getX() != this.lastX || me.getY() != this.lastY) {
       this.reset(me, true);
-      let state = this.getStateForEvent(me);
+      const state = this.getStateForEvent(me);
 
-      if (this.isHideOnHover() || state != this.state || (me.getSource() != this.node &&
-          (!this.stateSource || (state != null && this.stateSource ==
-              (me.isSource(state.shape) || !me.isSource(state.text)))))) {
+      if (
+        this.isHideOnHover() ||
+        state != this.state ||
+        (me.getSource() != this.node &&
+          (!this.stateSource ||
+            (state != null &&
+              this.stateSource ==
+                (me.isSource(state.shape) || !me.isSource(state.text)))))
+      ) {
         this.hideTooltip();
       }
     }
@@ -195,7 +207,6 @@ class mxTooltipHandler {
     this.reset(me, true);
     this.hideTooltip();
   };
-
 
   /**
    * Function: resetTimer
@@ -217,21 +228,29 @@ class mxTooltipHandler {
   reset = (me, restart, state) => {
     if (!this.ignoreTouchEvents || mxEvent.isMouseEvent(me.getEvent())) {
       this.resetTimer();
-      state = (state != null) ? state : this.getStateForEvent(me);
+      state = state != null ? state : this.getStateForEvent(me);
 
-      if (restart && this.isEnabled() && state != null && (this.div == null ||
-          this.div.style.visibility == 'hidden')) {
-        let node = me.getSource();
-        let x = me.getX();
-        let y = me.getY();
-        let stateSource = me.isSource(state.shape) || me.isSource(state.text);
+      if (
+        restart &&
+        this.isEnabled() &&
+        state != null &&
+        (this.div == null || this.div.style.visibility == 'hidden')
+      ) {
+        const node = me.getSource();
+        const x = me.getX();
+        const y = me.getY();
+        const stateSource = me.isSource(state.shape) || me.isSource(state.text);
 
         this.thread = window.setTimeout(() => {
-          if (!this.graph.isEditing() && !this.graph.popupMenuHandler.isMenuShowing() && !this.graph.isMouseDown) {
+          if (
+            !this.graph.isEditing() &&
+            !this.graph.popupMenuHandler.isMenuShowing() &&
+            !this.graph.isMouseDown
+          ) {
             // Uses information from inside event cause using the event at
             // this (delayed) point in time is not possible in IE as it no
             // longer contains the required information (member not found)
-            let tip = this.graph.getTooltip(state, node, x, y);
+            const tip = this.graph.getTooltip(state, node, x, y);
             this.show(tip, x, y);
             this.state = state;
             this.node = node;
@@ -277,12 +296,13 @@ class mxTooltipHandler {
         this.init();
       }
 
-      let origin = mxUtils.getScrollOrigin();
+      const origin = mxUtils.getScrollOrigin();
 
       this.div.style.zIndex = this.zIndex;
-      this.div.style.left = (x + origin.x) + 'px';
-      this.div.style.top = (y + mxConstants.TOOLTIP_VERTICAL_OFFSET +
-          origin.y) + 'px';
+      this.div.style.left = `${x + origin.x}px`;
+      this.div.style.top = `${y +
+        mxConstants.TOOLTIP_VERTICAL_OFFSET +
+        origin.y}px`;
 
       if (!mxUtils.isNode(tip)) {
         this.div.innerHTML = tip.replace(/\n/g, '<br>');

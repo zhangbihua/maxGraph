@@ -51,18 +51,15 @@ class mxPanningManager {
     this.scrollLeft = 0;
     this.scrollTop = 0;
 
-    this.mouseListener =
-        {
-          mouseDown: (sender, me) => {
-          },
-          mouseMove: (sender, me) => {
-          },
-          mouseUp: (sender, me) => {
-            if (this.active) {
-              this.stop();
-            }
-          }
-        };
+    this.mouseListener = {
+      mouseDown: (sender, me) => {},
+      mouseMove: (sender, me) => {},
+      mouseUp: (sender, me) => {
+        if (this.active) {
+          this.stop();
+        }
+      },
+    };
 
     graph.addMouseListener(this.mouseListener);
 
@@ -75,7 +72,7 @@ class mxPanningManager {
     // Stops scrolling on every mouseup anywhere in the document
     mxEvent.addListener(document, 'mouseup', this.mouseUpListener);
 
-    let createThread = () => {
+    const createThread = () => {
       this.scrollbars = mxUtils.hasScrollbars(graph.container);
       this.scrollLeft = graph.container.scrollLeft;
       this.scrollTop = graph.container.scrollTop;
@@ -85,8 +82,8 @@ class mxPanningManager {
         this.tdy -= this.dy;
 
         if (this.scrollbars) {
-          let left = -graph.container.scrollLeft - Math.ceil(this.dx);
-          let top = -graph.container.scrollTop - Math.ceil(this.dy);
+          const left = -graph.container.scrollLeft - Math.ceil(this.dx);
+          const top = -graph.container.scrollTop - Math.ceil(this.dy);
           graph.panGraph(left, top);
           graph.panDx = this.scrollLeft - graph.container.scrollLeft;
           graph.panDy = this.scrollTop - graph.container.scrollTop;
@@ -124,10 +121,10 @@ class mxPanningManager {
       this.scrollLeft = graph.container.scrollLeft;
       this.scrollTop = graph.container.scrollTop;
 
-      w = (w != null) ? w : 0;
-      h = (h != null) ? h : 0;
+      w = w != null ? w : 0;
+      h = h != null ? h : 0;
 
-      let c = graph.container;
+      const c = graph.container;
       this.dx = x + w - c.scrollLeft - c.clientWidth;
 
       if (this.dx < 0 && Math.abs(this.dx) < this.border) {
@@ -142,7 +139,7 @@ class mxPanningManager {
         this.dx = x - c.scrollLeft;
 
         if (this.dx > 0 && this.dx < this.border) {
-          this.dx = this.dx - this.border;
+          this.dx -= this.border;
         } else if (this.handleMouseOut) {
           this.dx = Math.min(0, this.dx);
         } else {
@@ -164,7 +161,7 @@ class mxPanningManager {
         this.dy = y - c.scrollTop;
 
         if (this.dy > 0 && this.dy < this.border) {
-          this.dy = this.dy - this.border;
+          this.dy -= this.border;
         } else if (this.handleMouseOut) {
           this.dy = Math.min(0, this.dy);
         } else {
@@ -198,12 +195,15 @@ class mxPanningManager {
         this.tdy = 0;
 
         if (!this.scrollbars) {
-          let px = graph.panDx;
-          let py = graph.panDy;
+          const px = graph.panDx;
+          const py = graph.panDy;
 
           if (px != 0 || py != 0) {
             graph.panGraph(0, 0);
-            graph.view.setTranslate(this.t0x + px / graph.view.scale, this.t0y + py / graph.view.scale);
+            graph.view.setTranslate(
+              this.t0x + px / graph.view.scale,
+              this.t0y + py / graph.view.scale
+            );
           }
         } else {
           graph.panDx = 0;
@@ -217,7 +217,7 @@ class mxPanningManager {
       graph.removeMouseListener(this.mouseListener);
       mxEvent.removeListener(document, 'mouseup', this.mouseUpListener);
     };
-  };
+  }
 }
 
 export default mxPanningManager;

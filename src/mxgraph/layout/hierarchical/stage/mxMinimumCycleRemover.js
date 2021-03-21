@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxHierarchicalLayoutStage from "./mxHierarchicalLayoutStage";
+import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
 
 class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
   /**
@@ -27,7 +27,7 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
     super();
 
     this.layout = layout;
-  };
+  }
 
   /**
    * Function: execute
@@ -36,11 +36,11 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
    * and creates the resulting laid out graph within that facade for further
    * use.
    */
-  execute = (parent) => {
-    let model = this.layout.getModel();
-    let seenNodes = {};
-    let unseenNodesArray = model.vertexMapper.getValues();
-    let unseenNodes = {};
+  execute = parent => {
+    const model = this.layout.getModel();
+    const seenNodes = {};
+    const unseenNodesArray = model.vertexMapper.getValues();
+    const unseenNodes = {};
 
     for (let i = 0; i < unseenNodesArray.length; i++) {
       unseenNodes[unseenNodesArray[i].id] = unseenNodesArray[i];
@@ -51,7 +51,7 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
     let rootsArray = null;
 
     if (model.roots != null) {
-      let modelRoots = model.roots;
+      const modelRoots = model.roots;
       rootsArray = [];
 
       for (let i = 0; i < modelRoots.length; i++) {
@@ -59,43 +59,53 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
       }
     }
 
-    model.visit((parent, node, connectingEdge, layer, seen) => {
-      // Check if the cell is in it's own ancestor list, if so
-      // invert the connecting edge and reverse the target/source
-      // relationship to that edge in the parent and the cell
-      if (node.isAncestor(parent)) {
-        connectingEdge.invert();
-        mxUtils.remove(connectingEdge, parent.connectsAsSource);
-        parent.connectsAsTarget.push(connectingEdge);
-        mxUtils.remove(connectingEdge, node.connectsAsTarget);
-        node.connectsAsSource.push(connectingEdge);
-      }
+    model.visit(
+      (parent, node, connectingEdge, layer, seen) => {
+        // Check if the cell is in it's own ancestor list, if so
+        // invert the connecting edge and reverse the target/source
+        // relationship to that edge in the parent and the cell
+        if (node.isAncestor(parent)) {
+          connectingEdge.invert();
+          mxUtils.remove(connectingEdge, parent.connectsAsSource);
+          parent.connectsAsTarget.push(connectingEdge);
+          mxUtils.remove(connectingEdge, node.connectsAsTarget);
+          node.connectsAsSource.push(connectingEdge);
+        }
 
-      seenNodes[node.id] = node;
-      delete unseenNodes[node.id];
-    }, rootsArray, true, null);
+        seenNodes[node.id] = node;
+        delete unseenNodes[node.id];
+      },
+      rootsArray,
+      true,
+      null
+    );
 
     // If there are any nodes that should be nodes that the dfs can miss
     // these need to be processed with the dfs and the roots assigned
     // correctly to form a correct internal model
-    let seenNodesCopy = mxUtils.clone(seenNodes, null, true);
+    const seenNodesCopy = mxUtils.clone(seenNodes, null, true);
 
     // Pick a random cell and dfs from it
-    model.visit((parent, node, connectingEdge, layer, seen) => {
-      // Check if the cell is in it's own ancestor list, if so
-      // invert the connecting edge and reverse the target/source
-      // relationship to that edge in the parent and the cell
-      if (node.isAncestor(parent)) {
-        connectingEdge.invert();
-        mxUtils.remove(connectingEdge, parent.connectsAsSource);
-        node.connectsAsSource.push(connectingEdge);
-        parent.connectsAsTarget.push(connectingEdge);
-        mxUtils.remove(connectingEdge, node.connectsAsTarget);
-      }
+    model.visit(
+      (parent, node, connectingEdge, layer, seen) => {
+        // Check if the cell is in it's own ancestor list, if so
+        // invert the connecting edge and reverse the target/source
+        // relationship to that edge in the parent and the cell
+        if (node.isAncestor(parent)) {
+          connectingEdge.invert();
+          mxUtils.remove(connectingEdge, parent.connectsAsSource);
+          node.connectsAsSource.push(connectingEdge);
+          parent.connectsAsTarget.push(connectingEdge);
+          mxUtils.remove(connectingEdge, node.connectsAsTarget);
+        }
 
-      seenNodes[node.id] = node;
-      delete unseenNodes[node.id];
-    }, unseenNodes, true, seenNodesCopy);
+        seenNodes[node.id] = node;
+        delete unseenNodes[node.id];
+      },
+      unseenNodes,
+      true,
+      seenNodesCopy
+    );
   };
 }
 

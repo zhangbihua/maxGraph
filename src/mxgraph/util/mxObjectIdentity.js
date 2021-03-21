@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "./mxUtils";
+import mxUtils from './mxUtils';
 
-let mxObjectIdentity = {
+const mxObjectIdentity = {
   /**
    * Class: mxObjectIdentity
    *
@@ -36,14 +36,18 @@ let mxObjectIdentity = {
    * Returns the ID for the given object or function or null if no object
    * is specified.
    */
-  get: (obj) => {
+  get: obj => {
     if (obj != null) {
       if (obj[mxObjectIdentity.FIELD_NAME] == null) {
         if (typeof obj === 'object') {
-          let ctor = mxUtils.getFunctionName(obj.constructor);
-          obj[mxObjectIdentity.FIELD_NAME] = ctor + '#' + mxObjectIdentity.counter++;
+          const ctor = mxUtils.getFunctionName(obj.constructor);
+          obj[
+            mxObjectIdentity.FIELD_NAME
+          ] = `${ctor}#${mxObjectIdentity.counter++}`;
         } else if (typeof obj === 'function') {
-          obj[mxObjectIdentity.FIELD_NAME] = 'Function#' + mxObjectIdentity.counter++;
+          obj[
+            mxObjectIdentity.FIELD_NAME
+          ] = `Function#${mxObjectIdentity.counter++}`;
         }
       }
 
@@ -58,11 +62,11 @@ let mxObjectIdentity = {
    *
    * Deletes the ID from the given object or function.
    */
-  clear: (obj) => {
-    if (typeof (obj) === 'object' || typeof obj === 'function') {
+  clear: obj => {
+    if (typeof obj === 'object' || typeof obj === 'function') {
       delete obj[mxObjectIdentity.FIELD_NAME];
     }
-  }
+  },
 };
 
 export default mxObjectIdentity;

@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxEvent from "../util/mxEvent";
-import mxEventObject from "../util/mxEventObject";
-import mxKeyHandler from "../handler/mxKeyHandler";
+import mxEvent from '../util/mxEvent';
+import mxEventObject from '../util/mxEventObject';
+import mxKeyHandler from '../handler/mxKeyHandler';
 
 class mxDefaultKeyHandler {
   /**
@@ -72,15 +72,15 @@ class mxDefaultKeyHandler {
       // Extends the escape function of the internal key
       // handle to hide the properties dialog and fire
       // the escape event via the editor instance
-      let old = this.handler.escape;
+      const old = this.handler.escape;
 
-      this.handler.escape = (evt) => {
+      this.handler.escape = evt => {
         old.apply(this, [editor]);
         editor.hideProperties();
         editor.fireEvent(new mxEventObject(mxEvent.ESCAPE, 'event', evt));
       };
     }
-  };
+  }
 
   /**
    * Function: bindAction
@@ -97,7 +97,7 @@ class mxDefaultKeyHandler {
    * Default is false.
    */
   bindAction = (code, action, control) => {
-    let keyHandler = () => {
+    const keyHandler = () => {
       this.editor.execute(action);
     };
 

@@ -14,7 +14,7 @@ class mxCollapseChange {
     this.cell = cell;
     this.collapsed = collapsed;
     this.previous = collapsed;
-  };
+  }
 
   /**
    * Function: execute
@@ -26,7 +26,9 @@ class mxCollapseChange {
     if (this.cell != null) {
       this.collapsed = this.previous;
       this.previous = this.model.collapsedStateForCellChanged(
-          this.cell, this.previous);
+        this.cell,
+        this.previous
+      );
     }
   };
 }

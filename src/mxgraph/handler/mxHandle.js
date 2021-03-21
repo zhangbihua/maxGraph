@@ -42,42 +42,39 @@ class mxHandle {
   constructor(state, cursor, image, shape) {
     this.graph = state.view.graph;
     this.state = state;
-    this.cursor = (cursor != null) ? cursor : this.cursor;
-    this.image = (image != null) ? image : this.image;
-    this.shape = (shape != null) ? shape : null;
+    this.cursor = cursor != null ? cursor : this.cursor;
+    this.image = image != null ? image : this.image;
+    this.shape = shape != null ? shape : null;
     this.init();
-  };
+  }
 
   /**
    * Function: getPosition
    *
    * Hook for subclassers to return the current position of the handle.
    */
-  getPosition = (bounds) => {
-  };
+  getPosition = bounds => {};
 
   /**
    * Function: setPosition
    *
    * Hooks for subclassers to update the style in the <state>.
    */
-  setPosition = (bounds, pt, me) => {
-  };
+  setPosition = (bounds, pt, me) => {};
 
   /**
    * Function: execute
    *
    * Hook for subclassers to execute the handle.
    */
-  execute = (me) => {
-  };
+  execute = me => {};
 
   /**
    * Function: copyStyle
    *
    * Sets the cell style with the given name to the corresponding value in <state>.
    */
-  copyStyle = (key) => {
+  copyStyle = key => {
     this.graph.setCellStyles(key, this.state.style[key], [this.state.cell]);
   };
 
@@ -86,10 +83,13 @@ class mxHandle {
    *
    * Processes the given <mxMouseEvent> and invokes <setPosition>.
    */
-  processEvent = (me) => {
-    let scale = this.graph.view.scale;
-    let tr = this.graph.view.translate;
-    let pt = new mxPoint(me.getGraphX() / scale - tr.x, me.getGraphY() / scale - tr.y);
+  processEvent = me => {
+    const { scale } = this.graph.view;
+    const tr = this.graph.view.translate;
+    let pt = new mxPoint(
+      me.getGraphX() / scale - tr.x,
+      me.getGraphY() / scale - tr.y
+    );
 
     // Center shape on mouse cursor
     if (this.shape != null && this.shape.bounds != null) {
@@ -98,10 +98,17 @@ class mxHandle {
     }
 
     // Snaps to grid for the rotated position then applies the rotation for the direction after that
-    var alpha1 = -mxUtils.toRadians(this.getRotation());
-    var alpha2 = -mxUtils.toRadians(this.getTotalRotation()) - alpha1;
-    pt = this.flipPoint(this.rotatePoint(this.snapPoint(this.rotatePoint(pt, alpha1),
-        this.ignoreGrid || !this.graph.isGridEnabledEvent(me.getEvent())), alpha2));
+    const alpha1 = -mxUtils.toRadians(this.getRotation());
+    const alpha2 = -mxUtils.toRadians(this.getTotalRotation()) - alpha1;
+    pt = this.flipPoint(
+      this.rotatePoint(
+        this.snapPoint(
+          this.rotatePoint(pt, alpha1),
+          this.ignoreGrid || !this.graph.isGridEnabledEvent(me.getEvent())
+        ),
+        alpha2
+      )
+    );
     this.setPosition(this.state.getPaintBounds(), pt, me);
     this.redraw();
   };
@@ -157,10 +164,13 @@ class mxHandle {
    * Creates and initializes the shapes required for this handle.
    */
   init = () => {
-    let html = this.isHtmlRequired();
+    const html = this.isHtmlRequired();
 
     if (this.image != null) {
-      this.shape = new mxImageShape(new mxRectangle(0, 0, this.image.width, this.image.height), this.image.src);
+      this.shape = new mxImageShape(
+        new mxRectangle(0, 0, this.image.width, this.image.height),
+        this.image.src
+      );
       this.shape.preserveImageAspect = false;
     } else if (this.shape == null) {
       this.shape = this.createShape(html);
@@ -174,10 +184,19 @@ class mxHandle {
    *
    * Creates and returns the shape for this handle.
    */
-  createShape = (html) => {
-    let bounds = new mxRectangle(0, 0, mxConstants.HANDLE_SIZE, mxConstants.HANDLE_SIZE);
+  createShape = html => {
+    const bounds = new mxRectangle(
+      0,
+      0,
+      mxConstants.HANDLE_SIZE,
+      mxConstants.HANDLE_SIZE
+    );
 
-    return new mxRectangleShape(bounds, mxConstants.HANDLE_FILLCOLOR, mxConstants.HANDLE_STROKECOLOR);
+    return new mxRectangleShape(
+      bounds,
+      mxConstants.HANDLE_FILLCOLOR,
+      mxConstants.HANDLE_STROKECOLOR
+    );
   };
 
   /**
@@ -185,13 +204,15 @@ class mxHandle {
    *
    * Initializes <shape> and sets its cursor.
    */
-  initShape = (html) => {
+  initShape = html => {
     if (html && this.shape.isHtmlAllowed()) {
       this.shape.dialect = mxConstants.DIALECT_STRICTHTML;
       this.shape.init(this.graph.container);
     } else {
-      this.shape.dialect = (this.graph.dialect != mxConstants.DIALECT_SVG) ?
-          mxConstants.DIALECT_MIXEDHTML : mxConstants.DIALECT_SVG;
+      this.shape.dialect =
+        this.graph.dialect != mxConstants.DIALECT_SVG
+          ? mxConstants.DIALECT_MIXEDHTML
+          : mxConstants.DIALECT_SVG;
 
       if (this.cursor != null) {
         this.shape.init(this.graph.getView().getOverlayPane());
@@ -212,13 +233,17 @@ class mxHandle {
       let pt = this.getPosition(this.state.getPaintBounds());
 
       if (pt != null) {
-        let alpha = mxUtils.toRadians(this.getTotalRotation());
+        const alpha = mxUtils.toRadians(this.getTotalRotation());
         pt = this.rotatePoint(this.flipPoint(pt), alpha);
 
-        let scale = this.graph.view.scale;
-        let tr = this.graph.view.translate;
-        this.shape.bounds.x = Math.floor((pt.x + tr.x) * scale - this.shape.bounds.width / 2);
-        this.shape.bounds.y = Math.floor((pt.y + tr.y) * scale - this.shape.bounds.height / 2);
+        const { scale } = this.graph.view;
+        const tr = this.graph.view.translate;
+        this.shape.bounds.x = Math.floor(
+          (pt.x + tr.x) * scale - this.shape.bounds.width / 2
+        );
+        this.shape.bounds.y = Math.floor(
+          (pt.y + tr.y) * scale - this.shape.bounds.height / 2
+        );
 
         // Needed to force update of text bounds
         this.shape.redraw();
@@ -233,7 +258,10 @@ class mxHandle {
    * the text node is in the graph container.
    */
   isHtmlRequired = () => {
-    return this.state.text != null && this.state.text.node.parentNode == this.graph.container;
+    return (
+      this.state.text != null &&
+      this.state.text.node.parentNode == this.graph.container
+    );
   };
 
   /**
@@ -242,10 +270,10 @@ class mxHandle {
    * Rotates the point by the given angle.
    */
   rotatePoint = (pt, alpha) => {
-    let bounds = this.state.getCellBounds();
-    let cx = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
-    let cos = Math.cos(alpha);
-    let sin = Math.sin(alpha);
+    const bounds = this.state.getCellBounds();
+    const cx = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
+    const cos = Math.cos(alpha);
+    const sin = Math.sin(alpha);
 
     return mxUtils.getRotatedPoint(pt, cos, sin, cx);
   };
@@ -255,9 +283,9 @@ class mxHandle {
    *
    * Flips the given point vertically and/or horizontally.
    */
-  flipPoint = (pt) => {
+  flipPoint = pt => {
     if (this.state.shape != null) {
-      let bounds = this.state.getCellBounds();
+      const bounds = this.state.getCellBounds();
 
       if (this.state.shape.flipH) {
         pt.x = 2 * bounds.x + bounds.width - pt.x;
@@ -291,9 +319,9 @@ class mxHandle {
    *
    * Shows or hides this handle.
    */
-  setVisible = (visible) => {
+  setVisible = visible => {
     if (this.shape != null && this.shape.node != null) {
-      this.shape.node.style.display = (visible) ? '' : 'none';
+      this.shape.node.style.display = visible ? '' : 'none';
     }
   };
 

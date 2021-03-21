@@ -3,8 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEventSource from "./mxEventSource";
-import mxUtils from "./mxUtils";
+import mxEventSource from './mxEventSource';
+import mxUtils from './mxUtils';
 
 class mxAutoSaveManager extends mxEventSource {
   /**
@@ -107,7 +107,7 @@ class mxAutoSaveManager extends mxEventSource {
     };
 
     this.setGraph(graph);
-  };
+  }
 
   /**
    * Function: isEnabled
@@ -129,7 +129,7 @@ class mxAutoSaveManager extends mxEventSource {
    *
    * enabled - Boolean that specifies the new enabled state.
    */
-  setEnabled = (value) => {
+  setEnabled = value => {
     this.enabled = value;
   };
 
@@ -138,7 +138,7 @@ class mxAutoSaveManager extends mxEventSource {
    *
    * Sets the graph that the layouts operate on.
    */
-  setGraph = (graph) => {
+  setGraph = graph => {
     if (this.graph != null) {
       this.graph.getModel().removeListener(this.changeHandler);
     }
@@ -164,13 +164,15 @@ class mxAutoSaveManager extends mxEventSource {
    *
    * Invoked when the graph model has changed.
    */
-  graphModelChanged = (changes) => {
-    let now = new Date().getTime();
-    let dt = (now - this.lastSnapshot) / 1000;
+  graphModelChanged = changes => {
+    const now = new Date().getTime();
+    const dt = (now - this.lastSnapshot) / 1000;
 
-    if (dt > this.autoSaveDelay ||
-        (this.ignoredChanges >= this.autoSaveThreshold &&
-            dt > this.autoSaveThrottle)) {
+    if (
+      dt > this.autoSaveDelay ||
+      (this.ignoredChanges >= this.autoSaveThreshold &&
+        dt > this.autoSaveThrottle)
+    ) {
       this.save();
       this.reset();
     } else {

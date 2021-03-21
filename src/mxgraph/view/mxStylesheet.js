@@ -3,8 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxConstants from "../util/mxConstants";
-import mxPerimeter from "./mxPerimeter";
+import mxConstants from '../util/mxConstants';
+import mxPerimeter from './mxPerimeter';
 
 class mxStylesheet {
   /**
@@ -77,7 +77,7 @@ class mxStylesheet {
    * Creates and returns the default vertex style.
    */
   createDefaultVertexStyle = () => {
-    let style = {};
+    const style = {};
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
     style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
     style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
@@ -94,7 +94,7 @@ class mxStylesheet {
    * Creates and returns the default edge style.
    */
   createDefaultEdgeStyle = () => {
-    let style = {};
+    const style = {};
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
     style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
     style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
@@ -113,7 +113,7 @@ class mxStylesheet {
    * Parameters:
    * style - Key, value pairs that define the style.
    */
-  putDefaultVertexStyle = (style) => {
+  putDefaultVertexStyle = style => {
     this.putCellStyle('defaultVertex', style);
   };
 
@@ -122,7 +122,7 @@ class mxStylesheet {
    *
    * Sets the default style for edges using defaultEdge as the stylename.
    */
-  putDefaultEdgeStyle = (style) => {
+  putDefaultEdgeStyle = style => {
     this.putCellStyle('defaultEdge', style);
   };
 
@@ -132,7 +132,7 @@ class mxStylesheet {
    * Returns the default style for vertices.
    */
   getDefaultVertexStyle = () => {
-    return this.styles['defaultVertex'];
+    return this.styles.defaultVertex;
   };
 
   /**
@@ -141,7 +141,7 @@ class mxStylesheet {
    * Sets the default style for edges.
    */
   getDefaultEdgeStyle = () => {
-    return this.styles['defaultEdge'];
+    return this.styles.defaultEdge;
   };
 
   /**
@@ -201,10 +201,9 @@ class mxStylesheet {
     let style = defaultStyle;
 
     if (name != null && name.length > 0) {
-      let pairs = name.split(';');
+      const pairs = name.split(';');
 
-      if (style != null &&
-          name.charAt(0) != ';') {
+      if (style != null && name.charAt(0) != ';') {
         style = mxUtils.clone(style);
       } else {
         style = {};
@@ -212,12 +211,12 @@ class mxStylesheet {
 
       // Parses each key, value pair into the existing style
       for (let i = 0; i < pairs.length; i++) {
-        let tmp = pairs[i];
-        let pos = tmp.indexOf('=');
+        const tmp = pairs[i];
+        const pos = tmp.indexOf('=');
 
         if (pos >= 0) {
-          let key = tmp.substring(0, pos);
-          let value = tmp.substring(pos + 1);
+          const key = tmp.substring(0, pos);
+          const value = tmp.substring(pos + 1);
 
           if (value == mxConstants.NONE) {
             delete style[key];
@@ -228,10 +227,10 @@ class mxStylesheet {
           }
         } else {
           // Merges the entries from a named style
-          let tmpStyle = this.styles[tmp];
+          const tmpStyle = this.styles[tmp];
 
           if (tmpStyle != null) {
-            for (var key in tmpStyle) {
+            for (const key in tmpStyle) {
               style[key] = tmpStyle[key];
             }
           }

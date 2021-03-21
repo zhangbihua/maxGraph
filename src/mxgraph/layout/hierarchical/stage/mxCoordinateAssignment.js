@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2018, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxHierarchicalLayoutStage from "./mxHierarchicalLayoutStage";
+import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
 
 class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
   /**
@@ -202,8 +202,14 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * orientation - the position of the root node(s) relative to the graph
    * initialX - the leftmost coordinate node placement starts at
    */
-  constructor(layout, intraCellSpacing, interRankCellSpacing,
-              orientation, initialX, parallelEdgeSpacing) {
+  constructor(
+    layout,
+    intraCellSpacing,
+    interRankCellSpacing,
+    orientation,
+    initialX,
+    parallelEdgeSpacing
+  ) {
     super();
 
     this.layout = layout;
@@ -212,23 +218,23 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     this.orientation = orientation;
     this.initialX = initialX;
     this.parallelEdgeSpacing = parallelEdgeSpacing;
-  };
+  }
 
   /**
    * Utility method to display current positions
    */
   printStatus = () => {
-    let model = this.layout.getModel();
+    const model = this.layout.getModel();
     mxLog.show();
 
     mxLog.writeln('======Coord assignment debug=======');
 
     for (let j = 0; j < model.ranks.length; j++) {
       mxLog.write('Rank ', j, ' : ');
-      let rank = model.ranks[j];
+      const rank = model.ranks[j];
 
       for (let k = 0; k < rank.length; k++) {
-        let cell = rank[k];
+        const cell = rank[k];
 
         mxLog.write(cell.getGeneralPurposeVariable(j), '  ');
       }
@@ -243,14 +249,14 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    *
    * A basic horizontal coordinate assignment algorithm
    */
-  execute = (parent) => {
+  execute = parent => {
     this.jettyPositions = Object();
-    let model = this.layout.getModel();
+    const model = this.layout.getModel();
     this.currentXDelta = 0.0;
 
     this.initialCoords(this.layout.getGraph(), model);
 
-//  this.printStatus();
+    //  this.printStatus();
 
     if (this.fineTuning) {
       this.minNode(model);
@@ -260,7 +266,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
     if (this.fineTuning) {
       for (let i = 0; i < this.maxIterations; i++) {
-//      this.printStatus();
+        //      this.printStatus();
 
         // Median Heuristic
         if (i != 0) {
@@ -273,10 +279,10 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         // positioning is used
         if (this.currentXDelta < bestXDelta) {
           for (let j = 0; j < model.ranks.length; j++) {
-            let rank = model.ranks[j];
+            const rank = model.ranks[j];
 
             for (let k = 0; k < rank.length; k++) {
-              let cell = rank[k];
+              const cell = rank[k];
               cell.setX(j, cell.getGeneralPurposeVariable(j));
             }
           }
@@ -285,10 +291,10 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         } else {
           // Restore the best positions
           for (let j = 0; j < model.ranks.length; j++) {
-            let rank = model.ranks[j];
+            const rank = model.ranks[j];
 
             for (let k = 0; k < rank.length; k++) {
-              let cell = rank[k];
+              const cell = rank[k];
               cell.setGeneralPurposeVariable(j, cell.getX(j));
             }
           }
@@ -308,13 +314,13 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    *
    * Performs one median positioning sweep in both directions
    */
-  minNode = (model) => {
+  minNode = model => {
     // Queue all nodes
-    let nodeList = [];
+    const nodeList = [];
 
     // Need to be able to map from cell to cellWrapper
-    let map = new mxDictionary();
-    let rank = [];
+    const map = new mxDictionary();
+    const rank = [];
 
     for (let i = 0; i <= model.maxRank; i++) {
       rank[i] = model.ranks[i];
@@ -322,8 +328,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       for (let j = 0; j < rank[i].length; j++) {
         // Use the weight to store the rank and visited to store whether
         // or not the cell is in the list
-        let node = rank[i][j];
-        let nodeWrapper = new WeightedCellSorter(node, i);
+        const node = rank[i][j];
+        const nodeWrapper = new WeightedCellSorter(node, i);
         nodeWrapper.rankIndex = j;
         nodeWrapper.visited = true;
         nodeList.push(nodeWrapper);
@@ -334,39 +340,48 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
     // Set a limit of the maximum number of times we will access the queue
     // in case a loop appears
-    let maxTries = nodeList.length * 10;
+    const maxTries = nodeList.length * 10;
     let count = 0;
 
     // Don't move cell within this value of their median
-    let tolerance = 1;
+    const tolerance = 1;
 
     while (nodeList.length > 0 && count <= maxTries) {
-      let cellWrapper = nodeList.shift();
-      let cell = cellWrapper.cell;
+      const cellWrapper = nodeList.shift();
+      const { cell } = cellWrapper;
 
-      let rankValue = cellWrapper.weightedValue;
-      let rankIndex = parseInt(cellWrapper.rankIndex);
+      const rankValue = cellWrapper.weightedValue;
+      const rankIndex = parseInt(cellWrapper.rankIndex);
 
-      let nextLayerConnectedCells = cell.getNextLayerConnectedCells(rankValue);
-      let previousLayerConnectedCells = cell.getPreviousLayerConnectedCells(rankValue);
+      const nextLayerConnectedCells = cell.getNextLayerConnectedCells(
+        rankValue
+      );
+      const previousLayerConnectedCells = cell.getPreviousLayerConnectedCells(
+        rankValue
+      );
 
-      let numNextLayerConnected = nextLayerConnectedCells.length;
-      let numPreviousLayerConnected = previousLayerConnectedCells.length;
+      const numNextLayerConnected = nextLayerConnectedCells.length;
+      const numPreviousLayerConnected = previousLayerConnectedCells.length;
 
-      let medianNextLevel = this.medianXValue(nextLayerConnectedCells,
-          rankValue + 1);
-      let medianPreviousLevel = this.medianXValue(previousLayerConnectedCells,
-          rankValue - 1);
+      const medianNextLevel = this.medianXValue(
+        nextLayerConnectedCells,
+        rankValue + 1
+      );
+      const medianPreviousLevel = this.medianXValue(
+        previousLayerConnectedCells,
+        rankValue - 1
+      );
 
-      let numConnectedNeighbours = numNextLayerConnected
-          + numPreviousLayerConnected;
-      let currentPosition = cell.getGeneralPurposeVariable(rankValue);
+      const numConnectedNeighbours =
+        numNextLayerConnected + numPreviousLayerConnected;
+      const currentPosition = cell.getGeneralPurposeVariable(rankValue);
       let cellMedian = currentPosition;
 
       if (numConnectedNeighbours > 0) {
-        cellMedian = (medianNextLevel * numNextLayerConnected + medianPreviousLevel
-            * numPreviousLayerConnected)
-            / numConnectedNeighbours;
+        cellMedian =
+          (medianNextLevel * numNextLayerConnected +
+            medianPreviousLevel * numPreviousLayerConnected) /
+          numConnectedNeighbours;
       }
 
       // Flag storing whether or not position has changed
@@ -377,41 +392,47 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
           cell.setGeneralPurposeVariable(rankValue, cellMedian);
           positionChanged = true;
         } else {
-          let leftCell = rank[rankValue][rankIndex - 1];
-          let leftLimit = leftCell
-              .getGeneralPurposeVariable(rankValue);
-          leftLimit = leftLimit + leftCell.width / 2
-              + this.intraCellSpacing + cell.width / 2;
+          const leftCell = rank[rankValue][rankIndex - 1];
+          let leftLimit = leftCell.getGeneralPurposeVariable(rankValue);
+          leftLimit =
+            leftLimit +
+            leftCell.width / 2 +
+            this.intraCellSpacing +
+            cell.width / 2;
 
           if (leftLimit < cellMedian) {
             cell.setGeneralPurposeVariable(rankValue, cellMedian);
             positionChanged = true;
-          } else if (leftLimit < cell
-                  .getGeneralPurposeVariable(rankValue)
-              - tolerance) {
+          } else if (
+            leftLimit <
+            cell.getGeneralPurposeVariable(rankValue) - tolerance
+          ) {
             cell.setGeneralPurposeVariable(rankValue, leftLimit);
             positionChanged = true;
           }
         }
       } else if (cellMedian > currentPosition + tolerance) {
-        let rankSize = rank[rankValue].length;
+        const rankSize = rank[rankValue].length;
 
         if (rankIndex == rankSize - 1) {
           cell.setGeneralPurposeVariable(rankValue, cellMedian);
           positionChanged = true;
         } else {
-          let rightCell = rank[rankValue][rankIndex + 1];
-          let rightLimit = rightCell
-              .getGeneralPurposeVariable(rankValue);
-          rightLimit = rightLimit - rightCell.width / 2
-              - this.intraCellSpacing - cell.width / 2;
+          const rightCell = rank[rankValue][rankIndex + 1];
+          let rightLimit = rightCell.getGeneralPurposeVariable(rankValue);
+          rightLimit =
+            rightLimit -
+            rightCell.width / 2 -
+            this.intraCellSpacing -
+            cell.width / 2;
 
           if (rightLimit > cellMedian) {
             cell.setGeneralPurposeVariable(rankValue, cellMedian);
             positionChanged = true;
-          } else if (rightLimit > cell
-                  .getGeneralPurposeVariable(rankValue)
-              + tolerance) {
+          } else if (
+            rightLimit >
+            cell.getGeneralPurposeVariable(rankValue) + tolerance
+          ) {
             cell.setGeneralPurposeVariable(rankValue, rightLimit);
             positionChanged = true;
           }
@@ -421,8 +442,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       if (positionChanged) {
         // Add connected nodes to map and list
         for (let i = 0; i < nextLayerConnectedCells.length; i++) {
-          let connectedCell = nextLayerConnectedCells[i];
-          let connectedCellWrapper = map.get(connectedCell);
+          const connectedCell = nextLayerConnectedCells[i];
+          const connectedCellWrapper = map.get(connectedCell);
 
           if (connectedCellWrapper != null) {
             if (connectedCellWrapper.visited == false) {
@@ -434,8 +455,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
         // Add connected nodes to map and list
         for (let i = 0; i < previousLayerConnectedCells.length; i++) {
-          let connectedCell = previousLayerConnectedCells[i];
-          let connectedCellWrapper = map.get(connectedCell);
+          const connectedCell = previousLayerConnectedCells[i];
+          const connectedCellWrapper = map.get(connectedCell);
 
           if (connectedCellWrapper != null) {
             if (connectedCellWrapper.visited == false) {
@@ -463,7 +484,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    */
   medianPos = (i, model) => {
     // Reverse sweep direction each time through this method
-    let downwardSweep = (i % 2 == 0);
+    const downwardSweep = i % 2 == 0;
 
     if (downwardSweep) {
       for (let j = model.maxRank; j > 0; j--) {
@@ -489,16 +510,16 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * relative to
    */
   rankMedianPosition = (rankValue, model, nextRankValue) => {
-    let rank = model.ranks[rankValue];
+    const rank = model.ranks[rankValue];
 
     // Form an array of the order in which the cell are to be processed
     // , the order is given by the weighted sum of the in or out edges,
     // depending on whether we're traveling up or down the hierarchy.
-    let weightedValues = [];
-    let cellMap = {};
+    const weightedValues = [];
+    const cellMap = {};
 
     for (let i = 0; i < rank.length; i++) {
-      let currentCell = rank[i];
+      const currentCell = rank[i];
       weightedValues[i] = new WeightedCellSorter();
       weightedValues[i].cell = currentCell;
       weightedValues[i].rankIndex = i;
@@ -506,17 +527,21 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       let nextLayerConnectedCells = null;
 
       if (nextRankValue < rankValue) {
-        nextLayerConnectedCells = currentCell
-            .getPreviousLayerConnectedCells(rankValue);
+        nextLayerConnectedCells = currentCell.getPreviousLayerConnectedCells(
+          rankValue
+        );
       } else {
-        nextLayerConnectedCells = currentCell
-            .getNextLayerConnectedCells(rankValue);
+        nextLayerConnectedCells = currentCell.getNextLayerConnectedCells(
+          rankValue
+        );
       }
 
       // Calculate the weighing based on this node type and those this
       // node is connected to on the next layer
       weightedValues[i].weightedValue = this.calculatedWeightedValue(
-          currentCell, nextLayerConnectedCells);
+        currentCell,
+        nextLayerConnectedCells
+      );
     }
 
     weightedValues.sort(compare);
@@ -526,24 +551,28 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
     for (let i = 0; i < weightedValues.length; i++) {
       let numConnectionsNextLevel = 0;
-      let cell = weightedValues[i].cell;
+      const { cell } = weightedValues[i];
       let nextLayerConnectedCells = null;
       let medianNextLevel = 0;
 
       if (nextRankValue < rankValue) {
-        nextLayerConnectedCells = cell.getPreviousLayerConnectedCells(
-            rankValue).slice();
+        nextLayerConnectedCells = cell
+          .getPreviousLayerConnectedCells(rankValue)
+          .slice();
       } else {
-        nextLayerConnectedCells = cell.getNextLayerConnectedCells(
-            rankValue).slice();
+        nextLayerConnectedCells = cell
+          .getNextLayerConnectedCells(rankValue)
+          .slice();
       }
 
       if (nextLayerConnectedCells != null) {
         numConnectionsNextLevel = nextLayerConnectedCells.length;
 
         if (numConnectionsNextLevel > 0) {
-          medianNextLevel = this.medianXValue(nextLayerConnectedCells,
-              nextRankValue);
+          medianNextLevel = this.medianXValue(
+            nextLayerConnectedCells,
+            nextRankValue
+          );
         } else {
           // For case of no connections on the next level set the
           // median to be the current position and try to be
@@ -555,22 +584,22 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       let leftBuffer = 0.0;
       let leftLimit = -100000000.0;
 
-      for (let j = weightedValues[i].rankIndex - 1; j >= 0;) {
-        let weightedValue = cellMap[rank[j].id];
+      for (let j = weightedValues[i].rankIndex - 1; j >= 0; ) {
+        const weightedValue = cellMap[rank[j].id];
 
         if (weightedValue != null) {
-          let leftCell = weightedValue.cell;
+          const leftCell = weightedValue.cell;
 
           if (weightedValue.visited) {
             // The left limit is the right hand limit of that
             // cell plus any allowance for unallocated cells
             // in-between
-            leftLimit = leftCell
-                    .getGeneralPurposeVariable(rankValue)
-                + leftCell.width
-                / 2.0
-                + this.intraCellSpacing
-                + leftBuffer + cell.width / 2.0;
+            leftLimit =
+              leftCell.getGeneralPurposeVariable(rankValue) +
+              leftCell.width / 2.0 +
+              this.intraCellSpacing +
+              leftBuffer +
+              cell.width / 2.0;
             j = -1;
           } else {
             leftBuffer += leftCell.width + this.intraCellSpacing;
@@ -582,22 +611,26 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       let rightBuffer = 0.0;
       let rightLimit = 100000000.0;
 
-      for (let j = weightedValues[i].rankIndex + 1; j < weightedValues.length;) {
-        let weightedValue = cellMap[rank[j].id];
+      for (
+        let j = weightedValues[i].rankIndex + 1;
+        j < weightedValues.length;
+
+      ) {
+        const weightedValue = cellMap[rank[j].id];
 
         if (weightedValue != null) {
-          let rightCell = weightedValue.cell;
+          const rightCell = weightedValue.cell;
 
           if (weightedValue.visited) {
             // The left limit is the right hand limit of that
             // cell plus any allowance for unallocated cells
             // in-between
-            rightLimit = rightCell
-                    .getGeneralPurposeVariable(rankValue)
-                - rightCell.width
-                / 2.0
-                - this.intraCellSpacing
-                - rightBuffer - cell.width / 2.0;
+            rightLimit =
+              rightCell.getGeneralPurposeVariable(rankValue) -
+              rightCell.width / 2.0 -
+              this.intraCellSpacing -
+              rightBuffer -
+              cell.width / 2.0;
             j = weightedValues.length;
           } else {
             rightBuffer += rightCell.width + this.intraCellSpacing;
@@ -639,7 +672,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     let totalWeight = 0;
 
     for (let i = 0; i < collection.length; i++) {
-      let cell = collection[i];
+      const cell = collection[i];
 
       if (currentCell.isVertex() && cell.isVertex()) {
         totalWeight++;
@@ -669,7 +702,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       return 0;
     }
 
-    let medianValues = [];
+    const medianValues = [];
 
     for (let i = 0; i < connectedCells.length; i++) {
       medianValues[i] = connectedCells[i].getGeneralPurposeVariable(rankValue);
@@ -682,13 +715,12 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     if (connectedCells.length % 2 == 1) {
       // For odd numbers of adjacent vertices return the median
       return medianValues[Math.floor(connectedCells.length / 2)];
-    } else {
-      let medianPoint = connectedCells.length / 2;
-      let leftMedian = medianValues[medianPoint - 1];
-      let rightMedian = medianValues[medianPoint];
-
-      return ((leftMedian + rightMedian) / 2);
     }
+    const medianPoint = connectedCells.length / 2;
+    const leftMedian = medianValues[medianPoint - 1];
+    const rightMedian = medianValues[medianPoint];
+
+    return (leftMedian + rightMedian) / 2;
   };
 
   /**
@@ -735,24 +767,26 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * model - an internal model of the hierarchical layout
    */
   rankCoordinates = (rankValue, graph, model) => {
-    let rank = model.ranks[rankValue];
+    const rank = model.ranks[rankValue];
     let maxY = 0.0;
-    let localX = this.initialX + (this.widestRankValue - this.rankWidths[rankValue])
-        / 2;
+    let localX =
+      this.initialX + (this.widestRankValue - this.rankWidths[rankValue]) / 2;
 
     // Store whether or not any of the cells' bounds were unavailable so
     // to only issue the warning once for all cells
     let boundsWarning = false;
 
     for (let i = 0; i < rank.length; i++) {
-      let node = rank[i];
+      const node = rank[i];
 
       if (node.isVertex()) {
-        let bounds = this.layout.getVertexBounds(node.cell);
+        const bounds = this.layout.getVertexBounds(node.cell);
 
         if (bounds != null) {
-          if (this.orientation == mxConstants.DIRECTION_NORTH ||
-              this.orientation == mxConstants.DIRECTION_SOUTH) {
+          if (
+            this.orientation == mxConstants.DIRECTION_NORTH ||
+            this.orientation == mxConstants.DIRECTION_SOUTH
+          ) {
             node.width = bounds.width;
             node.height = bounds.height;
           } else {
@@ -815,7 +849,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     for (let rankValue = model.maxRank; rankValue >= 0; rankValue--) {
       // Keep track of the widest cell on this rank
       let maxCellHeight = 0.0;
-      let rank = model.ranks[rankValue];
+      const rank = model.ranks[rankValue];
       let localX = this.initialX;
 
       // Store whether or not any of the cells' bounds were unavailable so
@@ -823,14 +857,16 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       let boundsWarning = false;
 
       for (let i = 0; i < rank.length; i++) {
-        let node = rank[i];
+        const node = rank[i];
 
         if (node.isVertex()) {
-          let bounds = this.layout.getVertexBounds(node.cell);
+          const bounds = this.layout.getVertexBounds(node.cell);
 
           if (bounds != null) {
-            if (this.orientation == mxConstants.DIRECTION_NORTH ||
-                this.orientation == mxConstants.DIRECTION_SOUTH) {
+            if (
+              this.orientation == mxConstants.DIRECTION_NORTH ||
+              this.orientation == mxConstants.DIRECTION_SOUTH
+            ) {
               node.width = bounds.width;
               node.height = bounds.height;
             } else {
@@ -876,19 +912,23 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       }
 
       this.rankY[rankValue] = y;
-      let distanceToNextRank = maxCellHeight / 2.0
-          + lastRankMaxCellHeight / 2.0 + this.interRankCellSpacing;
+      const distanceToNextRank =
+        maxCellHeight / 2.0 +
+        lastRankMaxCellHeight / 2.0 +
+        this.interRankCellSpacing;
       lastRankMaxCellHeight = maxCellHeight;
 
-      if (this.orientation == mxConstants.DIRECTION_NORTH ||
-          this.orientation == mxConstants.DIRECTION_WEST) {
+      if (
+        this.orientation == mxConstants.DIRECTION_NORTH ||
+        this.orientation == mxConstants.DIRECTION_WEST
+      ) {
         y += distanceToNextRank;
       } else {
         y -= distanceToNextRank;
       }
 
       for (let i = 0; i < rank.length; i++) {
-        let cell = rank[i];
+        const cell = rank[i];
         cell.setY(rankValue, y);
       }
     }
@@ -912,10 +952,10 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     // preferred direction used is the one where the final
     // control points have the least offset from the connectable
     // region of the terminating vertices
-    let edges = model.edgeMapper.getValues();
+    const edges = model.edgeMapper.getValues();
 
     for (let j = 0; j < edges.length; j++) {
-      let cell = edges[j];
+      const cell = edges[j];
 
       if (cell.maxRank - cell.minRank - 1 < 1) {
         continue;
@@ -923,13 +963,12 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
       // At least two virtual nodes in the edge
       // Check first whether the edge is already straight
-      let referenceX = cell
-          .getGeneralPurposeVariable(cell.minRank + 1);
+      let referenceX = cell.getGeneralPurposeVariable(cell.minRank + 1);
       let edgeStraight = true;
       let refSegCount = 0;
 
       for (let i = cell.minRank + 2; i < cell.maxRank; i++) {
-        let x = cell.getGeneralPurposeVariable(i);
+        const x = cell.getGeneralPurposeVariable(i);
 
         if (referenceX != x) {
           edgeStraight = false;
@@ -942,15 +981,15 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       if (!edgeStraight) {
         let upSegCount = 0;
         let downSegCount = 0;
-        let upXPositions = [];
-        let downXPositions = [];
+        const upXPositions = [];
+        const downXPositions = [];
 
         let currentX = cell.getGeneralPurposeVariable(cell.minRank + 1);
 
         for (let i = cell.minRank + 1; i < cell.maxRank - 1; i++) {
           // Attempt to straight out the control point on the
           // next segment up with the current control point.
-          let nextX = cell.getX(i + 1);
+          const nextX = cell.getX(i + 1);
 
           if (currentX == nextX) {
             upXPositions[i - cell.minRank - 1] = currentX;
@@ -970,7 +1009,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         for (let i = cell.maxRank - 1; i > cell.minRank + 1; i--) {
           // Attempt to straight out the control point on the
           // next segment down with the current control point.
-          let nextX = cell.getX(i - 1);
+          const nextX = cell.getX(i - 1);
 
           if (currentX == nextX) {
             downXPositions[i - cell.minRank - 2] = currentX;
@@ -1021,7 +1060,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * position - the x position being sought
    */
   repositionValid = (model, cell, rank, position) => {
-    let rankArray = model.ranks[rank];
+    const rankArray = model.ranks[rank];
     let rankIndex = -1;
 
     for (let i = 0; i < rankArray.length; i++) {
@@ -1035,7 +1074,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       return false;
     }
 
-    let currentX = cell.getGeneralPurposeVariable(rank);
+    const currentX = cell.getGeneralPurposeVariable(rank);
 
     if (position < currentX) {
       // Trying to move node to the left.
@@ -1044,33 +1083,35 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         return true;
       }
 
-      let leftCell = rankArray[rankIndex - 1];
+      const leftCell = rankArray[rankIndex - 1];
       let leftLimit = leftCell.getGeneralPurposeVariable(rank);
-      leftLimit = leftLimit + leftCell.width / 2
-          + this.intraCellSpacing + cell.width / 2;
+      leftLimit =
+        leftLimit + leftCell.width / 2 + this.intraCellSpacing + cell.width / 2;
 
       if (leftLimit <= position) {
         return true;
-      } else {
-        return false;
       }
-    } else if (position > currentX) {
+      return false;
+    }
+    if (position > currentX) {
       // Trying to move node to the right.
       if (rankIndex == rankArray.length - 1) {
         // Right-most node, can move anywhere
         return true;
       }
 
-      let rightCell = rankArray[rankIndex + 1];
+      const rightCell = rankArray[rankIndex + 1];
       let rightLimit = rightCell.getGeneralPurposeVariable(rank);
-      rightLimit = rightLimit - rightCell.width / 2
-          - this.intraCellSpacing - cell.width / 2;
+      rightLimit =
+        rightLimit -
+        rightCell.width / 2 -
+        this.intraCellSpacing -
+        cell.width / 2;
 
       if (rightLimit >= position) {
         return true;
-      } else {
-        return false;
       }
+      return false;
     }
 
     return true;
@@ -1096,7 +1137,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       this.rankBottomY[i] = -Number.MAX_VALUE;
     }
 
-    let vertices = model.vertexMapper.getValues();
+    const vertices = model.vertexMapper.getValues();
 
     // Process vertices all first, since they define the lower and
     // limits of each rank. Between these limits lie the channels
@@ -1108,13 +1149,15 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
     // Post process edge styles. Needs the vertex locations set for initial
     // values of the top and bottoms of each rank
-    if (this.layout.edgeStyle == mxHierarchicalEdgeStyle.ORTHOGONAL
-        || this.layout.edgeStyle == mxHierarchicalEdgeStyle.POLYLINE
-        || this.layout.edgeStyle == mxHierarchicalEdgeStyle.CURVE) {
+    if (
+      this.layout.edgeStyle == mxHierarchicalEdgeStyle.ORTHOGONAL ||
+      this.layout.edgeStyle == mxHierarchicalEdgeStyle.POLYLINE ||
+      this.layout.edgeStyle == mxHierarchicalEdgeStyle.CURVE
+    ) {
       this.localEdgeProcessing(model);
     }
 
-    let edges = model.edgeMapper.getValues();
+    const edges = model.edgeMapper.getValues();
 
     for (let i = 0; i < edges.length; i++) {
       this.setEdgePosition(edges[i]);
@@ -1130,14 +1173,14 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    *
    * model - the layout model
    */
-  localEdgeProcessing = (model) => {
+  localEdgeProcessing = model => {
     // Iterate through each vertex, look at the edges connected in
     // both directions.
     for (let rankIndex = 0; rankIndex < model.ranks.length; rankIndex++) {
-      let rank = model.ranks[rankIndex];
+      const rank = model.ranks[rankIndex];
 
       for (let cellIndex = 0; cellIndex < rank.length; cellIndex++) {
-        let cell = rank[cellIndex];
+        const cell = rank[cellIndex];
 
         if (cell.isVertex()) {
           let currentCells = cell.getPreviousLayerConnectedCells(rankIndex);
@@ -1146,15 +1189,19 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
           // Two loops, last connected cells, and next
           for (let k = 0; k < 2; k++) {
-            if (currentRank > -1
-                && currentRank < model.ranks.length
-                && currentCells != null
-                && currentCells.length > 0) {
-              let sortedCells = [];
+            if (
+              currentRank > -1 &&
+              currentRank < model.ranks.length &&
+              currentCells != null &&
+              currentCells.length > 0
+            ) {
+              const sortedCells = [];
 
               for (let j = 0; j < currentCells.length; j++) {
-                let sorter = new WeightedCellSorter(
-                    currentCells[j], currentCells[j].getX(currentRank));
+                const sorter = new WeightedCellSorter(
+                  currentCells[j],
+                  currentCells[j].getX(currentRank)
+                );
                 sortedCells.push(sorter);
               }
 
@@ -1167,26 +1214,30 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
               // with edge of vertex
               let connectedEdgeCount = 0;
               let connectedEdgeGroupCount = 0;
-              let connectedEdges = [];
+              const connectedEdges = [];
               // Calculate width requirements for all connected edges
               for (let j = 0; j < sortedCells.length; j++) {
-                let innerCell = sortedCells[j].cell;
+                const innerCell = sortedCells[j].cell;
                 var connections;
 
                 if (innerCell.isVertex()) {
                   // Get the connecting edge
                   if (k == 0) {
                     connections = cell.connectsAsSource;
-
                   } else {
                     connections = cell.connectsAsTarget;
                   }
 
-                  for (let connIndex = 0; connIndex < connections.length; connIndex++) {
-                    if (connections[connIndex].source == innerCell
-                        || connections[connIndex].target == innerCell) {
-                      connectedEdgeCount += connections[connIndex].edges
-                          .length;
+                  for (
+                    let connIndex = 0;
+                    connIndex < connections.length;
+                    connIndex++
+                  ) {
+                    if (
+                      connections[connIndex].source == innerCell ||
+                      connections[connIndex].target == innerCell
+                    ) {
+                      connectedEdgeCount += connections[connIndex].edges.length;
                       connectedEdgeGroupCount++;
 
                       connectedEdges.push(connections[connIndex]);
@@ -1199,26 +1250,24 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
                 }
               }
 
-              let requiredWidth = (connectedEdgeCount + 1)
-                  * this.prefHozEdgeSep;
+              const requiredWidth =
+                (connectedEdgeCount + 1) * this.prefHozEdgeSep;
 
               // Add a buffer on the edges of the vertex if the edge count allows
-              if (cell.width > requiredWidth
-                  + (2 * this.prefHozEdgeSep)) {
+              if (cell.width > requiredWidth + 2 * this.prefHozEdgeSep) {
                 leftLimit += this.prefHozEdgeSep;
                 rightLimit -= this.prefHozEdgeSep;
               }
 
-              let availableWidth = rightLimit - leftLimit;
-              let edgeSpacing = availableWidth / connectedEdgeCount;
+              const availableWidth = rightLimit - leftLimit;
+              const edgeSpacing = availableWidth / connectedEdgeCount;
 
               let currentX = leftLimit + edgeSpacing / 2.0;
               let currentYOffset = this.minEdgeJetty - this.prefVertEdgeOff;
               let maxYOffset = 0;
 
               for (let j = 0; j < connectedEdges.length; j++) {
-                let numActualEdges = connectedEdges[j].edges
-                    .length;
+                const numActualEdges = connectedEdges[j].edges.length;
                 let pos = this.jettyPositions[connectedEdges[j].ids[0]];
 
                 if (pos == null) {
@@ -1240,8 +1289,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
                   pos[m * 4 + k * 2 + 1] = currentYOffset;
                 }
 
-                maxYOffset = Math.max(maxYOffset,
-                    currentYOffset);
+                maxYOffset = Math.max(maxYOffset, currentYOffset);
               }
             }
 
@@ -1259,15 +1307,15 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    *
    * Fixes the control points
    */
-  setEdgePosition = (cell) => {
+  setEdgePosition = cell => {
     // For parallel edges we need to seperate out the points a
     // little
     let offsetX = 0;
     // Only set the edge control points once
 
     if (cell.temp[0] != 101207) {
-      let maxRank = cell.maxRank;
-      let minRank = cell.minRank;
+      let { maxRank } = cell;
+      let { minRank } = cell;
 
       if (maxRank == minRank) {
         maxRank = cell.source.maxRank;
@@ -1275,19 +1323,20 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       }
 
       let parallelEdgeCount = 0;
-      let jettys = this.jettyPositions[cell.ids[0]];
+      const jettys = this.jettyPositions[cell.ids[0]];
 
-      let source = cell.isReversed ? cell.target.cell : cell.source.cell;
-      let graph = this.layout.graph;
-      let layoutReversed = this.orientation == mxConstants.DIRECTION_EAST
-          || this.orientation == mxConstants.DIRECTION_SOUTH;
+      const source = cell.isReversed ? cell.target.cell : cell.source.cell;
+      const { graph } = this.layout;
+      const layoutReversed =
+        this.orientation == mxConstants.DIRECTION_EAST ||
+        this.orientation == mxConstants.DIRECTION_SOUTH;
 
       for (let i = 0; i < cell.edges.length; i++) {
-        let realEdge = cell.edges[i];
-        let realSource = this.layout.getVisibleTerminal(realEdge, true);
+        const realEdge = cell.edges[i];
+        const realSource = this.layout.getVisibleTerminal(realEdge, true);
 
-        //List oldPoints = graph.getPoints(realEdge);
-        let newPoints = [];
+        // List oldPoints = graph.getPoints(realEdge);
+        const newPoints = [];
 
         // Single length reversed edges end up with the jettys in the wrong
         // places. Since single length edges only have jettys, not segment
@@ -1304,10 +1353,14 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
         // First jetty of edge
         if (jettys != null) {
-          let arrayOffset = reversed ? 2 : 0;
-          let y = reversed ?
-              (layoutReversed ? this.rankBottomY[minRank] : this.rankTopY[minRank]) :
-              (layoutReversed ? this.rankTopY[maxRank] : this.rankBottomY[maxRank]);
+          const arrayOffset = reversed ? 2 : 0;
+          let y = reversed
+            ? layoutReversed
+              ? this.rankBottomY[minRank]
+              : this.rankTopY[minRank]
+            : layoutReversed
+            ? this.rankTopY[maxRank]
+            : this.rankBottomY[maxRank];
           let jetty = jettys[parallelEdgeCount * 4 + 1 + arrayOffset];
 
           if (reversed != layoutReversed) {
@@ -1317,20 +1370,27 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
           y += jetty;
           let x = jettys[parallelEdgeCount * 4 + arrayOffset];
 
-          let modelSource = graph.model.getTerminal(realEdge, true);
+          const modelSource = graph.model.getTerminal(realEdge, true);
 
-          if (this.layout.isPort(modelSource) && graph.model.getParent(modelSource) == realSource) {
-            let state = graph.view.getState(modelSource);
+          if (
+            this.layout.isPort(modelSource) &&
+            graph.model.getParent(modelSource) == realSource
+          ) {
+            const state = graph.view.getState(modelSource);
 
             if (state != null) {
               x = state.x;
             } else {
-              x = realSource.geometry.x + cell.source.width * modelSource.geometry.x;
+              x =
+                realSource.geometry.x +
+                cell.source.width * modelSource.geometry.x;
             }
           }
 
-          if (this.orientation == mxConstants.DIRECTION_NORTH
-              || this.orientation == mxConstants.DIRECTION_SOUTH) {
+          if (
+            this.orientation == mxConstants.DIRECTION_NORTH ||
+            this.orientation == mxConstants.DIRECTION_SOUTH
+          ) {
             newPoints.push(new mxPoint(x, y));
 
             if (this.layout.edgeStyle == mxHierarchicalEdgeStyle.CURVE) {
@@ -1361,23 +1421,33 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         }
         // Reversed edges need the points inserted in
         // reverse order
-        for (let j = loopStart; (cell.maxRank != cell.minRank) && j != loopLimit; j += loopDelta) {
+        for (
+          let j = loopStart;
+          cell.maxRank != cell.minRank && j != loopLimit;
+          j += loopDelta
+        ) {
           // The horizontal position in a vertical layout
-          let positionX = cell.x[j] + offsetX;
+          const positionX = cell.x[j] + offsetX;
 
           // Work out the vertical positions in a vertical layout
           // in the edge buffer channels above and below this rank
-          let topChannelY = (this.rankTopY[currentRank] + this.rankBottomY[currentRank + 1]) / 2.0;
-          let bottomChannelY = (this.rankTopY[currentRank - 1] + this.rankBottomY[currentRank]) / 2.0;
+          let topChannelY =
+            (this.rankTopY[currentRank] + this.rankBottomY[currentRank + 1]) /
+            2.0;
+          let bottomChannelY =
+            (this.rankTopY[currentRank - 1] + this.rankBottomY[currentRank]) /
+            2.0;
 
           if (reversed) {
-            let tmp = topChannelY;
+            const tmp = topChannelY;
             topChannelY = bottomChannelY;
             bottomChannelY = tmp;
           }
 
-          if (this.orientation == mxConstants.DIRECTION_NORTH ||
-              this.orientation == mxConstants.DIRECTION_SOUTH) {
+          if (
+            this.orientation == mxConstants.DIRECTION_NORTH ||
+            this.orientation == mxConstants.DIRECTION_SOUTH
+          ) {
             newPoints.push(new mxPoint(positionX, topChannelY));
             newPoints.push(new mxPoint(positionX, bottomChannelY));
           } else {
@@ -1391,33 +1461,44 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
         // Second jetty of edge
         if (jettys != null) {
-          let arrayOffset = reversed ? 2 : 0;
-          let rankY = reversed ?
-              (layoutReversed ? this.rankTopY[maxRank] : this.rankBottomY[maxRank]) :
-              (layoutReversed ? this.rankBottomY[minRank] : this.rankTopY[minRank]);
+          const arrayOffset = reversed ? 2 : 0;
+          const rankY = reversed
+            ? layoutReversed
+              ? this.rankTopY[maxRank]
+              : this.rankBottomY[maxRank]
+            : layoutReversed
+            ? this.rankBottomY[minRank]
+            : this.rankTopY[minRank];
           let jetty = jettys[parallelEdgeCount * 4 + 3 - arrayOffset];
 
           if (reversed != layoutReversed) {
             jetty = -jetty;
           }
-          let y = rankY - jetty;
+          const y = rankY - jetty;
           let x = jettys[parallelEdgeCount * 4 + 2 - arrayOffset];
 
-          let modelTarget = graph.model.getTerminal(realEdge, false);
-          let realTarget = this.layout.getVisibleTerminal(realEdge, false);
+          const modelTarget = graph.model.getTerminal(realEdge, false);
+          const realTarget = this.layout.getVisibleTerminal(realEdge, false);
 
-          if (this.layout.isPort(modelTarget) && graph.model.getParent(modelTarget) == realTarget) {
-            let state = graph.view.getState(modelTarget);
+          if (
+            this.layout.isPort(modelTarget) &&
+            graph.model.getParent(modelTarget) == realTarget
+          ) {
+            const state = graph.view.getState(modelTarget);
 
             if (state != null) {
               x = state.x;
             } else {
-              x = realTarget.geometry.x + cell.target.width * modelTarget.geometry.x;
+              x =
+                realTarget.geometry.x +
+                cell.target.width * modelTarget.geometry.x;
             }
           }
 
-          if (this.orientation == mxConstants.DIRECTION_NORTH ||
-              this.orientation == mxConstants.DIRECTION_SOUTH) {
+          if (
+            this.orientation == mxConstants.DIRECTION_NORTH ||
+            this.orientation == mxConstants.DIRECTION_SOUTH
+          ) {
             if (this.layout.edgeStyle == mxHierarchicalEdgeStyle.CURVE) {
               newPoints.push(new mxPoint(x, y - jetty));
             }
@@ -1455,7 +1536,6 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     }
   };
 
-
   /**
    * Function: setVertexLocation
    *
@@ -1465,17 +1545,24 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    *
    * cell - the vertex to position
    */
-  setVertexLocation = (cell) => {
-    let realCell = cell.cell;
-    let positionX = cell.x[0] - cell.width / 2;
-    let positionY = cell.y[0] - cell.height / 2;
+  setVertexLocation = cell => {
+    const realCell = cell.cell;
+    const positionX = cell.x[0] - cell.width / 2;
+    const positionY = cell.y[0] - cell.height / 2;
 
-    this.rankTopY[cell.minRank] = Math.min(this.rankTopY[cell.minRank], positionY);
-    this.rankBottomY[cell.minRank] = Math.max(this.rankBottomY[cell.minRank],
-        positionY + cell.height);
+    this.rankTopY[cell.minRank] = Math.min(
+      this.rankTopY[cell.minRank],
+      positionY
+    );
+    this.rankBottomY[cell.minRank] = Math.max(
+      this.rankBottomY[cell.minRank],
+      positionY + cell.height
+    );
 
-    if (this.orientation == mxConstants.DIRECTION_NORTH ||
-        this.orientation == mxConstants.DIRECTION_SOUTH) {
+    if (
+      this.orientation == mxConstants.DIRECTION_NORTH ||
+      this.orientation == mxConstants.DIRECTION_SOUTH
+    ) {
       this.layout.setVertexLocation(realCell, positionX, positionY);
     } else {
       this.layout.setVertexLocation(realCell, positionY, positionX);

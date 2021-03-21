@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "../util/mxUtils";
-import mxPoint from "../util/mxPoint";
-import mxDictionary from "../util/mxDictionary";
+import mxUtils from '../util/mxUtils';
+import mxPoint from '../util/mxPoint';
+import mxDictionary from '../util/mxDictionary';
 
 class mxCellStatePreview {
   /**
@@ -47,7 +47,7 @@ class mxCellStatePreview {
   constructor(graph) {
     this.deltas = new mxDictionary();
     this.graph = graph;
-  };
+  }
 
   /**
    * Function: isEmpty
@@ -62,14 +62,14 @@ class mxCellStatePreview {
    * Function: moveState
    */
   moveState = (state, dx, dy, add, includeEdges) => {
-    add = (add != null) ? add : true;
-    includeEdges = (includeEdges != null) ? includeEdges : true;
+    add = add != null ? add : true;
+    includeEdges = includeEdges != null ? includeEdges : true;
 
     let delta = this.deltas.get(state.cell);
 
     if (delta == null) {
       // Note: Deltas stores the point and the state since the key is a string.
-      delta = {point: new mxPoint(dx, dy), state: state};
+      delta = { point: new mxPoint(dx, dy), state };
       this.deltas.put(state.cell, delta);
       this.count++;
     } else if (add) {
@@ -90,14 +90,23 @@ class mxCellStatePreview {
   /**
    * Function: show
    */
-  show = (visitor) => {
-    this.deltas.visit(mxUtils.bind(this, (key, delta) => {
-      this.translateState(delta.state, delta.point.x, delta.point.y);
-    }));
+  show = visitor => {
+    this.deltas.visit(
+      mxUtils.bind(this, (key, delta) => {
+        this.translateState(delta.state, delta.point.x, delta.point.y);
+      })
+    );
 
-    this.deltas.visit(mxUtils.bind(this, (key, delta) => {
-      this.revalidateState(delta.state, delta.point.x, delta.point.y, visitor);
-    }));
+    this.deltas.visit(
+      mxUtils.bind(this, (key, delta) => {
+        this.revalidateState(
+          delta.state,
+          delta.point.x,
+          delta.point.y,
+          visitor
+        );
+      })
+    );
   };
 
   /**
@@ -105,25 +114,33 @@ class mxCellStatePreview {
    */
   translateState = (state, dx, dy) => {
     if (state != null) {
-      let model = this.graph.getModel();
+      const model = this.graph.getModel();
 
       if (model.isVertex(state.cell)) {
         state.view.updateCellState(state);
-        let geo = model.getGeometry(state.cell);
+        const geo = model.getGeometry(state.cell);
 
         // Moves selection cells and non-relative vertices in
         // the first phase so that edge terminal points will
         // be updated in the second phase
-        if ((dx != 0 || dy != 0) && geo != null && (!geo.relative || this.deltas.get(state.cell) != null)) {
+        if (
+          (dx != 0 || dy != 0) &&
+          geo != null &&
+          (!geo.relative || this.deltas.get(state.cell) != null)
+        ) {
           state.x += dx;
           state.y += dy;
         }
       }
 
-      let childCount = model.getChildCount(state.cell);
+      const childCount = model.getChildCount(state.cell);
 
       for (let i = 0; i < childCount; i++) {
-        this.translateState(state.view.getState(model.getChildAt(state.cell, i)), dx, dy);
+        this.translateState(
+          state.view.getState(model.getChildAt(state.cell, i)),
+          dx,
+          dy
+        );
       }
     }
   };
@@ -133,7 +150,7 @@ class mxCellStatePreview {
    */
   revalidateState = (state, dx, dy, visitor) => {
     if (state != null) {
-      let model = this.graph.getModel();
+      const model = this.graph.getModel();
 
       // Updates the edge terminal points and restores the
       // (relative) positions of any (relative) children
@@ -141,13 +158,19 @@ class mxCellStatePreview {
         state.view.updateCellState(state);
       }
 
-      let geo = this.graph.getCellGeometry(state.cell);
-      let pState = state.view.getState(model.getParent(state.cell));
+      const geo = this.graph.getCellGeometry(state.cell);
+      const pState = state.view.getState(model.getParent(state.cell));
 
       // Moves selection vertices which are relative
-      if ((dx != 0 || dy != 0) && geo != null && geo.relative &&
-          model.isVertex(state.cell) && (pState == null ||
-              model.isVertex(pState.cell) || this.deltas.get(state.cell) != null)) {
+      if (
+        (dx != 0 || dy != 0) &&
+        geo != null &&
+        geo.relative &&
+        model.isVertex(state.cell) &&
+        (pState == null ||
+          model.isVertex(pState.cell) ||
+          this.deltas.get(state.cell) != null)
+      ) {
         state.x += dx;
         state.y += dy;
       }
@@ -159,10 +182,15 @@ class mxCellStatePreview {
         visitor(state);
       }
 
-      let childCount = model.getChildCount(state.cell);
+      const childCount = model.getChildCount(state.cell);
 
       for (let i = 0; i < childCount; i++) {
-        this.revalidateState(this.graph.view.getState(model.getChildAt(state.cell, i)), dx, dy, visitor);
+        this.revalidateState(
+          this.graph.view.getState(model.getChildAt(state.cell, i)),
+          dx,
+          dy,
+          visitor
+        );
       }
     }
   };
@@ -170,12 +198,12 @@ class mxCellStatePreview {
   /**
    * Function: addEdges
    */
-  addEdges = (state) => {
-    let model = this.graph.getModel();
-    let edgeCount = model.getEdgeCount(state.cell);
+  addEdges = state => {
+    const model = this.graph.getModel();
+    const edgeCount = model.getEdgeCount(state.cell);
 
     for (let i = 0; i < edgeCount; i++) {
-      let s = state.view.getState(model.getEdgeAt(state.cell, i));
+      const s = state.view.getState(model.getEdgeAt(state.cell, i));
 
       if (s != null) {
         this.moveState(s, 0, 0);

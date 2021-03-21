@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectCodec from "FIXME";
-import mxDefaultToolbar from "FIXME";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxObjectCodec from 'FIXME';
+import mxDefaultToolbar from 'FIXME';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxDefaultToolbarCodec extends mxObjectCodec {
   /**
@@ -124,7 +124,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
    */
   decode = (dec, node, into) => {
     if (into != null) {
-      let editor = into.editor;
+      const { editor } = into;
       node = node.firstChild;
 
       while (node != null) {
@@ -139,23 +139,28 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
             } else if (node.nodeName === 'add') {
               let as = node.getAttribute('as');
               as = mxResources.get(as) || as;
-              let icon = node.getAttribute('icon');
-              let pressedIcon = node.getAttribute('pressedIcon');
-              let action = node.getAttribute('action');
-              let mode = node.getAttribute('mode');
-              let template = node.getAttribute('template');
-              let toggle = node.getAttribute('toggle') != '0';
-              let text = mxUtils.getTextContent(node);
+              const icon = node.getAttribute('icon');
+              const pressedIcon = node.getAttribute('pressedIcon');
+              const action = node.getAttribute('action');
+              const mode = node.getAttribute('mode');
+              const template = node.getAttribute('template');
+              const toggle = node.getAttribute('toggle') != '0';
+              const text = mxUtils.getTextContent(node);
               let elt = null;
 
               if (action != null) {
                 elt = into.addItem(as, icon, action, pressedIcon);
               } else if (mode != null) {
-                let funct = (mxDefaultToolbarCodec.allowEval) ? mxUtils.eval(text) : null;
+                const funct = mxDefaultToolbarCodec.allowEval
+                  ? mxUtils.eval(text)
+                  : null;
                 elt = into.addMode(as, icon, mode, pressedIcon, funct);
-              } else if (template != null || (text != null && text.length > 0)) {
+              } else if (
+                template != null ||
+                (text != null && text.length > 0)
+              ) {
                 let cell = editor.templates[template];
-                let style = node.getAttribute('style');
+                const style = node.getAttribute('style');
 
                 if (cell != null && style != null) {
                   cell = editor.graph.cloneCell(cell);
@@ -164,59 +169,80 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
 
                 let insertFunction = null;
 
-                if (text != null && text.length > 0 && mxDefaultToolbarCodec.allowEval) {
+                if (
+                  text != null &&
+                  text.length > 0 &&
+                  mxDefaultToolbarCodec.allowEval
+                ) {
                   insertFunction = mxUtils.eval(text);
                 }
 
-                elt = into.addPrototype(as, icon, cell, pressedIcon, insertFunction, toggle);
+                elt = into.addPrototype(
+                  as,
+                  icon,
+                  cell,
+                  pressedIcon,
+                  insertFunction,
+                  toggle
+                );
               } else {
-                let children = mxUtils.getChildNodes(node);
+                const children = mxUtils.getChildNodes(node);
 
                 if (children.length > 0) {
                   if (icon == null) {
-                    let combo = into.addActionCombo(as);
+                    const combo = into.addActionCombo(as);
 
                     for (let i = 0; i < children.length; i++) {
-                      let child = children[i];
+                      const child = children[i];
 
                       if (child.nodeName === 'separator') {
                         into.addOption(combo, '---');
                       } else if (child.nodeName === 'add') {
-                        let lab = child.getAttribute('as');
-                        let act = child.getAttribute('action');
+                        const lab = child.getAttribute('as');
+                        const act = child.getAttribute('action');
                         into.addActionOption(combo, lab, act);
                       }
                     }
                   } else {
                     let select = null;
-                    let create = () => {
-                      let template = editor.templates[select.value];
+                    const create = () => {
+                      const template = editor.templates[select.value];
 
                       if (template != null) {
-                        let clone = template.clone();
-                        let style = select.options[select.selectedIndex].cellStyle;
+                        const clone = template.clone();
+                        const style =
+                          select.options[select.selectedIndex].cellStyle;
 
                         if (style != null) {
                           clone.setStyle(style);
                         }
 
                         return clone;
-                      } else {
-                        mxLog.warn('Template ' + template + ' not found');
                       }
+                      mxLog.warn(`Template ${template} not found`);
 
                       return null;
                     };
 
-                    let img = into.addPrototype(as, icon, create, null, null, toggle);
+                    const img = into.addPrototype(
+                      as,
+                      icon,
+                      create,
+                      null,
+                      null,
+                      toggle
+                    );
                     select = into.addCombo();
 
                     // Selects the toolbar icon if a selection change
                     // is made in the corresponding combobox.
                     mxEvent.addListener(select, 'change', () => {
-                      into.toolbar.selectMode(img, (evt) => {
-                        let pt = mxUtils.convertPoint(editor.graph.container,
-                            mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+                      into.toolbar.selectMode(img, evt => {
+                        const pt = mxUtils.convertPoint(
+                          editor.graph.container,
+                          mxEvent.getClientX(evt),
+                          mxEvent.getClientY(evt)
+                        );
 
                         return editor.addVertex(null, funct(), pt.x, pt.y);
                       });
@@ -226,25 +252,28 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
 
                     // Adds the entries to the combobox
                     for (let i = 0; i < children.length; i++) {
-                      let child = children[i];
+                      const child = children[i];
 
                       if (child.nodeName === 'separator') {
                         into.addOption(select, '---');
                       } else if (child.nodeName === 'add') {
-                        let lab = child.getAttribute('as');
-                        let tmp = child.getAttribute('template');
-                        let option = into.addOption(select, lab, tmp || template);
+                        const lab = child.getAttribute('as');
+                        const tmp = child.getAttribute('template');
+                        const option = into.addOption(
+                          select,
+                          lab,
+                          tmp || template
+                        );
                         option.cellStyle = child.getAttribute('style');
                       }
                     }
-
                   }
                 }
               }
 
               // Assigns an ID to the created element to access it later.
               if (elt != null) {
-                let id = node.getAttribute('id');
+                const id = node.getAttribute('id');
 
                 if (id != null && id.length > 0) {
                   elt.setAttribute('id', id);

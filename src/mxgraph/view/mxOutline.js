@@ -4,13 +4,15 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxConstants from "../util/mxConstants";
-import mxPoint from "../util/mxPoint";
-import mxRectangle from "../util/mxRectangle";
-import mxRectangleShape from "../shape/mxRectangleShape";
-import mxMouseEvent from "FIXME";
-import mxGraph from "./mxGraph";
-import mxImageShape from "../shape/mxImageShape";
+import mxMouseEvent from '../util/mxMouseEvent';
+import mxConstants from '../util/mxConstants';
+import mxPoint from '../util/mxPoint';
+import mxRectangle from '../util/mxRectangle';
+import mxRectangleShape from '../shape/mxRectangleShape';
+import mxGraph from './mxGraph';
+import mxImageShape from '../shape/mxImageShape';
+import mxEvent from "../util/mxEvent";
+import mxUtils from "../util/mxUtils";
 
 class mxOutline {
   /**
@@ -19,48 +21,56 @@ class mxOutline {
    * Reference to the source <mxGraph>.
    */
   source = null;
+
   /**
    * Function: outline
    *
    * Reference to the <mxGraph> that renders the outline.
    */
   outline = null;
+
   /**
    * Function: graphRenderHint
    *
    * Renderhint to be used for the outline graph. Default is faster.
    */
   graphRenderHint = mxConstants.RENDERING_HINT_FASTER;
+
   /**
    * Variable: enabled
    *
    * Specifies if events are handled. Default is true.
    */
   enabled = true;
+
   /**
    * Variable: showViewport
    *
    * Specifies a viewport rectangle should be shown. Default is true.
    */
   showViewport = true;
+
   /**
    * Variable: border
    *
    * Border to be added at the bottom and right. Default is 10.
    */
   border = 10;
+
   /**
    * Variable: enabled
    *
    * Specifies the size of the sizer handler. Default is 8.
    */
   sizerSize = 8;
+
   /**
    * Variable: labelsVisible
    *
    * Specifies if labels should be visible in the outline. Default is false.
    */
   labelsVisible = false;
+
   /**
    * Variable: updateOnPan
    *
@@ -68,18 +78,21 @@ class mxOutline {
    * graph. Default is false.
    */
   updateOnPan = false;
+
   /**
    * Variable: sizerImage
    *
    * Optional <mxImage> to be used for the sizer. Default is null.
    */
   sizerImage = null;
+
   /**
    * Variable: minScale
    *
    * Minimum scale to be used. Default is 0.0001.
    */
   minScale = 0.0001;
+
   /**
    * Variable: suspended
    *
@@ -156,15 +169,20 @@ class mxOutline {
     if (container != null) {
       this.init(container);
     }
-  };
+  }
 
   /**
    * Function: createGraph
    *
    * Creates the <mxGraph> used in the outline.
    */
-  createGraph = (container) => {
-    let graph = new mxGraph(container, this.source.getModel(), this.graphRenderHint, this.source.getStylesheet());
+  createGraph = container => {
+    const graph = new mxGraph(
+      container,
+      this.source.getModel(),
+      this.graphRenderHint,
+      this.source.getStylesheet()
+    );
     graph.foldingEnabled = false;
     graph.autoScroll = false;
 
@@ -176,12 +194,12 @@ class mxOutline {
    *
    * Initializes the outline inside the given container.
    */
-  init = (container) => {
+  init = container => {
     this.outline = this.createGraph(container);
 
     // Do not repaint when suspended
-    let outlineGraphModelChanged = this.outline.graphModelChanged;
-    this.outline.graphModelChanged = mxUtils.bind(this, (changes) => {
+    const outlineGraphModelChanged = this.outline.graphModelChanged;
+    this.outline.graphModelChanged = mxUtils.bind(this, changes => {
       if (!this.suspended && this.outline != null) {
         outlineGraphModelChanged.apply(this.outline, [changes]);
       }
@@ -189,7 +207,7 @@ class mxOutline {
 
     // Enables faster painting in SVG
     if (mxClient.IS_SVG) {
-      let node = this.outline.getView().getCanvas().parentNode;
+      const node = this.outline.getView().getCanvas().parentNode;
       node.setAttribute('shape-rendering', 'optimizeSpeed');
       node.setAttribute('image-rendering', 'optimizeSpeed');
     }
@@ -209,7 +227,7 @@ class mxOutline {
     this.outline.addMouseListener(this);
 
     // Adds listeners to keep the outline in sync with the source graph
-    let view = this.source.getView();
+    const view = this.source.getView();
     view.addListener(mxEvent.SCALE, this.updateHandler);
     view.addListener(mxEvent.TRANSLATE, this.updateHandler);
     view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.updateHandler);
@@ -227,7 +245,7 @@ class mxOutline {
     this.source.addListener(mxEvent.PAN, this.panHandler);
 
     // Refreshes the graph in the outline after a refresh of the main graph
-    this.refreshHandler = (sender) => {
+    this.refreshHandler = sender => {
       this.outline.setStylesheet(this.source.getStylesheet());
       this.outline.refresh();
     };
@@ -235,8 +253,12 @@ class mxOutline {
 
     // Creates the blue rectangle for the viewport
     this.bounds = new mxRectangle(0, 0, 0, 0);
-    this.selectionBorder = new mxRectangleShape(this.bounds, null,
-        mxConstants.OUTLINE_COLOR, mxConstants.OUTLINE_STROKEWIDTH);
+    this.selectionBorder = new mxRectangleShape(
+      this.bounds,
+      null,
+      mxConstants.OUTLINE_COLOR,
+      mxConstants.OUTLINE_STROKEWIDTH
+    );
     this.selectionBorder.dialect = this.outline.dialect;
 
     if (this.forceVmlHandles) {
@@ -251,14 +273,14 @@ class mxOutline {
     // complete gesture on the event target. This is needed because all the events
     // are routed via the initial element even if that element is removed from the
     // DOM, which happens when we repaint the selection border and zoom handles.
-    let handler = mxUtils.bind(this, (evt) => {
-      let t = mxEvent.getSource(evt);
+    const handler = mxUtils.bind(this, evt => {
+      const t = mxEvent.getSource(evt);
 
-      let redirect = mxUtils.bind(this, (evt) => {
+      const redirect = mxUtils.bind(this, evt => {
         this.outline.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt));
       });
 
-      var redirect2 = mxUtils.bind(this, (evt) => {
+      var redirect2 = mxUtils.bind(this, evt => {
         mxEvent.removeGestureListeners(t, null, redirect, redirect2);
         this.outline.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
       });
@@ -286,7 +308,7 @@ class mxOutline {
 
     mxEvent.addGestureListeners(this.sizer.node, handler);
 
-    this.selectionBorder.node.style.display = (this.showViewport) ? '' : 'none';
+    this.selectionBorder.node.style.display = this.showViewport ? '' : 'none';
     this.sizer.node.style.display = this.selectionBorder.node.style.display;
     this.selectionBorder.node.style.cursor = 'move';
 
@@ -313,7 +335,7 @@ class mxOutline {
    *
    * value - Boolean that specifies the new enabled state.
    */
-  setEnabled = (value) => {
+  setEnabled = value => {
     this.enabled = value;
   };
 
@@ -327,8 +349,8 @@ class mxOutline {
    *
    * value - Boolean that specifies the new enabled state.
    */
-  setZoomEnabled = (value) => {
-    this.sizer.node.style.visibility = (value) ? 'visible' : 'hidden';
+  setZoomEnabled = value => {
+    this.sizer.node.style.visibility = value ? 'visible' : 'hidden';
   };
 
   /**
@@ -347,17 +369,22 @@ class mxOutline {
    */
   createSizer = () => {
     if (this.sizerImage != null) {
-      let sizer = new mxImageShape(new mxRectangle(0, 0, this.sizerImage.width, this.sizerImage.height), this.sizerImage.src);
-      sizer.dialect = this.outline.dialect;
-
-      return sizer;
-    } else {
-      let sizer = new mxRectangleShape(new mxRectangle(0, 0, this.sizerSize, this.sizerSize),
-          mxConstants.OUTLINE_HANDLE_FILLCOLOR, mxConstants.OUTLINE_HANDLE_STROKECOLOR);
+      const sizer = new mxImageShape(
+        new mxRectangle(0, 0, this.sizerImage.width, this.sizerImage.height),
+        this.sizerImage.src
+      );
       sizer.dialect = this.outline.dialect;
 
       return sizer;
     }
+    const sizer = new mxRectangleShape(
+      new mxRectangle(0, 0, this.sizerSize, this.sizerSize),
+      mxConstants.OUTLINE_HANDLE_FILLCOLOR,
+      mxConstants.OUTLINE_HANDLE_STROKECOLOR
+    );
+    sizer.dialect = this.outline.dialect;
+
+    return sizer;
   };
 
   /**
@@ -366,7 +393,12 @@ class mxOutline {
    * Returns the size of the source container.
    */
   getSourceContainerSize = () => {
-    return new mxRectangle(0, 0, this.source.container.scrollWidth, this.source.container.scrollHeight);
+    return new mxRectangle(
+      0,
+      0,
+      this.source.container.scrollWidth,
+      this.source.container.scrollHeight
+    );
   };
 
   /**
@@ -374,7 +406,7 @@ class mxOutline {
    *
    * Returns the offset for drawing the outline graph.
    */
-  getOutlineOffset = (scale) => {
+  getOutlineOffset = scale => {
     return null;
   };
 
@@ -392,32 +424,53 @@ class mxOutline {
    *
    * Updates the outline.
    */
-  update = (revalidate) => {
-    if (this.source != null && this.source.container != null &&
-        this.outline != null && this.outline.container != null) {
-      let sourceScale = this.source.view.scale;
-      let scaledGraphBounds = this.getSourceGraphBounds();
-      let unscaledGraphBounds = new mxRectangle(scaledGraphBounds.x / sourceScale + this.source.panDx,
-          scaledGraphBounds.y / sourceScale + this.source.panDy, scaledGraphBounds.width / sourceScale,
-          scaledGraphBounds.height / sourceScale);
+  update = revalidate => {
+    if (
+      this.source != null &&
+      this.source.container != null &&
+      this.outline != null &&
+      this.outline.container != null
+    ) {
+      const sourceScale = this.source.view.scale;
+      const scaledGraphBounds = this.getSourceGraphBounds();
+      const unscaledGraphBounds = new mxRectangle(
+        scaledGraphBounds.x / sourceScale + this.source.panDx,
+        scaledGraphBounds.y / sourceScale + this.source.panDy,
+        scaledGraphBounds.width / sourceScale,
+        scaledGraphBounds.height / sourceScale
+      );
 
-      let unscaledFinderBounds = new mxRectangle(0, 0,
-          this.source.container.clientWidth / sourceScale,
-          this.source.container.clientHeight / sourceScale);
+      const unscaledFinderBounds = new mxRectangle(
+        0,
+        0,
+        this.source.container.clientWidth / sourceScale,
+        this.source.container.clientHeight / sourceScale
+      );
 
-      let union = unscaledGraphBounds.clone();
+      const union = unscaledGraphBounds.clone();
       union.add(unscaledFinderBounds);
 
       // Zooms to the scrollable area if that is bigger than the graph
-      let size = this.getSourceContainerSize();
-      let completeWidth = Math.max(size.width / sourceScale, union.width);
-      let completeHeight = Math.max(size.height / sourceScale, union.height);
+      const size = this.getSourceContainerSize();
+      const completeWidth = Math.max(size.width / sourceScale, union.width);
+      const completeHeight = Math.max(size.height / sourceScale, union.height);
 
-      let availableWidth = Math.max(0, this.outline.container.clientWidth - this.border);
-      let availableHeight = Math.max(0, this.outline.container.clientHeight - this.border);
+      const availableWidth = Math.max(
+        0,
+        this.outline.container.clientWidth - this.border
+      );
+      const availableHeight = Math.max(
+        0,
+        this.outline.container.clientHeight - this.border
+      );
 
-      let outlineScale = Math.min(availableWidth / completeWidth, availableHeight / completeHeight);
-      let scale = (isNaN(outlineScale)) ? this.minScale : Math.max(this.minScale, outlineScale);
+      const outlineScale = Math.min(
+        availableWidth / completeWidth,
+        availableHeight / completeHeight
+      );
+      let scale = isNaN(outlineScale)
+        ? this.minScale
+        : Math.max(this.minScale, outlineScale);
 
       if (scale > 0) {
         if (this.outline.getView().scale !== scale) {
@@ -425,17 +478,17 @@ class mxOutline {
           revalidate = true;
         }
 
-        let navView = this.outline.getView();
+        const navView = this.outline.getView();
 
         if (navView.currentRoot !== this.source.getView().currentRoot) {
           navView.setCurrentRoot(this.source.getView().currentRoot);
         }
 
-        let t = this.source.view.translate;
+        const t = this.source.view.translate;
         let tx = t.x + this.source.panDx;
         let ty = t.y + this.source.panDy;
 
-        let off = this.getOutlineOffset(scale);
+        const off = this.getOutlineOffset(scale);
 
         if (off != null) {
           tx += off.x;
@@ -443,10 +496,10 @@ class mxOutline {
         }
 
         if (unscaledGraphBounds.x < 0) {
-          tx = tx - unscaledGraphBounds.x;
+          tx -= unscaledGraphBounds.x;
         }
         if (unscaledGraphBounds.y < 0) {
-          ty = ty - unscaledGraphBounds.y;
+          ty -= unscaledGraphBounds.y;
         }
 
         if (navView.translate.x !== tx || navView.translate.y !== ty) {
@@ -456,36 +509,53 @@ class mxOutline {
         }
 
         // Prepares local variables for computations
-        var t2 = navView.translate;
+        const t2 = navView.translate;
         scale = this.source.getView().scale;
-        var scale2 = scale / navView.scale;
-        var scale3 = 1.0 / navView.scale;
-        let container = this.source.container;
+        const scale2 = scale / navView.scale;
+        const scale3 = 1.0 / navView.scale;
+        const { container } = this.source;
 
         // Updates the bounds of the viewrect in the navigation
         this.bounds = new mxRectangle(
-            (t2.x - t.x - this.source.panDx) / scale3,
-            (t2.y - t.y - this.source.panDy) / scale3,
-            (container.clientWidth / scale2),
-            (container.clientHeight / scale2));
+          (t2.x - t.x - this.source.panDx) / scale3,
+          (t2.y - t.y - this.source.panDy) / scale3,
+          container.clientWidth / scale2,
+          container.clientHeight / scale2
+        );
 
         // Adds the scrollbar offset to the finder
-        this.bounds.x += this.source.container.scrollLeft * navView.scale / scale;
-        this.bounds.y += this.source.container.scrollTop * navView.scale / scale;
+        this.bounds.x +=
+          (this.source.container.scrollLeft * navView.scale) / scale;
+        this.bounds.y +=
+          (this.source.container.scrollTop * navView.scale) / scale;
 
         let b = this.selectionBorder.bounds;
 
-        if (b.x !== this.bounds.x || b.y !== this.bounds.y || b.width !== this.bounds.width || b.height !== this.bounds.height) {
+        if (
+          b.x !== this.bounds.x ||
+          b.y !== this.bounds.y ||
+          b.width !== this.bounds.width ||
+          b.height !== this.bounds.height
+        ) {
           this.selectionBorder.bounds = this.bounds;
           this.selectionBorder.redraw();
         }
 
         // Updates the bounds of the zoom handle at the bottom right
         b = this.sizer.bounds;
-        var b2 = new mxRectangle(this.bounds.x + this.bounds.width - b.width / 2,
-            this.bounds.y + this.bounds.height - b.height / 2, b.width, b.height);
+        const b2 = new mxRectangle(
+          this.bounds.x + this.bounds.width - b.width / 2,
+          this.bounds.y + this.bounds.height - b.height / 2,
+          b.width,
+          b.height
+        );
 
-        if (b.x !== b2.x || b.y !== b2.y || b.width !== b2.width || b.height !== b2.height) {
+        if (
+          b.x !== b2.x ||
+          b.y !== b2.y ||
+          b.width !== b2.width ||
+          b.height !== b2.height
+        ) {
           this.sizer.bounds = b2;
 
           // Avoids update of visibility in redraw for VML
@@ -508,15 +578,29 @@ class mxOutline {
    */
   mouseDown = (sender, me) => {
     if (this.enabled && this.showViewport) {
-      let tol = (!mxEvent.isMouseEvent(me.getEvent())) ? this.source.tolerance : 0;
-      let hit = (this.source.allowHandleBoundsCheck && tol > 0) ?
-          new mxRectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol) : null;
-      this.zoom = me.isSource(this.sizer) || (hit != null && mxUtils.intersects(shape.bounds, hit));
+      const tol = !mxEvent.isMouseEvent(me.getEvent())
+        ? this.source.tolerance
+        : 0;
+      const hit =
+        this.source.allowHandleBoundsCheck && tol > 0
+          ? new mxRectangle(
+              me.getGraphX() - tol,
+              me.getGraphY() - tol,
+              2 * tol,
+              2 * tol
+            )
+          : null;
+      this.zoom =
+        me.isSource(this.sizer) ||
+        (hit != null && mxUtils.intersects(shape.bounds, hit));
       this.startX = me.getX();
       this.startY = me.getY();
       this.active = true;
 
-      if (this.source.useScrollbarsForPanning && mxUtils.hasScrollbars(this.source.container)) {
+      if (
+        this.source.useScrollbarsForPanning &&
+        mxUtils.hasScrollbars(this.source.container)
+      ) {
         this.dx0 = this.source.container.scrollLeft;
         this.dy0 = this.source.container.scrollTop;
       } else {
@@ -536,19 +620,23 @@ class mxOutline {
    */
   mouseMove = (sender, me) => {
     if (this.active) {
-      this.selectionBorder.node.style.display = (this.showViewport) ? '' : 'none';
+      this.selectionBorder.node.style.display = this.showViewport ? '' : 'none';
       this.sizer.node.style.display = this.selectionBorder.node.style.display;
 
-      let delta = this.getTranslateForEvent(me);
+      const delta = this.getTranslateForEvent(me);
       let dx = delta.x;
       let dy = delta.y;
       let bounds = null;
 
       if (!this.zoom) {
         // Previews the panning on the source graph
-        let scale = this.outline.getView().scale;
-        bounds = new mxRectangle(this.bounds.x + dx,
-            this.bounds.y + dy, this.bounds.width, this.bounds.height);
+        const { scale } = this.outline.getView();
+        bounds = new mxRectangle(
+          this.bounds.x + dx,
+          this.bounds.y + dy,
+          this.bounds.width,
+          this.bounds.height
+        );
         this.selectionBorder.bounds = bounds;
         this.selectionBorder.redraw();
         dx /= scale;
@@ -558,23 +646,27 @@ class mxOutline {
         this.source.panGraph(-dx - this.dx0, -dy - this.dy0);
       } else {
         // Does *not* preview zooming on the source graph
-        let container = this.source.container;
-        let viewRatio = container.clientWidth / container.clientHeight;
+        const { container } = this.source;
+        const viewRatio = container.clientWidth / container.clientHeight;
         dy = dx / viewRatio;
-        bounds = new mxRectangle(this.bounds.x,
-            this.bounds.y,
-            Math.max(1, this.bounds.width + dx),
-            Math.max(1, this.bounds.height + dy));
+        bounds = new mxRectangle(
+          this.bounds.x,
+          this.bounds.y,
+          Math.max(1, this.bounds.width + dx),
+          Math.max(1, this.bounds.height + dy)
+        );
         this.selectionBorder.bounds = bounds;
         this.selectionBorder.redraw();
       }
 
       // Updates the zoom handle
-      let b = this.sizer.bounds;
+      const b = this.sizer.bounds;
       this.sizer.bounds = new mxRectangle(
-          bounds.x + bounds.width - b.width / 2,
-          bounds.y + bounds.height - b.height / 2,
-          b.width, b.height);
+        bounds.x + bounds.width - b.width / 2,
+        bounds.y + bounds.height - b.height / 2,
+        b.width,
+        b.height
+      );
 
       // Avoids update of visibility in redraw for VML
       if (this.sizer.node.style.visibility !== 'hidden') {
@@ -607,7 +699,7 @@ class mxOutline {
    * };
    * (end)
    */
-  getTranslateForEvent = (me) => {
+  getTranslateForEvent = me => {
     return new mxPoint(me.getX() - this.startX, me.getY() - this.startY);
   };
 
@@ -618,7 +710,7 @@ class mxOutline {
    */
   mouseUp = (sender, me) => {
     if (this.active) {
-      let delta = this.getTranslateForEvent(me);
+      const delta = this.getTranslateForEvent(me);
       let dx = delta.x;
       let dy = delta.y;
 
@@ -626,19 +718,24 @@ class mxOutline {
         if (!this.zoom) {
           // Applies the new translation if the source
           // has no scrollbars
-          if (!this.source.useScrollbarsForPanning ||
-              !mxUtils.hasScrollbars(this.source.container)) {
+          if (
+            !this.source.useScrollbarsForPanning ||
+            !mxUtils.hasScrollbars(this.source.container)
+          ) {
             this.source.panGraph(0, 0);
             dx /= this.outline.getView().scale;
             dy /= this.outline.getView().scale;
-            let t = this.source.getView().translate;
+            const t = this.source.getView().translate;
             this.source.getView().setTranslate(t.x - dx, t.y - dy);
           }
         } else {
           // Applies the new zoom
-          let w = this.selectionBorder.bounds.width;
-          let scale = this.source.getView().scale;
-          this.source.zoomTo(Math.max(this.minScale, scale - (dx * scale) / w), false);
+          const w = this.selectionBorder.bounds.width;
+          const { scale } = this.source.getView();
+          this.source.zoomTo(
+            Math.max(this.minScale, scale - (dx * scale) / w),
+            false
+          );
         }
 
         this.update();
@@ -662,7 +759,11 @@ class mxOutline {
       this.source.removeListener(this.refreshHandler);
       this.source.getModel().removeListener(this.updateHandler);
       this.source.getView().removeListener(this.updateHandler);
-      mxEvent.removeListener(this.source.container, 'scroll', this.updateHandler);
+      mxEvent.removeListener(
+        this.source.container,
+        'scroll',
+        this.updateHandler
+      );
       this.source = null;
     }
 

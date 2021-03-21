@@ -45,12 +45,14 @@ class mxDivResizer {
    * Boolean specifying if the width should be updated.
    */
   resizeWidth = true;
+
   /**
    * Function: resizeHeight
    *
    * Boolean specifying if the height should be updated.
    */
   resizeHeight = true;
+
   /**
    * Function: handlingResize
    *
@@ -65,26 +67,24 @@ class mxDivResizer {
       }
 
       this.div = div;
-      let style = mxUtils.getCurrentStyle(div);
+      const style = mxUtils.getCurrentStyle(div);
 
       if (style != null) {
         this.resizeWidth = style.width == 'auto';
         this.resizeHeight = style.height == 'auto';
       }
 
-      mxEvent.addListener(container, 'resize',
-          (evt) => {
-            if (!this.handlingResize) {
-              this.handlingResize = true;
-              this.resize();
-              this.handlingResize = false;
-            }
-          }
-      );
+      mxEvent.addListener(container, 'resize', evt => {
+        if (!this.handlingResize) {
+          this.handlingResize = true;
+          this.resize();
+          this.handlingResize = false;
+        }
+      });
 
       this.resize();
     }
-  };
+  }
 
   /**
    * Function: resize
@@ -92,30 +92,34 @@ class mxDivResizer {
    * Updates the style of the DIV after the window has been resized.
    */
   resize = () => {
-    let w = this.getDocumentWidth();
-    let h = this.getDocumentHeight();
+    const w = this.getDocumentWidth();
+    const h = this.getDocumentHeight();
 
-    let l = parseInt(this.div.style.left);
-    let r = parseInt(this.div.style.right);
-    let t = parseInt(this.div.style.top);
-    let b = parseInt(this.div.style.bottom);
+    const l = parseInt(this.div.style.left);
+    const r = parseInt(this.div.style.right);
+    const t = parseInt(this.div.style.top);
+    const b = parseInt(this.div.style.bottom);
 
-    if (this.resizeWidth &&
-        !isNaN(l) &&
-        !isNaN(r) &&
-        l >= 0 &&
-        r >= 0 &&
-        w - r - l > 0) {
-      this.div.style.width = (w - r - l) + 'px';
+    if (
+      this.resizeWidth &&
+      !isNaN(l) &&
+      !isNaN(r) &&
+      l >= 0 &&
+      r >= 0 &&
+      w - r - l > 0
+    ) {
+      this.div.style.width = `${w - r - l}px`;
     }
 
-    if (this.resizeHeight &&
-        !isNaN(t) &&
-        !isNaN(b) &&
-        t >= 0 &&
-        b >= 0 &&
-        h - t - b > 0) {
-      this.div.style.height = (h - t - b) + 'px';
+    if (
+      this.resizeHeight &&
+      !isNaN(t) &&
+      !isNaN(b) &&
+      t >= 0 &&
+      b >= 0 &&
+      h - t - b > 0
+    ) {
+      this.div.style.height = `${h - t - b}px`;
     }
   };
 

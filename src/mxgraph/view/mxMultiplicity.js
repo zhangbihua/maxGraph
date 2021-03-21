@@ -132,20 +132,30 @@ class mxMultiplicity {
    * validNeighborsAllowed - Optional boolean indicating if the array of
    * opposite types should be valid or invalid.
    */
-  constructor(source, type, attr, value, min, max,
-              validNeighbors, countError, typeError, validNeighborsAllowed) {
+  constructor(
+    source,
+    type,
+    attr,
+    value,
+    min,
+    max,
+    validNeighbors,
+    countError,
+    typeError,
+    validNeighborsAllowed
+  ) {
     this.source = source;
     this.type = type;
     this.attr = attr;
     this.value = value;
-    this.min = (min != null) ? min : 0;
-    this.max = (max != null) ? max : 'n';
+    this.min = min != null ? min : 0;
+    this.max = max != null ? max : 'n';
     this.validNeighbors = validNeighbors;
     this.countError = mxResources.get(countError) || countError;
     this.typeError = mxResources.get(typeError) || typeError;
-    this.validNeighborsAllowed = (validNeighborsAllowed != null) ?
-        validNeighborsAllowed : true;
-  };
+    this.validNeighborsAllowed =
+      validNeighborsAllowed != null ? validNeighborsAllowed : true;
+  }
 
   /**
    * Function: check
@@ -165,24 +175,32 @@ class mxMultiplicity {
   check = (graph, edge, source, target, sourceOut, targetIn) => {
     let error = '';
 
-    if ((this.source && this.checkTerminal(graph, source, edge)) ||
-        (!this.source && this.checkTerminal(graph, target, edge))) {
-      if (this.countError != null &&
-          ((this.source && (this.max == 0 || (sourceOut >= this.max))) ||
-              (!this.source && (this.max == 0 || (targetIn >= this.max))))) {
-        error += this.countError + '\n';
+    if (
+      (this.source && this.checkTerminal(graph, source, edge)) ||
+      (!this.source && this.checkTerminal(graph, target, edge))
+    ) {
+      if (
+        this.countError != null &&
+        ((this.source && (this.max == 0 || sourceOut >= this.max)) ||
+          (!this.source && (this.max == 0 || targetIn >= this.max)))
+      ) {
+        error += `${this.countError}\n`;
       }
 
-      if (this.validNeighbors != null && this.typeError != null && this.validNeighbors.length > 0) {
-        let isValid = this.checkNeighbors(graph, edge, source, target);
+      if (
+        this.validNeighbors != null &&
+        this.typeError != null &&
+        this.validNeighbors.length > 0
+      ) {
+        const isValid = this.checkNeighbors(graph, edge, source, target);
 
         if (!isValid) {
-          error += this.typeError + '\n';
+          error += `${this.typeError}\n`;
         }
       }
     }
 
-    return (error.length > 0) ? error : null;
+    return error.length > 0 ? error : null;
   };
 
   /**
@@ -192,18 +210,16 @@ class mxMultiplicity {
    * called if <validNeighbors> is a non-empty array.
    */
   checkNeighbors = (graph, edge, source, target) => {
-    let sourceValue = graph.model.getValue(source);
-    let targetValue = graph.model.getValue(target);
+    const sourceValue = graph.model.getValue(source);
+    const targetValue = graph.model.getValue(target);
     let isValid = !this.validNeighborsAllowed;
-    let valid = this.validNeighbors;
+    const valid = this.validNeighbors;
 
     for (let j = 0; j < valid.length; j++) {
-      if (this.source &&
-          this.checkType(graph, targetValue, valid[j])) {
+      if (this.source && this.checkType(graph, targetValue, valid[j])) {
         isValid = this.validNeighborsAllowed;
         break;
-      } else if (!this.source &&
-          this.checkType(graph, sourceValue, valid[j])) {
+      } else if (!this.source && this.checkType(graph, sourceValue, valid[j])) {
         isValid = this.validNeighborsAllowed;
         break;
       }
@@ -220,7 +236,7 @@ class mxMultiplicity {
    * <source>. This implementation uses <checkType> on the terminal's value.
    */
   checkTerminal = (graph, terminal, edge) => {
-    let value = graph.model.getValue(terminal);
+    const value = graph.model.getValue(terminal);
 
     return this.checkType(graph, value, this.type, this.attr, this.value);
   };
@@ -232,12 +248,11 @@ class mxMultiplicity {
    */
   checkType = (graph, value, type, attr, attrValue) => {
     if (value != null) {
-      if (!isNaN(value.nodeType)) // Checks if value is a DOM node
-      {
+      if (!isNaN(value.nodeType)) {
+        // Checks if value is a DOM node
         return mxUtils.isNode(value, type, attr, attrValue);
-      } else {
-        return value == type;
       }
+      return value == type;
     }
     return false;
   };

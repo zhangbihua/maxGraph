@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxRectangle from "../util/mxRectangle";
-import mxConnectionConstraint from "FIXME";
-import mxShape from "./mxShape";
+import mxConnectionConstraint from 'FIXME';
+import mxRectangle from '../util/mxRectangle';
+import mxShape from './mxShape';
 
 class mxStencil extends mxShape {
   /**
@@ -286,7 +286,7 @@ class mxStencil extends mxShape {
     this.desc = desc;
     this.parseDescription();
     this.parseConstraints();
-  };
+  }
 
   /**
    * Function: parseDescription
@@ -303,15 +303,15 @@ class mxStencil extends mxShape {
     // Possible values for aspect are: variable and fixed where
     // variable means fill the available space and fixed means
     // use w0 and h0 to compute the aspect.
-    let aspect = this.desc.getAttribute('aspect');
-    this.aspect = (aspect != null) ? aspect : 'variable';
+    const aspect = this.desc.getAttribute('aspect');
+    this.aspect = aspect != null ? aspect : 'variable';
 
     // Possible values for strokewidth are all numbers and "inherit"
     // where the inherit means take the value from the style (ie. the
     // user-defined stroke-width). Note that the strokewidth is scaled
     // by the minimum scaling that is used to draw the shape (sx, sy).
-    let sw = this.desc.getAttribute('strokewidth');
-    this.strokewidth = (sw != null) ? sw : '1';
+    const sw = this.desc.getAttribute('strokewidth');
+    this.strokewidth = sw != null ? sw : '1';
   };
 
   /**
@@ -321,10 +321,10 @@ class mxStencil extends mxShape {
    * <parseConstraint>.
    */
   parseConstraints = () => {
-    let conns = this.desc.getElementsByTagName('connections')[0];
+    const conns = this.desc.getElementsByTagName('connections')[0];
 
     if (conns != null) {
-      let tmp = mxUtils.getChildNodes(conns);
+      const tmp = mxUtils.getChildNodes(conns);
 
       if (tmp != null && tmp.length > 0) {
         this.constraints = [];
@@ -341,11 +341,11 @@ class mxStencil extends mxShape {
    *
    * Parses the given XML node and returns its <mxConnectionConstraint>.
    */
-  parseConstraint = (node) => {
-    let x = Number(node.getAttribute('x'));
-    let y = Number(node.getAttribute('y'));
-    let perimeter = node.getAttribute('perimeter') == '1';
-    let name = node.getAttribute('name');
+  parseConstraint = node => {
+    const x = Number(node.getAttribute('x'));
+    const y = Number(node.getAttribute('y'));
+    const perimeter = node.getAttribute('perimeter') == '1';
+    const name = node.getAttribute('name');
 
     return new mxConnectionConstraint(new mxPoint(x, y), perimeter, name);
   };
@@ -359,7 +359,7 @@ class mxStencil extends mxShape {
    */
   evaluateTextAttribute = (node, attribute, shape) => {
     let result = this.evaluateAttribute(node, attribute, shape);
-    let loc = node.getAttribute('localized');
+    const loc = node.getAttribute('localized');
 
     if ((mxStencil.defaultLocalized && loc == null) || loc == '1') {
       result = mxResources.get(result);
@@ -380,12 +380,12 @@ class mxStencil extends mxShape {
     let result = node.getAttribute(attribute);
 
     if (result == null) {
-      let text = mxUtils.getTextContent(node);
+      const text = mxUtils.getTextContent(node);
 
       if (text != null && mxStencil.allowEval) {
-        let funct = mxUtils.eval(text);
+        const funct = mxUtils.eval(text);
 
-        if (typeof (funct) == 'function') {
+        if (typeof funct === 'function') {
           result = funct(shape);
         }
       }
@@ -400,7 +400,7 @@ class mxStencil extends mxShape {
    * Draws this stencil inside the given bounds.
    */
   drawShape = (canvas, shape, x, y, w, h) => {
-    let stack = canvas.states.slice();
+    const stack = canvas.states.slice();
 
     // TODO: Internal structure (array of special structs?), relative and absolute
     // coordinates (eg. note shape, process vs star, actor etc.), text rendering
@@ -408,26 +408,63 @@ class mxStencil extends mxShape {
     // (start, segment, end blocks), pluggable markers, how to implement
     // swimlanes (title area) with this API, add icon, horizontal/vertical
     // label, indicator for all shapes, rotation
-    let direction = mxUtils.getValue(shape.style, mxConstants.STYLE_DIRECTION, null);
-    let aspect = this.computeAspect(shape.style, x, y, w, h, direction);
-    let minScale = Math.min(aspect.width, aspect.height);
-    let sw = (this.strokewidth == 'inherit') ?
-        Number(mxUtils.getNumber(shape.style, mxConstants.STYLE_STROKEWIDTH, 1)) :
-        Number(this.strokewidth) * minScale;
+    const direction = mxUtils.getValue(
+      shape.style,
+      mxConstants.STYLE_DIRECTION,
+      null
+    );
+    const aspect = this.computeAspect(shape.style, x, y, w, h, direction);
+    const minScale = Math.min(aspect.width, aspect.height);
+    const sw =
+      this.strokewidth == 'inherit'
+        ? Number(
+            mxUtils.getNumber(shape.style, mxConstants.STYLE_STROKEWIDTH, 1)
+          )
+        : Number(this.strokewidth) * minScale;
     canvas.setStrokeWidth(sw);
 
     // Draws a transparent rectangle for catching events
-    if (shape.style != null && mxUtils.getValue(shape.style, mxConstants.STYLE_POINTER_EVENTS, '0') == '1') {
+    if (
+      shape.style != null &&
+      mxUtils.getValue(shape.style, mxConstants.STYLE_POINTER_EVENTS, '0') ==
+        '1'
+    ) {
       canvas.setStrokeColor(mxConstants.NONE);
       canvas.rect(x, y, w, h);
       canvas.stroke();
       canvas.setStrokeColor(shape.stroke);
     }
 
-    this.drawChildren(canvas, shape, x, y, w, h, this.bgNode, aspect, false, true);
-    this.drawChildren(canvas, shape, x, y, w, h, this.fgNode, aspect, true,
-        !shape.outline || shape.style == null || mxUtils.getValue(
-        shape.style, mxConstants.STYLE_BACKGROUND_OUTLINE, 0) == 0);
+    this.drawChildren(
+      canvas,
+      shape,
+      x,
+      y,
+      w,
+      h,
+      this.bgNode,
+      aspect,
+      false,
+      true
+    );
+    this.drawChildren(
+      canvas,
+      shape,
+      x,
+      y,
+      w,
+      h,
+      this.fgNode,
+      aspect,
+      true,
+      !shape.outline ||
+        shape.style == null ||
+        mxUtils.getValue(
+          shape.style,
+          mxConstants.STYLE_BACKGROUND_OUTLINE,
+          0
+        ) == 0
+    );
 
     // Restores stack for unequal count of save/restore calls
     if (canvas.states.length != stack.length) {
@@ -440,7 +477,18 @@ class mxStencil extends mxShape {
    *
    * Draws this stencil inside the given bounds.
    */
-  drawChildren = (canvas, shape, x, y, w, h, node, aspect, disableShadow, paint) => {
+  drawChildren = (
+    canvas,
+    shape,
+    x,
+    y,
+    w,
+    h,
+    node,
+    aspect,
+    disableShadow,
+    paint
+  ) => {
     if (node != null && w > 0 && h > 0) {
       let tmp = node.firstChild;
 
@@ -468,18 +516,20 @@ class mxStencil extends mxShape {
    * direction - Optional direction of the shape to be darwn.
    */
   computeAspect = (shape, x, y, w, h, direction) => {
-    var x0 = x;
-    var y0 = y;
+    let x0 = x;
+    let y0 = y;
     let sx = w / this.w0;
     let sy = h / this.h0;
 
-    let inverse = (direction === mxConstants.DIRECTION_NORTH || direction === mxConstants.DIRECTION_SOUTH);
+    const inverse =
+      direction === mxConstants.DIRECTION_NORTH ||
+      direction === mxConstants.DIRECTION_SOUTH;
 
     if (inverse) {
       sy = w / this.h0;
       sx = h / this.w0;
 
-      let delta = (w - h) / 2;
+      const delta = (w - h) / 2;
 
       x0 += delta;
       y0 -= delta;
@@ -508,12 +558,12 @@ class mxStencil extends mxShape {
    * Draws this stencil inside the given bounds.
    */
   drawNode = (canvas, shape, node, aspect, disableShadow, paint) => {
-    let name = node.nodeName;
-    var x0 = aspect.x;
-    var y0 = aspect.y;
-    let sx = aspect.width;
-    let sy = aspect.height;
-    let minScale = Math.min(sx, sy);
+    const name = node.nodeName;
+    const x0 = aspect.x;
+    const y0 = aspect.y;
+    const sx = aspect.width;
+    const sy = aspect.height;
+    const minScale = Math.min(sx, sy);
 
     if (name === 'save') {
       canvas.save();
@@ -528,27 +578,31 @@ class mxStencil extends mxShape {
         if (node.getAttribute('rounded') == '1') {
           parseRegularly = false;
 
-          let arcSize = Number(node.getAttribute('arcSize'));
+          const arcSize = Number(node.getAttribute('arcSize'));
           let pointCount = 0;
-          let segs = [];
+          const segs = [];
 
           // Renders the elements inside the given path
           let childNode = node.firstChild;
 
           while (childNode != null) {
             if (childNode.nodeType === mxConstants.NODETYPE_ELEMENT) {
-              let childName = childNode.nodeName;
+              const childName = childNode.nodeName;
 
               if (childName === 'move' || childName === 'line') {
                 if (childName === 'move' || segs.length === 0) {
                   segs.push([]);
                 }
 
-                segs[segs.length - 1].push(new mxPoint(x0 + Number(childNode.getAttribute('x')) * sx,
-                    y0 + Number(childNode.getAttribute('y')) * sy));
+                segs[segs.length - 1].push(
+                  new mxPoint(
+                    x0 + Number(childNode.getAttribute('x')) * sx,
+                    y0 + Number(childNode.getAttribute('y')) * sy
+                  )
+                );
                 pointCount++;
               } else {
-                //We only support move and line for rounded corners
+                // We only support move and line for rounded corners
                 parseRegularly = true;
                 break;
               }
@@ -559,7 +613,9 @@ class mxStencil extends mxShape {
 
           if (!parseRegularly && pointCount > 0) {
             for (let i = 0; i < segs.length; i++) {
-              let close = false, ps = segs[i][0], pe = segs[i][segs[i].length - 1];
+              let close = false;
+              const ps = segs[i][0];
+              const pe = segs[i][segs[i].length - 1];
 
               if (ps.x === pe.x && ps.y === pe.y) {
                 segs[i].pop();
@@ -579,7 +635,14 @@ class mxStencil extends mxShape {
 
           while (childNode != null) {
             if (childNode.nodeType == mxConstants.NODETYPE_ELEMENT) {
-              this.drawNode(canvas, shape, childNode, aspect, disableShadow, paint);
+              this.drawNode(
+                canvas,
+                shape,
+                childNode,
+                aspect,
+                disableShadow,
+                paint
+              );
             }
 
             childNode = childNode.nextSibling;
@@ -588,34 +651,48 @@ class mxStencil extends mxShape {
       } else if (name === 'close') {
         canvas.close();
       } else if (name === 'move') {
-        canvas.moveTo(x0 + Number(node.getAttribute('x')) * sx, y0 + Number(node.getAttribute('y')) * sy);
+        canvas.moveTo(
+          x0 + Number(node.getAttribute('x')) * sx,
+          y0 + Number(node.getAttribute('y')) * sy
+        );
       } else if (name === 'line') {
-        canvas.lineTo(x0 + Number(node.getAttribute('x')) * sx, y0 + Number(node.getAttribute('y')) * sy);
+        canvas.lineTo(
+          x0 + Number(node.getAttribute('x')) * sx,
+          y0 + Number(node.getAttribute('y')) * sy
+        );
       } else if (name === 'quad') {
-        canvas.quadTo(x0 + Number(node.getAttribute('x1')) * sx,
-            y0 + Number(node.getAttribute('y1')) * sy,
-            x0 + Number(node.getAttribute('x2')) * sx,
-            y0 + Number(node.getAttribute('y2')) * sy);
+        canvas.quadTo(
+          x0 + Number(node.getAttribute('x1')) * sx,
+          y0 + Number(node.getAttribute('y1')) * sy,
+          x0 + Number(node.getAttribute('x2')) * sx,
+          y0 + Number(node.getAttribute('y2')) * sy
+        );
       } else if (name === 'curve') {
-        canvas.curveTo(x0 + Number(node.getAttribute('x1')) * sx,
-            y0 + Number(node.getAttribute('y1')) * sy,
-            x0 + Number(node.getAttribute('x2')) * sx,
-            y0 + Number(node.getAttribute('y2')) * sy,
-            x0 + Number(node.getAttribute('x3')) * sx,
-            y0 + Number(node.getAttribute('y3')) * sy);
+        canvas.curveTo(
+          x0 + Number(node.getAttribute('x1')) * sx,
+          y0 + Number(node.getAttribute('y1')) * sy,
+          x0 + Number(node.getAttribute('x2')) * sx,
+          y0 + Number(node.getAttribute('y2')) * sy,
+          x0 + Number(node.getAttribute('x3')) * sx,
+          y0 + Number(node.getAttribute('y3')) * sy
+        );
       } else if (name === 'arc') {
-        canvas.arcTo(Number(node.getAttribute('rx')) * sx,
-            Number(node.getAttribute('ry')) * sy,
-            Number(node.getAttribute('x-axis-rotation')),
-            Number(node.getAttribute('large-arc-flag')),
-            Number(node.getAttribute('sweep-flag')),
-            x0 + Number(node.getAttribute('x')) * sx,
-            y0 + Number(node.getAttribute('y')) * sy);
+        canvas.arcTo(
+          Number(node.getAttribute('rx')) * sx,
+          Number(node.getAttribute('ry')) * sy,
+          Number(node.getAttribute('x-axis-rotation')),
+          Number(node.getAttribute('large-arc-flag')),
+          Number(node.getAttribute('sweep-flag')),
+          x0 + Number(node.getAttribute('x')) * sx,
+          y0 + Number(node.getAttribute('y')) * sy
+        );
       } else if (name === 'rect') {
-        canvas.rect(x0 + Number(node.getAttribute('x')) * sx,
-            y0 + Number(node.getAttribute('y')) * sy,
-            Number(node.getAttribute('w')) * sx,
-            Number(node.getAttribute('h')) * sy);
+        canvas.rect(
+          x0 + Number(node.getAttribute('x')) * sx,
+          y0 + Number(node.getAttribute('y')) * sy,
+          Number(node.getAttribute('w')) * sx,
+          Number(node.getAttribute('h')) * sy
+        );
       } else if (name === 'roundrect') {
         let arcsize = Number(node.getAttribute('arcsize'));
 
@@ -623,41 +700,54 @@ class mxStencil extends mxShape {
           arcsize = mxConstants.RECTANGLE_ROUNDING_FACTOR * 100;
         }
 
-        let w = Number(node.getAttribute('w')) * sx;
-        let h = Number(node.getAttribute('h')) * sy;
-        let factor = Number(arcsize) / 100;
-        let r = Math.min(w * factor, h * factor);
+        const w = Number(node.getAttribute('w')) * sx;
+        const h = Number(node.getAttribute('h')) * sy;
+        const factor = Number(arcsize) / 100;
+        const r = Math.min(w * factor, h * factor);
 
-        canvas.roundrect(x0 + Number(node.getAttribute('x')) * sx,
-            y0 + Number(node.getAttribute('y')) * sy,
-            w, h, r, r);
+        canvas.roundrect(
+          x0 + Number(node.getAttribute('x')) * sx,
+          y0 + Number(node.getAttribute('y')) * sy,
+          w,
+          h,
+          r,
+          r
+        );
       } else if (name === 'ellipse') {
-        canvas.ellipse(x0 + Number(node.getAttribute('x')) * sx,
-            y0 + Number(node.getAttribute('y')) * sy,
-            Number(node.getAttribute('w')) * sx,
-            Number(node.getAttribute('h')) * sy);
+        canvas.ellipse(
+          x0 + Number(node.getAttribute('x')) * sx,
+          y0 + Number(node.getAttribute('y')) * sy,
+          Number(node.getAttribute('w')) * sx,
+          Number(node.getAttribute('h')) * sy
+        );
       } else if (name === 'image') {
         if (!shape.outline) {
-          let src = this.evaluateAttribute(node, 'src', shape);
+          const src = this.evaluateAttribute(node, 'src', shape);
 
-          canvas.image(x0 + Number(node.getAttribute('x')) * sx,
-              y0 + Number(node.getAttribute('y')) * sy,
-              Number(node.getAttribute('w')) * sx,
-              Number(node.getAttribute('h')) * sy,
-              src, false, node.getAttribute('flipH') === '1',
-              node.getAttribute('flipV') === '1');
+          canvas.image(
+            x0 + Number(node.getAttribute('x')) * sx,
+            y0 + Number(node.getAttribute('y')) * sy,
+            Number(node.getAttribute('w')) * sx,
+            Number(node.getAttribute('h')) * sy,
+            src,
+            false,
+            node.getAttribute('flipH') === '1',
+            node.getAttribute('flipV') === '1'
+          );
         }
       } else if (name === 'text') {
         if (!shape.outline) {
-          let str = this.evaluateTextAttribute(node, 'str', shape);
+          const str = this.evaluateTextAttribute(node, 'str', shape);
           let rotation = node.getAttribute('vertical') == '1' ? -90 : 0;
 
           if (node.getAttribute('align-shape') == '0') {
-            let dr = shape.rotation;
+            const dr = shape.rotation;
 
             // Depends on flipping
-            let flipH = mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPH, 0) === 1;
-            let flipV = mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPV, 0) === 1;
+            const flipH =
+              mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPH, 0) === 1;
+            const flipV =
+              mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPV, 0) === 1;
 
             if (flipH && flipV) {
               rotation -= dr;
@@ -670,20 +760,29 @@ class mxStencil extends mxShape {
 
           rotation -= node.getAttribute('rotation');
 
-          canvas.text(x0 + Number(node.getAttribute('x')) * sx,
-              y0 + Number(node.getAttribute('y')) * sy,
-              0, 0, str, node.getAttribute('align') || 'left',
-              node.getAttribute('valign') || 'top', false, '',
-              null, false, rotation);
+          canvas.text(
+            x0 + Number(node.getAttribute('x')) * sx,
+            y0 + Number(node.getAttribute('y')) * sy,
+            0,
+            0,
+            str,
+            node.getAttribute('align') || 'left',
+            node.getAttribute('valign') || 'top',
+            false,
+            '',
+            null,
+            false,
+            rotation
+          );
         }
       } else if (name === 'include-shape') {
-        let stencil = mxStencilRegistry.getStencil(node.getAttribute('name'));
+        const stencil = mxStencilRegistry.getStencil(node.getAttribute('name'));
 
         if (stencil != null) {
-          let x = x0 + Number(node.getAttribute('x')) * sx;
-          let y = y0 + Number(node.getAttribute('y')) * sy;
-          let w = Number(node.getAttribute('w')) * sx;
-          let h = Number(node.getAttribute('h')) * sy;
+          const x = x0 + Number(node.getAttribute('x')) * sx;
+          const y = y0 + Number(node.getAttribute('y')) * sy;
+          const w = Number(node.getAttribute('w')) * sx;
+          const h = Number(node.getAttribute('h')) * sy;
 
           stencil.drawShape(canvas, shape, x, y, w, h);
         }
@@ -694,7 +793,7 @@ class mxStencil extends mxShape {
       } else if (name === 'stroke') {
         canvas.stroke();
       } else if (name === 'strokewidth') {
-        let s = (node.getAttribute('fixed') === '1') ? 1 : minScale;
+        const s = node.getAttribute('fixed') === '1' ? 1 : minScale;
         canvas.setStrokeWidth(Number(node.getAttribute('width')) * s);
       } else if (name === 'dashed') {
         canvas.setDashed(node.getAttribute('dashed') === '1');
@@ -702,8 +801,8 @@ class mxStencil extends mxShape {
         let value = node.getAttribute('pattern');
 
         if (value != null) {
-          let tmp = value.split(' ');
-          let pat = [];
+          const tmp = value.split(' ');
+          const pat = [];
 
           for (let i = 0; i < tmp.length; i++) {
             if (tmp[i].length > 0) {
@@ -740,7 +839,10 @@ class mxStencil extends mxShape {
         canvas.setFontSize(Number(node.getAttribute('size')) * minScale);
       }
 
-      if (disableShadow && (name === 'fillstroke' || name === 'fill' || name === 'stroke')) {
+      if (
+        disableShadow &&
+        (name === 'fillstroke' || name === 'fill' || name === 'stroke')
+      ) {
         disableShadow = false;
         canvas.setShadow(false);
       }

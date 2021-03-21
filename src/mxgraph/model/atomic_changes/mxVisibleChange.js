@@ -14,7 +14,7 @@ class mxVisibleChange {
     this.cell = cell;
     this.visible = visible;
     this.previous = visible;
-  };
+  }
 
   /**
    * Function: execute
@@ -26,7 +26,9 @@ class mxVisibleChange {
     if (this.cell != null) {
       this.visible = this.previous;
       this.previous = this.model.visibleStateForCellChanged(
-          this.cell, this.previous);
+        this.cell,
+        this.previous
+      );
     }
   };
 }

@@ -3,9 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxShape from "./mxShape";
-import mxRectangle from "../util/mxRectangle";
-import mxConstants from "../util/mxConstants";
+import mxShape from './mxShape';
+import mxRectangle from '../util/mxRectangle';
+import mxConstants from '../util/mxConstants';
 
 class mxSwimlane extends mxShape {
   /**
@@ -46,8 +46,8 @@ class mxSwimlane extends mxShape {
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = (strokewidth != null) ? strokewidth : 1;
-  };
+    this.strokewidth = strokewidth != null ? strokewidth : 1;
+  }
 
   /**
    * Function: isRoundable
@@ -64,7 +64,14 @@ class mxSwimlane extends mxShape {
    * Returns the title size.
    */
   getTitleSize = () => {
-    return Math.max(0, mxUtils.getValue(this.style, mxConstants.STYLE_STARTSIZE, mxConstants.DEFAULT_STARTSIZE));
+    return Math.max(
+      0,
+      mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_STARTSIZE,
+        mxConstants.DEFAULT_STARTSIZE
+      )
+    );
   };
 
   /**
@@ -72,27 +79,34 @@ class mxSwimlane extends mxShape {
    *
    * Returns the bounding box for the label.
    */
-  getLabelBounds = (rect) => {
-    let start = this.getTitleSize();
-    let bounds = new mxRectangle(rect.x, rect.y, rect.width, rect.height);
-    let horizontal = this.isHorizontal();
+  getLabelBounds = rect => {
+    const start = this.getTitleSize();
+    const bounds = new mxRectangle(rect.x, rect.y, rect.width, rect.height);
+    const horizontal = this.isHorizontal();
 
-    let flipH = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, 0) == 1;
-    let flipV = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, 0) == 1;
+    const flipH = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, 0) == 1;
+    const flipV = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, 0) == 1;
 
     // East is default
-    let shapeVertical = (this.direction == mxConstants.DIRECTION_NORTH ||
-        this.direction == mxConstants.DIRECTION_SOUTH);
-    let realHorizontal = horizontal == !shapeVertical;
+    const shapeVertical =
+      this.direction == mxConstants.DIRECTION_NORTH ||
+      this.direction == mxConstants.DIRECTION_SOUTH;
+    const realHorizontal = horizontal == !shapeVertical;
 
-    let realFlipH = !realHorizontal && flipH != (this.direction == mxConstants.DIRECTION_SOUTH ||
-        this.direction == mxConstants.DIRECTION_WEST);
-    let realFlipV = realHorizontal && flipV != (this.direction == mxConstants.DIRECTION_SOUTH ||
-        this.direction == mxConstants.DIRECTION_WEST);
+    const realFlipH =
+      !realHorizontal &&
+      flipH !=
+        (this.direction == mxConstants.DIRECTION_SOUTH ||
+          this.direction == mxConstants.DIRECTION_WEST);
+    const realFlipV =
+      realHorizontal &&
+      flipV !=
+        (this.direction == mxConstants.DIRECTION_SOUTH ||
+          this.direction == mxConstants.DIRECTION_WEST);
 
     // Shape is horizontal
     if (!shapeVertical) {
-      let tmp = Math.min(bounds.height, start * this.scale);
+      const tmp = Math.min(bounds.height, start * this.scale);
 
       if (realFlipH || realFlipV) {
         bounds.y += bounds.height - tmp;
@@ -100,7 +114,7 @@ class mxSwimlane extends mxShape {
 
       bounds.height = tmp;
     } else {
-      let tmp = Math.min(bounds.width, start * this.scale);
+      const tmp = Math.min(bounds.width, start * this.scale);
 
       if (realFlipH || realFlipV) {
         bounds.x += bounds.width - tmp;
@@ -123,10 +137,9 @@ class mxSwimlane extends mxShape {
     if (this.isHorizontal()) {
       start = Math.min(start, h);
       return new mxRectangle(x, y, w, start);
-    } else {
-      start = Math.min(start, w);
-      return new mxRectangle(x, y, start, h);
     }
+    start = Math.min(start, w);
+    return new mxRectangle(x, y, start, h);
   };
 
   /**
@@ -135,14 +148,29 @@ class mxSwimlane extends mxShape {
    * Returns the arcsize for the swimlane.
    */
   getSwimlaneArcSize = (w, h, start) => {
-    if (mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1') {
-      return Math.min(w / 2, Math.min(h / 2, mxUtils.getValue(this.style,
-          mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2));
-    } else {
-      let f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
-
-      return start * f * 3;
+    if (
+      mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1'
+    ) {
+      return Math.min(
+        w / 2,
+        Math.min(
+          h / 2,
+          mxUtils.getValue(
+            this.style,
+            mxConstants.STYLE_ARCSIZE,
+            mxConstants.LINE_ARCSIZE
+          ) / 2
+        )
+      );
     }
+    const f =
+      mxUtils.getValue(
+        this.style,
+        mxConstants.STYLE_ARCSIZE,
+        mxConstants.RECTANGLE_ROUNDING_FACTOR * 100
+      ) / 100;
+
+    return start * f * 3;
   };
 
   /**
@@ -161,8 +189,13 @@ class mxSwimlane extends mxShape {
    */
   paintVertexShape = (c, x, y, w, h) => {
     let start = this.getTitleSize();
-    let fill = mxUtils.getValue(this.style, mxConstants.STYLE_SWIMLANE_FILLCOLOR, mxConstants.NONE);
-    let swimlaneLine = mxUtils.getValue(this.style, mxConstants.STYLE_SWIMLANE_LINE, 1) == 1;
+    const fill = mxUtils.getValue(
+      this.style,
+      mxConstants.STYLE_SWIMLANE_FILLCOLOR,
+      mxConstants.NONE
+    );
+    const swimlaneLine =
+      mxUtils.getValue(this.style, mxConstants.STYLE_SWIMLANE_LINE, 1) == 1;
     let r = 0;
 
     if (this.isHorizontal()) {
@@ -177,17 +210,29 @@ class mxSwimlane extends mxShape {
       this.paintSwimlane(c, x, y, w, h, start, fill, swimlaneLine);
     } else {
       r = this.getSwimlaneArcSize(w, h, start);
-      r = Math.min(((this.isHorizontal()) ? h : w) - start, Math.min(start, r));
+      r = Math.min((this.isHorizontal() ? h : w) - start, Math.min(start, r));
       this.paintRoundedSwimlane(c, x, y, w, h, start, r, fill, swimlaneLine);
     }
 
-    let sep = mxUtils.getValue(this.style, mxConstants.STYLE_SEPARATORCOLOR, mxConstants.NONE);
+    const sep = mxUtils.getValue(
+      this.style,
+      mxConstants.STYLE_SEPARATORCOLOR,
+      mxConstants.NONE
+    );
     this.paintSeparator(c, x, y, w, h, start, sep);
 
     if (this.image != null) {
-      let bounds = this.getImageBounds(x, y, w, h);
-      c.image(bounds.x - x, bounds.y - y, bounds.width, bounds.height,
-          this.image, false, false, false);
+      const bounds = this.getImageBounds(x, y, w, h);
+      c.image(
+        bounds.x - x,
+        bounds.y - y,
+        bounds.width,
+        bounds.height,
+        this.image,
+        false,
+        false,
+        false
+      );
     }
 
     if (this.glass) {
@@ -207,7 +252,9 @@ class mxSwimlane extends mxShape {
     let events = true;
 
     if (this.style != null) {
-      events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1';
+      events =
+        mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') ==
+        '1';
     }
 
     if (!events && (this.fill == null || this.fill == mxConstants.NONE)) {
@@ -288,7 +335,9 @@ class mxSwimlane extends mxShape {
     let events = true;
 
     if (this.style != null) {
-      events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1';
+      events =
+        mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') ==
+        '1';
     }
 
     if (!events && (this.fill == null || this.fill == mxConstants.NONE)) {
@@ -420,10 +469,14 @@ class mxSwimlane extends mxShape {
    */
   getImageBounds = (x, y, w, h) => {
     if (this.isHorizontal()) {
-      return new mxRectangle(x + w - this.imageSize, y, this.imageSize, this.imageSize);
-    } else {
-      return new mxRectangle(x, y, this.imageSize, this.imageSize);
+      return new mxRectangle(
+        x + w - this.imageSize,
+        y,
+        this.imageSize,
+        this.imageSize
+      );
     }
+    return new mxRectangle(x, y, this.imageSize, this.imageSize);
   };
 }
 

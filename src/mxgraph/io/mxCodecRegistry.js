@@ -4,10 +4,10 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "../util/mxUtils";
-import mxObjectCodec from "./mxObjectCodec";
+import mxUtils from '../util/mxUtils';
+import mxObjectCodec from './mxObjectCodec';
 
-let mxCodecRegistry = {
+const mxCodecRegistry = {
   /**
    * Class: mxCodecRegistry
    *
@@ -65,12 +65,12 @@ let mxCodecRegistry = {
    *
    * codec - <mxObjectCodec> to be registered.
    */
-  register: (codec) => {
+  register: codec => {
     if (codec != null) {
-      let name = codec.getName();
+      const name = codec.getName();
       mxCodecRegistry.codecs[name] = codec;
 
-      let classname = mxUtils.getFunctionName(codec.template.constructor);
+      const classname = mxUtils.getFunctionName(codec.template.constructor);
 
       if (classname !== name) {
         mxCodecRegistry.addAlias(classname, name);
@@ -99,12 +99,12 @@ let mxCodecRegistry = {
    *
    * ctor - JavaScript constructor function.
    */
-  getCodec: (ctor) => {
+  getCodec: ctor => {
     let codec = null;
 
     if (ctor != null) {
       let name = mxUtils.getFunctionName(ctor);
-      let tmp = mxCodecRegistry.aliases[name];
+      const tmp = mxCodecRegistry.aliases[name];
 
       if (tmp != null) {
         name = tmp;
@@ -125,7 +125,7 @@ let mxCodecRegistry = {
     }
 
     return codec;
-  }
+  },
 };
 
 export default mxCodecRegistry;

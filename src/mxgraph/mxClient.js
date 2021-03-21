@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2017, JGraph Ltd
  * Copyright (c) 2006-2017, Gaudenz Alder
  */
-let mxClient = {
+const mxClient = {
   /**
    * Class: mxClient
    *
@@ -37,7 +37,7 @@ let mxClient = {
    * (end)
    */
   mxResourceExtension: '.txt',
-  setResourceExtension: (value) => {
+  setResourceExtension: value => {
     mxClient.mxResourceExtension = value;
     mxResources.extension = value;
   },
@@ -58,7 +58,7 @@ let mxClient = {
    * (end)
    */
   mxLoadResources: true,
-  setLoadResources: (value) => {},
+  setLoadResources: value => {},
 
   /**
    * Variable: mxForceIncludes
@@ -75,7 +75,7 @@ let mxClient = {
    * (end)
    */
   mxForceIncludes: false,
-  setForceIncludes: (value) => {
+  setForceIncludes: value => {
     mxClient.mxForceIncludes = value;
   },
 
@@ -94,7 +94,7 @@ let mxClient = {
    * (end)
    */
   mxLoadStylesheets: true,
-  setLoadStylesheets: (value) => {
+  setLoadStylesheets: value => {
     mxClient.mxLoadStylesheets = value;
   },
 
@@ -116,8 +116,8 @@ let mxClient = {
    * contains the assignment. Trailing slashes are automatically removed.
    */
   basePath: '.',
-  setBasePath: (value) => {
-    if (typeof(value) != 'undefined' && value.length > 0) {
+  setBasePath: value => {
+    if (typeof value !== 'undefined' && value.length > 0) {
       // Adds a trailing slash if required
       if (value.substring(value.length - 1) === '/') {
         value = value.substring(0, value.length - 1);
@@ -146,15 +146,15 @@ let mxClient = {
    * contains the assignment. Trailing slashes are automatically removed.
    */
   imageBasePath: '.',
-  setImageBasePath: (value) => {
-    if (typeof(value) != 'undefined' && value.length > 0) {
+  setImageBasePath: value => {
+    if (typeof value !== 'undefined' && value.length > 0) {
       // Adds a trailing slash if required
       if (value.substring(value.length - 1) === '/') {
         value = value.substring(0, value.length - 1);
       }
       mxClient.imageBasePath = value;
     } else {
-      mxClient.imageBasePath = mxClient.basePath + '/images';
+      mxClient.imageBasePath = `${mxClient.basePath}/images`;
     }
   },
 
@@ -189,12 +189,11 @@ let mxClient = {
    * <mxGraph.containsValidationErrorsResource> and
    * <mxGraph.alreadyConnectedResource>.
    */
-  language: typeof window !== "undefined" ? navigator.language : 'en',
-  setLanguage: (value) => {
-    if (typeof(value) != 'undefined' && value != null) {
+  language: typeof window !== 'undefined' ? navigator.language : 'en',
+  setLanguage: value => {
+    if (typeof value !== 'undefined' && value != null) {
       mxClient.language = value;
-    }
-    else {
+    } else {
       mxClient.language = navigator.language;
     }
   },
@@ -217,8 +216,8 @@ let mxClient = {
    * (end)
    */
   defaultLanguage: 'en',
-  setDefaultLanguage: (value) => {
-    if (typeof(value) != 'undefined' && value != null) {
+  setDefaultLanguage: value => {
+    if (typeof value !== 'undefined' && value != null) {
       mxClient.defaultLanguage = value;
     } else {
       mxClient.defaultLanguage = 'en';
@@ -243,8 +242,8 @@ let mxClient = {
    * will be returned.
    */
 
-  setLanguages: (value) => {
-    if (typeof(value) != 'undefined' && value != null) {
+  setLanguages: value => {
+    if (typeof value !== 'undefined' && value != null) {
       mxClient.languages = value;
     }
   },
@@ -254,67 +253,73 @@ let mxClient = {
    *
    * True if the current browser is Microsoft Edge.
    */
-  IS_EDGE: typeof window !== 'undefined' &&
-      navigator.userAgent != null && !!navigator.userAgent.match(/Edge\//),
+  IS_EDGE:
+    typeof window !== 'undefined' &&
+    navigator.userAgent != null &&
+    !!navigator.userAgent.match(/Edge\//),
 
   /**
    * Variable: IS_NS
    *
    * True if the current browser is Netscape (including Firefox).
    */
-  IS_NS: typeof window !== 'undefined' &&
-      navigator.userAgent != null &&
-      navigator.userAgent.indexOf('Mozilla/') >= 0 &&
-      navigator.userAgent.indexOf('MSIE') < 0 &&
-      navigator.userAgent.indexOf('Edge/') < 0,
+  IS_NS:
+    typeof window !== 'undefined' &&
+    navigator.userAgent != null &&
+    navigator.userAgent.indexOf('Mozilla/') >= 0 &&
+    navigator.userAgent.indexOf('MSIE') < 0 &&
+    navigator.userAgent.indexOf('Edge/') < 0,
 
   /**
    * Variable: IS_SF
    *
    * True if the current browser is Safari.
    */
-  IS_SF: typeof window !== 'undefined' &&
-      /Apple Computer, Inc/.test(navigator.vendor),
+  IS_SF:
+    typeof window !== 'undefined' &&
+    /Apple Computer, Inc/.test(navigator.vendor),
 
   /**
    * Variable: IS_ANDROID
    *
    * Returns true if the user agent contains Android.
    */
-  IS_ANDROID: typeof window !== 'undefined' &&
-      navigator.appVersion.indexOf('Android') >= 0,
+  IS_ANDROID:
+    typeof window !== 'undefined' &&
+    navigator.appVersion.indexOf('Android') >= 0,
 
   /**
    * Variable: IS_IOS
    *
    * Returns true if the user agent is an iPad, iPhone or iPod.
    */
-  IS_IOS: typeof window !== 'undefined' &&
-      (/iP(hone|od|ad)/.test(navigator.platform)),
+  IS_IOS:
+    typeof window !== 'undefined' && /iP(hone|od|ad)/.test(navigator.platform),
 
   /**
    * Variable: IS_GC
    *
    * True if the current browser is Google Chrome.
    */
-  IS_GC: typeof window !== 'undefined' &&
-      /Google Inc/.test(navigator.vendor),
+  IS_GC: typeof window !== 'undefined' && /Google Inc/.test(navigator.vendor),
 
   /**
    * Variable: IS_CHROMEAPP
    *
    * True if the this is running inside a Chrome App.
    */
-  IS_CHROMEAPP: typeof window !== 'undefined' &&
-      window.chrome != null && chrome.app != null && chrome.app.runtime != null,
+  IS_CHROMEAPP:
+    typeof window !== 'undefined' &&
+    window.chrome != null &&
+    chrome.app != null &&
+    chrome.app.runtime != null,
 
   /**
    * Variable: IS_FF
    *
    * True if the current browser is Firefox.
    */
-  IS_FF: typeof window !== 'undefined' &&
-      typeof InstallTrigger !== 'undefined',
+  IS_FF: typeof window !== 'undefined' && typeof InstallTrigger !== 'undefined',
 
   /**
    * Variable: IS_MT
@@ -323,25 +328,27 @@ let mxClient = {
    * for all Firefox-based browsers newer than or equal 3, such as Camino,
    * Iceweasel, Seamonkey and Iceape.
    */
-  IS_MT: typeof window !== 'undefined' &&
-      ((navigator.userAgent.indexOf('Firefox/') >= 0 &&
+  IS_MT:
+    typeof window !== 'undefined' &&
+    ((navigator.userAgent.indexOf('Firefox/') >= 0 &&
       navigator.userAgent.indexOf('Firefox/1.') < 0 &&
       navigator.userAgent.indexOf('Firefox/2.') < 0) ||
       (navigator.userAgent.indexOf('Iceweasel/') >= 0 &&
-          navigator.userAgent.indexOf('Iceweasel/1.') < 0 &&
-          navigator.userAgent.indexOf('Iceweasel/2.') < 0) ||
+        navigator.userAgent.indexOf('Iceweasel/1.') < 0 &&
+        navigator.userAgent.indexOf('Iceweasel/2.') < 0) ||
       (navigator.userAgent.indexOf('SeaMonkey/') >= 0 &&
-          navigator.userAgent.indexOf('SeaMonkey/1.') < 0) ||
+        navigator.userAgent.indexOf('SeaMonkey/1.') < 0) ||
       (navigator.userAgent.indexOf('Iceape/') >= 0 &&
-          navigator.userAgent.indexOf('Iceape/1.') < 0)),
+        navigator.userAgent.indexOf('Iceape/1.') < 0)),
 
   /**
    * Variable: IS_SVG
    *
    * True if the browser supports SVG.
    */
-  IS_SVG: typeof window !== 'undefined' &&
-      navigator.appName.toUpperCase() !== 'MICROSOFT INTERNET EXPLORER',
+  IS_SVG:
+    typeof window !== 'undefined' &&
+    navigator.appName.toUpperCase() !== 'MICROSOFT INTERNET EXPLORER',
 
   /**
    * Variable: NO_FO
@@ -349,33 +356,38 @@ let mxClient = {
    * True if foreignObject support is not available. This is the case for
    * Opera, older SVG-based browsers and all versions of IE.
    */
-  NO_FO: typeof window !== 'undefined' &&
-      (!document.createElementNS || document.createElementNS('http://www.w3.org/2000/svg','foreignObject') !==
-          '[object SVGForeignObjectElement]' || navigator.userAgent.indexOf('Opera/') >= 0),
+  NO_FO:
+    typeof window !== 'undefined' &&
+    (!document.createElementNS ||
+      document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'foreignObject'
+      ) !== '[object SVGForeignObjectElement]' ||
+      navigator.userAgent.indexOf('Opera/') >= 0),
 
   /**
    * Variable: IS_WIN
    *
    * True if the client is a Windows.
    */
-  IS_WIN: typeof window !== 'undefined' &&
-      navigator.appVersion.indexOf('Win') > 0,
+  IS_WIN:
+    typeof window !== 'undefined' && navigator.appVersion.indexOf('Win') > 0,
 
   /**
    * Variable: IS_MAC
    *
    * True if the client is a Mac.
    */
-  IS_MAC: typeof window !== 'undefined' &&
-      navigator.appVersion.indexOf('Mac') > 0,
+  IS_MAC:
+    typeof window !== 'undefined' && navigator.appVersion.indexOf('Mac') > 0,
 
   /**
    * Variable: IS_CHROMEOS
    *
    * True if the client is a Chrome OS.
    */
-  IS_CHROMEOS: typeof window !== 'undefined' &&
-      /\bCrOS\b/.test(navigator.appVersion),
+  IS_CHROMEOS:
+    typeof window !== 'undefined' && /\bCrOS\b/.test(navigator.appVersion),
 
   /**
    * Variable: IS_TOUCH
@@ -383,26 +395,28 @@ let mxClient = {
    * True if this device supports touchstart/-move/-end events (Apple iOS,
    * Android, Chromebook and Chrome Browser on touch-enabled devices).
    */
-  IS_TOUCH: typeof window !== 'undefined' &&
-      'ontouchstart' in document.documentElement,
+  IS_TOUCH:
+    typeof window !== 'undefined' && 'ontouchstart' in document.documentElement,
 
   /**
    * Variable: IS_POINTER
    *
    * True if this device supports Microsoft pointer events (always false on Macs).
    */
-  IS_POINTER: typeof window !== 'undefined' &&
-      window.PointerEvent != null &&
-      !(navigator.appVersion.indexOf('Mac') > 0),
+  IS_POINTER:
+    typeof window !== 'undefined' &&
+    window.PointerEvent != null &&
+    !(navigator.appVersion.indexOf('Mac') > 0),
 
   /**
    * Variable: IS_LOCAL
    *
    * True if the documents location does not start with http:// or https://.
    */
-  IS_LOCAL: typeof window !== 'undefined' &&
-      document.location.href.indexOf('http://') < 0 &&
-      document.location.href.indexOf('https://') < 0,
+  IS_LOCAL:
+    typeof window !== 'undefined' &&
+    document.location.href.indexOf('http://') < 0 &&
+    document.location.href.indexOf('https://') < 0,
 
   /**
    * Variable: defaultBundles
@@ -454,7 +468,7 @@ let mxClient = {
     doc = doc || document;
 
     // Workaround for Operation Aborted in IE6 if base tag is used in head
-    let link = doc.createElement('link');
+    const link = doc.createElement('link');
 
     link.setAttribute('rel', rel);
     link.setAttribute('href', href);
@@ -465,7 +479,7 @@ let mxClient = {
       link.setAttribute('id', id);
     }
 
-    let head = doc.getElementsByTagName('head')[0];
+    const head = doc.getElementsByTagName('head')[0];
     head.appendChild(link);
   },
 
@@ -491,8 +505,9 @@ let mxClient = {
     for (let i = 0; i < mxClient.defaultBundles.length; i++) {
       mxResources.add(mxClient.defaultBundles[i], lan, callback);
     }
-  }
+  },
 };
 
-let mxResources = require("./util/mxResources");
+let mxResources = require('./util/mxResources');
+
 export default mxClient;

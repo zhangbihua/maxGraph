@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-let mxConstants = {
+const mxConstants = {
   DO_NOTHING: {},
 
   /**
@@ -865,7 +865,6 @@ let mxConstants = {
    * of an edge with its source terminal. Value is "exitY".
    */
   STYLE_EXIT_Y: 'exitY',
-
 
   /**
    * Variable: STYLE_EXIT_DX
@@ -2337,7 +2336,7 @@ let mxConstants = {
    * Name of the triangle perimeter. Can be used as a string value
    * for the STYLE_PERIMETER style.
    */
-  PERIMETER_TRIANGLE: 'trianglePerimeter'
+  PERIMETER_TRIANGLE: 'trianglePerimeter',
 };
 
 export default mxConstants;

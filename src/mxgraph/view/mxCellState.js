@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from "../util/mxPoint";
-import mxRectangle from "../util/mxRectangle";
-import mxConstants from "../util/mxConstants";
+import mxPoint from '../util/mxPoint';
+import mxRectangle from '../util/mxRectangle';
+import mxConstants from '../util/mxConstants';
 
 class mxCellState extends mxRectangle {
   /**
@@ -161,11 +161,11 @@ class mxCellState extends mxRectangle {
    * style - Array of key, value pairs that constitute the style.
    */
   constructor(view, cell, style) {
-    super(mxConstants.DO_NOTHING)
+    super(mxConstants.DO_NOTHING);
 
     this.view = view;
     this.cell = cell;
-    this.style = (style != null) ? style : {};
+    this.style = style != null ? style : {};
 
     this.origin = new mxPoint();
     this.absoluteOffset = new mxPoint();
@@ -184,10 +184,23 @@ class mxCellState extends mxRectangle {
    */
   getPerimeterBounds = (border, bounds) => {
     border = border || 0;
-    bounds = (bounds != null) ? bounds : new mxRectangle(this.x, this.y, this.width, this.height);
+    bounds =
+      bounds != null
+        ? bounds
+        : new mxRectangle(this.x, this.y, this.width, this.height);
 
-    if (this.shape != null && this.shape.stencil != null && this.shape.stencil.aspect === 'fixed') {
-      let aspect = this.shape.stencil.computeAspect(this.style, bounds.x, bounds.y, bounds.width, bounds.height);
+    if (
+      this.shape != null &&
+      this.shape.stencil != null &&
+      this.shape.stencil.aspect === 'fixed'
+    ) {
+      const aspect = this.shape.stencil.computeAspect(
+        this.style,
+        bounds.x,
+        bounds.y,
+        bounds.width,
+        bounds.height
+      );
 
       bounds.x = aspect.x;
       bounds.y = aspect.y;
@@ -224,16 +237,14 @@ class mxCellState extends mxRectangle {
       } else {
         this.absolutePoints[0] = point;
       }
+    } else if (this.absolutePoints == null) {
+      this.absolutePoints = [];
+      this.absolutePoints.push(null);
+      this.absolutePoints.push(point);
+    } else if (this.absolutePoints.length === 1) {
+      this.absolutePoints.push(point);
     } else {
-      if (this.absolutePoints == null) {
-        this.absolutePoints = [];
-        this.absolutePoints.push(null);
-        this.absolutePoints.push(point);
-      } else if (this.absolutePoints.length === 1) {
-        this.absolutePoints.push(point);
-      } else {
-        this.absolutePoints[this.absolutePoints.length - 1] = point;
-      }
+      this.absolutePoints[this.absolutePoints.length - 1] = point;
     }
   };
 
@@ -242,7 +253,7 @@ class mxCellState extends mxRectangle {
    *
    * Sets the given cursor on the shape and text shape.
    */
-  setCursor = (cursor) => {
+  setCursor = cursor => {
     if (this.shape != null) {
       this.shape.setCursor(cursor);
     }
@@ -262,10 +273,10 @@ class mxCellState extends mxRectangle {
    * source - Boolean that specifies if the source or target cell should be
    * returned.
    */
-  getVisibleTerminal = (source) => {
-    let tmp = this.getVisibleTerminalState(source);
+  getVisibleTerminal = source => {
+    const tmp = this.getVisibleTerminalState(source);
 
-    return (tmp != null) ? tmp.cell : null;
+    return tmp != null ? tmp.cell : null;
   };
 
   /**
@@ -278,8 +289,8 @@ class mxCellState extends mxRectangle {
    * source - Boolean that specifies if the source or target state should be
    * returned.
    */
-  getVisibleTerminalState = (source) => {
-    return (source) ? this.visibleSourceState : this.visibleTargetState;
+  getVisibleTerminalState = source => {
+    return source ? this.visibleSourceState : this.visibleTargetState;
   };
 
   /**
@@ -326,9 +337,14 @@ class mxCellState extends mxRectangle {
    * Updates the cellBounds and paintBounds.
    */
   updateCachedBounds = () => {
-    let tr = this.view.translate;
-    let s = this.view.scale;
-    this.cellBounds = new mxRectangle(this.x / s - tr.x, this.y / s - tr.y, this.width / s, this.height / s);
+    const tr = this.view.translate;
+    const s = this.view.scale;
+    this.cellBounds = new mxRectangle(
+      this.x / s - tr.x,
+      this.y / s - tr.y,
+      this.width / s,
+      this.height / s
+    );
     this.paintBounds = mxRectangle.fromRectangle(this.cellBounds);
 
     if (this.shape != null && this.shape.isPaintBoundsInverted()) {
@@ -341,7 +357,7 @@ class mxCellState extends mxRectangle {
    *
    * Copies all fields from the given state to this state.
    */
-  setState = (state) => {
+  setState = state => {
     this.view = state.view;
     this.cell = state.cell;
     this.style = state.style;
@@ -366,7 +382,7 @@ class mxCellState extends mxRectangle {
    * Returns a clone of this <mxPoint>.
    */
   clone = () => {
-    let clone = new mxCellState(this.view, this.cell, this.style);
+    const clone = new mxCellState(this.view, this.cell, this.style);
 
     // Clones the absolute points
     if (this.absolutePoints != null) {

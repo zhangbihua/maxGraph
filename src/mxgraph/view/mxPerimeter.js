@@ -4,10 +4,10 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "../util/mxUtils";
-import mxPoint from "../util/mxPoint";
+import mxUtils from '../util/mxUtils';
+import mxPoint from '../util/mxPoint';
 
-let mxPerimeter = {
+const mxPerimeter = {
   /**
    * Class: mxPerimeter
    *
@@ -35,7 +35,7 @@ let mxPerimeter = {
    * {
    *   let x = 0; // Calculate x-coordinate
    *   let y = 0; // Calculate y-coordainte
-   *   
+   *
    *   return new mxPoint(x, y);
    * }
    * (end)
@@ -85,42 +85,40 @@ let mxPerimeter = {
    * of the perimeter and the line between the next and the center point is
    * returned.
    */
-  RectanglePerimeter: function (bounds, vertex, next, orthogonal) {
-    let cx = bounds.getCenterX();
-    let cy = bounds.getCenterY();
-    let dx = next.x - cx;
-    let dy = next.y - cy;
-    let alpha = Math.atan2(dy, dx);
-    let p = new mxPoint(0, 0);
-    let pi = Math.PI;
-    var pi2 = Math.PI / 2;
-    let beta = pi2 - alpha;
-    let t = Math.atan2(bounds.height, bounds.width);
+  RectanglePerimeter(bounds, vertex, next, orthogonal) {
+    const cx = bounds.getCenterX();
+    const cy = bounds.getCenterY();
+    const dx = next.x - cx;
+    const dy = next.y - cy;
+    const alpha = Math.atan2(dy, dx);
+    const p = new mxPoint(0, 0);
+    const pi = Math.PI;
+    const pi2 = Math.PI / 2;
+    const beta = pi2 - alpha;
+    const t = Math.atan2(bounds.height, bounds.width);
 
     if (alpha < -pi + t || alpha > pi - t) {
       // Left edge
       p.x = bounds.x;
-      p.y = cy - bounds.width * Math.tan(alpha) / 2;
+      p.y = cy - (bounds.width * Math.tan(alpha)) / 2;
     } else if (alpha < -t) {
       // Top Edge
       p.y = bounds.y;
-      p.x = cx - bounds.height * Math.tan(beta) / 2;
+      p.x = cx - (bounds.height * Math.tan(beta)) / 2;
     } else if (alpha < t) {
       // Right Edge
       p.x = bounds.x + bounds.width;
-      p.y = cy + bounds.width * Math.tan(alpha) / 2;
+      p.y = cy + (bounds.width * Math.tan(alpha)) / 2;
     } else {
       // Bottom Edge
       p.y = bounds.y + bounds.height;
-      p.x = cx + bounds.height * Math.tan(beta) / 2;
+      p.x = cx + (bounds.height * Math.tan(beta)) / 2;
     }
 
     if (orthogonal) {
-      if (next.x >= bounds.x &&
-          next.x <= bounds.x + bounds.width) {
+      if (next.x >= bounds.x && next.x <= bounds.x + bounds.width) {
         p.x = next.x;
-      } else if (next.y >= bounds.y &&
-          next.y <= bounds.y + bounds.height) {
+      } else if (next.y >= bounds.y && next.y <= bounds.y + bounds.height) {
         p.y = next.y;
       }
       if (next.x < bounds.x) {
@@ -144,30 +142,31 @@ let mxPerimeter = {
    * Describes an elliptic perimeter. See <RectanglePerimeter>
    * for a description of the parameters.
    */
-  EllipsePerimeter: function (bounds, vertex, next, orthogonal) {
-    let x = bounds.x;
-    let y = bounds.y;
-    let a = bounds.width / 2;
-    let b = bounds.height / 2;
-    let cx = x + a;
-    let cy = y + b;
-    let px = next.x;
-    let py = next.y;
+  EllipsePerimeter(bounds, vertex, next, orthogonal) {
+    const { x } = bounds;
+    const { y } = bounds;
+    const a = bounds.width / 2;
+    const b = bounds.height / 2;
+    const cx = x + a;
+    const cy = y + b;
+    const px = next.x;
+    const py = next.y;
 
     // Calculates straight line equation through
     // point and ellipse center y = d * x + h
-    let dx = parseInt(px - cx);
-    let dy = parseInt(py - cy);
+    const dx = parseInt(px - cx);
+    const dy = parseInt(py - cy);
 
     if (dx == 0 && dy != 0) {
-      return new mxPoint(cx, cy + b * dy / Math.abs(dy));
-    } else if (dx == 0 && dy == 0) {
+      return new mxPoint(cx, cy + (b * dy) / Math.abs(dy));
+    }
+    if (dx == 0 && dy == 0) {
       return new mxPoint(px, py);
     }
 
     if (orthogonal) {
       if (py >= y && py <= y + bounds.height) {
-        let ty = py - cy;
+        const ty = py - cy;
         let tx = Math.sqrt(a * a * (1 - (ty * ty) / (b * b))) || 0;
 
         if (px <= x) {
@@ -178,7 +177,7 @@ let mxPerimeter = {
       }
 
       if (px >= x && px <= x + bounds.width) {
-        let tx = px - cx;
+        const tx = px - cx;
         let ty = Math.sqrt(b * b * (1 - (tx * tx) / (a * a))) || 0;
 
         if (py <= y) {
@@ -190,24 +189,20 @@ let mxPerimeter = {
     }
 
     // Calculates intersection
-    let d = dy / dx;
-    let h = cy - d * cx;
-    let e = a * a * d * d + b * b;
-    let f = -2 * cx * e;
-    let g = a * a * d * d * cx * cx +
-        b * b * cx * cx -
-        a * a * b * b;
-    let det = Math.sqrt(f * f - 4 * e * g);
+    const d = dy / dx;
+    const h = cy - d * cx;
+    const e = a * a * d * d + b * b;
+    const f = -2 * cx * e;
+    const g = a * a * d * d * cx * cx + b * b * cx * cx - a * a * b * b;
+    const det = Math.sqrt(f * f - 4 * e * g);
 
     // Two solutions (perimeter points)
-    var xout1 = (-f + det) / (2 * e);
-    var xout2 = (-f - det) / (2 * e);
-    var yout1 = d * xout1 + h;
-    var yout2 = d * xout2 + h;
-    var dist1 = Math.sqrt(Math.pow((xout1 - px), 2)
-        + Math.pow((yout1 - py), 2));
-    var dist2 = Math.sqrt(Math.pow((xout2 - px), 2)
-        + Math.pow((yout2 - py), 2));
+    const xout1 = (-f + det) / (2 * e);
+    const xout2 = (-f - det) / (2 * e);
+    const yout1 = d * xout1 + h;
+    const yout2 = d * xout2 + h;
+    const dist1 = Math.sqrt(Math.pow(xout1 - px, 2) + Math.pow(yout1 - py, 2));
+    const dist2 = Math.sqrt(Math.pow(xout2 - px, 2) + Math.pow(yout2 - py, 2));
 
     // Correct solution
     let xout = 0;
@@ -230,31 +225,30 @@ let mxPerimeter = {
    * Describes a rhombus (aka diamond) perimeter. See <RectanglePerimeter>
    * for a description of the parameters.
    */
-  RhombusPerimeter: function (bounds, vertex, next, orthogonal) {
-    let x = bounds.x;
-    let y = bounds.y;
-    let w = bounds.width;
-    let h = bounds.height;
+  RhombusPerimeter(bounds, vertex, next, orthogonal) {
+    const { x } = bounds;
+    const { y } = bounds;
+    const w = bounds.width;
+    const h = bounds.height;
 
-    let cx = x + w / 2;
-    let cy = y + h / 2;
+    const cx = x + w / 2;
+    const cy = y + h / 2;
 
-    let px = next.x;
-    let py = next.y;
+    const px = next.x;
+    const py = next.y;
 
     // Special case for intersecting the diamond's corners
     if (cx == px) {
       if (cy > py) {
         return new mxPoint(cx, y); // top
-      } else {
-        return new mxPoint(cx, y + h); // bottom
       }
-    } else if (cy == py) {
+      return new mxPoint(cx, y + h); // bottom
+    }
+    if (cy == py) {
       if (cx > px) {
         return new mxPoint(x, cy); // left
-      } else {
-        return new mxPoint(x + w, cy); // right
       }
+      return new mxPoint(x + w, cy); // right
     }
 
     let tx = cx;
@@ -273,14 +267,13 @@ let mxPerimeter = {
     if (px < cx) {
       if (py < cy) {
         return mxUtils.intersection(px, py, tx, ty, cx, y, x, cy);
-      } else {
-        return mxUtils.intersection(px, py, tx, ty, cx, y + h, x, cy);
       }
-    } else if (py < cy) {
-      return mxUtils.intersection(px, py, tx, ty, cx, y, x + w, cy);
-    } else {
-      return mxUtils.intersection(px, py, tx, ty, cx, y + h, x + w, cy);
+      return mxUtils.intersection(px, py, tx, ty, cx, y + h, x, cy);
     }
+    if (py < cy) {
+      return mxUtils.intersection(px, py, tx, ty, cx, y, x + w, cy);
+    }
+    return mxUtils.intersection(px, py, tx, ty, cx, y + h, x + w, cy);
   },
 
   /**
@@ -289,16 +282,17 @@ let mxPerimeter = {
    * Describes a triangle perimeter. See <RectanglePerimeter>
    * for a description of the parameters.
    */
-  TrianglePerimeter: function (bounds, vertex, next, orthogonal) {
-    let direction = (vertex != null) ?
-        vertex.style[mxConstants.STYLE_DIRECTION] : null;
-    let vertical = direction == mxConstants.DIRECTION_NORTH ||
-        direction == mxConstants.DIRECTION_SOUTH;
+  TrianglePerimeter(bounds, vertex, next, orthogonal) {
+    const direction =
+      vertex != null ? vertex.style[mxConstants.STYLE_DIRECTION] : null;
+    const vertical =
+      direction == mxConstants.DIRECTION_NORTH ||
+      direction == mxConstants.DIRECTION_SOUTH;
 
-    let x = bounds.x;
-    let y = bounds.y;
-    let w = bounds.width;
-    let h = bounds.height;
+    const { x } = bounds;
+    const { y } = bounds;
+    const w = bounds.width;
+    const h = bounds.height;
 
     let cx = x + w / 2;
     let cy = y + h / 2;
@@ -323,13 +317,15 @@ let mxPerimeter = {
     let dx = next.x - cx;
     let dy = next.y - cy;
 
-    let alpha = (vertical) ? Math.atan2(dx, dy) : Math.atan2(dy, dx);
-    let t = (vertical) ? Math.atan2(w, h) : Math.atan2(h, w);
+    const alpha = vertical ? Math.atan2(dx, dy) : Math.atan2(dy, dx);
+    const t = vertical ? Math.atan2(w, h) : Math.atan2(h, w);
 
     let base = false;
 
-    if (direction == mxConstants.DIRECTION_NORTH ||
-        direction == mxConstants.DIRECTION_WEST) {
+    if (
+      direction == mxConstants.DIRECTION_NORTH ||
+      direction == mxConstants.DIRECTION_WEST
+    ) {
       base = alpha > -t && alpha < t;
     } else {
       base = alpha < -Math.PI + t || alpha > Math.PI - t;
@@ -338,42 +334,43 @@ let mxPerimeter = {
     let result = null;
 
     if (base) {
-      if (orthogonal && ((vertical && next.x >= start.x && next.x <= end.x) ||
-          (!vertical && next.y >= start.y && next.y <= end.y))) {
+      if (
+        orthogonal &&
+        ((vertical && next.x >= start.x && next.x <= end.x) ||
+          (!vertical && next.y >= start.y && next.y <= end.y))
+      ) {
         if (vertical) {
           result = new mxPoint(next.x, start.y);
         } else {
           result = new mxPoint(start.x, next.y);
         }
+      } else if (direction == mxConstants.DIRECTION_NORTH) {
+        result = new mxPoint(x + w / 2 + (h * Math.tan(alpha)) / 2, y + h);
+      } else if (direction == mxConstants.DIRECTION_SOUTH) {
+        result = new mxPoint(x + w / 2 - (h * Math.tan(alpha)) / 2, y);
+      } else if (direction == mxConstants.DIRECTION_WEST) {
+        result = new mxPoint(x + w, y + h / 2 + (w * Math.tan(alpha)) / 2);
       } else {
-        if (direction == mxConstants.DIRECTION_NORTH) {
-          result = new mxPoint(x + w / 2 + h * Math.tan(alpha) / 2,
-              y + h);
-        } else if (direction == mxConstants.DIRECTION_SOUTH) {
-          result = new mxPoint(x + w / 2 - h * Math.tan(alpha) / 2,
-              y);
-        } else if (direction == mxConstants.DIRECTION_WEST) {
-          result = new mxPoint(x + w, y + h / 2 +
-              w * Math.tan(alpha) / 2);
-        } else {
-          result = new mxPoint(x, y + h / 2 -
-              w * Math.tan(alpha) / 2);
-        }
+        result = new mxPoint(x, y + h / 2 - (w * Math.tan(alpha)) / 2);
       }
     } else {
       if (orthogonal) {
-        let pt = new mxPoint(cx, cy);
+        const pt = new mxPoint(cx, cy);
 
         if (next.y >= y && next.y <= y + h) {
-          pt.x = (vertical) ? cx : (
-              (direction == mxConstants.DIRECTION_WEST) ?
-                  x + w : x);
+          pt.x = vertical
+            ? cx
+            : direction == mxConstants.DIRECTION_WEST
+            ? x + w
+            : x;
           pt.y = next.y;
         } else if (next.x >= x && next.x <= x + w) {
           pt.x = next.x;
-          pt.y = (!vertical) ? cy : (
-              (direction == mxConstants.DIRECTION_NORTH) ?
-                  y + h : y);
+          pt.y = !vertical
+            ? cy
+            : direction == mxConstants.DIRECTION_NORTH
+            ? y + h
+            : y;
         }
 
         // Compute angle
@@ -384,13 +381,31 @@ let mxPerimeter = {
         cy = pt.y;
       }
 
-      if ((vertical && next.x <= x + w / 2) ||
-          (!vertical && next.y <= y + h / 2)) {
-        result = mxUtils.intersection(next.x, next.y, cx, cy,
-            start.x, start.y, corner.x, corner.y);
+      if (
+        (vertical && next.x <= x + w / 2) ||
+        (!vertical && next.y <= y + h / 2)
+      ) {
+        result = mxUtils.intersection(
+          next.x,
+          next.y,
+          cx,
+          cy,
+          start.x,
+          start.y,
+          corner.x,
+          corner.y
+        );
       } else {
-        result = mxUtils.intersection(next.x, next.y, cx, cy,
-            corner.x, corner.y, end.x, end.y);
+        result = mxUtils.intersection(
+          next.x,
+          next.y,
+          cx,
+          cy,
+          corner.x,
+          corner.y,
+          end.x,
+          end.y
+        );
       }
     }
 
@@ -407,41 +422,51 @@ let mxPerimeter = {
    * Describes a hexagon perimeter. See <RectanglePerimeter>
    * for a description of the parameters.
    */
-  HexagonPerimeter: function (bounds, vertex, next, orthogonal) {
-    let x = bounds.x;
-    let y = bounds.y;
-    let w = bounds.width;
-    let h = bounds.height;
+  HexagonPerimeter(bounds, vertex, next, orthogonal) {
+    const {x} = bounds;
+    const {y} = bounds;
+    const w = bounds.width;
+    const h = bounds.height;
 
-    let cx = bounds.getCenterX();
-    let cy = bounds.getCenterY();
-    let px = next.x;
-    let py = next.y;
-    let dx = px - cx;
-    let dy = py - cy;
-    let alpha = -Math.atan2(dy, dx);
-    let pi = Math.PI;
-    var pi2 = Math.PI / 2;
+    const cx = bounds.getCenterX();
+    const cy = bounds.getCenterY();
+    const px = next.x;
+    const py = next.y;
+    const dx = px - cx;
+    const dy = py - cy;
+    const alpha = -Math.atan2(dy, dx);
+    const pi = Math.PI;
+    let pi2 = Math.PI / 2;
 
     let result = new mxPoint(cx, cy);
 
-    let direction = (vertex != null) ? mxUtils.getValue(
-        vertex.style, mxConstants.STYLE_DIRECTION,
-        mxConstants.DIRECTION_EAST) : mxConstants.DIRECTION_EAST;
-    let vertical = direction == mxConstants.DIRECTION_NORTH
-        || direction == mxConstants.DIRECTION_SOUTH;
+    const direction =
+      vertex != null
+        ? mxUtils.getValue(
+            vertex.style,
+            mxConstants.STYLE_DIRECTION,
+            mxConstants.DIRECTION_EAST
+          )
+        : mxConstants.DIRECTION_EAST;
+    const vertical =
+      direction == mxConstants.DIRECTION_NORTH ||
+      direction == mxConstants.DIRECTION_SOUTH;
     let a = new mxPoint();
     let b = new mxPoint();
 
-    //Only consider corrects quadrants for the orthogonal case.
-    if ((px < x) && (py < y) || (px < x) && (py > y + h)
-        || (px > x + w) && (py < y) || (px > x + w) && (py > y + h)) {
+    // Only consider corrects quadrants for the orthogonal case.
+    if (
+      (px < x && py < y) ||
+      (px < x && py > y + h) ||
+      (px > x + w && py < y) ||
+      (px > x + w && py > y + h)
+    ) {
       orthogonal = false;
     }
 
     if (orthogonal) {
       if (vertical) {
-        //Special cases where intersects with hexagon corners
+        // Special cases where intersects with hexagon corners
         if (px == cx) {
           if (py <= y) {
             return new mxPoint(cx, y);
@@ -451,26 +476,26 @@ let mxPerimeter = {
         } else if (px < x) {
           if (py == y + h / 4) {
             return new mxPoint(x, y + h / 4);
-          } else if (py == y + 3 * h / 4) {
-            return new mxPoint(x, y + 3 * h / 4);
+          } else if (py == y + (3 * h) / 4) {
+            return new mxPoint(x, y + (3 * h) / 4);
           }
         } else if (px > x + w) {
           if (py == y + h / 4) {
             return new mxPoint(x + w, y + h / 4);
-          } else if (py == y + 3 * h / 4) {
-            return new mxPoint(x + w, y + 3 * h / 4);
+          } else if (py == y + (3 * h) / 4) {
+            return new mxPoint(x + w, y + (3 * h) / 4);
           }
         } else if (px == x) {
           if (py < cy) {
             return new mxPoint(x, y + h / 4);
           } else if (py > cy) {
-            return new mxPoint(x, y + 3 * h / 4);
+            return new mxPoint(x, y + (3 * h) / 4);
           }
         } else if (px == x + w) {
           if (py < cy) {
             return new mxPoint(x + w, y + h / 4);
           } else if (py > cy) {
-            return new mxPoint(x + w, y + 3 * h / 4);
+            return new mxPoint(x + w, y + (3 * h) / 4);
           }
         }
         if (py == y) {
@@ -480,35 +505,30 @@ let mxPerimeter = {
         }
 
         if (px < cx) {
-          if ((py > y + h / 4) && (py < y + 3 * h / 4)) {
+          if (py > y + h / 4 && py < y + (3 * h) / 4) {
             a = new mxPoint(x, y);
             b = new mxPoint(x, y + h);
           } else if (py < y + h / 4) {
-            a = new mxPoint(x - Math.floor(0.5 * w), y
-                + Math.floor(0.5 * h));
+            a = new mxPoint(x - Math.floor(0.5 * w), y + Math.floor(0.5 * h));
             b = new mxPoint(x + w, y - Math.floor(0.25 * h));
-          } else if (py > y + 3 * h / 4) {
-            a = new mxPoint(x - Math.floor(0.5 * w), y
-                + Math.floor(0.5 * h));
+          } else if (py > y + (3 * h) / 4) {
+            a = new mxPoint(x - Math.floor(0.5 * w), y + Math.floor(0.5 * h));
             b = new mxPoint(x + w, y + Math.floor(1.25 * h));
           }
         } else if (px > cx) {
-          if ((py > y + h / 4) && (py < y + 3 * h / 4)) {
+          if (py > y + h / 4 && py < y + (3 * h) / 4) {
             a = new mxPoint(x + w, y);
             b = new mxPoint(x + w, y + h);
           } else if (py < y + h / 4) {
             a = new mxPoint(x, y - Math.floor(0.25 * h));
-            b = new mxPoint(x + Math.floor(1.5 * w), y
-                + Math.floor(0.5 * h));
-          } else if (py > y + 3 * h / 4) {
-            a = new mxPoint(x + Math.floor(1.5 * w), y
-                + Math.floor(0.5 * h));
+            b = new mxPoint(x + Math.floor(1.5 * w), y + Math.floor(0.5 * h));
+          } else if (py > y + (3 * h) / 4) {
+            a = new mxPoint(x + Math.floor(1.5 * w), y + Math.floor(0.5 * h));
             b = new mxPoint(x, y + Math.floor(1.25 * h));
           }
         }
-
       } else {
-        //Special cases where intersects with hexagon corners
+        // Special cases where intersects with hexagon corners
         if (py == cy) {
           if (px <= x) {
             return new mxPoint(x, y + h / 2);
@@ -518,58 +538,54 @@ let mxPerimeter = {
         } else if (py < y) {
           if (px == x + w / 4) {
             return new mxPoint(x + w / 4, y);
-          } else if (px == x + 3 * w / 4) {
-            return new mxPoint(x + 3 * w / 4, y);
+          } else if (px == x + (3 * w) / 4) {
+            return new mxPoint(x + (3 * w) / 4, y);
           }
         } else if (py > y + h) {
           if (px == x + w / 4) {
             return new mxPoint(x + w / 4, y + h);
-          } else if (px == x + 3 * w / 4) {
-            return new mxPoint(x + 3 * w / 4, y + h);
+          } if (px == x + (3 * w) / 4) {
+            return new mxPoint(x + (3 * w) / 4, y + h);
           }
         } else if (py == y) {
           if (px < cx) {
             return new mxPoint(x + w / 4, y);
           } else if (px > cx) {
-            return new mxPoint(x + 3 * w / 4, y);
+            return new mxPoint(x + (3 * w) / 4, y);
           }
         } else if (py == y + h) {
           if (px < cx) {
             return new mxPoint(x + w / 4, y + h);
           } else if (py > cy) {
-            return new mxPoint(x + 3 * w / 4, y + h);
+            return new mxPoint(x + (3 * w) / 4, y + h);
           }
         }
         if (px == x) {
           return new mxPoint(x, cy);
-        } else if (px == x + w) {
+        } if (px == x + w) {
           return new mxPoint(x + w, cy);
         }
 
         if (py < cy) {
-          if ((px > x + w / 4) && (px < x + 3 * w / 4)) {
+          if (px > x + w / 4 && px < x + (3 * w) / 4) {
             a = new mxPoint(x, y);
             b = new mxPoint(x + w, y);
           } else if (px < x + w / 4) {
             a = new mxPoint(x - Math.floor(0.25 * w), y + h);
-            b = new mxPoint(x + Math.floor(0.5 * w), y
-                - Math.floor(0.5 * h));
-          } else if (px > x + 3 * w / 4) {
-            a = new mxPoint(x + Math.floor(0.5 * w), y
-                - Math.floor(0.5 * h));
+            b = new mxPoint(x + Math.floor(0.5 * w), y - Math.floor(0.5 * h));
+          } else if (px > x + (3 * w) / 4) {
+            a = new mxPoint(x + Math.floor(0.5 * w), y - Math.floor(0.5 * h));
             b = new mxPoint(x + Math.floor(1.25 * w), y + h);
           }
         } else if (py > cy) {
-          if ((px > x + w / 4) && (px < x + 3 * w / 4)) {
+          if (px > x + w / 4 && px < x + (3 * w) / 4) {
             a = new mxPoint(x, y + h);
             b = new mxPoint(x + w, y + h);
           } else if (px < x + w / 4) {
             a = new mxPoint(x - Math.floor(0.25 * w), y);
-            b = new mxPoint(x + Math.floor(0.5 * w), y
-                + Math.floor(1.5 * h));
-          } else if (px > x + 3 * w / 4) {
-            a = new mxPoint(x + Math.floor(0.5 * w), y
-                + Math.floor(1.5 * h));
+            b = new mxPoint(x + Math.floor(0.5 * w), y + Math.floor(1.5 * h));
+          } else if (px > x + (3 * w) / 4) {
+            a = new mxPoint(x + Math.floor(0.5 * w), y + Math.floor(1.5 * h));
             b = new mxPoint(x + Math.floor(1.25 * w), y);
           }
         }
@@ -599,87 +615,81 @@ let mxPerimeter = {
       result = mxUtils.intersection(tx, ty, next.x, next.y, a.x, a.y, b.x, b.y);
     } else {
       if (vertical) {
-        let beta = Math.atan2(h / 4, w / 2);
+        const beta = Math.atan2(h / 4, w / 2);
 
-        //Special cases where intersects with hexagon corners
+        // Special cases where intersects with hexagon corners
         if (alpha == beta) {
           return new mxPoint(x + w, y + Math.floor(0.25 * h));
-        } else if (alpha == pi2) {
+        } if (alpha == pi2) {
           return new mxPoint(x + Math.floor(0.5 * w), y);
-        } else if (alpha == (pi - beta)) {
+        } if (alpha == pi - beta) {
           return new mxPoint(x, y + Math.floor(0.25 * h));
-        } else if (alpha == -beta) {
+        } if (alpha == -beta) {
           return new mxPoint(x + w, y + Math.floor(0.75 * h));
-        } else if (alpha == (-pi2)) {
+        } if (alpha == -pi2) {
           return new mxPoint(x + Math.floor(0.5 * w), y + h);
-        } else if (alpha == (-pi + beta)) {
+        } if (alpha == -pi + beta) {
           return new mxPoint(x, y + Math.floor(0.75 * h));
         }
 
-        if ((alpha < beta) && (alpha > -beta)) {
+        if (alpha < beta && alpha > -beta) {
           a = new mxPoint(x + w, y);
           b = new mxPoint(x + w, y + h);
-        } else if ((alpha > beta) && (alpha < pi2)) {
+        } else if (alpha > beta && alpha < pi2) {
           a = new mxPoint(x, y - Math.floor(0.25 * h));
-          b = new mxPoint(x + Math.floor(1.5 * w), y
-              + Math.floor(0.5 * h));
-        } else if ((alpha > pi2) && (alpha < (pi - beta))) {
-          a = new mxPoint(x - Math.floor(0.5 * w), y
-              + Math.floor(0.5 * h));
+          b = new mxPoint(x + Math.floor(1.5 * w), y + Math.floor(0.5 * h));
+        } else if (alpha > pi2 && alpha < pi - beta) {
+          a = new mxPoint(x - Math.floor(0.5 * w), y + Math.floor(0.5 * h));
           b = new mxPoint(x + w, y - Math.floor(0.25 * h));
-        } else if (((alpha > (pi - beta)) && (alpha <= pi))
-            || ((alpha < (-pi + beta)) && (alpha >= -pi))) {
+        } else if (
+          (alpha > pi - beta && alpha <= pi) ||
+          (alpha < -pi + beta && alpha >= -pi)
+        ) {
           a = new mxPoint(x, y);
           b = new mxPoint(x, y + h);
-        } else if ((alpha < -beta) && (alpha > -pi2)) {
-          a = new mxPoint(x + Math.floor(1.5 * w), y
-              + Math.floor(0.5 * h));
+        } else if (alpha < -beta && alpha > -pi2) {
+          a = new mxPoint(x + Math.floor(1.5 * w), y + Math.floor(0.5 * h));
           b = new mxPoint(x, y + Math.floor(1.25 * h));
-        } else if ((alpha < -pi2) && (alpha > (-pi + beta))) {
-          a = new mxPoint(x - Math.floor(0.5 * w), y
-              + Math.floor(0.5 * h));
+        } else if (alpha < -pi2 && alpha > -pi + beta) {
+          a = new mxPoint(x - Math.floor(0.5 * w), y + Math.floor(0.5 * h));
           b = new mxPoint(x + w, y + Math.floor(1.25 * h));
         }
       } else {
-        let beta = Math.atan2(h / 2, w / 4);
+        const beta = Math.atan2(h / 2, w / 4);
 
-        //Special cases where intersects with hexagon corners
+        // Special cases where intersects with hexagon corners
         if (alpha == beta) {
           return new mxPoint(x + Math.floor(0.75 * w), y);
-        } else if (alpha == (pi - beta)) {
+        } if (alpha == pi - beta) {
           return new mxPoint(x + Math.floor(0.25 * w), y);
-        } else if ((alpha == pi) || (alpha == -pi)) {
+        } else if (alpha == pi || alpha == -pi) {
           return new mxPoint(x, y + Math.floor(0.5 * h));
         } else if (alpha == 0) {
           return new mxPoint(x + w, y + Math.floor(0.5 * h));
         } else if (alpha == -beta) {
           return new mxPoint(x + Math.floor(0.75 * w), y + h);
-        } else if (alpha == (-pi + beta)) {
+        } else if (alpha == -pi + beta) {
           return new mxPoint(x + Math.floor(0.25 * w), y + h);
         }
 
-        if ((alpha > 0) && (alpha < beta)) {
-          a = new mxPoint(x + Math.floor(0.5 * w), y
-              - Math.floor(0.5 * h));
+        if (alpha > 0 && alpha < beta) {
+          a = new mxPoint(x + Math.floor(0.5 * w), y - Math.floor(0.5 * h));
           b = new mxPoint(x + Math.floor(1.25 * w), y + h);
-        } else if ((alpha > beta) && (alpha < (pi - beta))) {
+        } else if (alpha > beta && alpha < pi - beta) {
           a = new mxPoint(x, y);
           b = new mxPoint(x + w, y);
-        } else if ((alpha > (pi - beta)) && (alpha < pi)) {
+        } else if (alpha > pi - beta && alpha < pi) {
           a = new mxPoint(x - Math.floor(0.25 * w), y + h);
-          b = new mxPoint(x + Math.floor(0.5 * w), y
-              - Math.floor(0.5 * h));
-        } else if ((alpha < 0) && (alpha > -beta)) {
-          a = new mxPoint(x + Math.floor(0.5 * w), y
-              + Math.floor(1.5 * h));
+          b = new mxPoint(x + Math.floor(0.5 * w), y - Math.floor(0.5 * h));
+        } else if (alpha < 0 && alpha > -beta) {
+          a = new mxPoint(x + Math.floor(0.5 * w), y + Math.floor(1.5 * h));
           b = new mxPoint(x + Math.floor(1.25 * w), y);
-        } else if ((alpha < -beta) && (alpha > (-pi + beta))) {
+        } else if (alpha < -beta && alpha > -pi + beta) {
           a = new mxPoint(x, y + h);
           b = new mxPoint(x + w, y + h);
-        } else if ((alpha < (-pi + beta)) && (alpha > -pi)) {
+        } else if (alpha < -pi + beta && alpha > -pi) {
           a = new mxPoint(x - Math.floor(0.25 * w), y);
-          b = new mxPoint(x + Math.floor(0.5 * w), y
-              + Math.floor(1.5 * h));
+          b = new mxPoint(x + Math.floor(0.5 * w), y + Math.floor(1.5 * h));
         }
       }
 
@@ -691,7 +701,7 @@ let mxPerimeter = {
     }
 
     return result;
-  }
+  },
 };
 
 export default mxPerimeter;

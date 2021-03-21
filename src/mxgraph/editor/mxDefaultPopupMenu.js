@@ -3,8 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxResources from "../util/mxResources";
-import mxUtils from "../util/mxUtils";
+import mxResources from '../util/mxResources';
+import mxUtils from '../util/mxUtils';
 
 class mxDefaultPopupMenu {
   /**
@@ -53,7 +53,7 @@ class mxDefaultPopupMenu {
    */
   constructor(config) {
     this.config = config;
-  };
+  }
 
   /**
    * Function: createMenu
@@ -157,8 +157,8 @@ class mxDefaultPopupMenu {
    */
   createMenu = (editor, menu, cell, evt) => {
     if (this.config != null) {
-      let conditions = this.createConditions(editor, cell, evt);
-      let item = this.config.firstChild;
+      const conditions = this.createConditions(editor, cell, evt);
+      const item = this.config.firstChild;
 
       this.addItems(editor, menu, cell, evt, conditions, item, null);
     }
@@ -184,17 +184,17 @@ class mxDefaultPopupMenu {
 
     while (item != null) {
       if (item.nodeName === 'add') {
-        let condition = item.getAttribute('if');
+        const condition = item.getAttribute('if');
 
         if (condition == null || conditions[condition]) {
           let as = item.getAttribute('as');
           as = mxResources.get(as) || as;
-          let funct = mxUtils.eval(mxUtils.getTextContent(item));
-          let action = item.getAttribute('action');
+          const funct = mxUtils.eval(mxUtils.getTextContent(item));
+          const action = item.getAttribute('action');
           let icon = item.getAttribute('icon');
-          let iconCls = item.getAttribute('iconCls');
-          let enabledCond = item.getAttribute('enabled-if');
-          let enabled = enabledCond == null || conditions[enabledCond];
+          const iconCls = item.getAttribute('iconCls');
+          const enabledCond = item.getAttribute('enabled-if');
+          const enabled = enabledCond == null || conditions[enabledCond];
 
           if (addSeparator) {
             menu.addSeparator(parent);
@@ -205,8 +205,27 @@ class mxDefaultPopupMenu {
             icon = this.imageBasePath + icon;
           }
 
-          let row = this.addAction(menu, editor, as, icon, funct, action, cell, parent, iconCls, enabled);
-          this.addItems(editor, menu, cell, evt, conditions, item.firstChild, row);
+          const row = this.addAction(
+            menu,
+            editor,
+            as,
+            icon,
+            funct,
+            action,
+            cell,
+            parent,
+            iconCls,
+            enabled
+          );
+          this.addItems(
+            editor,
+            menu,
+            cell,
+            evt,
+            conditions,
+            item.firstChild,
+            row
+          );
         }
       } else if (item.nodeName === 'separator') {
         addSeparator = true;
@@ -237,9 +256,20 @@ class mxDefaultPopupMenu {
    * enabled - Optional boolean that specifies if the menu item is enabled.
    * Default is true.
    */
-  addAction = (menu, editor, lab, icon, funct, action, cell, parent, iconCls, enabled) => {
-    let clickHandler = (evt) => {
-      if (typeof (funct) == 'function') {
+  addAction = (
+    menu,
+    editor,
+    lab,
+    icon,
+    funct,
+    action,
+    cell,
+    parent,
+    iconCls,
+    enabled
+  ) => {
+    const clickHandler = evt => {
+      if (typeof funct === 'function') {
         funct.call(editor, editor, cell, evt);
       }
       if (action != null) {
@@ -256,32 +286,33 @@ class mxDefaultPopupMenu {
    */
   createConditions = (editor, cell, evt) => {
     // Creates array with conditions
-    let model = editor.graph.getModel();
-    let childCount = model.getChildCount(cell);
+    const model = editor.graph.getModel();
+    const childCount = model.getChildCount(cell);
 
     // Adds some frequently used conditions
-    let conditions = [];
-    conditions['nocell'] = cell == null;
-    conditions['ncells'] = editor.graph.getSelectionCount() > 1;
-    conditions['notRoot'] = model.getRoot() != model.getParent(editor.graph.getDefaultParent());
-    conditions['cell'] = cell != null;
+    const conditions = [];
+    conditions.nocell = cell == null;
+    conditions.ncells = editor.graph.getSelectionCount() > 1;
+    conditions.notRoot =
+      model.getRoot() != model.getParent(editor.graph.getDefaultParent());
+    conditions.cell = cell != null;
 
-    let isCell = cell != null && editor.graph.getSelectionCount() === 1;
-    conditions['nonEmpty'] = isCell && childCount > 0;
-    conditions['expandable'] = isCell && editor.graph.isCellFoldable(cell, false);
-    conditions['collapsable'] = isCell && editor.graph.isCellFoldable(cell, true);
-    conditions['validRoot'] = isCell && editor.graph.isValidRoot(cell);
-    conditions['emptyValidRoot'] = conditions['validRoot'] && childCount === 0;
-    conditions['swimlane'] = isCell && editor.graph.isSwimlane(cell);
+    const isCell = cell != null && editor.graph.getSelectionCount() === 1;
+    conditions.nonEmpty = isCell && childCount > 0;
+    conditions.expandable = isCell && editor.graph.isCellFoldable(cell, false);
+    conditions.collapsable = isCell && editor.graph.isCellFoldable(cell, true);
+    conditions.validRoot = isCell && editor.graph.isValidRoot(cell);
+    conditions.emptyValidRoot = conditions.validRoot && childCount === 0;
+    conditions.swimlane = isCell && editor.graph.isSwimlane(cell);
 
     // Evaluates dynamic conditions from config file
-    let condNodes = this.config.getElementsByTagName('condition');
+    const condNodes = this.config.getElementsByTagName('condition');
 
     for (let i = 0; i < condNodes.length; i++) {
-      let funct = mxUtils.eval(mxUtils.getTextContent(condNodes[i]));
-      let name = condNodes[i].getAttribute('name');
+      const funct = mxUtils.eval(mxUtils.getTextContent(condNodes[i]));
+      const name = condNodes[i].getAttribute('name');
 
-      if (name != null && typeof (funct) == 'function') {
+      if (name != null && typeof funct === 'function') {
         conditions[name] = funct(editor, cell, evt);
       }
     }

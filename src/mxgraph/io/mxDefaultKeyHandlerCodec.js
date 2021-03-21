@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectCodec from "FIXME";
-import mxDefaultKeyHandler from "FIXME";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxObjectCodec from 'FIXME';
+import mxDefaultKeyHandler from 'FIXME';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxDefaultKeyHandlerCodec extends mxObjectCodec {
   /**
@@ -64,15 +64,14 @@ class mxDefaultKeyHandlerCodec extends mxObjectCodec {
    */
   decode = (dec, node, into) => {
     if (into != null) {
-      let editor = into.editor;
+      const { editor } = into;
       node = node.firstChild;
 
       while (node != null) {
-        if (!this.processInclude(dec, node, into) &&
-            node.nodeName === 'add') {
-          let as = node.getAttribute('as');
-          let action = node.getAttribute('action');
-          let control = node.getAttribute('control');
+        if (!this.processInclude(dec, node, into) && node.nodeName === 'add') {
+          const as = node.getAttribute('as');
+          const action = node.getAttribute('action');
+          const control = node.getAttribute('control');
 
           into.bindAction(as, action, control);
         }

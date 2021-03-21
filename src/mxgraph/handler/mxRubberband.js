@@ -3,12 +3,12 @@
  * Copyright (c) 2006-2016, Gaudenz Alder
  */
 
-import mxUtils from "../util/mxUtils";
-import mxEvent from "../util/mxEvent";
-import mxPoint from "../util/mxPoint";
-import mxMouseEvent from "../util/mxMouseEvent";
-import mxClient from "../mxClient";
-import mxRectangle from "../util/mxRectangle";
+import mxUtils from '../util/mxUtils';
+import mxEvent from '../util/mxEvent';
+import mxPoint from '../util/mxPoint';
+import mxMouseEvent from '../util/mxMouseEvent';
+import mxClient from '../mxClient';
+import mxRectangle from '../util/mxRectangle';
 
 class mxRubberband {
   /**
@@ -85,12 +85,12 @@ class mxRubberband {
 
       // Handles force rubberband event
       this.forceRubberbandHandler = (sender, evt) => {
-        let evtName = evt.getProperty('eventName');
-        let me = evt.getProperty('event');
+        const evtName = evt.getProperty('eventName');
+        const me = evt.getProperty('event');
 
         if (evtName === mxEvent.MOUSE_DOWN && this.isForceRubberbandEvent(me)) {
-          let offset = mxUtils.getOffset(this.graph.container);
-          let origin = mxUtils.getScrollOrigin(this.graph.container);
+          const offset = mxUtils.getOffset(this.graph.container);
+          const origin = mxUtils.getScrollOrigin(this.graph.container);
           origin.x -= offset.x;
           origin.y -= offset.y;
           this.start(me.getX() + origin.x, me.getY() + origin.y);
@@ -98,7 +98,10 @@ class mxRubberband {
         }
       };
 
-      this.graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.forceRubberbandHandler);
+      this.graph.addListener(
+        mxEvent.FIRE_MOUSE_EVENT,
+        this.forceRubberbandHandler
+      );
 
       // Repaints the marquee after autoscroll
       this.panHandler = mxUtils.bind(this, () => {
@@ -116,7 +119,7 @@ class mxRubberband {
 
       this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
     }
-  };
+  }
 
   /**
    * Function: isEnabled
@@ -134,7 +137,7 @@ class mxRubberband {
    * Enables or disables event handling. This implementation updates
    * <enabled>.
    */
-  setEnabled = (enabled) => {
+  setEnabled = enabled => {
     this.enabled = enabled;
   };
 
@@ -144,7 +147,7 @@ class mxRubberband {
    * Returns true if the given <mxMouseEvent> should start rubberband selection.
    * This implementation returns true if the alt key is pressed.
    */
-  isForceRubberbandEvent = (me) => {
+  isForceRubberbandEvent = me => {
     return mxEvent.isAltDown(me.getEvent());
   };
 
@@ -156,10 +159,15 @@ class mxRubberband {
    * handler.
    */
   mouseDown = (sender, me) => {
-    if (!me.isConsumed() && this.isEnabled() && this.graph.isEnabled() &&
-        me.getState() == null && !mxEvent.isMultiTouchEvent(me.getEvent())) {
-      let offset = mxUtils.getOffset(this.graph.container);
-      let origin = mxUtils.getScrollOrigin(this.graph.container);
+    if (
+      !me.isConsumed() &&
+      this.isEnabled() &&
+      this.graph.isEnabled() &&
+      me.getState() == null &&
+      !mxEvent.isMultiTouchEvent(me.getEvent())
+    ) {
+      const offset = mxUtils.getOffset(this.graph.container);
+      const origin = mxUtils.getScrollOrigin(this.graph.container);
       origin.x -= offset.x;
       origin.y -= offset.y;
       this.start(me.getX() + origin.x, me.getY() + origin.y);
@@ -181,11 +189,11 @@ class mxRubberband {
   start = (x, y) => {
     this.first = new mxPoint(x, y);
 
-    let container = this.graph.container;
+    const { container } = this.graph;
 
     function createMouseEvent(evt) {
-      let me = new mxMouseEvent(evt);
-      let pt = mxUtils.convertPoint(container, me.getX(), me.getY());
+      const me = new mxMouseEvent(evt);
+      const pt = mxUtils.convertPoint(container, me.getX(), me.getY());
 
       me.graphX = pt.x;
       me.graphY = pt.y;
@@ -193,17 +201,22 @@ class mxRubberband {
       return me;
     }
 
-    this.dragHandler = mxUtils.bind(this, (evt) => {
+    this.dragHandler = mxUtils.bind(this, evt => {
       this.mouseMove(this.graph, createMouseEvent(evt));
     });
 
-    this.dropHandler = (evt) => {
+    this.dropHandler = evt => {
       this.mouseUp(this.graph, createMouseEvent(evt));
     };
 
     // Workaround for rubberband stopping if the mouse leaves the container in Firefox
     if (mxClient.IS_FF) {
-      mxEvent.addGestureListeners(document, null, this.dragHandler, this.dropHandler);
+      mxEvent.addGestureListeners(
+        document,
+        null,
+        this.dragHandler,
+        this.dropHandler
+      );
     }
   };
 
@@ -214,15 +227,15 @@ class mxRubberband {
    */
   mouseMove = (sender, me) => {
     if (!me.isConsumed() && this.first != null) {
-      let origin = mxUtils.getScrollOrigin(this.graph.container);
-      let offset = mxUtils.getOffset(this.graph.container);
+      const origin = mxUtils.getScrollOrigin(this.graph.container);
+      const offset = mxUtils.getOffset(this.graph.container);
       origin.x -= offset.x;
       origin.y -= offset.y;
-      let x = me.getX() + origin.x;
-      let y = me.getY() + origin.y;
-      let dx = this.first.x - x;
-      let dy = this.first.y - y;
-      let tol = this.graph.tolerance;
+      const x = me.getX() + origin.x;
+      const y = me.getY() + origin.y;
+      const dx = this.first.x - x;
+      const dy = this.first.y - y;
+      const tol = this.graph.tolerance;
 
       if (this.div != null || Math.abs(dx) > tol || Math.abs(dy) > tol) {
         if (this.div == null) {
@@ -252,7 +265,7 @@ class mxRubberband {
     }
 
     this.graph.container.appendChild(this.sharedDiv);
-    let result = this.sharedDiv;
+    const result = this.sharedDiv;
 
     if (mxClient.IS_SVG && this.fadeOut) {
       this.sharedDiv = null;
@@ -277,7 +290,7 @@ class mxRubberband {
    * <mxGraph.selectRegion>.
    */
   mouseUp = (sender, me) => {
-    let active = this.isActive();
+    const active = this.isActive();
     this.reset();
 
     if (active) {
@@ -292,8 +305,8 @@ class mxRubberband {
    * Resets the state of this handler and selects the current region
    * for the given event.
    */
-  execute = (evt) => {
-    let rect = new mxRectangle(this.x, this.y, this.width, this.height);
+  execute = evt => {
+    const rect = new mxRectangle(this.x, this.y, this.width, this.height);
     this.graph.selectRegion(rect, evt);
   };
 
@@ -305,7 +318,7 @@ class mxRubberband {
   reset = () => {
     if (this.div != null) {
       if (mxClient.IS_SVG && this.fadeOut) {
-        let temp = this.div;
+        const temp = this.div;
         mxUtils.setPrefixedStyle(temp.style, 'transition', 'all 0.2s linear');
         temp.style.pointerEvents = 'none';
         temp.style.opacity = 0;
@@ -318,7 +331,12 @@ class mxRubberband {
       }
     }
 
-    mxEvent.removeGestureListeners(document, null, this.dragHandler, this.dropHandler);
+    mxEvent.removeGestureListeners(
+      document,
+      null,
+      this.dragHandler,
+      this.dropHandler
+    );
     this.dragHandler = null;
     this.dropHandler = null;
 
@@ -347,21 +365,21 @@ class mxRubberband {
    */
   repaint = () => {
     if (this.div != null) {
-      let x = this.currentX - this.graph.panDx;
-      let y = this.currentY - this.graph.panDy;
+      const x = this.currentX - this.graph.panDx;
+      const y = this.currentY - this.graph.panDy;
 
       this.x = Math.min(this.first.x, x);
       this.y = Math.min(this.first.y, y);
       this.width = Math.max(this.first.x, x) - this.x;
       this.height = Math.max(this.first.y, y) - this.y;
 
-      let dx = 0;
-      let dy = 0;
+      const dx = 0;
+      const dy = 0;
 
-      this.div.style.left = (this.x + dx) + 'px';
-      this.div.style.top = (this.y + dy) + 'px';
-      this.div.style.width = Math.max(1, this.width) + 'px';
-      this.div.style.height = Math.max(1, this.height) + 'px';
+      this.div.style.left = `${this.x + dx}px`;
+      this.div.style.top = `${this.y + dy}px`;
+      this.div.style.width = `${Math.max(1, this.width)}px`;
+      this.div.style.height = `${Math.max(1, this.height)}px`;
     }
   };
 

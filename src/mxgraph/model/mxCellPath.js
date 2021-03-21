@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-let mxCellPath = {
+const mxCellPath = {
   /**
    * Class: mxCellPath
    *
@@ -26,14 +26,14 @@ let mxCellPath = {
    *
    * cell - Cell whose path should be returned.
    */
-  create: (cell) => {
+  create: cell => {
     let result = '';
 
     if (cell != null) {
       let parent = cell.getParent();
 
       while (parent != null) {
-        let index = parent.getIndex(cell);
+        const index = parent.getIndex(cell);
         result = index + mxCellPath.PATH_SEPARATOR + result;
 
         cell = parent;
@@ -42,7 +42,7 @@ let mxCellPath = {
     }
 
     // Removes trailing separator
-    let n = result.length;
+    const n = result.length;
 
     if (n > 1) {
       result = result.substring(0, n - 1);
@@ -61,13 +61,14 @@ let mxCellPath = {
    *
    * path - Path whose parent path should be returned.
    */
-  getParentPath: (path) => {
+  getParentPath: path => {
     if (path != null) {
-      let index = path.lastIndexOf(mxCellPath.PATH_SEPARATOR);
+      const index = path.lastIndexOf(mxCellPath.PATH_SEPARATOR);
 
       if (index >= 0) {
         return path.substring(0, index);
-      } else if (path.length > 0) {
+      }
+      if (path.length > 0) {
         return '';
       }
     }
@@ -90,7 +91,7 @@ let mxCellPath = {
     let parent = root;
 
     if (path != null) {
-      let tokens = path.split(mxCellPath.PATH_SEPARATOR);
+      const tokens = path.split(mxCellPath.PATH_SEPARATOR);
 
       for (let i = 0; i < tokens.length; i++) {
         parent = parent.getChildAt(parseInt(tokens[i]));
@@ -107,19 +108,18 @@ let mxCellPath = {
    * p1 is equal and 1 if p1 is greater than p2.
    */
   compare: (p1, p2) => {
-    let min = Math.min(p1.length, p2.length);
+    const min = Math.min(p1.length, p2.length);
     let comp = 0;
 
     for (let i = 0; i < min; i++) {
       if (p1[i] != p2[i]) {
-        if (p1[i].length == 0 ||
-            p2[i].length == 0) {
-          comp = (p1[i] == p2[i]) ? 0 : ((p1[i] > p2[i]) ? 1 : -1);
+        if (p1[i].length == 0 || p2[i].length == 0) {
+          comp = p1[i] == p2[i] ? 0 : p1[i] > p2[i] ? 1 : -1;
         } else {
           var t1 = parseInt(p1[i]);
           var t2 = parseInt(p2[i]);
 
-          comp = (t1 == t2) ? 0 : ((t1 > t2) ? 1 : -1);
+          comp = t1 == t2 ? 0 : t1 > t2 ? 1 : -1;
         }
 
         break;
@@ -132,12 +132,12 @@ let mxCellPath = {
       var t2 = p2.length;
 
       if (t1 !== t2) {
-        comp = (t1 > t2) ? 1 : -1;
+        comp = t1 > t2 ? 1 : -1;
       }
     }
 
     return comp;
-  }
+  },
 };
 
 export default mxCellPath;

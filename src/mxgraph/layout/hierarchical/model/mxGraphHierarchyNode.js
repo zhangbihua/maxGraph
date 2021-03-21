@@ -60,14 +60,14 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
     this.id = mxObjectIdentity.get(cell);
     this.connectsAsTarget = [];
     this.connectsAsSource = [];
-  };
+  }
 
   /**
    * Function: getRankValue
    *
    * Returns the integer value of the layer that this node resides in
    */
-  getRankValue = (layer) => {
+  getRankValue = layer => {
     return this.maxRank;
   };
 
@@ -76,13 +76,13 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
    *
    * Returns the cells this cell connects to on the next layer up
    */
-  getNextLayerConnectedCells = (layer) => {
+  getNextLayerConnectedCells = layer => {
     if (this.nextLayerConnectedCells == null) {
       this.nextLayerConnectedCells = [];
       this.nextLayerConnectedCells[0] = [];
 
       for (let i = 0; i < this.connectsAsTarget.length; i++) {
-        let edge = this.connectsAsTarget[i];
+        const edge = this.connectsAsTarget[i];
 
         if (edge.maxRank == -1 || edge.maxRank == layer + 1) {
           // Either edge is not in any rank or
@@ -103,13 +103,13 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
    *
    * Returns the cells this cell connects to on the next layer down
    */
-  getPreviousLayerConnectedCells = (layer) => {
+  getPreviousLayerConnectedCells = layer => {
     if (this.previousLayerConnectedCells == null) {
       this.previousLayerConnectedCells = [];
       this.previousLayerConnectedCells[0] = [];
 
       for (let i = 0; i < this.connectsAsSource.length; i++) {
-        let edge = this.connectsAsSource[i];
+        const edge = this.connectsAsSource[i];
 
         if (edge.minRank == -1 || edge.minRank == layer - 1) {
           // No dummy nodes in edge, add node of other side of edge
@@ -138,7 +138,7 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
    *
    * Gets the value of temp for the specified layer
    */
-  getGeneralPurposeVariable = (layer) => {
+  getGeneralPurposeVariable = layer => {
     return this.temp[0];
   };
 
@@ -154,11 +154,15 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
   /**
    * Function: isAncestor
    */
-  isAncestor = (otherNode) => {
+  isAncestor = otherNode => {
     // Firstly, the hash code of this node needs to be shorter than the
     // other node
-    if (otherNode != null && this.hashCode != null && otherNode.hashCode != null
-        && this.hashCode.length < otherNode.hashCode.length) {
+    if (
+      otherNode != null &&
+      this.hashCode != null &&
+      otherNode.hashCode != null &&
+      this.hashCode.length < otherNode.hashCode.length
+    ) {
       if (this.hashCode == otherNode.hashCode) {
         return true;
       }

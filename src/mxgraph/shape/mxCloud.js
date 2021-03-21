@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxActor from "./mxActor";
+import mxActor from './mxActor';
 
 class mxCloud extends mxActor {
   /**
@@ -32,8 +32,8 @@ class mxCloud extends mxActor {
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = (strokewidth != null) ? strokewidth : 1;
-  };
+    this.strokewidth = strokewidth != null ? strokewidth : 1;
+  }
 
   /**
    * Function: redrawPath

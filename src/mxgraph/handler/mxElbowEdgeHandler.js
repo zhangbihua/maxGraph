@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEdgeHandler from "./mxEdgeHandler";
+import mxEdgeHandler from './mxEdgeHandler';
 
 class mxElbowEdgeHandler extends mxEdgeHandler {
   /**
@@ -20,7 +20,8 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * exist then the value is used as the error message. Default is
    * 'doubleClickOrientation'.
    */
-  doubleClickOrientationResource = (mxClient.language !== 'none') ? 'doubleClickOrientation' : '';
+  doubleClickOrientationResource =
+    mxClient.language !== 'none' ? 'doubleClickOrientation' : '';
 
   /**
    * Class: mxElbowEdgeHandler
@@ -40,7 +41,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    */
   constructor(state) {
     super(state);
-  };
+  }
 
   /**
    * Function: createBends
@@ -48,7 +49,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * Overrides <mxEdgeHandler.createBends> to create custom bends.
    */
   createBends = () => {
-    let bends = [];
+    const bends = [];
 
     // Source
     let bend = this.createHandleShape(0);
@@ -57,12 +58,14 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
     bends.push(bend);
 
     // Virtual
-    bends.push(this.createVirtualBend((evt) => {
-      if (!mxEvent.isConsumed(evt) && this.flipEnabled) {
-        this.graph.flipEdge(this.state.cell, evt);
-        mxEvent.consume(evt);
-      }
-    }));
+    bends.push(
+      this.createVirtualBend(evt => {
+        if (!mxEvent.isConsumed(evt) && this.flipEnabled) {
+          this.graph.flipEdge(this.state.cell, evt);
+          mxEvent.consume(evt);
+        }
+      })
+    );
 
     this.points.push(new mxPoint(0, 0));
 
@@ -81,8 +84,8 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * Creates a virtual bend that supports double clicking and calls
    * <mxGraph.flipEdge>.
    */
-  createVirtualBend = (dblClickHandler) => {
-    let bend = this.createHandleShape();
+  createVirtualBend = dblClickHandler => {
+    const bend = this.createHandleShape();
     this.initBend(bend, dblClickHandler);
 
     bend.setCursor(this.getCursorForBend());
@@ -100,12 +103,18 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * Returns the cursor to be used for the bend.
    */
   getCursorForBend = () => {
-    return (this.state.style[mxConstants.STYLE_EDGE] === mxEdgeStyle.TopToBottom ||
-        this.state.style[mxConstants.STYLE_EDGE] === mxConstants.EDGESTYLE_TOPTOBOTTOM ||
-        ((this.state.style[mxConstants.STYLE_EDGE] === mxEdgeStyle.ElbowConnector ||
-            this.state.style[mxConstants.STYLE_EDGE] === mxConstants.EDGESTYLE_ELBOW) &&
-            this.state.style[mxConstants.STYLE_ELBOW] === mxConstants.ELBOW_VERTICAL)) ?
-        'row-resize' : 'col-resize';
+    return this.state.style[mxConstants.STYLE_EDGE] ===
+      mxEdgeStyle.TopToBottom ||
+      this.state.style[mxConstants.STYLE_EDGE] ===
+        mxConstants.EDGESTYLE_TOPTOBOTTOM ||
+      ((this.state.style[mxConstants.STYLE_EDGE] ===
+        mxEdgeStyle.ElbowConnector ||
+        this.state.style[mxConstants.STYLE_EDGE] ===
+          mxConstants.EDGESTYLE_ELBOW) &&
+        this.state.style[mxConstants.STYLE_ELBOW] ===
+          mxConstants.ELBOW_VERTICAL)
+      ? 'row-resize'
+      : 'col-resize';
   };
 
   /**
@@ -113,11 +122,14 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    *
    * Returns the tooltip for the given node.
    */
-  getTooltipForNode = (node) => {
+  getTooltipForNode = node => {
     let tip = null;
 
-    if (this.bends != null && this.bends[1] != null && (node === this.bends[1].node ||
-        node.parentNode === this.bends[1].node)) {
+    if (
+      this.bends != null &&
+      this.bends[1] != null &&
+      (node === this.bends[1].node || node.parentNode === this.bends[1].node)
+    ) {
       tip = this.doubleClickOrientationResource;
       tip = mxResources.get(tip) || tip; // translate
     }
@@ -137,9 +149,9 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * gridEnabled - Boolean that specifies if the grid should be applied.
    */
   convertPoint = (point, gridEnabled) => {
-    let scale = this.graph.getView().getScale();
-    let tr = this.graph.getView().getTranslate();
-    let origin = this.state.origin;
+    const scale = this.graph.getView().getScale();
+    const tr = this.graph.getView().getTranslate();
+    const { origin } = this.state;
 
     if (gridEnabled) {
       point.x = this.graph.snap(point.x);
@@ -163,8 +175,8 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * pe - <mxPoint> that represents the location of the last point.
    */
   redrawInnerBends = (p0, pe) => {
-    let g = this.graph.getModel().getGeometry(this.state.cell);
-    let pts = this.state.absolutePoints;
+    const g = this.graph.getModel().getGeometry(this.state.cell);
+    const pts = this.state.absolutePoints;
     let pt = null;
 
     // Keeps the virtual bend on the edge shape
@@ -178,23 +190,41 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
     if (pt == null) {
       pt = new mxPoint(p0.x + (pe.x - p0.x) / 2, p0.y + (pe.y - p0.y) / 2);
     } else {
-      pt = new mxPoint(this.graph.getView().scale * (pt.x + this.graph.getView().translate.x + this.state.origin.x),
-          this.graph.getView().scale * (pt.y + this.graph.getView().translate.y + this.state.origin.y));
+      pt = new mxPoint(
+        this.graph.getView().scale *
+          (pt.x + this.graph.getView().translate.x + this.state.origin.x),
+        this.graph.getView().scale *
+          (pt.y + this.graph.getView().translate.y + this.state.origin.y)
+      );
     }
 
     // Makes handle slightly bigger if the yellow  label handle
     // exists and intersects this green handle
-    let b = this.bends[1].bounds;
+    const b = this.bends[1].bounds;
     let w = b.width;
     let h = b.height;
-    let bounds = new mxRectangle(Math.round(pt.x - w / 2), Math.round(pt.y - h / 2), w, h);
+    let bounds = new mxRectangle(
+      Math.round(pt.x - w / 2),
+      Math.round(pt.y - h / 2),
+      w,
+      h
+    );
 
     if (this.manageLabelHandle) {
       this.checkLabelHandle(bounds);
-    } else if (this.handleImage == null && this.labelShape.visible && mxUtils.intersects(bounds, this.labelShape.bounds)) {
+    } else if (
+      this.handleImage == null &&
+      this.labelShape.visible &&
+      mxUtils.intersects(bounds, this.labelShape.bounds)
+    ) {
       w = mxConstants.HANDLE_SIZE + 3;
       h = mxConstants.HANDLE_SIZE + 3;
-      bounds = new mxRectangle(Math.floor(pt.x - w / 2), Math.floor(pt.y - h / 2), w, h);
+      bounds = new mxRectangle(
+        Math.floor(pt.x - w / 2),
+        Math.floor(pt.y - h / 2),
+        w,
+        h
+      );
     }
 
     this.bends[1].bounds = bounds;

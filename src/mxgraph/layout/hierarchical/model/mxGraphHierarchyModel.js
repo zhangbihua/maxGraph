@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDictionary from "FIXME";
+import mxDictionary from 'FIXME';
 
 class mxGraphHierarchyModel {
   /**
@@ -97,7 +97,7 @@ class mxGraphHierarchyModel {
    * usage
    */
   constructor(layout, vertices, roots, parent, tightenToSource) {
-    let graph = layout.getGraph();
+    const graph = layout.getGraph();
     this.tightenToSource = tightenToSource;
     this.roots = roots;
     this.parent = parent;
@@ -107,7 +107,7 @@ class mxGraphHierarchyModel {
     this.vertexMapper = new mxDictionary();
     this.edgeMapper = new mxDictionary();
     this.maxRank = 0;
-    let internalVertices = [];
+    const internalVertices = [];
 
     if (vertices == null) {
       vertices = this.graph.getChildVertices(parent);
@@ -122,18 +122,17 @@ class mxGraphHierarchyModel {
     // Go through edges set their sink values. Also check the
     // ordering if and invert edges if necessary
     for (let i = 0; i < vertices.length; i++) {
-      let edges = internalVertices[i].connectsAsSource;
+      const edges = internalVertices[i].connectsAsSource;
 
       for (let j = 0; j < edges.length; j++) {
-        let internalEdge = edges[j];
-        let realEdges = internalEdge.edges;
+        const internalEdge = edges[j];
+        const realEdges = internalEdge.edges;
 
         // Only need to process the first real edge, since
         // all the edges connect to the same other vertex
         if (realEdges != null && realEdges.length > 0) {
-          let realEdge = realEdges[0];
-          let targetCell = layout.getVisibleTerminal(
-              realEdge, false);
+          const realEdge = realEdges[0];
+          let targetCell = layout.getVisibleTerminal(realEdge, false);
           let internalTargetCell = this.vertexMapper.get(targetCell);
 
           if (internalVertices[i] == internalTargetCell) {
@@ -142,20 +141,26 @@ class mxGraphHierarchyModel {
             // direction as the first real edge in the array above. When that happens the if above catches
             // that and we correct the target cell before continuing.
             // This branch only detects this single case
-            targetCell = layout.getVisibleTerminal(
-                realEdge, true);
+            targetCell = layout.getVisibleTerminal(realEdge, true);
             internalTargetCell = this.vertexMapper.get(targetCell);
           }
 
-          if (internalTargetCell != null
-              && internalVertices[i] != internalTargetCell) {
+          if (
+            internalTargetCell != null &&
+            internalVertices[i] != internalTargetCell
+          ) {
             internalEdge.target = internalTargetCell;
 
             if (internalTargetCell.connectsAsTarget.length == 0) {
               internalTargetCell.connectsAsTarget = [];
             }
 
-            if (mxUtils.indexOf(internalTargetCell.connectsAsTarget, internalEdge) < 0) {
+            if (
+              mxUtils.indexOf(
+                internalTargetCell.connectsAsTarget,
+                internalEdge
+              ) < 0
+            ) {
               internalTargetCell.connectsAsTarget.push(internalEdge);
             }
           }
@@ -166,7 +171,7 @@ class mxGraphHierarchyModel {
       // internal vertex as having been visited.
       internalVertices[i].temp[0] = 1;
     }
-  };
+  }
 
   /**
    * Function: createInternalCells
@@ -182,7 +187,7 @@ class mxGraphHierarchyModel {
    * information filled in using the real vertices.
    */
   createInternalCells = (layout, vertices, internalVertices) => {
-    let graph = layout.getGraph();
+    const graph = layout.getGraph();
 
     // Create internal edges
     for (let i = 0; i < vertices.length; i++) {
@@ -190,19 +195,22 @@ class mxGraphHierarchyModel {
       this.vertexMapper.put(vertices[i], internalVertices[i]);
 
       // If the layout is deterministic, order the cells
-      //List outgoingCells = graph.getNeighbours(vertices[i], deterministic);
-      let conns = layout.getEdges(vertices[i]);
+      // List outgoingCells = graph.getNeighbours(vertices[i], deterministic);
+      const conns = layout.getEdges(vertices[i]);
       internalVertices[i].connectsAsSource = [];
 
       // Create internal edges, but don't do any rank assignment yet
       // First use the information from the greedy cycle remover to
       // invert the leftward edges internally
       for (let j = 0; j < conns.length; j++) {
-        let cell = layout.getVisibleTerminal(conns[j], false);
+        const cell = layout.getVisibleTerminal(conns[j], false);
 
         // Looking for outgoing edges only
-        if (cell != vertices[i] && layout.graph.model.isVertex(cell) &&
-            !layout.isVertexIgnored(cell)) {
+        if (
+          cell != vertices[i] &&
+          layout.graph.model.isVertex(cell) &&
+          !layout.isVertexIgnored(cell)
+        ) {
           // We process all edge between this source and its targets
           // If there are edges going both ways, we need to collect
           // them all into one internal edges to avoid looping problems
@@ -216,19 +224,23 @@ class mxGraphHierarchyModel {
           // are the same. All the graph edges will have been assigned to
           // an internal edge going the other way, so we don't want to
           // process them again
-          let undirectedEdges = layout.getEdgesBetween(vertices[i],
-              cell, false);
-          let directedEdges = layout.getEdgesBetween(vertices[i],
-              cell, true);
+          const undirectedEdges = layout.getEdgesBetween(
+            vertices[i],
+            cell,
+            false
+          );
+          const directedEdges = layout.getEdgesBetween(vertices[i], cell, true);
 
-          if (undirectedEdges != null &&
-              undirectedEdges.length > 0 &&
-              this.edgeMapper.get(undirectedEdges[0]) == null &&
-              directedEdges.length * 2 >= undirectedEdges.length) {
-            let internalEdge = new mxGraphHierarchyEdge(undirectedEdges);
+          if (
+            undirectedEdges != null &&
+            undirectedEdges.length > 0 &&
+            this.edgeMapper.get(undirectedEdges[0]) == null &&
+            directedEdges.length * 2 >= undirectedEdges.length
+          ) {
+            const internalEdge = new mxGraphHierarchyEdge(undirectedEdges);
 
             for (let k = 0; k < undirectedEdges.length; k++) {
-              let edge = undirectedEdges[k];
+              const edge = undirectedEdges[k];
               this.edgeMapper.put(edge, internalEdge);
 
               // Resets all point on the edge and disables the edge style
@@ -243,7 +255,12 @@ class mxGraphHierarchyModel {
 
             internalEdge.source = internalVertices[i];
 
-            if (mxUtils.indexOf(internalVertices[i].connectsAsSource, internalEdge) < 0) {
+            if (
+              mxUtils.indexOf(
+                internalVertices[i].connectsAsSource,
+                internalEdge
+              ) < 0
+            ) {
               internalVertices[i].connectsAsSource.push(internalEdge);
             }
           }
@@ -263,11 +280,11 @@ class mxGraphHierarchyModel {
    * Starting at the sinks is basically a longest path layering algorithm.
    */
   initialRank = () => {
-    let startNodes = [];
+    const startNodes = [];
 
     if (this.roots != null) {
       for (let i = 0; i < this.roots.length; i++) {
-        let internalNode = this.vertexMapper.get(this.roots[i]);
+        const internalNode = this.vertexMapper.get(this.roots[i]);
 
         if (internalNode != null) {
           startNodes.push(internalNode);
@@ -275,17 +292,17 @@ class mxGraphHierarchyModel {
       }
     }
 
-    let internalNodes = this.vertexMapper.getValues();
+    const internalNodes = this.vertexMapper.getValues();
 
     for (let i = 0; i < internalNodes.length; i++) {
       // Mark the node as not having had a layer assigned
       internalNodes[i].temp[0] = -1;
     }
 
-    let startNodesCopy = startNodes.slice();
+    const startNodesCopy = startNodes.slice();
 
     while (startNodes.length > 0) {
-      let internalNode = startNodes[0];
+      const internalNode = startNodes[0];
       var layerDeterminingEdges;
       var edgesToBeMarked;
 
@@ -302,12 +319,12 @@ class mxGraphHierarchyModel {
       let minimumLayer = this.SOURCESCANSTARTRANK;
 
       for (let i = 0; i < layerDeterminingEdges.length; i++) {
-        let internalEdge = layerDeterminingEdges[i];
+        const internalEdge = layerDeterminingEdges[i];
 
         if (internalEdge.temp[0] == 5270620) {
           // This edge has been scanned, get the layer of the
           // node on the other end
-          let otherNode = internalEdge.source;
+          const otherNode = internalEdge.source;
           minimumLayer = Math.min(minimumLayer, otherNode.temp[0] - 1);
         } else {
           allEdgesScanned = false;
@@ -324,14 +341,14 @@ class mxGraphHierarchyModel {
 
         if (edgesToBeMarked != null) {
           for (let i = 0; i < edgesToBeMarked.length; i++) {
-            let internalEdge = edgesToBeMarked[i];
+            const internalEdge = edgesToBeMarked[i];
 
             // Assign unique stamp ( y/m/d/h )
             internalEdge.temp[0] = 5270620;
 
             // Add node on other end of edge to LinkedList of
             // nodes to be analysed
-            let otherNode = internalEdge.target;
+            const otherNode = internalEdge.target;
 
             // Only add node if it hasn't been assigned a layer
             if (otherNode.temp[0] == -1) {
@@ -350,7 +367,7 @@ class mxGraphHierarchyModel {
       } else {
         // Not all the edges have been scanned, get to the back of
         // the class and put the dunces cap on
-        let removedCell = startNodes.shift();
+        const removedCell = startNodes.shift();
         startNodes.push(internalNode);
 
         if (removedCell == internalNode && startNodes.length == 1) {
@@ -372,15 +389,14 @@ class mxGraphHierarchyModel {
 
     // Tighten the rank 0 nodes as far as possible
     for (let i = 0; i < startNodesCopy.length; i++) {
-      let internalNode = startNodesCopy[i];
+      const internalNode = startNodesCopy[i];
       let currentMaxLayer = 0;
-      let layerDeterminingEdges = internalNode.connectsAsSource;
+      const layerDeterminingEdges = internalNode.connectsAsSource;
 
       for (let j = 0; j < layerDeterminingEdges.length; j++) {
-        let internalEdge = layerDeterminingEdges[j];
-        let otherNode = internalEdge.target;
-        internalNode.temp[0] = Math.max(currentMaxLayer,
-            otherNode.temp[0] + 1);
+        const internalEdge = layerDeterminingEdges[j];
+        const otherNode = internalEdge.target;
+        internalNode.temp[0] = Math.max(currentMaxLayer, otherNode.temp[0] + 1);
         currentMaxLayer = internalNode.temp[0];
       }
     }
@@ -397,7 +413,7 @@ class mxGraphHierarchyModel {
    * to create dummy nodes for edges that cross layers.
    */
   fixRanks = () => {
-    let rankList = [];
+    const rankList = [];
     this.ranks = [];
 
     for (let i = 0; i < this.maxRank + 1; i++) {
@@ -411,47 +427,51 @@ class mxGraphHierarchyModel {
     let rootsArray = null;
 
     if (this.roots != null) {
-      let oldRootsArray = this.roots;
+      const oldRootsArray = this.roots;
       rootsArray = [];
 
       for (let i = 0; i < oldRootsArray.length; i++) {
-        let cell = oldRootsArray[i];
-        let internalNode = this.vertexMapper.get(cell);
+        const cell = oldRootsArray[i];
+        const internalNode = this.vertexMapper.get(cell);
         rootsArray[i] = internalNode;
       }
     }
 
-    this.visit((parent, node, edge, layer, seen) => {
-      if (seen == 0 && node.maxRank < 0 && node.minRank < 0) {
-        rankList[node.temp[0]].push(node);
-        node.maxRank = node.temp[0];
-        node.minRank = node.temp[0];
+    this.visit(
+      (parent, node, edge, layer, seen) => {
+        if (seen == 0 && node.maxRank < 0 && node.minRank < 0) {
+          rankList[node.temp[0]].push(node);
+          node.maxRank = node.temp[0];
+          node.minRank = node.temp[0];
 
-        // Set temp[0] to the nodes position in the rank
-        node.temp[0] = rankList[node.maxRank].length - 1;
-      }
+          // Set temp[0] to the nodes position in the rank
+          node.temp[0] = rankList[node.maxRank].length - 1;
+        }
 
-      if (parent != null && edge != null) {
-        let parentToCellRankDifference = parent.maxRank - node.maxRank;
+        if (parent != null && edge != null) {
+          const parentToCellRankDifference = parent.maxRank - node.maxRank;
 
-        if (parentToCellRankDifference > 1) {
-          // There are ranks in between the parent and current cell
-          edge.maxRank = parent.maxRank;
-          edge.minRank = node.maxRank;
-          edge.temp = [];
-          edge.x = [];
-          edge.y = [];
+          if (parentToCellRankDifference > 1) {
+            // There are ranks in between the parent and current cell
+            edge.maxRank = parent.maxRank;
+            edge.minRank = node.maxRank;
+            edge.temp = [];
+            edge.x = [];
+            edge.y = [];
 
-          for (let i = edge.minRank + 1; i < edge.maxRank; i++) {
-            // The connecting edge must be added to the
-            // appropriate ranks
-            rankList[i].push(edge);
-            edge.setGeneralPurposeVariable(i, rankList[i]
-                .length - 1);
+            for (let i = edge.minRank + 1; i < edge.maxRank; i++) {
+              // The connecting edge must be added to the
+              // appropriate ranks
+              rankList[i].push(edge);
+              edge.setGeneralPurposeVariable(i, rankList[i].length - 1);
+            }
           }
         }
-      }
-    }, rootsArray, false, null);
+      },
+      rootsArray,
+      false,
+      null
+    );
   };
 
   /**
@@ -469,7 +489,7 @@ class mxGraphHierarchyModel {
     // Run dfs through on all roots
     if (dfsRoots != null) {
       for (let i = 0; i < dfsRoots.length; i++) {
-        let internalNode = dfsRoots[i];
+        const internalNode = dfsRoots[i];
 
         if (internalNode != null) {
           if (seenNodes == null) {
@@ -481,8 +501,16 @@ class mxGraphHierarchyModel {
             internalNode.hashCode = [];
             internalNode.hashCode[0] = this.dfsCount;
             internalNode.hashCode[1] = i;
-            this.extendedDfs(null, internalNode, null, visitor, seenNodes,
-                internalNode.hashCode, i, 0);
+            this.extendedDfs(
+              null,
+              internalNode,
+              null,
+              visitor,
+              seenNodes,
+              internalNode.hashCode,
+              i,
+              0
+            );
           } else {
             this.dfs(null, internalNode, null, visitor, seenNodes, 0);
           }
@@ -511,7 +539,7 @@ class mxGraphHierarchyModel {
    */
   dfs = (parent, root, connectingEdge, visitor, seen, layer) => {
     if (root != null) {
-      let rootId = root.id;
+      const rootId = root.id;
 
       if (seen[rootId] == null) {
         seen[rootId] = root;
@@ -519,15 +547,14 @@ class mxGraphHierarchyModel {
 
         // Copy the connects as source list so that visitors
         // can change the original for edge direction inversions
-        let outgoingEdges = root.connectsAsSource.slice();
+        const outgoingEdges = root.connectsAsSource.slice();
 
         for (let i = 0; i < outgoingEdges.length; i++) {
-          let internalEdge = outgoingEdges[i];
-          let targetNode = internalEdge.target;
+          const internalEdge = outgoingEdges[i];
+          const targetNode = internalEdge.target;
 
           // Root check is O(|roots|)
-          this.dfs(root, targetNode, internalEdge, visitor, seen,
-              layer + 1);
+          this.dfs(root, targetNode, internalEdge, visitor, seen, layer + 1);
         }
       } else {
         // Use the int field to indicate this node has been seen
@@ -556,7 +583,16 @@ class mxGraphHierarchyModel {
    * childHash - the new hash code for this node
    * layer - the layer on the dfs tree ( not the same as the model ranks )
    */
-  extendedDfs = (parent, root, connectingEdge, visitor, seen, ancestors, childHash, layer) => {
+  extendedDfs = (
+    parent,
+    root,
+    connectingEdge,
+    visitor,
+    seen,
+    ancestors,
+    childHash,
+    layer
+  ) => {
     // Explanation of custom hash set. Previously, the ancestors variable
     // was passed through the dfs as a HashSet. The ancestors were copied
     // into a new HashSet and when the new child was processed it was also
@@ -584,15 +620,14 @@ class mxGraphHierarchyModel {
         // start of the parent hash code does not equal the start of
         // this nodes hash code, indicating the code was set on a
         // previous run of this dfs.
-        if (root.hashCode == null ||
-            root.hashCode[0] != parent.hashCode[0]) {
-          let hashCodeLength = parent.hashCode.length + 1;
+        if (root.hashCode == null || root.hashCode[0] != parent.hashCode[0]) {
+          const hashCodeLength = parent.hashCode.length + 1;
           root.hashCode = parent.hashCode.slice();
           root.hashCode[hashCodeLength - 1] = childHash;
         }
       }
 
-      let rootId = root.id;
+      const rootId = root.id;
 
       if (seen[rootId] == null) {
         seen[rootId] = root;
@@ -600,15 +635,23 @@ class mxGraphHierarchyModel {
 
         // Copy the connects as source list so that visitors
         // can change the original for edge direction inversions
-        let outgoingEdges = root.connectsAsSource.slice();
+        const outgoingEdges = root.connectsAsSource.slice();
 
         for (let i = 0; i < outgoingEdges.length; i++) {
-          let internalEdge = outgoingEdges[i];
-          let targetNode = internalEdge.target;
+          const internalEdge = outgoingEdges[i];
+          const targetNode = internalEdge.target;
 
           // Root check is O(|roots|)
-          this.extendedDfs(root, targetNode, internalEdge, visitor, seen,
-              root.hashCode, i, layer + 1);
+          this.extendedDfs(
+            root,
+            targetNode,
+            internalEdge,
+            visitor,
+            seen,
+            root.hashCode,
+            i,
+            layer + 1
+          );
         }
       } else {
         // Use the int field to indicate this node has been seen

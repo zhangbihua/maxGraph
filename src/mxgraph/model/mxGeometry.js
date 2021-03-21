@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from "../util/mxPoint";
-import mxRectangle from "../util/mxRectangle";
+import mxPoint from '../util/mxPoint';
+import mxRectangle from '../util/mxRectangle';
 
 class mxGeometry extends mxRectangle {
   /**
@@ -149,7 +149,7 @@ class mxGeometry extends mxRectangle {
    */
   constructor(x, y, width, height) {
     super(x, y, width, height);
-  };
+  }
 
   /**
    * Function: swap
@@ -164,8 +164,7 @@ class mxGeometry extends mxRectangle {
    */
   swap = () => {
     if (this.alternateBounds != null) {
-      let old = new mxRectangle(
-          this.x, this.y, this.width, this.height);
+      const old = new mxRectangle(this.x, this.y, this.width, this.height);
 
       this.x = this.alternateBounds.x;
       this.y = this.alternateBounds.y;
@@ -187,8 +186,8 @@ class mxGeometry extends mxRectangle {
    * isSource - Boolean that specifies if the source or target point
    * should be returned.
    */
-  getTerminalPoint = (isSource) => {
-    return (isSource) ? this.sourcePoint : this.targetPoint;
+  getTerminalPoint = isSource => {
+    return isSource ? this.sourcePoint : this.targetPoint;
   };
 
   /**
@@ -227,14 +226,14 @@ class mxGeometry extends mxRectangle {
    * cx - <mxPoint> that specifies the center of the rotation.
    */
   rotate = (angle, cx) => {
-    let rad = mxUtils.toRadians(angle);
-    let cos = Math.cos(rad);
-    let sin = Math.sin(rad);
+    const rad = mxUtils.toRadians(angle);
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
 
     // Rotates the geometry
     if (!this.relative) {
-      let ct = new mxPoint(this.getCenterX(), this.getCenterY());
-      let pt = mxUtils.getRotatedPoint(ct, cos, sin, cx);
+      const ct = new mxPoint(this.getCenterX(), this.getCenterY());
+      const pt = mxUtils.getRotatedPoint(ct, cos, sin, cx);
 
       this.x = Math.round(pt.x - this.width / 2);
       this.y = Math.round(pt.y - this.height / 2);
@@ -242,14 +241,14 @@ class mxGeometry extends mxRectangle {
 
     // Rotates the source point
     if (this.sourcePoint != null) {
-      let pt = mxUtils.getRotatedPoint(this.sourcePoint, cos, sin, cx);
+      const pt = mxUtils.getRotatedPoint(this.sourcePoint, cos, sin, cx);
       this.sourcePoint.x = Math.round(pt.x);
       this.sourcePoint.y = Math.round(pt.y);
     }
 
     // Translates the target point
     if (this.targetPoint != null) {
-      let pt = mxUtils.getRotatedPoint(this.targetPoint, cos, sin, cx);
+      const pt = mxUtils.getRotatedPoint(this.targetPoint, cos, sin, cx);
       this.targetPoint.x = Math.round(pt.x);
       this.targetPoint.y = Math.round(pt.y);
     }
@@ -258,7 +257,7 @@ class mxGeometry extends mxRectangle {
     if (this.points != null) {
       for (let i = 0; i < this.points.length; i++) {
         if (this.points[i] != null) {
-          let pt = mxUtils.getRotatedPoint(this.points[i], cos, sin, cx);
+          const pt = mxUtils.getRotatedPoint(this.points[i], cos, sin, cx);
           this.points[i].x = Math.round(pt.x);
           this.points[i].y = Math.round(pt.y);
         }
@@ -373,14 +372,25 @@ class mxGeometry extends mxRectangle {
    *
    * Returns true if the given object equals this geometry.
    */
-  equals = (obj) => {
-    return super.equals(obj) &&
-        this.relative === obj.relative &&
-        ((this.sourcePoint == null && obj.sourcePoint == null) || (this.sourcePoint != null && this.sourcePoint.equals(obj.sourcePoint))) &&
-        ((this.targetPoint == null && obj.targetPoint == null) || (this.targetPoint != null && this.targetPoint.equals(obj.targetPoint))) &&
-        ((this.points == null && obj.points == null) || (this.points != null && mxUtils.equalPoints(this.points, obj.points))) &&
-        ((this.alternateBounds == null && obj.alternateBounds == null) || (this.alternateBounds != null && this.alternateBounds.equals(obj.alternateBounds))) &&
-        ((this.offset == null && obj.offset == null) || (this.offset != null && this.offset.equals(obj.offset)));
+  equals = obj => {
+    return (
+      super.equals(obj) &&
+      this.relative === obj.relative &&
+      ((this.sourcePoint == null && obj.sourcePoint == null) ||
+        (this.sourcePoint != null &&
+          this.sourcePoint.equals(obj.sourcePoint))) &&
+      ((this.targetPoint == null && obj.targetPoint == null) ||
+        (this.targetPoint != null &&
+          this.targetPoint.equals(obj.targetPoint))) &&
+      ((this.points == null && obj.points == null) ||
+        (this.points != null &&
+          mxUtils.equalPoints(this.points, obj.points))) &&
+      ((this.alternateBounds == null && obj.alternateBounds == null) ||
+        (this.alternateBounds != null &&
+          this.alternateBounds.equals(obj.alternateBounds))) &&
+      ((this.offset == null && obj.offset == null) ||
+        (this.offset != null && this.offset.equals(obj.offset)))
+    );
   };
 }
 

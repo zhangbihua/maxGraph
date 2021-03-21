@@ -3,9 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxRectangle from "../util/mxRectangle";
-import mxConstants from "../util/mxConstants";
-import mxRectangleShape from "./mxRectangleShape";
+import mxRectangle from '../util/mxRectangle';
+import mxConstants from '../util/mxConstants';
+import mxRectangleShape from './mxRectangleShape';
 
 class mxLabel extends mxRectangleShape {
   /**
@@ -66,7 +66,7 @@ class mxLabel extends mxRectangleShape {
    *
    * Initializes the shape and the <indicator>.
    */
-  init = (container) => {
+  init = container => {
     super.init(container);
 
     if (this.indicatorShape != null) {
@@ -100,8 +100,11 @@ class mxLabel extends mxRectangleShape {
    * no indicator shape.
    */
   isHtmlAllowed = () => {
-    return super.isHtmlAllowed() &&
-        this.indicatorColor == null && this.indicatorShape == null;
+    return (
+      super.isHtmlAllowed() &&
+      this.indicatorColor == null &&
+      this.indicatorShape == null
+    );
   };
 
   /**
@@ -122,8 +125,17 @@ class mxLabel extends mxRectangleShape {
    */
   paintImage = (c, x, y, w, h) => {
     if (this.image != null) {
-      let bounds = this.getImageBounds(x, y, w, h);
-      c.image(bounds.x, bounds.y, bounds.width, bounds.height, this.image, false, false, false);
+      const bounds = this.getImageBounds(x, y, w, h);
+      c.image(
+        bounds.x,
+        bounds.y,
+        bounds.width,
+        bounds.height,
+        this.image,
+        false,
+        false,
+        false
+      );
     }
   };
 
@@ -133,18 +145,36 @@ class mxLabel extends mxRectangleShape {
    * Generic background painting implementation.
    */
   getImageBounds = (x, y, w, h) => {
-    let align = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_ALIGN, mxConstants.ALIGN_LEFT);
-    let valign = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-    let width = mxUtils.getNumber(this.style, mxConstants.STYLE_IMAGE_WIDTH, mxConstants.DEFAULT_IMAGESIZE);
-    let height = mxUtils.getNumber(this.style, mxConstants.STYLE_IMAGE_HEIGHT, mxConstants.DEFAULT_IMAGESIZE);
-    let spacing = mxUtils.getNumber(this.style, mxConstants.STYLE_SPACING, this.spacing) + 5;
+    const align = mxUtils.getValue(
+      this.style,
+      mxConstants.STYLE_IMAGE_ALIGN,
+      mxConstants.ALIGN_LEFT
+    );
+    const valign = mxUtils.getValue(
+      this.style,
+      mxConstants.STYLE_IMAGE_VERTICAL_ALIGN,
+      mxConstants.ALIGN_MIDDLE
+    );
+    const width = mxUtils.getNumber(
+      this.style,
+      mxConstants.STYLE_IMAGE_WIDTH,
+      mxConstants.DEFAULT_IMAGESIZE
+    );
+    const height = mxUtils.getNumber(
+      this.style,
+      mxConstants.STYLE_IMAGE_HEIGHT,
+      mxConstants.DEFAULT_IMAGESIZE
+    );
+    const spacing =
+      mxUtils.getNumber(this.style, mxConstants.STYLE_SPACING, this.spacing) +
+      5;
 
     if (align == mxConstants.ALIGN_CENTER) {
       x += (w - width) / 2;
     } else if (align == mxConstants.ALIGN_RIGHT) {
       x += w - width - spacing;
-    } else // default is left
-    {
+    } // default is left
+    else {
       x += spacing;
     }
 
@@ -152,8 +182,8 @@ class mxLabel extends mxRectangleShape {
       y += spacing;
     } else if (valign == mxConstants.ALIGN_BOTTOM) {
       y += h - height - spacing;
-    } else // default is middle
-    {
+    } // default is middle
+    else {
       y += (h - height) / 2;
     }
 
@@ -170,8 +200,17 @@ class mxLabel extends mxRectangleShape {
       this.indicator.bounds = this.getIndicatorBounds(x, y, w, h);
       this.indicator.paint(c);
     } else if (this.indicatorImage != null) {
-      let bounds = this.getIndicatorBounds(x, y, w, h);
-      c.image(bounds.x, bounds.y, bounds.width, bounds.height, this.indicatorImage, false, false, false);
+      const bounds = this.getIndicatorBounds(x, y, w, h);
+      c.image(
+        bounds.x,
+        bounds.y,
+        bounds.width,
+        bounds.height,
+        this.indicatorImage,
+        false,
+        false,
+        false
+      );
     }
   };
 
@@ -181,18 +220,34 @@ class mxLabel extends mxRectangleShape {
    * Generic background painting implementation.
    */
   getIndicatorBounds = (x, y, w, h) => {
-    let align = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_ALIGN, mxConstants.ALIGN_LEFT);
-    let valign = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-    let width = mxUtils.getNumber(this.style, mxConstants.STYLE_INDICATOR_WIDTH, this.indicatorSize);
-    let height = mxUtils.getNumber(this.style, mxConstants.STYLE_INDICATOR_HEIGHT, this.indicatorSize);
-    let spacing = this.spacing + 5;
+    const align = mxUtils.getValue(
+      this.style,
+      mxConstants.STYLE_IMAGE_ALIGN,
+      mxConstants.ALIGN_LEFT
+    );
+    const valign = mxUtils.getValue(
+      this.style,
+      mxConstants.STYLE_IMAGE_VERTICAL_ALIGN,
+      mxConstants.ALIGN_MIDDLE
+    );
+    const width = mxUtils.getNumber(
+      this.style,
+      mxConstants.STYLE_INDICATOR_WIDTH,
+      this.indicatorSize
+    );
+    const height = mxUtils.getNumber(
+      this.style,
+      mxConstants.STYLE_INDICATOR_HEIGHT,
+      this.indicatorSize
+    );
+    const spacing = this.spacing + 5;
 
     if (align == mxConstants.ALIGN_RIGHT) {
       x += w - width - spacing;
     } else if (align == mxConstants.ALIGN_CENTER) {
       x += (w - width) / 2;
-    } else // default is left
-    {
+    } // default is left
+    else {
       x += spacing;
     }
 
@@ -200,13 +255,14 @@ class mxLabel extends mxRectangleShape {
       y += h - height - spacing;
     } else if (valign === mxConstants.ALIGN_TOP) {
       y += spacing;
-    } else // default is middle
-    {
+    } // default is middle
+    else {
       y += (h - height) / 2;
     }
 
     return new mxRectangle(x, y, width, height);
   };
+
   /**
    * Function: redrawHtmlShape
    *
@@ -221,18 +277,23 @@ class mxLabel extends mxRectangleShape {
     }
 
     if (this.image != null) {
-      let node = document.createElement('img');
+      const node = document.createElement('img');
       node.style.position = 'relative';
       node.setAttribute('border', '0');
 
-      let bounds = this.getImageBounds(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+      const bounds = this.getImageBounds(
+        this.bounds.x,
+        this.bounds.y,
+        this.bounds.width,
+        this.bounds.height
+      );
       bounds.x -= this.bounds.x;
       bounds.y -= this.bounds.y;
 
-      node.style.left = Math.round(bounds.x) + 'px';
-      node.style.top = Math.round(bounds.y) + 'px';
-      node.style.width = Math.round(bounds.width) + 'px';
-      node.style.height = Math.round(bounds.height) + 'px';
+      node.style.left = `${Math.round(bounds.x)}px`;
+      node.style.top = `${Math.round(bounds.y)}px`;
+      node.style.width = `${Math.round(bounds.width)}px`;
+      node.style.height = `${Math.round(bounds.height)}px`;
 
       node.src = this.image;
 

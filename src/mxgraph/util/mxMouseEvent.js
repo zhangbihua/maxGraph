@@ -3,8 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEvent from "./mxEvent";
-import mxUtils from "./mxUtils";
+import mxEvent from './mxEvent';
+import mxUtils from './mxUtils';
 
 class mxMouseEvent {
   /**
@@ -90,7 +90,7 @@ class mxMouseEvent {
     this.evt = evt;
     this.state = state;
     this.sourceState = state;
-  };
+  }
 
   /**
    * Function: getEvent
@@ -115,7 +115,7 @@ class mxMouseEvent {
    *
    * Returns true if the given <mxShape> is the source of <evt>.
    */
-  isSource = (shape) => {
+  isSource = shape => {
     if (shape != null) {
       return mxUtils.isAncestorNode(shape.node, this.getSource());
     }
@@ -174,7 +174,7 @@ class mxMouseEvent {
    * Returns the <mxCell> in <state> is not null.
    */
   getCell = () => {
-    let state = this.getState();
+    const state = this.getState();
 
     if (state != null) {
       return state.cell;
@@ -214,9 +214,11 @@ class mxMouseEvent {
    * preventDefault - Specifies if the native event should be canceled. Default
    * is true.
    */
-  consume = (preventDefault) => {
-    preventDefault = (preventDefault != null) ? preventDefault :
-        (this.evt.touches != null || mxEvent.isMouseEvent(this.evt));
+  consume = preventDefault => {
+    preventDefault =
+      preventDefault != null
+        ? preventDefault
+        : this.evt.touches != null || mxEvent.isMouseEvent(this.evt);
 
     if (preventDefault && this.evt.preventDefault) {
       this.evt.preventDefault();

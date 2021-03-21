@@ -13,7 +13,7 @@ class mxRootChange {
     this.model = model;
     this.root = root;
     this.previous = root;
-  };
+  }
 
   /**
    * Function: execute

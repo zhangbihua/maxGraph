@@ -8,8 +8,8 @@
  * Creates a temporary set of cell states.
  */
 
-import mxRectangle from "../util/mxRectangle";
-import mxDictionary from "../util/mxDictionary";
+import mxRectangle from '../util/mxRectangle';
+import mxDictionary from '../util/mxDictionary';
 
 class mxTemporaryCellStates {
   /**
@@ -41,7 +41,7 @@ class mxTemporaryCellStates {
   oldScale = null;
 
   constructor(view, scale, cells, isCellVisibleFn, getLinkForCellState) {
-    scale = (scale != null) ? scale : 1;
+    scale = scale != null ? scale : 1;
     this.view = view;
 
     // Stores the previous state
@@ -51,15 +51,15 @@ class mxTemporaryCellStates {
     this.oldScale = view.getScale();
     this.oldDoRedrawShape = view.graph.cellRenderer.doRedrawShape;
 
-    let self = this;
+    const self = this;
 
     // Overrides doRedrawShape and paint shape to add links on shapes
     if (getLinkForCellState != null) {
-      view.graph.cellRenderer.doRedrawShape = (state) => {
-        let oldPaint = state.shape.paint;
+      view.graph.cellRenderer.doRedrawShape = state => {
+        const oldPaint = state.shape.paint;
 
-        state.shape.paint = (c) => {
-          let link = getLinkForCellState(state);
+        state.shape.paint = c => {
+          const link = getLinkForCellState(state);
 
           if (link != null) {
             c.setLink(link);
@@ -96,7 +96,9 @@ class mxTemporaryCellStates {
       // Validates the vertices and edges without adding them to
       // the model so that the original cells are not modified
       for (let i = 0; i < cells.length; i++) {
-        let bounds = view.getBoundingBox(view.validateCellState(view.validateCell(cells[i])));
+        const bounds = view.getBoundingBox(
+          view.validateCellState(view.validateCell(cells[i]))
+        );
 
         if (bbox == null) {
           bbox = bounds;
@@ -107,7 +109,7 @@ class mxTemporaryCellStates {
 
       view.setGraphBounds(bbox || new mxRectangle());
     }
-  };
+  }
 
   /**
    * Function: destroy

@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectCodec from "FIXME";
-import mxTerminalChange from "FIXME";
+import mxObjectCodec from 'FIXME';
+import mxTerminalChange from 'FIXME';
 
 class mxTerminalChangeCodec extends mxObjectCodec {
   /**

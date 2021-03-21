@@ -102,7 +102,7 @@ class mxSwimlaneModel {
    * usage
    */
   constructor(layout, vertices, roots, parent, tightenToSource) {
-    let graph = layout.getGraph();
+    const graph = layout.getGraph();
     this.tightenToSource = tightenToSource;
     this.roots = roots;
     this.parent = parent;
@@ -112,7 +112,7 @@ class mxSwimlaneModel {
     this.vertexMapper = new mxDictionary();
     this.edgeMapper = new mxDictionary();
     this.maxRank = 0;
-    let internalVertices = [];
+    const internalVertices = [];
 
     if (vertices == null) {
       vertices = this.graph.getChildVertices(parent);
@@ -127,18 +127,17 @@ class mxSwimlaneModel {
     // Go through edges set their sink values. Also check the
     // ordering if and invert edges if necessary
     for (let i = 0; i < vertices.length; i++) {
-      let edges = internalVertices[i].connectsAsSource;
+      const edges = internalVertices[i].connectsAsSource;
 
       for (let j = 0; j < edges.length; j++) {
-        let internalEdge = edges[j];
-        let realEdges = internalEdge.edges;
+        const internalEdge = edges[j];
+        const realEdges = internalEdge.edges;
 
         // Only need to process the first real edge, since
         // all the edges connect to the same other vertex
         if (realEdges != null && realEdges.length > 0) {
-          let realEdge = realEdges[0];
-          let targetCell = layout.getVisibleTerminal(
-              realEdge, false);
+          const realEdge = realEdges[0];
+          let targetCell = layout.getVisibleTerminal(realEdge, false);
           let internalTargetCell = this.vertexMapper.get(targetCell);
 
           if (internalVertices[i] == internalTargetCell) {
@@ -147,20 +146,26 @@ class mxSwimlaneModel {
             // direction as the first real edge in the array above. When that happens the if above catches
             // that and we correct the target cell before continuing.
             // This branch only detects this single case
-            targetCell = layout.getVisibleTerminal(
-                realEdge, true);
+            targetCell = layout.getVisibleTerminal(realEdge, true);
             internalTargetCell = this.vertexMapper.get(targetCell);
           }
 
-          if (internalTargetCell != null
-              && internalVertices[i] != internalTargetCell) {
+          if (
+            internalTargetCell != null &&
+            internalVertices[i] != internalTargetCell
+          ) {
             internalEdge.target = internalTargetCell;
 
             if (internalTargetCell.connectsAsTarget.length == 0) {
               internalTargetCell.connectsAsTarget = [];
             }
 
-            if (mxUtils.indexOf(internalTargetCell.connectsAsTarget, internalEdge) < 0) {
+            if (
+              mxUtils.indexOf(
+                internalTargetCell.connectsAsTarget,
+                internalEdge
+              ) < 0
+            ) {
               internalTargetCell.connectsAsTarget.push(internalEdge);
             }
           }
@@ -171,7 +176,7 @@ class mxSwimlaneModel {
       // internal vertex as having been visited.
       internalVertices[i].temp[0] = 1;
     }
-  };
+  }
 
   /**
    * Function: createInternalCells
@@ -187,8 +192,8 @@ class mxSwimlaneModel {
    * information filled in using the real vertices.
    */
   createInternalCells = (layout, vertices, internalVertices) => {
-    let graph = layout.getGraph();
-    let swimlanes = layout.swimlanes;
+    const graph = layout.getGraph();
+    const { swimlanes } = layout;
 
     // Create internal edges
     for (let i = 0; i < vertices.length; i++) {
@@ -204,19 +209,22 @@ class mxSwimlaneModel {
       }
 
       // If the layout is deterministic, order the cells
-      //List outgoingCells = graph.getNeighbours(vertices[i], deterministic);
-      let conns = layout.getEdges(vertices[i]);
+      // List outgoingCells = graph.getNeighbours(vertices[i], deterministic);
+      const conns = layout.getEdges(vertices[i]);
       internalVertices[i].connectsAsSource = [];
 
       // Create internal edges, but don't do any rank assignment yet
       // First use the information from the greedy cycle remover to
       // invert the leftward edges internally
       for (let j = 0; j < conns.length; j++) {
-        let cell = layout.getVisibleTerminal(conns[j], false);
+        const cell = layout.getVisibleTerminal(conns[j], false);
 
         // Looking for outgoing edges only
-        if (cell != vertices[i] && layout.graph.model.isVertex(cell) &&
-            !layout.isVertexIgnored(cell)) {
+        if (
+          cell != vertices[i] &&
+          layout.graph.model.isVertex(cell) &&
+          !layout.isVertexIgnored(cell)
+        ) {
           // We process all edge between this source and its targets
           // If there are edges going both ways, we need to collect
           // them all into one internal edges to avoid looping problems
@@ -230,19 +238,23 @@ class mxSwimlaneModel {
           // are the same. All the graph edges will have been assigned to
           // an internal edge going the other way, so we don't want to
           // process them again
-          let undirectedEdges = layout.getEdgesBetween(vertices[i],
-              cell, false);
-          let directedEdges = layout.getEdgesBetween(vertices[i],
-              cell, true);
+          const undirectedEdges = layout.getEdgesBetween(
+            vertices[i],
+            cell,
+            false
+          );
+          const directedEdges = layout.getEdgesBetween(vertices[i], cell, true);
 
-          if (undirectedEdges != null &&
-              undirectedEdges.length > 0 &&
-              this.edgeMapper.get(undirectedEdges[0]) == null &&
-              directedEdges.length * 2 >= undirectedEdges.length) {
-            let internalEdge = new mxGraphHierarchyEdge(undirectedEdges);
+          if (
+            undirectedEdges != null &&
+            undirectedEdges.length > 0 &&
+            this.edgeMapper.get(undirectedEdges[0]) == null &&
+            directedEdges.length * 2 >= undirectedEdges.length
+          ) {
+            const internalEdge = new mxGraphHierarchyEdge(undirectedEdges);
 
             for (let k = 0; k < undirectedEdges.length; k++) {
-              let edge = undirectedEdges[k];
+              const edge = undirectedEdges[k];
               this.edgeMapper.put(edge, internalEdge);
 
               // Resets all point on the edge and disables the edge style
@@ -257,7 +269,12 @@ class mxSwimlaneModel {
 
             internalEdge.source = internalVertices[i];
 
-            if (mxUtils.indexOf(internalVertices[i].connectsAsSource, internalEdge) < 0) {
+            if (
+              mxUtils.indexOf(
+                internalVertices[i].connectsAsSource,
+                internalEdge
+              ) < 0
+            ) {
               internalVertices[i].connectsAsSource.push(internalEdge);
             }
           }
@@ -279,12 +296,12 @@ class mxSwimlaneModel {
   initialRank = () => {
     this.ranksPerGroup = [];
 
-    let startNodes = [];
-    let seen = {};
+    const startNodes = [];
+    const seen = {};
 
     if (this.roots != null) {
       for (let i = 0; i < this.roots.length; i++) {
-        let internalNode = this.vertexMapper.get(this.roots[i]);
+        const internalNode = this.vertexMapper.get(this.roots[i]);
         this.maxChainDfs(null, internalNode, null, seen, 0);
 
         if (internalNode != null) {
@@ -294,8 +311,8 @@ class mxSwimlaneModel {
     }
 
     // Calculate the lower and upper rank bounds of each swimlane
-    let lowerRank = [];
-    let upperRank = [];
+    const lowerRank = [];
+    const upperRank = [];
 
     for (let i = this.ranksPerGroup.length - 1; i >= 0; i--) {
       if (i == this.ranksPerGroup.length - 1) {
@@ -309,17 +326,17 @@ class mxSwimlaneModel {
 
     this.maxRank = upperRank[0];
 
-    let internalNodes = this.vertexMapper.getValues();
+    const internalNodes = this.vertexMapper.getValues();
 
     for (let i = 0; i < internalNodes.length; i++) {
       // Mark the node as not having had a layer assigned
       internalNodes[i].temp[0] = -1;
     }
 
-    let startNodesCopy = startNodes.slice();
+    const startNodesCopy = startNodes.slice();
 
     while (startNodes.length > 0) {
-      let internalNode = startNodes[0];
+      const internalNode = startNodes[0];
       var layerDeterminingEdges;
       var edgesToBeMarked;
 
@@ -336,12 +353,12 @@ class mxSwimlaneModel {
       let minimumLayer = upperRank[0];
 
       for (let i = 0; i < layerDeterminingEdges.length; i++) {
-        let internalEdge = layerDeterminingEdges[i];
+        const internalEdge = layerDeterminingEdges[i];
 
         if (internalEdge.temp[0] == 5270620) {
           // This edge has been scanned, get the layer of the
           // node on the other end
-          let otherNode = internalEdge.source;
+          const otherNode = internalEdge.source;
           minimumLayer = Math.min(minimumLayer, otherNode.temp[0] - 1);
         } else {
           allEdgesScanned = false;
@@ -361,14 +378,14 @@ class mxSwimlaneModel {
 
         if (edgesToBeMarked != null) {
           for (let i = 0; i < edgesToBeMarked.length; i++) {
-            let internalEdge = edgesToBeMarked[i];
+            const internalEdge = edgesToBeMarked[i];
 
             // Assign unique stamp ( y/m/d/h )
             internalEdge.temp[0] = 5270620;
 
             // Add node on other end of edge to LinkedList of
             // nodes to be analysed
-            let otherNode = internalEdge.target;
+            const otherNode = internalEdge.target;
 
             // Only add node if it hasn't been assigned a layer
             if (otherNode.temp[0] == -1) {
@@ -387,7 +404,7 @@ class mxSwimlaneModel {
       } else {
         // Not all the edges have been scanned, get to the back of
         // the class and put the dunces cap on
-        let removedCell = startNodes.shift();
+        const removedCell = startNodes.shift();
         startNodes.push(internalNode);
 
         if (removedCell == internalNode && startNodes.length == 1) {
@@ -402,29 +419,29 @@ class mxSwimlaneModel {
 
     // Normalize the ranks down from their large starting value to place
     // at least 1 sink on layer 0
-//  for (var key in this.vertexMapper)
-//  {
-//    let internalNode = this.vertexMapper[key];
-//    // Mark the node as not having had a layer assigned
-//    internalNode.temp[0] -= this.maxRank;
-//  }
+    //  for (var key in this.vertexMapper)
+    //  {
+    //    let internalNode = this.vertexMapper[key];
+    //    // Mark the node as not having had a layer assigned
+    //    internalNode.temp[0] -= this.maxRank;
+    //  }
 
     // Tighten the rank 0 nodes as far as possible
-//  for ( let i = 0; i < startNodesCopy.length; i++)
-//  {
-//    let internalNode = startNodesCopy[i];
-//    let currentMaxLayer = 0;
-//    let layerDeterminingEdges = internalNode.connectsAsSource;
-//
-//    for ( let j = 0; j < layerDeterminingEdges.length; j++)
-//    {
-//      let internalEdge = layerDeterminingEdges[j];
-//      let otherNode = internalEdge.target;
-//      internalNode.temp[0] = Math.max(currentMaxLayer,
-//          otherNode.temp[0] + 1);
-//      currentMaxLayer = internalNode.temp[0];
-//    }
-//  }
+    //  for ( let i = 0; i < startNodesCopy.length; i++)
+    //  {
+    //    let internalNode = startNodesCopy[i];
+    //    let currentMaxLayer = 0;
+    //    let layerDeterminingEdges = internalNode.connectsAsSource;
+    //
+    //    for ( let j = 0; j < layerDeterminingEdges.length; j++)
+    //    {
+    //      let internalEdge = layerDeterminingEdges[j];
+    //      let otherNode = internalEdge.target;
+    //      internalNode.temp[0] = Math.max(currentMaxLayer,
+    //          otherNode.temp[0] + 1);
+    //      currentMaxLayer = internalNode.temp[0];
+    //    }
+    //  }
   };
 
   /**
@@ -447,30 +464,45 @@ class mxSwimlaneModel {
    */
   maxChainDfs = (parent, root, connectingEdge, seen, chainCount) => {
     if (root != null) {
-      let rootId = mxCellPath.create(root.cell);
+      const rootId = mxCellPath.create(root.cell);
 
       if (seen[rootId] == null) {
         seen[rootId] = root;
-        let slIndex = root.swimlaneIndex;
+        const slIndex = root.swimlaneIndex;
 
-        if (this.ranksPerGroup[slIndex] == null || this.ranksPerGroup[slIndex] < chainCount) {
+        if (
+          this.ranksPerGroup[slIndex] == null ||
+          this.ranksPerGroup[slIndex] < chainCount
+        ) {
           this.ranksPerGroup[slIndex] = chainCount;
         }
 
         // Copy the connects as source list so that visitors
         // can change the original for edge direction inversions
-        let outgoingEdges = root.connectsAsSource.slice();
+        const outgoingEdges = root.connectsAsSource.slice();
 
         for (let i = 0; i < outgoingEdges.length; i++) {
-          let internalEdge = outgoingEdges[i];
-          let targetNode = internalEdge.target;
+          const internalEdge = outgoingEdges[i];
+          const targetNode = internalEdge.target;
 
           // Only navigate in source->target direction within the same
           // swimlane, or from a lower index swimlane to a higher one
           if (root.swimlaneIndex < targetNode.swimlaneIndex) {
-            this.maxChainDfs(root, targetNode, internalEdge, mxUtils.clone(seen, null, true), 0);
+            this.maxChainDfs(
+              root,
+              targetNode,
+              internalEdge,
+              mxUtils.clone(seen, null, true),
+              0
+            );
           } else if (root.swimlaneIndex == targetNode.swimlaneIndex) {
-            this.maxChainDfs(root, targetNode, internalEdge, mxUtils.clone(seen, null, true), chainCount + 1);
+            this.maxChainDfs(
+              root,
+              targetNode,
+              internalEdge,
+              mxUtils.clone(seen, null, true),
+              chainCount + 1
+            );
           }
         }
       }
@@ -484,7 +516,7 @@ class mxSwimlaneModel {
    * to create dummy nodes for edges that cross layers.
    */
   fixRanks = () => {
-    let rankList = [];
+    const rankList = [];
     this.ranks = [];
 
     for (let i = 0; i < this.maxRank + 1; i++) {
@@ -498,47 +530,51 @@ class mxSwimlaneModel {
     let rootsArray = null;
 
     if (this.roots != null) {
-      let oldRootsArray = this.roots;
+      const oldRootsArray = this.roots;
       rootsArray = [];
 
       for (let i = 0; i < oldRootsArray.length; i++) {
-        let cell = oldRootsArray[i];
-        let internalNode = this.vertexMapper.get(cell);
+        const cell = oldRootsArray[i];
+        const internalNode = this.vertexMapper.get(cell);
         rootsArray[i] = internalNode;
       }
     }
 
-    this.visit((parent, node, edge, layer, seen) => {
-      if (seen == 0 && node.maxRank < 0 && node.minRank < 0) {
-        rankList[node.temp[0]].push(node);
-        node.maxRank = node.temp[0];
-        node.minRank = node.temp[0];
+    this.visit(
+      (parent, node, edge, layer, seen) => {
+        if (seen == 0 && node.maxRank < 0 && node.minRank < 0) {
+          rankList[node.temp[0]].push(node);
+          node.maxRank = node.temp[0];
+          node.minRank = node.temp[0];
 
-        // Set temp[0] to the nodes position in the rank
-        node.temp[0] = rankList[node.maxRank].length - 1;
-      }
+          // Set temp[0] to the nodes position in the rank
+          node.temp[0] = rankList[node.maxRank].length - 1;
+        }
 
-      if (parent != null && edge != null) {
-        let parentToCellRankDifference = parent.maxRank - node.maxRank;
+        if (parent != null && edge != null) {
+          const parentToCellRankDifference = parent.maxRank - node.maxRank;
 
-        if (parentToCellRankDifference > 1) {
-          // There are ranks in between the parent and current cell
-          edge.maxRank = parent.maxRank;
-          edge.minRank = node.maxRank;
-          edge.temp = [];
-          edge.x = [];
-          edge.y = [];
+          if (parentToCellRankDifference > 1) {
+            // There are ranks in between the parent and current cell
+            edge.maxRank = parent.maxRank;
+            edge.minRank = node.maxRank;
+            edge.temp = [];
+            edge.x = [];
+            edge.y = [];
 
-          for (let i = edge.minRank + 1; i < edge.maxRank; i++) {
-            // The connecting edge must be added to the
-            // appropriate ranks
-            rankList[i].push(edge);
-            edge.setGeneralPurposeVariable(i, rankList[i]
-                .length - 1);
+            for (let i = edge.minRank + 1; i < edge.maxRank; i++) {
+              // The connecting edge must be added to the
+              // appropriate ranks
+              rankList[i].push(edge);
+              edge.setGeneralPurposeVariable(i, rankList[i].length - 1);
+            }
           }
         }
-      }
-    }, rootsArray, false, null);
+      },
+      rootsArray,
+      false,
+      null
+    );
   };
 
   /**
@@ -556,7 +592,7 @@ class mxSwimlaneModel {
     // Run dfs through on all roots
     if (dfsRoots != null) {
       for (let i = 0; i < dfsRoots.length; i++) {
-        let internalNode = dfsRoots[i];
+        const internalNode = dfsRoots[i];
 
         if (internalNode != null) {
           if (seenNodes == null) {
@@ -568,8 +604,16 @@ class mxSwimlaneModel {
             internalNode.hashCode = [];
             internalNode.hashCode[0] = this.dfsCount;
             internalNode.hashCode[1] = i;
-            this.extendedDfs(null, internalNode, null, visitor, seenNodes,
-                internalNode.hashCode, i, 0);
+            this.extendedDfs(
+              null,
+              internalNode,
+              null,
+              visitor,
+              seenNodes,
+              internalNode.hashCode,
+              i,
+              0
+            );
           } else {
             this.dfs(null, internalNode, null, visitor, seenNodes, 0);
           }
@@ -598,7 +642,7 @@ class mxSwimlaneModel {
    */
   dfs = (parent, root, connectingEdge, visitor, seen, layer) => {
     if (root != null) {
-      let rootId = root.id;
+      const rootId = root.id;
 
       if (seen[rootId] == null) {
         seen[rootId] = root;
@@ -606,15 +650,14 @@ class mxSwimlaneModel {
 
         // Copy the connects as source list so that visitors
         // can change the original for edge direction inversions
-        let outgoingEdges = root.connectsAsSource.slice();
+        const outgoingEdges = root.connectsAsSource.slice();
 
         for (let i = 0; i < outgoingEdges.length; i++) {
-          let internalEdge = outgoingEdges[i];
-          let targetNode = internalEdge.target;
+          const internalEdge = outgoingEdges[i];
+          const targetNode = internalEdge.target;
 
           // Root check is O(|roots|)
-          this.dfs(root, targetNode, internalEdge, visitor, seen,
-              layer + 1);
+          this.dfs(root, targetNode, internalEdge, visitor, seen, layer + 1);
         }
       } else {
         // Use the int field to indicate this node has been seen
@@ -643,7 +686,16 @@ class mxSwimlaneModel {
    * childHash - the new hash code for this node
    * layer - the layer on the dfs tree ( not the same as the model ranks )
    */
-  extendedDfs = (parent, root, connectingEdge, visitor, seen, ancestors, childHash, layer) => {
+  extendedDfs = (
+    parent,
+    root,
+    connectingEdge,
+    visitor,
+    seen,
+    ancestors,
+    childHash,
+    layer
+  ) => {
     // Explanation of custom hash set. Previously, the ancestors variable
     // was passed through the dfs as a HashSet. The ancestors were copied
     // into a new HashSet and when the new child was processed it was also
@@ -671,15 +723,14 @@ class mxSwimlaneModel {
         // start of the parent hash code does not equal the start of
         // this nodes hash code, indicating the code was set on a
         // previous run of this dfs.
-        if (root.hashCode == null ||
-            root.hashCode[0] != parent.hashCode[0]) {
-          let hashCodeLength = parent.hashCode.length + 1;
+        if (root.hashCode == null || root.hashCode[0] != parent.hashCode[0]) {
+          const hashCodeLength = parent.hashCode.length + 1;
           root.hashCode = parent.hashCode.slice();
           root.hashCode[hashCodeLength - 1] = childHash;
         }
       }
 
-      let rootId = root.id;
+      const rootId = root.id;
 
       if (seen[rootId] == null) {
         seen[rootId] = root;
@@ -687,30 +738,46 @@ class mxSwimlaneModel {
 
         // Copy the connects as source list so that visitors
         // can change the original for edge direction inversions
-        let outgoingEdges = root.connectsAsSource.slice();
-        let incomingEdges = root.connectsAsTarget.slice();
+        const outgoingEdges = root.connectsAsSource.slice();
+        const incomingEdges = root.connectsAsTarget.slice();
 
         for (let i = 0; i < outgoingEdges.length; i++) {
-          let internalEdge = outgoingEdges[i];
-          let targetNode = internalEdge.target;
+          const internalEdge = outgoingEdges[i];
+          const targetNode = internalEdge.target;
 
           // Only navigate in source->target direction within the same
           // swimlane, or from a lower index swimlane to a higher one
           if (root.swimlaneIndex <= targetNode.swimlaneIndex) {
-            this.extendedDfs(root, targetNode, internalEdge, visitor, seen,
-                root.hashCode, i, layer + 1);
+            this.extendedDfs(
+              root,
+              targetNode,
+              internalEdge,
+              visitor,
+              seen,
+              root.hashCode,
+              i,
+              layer + 1
+            );
           }
         }
 
         for (let i = 0; i < incomingEdges.length; i++) {
-          let internalEdge = incomingEdges[i];
-          let targetNode = internalEdge.source;
+          const internalEdge = incomingEdges[i];
+          const targetNode = internalEdge.source;
 
           // Only navigate in target->source direction from a lower index
           // swimlane to a higher one
           if (root.swimlaneIndex < targetNode.swimlaneIndex) {
-            this.extendedDfs(root, targetNode, internalEdge, visitor, seen,
-                root.hashCode, i, layer + 1);
+            this.extendedDfs(
+              root,
+              targetNode,
+              internalEdge,
+              visitor,
+              seen,
+              root.hashCode,
+              i,
+              layer + 1
+            );
           }
         }
       } else {

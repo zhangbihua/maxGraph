@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from "FIXME";
+import mxPoint from 'FIXME';
 
 class mxEdgeLabelLayout extends mxGraphLayout {
   /**
@@ -32,25 +32,25 @@ class mxEdgeLabelLayout extends mxGraphLayout {
    */
   constructor(graph, radius) {
     super(graph);
-  };
+  }
 
   /**
    * Function: execute
    *
    * Implements <mxGraphLayout.execute>.
    */
-  execute = (parent) => {
-    let view = this.graph.view;
-    let model = this.graph.getModel();
+  execute = parent => {
+    const { view } = this.graph;
+    const model = this.graph.getModel();
 
     // Gets all vertices and edges inside the parent
-    let edges = [];
-    let vertices = [];
-    let childCount = model.getChildCount(parent);
+    const edges = [];
+    const vertices = [];
+    const childCount = model.getChildCount(parent);
 
     for (let i = 0; i < childCount; i++) {
-      let cell = model.getChildAt(parent, i);
-      let state = view.getState(cell);
+      const cell = model.getChildAt(parent, i);
+      const state = view.getState(cell);
 
       if (state != null) {
         if (!this.isVertexIgnored(cell)) {
@@ -70,7 +70,7 @@ class mxEdgeLabelLayout extends mxGraphLayout {
    * Places the labels of the given edges.
    */
   placeLabels = (v, e) => {
-    let model = this.graph.getModel();
+    const model = this.graph.getModel();
 
     // Moves the vertices to build a circle. Makes sure the
     // radius is large enough for the vertices to not
@@ -78,12 +78,15 @@ class mxEdgeLabelLayout extends mxGraphLayout {
     model.beginUpdate();
     try {
       for (let i = 0; i < e.length; i++) {
-        let edge = e[i];
+        const edge = e[i];
 
-        if (edge != null && edge.text != null &&
-            edge.text.boundingBox != null) {
+        if (
+          edge != null &&
+          edge.text != null &&
+          edge.text.boundingBox != null
+        ) {
           for (let j = 0; j < v.length; j++) {
-            let vertex = v[j];
+            const vertex = v[j];
 
             if (vertex != null) {
               this.avoid(edge, vertex);
@@ -102,19 +105,19 @@ class mxEdgeLabelLayout extends mxGraphLayout {
    * Places the labels of the given edges.
    */
   avoid = (edge, vertex) => {
-    let model = this.graph.getModel();
-    let labRect = edge.text.boundingBox;
+    const model = this.graph.getModel();
+    const labRect = edge.text.boundingBox;
 
     if (mxUtils.intersects(labRect, vertex)) {
-      var dy1 = -labRect.y - labRect.height + vertex.y;
-      var dy2 = -labRect.y + vertex.y + vertex.height;
+      const dy1 = -labRect.y - labRect.height + vertex.y;
+      const dy2 = -labRect.y + vertex.y + vertex.height;
 
-      let dy = (Math.abs(dy1) < Math.abs(dy2)) ? dy1 : dy2;
+      let dy = Math.abs(dy1) < Math.abs(dy2) ? dy1 : dy2;
 
-      var dx1 = -labRect.x - labRect.width + vertex.x;
-      var dx2 = -labRect.x + vertex.x + vertex.width;
+      const dx1 = -labRect.x - labRect.width + vertex.x;
+      const dx2 = -labRect.x + vertex.x + vertex.width;
 
-      let dx = (Math.abs(dx1) < Math.abs(dx2)) ? dx1 : dx2;
+      let dx = Math.abs(dx1) < Math.abs(dx2) ? dx1 : dx2;
 
       if (Math.abs(dx) < Math.abs(dy)) {
         dy = 0;

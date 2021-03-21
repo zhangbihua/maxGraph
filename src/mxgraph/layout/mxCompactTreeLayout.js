@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDictionary from "FIXME";
-import mxPoint from "FIXME";
+import mxDictionary from 'FIXME';
+import mxPoint from 'FIXME';
 
 class mxCompactTreeLayout extends mxGraphLayout {
   /**
@@ -216,9 +216,9 @@ class mxCompactTreeLayout extends mxGraphLayout {
    */
   constructor(graph, horizontal, invert) {
     super(graph);
-    this.horizontal = (horizontal != null) ? horizontal : true;
-    this.invert = (invert != null) ? invert : false;
-  };
+    this.horizontal = horizontal != null ? horizontal : true;
+    this.invert = invert != null ? invert : false;
+  }
 
   /**
    * Function: isVertexIgnored
@@ -230,9 +230,11 @@ class mxCompactTreeLayout extends mxGraphLayout {
    *
    * vertex - <mxCell> whose ignored state should be returned.
    */
-  isVertexIgnored = (vertex) => {
-    return super.isVertexIgnored(vertex) ||
-        this.graph.getConnections(vertex).length == 0;
+  isVertexIgnored = vertex => {
+    return (
+      super.isVertexIgnored(vertex) ||
+      this.graph.getConnections(vertex).length == 0
+    );
   };
 
   /**
@@ -261,25 +263,39 @@ class mxCompactTreeLayout extends mxGraphLayout {
    */
   execute = (parent, root) => {
     this.parent = parent;
-    let model = this.graph.getModel();
+    const model = this.graph.getModel();
 
     if (root == null) {
       // Takes the parent as the root if it has outgoing edges
-      if (this.graph.getEdges(parent, model.getParent(parent),
-          this.invert, !this.invert, false).length > 0) {
+      if (
+        this.graph.getEdges(
+          parent,
+          model.getParent(parent),
+          this.invert,
+          !this.invert,
+          false
+        ).length > 0
+      ) {
         this.root = parent;
       }
 
-          // Tries to find a suitable root in the parent's
+      // Tries to find a suitable root in the parent's
       // children
       else {
-        let roots = this.graph.findTreeRoots(parent, true, this.invert);
+        const roots = this.graph.findTreeRoots(parent, true, this.invert);
 
         if (roots.length > 0) {
           for (let i = 0; i < roots.length; i++) {
-            if (!this.isVertexIgnored(roots[i]) &&
-                this.graph.getEdges(roots[i], null,
-                    this.invert, !this.invert, false).length > 0) {
+            if (
+              !this.isVertexIgnored(roots[i]) &&
+              this.graph.getEdges(
+                roots[i],
+                null,
+                this.invert,
+                !this.invert,
+                false
+              ).length > 0
+            ) {
               this.root = roots[i];
               break;
             }
@@ -301,8 +317,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
       this.parentX = null;
       this.parentY = null;
 
-      if (parent != this.root && model.isVertex(parent) != null && this.maintainParentLocation) {
-        let geo = this.graph.getCellGeometry(parent);
+      if (
+        parent != this.root &&
+        model.isVertex(parent) != null &&
+        this.maintainParentLocation
+      ) {
+        const geo = this.graph.getCellGeometry(parent);
 
         if (geo != null) {
           this.parentX = geo.x;
@@ -324,11 +344,11 @@ class mxCompactTreeLayout extends mxGraphLayout {
 
         if (this.node != null) {
           this.layout(this.node);
-          var x0 = this.graph.gridSize;
-          var y0 = x0;
+          let x0 = this.graph.gridSize;
+          let y0 = x0;
 
           if (!this.moveTree) {
-            let g = this.getVertexBounds(this.root);
+            const g = this.getVertexBounds(this.root);
 
             if (g != null) {
               x0 = g.x;
@@ -398,7 +418,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
     node.y += dy;
     this.apply(node);
 
-    let child = node.child;
+    let { child } = node;
 
     while (child != null) {
       this.moveNode(child, dx, dy);
@@ -406,26 +426,25 @@ class mxCompactTreeLayout extends mxGraphLayout {
     }
   };
 
-
   /**
    * Function: sortOutgoingEdges
    *
    * Called if <sortEdges> is true to sort the array of outgoing edges in place.
    */
   sortOutgoingEdges = (source, edges) => {
-    let lookup = new mxDictionary();
+    const lookup = new mxDictionary();
 
     edges.sort((e1, e2) => {
-      var end1 = e1.getTerminal(e1.getTerminal(false) == source);
-      var p1 = lookup.get(end1);
+      const end1 = e1.getTerminal(e1.getTerminal(false) == source);
+      let p1 = lookup.get(end1);
 
       if (p1 == null) {
         p1 = mxCellPath.create(end1).split(mxCellPath.PATH_SEPARATOR);
         lookup.put(end1, p1);
       }
 
-      var end2 = e2.getTerminal(e2.getTerminal(false) == source);
-      var p2 = lookup.get(end2);
+      const end2 = e2.getTerminal(e2.getTerminal(false) == source);
+      let p2 = lookup.get(end2);
 
       if (p2 == null) {
         p2 = mxCellPath.create(end2).split(mxCellPath.PATH_SEPARATOR);
@@ -443,11 +462,14 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * direction) of cells in each rank
    */
   findRankHeights = (node, rank) => {
-    if (this.maxRankHeight[rank] == null || this.maxRankHeight[rank] < node.height) {
+    if (
+      this.maxRankHeight[rank] == null ||
+      this.maxRankHeight[rank] < node.height
+    ) {
       this.maxRankHeight[rank] = node.height;
     }
 
-    let child = node.child;
+    let { child } = node;
 
     while (child != null) {
       this.findRankHeights(child, rank + 1);
@@ -462,11 +484,14 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * direction) when the tops of each rank are to be aligned
    */
   setCellHeights = (node, rank) => {
-    if (this.maxRankHeight[rank] != null && this.maxRankHeight[rank] > node.height) {
+    if (
+      this.maxRankHeight[rank] != null &&
+      this.maxRankHeight[rank] > node.height
+    ) {
       node.height = this.maxRankHeight[rank];
     }
 
-    let child = node.child;
+    let { child } = node;
 
     while (child != null) {
       this.setCellHeights(child, rank + 1);
@@ -482,24 +507,35 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * algorithm.
    */
   dfs = (cell, parent) => {
-    let id = mxCellPath.create(cell);
+    const id = mxCellPath.create(cell);
     let node = null;
 
-    if (cell != null && this.visited[id] == null && !this.isVertexIgnored(cell)) {
+    if (
+      cell != null &&
+      this.visited[id] == null &&
+      !this.isVertexIgnored(cell)
+    ) {
       this.visited[id] = cell;
       node = this.createNode(cell);
 
-      let model = this.graph.getModel();
+      const model = this.graph.getModel();
       let prev = null;
-      let out = this.graph.getEdges(cell, parent, this.invert, !this.invert, false, true);
-      let view = this.graph.getView();
+      const out = this.graph.getEdges(
+        cell,
+        parent,
+        this.invert,
+        !this.invert,
+        false,
+        true
+      );
+      const view = this.graph.getView();
 
       if (this.sortEdges) {
         this.sortOutgoingEdges(cell, out);
       }
 
       for (let i = 0; i < out.length; i++) {
-        let edge = out[i];
+        const edge = out[i];
 
         if (!this.isEdgeIgnored(edge)) {
           // Resets the points on the traversed edge
@@ -513,9 +549,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
           }
 
           // Checks if terminal in same swimlane
-          let state = view.getState(edge);
-          let target = (state != null) ? state.getVisibleTerminal(this.invert) : view.getVisibleTerminal(edge, this.invert);
-          let tmp = this.dfs(target, parent);
+          const state = view.getState(edge);
+          const target =
+            state != null
+              ? state.getVisibleTerminal(this.invert)
+              : view.getVisibleTerminal(edge, this.invert);
+          const tmp = this.dfs(target, parent);
 
           if (tmp != null && model.getGeometry(target) != null) {
             if (prev == null) {
@@ -539,9 +578,9 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * Starts the actual compact tree layout algorithm
    * at the given node.
    */
-  layout = (node) => {
+  layout = node => {
     if (node != null) {
-      let child = node.child;
+      let { child } = node;
 
       while (child != null) {
         this.layout(child);
@@ -563,7 +602,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
     node.x += x0 + node.offsetX;
     node.y += y0 + node.offsetY;
     bounds = this.apply(node, bounds);
-    let child = node.child;
+    const { child } = node;
 
     if (child != null) {
       bounds = this.horizontalLayout(child, node.x, node.y, bounds);
@@ -571,7 +610,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
       let s = child.next;
 
       while (s != null) {
-        bounds = this.horizontalLayout(s, node.x + child.offsetX, siblingOffset, bounds);
+        bounds = this.horizontalLayout(
+          s,
+          node.x + child.offsetX,
+          siblingOffset,
+          bounds
+        );
         siblingOffset += s.offsetY;
         s = s.next;
       }
@@ -587,7 +631,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
     node.x += x0 + node.offsetY;
     node.y += y0 + node.offsetX;
     bounds = this.apply(node, bounds);
-    let child = node.child;
+    const { child } = node;
 
     if (child != null) {
       bounds = this.verticalLayout(child, node, node.x, node.y, bounds);
@@ -595,7 +639,13 @@ class mxCompactTreeLayout extends mxGraphLayout {
       let s = child.next;
 
       while (s != null) {
-        bounds = this.verticalLayout(s, node, siblingOffset, node.y + child.offsetX, bounds);
+        bounds = this.verticalLayout(
+          s,
+          node,
+          siblingOffset,
+          node.y + child.offsetX,
+          bounds
+        );
         siblingOffset += s.offsetY;
         s = s.next;
       }
@@ -608,48 +658,55 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * Function: attachParent
    */
   attachParent = (node, height) => {
-    let x = this.nodeDistance + this.levelDistance;
-    var y2 = (height - node.width) / 2 - this.nodeDistance;
-    var y1 = y2 + node.width + 2 * this.nodeDistance - height;
+    const x = this.nodeDistance + this.levelDistance;
+    const y2 = (height - node.width) / 2 - this.nodeDistance;
+    const y1 = y2 + node.width + 2 * this.nodeDistance - height;
 
     node.child.offsetX = x + node.height;
     node.child.offsetY = y1;
 
-    node.contour.upperHead = this.createLine(node.height, 0,
-        this.createLine(x, y1, node.contour.upperHead));
-    node.contour.lowerHead = this.createLine(node.height, 0,
-        this.createLine(x, y2, node.contour.lowerHead));
+    node.contour.upperHead = this.createLine(
+      node.height,
+      0,
+      this.createLine(x, y1, node.contour.upperHead)
+    );
+    node.contour.lowerHead = this.createLine(
+      node.height,
+      0,
+      this.createLine(x, y2, node.contour.lowerHead)
+    );
   };
 
   /**
    * Function: layoutLeaf
    */
-  layoutLeaf = (node) => {
-    let dist = 2 * this.nodeDistance;
+  layoutLeaf = node => {
+    const dist = 2 * this.nodeDistance;
 
-    node.contour.upperTail = this.createLine(
-        node.height + dist, 0);
+    node.contour.upperTail = this.createLine(node.height + dist, 0);
     node.contour.upperHead = node.contour.upperTail;
-    node.contour.lowerTail = this.createLine(
-        0, -node.width - dist);
+    node.contour.lowerTail = this.createLine(0, -node.width - dist);
     node.contour.lowerHead = this.createLine(
-        node.height + dist, 0, node.contour.lowerTail);
+      node.height + dist,
+      0,
+      node.contour.lowerTail
+    );
   };
 
   /**
    * Function: join
    */
-  join = (node) => {
-    let dist = 2 * this.nodeDistance;
+  join = node => {
+    const dist = 2 * this.nodeDistance;
 
-    let child = node.child;
+    let { child } = node;
     node.contour = child.contour;
     let h = child.width + dist;
     let sum = h;
     child = child.next;
 
     while (child != null) {
-      let d = this.merge(node.contour, child.contour);
+      const d = this.merge(node.contour, child.contour);
       child.offsetY = d + h;
       child.offsetX = 0;
       h = child.width + dist;
@@ -672,8 +729,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
     let lower = p2.upperHead;
 
     while (lower != null && upper != null) {
-      let d = this.offset(x, y, lower.dx, lower.dy,
-          upper.dx, upper.dy);
+      const d = this.offset(x, y, lower.dx, lower.dy, upper.dx, upper.dy);
       y += d;
       total += d;
 
@@ -689,11 +745,11 @@ class mxCompactTreeLayout extends mxGraphLayout {
     }
 
     if (lower != null) {
-      let b = this.bridge(p1.upperTail, 0, 0, lower, x, y);
-      p1.upperTail = (b.next != null) ? p2.upperTail : b;
+      const b = this.bridge(p1.upperTail, 0, 0, lower, x, y);
+      p1.upperTail = b.next != null ? p2.upperTail : b;
       p1.lowerTail = p2.lowerTail;
     } else {
-      let b = this.bridge(p2.lowerTail, x, y, upper, 0, 0);
+      const b = this.bridge(p2.lowerTail, x, y, upper, 0, 0);
 
       if (b.next == null) {
         p1.lowerTail = b;
@@ -715,23 +771,23 @@ class mxCompactTreeLayout extends mxGraphLayout {
       return 0;
     }
 
-    let t = b1 * a2 - a1 * b2;
+    const t = b1 * a2 - a1 * b2;
 
     if (t > 0) {
       if (p1 < 0) {
-        let s = p1 * a2;
+        const s = p1 * a2;
         d = s / a1 - p2;
       } else if (p1 > 0) {
-        let s = p1 * b2;
+        const s = p1 * b2;
         d = s / b1 - p2;
       } else {
         d = -p2;
       }
     } else if (b1 < p1 + a1) {
-      let s = (b1 - p1) * a2;
+      const s = (b1 - p1) * a2;
       d = b2 - (p2 + s / a1);
     } else if (b1 > p1 + a1) {
-      let s = (a1 + p1) * b2;
+      const s = (a1 + p1) * b2;
       d = s / b1 - (p2 + a2);
     } else {
       d = b2 - (p2 + a2);
@@ -739,16 +795,15 @@ class mxCompactTreeLayout extends mxGraphLayout {
 
     if (d > 0) {
       return d;
-    } else {
-      return 0;
     }
+    return 0;
   };
 
   /**
    * Function: bridge
    */
   bridge = (line1, x1, y1, line2, x2, y2) => {
-    let dx = x2 + line2.dx - x1;
+    const dx = x2 + line2.dx - x1;
     let dy = 0;
     let s = 0;
 
@@ -759,7 +814,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
       dy = s / line2.dx;
     }
 
-    let r = this.createLine(dx, dy, line2.next);
+    const r = this.createLine(dx, dy, line2.next);
     line1.next = this.createLine(0, y2 + line2.dy - dy - y1, r);
 
     return r;
@@ -768,15 +823,15 @@ class mxCompactTreeLayout extends mxGraphLayout {
   /**
    * Function: createNode
    */
-  createNode = (cell) => {
-    let node = {};
+  createNode = cell => {
+    const node = {};
     node.cell = cell;
     node.x = 0;
     node.y = 0;
     node.width = 0;
     node.height = 0;
 
-    let geo = this.getVertexBounds(cell);
+    const geo = this.getVertexBounds(cell);
 
     if (geo != null) {
       if (this.isHorizontal()) {
@@ -799,8 +854,8 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * Function: apply
    */
   apply = (node, bounds) => {
-    let model = this.graph.getModel();
-    let cell = node.cell;
+    const model = this.graph.getModel();
+    const { cell } = node;
     let g = model.getGeometry(cell);
 
     if (cell != null && g != null) {
@@ -808,8 +863,8 @@ class mxCompactTreeLayout extends mxGraphLayout {
         g = this.setVertexLocation(cell, node.x, node.y);
 
         if (this.resizeParent) {
-          let parent = model.getParent(cell);
-          let id = mxCellPath.create(parent);
+          const parent = model.getParent(cell);
+          const id = mxCellPath.create(parent);
 
           // Implements set semantic
           if (this.parentsChanged[id] == null) {
@@ -821,10 +876,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
       if (bounds == null) {
         bounds = new mxRectangle(g.x, g.y, g.width, g.height);
       } else {
-        bounds = new mxRectangle(Math.min(bounds.x, g.x),
-            Math.min(bounds.y, g.y),
-            Math.max(bounds.x + bounds.width, g.x + g.width),
-            Math.max(bounds.y + bounds.height, g.y + g.height));
+        bounds = new mxRectangle(
+          Math.min(bounds.x, g.x),
+          Math.min(bounds.y, g.y),
+          Math.max(bounds.x + bounds.width, g.x + g.width),
+          Math.max(bounds.y + bounds.height, g.y + g.height)
+        );
       }
     }
 
@@ -835,7 +892,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * Function: createLine
    */
   createLine = (dx, dy, next) => {
-    let line = {};
+    const line = {};
     line.dx = dx;
     line.dy = dy;
     line.next = next;
@@ -851,14 +908,20 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * a padding.
    */
   adjustParents = () => {
-    let tmp = [];
+    const tmp = [];
 
-    for (var id in this.parentsChanged) {
+    for (const id in this.parentsChanged) {
       tmp.push(this.parentsChanged[id]);
     }
 
-    this.arrangeGroups(mxUtils.sortCells(tmp, true), this.groupPadding, this.groupPaddingTop,
-        this.groupPaddingRight, this.groupPaddingBottom, this.groupPaddingLeft);
+    this.arrangeGroups(
+      mxUtils.sortCells(tmp, true),
+      this.groupPadding,
+      this.groupPaddingTop,
+      this.groupPaddingRight,
+      this.groupPaddingBottom,
+      this.groupPaddingLeft
+    );
   };
 
   /**
@@ -866,9 +929,9 @@ class mxCompactTreeLayout extends mxGraphLayout {
    *
    * Moves the specified node and all of its children by the given amount.
    */
-  localEdgeProcessing = (node) => {
+  localEdgeProcessing = node => {
     this.processNodeOutgoing(node);
-    let child = node.child;
+    let { child } = node;
 
     while (child != null) {
       this.localEdgeProcessing(child);
@@ -881,12 +944,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
    *
    * Separates the x position of edges as they connect to vertices
    */
-  processNodeOutgoing = (node) => {
-    let child = node.child;
-    let parentCell = node.cell;
+  processNodeOutgoing = node => {
+    let { child } = node;
+    const parentCell = node.cell;
 
     let childCount = 0;
-    let sortedCells = [];
+    const sortedCells = [];
 
     while (child != null) {
       childCount++;
@@ -905,35 +968,34 @@ class mxCompactTreeLayout extends mxGraphLayout {
 
     let availableWidth = node.width;
 
-    let requiredWidth = (childCount + 1) * this.prefHozEdgeSep;
+    const requiredWidth = (childCount + 1) * this.prefHozEdgeSep;
 
     // Add a buffer on the edges of the vertex if the edge count allows
-    if (availableWidth > requiredWidth + (2 * this.prefHozEdgeSep)) {
+    if (availableWidth > requiredWidth + 2 * this.prefHozEdgeSep) {
       availableWidth -= 2 * this.prefHozEdgeSep;
     }
 
-    let edgeSpacing = availableWidth / childCount;
+    const edgeSpacing = availableWidth / childCount;
 
     let currentXOffset = edgeSpacing / 2.0;
 
-    if (availableWidth > requiredWidth + (2 * this.prefHozEdgeSep)) {
+    if (availableWidth > requiredWidth + 2 * this.prefHozEdgeSep) {
       currentXOffset += this.prefHozEdgeSep;
     }
 
     let currentYOffset = this.minEdgeJetty - this.prefVertEdgeOff;
     let maxYOffset = 0;
 
-    let parentBounds = this.getVertexBounds(parentCell);
+    const parentBounds = this.getVertexBounds(parentCell);
     child = node.child;
 
     for (let j = 0; j < sortedCells.length; j++) {
-      let childCell = sortedCells[j].cell.cell;
-      let childBounds = this.getVertexBounds(childCell);
+      const childCell = sortedCells[j].cell.cell;
+      const childBounds = this.getVertexBounds(childCell);
 
-      let edges = this.graph.getEdgesBetween(parentCell,
-          childCell, false);
+      const edges = this.graph.getEdgesBetween(parentCell, childCell, false);
 
-      let newPoints = [];
+      const newPoints = [];
       let x = 0;
       let y = 0;
 
@@ -944,8 +1006,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
           x = parentBounds.x + parentBounds.width;
           y = parentBounds.y + currentXOffset;
           newPoints.push(new mxPoint(x, y));
-          x = parentBounds.x + parentBounds.width
-              + currentYOffset;
+          x = parentBounds.x + parentBounds.width + currentYOffset;
           newPoints.push(new mxPoint(x, y));
           y = childBounds.y + childBounds.height / 2.0;
           newPoints.push(new mxPoint(x, y));
@@ -954,8 +1015,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
           x = parentBounds.x + currentXOffset;
           y = parentBounds.y + parentBounds.height;
           newPoints.push(new mxPoint(x, y));
-          y = parentBounds.y + parentBounds.height
-              + currentYOffset;
+          y = parentBounds.y + parentBounds.height + currentYOffset;
           newPoints.push(new mxPoint(x, y));
           x = childBounds.x + childBounds.width / 2.0;
           newPoints.push(new mxPoint(x, y));

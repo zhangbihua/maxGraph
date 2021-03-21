@@ -11,12 +11,14 @@ class mxEventObject {
    * Holds the name.
    */
   name = null;
+
   /**
    * Variable: properties
    *
    * Holds the properties as an associative array.
    */
   properties = null;
+
   /**
    * Variable: consumed
    *
@@ -56,7 +58,7 @@ class mxEventObject {
         this.properties[args[i]] = args[i + 1];
       }
     }
-  };
+  }
 
   /**
    * Function: getName
@@ -81,7 +83,7 @@ class mxEventObject {
    *
    * Returns the property for the given key.
    */
-  getProperty = (key) => {
+  getProperty = key => {
     return this.properties[key];
   };
 

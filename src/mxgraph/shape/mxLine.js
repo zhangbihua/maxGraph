@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxShape from "./mxShape";
+import mxShape from './mxShape';
 
 class mxLine extends mxShape {
   /**
@@ -37,8 +37,8 @@ class mxLine extends mxShape {
     super();
     this.bounds = bounds;
     this.stroke = stroke;
-    this.strokewidth = (strokewidth != null) ? strokewidth : 1;
-    this.vertical = (vertical != null) ? vertical : this.vertical;
+    this.strokewidth = strokewidth != null ? strokewidth : 1;
+    this.vertical = vertical != null ? vertical : this.vertical;
   }
 
   /**
@@ -50,11 +50,11 @@ class mxLine extends mxShape {
     c.begin();
 
     if (this.vertical) {
-      let mid = x + w / 2;
+      const mid = x + w / 2;
       c.moveTo(mid, y);
       c.lineTo(mid, y + h);
     } else {
-      let mid = y + h / 2;
+      const mid = y + h / 2;
       c.moveTo(x, mid);
       c.lineTo(x + w, mid);
     }

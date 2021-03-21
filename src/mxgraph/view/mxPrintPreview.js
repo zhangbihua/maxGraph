@@ -3,9 +3,9 @@
  * Copyright (c) 2006-2017, draw.io AG
  */
 
-import mxPoint from "../util/mxPoint";
-import mxRectangle from "../util/mxRectangle";
-import mxTemporaryCellStates from "./mxTemporaryCellStates";
+import mxPoint from '../util/mxPoint';
+import mxRectangle from '../util/mxRectangle';
+import mxTemporaryCellStates from './mxTemporaryCellStates';
 
 class mxPrintPreview {
   /**
@@ -325,17 +325,29 @@ class mxPrintPreview {
    * pageSelector - Optional boolean that specifies if the page selector
    * should appear in the window with the print preview. Default is true.
    */
-  constructor(graph, scale, pageFormat, border, x0, y0, borderColor, title, pageSelector) {
+  constructor(
+    graph,
+    scale,
+    pageFormat,
+    border,
+    x0,
+    y0,
+    borderColor,
+    title,
+    pageSelector
+  ) {
     this.graph = graph;
-    this.scale = (scale != null) ? scale : 1 / graph.pageScale;
-    this.border = (border != null) ? border : 0;
-    this.pageFormat = mxRectangle.fromRectangle((pageFormat != null) ? pageFormat : graph.pageFormat);
-    this.title = (title != null) ? title : 'Printer-friendly version';
-    this.x0 = (x0 != null) ? x0 : 0;
-    this.y0 = (y0 != null) ? y0 : 0;
+    this.scale = scale != null ? scale : 1 / graph.pageScale;
+    this.border = border != null ? border : 0;
+    this.pageFormat = mxRectangle.fromRectangle(
+      pageFormat != null ? pageFormat : graph.pageFormat
+    );
+    this.title = title != null ? title : 'Printer-friendly version';
+    this.x0 = x0 != null ? x0 : 0;
+    this.y0 = y0 != null ? y0 : 0;
     this.borderColor = borderColor;
-    this.pageSelector = (pageSelector != null) ? pageSelector : true;
-  };
+    this.pageSelector = pageSelector != null ? pageSelector : true;
+  }
 
   /**
    * Function: getWindow
@@ -354,7 +366,7 @@ class mxPrintPreview {
    * IE8 in IE8 standards mode and edge in IE9 standards mode.
    */
   getDoctype = () => {
-    let dt = '';
+    const dt = '';
     return dt;
   };
 
@@ -371,7 +383,7 @@ class mxPrintPreview {
    */
   appendGraph = (graph, scale, x0, y0, forcePageBreaks, keepOpen) => {
     this.graph = graph;
-    this.scale = (scale != null) ? scale : 1 / graph.pageScale;
+    this.scale = scale != null ? scale : 1 / graph.pageScale;
     this.x0 = x0;
     this.y0 = y0;
     this.open(null, null, forcePageBreaks, keepOpen);
@@ -392,7 +404,7 @@ class mxPrintPreview {
   open = (css, targetWindow, forcePageBreaks, keepOpen) => {
     // Closing the window while the page is being rendered may cause an
     // exception in IE. This and any other exceptions are simply ignored.
-    let previousInitializeOverlay = this.graph.cellRenderer.initializeOverlay;
+    const previousInitializeOverlay = this.graph.cellRenderer.initializeOverlay;
     let div = null;
 
     try {
@@ -405,13 +417,18 @@ class mxPrintPreview {
       }
 
       if (this.printControls) {
-        this.graph.cellRenderer.initControl = (state, control, handleEvents, clickHandler) => {
+        this.graph.cellRenderer.initControl = (
+          state,
+          control,
+          handleEvents,
+          clickHandler
+        ) => {
           control.dialect = state.view.graph.dialect;
           control.init(state.view.getDrawPane());
         };
       }
 
-      this.wnd = (targetWindow != null) ? targetWindow : this.wnd;
+      this.wnd = targetWindow != null ? targetWindow : this.wnd;
       let isNewWindow = false;
 
       if (this.wnd == null) {
@@ -419,10 +436,10 @@ class mxPrintPreview {
         this.wnd = window.open();
       }
 
-      let doc = this.wnd.document;
+      const doc = this.wnd.document;
 
       if (isNewWindow) {
-        let dt = this.getDoctype();
+        const dt = this.getDoctype();
 
         if (dt != null && dt.length > 0) {
           doc.writeln(dt);
@@ -441,10 +458,10 @@ class mxPrintPreview {
       }
 
       // Computes the horizontal and vertical page count
-      let bounds = this.graph.getGraphBounds().clone();
-      let currentScale = this.graph.getView().getScale();
-      let sc = currentScale / this.scale;
-      let tr = this.graph.getView().getTranslate();
+      const bounds = this.graph.getGraphBounds().clone();
+      const currentScale = this.graph.getView().getScale();
+      const sc = currentScale / this.scale;
+      const tr = this.graph.getView().getTranslate();
 
       // Uses the absolute origin with no offset for all printing
       if (!this.autoOrigin) {
@@ -458,8 +475,8 @@ class mxPrintPreview {
       }
 
       // Store the available page area
-      let availableWidth = this.pageFormat.width - (this.border * 2);
-      let availableHeight = this.pageFormat.height - (this.border * 2);
+      const availableWidth = this.pageFormat.width - this.border * 2;
+      const availableHeight = this.pageFormat.height - this.border * 2;
 
       // Adds margins to page format
       this.pageFormat.height += this.marginTop + this.marginBottom;
@@ -469,18 +486,24 @@ class mxPrintPreview {
       bounds.width /= sc;
       bounds.height /= sc;
 
-      let hpages = Math.max(1, Math.ceil((bounds.width + this.x0) / availableWidth));
-      let vpages = Math.max(1, Math.ceil((bounds.height + this.y0) / availableHeight));
+      const hpages = Math.max(
+        1,
+        Math.ceil((bounds.width + this.x0) / availableWidth)
+      );
+      const vpages = Math.max(
+        1,
+        Math.ceil((bounds.height + this.y0) / availableHeight)
+      );
       this.pageCount = hpages * vpages;
 
-      let writePageSelector = () => {
+      const writePageSelector = () => {
         if (this.pageSelector && (vpages > 1 || hpages > 1)) {
-          let table = this.createPageSelector(vpages, hpages);
+          const table = this.createPageSelector(vpages, hpages);
           doc.body.appendChild(table);
         }
       };
 
-      let addPage =  (div, addBreak) => {
+      const addPage = (div, addBreak) => {
         // Border of the DIV (aka page) inside the document
         if (this.borderColor != null) {
           div.style.borderColor = this.borderColor;
@@ -527,7 +550,10 @@ class mxPrintPreview {
         }
       };
 
-      let cov = this.getCoverPages(this.pageFormat.width, this.pageFormat.height);
+      const cov = this.getCoverPages(
+        this.pageFormat.width,
+        this.pageFormat.height
+      );
 
       if (cov != null) {
         for (let i = 0; i < cov.length; i++) {
@@ -535,33 +561,47 @@ class mxPrintPreview {
         }
       }
 
-      let apx = this.getAppendices(this.pageFormat.width, this.pageFormat.height);
+      const apx = this.getAppendices(
+        this.pageFormat.width,
+        this.pageFormat.height
+      );
 
       // Appends each page to the page output for printing, making
       // sure there will be a page break after each page (ie. div)
       for (let i = 0; i < vpages; i++) {
-        let dy = i * availableHeight / this.scale - this.y0 / this.scale +
-            (bounds.y - tr.y * currentScale) / currentScale;
+        const dy =
+          (i * availableHeight) / this.scale -
+          this.y0 / this.scale +
+          (bounds.y - tr.y * currentScale) / currentScale;
 
         for (let j = 0; j < hpages; j++) {
           if (this.wnd == null) {
             return null;
           }
 
-          let dx = j * availableWidth / this.scale - this.x0 / this.scale +
-              (bounds.x - tr.x * currentScale) / currentScale;
-          let pageNum = i * hpages + j + 1;
-          let clip = new mxRectangle(dx, dy, availableWidth, availableHeight);
-          div = this.renderPage(this.pageFormat.width, this.pageFormat.height, 0, 0, mxUtils.bind(this, (div) => {
-            this.addGraphFragment(-dx, -dy, this.scale, pageNum, div, clip);
+          const dx =
+            (j * availableWidth) / this.scale -
+            this.x0 / this.scale +
+            (bounds.x - tr.x * currentScale) / currentScale;
+          const pageNum = i * hpages + j + 1;
+          const clip = new mxRectangle(dx, dy, availableWidth, availableHeight);
+          div = this.renderPage(
+            this.pageFormat.width,
+            this.pageFormat.height,
+            0,
+            0,
+            mxUtils.bind(this, div => {
+              this.addGraphFragment(-dx, -dy, this.scale, pageNum, div, clip);
 
-            if (this.printBackgroundImage) {
-              this.insertBackgroundImage(div, -dx, -dy);
-            }
-          }), pageNum);
+              if (this.printBackgroundImage) {
+                this.insertBackgroundImage(div, -dx, -dy);
+              }
+            }),
+            pageNum
+          );
 
           // Gives the page a unique ID for later accessing the page
-          div.setAttribute('id', 'mxPage-' + pageNum);
+          div.setAttribute('id', `mxPage-${pageNum}`);
 
           addPage(div, apx != null || i < vpages - 1 || j < hpages - 1);
         }
@@ -596,8 +636,8 @@ class mxPrintPreview {
    *
    * Adds a page break to the given document.
    */
-  addPageBreak = (doc) => {
-    let hr = doc.createElement('hr');
+  addPageBreak = doc => {
+    const hr = doc.createElement('hr');
     hr.className = 'mxPageBreak';
     doc.body.appendChild(hr);
   };
@@ -610,7 +650,7 @@ class mxPrintPreview {
   closeDocument = () => {
     try {
       if (this.wnd != null && this.wnd.document != null) {
-        let doc = this.wnd.document;
+        const doc = this.wnd.document;
 
         this.writePostfix(doc);
         doc.writeln('</body>');
@@ -633,11 +673,11 @@ class mxPrintPreview {
    */
   writeHead = (doc, css) => {
     if (this.title != null) {
-      doc.writeln('<title>' + this.title + '</title>');
+      doc.writeln(`<title>${this.title}</title>`);
     }
 
     // Adds all required stylesheets
-    mxClient.link('stylesheet', mxClient.basePath + '/css/common.css', doc);
+    mxClient.link('stylesheet', `${mxClient.basePath}/css/common.css`, doc);
 
     // Removes horizontal rules and page selector from print output
     doc.writeln('<style type="text/css">');
@@ -650,10 +690,14 @@ class mxPrintPreview {
 
     // NOTE: position: fixed is not supported in IE, so the page selector
     // position (absolute) needs to be updated in IE (see below)
-    doc.writeln('  table.mxPageSelector { position: fixed; right: 10px; top: 10px;' +
+    doc.writeln(
+      '  table.mxPageSelector { position: fixed; right: 10px; top: 10px;' +
         'font-family: Arial; font-size:10pt; border: solid 1px darkgray;' +
-        'background: white; border-collapse:collapse; }');
-    doc.writeln('  table.mxPageSelector td { border: solid 1px gray; padding:4px; }');
+        'background: white; border-collapse:collapse; }'
+    );
+    doc.writeln(
+      '  table.mxPageSelector td { border: solid 1px gray; padding:4px; }'
+    );
     doc.writeln('  body.mxPage { background: gray; }');
     doc.writeln('}');
 
@@ -669,7 +713,7 @@ class mxPrintPreview {
    *
    * Called before closing the body of the page. This implementation is empty.
    */
-  writePostfix = (doc) => {
+  writePostfix = doc => {
     // empty
   };
 
@@ -679,25 +723,25 @@ class mxPrintPreview {
    * Creates the page selector table.
    */
   createPageSelector = (vpages, hpages) => {
-    let doc = this.wnd.document;
-    let table = doc.createElement('table');
+    const doc = this.wnd.document;
+    const table = doc.createElement('table');
     table.className = 'mxPageSelector';
     table.setAttribute('border', '0');
 
-    let tbody = doc.createElement('tbody');
+    const tbody = doc.createElement('tbody');
 
     for (let i = 0; i < vpages; i++) {
-      let row = doc.createElement('tr');
+      const row = doc.createElement('tr');
 
       for (let j = 0; j < hpages; j++) {
-        let pageNum = i * hpages + j + 1;
-        let cell = doc.createElement('td');
-        let a = doc.createElement('a');
-        a.setAttribute('href', '#mxPage-' + pageNum);
+        const pageNum = i * hpages + j + 1;
+        const cell = doc.createElement('td');
+        const a = doc.createElement('a');
+        a.setAttribute('href', `#mxPage-${pageNum}`);
 
         // Workaround for FF where the anchor is appended to the URL of the original document
         if (mxClient.IS_NS && !mxClient.IS_SF && !mxClient.IS_GC) {
-          let js = 'let page = document.getElementById(\'mxPage-' + pageNum + '\');page.scrollIntoView(true);event.preventDefault();';
+          const js = `let page = document.getElementById('mxPage-${pageNum}');page.scrollIntoView(true);event.preventDefault();`;
           a.setAttribute('onclick', js);
         }
 
@@ -732,7 +776,7 @@ class mxPrintPreview {
    * pageNumber - Integer representing the page number.
    */
   renderPage = (w, h, dx, dy, content, pageNumber) => {
-    let doc = this.wnd.document;
+    const doc = this.wnd.document;
     let div = document.createElement('div');
     let arg = null;
 
@@ -741,22 +785,22 @@ class mxPrintPreview {
       // when printing with page breaks and HTML labels.
       if (dx != 0 || dy != 0) {
         div.style.position = 'relative';
-        div.style.width = w + 'px';
-        div.style.height = h + 'px';
+        div.style.width = `${w}px`;
+        div.style.height = `${h}px`;
         div.style.pageBreakInside = 'avoid';
 
-        let innerDiv = document.createElement('div');
+        const innerDiv = document.createElement('div');
         innerDiv.style.position = 'relative';
-        innerDiv.style.top = this.border + 'px';
-        innerDiv.style.left = this.border + 'px';
-        innerDiv.style.width = (w - 2 * this.border) + 'px';
-        innerDiv.style.height = (h - 2 * this.border) + 'px';
+        innerDiv.style.top = `${this.border}px`;
+        innerDiv.style.left = `${this.border}px`;
+        innerDiv.style.width = `${w - 2 * this.border}px`;
+        innerDiv.style.height = `${h - 2 * this.border}px`;
         innerDiv.style.overflow = 'hidden';
 
-        let viewport = document.createElement('div');
+        const viewport = document.createElement('div');
         viewport.style.position = 'relative';
-        viewport.style.marginLeft = dx + 'px';
-        viewport.style.marginTop = dy + 'px';
+        viewport.style.marginLeft = `${dx}px`;
+        viewport.style.marginTop = `${dy}px`;
 
         innerDiv.appendChild(viewport);
         div.appendChild(innerDiv);
@@ -765,18 +809,18 @@ class mxPrintPreview {
       }
       // FIXME: IE10/11 too many pages
       else {
-        div.style.width = w + 'px';
-        div.style.height = h + 'px';
+        div.style.width = `${w}px`;
+        div.style.height = `${h}px`;
         div.style.overflow = 'hidden';
         div.style.pageBreakInside = 'avoid';
 
-        let innerDiv = document.createElement('div');
-        innerDiv.style.width = (w - 2 * this.border) + 'px';
-        innerDiv.style.height = (h - 2 * this.border) + 'px';
+        const innerDiv = document.createElement('div');
+        innerDiv.style.width = `${w - 2 * this.border}px`;
+        innerDiv.style.height = `${h - 2 * this.border}px`;
         innerDiv.style.overflow = 'hidden';
 
-        innerDiv.style.top = this.border + 'px';
-        innerDiv.style.left = this.border + 'px';
+        innerDiv.style.top = `${this.border}px`;
+        innerDiv.style.left = `${this.border}px`;
 
         if (this.graph.dialect == mxConstants.DIALECT_VML) {
           innerDiv.style.position = 'absolute';
@@ -839,26 +883,28 @@ class mxPrintPreview {
    * clip - Contains the clipping rectangle as an <mxRectangle>.
    */
   addGraphFragment = (dx, dy, scale, pageNumber, div, clip) => {
-    let view = this.graph.getView();
-    let previousContainer = this.graph.container;
+    const view = this.graph.getView();
+    const previousContainer = this.graph.container;
     this.graph.container = div;
 
-    let canvas = view.getCanvas();
-    let backgroundPane = view.getBackgroundPane();
-    let drawPane = view.getDrawPane();
-    let overlayPane = view.getOverlayPane();
-    let realScale = scale;
+    const canvas = view.getCanvas();
+    const backgroundPane = view.getBackgroundPane();
+    const drawPane = view.getDrawPane();
+    const overlayPane = view.getOverlayPane();
+    const realScale = scale;
 
     if (this.graph.dialect == mxConstants.DIALECT_SVG) {
       view.createSvg();
 
       // Uses CSS transform for scaling
       if (this.useCssTransforms()) {
-        let g = view.getDrawPane().parentNode;
-        let prev = g.getAttribute('transform');
+        const g = view.getDrawPane().parentNode;
+        const prev = g.getAttribute('transform');
         g.setAttribute('transformOrigin', '0 0');
-        g.setAttribute('transform', 'scale(' + scale + ',' + scale + ')' +
-            'translate(' + dx + ',' + dy + ')');
+        g.setAttribute(
+          'transform',
+          `scale(${scale},${scale})` + `translate(${dx},${dy})`
+        );
 
         scale = 1;
         dx = 0;
@@ -871,47 +917,55 @@ class mxPrintPreview {
     }
 
     // Disables events on the view
-    let eventsEnabled = view.isEventsEnabled();
+    const eventsEnabled = view.isEventsEnabled();
     view.setEventsEnabled(false);
 
     // Disables the graph to avoid cursors
-    let graphEnabled = this.graph.isEnabled();
+    const graphEnabled = this.graph.isEnabled();
     this.graph.setEnabled(false);
 
     // Resets the translation
-    let translate = view.getTranslate();
+    const translate = view.getTranslate();
     view.translate = new mxPoint(dx, dy);
 
     // Redraws only states that intersect the clip
-    let redraw = this.graph.cellRenderer.redraw;
-    let states = view.states;
-    let s = view.scale;
+    const { redraw } = this.graph.cellRenderer;
+    const { states } = view;
+    const s = view.scale;
 
     // Gets the transformed clip for intersection check below
     if (this.clipping) {
-      let tempClip = new mxRectangle((clip.x + translate.x) * s, (clip.y + translate.y) * s,
-          clip.width * s / realScale, clip.height * s / realScale);
+      const tempClip = new mxRectangle(
+        (clip.x + translate.x) * s,
+        (clip.y + translate.y) * s,
+        (clip.width * s) / realScale,
+        (clip.height * s) / realScale
+      );
 
       // Checks clipping rectangle for speedup
       // Must create terminal states for edge clipping even if terminal outside of clip
       this.graph.cellRenderer.redraw = (state, force, rendering) => {
         if (state != null) {
           // Gets original state from graph to find bounding box
-          let orig = states.get(state.cell);
+          const orig = states.get(state.cell);
 
           if (orig != null) {
-            let bbox = view.getBoundingBox(orig, false);
+            const bbox = view.getBoundingBox(orig, false);
 
             // Stops rendering if outside clip for speedup but ignores
             // edge labels where width and height is set to 0
-            if (bbox != null && bbox.width > 0 && bbox.height > 0 &&
-                !mxUtils.intersects(tempClip, bbox)) {
+            if (
+              bbox != null &&
+              bbox.width > 0 &&
+              bbox.height > 0 &&
+              !mxUtils.intersects(tempClip, bbox)
+            ) {
               return;
             }
           }
         }
 
-        redraw.apply(this, [state, force, rendering]);  // CHECK ME!!!
+        redraw.apply(this, [state, force, rendering]); // CHECK ME!!!
       };
     }
 
@@ -920,8 +974,8 @@ class mxPrintPreview {
     try {
       // Creates the temporary cell states in the view and
       // draws them onto the temporary DOM nodes in the view
-      let cells = [this.getRoot()];
-      temp = new mxTemporaryCellStates(view, scale, cells, null, (state) => {
+      const cells = [this.getRoot()];
+      temp = new mxTemporaryCellStates(view, scale, cells, null, state => {
         return this.getLinkForCellState(state);
       });
     } finally {
@@ -929,14 +983,14 @@ class mxPrintPreview {
       let tmp = div.firstChild;
 
       while (tmp != null) {
-        let next = tmp.nextSibling;
-        let name = tmp.nodeName.toLowerCase();
+        const next = tmp.nextSibling;
+        const name = tmp.nodeName.toLowerCase();
 
         // Note: Width and height are required in FF 11
         if (name == 'svg') {
           tmp.style.overflow = 'hidden';
           tmp.style.position = 'relative';
-          tmp.style.top = this.marginTop + 'px';
+          tmp.style.top = `${this.marginTop}px`;
           tmp.setAttribute('width', clip.width);
           tmp.setAttribute('height', clip.height);
           tmp.style.width = '';
@@ -952,7 +1006,7 @@ class mxPrintPreview {
 
       // Puts background image behind SVG output
       if (this.printBackgroundImage) {
-        let svgs = div.getElementsByTagName('svg');
+        const svgs = div.getElementsByTagName('svg');
 
         if (svgs.length > 0) {
           svgs[0].style.position = 'absolute';
@@ -981,7 +1035,7 @@ class mxPrintPreview {
    *
    * Returns the link for the given cell state. This returns null.
    */
-  getLinkForCellState = (state) => {
+  getLinkForCellState = state => {
     return this.graph.getLinkForCell(state.cell);
   };
 
@@ -991,13 +1045,13 @@ class mxPrintPreview {
    * Inserts the background image into the given div.
    */
   insertBackgroundImage = (div, dx, dy) => {
-    let bg = this.graph.backgroundImage;
+    const bg = this.graph.backgroundImage;
 
     if (bg != null) {
-      let img = document.createElement('img');
+      const img = document.createElement('img');
       img.style.position = 'absolute';
-      img.style.marginLeft = Math.round(dx * this.scale) + 'px';
-      img.style.marginTop = Math.round(dy * this.scale) + 'px';
+      img.style.marginLeft = `${Math.round(dx * this.scale)}px`;
+      img.style.marginTop = `${Math.round(dy * this.scale)}px`;
       img.setAttribute('width', Math.round(this.scale * bg.width));
       img.setAttribute('height', Math.round(this.scale * bg.height));
       img.src = bg.src;
@@ -1033,8 +1087,8 @@ class mxPrintPreview {
    *
    * css - Optional CSS string to be used in the head section.
    */
-  print = (css) => {
-    let wnd = this.open(css);
+  print = css => {
+    const wnd = this.open(css);
 
     if (wnd != null) {
       wnd.print();

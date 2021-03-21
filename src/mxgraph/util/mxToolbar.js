@@ -4,12 +4,12 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "./mxUtils";
-import mxEvent from "./mxEvent";
-import mxPoint from "./mxPoint";
-import mxPopupMenu from "./mxPopupMenu";
-import mxEventSource from "./mxEventSource";
-import mxEventObject from "./mxEventObject";
+import mxUtils from './mxUtils';
+import mxEvent from './mxEvent';
+import mxPoint from './mxPoint';
+import mxPopupMenu from './mxPopupMenu';
+import mxEventSource from './mxEventSource';
+import mxEventObject from './mxEventObject';
 
 class mxToolbar extends mxEventSource {
   /**
@@ -71,7 +71,7 @@ class mxToolbar extends mxEventSource {
   constructor(container) {
     super();
     this.container = container;
-  };
+  }
 
   /**
    * Function: addItem
@@ -92,9 +92,9 @@ class mxToolbar extends mxEventSource {
    * (menu, evt, cell)=> { menu.addItem('Hello, World!'); }
    */
   addItem = (title, icon, funct, pressedIcon, style, factoryMethod) => {
-    let img = document.createElement((icon != null) ? 'img' : 'button');
-    let initialClassName = style || ((factoryMethod != null) ?
-        'mxToolbarMode' : 'mxToolbarItem');
+    const img = document.createElement(icon != null ? 'img' : 'button');
+    const initialClassName =
+      style || (factoryMethod != null ? 'mxToolbarMode' : 'mxToolbarItem');
     img.className = initialClassName;
     img.setAttribute('src', icon);
 
@@ -117,7 +117,7 @@ class mxToolbar extends mxEventSource {
       }
     }
 
-    let mouseHandler = (evt) => {
+    const mouseHandler = evt => {
       if (pressedIcon != null) {
         img.setAttribute('src', icon);
       } else {
@@ -127,49 +127,55 @@ class mxToolbar extends mxEventSource {
 
     // Highlights the toolbar item with a gray background
     // while it is being clicked with the mouse
-    mxEvent.addGestureListeners(img, (evt) => {
-      if (pressedIcon != null) {
-        img.setAttribute('src', pressedIcon);
-      } else {
-        img.style.backgroundColor = 'gray';
-      }
-
-      // Popup Menu
-      if (factoryMethod != null) {
-        if (this.menu == null) {
-          this.menu = new mxPopupMenu();
-          this.menu.init();
+    mxEvent.addGestureListeners(
+      img,
+      evt => {
+        if (pressedIcon != null) {
+          img.setAttribute('src', pressedIcon);
+        } else {
+          img.style.backgroundColor = 'gray';
         }
 
-        let last = this.currentImg;
+        // Popup Menu
+        if (factoryMethod != null) {
+          if (this.menu == null) {
+            this.menu = new mxPopupMenu();
+            this.menu.init();
+          }
 
-        if (this.menu.isMenuShowing()) {
-          this.menu.hideMenu();
-        }
+          const last = this.currentImg;
 
-        if (last != img) {
-          // Redirects factory method to local factory method
-          this.currentImg = img;
-          this.menu.factoryMethod = factoryMethod;
-
-          let point = new mxPoint(
-              img.offsetLeft,
-              img.offsetTop + img.offsetHeight);
-          this.menu.popup(point.x, point.y, null, evt);
-
-          // Sets and overrides to restore classname
           if (this.menu.isMenuShowing()) {
-            img.className = initialClassName + 'Selected';
+            this.menu.hideMenu();
+          }
 
-            this.menu.hideMenu = () => {
-              hideMenu.apply(this);
-              img.className = initialClassName;
-              this.currentImg = null;
-            };
+          if (last != img) {
+            // Redirects factory method to local factory method
+            this.currentImg = img;
+            this.menu.factoryMethod = factoryMethod;
+
+            const point = new mxPoint(
+              img.offsetLeft,
+              img.offsetTop + img.offsetHeight
+            );
+            this.menu.popup(point.x, point.y, null, evt);
+
+            // Sets and overrides to restore classname
+            if (this.menu.isMenuShowing()) {
+              img.className = `${initialClassName}Selected`;
+
+              this.menu.hideMenu = () => {
+                hideMenu.apply(this);
+                img.className = initialClassName;
+                this.currentImg = null;
+              };
+            }
           }
         }
-      }
-    }, null, mouseHandler);
+      },
+      null,
+      mouseHandler
+    );
 
     mxEvent.addListener(img, 'mouseout', mouseHandler);
 
@@ -186,12 +192,12 @@ class mxToolbar extends mxEventSource {
    *
    * style - Optional style classname. Default is mxToolbarCombo.
    */
-  addCombo = (style) => {
-    let div = document.createElement('div');
+  addCombo = style => {
+    const div = document.createElement('div');
     div.style.display = 'inline';
     div.className = 'mxToolbarComboContainer';
 
-    let select = document.createElement('select');
+    const select = document.createElement('select');
     select.className = style || 'mxToolbarCombo';
     div.appendChild(select);
 
@@ -213,12 +219,12 @@ class mxToolbar extends mxEventSource {
    * style - Optional style classname. Default is mxToolbarCombo.
    */
   addActionCombo = (title, style) => {
-    let select = document.createElement('select');
+    const select = document.createElement('select');
     select.className = style || 'mxToolbarCombo';
     this.addOption(select, title, null);
 
-    mxEvent.addListener(select, 'change', (evt) => {
-      let value = select.options[select.selectedIndex];
+    mxEvent.addListener(select, 'change', evt => {
+      const value = select.options[select.selectedIndex];
       select.selectedIndex = 0;
 
       if (value.funct != null) {
@@ -245,10 +251,10 @@ class mxToolbar extends mxEventSource {
    * value - Specifies the value associated with this option.
    */
   addOption = (combo, title, value) => {
-    let option = document.createElement('option');
+    const option = document.createElement('option');
     mxUtils.writeln(option, title);
 
-    if (typeof (value) == 'function') {
+    if (typeof value === 'function') {
       option.funct = value;
     } else {
       option.setAttribute('value', value);
@@ -267,7 +273,7 @@ class mxToolbar extends mxEventSource {
    * after a reset of the toolbar.
    */
   addSwitchMode = (title, icon, funct, pressedIcon, style) => {
-    let img = document.createElement('img');
+    const img = document.createElement('img');
     img.initialClassName = style || 'mxToolbarMode';
     img.className = img.initialClassName;
     img.setAttribute('src', icon);
@@ -277,7 +283,7 @@ class mxToolbar extends mxEventSource {
       img.setAttribute('title', title);
     }
 
-    mxEvent.addListener(img, 'click', (evt) => {
+    mxEvent.addListener(img, 'click', evt => {
       let tmp = this.selectedMode.altIcon;
 
       if (tmp != null) {
@@ -299,7 +305,7 @@ class mxToolbar extends mxEventSource {
         img.altIcon = img.getAttribute('src');
         img.setAttribute('src', tmp);
       } else {
-        img.className = img.initialClassName + 'Selected';
+        img.className = `${img.initialClassName}Selected`;
       }
 
       this.fireEvent(new mxEventObject(mxEvent.SELECT));
@@ -331,8 +337,8 @@ class mxToolbar extends mxEventSource {
    * evt is the native mouse event and cell is the cell under the mouse.
    */
   addMode = (title, icon, funct, pressedIcon, style, toggle) => {
-    toggle = (toggle != null) ? toggle : true;
-    let img = document.createElement((icon != null) ? 'img' : 'button');
+    toggle = toggle != null ? toggle : true;
+    const img = document.createElement(icon != null ? 'img' : 'button');
 
     img.initialClassName = style || 'mxToolbarMode';
     img.className = img.initialClassName;
@@ -344,12 +350,12 @@ class mxToolbar extends mxEventSource {
     }
 
     if (this.enabled && toggle) {
-      mxEvent.addListener(img, 'click', (evt) => {
+      mxEvent.addListener(img, 'click', evt => {
         this.selectMode(img, funct);
         this.noReset = false;
       });
 
-      mxEvent.addListener(img, 'dblclick', (evt) => {
+      mxEvent.addListener(img, 'dblclick', evt => {
         this.selectMode(img, funct);
         this.noReset = true;
       });
@@ -376,7 +382,7 @@ class mxToolbar extends mxEventSource {
   selectMode = (domNode, funct) => {
     if (this.selectedMode != domNode) {
       if (this.selectedMode != null) {
-        let tmp = this.selectedMode.altIcon;
+        const tmp = this.selectedMode.altIcon;
 
         if (tmp != null) {
           this.selectedMode.altIcon = this.selectedMode.getAttribute('src');
@@ -387,16 +393,16 @@ class mxToolbar extends mxEventSource {
       }
 
       this.selectedMode = domNode;
-      let tmp = this.selectedMode.altIcon;
+      const tmp = this.selectedMode.altIcon;
 
       if (tmp != null) {
         this.selectedMode.altIcon = this.selectedMode.getAttribute('src');
         this.selectedMode.setAttribute('src', tmp);
       } else {
-        this.selectedMode.className = this.selectedMode.initialClassName + 'Selected';
+        this.selectedMode.className = `${this.selectedMode.initialClassName}Selected`;
       }
 
-      this.fireEvent(new mxEventObject(mxEvent.SELECT, "function", funct));
+      this.fireEvent(new mxEventObject(mxEvent.SELECT, 'function', funct));
     }
   };
 
@@ -406,7 +412,7 @@ class mxToolbar extends mxEventSource {
    * Selects the default mode and resets the state of the previously selected
    * mode.
    */
-  resetMode = (forced) => {
+  resetMode = forced => {
     if ((forced || !this.noReset) && this.selectedMode != this.defaultMode) {
       // The last selected switch mode will be activated
       // so the function was already executed and is
@@ -424,7 +430,7 @@ class mxToolbar extends mxEventSource {
    *
    * icon - URL of the separator icon.
    */
-  addSeparator = (icon) => {
+  addSeparator = icon => {
     return this.addItem(null, icon, null);
   };
 
@@ -443,7 +449,7 @@ class mxToolbar extends mxEventSource {
    * Adds a horizontal line to the container.
    */
   addLine = () => {
-    let hr = document.createElement('hr');
+    const hr = document.createElement('hr');
 
     hr.style.marginRight = '6px';
     hr.setAttribute('size', '1');

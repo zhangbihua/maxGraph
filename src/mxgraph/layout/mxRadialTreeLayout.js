@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxCompactTreeLayout from "./mxCompactTreeLayout";
+import mxCompactTreeLayout from './mxCompactTreeLayout';
 
 class mxRadialTreeLayout extends mxCompactTreeLayout {
   /**
@@ -118,7 +118,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
    */
   constructor(graph) {
     super(graph, false);
-  };
+  }
 
   /**
    * Function: isVertexIgnored
@@ -130,9 +130,11 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
    *
    * vertex - <mxCell> whose ignored state should be returned.
    */
-  isVertexIgnored = (vertex) => {
-    return super.isVertexIgnored(vertex) ||
-        this.graph.getConnections(vertex).length === 0;
+  isVertexIgnored = vertex => {
+    return (
+      super.isVertexIgnored(vertex) ||
+      this.graph.getConnections(vertex).length === 0
+    );
   };
 
   /**
@@ -154,19 +156,19 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
 
     this.useBoundingBox = false;
     this.edgeRouting = false;
-    //this.horizontal = false;
+    // this.horizontal = false;
 
     super.execute(parent, root);
 
     let bounds = null;
-    let rootBounds = this.getVertexBounds(this.root);
+    const rootBounds = this.getVertexBounds(this.root);
     this.centerX = rootBounds.x + rootBounds.width / 2;
     this.centerY = rootBounds.y + rootBounds.height / 2;
 
     // Calculate the bounds of the involved vertices directly from the values set in the compact tree
-    for (var vertex in this.visited) {
-      let vertexBounds = this.getVertexBounds(this.visited[vertex]);
-      bounds = (bounds != null) ? bounds : vertexBounds.clone();
+    for (const vertex in this.visited) {
+      const vertexBounds = this.getVertexBounds(this.visited[vertex]);
+      bounds = bounds != null ? bounds : vertexBounds.clone();
       bounds.add(vertexBounds);
     }
 
@@ -177,8 +179,10 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
 
     // Find the steepest left and right gradients
     for (let i = 0; i < this.row.length; i++) {
-      let leftGrad = (this.centerX - this.rowMinX[i] - this.nodeDistance) / this.rowRadi[i];
-      let rightGrad = (this.rowMaxX[i] - this.centerX - this.nodeDistance) / this.rowRadi[i];
+      const leftGrad =
+        (this.centerX - this.rowMinX[i] - this.nodeDistance) / this.rowRadi[i];
+      const rightGrad =
+        (this.rowMaxX[i] - this.centerX - this.nodeDistance) / this.rowRadi[i];
 
       maxLeftGrad = Math.max(maxLeftGrad, leftGrad);
       maxRightGrad = Math.max(maxRightGrad, rightGrad);
@@ -186,27 +190,30 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
 
     // Extend out row so they meet the maximum gradient and convert to polar co-ords
     for (let i = 0; i < this.row.length; i++) {
-      let xLeftLimit = this.centerX - this.nodeDistance - maxLeftGrad * this.rowRadi[i];
-      let xRightLimit = this.centerX + this.nodeDistance + maxRightGrad * this.rowRadi[i];
-      let fullWidth = xRightLimit - xLeftLimit;
+      const xLeftLimit =
+        this.centerX - this.nodeDistance - maxLeftGrad * this.rowRadi[i];
+      const xRightLimit =
+        this.centerX + this.nodeDistance + maxRightGrad * this.rowRadi[i];
+      const fullWidth = xRightLimit - xLeftLimit;
 
       for (let j = 0; j < this.row[i].length; j++) {
-        let row = this.row[i];
-        let node = row[j];
-        let vertexBounds = this.getVertexBounds(node.cell);
-        let xProportion = (vertexBounds.x + vertexBounds.width / 2 - xLeftLimit) / (fullWidth);
-        let theta = 2 * Math.PI * xProportion;
+        const row = this.row[i];
+        const node = row[j];
+        const vertexBounds = this.getVertexBounds(node.cell);
+        const xProportion =
+          (vertexBounds.x + vertexBounds.width / 2 - xLeftLimit) / fullWidth;
+        const theta = 2 * Math.PI * xProportion;
         node.theta = theta;
       }
     }
 
     // Post-process from outside inwards to try to align parents with children
     for (let i = this.row.length - 2; i >= 0; i--) {
-      let row = this.row[i];
+      const row = this.row[i];
 
       for (let j = 0; j < row.length; j++) {
-        let node = row[j];
-        let child = node.child;
+        const node = row[j];
+        let { child } = node;
         let counter = 0;
         let totalTheta = 0;
 
@@ -217,13 +224,13 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
         }
 
         if (counter > 0) {
-          let averTheta = totalTheta / counter;
+          const averTheta = totalTheta / counter;
 
           if (averTheta > node.theta && j < row.length - 1) {
-            let nextTheta = row[j + 1].theta;
+            const nextTheta = row[j + 1].theta;
             node.theta = Math.min(averTheta, nextTheta - Math.PI / 10);
           } else if (averTheta < node.theta && j > 0) {
-            let lastTheta = row[j - 1].theta;
+            const lastTheta = row[j - 1].theta;
             node.theta = Math.max(averTheta, lastTheta + Math.PI / 10);
           }
         }
@@ -233,12 +240,18 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
     // Set locations
     for (let i = 0; i < this.row.length; i++) {
       for (let j = 0; j < this.row[i].length; j++) {
-        let row = this.row[i];
-        let node = row[j];
-        let vertexBounds = this.getVertexBounds(node.cell);
-        this.setVertexLocation(node.cell,
-            this.centerX - vertexBounds.width / 2 + this.rowRadi[i] * Math.cos(node.theta),
-            this.centerY - vertexBounds.height / 2 + this.rowRadi[i] * Math.sin(node.theta));
+        const row = this.row[i];
+        const node = row[j];
+        const vertexBounds = this.getVertexBounds(node.cell);
+        this.setVertexLocation(
+          node.cell,
+          this.centerX -
+            vertexBounds.width / 2 +
+            this.rowRadi[i] * Math.cos(node.theta),
+          this.centerY -
+            vertexBounds.height / 2 +
+            this.rowRadi[i] * Math.sin(node.theta)
+        );
       }
     }
   };
@@ -271,14 +284,24 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
       let child = row[i] != null ? row[i].child : null;
 
       while (child != null) {
-        let cell = child.cell;
-        let vertexBounds = this.getVertexBounds(cell);
+        const { cell } = child;
+        const vertexBounds = this.getVertexBounds(cell);
 
         this.rowMinX[rowNum] = Math.min(vertexBounds.x, this.rowMinX[rowNum]);
-        this.rowMaxX[rowNum] = Math.max(vertexBounds.x + vertexBounds.width, this.rowMaxX[rowNum]);
-        this.rowMinCenX[rowNum] = Math.min(vertexBounds.x + vertexBounds.width / 2, this.rowMinCenX[rowNum]);
-        this.rowMaxCenX[rowNum] = Math.max(vertexBounds.x + vertexBounds.width / 2, this.rowMaxCenX[rowNum]);
-        this.rowRadi[rowNum] = vertexBounds.y - this.getVertexBounds(this.root).y;
+        this.rowMaxX[rowNum] = Math.max(
+          vertexBounds.x + vertexBounds.width,
+          this.rowMaxX[rowNum]
+        );
+        this.rowMinCenX[rowNum] = Math.min(
+          vertexBounds.x + vertexBounds.width / 2,
+          this.rowMinCenX[rowNum]
+        );
+        this.rowMaxCenX[rowNum] = Math.max(
+          vertexBounds.x + vertexBounds.width / 2,
+          this.rowMaxCenX[rowNum]
+        );
+        this.rowRadi[rowNum] =
+          vertexBounds.y - this.getVertexBounds(this.root).y;
 
         if (child.child != null) {
           rowHasChildren = true;

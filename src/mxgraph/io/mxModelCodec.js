@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxGraphModel from "FIXME";
-import mxObjectCodec from "FIXME";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxGraphModel from 'FIXME';
+import mxObjectCodec from 'FIXME';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxModelCodec extends mxObjectCodec {
   /**
@@ -28,7 +28,7 @@ class mxModelCodec extends mxObjectCodec {
    * wrapped-up in a node with the name root.
    */
   encodeObject = (enc, obj, node) => {
-    let rootNode = enc.document.createElement('root');
+    const rootNode = enc.document.createElement('root');
     enc.encodeCell(obj.getRoot(), rootNode);
     node.appendChild(rootNode);
   };
@@ -57,7 +57,7 @@ class mxModelCodec extends mxObjectCodec {
     let tmp = root.firstChild;
 
     while (tmp != null) {
-      let cell = dec.decodeCell(tmp);
+      const cell = dec.decodeCell(tmp);
 
       if (cell != null && cell.getParent() == null) {
         rootCell = cell;

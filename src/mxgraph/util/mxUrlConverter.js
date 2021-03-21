@@ -11,12 +11,14 @@ class mxUrlConverter {
    * Specifies if the converter is enabled. Default is true.
    */
   enabled = true;
+
   /**
    * Variable: baseUrl
    *
    * Specifies the base URL to be used as a prefix for relative URLs.
    */
   baseUrl = null;
+
   /**
    * Variable: baseDomain
    *
@@ -32,7 +34,7 @@ class mxUrlConverter {
    */
   constructor() {
     // Empty constructor
-  };
+  }
 
   /**
    * Function: updateBaseUrl
@@ -40,9 +42,9 @@ class mxUrlConverter {
    * Private helper function to update the base URL.
    */
   updateBaseUrl = () => {
-    this.baseDomain = location.protocol + '//' + location.host;
+    this.baseDomain = `${location.protocol}//${location.host}`;
     this.baseUrl = this.baseDomain + location.pathname;
-    let tmp = this.baseUrl.lastIndexOf('/');
+    const tmp = this.baseUrl.lastIndexOf('/');
 
     // Strips filename etc
     if (tmp > 0) {
@@ -64,7 +66,7 @@ class mxUrlConverter {
    *
    * Sets <enabled>.
    */
-  setEnabled = (value) => {
+  setEnabled = value => {
     this.enabled = value;
   };
 
@@ -82,7 +84,7 @@ class mxUrlConverter {
    *
    * Sets <baseUrl>.
    */
-  setBaseUrl = (value) => {
+  setBaseUrl = value => {
     this.baseUrl = value;
   };
 
@@ -100,7 +102,7 @@ class mxUrlConverter {
    *
    * Sets <baseDomain>.
    */
-  setBaseDomain = (value) => {
+  setBaseDomain = value => {
     this.baseDomain = value;
   };
 
@@ -109,10 +111,15 @@ class mxUrlConverter {
    *
    * Returns true if the given URL is relative.
    */
-  isRelativeUrl = (url) => {
-    return url != null && url.substring(0, 2) != '//' && url.substring(0, 7) != 'http://' &&
-        url.substring(0, 8) != 'https://' && url.substring(0, 10) != 'data:image' &&
-        url.substring(0, 7) != 'file://';
+  isRelativeUrl = url => {
+    return (
+      url != null &&
+      url.substring(0, 2) != '//' &&
+      url.substring(0, 7) != 'http://' &&
+      url.substring(0, 8) != 'https://' &&
+      url.substring(0, 10) != 'data:image' &&
+      url.substring(0, 7) != 'file://'
+    );
   };
 
   /**
@@ -121,7 +128,7 @@ class mxUrlConverter {
    * Converts the given URL to an absolute URL with protol and domain.
    * Relative URLs are first converted to absolute URLs.
    */
-  convert = (url) => {
+  convert = url => {
     if (this.isEnabled() && this.isRelativeUrl(url)) {
       if (this.getBaseUrl() == null) {
         this.updateBaseUrl();

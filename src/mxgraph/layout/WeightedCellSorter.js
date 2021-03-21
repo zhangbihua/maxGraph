@@ -48,7 +48,7 @@ class WeightedCellSorter {
   constructor(cell, weightedValue) {
     this.cell = cell;
     this.weightedValue = weightedValue;
-  };
+  }
 
   /**
    * Function: compare
@@ -59,18 +59,16 @@ class WeightedCellSorter {
     if (a != null && b != null) {
       if (b.weightedValue > a.weightedValue) {
         return -1;
-      } else if (b.weightedValue < a.weightedValue) {
-        return 1;
-      } else {
-        if (b.nudge) {
-          return -1;
-        } else {
-          return 1;
-        }
       }
-    } else {
-      return 0;
+      if (b.weightedValue < a.weightedValue) {
+        return 1;
+      }
+      if (b.nudge) {
+        return -1;
+      }
+      return 1;
     }
+    return 0;
   };
 }
 

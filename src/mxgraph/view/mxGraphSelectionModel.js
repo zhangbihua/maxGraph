@@ -4,13 +4,13 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUndoableEdit from "../util/mxUndoableEdit";
-import mxEventSource from "../util/mxEventSource";
-import mxEventObject from "../util/mxEventObject";
-import mxClient from "../mxClient";
-import mxUtils from "../util/mxUtils";
-import mxSelectionChange from "./mxSelectionChange";
-import mxEvent from "../util/mxEvent";
+import mxUndoableEdit from '../util/mxUndoableEdit';
+import mxEventSource from '../util/mxEventSource';
+import mxEventObject from '../util/mxEventObject';
+import mxClient from '../mxClient';
+import mxUtils from '../util/mxUtils';
+import mxSelectionChange from './mxSelectionChange';
+import mxEvent from '../util/mxEvent';
 
 class mxGraphSelectionModel extends mxEventSource {
   /**
@@ -20,7 +20,7 @@ class mxGraphSelectionModel extends mxEventSource {
    * If the resource for this key does not exist then the value is used as
    * the status message. Default is 'done'.
    */
-  doneResource = (mxClient.language !== 'none') ? 'done' : '';
+  doneResource = mxClient.language !== 'none' ? 'done' : '';
 
   /**
    * Variable: updatingSelectionResource
@@ -29,7 +29,8 @@ class mxGraphSelectionModel extends mxEventSource {
    * being updated. If the resource for this key does not exist then the
    * value is used as the status message. Default is 'updatingSelection'.
    */
-  updatingSelectionResource = (mxClient.language !== 'none') ? 'updatingSelection' : '';
+  updatingSelectionResource =
+    mxClient.language !== 'none' ? 'updatingSelection' : '';
 
   /**
    * Variable: graph
@@ -90,7 +91,7 @@ class mxGraphSelectionModel extends mxEventSource {
 
     this.graph = graph;
     this.cells = [];
-  };
+  }
 
   /**
    * Function: isSingleSelection
@@ -111,7 +112,7 @@ class mxGraphSelectionModel extends mxEventSource {
    * singleSelection - Boolean that specifies the new value for
    * <singleSelection>.
    */
-  setSingleSelection = (singleSelection) => {
+  setSingleSelection = singleSelection => {
     this.singleSelection = singleSelection;
   };
 
@@ -120,7 +121,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * Returns true if the given <mxCell> is selected.
    */
-  isSelected = (cell) => {
+  isSelected = cell => {
     if (cell != null) {
       return mxUtils.indexOf(this.cells, cell) >= 0;
     }
@@ -156,7 +157,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to be selected.
    */
-  setCell = (cell) => {
+  setCell = cell => {
     if (cell != null) {
       this.setCells([cell]);
     }
@@ -171,13 +172,13 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cells - Array of <mxCells> to be selected.
    */
-  setCells = (cells) => {
+  setCells = cells => {
     if (cells != null) {
       if (this.singleSelection) {
         cells = [this.getFirstSelectableCell(cells)];
       }
 
-      let tmp = [];
+      const tmp = [];
 
       for (let i = 0; i < cells.length; i++) {
         if (this.graph.isCellSelectable(cells[i])) {
@@ -194,7 +195,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * Returns the first selectable cell in the given array of cells.
    */
-  getFirstSelectableCell = (cells) => {
+  getFirstSelectableCell = cells => {
     if (cells != null) {
       for (let i = 0; i < cells.length; i++) {
         if (this.graph.isCellSelectable(cells[i])) {
@@ -215,7 +216,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to add to the selection.
    */
-  addCell = (cell) => {
+  addCell = cell => {
     if (cell != null) {
       this.addCells([cell]);
     }
@@ -231,7 +232,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cells - Array of <mxCells> to add to the selection.
    */
-  addCells = (cells) => {
+  addCells = cells => {
     if (cells != null) {
       let remove = null;
 
@@ -240,11 +241,13 @@ class mxGraphSelectionModel extends mxEventSource {
         cells = [this.getFirstSelectableCell(cells)];
       }
 
-      let tmp = [];
+      const tmp = [];
 
       for (let i = 0; i < cells.length; i++) {
-        if (!this.isSelected(cells[i]) &&
-            this.graph.isCellSelectable(cells[i])) {
+        if (
+          !this.isSelected(cells[i]) &&
+          this.graph.isCellSelectable(cells[i])
+        ) {
           tmp.push(cells[i]);
         }
       }
@@ -263,7 +266,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to remove from the selection.
    */
-  removeCell = (cell) => {
+  removeCell = cell => {
     if (cell != null) {
       this.removeCells([cell]);
     }
@@ -272,9 +275,9 @@ class mxGraphSelectionModel extends mxEventSource {
   /**
    * Function: removeCells
    */
-  removeCells = (cells) => {
+  removeCells = cells => {
     if (cells != null) {
-      let tmp = [];
+      const tmp = [];
 
       for (let i = 0; i < cells.length; i++) {
         if (this.isSelected(cells[i])) {
@@ -297,15 +300,13 @@ class mxGraphSelectionModel extends mxEventSource {
    * remove - Array of <mxCell> to remove from the selection.
    */
   changeSelection = (added, removed) => {
-    if ((added != null &&
-        added.length > 0 &&
-        added[0] != null) ||
-        (removed != null &&
-            removed.length > 0 &&
-            removed[0] != null)) {
-      let change = new mxSelectionChange(this, added, removed);
+    if (
+      (added != null && added.length > 0 && added[0] != null) ||
+      (removed != null && removed.length > 0 && removed[0] != null)
+    ) {
+      const change = new mxSelectionChange(this, added, removed);
       change.execute();
-      let edit = new mxUndoableEdit(this, false);
+      const edit = new mxUndoableEdit(this, false);
       edit.add(change);
       this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
     }
@@ -321,9 +322,8 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to add to the selection.
    */
-  cellAdded = (cell) => {
-    if (cell != null &&
-        !this.isSelected(cell)) {
+  cellAdded = cell => {
+    if (cell != null && !this.isSelected(cell)) {
       this.cells.push(cell);
     }
   };
@@ -338,9 +338,9 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to remove from the selection.
    */
-  cellRemoved = (cell) => {
+  cellRemoved = cell => {
     if (cell != null) {
-      let index = mxUtils.indexOf(this.cells, cell);
+      const index = mxUtils.indexOf(this.cells, cell);
 
       if (index >= 0) {
         this.cells.splice(index, 1);

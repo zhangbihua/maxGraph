@@ -14,7 +14,7 @@ class mxValueChange {
     this.cell = cell;
     this.value = value;
     this.previous = value;
-  };
+  }
 
   /**
    * Function: execute
@@ -25,8 +25,7 @@ class mxValueChange {
   execute = () => {
     if (this.cell != null) {
       this.value = this.previous;
-      this.previous = this.model.valueForCellChanged(
-          this.cell, this.previous);
+      this.previous = this.model.valueForCellChanged(this.cell, this.previous);
     }
   };
 }

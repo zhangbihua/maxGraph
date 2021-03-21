@@ -3,8 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxPoint from "./mxPoint";
-import mxCellStatePreview from "../view/mxCellStatePreview";
+import mxPoint from './mxPoint';
+import mxCellStatePreview from '../view/mxCellStatePreview';
 
 class mxMorphing extends mxAnimation {
   /**
@@ -85,9 +85,9 @@ class mxMorphing extends mxAnimation {
   constructor(graph, steps, ease, delay) {
     super(delay);
     this.graph = graph;
-    this.steps = (steps != null) ? steps : 6;
-    this.ease = (ease != null) ? ease : 1.5;
-  };
+    this.steps = steps != null ? steps : 6;
+    this.ease = ease != null ? ease : 1.5;
+  }
 
   /**
    * Function: updateAnimation
@@ -96,7 +96,7 @@ class mxMorphing extends mxAnimation {
    */
   updateAnimation = () => {
     super.updateAnimation();
-    let move = new mxCellStatePreview(this.graph);
+    const move = new mxCellStatePreview(this.graph);
 
     if (this.cells != null) {
       // Animates the given cells individually without recursion
@@ -121,7 +121,7 @@ class mxMorphing extends mxAnimation {
    *
    * Shows the changes in the given <mxCellStatePreview>.
    */
-  show = (move) => {
+  show = move => {
     move.show();
   };
 
@@ -131,7 +131,7 @@ class mxMorphing extends mxAnimation {
    * Animates the given cell state using <mxCellStatePreview.moveState>.
    */
   animateCell = (cell, move, recurse) => {
-    let state = this.graph.getView().getState(cell);
+    const state = this.graph.getView().getState(cell);
     let delta = null;
 
     if (state != null) {
@@ -139,9 +139,12 @@ class mxMorphing extends mxAnimation {
       // change by subtracting the given delta vector from that location
       delta = this.getDelta(state);
 
-      if (this.graph.getModel().isVertex(cell) && (delta.x != 0 || delta.y != 0)) {
-        let translate = this.graph.view.getTranslate();
-        let scale = this.graph.view.getScale();
+      if (
+        this.graph.getModel().isVertex(cell) &&
+        (delta.x != 0 || delta.y != 0)
+      ) {
+        const translate = this.graph.view.getTranslate();
+        const scale = this.graph.view.getScale();
 
         delta.x += translate.x * scale;
         delta.y += translate.y * scale;
@@ -151,10 +154,14 @@ class mxMorphing extends mxAnimation {
     }
 
     if (recurse && !this.stopRecursion(state, delta)) {
-      let childCount = this.graph.getModel().getChildCount(cell);
+      const childCount = this.graph.getModel().getChildCount(cell);
 
       for (let i = 0; i < childCount; i++) {
-        this.animateCell(this.graph.getModel().getChildAt(cell, i), move, recurse);
+        this.animateCell(
+          this.graph.getModel().getChildAt(cell, i),
+          move,
+          recurse
+        );
       }
     }
   };
@@ -175,12 +182,12 @@ class mxMorphing extends mxAnimation {
    * Returns the vector between the current rendered state and the future
    * location of the state after the display will be updated.
    */
-  getDelta = (state) => {
-    let origin = this.getOriginForCell(state.cell);
-    let translate = this.graph.getView().getTranslate();
-    let scale = this.graph.getView().getScale();
-    let x = state.x / scale - translate.x;
-    let y = state.y / scale - translate.y;
+  getDelta = state => {
+    const origin = this.getOriginForCell(state.cell);
+    const translate = this.graph.getView().getTranslate();
+    const scale = this.graph.getView().getScale();
+    const x = state.x / scale - translate.x;
+    const y = state.y / scale - translate.y;
 
     return new mxPoint((origin.x - x) * scale, (origin.y - y) * scale);
   };
@@ -192,18 +199,18 @@ class mxMorphing extends mxAnimation {
    * by using caching inside this method as the result per cell never changes
    * during the lifecycle of this object.
    */
-  getOriginForCell = (cell) => {
+  getOriginForCell = cell => {
     let result = null;
 
     if (cell != null) {
-      let parent = this.graph.getModel().getParent(cell);
-      let geo = this.graph.getCellGeometry(cell);
+      const parent = this.graph.getModel().getParent(cell);
+      const geo = this.graph.getCellGeometry(cell);
       result = this.getOriginForCell(parent);
 
       // TODO: Handle offsets
       if (geo != null) {
         if (geo.relative) {
-          let pgeo = this.graph.getCellGeometry(parent);
+          const pgeo = this.graph.getCellGeometry(parent);
 
           if (pgeo != null) {
             result.x += geo.x * pgeo.width;
@@ -217,7 +224,7 @@ class mxMorphing extends mxAnimation {
     }
 
     if (result == null) {
-      let t = this.graph.view.getTranslate();
+      const t = this.graph.view.getTranslate();
       result = new mxPoint(-t.x, -t.y);
     }
 

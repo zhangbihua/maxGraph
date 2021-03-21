@@ -15,8 +15,8 @@
  * are given then the respective default values are used.
  */
 
-import mxPoint from "./mxPoint";
-import mxConstants from "./mxConstants";
+import mxPoint from './mxPoint';
+import mxConstants from './mxConstants';
 
 class mxRectangle extends mxPoint {
   /**
@@ -25,6 +25,7 @@ class mxRectangle extends mxPoint {
    * Holds the width of the rectangle. Default is 0.
    */
   width = null;
+
   /**
    * Variable: height
    *
@@ -37,17 +38,17 @@ class mxRectangle extends mxPoint {
 
     if (x !== mxConstants.DO_NOTHING) {
       // replace super of mxPoint
-      this.width = (width != null) ? width : 0;
-      this.height = (height != null) ? height : 0;
+      this.width = width != null ? width : 0;
+      this.height = height != null ? height : 0;
     }
-  };
+  }
 
   /**
    * Function: fromRectangle
    *
    * Returns a new <mxRectangle> which is a copy of the given rectangle.
    */
-  static fromRectangle = (rect) => {
+  static fromRectangle = rect => {
     return new mxRectangle(rect.x, rect.y, rect.width, rect.height);
   };
 
@@ -86,12 +87,12 @@ class mxRectangle extends mxPoint {
    *
    * Adds the given rectangle to this rectangle.
    */
-  add = (rect) => {
+  add = rect => {
     if (rect != null) {
-      let minX = Math.min(this.x, rect.x);
-      let minY = Math.min(this.y, rect.y);
-      let maxX = Math.max(this.x + this.width, rect.x + rect.width);
-      let maxY = Math.max(this.y + this.height, rect.y + rect.height);
+      const minX = Math.min(this.x, rect.x);
+      const minY = Math.min(this.y, rect.y);
+      const maxX = Math.max(this.x + this.width, rect.x + rect.width);
+      const maxY = Math.max(this.y + this.height, rect.y + rect.height);
 
       this.x = minX;
       this.y = minY;
@@ -105,13 +106,13 @@ class mxRectangle extends mxPoint {
    *
    * Changes this rectangle to where it overlaps with the given rectangle.
    */
-  intersect = (rect) => {
+  intersect = rect => {
     if (rect != null) {
-      var r1 = this.x + this.width;
-      var r2 = rect.x + rect.width;
+      const r1 = this.x + this.width;
+      const r2 = rect.x + rect.width;
 
-      var b1 = this.y + this.height;
-      var b2 = rect.y + rect.height;
+      const b1 = this.y + this.height;
+      const b2 = rect.y + rect.height;
 
       this.x = Math.max(this.x, rect.x);
       this.y = Math.max(this.y, rect.y);
@@ -127,7 +128,7 @@ class mxRectangle extends mxPoint {
    * the given amount from the x- and y-coordinates and adds twice the amount
    * to the width and height.
    */
-  grow = (amount) => {
+  grow = amount => {
     this.x -= amount;
     this.y -= amount;
     this.width += 2 * amount;
@@ -151,10 +152,10 @@ class mxRectangle extends mxPoint {
    * Rotates this rectangle by 90 degree around its center point.
    */
   rotate90 = () => {
-    let t = (this.width - this.height) / 2;
+    const t = (this.width - this.height) / 2;
     this.x += t;
     this.y -= t;
-    let tmp = this.width;
+    const tmp = this.width;
     this.width = this.height;
     this.height = tmp;
   };
@@ -165,16 +166,29 @@ class mxRectangle extends mxPoint {
    * Returns true if the given object equals this rectangle.
    */
   equals(obj) {
-    return obj != null && obj.x === this.x && obj.y === this.y &&
-        obj.width === this.width && obj.height === this.height;
-  };
+    return (
+      obj != null &&
+      obj.x === this.x &&
+      obj.y === this.y &&
+      obj.width === this.width &&
+      obj.height === this.height
+    );
+  }
 }
 
 // HACK: Prevent dependency problems with mxConstants
 //       importing mxRectangle and vice-versa
-mxConstants.PAGE_FORMAT_A4_PORTRAIT = new mxRectangle(...mxConstants.PAGE_FORMAT_A4_PORTRAIT);
-mxConstants.PAGE_FORMAT_A4_LANDSCAPE = new mxRectangle(...mxConstants.PAGE_FORMAT_A4_LANDSCAPE);
-mxConstants.PAGE_FORMAT_LETTER_PORTRAIT = new mxRectangle(...mxConstants.PAGE_FORMAT_LETTER_PORTRAIT);
-mxConstants.PAGE_FORMAT_LETTER_LANDSCAPE = new mxRectangle(...mxConstants.PAGE_FORMAT_LETTER_LANDSCAPE);
+mxConstants.PAGE_FORMAT_A4_PORTRAIT = new mxRectangle(
+  ...mxConstants.PAGE_FORMAT_A4_PORTRAIT
+);
+mxConstants.PAGE_FORMAT_A4_LANDSCAPE = new mxRectangle(
+  ...mxConstants.PAGE_FORMAT_A4_LANDSCAPE
+);
+mxConstants.PAGE_FORMAT_LETTER_PORTRAIT = new mxRectangle(
+  ...mxConstants.PAGE_FORMAT_LETTER_PORTRAIT
+);
+mxConstants.PAGE_FORMAT_LETTER_LANDSCAPE = new mxRectangle(
+  ...mxConstants.PAGE_FORMAT_LETTER_LANDSCAPE
+);
 
 export default mxRectangle;

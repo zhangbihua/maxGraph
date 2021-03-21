@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxEventObject from "./mxEventObject";
+import mxEventObject from './mxEventObject';
 
 class mxEventSource {
   /**
@@ -54,7 +54,7 @@ class mxEventSource {
    */
   constructor(eventSource) {
     this.setEventSource(eventSource);
-  };
+  }
 
   /**
    * Function: isEventsEnabled
@@ -70,7 +70,7 @@ class mxEventSource {
    *
    * Sets <eventsEnabled>.
    */
-  setEventsEnabled = (value) => {
+  setEventsEnabled = value => {
     this.eventsEnabled = value;
   };
 
@@ -88,7 +88,7 @@ class mxEventSource {
    *
    * Sets <eventSource>.
    */
-  setEventSource = (value) => {
+  setEventSource = value => {
     this.eventSource = value;
   };
 
@@ -114,7 +114,7 @@ class mxEventSource {
    *
    * Removes all occurrences of the given listener from <eventListeners>.
    */
-  removeListener = (funct) => {
+  removeListener = funct => {
     if (this.eventListeners != null) {
       let i = 0;
 
@@ -161,10 +161,10 @@ class mxEventSource {
         sender = this;
       }
 
-      let args = [sender, evt];
+      const args = [sender, evt];
 
       for (let i = 0; i < this.eventListeners.length; i += 2) {
-        let listen = this.eventListeners[i];
+        const listen = this.eventListeners[i];
 
         if (listen == null || listen === evt.getName()) {
           this.eventListeners[i + 1].apply(this, args);

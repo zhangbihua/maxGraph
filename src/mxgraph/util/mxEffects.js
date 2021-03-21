@@ -3,9 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxUtils from "./mxUtils";
+import mxUtils from './mxUtils';
 
-let mxEffects = {
+const mxEffects = {
   /**
    * Class: mxEffects
    *
@@ -39,35 +39,44 @@ let mxEffects = {
    * last step of the animation.
    */
   animateChanges: (graph, changes, done) => {
-    let maxStep = 10;
+    const maxStep = 10;
     let step = 0;
 
-    let animate = () => {
+    const animate = () => {
       let isRequired = false;
 
       for (let i = 0; i < changes.length; i++) {
-        let change = changes[i];
+        const change = changes[i];
 
-        if (change instanceof mxGeometryChange ||
-            change instanceof mxTerminalChange ||
-            change instanceof mxValueChange ||
-            change instanceof mxChildChange ||
-            change instanceof mxStyleChange) {
-          let state = graph.getView().getState(change.cell || change.child, false);
+        if (
+          change instanceof mxGeometryChange ||
+          change instanceof mxTerminalChange ||
+          change instanceof mxValueChange ||
+          change instanceof mxChildChange ||
+          change instanceof mxStyleChange
+        ) {
+          const state = graph
+            .getView()
+            .getState(change.cell || change.child, false);
 
           if (state != null) {
             isRequired = true;
 
-            if (change.constructor !== mxGeometryChange || graph.model.isEdge(change.cell)) {
-              mxUtils.setOpacity(state.shape.node, 100 * step / maxStep);
+            if (
+              change.constructor !== mxGeometryChange ||
+              graph.model.isEdge(change.cell)
+            ) {
+              mxUtils.setOpacity(state.shape.node, (100 * step) / maxStep);
             } else {
-              let scale = graph.getView().scale;
+              const { scale } = graph.getView();
 
-              let dx = (change.geometry.x - change.previous.x) * scale;
-              let dy = (change.geometry.y - change.previous.y) * scale;
+              const dx = (change.geometry.x - change.previous.x) * scale;
+              const dy = (change.geometry.y - change.previous.y) * scale;
 
-              let sx = (change.geometry.width - change.previous.width) * scale;
-              let sy = (change.geometry.height - change.previous.height) * scale;
+              const sx =
+                (change.geometry.width - change.previous.width) * scale;
+              const sy =
+                (change.geometry.height - change.previous.height) * scale;
 
               if (step === 0) {
                 state.x -= dx;
@@ -84,7 +93,11 @@ let mxEffects = {
               graph.cellRenderer.redraw(state);
 
               // Fades all connected edges and children
-              mxEffects.cascadeOpacity(graph, change.cell, 100 * step / maxStep);
+              mxEffects.cascadeOpacity(
+                graph,
+                change.cell,
+                (100 * step) / maxStep
+              );
             }
           }
         }
@@ -115,11 +128,11 @@ let mxEffects = {
    */
   cascadeOpacity: (graph, cell, opacity) => {
     // Fades all children
-    let childCount = graph.model.getChildCount(cell);
+    const childCount = graph.model.getChildCount(cell);
 
     for (let i = 0; i < childCount; i++) {
-      let child = graph.model.getChildAt(cell, i);
-      let childState = graph.getView().getState(child);
+      const child = graph.model.getChildAt(cell, i);
+      const childState = graph.getView().getState(child);
 
       if (childState != null) {
         mxUtils.setOpacity(childState.shape.node, opacity);
@@ -128,11 +141,11 @@ let mxEffects = {
     }
 
     // Fades all connected edges
-    let edges = graph.model.getEdges(cell);
+    const edges = graph.model.getEdges(cell);
 
     if (edges != null) {
       for (let i = 0; i < edges.length; i++) {
-        let edgeState = graph.getView().getState(edges[i]);
+        const edgeState = graph.getView().getState(edges[i]);
 
         if (edgeState != null) {
           mxUtils.setOpacity(edgeState.shape.node, opacity);
@@ -155,7 +168,7 @@ let mxEffects = {
     mxUtils.setOpacity(node, opacity);
 
     if (isEnabled || isEnabled == null) {
-      let f = () => {
+      const f = () => {
         opacity = Math.max(opacity - step, 0);
         mxUtils.setOpacity(node, opacity);
 
@@ -177,7 +190,7 @@ let mxEffects = {
         node.parentNode.removeChild(node);
       }
     }
-  }
+  },
 };
 
 export default mxEffects;

@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxEvent from "./mxEvent";
-import mxEventObject from "./mxEventObject";
-import mxEventSource from "./mxEventSource";
+import mxEvent from './mxEvent';
+import mxEventObject from './mxEventObject';
+import mxEventSource from './mxEventSource';
 
 class mxUndoManager extends mxEventSource {
   /**
@@ -101,9 +101,9 @@ class mxUndoManager extends mxEventSource {
    */
   constructor(size) {
     super();
-    this.size = (size != null) ? size : 100;
+    this.size = size != null ? size : 100;
     this.clear();
-  };
+  }
 
   /**
    * Function: isEmpty
@@ -141,7 +141,7 @@ class mxUndoManager extends mxEventSource {
    */
   undo = () => {
     while (this.indexOfNextAdd > 0) {
-      let edit = this.history[--this.indexOfNextAdd];
+      const edit = this.history[--this.indexOfNextAdd];
       edit.undo();
 
       if (edit.isSignificant()) {
@@ -166,10 +166,10 @@ class mxUndoManager extends mxEventSource {
    * Redoes the last change.
    */
   redo = () => {
-    let n = this.history.length;
+    const n = this.history.length;
 
     while (this.indexOfNextAdd < n) {
-      let edit = this.history[this.indexOfNextAdd++];
+      const edit = this.history[this.indexOfNextAdd++];
       edit.redo();
 
       if (edit.isSignificant()) {
@@ -184,11 +184,10 @@ class mxUndoManager extends mxEventSource {
    *
    * Method to be called to add new undoable edits to the <history>.
    */
-  undoableEditHappened = (undoableEdit) => {
+  undoableEditHappened = undoableEdit => {
     this.trim();
 
-    if (this.size > 0 &&
-        this.size == this.history.length) {
+    if (this.size > 0 && this.size == this.history.length) {
       this.history.shift();
     }
 
@@ -205,8 +204,10 @@ class mxUndoManager extends mxEventSource {
    */
   trim = () => {
     if (this.history.length > this.indexOfNextAdd) {
-      let edits = this.history.splice(this.indexOfNextAdd,
-          this.history.length - this.indexOfNextAdd);
+      const edits = this.history.splice(
+        this.indexOfNextAdd,
+        this.history.length - this.indexOfNextAdd
+      );
 
       for (let i = 0; i < edits.length; i++) {
         edits[i].die();

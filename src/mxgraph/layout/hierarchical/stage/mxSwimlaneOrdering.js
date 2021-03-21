@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxHierarchicalLayoutStage from "./mxHierarchicalLayoutStage";
+import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
 
 class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
   /**
@@ -27,7 +27,7 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
     super();
 
     this.layout = layout;
-  };
+  }
 
   /**
    * Function: execute
@@ -36,17 +36,17 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
    * and creates the resulting laid out graph within that facade for further
    * use.
    */
-  execute = (parent) => {
-    let model = this.layout.getModel();
-    let seenNodes = {};
-    let unseenNodes = mxUtils.clone(model.vertexMapper, null, true);
+  execute = parent => {
+    const model = this.layout.getModel();
+    const seenNodes = {};
+    const unseenNodes = mxUtils.clone(model.vertexMapper, null, true);
 
     // Perform a dfs through the internal model. If a cycle is found,
     // reverse it.
     let rootsArray = null;
 
     if (model.roots != null) {
-      let modelRoots = model.roots;
+      const modelRoots = model.roots;
       rootsArray = [];
 
       for (let i = 0; i < modelRoots.length; i++) {
@@ -54,36 +54,47 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
       }
     }
 
-    model.visit((parent, node, connectingEdge, layer, seen) => {
-      // Check if the cell is in it's own ancestor list, if so
-      // invert the connecting edge and reverse the target/source
-      // relationship to that edge in the parent and the cell
-      // Ancestor hashes only line up within a swimlane
-      let isAncestor = parent != null && parent.swimlaneIndex == node.swimlaneIndex && node.isAncestor(parent);
+    model.visit(
+      (parent, node, connectingEdge, layer, seen) => {
+        // Check if the cell is in it's own ancestor list, if so
+        // invert the connecting edge and reverse the target/source
+        // relationship to that edge in the parent and the cell
+        // Ancestor hashes only line up within a swimlane
+        const isAncestor =
+          parent != null &&
+          parent.swimlaneIndex == node.swimlaneIndex &&
+          node.isAncestor(parent);
 
-      // If the source->target swimlane indices go from higher to
-      // lower, the edge is reverse
-      let reversedOverSwimlane = parent != null && connectingEdge != null &&
-          parent.swimlaneIndex < node.swimlaneIndex && connectingEdge.source == node;
+        // If the source->target swimlane indices go from higher to
+        // lower, the edge is reverse
+        const reversedOverSwimlane =
+          parent != null &&
+          connectingEdge != null &&
+          parent.swimlaneIndex < node.swimlaneIndex &&
+          connectingEdge.source == node;
 
-      if (isAncestor) {
-        connectingEdge.invert();
-        mxUtils.remove(connectingEdge, parent.connectsAsSource);
-        node.connectsAsSource.push(connectingEdge);
-        parent.connectsAsTarget.push(connectingEdge);
-        mxUtils.remove(connectingEdge, node.connectsAsTarget);
-      } else if (reversedOverSwimlane) {
-        connectingEdge.invert();
-        mxUtils.remove(connectingEdge, parent.connectsAsTarget);
-        node.connectsAsTarget.push(connectingEdge);
-        parent.connectsAsSource.push(connectingEdge);
-        mxUtils.remove(connectingEdge, node.connectsAsSource);
-      }
+        if (isAncestor) {
+          connectingEdge.invert();
+          mxUtils.remove(connectingEdge, parent.connectsAsSource);
+          node.connectsAsSource.push(connectingEdge);
+          parent.connectsAsTarget.push(connectingEdge);
+          mxUtils.remove(connectingEdge, node.connectsAsTarget);
+        } else if (reversedOverSwimlane) {
+          connectingEdge.invert();
+          mxUtils.remove(connectingEdge, parent.connectsAsTarget);
+          node.connectsAsTarget.push(connectingEdge);
+          parent.connectsAsSource.push(connectingEdge);
+          mxUtils.remove(connectingEdge, node.connectsAsSource);
+        }
 
-      let cellId = mxCellPath.create(node.cell);
-      seenNodes[cellId] = node;
-      delete unseenNodes[cellId];
-    }, rootsArray, true, null);
+        const cellId = mxCellPath.create(node.cell);
+        seenNodes[cellId] = node;
+        delete unseenNodes[cellId];
+      },
+      rootsArray,
+      true,
+      null
+    );
   };
 }
 

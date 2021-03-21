@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxCell from "FIXME";
-import mxObjectCodec from "./mxObjectCodec";
-import mxCodecRegistry from "./mxCodecRegistry";
+import mxCell from 'FIXME';
+import mxObjectCodec from './mxObjectCodec';
+import mxCodecRegistry from './mxCodecRegistry';
 
 class mxCellCodec extends mxObjectCodec {
   /**
@@ -49,9 +49,11 @@ class mxCellCodec extends mxObjectCodec {
    * (end)
    */
   constructor() {
-    super(new mxCell(),
-        ['children', 'edges', 'overlays', 'mxTransient'],
-        ['parent', 'source', 'target']);
+    super(
+      new mxCell(),
+      ['children', 'edges', 'overlays', 'mxTransient'],
+      ['parent', 'source', 'target']
+    );
   }
 
   /**
@@ -67,8 +69,9 @@ class mxCellCodec extends mxObjectCodec {
    * Overidden to disable conversion of value to number.
    */
   isNumericAttribute = (dec, attr, obj) => {
-    return attr.nodeName !== 'value' &&
-        super.isNumericAttribute(dec, attr, obj);
+    return (
+      attr.nodeName !== 'value' && super.isNumericAttribute(dec, attr, obj)
+    );
   };
 
   /**
@@ -77,9 +80,12 @@ class mxCellCodec extends mxObjectCodec {
    * Excludes user objects that are XML nodes.
    */
   isExcluded = (obj, attr, value, isWrite) => {
-    return super.isExcluded(obj, attr, value, isWrite) ||
-        (isWrite && attr === 'value' &&
-            value.nodeType === mxConstants.NODETYPE_ELEMENT);
+    return (
+      super.isExcluded(obj, attr, value, isWrite) ||
+      (isWrite &&
+        attr === 'value' &&
+        value.nodeType === mxConstants.NODETYPE_ELEMENT)
+    );
   };
 
   /**
@@ -89,17 +95,20 @@ class mxCellCodec extends mxObjectCodec {
    * XML of the user object (inversion).
    */
   afterEncode = (enc, obj, node) => {
-    if (obj.value != null && obj.value.nodeType === mxConstants.NODETYPE_ELEMENT) {
+    if (
+      obj.value != null &&
+      obj.value.nodeType === mxConstants.NODETYPE_ELEMENT
+    ) {
       // Wraps the graphical annotation up in the user object (inversion)
       // by putting the result of the default encoding into a clone of the
       // user object (node type 1) and returning this cloned user object.
-      let tmp = node;
+      const tmp = node;
       node = mxUtils.importNode(enc.document, obj.value, true);
       node.appendChild(tmp);
 
       // Moves the id attribute to the outermost XML node, namely the
       // node which denotes the object boundaries in the file.
-      let id = tmp.getAttribute('id');
+      const id = tmp.getAttribute('id');
       node.setAttribute('id', id);
       tmp.removeAttribute('id');
     }
@@ -115,12 +124,12 @@ class mxCellCodec extends mxObjectCodec {
    */
   beforeDecode = (dec, node, obj) => {
     let inner = node.cloneNode(true);
-    let classname = this.getName();
+    const classname = this.getName();
 
     if (node.nodeName !== classname) {
       // Passes the inner graphical annotation node to the
       // object codec for further processing of the cell.
-      let tmp = node.getElementsByTagName(classname)[0];
+      const tmp = node.getElementsByTagName(classname)[0];
 
       if (tmp != null && tmp.parentNode === node) {
         mxUtils.removeWhitespace(tmp, true);
@@ -133,7 +142,7 @@ class mxCellCodec extends mxObjectCodec {
 
       // Creates the user object out of the XML node
       obj.value = node.cloneNode(true);
-      let id = obj.value.getAttribute('id');
+      const id = obj.value.getAttribute('id');
 
       if (id != null) {
         obj.setId(id);
@@ -148,8 +157,8 @@ class mxCellCodec extends mxObjectCodec {
     // correct encoder (this) for the known references to cells (all).
     if (inner != null) {
       for (let i = 0; i < this.idrefs.length; i++) {
-        let attr = this.idrefs[i];
-        let ref = inner.getAttribute(attr);
+        const attr = this.idrefs[i];
+        const ref = inner.getAttribute(attr);
 
         if (ref != null) {
           inner.removeAttribute(attr);
@@ -157,10 +166,10 @@ class mxCellCodec extends mxObjectCodec {
 
           if (object == null) {
             // Needs to decode forward reference
-            let element = dec.getElementById(ref);
+            const element = dec.getElementById(ref);
 
             if (element != null) {
-              let decoder = mxCodecRegistry.codecs[element.nodeName] || this;
+              const decoder = mxCodecRegistry.codecs[element.nodeName] || this;
               object = decoder.decode(dec, element);
             }
           }

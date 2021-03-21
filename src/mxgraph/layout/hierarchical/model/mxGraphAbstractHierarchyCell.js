@@ -86,14 +86,14 @@ class mxGraphAbstractHierarchyCell {
     this.x = [];
     this.y = [];
     this.temp = [];
-  };
+  }
 
   /**
    * Function: getNextLayerConnectedCells
    *
    * Returns the cells this cell connects to on the next layer up
    */
-  getNextLayerConnectedCells = (layer) => {
+  getNextLayerConnectedCells = layer => {
     return null;
   };
 
@@ -102,7 +102,7 @@ class mxGraphAbstractHierarchyCell {
    *
    * Returns the cells this cell connects to on the next layer down
    */
-  getPreviousLayerConnectedCells = (layer) => {
+  getPreviousLayerConnectedCells = layer => {
     return null;
   };
 
@@ -129,7 +129,7 @@ class mxGraphAbstractHierarchyCell {
    *
    * Gets the value of temp for the specified layer
    */
-  getGeneralPurposeVariable = (layer) => {
+  getGeneralPurposeVariable = layer => {
     return null;
   };
 
@@ -160,10 +160,11 @@ class mxGraphAbstractHierarchyCell {
    *
    * Gets the value of x on the specified layer
    */
-  getX = (layer) => {
+  getX = layer => {
     if (this.isVertex()) {
       return this.x[0];
-    } else if (this.isEdge()) {
+    }
+    if (this.isEdge()) {
       return this.x[layer - this.minRank - 1];
     }
 

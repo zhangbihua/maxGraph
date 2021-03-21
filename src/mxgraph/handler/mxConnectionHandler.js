@@ -2,20 +2,20 @@
  * Copyright (c) 2006-2016, JGraph Ltd
  * Copyright (c) 2006-2016, Gaudenz Alder
  */
-import mxGeometry from "../model/mxGeometry";
-import mxCell from "../model/mxCell";
-import mxPoint from "../util/mxPoint";
-import mxEventObject from "../util/mxEventObject";
-import mxEvent from "../util/mxEvent";
-import mxConstants from "../util/mxConstants";
-import mxUtils from "../util/mxUtils";
-import mxMouseEvent from "../util/mxMouseEvent";
-import mxImageShape from "../shape/mxImageShape";
-import mxCellMarker from "./mxCellMarker";
-import mxConstraintHandler from "./mxConstraintHandler";
-import mxPolyline from "../shape/mxPolyline";
-import mxEventSource from "../util/mxEventSource";
-import mxRectangle from "../util/mxRectangle";
+import mxGeometry from '../model/mxGeometry';
+import mxCell from '../model/mxCell';
+import mxPoint from '../util/mxPoint';
+import mxEventObject from '../util/mxEventObject';
+import mxEvent from '../util/mxEvent';
+import mxConstants from '../util/mxConstants';
+import mxUtils from '../util/mxUtils';
+import mxMouseEvent from '../util/mxMouseEvent';
+import mxImageShape from '../shape/mxImageShape';
+import mxCellMarker from './mxCellMarker';
+import mxConstraintHandler from './mxConstraintHandler';
+import mxPolyline from '../shape/mxPolyline';
+import mxEventSource from '../util/mxEventSource';
+import mxRectangle from '../util/mxRectangle';
 
 class mxConnectionHandler extends mxEventSource {
   /**
@@ -394,7 +394,7 @@ class mxConnectionHandler extends mxEventSource {
 
       this.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
     }
-  };
+  }
 
   /**
    * Function: isEnabled
@@ -416,7 +416,7 @@ class mxConnectionHandler extends mxEventSource {
    *
    * enabled - Boolean that specifies the new enabled state.
    */
-  setEnabled = (enabled) => {
+  setEnabled = enabled => {
     this.enabled = enabled;
   };
 
@@ -447,7 +447,7 @@ class mxConnectionHandler extends mxEventSource {
    *
    * evt - Current active native pointer event.
    */
-  isCreateTarget = (evt) => {
+  isCreateTarget = evt => {
     return this.createTarget;
   };
 
@@ -456,7 +456,7 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Sets <createTarget>.
    */
-  setCreateTarget = (value) => {
+  setCreateTarget = value => {
     this.createTarget = value;
   };
 
@@ -467,11 +467,14 @@ class mxConnectionHandler extends mxEventSource {
    */
   createShape = () => {
     // Creates the edge preview
-    let shape = (this.livePreview && this.edgeState != null) ?
-        this.graph.cellRenderer.createShape(this.edgeState) :
-        new mxPolyline([], mxConstants.INVALID_COLOR);
-    shape.dialect = (this.graph.dialect !== mxConstants.DIALECT_SVG) ?
-        mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
+    const shape =
+      this.livePreview && this.edgeState != null
+        ? this.graph.cellRenderer.createShape(this.edgeState)
+        : new mxPolyline([], mxConstants.INVALID_COLOR);
+    shape.dialect =
+      this.graph.dialect !== mxConstants.DIALECT_SVG
+        ? mxConstants.DIALECT_VML
+        : mxConstants.DIALECT_SVG;
     shape.scale = this.graph.view.scale;
     shape.pointerEvents = false;
     shape.isDashed = true;
@@ -494,7 +497,7 @@ class mxConnectionHandler extends mxEventSource {
     this.constraintHandler = new mxConstraintHandler(this.graph);
 
     // Redraws the icons if the graph changes
-    this.changeHandler = mxUtils.bind(this, (sender) => {
+    this.changeHandler = mxUtils.bind(this, sender => {
       if (this.iconState != null) {
         this.iconState = this.graph.getView().getState(this.iconState.cell);
       }
@@ -502,7 +505,10 @@ class mxConnectionHandler extends mxEventSource {
       if (this.iconState != null) {
         this.redrawIcons(this.icons, this.iconState);
         this.constraintHandler.reset();
-      } else if (this.previous != null && this.graph.view.getState(this.previous.cell) == null) {
+      } else if (
+        this.previous != null &&
+        this.graph.view.getState(this.previous.cell) == null
+      ) {
         this.reset();
       }
     });
@@ -510,10 +516,12 @@ class mxConnectionHandler extends mxEventSource {
     this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
     this.graph.getView().addListener(mxEvent.SCALE, this.changeHandler);
     this.graph.getView().addListener(mxEvent.TRANSLATE, this.changeHandler);
-    this.graph.getView().addListener(mxEvent.SCALE_AND_TRANSLATE, this.changeHandler);
+    this.graph
+      .getView()
+      .addListener(mxEvent.SCALE_AND_TRANSLATE, this.changeHandler);
 
     // Removes the icon if we step into/up or start editing
-    this.drillHandler = (sender) => {
+    this.drillHandler = sender => {
       this.reset();
     };
 
@@ -528,7 +536,7 @@ class mxConnectionHandler extends mxEventSource {
    * Returns true if the given cell is connectable. This is a hook to
    * disable floating connections. This implementation returns true.
    */
-  isConnectableCell = (cell) => {
+  isConnectableCell = cell => {
     return true;
   };
 
@@ -538,14 +546,14 @@ class mxConnectionHandler extends mxEventSource {
    * Creates and returns the <mxCellMarker> used in <marker>.
    */
   createMarker = () => {
-    let self = this;
+    const self = this;
 
     class MyCellMarker extends mxCellMarker {
       hotspotEnabled = true;
 
       // Overrides to return cell at location only if valid (so that
       // there is no highlight for invalid cells)
-      getCell = (me) => {
+      getCell = me => {
         let cell = super.getCell(me);
         self.error = null;
 
@@ -556,16 +564,26 @@ class mxConnectionHandler extends mxEventSource {
 
         // Uses connectable parent vertex if one exists
         if (cell != null && !self.graph.isCellConnectable(cell)) {
-          let parent = self.graph.getModel().getParent(cell);
+          const parent = self.graph.getModel().getParent(cell);
 
-          if (self.graph.getModel().isVertex(parent) && self.graph.isCellConnectable(parent)) {
+          if (
+            self.graph.getModel().isVertex(parent) &&
+            self.graph.isCellConnectable(parent)
+          ) {
             cell = parent;
           }
         }
 
-        if ((self.graph.isSwimlane(cell) && self.currentPoint != null &&
-            self.graph.hitsSwimlaneContent(cell, self.currentPoint.x, self.currentPoint.y)) ||
-            !self.isConnectableCell(cell)) {
+        if (
+          (self.graph.isSwimlane(cell) &&
+            self.currentPoint != null &&
+            self.graph.hitsSwimlaneContent(
+              cell,
+              self.currentPoint.x,
+              self.currentPoint.y
+            )) ||
+          !self.isConnectableCell(cell)
+        ) {
           cell = null;
         }
 
@@ -586,8 +604,11 @@ class mxConnectionHandler extends mxEventSource {
           } else if (!self.isValidSource(cell, me)) {
             cell = null;
           }
-        } else if (self.isConnecting() && !self.isCreateTarget(me.getEvent()) &&
-            !self.graph.allowDanglingEdges) {
+        } else if (
+          self.isConnecting() &&
+          !self.isCreateTarget(me.getEvent()) &&
+          !self.graph.allowDanglingEdges
+        ) {
           self.error = '';
         }
 
@@ -595,20 +616,19 @@ class mxConnectionHandler extends mxEventSource {
       };
 
       // Sets the highlight color according to validateConnection
-      isValidState = (state) => {
+      isValidState = state => {
         if (self.isConnecting()) {
           return self.error == null;
-        } else {
-          return super.isValidState(state);
         }
+        return super.isValidState(state);
       };
 
       // Overrides to use marker color only in highlight mode or for
       // target selection
       getMarkerColor = (evt, state, isValid) => {
-        return (self.connectImage == null || self.isConnecting()) ?
-            super.getMarkerColor(evt, state, isValid) :
-            null;
+        return self.connectImage == null || self.isConnecting()
+          ? super.getMarkerColor(evt, state, isValid)
+          : null;
       };
 
       // Overrides to use hotspot only for source selection otherwise
@@ -632,7 +652,7 @@ class mxConnectionHandler extends mxEventSource {
   start = (state, x, y, edgeState) => {
     this.previous = state;
     this.first = new mxPoint(x, y);
-    this.edgeState = (edgeState != null) ? edgeState : this.createEdgeState(null);
+    this.edgeState = edgeState != null ? edgeState : this.createEdgeState(null);
 
     // Marks the source state
     this.marker.currentColor = this.marker.validColor;
@@ -677,7 +697,7 @@ class mxConnectionHandler extends mxEventSource {
    *
    * cell - <mxCell> that represents the target terminal.
    */
-  isValidTarget = (cell) => {
+  isValidTarget = cell => {
     return true;
   };
 
@@ -711,7 +731,7 @@ class mxConnectionHandler extends mxEventSource {
    *
    * state - <mxCellState> whose connect image should be returned.
    */
-  getConnectImage = (state) => {
+  getConnectImage = state => {
     return this.connectImage;
   };
 
@@ -725,8 +745,11 @@ class mxConnectionHandler extends mxEventSource {
    *
    * state - <mxCellState> whose connect icons should be returned.
    */
-  isMoveIconToFrontForState = (state) => {
-    if (state.text != null && state.text.node.parentNode === this.graph.container) {
+  isMoveIconToFrontForState = state => {
+    if (
+      state.text != null &&
+      state.text.node.parentNode === this.graph.container
+    ) {
       return true;
     }
 
@@ -743,48 +766,55 @@ class mxConnectionHandler extends mxEventSource {
    *
    * state - <mxCellState> whose connect icons should be returned.
    */
-  createIcons = (state) => {
-    let image = this.getConnectImage(state);
+  createIcons = state => {
+    const image = this.getConnectImage(state);
 
     if (image != null && state != null) {
       this.iconState = state;
-      let icons = [];
+      const icons = [];
 
       // Cannot use HTML for the connect icons because the icon receives all
       // mouse move events in IE, must use VML and SVG instead even if the
       // connect-icon appears behind the selection border and the selection
       // border consumes the events before the icon gets a chance
-      let bounds = new mxRectangle(0, 0, image.width, image.height);
-      let icon = new mxImageShape(bounds, image.src, null, null, 0);
+      const bounds = new mxRectangle(0, 0, image.width, image.height);
+      const icon = new mxImageShape(bounds, image.src, null, null, 0);
       icon.preserveImageAspect = false;
 
       if (this.isMoveIconToFrontForState(state)) {
         icon.dialect = mxConstants.DIALECT_STRICTHTML;
         icon.init(this.graph.container);
       } else {
-        icon.dialect = (this.graph.dialect === mxConstants.DIALECT_SVG) ?
-            mxConstants.DIALECT_SVG : mxConstants.DIALECT_VML;
+        icon.dialect =
+          this.graph.dialect === mxConstants.DIALECT_SVG
+            ? mxConstants.DIALECT_SVG
+            : mxConstants.DIALECT_VML;
         icon.init(this.graph.getView().getOverlayPane());
 
         // Move the icon back in the overlay pane
         if (this.moveIconBack && icon.node.previousSibling != null) {
-          icon.node.parentNode.insertBefore(icon.node, icon.node.parentNode.firstChild);
+          icon.node.parentNode.insertBefore(
+            icon.node,
+            icon.node.parentNode.firstChild
+          );
         }
       }
 
       icon.node.style.cursor = mxConstants.CURSOR_CONNECT;
 
       // Events transparency
-      let getState = () => {
-        return (this.currentState != null) ? this.currentState : state;
+      const getState = () => {
+        return this.currentState != null ? this.currentState : state;
       };
 
       // Updates the local icon before firing the mouse down event.
-      let mouseDown = (evt) => {
+      const mouseDown = evt => {
         if (!mxEvent.isConsumed(evt)) {
           this.icon = icon;
-          this.graph.fireMouseEvent(mxEvent.MOUSE_DOWN,
-              new mxMouseEvent(evt, getState()));
+          this.graph.fireMouseEvent(
+            mxEvent.MOUSE_DOWN,
+            new mxMouseEvent(evt, getState())
+          );
         }
       };
 
@@ -810,7 +840,7 @@ class mxConnectionHandler extends mxEventSource {
    */
   redrawIcons = (icons, state) => {
     if (icons != null && icons[0] != null && state != null) {
-      let pos = this.getIconPosition(icons[0], state);
+      const pos = this.getIconPosition(icons[0], state);
       icons[0].bounds.x = pos.x;
       icons[0].bounds.y = pos.y;
       icons[0].redraw();
@@ -828,30 +858,31 @@ class mxConnectionHandler extends mxEventSource {
    * state - <mxCellState> under the mouse.
    */
   getIconPosition = (icon, state) => {
-    let scale = this.graph.getView().scale;
+    const { scale } = this.graph.getView();
     let cx = state.getCenterX();
     let cy = state.getCenterY();
 
     if (this.graph.isSwimlane(state.cell)) {
-      let size = this.graph.getStartSize(state.cell);
+      const size = this.graph.getStartSize(state.cell);
 
-      cx = (size.width !== 0) ? state.x + size.width * scale / 2 : cx;
-      cy = (size.height !== 0) ? state.y + size.height * scale / 2 : cy;
+      cx = size.width !== 0 ? state.x + (size.width * scale) / 2 : cx;
+      cy = size.height !== 0 ? state.y + (size.height * scale) / 2 : cy;
 
-      let alpha = mxUtils.toRadians(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0);
+      const alpha = mxUtils.toRadians(
+        mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0
+      );
 
       if (alpha !== 0) {
-        let cos = Math.cos(alpha);
-        let sin = Math.sin(alpha);
-        let ct = new mxPoint(state.getCenterX(), state.getCenterY());
-        let pt = mxUtils.getRotatedPoint(new mxPoint(cx, cy), cos, sin, ct);
+        const cos = Math.cos(alpha);
+        const sin = Math.sin(alpha);
+        const ct = new mxPoint(state.getCenterX(), state.getCenterY());
+        const pt = mxUtils.getRotatedPoint(new mxPoint(cx, cy), cos, sin, ct);
         cx = pt.x;
         cy = pt.y;
       }
     }
 
-    return new mxPoint(cx - icon.bounds.width / 2,
-        cy - icon.bounds.height / 2);
+    return new mxPoint(cx - icon.bounds.width / 2, cy - icon.bounds.height / 2);
   };
 
   /**
@@ -881,10 +912,14 @@ class mxConnectionHandler extends mxEventSource {
    * <constraintHandler> are not null, or <previous> and <error> are not null and
    * <icons> is null or <icons> and <icon> are not null.
    */
-  isStartEvent = (me) => {
-    return ((this.constraintHandler.currentFocus !== null && this.constraintHandler.currentConstraint !== null) ||
-        (this.previous !== null && this.error === null && (this.icons === null || (this.icons !== null &&
-            this.icon !== null))));
+  isStartEvent = me => {
+    return (
+      (this.constraintHandler.currentFocus !== null &&
+        this.constraintHandler.currentConstraint !== null) ||
+      (this.previous !== null &&
+        this.error === null &&
+        (this.icons === null || (this.icons !== null && this.icon !== null)))
+    );
   };
 
   /**
@@ -895,11 +930,18 @@ class mxConnectionHandler extends mxEventSource {
   mouseDown = (sender, me) => {
     this.mouseDownCounter++;
 
-    if (this.isEnabled() && this.graph.isEnabled() && !me.isConsumed() &&
-        !this.isConnecting() && this.isStartEvent(me)) {
-      if (this.constraintHandler.currentConstraint != null &&
-          this.constraintHandler.currentFocus != null &&
-          this.constraintHandler.currentPoint != null) {
+    if (
+      this.isEnabled() &&
+      this.graph.isEnabled() &&
+      !me.isConsumed() &&
+      !this.isConnecting() &&
+      this.isStartEvent(me)
+    ) {
+      if (
+        this.constraintHandler.currentConstraint != null &&
+        this.constraintHandler.currentFocus != null &&
+        this.constraintHandler.currentPoint != null
+      ) {
         this.sourceConstraint = this.constraintHandler.currentConstraint;
         this.previous = this.constraintHandler.currentFocus;
         this.first = this.constraintHandler.currentPoint.clone();
@@ -922,7 +964,7 @@ class mxConnectionHandler extends mxEventSource {
 
       // Stores the starting point in the geometry of the preview
       if (this.previous == null && this.edgeState != null) {
-        let pt = this.graph.getPointForEvent(me.getEvent());
+        const pt = this.graph.getPointForEvent(me.getEvent());
         this.edgeState.cell.geometry.setTerminalPoint(pt, true);
       }
 
@@ -942,7 +984,7 @@ class mxConnectionHandler extends mxEventSource {
    * connecting. This implementation returns true if the state is not movable
    * in the graph.
    */
-  isImmediateConnectSource = (state) => {
+  isImmediateConnectSource = state => {
     return !this.graph.isCellMovable(state.cell);
   };
 
@@ -963,7 +1005,7 @@ class mxConnectionHandler extends mxEventSource {
    * };
    * (end)
    */
-  createEdgeState = (me) => {
+  createEdgeState = me => {
     return null;
   };
 
@@ -973,26 +1015,32 @@ class mxConnectionHandler extends mxEventSource {
    * Returns true if <outlineConnect> is true and the source of the event is the outline shape
    * or shift is pressed.
    */
-  isOutlineConnectEvent = (me) => {
-    let offset = mxUtils.getOffset(this.graph.container);
-    let evt = me.getEvent();
+  isOutlineConnectEvent = me => {
+    const offset = mxUtils.getOffset(this.graph.container);
+    const evt = me.getEvent();
 
-    let clientX = mxEvent.getClientX(evt);
-    let clientY = mxEvent.getClientY(evt);
+    const clientX = mxEvent.getClientX(evt);
+    const clientY = mxEvent.getClientY(evt);
 
-    let doc = document.documentElement;
-    let left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
-    let top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
+    const doc = document.documentElement;
+    const left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+    const top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
 
-    let gridX = this.currentPoint.x - this.graph.container.scrollLeft + offset.x - left;
-    let gridY = this.currentPoint.y - this.graph.container.scrollTop + offset.y - top;
+    const gridX =
+      this.currentPoint.x - this.graph.container.scrollLeft + offset.x - left;
+    const gridY =
+      this.currentPoint.y - this.graph.container.scrollTop + offset.y - top;
 
-    return this.outlineConnect && !mxEvent.isShiftDown(me.getEvent()) &&
-        (me.isSource(this.marker.highlight.shape) ||
-            (mxEvent.isAltDown(me.getEvent()) && me.getState() != null) ||
-            this.marker.highlight.isHighlightAt(clientX, clientY) ||
-            ((gridX !== clientX || gridY !== clientY) && me.getState() == null &&
-                this.marker.highlight.isHighlightAt(gridX, gridY)));
+    return (
+      this.outlineConnect &&
+      !mxEvent.isShiftDown(me.getEvent()) &&
+      (me.isSource(this.marker.highlight.shape) ||
+        (mxEvent.isAltDown(me.getEvent()) && me.getState() != null) ||
+        this.marker.highlight.isHighlightAt(clientX, clientY) ||
+        ((gridX !== clientX || gridY !== clientY) &&
+          me.getState() == null &&
+          this.marker.highlight.isHighlightAt(gridX, gridY)))
+    );
   };
 
   /**
@@ -1002,33 +1050,55 @@ class mxConnectionHandler extends mxEventSource {
    * the <marker>.
    */
   updateCurrentState = (me, point) => {
-    this.constraintHandler.update(me, this.first == null, false, (this.first == null ||
-        me.isSource(this.marker.highlight.shape)) ? null : point);
+    this.constraintHandler.update(
+      me,
+      this.first == null,
+      false,
+      this.first == null || me.isSource(this.marker.highlight.shape)
+        ? null
+        : point
+    );
 
-    if (this.constraintHandler.currentFocus != null && this.constraintHandler.currentConstraint != null) {
+    if (
+      this.constraintHandler.currentFocus != null &&
+      this.constraintHandler.currentConstraint != null
+    ) {
       // Handles special case where grid is large and connection point is at actual point in which
       // case the outline is not followed as long as we're < gridSize / 2 away from that point
-      if (this.marker.highlight != null && this.marker.highlight.state != null &&
-          this.marker.highlight.state.cell === this.constraintHandler.currentFocus.cell) {
+      if (
+        this.marker.highlight != null &&
+        this.marker.highlight.state != null &&
+        this.marker.highlight.state.cell ===
+          this.constraintHandler.currentFocus.cell
+      ) {
         // Direct repaint needed if cell already highlighted
         if (this.marker.highlight.shape.stroke !== 'transparent') {
           this.marker.highlight.shape.stroke = 'transparent';
           this.marker.highlight.repaint();
         }
       } else {
-        this.marker.markCell(this.constraintHandler.currentFocus.cell, 'transparent');
+        this.marker.markCell(
+          this.constraintHandler.currentFocus.cell,
+          'transparent'
+        );
       }
 
       // Updates validation state
       if (this.previous != null) {
-        this.error = this.validateConnection(this.previous.cell, this.constraintHandler.currentFocus.cell);
+        this.error = this.validateConnection(
+          this.previous.cell,
+          this.constraintHandler.currentFocus.cell
+        );
 
         if (this.error == null) {
           this.currentState = this.constraintHandler.currentFocus;
         }
 
-        if (this.error != null || (this.currentState != null &&
-            !this.isCellEnabled(this.currentState.cell))) {
+        if (
+          this.error != null ||
+          (this.currentState != null &&
+            !this.isCellEnabled(this.currentState.cell))
+        ) {
           this.constraintHandler.reset();
         }
       }
@@ -1041,13 +1111,16 @@ class mxConnectionHandler extends mxEventSource {
         this.currentState = this.marker.getValidState();
       }
 
-      if (this.currentState != null && !this.isCellEnabled(this.currentState.cell)) {
+      if (
+        this.currentState != null &&
+        !this.isCellEnabled(this.currentState.cell)
+      ) {
         this.constraintHandler.reset();
         this.marker.reset();
         this.currentState = null;
       }
 
-      let outline = this.isOutlineConnectEvent(me);
+      const outline = this.isOutlineConnectEvent(me);
 
       if (this.currentState != null && outline) {
         // Handles special case where mouse is on outline away from actual end point
@@ -1056,34 +1129,49 @@ class mxConnectionHandler extends mxEventSource {
           point = new mxPoint(me.getGraphX(), me.getGraphY());
         }
 
-        let constraint = this.graph.getOutlineConstraint(point, this.currentState, me);
+        const constraint = this.graph.getOutlineConstraint(
+          point,
+          this.currentState,
+          me
+        );
         this.constraintHandler.setFocus(me, this.currentState, false);
         this.constraintHandler.currentConstraint = constraint;
         this.constraintHandler.currentPoint = point;
       }
 
       if (this.outlineConnect) {
-        if (this.marker.highlight != null && this.marker.highlight.shape != null) {
-          let s = this.graph.view.scale;
+        if (
+          this.marker.highlight != null &&
+          this.marker.highlight.shape != null
+        ) {
+          const s = this.graph.view.scale;
 
-          if (this.constraintHandler.currentConstraint != null &&
-              this.constraintHandler.currentFocus != null) {
-            this.marker.highlight.shape.stroke = mxConstants.OUTLINE_HIGHLIGHT_COLOR;
-            this.marker.highlight.shape.strokewidth = mxConstants.OUTLINE_HIGHLIGHT_STROKEWIDTH / s / s;
+          if (
+            this.constraintHandler.currentConstraint != null &&
+            this.constraintHandler.currentFocus != null
+          ) {
+            this.marker.highlight.shape.stroke =
+              mxConstants.OUTLINE_HIGHLIGHT_COLOR;
+            this.marker.highlight.shape.strokewidth =
+              mxConstants.OUTLINE_HIGHLIGHT_STROKEWIDTH / s / s;
             this.marker.highlight.repaint();
           } else if (this.marker.hasValidState()) {
             // Handles special case where actual end point of edge and current mouse point
             // are not equal (due to grid snapping) and there is no hit on shape or highlight
             // but ignores cases where parent is used for non-connectable child cells
-            if (this.graph.isCellConnectable(me.getCell()) &&
-                this.marker.getValidState() !== me.getState()) {
+            if (
+              this.graph.isCellConnectable(me.getCell()) &&
+              this.marker.getValidState() !== me.getState()
+            ) {
               this.marker.highlight.shape.stroke = 'transparent';
               this.currentState = null;
             } else {
-              this.marker.highlight.shape.stroke = mxConstants.DEFAULT_VALID_COLOR;
+              this.marker.highlight.shape.stroke =
+                mxConstants.DEFAULT_VALID_COLOR;
             }
 
-            this.marker.highlight.shape.strokewidth = mxConstants.HIGHLIGHT_STROKEWIDTH / s / s;
+            this.marker.highlight.shape.strokewidth =
+              mxConstants.HIGHLIGHT_STROKEWIDTH / s / s;
             this.marker.highlight.repaint();
           }
         }
@@ -1097,7 +1185,7 @@ class mxConnectionHandler extends mxEventSource {
    * Returns true if the given cell allows new connections to be created. This implementation
    * always returns true.
    */
-  isCellEnabled = (cell) => {
+  isCellEnabled = cell => {
     return true;
   };
 
@@ -1106,9 +1194,9 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Converts the given point from screen coordinates to model coordinates.
    */
-  convertWaypoint = (point) => {
-    let scale = this.graph.getView().getScale();
-    let tr = this.graph.getView().getTranslate();
+  convertWaypoint = point => {
+    const scale = this.graph.getView().getScale();
+    const tr = this.graph.getView().getTranslate();
 
     point.x = point.x / scale - tr.x;
     point.y = point.y / scale - tr.y;
@@ -1122,9 +1210,11 @@ class mxConnectionHandler extends mxEventSource {
    */
   snapToPreview = (me, point) => {
     if (!mxEvent.isAltDown(me.getEvent()) && this.previous != null) {
-      let tol = this.graph.gridSize * this.graph.view.scale / 2;
-      let tmp = (this.sourceConstraint != null) ? this.first :
-          new mxPoint(this.previous.getCenterX(), this.previous.getCenterY());
+      const tol = (this.graph.gridSize * this.graph.view.scale) / 2;
+      const tmp =
+        this.sourceConstraint != null
+          ? this.first
+          : new mxPoint(this.previous.getCenterX(), this.previous.getCenterY());
 
       if (Math.abs(tmp.x - me.getGraphX()) < tol) {
         point.x = tmp.x;
@@ -1143,31 +1233,39 @@ class mxConnectionHandler extends mxEventSource {
    * a possible source or target terminal.
    */
   mouseMove = (sender, me) => {
-    if (!me.isConsumed() && (this.ignoreMouseDown || this.first != null || !this.graph.isMouseDown)) {
+    if (
+      !me.isConsumed() &&
+      (this.ignoreMouseDown || this.first != null || !this.graph.isMouseDown)
+    ) {
       // Handles special case when handler is disabled during highlight
       if (!this.isEnabled() && this.currentState != null) {
         this.destroyIcons();
         this.currentState = null;
       }
 
-      let view = this.graph.getView();
-      let scale = view.scale;
-      let tr = view.translate;
+      const view = this.graph.getView();
+      const { scale } = view;
+      const tr = view.translate;
       let point = new mxPoint(me.getGraphX(), me.getGraphY());
       this.error = null;
 
       if (this.graph.isGridEnabledEvent(me.getEvent())) {
-        point = new mxPoint((this.graph.snap(point.x / scale - tr.x) + tr.x) * scale,
-            (this.graph.snap(point.y / scale - tr.y) + tr.y) * scale);
+        point = new mxPoint(
+          (this.graph.snap(point.x / scale - tr.x) + tr.x) * scale,
+          (this.graph.snap(point.y / scale - tr.y) + tr.y) * scale
+        );
       }
 
       this.snapToPreview(me, point);
       this.currentPoint = point;
 
-      if ((this.first != null || (this.isEnabled() && this.graph.isEnabled())) &&
-          (this.shape != null || this.first == null ||
-              Math.abs(me.getGraphX() - this.first.x) > this.graph.tolerance ||
-              Math.abs(me.getGraphY() - this.first.y) > this.graph.tolerance)) {
+      if (
+        (this.first != null || (this.isEnabled() && this.graph.isEnabled())) &&
+        (this.shape != null ||
+          this.first == null ||
+          Math.abs(me.getGraphX() - this.first.x) > this.graph.tolerance ||
+          Math.abs(me.getGraphY() - this.first.y) > this.graph.tolerance)
+      ) {
         this.updateCurrentState(me, point);
       }
 
@@ -1176,35 +1274,49 @@ class mxConnectionHandler extends mxEventSource {
         let current = point;
 
         // Uses the current point from the constraint handler if available
-        if (this.constraintHandler.currentConstraint != null &&
-            this.constraintHandler.currentFocus != null &&
-            this.constraintHandler.currentPoint != null) {
+        if (
+          this.constraintHandler.currentConstraint != null &&
+          this.constraintHandler.currentFocus != null &&
+          this.constraintHandler.currentPoint != null
+        ) {
           constraint = this.constraintHandler.currentConstraint;
           current = this.constraintHandler.currentPoint.clone();
-        } else if (this.previous != null && !this.graph.isIgnoreTerminalEvent(me.getEvent()) &&
-            mxEvent.isShiftDown(me.getEvent())) {
-          if (Math.abs(this.previous.getCenterX() - point.x) <
-              Math.abs(this.previous.getCenterY() - point.y)) {
+        } else if (
+          this.previous != null &&
+          !this.graph.isIgnoreTerminalEvent(me.getEvent()) &&
+          mxEvent.isShiftDown(me.getEvent())
+        ) {
+          if (
+            Math.abs(this.previous.getCenterX() - point.x) <
+            Math.abs(this.previous.getCenterY() - point.y)
+          ) {
             point.x = this.previous.getCenterX();
           } else {
             point.y = this.previous.getCenterY();
           }
         }
 
-        var pt2 = this.first;
+        let pt2 = this.first;
 
         // Moves the connect icon with the mouse
         if (this.selectedIcon != null) {
-          let w = this.selectedIcon.bounds.width;
-          let h = this.selectedIcon.bounds.height;
+          const w = this.selectedIcon.bounds.width;
+          const h = this.selectedIcon.bounds.height;
 
           if (this.currentState != null && this.targetConnectImage) {
-            let pos = this.getIconPosition(this.selectedIcon, this.currentState);
+            const pos = this.getIconPosition(
+              this.selectedIcon,
+              this.currentState
+            );
             this.selectedIcon.bounds.x = pos.x;
             this.selectedIcon.bounds.y = pos.y;
           } else {
-            let bounds = new mxRectangle(me.getGraphX() + this.connectIconOffset.x,
-                me.getGraphY() + this.connectIconOffset.y, w, h);
+            const bounds = new mxRectangle(
+              me.getGraphX() + this.connectIconOffset.x,
+              me.getGraphY() + this.connectIconOffset.y,
+              w,
+              h
+            );
             this.selectedIcon.bounds = bounds;
           }
 
@@ -1214,12 +1326,14 @@ class mxConnectionHandler extends mxEventSource {
         // Uses edge state to compute the terminal points
         if (this.edgeState != null) {
           this.updateEdgeState(current, constraint);
-          current = this.edgeState.absolutePoints[this.edgeState.absolutePoints.length - 1];
+          current = this.edgeState.absolutePoints[
+            this.edgeState.absolutePoints.length - 1
+          ];
           pt2 = this.edgeState.absolutePoints[0];
         } else {
           if (this.currentState != null) {
             if (this.constraintHandler.currentConstraint == null) {
-              let tmp = this.getTargetPerimeterPoint(this.currentState, me);
+              const tmp = this.getTargetPerimeterPoint(this.currentState, me);
 
               if (tmp != null) {
                 current = tmp;
@@ -1229,9 +1343,11 @@ class mxConnectionHandler extends mxEventSource {
 
           // Computes the source perimeter point
           if (this.sourceConstraint == null && this.previous != null) {
-            let next = (this.waypoints != null && this.waypoints.length > 0) ?
-                this.waypoints[0] : current;
-            let tmp = this.getSourcePerimeterPoint(this.previous, next, me);
+            const next =
+              this.waypoints != null && this.waypoints.length > 0
+                ? this.waypoints[0]
+                : current;
+            const tmp = this.getSourcePerimeterPoint(this.previous, next, me);
 
             if (tmp != null) {
               pt2 = tmp;
@@ -1246,18 +1362,23 @@ class mxConnectionHandler extends mxEventSource {
         if (this.currentState == null && this.movePreviewAway) {
           let tmp = pt2;
 
-          if (this.edgeState != null && this.edgeState.absolutePoints.length >= 2) {
-            var tmp2 = this.edgeState.absolutePoints[this.edgeState.absolutePoints.length - 2];
+          if (
+            this.edgeState != null &&
+            this.edgeState.absolutePoints.length >= 2
+          ) {
+            const tmp2 = this.edgeState.absolutePoints[
+              this.edgeState.absolutePoints.length - 2
+            ];
 
             if (tmp2 != null) {
               tmp = tmp2;
             }
           }
 
-          let dx = current.x - tmp.x;
-          let dy = current.y - tmp.y;
+          const dx = current.x - tmp.x;
+          const dy = current.y - tmp.y;
 
-          let len = Math.sqrt(dx * dx + dy * dy);
+          const len = Math.sqrt(dx * dx + dy * dy);
 
           if (len === 0) {
             return;
@@ -1265,16 +1386,16 @@ class mxConnectionHandler extends mxEventSource {
 
           // Stores old point to reuse when creating edge
           this.originalPoint = current.clone();
-          current.x -= dx * 4 / len;
-          current.y -= dy * 4 / len;
+          current.x -= (dx * 4) / len;
+          current.y -= (dy * 4) / len;
         } else {
           this.originalPoint = null;
         }
 
         // Creates the preview shape (lazy)
         if (this.shape == null) {
-          let dx = Math.abs(me.getGraphX() - this.first.x);
-          let dy = Math.abs(me.getGraphY() - this.first.y);
+          const dx = Math.abs(me.getGraphX() - this.first.x);
+          const dy = Math.abs(me.getGraphY() - this.first.y);
 
           if (dx > this.graph.tolerance || dy > this.graph.tolerance) {
             this.shape = this.createShape();
@@ -1315,11 +1436,18 @@ class mxConnectionHandler extends mxEventSource {
         me.consume();
       } else if (!this.isEnabled() || !this.graph.isEnabled()) {
         this.constraintHandler.reset();
-      } else if (this.previous !== this.currentState && this.edgeState == null) {
+      } else if (
+        this.previous !== this.currentState &&
+        this.edgeState == null
+      ) {
         this.destroyIcons();
 
         // Sets the cursor on the current shape
-        if (this.currentState != null && this.error == null && this.constraintHandler.currentConstraint == null) {
+        if (
+          this.currentState != null &&
+          this.error == null &&
+          this.constraintHandler.currentConstraint == null
+        ) {
           this.icons = this.createIcons(this.currentState);
 
           if (this.icons == null) {
@@ -1329,18 +1457,28 @@ class mxConnectionHandler extends mxEventSource {
         }
 
         this.previous = this.currentState;
-      } else if (this.previous === this.currentState && this.currentState != null && this.icons == null &&
-          !this.graph.isMouseDown) {
+      } else if (
+        this.previous === this.currentState &&
+        this.currentState != null &&
+        this.icons == null &&
+        !this.graph.isMouseDown
+      ) {
         // Makes sure that no cursors are changed
         me.consume();
       }
 
-      if (!this.graph.isMouseDown && this.currentState != null && this.icons != null) {
+      if (
+        !this.graph.isMouseDown &&
+        this.currentState != null &&
+        this.icons != null
+      ) {
         let hitsIcon = false;
-        let target = me.getSource();
+        const target = me.getSource();
 
         for (let i = 0; i < this.icons.length && !hitsIcon; i++) {
-          hitsIcon = target === this.icons[i].node || target.parentNode === this.icons[i].node;
+          hitsIcon =
+            target === this.icons[i].node ||
+            target.parentNode === this.icons[i].node;
         }
 
         if (!hitsIcon) {
@@ -1360,8 +1498,12 @@ class mxConnectionHandler extends mxEventSource {
   updateEdgeState = (current, constraint) => {
     // TODO: Use generic method for writing constraint to style
     if (this.sourceConstraint != null && this.sourceConstraint.point != null) {
-      this.edgeState.style[mxConstants.STYLE_EXIT_X] = this.sourceConstraint.point.x;
-      this.edgeState.style[mxConstants.STYLE_EXIT_Y] = this.sourceConstraint.point.y;
+      this.edgeState.style[
+        mxConstants.STYLE_EXIT_X
+      ] = this.sourceConstraint.point.x;
+      this.edgeState.style[
+        mxConstants.STYLE_EXIT_Y
+      ] = this.sourceConstraint.point.y;
     }
 
     if (constraint != null && constraint.point != null) {
@@ -1372,16 +1514,33 @@ class mxConnectionHandler extends mxEventSource {
       delete this.edgeState.style[mxConstants.STYLE_ENTRY_Y];
     }
 
-    this.edgeState.absolutePoints = [null, (this.currentState != null) ? null : current];
-    this.graph.view.updateFixedTerminalPoint(this.edgeState, this.previous, true, this.sourceConstraint);
+    this.edgeState.absolutePoints = [
+      null,
+      this.currentState != null ? null : current,
+    ];
+    this.graph.view.updateFixedTerminalPoint(
+      this.edgeState,
+      this.previous,
+      true,
+      this.sourceConstraint
+    );
 
     if (this.currentState != null) {
       if (constraint == null) {
-        constraint = this.graph.getConnectionConstraint(this.edgeState, this.previous, false);
+        constraint = this.graph.getConnectionConstraint(
+          this.edgeState,
+          this.previous,
+          false
+        );
       }
 
       this.edgeState.setAbsoluteTerminalPoint(null, false);
-      this.graph.view.updateFixedTerminalPoint(this.edgeState, this.currentState, false, constraint);
+      this.graph.view.updateFixedTerminalPoint(
+        this.edgeState,
+        this.currentState,
+        false,
+        constraint
+      );
     }
 
     // Scales and translates the waypoints to the model
@@ -1391,14 +1550,23 @@ class mxConnectionHandler extends mxEventSource {
       realPoints = [];
 
       for (let i = 0; i < this.waypoints.length; i++) {
-        let pt = this.waypoints[i].clone();
+        const pt = this.waypoints[i].clone();
         this.convertWaypoint(pt);
         realPoints[i] = pt;
       }
     }
 
-    this.graph.view.updatePoints(this.edgeState, realPoints, this.previous, this.currentState);
-    this.graph.view.updateFloatingTerminalPoints(this.edgeState, this.previous, this.currentState);
+    this.graph.view.updatePoints(
+      this.edgeState,
+      realPoints,
+      this.previous,
+      this.currentState
+    );
+    this.graph.view.updateFloatingTerminalPoints(
+      this.edgeState,
+      this.previous,
+      this.currentState
+    );
   };
 
   /**
@@ -1413,15 +1581,20 @@ class mxConnectionHandler extends mxEventSource {
    */
   getTargetPerimeterPoint = (state, me) => {
     let result = null;
-    let view = state.view;
-    let targetPerimeter = view.getPerimeterFunction(state);
+    const { view } = state;
+    const targetPerimeter = view.getPerimeterFunction(state);
 
     if (targetPerimeter != null) {
-      let next = (this.waypoints != null && this.waypoints.length > 0) ?
-          this.waypoints[this.waypoints.length - 1] :
-          new mxPoint(this.previous.getCenterX(), this.previous.getCenterY());
-      let tmp = targetPerimeter(view.getPerimeterBounds(state),
-          this.edgeState, next, false);
+      const next =
+        this.waypoints != null && this.waypoints.length > 0
+          ? this.waypoints[this.waypoints.length - 1]
+          : new mxPoint(this.previous.getCenterX(), this.previous.getCenterY());
+      const tmp = targetPerimeter(
+        view.getPerimeterBounds(state),
+        this.edgeState,
+        next,
+        false
+      );
 
       if (tmp != null) {
         result = tmp;
@@ -1447,23 +1620,42 @@ class mxConnectionHandler extends mxEventSource {
    */
   getSourcePerimeterPoint = (state, next, me) => {
     let result = null;
-    let view = state.view;
-    let sourcePerimeter = view.getPerimeterFunction(state);
-    let c = new mxPoint(state.getCenterX(), state.getCenterY());
+    const { view } = state;
+    const sourcePerimeter = view.getPerimeterFunction(state);
+    const c = new mxPoint(state.getCenterX(), state.getCenterY());
 
     if (sourcePerimeter != null) {
-      let theta = mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION, 0);
-      let rad = -theta * (Math.PI / 180);
+      const theta = mxUtils.getValue(
+        state.style,
+        mxConstants.STYLE_ROTATION,
+        0
+      );
+      const rad = -theta * (Math.PI / 180);
 
       if (theta != 0) {
-        next = mxUtils.getRotatedPoint(new mxPoint(next.x, next.y), Math.cos(rad), Math.sin(rad), c);
+        next = mxUtils.getRotatedPoint(
+          new mxPoint(next.x, next.y),
+          Math.cos(rad),
+          Math.sin(rad),
+          c
+        );
       }
 
-      let tmp = sourcePerimeter(view.getPerimeterBounds(state), state, next, false);
+      let tmp = sourcePerimeter(
+        view.getPerimeterBounds(state),
+        state,
+        next,
+        false
+      );
 
       if (tmp != null) {
         if (theta != 0) {
-          tmp = mxUtils.getRotatedPoint(new mxPoint(tmp.x, tmp.y), Math.cos(-rad), Math.sin(-rad), c);
+          tmp = mxUtils.getRotatedPoint(
+            new mxPoint(tmp.x, tmp.y),
+            Math.cos(-rad),
+            Math.sin(-rad),
+            c
+          );
         }
 
         result = tmp;
@@ -1474,7 +1666,6 @@ class mxConnectionHandler extends mxEventSource {
 
     return result;
   };
-
 
   /**
    * Function: updateIcons
@@ -1500,7 +1691,7 @@ class mxConnectionHandler extends mxEventSource {
    * called if <waypointsEnabled> is true. This implemtation returns true
    * if there is a cell state in the given event.
    */
-  isStopEvent = (me) => {
+  isStopEvent = me => {
     return me.getState() != null;
   };
 
@@ -1509,11 +1700,17 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Adds the waypoint for the given event to <waypoints>.
    */
-  addWaypointForEvent = (me) => {
-    let point = mxUtils.convertPoint(this.graph.container, me.getX(), me.getY());
-    let dx = Math.abs(point.x - this.first.x);
-    let dy = Math.abs(point.y - this.first.y);
-    let addPoint = this.waypoints != null || (this.mouseDownCounter > 1 &&
+  addWaypointForEvent = me => {
+    const point = mxUtils.convertPoint(
+      this.graph.container,
+      me.getX(),
+      me.getY()
+    );
+    const dx = Math.abs(point.x - this.first.x);
+    const dy = Math.abs(point.y - this.first.y);
+    const addPoint =
+      this.waypoints != null ||
+      (this.mouseDownCounter > 1 &&
         (dx > this.graph.tolerance || dy > this.graph.tolerance));
 
     if (addPoint) {
@@ -1521,9 +1718,11 @@ class mxConnectionHandler extends mxEventSource {
         this.waypoints = [];
       }
 
-      let scale = this.graph.view.scale;
-      let point = new mxPoint(this.graph.snap(me.getGraphX() / scale) * scale,
-          this.graph.snap(me.getGraphY() / scale) * scale);
+      const { scale } = this.graph.view;
+      const point = new mxPoint(
+        this.graph.snap(me.getGraphX() / scale) * scale,
+        this.graph.snap(me.getGraphY() / scale) * scale
+      );
       this.waypoints.push(point);
     }
   };
@@ -1536,9 +1735,16 @@ class mxConnectionHandler extends mxEventSource {
    * same fixed connection point.
    */
   checkConstraints = (c1, c2) => {
-    return (c1 == null || c2 == null || c1.point == null || c2.point == null ||
-        !c1.point.equals(c2.point) || c1.dx !== c2.dx || c1.dy !== c2.dy ||
-        c1.perimeter !== c2.perimeter);
+    return (
+      c1 == null ||
+      c2 == null ||
+      c1.point == null ||
+      c2.point == null ||
+      !c1.point.equals(c2.point) ||
+      c1.dx !== c2.dx ||
+      c1.dy !== c2.dy ||
+      c1.perimeter !== c2.perimeter
+    );
   };
 
   /**
@@ -1555,14 +1761,16 @@ class mxConnectionHandler extends mxEventSource {
         return;
       }
 
-      var c1 = this.sourceConstraint;
-      var c2 = this.constraintHandler.currentConstraint;
+      const c1 = this.sourceConstraint;
+      const c2 = this.constraintHandler.currentConstraint;
 
-      let source = (this.previous != null) ? this.previous.cell : null;
+      const source = this.previous != null ? this.previous.cell : null;
       let target = null;
 
-      if (this.constraintHandler.currentConstraint != null &&
-          this.constraintHandler.currentFocus != null) {
+      if (
+        this.constraintHandler.currentConstraint != null &&
+        this.constraintHandler.currentFocus != null
+      ) {
         target = this.constraintHandler.currentFocus.cell;
       }
 
@@ -1571,13 +1779,21 @@ class mxConnectionHandler extends mxEventSource {
       }
 
       // Inserts the edge if no validation error exists and if constraints differ
-      if (this.error == null && (source == null || target == null ||
-          source !== target || this.checkConstraints(c1, c2))) {
+      if (
+        this.error == null &&
+        (source == null ||
+          target == null ||
+          source !== target ||
+          this.checkConstraints(c1, c2))
+      ) {
         this.connect(source, target, me.getEvent(), me.getCell());
       } else {
         // Selects the source terminal for self-references
-        if (this.previous != null && this.marker.validState != null &&
-            this.previous.cell === this.marker.validState.cell) {
+        if (
+          this.previous != null &&
+          this.marker.validState != null &&
+          this.previous.cell === this.marker.validState.cell
+        ) {
           this.graph.selectCellForEvent(this.marker.source, me.getEvent());
         }
 
@@ -1651,7 +1867,7 @@ class mxConnectionHandler extends mxEventSource {
    * valid - Boolean indicating if the color for a valid edge should be
    * returned.
    */
-  updatePreview = (valid) => {
+  updatePreview = valid => {
     this.shape.strokewidth = this.getEdgeWidth(valid);
     this.shape.stroke = this.getEdgeColor(valid);
   };
@@ -1667,8 +1883,8 @@ class mxConnectionHandler extends mxEventSource {
    * valid - Boolean indicating if the color for a valid edge should be
    * returned.
    */
-  getEdgeColor = (valid) => {
-    return (valid) ? mxConstants.VALID_COLOR : mxConstants.INVALID_COLOR;
+  getEdgeColor = valid => {
+    return valid ? mxConstants.VALID_COLOR : mxConstants.INVALID_COLOR;
   };
 
   /**
@@ -1682,8 +1898,8 @@ class mxConnectionHandler extends mxEventSource {
    * valid - Boolean indicating if the width for a valid edge should be
    * returned.
    */
-  getEdgeWidth = (valid) => {
-    return (valid) ? 3 : 1;
+  getEdgeWidth = valid => {
+    return valid ? 3 : 1;
   };
 
   /**
@@ -1701,16 +1917,25 @@ class mxConnectionHandler extends mxEventSource {
    * released.
    */
   connect = (source, target, evt, dropTarget) => {
-    if (target != null || this.isCreateTarget(evt) || this.graph.allowDanglingEdges) {
+    if (
+      target != null ||
+      this.isCreateTarget(evt) ||
+      this.graph.allowDanglingEdges
+    ) {
       // Uses the common parent of source and target or
       // the default parent to insert the edge
-      let model = this.graph.getModel();
+      const model = this.graph.getModel();
       let terminalInserted = false;
       let edge = null;
 
       model.beginUpdate();
       try {
-        if (source != null && target == null && !this.graph.isIgnoreTerminalEvent(evt) && this.isCreateTarget(evt)) {
+        if (
+          source != null &&
+          target == null &&
+          !this.graph.isIgnoreTerminalEvent(evt) &&
+          this.isCreateTarget(evt)
+        ) {
           target = this.createTargetVertex(evt, source);
 
           if (target != null) {
@@ -1719,11 +1944,14 @@ class mxConnectionHandler extends mxEventSource {
 
             // Disables edges as drop targets if the target cell was created
             // FIXME: Should not shift if vertex was aligned (same in Java)
-            if (dropTarget == null || !this.graph.getModel().isEdge(dropTarget)) {
-              let pstate = this.graph.getView().getState(dropTarget);
+            if (
+              dropTarget == null ||
+              !this.graph.getModel().isEdge(dropTarget)
+            ) {
+              const pstate = this.graph.getView().getState(dropTarget);
 
               if (pstate != null) {
-                let tmp = model.getGeometry(target);
+                const tmp = model.getGeometry(target);
                 tmp.x -= pstate.origin.x;
                 tmp.y -= pstate.origin.y;
               }
@@ -1737,13 +1965,20 @@ class mxConnectionHandler extends mxEventSource {
 
         let parent = this.graph.getDefaultParent();
 
-        if (source != null && target != null &&
-            model.getParent(source) === model.getParent(target) &&
-            model.getParent(model.getParent(source)) !== model.getRoot()) {
+        if (
+          source != null &&
+          target != null &&
+          model.getParent(source) === model.getParent(target) &&
+          model.getParent(model.getParent(source)) !== model.getRoot()
+        ) {
           parent = model.getParent(source);
 
-          if ((source.geometry != null && source.geometry.relative) &&
-              (target.geometry != null && target.geometry.relative)) {
+          if (
+            source.geometry != null &&
+            source.geometry.relative &&
+            target.geometry != null &&
+            target.geometry.relative
+          ) {
             parent = model.getParent(parent);
           }
         }
@@ -1762,27 +1997,45 @@ class mxConnectionHandler extends mxEventSource {
 
         if (edge != null) {
           // Updates the connection constraints
-          this.graph.setConnectionConstraint(edge, source, true, this.sourceConstraint);
-          this.graph.setConnectionConstraint(edge, target, false, this.constraintHandler.currentConstraint);
+          this.graph.setConnectionConstraint(
+            edge,
+            source,
+            true,
+            this.sourceConstraint
+          );
+          this.graph.setConnectionConstraint(
+            edge,
+            target,
+            false,
+            this.constraintHandler.currentConstraint
+          );
 
           // Uses geometry of the preview edge state
           if (this.edgeState != null) {
             model.setGeometry(edge, this.edgeState.cell.geometry);
           }
 
-          let parent = model.getParent(source);
+          const parent = model.getParent(source);
 
           // Inserts edge before source
           if (this.isInsertBefore(edge, source, target, evt, dropTarget)) {
-            let index = null;
+            const index = null;
             let tmp = source;
 
-            while (tmp.parent != null && tmp.geometry != null &&
-            tmp.geometry.relative && tmp.parent !== edge.parent) {
+            while (
+              tmp.parent != null &&
+              tmp.geometry != null &&
+              tmp.geometry.relative &&
+              tmp.parent !== edge.parent
+            ) {
               tmp = this.graph.model.getParent(tmp);
             }
 
-            if (tmp != null && tmp.parent != null && tmp.parent === edge.parent) {
+            if (
+              tmp != null &&
+              tmp.parent != null &&
+              tmp.parent === edge.parent
+            ) {
               model.add(parent, edge, tmp.parent.getIndex(tmp));
             }
           }
@@ -1799,29 +2052,49 @@ class mxConnectionHandler extends mxEventSource {
 
           // Uses scaled waypoints in geometry
           if (this.waypoints != null && this.waypoints.length > 0) {
-            let s = this.graph.view.scale;
-            let tr = this.graph.view.translate;
+            const s = this.graph.view.scale;
+            const tr = this.graph.view.translate;
             geo.points = [];
 
             for (let i = 0; i < this.waypoints.length; i++) {
-              let pt = this.waypoints[i];
+              const pt = this.waypoints[i];
               geo.points.push(new mxPoint(pt.x / s - tr.x, pt.y / s - tr.y));
             }
           }
 
           if (target == null) {
-            let t = this.graph.view.translate;
-            let s = this.graph.view.scale;
-            let pt = (this.originalPoint != null) ?
-                new mxPoint(this.originalPoint.x / s - t.x, this.originalPoint.y / s - t.y) :
-                new mxPoint(this.currentPoint.x / s - t.x, this.currentPoint.y / s - t.y);
+            const t = this.graph.view.translate;
+            const s = this.graph.view.scale;
+            const pt =
+              this.originalPoint != null
+                ? new mxPoint(
+                    this.originalPoint.x / s - t.x,
+                    this.originalPoint.y / s - t.y
+                  )
+                : new mxPoint(
+                    this.currentPoint.x / s - t.x,
+                    this.currentPoint.y / s - t.y
+                  );
             pt.x -= this.graph.panDx / this.graph.view.scale;
             pt.y -= this.graph.panDy / this.graph.view.scale;
             geo.setTerminalPoint(pt, false);
           }
 
-          this.fireEvent(new mxEventObject(mxEvent.CONNECT, 'cell', edge, 'terminal', target,
-              'event', evt, 'target', dropTarget, 'terminalInserted', terminalInserted));
+          this.fireEvent(
+            new mxEventObject(
+              mxEvent.CONNECT,
+              'cell',
+              edge,
+              'terminal',
+              target,
+              'event',
+              evt,
+              'target',
+              dropTarget,
+              'terminalInserted',
+              terminalInserted
+            )
+          );
         }
       } catch (e) {
         mxLog.show();
@@ -1831,7 +2104,7 @@ class mxConnectionHandler extends mxEventSource {
       }
 
       if (this.select) {
-        this.selectCells(edge, (terminalInserted) ? target : null);
+        this.selectCells(edge, terminalInserted ? target : null);
       }
     }
   };
@@ -1856,12 +2129,11 @@ class mxConnectionHandler extends mxEventSource {
   insertEdge = (parent, id, value, source, target, style) => {
     if (this.factoryMethod == null) {
       return this.graph.insertEdge(parent, id, value, source, target, style);
-    } else {
-      let edge = this.createEdge(value, source, target, style);
-      edge = this.graph.addEdge(edge, parent, source, target);
-
-      return edge;
     }
+    let edge = this.createEdge(value, source, target, style);
+    edge = this.graph.addEdge(edge, parent, source, target);
+
+    return edge;
   };
 
   /**
@@ -1885,25 +2157,28 @@ class mxConnectionHandler extends mxEventSource {
       geo = this.graph.getCellGeometry(source);
     }
 
-    let clone = this.graph.cloneCell(source);
+    const clone = this.graph.cloneCell(source);
     geo = this.graph.getModel().getGeometry(clone);
 
     if (geo != null) {
-      let t = this.graph.view.translate;
-      let s = this.graph.view.scale;
-      let point = new mxPoint(this.currentPoint.x / s - t.x, this.currentPoint.y / s - t.y);
+      const t = this.graph.view.translate;
+      const s = this.graph.view.scale;
+      const point = new mxPoint(
+        this.currentPoint.x / s - t.x,
+        this.currentPoint.y / s - t.y
+      );
       geo.x = Math.round(point.x - geo.width / 2 - this.graph.panDx / s);
       geo.y = Math.round(point.y - geo.height / 2 - this.graph.panDy / s);
 
       // Aligns with source if within certain tolerance
-      let tol = this.getAlignmentTolerance();
+      const tol = this.getAlignmentTolerance();
 
       if (tol > 0) {
-        let sourceState = this.graph.view.getState(source);
+        const sourceState = this.graph.view.getState(source);
 
         if (sourceState != null) {
-          let x = sourceState.x / s - t.x;
-          let y = sourceState.y / s - t.y;
+          const x = sourceState.x / s - t.x;
+          const y = sourceState.y / s - t.y;
 
           if (Math.abs(x - geo.x) <= tol) {
             geo.x = Math.round(x);
@@ -1924,8 +2199,10 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Returns the tolerance for aligning new targets to sources. This returns the grid size / 2.
    */
-  getAlignmentTolerance = (evt) => {
-    return (this.graph.isGridEnabled()) ? this.graph.gridSize / 2 : this.graph.tolerance;
+  getAlignmentTolerance = evt => {
+    return this.graph.isGridEnabled()
+      ? this.graph.gridSize / 2
+      : this.graph.tolerance;
   };
 
   /**
@@ -1956,7 +2233,7 @@ class mxConnectionHandler extends mxEventSource {
       edge.setEdge(true);
       edge.setStyle(style);
 
-      let geo = new mxGeometry();
+      const geo = new mxGeometry();
       geo.relative = true;
       edge.setGeometry(geo);
     }
