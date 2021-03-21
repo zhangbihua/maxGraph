@@ -6,6 +6,7 @@
 import mxEventSource from "../util/mxEventSource";
 import mxUtils from "../util/mxUtils";
 import mxEventObject from "../util/mxEventObject";
+import mxEvent from "../util/mxEvent";
 
 class mxPanningHandler extends mxEventSource {
   /**

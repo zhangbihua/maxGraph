@@ -7,6 +7,7 @@
 import mxUndoableEdit from "../util/mxUndoableEdit";
 import mxEventSource from "../util/mxEventSource";
 import mxEventObject from "../util/mxEventObject";
+import mxClient from "../mxClient";
 
 class mxGraphSelectionModel extends mxEventSource {
   /**

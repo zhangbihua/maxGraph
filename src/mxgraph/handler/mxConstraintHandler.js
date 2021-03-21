@@ -3,6 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxImage from "../util/mxImage";
+import mxClient from "../mxClient";
+import mxConstants from "../util/mxConstants";
+import mxEvent from "../util/mxEvent";
 
 class mxConstraintHandler {
   /**

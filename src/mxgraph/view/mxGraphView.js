@@ -11,6 +11,7 @@ import mxEventSource from "../util/mxEventSource";
 import mxEventObject from "../util/mxEventObject";
 import mxRectangleShape from "../shape/mxRectangleShape";
 import mxConstants from "../util/mxConstants";
+import mxClient from "../mxClient";
 
 class mxGraphView extends mxEventSource {
   EMPTY_POINT = new mxPoint();

@@ -4,6 +4,10 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxClient from "../mxClient";
+import mxEvent from "../util/mxEvent";
+import mxUtils from "../util/mxUtils";
+
 class mxGraphHandler {
   /**
    * Variable: graph

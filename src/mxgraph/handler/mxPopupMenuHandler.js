@@ -4,6 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxPopupMenu from "../util/mxPopupMenu";
+import mxEvent from "../util/mxEvent";
+import mxUtils from "../util/mxUtils";
 
 class mxPopupMenuHandler extends mxPopupMenu {
   /**
@@ -92,7 +94,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    */
   init = () => {
     // Supercall
-    init.apply(this);
+    super.init();
 
     // Hides the tooltip if the mouse is over
     // the context menu

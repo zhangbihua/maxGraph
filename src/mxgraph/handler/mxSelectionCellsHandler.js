@@ -6,6 +6,7 @@
 import mxEventSource from "../util/mxEventSource";
 import mxDictionary from "../util/mxDictionary";
 import mxEventObject from "../util/mxEventObject";
+import mxEvent from "../util/mxEvent";
 
 class mxSelectionCellsHandler extends mxEventSource {
   /**

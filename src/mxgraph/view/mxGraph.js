@@ -37,6 +37,7 @@ import mxResources from "../util/mxResources";
 import mxGeometry from "../model/mxGeometry";
 import mxCell from "../model/mxCell";
 import mxGraphModel from "../model/mxGraphModel";
+import mxStylesheet from "./mxStylesheet";
 
 class mxGraph extends mxEventSource {
   /**
