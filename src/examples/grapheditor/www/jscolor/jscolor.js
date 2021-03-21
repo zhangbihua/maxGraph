@@ -690,7 +690,7 @@ var mxJSColor = {
 			} catch(eOldIE) {
 				p.btn.style.cursor = 'hand';
 			}
-			p.btn.onmousedown = function () {
+			p.btn.onmousedown = () => {
 				THIS.hidePicker();
 			};
 			p.btnS.style.lineHeight = p.btn.style.height;

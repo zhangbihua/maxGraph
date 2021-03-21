@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
+ * Updated to ES9 syntax by David Morrissey 2021
  */
 
 import mxUtils from "../util/mxUtils";
@@ -30,7 +31,7 @@ var mxPerimeter = {
    * mxPerimeter-namespace as follows:
    *
    * (code)
-   * mxPerimeter.CustomPerimeter = function (bounds, vertex, next, orthogonal)
+   * mxPerimeter.CustomPerimeter = (bounds, vertex, next, orthogonal) =>
    * {
    *   var x = 0; // Calculate x-coordinate
    *   var y = 0; // Calculate y-coordainte

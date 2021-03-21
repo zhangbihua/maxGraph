@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
+ * Updated to ES9 syntax by David Morrissey 2021
  */
 
 class mxSwimlaneLayout extends mxGraphLayout {
@@ -707,8 +708,8 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * allVertices - Array of cell paths for the visited cells.
    * swimlaneIndex - the laid out order index of the swimlane vertex is contained in
    */
-  traverse = function (vertex, directed, edge, allVertices, currentComp,
-                       hierarchyVertices, filledVertexSet, swimlaneIndex) {
+  traverse = (vertex, directed, edge, allVertices, currentComp,
+              hierarchyVertices, filledVertexSet, swimlaneIndex) => {
     if (vertex != null && allVertices != null) {
       // Has this vertex been seen before in any traversal
       // And if the filled vertex set is populated, only

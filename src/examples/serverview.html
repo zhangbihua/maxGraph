@@ -22,7 +22,7 @@
 	<script type="text/javascript">
 		// Makes the background of the in-place editor non-transparent
 		var previousStartEditing = mxCellEditor.prototype.startEditing;
-		mxCellEditor.prototype.startEditing = function (cell, trigger)
+		mxCellEditor.prototype.startEditing = (cell, trigger) =>
 		{
 			previousStartEditing.apply(this, arguments);
 	

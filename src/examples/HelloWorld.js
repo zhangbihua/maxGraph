@@ -14,7 +14,7 @@ class HelloWorld extends React.Component {
     super(props);
   }
 
-  render() {
+  render=()=>{
     // A container for the graph with a grid wallpaper
     return <>
       <h1>Hello, World! example for mxGraph</h1>
@@ -31,7 +31,7 @@ class HelloWorld extends React.Component {
     </>;
   }
 
-  componentDidMount() {
+  componentDidMount=()=>{
     // FIXME!!
     let mxBasePath = '../src';
 
@@ -44,34 +44,27 @@ class HelloWorld extends React.Component {
     // is normally the first child of the root (ie. layer 0).
     let parent = graph.getDefaultParent();
 
-    // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
-      let v1 = graph.insertVertex({
-        id: null,
+    graph.getModel().batchUpdate(() => {
+      // Add cells to the model in a single step
+      let vertex1 = graph.insertVertex({
         parent: parent,
-        value: 'Hello,',
+        value: 'Hello',
         position: [20, 20],
         size: [80, 30]
       });
-      let v2 = graph.insertVertex({
-        id: null,
+      let vertex2 = graph.insertVertex({
         parent: parent,
         value: 'World!',
         position: [200, 150],
         size: [80, 30]
       });
       graph.insertEdge({
-        id: null,
         parent: parent,
-        value: '',
-        source: v1,
-        target: v2
+        value: 'to the',
+        source: vertex1,
+        target: vertex2
       });
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
-    }
+    });
   }
 }
 

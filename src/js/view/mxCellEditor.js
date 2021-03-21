@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
+ * Updated to ES9 syntax by David Morrissey 2021
  */
 
 import mxUtils from "../util/mxUtils"
@@ -267,7 +268,7 @@ class mxCellEditor {
    * Creates the <textarea> and installs the event listeners. The key handler
    * updates the <modified> state.
    */
-  init = function () {
+  init = () => {
     this.textarea = document.createElement('div');
     this.textarea.className = 'mxCellEditor mxPlainTextEditor';
     this.textarea.contentEditable = true;
@@ -295,7 +296,7 @@ class mxCellEditor {
    *
    * Sets the temporary horizontal alignment for the current editing session.
    */
-  setAlign = function (align) {
+  setAlign = (align) => {
     if (this.textarea != null) {
       this.textarea.style.textAlign = align;
     }
@@ -979,7 +980,7 @@ class mxCellEditor {
    * cell - <mxCell> for which a text for an empty editing box should be
    * returned.
    */
-  getEmptyLabelText = function (cell) {
+  getEmptyLabelText = (cell) => {
     return this.emptyLabelText;
   };
 
@@ -989,7 +990,7 @@ class mxCellEditor {
    * Returns the cell that is currently being edited or null if no cell is
    * being edited.
    */
-  getEditingCell = function () {
+  getEditingCell = () => {
     return this.editingCell;
   };
 
@@ -998,7 +999,7 @@ class mxCellEditor {
    *
    * Destroys the editor and removes all associated resources.
    */
-  destroy = function () {
+  destroy = () => {
     if (this.textarea != null) {
       mxEvent.release(this.textarea);
 

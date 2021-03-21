@@ -2698,7 +2698,7 @@ Graph.prototype.formatDate = function(date, mask, utc)
 	var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
     	timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
     	timezoneClip = /[^-+\dA-Z]/g,
-    	pad = function (val, len) {
+    	pad = (val, len) => {
 			val = String(val);
 			len = len || 2;
 			while (val.length < len) val = "0" + val;
@@ -3691,7 +3691,7 @@ Graph.prototype.selectCells = function(vertices, edges, parent)
  * parent - <mxCell> that should be used as the root of the recursion.
  * Default is <defaultParent>.
  */
-Graph.prototype.getSwimlaneAt = function (x, y, parent)
+Graph.prototype.getSwimlaneAt = (x, y, parent) =>
 {
 	var result = mxGraph.prototype.getSwimlaneAt.apply(this, arguments);
 	
@@ -5580,7 +5580,7 @@ TableLayout.prototype.execute = function(parent)
 	 */
 	var mxConnectorPaintLine = mxConnector.prototype.paintLine;
 
-	mxConnector.prototype.paintLine = function (c, absPts, rounded)
+	mxConnector.prototype.paintLine = (c, absPts, rounded) =>
 	{
 		// Required for checking dirty state
 		this.routedPoints = (this.state != null) ? this.state.routedPoints : null;

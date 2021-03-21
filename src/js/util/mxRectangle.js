@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
+ * Updated to ES9 syntax by David Morrissey 2021
  */
 /**
  * Class: mxRectangle
@@ -66,7 +67,7 @@ class mxRectangle extends mxPoint {
    *
    * Returns the x-coordinate of the center point.
    */
-  getCenterX = function () {
+  getCenterX = () => {
     return this.x + this.width / 2;
   };
 
@@ -75,7 +76,7 @@ class mxRectangle extends mxPoint {
    *
    * Returns the y-coordinate of the center point.
    */
-  getCenterY = function () {
+  getCenterY = () => {
     return this.y + this.height / 2;
   };
 

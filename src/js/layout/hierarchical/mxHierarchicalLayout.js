@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2006-2018, JGraph Ltd
  * Copyright (c) 2006-2018, Gaudenz Alder
+ * Updated to ES9 syntax by David Morrissey 2021
  */
 
 class mxHierarchicalLayout extends mxGraphLayout {
@@ -610,8 +611,8 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * null for the first step of the traversal.
    * allVertices - Array of cell paths for the visited cells.
    */
-  traverse = function (vertex, directed, edge, allVertices, currentComp,
-                       hierarchyVertices, filledVertexSet) {
+  traverse = (vertex, directed, edge, allVertices, currentComp,
+              hierarchyVertices, filledVertexSet) => {
     if (vertex != null && allVertices != null) {
       // Has this vertex been seen before in any traversal
       // And if the filled vertex set is populated, only

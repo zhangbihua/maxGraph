@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
+ * Updated to ES9 syntax by David Morrissey 2021
  */
 
 import mxImage from "../util/mxImage";
@@ -4021,9 +4022,9 @@ class mxGraph extends mxEventSource {
    * relative - Optional boolean that specifies if the geometry is relative.
    * Default is false.
    */
-  insertVertex = function (parent, id, value,
-                           x, y, width, height,
-                           style, relative) {
+  insertVertex = (parent, id, value,
+                  x, y, width, height,
+                  style, relative) => {
 
     if (arguments.length === 1) {
       // If only a single parameter, treat as an object
@@ -4042,7 +4043,7 @@ class mxGraph extends mxEventSource {
       relative = params.relative;
     }
 
-    var vertex = this.createVertex(
+    let vertex = this.createVertex(
         parent, id, value,
         x, y, width, height,
         style, relative
@@ -4055,14 +4056,15 @@ class mxGraph extends mxEventSource {
    *
    * Hook method that creates the new vertex for <insertVertex>.
    */
-  createVertex = function (parent, id, value,
-                           x, y, width, height, style, relative) {
+  createVertex = (parent, id, value,
+                  x, y, width, height, style, relative) => {
+
     // Creates the geometry for the vertex
-    var geometry = new mxGeometry(x, y, width, height);
+    let geometry = new mxGeometry(x, y, width, height);
     geometry.relative = (relative != null) ? relative : false;
 
     // Creates the vertex
-    var vertex = new mxCell(value, geometry, style);
+    let vertex = new mxCell(value, geometry, style);
     vertex.setId(id);
     vertex.setVertex(true);
     vertex.setConnectable(true);
@@ -4088,8 +4090,20 @@ class mxGraph extends mxEventSource {
    * style - Optional string that defines the cell style.
    */
   insertEdge = (parent, id, value, source, target, style) => {
-    var edge = this.createEdge(parent, id, value, source, target, style);
 
+    if (arguments.length === 1) {
+      // If only a single parameter, treat as an object
+      // This syntax can be more readable
+      let params = arguments[0];
+      parent = params.parent;
+      id = params.id;
+      value = params.value;
+      source = params.source;
+      target = params.target;
+      style = params.style;
+    }
+
+    let edge = this.createEdge(parent, id, value, source, target, style);
     return this.addEdge(edge, parent, source, target);
   };
 
@@ -4107,7 +4121,6 @@ class mxGraph extends mxEventSource {
     edge.setId(id);
     edge.setEdge(true);
     edge.geometry.relative = true;
-
     return edge;
   };
 
@@ -9464,7 +9477,7 @@ class mxGraph extends mxEventSource {
    *
    * enabled - Boolean indicating if tooltips should be enabled.
    */
-  setTooltips = function (enabled) {
+  setTooltips = (enabled) => {
     this.tooltipHandler.setEnabled(enabled);
   };
 
@@ -9965,7 +9978,7 @@ class mxGraph extends mxEventSource {
    * parent - <mxCell> that should be used as the root of the recursion.
    * Default is <defaultParent>.
    */
-  getSwimlaneAt = function (x, y, parent) {
+  getSwimlaneAt = (x, y, parent) => {
     if (parent == null) {
       parent = this.getCurrentRoot();
 

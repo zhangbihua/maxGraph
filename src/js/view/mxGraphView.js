@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
+ * Updated to ES9 syntax by David Morrissey 2021
  */
 
 import mxPoint from "../util/mxPoint";
@@ -1490,7 +1491,7 @@ class mxGraphView extends mxEventSource {
    *
    * Returns the x-coordinate of the center point for automatic routing.
    */
-  getRoutingCenterX = function (state) {
+  getRoutingCenterX = (state) => {
     var f = (state.style != null) ? parseFloat(state.style
         [mxConstants.STYLE_ROUTING_CENTER_X]) || 0 : 0;
 
@@ -1502,7 +1503,7 @@ class mxGraphView extends mxEventSource {
    *
    * Returns the y-coordinate of the center point for automatic routing.
    */
-  getRoutingCenterY = function (state) {
+  getRoutingCenterY = (state) => {
     var f = (state.style != null) ? parseFloat(state.style
         [mxConstants.STYLE_ROUTING_CENTER_Y]) || 0 : 0;
 

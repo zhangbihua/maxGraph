@@ -173,7 +173,7 @@ for storing references to ports.)
 				
 				// White in-place editor text color
 				mxCellEditorStartEditing = mxCellEditor.prototype.startEditing;
-				mxCellEditor.prototype.startEditing = function (cell, trigger)
+				mxCellEditor.prototype.startEditing = (cell, trigger) =>
 				{
 					mxCellEditorStartEditing.apply(this, arguments);
 					

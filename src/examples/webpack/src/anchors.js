@@ -11,7 +11,7 @@ var mxgraph = require("../../../dist/build")({
     mxRubberband = mxgraph.mxRubberband,
     mxCellState = mxgraph.mxCellState;
 
-window.onload = function () {
+window.onload = () => {
   // Overridden to define per-shape connection points
   mxGraph.prototype.getAllConnectionConstraints = function(terminal, source)
   {

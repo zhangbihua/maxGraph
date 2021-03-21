@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
+ * Updated to ES9 syntax by David Morrissey 2021
  */
 
 import mxUtils from "./mxUtils";
@@ -455,7 +456,7 @@ class mxToolbar extends mxEventSource {
    *
    * Removes the toolbar and all its associated resources.
    */
-  destroy = function () {
+  destroy = () => {
     mxEvent.release(this.container);
     this.container = null;
     this.defaultMode = null;

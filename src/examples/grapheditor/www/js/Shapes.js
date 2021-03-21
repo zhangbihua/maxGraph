@@ -2108,7 +2108,7 @@
 
 	mxCellRenderer.registerShape('umlFrame', UmlFrame);
 	
-	mxPerimeter.LifelinePerimeter = function (bounds, vertex, next, orthogonal)
+	mxPerimeter.LifelinePerimeter = (bounds, vertex, next, orthogonal) =>
 	{
 		var size = UmlLifeline.prototype.size;
 		
@@ -2131,7 +2131,7 @@
 	
 	mxStyleRegistry.putValue('lifelinePerimeter', mxPerimeter.LifelinePerimeter);
 	
-	mxPerimeter.OrthogonalPerimeter = function (bounds, vertex, next, orthogonal)
+	mxPerimeter.OrthogonalPerimeter = (bounds, vertex, next, orthogonal) =>
 	{
 		orthogonal = true;
 		
@@ -2140,7 +2140,7 @@
 	
 	mxStyleRegistry.putValue('orthogonalPerimeter', mxPerimeter.OrthogonalPerimeter);
 
-	mxPerimeter.BackbonePerimeter = function (bounds, vertex, next, orthogonal)
+	mxPerimeter.BackbonePerimeter = (bounds, vertex, next, orthogonal) =>
 	{
 		var sw = (parseFloat(vertex.style[mxConstants.STYLE_STROKEWIDTH] || 1) * vertex.view.scale / 2) - 1;
 		
@@ -2177,7 +2177,7 @@
 	mxStyleRegistry.putValue('backbonePerimeter', mxPerimeter.BackbonePerimeter);
 
 	// Callout Perimeter
-	mxPerimeter.CalloutPerimeter = function (bounds, vertex, next, orthogonal)
+	mxPerimeter.CalloutPerimeter = (bounds, vertex, next, orthogonal) =>
 	{
 		return mxPerimeter.RectanglePerimeter(mxUtils.getDirectedBounds(bounds, new mxRectangle(0, 0, 0,
 			Math.max(0, Math.min(bounds.height, parseFloat(mxUtils.getValue(vertex.style, 'size',
@@ -2188,7 +2188,7 @@
 	mxStyleRegistry.putValue('calloutPerimeter', mxPerimeter.CalloutPerimeter);
 	
 	// Parallelogram Perimeter
-	mxPerimeter.ParallelogramPerimeter = function (bounds, vertex, next, orthogonal)
+	mxPerimeter.ParallelogramPerimeter = (bounds, vertex, next, orthogonal) =>
 	{
 		var fixed = mxUtils.getValue(vertex.style, 'fixedSize', '0') != '0';
 		var size = (fixed) ? ParallelogramShape.prototype.fixedSize : ParallelogramShape.prototype.size;
@@ -2251,7 +2251,7 @@
 	mxStyleRegistry.putValue('parallelogramPerimeter', mxPerimeter.ParallelogramPerimeter);
 	
 	// Trapezoid Perimeter
-	mxPerimeter.TrapezoidPerimeter = function (bounds, vertex, next, orthogonal)
+	mxPerimeter.TrapezoidPerimeter = (bounds, vertex, next, orthogonal) =>
 	{
 		var fixed = mxUtils.getValue(vertex.style, 'fixedSize', '0') != '0';
 		var size = (fixed) ? TrapezoidShape.prototype.fixedSize : TrapezoidShape.prototype.size;
@@ -2324,7 +2324,7 @@
 	mxStyleRegistry.putValue('trapezoidPerimeter', mxPerimeter.TrapezoidPerimeter);
 	
 	// Step Perimeter
-	mxPerimeter.StepPerimeter = function (bounds, vertex, next, orthogonal)
+	mxPerimeter.StepPerimeter = (bounds, vertex, next, orthogonal) =>
 	{
 		var fixed = mxUtils.getValue(vertex.style, 'fixedSize', '0') != '0';
 		var size = (fixed) ? StepShape.prototype.fixedSize : StepShape.prototype.size;
@@ -2401,7 +2401,7 @@
 	mxStyleRegistry.putValue('stepPerimeter', mxPerimeter.StepPerimeter);
 	
 	// Hexagon Perimeter 2 (keep existing one)
-	mxPerimeter.HexagonPerimeter2 = function (bounds, vertex, next, orthogonal)
+	mxPerimeter.HexagonPerimeter2 = (bounds, vertex, next, orthogonal) =>
 	{
 		var fixed = mxUtils.getValue(vertex.style, 'fixedSize', '0') != '0';
 		var size = (fixed) ? HexagonShape.prototype.fixedSize : HexagonShape.prototype.size;
@@ -4634,7 +4634,7 @@
 
 	 isoVVector = mxUtils.getRotatedPoint(isoVVector, cos2, sin2);
 	
-	 mxEdgeStyle.IsometricConnector = function (state, source, target, points, result)
+	 mxEdgeStyle.IsometricConnector = (state, source, target, points, result) =>
 	 {
 		var view = state.view;
 		var pt = (points != null && points.length > 0) ? points[0] : null;

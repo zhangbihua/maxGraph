@@ -18,7 +18,7 @@ var version = "1.3.1+HEAD.ba6f97f";
  */
 
 var freeze = Object.freeze;
-Object.freeze = function (obj) { return obj; };
+Object.freeze = (obj) => { return obj; };
 
 // @function extend(dest: Object, src?: Object): Object
 // Merges the properties of the `src` object (or multiple objects) into `dest` object and returns the latter. Has an `L.extend` shortcut.
@@ -84,7 +84,7 @@ function stamp(obj) {
 function throttle(fn, time, context) {
 	var lock, args, wrapperFn, later;
 
-	later = function () {
+	later = () => {
 		// reset lock and call if queued
 		lock = false;
 		if (args) {
@@ -93,7 +93,7 @@ function throttle(fn, time, context) {
 		}
 	};
 
-	wrapperFn = function () {
+	wrapperFn = () => {
 		if (lock) {
 			// called too soon, queue to call later
 			args = arguments;
@@ -289,12 +289,12 @@ var Util = (Object.freeze || Object)({
 
 function Class() {}
 
-Class.extend = function (props) {
+Class.extend = (props) => {
 
 	// @function extend(props: Object): Function
 	// [Extends the current class](#class-inheritance) given the properties to be included.
 	// Returns a Javascript function that is a class constructor (to be called with `new`).
-	var NewClass = function () {
+	var NewClass = () => {
 
 		// call the constructor
 		if (this.initialize) {
@@ -343,7 +343,7 @@ Class.extend = function (props) {
 	proto._initHooks = [];
 
 	// add method for calling all hooks
-	proto.callInitHooks = function () {
+	proto.callInitHooks = () => {
 
 		if (this._initHooksCalled) { return; }
 
@@ -364,21 +364,21 @@ Class.extend = function (props) {
 
 // @function include(properties: Object): this
 // [Includes a mixin](#class-includes) into the current class.
-Class.include = function (props) {
+Class.include = (props) => {
 	extend(this.prototype, props);
 	return this;
 };
 
 // @function mergeOptions(options: Object): this
 // [Merges `options`](#class-options) into the defaults of the class.
-Class.mergeOptions = function (options) {
+Class.mergeOptions = (options) => {
 	extend(this.prototype.options, options);
 	return this;
 };
 
 // @function addInitHook(fn: Function): this
 // Adds a [constructor hook](#class-constructor-hooks) to the class.
-Class.addInitHook = function (fn) { // (Function) || (String, args...)
+Class.addInitHook = (fn) => { // (Function) || (String, args...)
 	var args = Array.prototype.slice.call(arguments, 1);
 
 	var init = typeof fn === 'function' ? fn : function () {
@@ -2101,7 +2101,7 @@ function _handlePointer(e, handler) {
 }
 
 function _addPointerMove(obj, handler, id) {
-	var onMove = function (e) {
+	var onMove = (e) => {
 		// don't fire touch moves when mouse isn't down
 		if ((e.pointerType === e.MSPOINTER_TYPE_MOUSE || e.pointerType === 'mouse') && e.buttons === 0) { return; }
 
@@ -2113,7 +2113,7 @@ function _addPointerMove(obj, handler, id) {
 }
 
 function _addPointerEnd(obj, handler, id) {
-	var onUp = function (e) {
+	var onUp = (e) => {
 		_handlePointer(e, handler);
 	};
 
@@ -2276,7 +2276,7 @@ function addOne(obj, type, fn, context) {
 
 	if (obj[eventsKey] && obj[eventsKey][id]) { return this; }
 
-	var handler = function (e) {
+	var handler = (e) => {
 		return fn.call(context || obj, e || window.event);
 	};
 
@@ -2298,7 +2298,7 @@ function addOne(obj, type, fn, context) {
 			obj.addEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
 
 		} else if ((type === 'mouseenter') || (type === 'mouseleave')) {
-			handler = function (e) {
+			handler = (e) => {
 				e = e || window.event;
 				if (isExternalTarget(obj, e)) {
 					originalHandler(e);
@@ -2308,7 +2308,7 @@ function addOne(obj, type, fn, context) {
 
 		} else {
 			if (type === 'click' && android) {
-				handler = function (e) {
+				handler = (e) => {
 					filterClick(e, originalHandler);
 				};
 			}
@@ -2777,24 +2777,24 @@ var disableTextSelection;
 var enableTextSelection;
 var _userSelect;
 if ('onselectstart' in document) {
-	disableTextSelection = function () {
+	disableTextSelection = () => {
 		on(window, 'selectstart', preventDefault);
 	};
-	enableTextSelection = function () {
+	enableTextSelection = () => {
 		off(window, 'selectstart', preventDefault);
 	};
 } else {
 	var userSelectProperty = testProp(
 		['userSelect', 'WebkitUserSelect', 'OUserSelect', 'MozUserSelect', 'msUserSelect']);
 
-	disableTextSelection = function () {
+	disableTextSelection = () => {
 		if (userSelectProperty) {
 			var style = document.documentElement.style;
 			_userSelect = style[userSelectProperty];
 			style[userSelectProperty] = 'none';
 		}
 	};
-	enableTextSelection = function () {
+	enableTextSelection = () => {
 		if (userSelectProperty) {
 			document.documentElement.style[userSelectProperty] = _userSelect;
 			_userSelect = undefined;
@@ -4730,7 +4730,7 @@ var Control = Class.extend({
 	}
 });
 
-var control = function (options) {
+var control = (options) => {
 	return new Control(options);
 };
 
@@ -5213,7 +5213,7 @@ var Layers = Control.extend({
 
 // @factory L.control.layers(baselayers?: Object, overlays?: Object, options?: Control.Layers options)
 // Creates an attribution control with the given layers. Base layers will be switched with radio buttons, while overlays will be switched with checkboxes. Note that all base layers should be passed in the base layers object, but only one should be added to the map during map instantiation.
-var layers = function (baseLayers, overlays, options) {
+var layers = (baseLayers, overlays, options) => {
 	return new Layers(baseLayers, overlays, options);
 };
 
@@ -5346,7 +5346,7 @@ Map.addInitHook(function () {
 // @namespace Control.Zoom
 // @factory L.control.zoom(options: Control.Zoom options)
 // Creates a zoom control
-var zoom = function (options) {
+var zoom = (options) => {
 	return new Zoom(options);
 };
 
@@ -5475,7 +5475,7 @@ var Scale = Control.extend({
 
 // @factory L.control.scale(options?: Control.Scale options)
 // Creates an scale control with the given options.
-var scale = function (options) {
+var scale = (options) => {
 	return new Scale(options);
 };
 
@@ -5598,7 +5598,7 @@ Map.addInitHook(function () {
 // @namespace Control.Attribution
 // @factory L.control.attribution(options: Control.Attribution options)
 // Creates an attribution control.
-var attribution = function (options) {
+var attribution = (options) => {
 	return new Attribution(options);
 };
 
@@ -5663,7 +5663,7 @@ var Handler = Class.extend({
 // @section There is static function which can be called without instantiating L.Handler:
 // @function addTo(map: Map, name: String): this
 // Adds a new Handler to the given map with the given name.
-Handler.addTo = function (map, name) {
+Handler.addTo = (map, name) => {
 	map.addHandler(name, this);
 	return this;
 };
@@ -6806,7 +6806,7 @@ var LayerGroup = Layer.extend({
 
 // @factory L.layerGroup(layers?: Layer[], options?: Object)
 // Create a layer group, optionally given an initial set of layers and an `options` object.
-var layerGroup = function (layers, options) {
+var layerGroup = (layers, options) => {
 	return new LayerGroup(layers, options);
 };
 
@@ -6898,7 +6898,7 @@ var FeatureGroup = LayerGroup.extend({
 
 // @factory L.featureGroup(layers: Layer[])
 // Create a feature group, optionally given an initial set of layers.
-var featureGroup = function (layers) {
+var featureGroup = (layers) => {
 	return new FeatureGroup(layers);
 };
 
@@ -9132,7 +9132,7 @@ var ImageOverlay = Layer.extend({
 // @factory L.imageOverlay(imageUrl: String, bounds: LatLngBounds, options?: ImageOverlay options)
 // Instantiates an image overlay object given the URL of the image and the
 // geographical bounds it is tied to.
-var imageOverlay = function (url, bounds, options) {
+var imageOverlay = (url, bounds, options) => {
 	return new ImageOverlay(url, bounds, options);
 };
 
@@ -9701,7 +9701,7 @@ var Popup = DivOverlay.extend({
 // @namespace Popup
 // @factory L.popup(options?: Popup options, source?: Layer)
 // Instantiates a `Popup` object given an optional `options` object that describes its appearance and location and an optional `source` object that is used to tag the popup with a reference to the Layer to which it refers.
-var popup = function (options, source) {
+var popup = (options, source) => {
 	return new Popup(options, source);
 };
 
@@ -10124,7 +10124,7 @@ var Tooltip = DivOverlay.extend({
 // @namespace Tooltip
 // @factory L.tooltip(options?: Tooltip options, source?: Layer)
 // Instantiates a Tooltip object given an optional `options` object that describes its appearance and location and an optional `source` object that is used to tag the tooltip with a reference to the Layer to which it refers.
-var tooltip = function (options, source) {
+var tooltip = (options, source) => {
 	return new Tooltip(options, source);
 };
 
