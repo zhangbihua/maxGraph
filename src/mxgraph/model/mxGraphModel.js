@@ -12,6 +12,7 @@ import mxCell from "./mxCell";
 import mxUtils from "../util/mxUtils";
 import mxEventObject from "../util/mxEventObject";
 import mxEvent from "../util/mxEvent";
+import mxPoint from "../util/mxPoint";
 
 import mxCellAttributeChange from "./atomic_changes/mxCellAttributeChange";
 import mxChildChange from "./atomic_changes/mxChildChange";

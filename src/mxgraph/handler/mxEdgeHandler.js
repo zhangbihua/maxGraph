@@ -204,13 +204,13 @@ class mxEdgeHandler {
    * Returns true if the parent highlight should be visible. This implementation
    * always returns true.
    */
-  isParentHighlightVisible = isParentHighlightVisible;
+  //isParentHighlightVisible = isParentHighlightVisible;
   /**
    * Function: updateParentHighlight
    *
    * Updates the highlight of the parent if <parentHighlightEnabled> is true.
    */
-  updateParentHighlight = updateParentHighlight;
+  //updateParentHighlight = updateParentHighlight;
 
   /**
    * Class: mxEdgeHandler

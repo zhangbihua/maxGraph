@@ -33,7 +33,7 @@ class mxRectangle extends mxPoint {
   height = null;
 
   constructor(x, y, width, height) {
-    super(mxConstants.DO_NOTHING);
+    super(x, y, width, height);
 
     if (x !== mxConstants.DO_NOTHING) {
       // replace super of mxPoint
@@ -165,8 +165,8 @@ class mxRectangle extends mxPoint {
    * Returns true if the given object equals this rectangle.
    */
   equals(obj) {
-    return obj != null && obj.x == this.x && obj.y == this.y &&
-        obj.width == this.width && obj.height == this.height;
+    return obj != null && obj.x === this.x && obj.y === this.y &&
+        obj.width === this.width && obj.height === this.height;
   };
 }
 

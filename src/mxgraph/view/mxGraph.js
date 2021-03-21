@@ -4085,6 +4085,8 @@ class mxGraph extends mxEventSource {
     let geometry = new mxGeometry(x, y, width, height);
     geometry.relative = (relative != null) ? relative : false;
 
+    alert(geometry.relative)
+
     // Creates the vertex
     let vertex = new mxCell(value, geometry, style);
     vertex.setId(id);
