@@ -4,6 +4,11 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxEventSource from "../util/mxEventSource";
+import mxUndoableEdit from "../util/mxUndoableEdit";
+import mxCellPath from "./mxCellPath";
+import mxDictionary from "../util/mxDictionary";
+import mxObjectIdentity from "../util/mxObjectIdentity";
+import mxCell from "./mxCell";
 
 class mxGraphModel extends mxEventSource {
   /**

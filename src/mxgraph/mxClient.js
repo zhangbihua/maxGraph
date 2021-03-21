@@ -2,6 +2,8 @@
  * Copyright (c) 2006-2017, JGraph Ltd
  * Copyright (c) 2006-2017, Gaudenz Alder
  */
+import mxResources from "./util/mxResources";
+
 let mxClient = {
   /**
    * Class: mxClient
@@ -24,18 +26,246 @@ let mxClient = {
   VERSION: '4.2.2',
 
   /**
+   * Variable: mxResourceExtension
+   *
+   * Optional global config variable to specify the extension of resource files.
+   * Default is true. NOTE: This is a global variable, not a variable of mxClient.
+   *
+   * (code)
+   * <script type="text/javascript">
+   *     let mxResourceExtension = '.txt';
+   * </script>
+   * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
+   * (end)
+   */
+  mxResourceExtension: '.txt',
+  setResourceExtension: (value) => {
+    mxClient.mxResourceExtension = value;
+    mxResources.extension = value;
+  },
+
+  /**
+   * Variable: mxLoadResources
+   *
+   * Optional global config variable to toggle loading of the two resource files
+   * in <mxGraph> and <mxEditor>. Default is true. NOTE: This is a global variable,
+   * not a variable of mxClient. If this is false, you can use <mxClient.loadResources>
+   * with its callback to load the default bundles asynchronously.
+   *
+   * (code)
+   * <script type="text/javascript">
+   *     let mxLoadResources = false;
+   * </script>
+   * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
+   * (end)
+   */
+  mxLoadResources: true,
+  setLoadResources: (value) => {},
+
+  /**
+   * Variable: mxForceIncludes
+   *
+   * Optional global config variable to force loading the JavaScript files in
+   * development mode. Default is undefined. NOTE: This is a global variable,
+   * not a variable of mxClient.
+   *
+   * (code)
+   * <script type="text/javascript">
+   *     let mxLoadResources = true;
+   * </script>
+   * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
+   * (end)
+   */
+  mxForceIncludes: false,
+  setForceIncludes: (value) => {
+    mxClient.mxForceIncludes = value;
+  },
+
+  /**
+   * Variable: mxLoadStylesheets
+   *
+   * Optional global config variable to toggle loading of the CSS files when
+   * the library is initialized. Default is true. NOTE: This is a global variable,
+   * not a variable of mxClient.
+   *
+   * (code)
+   * <script type="text/javascript">
+   *     let mxLoadStylesheets = false;
+   * </script>
+   * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
+   * (end)
+   */
+  mxLoadStylesheets: true,
+  setLoadStylesheets: (value) => {
+    mxClient.mxLoadStylesheets = value;
+  },
+
+  /**
+   * Variable: basePath
+   *
+   * Basepath for all URLs in the core without trailing slash. Default is '.'.
+   * Set mxBasePath prior to loading the mxClient library as follows to override
+   * this setting:
+   *
+   * (code)
+   * <script type="text/javascript">
+   *     mxBasePath = '/path/to/core/directory';
+   * </script>
+   * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
+   * (end)
+   *
+   * When using a relative path, the path is relative to the URL of the page that
+   * contains the assignment. Trailing slashes are automatically removed.
+   */
+  basePath: '.',
+  setBasePath: (value) => {
+    if (typeof(value) != 'undefined' && value.length > 0) {
+      // Adds a trailing slash if required
+      if (value.substring(value.length - 1) === '/') {
+        value = value.substring(0, value.length - 1);
+      }
+      mxClient.basePath = value;
+    } else {
+      mxClient.basePath = '.';
+    }
+  },
+
+  /**
+   * Variable: imageBasePath
+   *
+   * Basepath for all images URLs in the core without trailing slash. Default is
+   * <mxClient.basePath> + '/images'. Set mxImageBasePath prior to loading the
+   * mxClient library as follows to override this setting:
+   *
+   * (code)
+   * <script type="text/javascript">
+   *     mxImageBasePath = '/path/to/image/directory';
+   * </script>
+   * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
+   * (end)
+   *
+   * When using a relative path, the path is relative to the URL of the page that
+   * contains the assignment. Trailing slashes are automatically removed.
+   */
+  imageBasePath: '.',
+  setImageBasePath: (value) => {
+    if (typeof(value) != 'undefined' && value.length > 0) {
+      // Adds a trailing slash if required
+      if (value.substring(value.length - 1) === '/') {
+        value = value.substring(0, value.length - 1);
+      }
+      mxClient.imageBasePath = value;
+    } else {
+      mxClient.imageBasePath = mxClient.basePath + '/images';
+    }
+  },
+
+  /**
+   * Variable: language
+   *
+   * Defines the language of the client, eg. en for english, de for german etc.
+   * The special value 'none' will disable all built-in internationalization and
+   * resource loading. See <mxResources.getSpecialBundle> for handling identifiers
+   * with and without a dash.
+   *
+   * Set mxLanguage prior to loading the mxClient library as follows to override
+   * this setting:
+   *
+   * (code)
+   * <script type="text/javascript">
+   *     mxLanguage = 'en';
+   * </script>
+   * <script type="text/javascript" src="js/mxClient.js"></script>
+   * (end)
+   *
+   * If internationalization is disabled, then the following variables should be
+   * overridden to reflect the current language of the system. These variables are
+   * cleared when i18n is disabled.
+   * <mxEditor.askZoomResource>, <mxEditor.lastSavedResource>,
+   * <mxEditor.currentFileResource>, <mxEditor.propertiesResource>,
+   * <mxEditor.tasksResource>, <mxEditor.helpResource>, <mxEditor.outlineResource>,
+   * <mxElbowEdgeHandler.doubleClickOrientationResource>, <mxUtils.errorResource>,
+   * <mxUtils.closeResource>, <mxGraphSelectionModel.doneResource>,
+   * <mxGraphSelectionModel.updatingSelectionResource>, <mxGraphView.doneResource>,
+   * <mxGraphView.updatingDocumentResource>, <mxCellRenderer.collapseExpandResource>,
+   * <mxGraph.containsValidationErrorsResource> and
+   * <mxGraph.alreadyConnectedResource>.
+   */
+  language: typeof window !== "undefined" ? navigator.language : 'en',
+  setLanguage: (value) => {
+    if (typeof(value) != 'undefined' && value != null) {
+      mxClient.language = value;
+    }
+    else {
+      mxClient.language = navigator.language;
+    }
+  },
+
+  /**
+   * Variable: defaultLanguage
+   *
+   * Defines the default language which is used in the common resource files. Any
+   * resources for this language will only load the common resource file, but not
+   * the language-specific resource file. Default is 'en'.
+   *
+   * Set mxDefaultLanguage prior to loading the mxClient library as follows to override
+   * this setting:
+   *
+   * (code)
+   * <script type="text/javascript">
+   *     mxDefaultLanguage = 'de';
+   * </script>
+   * <script type="text/javascript" src="js/mxClient.js"></script>
+   * (end)
+   */
+  defaultLanguage: 'en',
+  setDefaultLanguage: (value) => {
+    if (typeof(value) != 'undefined' && value != null) {
+      mxClient.defaultLanguage = value;
+    } else {
+      mxClient.defaultLanguage = 'en';
+    }
+  },
+
+  /**
+   * Variable: languages
+   *
+   * Defines the optional array of all supported language extensions. The default
+   * language does not have to be part of this list. See
+   * <mxResources.isLanguageSupported>.
+   *
+   * (code)
+   * <script type="text/javascript">
+   *     mxLanguages = ['de', 'it', 'fr'];
+   * </script>
+   * <script type="text/javascript" src="js/mxClient.js"></script>
+   * (end)
+   *
+   * This is used to avoid unnecessary requests to language files, ie. if a 404
+   * will be returned.
+   */
+
+  setLanguages: (value) => {
+    if (typeof(value) != 'undefined' && value != null) {
+      mxClient.languages = value;
+    }
+  },
+
+  /**
    * Variable: IS_EDGE
    *
    * True if the current browser is Microsoft Edge.
    */
-  IS_EDGE: navigator.userAgent != null && !!navigator.userAgent.match(/Edge\//),
+  IS_EDGE: typeof window !== 'undefined' &&
+      navigator.userAgent != null && !!navigator.userAgent.match(/Edge\//),
 
   /**
    * Variable: IS_NS
    *
    * True if the current browser is Netscape (including Firefox).
    */
-  IS_NS: navigator.userAgent != null &&
+  IS_NS: typeof window !== 'undefined' &&
+      navigator.userAgent != null &&
       navigator.userAgent.indexOf('Mozilla/') >= 0 &&
       navigator.userAgent.indexOf('MSIE') < 0 &&
       navigator.userAgent.indexOf('Edge/') < 0,
@@ -45,42 +275,48 @@ let mxClient = {
    *
    * True if the current browser is Safari.
    */
-  IS_SF: /Apple Computer, Inc/.test(navigator.vendor),
+  IS_SF: typeof window !== 'undefined' &&
+      /Apple Computer, Inc/.test(navigator.vendor),
 
   /**
    * Variable: IS_ANDROID
    *
    * Returns true if the user agent contains Android.
    */
-  IS_ANDROID: navigator.appVersion.indexOf('Android') >= 0,
+  IS_ANDROID: typeof window !== 'undefined' &&
+      navigator.appVersion.indexOf('Android') >= 0,
 
   /**
    * Variable: IS_IOS
    *
    * Returns true if the user agent is an iPad, iPhone or iPod.
    */
-  IS_IOS: (/iP(hone|od|ad)/.test(navigator.platform)),
+  IS_IOS: typeof window !== 'undefined' &&
+      (/iP(hone|od|ad)/.test(navigator.platform)),
 
   /**
    * Variable: IS_GC
    *
    * True if the current browser is Google Chrome.
    */
-  IS_GC: /Google Inc/.test(navigator.vendor),
+  IS_GC: typeof window !== 'undefined' &&
+      /Google Inc/.test(navigator.vendor),
 
   /**
    * Variable: IS_CHROMEAPP
    *
    * True if the this is running inside a Chrome App.
    */
-  IS_CHROMEAPP: window.chrome != null && chrome.app != null && chrome.app.runtime != null,
+  IS_CHROMEAPP: typeof window !== 'undefined' &&
+      window.chrome != null && chrome.app != null && chrome.app.runtime != null,
 
   /**
    * Variable: IS_FF
    *
    * True if the current browser is Firefox.
    */
-  IS_FF: typeof InstallTrigger !== 'undefined',
+  IS_FF: typeof window !== 'undefined' &&
+      typeof InstallTrigger !== 'undefined',
 
   /**
    * Variable: IS_MT
@@ -89,7 +325,8 @@ let mxClient = {
    * for all Firefox-based browsers newer than or equal 3, such as Camino,
    * Iceweasel, Seamonkey and Iceape.
    */
-  IS_MT: (navigator.userAgent.indexOf('Firefox/') >= 0 &&
+  IS_MT: typeof window !== 'undefined' &&
+      ((navigator.userAgent.indexOf('Firefox/') >= 0 &&
       navigator.userAgent.indexOf('Firefox/1.') < 0 &&
       navigator.userAgent.indexOf('Firefox/2.') < 0) ||
       (navigator.userAgent.indexOf('Iceweasel/') >= 0 &&
@@ -98,14 +335,15 @@ let mxClient = {
       (navigator.userAgent.indexOf('SeaMonkey/') >= 0 &&
           navigator.userAgent.indexOf('SeaMonkey/1.') < 0) ||
       (navigator.userAgent.indexOf('Iceape/') >= 0 &&
-          navigator.userAgent.indexOf('Iceape/1.') < 0),
+          navigator.userAgent.indexOf('Iceape/1.') < 0)),
 
   /**
    * Variable: IS_SVG
    *
    * True if the browser supports SVG.
    */
-  IS_SVG: navigator.appName.toUpperCase() != 'MICROSOFT INTERNET EXPLORER',
+  IS_SVG: typeof window !== 'undefined' &&
+      navigator.appName.toUpperCase() !== 'MICROSOFT INTERNET EXPLORER',
 
   /**
    * Variable: NO_FO
@@ -113,29 +351,33 @@ let mxClient = {
    * True if foreignObject support is not available. This is the case for
    * Opera, older SVG-based browsers and all versions of IE.
    */
-  NO_FO: !document.createElementNS || document.createElementNS('http://www.w3.org/2000/svg',
-      'foreignObject') != '[object SVGForeignObjectElement]' || navigator.userAgent.indexOf('Opera/') >= 0,
+  NO_FO: typeof window !== 'undefined' &&
+      (!document.createElementNS || document.createElementNS('http://www.w3.org/2000/svg','foreignObject') !==
+          '[object SVGForeignObjectElement]' || navigator.userAgent.indexOf('Opera/') >= 0),
 
   /**
    * Variable: IS_WIN
    *
    * True if the client is a Windows.
    */
-  IS_WIN: navigator.appVersion.indexOf('Win') > 0,
+  IS_WIN: typeof window !== 'undefined' &&
+      navigator.appVersion.indexOf('Win') > 0,
 
   /**
    * Variable: IS_MAC
    *
    * True if the client is a Mac.
    */
-  IS_MAC: navigator.appVersion.indexOf('Mac') > 0,
+  IS_MAC: typeof window !== 'undefined' &&
+      navigator.appVersion.indexOf('Mac') > 0,
 
   /**
    * Variable: IS_CHROMEOS
    *
    * True if the client is a Chrome OS.
    */
-  IS_CHROMEOS: /\bCrOS\b/.test(navigator.appVersion),
+  IS_CHROMEOS: typeof window !== 'undefined' &&
+      /\bCrOS\b/.test(navigator.appVersion),
 
   /**
    * Variable: IS_TOUCH
@@ -143,21 +385,25 @@ let mxClient = {
    * True if this device supports touchstart/-move/-end events (Apple iOS,
    * Android, Chromebook and Chrome Browser on touch-enabled devices).
    */
-  IS_TOUCH: 'ontouchstart' in document.documentElement,
+  IS_TOUCH: typeof window !== 'undefined' &&
+      'ontouchstart' in document.documentElement,
 
   /**
    * Variable: IS_POINTER
    *
    * True if this device supports Microsoft pointer events (always false on Macs).
    */
-  IS_POINTER: window.PointerEvent != null && !(navigator.appVersion.indexOf('Mac') > 0),
+  IS_POINTER: typeof window !== 'undefined' &&
+      window.PointerEvent != null &&
+      !(navigator.appVersion.indexOf('Mac') > 0),
 
   /**
    * Variable: IS_LOCAL
    *
    * True if the documents location does not start with http:// or https://.
    */
-  IS_LOCAL: document.location.href.indexOf('http://') < 0 &&
+  IS_LOCAL: typeof window !== 'undefined' &&
+      document.location.href.indexOf('http://') < 0 &&
       document.location.href.indexOf('https://') < 0,
 
   /**
@@ -239,7 +485,7 @@ let mxClient = {
     let pending = mxClient.defaultBundles.length;
 
     function callback() {
-      if (--pending == 0) {
+      if (--pending === 0) {
         fn();
       }
     }
@@ -250,215 +496,4 @@ let mxClient = {
   }
 };
 
-/**
- * Variable: mxLoadResources
- * 
- * Optional global config variable to toggle loading of the two resource files
- * in <mxGraph> and <mxEditor>. Default is true. NOTE: This is a global variable,
- * not a variable of mxClient. If this is false, you can use <mxClient.loadResources>
- * with its callback to load the default bundles asynchronously.
- *
- * (code)
- * <script type="text/javascript">
- *     let mxLoadResources = false;
- * </script>
- * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
- * (end)
- */
-if (typeof(mxLoadResources) == 'undefined') {
-  mxLoadResources = true;
-}
-
-/**
- * Variable: mxForceIncludes
- * 
- * Optional global config variable to force loading the JavaScript files in
- * development mode. Default is undefined. NOTE: This is a global variable,
- * not a variable of mxClient.
- *
- * (code)
- * <script type="text/javascript">
- *     let mxLoadResources = true;
- * </script>
- * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
- * (end)
- */
-if (typeof(mxForceIncludes) == 'undefined') {
-  mxForceIncludes = false;
-}
-
-/**
- * Variable: mxResourceExtension
- * 
- * Optional global config variable to specify the extension of resource files.
- * Default is true. NOTE: This is a global variable, not a variable of mxClient.
- *
- * (code)
- * <script type="text/javascript">
- *     let mxResourceExtension = '.txt';
- * </script>
- * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
- * (end)
- */
-if (typeof(mxResourceExtension) == 'undefined') {
-  mxResourceExtension = '.txt';
-}
-
-/**
- * Variable: mxLoadStylesheets
- * 
- * Optional global config variable to toggle loading of the CSS files when
- * the library is initialized. Default is true. NOTE: This is a global variable,
- * not a variable of mxClient.
- *
- * (code)
- * <script type="text/javascript">
- *     let mxLoadStylesheets = false;
- * </script>
- * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
- * (end)
- */
-if (typeof(mxLoadStylesheets) == 'undefined') {
-  mxLoadStylesheets = true;
-}
-
-/**
- * Variable: basePath
- *
- * Basepath for all URLs in the core without trailing slash. Default is '.'.
- * Set mxBasePath prior to loading the mxClient library as follows to override
- * this setting:
- *
- * (code)
- * <script type="text/javascript">
- *     mxBasePath = '/path/to/core/directory';
- * </script>
- * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
- * (end)
- * 
- * When using a relative path, the path is relative to the URL of the page that
- * contains the assignment. Trailing slashes are automatically removed.
- */
-if (typeof(mxBasePath) != 'undefined' && mxBasePath.length > 0) {
-  // Adds a trailing slash if required
-  if (mxBasePath.substring(mxBasePath.length - 1) === '/') {
-    mxBasePath = mxBasePath.substring(0, mxBasePath.length - 1);
-  }
-  mxClient.basePath = mxBasePath;
-} else {
-  mxClient.basePath = '.';
-}
-
-/**
- * Variable: imageBasePath
- *
- * Basepath for all images URLs in the core without trailing slash. Default is
- * <mxClient.basePath> + '/images'. Set mxImageBasePath prior to loading the
- * mxClient library as follows to override this setting:
- *
- * (code)
- * <script type="text/javascript">
- *     mxImageBasePath = '/path/to/image/directory';
- * </script>
- * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
- * (end)
- * 
- * When using a relative path, the path is relative to the URL of the page that
- * contains the assignment. Trailing slashes are automatically removed.
- */
-if (typeof(mxImageBasePath) != 'undefined' && mxImageBasePath.length > 0) {
-  // Adds a trailing slash if required
-  if (mxImageBasePath.substring(mxImageBasePath.length - 1) === '/') {
-    mxImageBasePath = mxImageBasePath.substring(0, mxImageBasePath.length - 1);
-  }
-  mxClient.imageBasePath = mxImageBasePath;
-} else {
-  mxClient.imageBasePath = mxClient.basePath + '/images';
-}
-
-/**
- * Variable: language
- *
- * Defines the language of the client, eg. en for english, de for german etc.
- * The special value 'none' will disable all built-in internationalization and
- * resource loading. See <mxResources.getSpecialBundle> for handling identifiers
- * with and without a dash.
- * 
- * Set mxLanguage prior to loading the mxClient library as follows to override
- * this setting:
- *
- * (code)
- * <script type="text/javascript">
- *     mxLanguage = 'en';
- * </script>
- * <script type="text/javascript" src="js/mxClient.js"></script>
- * (end)
- * 
- * If internationalization is disabled, then the following variables should be
- * overridden to reflect the current language of the system. These variables are
- * cleared when i18n is disabled.
- * <mxEditor.askZoomResource>, <mxEditor.lastSavedResource>,
- * <mxEditor.currentFileResource>, <mxEditor.propertiesResource>,
- * <mxEditor.tasksResource>, <mxEditor.helpResource>, <mxEditor.outlineResource>,
- * <mxElbowEdgeHandler.doubleClickOrientationResource>, <mxUtils.errorResource>,
- * <mxUtils.closeResource>, <mxGraphSelectionModel.doneResource>,
- * <mxGraphSelectionModel.updatingSelectionResource>, <mxGraphView.doneResource>,
- * <mxGraphView.updatingDocumentResource>, <mxCellRenderer.collapseExpandResource>,
- * <mxGraph.containsValidationErrorsResource> and
- * <mxGraph.alreadyConnectedResource>.
- */
-if (typeof(mxLanguage) != 'undefined' && mxLanguage != null) {
-  mxClient.language = mxLanguage;
-}
-else {
-  mxClient.language = navigator.language;
-}
-
-/**
- * Variable: defaultLanguage
- * 
- * Defines the default language which is used in the common resource files. Any
- * resources for this language will only load the common resource file, but not
- * the language-specific resource file. Default is 'en'.
- * 
- * Set mxDefaultLanguage prior to loading the mxClient library as follows to override
- * this setting:
- *
- * (code)
- * <script type="text/javascript">
- *     mxDefaultLanguage = 'de';
- * </script>
- * <script type="text/javascript" src="js/mxClient.js"></script>
- * (end)
- */
-if (typeof(mxDefaultLanguage) != 'undefined' && mxDefaultLanguage != null) {
-  mxClient.defaultLanguage = mxDefaultLanguage;
-} else {
-  mxClient.defaultLanguage = 'en';
-}
-
-// Adds all required stylesheets and namespaces
-if (mxLoadStylesheets) {
-  mxClient.link('stylesheet', mxClient.basePath + '/css/common.css');
-}
-
-/**
- * Variable: languages
- *
- * Defines the optional array of all supported language extensions. The default
- * language does not have to be part of this list. See
- * <mxResources.isLanguageSupported>.
- *
- * (code)
- * <script type="text/javascript">
- *     mxLanguages = ['de', 'it', 'fr'];
- * </script>
- * <script type="text/javascript" src="js/mxClient.js"></script>
- * (end)
- * 
- * This is used to avoid unnecessary requests to language files, ie. if a 404
- * will be returned.
- */
-if (typeof(mxLanguages) != 'undefined' && mxLanguages != null) {
-  mxClient.languages = mxLanguages;
-}
+export default mxClient;

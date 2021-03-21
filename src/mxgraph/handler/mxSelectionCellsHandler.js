@@ -3,6 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxEventSource from "../util/mxEventSource";
+import mxDictionary from "../util/mxDictionary";
+import mxEventObject from "../util/mxEventObject";
 
 class mxSelectionCellsHandler extends mxEventSource {
   /**

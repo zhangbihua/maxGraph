@@ -36,6 +36,7 @@ import mxMouseEvent from "../util/mxMouseEvent";
 import mxResources from "../util/mxResources";
 import mxGeometry from "../model/mxGeometry";
 import mxCell from "../model/mxCell";
+import mxGraphModel from "../model/mxGraphModel";
 
 class mxGraph extends mxEventSource {
   /**
@@ -11703,7 +11704,7 @@ class mxGraph extends mxEventSource {
  * Installs the required language resources at class
  * loading time.
  */
-if (mxLoadResources) {
+if (mxClient.mxLoadResources) {
   mxResources.add(mxClient.basePath + '/resources/graph');
 } else {
   mxClient.defaultBundles.push(mxClient.basePath + '/resources/graph');

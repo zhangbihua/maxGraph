@@ -6,6 +6,7 @@
 
 import mxRectangle from "../util/mxRectangle";
 import mxConnectionConstraint from "FIXME";
+import mxShape from "./mxShape";
 
 class mxStencil extends mxShape {
   /**
@@ -281,7 +282,7 @@ class mxStencil extends mxShape {
    * desc - XML node that contains the stencil description.
    */
   constructor(desc) {
-    // constructor not called
+    super();
     this.desc = desc;
     this.parseDescription();
     this.parseConstraints();

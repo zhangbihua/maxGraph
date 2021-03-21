@@ -3,6 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxActor from "./mxActor";
+import mxPoint from "../util/mxPoint";
+import mxUtils from "../util/mxUtils";
+import mxConstants from "../util/mxConstants";
 
 class mxHexagon extends mxActor {
   /**

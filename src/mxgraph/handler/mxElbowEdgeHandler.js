@@ -3,6 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxEdgeHandler from "./mxEdgeHandler";
 
 class mxElbowEdgeHandler extends mxEdgeHandler {
   /**

@@ -4,6 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxRectangle from "./mxRectangle";
+
 let mxConstants = {
   /**
    * Class: mxConstants

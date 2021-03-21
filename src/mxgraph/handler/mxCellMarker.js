@@ -3,6 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxEventSource from "../util/mxEventSource";
+import mxConstants from "../util/mxConstants";
+import mxCellHighlight from "./mxCellHighlight";
+import mxEventObject from "../util/mxEventObject";
 
 class mxCellMarker extends mxEventSource {
   /**
@@ -261,7 +265,7 @@ class mxCellMarker extends mxEventSource {
       this.validState = null;
     }
 
-    if (state != this.markedState || color != this.currentColor) {
+    if (state !== this.markedState || color !== this.currentColor) {
       this.currentColor = color;
 
       if (state != null && this.currentColor != null) {

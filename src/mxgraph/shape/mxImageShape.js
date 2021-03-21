@@ -6,6 +6,7 @@
 
 import mxUtils from "../util/mxUtils";
 import mxConstants from "../util/mxConstants";
+import mxRectangleShape from "./mxRectangleShape";
 
 class mxImageShape extends mxRectangleShape {
   /**

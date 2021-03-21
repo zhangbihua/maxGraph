@@ -5,6 +5,9 @@
  */
 
 import mxRectangle from "../util/mxRectangle";
+import mxShape from "./mxShape";
+import mxConstants from "../util/mxConstants";
+import mxUtils from "../util/mxUtils";
 
 class mxDoubleEllipse extends mxShape {
   /**

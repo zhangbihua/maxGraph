@@ -3,6 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxShape from "./mxShape";
+import mxRectangle from "../util/mxRectangle";
+import mxConstants from "../util/mxConstants";
 
 class mxSwimlane extends mxShape {
   /**
@@ -44,6 +47,11 @@ class mxSwimlane extends mxShape {
     this.fill = fill;
     this.stroke = stroke;
     this.strokewidth = (strokewidth != null) ? strokewidth : 1;
+  };
+
+  _constructor = () => {
+    // explicitly do nothing in
+    // overridden constructor in mxShape
   };
 
   /**

@@ -6,6 +6,8 @@
 
 import mxPoint from "../util/mxPoint";
 import mxRectangle from "../util/mxRectangle";
+import mxEventSource from "../util/mxEventSource";
+import mxConstants from "../util/mxConstants";
 
 class mxCellOverlay extends mxEventSource {
   /**

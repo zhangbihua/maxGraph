@@ -9,6 +9,7 @@ import mxConstants from "../util/mxConstants";
 import mxUtils from "../util/mxUtils";
 import mxPoint from "../util/mxPoint";
 import mxSvgCanvas2D from "../util/mxSvgCanvas2D";
+import mxShape from "./mxShape";
 
 class mxText extends mxShape {
   /**

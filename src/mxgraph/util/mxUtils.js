@@ -6,6 +6,7 @@
 import mxEffects from "./mxEffects";
 import mxXmlRequest from "./mxXmlRequest";
 import mxClient from "../mxClient";
+import mxConstants from "./mxConstants";
 
 let mxUtils = {
   /**
@@ -30,7 +31,7 @@ let mxUtils = {
    * resource for this key does not exist then the value is used as
    * the title. Default is 'error'.
    */
-  errorResource: (mxClient.language != 'none') ? 'error' : '',
+  errorResource: (mxClient.language !== 'none') ? 'error' : '',
 
   /**
    * Variable: closeResource
@@ -39,7 +40,7 @@ let mxUtils = {
    * resource for this key does not exist then the value is used as
    * the label. Default is 'close'.
    */
-  closeResource: (mxClient.language != 'none') ? 'close' : '',
+  closeResource: (mxClient.language !== 'none') ? 'close' : '',
 
   /**
    * Variable: errorImage
@@ -163,11 +164,11 @@ let mxUtils = {
    * function to the specified scope. Inside funct, the "this" keyword
    * becomes a reference to that scope.
    */
-  /*bind: (scope, funct) => {
+  bind: (scope, funct) => {
     return () => {
       return funct.apply(scope, arguments);
     };
-  },*/
+  },
 
   /**
    * Function: eval
@@ -393,7 +394,7 @@ let mxUtils = {
     let parent = child;
 
     while (parent != null) {
-      if (parent == ancestor) {
+      if (parent === ancestor) {
         return true;
       }
 
@@ -582,11 +583,11 @@ let mxUtils = {
   removeWhitespace: (node, before) => {
     let tmp = (before) ? node.previousSibling : node.nextSibling;
 
-    while (tmp != null && tmp.nodeType == mxConstants.NODETYPE_TEXT) {
+    while (tmp != null && tmp.nodeType === mxConstants.NODETYPE_TEXT) {
       let next = (before) ? tmp.previousSibling : tmp.nextSibling;
       let text = mxUtils.getTextContent(tmp);
 
-      if (mxUtils.trim(text).length == 0) {
+      if (mxUtils.trim(text).length === 0) {
         tmp.parentNode.removeChild(tmp);
       }
 
@@ -689,7 +690,7 @@ let mxUtils = {
       indent = (indent != null) ? indent : '';
       newline = (newline != null) ? newline : '\n';
 
-      if (node.namespaceURI != null && node.namespaceURI != ns) {
+      if (node.namespaceURI != null && node.namespaceURI !== ns) {
         ns = node.namespaceURI;
 
         if (node.getAttribute('xmlns') == null) {
@@ -697,9 +698,9 @@ let mxUtils = {
         }
       }
 
-      if (node.nodeType == mxConstants.NODETYPE_DOCUMENT) {
+      if (node.nodeType === mxConstants.NODETYPE_DOCUMENT) {
         result.push(mxUtils.getPrettyXml(node.documentElement, tab, indent, newline, ns));
-      } else if (node.nodeType == mxConstants.NODETYPE_DOCUMENT_FRAGMENT) {
+      } else if (node.nodeType === mxConstants.NODETYPE_DOCUMENT_FRAGMENT) {
         let tmp = node.firstChild;
 
         if (tmp != null) {
@@ -708,19 +709,19 @@ let mxUtils = {
             tmp = tmp.nextSibling;
           }
         }
-      } else if (node.nodeType == mxConstants.NODETYPE_COMMENT) {
+      } else if (node.nodeType === mxConstants.NODETYPE_COMMENT) {
         let value = mxUtils.getTextContent(node);
 
         if (value.length > 0) {
           result.push(indent + '<!--' + value + '-->' + newline);
         }
-      } else if (node.nodeType == mxConstants.NODETYPE_TEXT) {
+      } else if (node.nodeType === mxConstants.NODETYPE_TEXT) {
         let value = mxUtils.trim(mxUtils.getTextContent(node));
 
         if (value.length > 0) {
           result.push(indent + mxUtils.htmlEntities(value, false) + newline);
         }
-      } else if (node.nodeType == mxConstants.NODETYPE_CDATA) {
+      } else if (node.nodeType === mxConstants.NODETYPE_CDATA) {
         let value = mxUtils.getTextContent(node);
 
         if (value.length > 0) {
