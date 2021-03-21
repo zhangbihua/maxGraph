@@ -26,10 +26,10 @@
 		function mxIconSet(state)
 		{
 			this.images = [];
-			var graph = state.view.graph;
+			let graph = state.view.graph;
 			
 			// Icon1
-			var img = mxUtils.createImage('images/copy.png');
+			let img = mxUtils.createImage('images/copy.png');
 			img.setAttribute('title', 'Duplicate');
 			img.style.position = 'absolute';
 			img.style.cursor = 'pointer';
@@ -40,7 +40,7 @@
 			
 			mxEvent.addGestureListeners(img,
 				(evt) => {
-					var s = graph.gridSize;
+					let s = graph.gridSize;
 					graph.setSelectionCells(graph.moveCells([state.cell], s, s, true));
 					mxEvent.consume(evt);
 					this.destroy();
@@ -51,7 +51,7 @@
 			this.images.push(img);
 			
 			// Delete
-			var img = mxUtils.createImage('images/delete2.png');
+			let img = mxUtils.createImage('images/delete2.png');
 			img.setAttribute('title', 'Delete');
 			img.style.position = 'absolute';
 			img.style.cursor = 'pointer';
@@ -83,9 +83,9 @@
 		{
 			if (this.images != null)
 			{
-				for (var i = 0; i < this.images.length; i++)
+				for (let i = 0; i < this.images.length; i++)
 				{
-					var img = this.images[i];
+					let img = this.images[i];
 					img.parentNode.removeChild(img);
 				}
 			}
@@ -107,11 +107,11 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setConnectable(true);
 				
 				// Defines the tolerance before removing the icons
-				var iconTolerance = 20;
+				let iconTolerance = 20;
 
 				// Shows icons if the mouse is over a cell
 				graph.addMouseListener(
@@ -132,8 +132,8 @@
 				    	if (this.currentState != null && (me.getState() == this.currentState ||
 				    		me.getState() == null))
 				    	{
-				    		var tol = iconTolerance;
-				    		var tmp = new mxRectangle(me.getGraphX() - tol,
+				    		let tol = iconTolerance;
+				    		let tmp = new mxRectangle(me.getGraphX() - tol,
 				    			me.getGraphY() - tol, 2 * tol, 2 * tol);
 
 				    		if (mxUtils.intersects(tmp, this.currentState))
@@ -142,7 +142,7 @@
 				    		}
 				    	}
 				    	
-						var tmp = graph.view.getState(me.getCell());
+						let tmp = graph.view.getState(me.getCell());
 				    	
 				    	// Ignores everything but vertices
 						if (graph.isMouseDown || (tmp != null && !graph.getModel().isVertex(tmp.cell)))
@@ -188,7 +188,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

@@ -6,9 +6,9 @@
  * Code to add stencils.
  *
  * (code)
- * var req = mxUtils.load('test/stencils.xml');
- * var root = req.getDocumentElement();
- * var shape = root.firstChild;
+ * let req = mxUtils.load('test/stencils.xml');
+ * let root = req.getDocumentElement();
+ * let shape = root.firstChild;
  *
  * while (shape != null)
  * {
@@ -21,7 +21,7 @@
  * }
  * (end)
  */
-var mxStencilRegistry =
+let mxStencilRegistry =
     {
       /**
        * Class: mxStencilRegistry

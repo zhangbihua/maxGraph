@@ -99,34 +99,34 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * 1993
    */
   execute = (parent) => {
-    var model = this.layout.getModel();
+    let model = this.layout.getModel();
 
     // Stores initial ordering as being the best one found so far
     this.nestedBestRanks = [];
 
-    for (var i = 0; i < model.ranks.length; i++) {
+    for (let i = 0; i < model.ranks.length; i++) {
       this.nestedBestRanks[i] = model.ranks[i].slice();
     }
 
-    var iterationsWithoutImprovement = 0;
-    var currentBestCrossings = this.calculateCrossings(model);
+    let iterationsWithoutImprovement = 0;
+    let currentBestCrossings = this.calculateCrossings(model);
 
-    for (var i = 0; i < this.maxIterations &&
+    for (let i = 0; i < this.maxIterations &&
     iterationsWithoutImprovement < this.maxNoImprovementIterations; i++) {
       this.weightedMedian(i, model);
       this.transpose(i, model);
-      var candidateCrossings = this.calculateCrossings(model);
+      let candidateCrossings = this.calculateCrossings(model);
 
       if (candidateCrossings < currentBestCrossings) {
         currentBestCrossings = candidateCrossings;
         iterationsWithoutImprovement = 0;
 
         // Store the current rankings as the best ones
-        for (var j = 0; j < this.nestedBestRanks.length; j++) {
-          var rank = model.ranks[j];
+        for (let j = 0; j < this.nestedBestRanks.length; j++) {
+          let rank = model.ranks[j];
 
-          for (var k = 0; k < rank.length; k++) {
-            var cell = rank[k];
+          for (let k = 0; k < rank.length; k++) {
+            let cell = rank[k];
             this.nestedBestRanks[j][cell.getGeneralPurposeVariable(j)] = cell;
           }
         }
@@ -136,11 +136,11 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
         iterationsWithoutImprovement++;
 
         // Restore the best values to the cells
-        for (var j = 0; j < this.nestedBestRanks.length; j++) {
-          var rank = model.ranks[j];
+        for (let j = 0; j < this.nestedBestRanks.length; j++) {
+          let rank = model.ranks[j];
 
-          for (var k = 0; k < rank.length; k++) {
-            var cell = rank[k];
+          for (let k = 0; k < rank.length; k++) {
+            let cell = rank[k];
             cell.setGeneralPurposeVariable(j, k);
           }
         }
@@ -153,16 +153,16 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     }
 
     // Store the best rankings but in the model
-    var ranks = [];
-    var rankList = [];
+    let ranks = [];
+    let rankList = [];
 
-    for (var i = 0; i < model.maxRank + 1; i++) {
+    for (let i = 0; i < model.maxRank + 1; i++) {
       rankList[i] = [];
       ranks[i] = rankList[i];
     }
 
-    for (var i = 0; i < this.nestedBestRanks.length; i++) {
-      for (var j = 0; j < this.nestedBestRanks[i].length; j++) {
+    for (let i = 0; i < this.nestedBestRanks.length; i++) {
+      for (let j = 0; j < this.nestedBestRanks[i].length; j++) {
         rankList[i].push(this.nestedBestRanks[i][j]);
       }
     }
@@ -182,10 +182,10 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * model - the internal model describing the hierarchy
    */
   calculateCrossings = (model) => {
-    var numRanks = model.ranks.length;
-    var totalCrossings = 0;
+    let numRanks = model.ranks.length;
+    let totalCrossings = 0;
 
-    for (var i = 1; i < numRanks; i++) {
+    for (let i = 1; i < numRanks; i++) {
       totalCrossings += this.calculateRankCrossing(i, model);
     }
 
@@ -205,22 +205,22 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * model - the internal model describing the hierarchy
    */
   calculateRankCrossing = (i, model) => {
-    var totalCrossings = 0;
-    var rank = model.ranks[i];
-    var previousRank = model.ranks[i - 1];
+    let totalCrossings = 0;
+    let rank = model.ranks[i];
+    let previousRank = model.ranks[i - 1];
 
-    var tmpIndices = [];
+    let tmpIndices = [];
 
     // Iterate over the top rank and fill in the connection information
-    for (var j = 0; j < rank.length; j++) {
-      var node = rank[j];
-      var rankPosition = node.getGeneralPurposeVariable(i);
-      var connectedCells = node.getPreviousLayerConnectedCells(i);
-      var nodeIndices = [];
+    for (let j = 0; j < rank.length; j++) {
+      let node = rank[j];
+      let rankPosition = node.getGeneralPurposeVariable(i);
+      let connectedCells = node.getPreviousLayerConnectedCells(i);
+      let nodeIndices = [];
 
-      for (var k = 0; k < connectedCells.length; k++) {
-        var connectedNode = connectedCells[k];
-        var otherCellRankPosition = connectedNode.getGeneralPurposeVariable(i - 1);
+      for (let k = 0; k < connectedCells.length; k++) {
+        let connectedNode = connectedCells[k];
+        let otherCellRankPosition = connectedNode.getGeneralPurposeVariable(i - 1);
         nodeIndices.push(otherCellRankPosition);
       }
 
@@ -230,30 +230,30 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
       tmpIndices[rankPosition] = nodeIndices;
     }
 
-    var indices = [];
+    let indices = [];
 
-    for (var j = 0; j < tmpIndices.length; j++) {
+    for (let j = 0; j < tmpIndices.length; j++) {
       indices = indices.concat(tmpIndices[j]);
     }
 
-    var firstIndex = 1;
+    let firstIndex = 1;
 
     while (firstIndex < previousRank.length) {
       firstIndex <<= 1;
     }
 
-    var treeSize = 2 * firstIndex - 1;
+    let treeSize = 2 * firstIndex - 1;
     firstIndex -= 1;
 
-    var tree = [];
+    let tree = [];
 
-    for (var j = 0; j < treeSize; ++j) {
+    for (let j = 0; j < treeSize; ++j) {
       tree[j] = 0;
     }
 
-    for (var j = 0; j < indices.length; j++) {
-      var index = indices[j];
-      var treeIndex = index + firstIndex;
+    for (let j = 0; j < indices.length; j++) {
+      let index = indices[j];
+      let treeIndex = index + firstIndex;
       ++tree[treeIndex];
 
       while (treeIndex > 0) {
@@ -281,25 +281,25 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * model - the internal model describing the hierarchy
    */
   transpose = (mainLoopIteration, model) => {
-    var improved = true;
+    let improved = true;
 
     // Track the number of iterations in case of looping
-    var count = 0;
-    var maxCount = 10;
+    let count = 0;
+    let maxCount = 10;
     while (improved && count++ < maxCount) {
       // On certain iterations allow allow swapping of cell pairs with
       // equal edge crossings switched or not switched. This help to
       // nudge a stuck layout into a lower crossing total.
-      var nudge = mainLoopIteration % 2 == 1 && count % 2 == 1;
+      let nudge = mainLoopIteration % 2 == 1 && count % 2 == 1;
       improved = false;
 
-      for (var i = 0; i < model.ranks.length; i++) {
-        var rank = model.ranks[i];
-        var orderedCells = [];
+      for (let i = 0; i < model.ranks.length; i++) {
+        let rank = model.ranks[i];
+        let orderedCells = [];
 
-        for (var j = 0; j < rank.length; j++) {
-          var cell = rank[j];
-          var tempRank = cell.getGeneralPurposeVariable(i);
+        for (let j = 0; j < rank.length; j++) {
+          let cell = rank[j];
+          let tempRank = cell.getGeneralPurposeVariable(i);
 
           // FIXME: Workaround to avoid negative tempRanks
           if (tempRank < 0) {
@@ -308,20 +308,20 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
           orderedCells[tempRank] = cell;
         }
 
-        var leftCellAboveConnections = null;
-        var leftCellBelowConnections = null;
-        var rightCellAboveConnections = null;
-        var rightCellBelowConnections = null;
+        let leftCellAboveConnections = null;
+        let leftCellBelowConnections = null;
+        let rightCellAboveConnections = null;
+        let rightCellBelowConnections = null;
 
-        var leftAbovePositions = null;
-        var leftBelowPositions = null;
-        var rightAbovePositions = null;
-        var rightBelowPositions = null;
+        let leftAbovePositions = null;
+        let leftBelowPositions = null;
+        let rightAbovePositions = null;
+        let rightBelowPositions = null;
 
-        var leftCell = null;
-        var rightCell = null;
+        let leftCell = null;
+        let rightCell = null;
 
-        for (var j = 0; j < (rank.length - 1); j++) {
+        for (let j = 0; j < (rank.length - 1); j++) {
           // For each intra-rank adjacent pair of cells
           // see if swapping them around would reduce the
           // number of edges crossing they cause in total
@@ -337,11 +337,11 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
             leftAbovePositions = [];
             leftBelowPositions = [];
 
-            for (var k = 0; k < leftCellAboveConnections.length; k++) {
+            for (let k = 0; k < leftCellAboveConnections.length; k++) {
               leftAbovePositions[k] = leftCellAboveConnections[k].getGeneralPurposeVariable(i + 1);
             }
 
-            for (var k = 0; k < leftCellBelowConnections.length; k++) {
+            for (let k = 0; k < leftCellBelowConnections.length; k++) {
               leftBelowPositions[k] = leftCellBelowConnections[k].getGeneralPurposeVariable(i - 1);
             }
           } else {
@@ -361,19 +361,19 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
           rightAbovePositions = [];
           rightBelowPositions = [];
 
-          for (var k = 0; k < rightCellAboveConnections.length; k++) {
+          for (let k = 0; k < rightCellAboveConnections.length; k++) {
             rightAbovePositions[k] = rightCellAboveConnections[k].getGeneralPurposeVariable(i + 1);
           }
 
-          for (var k = 0; k < rightCellBelowConnections.length; k++) {
+          for (let k = 0; k < rightCellBelowConnections.length; k++) {
             rightBelowPositions[k] = rightCellBelowConnections[k].getGeneralPurposeVariable(i - 1);
           }
 
-          var totalCurrentCrossings = 0;
-          var totalSwitchedCrossings = 0;
+          let totalCurrentCrossings = 0;
+          let totalSwitchedCrossings = 0;
 
-          for (var k = 0; k < leftAbovePositions.length; k++) {
-            for (var ik = 0; ik < rightAbovePositions.length; ik++) {
+          for (let k = 0; k < leftAbovePositions.length; k++) {
+            for (let ik = 0; ik < rightAbovePositions.length; ik++) {
               if (leftAbovePositions[k] > rightAbovePositions[ik]) {
                 totalCurrentCrossings++;
               }
@@ -384,8 +384,8 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
             }
           }
 
-          for (var k = 0; k < leftBelowPositions.length; k++) {
-            for (var ik = 0; ik < rightBelowPositions.length; ik++) {
+          for (let k = 0; k < leftBelowPositions.length; k++) {
+            for (let ik = 0; ik < rightBelowPositions.length; ik++) {
               if (leftBelowPositions[k] > rightBelowPositions[ik]) {
                 totalCurrentCrossings++;
               }
@@ -399,7 +399,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
           if ((totalSwitchedCrossings < totalCurrentCrossings) ||
               (totalSwitchedCrossings == totalCurrentCrossings &&
                   nudge)) {
-            var temp = leftCell.getGeneralPurposeVariable(i);
+            let temp = leftCell.getGeneralPurposeVariable(i);
             leftCell.setGeneralPurposeVariable(i, rightCell
                 .getGeneralPurposeVariable(i));
             rightCell.setGeneralPurposeVariable(i, temp);
@@ -439,13 +439,13 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    */
   weightedMedian = (iteration, model) => {
     // Reverse sweep direction each time through this method
-    var downwardSweep = (iteration % 2 == 0);
+    let downwardSweep = (iteration % 2 == 0);
     if (downwardSweep) {
-      for (var j = model.maxRank - 1; j >= 0; j--) {
+      for (let j = model.maxRank - 1; j >= 0; j--) {
         this.medianRank(j, downwardSweep);
       }
     } else {
-      for (var j = 1; j < model.maxRank; j++) {
+      for (let j = 1; j < model.maxRank; j++) {
         this.medianRank(j, downwardSweep);
       }
     }
@@ -463,13 +463,13 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * downwardSweep - whether or not this is a downward sweep through the graph
    */
   medianRank = (rankValue, downwardSweep) => {
-    var numCellsForRank = this.nestedBestRanks[rankValue].length;
-    var medianValues = [];
-    var reservedPositions = [];
+    let numCellsForRank = this.nestedBestRanks[rankValue].length;
+    let medianValues = [];
+    let reservedPositions = [];
 
-    for (var i = 0; i < numCellsForRank; i++) {
-      var cell = this.nestedBestRanks[rankValue][i];
-      var sorterEntry = new MedianCellSorter();
+    for (let i = 0; i < numCellsForRank; i++) {
+      let cell = this.nestedBestRanks[rankValue][i];
+      let sorterEntry = new MedianCellSorter();
       sorterEntry.cell = cell;
 
       // Flip whether or not equal medians are flipped on up and down
@@ -510,9 +510,9 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
 
     // Set the new position of each node within the rank using
     // its temp variable
-    for (var i = 0; i < numCellsForRank; i++) {
+    for (let i = 0; i < numCellsForRank; i++) {
       if (reservedPositions[i] == null) {
-        var cell = medianValues.shift().cell;
+        let cell = medianValues.shift().cell;
         cell.setGeneralPurposeVariable(rankValue, i);
       }
     }
@@ -532,11 +532,11 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * rankValue - the rank that the connected cell lie upon
    */
   medianValue = (connectedCells, rankValue) => {
-    var medianValues = [];
-    var arrayCount = 0;
+    let medianValues = [];
+    let arrayCount = 0;
 
-    for (var i = 0; i < connectedCells.length; i++) {
-      var cell = connectedCells[i];
+    for (let i = 0; i < connectedCells.length; i++) {
+      let cell = connectedCells[i];
       medianValues[arrayCount++] = cell.getGeneralPurposeVariable(rankValue);
     }
 
@@ -552,9 +552,9 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     } else if (arrayCount == 2) {
       return ((medianValues[0] + medianValues[1]) / 2.0);
     } else {
-      var medianPoint = arrayCount / 2;
-      var leftMedian = medianValues[medianPoint - 1] - medianValues[0];
-      var rightMedian = medianValues[arrayCount - 1]
+      let medianPoint = arrayCount / 2;
+      let leftMedian = medianValues[medianPoint - 1] - medianValues[0];
+      let rightMedian = medianValues[arrayCount - 1]
           - medianValues[medianPoint];
 
       return (medianValues[medianPoint - 1] * rightMedian + medianValues[medianPoint]

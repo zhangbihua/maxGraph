@@ -16,8 +16,8 @@
 		<add as="myFirstAction"><![CDATA[
 			function (editor, cell)
 			{
-				var encoder = new mxCodec();
-				var node = encoder.encode(editor.graph.getModel());
+				let encoder = new mxCodec();
+				let node = encoder.encode(editor.graph.getModel());
 				mxUtils.popup(mxUtils.getPrettyXml(node), true);
 			}
 		]]></add>

@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-var mxClipboard = {
+let mxClipboard = {
   /**
    * Class: mxClipboard
    *
@@ -29,11 +29,11 @@ var mxClipboard = {
    * mxClipboard.copy = (graph, cells)=>
    * {
    *   cells = cells || graph.getSelectionCells();
-   *   var result = graph.getExportableCells(cells);
+   *   let result = graph.getExportableCells(cells);
    *   
    *   mxClipboard.parents = {};
    *   
-   *   for (var i = 0; i < result.length; i++)
+   *   for (let i = 0; i < result.length; i++)
    *   {
    *     mxClipboard.parents[i] = graph.model.getParent(cells[i]);
    *   }
@@ -48,16 +48,16 @@ var mxClipboard = {
    * {
    *   if (!mxClipboard.isEmpty())
    *   {
-   *     var cells = graph.getImportableCells(mxClipboard.getCells());
-   *     var delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
-   *     var parent = graph.getDefaultParent();
+   *     let cells = graph.getImportableCells(mxClipboard.getCells());
+   *     let delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
+   *     let parent = graph.getDefaultParent();
    *     
    *     graph.model.beginUpdate();
    *     try
    *     {
-   *       for (var i = 0; i < cells.length; i++)
+   *       for (let i = 0; i < cells.length; i++)
    *       {
-   *         var tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
+   *         let tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
    *              mxClipboard.parents[i] : parent;
    *         cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
    *       }
@@ -171,7 +171,7 @@ var mxClipboard = {
    */
   copy: (graph, cells) => {
     cells = cells || graph.getSelectionCells();
-    var result = graph.getExportableCells(graph.model.getTopmostCells(cells));
+    let result = graph.getExportableCells(graph.model.getTopmostCells(cells));
     mxClipboard.insertCount = 1;
     mxClipboard.setCells(graph.cloneCells(result));
 
@@ -194,12 +194,12 @@ var mxClipboard = {
    * graph - <mxGraph> to paste the <cells> into.
    */
   paste: (graph) => {
-    var cells = null;
+    let cells = null;
 
     if (!mxClipboard.isEmpty()) {
       cells = graph.getImportableCells(mxClipboard.getCells());
-      var delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
-      var parent = graph.getDefaultParent();
+      let delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
+      let parent = graph.getDefaultParent();
       cells = graph.importCells(cells, delta, delta, parent);
 
       // Increments the counter and selects the inserted cells

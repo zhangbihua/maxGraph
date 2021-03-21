@@ -204,7 +204,7 @@ class mxShape {
    * vertex style, the following code is used:
    *
    * (code)
-   * var style = graph.getStylesheet().getDefaultVertexStyle();
+   * let style = graph.getStylesheet().getDefaultVertexStyle();
    * style[mxConstants.STYLE_SHAPE] = 'customShape';
    * (end)
    *
@@ -279,7 +279,7 @@ class mxShape {
    * Returns 0, or 0.5 if <strokewidth> % 2 == 1.
    */
   getSvgScreenOffset = () => {
-    var sw = this.stencil && this.stencil.strokewidth !== 'inherit' ? Number(this.stencil.strokewidth) : this.strokewidth;
+    let sw = this.stencil && this.stencil.strokewidth !== 'inherit' ? Number(this.stencil.strokewidth) : this.strokewidth;
 
     return (mxUtils.mod(Math.max(1, Math.round(sw * this.scale)), 2) === 1) ? 0.5 : 0;
   };
@@ -297,7 +297,7 @@ class mxShape {
    * container - DOM node that will contain the shape.
    */
   create = (container) => {
-    var node = null;
+    let node = null;
 
     if (container != null && container.ownerSVGElement != null) {
       node = this.createSvg(container);
@@ -325,7 +325,7 @@ class mxShape {
    * so that the HTML creation is optional.
    */
   createHtml = () => {
-    var node = document.createElement('div');
+    let node = document.createElement('div');
     node.style.position = 'absolute';
 
     return node;
@@ -389,12 +389,12 @@ class mxShape {
    * Updates the bounds based on the points.
    */
   updateBoundsFromPoints = () => {
-    var pts = this.points;
+    let pts = this.points;
 
     if (pts != null && pts.length > 0 && pts[0] != null) {
       this.bounds = new mxRectangle(Number(pts[0].x), Number(pts[0].y), 1, 1);
 
-      for (var i = 1; i < this.points.length; i++) {
+      for (let i = 1; i < this.points.length; i++) {
         if (pts[i] != null) {
           this.bounds.add(new mxRectangle(Number(pts[i].x), Number(pts[i].y), 1, 1));
         }
@@ -410,29 +410,29 @@ class mxShape {
    * change the rectangle in-place. This implementation returns the given rect.
    */
   getLabelBounds = (rect) => {
-    var d = mxUtils.getValue(this.style, mxConstants.STYLE_DIRECTION, mxConstants.DIRECTION_EAST);
-    var bounds = rect;
+    let d = mxUtils.getValue(this.style, mxConstants.STYLE_DIRECTION, mxConstants.DIRECTION_EAST);
+    let bounds = rect;
 
     // Normalizes argument for getLabelMargins hook
     if (d !== mxConstants.DIRECTION_SOUTH && d !== mxConstants.DIRECTION_NORTH &&
         this.state != null && this.state.text != null &&
         this.state.text.isPaintBoundsInverted()) {
       bounds = bounds.clone();
-      var tmp = bounds.width;
+      let tmp = bounds.width;
       bounds.width = bounds.height;
       bounds.height = tmp;
     }
 
-    var m = this.getLabelMargins(bounds);
+    let m = this.getLabelMargins(bounds);
 
     if (m != null) {
-      var flipH = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, false) == '1';
-      var flipV = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, false) == '1';
+      let flipH = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, false) == '1';
+      let flipV = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, false) == '1';
 
       // Handles special case for vertical labels
       if (this.state != null && this.state.text != null &&
           this.state.text.isPaintBoundsInverted()) {
-        var tmp = m.x;
+        let tmp = m.x;
         m.x = m.height;
         m.height = m.width;
         m.width = m.y;
@@ -478,7 +478,7 @@ class mxShape {
    * Updates the SVG shape.
    */
   redrawShape = () => {
-    var canvas = this.createCanvas();
+    let canvas = this.createCanvas();
 
     if (canvas != null) {
       // Specifies if events should be handled
@@ -503,7 +503,7 @@ class mxShape {
    * Creates a new canvas for drawing this shape. May return null.
    */
   createCanvas = () => {
-    var canvas = null;
+    let canvas = null;
 
     // LATER: Check if reusing existing DOM nodes improves performance
     if (this.node.ownerSVGElement != null) {
@@ -541,10 +541,10 @@ class mxShape {
    * Creates and returns an <mxSvgCanvas2D> for rendering this shape.
    */
   createSvgCanvas = () => {
-    var canvas = new mxSvgCanvas2D(this.node, false);
+    let canvas = new mxSvgCanvas2D(this.node, false);
     canvas.strokeTolerance = (this.pointerEvents) ? this.svgStrokeTolerance : 0;
     canvas.pointerEventsValue = this.svgPointerEvents;
-    var off = this.getSvgScreenOffset();
+    let off = this.getSvgScreenOffset();
 
     if (off !== 0) {
       this.node.setAttribute('transform', 'translate(' + off + ',' + off + ')');
@@ -582,7 +582,7 @@ class mxShape {
    * Allow optimization by replacing VML with HTML.
    */
   updateHtmlFilters = (node) => {
-    var f = '';
+    let f = '';
 
     if (this.opacity < 100) {
       f += 'alpha(opacity=' + (this.opacity) + ')';
@@ -597,12 +597,12 @@ class mxShape {
     }
 
     if (this.fill != null && this.fill !== mxConstants.NONE && this.gradient && this.gradient !== mxConstants.NONE) {
-      var start = this.fill;
-      var end = this.gradient;
-      var type = '0';
+      let start = this.fill;
+      let end = this.gradient;
+      let type = '0';
 
-      var lookup = {east: 0, south: 1, west: 2, north: 3};
-      var dir = (this.direction != null) ? lookup[this.direction] : 0;
+      let lookup = {east: 0, south: 1, west: 2, north: 3};
+      let dir = (this.direction != null) ? lookup[this.direction] : 0;
 
       if (this.gradientDirection != null) {
         dir = mxUtils.mod(dir + lookup[this.gradientDirection] - 1, 4);
@@ -610,11 +610,11 @@ class mxShape {
 
       if (dir === 1) {
         type = '1';
-        var tmp = start;
+        let tmp = start;
         start = end;
         end = tmp;
       } else if (dir === 2) {
-        var tmp = start;
+        let tmp = start;
         start = end;
         end = tmp;
       } else if (dir === 3) {
@@ -635,7 +635,7 @@ class mxShape {
    * Allow optimization by replacing VML with HTML.
    */
   updateHtmlColors = (node) => {
-    var color = this.stroke;
+    let color = this.stroke;
 
     if (color != null && color !== mxConstants.NONE) {
       node.style.borderColor = color;
@@ -671,7 +671,7 @@ class mxShape {
    * Allow optimization by replacing VML with HTML.
    */
   updateHtmlBounds = (node) => {
-    var sw = (document.documentMode >= 9) ? 0 : Math.ceil(this.strokewidth * this.scale);
+    let sw = (document.documentMode >= 9) ? 0 : Math.ceil(this.strokewidth * this.scale);
     node.style.borderWidth = Math.max(1, sw) + 'px';
     node.style.overflow = 'hidden';
 
@@ -697,7 +697,7 @@ class mxShape {
     if (canvas instanceof mxSvgCanvas2D) {
       // Increments ref counts
       for (var key in canvas.gradients) {
-        var gradient = canvas.gradients[key];
+        let gradient = canvas.gradients[key];
 
         if (gradient != null) {
           gradient.mxRefCount = (gradient.mxRefCount || 0) + 1;
@@ -731,17 +731,17 @@ class mxShape {
    * Generic rendering code.
    */
   paint = (c) => {
-    var strokeDrawn = false;
+    let strokeDrawn = false;
 
     if (c != null && this.outline) {
-      var stroke = c.stroke;
+      let stroke = c.stroke;
 
       c.stroke = () => {
         strokeDrawn = true;
         stroke.apply(this, arguments);
       };
 
-      var fillAndStroke = c.fillAndStroke;
+      let fillAndStroke = c.fillAndStroke;
 
       c.fillAndStroke = () => {
         strokeDrawn = true;
@@ -750,17 +750,17 @@ class mxShape {
     }
 
     // Scale is passed-through to canvas
-    var s = this.scale;
-    var x = this.bounds.x / s;
-    var y = this.bounds.y / s;
-    var w = this.bounds.width / s;
-    var h = this.bounds.height / s;
+    let s = this.scale;
+    let x = this.bounds.x / s;
+    let y = this.bounds.y / s;
+    let w = this.bounds.width / s;
+    let h = this.bounds.height / s;
 
     if (this.isPaintBoundsInverted()) {
-      var t = (w - h) / 2;
+      let t = (w - h) / 2;
       x += t;
       y -= t;
-      var tmp = w;
+      let tmp = w;
       w = h;
       h = tmp;
     }
@@ -769,17 +769,17 @@ class mxShape {
     this.configureCanvas(c, x, y, w, h);
 
     // Adds background rectangle to capture events
-    var bg = null;
+    let bg = null;
 
     if ((this.stencil == null && this.points == null && this.shapePointerEvents) ||
         (this.stencil != null && this.stencilPointerEvents)) {
-      var bb = this.createBoundingBox();
+      let bb = this.createBoundingBox();
 
       if (this.dialect === mxConstants.DIALECT_SVG) {
         bg = this.createTransparentSvgRectangle(bb.x, bb.y, bb.width, bb.height);
         this.node.appendChild(bg);
       } else {
-        var rect = c.createRect('rect', bb.x / s, bb.y / s, bb.width / s, bb.height / s);
+        let rect = c.createRect('rect', bb.x / s, bb.y / s, bb.width / s, bb.height / s);
         rect.appendChild(c.createTransparentFill());
         rect.stroked = 'false';
         c.root.appendChild(rect);
@@ -794,9 +794,9 @@ class mxShape {
 
       if (this.points != null) {
         // Paints edge shape
-        var pts = [];
+        let pts = [];
 
-        for (var i = 0; i < this.points.length; i++) {
+        for (let i = 0; i < this.points.length; i++) {
           if (this.points[i] != null) {
             pts.push(new mxPoint(this.points[i].x / s, this.points[i].y / s));
           }
@@ -826,7 +826,7 @@ class mxShape {
    * Sets the state of the canvas for drawing the shape.
    */
   configureCanvas = (c, x, y, w, h) => {
-    var dash = null;
+    let dash = null;
 
     if (this.style != null) {
       dash = this.style['dashPattern'];
@@ -852,7 +852,7 @@ class mxShape {
     }
 
     if (this.fill != null && this.fill !== mxConstants.NONE && this.gradient && this.gradient !== mxConstants.NONE) {
-      var b = this.getGradientBounds(c, x, y, w, h);
+      let b = this.getGradientBounds(c, x, y, w, h);
       c.setGradient(this.fill, this.gradient, b.x, b.y, b.width, b.height, this.gradientDirection);
     } else {
       c.setFillColor(this.fill);
@@ -928,13 +928,13 @@ class mxShape {
    * Returns the arc size for the given dimension.
    */
   getArcSize = (w, h) => {
-    var r = 0;
+    let r = 0;
 
     if (mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1') {
       r = Math.min(w / 2, Math.min(h / 2, mxUtils.getValue(this.style,
           mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2));
     } else {
-      var f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE,
+      let f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE,
           mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
       r = Math.min(w * f, h * f);
     }
@@ -948,8 +948,8 @@ class mxShape {
    * Paints the glass gradient effect.
    */
   paintGlassEffect = (c, x, y, w, h, arc) => {
-    var sw = Math.ceil(this.strokewidth / 2);
-    var size = 0.4;
+    let sw = Math.ceil(this.strokewidth / 2);
+    let size = 0.4;
 
     c.setGradient('#ffffff', '#ffffff', x, y, w, h * 0.6, 'south', 0.9, 0.1);
     c.begin();
@@ -981,18 +981,18 @@ class mxShape {
   addPoints = (c, pts, rounded, arcSize, close, exclude, initialMove) => {
     if (pts != null && pts.length > 0) {
       initialMove = (initialMove != null) ? initialMove : true;
-      var pe = pts[pts.length - 1];
+      let pe = pts[pts.length - 1];
 
       // Adds virtual waypoint in the center between start and end point
       if (close && rounded) {
         pts = pts.slice();
         var p0 = pts[0];
-        var wp = new mxPoint(pe.x + (p0.x - pe.x) / 2, pe.y + (p0.y - pe.y) / 2);
+        let wp = new mxPoint(pe.x + (p0.x - pe.x) / 2, pe.y + (p0.y - pe.y) / 2);
         pts.splice(0, 0, wp);
       }
 
-      var pt = pts[0];
-      var i = 1;
+      let pt = pts[0];
+      let i = 1;
 
       // Draws the line segments
       if (initialMove) {
@@ -1002,15 +1002,15 @@ class mxShape {
       }
 
       while (i < ((close) ? pts.length : pts.length - 1)) {
-        var tmp = pts[mxUtils.mod(i, pts.length)];
-        var dx = pt.x - tmp.x;
-        var dy = pt.y - tmp.y;
+        let tmp = pts[mxUtils.mod(i, pts.length)];
+        let dx = pt.x - tmp.x;
+        let dy = pt.y - tmp.y;
 
         if (rounded && (dx != 0 || dy != 0) && (exclude == null || mxUtils.indexOf(exclude, i - 1) < 0)) {
           // Draws a line from the last point to the current
           // point with a spacing of size off the current point
           // into direction of the last point
-          var dist = Math.sqrt(dx * dx + dy * dy);
+          let dist = Math.sqrt(dx * dx + dy * dy);
           var nx1 = dx * Math.min(arcSize, dist / 2) / dist;
           var ny1 = dy * Math.min(arcSize, dist / 2) / dist;
 
@@ -1021,7 +1021,7 @@ class mxShape {
           // Draws a curve from the last point to the current
           // point with a spacing of size off the current point
           // into direction of the next point
-          var next = pts[mxUtils.mod(i + 1, pts.length)];
+          let next = pts[mxUtils.mod(i + 1, pts.length)];
 
           // Uses next non-overlapping point
           while (i < pts.length - 2 && Math.round(next.x - tmp.x) === 0 && Math.round(next.y - tmp.y) === 0) {
@@ -1147,7 +1147,7 @@ class mxShape {
       }
 
       if (this.direction === mxConstants.DIRECTION_NORTH || this.direction === mxConstants.DIRECTION_SOUTH) {
-        var tmp = this.flipH;
+        let tmp = this.flipH;
         this.flipH = this.flipV;
         this.flipV = tmp;
       }
@@ -1221,7 +1221,7 @@ class mxShape {
     // LATER: Use getBoundingClientRect for fallback in VML
     if (this.useSvgBoundingBox && this.node != null && this.node.ownerSVGElement != null) {
       try {
-        var b = this.node.getBBox();
+        let b = this.node.getBBox();
 
         if (b.width > 0 && b.height > 0) {
           this.boundingBox = new mxRectangle(b.x, b.y, b.width, b.height);
@@ -1237,11 +1237,11 @@ class mxShape {
     }
 
     if (this.bounds != null) {
-      var bbox = this.createBoundingBox();
+      let bbox = this.createBoundingBox();
 
       if (bbox != null) {
         this.augmentBoundingBox(bbox);
-        var rot = this.getShapeRotation();
+        let rot = this.getShapeRotation();
 
         if (rot != 0) {
           bbox = mxUtils.getBoundingBox(bbox, rot);
@@ -1259,7 +1259,7 @@ class mxShape {
    * with no shadows or strokewidths.
    */
   createBoundingBox = () => {
-    var bb = this.bounds.clone();
+    let bb = this.bounds.clone();
 
     if ((this.stencil != null && (this.direction === mxConstants.DIRECTION_NORTH ||
         this.direction === mxConstants.DIRECTION_SOUTH)) || this.isPaintBoundsInverted()) {
@@ -1310,7 +1310,7 @@ class mxShape {
    * Returns the rotation for the text label.
    */
   getTextRotation = () => {
-    var rot = this.getRotation();
+    let rot = this.getRotation();
 
     if (mxUtils.getValue(this.style, mxConstants.STYLE_HORIZONTAL, 1) != 1) {
       rot += verticalTextRotation;
@@ -1325,7 +1325,7 @@ class mxShape {
    * Returns the actual rotation of the shape.
    */
   getShapeRotation = () => {
-    var rot = this.getRotation();
+    let rot = this.getRotation();
 
     if (this.direction != null) {
       if (this.direction === mxConstants.DIRECTION_NORTH) {
@@ -1346,7 +1346,7 @@ class mxShape {
    * Adds a transparent rectangle that catches all events.
    */
   createTransparentSvgRectangle = (x, y, w, h) => {
-    var rect = document.createElementNS(mxConstants.NS_SVG, 'rect');
+    let rect = document.createElementNS(mxConstants.NS_SVG, 'rect');
     rect.setAttribute('x', x);
     rect.setAttribute('y', y);
     rect.setAttribute('width', w);
@@ -1377,7 +1377,7 @@ class mxShape {
   releaseSvgGradients = (grads) => {
     if (grads != null) {
       for (var key in grads) {
-        var gradient = grads[key];
+        let gradient = grads[key];
 
         if (gradient != null) {
           gradient.mxRefCount = (gradient.mxRefCount || 0) - 1;

@@ -27,7 +27,7 @@ class mxDoubleEllipse extends mxShape {
    *   c.ellipse(x, y, w, h);
    *   c.stroke();
    *
-   *   var inset = mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));
+   *   let inset = mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));
    *   x += inset;
    *   y += inset;
    *   w -= 2 * inset;
@@ -80,7 +80,7 @@ class mxDoubleEllipse extends mxShape {
    */
   paintForeground = (c, x, y, w, h) => {
     if (!this.outline) {
-      var margin = mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));
+      let margin = mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));
       x += margin;
       y += margin;
       w -= 2 * margin;
@@ -101,7 +101,7 @@ class mxDoubleEllipse extends mxShape {
    * Returns the bounds for the label.
    */
   getLabelBounds = (rect) => {
-    var margin = (mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth,
+    let margin = (mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth,
         Math.min(rect.width / 5 / this.scale, rect.height / 5 / this.scale)))) * this.scale;
 
     return new mxRectangle(rect.x + margin, rect.y + margin, rect.width - 2 * margin, rect.height - 2 * margin);

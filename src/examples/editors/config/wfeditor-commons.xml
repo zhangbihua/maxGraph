@@ -69,11 +69,11 @@
 	<add as="createTasks"><![CDATA[
 		function (div)
 		{
-			var off = 30;
+			let off = 30;
 			
 			if (this.graph != null)
 			{
-				var layer = this.graph.model.root.getChildAt(0);
+				let layer = this.graph.model.root.getChildAt(0);
 				mxUtils.para(div,  mxResources.get('examples'));
 				mxUtils.linkInvoke(div, mxResources.get('newDiagram'), this,
 					'open', 'diagrams/empty.xml', off);
@@ -87,7 +87,7 @@
 				
 				if (!this.graph.isSelectionEmpty())
 				{
-					var cell = this.graph.getSelectionCell();
+					let cell = this.graph.getSelectionCell();
 					if (this.graph.getSelectionCount() == 1 &&
 						(this.graph.model.isVertex(cell) &&
 						cell.getEdgeCount() > 0) || this.graph.isSwimlane(cell))

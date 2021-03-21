@@ -34,22 +34,22 @@
 			{
 				// Note that we're using the container scrollbars for the graph so that the
 				// container extends to the parent div inside the window
-				var wnd = new mxWindow('Scrollable, resizable, given height', container, 50, 50, 220, 224, true, true);
+				let wnd = new mxWindow('Scrollable, resizable, given height', container, 50, 50, 220, 224, true, true);
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Adds rubberband selection and keystrokes
 				graph.setTooltips(true);
 				graph.setPanning(true);
-				var rubberband = new mxRubberband(graph);
+				let rubberband = new mxRubberband(graph);
 				new mxKeyHandler(graph);
 				
 				mxEvent.disableContextMenu(container);
 
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -69,8 +69,8 @@
 				wnd.setResizable(true);
 				wnd.setVisible(true);
 				
-				var lorem = 'Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ';
-				var content = document.createElement('div');
+				let lorem = 'Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ';
+				let content = document.createElement('div');
 				mxUtils.write(content, lorem + lorem + lorem);
 				
 				wnd = new mxWindow('Scrollable, resizable, auto height', content, 300, 50, 200, null, true, true);

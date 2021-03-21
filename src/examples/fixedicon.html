@@ -21,12 +21,12 @@
 		// Overrides the image bounds code to change the position
 		mxLabel.prototype.getImageBounds = function(x, y, w, h)
 		{
-			var iw = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_WIDTH, mxConstants.DEFAULT_IMAGESIZE);
-			var ih = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_HEIGHT, mxConstants.DEFAULT_IMAGESIZE);
+			let iw = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_WIDTH, mxConstants.DEFAULT_IMAGESIZE);
+			let ih = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_HEIGHT, mxConstants.DEFAULT_IMAGESIZE);
 			
 			// Places the icon
-			var ix = (w - iw) / 2;
-			var iy = h - ih;
+			let ix = (w - iw) / 2;
+			let iy = h - ih;
 			
 			return new mxRectangle(x + ix, y + iy, iw, ih);
 		};
@@ -48,7 +48,7 @@
 				mxConstants.SHADOWCOLOR = '#C0C0C0';
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Uncomment the following if you want the container
 				// to fit the size of the graph
@@ -59,7 +59,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

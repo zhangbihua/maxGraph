@@ -32,23 +32,23 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Enables rubberband selection
 				new mxRubberband(graph);
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 				
-				var showOne = true;
-				var showTwo = true;
-				var showThree = true;
+				let showOne = true;
+				let showTwo = true;
+				let showThree = true;
 				
 				// Overridden to implement dynamic conditions
 				graph.isCellVisible = function(cell)
 				{
-					var result = mxGraph.prototype.isCellVisible.apply(this, arguments);
+					let result = mxGraph.prototype.isCellVisible.apply(this, arguments);
 					
 					if (result && cell.value != null)
 					{
@@ -99,7 +99,7 @@
 				}));
 				
 				// Explicit remove/add
-				var removed = null;
+				let removed = null;
 				
 				document.body.appendChild(mxUtils.button('Add/remove cell', function()
 				{

@@ -39,7 +39,7 @@
 			}
 			else
 			{
-				var container = document.createElement('div');
+				let container = document.createElement('div');
 				container.style.position = 'absolute';
 				container.style.overflow = 'hidden';
 				container.style.left = '0px';
@@ -58,7 +58,7 @@
 				// using graph.setPanning(), setTooltips() & setConnectable().
 				// To enable rubberband selection and basic keyboard events,
 				// use new mxRubberband(graph) and new mxKeyHandler(graph).
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Enables tooltips, new connections and panning
 				graph.setPanning(true);
@@ -66,8 +66,8 @@
 				graph.setConnectable(true);
 				
 				// Automatically handle parallel edges
- 				var layout = new mxParallelEdgeLayout(graph);
- 				var layoutMgr = new mxLayoutManager(graph);
+ 				let layout = new mxParallelEdgeLayout(graph);
+ 				let layoutMgr = new mxLayoutManager(graph);
  				
  				layoutMgr.getLayout = function(cell)
 				{
@@ -79,15 +79,15 @@
 				
 				// Enables rubberband (marquee) selection and a handler
 				// for basic keystrokes (eg. return, escape during editing).
-				var rubberband = new mxRubberband(graph);
-				var keyHandler = new mxKeyHandler(graph);
+				let rubberband = new mxRubberband(graph);
+				let keyHandler = new mxKeyHandler(graph);
 
 				// Changes the default style for edges "in-place" and assigns
 				// an alternate edge style which is applied in mxGraph.flip
 				// when the user double clicks on the adjustment control point
 				// of the edge. The ElbowConnector edge style switches to TopToBottom
 				// if the horizontal style is true.
-				var style = graph.getStylesheet().getDefaultEdgeStyle();
+				let style = graph.getStylesheet().getDefaultEdgeStyle();
 				style[mxConstants.STYLE_ROUNDED] = true;
 				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
 		
@@ -107,7 +107,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

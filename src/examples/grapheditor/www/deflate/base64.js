@@ -14,9 +14,9 @@ var Base64 = {
 	// public method for encoding
 	encode : function (input, binary) {
 		binary = (binary != null) ? binary : false;
-		var output = "";
+		let output = "";
 		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-		var i = 0;
+		let i = 0;
 
 		if (!binary)
 		{
@@ -52,10 +52,10 @@ var Base64 = {
 	// public method for decoding
 	decode : function (input, binary) {
 		binary = (binary != null) ? binary : false;
-		var output = "";
+		let output = "";
 		var chr1, chr2, chr3;
 		var enc1, enc2, enc3, enc4;
-		var i = 0;
+		let i = 0;
 
 		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
@@ -93,11 +93,11 @@ var Base64 = {
 	// private method for UTF-8 encoding
 	_utf8_encode : function (string) {
 		string = string.replace(/\r\n/g,"\n");
-		var utftext = "";
+		let utftext = "";
 
-		for (var n = 0; n < string.length; n++) {
+		for (let n = 0; n < string.length; n++) {
 
-			var c = string.charCodeAt(n);
+			let c = string.charCodeAt(n);
 
 			if (c < 128) {
 				utftext += String.fromCharCode(c);
@@ -119,9 +119,9 @@ var Base64 = {
 
 	// private method for UTF-8 decoding
 	_utf8_decode : function (utftext) {
-		var string = "";
-		var i = 0;
-		var c = c1 = c2 = 0;
+		let string = "";
+		let i = 0;
+		let c = c1 = c2 = 0;
 
 		while ( i < utftext.length ) {
 

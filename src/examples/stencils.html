@@ -53,9 +53,9 @@
 				// Uses the shape for resize previews
 				mxVertexHandler.prototype.createSelectionShape = function(bounds)
 				{
-					var key = this.state.style[mxConstants.STYLE_SHAPE];
-					var stencil = mxStencilRegistry.getStencil(key);
-					var shape = null;
+					let key = this.state.style[mxConstants.STYLE_SHAPE];
+					let stencil = mxStencilRegistry.getStencil(key);
+					let shape = null;
 					
 					if (stencil != null)
 					{
@@ -116,9 +116,9 @@
 				mxCellRenderer.registerShape('customShape', CustomShape);
 				
 				// Loads the stencils into the registry
-				var req = mxUtils.load('stencils.xml');
-				var root = req.getDocumentElement();
-				var shape = root.firstChild;
+				let req = mxUtils.load('stencils.xml');
+				let root = req.getDocumentElement();
+				let shape = root.firstChild;
 				
 				while (shape != null)
 				{
@@ -133,7 +133,7 @@
 				mxEvent.disableContextMenu(container);
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setConnectable(true);
 				graph.setTooltips(true);
 				graph.setPanning(true);
@@ -149,7 +149,7 @@
 				};
 				
 				// Changes default styles
-				var style = graph.getStylesheet().getDefaultEdgeStyle();
+				let style = graph.getStylesheet().getDefaultEdgeStyle();
 				style[mxConstants.STYLE_EDGE] = 'orthogonalEdgeStyle';
 				style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_FILLCOLOR] = '#adc5ff';
@@ -161,7 +161,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -215,11 +215,11 @@
 
 				document.body.appendChild(mxUtils.button('Rotate', function()
 				{
-					var cell = graph.getSelectionCell();
+					let cell = graph.getSelectionCell();
 					
 					if (cell != null)
 					{
-						var geo = graph.getCellGeometry(cell);
+						let geo = graph.getCellGeometry(cell);
 	
 						if (geo != null)
 						{
@@ -230,17 +230,17 @@
 								geo = geo.clone();
 								geo.x += geo.width / 2 - geo.height / 2;
 								geo.y += geo.height / 2 - geo.width / 2;
-								var tmp = geo.width;
+								let tmp = geo.width;
 								geo.width = geo.height;
 								geo.height = tmp;
 								graph.getModel().setGeometry(cell, geo);
 								
 								// Reads the current direction and advances by 90 degrees
-								var state = graph.view.getState(cell);
+								let state = graph.view.getState(cell);
 								
 								if (state != null)
 								{
-									var dir = state.style[mxConstants.STYLE_DIRECTION] || 'east'/*default*/;
+									let dir = state.style[mxConstants.STYLE_DIRECTION] || 'east'/*default*/;
 									
 									if (dir == 'east')
 									{
@@ -295,11 +295,11 @@
 				
 				document.body.appendChild(mxUtils.button('Style', function()
 				{
-					var cell = graph.getSelectionCell();
+					let cell = graph.getSelectionCell();
 					
 					if (cell != null)
 					{
-						var style = mxUtils.prompt('Style', graph.getModel().getStyle(cell));
+						let style = mxUtils.prompt('Style', graph.getModel().getStyle(cell));
 						
 						if (style != null)
 						{

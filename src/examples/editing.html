@@ -35,22 +35,22 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setHtmlLabels(true);
 				
 				// Adds handling of return and escape keystrokes for editing
-				var keyHandler = new mxKeyHandler(graph);
+				let keyHandler = new mxKeyHandler(graph);
 				
 				// Helper method that returns the fieldname to be used for
 				// a mouse event
-				var getFieldnameForEvent = function(cell, evt)
+				let getFieldnameForEvent = function(cell, evt)
 				{
 					if (evt != null)
 					{
 						// Finds the relative coordinates inside the cell
-						var point = mxUtils.convertPoint(graph.container,
+						let point = mxUtils.convertPoint(graph.container,
 							mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-						var state = graph.getView().getState(cell);
+						let state = graph.getView().getState(cell);
 						
 						if (state != null)
 						{
@@ -73,11 +73,11 @@
 				// value
 				graph.getLabel = function(cell)
 				{
-					var table = document.createElement('table');
+					let table = document.createElement('table');
 					table.style.height = '100%';
 					table.style.width = '100%';
 					
-					var body = document.createElement('tbody');
+					let body = document.createElement('tbody');
 					var tr1 = document.createElement('tr');
 					var td1 = document.createElement('td');
 					td1.style.textAlign = 'center';
@@ -112,13 +112,13 @@
 				// Sets the new value for the given cell and trigger
 				graph.labelChanged = function(cell, newValue, trigger)
 				{
-					var name = (trigger != null) ? trigger.fieldname : null;
+					let name = (trigger != null) ? trigger.fieldname : null;
 					
 					if (name != null)
 					{
 						// Clones the user object for correct undo and puts
 						// the new value in the correct field.
-						var value = mxUtils.clone(cell.value);
+						let value = mxUtils.clone(cell.value);
 						value[name] = newValue;
 						newValue = value;
 						
@@ -127,13 +127,13 @@
 				};
 				
 				// Sample user objects with 2 fields
-				var value = {};
+				let value = {};
 				value.first = 'First value';
 				value.second = 'Second value';
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

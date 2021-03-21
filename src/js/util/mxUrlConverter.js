@@ -42,7 +42,7 @@ class mxUrlConverter {
   updateBaseUrl = () => {
     this.baseDomain = location.protocol + '//' + location.host;
     this.baseUrl = this.baseDomain + location.pathname;
-    var tmp = this.baseUrl.lastIndexOf('/');
+    let tmp = this.baseUrl.lastIndexOf('/');
 
     // Strips filename etc
     if (tmp > 0) {

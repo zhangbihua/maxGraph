@@ -48,7 +48,7 @@ class mxRootChangeCodec extends mxObjectCodec {
       // Makes sure the original node isn't modified
       node = node.cloneNode(true);
 
-      var tmp = node.firstChild;
+      let tmp = node.firstChild;
       obj.root = dec.decodeCell(tmp, false);
 
       var tmp2 = tmp.nextSibling;

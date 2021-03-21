@@ -6,20 +6,20 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<script type="text/javascript">
-		var STENCIL_PATH = 'stencils';
-		var IMAGE_PATH = 'images';
-		var STYLE_PATH = 'styles';
+		let STENCIL_PATH = 'stencils';
+		let IMAGE_PATH = 'images';
+		let STYLE_PATH = 'styles';
 	
-		var urlParams = (function(url)
+		let urlParams = (function(url)
 		{
-			var result = {};
-			var idx = url.lastIndexOf('?');
+			let result = {};
+			let idx = url.lastIndexOf('?');
 	
 			if (idx > 0)
 			{
-				var params = url.substring(idx + 1).split('&');
+				let params = url.substring(idx + 1).split('&');
 				
-				for (var i = 0; i < params.length; i++)
+				for (let i = 0; i < params.length; i++)
 				{
 					idx = params[i].indexOf('=');
 					
@@ -40,8 +40,8 @@
 		// files (the special bundle and the default bundle) is disabled to
 		// save a GET request. This requires that all resources be present in
 		// each properties file since only one file is loaded.
-		var mxLoadResources = false;
-		var mxBasePath = '../../../src';
+		let mxLoadResources = false;
+		let mxBasePath = '../../../src';
 	</script>
 	<script type="text/javascript" src="sanitizer/sanitizer.min.js"></script>
 	<script type="text/javascript" src="../../../src/js/mxClient.js"></script>
@@ -56,14 +56,14 @@
 	<button onclick="show(document.getElementById('textarea').value);return false;">Show</button>
 	<div id="graph"></div>
 	<script type="text/javascript">
-		var graph = new Graph(document.getElementById('graph'));
+		let graph = new Graph(document.getElementById('graph'));
 		graph.resizeContainer = true;
 		graph.setEnabled(false);
 
 		function show(data)
 		{
-			var xmlDoc = mxUtils.parseXml(data);
-			var codec = new mxCodec(xmlDoc);
+			let xmlDoc = mxUtils.parseXml(data);
+			let codec = new mxCodec(xmlDoc);
 			codec.decode(xmlDoc.documentElement, graph.getModel());
 		};
 	</script>

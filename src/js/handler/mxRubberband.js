@@ -63,7 +63,7 @@ class mxRubberband {
    * Example:
    *
    * (code)
-   * var rubberband = new mxRubberband(graph);
+   * let rubberband = new mxRubberband(graph);
    * (end)
    *
    * Constructor: mxRubberband
@@ -78,12 +78,12 @@ class mxRubberband {
 
       // Handles force rubberband event
       this.forceRubberbandHandler = (sender, evt) => {
-        var evtName = evt.getProperty('eventName');
-        var me = evt.getProperty('event');
+        let evtName = evt.getProperty('eventName');
+        let me = evt.getProperty('event');
 
         if (evtName == mxEvent.MOUSE_DOWN && this.isForceRubberbandEvent(me)) {
-          var offset = mxUtils.getOffset(this.graph.container);
-          var origin = mxUtils.getScrollOrigin(this.graph.container);
+          let offset = mxUtils.getOffset(this.graph.container);
+          let origin = mxUtils.getScrollOrigin(this.graph.container);
           origin.x -= offset.x;
           origin.y -= offset.y;
           this.start(me.getX() + origin.x, me.getY() + origin.y);
@@ -151,8 +151,8 @@ class mxRubberband {
   mouseDown = (sender, me) => {
     if (!me.isConsumed() && this.isEnabled() && this.graph.isEnabled() &&
         me.getState() == null && !mxEvent.isMultiTouchEvent(me.getEvent())) {
-      var offset = mxUtils.getOffset(this.graph.container);
-      var origin = mxUtils.getScrollOrigin(this.graph.container);
+      let offset = mxUtils.getOffset(this.graph.container);
+      let origin = mxUtils.getScrollOrigin(this.graph.container);
       origin.x -= offset.x;
       origin.y -= offset.y;
       this.start(me.getX() + origin.x, me.getY() + origin.y);
@@ -174,11 +174,11 @@ class mxRubberband {
   start = (x, y) => {
     this.first = new mxPoint(x, y);
 
-    var container = this.graph.container;
+    let container = this.graph.container;
 
     function createMouseEvent(evt) {
-      var me = new mxMouseEvent(evt);
-      var pt = mxUtils.convertPoint(container, me.getX(), me.getY());
+      let me = new mxMouseEvent(evt);
+      let pt = mxUtils.convertPoint(container, me.getX(), me.getY());
 
       me.graphX = pt.x;
       me.graphY = pt.y;
@@ -207,15 +207,15 @@ class mxRubberband {
    */
   mouseMove = (sender, me) => {
     if (!me.isConsumed() && this.first != null) {
-      var origin = mxUtils.getScrollOrigin(this.graph.container);
-      var offset = mxUtils.getOffset(this.graph.container);
+      let origin = mxUtils.getScrollOrigin(this.graph.container);
+      let offset = mxUtils.getOffset(this.graph.container);
       origin.x -= offset.x;
       origin.y -= offset.y;
-      var x = me.getX() + origin.x;
-      var y = me.getY() + origin.y;
-      var dx = this.first.x - x;
-      var dy = this.first.y - y;
-      var tol = this.graph.tolerance;
+      let x = me.getX() + origin.x;
+      let y = me.getY() + origin.y;
+      let dx = this.first.x - x;
+      let dy = this.first.y - y;
+      let tol = this.graph.tolerance;
 
       if (this.div != null || Math.abs(dx) > tol || Math.abs(dy) > tol) {
         if (this.div == null) {
@@ -245,7 +245,7 @@ class mxRubberband {
     }
 
     this.graph.container.appendChild(this.sharedDiv);
-    var result = this.sharedDiv;
+    let result = this.sharedDiv;
 
     if (mxClient.IS_SVG && this.fadeOut) {
       this.sharedDiv = null;
@@ -270,7 +270,7 @@ class mxRubberband {
    * <mxGraph.selectRegion>.
    */
   mouseUp = (sender, me) => {
-    var active = this.isActive();
+    let active = this.isActive();
     this.reset();
 
     if (active) {
@@ -286,7 +286,7 @@ class mxRubberband {
    * for the given event.
    */
   execute = (evt) => {
-    var rect = new mxRectangle(this.x, this.y, this.width, this.height);
+    let rect = new mxRectangle(this.x, this.y, this.width, this.height);
     this.graph.selectRegion(rect, evt);
   };
 
@@ -298,7 +298,7 @@ class mxRubberband {
   reset = () => {
     if (this.div != null) {
       if (mxClient.IS_SVG && this.fadeOut) {
-        var temp = this.div;
+        let temp = this.div;
         mxUtils.setPrefixedStyle(temp.style, 'transition', 'all 0.2s linear');
         temp.style.pointerEvents = 'none';
         temp.style.opacity = 0;
@@ -340,16 +340,16 @@ class mxRubberband {
    */
   repaint = () => {
     if (this.div != null) {
-      var x = this.currentX - this.graph.panDx;
-      var y = this.currentY - this.graph.panDy;
+      let x = this.currentX - this.graph.panDx;
+      let y = this.currentY - this.graph.panDy;
 
       this.x = Math.min(this.first.x, x);
       this.y = Math.min(this.first.y, y);
       this.width = Math.max(this.first.x, x) - this.x;
       this.height = Math.max(this.first.y, y) - this.y;
 
-      var dx = 0;
-      var dy = 0;
+      let dx = 0;
+      let dy = 0;
 
       this.div.style.left = (this.x + dx) + 'px';
       this.div.style.top = (this.y + dy) + 'px';

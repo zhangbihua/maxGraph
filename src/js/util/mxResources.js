@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2016, JGraph Ltd
  * Copyright (c) 2006-2016, Gaudenz Alder
  */
-var mxResources =
+let mxResources =
     {
       /**
        * Class: mxResources
@@ -154,7 +154,7 @@ var mxResources =
        */
       getSpecialBundle: (basename, lan) => {
         if (mxClient.languages == null || !this.isLanguageSupported(lan)) {
-          var dash = lan.indexOf('-');
+          let dash = lan.indexOf('-');
 
           if (dash > 0) {
             lan = lan.substring(0, dash);
@@ -195,10 +195,10 @@ var mxResources =
             mxClient.language.toLowerCase() : mxConstants.NONE);
 
         if (lan != mxConstants.NONE) {
-          var defaultBundle = mxResources.getDefaultBundle(basename, lan);
-          var specialBundle = mxResources.getSpecialBundle(basename, lan);
+          let defaultBundle = mxResources.getDefaultBundle(basename, lan);
+          let specialBundle = mxResources.getSpecialBundle(basename, lan);
 
-          var loadSpecialBundle = () => {
+          let loadSpecialBundle = () => {
             if (specialBundle != null) {
               if (callback) {
                 mxUtils.get(specialBundle, (req) => {
@@ -209,7 +209,7 @@ var mxResources =
                 });
               } else {
                 try {
-                  var req = mxUtils.load(specialBundle);
+                  let req = mxUtils.load(specialBundle);
 
                   if (req.isReady()) {
                     mxResources.parse(req.getText());
@@ -233,7 +233,7 @@ var mxResources =
               });
             } else {
               try {
-                var req = mxUtils.load(defaultBundle);
+                let req = mxUtils.load(defaultBundle);
 
                 if (req.isReady()) {
                   mxResources.parse(req.getText());
@@ -259,21 +259,21 @@ var mxResources =
        */
       parse: (text) => {
         if (text != null) {
-          var lines = text.split('\n');
+          let lines = text.split('\n');
 
-          for (var i = 0; i < lines.length; i++) {
+          for (let i = 0; i < lines.length; i++) {
             if (lines[i].charAt(0) != '#') {
-              var index = lines[i].indexOf('=');
+              let index = lines[i].indexOf('=');
 
               if (index > 0) {
-                var key = lines[i].substring(0, index);
-                var idx = lines[i].length;
+                let key = lines[i].substring(0, index);
+                let idx = lines[i].length;
 
                 if (lines[i].charCodeAt(idx - 1) == 13) {
                   idx--;
                 }
 
-                var value = lines[i].substring(index + 1, idx);
+                let value = lines[i].substring(index + 1, idx);
 
                 if (this.resourcesEncoded) {
                   value = value.replace(/\\(?=u[a-fA-F\d]{4})/g, "%");
@@ -295,7 +295,7 @@ var mxResources =
        * Example:
        * To read the value for 'welomeMessage', use the following:
        * (code)
-       * var result = mxResources.get('welcomeMessage') || '';
+       * let result = mxResources.get('welcomeMessage') || '';
        * (end)
        *
        * This would require an entry of the following form in
@@ -315,7 +315,7 @@ var mxResources =
        * defaultValue - Optional string that specifies the default return value.
        */
       get: (key, params, defaultValue) => {
-        var value = mxResources.resources[key];
+        let value = mxResources.resources[key];
 
         // Applies the default value if no resource was found
         if (value == null) {
@@ -342,11 +342,11 @@ var mxResources =
        * to be replaced with in the resulting string.
        */
       replacePlaceholders: (value, params) => {
-        var result = [];
-        var index = null;
+        let result = [];
+        let index = null;
 
-        for (var i = 0; i < value.length; i++) {
-          var c = value.charAt(i);
+        for (let i = 0; i < value.length; i++) {
+          let c = value.charAt(i);
 
           if (c == '{') {
             index = '';

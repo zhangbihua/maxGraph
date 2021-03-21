@@ -35,14 +35,14 @@
 				mxEvent.disableContextMenu(container);
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Enables rubberband selection
 				new mxRubberband(graph);
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -64,8 +64,8 @@
 			// Adds an option to view the XML of the graph
 			document.body.appendChild(mxUtils.button('View XML', function()
 			{
-				var encoder = new mxCodec();
-				var node = encoder.encode(graph.getModel());
+				let encoder = new mxCodec();
+				let node = encoder.encode(graph.getModel());
 				mxUtils.popup(mxUtils.getXml(node), true);
 			}));
 		};
@@ -75,11 +75,11 @@
 			this.value = value;
 		}
 		
-		var codec = new mxObjectCodec(new CustomData());
+		let codec = new mxObjectCodec(new CustomData());
 
 		codec.encode = function(enc, obj)
 		{
-			var node = enc.document.createElement('CustomData');
+			let node = enc.document.createElement('CustomData');
 			mxUtils.setTextContent(node, JSON.stringify(obj));
 		   
 			return node;
@@ -87,7 +87,7 @@
 		
 		codec.decode = function(dec, node, into)
 		{
-			var obj = JSON.parse(mxUtils.getTextContent(node));
+			let obj = JSON.parse(mxUtils.getTextContent(node));
 			obj.constructor = CustomData;
 			
 			return obj;

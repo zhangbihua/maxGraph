@@ -35,13 +35,13 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Adds rubberband selection
 				new mxRubberband(graph);
 				
 				// Changes the default vertex style in-place
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 				style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
 				style[mxConstants.STYLE_PERIMETER_SPACING] = 6;
@@ -53,9 +53,9 @@
 
 				// Creates a layout algorithm to be used
 				// with the graph
-				var layout = new mxRadialTreeLayout(graph);
+				let layout = new mxRadialTreeLayout(graph);
 				
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 			
 				// Load cells and layouts the graph
 				graph.getModel().beginUpdate();

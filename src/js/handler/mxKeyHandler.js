@@ -73,7 +73,7 @@ class mxKeyHandler {
    * (46) and deletes the selection cells if the graph is enabled.
    *
    * (code)
-   * var keyHandler = new mxKeyHandler(graph);
+   * let keyHandler = new mxKeyHandler(graph);
    * keyHandler.bindKey(46, (evt)=>
    * {
    *   if (graph.isEnabled())
@@ -275,7 +275,7 @@ class mxKeyHandler {
    * evt - Key event that represents the keystroke.
    */
   isGraphEvent = (evt) => {
-    var source = mxEvent.getSource(evt);
+    let source = mxEvent.getSource(evt);
 
     // Accepts events from the target object or
     // in-place editing inside graph
@@ -309,7 +309,7 @@ class mxKeyHandler {
 
       // Invokes the function for the keystroke
       else if (!this.isEventIgnored(evt)) {
-        var boundFunction = this.getFunction(evt);
+        let boundFunction = this.getFunction(evt);
 
         if (boundFunction != null) {
           boundFunction(evt);

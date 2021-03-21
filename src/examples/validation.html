@@ -31,13 +31,13 @@
 			}
 			else
 			{
-				var xmlDocument = mxUtils.createXmlDocument();
-				var sourceNode = xmlDocument.createElement('Source');
-				var targetNode = xmlDocument.createElement('Target');
-				var subtargetNode = xmlDocument.createElement('Subtarget');
+				let xmlDocument = mxUtils.createXmlDocument();
+				let sourceNode = xmlDocument.createElement('Source');
+				let targetNode = xmlDocument.createElement('Target');
+				let subtargetNode = xmlDocument.createElement('Subtarget');
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setConnectable(true);
 				graph.setTooltips(true);
 				graph.setAllowDanglingEdges(false);
@@ -65,7 +65,7 @@
 				new mxRubberband(graph);
 
 				// Removes cells when [DELETE] is pressed
-				var keyHandler = new mxKeyHandler(graph);
+				let keyHandler = new mxKeyHandler(graph);
 				keyHandler.bindKey(46, function(evt)
 				{
 					if (graph.isEnabled())
@@ -76,7 +76,7 @@
 
 				// Installs automatic validation (use editor.validation = true
 				// if you are using an mxEditor instance)
-				var listener = function(sender, evt)
+				let listener = function(sender, evt)
 				{
 					graph.validateGraph();
 				};
@@ -85,7 +85,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

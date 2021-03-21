@@ -54,22 +54,22 @@
 
 				// Prefetches all images that appear in colums
 				// to avoid problems with the auto-layout
-				var keyImage = new Image();
+				let keyImage = new Image();
 				keyImage.src = "images/key.png";
 
-				var plusImage = new Image();
+				let plusImage = new Image();
 				plusImage.src = "images/plus.png";
 
-				var checkImage = new Image();
+				let checkImage = new Image();
 				checkImage.src = "images/check.png";
 
 				// Creates the graph inside the given container. The
 				// editor is used to create certain functionality for the
 				// graph, such as the rubberband selection, but most parts
 				// of the UI are custom in this example.
-				var editor = new mxEditor();
-				var graph = editor.graph;
-				var model = graph.model;
+				let editor = new mxEditor();
+				let graph = editor.graph;
+				let model = graph.model;
 				
 				// Disables some global features
 				graph.setConnectable(true);
@@ -98,7 +98,7 @@
 
 				// Sets the graph container and configures the editor
 				editor.setGraphContainer(container);
-				var config = mxUtils.load(
+				let config = mxUtils.load(
 					'editors/config/keyhandler-minimal.xml').
 						getDocumentElement();
 				editor.configure(config);
@@ -107,7 +107,7 @@
 				editor.layoutSwimlanes = true;
 				editor.createSwimlaneLayout = () =>
 				{
-					var layout = new mxStackLayout(this.graph, false);
+					let layout = new mxStackLayout(this.graph, false);
 					layout.fill = true;
 					layout.resizeParent = true;
 					
@@ -129,7 +129,7 @@
 					}
 					else
 					{
-						var old = cell.value.name;
+						let old = cell.value.name;
 						cell.value.name = value;
 						return old;
 					}
@@ -168,8 +168,8 @@
 					}
 					else if (this.model.isEdge(state.cell))
 					{
-						var source = this.model.getTerminal(state.cell, true);
-						var parent = this.model.getParent(source);
+						let source = this.model.getTerminal(state.cell, true);
+						let parent = this.model.getParent(source);
 						
 						return parent.value.name+'.'+source.value.name;
 					}
@@ -182,7 +182,7 @@
 				{
 					if (this.isHtmlLabel(cell))
 					{
-						var label = '';
+						let label = '';
 						
 						if (cell.value.primaryKey)
 						{
@@ -216,16 +216,16 @@
 				// Removes the source vertex if edges are removed
 				graph.addListener(mxEvent.REMOVE_CELLS, function(sender, evt)
 				{
-					var cells = evt.getProperty('cells');
+					let cells = evt.getProperty('cells');
 					
-					for (var i = 0; i < cells.length; i++)
+					for (let i = 0; i < cells.length; i++)
 					{
-						var cell = cells[i];
+						let cell = cells[i];
 						
 						if (this.model.isEdge(cell))
 						{
-							var terminal = this.model.getTerminal(cell, true);
-							var parent = this.model.getParent(terminal);
+							let terminal = this.model.getTerminal(cell, true);
+							let parent = this.model.getParent(terminal);
 							this.model.remove(terminal);
 						}
 					}
@@ -247,15 +247,15 @@
 				configureStylesheet(graph);
 
 				// Adds sidebar icon for the table object
-				var tableObject = new Table('TABLENAME');
-				var table = new mxCell(tableObject, new mxGeometry(0, 0, 200, 28), 'table');
+				let tableObject = new Table('TABLENAME');
+				let table = new mxCell(tableObject, new mxGeometry(0, 0, 200, 28), 'table');
 				
 				table.setVertex(true);
 				addSidebarIcon(graph, sidebar, 	table, 'images/icons48/table.png');
 				
 				// Adds sidebar icon for the column object
-				var columnObject = new Column('COLUMNNAME');
-				var column = new mxCell(columnObject, new mxGeometry(0, 0, 0, 26));
+				let columnObject = new Column('COLUMNNAME');
+				let column = new mxCell(columnObject, new mxGeometry(0, 0, 0, 26));
 				
 				column.setVertex(true);
 				column.setConnectable(false);
@@ -263,7 +263,7 @@
 				addSidebarIcon(graph, sidebar, 	column, 'images/icons48/column.png');
 				
 				// Adds primary key field into table
-				var firstColumn = column.clone();
+				let firstColumn = column.clone();
 				
 				firstColumn.value.name = 'TABLENAME_ID';
 				firstColumn.value.type = 'INTEGER';
@@ -276,12 +276,12 @@
 				graph.addEdge = function(edge, parent, source, target, index)
 				{
 					// Finds the primary key child of the target table
-					var primaryKey = null;
-					var childCount = this.model.getChildCount(target);
+					let primaryKey = null;
+					let childCount = this.model.getChildCount(target);
 					
 					for (var i=0; i < childCount; i++)
 					{
-						var child = this.model.getChildAt(target, i);
+						let child = this.model.getChildAt(target, i);
 						
 						if (child.value.primaryKey)
 						{
@@ -318,7 +318,7 @@
 				};
 
 				// Displays useful hints in a small semi-transparent box.
-				var hints = document.createElement('div');
+				let hints = document.createElement('div');
 				hints.style.position = 'absolute';
 				hints.style.overflow = 'hidden';
 				hints.style.width = '230px';
@@ -344,7 +344,7 @@
 				
 				// Creates a new DIV that is used as a toolbar and adds
 				// toolbar buttons.
-				var spacer = document.createElement('div');
+				let spacer = document.createElement('div');
 				spacer.style.display = 'inline';
 				spacer.style.padding = '8px';
 
@@ -381,11 +381,11 @@
 				// Defines a create SQK action
 				editor.addAction('showSql', function(editor, cell)
 				{
-					var sql = createSql(graph);
+					let sql = createSql(graph);
 					
 					if (sql.length > 0)
 					{
-						var textarea = document.createElement('textarea');
+						let textarea = document.createElement('textarea');
 						textarea.style.width = '400px';
 						textarea.style.height = '400px';
 						
@@ -403,11 +403,11 @@
 				// Defines export XML action
 				editor.addAction('export', function(editor, cell)
 				{
-					var textarea = document.createElement('textarea');
+					let textarea = document.createElement('textarea');
 					textarea.style.width = '400px';
 					textarea.style.height = '400px';
-					var enc = new mxCodec(mxUtils.createXmlDocument());
-					var node = enc.encode(editor.graph.getModel());
+					let enc = new mxCodec(mxUtils.createXmlDocument());
+					let node = enc.encode(editor.graph.getModel());
 					textarea.value = mxUtils.getPrettyXml(node);
 					showModalWindow('XML', textarea, 410, 440);
 				});
@@ -428,10 +428,10 @@
 				
 				// Creates the outline (navigator, overview) for moving
 				// around the graph in the top, right corner of the window.
-				var outln = new mxOutline(graph, outline);
+				let outln = new mxOutline(graph, outline);
 				
 				// Fades-out the splash screen after the UI has been loaded.
-				var splash = document.getElementById('splash');
+				let splash = document.getElementById('splash');
 				if (splash != null)
 				{
 					try
@@ -451,11 +451,11 @@
 		
 		function addToolbarButton(editor, toolbar, action, label, image, isTransparent)
 		{
-			var button = document.createElement('button');
+			let button = document.createElement('button');
 			button.style.fontSize = '10';
 			if (image != null)
 			{
-				var img = document.createElement('img');
+				let img = document.createElement('img');
 				img.setAttribute('src', image);
 				img.style.width = '16px';
 				img.style.height = '16px';
@@ -479,7 +479,7 @@
 
 		function showModalWindow(title, content, width, height)
 		{
-			var background = document.createElement('div');
+			let background = document.createElement('div');
 			background.style.position = 'absolute';
 			background.style.left = '0px';
 			background.style.top = '0px';
@@ -489,10 +489,10 @@
 			mxUtils.setOpacity(background, 50);
 			document.body.appendChild(background);
 
-			var x = Math.max(0, document.body.scrollWidth/2-width/2);
-			var y = Math.max(10, (document.body.scrollHeight ||
+			let x = Math.max(0, document.body.scrollWidth/2-width/2);
+			let y = Math.max(10, (document.body.scrollHeight ||
 						document.documentElement.scrollHeight)/2-height*2/3);
-			var wnd = new mxWindow(title, content, x, y, width, height, false, true);
+			let wnd = new mxWindow(title, content, x, y, width, height, false, true);
 			wnd.setClosable(true);
 						
 			// Fades the background out after after the window has been closed
@@ -512,22 +512,22 @@
 			// Function that is executed when the image is dropped on
 			// the graph. The cell argument points to the cell under
 			// the mousepointer if there is one.
-			var funct = function(graph, evt, cell)
+			let funct = function(graph, evt, cell)
 			{
 				graph.stopEditing(false);
 
-				var pt = graph.getPointForEvent(evt);
+				let pt = graph.getPointForEvent(evt);
 				
-				var parent = graph.getDefaultParent();
-				var model = graph.getModel();
+				let parent = graph.getDefaultParent();
+				let model = graph.getModel();
 				
-				var isTable = graph.isSwimlane(prototype);
-				var name = null;				
+				let isTable = graph.isSwimlane(prototype);
+				let name = null;
 
 				if (!isTable)
 				{
 					parent = cell;
-					var pstate = graph.getView().getState(parent);
+					let pstate = graph.getView().getState(parent);
 					
 					if (parent == null || pstate == null)
 					{
@@ -538,13 +538,13 @@
 					pt.x -= pstate.x;
 					pt.y -= pstate.y;
 
-					var columnCount = graph.model.getChildCount(parent)+1;
+					let columnCount = graph.model.getChildCount(parent)+1;
 					name = mxUtils.prompt('Enter name for new column', 'COLUMN'+columnCount);
 				}
 				else
 				{
-					var tableCount = 0;
-					var childCount = graph.model.getChildCount(parent);
+					let tableCount = 0;
+					let childCount = graph.model.getChildCount(parent);
 					
 					for (var i=0; i<childCount; i++)
 					{
@@ -554,7 +554,7 @@
 						}
 					}
 					
-					var name = mxUtils.prompt('Enter name for new table', 'TABLE'+(tableCount+1));
+					let name = mxUtils.prompt('Enter name for new table', 'TABLE'+(tableCount+1));
 				}
 				
 				if (name != null)
@@ -586,7 +586,7 @@
 			}
 			
 			// Creates the image which is used as the sidebar icon (drag source)
-			var img = document.createElement('img');
+			let img = document.createElement('img');
 			img.setAttribute('src', image);
 			img.style.width = '48px';
 			img.style.height = '48px';
@@ -594,8 +594,8 @@
 			sidebar.appendChild(img);
 			  					
 			// Creates the image which is used as the drag icon (preview)
-			var dragImage = img.cloneNode(true);
-			var ds = mxUtils.makeDraggable(img, graph, funct, dragImage);
+			let dragImage = img.cloneNode(true);
+			let ds = mxUtils.makeDraggable(img, graph, funct, dragImage);
 
 			// Adds highlight of target tables for columns
 			ds.highlightDropTargets = true;
@@ -607,7 +607,7 @@
 				}
 				else
 				{
-					var cell = graph.getCellAt(x, y);
+					let cell = graph.getCellAt(x, y);
 					
 					if (graph.isSwimlane(cell))
 					{
@@ -615,7 +615,7 @@
 					}
 					else
 					{
-						var parent = graph.getModel().getParent(cell);
+						let parent = graph.getModel().getParent(cell);
 						
 						if (graph.isSwimlane(parent))
 						{
@@ -628,7 +628,7 @@
 		
 		function configureStylesheet(graph)
 		{
-			var style = {};
+			let style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 			style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
@@ -715,27 +715,27 @@
 		{
 			// Creates a form for the user object inside
 			// the cell
-			var form = new mxForm('properties');
+			let form = new mxForm('properties');
 
 			// Adds a field for the columnname
-			var nameField = form.addText('Name', cell.value.name);
-			var typeField = form.addText('Type', cell.value.type);
+			let nameField = form.addText('Name', cell.value.name);
+			let typeField = form.addText('Type', cell.value.type);
 			
-			var primaryKeyField = form.addCheckbox('Primary Key', cell.value.primaryKey);
-			var autoIncrementField = form.addCheckbox('Auto Increment', cell.value.autoIncrement);
-			var notNullField = form.addCheckbox('Not Null', cell.value.notNull);
-			var uniqueField = form.addCheckbox('Unique', cell.value.unique);
+			let primaryKeyField = form.addCheckbox('Primary Key', cell.value.primaryKey);
+			let autoIncrementField = form.addCheckbox('Auto Increment', cell.value.autoIncrement);
+			let notNullField = form.addCheckbox('Not Null', cell.value.notNull);
+			let uniqueField = form.addCheckbox('Unique', cell.value.unique);
 			
-			var defaultField = form.addText('Default', cell.value.defaultValue || '');
-			var useDefaultField = form.addCheckbox('Use Default', (cell.value.defaultValue != null));
+			let defaultField = form.addText('Default', cell.value.defaultValue || '');
+			let useDefaultField = form.addCheckbox('Use Default', (cell.value.defaultValue != null));
 
-			var wnd = null;
+			let wnd = null;
 
 			// Defines the function to be executed when the
 			// OK button is pressed in the dialog
-			var okFunction = function()
+			let okFunction = function()
 			{
-				var clone = cell.value.clone();
+				let clone = cell.value.clone();
 				
 				clone.name = nameField.value;
 				clone.type = typeField.value;
@@ -761,38 +761,38 @@
 			
 			// Defines the function to be executed when the
 			// Cancel button is pressed in the dialog
-			var cancelFunction = function()
+			let cancelFunction = function()
 			{
 				wnd.destroy();
 			}
 			form.addButtons(okFunction, cancelFunction);
 
-			var parent = graph.model.getParent(cell);
-			var name = parent.value.name + '.' + cell.value.name;
+			let parent = graph.model.getParent(cell);
+			let name = parent.value.name + '.' + cell.value.name;
 			wnd = showModalWindow(name, form.table, 240, 240);
 		};
 		
 		function createSql(graph)
 		{
-			var sql = [];
-			var parent = graph.getDefaultParent();
-			var childCount = graph.model.getChildCount(parent);
+			let sql = [];
+			let parent = graph.getDefaultParent();
+			let childCount = graph.model.getChildCount(parent);
 
 			for (var i=0; i<childCount; i++)
 			{
-				var child = graph.model.getChildAt(parent, i);
+				let child = graph.model.getChildAt(parent, i);
 				
 				if (!graph.model.isEdge(child))
 				{
 					sql.push('CREATE TABLE IF NOT EXISTS '+child.value.name+' (');
 					
-					var columnCount = graph.model.getChildCount(child);
+					let columnCount = graph.model.getChildCount(child);
 
 					if (columnCount > 0)
 					{
 						for (var j=0; j<columnCount; j++)
 						{
-							var column = graph.model.getChildAt(child, j).value;
+							let column = graph.model.getChildAt(child, j).value;
 							
 							sql.push('\n    '+column.name+' '+column.type);
 							

@@ -33,11 +33,11 @@
 	<script type="text/javascript">
 		function main(container)
 		{
-			var graph = new mxGraph(container);
+			let graph = new mxGraph(container);
 			graph.setEnabled(false);
-			var parent = graph.getDefaultParent();
+			let parent = graph.getDefaultParent();
 
-			var vertexStyle = 'shape=cylinder;strokeWidth=2;fillColor=#ffffff;strokeColor=black;' +
+			let vertexStyle = 'shape=cylinder;strokeWidth=2;fillColor=#ffffff;strokeColor=black;' +
 				'gradientColor=#a0a0a0;fontColor=black;fontStyle=1;spacingTop=14;';
 			
 			graph.getModel().beginUpdate();
@@ -57,7 +57,7 @@
 			}
 
 			// Adds animation to edge shape and makes "pipe" visible
-			var state = graph.view.getState(e1);
+			let state = graph.view.getState(e1);
 			state.shape.node.getElementsByTagName('path')[0].removeAttribute('visibility');
 			state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke-width', '6');
 			state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke', 'lightGray');

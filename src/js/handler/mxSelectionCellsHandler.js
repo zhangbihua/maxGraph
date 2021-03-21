@@ -147,18 +147,18 @@ class mxSelectionCellsHandler extends mxEventSource {
    */
   refresh = () => {
     // Removes all existing handlers
-    var oldHandlers = this.handlers;
+    let oldHandlers = this.handlers;
     this.handlers = new mxDictionary();
 
     // Creates handles for all selection cells
-    var tmp = mxUtils.sortCells(this.getHandledSelectionCells(), false);
+    let tmp = mxUtils.sortCells(this.getHandledSelectionCells(), false);
 
     // Destroys or updates old handlers
-    for (var i = 0; i < tmp.length; i++) {
-      var state = this.graph.view.getState(tmp[i]);
+    for (let i = 0; i < tmp.length; i++) {
+      let state = this.graph.view.getState(tmp[i]);
 
       if (state != null) {
-        var handler = oldHandlers.remove(tmp[i]);
+        let handler = oldHandlers.remove(tmp[i]);
 
         if (handler != null) {
           if (handler.state != state) {
@@ -186,11 +186,11 @@ class mxSelectionCellsHandler extends mxEventSource {
     }));
 
     // Creates new handlers and updates parent highlight on existing handlers
-    for (var i = 0; i < tmp.length; i++) {
-      var state = this.graph.view.getState(tmp[i]);
+    for (let i = 0; i < tmp.length; i++) {
+      let state = this.graph.view.getState(tmp[i]);
 
       if (state != null) {
-        var handler = this.handlers.get(tmp[i]);
+        let handler = this.handlers.get(tmp[i]);
 
         if (handler == null) {
           handler = this.graph.createHandler(state);
@@ -218,13 +218,13 @@ class mxSelectionCellsHandler extends mxEventSource {
    * Updates the handler for the given shape if one exists.
    */
   updateHandler = (state) => {
-    var handler = this.handlers.remove(state.cell);
+    let handler = this.handlers.remove(state.cell);
 
     if (handler != null) {
       // Transfers the current state to the new handler
-      var index = handler.index;
-      var x = handler.startX;
-      var y = handler.startY;
+      let index = handler.index;
+      let x = handler.startX;
+      let y = handler.startY;
 
       handler.destroy();
       handler = this.graph.createHandler(state);
@@ -246,7 +246,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    */
   mouseDown = (sender, me) => {
     if (this.graph.isEnabled() && this.isEnabled()) {
-      var args = [sender, me];
+      let args = [sender, me];
 
       this.handlers.visit((key, handler) => {
         handler.mouseDown.apply(handler, args);
@@ -261,7 +261,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    */
   mouseMove = (sender, me) => {
     if (this.graph.isEnabled() && this.isEnabled()) {
-      var args = [sender, me];
+      let args = [sender, me];
 
       this.handlers.visit((key, handler) => {
         handler.mouseMove.apply(handler, args);
@@ -276,7 +276,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    */
   mouseUp = (sender, me) => {
     if (this.graph.isEnabled() && this.isEnabled()) {
-      var args = [sender, me];
+      let args = [sender, me];
 
       this.handlers.visit((key, handler) => {
         handler.mouseUp.apply(handler, args);

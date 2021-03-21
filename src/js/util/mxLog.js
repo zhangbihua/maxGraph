@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-var mxLog = {
+let mxLog = {
   /**
    * Class: mxLog
    *
@@ -56,16 +56,16 @@ var mxLog = {
    */
   init: () => {
     if (mxLog.window == null && document.body != null) {
-      var title = mxLog.consoleName + ' - mxGraph ' + mxClient.VERSION;
+      let title = mxLog.consoleName + ' - mxGraph ' + mxClient.VERSION;
 
       // Creates a table that maintains the layout
-      var table = document.createElement('table');
+      let table = document.createElement('table');
       table.setAttribute('width', '100%');
       table.setAttribute('height', '100%');
 
-      var tbody = document.createElement('tbody');
-      var tr = document.createElement('tr');
-      var td = document.createElement('td');
+      let tbody = document.createElement('tbody');
+      let tr = document.createElement('tr');
+      let td = document.createElement('td');
       td.style.verticalAlign = 'top';
 
       // Adds the actual console as a textarea
@@ -103,7 +103,7 @@ var mxLog = {
       });
 
       mxLog.addButton('DOM', function (evt) {
-        var content = mxUtils.getInnerHtml(document.body);
+        let content = mxUtils.getInnerHtml(document.body);
         mxLog.debug(content);
       });
 
@@ -138,8 +138,8 @@ var mxLog = {
       });
 
       // Cross-browser code to get window size
-      var h = 0;
-      var w = 0;
+      let h = 0;
+      let w = 0;
 
       if (typeof (window.innerWidth) === 'number') {
         h = window.innerHeight;
@@ -159,9 +159,9 @@ var mxLog = {
       // Workaround for ignored textarea height in various setups
       if ((mxClient.IS_NS && !mxClient.IS_GC &&
           !mxClient.IS_SF && document.compatMode != 'BackCompat')) {
-        var elt = mxLog.window.getElement();
+        let elt = mxLog.window.getElement();
 
-        var resizeHandler = (sender, evt) => {
+        let resizeHandler = (sender, evt) => {
           mxLog.textarea.style.height = Math.max(0, elt.offsetHeight - 70) + 'px';
         };
 
@@ -189,7 +189,7 @@ var mxLog = {
    * Adds a button to the console using the given label and function.
    */
   addButton: (lab, funct) => {
-    var button = document.createElement('button');
+    let button = document.createElement('button');
     mxUtils.write(button, lab);
     mxEvent.addListener(button, 'click', funct);
     mxLog.td.appendChild(button);
@@ -267,7 +267,7 @@ var mxLog = {
    */
   leave: (string, t0) => {
     if (mxLog.TRACE) {
-      var dt = (t0 != 0) ? ' (' + (new Date().getTime() - t0) + ' ms)' : '';
+      let dt = (t0 != 0) ? ' (' + (new Date().getTime() - t0) + ' ms)' : '';
       mxLog.writeln('Leaving ' + string + dt);
     }
   },
@@ -314,9 +314,9 @@ var mxLog = {
    * Adds the specified strings to the console.
    */
   write: () => {
-    var string = '';
+    let string = '';
 
-    for (var i = 0; i < arguments.length; i++) {
+    for (let i = 0; i < arguments.length; i++) {
       string += arguments[i];
 
       if (i < arguments.length - 1) {
@@ -347,9 +347,9 @@ var mxLog = {
    * end of each string.
    */
   writeln: () => {
-    var string = '';
+    let string = '';
 
-    for (var i = 0; i < arguments.length; i++) {
+    for (let i = 0; i < arguments.length; i++) {
       string += arguments[i];
 
       if (i < arguments.length - 1) {

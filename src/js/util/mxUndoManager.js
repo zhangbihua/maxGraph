@@ -61,8 +61,8 @@ class mxUndoManager extends mxEventSource {
    * display across multiple undo/redo steps.
    *
    * (code)
-   * var undoManager = new mxUndoManager();
-   * var listener = (sender, evt)=>
+   * let undoManager = new mxUndoManager();
+   * let listener = (sender, evt)=>
    * {
    *   undoManager.undoableEditHappened(evt.getProperty('edit'));
    * };
@@ -141,7 +141,7 @@ class mxUndoManager extends mxEventSource {
    */
   undo = () => {
     while (this.indexOfNextAdd > 0) {
-      var edit = this.history[--this.indexOfNextAdd];
+      let edit = this.history[--this.indexOfNextAdd];
       edit.undo();
 
       if (edit.isSignificant()) {
@@ -166,10 +166,10 @@ class mxUndoManager extends mxEventSource {
    * Redoes the last change.
    */
   redo = () => {
-    var n = this.history.length;
+    let n = this.history.length;
 
     while (this.indexOfNextAdd < n) {
-      var edit = this.history[this.indexOfNextAdd++];
+      let edit = this.history[this.indexOfNextAdd++];
       edit.redo();
 
       if (edit.isSignificant()) {
@@ -205,10 +205,10 @@ class mxUndoManager extends mxEventSource {
    */
   trim = () => {
     if (this.history.length > this.indexOfNextAdd) {
-      var edits = this.history.splice(this.indexOfNextAdd,
+      let edits = this.history.splice(this.indexOfNextAdd,
           this.history.length - this.indexOfNextAdd);
 
-      for (var i = 0; i < edits.length; i++) {
+      for (let i = 0; i < edits.length; i++) {
         edits[i].die();
       }
     }

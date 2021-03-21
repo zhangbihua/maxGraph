@@ -197,7 +197,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    */
   execute = (parent, roots) => {
     this.parent = parent;
-    var model = this.graph.model;
+    let model = this.graph.model;
     this.edgesCache = new mxDictionary();
     this.edgeSourceTermCache = new mxDictionary();
     this.edgesTargetTermCache = new mxDictionary();
@@ -223,7 +223,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     this.parentY = null;
 
     if (parent != this.root && model.isVertex(parent) != null && this.maintainParentLocation) {
-      var geo = this.graph.getCellGeometry(parent);
+      let geo = this.graph.getCellGeometry(parent);
 
       if (geo != null) {
         this.parentX = geo.x;
@@ -232,10 +232,10 @@ class mxHierarchicalLayout extends mxGraphLayout {
     }
 
     if (roots != null) {
-      var rootsCopy = [];
+      let rootsCopy = [];
 
-      for (var i = 0; i < roots.length; i++) {
-        var ancestor = parent != null ? model.isAncestor(parent, roots[i]) : true;
+      for (let i = 0; i < roots.length; i++) {
+        let ancestor = parent != null ? model.isAncestor(parent, roots[i]) : true;
 
         if (ancestor && model.isVertex(roots[i])) {
           rootsCopy.push(roots[i]);
@@ -255,7 +255,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
       // Maintaining parent location
       if (this.parentX != null && this.parentY != null) {
-        var geo = this.graph.getCellGeometry(parent);
+        let geo = this.graph.getCellGeometry(parent);
 
         if (geo != null) {
           geo = geo.clone();
@@ -284,23 +284,23 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * vertices - array of vertices to limit search to
    */
   findRoots = (parent, vertices) => {
-    var roots = [];
+    let roots = [];
 
     if (parent != null && vertices != null) {
-      var model = this.graph.model;
-      var best = null;
-      var maxDiff = -100000;
+      let model = this.graph.model;
+      let best = null;
+      let maxDiff = -100000;
 
       for (var i in vertices) {
-        var cell = vertices[i];
+        let cell = vertices[i];
 
         if (model.isVertex(cell) && this.graph.isCellVisible(cell)) {
-          var conns = this.getEdges(cell);
-          var fanOut = 0;
-          var fanIn = 0;
+          let conns = this.getEdges(cell);
+          let fanOut = 0;
+          let fanIn = 0;
 
-          for (var k = 0; k < conns.length; k++) {
-            var src = this.getVisibleTerminal(conns[k], true);
+          for (let k = 0; k < conns.length; k++) {
+            let src = this.getVisibleTerminal(conns[k], true);
 
             if (src == cell) {
               fanOut++;
@@ -313,7 +313,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
             roots.push(cell);
           }
 
-          var diff = fanOut - fanIn;
+          let diff = fanOut - fanIn;
 
           if (diff > maxDiff) {
             maxDiff = diff;
@@ -340,19 +340,19 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * cell - <mxCell> whose edges should be returned.
    */
   getEdges = (cell) => {
-    var cachedEdges = this.edgesCache.get(cell);
+    let cachedEdges = this.edgesCache.get(cell);
 
     if (cachedEdges != null) {
       return cachedEdges;
     }
 
-    var model = this.graph.model;
-    var edges = [];
-    var isCollapsed = this.graph.isCellCollapsed(cell);
-    var childCount = model.getChildCount(cell);
+    let model = this.graph.model;
+    let edges = [];
+    let isCollapsed = this.graph.isCellCollapsed(cell);
+    let childCount = model.getChildCount(cell);
 
-    for (var i = 0; i < childCount; i++) {
-      var child = model.getChildAt(cell, i);
+    for (let i = 0; i < childCount; i++) {
+      let child = model.getChildAt(cell, i);
 
       if (this.isPort(child)) {
         edges = edges.concat(model.getEdges(child, true, true));
@@ -362,11 +362,11 @@ class mxHierarchicalLayout extends mxGraphLayout {
     }
 
     edges = edges.concat(model.getEdges(cell, true, true));
-    var result = [];
+    let result = [];
 
-    for (var i = 0; i < edges.length; i++) {
-      var source = this.getVisibleTerminal(edges[i], true);
-      var target = this.getVisibleTerminal(edges[i], false);
+    for (let i = 0; i < edges.length; i++) {
+      let source = this.getVisibleTerminal(edges[i], true);
+      let target = this.getVisibleTerminal(edges[i], false);
 
       if ((source == target) ||
           ((source != target) &&
@@ -392,21 +392,21 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * source - Boolean that specifies whether the source or target terminal is to be returned
    */
   getVisibleTerminal = (edge, source) => {
-    var terminalCache = this.edgesTargetTermCache;
+    let terminalCache = this.edgesTargetTermCache;
 
     if (source) {
       terminalCache = this.edgeSourceTermCache;
     }
 
-    var term = terminalCache.get(edge);
+    let term = terminalCache.get(edge);
 
     if (term != null) {
       return term;
     }
 
-    var state = this.graph.view.getState(edge);
+    let state = this.graph.view.getState(edge);
 
-    var terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
+    let terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
 
     if (terminal == null) {
       terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
@@ -433,15 +433,15 @@ class mxHierarchicalLayout extends mxGraphLayout {
    */
   run = (parent) => {
     // Separate out unconnected hierarchies
-    var hierarchyVertices = [];
-    var allVertexSet = [];
+    let hierarchyVertices = [];
+    let allVertexSet = [];
 
     if (this.roots == null && parent != null) {
-      var filledVertexSet = Object();
+      let filledVertexSet = Object();
       this.filterDescendants(parent, filledVertexSet);
 
       this.roots = [];
-      var filledVertexSetEmpty = true;
+      let filledVertexSetEmpty = true;
 
       // Poor man's isSetEmpty
       for (var key in filledVertexSet) {
@@ -452,22 +452,22 @@ class mxHierarchicalLayout extends mxGraphLayout {
       }
 
       while (!filledVertexSetEmpty) {
-        var candidateRoots = this.findRoots(parent, filledVertexSet);
+        let candidateRoots = this.findRoots(parent, filledVertexSet);
 
         // If the candidate root is an unconnected group cell, remove it from
         // the layout. We may need a custom set that holds such groups and forces
         // them to be processed for resizing and/or moving.
 
 
-        for (var i = 0; i < candidateRoots.length; i++) {
-          var vertexSet = Object();
+        for (let i = 0; i < candidateRoots.length; i++) {
+          let vertexSet = Object();
           hierarchyVertices.push(vertexSet);
 
           this.traverse(candidateRoots[i], true, null, allVertexSet, vertexSet,
               hierarchyVertices, filledVertexSet);
         }
 
-        for (var i = 0; i < candidateRoots.length; i++) {
+        for (let i = 0; i < candidateRoots.length; i++) {
           this.roots.push(candidateRoots[i]);
         }
 
@@ -484,8 +484,8 @@ class mxHierarchicalLayout extends mxGraphLayout {
     } else {
       // Find vertex set as directed traversal from roots
 
-      for (var i = 0; i < this.roots.length; i++) {
-        var vertexSet = Object();
+      for (let i = 0; i < this.roots.length; i++) {
+        let vertexSet = Object();
         hierarchyVertices.push(vertexSet);
 
         this.traverse(this.roots[i], true, null, allVertexSet, vertexSet,
@@ -497,11 +497,11 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
     // Perform a layout for each seperate hierarchy
     // Track initial coordinate x-positioning
-    var initialX = 0;
+    let initialX = 0;
 
-    for (var i = 0; i < hierarchyVertices.length; i++) {
-      var vertexSet = hierarchyVertices[i];
-      var tmp = [];
+    for (let i = 0; i < hierarchyVertices.length; i++) {
+      let vertexSet = hierarchyVertices[i];
+      let tmp = [];
 
       for (var key in vertexSet) {
         tmp.push(vertexSet[key]);
@@ -524,7 +524,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * Creates an array of descendant cells
    */
   filterDescendants = (cell, result) => {
-    var model = this.graph.model;
+    let model = this.graph.model;
 
     if (model.isVertex(cell) && cell != this.parent && this.graph.isCellVisible(cell)) {
       result[mxObjectIdentity.get(cell)] = cell;
@@ -532,10 +532,10 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
     if (this.traverseAncestors || cell == this.parent
         && this.graph.isCellVisible(cell)) {
-      var childCount = model.getChildCount(cell);
+      let childCount = model.getChildCount(cell);
 
-      for (var i = 0; i < childCount; i++) {
-        var child = model.getChildAt(cell, i);
+      for (let i = 0; i < childCount; i++) {
+        let child = model.getChildAt(cell, i);
 
         // Ignore ports in the layout vertex list, they are dealt with
         // in the traversal mechanisms
@@ -578,14 +578,14 @@ class mxHierarchicalLayout extends mxGraphLayout {
    */
   getEdgesBetween = (source, target, directed) => {
     directed = (directed != null) ? directed : false;
-    var edges = this.getEdges(source);
-    var result = [];
+    let edges = this.getEdges(source);
+    let result = [];
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match
-    for (var i = 0; i < edges.length; i++) {
-      var src = this.getVisibleTerminal(edges[i], true);
-      var trg = this.getVisibleTerminal(edges[i], false);
+    for (let i = 0; i < edges.length; i++) {
+      let src = this.getVisibleTerminal(edges[i], true);
+      let trg = this.getVisibleTerminal(edges[i], false);
 
       if ((src == source && trg == target) || (!directed && src == target && trg == source)) {
         result.push(edges[i]);
@@ -617,7 +617,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
       // Has this vertex been seen before in any traversal
       // And if the filled vertex set is populated, only
       // process vertices in that it contains
-      var vertexID = mxObjectIdentity.get(vertex);
+      let vertexID = mxObjectIdentity.get(vertex);
 
       if ((allVertices[vertexID] == null)
           && (filledVertexSet == null ? true : filledVertexSet[vertexID] != null)) {
@@ -632,30 +632,30 @@ class mxHierarchicalLayout extends mxGraphLayout {
           delete filledVertexSet[vertexID];
         }
 
-        var edges = this.getEdges(vertex);
-        var edgeIsSource = [];
+        let edges = this.getEdges(vertex);
+        let edgeIsSource = [];
 
-        for (var i = 0; i < edges.length; i++) {
+        for (let i = 0; i < edges.length; i++) {
           edgeIsSource[i] = (this.getVisibleTerminal(edges[i], true) == vertex);
         }
 
-        for (var i = 0; i < edges.length; i++) {
+        for (let i = 0; i < edges.length; i++) {
           if (!directed || edgeIsSource[i]) {
-            var next = this.getVisibleTerminal(edges[i], !edgeIsSource[i]);
+            let next = this.getVisibleTerminal(edges[i], !edgeIsSource[i]);
 
             // Check whether there are more edges incoming from the target vertex than outgoing
             // The hierarchical model treats bi-directional parallel edges as being sourced
             // from the more "sourced" terminal. If the directions are equal in number, the direction
             // is that of the natural direction from the roots of the layout.
             // The checks below are slightly more verbose than need be for performance reasons
-            var netCount = 1;
+            let netCount = 1;
 
-            for (var j = 0; j < edges.length; j++) {
+            for (let j = 0; j < edges.length; j++) {
               if (j == i) {
 
               } else {
                 var isSource2 = edgeIsSource[j];
-                var otherTerm = this.getVisibleTerminal(edges[j], !isSource2);
+                let otherTerm = this.getVisibleTerminal(edges[j], !isSource2);
 
                 if (otherTerm == next) {
                   if (isSource2) {
@@ -679,8 +679,8 @@ class mxHierarchicalLayout extends mxGraphLayout {
           // We've seen this vertex before, but not in the current component
           // This component and the one it's in need to be merged
 
-          for (var i = 0; i < hierarchyVertices.length; i++) {
-            var comp = hierarchyVertices[i];
+          for (let i = 0; i < hierarchyVertices.length; i++) {
+            let comp = hierarchyVertices[i];
 
             if (comp[vertexID] != null) {
               for (var key in comp) {
@@ -705,7 +705,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * Executes the cycle stage using mxMinimumCycleRemover.
    */
   cycleStage = (parent) => {
-    var cycleStage = new mxMinimumCycleRemover(this);
+    let cycleStage = new mxMinimumCycleRemover(this);
     cycleStage.execute(parent);
   };
 
@@ -725,7 +725,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * Executes the crossing stage using mxMedianHybridCrossingReduction.
    */
   crossingStage = (parent) => {
-    var crossingStage = new mxMedianHybridCrossingReduction(this);
+    let crossingStage = new mxMedianHybridCrossingReduction(this);
     crossingStage.execute(parent);
   };
 
@@ -735,7 +735,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * Executes the placement stage using mxCoordinateAssignment.
    */
   placementStage = (initialX, parent) => {
-    var placementStage = new mxCoordinateAssignment(this, this.intraCellSpacing,
+    let placementStage = new mxCoordinateAssignment(this, this.intraCellSpacing,
         this.interRankCellSpacing, this.orientation, initialX,
         this.parallelEdgeSpacing);
     placementStage.fineTuning = this.fineTuning;

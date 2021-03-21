@@ -26,31 +26,31 @@
 		{
 			if (mxClient.isBrowserSupported())
 			{
-				var divs = document.getElementsByTagName('*');
+				let divs = document.getElementsByTagName('*');
 				
-				for (var i = 0; i < divs.length; i++)
+				for (let i = 0; i < divs.length; i++)
 				{
 					if (divs[i].className.toString().indexOf('mxgraph') >= 0)
 					{
 						(function(container)
 						{
-							var xml = mxUtils.getTextContent(container);
-							var xmlDocument = mxUtils.parseXml(xml);
+							let xml = mxUtils.getTextContent(container);
+							let xmlDocument = mxUtils.parseXml(xml);
 							
 							if (xmlDocument.documentElement != null && xmlDocument.documentElement.nodeName == 'mxGraphModel')
 							{
-								var decoder = new mxCodec(xmlDocument);
-								var node = xmlDocument.documentElement;
+								let decoder = new mxCodec(xmlDocument);
+								let node = xmlDocument.documentElement;
 		
 								container.innerHTML = '';
 		
-								var graph = new mxGraph(container);
+								let graph = new mxGraph(container);
 								graph.centerZoom = false;
 								graph.setTooltips(false);
 								graph.setEnabled(false);
 								
 								// Changes the default style for edges "in-place"
-								var style = graph.getStylesheet().getDefaultEdgeStyle();
+								let style = graph.getStylesheet().getDefaultEdgeStyle();
 								style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
 								
 								// Enables panning with left mouse button
@@ -73,21 +73,21 @@
 								graph.resizeContainer = false;
 								
 								// Adds zoom buttons in top, left corner
-								var buttons = document.createElement('div');
+								let buttons = document.createElement('div');
 								buttons.style.position = 'absolute';
 								buttons.style.overflow = 'visible';
 
-								var bs = graph.getBorderSizes();
+								let bs = graph.getBorderSizes();
 								buttons.style.top = (container.offsetTop + bs.y) + 'px';
 								buttons.style.left = (container.offsetLeft + bs.x) + 'px';
 								
-								var left = 0;
-								var bw = 16;
-								var bh = 16;
+								let left = 0;
+								let bw = 16;
+								let bh = 16;
 
 								function addButton(label, funct)
 								{
-									var btn = document.createElement('div');
+									let btn = document.createElement('div');
 									mxUtils.write(btn, label);
 									btn.style.position = 'absolute';
 									btn.style.backgroundColor = 'transparent';

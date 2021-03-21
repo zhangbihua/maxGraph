@@ -67,9 +67,9 @@
 				// The editor is used to create certain functionality for the
 				// graph, such as the rubberband selection, but most parts
 				// of the UI are custom in this example.
-				var editor = new mxEditor();
-				var graph = editor.graph;
-				var model = graph.getModel();
+				let editor = new mxEditor();
+				let graph = editor.graph;
+				let model = graph.getModel();
 
 				// Disable highlight of cells when dragging from toolbar
 				graph.setDropEnabled(false);
@@ -88,7 +88,7 @@
 
 				// Sets the graph container and configures the editor
 				editor.setGraphContainer(container);
-				var config = mxUtils.load(
+				let config = mxUtils.load(
 					'editors/config/keyhandler-commons.xml').
 						getDocumentElement();
 				editor.configure(config);
@@ -98,7 +98,7 @@
 				// is supposed to be a cell which is cloned for new cells.
 				// The groupBorderSize is used to define the spacing between
 				// the children of a group and the group bounds.
-				var group = new mxCell('Group', new mxGeometry(), 'group');
+				let group = new mxCell('Group', new mxGeometry(), 'group');
 				group.setVertex(true);
 				group.setConnectable(false);
 				editor.defaultGroup = group;
@@ -126,7 +126,7 @@
 				// label for expanded groups
 				graph.getLabel = function(cell)
 				{
-					var tmp = mxGraph.prototype.getLabel.apply(this, arguments); // "supercall"
+					let tmp = mxGraph.prototype.getLabel.apply(this, arguments); // "supercall"
 					
 					if (this.isCellLocked(cell))
 					{
@@ -137,7 +137,7 @@
 					}
 					else if (this.isCellCollapsed(cell))
 					{
-						var index = tmp.indexOf('</h1>');
+						let index = tmp.indexOf('</h1>');
 						
 						if (index > 0)
 						{
@@ -186,7 +186,7 @@
 						}
 						else
 						{
-							var content = document.createElement('div');
+							let content = document.createElement('div');
 							content.innerHTML = this.convertValueToString(cell);
 							showModalWindow(this, 'Properties', content, 400, 300);
 						}
@@ -239,7 +239,7 @@
 					'images/icons48/server.png');
 
 				// Displays useful hints in a small semi-transparent box.
-				var hints = document.createElement('div');
+				let hints = document.createElement('div');
 				hints.style.position = 'absolute';
 				hints.style.overflow = 'hidden';
 				hints.style.width = '230px';
@@ -264,7 +264,7 @@
 				
 				// Creates a new DIV that is used as a toolbar and adds
 				// toolbar buttons.
-				var spacer = document.createElement('div');
+				let spacer = document.createElement('div');
 				spacer.style.display = 'inline';
 				spacer.style.padding = '8px';
 				
@@ -307,11 +307,11 @@
 				// Defines a new export action
 				editor.addAction('export', function(editor, cell)
 				{
-					var textarea = document.createElement('textarea');
+					let textarea = document.createElement('textarea');
 					textarea.style.width = '400px';
 					textarea.style.height = '400px';
-					var enc = new mxCodec(mxUtils.createXmlDocument());
-					var node = enc.encode(editor.graph.getModel());
+					let enc = new mxCodec(mxUtils.createXmlDocument());
+					let node = enc.encode(editor.graph.getModel());
 					textarea.value = mxUtils.getPrettyXml(node);
 					showModalWindow(graph, 'XML', textarea, 410, 440);
 				});
@@ -339,14 +339,14 @@
 				
 				// Creates the outline (navigator, overview) for moving
 				// around the graph in the top, right corner of the window.
-				var outln = new mxOutline(graph, outline);
+				let outln = new mxOutline(graph, outline);
 
 				// To show the images in the outline, uncomment the following code
 				//outln.outline.labelsVisible = true;
 				//outln.outline.setHtmlLabels(true);
 				
 				// Fades-out the splash screen after the UI has been loaded.
-				var splash = document.getElementById('splash');
+				let splash = document.getElementById('splash');
 				if (splash != null)
 				{
 					try
@@ -366,11 +366,11 @@
 		
 		function addToolbarButton(editor, toolbar, action, label, image, isTransparent)
 		{
-			var button = document.createElement('button');
+			let button = document.createElement('button');
 			button.style.fontSize = '10';
 			if (image != null)
 			{
-				var img = document.createElement('img');
+				let img = document.createElement('img');
 				img.setAttribute('src', image);
 				img.style.width = '16px';
 				img.style.height = '16px';
@@ -394,7 +394,7 @@
 
 		function showModalWindow(graph, title, content, width, height)
 		{
-			var background = document.createElement('div');
+			let background = document.createElement('div');
 			background.style.position = 'absolute';
 			background.style.left = '0px';
 			background.style.top = '0px';
@@ -404,10 +404,10 @@
 			mxUtils.setOpacity(background, 50);
 			document.body.appendChild(background);
 
-			var x = Math.max(0, document.body.scrollWidth/2-width/2);
-			var y = Math.max(10, (document.body.scrollHeight ||
+			let x = Math.max(0, document.body.scrollWidth/2-width/2);
+			let y = Math.max(10, (document.body.scrollHeight ||
 						document.documentElement.scrollHeight)/2-height*2/3);
-			var wnd = new mxWindow(title, content, x, y, width, height, false, true);
+			let wnd = new mxWindow(title, content, x, y, width, height, false, true);
 			wnd.setClosable(true);
 			
 			// Fades the background out after after the window has been closed
@@ -428,10 +428,10 @@
 			// Function that is executed when the image is dropped on
 			// the graph. The cell argument points to the cell under
 			// the mousepointer if there is one.
-			var funct = function(graph, evt, cell, x, y)
+			let funct = function(graph, evt, cell, x, y)
 			{
-				var parent = graph.getDefaultParent();
-				var model = graph.getModel();
+				let parent = graph.getDefaultParent();
+				let model = graph.getModel();
 				
 				var v1 = null;
 				
@@ -449,19 +449,19 @@
 					v1.geometry.alternateBounds = new mxRectangle(0, 0, 120, 40);
 										
 					// Adds the ports at various relative locations
-					var port = graph.insertVertex(v1, null, 'Trigger', 0, 0.25, 16, 16,
+					let port = graph.insertVertex(v1, null, 'Trigger', 0, 0.25, 16, 16,
 							'port;image=editors/images/overlays/flash.png;align=right;imageAlign=right;spacingRight=18', true);
 					port.geometry.offset = new mxPoint(-6, -8);
 		
-					var port = graph.insertVertex(v1, null, 'Input', 0, 0.75, 16, 16,
+					let port = graph.insertVertex(v1, null, 'Input', 0, 0.75, 16, 16,
 							'port;image=editors/images/overlays/check.png;align=right;imageAlign=right;spacingRight=18', true);
 					port.geometry.offset = new mxPoint(-6, -4);
 					
-					var port = graph.insertVertex(v1, null, 'Error', 1, 0.25, 16, 16,
+					let port = graph.insertVertex(v1, null, 'Error', 1, 0.25, 16, 16,
 							'port;image=editors/images/overlays/error.png;spacingLeft=18', true);
 					port.geometry.offset = new mxPoint(-8, -8);
 
-					var port = graph.insertVertex(v1, null, 'Result', 1, 0.75, 16, 16,
+					let port = graph.insertVertex(v1, null, 'Result', 1, 0.75, 16, 16,
 							'port;image=editors/images/overlays/information.png;spacingLeft=18', true);
 					port.geometry.offset = new mxPoint(-8, -4);
 				}
@@ -474,26 +474,26 @@
 			}
 			
 			// Creates the image which is used as the sidebar icon (drag source)
-			var img = document.createElement('img');
+			let img = document.createElement('img');
 			img.setAttribute('src', image);
 			img.style.width = '48px';
 			img.style.height = '48px';
 			img.title = 'Drag this to the diagram to create a new vertex';
 			sidebar.appendChild(img);
 			
-			var dragElt = document.createElement('div');
+			let dragElt = document.createElement('div');
 			dragElt.style.border = 'dashed black 1px';
 			dragElt.style.width = '120px';
 			dragElt.style.height = '120px';
 			  					
 			// Creates the image which is used as the drag icon (preview)
-			var ds = mxUtils.makeDraggable(img, graph, funct, dragElt, 0, 0, true, true);
+			let ds = mxUtils.makeDraggable(img, graph, funct, dragElt, 0, 0, true, true);
 			ds.setGuidesEnabled(true);
 		};
 		
 		function configureStylesheet(graph)
 		{
-			var style = {};
+			let style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 			style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
@@ -512,7 +512,7 @@
 
 			// NOTE: Alternative vertex style for non-HTML labels should be as
 			// follows. This repaces the above style for HTML labels.
-			/*var style = {};
+			/*let style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_LABEL;
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 			style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;

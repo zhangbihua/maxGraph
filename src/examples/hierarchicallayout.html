@@ -35,13 +35,13 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Adds rubberband selection
 				new mxRubberband(graph);
 				
 				// Changes the default vertex style in-place
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 				style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
 				style[mxConstants.STYLE_PERIMETER_SPACING] = 6;
@@ -53,14 +53,14 @@
 
 				// Creates a layout algorithm to be used
 				// with the graph
-				var layout = new mxHierarchicalLayout(graph);
-				var organic = new mxFastOrganicLayout(graph);
+				let layout = new mxHierarchicalLayout(graph);
+				let organic = new mxFastOrganicLayout(graph);
 				organic.forceConstant = 120;
 				
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 			
 				// Adds a button to execute the layout
-				var button = document.createElement('button');
+				let button = document.createElement('button');
 				mxUtils.write(button, 'Hierarchical');
 				mxEvent.addListener(button, 'click', function(evt)
 				{
@@ -69,7 +69,7 @@
 				document.body.appendChild(button);
 
 				// Adds a button to execute the layout
-				var button = document.createElement('button');
+				let button = document.createElement('button');
 				mxUtils.write(button, 'Organic');
 				
 				mxEvent.addListener(button, 'click', function(evt)

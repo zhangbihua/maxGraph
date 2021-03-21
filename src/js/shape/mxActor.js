@@ -71,7 +71,7 @@ class mxActor extends mxShape {
    * Draws the path for this shape.
    */
   redrawPath = (c, x, y, w, h) => {
-    var width = w / 3;
+    let width = w / 3;
     c.moveTo(0, h);
     c.curveTo(0, 3 * h / 5, 0, 2 * h / 5, w / 2, 2 * h / 5);
     c.curveTo(w / 2 - width, 2 * h / 5, w / 2 - width, 0, w / 2, 0);

@@ -1,11 +1,13 @@
 /*
  *  Copyright (c) 2006-2018, JGraph Ltd
+ *  Converted to ES9 syntax/React by David Morrissey 2021
  *
  *  Hello, World! example for mxGraph. This example demonstrates using
  *  a DOM node to create a graph and adding vertices and edges.
 */
 
 import React from "react";
+import mxEvent from "../js/util/mxEvent";
 import mxGraph from "../js/view/mxGraph";
 import mxRubberband from "../js/handler/mxRubberband";
 

@@ -129,8 +129,8 @@ class mxCell {
    * value:
    *
    * (code)
-   * var doc = mxUtils.createXmlDocument();
-   * var node = doc.createElement('MyNode')
+   * let doc = mxUtils.createXmlDocument();
+   * let node = doc.createElement('MyNode')
    * node.setAttribute('label', 'MyLabel');
    * node.setAttribute('attribute1', 'value1');
    * graph.insertVertex(graph.getDefaultParent(), null, node, 40, 40, 80, 30);
@@ -148,13 +148,13 @@ class mxCell {
    *   }
    * };
    *
-   * var cellLabelChanged = graph.cellLabelChanged;
+   * let cellLabelChanged = graph.cellLabelChanged;
    * graph.cellLabelChanged = (cell, newValue, autoSize)=>
    * {
    *   if (mxUtils.isNode(cell.value))
    *   {
    *     // Clones the value for correct undo/redo
-   *     var elt = cell.value.cloneNode(true);
+   *     let elt = cell.value.cloneNode(true);
    *     elt.setAttribute('label', newValue);
    *     newValue = elt;
    *   }
@@ -235,7 +235,7 @@ class mxCell {
    * returns the old user object.
    */
   valueChanged = (newValue) => {
-    var previous = this.getValue();
+    let previous = this.getValue();
     this.setValue(newValue);
 
     return previous;
@@ -532,7 +532,7 @@ class mxCell {
    * removed.
    */
   remove = (index) => {
-    var child = null;
+    let child = null;
 
     if (this.children != null && index >= 0) {
       child = this.getChildAt(index);
@@ -553,7 +553,7 @@ class mxCell {
    */
   removeFromParent = () => {
     if (this.parent != null) {
-      var index = this.parent.getIndex(this);
+      let index = this.parent.getIndex(this);
       this.parent.remove(index);
     }
   };
@@ -638,7 +638,7 @@ class mxCell {
     if (edge != null) {
       if (edge.getTerminal(!isOutgoing) != this &&
           this.edges != null) {
-        var index = this.getEdgeIndex(edge);
+        let index = this.getEdgeIndex(edge);
 
         if (index >= 0) {
           this.edges.splice(index, 1);
@@ -662,7 +662,7 @@ class mxCell {
    * source or target terminal.
    */
   removeFromTerminal = (isSource) => {
-    var terminal = this.getTerminal(isSource);
+    let terminal = this.getTerminal(isSource);
 
     if (terminal != null) {
       terminal.removeEdge(this, isSource);
@@ -680,7 +680,7 @@ class mxCell {
    * name - Name of the attribute.
    */
   hasAttribute = (name) => {
-    var userObject = this.getValue();
+    let userObject = this.getValue();
 
     return (userObject != null &&
         userObject.nodeType == mxConstants.NODETYPE_ELEMENT && userObject.hasAttribute) ?
@@ -700,9 +700,9 @@ class mxCell {
    * value.
    */
   getAttribute = (name, defaultValue) => {
-    var userObject = this.getValue();
+    let userObject = this.getValue();
 
-    var val = (userObject != null &&
+    let val = (userObject != null &&
         userObject.nodeType == mxConstants.NODETYPE_ELEMENT) ?
         userObject.getAttribute(name) : null;
 
@@ -720,7 +720,7 @@ class mxCell {
    * value - New value of the attribute.
    */
   setAttribute = (name, value) => {
-    var userObject = this.getValue();
+    let userObject = this.getValue();
 
     if (userObject != null &&
         userObject.nodeType == mxConstants.NODETYPE_ELEMENT) {
@@ -736,7 +736,7 @@ class mxCell {
    * during the cloning.
    */
   clone = () => {
-    var clone = mxUtils.clone(this, this.mxTransient);
+    let clone = mxUtils.clone(this, this.mxTransient);
     clone.setValue(this.cloneValue());
 
     return clone;
@@ -748,7 +748,7 @@ class mxCell {
    * Returns a clone of the cell's user object.
    */
   cloneValue = () => {
-    var value = this.getValue();
+    let value = this.getValue();
 
     if (value != null) {
       if (typeof (value.clone) == 'function') {

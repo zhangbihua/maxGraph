@@ -10,12 +10,12 @@
 	 */
 	function createEditor(config)
 	{
-		var editor = null;
+		let editor = null;
 		
-		var hideSplash = function()
+		let hideSplash = function()
 		{
 			// Fades-out the splash screen
-			var splash = document.getElementById('splash');
+			let splash = document.getElementById('splash');
 			
 			if (splash != null)
 			{
@@ -40,14 +40,14 @@
 			else
 			{
 				mxObjectCodec.allowEval = true;
-				var node = mxUtils.load(config).getDocumentElement();
+				let node = mxUtils.load(config).getDocumentElement();
 				editor = new mxEditor(node);
 				mxObjectCodec.allowEval = false;
 				
 				// Adds active border for panning inside the container
 				editor.graph.createPanningManager = function()
 				{
-					var pm = new mxPanningManager(this);
+					let pm = new mxPanningManager(this);
 					pm.border = 30;
 					
 					return pm;
@@ -57,8 +57,8 @@
 				editor.graph.timerAutoScroll = true;
 				
 				// Updates the window title after opening new files
-				var title = document.title;
-				var funct = function(sender)
+				let title = document.title;
+				let funct = function(sender)
 				{
 					document.title = title + ' - ' + sender.getTitle();
 				};

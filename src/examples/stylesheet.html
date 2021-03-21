@@ -36,7 +36,7 @@
 			else
 			{
 				// Creates the graph inside the DOM node.
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 			
 				// Disables basic selection and cell handling
 				graph.setEnabled(false);
@@ -45,7 +45,7 @@
 				// a supercall to use the default implementation.
 				graph.getLabel = function(cell)
 				{
-					var label = mxGraph.prototype.getLabel.apply(this, arguments);
+					let label = mxGraph.prototype.getLabel.apply(this, arguments);
 					
 					if (this.getModel().isEdge(cell))
 					{
@@ -61,13 +61,13 @@
 				graph.setTooltips(true);
 				graph.getTooltip = function(state)
 				{
-					var cell = state.cell;
-					var model = this.getModel();
+					let cell = state.cell;
+					let model = this.getModel();
 					
 					if (model.isEdge(cell))
 					{
-						var source = this.getLabel(model.getTerminal(cell, true));
-						var target = this.getLabel(model.getTerminal(cell, false));
+						let source = this.getLabel(model.getTerminal(cell, true));
+						let target = this.getLabel(model.getTerminal(cell, false));
 						
 						return source+' -> '+target;
 					}
@@ -78,7 +78,7 @@
 				};
 				
 				// Creates the default style for vertices
-				var style = [];
+				let style = [];
 				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
 				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 				style[mxConstants.STYLE_STROKECOLOR] = 'gray';
@@ -105,7 +105,7 @@
 
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

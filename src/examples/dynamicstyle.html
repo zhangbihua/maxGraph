@@ -32,7 +32,7 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Disables moving of edge labels in this examples
 				graph.edgeLabelsMovable = false;
@@ -48,22 +48,22 @@
 				// Overrides mxGraphModel.getStyle to return a specific style
 				// for edges that reflects their target terminal (in this case
 				// the strokeColor will be equal to the target's fillColor).
-				var previous = graph.model.getStyle;
+				let previous = graph.model.getStyle;
 				
 				graph.model.getStyle = function(cell)
 				{
 					if (cell != null)
 					{
-						var style = previous.apply(this, arguments);
+						let style = previous.apply(this, arguments);
 						
 						if (this.isEdge(cell))
 						{
-							var target = this.getTerminal(cell, false);
+							let target = this.getTerminal(cell, false);
 
 							if (target != null)
 							{
-								var targetStyle = graph.getCurrentCellStyle(target);
-								var fill = mxUtils.getValue(targetStyle, mxConstants.STYLE_FILLCOLOR);
+								let targetStyle = graph.getCurrentCellStyle(target);
+								let fill = mxUtils.getValue(targetStyle, mxConstants.STYLE_FILLCOLOR);
 								
 								if (fill != null)
 								{
@@ -73,7 +73,7 @@
 						}
 						else if (this.isVertex(cell))
 						{
-							var geometry = this.getGeometry(cell);
+							let geometry = this.getGeometry(cell);
 							
 							if (geometry != null &&
 								geometry.width > 80)
@@ -90,7 +90,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

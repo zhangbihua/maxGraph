@@ -49,7 +49,7 @@ class mxCellHighlight {
    * A helper class to highlight cells. Here is an example for a given cell.
    *
    * (code)
-   * var highlight = new mxCellHighlight(graph, '#ff0000', 2);
+   * let highlight = new mxCellHighlight(graph, '#ff0000', 2);
    * highlight.highlight(graph.view.getState(cell)));
    * (end)
    *
@@ -69,7 +69,7 @@ class mxCellHighlight {
       this.repaintHandler = () => {
         // Updates reference to state
         if (this.state != null) {
-          var tmp = this.graph.view.getState(this.state.cell);
+          let tmp = this.graph.view.getState(this.state.cell);
 
           if (tmp == null) {
             this.hide();
@@ -132,7 +132,7 @@ class mxCellHighlight {
    * Creates and returns the highlight shape for the given state.
    */
   createShape = () => {
-    var shape = this.graph.cellRenderer.createShape(this.state);
+    let shape = this.graph.cellRenderer.createShape(this.state);
 
     shape.svgStrokeTolerance = this.graph.tolerance;
     shape.points = this.state.absolutePoints;
@@ -229,10 +229,10 @@ class mxCellHighlight {
    * Returns true if this highlight is at the given position.
    */
   isHighlightAt = (x, y) => {
-    var hit = false;
+    let hit = false;
 
     if (this.shape != null && document.elementFromPoint != null) {
-      var elt = document.elementFromPoint(x, y);
+      let elt = document.elementFromPoint(x, y);
 
       while (elt != null) {
         if (elt == this.shape.node) {

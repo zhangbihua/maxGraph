@@ -39,7 +39,7 @@ class mxRectangleShape extends mxShape {
    * Returns true for non-rounded, non-rotated shapes with no glass gradient.
    */
   isHtmlAllowed = () => {
-    var events = true;
+    let events = true;
 
     if (this.style != null) {
       events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1';
@@ -55,7 +55,7 @@ class mxRectangleShape extends mxShape {
    * Generic background painting implementation.
    */
   paintBackground = (c, x, y, w, h) => {
-    var events = true;
+    let events = true;
 
     if (this.style != null) {
       events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1';
@@ -68,13 +68,13 @@ class mxRectangleShape extends mxShape {
       }
 
       if (this.isRounded) {
-        var r = 0;
+        let r = 0;
 
         if (mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1') {
           r = Math.min(w / 2, Math.min(h / 2, mxUtils.getValue(this.style,
               mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2));
         } else {
-          var f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE,
+          let f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE,
               mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
           r = Math.min(w * f, h * f);
         }

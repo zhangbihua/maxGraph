@@ -87,9 +87,9 @@ class mxHandle {
    * Processes the given <mxMouseEvent> and invokes <setPosition>.
    */
   processEvent = (me) => {
-    var scale = this.graph.view.scale;
-    var tr = this.graph.view.translate;
-    var pt = new mxPoint(me.getGraphX() / scale - tr.x, me.getGraphY() / scale - tr.y);
+    let scale = this.graph.view.scale;
+    let tr = this.graph.view.translate;
+    let pt = new mxPoint(me.getGraphX() / scale - tr.x, me.getGraphY() / scale - tr.y);
 
     // Center shape on mouse cursor
     if (this.shape != null && this.shape.bounds != null) {
@@ -157,7 +157,7 @@ class mxHandle {
    * Creates and initializes the shapes required for this handle.
    */
   init = () => {
-    var html = this.isHtmlRequired();
+    let html = this.isHtmlRequired();
 
     if (this.image != null) {
       this.shape = new mxImageShape(new mxRectangle(0, 0, this.image.width, this.image.height), this.image.src);
@@ -175,7 +175,7 @@ class mxHandle {
    * Creates and returns the shape for this handle.
    */
   createShape = (html) => {
-    var bounds = new mxRectangle(0, 0, mxConstants.HANDLE_SIZE, mxConstants.HANDLE_SIZE);
+    let bounds = new mxRectangle(0, 0, mxConstants.HANDLE_SIZE, mxConstants.HANDLE_SIZE);
 
     return new mxRectangleShape(bounds, mxConstants.HANDLE_FILLCOLOR, mxConstants.HANDLE_STROKECOLOR);
   };
@@ -209,14 +209,14 @@ class mxHandle {
    */
   redraw = () => {
     if (this.shape != null && this.state.shape != null) {
-      var pt = this.getPosition(this.state.getPaintBounds());
+      let pt = this.getPosition(this.state.getPaintBounds());
 
       if (pt != null) {
-        var alpha = mxUtils.toRadians(this.getTotalRotation());
+        let alpha = mxUtils.toRadians(this.getTotalRotation());
         pt = this.rotatePoint(this.flipPoint(pt), alpha);
 
-        var scale = this.graph.view.scale;
-        var tr = this.graph.view.translate;
+        let scale = this.graph.view.scale;
+        let tr = this.graph.view.translate;
         this.shape.bounds.x = Math.floor((pt.x + tr.x) * scale - this.shape.bounds.width / 2);
         this.shape.bounds.y = Math.floor((pt.y + tr.y) * scale - this.shape.bounds.height / 2);
 
@@ -242,10 +242,10 @@ class mxHandle {
    * Rotates the point by the given angle.
    */
   rotatePoint = (pt, alpha) => {
-    var bounds = this.state.getCellBounds();
-    var cx = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
-    var cos = Math.cos(alpha);
-    var sin = Math.sin(alpha);
+    let bounds = this.state.getCellBounds();
+    let cx = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
+    let cos = Math.cos(alpha);
+    let sin = Math.sin(alpha);
 
     return mxUtils.getRotatedPoint(pt, cos, sin, cx);
   };
@@ -257,7 +257,7 @@ class mxHandle {
    */
   flipPoint = (pt) => {
     if (this.state.shape != null) {
-      var bounds = this.state.getCellBounds();
+      let bounds = this.state.getCellBounds();
 
       if (this.state.shape.flipH) {
         pt.x = 2 * bounds.x + bounds.width - pt.x;

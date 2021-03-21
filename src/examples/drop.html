@@ -24,7 +24,7 @@
 		function main(container)
 		{
 			// Checks if the browser is supported
-			var fileSupport = window.File != null && window.FileReader != null && window.FileList != null;
+			let fileSupport = window.File != null && window.FileReader != null && window.FileList != null;
 			
 			if (!fileSupport || !mxClient.isBrowserSupported())
 			{
@@ -37,7 +37,7 @@
 				mxEvent.disableContextMenu(container);
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Enables rubberband selection
 				new mxRubberband(graph);
@@ -59,16 +59,16 @@
 						evt.preventDefault();
 
 						// Gets drop location point for vertex
-						var pt = mxUtils.convertPoint(graph.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-						var tr = graph.view.translate;
-						var scale = graph.view.scale;
-						var x = pt.x / scale - tr.x;
-						var y = pt.y / scale - tr.y;
+						let pt = mxUtils.convertPoint(graph.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+						let tr = graph.view.translate;
+						let scale = graph.view.scale;
+						let x = pt.x / scale - tr.x;
+						let y = pt.y / scale - tr.y;
 						
 						// Converts local images to data urls
-						var filesArray = event.dataTransfer.files;
+						let filesArray = event.dataTransfer.files;
 						
-		                for (var i = 0; i < filesArray.length; i++)
+		                for (let i = 0; i < filesArray.length; i++)
 		                {
 			    			handleDrop(graph, filesArray[i], x + i * 10, y + i * 10);
 		                }
@@ -83,34 +83,34 @@
 		{
 			if (file.type.substring(0, 5) == 'image')
 			{
-                var reader = new FileReader();
+                let reader = new FileReader();
 
                 reader.onload = function(e)
                 {
                 	// Gets size of image for vertex
-					var data = e.target.result;
+					let data = e.target.result;
 
     				// SVG needs special handling to add viewbox if missing and
     				// find initial size from SVG attributes (only for IE11)
 					if (file.type.substring(0, 9) == 'image/svg')
 	    			{
-    					var comma = data.indexOf(',');
-    					var svgText = atob(data.substring(comma + 1));
-    					var root = mxUtils.parseXml(svgText);
+    					let comma = data.indexOf(',');
+    					let svgText = atob(data.substring(comma + 1));
+    					let root = mxUtils.parseXml(svgText);
     					
     					// Parses SVG to find width and height
     					if (root != null)
     					{
-    						var svgs = root.getElementsByTagName('svg');
+    						let svgs = root.getElementsByTagName('svg');
     						
     						if (svgs.length > 0)
 	    					{
-    							var svgRoot = svgs[0];
-	    						var w = parseFloat(svgRoot.getAttribute('width'));
-	    						var h = parseFloat(svgRoot.getAttribute('height'));
+    							let svgRoot = svgs[0];
+	    						let w = parseFloat(svgRoot.getAttribute('width'));
+	    						let h = parseFloat(svgRoot.getAttribute('height'));
 	    						
 	    						// Check if viewBox attribute already exists
-	    						var vb = svgRoot.getAttribute('viewBox');
+	    						let vb = svgRoot.getAttribute('viewBox');
 	    						
 	    						if (vb == null || vb.length == 0)
 	    						{
@@ -120,7 +120,7 @@
 	    						// missing width and height attributes
 	    						else if (isNaN(w) || isNaN(h))
 	    						{
-	    							var tokens = vb.split(' ');
+	    							let tokens = vb.split(' ');
 	    							
 	    							if (tokens.length > 3)
 	    							{
@@ -139,15 +139,15 @@
 	    			}
 					else
 					{
-                    	var img = new Image();
+                    	let img = new Image();
                     	
                     	img.onload = function()
                     	{
-	                    	var w = Math.max(1, img.width);
-	                    	var h = Math.max(1, img.height);
+	                    	let w = Math.max(1, img.width);
+	                    	let h = Math.max(1, img.height);
 	                    	
 	                    	// Converts format of data url to cell style value for use in vertex
-	        				var semi = data.indexOf(';');
+	        				let semi = data.indexOf(';');
 	        				
 	        				if (semi > 0)
 	        				{

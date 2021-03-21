@@ -49,11 +49,11 @@ class mxLine extends mxShape {
     c.begin();
 
     if (this.vertical) {
-      var mid = x + w / 2;
+      let mid = x + w / 2;
       c.moveTo(mid, y);
       c.lineTo(mid, y + h);
     } else {
-      var mid = y + h / 2;
+      let mid = y + h / 2;
       c.moveTo(x, mid);
       c.lineTo(x + w, mid);
     }

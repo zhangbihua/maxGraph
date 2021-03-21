@@ -37,24 +37,24 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
    * use.
    */
   execute = (parent) => {
-    var model = this.layout.getModel();
-    var seenNodes = {};
-    var unseenNodesArray = model.vertexMapper.getValues();
-    var unseenNodes = {};
+    let model = this.layout.getModel();
+    let seenNodes = {};
+    let unseenNodesArray = model.vertexMapper.getValues();
+    let unseenNodes = {};
 
-    for (var i = 0; i < unseenNodesArray.length; i++) {
+    for (let i = 0; i < unseenNodesArray.length; i++) {
       unseenNodes[unseenNodesArray[i].id] = unseenNodesArray[i];
     }
 
     // Perform a dfs through the internal model. If a cycle is found,
     // reverse it.
-    var rootsArray = null;
+    let rootsArray = null;
 
     if (model.roots != null) {
-      var modelRoots = model.roots;
+      let modelRoots = model.roots;
       rootsArray = [];
 
-      for (var i = 0; i < modelRoots.length; i++) {
+      for (let i = 0; i < modelRoots.length; i++) {
         rootsArray[i] = model.vertexMapper.get(modelRoots[i]);
       }
     }
@@ -78,7 +78,7 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
     // If there are any nodes that should be nodes that the dfs can miss
     // these need to be processed with the dfs and the roots assigned
     // correctly to form a correct internal model
-    var seenNodesCopy = mxUtils.clone(seenNodes, null, true);
+    let seenNodesCopy = mxUtils.clone(seenNodes, null, true);
 
     // Pick a random cell and dfs from it
     model.visit((parent, node, connectingEdge, layer, seen) => {

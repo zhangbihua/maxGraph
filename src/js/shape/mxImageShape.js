@@ -103,7 +103,7 @@ class mxImageShape extends mxRectangleShape {
    * so that the HTML creation is optional.
    */
   createHtml = () => {
-    var node = document.createElement('div');
+    let node = document.createElement('div');
     node.style.position = 'absolute';
 
     return node;
@@ -125,8 +125,8 @@ class mxImageShape extends mxRectangleShape {
    */
   paintVertexShape = (c, x, y, w, h) => {
     if (this.image != null) {
-      var fill = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BACKGROUND, null);
-      var stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, null);
+      let fill = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BACKGROUND, null);
+      let stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, null);
 
       if (fill != null) {
         // Stroke rendering required for shadow
@@ -139,7 +139,7 @@ class mxImageShape extends mxRectangleShape {
       // FlipH/V are implicit via mxShape.updateTransform
       c.image(x, y, w, h, this.image, this.preserveImageAspect, false, false);
 
-      var stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, null);
+      let stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, null);
 
       if (stroke != null) {
         c.setShadow(false);
@@ -165,18 +165,18 @@ class mxImageShape extends mxRectangleShape {
     this.node.innerHTML = '';
 
     if (this.image != null) {
-      var fill = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BACKGROUND, '');
-      var stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, '');
+      let fill = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BACKGROUND, '');
+      let stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, '');
       this.node.style.backgroundColor = fill;
       this.node.style.borderColor = stroke;
 
       // VML image supports PNG in IE6
-      var img = document.createElement('img');
+      let img = document.createElement('img');
       img.setAttribute('border', '0');
       img.style.position = 'absolute';
       img.src = this.image;
 
-      var filter = (this.opacity < 100) ? 'alpha(opacity=' + this.opacity + ')' : '';
+      let filter = (this.opacity < 100) ? 'alpha(opacity=' + this.opacity + ')' : '';
       this.node.style.filter = filter;
 
       if (this.flipH && this.flipV) {

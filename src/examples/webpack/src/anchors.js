@@ -1,4 +1,4 @@
-var mxgraph = require("../../../dist/build")({
+let mxgraph = require("../../../dist/build")({
       mxImageBasePath: "../../src/images",
       mxBasePath: "../../src"
     }),
@@ -59,13 +59,13 @@ window.onload = () => {
     mxEvent.disableContextMenu(container);
 
     // Creates the graph inside the given container
-    var graph = new mxGraph(container);
+    let graph = new mxGraph(container);
     graph.setConnectable(true);
 
     // Enables connect preview for the default edge style
     graph.connectionHandler.createEdgeState = function(me)
     {
-      var edge = graph.createEdge(null, null, null, null, null);
+      let edge = graph.createEdge(null, null, null, null, null);
 
       return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
     };
@@ -78,7 +78,7 @@ window.onload = () => {
 
     // Gets the default parent for inserting new cells. This
     // is normally the first child of the root (ie. layer 0).
-    var parent = graph.getDefaultParent();
+    let parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
     graph.getModel().beginUpdate();

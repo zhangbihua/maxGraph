@@ -153,7 +153,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    */
   mouseUp = (sender, me) => {
     if (this.popupTrigger && this.inTolerance && this.triggerX != null && this.triggerY != null) {
-      var cell = this.getCellForPopupEvent(me);
+      let cell = this.getCellForPopupEvent(me);
 
       // Selects the cell for which the context menu is being displayed
       if (this.graph.isEnabled() && this.isSelectOnPopup(me) &&
@@ -168,7 +168,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
 
       // Menu is shifted by 1 pixel so that the mouse up event
       // is routed via the underlying shape instead of the DIV
-      var origin = mxUtils.getScrollOrigin();
+      let origin = mxUtils.getScrollOrigin();
       this.popup(me.getX() + origin.x + 1, me.getY() + origin.y + 1, cell, me.getEvent());
       me.consume();
     }

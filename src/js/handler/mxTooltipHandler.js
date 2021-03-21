@@ -133,7 +133,7 @@ class mxTooltipHandler {
       document.body.appendChild(this.div);
 
       mxEvent.addGestureListeners(this.div, (evt) => {
-        var source = mxEvent.getSource(evt);
+        let source = mxEvent.getSource(evt);
 
         if (source.nodeName != 'A') {
           this.hideTooltip();
@@ -171,7 +171,7 @@ class mxTooltipHandler {
   mouseMove = (sender, me) => {
     if (me.getX() != this.lastX || me.getY() != this.lastY) {
       this.reset(me, true);
-      var state = this.getStateForEvent(me);
+      let state = this.getStateForEvent(me);
 
       if (this.isHideOnHover() || state != this.state || (me.getSource() != this.node &&
           (!this.stateSource || (state != null && this.stateSource ==
@@ -220,17 +220,17 @@ class mxTooltipHandler {
 
       if (restart && this.isEnabled() && state != null && (this.div == null ||
           this.div.style.visibility == 'hidden')) {
-        var node = me.getSource();
-        var x = me.getX();
-        var y = me.getY();
-        var stateSource = me.isSource(state.shape) || me.isSource(state.text);
+        let node = me.getSource();
+        let x = me.getX();
+        let y = me.getY();
+        let stateSource = me.isSource(state.shape) || me.isSource(state.text);
 
         this.thread = window.setTimeout(() => {
           if (!this.graph.isEditing() && !this.graph.popupMenuHandler.isMenuShowing() && !this.graph.isMouseDown) {
             // Uses information from inside event cause using the event at
             // this (delayed) point in time is not possible in IE as it no
             // longer contains the required information (member not found)
-            var tip = this.graph.getTooltip(state, node, x, y);
+            let tip = this.graph.getTooltip(state, node, x, y);
             this.show(tip, x, y);
             this.state = state;
             this.node = node;
@@ -276,7 +276,7 @@ class mxTooltipHandler {
         this.init();
       }
 
-      var origin = mxUtils.getScrollOrigin();
+      let origin = mxUtils.getScrollOrigin();
 
       this.div.style.zIndex = this.zIndex;
       this.div.style.left = (x + origin.x) + 'px';

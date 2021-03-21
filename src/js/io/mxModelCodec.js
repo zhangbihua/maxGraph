@@ -28,7 +28,7 @@ class mxModelCodec extends mxObjectCodec {
    * wrapped-up in a node with the name root.
    */
   encodeObject = (enc, obj, node) => {
-    var rootNode = enc.document.createElement('root');
+    let rootNode = enc.document.createElement('root');
     enc.encodeCell(obj.getRoot(), rootNode);
     node.appendChild(rootNode);
   };
@@ -53,11 +53,11 @@ class mxModelCodec extends mxObjectCodec {
    * are children of the root element in the node.
    */
   decodeRoot = (dec, root, model) => {
-    var rootCell = null;
-    var tmp = root.firstChild;
+    let rootCell = null;
+    let tmp = root.firstChild;
 
     while (tmp != null) {
-      var cell = dec.decodeCell(tmp);
+      let cell = dec.decodeCell(tmp);
 
       if (cell != null && cell.getParent() == null) {
         rootCell = cell;

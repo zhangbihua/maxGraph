@@ -48,10 +48,10 @@ class mxRhombus extends mxShape {
    * Generic painting implementation.
    */
   paintVertexShape = (c, x, y, w, h) => {
-    var hw = w / 2;
-    var hh = h / 2;
+    let hw = w / 2;
+    let hh = h / 2;
 
-    var arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+    let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
     c.begin();
     this.addPoints(c, [new mxPoint(x + hw, y), new mxPoint(x + w, y + hh), new mxPoint(x + hw, y + h),
       new mxPoint(x, y + hh)], this.isRounded, arcSize, true);

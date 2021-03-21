@@ -20,11 +20,11 @@
 	<add as="getTooltipForCell"><![CDATA[
 		function(cell)
 		{
-			var href = cell.getAttribute('href');
+			let href = cell.getAttribute('href');
 			href = (href != null && href.length > 0) ?
 				'<br>'+href : '';
-			var maxlen = 30;
-			var desc = cell.getAttribute('description');
+			let maxlen = 30;
+			let desc = cell.getAttribute('description');
 			if (desc == null || desc.length == 0)
 			{
 				desc = '';
@@ -53,7 +53,7 @@
 		<add as="valueForCellChanged"><![CDATA[
 			function(cell, value)
 			{
-				var previous = null;
+				let previous = null;
 				
 				if (isNaN(value.nodeType))
 				{

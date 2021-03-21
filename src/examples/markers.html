@@ -38,8 +38,8 @@
 				// Registers and defines the custom marker
 				mxMarker.addMarker('dash', function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
 				{
-					var nx = unitX * (size + sw + 1);
-					var ny = unitY * (size + sw + 1);
+					let nx = unitX * (size + sw + 1);
+					let ny = unitY * (size + sw + 1);
 
 					return function()
 					{
@@ -85,24 +85,24 @@
 				mxUtils.extend(LinkShape, mxArrow);
 				LinkShape.prototype.paintEdgeShape = function(c, pts)
 				{
-					var width = 10;
+					let width = 10;
 
 					// Base vector (between end points)
 					var p0 = pts[0];
-					var pe = pts[pts.length - 1];
+					let pe = pts[pts.length - 1];
 					
-					var dx = pe.x - p0.x;
-					var dy = pe.y - p0.y;
-					var dist = Math.sqrt(dx * dx + dy * dy);
-					var length = dist;
+					let dx = pe.x - p0.x;
+					let dy = pe.y - p0.y;
+					let dist = Math.sqrt(dx * dx + dy * dy);
+					let length = dist;
 					
 					// Computes the norm and the inverse norm
-					var nx = dx / dist;
-					var ny = dy / dist;
-					var basex = length * nx;
-					var basey = length * ny;
-					var floorx = width * ny/3;
-					var floory = -width * nx/3;
+					let nx = dx / dist;
+					let ny = dy / dist;
+					let basex = length * nx;
+					let basey = length * ny;
+					let floorx = width * ny/3;
+					let floory = -width * nx/3;
 					
 					// Computes points
 					var p0x = p0.x - floorx / 2;
@@ -129,10 +129,10 @@
 				mxCellRenderer.registerShape('link', LinkShape);
 
 				// Creates the graph
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Sets default styles
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style['fillColor'] = '#FFFFFF';
 				style['strokeColor'] = '#000000';
 				style['fontColor'] = '#000000';
@@ -147,7 +147,7 @@
 				style['endSize'] = '8';
 
 				// Populates the graph
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				graph.getModel().beginUpdate();
 				try

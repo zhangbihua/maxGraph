@@ -36,16 +36,16 @@
 				mxGraphViewGetPerimeterPoint = mxGraphView.prototype.getPerimeterPoint;
 				mxGraphView.prototype.getPerimeterPoint = function(terminal, next, orthogonal, border)
 				{
-					var point = mxGraphViewGetPerimeterPoint.apply(this, arguments);
+					let point = mxGraphViewGetPerimeterPoint.apply(this, arguments);
 					
 					if (point != null)
 					{
-						var perimeter = this.getPerimeterFunction(terminal);
+						let perimeter = this.getPerimeterFunction(terminal);
 
 						if (terminal.text != null && terminal.text.boundingBox != null)
 						{
 							// Adds a small border to the label bounds
-							var b = terminal.text.boundingBox.clone();
+							let b = terminal.text.boundingBox.clone();
 							b.grow(3)
 
 							if (mxUtils.rectangleIntersectsSegment(b, point, next))
@@ -59,7 +59,7 @@
 				};
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setVertexLabelsMovable(true);
 				graph.setConnectable(true);
 
@@ -72,7 +72,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

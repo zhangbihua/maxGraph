@@ -37,8 +37,8 @@
 		
 		TreeNodeShape.prototype.redrawPath = function(path, x, y, w, h, isForeground)
 		{
-			var graph = this.state.view.graph;
-			var hasChildren = graph.model.getOutgoingEdges(this.state.cell).length > 0;
+			let graph = this.state.view.graph;
+			let hasChildren = graph.model.getOutgoingEdges(this.state.cell).length > 0;
 			
 			if (isForeground)
 			{
@@ -65,7 +65,7 @@
 		// Defines a custom perimeter for the nodes in the tree
 		mxGraphView.prototype.updateFloatingTerminalPoint = function(edge, start, end, source)
 		{
-			var pt = null;
+			let pt = null;
 			
 			if (source)
 			{
@@ -103,7 +103,7 @@
 				mxGraph.prototype.expandedImage = new mxImage(mxClient.imageBasePath + '/expanded.gif', 9, 9);
 				
 				// Workaround for Internet Explorer ignoring certain styles
-				var container = document.createElement('div');
+				let container = document.createElement('div');
 				container.style.position = 'absolute';
 				container.style.overflow = 'hidden';
 				container.style.left = '0px';
@@ -114,13 +114,13 @@
 				document.body.appendChild(container);
 			
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Avoids overlap of edges and collapse icons
 				graph.keepEdgesInBackground = true;
 
 				// Set some stylesheet options for the visual appearance
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_SHAPE] = 'treenode';
 				style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
 				style[mxConstants.STYLE_SHADOW] = true;
@@ -136,18 +136,18 @@
 				graph.panningHandler.useLeftButtonForPanning = true;
 
 				// Stops editing on enter or escape keypress
-				var keyHandler = new mxKeyHandler(graph);
+				let keyHandler = new mxKeyHandler(graph);
 				
 				// Enables automatic layout on the graph and installs
 				// a tree layout for all groups who's children are
 				// being changed, added or removed.
-				var layout = new mxCompactTreeLayout(graph, false);
+				let layout = new mxCompactTreeLayout(graph, false);
 				layout.useBoundingBox = false;
 				layout.edgeRouting = false;
 				layout.levelDistance = 30;
 				layout.nodeDistance = 10;
 
-				var layoutMgr = new mxLayoutManager(graph);
+				let layoutMgr = new mxLayoutManager(graph);
 				
 				layoutMgr.getLayout = function(cell)
 				{
@@ -171,10 +171,10 @@
 				{
 					if (state.control != null)
 					{
-						var oldScale = state.control.scale;
-						var w = state.control.bounds.width / oldScale;
-						var h = state.control.bounds.height / oldScale;
-						var s = state.view.scale;			
+						let oldScale = state.control.scale;
+						let w = state.control.bounds.width / oldScale;
+						let h = state.control.bounds.height / oldScale;
+						let s = state.view.scale;
 
 						return new mxRectangle(state.x + state.width / 2 - w / 2 * s,
 							state.y + state.height + TreeNodeShape.prototype.segment * s - h / 2 * s,
@@ -206,14 +206,14 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds the root vertex of the tree
 				graph.getModel().beginUpdate();
 				try
 				{
-					var w = graph.container.offsetWidth;
-					var root = graph.insertVertex(parent, 'treeRoot', 'Root', w/2 - 30, 20, 60, 40);
+					let w = graph.container.offsetWidth;
+					let root = graph.insertVertex(parent, 'treeRoot', 'Root', w/2 - 30, 20, 60, 40);
 
 					var v1 = graph.insertVertex(parent, 'v1', 'Child 1', 0, 0, 60, 40);
 					graph.insertEdge(parent, null, '', root, v1);
@@ -258,7 +258,7 @@
 		function toggleSubtree(graph, cell, show)
 		{
 			show = (show != null) ? show : true;
-			var cells = [];
+			let cells = [];
 			
 			graph.traverse(cell, true, function(vertex)
 			{

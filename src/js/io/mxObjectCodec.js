@@ -63,7 +63,7 @@ class mxObjectCodec {
    * Consider the following example.
    *
    * (code)
-   * var obj = {};
+   * let obj = {};
    * obj.foo = "Foo";
    * obj.bar = "Bar";
    * (end)
@@ -71,8 +71,8 @@ class mxObjectCodec {
    * This object is encoded into an XML node using the following.
    *
    * (code)
-   * var enc = new mxCodec();
-   * var node = enc.encode(obj);
+   * let enc = new mxCodec();
+   * let node = enc.encode(obj);
    * (end)
    *
    * The output of the encoding may be viewed using <mxLog> as follows.
@@ -110,7 +110,7 @@ class mxObjectCodec {
    * property of foo.
    *
    * (code)
-   * var obj = {foo: {bar: "Bar"}};
+   * let obj = {foo: {bar: "Bar"}};
    * (end)
    *
    * This will be mapped to the following XML structure by mxObjectCodec.
@@ -140,7 +140,7 @@ class mxObjectCodec {
    * called bar with an atomic value, and foo with an object value.
    *
    * (code)
-   * var obj = ["Bar", {bar: "Bar"}];
+   * let obj = ["Bar", {bar: "Bar"}];
    * obj["bar"] = "Bar";
    * obj["foo"] = {bar: "Bar"};
    * (end)
@@ -233,7 +233,7 @@ class mxObjectCodec {
    * The argument is created as follows:
    *
    * (code)
-   * var mapping = {};
+   * let mapping = {};
    * mapping['variableName'] = 'attribute-name';
    * (end)
    *
@@ -292,7 +292,7 @@ class mxObjectCodec {
    */
   getFieldName = (attributename) => {
     if (attributename != null) {
-      var mapped = this.reverse[attributename];
+      let mapped = this.reverse[attributename];
 
       if (mapped != null) {
         attributename = mapped;
@@ -312,7 +312,7 @@ class mxObjectCodec {
    */
   getAttributeName = (fieldname) => {
     if (fieldname != null) {
-      var mapped = this.mapping[fieldname];
+      let mapped = this.mapping[fieldname];
 
       if (mapped != null) {
         fieldname = mapped;
@@ -404,7 +404,7 @@ class mxObjectCodec {
    * obj - Object to be encoded.
    */
   encode = (enc, obj) => {
-    var node = enc.document.createElement(this.getName());
+    let node = enc.document.createElement(this.getName());
 
     obj = this.beforeEncode(enc, obj, node);
     this.encodeObject(enc, obj, node);
@@ -428,8 +428,8 @@ class mxObjectCodec {
     enc.setAttribute(node, 'id', enc.getId(obj));
 
     for (var i in obj) {
-      var name = i;
-      var value = obj[name];
+      let name = i;
+      let value = obj[name];
 
       if (value != null && !this.isExcluded(obj, name, value, true)) {
         if (mxUtils.isInteger(name)) {
@@ -459,7 +459,7 @@ class mxObjectCodec {
   encodeValue = (enc, obj, name, value, node) => {
     if (value != null) {
       if (this.isReference(obj, name, value, true)) {
-        var tmp = enc.getId(value);
+        let tmp = enc.getId(value);
 
         if (tmp == null) {
           mxLog.warn('mxObjectCodec.encode: No ID for ' +
@@ -470,7 +470,7 @@ class mxObjectCodec {
         value = tmp;
       }
 
-      var defaultValue = this.template[name];
+      let defaultValue = this.template[name];
 
       // Checks if the value is a default value and
       // the name is correct
@@ -505,7 +505,7 @@ class mxObjectCodec {
     value = this.convertAttributeToXml(enc, obj, name, value, node);
 
     if (name == null) {
-      var child = enc.document.createElement('add');
+      let child = enc.document.createElement('add');
 
       if (typeof (value) == 'function') {
         child.appendChild(enc.document.createTextNode(value));
@@ -525,7 +525,7 @@ class mxObjectCodec {
    * Writes the given value as a child node of the given node.
    */
   writeComplexAttribute = (enc, obj, name, value, node) => {
-    var child = enc.encode(value);
+    let child = enc.encode(value);
 
     if (child != null) {
       if (name != null) {
@@ -591,7 +591,7 @@ class mxObjectCodec {
    * obj - Objec to convert the attribute for.
    */
   convertAttributeFromXml = (dec, attr, obj) => {
-    var value = attr.value;
+    let value = attr.value;
 
     if (this.isNumericAttribute(dec, attr, obj)) {
       value = parseFloat(value);
@@ -617,7 +617,7 @@ class mxObjectCodec {
    */
   isNumericAttribute = (dec, attr, obj) => {
     // Handles known numeric attributes for generic objects
-    var result = (obj.constructor === mxGeometry &&
+    let result = (obj.constructor === mxGeometry &&
         (attr.name === 'x' || attr.name === 'y' ||
             attr.name === 'width' || attr.name === 'height')) ||
         (obj.constructor === mxPoint &&
@@ -719,8 +719,8 @@ class mxObjectCodec {
    * into - Optional objec to encode the node into.
    */
   decode = (dec, node, into) => {
-    var id = node.getAttribute('id');
-    var obj = dec.objects[id];
+    let id = node.getAttribute('id');
+    let obj = dec.objects[id];
 
     if (obj == null) {
       obj = into || this.cloneTemplate();
@@ -766,10 +766,10 @@ class mxObjectCodec {
    * obj - Objec to encode the node into.
    */
   decodeAttributes = (dec, node, obj) => {
-    var attrs = node.attributes;
+    let attrs = node.attributes;
 
     if (attrs != null) {
-      for (var i = 0; i < attrs.length; i++) {
+      for (let i = 0; i < attrs.length; i++) {
         this.decodeAttribute(dec, attrs[i], obj);
       }
     }
@@ -804,17 +804,17 @@ class mxObjectCodec {
    */
   decodeAttribute = (dec, attr, obj) => {
     if (!this.isIgnoredAttribute(dec, attr, obj)) {
-      var name = attr.nodeName;
+      let name = attr.nodeName;
 
       // Converts the string true and false to their boolean values.
       // This may require an additional check on the obj to see if
       // the existing field is a boolean value or uninitialized, in
       // which case we may want to convert true and false to a string.
-      var value = this.convertAttributeFromXml(dec, attr, obj);
-      var fieldname = this.getFieldName(name);
+      let value = this.convertAttributeFromXml(dec, attr, obj);
+      let fieldname = this.getFieldName(name);
 
       if (this.isReference(obj, fieldname, value, false)) {
-        var tmp = dec.getObject(value);
+        let tmp = dec.getObject(value);
 
         if (tmp == null) {
           mxLog.warn('mxObjectCodec.decode: No object for ' +
@@ -844,10 +844,10 @@ class mxObjectCodec {
    * obj - Objec to encode the node into.
    */
   decodeChildren = (dec, node, obj) => {
-    var child = node.firstChild;
+    let child = node.firstChild;
 
     while (child != null) {
-      var tmp = child.nextSibling;
+      let tmp = child.nextSibling;
 
       if (child.nodeType == mxConstants.NODETYPE_ELEMENT &&
           !this.processInclude(dec, child, obj)) {
@@ -870,11 +870,11 @@ class mxObjectCodec {
    * obj - Objec to encode the node into.
    */
   decodeChild = (dec, child, obj) => {
-    var fieldname = this.getFieldName(child.getAttribute('as'));
+    let fieldname = this.getFieldName(child.getAttribute('as'));
 
     if (fieldname == null || !this.isExcluded(obj, fieldname, child, false)) {
-      var template = this.getFieldTemplate(obj, fieldname, child);
-      var value = null;
+      let template = this.getFieldTemplate(obj, fieldname, child);
+      let value = null;
 
       if (child.nodeName === 'add') {
         value = child.getAttribute('value');
@@ -905,7 +905,7 @@ class mxObjectCodec {
    * based on the encoded child.
    */
   getFieldTemplate = (obj, fieldname, child) => {
-    var template = obj[fieldname];
+    let template = obj[fieldname];
 
     // Non-empty arrays are replaced completely
     if (template instanceof Array && template.length > 0) {
@@ -951,11 +951,11 @@ class mxObjectCodec {
    */
   processInclude = (dec, node, into) => {
     if (node.nodeName === 'include') {
-      var name = node.getAttribute('name');
+      let name = node.getAttribute('name');
 
       if (name != null) {
         try {
-          var xml = mxUtils.load(name).getDocumentElement();
+          let xml = mxUtils.load(name).getDocumentElement();
 
           if (xml != null) {
             dec.decode(xml, into);

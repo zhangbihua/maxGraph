@@ -88,7 +88,7 @@ class mxEditorCodec extends mxObjectCodec {
    */
   afterDecode = (dec, node, obj) => {
     // Assigns the specified templates for edges
-    var defaultEdge = node.getAttribute('defaultEdge');
+    let defaultEdge = node.getAttribute('defaultEdge');
 
     if (defaultEdge != null) {
       node.removeAttribute('defaultEdge');
@@ -96,7 +96,7 @@ class mxEditorCodec extends mxObjectCodec {
     }
 
     // Assigns the specified templates for groups
-    var defaultGroup = node.getAttribute('defaultGroup');
+    let defaultGroup = node.getAttribute('defaultGroup');
 
     if (defaultGroup != null) {
       node.removeAttribute('defaultGroup');
@@ -113,7 +113,7 @@ class mxEditorCodec extends mxObjectCodec {
    */
   decodeChild = (dec, child, obj) => {
     if (child.nodeName === 'Array') {
-      var role = child.getAttribute('as');
+      let role = child.getAttribute('as');
 
       if (role === 'templates') {
         this.decodeTemplates(dec, child, obj);
@@ -133,13 +133,13 @@ class mxEditorCodec extends mxObjectCodec {
    * Decodes the ui elements from the given node.
    */
   decodeUi = (dec, node, editor) => {
-    var tmp = node.firstChild;
+    let tmp = node.firstChild;
     while (tmp != null) {
       if (tmp.nodeName === 'add') {
-        var as = tmp.getAttribute('as');
-        var elt = tmp.getAttribute('element');
-        var style = tmp.getAttribute('style');
-        var element = null;
+        let as = tmp.getAttribute('as');
+        let elt = tmp.getAttribute('element');
+        let style = tmp.getAttribute('style');
+        let element = null;
 
         if (elt != null) {
           element = document.getElementById(elt);
@@ -148,16 +148,16 @@ class mxEditorCodec extends mxObjectCodec {
             element.style.cssText += ';' + style;
           }
         } else {
-          var x = parseInt(tmp.getAttribute('x'));
-          var y = parseInt(tmp.getAttribute('y'));
-          var width = tmp.getAttribute('width');
-          var height = tmp.getAttribute('height');
+          let x = parseInt(tmp.getAttribute('x'));
+          let y = parseInt(tmp.getAttribute('y'));
+          let width = tmp.getAttribute('width');
+          let height = tmp.getAttribute('height');
 
           // Creates a new window around the element
           element = document.createElement('div');
           element.style.cssText = style;
 
-          var wnd = new mxWindow(mxResources.get(as) || as,
+          let wnd = new mxWindow(mxResources.get(as) || as,
               element, x, y, width, height, false, true);
           wnd.setVisible(true);
         }
@@ -194,10 +194,10 @@ class mxEditorCodec extends mxObjectCodec {
       editor.templates = [];
     }
 
-    var children = mxUtils.getChildNodes(node);
-    for (var j = 0; j < children.length; j++) {
-      var name = children[j].getAttribute('as');
-      var child = children[j].firstChild;
+    let children = mxUtils.getChildNodes(node);
+    for (let j = 0; j < children.length; j++) {
+      let name = children[j].getAttribute('as');
+      let child = children[j].firstChild;
 
       while (child != null && child.nodeType !== 1) {
         child = child.nextSibling;

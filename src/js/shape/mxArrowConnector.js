@@ -93,7 +93,7 @@ class mxArrowConnector extends mxShape {
   augmentBoundingBox = (bbox) => {
     augmentBoundingBox.apply(this, arguments);
 
-    var w = this.getEdgeWidth();
+    let w = this.getEdgeWidth();
 
     if (this.isMarkerStart()) {
       w = Math.max(w, this.getStartArrowWidth());
@@ -113,25 +113,25 @@ class mxArrowConnector extends mxShape {
    */
   paintEdgeShape = (c, pts) => {
     // Geometry of arrow
-    var strokeWidth = this.strokewidth;
+    let strokeWidth = this.strokewidth;
 
     if (this.outline) {
       strokeWidth = Math.max(1, mxUtils.getNumber(this.style, mxConstants.STYLE_STROKEWIDTH, this.strokewidth));
     }
 
-    var startWidth = this.getStartArrowWidth() + strokeWidth;
-    var endWidth = this.getEndArrowWidth() + strokeWidth;
-    var edgeWidth = this.outline ? this.getEdgeWidth() + strokeWidth : this.getEdgeWidth();
-    var openEnded = this.isOpenEnded();
-    var markerStart = this.isMarkerStart();
-    var markerEnd = this.isMarkerEnd();
-    var spacing = (openEnded) ? 0 : this.arrowSpacing + strokeWidth / 2;
-    var startSize = this.startSize + strokeWidth;
-    var endSize = this.endSize + strokeWidth;
-    var isRounded = this.isArrowRounded();
+    let startWidth = this.getStartArrowWidth() + strokeWidth;
+    let endWidth = this.getEndArrowWidth() + strokeWidth;
+    let edgeWidth = this.outline ? this.getEdgeWidth() + strokeWidth : this.getEdgeWidth();
+    let openEnded = this.isOpenEnded();
+    let markerStart = this.isMarkerStart();
+    let markerEnd = this.isMarkerEnd();
+    let spacing = (openEnded) ? 0 : this.arrowSpacing + strokeWidth / 2;
+    let startSize = this.startSize + strokeWidth;
+    let endSize = this.endSize + strokeWidth;
+    let isRounded = this.isArrowRounded();
 
     // Base vector (between first points)
-    var pe = pts[pts.length - 1];
+    let pe = pts[pts.length - 1];
 
     // Finds first non-overlapping point
     var i0 = 1;
@@ -140,24 +140,24 @@ class mxArrowConnector extends mxShape {
       i0++;
     }
 
-    var dx = pts[i0].x - pts[0].x;
-    var dy = pts[i0].y - pts[0].y;
-    var dist = Math.sqrt(dx * dx + dy * dy);
+    let dx = pts[i0].x - pts[0].x;
+    let dy = pts[i0].y - pts[0].y;
+    let dist = Math.sqrt(dx * dx + dy * dy);
 
     if (dist == 0) {
       return;
     }
 
     // Computes the norm and the inverse norm
-    var nx = dx / dist;
+    let nx = dx / dist;
     var nx2, nx1 = nx;
-    var ny = dy / dist;
+    let ny = dy / dist;
     var ny2, ny1 = ny;
-    var orthx = edgeWidth * ny;
-    var orthy = -edgeWidth * nx;
+    let orthx = edgeWidth * ny;
+    let orthy = -edgeWidth * nx;
 
     // Stores the inbound function calls in reverse order in fns
-    var fns = [];
+    let fns = [];
 
     if (isRounded) {
       c.setLineJoin('round');
@@ -168,16 +168,16 @@ class mxArrowConnector extends mxShape {
 
     c.begin();
 
-    var startNx = nx;
-    var startNy = ny;
+    let startNx = nx;
+    let startNy = ny;
 
     if (markerStart && !openEnded) {
       this.paintMarker(c, pts[0].x, pts[0].y, nx, ny, startSize, startWidth, edgeWidth, spacing, true);
     } else {
-      var outStartX = pts[0].x + orthx / 2 + spacing * nx;
-      var outStartY = pts[0].y + orthy / 2 + spacing * ny;
-      var inEndX = pts[0].x - orthx / 2 + spacing * nx;
-      var inEndY = pts[0].y - orthy / 2 + spacing * ny;
+      let outStartX = pts[0].x + orthx / 2 + spacing * nx;
+      let outStartY = pts[0].y + orthy / 2 + spacing * ny;
+      let inEndX = pts[0].x - orthx / 2 + spacing * nx;
+      let inEndY = pts[0].y - orthy / 2 + spacing * ny;
 
       if (openEnded) {
         c.moveTo(outStartX, outStartY);
@@ -195,9 +195,9 @@ class mxArrowConnector extends mxShape {
     var dy1 = 0;
     var dist1 = 0;
 
-    for (var i = 0; i < pts.length - 2; i++) {
+    for (let i = 0; i < pts.length - 2; i++) {
       // Work out in which direction the line is bending
-      var pos = mxUtils.relativeCcw(pts[i].x, pts[i].y, pts[i + 1].x, pts[i + 1].y, pts[i + 2].x, pts[i + 2].y);
+      let pos = mxUtils.relativeCcw(pts[i].x, pts[i].y, pts[i + 1].x, pts[i + 1].y, pts[i + 2].x, pts[i + 2].y);
 
       dx1 = pts[i + 2].x - pts[i + 1].x;
       dy1 = pts[i + 2].y - pts[i + 1].y;
@@ -209,7 +209,7 @@ class mxArrowConnector extends mxShape {
         ny1 = dy1 / dist1;
 
         var tmp1 = nx * nx1 + ny * ny1;
-        var tmp = Math.max(Math.sqrt((tmp1 + 1) / 2), 0.04);
+        let tmp = Math.max(Math.sqrt((tmp1 + 1) / 2), 0.04);
 
         // Work out the normal orthogonal to the line through the control point and the edge sides intersection
         nx2 = (nx + nx1);
@@ -222,13 +222,13 @@ class mxArrowConnector extends mxShape {
           ny2 = ny2 / dist2;
 
           // Higher strokewidths require a larger minimum bend, 0.35 covers all but the most extreme cases
-          var strokeWidthFactor = Math.max(tmp, Math.min(this.strokewidth / 200 + 0.04, 0.35));
-          var angleFactor = (pos != 0 && isRounded) ? Math.max(0.1, strokeWidthFactor) : Math.max(tmp, 0.06);
+          let strokeWidthFactor = Math.max(tmp, Math.min(this.strokewidth / 200 + 0.04, 0.35));
+          let angleFactor = (pos != 0 && isRounded) ? Math.max(0.1, strokeWidthFactor) : Math.max(tmp, 0.06);
 
-          var outX = pts[i + 1].x + ny2 * edgeWidth / 2 / angleFactor;
-          var outY = pts[i + 1].y - nx2 * edgeWidth / 2 / angleFactor;
-          var inX = pts[i + 1].x - ny2 * edgeWidth / 2 / angleFactor;
-          var inY = pts[i + 1].y + nx2 * edgeWidth / 2 / angleFactor;
+          let outX = pts[i + 1].x + ny2 * edgeWidth / 2 / angleFactor;
+          let outY = pts[i + 1].y - nx2 * edgeWidth / 2 / angleFactor;
+          let inX = pts[i + 1].x - ny2 * edgeWidth / 2 / angleFactor;
+          let inY = pts[i + 1].y + nx2 * edgeWidth / 2 / angleFactor;
 
           if (pos == 0 || !isRounded) {
             // If the two segments are aligned, or if we're not drawing curved sections between segments
@@ -285,8 +285,8 @@ class mxArrowConnector extends mxShape {
     } else {
       c.lineTo(pe.x - spacing * nx1 + orthx / 2, pe.y - spacing * ny1 + orthy / 2);
 
-      var inStartX = pe.x - spacing * nx1 - orthx / 2;
-      var inStartY = pe.y - spacing * ny1 - orthy / 2;
+      let inStartX = pe.x - spacing * nx1 - orthx / 2;
+      let inStartY = pe.y - spacing * ny1 - orthy / 2;
 
       if (!openEnded) {
         c.lineTo(inStartX, inStartY);
@@ -299,7 +299,7 @@ class mxArrowConnector extends mxShape {
       }
     }
 
-    for (var i = fns.length - 1; i >= 0; i--) {
+    for (let i = fns.length - 1; i >= 0; i--) {
       fns[i]();
     }
 
@@ -347,12 +347,12 @@ class mxArrowConnector extends mxShape {
    * Paints the marker.
    */
   paintMarker = (c, ptX, ptY, nx, ny, size, arrowWidth, edgeWidth, spacing, initialMove) => {
-    var widthArrowRatio = edgeWidth / arrowWidth;
-    var orthx = edgeWidth * ny / 2;
-    var orthy = -edgeWidth * nx / 2;
+    let widthArrowRatio = edgeWidth / arrowWidth;
+    let orthx = edgeWidth * ny / 2;
+    let orthy = -edgeWidth * nx / 2;
 
-    var spaceX = (spacing + size) * nx;
-    var spaceY = (spacing + size) * ny;
+    let spaceX = (spacing + size) * nx;
+    let spaceY = (spacing + size) * ny;
 
     if (initialMove) {
       c.moveTo(ptX - orthx + spaceX, ptY - orthy + spaceY);

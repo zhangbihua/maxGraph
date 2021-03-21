@@ -33,7 +33,7 @@
 			{
 				// Note that these XML nodes will be enclosing the
 				// mxCell nodes for the model cells in the output
-				var doc = mxUtils.createXmlDocument();
+				let doc = mxUtils.createXmlDocument();
 
 				var person1 = doc.createElement('Person');
 				person1.setAttribute('firstName', 'Daffy');
@@ -43,11 +43,11 @@
 				person2.setAttribute('firstName', 'Bugs');
 				person2.setAttribute('lastName', 'Bunny');
 
-				var relation = doc.createElement('Knows');
+				let relation = doc.createElement('Knows');
 				relation.setAttribute('since', '1985');
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Optional disabling of sizing
 				graph.setCellsResizable(false);
@@ -74,8 +74,8 @@
 					{
 						if (cell.value.nodeName.toLowerCase() == 'person')
 						{
-							var firstName = cell.getAttribute('firstName', '');
-							var lastName = cell.getAttribute('lastName', '');
+							let firstName = cell.getAttribute('firstName', '');
+							let lastName = cell.getAttribute('lastName', '');
 
 							if (lastName != null && lastName.length > 0)
 							{
@@ -96,21 +96,21 @@
 				};
 
 				// Overrides method to store a cell label in the model
-				var cellLabelChanged = graph.cellLabelChanged;
+				let cellLabelChanged = graph.cellLabelChanged;
 				graph.cellLabelChanged = function(cell, newValue, autoSize)
 				{
 					if (mxUtils.isNode(cell.value) &&
 						cell.value.nodeName.toLowerCase() == 'person')
 					{
-						var pos = newValue.indexOf(' ');
+						let pos = newValue.indexOf(' ');
 
-						var firstName = (pos > 0) ? newValue.substring(0,
+						let firstName = (pos > 0) ? newValue.substring(0,
 								pos) : newValue;
-						var lastName = (pos > 0) ? newValue.substring(
+						let lastName = (pos > 0) ? newValue.substring(
 								pos + 1, newValue.length) : '';
 
 						// Clones the value for correct undo/redo
-						var elt = cell.value.cloneNode(true);
+						let elt = cell.value.cloneNode(true);
 
 						elt.setAttribute('firstName', firstName);
 						elt.setAttribute('lastName', lastName);
@@ -123,14 +123,14 @@
 				};
 
 				// Overrides method to create the editing value
-				var getEditingValue = graph.getEditingValue;
+				let getEditingValue = graph.getEditingValue;
 				graph.getEditingValue = function(cell)
 				{
 					if (mxUtils.isNode(cell.value) &&
 						cell.value.nodeName.toLowerCase() == 'person')
 					{
-						var firstName = cell.getAttribute('firstName', '');
-						var lastName = cell.getAttribute('lastName', '');
+						let firstName = cell.getAttribute('firstName', '');
+						let lastName = cell.getAttribute('lastName', '');
 
 						return firstName + ' ' + lastName;
 					}
@@ -139,14 +139,14 @@
 				// Adds a special tooltip for edges
 				graph.setTooltips(true);
 				
-				var getTooltipForCell = graph.getTooltipForCell;
+				let getTooltipForCell = graph.getTooltipForCell;
 				graph.getTooltipForCell = function(cell)
 				{
 					// Adds some relation details for edges
 					if (graph.getModel().isEdge(cell))
 					{
-						var src = this.getLabel(this.getModel().getTerminal(cell, true));
-						var trg = this.getLabel(this.getModel().getTerminal(cell, false));
+						let src = this.getLabel(this.getModel().getTerminal(cell, true));
+						let trg = this.getLabel(this.getModel().getTerminal(cell, false));
 
 						return src + ' ' + cell.value.nodeName + ' ' +  trg;
 					}
@@ -160,14 +160,14 @@
 				// Adds an option to view the XML of the graph
 				document.body.appendChild(mxUtils.button('View XML', function()
 				{
-					var encoder = new mxCodec();
-					var node = encoder.encode(graph.getModel());
+					let encoder = new mxCodec();
+					let node = encoder.encode(graph.getModel());
 					mxUtils.popup(mxUtils.getPrettyXml(node), true);
 				}));
 
 				// Changes the style for match the markup
 				// Creates the default style for vertices
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_STROKECOLOR] = 'gray';
 				style[mxConstants.STYLE_ROUNDED] = true;
 				style[mxConstants.STYLE_SHADOW] = true;
@@ -188,7 +188,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -219,7 +219,7 @@
 			 */
 			function selectionChanged(graph)
 			{
-				var div = document.getElementById('properties');
+				let div = document.getElementById('properties');
 
 				// Forces focusout in IE
 				graph.container.focus();
@@ -228,7 +228,7 @@
 				div.innerHTML = '';
 
 				// Gets the selection cell
-				var cell = graph.getSelectionCell();
+				let cell = graph.getSelectionCell();
 
 				if (cell == null)
 				{
@@ -237,17 +237,17 @@
 				else
 				{
 					// Writes the title
-					var center = document.createElement('center');
+					let center = document.createElement('center');
 					mxUtils.writeln(center, cell.value.nodeName + ' (' + cell.id + ')');
 					div.appendChild(center);
 					mxUtils.br(div);
 
 					// Creates the form from the attributes of the user object
-					var form = new mxForm();
+					let form = new mxForm();
 	
-					var attrs = cell.value.attributes;
+					let attrs = cell.value.attributes;
 					
-					for (var i = 0; i < attrs.length; i++)
+					for (let i = 0; i < attrs.length; i++)
 					{
 						createTextField(graph, form, cell, attrs[i]);
 					}
@@ -262,12 +262,12 @@
 			 */
 			function createTextField(graph, form, cell, attribute)
 			{
-				var input = form.addText(attribute.nodeName + ':', attribute.nodeValue);
+				let input = form.addText(attribute.nodeName + ':', attribute.nodeValue);
 
-				var applyHandler = function()
+				let applyHandler = function()
 				{
-					var newValue = input.value || '';
-					var oldValue = cell.getAttribute(attribute.nodeName, '');
+					let newValue = input.value || '';
+					let oldValue = cell.getAttribute(attribute.nodeName, '');
 
 					if (newValue != oldValue)
 					{
@@ -275,7 +275,7 @@
                         
                         try
                         {
-                        	var edit = new mxCellAttributeChange(
+                        	let edit = new mxCellAttributeChange(
  		                           cell, attribute.nodeName,
  		                           newValue);
                            	graph.getModel().execute(edit);

@@ -53,7 +53,7 @@
 				mxEdgeHandler.prototype.snapToTerminals = true;
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setConnectable(true);
 				graph.gridSize = 30;
 				
@@ -62,7 +62,7 @@
 				// when the user double clicks on the adjustment control point
 				// of the edge. The ElbowConnector edge style switches to TopToBottom
 				// if the horizontal style is true.
-				var style = graph.getStylesheet().getDefaultEdgeStyle();
+				let style = graph.getStylesheet().getDefaultEdgeStyle();
 				style[mxConstants.STYLE_ROUNDED] = true;
 				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
 				graph.alternateEdgeStyle = 'elbow=vertical';
@@ -72,7 +72,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -90,12 +90,12 @@
 				}
 
 			    // Handles cursor keys
-			    var nudge = function(keyCode)
+			    let nudge = function(keyCode)
 			    {
 			    	if (!graph.isSelectionEmpty())
 					{
-			    		var dx = 0;
-			    		var dy = 0;
+			    		let dx = 0;
+			    		let dy = 0;
 			    		
 			    		if (keyCode == 37)
 						{
@@ -122,7 +122,7 @@
 				graph.container.focus();
 				    
 			    // Handles keystroke events
-			    var keyHandler = new mxKeyHandler(graph);
+			    let keyHandler = new mxKeyHandler(graph);
 			    
 			    // Ignores enter keystroke. Remove this line if you want the
 			    // enter keystroke to stop editing

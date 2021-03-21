@@ -80,7 +80,7 @@ class mxAutoSaveManager extends mxEventSource {
    * Example:
    *
    * (code)
-   * var mgr = new mxAutoSaveManager(editor.graph);
+   * let mgr = new mxAutoSaveManager(editor.graph);
    * mgr.save = ()=>
    * {
    *   mxLog.show();
@@ -165,8 +165,8 @@ class mxAutoSaveManager extends mxEventSource {
    * Invoked when the graph model has changed.
    */
   graphModelChanged = (changes) => {
-    var now = new Date().getTime();
-    var dt = (now - this.lastSnapshot) / 1000;
+    let now = new Date().getTime();
+    let dt = (now - this.lastSnapshot) / 1000;
 
     if (dt > this.autoSaveDelay ||
         (this.ignoredChanges >= this.autoSaveThreshold &&

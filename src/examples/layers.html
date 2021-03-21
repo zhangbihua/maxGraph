@@ -34,20 +34,20 @@
 			{
 				// Creates the graph inside the given container using a model
 				// with a custom root and two layers. Layers can also be added
-				// dynamically using var layer = model.add(root, new mxCell()).
-				var root = new mxCell();
+				// dynamically using let layer = model.add(root, new mxCell()).
+				let root = new mxCell();
 				var layer0 = root.insert(new mxCell());
 				var layer1 = root.insert(new mxCell()); 
-				var model = new mxGraphModel(root);
+				let model = new mxGraphModel(root);
 
-				var graph = new mxGraph(container, model);
+				let graph = new mxGraph(container, model);
 				
 				// Disables basic selection and cell handling
 				graph.setEnabled(false);
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				model.beginUpdate();

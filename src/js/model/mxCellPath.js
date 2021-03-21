@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-var mxCellPath = {
+let mxCellPath = {
   /**
    * Class: mxCellPath
    *
@@ -27,13 +27,13 @@ var mxCellPath = {
    * cell - Cell whose path should be returned.
    */
   create: (cell) => {
-    var result = '';
+    let result = '';
 
     if (cell != null) {
-      var parent = cell.getParent();
+      let parent = cell.getParent();
 
       while (parent != null) {
-        var index = parent.getIndex(cell);
+        let index = parent.getIndex(cell);
         result = index + mxCellPath.PATH_SEPARATOR + result;
 
         cell = parent;
@@ -42,7 +42,7 @@ var mxCellPath = {
     }
 
     // Removes trailing separator
-    var n = result.length;
+    let n = result.length;
 
     if (n > 1) {
       result = result.substring(0, n - 1);
@@ -63,7 +63,7 @@ var mxCellPath = {
    */
   getParentPath: (path) => {
     if (path != null) {
-      var index = path.lastIndexOf(mxCellPath.PATH_SEPARATOR);
+      let index = path.lastIndexOf(mxCellPath.PATH_SEPARATOR);
 
       if (index >= 0) {
         return path.substring(0, index);
@@ -87,12 +87,12 @@ var mxCellPath = {
    * path - String that defines the path.
    */
   resolve: (root, path) => {
-    var parent = root;
+    let parent = root;
 
     if (path != null) {
-      var tokens = path.split(mxCellPath.PATH_SEPARATOR);
+      let tokens = path.split(mxCellPath.PATH_SEPARATOR);
 
-      for (var i = 0; i < tokens.length; i++) {
+      for (let i = 0; i < tokens.length; i++) {
         parent = parent.getChildAt(parseInt(tokens[i]));
       }
     }
@@ -107,10 +107,10 @@ var mxCellPath = {
    * p1 is equal and 1 if p1 is greater than p2.
    */
   compare: (p1, p2) => {
-    var min = Math.min(p1.length, p2.length);
-    var comp = 0;
+    let min = Math.min(p1.length, p2.length);
+    let comp = 0;
 
-    for (var i = 0; i < min; i++) {
+    for (let i = 0; i < min; i++) {
       if (p1[i] != p2[i]) {
         if (p1[i].length == 0 ||
             p2[i].length == 0) {

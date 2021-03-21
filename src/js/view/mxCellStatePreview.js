@@ -65,7 +65,7 @@ class mxCellStatePreview {
     add = (add != null) ? add : true;
     includeEdges = (includeEdges != null) ? includeEdges : true;
 
-    var delta = this.deltas.get(state.cell);
+    let delta = this.deltas.get(state.cell);
 
     if (delta == null) {
       // Note: Deltas stores the point and the state since the key is a string.
@@ -105,11 +105,11 @@ class mxCellStatePreview {
    */
   translateState = (state, dx, dy) => {
     if (state != null) {
-      var model = this.graph.getModel();
+      let model = this.graph.getModel();
 
       if (model.isVertex(state.cell)) {
         state.view.updateCellState(state);
-        var geo = model.getGeometry(state.cell);
+        let geo = model.getGeometry(state.cell);
 
         // Moves selection cells and non-relative vertices in
         // the first phase so that edge terminal points will
@@ -120,9 +120,9 @@ class mxCellStatePreview {
         }
       }
 
-      var childCount = model.getChildCount(state.cell);
+      let childCount = model.getChildCount(state.cell);
 
-      for (var i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i++) {
         this.translateState(state.view.getState(model.getChildAt(state.cell, i)), dx, dy);
       }
     }
@@ -133,7 +133,7 @@ class mxCellStatePreview {
    */
   revalidateState = (state, dx, dy, visitor) => {
     if (state != null) {
-      var model = this.graph.getModel();
+      let model = this.graph.getModel();
 
       // Updates the edge terminal points and restores the
       // (relative) positions of any (relative) children
@@ -141,8 +141,8 @@ class mxCellStatePreview {
         state.view.updateCellState(state);
       }
 
-      var geo = this.graph.getCellGeometry(state.cell);
-      var pState = state.view.getState(model.getParent(state.cell));
+      let geo = this.graph.getCellGeometry(state.cell);
+      let pState = state.view.getState(model.getParent(state.cell));
 
       // Moves selection vertices which are relative
       if ((dx != 0 || dy != 0) && geo != null && geo.relative &&
@@ -159,9 +159,9 @@ class mxCellStatePreview {
         visitor(state);
       }
 
-      var childCount = model.getChildCount(state.cell);
+      let childCount = model.getChildCount(state.cell);
 
-      for (var i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i++) {
         this.revalidateState(this.graph.view.getState(model.getChildAt(state.cell, i)), dx, dy, visitor);
       }
     }
@@ -171,11 +171,11 @@ class mxCellStatePreview {
    * Function: addEdges
    */
   addEdges = (state) => {
-    var model = this.graph.getModel();
-    var edgeCount = model.getEdgeCount(state.cell);
+    let model = this.graph.getModel();
+    let edgeCount = model.getEdgeCount(state.cell);
 
-    for (var i = 0; i < edgeCount; i++) {
-      var s = state.view.getState(model.getEdgeAt(state.cell, i));
+    for (let i = 0; i < edgeCount; i++) {
+      let s = state.view.getState(model.getEdgeAt(state.cell, i));
 
       if (s != null) {
         this.moveState(s, 0, 0);

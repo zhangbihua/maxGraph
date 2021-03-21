@@ -67,7 +67,7 @@
 			if (this.state.style['shape'] == 'myShape')
 			{
 				// Implements the handle for the first divider
-				var firstHandle = new mxHandle(this.state);
+				let firstHandle = new mxHandle(this.state);
 				
 				firstHandle.getPosition = function(bounds)
 				{
@@ -92,7 +92,7 @@
 				firstHandle.ignoreGrid = true;
 				
 				// Implements the handle for the second divider
-				var secondHandle = new mxHandle(this.state);
+				let secondHandle = new mxHandle(this.state);
 				
 				secondHandle.getPosition = function(bounds)
 				{
@@ -142,7 +142,7 @@
 				mxEvent.disableContextMenu(container);
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setCellsCloneable(true);
 				graph.setHtmlLabels(true);
 				graph.setPanning(true);
@@ -153,7 +153,7 @@
 
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

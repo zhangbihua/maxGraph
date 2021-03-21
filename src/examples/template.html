@@ -35,13 +35,13 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Adds rubberband selection to the graph
 				new mxRubberband(graph);
 				
-				var doc = mxUtils.parseXml(xml);
-				var codec = new mxCodec(doc);
+				let doc = mxUtils.parseXml(xml);
+				let codec = new mxCodec(doc);
 				codec.decode(doc.documentElement, graph.getModel());
 			}
 		};

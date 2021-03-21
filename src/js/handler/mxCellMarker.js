@@ -80,7 +80,7 @@ class mxCellMarker extends mxEventSource {
    * for highlighting all cells, the following code is used:
    *
    * (code)
-   * var marker = new mxCellMarker(graph);
+   * let marker = new mxCellMarker(graph);
    * graph.addMouseListener({
    *   mouseDown: ()=> {},
    *   mouseMove: (sender, me)=>
@@ -236,7 +236,7 @@ class mxCellMarker extends mxEventSource {
    * marker color and valid state.
    */
   process = (me) => {
-    var state = null;
+    let state = null;
 
     if (this.isEnabled()) {
       state = this.getState(me);
@@ -252,7 +252,7 @@ class mxCellMarker extends mxEventSource {
    * Sets and marks the current valid state.
    */
   setCurrentState = (state, me, color) => {
-    var isValid = (state != null) ? this.isValidState(state) : false;
+    let isValid = (state != null) ? this.isValidState(state) : false;
     color = (color != null) ? color : this.getMarkerColor(me.getEvent(), state, isValid);
 
     if (isValid) {
@@ -280,7 +280,7 @@ class mxCellMarker extends mxEventSource {
    * Marks the given cell using the given color, or <validColor> if no color is specified.
    */
   markCell = (cell, color) => {
-    var state = this.graph.getView().getState(cell);
+    let state = this.graph.getView().getState(cell);
 
     if (state != null) {
       this.currentColor = (color != null) ? color : this.validColor;
@@ -337,9 +337,9 @@ class mxCellMarker extends mxEventSource {
    * <mxCellState> for the given <mxMouseEvent>.
    */
   getState = (me) => {
-    var view = this.graph.getView();
-    var cell = this.getCell(me);
-    var state = this.getStateToMark(view.getState(cell));
+    let view = this.graph.getView();
+    let cell = this.getCell(me);
+    let state = this.getStateToMark(view.getState(cell));
 
     return (state != null && this.intersects(state, me)) ? state : null;
   };

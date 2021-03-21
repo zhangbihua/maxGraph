@@ -223,11 +223,11 @@ class mxText extends mxShape {
    */
   paint = (c, update) => {
     // Scale is passed-through to canvas
-    var s = this.scale;
-    var x = this.bounds.x / s;
-    var y = this.bounds.y / s;
-    var w = this.bounds.width / s;
-    var h = this.bounds.height / s;
+    let s = this.scale;
+    let x = this.bounds.x / s;
+    let y = this.bounds.y / s;
+    let w = this.bounds.width / s;
+    let h = this.bounds.height / s;
 
     this.updateTransform(c, x, y, w, h);
     this.configureCanvas(c, x, y, w, h);
@@ -237,11 +237,11 @@ class mxText extends mxShape {
           this.clipped, this.getTextRotation(), this.node);
     } else {
       // Checks if text contains HTML markup
-      var realHtml = mxUtils.isNode(this.value) || this.dialect == mxConstants.DIALECT_STRICTHTML;
+      let realHtml = mxUtils.isNode(this.value) || this.dialect == mxConstants.DIALECT_STRICTHTML;
 
       // Always renders labels as HTML in VML
-      var fmt = (realHtml || c instanceof mxVmlCanvas2D) ? 'html' : '';
-      var val = this.value;
+      let fmt = (realHtml || c instanceof mxVmlCanvas2D) ? 'html' : '';
+      let val = this.value;
 
       if (!realHtml && fmt == 'html') {
         val = mxUtils.htmlEntities(val, false);
@@ -255,7 +255,7 @@ class mxText extends mxShape {
       val = (!mxUtils.isNode(this.value) && this.replaceLinefeeds && fmt == 'html') ?
           val.replace(/\n/g, '<br/>') : val;
 
-      var dir = this.textDirection;
+      let dir = this.textDirection;
 
       if (dir == mxConstants.TEXT_DIRECTION_AUTO && !realHtml) {
         dir = this.getAutoDirection();
@@ -289,7 +289,7 @@ class mxText extends mxShape {
 
         this.updateBoundingBox();
       } else {
-        var canvas = this.createCanvas();
+        let canvas = this.createCanvas();
 
         if (canvas != null && canvas.updateText != null) {
           // Specifies if events should be handled
@@ -350,7 +350,7 @@ class mxText extends mxShape {
    * state - <mxCellState> of the corresponding cell.
    */
   apply = (state) => {
-    var old = this.spacing;
+    let old = this.spacing;
     apply.apply(this, arguments);
 
     if (this.style != null) {
@@ -387,7 +387,7 @@ class mxText extends mxShape {
    */
   getAutoDirection = () => {
     // Looks for strong (directional) characters
-    var tmp = /[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(this.value);
+    let tmp = /[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(this.value);
 
     // Returns the direction defined by the character
     return (tmp != null && tmp.length > 0 && tmp[0] > 'z') ?
@@ -400,7 +400,7 @@ class mxText extends mxShape {
    * Returns the node that contains the rendered input.
    */
   getContentNode = () => {
-    var result = this.node;
+    let result = this.node;
 
     if (result != null) {
       // Rendered with no foreignObject
@@ -421,17 +421,17 @@ class mxText extends mxShape {
    * Updates the <boundingBox> for this shape using the given node and position.
    */
   updateBoundingBox = () => {
-    var node = this.node;
+    let node = this.node;
     this.boundingBox = this.bounds.clone();
-    var rot = this.getTextRotation();
+    let rot = this.getTextRotation();
 
-    var h = (this.style != null) ? mxUtils.getValue(this.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER) : null;
-    var v = (this.style != null) ? mxUtils.getValue(this.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE) : null;
+    let h = (this.style != null) ? mxUtils.getValue(this.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER) : null;
+    let v = (this.style != null) ? mxUtils.getValue(this.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE) : null;
 
     if (!this.ignoreStringSize && node != null && this.overflow != 'fill' && (!this.clipped ||
         !this.ignoreClippedStringSize || h != mxConstants.ALIGN_CENTER || v != mxConstants.ALIGN_MIDDLE)) {
-      var ow = null;
-      var oh = null;
+      let ow = null;
+      let oh = null;
 
       if (node.ownerSVGElement != null) {
         if (node.firstChild != null && node.firstChild.firstChild != null &&
@@ -447,7 +447,7 @@ class mxText extends mxShape {
           }
         } else {
           try {
-            var b = node.getBBox();
+            let b = node.getBBox();
 
             // Workaround for bounding box of empty string
             if (typeof (this.value) == 'string' && mxUtils.trim(this.value) == 0) {
@@ -464,7 +464,7 @@ class mxText extends mxShape {
           }
         }
       } else {
-        var td = (this.state != null) ? this.state.view.textDiv : null;
+        let td = (this.state != null) ? this.state.view.textDiv : null;
 
         // Use cached offset size
         if (this.offsetWidth != null && this.offsetHeight != null) {
@@ -481,7 +481,7 @@ class mxText extends mxShape {
             node = td;
           }
 
-          var sizeDiv = node;
+          let sizeDiv = node;
 
           if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName == 'DIV') {
             sizeDiv = sizeDiv.firstChild;
@@ -504,7 +504,7 @@ class mxText extends mxShape {
     if (this.boundingBox != null) {
       if (rot != 0) {
         // Accounts for pre-rotated x and y
-        var bbox = mxUtils.getBoundingBox(new mxRectangle(
+        let bbox = mxUtils.getBoundingBox(new mxRectangle(
             this.margin.x * this.boundingBox.width,
             this.margin.y * this.boundingBox.height,
             this.boundingBox.width, this.boundingBox.height),
@@ -589,7 +589,7 @@ class mxText extends mxShape {
    * Private helper function to create SVG elements
    */
   getHtmlValue = () => {
-    var val = this.value;
+    let val = this.value;
 
     if (this.dialect != mxConstants.DIALECT_STRICTHTML) {
       val = mxUtils.htmlEntities(val, false);
@@ -608,10 +608,10 @@ class mxText extends mxShape {
    * Private helper function to create SVG elements
    */
   getTextCss = () => {
-    var lh = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? (this.size * mxConstants.LINE_HEIGHT) + 'px' :
+    let lh = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? (this.size * mxConstants.LINE_HEIGHT) + 'px' :
         mxConstants.LINE_HEIGHT;
 
-    var css = 'display: inline-block; font-size: ' + this.size + 'px; ' +
+    let css = 'display: inline-block; font-size: ' + this.size + 'px; ' +
         'font-family: ' + this.family + '; color: ' + this.color + '; line-height: ' + lh +
         '; pointer-events: ' + ((this.pointerEvents) ? 'all' : 'none') + '; ';
 
@@ -623,7 +623,7 @@ class mxText extends mxShape {
       css += 'font-style: italic; ';
     }
 
-    var deco = [];
+    let deco = [];
 
     if ((this.fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE) {
       deco.push('underline');
@@ -649,7 +649,7 @@ class mxText extends mxShape {
     if (mxClient.IS_SVG) {
       this.redrawHtmlShapeWithCss3();
     } else {
-      var style = this.node.style;
+      let style = this.node.style;
 
       // Resets CSS styles
       style.whiteSpace = 'normal';
@@ -674,18 +674,18 @@ class mxText extends mxShape {
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
   redrawHtmlShapeWithCss3 = () => {
-    var w = Math.max(0, Math.round(this.bounds.width / this.scale));
-    var h = Math.max(0, Math.round(this.bounds.height / this.scale));
-    var flex = 'position: absolute; left: ' + Math.round(this.bounds.x) + 'px; ' +
+    let w = Math.max(0, Math.round(this.bounds.width / this.scale));
+    let h = Math.max(0, Math.round(this.bounds.height / this.scale));
+    let flex = 'position: absolute; left: ' + Math.round(this.bounds.x) + 'px; ' +
         'top: ' + Math.round(this.bounds.y) + 'px; pointer-events: none; ';
-    var block = this.getTextCss();
+    let block = this.getTextCss();
 
     mxSvgCanvas2D.createCss(w + 2, h, this.align, this.valign, this.wrap, this.overflow, this.clipped,
         (this.background != null) ? mxUtils.htmlEntities(this.background) : null,
         (this.border != null) ? mxUtils.htmlEntities(this.border) : null,
         flex, block, this.scale, (dx, dy, flex, item, block, ofl) => {
-          var r = this.getTextRotation();
-          var tr = ((this.scale != 1) ? 'scale(' + this.scale + ') ' : '') +
+          let r = this.getTextRotation();
+          let tr = ((this.scale != 1) ? 'scale(' + this.scale + ') ' : '') +
               ((r != 0) ? 'rotate(' + r + 'deg) ' : '') +
               ((this.margin.x != 0 || this.margin.y != 0) ?
                   'translate(' + (this.margin.x * 100) + '%,' +
@@ -712,7 +712,7 @@ class mxText extends mxShape {
 
           this.node.setAttribute('style', flex);
 
-          var html = (mxUtils.isNode(this.value)) ? this.value.outerHTML : this.getHtmlValue();
+          let html = (mxUtils.isNode(this.value)) ? this.value.outerHTML : this.getHtmlValue();
 
           if (this.node.firstChild == null) {
             this.node.innerHTML = '<div><div>' + html + '</div></div>';
@@ -729,10 +729,10 @@ class mxText extends mxShape {
    * Returns the spacing as an <mxPoint>.
    */
   updateHtmlTransform = () => {
-    var theta = this.getTextRotation();
-    var style = this.node.style;
-    var dx = this.margin.x;
-    var dy = this.margin.y;
+    let theta = this.getTextRotation();
+    let style = this.node.style;
+    let dx = this.margin.x;
+    let dy = this.margin.y;
 
     if (theta != 0) {
       mxUtils.setPrefixedStyle(style, 'transformOrigin', (-dx * 100) + '%' + ' ' + (-dy * 100) + '%');
@@ -764,7 +764,7 @@ class mxText extends mxShape {
     if (mxUtils.isNode(this.value)) {
       elt.innerHTML = this.value.outerHTML;
     } else {
-      var val = this.value;
+      let val = this.value;
 
       if (this.dialect != mxConstants.DIALECT_STRICTHTML) {
         // LATER: Can be cached in updateValue
@@ -786,19 +786,19 @@ class mxText extends mxShape {
    * Rotated text rendering quality is bad for IE9 quirks/IE8 standards
    */
   updateHtmlFilter = () => {
-    var style = this.node.style;
-    var dx = this.margin.x;
-    var dy = this.margin.y;
-    var s = this.scale;
+    let style = this.node.style;
+    let dx = this.margin.x;
+    let dy = this.margin.y;
+    let s = this.scale;
 
     // Resets filter before getting offsetWidth
     mxUtils.setOpacity(this.node, this.opacity);
 
     // Adds 1 to match table height in 1.x
-    var ow = 0;
-    var oh = 0;
-    var td = (this.state != null) ? this.state.view.textDiv : null;
-    var sizeDiv = this.node;
+    let ow = 0;
+    let oh = 0;
+    let td = (this.state != null) ? this.state.view.textDiv : null;
+    let sizeDiv = this.node;
 
     // Fallback for hidden text rendering in IE quirks mode
     if (td != null) {
@@ -810,7 +810,7 @@ class mxText extends mxShape {
       this.updateSize(td, false);
       this.updateInnerHtml(td);
 
-      var w = Math.round(this.bounds.width / this.scale);
+      let w = Math.round(this.bounds.width / this.scale);
 
       if (this.wrap && w > 0) {
         td.style.whiteSpace = 'normal';
@@ -855,8 +855,8 @@ class mxText extends mxShape {
       oh = Math.min(oh, this.bounds.height);
     }
 
-    var w = this.bounds.width / s;
-    var h = this.bounds.height / s;
+    let w = this.bounds.width / s;
+    let h = this.bounds.height / s;
 
     // Handles special case for live preview with no wrapper DIV and no textDiv
     if (this.overflow == 'fill') {
@@ -885,11 +885,11 @@ class mxText extends mxShape {
     w *= s;
 
     // Rotation case is handled via VML canvas
-    var rad = this.getTextRotation() * (Math.PI / 180);
+    let rad = this.getTextRotation() * (Math.PI / 180);
 
     // Precalculate cos and sin for the rotation
-    var real_cos = parseFloat(parseFloat(Math.cos(rad)).toFixed(8));
-    var real_sin = parseFloat(parseFloat(Math.sin(-rad)).toFixed(8));
+    let real_cos = parseFloat(parseFloat(Math.cos(rad)).toFixed(8));
+    let real_sin = parseFloat(parseFloat(Math.sin(-rad)).toFixed(8));
 
     rad %= 2 * Math.PI;
 
@@ -903,17 +903,17 @@ class mxText extends mxShape {
       rad = Math.PI - rad;
     }
 
-    var cos = Math.cos(rad);
-    var sin = Math.sin(-rad);
+    let cos = Math.cos(rad);
+    let sin = Math.sin(-rad);
 
-    var tx = w * -(dx + 0.5);
-    var ty = h * -(dy + 0.5);
+    let tx = w * -(dx + 0.5);
+    let ty = h * -(dy + 0.5);
 
-    var top_fix = (h - h * cos + w * sin) / 2 + real_sin * tx - real_cos * ty;
-    var left_fix = (w - w * cos + h * sin) / 2 - real_cos * tx - real_sin * ty;
+    let top_fix = (h - h * cos + w * sin) / 2 + real_sin * tx - real_cos * ty;
+    let left_fix = (w - w * cos + h * sin) / 2 - real_cos * tx - real_sin * ty;
 
     if (rad != 0) {
-      var f = 'progid:DXImageTransform.Microsoft.Matrix(M11=' + real_cos + ', M12=' +
+      let f = 'progid:DXImageTransform.Microsoft.Matrix(M11=' + real_cos + ', M12=' +
           real_sin + ', M21=' + (-real_sin) + ', M22=' + real_cos + ', sizingMethod=\'auto expand\')';
 
       if (style.filter != null && style.filter.length > 0) {
@@ -924,7 +924,7 @@ class mxText extends mxShape {
     }
 
     // Workaround for rendering offsets
-    var dy = 0;
+    let dy = 0;
 
     style.zoom = s;
     style.left = Math.round(this.bounds.x + left_fix - w / 2) + 'px';
@@ -941,7 +941,7 @@ class mxText extends mxShape {
       this.node.innerHTML = '';
       this.node.appendChild(this.value);
     } else {
-      var val = this.value;
+      let val = this.value;
 
       if (this.dialect != mxConstants.DIALECT_STRICTHTML) {
         val = mxUtils.htmlEntities(val, false);
@@ -950,8 +950,8 @@ class mxText extends mxShape {
       // Handles trailing newlines to make sure they are visible in rendering output
       val = mxUtils.replaceTrailingNewlines(val, '<div><br></div>');
       val = (this.replaceLinefeeds) ? val.replace(/\n/g, '<br/>') : val;
-      var bg = (this.background != null && this.background != mxConstants.NONE) ? this.background : null;
-      var bd = (this.border != null && this.border != mxConstants.NONE) ? this.border : null;
+      let bg = (this.background != null && this.background != mxConstants.NONE) ? this.background : null;
+      let bd = (this.border != null && this.border != mxConstants.NONE) ? this.border : null;
 
       if (this.overflow == 'fill' || this.overflow == 'width') {
         if (bg != null) {
@@ -962,7 +962,7 @@ class mxText extends mxShape {
           this.node.style.border = '1px solid ' + bd;
         }
       } else {
-        var css = '';
+        let css = '';
 
         if (bg != null) {
           css += 'background-color:' + mxUtils.htmlEntities(bg) + ';';
@@ -975,7 +975,7 @@ class mxText extends mxShape {
         // Wrapper DIV for background, zoom needed for inline in quirks
         // and to measure wrapped font sizes in all browsers
         // FIXME: Background size in quirks mode for wrapped text
-        var lh = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? (this.size * mxConstants.LINE_HEIGHT) + 'px' :
+        let lh = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? (this.size * mxConstants.LINE_HEIGHT) + 'px' :
             mxConstants.LINE_HEIGHT;
         val = '<div style="zoom:1;' + css + 'display:inline-block;_display:inline;text-decoration:inherit;' +
             'padding-bottom:1px;padding-right:1px;line-height:' + lh + '">' + val + '</div>';
@@ -984,10 +984,10 @@ class mxText extends mxShape {
       this.node.innerHTML = val;
 
       // Sets text direction
-      var divs = this.node.getElementsByTagName('div');
+      let divs = this.node.getElementsByTagName('div');
 
       if (divs.length > 0) {
-        var dir = this.textDirection;
+        let dir = this.textDirection;
 
         if (dir == mxConstants.TEXT_DIRECTION_AUTO && this.dialect != mxConstants.DIALECT_STRICTHTML) {
           dir = this.getAutoDirection();
@@ -1008,7 +1008,7 @@ class mxText extends mxShape {
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
   updateFont = (node) => {
-    var style = node.style;
+    let style = node.style;
 
     style.lineHeight = (mxConstants.ABSOLUTE_LINE_HEIGHT) ? (this.size * mxConstants.LINE_HEIGHT) + 'px' : mxConstants.LINE_HEIGHT;
     style.fontSize = this.size + 'px';
@@ -1028,7 +1028,7 @@ class mxText extends mxShape {
       style.fontStyle = '';
     }
 
-    var txtDecor = [];
+    let txtDecor = [];
 
     if ((this.fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE) {
       txtDecor.push('underline');
@@ -1055,9 +1055,9 @@ class mxText extends mxShape {
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
   updateSize = (node, enableWrap) => {
-    var w = Math.max(0, Math.round(this.bounds.width / this.scale));
-    var h = Math.max(0, Math.round(this.bounds.height / this.scale));
-    var style = node.style;
+    let w = Math.max(0, Math.round(this.bounds.width / this.scale));
+    let h = Math.max(0, Math.round(this.bounds.height / this.scale));
+    let style = node.style;
 
     // NOTE: Do not use maxWidth here because wrapping will
     // go wrong if the cell is outside of the viewable area
@@ -1082,7 +1082,7 @@ class mxText extends mxShape {
       style.width = w + 'px';
 
       if (enableWrap && this.overflow != 'fill' && this.overflow != 'width') {
-        var sizeDiv = node;
+        let sizeDiv = node;
 
         if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName == 'DIV') {
           sizeDiv = sizeDiv.firstChild;
@@ -1092,11 +1092,11 @@ class mxText extends mxShape {
           }
         }
 
-        var tmp = sizeDiv.offsetWidth;
+        let tmp = sizeDiv.offsetWidth;
 
         // Workaround for text measuring in hidden containers
         if (tmp == 0) {
-          var prev = node.parentNode;
+          let prev = node.parentNode;
           node.style.visibility = 'hidden';
           document.body.appendChild(node);
           tmp = sizeDiv.offsetWidth;
@@ -1132,8 +1132,8 @@ class mxText extends mxShape {
    * Returns the spacing as an <mxPoint>.
    */
   getSpacing = () => {
-    var dx = 0;
-    var dy = 0;
+    let dx = 0;
+    let dy = 0;
 
     if (this.align == mxConstants.ALIGN_CENTER) {
       dx = (this.spacingLeft - this.spacingRight) / 2;

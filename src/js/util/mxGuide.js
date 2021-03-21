@@ -107,7 +107,7 @@ class mxGuide {
    * horizontal - Boolean that specifies which guide should be created.
    */
   createGuideShape = (horizontal) => {
-    var guide = new mxPolyline([], mxConstants.GUIDE_COLOR, mxConstants.GUIDE_STROKEWIDTH);
+    let guide = new mxPolyline([], mxConstants.GUIDE_COLOR, mxConstants.GUIDE_STROKEWIDTH);
     guide.isDashed = true;
 
     return guide;
@@ -129,29 +129,29 @@ class mxGuide {
    */
   move = (bounds, delta, gridEnabled, clone) => {
     if (this.states != null && (this.horizontal || this.vertical) && bounds != null && delta != null) {
-      var scale = this.graph.getView().scale;
-      var tt = this.getGuideTolerance(gridEnabled) * scale;
-      var b = bounds.clone();
+      let scale = this.graph.getView().scale;
+      let tt = this.getGuideTolerance(gridEnabled) * scale;
+      let b = bounds.clone();
       b.x += delta.x;
       b.y += delta.y;
-      var overrideX = false;
-      var stateX = null;
-      var valueX = null;
-      var overrideY = false;
-      var stateY = null;
-      var valueY = null;
-      var ttX = tt;
-      var ttY = tt;
-      var left = b.x;
-      var right = b.x + b.width;
-      var center = b.getCenterX();
-      var top = b.y;
-      var bottom = b.y + b.height;
-      var middle = b.getCenterY();
+      let overrideX = false;
+      let stateX = null;
+      let valueX = null;
+      let overrideY = false;
+      let stateY = null;
+      let valueY = null;
+      let ttX = tt;
+      let ttY = tt;
+      let left = b.x;
+      let right = b.x + b.width;
+      let center = b.getCenterX();
+      let top = b.y;
+      let bottom = b.y + b.height;
+      let middle = b.getCenterY();
 
       // Snaps the left, center and right to the given x-coordinate
       function snapX(x, state, centerAlign) {
-        var override = false;
+        let override = false;
 
         if (centerAlign && Math.abs(x - center) < ttX) {
           delta.x = x - bounds.getCenterX();
@@ -191,7 +191,7 @@ class mxGuide {
 
       // Snaps the top, middle or bottom to the given y-coordinate
       function snapY(y, state, centerAlign) {
-        var override = false;
+        let override = false;
 
         if (centerAlign && Math.abs(y - middle) < ttY) {
           delta.y = y - bounds.getCenterY();
@@ -229,8 +229,8 @@ class mxGuide {
         overrideY = overrideY || override;
       }
 
-      for (var i = 0; i < this.states.length; i++) {
-        var state = this.states[i];
+      for (let i = 0; i < this.states.length; i++) {
+        let state = this.states[i];
 
         if (state != null && !this.isStateIgnored(state)) {
           // Align x
@@ -264,13 +264,13 @@ class mxGuide {
       delta = this.getDelta(bounds, stateX, delta.x, stateY, delta.y)
 
       // Redraws the guides
-      var c = this.graph.container;
+      let c = this.graph.container;
 
       if (!overrideX && this.guideX != null) {
         this.guideX.node.style.visibility = 'hidden';
       } else if (this.guideX != null) {
-        var minY = null;
-        var maxY = null;
+        let minY = null;
+        let maxY = null;
 
         if (stateX != null && bounds != null) {
           minY = Math.min(bounds.y + delta.y - this.graph.panDy, stateX.y);
@@ -292,8 +292,8 @@ class mxGuide {
       if (!overrideY && this.guideY != null) {
         this.guideY.node.style.visibility = 'hidden';
       } else if (this.guideY != null) {
-        var minX = null;
-        var maxX = null;
+        let minX = null;
+        let maxX = null;
 
         if (stateY != null && bounds != null) {
           minX = Math.min(bounds.x + delta.x - this.graph.panDx, stateY.x);
@@ -322,7 +322,7 @@ class mxGuide {
    * Rounds to pixels for virtual states (eg. page guides)
    */
   getDelta = (bounds, stateX, dx, stateY, dy) => {
-    var s = this.graph.view.scale;
+    let s = this.graph.view.scale;
 
     if (this.rounded || (stateX != null && stateX.cell == null)) {
       dx = Math.round((bounds.x + dx) / s) * s - bounds.x;

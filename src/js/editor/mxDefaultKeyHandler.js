@@ -4,8 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxKeyHandler from "../handler/mxKeyHandler";
+import mxEvent from "../util/mxEvent";
 import mxEventObject from "../util/mxEventObject";
+import mxKeyHandler from "../handler/mxKeyHandler";
 
 class mxDefaultKeyHandler {
   /**

@@ -100,12 +100,12 @@ class mxXmlRequest {
    * Example:
    *
    * (code)
-   * var onload = (req)=>
+   * let onload = (req)=>
    * {
    *   mxUtils.alert(req.getDocumentElement());
    * }
    *
-   * var onerror = (req)=>
+   * let onerror = (req)=>
    * {
    *   mxUtils.alert('Error');
    * }
@@ -117,7 +117,7 @@ class mxXmlRequest {
    * Example:
    *
    * (code)
-   * var req = new mxXmlRequest(url, 'key=value', 'POST', false);
+   * let req = new mxXmlRequest(url, 'key=value', 'POST', false);
    * req.send();
    * mxUtils.alert(req.getDocumentElement());
    * (end)
@@ -127,9 +127,9 @@ class mxXmlRequest {
    * Example:
    *
    * (code)
-   * var encoder = new mxCodec();
-   * var result = encoder.encode(graph.getModel());
-   * var xml = encodeURIComponent(mxUtils.getXml(result));
+   * let encoder = new mxCodec();
+   * let result = encoder.encode(graph.getModel());
+   * let xml = encodeURIComponent(mxUtils.getXml(result));
    * new mxXmlRequest(url, 'xml='+xml).send();
    * (end)
    *
@@ -215,7 +215,7 @@ class mxXmlRequest {
    * Returns the document element of the response XML document.
    */
   getDocumentElement = () => {
-    var doc = this.getXml();
+    let doc = this.getXml();
 
     if (doc != null) {
       return doc.documentElement;
@@ -231,7 +231,7 @@ class mxXmlRequest {
    * the document element of the XML document.
    */
   getXml = () => {
-    var xml = this.request.responseXML;
+    let xml = this.request.responseXML;
 
     // Handles missing response headers in IE, the first condition handles
     // the case where responseXML is there, but using its nodes leads to
@@ -261,7 +261,7 @@ class mxXmlRequest {
    * Creates and returns the inner <request> object.
    */
   create = () => {
-    var req = new XMLHttpRequest();
+    let req = new XMLHttpRequest();
 
     // TODO: Check for overrideMimeType required here?
     if (this.isBinary() && req.overrideMimeType) {
@@ -360,14 +360,14 @@ class mxXmlRequest {
    */
   simulate = (doc, target) => {
     doc = doc || document;
-    var old = null;
+    let old = null;
 
     if (doc === document) {
       old = window.onbeforeunload;
       window.onbeforeunload = null;
     }
 
-    var form = doc.createElement('form');
+    let form = doc.createElement('form');
     form.setAttribute('method', this.method);
     form.setAttribute('action', this.url);
 
@@ -378,23 +378,23 @@ class mxXmlRequest {
     form.style.display = 'none';
     form.style.visibility = 'hidden';
 
-    var pars = (this.params.indexOf('&') > 0) ?
+    let pars = (this.params.indexOf('&') > 0) ?
         this.params.split('&') :
         this.params.split();
 
     // Adds the parameters as textareas to the form
-    for (var i = 0; i < pars.length; i++) {
-      var pos = pars[i].indexOf('=');
+    for (let i = 0; i < pars.length; i++) {
+      let pos = pars[i].indexOf('=');
 
       if (pos > 0) {
-        var name = pars[i].substring(0, pos);
-        var value = pars[i].substring(pos + 1);
+        let name = pars[i].substring(0, pos);
+        let value = pars[i].substring(pos + 1);
 
         if (this.decodeSimulateValues) {
           value = decodeURIComponent(value);
         }
 
-        var textarea = doc.createElement('textarea');
+        let textarea = doc.createElement('textarea');
         textarea.setAttribute('wrap', 'off');
         textarea.setAttribute('name', name);
         mxUtils.write(textarea, value);

@@ -145,7 +145,7 @@ class mxCellState extends mxRectangle {
    * of the <text> field as shown below.
    *
    * (code)
-   * var bbox = (state.text != null) ? state.text.boundingBox : null;
+   * let bbox = (state.text != null) ? state.text.boundingBox : null;
    * (end)
    *
    * Constructor: mxCellState
@@ -189,7 +189,7 @@ class mxCellState extends mxRectangle {
     bounds = (bounds != null) ? bounds : new mxRectangle(this.x, this.y, this.width, this.height);
 
     if (this.shape != null && this.shape.stencil != null && this.shape.stencil.aspect === 'fixed') {
-      var aspect = this.shape.stencil.computeAspect(this.style, bounds.x, bounds.y, bounds.width, bounds.height);
+      let aspect = this.shape.stencil.computeAspect(this.style, bounds.x, bounds.y, bounds.width, bounds.height);
 
       bounds.x = aspect.x;
       bounds.y = aspect.y;
@@ -265,7 +265,7 @@ class mxCellState extends mxRectangle {
    * returned.
    */
   getVisibleTerminal = (source) => {
-    var tmp = this.getVisibleTerminalState(source);
+    let tmp = this.getVisibleTerminalState(source);
 
     return (tmp != null) ? tmp.cell : null;
   };
@@ -328,8 +328,8 @@ class mxCellState extends mxRectangle {
    * Updates the cellBounds and paintBounds.
    */
   updateCachedBounds = () => {
-    var tr = this.view.translate;
-    var s = this.view.scale;
+    let tr = this.view.translate;
+    let s = this.view.scale;
     this.cellBounds = new mxRectangle(this.x / s - tr.x, this.y / s - tr.y, this.width / s, this.height / s);
     this.paintBounds = mxRectangle.fromRectangle(this.cellBounds);
 
@@ -368,13 +368,13 @@ class mxCellState extends mxRectangle {
    * Returns a clone of this <mxPoint>.
    */
   clone = () => {
-    var clone = new mxCellState(this.view, this.cell, this.style);
+    let clone = new mxCellState(this.view, this.cell, this.style);
 
     // Clones the absolute points
     if (this.absolutePoints != null) {
       clone.absolutePoints = [];
 
-      for (var i = 0; i < this.absolutePoints.length; i++) {
+      for (let i = 0; i < this.absolutePoints.length; i++) {
         clone.absolutePoints[i] = this.absolutePoints[i].clone();
       }
     }

@@ -32,19 +32,19 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setConnectable(true);
 				graph.setTooltips(true);
 
 				// Sets the default edge style
-				var style = graph.getStylesheet().getDefaultEdgeStyle();
+				let style = graph.getStylesheet().getDefaultEdgeStyle();
 				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
 
 				// Ports are not used as terminals for edges, they are
 				// only used to compute the graphical connection point
 				graph.isPort = function(cell)
 				{
-					var geo = this.getCellGeometry(cell);
+					let geo = this.getCellGeometry(cell);
 
 					return (geo != null) ? geo.relative : false;
 				};
@@ -73,7 +73,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -98,10 +98,10 @@
 					graph.getModel().endUpdate();
 				}
 				
-				var button = mxUtils.button('View XML', function()
+				let button = mxUtils.button('View XML', function()
 				{
-					var encoder = new mxCodec();
-					var node = encoder.encode(graph.getModel());
+					let encoder = new mxCodec();
+					let node = encoder.encode(graph.getModel());
 					mxUtils.popup(mxUtils.getPrettyXml(node), true);
 				});
 				

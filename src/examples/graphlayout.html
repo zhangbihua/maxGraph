@@ -35,13 +35,13 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Disables basic selection and cell handling
 				graph.setEnabled(false);
 				
 				// Changes the default vertex style in-place
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
 				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
 				style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
@@ -63,17 +63,17 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 
 				// Creates a layout algorithm to be used
 				// with the graph
-				var layout = new mxFastOrganicLayout(graph);
+				let layout = new mxFastOrganicLayout(graph);
 
 				// Moves stuff wider apart than usual
 				layout.forceConstant = 80;
 
 				// Reference to the transition checkbox
-				var animate = document.getElementById('animate');
+				let animate = document.getElementById('animate');
 				
 				// Adds a button to execute the layout
 				document.body.insertBefore(mxUtils.button('Circle Layout',
@@ -84,7 +84,7 @@
 						{
 							// Creates a layout algorithm to be used
 							// with the graph
-							var circleLayout = new mxCircleLayout(graph);
+							let circleLayout = new mxCircleLayout(graph);
 							circleLayout.execute(parent);
 						}
 						catch (e)
@@ -95,7 +95,7 @@
 						{
 							if (animate.checked)
 							{
-								var morph = new mxMorphing(graph);
+								let morph = new mxMorphing(graph);
 								morph.addListener(mxEvent.DONE, function()
 								{
 									graph.getModel().endUpdate();
@@ -129,7 +129,7 @@
 							if (animate.checked)
 							{
 								// Default values are 6, 1.5, 20
-								var morph = new mxMorphing(graph, 10, 1.7, 20);
+								let morph = new mxMorphing(graph, 10, 1.7, 20);
 								morph.addListener(mxEvent.DONE, function()
 								{
 									graph.getModel().endUpdate();
@@ -146,8 +146,8 @@
 
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
-				var w = 30;
-				var h = 30;
+				let w = 30;
+				let h = 30;
 				try
 				{
 					var v1 = graph.insertVertex(parent, null, 'A', 0, 0, w, h);

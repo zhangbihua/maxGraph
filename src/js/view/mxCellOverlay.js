@@ -84,11 +84,11 @@ class mxCellOverlay extends mxEventSource {
    * if the overlay is clicked.
    *
    * (code)
-   * var overlay = new mxCellOverlay(img, html);
+   * let overlay = new mxCellOverlay(img, html);
    * graph.addCellOverlay(vertex, overlay);
    * overlay.addListener(mxEvent.CLICK, (sender, evt)=>
    * {
-   *   var cell = evt.getProperty('cell');
+   *   let cell = evt.getProperty('cell');
    *   graph.setSelectionCell(cell);
    * });
    * (end)
@@ -142,11 +142,11 @@ class mxCellOverlay extends mxEventSource {
    * (code)
    * overlay.getBounds = (state)=>
    * {
-   *   var bounds = getBounds.apply(this, arguments);
+   *   let bounds = getBounds.apply(this, arguments);
    *
    *   if (state.view.graph.getModel().isEdge(state.cell))
    *   {
-   *     var pt = state.view.getPoint(state, {x: 0, y: 0, relative: true});
+   *     let pt = state.view.getPoint(state, {x: 0, y: 0, relative: true});
    *
    *     bounds.x = pt.x - bounds.width / 2;
    *     bounds.y = pt.y - bounds.height / 2;
@@ -162,20 +162,20 @@ class mxCellOverlay extends mxEventSource {
    * associated cell.
    */
   getBounds = (state) => {
-    var isEdge = state.view.graph.getModel().isEdge(state.cell);
-    var s = state.view.scale;
-    var pt = null;
+    let isEdge = state.view.graph.getModel().isEdge(state.cell);
+    let s = state.view.scale;
+    let pt = null;
 
-    var w = this.image.width;
-    var h = this.image.height;
+    let w = this.image.width;
+    let h = this.image.height;
 
     if (isEdge) {
-      var pts = state.absolutePoints;
+      let pts = state.absolutePoints;
 
       if (pts.length % 2 === 1) {
         pt = pts[Math.floor(pts.length / 2)];
       } else {
-        var idx = pts.length / 2;
+        let idx = pts.length / 2;
         var p0 = pts[idx - 1];
         var p1 = pts[idx];
         pt = new mxPoint(p0.x + (p1.x - p0.x) / 2,

@@ -38,7 +38,7 @@ class mxDefaultPopupMenuCodec extends mxObjectCodec {
    * Uses the given node as the config for <mxDefaultPopupMenu>.
    */
   decode = (dec, node, into) => {
-    var inc = node.getElementsByTagName('include')[0];
+    let inc = node.getElementsByTagName('include')[0];
 
     if (inc != null) {
       this.processInclude(dec, inc, into);

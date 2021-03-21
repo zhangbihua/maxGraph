@@ -74,7 +74,7 @@ class mxPopupMenu extends mxEventSource {
    * following code can be used.
    *
    * (code)
-   * var mxPopupMenuShowMenu = showMenu;
+   * let mxPopupMenuShowMenu = showMenu;
    * showMenu = ()=>
    * {
    *   mxPopupMenuShowMenu.apply(this, arguments);
@@ -195,18 +195,18 @@ class mxPopupMenu extends mxEventSource {
     }
 
     parent.containsItems = true;
-    var tr = document.createElement('tr');
+    let tr = document.createElement('tr');
     tr.className = 'mxPopupMenuItem';
     var col1 = document.createElement('td');
     col1.className = 'mxPopupMenuIcon';
 
     // Adds the given image into the first column
     if (image != null) {
-      var img = document.createElement('img');
+      let img = document.createElement('img');
       img.src = image;
       col1.appendChild(img);
     } else if (iconCls != null) {
-      var div = document.createElement('div');
+      let div = document.createElement('div');
       div.className = iconCls;
       col1.appendChild(div);
     }
@@ -238,7 +238,7 @@ class mxPopupMenu extends mxEventSource {
     parent.tbody.appendChild(tr);
 
     if (active != false && enabled != false) {
-      var currentSelection = null;
+      let currentSelection = null;
 
       mxEvent.addGestureListeners(tr,
           mxUtils.bind(this, (evt) => {
@@ -321,7 +321,7 @@ class mxPopupMenu extends mxEventSource {
    * Adds a checkmark to the given menuitem.
    */
   addCheckmark = (item, img) => {
-    var td = item.firstChild.nextSibling;
+    let td = item.firstChild.nextSibling;
     td.style.backgroundImage = 'url(\'' + img + '\')';
     td.style.backgroundRepeat = 'no-repeat';
     td.style.backgroundPosition = '2px 50%';
@@ -354,7 +354,7 @@ class mxPopupMenu extends mxEventSource {
 
     parent.div.appendChild(parent.table);
 
-    var img = document.createElement('img');
+    let img = document.createElement('img');
     img.setAttribute('src', this.submenuImage);
 
     // Last column of the submenu item in the parent menu
@@ -375,14 +375,14 @@ class mxPopupMenu extends mxEventSource {
       document.body.appendChild(row.div);
 
       // Moves the submenu to the left side if there is no space
-      var left = parseInt(row.div.offsetLeft);
-      var width = parseInt(row.div.offsetWidth);
-      var offset = mxUtils.getDocumentScrollOrigin(document);
+      let left = parseInt(row.div.offsetLeft);
+      let width = parseInt(row.div.offsetWidth);
+      let offset = mxUtils.getDocumentScrollOrigin(document);
 
-      var b = document.body;
-      var d = document.documentElement;
+      let b = document.body;
+      let d = document.documentElement;
 
-      var right = offset.x + (b.clientWidth || d.clientWidth);
+      let right = offset.x + (b.clientWidth || d.clientWidth);
 
       if (left + width > right) {
         row.div.style.left = Math.max(0, (parent.div.offsetLeft - width - 6)) + 'px';
@@ -410,7 +410,7 @@ class mxPopupMenu extends mxEventSource {
       parent.willAddSeparator = true;
     } else if (parent.tbody != null) {
       parent.willAddSeparator = false;
-      var tr = document.createElement('tr');
+      let tr = document.createElement('tr');
 
       var col1 = document.createElement('td');
       col1.className = 'mxPopupMenuIcon';
@@ -422,7 +422,7 @@ class mxPopupMenu extends mxEventSource {
       col2.style.padding = '0 0 0 0px';
       col2.setAttribute('colSpan', '2');
 
-      var hr = document.createElement('hr');
+      let hr = document.createElement('hr');
       hr.setAttribute('size', '1');
       col2.appendChild(hr);
 

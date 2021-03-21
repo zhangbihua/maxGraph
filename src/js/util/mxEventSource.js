@@ -116,10 +116,10 @@ class mxEventSource {
    */
   removeListener = (funct) => {
     if (this.eventListeners != null) {
-      var i = 0;
+      let i = 0;
 
       while (i < this.eventListeners.length) {
-        if (this.eventListeners[i + 1] == funct) {
+        if (this.eventListeners[i + 1] === funct) {
           this.eventListeners.splice(i, 2);
         } else {
           i += 2;
@@ -161,12 +161,12 @@ class mxEventSource {
         sender = this;
       }
 
-      var args = [sender, evt];
+      let args = [sender, evt];
 
-      for (var i = 0; i < this.eventListeners.length; i += 2) {
-        var listen = this.eventListeners[i];
+      for (let i = 0; i < this.eventListeners.length; i += 2) {
+        let listen = this.eventListeners[i];
 
-        if (listen == null || listen == evt.getName()) {
+        if (listen == null || listen === evt.getName()) {
           this.eventListeners[i + 1].apply(this, args);
         }
       }

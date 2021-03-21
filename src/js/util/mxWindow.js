@@ -92,23 +92,23 @@ class mxWindow extends mxEventSource {
    * Creating a simple window.
    *
    * (code)
-   * var tb = document.createElement('div');
-   * var wnd = new mxWindow('Title', tb, 100, 100, 200, 200, true, true);
+   * let tb = document.createElement('div');
+   * let wnd = new mxWindow('Title', tb, 100, 100, 200, 200, true, true);
    * wnd.setVisible(true);
    * (end)
    *
    * Creating a window that contains an iframe.
    *
    * (code)
-   * var frame = document.createElement('iframe');
+   * let frame = document.createElement('iframe');
    * frame.setAttribute('width', '192px');
    * frame.setAttribute('height', '172px');
    * frame.setAttribute('src', 'http://www.example.com/');
    * frame.style.backgroundColor = 'white';
    *
-   * var w = document.body.clientWidth;
-   * var h = (document.body.clientHeight || document.documentElement.clientHeight);
-   * var wnd = new mxWindow('Title', frame, (w-200)/2, (h-200)/3, 200, 200);
+   * let w = document.body.clientWidth;
+   * let h = (document.body.clientHeight || document.documentElement.clientHeight);
+   * let wnd = new mxWindow('Title', frame, (w-200)/2, (h-200)/3, 200, 200);
    * wnd.setVisible(true);
    * (end)
    *
@@ -138,11 +138,11 @@ class mxWindow extends mxEventSource {
    * (code)
    * mxEvent.addListener(window, 'resize', mxUtils.bind(this, ()=>
    * {
-   *   var iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-   *   var ih = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+   *   let iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+   *   let ih = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
    *
-   *   var x = this.window.getX();
-   *   var y = this.window.getY();
+   *   let x = this.window.getX();
+   *   let y = this.window.getY();
    *
    *   if (x + this.window.table.clientWidth > iw)
    *   {
@@ -324,8 +324,8 @@ class mxWindow extends mxEventSource {
     }
 
     // Creates title row
-    var tbody = document.createElement('tbody');
-    var tr = document.createElement('tr');
+    let tbody = document.createElement('tbody');
+    let tr = document.createElement('tr');
 
     this.title = document.createElement('td');
     this.title.className = style + 'Title';
@@ -364,7 +364,7 @@ class mxWindow extends mxEventSource {
     this.div.appendChild(this.table);
 
     // Puts the window on top of other windows when clicked
-    var activator = mxUtils.bind(this, (evt) => {
+    let activator = mxUtils.bind(this, (evt) => {
       this.activate();
     });
 
@@ -382,10 +382,10 @@ class mxWindow extends mxEventSource {
    */
   setTitle = (title) => {
     // Removes all text content nodes (normally just one)
-    var child = this.title.firstChild;
+    let child = this.title.firstChild;
 
     while (child != null) {
-      var next = child.nextSibling;
+      let next = child.nextSibling;
 
       if (child.nodeType === mxConstants.NODETYPE_TEXT) {
         child.parentNode.removeChild(child);
@@ -422,18 +422,18 @@ class mxWindow extends mxEventSource {
    */
   activate = () => {
     if (mxWindow.activeWindow !== this) {
-      var style = mxUtils.getCurrentStyle(this.getElement());
-      var index = (style != null) ? style.zIndex : 3;
+      let style = mxUtils.getCurrentStyle(this.getElement());
+      let index = (style != null) ? style.zIndex : 3;
 
       if (mxWindow.activeWindow) {
-        var elt = mxWindow.activeWindow.getElement();
+        let elt = mxWindow.activeWindow.getElement();
 
         if (elt != null && elt.style != null) {
           elt.style.zIndex = index;
         }
       }
 
-      var previousWindow = mxWindow.activeWindow;
+      let previousWindow = mxWindow.activeWindow;
       this.getElement().style.zIndex = parseInt(index) + 1;
       mxWindow.activeWindow = this;
 
@@ -497,12 +497,12 @@ class mxWindow extends mxEventSource {
         this.resize.setAttribute('src', this.resizeImage);
         this.resize.style.cursor = 'nw-resize';
 
-        var startX = null;
-        var startY = null;
-        var width = null;
-        var height = null;
+        let startX = null;
+        let startY = null;
+        let width = null;
+        let height = null;
 
-        var start = mxUtils.bind(this, (evt) => {
+        let start = mxUtils.bind(this, (evt) => {
           // LATER: pointerdown starting on border of resize does start
           // the drag operation but does not fire consecutive events via
           // one of the listeners below (does pan instead).
@@ -520,10 +520,10 @@ class mxWindow extends mxEventSource {
 
         // Adds a temporary pair of listeners to intercept
         // the gesture event in the document
-        var dragHandler = mxUtils.bind(this, (evt) => {
+        let dragHandler = mxUtils.bind(this, (evt) => {
           if (startX != null && startY != null) {
-            var dx = mxEvent.getClientX(evt) - startX;
-            var dy = mxEvent.getClientY(evt) - startY;
+            let dx = mxEvent.getClientX(evt) - startX;
+            let dy = mxEvent.getClientY(evt) - startY;
 
             this.setSize(width + dx, height + dy);
 
@@ -532,7 +532,7 @@ class mxWindow extends mxEventSource {
           }
         });
 
-        var dropHandler = mxUtils.bind(this, (evt) => {
+        let dropHandler = mxUtils.bind(this, (evt) => {
           if (startX != null && startY != null) {
             startX = null;
             startY = null;
@@ -608,11 +608,11 @@ class mxWindow extends mxEventSource {
 
     this.buttons.appendChild(this.minimize);
 
-    var minimized = false;
-    var maxDisplay = null;
-    var height = null;
+    let minimized = false;
+    let maxDisplay = null;
+    let height = null;
 
-    var funct = mxUtils.bind(this, (evt) => {
+    let funct = mxUtils.bind(this, (evt) => {
       this.activate();
 
       if (!minimized) {
@@ -626,7 +626,7 @@ class mxWindow extends mxEventSource {
         this.maximize.style.display = 'none';
         height = this.table.style.height;
 
-        var minSize = this.getMinimumSize();
+        let minSize = this.getMinimumSize();
 
         if (minSize.height > 0) {
           this.div.style.height = minSize.height + 'px';
@@ -692,14 +692,14 @@ class mxWindow extends mxEventSource {
 
     this.buttons.appendChild(this.maximize);
 
-    var maximized = false;
-    var x = null;
-    var y = null;
-    var height = null;
-    var width = null;
-    var minDisplay = null;
+    let maximized = false;
+    let x = null;
+    let y = null;
+    let height = null;
+    let width = null;
+    let minDisplay = null;
 
-    var funct = mxUtils.bind(this, (evt) => {
+    let funct = mxUtils.bind(this, (evt) => {
       this.activate();
 
       if (this.maximize.style.display != 'none') {
@@ -720,7 +720,7 @@ class mxWindow extends mxEventSource {
 
           this.div.style.left = '0px';
           this.div.style.top = '0px';
-          var docHeight = Math.max(document.body.clientHeight || 0, document.documentElement.clientHeight || 0);
+          let docHeight = Math.max(document.body.clientHeight || 0, document.documentElement.clientHeight || 0);
 
           this.div.style.width = (document.body.clientWidth - 2) + 'px';
           this.div.style.height = (docHeight - 2) + 'px';
@@ -732,7 +732,7 @@ class mxWindow extends mxEventSource {
             this.resize.style.visibility = 'hidden';
           }
 
-          var style = mxUtils.getCurrentStyle(this.contentWrapper);
+          let style = mxUtils.getCurrentStyle(this.contentWrapper);
 
           if (style.overflow == 'auto' || this.resize != null) {
             this.contentWrapper.style.height = (this.div.offsetHeight -
@@ -755,7 +755,7 @@ class mxWindow extends mxEventSource {
           this.div.style.height = height;
           this.div.style.width = width;
 
-          var style = mxUtils.getCurrentStyle(this.contentWrapper);
+          let style = mxUtils.getCurrentStyle(this.contentWrapper);
 
           if (style.overflow == 'auto' || this.resize != null) {
             this.contentWrapper.style.height = (this.div.offsetHeight -
@@ -790,22 +790,22 @@ class mxWindow extends mxEventSource {
 
     mxEvent.addGestureListeners(this.title,
         mxUtils.bind(this, (evt) => {
-          var startX = mxEvent.getClientX(evt);
-          var startY = mxEvent.getClientY(evt);
-          var x = this.getX();
-          var y = this.getY();
+          let startX = mxEvent.getClientX(evt);
+          let startY = mxEvent.getClientY(evt);
+          let x = this.getX();
+          let y = this.getY();
 
           // Adds a temporary pair of listeners to intercept
           // the gesture event in the document
-          var dragHandler = mxUtils.bind(this, (evt) => {
-            var dx = mxEvent.getClientX(evt) - startX;
-            var dy = mxEvent.getClientY(evt) - startY;
+          let dragHandler = mxUtils.bind(this, (evt) => {
+            let dx = mxEvent.getClientX(evt) - startX;
+            let dy = mxEvent.getClientY(evt) - startY;
             this.setLocation(x + dx, y + dy);
             this.fireEvent(new mxEventObject(mxEvent.MOVE, 'event', evt));
             mxEvent.consume(evt);
           });
 
-          var dropHandler = mxUtils.bind(this, (evt) => {
+          let dropHandler = mxUtils.bind(this, (evt) => {
             mxEvent.removeGestureListeners(document, null, dragHandler, dropHandler);
             this.fireEvent(new mxEventObject(mxEvent.MOVE_END, 'event', evt));
             mxEvent.consume(evt);
@@ -955,7 +955,7 @@ class mxWindow extends mxEventSource {
     this.div.style.display = '';
     this.activate();
 
-    var style = mxUtils.getCurrentStyle(this.contentWrapper);
+    let style = mxUtils.getCurrentStyle(this.contentWrapper);
 
     if ((style.overflow == 'auto' || this.resize != null) &&
         this.contentWrapper.style.display != 'none') {

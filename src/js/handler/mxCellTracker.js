@@ -26,7 +26,7 @@ class mxCellTracker extends mxCellMarker {
    *   mouseDown: (sender, me)=> { },
    *   mouseMove: (sender, me)=>
    *   {
-   *     var tmp = me.getCell();
+   *     let tmp = me.getCell();
    *
    *     if (tmp != this.cell)
    *     {

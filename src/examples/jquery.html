@@ -41,12 +41,12 @@
 				mxEvent.disableContextMenu(container);
 
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Adds custom HTML labels
 				graph.setHtmlLabels(true);
 				
-				var chartColors = {
+				let chartColors = {
 					red: 'rgb(255, 99, 132)',
 					orange: 'rgb(255, 159, 64)',
 					yellow: 'rgb(255, 205, 86)',
@@ -56,13 +56,13 @@
 					grey: 'rgb(201, 203, 207)'
 				};
 				
-				var randomScalingFactor = function()
+				let randomScalingFactor = function()
 				{
 					return (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
 				};
 				
-				var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-		        var config = {
+				let MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+		        let config = {
 		            type: 'line',
 		            data: {
 		                labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -130,19 +130,19 @@
 		        };
 			
 				// Returns canvas with dynamic chart for vertex labels
-				var graphConvertValueToString = graph.convertValueToString;
+				let graphConvertValueToString = graph.convertValueToString;
 				graph.convertValueToString = function(cell)
 				{
 					if (this.model.isVertex(cell))
 					{
-						var node = document.createElement('canvas');
+						let node = document.createElement('canvas');
 						node.setAttribute('width', cell.geometry.width);
 						node.setAttribute('height', cell.geometry.height);
 						
 						// Document for empty output if not in DOM
 						document.body.appendChild(node);
 						
-						var ctx = node.getContext("2d");
+						let ctx = node.getContext("2d");
 						new Chart(ctx, config);
 						
 						return node;
@@ -156,7 +156,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

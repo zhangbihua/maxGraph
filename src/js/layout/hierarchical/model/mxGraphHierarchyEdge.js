@@ -60,7 +60,7 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
     this.edges = edges;
     this.ids = [];
 
-    for (var i = 0; i < edges.length; i++) {
+    for (let i = 0; i < edges.length; i++) {
       this.ids.push(mxObjectIdentity.get(edges[i]));
     }
   };
@@ -71,7 +71,7 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
    * Inverts the direction of this internal edge(s)
    */
   invert = (layer) => {
-    var temp = this.source;
+    let temp = this.source;
     this.source = this.target;
     this.target = temp;
     this.isReversed = !this.isReversed;
@@ -86,7 +86,7 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
     if (this.nextLayerConnectedCells == null) {
       this.nextLayerConnectedCells = [];
 
-      for (var i = 0; i < this.temp.length; i++) {
+      for (let i = 0; i < this.temp.length; i++) {
         this.nextLayerConnectedCells[i] = [];
 
         if (i === this.temp.length - 1) {
@@ -109,7 +109,7 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
     if (this.previousLayerConnectedCells == null) {
       this.previousLayerConnectedCells = [];
 
-      for (var i = 0; i < this.temp.length; i++) {
+      for (let i = 0; i < this.temp.length; i++) {
         this.previousLayerConnectedCells[i] = [];
 
         if (i === 0) {

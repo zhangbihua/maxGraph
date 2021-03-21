@@ -85,7 +85,7 @@ class mxCylinder extends mxShape {
    * Draws the path for this shape.
    */
   redrawPath = (c, x, y, w, h, isForeground) => {
-    var dy = this.getCylinderSize(x, y, w, h);
+    let dy = this.getCylinderSize(x, y, w, h);
 
     if ((isForeground && this.fill != null) || (!isForeground && this.fill == null)) {
       c.moveTo(0, dy);

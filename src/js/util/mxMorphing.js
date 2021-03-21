@@ -56,12 +56,12 @@ class mxMorphing extends mxAnimation {
    * graph.getModel().beginUpdate();
    * try
    * {
-   *   var circleLayout = new mxCircleLayout(graph);
+   *   let circleLayout = new mxCircleLayout(graph);
    *   circleLayout.execute(graph.getDefaultParent());
    * }
    * finally
    * {
-   *   var morph = new mxMorphing(graph);
+   *   let morph = new mxMorphing(graph);
    *   morph.addListener(mxEvent.DONE, ()=>
    *   {
    *     graph.getModel().endUpdate();
@@ -96,11 +96,11 @@ class mxMorphing extends mxAnimation {
    */
   updateAnimation = () => {
     updateAnimation.apply(this, arguments);
-    var move = new mxCellStatePreview(this.graph);
+    let move = new mxCellStatePreview(this.graph);
 
     if (this.cells != null) {
       // Animates the given cells individually without recursion
-      for (var i = 0; i < this.cells.length; i++) {
+      for (let i = 0; i < this.cells.length; i++) {
         this.animateCell(this.cells[i], move, false);
       }
     } else {
@@ -131,8 +131,8 @@ class mxMorphing extends mxAnimation {
    * Animates the given cell state using <mxCellStatePreview.moveState>.
    */
   animateCell = (cell, move, recurse) => {
-    var state = this.graph.getView().getState(cell);
-    var delta = null;
+    let state = this.graph.getView().getState(cell);
+    let delta = null;
 
     if (state != null) {
       // Moves the animated state from where it will be after the model
@@ -140,8 +140,8 @@ class mxMorphing extends mxAnimation {
       delta = this.getDelta(state);
 
       if (this.graph.getModel().isVertex(cell) && (delta.x != 0 || delta.y != 0)) {
-        var translate = this.graph.view.getTranslate();
-        var scale = this.graph.view.getScale();
+        let translate = this.graph.view.getTranslate();
+        let scale = this.graph.view.getScale();
 
         delta.x += translate.x * scale;
         delta.y += translate.y * scale;
@@ -151,9 +151,9 @@ class mxMorphing extends mxAnimation {
     }
 
     if (recurse && !this.stopRecursion(state, delta)) {
-      var childCount = this.graph.getModel().getChildCount(cell);
+      let childCount = this.graph.getModel().getChildCount(cell);
 
-      for (var i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i++) {
         this.animateCell(this.graph.getModel().getChildAt(cell, i), move, recurse);
       }
     }
@@ -176,11 +176,11 @@ class mxMorphing extends mxAnimation {
    * location of the state after the display will be updated.
    */
   getDelta = (state) => {
-    var origin = this.getOriginForCell(state.cell);
-    var translate = this.graph.getView().getTranslate();
-    var scale = this.graph.getView().getScale();
-    var x = state.x / scale - translate.x;
-    var y = state.y / scale - translate.y;
+    let origin = this.getOriginForCell(state.cell);
+    let translate = this.graph.getView().getTranslate();
+    let scale = this.graph.getView().getScale();
+    let x = state.x / scale - translate.x;
+    let y = state.y / scale - translate.y;
 
     return new mxPoint((origin.x - x) * scale, (origin.y - y) * scale);
   };
@@ -193,17 +193,17 @@ class mxMorphing extends mxAnimation {
    * during the lifecycle of this object.
    */
   getOriginForCell = (cell) => {
-    var result = null;
+    let result = null;
 
     if (cell != null) {
-      var parent = this.graph.getModel().getParent(cell);
-      var geo = this.graph.getCellGeometry(cell);
+      let parent = this.graph.getModel().getParent(cell);
+      let geo = this.graph.getCellGeometry(cell);
       result = this.getOriginForCell(parent);
 
       // TODO: Handle offsets
       if (geo != null) {
         if (geo.relative) {
-          var pgeo = this.graph.getCellGeometry(parent);
+          let pgeo = this.graph.getCellGeometry(parent);
 
           if (pgeo != null) {
             result.x += geo.x * pgeo.width;
@@ -217,7 +217,7 @@ class mxMorphing extends mxAnimation {
     }
 
     if (result == null) {
-      var t = this.graph.view.getTranslate();
+      let t = this.graph.view.getTranslate();
       result = new mxPoint(-t.x, -t.y);
     }
 

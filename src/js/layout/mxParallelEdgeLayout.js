@@ -32,7 +32,7 @@ class mxParallelEdgeLayout extends mxGraphLayout {
    * Example:
    *
    * (code)
-   * var layout = new mxParallelEdgeLayout(graph);
+   * let layout = new mxParallelEdgeLayout(graph);
    * layout.execute(graph.getDefaultParent());
    * (end)
    *
@@ -40,14 +40,14 @@ class mxParallelEdgeLayout extends mxGraphLayout {
    * following code can be used.
    *
    * (code)
-   * var layout = new mxParallelEdgeLayout(graph);
+   * let layout = new mxParallelEdgeLayout(graph);
    *
    * graph.addListener(mxEvent.CELL_CONNECTED, (sender, evt)=>
    * {
-   *   var model = graph.getModel();
-   *   var edge = evt.getProperty('edge');
-   *   var src = model.getTerminal(edge, true);
-   *   var trg = model.getTerminal(edge, false);
+   *   let model = graph.getModel();
+   *   let edge = evt.getProperty('edge');
+   *   let src = model.getTerminal(edge, true);
+   *   let trg = model.getTerminal(edge, false);
    *
    *   layout.isEdgeIgnored = (edge2)=>
    *   {
@@ -75,12 +75,12 @@ class mxParallelEdgeLayout extends mxGraphLayout {
    * Implements <mxGraphLayout.execute>.
    */
   execute = (parent, cells) => {
-    var lookup = this.findParallels(parent, cells);
+    let lookup = this.findParallels(parent, cells);
 
     this.graph.model.beginUpdate();
     try {
       for (var i in lookup) {
-        var parallels = lookup[i];
+        let parallels = lookup[i];
 
         if (parallels.length > 1) {
           this.layout(parallels);
@@ -97,11 +97,11 @@ class mxParallelEdgeLayout extends mxGraphLayout {
    * Finds the parallel edges in the given parent.
    */
   findParallels = (parent, cells) => {
-    var lookup = [];
+    let lookup = [];
 
-    var addCell = (cell) => {
+    let addCell = (cell) => {
       if (!this.isEdgeIgnored(cell)) {
-        var id = this.getEdgeId(cell);
+        let id = this.getEdgeId(cell);
 
         if (id != null) {
           if (lookup[id] == null) {
@@ -114,14 +114,14 @@ class mxParallelEdgeLayout extends mxGraphLayout {
     };
 
     if (cells != null) {
-      for (var i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i++) {
         addCell(cells[i]);
       }
     } else {
-      var model = this.graph.getModel();
-      var childCount = model.getChildCount(parent);
+      let model = this.graph.getModel();
+      let childCount = model.getChildCount(parent);
 
-      for (var i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i++) {
         addCell(model.getChildAt(parent, i));
       }
     }
@@ -137,25 +137,25 @@ class mxParallelEdgeLayout extends mxGraphLayout {
    * edge.
    */
   getEdgeId = (edge) => {
-    var view = this.graph.getView();
+    let view = this.graph.getView();
 
     // Cannot used cached visible terminal because this could be triggered in BEFORE_UNDO
-    var src = view.getVisibleTerminal(edge, true);
-    var trg = view.getVisibleTerminal(edge, false);
-    var pts = '';
+    let src = view.getVisibleTerminal(edge, true);
+    let trg = view.getVisibleTerminal(edge, false);
+    let pts = '';
 
     if (src != null && trg != null) {
       src = mxObjectIdentity.get(src);
       trg = mxObjectIdentity.get(trg);
 
       if (this.checkOverlap) {
-        var state = this.graph.view.getState(edge);
+        let state = this.graph.view.getState(edge);
 
         if (state != null && state.absolutePoints != null) {
-          var tmp = [];
+          let tmp = [];
 
-          for (var i = 0; i < state.absolutePoints.length; i++) {
-            var pt = state.absolutePoints[i];
+          for (let i = 0; i < state.absolutePoints.length; i++) {
+            let pt = state.absolutePoints[i];
 
             if (pt != null) {
               tmp.push(pt.x, pt.y);
@@ -179,45 +179,45 @@ class mxParallelEdgeLayout extends mxGraphLayout {
    * Lays out the parallel edges in the given array.
    */
   layout = (parallels) => {
-    var edge = parallels[0];
-    var view = this.graph.getView();
-    var model = this.graph.getModel();
-    var src = model.getGeometry(view.getVisibleTerminal(edge, true));
-    var trg = model.getGeometry(view.getVisibleTerminal(edge, false));
+    let edge = parallels[0];
+    let view = this.graph.getView();
+    let model = this.graph.getModel();
+    let src = model.getGeometry(view.getVisibleTerminal(edge, true));
+    let trg = model.getGeometry(view.getVisibleTerminal(edge, false));
 
     // Routes multiple loops
     if (src == trg) {
       var x0 = src.x + src.width + this.spacing;
       var y0 = src.y + src.height / 2;
 
-      for (var i = 0; i < parallels.length; i++) {
+      for (let i = 0; i < parallels.length; i++) {
         this.route(parallels[i], x0, y0);
         x0 += this.spacing;
       }
     } else if (src != null && trg != null) {
       // Routes parallel edges
-      var scx = src.x + src.width / 2;
-      var scy = src.y + src.height / 2;
+      let scx = src.x + src.width / 2;
+      let scy = src.y + src.height / 2;
 
-      var tcx = trg.x + trg.width / 2;
-      var tcy = trg.y + trg.height / 2;
+      let tcx = trg.x + trg.width / 2;
+      let tcy = trg.y + trg.height / 2;
 
-      var dx = tcx - scx;
-      var dy = tcy - scy;
+      let dx = tcx - scx;
+      let dy = tcy - scy;
 
-      var len = Math.sqrt(dx * dx + dy * dy);
+      let len = Math.sqrt(dx * dx + dy * dy);
 
       if (len > 0) {
         var x0 = scx + dx / 2;
         var y0 = scy + dy / 2;
 
-        var nx = dy * this.spacing / len;
-        var ny = dx * this.spacing / len;
+        let nx = dy * this.spacing / len;
+        let ny = dx * this.spacing / len;
 
         x0 += nx * (parallels.length - 1) / 2;
         y0 -= ny * (parallels.length - 1) / 2;
 
-        for (var i = 0; i < parallels.length; i++) {
+        for (let i = 0; i < parallels.length; i++) {
           this.route(parallels[i], x0, y0);
           x0 -= nx;
           y0 += ny;

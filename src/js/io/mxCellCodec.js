@@ -93,13 +93,13 @@ class mxCellCodec extends mxObjectCodec {
       // Wraps the graphical annotation up in the user object (inversion)
       // by putting the result of the default encoding into a clone of the
       // user object (node type 1) and returning this cloned user object.
-      var tmp = node;
+      let tmp = node;
       node = mxUtils.importNode(enc.document, obj.value, true);
       node.appendChild(tmp);
 
       // Moves the id attribute to the outermost XML node, namely the
       // node which denotes the object boundaries in the file.
-      var id = tmp.getAttribute('id');
+      let id = tmp.getAttribute('id');
       node.setAttribute('id', id);
       tmp.removeAttribute('id');
     }
@@ -114,13 +114,13 @@ class mxCellCodec extends mxObjectCodec {
    * the user object for the cell (inversion).
    */
   beforeDecode = (dec, node, obj) => {
-    var inner = node.cloneNode(true);
-    var classname = this.getName();
+    let inner = node.cloneNode(true);
+    let classname = this.getName();
 
     if (node.nodeName !== classname) {
       // Passes the inner graphical annotation node to the
       // object codec for further processing of the cell.
-      var tmp = node.getElementsByTagName(classname)[0];
+      let tmp = node.getElementsByTagName(classname)[0];
 
       if (tmp != null && tmp.parentNode === node) {
         mxUtils.removeWhitespace(tmp, true);
@@ -133,7 +133,7 @@ class mxCellCodec extends mxObjectCodec {
 
       // Creates the user object out of the XML node
       obj.value = node.cloneNode(true);
-      var id = obj.value.getAttribute('id');
+      let id = obj.value.getAttribute('id');
 
       if (id != null) {
         obj.setId(id);
@@ -147,20 +147,20 @@ class mxCellCodec extends mxObjectCodec {
     // Preprocesses and removes all Id-references in order to use the
     // correct encoder (this) for the known references to cells (all).
     if (inner != null) {
-      for (var i = 0; i < this.idrefs.length; i++) {
-        var attr = this.idrefs[i];
-        var ref = inner.getAttribute(attr);
+      for (let i = 0; i < this.idrefs.length; i++) {
+        let attr = this.idrefs[i];
+        let ref = inner.getAttribute(attr);
 
         if (ref != null) {
           inner.removeAttribute(attr);
-          var object = dec.objects[ref] || dec.lookup(ref);
+          let object = dec.objects[ref] || dec.lookup(ref);
 
           if (object == null) {
             // Needs to decode forward reference
-            var element = dec.getElementById(ref);
+            let element = dec.getElementById(ref);
 
             if (element != null) {
-              var decoder = mxCodecRegistry.codecs[element.nodeName] || this;
+              let decoder = mxCodecRegistry.codecs[element.nodeName] || this;
               object = decoder.decode(dec, element);
             }
           }

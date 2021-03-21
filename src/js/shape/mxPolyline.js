@@ -65,7 +65,7 @@ class mxPolyline extends mxShape {
    * Paints the line shape.
    */
   paintEdgeShape = (c, pts) => {
-    var prev = c.pointerEventsValue;
+    let prev = c.pointerEventsValue;
     c.pointerEventsValue = 'stroke';
 
     if (this.style == null || this.style[mxConstants.STYLE_CURVED] != 1) {
@@ -83,7 +83,7 @@ class mxPolyline extends mxShape {
    * Paints the line shape.
    */
   paintLine = (c, pts, rounded) => {
-    var arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+    let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
     c.begin();
     this.addPoints(c, pts, rounded, arcSize, false);
     c.stroke();
@@ -97,16 +97,16 @@ class mxPolyline extends mxShape {
   paintCurvedLine = (c, pts) => {
     c.begin();
 
-    var pt = pts[0];
-    var n = pts.length;
+    let pt = pts[0];
+    let n = pts.length;
 
     c.moveTo(pt.x, pt.y);
 
-    for (var i = 1; i < n - 2; i++) {
+    for (let i = 1; i < n - 2; i++) {
       var p0 = pts[i];
       var p1 = pts[i + 1];
-      var ix = (p0.x + p1.x) / 2;
-      var iy = (p0.y + p1.y) / 2;
+      let ix = (p0.x + p1.x) / 2;
+      let iy = (p0.y + p1.y) / 2;
 
       c.quadTo(p0.x, p0.y, ix, iy);
     }

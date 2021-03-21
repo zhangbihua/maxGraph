@@ -75,7 +75,7 @@ class mxPanningManager {
     // Stops scrolling on every mouseup anywhere in the document
     mxEvent.addListener(document, 'mouseup', this.mouseUpListener);
 
-    var createThread = mxUtils.bind(this, () => {
+    let createThread = mxUtils.bind(this, () => {
       this.scrollbars = mxUtils.hasScrollbars(graph.container);
       this.scrollLeft = graph.container.scrollLeft;
       this.scrollTop = graph.container.scrollTop;
@@ -85,8 +85,8 @@ class mxPanningManager {
         this.tdy -= this.dy;
 
         if (this.scrollbars) {
-          var left = -graph.container.scrollLeft - Math.ceil(this.dx);
-          var top = -graph.container.scrollTop - Math.ceil(this.dy);
+          let left = -graph.container.scrollLeft - Math.ceil(this.dx);
+          let top = -graph.container.scrollTop - Math.ceil(this.dy);
           graph.panGraph(left, top);
           graph.panDx = this.scrollLeft - graph.container.scrollLeft;
           graph.panDy = this.scrollTop - graph.container.scrollTop;
@@ -127,7 +127,7 @@ class mxPanningManager {
       w = (w != null) ? w : 0;
       h = (h != null) ? h : 0;
 
-      var c = graph.container;
+      let c = graph.container;
       this.dx = x + w - c.scrollLeft - c.clientWidth;
 
       if (this.dx < 0 && Math.abs(this.dx) < this.border) {
@@ -198,8 +198,8 @@ class mxPanningManager {
         this.tdy = 0;
 
         if (!this.scrollbars) {
-          var px = graph.panDx;
-          var py = graph.panDy;
+          let px = graph.panDx;
+          let py = graph.panDy;
 
           if (px != 0 || py != 0) {
             graph.panGraph(0, 0);

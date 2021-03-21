@@ -23,16 +23,16 @@
 		// from the onLoad event handler of the document (see below).
 		function main(container)
 		{
-			var graph = new mxGraph(container);
-			var parent = graph.getDefaultParent();
+			let graph = new mxGraph(container);
+			let parent = graph.getDefaultParent();
 			
 			// Extends mxGraphModel.getStyle to show an image when collapsed
-			var modelGetStyle = graph.model.getStyle;
+			let modelGetStyle = graph.model.getStyle;
 			graph.model.getStyle = function(cell)
 			{
 				if (cell != null)
 				{
-					var style = modelGetStyle.apply(this, arguments);
+					let style = modelGetStyle.apply(this, arguments);
 					
 					if (this.isCollapsed(cell))
 					{

@@ -64,8 +64,8 @@
 		*/
 		BoxShape.prototype.redrawPath = function(path, x, y, w, h, isForeground)
 		{
-			var dy = this.extrude * this.scale;
-			var dx = this.extrude * this.scale;
+			let dy = this.extrude * this.scale;
+			let dx = this.extrude * this.scale;
 
 			if (isForeground)
 			{
@@ -110,14 +110,14 @@
 			else
 			{
 				// Creates the graph inside the DOM node.
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Disables basic selection and cell handling
 				graph.setEnabled(false);
 
 				// Changes the default style for vertices "in-place"
 				// to use the custom shape.
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_SHAPE] = 'box';
 				
 				// Adds a spacing for the label that matches the
@@ -131,7 +131,7 @@
 
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

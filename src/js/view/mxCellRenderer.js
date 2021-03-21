@@ -164,17 +164,17 @@ class mxCellRenderer {
    * state - <mxCellState> for which the shape should be created.
    */
   createShape = (state) => {
-    var shape = null;
+    let shape = null;
 
     if (state.style != null) {
       // Checks if there is a stencil for the name and creates
       // a shape instance for the stencil if one exists
-      var stencil = mxStencilRegistry.getStencil(state.style[mxConstants.STYLE_SHAPE]);
+      let stencil = mxStencilRegistry.getStencil(state.style[mxConstants.STYLE_SHAPE]);
 
       if (stencil != null) {
         shape = new mxShape(stencil);
       } else {
-        var ctor = this.getShapeConstructor(state);
+        let ctor = this.getShapeConstructor(state);
         shape = new ctor();
       }
     }
@@ -210,7 +210,7 @@ class mxCellRenderer {
    * Returns the constructor to be used for creating the shape.
    */
   getShapeConstructor = (state) => {
-    var ctor = this.getShape(state.style[mxConstants.STYLE_SHAPE]);
+    let ctor = this.getShape(state.style[mxConstants.STYLE_SHAPE]);
 
     if (ctor == null) {
       ctor = (state.view.graph.getModel().isEdge(state.cell)) ?
@@ -268,11 +268,11 @@ class mxCellRenderer {
   checkPlaceholderStyles = (state) => {
     // LATER: Check if the color has actually changed
     if (state.style != null) {
-      var values = ['inherit', 'swimlane', 'indicated'];
-      var styles = [mxConstants.STYLE_FILLCOLOR, mxConstants.STYLE_STROKECOLOR,
+      let values = ['inherit', 'swimlane', 'indicated'];
+      let styles = [mxConstants.STYLE_FILLCOLOR, mxConstants.STYLE_STROKECOLOR,
         mxConstants.STYLE_GRADIENTCOLOR, mxConstants.STYLE_FONTCOLOR];
 
-      for (var i = 0; i < styles.length; i++) {
+      for (let i = 0; i < styles.length; i++) {
         if (mxUtils.indexOf(values, state.style[styles[i]]) >= 0) {
           return true;
         }
@@ -289,13 +289,13 @@ class mxCellRenderer {
    * the respective color on the shape.
    */
   resolveColor = (state, field, key) => {
-    var shape = (key == mxConstants.STYLE_FONTCOLOR) ?
+    let shape = (key == mxConstants.STYLE_FONTCOLOR) ?
         state.text : state.shape;
 
     if (shape != null) {
-      var graph = state.view.graph;
-      var value = shape[field];
-      var referenced = null;
+      let graph = state.view.graph;
+      let value = shape[field];
+      let referenced = null;
 
       if (value == 'inherit') {
         referenced = graph.model.getParent(state.cell);
@@ -325,11 +325,11 @@ class mxCellRenderer {
       }
 
       if (referenced != null) {
-        var rstate = graph.getView().getState(referenced);
+        let rstate = graph.getView().getState(referenced);
         shape[field] = null;
 
         if (rstate != null) {
-          var rshape = (key == mxConstants.STYLE_FONTCOLOR) ? rstate.text : rstate.shape;
+          let rshape = (key == mxConstants.STYLE_FONTCOLOR) ? rstate.text : rstate.shape;
 
           if (rshape != null && field != 'indicatorColor') {
             shape[field] = rshape[field];
@@ -364,12 +364,12 @@ class mxCellRenderer {
    * state - <mxCellState> for which the label should be created.
    */
   createLabel = (state, value) => {
-    var graph = state.view.graph;
-    var isEdge = graph.getModel().isEdge(state.cell);
+    let graph = state.view.graph;
+    let isEdge = graph.getModel().isEdge(state.cell);
 
     if (state.style[mxConstants.STYLE_FONTSIZE] > 0 || state.style[mxConstants.STYLE_FONTSIZE] == null) {
       // Avoids using DOM node for empty labels
-      var isForceHtml = (graph.isHtmlLabel(state.cell) || (value != null && mxUtils.isNode(value)));
+      let isForceHtml = (graph.isHtmlLabel(state.cell) || (value != null && mxUtils.isNode(value)));
 
       state.text = new this.defaultTextShape(value, new mxRectangle(),
           (state.style[mxConstants.STYLE_ALIGN] || mxConstants.ALIGN_CENTER),
@@ -402,18 +402,18 @@ class mxCellRenderer {
       // the event via the initial DOM node but the event source is the node
       // under the mouse, so we need to check if this is the case and force
       // getCellAt for the subsequent mouseMoves and the final mouseUp.
-      var forceGetCell = false;
+      let forceGetCell = false;
 
-      var getState = (evt) => {
-        var result = state;
+      let getState = (evt) => {
+        let result = state;
 
         if (mxClient.IS_TOUCH || forceGetCell) {
-          var x = mxEvent.getClientX(evt);
-          var y = mxEvent.getClientY(evt);
+          let x = mxEvent.getClientX(evt);
+          let y = mxEvent.getClientY(evt);
 
           // Dispatches the drop event to the graph which
           // consumes and executes the source function
-          var pt = mxUtils.convertPoint(graph.container, x, y);
+          let pt = mxUtils.convertPoint(graph.container, x, y);
           result = graph.view.getState(graph.getCellAt(pt.x, pt.y));
         }
 
@@ -483,18 +483,18 @@ class mxCellRenderer {
    * state - <mxCellState> for which the overlay should be created.
    */
   createCellOverlays = (state) => {
-    var graph = state.view.graph;
-    var overlays = graph.getCellOverlays(state.cell);
-    var dict = null;
+    let graph = state.view.graph;
+    let overlays = graph.getCellOverlays(state.cell);
+    let dict = null;
 
     if (overlays != null) {
       dict = new mxDictionary();
 
-      for (var i = 0; i < overlays.length; i++) {
-        var shape = (state.overlays != null) ? state.overlays.remove(overlays[i]) : null;
+      for (let i = 0; i < overlays.length; i++) {
+        let shape = (state.overlays != null) ? state.overlays.remove(overlays[i]) : null;
 
         if (shape == null) {
-          var tmp = new mxImageShape(new mxRectangle(), overlays[i].image.src);
+          let tmp = new mxImageShape(new mxRectangle(), overlays[i].image.src);
           tmp.dialect = state.view.graph.dialect;
           tmp.preserveImageAspect = false;
           tmp.overlay = overlays[i];
@@ -543,7 +543,7 @@ class mxCellRenderer {
    * <mxShape> that represents the overlay.
    */
   installCellOverlayListeners = (state, overlay, shape) => {
-    var graph = state.view.graph;
+    let graph = state.view.graph;
 
     mxEvent.addListener(shape.node, 'click', function (evt) {
       if (graph.isEditing()) {
@@ -581,12 +581,12 @@ class mxCellRenderer {
    * state - <mxCellState> for which the control should be created.
    */
   createControl = (state) => {
-    var graph = state.view.graph;
-    var image = graph.getFoldingImage(state);
+    let graph = state.view.graph;
+    let image = graph.getFoldingImage(state);
 
     if (graph.foldingEnabled && image != null) {
       if (state.control == null) {
-        var b = new mxRectangle(0, 0, image.width, image.height);
+        let b = new mxRectangle(0, 0, image.width, image.height);
         state.control = new mxImageShape(b, image.src);
         state.control.preserveImageAspect = false;
         state.control.dialect = graph.dialect;
@@ -609,11 +609,11 @@ class mxCellRenderer {
    * state - <mxCellState> whose control click handler should be returned.
    */
   createControlClickHandler = (state) => {
-    var graph = state.view.graph;
+    let graph = state.view.graph;
 
     return mxUtils.bind(this, function (evt) {
       if (this.forceControlClickHandler || graph.isEnabled()) {
-        var collapse = !graph.isCellCollapsed(state.cell);
+        let collapse = !graph.isCellCollapsed(state.cell);
         graph.foldCells(collapse, false, [state.cell], null, evt);
         mxEvent.consume(evt);
       }
@@ -633,12 +633,12 @@ class mxCellRenderer {
    * clickHandler - Optional function to implement clicks on the control.
    */
   initControl = (state, control, handleEvents, clickHandler) => {
-    var graph = state.view.graph;
+    let graph = state.view.graph;
 
     // In the special case where the label is in HTML and the display is SVG the image
     // should go into the graph container directly in order to be clickable. Otherwise
     // it is obscured by the HTML label that overlaps the cell.
-    var isForceHtml = graph.isHtmlLabel(state.cell) && mxClient.NO_FO &&
+    let isForceHtml = graph.isHtmlLabel(state.cell) && mxClient.NO_FO &&
         graph.dialect == mxConstants.DIALECT_SVG;
 
     if (isForceHtml) {
@@ -649,7 +649,7 @@ class mxCellRenderer {
       control.init(state.view.getOverlayPane());
     }
 
-    var node = control.innerNode || control.node;
+    let node = control.innerNode || control.node;
 
     // Workaround for missing click event on iOS is to check tolerance below
     if (clickHandler != null && !mxClient.IS_IOS) {
@@ -661,7 +661,7 @@ class mxCellRenderer {
     }
 
     if (handleEvents) {
-      var first = null;
+      let first = null;
 
       mxEvent.addGestureListeners(node,
           function (evt) {
@@ -681,7 +681,7 @@ class mxCellRenderer {
       if (clickHandler != null && mxClient.IS_IOS) {
         node.addEventListener('touchend', (evt) => {
           if (first != null) {
-            var tol = graph.tolerance;
+            let tol = graph.tolerance;
 
             if (Math.abs(first.x - mxEvent.getClientX(evt)) < tol &&
                 Math.abs(first.y - mxEvent.getClientY(evt)) < tol) {
@@ -736,21 +736,21 @@ class mxCellRenderer {
    * state - <mxCellState> for which the event listeners should be isntalled.
    */
   installListeners = (state) => {
-    var graph = state.view.graph;
+    let graph = state.view.graph;
 
     // Workaround for touch devices routing all events for a mouse
     // gesture (down, move, up) via the initial DOM node. Same for
     // HTML images in all IE versions (VML images are working).
-    var getState = (evt) => {
-      var result = state;
+    let getState = (evt) => {
+      let result = state;
 
       if ((graph.dialect != mxConstants.DIALECT_SVG && mxEvent.getSource(evt).nodeName == 'IMG') || mxClient.IS_TOUCH) {
-        var x = mxEvent.getClientX(evt);
-        var y = mxEvent.getClientY(evt);
+        let x = mxEvent.getClientX(evt);
+        let y = mxEvent.getClientY(evt);
 
         // Dispatches the drop event to the graph which
         // consumes and executes the source function
-        var pt = mxUtils.convertPoint(graph.container, x, y);
+        let pt = mxUtils.convertPoint(graph.container, x, y);
         result = graph.view.getState(graph.getCellAt(pt.x, pt.y));
       }
 
@@ -798,13 +798,13 @@ class mxCellRenderer {
    * state - <mxCellState> whose label should be redrawn.
    */
   redrawLabel = (state, forced) => {
-    var graph = state.view.graph;
-    var value = this.getLabelValue(state);
-    var wrapping = graph.isWrapping(state.cell);
-    var clipping = graph.isLabelClipped(state.cell);
-    var isForceHtml = (state.view.graph.isHtmlLabel(state.cell) || (value != null && mxUtils.isNode(value)));
-    var dialect = (isForceHtml) ? mxConstants.DIALECT_STRICTHTML : state.view.graph.dialect;
-    var overflow = state.style[mxConstants.STYLE_OVERFLOW] || 'visible';
+    let graph = state.view.graph;
+    let value = this.getLabelValue(state);
+    let wrapping = graph.isWrapping(state.cell);
+    let clipping = graph.isLabelClipped(state.cell);
+    let isForceHtml = (state.view.graph.isHtmlLabel(state.cell) || (value != null && mxUtils.isNode(value)));
+    let dialect = (isForceHtml) ? mxConstants.DIALECT_STRICTHTML : state.view.graph.dialect;
+    let overflow = state.style[mxConstants.STYLE_OVERFLOW] || 'visible';
 
     if (state.text != null && (state.text.wrap != wrapping || state.text.clipped != clipping ||
         state.text.overflow != overflow || state.text.dialect != dialect)) {
@@ -836,8 +836,8 @@ class mxCellRenderer {
         state.text.valign = graph.getVerticalAlign(state);
       }
 
-      var bounds = this.getLabelBounds(state);
-      var nextScale = this.getTextScale(state);
+      let bounds = this.getLabelBounds(state);
+      let nextScale = this.getTextScale(state);
       this.resolveColor(state, 'color', mxConstants.STYLE_FONTCOLOR);
 
       if (forced || state.text.value != value || state.text.isWrapping != wrapping ||
@@ -853,7 +853,7 @@ class mxCellRenderer {
         state.text.overflow = overflow;
 
         // Preserves visible state
-        var vis = state.text.node.style.visibility;
+        let vis = state.text.node.style.visibility;
         this.redrawLabelShape(state.text);
         state.text.node.style.visibility = vis;
       }
@@ -872,7 +872,7 @@ class mxCellRenderer {
    */
   isTextShapeInvalid = (state, shape) => {
     function check(property, stylename, defaultValue) {
-      var result = false;
+      let result = false;
 
       // Workaround for spacing added to directional spacing
       if (stylename == 'spacingTop' || stylename == 'spacingRight' ||
@@ -940,17 +940,17 @@ class mxCellRenderer {
    * state - <mxCellState> whose label bounds should be returned.
    */
   getLabelBounds = (state) => {
-    var graph = state.view.graph;
-    var scale = state.view.scale;
-    var isEdge = graph.getModel().isEdge(state.cell);
-    var bounds = new mxRectangle(state.absoluteOffset.x, state.absoluteOffset.y);
+    let graph = state.view.graph;
+    let scale = state.view.scale;
+    let isEdge = graph.getModel().isEdge(state.cell);
+    let bounds = new mxRectangle(state.absoluteOffset.x, state.absoluteOffset.y);
 
     if (isEdge) {
-      var spacing = state.text.getSpacing();
+      let spacing = state.text.getSpacing();
       bounds.x += spacing.x * scale;
       bounds.y += spacing.y * scale;
 
-      var geo = graph.getCellGeometry(state.cell);
+      let geo = graph.getCellGeometry(state.cell);
 
       if (geo != null) {
         bounds.width = Math.max(0, geo.width * scale);
@@ -959,7 +959,7 @@ class mxCellRenderer {
     } else {
       // Inverts label position
       if (state.text.isPaintBoundsInverted()) {
-        var tmp = bounds.x;
+        let tmp = bounds.x;
         bounds.x = bounds.y;
         bounds.y = tmp;
       }
@@ -974,18 +974,18 @@ class mxCellRenderer {
 
     if (state.text.isPaintBoundsInverted()) {
       // Rotates around center of state
-      var t = (state.width - state.height) / 2;
+      let t = (state.width - state.height) / 2;
       bounds.x += t;
       bounds.y -= t;
-      var tmp = bounds.width;
+      let tmp = bounds.width;
       bounds.width = bounds.height;
       bounds.height = tmp;
     }
 
     // Shape can modify its label bounds
     if (state.shape != null) {
-      var hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
-      var vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+      let hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
+      let vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
 
       if (hpos == mxConstants.ALIGN_CENTER && vpos == mxConstants.ALIGN_MIDDLE) {
         bounds = state.shape.getLabelBounds(bounds);
@@ -993,7 +993,7 @@ class mxCellRenderer {
     }
 
     // Label width style overrides actual label width
-    var lw = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_WIDTH, null);
+    let lw = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_WIDTH, null);
 
     if (lw != null) {
       bounds.width = parseFloat(lw) * scale;
@@ -1022,29 +1022,29 @@ class mxCellRenderer {
     bounds.x -= state.text.margin.x * bounds.width;
 
     if (!this.legacySpacing || (state.style[mxConstants.STYLE_OVERFLOW] != 'fill' && state.style[mxConstants.STYLE_OVERFLOW] != 'width')) {
-      var s = state.view.scale;
-      var spacing = state.text.getSpacing();
+      let s = state.view.scale;
+      let spacing = state.text.getSpacing();
       bounds.x += spacing.x * s;
       bounds.y += spacing.y * s;
 
-      var hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
-      var vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
-      var lw = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_WIDTH, null);
+      let hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
+      let vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+      let lw = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_WIDTH, null);
 
       bounds.width = Math.max(0, bounds.width - ((hpos == mxConstants.ALIGN_CENTER && lw == null) ? (state.text.spacingLeft * s + state.text.spacingRight * s) : 0));
       bounds.height = Math.max(0, bounds.height - ((vpos == mxConstants.ALIGN_MIDDLE) ? (state.text.spacingTop * s + state.text.spacingBottom * s) : 0));
     }
 
-    var theta = state.text.getTextRotation();
+    let theta = state.text.getTextRotation();
 
     // Only needed if rotated around another center
     if (theta != 0 && state != null && state.view.graph.model.isVertex(state.cell)) {
-      var cx = state.getCenterX();
-      var cy = state.getCenterY();
+      let cx = state.getCenterX();
+      let cy = state.getCenterY();
 
       if (bounds.x != cx || bounds.y != cy) {
-        var rad = theta * (Math.PI / 180);
-        var pt = mxUtils.getRotatedPoint(new mxPoint(bounds.x, bounds.y),
+        let rad = theta * (Math.PI / 180);
+        let pt = mxUtils.getRotatedPoint(new mxPoint(bounds.x, bounds.y),
             Math.cos(rad), Math.sin(rad), new mxPoint(cx, cy));
 
         bounds.x = pt.x;
@@ -1066,20 +1066,20 @@ class mxCellRenderer {
     this.createCellOverlays(state);
 
     if (state.overlays != null) {
-      var rot = mxUtils.mod(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION, 0), 90);
-      var rad = mxUtils.toRadians(rot);
-      var cos = Math.cos(rad);
-      var sin = Math.sin(rad);
+      let rot = mxUtils.mod(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION, 0), 90);
+      let rad = mxUtils.toRadians(rot);
+      let cos = Math.cos(rad);
+      let sin = Math.sin(rad);
 
       state.overlays.visit((id, shape) => {
-        var bounds = shape.overlay.getBounds(state);
+        let bounds = shape.overlay.getBounds(state);
 
         if (!state.view.graph.getModel().isEdge(state.cell)) {
           if (state.shape != null && rot != 0) {
-            var cx = bounds.getCenterX();
-            var cy = bounds.getCenterY();
+            let cx = bounds.getCenterX();
+            let cy = bounds.getCenterY();
 
-            var point = mxUtils.getRotatedPoint(new mxPoint(cx, cy), cos, sin,
+            let point = mxUtils.getRotatedPoint(new mxPoint(cx, cy), cos, sin,
                 new mxPoint(state.getCenterX(), state.getCenterY()));
 
             cx = point.x;
@@ -1109,14 +1109,14 @@ class mxCellRenderer {
    * state - <mxCellState> whose control should be redrawn.
    */
   redrawControl = (state, forced) => {
-    var image = state.view.graph.getFoldingImage(state);
+    let image = state.view.graph.getFoldingImage(state);
 
     if (state.control != null && image != null) {
-      var bounds = this.getControlBounds(state, image.width, image.height);
-      var r = (this.legacyControlPosition) ?
+      let bounds = this.getControlBounds(state, image.width, image.height);
+      let r = (this.legacyControlPosition) ?
           mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION, 0) :
           state.shape.getTextRotation();
-      var s = state.view.scale;
+      let s = state.view.scale;
 
       if (forced || state.control.scale != s || !state.control.bounds.equals(bounds) ||
           state.control.rotation != r) {
@@ -1137,9 +1137,9 @@ class mxCellRenderer {
    */
   getControlBounds = (state, w, h) => {
     if (state.control != null) {
-      var s = state.view.scale;
-      var cx = state.getCenterX();
-      var cy = state.getCenterY();
+      let s = state.view.scale;
+      let cx = state.getCenterX();
+      let cy = state.getCenterY();
 
       if (!state.view.graph.getModel().isEdge(state.cell)) {
         cx = state.x + w * s;
@@ -1147,24 +1147,24 @@ class mxCellRenderer {
 
         if (state.shape != null) {
           // TODO: Factor out common code
-          var rot = state.shape.getShapeRotation();
+          let rot = state.shape.getShapeRotation();
 
           if (this.legacyControlPosition) {
             rot = mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION, 0);
           } else {
             if (state.shape.isPaintBoundsInverted()) {
-              var t = (state.width - state.height) / 2;
+              let t = (state.width - state.height) / 2;
               cx += t;
               cy -= t;
             }
           }
 
           if (rot != 0) {
-            var rad = mxUtils.toRadians(rot);
-            var cos = Math.cos(rad);
-            var sin = Math.sin(rad);
+            let rad = mxUtils.toRadians(rot);
+            let cos = Math.cos(rad);
+            let sin = Math.sin(rad);
 
-            var point = mxUtils.getRotatedPoint(new mxPoint(cx, cy), cos, sin,
+            let point = mxUtils.getRotatedPoint(new mxPoint(cx, cy), cos, sin,
                 new mxPoint(state.getCenterX(), state.getCenterY()));
             cx = point.x;
             cy = point.y;
@@ -1193,13 +1193,13 @@ class mxCellRenderer {
    * will not go into the <drawPane> (eg. HTML labels without foreignObjects).
    */
   insertStateAfter = (state, node, htmlNode) => {
-    var shapes = this.getShapesForState(state);
+    let shapes = this.getShapesForState(state);
 
-    for (var i = 0; i < shapes.length; i++) {
+    for (let i = 0; i < shapes.length; i++) {
       if (shapes[i] != null && shapes[i].node != null) {
-        var html = shapes[i].node.parentNode != state.view.getDrawPane() &&
+        let html = shapes[i].node.parentNode != state.view.getDrawPane() &&
             shapes[i].node.parentNode != state.view.getOverlayPane();
-        var temp = (html) ? htmlNode : node;
+        let temp = (html) ? htmlNode : node;
 
         if (temp != null && temp.nextSibling != shapes[i].node) {
           if (temp.nextSibling == null) {
@@ -1210,7 +1210,7 @@ class mxCellRenderer {
         } else if (temp == null) {
           // Special case: First HTML node should be first sibling after canvas
           if (shapes[i].node.parentNode == state.view.graph.container) {
-            var canvas = state.view.canvas;
+            let canvas = state.view.canvas;
 
             while (canvas != null && canvas.parentNode != state.view.graph.container) {
               canvas = canvas.parentNode;
@@ -1273,7 +1273,7 @@ class mxCellRenderer {
    * will not be called on the shape.
    */
   redraw = (state, force, rendering) => {
-    var shapeChanged = this.redrawShape(state, force, rendering);
+    let shapeChanged = this.redrawShape(state, force, rendering);
 
     if (state.shape != null && (rendering == null || rendering)) {
       this.redrawLabel(state, shapeChanged);
@@ -1292,8 +1292,8 @@ class mxCellRenderer {
    * state - <mxCellState> whose label should be redrawn.
    */
   redrawShape = (state, force, rendering) => {
-    var model = state.view.graph.model;
-    var shapeChanged = false;
+    let model = state.view.graph.model;
+    let shapeChanged = false;
 
     // Forces creation of new shape if shape style has changed
     if (state.shape != null && state.shape.style != null && state.style != null &&

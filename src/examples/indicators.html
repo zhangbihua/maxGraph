@@ -34,7 +34,7 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setConnectable(true);
 				new mxKeyHandler(graph);
 				
@@ -42,7 +42,7 @@
 				graph.vertexLabelsMovable = true;
 				
 				// Creates a style with an indicator
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				
 				style[mxConstants.STYLE_SHAPE] = 'label';
 				style[mxConstants.STYLE_VERTICAL_ALIGN] = 'bottom';
@@ -56,7 +56,7 @@
 				delete style[mxConstants.STYLE_FILLCOLOR]; // transparent
 				
 				// Creates a style with an indicator
-				var style = graph.getStylesheet().getDefaultEdgeStyle();
+				let style = graph.getStylesheet().getDefaultEdgeStyle();
 				
 				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
 				style[mxConstants.STYLE_ELBOW] = mxConstants.ELBOW_VERTICAL;
@@ -64,7 +64,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

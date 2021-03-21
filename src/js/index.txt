@@ -148,7 +148,7 @@ Images:
   prefetched using the following code:
   
   (code)
-  var image = new Image();
+  let image = new Image();
   image.src = url_to_image;
   (end)
 
@@ -236,7 +236,7 @@ Constructor:
   same codec is used to encode instances of mxGraph and MyGraph.
 
   (code)
-  var codec = mxCodecRegistry.getCodec(mxGraph);
+  let codec = mxCodecRegistry.getCodec(mxGraph);
   codec.template = new MyGraph();
   mxCodecRegistry.register(codec);
   (end)
@@ -249,9 +249,9 @@ Functions:
   (code)
   isCellSelectable = (cell)=>
   {
-    var selectable = isSelectable.apply(this, arguments);
+    let selectable = isSelectable.apply(this, arguments);
 
-    var geo = this.model.getGeometry(cell);
+    let geo = this.model.getGeometry(cell);
     return selectable && (geo == null || !geo.relative);
   }
   (end)
@@ -265,7 +265,7 @@ Functions:
   (code)
   isCellSelectable = (cell)=>
   {
-    var geo = this.model.getGeometry(cell);
+    let geo = this.model.getGeometry(cell);
     return selectable &&
         (geo == null ||
         !geo.relative);
@@ -282,7 +282,7 @@ Functions:
   (code)
   getXml = ()=>
   {
-    var enc = new mxCodec();
+    let enc = new mxCodec();
     return enc.encode(this.getModel());
   }
   (end)
@@ -312,5 +312,5 @@ Variables:
   container is a DOM node that acts as a container for the graph view:
 
   (code)
-  var graph = new MyGraph(container);
+  let graph = new MyGraph(container);
   (end)

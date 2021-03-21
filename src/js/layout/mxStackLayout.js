@@ -146,7 +146,7 @@ class mxStackLayout extends mxGraphLayout {
    * Example:
    *
    * (code)
-   * var layout = new mxStackLayout(graph, true);
+   * let layout = new mxStackLayout(graph, true);
    * layout.execute(graph.getDefaultParent());
    * (end)
    *
@@ -179,16 +179,16 @@ class mxStackLayout extends mxGraphLayout {
    * Implements <mxGraphLayout.moveCell>.
    */
   moveCell = (cell, x, y) => {
-    var model = this.graph.getModel();
-    var parent = model.getParent(cell);
-    var horizontal = this.isHorizontal();
+    let model = this.graph.getModel();
+    let parent = model.getParent(cell);
+    let horizontal = this.isHorizontal();
 
     if (cell != null && parent != null) {
-      var i = 0;
-      var last = 0;
-      var childCount = model.getChildCount(parent);
-      var value = (horizontal) ? x : y;
-      var pstate = this.graph.getView().getState(parent);
+      let i = 0;
+      let last = 0;
+      let childCount = model.getChildCount(parent);
+      let value = (horizontal) ? x : y;
+      let pstate = this.graph.getView().getState(parent);
 
       if (pstate != null) {
         value -= (horizontal) ? pstate.x : pstate.y;
@@ -197,13 +197,13 @@ class mxStackLayout extends mxGraphLayout {
       value /= this.graph.view.scale;
 
       for (i = 0; i < childCount; i++) {
-        var child = model.getChildAt(parent, i);
+        let child = model.getChildAt(parent, i);
 
         if (child != cell) {
-          var bounds = model.getGeometry(child);
+          let bounds = model.getGeometry(child);
 
           if (bounds != null) {
-            var tmp = (horizontal) ?
+            let tmp = (horizontal) ?
                 bounds.x + bounds.width / 2 :
                 bounds.y + bounds.height / 2;
 
@@ -217,7 +217,7 @@ class mxStackLayout extends mxGraphLayout {
       }
 
       // Changes child order in parent
-      var idx = parent.getIndex(cell);
+      let idx = parent.getIndex(cell);
       idx = Math.max(0, i - ((i > idx) ? 1 : 0));
 
       model.add(parent, cell, idx);
@@ -231,16 +231,16 @@ class mxStackLayout extends mxGraphLayout {
    * container if the parent is a layer or the root of the model.
    */
   getParentSize = (parent) => {
-    var model = this.graph.getModel();
-    var pgeo = model.getGeometry(parent);
+    let model = this.graph.getModel();
+    let pgeo = model.getGeometry(parent);
 
     // Handles special case where the parent is either a layer with no
     // geometry or the current root of the view in which case the size
     // of the graph's container will be used.
     if (this.graph.container != null && ((pgeo == null &&
         model.isLayer(parent)) || parent == this.graph.getView().currentRoot)) {
-      var width = this.graph.container.offsetWidth - 1;
-      var height = this.graph.container.offsetHeight - 1;
+      let width = this.graph.container.offsetWidth - 1;
+      let height = this.graph.container.offsetHeight - 1;
       pgeo = new mxRectangle(0, 0, width, height);
     }
 
@@ -253,12 +253,12 @@ class mxStackLayout extends mxGraphLayout {
    * Returns the cells to be layouted.
    */
   getLayoutCells = (parent) => {
-    var model = this.graph.getModel();
-    var childCount = model.getChildCount(parent);
-    var cells = [];
+    let model = this.graph.getModel();
+    let childCount = model.getChildCount(parent);
+    let cells = [];
 
-    for (var i = 0; i < childCount; i++) {
-      var child = model.getChildAt(parent, i);
+    for (let i = 0; i < childCount; i++) {
+      let child = model.getChildAt(parent, i);
 
       if (!this.isVertexIgnored(child) && this.isVertexMovable(child)) {
         cells.push(child);
@@ -289,7 +289,7 @@ class mxStackLayout extends mxGraphLayout {
       value = Math.max(value, this.gridSize);
 
       if (value / this.gridSize > 1) {
-        var mod = value % this.gridSize;
+        let mod = value % this.gridSize;
         value += mod > this.gridSize / 2 ? (this.gridSize - mod) : -mod;
       }
     }
@@ -307,10 +307,10 @@ class mxStackLayout extends mxGraphLayout {
    */
   execute = (parent) => {
     if (parent != null) {
-      var pgeo = this.getParentSize(parent);
-      var horizontal = this.isHorizontal();
-      var model = this.graph.getModel();
-      var fillValue = null;
+      let pgeo = this.getParentSize(parent);
+      let horizontal = this.isHorizontal();
+      let model = this.graph.getModel();
+      let fillValue = null;
 
       if (pgeo != null) {
         fillValue = (horizontal) ? pgeo.height - this.marginTop - this.marginBottom :
@@ -324,9 +324,9 @@ class mxStackLayout extends mxGraphLayout {
       // Handles swimlane start size
       if (this.graph.isSwimlane(parent)) {
         // Uses computed style to get latest
-        var style = this.graph.getCellStyle(parent);
-        var start = mxUtils.getNumber(style, mxConstants.STYLE_STARTSIZE, mxConstants.DEFAULT_STARTSIZE);
-        var horz = mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true) == 1;
+        let style = this.graph.getCellStyle(parent);
+        let start = mxUtils.getNumber(style, mxConstants.STYLE_STARTSIZE, mxConstants.DEFAULT_STARTSIZE);
+        let horz = mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true) == 1;
 
         if (pgeo != null) {
           if (horz) {
@@ -349,15 +349,15 @@ class mxStackLayout extends mxGraphLayout {
 
       model.beginUpdate();
       try {
-        var tmp = 0;
-        var last = null;
-        var lastValue = 0;
-        var lastChild = null;
-        var cells = this.getLayoutCells(parent);
+        let tmp = 0;
+        let last = null;
+        let lastValue = 0;
+        let lastChild = null;
+        let cells = this.getLayoutCells(parent);
 
-        for (var i = 0; i < cells.length; i++) {
-          var child = cells[i];
-          var geo = model.getGeometry(child);
+        for (let i = 0; i < cells.length; i++) {
+          let child = cells[i];
+          let geo = model.getGeometry(child);
 
           if (geo != null) {
             geo = geo.clone();
@@ -380,15 +380,15 @@ class mxStackLayout extends mxGraphLayout {
             }
 
             tmp = Math.max(tmp, (horizontal) ? geo.height : geo.width);
-            var sw = 0;
+            let sw = 0;
 
             if (!this.borderCollapse) {
-              var childStyle = this.graph.getCellStyle(child);
+              let childStyle = this.graph.getCellStyle(child);
               sw = mxUtils.getNumber(childStyle, mxConstants.STYLE_STROKEWIDTH, 1);
             }
 
             if (last != null) {
-              var temp = lastValue + this.spacing + Math.floor(sw / 2);
+              let temp = lastValue + this.spacing + Math.floor(sw / 2);
 
               if (horizontal) {
                 geo.x = this.snap(((this.allowGaps) ? Math.max(temp, geo.x) :
@@ -487,13 +487,13 @@ class mxStackLayout extends mxGraphLayout {
    * last - The last <mxGeometry>.
    */
   updateParentGeometry = (parent, pgeo, last) => {
-    var horizontal = this.isHorizontal();
-    var model = this.graph.getModel();
+    let horizontal = this.isHorizontal();
+    let model = this.graph.getModel();
 
     var pgeo2 = pgeo.clone();
 
     if (horizontal) {
-      var tmp = last.x + last.width + this.marginRight + this.border;
+      let tmp = last.x + last.width + this.marginRight + this.border;
 
       if (this.resizeParentMax) {
         pgeo2.width = Math.max(pgeo2.width, tmp);
@@ -501,7 +501,7 @@ class mxStackLayout extends mxGraphLayout {
         pgeo2.width = tmp;
       }
     } else {
-      var tmp = last.y + last.height + this.marginBottom + this.border;
+      let tmp = last.y + last.height + this.marginBottom + this.border;
 
       if (this.resizeParentMax) {
         pgeo2.height = Math.max(pgeo2.height, tmp);

@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-var mxObjectIdentity = {
+let mxObjectIdentity = {
   /**
    * Class: mxObjectIdentity
    *
@@ -38,7 +38,7 @@ var mxObjectIdentity = {
     if (obj != null) {
       if (obj[mxObjectIdentity.FIELD_NAME] == null) {
         if (typeof obj === 'object') {
-          var ctor = mxUtils.getFunctionName(obj.constructor);
+          let ctor = mxUtils.getFunctionName(obj.constructor);
           obj[mxObjectIdentity.FIELD_NAME] = ctor + '#' + mxObjectIdentity.counter++;
         } else if (typeof obj === 'function') {
           obj[mxObjectIdentity.FIELD_NAME] = 'Function#' + mxObjectIdentity.counter++;

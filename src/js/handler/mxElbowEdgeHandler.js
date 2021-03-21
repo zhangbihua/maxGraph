@@ -47,10 +47,10 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * Overrides <mxEdgeHandler.createBends> to create custom bends.
    */
   createBends = () => {
-    var bends = [];
+    let bends = [];
 
     // Source
-    var bend = this.createHandleShape(0);
+    let bend = this.createHandleShape(0);
     this.initBend(bend);
     bend.setCursor(mxConstants.CURSOR_TERMINAL_HANDLE);
     bends.push(bend);
@@ -81,7 +81,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * <mxGraph.flipEdge>.
    */
   createVirtualBend = (dblClickHandler) => {
-    var bend = this.createHandleShape();
+    let bend = this.createHandleShape();
     this.initBend(bend, dblClickHandler);
 
     bend.setCursor(this.getCursorForBend());
@@ -113,7 +113,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * Returns the tooltip for the given node.
    */
   getTooltipForNode = (node) => {
-    var tip = null;
+    let tip = null;
 
     if (this.bends != null && this.bends[1] != null && (node === this.bends[1].node ||
         node.parentNode === this.bends[1].node)) {
@@ -136,9 +136,9 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * gridEnabled - Boolean that specifies if the grid should be applied.
    */
   convertPoint = (point, gridEnabled) => {
-    var scale = this.graph.getView().getScale();
-    var tr = this.graph.getView().getTranslate();
-    var origin = this.state.origin;
+    let scale = this.graph.getView().getScale();
+    let tr = this.graph.getView().getTranslate();
+    let origin = this.state.origin;
 
     if (gridEnabled) {
       point.x = this.graph.snap(point.x);
@@ -162,9 +162,9 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * pe - <mxPoint> that represents the location of the last point.
    */
   redrawInnerBends = (p0, pe) => {
-    var g = this.graph.getModel().getGeometry(this.state.cell);
-    var pts = this.state.absolutePoints;
-    var pt = null;
+    let g = this.graph.getModel().getGeometry(this.state.cell);
+    let pts = this.state.absolutePoints;
+    let pt = null;
 
     // Keeps the virtual bend on the edge shape
     if (pts.length > 1) {
@@ -183,10 +183,10 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
 
     // Makes handle slightly bigger if the yellow  label handle
     // exists and intersects this green handle
-    var b = this.bends[1].bounds;
-    var w = b.width;
-    var h = b.height;
-    var bounds = new mxRectangle(Math.round(pt.x - w / 2), Math.round(pt.y - h / 2), w, h);
+    let b = this.bends[1].bounds;
+    let w = b.width;
+    let h = b.height;
+    let bounds = new mxRectangle(Math.round(pt.x - w / 2), Math.round(pt.y - h / 2), w, h);
 
     if (this.manageLabelHandle) {
       this.checkLabelHandle(bounds);

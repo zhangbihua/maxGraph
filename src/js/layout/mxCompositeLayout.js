@@ -30,9 +30,9 @@ class mxCompositeLayout extends mxGraphLayout {
    *
    * Example:
    * (code)
-   * var first = new mxFastOrganicLayout(graph);
-   * var second = new mxParallelEdgeLayout(graph);
-   * var layout = new mxCompositeLayout(graph, [first, second], first);
+   * let first = new mxFastOrganicLayout(graph);
+   * let second = new mxParallelEdgeLayout(graph);
+   * let layout = new mxCompositeLayout(graph, [first, second], first);
    * layout.execute(graph.getDefaultParent());
    * (end)
    *
@@ -75,11 +75,11 @@ class mxCompositeLayout extends mxGraphLayout {
    * single transaction.
    */
   execute = (parent) => {
-    var model = this.graph.getModel();
+    let model = this.graph.getModel();
 
     model.beginUpdate();
     try {
-      for (var i = 0; i < this.layouts.length; i++) {
+      for (let i = 0; i < this.layouts.length; i++) {
         this.layouts[i].execute.apply(this.layouts[i], arguments);
       }
     } finally {

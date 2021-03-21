@@ -51,9 +51,9 @@ class mxGraphSelectionModel extends mxEventSource {
    * (code)
    * graph.getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt)=>
    * {
-   *   var cells = evt.getProperty('added');
+   *   let cells = evt.getProperty('added');
    *
-   *   for (var i = 0; i < cells.length; i++)
+   *   for (let i = 0; i < cells.length; i++)
    *   {
    *     // Handle cells[i]...
    *   }
@@ -173,9 +173,9 @@ class mxGraphSelectionModel extends mxEventSource {
         cells = [this.getFirstSelectableCell(cells)];
       }
 
-      var tmp = [];
+      let tmp = [];
 
-      for (var i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i++) {
         if (this.graph.isCellSelectable(cells[i])) {
           tmp.push(cells[i]);
         }
@@ -192,7 +192,7 @@ class mxGraphSelectionModel extends mxEventSource {
    */
   getFirstSelectableCell = (cells) => {
     if (cells != null) {
-      for (var i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i++) {
         if (this.graph.isCellSelectable(cells[i])) {
           return cells[i];
         }
@@ -229,16 +229,16 @@ class mxGraphSelectionModel extends mxEventSource {
    */
   addCells = (cells) => {
     if (cells != null) {
-      var remove = null;
+      let remove = null;
 
       if (this.singleSelection) {
         remove = this.cells;
         cells = [this.getFirstSelectableCell(cells)];
       }
 
-      var tmp = [];
+      let tmp = [];
 
-      for (var i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i++) {
         if (!this.isSelected(cells[i]) &&
             this.graph.isCellSelectable(cells[i])) {
           tmp.push(cells[i]);
@@ -270,9 +270,9 @@ class mxGraphSelectionModel extends mxEventSource {
    */
   removeCells = (cells) => {
     if (cells != null) {
-      var tmp = [];
+      let tmp = [];
 
-      for (var i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i++) {
         if (this.isSelected(cells[i])) {
           tmp.push(cells[i]);
         }
@@ -299,9 +299,9 @@ class mxGraphSelectionModel extends mxEventSource {
         (removed != null &&
             removed.length > 0 &&
             removed[0] != null)) {
-      var change = new mxSelectionChange(this, added, removed);
+      let change = new mxSelectionChange(this, added, removed);
       change.execute();
-      var edit = new mxUndoableEdit(this, false);
+      let edit = new mxUndoableEdit(this, false);
       edit.add(change);
       this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
     }
@@ -336,7 +336,7 @@ class mxGraphSelectionModel extends mxEventSource {
    */
   cellRemoved = (cell) => {
     if (cell != null) {
-      var index = mxUtils.indexOf(this.cells, cell);
+      let index = mxUtils.indexOf(this.cells, cell);
 
       if (index >= 0) {
         this.cells.splice(index, 1);
@@ -371,18 +371,18 @@ class mxGraphSelectionModel extends mxEventSource {
         this.selectionModel.updatingSelectionResource;
 
     if (this.removed != null) {
-      for (var i = 0; i < this.removed.length; i++) {
+      for (let i = 0; i < this.removed.length; i++) {
         this.selectionModel.cellRemoved(this.removed[i]);
       }
     }
 
     if (this.added != null) {
-      for (var i = 0; i < this.added.length; i++) {
+      for (let i = 0; i < this.added.length; i++) {
         this.selectionModel.cellAdded(this.added[i]);
       }
     }
 
-    var tmp = this.added;
+    let tmp = this.added;
     this.added = this.removed;
     this.removed = tmp;
 

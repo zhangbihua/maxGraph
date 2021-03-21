@@ -30,14 +30,14 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 
 				// Defines the common part of all cell styles as a string-prefix
-				var prefix = 'shape=image;image=images/icons48/keys.png;';
+				let prefix = 'shape=image;image=images/icons48/keys.png;';
 								
 				// Adds cells to the model in a single step and set the vertex
 				// label positions using the label position styles. Vertical

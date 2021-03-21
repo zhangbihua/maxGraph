@@ -33,14 +33,14 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Disables basic selection and cell handling
 				graph.setEnabled(false);
 
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 				var v1, v2, e1;
 												
 				// Adds cells to the model in a single step
@@ -58,9 +58,9 @@
 				}
 					
 				// Function to switch the overlay every 5 secs
-				var f = function()
+				let f = function()
 				{
-					var overlays = graph.getCellOverlays(v1);
+					let overlays = graph.getCellOverlays(v1);
 					
 					if (overlays == null)
 					{

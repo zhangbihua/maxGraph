@@ -92,7 +92,7 @@ class mxChildChangeCodec extends mxObjectCodec {
       // Makes sure the original node isn't modified
       node = node.cloneNode(true);
 
-      var tmp = node.firstChild;
+      let tmp = node.firstChild;
       obj.child = dec.decodeCell(tmp, false);
 
       var tmp2 = tmp.nextSibling;
@@ -108,7 +108,7 @@ class mxChildChangeCodec extends mxObjectCodec {
           // of these cells contains the new parent, this would leave
           // to an inconsistent state on the model (ie. a parent
           // change without a call to parentForCellChanged).
-          var id = tmp.getAttribute('id');
+          let id = tmp.getAttribute('id');
 
           if (dec.lookup(id) == null) {
             dec.decodeCell(tmp);
@@ -119,7 +119,7 @@ class mxChildChangeCodec extends mxObjectCodec {
         tmp = tmp2;
       }
     } else {
-      var childRef = node.getAttribute('child');
+      let childRef = node.getAttribute('child');
       obj.child = dec.getObject(childRef);
     }
 

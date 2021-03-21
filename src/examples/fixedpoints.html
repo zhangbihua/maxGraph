@@ -42,22 +42,22 @@
 				// and getSourcePerimeterPoint should be overriden by setting sourceConstraint
 				// sourceConstraint to null in mouseMove and updating it and returning the
 				// nearest point (cp) in getSourcePerimeterPoint (see below)
-				var mxConnectionHandlerUpdateEdgeState = mxConnectionHandler.prototype.updateEdgeState;
+				let mxConnectionHandlerUpdateEdgeState = mxConnectionHandler.prototype.updateEdgeState;
 				mxConnectionHandler.prototype.updateEdgeState = function(pt, constraint)
 				{
 					if (pt != null && this.previous != null)
 					{
-				        var constraints = this.graph.getAllConnectionConstraints(this.previous);
-				        var nearestConstraint = null;
-				        var dist = null;
+				        let constraints = this.graph.getAllConnectionConstraints(this.previous);
+				        let nearestConstraint = null;
+				        let dist = null;
 				   
-				        for (var i = 0; i < constraints.length; i++)
+				        for (let i = 0; i < constraints.length; i++)
 				        {
-				            var cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
+				            let cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
 				           
 				            if (cp != null)
 				            {
-				                var tmp = (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
+				                let tmp = (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
 				           
 				                if (dist == null || tmp < dist)
 				                {
@@ -83,7 +83,7 @@
 				};
 
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setConnectable(true);
 
 				//graph.connectionHandler.connectImage = new mxImage('images/connector.gif', 16, 16);
@@ -121,7 +121,7 @@
 				// Connect preview
 				graph.connectionHandler.createEdgeState = function(me)
 				{
-					var edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle');
+					let edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle');
 					
 					return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
 				};
@@ -131,7 +131,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -159,7 +159,7 @@
 			// Use this code to snap the source point for new connections without a connect preview,
 			// ie. without an overridden graph.connectionHandler.createEdgeState
 			/*
-			var mxConnectionHandlerMouseMove = mxConnectionHandler.prototype.mouseMove;
+			let mxConnectionHandlerMouseMove = mxConnectionHandler.prototype.mouseMove;
 			mxConnectionHandler.prototype.mouseMove = function(sender, me)
 			{
 			    this.sourceConstraint = null;
@@ -167,25 +167,25 @@
 			    mxConnectionHandlerMouseMove.apply(this, arguments);
 			};
 
-			var mxConnectionHandlerGetSourcePerimeterPoint = mxConnectionHandler.prototype.getSourcePerimeterPoint;
+			let mxConnectionHandlerGetSourcePerimeterPoint = mxConnectionHandler.prototype.getSourcePerimeterPoint;
 			mxConnectionHandler.prototype.getSourcePerimeterPoint = function(state, pt, me)
 			{
-			    var result = null;
+			    let result = null;
 			   
 			    if (this.previous != null && pt != null)
 			    {
-			        var constraints = this.graph.getAllConnectionConstraints(this.previous);
-			        var nearestConstraint = null;
-			        var nearest = null;
-			        var dist = null;
+			        let constraints = this.graph.getAllConnectionConstraints(this.previous);
+			        let nearestConstraint = null;
+			        let nearest = null;
+			        let dist = null;
 			  
-			        for (var i = 0; i < constraints.length; i++)
+			        for (let i = 0; i < constraints.length; i++)
 			        {
-			            var cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
+			            let cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
 			          
 			            if (cp != null)
 			            {
-			                var tmp = (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
+			                let tmp = (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
 			          
 			                if (dist == null || tmp < dist)
 			                {

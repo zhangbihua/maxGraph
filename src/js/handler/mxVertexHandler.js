@@ -209,12 +209,12 @@ class mxVertexHandler {
 
     // Adds the sizer handles
     if (maxCells <= 0 || this.graph.getSelectionCount() < maxCells) {
-      var resizable = this.graph.isCellResizable(this.state.cell);
+      let resizable = this.graph.isCellResizable(this.state.cell);
       this.sizers = [];
 
       if (resizable || (this.graph.isLabelMovable(this.state.cell) &&
           this.state.width >= 2 && this.state.height >= 2)) {
-        var i = 0;
+        let i = 0;
 
         if (resizable) {
           if (!this.singleSizer) {
@@ -230,7 +230,7 @@ class mxVertexHandler {
           this.sizers.push(this.createSizer('se-resize', i++));
         }
 
-        var geo = this.graph.model.getGeometry(this.state.cell);
+        let geo = this.graph.model.getGeometry(this.state.cell);
 
         if (geo != null && !geo.relative && !this.graph.isSwimlane(this.state.cell) &&
             this.graph.isLabelMovable(this.state.cell)) {
@@ -305,14 +305,14 @@ class mxVertexHandler {
    * Initializes the shapes required for this vertex handler.
    */
   updateMinBounds = () => {
-    var children = this.graph.getChildCells(this.state.cell);
+    let children = this.graph.getChildCells(this.state.cell);
 
     if (children.length > 0) {
       this.minBounds = this.graph.view.getBounds(children);
 
       if (this.minBounds != null) {
-        var s = this.state.view.scale;
-        var t = this.state.view.translate;
+        let s = this.state.view.scale;
+        let t = this.state.view.translate;
 
         this.minBounds.x -= this.state.x;
         this.minBounds.y -= this.state.y;
@@ -351,7 +351,7 @@ class mxVertexHandler {
    * Creates the shape used to draw the selection border.
    */
   createSelectionShape = (bounds) => {
-    var shape = new mxRectangleShape(
+    let shape = new mxRectangleShape(
         mxRectangle.fromRectangle(bounds),
         null, this.getSelectionColor());
     shape.strokewidth = this.getSelectionStrokeWidth();
@@ -396,8 +396,8 @@ class mxVertexHandler {
   createSizer = (cursor, index, size, fillColor) => {
     size = size || mxConstants.HANDLE_SIZE;
 
-    var bounds = new mxRectangle(0, 0, size, size);
-    var sizer = this.createSizerShape(bounds, index, fillColor);
+    let bounds = new mxRectangle(0, 0, size, size);
+    let sizer = this.createSizerShape(bounds, index, fillColor);
 
     if (sizer.isHtmlAllowed() && this.state.text != null && this.state.text.node.parentNode == this.graph.container) {
       sizer.bounds.height -= 1;
@@ -443,7 +443,7 @@ class mxVertexHandler {
   createSizerShape = (bounds, index, fillColor) => {
     if (this.handleImage != null) {
       bounds = new mxRectangle(bounds.x, bounds.y, this.handleImage.width, this.handleImage.height);
-      var shape = new mxImageShape(bounds, this.handleImage.src);
+      let shape = new mxImageShape(bounds, this.handleImage.src);
 
       // Allows HTML rendering of the images
       shape.preserveImageAspect = false;
@@ -482,14 +482,14 @@ class mxVertexHandler {
    */
   getHandleForEvent = (me) => {
     // Connection highlight may consume events before they reach sizer handle
-    var tol = (!mxEvent.isMouseEvent(me.getEvent())) ? this.tolerance : 1;
-    var hit = (this.allowHandleBoundsCheck && tol > 0) ?
+    let tol = (!mxEvent.isMouseEvent(me.getEvent())) ? this.tolerance : 1;
+    let hit = (this.allowHandleBoundsCheck && tol > 0) ?
         new mxRectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol) : null;
 
-    var checkShape = (shape) => {
-      var st = (shape != null && shape.constructor != mxImageShape &&
+    let checkShape = (shape) => {
+      let st = (shape != null && shape.constructor != mxImageShape &&
           this.allowHandleBoundsCheck) ? shape.strokewidth + shape.svgStrokeTolerance : null;
-      var real = (st != null) ? new mxRectangle(me.getGraphX() - Math.floor(st / 2),
+      let real = (st != null) ? new mxRectangle(me.getGraphX() - Math.floor(st / 2),
           me.getGraphY() - Math.floor(st / 2), st, st) : hit;
 
       return shape != null && (me.isSource(shape) || (real != null && mxUtils.intersects(shape.bounds, real) &&
@@ -503,7 +503,7 @@ class mxVertexHandler {
     }
 
     if (this.sizers != null) {
-      for (var i = 0; i < this.sizers.length; i++) {
+      for (let i = 0; i < this.sizers.length; i++) {
         if (checkShape(this.sizers[i])) {
           return i;
         }
@@ -512,7 +512,7 @@ class mxVertexHandler {
 
     if (this.customHandles != null && this.isCustomHandleEvent(me)) {
       // Inverse loop order to match display order
-      for (var i = this.customHandles.length - 1; i >= 0; i--) {
+      for (let i = this.customHandles.length - 1; i >= 0; i--) {
         if (checkShape(this.customHandles[i].shape)) {
           // LATER: Return reference to active shape
           return mxEvent.CUSTOM_HANDLE - i;
@@ -542,7 +542,7 @@ class mxVertexHandler {
    */
   mouseDown = (sender, me) => {
     if (!me.isConsumed() && this.graph.isEnabled()) {
-      var handle = this.getHandleForEvent(me);
+      let handle = this.getHandleForEvent(me);
 
       if (handle != null) {
         this.start(me.getGraphX(), me.getGraphY(), handle);
@@ -580,8 +580,8 @@ class mxVertexHandler {
         this.ghostPreview = this.createGhostPreview();
       } else {
         // Saves reference to parent state
-        var model = this.state.view.graph.model;
-        var parent = model.getParent(this.state.cell);
+        let model = this.state.view.graph.model;
+        let parent = model.getParent(this.state.cell);
 
         if (this.state.view.currentRoot != parent && (model.isVertex(parent) || model.isEdge(parent))) {
           this.parentState = this.state.view.graph.view.getState(parent);
@@ -607,10 +607,10 @@ class mxVertexHandler {
 
         if (index == mxEvent.ROTATION_HANDLE) {
           // With the rotation handle in a corner, need the angle and distance
-          var pos = this.getRotationHandlePosition();
+          let pos = this.getRotationHandlePosition();
 
-          var dx = pos.x - this.state.getCenterX();
-          var dy = pos.y - this.state.getCenterY();
+          let dx = pos.x - this.state.getCenterX();
+          let dy = pos.y - this.state.getCenterY();
 
           this.startAngle = (dx != 0) ? Math.atan(dy / dx) * 180 / Math.PI + 90 : 0;
           this.startDist = Math.sqrt(dx * dx + dy * dy);
@@ -631,11 +631,11 @@ class mxVertexHandler {
           }
 
           // Gets the array of connected edge handlers for redrawing
-          var edges = this.graph.getEdges(this.state.cell);
+          let edges = this.graph.getEdges(this.state.cell);
           this.edgeHandlers = [];
 
-          for (var i = 0; i < edges.length; i++) {
-            var handler = this.graph.selectionCellsHandler.getHandler(edges[i]);
+          for (let i = 0; i < edges.length; i++) {
+            let handler = this.graph.selectionCellsHandler.getHandler(edges[i]);
 
             if (handler != null) {
               this.edgeHandlers.push(handler);
@@ -652,7 +652,7 @@ class mxVertexHandler {
    * Starts the handling of the mouse gesture.
    */
   createGhostPreview = () => {
-    var shape = this.graph.cellRenderer.createShape(this.state);
+    let shape = this.graph.cellRenderer.createShape(this.state);
     shape.init(this.graph.view.getOverlayPane());
     shape.scale = this.state.view.scale;
     shape.bounds = this.bounds;
@@ -670,13 +670,13 @@ class mxVertexHandler {
     this.handlesVisible = visible;
 
     if (this.sizers != null) {
-      for (var i = 0; i < this.sizers.length; i++) {
+      for (let i = 0; i < this.sizers.length; i++) {
         this.sizers[i].node.style.display = (visible) ? '' : 'none';
       }
     }
 
     if (this.customHandles != null) {
-      for (var i = 0; i < this.customHandles.length; i++) {
+      for (let i = 0; i < this.customHandles.length; i++) {
         this.customHandles[i].setVisible(visible);
       }
     }
@@ -815,16 +815,16 @@ class mxVertexHandler {
    * Moves the label.
    */
   moveLabel = (me) => {
-    var point = new mxPoint(me.getGraphX(), me.getGraphY());
-    var tr = this.graph.view.translate;
-    var scale = this.graph.view.scale;
+    let point = new mxPoint(me.getGraphX(), me.getGraphY());
+    let tr = this.graph.view.translate;
+    let scale = this.graph.view.scale;
 
     if (this.graph.isGridEnabledEvent(me.getEvent())) {
       point.x = (this.graph.snap(point.x / scale - tr.x) + tr.x) * scale;
       point.y = (this.graph.snap(point.y / scale - tr.y) + tr.y) * scale;
     }
 
-    var index = (this.rotationShape != null) ? this.sizers.length - 2 : this.sizers.length - 1;
+    let index = (this.rotationShape != null) ? this.sizers.length - 2 : this.sizers.length - 1;
     this.moveSizerTo(this.sizers[index], point.x, point.y);
   };
 
@@ -834,9 +834,9 @@ class mxVertexHandler {
    * Rotates the vertex.
    */
   rotateVertex = (me) => {
-    var point = new mxPoint(me.getGraphX(), me.getGraphY());
-    var dx = this.state.x + this.state.width / 2 - point.x;
-    var dy = this.state.y + this.state.height / 2 - point.y;
+    let point = new mxPoint(me.getGraphX(), me.getGraphY());
+    let dx = this.state.x + this.state.width / 2 - point.x;
+    let dy = this.state.y + this.state.height / 2 - point.y;
     this.currentAlpha = (dx != 0) ? Math.atan(dy / dx) * 180 / Math.PI + 90 : ((dy < 0) ? 180 : 0);
 
     if (dx > 0) {
@@ -848,9 +848,9 @@ class mxVertexHandler {
     // Rotation raster
     if (this.rotationRaster && this.graph.isGridEnabledEvent(me.getEvent())) {
       var raster;
-      var dx = point.x - this.state.getCenterX();
-      var dy = point.y - this.state.getCenterY();
-      var dist = Math.sqrt(dx * dx + dy * dy);
+      let dx = point.x - this.state.getCenterX();
+      let dy = point.y - this.state.getCenterY();
+      let dist = Math.sqrt(dx * dx + dy * dy);
 
       if (dist - this.startDist < 2) {
         raster = 15;
@@ -879,25 +879,25 @@ class mxVertexHandler {
    * Risizes the vertex.
    */
   resizeVertex = (me) => {
-    var ct = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
-    var alpha = mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
-    var point = new mxPoint(me.getGraphX(), me.getGraphY());
-    var tr = this.graph.view.translate;
-    var scale = this.graph.view.scale;
-    var cos = Math.cos(-alpha);
-    var sin = Math.sin(-alpha);
+    let ct = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
+    let alpha = mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
+    let point = new mxPoint(me.getGraphX(), me.getGraphY());
+    let tr = this.graph.view.translate;
+    let scale = this.graph.view.scale;
+    let cos = Math.cos(-alpha);
+    let sin = Math.sin(-alpha);
 
-    var dx = point.x - this.startX;
-    var dy = point.y - this.startY;
+    let dx = point.x - this.startX;
+    let dy = point.y - this.startY;
 
     // Rotates vector for mouse gesture
-    var tx = cos * dx - sin * dy;
-    var ty = sin * dx + cos * dy;
+    let tx = cos * dx - sin * dy;
+    let ty = sin * dx + cos * dy;
 
     dx = tx;
     dy = ty;
 
-    var geo = this.graph.getCellGeometry(this.state.cell);
+    let geo = this.graph.getCellGeometry(this.state.cell);
     this.unscaledBounds = this.union(geo, dx / scale, dy / scale, this.index,
         this.graph.isGridEnabledEvent(me.getEvent()), 1,
         new mxPoint(0, 0), this.isConstrainedEvent(me),
@@ -905,7 +905,7 @@ class mxVertexHandler {
 
     // Keeps vertex within maximum graph or parent bounds
     if (!geo.relative) {
-      var max = this.graph.getMaximumGraphBounds();
+      let max = this.graph.getMaximumGraphBounds();
 
       // Handles child cells
       if (max != null && this.parentState != null) {
@@ -916,10 +916,10 @@ class mxVertexHandler {
       }
 
       if (this.graph.isConstrainChild(this.state.cell)) {
-        var tmp = this.graph.getCellContainmentArea(this.state.cell);
+        let tmp = this.graph.getCellContainmentArea(this.state.cell);
 
         if (tmp != null) {
-          var overlap = this.graph.getOverlap(this.state.cell);
+          let overlap = this.graph.getOverlap(this.state.cell);
 
           if (overlap > 0) {
             tmp = mxRectangle.fromRectangle(tmp);
@@ -962,7 +962,7 @@ class mxVertexHandler {
       }
     }
 
-    var old = this.bounds;
+    let old = this.bounds;
     this.bounds = new mxRectangle(((this.parentState != null) ? this.parentState.x : tr.x * scale) +
         (this.unscaledBounds.x) * scale, ((this.parentState != null) ? this.parentState.y : tr.y * scale) +
         (this.unscaledBounds.y) * scale, this.unscaledBounds.width * scale, this.unscaledBounds.height * scale);
@@ -977,8 +977,8 @@ class mxVertexHandler {
 
     var c2 = new mxPoint(this.bounds.getCenterX(), this.bounds.getCenterY());
 
-    var dx = c2.x - ct.x;
-    var dy = c2.y - ct.y;
+    let dx = c2.x - ct.x;
+    let dy = c2.y - ct.y;
 
     var dx2 = cos * dx - sin * dy;
     var dy2 = sin * dx + cos * dy;
@@ -1030,11 +1030,11 @@ class mxVertexHandler {
    */
   updateLivePreview = (me) => {
     // TODO: Apply child offset to children in live preview
-    var scale = this.graph.view.scale;
-    var tr = this.graph.view.translate;
+    let scale = this.graph.view.scale;
+    let tr = this.graph.view.translate;
 
     // Saves current state
-    var tempState = this.state.clone();
+    let tempState = this.state.clone();
 
     // Temporarily changes size and origin
     this.state.x = this.bounds.x;
@@ -1044,16 +1044,16 @@ class mxVertexHandler {
     this.state.height = this.bounds.height;
 
     // Redraws cell and handles
-    var off = this.state.absoluteOffset;
+    let off = this.state.absoluteOffset;
     off = new mxPoint(off.x, off.y);
 
     // Required to store and reset absolute offset for updating label position
     this.state.absoluteOffset.x = 0;
     this.state.absoluteOffset.y = 0;
-    var geo = this.graph.getCellGeometry(this.state.cell);
+    let geo = this.graph.getCellGeometry(this.state.cell);
 
     if (geo != null) {
-      var offset = geo.offset || this.EMPTY_POINT;
+      let offset = geo.offset || this.EMPTY_POINT;
 
       if (offset != null && !geo.relative) {
         this.state.absoluteOffset.x = this.state.view.scale * offset.x;
@@ -1114,8 +1114,8 @@ class mxVertexHandler {
    */
   mouseUp = (sender, me) => {
     if (this.index != null && this.state != null) {
-      var point = new mxPoint(me.getGraphX(), me.getGraphY());
-      var index = this.index;
+      let point = new mxPoint(me.getGraphX(), me.getGraphY());
+      let index = this.index;
       this.index = null;
 
       if (this.ghostPreview == null) {
@@ -1129,7 +1129,7 @@ class mxVertexHandler {
         if (index <= mxEvent.CUSTOM_HANDLE) {
           if (this.customHandles != null) {
             // Creates style before changing cell state
-            var style = this.state.view.graph.getCellStyle(this.state.cell);
+            let style = this.state.view.graph.getCellStyle(this.state.cell);
 
             this.customHandles[mxEvent.CUSTOM_HANDLE - index].active = false;
             this.customHandles[mxEvent.CUSTOM_HANDLE - index].execute(me);
@@ -1144,7 +1144,7 @@ class mxVertexHandler {
           }
         } else if (index == mxEvent.ROTATION_HANDLE) {
           if (this.currentAlpha != null) {
-            var delta = this.currentAlpha - (this.state.style[mxConstants.STYLE_ROTATION] || 0);
+            let delta = this.currentAlpha - (this.state.style[mxConstants.STYLE_ROTATION] || 0);
 
             if (delta != 0) {
               this.rotateCell(this.state.cell, delta);
@@ -1153,23 +1153,23 @@ class mxVertexHandler {
             this.rotateClick();
           }
         } else {
-          var gridEnabled = this.graph.isGridEnabledEvent(me.getEvent());
-          var alpha = mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
-          var cos = Math.cos(-alpha);
-          var sin = Math.sin(-alpha);
+          let gridEnabled = this.graph.isGridEnabledEvent(me.getEvent());
+          let alpha = mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
+          let cos = Math.cos(-alpha);
+          let sin = Math.sin(-alpha);
 
-          var dx = point.x - this.startX;
-          var dy = point.y - this.startY;
+          let dx = point.x - this.startX;
+          let dy = point.y - this.startY;
 
           // Rotates vector for mouse gesture
-          var tx = cos * dx - sin * dy;
-          var ty = sin * dx + cos * dy;
+          let tx = cos * dx - sin * dy;
+          let ty = sin * dx + cos * dy;
 
           dx = tx;
           dy = ty;
 
-          var s = this.graph.view.scale;
-          var recurse = this.isRecursiveResize(this.state, me);
+          let s = this.graph.view.scale;
+          let recurse = this.isRecursiveResize(this.state, me);
           this.resizeCell(this.state.cell, this.roundLength(dx / s), this.roundLength(dy / s),
               index, gridEnabled, this.isConstrainedEvent(me), recurse);
         }
@@ -1220,19 +1220,19 @@ class mxVertexHandler {
    */
   rotateCell = (cell, angle, parent) => {
     if (angle != 0) {
-      var model = this.graph.getModel();
+      let model = this.graph.getModel();
 
       if (model.isVertex(cell) || model.isEdge(cell)) {
         if (!model.isEdge(cell)) {
-          var style = this.graph.getCurrentCellStyle(cell);
-          var total = (style[mxConstants.STYLE_ROTATION] || 0) + angle;
+          let style = this.graph.getCurrentCellStyle(cell);
+          let total = (style[mxConstants.STYLE_ROTATION] || 0) + angle;
           this.graph.setCellStyles(mxConstants.STYLE_ROTATION, total, [cell]);
         }
 
-        var geo = this.graph.getCellGeometry(cell);
+        let geo = this.graph.getCellGeometry(cell);
 
         if (geo != null) {
-          var pgeo = this.graph.getCellGeometry(parent);
+          let pgeo = this.graph.getCellGeometry(parent);
 
           if (pgeo != null && !model.isEdge(parent)) {
             geo = geo.clone();
@@ -1242,9 +1242,9 @@ class mxVertexHandler {
 
           if ((model.isVertex(cell) && !geo.relative) || model.isEdge(cell)) {
             // Recursive rotation
-            var childCount = model.getChildCount(cell);
+            let childCount = model.getChildCount(cell);
 
-            for (var i = 0; i < childCount; i++) {
+            for (let i = 0; i < childCount; i++) {
               this.rotateCell(model.getChildAt(cell, i), angle, cell);
             }
           }
@@ -1280,7 +1280,7 @@ class mxVertexHandler {
     }
 
     if (this.livePreviewActive && this.sizers != null) {
-      for (var i = 0; i < this.sizers.length; i++) {
+      for (let i = 0; i < this.sizers.length; i++) {
         if (this.sizers[i] != null) {
           this.sizers[i].node.style.display = '';
         }
@@ -1293,7 +1293,7 @@ class mxVertexHandler {
     }
 
     if (this.customHandles != null) {
-      for (var i = 0; i < this.customHandles.length; i++) {
+      for (let i = 0; i < this.customHandles.length; i++) {
         if (this.customHandles[i].active) {
           this.customHandles[i].active = false;
           this.customHandles[i].reset();
@@ -1327,15 +1327,15 @@ class mxVertexHandler {
    * in the graph using <mxGraph.resizeCell>.
    */
   resizeCell = (cell, dx, dy, index, gridEnabled, constrained, recurse) => {
-    var geo = this.graph.model.getGeometry(cell);
+    let geo = this.graph.model.getGeometry(cell);
 
     if (geo != null) {
       if (index == mxEvent.LABEL_HANDLE) {
-        var alpha = -mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
-        var cos = Math.cos(alpha);
-        var sin = Math.sin(alpha);
-        var scale = this.graph.view.scale;
-        var pt = mxUtils.getRotatedPoint(new mxPoint(
+        let alpha = -mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
+        let cos = Math.cos(alpha);
+        let sin = Math.sin(alpha);
+        let scale = this.graph.view.scale;
+        let pt = mxUtils.getRotatedPoint(new mxPoint(
             Math.round((this.labelShape.bounds.getCenterX() - this.startX) / scale),
             Math.round((this.labelShape.bounds.getCenterY() - this.startY) / scale)),
             cos, sin);
@@ -1351,7 +1351,7 @@ class mxVertexHandler {
 
         this.graph.model.setGeometry(cell, geo);
       } else if (this.unscaledBounds != null) {
-        var scale = this.graph.view.scale;
+        let scale = this.graph.view.scale;
 
         if (this.childOffsetX != 0 || this.childOffsetY != 0) {
           this.moveChildren(cell, Math.round(this.childOffsetX / scale), Math.round(this.childOffsetY / scale));
@@ -1368,12 +1368,12 @@ class mxVertexHandler {
    * Moves the children of the given cell by the given vector.
    */
   moveChildren = (cell, dx, dy) => {
-    var model = this.graph.getModel();
-    var childCount = model.getChildCount(cell);
+    let model = this.graph.getModel();
+    let childCount = model.getChildCount(cell);
 
-    for (var i = 0; i < childCount; i++) {
-      var child = model.getChildAt(cell, i);
-      var geo = this.graph.getCellGeometry(child);
+    for (let i = 0; i < childCount; i++) {
+      let child = model.getChildAt(cell, i);
+      let geo = this.graph.getCellGeometry(child);
 
       if (geo != null) {
         geo = geo.clone();
@@ -1392,10 +1392,10 @@ class mxVertexHandler {
    * the following code can be used.
    *
    * (code)
-   * var vertexHandlerUnion = union;
+   * let vertexHandlerUnion = union;
    * union = (bounds, dx, dy, index, gridEnabled, scale, tr, constrained)=>
    * {
-   *   var result = vertexHandlerUnion.apply(this, arguments);
+   *   let result = vertexHandlerUnion.apply(this, arguments);
    *
    *   result.width = Math.max(result.width, mxUtils.getNumber(this.state.style, 'minWidth', 0));
    *   result.height = Math.max(result.height, mxUtils.getNumber(this.state.style, 'minHeight', 0));
@@ -1414,18 +1414,18 @@ class mxVertexHandler {
    * changed, the following can be used.
    *
    * (code)
-   * var mxVertexHandlerUnion = union;
+   * let mxVertexHandlerUnion = union;
    * union = (bounds, dx, dy, index, gridEnabled, scale, tr, constrained)=>
    * {
-   *   var result = mxVertexHandlerUnion.apply(this, arguments);
-   *   var s = this.state;
+   *   let result = mxVertexHandlerUnion.apply(this, arguments);
+   *   let s = this.state;
    *
    *   if (this.graph.isHtmlLabel(s.cell) && (index == 3 || index == 4) &&
    *       s.text != null && s.style[mxConstants.STYLE_WHITE_SPACE] == 'wrap')
    *   {
-   *     var label = this.graph.getLabel(s.cell);
-   *     var fontSize = mxUtils.getNumber(s.style, mxConstants.STYLE_FONTSIZE, mxConstants.DEFAULT_FONTSIZE);
-   *     var ww = result.width / s.view.scale - s.text.spacingRight - s.text.spacingLeft
+   *     let label = this.graph.getLabel(s.cell);
+   *     let fontSize = mxUtils.getNumber(s.style, mxConstants.STYLE_FONTSIZE, mxConstants.DEFAULT_FONTSIZE);
+   *     let ww = result.width / s.view.scale - s.text.spacingRight - s.text.spacingLeft
    *
    *     result.height = mxUtils.getSizeForString(label, fontSize, s.style[mxConstants.STYLE_FONTFAMILY], ww).height;
    *   }
@@ -1438,28 +1438,28 @@ class mxVertexHandler {
     gridEnabled = (gridEnabled != null) ? gridEnabled && this.graph.gridEnabled : this.graph.gridEnabled;
 
     if (this.singleSizer) {
-      var x = bounds.x + bounds.width + dx;
-      var y = bounds.y + bounds.height + dy;
+      let x = bounds.x + bounds.width + dx;
+      let y = bounds.y + bounds.height + dy;
 
       if (gridEnabled) {
         x = this.graph.snap(x / scale) * scale;
         y = this.graph.snap(y / scale) * scale;
       }
 
-      var rect = new mxRectangle(bounds.x, bounds.y, 0, 0);
+      let rect = new mxRectangle(bounds.x, bounds.y, 0, 0);
       rect.add(new mxRectangle(x, y, 0, 0));
 
       return rect;
     } else {
       var w0 = bounds.width;
       var h0 = bounds.height;
-      var left = bounds.x - tr.x * scale;
-      var right = left + w0;
-      var top = bounds.y - tr.y * scale;
-      var bottom = top + h0;
+      let left = bounds.x - tr.x * scale;
+      let right = left + w0;
+      let top = bounds.y - tr.y * scale;
+      let bottom = top + h0;
 
-      var cx = left + w0 / 2;
-      var cy = top + h0 / 2;
+      let cx = left + w0 / 2;
+      let cy = top + h0 / 2;
 
       if (index > 4 /* Bottom Row */) {
         bottom = bottom + dy;
@@ -1497,14 +1497,14 @@ class mxVertexHandler {
         }
       }
 
-      var width = right - left;
-      var height = bottom - top;
+      let width = right - left;
+      let height = bottom - top;
 
       if (constrained) {
-        var geo = this.graph.getCellGeometry(this.state.cell);
+        let geo = this.graph.getCellGeometry(this.state.cell);
 
         if (geo != null) {
-          var aspect = geo.width / geo.height;
+          let aspect = geo.width / geo.height;
 
           if (index == 1 || index == 2 || index == 7 || index == 6) {
             width = height * aspect;
@@ -1523,8 +1523,8 @@ class mxVertexHandler {
         width += (width - w0);
         height += (height - h0);
 
-        var cdx = cx - (left + width / 2);
-        var cdy = cy - (top + height / 2);
+        let cdx = cx - (left + width / 2);
+        let cdy = cy - (top + height / 2);
 
         left += cdx;
         top += cdy;
@@ -1544,7 +1544,7 @@ class mxVertexHandler {
         height = Math.abs(height);
       }
 
-      var result = new mxRectangle(left + tr.x * scale, top + tr.y * scale, width, height);
+      let result = new mxRectangle(left + tr.x * scale, top + tr.y * scale, width, height);
 
       if (this.minBounds != null) {
         result.width = Math.max(result.width, this.minBounds.x * scale + this.minBounds.width * scale +
@@ -1578,8 +1578,8 @@ class mxVertexHandler {
    */
   getHandlePadding = () => {
     // KNOWN: Tolerance depends on event type (eg. 0 for mouse events)
-    var result = new mxPoint(0, 0);
-    var tol = this.tolerance;
+    let result = new mxPoint(0, 0);
+    let tol = this.tolerance;
 
     if (this.sizers != null && this.sizers.length > 0 && this.sizers[0] != null &&
         (this.bounds.width < 2 * this.sizers[0].bounds.width + 2 * tol ||
@@ -1621,14 +1621,14 @@ class mxVertexHandler {
    * (end)
    */
   redrawHandles = () => {
-    var s = this.getSizerBounds();
-    var tol = this.tolerance;
+    let s = this.getSizerBounds();
+    let tol = this.tolerance;
     this.horizontalOffset = 0;
     this.verticalOffset = 0;
 
     if (this.customHandles != null) {
-      for (var i = 0; i < this.customHandles.length; i++) {
-        var temp = this.customHandles[i].shape.node.style.display;
+      for (let i = 0; i < this.customHandles.length; i++) {
+        let temp = this.customHandles[i].shape.node.style.display;
         this.customHandles[i].redraw();
         this.customHandles[i].shape.node.style.display = temp;
 
@@ -1642,7 +1642,7 @@ class mxVertexHandler {
     if (this.sizers != null && this.sizers.length > 0 && this.sizers[0] != null) {
       if (this.index == null && this.manageSizers && this.sizers.length >= 8) {
         // KNOWN: Tolerance depends on event type (eg. 0 for mouse events)
-        var padding = this.getHandlePadding();
+        let padding = this.getHandlePadding();
         this.horizontalOffset = padding.x;
         this.verticalOffset = padding.y;
 
@@ -1671,26 +1671,26 @@ class mxVertexHandler {
         }
       }
 
-      var r = s.x + s.width;
-      var b = s.y + s.height;
+      let r = s.x + s.width;
+      let b = s.y + s.height;
 
       if (this.singleSizer) {
         this.moveSizerTo(this.sizers[0], r, b);
       } else {
-        var cx = s.x + s.width / 2;
-        var cy = s.y + s.height / 2;
+        let cx = s.x + s.width / 2;
+        let cy = s.y + s.height / 2;
 
         if (this.sizers.length >= 8) {
-          var crs = ['nw-resize', 'n-resize', 'ne-resize', 'e-resize', 'se-resize', 's-resize', 'sw-resize', 'w-resize'];
+          let crs = ['nw-resize', 'n-resize', 'ne-resize', 'e-resize', 'se-resize', 's-resize', 'sw-resize', 'w-resize'];
 
-          var alpha = mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
-          var cos = Math.cos(alpha);
-          var sin = Math.sin(alpha);
+          let alpha = mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
+          let cos = Math.cos(alpha);
+          let sin = Math.sin(alpha);
 
-          var da = Math.round(alpha * 4 / Math.PI);
+          let da = Math.round(alpha * 4 / Math.PI);
 
-          var ct = new mxPoint(s.getCenterX(), s.getCenterY());
-          var pt = mxUtils.getRotatedPoint(new mxPoint(s.x, s.y), cos, sin, ct);
+          let ct = new mxPoint(s.getCenterX(), s.getCenterY());
+          let pt = mxUtils.getRotatedPoint(new mxPoint(s.x, s.y), cos, sin, ct);
 
           this.moveSizerTo(this.sizers[0], pt.x, pt.y);
           this.sizers[0].setCursor(crs[mxUtils.mod(0 + da, crs.length)]);
@@ -1757,12 +1757,12 @@ class mxVertexHandler {
     }
 
     if (this.rotationShape != null) {
-      var alpha = mxUtils.toRadians((this.currentAlpha != null) ? this.currentAlpha : this.state.style[mxConstants.STYLE_ROTATION] || '0');
-      var cos = Math.cos(alpha);
-      var sin = Math.sin(alpha);
+      let alpha = mxUtils.toRadians((this.currentAlpha != null) ? this.currentAlpha : this.state.style[mxConstants.STYLE_ROTATION] || '0');
+      let cos = Math.cos(alpha);
+      let sin = Math.sin(alpha);
 
-      var ct = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
-      var pt = mxUtils.getRotatedPoint(this.getRotationHandlePosition(), cos, sin, ct);
+      let ct = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
+      let pt = mxUtils.getRotatedPoint(this.getRotationHandlePosition(), cos, sin, ct);
 
       if (this.rotationShape.node != null) {
         this.moveSizerTo(this.rotationShape, pt.x, pt.y);
@@ -1778,7 +1778,7 @@ class mxVertexHandler {
     }
 
     if (this.edgeHandlers != null) {
-      for (var i = 0; i < this.edgeHandlers.length; i++) {
+      for (let i = 0; i < this.edgeHandlers.length; i++) {
         this.edgeHandlers[i].redraw();
       }
     }
@@ -1819,13 +1819,13 @@ class mxVertexHandler {
    */
   updateParentHighlight = () => {
     if (!this.isDestroyed()) {
-      var visible = this.isParentHighlightVisible();
-      var parent = this.graph.model.getParent(this.state.cell);
-      var pstate = this.graph.view.getState(parent);
+      let visible = this.isParentHighlightVisible();
+      let parent = this.graph.model.getParent(this.state.cell);
+      let pstate = this.graph.view.getState(parent);
 
       if (this.parentHighlight != null) {
         if (this.graph.model.isVertex(parent) && visible) {
-          var b = this.parentHighlight.bounds;
+          let b = this.parentHighlight.bounds;
 
           if (pstate != null && (b.x != pstate.x || b.y != pstate.y ||
               b.width != pstate.width || b.height != pstate.height)) {
@@ -1916,8 +1916,8 @@ class mxVertexHandler {
     }
 
     if (this.parentHighlight != null) {
-      var parent = this.graph.model.getParent(this.state.cell);
-      var pstate = this.graph.view.getState(parent);
+      let parent = this.graph.model.getParent(this.state.cell);
+      let pstate = this.graph.view.getState(parent);
 
       if (pstate != null && pstate.parentHighlight == this.parentHighlight) {
         pstate.parentHighlight = null;
@@ -1941,7 +1941,7 @@ class mxVertexHandler {
     this.removeHint();
 
     if (this.sizers != null) {
-      for (var i = 0; i < this.sizers.length; i++) {
+      for (let i = 0; i < this.sizers.length; i++) {
         this.sizers[i].destroy();
       }
 
@@ -1949,7 +1949,7 @@ class mxVertexHandler {
     }
 
     if (this.customHandles != null) {
-      for (var i = 0; i < this.customHandles.length; i++) {
+      for (let i = 0; i < this.customHandles.length; i++) {
         this.customHandles[i].destroy();
       }
 

@@ -26,7 +26,7 @@
 			// Replaces the port image
 			mxConstraintHandler.prototype.pointImage = new mxImage('images/dot.gif', 10, 10);
 			
-			var graph = new mxGraph(container);
+			let graph = new mxGraph(container);
 			graph.setConnectable(true);
 			
 			// Disables automatic handling of ports. This disables the reset of the
@@ -39,10 +39,10 @@
 			
 			// Gets the default parent for inserting new cells. This
 			// is normally the first child of the root (ie. layer 0).
-			var parent = graph.getDefaultParent();
+			let parent = graph.getDefaultParent();
 
 			// Ports are equal for all shapes...
-			var ports = new Array();
+			let ports = new Array();
 			
 			// NOTE: Constraint is used later for orthogonal edge routing (currently ignored)
 			ports['w'] = {x: 0, y: 0.5, perimeter: true, constraint: 'west'};
@@ -111,14 +111,14 @@
 				{
 					if (terminal.shape != null)
 					{
-						var ports = terminal.shape.getPorts();
-						var cstrs = new Array();
+						let ports = terminal.shape.getPorts();
+						let cstrs = new Array();
 						
 						for (var id in ports)
 						{
-							var port = ports[id];
+							let port = ports[id];
 							
-							var cstr = new mxConnectionConstraint(new mxPoint(port.x, port.y), port.perimeter);
+							let cstr = new mxConnectionConstraint(new mxPoint(port.x, port.y), port.perimeter);
 							cstr.id = id;
 							cstrs.push(cstr);
 						}
@@ -135,7 +135,7 @@
 			{
 				if (constraint != null)
 				{
-					var key = (source) ? mxConstants.STYLE_SOURCE_PORT : mxConstants.STYLE_TARGET_PORT;
+					let key = (source) ? mxConstants.STYLE_SOURCE_PORT : mxConstants.STYLE_TARGET_PORT;
 					
 					if (constraint == null || constraint.id == null)
 					{
@@ -151,12 +151,12 @@
 			// Returns the port for the given connection
 			graph.getConnectionConstraint = function(edge, terminal, source)
 			{
-				var key = (source) ? mxConstants.STYLE_SOURCE_PORT : mxConstants.STYLE_TARGET_PORT;
-				var id = edge.style[key];
+				let key = (source) ? mxConstants.STYLE_SOURCE_PORT : mxConstants.STYLE_TARGET_PORT;
+				let id = edge.style[key];
 				
 				if (id != null)
 				{
-					var c =  new mxConnectionConstraint(null, null);
+					let c =  new mxConnectionConstraint(null, null);
 					c.id = id;
 					
 					return c;
@@ -171,7 +171,7 @@
 			{
 				if (constraint.id != null && vertex != null && vertex.shape != null)
 				{
-					var port = vertex.shape.getPorts()[constraint.id];
+					let port = vertex.shape.getPorts()[constraint.id];
 					
 					if (port != null)
 					{
@@ -203,13 +203,13 @@
 			// Comming soon... Integration with orthogonal edge style
 			// Sets default edge style to use port constraints (needs to be moved up when uncommented)
 			//graph.getStylesheet().getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
-			/*var mxUtilsGetPortConstraints = mxUtils.getPortConstraints;
+			/*let mxUtilsGetPortConstraints = mxUtils.getPortConstraints;
 			mxUtils.getPortConstraints = function(terminal, edge, source, defaultValue)
 			{
-				var key = (source) ? mxConstants.STYLE_SOURCE_PORT : mxConstants.STYLE_TARGET_PORT;
-				var id = edge.style[key];
+				let key = (source) ? mxConstants.STYLE_SOURCE_PORT : mxConstants.STYLE_TARGET_PORT;
+				let id = edge.style[key];
 				
-				var port = terminal.shape.getPorts()[id];
+				let port = terminal.shape.getPorts()[id];
 				
 				// TODO: Add support for rotation, direction
 				if (port != null)
@@ -222,7 +222,7 @@
 			// Connect preview
 			graph.connectionHandler.createEdgeState = function(me)
 			{
-				var edge = graph.createEdge(null, null, null, null, null);
+				let edge = graph.createEdge(null, null, null, null, null);
 				
 				return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
 			};

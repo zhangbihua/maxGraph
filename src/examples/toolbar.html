@@ -37,7 +37,7 @@
 			else
 			{
 				// Creates the div for the toolbar
-				var tbContainer = document.createElement('div');
+				let tbContainer = document.createElement('div');
 				tbContainer.style.position = 'absolute';
 				tbContainer.style.overflow = 'hidden';
 				tbContainer.style.padding = '2px';
@@ -49,7 +49,7 @@
 				document.body.appendChild(tbContainer);
 			
 				// Creates new toolbar without event processing
-				var toolbar = new mxToolbar(tbContainer);
+				let toolbar = new mxToolbar(tbContainer);
 				toolbar.enabled = false
 				
 				// Creates the div for the graph
@@ -66,14 +66,14 @@
 
 				// Creates the model and the graph inside the container
 				// using the fastest rendering available on the browser
-				var model = new mxGraphModel();
-				var graph = new mxGraph(container, model);
+				let model = new mxGraphModel();
+				let graph = new mxGraph(container, model);
 				graph.dropEnabled = true;
 				
 				// Matches DnD inside the graph
 				mxDragSource.prototype.getDropTarget = function(graph, x, y)
 				{
-					var cell = graph.getCellAt(x, y);
+					let cell = graph.getCellAt(x, y);
 					
 					if (!graph.isValidDropTarget(cell))
 					{
@@ -88,12 +88,12 @@
 				graph.setMultigraph(false);
 
 				// Stops editing on enter or escape keypress
-				var keyHandler = new mxKeyHandler(graph);
-				var rubberband = new mxRubberband(graph);
+				let keyHandler = new mxKeyHandler(graph);
+				let rubberband = new mxRubberband(graph);
 				
-				var addVertex = function(icon, w, h, style)
+				let addVertex = function(icon, w, h, style)
 				{
-					var vertex = new mxCell(null, new mxGeometry(0, 0, w, h), style);
+					let vertex = new mxCell(null, new mxGeometry(0, 0, w, h), style);
 					vertex.setVertex(true);
 				
 					addToolbarItem(graph, toolbar, vertex, icon);
@@ -109,30 +109,30 @@
 				addVertex('editors/images/actor.gif', 30, 40, 'shape=actor');
 				toolbar.addLine();
 				
-				var button = mxUtils.button('Create toolbar entry from selection', function(evt)
+				let button = mxUtils.button('Create toolbar entry from selection', function(evt)
 				{
 					if (!graph.isSelectionEmpty())
 					{
 						// Creates a copy of the selection array to preserve its state
-						var cells = graph.getSelectionCells();
-						var bounds = graph.getView().getBounds(cells);
+						let cells = graph.getSelectionCells();
+						let bounds = graph.getView().getBounds(cells);
 						
 						// Function that is executed when the image is dropped on
 						// the graph. The cell argument points to the cell under
 						// the mousepointer if there is one.
-						var funct = function(graph, evt, cell)
+						let funct = function(graph, evt, cell)
 						{
 							graph.stopEditing(false);
 			
-							var pt = graph.getPointForEvent(evt);
-							var dx = pt.x - bounds.x;
-							var dy = pt.y - bounds.y;
+							let pt = graph.getPointForEvent(evt);
+							let dx = pt.x - bounds.x;
+							let dy = pt.y - bounds.y;
 							
 							graph.setSelectionCells(graph.importCells(cells, dx, dy, cell));
 						}
 			
 						// Creates the image which is used as the drag icon (preview)
-						var img = toolbar.addMode(null, 'editors/images/outline.gif', funct);
+						let img = toolbar.addMode(null, 'editors/images/outline.gif', funct);
 						mxUtils.makeDraggable(img, graph, funct);
 					}
 				});
@@ -150,12 +150,12 @@
 			// Function that is executed when the image is dropped on
 			// the graph. The cell argument points to the cell under
 			// the mousepointer if there is one.
-			var funct = function(graph, evt, cell)
+			let funct = function(graph, evt, cell)
 			{
 				graph.stopEditing(false);
 
-				var pt = graph.getPointForEvent(evt);
-				var vertex = graph.getModel().cloneCell(prototype);
+				let pt = graph.getPointForEvent(evt);
+				let vertex = graph.getModel().cloneCell(prototype);
 				vertex.geometry.x = pt.x;
 				vertex.geometry.y = pt.y;
 				
@@ -163,7 +163,7 @@
 			}
 
 			// Creates the image which is used as the drag icon (preview)
-			var img = toolbar.addMode(null, image, funct);
+			let img = toolbar.addMode(null, image, funct);
 			mxUtils.makeDraggable(img, graph, funct);
 		}
 

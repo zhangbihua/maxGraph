@@ -35,14 +35,14 @@
 				mxEvent.disableContextMenu(container);
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Enables rubberband selection
 				new mxRubberband(graph);
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -59,7 +59,7 @@
 					graph.getModel().endUpdate();
 				}
 				
-				var mult = 1;
+				let mult = 1;
 				
 				document.body.appendChild(mxUtils.button('Morph', function()
 				{
@@ -68,12 +68,12 @@
 					graph.getModel().beginUpdate();
 					try
 					{
-						var geo = graph.getCellGeometry(v1);
+						let geo = graph.getCellGeometry(v1);
 						geo = geo.clone();
 						geo.x += 180 * mult;
 						graph.getModel().setGeometry(v1, geo);
 						
-						var geo = graph.getCellGeometry(v2);
+						let geo = graph.getCellGeometry(v2);
 						geo = geo.clone();
 						geo.x -= 180 * mult;
 						graph.getModel().setGeometry(v2, geo);
@@ -81,7 +81,7 @@
 					finally
 					{
 						// Arguments are number of steps, ease and delay
-						var morph = new mxMorphing(graph, 20, 1.2, 20);
+						let morph = new mxMorphing(graph, 20, 1.2, 20);
 						morph.addListener(mxEvent.DONE, function()
 						{
 							graph.getModel().endUpdate();

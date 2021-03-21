@@ -25,7 +25,7 @@
 		};
 		
 		// Don't clear selection if multiple cells selected
-		var graphHandlerMouseDown = mxGraphHandler.prototype.mouseDown;
+		let graphHandlerMouseDown = mxGraphHandler.prototype.mouseDown;
 		mxGraphHandler.prototype.mouseDown = function(sender, me)
 		{
 			graphHandlerMouseDown.apply(this, arguments);
@@ -37,13 +37,13 @@
 		};
 		
 		// Selects descendants before children selection mode
-		var graphHandlerGetInitialCellForEvent = mxGraphHandler.prototype.getInitialCellForEvent;
+		let graphHandlerGetInitialCellForEvent = mxGraphHandler.prototype.getInitialCellForEvent;
 		mxGraphHandler.prototype.getInitialCellForEvent = function(me)
 		{
-			var model = this.graph.getModel();
-			var psel = model.getParent(this.graph.getSelectionCell());
-			var cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
-			var parent = model.getParent(cell);
+			let model = this.graph.getModel();
+			let psel = model.getParent(this.graph.getSelectionCell());
+			let cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
+			let parent = model.getParent(cell);
 			
 			if (psel == null || (psel != cell && psel != parent))
 			{
@@ -59,13 +59,13 @@
 		};
 		
 		// Selection is delayed to mouseup if child selected
-		var graphHandlerIsDelayedSelection = mxGraphHandler.prototype.isDelayedSelection;
+		let graphHandlerIsDelayedSelection = mxGraphHandler.prototype.isDelayedSelection;
 		mxGraphHandler.prototype.isDelayedSelection = function(cell)
 		{
-			var result = graphHandlerIsDelayedSelection.apply(this, arguments);
-			var model = this.graph.getModel();
-			var psel = model.getParent(this.graph.getSelectionCell());
-			var parent = model.getParent(cell);
+			let result = graphHandlerIsDelayedSelection.apply(this, arguments);
+			let model = this.graph.getModel();
+			let psel = model.getParent(this.graph.getSelectionCell());
+			let parent = model.getParent(cell);
 			
 			if (psel == null || (psel != cell && psel != parent))
 			{
@@ -81,15 +81,15 @@
 		// Delayed selection of parent group
 		mxGraphHandler.prototype.selectDelayed = function(me)
 		{
-			var cell = me.getCell();
+			let cell = me.getCell();
 			
 			if (cell == null)
 			{
 				cell = this.cell;
 			}
 			
-			var model = this.graph.getModel();
-			var parent = model.getParent(cell);
+			let model = this.graph.getModel();
+			let parent = model.getParent(cell);
 			
 			while (this.graph.isCellSelected(cell) && model.isVertex(parent) && !this.graph.isValidRoot(parent))
 			{
@@ -103,9 +103,9 @@
 		// Returns last selected ancestor
 		mxPopupMenuHandler.prototype.getCellForPopupEvent = function(me)
 		{
-			var cell = me.getCell();
-			var model = this.graph.getModel();
-			var parent = model.getParent(cell);
+			let cell = me.getCell();
+			let model = this.graph.getModel();
+			let parent = model.getParent(cell);
 			
 			while (model.isVertex(parent) && !this.graph.isValidRoot(parent))
 			{
@@ -134,7 +134,7 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.constrainChildren = false;
 				graph.extendParents = false;
 				graph.extendParentsOnAdd = false;
@@ -148,7 +148,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

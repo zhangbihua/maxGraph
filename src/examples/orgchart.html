@@ -37,7 +37,7 @@
 			else
 			{
 				// Workaround for Internet Explorer ignoring certain styles
-				var container = document.createElement('div');
+				let container = document.createElement('div');
 				container.style.position = 'absolute';
 				container.style.overflow = 'hidden';
 				container.style.left = '0px';
@@ -45,7 +45,7 @@
 				container.style.right = '0px';
 				container.style.bottom = '0px';
 
-				var outline = document.getElementById('outlineContainer');
+				let outline = document.getElementById('outlineContainer');
 
 				mxEvent.disableContextMenu(container);
 
@@ -62,7 +62,7 @@
 				document.body.appendChild(container);
 
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Enables automatic sizing for vertices after editing and
 				// panning by using the left mouse button.
@@ -80,13 +80,13 @@
 
 				// Creates the outline (navigator, overview) for moving
 				// around the graph in the top, right corner of the window.
-				var outln = new mxOutline(graph, outline);
+				let outln = new mxOutline(graph, outline);
 				
 				// Disables tooltips on touch devices
 				graph.setTooltips(!mxClient.IS_TOUCH);
 
 				// Set some stylesheet options for the visual appearance of vertices
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_SHAPE] = 'label';
 				
 				style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
@@ -126,12 +126,12 @@
 				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.TopToBottom;
 
 				// Stops editing on enter or escape keypress
-				var keyHandler = new mxKeyHandler(graph);
+				let keyHandler = new mxKeyHandler(graph);
 
 				// Enables automatic layout on the graph and installs
 				// a tree layout for all groups who's children are
 				// being changed, added or removed.
-				var layout = new mxCompactTreeLayout(graph, false);
+				let layout = new mxCompactTreeLayout(graph, false);
 				layout.useBoundingBox = false;
 				layout.edgeRouting = false;
 				layout.levelDistance = 60;
@@ -144,7 +144,7 @@
 					return true;
 				};
 
-				var layoutMgr = new mxLayoutManager(graph);
+				let layoutMgr = new mxLayoutManager(graph);
 
 				layoutMgr.getLayout = function(cell)
 				{
@@ -161,10 +161,10 @@
 				};
 
 				// Fix for wrong preferred size
-				var oldGetPreferredSizeForCell = graph.getPreferredSizeForCell;
+				let oldGetPreferredSizeForCell = graph.getPreferredSizeForCell;
 				graph.getPreferredSizeForCell = function(cell)
 				{
-					var result = oldGetPreferredSizeForCell.apply(this, arguments);
+					let result = oldGetPreferredSizeForCell.apply(this, arguments);
 
 					if (result != null)
 					{
@@ -184,7 +184,7 @@
 				// (without affecting the preferred size for new cells)
 				graph.cellRenderer.getLabelValue = function(state)
 				{
-					var result = state.cell.value;
+					let result = state.cell.value;
 					
 					if (state.view.graph.getModel().isVertex(state.cell))
 					{
@@ -204,13 +204,13 @@
 
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 
 				// Adds the root vertex of the tree
 				graph.getModel().beginUpdate();
 				try
 				{
-					var w = graph.container.offsetWidth;
+					let w = graph.container.offsetWidth;
 					var v1 = graph.insertVertex(parent, 'treeRoot',
 						'Organization', w/2 - 30, 20, 140, 60, 'image=editors/images/house.png');
 					graph.updateCellSize(v1);
@@ -222,10 +222,10 @@
 					graph.getModel().endUpdate();
 				}
 
-				var content = document.createElement('div');
+				let content = document.createElement('div');
 				content.style.padding = '4px';
 
-				var tb = new mxToolbar(content);
+				let tb = new mxToolbar(content);
 
 				tb.addItem('Zoom In', 'images/zoom_in32.png',function(evt)
 				{
@@ -244,18 +244,18 @@
 
 				tb.addItem('Print', 'images/print32.png',function(evt)
 				{
-					var preview = new mxPrintPreview(graph, 1);
+					let preview = new mxPrintPreview(graph, 1);
 					preview.open();
 				});
 
 				tb.addItem('Poster Print', 'images/press32.png',function(evt)
 				{
-					var pageCount = mxUtils.prompt('Enter maximum page count', '1');
+					let pageCount = mxUtils.prompt('Enter maximum page count', '1');
 
 					if (pageCount != null)
 					{
-						var scale = mxUtils.getScaleForPageCount(pageCount, graph);
-						var preview = new mxPrintPreview(graph, scale);
+						let scale = mxUtils.getScaleForPageCount(pageCount, graph);
+						let preview = new mxPrintPreview(graph, scale);
 						preview.open();
 					}
 				});
@@ -271,7 +271,7 @@
 // Function to create the entries in the popupmenu
 function createPopupMenu(graph, menu, cell, evt)
 {
-	var model = graph.getModel();
+	let model = graph.getModel();
 
 	if (cell != null)
 	{
@@ -314,18 +314,18 @@ function createPopupMenu(graph, menu, cell, evt)
 
 	menu.addItem('Print', 'editors/images/print.gif', function()
 	{
-		var preview = new mxPrintPreview(graph, 1);
+		let preview = new mxPrintPreview(graph, 1);
 		preview.open();
 	});
 
 	menu.addItem('Poster Print', 'editors/images/print.gif', function()
 	{
-		var pageCount = mxUtils.prompt('Enter maximum page count', '1');
+		let pageCount = mxUtils.prompt('Enter maximum page count', '1');
 
 		if (pageCount != null)
 		{
-			var scale = mxUtils.getScaleForPageCount(pageCount, graph);
-			var preview = new mxPrintPreview(graph, scale);
+			let scale = mxUtils.getScaleForPageCount(pageCount, graph);
+			let preview = new mxPrintPreview(graph, scale);
 			preview.open();
 		}
 	});
@@ -333,7 +333,7 @@ function createPopupMenu(graph, menu, cell, evt)
 
 function addOverlays(graph, cell, addDeleteIcon)
 {
-	var overlay = new mxCellOverlay(new mxImage('images/add.png', 24, 24), 'Add child');
+	let overlay = new mxCellOverlay(new mxImage('images/add.png', 24, 24), 'Add child');
 	overlay.cursor = 'hand';
 	overlay.align = mxConstants.ALIGN_CENTER;
 	overlay.addListener(mxEvent.CLICK, mxUtils.bind(this, function(sender, evt)
@@ -361,26 +361,26 @@ function addOverlays(graph, cell, addDeleteIcon)
 
 function addChild(graph, cell)
 {
-	var model = graph.getModel();
-	var parent = graph.getDefaultParent();
+	let model = graph.getModel();
+	let parent = graph.getDefaultParent();
 	var vertex;
 
 	model.beginUpdate();
 	try
 	{
 		vertex = graph.insertVertex(parent, null, 'Double click to set name');
-		var geometry = model.getGeometry(vertex);
+		let geometry = model.getGeometry(vertex);
 
 		// Updates the geometry of the vertex with the
 		// preferred size computed in the graph
-		var size = graph.getPreferredSizeForCell(vertex);
+		let size = graph.getPreferredSizeForCell(vertex);
 		geometry.width = size.width;
 		geometry.height = size.height;
 
 		// Adds the edge between the existing cell
 		// and the new vertex and executes the
 		// automatic layout on the parent
-		var edge = graph.insertEdge(parent, null, '', cell, vertex);
+		let edge = graph.insertEdge(parent, null, '', cell, vertex);
 
 		// Configures the edge label "in-place" to reside
 		// at the end of the edge (x = 1) and with an offset
@@ -402,7 +402,7 @@ function addChild(graph, cell)
 function deleteSubtree(graph, cell)
 {
 	// Gets the subtree from cell downwards
-	var cells = [];
+	let cells = [];
 	graph.traverse(cell, true, function(vertex)
 	{
 		cells.push(vertex);

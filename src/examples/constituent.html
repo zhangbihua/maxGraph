@@ -22,10 +22,10 @@
 		/**
 		 * Redirects start drag to parent.
 		 */
-		var graphHandlerGetInitialCellForEvent = mxGraphHandler.prototype.getInitialCellForEvent;
+		let graphHandlerGetInitialCellForEvent = mxGraphHandler.prototype.getInitialCellForEvent;
 		mxGraphHandler.prototype.getInitialCellForEvent = function(me)
 		{
-			var cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
+			let cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
 			
 			if (this.graph.isPart(cell))
 			{
@@ -52,7 +52,7 @@
 				mxEvent.disableContextMenu(container);
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.foldingEnabled = false;
 				graph.recursiveResize = true;
 				
@@ -78,7 +78,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

@@ -35,7 +35,7 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				graph.setEnabled(false);
 				graph.setPanning(true);
@@ -46,7 +46,7 @@
 				new mxCellTracker(graph);
 				
 				// Changes the default vertex style in-place
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ROUNDED;
 				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 				style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
@@ -70,7 +70,7 @@
 			
 				// Creates a layout algorithm to be used
 				// with the graph
-				var layout = new mxFastOrganicLayout(graph);
+				let layout = new mxFastOrganicLayout(graph);
 
 				// Moves stuff wider apart than usual
 				layout.forceConstant = 140;
@@ -78,7 +78,7 @@
 				// Adds a button to execute the layout
 				document.body.appendChild(mxUtils.button('Arrange',function(evt)
 				{
-					var parent = graph.getDefaultParent();
+					let parent = graph.getDefaultParent();
 					layout.execute(parent);
 				}));
 				
@@ -94,7 +94,7 @@
 										
 					// Gets the default parent for inserting new cells. This
 					// is normally the first child of the root (ie. layer 0).
-					var parent = graph.getDefaultParent();
+					let parent = graph.getDefaultParent();
 
 					// Executes the layout
 					layout.execute(parent);
@@ -107,7 +107,7 @@
 
 				graph.dblClick = function(evt, cell)
 				{
-					var mxe = new mxEventObject(mxEvent.DOUBLE_CLICK, 'event', evt, 'cell', cell);
+					let mxe = new mxEventObject(mxEvent.DOUBLE_CLICK, 'event', evt, 'cell', cell);
 					this.fireEvent(mxe);
 					
 					if (this.isEnabled() &&
@@ -124,19 +124,19 @@
 		// Custom parser for simple file format
 		function parse(graph, filename)
 		{
-			var model = graph.getModel();
+			let model = graph.getModel();
 								
 			// Gets the default parent for inserting new cells. This
 			// is normally the first child of the root (ie. layer 0).
-			var parent = graph.getDefaultParent();
+			let parent = graph.getDefaultParent();
 
-			var req = mxUtils.load(filename);
-			var text = req.getText();
+			let req = mxUtils.load(filename);
+			let text = req.getText();
 
-			var lines = text.split('\n');
+			let lines = text.split('\n');
 			
 			// Creates the lookup table for the vertices
-			var vertices = [];
+			let vertices = [];
 
 			// Parses all lines (vertices must be first in the file)
 			graph.getModel().beginUpdate();
@@ -145,17 +145,17 @@
 				for (var i=0; i<lines.length; i++)
 				{
 					// Ignores comments (starting with #)
-					var colon = lines[i].indexOf(':');
+					let colon = lines[i].indexOf(':');
 	
 					if (lines[i].substring(0, 1) != "#" ||
 						colon == -1)
 					{
-						var comma = lines[i].indexOf(',');
-						var value = lines[i].substring(colon+2, lines[i].length);
+						let comma = lines[i].indexOf(',');
+						let value = lines[i].substring(colon+2, lines[i].length);
 						
 						if (comma == -1 || comma > colon)
 						{
-							var key = lines[i].substring(0, colon);
+							let key = lines[i].substring(0, colon);
 							
 							if (key.length > 0)
 							{
@@ -165,12 +165,12 @@
 						else if (comma < colon)
 						{
 							// Looks up the vertices in the lookup table
-							var source = vertices[lines[i].substring(0, comma)];
-							var target = vertices[lines[i].substring(comma+1, colon)];
+							let source = vertices[lines[i].substring(0, comma)];
+							let target = vertices[lines[i].substring(comma+1, colon)];
 							
 							if (source != null && target != null)
 							{
-								var e = graph.insertEdge(parent, null, value, source, target);
+								let e = graph.insertEdge(parent, null, value, source, target);
 	
 								// Uses the special 2-way style for 2-way labels
 								if (value.indexOf('2-Way') >= 0)
@@ -191,9 +191,9 @@
 		// Parses the mxGraph XML file format
 		function read(graph, filename)
 		{
-			var req = mxUtils.load(filename);
-			var root = req.getDocumentElement();
-			var dec = new mxCodec(root.ownerDocument);
+			let req = mxUtils.load(filename);
+			let root = req.getDocumentElement();
+			let dec = new mxCodec(root.ownerDocument);
 			
 			dec.decode(root, graph.getModel());
 		};

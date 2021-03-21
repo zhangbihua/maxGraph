@@ -35,7 +35,7 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setTooltips(true);
 				graph.htmlLabels = true;
 				graph.vertexLabelsMovable = true;
@@ -56,7 +56,7 @@
 				
 				graph.isCellResizable = function(cell)
 				{
-					var geo = this.model.getGeometry(cell);
+					let geo = this.model.getGeometry(cell);
 					
 					return geo == null || !geo.relative;
 				};
@@ -64,16 +64,16 @@
 				// Truncates the label to the size of the vertex
 				graph.getLabel = function(cell)
 				{
-					var label = (this.labelsVisible) ? this.convertValueToString(cell) : '';
-					var geometry = this.model.getGeometry(cell);
+					let label = (this.labelsVisible) ? this.convertValueToString(cell) : '';
+					let geometry = this.model.getGeometry(cell);
 					
 					if (!this.model.isCollapsed(cell) && geometry != null && (geometry.offset == null ||
 						(geometry.offset.x == 0 && geometry.offset.y == 0)) && this.model.isVertex(cell) &&
 						geometry.width >= 2)
 					{
-						var style = this.getCellStyle(cell);
-						var fontSize = style[mxConstants.STYLE_FONTSIZE] || mxConstants.DEFAULT_FONTSIZE;
-						var max = geometry.width / (fontSize * 0.625);
+						let style = this.getCellStyle(cell);
+						let fontSize = style[mxConstants.STYLE_FONTSIZE] || mxConstants.DEFAULT_FONTSIZE;
+						let max = geometry.width / (fontSize * 0.625);
 						
 						if (max < label.length)
 						{
@@ -93,7 +93,7 @@
 				// Enables clipping of vertex labels if no offset is defined
 				graph.isLabelClipped = function(cell)
 				{
-					var geometry = this.model.getGeometry(cell);
+					let geometry = this.model.getGeometry(cell);
 					
 					return geometry != null && !geometry.relative && (geometry.offset == null ||
 						(geometry.offset.x == 0 && geometry.offset.y == 0));
@@ -101,7 +101,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

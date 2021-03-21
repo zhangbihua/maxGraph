@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2017, JGraph Ltd
  * Copyright (c) 2006-2017, Gaudenz Alder
  */
-var mxClient = {
+let mxClient = {
   /**
    * Class: mxClient
    *
@@ -210,7 +210,7 @@ var mxClient = {
     doc = doc || document;
 
     // Workaround for Operation Aborted in IE6 if base tag is used in head
-    var link = doc.createElement('link');
+    let link = doc.createElement('link');
 
     link.setAttribute('rel', rel);
     link.setAttribute('href', href);
@@ -221,7 +221,7 @@ var mxClient = {
       link.setAttribute('id', id);
     }
 
-    var head = doc.getElementsByTagName('head')[0];
+    let head = doc.getElementsByTagName('head')[0];
     head.appendChild(link);
   },
 
@@ -236,7 +236,7 @@ var mxClient = {
    * lan - Optional string to pass to <mxResources.add>.
    */
   loadResources: (fn, lan) => {
-    var pending = mxClient.defaultBundles.length;
+    let pending = mxClient.defaultBundles.length;
 
     function callback() {
       if (--pending == 0) {
@@ -244,7 +244,7 @@ var mxClient = {
       }
     }
 
-    for (var i = 0; i < mxClient.defaultBundles.length; i++) {
+    for (let i = 0; i < mxClient.defaultBundles.length; i++) {
       mxResources.add(mxClient.defaultBundles[i], lan, callback);
     }
   }
@@ -260,7 +260,7 @@ var mxClient = {
  *
  * (code)
  * <script type="text/javascript">
- *     var mxLoadResources = false;
+ *     let mxLoadResources = false;
  * </script>
  * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
  * (end)
@@ -278,7 +278,7 @@ if (typeof(mxLoadResources) == 'undefined') {
  *
  * (code)
  * <script type="text/javascript">
- *     var mxLoadResources = true;
+ *     let mxLoadResources = true;
  * </script>
  * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
  * (end)
@@ -295,7 +295,7 @@ if (typeof(mxForceIncludes) == 'undefined') {
  *
  * (code)
  * <script type="text/javascript">
- *     var mxResourceExtension = '.txt';
+ *     let mxResourceExtension = '.txt';
  * </script>
  * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
  * (end)
@@ -313,7 +313,7 @@ if (typeof(mxResourceExtension) == 'undefined') {
  *
  * (code)
  * <script type="text/javascript">
- *     var mxLoadStylesheets = false;
+ *     let mxLoadStylesheets = false;
  * </script>
  * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
  * (end)

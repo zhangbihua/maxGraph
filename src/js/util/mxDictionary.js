@@ -41,7 +41,7 @@ class mxDictionary {
    * Returns the value for the given key.
    */
   get = (key) => {
-    var id = mxObjectIdentity.get(key);
+    let id = mxObjectIdentity.get(key);
 
     return this.map[id];
   };
@@ -53,8 +53,8 @@ class mxDictionary {
    * value for that key.
    */
   put = (key, value) => {
-    var id = mxObjectIdentity.get(key);
-    var previous = this.map[id];
+    let id = mxObjectIdentity.get(key);
+    let previous = this.map[id];
     this.map[id] = value;
 
     return previous;
@@ -67,8 +67,8 @@ class mxDictionary {
    * has been removed.
    */
   remove = (key) => {
-    var id = mxObjectIdentity.get(key);
-    var previous = this.map[id];
+    let id = mxObjectIdentity.get(key);
+    let previous = this.map[id];
     delete this.map[id];
 
     return previous;
@@ -80,7 +80,7 @@ class mxDictionary {
    * Returns all keys as an array.
    */
   getKeys = () => {
-    var result = [];
+    let result = [];
 
     for (var key in this.map) {
       result.push(key);
@@ -95,7 +95,7 @@ class mxDictionary {
    * Returns all values as an array.
    */
   getValues = () => {
-    var result = [];
+    let result = [];
 
     for (var key in this.map) {
       result.push(this.map[key]);

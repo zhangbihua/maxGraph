@@ -7,7 +7,7 @@ import mxMouseEvent from "./mxMouseEvent";
 
 // Checks if passive event listeners are supported
 // see https://github.com/Modernizr/Modernizr/issues/1894
-var supportsPassive = false;
+let supportsPassive = false;
 
 try {
   document.addEventListener(
@@ -26,7 +26,7 @@ try {
   // ignore
 }
 
-var mxEvent = {
+let mxEvent = {
   /**
    * Class: mxEvent
    *
@@ -55,7 +55,7 @@ var mxEvent = {
     if (element.mxListenerList == null) {
       element.mxListenerList = [];
     }
-    var entry = {name: eventName, f: funct};
+    let entry = {name: eventName, f: funct};
     element.mxListenerList.push(entry);
   },
 
@@ -68,10 +68,10 @@ var mxEvent = {
     element.removeEventListener(eventName, funct, false);
 
     if (element.mxListenerList != null) {
-      var listenerCount = element.mxListenerList.length;
+      let listenerCount = element.mxListenerList.length;
 
-      for (var i = 0; i < listenerCount; i++) {
-        var entry = element.mxListenerList[i];
+      for (let i = 0; i < listenerCount; i++) {
+        let entry = element.mxListenerList[i];
 
         if (entry.f === funct) {
           element.mxListenerList.splice(i, 1);
@@ -90,11 +90,11 @@ var mxEvent = {
    * Removes all listeners from the given element.
    */
   removeAllListeners: (element) => {
-    var list = element.mxListenerList;
+    let list = element.mxListenerList;
 
     if (list != null) {
       while (list.length > 0) {
-        var entry = list[0];
+        let entry = list[0];
         mxEvent.removeListener(element, entry.name, entry.f);
       }
     }
@@ -182,7 +182,7 @@ var mxEvent = {
    * default behaviour.
    */
   redirectMouseEvents: (node, graph, state, down, move, up, dblClick) => {
-    var getState = (evt) => {
+    let getState = (evt) => {
       return (typeof (state) == 'function') ? state(evt) : state;
     };
 
@@ -213,7 +213,7 @@ var mxEvent = {
       if (dblClick != null) {
         dblClick(evt);
       } else if (!mxEvent.isConsumed(evt)) {
-        var tmp = getState(evt);
+        let tmp = getState(evt);
         graph.dblClick(evt, (tmp != null) ? tmp.cell : null);
       }
     });
@@ -233,10 +233,10 @@ var mxEvent = {
       if (element != null) {
         mxEvent.removeAllListeners(element);
 
-        var children = element.childNodes;
+        let children = element.childNodes;
         if (children != null) {
-          var childCount = children.length;
-          for (var i = 0; i < childCount; i += 1) {
+          let childCount = children.length;
+          for (let i = 0; i < childCount; i += 1) {
             mxEvent.release(children[i]);
           }
         }
@@ -276,7 +276,7 @@ var mxEvent = {
    */
   addMouseWheelListener: (funct, target) => {
     if (funct != null) {
-      var wheelHandler = (evt) => {
+      let wheelHandler = (evt) => {
         // IE does not give an event object but the
         // global event object is the mousewheel event
         // at this point in time.
@@ -298,7 +298,7 @@ var mxEvent = {
       target = target != null ? target : window;
 
       if (mxClient.IS_SF && !mxClient.IS_TOUCH) {
-        var scale = 1;
+        let scale = 1;
 
         mxEvent.addListener(target, 'gesturestart', (evt) => {
           mxEvent.consume(evt);
@@ -307,7 +307,7 @@ var mxEvent = {
 
         mxEvent.addListener(target, 'gesturechange', (evt) => {
           mxEvent.consume(evt);
-          var diff = scale - evt.scale;
+          let diff = scale - evt.scale;
 
           if (Math.abs(diff) > 0.2) {
             funct(evt, diff < 0, true);
@@ -319,7 +319,7 @@ var mxEvent = {
           mxEvent.consume(evt);
         });
       } else {
-        var evtCache = [];
+        let evtCache = [];
         var dx0 = 0;
         var dy0 = 0;
 
@@ -332,7 +332,7 @@ var mxEvent = {
             (evt) => {
               if (!mxEvent.isMouseEvent(evt) && evtCache.length == 2) {
                 // Find this event in the cache and update its record with this event
-                for (var i = 0; i < evtCache.length; i++) {
+                for (let i = 0; i < evtCache.length; i++) {
                   if (evt.pointerId == evtCache[i].pointerId) {
                     evtCache[i] = evt;
                     break;
@@ -340,14 +340,14 @@ var mxEvent = {
                 }
 
                 // Calculate the distance between the two pointers
-                var dx = Math.abs(evtCache[0].clientX - evtCache[1].clientX);
-                var dy = Math.abs(evtCache[0].clientY - evtCache[1].clientY);
-                var tx = Math.abs(dx - dx0);
-                var ty = Math.abs(dy - dy0);
+                let dx = Math.abs(evtCache[0].clientX - evtCache[1].clientX);
+                let dy = Math.abs(evtCache[0].clientY - evtCache[1].clientY);
+                let tx = Math.abs(dx - dx0);
+                let ty = Math.abs(dy - dy0);
 
                 if (tx > mxEvent.PINCH_THRESHOLD || ty > mxEvent.PINCH_THRESHOLD) {
-                  var cx = evtCache[0].clientX + (evtCache[1].clientX - evtCache[0].clientX) / 2;
-                  var cy = evtCache[0].clientY + (evtCache[1].clientY - evtCache[0].clientY) / 2;
+                  let cx = evtCache[0].clientX + (evtCache[1].clientX - evtCache[0].clientX) / 2;
+                  let cy = evtCache[0].clientY + (evtCache[1].clientY - evtCache[0].clientY) / 2;
 
                   funct(evtCache[0], (tx > ty) ? dx > dx0 : dy > dy0, true, cx, cy);
 

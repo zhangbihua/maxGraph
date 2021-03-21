@@ -106,7 +106,7 @@ class mxOutline {
    * Example:
    *
    * (code)
-   * var outline = new mxOutline(graph, div);
+   * let outline = new mxOutline(graph, div);
    * (end)
    *
    * If an outline is used in an <mxWindow> in IE8 standards mode, the following
@@ -124,8 +124,8 @@ class mxOutline {
    * To move the graph to the top, left corner the following code can be used.
    *
    * (code)
-   * var scale = graph.view.scale;
-   * var bounds = graph.getGraphBounds();
+   * let scale = graph.view.scale;
+   * let bounds = graph.getGraphBounds();
    * graph.view.setTranslate(-bounds.x / scale, -bounds.y / scale);
    * (end)
    *
@@ -163,7 +163,7 @@ class mxOutline {
    * Creates the <mxGraph> used in the outline.
    */
   createGraph = (container) => {
-    var graph = new mxGraph(container, this.source.getModel(), this.graphRenderHint, this.source.getStylesheet());
+    let graph = new mxGraph(container, this.source.getModel(), this.graphRenderHint, this.source.getStylesheet());
     graph.foldingEnabled = false;
     graph.autoScroll = false;
 
@@ -179,7 +179,7 @@ class mxOutline {
     this.outline = this.createGraph(container);
 
     // Do not repaint when suspended
-    var outlineGraphModelChanged = this.outline.graphModelChanged;
+    let outlineGraphModelChanged = this.outline.graphModelChanged;
     this.outline.graphModelChanged = mxUtils.bind(this, (changes) => {
       if (!this.suspended && this.outline != null) {
         outlineGraphModelChanged.apply(this.outline, arguments);
@@ -188,7 +188,7 @@ class mxOutline {
 
     // Enables faster painting in SVG
     if (mxClient.IS_SVG) {
-      var node = this.outline.getView().getCanvas().parentNode;
+      let node = this.outline.getView().getCanvas().parentNode;
       node.setAttribute('shape-rendering', 'optimizeSpeed');
       node.setAttribute('image-rendering', 'optimizeSpeed');
     }
@@ -208,7 +208,7 @@ class mxOutline {
     this.outline.addMouseListener(this);
 
     // Adds listeners to keep the outline in sync with the source graph
-    var view = this.source.getView();
+    let view = this.source.getView();
     view.addListener(mxEvent.SCALE, this.updateHandler);
     view.addListener(mxEvent.TRANSLATE, this.updateHandler);
     view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.updateHandler);
@@ -250,10 +250,10 @@ class mxOutline {
     // complete gesture on the event target. This is needed because all the events
     // are routed via the initial element even if that element is removed from the
     // DOM, which happens when we repaint the selection border and zoom handles.
-    var handler = mxUtils.bind(this, (evt) => {
-      var t = mxEvent.getSource(evt);
+    let handler = mxUtils.bind(this, (evt) => {
+      let t = mxEvent.getSource(evt);
 
-      var redirect = mxUtils.bind(this, (evt) => {
+      let redirect = mxUtils.bind(this, (evt) => {
         this.outline.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt));
       });
 
@@ -346,12 +346,12 @@ class mxOutline {
    */
   createSizer = () => {
     if (this.sizerImage != null) {
-      var sizer = new mxImageShape(new mxRectangle(0, 0, this.sizerImage.width, this.sizerImage.height), this.sizerImage.src);
+      let sizer = new mxImageShape(new mxRectangle(0, 0, this.sizerImage.width, this.sizerImage.height), this.sizerImage.src);
       sizer.dialect = this.outline.dialect;
 
       return sizer;
     } else {
-      var sizer = new mxRectangleShape(new mxRectangle(0, 0, this.sizerSize, this.sizerSize),
+      let sizer = new mxRectangleShape(new mxRectangle(0, 0, this.sizerSize, this.sizerSize),
           mxConstants.OUTLINE_HANDLE_FILLCOLOR, mxConstants.OUTLINE_HANDLE_STROKECOLOR);
       sizer.dialect = this.outline.dialect;
 
@@ -394,29 +394,29 @@ class mxOutline {
   update = (revalidate) => {
     if (this.source != null && this.source.container != null &&
         this.outline != null && this.outline.container != null) {
-      var sourceScale = this.source.view.scale;
-      var scaledGraphBounds = this.getSourceGraphBounds();
-      var unscaledGraphBounds = new mxRectangle(scaledGraphBounds.x / sourceScale + this.source.panDx,
+      let sourceScale = this.source.view.scale;
+      let scaledGraphBounds = this.getSourceGraphBounds();
+      let unscaledGraphBounds = new mxRectangle(scaledGraphBounds.x / sourceScale + this.source.panDx,
           scaledGraphBounds.y / sourceScale + this.source.panDy, scaledGraphBounds.width / sourceScale,
           scaledGraphBounds.height / sourceScale);
 
-      var unscaledFinderBounds = new mxRectangle(0, 0,
+      let unscaledFinderBounds = new mxRectangle(0, 0,
           this.source.container.clientWidth / sourceScale,
           this.source.container.clientHeight / sourceScale);
 
-      var union = unscaledGraphBounds.clone();
+      let union = unscaledGraphBounds.clone();
       union.add(unscaledFinderBounds);
 
       // Zooms to the scrollable area if that is bigger than the graph
-      var size = this.getSourceContainerSize();
-      var completeWidth = Math.max(size.width / sourceScale, union.width);
-      var completeHeight = Math.max(size.height / sourceScale, union.height);
+      let size = this.getSourceContainerSize();
+      let completeWidth = Math.max(size.width / sourceScale, union.width);
+      let completeHeight = Math.max(size.height / sourceScale, union.height);
 
-      var availableWidth = Math.max(0, this.outline.container.clientWidth - this.border);
-      var availableHeight = Math.max(0, this.outline.container.clientHeight - this.border);
+      let availableWidth = Math.max(0, this.outline.container.clientWidth - this.border);
+      let availableHeight = Math.max(0, this.outline.container.clientHeight - this.border);
 
-      var outlineScale = Math.min(availableWidth / completeWidth, availableHeight / completeHeight);
-      var scale = (isNaN(outlineScale)) ? this.minScale : Math.max(this.minScale, outlineScale);
+      let outlineScale = Math.min(availableWidth / completeWidth, availableHeight / completeHeight);
+      let scale = (isNaN(outlineScale)) ? this.minScale : Math.max(this.minScale, outlineScale);
 
       if (scale > 0) {
         if (this.outline.getView().scale != scale) {
@@ -424,17 +424,17 @@ class mxOutline {
           revalidate = true;
         }
 
-        var navView = this.outline.getView();
+        let navView = this.outline.getView();
 
         if (navView.currentRoot != this.source.getView().currentRoot) {
           navView.setCurrentRoot(this.source.getView().currentRoot);
         }
 
-        var t = this.source.view.translate;
-        var tx = t.x + this.source.panDx;
-        var ty = t.y + this.source.panDy;
+        let t = this.source.view.translate;
+        let tx = t.x + this.source.panDx;
+        let ty = t.y + this.source.panDy;
 
-        var off = this.getOutlineOffset(scale);
+        let off = this.getOutlineOffset(scale);
 
         if (off != null) {
           tx += off.x;
@@ -459,7 +459,7 @@ class mxOutline {
         scale = this.source.getView().scale;
         var scale2 = scale / navView.scale;
         var scale3 = 1.0 / navView.scale;
-        var container = this.source.container;
+        let container = this.source.container;
 
         // Updates the bounds of the viewrect in the navigation
         this.bounds = new mxRectangle(
@@ -472,7 +472,7 @@ class mxOutline {
         this.bounds.x += this.source.container.scrollLeft * navView.scale / scale;
         this.bounds.y += this.source.container.scrollTop * navView.scale / scale;
 
-        var b = this.selectionBorder.bounds;
+        let b = this.selectionBorder.bounds;
 
         if (b.x != this.bounds.x || b.y != this.bounds.y || b.width != this.bounds.width || b.height != this.bounds.height) {
           this.selectionBorder.bounds = this.bounds;
@@ -480,7 +480,7 @@ class mxOutline {
         }
 
         // Updates the bounds of the zoom handle at the bottom right
-        var b = this.sizer.bounds;
+        let b = this.sizer.bounds;
         var b2 = new mxRectangle(this.bounds.x + this.bounds.width - b.width / 2,
             this.bounds.y + this.bounds.height - b.height / 2, b.width, b.height);
 
@@ -507,8 +507,8 @@ class mxOutline {
    */
   mouseDown = (sender, me) => {
     if (this.enabled && this.showViewport) {
-      var tol = (!mxEvent.isMouseEvent(me.getEvent())) ? this.source.tolerance : 0;
-      var hit = (this.source.allowHandleBoundsCheck && tol > 0) ?
+      let tol = (!mxEvent.isMouseEvent(me.getEvent())) ? this.source.tolerance : 0;
+      let hit = (this.source.allowHandleBoundsCheck && tol > 0) ?
           new mxRectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol) : null;
       this.zoom = me.isSource(this.sizer) || (hit != null && mxUtils.intersects(shape.bounds, hit));
       this.startX = me.getX();
@@ -538,14 +538,14 @@ class mxOutline {
       this.selectionBorder.node.style.display = (this.showViewport) ? '' : 'none';
       this.sizer.node.style.display = this.selectionBorder.node.style.display;
 
-      var delta = this.getTranslateForEvent(me);
-      var dx = delta.x;
-      var dy = delta.y;
-      var bounds = null;
+      let delta = this.getTranslateForEvent(me);
+      let dx = delta.x;
+      let dy = delta.y;
+      let bounds = null;
 
       if (!this.zoom) {
         // Previews the panning on the source graph
-        var scale = this.outline.getView().scale;
+        let scale = this.outline.getView().scale;
         bounds = new mxRectangle(this.bounds.x + dx,
             this.bounds.y + dy, this.bounds.width, this.bounds.height);
         this.selectionBorder.bounds = bounds;
@@ -557,8 +557,8 @@ class mxOutline {
         this.source.panGraph(-dx - this.dx0, -dy - this.dy0);
       } else {
         // Does *not* preview zooming on the source graph
-        var container = this.source.container;
-        var viewRatio = container.clientWidth / container.clientHeight;
+        let container = this.source.container;
+        let viewRatio = container.clientWidth / container.clientHeight;
         dy = dx / viewRatio;
         bounds = new mxRectangle(this.bounds.x,
             this.bounds.y,
@@ -569,7 +569,7 @@ class mxOutline {
       }
 
       // Updates the zoom handle
-      var b = this.sizer.bounds;
+      let b = this.sizer.bounds;
       this.sizer.bounds = new mxRectangle(
           bounds.x + bounds.width - b.width / 2,
           bounds.y + bounds.height - b.height / 2,
@@ -593,11 +593,11 @@ class mxOutline {
    * (code)
    * outline.getTranslateForEvent = (me)=>
    * {
-   *   var pt = new mxPoint(me.getX() - this.startX, me.getY() - this.startY);
+   *   let pt = new mxPoint(me.getX() - this.startX, me.getY() - this.startY);
    *
    *   if (!this.zoom)
    *   {
-   *     var tr = this.source.view.translate;
+   *     let tr = this.source.view.translate;
    *     pt.x = Math.max(tr.x * this.outline.view.scale, pt.x);
    *     pt.y = Math.max(tr.y * this.outline.view.scale, pt.y);
    *   }
@@ -617,9 +617,9 @@ class mxOutline {
    */
   mouseUp = (sender, me) => {
     if (this.active) {
-      var delta = this.getTranslateForEvent(me);
-      var dx = delta.x;
-      var dy = delta.y;
+      let delta = this.getTranslateForEvent(me);
+      let dx = delta.x;
+      let dy = delta.y;
 
       if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {
         if (!this.zoom) {
@@ -630,13 +630,13 @@ class mxOutline {
             this.source.panGraph(0, 0);
             dx /= this.outline.getView().scale;
             dy /= this.outline.getView().scale;
-            var t = this.source.getView().translate;
+            let t = this.source.getView().translate;
             this.source.getView().setTranslate(t.x - dx, t.y - dy);
           }
         } else {
           // Applies the new zoom
-          var w = this.selectionBorder.bounds.width;
-          var scale = this.source.getView().scale;
+          let w = this.selectionBorder.bounds.width;
+          let scale = this.source.getView().scale;
           this.source.zoomTo(Math.max(this.minScale, scale - (dx * scale) / w), false);
         }
 

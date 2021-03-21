@@ -38,7 +38,7 @@
 				// editor is used to create certain functionality for the
 				// graph, such as the rubberband selection, but most parts
 				// of the UI are custom in this example.
-				var editor = new mxEditor();
+				let editor = new mxEditor();
 
 				// Configures the editor's UI, the toolbar and the popupmenu.
 				// Note that the element with the id toolbox is used in the
@@ -51,7 +51,7 @@
 				// and toolbar objects, respectively.
 				// Keep in mind that the as-attributes of the add-items in the
 				// toolbar and popupmenu sections refer to keys in mxResources.
-				var config = mxUtils.load('uiconfig.xml').getDocumentElement();
+				let config = mxUtils.load('uiconfig.xml').getDocumentElement();
 				mxObjectCodec.allowEval = true;
 				editor.configure(config);
 				mxObjectCodec.allowEval = false;
@@ -60,8 +60,8 @@
 				editor.graph.setConnectable(true);
 
 				// Creates the second toolbar programmatically
-				var container = document.getElementById('toolbar');
-				var toolbar = new mxDefaultToolbar(container, editor);
+				let container = document.getElementById('toolbar');
+				let toolbar = new mxDefaultToolbar(container, editor);
 				
 				// Use eg. mxResources.get("delete") to translate tooltip
 				toolbar.addItem('Show XML', 'images/icons48/gear.png', 'myFirstAction');

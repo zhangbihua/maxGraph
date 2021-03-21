@@ -35,10 +35,10 @@
 				mxEvent.disableContextMenu(container);
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Sets the base style for all vertices
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_ROUNDED] = true;
 				style[mxConstants.STYLE_FILLCOLOR] = '#ffffff';
 				style[mxConstants.STYLE_STROKECOLOR] = '#000000';
@@ -51,12 +51,12 @@
 				// Removes folding icon for relative children
 				graph.isCellFoldable = function(cell, collapse)
 				{
-					var childCount = this.model.getChildCount(cell);
+					let childCount = this.model.getChildCount(cell);
 					
-					for (var i = 0; i < childCount; i++)
+					for (let i = 0; i < childCount; i++)
 					{
-						var child = this.model.getChildAt(cell, i);
-						var geo = this.getCellGeometry(child);
+						let child = this.model.getChildAt(cell, i);
+						let geo = this.getCellGeometry(child);
 						
 						if (geo != null && geo.relative)
 						{
@@ -72,22 +72,22 @@
 				{
 					if (state != null)
 					{
-						var model = graph.getModel();
-						var geo = model.getGeometry(state.cell);
+						let model = graph.getModel();
+						let geo = model.getGeometry(state.cell);
 						
 						if (geo != null && geo.relative && !model.isEdge(state.cell))
 						{
-							var parent = model.getParent(state.cell);
+							let parent = model.getParent(state.cell);
 							
 							if (model.isVertex(parent))
 							{
-								var pstate = graph.view.getState(parent);
+								let pstate = graph.view.getState(parent);
 								
 								if (pstate != null)
 								{
-									var scale = graph.view.scale;
-									var x = state.x + dx;
-									var y = state.y + dy;
+									let scale = graph.view.scale;
+									let x = state.x + dx;
+									let y = state.y + dy;
 									
 									if (geo.offset != null)
 									{
@@ -121,11 +121,11 @@
 				// Replaces translation for relative children
 				graph.translateCell = function(cell, dx, dy)
 				{
-					var rel = getRelativePosition(this.view.getState(cell), dx * graph.view.scale, dy * graph.view.scale);
+					let rel = getRelativePosition(this.view.getState(cell), dx * graph.view.scale, dy * graph.view.scale);
 					
 					if (rel != null)
 					{
-						var geo = this.model.getGeometry(cell);
+						let geo = this.model.getGeometry(cell);
 						
 						if (geo != null && geo.relative)
 						{
@@ -145,17 +145,17 @@
 				// Replaces move preview for relative children
 				graph.graphHandler.getDelta = function(me)
 				{
-					var point = mxUtils.convertPoint(this.graph.container, me.getX(), me.getY());
-					var delta = new mxPoint(point.x - this.first.x, point.y - this.first.y);
+					let point = mxUtils.convertPoint(this.graph.container, me.getX(), me.getY());
+					let delta = new mxPoint(point.x - this.first.x, point.y - this.first.y);
 					
 					if (this.cells != null && this.cells.length > 0 && this.cells[0] != null)
 					{
-						var state = this.graph.view.getState(this.cells[0]);
-						var rel = getRelativePosition(state, delta.x, delta.y);
+						let state = this.graph.view.getState(this.cells[0]);
+						let rel = getRelativePosition(state, delta.x, delta.y);
 						
 						if (rel != null)
 						{
-							var pstate = this.graph.view.getState(this.graph.model.getParent(state.cell));
+							let pstate = this.graph.view.getState(this.graph.model.getParent(state.cell));
 							
 							if (pstate != null)
 							{
@@ -185,7 +185,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

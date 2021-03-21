@@ -10,7 +10,7 @@
  */
 
 
-var mxJSColor = {
+let mxJSColor = {
 
 	dir : '', // location of jscolor directory (leave empty to autodetect)
 	bindClass : 'color', // class name
@@ -32,7 +32,7 @@ var mxJSColor = {
 
 	getDir : function() {
 		if(!mxJSColor.dir) {
-			var detected = mxJSColor.detectDir();
+			let detected = mxJSColor.detectDir();
 			mxJSColor.dir = detected!==false ? detected : 'jscolor/';
 		}
 		return mxJSColor.dir;
@@ -40,18 +40,18 @@ var mxJSColor = {
 
 
 	detectDir : function() {
-		var base = location.href;
+		let base = location.href;
 
-		var e = document.getElementsByTagName('base');
+		let e = document.getElementsByTagName('base');
 		for(var i=0; i<e.length; i+=1) {
 			if(e[i].href) { base = e[i].href; }
 		}
 
-		var e = document.getElementsByTagName('script');
+		let e = document.getElementsByTagName('script');
 		for(var i=0; i<e.length; i+=1) {
 			if(e[i].src && /(^|\/)jscolor\.js([?#].*)?$/i.test(e[i].src)) {
-				var src = new mxJSColor.URI(e[i].src);
-				var srcAbs = src.toAbsolute(base);
+				let src = new mxJSColor.URI(e[i].src);
+				let srcAbs = src.toAbsolute(base);
 				srcAbs.path = srcAbs.path.replace(/[^\/]+$/, ''); // remove filename
 				srcAbs.query = null;
 				srcAbs.fragment = null;
@@ -114,11 +114,11 @@ var mxJSColor = {
 			return;
 		}
 		if(document.createEvent) {
-			var ev = document.createEvent('HTMLEvents');
+			let ev = document.createEvent('HTMLEvents');
 			ev.initEvent(evnt, true, true);
 			el.dispatchEvent(ev);
 		} else if(document.createEventObject) {
-			var ev = document.createEventObject();
+			let ev = document.createEventObject();
 			el.fireEvent('on'+evnt, ev);
 		} else if(el['on'+evnt]) { // alternatively use the traditional event model (IE5)
 			el['on'+evnt]();
@@ -149,7 +149,7 @@ var mxJSColor = {
 
 
 	getRelMousePos : function(e) {
-		var x = 0, y = 0;
+		let x = 0, y = 0;
 		if (!e) { e = window.event; }
 		if (typeof e.offsetX === 'number') {
 			x = e.offsetX;
@@ -197,7 +197,7 @@ var mxJSColor = {
 		this.fragment = null;
 
 		this.parse = function(uri) {
-			var m = uri.match(/^(([A-Za-z][0-9A-Za-z+.-]*)(:))?((\/\/)([^\/?#]*))?([^?#]*)((\?)([^#]*))?((#)(.*))?/);
+			let m = uri.match(/^(([A-Za-z][0-9A-Za-z+.-]*)(:))?((\/\/)([^\/?#]*))?([^?#]*)((\?)([^#]*))?((#)(.*))?/);
 			this.scheme = m[3] ? m[2] : null;
 			this.authority = m[5] ? m[6] : null;
 			this.path = m[7];
@@ -207,7 +207,7 @@ var mxJSColor = {
 		};
 
 		this.toString = function() {
-			var result = '';
+			let result = '';
 			if(this.scheme !== null) { result = result + this.scheme + ':'; }
 			if(this.authority !== null) { result = result + '//' + this.authority; }
 			if(this.path !== null) { result = result + this.path; }
@@ -217,9 +217,9 @@ var mxJSColor = {
 		};
 
 		this.toAbsolute = function(base) {
-			var base = new mxJSColor.URI(base);
-			var r = this;
-			var t = new mxJSColor.URI;
+			let base = new mxJSColor.URI(base);
+			let r = this;
+			let t = new mxJSColor.URI;
 
 			if(base.scheme === null) { return false; }
 
@@ -268,7 +268,7 @@ var mxJSColor = {
 		};
 
 		function removeDotSegments(path) {
-			var out = '';
+			let out = '';
 			while(path) {
 				if(path.substr(0,3)==='../' || path.substr(0,2)==='./') {
 					path = path.replace(/^\.+/,'').substr(1);
@@ -280,7 +280,7 @@ var mxJSColor = {
 				} else if(path==='.' || path==='..') {
 					path = '';
 				} else {
-					var rm = path.match(/^\/?[^\/]*/)[0];
+					let rm = path.match(/^\/?[^\/]*/)[0];
 					path = path.substr(rm.length);
 					out = out + rm;
 				}
@@ -297,7 +297,7 @@ var mxJSColor = {
 
 	/*
 	 * Usage example:
-	 * var myColor = new mxJSColor.color(myInputElement)
+	 * let myColor = new mxJSColor.color(myInputElement)
 	 */
 
 	color : function(target, prop) {
@@ -347,11 +347,11 @@ var mxJSColor = {
 
 		this.showPicker = function() {
 			if(!isPickerOwner()) {
-				var tp = mxJSColor.getElementPos(target); // target pos
-				var ts = mxJSColor.getElementSize(target); // target size
-				var vp = mxJSColor.getViewPos(); // view pos
-				var vs = mxJSColor.getViewSize(); // view size
-				var ps = getPickerDims(this); // picker size
+				let tp = mxJSColor.getElementPos(target); // target pos
+				let ts = mxJSColor.getElementSize(target); // target size
+				let vp = mxJSColor.getViewPos(); // view pos
+				let vs = mxJSColor.getViewSize(); // view size
+				let ps = getPickerDims(this); // picker size
 				var a, b, c;
 				switch(this.pickerPosition.toLowerCase()) {
 					case 'left': a=1; b=0; c=-1; break;
@@ -359,16 +359,16 @@ var mxJSColor = {
 					case 'top':  a=0; b=1; c=-1; break;
 					default:     a=0; b=1; c=1; break;
 				}
-				var l = (ts[b]+ps[b])/2;
+				let l = (ts[b]+ps[b])/2;
 
 				// picker pos
 				if (!this.pickerSmartPosition) {
-					var pp = [
+					let pp = [
 						tp[a],
 						tp[b]+ts[b]-l+l*c
 					];
 				} else {
-					var pp = [
+					let pp = [
 						-vp[a]+tp[a]+ps[a] > vs[a] ?
 							(-vp[a]+tp[a]+ts[a]/2 > vs[a]/2 && tp[a]+ts[a]-ps[a] >= 0 ? tp[a]+ts[a]-ps[a] : tp[a]) :
 							tp[a],
@@ -411,7 +411,7 @@ var mxJSColor = {
 
 		this.exportColor = function(flags) {
 			if(!(flags & leaveValue) && valueElement) {
-				var value = this.toString();
+				let value = this.toString();
 				if(this.caps) { value = value.toUpperCase(); }
 				if(this.hash) { value = '#'+value; }
 				valueElement.value = value;
@@ -452,7 +452,7 @@ var mxJSColor = {
 			r<0 && (r=0) || r>1 && (r=1);
 			g<0 && (g=0) || g>1 && (g=1);
 			b<0 && (b=0) || b>1 && (b=1);
-			var hsv = RGB_HSV(
+			let hsv = RGB_HSV(
 				r===null ? this.rgb[0] : (this.rgb[0]=r),
 				g===null ? this.rgb[1] : (this.rgb[1]=g),
 				b===null ? this.rgb[2] : (this.rgb[2]=b)
@@ -469,7 +469,7 @@ var mxJSColor = {
 
 
 		this.fromString = function(hex, flags) {
-			var m = hex.match(/^\W*([0-9A-F]{3}([0-9A-F]{3})?)\W*$/i);
+			let m = hex.match(/^\W*([0-9A-F]{3}([0-9A-F]{3})?)\W*$/i);
 			if(!m) {
 				return false;
 			} else {
@@ -503,21 +503,21 @@ var mxJSColor = {
 
 
 		function RGB_HSV(r, g, b) {
-			var n = Math.min(Math.min(r,g),b);
-			var v = Math.max(Math.max(r,g),b);
-			var m = v - n;
+			let n = Math.min(Math.min(r,g),b);
+			let v = Math.max(Math.max(r,g),b);
+			let m = v - n;
 			if(m === 0) { return [ null, 0, v ]; }
-			var h = r===n ? 3+(b-g)/m : (g===n ? 5+(r-b)/m : 1+(g-r)/m);
+			let h = r===n ? 3+(b-g)/m : (g===n ? 5+(r-b)/m : 1+(g-r)/m);
 			return [ h===6?0:h, m/v, v ];
 		}
 
 
 		function HSV_RGB(h, s, v) {
 			if(h === null) { return [ v, v, v ]; }
-			var i = Math.floor(h);
-			var f = i%2 ? h-i : 1-(h-i);
-			var m = v * (1 - s);
-			var n = v * (1 - s*f);
+			let i = Math.floor(h);
+			let f = i%2 ? h-i : 1-(h-i);
+			let m = v * (1 - s);
+			let n = v * (1 - s*f);
 			switch(i) {
 				case 6:
 				case 0: return [v,n,m];
@@ -552,7 +552,7 @@ var mxJSColor = {
 					btnT : document.createTextNode(THIS.pickerCloseText)
 				};
 				for(var i=0,segSize=4; i<mxJSColor.images.sld[1]; i+=segSize) {
-					var seg = document.createElement('div');
+					let seg = document.createElement('div');
 					seg.style.height = segSize+'px';
 					seg.style.fontSize = '1px';
 					seg.style.lineHeight = '0';
@@ -570,7 +570,7 @@ var mxJSColor = {
 				mxJSColor.picker.boxB.appendChild(mxJSColor.picker.box);
 			}
 
-			var p = mxJSColor.picker;
+			let p = mxJSColor.picker;
 
 			// controls interaction
 			p.box.onmouseup =
@@ -609,7 +609,7 @@ var mxJSColor = {
 			};
 
 			// picker
-			var dims = getPickerDims(THIS);
+			let dims = getPickerDims(THIS);
 			p.box.style.width = dims[0] + 'px';
 			p.box.style.height = dims[1] + 'px';
 
@@ -670,8 +670,8 @@ var mxJSColor = {
 
 			// "close" button
 			function setBtnBorder() {
-				var insetColors = THIS.pickerInsetColor.split(/\s+/);
-				var pickerOutsetColor = insetColors.length < 2 ? insetColors[0] : insetColors[1] + ' ' + insetColors[0] + ' ' + insetColors[0] + ' ' + insetColors[1];
+				let insetColors = THIS.pickerInsetColor.split(/\s+/);
+				let pickerOutsetColor = insetColors.length < 2 ? insetColors[0] : insetColors[1] + ' ' + insetColors[0] + ' ' + insetColors[0] + ' ' + insetColors[1];
 				p.btn.style.borderColor = pickerOutsetColor;
 			}
 			p.btn.style.display = THIS.pickerClosable ? 'block' : 'none';
@@ -697,8 +697,8 @@ var mxJSColor = {
 
 			// load images in optimal order
 			switch(modeID) {
-				case 0: var padImg = 'hs.png'; break;
-				case 1: var padImg = 'hv.png'; break;
+				case 0: let padImg = 'hs.png'; break;
+				case 1: let padImg = 'hv.png'; break;
 			}
 			p.padM.style.backgroundImage = "url('"+mxJSColor.getDir()+"cross.gif')";
 			p.padM.style.backgroundRepeat = "no-repeat";
@@ -718,7 +718,7 @@ var mxJSColor = {
 
 
 		function getPickerDims(o) {
-			var dims = [
+			let dims = [
 				2*o.pickerInset + 2*o.pickerFace + mxJSColor.images.pad[0] +
 					(o.slider ? 2*o.pickerInset + 2*mxJSColor.images.arrow[0] + mxJSColor.images.sld[0] : 0),
 				o.pickerClosable ?
@@ -732,21 +732,21 @@ var mxJSColor = {
 		function redrawPad() {
 			// redraw the pad pointer
 			switch(modeID) {
-				case 0: var yComponent = 1; break;
-				case 1: var yComponent = 2; break;
+				case 0: let yComponent = 1; break;
+				case 1: let yComponent = 2; break;
 			}
-			var x = Math.round((THIS.hsv[0]/6) * (mxJSColor.images.pad[0]-1));
-			var y = Math.round((1-THIS.hsv[yComponent]) * (mxJSColor.images.pad[1]-1));
+			let x = Math.round((THIS.hsv[0]/6) * (mxJSColor.images.pad[0]-1));
+			let y = Math.round((1-THIS.hsv[yComponent]) * (mxJSColor.images.pad[1]-1));
 			mxJSColor.picker.padM.style.backgroundPosition =
 				(THIS.pickerFace+THIS.pickerInset+x - Math.floor(mxJSColor.images.cross[0]/2)) + 'px ' +
 				(THIS.pickerFace+THIS.pickerInset+y - Math.floor(mxJSColor.images.cross[1]/2)) + 'px';
 
 			// redraw the slider image
-			var seg = mxJSColor.picker.sld.childNodes;
+			let seg = mxJSColor.picker.sld.childNodes;
 
 			switch(modeID) {
 				case 0:
-					var rgb = HSV_RGB(THIS.hsv[0], THIS.hsv[1], 1);
+					let rgb = HSV_RGB(THIS.hsv[0], THIS.hsv[1], 1);
 					for(var i=0; i<seg.length; i+=1) {
 						seg[i].style.backgroundColor = 'rgb('+
 							(rgb[0]*(1-i/seg.length)*100)+'%,'+
@@ -756,8 +756,8 @@ var mxJSColor = {
 					break;
 				case 1:
 					var rgb, s, c = [ THIS.hsv[2], 0, 0 ];
-					var i = Math.floor(THIS.hsv[0]);
-					var f = i%2 ? THIS.hsv[0]-i : 1-(THIS.hsv[0]-i);
+					let i = Math.floor(THIS.hsv[0]);
+					let f = i%2 ? THIS.hsv[0]-i : 1-(THIS.hsv[0]-i);
 					switch(i) {
 						case 6:
 						case 0: rgb=[0,1,2]; break;
@@ -784,10 +784,10 @@ var mxJSColor = {
 		function redrawSld() {
 			// redraw the slider pointer
 			switch(modeID) {
-				case 0: var yComponent = 2; break;
-				case 1: var yComponent = 1; break;
+				case 0: let yComponent = 2; break;
+				case 1: let yComponent = 1; break;
 			}
-			var y = Math.round((1-THIS.hsv[yComponent]) * (mxJSColor.images.sld[1]-1));
+			let y = Math.round((1-THIS.hsv[yComponent]) * (mxJSColor.images.sld[1]-1));
 			mxJSColor.picker.sldM.style.backgroundPosition =
 				'0 ' + (THIS.pickerFace+THIS.pickerInset+y - Math.floor(mxJSColor.images.arrow[1]/2)) + 'px';
 		}
@@ -816,9 +816,9 @@ var mxJSColor = {
 
 
 		function setPad(e) {
-			var mpos = mxJSColor.getRelMousePos(e);
-			var x = mpos.x - THIS.pickerFace - THIS.pickerInset;
-			var y = mpos.y - THIS.pickerFace - THIS.pickerInset;
+			let mpos = mxJSColor.getRelMousePos(e);
+			let x = mpos.x - THIS.pickerFace - THIS.pickerInset;
+			let y = mpos.y - THIS.pickerFace - THIS.pickerInset;
 			switch(modeID) {
 				case 0: THIS.fromHSV(x*(6/(mxJSColor.images.pad[0]-1)), 1 - y/(mxJSColor.images.pad[1]-1), null, leaveSld); break;
 				case 1: THIS.fromHSV(x*(6/(mxJSColor.images.pad[0]-1)), null, 1 - y/(mxJSColor.images.pad[1]-1), leaveSld); break;
@@ -827,8 +827,8 @@ var mxJSColor = {
 
 
 		function setSld(e) {
-			var mpos = mxJSColor.getRelMousePos(e);
-			var y = mpos.y - THIS.pickerFace - THIS.pickerInset;
+			let mpos = mxJSColor.getRelMousePos(e);
+			let y = mpos.y - THIS.pickerFace - THIS.pickerInset;
 			switch(modeID) {
 				case 0: THIS.fromHSV(null, null, 1 - y/(mxJSColor.images.sld[1]-1), leavePad); break;
 				case 1: THIS.fromHSV(null, 1 - y/(mxJSColor.images.sld[1]-1), null, leavePad); break;
@@ -847,9 +847,9 @@ var mxJSColor = {
 		}
 
 
-		var THIS = this;
-		var modeID = this.pickerMode.toLowerCase()==='hvs' ? 1 : 0;
-		var abortBlur = false;
+		let THIS = this;
+		let modeID = this.pickerMode.toLowerCase()==='hvs' ? 1 : 0;
+		let abortBlur = false;
 		var
 			valueElement = mxJSColor.fetchElement(this.valueElement),
 			styleElement = mxJSColor.fetchElement(this.styleElement);
@@ -876,7 +876,7 @@ var mxJSColor = {
 
 		// valueElement
 		if(valueElement) {
-			var updateField = function() {
+			let updateField = function() {
 				THIS.fromString(valueElement.value, leaveValue);
 				dispatchImmediateChange();
 			};

@@ -54,9 +54,9 @@ class mxCodec {
    * The following code is used to encode a graph model.
    *
    * (code)
-   * var encoder = new mxCodec();
-   * var result = encoder.encode(graph.getModel());
-   * var xml = mxUtils.getXml(result);
+   * let encoder = new mxCodec();
+   * let result = encoder.encode(graph.getModel());
+   * let xml = mxUtils.getXml(result);
    * (end)
    *
    * Example:
@@ -67,8 +67,8 @@ class mxCodec {
    * XML string.
    *
    * (code)
-   * var doc = mxUtils.parseXml(xmlString);
-   * var codec = new mxCodec(doc);
+   * let doc = mxUtils.parseXml(xmlString);
+   * let codec = new mxCodec(doc);
    * codec.decode(doc.documentElement, graph.getModel());
    * (end)
    *
@@ -79,11 +79,11 @@ class mxCodec {
    * be added anywhere in the cell hierarchy after parsing.
    *
    * (code)
-   * var xml = '<root><mxCell id="2" value="Hello," vertex="1"><mxGeometry x="20" y="20" width="80" height="30" as="geometry"/></mxCell><mxCell id="3" value="World!" vertex="1"><mxGeometry x="200" y="150" width="80" height="30" as="geometry"/></mxCell><mxCell id="4" value="" edge="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell></root>';
-   * var doc = mxUtils.parseXml(xml);
-   * var codec = new mxCodec(doc);
-   * var elt = doc.documentElement.firstChild;
-   * var cells = [];
+   * let xml = '<root><mxCell id="2" value="Hello," vertex="1"><mxGeometry x="20" y="20" width="80" height="30" as="geometry"/></mxCell><mxCell id="3" value="World!" vertex="1"><mxGeometry x="200" y="150" width="80" height="30" as="geometry"/></mxCell><mxCell id="4" value="" edge="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell></root>';
+   * let doc = mxUtils.parseXml(xml);
+   * let codec = new mxCodec(doc);
+   * let elt = doc.documentElement.firstChild;
+   * let cells = [];
    *
    * while (elt != null)
    * {
@@ -100,8 +100,8 @@ class mxCodec {
    * output is displayed in a dialog box.
    *
    * (code)
-   * var enc = new mxCodec();
-   * var cells = graph.getSelectionCells();
+   * let enc = new mxCodec();
+   * let cells = graph.getSelectionCells();
    * mxUtils.alert(mxUtils.getPrettyXml(enc.encode(cells)));
    * (end)
    *
@@ -114,7 +114,7 @@ class mxCodec {
    * encoded objects:
    *
    * (code)
-   * var oldEncode = encode;
+   * let oldEncode = encode;
    * encode = (obj)=>
    * {
    *   mxLog.show();
@@ -128,7 +128,7 @@ class mxCodec {
    * decoding those objects, the constructor should be written as follows:
    *
    * (code)
-   * var MyObj = (name)=>
+   * let MyObj = (name)=>
    * {
    *   // ...
    * };
@@ -175,7 +175,7 @@ class mxCodec {
    * from the document is parsed using <decode>.
    */
   getObject = (id) => {
-    var obj = null;
+    let obj = null;
 
     if (id != null) {
       obj = this.objects[id];
@@ -184,7 +184,7 @@ class mxCodec {
         obj = this.lookup(id);
 
         if (obj == null) {
-          var node = this.getElementById(id);
+          let node = this.getElementById(id);
 
           if (node != null) {
             obj = this.decode(node);
@@ -205,7 +205,7 @@ class mxCodec {
    * Example:
    *
    * (code)
-   * var codec = new mxCodec();
+   * let codec = new mxCodec();
    * codec.lookup = (id)=>
    * {
    *   return model.getCell(id);
@@ -261,7 +261,7 @@ class mxCodec {
    */
   addElement = (node) => {
     if (node.nodeType === mxConstants.NODETYPE_ELEMENT) {
-      var id = node.getAttribute('id');
+      let id = node.getAttribute('id');
 
       if (id != null) {
         if (this.elements[id] == null) {
@@ -294,7 +294,7 @@ class mxCodec {
    * obj - Object to return the ID for.
    */
   getId = (obj) => {
-    var id = null;
+    let id = null;
 
     if (obj != null) {
       id = this.reference(obj);
@@ -326,7 +326,7 @@ class mxCodec {
    * Example:
    *
    * (code)
-   * var codec = new mxCodec();
+   * let codec = new mxCodec();
    * codec.reference = (obj)=>
    * {
    *   return obj.getCustomId();
@@ -352,10 +352,10 @@ class mxCodec {
    * obj - Object to be encoded.
    */
   encode = (obj) => {
-    var node = null;
+    let node = null;
 
     if (obj != null && obj.constructor != null) {
-      var enc = mxCodecRegistry.getCodec(obj.constructor);
+      let enc = mxCodecRegistry.getCodec(obj.constructor);
 
       if (enc != null) {
         node = enc.encode(this, obj);
@@ -389,10 +389,10 @@ class mxCodec {
    */
   decode = (node, into) => {
     this.updateElements();
-    var obj = null;
+    let obj = null;
 
     if (node != null && node.nodeType === mxConstants.NODETYPE_ELEMENT) {
-      var ctor = null;
+      let ctor = null;
 
       try {
         ctor = window[node.nodeName];
@@ -400,7 +400,7 @@ class mxCodec {
         // ignore
       }
 
-      var dec = mxCodecRegistry.getCodec(ctor);
+      let dec = mxCodecRegistry.getCodec(ctor);
 
       if (dec != null) {
         obj = dec.decode(this, node, into);
@@ -437,9 +437,9 @@ class mxCodec {
     node.appendChild(this.encode(cell));
 
     if (includeChildren == null || includeChildren) {
-      var childCount = cell.getChildCount();
+      let childCount = cell.getChildCount();
 
-      for (var i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i++) {
         this.encodeCell(cell.getChildAt(i), node);
       }
     }
@@ -479,19 +479,19 @@ class mxCodec {
    */
   decodeCell = (node, restoreStructures) => {
     restoreStructures = (restoreStructures != null) ? restoreStructures : true;
-    var cell = null;
+    let cell = null;
 
     if (node != null && node.nodeType === mxConstants.NODETYPE_ELEMENT) {
       // Tries to find a codec for the given node name. If that does
       // not return a codec then the node is the user object (an XML node
       // that contains the mxCell, aka inversion).
-      var decoder = mxCodecRegistry.getCodec(node.nodeName);
+      let decoder = mxCodecRegistry.getCodec(node.nodeName);
 
       // Tries to find the codec for the cell inside the user object.
       // This assumes all node names inside the user object are either
       // not registered or they correspond to a class for cells.
       if (!this.isCellCodec(decoder)) {
-        var child = node.firstChild;
+        let child = node.firstChild;
 
         while (child != null && !this.isCellCodec(decoder)) {
           decoder = mxCodecRegistry.getCodec(child.nodeName);
@@ -519,9 +519,9 @@ class mxCodec {
    * Inserts the given cell into its parent and terminal cells.
    */
   insertIntoGraph = (cell) => {
-    var parent = cell.parent;
-    var source = cell.getTerminal(true);
-    var target = cell.getTerminal(false);
+    let parent = cell.parent;
+    let source = cell.getTerminal(true);
+    let target = cell.getTerminal(false);
 
     // Fixes possible inconsistencies during insert into graph
     cell.setTerminal(null, false);

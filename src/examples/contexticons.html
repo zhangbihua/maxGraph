@@ -49,7 +49,7 @@
 			};
 
 			// Delete
-			var img = createImage('images/delete2.png');
+			let img = createImage('images/delete2.png');
 			img.setAttribute('title', 'Delete');
 			img.style.cursor = 'pointer';
 			img.style.width = '16px';
@@ -71,7 +71,7 @@
 			this.domNode.appendChild(img);
 
 			// Size
-			var img = createImage('images/fit_to_size.png');
+			let img = createImage('images/fit_to_size.png');
 			img.setAttribute('title', 'Resize');
 			img.style.cursor = 'se-resize';
 			img.style.width = '16px';
@@ -88,7 +88,7 @@
 			this.domNode.appendChild(img);
 
 			// Move
-			var img = createImage('images/plus.png');
+			let img = createImage('images/plus.png');
 			img.setAttribute('title', 'Move');
 			img.style.cursor = 'move';
 			img.style.width = '16px';
@@ -107,7 +107,7 @@
 			this.domNode.appendChild(img);
 
 			// Connect
-			var img = createImage('images/check.png');
+			let img = createImage('images/check.png');
 			img.setAttribute('title', 'Connect');
 			img.style.cursor = 'pointer';
 			img.style.width = '16px';
@@ -115,7 +115,7 @@
 			mxEvent.addGestureListeners(img,
 				mxUtils.bind(this, function(evt)
 				{
-					var pt = mxUtils.convertPoint(this.graph.container,
+					let pt = mxUtils.convertPoint(this.graph.container,
 							mxEvent.getClientX(evt), mxEvent.getClientY(evt));
 					this.graph.connectionHandler.start(this.state, pt.x, pt.y);
 					this.graph.isMouseDown = true;
@@ -139,7 +139,7 @@
 		{
 			if (this.state != null && this.domNode != null)
 			{
-				var dy = 4;
+				let dy = 4;
 				this.domNode.style.left = (this.state.x + this.state.width - 56) + 'px';
 				this.domNode.style.top = (this.state.y + this.state.height + dy) + 'px';
 			}
@@ -170,7 +170,7 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setConnectable(true);
 				graph.connectionHandler.createTarget = true;
 
@@ -194,7 +194,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

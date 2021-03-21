@@ -70,26 +70,26 @@ class mxSwimlane extends mxShape {
    * Returns the bounding box for the label.
    */
   getLabelBounds = (rect) => {
-    var start = this.getTitleSize();
-    var bounds = new mxRectangle(rect.x, rect.y, rect.width, rect.height);
-    var horizontal = this.isHorizontal();
+    let start = this.getTitleSize();
+    let bounds = new mxRectangle(rect.x, rect.y, rect.width, rect.height);
+    let horizontal = this.isHorizontal();
 
-    var flipH = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, 0) == 1;
-    var flipV = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, 0) == 1;
+    let flipH = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, 0) == 1;
+    let flipV = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, 0) == 1;
 
     // East is default
-    var shapeVertical = (this.direction == mxConstants.DIRECTION_NORTH ||
+    let shapeVertical = (this.direction == mxConstants.DIRECTION_NORTH ||
         this.direction == mxConstants.DIRECTION_SOUTH);
-    var realHorizontal = horizontal == !shapeVertical;
+    let realHorizontal = horizontal == !shapeVertical;
 
-    var realFlipH = !realHorizontal && flipH != (this.direction == mxConstants.DIRECTION_SOUTH ||
+    let realFlipH = !realHorizontal && flipH != (this.direction == mxConstants.DIRECTION_SOUTH ||
         this.direction == mxConstants.DIRECTION_WEST);
-    var realFlipV = realHorizontal && flipV != (this.direction == mxConstants.DIRECTION_SOUTH ||
+    let realFlipV = realHorizontal && flipV != (this.direction == mxConstants.DIRECTION_SOUTH ||
         this.direction == mxConstants.DIRECTION_WEST);
 
     // Shape is horizontal
     if (!shapeVertical) {
-      var tmp = Math.min(bounds.height, start * this.scale);
+      let tmp = Math.min(bounds.height, start * this.scale);
 
       if (realFlipH || realFlipV) {
         bounds.y += bounds.height - tmp;
@@ -97,7 +97,7 @@ class mxSwimlane extends mxShape {
 
       bounds.height = tmp;
     } else {
-      var tmp = Math.min(bounds.width, start * this.scale);
+      let tmp = Math.min(bounds.width, start * this.scale);
 
       if (realFlipH || realFlipV) {
         bounds.x += bounds.width - tmp;
@@ -115,7 +115,7 @@ class mxSwimlane extends mxShape {
    * Returns the bounding box for the gradient box for this shape.
    */
   getGradientBounds = (c, x, y, w, h) => {
-    var start = this.getTitleSize();
+    let start = this.getTitleSize();
 
     if (this.isHorizontal()) {
       start = Math.min(start, h);
@@ -136,7 +136,7 @@ class mxSwimlane extends mxShape {
       return Math.min(w / 2, Math.min(h / 2, mxUtils.getValue(this.style,
           mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2));
     } else {
-      var f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
+      let f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
 
       return start * f * 3;
     }
@@ -157,10 +157,10 @@ class mxSwimlane extends mxShape {
    * Paints the swimlane vertex shape.
    */
   paintVertexShape = (c, x, y, w, h) => {
-    var start = this.getTitleSize();
-    var fill = mxUtils.getValue(this.style, mxConstants.STYLE_SWIMLANE_FILLCOLOR, mxConstants.NONE);
-    var swimlaneLine = mxUtils.getValue(this.style, mxConstants.STYLE_SWIMLANE_LINE, 1) == 1;
-    var r = 0;
+    let start = this.getTitleSize();
+    let fill = mxUtils.getValue(this.style, mxConstants.STYLE_SWIMLANE_FILLCOLOR, mxConstants.NONE);
+    let swimlaneLine = mxUtils.getValue(this.style, mxConstants.STYLE_SWIMLANE_LINE, 1) == 1;
+    let r = 0;
 
     if (this.isHorizontal()) {
       start = Math.min(start, h);
@@ -178,11 +178,11 @@ class mxSwimlane extends mxShape {
       this.paintRoundedSwimlane(c, x, y, w, h, start, r, fill, swimlaneLine);
     }
 
-    var sep = mxUtils.getValue(this.style, mxConstants.STYLE_SEPARATORCOLOR, mxConstants.NONE);
+    let sep = mxUtils.getValue(this.style, mxConstants.STYLE_SEPARATORCOLOR, mxConstants.NONE);
     this.paintSeparator(c, x, y, w, h, start, sep);
 
     if (this.image != null) {
-      var bounds = this.getImageBounds(x, y, w, h);
+      let bounds = this.getImageBounds(x, y, w, h);
       c.image(bounds.x - x, bounds.y - y, bounds.width, bounds.height,
           this.image, false, false, false);
     }
@@ -201,7 +201,7 @@ class mxSwimlane extends mxShape {
   paintSwimlane = (c, x, y, w, h, start, fill, swimlaneLine) => {
     c.begin();
 
-    var events = true;
+    let events = true;
 
     if (this.style != null) {
       events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1';
@@ -282,7 +282,7 @@ class mxSwimlane extends mxShape {
   paintRoundedSwimlane = (c, x, y, w, h, start, r, fill, swimlaneLine) => {
     c.begin();
 
-    var events = true;
+    let events = true;
 
     if (this.style != null) {
       events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1';

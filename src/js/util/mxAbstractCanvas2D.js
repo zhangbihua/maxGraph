@@ -195,9 +195,9 @@ class mxAbstractCanvas2D {
       this.path.push(arguments[0]);
 
       if (arguments.length > 2) {
-        var s = this.state;
+        let s = this.state;
 
-        for (var i = 2; i < arguments.length; i += 2) {
+        for (let i = 2; i < arguments.length; i += 2) {
           this.lastX = arguments[i - 1];
           this.lastY = arguments[i];
 
@@ -214,7 +214,7 @@ class mxAbstractCanvas2D {
    * Rotates the given point and returns the result as an <mxPoint>.
    */
   mxAbstractCanvas2rotatePoint = (x, y, theta, cx, cy) => {
-    var rad = theta * (Math.PI / 180);
+    let rad = theta * (Math.PI / 180);
 
     return mxUtils.getRotatedPoint(new mxPoint(x, y), Math.cos(rad),
         Math.sin(rad), new mxPoint(cx, cy));
@@ -326,7 +326,7 @@ class mxAbstractCanvas2D {
    * Sets the current gradient.
    */
   mxAbstractCanvas2setGradient = (color1, color2, x, y, w, h, direction, alpha1, alpha2) => {
-    var s = this.state;
+    let s = this.state;
     s.fillColor = color1;
     s.gradientFillAlpha = (alpha1 != null) ? alpha1 : 1;
     s.gradientColor = color2;
@@ -567,10 +567,10 @@ class mxAbstractCanvas2D {
    * is broken down into curves.
    */
   mxAbstractCanvas2arcTo = (rx, ry, angle, largeArcFlag, sweepFlag, x, y) => {
-    var curves = mxUtils.arcToCurves(this.lastX, this.lastY, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
+    let curves = mxUtils.arcToCurves(this.lastX, this.lastY, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
 
     if (curves != null) {
-      for (var i = 0; i < curves.length; i += 6) {
+      for (let i = 0; i < curves.length; i += 6) {
         this.curveTo(curves[i], curves[i + 1], curves[i + 2],
             curves[i + 3], curves[i + 4], curves[i + 5]);
       }

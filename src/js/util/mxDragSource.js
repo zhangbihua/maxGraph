@@ -172,8 +172,8 @@ class mxDragSource {
     });
 
     this.eventConsumer = (sender, evt) => {
-      var evtName = evt.getProperty('eventName');
-      var me = evt.getProperty('event');
+      let evtName = evt.getProperty('eventName');
+      let me = evt.getProperty('event');
 
       if (evtName != mxEvent.MOUSE_DOWN) {
         me.consume();
@@ -310,7 +310,7 @@ class mxDragSource {
    * overridden as follows.
    *
    * (code)
-   * var mouseDown = dragSource.mouseDown;
+   * let mouseDown = dragSource.mouseDown;
    *
    * dragSource.mouseDown = (evt)=>
    * {
@@ -395,11 +395,11 @@ class mxDragSource {
    * Returns true if the given graph contains the given event.
    */
   graphContainsEvent = (graph, evt) => {
-    var x = mxEvent.getClientX(evt);
-    var y = mxEvent.getClientY(evt);
-    var offset = mxUtils.getOffset(graph.container);
-    var origin = mxUtils.getScrollOrigin();
-    var elt = this.getElementForEvent(evt);
+    let x = mxEvent.getClientX(evt);
+    let y = mxEvent.getClientY(evt);
+    let offset = mxUtils.getOffset(graph.container);
+    let origin = mxUtils.getScrollOrigin();
+    let elt = this.getElementForEvent(evt);
 
     if (this.checkEventSource) {
       while (elt != null && elt != graph.container) {
@@ -421,7 +421,7 @@ class mxDragSource {
    * respectively, and invokes <dragOver> if <currentGraph> is not null.
    */
   mouseMove = (evt) => {
-    var graph = this.getGraphForEvent(evt);
+    let graph = this.getGraphForEvent(evt);
 
     // Checks if event is inside the bounds of the graph container
     if (graph != null && !this.graphContainsEvent(graph, evt)) {
@@ -445,8 +445,8 @@ class mxDragSource {
     }
 
     if (this.dragElement != null && (this.previewElement == null || this.previewElement.style.visibility != 'visible')) {
-      var x = mxEvent.getClientX(evt);
-      var y = mxEvent.getClientY(evt);
+      let x = mxEvent.getClientX(evt);
+      let y = mxEvent.getClientY(evt);
 
       if (this.dragElement.parentNode == null) {
         document.body.appendChild(this.dragElement);
@@ -459,7 +459,7 @@ class mxDragSource {
         y += this.dragOffset.y;
       }
 
-      var offset = mxUtils.getDocumentScrollOrigin(document);
+      let offset = mxUtils.getDocumentScrollOrigin(document);
 
       this.dragElement.style.left = (x + offset.x) + 'px';
       this.dragElement.style.top = (y + offset.y) + 'px';
@@ -480,10 +480,10 @@ class mxDragSource {
     if (this.currentGraph != null) {
       if (this.currentPoint != null && (this.previewElement == null ||
           this.previewElement.style.visibility != 'hidden')) {
-        var scale = this.currentGraph.view.scale;
-        var tr = this.currentGraph.view.translate;
-        var x = this.currentPoint.x / scale - tr.x;
-        var y = this.currentPoint.y / scale - tr.y;
+        let scale = this.currentGraph.view.scale;
+        let tr = this.currentGraph.view.translate;
+        let x = this.currentPoint.x / scale - tr.x;
+        let y = this.currentPoint.y / scale - tr.y;
 
         this.drop(this.currentGraph, evt, this.currentDropTarget, x, y);
       }
@@ -580,10 +580,10 @@ class mxDragSource {
    * targets and updates the preview.
    */
   dragOver = (graph, evt) => {
-    var offset = mxUtils.getOffset(graph.container);
-    var origin = mxUtils.getScrollOrigin(graph.container);
-    var x = mxEvent.getClientX(evt) - offset.x + origin.x - graph.panDx;
-    var y = mxEvent.getClientY(evt) - offset.y + origin.y - graph.panDy;
+    let offset = mxUtils.getOffset(graph.container);
+    let origin = mxUtils.getScrollOrigin(graph.container);
+    let x = mxEvent.getClientX(evt) - offset.x + origin.x - graph.panDx;
+    let y = mxEvent.getClientY(evt) - offset.y + origin.y - graph.panDy;
 
     if (graph.autoScroll && (this.autoscroll == null || this.autoscroll)) {
       graph.scrollPointToVisible(x, y, graph.autoExtend);
@@ -592,7 +592,7 @@ class mxDragSource {
     // Highlights the drop target under the mouse
     if (this.currentHighlight != null && graph.isDropEnabled()) {
       this.currentDropTarget = this.getDropTarget(graph, x, y, evt);
-      var state = graph.getView().getState(this.currentDropTarget);
+      let state = graph.getView().getState(this.currentDropTarget);
       this.currentHighlight.highlight(state);
     }
 
@@ -605,24 +605,24 @@ class mxDragSource {
         this.previewElement.style.position = 'absolute';
       }
 
-      var gridEnabled = this.isGridEnabled() && graph.isGridEnabledEvent(evt);
-      var hideGuide = true;
+      let gridEnabled = this.isGridEnabled() && graph.isGridEnabledEvent(evt);
+      let hideGuide = true;
 
       // Grid and guides
       if (this.currentGuide != null && this.currentGuide.isEnabledForEvent(evt)) {
         // LATER: HTML preview appears smaller than SVG preview
-        var w = parseInt(this.previewElement.style.width);
-        var h = parseInt(this.previewElement.style.height);
-        var bounds = new mxRectangle(0, 0, w, h);
-        var delta = new mxPoint(x, y);
+        let w = parseInt(this.previewElement.style.width);
+        let h = parseInt(this.previewElement.style.height);
+        let bounds = new mxRectangle(0, 0, w, h);
+        let delta = new mxPoint(x, y);
         delta = this.currentGuide.move(bounds, delta, gridEnabled, true);
         hideGuide = false;
         x = delta.x;
         y = delta.y;
       } else if (gridEnabled) {
-        var scale = graph.view.scale;
-        var tr = graph.view.translate;
-        var off = graph.gridSize / 2;
+        let scale = graph.view.scale;
+        let tr = graph.view.translate;
+        let off = graph.gridSize / 2;
         x = (graph.snap(x / scale - tr.x - off) + tr.x) * scale;
         y = (graph.snap(y / scale - tr.y - off) + tr.y) * scale;
       }

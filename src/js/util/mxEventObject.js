@@ -51,7 +51,7 @@ class mxEventObject {
     this.name = name;
     this.properties = [];
 
-    for (var i = 1; i < arguments.length; i += 2) {
+    for (let i = 1; i < arguments.length; i += 2) {
       if (arguments[i + 1] != null) {
         this.properties[arguments[i]] = arguments[i + 1];
       }

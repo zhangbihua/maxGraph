@@ -35,7 +35,7 @@
 				mxConstants.ENTITY_SEGMENT = 20;
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.setDropEnabled(true);
 				
 				// Disables global features
@@ -47,7 +47,7 @@
 				graph.border = 10;
 
 				// Sets global styles
-				var style = graph.getStylesheet().getDefaultEdgeStyle();
+				let style = graph.getStylesheet().getDefaultEdgeStyle();
 				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
 				style[mxConstants.STYLE_ROUNDED] = true;
 
@@ -64,9 +64,9 @@
 				graph.getStylesheet().putCellStyle('column', style);
 				
 				// Installs auto layout for all levels
-				var layout = new mxStackLayout(graph, true);
+				let layout = new mxStackLayout(graph, true);
 				layout.border = graph.border;
-				var layoutMgr = new mxLayoutManager(graph);
+				let layoutMgr = new mxLayoutManager(graph);
 				layoutMgr.getLayout = function(cell)
 				{
 					if (!cell.collapsed)
@@ -95,7 +95,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

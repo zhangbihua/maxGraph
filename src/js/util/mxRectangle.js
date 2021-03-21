@@ -87,10 +87,10 @@ class mxRectangle extends mxPoint {
    */
   add = (rect) => {
     if (rect != null) {
-      var minX = Math.min(this.x, rect.x);
-      var minY = Math.min(this.y, rect.y);
-      var maxX = Math.max(this.x + this.width, rect.x + rect.width);
-      var maxY = Math.max(this.y + this.height, rect.y + rect.height);
+      let minX = Math.min(this.x, rect.x);
+      let minY = Math.min(this.y, rect.y);
+      let maxX = Math.max(this.x + this.width, rect.x + rect.width);
+      let maxY = Math.max(this.y + this.height, rect.y + rect.height);
 
       this.x = minX;
       this.y = minY;
@@ -150,10 +150,10 @@ class mxRectangle extends mxPoint {
    * Rotates this rectangle by 90 degree around its center point.
    */
   rotate90 = () => {
-    var t = (this.width - this.height) / 2;
+    let t = (this.width - this.height) / 2;
     this.x += t;
     this.y -= t;
-    var tmp = this.width;
+    let tmp = this.width;
     this.width = this.height;
     this.height = tmp;
   };

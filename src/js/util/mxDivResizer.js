@@ -13,7 +13,7 @@
  * then you can use this class as follows:
  *
  * (code)
- * var resizer = new mxDivResizer(background);
+ * let resizer = new mxDivResizer(background);
  * resizer.getDocumentHeight = ()=>
  * {
  *   return document.body.scrollHeight;
@@ -65,7 +65,7 @@ class mxDivResizer {
       }
 
       this.div = div;
-      var style = mxUtils.getCurrentStyle(div);
+      let style = mxUtils.getCurrentStyle(div);
 
       if (style != null) {
         this.resizeWidth = style.width == 'auto';
@@ -92,13 +92,13 @@ class mxDivResizer {
    * Updates the style of the DIV after the window has been resized.
    */
   resize = () => {
-    var w = this.getDocumentWidth();
-    var h = this.getDocumentHeight();
+    let w = this.getDocumentWidth();
+    let h = this.getDocumentHeight();
 
-    var l = parseInt(this.div.style.left);
-    var r = parseInt(this.div.style.right);
-    var t = parseInt(this.div.style.top);
-    var b = parseInt(this.div.style.bottom);
+    let l = parseInt(this.div.style.left);
+    let r = parseInt(this.div.style.right);
+    let t = parseInt(this.div.style.top);
+    let b = parseInt(this.div.style.bottom);
 
     if (this.resizeWidth &&
         !isNaN(l) &&

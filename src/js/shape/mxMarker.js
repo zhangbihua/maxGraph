@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-var mxMarker =
+let mxMarker =
     {
       /**
        * Class: mxMarker
@@ -33,7 +33,7 @@ var mxMarker =
        * Returns a function to paint the given marker.
        */
       createMarker: (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) => {
-        var funct = mxMarker.markers[type];
+        let funct = mxMarker.markers[type];
 
         return (funct != null) ? funct(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) : null;
       }
@@ -51,17 +51,17 @@ var mxMarker =
       // The angle of the forward facing arrow sides against the x axis is
       // 26.565 degrees, 1/sin(26.565) = 2.236 / 2 = 1.118 ( / 2 allows for
       // only half the strokewidth is processed ).
-      var endOffsetX = unitX * sw * 1.118;
-      var endOffsetY = unitY * sw * 1.118;
+      let endOffsetX = unitX * sw * 1.118;
+      let endOffsetY = unitY * sw * 1.118;
 
       unitX = unitX * (size + sw);
       unitY = unitY * (size + sw);
 
-      var pt = pe.clone();
+      let pt = pe.clone();
       pt.x -= endOffsetX;
       pt.y -= endOffsetY;
 
-      var f = (type != mxConstants.ARROW_CLASSIC && type != mxConstants.ARROW_CLASSIC_THIN) ? 1 : 3 / 4;
+      let f = (type != mxConstants.ARROW_CLASSIC && type != mxConstants.ARROW_CLASSIC_THIN) ? 1 : 3 / 4;
       pe.x += -unitX * f - endOffsetX;
       pe.y += -unitY * f - endOffsetY;
 
@@ -98,13 +98,13 @@ var mxMarker =
       // The angle of the forward facing arrow sides against the x axis is
       // 26.565 degrees, 1/sin(26.565) = 2.236 / 2 = 1.118 ( / 2 allows for
       // only half the strokewidth is processed ).
-      var endOffsetX = unitX * sw * 1.118;
-      var endOffsetY = unitY * sw * 1.118;
+      let endOffsetX = unitX * sw * 1.118;
+      let endOffsetY = unitY * sw * 1.118;
 
       unitX = unitX * (size + sw);
       unitY = unitY * (size + sw);
 
-      var pt = pe.clone();
+      let pt = pe.clone();
       pt.x -= endOffsetX;
       pt.y -= endOffsetY;
 
@@ -125,9 +125,9 @@ var mxMarker =
   mxMarker.addMarker('openThin', createOpenArrow(3));
 
   mxMarker.addMarker('oval', (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) => {
-    var a = size / 2;
+    let a = size / 2;
 
-    var pt = pe.clone();
+    let pt = pe.clone();
     pe.x -= unitX * a;
     pe.y -= unitY * a;
 
@@ -148,14 +148,14 @@ var mxMarker =
     // only half the strokewidth is processed ). Or 0.9862 for thin diamond.
     // Note these values and the tk variable below are dependent, update
     // both together (saves trig hard coding it).
-    var swFactor = (type == mxConstants.ARROW_DIAMOND) ? 0.7071 : 0.9862;
-    var endOffsetX = unitX * sw * swFactor;
-    var endOffsetY = unitY * sw * swFactor;
+    let swFactor = (type == mxConstants.ARROW_DIAMOND) ? 0.7071 : 0.9862;
+    let endOffsetX = unitX * sw * swFactor;
+    let endOffsetY = unitY * sw * swFactor;
 
     unitX = unitX * (size + sw);
     unitY = unitY * (size + sw);
 
-    var pt = pe.clone();
+    let pt = pe.clone();
     pt.x -= endOffsetX;
     pt.y -= endOffsetY;
 
@@ -163,7 +163,7 @@ var mxMarker =
     pe.y += -unitY - endOffsetY;
 
     // thickness factor for diamond
-    var tk = ((type == mxConstants.ARROW_DIAMOND) ? 2 : 3.4);
+    let tk = ((type == mxConstants.ARROW_DIAMOND) ? 2 : 3.4);
 
     return () => {
       canvas.begin();

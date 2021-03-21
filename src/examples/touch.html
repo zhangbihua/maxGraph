@@ -67,7 +67,7 @@
 				// mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
 				
 				// Disables built-in text selection and context menu while not editing text
-				var textEditing =  mxUtils.bind(this, function(evt)
+				let textEditing =  mxUtils.bind(this, function(evt)
 				{
 					return graph.isEditing();
 				});
@@ -77,13 +77,13 @@
 				container.oncontextmenu = textEditing;
 
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.centerZoom = false;
 				graph.setConnectable(true);
 				graph.setPanning(true);
 				
 				// Creates rubberband selection
-			    var rubberband = new mxRubberband(graph);
+			    let rubberband = new mxRubberband(graph);
 				
 				graph.popupMenuHandler.autoExpand = true;
 				
@@ -116,9 +116,9 @@
 
 				// Context menu trigger implementation depending on current selection state
 				// combined with support for normal popup trigger.
-				var cellSelected = false;
-				var selectionEmpty = false;
-				var menuShowing = false;
+				let cellSelected = false;
+				let selectionEmpty = false;
+				let menuShowing = false;
 				
 				graph.fireMouseEvent = function(evtName, me, sender)
 				{
@@ -151,12 +151,12 @@
 				{
 					if (!mxEvent.isMultiTouchEvent(evt))
 					{
-						var me = evt.getProperty('event');
-						var cell = evt.getProperty('cell');
+						let me = evt.getProperty('event');
+						let cell = evt.getProperty('cell');
 						
 						if (cell == null)
 						{
-							var pt = mxUtils.convertPoint(this.container,
+							let pt = mxUtils.convertPoint(this.container,
 									mxEvent.getClientX(me), mxEvent.getClientY(me));
 							rubberband.start(pt.x, pt.y);
 						}
@@ -187,7 +187,7 @@
 
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -212,11 +212,11 @@
 				// Adds custom hit detection if native hit detection found no cell
 				graph.updateMouseEvent = function(me)
 				{
-					var me = mxGraph.prototype.updateMouseEvent.apply(this, arguments);
+					let me = mxGraph.prototype.updateMouseEvent.apply(this, arguments);
 
 					if (me.getState() == null)
 					{
-						var cell = this.getCellAt(me.graphX, me.graphY);
+						let cell = this.getCellAt(me.graphX, me.graphY);
 
 						if (cell != null && this.isSwimlane(cell) && this.hitsSwimlaneContent(cell, me.graphX, me.graphY))
 						{
@@ -270,7 +270,7 @@
 			// One finger pans (no rubberband selection) must start regardless of mouse button
 			mxPanningHandler.prototype.isPanningTrigger = function(me)
 			{
-				var evt = me.getEvent();
+				let evt = me.getEvent();
 				
 			 	return (me.getState() == null && !mxEvent.isMouseEvent(evt)) ||
 			 		(mxEvent.isPopupTrigger(evt) && (me.getState() == null ||
@@ -278,7 +278,7 @@
 			};
 	
 			// Don't clear selection if multiple cells selected
-			var graphHandlerMouseDown = mxGraphHandler.prototype.mouseDown;
+			let graphHandlerMouseDown = mxGraphHandler.prototype.mouseDown;
 			mxGraphHandler.prototype.mouseDown = function(sender, me)
 			{
 				graphHandlerMouseDown.apply(this, arguments);
@@ -303,12 +303,12 @@
 			};
 	
 			// Overrides double click handling to use the tolerance
-			var graphDblClick = mxGraph.prototype.dblClick;
+			let graphDblClick = mxGraph.prototype.dblClick;
 			mxGraph.prototype.dblClick = function(evt, cell)
 			{
 				if (cell == null)
 				{
-					var pt = mxUtils.convertPoint(this.container,
+					let pt = mxUtils.convertPoint(this.container,
 						mxEvent.getClientX(evt), mxEvent.getClientY(evt));
 					cell = this.getCellAt(pt.x, pt.y);
 				}
@@ -317,7 +317,7 @@
 			};
 	
 			// Rounded edge and vertex handles
-			var touchHandle = new mxImage('images/handle-main.png', 17, 17);
+			let touchHandle = new mxImage('images/handle-main.png', 17, 17);
 			mxVertexHandler.prototype.handleImage = touchHandle;
 			mxEdgeHandler.prototype.handleImage = touchHandle;
 			mxOutline.prototype.sizerImage = touchHandle;
@@ -326,9 +326,9 @@
 			new Image().src = touchHandle.src;
 	
 			// Adds connect icon to selected vertex
-			var connectorSrc = 'images/handle-connect.png';
+			let connectorSrc = 'images/handle-connect.png';
 	
-			var vertexHandlerInit = mxVertexHandler.prototype.init;
+			let vertexHandlerInit = mxVertexHandler.prototype.init;
 			mxVertexHandler.prototype.init = function()
 			{
 				// TODO: Use 4 sizers, move outside of shape
@@ -359,7 +359,7 @@
 							this.graph.popupMenuHandler.hideMenu();
 							this.graph.stopEditing(false);
 							
-							var pt = mxUtils.convertPoint(this.graph.container,
+							let pt = mxUtils.convertPoint(this.graph.container,
 									mxEvent.getClientX(evt), mxEvent.getClientY(evt));
 							this.graph.connectionHandler.start(this.state, pt.x, pt.y);
 							this.graph.isMouseDown = true;
@@ -374,7 +374,7 @@
 				this.redrawHandles();
 			};
 			
-			var vertexHandlerHideSizers = mxVertexHandler.prototype.hideSizers;
+			let vertexHandlerHideSizers = mxVertexHandler.prototype.hideSizers;
 			mxVertexHandler.prototype.hideSizers = function()
 			{
 				vertexHandlerHideSizers.apply(this, arguments);
@@ -385,7 +385,7 @@
 				}
 			};
 			
-			var vertexHandlerReset = mxVertexHandler.prototype.reset;
+			let vertexHandlerReset = mxVertexHandler.prototype.reset;
 			mxVertexHandler.prototype.reset = function()
 			{
 				vertexHandlerReset.apply(this, arguments);
@@ -396,15 +396,15 @@
 				}
 			};
 			
-			var vertexHandlerRedrawHandles = mxVertexHandler.prototype.redrawHandles;
+			let vertexHandlerRedrawHandles = mxVertexHandler.prototype.redrawHandles;
 			mxVertexHandler.prototype.redrawHandles = function()
 			{
 				vertexHandlerRedrawHandles.apply(this);
 	
 				if (this.state != null && this.connectorImg != null)
 				{
-					var pt = new mxPoint();
-					var s = this.state;
+					let pt = new mxPoint();
+					let s = this.state;
 					
 					// Top right for single-sizer
 					if (mxVertexHandler.prototype.singleSizer)
@@ -418,14 +418,14 @@
 						pt.y = s.y + s.height / 2;
 					}
 					
-					var alpha = mxUtils.toRadians(mxUtils.getValue(s.style, mxConstants.STYLE_ROTATION, 0));
+					let alpha = mxUtils.toRadians(mxUtils.getValue(s.style, mxConstants.STYLE_ROTATION, 0));
 					
 					if (alpha != 0)
 					{
-						var cos = Math.cos(alpha);
-						var sin = Math.sin(alpha);
+						let cos = Math.cos(alpha);
+						let sin = Math.sin(alpha);
 						
-						var ct = new mxPoint(s.getCenterX(), s.getCenterY());
+						let ct = new mxPoint(s.getCenterX(), s.getCenterY());
 						pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
 					}
 					
@@ -434,7 +434,7 @@
 				}
 			};
 			
-			var vertexHandlerDestroy = mxVertexHandler.prototype.destroy;
+			let vertexHandlerDestroy = mxVertexHandler.prototype.destroy;
 			mxVertexHandler.prototype.destroy = function(sender, me)
 			{
 				vertexHandlerDestroy.apply(this, arguments);

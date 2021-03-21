@@ -48,8 +48,8 @@ for storing references to ports.)
 		mxConnectionHandler.prototype.waypointsEnabled = true;
 		mxGraph.prototype.resetEdgesOnConnect = false;
 		mxConstants.SHADOWCOLOR = '#C0C0C0';
-		var joinNodeSize = 7;
-		var strokeWidth = 2;
+		let joinNodeSize = 7;
+		let strokeWidth = 2;
 		
 		// Replaces the port image
 		mxConstraintHandler.prototype.pointImage = new mxImage('images/dot.gif', 10, 10);
@@ -68,7 +68,7 @@ for storing references to ports.)
 		
 		function main(container)
 		{
-			var graph = new mxGraph(container);
+			let graph = new mxGraph(container);
 			graph.view.scale = 1;
 			graph.setPanning(true);
 			graph.setConnectable(true);
@@ -95,7 +95,7 @@ for storing references to ports.)
 			// incoming/outgoing direction.
 			graph.getAllConnectionConstraints = function(terminal)
 			{
-			   var geo = (terminal != null) ? this.getCellGeometry(terminal.cell) : null;
+			   let geo = (terminal != null) ? this.getCellGeometry(terminal.cell) : null;
 
 			   if ((geo != null ? !geo.relative : false) &&
 				   this.getModel().isVertex(terminal.cell) &&
@@ -117,7 +117,7 @@ for storing references to ports.)
 				}
 				else
 				{
-					var geo = (cell != null) ? this.graph.getCellGeometry(cell) : null;
+					let geo = (cell != null) ? this.graph.getCellGeometry(cell) : null;
 					
 					return (geo != null) ? geo.relative : false;
 				}
@@ -130,21 +130,21 @@ for storing references to ports.)
 			// Adds a special tooltip for edges
 			graph.setTooltips(true);
 			
-			var getTooltipForCell = graph.getTooltipForCell;
+			let getTooltipForCell = graph.getTooltipForCell;
 			graph.getTooltipForCell = function(cell)
 			{
-				var tip = '';
+				let tip = '';
 				
 				if (cell != null)
 				{
-					var src = this.getModel().getTerminal(cell, true);
+					let src = this.getModel().getTerminal(cell, true);
 					
 					if (src != null)
 					{
 						tip += this.getTooltipForCell(src) + ' ';
 					}
 					
-					var parent = this.getModel().getParent(cell);
+					let parent = this.getModel().getParent(cell);
 					
 					if (this.getModel().isVertex(parent))
 					{
@@ -153,7 +153,7 @@ for storing references to ports.)
 	
 					tip += getTooltipForCell.apply(this, arguments);
 					
-					var trg = this.getModel().getTerminal(cell, false);
+					let trg = this.getModel().getTerminal(cell, false);
 					
 					if (trg != null)
 					{
@@ -165,7 +165,7 @@ for storing references to ports.)
 			};
 
 			// Switch for black background and bright styles
-			var invert = false;
+			let invert = false;
 			
 			if (invert)
 			{
@@ -186,12 +186,12 @@ for storing references to ports.)
 				mxGraphHandler.prototype.previewColor = 'white';
 			}
 			
-			var labelBackground = (invert) ? '#000000' : '#FFFFFF';
-			var fontColor = (invert) ? '#FFFFFF' : '#000000';
-			var strokeColor = (invert) ? '#C0C0C0' : '#000000';
-			var fillColor = (invert) ? 'none' : '#FFFFFF';
+			let labelBackground = (invert) ? '#000000' : '#FFFFFF';
+			let fontColor = (invert) ? '#FFFFFF' : '#000000';
+			let strokeColor = (invert) ? '#C0C0C0' : '#000000';
+			let fillColor = (invert) ? 'none' : '#FFFFFF';
 			
-			var style = graph.getStylesheet().getDefaultEdgeStyle();
+			let style = graph.getStylesheet().getDefaultEdgeStyle();
 			delete style['endArrow'];
 			style['strokeColor'] = strokeColor;
 			style['labelBackgroundColor'] = labelBackground;
@@ -219,7 +219,7 @@ for storing references to ports.)
 			style['rounded'] = '1';
 			style['strokeWidth'] = strokeWidth;
 
-			var parent = graph.getDefaultParent();
+			let parent = graph.getDefaultParent();
 			
 			graph.getModel().beginUpdate();
 			try
@@ -356,8 +356,8 @@ for storing references to ports.)
 			}));
 			
 			// Undo/redo
-			var undoManager = new mxUndoManager();
-			var listener = function(sender, evt)
+			let undoManager = new mxUndoManager();
+			let listener = function(sender, evt)
 			{
 				undoManager.undoableEditHappened(evt.getProperty('edit'));
 			};
@@ -381,14 +381,14 @@ for storing references to ports.)
 			}));
 			
 			// Wire-mode
-			var checkbox = document.createElement('input');
+			let checkbox = document.createElement('input');
 			checkbox.setAttribute('type', 'checkbox');
 			
 			document.body.appendChild(checkbox);
 			mxUtils.write(document.body, 'Wire Mode');
 			
 			// Starts connections on the background in wire-mode
-			var connectionHandlerIsStartEvent = graph.connectionHandler.isStartEvent;
+			let connectionHandlerIsStartEvent = graph.connectionHandler.isStartEvent;
 			graph.connectionHandler.isStartEvent = function(me)
 			{
 				return checkbox.checked || connectionHandlerIsStartEvent.apply(this, arguments);
@@ -396,14 +396,14 @@ for storing references to ports.)
 			
 			// Avoids any connections for gestures within tolerance except when in wire-mode
 			// or when over a port
-			var connectionHandlerMouseUp = graph.connectionHandler.mouseUp;
+			let connectionHandlerMouseUp = graph.connectionHandler.mouseUp;
 			graph.connectionHandler.mouseUp = function(sender, me)
 			{
 				if (this.first != null && this.previous != null)
 				{
-					var point = mxUtils.convertPoint(this.graph.container, me.getX(), me.getY());
-					var dx = Math.abs(point.x - this.first.x);
-					var dy = Math.abs(point.y - this.first.y);
+					let point = mxUtils.convertPoint(this.graph.container, me.getX(), me.getY());
+					let dx = Math.abs(point.x - this.first.x);
+					let dy = Math.abs(point.y - this.first.y);
 
 					if (dx < this.graph.tolerance && dy < this.graph.tolerance)
 					{
@@ -453,7 +453,7 @@ for storing references to ports.)
 		// Computes the position of edge to edge connection points.
 		mxGraphView.prototype.updateFixedTerminalPoint = function(edge, terminal, source, constraint)
 		{
-			var pt = null;
+			let pt = null;
 			
 			if (constraint != null)
 			{
@@ -471,10 +471,10 @@ for storing references to ports.)
 			
 			if (pt == null)
 			{
-				var s = this.scale;
-				var tr = this.translate;
-				var orig = edge.origin;
-				var geo = this.graph.getCellGeometry(edge.cell);
+				let s = this.scale;
+				let tr = this.translate;
+				let orig = edge.origin;
+				let geo = this.graph.getCellGeometry(edge.cell);
 				pt = geo.getTerminalPoint(source);
 
 				// Computes edge-to-edge connection point
@@ -486,16 +486,16 @@ for storing references to ports.)
 					// Finds nearest segment on edge and computes intersection
 					if (terminal != null && terminal.absolutePoints != null)
 					{
-						var seg = mxUtils.findNearestSegment(terminal, pt.x, pt.y);
+						let seg = mxUtils.findNearestSegment(terminal, pt.x, pt.y);
 
 						// Finds orientation of the segment
 						var p0 = terminal.absolutePoints[seg];
-						var pe = terminal.absolutePoints[seg + 1];
-						var horizontal = (p0.x - pe.x == 0);
+						let pe = terminal.absolutePoints[seg + 1];
+						let horizontal = (p0.x - pe.x == 0);
 						
 						// Stores the segment in the edge state
-						var key = (source) ? 'sourceConstraint' : 'targetConstraint';
-						var value = (horizontal) ? 'horizontal' : 'vertical';
+						let key = (source) ? 'sourceConstraint' : 'targetConstraint';
+						let value = (horizontal) ? 'horizontal' : 'vertical';
 						edge.style[key] = value;
 						
 						// Keeps the coordinate within the segment bounds
@@ -523,8 +523,8 @@ for storing references to ports.)
 				// Snaps point to grid
 				/*if (pt != null)
 				{
-					var tr = this.graph.view.translate;
-					var s = this.graph.view.scale;
+					let tr = this.graph.view.translate;
+					let s = this.graph.view.scale;
 					
 					pt.x = (this.graph.snap(pt.x / s - tr.x) + tr.x) * s;
 					pt.y = (this.graph.snap(pt.y / s - tr.y) + tr.y) * s;
@@ -541,7 +541,7 @@ for storing references to ports.)
 		// Sets source terminal point for edge-to-edge connections.
 		mxConnectionHandler.prototype.createEdgeState = function(me)
 		{
-			var edge = this.graph.createEdge();
+			let edge = this.graph.createEdge();
 			
 			if (this.sourceConstraint != null && this.previous != null)
 			{
@@ -550,9 +550,9 @@ for storing references to ports.)
 			}
 			else if (this.graph.model.isEdge(me.getCell()))
 			{
-				var scale = this.graph.view.scale;
-				var tr = this.graph.view.translate;
-				var pt = new mxPoint(this.graph.snap(me.getGraphX() / scale) - tr.x,
+				let scale = this.graph.view.scale;
+				let tr = this.graph.view.translate;
+				let pt = new mxPoint(this.graph.snap(me.getGraphX() / scale) - tr.x,
 						this.graph.snap(me.getGraphY() / scale) - tr.y);
 				edge.geometry.setTerminalPoint(pt, true);
 			}
@@ -579,9 +579,9 @@ for storing references to ports.)
 				if (this.shape != null && this.currentState != null &&
 					this.currentState.view.graph.model.isEdge(this.currentState.cell))
 				{
-					var scale = this.graph.view.scale;
-					var tr = this.graph.view.translate;
-					var pt = new mxPoint(this.graph.snap(me.getGraphX() / scale) - tr.x,
+					let scale = this.graph.view.scale;
+					let tr = this.graph.view.translate;
+					let pt = new mxPoint(this.graph.snap(me.getGraphX() / scale) - tr.x,
 							this.graph.snap(me.getGraphY() / scale) - tr.y);
 					this.edgeState.cell.geometry.setTerminalPoint(pt, false);
 				}
@@ -591,7 +591,7 @@ for storing references to ports.)
 		// Updates the terminal and control points in the cloned preview.
 		mxEdgeSegmentHandler.prototype.clonePreviewState = function(point, terminal)
 		{
-			var clone = mxEdgeHandler.prototype.clonePreviewState.apply(this, arguments);
+			let clone = mxEdgeHandler.prototype.clonePreviewState.apply(this, arguments);
 			clone.cell = clone.cell.clone();
 			
 			if (this.isSource || this.isTarget)
@@ -613,23 +613,23 @@ for storing references to ports.)
 			return clone;
 		};
 		
-		var mxEdgeHandlerConnect = mxEdgeHandler.prototype.connect;
+		let mxEdgeHandlerConnect = mxEdgeHandler.prototype.connect;
 		mxEdgeHandler.prototype.connect = function(edge, terminal, isSource, isClone, me)
 		{
-			var result = null;
-			var model = this.graph.getModel();
-			var parent = model.getParent(edge);
+			let result = null;
+			let model = this.graph.getModel();
+			let parent = model.getParent(edge);
 			
 			model.beginUpdate();
 			try
 			{
 				result = mxEdgeHandlerConnect.apply(this, arguments);
-				var geo = model.getGeometry(result);
+				let geo = model.getGeometry(result);
 				
 				if (geo != null)
 				{
 					geo = geo.clone();
-					var pt = null;
+					let pt = null;
 					
 					if (model.isEdge(terminal))
 					{
@@ -637,7 +637,7 @@ for storing references to ports.)
 						pt.x = pt.x / this.graph.view.scale - this.graph.view.translate.x;
 						pt.y = pt.y / this.graph.view.scale - this.graph.view.translate.y;
 			
-						var pstate = this.graph.getView().getState(
+						let pstate = this.graph.getView().getState(
 								this.graph.getModel().getParent(edge));
 								
 						if (pstate != null)
@@ -669,7 +669,7 @@ for storing references to ports.)
 		mxConnectionHandlerCreateMarker = mxConnectionHandler.prototype.createMarker;
 		mxConnectionHandler.prototype.createMarker = function()
 		{
-			var marker = mxConnectionHandlerCreateMarker.apply(this, arguments);
+			let marker = mxConnectionHandlerCreateMarker.apply(this, arguments);
 			
 			// Uses complete area of cell for new connections (no hotspot)
 			marker.intersects = function(state, evt)
@@ -722,7 +722,7 @@ for storing references to ports.)
 		mxEdgeHandlerCreateMarker = mxEdgeHandler.prototype.createMarker;
 		mxEdgeHandler.prototype.createMarker = function()
 		{
-			var marker = mxEdgeHandlerCreateMarker.apply(this, arguments);
+			let marker = mxEdgeHandlerCreateMarker.apply(this, arguments);
 			
 			// Adds in-place highlighting when reconnecting existing edges
 			marker.highlight.highlight = this.graph.connectionHandler.marker.highlight.highlight;
@@ -737,7 +737,7 @@ for storing references to ports.)
 		mxGraphGetCellStyle = mxGraph.prototype.getCellStyle;
 		mxGraph.prototype.getCellStyle = function(cell)
 		{
-			var style = mxGraphGetCellStyle.apply(this, arguments);
+			let style = mxGraphGetCellStyle.apply(this, arguments);
 			
 			if (style != null && this.model.isEdge(cell))
 			{
@@ -767,7 +767,7 @@ for storing references to ports.)
 
 		ResistorShape.prototype.redrawPath = function(path, x, y, w, h, isForeground)
 		{
-			var dx = w / 16;
+			let dx = w / 16;
 
 			if (isForeground)
 			{
@@ -795,9 +795,9 @@ for storing references to ports.)
 	mxEdgeStyle.WireConnector = function(state, source, target, hints, result)
 	{
 		// Creates array of all way- and terminalpoints
-		var pts = state.absolutePoints;
-		var horizontal = true;
-		var hint = null;
+		let pts = state.absolutePoints;
+		let horizontal = true;
+		let hint = null;
 		
 		// Gets the initial connection from the source terminal or edge
 		if (source != null && state.view.graph.model.isEdge(source.cell))
@@ -809,7 +809,7 @@ for storing references to ports.)
 			horizontal = source.style['portConstraint'] != 'vertical';
 			
 			// Checks the direction of the shape and rotates
-			var direction = source.style[mxConstants.STYLE_DIRECTION];
+			let direction = source.style[mxConstants.STYLE_DIRECTION];
 			
 			if (direction == 'north' || direction == 'south')
 			{
@@ -819,7 +819,7 @@ for storing references to ports.)
 		
 		// Adds the first point
 		// TODO: Should move along connected segment
-		var pt = pts[0];
+		let pt = pts[0];
 		
 		if (pt == null && source != null)
 		{
@@ -830,7 +830,7 @@ for storing references to ports.)
 			pt = pt.clone();
 		}
 		
-		var first = pt;
+		let first = pt;
 
 		// Adds the waypoints
 		if (hints != null && hints.length > 0)
@@ -851,7 +851,7 @@ for storing references to ports.)
 				//horizontal = !horizontal;
 			}*/
 			
-			for (var i = 0; i < hints.length; i++)
+			for (let i = 0; i < hints.length; i++)
 			{
 				horizontal = !horizontal;
 				hint = state.view.transformControlPoint(state, hints[i]);
@@ -904,13 +904,13 @@ for storing references to ports.)
 	mxGraphCreateHandler = mxGraph.prototype.createHandler;
 	mxGraph.prototype.createHandler = function(state)
 	{
-		var result = null;
+		let result = null;
 		
 		if (state != null)
 		{
 			if (this.model.isEdge(state.cell))
 			{
-				var style = this.view.getEdgeStyle(state);
+				let style = this.view.getEdgeStyle(state);
 				
 				if (style == mxEdgeStyle.WireConnector)
 				{

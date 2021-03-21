@@ -216,7 +216,7 @@ class mxSwimlaneManager extends mxEventSource {
    */
   isCellHorizontal = (cell) => {
     if (this.graph.isSwimlane(cell)) {
-      var style = this.graph.getCellStyle(cell);
+      let style = this.graph.getCellStyle(cell);
 
       return mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, 1) == 1;
     }
@@ -235,11 +235,11 @@ class mxSwimlaneManager extends mxEventSource {
    */
   cellsAdded = (cells) => {
     if (cells != null) {
-      var model = this.getGraph().getModel();
+      let model = this.getGraph().getModel();
 
       model.beginUpdate();
       try {
-        for (var i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i++) {
           if (!this.isSwimlaneIgnored(cells[i])) {
             this.swimlaneAdded(cells[i]);
           }
@@ -261,14 +261,14 @@ class mxSwimlaneManager extends mxEventSource {
    * swimlane - <mxCell> that represents the new swimlane.
    */
   swimlaneAdded = (swimlane) => {
-    var model = this.getGraph().getModel();
-    var parent = model.getParent(swimlane);
-    var childCount = model.getChildCount(parent);
-    var geo = null;
+    let model = this.getGraph().getModel();
+    let parent = model.getParent(swimlane);
+    let childCount = model.getChildCount(parent);
+    let geo = null;
 
     // Finds the first valid sibling swimlane as reference
-    for (var i = 0; i < childCount; i++) {
-      var child = model.getChildAt(parent, i);
+    for (let i = 0; i < childCount; i++) {
+      let child = model.getChildAt(parent, i);
 
       if (child != swimlane && !this.isSwimlaneIgnored(child)) {
         geo = model.getGeometry(child);
@@ -281,7 +281,7 @@ class mxSwimlaneManager extends mxEventSource {
 
     // Applies the size of the refernece to the newly added swimlane
     if (geo != null) {
-      var parentHorizontal = (parent != null) ? this.isCellHorizontal(parent) : this.horizontal;
+      let parentHorizontal = (parent != null) ? this.isCellHorizontal(parent) : this.horizontal;
       this.resizeSwimlane(swimlane, geo.width, geo.height, parentHorizontal);
     }
   };
@@ -298,31 +298,31 @@ class mxSwimlaneManager extends mxEventSource {
    */
   cellsResized = (cells) => {
     if (cells != null) {
-      var model = this.getGraph().getModel();
+      let model = this.getGraph().getModel();
 
       model.beginUpdate();
       try {
         // Finds the top-level swimlanes and adds offsets
-        for (var i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i++) {
           if (!this.isSwimlaneIgnored(cells[i])) {
-            var geo = model.getGeometry(cells[i]);
+            let geo = model.getGeometry(cells[i]);
 
             if (geo != null) {
-              var size = new mxRectangle(0, 0, geo.width, geo.height);
-              var top = cells[i];
-              var current = top;
+              let size = new mxRectangle(0, 0, geo.width, geo.height);
+              let top = cells[i];
+              let current = top;
 
               while (current != null) {
                 top = current;
                 current = model.getParent(current);
-                var tmp = (this.graph.isSwimlane(current)) ?
+                let tmp = (this.graph.isSwimlane(current)) ?
                     this.graph.getStartSize(current) :
                     new mxRectangle();
                 size.width += tmp.width;
                 size.height += tmp.height;
               }
 
-              var parentHorizontal = (current != null) ? this.isCellHorizontal(current) : this.horizontal;
+              let parentHorizontal = (current != null) ? this.isCellHorizontal(current) : this.horizontal;
               this.resizeSwimlane(top, size.width, size.height, parentHorizontal);
             }
           }
@@ -345,14 +345,14 @@ class mxSwimlaneManager extends mxEventSource {
    * swimlane - <mxCell> whose size has changed.
    */
   resizeSwimlane = (swimlane, w, h, parentHorizontal) => {
-    var model = this.getGraph().getModel();
+    let model = this.getGraph().getModel();
 
     model.beginUpdate();
     try {
-      var horizontal = this.isCellHorizontal(swimlane);
+      let horizontal = this.isCellHorizontal(swimlane);
 
       if (!this.isSwimlaneIgnored(swimlane)) {
-        var geo = model.getGeometry(swimlane);
+        let geo = model.getGeometry(swimlane);
 
         if (geo != null) {
           if ((parentHorizontal && geo.height != h) || (!parentHorizontal && geo.width != w)) {
@@ -369,16 +369,16 @@ class mxSwimlaneManager extends mxEventSource {
         }
       }
 
-      var tmp = (this.graph.isSwimlane(swimlane)) ?
+      let tmp = (this.graph.isSwimlane(swimlane)) ?
           this.graph.getStartSize(swimlane) :
           new mxRectangle();
       w -= tmp.width;
       h -= tmp.height;
 
-      var childCount = model.getChildCount(swimlane);
+      let childCount = model.getChildCount(swimlane);
 
-      for (var i = 0; i < childCount; i++) {
-        var child = model.getChildAt(swimlane, i);
+      for (let i = 0; i < childCount; i++) {
+        let child = model.getChildAt(swimlane, i);
         this.resizeSwimlane(child, w, h, horizontal);
       }
     } finally {

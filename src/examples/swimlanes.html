@@ -41,13 +41,13 @@
 				// Creates a wrapper editor around a new graph inside
 				// the given container using an XML config for the
 				// keyboard bindings
-				var config = mxUtils.load(
+				let config = mxUtils.load(
 					'editors/config/keyhandler-commons.xml').
 						getDocumentElement();
-				var editor = new mxEditor(config);
+				let editor = new mxEditor(config);
 				editor.setGraphContainer(container);
-				var graph = editor.graph;
-				var model = graph.getModel();
+				let graph = editor.graph;
+				let model = graph.getModel();
 
 				// Auto-resizes the container
 				graph.border = 80;
@@ -56,7 +56,7 @@
 				graph.graphHandler.setRemoveCellsFromParent(false);
 
 				// Changes the default vertex style in-place
-				var style = graph.getStylesheet().getDefaultVertexStyle();
+				let style = graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
 				style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
 				style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'white';
@@ -126,13 +126,13 @@
 					graph.setAllowDanglingEdges(false);
 					
 					// End-states are no valid sources
-					var previousIsValidSource = graph.isValidSource;
+					let previousIsValidSource = graph.isValidSource;
 					
 					graph.isValidSource = function(cell)
 					{
 						if (previousIsValidSource.apply(this, arguments))
 						{
-							var style = this.getModel().getStyle(cell);
+							let style = this.getModel().getStyle(cell);
 							
 							return style == null || !(style == 'end' || style.indexOf('end') == 0);
 						}
@@ -148,7 +148,7 @@
 					// style below
 					graph.isValidTarget = function(cell)
 					{
-						var style = this.getModel().getStyle(cell);
+						let style = this.getModel().getStyle(cell);
 						
 						return !this.getModel().isEdge(cell) && !this.isSwimlane(cell) &&
 							(style == null || !(style == 'state' || style.indexOf('state') == 0));
@@ -168,15 +168,15 @@
 							return true;
 						}
 						
-						var model = this.getModel();
-						var lane = false;
-						var pool = false;
-						var cell = false;
+						let model = this.getModel();
+						let lane = false;
+						let pool = false;
+						let cell = false;
 						
 						// Checks if any lanes or pools are selected
-						for (var i = 0; i < cells.length; i++)
+						for (let i = 0; i < cells.length; i++)
 						{
-							var tmp = model.getParent(cells[i]);
+							let tmp = model.getParent(cells[i]);
 							lane = lane || this.isPool(tmp);
 							pool = pool || this.isPool(cells[i]);
 							
@@ -190,8 +190,8 @@
 					// Adds new method for identifying a pool
 					graph.isPool = function(cell)
 					{
-						var model = this.getModel();
-						var parent = model.getParent(cell);
+						let model = this.getModel();
+						let parent = model.getParent(cell);
 					
 						return parent != null && model.getParent(parent) == model.getRoot();
 					};
@@ -199,7 +199,7 @@
 					// Changes swimlane orientation while collapsed
 					graph.model.getStyle = function(cell)
 					{
-						var style = mxGraphModel.prototype.getStyle.apply(this, arguments);
+						let style = mxGraphModel.prototype.getStyle.apply(this, arguments);
 					
 						if (graph.isCellCollapsed(cell))
 						{
@@ -219,13 +219,13 @@
 					};
 
 					// Keeps widths on collapse/expand					
-					var foldingHandler = function(sender, evt)
+					let foldingHandler = function(sender, evt)
 					{
-						var cells = evt.getProperty('cells');
+						let cells = evt.getProperty('cells');
 						
-						for (var i = 0; i < cells.length; i++)
+						for (let i = 0; i < cells.length; i++)
 						{
-							var geo = graph.model.getGeometry(cells[i]);
+							let geo = graph.model.getGeometry(cells[i]);
 
 							if (geo.alternateBounds != null)
 							{
@@ -241,7 +241,7 @@
 				new mxSwimlaneManager(graph);
 
 				// Creates a stack depending on the orientation of the swimlane
-				var layout = new mxStackLayout(graph, false);
+				let layout = new mxStackLayout(graph, false);
 				
 				// Makes sure all children fit into the parent swimlane
 				layout.resizeParent = true;
@@ -256,7 +256,7 @@
 				}
 				
 				// Keeps the lanes and pools stacked
-				var layoutMgr = new mxLayoutManager(graph);
+				let layoutMgr = new mxLayoutManager(graph);
 
 				layoutMgr.getLayout = function(cell)
 				{
@@ -273,7 +273,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 
 				// Adds cells to the model in a single step
 				model.beginUpdate();
@@ -319,7 +319,7 @@
 					var end2 = graph.insertVertex(lane2a, null, 'B', 560, 30, 30, 30, 'end');
 					var end3 = graph.insertVertex(lane2a, null, 'C', 560, 84, 30, 30, 'end');
 					
-					var e = null;
+					let e = null;
 					
 					graph.insertEdge(lane1a, null, null, start1, step1);
 					graph.insertEdge(lane1a, null, null, step1, step11);

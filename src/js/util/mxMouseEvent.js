@@ -172,7 +172,7 @@ class mxMouseEvent {
    * Returns the <mxCell> in <state> is not null.
    */
   getCell = () => {
-    var state = this.getState();
+    let state = this.getState();
 
     if (state != null) {
       return state.cell;

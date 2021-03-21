@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-var mxConstants = {
+let mxConstants = {
   /**
    * Class: mxConstants
    *

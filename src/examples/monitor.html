@@ -34,10 +34,10 @@
 				mxConstants.SHADOWCOLOR = '#e0e0e0';
 				
 				// Creates the graph inside the given container
-				var graph = createGraph(container);
+				let graph = createGraph(container);
 
 				// Creates a process display using the activity names as IDs to refer to the elements
-				var xml = '<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/>'+
+				let xml = '<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/>'+
 					'<mxCell id="2" value="Claim Handling Process" style="swimlane" vertex="1" parent="1"><mxGeometry x="1" width="850" height="400" as="geometry"/></mxCell>'+
 					'<mxCell id="3" value="Claim Manager" style="swimlane" vertex="1" parent="2"><mxGeometry x="30" width="820" height="200" as="geometry"/></mxCell>'+
 					'<mxCell id="5" value="" style="start" vertex="1" parent="3"><mxGeometry x="40" y="85" width="30" height="30" as="geometry"/></mxCell>'+
@@ -75,8 +75,8 @@
 					'<mxCell id="30" value="" edge="1" parent="2" source="27" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="469" y="40"/></Array></mxGeometry></mxCell>'+
 					'<mxCell id="33" value="" edge="1" parent="2" source="6" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="255" y="200"/></Array></mxGeometry></mxCell>'+
 					'</root></mxGraphModel>';
-				var doc = mxUtils.parseXml(xml);
-				var codec = new mxCodec(doc);
+				let doc = mxUtils.parseXml(xml);
+				let codec = new mxCodec(doc);
 				codec.decode(doc.documentElement, graph.getModel());
 			}
 			
@@ -85,7 +85,7 @@
 			{
 				// XML is normally fetched from URL at server using mxUtils.get - this is a client-side
 				// string with randomized states to demonstrate the idea of the workflow monitor
-				var xml = '<process><update id="ApproveClaim" state="'+getState()+'"/><update id="AuthorizeClaim" state="'+getState()+'"/>'+
+				let xml = '<process><update id="ApproveClaim" state="'+getState()+'"/><update id="AuthorizeClaim" state="'+getState()+'"/>'+
 					'<update id="CheckAccountingData" state="'+getState()+'"/><update id="ReviewClaim" state="'+getState()+'"/>'+
 					'<update id="ApproveReviewedClaim" state="'+getState()+'"/><update id="EnterAccountingData" state="'+getState()+'"/></process>';
 				update(graph, xml);
@@ -99,12 +99,12 @@
 		{
 			if (xml != null && xml.length > 0)
 			{
-				var doc = mxUtils.parseXml(xml);
+				let doc = mxUtils.parseXml(xml);
 				
 				if (doc != null && doc.documentElement != null)
 				{
-					var model = graph.getModel();
-					var nodes = doc.documentElement.getElementsByTagName('update');
+					let model = graph.getModel();
+					let nodes = doc.documentElement.getElementsByTagName('update');
 					
 					if (nodes != null && nodes.length > 0)
 					{
@@ -112,14 +112,14 @@
 
 						try
 						{
-							for (var i = 0; i < nodes.length; i++)
+							for (let i = 0; i < nodes.length; i++)
 							{
 								// Processes the activity nodes inside the process node
-								var id = nodes[i].getAttribute('id');
-								var state = nodes[i].getAttribute('state');
+								let id = nodes[i].getAttribute('id');
+								let state = nodes[i].getAttribute('state');
 								
 								// Gets the cell for the given activity name from the model
-								var cell = model.getCell(id);
+								let cell = model.getCell(id);
 								
 								// Updates the cell color and adds some tooltip information
 								if (cell != null)
@@ -166,7 +166,7 @@
 		 */
 		function createOverlay(image, tooltip)
 		{
-			var overlay = new mxCellOverlay(image, tooltip);
+			let overlay = new mxCellOverlay(image, tooltip);
 
 			// Installs a handler for clicks on the overlay
 			overlay.addListener(mxEvent.CLICK, function(sender, evt)
@@ -182,7 +182,7 @@
 		 */
 		function createGraph(container)
 		{
-			var graph = new mxGraph(container);
+			let graph = new mxGraph(container);
 			graph.setTooltips(true);
 			graph.setEnabled(false);
 			
@@ -193,7 +193,7 @@
 			};
 
 			// Creates the stylesheet for the process display
-			var style = graph.getStylesheet().getDefaultVertexStyle();
+			let style = graph.getStylesheet().getDefaultVertexStyle();
 			style[mxConstants.STYLE_FONTSIZE] = 11;
 			style[mxConstants.STYLE_FONTCOLOR] = 'black';
 			style[mxConstants.STYLE_STROKECOLOR] = '#808080';
@@ -264,8 +264,8 @@
 		 */
 		function getState()
 		{
-			var state = 'Init';
-			var rnd = Math.random() * 4;
+			let state = 'Init';
+			let rnd = Math.random() * 4;
 			
 			if (rnd > 3)
 			{

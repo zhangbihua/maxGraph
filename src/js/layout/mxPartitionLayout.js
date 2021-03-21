@@ -51,7 +51,7 @@ class mxPartitionLayout extends mxGraphLayout {
    * Example:
    *
    * (code)
-   * var layout = new mxPartitionLayout(graph, true, 10, 20);
+   * let layout = new mxPartitionLayout(graph, true, 10, 20);
    * layout.execute(graph.getDefaultParent());
    * (end)
    *
@@ -82,23 +82,23 @@ class mxPartitionLayout extends mxGraphLayout {
    * Implements <mxGraphLayout.moveCell>.
    */
   moveCell = (cell, x, y) => {
-    var model = this.graph.getModel();
-    var parent = model.getParent(cell);
+    let model = this.graph.getModel();
+    let parent = model.getParent(cell);
 
     if (cell != null &&
         parent != null) {
-      var i = 0;
-      var last = 0;
-      var childCount = model.getChildCount(parent);
+      let i = 0;
+      let last = 0;
+      let childCount = model.getChildCount(parent);
 
       // Finds index of the closest swimlane
       // TODO: Take into account the orientation
       for (i = 0; i < childCount; i++) {
-        var child = model.getChildAt(parent, i);
-        var bounds = this.getVertexBounds(child);
+        let child = model.getChildAt(parent, i);
+        let bounds = this.getVertexBounds(child);
 
         if (bounds != null) {
-          var tmp = bounds.x + bounds.width / 2;
+          let tmp = bounds.x + bounds.width / 2;
 
           if (last < x && tmp > x) {
             break;
@@ -109,7 +109,7 @@ class mxPartitionLayout extends mxGraphLayout {
       }
 
       // Changes child order in parent
-      var idx = parent.getIndex(cell);
+      let idx = parent.getIndex(cell);
       idx = Math.max(0, i - ((i > idx) ? 1 : 0));
 
       model.add(parent, cell, idx);
@@ -123,9 +123,9 @@ class mxPartitionLayout extends mxGraphLayout {
    * returns false and <isVertexMovable> returns true are modified.
    */
   execute = (parent) => {
-    var horizontal = this.isHorizontal();
-    var model = this.graph.getModel();
-    var pgeo = model.getGeometry(parent);
+    let horizontal = this.isHorizontal();
+    let model = this.graph.getModel();
+    let pgeo = model.getGeometry(parent);
 
     // Handles special case where the parent is either a layer with no
     // geometry or the current root of the view in which case the size
@@ -134,17 +134,17 @@ class mxPartitionLayout extends mxGraphLayout {
         ((pgeo == null &&
             model.isLayer(parent)) ||
             parent == this.graph.getView().currentRoot)) {
-      var width = this.graph.container.offsetWidth - 1;
-      var height = this.graph.container.offsetHeight - 1;
+      let width = this.graph.container.offsetWidth - 1;
+      let height = this.graph.container.offsetHeight - 1;
       pgeo = new mxRectangle(0, 0, width, height);
     }
 
     if (pgeo != null) {
-      var children = [];
-      var childCount = model.getChildCount(parent);
+      let children = [];
+      let childCount = model.getChildCount(parent);
 
-      for (var i = 0; i < childCount; i++) {
-        var child = model.getChildAt(parent, i);
+      for (let i = 0; i < childCount; i++) {
+        let child = model.getChildAt(parent, i);
 
         if (!this.isVertexIgnored(child) &&
             this.isVertexMovable(child)) {
@@ -152,15 +152,15 @@ class mxPartitionLayout extends mxGraphLayout {
         }
       }
 
-      var n = children.length;
+      let n = children.length;
 
       if (n > 0) {
         var x0 = this.border;
         var y0 = this.border;
-        var other = (horizontal) ? pgeo.height : pgeo.width;
+        let other = (horizontal) ? pgeo.height : pgeo.width;
         other -= 2 * this.border;
 
-        var size = (this.graph.isSwimlane(parent)) ?
+        let size = (this.graph.isSwimlane(parent)) ?
             this.graph.getStartSize(parent) :
             new mxRectangle();
 
@@ -168,8 +168,8 @@ class mxPartitionLayout extends mxGraphLayout {
         x0 = x0 + size.width;
         y0 = y0 + size.height;
 
-        var tmp = this.border + (n - 1) * this.spacing;
-        var value = (horizontal) ?
+        let tmp = this.border + (n - 1) * this.spacing;
+        let value = (horizontal) ?
             ((pgeo.width - x0 - tmp) / n) :
             ((pgeo.height - y0 - tmp) / n);
 
@@ -178,9 +178,9 @@ class mxPartitionLayout extends mxGraphLayout {
         if (value > 0) {
           model.beginUpdate();
           try {
-            for (var i = 0; i < n; i++) {
-              var child = children[i];
-              var geo = model.getGeometry(child);
+            for (let i = 0; i < n; i++) {
+              let child = children[i];
+              let geo = model.getGeometry(child);
 
               if (geo != null) {
                 geo = geo.clone();

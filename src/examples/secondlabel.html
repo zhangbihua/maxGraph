@@ -22,7 +22,7 @@
 		// Simple solution to add additional text to the rectangle shape definition:
 		(function()
 		{
-			var mxRectangleShapeIsHtmlAllowed = mxRectangleShape.prototype.isHtmlAllowed;
+			let mxRectangleShapeIsHtmlAllowed = mxRectangleShape.prototype.isHtmlAllowed;
 			mxRectangleShape.prototype.isHtmlAllowed = function()
 			{
 				return mxRectangleShapeIsHtmlAllowed.apply(this, arguments) && this.state == null;
@@ -55,7 +55,7 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Disables the folding icon
 				graph.isCellFoldable = function(cell)
@@ -63,7 +63,7 @@
 					return false;
 				}
 
-				var secondLabelVisible = true;
+				let secondLabelVisible = true;
 
 				// Hook for returning shape number for a given cell
 				graph.getSecondLabel = function(cell)
@@ -77,7 +77,7 @@
 					return null;
 				};
 
-				var relativeChildVerticesVisible = true;
+				let relativeChildVerticesVisible = true;
 
 				// Overrides method to hide relative child vertices
 				graph.isCellVisible = function(cell)
@@ -88,14 +88,14 @@
 				};
 
 				// Creates the shape for the shape number and puts it into the draw pane
-				var redrawShape = graph.cellRenderer.redrawShape;
+				let redrawShape = graph.cellRenderer.redrawShape;
 				graph.cellRenderer.redrawShape = function(state, force, rendering)
 				{
-					var result = redrawShape.apply(this, arguments);
+					let result = redrawShape.apply(this, arguments);
 
 					if (result && secondLabelVisible && state.cell.geometry != null && !state.cell.geometry.relative)
 					{
-						var secondLabel = graph.getSecondLabel(state.cell);
+						let secondLabel = graph.getSecondLabel(state.cell);
 	
 						if (secondLabel != null && state.shape != null && state.secondLabel == null)
 						{
@@ -119,8 +119,8 @@
 					
 					if (state.secondLabel != null)
 					{
-						var scale = graph.getView().getScale();
-						var bounds = new mxRectangle(state.x + state.width - 8 * scale, state.y + 8 * scale, 35, 0);
+						let scale = graph.getView().getScale();
+						let bounds = new mxRectangle(state.x + state.width - 8 * scale, state.y + 8 * scale, 35, 0);
 						state.secondLabel.state = state;
 						state.secondLabel.value = graph.getSecondLabel(state.cell);
 						state.secondLabel.scale = scale;
@@ -132,7 +132,7 @@
 				};
 
 				// Destroys the shape number
-				var destroy = graph.cellRenderer.destroy;
+				let destroy = graph.cellRenderer.destroy;
 				graph.cellRenderer.destroy = function(state)
 				{
 					destroy.apply(this, arguments);
@@ -151,7 +151,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();

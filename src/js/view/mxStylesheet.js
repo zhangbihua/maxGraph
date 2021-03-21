@@ -34,9 +34,9 @@ class mxStylesheet {
    * Example:
    *
    * (code)
-   * var vertexStyle = stylesheet.getDefaultVertexStyle();
+   * let vertexStyle = stylesheet.getDefaultVertexStyle();
    * vertexStyle[mxConstants.STYLE_ROUNDED] = true;
-   * var edgeStyle = stylesheet.getDefaultEdgeStyle();
+   * let edgeStyle = stylesheet.getDefaultEdgeStyle();
    * edgeStyle[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
    * (end)
    *
@@ -76,7 +76,7 @@ class mxStylesheet {
    * Creates and returns the default vertex style.
    */
   createDefaultVertexStyle = () => {
-    var style = {};
+    let style = {};
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
     style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
     style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
@@ -93,7 +93,7 @@ class mxStylesheet {
    * Creates and returns the default edge style.
    */
   createDefaultEdgeStyle = () => {
-    var style = {};
+    let style = {};
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
     style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
     style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
@@ -155,7 +155,7 @@ class mxStylesheet {
    * existing stylesheet:
    *
    * (code)
-   * var style = {};
+   * let style = {};
    * style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
    * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
    * style[mxConstants.STYLE_ROUNDED] = true;
@@ -197,10 +197,10 @@ class mxStylesheet {
    * defaultStyle - Default style to be returned if no style can be found.
    */
   getCellStyle = (name, defaultStyle) => {
-    var style = defaultStyle;
+    let style = defaultStyle;
 
     if (name != null && name.length > 0) {
-      var pairs = name.split(';');
+      let pairs = name.split(';');
 
       if (style != null &&
           name.charAt(0) != ';') {
@@ -210,13 +210,13 @@ class mxStylesheet {
       }
 
       // Parses each key, value pair into the existing style
-      for (var i = 0; i < pairs.length; i++) {
-        var tmp = pairs[i];
-        var pos = tmp.indexOf('=');
+      for (let i = 0; i < pairs.length; i++) {
+        let tmp = pairs[i];
+        let pos = tmp.indexOf('=');
 
         if (pos >= 0) {
-          var key = tmp.substring(0, pos);
-          var value = tmp.substring(pos + 1);
+          let key = tmp.substring(0, pos);
+          let value = tmp.substring(pos + 1);
 
           if (value == mxConstants.NONE) {
             delete style[key];
@@ -227,7 +227,7 @@ class mxStylesheet {
           }
         } else {
           // Merges the entries from a named style
-          var tmpStyle = this.styles[tmp];
+          let tmpStyle = this.styles[tmp];
 
           if (tmpStyle != null) {
             for (var key in tmpStyle) {

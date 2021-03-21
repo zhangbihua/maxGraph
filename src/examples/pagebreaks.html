@@ -35,7 +35,7 @@
 				mxEvent.disableContextMenu(container);
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				graph.view.setScale(0.15);
 				graph.pageBreaksVisible = true;
 				graph.pageBreakDashed = true;
@@ -44,8 +44,8 @@
 				graph.setPanning(true);
 				
 				// Account for the header and footer size in the page format
-				var headerSize = 100;
-				var footerSize = 100;
+				let headerSize = 100;
+				let footerSize = 100;
 				
 				// Removes header and footer from page height
  				graph.pageFormat.height -= headerSize + footerSize;
@@ -58,7 +58,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -103,32 +103,32 @@
 					function(evt)
 					{
 						// Matches actual printer paper size and avoids blank pages
-						var scale = 0.5;
+						let scale = 0.5;
 
 						// Applies scale to page
-						var pf = mxRectangle.fromRectangle(graph.pageFormat || mxConstants.PAGE_FORMAT_A4_PORTRAIT);
+						let pf = mxRectangle.fromRectangle(graph.pageFormat || mxConstants.PAGE_FORMAT_A4_PORTRAIT);
 						pf.width = Math.round(pf.width * scale * graph.pageScale);
 						pf.height = Math.round(pf.height * scale * graph.pageScale);
 
 						// Finds top left corner of top left page
-						var bounds = mxRectangle.fromRectangle(graph.getGraphBounds());
+						let bounds = mxRectangle.fromRectangle(graph.getGraphBounds());
 						bounds.x -= graph.view.translate.x * graph.view.scale;
 						bounds.y -= graph.view.translate.y * graph.view.scale;
 
 						var x0 = Math.floor(bounds.x / pf.width) * pf.width;
 						var y0 = Math.floor(bounds.y / pf.height) * pf.height;
 					
-				 		var preview = new mxPrintPreview(graph, scale, pf, 0, -x0, -y0);
+				 		let preview = new mxPrintPreview(graph, scale, pf, 0, -x0, -y0);
 					 	preview.marginTop = headerSize * scale * graph.pageScale;
 					 	preview.marginBottom = footerSize * scale * graph.pageScale;
 					 	preview.autoOrigin = false;
 					 	
-						var oldRenderPage = preview.renderPage;
+						let oldRenderPage = preview.renderPage;
 						preview.renderPage = function(w, h, x, y, content, pageNumber)
 						{
-							var div = oldRenderPage.apply(this, arguments);
+							let div = oldRenderPage.apply(this, arguments);
 
-							var header = document.createElement('div');
+							let header = document.createElement('div');
 							header.style.position = 'absolute';
 							header.style.boxSizing = 'border-box';
 							header.style.fontFamily = 'Arial,Helvetica';
@@ -142,7 +142,7 @@
 							// Vertical centering for text in header/footer
 							header.style.lineHeight = (this.marginTop - 10) + 'px';
 							
-							var footer = header.cloneNode(true);
+							let footer = header.cloneNode(true);
 
 							mxUtils.write(header, 'Page ' + pageNumber + ' - Header');
 							header.style.borderBottom = '1px solid gray';

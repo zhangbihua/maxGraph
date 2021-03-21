@@ -71,7 +71,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
    * <add as="Swimlane" template="swimlane" icon="images/swimlane.gif"><![CDATA[
    *   function (editor, cell, evt, targetCell)
    *   {
-   *     var pt = mxUtils.convertPoint(
+   *     let pt = mxUtils.convertPoint(
    *       editor.graph.container, mxEvent.getClientX(evt),
    *         mxEvent.getClientY(evt));
    *     return editor.addVertex(targetCell, cell, pt.x, pt.y);
@@ -124,7 +124,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
    */
   decode = (dec, node, into) => {
     if (into != null) {
-      var editor = into.editor;
+      let editor = into.editor;
       node = node.firstChild;
 
       while (node != null) {
@@ -137,32 +137,32 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
             } else if (node.nodeName === 'hr') {
               into.toolbar.addLine();
             } else if (node.nodeName === 'add') {
-              var as = node.getAttribute('as');
+              let as = node.getAttribute('as');
               as = mxResources.get(as) || as;
-              var icon = node.getAttribute('icon');
-              var pressedIcon = node.getAttribute('pressedIcon');
-              var action = node.getAttribute('action');
-              var mode = node.getAttribute('mode');
-              var template = node.getAttribute('template');
-              var toggle = node.getAttribute('toggle') != '0';
-              var text = mxUtils.getTextContent(node);
-              var elt = null;
+              let icon = node.getAttribute('icon');
+              let pressedIcon = node.getAttribute('pressedIcon');
+              let action = node.getAttribute('action');
+              let mode = node.getAttribute('mode');
+              let template = node.getAttribute('template');
+              let toggle = node.getAttribute('toggle') != '0';
+              let text = mxUtils.getTextContent(node);
+              let elt = null;
 
               if (action != null) {
                 elt = into.addItem(as, icon, action, pressedIcon);
               } else if (mode != null) {
-                var funct = (mxDefaultToolbarCodec.allowEval) ? mxUtils.eval(text) : null;
+                let funct = (mxDefaultToolbarCodec.allowEval) ? mxUtils.eval(text) : null;
                 elt = into.addMode(as, icon, mode, pressedIcon, funct);
               } else if (template != null || (text != null && text.length > 0)) {
-                var cell = editor.templates[template];
-                var style = node.getAttribute('style');
+                let cell = editor.templates[template];
+                let style = node.getAttribute('style');
 
                 if (cell != null && style != null) {
                   cell = editor.graph.cloneCell(cell);
                   cell.setStyle(style);
                 }
 
-                var insertFunction = null;
+                let insertFunction = null;
 
                 if (text != null && text.length > 0 && mxDefaultToolbarCodec.allowEval) {
                   insertFunction = mxUtils.eval(text);
@@ -170,31 +170,31 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
 
                 elt = into.addPrototype(as, icon, cell, pressedIcon, insertFunction, toggle);
               } else {
-                var children = mxUtils.getChildNodes(node);
+                let children = mxUtils.getChildNodes(node);
 
                 if (children.length > 0) {
                   if (icon == null) {
-                    var combo = into.addActionCombo(as);
+                    let combo = into.addActionCombo(as);
 
-                    for (var i = 0; i < children.length; i++) {
-                      var child = children[i];
+                    for (let i = 0; i < children.length; i++) {
+                      let child = children[i];
 
                       if (child.nodeName === 'separator') {
                         into.addOption(combo, '---');
                       } else if (child.nodeName === 'add') {
-                        var lab = child.getAttribute('as');
-                        var act = child.getAttribute('action');
+                        let lab = child.getAttribute('as');
+                        let act = child.getAttribute('action');
                         into.addActionOption(combo, lab, act);
                       }
                     }
                   } else {
-                    var select = null;
-                    var create = () => {
-                      var template = editor.templates[select.value];
+                    let select = null;
+                    let create = () => {
+                      let template = editor.templates[select.value];
 
                       if (template != null) {
-                        var clone = template.clone();
-                        var style = select.options[select.selectedIndex].cellStyle;
+                        let clone = template.clone();
+                        let style = select.options[select.selectedIndex].cellStyle;
 
                         if (style != null) {
                           clone.setStyle(style);
@@ -208,14 +208,14 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
                       return null;
                     };
 
-                    var img = into.addPrototype(as, icon, create, null, null, toggle);
+                    let img = into.addPrototype(as, icon, create, null, null, toggle);
                     select = into.addCombo();
 
                     // Selects the toolbar icon if a selection change
                     // is made in the corresponding combobox.
                     mxEvent.addListener(select, 'change', () => {
                       into.toolbar.selectMode(img, (evt) => {
-                        var pt = mxUtils.convertPoint(editor.graph.container,
+                        let pt = mxUtils.convertPoint(editor.graph.container,
                             mxEvent.getClientX(evt), mxEvent.getClientY(evt));
 
                         return editor.addVertex(null, funct(), pt.x, pt.y);
@@ -225,15 +225,15 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
                     });
 
                     // Adds the entries to the combobox
-                    for (var i = 0; i < children.length; i++) {
-                      var child = children[i];
+                    for (let i = 0; i < children.length; i++) {
+                      let child = children[i];
 
                       if (child.nodeName === 'separator') {
                         into.addOption(select, '---');
                       } else if (child.nodeName === 'add') {
-                        var lab = child.getAttribute('as');
-                        var tmp = child.getAttribute('template');
-                        var option = into.addOption(select, lab, tmp || template);
+                        let lab = child.getAttribute('as');
+                        let tmp = child.getAttribute('template');
+                        let option = into.addOption(select, lab, tmp || template);
                         option.cellStyle = child.getAttribute('style');
                       }
                     }
@@ -244,7 +244,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
 
               // Assigns an ID to the created element to access it later.
               if (elt != null) {
-                var id = node.getAttribute('id');
+                let id = node.getAttribute('id');
 
                 if (id != null && id.length > 0) {
                   elt.setAttribute('id', id);

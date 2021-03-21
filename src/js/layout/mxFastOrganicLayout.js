@@ -179,7 +179,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * Example:
    *
    * (code)
-   * var layout = new mxFastOrganicLayout(graph);
+   * let layout = new mxFastOrganicLayout(graph);
    * layout.execute(graph.getDefaultParent());
    * (end)
    *
@@ -213,20 +213,20 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * given parent where <isVertexIgnored> returns false.
    */
   execute = (parent) => {
-    var model = this.graph.getModel();
+    let model = this.graph.getModel();
     this.vertexArray = [];
-    var cells = this.graph.getChildVertices(parent);
+    let cells = this.graph.getChildVertices(parent);
 
-    for (var i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i++) {
       if (!this.isVertexIgnored(cells[i])) {
         this.vertexArray.push(cells[i]);
       }
     }
 
-    var initialBounds = (this.useInputOrigin) ?
+    let initialBounds = (this.useInputOrigin) ?
         this.graph.getBoundingBoxFromGeometry(this.vertexArray) :
         null;
-    var n = this.vertexArray.length;
+    let n = this.vertexArray.length;
 
     this.indices = [];
     this.dispX = [];
@@ -247,23 +247,23 @@ class mxFastOrganicLayout extends mxGraphLayout {
     // arrays called neighbours which holds, for each vertex, a list of
     // ints which represents the neighbours cells to that vertex as
     // the indices into vertexArray
-    for (var i = 0; i < this.vertexArray.length; i++) {
-      var vertex = this.vertexArray[i];
+    for (let i = 0; i < this.vertexArray.length; i++) {
+      let vertex = this.vertexArray[i];
       this.cellLocation[i] = [];
 
       // Set up the mapping from array indices to cells
-      var id = mxObjectIdentity.get(vertex);
+      let id = mxObjectIdentity.get(vertex);
       this.indices[id] = i;
-      var bounds = this.getVertexBounds(vertex);
+      let bounds = this.getVertexBounds(vertex);
 
       // Set the X,Y value of the internal version of the cell to
       // the center point of the vertex for better positioning
-      var width = bounds.width;
-      var height = bounds.height;
+      let width = bounds.width;
+      let height = bounds.height;
 
       // Randomize (0, 0) locations
-      var x = bounds.x;
-      var y = bounds.y;
+      let x = bounds.x;
+      let y = bounds.y;
 
       this.cellLocation[i][0] = x + width / 2.0;
       this.cellLocation[i][1] = y + height / 2.0;
@@ -275,7 +275,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
     // algorithm, resetting the edge points is part of the transaction
     model.beginUpdate();
     try {
-      for (var i = 0; i < n; i++) {
+      for (let i = 0; i < n; i++) {
         this.dispX[i] = 0;
         this.dispY[i] = 0;
         this.isMoveable[i] = this.isVertexMovable(this.vertexArray[i]);
@@ -283,11 +283,11 @@ class mxFastOrganicLayout extends mxGraphLayout {
         // Get lists of neighbours to all vertices, translate the cells
         // obtained in indices into vertexArray and store as an array
         // against the orginial cell index
-        var edges = this.graph.getConnections(this.vertexArray[i], parent);
-        var cells = this.graph.getOpposites(edges, this.vertexArray[i]);
+        let edges = this.graph.getConnections(this.vertexArray[i], parent);
+        let cells = this.graph.getOpposites(edges, this.vertexArray[i]);
         this.neighbours[i] = [];
 
-        for (var j = 0; j < cells.length; j++) {
+        for (let j = 0; j < cells.length; j++) {
           // Resets the points on the traversed edge
           if (this.resetEdges) {
             this.graph.resetEdge(edges[j]);
@@ -298,8 +298,8 @@ class mxFastOrganicLayout extends mxGraphLayout {
           }
 
           // Looks the cell up in the indices dictionary
-          var id = mxObjectIdentity.get(cells[j]);
-          var index = this.indices[id];
+          let id = mxObjectIdentity.get(cells[j]);
+          let index = this.indices[id];
 
           // Check the connected cell in part of the vertex list to be
           // acted on by this layout
@@ -339,21 +339,21 @@ class mxFastOrganicLayout extends mxGraphLayout {
         this.reduceTemperature();
       }
 
-      var minx = null;
-      var miny = null;
+      let minx = null;
+      let miny = null;
 
-      for (var i = 0; i < this.vertexArray.length; i++) {
-        var vertex = this.vertexArray[i];
+      for (let i = 0; i < this.vertexArray.length; i++) {
+        let vertex = this.vertexArray[i];
 
         if (this.isVertexMovable(vertex)) {
-          var bounds = this.getVertexBounds(vertex);
+          let bounds = this.getVertexBounds(vertex);
 
           if (bounds != null) {
             this.cellLocation[i][0] -= bounds.width / 2.0;
             this.cellLocation[i][1] -= bounds.height / 2.0;
 
-            var x = this.graph.snap(Math.round(this.cellLocation[i][0]));
-            var y = this.graph.snap(Math.round(this.cellLocation[i][1]));
+            let x = this.graph.snap(Math.round(this.cellLocation[i][0]));
+            let y = this.graph.snap(Math.round(this.cellLocation[i][1]));
 
             this.setVertexLocation(vertex, x, y);
 
@@ -375,8 +375,8 @@ class mxFastOrganicLayout extends mxGraphLayout {
       // Modifies the cloned geometries in-place. Not needed
       // to clone the geometries again as we're in the same
       // undoable change.
-      var dx = -(minx || 0) + 1;
-      var dy = -(miny || 0) + 1;
+      let dx = -(minx || 0) + 1;
+      let dy = -(miny || 0) + 1;
 
       if (initialBounds != null) {
         dx += initialBounds.x;
@@ -397,11 +397,11 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * temperature.
    */
   calcPositions = () => {
-    for (var index = 0; index < this.vertexArray.length; index++) {
+    for (let index = 0; index < this.vertexArray.length; index++) {
       if (this.isMoveable[index]) {
         // Get the distance of displacement for this node for this
         // iteration
-        var deltaLength = Math.sqrt(this.dispX[index] * this.dispX[index] +
+        let deltaLength = Math.sqrt(this.dispX[index] * this.dispX[index] +
             this.dispY[index] * this.dispY[index]);
 
         if (deltaLength < 0.001) {
@@ -410,10 +410,10 @@ class mxFastOrganicLayout extends mxGraphLayout {
 
         // Scale down by the current temperature if less than the
         // displacement distance
-        var newXDisp = this.dispX[index] / deltaLength
+        let newXDisp = this.dispX[index] / deltaLength
             * Math.min(deltaLength, this.temperature);
 
-        var newYDisp = this.dispY[index] / deltaLength
+        let newYDisp = this.dispY[index] / deltaLength
             * Math.min(deltaLength, this.temperature);
 
         // reset displacements
@@ -436,31 +436,31 @@ class mxFastOrganicLayout extends mxGraphLayout {
   calcAttraction = () => {
     // Check the neighbours of each vertex and calculate the attractive
     // force of the edge connecting them
-    for (var i = 0; i < this.vertexArray.length; i++) {
-      for (var k = 0; k < this.neighbours[i].length; k++) {
+    for (let i = 0; i < this.vertexArray.length; i++) {
+      for (let k = 0; k < this.neighbours[i].length; k++) {
         // Get the index of the othe cell in the vertex array
-        var j = this.neighbours[i][k];
+        let j = this.neighbours[i][k];
 
         // Do not proceed self-loops
         if (i != j &&
             this.isMoveable[i] &&
             this.isMoveable[j]) {
-          var xDelta = this.cellLocation[i][0] - this.cellLocation[j][0];
-          var yDelta = this.cellLocation[i][1] - this.cellLocation[j][1];
+          let xDelta = this.cellLocation[i][0] - this.cellLocation[j][0];
+          let yDelta = this.cellLocation[i][1] - this.cellLocation[j][1];
 
           // The distance between the nodes
-          var deltaLengthSquared = xDelta * xDelta + yDelta
+          let deltaLengthSquared = xDelta * xDelta + yDelta
               * yDelta - this.radiusSquared[i] - this.radiusSquared[j];
 
           if (deltaLengthSquared < this.minDistanceLimitSquared) {
             deltaLengthSquared = this.minDistanceLimitSquared;
           }
 
-          var deltaLength = Math.sqrt(deltaLengthSquared);
-          var force = (deltaLengthSquared) / this.forceConstant;
+          let deltaLength = Math.sqrt(deltaLengthSquared);
+          let force = (deltaLengthSquared) / this.forceConstant;
 
-          var displacementX = (xDelta / deltaLength) * force;
-          var displacementY = (yDelta / deltaLength) * force;
+          let displacementX = (xDelta / deltaLength) * force;
+          let displacementY = (yDelta / deltaLength) * force;
 
           this.dispX[i] -= displacementX;
           this.dispY[i] -= displacementY;
@@ -478,10 +478,10 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * Calculates the repulsive forces between all laid out nodes
    */
   calcRepulsion = () => {
-    var vertexCount = this.vertexArray.length;
+    let vertexCount = this.vertexArray.length;
 
-    for (var i = 0; i < vertexCount; i++) {
-      for (var j = i; j < vertexCount; j++) {
+    for (let i = 0; i < vertexCount; i++) {
+      for (let j = i; j < vertexCount; j++) {
         // Exits if the layout is no longer allowed to run
         if (!this.allowedToRun) {
           return;
@@ -490,8 +490,8 @@ class mxFastOrganicLayout extends mxGraphLayout {
         if (j != i &&
             this.isMoveable[i] &&
             this.isMoveable[j]) {
-          var xDelta = this.cellLocation[i][0] - this.cellLocation[j][0];
-          var yDelta = this.cellLocation[i][1] - this.cellLocation[j][1];
+          let xDelta = this.cellLocation[i][0] - this.cellLocation[j][0];
+          let yDelta = this.cellLocation[i][1] - this.cellLocation[j][1];
 
           if (xDelta == 0) {
             xDelta = 0.01 + Math.random();
@@ -502,9 +502,9 @@ class mxFastOrganicLayout extends mxGraphLayout {
           }
 
           // Distance between nodes
-          var deltaLength = Math.sqrt((xDelta * xDelta)
+          let deltaLength = Math.sqrt((xDelta * xDelta)
               + (yDelta * yDelta));
-          var deltaLengthWithRadius = deltaLength - this.radius[i]
+          let deltaLengthWithRadius = deltaLength - this.radius[i]
               - this.radius[j];
 
           if (deltaLengthWithRadius > this.maxDistanceLimit) {
@@ -516,10 +516,10 @@ class mxFastOrganicLayout extends mxGraphLayout {
             deltaLengthWithRadius = this.minDistanceLimit;
           }
 
-          var force = this.forceConstantSquared / deltaLengthWithRadius;
+          let force = this.forceConstantSquared / deltaLengthWithRadius;
 
-          var displacementX = (xDelta / deltaLength) * force;
-          var displacementY = (yDelta / deltaLength) * force;
+          let displacementX = (xDelta / deltaLength) * force;
+          let displacementY = (yDelta / deltaLength) * force;
 
           this.dispX[i] += displacementX;
           this.dispY[i] += displacementY;

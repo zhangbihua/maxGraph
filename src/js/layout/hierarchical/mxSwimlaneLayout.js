@@ -210,7 +210,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    */
   execute = (parent, swimlanes) => {
     this.parent = parent;
-    var model = this.graph.model;
+    let model = this.graph.model;
     this.edgesCache = new mxDictionary();
     this.edgeSourceTermCache = new mxDictionary();
     this.edgesTargetTermCache = new mxDictionary();
@@ -236,7 +236,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     this.parentY = null;
 
     if (parent != this.root && model.isVertex(parent) != null && this.maintainParentLocation) {
-      var geo = this.graph.getCellGeometry(parent);
+      let geo = this.graph.getCellGeometry(parent);
 
       if (geo != null) {
         this.parentX = geo.x;
@@ -245,14 +245,14 @@ class mxSwimlaneLayout extends mxGraphLayout {
     }
 
     this.swimlanes = swimlanes;
-    var dummyVertices = [];
+    let dummyVertices = [];
     // Check the swimlanes all have vertices
     // in them
-    for (var i = 0; i < swimlanes.length; i++) {
-      var children = this.graph.getChildCells(swimlanes[i]);
+    for (let i = 0; i < swimlanes.length; i++) {
+      let children = this.graph.getChildCells(swimlanes[i]);
 
       if (children == null || children.length == 0) {
-        var vertex = this.graph.insertVertex(swimlanes[i], null, null, 0, 0, this.dummyVertexWidth, 0);
+        let vertex = this.graph.insertVertex(swimlanes[i], null, null, 0, 0, this.dummyVertexWidth, 0);
         dummyVertices.push(vertex);
       }
     }
@@ -267,7 +267,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
       // Maintaining parent location
       if (this.parentX != null && this.parentY != null) {
-        var geo = this.graph.getCellGeometry(parent);
+        let geo = this.graph.getCellGeometry(parent);
 
         if (geo != null) {
           geo = geo.clone();
@@ -292,62 +292,62 @@ class mxSwimlaneLayout extends mxGraphLayout {
    */
   updateGroupBounds = () => {
     // Get all vertices and edge in the layout
-    var cells = [];
-    var model = this.model;
+    let cells = [];
+    let model = this.model;
 
     for (var key in model.edgeMapper) {
-      var edge = model.edgeMapper[key];
+      let edge = model.edgeMapper[key];
 
-      for (var i = 0; i < edge.edges.length; i++) {
+      for (let i = 0; i < edge.edges.length; i++) {
         cells.push(edge.edges[i]);
       }
     }
 
-    var layoutBounds = this.graph.getBoundingBoxFromGeometry(cells, true);
-    var childBounds = [];
+    let layoutBounds = this.graph.getBoundingBoxFromGeometry(cells, true);
+    let childBounds = [];
 
-    for (var i = 0; i < this.swimlanes.length; i++) {
-      var lane = this.swimlanes[i];
-      var geo = this.graph.getCellGeometry(lane);
+    for (let i = 0; i < this.swimlanes.length; i++) {
+      let lane = this.swimlanes[i];
+      let geo = this.graph.getCellGeometry(lane);
 
       if (geo != null) {
-        var children = this.graph.getChildCells(lane);
+        let children = this.graph.getChildCells(lane);
 
-        var size = (this.graph.isSwimlane(lane)) ?
+        let size = (this.graph.isSwimlane(lane)) ?
             this.graph.getStartSize(lane) : new mxRectangle();
 
-        var bounds = this.graph.getBoundingBoxFromGeometry(children);
+        let bounds = this.graph.getBoundingBoxFromGeometry(children);
         childBounds[i] = bounds;
-        var childrenY = bounds.y + geo.y - size.height - this.parentBorder;
-        var maxChildrenY = bounds.y + geo.y + bounds.height;
+        let childrenY = bounds.y + geo.y - size.height - this.parentBorder;
+        let maxChildrenY = bounds.y + geo.y + bounds.height;
 
         if (layoutBounds == null) {
           layoutBounds = new mxRectangle(0, childrenY, 0, maxChildrenY - childrenY);
         } else {
           layoutBounds.y = Math.min(layoutBounds.y, childrenY);
-          var maxY = Math.max(layoutBounds.y + layoutBounds.height, maxChildrenY);
+          let maxY = Math.max(layoutBounds.y + layoutBounds.height, maxChildrenY);
           layoutBounds.height = maxY - layoutBounds.y;
         }
       }
     }
 
 
-    for (var i = 0; i < this.swimlanes.length; i++) {
-      var lane = this.swimlanes[i];
-      var geo = this.graph.getCellGeometry(lane);
+    for (let i = 0; i < this.swimlanes.length; i++) {
+      let lane = this.swimlanes[i];
+      let geo = this.graph.getCellGeometry(lane);
 
       if (geo != null) {
-        var children = this.graph.getChildCells(lane);
+        let children = this.graph.getChildCells(lane);
 
-        var size = (this.graph.isSwimlane(lane)) ?
+        let size = (this.graph.isSwimlane(lane)) ?
             this.graph.getStartSize(lane) : new mxRectangle();
 
-        var newGeo = geo.clone();
+        let newGeo = geo.clone();
 
-        var leftGroupBorder = (i == 0) ? this.parentBorder : this.interRankCellSpacing / 2;
-        var w = size.width + leftGroupBorder;
-        var x = childBounds[i].x - w;
-        var y = layoutBounds.y - this.parentBorder;
+        let leftGroupBorder = (i == 0) ? this.parentBorder : this.interRankCellSpacing / 2;
+        let w = size.width + leftGroupBorder;
+        let x = childBounds[i].x - w;
+        let y = layoutBounds.y - this.parentBorder;
 
         newGeo.x += x;
         newGeo.y = y;
@@ -376,27 +376,27 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * vertices - array of vertices to limit search to
    */
   findRoots = (parent, vertices) => {
-    var roots = [];
+    let roots = [];
 
     if (parent != null && vertices != null) {
-      var model = this.graph.model;
-      var best = null;
-      var maxDiff = -100000;
+      let model = this.graph.model;
+      let best = null;
+      let maxDiff = -100000;
 
       for (var i in vertices) {
-        var cell = vertices[i];
+        let cell = vertices[i];
 
         if (cell != null && model.isVertex(cell) && this.graph.isCellVisible(cell) && model.isAncestor(parent, cell)) {
-          var conns = this.getEdges(cell);
-          var fanOut = 0;
-          var fanIn = 0;
+          let conns = this.getEdges(cell);
+          let fanOut = 0;
+          let fanIn = 0;
 
-          for (var k = 0; k < conns.length; k++) {
-            var src = this.getVisibleTerminal(conns[k], true);
+          for (let k = 0; k < conns.length; k++) {
+            let src = this.getVisibleTerminal(conns[k], true);
 
             if (src == cell) {
               // Only count connection within this swimlane
-              var other = this.getVisibleTerminal(conns[k], false);
+              let other = this.getVisibleTerminal(conns[k], false);
 
               if (model.isAncestor(parent, other)) {
                 fanOut++;
@@ -410,7 +410,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
             roots.push(cell);
           }
 
-          var diff = fanOut - fanIn;
+          let diff = fanOut - fanIn;
 
           if (diff > maxDiff) {
             maxDiff = diff;
@@ -437,19 +437,19 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * cell - <mxCell> whose edges should be returned.
    */
   getEdges = (cell) => {
-    var cachedEdges = this.edgesCache.get(cell);
+    let cachedEdges = this.edgesCache.get(cell);
 
     if (cachedEdges != null) {
       return cachedEdges;
     }
 
-    var model = this.graph.model;
-    var edges = [];
-    var isCollapsed = this.graph.isCellCollapsed(cell);
-    var childCount = model.getChildCount(cell);
+    let model = this.graph.model;
+    let edges = [];
+    let isCollapsed = this.graph.isCellCollapsed(cell);
+    let childCount = model.getChildCount(cell);
 
-    for (var i = 0; i < childCount; i++) {
-      var child = model.getChildAt(cell, i);
+    for (let i = 0; i < childCount; i++) {
+      let child = model.getChildAt(cell, i);
 
       if (this.isPort(child)) {
         edges = edges.concat(model.getEdges(child, true, true));
@@ -459,11 +459,11 @@ class mxSwimlaneLayout extends mxGraphLayout {
     }
 
     edges = edges.concat(model.getEdges(cell, true, true));
-    var result = [];
+    let result = [];
 
-    for (var i = 0; i < edges.length; i++) {
-      var source = this.getVisibleTerminal(edges[i], true);
-      var target = this.getVisibleTerminal(edges[i], false);
+    for (let i = 0; i < edges.length; i++) {
+      let source = this.getVisibleTerminal(edges[i], true);
+      let target = this.getVisibleTerminal(edges[i], false);
 
       if ((source == target) || ((source != target) && ((target == cell && (this.parent == null || this.graph.isValidAncestor(source, this.parent, this.traverseAncestors))) ||
           (source == cell && (this.parent == null ||
@@ -488,21 +488,21 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * source - Boolean that specifies whether the source or target terminal is to be returned
    */
   getVisibleTerminal = (edge, source) => {
-    var terminalCache = this.edgesTargetTermCache;
+    let terminalCache = this.edgesTargetTermCache;
 
     if (source) {
       terminalCache = this.edgeSourceTermCache;
     }
 
-    var term = terminalCache.get(edge);
+    let term = terminalCache.get(edge);
 
     if (term != null) {
       return term;
     }
 
-    var state = this.graph.view.getState(edge);
+    let state = this.graph.view.getState(edge);
 
-    var terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
+    let terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
 
     if (terminal == null) {
       terminal = (state != null) ? state.getVisibleTerminal(source) : this.graph.view.getVisibleTerminal(edge, source);
@@ -529,18 +529,18 @@ class mxSwimlaneLayout extends mxGraphLayout {
    */
   run = (parent) => {
     // Separate out unconnected hierarchies
-    var hierarchyVertices = [];
-    var allVertexSet = Object();
+    let hierarchyVertices = [];
+    let allVertexSet = Object();
 
     if (this.swimlanes != null && this.swimlanes.length > 0 && parent != null) {
-      var filledVertexSet = Object();
+      let filledVertexSet = Object();
 
-      for (var i = 0; i < this.swimlanes.length; i++) {
+      for (let i = 0; i < this.swimlanes.length; i++) {
         this.filterDescendants(this.swimlanes[i], filledVertexSet);
       }
 
       this.roots = [];
-      var filledVertexSetEmpty = true;
+      let filledVertexSetEmpty = true;
 
       // Poor man's isSetEmpty
       for (var key in filledVertexSet) {
@@ -551,10 +551,10 @@ class mxSwimlaneLayout extends mxGraphLayout {
       }
 
       // Only test for candidates in each swimlane in order
-      var laneCounter = 0;
+      let laneCounter = 0;
 
       while (!filledVertexSetEmpty && laneCounter < this.swimlanes.length) {
-        var candidateRoots = this.findRoots(this.swimlanes[laneCounter], filledVertexSet);
+        let candidateRoots = this.findRoots(this.swimlanes[laneCounter], filledVertexSet);
 
         if (candidateRoots.length == 0) {
           laneCounter++;
@@ -564,15 +564,15 @@ class mxSwimlaneLayout extends mxGraphLayout {
         // If the candidate root is an unconnected group cell, remove it from
         // the layout. We may need a custom set that holds such groups and forces
         // them to be processed for resizing and/or moving.
-        for (var i = 0; i < candidateRoots.length; i++) {
-          var vertexSet = Object();
+        for (let i = 0; i < candidateRoots.length; i++) {
+          let vertexSet = Object();
           hierarchyVertices.push(vertexSet);
 
           this.traverse(candidateRoots[i], true, null, allVertexSet, vertexSet,
               hierarchyVertices, filledVertexSet, laneCounter);
         }
 
-        for (var i = 0; i < candidateRoots.length; i++) {
+        for (let i = 0; i < candidateRoots.length; i++) {
           this.roots.push(candidateRoots[i]);
         }
 
@@ -589,8 +589,8 @@ class mxSwimlaneLayout extends mxGraphLayout {
     } else {
       // Find vertex set as directed traversal from roots
 
-      for (var i = 0; i < this.roots.length; i++) {
-        var vertexSet = Object();
+      for (let i = 0; i < this.roots.length; i++) {
+        let vertexSet = Object();
         hierarchyVertices.push(vertexSet);
 
         this.traverse(this.roots[i], true, null, allVertexSet, vertexSet,
@@ -598,7 +598,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
       }
     }
 
-    var tmp = [];
+    let tmp = [];
 
     for (var key in allVertexSet) {
       tmp.push(allVertexSet[key]);
@@ -620,7 +620,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * Creates an array of descendant cells
    */
   filterDescendants = (cell, result) => {
-    var model = this.graph.model;
+    let model = this.graph.model;
 
     if (model.isVertex(cell) && cell != this.parent && model.getParent(cell) != this.parent && this.graph.isCellVisible(cell)) {
       result[mxObjectIdentity.get(cell)] = cell;
@@ -628,10 +628,10 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
     if (this.traverseAncestors || cell == this.parent
         && this.graph.isCellVisible(cell)) {
-      var childCount = model.getChildCount(cell);
+      let childCount = model.getChildCount(cell);
 
-      for (var i = 0; i < childCount; i++) {
-        var child = model.getChildAt(cell, i);
+      for (let i = 0; i < childCount; i++) {
+        let child = model.getChildAt(cell, i);
 
         // Ignore ports in the layout vertex list, they are dealt with
         // in the traversal mechanisms
@@ -674,14 +674,14 @@ class mxSwimlaneLayout extends mxGraphLayout {
    */
   getEdgesBetween = (source, target, directed) => {
     directed = (directed != null) ? directed : false;
-    var edges = this.getEdges(source);
-    var result = [];
+    let edges = this.getEdges(source);
+    let result = [];
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match
-    for (var i = 0; i < edges.length; i++) {
-      var src = this.getVisibleTerminal(edges[i], true);
-      var trg = this.getVisibleTerminal(edges[i], false);
+    for (let i = 0; i < edges.length; i++) {
+      let src = this.getVisibleTerminal(edges[i], true);
+      let trg = this.getVisibleTerminal(edges[i], false);
 
       if ((src == source && trg == target) || (!directed && src == target && trg == source)) {
         result.push(edges[i]);
@@ -714,7 +714,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
       // Has this vertex been seen before in any traversal
       // And if the filled vertex set is populated, only
       // process vertices in that it contains
-      var vertexID = mxObjectIdentity.get(vertex);
+      let vertexID = mxObjectIdentity.get(vertex);
 
       if ((allVertices[vertexID] == null)
           && (filledVertexSet == null ? true : filledVertexSet[vertexID] != null)) {
@@ -729,18 +729,18 @@ class mxSwimlaneLayout extends mxGraphLayout {
           delete filledVertexSet[vertexID];
         }
 
-        var edges = this.getEdges(vertex);
-        var model = this.graph.model;
+        let edges = this.getEdges(vertex);
+        let model = this.graph.model;
 
-        for (var i = 0; i < edges.length; i++) {
-          var otherVertex = this.getVisibleTerminal(edges[i], true);
-          var isSource = otherVertex == vertex;
+        for (let i = 0; i < edges.length; i++) {
+          let otherVertex = this.getVisibleTerminal(edges[i], true);
+          let isSource = otherVertex == vertex;
 
           if (isSource) {
             otherVertex = this.getVisibleTerminal(edges[i], false);
           }
 
-          var otherIndex = 0;
+          let otherIndex = 0;
           // Get the swimlane index of the other terminal
           for (otherIndex = 0; otherIndex < this.swimlanes.length; otherIndex++) {
             if (model.isAncestor(this.swimlanes[otherIndex], otherVertex)) {
@@ -766,8 +766,8 @@ class mxSwimlaneLayout extends mxGraphLayout {
         if (currentComp[vertexID] == null) {
           // We've seen this vertex before, but not in the current component
           // This component and the one it's in need to be merged
-          for (var i = 0; i < hierarchyVertices.length; i++) {
-            var comp = hierarchyVertices[i];
+          for (let i = 0; i < hierarchyVertices.length; i++) {
+            let comp = hierarchyVertices[i];
 
             if (comp[vertexID] != null) {
               for (var key in comp) {
@@ -792,7 +792,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * Executes the cycle stage using mxMinimumCycleRemover.
    */
   cycleStage = (parent) => {
-    var cycleStage = new mxSwimlaneOrdering(this);
+    let cycleStage = new mxSwimlaneOrdering(this);
     cycleStage.execute(parent);
   };
 
@@ -812,7 +812,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * Executes the crossing stage using mxMedianHybridCrossingReduction.
    */
   crossingStage = (parent) => {
-    var crossingStage = new mxMedianHybridCrossingReduction(this);
+    let crossingStage = new mxMedianHybridCrossingReduction(this);
     crossingStage.execute(parent);
   };
 
@@ -822,7 +822,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * Executes the placement stage using mxCoordinateAssignment.
    */
   placementStage = (initialX, parent) => {
-    var placementStage = new mxCoordinateAssignment(this, this.intraCellSpacing,
+    let placementStage = new mxCoordinateAssignment(this, this.intraCellSpacing,
         this.interRankCellSpacing, this.orientation, initialX,
         this.parallelEdgeSpacing);
     placementStage.fineTuning = this.fineTuning;

@@ -39,7 +39,7 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Uncomment the following if you want the container
 				// to fit the size of the graph
@@ -50,7 +50,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -69,8 +69,8 @@
 				// Prints the rendering mode and display dialect (VML or SVG) in use
 				// CSS1Compat means standard
 				mxLog.show();
-				var mode = (document.compatMode == 'CSS1Compat') ? 'standards' : 'quirks';
-				var disp = (mxClient.IS_SVG) ? 'svg' : 'vml';
+				let mode = (document.compatMode == 'CSS1Compat') ? 'standards' : 'quirks';
+				let disp = (mxClient.IS_SVG) ? 'svg' : 'vml';
 				mxLog.debug(mode + ' ' + disp);
 			}
 		};

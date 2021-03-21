@@ -62,12 +62,12 @@ class mxUndoableEdit {
    *
    * execute = ()=>
    * {
-   *   var tmp = this.model.name;
+   *   let tmp = this.model.name;
    *   this.model.name = this.previous;
    *   this.previous = tmp;
    * };
    *
-   * var name = prompt('Enter name');
+   * let name = prompt('Enter name');
    * graph.model.execute(new CustomChange(graph.model, name));
    * (end)
    *
@@ -150,10 +150,10 @@ class mxUndoableEdit {
   undo = () => {
     if (!this.undone) {
       this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
-      var count = this.changes.length;
+      let count = this.changes.length;
 
-      for (var i = count - 1; i >= 0; i--) {
-        var change = this.changes[i];
+      for (let i = count - 1; i >= 0; i--) {
+        let change = this.changes[i];
 
         if (change.execute != null) {
           change.execute();
@@ -181,10 +181,10 @@ class mxUndoableEdit {
   redo = () => {
     if (!this.redone) {
       this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
-      var count = this.changes.length;
+      let count = this.changes.length;
 
-      for (var i = 0; i < count; i++) {
-        var change = this.changes[i];
+      for (let i = 0; i < count; i++) {
+        let change = this.changes[i];
 
         if (change.execute != null) {
           change.execute();

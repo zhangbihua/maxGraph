@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-var mxUtils = {
+let mxUtils = {
   /**
    * Class: mxUtils
    *
@@ -59,12 +59,12 @@ var mxUtils = {
       element.style.cursor = '';
     }
 
-    var children = element.childNodes;
+    let children = element.childNodes;
 
     if (children != null) {
-      var childCount = children.length;
+      let childCount = children.length;
 
-      for (var i = 0; i < childCount; i += 1) {
+      for (let i = 0; i < childCount; i += 1) {
         mxUtils.removeCursors(children[i]);
       }
     }
@@ -120,7 +120,7 @@ var mxUtils = {
    * (end)
    */
   setPrefixedStyle: (style, name, value) => {
-    var prefix = null;
+    let prefix = null;
 
     if (mxClient.IS_SF || mxClient.IS_GC) {
       prefix = 'Webkit';
@@ -147,7 +147,7 @@ var mxUtils = {
    * node - DOM node whose style should be checked for scrollbars.
    */
   hasScrollbars: (node) => {
-    var style = mxUtils.getCurrentStyle(node);
+    let style = mxUtils.getCurrentStyle(node);
 
     return style != null && (style.overflow === 'scroll' || style.overflow === 'auto');
   },
@@ -178,7 +178,7 @@ var mxUtils = {
    * expr - A string that represents a JavaScript expression.
    */
   eval: (expr) => {
-    var result = null;
+    let result = null;
 
     if (expr.indexOf('function') >= 0) {
       try {
@@ -208,7 +208,7 @@ var mxUtils = {
    */
   findNode: (node, attr, value) => {
     if (node.nodeType === mxConstants.NODETYPE_ELEMENT) {
-      var tmp = node.getAttribute(attr);
+      let tmp = node.getAttribute(attr);
 
       if (tmp != null && tmp == value) {
         return node;
@@ -218,7 +218,7 @@ var mxUtils = {
     node = node.firstChild;
 
     while (node != null) {
-      var result = mxUtils.findNode(node, attr, value);
+      let result = mxUtils.findNode(node, attr, value);
 
       if (result != null) {
         return result;
@@ -240,7 +240,7 @@ var mxUtils = {
    * f - JavaScript object that represents a function.
    */
   getFunctionName: (f) => {
-    var str = null;
+    let str = null;
 
     if (f != null) {
       if (f.name != null) {
@@ -275,7 +275,7 @@ var mxUtils = {
    */
   indexOf: (array, obj) => {
     if (array != null && obj != null) {
-      for (var i = 0; i < array.length; i++) {
+      for (let i = 0; i < array.length; i++) {
         if (array[i] == obj) {
           return i;
         }
@@ -298,7 +298,7 @@ var mxUtils = {
    */
   forEach: (array, fn) => {
     if (array != null && fn != null) {
-      for (var i = 0; i < array.length; i++) {
+      for (let i = 0; i < array.length; i++) {
         fn(array[i]);
       }
     }
@@ -324,10 +324,10 @@ var mxUtils = {
    * array - Array to check for the given obj.
    */
   remove: (obj, array) => {
-    var result = null;
+    let result = null;
 
     if (typeof (array) == 'object') {
-      var index = mxUtils.indexOf(array, obj);
+      let index = mxUtils.indexOf(array, obj);
 
       while (index >= 0) {
         array.splice(index, 1);
@@ -386,7 +386,7 @@ var mxUtils = {
    * child - DOM node that represents the child.
    */
   isAncestorNode: (ancestor, child) => {
-    var parent = child;
+    let parent = child;
 
     while (parent != null) {
       if (parent == ancestor) {
@@ -413,8 +413,8 @@ var mxUtils = {
   getChildNodes: (node, nodeType) => {
     nodeType = nodeType || mxConstants.NODETYPE_ELEMENT;
 
-    var children = [];
-    var tmp = node.firstChild;
+    let children = [];
+    let tmp = node.firstChild;
 
     while (tmp != null) {
       if (tmp.nodeType === nodeType) {
@@ -459,17 +459,17 @@ var mxUtils = {
     switch (node.nodeType) {
       case 1: /* element */
       {
-        var newNode = doc.createElement(node.nodeName);
+        let newNode = doc.createElement(node.nodeName);
 
         if (node.attributes && node.attributes.length > 0) {
-          for (var i = 0; i < node.attributes.length; i++) {
+          for (let i = 0; i < node.attributes.length; i++) {
             newNode.setAttribute(node.attributes[i].nodeName,
                 node.getAttribute(node.attributes[i].nodeName));
           }
         }
 
         if (allChildren && node.childNodes && node.childNodes.length > 0) {
-          for (var i = 0; i < node.childNodes.length; i++) {
+          for (let i = 0; i < node.childNodes.length; i++) {
             newNode.appendChild(mxUtils.importNodeImplementation(doc, node.childNodes[i], allChildren));
           }
         }
@@ -494,7 +494,7 @@ var mxUtils = {
    * Returns a new, empty XML document.
    */
   createXmlDocument: () => {
-    var doc = null;
+    let doc = null;
 
     if (document.implementation && document.implementation.createDocument) {
       doc = document.implementation.createDocument('', '', null);
@@ -511,7 +511,7 @@ var mxUtils = {
    * Returns a new, empty Microsoft.XMLDOM document using ActiveXObject.
    */
   createMsXmlDocument: () => {
-    var doc = new ActiveXObject('Microsoft.XMLDOM');
+    let doc = new ActiveXObject('Microsoft.XMLDOM');
     doc.async = false;
 
     // Workaround for parsing errors with SVG DTD
@@ -530,7 +530,7 @@ var mxUtils = {
    * Example:
    *
    * (code)
-   * var doc = mxUtils.parseXml(
+   * let doc = mxUtils.parseXml(
    *   '<mxGraphModel><root><MyDiagram id="0"><mxCell/></MyDiagram>'+
    *   '<MyLayer id="1"><mxCell parent="0" /></MyLayer><MyObject id="2">'+
    *   '<mxCell style="strokeColor=blue;fillColor=red" parent="1" vertex="1">'+
@@ -543,7 +543,7 @@ var mxUtils = {
    * xml - String that contains the XML data.
    */
   parseXml: (xml) => {
-    var parser = new DOMParser();
+    let parser = new DOMParser();
     return parser.parseFromString(xml, 'text/xml');
   },
 
@@ -576,11 +576,11 @@ var mxUtils = {
    * before - Optional boolean that specifies the direction of the traversal.
    */
   removeWhitespace: (node, before) => {
-    var tmp = (before) ? node.previousSibling : node.nextSibling;
+    let tmp = (before) ? node.previousSibling : node.nextSibling;
 
     while (tmp != null && tmp.nodeType == mxConstants.NODETYPE_TEXT) {
-      var next = (before) ? tmp.previousSibling : tmp.nextSibling;
-      var text = mxUtils.getTextContent(tmp);
+      let next = (before) ? tmp.previousSibling : tmp.nextSibling;
+      let text = mxUtils.getTextContent(tmp);
 
       if (mxUtils.trim(text).length == 0) {
         tmp.parentNode.removeChild(tmp);
@@ -645,10 +645,10 @@ var mxUtils = {
    * &#xa;
    */
   getXml: (node, linefeed) => {
-    var xml = '';
+    let xml = '';
 
     if (window.XMLSerializer != null) {
-      var xmlSerializer = new XMLSerializer();
+      let xmlSerializer = new XMLSerializer();
       xml = xmlSerializer.serializeToString(node);
     } else if (node.xml != null) {
       xml = node.xml.replace(/\r\n\t[\t]*/g, '').replace(/>\r\n/g, '>').replace(/\r\n/g, '\n');
@@ -678,7 +678,7 @@ var mxUtils = {
    * newline - Option string that represents a linefeed. Default is '\n'.
    */
   getPrettyXml: (node, tab, indent, newline, ns) => {
-    var result = [];
+    let result = [];
 
     if (node != null) {
       tab = (tab != null) ? tab : '  ';
@@ -696,7 +696,7 @@ var mxUtils = {
       if (node.nodeType == mxConstants.NODETYPE_DOCUMENT) {
         result.push(mxUtils.getPrettyXml(node.documentElement, tab, indent, newline, ns));
       } else if (node.nodeType == mxConstants.NODETYPE_DOCUMENT_FRAGMENT) {
-        var tmp = node.firstChild;
+        let tmp = node.firstChild;
 
         if (tmp != null) {
           while (tmp != null) {
@@ -705,19 +705,19 @@ var mxUtils = {
           }
         }
       } else if (node.nodeType == mxConstants.NODETYPE_COMMENT) {
-        var value = mxUtils.getTextContent(node);
+        let value = mxUtils.getTextContent(node);
 
         if (value.length > 0) {
           result.push(indent + '<!--' + value + '-->' + newline);
         }
       } else if (node.nodeType == mxConstants.NODETYPE_TEXT) {
-        var value = mxUtils.trim(mxUtils.getTextContent(node));
+        let value = mxUtils.trim(mxUtils.getTextContent(node));
 
         if (value.length > 0) {
           result.push(indent + mxUtils.htmlEntities(value, false) + newline);
         }
       } else if (node.nodeType == mxConstants.NODETYPE_CDATA) {
-        var value = mxUtils.getTextContent(node);
+        let value = mxUtils.getTextContent(node);
 
         if (value.length > 0) {
           result.push(indent + '<![CDATA[' + value + ']]' + newline);
@@ -727,18 +727,18 @@ var mxUtils = {
 
         // Creates the string with the node attributes
         // and converts all HTML entities in the values
-        var attrs = node.attributes;
+        let attrs = node.attributes;
 
         if (attrs != null) {
-          for (var i = 0; i < attrs.length; i++) {
-            var val = mxUtils.htmlEntities(attrs[i].value);
+          for (let i = 0; i < attrs.length; i++) {
+            let val = mxUtils.htmlEntities(attrs[i].value);
             result.push(' ' + attrs[i].nodeName + '="' + val + '"');
           }
         }
 
         // Recursively creates the XML string for each child
         // node and appends it here with an indentation
-        var tmp = node.firstChild;
+        let tmp = node.firstChild;
 
         if (tmp != null) {
           result.push('>' + newline);
@@ -769,8 +769,8 @@ var mxUtils = {
    */
   extractTextWithWhitespace: (elems) => {
     // Known block elements for handling linefeeds (list is not complete)
-    var blocks = ['BLOCKQUOTE', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'OL', 'P', 'PRE', 'TABLE', 'UL'];
-    var ret = [];
+    let blocks = ['BLOCKQUOTE', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'OL', 'P', 'PRE', 'TABLE', 'UL'];
+    let ret = [];
 
     function doExtract(elts) {
       // Single break should be ignored
@@ -779,8 +779,8 @@ var mxUtils = {
         return;
       }
 
-      for (var i = 0; i < elts.length; i++) {
-        var elem = elts[i];
+      for (let i = 0; i < elts.length; i++) {
+        let elem = elts[i];
 
         // DIV with a br or linefeed forces a linefeed
         if (elem.nodeName == 'BR' || elem.innerHTML == '\n' ||
@@ -815,7 +815,7 @@ var mxUtils = {
    */
   replaceTrailingNewlines: (str, pattern) => {
     // LATER: Check is this can be done with a regular expression
-    var postfix = '';
+    let postfix = '';
 
     while (str.length > 0 && str.charAt(str.length - 1) == '\n') {
       str = str.substring(0, str.length - 1);
@@ -869,7 +869,7 @@ var mxUtils = {
    */
   getInnerHtml: (node) => {
     if (node != null) {
-      var serializer = new XMLSerializer();
+      let serializer = new XMLSerializer();
       return serializer.serializeToString(node);
     }
 
@@ -889,7 +889,7 @@ var mxUtils = {
    */
   getOuterHtml: (node) => {
     if (node != null) {
-      var serializer = new XMLSerializer();
+      let serializer = new XMLSerializer();
       return serializer.serializeToString(node);
     }
 
@@ -908,8 +908,8 @@ var mxUtils = {
    * text - String representing the text to be added.
    */
   write: (parent, text) => {
-    var doc = parent.ownerDocument;
-    var node = doc.createTextNode(text);
+    let doc = parent.ownerDocument;
+    let node = doc.createTextNode(text);
 
     if (parent != null) {
       parent.appendChild(node);
@@ -930,8 +930,8 @@ var mxUtils = {
    * text - String representing the text to be added.
    */
   writeln: (parent, text) => {
-    var doc = parent.ownerDocument;
-    var node = doc.createTextNode(text);
+    let doc = parent.ownerDocument;
+    let node = doc.createTextNode(text);
 
     if (parent != null) {
       parent.appendChild(node);
@@ -952,9 +952,9 @@ var mxUtils = {
    */
   br: (parent, count) => {
     count = count || 1;
-    var br = null;
+    let br = null;
 
-    for (var i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
       if (parent != null) {
         br = parent.ownerDocument.createElement('br');
         parent.appendChild(br);
@@ -987,7 +987,7 @@ var mxUtils = {
   button: (label, funct, doc) => {
     doc = (doc != null) ? doc : document;
 
-    var button = doc.createElement('button');
+    let button = doc.createElement('button');
     mxUtils.write(button, label);
 
     mxEvent.addListener(button, 'click', (evt) => {
@@ -1009,7 +1009,7 @@ var mxUtils = {
    * text - String representing the text for the new paragraph.
    */
   para: (parent, text) => {
-    var p = document.createElement('p');
+    let p = document.createElement('p');
     mxUtils.write(p, text);
 
     if (parent != null) {
@@ -1088,7 +1088,7 @@ var mxUtils = {
    * pad - Optional left-padding for the link. Default is 0.
    */
   link: (parent, text, funct, pad) => {
-    var a = document.createElement('span');
+    let a = document.createElement('span');
 
     a.style.color = 'blue';
     a.style.textDecoration = 'underline';
@@ -1114,8 +1114,8 @@ var mxUtils = {
    * Returns the client size for the current document as an <mxRectangle>.
    */
   getDocumentSize: () => {
-    var b = document.body;
-    var d = document.documentElement;
+    let b = document.body;
+    let d = document.documentElement;
 
     try {
       return new mxRectangle(0, 0, b.clientWidth || d.clientWidth, Math.max(b.clientHeight || 0, d.clientHeight));
@@ -1131,26 +1131,26 @@ var mxUtils = {
    * is done by setting the left and top in the style.
    */
   fit: (node) => {
-    var ds = mxUtils.getDocumentSize();
-    var left = parseInt(node.offsetLeft);
-    var width = parseInt(node.offsetWidth);
+    let ds = mxUtils.getDocumentSize();
+    let left = parseInt(node.offsetLeft);
+    let width = parseInt(node.offsetWidth);
 
-    var offset = mxUtils.getDocumentScrollOrigin(node.ownerDocument);
-    var sl = offset.x;
-    var st = offset.y;
+    let offset = mxUtils.getDocumentScrollOrigin(node.ownerDocument);
+    let sl = offset.x;
+    let st = offset.y;
 
-    var b = document.body;
-    var d = document.documentElement;
-    var right = (sl) + ds.width;
+    let b = document.body;
+    let d = document.documentElement;
+    let right = (sl) + ds.width;
 
     if (left + width > right) {
       node.style.left = Math.max(sl, right - width) + 'px';
     }
 
-    var top = parseInt(node.offsetTop);
-    var height = parseInt(node.offsetHeight);
+    let top = parseInt(node.offsetTop);
+    let height = parseInt(node.offsetHeight);
 
-    var bottom = st + ds.height;
+    let bottom = st + ds.height;
 
     if (top + height > bottom) {
       node.style.top = Math.max(st, bottom - height) + 'px';
@@ -1169,8 +1169,8 @@ var mxUtils = {
    * (code)
    * try
    * {
-   *   var req = mxUtils.load(filename);
-   *   var root = req.getDocumentElement();
+   *   let req = mxUtils.load(filename);
+   *   let root = req.getDocumentElement();
    *   // Process XML DOM...
    * }
    * catch (ex)
@@ -1184,7 +1184,7 @@ var mxUtils = {
    * url - URL to get the data from.
    */
   load: (url) => {
-    var req = new mxXmlRequest(url, null, 'GET', false);
+    let req = new mxXmlRequest(url, null, 'GET', false);
     req.send();
 
     return req;
@@ -1203,7 +1203,7 @@ var mxUtils = {
    * (code)
    * mxUtils.get(url, (req)=>
    * {
-   *    var node = req.getDocumentElement();
+   *    let node = req.getDocumentElement();
    *    // Process XML DOM...
    * });
    * (end)
@@ -1214,8 +1214,8 @@ var mxUtils = {
    * (code)
    * mxUtils.get(url, (req)=>
    * {
-   *   var node = req.getDocumentElement();
-   *   var dec = new mxCodec(node.ownerDocument);
+   *   let node = req.getDocumentElement();
+   *   let dec = new mxCodec(node.ownerDocument);
    *   dec.decode(node, graph.getModel());
    * });
    * (end)
@@ -1232,8 +1232,8 @@ var mxUtils = {
    * headers - Optional with headers, eg. {'Authorization': 'token xyz'}
    */
   get: (url, onload, onerror, binary, timeout, ontimeout, headers) => {
-    var req = new mxXmlRequest(url, null, 'GET');
-    var setRequestHeaders = req.setRequestHeaders;
+    let req = new mxXmlRequest(url, null, 'GET');
+    let setRequestHeaders = req.setRequestHeaders;
 
     if (headers) {
       req.setRequestHeaders = (request, params) => {
@@ -1268,10 +1268,10 @@ var mxUtils = {
    * onerror - Optional function to execute on error.
    */
   getAll: (urls, onload, onerror) => {
-    var remain = urls.length;
-    var result = [];
-    var errors = 0;
-    var err = () => {
+    let remain = urls.length;
+    let result = [];
+    let errors = 0;
+    let err = () => {
       if (errors == 0 && onerror != null) {
         onerror();
       }
@@ -1279,10 +1279,10 @@ var mxUtils = {
       errors++;
     };
 
-    for (var i = 0; i < urls.length; i++) {
+    for (let i = 0; i < urls.length; i++) {
       ((url, index) => {
         mxUtils.get(url, (req) => {
-          var status = req.getStatus();
+          let status = req.getStatus();
 
           if (status < 200 || status > 299) {
             err();
@@ -1384,7 +1384,7 @@ var mxUtils = {
    * key is null.
    */
   getValue: (array, key, defaultValue) => {
-    var value = (array != null) ? array[key] : null;
+    let value = (array != null) ? array[key] : null;
 
     if (value == null) {
       value = defaultValue;
@@ -1408,7 +1408,7 @@ var mxUtils = {
    * key is null. Default is 0.
    */
   getNumber: (array, key, defaultValue) => {
-    var value = (array != null) ? array[key] : null;
+    let value = (array != null) ? array[key] : null;
 
     if (value == null) {
       value = defaultValue || 0;
@@ -1432,7 +1432,7 @@ var mxUtils = {
    * key is null. Default is null.
    */
   getColor: (array, key, defaultValue) => {
-    var value = (array != null) ? array[key] : null;
+    let value = (array != null) ? array[key] : null;
 
     if (value == null) {
       value = defaultValue;
@@ -1462,7 +1462,7 @@ var mxUtils = {
    */
   clone: (obj, transients, shallow) => {
     shallow = (shallow != null) ? shallow : false;
-    var clone = null;
+    let clone = null;
 
     if (obj != null && typeof (obj.constructor) == 'function') {
       clone = new obj.constructor();
@@ -1497,7 +1497,7 @@ var mxUtils = {
         (a != null && b != null && a.length != b.length)) {
       return false;
     } else if (a != null && b != null) {
-      for (var i = 0; i < a.length; i++) {
+      for (let i = 0; i < a.length; i++) {
         if ((a[i] != null && b[i] == null) ||
             (a[i] == null && b[i] != null) ||
             (a[i] != null && b[i] != null &&
@@ -1523,7 +1523,7 @@ var mxUtils = {
    */
   equalEntries: (a, b) => {
     // Counts keys in b to check if all values have been compared
-    var count = 0;
+    let count = 0;
 
     if ((a == null && b != null) || (a != null && b == null) ||
         (a != null && b != null && a.length != b.length)) {
@@ -1551,10 +1551,10 @@ var mxUtils = {
    * Removes all duplicates from the given array.
    */
   removeDuplicates: (arr) => {
-    var dict = new mxDictionary();
-    var result = [];
+    let dict = new mxDictionary();
+    let result = [];
 
-    for (var i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
       if (!dict.get(arr[i])) {
         result.push(arr[i]);
         dict.put(arr[i], true);
@@ -1596,7 +1596,7 @@ var mxUtils = {
    * superCtor - Constructor of the superclass.
    */
   extend: (ctor, superCtor) => {
-    var f = () => {
+    let f = () => {
     };
     f.prototype = superCtor.prototype;
 
@@ -1614,7 +1614,7 @@ var mxUtils = {
    * obj - Object to return the string representation for.
    */
   toString: (obj) => {
-    var output = '';
+    let output = '';
 
     for (var i in obj) {
       try {
@@ -1623,7 +1623,7 @@ var mxUtils = {
         } else if (typeof (obj[i]) == 'function') {
           output += i + ' => [Function]\n';
         } else if (typeof (obj[i]) == 'object') {
-          var ctor = mxUtils.getFunctionName(obj[i].constructor);
+          let ctor = mxUtils.getFunctionName(obj[i].constructor);
           output += i + ' => [' + ctor + ']\n';
         } else {
           output += i + ' = ' + obj[i] + '\n';
@@ -1667,21 +1667,21 @@ var mxUtils = {
       return result;
     }
 
-    var fS = sweepFlag;
-    var psai = angle;
+    let fS = sweepFlag;
+    let psai = angle;
     r1 = Math.abs(r1);
     r2 = Math.abs(r2);
-    var ctx = -x / 2;
-    var cty = -y / 2;
-    var cpsi = Math.cos(psai * Math.PI / 180);
-    var spsi = Math.sin(psai * Math.PI / 180);
-    var rxd = cpsi * ctx + spsi * cty;
-    var ryd = -1 * spsi * ctx + cpsi * cty;
-    var rxdd = rxd * rxd;
-    var rydd = ryd * ryd;
+    let ctx = -x / 2;
+    let cty = -y / 2;
+    let cpsi = Math.cos(psai * Math.PI / 180);
+    let spsi = Math.sin(psai * Math.PI / 180);
+    let rxd = cpsi * ctx + spsi * cty;
+    let ryd = -1 * spsi * ctx + cpsi * cty;
+    let rxdd = rxd * rxd;
+    let rydd = ryd * ryd;
     var r1x = r1 * r1;
     var r2y = r2 * r2;
-    var lamda = rxdd / r1x + rydd / r2y;
+    let lamda = rxdd / r1x + rydd / r2y;
     var sds;
 
     if (lamda > 1) {
@@ -1689,7 +1689,7 @@ var mxUtils = {
       r2 = Math.sqrt(lamda) * r2;
       sds = 0;
     } else {
-      var seif = 1;
+      let seif = 1;
 
       if (largeArcFlag === fS) {
         seif = -1;
@@ -1698,14 +1698,14 @@ var mxUtils = {
       sds = seif * Math.sqrt((r1x * r2y - r1x * rydd - r2y * rxdd) / (r1x * rydd + r2y * rxdd));
     }
 
-    var txd = sds * r1 * ryd / r2;
-    var tyd = -1 * sds * r2 * rxd / r1;
-    var tx = cpsi * txd - spsi * tyd + x / 2;
-    var ty = spsi * txd + cpsi * tyd + y / 2;
-    var rad = Math.atan2((ryd - tyd) / r2, (rxd - txd) / r1) - Math.atan2(0, 1);
+    let txd = sds * r1 * ryd / r2;
+    let tyd = -1 * sds * r2 * rxd / r1;
+    let tx = cpsi * txd - spsi * tyd + x / 2;
+    let ty = spsi * txd + cpsi * tyd + y / 2;
+    let rad = Math.atan2((ryd - tyd) / r2, (rxd - txd) / r1) - Math.atan2(0, 1);
     var s1 = (rad >= 0) ? rad : 2 * Math.PI + rad;
     rad = Math.atan2((-ryd - tyd) / r2, (-rxd - txd) / r1) - Math.atan2((ryd - tyd) / r2, (rxd - txd) / r1);
-    var dr = (rad >= 0) ? rad : 2 * Math.PI + rad;
+    let dr = (rad >= 0) ? rad : 2 * Math.PI + rad;
 
     if (fS == 0 && dr > 0) {
       dr -= 2 * Math.PI;
@@ -1713,35 +1713,35 @@ var mxUtils = {
       dr += 2 * Math.PI;
     }
 
-    var sse = dr * 2 / Math.PI;
-    var seg = Math.ceil(sse < 0 ? -1 * sse : sse);
-    var segr = dr / seg;
-    var t = 8 / 3 * Math.sin(segr / 4) * Math.sin(segr / 4) / Math.sin(segr / 2);
+    let sse = dr * 2 / Math.PI;
+    let seg = Math.ceil(sse < 0 ? -1 * sse : sse);
+    let segr = dr / seg;
+    let t = 8 / 3 * Math.sin(segr / 4) * Math.sin(segr / 4) / Math.sin(segr / 2);
     var cpsir1 = cpsi * r1;
     var cpsir2 = cpsi * r2;
     var spsir1 = spsi * r1;
     var spsir2 = spsi * r2;
-    var mc = Math.cos(s1);
-    var ms = Math.sin(s1);
+    let mc = Math.cos(s1);
+    let ms = Math.sin(s1);
     var x2 = -t * (cpsir1 * ms + spsir2 * mc);
     var y2 = -t * (spsir1 * ms - cpsir2 * mc);
     var x3 = 0;
     var y3 = 0;
 
-    var result = [];
+    let result = [];
 
-    for (var n = 0; n < seg; ++n) {
+    for (let n = 0; n < seg; ++n) {
       s1 += segr;
       mc = Math.cos(s1);
       ms = Math.sin(s1);
 
       x3 = cpsir1 * mc - spsir2 * ms + tx;
       y3 = spsir1 * mc + cpsir2 * ms + ty;
-      var dx = -t * (cpsir1 * ms + spsir2 * mc);
-      var dy = -t * (spsir1 * ms - cpsir2 * mc);
+      let dx = -t * (cpsir1 * ms + spsir2 * mc);
+      let dy = -t * (spsir1 * ms - cpsir2 * mc);
 
       // CurveTo updates x0, y0 so need to restore it
-      var index = n * 6;
+      let index = n * 6;
       result[index] = Number(x2 + x0);
       result[index + 1] = Number(y2 + y0);
       result[index + 2] = Number(x3 - dx + x0);
@@ -1769,12 +1769,12 @@ var mxUtils = {
    * rotation center is given then the center of rect is used.
    */
   getBoundingBox: (rect, rotation, cx) => {
-    var result = null;
+    let result = null;
 
     if (rect != null && rotation != null && rotation != 0) {
-      var rad = mxUtils.toRadians(rotation);
-      var cos = Math.cos(rad);
-      var sin = Math.sin(rad);
+      let rad = mxUtils.toRadians(rotation);
+      let cos = Math.cos(rad);
+      let sin = Math.sin(rad);
 
       cx = (cx != null) ? cx : new mxPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
 
@@ -1804,8 +1804,8 @@ var mxUtils = {
    */
   getRotatedPoint: (pt, cos, sin, c) => {
     c = (c != null) ? c : new mxPoint();
-    var x = pt.x - c.x;
-    var y = pt.y - c.y;
+    let x = pt.x - c.x;
+    let y = pt.y - c.y;
 
     var x1 = x * cos - y * sin;
     var y1 = y * cos + x * sin;
@@ -1827,23 +1827,23 @@ var mxUtils = {
    * defaultValue - Default value to be returned.
    */
   getPortConstraints: (terminal, edge, source, defaultValue) => {
-    var value = mxUtils.getValue(terminal.style, mxConstants.STYLE_PORT_CONSTRAINT,
+    let value = mxUtils.getValue(terminal.style, mxConstants.STYLE_PORT_CONSTRAINT,
         mxUtils.getValue(edge.style, (source) ? mxConstants.STYLE_SOURCE_PORT_CONSTRAINT :
             mxConstants.STYLE_TARGET_PORT_CONSTRAINT, null));
 
     if (value == null) {
       return defaultValue;
     } else {
-      var directions = value.toString();
-      var returnValue = mxConstants.DIRECTION_MASK_NONE;
-      var constraintRotationEnabled = mxUtils.getValue(terminal.style, mxConstants.STYLE_PORT_CONSTRAINT_ROTATION, 0);
-      var rotation = 0;
+      let directions = value.toString();
+      let returnValue = mxConstants.DIRECTION_MASK_NONE;
+      let constraintRotationEnabled = mxUtils.getValue(terminal.style, mxConstants.STYLE_PORT_CONSTRAINT_ROTATION, 0);
+      let rotation = 0;
 
       if (constraintRotationEnabled == 1) {
         rotation = mxUtils.getValue(terminal.style, mxConstants.STYLE_ROTATION, 0);
       }
 
-      var quad = 0;
+      let quad = 0;
 
       if (rotation > 45) {
         quad = 1;
@@ -1935,7 +1935,7 @@ var mxUtils = {
    * becomes south | west
    */
   reversePortConstraints: (constraint) => {
-    var result = 0;
+    let result = 0;
 
     result = (constraint & mxConstants.DIRECTION_MASK_WEST) << 3;
     result |= (constraint & mxConstants.DIRECTION_MASK_NORTH) << 1;
@@ -1952,15 +1952,15 @@ var mxUtils = {
    * the specified coordinate pair.
    */
   findNearestSegment: (state, x, y) => {
-    var index = -1;
+    let index = -1;
 
     if (state.absolutePoints.length > 0) {
-      var last = state.absolutePoints[0];
-      var min = null;
+      let last = state.absolutePoints[0];
+      let min = null;
 
-      for (var i = 1; i < state.absolutePoints.length; i++) {
-        var current = state.absolutePoints[i];
-        var dist = mxUtils.ptSegDistSq(last.x, last.y,
+      for (let i = 1; i < state.absolutePoints.length; i++) {
+        let current = state.absolutePoints[i];
+        let dist = mxUtils.ptSegDistSq(last.x, last.y,
             current.x, current.y, x, y);
 
         if (min == null || dist < min) {
@@ -1982,7 +1982,7 @@ var mxUtils = {
    * rectangle according to the respective styles in style.
    */
   getDirectedBounds: function (rect, m, style, flipH, flipV) {
-    var d = mxUtils.getValue(style, mxConstants.STYLE_DIRECTION, mxConstants.DIRECTION_EAST);
+    let d = mxUtils.getValue(style, mxConstants.STYLE_DIRECTION, mxConstants.DIRECTION_EAST);
     flipH = (flipH != null) ? flipH : mxUtils.getValue(style, mxConstants.STYLE_FLIPH, false);
     flipV = (flipV != null) ? flipV : mxUtils.getValue(style, mxConstants.STYLE_FLIPV, false);
 
@@ -1993,14 +1993,14 @@ var mxUtils = {
 
     if ((flipV && (d == mxConstants.DIRECTION_SOUTH || d == mxConstants.DIRECTION_NORTH)) ||
         (flipH && (d == mxConstants.DIRECTION_EAST || d == mxConstants.DIRECTION_WEST))) {
-      var tmp = m.x;
+      let tmp = m.x;
       m.x = m.width;
       m.width = tmp;
     }
 
     if ((flipH && (d == mxConstants.DIRECTION_SOUTH || d == mxConstants.DIRECTION_NORTH)) ||
         (flipV && (d == mxConstants.DIRECTION_EAST || d == mxConstants.DIRECTION_WEST))) {
-      var tmp = m.y;
+      let tmp = m.y;
       m.y = m.height;
       m.height = tmp;
     }
@@ -2034,16 +2034,16 @@ var mxUtils = {
    * points and the line between center and point.
    */
   getPerimeterPoint: function (pts, center, point) {
-    var min = null;
+    let min = null;
 
-    for (var i = 0; i < pts.length - 1; i++) {
-      var pt = mxUtils.intersection(pts[i].x, pts[i].y, pts[i + 1].x, pts[i + 1].y,
+    for (let i = 0; i < pts.length - 1; i++) {
+      let pt = mxUtils.intersection(pts[i].x, pts[i].y, pts[i + 1].x, pts[i + 1].y,
           center.x, center.y, point.x, point.y);
 
       if (pt != null) {
-        var dx = point.x - pt.x;
-        var dy = point.y - pt.y;
-        var ip = {p: pt, distSq: dy * dy + dx * dx};
+        let dx = point.x - pt.x;
+        let dy = point.y - pt.y;
+        let ip = {p: pt, distSq: dy * dy + dx * dx};
 
         if (ip != null && (min == null || min.distSq > ip.distSq)) {
           min = ip;
@@ -2066,14 +2066,14 @@ var mxUtils = {
    * p2 - <mxPoint> that represents the second point of the segment.
    */
   rectangleIntersectsSegment: (bounds, p1, p2) => {
-    var top = bounds.y;
-    var left = bounds.x;
-    var bottom = top + bounds.height;
-    var right = left + bounds.width;
+    let top = bounds.y;
+    let left = bounds.x;
+    let bottom = top + bounds.height;
+    let right = left + bounds.width;
 
     // Find min and max X for the segment
-    var minX = p1.x;
-    var maxX = p2.x;
+    let minX = p1.x;
+    let maxX = p2.x;
 
     if (p1.x > p2.x) {
       minX = p2.x;
@@ -2095,19 +2095,19 @@ var mxUtils = {
     }
 
     // Find corresponding min and max Y for min and max X we found before
-    var minY = p1.y;
-    var maxY = p2.y;
-    var dx = p2.x - p1.x;
+    let minY = p1.y;
+    let maxY = p2.y;
+    let dx = p2.x - p1.x;
 
     if (Math.abs(dx) > 0.0000001) {
-      var a = (p2.y - p1.y) / dx;
-      var b = p1.y - a * p1.x;
+      let a = (p2.y - p1.y) / dx;
+      let b = p1.y - a * p1.x;
       minY = a * minX + b;
       maxY = a * maxX + b;
     }
 
     if (minY > maxY) {
-      var tmp = maxY;
+      let tmp = maxY;
       maxY = minY;
       minY = tmp;
     }
@@ -2156,19 +2156,19 @@ var mxUtils = {
    * b - <mxRectangle> to be checked for intersection.
    */
   intersects: (a, b) => {
-    var tw = a.width;
-    var th = a.height;
-    var rw = b.width;
-    var rh = b.height;
+    let tw = a.width;
+    let th = a.height;
+    let rw = b.width;
+    let rh = b.height;
 
     if (rw <= 0 || rh <= 0 || tw <= 0 || th <= 0) {
       return false;
     }
 
-    var tx = a.x;
-    var ty = a.y;
-    var rx = b.x;
-    var ry = b.y;
+    let tx = a.x;
+    let ty = a.y;
+    let rx = b.x;
+    let ry = b.y;
 
     rw += rx;
     rh += ry;
@@ -2201,12 +2201,12 @@ var mxUtils = {
     max = (max != null) ? max : 0;
 
     if (hotspot > 0) {
-      var cx = state.getCenterX();
-      var cy = state.getCenterY();
-      var w = state.width;
-      var h = state.height;
+      let cx = state.getCenterX();
+      let cy = state.getCenterY();
+      let w = state.width;
+      let h = state.height;
 
-      var start = mxUtils.getValue(state.style, mxConstants.STYLE_STARTSIZE) * state.view.scale;
+      let start = mxUtils.getValue(state.style, mxConstants.STYLE_STARTSIZE) * state.view.scale;
 
       if (start > 0) {
         if (mxUtils.getValue(state.style, mxConstants.STYLE_HORIZONTAL, true)) {
@@ -2226,14 +2226,14 @@ var mxUtils = {
         h = Math.min(h, max);
       }
 
-      var rect = new mxRectangle(cx - w / 2, cy - h / 2, w, h);
-      var alpha = mxUtils.toRadians(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0);
+      let rect = new mxRectangle(cx - w / 2, cy - h / 2, w, h);
+      let alpha = mxUtils.toRadians(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0);
 
       if (alpha != 0) {
-        var cos = Math.cos(-alpha);
-        var sin = Math.sin(-alpha);
-        var cx = new mxPoint(state.getCenterX(), state.getCenterY());
-        var pt = mxUtils.getRotatedPoint(new mxPoint(x, y), cos, sin, cx);
+        let cos = Math.cos(-alpha);
+        let sin = Math.sin(-alpha);
+        let cx = new mxPoint(state.getCenterX(), state.getCenterY());
+        let pt = mxUtils.getRotatedPoint(new mxPoint(x, y), cos, sin, cx);
         x = pt.x;
         y = pt.y;
       }
@@ -2258,17 +2258,17 @@ var mxUtils = {
    * Default is false.
    */
   getOffset: (container, scrollOffset) => {
-    var offsetLeft = 0;
-    var offsetTop = 0;
+    let offsetLeft = 0;
+    let offsetTop = 0;
 
     // Ignores document scroll origin for fixed elements
-    var fixed = false;
-    var node = container;
-    var b = document.body;
-    var d = document.documentElement;
+    let fixed = false;
+    let node = container;
+    let b = document.body;
+    let d = document.documentElement;
 
     while (node != null && node != b && node != d && !fixed) {
-      var style = mxUtils.getCurrentStyle(node);
+      let style = mxUtils.getCurrentStyle(node);
 
       if (style != null) {
         fixed = fixed || style.position == 'fixed';
@@ -2278,12 +2278,12 @@ var mxUtils = {
     }
 
     if (!scrollOffset && !fixed) {
-      var offset = mxUtils.getDocumentScrollOrigin(container.ownerDocument);
+      let offset = mxUtils.getDocumentScrollOrigin(container.ownerDocument);
       offsetLeft += offset.x;
       offsetTop += offset.y;
     }
 
-    var r = container.getBoundingClientRect();
+    let r = container.getBoundingClientRect();
 
     if (r != null) {
       offsetLeft += r.left;
@@ -2300,10 +2300,10 @@ var mxUtils = {
    * if no document is given.
    */
   getDocumentScrollOrigin: (doc) => {
-    var wnd = doc.defaultView || doc.parentWindow;
+    let wnd = doc.defaultView || doc.parentWindow;
 
-    var x = (wnd != null && window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
-    var y = (wnd != null && window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    let x = (wnd != null && window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
+    let y = (wnd != null && window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
 
     return new mxPoint(x, y);
   },
@@ -2325,11 +2325,11 @@ var mxUtils = {
     includeAncestors = (includeAncestors != null) ? includeAncestors : false;
     includeDocument = (includeDocument != null) ? includeDocument : true;
 
-    var doc = (node != null) ? node.ownerDocument : document;
-    var b = doc.body;
-    var d = doc.documentElement;
-    var result = new mxPoint();
-    var fixed = false;
+    let doc = (node != null) ? node.ownerDocument : document;
+    let b = doc.body;
+    let d = doc.documentElement;
+    let result = new mxPoint();
+    let fixed = false;
 
     while (node != null && node != b && node != d) {
       if (!isNaN(node.scrollLeft) && !isNaN(node.scrollTop)) {
@@ -2337,7 +2337,7 @@ var mxUtils = {
         result.y += node.scrollTop;
       }
 
-      var style = mxUtils.getCurrentStyle(node);
+      let style = mxUtils.getCurrentStyle(node);
 
       if (style != null) {
         fixed = fixed || style.position == 'fixed';
@@ -2347,7 +2347,7 @@ var mxUtils = {
     }
 
     if (!fixed && includeDocument) {
-      var origin = mxUtils.getDocumentScrollOrigin(doc);
+      let origin = mxUtils.getDocumentScrollOrigin(doc);
 
       result.x += origin.x;
       result.y += origin.y;
@@ -2363,7 +2363,7 @@ var mxUtils = {
    * container and returns a new <mxPoint> with the result.
    *
    * (code)
-   * var pt = mxUtils.convertPoint(graph.container,
+   * let pt = mxUtils.convertPoint(graph.container,
    *   mxEvent.getClientX(evt), mxEvent.getClientY(evt));
    * (end)
    *
@@ -2374,8 +2374,8 @@ var mxUtils = {
    * y - Y-coordinate of the point to be converted.
    */
   convertPoint: (container, x, y) => {
-    var origin = mxUtils.getScrollOrigin(container, false);
-    var offset = mxUtils.getOffset(container);
+    let origin = mxUtils.getScrollOrigin(container, false);
+    let offset = mxUtils.getOffset(container);
 
     offset.x -= origin.x;
     offset.y -= origin.y;
@@ -2494,17 +2494,17 @@ var mxUtils = {
    * y3 - Y-coordinate of the second line's endpoint.
    */
   intersection: function (x0, y0, x1, y1, x2, y2, x3, y3) {
-    var denom = ((y3 - y2) * (x1 - x0)) - ((x3 - x2) * (y1 - y0));
-    var nume_a = ((x3 - x2) * (y0 - y2)) - ((y3 - y2) * (x0 - x2));
-    var nume_b = ((x1 - x0) * (y0 - y2)) - ((y1 - y0) * (x0 - x2));
+    let denom = ((y3 - y2) * (x1 - x0)) - ((x3 - x2) * (y1 - y0));
+    let nume_a = ((x3 - x2) * (y0 - y2)) - ((y3 - y2) * (x0 - x2));
+    let nume_b = ((x1 - x0) * (y0 - y2)) - ((y1 - y0) * (x0 - x2));
 
-    var ua = nume_a / denom;
-    var ub = nume_b / denom;
+    let ua = nume_a / denom;
+    let ub = nume_b / denom;
 
     if (ua >= 0.0 && ua <= 1.0 && ub >= 0.0 && ub <= 1.0) {
       // Get the intersection point
-      var x = x0 + ua * (x1 - x0);
-      var y = y0 + ua * (y1 - y0);
+      let x = x0 + ua * (x1 - x0);
+      let y = y0 + ua * (y1 - y0);
 
       return new mxPoint(x, y);
     }
@@ -2536,7 +2536,7 @@ var mxUtils = {
     px -= x1;
     py -= y1;
 
-    var dotprod = px * x2 + py * y2;
+    let dotprod = px * x2 + py * y2;
     var projlenSq;
 
     if (dotprod <= 0.0) {
@@ -2553,7 +2553,7 @@ var mxUtils = {
       }
     }
 
-    var lenSq = px * px + py * py - projlenSq;
+    let lenSq = px * px + py * py - projlenSq;
 
     if (lenSq < 0) {
       lenSq = 0;
@@ -2603,7 +2603,7 @@ var mxUtils = {
     y2 -= y1;
     px -= x1;
     py -= y1;
-    var ccw = px * y2 - py * x2;
+    let ccw = px * y2 - py * x2;
 
     if (ccw == 0.0) {
       ccw = px * x2 + py * y2;
@@ -2678,7 +2678,7 @@ var mxUtils = {
    * src - URL that points to the image to be displayed.
    */
   createImage: (src) => {
-    var imageNode = null;
+    let imageNode = null;
     imageNode = document.createElement('img');
     imageNode.setAttribute('src', src);
     imageNode.setAttribute('border', '0');
@@ -2693,7 +2693,7 @@ var mxUtils = {
    */
   sortCells: (cells, ascending) => {
     ascending = (ascending != null) ? ascending : true;
-    var lookup = new mxDictionary();
+    let lookup = new mxDictionary();
     cells.sort((o1, o2) => {
       var p1 = lookup.get(o1);
 
@@ -2709,7 +2709,7 @@ var mxUtils = {
         lookup.put(o2, p2);
       }
 
-      var comp = mxCellPath.compare(p1, p2);
+      let comp = mxCellPath.compare(p1, p2);
 
       return (comp == 0) ? 0 : (((comp > 0) == ascending) ? 1 : -1);
     });
@@ -2729,8 +2729,8 @@ var mxUtils = {
    */
   getStylename: (style) => {
     if (style != null) {
-      var pairs = style.split(';');
-      var stylename = pairs[0];
+      let pairs = style.split(';');
+      let stylename = pairs[0];
 
       if (stylename.indexOf('=') < 0) {
         return stylename;
@@ -2751,12 +2751,12 @@ var mxUtils = {
    * style - String of the form [(stylename|key=value);].
    */
   getStylenames: (style) => {
-    var result = [];
+    let result = [];
 
     if (style != null) {
-      var pairs = style.split(';');
+      let pairs = style.split(';');
 
-      for (var i = 0; i < pairs.length; i++) {
+      for (let i = 0; i < pairs.length; i++) {
         if (pairs[i].indexOf('=') < 0) {
           result.push(pairs[i]);
         }
@@ -2775,10 +2775,10 @@ var mxUtils = {
    */
   indexOfStylename: (style, stylename) => {
     if (style != null && stylename != null) {
-      var tokens = style.split(';');
-      var pos = 0;
+      let tokens = style.split(';');
+      let pos = 0;
 
-      for (var i = 0; i < tokens.length; i++) {
+      for (let i = 0; i < tokens.length; i++) {
         if (tokens[i] == stylename) {
           return pos;
         }
@@ -2817,12 +2817,12 @@ var mxUtils = {
    * and returns the updated style. Trailing semicolons are not preserved.
    */
   removeStylename: (style, stylename) => {
-    var result = [];
+    let result = [];
 
     if (style != null) {
-      var tokens = style.split(';');
+      let tokens = style.split(';');
 
-      for (var i = 0; i < tokens.length; i++) {
+      for (let i = 0; i < tokens.length; i++) {
         if (tokens[i] != stylename) {
           result.push(tokens[i]);
         }
@@ -2839,12 +2839,12 @@ var mxUtils = {
    * style.
    */
   removeAllStylenames: (style) => {
-    var result = [];
+    let result = [];
 
     if (style != null) {
-      var tokens = style.split(';');
+      let tokens = style.split(';');
 
-      for (var i = 0; i < tokens.length; i++) {
+      for (let i = 0; i < tokens.length; i++) {
         // Keeps the key, value assignments
         if (tokens[i].indexOf('=') >= 0) {
           result.push(tokens[i]);
@@ -2872,9 +2872,9 @@ var mxUtils = {
     if (cells != null && cells.length > 0) {
       model.beginUpdate();
       try {
-        for (var i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i++) {
           if (cells[i] != null) {
-            var style = mxUtils.setStyle(model.getStyle(cells[i]), key, value);
+            let style = mxUtils.setStyle(model.getStyle(cells[i]), key, value);
             model.setStyle(cells[i], style);
           }
         }
@@ -2898,7 +2898,7 @@ var mxUtils = {
    * value - New value for the given key.
    */
   setStyle: (style, key, value) => {
-    var isValue = value != null && (typeof (value.length) == 'undefined' || value.length > 0);
+    let isValue = value != null && (typeof (value.length) == 'undefined' || value.length > 0);
 
     if (style == null || style.length == 0) {
       if (isValue) {
@@ -2906,7 +2906,7 @@ var mxUtils = {
       }
     } else {
       if (style.substring(0, key.length + 1) == key + '=') {
-        var next = style.indexOf(';');
+        let next = style.indexOf(';');
 
         if (isValue) {
           style = key + '=' + value + ((next < 0) ? ';' : style.substring(next));
@@ -2914,15 +2914,15 @@ var mxUtils = {
           style = (next < 0 || next == style.length - 1) ? '' : style.substring(next + 1);
         }
       } else {
-        var index = style.indexOf(';' + key + '=');
+        let index = style.indexOf(';' + key + '=');
 
         if (index < 0) {
           if (isValue) {
-            var sep = (style.charAt(style.length - 1) == ';') ? '' : ';';
+            let sep = (style.charAt(style.length - 1) == ';') ? '' : ';';
             style = style + sep + key + '=' + value + ';';
           }
         } else {
-          var next = style.indexOf(';', index + 1);
+          let next = style.indexOf(';', index + 1);
 
           if (isValue) {
             style = style.substring(0, index + 1) + key + '=' + value + ((next < 0) ? ';' : style.substring(next));
@@ -2945,7 +2945,7 @@ var mxUtils = {
    * Example:
    *
    * (code)
-   * var cells = graph.getSelectionCells();
+   * let cells = graph.getSelectionCells();
    * mxUtils.setCellStyleFlags(graph.model,
    *       cells,
    *       mxConstants.STYLE_FONTSTYLE,
@@ -2966,9 +2966,9 @@ var mxUtils = {
     if (cells != null && cells.length > 0) {
       model.beginUpdate();
       try {
-        for (var i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i++) {
           if (cells[i] != null) {
-            var style = mxUtils.setStyleFlag(
+            let style = mxUtils.setStyleFlag(
                 model.getStyle(cells[i]),
                 key, flag, value);
             model.setStyle(cells[i], style);
@@ -3001,10 +3001,10 @@ var mxUtils = {
         style = key + '=0';
       }
     } else {
-      var index = style.indexOf(key + '=');
+      let index = style.indexOf(key + '=');
 
       if (index < 0) {
-        var sep = (style.charAt(style.length - 1) == ';') ? '' : ';';
+        let sep = (style.charAt(style.length - 1) == ';') ? '' : ';';
 
         if (value || value == null) {
           style = style + sep + key + '=' + flag;
@@ -3012,8 +3012,8 @@ var mxUtils = {
           style = style + sep + key + '=0';
         }
       } else {
-        var cont = style.indexOf(';', index);
-        var tmp = '';
+        let cont = style.indexOf(';', index);
+        let tmp = '';
 
         if (cont < 0) {
           tmp = style.substring(index + key.length + 1);
@@ -3046,8 +3046,8 @@ var mxUtils = {
    * alignment. Default values for missing arguments is top, left.
    */
   getAlignmentAsPoint: (align, valign) => {
-    var dx = -0.5;
-    var dy = -0.5;
+    let dx = -0.5;
+    let dy = -0.5;
 
     // Horizontal alignment
     if (align == mxConstants.ALIGN_LEFT) {
@@ -3077,8 +3077,8 @@ var mxUtils = {
    * Example:
    *
    * (code)
-   * var label = graph.getLabel(cell).replace(/\n/g, "<br>");
-   * var size = graph.getSizeForString(label);
+   * let label = graph.getLabel(cell).replace(/\n/g, "<br>");
+   * let size = graph.getSizeForString(label);
    * (end)
    *
    * Parameters:
@@ -3094,7 +3094,7 @@ var mxUtils = {
   getSizeForString: (text, fontSize, fontFamily, textWidth, fontStyle) => {
     fontSize = (fontSize != null) ? fontSize : mxConstants.DEFAULT_FONTSIZE;
     fontFamily = (fontFamily != null) ? fontFamily : mxConstants.DEFAULT_FONTFAMILY;
-    var div = document.createElement('div');
+    let div = document.createElement('div');
 
     // Sets the font size and family
     div.style.fontFamily = fontFamily;
@@ -3111,7 +3111,7 @@ var mxUtils = {
         div.style.fontStyle = 'italic';
       }
 
-      var txtDecor = [];
+      let txtDecor = [];
 
       if ((fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE) {
         txtDecor.push('underline');
@@ -3143,7 +3143,7 @@ var mxUtils = {
     document.body.appendChild(div);
 
     // Gets the size and removes from DOM
-    var size = new mxRectangle(0, 0, div.offsetWidth, div.offsetHeight);
+    let size = new mxRectangle(0, 0, div.offsetWidth, div.offsetHeight);
     document.body.removeChild(div);
 
     return size;
@@ -3158,22 +3158,22 @@ var mxUtils = {
     scale = (scale != null) ? scale : 1;
 
     if (cells == null) {
-      var model = graph.getModel();
+      let model = graph.getModel();
       cells = [model.getRoot()];
     }
 
-    var view = graph.getView();
-    var result = null;
+    let view = graph.getView();
+    let result = null;
 
     // Disables events on the view
-    var eventsEnabled = view.isEventsEnabled();
+    let eventsEnabled = view.isEventsEnabled();
     view.setEventsEnabled(false);
 
     // Workaround for label bounds not taken into account for image export.
     // Creates a temporary draw pane which is used for rendering the text.
     // Text rendering is required for finding the bounds of the labels.
-    var drawPane = view.drawPane;
-    var overlayPane = view.overlayPane;
+    let drawPane = view.drawPane;
+    let overlayPane = view.overlayPane;
 
     if (graph.dialect == mxConstants.DIALECT_SVG) {
       view.drawPane = document.createElementNS(mxConstants.NS_SVG, 'g');
@@ -3192,14 +3192,14 @@ var mxUtils = {
     }
 
     // Resets the translation
-    var translate = view.getTranslate();
+    let translate = view.getTranslate();
     view.translate = new mxPoint(x0, y0);
 
     // Creates the temporary cell states in the view
-    var temp = new mxTemporaryCellStates(graph.getView(), scale, cells);
+    let temp = new mxTemporaryCellStates(graph.getView(), scale, cells);
 
     try {
-      var enc = new mxCodec();
+      let enc = new mxCodec();
       result = enc.encode(graph.getView());
     } finally {
       temp.destroy();
@@ -3240,37 +3240,37 @@ var mxUtils = {
     pageFormat = (pageFormat != null) ? pageFormat : mxConstants.PAGE_FORMAT_A4_PORTRAIT;
     border = (border != null) ? border : 0;
 
-    var availablePageWidth = pageFormat.width - (border * 2);
-    var availablePageHeight = pageFormat.height - (border * 2);
+    let availablePageWidth = pageFormat.width - (border * 2);
+    let availablePageHeight = pageFormat.height - (border * 2);
 
     // Work out the number of pages required if the
     // graph is not scaled.
-    var graphBounds = graph.getGraphBounds().clone();
-    var sc = graph.getView().getScale();
+    let graphBounds = graph.getGraphBounds().clone();
+    let sc = graph.getView().getScale();
     graphBounds.width /= sc;
     graphBounds.height /= sc;
-    var graphWidth = graphBounds.width;
-    var graphHeight = graphBounds.height;
+    let graphWidth = graphBounds.width;
+    let graphHeight = graphBounds.height;
 
-    var scale = 1;
+    let scale = 1;
 
     // The ratio of the width/height for each printer page
-    var pageFormatAspectRatio = availablePageWidth / availablePageHeight;
+    let pageFormatAspectRatio = availablePageWidth / availablePageHeight;
     // The ratio of the width/height for the graph to be printer
-    var graphAspectRatio = graphWidth / graphHeight;
+    let graphAspectRatio = graphWidth / graphHeight;
 
     // The ratio of horizontal pages / vertical pages for this
     // graph to maintain its aspect ratio on this page format
-    var pagesAspectRatio = graphAspectRatio / pageFormatAspectRatio;
+    let pagesAspectRatio = graphAspectRatio / pageFormatAspectRatio;
 
     // Factor the square root of the page count up and down
     // by the pages aspect ratio to obtain a horizontal and
     // vertical page count that adds up to the page count
     // and has the correct aspect ratio
-    var pageRoot = Math.sqrt(pageCount);
-    var pagesAspectRatioSqrt = Math.sqrt(pagesAspectRatio);
-    var numRowPages = pageRoot * pagesAspectRatioSqrt;
-    var numColumnPages = pageRoot / pagesAspectRatioSqrt;
+    let pageRoot = Math.sqrt(pageCount);
+    let pagesAspectRatioSqrt = Math.sqrt(pagesAspectRatio);
+    let numRowPages = pageRoot * pagesAspectRatioSqrt;
+    let numColumnPages = pageRoot / pagesAspectRatioSqrt;
 
     // These value are rarely more than 2 rounding downs away from
     // a total that meets the page count. In cases of one being less
@@ -3278,20 +3278,20 @@ var mxUtils = {
     // In this case, just change that value to be the page count, since
     // we know the other value is 1
     if (numRowPages < 1 && numColumnPages > pageCount) {
-      var scaleChange = numColumnPages / pageCount;
+      let scaleChange = numColumnPages / pageCount;
       numColumnPages = pageCount;
       numRowPages /= scaleChange;
     }
 
     if (numColumnPages < 1 && numRowPages > pageCount) {
-      var scaleChange = numRowPages / pageCount;
+      let scaleChange = numRowPages / pageCount;
       numRowPages = pageCount;
       numColumnPages /= scaleChange;
     }
 
-    var currentTotalPages = Math.ceil(numRowPages) * Math.ceil(numColumnPages);
+    let currentTotalPages = Math.ceil(numRowPages) * Math.ceil(numColumnPages);
 
-    var numLoops = 0;
+    let numLoops = 0;
 
     // Iterate through while the rounded up number of pages comes to
     // a total greater than the required number
@@ -3301,8 +3301,8 @@ var mxUtils = {
       // i.e. Reduce the page total by reducing the total
       // page area by the least possible amount
 
-      var roundRowDownProportion = Math.floor(numRowPages) / numRowPages;
-      var roundColumnDownProportion = Math.floor(numColumnPages) / numColumnPages;
+      let roundRowDownProportion = Math.floor(numRowPages) / numRowPages;
+      let roundColumnDownProportion = Math.floor(numColumnPages) / numColumnPages;
 
       // If the round down proportion is, work out the proportion to
       // round down to 1 page less
@@ -3315,7 +3315,7 @@ var mxUtils = {
 
       // Check which rounding down is smaller, but in the case of very small roundings
       // try the other dimension instead
-      var scaleChange = 1;
+      let scaleChange = 1;
 
       // Use the higher of the two values
       if (roundRowDownProportion > roundColumnDownProportion) {
@@ -3337,7 +3337,7 @@ var mxUtils = {
 
     // Work out the scale from the number of row pages required
     // The column pages will give the same value
-    var posterWidth = availablePageWidth * numRowPages;
+    let posterWidth = availablePageWidth * numRowPages;
     scale = posterWidth / graphWidth;
 
     // Allow for rounding errors
@@ -3368,15 +3368,15 @@ var mxUtils = {
     y0 = (y0 != null) ? y0 : 0;
 
     if (doc == null) {
-      var wnd = window.open();
+      let wnd = window.open();
       doc = wnd.document;
     } else {
       doc.open();
     }
 
-    var bounds = graph.getGraphBounds();
-    var dx = Math.ceil(x0 - bounds.x);
-    var dy = Math.ceil(y0 - bounds.y);
+    let bounds = graph.getGraphBounds();
+    let dx = Math.ceil(x0 - bounds.x);
+    let dy = Math.ceil(y0 - bounds.y);
 
     if (w == null) {
       w = Math.ceil(bounds.width + x0) + Math.ceil(Math.ceil(bounds.x) - bounds.x);
@@ -3388,44 +3388,44 @@ var mxUtils = {
 
     doc.writeln('<html><head>');
 
-    var base = document.getElementsByTagName('base');
+    let base = document.getElementsByTagName('base');
 
-    for (var i = 0; i < base.length; i++) {
+    for (let i = 0; i < base.length; i++) {
       doc.writeln(mxUtils.getOuterHtml(base[i]));
     }
 
-    var links = document.getElementsByTagName('link');
+    let links = document.getElementsByTagName('link');
 
-    for (var i = 0; i < links.length; i++) {
+    for (let i = 0; i < links.length; i++) {
       doc.writeln(mxUtils.getOuterHtml(links[i]));
     }
 
-    var styles = document.getElementsByTagName('style');
+    let styles = document.getElementsByTagName('style');
 
-    for (var i = 0; i < styles.length; i++) {
+    for (let i = 0; i < styles.length; i++) {
       doc.writeln(mxUtils.getOuterHtml(styles[i]));
     }
 
     doc.writeln('</head><body style="margin:0px;"></body></html>');
     doc.close();
 
-    var outer = doc.createElement('div');
+    let outer = doc.createElement('div');
     outer.position = 'absolute';
     outer.overflow = 'hidden';
     outer.style.width = w + 'px';
     outer.style.height = h + 'px';
 
     // Required for HTML labels if foreignObjects are disabled
-    var div = doc.createElement('div');
+    let div = doc.createElement('div');
     div.style.position = 'absolute';
     div.style.left = dx + 'px';
     div.style.top = dy + 'px';
 
-    var node = graph.container.firstChild;
-    var svg = null;
+    let node = graph.container.firstChild;
+    let svg = null;
 
     while (node != null) {
-      var clone = node.cloneNode(true);
+      let clone = node.cloneNode(true);
 
       if (node == graph.view.drawPane.ownerSVGElement) {
         outer.appendChild(clone);
@@ -3467,11 +3467,11 @@ var mxUtils = {
    * graph - <mxGraph> to be printed.
    */
   printScreen: (graph) => {
-    var wnd = window.open();
-    var bounds = graph.getGraphBounds();
+    let wnd = window.open();
+    let bounds = graph.getGraphBounds();
     mxUtils.show(graph, wnd.document);
 
-    var print = () => {
+    let print = () => {
       wnd.focus();
       wnd.print();
       wnd.close();
@@ -3500,20 +3500,20 @@ var mxUtils = {
    */
   popup: (content, isInternalWindow) => {
     if (isInternalWindow) {
-      var div = document.createElement('div');
+      let div = document.createElement('div');
 
       div.style.overflow = 'scroll';
       div.style.width = '636px';
       div.style.height = '460px';
 
-      var pre = document.createElement('pre');
+      let pre = document.createElement('pre');
       pre.innerHTML = mxUtils.htmlEntities(content, false).replace(/\n/g, '<br>').replace(/ /g, '&nbsp;');
 
       div.appendChild(pre);
 
-      var w = document.body.clientWidth;
-      var h = Math.max(document.body.clientHeight || 0, document.documentElement.clientHeight)
-      var wnd = new mxWindow('Popup Window', div,
+      let w = document.body.clientWidth;
+      let h = Math.max(document.body.clientHeight || 0, document.documentElement.clientHeight)
+      let wnd = new mxWindow('Popup Window', div,
           w / 2 - 320, h / 2 - 240, 640, 480, false, true);
 
       wnd.setClosable(true);
@@ -3521,12 +3521,12 @@ var mxUtils = {
     } else {
       // Wraps up the XML content in a textarea
       if (mxClient.IS_NS) {
-        var wnd = window.open();
+        let wnd = window.open();
         wnd.document.writeln('<pre>' + mxUtils.htmlEntities(content) + '</pre');
         wnd.document.close();
       } else {
-        var wnd = window.open();
-        var pre = wnd.document.createElement('pre');
+        let wnd = window.open();
+        let pre = wnd.document.createElement('pre');
         pre.innerHTML = mxUtils.htmlEntities(content, false).replace(/\n/g, '<br>').replace(/ /g, '&nbsp;');
         wnd.document.body.appendChild(pre);
       }
@@ -3593,10 +3593,10 @@ var mxUtils = {
    * icon - Optional icon for the window decoration.
    */
   error: (message, width, close, icon) => {
-    var div = document.createElement('div');
+    let div = document.createElement('div');
     div.style.padding = '20px';
 
-    var img = document.createElement('img');
+    let img = document.createElement('img');
     img.setAttribute('src', icon || mxUtils.errorImage);
     img.setAttribute('valign', 'bottom');
     img.style.verticalAlign = 'middle';
@@ -3607,17 +3607,17 @@ var mxUtils = {
     div.appendChild(document.createTextNode('\u00a0')); // &nbsp;
     mxUtils.write(div, message);
 
-    var w = document.body.clientWidth;
-    var h = (document.body.clientHeight || document.documentElement.clientHeight);
-    var warn = new mxWindow(mxResources.get(mxUtils.errorResource) ||
+    let w = document.body.clientWidth;
+    let h = (document.body.clientHeight || document.documentElement.clientHeight);
+    let warn = new mxWindow(mxResources.get(mxUtils.errorResource) ||
         mxUtils.errorResource, div, (w - width) / 2, h / 4, width, null,
         false, true);
 
     if (close) {
       mxUtils.br(div);
 
-      var tmp = document.createElement('p');
-      var button = document.createElement('button');
+      let tmp = document.createElement('p');
+      let button = document.createElement('button');
 
       button.setAttribute('style', 'float:right');
 
@@ -3652,12 +3652,12 @@ var mxUtils = {
    * Example:
    *
    * (code)
-   * var funct = (graph, evt, cell, x, y)=>
+   * let funct = (graph, evt, cell, x, y)=>
    * {
    *   if (graph.canImportCell(cell))
    *   {
-   *     var parent = graph.getDefaultParent();
-   *     var vertex = null;
+   *     let parent = graph.getDefaultParent();
+   *     let vertex = null;
    *
    *     graph.getModel().beginUpdate();
    *     try
@@ -3673,7 +3673,7 @@ var mxUtils = {
    *   }
    * }
    *
-   * var img = document.createElement('img');
+   * let img = document.createElement('img');
    * img.setAttribute('src', 'editors/images/rectangle.gif');
    * img.style.position = 'absolute';
    * img.style.left = '0px';
@@ -3681,7 +3681,7 @@ var mxUtils = {
    * img.style.width = '16px';
    * img.style.height = '16px';
    *
-   * var dragImage = img.cloneNode(true);
+   * let dragImage = img.cloneNode(true);
    * dragImage.style.width = '32px';
    * dragImage.style.height = '32px';
    * mxUtils.makeDraggable(img, graph, funct, dragImage);
@@ -3711,7 +3711,7 @@ var mxUtils = {
    */
   makeDraggable: function (element, graphF, funct, dragElement, dx, dy, autoscroll,
                            scalePreview, highlightDropTargets, getDropTarget) {
-    var dragSource = new mxDragSource(element, funct);
+    let dragSource = new mxDragSource(element, funct);
     dragSource.dragOffset = new mxPoint((dx != null) ? dx : 0,
         (dy != null) ? dy : mxConstants.TOOLTIP_VERTICAL_OFFSET);
     dragSource.autoscroll = autoscroll;
@@ -3742,10 +3742,10 @@ var mxUtils = {
 
       if (scalePreview) {
         dragSource.createPreviewElement = (graph) => {
-          var elt = dragElement.cloneNode(true);
+          let elt = dragElement.cloneNode(true);
 
-          var w = parseInt(elt.style.width);
-          var h = parseInt(elt.style.height);
+          let w = parseInt(elt.style.width);
+          let h = parseInt(elt.style.height);
           elt.style.width = Math.round(w * graph.view.scale) + 'px';
           elt.style.height = Math.round(h * graph.view.scale) + 'px';
 

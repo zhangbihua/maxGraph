@@ -37,19 +37,19 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
    * use.
    */
   execute = (parent) => {
-    var model = this.layout.getModel();
-    var seenNodes = {};
-    var unseenNodes = mxUtils.clone(model.vertexMapper, null, true);
+    let model = this.layout.getModel();
+    let seenNodes = {};
+    let unseenNodes = mxUtils.clone(model.vertexMapper, null, true);
 
     // Perform a dfs through the internal model. If a cycle is found,
     // reverse it.
-    var rootsArray = null;
+    let rootsArray = null;
 
     if (model.roots != null) {
-      var modelRoots = model.roots;
+      let modelRoots = model.roots;
       rootsArray = [];
 
-      for (var i = 0; i < modelRoots.length; i++) {
+      for (let i = 0; i < modelRoots.length; i++) {
         rootsArray[i] = model.vertexMapper.get(modelRoots[i]);
       }
     }
@@ -59,11 +59,11 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
       // invert the connecting edge and reverse the target/source
       // relationship to that edge in the parent and the cell
       // Ancestor hashes only line up within a swimlane
-      var isAncestor = parent != null && parent.swimlaneIndex == node.swimlaneIndex && node.isAncestor(parent);
+      let isAncestor = parent != null && parent.swimlaneIndex == node.swimlaneIndex && node.isAncestor(parent);
 
       // If the source->target swimlane indices go from higher to
       // lower, the edge is reverse
-      var reversedOverSwimlane = parent != null && connectingEdge != null &&
+      let reversedOverSwimlane = parent != null && connectingEdge != null &&
           parent.swimlaneIndex < node.swimlaneIndex && connectingEdge.source == node;
 
       if (isAncestor) {
@@ -80,7 +80,7 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
         mxUtils.remove(connectingEdge, node.connectsAsSource);
       }
 
-      var cellId = mxCellPath.create(node.cell);
+      let cellId = mxCellPath.create(node.cell);
       seenNodes[cellId] = node;
       delete unseenNodes[cellId];
     }, rootsArray, true, null);

@@ -7,7 +7,7 @@
 import mxUtils from "../util/mxUtils";
 import mxObjectCodec from "./mxObjectCodec";
 
-var mxCodecRegistry = {
+let mxCodecRegistry = {
   /**
    * Class: mxCodecRegistry
    *
@@ -19,7 +19,7 @@ var mxCodecRegistry = {
    * object to be handled.
    *
    * (code)
-   * var codec = new mxObjectCodec(new mxGraphModel());
+   * let codec = new mxObjectCodec(new mxGraphModel());
    * (end)
    *
    * 2. Define the functions required for encoding and decoding
@@ -67,10 +67,10 @@ var mxCodecRegistry = {
    */
   register: (codec) => {
     if (codec != null) {
-      var name = codec.getName();
+      let name = codec.getName();
       mxCodecRegistry.codecs[name] = codec;
 
-      var classname = mxUtils.getFunctionName(codec.template.constructor);
+      let classname = mxUtils.getFunctionName(codec.template.constructor);
 
       if (classname !== name) {
         mxCodecRegistry.addAlias(classname, name);
@@ -100,11 +100,11 @@ var mxCodecRegistry = {
    * ctor - JavaScript constructor function.
    */
   getCodec: (ctor) => {
-    var codec = null;
+    let codec = null;
 
     if (ctor != null) {
-      var name = mxUtils.getFunctionName(ctor);
-      var tmp = mxCodecRegistry.aliases[name];
+      let name = mxUtils.getFunctionName(ctor);
+      let tmp = mxCodecRegistry.aliases[name];
 
       if (tmp != null) {
         name = tmp;

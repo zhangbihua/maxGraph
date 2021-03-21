@@ -164,7 +164,7 @@ class mxGeometry extends mxRectangle {
    */
   swap = () => {
     if (this.alternateBounds != null) {
-      var old = new mxRectangle(
+      let old = new mxRectangle(
           this.x, this.y, this.width, this.height);
 
       this.x = this.alternateBounds.x;
@@ -227,14 +227,14 @@ class mxGeometry extends mxRectangle {
    * cx - <mxPoint> that specifies the center of the rotation.
    */
   rotate = (angle, cx) => {
-    var rad = mxUtils.toRadians(angle);
-    var cos = Math.cos(rad);
-    var sin = Math.sin(rad);
+    let rad = mxUtils.toRadians(angle);
+    let cos = Math.cos(rad);
+    let sin = Math.sin(rad);
 
     // Rotates the geometry
     if (!this.relative) {
-      var ct = new mxPoint(this.getCenterX(), this.getCenterY());
-      var pt = mxUtils.getRotatedPoint(ct, cos, sin, cx);
+      let ct = new mxPoint(this.getCenterX(), this.getCenterY());
+      let pt = mxUtils.getRotatedPoint(ct, cos, sin, cx);
 
       this.x = Math.round(pt.x - this.width / 2);
       this.y = Math.round(pt.y - this.height / 2);
@@ -242,23 +242,23 @@ class mxGeometry extends mxRectangle {
 
     // Rotates the source point
     if (this.sourcePoint != null) {
-      var pt = mxUtils.getRotatedPoint(this.sourcePoint, cos, sin, cx);
+      let pt = mxUtils.getRotatedPoint(this.sourcePoint, cos, sin, cx);
       this.sourcePoint.x = Math.round(pt.x);
       this.sourcePoint.y = Math.round(pt.y);
     }
 
     // Translates the target point
     if (this.targetPoint != null) {
-      var pt = mxUtils.getRotatedPoint(this.targetPoint, cos, sin, cx);
+      let pt = mxUtils.getRotatedPoint(this.targetPoint, cos, sin, cx);
       this.targetPoint.x = Math.round(pt.x);
       this.targetPoint.y = Math.round(pt.y);
     }
 
     // Translate the control points
     if (this.points != null) {
-      for (var i = 0; i < this.points.length; i++) {
+      for (let i = 0; i < this.points.length; i++) {
         if (this.points[i] != null) {
-          var pt = mxUtils.getRotatedPoint(this.points[i], cos, sin, cx);
+          let pt = mxUtils.getRotatedPoint(this.points[i], cos, sin, cx);
           this.points[i].x = Math.round(pt.x);
           this.points[i].y = Math.round(pt.y);
         }
@@ -304,7 +304,7 @@ class mxGeometry extends mxRectangle {
 
     // Translate the control points
     if (this.TRANSLATE_CONTROL_POINTS && this.points != null) {
-      for (var i = 0; i < this.points.length; i++) {
+      for (let i = 0; i < this.points.length; i++) {
         if (this.points[i] != null) {
           this.points[i].x = parseFloat(this.points[i].x) + dx;
           this.points[i].y = parseFloat(this.points[i].y) + dy;
@@ -346,7 +346,7 @@ class mxGeometry extends mxRectangle {
 
     // Translate the control points
     if (this.points != null) {
-      for (var i = 0; i < this.points.length; i++) {
+      for (let i = 0; i < this.points.length; i++) {
         if (this.points[i] != null) {
           this.points[i].x = parseFloat(this.points[i].x) * sx;
           this.points[i].y = parseFloat(this.points[i].y) * sy;

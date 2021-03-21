@@ -33,7 +33,7 @@
 			else
 			{
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Sets a background image and restricts child movement to its bounds
 				graph.setBackgroundImage(new mxImage('images/gradient_background.jpg', 360, 200));
@@ -49,7 +49,7 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
@@ -71,7 +71,7 @@
 		
 		function configureStylesheet(graph)
 		{
-			var style = {};
+			let style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 			style[mxConstants.STYLE_IMAGE] = 'images/icons48/keys.png';

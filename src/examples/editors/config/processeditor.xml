@@ -78,11 +78,11 @@
 	<add as="createTasks"><![CDATA[
 		function (div)
 		{
-			var off = 30;
+			let off = 30;
 			
 			if (this.graph != null)
 			{
-				var layer = this.graph.getModel().getRoot().getChildAt(0);
+				let layer = this.graph.getModel().getRoot().getChildAt(0);
 				
 				if (layer == null || layer.getChildCount() == 0)
 				{
@@ -270,7 +270,7 @@
 			<add as="valueForCellChanged"><![CDATA[
 				function(cell, value)
 				{
-					var previous = null;
+					let previous = null;
 					
 					if (isNaN(value.nodeType))
 					{

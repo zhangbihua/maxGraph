@@ -146,7 +146,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * scale - Number that represents the scale where 1 is equal to 100%.
    */
   mxXmlCanvas2scale = (value) => {
-    var elem = this.createElement('scale');
+    let elem = this.createElement('scale');
     elem.setAttribute('scale', value);
     this.root.appendChild(elem);
   };
@@ -162,7 +162,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * dy - Number that specifies the vertical translation.
    */
   mxXmlCanvas2translate = (dx, dy) => {
-    var elem = this.createElement('translate');
+    let elem = this.createElement('translate');
     elem.setAttribute('dx', this.format(dx));
     elem.setAttribute('dy', this.format(dy));
     this.root.appendChild(elem);
@@ -183,7 +183,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * cy - Number that represents the y-coordinate of the rotation center.
    */
   mxXmlCanvas2rotate = (theta, flipH, flipV, cx, cy) => {
-    var elem = this.createElement('rotate');
+    let elem = this.createElement('rotate');
 
     if (theta != 0 || flipH || flipV) {
       elem.setAttribute('theta', this.format(theta));
@@ -214,7 +214,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setAlpha.apply(this, arguments);
     }
 
-    var elem = this.createElement('alpha');
+    let elem = this.createElement('alpha');
     elem.setAttribute('alpha', this.format(value));
     this.root.appendChild(elem);
   };
@@ -238,7 +238,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setFillAlpha.apply(this, arguments);
     }
 
-    var elem = this.createElement('fillalpha');
+    let elem = this.createElement('fillalpha');
     elem.setAttribute('alpha', this.format(value));
     this.root.appendChild(elem);
   };
@@ -262,7 +262,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setStrokeAlpha.apply(this, arguments);
     }
 
-    var elem = this.createElement('strokealpha');
+    let elem = this.createElement('strokealpha');
     elem.setAttribute('alpha', this.format(value));
     this.root.appendChild(elem);
   };
@@ -289,7 +289,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setFillColor.apply(this, arguments);
     }
 
-    var elem = this.createElement('fillcolor');
+    let elem = this.createElement('fillcolor');
     elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
     this.root.appendChild(elem);
   };
@@ -318,7 +318,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
     if (color1 != null && color2 != null) {
       mxAbstractCanvas2setGradient.apply(this, arguments);
 
-      var elem = this.createElement('gradient');
+      let elem = this.createElement('gradient');
       elem.setAttribute('c1', color1);
       elem.setAttribute('c2', color2);
       elem.setAttribute('x', this.format(x));
@@ -365,7 +365,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setStrokeColor.apply(this, arguments);
     }
 
-    var elem = this.createElement('strokecolor');
+    let elem = this.createElement('strokecolor');
     elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
     this.root.appendChild(elem);
   };
@@ -388,7 +388,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setStrokeWidth.apply(this, arguments);
     }
 
-    var elem = this.createElement('strokewidth');
+    let elem = this.createElement('strokewidth');
     elem.setAttribute('width', this.format(value));
     this.root.appendChild(elem);
   };
@@ -413,7 +413,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setDashed.apply(this, arguments);
     }
 
-    var elem = this.createElement('dashed');
+    let elem = this.createElement('dashed');
     elem.setAttribute('dashed', (value) ? '1' : '0');
 
     if (fixDash != null) {
@@ -444,7 +444,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setDashPattern.apply(this, arguments);
     }
 
-    var elem = this.createElement('dashpattern');
+    let elem = this.createElement('dashpattern');
     elem.setAttribute('pattern', value);
     this.root.appendChild(elem);
   };
@@ -468,7 +468,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setLineCap.apply(this, arguments);
     }
 
-    var elem = this.createElement('linecap');
+    let elem = this.createElement('linecap');
     elem.setAttribute('cap', value);
     this.root.appendChild(elem);
   };
@@ -492,7 +492,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setLineJoin.apply(this, arguments);
     }
 
-    var elem = this.createElement('linejoin');
+    let elem = this.createElement('linejoin');
     elem.setAttribute('join', value);
     this.root.appendChild(elem);
   };
@@ -515,7 +515,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setMiterLimit.apply(this, arguments);
     }
 
-    var elem = this.createElement('miterlimit');
+    let elem = this.createElement('miterlimit');
     elem.setAttribute('limit', value);
     this.root.appendChild(elem);
   };
@@ -543,7 +543,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
         mxAbstractCanvas2setFontColor.apply(this, arguments);
       }
 
-      var elem = this.createElement('fontcolor');
+      let elem = this.createElement('fontcolor');
       elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
       this.root.appendChild(elem);
     }
@@ -572,7 +572,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
         mxAbstractCanvas2setFontBackgroundColor.apply(this, arguments);
       }
 
-      var elem = this.createElement('fontbackgroundcolor');
+      let elem = this.createElement('fontbackgroundcolor');
       elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
       this.root.appendChild(elem);
     }
@@ -601,7 +601,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
         mxAbstractCanvas2setFontBorderColor.apply(this, arguments);
       }
 
-      var elem = this.createElement('fontbordercolor');
+      let elem = this.createElement('fontbordercolor');
       elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
       this.root.appendChild(elem);
     }
@@ -626,7 +626,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
         mxAbstractCanvas2setFontSize.apply(this, arguments);
       }
 
-      var elem = this.createElement('fontsize');
+      let elem = this.createElement('fontsize');
       elem.setAttribute('size', value);
       this.root.appendChild(elem);
     }
@@ -652,7 +652,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
         mxAbstractCanvas2setFontFamily.apply(this, arguments);
       }
 
-      var elem = this.createElement('fontfamily');
+      let elem = this.createElement('fontfamily');
       elem.setAttribute('family', value);
       this.root.appendChild(elem);
     }
@@ -682,7 +682,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
         mxAbstractCanvas2setFontStyle.apply(this, arguments);
       }
 
-      var elem = this.createElement('fontstyle');
+      let elem = this.createElement('fontstyle');
       elem.setAttribute('style', value);
       this.root.appendChild(elem);
     }
@@ -706,7 +706,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setShadow.apply(this, arguments);
     }
 
-    var elem = this.createElement('shadow');
+    let elem = this.createElement('shadow');
     elem.setAttribute('enabled', (value) ? '1' : '0');
     this.root.appendChild(elem);
   };
@@ -733,7 +733,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setShadowColor.apply(this, arguments);
     }
 
-    var elem = this.createElement('shadowcolor');
+    let elem = this.createElement('shadowcolor');
     elem.setAttribute('color', (value != null) ? value : mxConstants.NONE);
     this.root.appendChild(elem);
   };
@@ -757,7 +757,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setShadowAlpha.apply(this, arguments);
     }
 
-    var elem = this.createElement('shadowalpha');
+    let elem = this.createElement('shadowalpha');
     elem.setAttribute('alpha', value);
     this.root.appendChild(elem);
 
@@ -782,7 +782,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       mxAbstractCanvas2setShadowOffset.apply(this, arguments);
     }
 
-    var elem = this.createElement('shadowoffset');
+    let elem = this.createElement('shadowoffset');
     elem.setAttribute('dx', dx);
     elem.setAttribute('dy', dy);
     this.root.appendChild(elem);
@@ -802,7 +802,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * h - Number that represents the height of the rectangle.
    */
   mxXmlCanvas2rect = (x, y, w, h) => {
-    var elem = this.createElement('rect');
+    let elem = this.createElement('rect');
     elem.setAttribute('x', this.format(x));
     elem.setAttribute('y', this.format(y));
     elem.setAttribute('w', this.format(w));
@@ -825,7 +825,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * dy - Number that represents the vertical rounding.
    */
   mxXmlCanvas2roundrect = (x, y, w, h, dx, dy) => {
-    var elem = this.createElement('roundrect');
+    let elem = this.createElement('roundrect');
     elem.setAttribute('x', this.format(x));
     elem.setAttribute('y', this.format(y));
     elem.setAttribute('w', this.format(w));
@@ -848,7 +848,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * h - Number that represents the height of the ellipse.
    */
   mxXmlCanvas2ellipse = (x, y, w, h) => {
-    var elem = this.createElement('ellipse');
+    let elem = this.createElement('ellipse');
     elem.setAttribute('x', this.format(x));
     elem.setAttribute('y', this.format(y));
     elem.setAttribute('w', this.format(w));
@@ -876,7 +876,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
     src = this.converter.convert(src);
 
     // LATER: Add option for embedding images as base64.
-    var elem = this.createElement('image');
+    let elem = this.createElement('image');
     elem.setAttribute('x', this.format(x));
     elem.setAttribute('y', this.format(y));
     elem.setAttribute('w', this.format(w));
@@ -910,7 +910,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * y - Number that represents the y-coordinate of the point.
    */
   mxXmlCanvas2moveTo = (x, y) => {
-    var elem = this.createElement('move');
+    let elem = this.createElement('move');
     elem.setAttribute('x', this.format(x));
     elem.setAttribute('y', this.format(y));
     this.root.appendChild(elem);
@@ -929,7 +929,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * y - Number that represents the y-coordinate of the endpoint.
    */
   mxXmlCanvas2lineTo = (x, y) => {
-    var elem = this.createElement('line');
+    let elem = this.createElement('line');
     elem.setAttribute('x', this.format(x));
     elem.setAttribute('y', this.format(y));
     this.root.appendChild(elem);
@@ -950,7 +950,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * y2 - Number that represents the y-coordinate of the endpoint.
    */
   mxXmlCanvas2quadTo = (x1, y1, x2, y2) => {
-    var elem = this.createElement('quad');
+    let elem = this.createElement('quad');
     elem.setAttribute('x1', this.format(x1));
     elem.setAttribute('y1', this.format(y1));
     elem.setAttribute('x2', this.format(x2));
@@ -975,7 +975,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * y3 - Number that represents the y-coordinate of the endpoint.
    */
   mxXmlCanvas2curveTo = (x1, y1, x2, y2, x3, y3) => {
-    var elem = this.createElement('curve');
+    let elem = this.createElement('curve');
     elem.setAttribute('x1', this.format(x1));
     elem.setAttribute('y1', this.format(y1));
     elem.setAttribute('x2', this.format(x2));
@@ -1027,7 +1027,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
         str = mxUtils.getOuterHtml(str);
       }
 
-      var elem = this.createElement('text');
+      let elem = this.createElement('text');
       elem.setAttribute('x', this.format(x));
       elem.setAttribute('y', this.format(y));
       elem.setAttribute('w', this.format(w));

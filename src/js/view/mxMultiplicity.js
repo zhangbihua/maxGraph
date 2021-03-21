@@ -163,7 +163,7 @@ class mxMultiplicity {
    * targetIn - Number of incoming edges for the target terminal.
    */
   check = (graph, edge, source, target, sourceOut, targetIn) => {
-    var error = '';
+    let error = '';
 
     if ((this.source && this.checkTerminal(graph, source, edge)) ||
         (!this.source && this.checkTerminal(graph, target, edge))) {
@@ -174,7 +174,7 @@ class mxMultiplicity {
       }
 
       if (this.validNeighbors != null && this.typeError != null && this.validNeighbors.length > 0) {
-        var isValid = this.checkNeighbors(graph, edge, source, target);
+        let isValid = this.checkNeighbors(graph, edge, source, target);
 
         if (!isValid) {
           error += this.typeError + '\n';
@@ -192,12 +192,12 @@ class mxMultiplicity {
    * called if <validNeighbors> is a non-empty array.
    */
   checkNeighbors = (graph, edge, source, target) => {
-    var sourceValue = graph.model.getValue(source);
-    var targetValue = graph.model.getValue(target);
-    var isValid = !this.validNeighborsAllowed;
-    var valid = this.validNeighbors;
+    let sourceValue = graph.model.getValue(source);
+    let targetValue = graph.model.getValue(target);
+    let isValid = !this.validNeighborsAllowed;
+    let valid = this.validNeighbors;
 
-    for (var j = 0; j < valid.length; j++) {
+    for (let j = 0; j < valid.length; j++) {
       if (this.source &&
           this.checkType(graph, targetValue, valid[j])) {
         isValid = this.validNeighborsAllowed;
@@ -220,7 +220,7 @@ class mxMultiplicity {
    * <source>. This implementation uses <checkType> on the terminal's value.
    */
   checkTerminal = (graph, terminal, edge) => {
-    var value = graph.model.getValue(terminal);
+    let value = graph.model.getValue(terminal);
 
     return this.checkType(graph, value, this.type, this.attr, this.value);
   };

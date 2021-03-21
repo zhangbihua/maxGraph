@@ -6,7 +6,7 @@
 
 import mxConstants from "../util/mxConstants";
 
-var mxStyleRegistry = {
+let mxStyleRegistry = {
   /**
    * Class: mxStyleRegistry
    *

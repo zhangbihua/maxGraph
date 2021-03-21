@@ -147,8 +147,8 @@ class mxPanningHandler extends mxEventSource {
 
       // Handles force panning event
       this.forcePanningHandler = (sender, evt) => {
-        var evtName = evt.getProperty('eventName');
-        var me = evt.getProperty('event');
+        let evtName = evt.getProperty('eventName');
+        let me = evt.getProperty('event');
 
         if (evtName == mxEvent.MOUSE_DOWN && this.isForcePanningEvent(me)) {
           this.start(me);
@@ -163,7 +163,7 @@ class mxPanningHandler extends mxEventSource {
       // Handles pinch gestures
       this.gestureHandler = mxUtils.bind(this, (sender, eo) => {
         if (this.isPinchEnabled()) {
-          var evt = eo.getProperty('event');
+          let evt = eo.getProperty('event');
 
           if (!mxEvent.isConsumed(evt) && evt.type === 'gesturestart') {
             this.initialScale = this.graph.view.scale;
@@ -249,7 +249,7 @@ class mxPanningHandler extends mxEventSource {
    * <usePopupTrigger> is true and the event is a popup trigger.
    */
   isPanningTrigger = (me) => {
-    var evt = me.getEvent();
+    let evt = me.getEvent();
 
     return (this.useLeftButtonForPanning && me.getState() == null &&
         mxEvent.isLeftMouseButton(evt)) || (mxEvent.isControlDown(evt) &&
@@ -354,7 +354,7 @@ class mxPanningHandler extends mxEventSource {
 
       this.fireEvent(new mxEventObject(mxEvent.PAN, 'event', me));
     } else if (this.panningTrigger) {
-      var tmp = this.active;
+      let tmp = this.active;
 
       // Panning is activated only if the mouse is moved
       // beyond the graph tolerance
@@ -381,8 +381,8 @@ class mxPanningHandler extends mxEventSource {
       if (this.dx != null && this.dy != null) {
         // Ignores if scrollbars have been used for panning
         if (!this.graph.useScrollbarsForPanning || !mxUtils.hasScrollbars(this.graph.container)) {
-          var scale = this.graph.getView().scale;
-          var t = this.graph.getView().translate;
+          let scale = this.graph.getView().scale;
+          let t = this.graph.getView().translate;
           this.graph.panGraph(0, 0);
           this.panGraph(t.x + this.dx / scale, t.y + this.dy / scale);
         }
@@ -402,7 +402,7 @@ class mxPanningHandler extends mxEventSource {
    * Zooms the graph to the given value and consumed the event if needed.
    */
   zoomGraph = (evt) => {
-    var value = Math.round(this.initialScale * evt.scale * 100) / 100;
+    let value = Math.round(this.initialScale * evt.scale * 100) / 100;
 
     if (this.minScale != null) {
       value = Math.max(this.minScale, value);

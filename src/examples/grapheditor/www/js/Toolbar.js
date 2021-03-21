@@ -54,19 +54,19 @@ Toolbar.prototype.staticElements = null;
  */
 Toolbar.prototype.init = function()
 {
-	var sw = screen.width;
+	let sw = screen.width;
 	
 	// Takes into account initial compact mode
 	sw -= (screen.height > 740) ? 56 : 0;
 	
 	if (sw >= 700)
 	{
-		var formatMenu = this.addMenu('', mxResources.get('view') + ' (' + mxResources.get('panTooltip') + ')', true, 'viewPanels', null, true);
+		let formatMenu = this.addMenu('', mxResources.get('view') + ' (' + mxResources.get('panTooltip') + ')', true, 'viewPanels', null, true);
 		this.addDropDownArrow(formatMenu, 'geSprite-formatpanel', 38, 50, -4, -3, 36, -8);
 		this.addSeparator();
 	}
 	
-	var viewMenu = this.addMenu('', mxResources.get('zoom') + ' (Alt+Mousewheel)', true, 'viewZoom', null, true);
+	let viewMenu = this.addMenu('', mxResources.get('zoom') + ' (Alt+Mousewheel)', true, 'viewZoom', null, true);
 	viewMenu.showDisabled = true;
 	viewMenu.style.whiteSpace = 'nowrap';
 	viewMenu.style.position = 'relative';
@@ -84,7 +84,7 @@ Toolbar.prototype.init = function()
 	if (sw >= 420)
 	{
 		this.addSeparator();
-		var elts = this.addItems(['zoomIn', 'zoomOut']);
+		let elts = this.addItems(['zoomIn', 'zoomOut']);
 		elts[0].setAttribute('title', mxResources.get('zoomIn') + ' (' + this.editorUi.actions.get('zoomIn').shortcut + ')');
 		elts[1].setAttribute('title', mxResources.get('zoomOut') + ' (' + this.editorUi.actions.get('zoomOut').shortcut + ')');
 	}
@@ -105,13 +105,13 @@ Toolbar.prototype.init = function()
 	this.editorUi.editor.graph.view.addListener(mxEvent.EVENT_SCALE, this.updateZoom);
 	this.editorUi.editor.addListener('resetGraphView', this.updateZoom);
 
-	var elts = this.addItems(['-', 'undo', 'redo']);
+	let elts = this.addItems(['-', 'undo', 'redo']);
 	elts[1].setAttribute('title', mxResources.get('undo') + ' (' + this.editorUi.actions.get('undo').shortcut + ')');
 	elts[2].setAttribute('title', mxResources.get('redo') + ' (' + this.editorUi.actions.get('redo').shortcut + ')');
 	
 	if (sw >= 320)
 	{
-		var elts = this.addItems(['-', 'delete']);
+		let elts = this.addItems(['-', 'delete']);
 		elts[1].setAttribute('title', mxResources.get('delete') + ' (' + this.editorUi.actions.get('delete').shortcut + ')');
 	}
 	
@@ -168,7 +168,7 @@ Toolbar.prototype.init = function()
 	}
 
 	this.addSeparator();
-	var insertMenu = this.addMenu('', mxResources.get('insert') + ' (' + mxResources.get('doubleClickTooltip') + ')', true, 'insert', null, true);
+	let insertMenu = this.addMenu('', mxResources.get('insert') + ' (' + mxResources.get('doubleClickTooltip') + ')', true, 'insert', null, true);
 	this.addDropDownArrow(insertMenu, 'geSprite-plus', 38, 48, -4, -3, 36, -8);
 	this.addTableDropDown();
 };
@@ -183,10 +183,10 @@ Toolbar.prototype.addTableDropDown = function()
 	// KNOWN: All table stuff does not work with undo/redo
 	// KNOWN: Lost focus after click on submenu with text (not icon) in quirks and IE8. This is because the TD seems
 	// to catch the focus on click in these browsers. NOTE: Workaround in mxPopupMenu for icon items (without text).
-	var menuElt = this.addMenuFunction('geIcon geSprite geSprite-table', mxResources.get('table'), false, mxUtils.bind(this, function(menu)
+	let menuElt = this.addMenuFunction('geIcon geSprite geSprite-table', mxResources.get('table'), false, mxUtils.bind(this, function(menu)
 	{
-		var graph = this.editorUi.editor.graph;
-		var cell = graph.getSelectionCell();
+		let graph = this.editorUi.editor.graph;
+		let cell = graph.getSelectionCell();
 
 		if (!graph.isTableCell(cell) && !graph.isTableRow(cell) && !graph.isTable(cell))
 		{
@@ -194,7 +194,7 @@ Toolbar.prototype.addTableDropDown = function()
     	}
 		else
     	{
-			var elt = menu.addItem('', null, mxUtils.bind(this, function()
+			let elt = menu.addItem('', null, mxUtils.bind(this, function()
 			{
 				try
 				{
@@ -291,7 +291,7 @@ Toolbar.prototype.addTableDropDown = function()
 	}
 	
 	// Connects to insert menu enabled state
-	var menu = this.editorUi.menus.get('insert');
+	let menu = this.editorUi.menus.get('insert');
 	
 	// Workaround for possible not a function
 	// when extending HTML objects
@@ -359,9 +359,9 @@ Toolbar.prototype.setFontSize = function(value)
  */
 Toolbar.prototype.createTextToolbar = function()
 {
-	var graph = this.editorUi.editor.graph;
+	let graph = this.editorUi.editor.graph;
 
-	var styleElt = this.addMenu('', mxResources.get('style'), true, 'formatBlock');
+	let styleElt = this.addMenu('', mxResources.get('style'), true, 'formatBlock');
 	styleElt.style.position = 'relative';
 	styleElt.style.whiteSpace = 'nowrap';
 	styleElt.style.overflow = 'hidden';
@@ -408,7 +408,7 @@ Toolbar.prototype.createTextToolbar = function()
 		this.sizeMenu.getElementsByTagName('img')[0].style.top = '5px';
 	}
 	
-	var elts = this.addItems(['-', 'undo', 'redo','-', 'bold', 'italic', 'underline']);
+	let elts = this.addItems(['-', 'undo', 'redo','-', 'bold', 'italic', 'underline']);
 	elts[1].setAttribute('title', mxResources.get('undo') + ' (' + this.editorUi.actions.get('undo').shortcut + ')');
 	elts[2].setAttribute('title', mxResources.get('redo') + ' (' + this.editorUi.actions.get('redo').shortcut + ')');
 	elts[4].setAttribute('title', mxResources.get('bold') + ' (' + this.editorUi.actions.get('bold').shortcut + ')');
@@ -417,7 +417,7 @@ Toolbar.prototype.createTextToolbar = function()
 
 	// KNOWN: Lost focus after click on submenu with text (not icon) in quirks and IE8. This is because the TD seems
 	// to catch the focus on click in these browsers. NOTE: Workaround in mxPopupMenu for icon items (without text).
-	var alignMenu = this.addMenuFunction('', mxResources.get('align'), false, mxUtils.bind(this, function(menu)
+	let alignMenu = this.addMenuFunction('', mxResources.get('align'), false, mxUtils.bind(this, function(menu)
 	{
 		elt = menu.addItem('', null, mxUtils.bind(this, function(evt)
 		{
@@ -480,7 +480,7 @@ Toolbar.prototype.createTextToolbar = function()
 		alignMenu.getElementsByTagName('img')[0].style.top = '5px';
 	}
 	
-	var formatMenu = this.addMenuFunction('', mxResources.get('format'), false, mxUtils.bind(this, function(menu)
+	let formatMenu = this.addMenuFunction('', mxResources.get('format'), false, mxUtils.bind(this, function(menu)
 	{
 		elt = menu.addItem('', null, this.editorUi.actions.get('subscript').funct,
 			null, 'geIcon geSprite geSprite-subscript');
@@ -536,7 +536,7 @@ Toolbar.prototype.createTextToolbar = function()
 	
 	this.addSeparator();
 	
-	var insertMenu = this.addMenuFunction('', mxResources.get('insert'), true, mxUtils.bind(this, function(menu)
+	let insertMenu = this.addMenuFunction('', mxResources.get('insert'), true, mxUtils.bind(this, function(menu)
 	{
 		menu.addItem(mxResources.get('insertLink'), null, mxUtils.bind(this, function()
 		{
@@ -574,23 +574,23 @@ Toolbar.prototype.createTextToolbar = function()
 	// KNOWN: All table stuff does not work with undo/redo
 	// KNOWN: Lost focus after click on submenu with text (not icon) in quirks and IE8. This is because the TD seems
 	// to catch the focus on click in these browsers. NOTE: Workaround in mxPopupMenu for icon items (without text).
-	var elt = this.addMenuFunction('geIcon geSprite geSprite-table', mxResources.get('table'), false, mxUtils.bind(this, function(menu)
+	let elt = this.addMenuFunction('geIcon geSprite geSprite-table', mxResources.get('table'), false, mxUtils.bind(this, function(menu)
 	{
-		var elt = graph.getSelectedElement();
-		var cell = graph.getParentByNames(elt, ['TD', 'TH'], graph.cellEditor.text2);
-		var row = graph.getParentByName(elt, 'TR', graph.cellEditor.text2);
+		let elt = graph.getSelectedElement();
+		let cell = graph.getParentByNames(elt, ['TD', 'TH'], graph.cellEditor.text2);
+		let row = graph.getParentByName(elt, 'TR', graph.cellEditor.text2);
 
 		if (row == null)
     	{
 			function createTable(rows, cols)
 			{
-				var html = ['<table>'];
+				let html = ['<table>'];
 				
-				for (var i = 0; i < rows; i++)
+				for (let i = 0; i < rows; i++)
 				{
 					html.push('<tr>');
 					
-					for (var j = 0; j < cols; j++)
+					for (let j = 0; j < cols; j++)
 					{
 						html.push('<td><br></td>');
 					}
@@ -607,7 +607,7 @@ Toolbar.prototype.createTextToolbar = function()
     	}
 		else
     	{
-			var table = graph.getParentByName(row, 'TABLE', graph.cellEditor.text2);
+			let table = graph.getParentByName(row, 'TABLE', graph.cellEditor.text2);
 
 			elt = menu.addItem('', null, mxUtils.bind(this, function()
 			{
@@ -693,7 +693,7 @@ Toolbar.prototype.createTextToolbar = function()
 			elt = menu.addItem('', null, mxUtils.bind(this, function()
 			{
 				// Converts rgb(r,g,b) values
-				var color = table.style.borderColor.replace(
+				let color = table.style.borderColor.replace(
 					    /\brgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/g,
 					    function($0, $1, $2, $3) {
 					        return "#" + ("0"+Number($1).toString(16)).substr(-2) + ("0"+Number($2).toString(16)).substr(-2) + ("0"+Number($3).toString(16)).substr(-2);
@@ -719,7 +719,7 @@ Toolbar.prototype.createTextToolbar = function()
 			elt = menu.addItem('', null, mxUtils.bind(this, function()
 			{
 				// Converts rgb(r,g,b) values
-				var color = table.style.backgroundColor.replace(
+				let color = table.style.backgroundColor.replace(
 					    /\brgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/g,
 					    function($0, $1, $2, $3) {
 					        return "#" + ("0"+Number($1).toString(16)).substr(-2) + ("0"+Number($2).toString(16)).substr(-2) + ("0"+Number($3).toString(16)).substr(-2);
@@ -740,9 +740,9 @@ Toolbar.prototype.createTextToolbar = function()
 			
 			elt = menu.addItem('', null, mxUtils.bind(this, function()
 			{
-				var value = table.getAttribute('cellPadding') || 0;
+				let value = table.getAttribute('cellPadding') || 0;
 				
-				var dlg = new FilenameDialog(this.editorUi, value, mxResources.get('apply'), mxUtils.bind(this, function(newValue)
+				let dlg = new FilenameDialog(this.editorUi, value, mxResources.get('apply'), mxUtils.bind(this, function(newValue)
 				{
 					if (newValue != null && newValue.length > 0)
 					{
@@ -805,8 +805,8 @@ Toolbar.prototype.hideMenu = function()
  */
 Toolbar.prototype.addMenu = function(label, tooltip, showLabels, name, c, showAll, ignoreState)
 {
-	var menu = this.editorUi.menus.get(name);
-	var elt = this.addMenuFunction(label, tooltip, showLabels, function()
+	let menu = this.editorUi.menus.get(name);
+	let elt = this.addMenuFunction(label, tooltip, showLabels, function()
 	{
 		menu.funct.apply(menu, arguments);
 	}, c, showAll);
@@ -837,7 +837,7 @@ Toolbar.prototype.addMenuFunction = function(label, tooltip, showLabels, funct, 
  */
 Toolbar.prototype.addMenuFunctionInContainer = function(container, label, tooltip, showLabels, funct, showAll)
 {
-	var elt = (showLabels) ? this.createLabel(label) : this.createButton(label);
+	let elt = (showLabels) ? this.createLabel(label) : this.createButton(label);
 	this.initElement(elt, tooltip);
 	this.addMenuHandler(elt, showLabels, funct, showAll);
 	container.appendChild(elt);
@@ -851,7 +851,7 @@ Toolbar.prototype.addMenuFunctionInContainer = function(container, label, toolti
 Toolbar.prototype.addSeparator = function(c)
 {
 	c = (c != null) ? c : this.container;
-	var elt = document.createElement('div');
+	let elt = document.createElement('div');
 	elt.className = 'geSeparator';
 	c.appendChild(elt);
 	
@@ -863,11 +863,11 @@ Toolbar.prototype.addSeparator = function(c)
  */
 Toolbar.prototype.addItems = function(keys, c, ignoreDisabled)
 {
-	var items = [];
+	let items = [];
 	
-	for (var i = 0; i < keys.length; i++)
+	for (let i = 0; i < keys.length; i++)
 	{
-		var key = keys[i];
+		let key = keys[i];
 		
 		if (key == '-')
 		{
@@ -887,12 +887,12 @@ Toolbar.prototype.addItems = function(keys, c, ignoreDisabled)
  */
 Toolbar.prototype.addItem = function(sprite, key, c, ignoreDisabled)
 {
-	var action = this.editorUi.actions.get(key);
-	var elt = null;
+	let action = this.editorUi.actions.get(key);
+	let elt = null;
 	
 	if (action != null)
 	{
-		var tooltip = action.label;
+		let tooltip = action.label;
 		
 		if (action.shortcut != null)
 		{
@@ -922,7 +922,7 @@ Toolbar.prototype.addItem = function(sprite, key, c, ignoreDisabled)
  */
 Toolbar.prototype.addButton = function(classname, tooltip, funct, c)
 {
-	var elt = this.createButton(classname);
+	let elt = this.createButton(classname);
 	c = (c != null) ? c : this.container;
 	
 	this.initElement(elt, tooltip);
@@ -951,7 +951,7 @@ Toolbar.prototype.initElement = function(elt, tooltip)
  */
 Toolbar.prototype.addEnabledState = function(elt)
 {
-	var classname = elt.className;
+	let classname = elt.className;
 	
 	elt.setEnabled = function(value)
 	{
@@ -1001,10 +1001,10 @@ Toolbar.prototype.addClickHandler = function(elt, funct)
  */
 Toolbar.prototype.createButton = function(classname)
 {
-	var elt = document.createElement('a');
+	let elt = document.createElement('a');
 	elt.className = 'geButton';
 
-	var inner = document.createElement('div');
+	let inner = document.createElement('div');
 	
 	if (classname != null)
 	{
@@ -1021,7 +1021,7 @@ Toolbar.prototype.createButton = function(classname)
  */
 Toolbar.prototype.createLabel = function(label, tooltip)
 {
-	var elt = document.createElement('a');
+	let elt = document.createElement('a');
 	elt.className = 'geLabel';
 	mxUtils.write(elt, label);
 	
@@ -1035,9 +1035,9 @@ Toolbar.prototype.addMenuHandler = function(elt, showLabels, funct, showAll)
 {
 	if (funct != null)
 	{
-		var graph = this.editorUi.editor.graph;
-		var menu = null;
-		var show = true;
+		let graph = this.editorUi.editor.graph;
+		let menu = null;
+		let show = true;
 
 		mxEvent.addListener(elt, 'click', mxUtils.bind(this, function(evt)
 		{
@@ -1050,7 +1050,7 @@ Toolbar.prototype.addMenuHandler = function(elt, showLabels, funct, showAll)
 				menu.labels = showLabels;
 				menu.autoExpand = true;
 				
-				var offset = mxUtils.getOffset(elt);
+				let offset = mxUtils.getOffset(elt);
 				menu.popup(offset.x, offset.y + elt.offsetHeight, null, evt);
 				this.editorUi.setCurrentMenu(menu, elt);
 				

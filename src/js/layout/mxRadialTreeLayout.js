@@ -107,7 +107,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
    * Example:
    *
    * (code)
-   * var layout = new mxRadialTreeLayout(graph);
+   * let layout = new mxRadialTreeLayout(graph);
    * layout.execute(graph.getDefaultParent());
    * (end)
    *
@@ -157,57 +157,57 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
 
     execute.apply(this, arguments);
 
-    var bounds = null;
-    var rootBounds = this.getVertexBounds(this.root);
+    let bounds = null;
+    let rootBounds = this.getVertexBounds(this.root);
     this.centerX = rootBounds.x + rootBounds.width / 2;
     this.centerY = rootBounds.y + rootBounds.height / 2;
 
     // Calculate the bounds of the involved vertices directly from the values set in the compact tree
     for (var vertex in this.visited) {
-      var vertexBounds = this.getVertexBounds(this.visited[vertex]);
+      let vertexBounds = this.getVertexBounds(this.visited[vertex]);
       bounds = (bounds != null) ? bounds : vertexBounds.clone();
       bounds.add(vertexBounds);
     }
 
     this.calcRowDims([this.node], 0);
 
-    var maxLeftGrad = 0;
-    var maxRightGrad = 0;
+    let maxLeftGrad = 0;
+    let maxRightGrad = 0;
 
     // Find the steepest left and right gradients
-    for (var i = 0; i < this.row.length; i++) {
-      var leftGrad = (this.centerX - this.rowMinX[i] - this.nodeDistance) / this.rowRadi[i];
-      var rightGrad = (this.rowMaxX[i] - this.centerX - this.nodeDistance) / this.rowRadi[i];
+    for (let i = 0; i < this.row.length; i++) {
+      let leftGrad = (this.centerX - this.rowMinX[i] - this.nodeDistance) / this.rowRadi[i];
+      let rightGrad = (this.rowMaxX[i] - this.centerX - this.nodeDistance) / this.rowRadi[i];
 
       maxLeftGrad = Math.max(maxLeftGrad, leftGrad);
       maxRightGrad = Math.max(maxRightGrad, rightGrad);
     }
 
     // Extend out row so they meet the maximum gradient and convert to polar co-ords
-    for (var i = 0; i < this.row.length; i++) {
-      var xLeftLimit = this.centerX - this.nodeDistance - maxLeftGrad * this.rowRadi[i];
-      var xRightLimit = this.centerX + this.nodeDistance + maxRightGrad * this.rowRadi[i];
-      var fullWidth = xRightLimit - xLeftLimit;
+    for (let i = 0; i < this.row.length; i++) {
+      let xLeftLimit = this.centerX - this.nodeDistance - maxLeftGrad * this.rowRadi[i];
+      let xRightLimit = this.centerX + this.nodeDistance + maxRightGrad * this.rowRadi[i];
+      let fullWidth = xRightLimit - xLeftLimit;
 
-      for (var j = 0; j < this.row[i].length; j++) {
-        var row = this.row[i];
-        var node = row[j];
-        var vertexBounds = this.getVertexBounds(node.cell);
-        var xProportion = (vertexBounds.x + vertexBounds.width / 2 - xLeftLimit) / (fullWidth);
-        var theta = 2 * Math.PI * xProportion;
+      for (let j = 0; j < this.row[i].length; j++) {
+        let row = this.row[i];
+        let node = row[j];
+        let vertexBounds = this.getVertexBounds(node.cell);
+        let xProportion = (vertexBounds.x + vertexBounds.width / 2 - xLeftLimit) / (fullWidth);
+        let theta = 2 * Math.PI * xProportion;
         node.theta = theta;
       }
     }
 
     // Post-process from outside inwards to try to align parents with children
-    for (var i = this.row.length - 2; i >= 0; i--) {
-      var row = this.row[i];
+    for (let i = this.row.length - 2; i >= 0; i--) {
+      let row = this.row[i];
 
-      for (var j = 0; j < row.length; j++) {
-        var node = row[j];
-        var child = node.child;
-        var counter = 0;
-        var totalTheta = 0;
+      for (let j = 0; j < row.length; j++) {
+        let node = row[j];
+        let child = node.child;
+        let counter = 0;
+        let totalTheta = 0;
 
         while (child != null) {
           totalTheta += child.theta;
@@ -216,13 +216,13 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
         }
 
         if (counter > 0) {
-          var averTheta = totalTheta / counter;
+          let averTheta = totalTheta / counter;
 
           if (averTheta > node.theta && j < row.length - 1) {
-            var nextTheta = row[j + 1].theta;
+            let nextTheta = row[j + 1].theta;
             node.theta = Math.min(averTheta, nextTheta - Math.PI / 10);
           } else if (averTheta < node.theta && j > 0) {
-            var lastTheta = row[j - 1].theta;
+            let lastTheta = row[j - 1].theta;
             node.theta = Math.max(averTheta, lastTheta + Math.PI / 10);
           }
         }
@@ -230,11 +230,11 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
     }
 
     // Set locations
-    for (var i = 0; i < this.row.length; i++) {
-      for (var j = 0; j < this.row[i].length; j++) {
-        var row = this.row[i];
-        var node = row[j];
-        var vertexBounds = this.getVertexBounds(node.cell);
+    for (let i = 0; i < this.row.length; i++) {
+      for (let j = 0; j < this.row[i].length; j++) {
+        let row = this.row[i];
+        let node = row[j];
+        let vertexBounds = this.getVertexBounds(node.cell);
         this.setVertexLocation(node.cell,
             this.centerX - vertexBounds.width / 2 + this.rowRadi[i] * Math.cos(node.theta),
             this.centerY - vertexBounds.height / 2 + this.rowRadi[i] * Math.sin(node.theta));
@@ -264,14 +264,14 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
     this.rowMaxCenX[rowNum] = this.centerX;
     this.row[rowNum] = [];
 
-    var rowHasChildren = false;
+    let rowHasChildren = false;
 
-    for (var i = 0; i < row.length; i++) {
-      var child = row[i] != null ? row[i].child : null;
+    for (let i = 0; i < row.length; i++) {
+      let child = row[i] != null ? row[i].child : null;
 
       while (child != null) {
-        var cell = child.cell;
-        var vertexBounds = this.getVertexBounds(cell);
+        let cell = child.cell;
+        let vertexBounds = this.getVertexBounds(cell);
 
         this.rowMinX[rowNum] = Math.min(vertexBounds.x, this.rowMinX[rowNum]);
         this.rowMaxX[rowNum] = Math.max(vertexBounds.x + vertexBounds.width, this.rowMaxX[rowNum]);

@@ -20,19 +20,19 @@ class mxImageExport {
    * <mxXmlExportCanvas>.
    *
    * (code)
-   * var xmlDoc = mxUtils.createXmlDocument();
-   * var root = xmlDoc.createElement('output');
+   * let xmlDoc = mxUtils.createXmlDocument();
+   * let root = xmlDoc.createElement('output');
    * xmlDoc.appendChild(root);
    *
-   * var xmlCanvas = new mxXmlCanvas2D(root);
-   * var imgExport = new mxImageExport();
+   * let xmlCanvas = new mxXmlCanvas2D(root);
+   * let imgExport = new mxImageExport();
    * imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
    *
-   * var bounds = graph.getGraphBounds();
-   * var w = Math.ceil(bounds.x + bounds.width);
-   * var h = Math.ceil(bounds.y + bounds.height);
+   * let bounds = graph.getGraphBounds();
+   * let w = Math.ceil(bounds.x + bounds.width);
+   * let h = Math.ceil(bounds.y + bounds.height);
    *
-   * var xml = mxUtils.getXml(root);
+   * let xml = mxUtils.getXml(root);
    * new mxXmlRequest('export', 'format=png&w=' + w +
    *     '&h=' + h + '&bg=#F9F7ED&xml=' + encodeURIComponent(xml))
    *     .simulate(document, '_blank');
@@ -74,11 +74,11 @@ class mxImageExport {
     if (state != null) {
       visitor(state, canvas);
 
-      var graph = state.view.graph;
-      var childCount = graph.model.getChildCount(state.cell);
+      let graph = state.view.graph;
+      let childCount = graph.model.getChildCount(state.cell);
 
-      for (var i = 0; i < childCount; i++) {
-        var childState = graph.view.getState(graph.model.getChildAt(state.cell, i));
+      for (let i = 0; i < childCount; i++) {
+        let childState = graph.view.getState(graph.model.getChildAt(state.cell, i));
         this.visitStatesRecursive(childState, canvas, visitor);
       }
     }
@@ -100,7 +100,7 @@ class mxImageExport {
    */
   drawCellState = (state, canvas) => {
     // Experimental feature
-    var link = this.getLinkForCellState(state, canvas);
+    let link = this.getLinkForCellState(state, canvas);
 
     if (link != null) {
       canvas.setLink(link);

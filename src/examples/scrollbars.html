@@ -98,7 +98,7 @@
 				{
 					// Determines the y-coordinate of the target perimeter point
 					// by using the currentRowNode assigned in updateRow
-					var y = me.getY();
+					let y = me.getY();
 
 					if (this.currentRowNode != null)
 					{
@@ -106,7 +106,7 @@
 					}
 
 					// Checks on which side of the terminal to leave
-					var x = state.x;
+					let x = state.x;
 					
 					if (this.previous.getCenterX() > state.getCenterX())
 					{
@@ -119,7 +119,7 @@
 				// Overrides source perimeter point for connection previews
 				mxConnectionHandler.prototype.getSourcePerimeterPoint = function(state, next, me)
 				{
-					var y = me.getY();
+					let y = me.getY();
 
 					if (this.sourceRowNode != null)
 					{
@@ -127,7 +127,7 @@
 					}
 
 					// Checks on which side of the terminal to leave
-					var x = state.x;
+					let x = state.x;
 					
 					if (next.x > state.getCenterX())
 					{
@@ -144,7 +144,7 @@
 				};
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 
 				// Uses the entity perimeter (below) as default
 				graph.stylesheet.getDefaultVertexStyle()[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
@@ -193,7 +193,7 @@
 				// Scroll events should not start moving the vertex
 				graph.cellRenderer.isLabelEvent = function(state, evt)
 				{
-					var source = mxEvent.getSource(evt);
+					let source = mxEvent.getSource(evt);
 
 					return state.text != null && source != state.text.node &&
 						source != state.text.node.getElementsByTagName('div')[0];
@@ -201,18 +201,18 @@
 
 				// Adds scrollbars to the outermost div and keeps the
 				// DIV position and size the same as the vertex
-				var oldRedrawLabel = graph.cellRenderer.redrawLabel;
+				let oldRedrawLabel = graph.cellRenderer.redrawLabel;
 				graph.cellRenderer.redrawLabel = function(state)
 				{
 					oldRedrawLabel.apply(this, arguments); // "supercall"
-					var graph = state.view.graph;
-					var model = graph.model;
+					let graph = state.view.graph;
+					let model = graph.model;
 
 					if (model.isVertex(state.cell) && state.text != null)
 					{
 						// Scrollbars are on the div
-						var s = graph.view.scale;
-						var div = state.text.node.getElementsByTagName('div')[2];
+						let s = graph.view.scale;
+						let div = state.text.node.getElementsByTagName('div')[2];
 						
 						if (div != null)
 						{
@@ -221,15 +221,15 @@
 							{
 								div.scrollHandler = true;
 								
-								var updateEdges = mxUtils.bind(this, function()
+								let updateEdges = mxUtils.bind(this, function()
 								{
-									var edgeCount = model.getEdgeCount(state.cell);
+									let edgeCount = model.getEdgeCount(state.cell);
 									
 									// Only updates edges to avoid update in DOM order
 									// for text label which would reset the scrollbar
-									for (var i = 0; i < edgeCount; i++)
+									for (let i = 0; i < edgeCount; i++)
 									{
-										var edge = model.getEdgeAt(state.cell, i);
+										let edge = model.getEdgeAt(state.cell, i);
 										graph.view.invalidate(edge, true, false);
 										graph.view.validate(edge);
 									}
@@ -258,8 +258,8 @@
 					{
 						// Stores the current row number in a property so that it can
 						// be retrieved to create the preview and final edge
-						var rowNumber = 0;
-						var current = target.parentNode.firstChild;
+						let rowNumber = 0;
+						let current = target.parentNode.firstChild;
 
 						while (target != current && current != null)
 						{
@@ -280,13 +280,13 @@
 				// Adds placement of the connect icon based on the mouse event target (row)
 				graph.connectionHandler.updateIcons = function(state, icons, me)
 				{
-					var target = me.getSource();
+					let target = me.getSource();
 					target = this.updateRow(target);
 					
 					if (target != null && this.currentRow != null)
 					{
-						var div = target.parentNode.parentNode.parentNode;
-						var s = state.view.scale;
+						let div = target.parentNode.parentNode.parentNode;
+						let s = state.view.scale;
 
 						icons[0].node.style.visibility = 'visible';
 						icons[0].bounds.x = state.x + target.offsetLeft + Math.min(state.width,
@@ -304,7 +304,7 @@
 				};
 
 				// Updates the targetRow in the preview edge State
-				var oldMouseMove = graph.connectionHandler.mouseMove;
+				let oldMouseMove = graph.connectionHandler.mouseMove;
 				graph.connectionHandler.mouseMove = function(sender, me)
 				{
 					if (this.edgeState != null)
@@ -330,13 +330,13 @@
 				// Creates the edge state that may be used for preview
 				graph.connectionHandler.createEdgeState = function(me)
 				{
-					var relation = doc.createElement('Relation');
+					let relation = doc.createElement('Relation');
 					relation.setAttribute('sourceRow', this.currentRow || '0');
 					relation.setAttribute('targetRow', '0');
 
-					var edge = this.createEdge(relation);
-					var style = this.graph.getCellStyle(edge);
-					var state = new mxCellState(this.graph.view, edge, style);
+					let edge = this.createEdge(relation);
+					let style = this.graph.getCellStyle(edge);
+					let state = new mxCellState(this.graph.view, edge, style);
 
 					// Stores the source row in the handler
 					this.sourceRowNode = this.currentRowNode;
@@ -381,11 +381,11 @@
 				};
 
 				// User objects (data) for the individual cells
-				var doc = mxUtils.createXmlDocument();
+				let doc = mxUtils.createXmlDocument();
 
 				// Same should be used to create the XML node for the table
 				// description and the rows (most probably as child nodes)
-				var relation = doc.createElement('Relation');
+				let relation = doc.createElement('Relation');
 				relation.setAttribute('sourceRow', '4');
 				relation.setAttribute('targetRow', '6');
 				
@@ -397,11 +397,11 @@
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
-				var width = 160;
-				var height = 230;
+				let width = 160;
+				let height = 230;
 				graph.getModel().beginUpdate();
 				try
 				{
@@ -436,11 +436,11 @@
 		// Implements a special perimeter for table rows inside the table markup
 		mxGraphView.prototype.updateFloatingTerminalPoint = function(edge, start, end, source)
 		{
-			var next = this.getNextPoint(edge, end, source);
-			var div = start.text.node.getElementsByTagName('div')[2];
+			let next = this.getNextPoint(edge, end, source);
+			let div = start.text.node.getElementsByTagName('div')[2];
 			
-			var x = start.x;
-			var y = start.getCenterY();
+			let x = start.x;
+			let y = start.getCenterY();
 		
 			// Checks on which side of the terminal to leave
 			if (next.x > x + start.width / 2)
@@ -454,13 +454,13 @@
 				
 				if (mxUtils.isNode(edge.cell.value) && !this.graph.isCellCollapsed(start.cell))
 				{
-					var attr = (source) ? 'sourceRow' : 'targetRow';
-					var row = parseInt(edge.cell.value.getAttribute(attr));
+					let attr = (source) ? 'sourceRow' : 'targetRow';
+					let row = parseInt(edge.cell.value.getAttribute(attr));
 			
 					// HTML labels contain an outer table which is built-in
-					var table = div.getElementsByTagName('table')[0];
-					var trs = table.getElementsByTagName('tr');
-					var tr = trs[Math.min(trs.length - 1, row - 1)];
+					let table = div.getElementsByTagName('table')[0];
+					let trs = table.getElementsByTagName('tr');
+					let tr = trs[Math.min(trs.length - 1, row - 1)];
 					
 					// Gets vertical center of source or target row
 					if (tr != null)
@@ -470,7 +470,7 @@
 				}
 
 				// Keeps vertical coordinate inside start
-				var offsetTop = parseInt(div.style.top) * start.view.scale;
+				let offsetTop = parseInt(div.style.top) * start.view.scale;
 				y = Math.min(start.y + start.height, Math.max(start.y + offsetTop, y));
 
 				// Updates the vertical position of the nearest point if we're not
@@ -488,13 +488,13 @@
 			// the edges have a common target row
 			if (source && mxUtils.isNode(edge.cell.value) && start != null && end != null)
 			{
-				var edges = this.graph.getEdgesBetween(start.cell, end.cell, true);
-				var tmp = [];
+				let edges = this.graph.getEdgesBetween(start.cell, end.cell, true);
+				let tmp = [];
 		
 				// Filters the edges with the same source row
-				var row = edge.cell.value.getAttribute('targetRow');
+				let row = edge.cell.value.getAttribute('targetRow');
 				
-				for (var i = 0; i < edges.length; i++)
+				for (let i = 0; i < edges.length; i++)
 				{
 					if (mxUtils.isNode(edges[i].value) &&
 						edges[i].value.getAttribute('targetRow') == row)
@@ -508,10 +508,10 @@
 				if (edges.length > 1 && edge.cell == edges[edges.length - 1])
 				{
 					// Finds the vertical center
-					var states = [];
-					var y = 0;
+					let states = [];
+					let y = 0;
 					
-					for (var i = 0; i < edges.length; i++)
+					for (let i = 0; i < edges.length; i++)
 				    {
 						states[i] = this.getState(edges[i]);
 				   		y += states[i].absolutePoints[0].y;
@@ -519,9 +519,9 @@
 				    
 				    y /= edges.length;
 					
-				    for (var i = 0; i < states.length; i++)
+				    for (let i = 0; i < states.length; i++)
 				    {
-						var x = states[i].absolutePoints[1].x;
+						let x = states[i].absolutePoints[1].x;
 
 						if (states[i].absolutePoints.length < 5)
 						{
@@ -543,12 +543,12 @@
 		};
 
 		// Defines global helper function to get y-coordinate for a given cell state and row
-		var getRowY = function(state, tr)
+		let getRowY = function(state, tr)
 		{
-			var s = state.view.scale;
-			var div = tr.parentNode.parentNode.parentNode;
-			var offsetTop = parseInt(div.style.top);
-			var y = state.y + (tr.offsetTop + tr.offsetHeight / 2 - div.scrollTop + offsetTop) * s;
+			let s = state.view.scale;
+			let div = tr.parentNode.parentNode.parentNode;
+			let offsetTop = parseInt(div.style.top);
+			let y = state.y + (tr.offsetTop + tr.offsetHeight / 2 - div.scrollTop + offsetTop) * s;
 			y = Math.min(state.y + state.height, Math.max(state.y + offsetTop * s, y));
 			
 			return y;

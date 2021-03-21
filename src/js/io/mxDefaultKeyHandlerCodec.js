@@ -64,15 +64,15 @@ class mxDefaultKeyHandlerCodec extends mxObjectCodec {
    */
   decode = (dec, node, into) => {
     if (into != null) {
-      var editor = into.editor;
+      let editor = into.editor;
       node = node.firstChild;
 
       while (node != null) {
         if (!this.processInclude(dec, node, into) &&
             node.nodeName === 'add') {
-          var as = node.getAttribute('as');
-          var action = node.getAttribute('action');
-          var control = node.getAttribute('control');
+          let as = node.getAttribute('as');
+          let action = node.getAttribute('action');
+          let control = node.getAttribute('control');
 
           into.bindAction(as, action, control);
         }

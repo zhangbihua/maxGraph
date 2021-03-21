@@ -49,7 +49,7 @@
 		// Initialize the map and the custom overlay.
 		function initialize()
 		{
-		  var mapOptions = {
+		  let mapOptions = {
 		    zoom: 4,
 		    center: new google.maps.LatLng(34, -96),
 		    mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -57,11 +57,11 @@
 		      {"elementType": "labels", "stylers": [{"visibility": "off" }]}]
 		  };
 
-		  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+		  let map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-		  var swBound = new google.maps.LatLng(18, -126);
-		  var neBound = new google.maps.LatLng(50, -65);
-		  var bounds = new google.maps.LatLngBounds(swBound, neBound);
+		  let swBound = new google.maps.LatLng(18, -126);
+		  let neBound = new google.maps.LatLng(50, -65);
+		  let bounds = new google.maps.LatLngBounds(swBound, neBound);
 
 		  // The custom mxGraphOverlay object contains the graph,
 		  // the bounds of the graph, and a reference to the map.
@@ -89,7 +89,7 @@
 		 */
 		mxGraphOverlay.prototype.onAdd = function()
 		{
-			var div = document.createElement('div');
+			let div = document.createElement('div');
 			div.style.borderStyle = 'none';
 			div.style.borderWidth = '0px';
 			div.style.overflow = 'visible';
@@ -99,12 +99,12 @@
 			mxClient.NO_FO = true;
 			
 			// Creates the graph inside the given container
-			var graph = new mxGraph(div);
+			let graph = new mxGraph(div);
 			graph.setHtmlLabels(true);
 			graph.view.setTranslate(4, 4);
 			
 			// Sets default vertex style
-			var style = {};
+			let style = {};
 			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
 			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
 			style[mxConstants.STYLE_FILLCOLOR] = '#8CCDF5';
@@ -131,7 +131,7 @@
 			
 			// Gets the default parent for inserting new cells. This
 			// is normally the first child of the root (ie. layer 0).
-			var parent = graph.getDefaultParent();
+			let parent = graph.getDefaultParent();
 							
 			// Adds cells to the model in a single step
 			graph.getModel().beginUpdate();
@@ -152,8 +152,8 @@
 				// This node and its connections are only visible for zoom 200% and above
 				var n12 = graph.insertVertex(parent, null, {label:'Columbus', minScale:2}, 380, 120, 10, 10);
 				
-				var estyle = 'strokeWidth=2;endArrow=none;labelBackgroundColor=white;';
-				var e = [graph.insertEdge(parent, null, '', n1, n2, estyle),
+				let estyle = 'strokeWidth=2;endArrow=none;labelBackgroundColor=white;';
+				let e = [graph.insertEdge(parent, null, '', n1, n2, estyle),
 				         graph.insertEdge(parent, null, '', n2, n3, estyle),
 				         graph.insertEdge(parent, null, '', n1, n4, estyle),
 				         graph.insertEdge(parent, null, '', n2, n4, estyle),
@@ -182,9 +182,9 @@
 				graph.getModel().beginUpdate();
 				try
 				{
-					for (var i = 0; i < e.length; i++)
+					for (let i = 0; i < e.length; i++)
 					{
-						var rnd = Math.random();
+						let rnd = Math.random();
 						graph.getModel().setValue(e[i], Math.round(rnd * 100));
 					}
 				}
@@ -198,7 +198,7 @@
 			this.div_ = div;
 			
 			// Add the element to the "overlayLayer" pane.
-			var panes = this.getPanes();
+			let panes = this.getPanes();
 			panes.overlayLayer.appendChild(div);
 		};
 
@@ -207,20 +207,20 @@
 		  // We use the south-west and north-east
 		  // coordinates of the overlay to peg it to the correct position and size.
 		  // To do this, we need to retrieve the projection from the overlay.
-		  var overlayProjection = this.getProjection();
+		  let overlayProjection = this.getProjection();
 
 		  // Retrieve the south-west and north-east coordinates of this overlay
 		  // in LatLngs and convert them to pixel coordinates.
 		  // We'll use these coordinates to resize the div.
-		  var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
-		  var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+		  let sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
+		  let ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
 
 		  // Resize the graph's div to fit the indicated dimensions.
-		  var div = this.div_;
+		  let div = this.div_;
 		  div.style.left = sw.x + 'px';
 		  div.style.top = ne.y + 'px';
-		  var w = (ne.x - sw.x);
-		  var h = (sw.y - ne.y);
+		  let w = (ne.x - sw.x);
+		  let h = (sw.y - ne.y);
 		  div.style.width = w + 'px';
 		  div.style.height = h + 'px';
 		  

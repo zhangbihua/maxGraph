@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-var mxEffects = {
+let mxEffects = {
   /**
    * Class: mxEffects
    *
@@ -20,7 +20,7 @@ var mxEffects = {
    * (code)
    * graph.model.addListener(mxEvent.CHANGE, (sender, evt)=>
    * {
-   *   var changes = evt.getProperty('edit').changes;
+   *   let changes = evt.getProperty('edit').changes;
    *
    *   if (changes.length < 10)
    *   {
@@ -37,21 +37,21 @@ var mxEffects = {
    * last step of the animation.
    */
   animateChanges: (graph, changes, done) => {
-    var maxStep = 10;
-    var step = 0;
+    let maxStep = 10;
+    let step = 0;
 
-    var animate = () => {
-      var isRequired = false;
+    let animate = () => {
+      let isRequired = false;
 
-      for (var i = 0; i < changes.length; i++) {
-        var change = changes[i];
+      for (let i = 0; i < changes.length; i++) {
+        let change = changes[i];
 
         if (change instanceof mxGeometryChange ||
             change instanceof mxTerminalChange ||
             change instanceof mxValueChange ||
             change instanceof mxChildChange ||
             change instanceof mxStyleChange) {
-          var state = graph.getView().getState(change.cell || change.child, false);
+          let state = graph.getView().getState(change.cell || change.child, false);
 
           if (state != null) {
             isRequired = true;
@@ -59,13 +59,13 @@ var mxEffects = {
             if (change.constructor != mxGeometryChange || graph.model.isEdge(change.cell)) {
               mxUtils.setOpacity(state.shape.node, 100 * step / maxStep);
             } else {
-              var scale = graph.getView().scale;
+              let scale = graph.getView().scale;
 
-              var dx = (change.geometry.x - change.previous.x) * scale;
-              var dy = (change.geometry.y - change.previous.y) * scale;
+              let dx = (change.geometry.x - change.previous.x) * scale;
+              let dy = (change.geometry.y - change.previous.y) * scale;
 
-              var sx = (change.geometry.width - change.previous.width) * scale;
-              var sy = (change.geometry.height - change.previous.height) * scale;
+              let sx = (change.geometry.width - change.previous.width) * scale;
+              let sy = (change.geometry.height - change.previous.height) * scale;
 
               if (step == 0) {
                 state.x -= dx;
@@ -96,7 +96,7 @@ var mxEffects = {
       }
     };
 
-    var delay = 30;
+    let delay = 30;
     animate();
   },
 
@@ -113,11 +113,11 @@ var mxEffects = {
    */
   cascadeOpacity: (graph, cell, opacity) => {
     // Fades all children
-    var childCount = graph.model.getChildCount(cell);
+    let childCount = graph.model.getChildCount(cell);
 
-    for (var i = 0; i < childCount; i++) {
-      var child = graph.model.getChildAt(cell, i);
-      var childState = graph.getView().getState(child);
+    for (let i = 0; i < childCount; i++) {
+      let child = graph.model.getChildAt(cell, i);
+      let childState = graph.getView().getState(child);
 
       if (childState != null) {
         mxUtils.setOpacity(childState.shape.node, opacity);
@@ -126,11 +126,11 @@ var mxEffects = {
     }
 
     // Fades all connected edges
-    var edges = graph.model.getEdges(cell);
+    let edges = graph.model.getEdges(cell);
 
     if (edges != null) {
-      for (var i = 0; i < edges.length; i++) {
-        var edgeState = graph.getView().getState(edges[i]);
+      for (let i = 0; i < edges.length; i++) {
+        let edgeState = graph.getView().getState(edges[i]);
 
         if (edgeState != null) {
           mxUtils.setOpacity(edgeState.shape.node, opacity);
@@ -148,12 +148,12 @@ var mxEffects = {
     step = step || 40;
     delay = delay || 30;
 
-    var opacity = from || 100;
+    let opacity = from || 100;
 
     mxUtils.setOpacity(node, opacity);
 
     if (isEnabled || isEnabled == null) {
-      var f = () => {
+      let f = () => {
         opacity = Math.max(opacity - step, 0);
         mxUtils.setOpacity(node, opacity);
 

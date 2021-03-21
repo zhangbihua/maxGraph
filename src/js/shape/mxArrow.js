@@ -52,7 +52,7 @@ class mxArrow extends mxShape {
   augmentBoundingBox = (bbox) => {
     super.augmentBoundingBox.apply(bbox);
 
-    var w = Math.max(this.arrowWidth, this.endSize);
+    let w = Math.max(this.arrowWidth, this.endSize);
     bbox.grow((w / 2 + this.strokewidth) * this.scale);
   };
 
@@ -63,25 +63,25 @@ class mxArrow extends mxShape {
    */
   paintEdgeShape = (c, pts) => {
     // Geometry of arrow
-    var spacing = mxConstants.ARROW_SPACING;
-    var width = mxConstants.ARROW_WIDTH;
-    var arrow = mxConstants.ARROW_SIZE;
+    let spacing = mxConstants.ARROW_SPACING;
+    let width = mxConstants.ARROW_WIDTH;
+    let arrow = mxConstants.ARROW_SIZE;
 
     // Base vector (between end points)
     var p0 = pts[0];
-    var pe = pts[pts.length - 1];
-    var dx = pe.x - p0.x;
-    var dy = pe.y - p0.y;
-    var dist = Math.sqrt(dx * dx + dy * dy);
-    var length = dist - 2 * spacing - arrow;
+    let pe = pts[pts.length - 1];
+    let dx = pe.x - p0.x;
+    let dy = pe.y - p0.y;
+    let dist = Math.sqrt(dx * dx + dy * dy);
+    let length = dist - 2 * spacing - arrow;
 
     // Computes the norm and the inverse norm
-    var nx = dx / dist;
-    var ny = dy / dist;
-    var basex = length * nx;
-    var basey = length * ny;
-    var floorx = width * ny / 3;
-    var floory = -width * nx / 3;
+    let nx = dx / dist;
+    let ny = dy / dist;
+    let basex = length * nx;
+    let basey = length * ny;
+    let floorx = width * ny / 3;
+    let floory = -width * nx / 3;
 
     // Computes points
     var p0x = p0.x - floorx / 2 + spacing * nx;

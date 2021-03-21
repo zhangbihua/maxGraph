@@ -43,14 +43,14 @@
 					mxEvent.disableContextMenu(container);
 					
 					// Creates the graph inside the given container
-					var graph = new mxGraph(container);
+					let graph = new mxGraph(container);
 	
 					// Enables rubberband selection
 					new mxRubberband(graph);
 					
 					// Gets the default parent for inserting new cells. This
 					// is normally the first child of the root (ie. layer 0).
-					var parent = graph.getDefaultParent();
+					let parent = graph.getDefaultParent();
 									
 					// Adds cells to the model in a single step
 					graph.getModel().beginUpdate();

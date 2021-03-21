@@ -250,8 +250,8 @@ class mxGraphHandler {
 
         if (this.first != null && !this.suspended) {
           // Updates preview with no translate to compute bounding box
-          var dx = this.currentDx;
-          var dy = this.currentDy;
+          let dx = this.currentDx;
+          let dy = this.currentDy;
           this.currentDx = 0;
           this.currentDy = 0;
           this.updatePreview();
@@ -284,7 +284,7 @@ class mxGraphHandler {
     this.keyHandler = (e) => {
       if (this.graph.container != null && this.graph.container.style.visibility != 'hidden' &&
           this.first != null && !this.suspended) {
-        var clone = this.graph.isCloneEvent(e) &&
+        let clone = this.graph.isCloneEvent(e) &&
             this.graph.isCellsCloneable() &&
             this.isCloneEnabled();
 
@@ -401,10 +401,10 @@ class mxGraphHandler {
    * selection state to the parent.
    */
   isPropagateSelectionCell = (cell, immediate, me) => {
-    var parent = this.graph.model.getParent(cell);
+    let parent = this.graph.model.getParent(cell);
 
     if (immediate) {
-      var geo = (this.graph.model.isEdge(cell)) ? null :
+      let geo = (this.graph.model.isEdge(cell)) ? null :
           this.graph.getCellGeometry(cell);
 
       return !this.graph.isSiblingSelected(cell) &&
@@ -428,12 +428,12 @@ class mxGraphHandler {
    * the topmost cell that is not a swimlane or is selected.
    */
   getInitialCellForEvent = (me) => {
-    var state = me.getState();
+    let state = me.getState();
 
     if ((!this.graph.isToggleEvent(me.getEvent()) || !mxEvent.isAltDown(me.getEvent())) &&
         state != null && !this.graph.isCellSelected(state.cell)) {
-      var model = this.graph.model;
-      var next = this.graph.view.getState(model.getParent(state.cell));
+      let model = this.graph.model;
+      let next = this.graph.view.getState(model.getParent(state.cell));
 
       while (next != null && !this.graph.isCellSelected(next.cell) &&
       (model.isVertex(next.cell) || model.isEdge(next.cell)) &&
@@ -472,7 +472,7 @@ class mxGraphHandler {
    */
   selectDelayed = (me) => {
     if (!this.graph.popupMenuHandler.isPopupTrigger(me)) {
-      var cell = me.getCell();
+      let cell = me.getCell();
 
       if (cell == null) {
         cell = this.cell;
@@ -488,7 +488,7 @@ class mxGraphHandler {
    * Selects the given cell for the given <mxMouseEvent>.
    */
   selectCellForEvent = (cell, me) => {
-    var state = this.graph.view.getState(cell);
+    let state = this.graph.view.getState(cell);
 
     if (state != null) {
       if (me.isSource(state.control)) {
@@ -496,8 +496,8 @@ class mxGraphHandler {
       } else {
         if (!this.graph.isToggleEvent(me.getEvent()) ||
             !mxEvent.isAltDown(me.getEvent())) {
-          var model = this.graph.getModel();
-          var parent = model.getParent(cell);
+          let model = this.graph.getModel();
+          let parent = model.getParent(cell);
 
           while (this.graph.view.getState(parent) != null &&
           (model.isVertex(parent) || model.isEdge(parent)) &&
@@ -524,7 +524,7 @@ class mxGraphHandler {
    * <code>
    * consumeMouseEvent = (evtName, me)=>
    * {
-   *   var source = mxEvent.getSource(me.getEvent());
+   *   let source = mxEvent.getSource(me.getEvent());
    *
    *   if (!mxEvent.isTouchEvent(me.getEvent()) || source.nodeName != 'A')
    *   {
@@ -547,7 +547,7 @@ class mxGraphHandler {
   mouseDown = (sender, me) => {
     if (!me.isConsumed() && this.isEnabled() && this.graph.isEnabled() &&
         me.getState() != null && !mxEvent.isMultiTouchEvent(me.getEvent())) {
-      var cell = this.getInitialCellForEvent(me);
+      let cell = this.getInitialCellForEvent(me);
       this.delayedSelection = this.isDelayedSelection(cell, me);
       this.cell = null;
 
@@ -556,8 +556,8 @@ class mxGraphHandler {
       }
 
       if (this.isMoveEnabled()) {
-        var model = this.graph.model;
-        var geo = model.getGeometry(cell);
+        let model = this.graph.model;
+        let geo = model.getGeometry(cell);
 
         if (this.graph.isCellMovable(cell) && ((!model.isEdge(cell) || this.graph.getSelectionCount() > 1 ||
             (geo.points != null && geo.points.length > 0) || model.getTerminal(cell, true) == null ||
@@ -580,10 +580,10 @@ class mxGraphHandler {
    * Creates an array of cell states which should be used as guides.
    */
   getGuideStates = () => {
-    var parent = this.graph.getDefaultParent();
-    var model = this.graph.getModel();
+    let parent = this.graph.getDefaultParent();
+    let model = this.graph.getModel();
 
-    var filter = mxUtils.bind(this, (cell) => {
+    let filter = mxUtils.bind(this, (cell) => {
       return this.graph.view.getState(cell) != null &&
           model.isVertex(cell) &&
           model.getGeometry(cell) != null &&
@@ -620,7 +620,7 @@ class mxGraphHandler {
    * moving the given cells.
    */
   getPreviewBounds = (cells) => {
-    var bounds = this.getBoundingBox(cells);
+    let bounds = this.getBoundingBox(cells);
 
     if (bounds != null) {
       // Corrects width and height
@@ -628,7 +628,7 @@ class mxGraphHandler {
       bounds.height = Math.max(0, bounds.height - 1);
 
       if (bounds.width < this.minimumSize) {
-        var dx = this.minimumSize - bounds.width;
+        let dx = this.minimumSize - bounds.width;
         bounds.x -= dx / 2;
         bounds.width = this.minimumSize;
       } else {
@@ -636,11 +636,11 @@ class mxGraphHandler {
         bounds.width = Math.ceil(bounds.width);
       }
 
-      var tr = this.graph.view.translate;
-      var s = this.graph.view.scale;
+      let tr = this.graph.view.translate;
+      let s = this.graph.view.scale;
 
       if (bounds.height < this.minimumSize) {
-        var dy = this.minimumSize - bounds.height;
+        let dy = this.minimumSize - bounds.height;
         bounds.y -= dy / 2;
         bounds.height = this.minimumSize;
       } else {
@@ -666,17 +666,17 @@ class mxGraphHandler {
    * cells - Array of <mxCells> whose bounding box should be returned.
    */
   getBoundingBox = (cells) => {
-    var result = null;
+    let result = null;
 
     if (cells != null && cells.length > 0) {
-      var model = this.graph.getModel();
+      let model = this.graph.getModel();
 
-      for (var i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i++) {
         if (model.isVertex(cells[i]) || model.isEdge(cells[i])) {
-          var state = this.graph.view.getState(cells[i]);
+          let state = this.graph.view.getState(cells[i]);
 
           if (state != null) {
-            var bbox = state;
+            let bbox = state;
 
             if (model.isVertex(cells[i]) && state.shape != null && state.shape.boundingBox != null) {
               bbox = state.shape.boundingBox;
@@ -701,7 +701,7 @@ class mxGraphHandler {
    * Creates the shape used to draw the preview for the given bounds.
    */
   createPreviewShape = (bounds) => {
-    var shape = new mxRectangleShape(bounds, null, this.previewColor);
+    let shape = new mxRectangleShape(bounds, null, this.previewColor);
     shape.isDashed = true;
 
     if (this.htmlPreview) {
@@ -742,21 +742,21 @@ class mxGraphHandler {
     this.cloning = false;
     this.cellCount = 0;
 
-    for (var i = 0; i < this.cells.length; i++) {
+    for (let i = 0; i < this.cells.length; i++) {
       this.cellCount += this.addStates(this.cells[i], this.allCells);
     }
 
     if (this.guidesEnabled) {
       this.guide = new mxGuide(this.graph, this.getGuideStates());
-      var parent = this.graph.model.getParent(cell);
-      var ignore = this.graph.model.getChildCount(parent) < 2;
+      let parent = this.graph.model.getParent(cell);
+      let ignore = this.graph.model.getChildCount(parent) < 2;
 
       // Uses connected states as guides
-      var connected = new mxDictionary();
-      var opps = this.graph.getOpposites(this.graph.getEdges(this.cell), this.cell);
+      let connected = new mxDictionary();
+      let opps = this.graph.getOpposites(this.graph.getEdges(this.cell), this.cell);
 
-      for (var i = 0; i < opps.length; i++) {
-        var state = this.graph.view.getState(opps[i]);
+      for (let i = 0; i < opps.length; i++) {
+        let state = this.graph.view.getState(opps[i]);
 
         if (state != null && !connected.get(state)) {
           connected.put(state, true);
@@ -764,7 +764,7 @@ class mxGraphHandler {
       }
 
       this.guide.isStateIgnored = (state) => {
-        var p = this.graph.model.getParent(state.cell);
+        let p = this.graph.model.getParent(state.cell);
 
         return state.cell != null && ((!this.cloning &&
             this.isCellMoving(state.cell)) ||
@@ -782,16 +782,16 @@ class mxGraphHandler {
    * Adds the states for the given cell recursively to the given dictionary.
    */
   addStates = (cell, dict) => {
-    var state = this.graph.view.getState(cell);
-    var count = 0;
+    let state = this.graph.view.getState(cell);
+    let count = 0;
 
     if (state != null && dict.get(cell) == null) {
       dict.put(cell, state);
       count++;
 
-      var childCount = this.graph.model.getChildCount(cell);
+      let childCount = this.graph.model.getChildCount(cell);
 
-      for (var i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i++) {
         count += this.addStates(this.graph.model.getChildAt(cell, i), dict);
       }
     }
@@ -826,7 +826,7 @@ class mxGraphHandler {
    * Snaps the given vector to the grid and returns the given mxPoint instance.
    */
   snap = (vector) => {
-    var scale = (this.scaleGrid) ? this.graph.view.scale : 1;
+    let scale = (this.scaleGrid) ? this.graph.view.scale : 1;
 
     vector.x = this.graph.snap(vector.x / scale) * scale;
     vector.y = this.graph.snap(vector.y / scale) * scale;
@@ -841,7 +841,7 @@ class mxGraphHandler {
    * for the given <mxMouseEvent>.
    */
   getDelta = (me) => {
-    var point = mxUtils.convertPoint(this.graph.container, me.getX(), me.getY());
+    let point = mxUtils.convertPoint(this.graph.container, me.getX(), me.getY());
 
     return new mxPoint(point.x - this.first.x - this.graph.panDx,
         point.y - this.first.y - this.graph.panDy);
@@ -909,7 +909,7 @@ class mxGraphHandler {
    * preview.
    */
   mouseMove = (sender, me) => {
-    var graph = this.graph;
+    let graph = this.graph;
 
     if (!me.isConsumed() && graph.isMouseDown && this.cell != null &&
         this.first != null && this.bounds != null && !this.suspended) {
@@ -919,8 +919,8 @@ class mxGraphHandler {
         return;
       }
 
-      var delta = this.getDelta(me);
-      var tol = graph.tolerance;
+      let delta = this.getDelta(me);
+      let tol = graph.tolerance;
 
       if (this.shape != null || this.livePreviewActive || Math.abs(delta.x) > tol || Math.abs(delta.y) > tol) {
         // Highlight is used for highlighting drop targets
@@ -929,11 +929,11 @@ class mxGraphHandler {
               mxConstants.DROP_TARGET_COLOR, 3);
         }
 
-        var clone = graph.isCloneEvent(me.getEvent()) && graph.isCellsCloneable() && this.isCloneEnabled();
-        var gridEnabled = graph.isGridEnabledEvent(me.getEvent());
-        var cell = me.getCell();
-        var hideGuide = true;
-        var target = null;
+        let clone = graph.isCloneEvent(me.getEvent()) && graph.isCellsCloneable() && this.isCloneEnabled();
+        let gridEnabled = graph.isGridEnabledEvent(me.getEvent());
+        let cell = me.getCell();
+        let hideGuide = true;
+        let target = null;
         this.cloning = clone;
 
         if (graph.isDropEnabled() && this.highlightEnabled) {
@@ -941,8 +941,8 @@ class mxGraphHandler {
           target = graph.getDropTarget(this.cells, me.getEvent(), cell, clone);
         }
 
-        var state = graph.getView().getState(target);
-        var highlight = false;
+        let state = graph.getView().getState(target);
+        let highlight = false;
 
         if (state != null && (clone || this.isValidDropTarget(target, me))) {
           if (this.target != target) {
@@ -959,8 +959,8 @@ class mxGraphHandler {
             state = graph.getView().getState(cell);
 
             if (state != null) {
-              var error = graph.getEdgeValidationError(null, this.cell, cell);
-              var color = (error == null) ?
+              let error = graph.getEdgeValidationError(null, this.cell, cell);
+              let color = (error == null) ?
                   mxConstants.VALID_COLOR :
                   mxConstants.INVALID_CONNECT_TARGET_COLOR;
               this.setHighlightColor(color);
@@ -1013,7 +1013,7 @@ class mxGraphHandler {
       mxEvent.consume(me.getEvent());
     } else if ((this.isMoveEnabled() || this.isCloneEnabled()) && this.updateCursor && !me.isConsumed() &&
         (me.getState() != null || me.sourceState != null) && !graph.isMouseDown) {
-      var cursor = graph.getCursorForMouseEvent(me);
+      let cursor = graph.getCursorForMouseEvent(me);
 
       if (cursor == null && graph.isEnabled() && graph.isCellMovable(me.getCell())) {
         if (graph.getModel().isEdge(me.getCell())) {
@@ -1068,11 +1068,11 @@ class mxGraphHandler {
    */
   updateLivePreview = (dx, dy) => {
     if (!this.suspended) {
-      var states = [];
+      let states = [];
 
       if (this.allCells != null) {
         this.allCells.visit(mxUtils.bind(this, (key, state) => {
-          var realState = this.graph.view.getState(state.cell);
+          let realState = this.graph.view.getState(state.cell);
 
           // Checks if cell was removed or replaced
           if (realState != state) {
@@ -1089,7 +1089,7 @@ class mxGraphHandler {
 
           if (state != null) {
             // Saves current state
-            var tempState = state.clone();
+            let tempState = state.clone();
             states.push([state, tempState]);
 
             // Makes transparent for events to detect drop targets
@@ -1153,17 +1153,17 @@ class mxGraphHandler {
         this.reset();
       } else {
         // Redraws connected edges
-        var s = this.graph.view.scale;
+        let s = this.graph.view.scale;
 
-        for (var i = 0; i < states.length; i++) {
-          var state = states[i][0];
+        for (let i = 0; i < states.length; i++) {
+          let state = states[i][0];
 
           if (this.graph.model.isEdge(state.cell)) {
-            var geometry = this.graph.getCellGeometry(state.cell);
-            var points = [];
+            let geometry = this.graph.getCellGeometry(state.cell);
+            let points = [];
 
             if (geometry != null && geometry.points != null) {
-              for (var j = 0; j < geometry.points.length; j++) {
+              for (let j = 0; j < geometry.points.length; j++) {
                 if (geometry.points[j] != null) {
                   points.push(new mxPoint(
                       geometry.points[j].x + dx / s,
@@ -1172,9 +1172,9 @@ class mxGraphHandler {
               }
             }
 
-            var source = state.visibleSourceState;
-            var target = state.visibleTargetState;
-            var pts = states[i][1].absolutePoints;
+            let source = state.visibleSourceState;
+            let target = state.visibleTargetState;
+            let pts = states[i][1].absolutePoints;
 
             if (source == null || !this.isCellMoving(source.cell)) {
               var pt0 = pts[0];
@@ -1186,7 +1186,7 @@ class mxGraphHandler {
             }
 
             if (target == null || !this.isCellMoving(target.cell)) {
-              var ptn = pts[pts.length - 1];
+              let ptn = pts[pts.length - 1];
               state.setAbsoluteTerminalPoint(new mxPoint(ptn.x + dx, ptn.y + dy), false);
               target = null;
             } else {
@@ -1219,8 +1219,8 @@ class mxGraphHandler {
    * Redraws the preview shape for the given states array.
    */
   redrawHandles = (states) => {
-    for (var i = 0; i < states.length; i++) {
-      var handler = this.graph.selectionCellsHandler.getHandler(states[i][0].cell);
+    for (let i = 0; i < states.length; i++) {
+      let handler = this.graph.selectionCellsHandler.getHandler(states[i][0].cell);
 
       if (handler != null) {
         handler.redraw(true);
@@ -1234,7 +1234,7 @@ class mxGraphHandler {
    * Resets the given preview states array.
    */
   resetPreviewStates = (states) => {
-    for (var i = 0; i < states.length; i++) {
+    for (let i = 0; i < states.length; i++) {
       states[i][0].setState(states[i][1]);
     }
   };
@@ -1344,8 +1344,8 @@ class mxGraphHandler {
     if (force || this.handlesVisible != visible) {
       this.handlesVisible = visible;
 
-      for (var i = 0; i < cells.length; i++) {
-        var handler = this.graph.selectionCellsHandler.getHandler(cells[i]);
+      for (let i = 0; i < cells.length; i++) {
+        let handler = this.graph.selectionCellsHandler.getHandler(cells[i]);
 
         if (handler != null) {
           handler.setHandlesVisible(visible);
@@ -1386,18 +1386,18 @@ class mxGraphHandler {
 
       if (this.cell != null && this.first != null && (this.shape != null || this.livePreviewUsed) &&
           this.currentDx != null && this.currentDy != null) {
-        var graph = this.graph;
-        var cell = me.getCell();
+        let graph = this.graph;
+        let cell = me.getCell();
 
         if (this.connectOnDrop && this.target == null && cell != null && graph.getModel().isVertex(cell) &&
             graph.isCellConnectable(cell) && graph.isEdgeValid(null, this.cell, cell)) {
           graph.connectionHandler.connect(this.cell, cell, me.getEvent());
         } else {
-          var clone = graph.isCloneEvent(me.getEvent()) && graph.isCellsCloneable() && this.isCloneEnabled();
-          var scale = graph.getView().scale;
-          var dx = this.roundLength(this.currentDx / scale);
-          var dy = this.roundLength(this.currentDy / scale);
-          var target = this.target;
+          let clone = graph.isCloneEvent(me.getEvent()) && graph.isCellsCloneable() && this.isCloneEnabled();
+          let scale = graph.getView().scale;
+          let dx = this.roundLength(this.currentDx / scale);
+          let dy = this.roundLength(this.currentDy / scale);
+          let target = this.target;
 
           if (graph.isSplitEnabled() && graph.isSplitTarget(target, this.cells, me.getEvent())) {
             graph.splitEdge(target, this.cells, null, dx, dy,
@@ -1460,17 +1460,17 @@ class mxGraphHandler {
    */
   shouldRemoveCellsFromParent = (parent, cells, evt) => {
     if (this.graph.getModel().isVertex(parent)) {
-      var pState = this.graph.getView().getState(parent);
+      let pState = this.graph.getView().getState(parent);
 
       if (pState != null) {
-        var pt = mxUtils.convertPoint(this.graph.container,
+        let pt = mxUtils.convertPoint(this.graph.container,
             mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-        var alpha = mxUtils.toRadians(mxUtils.getValue(pState.style, mxConstants.STYLE_ROTATION) || 0);
+        let alpha = mxUtils.toRadians(mxUtils.getValue(pState.style, mxConstants.STYLE_ROTATION) || 0);
 
         if (alpha != 0) {
-          var cos = Math.cos(-alpha);
-          var sin = Math.sin(-alpha);
-          var cx = new mxPoint(pState.getCenterX(), pState.getCenterY());
+          let cos = Math.cos(-alpha);
+          let sin = Math.sin(-alpha);
+          let cx = new mxPoint(pState.getCenterX(), pState.getCenterY());
           pt = mxUtils.getRotatedPoint(pt, cos, sin, cx);
         }
 
@@ -1492,7 +1492,7 @@ class mxGraphHandler {
     }
 
     // Removes cells from parent
-    var parent = this.graph.getModel().getParent(this.cell);
+    let parent = this.graph.getModel().getParent(this.cell);
 
     if (target == null && this.isRemoveCellsFromParent() &&
         this.shouldRemoveCellsFromParent(parent, cells, evt)) {
@@ -1504,20 +1504,20 @@ class mxGraphHandler {
 
     this.graph.getModel().beginUpdate();
     try {
-      var parents = [];
+      let parents = [];
 
       // Removes parent if all child cells are removed
       if (!clone && target != null && this.removeEmptyParents) {
         // Collects all non-selected parents
-        var dict = new mxDictionary();
+        let dict = new mxDictionary();
 
-        for (var i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i++) {
           dict.put(cells[i], true);
         }
 
         // LATER: Recurse up the cell hierarchy
-        for (var i = 0; i < cells.length; i++) {
-          var par = this.graph.model.getParent(cells[i]);
+        for (let i = 0; i < cells.length; i++) {
+          let par = this.graph.model.getParent(cells[i]);
 
           if (par != null && !dict.get(par)) {
             dict.put(par, true);
@@ -1531,9 +1531,9 @@ class mxGraphHandler {
       cells = this.graph.moveCells(cells, dx, dy, clone, target, evt);
 
       // Removes parent if all child cells are removed
-      var temp = [];
+      let temp = [];
 
-      for (var i = 0; i < parents.length; i++) {
+      for (let i = 0; i < parents.length; i++) {
         if (this.shouldRemoveParent(parents[i])) {
           temp.push(parents[i]);
         }
@@ -1560,7 +1560,7 @@ class mxGraphHandler {
    * Returns true if the given parent should be removed after removal of child cells.
    */
   shouldRemoveParent = (parent) => {
-    var state = this.graph.view.getState(parent);
+    let state = this.graph.view.getState(parent);
 
     return state != null && (this.graph.model.isEdge(state.cell) || this.graph.model.isVertex(state.cell)) &&
         this.graph.isCellDeletable(state.cell) && this.graph.model.getChildCount(state.cell) == 0 &&

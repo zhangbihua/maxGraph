@@ -30,7 +30,7 @@ class mxImageBundle {
    * To add a new image bundle to an existing graph, the following code is used:
    *
    * (code)
-   * var bundle = new mxImageBundle(alt);
+   * let bundle = new mxImageBundle(alt);
    * bundle.putImage('myImage', 'data:image/gif,R0lGODlhEAAQAMIGAAAAAICAAICAgP' +
    *   '//AOzp2O3r2////////yH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgAHACwAAAAA' +
    *   'EAAQAAADTXi63AowynnAMDfjPUDlnAAJhmeBFxAEloliKltWmiYCQvfVr6lBPB1ggxN1hi' +
@@ -87,10 +87,10 @@ class mxImageBundle {
    * <alt> is true, the value is returned otherwise.
    */
   getImage = (key) => {
-    var result = null;
+    let result = null;
 
     if (key != null) {
-      var img = this.images[key];
+      let img = this.images[key];
 
       if (img != null) {
         result = (this.alt) ? img.fallback : img.value;

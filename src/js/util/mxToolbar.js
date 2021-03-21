@@ -92,8 +92,8 @@ class mxToolbar extends mxEventSource {
    * (menu, evt, cell)=> { menu.addItem('Hello, World!'); }
    */
   addItem = (title, icon, funct, pressedIcon, style, factoryMethod) => {
-    var img = document.createElement((icon != null) ? 'img' : 'button');
-    var initialClassName = style || ((factoryMethod != null) ?
+    let img = document.createElement((icon != null) ? 'img' : 'button');
+    let initialClassName = style || ((factoryMethod != null) ?
         'mxToolbarMode' : 'mxToolbarItem');
     img.className = initialClassName;
     img.setAttribute('src', icon);
@@ -117,7 +117,7 @@ class mxToolbar extends mxEventSource {
       }
     }
 
-    var mouseHandler = mxUtils.bind(this, (evt) => {
+    let mouseHandler = mxUtils.bind(this, (evt) => {
       if (pressedIcon != null) {
         img.setAttribute('src', icon);
       } else {
@@ -141,7 +141,7 @@ class mxToolbar extends mxEventSource {
           this.menu.init();
         }
 
-        var last = this.currentImg;
+        let last = this.currentImg;
 
         if (this.menu.isMenuShowing()) {
           this.menu.hideMenu();
@@ -152,7 +152,7 @@ class mxToolbar extends mxEventSource {
           this.currentImg = img;
           this.menu.factoryMethod = factoryMethod;
 
-          var point = new mxPoint(
+          let point = new mxPoint(
               img.offsetLeft,
               img.offsetTop + img.offsetHeight);
           this.menu.popup(point.x, point.y, null, evt);
@@ -187,11 +187,11 @@ class mxToolbar extends mxEventSource {
    * style - Optional style classname. Default is mxToolbarCombo.
    */
   addCombo = (style) => {
-    var div = document.createElement('div');
+    let div = document.createElement('div');
     div.style.display = 'inline';
     div.className = 'mxToolbarComboContainer';
 
-    var select = document.createElement('select');
+    let select = document.createElement('select');
     select.className = style || 'mxToolbarCombo';
     div.appendChild(select);
 
@@ -213,12 +213,12 @@ class mxToolbar extends mxEventSource {
    * style - Optional style classname. Default is mxToolbarCombo.
    */
   addActionCombo = (title, style) => {
-    var select = document.createElement('select');
+    let select = document.createElement('select');
     select.className = style || 'mxToolbarCombo';
     this.addOption(select, title, null);
 
     mxEvent.addListener(select, 'change', (evt) => {
-      var value = select.options[select.selectedIndex];
+      let value = select.options[select.selectedIndex];
       select.selectedIndex = 0;
 
       if (value.funct != null) {
@@ -245,7 +245,7 @@ class mxToolbar extends mxEventSource {
    * value - Specifies the value associated with this option.
    */
   addOption = (combo, title, value) => {
-    var option = document.createElement('option');
+    let option = document.createElement('option');
     mxUtils.writeln(option, title);
 
     if (typeof (value) == 'function') {
@@ -267,7 +267,7 @@ class mxToolbar extends mxEventSource {
    * after a reset of the toolbar.
    */
   addSwitchMode = (title, icon, funct, pressedIcon, style) => {
-    var img = document.createElement('img');
+    let img = document.createElement('img');
     img.initialClassName = style || 'mxToolbarMode';
     img.className = img.initialClassName;
     img.setAttribute('src', icon);
@@ -278,7 +278,7 @@ class mxToolbar extends mxEventSource {
     }
 
     mxEvent.addListener(img, 'click', mxUtils.bind(this, (evt) => {
-      var tmp = this.selectedMode.altIcon;
+      let tmp = this.selectedMode.altIcon;
 
       if (tmp != null) {
         this.selectedMode.altIcon = this.selectedMode.getAttribute('src');
@@ -293,7 +293,7 @@ class mxToolbar extends mxEventSource {
 
       this.selectedMode = img;
 
-      var tmp = img.altIcon;
+      let tmp = img.altIcon;
 
       if (tmp != null) {
         img.altIcon = img.getAttribute('src');
@@ -332,7 +332,7 @@ class mxToolbar extends mxEventSource {
    */
   addMode = (title, icon, funct, pressedIcon, style, toggle) => {
     toggle = (toggle != null) ? toggle : true;
-    var img = document.createElement((icon != null) ? 'img' : 'button');
+    let img = document.createElement((icon != null) ? 'img' : 'button');
 
     img.initialClassName = style || 'mxToolbarMode';
     img.className = img.initialClassName;
@@ -376,7 +376,7 @@ class mxToolbar extends mxEventSource {
   selectMode = (domNode, funct) => {
     if (this.selectedMode != domNode) {
       if (this.selectedMode != null) {
-        var tmp = this.selectedMode.altIcon;
+        let tmp = this.selectedMode.altIcon;
 
         if (tmp != null) {
           this.selectedMode.altIcon = this.selectedMode.getAttribute('src');
@@ -387,7 +387,7 @@ class mxToolbar extends mxEventSource {
       }
 
       this.selectedMode = domNode;
-      var tmp = this.selectedMode.altIcon;
+      let tmp = this.selectedMode.altIcon;
 
       if (tmp != null) {
         this.selectedMode.altIcon = this.selectedMode.getAttribute('src');
@@ -443,7 +443,7 @@ class mxToolbar extends mxEventSource {
    * Adds a horizontal line to the container.
    */
   addLine = () => {
-    var hr = document.createElement('hr');
+    let hr = document.createElement('hr');
 
     hr.style.marginRight = '6px';
     hr.setAttribute('size', '1');

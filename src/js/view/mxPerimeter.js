@@ -7,7 +7,7 @@
 import mxUtils from "../util/mxUtils";
 import mxPoint from "../util/mxPoint";
 
-var mxPerimeter = {
+let mxPerimeter = {
   /**
    * Class: mxPerimeter
    *
@@ -33,8 +33,8 @@ var mxPerimeter = {
    * (code)
    * mxPerimeter.CustomPerimeter = (bounds, vertex, next, orthogonal) =>
    * {
-   *   var x = 0; // Calculate x-coordinate
-   *   var y = 0; // Calculate y-coordainte
+   *   let x = 0; // Calculate x-coordinate
+   *   let y = 0; // Calculate y-coordainte
    *   
    *   return new mxPoint(x, y);
    * }
@@ -59,7 +59,7 @@ var mxPerimeter = {
    * Or it can be used for all vertices in the graph as follows:
    *
    * (code)
-   * var style = graph.getStylesheet().getDefaultVertexStyle();
+   * let style = graph.getStylesheet().getDefaultVertexStyle();
    * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.CustomPerimeter;
    * (end)
    *
@@ -86,16 +86,16 @@ var mxPerimeter = {
    * returned.
    */
   RectanglePerimeter: function (bounds, vertex, next, orthogonal) {
-    var cx = bounds.getCenterX();
-    var cy = bounds.getCenterY();
-    var dx = next.x - cx;
-    var dy = next.y - cy;
-    var alpha = Math.atan2(dy, dx);
-    var p = new mxPoint(0, 0);
-    var pi = Math.PI;
+    let cx = bounds.getCenterX();
+    let cy = bounds.getCenterY();
+    let dx = next.x - cx;
+    let dy = next.y - cy;
+    let alpha = Math.atan2(dy, dx);
+    let p = new mxPoint(0, 0);
+    let pi = Math.PI;
     var pi2 = Math.PI / 2;
-    var beta = pi2 - alpha;
-    var t = Math.atan2(bounds.height, bounds.width);
+    let beta = pi2 - alpha;
+    let t = Math.atan2(bounds.height, bounds.width);
 
     if (alpha < -pi + t || alpha > pi - t) {
       // Left edge
@@ -145,19 +145,19 @@ var mxPerimeter = {
    * for a description of the parameters.
    */
   EllipsePerimeter: function (bounds, vertex, next, orthogonal) {
-    var x = bounds.x;
-    var y = bounds.y;
-    var a = bounds.width / 2;
-    var b = bounds.height / 2;
-    var cx = x + a;
-    var cy = y + b;
-    var px = next.x;
-    var py = next.y;
+    let x = bounds.x;
+    let y = bounds.y;
+    let a = bounds.width / 2;
+    let b = bounds.height / 2;
+    let cx = x + a;
+    let cy = y + b;
+    let px = next.x;
+    let py = next.y;
 
     // Calculates straight line equation through
     // point and ellipse center y = d * x + h
-    var dx = parseInt(px - cx);
-    var dy = parseInt(py - cy);
+    let dx = parseInt(px - cx);
+    let dy = parseInt(py - cy);
 
     if (dx == 0 && dy != 0) {
       return new mxPoint(cx, cy + b * dy / Math.abs(dy));
@@ -167,8 +167,8 @@ var mxPerimeter = {
 
     if (orthogonal) {
       if (py >= y && py <= y + bounds.height) {
-        var ty = py - cy;
-        var tx = Math.sqrt(a * a * (1 - (ty * ty) / (b * b))) || 0;
+        let ty = py - cy;
+        let tx = Math.sqrt(a * a * (1 - (ty * ty) / (b * b))) || 0;
 
         if (px <= x) {
           tx = -tx;
@@ -178,8 +178,8 @@ var mxPerimeter = {
       }
 
       if (px >= x && px <= x + bounds.width) {
-        var tx = px - cx;
-        var ty = Math.sqrt(b * b * (1 - (tx * tx) / (a * a))) || 0;
+        let tx = px - cx;
+        let ty = Math.sqrt(b * b * (1 - (tx * tx) / (a * a))) || 0;
 
         if (py <= y) {
           ty = -ty;
@@ -190,14 +190,14 @@ var mxPerimeter = {
     }
 
     // Calculates intersection
-    var d = dy / dx;
-    var h = cy - d * cx;
-    var e = a * a * d * d + b * b;
-    var f = -2 * cx * e;
-    var g = a * a * d * d * cx * cx +
+    let d = dy / dx;
+    let h = cy - d * cx;
+    let e = a * a * d * d + b * b;
+    let f = -2 * cx * e;
+    let g = a * a * d * d * cx * cx +
         b * b * cx * cx -
         a * a * b * b;
-    var det = Math.sqrt(f * f - 4 * e * g);
+    let det = Math.sqrt(f * f - 4 * e * g);
 
     // Two solutions (perimeter points)
     var xout1 = (-f + det) / (2 * e);
@@ -210,8 +210,8 @@ var mxPerimeter = {
         + Math.pow((yout2 - py), 2));
 
     // Correct solution
-    var xout = 0;
-    var yout = 0;
+    let xout = 0;
+    let yout = 0;
 
     if (dist1 < dist2) {
       xout = xout1;
@@ -231,16 +231,16 @@ var mxPerimeter = {
    * for a description of the parameters.
    */
   RhombusPerimeter: function (bounds, vertex, next, orthogonal) {
-    var x = bounds.x;
-    var y = bounds.y;
-    var w = bounds.width;
-    var h = bounds.height;
+    let x = bounds.x;
+    let y = bounds.y;
+    let w = bounds.width;
+    let h = bounds.height;
 
-    var cx = x + w / 2;
-    var cy = y + h / 2;
+    let cx = x + w / 2;
+    let cy = y + h / 2;
 
-    var px = next.x;
-    var py = next.y;
+    let px = next.x;
+    let py = next.y;
 
     // Special case for intersecting the diamond's corners
     if (cx == px) {
@@ -257,8 +257,8 @@ var mxPerimeter = {
       }
     }
 
-    var tx = cx;
-    var ty = cy;
+    let tx = cx;
+    let ty = cy;
 
     if (orthogonal) {
       if (px >= x && px <= x + w) {
@@ -290,22 +290,22 @@ var mxPerimeter = {
    * for a description of the parameters.
    */
   TrianglePerimeter: function (bounds, vertex, next, orthogonal) {
-    var direction = (vertex != null) ?
+    let direction = (vertex != null) ?
         vertex.style[mxConstants.STYLE_DIRECTION] : null;
-    var vertical = direction == mxConstants.DIRECTION_NORTH ||
+    let vertical = direction == mxConstants.DIRECTION_NORTH ||
         direction == mxConstants.DIRECTION_SOUTH;
 
-    var x = bounds.x;
-    var y = bounds.y;
-    var w = bounds.width;
-    var h = bounds.height;
+    let x = bounds.x;
+    let y = bounds.y;
+    let w = bounds.width;
+    let h = bounds.height;
 
-    var cx = x + w / 2;
-    var cy = y + h / 2;
+    let cx = x + w / 2;
+    let cy = y + h / 2;
 
-    var start = new mxPoint(x, y);
-    var corner = new mxPoint(x + w, cy);
-    var end = new mxPoint(x, y + h);
+    let start = new mxPoint(x, y);
+    let corner = new mxPoint(x + w, cy);
+    let end = new mxPoint(x, y + h);
 
     if (direction == mxConstants.DIRECTION_NORTH) {
       start = end;
@@ -320,13 +320,13 @@ var mxPerimeter = {
       end = new mxPoint(x + w, y + h);
     }
 
-    var dx = next.x - cx;
-    var dy = next.y - cy;
+    let dx = next.x - cx;
+    let dy = next.y - cy;
 
-    var alpha = (vertical) ? Math.atan2(dx, dy) : Math.atan2(dy, dx);
-    var t = (vertical) ? Math.atan2(w, h) : Math.atan2(h, w);
+    let alpha = (vertical) ? Math.atan2(dx, dy) : Math.atan2(dy, dx);
+    let t = (vertical) ? Math.atan2(w, h) : Math.atan2(h, w);
 
-    var base = false;
+    let base = false;
 
     if (direction == mxConstants.DIRECTION_NORTH ||
         direction == mxConstants.DIRECTION_WEST) {
@@ -335,7 +335,7 @@ var mxPerimeter = {
       base = alpha < -Math.PI + t || alpha > Math.PI - t;
     }
 
-    var result = null;
+    let result = null;
 
     if (base) {
       if (orthogonal && ((vertical && next.x >= start.x && next.x <= end.x) ||
@@ -362,7 +362,7 @@ var mxPerimeter = {
       }
     } else {
       if (orthogonal) {
-        var pt = new mxPoint(cx, cy);
+        let pt = new mxPoint(cx, cy);
 
         if (next.y >= y && next.y <= y + h) {
           pt.x = (vertical) ? cx : (
@@ -408,30 +408,30 @@ var mxPerimeter = {
    * for a description of the parameters.
    */
   HexagonPerimeter: function (bounds, vertex, next, orthogonal) {
-    var x = bounds.x;
-    var y = bounds.y;
-    var w = bounds.width;
-    var h = bounds.height;
+    let x = bounds.x;
+    let y = bounds.y;
+    let w = bounds.width;
+    let h = bounds.height;
 
-    var cx = bounds.getCenterX();
-    var cy = bounds.getCenterY();
-    var px = next.x;
-    var py = next.y;
-    var dx = px - cx;
-    var dy = py - cy;
-    var alpha = -Math.atan2(dy, dx);
-    var pi = Math.PI;
+    let cx = bounds.getCenterX();
+    let cy = bounds.getCenterY();
+    let px = next.x;
+    let py = next.y;
+    let dx = px - cx;
+    let dy = py - cy;
+    let alpha = -Math.atan2(dy, dx);
+    let pi = Math.PI;
     var pi2 = Math.PI / 2;
 
-    var result = new mxPoint(cx, cy);
+    let result = new mxPoint(cx, cy);
 
-    var direction = (vertex != null) ? mxUtils.getValue(
+    let direction = (vertex != null) ? mxUtils.getValue(
         vertex.style, mxConstants.STYLE_DIRECTION,
         mxConstants.DIRECTION_EAST) : mxConstants.DIRECTION_EAST;
-    var vertical = direction == mxConstants.DIRECTION_NORTH
+    let vertical = direction == mxConstants.DIRECTION_NORTH
         || direction == mxConstants.DIRECTION_SOUTH;
-    var a = new mxPoint();
-    var b = new mxPoint();
+    let a = new mxPoint();
+    let b = new mxPoint();
 
     //Only consider corrects quadrants for the orthogonal case.
     if ((px < x) && (py < y) || (px < x) && (py > y + h)
@@ -575,8 +575,8 @@ var mxPerimeter = {
         }
       }
 
-      var tx = cx;
-      var ty = cy;
+      let tx = cx;
+      let ty = cy;
 
       if (px >= x && px <= x + w) {
         tx = px;
@@ -599,7 +599,7 @@ var mxPerimeter = {
       result = mxUtils.intersection(tx, ty, next.x, next.y, a.x, a.y, b.x, b.y);
     } else {
       if (vertical) {
-        var beta = Math.atan2(h / 4, w / 2);
+        let beta = Math.atan2(h / 4, w / 2);
 
         //Special cases where intersects with hexagon corners
         if (alpha == beta) {
@@ -641,7 +641,7 @@ var mxPerimeter = {
           b = new mxPoint(x + w, y + Math.floor(1.25 * h));
         }
       } else {
-        var beta = Math.atan2(h / 2, w / 4);
+        let beta = Math.atan2(h / 2, w / 4);
 
         //Special cases where intersects with hexagon corners
         if (alpha == beta) {

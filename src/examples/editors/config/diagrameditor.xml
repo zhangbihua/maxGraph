@@ -104,8 +104,8 @@
 		<add as="getTooltipForCell"><![CDATA[
 			function(cell)
 			{
-				var label = cell.getAttribute('label');
-				var style = cell.getStyle();
+				let label = cell.getAttribute('label');
+				let style = cell.getStyle();
 			
 				return ((label != null) ? ('<b>' + label +
 						'</b> (' + cell.getId() + ')<br>') : '') +
@@ -252,7 +252,7 @@
 			<add as="valueForCellChanged"><![CDATA[
 				function(cell, value)
 				{
-					var previous = null;
+					let previous = null;
 					
 					if (value == null || isNaN(value.nodeType))
 					{

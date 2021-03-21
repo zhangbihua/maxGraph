@@ -124,7 +124,7 @@ paintForeground = (c, x, y, w, h) => {
  */
 paintImage = (c, x, y, w, h) => {
   if (this.image != null) {
-    var bounds = this.getImageBounds(x, y, w, h);
+    let bounds = this.getImageBounds(x, y, w, h);
     c.image(bounds.x, bounds.y, bounds.width, bounds.height, this.image, false, false, false);
   }
 };
@@ -135,11 +135,11 @@ paintImage = (c, x, y, w, h) => {
  * Generic background painting implementation.
  */
 getImageBounds = (x, y, w, h) => {
-  var align = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_ALIGN, mxConstants.ALIGN_LEFT);
-  var valign = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-  var width = mxUtils.getNumber(this.style, mxConstants.STYLE_IMAGE_WIDTH, mxConstants.DEFAULT_IMAGESIZE);
-  var height = mxUtils.getNumber(this.style, mxConstants.STYLE_IMAGE_HEIGHT, mxConstants.DEFAULT_IMAGESIZE);
-  var spacing = mxUtils.getNumber(this.style, mxConstants.STYLE_SPACING, this.spacing) + 5;
+  let align = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_ALIGN, mxConstants.ALIGN_LEFT);
+  let valign = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+  let width = mxUtils.getNumber(this.style, mxConstants.STYLE_IMAGE_WIDTH, mxConstants.DEFAULT_IMAGESIZE);
+  let height = mxUtils.getNumber(this.style, mxConstants.STYLE_IMAGE_HEIGHT, mxConstants.DEFAULT_IMAGESIZE);
+  let spacing = mxUtils.getNumber(this.style, mxConstants.STYLE_SPACING, this.spacing) + 5;
 
   if (align == mxConstants.ALIGN_CENTER) {
     x += (w - width) / 2;
@@ -172,7 +172,7 @@ paintIndicator = (c, x, y, w, h) => {
     this.indicator.bounds = this.getIndicatorBounds(x, y, w, h);
     this.indicator.paint(c);
   } else if (this.indicatorImage != null) {
-    var bounds = this.getIndicatorBounds(x, y, w, h);
+    let bounds = this.getIndicatorBounds(x, y, w, h);
     c.image(bounds.x, bounds.y, bounds.width, bounds.height, this.indicatorImage, false, false, false);
   }
 };
@@ -183,11 +183,11 @@ paintIndicator = (c, x, y, w, h) => {
  * Generic background painting implementation.
  */
 getIndicatorBounds = (x, y, w, h) => {
-  var align = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_ALIGN, mxConstants.ALIGN_LEFT);
-  var valign = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-  var width = mxUtils.getNumber(this.style, mxConstants.STYLE_INDICATOR_WIDTH, this.indicatorSize);
-  var height = mxUtils.getNumber(this.style, mxConstants.STYLE_INDICATOR_HEIGHT, this.indicatorSize);
-  var spacing = this.spacing + 5;
+  let align = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_ALIGN, mxConstants.ALIGN_LEFT);
+  let valign = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+  let width = mxUtils.getNumber(this.style, mxConstants.STYLE_INDICATOR_WIDTH, this.indicatorSize);
+  let height = mxUtils.getNumber(this.style, mxConstants.STYLE_INDICATOR_HEIGHT, this.indicatorSize);
+  let spacing = this.spacing + 5;
 
   if (align == mxConstants.ALIGN_RIGHT) {
     x += w - width - spacing;
@@ -223,11 +223,11 @@ redrawHtmlShape = () => {
   }
 
   if (this.image != null) {
-    var node = document.createElement('img');
+    let node = document.createElement('img');
     node.style.position = 'relative';
     node.setAttribute('border', '0');
 
-    var bounds = this.getImageBounds(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+    let bounds = this.getImageBounds(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
     bounds.x -= this.bounds.x;
     bounds.y -= this.bounds.y;
 

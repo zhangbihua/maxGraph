@@ -35,7 +35,7 @@
 				mxEvent.disableContextMenu(container);
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				let graph = new mxGraph(container);
 				
 				// Enables HTML labels
 				graph.setHtmlLabels(true);
@@ -44,13 +44,13 @@
 				new mxRubberband(graph);
 				
 				// Creates a user object that stores the state
-				var doc = mxUtils.createXmlDocument();
-				var obj = doc.createElement('UserObject');
+				let doc = mxUtils.createXmlDocument();
+				let obj = doc.createElement('UserObject');
 				obj.setAttribute('label', 'Hello, World!');
 				obj.setAttribute('checked', 'false');
 				
 				// Adds optional caching for the HTML label
-				var cached = true;
+				let cached = true;
 				
 				if (cached)
 				{
@@ -76,11 +76,11 @@
 					else if (mxUtils.isNode(cell.value) && cell.value.nodeName.toLowerCase() == 'userobject')
 					{
 						// Returns a DOM for the label
-						var div = document.createElement('div');
+						let div = document.createElement('div');
 						div.innerHTML = cell.getAttribute('label');
 						mxUtils.br(div);
 						
-						var checkbox = document.createElement('input');
+						let checkbox = document.createElement('input');
 						checkbox.setAttribute('type', 'checkbox');
 
 						if (cell.getAttribute('checked') == 'true')
@@ -92,7 +92,7 @@
 						// Writes back to cell if checkbox is clicked
 						mxEvent.addListener(checkbox, 'change', function(evt)
 						{
-							var elt = cell.value.cloneNode(true);
+							let elt = cell.value.cloneNode(true);
 							elt.setAttribute('checked', (checkbox.checked) ? 'true' : 'false');
 							
 							graph.model.setValue(cell, elt);
@@ -113,13 +113,13 @@
 				};
 
 				// Overrides method to store a cell label in the model
-				var cellLabelChanged = graph.cellLabelChanged;
+				let cellLabelChanged = graph.cellLabelChanged;
 				graph.cellLabelChanged = function(cell, newValue, autoSize)
 				{
 					if (mxUtils.isNode(cell.value) && cell.value.nodeName.toLowerCase() == 'userobject')
 					{
 						// Clones the value for correct undo/redo
-						var elt = cell.value.cloneNode(true);
+						let elt = cell.value.cloneNode(true);
 						elt.setAttribute('label', newValue);
 						newValue = elt;
 					}
@@ -128,7 +128,7 @@
 				};
 				
 				// Overrides method to create the editing value
-				var getEditingValue = graph.getEditingValue;
+				let getEditingValue = graph.getEditingValue;
 				graph.getEditingValue = function(cell)
 				{
 					if (mxUtils.isNode(cell.value) && cell.value.nodeName.toLowerCase() == 'userobject')
@@ -137,12 +137,12 @@
 					}
 				};
 				
-				var parent = graph.getDefaultParent();
+				let parent = graph.getDefaultParent();
 				graph.insertVertex(parent, null, obj, 20, 20, 80, 60);
 				
 				// Undo/redo
-				var undoManager = new mxUndoManager();
-				var listener = function(sender, evt)
+				let undoManager = new mxUndoManager();
+				let listener = function(sender, evt)
 				{
 					undoManager.undoableEditHappened(evt.getProperty('edit'));
 				};

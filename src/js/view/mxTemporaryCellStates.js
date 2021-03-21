@@ -51,15 +51,15 @@ class mxTemporaryCellStates {
     this.oldScale = view.getScale();
     this.oldDoRedrawShape = view.graph.cellRenderer.doRedrawShape;
 
-    var self = this;
+    let self = this;
 
     // Overrides doRedrawShape and paint shape to add links on shapes
     if (getLinkForCellState != null) {
       view.graph.cellRenderer.doRedrawShape = (state) => {
-        var oldPaint = state.shape.paint;
+        let oldPaint = state.shape.paint;
 
         state.shape.paint = (c) => {
-          var link = getLinkForCellState(state);
+          let link = getLinkForCellState(state);
 
           if (link != null) {
             c.setLink(link);
@@ -92,12 +92,12 @@ class mxTemporaryCellStates {
 
     if (cells != null) {
       view.resetValidationState();
-      var bbox = null;
+      let bbox = null;
 
       // Validates the vertices and edges without adding them to
       // the model so that the original cells are not modified
-      for (var i = 0; i < cells.length; i++) {
-        var bounds = view.getBoundingBox(view.validateCellState(view.validateCell(cells[i])));
+      for (let i = 0; i < cells.length; i++) {
+        let bounds = view.getBoundingBox(view.validateCellState(view.validateCell(cells[i])));
 
         if (bbox == null) {
           bbox = bounds;
