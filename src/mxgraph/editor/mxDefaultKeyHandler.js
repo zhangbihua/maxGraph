@@ -75,7 +75,7 @@ class mxDefaultKeyHandler {
       let old = this.handler.escape;
 
       this.handler.escape = (evt) => {
-        old.apply(this, arguments);
+        old.apply(this, [editor]);
         editor.hideProperties();
         editor.fireEvent(new mxEventObject(mxEvent.ESCAPE, 'event', evt));
       };

@@ -3,6 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxAbstractCanvas2D from "./mxAbstractCanvas2D";
+import mxConstants from "./mxConstants";
 
 class mxXmlCanvas2D extends mxAbstractCanvas2D {
   /**
@@ -117,9 +119,8 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2save = () => {
     if (this.compressed) {
-      mxAbstractCanvas2save.apply(this, arguments);
+      this.mxAbstractCanvas2save();
     }
-
     this.root.appendChild(this.createElement('save'));
   };
 
@@ -130,9 +131,8 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2restore = () => {
     if (this.compressed) {
-      mxAbstractCanvas2restore.apply(this, arguments);
+      this.mxAbstractCanvas2restore();
     }
-
     this.root.appendChild(this.createElement('restore'));
   };
 
@@ -185,7 +185,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   mxXmlCanvas2rotate = (theta, flipH, flipV, cx, cy) => {
     let elem = this.createElement('rotate');
 
-    if (theta != 0 || flipH || flipV) {
+    if (theta !== 0 || flipH || flipV) {
       elem.setAttribute('theta', this.format(theta));
       elem.setAttribute('flipH', (flipH) ? '1' : '0');
       elem.setAttribute('flipV', (flipV) ? '1' : '0');
@@ -207,11 +207,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setAlpha = (value) => {
     if (this.compressed) {
-      if (this.state.alpha == value) {
+      if (this.state.alpha === value) {
         return;
       }
-
-      mxAbstractCanvas2setAlpha.apply(this, arguments);
+      this.mxAbstractCanvas2setAlpha.apply(value);
     }
 
     let elem = this.createElement('alpha');
@@ -231,11 +230,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setFillAlpha = (value) => {
     if (this.compressed) {
-      if (this.state.fillAlpha == value) {
+      if (this.state.fillAlpha === value) {
         return;
       }
-
-      mxAbstractCanvas2setFillAlpha.apply(this, arguments);
+      this.mxAbstractCanvas2setFillAlpha(value);
     }
 
     let elem = this.createElement('fillalpha');
@@ -255,11 +253,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setStrokeAlpha = (value) => {
     if (this.compressed) {
-      if (this.state.strokeAlpha == value) {
+      if (this.state.strokeAlpha === value) {
         return;
       }
-
-      mxAbstractCanvas2setStrokeAlpha.apply(this, arguments);
+      this.mxAbstractCanvas2setStrokeAlpha(value);
     }
 
     let elem = this.createElement('strokealpha');
@@ -277,16 +274,15 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * value - Hexadecimal representation of the color or 'none'.
    */
   mxXmlCanvas2setFillColor = (value) => {
-    if (value == mxConstants.NONE) {
+    if (value === mxConstants.NONE) {
       value = null;
     }
 
     if (this.compressed) {
-      if (this.state.fillColor == value) {
+      if (this.state.fillColor === value) {
         return;
       }
-
-      mxAbstractCanvas2setFillColor.apply(this, arguments);
+      this.mxAbstractCanvas2setFillColor(value);
     }
 
     let elem = this.createElement('fillcolor');
@@ -316,7 +312,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setGradient = (color1, color2, x, y, w, h, direction, alpha1, alpha2) => {
     if (color1 != null && color2 != null) {
-      mxAbstractCanvas2setGradient.apply(this, arguments);
+      this.mxAbstractCanvas2setGradient(color1, color2, x, y, w, h, direction, alpha1, alpha2);
 
       let elem = this.createElement('gradient');
       elem.setAttribute('c1', color1);
@@ -353,16 +349,15 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * value - Hexadecimal representation of the color or 'none'.
    */
   mxXmlCanvas2setStrokeColor = (value) => {
-    if (value == mxConstants.NONE) {
+    if (value === mxConstants.NONE) {
       value = null;
     }
 
     if (this.compressed) {
-      if (this.state.strokeColor == value) {
+      if (this.state.strokeColor === value) {
         return;
       }
-
-      mxAbstractCanvas2setStrokeColor.apply(this, arguments);
+      this.mxAbstractCanvas2setStrokeColor(value);
     }
 
     let elem = this.createElement('strokecolor');
@@ -381,11 +376,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setStrokeWidth = (value) => {
     if (this.compressed) {
-      if (this.state.strokeWidth == value) {
+      if (this.state.strokeWidth === value) {
         return;
       }
-
-      mxAbstractCanvas2setStrokeWidth.apply(this, arguments);
+      this.mxAbstractCanvas2setStrokeWidth(value);
     }
 
     let elem = this.createElement('strokewidth');
@@ -406,11 +400,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setDashed = (value, fixDash) => {
     if (this.compressed) {
-      if (this.state.dashed == value) {
+      if (this.state.dashed === value) {
         return;
       }
-
-      mxAbstractCanvas2setDashed.apply(this, arguments);
+      this.mxAbstractCanvas2setDashed(value, fixDash);
     }
 
     let elem = this.createElement('dashed');
@@ -437,11 +430,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setDashPattern = (value) => {
     if (this.compressed) {
-      if (this.state.dashPattern == value) {
+      if (this.state.dashPattern === value) {
         return;
       }
-
-      mxAbstractCanvas2setDashPattern.apply(this, arguments);
+      this.mxAbstractCanvas2setDashPattern(value);
     }
 
     let elem = this.createElement('dashpattern');
@@ -461,11 +453,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setLineCap = (value) => {
     if (this.compressed) {
-      if (this.state.lineCap == value) {
+      if (this.state.lineCap === value) {
         return;
       }
-
-      mxAbstractCanvas2setLineCap.apply(this, arguments);
+      this.mxAbstractCanvas2setLineCap(value);
     }
 
     let elem = this.createElement('linecap');
@@ -485,11 +476,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setLineJoin = (value) => {
     if (this.compressed) {
-      if (this.state.lineJoin == value) {
+      if (this.state.lineJoin === value) {
         return;
       }
-
-      mxAbstractCanvas2setLineJoin.apply(this, arguments);
+      this.mxAbstractCanvas2setLineJoin(value);
     }
 
     let elem = this.createElement('linejoin');
@@ -508,11 +498,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setMiterLimit = (value) => {
     if (this.compressed) {
-      if (this.state.miterLimit == value) {
+      if (this.state.miterLimit === value) {
         return;
       }
-
-      mxAbstractCanvas2setMiterLimit.apply(this, arguments);
+      this.mxAbstractCanvas2setMiterLimit(value);
     }
 
     let elem = this.createElement('miterlimit');
@@ -531,16 +520,15 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setFontColor = (value) => {
     if (this.textEnabled) {
-      if (value == mxConstants.NONE) {
+      if (value === mxConstants.NONE) {
         value = null;
       }
 
       if (this.compressed) {
-        if (this.state.fontColor == value) {
+        if (this.state.fontColor === value) {
           return;
         }
-
-        mxAbstractCanvas2setFontColor.apply(this, arguments);
+        this.mxAbstractCanvas2setFontColor(value);
       }
 
       let elem = this.createElement('fontcolor');
@@ -560,16 +548,15 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setFontBackgroundColor = (value) => {
     if (this.textEnabled) {
-      if (value == mxConstants.NONE) {
+      if (value === mxConstants.NONE) {
         value = null;
       }
 
       if (this.compressed) {
-        if (this.state.fontBackgroundColor == value) {
+        if (this.state.fontBackgroundColor === value) {
           return;
         }
-
-        mxAbstractCanvas2setFontBackgroundColor.apply(this, arguments);
+        this.mxAbstractCanvas2setFontBackgroundColor(value);
       }
 
       let elem = this.createElement('fontbackgroundcolor');
@@ -589,16 +576,15 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setFontBorderColor = (value) => {
     if (this.textEnabled) {
-      if (value == mxConstants.NONE) {
+      if (value === mxConstants.NONE) {
         value = null;
       }
 
       if (this.compressed) {
-        if (this.state.fontBorderColor == value) {
+        if (this.state.fontBorderColor === value) {
           return;
         }
-
-        mxAbstractCanvas2setFontBorderColor.apply(this, arguments);
+        this.mxAbstractCanvas2setFontBorderColor(value);
       }
 
       let elem = this.createElement('fontbordercolor');
@@ -619,11 +605,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   mxXmlCanvas2setFontSize = (value) => {
     if (this.textEnabled) {
       if (this.compressed) {
-        if (this.state.fontSize == value) {
+        if (this.state.fontSize === value) {
           return;
         }
-
-        mxAbstractCanvas2setFontSize.apply(this, arguments);
+        this.mxAbstractCanvas2setFontSize(value);
       }
 
       let elem = this.createElement('fontsize');
@@ -645,11 +630,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   mxXmlCanvas2setFontFamily = (value) => {
     if (this.textEnabled) {
       if (this.compressed) {
-        if (this.state.fontFamily == value) {
+        if (this.state.fontFamily === value) {
           return;
         }
-
-        mxAbstractCanvas2setFontFamily.apply(this, arguments);
+        this.mxAbstractCanvas2setFontFamily(value);
       }
 
       let elem = this.createElement('fontfamily');
@@ -675,11 +659,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       }
 
       if (this.compressed) {
-        if (this.state.fontStyle == value) {
+        if (this.state.fontStyle === value) {
           return;
         }
-
-        mxAbstractCanvas2setFontStyle.apply(this, arguments);
+        this.mxAbstractCanvas2setFontStyle.apply(value);
       }
 
       let elem = this.createElement('fontstyle');
@@ -699,11 +682,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setShadow = (value) => {
     if (this.compressed) {
-      if (this.state.shadow == value) {
+      if (this.state.shadow === value) {
         return;
       }
-
-      mxAbstractCanvas2setShadow.apply(this, arguments);
+      this.mxAbstractCanvas2setShadow(value);
     }
 
     let elem = this.createElement('shadow');
@@ -722,15 +704,15 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setShadowColor = (value) => {
     if (this.compressed) {
-      if (value == mxConstants.NONE) {
+      if (value === mxConstants.NONE) {
         value = null;
       }
 
-      if (this.state.shadowColor == value) {
+      if (this.state.shadowColor === value) {
         return;
       }
 
-      mxAbstractCanvas2setShadowColor.apply(this, arguments);
+      this.mxAbstractCanvas2setShadowColor(value);
     }
 
     let elem = this.createElement('shadowcolor');
@@ -750,17 +732,15 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setShadowAlpha = (value) => {
     if (this.compressed) {
-      if (this.state.shadowAlpha == value) {
+      if (this.state.shadowAlpha === value) {
         return;
       }
-
-      mxAbstractCanvas2setShadowAlpha.apply(this, arguments);
+      this.mxAbstractCanvas2setShadowAlpha(value);
     }
 
     let elem = this.createElement('shadowalpha');
     elem.setAttribute('alpha', value);
     this.root.appendChild(elem);
-
   };
 
   /**
@@ -775,11 +755,10 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   mxXmlCanvas2setShadowOffset = (dx, dy) => {
     if (this.compressed) {
-      if (this.state.shadowDx == dx && this.state.shadowDy == dy) {
+      if (this.state.shadowDx === dx && this.state.shadowDy === dy) {
         return;
       }
-
-      mxAbstractCanvas2setShadowOffset.apply(this, arguments);
+      this.mxAbstractCanvas2setShadowOffset(dx, dy);
     }
 
     let elem = this.createElement('shadowoffset');

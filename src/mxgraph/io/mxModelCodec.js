@@ -42,7 +42,7 @@ class mxModelCodec extends mxObjectCodec {
     if (child.nodeName === 'root') {
       this.decodeRoot(dec, child, obj);
     } else {
-      decodeChild.apply(this, arguments);
+      decodeChild.apply(this, [dec, child, obj]);
     }
   };
 

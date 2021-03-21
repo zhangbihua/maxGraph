@@ -62,9 +62,9 @@ class mxCompositeLayout extends mxGraphLayout {
    */
   moveCell = (cell, x, y) => {
     if (this.master != null) {
-      this.master.moveCell.apply(this.master, arguments);
+      this.master.moveCell.apply(this.master, [cell, x, y]);
     } else {
-      this.layouts[0].moveCell.apply(this.layouts[0], arguments);
+      this.layouts[0].moveCell.apply(this.layouts[0], [cell, x, y]);
     }
   };
 
@@ -80,7 +80,7 @@ class mxCompositeLayout extends mxGraphLayout {
     model.beginUpdate();
     try {
       for (let i = 0; i < this.layouts.length; i++) {
-        this.layouts[i].execute.apply(this.layouts[i], arguments);
+        this.layouts[i].execute.apply(this.layouts[i], [parent]);
       }
     } finally {
       model.endUpdate();

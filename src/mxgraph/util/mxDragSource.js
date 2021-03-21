@@ -651,13 +651,13 @@ class mxDragSource {
    * implementation uses <mxGraph.getCellAt>.
    */
   drop = (graph, evt, dropTarget, x, y) => {
-    this.dropHandler.apply(this, arguments);
+    this.dropHandler(graph, evt, dropTarget, x, y);
 
     // Had to move this to after the insert because it will
     // affect the scrollbars of the window in IE to try and
     // make the complete container visible.
     // LATER: Should be made optional.
-    if (graph.container.style.visibility != 'hidden') {
+    if (graph.container.style.visibility !== 'hidden') {
       graph.container.focus();
     }
   };

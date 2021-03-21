@@ -374,8 +374,8 @@ class mxGeometry extends mxRectangle {
    * Returns true if the given object equals this geometry.
    */
   equals = (obj) => {
-    return equals.apply(this, arguments) &&
-        this.relative == obj.relative &&
+    return super.equals(obj) &&
+        this.relative === obj.relative &&
         ((this.sourcePoint == null && obj.sourcePoint == null) || (this.sourcePoint != null && this.sourcePoint.equals(obj.sourcePoint))) &&
         ((this.targetPoint == null && obj.targetPoint == null) || (this.targetPoint != null && this.targetPoint.equals(obj.targetPoint))) &&
         ((this.points == null && obj.points == null) || (this.points != null && mxUtils.equalPoints(this.points, obj.points))) &&

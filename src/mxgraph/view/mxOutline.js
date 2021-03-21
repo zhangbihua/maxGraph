@@ -10,6 +10,7 @@ import mxRectangle from "../util/mxRectangle";
 import mxRectangleShape from "../shape/mxRectangleShape";
 import mxMouseEvent from "FIXME";
 import mxGraph from "./mxGraph";
+import mxImageShape from "../shape/mxImageShape";
 
 class mxOutline {
   /**
@@ -182,7 +183,7 @@ class mxOutline {
     let outlineGraphModelChanged = this.outline.graphModelChanged;
     this.outline.graphModelChanged = mxUtils.bind(this, (changes) => {
       if (!this.suspended && this.outline != null) {
-        outlineGraphModelChanged.apply(this.outline, arguments);
+        outlineGraphModelChanged.apply(this.outline, [changes]);
       }
     });
 
@@ -197,11 +198,11 @@ class mxOutline {
     this.outline.labelsVisible = this.labelsVisible;
     this.outline.setEnabled(false);
 
-    this.updateHandler = mxUtils.bind(this, (sender, evt) => {
+    this.updateHandler = (sender, evt) => {
       if (!this.suspended && !this.active) {
         this.update();
       }
-    });
+    };
 
     // Updates the scale of the outline after a change of the main graph
     this.source.getModel().addListener(mxEvent.CHANGE, this.updateHandler);
@@ -218,18 +219,18 @@ class mxOutline {
     // Updates blue rectangle on scroll
     mxEvent.addListener(this.source.container, 'scroll', this.updateHandler);
 
-    this.panHandler = mxUtils.bind(this, (sender) => {
+    this.panHandler = (sender, evt) => {
       if (this.updateOnPan) {
-        this.updateHandler.apply(this, arguments);
+        this.updateHandler.apply(this, [sender, evt]);
       }
-    });
+    };
     this.source.addListener(mxEvent.PAN, this.panHandler);
 
     // Refreshes the graph in the outline after a refresh of the main graph
-    this.refreshHandler = mxUtils.bind(this, (sender) => {
+    this.refreshHandler = (sender) => {
       this.outline.setStylesheet(this.source.getStylesheet());
       this.outline.refresh();
-    });
+    };
     this.source.addListener(mxEvent.REFRESH, this.refreshHandler);
 
     // Creates the blue rectangle for the viewport
@@ -419,14 +420,14 @@ class mxOutline {
       let scale = (isNaN(outlineScale)) ? this.minScale : Math.max(this.minScale, outlineScale);
 
       if (scale > 0) {
-        if (this.outline.getView().scale != scale) {
+        if (this.outline.getView().scale !== scale) {
           this.outline.getView().scale = scale;
           revalidate = true;
         }
 
         let navView = this.outline.getView();
 
-        if (navView.currentRoot != this.source.getView().currentRoot) {
+        if (navView.currentRoot !== this.source.getView().currentRoot) {
           navView.setCurrentRoot(this.source.getView().currentRoot);
         }
 
@@ -448,7 +449,7 @@ class mxOutline {
           ty = ty - unscaledGraphBounds.y;
         }
 
-        if (navView.translate.x != tx || navView.translate.y != ty) {
+        if (navView.translate.x !== tx || navView.translate.y !== ty) {
           navView.translate.x = tx;
           navView.translate.y = ty;
           revalidate = true;
@@ -474,21 +475,21 @@ class mxOutline {
 
         let b = this.selectionBorder.bounds;
 
-        if (b.x != this.bounds.x || b.y != this.bounds.y || b.width != this.bounds.width || b.height != this.bounds.height) {
+        if (b.x !== this.bounds.x || b.y !== this.bounds.y || b.width !== this.bounds.width || b.height !== this.bounds.height) {
           this.selectionBorder.bounds = this.bounds;
           this.selectionBorder.redraw();
         }
 
         // Updates the bounds of the zoom handle at the bottom right
-        let b = this.sizer.bounds;
+        b = this.sizer.bounds;
         var b2 = new mxRectangle(this.bounds.x + this.bounds.width - b.width / 2,
             this.bounds.y + this.bounds.height - b.height / 2, b.width, b.height);
 
-        if (b.x != b2.x || b.y != b2.y || b.width != b2.width || b.height != b2.height) {
+        if (b.x !== b2.x || b.y !== b2.y || b.width !== b2.width || b.height !== b2.height) {
           this.sizer.bounds = b2;
 
           // Avoids update of visibility in redraw for VML
-          if (this.sizer.node.style.visibility != 'hidden') {
+          if (this.sizer.node.style.visibility !== 'hidden') {
             this.sizer.redraw();
           }
         }
@@ -576,7 +577,7 @@ class mxOutline {
           b.width, b.height);
 
       // Avoids update of visibility in redraw for VML
-      if (this.sizer.node.style.visibility != 'hidden') {
+      if (this.sizer.node.style.visibility !== 'hidden') {
         this.sizer.redraw();
       }
 

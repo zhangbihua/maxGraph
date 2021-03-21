@@ -53,13 +53,13 @@ class mxImageExport {
   drawState = (state, canvas) => {
     if (state != null) {
       this.visitStatesRecursive(state, canvas, mxUtils.bind(this, () => {
-        this.drawCellState.apply(this, arguments);
+        this.drawCellState(state, canvas);
       }));
 
       // Paints the overlays
       if (this.includeOverlays) {
         this.visitStatesRecursive(state, canvas, mxUtils.bind(this, () => {
-          this.drawOverlays.apply(this, arguments);
+          this.drawOverlays(state, canvas);
         }));
       }
     }

@@ -68,8 +68,7 @@ class mxArrowConnector extends mxShape {
    * Overrides mxShape to reset spacing.
    */
   resetStyles = () => {
-    resetStyles.apply(this, arguments);
-
+    super.resetStyles();
     this.arrowSpacing = mxConstants.ARROW_SPACING;
   };
 
@@ -77,7 +76,7 @@ class mxArrowConnector extends mxShape {
    * Overrides apply to get smooth transition from default start- and endsize.
    */
   apply = (state) => {
-    apply.apply(this, arguments);
+    super.apply(state);
 
     if (this.style != null) {
       this.startSize = mxUtils.getNumber(this.style, mxConstants.STYLE_STARTSIZE, mxConstants.ARROW_SIZE / 5) * 3;
@@ -91,7 +90,7 @@ class mxArrowConnector extends mxShape {
    * Augments the bounding box with the edge width and markers.
    */
   augmentBoundingBox = (bbox) => {
-    augmentBoundingBox.apply(this, arguments);
+    super.augmentBoundingBox(bbox);
 
     let w = this.getEdgeWidth();
 

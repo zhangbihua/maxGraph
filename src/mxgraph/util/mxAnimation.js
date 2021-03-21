@@ -6,6 +6,7 @@
 import mxUtils from "./mxUtils";
 import mxEventSource from "./mxEventSource";
 import mxEventObject from "./mxEventObject";
+import mxEvent from "./mxEvent";
 
 class mxAnimation extends mxEventSource {
   /**

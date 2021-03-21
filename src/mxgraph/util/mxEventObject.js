@@ -47,13 +47,13 @@ class mxEventObject {
    * new mxEventObject("eventName", key1, val1, .., keyN, valN)
    * (end)
    */
-  constructor(name) {
+  constructor(name, ...args) {
     this.name = name;
     this.properties = [];
 
-    for (let i = 1; i < arguments.length; i += 2) {
-      if (arguments[i + 1] != null) {
-        this.properties[arguments[i]] = arguments[i + 1];
+    for (let i = 0; i < args.length; i += 2) {
+      if (args[i + 1] != null) {
+        this.properties[args[i]] = args[i + 1];
       }
     }
   };

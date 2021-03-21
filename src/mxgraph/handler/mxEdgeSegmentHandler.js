@@ -42,7 +42,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    */
   getPreviewPoints = (point) => {
     if (this.isSource || this.isTarget) {
-      return getPreviewPoints.apply(this, arguments);
+      return super.getPreviewPoints(point);
     } else {
       let pts = this.getCurrentPoints();
       let last = this.convertPoint(pts[0].clone(), false);
@@ -52,13 +52,13 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
       for (let i = 1; i < pts.length; i++) {
         let pt = this.convertPoint(pts[i].clone(), false);
 
-        if (i == this.index) {
-          if (Math.round(last.x - pt.x) == 0) {
+        if (i === this.index) {
+          if (Math.round(last.x - pt.x) === 0) {
             last.x = point.x;
             pt.x = point.x;
           }
 
-          if (Math.round(last.y - pt.y) == 0) {
+          if (Math.round(last.y - pt.y) === 0) {
             last.y = point.y;
             pt.y = point.y;
           }
@@ -97,7 +97,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    * Overridden to perform optimization of the edge style result.
    */
   updatePreviewState = (edge, point, terminalState, me) => {
-    updatePreviewState.apply(this, arguments);
+    super.updatePreviewState(edge, point, terminalState, me);
 
     // Checks and corrects preview by running edge style again
     if (!this.isSource && !this.isTarget) {
@@ -112,8 +112,8 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
         var pt2 = pts[i];
 
         // Merges adjacent segments only if more than 2 to allow for straight edges
-        if ((Math.round(pt0.x - pt1.x) != 0 || Math.round(pt1.x - pt2.x) != 0) &&
-            (Math.round(pt0.y - pt1.y) != 0 || Math.round(pt1.y - pt2.y) != 0)) {
+        if ((Math.round(pt0.x - pt1.x) !== 0 || Math.round(pt1.x - pt2.x) !== 0) &&
+            (Math.round(pt0.y - pt1.y) !== 0 || Math.round(pt1.y - pt2.y) !== 0)) {
           result.push(this.convertPoint(pt1.clone(), false));
         }
 
@@ -219,7 +219,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
         }
       }
 
-      edge = connect.apply(this, arguments);
+      edge = super.connect(edge, terminal, isSource, isClone, me);
     } finally {
       model.endUpdate();
     }
@@ -242,7 +242,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    * Starts the handling of the mouse gesture.
    */
   start = (x, y, index) => {
-    start.apply(this, arguments);
+    super.start(x, y, index);
 
     if (this.bends != null && this.bends[index] != null &&
         !this.isSource && !this.isTarget) {
@@ -303,7 +303,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    */
   redraw = () => {
     this.refresh();
-    redraw.apply(this, arguments);
+    super.redraw();
   };
 
   /**

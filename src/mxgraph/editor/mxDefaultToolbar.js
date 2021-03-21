@@ -115,7 +115,7 @@ class mxDefaultToolbar {
 
         if (funct != null) {
           this.editor.insertFunction = () => {
-            funct.apply(this, arguments);
+            funct.apply(this, [container]);
             this.toolbar.resetMode();
           };
         } else {

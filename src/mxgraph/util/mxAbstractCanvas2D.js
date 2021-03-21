@@ -190,16 +190,16 @@ class mxAbstractCanvas2D {
    *
    * Adds the given operation to the path.
    */
-  mxAbstractCanvas2addOp = () => {
+  mxAbstractCanvas2addOp = (...args) => {
     if (this.path != null) {
-      this.path.push(arguments[0]);
+      this.path.push(args[0]);
 
-      if (arguments.length > 2) {
+      if (args.length > 2) {
         let s = this.state;
 
-        for (let i = 2; i < arguments.length; i += 2) {
-          this.lastX = arguments[i - 1];
-          this.lastY = arguments[i];
+        for (let i = 2; i < args.length; i += 2) {
+          this.lastX = args[i - 1];
+          this.lastY = args[i];
 
           this.path.push(this.format((this.lastX + s.dx) * s.scale));
           this.path.push(this.format((this.lastY + s.dy) * s.scale));

@@ -4,6 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxConstants from "../util/mxConstants";
+import mxUtils from "../util/mxUtils";
+
 class mxRectangleShape extends mxShape {
   /**
    * Class: mxRectangleShape
@@ -61,9 +64,9 @@ class mxRectangleShape extends mxShape {
       events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1';
     }
 
-    if (events || (this.fill != null && this.fill != mxConstants.NONE) ||
-        (this.stroke != null && this.stroke != mxConstants.NONE)) {
-      if (!events && (this.fill == null || this.fill == mxConstants.NONE)) {
+    if (events || (this.fill != null && this.fill !== mxConstants.NONE) ||
+        (this.stroke != null && this.stroke !== mxConstants.NONE)) {
+      if (!events && (this.fill == null || this.fill === mxConstants.NONE)) {
         c.pointerEvents = false;
       }
 

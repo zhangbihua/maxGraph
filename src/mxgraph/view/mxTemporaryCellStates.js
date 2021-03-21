@@ -65,24 +65,23 @@ class mxTemporaryCellStates {
             c.setLink(link);
           }
 
-          oldPaint.apply(this, arguments);
+          oldPaint.apply(this, [c]);
 
           if (link != null) {
             c.setLink(null);
           }
         };
 
-        self.oldDoRedrawShape.apply(view.graph.cellRenderer, arguments);
+        self.oldDoRedrawShape.apply(view.graph.cellRenderer, [state]);
         state.shape.paint = oldPaint;
       };
     }
 
     // Overrides validateCellState to ignore invisible cells
-    view.validateCellState = (cell, resurse) => {
+    view.validateCellState = (cell, recurse) => {
       if (cell == null || isCellVisibleFn == null || isCellVisibleFn(cell)) {
-        return self.oldValidateCellState.apply(view, arguments);
+        return self.oldValidateCellState.apply(view, [cell, recurse]);
       }
-
       return null;
     };
 

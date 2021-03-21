@@ -4,6 +4,12 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxClient from "../mxClient";
+import mxConstants from "../util/mxConstants";
+import mxUtils from "../util/mxUtils";
+import mxPoint from "../util/mxPoint";
+import mxSvgCanvas2D from "../util/mxSvgCanvas2D";
+
 class mxText extends mxShape {
   /**
    * Variable: baseSpacingTop
@@ -76,7 +82,7 @@ class mxText extends mxShape {
    * This is needed to make sure no clipping is applied to borders. Default is 4
    * for IE 8 standards mode and 3 for all others.
    */
-  textWidthPadding = (document.documentMode == 8 && !mxClient.IS_EM) ? 4 : 3;
+  textWidthPadding = 3;
 
   /**
    * Variable: lastValue
@@ -193,7 +199,7 @@ class mxText extends mxShape {
    * true if the browser is not in IE8 standards mode.
    */
   isHtmlAllowed = () => {
-    return document.documentMode != 8 || mxClient.IS_EM;
+    return document.documentMode !== 8 || mxClient.IS_EM;
   };
 
   /**
@@ -237,31 +243,31 @@ class mxText extends mxShape {
           this.clipped, this.getTextRotation(), this.node);
     } else {
       // Checks if text contains HTML markup
-      let realHtml = mxUtils.isNode(this.value) || this.dialect == mxConstants.DIALECT_STRICTHTML;
+      let realHtml = mxUtils.isNode(this.value) || this.dialect === mxConstants.DIALECT_STRICTHTML;
 
       // Always renders labels as HTML in VML
       let fmt = (realHtml || c instanceof mxVmlCanvas2D) ? 'html' : '';
       let val = this.value;
 
-      if (!realHtml && fmt == 'html') {
+      if (!realHtml && fmt === 'html') {
         val = mxUtils.htmlEntities(val, false);
       }
 
-      if (fmt == 'html' && !mxUtils.isNode(this.value)) {
+      if (fmt === 'html' && !mxUtils.isNode(this.value)) {
         val = mxUtils.replaceTrailingNewlines(val, '<div><br></div>');
       }
 
       // Handles trailing newlines to make sure they are visible in rendering output
-      val = (!mxUtils.isNode(this.value) && this.replaceLinefeeds && fmt == 'html') ?
+      val = (!mxUtils.isNode(this.value) && this.replaceLinefeeds && fmt === 'html') ?
           val.replace(/\n/g, '<br/>') : val;
 
       let dir = this.textDirection;
 
-      if (dir == mxConstants.TEXT_DIRECTION_AUTO && !realHtml) {
+      if (dir === mxConstants.TEXT_DIRECTION_AUTO && !realHtml) {
         dir = this.getAutoDirection();
       }
 
-      if (dir != mxConstants.TEXT_DIRECTION_LTR && dir != mxConstants.TEXT_DIRECTION_RTL) {
+      if (dir !== mxConstants.TEXT_DIRECTION_LTR && dir !== mxConstants.TEXT_DIRECTION_RTL) {
         dir = null;
       }
 
@@ -276,8 +282,8 @@ class mxText extends mxShape {
    * Renders the text using the given DOM nodes.
    */
   redraw = () => {
-    if (this.visible && this.checkBounds() && this.cacheEnabled && this.lastValue == this.value &&
-        (mxUtils.isNode(this.value) || this.dialect == mxConstants.DIALECT_STRICTHTML)) {
+    if (this.visible && this.checkBounds() && this.cacheEnabled && this.lastValue === this.value &&
+        (mxUtils.isNode(this.value) || this.dialect === mxConstants.DIALECT_STRICTHTML)) {
       if (this.node.nodeName === 'DIV') {
         if (mxClient.IS_SVG) {
           this.redrawHtmlShapeWithCss3();
@@ -300,13 +306,13 @@ class mxText extends mxShape {
           this.updateBoundingBox();
         } else {
           // Fallback if canvas does not support updateText (VML)
-          redraw.apply(this, arguments);
+          super.redraw();
         }
       }
     } else {
-      redraw.apply(this, arguments);
+      super.redraw();
 
-      if (mxUtils.isNode(this.value) || this.dialect == mxConstants.DIALECT_STRICTHTML) {
+      if (mxUtils.isNode(this.value) || this.dialect === mxConstants.DIALECT_STRICTHTML) {
         this.lastValue = this.value;
       } else {
         this.lastValue = null;
@@ -320,7 +326,7 @@ class mxText extends mxShape {
    * Resets all styles.
    */
   resetStyles = () => {
-    resetStyles.apply(this, arguments);
+    super.resetStyles();
 
     this.color = 'black';
     this.align = mxConstants.ALIGN_CENTER;
@@ -351,7 +357,7 @@ class mxText extends mxShape {
    */
   apply = (state) => {
     let old = this.spacing;
-    apply.apply(this, arguments);
+    super.apply(state);
 
     if (this.style != null) {
       this.fontStyle = mxUtils.getValue(this.style, mxConstants.STYLE_FONTSTYLE, this.fontStyle);
@@ -428,19 +434,19 @@ class mxText extends mxShape {
     let h = (this.style != null) ? mxUtils.getValue(this.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER) : null;
     let v = (this.style != null) ? mxUtils.getValue(this.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE) : null;
 
-    if (!this.ignoreStringSize && node != null && this.overflow != 'fill' && (!this.clipped ||
-        !this.ignoreClippedStringSize || h != mxConstants.ALIGN_CENTER || v != mxConstants.ALIGN_MIDDLE)) {
+    if (!this.ignoreStringSize && node != null && this.overflow !== 'fill' && (!this.clipped ||
+        !this.ignoreClippedStringSize || h !== mxConstants.ALIGN_CENTER || v !== mxConstants.ALIGN_MIDDLE)) {
       let ow = null;
       let oh = null;
 
       if (node.ownerSVGElement != null) {
         if (node.firstChild != null && node.firstChild.firstChild != null &&
-            node.firstChild.firstChild.nodeName == 'foreignObject') {
+            node.firstChild.firstChild.nodeName === 'foreignObject') {
           // Uses second inner DIV for font metrics
           node = node.firstChild.firstChild.firstChild.firstChild;
           oh = node.offsetHeight * this.scale;
 
-          if (this.overflow == 'width') {
+          if (this.overflow === 'width') {
             ow = this.boundingBox.width;
           } else {
             ow = node.offsetWidth * this.scale;
@@ -452,7 +458,7 @@ class mxText extends mxShape {
             // Workaround for bounding box of empty string
             if (typeof (this.value) == 'string' && mxUtils.trim(this.value) == 0) {
               this.boundingBox = null;
-            } else if (b.width == 0 && b.height == 0) {
+            } else if (b.width === 0 && b.height === 0) {
               this.boundingBox = null;
             } else {
               this.boundingBox = new mxRectangle(b.x, b.y, b.width, b.height);
@@ -483,7 +489,7 @@ class mxText extends mxShape {
 
           let sizeDiv = node;
 
-          if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName == 'DIV') {
+          if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName === 'DIV') {
             sizeDiv = sizeDiv.firstChild;
           }
 
@@ -502,7 +508,7 @@ class mxText extends mxShape {
     }
 
     if (this.boundingBox != null) {
-      if (rot != 0) {
+      if (rot !== 0) {
         // Accounts for pre-rotated x and y
         let bbox = mxUtils.getBoundingBox(new mxRectangle(
             this.margin.x * this.boundingBox.width,
@@ -560,7 +566,7 @@ class mxText extends mxShape {
    * Sets the state of the canvas for drawing the shape.
    */
   configureCanvas = (c, x, y, w, h) => {
-    configureCanvas.apply(this, arguments);
+    super.configureCanvas(c, x, y, w, h);
 
     c.setFontColor(this.color);
     c.setFontBackgroundColor(this.background);
@@ -591,7 +597,7 @@ class mxText extends mxShape {
   getHtmlValue = () => {
     let val = this.value;
 
-    if (this.dialect != mxConstants.DIALECT_STRICTHTML) {
+    if (this.dialect !== mxConstants.DIALECT_STRICTHTML) {
       val = mxUtils.htmlEntities(val, false);
     }
 
@@ -615,21 +621,21 @@ class mxText extends mxShape {
         'font-family: ' + this.family + '; color: ' + this.color + '; line-height: ' + lh +
         '; pointer-events: ' + ((this.pointerEvents) ? 'all' : 'none') + '; ';
 
-    if ((this.fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD) {
+    if ((this.fontStyle & mxConstants.FONT_BOLD) === mxConstants.FONT_BOLD) {
       css += 'font-weight: bold; ';
     }
 
-    if ((this.fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC) {
+    if ((this.fontStyle & mxConstants.FONT_ITALIC) === mxConstants.FONT_ITALIC) {
       css += 'font-style: italic; ';
     }
 
     let deco = [];
 
-    if ((this.fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE) {
+    if ((this.fontStyle & mxConstants.FONT_UNDERLINE) === mxConstants.FONT_UNDERLINE) {
       deco.push('underline');
     }
 
-    if ((this.fontStyle & mxConstants.FONT_STRIKETHROUGH) == mxConstants.FONT_STRIKETHROUGH) {
+    if ((this.fontStyle & mxConstants.FONT_STRIKETHROUGH) === mxConstants.FONT_STRIKETHROUGH) {
       deco.push('line-through');
     }
 
@@ -685,17 +691,17 @@ class mxText extends mxShape {
         (this.border != null) ? mxUtils.htmlEntities(this.border) : null,
         flex, block, this.scale, (dx, dy, flex, item, block, ofl) => {
           let r = this.getTextRotation();
-          let tr = ((this.scale != 1) ? 'scale(' + this.scale + ') ' : '') +
-              ((r != 0) ? 'rotate(' + r + 'deg) ' : '') +
-              ((this.margin.x != 0 || this.margin.y != 0) ?
+          let tr = ((this.scale !== 1) ? 'scale(' + this.scale + ') ' : '') +
+              ((r !== 0) ? 'rotate(' + r + 'deg) ' : '') +
+              ((this.margin.x !== 0 || this.margin.y !== 0) ?
                   'translate(' + (this.margin.x * 100) + '%,' +
                   (this.margin.y * 100) + '%)' : '');
 
-          if (tr != '') {
+          if (tr !== '') {
             tr = 'transform-origin: 0 0; transform: ' + tr + '; ';
           }
 
-          if (ofl == '') {
+          if (ofl === '') {
             flex += item;
             item = 'display:inline-block; min-width: 100%; ' + tr;
           } else {
@@ -734,7 +740,7 @@ class mxText extends mxShape {
     let dx = this.margin.x;
     let dy = this.margin.y;
 
-    if (theta != 0) {
+    if (theta !== 0) {
       mxUtils.setPrefixedStyle(style, 'transformOrigin', (-dx * 100) + '%' + ' ' + (-dy * 100) + '%');
       mxUtils.setPrefixedStyle(style, 'transform', 'translate(' + (dx * 100) + '%' + ',' + (dy * 100) + '%) ' +
           'scale(' + this.scale + ') rotate(' + theta + 'deg)');
@@ -744,9 +750,9 @@ class mxText extends mxShape {
           'translate(' + (dx * 100) + '%' + ',' + (dy * 100) + '%)');
     }
 
-    style.left = Math.round(this.bounds.x - Math.ceil(dx * ((this.overflow != 'fill' &&
-        this.overflow != 'width') ? 3 : 1))) + 'px';
-    style.top = Math.round(this.bounds.y - dy * ((this.overflow != 'fill') ? 3 : 1)) + 'px';
+    style.left = Math.round(this.bounds.x - Math.ceil(dx * ((this.overflow !== 'fill' &&
+        this.overflow !== 'width') ? 3 : 1))) + 'px';
+    style.top = Math.round(this.bounds.y - dy * ((this.overflow !== 'fill') ? 3 : 1)) + 'px';
 
     if (this.opacity < 100) {
       style.opacity = this.opacity / 100;
@@ -766,7 +772,7 @@ class mxText extends mxShape {
     } else {
       let val = this.value;
 
-      if (this.dialect != mxConstants.DIALECT_STRICTHTML) {
+      if (this.dialect !== mxConstants.DIALECT_STRICTHTML) {
         // LATER: Can be cached in updateValue
         val = mxUtils.htmlEntities(val, false);
       }
@@ -828,10 +834,10 @@ class mxText extends mxShape {
 
       sizeDiv = td;
 
-      if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName == 'DIV') {
+      if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName === 'DIV') {
         sizeDiv = sizeDiv.firstChild;
 
-        if (this.wrap && td.style.wordWrap == 'break-word') {
+        if (this.wrap && td.style.wordWrap === 'break-word') {
           sizeDiv.style.width = '100%';
         }
       }
@@ -844,7 +850,7 @@ class mxText extends mxShape {
 
       oh = sizeDiv.offsetHeight + 2;
 
-    } else if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName == 'DIV') {
+    } else if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName === 'DIV') {
       sizeDiv = sizeDiv.firstChild;
       oh = sizeDiv.offsetHeight;
     }
@@ -859,10 +865,10 @@ class mxText extends mxShape {
     let h = this.bounds.height / s;
 
     // Handles special case for live preview with no wrapper DIV and no textDiv
-    if (this.overflow == 'fill') {
+    if (this.overflow === 'fill') {
       oh = h;
       ow = w;
-    } else if (this.overflow == 'width') {
+    } else if (this.overflow === 'width') {
       oh = sizeDiv.scrollHeight;
       ow = w;
     }
@@ -873,7 +879,7 @@ class mxText extends mxShape {
 
     h = oh;
 
-    if (this.overflow != 'fill' && this.overflow != 'width') {
+    if (this.overflow !== 'fill' && this.overflow !== 'width') {
       if (this.clipped) {
         ow = Math.min(w, ow);
       }
@@ -912,7 +918,7 @@ class mxText extends mxShape {
     let top_fix = (h - h * cos + w * sin) / 2 + real_sin * tx - real_cos * ty;
     let left_fix = (w - w * cos + h * sin) / 2 - real_cos * tx - real_sin * ty;
 
-    if (rad != 0) {
+    if (rad !== 0) {
       let f = 'progid:DXImageTransform.Microsoft.Matrix(M11=' + real_cos + ', M12=' +
           real_sin + ', M21=' + (-real_sin) + ', M22=' + real_cos + ', sizingMethod=\'auto expand\')';
 
@@ -943,17 +949,17 @@ class mxText extends mxShape {
     } else {
       let val = this.value;
 
-      if (this.dialect != mxConstants.DIALECT_STRICTHTML) {
+      if (this.dialect !== mxConstants.DIALECT_STRICTHTML) {
         val = mxUtils.htmlEntities(val, false);
       }
 
       // Handles trailing newlines to make sure they are visible in rendering output
       val = mxUtils.replaceTrailingNewlines(val, '<div><br></div>');
       val = (this.replaceLinefeeds) ? val.replace(/\n/g, '<br/>') : val;
-      let bg = (this.background != null && this.background != mxConstants.NONE) ? this.background : null;
-      let bd = (this.border != null && this.border != mxConstants.NONE) ? this.border : null;
+      let bg = (this.background != null && this.background !== mxConstants.NONE) ? this.background : null;
+      let bd = (this.border != null && this.border !== mxConstants.NONE) ? this.border : null;
 
-      if (this.overflow == 'fill' || this.overflow == 'width') {
+      if (this.overflow === 'fill' || this.overflow === 'width') {
         if (bg != null) {
           this.node.style.backgroundColor = bg;
         }
@@ -989,11 +995,11 @@ class mxText extends mxShape {
       if (divs.length > 0) {
         let dir = this.textDirection;
 
-        if (dir == mxConstants.TEXT_DIRECTION_AUTO && this.dialect != mxConstants.DIALECT_STRICTHTML) {
+        if (dir === mxConstants.TEXT_DIRECTION_AUTO && this.dialect !== mxConstants.DIALECT_STRICTHTML) {
           dir = this.getAutoDirection();
         }
 
-        if (dir == mxConstants.TEXT_DIRECTION_LTR || dir == mxConstants.TEXT_DIRECTION_RTL) {
+        if (dir === mxConstants.TEXT_DIRECTION_LTR || dir === mxConstants.TEXT_DIRECTION_RTL) {
           divs[divs.length - 1].setAttribute('dir', dir);
         } else {
           divs[divs.length - 1].removeAttribute('dir');
@@ -1016,13 +1022,13 @@ class mxText extends mxShape {
     style.verticalAlign = 'top';
     style.color = this.color;
 
-    if ((this.fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD) {
+    if ((this.fontStyle & mxConstants.FONT_BOLD) === mxConstants.FONT_BOLD) {
       style.fontWeight = 'bold';
     } else {
       style.fontWeight = '';
     }
 
-    if ((this.fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC) {
+    if ((this.fontStyle & mxConstants.FONT_ITALIC) === mxConstants.FONT_ITALIC) {
       style.fontStyle = 'italic';
     } else {
       style.fontStyle = '';
@@ -1030,19 +1036,19 @@ class mxText extends mxShape {
 
     let txtDecor = [];
 
-    if ((this.fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE) {
+    if ((this.fontStyle & mxConstants.FONT_UNDERLINE) === mxConstants.FONT_UNDERLINE) {
       txtDecor.push('underline');
     }
 
-    if ((this.fontStyle & mxConstants.FONT_STRIKETHROUGH) == mxConstants.FONT_STRIKETHROUGH) {
+    if ((this.fontStyle & mxConstants.FONT_STRIKETHROUGH) === mxConstants.FONT_STRIKETHROUGH) {
       txtDecor.push('line-through');
     }
 
     style.textDecoration = txtDecor.join(' ');
 
-    if (this.align == mxConstants.ALIGN_CENTER) {
+    if (this.align === mxConstants.ALIGN_CENTER) {
       style.textAlign = 'center';
-    } else if (this.align == mxConstants.ALIGN_RIGHT) {
+    } else if (this.align === mxConstants.ALIGN_RIGHT) {
       style.textAlign = 'right';
     } else {
       style.textAlign = 'left';
@@ -1066,11 +1072,11 @@ class mxText extends mxShape {
 
       style.maxHeight = h + 'px';
       style.maxWidth = w + 'px';
-    } else if (this.overflow == 'fill') {
+    } else if (this.overflow === 'fill') {
       style.width = (w + 1) + 'px';
       style.height = (h + 1) + 'px';
       style.overflow = 'hidden';
-    } else if (this.overflow == 'width') {
+    } else if (this.overflow === 'width') {
       style.width = (w + 1) + 'px';
       style.maxHeight = (h + 1) + 'px';
       style.overflow = 'hidden';
@@ -1081,13 +1087,13 @@ class mxText extends mxShape {
       style.whiteSpace = 'normal';
       style.width = w + 'px';
 
-      if (enableWrap && this.overflow != 'fill' && this.overflow != 'width') {
+      if (enableWrap && this.overflow !== 'fill' && this.overflow !== 'width') {
         let sizeDiv = node;
 
-        if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName == 'DIV') {
+        if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName === 'DIV') {
           sizeDiv = sizeDiv.firstChild;
 
-          if (node.style.wordWrap == 'break-word') {
+          if (node.style.wordWrap === 'break-word') {
             sizeDiv.style.width = '100%';
           }
         }
@@ -1095,7 +1101,7 @@ class mxText extends mxShape {
         let tmp = sizeDiv.offsetWidth;
 
         // Workaround for text measuring in hidden containers
-        if (tmp == 0) {
+        if (tmp === 0) {
           let prev = node.parentNode;
           node.style.visibility = 'hidden';
           document.body.appendChild(node);
@@ -1135,17 +1141,17 @@ class mxText extends mxShape {
     let dx = 0;
     let dy = 0;
 
-    if (this.align == mxConstants.ALIGN_CENTER) {
+    if (this.align === mxConstants.ALIGN_CENTER) {
       dx = (this.spacingLeft - this.spacingRight) / 2;
-    } else if (this.align == mxConstants.ALIGN_RIGHT) {
+    } else if (this.align === mxConstants.ALIGN_RIGHT) {
       dx = -this.spacingRight - this.baseSpacingRight;
     } else {
       dx = this.spacingLeft + this.baseSpacingLeft;
     }
 
-    if (this.valign == mxConstants.ALIGN_MIDDLE) {
+    if (this.valign === mxConstants.ALIGN_MIDDLE) {
       dy = (this.spacingTop - this.spacingBottom) / 2;
-    } else if (this.valign == mxConstants.ALIGN_BOTTOM) {
+    } else if (this.valign === mxConstants.ALIGN_BOTTOM) {
       dy = -this.spacingBottom - this.baseSpacingBottom;
 
     } else {

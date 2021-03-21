@@ -284,7 +284,7 @@ let mxLog = {
    * mxLog.debug('Hello, World!');
    * (end)
    */
-  debug: () => {
+  debug: function() {
     if (mxLog.DEBUG) {
       mxLog.writeln.apply(this, arguments);
     }
@@ -302,7 +302,7 @@ let mxLog = {
    * mxLog.warn('Hello, World!');
    * (end)
    */
-  warn: () => {
+  warn: function() {
     if (mxLog.WARN) {
       mxLog.writeln.apply(this, arguments);
     }
@@ -313,7 +313,7 @@ let mxLog = {
    *
    * Adds the specified strings to the console.
    */
-  write: () => {
+  write: function() {
     let string = '';
 
     for (let i = 0; i < arguments.length; i++) {
@@ -346,7 +346,7 @@ let mxLog = {
    * Adds the specified strings to the console, appending a linefeed at the
    * end of each string.
    */
-  writeln: () => {
+  writeln: function() {
     let string = '';
 
     for (let i = 0; i < arguments.length; i++) {

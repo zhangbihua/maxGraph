@@ -736,16 +736,16 @@ class mxShape {
     if (c != null && this.outline) {
       let stroke = c.stroke;
 
-      c.stroke = () => {
+      c.stroke = (...args) => {
         strokeDrawn = true;
-        stroke.apply(this, arguments);
+        stroke.apply(this, args);
       };
 
       let fillAndStroke = c.fillAndStroke;
 
-      c.fillAndStroke = () => {
+      c.fillAndStroke = (...args) => {
         strokeDrawn = true;
-        fillAndStroke.apply(this, arguments);
+        fillAndStroke.apply(this, args);
       };
     }
 

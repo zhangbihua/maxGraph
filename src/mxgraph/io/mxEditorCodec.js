@@ -124,7 +124,7 @@ class mxEditorCodec extends mxObjectCodec {
       return;
     }
 
-    decodeChild.apply(this, arguments);
+    super.decodeChild.apply(this, [dec, child, obj]);
   };
 
   /**

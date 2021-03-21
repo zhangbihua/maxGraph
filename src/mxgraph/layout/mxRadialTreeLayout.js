@@ -3,6 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxCompactTreeLayout from "./mxCompactTreeLayout";
 
 class mxRadialTreeLayout extends mxCompactTreeLayout {
   /**
@@ -155,7 +156,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
     this.edgeRouting = false;
     //this.horizontal = false;
 
-    execute.apply(this, arguments);
+    super.execute(parent, root);
 
     let bounds = null;
     let rootBounds = this.getVertexBounds(this.root);
@@ -253,7 +254,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
    * rowNum - Integer indicating which row is being processed.
    */
   calcRowDims = (row, rowNum) => {
-    if (row == null || row.length == 0) {
+    if (row == null || row.length === 0) {
       return;
     }
 

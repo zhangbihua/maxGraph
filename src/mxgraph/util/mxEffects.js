@@ -3,6 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxUtils from "./mxUtils";
+
 let mxEffects = {
   /**
    * Class: mxEffects
@@ -56,7 +58,7 @@ let mxEffects = {
           if (state != null) {
             isRequired = true;
 
-            if (change.constructor != mxGeometryChange || graph.model.isEdge(change.cell)) {
+            if (change.constructor !== mxGeometryChange || graph.model.isEdge(change.cell)) {
               mxUtils.setOpacity(state.shape.node, 100 * step / maxStep);
             } else {
               let scale = graph.getView().scale;
@@ -67,7 +69,7 @@ let mxEffects = {
               let sx = (change.geometry.width - change.previous.width) * scale;
               let sy = (change.geometry.height - change.previous.height) * scale;
 
-              if (step == 0) {
+              if (step === 0) {
                 state.x -= dx;
                 state.y -= dy;
                 state.width -= sx;

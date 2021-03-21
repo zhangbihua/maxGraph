@@ -95,7 +95,7 @@ class mxMorphing extends mxAnimation {
    * Animation step.
    */
   updateAnimation = () => {
-    updateAnimation.apply(this, arguments);
+    super.updateAnimation();
     let move = new mxCellStatePreview(this.graph);
 
     if (this.cells != null) {

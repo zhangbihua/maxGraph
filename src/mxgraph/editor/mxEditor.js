@@ -1401,8 +1401,7 @@ class mxEditor extends mxEventSource {
       try {
         // Creates the array of arguments by replacing the actionname
         // with the editor instance in the args of this function
-        let args = arguments;
-        args[0] = this;
+        let args = [this, cell, evt];
 
         // Invokes the function on the editor using the args
         action.apply(this, args);

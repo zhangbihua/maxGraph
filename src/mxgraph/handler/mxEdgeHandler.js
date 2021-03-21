@@ -3,6 +3,15 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxCellMarker from "./mxCellMarker";
+import mxPoint from "../util/mxPoint";
+import mxConstants from "../util/mxConstants";
+import mxUtils from "../examples/map-background/leaflet";
+import mxImageShape from "../shape/mxImageShape";
+import mxRectangleShape from "../shape/mxRectangleShape";
+import mxConnectionConstraint from "../view/mxConnectionConstraint";
+import mxEvent from "../util/mxEvent";
+import mxConstraintHandler from "./mxConstraintHandler";
 
 class mxEdgeHandler {
   /**
@@ -265,7 +274,7 @@ class mxEdgeHandler {
     // for the initial configuration and preview
     this.abspoints = this.getSelectionPoints(this.state);
     this.shape = this.createSelectionShape(this.abspoints);
-    this.shape.dialect = (this.graph.dialect != mxConstants.DIALECT_SVG) ?
+    this.shape.dialect = (this.graph.dialect !== mxConstants.DIALECT_SVG) ?
         mxConstants.DIALECT_MIXEDHTML : mxConstants.DIALECT_SVG;
     this.shape.init(this.graph.getView().getOverlayPane());
     this.shape.pointerEvents = false;
@@ -274,7 +283,7 @@ class mxEdgeHandler {
 
     // Updates preferHtml
     this.preferHtml = this.state.text != null &&
-        this.state.text.node.parentNode == this.graph.container;
+        this.state.text.node.parentNode === this.graph.container;
 
     if (!this.preferHtml) {
       // Checks source terminal
@@ -282,7 +291,7 @@ class mxEdgeHandler {
 
       if (sourceState != null) {
         this.preferHtml = sourceState.text != null &&
-            sourceState.text.node.parentNode == this.graph.container;
+            sourceState.text.node.parentNode === this.graph.container;
       }
 
       if (!this.preferHtml) {
@@ -291,7 +300,7 @@ class mxEdgeHandler {
 
         if (targetState != null) {
           this.preferHtml = targetState.text != null &&
-              targetState.text.node.parentNode == this.graph.container;
+              targetState.text.node.parentNode === this.graph.container;
         }
       }
     }
@@ -337,9 +346,9 @@ class mxEdgeHandler {
    */
   isVirtualBendsEnabled = (evt) => {
     return this.virtualBendsEnabled && (this.state.style[mxConstants.STYLE_EDGE] == null ||
-        this.state.style[mxConstants.STYLE_EDGE] == mxConstants.NONE ||
-        this.state.style[mxConstants.STYLE_NOEDGESTYLE] == 1) &&
-        mxUtils.getValue(this.state.style, mxConstants.STYLE_SHAPE, null) != 'arrow';
+        this.state.style[mxConstants.STYLE_EDGE] === mxConstants.NONE ||
+        this.state.style[mxConstants.STYLE_NOEDGESTYLE] === 1) &&
+        mxUtils.getValue(this.state.style, mxConstants.STYLE_SHAPE, null) !== 'arrow';
   };
 
   /**
@@ -473,7 +482,7 @@ class mxEdgeHandler {
       let cell = getCell.apply(this, arguments);
 
       // Checks for cell at preview point (with grid)
-      if ((cell == self.state.cell || cell == null) && self.currentPoint != null) {
+      if ((cell === self.state.cell || cell == null) && self.currentPoint != null) {
         cell = self.graph.getCellAt(self.currentPoint.x, self.currentPoint.y);
       }
 
@@ -490,7 +499,7 @@ class mxEdgeHandler {
 
       if ((this.graph.isSwimlane(cell) && self.currentPoint != null &&
           this.graph.hitsSwimlaneContent(cell, self.currentPoint.x, self.currentPoint.y)) ||
-          (!self.isConnectableCell(cell)) || (cell == self.state.cell ||
+          (!self.isConnectableCell(cell)) || (cell === self.state.cell ||
               (cell != null && !self.graph.connectableEdges && model.isEdge(cell))) ||
           model.isAncestor(self.state.cell, cell)) {
         cell = null;
@@ -550,8 +559,8 @@ class mxEdgeHandler {
 
     for (let i = 0; i < this.abspoints.length; i++) {
       if (this.isHandleVisible(i)) {
-        let source = i == 0;
-        let target = i == this.abspoints.length - 1;
+        let source = i === 0;
+        let target = i === this.abspoints.length - 1;
         let terminal = source || target;
 
         if (terminal || this.graph.isCellBendable(cell)) {
@@ -625,7 +634,7 @@ class mxEdgeHandler {
     let geo = this.graph.getCellGeometry(this.state.cell);
     let edgeStyle = (geo != null) ? this.graph.view.getEdgeStyle(this.state, geo.points, source, target) : null;
 
-    return edgeStyle != mxEdgeStyle.EntityRelation || index == 0 || index == this.abspoints.length - 1;
+    return edgeStyle !== mxEdgeStyle.EntityRelation || index === 0 || index === this.abspoints.length - 1;
   };
 
   /**
@@ -689,7 +698,7 @@ class mxEdgeHandler {
       bend.dialect = mxConstants.DIALECT_STRICTHTML;
       bend.init(this.graph.container);
     } else {
-      bend.dialect = (this.graph.dialect != mxConstants.DIALECT_SVG) ?
+      bend.dialect = (this.graph.dialect !== mxConstants.DIALECT_SVG) ?
           mxConstants.DIALECT_MIXEDHTML : mxConstants.DIALECT_SVG;
       bend.init(this.graph.getView().getOverlayPane());
     }
@@ -853,7 +862,7 @@ class mxEdgeHandler {
     if (this.index <= mxEvent.CUSTOM_HANDLE && this.index > mxEvent.VIRTUAL_HANDLE) {
       if (this.customHandles != null) {
         for (let i = 0; i < this.customHandles.length; i++) {
-          if (i != mxEvent.CUSTOM_HANDLE - this.index) {
+          if (i !== mxEvent.CUSTOM_HANDLE - this.index) {
             this.customHandles[i].setVisible(false);
           }
         }
@@ -993,9 +1002,9 @@ class mxEdgeHandler {
       // Handles special case where grid is large and connection point is at actual point in which
       // case the outline is not followed as long as we're < gridSize / 2 away from that point
       if (this.marker.highlight != null && this.marker.highlight.state != null &&
-          this.marker.highlight.state.cell == this.constraintHandler.currentFocus.cell) {
+          this.marker.highlight.state.cell === this.constraintHandler.currentFocus.cell) {
         // Direct repaint needed if cell already highlighted
-        if (this.marker.highlight.shape.stroke != 'transparent') {
+        if (this.marker.highlight.shape.stroke !== 'transparent') {
           this.marker.highlight.shape.stroke = 'transparent';
           this.marker.highlight.repaint();
         }
@@ -1166,7 +1175,7 @@ class mxEdgeHandler {
         (me.isSource(this.marker.highlight.shape) ||
             (mxEvent.isAltDown(me.getEvent()) && me.getState() != null) ||
             this.marker.highlight.isHighlightAt(clientX, clientY) ||
-            ((gridX != clientX || gridY != clientY) && me.getState() == null &&
+            ((gridX !== clientX || gridY !== clientY) && me.getState() == null &&
                 this.marker.highlight.isHighlightAt(gridX, gridY)));
   };
 
@@ -1212,7 +1221,7 @@ class mxEdgeHandler {
         this.marker.highlight.repaint();
       } else if (this.marker.hasValidState()) {
         this.marker.highlight.shape.stroke = (this.graph.isCellConnectable(me.getCell()) &&
-            this.marker.getValidState() != me.getState()) ?
+            this.marker.getValidState() !== me.getState()) ?
             'transparent' : mxConstants.DEFAULT_VALID_COLOR;
         this.marker.highlight.shape.strokewidth = mxConstants.HIGHLIGHT_STROKEWIDTH / s / s;
         this.marker.highlight.repaint();
@@ -1356,7 +1365,7 @@ class mxEdgeHandler {
       this.index = null;
 
       // Ignores event if mouse has not been moved
-      if (me.getX() != this.startX || me.getY() != this.startY) {
+      if (me.getX() !== this.startX || me.getY() !== this.startY) {
         let clone = !this.graph.isIgnoreTerminalEvent(me.getEvent()) && this.graph.isCloneEvent(me.getEvent()) &&
             this.cloneEnabled && this.graph.isCellsCloneable();
 
@@ -1394,8 +1403,8 @@ class mxEdgeHandler {
 
           if (terminal == null && this.marker.hasValidState() && this.marker.highlight != null &&
               this.marker.highlight.shape != null &&
-              this.marker.highlight.shape.stroke != 'transparent' &&
-              this.marker.highlight.shape.stroke != 'white') {
+              this.marker.highlight.shape.stroke !== 'transparent' &&
+              this.marker.highlight.shape.stroke !== 'white') {
             terminal = this.marker.validState.cell;
           }
 
@@ -1461,7 +1470,7 @@ class mxEdgeHandler {
         this.reset();
 
         // Updates the selection if the edge has been cloned
-        if (edge != this.state.cell) {
+        if (edge !== this.state.cell) {
           this.graph.setSelectionCell(edge);
         }
       }
@@ -1791,7 +1800,7 @@ class mxEdgeHandler {
    * Returns the fillcolor for the handle at the given index.
    */
   getHandleFillColor = (index) => {
-    let isSource = index == 0;
+    let isSource = index === 0;
     let cell = this.state.cell;
     let terminal = this.graph.getModel().getTerminal(cell, isSource);
     let color = mxConstants.HANDLE_FILLCOLOR;
@@ -1941,7 +1950,7 @@ class mxEdgeHandler {
    * Returns true if the given custom handle is visible.
    */
   isCustomHandleVisible = (handle) => {
-    return !this.graph.isEditing() && this.state.view.graph.getSelectionCount() == 1;
+    return !this.graph.isEditing() && this.state.view.graph.getSelectionCount() === 1;
   };
 
   /**
@@ -2150,7 +2159,7 @@ class mxEdgeHandler {
       let parent = this.graph.model.getParent(this.state.cell);
       let pstate = this.graph.view.getState(parent);
 
-      if (pstate != null && pstate.parentHighlight == this.parentHighlight) {
+      if (pstate != null && pstate.parentHighlight === this.parentHighlight) {
         pstate.parentHighlight = null;
       }
 

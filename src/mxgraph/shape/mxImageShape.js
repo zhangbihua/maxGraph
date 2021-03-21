@@ -4,6 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxUtils from "../util/mxUtils";
+import mxConstants from "../util/mxConstants";
+
 class mxImageShape extends mxRectangleShape {
   /**
    * Variable: preserveImageAspect
@@ -70,7 +73,7 @@ class mxImageShape extends mxRectangleShape {
    * state - <mxCellState> of the corresponding cell.
    */
   apply = (state) => {
-    apply.apply(this, arguments);
+    super.apply(state);
 
     this.fill = null;
     this.stroke = null;
@@ -139,7 +142,7 @@ class mxImageShape extends mxRectangleShape {
       // FlipH/V are implicit via mxShape.updateTransform
       c.image(x, y, w, h, this.image, this.preserveImageAspect, false, false);
 
-      let stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, null);
+      stroke = mxUtils.getValue(this.style, mxConstants.STYLE_IMAGE_BORDER, null);
 
       if (stroke != null) {
         c.setShadow(false);
@@ -148,7 +151,7 @@ class mxImageShape extends mxRectangleShape {
         c.stroke();
       }
     } else {
-      paintBackground.apply(this, arguments);
+      this.paintBackground(c, x, y, w, h);
     }
   };
 

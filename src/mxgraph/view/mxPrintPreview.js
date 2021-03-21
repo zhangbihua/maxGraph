@@ -911,7 +911,7 @@ class mxPrintPreview {
           }
         }
 
-        redraw.apply(this, arguments);
+        redraw.apply(this, [state, force, rendering]);  // CHECK ME!!!
       };
     }
 

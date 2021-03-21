@@ -3,6 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxEffects from "./mxEffects";
+import mxXmlRequest from "./mxXmlRequest";
+
 let mxUtils = {
   /**
    * Class: mxUtils
@@ -159,11 +162,11 @@ let mxUtils = {
    * function to the specified scope. Inside funct, the "this" keyword
    * becomes a reference to that scope.
    */
-  bind: (scope, funct) => {
+  /*bind: (scope, funct) => {
     return () => {
       return funct.apply(scope, arguments);
     };
-  },
+  },*/
 
   /**
    * Function: eval
@@ -1237,7 +1240,7 @@ let mxUtils = {
 
     if (headers) {
       req.setRequestHeaders = (request, params) => {
-        setRequestHeaders.apply(this, arguments);
+        setRequestHeaders.apply(this, [url, onload, onerror, binary, timeout, ontimeout, headers]);
 
         for (var key in headers) {
           request.setRequestHeader(key, headers[key]);
@@ -2630,7 +2633,7 @@ let mxUtils = {
    */
   animateChanges: (graph, changes) => {
     // LATER: Deprecated, remove this function
-    mxEffects.animateChanges.apply(this, arguments);
+    mxEffects.animateChanges.apply(this, [graph, changes]);
   },
 
   /**
@@ -2640,7 +2643,7 @@ let mxUtils = {
    * will be removed later.
    */
   cascadeOpacity: (graph, cell, opacity) => {
-    mxEffects.cascadeOpacity.apply(this, arguments);
+    mxEffects.cascadeOpacity.apply(this, [graph, cell, opacity]);
   },
 
   /**
@@ -2650,7 +2653,7 @@ let mxUtils = {
    * will be removed later.
    */
   fadeOut: (node, from, remove, step, delay, isEnabled) => {
-    mxEffects.fadeOut.apply(this, arguments);
+    mxEffects.fadeOut.apply(this, [node, from, remove, step, delay, isEnabled]);
   },
 
   /**

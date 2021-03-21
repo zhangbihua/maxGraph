@@ -4029,14 +4029,15 @@ class mxGraph extends mxEventSource {
    * relative - Optional boolean that specifies if the geometry is relative.
    * Default is false.
    */
-  insertVertex = (parent, id, value,
-                  x, y, width, height,
-                  style, relative) => {
+  insertVertex = (...args) => {
+    let parent, id, value,
+        x, y, width, height,
+        style, relative;
 
-    if (arguments.length === 1) {
+    if (args.length === 1) {
       // If only a single parameter, treat as an object
       // This syntax can be more readable
-      let params = arguments[0];
+      let params = args[0];
       parent = params.parent;
       id = params.id;
       value = params.value;
@@ -4048,6 +4049,11 @@ class mxGraph extends mxEventSource {
 
       style = params.style;
       relative = params.relative;
+    } else {
+      // Otherwise treat as arguments
+      [parent, id, value,
+       x, y, width, height,
+       style, relative] = args;
     }
 
     let vertex = this.createVertex(
@@ -4096,18 +4102,22 @@ class mxGraph extends mxEventSource {
    * target - <mxCell> that defines the target of the edge.
    * style - Optional string that defines the cell style.
    */
-  insertEdge = (parent, id, value, source, target, style) => {
+  insertEdge = (...args) => {
+    let parent, id, value, source, target, style;
 
-    if (arguments.length === 1) {
+    if (args.length === 1) {
       // If only a single parameter, treat as an object
       // This syntax can be more readable
-      let params = arguments[0];
+      let params = args[0];
       parent = params.parent;
       id = params.id;
       value = params.value;
       source = params.source;
       target = params.target;
       style = params.style;
+    } else {
+      // otherwise treat as individual arguments
+      [parent, id, value, source, target, style] = args;
     }
 
     let edge = this.createEdge(parent, id, value, source, target, style);
