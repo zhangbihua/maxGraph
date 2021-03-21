@@ -178,7 +178,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
     let maxRightGrad = 0;
 
     // Find the steepest left and right gradients
-    for (let i = 0; i < this.row.length; i++) {
+    for (let i = 0; i < this.row.length; i += 1) {
       const leftGrad =
         (this.centerX - this.rowMinX[i] - this.nodeDistance) / this.rowRadi[i];
       const rightGrad =
@@ -189,7 +189,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
     }
 
     // Extend out row so they meet the maximum gradient and convert to polar co-ords
-    for (let i = 0; i < this.row.length; i++) {
+    for (let i = 0; i < this.row.length; i += 1) {
       const xLeftLimit =
         this.centerX - this.nodeDistance - maxLeftGrad * this.rowRadi[i];
       const xRightLimit =
@@ -238,7 +238,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
     }
 
     // Set locations
-    for (let i = 0; i < this.row.length; i++) {
+    for (let i = 0; i < this.row.length; i += 1) {
       for (let j = 0; j < this.row[i].length; j++) {
         const row = this.row[i];
         const node = row[j];
@@ -280,7 +280,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
 
     let rowHasChildren = false;
 
-    for (let i = 0; i < row.length; i++) {
+    for (let i = 0; i < row.length; i += 1) {
       let child = row[i] != null ? row[i].child : null;
 
       while (child != null) {

@@ -33,7 +33,7 @@ const mxClipboard = {
    *
    *   mxClipboard.parents = {};
    *
-   *   for (let i = 0; i < result.length; i++)
+   *   for (let i = 0; i < result.length; i += 1)
    *   {
    *     mxClipboard.parents[i] = graph.model.getParent(cells[i]);
    *   }
@@ -55,7 +55,7 @@ const mxClipboard = {
    *     graph.model.beginUpdate();
    *     try
    *     {
-   *       for (let i = 0; i < cells.length; i++)
+   *       for (let i = 0; i < cells.length; i += 1)
    *       {
    *         let tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
    *              mxClipboard.parents[i] : parent;

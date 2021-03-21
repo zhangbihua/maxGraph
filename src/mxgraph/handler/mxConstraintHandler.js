@@ -108,7 +108,7 @@ class mxConstraintHandler {
    */
   reset = () => {
     if (this.focusIcons != null) {
-      for (let i = 0; i < this.focusIcons.length; i++) {
+      for (let i = 0; i < this.focusIcons.length; i += 1) {
         this.focusIcons[i].destroy();
       }
 
@@ -176,7 +176,7 @@ class mxConstraintHandler {
    */
   destroyIcons = () => {
     if (this.focusIcons != null) {
-      for (let i = 0; i < this.focusIcons.length; i++) {
+      for (let i = 0; i < this.focusIcons.length; i += 1) {
         this.focusIcons[i].destroy();
       }
 
@@ -299,7 +299,7 @@ class mxConstraintHandler {
         const cx = mouse.getCenterX();
         const cy = mouse.getCenterY();
 
-        for (let i = 0; i < this.focusIcons.length; i++) {
+        for (let i = 0; i < this.focusIcons.length; i += 1) {
           const dx = cx - this.focusIcons[i].bounds.getCenterX();
           const dy = cy - this.focusIcons[i].bounds.getCenterY();
           const tmp = dx * dx + dy * dy;
@@ -377,7 +377,7 @@ class mxConstraintHandler {
         state.height
       );
 
-      for (let i = 0; i < this.constraints.length; i++) {
+      for (let i = 0; i < this.constraints.length; i += 1) {
         const cp = this.graph.getConnectionPoint(state, this.constraints[i]);
         const img = this.getImageForConstraint(state, this.constraints[i], cp);
 
@@ -423,7 +423,7 @@ class mxConstraintHandler {
       );
 
       if (this.focusIcons != null) {
-        for (let i = 0; i < this.focusIcons.length; i++) {
+        for (let i = 0; i < this.focusIcons.length; i += 1) {
           this.focusIcons[i].destroy();
         }
 
@@ -434,7 +434,7 @@ class mxConstraintHandler {
       this.focusPoints = [];
       this.focusIcons = [];
 
-      for (let i = 0; i < this.constraints.length; i++) {
+      for (let i = 0; i < this.constraints.length; i += 1) {
         const cp = this.graph.getConnectionPoint(state, this.constraints[i]);
         const img = this.getImageForConstraint(state, this.constraints[i], cp);
 

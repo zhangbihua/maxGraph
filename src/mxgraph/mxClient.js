@@ -502,7 +502,7 @@ const mxClient = {
       }
     }
 
-    for (let i = 0; i < mxClient.defaultBundles.length; i++) {
+    for (let i = 0; i < mxClient.defaultBundles.length; i += 1) {
       mxResources.add(mxClient.defaultBundles[i], lan, callback);
     }
   },

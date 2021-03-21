@@ -237,7 +237,7 @@ const mxEdgeStyle = {
 
     if (p0 != null && pe != null) {
       if (points != null && points.length > 0) {
-        for (let i = 0; i < points.length; i++) {
+        for (let i = 0; i < points.length; i += 1) {
           let pt = points[i];
           pt = state.view.transformControlPoint(state, pt);
           result.push(new mxPoint(pt.x, pt.y));
@@ -604,7 +604,7 @@ const mxEdgeStyle = {
       // Converts all hints and removes nulls
       let hints = [];
 
-      for (let i = 0; i < controlHints.length; i++) {
+      for (let i = 0; i < controlHints.length; i += 1) {
         const tmp = state.view.transformControlPoint(
           state,
           controlHints[i],
@@ -657,7 +657,7 @@ const mxEdgeStyle = {
 
       // Check for alignment with fixed points and with channels
       // at source and target segments only
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 2; i += 1) {
         const fixedVertAlign =
           currentPt != null && currentPt.x == currentHint.x;
         const fixedHozAlign = currentPt != null && currentPt.y == currentHint.y;
@@ -743,7 +743,7 @@ const mxEdgeStyle = {
         pt.x = hint.x;
       }
 
-      for (let i = 0; i < hints.length; i++) {
+      for (let i = 0; i < hints.length; i += 1) {
         horizontal = !horizontal;
         hint = hints[i];
 
@@ -998,7 +998,7 @@ const mxEdgeStyle = {
     let result = [];
 
     if (points != null) {
-      for (let i = 0; i < points.length; i++) {
+      for (let i = 0; i < points.length; i += 1) {
         if (points[i] != null) {
           const pt = new mxPoint(
             Math.round((points[i].x / scale) * 10) / 10,
@@ -1200,7 +1200,7 @@ const mxEdgeStyle = {
     ];
     const buffer = [sourceBuffer, targetBuffer];
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 2; i += 1) {
       mxEdgeStyle.limits[i][1] = geo[i][0] - buffer[i];
       mxEdgeStyle.limits[i][2] = geo[i][1] - buffer[i];
       mxEdgeStyle.limits[i][4] = geo[i][0] + geo[i][2] + buffer[i];
@@ -1251,7 +1251,7 @@ const mxEdgeStyle = {
       [0.5, 0.5],
     ];
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 2; i += 1) {
       if (currentTerm != null) {
         constraint[i][0] = (currentTerm.x - geo[i][0]) / geo[i][2];
 
@@ -1330,7 +1330,7 @@ const mxEdgeStyle = {
     let preferredOrderSet = false;
 
     // If the preferred port isn't available, switch it
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 2; i += 1) {
       if (dir[i] != 0x0) {
         continue;
       }
@@ -1390,7 +1390,7 @@ const mxEdgeStyle = {
     // the preferred port selections
     // If the list contains gaps, compact it
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 2; i += 1) {
       if (dir[i] != 0x0) {
         continue;
       }
@@ -1484,7 +1484,7 @@ const mxEdgeStyle = {
     const initialOrientation = lastOrientation;
     let currentOrientation = 0;
 
-    for (let i = 0; i < routePattern.length; i++) {
+    for (let i = 0; i < routePattern.length; i += 1) {
       const nextDirection = routePattern[i] & 0xf;
 
       // Rotate the index of this direction by the quad
@@ -1576,7 +1576,7 @@ const mxEdgeStyle = {
       }
     }
 
-    for (let i = 0; i <= currentIndex; i++) {
+    for (let i = 0; i <= currentIndex; i += 1) {
       if (i === currentIndex) {
         // Last point can cause last segment to be in
         // same direction as jetty/approach. If so,

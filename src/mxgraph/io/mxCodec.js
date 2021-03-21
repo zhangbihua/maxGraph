@@ -441,7 +441,7 @@ class mxCodec {
     if (includeChildren == null || includeChildren) {
       const childCount = cell.getChildCount();
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         this.encodeCell(cell.getChildAt(i), node);
       }
     }

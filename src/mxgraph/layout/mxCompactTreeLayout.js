@@ -285,7 +285,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
         const roots = this.graph.findTreeRoots(parent, true, this.invert);
 
         if (roots.length > 0) {
-          for (let i = 0; i < roots.length; i++) {
+          for (let i = 0; i < roots.length; i += 1) {
             if (
               !this.isVertexIgnored(roots[i]) &&
               this.graph.getEdges(
@@ -534,7 +534,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
         this.sortOutgoingEdges(cell, out);
       }
 
-      for (let i = 0; i < out.length; i++) {
+      for (let i = 0; i < out.length; i += 1) {
         const edge = out[i];
 
         if (!this.isEdgeIgnored(edge)) {
@@ -999,7 +999,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
       let x = 0;
       let y = 0;
 
-      for (let i = 0; i < edges.length; i++) {
+      for (let i = 0; i < edges.length; i += 1) {
         if (this.horizontal) {
           // Use opposite co-ords, calculation was done for
           //

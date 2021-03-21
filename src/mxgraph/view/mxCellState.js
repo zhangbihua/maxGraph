@@ -388,7 +388,7 @@ class mxCellState extends mxRectangle {
     if (this.absolutePoints != null) {
       clone.absolutePoints = [];
 
-      for (let i = 0; i < this.absolutePoints.length; i++) {
+      for (let i = 0; i < this.absolutePoints.length; i += 1) {
         clone.absolutePoints[i] = this.absolutePoints[i].clone();
       }
     }

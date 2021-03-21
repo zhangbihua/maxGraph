@@ -95,7 +95,7 @@ class mxTemporaryCellStates {
 
       // Validates the vertices and edges without adding them to
       // the model so that the original cells are not modified
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         const bounds = view.getBoundingBox(
           view.validateCellState(view.validateCell(cells[i]))
         );

@@ -112,7 +112,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     // Stores initial ordering as being the best one found so far
     this.nestedBestRanks = [];
 
-    for (let i = 0; i < model.ranks.length; i++) {
+    for (let i = 0; i < model.ranks.length; i += 1) {
       this.nestedBestRanks[i] = model.ranks[i].slice();
     }
 
@@ -168,12 +168,12 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     const ranks = [];
     const rankList = [];
 
-    for (let i = 0; i < model.maxRank + 1; i++) {
+    for (let i = 0; i < model.maxRank + 1; i += 1) {
       rankList[i] = [];
       ranks[i] = rankList[i];
     }
 
-    for (let i = 0; i < this.nestedBestRanks.length; i++) {
+    for (let i = 0; i < this.nestedBestRanks.length; i += 1) {
       for (let j = 0; j < this.nestedBestRanks[i].length; j++) {
         rankList[i].push(this.nestedBestRanks[i][j]);
       }
@@ -197,7 +197,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     const numRanks = model.ranks.length;
     let totalCrossings = 0;
 
-    for (let i = 1; i < numRanks; i++) {
+    for (let i = 1; i < numRanks; i += 1) {
       totalCrossings += this.calculateRankCrossing(i, model);
     }
 
@@ -307,7 +307,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
       const nudge = mainLoopIteration % 2 == 1 && count % 2 == 1;
       improved = false;
 
-      for (let i = 0; i < model.ranks.length; i++) {
+      for (let i = 0; i < model.ranks.length; i += 1) {
         const rank = model.ranks[i];
         const orderedCells = [];
 
@@ -492,7 +492,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     const medianValues = [];
     const reservedPositions = [];
 
-    for (let i = 0; i < numCellsForRank; i++) {
+    for (let i = 0; i < numCellsForRank; i += 1) {
       const cell = this.nestedBestRanks[rankValue][i];
       const sorterEntry = new MedianCellSorter();
       sorterEntry.cell = cell;
@@ -539,7 +539,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
 
     // Set the new position of each node within the rank using
     // its temp variable
-    for (let i = 0; i < numCellsForRank; i++) {
+    for (let i = 0; i < numCellsForRank; i += 1) {
       if (reservedPositions[i] == null) {
         const { cell } = medianValues.shift();
         cell.setGeneralPurposeVariable(rankValue, i);
@@ -564,7 +564,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     const medianValues = [];
     let arrayCount = 0;
 
-    for (let i = 0; i < connectedCells.length; i++) {
+    for (let i = 0; i < connectedCells.length; i += 1) {
       const cell = connectedCells[i];
       medianValues[arrayCount++] = cell.getGeneralPurposeVariable(rankValue);
     }

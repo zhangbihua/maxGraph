@@ -42,7 +42,7 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
     const unseenNodesArray = model.vertexMapper.getValues();
     const unseenNodes = {};
 
-    for (let i = 0; i < unseenNodesArray.length; i++) {
+    for (let i = 0; i < unseenNodesArray.length; i += 1) {
       unseenNodes[unseenNodesArray[i].id] = unseenNodesArray[i];
     }
 
@@ -54,7 +54,7 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
       const modelRoots = model.roots;
       rootsArray = [];
 
-      for (let i = 0; i < modelRoots.length; i++) {
+      for (let i = 0; i < modelRoots.length; i += 1) {
         rootsArray[i] = model.vertexMapper.get(modelRoots[i]);
       }
     }

@@ -81,7 +81,7 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
       this.nextLayerConnectedCells = [];
       this.nextLayerConnectedCells[0] = [];
 
-      for (let i = 0; i < this.connectsAsTarget.length; i++) {
+      for (let i = 0; i < this.connectsAsTarget.length; i += 1) {
         const edge = this.connectsAsTarget[i];
 
         if (edge.maxRank == -1 || edge.maxRank == layer + 1) {
@@ -108,7 +108,7 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
       this.previousLayerConnectedCells = [];
       this.previousLayerConnectedCells[0] = [];
 
-      for (let i = 0; i < this.connectsAsSource.length; i++) {
+      for (let i = 0; i < this.connectsAsSource.length; i += 1) {
         const edge = this.connectsAsSource[i];
 
         if (edge.minRank == -1 || edge.minRank == layer - 1) {
@@ -175,7 +175,7 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
       // node's hash code. Arrays.equals cannot be used here since
       // the arrays are different length, and we do not want to
       // perform another array copy.
-      for (let i = 0; i < this.hashCode.length; i++) {
+      for (let i = 0; i < this.hashCode.length; i += 1) {
         if (this.hashCode[i] != otherNode.hashCode[i]) {
           return false;
         }

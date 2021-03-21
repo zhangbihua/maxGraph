@@ -655,7 +655,7 @@ class mxEdgeHandler {
     const { cell } = this.state;
     const bends = [];
 
-    for (let i = 0; i < this.abspoints.length; i++) {
+    for (let i = 0; i < this.abspoints.length; i += 1) {
       if (this.isHandleVisible(i)) {
         const source = i === 0;
         const target = i === this.abspoints.length - 1;
@@ -704,7 +704,7 @@ class mxEdgeHandler {
     const bends = [];
 
     if (this.graph.isCellBendable(cell)) {
-      for (let i = 1; i < this.abspoints.length; i++) {
+      for (let i = 1; i < this.abspoints.length; i += 1) {
         mxUtils.bind(this, bend => {
           this.initBend(bend);
           bend.setCursor(mxConstants.CURSOR_VIRTUAL_BEND_HANDLE);
@@ -1026,7 +1026,7 @@ class mxEdgeHandler {
       this.index > mxEvent.VIRTUAL_HANDLE
     ) {
       if (this.customHandles != null) {
-        for (let i = 0; i < this.customHandles.length; i++) {
+        for (let i = 0; i < this.customHandles.length; i += 1) {
           if (i !== mxEvent.CUSTOM_HANDLE - this.index) {
             this.customHandles[i].setVisible(false);
           }
@@ -1139,7 +1139,7 @@ class mxEdgeHandler {
       snapToTerminal.call(this, this.state.getVisibleTerminalState(false));
 
       if (this.state.absolutePoints != null) {
-        for (let i = 0; i < this.state.absolutePoints.length; i++) {
+        for (let i = 0; i < this.state.absolutePoints.length; i += 1) {
           snapToPoint.call(this, this.state.absolutePoints[i]);
         }
       }
@@ -1275,7 +1275,7 @@ class mxEdgeHandler {
 
         // Removes point if dragged on terminal point
         if (!this.isSource && !this.isTarget) {
-          for (let i = 0; i < this.bends.length; i++) {
+          for (let i = 0; i < this.bends.length; i += 1) {
             if (i !== this.index) {
               const bend = this.bends[i];
 
@@ -1673,7 +1673,7 @@ class mxEdgeHandler {
 
       // Ignores event if mouse has not been moved
       if (me.getX() !== this.startX || me.getY() !== this.startY) {
-        const clone =
+        let clone =
           !this.graph.isIgnoreTerminalEvent(me.getEvent()) &&
           this.graph.isCloneEvent(me.getEvent()) &&
           this.cloneEnabled &&
@@ -1736,7 +1736,7 @@ class mxEdgeHandler {
               // Clones and adds the cell
               if (clone) {
                 let geo = model.getGeometry(edge);
-                const clone = this.graph.cloneCell(edge);
+                clone = this.graph.cloneCell(edge);
                 model.add(parent, clone, model.getChildCount(parent));
 
                 if (geo != null) {
@@ -1842,7 +1842,7 @@ class mxEdgeHandler {
     }
 
     if (this.customHandles != null) {
-      for (let i = 0; i < this.customHandles.length; i++) {
+      for (let i = 0; i < this.customHandles.length; i += 1) {
         this.customHandles[i].reset();
       }
     }
@@ -2184,7 +2184,7 @@ class mxEdgeHandler {
               this.points = [];
             }
 
-            for (let i = 1; i < this.bends.length - 1; i++) {
+            for (let i = 1; i < this.bends.length - 1; i += 1) {
               if (this.bends[i] != null && this.abspoints[i] != null) {
                 this.points[i - 1] = pts[i - 1];
               }
@@ -2305,7 +2305,7 @@ class mxEdgeHandler {
     }
 
     if (this.customHandles != null) {
-      for (let i = 0; i < this.customHandles.length; i++) {
+      for (let i = 0; i < this.customHandles.length; i += 1) {
         const temp = this.customHandles[i].shape.node.style.display;
         this.customHandles[i].redraw();
         this.customHandles[i].shape.node.style.display = temp;

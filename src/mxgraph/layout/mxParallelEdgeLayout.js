@@ -4,7 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from 'FIXME';
+import mxPoint from "../util/mxPoint";
+import mxGraphLayout from "./mxGraphLayout";
+import mxObjectIdentity from "../util/mxObjectIdentity";
 
 class mxParallelEdgeLayout extends mxGraphLayout {
   /**
@@ -114,14 +116,14 @@ class mxParallelEdgeLayout extends mxGraphLayout {
     };
 
     if (cells != null) {
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         addCell(cells[i]);
       }
     } else {
       const model = this.graph.getModel();
       const childCount = model.getChildCount(parent);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         addCell(model.getChildAt(parent, i));
       }
     }
@@ -154,7 +156,7 @@ class mxParallelEdgeLayout extends mxGraphLayout {
         if (state != null && state.absolutePoints != null) {
           const tmp = [];
 
-          for (let i = 0; i < state.absolutePoints.length; i++) {
+          for (let i = 0; i < state.absolutePoints.length; i += 1) {
             const pt = state.absolutePoints[i];
 
             if (pt != null) {
@@ -184,12 +186,15 @@ class mxParallelEdgeLayout extends mxGraphLayout {
     const src = model.getGeometry(view.getVisibleTerminal(edge, true));
     const trg = model.getGeometry(view.getVisibleTerminal(edge, false));
 
-    // Routes multiple loops
-    if (src == trg) {
-      var x0 = src.x + src.width + this.spacing;
-      var y0 = src.y + src.height / 2;
+    let x0;
+    let y0;
 
-      for (let i = 0; i < parallels.length; i++) {
+    // Routes multiple loops
+    if (src === trg) {
+      x0 = src.x + src.width + this.spacing;
+      y0 = src.y + src.height / 2;
+
+      for (let i = 0; i < parallels.length; i += 1) {
         this.route(parallels[i], x0, y0);
         x0 += this.spacing;
       }
@@ -207,8 +212,8 @@ class mxParallelEdgeLayout extends mxGraphLayout {
       const len = Math.sqrt(dx * dx + dy * dy);
 
       if (len > 0) {
-        var x0 = scx + dx / 2;
-        var y0 = scy + dy / 2;
+        x0 = scx + dx / 2;
+        y0 = scy + dy / 2;
 
         const nx = (dy * this.spacing) / len;
         const ny = (dx * this.spacing) / len;
@@ -216,7 +221,7 @@ class mxParallelEdgeLayout extends mxGraphLayout {
         x0 += (nx * (parallels.length - 1)) / 2;
         y0 -= (ny * (parallels.length - 1)) / 2;
 
-        for (let i = 0; i < parallels.length; i++) {
+        for (let i = 0; i < parallels.length; i += 1) {
           this.route(parallels[i], x0, y0);
           x0 -= nx;
           y0 += ny;

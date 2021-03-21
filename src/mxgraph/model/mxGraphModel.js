@@ -165,7 +165,7 @@ class mxGraphModel extends mxEventSource {
    *   let nodes = [];
    *   let codec = new mxCodec();
    *
-   *   for (let i = 0; i < changes.length; i++)
+   *   for (let i = 0; i < changes.length; i += 1)
    *   {
    *     nodes.push(codec.encode(changes[i]));
    *   }
@@ -230,7 +230,7 @@ class mxGraphModel extends mxEventSource {
    * {
    *   let changes = evt.getProperty('edit').changes;
    *
-   *   for (let i = 0; i < changes.length; i++)
+   *   for (let i = 0; i < changes.length; i += 1)
    *   {
    *     let change = changes[i];
    *
@@ -379,7 +379,7 @@ class mxGraphModel extends mxEventSource {
     if (cells != null) {
       result = [];
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         if (filter(cells[i])) {
           result.push(cells[i]);
         }
@@ -442,7 +442,7 @@ class mxGraphModel extends mxEventSource {
     // Visits the children of the cell
     const childCount = this.getChildCount(parent);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = this.getChildAt(parent, i);
       result = result.concat(this.filterDescendants(filter, child));
     }
@@ -683,7 +683,7 @@ class mxGraphModel extends mxEventSource {
       // Recursively processes child cells
       const childCount = this.getChildCount(cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         this.cellAdded(this.getChildAt(cell, i));
       }
     }
@@ -721,7 +721,7 @@ class mxGraphModel extends mxEventSource {
     // Updates edges on children first
     const childCount = this.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = this.getChildAt(cell, i);
       this.updateEdgeParents(child, root);
     }
@@ -1289,7 +1289,7 @@ class mxGraphModel extends mxEventSource {
     const edgeCount = this.getEdgeCount(cell);
     const result = [];
 
-    for (let i = 0; i < edgeCount; i++) {
+    for (let i = 0; i < edgeCount; i += 1) {
       const edge = this.getEdgeAt(cell, i);
       const source = this.getTerminal(edge, true);
       const target = this.getTerminal(edge, false);
@@ -1343,7 +1343,7 @@ class mxGraphModel extends mxEventSource {
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match
-    for (let i = 0; i < edgeCount; i++) {
+    for (let i = 0; i < edgeCount; i += 1) {
       const edge = this.getEdgeAt(terminal, i);
       const src = this.getTerminal(edge, true);
       const trg = this.getTerminal(edge, false);
@@ -1381,7 +1381,7 @@ class mxGraphModel extends mxEventSource {
     const terminals = [];
 
     if (edges != null) {
-      for (let i = 0; i < edges.length; i++) {
+      for (let i = 0; i < edges.length; i += 1) {
         const source = this.getTerminal(edges[i], true);
         const target = this.getTerminal(edges[i], false);
 
@@ -1429,11 +1429,11 @@ class mxGraphModel extends mxEventSource {
     const dict = new mxDictionary();
     const tmp = [];
 
-    for (let i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i += 1) {
       dict.put(cells[i], true);
     }
 
-    for (let i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i += 1) {
       const cell = cells[i];
       let topmost = true;
       let parent = this.getParent(cell);
@@ -2009,7 +2009,7 @@ class mxGraphModel extends mxEventSource {
     if (cells != null) {
       const dict = new mxDictionary();
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         const parent = this.getParent(cells[i]);
 
         if (parent != null && !dict.get(parent)) {
@@ -2066,7 +2066,7 @@ class mxGraphModel extends mxEventSource {
     mapping = mapping != null ? mapping : {};
     const clones = [];
 
-    for (let i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i += 1) {
       if (cells[i] != null) {
         clones.push(this.cloneCellImpl(cells[i], mapping, includeChildren));
       } else {
@@ -2074,7 +2074,7 @@ class mxGraphModel extends mxEventSource {
       }
     }
 
-    for (let i = 0; i < clones.length; i++) {
+    for (let i = 0; i < clones.length; i += 1) {
       if (clones[i] != null) {
         this.restoreClone(clones[i], cells[i], mapping);
       }
@@ -2099,7 +2099,7 @@ class mxGraphModel extends mxEventSource {
       if (includeChildren) {
         const childCount = this.getChildCount(cell);
 
-        for (let i = 0; i < childCount; i++) {
+        for (let i = 0; i < childCount; i += 1) {
           const cloneChild = this.cloneCellImpl(
             this.getChildAt(cell, i),
             mapping,
@@ -2152,7 +2152,7 @@ class mxGraphModel extends mxEventSource {
 
     const childCount = this.getChildCount(clone);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       this.restoreClone(
         this.getChildAt(clone, i),
         this.getChildAt(cell, i),

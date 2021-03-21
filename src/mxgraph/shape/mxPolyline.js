@@ -110,7 +110,7 @@ class mxPolyline extends mxShape {
 
     c.moveTo(pt.x, pt.y);
 
-    for (let i = 1; i < n - 2; i++) {
+    for (let i = 1; i < n - 2; i += 1) {
       var p0 = pts[i];
       var p1 = pts[i + 1];
       const ix = (p0.x + p1.x) / 2;

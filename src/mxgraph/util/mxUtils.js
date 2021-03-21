@@ -282,7 +282,7 @@ const mxUtils = {
    */
   indexOf: (array, obj) => {
     if (array != null && obj != null) {
-      for (let i = 0; i < array.length; i++) {
+      for (let i = 0; i < array.length; i += 1) {
         if (array[i] == obj) {
           return i;
         }
@@ -305,7 +305,7 @@ const mxUtils = {
    */
   forEach: (array, fn) => {
     if (array != null && fn != null) {
-      for (let i = 0; i < array.length; i++) {
+      for (let i = 0; i < array.length; i += 1) {
         fn(array[i]);
       }
     }
@@ -474,7 +474,7 @@ const mxUtils = {
         const newNode = doc.createElement(node.nodeName);
 
         if (node.attributes && node.attributes.length > 0) {
-          for (let i = 0; i < node.attributes.length; i++) {
+          for (let i = 0; i < node.attributes.length; i += 1) {
             newNode.setAttribute(
               node.attributes[i].nodeName,
               node.getAttribute(node.attributes[i].nodeName)
@@ -483,7 +483,7 @@ const mxUtils = {
         }
 
         if (allChildren && node.childNodes && node.childNodes.length > 0) {
-          for (let i = 0; i < node.childNodes.length; i++) {
+          for (let i = 0; i < node.childNodes.length; i += 1) {
             newNode.appendChild(
               mxUtils.importNodeImplementation(
                 doc,
@@ -742,7 +742,7 @@ const mxUtils = {
         const attrs = node.attributes;
 
         if (attrs != null) {
-          for (let i = 0; i < attrs.length; i++) {
+          for (let i = 0; i < attrs.length; i += 1) {
             const val = mxUtils.htmlEntities(attrs[i].value);
             result.push(` ${attrs[i].nodeName}="${val}"`);
           }
@@ -809,7 +809,7 @@ const mxUtils = {
         return;
       }
 
-      for (let i = 0; i < elts.length; i++) {
+      for (let i = 0; i < elts.length; i += 1) {
         const elem = elts[i];
 
         // DIV with a br or linefeed forces a linefeed
@@ -993,7 +993,7 @@ const mxUtils = {
     count = count || 1;
     let br = null;
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count; i += 1) {
       if (parent != null) {
         br = parent.ownerDocument.createElement('br');
         parent.appendChild(br);
@@ -1340,7 +1340,7 @@ const mxUtils = {
       errors++;
     };
 
-    for (let i = 0; i < urls.length; i++) {
+    for (let i = 0; i < urls.length; i += 1) {
       ((url, index) => {
         mxUtils.get(
           url,
@@ -1568,7 +1568,7 @@ const mxUtils = {
       return false;
     }
     if (a != null && b != null) {
-      for (let i = 0; i < a.length; i++) {
+      for (let i = 0; i < a.length; i += 1) {
         if (
           (a[i] != null && b[i] == null) ||
           (a[i] == null && b[i] != null) ||
@@ -1635,7 +1635,7 @@ const mxUtils = {
     const dict = new mxDictionary();
     const result = [];
 
-    for (let i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i += 1) {
       if (!dict.get(arr[i])) {
         result.push(arr[i]);
         dict.put(arr[i], true);
@@ -2033,7 +2033,7 @@ const mxUtils = {
       let last = state.absolutePoints[0];
       let min = null;
 
-      for (let i = 1; i < state.absolutePoints.length; i++) {
+      for (let i = 1; i < state.absolutePoints.length; i += 1) {
         const current = state.absolutePoints[i];
         const dist = mxUtils.ptSegDistSq(
           last.x,
@@ -2142,7 +2142,7 @@ const mxUtils = {
   getPerimeterPoint(pts, center, point) {
     let min = null;
 
-    for (let i = 0; i < pts.length - 1; i++) {
+    for (let i = 0; i < pts.length - 1; i += 1) {
       const pt = mxUtils.intersection(
         pts[i].x,
         pts[i].y,
@@ -2904,7 +2904,7 @@ const mxUtils = {
     if (style != null) {
       const pairs = style.split(';');
 
-      for (let i = 0; i < pairs.length; i++) {
+      for (let i = 0; i < pairs.length; i += 1) {
         if (pairs[i].indexOf('=') < 0) {
           result.push(pairs[i]);
         }
@@ -2926,7 +2926,7 @@ const mxUtils = {
       const tokens = style.split(';');
       let pos = 0;
 
-      for (let i = 0; i < tokens.length; i++) {
+      for (let i = 0; i < tokens.length; i += 1) {
         if (tokens[i] == stylename) {
           return pos;
         }
@@ -2970,7 +2970,7 @@ const mxUtils = {
     if (style != null) {
       const tokens = style.split(';');
 
-      for (let i = 0; i < tokens.length; i++) {
+      for (let i = 0; i < tokens.length; i += 1) {
         if (tokens[i] != stylename) {
           result.push(tokens[i]);
         }
@@ -2992,7 +2992,7 @@ const mxUtils = {
     if (style != null) {
       const tokens = style.split(';');
 
-      for (let i = 0; i < tokens.length; i++) {
+      for (let i = 0; i < tokens.length; i += 1) {
         // Keeps the key, value assignments
         if (tokens[i].indexOf('=') >= 0) {
           result.push(tokens[i]);
@@ -3020,7 +3020,7 @@ const mxUtils = {
     if (cells != null && cells.length > 0) {
       model.beginUpdate();
       try {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           if (cells[i] != null) {
             const style = mxUtils.setStyle(
               model.getStyle(cells[i]),
@@ -3123,7 +3123,7 @@ const mxUtils = {
     if (cells != null && cells.length > 0) {
       model.beginUpdate();
       try {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           if (cells[i] != null) {
             const style = mxUtils.setStyleFlag(
               model.getStyle(cells[i]),
@@ -3567,19 +3567,19 @@ const mxUtils = {
 
     const base = document.getElementsByTagName('base');
 
-    for (let i = 0; i < base.length; i++) {
+    for (let i = 0; i < base.length; i += 1) {
       doc.writeln(mxUtils.getOuterHtml(base[i]));
     }
 
     const links = document.getElementsByTagName('link');
 
-    for (let i = 0; i < links.length; i++) {
+    for (let i = 0; i < links.length; i += 1) {
       doc.writeln(mxUtils.getOuterHtml(links[i]));
     }
 
     const styles = document.getElementsByTagName('style');
 
-    for (let i = 0; i < styles.length; i++) {
+    for (let i = 0; i < styles.length; i += 1) {
       doc.writeln(mxUtils.getOuterHtml(styles[i]));
     }
 

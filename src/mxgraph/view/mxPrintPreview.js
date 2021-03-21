@@ -556,7 +556,7 @@ class mxPrintPreview {
       );
 
       if (cov != null) {
-        for (let i = 0; i < cov.length; i++) {
+        for (let i = 0; i < cov.length; i += 1) {
           addPage(cov[i], true);
         }
       }
@@ -568,7 +568,7 @@ class mxPrintPreview {
 
       // Appends each page to the page output for printing, making
       // sure there will be a page break after each page (ie. div)
-      for (let i = 0; i < vpages; i++) {
+      for (let i = 0; i < vpages; i += 1) {
         const dy =
           (i * availableHeight) / this.scale -
           this.y0 / this.scale +
@@ -608,7 +608,7 @@ class mxPrintPreview {
       }
 
       if (apx != null) {
-        for (let i = 0; i < apx.length; i++) {
+        for (let i = 0; i < apx.length; i += 1) {
           addPage(apx[i], i < apx.length - 1);
         }
       }
@@ -730,7 +730,7 @@ class mxPrintPreview {
 
     const tbody = doc.createElement('tbody');
 
-    for (let i = 0; i < vpages; i++) {
+    for (let i = 0; i < vpages; i += 1) {
       const row = doc.createElement('tr');
 
       for (let j = 0; j < hpages; j++) {

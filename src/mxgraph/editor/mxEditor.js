@@ -20,16 +20,27 @@ import mxForm from '../util/mxForm';
 import mxOutline from '../view/mxOutline';
 import mxCell from '../model/mxCell';
 import mxGeometry from '../model/mxGeometry';
+import mxConstants from '../util/mxConstants';
+import mxGraph from '../view/mxGraph';
+import mxSwimlaneManager from '../view/mxSwimlaneManager';
+import mxLayoutManager from '../view/mxLayoutManager';
+import mxRubberband from '../handler/mxRubberband';
+import mxEvent from '../util/mxEvent';
+import mxRootChange from '../model/atomic_changes/mxRootChange';
+import mxValueChange from '../model/atomic_changes/mxValueChange';
+import mxCellAttributeChange from '../model/atomic_changes/mxCellAttributeChange';
 
 /**
  * Installs the required language resources at class
  * loading time.
  */
+/*
 if (mxLoadResources) {
   mxResources.add(`${mxClient.basePath}/resources/editor`);
 } else {
   mxClient.defaultBundles.push(`${mxClient.basePath}/resources/editor`);
 }
+ */
 
 class mxEditor extends mxEventSource {
   /**
@@ -1712,7 +1723,7 @@ class mxEditor extends mxEventSource {
       // Checks if the root has been changed
       const { changes } = evt.getProperty('edit');
 
-      for (let i = 0; i < changes.length; i++) {
+      for (let i = 0; i < changes.length; i += 1) {
         const change = changes[i];
 
         if (
@@ -2319,14 +2330,14 @@ class mxEditor extends mxEventSource {
       const attrs = value.attributes;
       const texts = [];
 
-      for (let i = 0; i < attrs.length; i++) {
+      for (let i = 0; i < attrs.length; i += 1) {
         // Creates a textarea with more lines for
         // the cell label
         const val = attrs[i].value;
         texts[i] = form.addTextarea(
           attrs[i].nodeName,
           val,
-          attrs[i].nodeName == 'label' ? 4 : 2
+          attrs[i].nodeName === 'label' ? 4 : 2
         );
       }
 
@@ -2366,7 +2377,7 @@ class mxEditor extends mxEventSource {
           // attribute and executes it using the
           // model, which will also make the change
           // part of the current transaction
-          for (let i = 0; i < attrs.length; i++) {
+          for (let i = 0; i < attrs.length; i += 1) {
             const edit = new mxCellAttributeChange(
               cell,
               attrs[i].nodeName,

@@ -730,7 +730,7 @@ class mxGraphHandler {
     if (cells != null && cells.length > 0) {
       const model = this.graph.getModel();
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         if (model.isVertex(cells[i]) || model.isEdge(cells[i])) {
           const state = this.graph.view.getState(cells[i]);
 
@@ -804,7 +804,7 @@ class mxGraphHandler {
     this.cloning = false;
     this.cellCount = 0;
 
-    for (let i = 0; i < this.cells.length; i++) {
+    for (let i = 0; i < this.cells.length; i += 1) {
       this.cellCount += this.addStates(this.cells[i], this.allCells);
     }
 
@@ -820,7 +820,7 @@ class mxGraphHandler {
         this.cell
       );
 
-      for (let i = 0; i < opps.length; i++) {
+      for (let i = 0; i < opps.length; i += 1) {
         const state = this.graph.view.getState(opps[i]);
 
         if (state != null && !connected.get(state)) {
@@ -860,7 +860,7 @@ class mxGraphHandler {
 
       const childCount = this.graph.model.getChildCount(cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         count += this.addStates(this.graph.model.getChildAt(cell, i), dict);
       }
     }
@@ -1279,7 +1279,7 @@ class mxGraphHandler {
         // Redraws connected edges
         const s = this.graph.view.scale;
 
-        for (let i = 0; i < states.length; i++) {
+        for (let i = 0; i < states.length; i += 1) {
           const state = states[i][0];
 
           if (this.graph.model.isEdge(state.cell)) {
@@ -1360,7 +1360,7 @@ class mxGraphHandler {
    * Redraws the preview shape for the given states array.
    */
   redrawHandles = states => {
-    for (let i = 0; i < states.length; i++) {
+    for (let i = 0; i < states.length; i += 1) {
       const handler = this.graph.selectionCellsHandler.getHandler(
         states[i][0].cell
       );
@@ -1377,7 +1377,7 @@ class mxGraphHandler {
    * Resets the given preview states array.
    */
   resetPreviewStates = states => {
-    for (let i = 0; i < states.length; i++) {
+    for (let i = 0; i < states.length; i += 1) {
       states[i][0].setState(states[i][1]);
     }
   };
@@ -1490,7 +1490,7 @@ class mxGraphHandler {
     if (force || this.handlesVisible != visible) {
       this.handlesVisible = visible;
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         const handler = this.graph.selectionCellsHandler.getHandler(cells[i]);
 
         if (handler != null) {
@@ -1704,12 +1704,12 @@ class mxGraphHandler {
         // Collects all non-selected parents
         const dict = new mxDictionary();
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           dict.put(cells[i], true);
         }
 
         // LATER: Recurse up the cell hierarchy
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           const par = this.graph.model.getParent(cells[i]);
 
           if (par != null && !dict.get(par)) {
@@ -1726,7 +1726,7 @@ class mxGraphHandler {
       // Removes parent if all child cells are removed
       const temp = [];
 
-      for (let i = 0; i < parents.length; i++) {
+      for (let i = 0; i < parents.length; i += 1) {
         if (this.shouldRemoveParent(parents[i])) {
           temp.push(parents[i]);
         }

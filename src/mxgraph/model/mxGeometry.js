@@ -255,7 +255,7 @@ class mxGeometry extends mxRectangle {
 
     // Translate the control points
     if (this.points != null) {
-      for (let i = 0; i < this.points.length; i++) {
+      for (let i = 0; i < this.points.length; i += 1) {
         if (this.points[i] != null) {
           const pt = mxUtils.getRotatedPoint(this.points[i], cos, sin, cx);
           this.points[i].x = Math.round(pt.x);
@@ -303,7 +303,7 @@ class mxGeometry extends mxRectangle {
 
     // Translate the control points
     if (this.TRANSLATE_CONTROL_POINTS && this.points != null) {
-      for (let i = 0; i < this.points.length; i++) {
+      for (let i = 0; i < this.points.length; i += 1) {
         if (this.points[i] != null) {
           this.points[i].x = parseFloat(this.points[i].x) + dx;
           this.points[i].y = parseFloat(this.points[i].y) + dy;
@@ -345,7 +345,7 @@ class mxGeometry extends mxRectangle {
 
     // Translate the control points
     if (this.points != null) {
-      for (let i = 0; i < this.points.length; i++) {
+      for (let i = 0; i < this.points.length; i += 1) {
         if (this.points[i] != null) {
           this.points[i].x = parseFloat(this.points[i].x) * sx;
           this.points[i].y = parseFloat(this.points[i].y) * sy;

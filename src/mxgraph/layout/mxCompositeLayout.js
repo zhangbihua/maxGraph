@@ -79,7 +79,7 @@ class mxCompositeLayout extends mxGraphLayout {
 
     model.beginUpdate();
     try {
-      for (let i = 0; i < this.layouts.length; i++) {
+      for (let i = 0; i < this.layouts.length; i += 1) {
         this.layouts[i].execute.apply(this.layouts[i], [parent]);
       }
     } finally {

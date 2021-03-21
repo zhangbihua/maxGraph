@@ -329,7 +329,7 @@ const mxLog = {
   write() {
     let string = '';
 
-    for (let i = 0; i < arguments.length; i++) {
+    for (let i = 0; i < arguments.length; i += 1) {
       string += arguments[i];
 
       if (i < arguments.length - 1) {
@@ -364,7 +364,7 @@ const mxLog = {
   writeln() {
     let string = '';
 
-    for (let i = 0; i < arguments.length; i++) {
+    for (let i = 0; i < arguments.length; i += 1) {
       string += arguments[i];
 
       if (i < arguments.length - 1) {

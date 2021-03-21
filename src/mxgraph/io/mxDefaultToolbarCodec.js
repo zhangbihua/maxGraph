@@ -192,7 +192,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
                   if (icon == null) {
                     const combo = into.addActionCombo(as);
 
-                    for (let i = 0; i < children.length; i++) {
+                    for (let i = 0; i < children.length; i += 1) {
                       const child = children[i];
 
                       if (child.nodeName === 'separator') {
@@ -251,7 +251,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
                     });
 
                     // Adds the entries to the combobox
-                    for (let i = 0; i < children.length; i++) {
+                    for (let i = 0; i < children.length; i += 1) {
                       const child = children[i];
 
                       if (child.nodeName === 'separator') {

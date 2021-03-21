@@ -239,7 +239,7 @@ class mxSwimlaneManager extends mxEventSource {
 
       model.beginUpdate();
       try {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           if (!this.isSwimlaneIgnored(cells[i])) {
             this.swimlaneAdded(cells[i]);
           }
@@ -267,7 +267,7 @@ class mxSwimlaneManager extends mxEventSource {
     let geo = null;
 
     // Finds the first valid sibling swimlane as reference
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = model.getChildAt(parent, i);
 
       if (child != swimlane && !this.isSwimlaneIgnored(child)) {
@@ -304,7 +304,7 @@ class mxSwimlaneManager extends mxEventSource {
       model.beginUpdate();
       try {
         // Finds the top-level swimlanes and adds offsets
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           if (!this.isSwimlaneIgnored(cells[i])) {
             const geo = model.getGeometry(cells[i]);
 
@@ -389,7 +389,7 @@ class mxSwimlaneManager extends mxEventSource {
 
       const childCount = model.getChildCount(swimlane);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         const child = model.getChildAt(swimlane, i);
         this.resizeSwimlane(child, w, h, horizontal);
       }

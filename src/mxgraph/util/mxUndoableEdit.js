@@ -183,7 +183,7 @@ class mxUndoableEdit {
       this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
       const count = this.changes.length;
 
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < count; i += 1) {
         const change = this.changes[i];
 
         if (change.execute != null) {

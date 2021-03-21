@@ -49,7 +49,7 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
       const modelRoots = model.roots;
       rootsArray = [];
 
-      for (let i = 0; i < modelRoots.length; i++) {
+      for (let i = 0; i < modelRoots.length; i += 1) {
         rootsArray[i] = model.vertexMapper.get(modelRoots[i]);
       }
     }

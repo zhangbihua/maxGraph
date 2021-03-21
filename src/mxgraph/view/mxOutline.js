@@ -11,8 +11,9 @@ import mxRectangle from '../util/mxRectangle';
 import mxRectangleShape from '../shape/mxRectangleShape';
 import mxGraph from './mxGraph';
 import mxImageShape from '../shape/mxImageShape';
-import mxEvent from "../util/mxEvent";
-import mxUtils from "../util/mxUtils";
+import mxEvent from '../util/mxEvent';
+import mxUtils from '../util/mxUtils';
+import mxClient from '../mxClient';
 
 class mxOutline {
   /**
@@ -456,7 +457,7 @@ class mxOutline {
         availableWidth / completeWidth,
         availableHeight / completeHeight
       );
-      let scale = isNaN(outlineScale)
+      let scale = Number.isNaN(outlineScale)
         ? this.minScale
         : Math.max(this.minScale, outlineScale);
 

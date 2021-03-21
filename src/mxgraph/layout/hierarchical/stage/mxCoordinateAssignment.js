@@ -265,7 +265,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     let bestXDelta = 100000000.0;
 
     if (this.fineTuning) {
-      for (let i = 0; i < this.maxIterations; i++) {
+      for (let i = 0; i < this.maxIterations; i += 1) {
         //      this.printStatus();
 
         // Median Heuristic
@@ -322,7 +322,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     const map = new mxDictionary();
     const rank = [];
 
-    for (let i = 0; i <= model.maxRank; i++) {
+    for (let i = 0; i <= model.maxRank; i += 1) {
       rank[i] = model.ranks[i];
 
       for (let j = 0; j < rank[i].length; j++) {
@@ -441,7 +441,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
       if (positionChanged) {
         // Add connected nodes to map and list
-        for (let i = 0; i < nextLayerConnectedCells.length; i++) {
+        for (let i = 0; i < nextLayerConnectedCells.length; i += 1) {
           const connectedCell = nextLayerConnectedCells[i];
           const connectedCellWrapper = map.get(connectedCell);
 
@@ -454,7 +454,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         }
 
         // Add connected nodes to map and list
-        for (let i = 0; i < previousLayerConnectedCells.length; i++) {
+        for (let i = 0; i < previousLayerConnectedCells.length; i += 1) {
           const connectedCell = previousLayerConnectedCells[i];
           const connectedCellWrapper = map.get(connectedCell);
 
@@ -518,7 +518,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     const weightedValues = [];
     const cellMap = {};
 
-    for (let i = 0; i < rank.length; i++) {
+    for (let i = 0; i < rank.length; i += 1) {
       const currentCell = rank[i];
       weightedValues[i] = new WeightedCellSorter();
       weightedValues[i].cell = currentCell;
@@ -549,7 +549,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     // Set the new position of each node within the rank using
     // its temp variable
 
-    for (let i = 0; i < weightedValues.length; i++) {
+    for (let i = 0; i < weightedValues.length; i += 1) {
       let numConnectionsNextLevel = 0;
       const { cell } = weightedValues[i];
       let nextLayerConnectedCells = null;
@@ -671,7 +671,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
   calculatedWeightedValue = (currentCell, collection) => {
     let totalWeight = 0;
 
-    for (let i = 0; i < collection.length; i++) {
+    for (let i = 0; i < collection.length; i += 1) {
       const cell = collection[i];
 
       if (currentCell.isVertex() && cell.isVertex()) {
@@ -704,7 +704,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
     const medianValues = [];
 
-    for (let i = 0; i < connectedCells.length; i++) {
+    for (let i = 0; i < connectedCells.length; i += 1) {
       medianValues[i] = connectedCells[i].getGeneralPurposeVariable(rankValue);
     }
 
@@ -745,7 +745,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       }
     }
 
-    for (let i = this.widestRank + 1; i <= model.maxRank; i++) {
+    for (let i = this.widestRank + 1; i <= model.maxRank; i += 1) {
       if (i > 0) {
         this.rankCoordinates(i, facade, model);
       }
@@ -776,7 +776,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     // to only issue the warning once for all cells
     let boundsWarning = false;
 
-    for (let i = 0; i < rank.length; i++) {
+    for (let i = 0; i < rank.length; i += 1) {
       const node = rank[i];
 
       if (node.isVertex()) {
@@ -856,7 +856,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       // to only issue the warning once for all cells
       let boundsWarning = false;
 
-      for (let i = 0; i < rank.length; i++) {
+      for (let i = 0; i < rank.length; i += 1) {
         const node = rank[i];
 
         if (node.isVertex()) {
@@ -927,7 +927,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         y -= distanceToNextRank;
       }
 
-      for (let i = 0; i < rank.length; i++) {
+      for (let i = 0; i < rank.length; i += 1) {
         const cell = rank[i];
         cell.setY(rankValue, y);
       }
@@ -967,7 +967,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       let edgeStraight = true;
       let refSegCount = 0;
 
-      for (let i = cell.minRank + 2; i < cell.maxRank; i++) {
+      for (let i = cell.minRank + 2; i < cell.maxRank; i += 1) {
         const x = cell.getGeneralPurposeVariable(i);
 
         if (referenceX != x) {
@@ -986,7 +986,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
         let currentX = cell.getGeneralPurposeVariable(cell.minRank + 1);
 
-        for (let i = cell.minRank + 1; i < cell.maxRank - 1; i++) {
+        for (let i = cell.minRank + 1; i < cell.maxRank - 1; i += 1) {
           // Attempt to straight out the control point on the
           // next segment up with the current control point.
           const nextX = cell.getX(i + 1);
@@ -1032,7 +1032,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
             }
           } else if (upSegCount > downSegCount) {
             // Apply up calculation values
-            for (let i = cell.minRank + 2; i < cell.maxRank; i++) {
+            for (let i = cell.minRank + 2; i < cell.maxRank; i += 1) {
               cell.setX(i, upXPositions[i - cell.minRank - 2]);
             }
           } else {
@@ -1063,7 +1063,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     const rankArray = model.ranks[rank];
     let rankIndex = -1;
 
-    for (let i = 0; i < rankArray.length; i++) {
+    for (let i = 0; i < rankArray.length; i += 1) {
       if (cell == rankArray[i]) {
         rankIndex = i;
         break;
@@ -1132,7 +1132,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     this.rankTopY = [];
     this.rankBottomY = [];
 
-    for (let i = 0; i < model.ranks.length; i++) {
+    for (let i = 0; i < model.ranks.length; i += 1) {
       this.rankTopY[i] = Number.MAX_VALUE;
       this.rankBottomY[i] = -Number.MAX_VALUE;
     }
@@ -1143,7 +1143,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     // limits of each rank. Between these limits lie the channels
     // where the edges can be routed across the graph
 
-    for (let i = 0; i < vertices.length; i++) {
+    for (let i = 0; i < vertices.length; i += 1) {
       this.setVertexLocation(vertices[i]);
     }
 
@@ -1159,7 +1159,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
     const edges = model.edgeMapper.getValues();
 
-    for (let i = 0; i < edges.length; i++) {
+    for (let i = 0; i < edges.length; i += 1) {
       this.setEdgePosition(edges[i]);
     }
   };
@@ -1331,7 +1331,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         this.orientation == mxConstants.DIRECTION_EAST ||
         this.orientation == mxConstants.DIRECTION_SOUTH;
 
-      for (let i = 0; i < cell.edges.length; i++) {
+      for (let i = 0; i < cell.edges.length; i += 1) {
         const realEdge = cell.edges[i];
         const realSource = this.layout.getVisibleTerminal(realEdge, true);
 

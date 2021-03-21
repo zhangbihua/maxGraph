@@ -3,6 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxUtils from '../util/mxUtils';
+import mxResources from '../util/mxResources';
 
 class mxMultiplicity {
   /**
@@ -181,8 +183,8 @@ class mxMultiplicity {
     ) {
       if (
         this.countError != null &&
-        ((this.source && (this.max == 0 || sourceOut >= this.max)) ||
-          (!this.source && (this.max == 0 || targetIn >= this.max)))
+        ((this.source && (this.max === 0 || sourceOut >= this.max)) ||
+          (!this.source && (this.max === 0 || targetIn >= this.max)))
       ) {
         error += `${this.countError}\n`;
       }
@@ -248,11 +250,11 @@ class mxMultiplicity {
    */
   checkType = (graph, value, type, attr, attrValue) => {
     if (value != null) {
-      if (!isNaN(value.nodeType)) {
+      if (!Number.isNaN(value.nodeType)) {
         // Checks if value is a DOM node
         return mxUtils.isNode(value, type, attr, attrValue);
       }
-      return value == type;
+      return value === type;
     }
     return false;
   };

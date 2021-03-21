@@ -64,7 +64,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
     point = this.convertPoint(point.clone(), false);
     let result = [];
 
-    for (let i = 1; i < pts.length; i++) {
+    for (let i = 1; i < pts.length; i += 1) {
       const pt = this.convertPoint(pts[i].clone(), false);
 
       if (i === this.index) {
@@ -124,7 +124,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
 
       let result = [];
 
-      for (let i = 2; i < pts.length; i++) {
+      for (let i = 2; i < pts.length; i += 1) {
         const pt2 = pts[i];
 
         // Merges adjacent segments only if more than 2 to allow for straight edges
@@ -220,7 +220,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
       let pt1 = pts[1];
       result = [];
 
-      for (let i = 2; i < pts.length; i++) {
+      for (let i = 2; i < pts.length; i += 1) {
         const pt2 = pts[i];
 
         // Merges adjacent segments only if more than 2 to allow for straight edges
@@ -307,7 +307,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
         this.points = [];
       }
 
-      for (let i = 0; i < pts.length - 1; i++) {
+      for (let i = 0; i < pts.length - 1; i += 1) {
         bend = this.createVirtualBend();
         bends.push(bend);
         let horizontal = Math.round(pts[i].x - pts[i + 1].x) === 0;
@@ -372,7 +372,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
           }
         }
 
-        for (let i = 0; i < pts.length - 1; i++) {
+        for (let i = 0; i < pts.length - 1; i += 1) {
           if (this.bends[i + 1] != null) {
             const p0 = pts[i];
             const pe = pts[i + 1];

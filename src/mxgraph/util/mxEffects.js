@@ -45,7 +45,7 @@ const mxEffects = {
     const animate = () => {
       let isRequired = false;
 
-      for (let i = 0; i < changes.length; i++) {
+      for (let i = 0; i < changes.length; i += 1) {
         const change = changes[i];
 
         if (
@@ -130,7 +130,7 @@ const mxEffects = {
     // Fades all children
     const childCount = graph.model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = graph.model.getChildAt(cell, i);
       const childState = graph.getView().getState(child);
 
@@ -144,7 +144,7 @@ const mxEffects = {
     const edges = graph.model.getEdges(cell);
 
     if (edges != null) {
-      for (let i = 0; i < edges.length; i++) {
+      for (let i = 0; i < edges.length; i += 1) {
         const edgeState = graph.getView().getState(edges[i]);
 
         if (edgeState != null) {

@@ -124,7 +124,7 @@ class mxGraphViewCodec extends mxObjectCodec {
           if (abs != null && abs.length > 0) {
             let pts = `${Math.round(abs[0].x)},${Math.round(abs[0].y)}`;
 
-            for (let i = 1; i < abs.length; i++) {
+            for (let i = 1; i < abs.length; i += 1) {
               pts += ` ${Math.round(abs[i].x)},${Math.round(abs[i].y)}`;
             }
 
@@ -153,7 +153,7 @@ class mxGraphViewCodec extends mxObjectCodec {
           }
         }
 
-        for (let i = 0; i < childCount; i++) {
+        for (let i = 0; i < childCount; i += 1) {
           const childNode = this.encodeCell(
             enc,
             view,

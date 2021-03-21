@@ -1916,14 +1916,14 @@ class mxGraph extends mxEventSource {
         } else {
           const childCount = this.model.getChildCount(cell);
 
-          for (let i = 0; i < childCount; i++) {
+          for (let i = 0; i < childCount; i += 1) {
             addCell(this.model.getChildAt(cell, i));
           }
         }
       }
     };
 
-    for (let i = 0; i < changes.length; i++) {
+    for (let i = 0; i < changes.length; i += 1) {
       const change = changes[i];
 
       if (
@@ -1958,7 +1958,7 @@ class mxGraph extends mxEventSource {
    * changes - Array that contains the individual changes.
    */
   graphModelChanged = changes => {
-    for (let i = 0; i < changes.length; i++) {
+    for (let i = 0; i < changes.length; i += 1) {
       this.processChange(changes[i]);
     }
 
@@ -1976,7 +1976,7 @@ class mxGraph extends mxEventSource {
     const cells = this.getSelectionCells();
     const removed = [];
 
-    for (let i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i += 1) {
       if (!this.model.contains(cells[i]) || !this.isCellVisible(cells[i])) {
         removed.push(cells[i]);
       } else {
@@ -2104,7 +2104,7 @@ class mxGraph extends mxEventSource {
   removeStateForCell = cell => {
     const childCount = this.model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       this.removeStateForCell(this.model.getChildAt(cell, i));
     }
 
@@ -2235,7 +2235,7 @@ class mxGraph extends mxEventSource {
         this.cellRenderer.redraw(state);
       }
 
-      for (let i = 0; i < overlays.length; i++) {
+      for (let i = 0; i < overlays.length; i += 1) {
         this.fireEvent(
           new mxEventObject(
             mxEvent.REMOVE_OVERLAY,
@@ -2271,7 +2271,7 @@ class mxGraph extends mxEventSource {
     // Recursively removes all overlays from the children
     const childCount = this.model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = this.model.getChildAt(cell, i);
       this.clearCellOverlays(child); // recurse
     }
@@ -2606,7 +2606,7 @@ class mxGraph extends mxEventSource {
             swimlanes.splice(0, 0, cell);
             swimlanes.push(cell);
 
-            for (let i = 0; i < swimlanes.length - 1; i++) {
+            for (let i = 0; i < swimlanes.length - 1; i += 1) {
               if (this.isCellSelected(swimlanes[i])) {
                 cell = swimlanes[this.isToggleEvent(evt) ? i : i + 1];
               }
@@ -2633,7 +2633,7 @@ class mxGraph extends mxEventSource {
     const parent = model.getParent(cell);
     const childCount = model.getChildCount(parent);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = model.getChildAt(parent, i);
 
       if (cell !== child && this.isCellSelected(child)) {
@@ -3235,7 +3235,7 @@ class mxGraph extends mxEventSource {
             ? horizontalCount
             : verticalCount;
 
-        for (let i = 0; i <= count; i++) {
+        for (let i = 0; i <= count; i += 1) {
           const pts =
             breaks === this.horizontalPageBreaks
               ? [
@@ -3274,7 +3274,7 @@ class mxGraph extends mxEventSource {
           }
         }
 
-        for (let i = count; i < breaks.length; i++) {
+        for (let i = count; i < breaks.length; i += 1) {
           breaks[i].destroy();
         }
 
@@ -3410,7 +3410,7 @@ class mxGraph extends mxEventSource {
     if (cells != null) {
       this.model.beginUpdate();
       try {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           this.model.setStyle(cells[i], style);
         }
       } finally {
@@ -3561,7 +3561,7 @@ class mxGraph extends mxEventSource {
     if (cells != null && cells.length > 1) {
       // Finds the required coordinate for the alignment
       if (param == null) {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           const state = this.view.getState(cells[i]);
 
           if (state != null && !this.model.isEdge(cells[i])) {
@@ -3600,7 +3600,7 @@ class mxGraph extends mxEventSource {
 
         this.model.beginUpdate();
         try {
-          for (let i = 0; i < cells.length; i++) {
+          for (let i = 0; i < cells.length; i += 1) {
             const state = this.view.getState(cells[i]);
 
             if (state != null) {
@@ -3715,7 +3715,7 @@ class mxGraph extends mxEventSource {
   removeImageBundle = bundle => {
     const tmp = [];
 
-    for (let i = 0; i < this.imageBundles.length; i++) {
+    for (let i = 0; i < this.imageBundles.length; i += 1) {
       if (this.imageBundles[i] !== bundle) {
         tmp.push(this.imageBundles[i]);
       }
@@ -3794,7 +3794,7 @@ class mxGraph extends mxEventSource {
     if (cells != null) {
       this.model.beginUpdate();
       try {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           const parent = this.model.getParent(cells[i]);
 
           if (back) {
@@ -3922,7 +3922,7 @@ class mxGraph extends mxEventSource {
       result.push(cells[0]);
 
       // Filters selection cells with the same parent
-      for (let i = 1; i < cells.length; i++) {
+      for (let i = 1; i < cells.length; i += 1) {
         if (this.model.getParent(cells[i]) === parent) {
           result.push(cells[i]);
         }
@@ -4010,7 +4010,7 @@ class mxGraph extends mxEventSource {
     if (cells != null && cells.length > 0) {
       this.model.beginUpdate();
       try {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           let children = this.model.getChildren(cells[i]);
 
           if (children != null && children.length > 0) {
@@ -4061,7 +4061,7 @@ class mxGraph extends mxEventSource {
     // Finds the cells with children
     const tmp = [];
 
-    for (let i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i += 1) {
       if (
         this.model.isVertex(cells[i]) &&
         this.model.getChildCount(cells[i]) > 0
@@ -4230,7 +4230,7 @@ class mxGraph extends mxEventSource {
     let result = null;
 
     if (cells != null && cells.length > 0) {
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         if (this.model.isVertex(cells[i]) || this.model.isEdge(cells[i])) {
           const bbox = this.view.getBoundingBox(
             this.view.getState(cells[i]),
@@ -4299,7 +4299,7 @@ class mxGraph extends mxEventSource {
       const dict = new mxDictionary();
       const tmp = [];
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         dict.put(cells[i], true);
         tmp.push(cells[i]);
       }
@@ -4309,7 +4309,7 @@ class mxGraph extends mxEventSource {
         const trans = this.view.translate;
         clones = this.model.cloneCells(cells, true, mapping);
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           if (
             !allowInvalidEdges &&
             this.model.isEdge(clones[i]) &&
@@ -4686,7 +4686,7 @@ class mxGraph extends mxEventSource {
         const o1 = parentState != null ? parentState.origin : null;
         const zero = new mxPoint(0, 0);
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           if (cells[i] == null) {
             index--;
           } else {
@@ -4801,7 +4801,7 @@ class mxGraph extends mxEventSource {
     if (recurse) {
       const childCount = this.model.getChildCount(cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         this.autoSizeCell(this.model.getChildAt(cell, i));
       }
     }
@@ -4846,11 +4846,11 @@ class mxGraph extends mxEventSource {
       const edges = this.getDeletableCells(this.getAllEdges(cells));
       const dict = new mxDictionary();
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         dict.put(cells[i], true);
       }
 
-      for (let i = 0; i < edges.length; i++) {
+      for (let i = 0; i < edges.length; i += 1) {
         if (this.view.getState(edges[i]) == null && !dict.get(edges[i])) {
           dict.put(edges[i], true);
           cells.push(edges[i]);
@@ -4897,11 +4897,11 @@ class mxGraph extends mxEventSource {
         // Creates hashtable for faster lookup
         const dict = new mxDictionary();
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           dict.put(cells[i], true);
         }
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           // Disconnects edges which are not being removed
           const edges = this.getAllEdges([cells[i]]);
 
@@ -5144,7 +5144,7 @@ class mxGraph extends mxEventSource {
     if (cells != null && cells.length > 0) {
       this.model.beginUpdate();
       try {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           this.model.setVisible(cells[i], show);
         }
       } finally {
@@ -5226,7 +5226,7 @@ class mxGraph extends mxEventSource {
     if (cells != null && cells.length > 0) {
       this.model.beginUpdate();
       try {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           if (
             (!checkFoldable || this.isCellFoldable(cells[i], collapse)) &&
             collapse !== this.isCellCollapsed(cells[i])
@@ -5382,7 +5382,7 @@ class mxGraph extends mxEventSource {
     let edges = [];
 
     if (cells != null) {
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         const edgeCount = this.model.getEdgeCount(cells[i]);
 
         for (let j = 0; j < edgeCount; j++) {
@@ -5727,7 +5727,7 @@ class mxGraph extends mxEventSource {
    *
    *   if (cells != null)
    *   {
-   *     for (let i = 0; i < cells.length; i++)
+   *     for (let i = 0; i < cells.length; i += 1)
    *     {
    *       if (graph.getModel().getChildCount(cells[i]) > 0)
    *       {
@@ -5763,7 +5763,7 @@ class mxGraph extends mxEventSource {
     if (cells != null && bounds != null && cells.length === bounds.length) {
       this.model.beginUpdate();
       try {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           prev.push(this.cellResized(cells[i], bounds[i], false, recurse));
 
           if (this.isExtendParent(cells[i])) {
@@ -5878,7 +5878,7 @@ class mxGraph extends mxEventSource {
     const dy = geo.height !== 0 ? newGeo.height / geo.height : 1;
     const childCount = this.model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       this.scaleCell(this.model.getChildAt(cell, i), dx, dy, true);
     }
   };
@@ -5895,7 +5895,7 @@ class mxGraph extends mxEventSource {
   constrainChildCells = cell => {
     const childCount = this.model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       this.constrainChild(this.model.getChildAt(cell, i));
     }
   };
@@ -6057,7 +6057,7 @@ class mxGraph extends mxEventSource {
         // terminals to avoid explicit and implicit move at same time
         const dict = new mxDictionary();
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           dict.put(cells[i], true);
         }
 
@@ -6076,7 +6076,7 @@ class mxGraph extends mxEventSource {
         // Removes relative edge labels with selected terminals
         const checked = [];
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           const geo = this.getCellGeometry(cells[i]);
           const parent = this.model.getParent(cells[i]);
 
@@ -6128,7 +6128,7 @@ class mxGraph extends mxEventSource {
 
           // Restores parent edge on cloned edge labels
           if (clone) {
-            for (let i = 0; i < cells.length; i++) {
+            for (let i = 0; i < cells.length; i += 1) {
               const geo = this.getCellGeometry(cells[i]);
               const parent = this.model.getParent(origCells[i]);
 
@@ -6187,7 +6187,7 @@ class mxGraph extends mxEventSource {
           this.disconnectGraph(cells);
         }
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           this.translateCell(cells[i], dx, dy);
 
           if (extend && this.isExtendParent(cells[i])) {
@@ -6425,7 +6425,7 @@ class mxGraph extends mxEventSource {
           if (!this.isCellCollapsed(cell)) {
             const desc = this.model.getDescendants(cell);
 
-            for (let i = 0; i < desc.length; i++) {
+            for (let i = 0; i < desc.length; i += 1) {
               if (this.isCellVisible(desc[i])) {
                 cells.push(desc[i]);
               }
@@ -6507,13 +6507,13 @@ class mxGraph extends mxEventSource {
       // Prepares faster cells lookup
       const dict = new mxDictionary();
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         dict.put(cells[i], true);
       }
 
       this.model.beginUpdate();
       try {
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           const edges = this.model.getEdges(cells[i]);
 
           if (edges != null) {
@@ -7095,11 +7095,11 @@ class mxGraph extends mxEventSource {
         // Fast lookup for finding cells in array
         const dict = new mxDictionary();
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           dict.put(cells[i], true);
         }
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           if (this.model.isEdge(cells[i])) {
             let geo = this.model.getGeometry(cells[i]);
 
@@ -7419,7 +7419,7 @@ class mxGraph extends mxEventSource {
     if (includeDescendants) {
       const childCount = this.model.getChildCount(cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         const tmp = this.getCellBounds(
           this.model.getChildAt(cell, i),
           includeEdges,
@@ -7478,7 +7478,7 @@ class mxGraph extends mxEventSource {
     let result = null;
 
     if (cells != null) {
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         if (includeEdges || this.model.isVertex(cells[i])) {
           // Computes the bounding box for the points in the geometry
           const geo = this.getCellGeometry(cells[i]);
@@ -8509,7 +8509,7 @@ class mxGraph extends mxEventSource {
 
       // Checks the change against each multiplicity rule
       if (this.multiplicities != null) {
-        for (let i = 0; i < this.multiplicities.length; i++) {
+        for (let i = 0; i < this.multiplicities.length; i += 1) {
           const err = this.multiplicities[i].check(
             this,
             edge,
@@ -8577,7 +8577,7 @@ class mxGraph extends mxEventSource {
     let isValid = true;
     const childCount = this.model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const tmp = this.model.getChildAt(cell, i);
       let ctx = context;
 
@@ -8652,7 +8652,7 @@ class mxGraph extends mxEventSource {
     let error = '';
 
     if (this.multiplicities != null) {
-      for (let i = 0; i < this.multiplicities.length; i++) {
+      for (let i = 0; i < this.multiplicities.length; i += 1) {
         const rule = this.multiplicities[i];
 
         if (
@@ -8819,7 +8819,7 @@ class mxGraph extends mxEventSource {
    * {
    *   let cells = evt.getProperty('cells');
    *
-   *   for (let i = 0; i < cells.length; i++)
+   *   for (let i = 0; i < cells.length; i += 1)
    *   {
    *     this.view.removeState(cells[i]);
    *   }
@@ -10885,7 +10885,7 @@ class mxGraph extends mxEventSource {
    */
   getDropTarget = (cells, evt, cell, clone) => {
     if (!this.isSwimlaneNesting()) {
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         if (this.isSwimlane(cells[i])) {
           return null;
         }
@@ -11017,7 +11017,7 @@ class mxGraph extends mxEventSource {
     if (parent != null) {
       const childCount = this.model.getChildCount(parent);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         const child = this.model.getChildAt(parent, i);
 
         if (child != null) {
@@ -11126,7 +11126,7 @@ class mxGraph extends mxEventSource {
         const t2 = this.tolerance * this.tolerance;
         let pt = pts[0];
 
-        for (let i = 1; i < pts.length; i++) {
+        for (let i = 1; i < pts.length; i += 1) {
           const next = pts[i];
           const dist = mxUtils.ptSegDistSq(pt.x, pt.y, next.x, next.y, x, y);
 
@@ -11240,7 +11240,7 @@ class mxGraph extends mxEventSource {
     const result = [];
 
     // Filters out the non-visible child cells
-    for (let i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i += 1) {
       if (this.isCellVisible(cells[i])) {
         result.push(cells[i]);
       }
@@ -11332,7 +11332,7 @@ class mxGraph extends mxEventSource {
     const isCollapsed = this.isCellCollapsed(cell);
     const childCount = this.model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = this.model.getChildAt(cell, i);
 
       if (isCollapsed || !this.isCellVisible(child)) {
@@ -11343,7 +11343,7 @@ class mxGraph extends mxEventSource {
     edges = edges.concat(this.model.getEdges(cell, incoming, outgoing));
     const result = [];
 
-    for (let i = 0; i < edges.length; i++) {
+    for (let i = 0; i < edges.length; i += 1) {
       const state = this.view.getState(edges[i]);
 
       const source =
@@ -11420,7 +11420,7 @@ class mxGraph extends mxEventSource {
     const dict = new mxDictionary();
 
     if (edges != null) {
-      for (let i = 0; i < edges.length; i++) {
+      for (let i = 0; i < edges.length; i += 1) {
         const state = this.view.getState(edges[i]);
 
         const source =
@@ -11485,7 +11485,7 @@ class mxGraph extends mxEventSource {
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match
-    for (let i = 0; i < edges.length; i++) {
+    for (let i = 0; i < edges.length; i += 1) {
       const state = this.view.getState(edges[i]);
 
       const src =
@@ -11588,7 +11588,7 @@ class mxGraph extends mxEventSource {
       if (parent != null) {
         const childCount = model.getChildCount(parent);
 
-        for (let i = 0; i < childCount; i++) {
+        for (let i = 0; i < childCount; i += 1) {
           const cell = model.getChildAt(parent, i);
           const state = this.view.getState(cell);
 
@@ -11670,7 +11670,7 @@ class mxGraph extends mxEventSource {
       if (parent != null) {
         const childCount = this.model.getChildCount(parent);
 
-        for (let i = 0; i < childCount; i++) {
+        for (let i = 0; i < childCount; i += 1) {
           const child = this.model.getChildAt(parent, i);
           const state = this.view.getState(child);
 
@@ -11717,7 +11717,7 @@ class mxGraph extends mxEventSource {
       let best = null;
       let maxDiff = 0;
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         const cell = model.getChildAt(parent, i);
 
         if (this.model.isVertex(cell) && this.isCellVisible(cell)) {
@@ -11806,7 +11806,7 @@ class mxGraph extends mxEventSource {
           const edgeCount = this.model.getEdgeCount(vertex);
 
           if (edgeCount > 0) {
-            for (let i = 0; i < edgeCount; i++) {
+            for (let i = 0; i < edgeCount; i += 1) {
               const e = this.model.getEdgeAt(vertex, i);
               const isSource = this.model.getTerminal(e, true) == vertex;
 
@@ -12350,7 +12350,7 @@ class mxGraph extends mxEventSource {
    */
   removeMouseListener = listener => {
     if (this.mouseListeners != null) {
-      for (let i = 0; i < this.mouseListeners.length; i++) {
+      for (let i = 0; i < this.mouseListeners.length; i += 1) {
         if (this.mouseListeners[i] === listener) {
           this.mouseListeners.splice(i, 1);
           break;
@@ -12770,7 +12770,7 @@ class mxGraph extends mxEventSource {
             me.getEvent().returnValue = true;
           }
 
-          for (let i = 0; i < this.mouseListeners.length; i++) {
+          for (let i = 0; i < this.mouseListeners.length; i += 1) {
             const l = this.mouseListeners[i];
 
             if (evtName === mxEvent.MOUSE_DOWN) {

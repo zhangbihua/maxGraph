@@ -396,7 +396,7 @@ class mxXmlRequest {
         : this.params.split();
 
     // Adds the parameters as textareas to the form
-    for (let i = 0; i < pars.length; i++) {
+    for (let i = 0; i < pars.length; i += 1) {
       const pos = pars[i].indexOf('=');
 
       if (pos > 0) {

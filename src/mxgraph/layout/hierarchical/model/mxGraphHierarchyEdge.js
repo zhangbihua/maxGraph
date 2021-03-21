@@ -60,7 +60,7 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
     this.edges = edges;
     this.ids = [];
 
-    for (let i = 0; i < edges.length; i++) {
+    for (let i = 0; i < edges.length; i += 1) {
       this.ids.push(mxObjectIdentity.get(edges[i]));
     }
   }
@@ -86,7 +86,7 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
     if (this.nextLayerConnectedCells == null) {
       this.nextLayerConnectedCells = [];
 
-      for (let i = 0; i < this.temp.length; i++) {
+      for (let i = 0; i < this.temp.length; i += 1) {
         this.nextLayerConnectedCells[i] = [];
 
         if (i === this.temp.length - 1) {
@@ -109,7 +109,7 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
     if (this.previousLayerConnectedCells == null) {
       this.previousLayerConnectedCells = [];
 
-      for (let i = 0; i < this.temp.length; i++) {
+      for (let i = 0; i < this.temp.length; i += 1) {
         this.previousLayerConnectedCells[i] = [];
 
         if (i === 0) {

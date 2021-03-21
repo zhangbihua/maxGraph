@@ -329,7 +329,7 @@ class mxStencil extends mxShape {
       if (tmp != null && tmp.length > 0) {
         this.constraints = [];
 
-        for (let i = 0; i < tmp.length; i++) {
+        for (let i = 0; i < tmp.length; i += 1) {
           this.constraints.push(this.parseConstraint(tmp[i]));
         }
       }
@@ -612,7 +612,7 @@ class mxStencil extends mxShape {
           }
 
           if (!parseRegularly && pointCount > 0) {
-            for (let i = 0; i < segs.length; i++) {
+            for (let i = 0; i < segs.length; i += 1) {
               let close = false;
               const ps = segs[i][0];
               const pe = segs[i][segs[i].length - 1];
@@ -804,7 +804,7 @@ class mxStencil extends mxShape {
           const tmp = value.split(' ');
           const pat = [];
 
-          for (let i = 0; i < tmp.length; i++) {
+          for (let i = 0; i < tmp.length; i += 1) {
             if (tmp[i].length > 0) {
               pat.push(Number(tmp[i]) * minScale);
             }

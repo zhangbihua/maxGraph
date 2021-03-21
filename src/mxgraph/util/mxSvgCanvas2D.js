@@ -870,7 +870,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       const dash = this.state.dashPattern.split(' ');
 
       if (dash.length > 0) {
-        for (let i = 0; i < dash.length; i++) {
+        for (let i = 0; i < dash.length; i += 1) {
           pat[i] = Number(dash[i]) * scale;
         }
       }
@@ -1732,7 +1732,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       }
     }
 
-    for (let i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i += 1) {
       // Workaround for bounding box of empty lines and spaces
       if (lines[i].length > 0 && mxUtils.trim(lines[i]).length > 0) {
         const text = this.createElement('text');

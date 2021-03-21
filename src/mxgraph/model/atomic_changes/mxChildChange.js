@@ -86,7 +86,7 @@ class mxChildChange {
 
     const childCount = this.model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       this.connect(this.model.getChildAt(cell, i), isConnect);
     }
   };

@@ -93,7 +93,7 @@ const mxCellPath = {
     if (path != null) {
       const tokens = path.split(mxCellPath.PATH_SEPARATOR);
 
-      for (let i = 0; i < tokens.length; i++) {
+      for (let i = 0; i < tokens.length; i += 1) {
         parent = parent.getChildAt(parseInt(tokens[i]));
       }
     }
@@ -111,7 +111,7 @@ const mxCellPath = {
     const min = Math.min(p1.length, p2.length);
     let comp = 0;
 
-    for (let i = 0; i < min; i++) {
+    for (let i = 0; i < min; i += 1) {
       if (p1[i] != p2[i]) {
         if (p1[i].length == 0 || p2[i].length == 0) {
           comp = p1[i] == p2[i] ? 0 : p1[i] > p2[i] ? 1 : -1;

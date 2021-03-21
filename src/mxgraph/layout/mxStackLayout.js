@@ -196,7 +196,7 @@ class mxStackLayout extends mxGraphLayout {
 
       value /= this.graph.view.scale;
 
-      for (i = 0; i < childCount; i++) {
+      for (i = 0; i < childCount; i += 1) {
         const child = model.getChildAt(parent, i);
 
         if (child != cell) {
@@ -260,7 +260,7 @@ class mxStackLayout extends mxGraphLayout {
     const childCount = model.getChildCount(parent);
     const cells = [];
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = model.getChildAt(parent, i);
 
       if (!this.isVertexIgnored(child) && this.isVertexMovable(child)) {
@@ -372,7 +372,7 @@ class mxStackLayout extends mxGraphLayout {
         let lastChild = null;
         const cells = this.getLayoutCells(parent);
 
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i += 1) {
           const child = cells[i];
           let geo = model.getGeometry(child);
 

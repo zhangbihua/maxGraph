@@ -4,8 +4,11 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDictionary from 'FIXME';
+import mxDictionary from "../util/mxDictionary";
 import mxRectangle from '../util/mxRectangle';
+import mxGeometry from "../model/mxGeometry";
+import mxPoint from "../util/mxPoint";
+import mxConstants from "../util/mxConstants";
 
 class mxGraphLayout {
   /**
@@ -173,7 +176,7 @@ class mxGraphLayout {
           const edgeCount = this.graph.model.getEdgeCount(vertex);
 
           if (edgeCount > 0) {
-            for (let i = 0; i < edgeCount; i++) {
+            for (let i = 0; i < edgeCount; i += 1) {
               const e = this.graph.model.getEdgeAt(vertex, i);
               const isSource = this.graph.model.getTerminal(e, true) == vertex;
 
@@ -342,7 +345,7 @@ class mxGraphLayout {
 
         const parentOffset = this.getParentOffset(parent);
 
-        for (let i = 0; i < points.length; i++) {
+        for (let i = 0; i < points.length; i += 1) {
           points[i].x = points[i].x - parentOffset.x;
           points[i].y = points[i].y - parentOffset.y;
         }

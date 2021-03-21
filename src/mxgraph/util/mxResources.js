@@ -280,7 +280,7 @@ const mxResources = {
     if (text != null) {
       const lines = text.split('\n');
 
-      for (let i = 0; i < lines.length; i++) {
+      for (let i = 0; i < lines.length; i += 1) {
         if (lines[i].charAt(0) !== '#') {
           const index = lines[i].indexOf('=');
 
@@ -364,7 +364,7 @@ const mxResources = {
     const result = [];
     let index = null;
 
-    for (let i = 0; i < value.length; i++) {
+    for (let i = 0; i < value.length; i += 1) {
       const c = value.charAt(i);
 
       if (c === '{') {

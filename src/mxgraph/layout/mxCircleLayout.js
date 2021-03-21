@@ -103,7 +103,7 @@ class mxCircleLayout extends mxGraphLayout {
       const vertices = [];
       const childCount = model.getChildCount(parent);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         const cell = model.getChildAt(parent, i);
 
         if (!this.isVertexIgnored(cell)) {
@@ -168,7 +168,7 @@ class mxCircleLayout extends mxGraphLayout {
     const vertexCount = vertices.length;
     const phi = (2 * Math.PI) / vertexCount;
 
-    for (let i = 0; i < vertexCount; i++) {
+    for (let i = 0; i < vertexCount; i += 1) {
       if (this.isVertexMovable(vertices[i])) {
         this.setVertexLocation(
           vertices[i],

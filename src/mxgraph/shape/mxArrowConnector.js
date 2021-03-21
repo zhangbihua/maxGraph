@@ -233,7 +233,7 @@ class mxArrowConnector extends mxShape {
     let dy1 = 0;
     let dist1 = 0;
 
-    for (let i = 0; i < pts.length - 2; i++) {
+    for (let i = 0; i < pts.length - 2; i += 1) {
       // Work out in which direction the line is bending
       const pos = mxUtils.relativeCcw(
         pts[i].x,

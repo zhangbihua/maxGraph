@@ -76,7 +76,7 @@ class mxImageExport {
       const { graph } = state.view;
       const childCount = graph.model.getChildCount(state.cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         const childState = graph.view.getState(
           graph.model.getChildAt(state.cell, i)
         );

@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxObjectIdentity from 'FIXME';
+import mxObjectIdentity from "../util/mxObjectIdentity";
 import mxGraphLayout from './mxGraphLayout';
 
 class mxFastOrganicLayout extends mxGraphLayout {
@@ -217,9 +217,9 @@ class mxFastOrganicLayout extends mxGraphLayout {
   execute = parent => {
     const model = this.graph.getModel();
     this.vertexArray = [];
-    const cells = this.graph.getChildVertices(parent);
+    let cells = this.graph.getChildVertices(parent);
 
-    for (let i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i += 1) {
       if (!this.isVertexIgnored(cells[i])) {
         this.vertexArray.push(cells[i]);
       }
@@ -249,7 +249,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
     // arrays called neighbours which holds, for each vertex, a list of
     // ints which represents the neighbours cells to that vertex as
     // the indices into vertexArray
-    for (let i = 0; i < this.vertexArray.length; i++) {
+    for (let i = 0; i < this.vertexArray.length; i += 1) {
       const vertex = this.vertexArray[i];
       this.cellLocation[i] = [];
 
@@ -277,7 +277,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
     // algorithm, resetting the edge points is part of the transaction
     model.beginUpdate();
     try {
-      for (let i = 0; i < n; i++) {
+      for (let i = 0; i < n; i += 1) {
         this.dispX[i] = 0;
         this.dispY[i] = 0;
         this.isMoveable[i] = this.isVertexMovable(this.vertexArray[i]);
@@ -286,10 +286,10 @@ class mxFastOrganicLayout extends mxGraphLayout {
         // obtained in indices into vertexArray and store as an array
         // against the orginial cell index
         const edges = this.graph.getConnections(this.vertexArray[i], parent);
-        const cells = this.graph.getOpposites(edges, this.vertexArray[i]);
+        cells = this.graph.getOpposites(edges, this.vertexArray[i]);
         this.neighbours[i] = [];
 
-        for (let j = 0; j < cells.length; j++) {
+        for (let j = 0; j < cells.length; j += 1) {
           // Resets the points on the traversed edge
           if (this.resetEdges) {
             this.graph.resetEdge(edges[j]);
@@ -329,7 +329,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
       for (
         this.iteration = 0;
         this.iteration < this.maxIterations;
-        this.iteration++
+        this.iteration += 1
       ) {
         if (!this.allowedToRun) {
           return;
@@ -348,7 +348,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
       let minx = null;
       let miny = null;
 
-      for (let i = 0; i < this.vertexArray.length; i++) {
+      for (let i = 0; i < this.vertexArray.length; i += 1) {
         const vertex = this.vertexArray[i];
 
         if (this.isVertexMovable(vertex)) {
@@ -403,7 +403,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * temperature.
    */
   calcPositions = () => {
-    for (let index = 0; index < this.vertexArray.length; index++) {
+    for (let index = 0; index < this.vertexArray.length; index += 1) {
       if (this.isMoveable[index]) {
         // Get the distance of displacement for this node for this
         // iteration
@@ -446,8 +446,8 @@ class mxFastOrganicLayout extends mxGraphLayout {
   calcAttraction = () => {
     // Check the neighbours of each vertex and calculate the attractive
     // force of the edge connecting them
-    for (let i = 0; i < this.vertexArray.length; i++) {
-      for (let k = 0; k < this.neighbours[i].length; k++) {
+    for (let i = 0; i < this.vertexArray.length; i += 1) {
+      for (let k = 0; k < this.neighbours[i].length; k += 1) {
         // Get the index of the othe cell in the vertex array
         const j = this.neighbours[i][k];
 
@@ -491,22 +491,22 @@ class mxFastOrganicLayout extends mxGraphLayout {
   calcRepulsion = () => {
     const vertexCount = this.vertexArray.length;
 
-    for (let i = 0; i < vertexCount; i++) {
-      for (let j = i; j < vertexCount; j++) {
+    for (let i = 0; i < vertexCount; i += 1) {
+      for (let j = i; j < vertexCount; j += 1) {
         // Exits if the layout is no longer allowed to run
         if (!this.allowedToRun) {
           return;
         }
 
-        if (j != i && this.isMoveable[i] && this.isMoveable[j]) {
+        if (j !== i && this.isMoveable[i] && this.isMoveable[j]) {
           let xDelta = this.cellLocation[i][0] - this.cellLocation[j][0];
           let yDelta = this.cellLocation[i][1] - this.cellLocation[j][1];
 
-          if (xDelta == 0) {
+          if (xDelta === 0) {
             xDelta = 0.01 + Math.random();
           }
 
-          if (yDelta == 0) {
+          if (yDelta === 0) {
             yDelta = 0.01 + Math.random();
           }
 

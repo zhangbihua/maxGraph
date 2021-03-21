@@ -156,7 +156,7 @@ class mxCellCodec extends mxObjectCodec {
     // Preprocesses and removes all Id-references in order to use the
     // correct encoder (this) for the known references to cells (all).
     if (inner != null) {
-      for (let i = 0; i < this.idrefs.length; i++) {
+      for (let i = 0; i < this.idrefs.length; i += 1) {
         const attr = this.idrefs[i];
         const ref = inner.getAttribute(attr);
 

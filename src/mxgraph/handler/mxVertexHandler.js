@@ -603,7 +603,7 @@ class mxVertexHandler {
     }
 
     if (this.sizers != null) {
-      for (let i = 0; i < this.sizers.length; i++) {
+      for (let i = 0; i < this.sizers.length; i += 1) {
         if (checkShape(this.sizers[i])) {
           return i;
         }
@@ -753,7 +753,7 @@ class mxVertexHandler {
           const edges = this.graph.getEdges(this.state.cell);
           this.edgeHandlers = [];
 
-          for (let i = 0; i < edges.length; i++) {
+          for (let i = 0; i < edges.length; i += 1) {
             const handler = this.graph.selectionCellsHandler.getHandler(
               edges[i]
             );
@@ -791,13 +791,13 @@ class mxVertexHandler {
     this.handlesVisible = visible;
 
     if (this.sizers != null) {
-      for (let i = 0; i < this.sizers.length; i++) {
+      for (let i = 0; i < this.sizers.length; i += 1) {
         this.sizers[i].node.style.display = visible ? '' : 'none';
       }
     }
 
     if (this.customHandles != null) {
-      for (let i = 0; i < this.customHandles.length; i++) {
+      for (let i = 0; i < this.customHandles.length; i += 1) {
         this.customHandles[i].setVisible(visible);
       }
     }
@@ -1432,7 +1432,7 @@ class mxVertexHandler {
             // Recursive rotation
             const childCount = model.getChildCount(cell);
 
-            for (let i = 0; i < childCount; i++) {
+            for (let i = 0; i < childCount; i += 1) {
               this.rotateCell(model.getChildAt(cell, i), angle, cell);
             }
           }
@@ -1472,7 +1472,7 @@ class mxVertexHandler {
     }
 
     if (this.livePreviewActive && this.sizers != null) {
-      for (let i = 0; i < this.sizers.length; i++) {
+      for (let i = 0; i < this.sizers.length; i += 1) {
         if (this.sizers[i] != null) {
           this.sizers[i].node.style.display = '';
         }
@@ -1485,7 +1485,7 @@ class mxVertexHandler {
     }
 
     if (this.customHandles != null) {
-      for (let i = 0; i < this.customHandles.length; i++) {
+      for (let i = 0; i < this.customHandles.length; i += 1) {
         if (this.customHandles[i].active) {
           this.customHandles[i].active = false;
           this.customHandles[i].reset();
@@ -1581,7 +1581,7 @@ class mxVertexHandler {
     const model = this.graph.getModel();
     const childCount = model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = model.getChildAt(cell, i);
       let geo = this.graph.getCellGeometry(child);
 
@@ -1871,7 +1871,7 @@ class mxVertexHandler {
     this.verticalOffset = 0;
 
     if (this.customHandles != null) {
-      for (let i = 0; i < this.customHandles.length; i++) {
+      for (let i = 0; i < this.customHandles.length; i += 1) {
         const temp = this.customHandles[i].shape.node.style.display;
         this.customHandles[i].redraw();
         this.customHandles[i].shape.node.style.display = temp;
@@ -2058,7 +2058,7 @@ class mxVertexHandler {
     }
 
     if (this.edgeHandlers != null) {
-      for (let i = 0; i < this.edgeHandlers.length; i++) {
+      for (let i = 0; i < this.edgeHandlers.length; i += 1) {
         this.edgeHandlers[i].redraw();
       }
     }
@@ -2246,7 +2246,7 @@ class mxVertexHandler {
     this.removeHint();
 
     if (this.sizers != null) {
-      for (let i = 0; i < this.sizers.length; i++) {
+      for (let i = 0; i < this.sizers.length; i += 1) {
         this.sizers[i].destroy();
       }
 
@@ -2254,7 +2254,7 @@ class mxVertexHandler {
     }
 
     if (this.customHandles != null) {
-      for (let i = 0; i < this.customHandles.length; i++) {
+      for (let i = 0; i < this.customHandles.length; i += 1) {
         this.customHandles[i].destroy();
       }
 

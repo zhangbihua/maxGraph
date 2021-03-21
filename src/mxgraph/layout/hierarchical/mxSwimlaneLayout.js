@@ -253,7 +253,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     const dummyVertices = [];
     // Check the swimlanes all have vertices
     // in them
-    for (let i = 0; i < swimlanes.length; i++) {
+    for (let i = 0; i < swimlanes.length; i += 1) {
       const children = this.graph.getChildCells(swimlanes[i]);
 
       if (children == null || children.length == 0) {
@@ -315,7 +315,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     for (const key in model.edgeMapper) {
       const edge = model.edgeMapper[key];
 
-      for (let i = 0; i < edge.edges.length; i++) {
+      for (let i = 0; i < edge.edges.length; i += 1) {
         cells.push(edge.edges[i]);
       }
     }
@@ -323,7 +323,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     let layoutBounds = this.graph.getBoundingBoxFromGeometry(cells, true);
     const childBounds = [];
 
-    for (let i = 0; i < this.swimlanes.length; i++) {
+    for (let i = 0; i < this.swimlanes.length; i += 1) {
       const lane = this.swimlanes[i];
       const geo = this.graph.getCellGeometry(lane);
 
@@ -357,7 +357,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
       }
     }
 
-    for (let i = 0; i < this.swimlanes.length; i++) {
+    for (let i = 0; i < this.swimlanes.length; i += 1) {
       const lane = this.swimlanes[i];
       const geo = this.graph.getCellGeometry(lane);
 
@@ -481,7 +481,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     const isCollapsed = this.graph.isCellCollapsed(cell);
     const childCount = model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = model.getChildAt(cell, i);
 
       if (this.isPort(child)) {
@@ -494,7 +494,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     edges = edges.concat(model.getEdges(cell, true, true));
     const result = [];
 
-    for (let i = 0; i < edges.length; i++) {
+    for (let i = 0; i < edges.length; i += 1) {
       const source = this.getVisibleTerminal(edges[i], true);
       const target = this.getVisibleTerminal(edges[i], false);
 
@@ -589,7 +589,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     if (this.swimlanes != null && this.swimlanes.length > 0 && parent != null) {
       const filledVertexSet = Object();
 
-      for (let i = 0; i < this.swimlanes.length; i++) {
+      for (let i = 0; i < this.swimlanes.length; i += 1) {
         this.filterDescendants(this.swimlanes[i], filledVertexSet);
       }
 
@@ -621,7 +621,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
         // If the candidate root is an unconnected group cell, remove it from
         // the layout. We may need a custom set that holds such groups and forces
         // them to be processed for resizing and/or moving.
-        for (let i = 0; i < candidateRoots.length; i++) {
+        for (let i = 0; i < candidateRoots.length; i += 1) {
           const vertexSet = Object();
           hierarchyVertices.push(vertexSet);
 
@@ -637,7 +637,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
           );
         }
 
-        for (let i = 0; i < candidateRoots.length; i++) {
+        for (let i = 0; i < candidateRoots.length; i += 1) {
           this.roots.push(candidateRoots[i]);
         }
 
@@ -654,7 +654,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     } else {
       // Find vertex set as directed traversal from roots
 
-      for (let i = 0; i < this.roots.length; i++) {
+      for (let i = 0; i < this.roots.length; i += 1) {
         const vertexSet = Object();
         hierarchyVertices.push(vertexSet);
 
@@ -714,7 +714,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     ) {
       const childCount = model.getChildCount(cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         const child = model.getChildAt(cell, i);
 
         // Ignore ports in the layout vertex list, they are dealt with
@@ -763,7 +763,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match
-    for (let i = 0; i < edges.length; i++) {
+    for (let i = 0; i < edges.length; i += 1) {
       const src = this.getVisibleTerminal(edges[i], true);
       const trg = this.getVisibleTerminal(edges[i], false);
 
@@ -829,7 +829,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
         const edges = this.getEdges(vertex);
         const { model } = this.graph;
 
-        for (let i = 0; i < edges.length; i++) {
+        for (let i = 0; i < edges.length; i += 1) {
           let otherVertex = this.getVisibleTerminal(edges[i], true);
           const isSource = otherVertex == vertex;
 
@@ -875,7 +875,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
       } else if (currentComp[vertexID] == null) {
         // We've seen this vertex before, but not in the current component
         // This component and the one it's in need to be merged
-        for (let i = 0; i < hierarchyVertices.length; i++) {
+        for (let i = 0; i < hierarchyVertices.length; i += 1) {
           const comp = hierarchyVertices[i];
 
           if (comp[vertexID] != null) {

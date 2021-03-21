@@ -58,7 +58,7 @@ class mxGraphSelectionModel extends mxEventSource {
    * {
    *   let cells = evt.getProperty('added');
    *
-   *   for (let i = 0; i < cells.length; i++)
+   *   for (let i = 0; i < cells.length; i += 1)
    *   {
    *     // Handle cells[i]...
    *   }
@@ -180,7 +180,7 @@ class mxGraphSelectionModel extends mxEventSource {
 
       const tmp = [];
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         if (this.graph.isCellSelectable(cells[i])) {
           tmp.push(cells[i]);
         }
@@ -197,7 +197,7 @@ class mxGraphSelectionModel extends mxEventSource {
    */
   getFirstSelectableCell = cells => {
     if (cells != null) {
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         if (this.graph.isCellSelectable(cells[i])) {
           return cells[i];
         }
@@ -243,7 +243,7 @@ class mxGraphSelectionModel extends mxEventSource {
 
       const tmp = [];
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         if (
           !this.isSelected(cells[i]) &&
           this.graph.isCellSelectable(cells[i])
@@ -279,7 +279,7 @@ class mxGraphSelectionModel extends mxEventSource {
     if (cells != null) {
       const tmp = [];
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         if (this.isSelected(cells[i])) {
           tmp.push(cells[i]);
         }

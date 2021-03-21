@@ -778,7 +778,7 @@ class mxObjectCodec {
     const attrs = node.attributes;
 
     if (attrs != null) {
-      for (let i = 0; i < attrs.length; i++) {
+      for (let i = 0; i < attrs.length; i += 1) {
         this.decodeAttribute(dec, attrs[i], obj);
       }
     }

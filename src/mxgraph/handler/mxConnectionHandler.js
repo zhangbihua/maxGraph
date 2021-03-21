@@ -886,7 +886,7 @@ class mxConnectionHandler extends mxEventSource {
    */
   destroyIcons = () => {
     if (this.icons != null) {
-      for (let i = 0; i < this.icons.length; i++) {
+      for (let i = 0; i < this.icons.length; i += 1) {
         this.icons[i].destroy();
       }
 
@@ -1469,7 +1469,7 @@ class mxConnectionHandler extends mxEventSource {
         let hitsIcon = false;
         const target = me.getSource();
 
-        for (let i = 0; i < this.icons.length && !hitsIcon; i++) {
+        for (let i = 0; i < this.icons.length && !hitsIcon; i += 1) {
           hitsIcon =
             target === this.icons[i].node ||
             target.parentNode === this.icons[i].node;
@@ -1543,7 +1543,7 @@ class mxConnectionHandler extends mxEventSource {
     if (this.waypoints != null) {
       realPoints = [];
 
-      for (let i = 0; i < this.waypoints.length; i++) {
+      for (let i = 0; i < this.waypoints.length; i += 1) {
         const pt = this.waypoints[i].clone();
         this.convertWaypoint(pt);
         realPoints[i] = pt;
@@ -2050,7 +2050,7 @@ class mxConnectionHandler extends mxEventSource {
             const tr = this.graph.view.translate;
             geo.points = [];
 
-            for (let i = 0; i < this.waypoints.length; i++) {
+            for (let i = 0; i < this.waypoints.length; i += 1) {
               const pt = this.waypoints[i];
               geo.points.push(new mxPoint(pt.x / s - tr.x, pt.y / s - tr.y));
             }

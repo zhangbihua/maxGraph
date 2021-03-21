@@ -209,7 +209,7 @@ class mxUndoManager extends mxEventSource {
         this.history.length - this.indexOfNextAdd
       );
 
-      for (let i = 0; i < edits.length; i++) {
+      for (let i = 0; i < edits.length; i += 1) {
         edits[i].die();
       }
     }

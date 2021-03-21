@@ -100,7 +100,7 @@ class mxMorphing extends mxAnimation {
 
     if (this.cells != null) {
       // Animates the given cells individually without recursion
-      for (let i = 0; i < this.cells.length; i++) {
+      for (let i = 0; i < this.cells.length; i += 1) {
         this.animateCell(this.cells[i], move, false);
       }
     } else {
@@ -156,7 +156,7 @@ class mxMorphing extends mxAnimation {
     if (recurse && !this.stopRecursion(state, delta)) {
       const childCount = this.graph.getModel().getChildCount(cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         this.animateCell(
           this.graph.getModel().getChildAt(cell, i),
           move,

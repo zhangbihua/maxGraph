@@ -5,6 +5,15 @@
  */
 
 import mxEventSource from '../util/mxEventSource';
+import mxEvent from '../util/mxEvent';
+import mxUtils from '../util/mxUtils';
+import mxRootChange from '../model/atomic_changes/mxRootChange';
+import mxChildChange from '../model/atomic_changes/mxChildChange';
+import mxTerminalChange from '../model/atomic_changes/mxTerminalChange';
+import mxGeometryChange from '../model/atomic_changes/mxGeometryChange';
+import mxVisibleChange from '../model/atomic_changes/mxVisibleChange';
+import mxStyleChange from '../model/atomic_changes/mxStyleChange';
+import mxEventObject from '../util/mxEventObject';
 
 class mxLayoutManager extends mxEventSource {
   /**
@@ -249,7 +258,7 @@ class mxLayoutManager extends mxEventSource {
       );
       const model = this.getGraph().getModel();
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         const layout = this.getLayout(
           model.getParent(cells[i]),
           mxEvent.MOVE_CELLS
@@ -276,7 +285,7 @@ class mxLayoutManager extends mxEventSource {
     if (cells != null && bounds != null) {
       const model = this.getGraph().getModel();
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         const layout = this.getLayout(
           model.getParent(cells[i]),
           mxEvent.RESIZE_CELLS
@@ -297,7 +306,7 @@ class mxLayoutManager extends mxEventSource {
   getCellsForChanges = changes => {
     let result = [];
 
-    for (let i = 0; i < changes.length; i++) {
+    for (let i = 0; i < changes.length; i += 1) {
       const change = changes[i];
 
       if (change instanceof mxRootChange) {
@@ -382,7 +391,7 @@ class mxLayoutManager extends mxEventSource {
     if (cell != null && this.hasLayout(cell)) {
       const model = this.getGraph().getModel();
 
-      for (let i = 0; i < model.getChildCount(cell); i++) {
+      for (let i = 0; i < model.getChildCount(cell); i += 1) {
         const child = model.getChildAt(cell, i);
 
         if (this.hasLayout(child)) {
@@ -423,8 +432,8 @@ class mxLayoutManager extends mxEventSource {
       try {
         let last = null;
 
-        for (let i = 0; i < cells.length; i++) {
-          if (cells[i] != model.getRoot() && cells[i] != last) {
+        for (let i = 0; i < cells.length; i += 1) {
+          if (cells[i] !== model.getRoot() && cells[i] !== last) {
             this.executeLayout(cells[i], bubble);
             last = cells[i];
           }

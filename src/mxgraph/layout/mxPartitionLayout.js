@@ -5,6 +5,7 @@
  */
 
 import mxRectangle from '../util/mxRectangle';
+import mxGraphLayout from "./mxGraphLayout";
 
 class mxPartitionLayout extends mxGraphLayout {
   /**
@@ -92,7 +93,7 @@ class mxPartitionLayout extends mxGraphLayout {
 
       // Finds index of the closest swimlane
       // TODO: Take into account the orientation
-      for (i = 0; i < childCount; i++) {
+      for (i = 0; i < childCount; i += 1) {
         const child = model.getChildAt(parent, i);
         const bounds = this.getVertexBounds(child);
 
@@ -132,7 +133,7 @@ class mxPartitionLayout extends mxGraphLayout {
     if (
       this.graph.container != null &&
       ((pgeo == null && model.isLayer(parent)) ||
-        parent == this.graph.getView().currentRoot)
+        parent === this.graph.getView().currentRoot)
     ) {
       const width = this.graph.container.offsetWidth - 1;
       const height = this.graph.container.offsetHeight - 1;
@@ -143,7 +144,7 @@ class mxPartitionLayout extends mxGraphLayout {
       const children = [];
       const childCount = model.getChildCount(parent);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         const child = model.getChildAt(parent, i);
 
         if (!this.isVertexIgnored(child) && this.isVertexMovable(child)) {
@@ -177,7 +178,7 @@ class mxPartitionLayout extends mxGraphLayout {
         if (value > 0) {
           model.beginUpdate();
           try {
-            for (let i = 0; i < n; i++) {
+            for (let i = 0; i < n; i += 1) {
               const child = children[i];
               let geo = model.getGeometry(child);
 

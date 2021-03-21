@@ -163,7 +163,7 @@ class mxSelectionCellsHandler extends mxEventSource {
     const tmp = mxUtils.sortCells(this.getHandledSelectionCells(), false);
 
     // Destroys or updates old handlers
-    for (let i = 0; i < tmp.length; i++) {
+    for (let i = 0; i < tmp.length; i += 1) {
       const state = this.graph.view.getState(tmp[i]);
 
       if (state != null) {
@@ -199,7 +199,7 @@ class mxSelectionCellsHandler extends mxEventSource {
     );
 
     // Creates new handlers and updates parent highlight on existing handlers
-    for (let i = 0; i < tmp.length; i++) {
+    for (let i = 0; i < tmp.length; i += 1) {
       const state = this.graph.view.getState(tmp[i]);
 
       if (state != null) {

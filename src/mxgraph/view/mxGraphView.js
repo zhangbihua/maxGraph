@@ -251,7 +251,7 @@ class mxGraphView extends mxEventSource {
     if (cells != null && cells.length > 0) {
       const model = this.graph.getModel();
 
-      for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < cells.length; i += 1) {
         if (model.isVertex(cells[i]) || model.isEdge(cells[i])) {
           const state = this.getState(cells[i]);
 
@@ -480,7 +480,7 @@ class mxGraphView extends mxEventSource {
     if (recurse && (force || cell != this.currentRoot)) {
       const childCount = model.getChildCount(cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         this.clear(model.getChildAt(cell, i), force);
       }
     } else {
@@ -519,7 +519,7 @@ class mxGraphView extends mxEventSource {
       if (recurse) {
         const childCount = model.getChildCount(cell);
 
-        for (let i = 0; i < childCount; i++) {
+        for (let i = 0; i < childCount; i += 1) {
           const child = model.getChildAt(cell, i);
           this.invalidate(child, recurse, includeEdges);
         }
@@ -529,7 +529,7 @@ class mxGraphView extends mxEventSource {
       if (includeEdges) {
         const edgeCount = model.getEdgeCount(cell);
 
-        for (let i = 0; i < edgeCount; i++) {
+        for (let i = 0; i < edgeCount; i += 1) {
           this.invalidate(model.getEdgeAt(cell, i), recurse, includeEdges);
         }
       }
@@ -626,7 +626,7 @@ class mxGraphView extends mxEventSource {
         const model = this.graph.getModel();
         const childCount = model.getChildCount(state.cell);
 
-        for (let i = 0; i < childCount; i++) {
+        for (let i = 0; i < childCount; i += 1) {
           const bounds = this.getBoundingBox(
             this.getState(model.getChildAt(state.cell, i))
           );
@@ -850,7 +850,7 @@ class mxGraphView extends mxEventSource {
         const model = this.graph.getModel();
         const childCount = model.getChildCount(cell);
 
-        for (let i = 0; i < childCount; i++) {
+        for (let i = 0; i < childCount; i += 1) {
           this.validateCell(
             model.getChildAt(cell, i),
             visible && (!this.isCellCollapsed(cell) || cell == this.currentRoot)
@@ -923,7 +923,7 @@ class mxGraphView extends mxEventSource {
 
           const childCount = model.getChildCount(cell);
 
-          for (let i = 0; i < childCount; i++) {
+          for (let i = 0; i < childCount; i += 1) {
             this.validateCellState(model.getChildAt(cell, i));
           }
         }
@@ -1389,7 +1389,7 @@ class mxGraphView extends mxEventSource {
           );
         }
       } else if (points != null) {
-        for (let i = 0; i < points.length; i++) {
+        for (let i = 0; i < points.length; i += 1) {
           if (points[i] != null) {
             const pt = mxUtils.clone(points[i]);
             pts.push(this.transformControlPoint(edge, pt));
@@ -1899,7 +1899,7 @@ class mxGraphView extends mxEventSource {
       let maxX = minX;
       let maxY = minY;
 
-      for (let i = 1; i < points.length; i++) {
+      for (let i = 1; i < points.length; i += 1) {
         const tmp = points[i];
 
         if (tmp != null) {
@@ -2030,7 +2030,7 @@ class mxGraphView extends mxEventSource {
         let index = 0;
         let tmp = 0;
 
-        for (let i = 2; i < pointCount; i++) {
+        for (let i = 2; i < pointCount; i += 1) {
           p0 = pe;
           pe = edgeState.absolutePoints[i];
           const dist = mxUtils.ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
@@ -2260,7 +2260,7 @@ class mxGraphView extends mxEventSource {
     }
     const result = [];
 
-    for (let i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i += 1) {
       const state = this.getState(cells[i]);
 
       if (state != null) {

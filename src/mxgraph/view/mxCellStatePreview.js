@@ -135,7 +135,7 @@ class mxCellStatePreview {
 
       const childCount = model.getChildCount(state.cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         this.translateState(
           state.view.getState(model.getChildAt(state.cell, i)),
           dx,
@@ -184,7 +184,7 @@ class mxCellStatePreview {
 
       const childCount = model.getChildCount(state.cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         this.revalidateState(
           this.graph.view.getState(model.getChildAt(state.cell, i)),
           dx,
@@ -202,7 +202,7 @@ class mxCellStatePreview {
     const model = this.graph.getModel();
     const edgeCount = model.getEdgeCount(state.cell);
 
-    for (let i = 0; i < edgeCount; i++) {
+    for (let i = 0; i < edgeCount; i += 1) {
       const s = state.view.getState(model.getEdgeAt(state.cell, i));
 
       if (s != null) {

@@ -308,7 +308,7 @@ class mxDefaultPopupMenu {
     // Evaluates dynamic conditions from config file
     const condNodes = this.config.getElementsByTagName('condition');
 
-    for (let i = 0; i < condNodes.length; i++) {
+    for (let i = 0; i < condNodes.length; i += 1) {
       const funct = mxUtils.eval(mxUtils.getTextContent(condNodes[i]));
       const name = condNodes[i].getAttribute('name');
 

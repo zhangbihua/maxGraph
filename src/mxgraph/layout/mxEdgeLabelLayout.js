@@ -4,7 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from 'FIXME';
+import mxPoint from "../util/mxPoint";
+import mxGraphLayout from "./mxGraphLayout";
+import mxUtils from "../util/mxUtils";
 
 class mxEdgeLabelLayout extends mxGraphLayout {
   /**
@@ -48,7 +50,7 @@ class mxEdgeLabelLayout extends mxGraphLayout {
     const vertices = [];
     const childCount = model.getChildCount(parent);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const cell = model.getChildAt(parent, i);
       const state = view.getState(cell);
 
@@ -77,7 +79,7 @@ class mxEdgeLabelLayout extends mxGraphLayout {
     // overlap
     model.beginUpdate();
     try {
-      for (let i = 0; i < e.length; i++) {
+      for (let i = 0; i < e.length; i += 1) {
         const edge = e[i];
 
         if (
@@ -85,7 +87,7 @@ class mxEdgeLabelLayout extends mxGraphLayout {
           edge.text != null &&
           edge.text.boundingBox != null
         ) {
-          for (let j = 0; j < v.length; j++) {
+          for (let j = 0; j < v.length; j += 1) {
             const vertex = v[j];
 
             if (vertex != null) {

@@ -247,7 +247,7 @@ class mxGuide {
         overrideY = overrideY || override;
       }
 
-      for (let i = 0; i < this.states.length; i++) {
+      for (let i = 0; i < this.states.length; i += 1) {
         const state = this.states[i];
 
         if (state != null && !this.isStateIgnored(state)) {

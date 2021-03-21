@@ -389,7 +389,7 @@ class mxShape {
     if (pts != null && pts.length > 0 && pts[0] != null) {
       this.bounds = new mxRectangle(Number(pts[0].x), Number(pts[0].y), 1, 1);
 
-      for (let i = 1; i < this.points.length; i++) {
+      for (let i = 1; i < this.points.length; i += 1) {
         if (pts[i] != null) {
           this.bounds.add(
             new mxRectangle(Number(pts[i].x), Number(pts[i].y), 1, 1)
@@ -830,7 +830,7 @@ class mxShape {
         // Paints edge shape
         const pts = [];
 
-        for (let i = 0; i < this.points.length; i++) {
+        for (let i = 0; i < this.points.length; i += 1) {
           if (this.points[i] != null) {
             pts.push(new mxPoint(this.points[i].x / s, this.points[i].y / s));
           }

@@ -239,7 +239,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     if (roots != null) {
       const rootsCopy = [];
 
-      for (let i = 0; i < roots.length; i++) {
+      for (let i = 0; i < roots.length; i += 1) {
         const ancestor =
           parent != null ? model.isAncestor(parent, roots[i]) : true;
 
@@ -361,7 +361,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     const isCollapsed = this.graph.isCellCollapsed(cell);
     const childCount = model.getChildCount(cell);
 
-    for (let i = 0; i < childCount; i++) {
+    for (let i = 0; i < childCount; i += 1) {
       const child = model.getChildAt(cell, i);
 
       if (this.isPort(child)) {
@@ -374,7 +374,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     edges = edges.concat(model.getEdges(cell, true, true));
     const result = [];
 
-    for (let i = 0; i < edges.length; i++) {
+    for (let i = 0; i < edges.length; i += 1) {
       const source = this.getVisibleTerminal(edges[i], true);
       const target = this.getVisibleTerminal(edges[i], false);
 
@@ -480,7 +480,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
         // the layout. We may need a custom set that holds such groups and forces
         // them to be processed for resizing and/or moving.
 
-        for (let i = 0; i < candidateRoots.length; i++) {
+        for (let i = 0; i < candidateRoots.length; i += 1) {
           const vertexSet = Object();
           hierarchyVertices.push(vertexSet);
 
@@ -495,7 +495,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
           );
         }
 
-        for (let i = 0; i < candidateRoots.length; i++) {
+        for (let i = 0; i < candidateRoots.length; i += 1) {
           this.roots.push(candidateRoots[i]);
         }
 
@@ -512,7 +512,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     } else {
       // Find vertex set as directed traversal from roots
 
-      for (let i = 0; i < this.roots.length; i++) {
+      for (let i = 0; i < this.roots.length; i += 1) {
         const vertexSet = Object();
         hierarchyVertices.push(vertexSet);
 
@@ -534,7 +534,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     // Track initial coordinate x-positioning
     let initialX = 0;
 
-    for (let i = 0; i < hierarchyVertices.length; i++) {
+    for (let i = 0; i < hierarchyVertices.length; i += 1) {
       const vertexSet = hierarchyVertices[i];
       const tmp = [];
 
@@ -580,7 +580,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     ) {
       const childCount = model.getChildCount(cell);
 
-      for (let i = 0; i < childCount; i++) {
+      for (let i = 0; i < childCount; i += 1) {
         const child = model.getChildAt(cell, i);
 
         // Ignore ports in the layout vertex list, they are dealt with
@@ -628,7 +628,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match
-    for (let i = 0; i < edges.length; i++) {
+    for (let i = 0; i < edges.length; i += 1) {
       const src = this.getVisibleTerminal(edges[i], true);
       const trg = this.getVisibleTerminal(edges[i], false);
 
@@ -692,11 +692,11 @@ class mxHierarchicalLayout extends mxGraphLayout {
         const edges = this.getEdges(vertex);
         const edgeIsSource = [];
 
-        for (let i = 0; i < edges.length; i++) {
+        for (let i = 0; i < edges.length; i += 1) {
           edgeIsSource[i] = this.getVisibleTerminal(edges[i], true) == vertex;
         }
 
-        for (let i = 0; i < edges.length; i++) {
+        for (let i = 0; i < edges.length; i += 1) {
           if (!directed || edgeIsSource[i]) {
             const next = this.getVisibleTerminal(edges[i], !edgeIsSource[i]);
 
@@ -740,7 +740,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
         // We've seen this vertex before, but not in the current component
         // This component and the one it's in need to be merged
 
-        for (let i = 0; i < hierarchyVertices.length; i++) {
+        for (let i = 0; i < hierarchyVertices.length; i += 1) {
           const comp = hierarchyVertices[i];
 
           if (comp[vertexID] != null) {

@@ -70,7 +70,7 @@ const mxEvent = {
     if (element.mxListenerList != null) {
       const listenerCount = element.mxListenerList.length;
 
-      for (let i = 0; i < listenerCount; i++) {
+      for (let i = 0; i < listenerCount; i += 1) {
         const entry = element.mxListenerList[i];
 
         if (entry.f === funct) {
@@ -369,7 +369,7 @@ const mxEvent = {
           evt => {
             if (!mxEvent.isMouseEvent(evt) && evtCache.length == 2) {
               // Find this event in the cache and update its record with this event
-              for (let i = 0; i < evtCache.length; i++) {
+              for (let i = 0; i < evtCache.length; i += 1) {
                 if (evt.pointerId == evtCache[i].pointerId) {
                   evtCache[i] = evt;
                   break;

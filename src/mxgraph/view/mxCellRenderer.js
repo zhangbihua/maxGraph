@@ -305,7 +305,7 @@ class mxCellRenderer {
         mxConstants.STYLE_FONTCOLOR,
       ];
 
-      for (let i = 0; i < styles.length; i++) {
+      for (let i = 0; i < styles.length; i += 1) {
         if (mxUtils.indexOf(values, state.style[styles[i]]) >= 0) {
           return true;
         }
@@ -564,7 +564,7 @@ class mxCellRenderer {
     if (overlays != null) {
       dict = new mxDictionary();
 
-      for (let i = 0; i < overlays.length; i++) {
+      for (let i = 0; i < overlays.length; i += 1) {
         const shape =
           state.overlays != null ? state.overlays.remove(overlays[i]) : null;
 
@@ -1436,7 +1436,7 @@ class mxCellRenderer {
   insertStateAfter = (state, node, htmlNode) => {
     const shapes = this.getShapesForState(state);
 
-    for (let i = 0; i < shapes.length; i++) {
+    for (let i = 0; i < shapes.length; i += 1) {
       if (shapes[i] != null && shapes[i].node != null) {
         const html =
           shapes[i].node.parentNode != state.view.getDrawPane() &&

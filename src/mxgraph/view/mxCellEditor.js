@@ -843,17 +843,17 @@ class mxCellEditor {
       );
       const bold =
         (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-          mxConstants.FONT_BOLD) ==
+          mxConstants.FONT_BOLD) ===
         mxConstants.FONT_BOLD;
       const italic =
         (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-          mxConstants.FONT_ITALIC) ==
+          mxConstants.FONT_ITALIC) ===
         mxConstants.FONT_ITALIC;
       const txtDecor = [];
 
       if (
         (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-          mxConstants.FONT_UNDERLINE) ==
+          mxConstants.FONT_UNDERLINE) ===
         mxConstants.FONT_UNDERLINE
       ) {
         txtDecor.push('underline');
@@ -861,7 +861,7 @@ class mxCellEditor {
 
       if (
         (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
-          mxConstants.FONT_STRIKETHROUGH) ==
+          mxConstants.FONT_STRIKETHROUGH) ===
         mxConstants.FONT_STRIKETHROUGH
       ) {
         txtDecor.push('line-through');
@@ -889,7 +889,6 @@ class mxCellEditor {
 
       if (dir === mxConstants.TEXT_DIRECTION_AUTO) {
         if (
-          state != null &&
           state.text != null &&
           state.text.dialect !== mxConstants.DIALECT_STRICTHTML &&
           !mxUtils.isNode(state.text.value)
@@ -922,7 +921,7 @@ class mxCellEditor {
         this.clearOnChange = true;
       } else {
         this.clearOnChange =
-          this.textarea.innerHTML == this.getEmptyLabelText();
+          this.textarea.innerHTML === this.getEmptyLabelText();
       }
 
       this.graph.container.appendChild(this.textarea);
@@ -1034,7 +1033,7 @@ class mxCellEditor {
 
       if (
         this.clearOnChange &&
-        this.textarea.innerHTML == this.getEmptyLabelText()
+        this.textarea.innerHTML === this.getEmptyLabelText()
       ) {
         this.textarea.innerHTML = '';
         this.clearOnChange = false;
@@ -1042,7 +1041,7 @@ class mxCellEditor {
 
       if (
         state != null &&
-        (this.textarea.innerHTML != initial || this.align != null)
+        (this.textarea.innerHTML !== initial || this.align != null)
       ) {
         this.prepareTextarea();
         const value = this.getCurrentValue(state);

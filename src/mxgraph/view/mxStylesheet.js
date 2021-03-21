@@ -210,7 +210,7 @@ class mxStylesheet {
       }
 
       // Parses each key, value pair into the existing style
-      for (let i = 0; i < pairs.length; i++) {
+      for (let i = 0; i < pairs.length; i += 1) {
         const tmp = pairs[i];
         const pos = tmp.indexOf('=');
 

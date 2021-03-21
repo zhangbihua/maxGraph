@@ -31,13 +31,13 @@ class mxSelectionChange {
       this.selectionModel.updatingSelectionResource;
 
     if (this.removed != null) {
-      for (let i = 0; i < this.removed.length; i++) {
+      for (let i = 0; i < this.removed.length; i += 1) {
         this.selectionModel.cellRemoved(this.removed[i]);
       }
     }
 
     if (this.added != null) {
-      for (let i = 0; i < this.added.length; i++) {
+      for (let i = 0; i < this.added.length; i += 1) {
         this.selectionModel.cellAdded(this.added[i]);
       }
     }
