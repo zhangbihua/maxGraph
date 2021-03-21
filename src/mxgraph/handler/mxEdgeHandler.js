@@ -12,6 +12,8 @@ import mxRectangleShape from "../shape/mxRectangleShape";
 import mxConnectionConstraint from "../view/mxConnectionConstraint";
 import mxEvent from "../util/mxEvent";
 import mxConstraintHandler from "./mxConstraintHandler";
+import mxRectangle from "../util/mxRectangle";
+import mxClient from "../mxClient";
 
 class mxEdgeHandler {
   /**
@@ -198,19 +200,62 @@ class mxEdgeHandler {
    * handle. Uses <checkLabelHandle> for checking and moving. Default is false.
    */
   manageLabelHandle = false;
+
   /**
    * Function: isParentHighlightVisible
    *
    * Returns true if the parent highlight should be visible. This implementation
    * always returns true.
    */
-  //isParentHighlightVisible = isParentHighlightVisible;
+  isParentHighlightVisible = () => {
+    return !this.graph.isCellSelected(this.graph.model.getParent(this.state.cell));
+  };
+
   /**
    * Function: updateParentHighlight
    *
    * Updates the highlight of the parent if <parentHighlightEnabled> is true.
    */
-  //updateParentHighlight = updateParentHighlight;
+  updateParentHighlight = () => {
+    if (!this.isDestroyed()) {
+      let visible = this.isParentHighlightVisible();
+      let parent = this.graph.model.getParent(this.state.cell);
+      let pstate = this.graph.view.getState(parent);
+
+      if (this.parentHighlight != null) {
+        if (this.graph.model.isVertex(parent) && visible) {
+          let b = this.parentHighlight.bounds;
+
+          if (pstate != null && (b.x !== pstate.x || b.y !== pstate.y ||
+              b.width !== pstate.width || b.height !== pstate.height)) {
+            this.parentHighlight.bounds = mxRectangle.fromRectangle(pstate);
+            this.parentHighlight.redraw();
+          }
+        } else {
+          if (pstate != null && pstate.parentHighlight === this.parentHighlight) {
+            pstate.parentHighlight = null;
+          }
+
+          this.parentHighlight.destroy();
+          this.parentHighlight = null;
+        }
+      } else if (this.parentHighlightEnabled && visible) {
+        if (this.graph.model.isVertex(parent) && pstate != null &&
+            pstate.parentHighlight == null) {
+          this.parentHighlight = this.createParentHighlightShape(pstate);
+          // VML dialect required here for event transparency in IE
+          this.parentHighlight.dialect = (this.graph.dialect !== mxConstants.DIALECT_SVG) ? mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
+          this.parentHighlight.pointerEvents = false;
+          this.parentHighlight.rotation = Number(pstate.style[mxConstants.STYLE_ROTATION] || '0');
+          this.parentHighlight.init(this.graph.getView().getOverlayPane());
+          this.parentHighlight.redraw();
+
+          // Shows highlight once per parent
+          pstate.parentHighlight = this.parentHighlight;
+        }
+      }
+    }
+  };
 
   /**
    * Class: mxEdgeHandler
@@ -821,7 +866,7 @@ class mxEdgeHandler {
     } else if (handle != null && !me.isConsumed() && this.graph.isEnabled()) {
       if (this.removeEnabled && this.isRemovePointEvent(me.getEvent())) {
         this.removePoint(this.state, handle);
-      } else if (handle != mxEvent.LABEL_HANDLE || this.graph.isLabelMovable(me.getCell())) {
+      } else if (handle !== mxEvent.LABEL_HANDLE || this.graph.isLabelMovable(me.getCell())) {
         if (handle <= mxEvent.VIRTUAL_HANDLE) {
           mxUtils.setOpacity(this.virtualBends[mxEvent.VIRTUAL_HANDLE - handle].node, 100);
         }
