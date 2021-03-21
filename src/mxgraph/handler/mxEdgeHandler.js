@@ -473,62 +473,62 @@ class mxEdgeHandler {
    * Creates and returns the <mxCellMarker> used in <marker>.
    */
   createMarker = () => {
-    let marker = new mxCellMarker(this.graph);
     let self = this; // closure
 
-    // Only returns edges if they are connectable and never returns
-    // the edge that is currently being modified
-    marker.getCell = (me) => {
-      let cell = getCell.apply(this, arguments);
+    class MyMarker extends mxCellMarker {
+      // Only returns edges if they are connectable and never returns
+      // the edge that is currently being modified
+      getCell = (me) => {
+        let cell = super.getCell(me);
 
-      // Checks for cell at preview point (with grid)
-      if ((cell === self.state.cell || cell == null) && self.currentPoint != null) {
-        cell = self.graph.getCellAt(self.currentPoint.x, self.currentPoint.y);
-      }
-
-      // Uses connectable parent vertex if one exists
-      if (cell != null && !this.graph.isCellConnectable(cell)) {
-        let parent = this.graph.getModel().getParent(cell);
-
-        if (this.graph.getModel().isVertex(parent) && this.graph.isCellConnectable(parent)) {
-          cell = parent;
+        // Checks for cell at preview point (with grid)
+        if ((cell === self.state.cell || cell == null) && self.currentPoint != null) {
+          cell = self.graph.getCellAt(self.currentPoint.x, self.currentPoint.y);
         }
-      }
 
-      let model = self.graph.getModel();
+        // Uses connectable parent vertex if one exists
+        if (cell != null && !this.graph.isCellConnectable(cell)) {
+          let parent = this.graph.getModel().getParent(cell);
 
-      if ((this.graph.isSwimlane(cell) && self.currentPoint != null &&
-          this.graph.hitsSwimlaneContent(cell, self.currentPoint.x, self.currentPoint.y)) ||
-          (!self.isConnectableCell(cell)) || (cell === self.state.cell ||
-              (cell != null && !self.graph.connectableEdges && model.isEdge(cell))) ||
-          model.isAncestor(self.state.cell, cell)) {
-        cell = null;
-      }
+          if (this.graph.getModel().isVertex(parent) && this.graph.isCellConnectable(parent)) {
+            cell = parent;
+          }
+        }
 
-      if (!this.graph.isCellConnectable(cell)) {
-        cell = null;
-      }
+        let model = self.graph.getModel();
 
-      return cell;
-    };
+        if ((this.graph.isSwimlane(cell) && self.currentPoint != null &&
+            this.graph.hitsSwimlaneContent(cell, self.currentPoint.x, self.currentPoint.y)) ||
+            (!self.isConnectableCell(cell)) || (cell === self.state.cell ||
+                (cell != null && !self.graph.connectableEdges && model.isEdge(cell))) ||
+            model.isAncestor(self.state.cell, cell)) {
+          cell = null;
+        }
 
-    // Sets the highlight color according to validateConnection
-    marker.isValidState = (state) => {
-      let model = self.graph.getModel();
-      let other = self.graph.view.getTerminalPort(state,
-          self.graph.view.getState(model.getTerminal(self.state.cell,
-              !self.isSource)), !self.isSource);
-      let otherCell = (other != null) ? other.cell : null;
-      let source = (self.isSource) ? state.cell : otherCell;
-      let target = (self.isSource) ? otherCell : state.cell;
+        if (!this.graph.isCellConnectable(cell)) {
+          cell = null;
+        }
+        return cell;
+      };
 
-      // Updates the error message of the handler
-      self.error = self.validateConnection(source, target);
+      // Sets the highlight color according to validateConnection
+      isValidState = (state) => {
+        let model = self.graph.getModel();
+        let other = self.graph.view.getTerminalPort(state,
+            self.graph.view.getState(model.getTerminal(self.state.cell,
+                !self.isSource)), !self.isSource);
+        let otherCell = (other != null) ? other.cell : null;
+        let source = (self.isSource) ? state.cell : otherCell;
+        let target = (self.isSource) ? otherCell : state.cell;
 
-      return self.error == null;
-    };
+        // Updates the error message of the handler
+        self.error = self.validateConnection(source, target);
 
-    return marker;
+        return self.error == null;
+      };
+    }
+
+    return new MyMarker(this.graph);
   };
 
   /**

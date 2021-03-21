@@ -538,87 +538,90 @@ class mxConnectionHandler extends mxEventSource {
    * Creates and returns the <mxCellMarker> used in <marker>.
    */
   createMarker = () => {
-    let marker = new mxCellMarker(this.graph);
-    marker.hotspotEnabled = true;
+    let self = this;
 
-    // Overrides to return cell at location only if valid (so that
-    // there is no highlight for invalid cells)
-    marker.getCell = mxUtils.bind(this, (me) => {
-      let cell = getCell.apply(marker, arguments);
-      this.error = null;
+    class MyCellMarker extends mxCellMarker {
+      hotspotEnabled = true;
 
-      // Checks for cell at preview point (with grid)
-      if (cell == null && this.currentPoint != null) {
-        cell = this.graph.getCellAt(this.currentPoint.x, this.currentPoint.y);
-      }
+      // Overrides to return cell at location only if valid (so that
+      // there is no highlight for invalid cells)
+      getCell = (me) => {
+        let cell = super.getCell(me);
+        self.error = null;
 
-      // Uses connectable parent vertex if one exists
-      if (cell != null && !this.graph.isCellConnectable(cell)) {
-        let parent = this.graph.getModel().getParent(cell);
-
-        if (this.graph.getModel().isVertex(parent) && this.graph.isCellConnectable(parent)) {
-          cell = parent;
+        // Checks for cell at preview point (with grid)
+        if (cell == null && self.currentPoint != null) {
+          cell = self.graph.getCellAt(self.currentPoint.x, self.currentPoint.y);
         }
-      }
 
-      if ((this.graph.isSwimlane(cell) && this.currentPoint != null &&
-          this.graph.hitsSwimlaneContent(cell, this.currentPoint.x, this.currentPoint.y)) ||
-          !this.isConnectableCell(cell)) {
-        cell = null;
-      }
+        // Uses connectable parent vertex if one exists
+        if (cell != null && !self.graph.isCellConnectable(cell)) {
+          let parent = self.graph.getModel().getParent(cell);
 
-      if (cell != null) {
-        if (this.isConnecting()) {
-          if (this.previous != null) {
-            this.error = this.validateConnection(this.previous.cell, cell);
-
-            if (this.error != null && this.error.length === 0) {
-              cell = null;
-
-              // Enables create target inside groups
-              if (this.isCreateTarget(me.getEvent())) {
-                this.error = null;
-              }
-            }
+          if (self.graph.getModel().isVertex(parent) && self.graph.isCellConnectable(parent)) {
+            cell = parent;
           }
-        } else if (!this.isValidSource(cell, me)) {
+        }
+
+        if ((self.graph.isSwimlane(cell) && self.currentPoint != null &&
+            self.graph.hitsSwimlaneContent(cell, self.currentPoint.x, self.currentPoint.y)) ||
+            !self.isConnectableCell(cell)) {
           cell = null;
         }
-      } else if (this.isConnecting() && !this.isCreateTarget(me.getEvent()) &&
-          !this.graph.allowDanglingEdges) {
-        this.error = '';
-      }
 
-      return cell;
-    });
+        if (cell != null) {
+          if (self.isConnecting()) {
+            if (self.previous != null) {
+              self.error = self.validateConnection(self.previous.cell, cell);
 
-    // Sets the highlight color according to validateConnection
-    marker.isValidState = (state) => {
-      if (this.isConnecting()) {
-        return this.error == null;
-      } else {
-        return this.isValidState.apply(marker, arguments);
-      }
-    };
+              if (self.error != null && self.error.length === 0) {
+                cell = null;
 
-    // Overrides to use marker color only in highlight mode or for
-    // target selection
-    marker.getMarkerColor = mxUtils.bind(this, (evt, state, isValid) => {
-      return (this.connectImage == null || this.isConnecting()) ?
-          super.getMarkerColor(evt, state, isValid) :
-          null;
-    });
+                // Enables create target inside groups
+                if (self.isCreateTarget(me.getEvent())) {
+                  self.error = null;
+                }
+              }
+            }
+          } else if (!self.isValidSource(cell, me)) {
+            cell = null;
+          }
+        } else if (self.isConnecting() && !self.isCreateTarget(me.getEvent()) &&
+            !self.graph.allowDanglingEdges) {
+          self.error = '';
+        }
 
-    // Overrides to use hotspot only for source selection otherwise
-    // intersects always returns true when over a cell
-    marker.intersects = (state, evt) => {
-      if (this.connectImage != null || this.isConnecting()) {
-        return true;
-      }
-      return super.intersects(state, evt);
-    };
+        return cell;
+      };
 
-    return marker;
+      // Sets the highlight color according to validateConnection
+      isValidState = (state) => {
+        if (self.isConnecting()) {
+          return self.error == null;
+        } else {
+          return super.isValidState(state);
+        }
+      };
+
+      // Overrides to use marker color only in highlight mode or for
+      // target selection
+      getMarkerColor = (evt, state, isValid) => {
+        return (self.connectImage == null || self.isConnecting()) ?
+            super.getMarkerColor(evt, state, isValid) :
+            null;
+      };
+
+      // Overrides to use hotspot only for source selection otherwise
+      // intersects always returns true when over a cell
+      intersects = (state, evt) => {
+        if (self.connectImage != null || self.isConnecting()) {
+          return true;
+        }
+        return super.intersects(state, evt);
+      };
+    }
+
+    return new MyCellMarker(this.graph);
   };
 
   /**
@@ -1883,7 +1886,7 @@ class mxConnectionHandler extends mxEventSource {
     }
 
     let clone = this.graph.cloneCell(source);
-    let geo = this.graph.getModel().getGeometry(clone);
+    geo = this.graph.getModel().getGeometry(clone);
 
     if (geo != null) {
       let t = this.graph.view.translate;
