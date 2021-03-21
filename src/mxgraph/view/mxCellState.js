@@ -6,6 +6,7 @@
 
 import mxPoint from "../util/mxPoint";
 import mxRectangle from "../util/mxRectangle";
+import mxConstants from "../util/mxConstants";
 
 class mxCellState extends mxRectangle {
   /**
@@ -159,19 +160,16 @@ class mxCellState extends mxRectangle {
    * cell - <mxCell> that this state represents.
    * style - Array of key, value pairs that constitute the style.
    */
-  constructor(...args) {
-    super(...args)
-  }
+  constructor(view, cell, style) {
+    super(mxConstants.DO_NOTHING)
 
-  _constructor(view, cell, style) {
-    // replace super of mxPoint/mxRectangle
     this.view = view;
     this.cell = cell;
     this.style = (style != null) ? style : {};
 
     this.origin = new mxPoint();
     this.absoluteOffset = new mxPoint();
-  };
+  }
 
   /**
    * Function: getPerimeterBounds

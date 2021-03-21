@@ -17,6 +17,9 @@ import mxUtils from "../util/mxUtils";
 import mxLog from "../util/mxLog";
 import mxResources from "../util/mxResources";
 import mxCellState from "./mxCellState";
+import mxUndoableEdit from "../util/mxUndoableEdit";
+import mxImageShape from "../shape/mxImageShape";
+import mxMouseEvent from "../util/mxMouseEvent";
 
 class mxGraphView extends mxEventSource {
   EMPTY_POINT = new mxPoint();
@@ -52,14 +55,6 @@ class mxGraphView extends mxEventSource {
    * graph container. Default is true.
    */
   captureDocumentGesture = true;
-  /**
-   * Variable: optimizeVmlReflows
-   *
-   * Specifies if the <canvas> should be hidden while rendering in IE8 standards
-   * mode and quirks mode. This will significantly improve rendering performance.
-   * Default is true.
-   */
-  optimizeVmlReflows = true;
   /**
    * Variable: rendering
    *
@@ -820,7 +815,8 @@ class mxGraphView extends mxEventSource {
 
           state.setVisibleTerminalState(this.validateCellState(this.getVisibleTerminal(cell, true), false), true);
           state.setVisibleTerminalState(this.validateCellState(this.getVisibleTerminal(cell, false), false), false);
-
+          
+          alert(state);
           this.updateCellState(state);
 
           // Repaint happens immediately after the cell is validated
@@ -860,6 +856,8 @@ class mxGraphView extends mxEventSource {
    * state - <mxCellState> to be updated.
    */
   updateCellState = (state) => {
+    alert("STATE:"+state);
+    alert(state.absoluteOffset)
     state.absoluteOffset.x = 0;
     state.absoluteOffset.y = 0;
     state.origin.x = 0;
@@ -2208,8 +2206,6 @@ class mxGraphView extends mxEventSource {
 
     if (graph.dialect == mxConstants.DIALECT_SVG) {
       this.createSvg();
-    } else if (graph.dialect == mxConstants.DIALECT_VML) {
-      this.createVml();
     } else {
       this.createHtml();
     }
@@ -2413,34 +2409,6 @@ class mxGraphView extends mxEventSource {
     }
 
     return pane;
-  };
-
-  /**
-   * Function: createVml
-   *
-   * Creates the DOM nodes for the VML display.
-   */
-  createVml = () => {
-    let container = this.graph.container;
-
-    if (container != null) {
-      let width = container.offsetWidth;
-      let height = container.offsetHeight;
-      this.canvas = this.createVmlPane(width, height);
-      this.canvas.style.overflow = 'hidden';
-
-      this.backgroundPane = this.createVmlPane(width, height);
-      this.drawPane = this.createVmlPane(width, height);
-      this.overlayPane = this.createVmlPane(width, height);
-      this.decoratorPane = this.createVmlPane(width, height);
-
-      this.canvas.appendChild(this.backgroundPane);
-      this.canvas.appendChild(this.drawPane);
-      this.canvas.appendChild(this.overlayPane);
-      this.canvas.appendChild(this.decoratorPane);
-
-      container.appendChild(this.canvas);
-    }
   };
 
   /**

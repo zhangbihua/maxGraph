@@ -109,9 +109,8 @@ class mxAbstractCanvas2D {
      *
      * Holds the <mxUrlConverter> to convert image URLs.
      */
-    this.converter = this.createUrlConverter();
-
-    this.reset();
+    this.converter = this.mxAbstractCanvas2createUrlConverter();
+    this.mxAbstractCanvas2reset();
   };
 
   /**
@@ -129,7 +128,7 @@ class mxAbstractCanvas2D {
    * Resets the state of this canvas.
    */
   mxAbstractCanvas2reset = () => {
-    this.state = this.createState();
+    this.state = this.mxAbstractCanvas2createState();
     this.states = [];
   };
 
@@ -201,8 +200,8 @@ class mxAbstractCanvas2D {
           this.lastX = args[i - 1];
           this.lastY = args[i];
 
-          this.path.push(this.format((this.lastX + s.dx) * s.scale));
-          this.path.push(this.format((this.lastY + s.dy) * s.scale));
+          this.path.push(this.mxAbstractCanvas2format((this.lastX + s.dx) * s.scale));
+          this.path.push(this.mxAbstractCanvas2format((this.lastY + s.dy) * s.scale));
         }
       }
     }
@@ -312,7 +311,7 @@ class mxAbstractCanvas2D {
    * Sets the current fill color.
    */
   mxAbstractCanvas2setFillColor = (value) => {
-    if (value == mxConstants.NONE) {
+    if (value === mxConstants.NONE) {
       value = null;
     }
 
@@ -340,7 +339,7 @@ class mxAbstractCanvas2D {
    * Sets the current stroke color.
    */
   mxAbstractCanvas2setStrokeColor = (value) => {
-    if (value == mxConstants.NONE) {
+    if (value === mxConstants.NONE) {
       value = null;
     }
 
@@ -408,7 +407,7 @@ class mxAbstractCanvas2D {
    * Sets the current font color.
    */
   mxAbstractCanvas2setFontColor = (value) => {
-    if (value == mxConstants.NONE) {
+    if (value === mxConstants.NONE) {
       value = null;
     }
 
@@ -421,7 +420,7 @@ class mxAbstractCanvas2D {
    * Sets the current font background color.
    */
   mxAbstractCanvas2setFontBackgroundColor = (value) => {
-    if (value == mxConstants.NONE) {
+    if (value === mxConstants.NONE) {
       value = null;
     }
 
@@ -434,7 +433,7 @@ class mxAbstractCanvas2D {
    * Sets the current font border color.
    */
   mxAbstractCanvas2setFontBorderColor = (value) => {
-    if (value == mxConstants.NONE) {
+    if (value === mxConstants.NONE) {
       value = null;
     }
 
@@ -487,7 +486,7 @@ class mxAbstractCanvas2D {
    * Enables or disables and configures the current shadow.
    */
   mxAbstractCanvas2setShadowColor = (value) => {
-    if (value == mxConstants.NONE) {
+    if (value === mxConstants.NONE) {
       value = null;
     }
 
@@ -530,7 +529,7 @@ class mxAbstractCanvas2D {
    *  Moves the current path the given coordinates.
    */
   mxAbstractCanvas2moveTo = (x, y) => {
-    this.addOp(this.moveOp, x, y);
+    this.mxAbstractCanvas2addOp(this.mxAbstractCanvas2moveOp, x, y);
   };
 
   /**
@@ -539,7 +538,7 @@ class mxAbstractCanvas2D {
    * Draws a line to the given coordinates. Uses moveTo with the op argument.
    */
   mxAbstractCanvas2lineTo = (x, y) => {
-    this.addOp(this.lineOp, x, y);
+    this.mxAbstractCanvas2addOp(this.mxAbstractCanvas2lineOp, x, y);
   };
 
   /**
@@ -548,7 +547,7 @@ class mxAbstractCanvas2D {
    * Adds a quadratic curve to the current path.
    */
   mxAbstractCanvas2quadTo = (x1, y1, x2, y2) => {
-    this.addOp(this.quadOp, x1, y1, x2, y2);
+    this.mxAbstractCanvas2addOp(this.mxAbstractCanvas2quadOp, x1, y1, x2, y2);
   };
 
   /**
@@ -557,7 +556,7 @@ class mxAbstractCanvas2D {
    * Adds a bezier curve to the current path.
    */
   mxAbstractCanvas2curveTo = (x1, y1, x2, y2, x3, y3) => {
-    this.addOp(this.curveOp, x1, y1, x2, y2, x3, y3);
+    this.mxAbstractCanvas2addOp(this.mxAbstractCanvas2curveOp, x1, y1, x2, y2, x3, y3);
   };
 
   /**
@@ -571,7 +570,7 @@ class mxAbstractCanvas2D {
 
     if (curves != null) {
       for (let i = 0; i < curves.length; i += 6) {
-        this.curveTo(curves[i], curves[i + 1], curves[i + 2],
+        this.mxAbstractCanvas2curveTo(curves[i], curves[i + 1], curves[i + 2],
             curves[i + 3], curves[i + 4], curves[i + 5]);
       }
     }
@@ -583,7 +582,7 @@ class mxAbstractCanvas2D {
    * Closes the current path.
    */
   mxAbstractCanvas2close = (x1, y1, x2, y2, x3, y3) => {
-    this.addOp(this.closeOp);
+    this.mxAbstractCanvas2addOp(this.mxAbstractCanvas2closeOp);
   };
 
   /**

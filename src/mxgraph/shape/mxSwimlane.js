@@ -42,16 +42,11 @@ class mxSwimlane extends mxShape {
    * 1. This is stored in <strokewidth>.
    */
   constructor(bounds, fill, stroke, strokewidth) {
-    super();
+    super(mxConstants.DO_NOTHING);
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
     this.strokewidth = (strokewidth != null) ? strokewidth : 1;
-  };
-
-  _constructor = () => {
-    // explicitly do nothing in
-    // overridden constructor in mxShape
   };
 
   /**

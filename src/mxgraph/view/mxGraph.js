@@ -39,6 +39,14 @@ import mxCell from "../model/mxCell";
 import mxGraphModel from "../model/mxGraphModel";
 import mxStylesheet from "./mxStylesheet";
 
+import mxChildChange from "../model/atomic_changes/mxChildChange";
+import mxGeometryChange from "../model/atomic_changes/mxGeometryChange";
+import mxRootChange from "../model/atomic_changes/mxRootChange";
+import mxStyleChange from "../model/atomic_changes/mxStyleChange";
+import mxTerminalChange from "../model/atomic_changes/mxTerminalChange";
+import mxValueChange from "../model/atomic_changes/mxValueChange";
+
+
 class mxGraph extends mxEventSource {
   /**
    * Variable: mouseListeners

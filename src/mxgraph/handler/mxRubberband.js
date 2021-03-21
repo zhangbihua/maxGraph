@@ -3,6 +3,13 @@
  * Copyright (c) 2006-2016, Gaudenz Alder
  */
 
+import mxUtils from "../util/mxUtils";
+import mxEvent from "../util/mxEvent";
+import mxPoint from "../util/mxPoint";
+import mxMouseEvent from "../util/mxMouseEvent";
+import mxClient from "../mxClient";
+import mxRectangle from "../util/mxRectangle";
+
 class mxRubberband {
   /**
    * Variable: defaultOpacity
@@ -81,7 +88,7 @@ class mxRubberband {
         let evtName = evt.getProperty('eventName');
         let me = evt.getProperty('event');
 
-        if (evtName == mxEvent.MOUSE_DOWN && this.isForceRubberbandEvent(me)) {
+        if (evtName === mxEvent.MOUSE_DOWN && this.isForceRubberbandEvent(me)) {
           let offset = mxUtils.getOffset(this.graph.container);
           let origin = mxUtils.getScrollOrigin(this.graph.container);
           origin.x -= offset.x;
@@ -260,7 +267,7 @@ class mxRubberband {
    * Returns true if this handler is active.
    */
   isActive = (sender, me) => {
-    return this.div != null && this.div.style.display != 'none';
+    return this.div != null && this.div.style.display !== 'none';
   };
 
   /**

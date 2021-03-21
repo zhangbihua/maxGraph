@@ -5,6 +5,7 @@
  */
 
 import mxUtils from "../util/mxUtils";
+import mxConstants from "./mxConstants";
 
 class mxPoint {
   /**
@@ -30,16 +31,12 @@ class mxPoint {
    * Constructs a new point for the optional x and y coordinates. If no
    * coordinates are given, then the default values for <x> and <y> are used.
    */
-  constructor(...args) {
-    // forward to this._constructor to allow not calling
-    // the constructor from mxRectangle/mxCellState
-    this._constructor(...args);
+  constructor(x, y) {
+    if (x !== mxConstants.DO_NOTHING) {
+      this.x = (x != null) ? x : 0;
+      this.y = (y != null) ? y : 0;
+    }
   };
-
-  _constructor(x, y) {
-    this.x = (x != null) ? x : 0;
-    this.y = (y != null) ? y : 0;
-  }
 
   /**
    * Function: equals

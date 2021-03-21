@@ -217,13 +217,10 @@ class mxShape {
    *
    * Constructs a new shape.
    */
-  constructor(...args) {
-    this._constructor(...args);
-  };
-
-  _constructor = (stencil) => {
-    this.stencil = stencil;
-    this.initStyles();
+  constructor(stencil) {
+    if (stencil !== mxConstants.DO_NOTHING) {
+      this.stencil = stencil;
+    }
   };
 
   /**

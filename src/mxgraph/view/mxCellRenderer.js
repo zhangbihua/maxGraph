@@ -23,6 +23,8 @@ import mxText from "../shape/mxText";
 import mxConstants from "../util/mxConstants";
 import mxUtils from "../util/mxUtils";
 import mxRectangle from "../util/mxRectangle";
+import mxStencilRegistry from "../shape/mxStencilRegistry";
+import mxEvent from "../util/mxEvent";
 
 class mxCellRenderer {
   /**
