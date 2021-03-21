@@ -7,9 +7,9 @@
 */
 
 import React from "react";
-import mxEvent from "../js/util/mxEvent";
-import mxGraph from "../js/view/mxGraph";
-import mxRubberband from "../js/handler/mxRubberband";
+import mxEvent from "../mxgraph/util/mxEvent";
+import mxGraph from "../mxgraph/view/mxGraph";
+import mxRubberband from "../mxgraph/handler/mxRubberband";
 
 class HelloWorld extends React.Component {
   constructor(props) {
