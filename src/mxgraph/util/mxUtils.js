@@ -31,7 +31,7 @@ let mxUtils = {
    * resource for this key does not exist then the value is used as
    * the title. Default is 'error'.
    */
-  errorResource: (mxClient.language !== 'none') ? 'error' : '',
+  errorResource: 'error',
 
   /**
    * Variable: closeResource
@@ -40,14 +40,14 @@ let mxUtils = {
    * resource for this key does not exist then the value is used as
    * the label. Default is 'close'.
    */
-  closeResource: (mxClient.language !== 'none') ? 'close' : '',
+  closeResource: 'close',
 
   /**
    * Variable: errorImage
    *
    * Defines the image used for error dialogs.
    */
-  errorImage: mxClient.imageBasePath + '/error.gif',
+  errorImage: '/error.gif', //mxClient.imageBasePath + '/error.gif',
 
   /**
    * Function: removeCursors

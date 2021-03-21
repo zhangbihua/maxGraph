@@ -109,7 +109,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Initializes the shapes required for this vertex handler.
    */
-  init = () => {
+  init() {
     // Adds the inner table
     this.table = document.createElement('table');
     this.table.className = 'mxPopupMenu';

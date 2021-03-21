@@ -4,6 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxMouseEvent from "./mxMouseEvent";
+import mxClient from "../mxClient";
 
 // Checks if passive event listeners are supported
 // see https://github.com/Modernizr/Modernizr/issues/1894

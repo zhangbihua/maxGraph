@@ -2,8 +2,6 @@
  * Copyright (c) 2006-2017, JGraph Ltd
  * Copyright (c) 2006-2017, Gaudenz Alder
  */
-import mxResources from "./util/mxResources";
-
 let mxClient = {
   /**
    * Class: mxClient
@@ -496,4 +494,5 @@ let mxClient = {
   }
 };
 
+let mxResources = require("./util/mxResources");
 export default mxClient;

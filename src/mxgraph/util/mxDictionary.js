@@ -3,16 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-/**
- * Class: mxDictionary
- *
- * A wrapper class for an associative array with object keys. Note: This
- * implementation uses <mxObjectIdentitiy> to turn object keys into strings.
- *
- * Constructor: mxEventSource
- *
- * Constructs a new dictionary which allows object to be used as keys.
- */
+
+import mxObjectIdentity from "./mxObjectIdentity";
 
 class mxDictionary {
   /**
@@ -22,6 +14,16 @@ class mxDictionary {
    */
   map = null;
 
+  /**
+   * Class: mxDictionary
+   *
+   * A wrapper class for an associative array with object keys. Note: This
+   * implementation uses <mxObjectIdentitiy> to turn object keys into strings.
+   *
+   * Constructor: mxEventSource
+   *
+   * Constructs a new dictionary which allows object to be used as keys.
+   */
   constructor() {
     this.clear();
   };

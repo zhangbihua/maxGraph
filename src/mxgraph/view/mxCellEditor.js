@@ -7,6 +7,7 @@
 import mxUtils from "../util/mxUtils"
 import mxRectangle from "../util/mxRectangle";
 import mxEvent from "../util/mxEvent";
+import mxClient from "../mxClient";
 
 class mxCellEditor {
   /**

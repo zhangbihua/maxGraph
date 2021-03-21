@@ -198,7 +198,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
     this.graph.removeListener(this.gestureHandler);
 
     // Supercall
-    destroy.apply(this);
+    super.destroy();
   };
 }
 
