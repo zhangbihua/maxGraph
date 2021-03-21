@@ -7,6 +7,10 @@ import mxImage from '../util/mxImage';
 import mxClient from '../mxClient';
 import mxConstants from '../util/mxConstants';
 import mxEvent from '../util/mxEvent';
+import mxUtils from "../util/mxUtils";
+import mxRectangle from "../util/mxRectangle";
+import mxImageShape from "../shape/mxImageShape";
+import mxRectangleShape from "../shape/mxRectangleShape";
 
 class mxConstraintHandler {
   /**
@@ -280,7 +284,7 @@ class mxConstraintHandler {
           state != null ||
           !this.graph.getModel().isVertex(this.currentFocus.cell) ||
           !mxUtils.intersects(this.currentFocusArea, mouse)) &&
-        state != this.currentFocus
+        state !== this.currentFocus
       ) {
         this.currentFocusArea = null;
         this.currentFocus = null;
@@ -291,10 +295,12 @@ class mxConstraintHandler {
       this.currentPoint = null;
       let minDistSq = null;
 
+      let tmp;
+
       if (
         this.focusIcons != null &&
         this.constraints != null &&
-        (state == null || this.currentFocus == state)
+        (state == null || this.currentFocus === state)
       ) {
         const cx = mouse.getCenterX();
         const cy = mouse.getCenterY();
@@ -302,7 +308,7 @@ class mxConstraintHandler {
         for (let i = 0; i < this.focusIcons.length; i += 1) {
           const dx = cx - this.focusIcons[i].bounds.getCenterX();
           const dy = cy - this.focusIcons[i].bounds.getCenterY();
-          const tmp = dx * dx + dy * dy;
+          tmp = dx * dx + dy * dy;
 
           if (
             (this.intersects(this.focusIcons[i], mouse, source, existingEdge) ||
@@ -319,7 +325,7 @@ class mxConstraintHandler {
             this.currentPoint = this.focusPoints[i];
             minDistSq = tmp;
 
-            let tmp = this.focusIcons[i].bounds.clone();
+            tmp = this.focusIcons[i].bounds.clone();
             tmp.grow(mxConstants.HIGHLIGHT_SIZE + 1);
             tmp.width -= 1;
             tmp.height -= 1;
@@ -447,7 +453,7 @@ class mxConstraintHandler {
         );
         const icon = new mxImageShape(bounds, src);
         icon.dialect =
-          this.graph.dialect != mxConstants.DIALECT_SVG
+          this.graph.dialect !== mxConstants.DIALECT_SVG
             ? mxConstants.DIALECT_MIXEDHTML
             : mxConstants.DIALECT_SVG;
         icon.preserveImageAspect = false;

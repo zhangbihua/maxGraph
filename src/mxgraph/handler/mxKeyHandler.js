@@ -4,6 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxEvent from "../util/mxEvent";
+import mxUtils from "../util/mxUtils";
+
 class mxKeyHandler {
   /**
    * Variable: graph
@@ -277,8 +280,8 @@ class mxKeyHandler {
     // Accepts events from the target object or
     // in-place editing inside graph
     if (
-      source == this.target ||
-      source.parentNode == this.target ||
+      source === this.target ||
+      source.parentNode === this.target ||
       (this.graph.cellEditor != null &&
         this.graph.cellEditor.isEventSource(evt))
     ) {
@@ -304,7 +307,7 @@ class mxKeyHandler {
   keyDown = evt => {
     if (this.isEnabledForEvent(evt)) {
       // Cancels the editing if escape is pressed
-      if (evt.keyCode == 27 /* Escape */) {
+      if (evt.keyCode === 27 /* Escape */) {
         this.escape(evt);
       }
 

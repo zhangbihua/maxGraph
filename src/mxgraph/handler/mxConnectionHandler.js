@@ -16,6 +16,7 @@ import mxConstraintHandler from './mxConstraintHandler';
 import mxPolyline from '../shape/mxPolyline';
 import mxEventSource from '../util/mxEventSource';
 import mxRectangle from '../util/mxRectangle';
+import mxLog from "../util/mxLog";
 
 class mxConnectionHandler extends mxEventSource {
   /**

@@ -7,6 +7,8 @@ import mxEventSource from '../util/mxEventSource';
 import mxConstants from '../util/mxConstants';
 import mxCellHighlight from './mxCellHighlight';
 import mxEventObject from '../util/mxEventObject';
+import mxEvent from "../util/mxEvent";
+import mxUtils from "../util/mxUtils";
 
 class mxCellMarker extends mxEventSource {
   /**
@@ -359,7 +361,7 @@ class mxCellMarker extends mxEventSource {
    * Returns the <mxCell> for the given event and cell. This returns the
    * given cell.
    */
-  getCell = me => {
+  getCell(me) {
     return me.getCell();
   };
 

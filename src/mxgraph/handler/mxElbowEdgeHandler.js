@@ -4,6 +4,14 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxEdgeHandler from './mxEdgeHandler';
+import mxConstants from "../util/mxConstants";
+import mxEvent from "../util/mxEvent";
+import mxPoint from "../util/mxPoint";
+import mxEdgeStyle from "../view/mxEdgeStyle";
+import mxResources from "../util/mxResources";
+import mxRectangle from "../util/mxRectangle";
+import mxUtils from "../util/mxUtils";
+import mxClient from "../mxClient";
 
 class mxElbowEdgeHandler extends mxEdgeHandler {
   /**

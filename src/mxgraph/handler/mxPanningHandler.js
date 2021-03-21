@@ -151,7 +151,7 @@ class mxPanningHandler extends mxEventSource {
         const evtName = evt.getProperty('eventName');
         const me = evt.getProperty('event');
 
-        if (evtName == mxEvent.MOUSE_DOWN && this.isForcePanningEvent(me)) {
+        if (evtName === mxEvent.MOUSE_DOWN && this.isForcePanningEvent(me)) {
           this.start(me);
           this.active = true;
           this.fireEvent(new mxEventObject(mxEvent.PAN_START, 'event', me));
@@ -430,7 +430,7 @@ class mxPanningHandler extends mxEventSource {
       value = Math.min(this.maxScale, value);
     }
 
-    if (this.graph.view.scale != value) {
+    if (this.graph.view.scale !== value) {
       this.graph.zoomTo(value);
       mxEvent.consume(evt);
     }

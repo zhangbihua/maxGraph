@@ -4,6 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxEvent from '../util/mxEvent';
+import mxUtils from "../util/mxUtils";
+import mxConstants from "../util/mxConstants";
 
 class mxTooltipHandler {
   /**
@@ -142,7 +144,7 @@ class mxTooltipHandler {
       mxEvent.addGestureListeners(this.div, evt => {
         const source = mxEvent.getSource(evt);
 
-        if (source.nodeName != 'A') {
+        if (source.nodeName !== 'A') {
           this.hideTooltip();
         }
       });
@@ -176,17 +178,17 @@ class mxTooltipHandler {
    * Handles the event by updating the rubberband selection.
    */
   mouseMove = (sender, me) => {
-    if (me.getX() != this.lastX || me.getY() != this.lastY) {
+    if (me.getX() !== this.lastX || me.getY() !== this.lastY) {
       this.reset(me, true);
       const state = this.getStateForEvent(me);
 
       if (
         this.isHideOnHover() ||
-        state != this.state ||
-        (me.getSource() != this.node &&
+        state !== this.state ||
+        (me.getSource() !== this.node &&
           (!this.stateSource ||
             (state != null &&
-              this.stateSource ==
+              this.stateSource ===
                 (me.isSource(state.shape) || !me.isSource(state.text)))))
       ) {
         this.hideTooltip();
@@ -234,7 +236,7 @@ class mxTooltipHandler {
         restart &&
         this.isEnabled() &&
         state != null &&
-        (this.div == null || this.div.style.visibility == 'hidden')
+        (this.div == null || this.div.style.visibility === 'hidden')
       ) {
         const node = me.getSource();
         const x = me.getX();

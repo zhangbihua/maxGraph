@@ -31,7 +31,7 @@ class mxGraphView extends mxEventSource {
    * If the resource for this key does not exist then the value is used as
    * the status message. Default is 'done'.
    */
-  doneResource = mxClient.language != 'none' ? 'done' : '';
+  doneResource = mxClient.language !== 'none' ? 'done' : '';
 
   /**
    * Function: updatingDocumentResource
@@ -41,7 +41,7 @@ class mxGraphView extends mxEventSource {
    * value is used as the status message. Default is 'updatingDocument'.
    */
   updatingDocumentResource =
-    mxClient.language != 'none' ? 'updatingDocument' : '';
+    mxClient.language !== 'none' ? 'updatingDocument' : '';
 
   /**
    * Variable: allowEval

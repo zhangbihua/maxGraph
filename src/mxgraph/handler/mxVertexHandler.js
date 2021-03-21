@@ -10,6 +10,9 @@ import mxRectangleShape from '../shape/mxRectangleShape';
 import mxImageShape from '../shape/mxImageShape';
 import mxEllipse from '../shape/mxEllipse';
 import mxPoint from '../util/mxPoint';
+import mxUtils from "../util/mxUtils";
+import mxClient from "../mxClient";
+import mxGraphHandler from "./mxGraphHandler";
 
 class mxVertexHandler {
   /**
@@ -226,7 +229,7 @@ class mxVertexHandler {
     }
 
     // Adds the sizer handles
-    if (this.maxCells <= 0 || this.graph.getSelectionCount() < this.maxCells) {
+    if (this.graph.graphHandler.maxCells <= 0 || this.graph.getSelectionCount() < this.graph.graphHandler.maxCells) {
       const resizable = this.graph.isCellResizable(this.state.cell);
       this.sizers = [];
 
@@ -314,7 +317,7 @@ class mxVertexHandler {
       this.graph.isEnabled() &&
       this.rotationEnabled &&
       this.graph.isCellRotatable(this.state.cell) &&
-      (this.maxCells <= 0 || this.graph.getSelectionCount() < this.maxCells)
+      (this.graph.graphHandler.maxCells <= 0 || this.graph.getSelectionCount() < this.graph.graphHandler.maxCells)
     );
   };
 
@@ -458,7 +461,7 @@ class mxVertexHandler {
     if (
       sizer.isHtmlAllowed() &&
       this.state.text != null &&
-      this.state.text.node.parentNode == this.graph.container
+      this.state.text.node.parentNode === this.graph.container
     ) {
       sizer.bounds.height -= 1;
       sizer.bounds.width -= 1;
@@ -466,7 +469,7 @@ class mxVertexHandler {
       sizer.init(this.graph.container);
     } else {
       sizer.dialect =
-        this.graph.dialect != mxConstants.DIALECT_SVG
+        this.graph.dialect !== mxConstants.DIALECT_SVG
           ? mxConstants.DIALECT_MIXEDHTML
           : mxConstants.DIALECT_SVG;
       sizer.init(this.graph.getView().getOverlayPane());
@@ -571,7 +574,7 @@ class mxVertexHandler {
     const checkShape = shape => {
       const st =
         shape != null &&
-        shape.constructor != mxImageShape &&
+        shape.constructor !== mxImageShape &&
         this.allowHandleBoundsCheck
           ? shape.strokewidth + shape.svgStrokeTolerance
           : null;
@@ -590,8 +593,8 @@ class mxVertexHandler {
         (me.isSource(shape) ||
           (real != null &&
             mxUtils.intersects(shape.bounds, real) &&
-            shape.node.style.display != 'none' &&
-            shape.node.style.visibility != 'hidden'))
+            shape.node.style.display !== 'none' &&
+            shape.node.style.visibility !== 'hidden'))
       );
     };
 
@@ -674,7 +677,7 @@ class mxVertexHandler {
     if (this.selectionBorder != null) {
       this.livePreviewActive =
         this.livePreview &&
-        this.graph.model.getChildCount(this.state.cell) == 0;
+        this.graph.model.getChildCount(this.state.cell) === 0;
       this.inTolerance = true;
       this.childOffsetX = 0;
       this.childOffsetY = 0;
@@ -690,7 +693,7 @@ class mxVertexHandler {
         const parent = model.getParent(this.state.cell);
 
         if (
-          this.state.view.currentRoot != parent &&
+          this.state.view.currentRoot !== parent &&
           (model.isVertex(parent) || model.isEdge(parent))
         ) {
           this.parentState = this.state.view.graph.view.getState(parent);
@@ -698,7 +701,7 @@ class mxVertexHandler {
 
         // Creates a preview that can be on top of any HTML label
         this.selectionBorder.node.style.display =
-          index == mxEvent.ROTATION_HANDLE ? 'inline' : 'none';
+          index === mxEvent.ROTATION_HANDLE ? 'inline' : 'none';
 
         // Creates the border that represents the new bounds
         if (!this.livePreviewActive || this.isLivePreviewBorder()) {
@@ -707,10 +710,10 @@ class mxVertexHandler {
           if (
             !(
               mxClient.IS_SVG &&
-              Number(this.state.style[mxConstants.STYLE_ROTATION] || '0') != 0
+              Number(this.state.style[mxConstants.STYLE_ROTATION] || '0') !== 0
             ) &&
             this.state.text != null &&
-            this.state.text.node.parentNode == this.graph.container
+            this.state.text.node.parentNode === this.graph.container
           ) {
             this.preview.dialect = mxConstants.DIALECT_STRICTHTML;
             this.preview.init(this.graph.container);
@@ -720,7 +723,7 @@ class mxVertexHandler {
           }
         }
 
-        if (index == mxEvent.ROTATION_HANDLE) {
+        if (index === mxEvent.ROTATION_HANDLE) {
           // With the rotation handle in a corner, need the angle and distance
           const pos = this.getRotationHandlePosition();
 
@@ -728,7 +731,7 @@ class mxVertexHandler {
           const dy = pos.y - this.state.getCenterY();
 
           this.startAngle =
-            dx != 0 ? (Math.atan(dy / dx) * 180) / Math.PI + 90 : 0;
+            dx !== 0 ? (Math.atan(dy / dx) * 180) / Math.PI + 90 : 0;
           this.startDist = Math.sqrt(dx * dx + dy * dy);
         }
 
@@ -967,8 +970,8 @@ class mxVertexHandler {
    */
   rotateVertex = me => {
     const point = new mxPoint(me.getGraphX(), me.getGraphY());
-    const dx = this.state.x + this.state.width / 2 - point.x;
-    const dy = this.state.y + this.state.height / 2 - point.y;
+    let dx = this.state.x + this.state.width / 2 - point.x;
+    let dy = this.state.y + this.state.height / 2 - point.y;
     this.currentAlpha =
       dx != 0 ? (Math.atan(dy / dx) * 180) / Math.PI + 90 : dy < 0 ? 180 : 0;
 
@@ -981,8 +984,8 @@ class mxVertexHandler {
     // Rotation raster
     if (this.rotationRaster && this.graph.isGridEnabledEvent(me.getEvent())) {
       let raster;
-      const dx = point.x - this.state.getCenterX();
-      const dy = point.y - this.state.getCenterY();
+      dx = point.x - this.state.getCenterX();
+      dy = point.y - this.state.getCenterY();
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       if (dist - this.startDist < 2) {
@@ -1167,7 +1170,7 @@ class mxVertexHandler {
     // Shifts the children according to parent offset
     if (
       !this.graph.isCellCollapsed(this.state.cell) &&
-      (dx3 != 0 || dy3 != 0)
+      (dx3 !== 0 || dy3 !== 0)
     ) {
       this.childOffsetX = this.state.x - this.bounds.x + dx5;
       this.childOffsetY = this.state.y - this.bounds.y + dy5;
@@ -1269,7 +1272,7 @@ class mxVertexHandler {
         this.state.shape.node != null &&
         this.state.shape.node.nextSibling != null &&
         (this.state.text == null ||
-          this.state.shape.node.nextSibling != this.state.text.node))
+          this.state.shape.node.nextSibling !== this.state.text.node))
     ) {
       if (this.state.shape != null && this.state.shape.node != null) {
         this.state.shape.node.parentNode.appendChild(this.state.shape.node);

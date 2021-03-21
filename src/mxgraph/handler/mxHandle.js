@@ -4,6 +4,13 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxUtils from "../util/mxUtils";
+import mxPoint from "../util/mxPoint";
+import mxImageShape from "../shape/mxImageShape";
+import mxRectangle from "../util/mxRectangle";
+import mxRectangleShape from "../shape/mxRectangleShape";
+import mxConstants from "../util/mxConstants";
+
 class mxHandle {
   /**
    * Variable: cursor
@@ -210,7 +217,7 @@ class mxHandle {
       this.shape.init(this.graph.container);
     } else {
       this.shape.dialect =
-        this.graph.dialect != mxConstants.DIALECT_SVG
+        this.graph.dialect !== mxConstants.DIALECT_SVG
           ? mxConstants.DIALECT_MIXEDHTML
           : mxConstants.DIALECT_SVG;
 
@@ -260,7 +267,7 @@ class mxHandle {
   isHtmlRequired = () => {
     return (
       this.state.text != null &&
-      this.state.text.node.parentNode == this.graph.container
+      this.state.text.node.parentNode === this.graph.container
     );
   };
 

@@ -5,6 +5,7 @@
  */
 import mxConstants from '../util/mxConstants';
 import mxEvent from '../util/mxEvent';
+import mxRectangle from "../util/mxRectangle";
 
 class mxCellHighlight {
   /**

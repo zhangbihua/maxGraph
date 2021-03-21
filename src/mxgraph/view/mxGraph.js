@@ -45,6 +45,7 @@ import mxRootChange from '../model/atomic_changes/mxRootChange';
 import mxStyleChange from '../model/atomic_changes/mxStyleChange';
 import mxTerminalChange from '../model/atomic_changes/mxTerminalChange';
 import mxValueChange from '../model/atomic_changes/mxValueChange';
+import mxPolyline from "../shape/mxPolyline";
 
 class mxGraph extends mxEventSource {
   /**
@@ -6741,8 +6742,8 @@ class mxGraph extends mxEventSource {
         ]
       );
 
-      dx = isFinite(dx) ? dx : 0;
-      dy = isFinite(dy) ? dy : 0;
+      dx = Number.isFinite(dx) ? dx : 0;
+      dy = Number.isFinite(dy) ? dy : 0;
     }
 
     return new mxConnectionConstraint(point, perimeter, null, dx, dy);
@@ -7476,6 +7477,7 @@ class mxGraph extends mxEventSource {
   getBoundingBoxFromGeometry = (cells, includeEdges) => {
     includeEdges = includeEdges != null ? includeEdges : false;
     let result = null;
+    let tmp;
 
     if (cells != null) {
       for (let i = 0; i < cells.length; i += 1) {
@@ -7508,7 +7510,7 @@ class mxGraph extends mxEventSource {
               const pts = geo.points;
 
               if (pts != null && pts.length > 0) {
-                const tmp = new mxRectangle(pts[0].x, pts[0].y, 0, 0);
+                tmp = new mxRectangle(pts[0].x, pts[0].y, 0, 0);
 
                 for (let j = 1; j < pts.length; j++) {
                   addPoint(pts[j]);
@@ -7524,7 +7526,7 @@ class mxGraph extends mxEventSource {
                   this.model.isVertex(parent) &&
                   parent !== this.view.currentRoot
                 ) {
-                  const tmp = this.getBoundingBoxFromGeometry([parent], false);
+                  tmp = this.getBoundingBoxFromGeometry([parent], false);
 
                   if (tmp != null) {
                     bbox = new mxRectangle(
@@ -7547,7 +7549,7 @@ class mxGraph extends mxEventSource {
                   this.model.isVertex(parent) &&
                   mxUtils.indexOf(cells, parent) >= 0
                 ) {
-                  const tmp = this.getBoundingBoxFromGeometry([parent], false);
+                  tmp = this.getBoundingBoxFromGeometry([parent], false);
 
                   if (tmp != null) {
                     bbox.x += tmp.x;
@@ -10215,11 +10217,12 @@ class mxGraph extends mxEventSource {
   isCellResizable = cell => {
     const style = this.getCurrentCellStyle(cell);
 
-    return (
+    const r =
       this.isCellsResizable() &&
       !this.isCellLocked(cell) &&
-      mxUtils.getValue(style, mxConstants.STYLE_RESIZABLE, '1') != '0'
-    );
+      mxUtils.getValue(style, mxConstants.STYLE_RESIZABLE, '1') != '0';
+    // alert(r);
+    return r;
   };
 
   /**
@@ -10281,7 +10284,7 @@ class mxGraph extends mxEventSource {
     return (
       this.isCellsBendable() &&
       !this.isCellLocked(cell) &&
-      style[mxConstants.STYLE_BENDABLE] != 0
+      style[mxConstants.STYLE_BENDABLE] !== 0
     );
   };
 
@@ -12652,7 +12655,7 @@ class mxGraph extends mxEventSource {
           Math.abs(this.lastTouchY - me.getY()) < this.doubleTapTolerance &&
           this.doubleClickCounter < 2
         ) {
-          this.doubleClickCounter++;
+          this.doubleClickCounter += 1;
           let doubleClickFired = false;
 
           if (evtName === mxEvent.MOUSE_UP) {

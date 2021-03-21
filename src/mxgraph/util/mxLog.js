@@ -4,6 +4,11 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxClient from "../mxClient";
+import mxEvent from "./mxEvent";
+import mxUtils from "./mxUtils";
+import mxWindow from "./mxWindow";
+
 const mxLog = {
   /**
    * Class: mxLog
@@ -77,7 +82,7 @@ const mxLog = {
       mxLog.textarea.value = mxLog.buffer;
 
       // Workaround for wrong width in standards mode
-      if (mxClient.IS_NS && document.compatMode != 'BackCompat') {
+      if (mxClient.IS_NS && document.compatMode !== 'BackCompat') {
         mxLog.textarea.style.width = '99%';
       } else {
         mxLog.textarea.style.width = '100%';
@@ -168,7 +173,7 @@ const mxLog = {
         mxClient.IS_NS &&
         !mxClient.IS_GC &&
         !mxClient.IS_SF &&
-        document.compatMode != 'BackCompat'
+        document.compatMode !== 'BackCompat'
       ) {
         const elt = mxLog.window.getElement();
 
@@ -280,7 +285,7 @@ const mxLog = {
    */
   leave: (string, t0) => {
     if (mxLog.TRACE) {
-      const dt = t0 != 0 ? ` (${new Date().getTime() - t0} ms)` : '';
+      const dt = t0 !== 0 ? ` (${new Date().getTime() - t0} ms)` : '';
       mxLog.writeln(`Leaving ${string}${dt}`);
     }
   },
@@ -297,9 +302,9 @@ const mxLog = {
    * mxLog.debug('Hello, World!');
    * (end)
    */
-  debug() {
+  debug(...args) {
     if (mxLog.DEBUG) {
-      mxLog.writeln.apply(this, arguments);
+      mxLog.writeln(...args);
     }
   },
 
@@ -315,9 +320,9 @@ const mxLog = {
    * mxLog.warn('Hello, World!');
    * (end)
    */
-  warn() {
+  warn(...args) {
     if (mxLog.WARN) {
-      mxLog.writeln.apply(this, arguments);
+      mxLog.writeln(...args);
     }
   },
 
