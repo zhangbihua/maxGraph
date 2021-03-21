@@ -4,6 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxUtils from "../util/mxUtils";
+import mxConstants from "../util/mxConstants";
+
 class mxCell {
   /**
    * Variable: id
@@ -683,7 +686,7 @@ class mxCell {
     let userObject = this.getValue();
 
     return (userObject != null &&
-        userObject.nodeType == mxConstants.NODETYPE_ELEMENT && userObject.hasAttribute) ?
+        userObject.nodeType === mxConstants.NODETYPE_ELEMENT && userObject.hasAttribute) ?
         userObject.hasAttribute(name) : userObject.getAttribute(name) != null;
   };
 
@@ -703,7 +706,7 @@ class mxCell {
     let userObject = this.getValue();
 
     let val = (userObject != null &&
-        userObject.nodeType == mxConstants.NODETYPE_ELEMENT) ?
+        userObject.nodeType === mxConstants.NODETYPE_ELEMENT) ?
         userObject.getAttribute(name) : null;
 
     return (val != null) ? val : defaultValue;
@@ -723,7 +726,7 @@ class mxCell {
     let userObject = this.getValue();
 
     if (userObject != null &&
-        userObject.nodeType == mxConstants.NODETYPE_ELEMENT) {
+        userObject.nodeType === mxConstants.NODETYPE_ELEMENT) {
       userObject.setAttribute(name, value);
     }
   };

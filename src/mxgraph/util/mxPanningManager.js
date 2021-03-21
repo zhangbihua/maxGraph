@@ -57,30 +57,30 @@ class mxPanningManager {
           },
           mouseMove: (sender, me) => {
           },
-          mouseUp: mxUtils.bind(this, (sender, me) => {
+          mouseUp: (sender, me) => {
             if (this.active) {
               this.stop();
             }
-          })
+          }
         };
 
     graph.addMouseListener(this.mouseListener);
 
-    this.mouseUpListener = mxUtils.bind(this, () => {
+    this.mouseUpListener = () => {
       if (this.active) {
         this.stop();
       }
-    });
+    };
 
     // Stops scrolling on every mouseup anywhere in the document
     mxEvent.addListener(document, 'mouseup', this.mouseUpListener);
 
-    let createThread = mxUtils.bind(this, () => {
+    let createThread = () => {
       this.scrollbars = mxUtils.hasScrollbars(graph.container);
       this.scrollLeft = graph.container.scrollLeft;
       this.scrollTop = graph.container.scrollTop;
 
-      return window.setInterval(mxUtils.bind(this, () => {
+      return window.setInterval(() => {
         this.tdx -= this.dx;
         this.tdy -= this.dy;
 
@@ -95,8 +95,8 @@ class mxPanningManager {
         } else {
           graph.panGraph(this.getDx(), this.getDy());
         }
-      }), this.delay);
-    });
+      }, this.delay);
+    };
 
     this.isActive = () => {
       return active;

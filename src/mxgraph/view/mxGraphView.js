@@ -816,7 +816,6 @@ class mxGraphView extends mxEventSource {
           state.setVisibleTerminalState(this.validateCellState(this.getVisibleTerminal(cell, true), false), true);
           state.setVisibleTerminalState(this.validateCellState(this.getVisibleTerminal(cell, false), false), false);
           
-          alert(state);
           this.updateCellState(state);
 
           // Repaint happens immediately after the cell is validated
@@ -856,8 +855,6 @@ class mxGraphView extends mxEventSource {
    * state - <mxCellState> to be updated.
    */
   updateCellState = (state) => {
-    alert("STATE:"+state);
-    alert(state.absoluteOffset)
     state.absoluteOffset.x = 0;
     state.absoluteOffset.y = 0;
     state.origin.x = 0;

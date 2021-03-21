@@ -5,6 +5,7 @@
  */
 import mxShape from "./mxShape";
 import mxConstants from "../util/mxConstants";
+import mxUtils from "../util/mxUtils";
 
 class mxPolyline extends mxShape {
   /**
@@ -66,7 +67,7 @@ class mxPolyline extends mxShape {
    *
    * Paints the line shape.
    */
-  paintEdgeShape = (c, pts) => {
+  paintEdgeShape(c, pts) {
     let prev = c.pointerEventsValue;
     c.pointerEventsValue = 'stroke';
 

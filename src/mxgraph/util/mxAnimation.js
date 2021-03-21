@@ -58,7 +58,7 @@ class mxAnimation extends mxEventSource {
    */
   startAnimation = () => {
     if (this.thread == null) {
-      this.thread = window.setInterval(mxUtils.bind(this, this.updateAnimation), this.delay);
+      this.thread = window.setInterval(this.updateAnimation.bind(this), this.delay);
     }
   };
 

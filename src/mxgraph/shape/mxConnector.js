@@ -6,6 +6,7 @@
 import mxConstants from "../util/mxConstants";
 import mxPolyline from "./mxPolyline";
 import mxUtils from "../util/mxUtils";
+import mxMarker from "./mxMarker";
 
 class mxConnector extends mxPolyline {
   /**

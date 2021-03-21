@@ -7,6 +7,13 @@
 import mxClient from "../mxClient";
 import mxEvent from "../util/mxEvent";
 import mxUtils from "../util/mxUtils";
+import mxRectangleShape from "../shape/mxRectangleShape";
+import mxGuide from "../util/mxGuide";
+import mxPoint from "../util/mxPoint";
+import mxConstants from "../util/mxConstants";
+import mxDictionary from "../util/mxDictionary";
+import mxCellHighlight from "./mxCellHighlight";
+import mxRectangle from "../util/mxRectangle";
 
 class mxGraphHandler {
   /**
@@ -286,13 +293,13 @@ class mxGraphHandler {
     this.graph.addListener(mxEvent.REFRESH, this.refreshHandler);
 
     this.keyHandler = (e) => {
-      if (this.graph.container != null && this.graph.container.style.visibility != 'hidden' &&
+      if (this.graph.container != null && this.graph.container.style.visibility !== 'hidden' &&
           this.first != null && !this.suspended) {
         let clone = this.graph.isCloneEvent(e) &&
             this.graph.isCellsCloneable() &&
             this.isCloneEnabled();
 
-        if (clone != this.cloning) {
+        if (clone !== this.cloning) {
           this.cloning = clone;
           this.checkPreview();
           this.updatePreview();
@@ -715,7 +722,7 @@ class mxGraphHandler {
       // Makes sure to use either VML or SVG shapes in order to implement
       // event-transparency on the background area of the rectangle since
       // HTML shapes do not let mouseevents through even when transparent
-      shape.dialect = (this.graph.dialect != mxConstants.DIALECT_SVG) ?
+      shape.dialect = (this.graph.dialect !== mxConstants.DIALECT_SVG) ?
           mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
       shape.init(this.graph.getView().getOverlayPane());
       shape.pointerEvents = false;

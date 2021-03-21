@@ -25,6 +25,12 @@ import mxUtils from "../util/mxUtils";
 import mxRectangle from "../util/mxRectangle";
 import mxStencilRegistry from "../shape/mxStencilRegistry";
 import mxEvent from "../util/mxEvent";
+import mxClient from "../mxClient";
+import mxMouseEvent from "../util/mxMouseEvent";
+import mxDictionary from "../util/mxDictionary";
+import mxEventObject from "../util/mxEventObject";
+import mxPoint from "../util/mxPoint";
+import mxShape from "../shape/mxShape";
 
 class mxCellRenderer {
   /**

@@ -3,6 +3,13 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxRectangle from "../util/mxRectangle";
+import mxConstants from "../util/mxConstants";
+import mxEvent from "../util/mxEvent";
+import mxRectangleShape from "../shape/mxRectangleShape";
+import mxImageShape from "../shape/mxImageShape";
+import mxEllipse from "../shape/mxEllipse";
+import mxPoint from "../util/mxPoint";
 
 class mxVertexHandler {
   /**
@@ -197,7 +204,7 @@ class mxVertexHandler {
     this.bounds = new mxRectangle(this.selectionBounds.x, this.selectionBounds.y, this.selectionBounds.width, this.selectionBounds.height);
     this.selectionBorder = this.createSelectionShape(this.bounds);
     // VML dialect required here for event transparency in IE
-    this.selectionBorder.dialect = (this.graph.dialect != mxConstants.DIALECT_SVG) ? mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
+    this.selectionBorder.dialect = (this.graph.dialect !== mxConstants.DIALECT_SVG) ? mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
     this.selectionBorder.pointerEvents = false;
     this.selectionBorder.rotation = Number(this.state.style[mxConstants.STYLE_ROTATION] || '0');
     this.selectionBorder.init(this.graph.getView().getOverlayPane());
@@ -208,7 +215,7 @@ class mxVertexHandler {
     }
 
     // Adds the sizer handles
-    if (maxCells <= 0 || this.graph.getSelectionCount() < maxCells) {
+    if (this.maxCells <= 0 || this.graph.getSelectionCount() < this.maxCells) {
       let resizable = this.graph.isCellResizable(this.state.cell);
       this.sizers = [];
 
@@ -269,7 +276,7 @@ class mxVertexHandler {
    */
   isRotationHandleVisible = () => {
     return this.graph.isEnabled() && this.rotationEnabled && this.graph.isCellRotatable(this.state.cell) &&
-        (maxCells <= 0 || this.graph.getSelectionCount() < maxCells);
+        (this.maxCells <= 0 || this.graph.getSelectionCount() < this.maxCells);
   };
 
   /**
@@ -278,7 +285,7 @@ class mxVertexHandler {
    * Returns true if the aspect ratio if the cell should be maintained.
    */
   isConstrainedEvent = (me) => {
-    return mxEvent.isShiftDown(me.getEvent()) || this.state.style[mxConstants.STYLE_ASPECT] == 'fixed';
+    return mxEvent.isShiftDown(me.getEvent()) || this.state.style[mxConstants.STYLE_ASPECT] === 'fixed';
   };
 
   /**
@@ -449,7 +456,7 @@ class mxVertexHandler {
       shape.preserveImageAspect = false;
 
       return shape;
-    } else if (index == mxEvent.ROTATION_HANDLE) {
+    } else if (index === mxEvent.ROTATION_HANDLE) {
       return new mxEllipse(bounds, fillColor || mxConstants.HANDLE_FILLCOLOR, mxConstants.HANDLE_STROKECOLOR);
     } else {
       return new mxRectangleShape(bounds, fillColor || mxConstants.HANDLE_FILLCOLOR, mxConstants.HANDLE_STROKECOLOR);
@@ -620,9 +627,9 @@ class mxVertexHandler {
         if (this.livePreviewActive) {
           this.hideSizers();
 
-          if (index == mxEvent.ROTATION_HANDLE) {
+          if (index === mxEvent.ROTATION_HANDLE) {
             this.rotationShape.node.style.display = '';
-          } else if (index == mxEvent.LABEL_HANDLE) {
+          } else if (index === mxEvent.LABEL_HANDLE) {
             this.labelShape.node.style.display = '';
           } else if (this.sizers != null && this.sizers[index] != null) {
             this.sizers[index].node.style.display = '';
@@ -779,10 +786,10 @@ class mxVertexHandler {
               this.customHandles[mxEvent.CUSTOM_HANDLE - this.index].positionChanged();
             }
           }
-        } else if (this.index == mxEvent.LABEL_HANDLE) {
+        } else if (this.index === mxEvent.LABEL_HANDLE) {
           this.moveLabel(me);
         } else {
-          if (this.index == mxEvent.ROTATION_HANDLE) {
+          if (this.index === mxEvent.ROTATION_HANDLE) {
             this.rotateVertex(me);
           } else {
             this.resizeVertex(me);
@@ -1142,11 +1149,11 @@ class mxVertexHandler {
               this.customHandles[mxEvent.CUSTOM_HANDLE - index].positionChanged();
             }
           }
-        } else if (index == mxEvent.ROTATION_HANDLE) {
+        } else if (index === mxEvent.ROTATION_HANDLE) {
           if (this.currentAlpha != null) {
             let delta = this.currentAlpha - (this.state.style[mxConstants.STYLE_ROTATION] || 0);
 
-            if (delta != 0) {
+            if (delta !== 0) {
               this.rotateCell(this.state.cell, delta);
             }
           } else {
@@ -1219,7 +1226,7 @@ class mxVertexHandler {
    * angle - Angle in degrees.
    */
   rotateCell = (cell, angle, parent) => {
-    if (angle != 0) {
+    if (angle !== 0) {
       let model = this.graph.getModel();
 
       if (model.isVertex(cell) || model.isEdge(cell)) {
@@ -1260,7 +1267,7 @@ class mxVertexHandler {
    */
   reset = () => {
     if (this.sizers != null && this.index != null && this.sizers[this.index] != null &&
-        this.sizers[this.index].node.style.display == 'none') {
+        this.sizers[this.index].node.style.display === 'none') {
       this.sizers[this.index].node.style.display = '';
     }
 
@@ -1330,7 +1337,7 @@ class mxVertexHandler {
     let geo = this.graph.model.getGeometry(cell);
 
     if (geo != null) {
-      if (index == mxEvent.LABEL_HANDLE) {
+      if (index === mxEvent.LABEL_HANDLE) {
         let alpha = -mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
         let cos = Math.cos(alpha);
         let sin = Math.sin(alpha);
@@ -1353,7 +1360,7 @@ class mxVertexHandler {
       } else if (this.unscaledBounds != null) {
         let scale = this.graph.view.scale;
 
-        if (this.childOffsetX != 0 || this.childOffsetY != 0) {
+        if (this.childOffsetX !== 0 || this.childOffsetY !== 0) {
           this.moveChildren(cell, Math.round(this.childOffsetX / scale), Math.round(this.childOffsetY / scale));
         }
 
@@ -1479,7 +1486,7 @@ class mxVertexHandler {
         }
       }
 
-      if (index == 0 || index == 3 || index == 5 /* Left */) {
+      if (index === 0 || index === 3 || index === 5 /* Left */) {
         left += dx;
 
         if (gridEnabled) {
@@ -1487,7 +1494,7 @@ class mxVertexHandler {
         } else {
           left = Math.round(left / scale) * scale;
         }
-      } else if (index == 2 || index == 4 || index == 7 /* Right */) {
+      } else if (index === 2 || index === 4 || index === 7 /* Right */) {
         right += dx;
 
         if (gridEnabled) {
@@ -1506,13 +1513,13 @@ class mxVertexHandler {
         if (geo != null) {
           let aspect = geo.width / geo.height;
 
-          if (index == 1 || index == 2 || index == 7 || index == 6) {
+          if (index === 1 || index === 2 || index === 7 || index === 6) {
             width = height * aspect;
           } else {
             height = width / aspect;
           }
 
-          if (index == 0) {
+          if (index === 0) {
             left = right - width;
             top = bottom - height;
           }
@@ -1646,7 +1653,7 @@ class mxVertexHandler {
         this.horizontalOffset = padding.x;
         this.verticalOffset = padding.y;
 
-        if (this.horizontalOffset != 0 || this.verticalOffset != 0) {
+        if (this.horizontalOffset !== 0 || this.verticalOffset !== 0) {
           s = new mxRectangle(s.x, s.y, s.width, s.height);
 
           s.x -= this.horizontalOffset / 2;
@@ -1790,7 +1797,7 @@ class mxVertexHandler {
    * Returns true if the given custom handle is visible.
    */
   isCustomHandleVisible = (handle) => {
-    return !this.graph.isEditing() && this.state.view.graph.getSelectionCount() == 1;
+    return !this.graph.isEditing() && this.state.view.graph.getSelectionCount() === 1;
   };
 
   /**
@@ -1827,13 +1834,13 @@ class mxVertexHandler {
         if (this.graph.model.isVertex(parent) && visible) {
           let b = this.parentHighlight.bounds;
 
-          if (pstate != null && (b.x != pstate.x || b.y != pstate.y ||
-              b.width != pstate.width || b.height != pstate.height)) {
+          if (pstate != null && (b.x !== pstate.x || b.y !== pstate.y ||
+              b.width !== pstate.width || b.height !== pstate.height)) {
             this.parentHighlight.bounds = mxRectangle.fromRectangle(pstate);
             this.parentHighlight.redraw();
           }
         } else {
-          if (pstate != null && pstate.parentHighlight == this.parentHighlight) {
+          if (pstate != null && pstate.parentHighlight === this.parentHighlight) {
             pstate.parentHighlight = null;
           }
 
@@ -1845,7 +1852,7 @@ class mxVertexHandler {
             pstate.parentHighlight == null) {
           this.parentHighlight = this.createParentHighlightShape(pstate);
           // VML dialect required here for event transparency in IE
-          this.parentHighlight.dialect = (this.graph.dialect != mxConstants.DIALECT_SVG) ? mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
+          this.parentHighlight.dialect = (this.graph.dialect !== mxConstants.DIALECT_SVG) ? mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG;
           this.parentHighlight.pointerEvents = false;
           this.parentHighlight.rotation = Number(pstate.style[mxConstants.STYLE_ROTATION] || '0');
           this.parentHighlight.init(this.graph.getView().getOverlayPane());
@@ -1867,7 +1874,7 @@ class mxVertexHandler {
     if (this.preview != null) {
       this.preview.bounds = this.bounds;
 
-      if (this.preview.node.parentNode == this.graph.container) {
+      if (this.preview.node.parentNode === this.graph.container) {
         this.preview.bounds.width = Math.max(0, this.preview.bounds.width - 1);
         this.preview.bounds.height = Math.max(0, this.preview.bounds.height - 1);
       }
@@ -1919,7 +1926,7 @@ class mxVertexHandler {
       let parent = this.graph.model.getParent(this.state.cell);
       let pstate = this.graph.view.getState(parent);
 
-      if (pstate != null && pstate.parentHighlight == this.parentHighlight) {
+      if (pstate != null && pstate.parentHighlight === this.parentHighlight) {
         pstate.parentHighlight = null;
       }
 

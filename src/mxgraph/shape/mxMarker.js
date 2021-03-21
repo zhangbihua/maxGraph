@@ -3,42 +3,42 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-let mxMarker =
-    {
-      /**
-       * Class: mxMarker
-       *
-       * A static class that implements all markers for VML and SVG using a
-       * registry. NOTE: The signatures in this class will change.
-       *
-       * Variable: markers
-       *
-       * Maps from markers names to functions to paint the markers.
-       */
-      markers: [],
+import mxConstants from "../util/mxConstants";
 
-      /**
-       * Function: addMarker
-       *
-       * Adds a factory method that updates a given endpoint and returns a
-       * function to paint the marker onto the given canvas.
-       */
-      addMarker: (type, funct) => {
-        mxMarker.markers[type] = funct;
-      },
+let mxMarker = {
+  /**
+   * Class: mxMarker
+   *
+   * A static class that implements all markers for VML and SVG using a
+   * registry. NOTE: The signatures in this class will change.
+   *
+   * Variable: markers
+   *
+   * Maps from markers names to functions to paint the markers.
+   */
+  markers: [],
 
-      /**
-       * Function: createMarker
-       *
-       * Returns a function to paint the given marker.
-       */
-      createMarker: (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) => {
-        let funct = mxMarker.markers[type];
+  /**
+   * Function: addMarker
+   *
+   * Adds a factory method that updates a given endpoint and returns a
+   * function to paint the marker onto the given canvas.
+   */
+  addMarker: (type, funct) => {
+    mxMarker.markers[type] = funct;
+  },
 
-        return (funct != null) ? funct(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) : null;
-      }
+  /**
+   * Function: createMarker
+   *
+   * Returns a function to paint the given marker.
+   */
+  createMarker: (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) => {
+    let funct = mxMarker.markers[type];
 
-    };
+    return (funct != null) ? funct(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) : null;
+  }
+};
 
 /**
  * Adds the classic and block marker factory method.
@@ -61,7 +61,7 @@ let mxMarker =
       pt.x -= endOffsetX;
       pt.y -= endOffsetY;
 
-      let f = (type != mxConstants.ARROW_CLASSIC && type != mxConstants.ARROW_CLASSIC_THIN) ? 1 : 3 / 4;
+      let f = (type !== mxConstants.ARROW_CLASSIC && type !== mxConstants.ARROW_CLASSIC_THIN) ? 1 : 3 / 4;
       pe.x += -unitX * f - endOffsetX;
       pe.y += -unitY * f - endOffsetY;
 
@@ -70,7 +70,7 @@ let mxMarker =
         canvas.moveTo(pt.x, pt.y);
         canvas.lineTo(pt.x - unitX - unitY / widthFactor, pt.y - unitY + unitX / widthFactor);
 
-        if (type == mxConstants.ARROW_CLASSIC || type == mxConstants.ARROW_CLASSIC_THIN) {
+        if (type === mxConstants.ARROW_CLASSIC || type === mxConstants.ARROW_CLASSIC_THIN) {
           canvas.lineTo(pt.x - unitX * 3 / 4, pt.y - unitY * 3 / 4);
         }
 
@@ -148,7 +148,7 @@ let mxMarker =
     // only half the strokewidth is processed ). Or 0.9862 for thin diamond.
     // Note these values and the tk variable below are dependent, update
     // both together (saves trig hard coding it).
-    let swFactor = (type == mxConstants.ARROW_DIAMOND) ? 0.7071 : 0.9862;
+    let swFactor = (type === mxConstants.ARROW_DIAMOND) ? 0.7071 : 0.9862;
     let endOffsetX = unitX * sw * swFactor;
     let endOffsetY = unitY * sw * swFactor;
 
@@ -163,7 +163,7 @@ let mxMarker =
     pe.y += -unitY - endOffsetY;
 
     // thickness factor for diamond
-    let tk = ((type == mxConstants.ARROW_DIAMOND) ? 2 : 3.4);
+    let tk = ((type === mxConstants.ARROW_DIAMOND) ? 2 : 3.4);
 
     return () => {
       canvas.begin();
@@ -184,3 +184,5 @@ let mxMarker =
   mxMarker.addMarker('diamond', diamond);
   mxMarker.addMarker('diamondThin', diamond);
 })();
+
+export default mxMarker;

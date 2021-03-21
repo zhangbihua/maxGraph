@@ -307,8 +307,8 @@ class mxEdgeHandler {
 
     // Creates bends for the non-routed absolute points
     // or bends that don't correspond to points
-    if (this.graph.getSelectionCount() < maxCells ||
-        maxCells <= 0) {
+    if (this.graph.getSelectionCount() < this.maxCells ||
+        this.maxCells <= 0) {
       this.bends = this.createBends();
 
       if (this.isVirtualBendsEnabled()) {

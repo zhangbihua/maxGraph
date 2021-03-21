@@ -8,6 +8,9 @@ import mxUndoableEdit from "../util/mxUndoableEdit";
 import mxEventSource from "../util/mxEventSource";
 import mxEventObject from "../util/mxEventObject";
 import mxClient from "../mxClient";
+import mxUtils from "../util/mxUtils";
+import mxSelectionChange from "./mxSelectionChange";
+import mxEvent from "../util/mxEvent";
 
 class mxGraphSelectionModel extends mxEventSource {
   /**
@@ -17,7 +20,7 @@ class mxGraphSelectionModel extends mxEventSource {
    * If the resource for this key does not exist then the value is used as
    * the status message. Default is 'done'.
    */
-  doneResource = (mxClient.language != 'none') ? 'done' : '';
+  doneResource = (mxClient.language !== 'none') ? 'done' : '';
 
   /**
    * Variable: updatingSelectionResource
@@ -26,7 +29,7 @@ class mxGraphSelectionModel extends mxEventSource {
    * being updated. If the resource for this key does not exist then the
    * value is used as the status message. Default is 'updatingSelection'.
    */
-  updatingSelectionResource = (mxClient.language != 'none') ? 'updatingSelection' : '';
+  updatingSelectionResource = (mxClient.language !== 'none') ? 'updatingSelection' : '';
 
   /**
    * Variable: graph
@@ -343,56 +346,6 @@ class mxGraphSelectionModel extends mxEventSource {
         this.cells.splice(index, 1);
       }
     }
-  };
-
-  /**
-   * Class: mxSelectionChange
-   *
-   * Action to change the current root in a view.
-   *
-   * Constructor: mxCurrentRootChange
-   *
-   * Constructs a change of the current root in the given view.
-   */
-  mxSelectionChange = (selectionModel, added, removed) => {
-    this.selectionModel = selectionModel;
-    this.added = (added != null) ? added.slice() : null;
-    this.removed = (removed != null) ? removed.slice() : null;
-  };
-
-  /**
-   * Function: execute
-   *
-   * Changes the current root of the view.
-   */
-  execute = () => {
-    var t0 = mxLog.enter('mxSelectionChange.execute');
-    window.status = mxResources.get(
-        this.selectionModel.updatingSelectionResource) ||
-        this.selectionModel.updatingSelectionResource;
-
-    if (this.removed != null) {
-      for (let i = 0; i < this.removed.length; i++) {
-        this.selectionModel.cellRemoved(this.removed[i]);
-      }
-    }
-
-    if (this.added != null) {
-      for (let i = 0; i < this.added.length; i++) {
-        this.selectionModel.cellAdded(this.added[i]);
-      }
-    }
-
-    let tmp = this.added;
-    this.added = this.removed;
-    this.removed = tmp;
-
-    window.status = mxResources.get(this.selectionModel.doneResource) ||
-        this.selectionModel.doneResource;
-    mxLog.leave('mxSelectionChange.execute', t0);
-
-    this.selectionModel.fireEvent(new mxEventObject(mxEvent.CHANGE,
-        'added', this.added, 'removed', this.removed));
   };
 }
 

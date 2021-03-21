@@ -8,6 +8,7 @@ import mxUtils from "../util/mxUtils";
 import mxConstants from "../util/mxConstants";
 import mxPoint from "../util/mxPoint";
 import mxSvgCanvas2D from "../util/mxSvgCanvas2D";
+import mxEvent from "../util/mxEvent";
 
 class mxShape {
   /**
@@ -352,7 +353,7 @@ class mxShape {
    *
    * Creates and returns the SVG node(s) to represent this shape.
    */
-  redraw = () => {
+  redraw() {
     this.updateBoundsFromPoints();
 
     if (this.visible && this.checkBounds()) {
@@ -831,7 +832,7 @@ class mxShape {
    *
    * Sets the state of the canvas for drawing the shape.
    */
-  configureCanvas = (c, x, y, w, h) => {
+  configureCanvas(c, x, y, w, h) {
     let dash = null;
 
     if (this.style != null) {
@@ -1068,7 +1069,7 @@ class mxShape {
    *
    * Resets all styles.
    */
-  resetStyles = () => {
+  resetStyles() {
     this.initStyles();
 
     this.spacing = 0;
@@ -1123,7 +1124,7 @@ class mxShape {
    *
    * state - <mxCellState> of the corresponding cell.
    */
-  apply = (state) => {
+  apply(state) {
     this.state = state;
     this.style = state.style;
 
@@ -1222,7 +1223,7 @@ class mxShape {
    * Updates the <boundingBox> for this shape using <createBoundingBox> and
    * <augmentBoundingBox> and stores the result in <boundingBox>.
    */
-  updateBoundingBox = () => {
+  updateBoundingBox() {
     // Tries to get bounding box from SVG subsystem
     // LATER: Use getBoundingClientRect for fallback in VML
     if (this.useSvgBoundingBox && this.node != null && this.node.ownerSVGElement != null) {
@@ -1280,7 +1281,7 @@ class mxShape {
    *
    * Augments the bounding box with the strokewidth and shadow offsets.
    */
-  augmentBoundingBox = (bbox) => {
+  augmentBoundingBox(bbox) {
     if (this.isShadow) {
       bbox.width += Math.ceil(mxConstants.SHADOW_OFFSET_X * this.scale);
       bbox.height += Math.ceil(mxConstants.SHADOW_OFFSET_Y * this.scale);

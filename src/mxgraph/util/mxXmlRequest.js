@@ -291,12 +291,12 @@ class mxXmlRequest {
 
     if (this.request != null) {
       if (onload != null) {
-        this.request.onreadystatechange = mxUtils.bind(this, () => {
+        this.request.onreadystatechange = () => {
           if (this.isReady()) {
             onload(this);
             this.request.onreadystatechange = null;
           }
-        });
+        };
       }
 
       this.request.open(this.method, this.url, this.async,

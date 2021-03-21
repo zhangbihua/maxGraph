@@ -7,6 +7,9 @@ import mxEffects from "./mxEffects";
 import mxXmlRequest from "./mxXmlRequest";
 import mxClient from "../mxClient";
 import mxConstants from "./mxConstants";
+import mxObjectIdentity from "./mxObjectIdentity";
+import mxPoint from "./mxPoint";
+import mxDictionary from "./mxDictionary";
 
 let mxUtils = {
   /**
@@ -165,9 +168,7 @@ let mxUtils = {
    * becomes a reference to that scope.
    */
   bind: (scope, funct) => {
-    return () => {
-      return funct.apply(scope, arguments);
-    };
+    return funct.bind(scope);
   },
 
   /**
@@ -1576,37 +1577,6 @@ let mxUtils = {
    */
   isNaN: (value) => {
     return typeof (value) == 'number' && isNaN(value);
-  },
-
-  /**
-   * Function: extend
-   *
-   * Assigns a copy of the superclass prototype to the subclass prototype.
-   * Note that this does not call the constructor of the superclass at this
-   * point, the superclass constructor should be called explicitely in the
-   * subclass constructor. Below is an example.
-   *
-   * (code)
-   * MyGraph = (container, model, renderHint, stylesheet)=>
-   * {
-   *   mxGraph.call(this, container, model, renderHint, stylesheet);
-   * }
-   *
-   * mxUtils.extend(MyGraph, mxGraph);
-   * (end)
-   *
-   * Parameters:
-   *
-   * ctor - Constructor of the subclass.
-   * superCtor - Constructor of the superclass.
-   */
-  extend: (ctor, superCtor) => {
-    let f = () => {
-    };
-    f.prototype = superCtor.prototype;
-
-    ctor.prototype = new f();
-    constructor = ctor;
   },
 
   /**

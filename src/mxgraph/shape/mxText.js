@@ -247,7 +247,7 @@ class mxText extends mxShape {
       let realHtml = mxUtils.isNode(this.value) || this.dialect === mxConstants.DIALECT_STRICTHTML;
 
       // Always renders labels as HTML in VML
-      let fmt = (realHtml || c instanceof mxVmlCanvas2D) ? 'html' : '';
+      let fmt = realHtml ? 'html' : '';
       let val = this.value;
 
       if (!realHtml && fmt === 'html') {

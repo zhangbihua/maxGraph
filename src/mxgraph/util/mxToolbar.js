@@ -117,17 +117,17 @@ class mxToolbar extends mxEventSource {
       }
     }
 
-    let mouseHandler = mxUtils.bind(this, (evt) => {
+    let mouseHandler = (evt) => {
       if (pressedIcon != null) {
         img.setAttribute('src', icon);
       } else {
         img.style.backgroundColor = '';
       }
-    });
+    };
 
     // Highlights the toolbar item with a gray background
     // while it is being clicked with the mouse
-    mxEvent.addGestureListeners(img, mxUtils.bind(this, (evt) => {
+    mxEvent.addGestureListeners(img, (evt) => {
       if (pressedIcon != null) {
         img.setAttribute('src', pressedIcon);
       } else {
@@ -169,7 +169,7 @@ class mxToolbar extends mxEventSource {
           }
         }
       }
-    }), null, mouseHandler);
+    }, null, mouseHandler);
 
     mxEvent.addListener(img, 'mouseout', mouseHandler);
 
@@ -277,7 +277,7 @@ class mxToolbar extends mxEventSource {
       img.setAttribute('title', title);
     }
 
-    mxEvent.addListener(img, 'click', mxUtils.bind(this, (evt) => {
+    mxEvent.addListener(img, 'click', (evt) => {
       let tmp = this.selectedMode.altIcon;
 
       if (tmp != null) {
@@ -293,7 +293,7 @@ class mxToolbar extends mxEventSource {
 
       this.selectedMode = img;
 
-      let tmp = img.altIcon;
+      tmp = img.altIcon;
 
       if (tmp != null) {
         img.altIcon = img.getAttribute('src');
@@ -304,7 +304,7 @@ class mxToolbar extends mxEventSource {
 
       this.fireEvent(new mxEventObject(mxEvent.SELECT));
       funct();
-    }));
+    });
 
     this.container.appendChild(img);
 
@@ -344,15 +344,15 @@ class mxToolbar extends mxEventSource {
     }
 
     if (this.enabled && toggle) {
-      mxEvent.addListener(img, 'click', mxUtils.bind(this, (evt) => {
+      mxEvent.addListener(img, 'click', (evt) => {
         this.selectMode(img, funct);
         this.noReset = false;
-      }));
+      });
 
-      mxEvent.addListener(img, 'dblclick', mxUtils.bind(this, (evt) => {
+      mxEvent.addListener(img, 'dblclick', (evt) => {
         this.selectMode(img, funct);
         this.noReset = true;
-      }));
+      });
 
       if (this.defaultMode == null) {
         this.defaultMode = img;

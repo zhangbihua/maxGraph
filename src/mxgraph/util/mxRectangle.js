@@ -164,7 +164,7 @@ class mxRectangle extends mxPoint {
    *
    * Returns true if the given object equals this rectangle.
    */
-  equals = (obj) => {
+  equals(obj) {
     return obj != null && obj.x == this.x && obj.y == this.y &&
         obj.width == this.width && obj.height == this.height;
   };

@@ -243,7 +243,7 @@ class mxPopupMenu extends mxEventSource {
       let currentSelection = null;
 
       mxEvent.addGestureListeners(tr,
-          mxUtils.bind(this, (evt) => {
+          (evt) => {
             this.eventReceiver = tr;
 
             if (parent.activeRow != tr && parent.activeRow != parent) {
@@ -258,8 +258,8 @@ class mxPopupMenu extends mxEventSource {
             }
 
             mxEvent.consume(evt);
-          }),
-          mxUtils.bind(this, (evt) => {
+          },
+          (evt) => {
             if (parent.activeRow != tr && parent.activeRow != parent) {
               if (parent.activeRow != null && parent.activeRow.div.parentNode != null) {
                 this.hideSubmenu(parent);
@@ -275,8 +275,8 @@ class mxPopupMenu extends mxEventSource {
             if (!noHover) {
               tr.className = 'mxPopupMenuItemHover';
             }
-          }),
-          mxUtils.bind(this, (evt) => {
+          },
+          (evt) => {
             // EventReceiver avoids clicks on a submenu item
             // which has just been shown in the mousedown
             if (this.eventReceiver == tr) {
@@ -303,15 +303,15 @@ class mxPopupMenu extends mxEventSource {
 
             this.eventReceiver = null;
             mxEvent.consume(evt);
-          })
+          }
       );
 
       // Resets hover style because TR in IE doesn't have hover
       if (!noHover) {
         mxEvent.addListener(tr, 'mouseout',
-            mxUtils.bind(this, (evt) => {
+            (evt) => {
               tr.className = 'mxPopupMenuItem';
-            })
+            }
         );
       }
     }

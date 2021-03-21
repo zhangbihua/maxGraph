@@ -162,9 +162,9 @@ class mxDragSource {
     this.dropHandler = dropHandler;
 
     // Handles a drag gesture on the element
-    mxEvent.addGestureListeners(element, mxUtils.bind(this, (evt) => {
+    mxEvent.addGestureListeners(element, (evt) => {
       this.mouseDown(evt);
-    }));
+    });
 
     // Prevents native drag and drop
     mxEvent.addListener(element, 'dragstart', (evt) => {
@@ -324,8 +324,8 @@ class mxDragSource {
   mouseDown = (evt) => {
     if (this.enabled && !mxEvent.isConsumed(evt) && this.mouseMoveHandler == null) {
       this.startDrag(evt);
-      this.mouseMoveHandler = mxUtils.bind(this, this.mouseMove);
-      this.mouseUpHandler = mxUtils.bind(this, this.mouseUp);
+      this.mouseMoveHandler = this.mouseMove.bind(this);
+      this.mouseUpHandler = this.mouseUp.bind(this);
       mxEvent.addGestureListeners(document, null, this.mouseMoveHandler, this.mouseUpHandler);
 
       if (mxClient.IS_TOUCH && !mxEvent.isMouseEvent(evt)) {

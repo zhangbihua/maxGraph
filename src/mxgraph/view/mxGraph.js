@@ -46,7 +46,6 @@ import mxStyleChange from "../model/atomic_changes/mxStyleChange";
 import mxTerminalChange from "../model/atomic_changes/mxTerminalChange";
 import mxValueChange from "../model/atomic_changes/mxValueChange";
 
-
 class mxGraph extends mxEventSource {
   /**
    * Variable: mouseListeners
@@ -11268,7 +11267,7 @@ class mxGraph extends mxEventSource {
       // Searches for rectangles using method if native hit detection is disabled on shape
       if (me.getCell() == null && this.isMouseDown && evtName === mxEvent.MOUSE_MOVE) {
         me.state = this.view.getState(this.getCellAt(pt.x, pt.y, null, null, null, (state) => {
-          return state.shape == null || state.shape.paintBackground !== paintBackground ||
+          return state.shape == null || state.shape.paintBackground !== this.paintBackground ||
               mxUtils.getValue(state.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1' ||
               (state.shape.fill != null && state.shape.fill !== mxConstants.NONE);
         }));
@@ -11318,7 +11317,7 @@ class mxGraph extends mxEventSource {
       this.mouseMoveRedirect = null;
       this.mouseUpRedirect = null;
       this.eventSource = null;
-    } else if (!mxClient.IS_GC && this.eventSource != null && me.getSource() != this.eventSource) {
+    } else if (!mxClient.IS_GC && this.eventSource != null && me.getSource() !== this.eventSource) {
       result = true;
     } else if (mxClient.IS_TOUCH && evtName === mxEvent.MOUSE_DOWN &&
         !mouseEvent && !mxEvent.isPenEvent(me.getEvent())) {

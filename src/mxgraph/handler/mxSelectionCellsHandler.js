@@ -7,6 +7,7 @@ import mxEventSource from "../util/mxEventSource";
 import mxDictionary from "../util/mxDictionary";
 import mxEventObject from "../util/mxEventObject";
 import mxEvent from "../util/mxEvent";
+import mxUtils from "../util/mxUtils";
 
 class mxSelectionCellsHandler extends mxEventSource {
   /**
@@ -165,7 +166,7 @@ class mxSelectionCellsHandler extends mxEventSource {
         let handler = oldHandlers.remove(tmp[i]);
 
         if (handler != null) {
-          if (handler.state != state) {
+          if (handler.state !== state) {
             handler.destroy();
             handler = null;
           } else if (!this.isHandlerActive(handler)) {
