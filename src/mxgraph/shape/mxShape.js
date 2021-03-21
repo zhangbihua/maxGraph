@@ -129,13 +129,6 @@ class mxShape {
   stencilPointerEvents = false;
 
   /**
-   * Variable: vmlScale
-   *
-   * Scale for improving the precision of VML rendering. Default is 1.
-   */
-  vmlScale = 1;
-
-  /**
    * Variable: outline
    *
    * Specifies if the shape should be drawn as an outline. This disables all
@@ -257,17 +250,6 @@ class mxShape {
     this.strokeOpacity = 100;
     this.flipH = false;
     this.flipV = false;
-  };
-
-  /**
-   * Function: isParseVml
-   *
-   * Specifies if any VML should be added via insertAdjacentHtml to the DOM. This
-   * is only needed in IE8 and only if the shape contains VML markup. This method
-   * returns true.
-   */
-  isParseVml = () => {
-    return true;
   };
 
   /**

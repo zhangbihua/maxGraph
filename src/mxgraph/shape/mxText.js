@@ -204,16 +204,6 @@ class mxText extends mxShape {
   }
 
   /**
-   * Function: isParseVml
-   *
-   * Text shapes do not contain VML markup and do not need to be parsed. This
-   * method returns false to speed up rendering in IE8.
-   */
-  isParseVml = () => {
-    return false;
-  };
-
-  /**
    * Function: isHtmlAllowed
    *
    * Returns true if HTML is allowed for this shape. This implementation returns
@@ -769,19 +759,6 @@ class mxText extends mxShape {
     c.setFontFamily(this.family);
     c.setFontSize(this.size);
     c.setFontStyle(this.fontStyle);
-  };
-
-  /**
-   * Function: updateVmlContainer
-   *
-   * Sets the width and height of the container to 1px.
-   */
-  updateVmlContainer = () => {
-    this.node.style.left = `${Math.round(this.bounds.x)}px`;
-    this.node.style.top = `${Math.round(this.bounds.y)}px`;
-    this.node.style.width = '1px';
-    this.node.style.height = '1px';
-    this.node.style.overflow = 'visible';
   };
 
   /**

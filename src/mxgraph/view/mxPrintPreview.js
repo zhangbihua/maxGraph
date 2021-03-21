@@ -822,10 +822,6 @@ class mxPrintPreview {
         innerDiv.style.top = `${this.border}px`;
         innerDiv.style.left = `${this.border}px`;
 
-        if (this.graph.dialect == mxConstants.DIALECT_VML) {
-          innerDiv.style.position = 'absolute';
-        }
-
         div.appendChild(innerDiv);
         document.body.appendChild(div);
         arg = innerDiv;
@@ -910,8 +906,6 @@ class mxPrintPreview {
         dx = 0;
         dy = 0;
       }
-    } else if (this.graph.dialect == mxConstants.DIALECT_VML) {
-      view.createVml();
     } else {
       view.createHtml();
     }

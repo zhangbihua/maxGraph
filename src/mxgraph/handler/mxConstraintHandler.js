@@ -326,10 +326,7 @@ class mxConstraintHandler {
 
             if (this.focusHighlight == null) {
               const hl = this.createHighlightShape();
-              hl.dialect =
-                this.graph.dialect == mxConstants.DIALECT_SVG
-                  ? mxConstants.DIALECT_SVG
-                  : mxConstants.DIALECT_VML;
+              hl.dialect = mxConstants.DIALECT_SVG
               hl.pointerEvents = false;
 
               hl.init(this.graph.getView().getOverlayPane());

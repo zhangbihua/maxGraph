@@ -11,13 +11,6 @@ import mxUtils from '../util/mxUtils';
 
 class mxDoubleEllipse extends mxShape {
   /**
-   * Variable: vmlScale
-   *
-   * Scale for improving the precision of VML rendering. Default is 10.
-   */
-  vmlScale = 10;
-
-  /**
    * Class: mxDoubleEllipse
    *
    * Extends <mxShape> to implement a double ellipse shape. This shape is

@@ -774,10 +774,7 @@ class mxGraphHandler {
       // Makes sure to use either VML or SVG shapes in order to implement
       // event-transparency on the background area of the rectangle since
       // HTML shapes do not let mouseevents through even when transparent
-      shape.dialect =
-        this.graph.dialect !== mxConstants.DIALECT_SVG
-          ? mxConstants.DIALECT_VML
-          : mxConstants.DIALECT_SVG;
+      shape.dialect = mxConstants.DIALECT_SVG;
       shape.init(this.graph.getView().getOverlayPane());
       shape.pointerEvents = false;
 

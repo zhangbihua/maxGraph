@@ -64,13 +64,6 @@ const mxConstants = {
   DIALECT_SVG: 'svg',
 
   /**
-   * Variable: DIALECT_VML
-   *
-   * Defines the VML display dialect name.
-   */
-  DIALECT_VML: 'vml',
-
-  /**
    * Variable: DIALECT_MIXEDHTML
    *
    * Defines the mixed HTML display dialect name.

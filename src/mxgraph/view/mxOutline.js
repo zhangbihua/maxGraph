@@ -261,12 +261,6 @@ class mxOutline {
     );
     this.selectionBorder.dialect = this.outline.dialect;
 
-    if (this.forceVmlHandles) {
-      this.selectionBorder.isHtmlAllowed = () => {
-        return false;
-      };
-    }
-
     this.selectionBorder.init(this.outline.getView().getOverlayPane());
 
     // Handles event by catching the initial pointer start and then listening to the
@@ -293,12 +287,6 @@ class mxOutline {
 
     // Creates a small blue rectangle for sizing (sizer handle)
     this.sizer = this.createSizer();
-
-    if (this.forceVmlHandles) {
-      this.sizer.isHtmlAllowed = () => {
-        return false;
-      };
-    }
 
     this.sizer.init(this.outline.getView().getOverlayPane());
 

@@ -209,10 +209,7 @@ class mxVertexHandler {
     );
     this.selectionBorder = this.createSelectionShape(this.bounds);
     // VML dialect required here for event transparency in IE
-    this.selectionBorder.dialect =
-      this.graph.dialect !== mxConstants.DIALECT_SVG
-        ? mxConstants.DIALECT_VML
-        : mxConstants.DIALECT_SVG;
+    this.selectionBorder.dialect = mxConstants.DIALECT_SVG;
     this.selectionBorder.pointerEvents = false;
     this.selectionBorder.rotation = Number(
       this.state.style[mxConstants.STYLE_ROTATION] || '0'
@@ -546,7 +543,7 @@ class mxVertexHandler {
       shape.bounds.y = Math.floor(y - shape.bounds.height / 2);
 
       // Fixes visible inactive handles in VML
-      if (shape.node != null && shape.node.style.display != 'none') {
+      if (shape.node != null && shape.node.style.display !== 'none') {
         shape.redraw();
       }
     }
@@ -718,10 +715,7 @@ class mxVertexHandler {
             this.preview.dialect = mxConstants.DIALECT_STRICTHTML;
             this.preview.init(this.graph.container);
           } else {
-            this.preview.dialect =
-              this.graph.dialect != mxConstants.DIALECT_SVG
-                ? mxConstants.DIALECT_VML
-                : mxConstants.DIALECT_SVG;
+            this.preview.dialect = mxConstants.DIALECT_SVG;
             this.preview.init(this.graph.view.getOverlayPane());
           }
         }
@@ -2149,10 +2143,7 @@ class mxVertexHandler {
         ) {
           this.parentHighlight = this.createParentHighlightShape(pstate);
           // VML dialect required here for event transparency in IE
-          this.parentHighlight.dialect =
-            this.graph.dialect !== mxConstants.DIALECT_SVG
-              ? mxConstants.DIALECT_VML
-              : mxConstants.DIALECT_SVG;
+          this.parentHighlight.dialect = mxConstants.DIALECT_SVG;
           this.parentHighlight.pointerEvents = false;
           this.parentHighlight.rotation = Number(
             pstate.style[mxConstants.STYLE_ROTATION] || '0'

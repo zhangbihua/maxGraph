@@ -257,10 +257,7 @@ class mxEdgeHandler {
         ) {
           this.parentHighlight = this.createParentHighlightShape(pstate);
           // VML dialect required here for event transparency in IE
-          this.parentHighlight.dialect =
-            this.graph.dialect !== mxConstants.DIALECT_SVG
-              ? mxConstants.DIALECT_VML
-              : mxConstants.DIALECT_SVG;
+          this.parentHighlight.dialect = mxConstants.DIALECT_SVG;
           this.parentHighlight.pointerEvents = false;
           this.parentHighlight.rotation = Number(
             pstate.style[mxConstants.STYLE_ROTATION] || '0'

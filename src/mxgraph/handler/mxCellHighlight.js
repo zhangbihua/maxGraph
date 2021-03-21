@@ -131,7 +131,7 @@ class mxCellHighlight {
 
     if (
       !this.keepOnTop &&
-      this.shape.node.parentNode.firstChild != this.shape.node
+      this.shape.node.parentNode.firstChild !== this.shape.node
     ) {
       this.shape.node.parentNode.insertBefore(
         this.shape.node,
@@ -156,14 +156,11 @@ class mxCellHighlight {
     shape.isDashed = this.dashed;
     shape.isShadow = false;
 
-    shape.dialect =
-      this.graph.dialect != mxConstants.DIALECT_SVG
-        ? mxConstants.DIALECT_VML
-        : mxConstants.DIALECT_SVG;
+    shape.dialect = mxConstants.DIALECT_SVG;
     shape.init(this.graph.getView().getOverlayPane());
     mxEvent.redirectMouseEvents(shape.node, this.graph, this.state);
 
-    if (this.graph.dialect != mxConstants.DIALECT_SVG) {
+    if (this.graph.dialect !== mxConstants.DIALECT_SVG) {
       shape.pointerEvents = false;
     } else {
       shape.svgPointerEvents = 'stroke';
@@ -232,7 +229,7 @@ class mxCellHighlight {
    * Marks the <markedState> and fires a <mark> event.
    */
   highlight = state => {
-    if (this.state != state) {
+    if (this.state !== state) {
       if (this.shape != null) {
         this.shape.destroy();
         this.shape = null;
@@ -258,7 +255,7 @@ class mxCellHighlight {
       let elt = document.elementFromPoint(x, y);
 
       while (elt != null) {
-        if (elt == this.shape.node) {
+        if (elt === this.shape.node) {
           hit = true;
           break;
         }

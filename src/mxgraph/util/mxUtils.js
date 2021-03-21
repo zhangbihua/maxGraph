@@ -638,19 +638,6 @@ const mxUtils = {
   },
 
   /**
-   * Function: isVml
-   *
-   * Returns true if the given node is in the VML namespace.
-   *
-   * Parameters:
-   *
-   * node - DOM node whose tag urn should be checked.
-   */
-  isVml: node => {
-    return node != null && node.tagUrn == 'urn:schemas-microsoft-com:vml';
-  },
-
-  /**
    * Function: getXml
    *
    * Returns the XML content of the specified node. For Internet Explorer,

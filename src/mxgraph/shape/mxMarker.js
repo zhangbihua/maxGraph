@@ -9,7 +9,7 @@ const mxMarker = {
   /**
    * Class: mxMarker
    *
-   * A static class that implements all markers for VML and SVG using a
+   * A static class that implements all markers for SVG using a
    * registry. NOTE: The signatures in this class will change.
    *
    * Variable: markers

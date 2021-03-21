@@ -3,6 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxConstants from "./mxConstants";
+
 /**
  * Class: mxGuide
  *
@@ -194,13 +196,10 @@ class mxGuide {
           if (this.guideX == null) {
             this.guideX = this.createGuideShape(true);
 
-            // Makes sure to use either VML or SVG shapes in order to implement
+            // Makes sure to use SVG shapes in order to implement
             // event-transparency on the background area of the rectangle since
             // HTML shapes do not let mouseevents through even when transparent
-            this.guideX.dialect =
-              this.graph.dialect != mxConstants.DIALECT_SVG
-                ? mxConstants.DIALECT_VML
-                : mxConstants.DIALECT_SVG;
+            this.guideX.dialect = mxConstants.DIALECT_SVG;
             this.guideX.pointerEvents = false;
             this.guideX.init(this.graph.getView().getOverlayPane());
           }
@@ -236,13 +235,10 @@ class mxGuide {
           if (this.guideY == null) {
             this.guideY = this.createGuideShape(false);
 
-            // Makes sure to use either VML or SVG shapes in order to implement
+            // Makes sure to use SVG shapes in order to implement
             // event-transparency on the background area of the rectangle since
             // HTML shapes do not let mouseevents through even when transparent
-            this.guideY.dialect =
-              this.graph.dialect != mxConstants.DIALECT_SVG
-                ? mxConstants.DIALECT_VML
-                : mxConstants.DIALECT_SVG;
+            this.guideY.dialect = mxConstants.DIALECT_SVG;
             this.guideY.pointerEvents = false;
             this.guideY.init(this.graph.getView().getOverlayPane());
           }

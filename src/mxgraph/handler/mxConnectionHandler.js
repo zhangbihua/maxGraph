@@ -471,10 +471,7 @@ class mxConnectionHandler extends mxEventSource {
       this.livePreview && this.edgeState != null
         ? this.graph.cellRenderer.createShape(this.edgeState)
         : new mxPolyline([], mxConstants.INVALID_COLOR);
-    shape.dialect =
-      this.graph.dialect !== mxConstants.DIALECT_SVG
-        ? mxConstants.DIALECT_VML
-        : mxConstants.DIALECT_SVG;
+    shape.dialect = mxConstants.DIALECT_SVG;
     shape.scale = this.graph.view.scale;
     shape.pointerEvents = false;
     shape.isDashed = true;
@@ -785,10 +782,7 @@ class mxConnectionHandler extends mxEventSource {
         icon.dialect = mxConstants.DIALECT_STRICTHTML;
         icon.init(this.graph.container);
       } else {
-        icon.dialect =
-          this.graph.dialect === mxConstants.DIALECT_SVG
-            ? mxConstants.DIALECT_SVG
-            : mxConstants.DIALECT_VML;
+        icon.dialect = mxConstants.DIALECT_SVG;
         icon.init(this.graph.getView().getOverlayPane());
 
         // Move the icon back in the overlay pane
