@@ -471,11 +471,8 @@ class mxShape {
         flipH,
         flipV
       );
-      alert(JSON.stringify(r))
       return r;
     }
-
-    alert(JSON.stringify(rect))
     return rect;
   };
 
