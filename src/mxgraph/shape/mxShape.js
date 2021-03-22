@@ -9,6 +9,17 @@ import mxConstants from '../util/mxConstants';
 import mxPoint from '../util/mxPoint';
 import mxSvgCanvas2D from '../util/mxSvgCanvas2D';
 import mxEvent from '../util/mxEvent';
+import mxClient from "../mxClient";
+
+const toBool = i => {
+  if (i === 0) return false;
+  if (i === 1) return true;
+  if (i === '0') return false;
+  if (i === '1') return true;
+  if (String(i).toLowerCase() === 'true') return true;
+  if (String(i).toLowerCase() === 'false') return false;
+  return !!i;
+};
 
 class mxShape {
   /**
@@ -151,7 +162,7 @@ class mxShape {
    * Allows to use the SVG bounding box in SVG. Default is false for performance
    * reasons.
    */
-  useSvgBoundingBox = false;
+  useSvgBoundingBox = true;
 
   /**
    * Class: mxShape
@@ -387,12 +398,12 @@ class mxShape {
     const pts = this.points;
 
     if (pts != null && pts.length > 0 && pts[0] != null) {
-      this.bounds = new mxRectangle(Number(pts[0].x), Number(pts[0].y), 1, 1);
+      this.bounds = new mxRectangle(Math.round(pts[0].x), Math.round(pts[0].y), 1, 1);
 
       for (let i = 1; i < this.points.length; i += 1) {
         if (pts[i] != null) {
           this.bounds.add(
-            new mxRectangle(Number(pts[i].x), Number(pts[i].y), 1, 1)
+            new mxRectangle(Math.round(pts[i].x), Math.round(pts[i].y), 1, 1)
           );
         }
       }
@@ -412,7 +423,7 @@ class mxShape {
       mxConstants.STYLE_DIRECTION,
       mxConstants.DIRECTION_EAST
     );
-    let bounds = rect;
+    let bounds = rect.clone();
 
     // Normalizes argument for getLabelMargins hook
     if (
@@ -423,18 +434,20 @@ class mxShape {
       this.state.text.isPaintBoundsInverted()
     ) {
       bounds = bounds.clone();
-      const tmp = bounds.width;
-      bounds.width = bounds.height;
-      bounds.height = tmp;
+      [bounds.width, bounds.height] = [bounds.height, bounds.width];
     }
 
-    const m = this.getLabelMargins(bounds);
+    let labelMargins = this.getLabelMargins(bounds);
 
-    if (m != null) {
-      let flipH =
-        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, false) == '1';
-      let flipV =
-        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, false) == '1';
+    if (labelMargins != null) {
+      labelMargins = labelMargins.copy();
+
+      let flipH = toBool(
+        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, false)
+      );
+      let flipV = toBool(
+        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, false)
+      );
 
       // Handles special case for vertical labels
       if (
@@ -442,20 +455,27 @@ class mxShape {
         this.state.text != null &&
         this.state.text.isPaintBoundsInverted()
       ) {
-        let tmp = m.x;
-        m.x = m.height;
-        m.height = m.width;
-        m.width = m.y;
-        m.y = tmp;
+        const tmp = labelMargins.x;
+        labelMargins.x = labelMargins.height;
+        labelMargins.height = labelMargins.width;
+        labelMargins.width = labelMargins.y;
+        labelMargins.y = tmp;
 
-        tmp = flipH;
-        flipH = flipV;
-        flipV = tmp;
+        [flipH, flipV] = [flipV, flipH];
       }
 
-      return mxUtils.getDirectedBounds(rect, m, this.style, flipH, flipV);
+      const r = mxUtils.getDirectedBounds(
+        rect,
+        labelMargins,
+        this.style,
+        flipH,
+        flipV
+      );
+      alert(JSON.stringify(r))
+      return r;
     }
 
+    alert(JSON.stringify(rect))
     return rect;
   };
 
@@ -477,14 +497,14 @@ class mxShape {
    */
   checkBounds = () => {
     return (
-      !isNaN(this.scale) &&
-      isFinite(this.scale) &&
+      !Number.isNaN(this.scale) &&
+      Number.isFinite(this.scale) &&
       this.scale > 0 &&
       this.bounds != null &&
-      !isNaN(this.bounds.x) &&
-      !isNaN(this.bounds.y) &&
-      !isNaN(this.bounds.width) &&
-      !isNaN(this.bounds.height) &&
+      !Number.isNaN(this.bounds.x) &&
+      !Number.isNaN(this.bounds.y) &&
+      !Number.isNaN(this.bounds.width) &&
+      !Number.isNaN(this.bounds.height) &&
       this.bounds.width > 0 &&
       this.bounds.height > 0
     );
@@ -506,7 +526,7 @@ class mxShape {
       this.paint(canvas);
       this.afterPaint(canvas);
 
-      if (this.node != canvas.root) {
+      if (this.node !== canvas.root) {
         // Forces parsing in IE8 standards mode - slow! avoid
         this.node.insertAdjacentHTML('beforeend', canvas.root.outerHTML);
       }
@@ -880,8 +900,9 @@ class mxShape {
       c.setDashed(
         this.isDashed,
         this.style != null
-          ? mxUtils.getValue(this.style, mxConstants.STYLE_FIX_DASH, false) ===
-              1
+          ? toBool(
+              mxUtils.getValue(this.style, mxConstants.STYLE_FIX_DASH, false)
+            )
           : false
       );
     }
@@ -952,8 +973,13 @@ class mxShape {
     if (
       !this.outline ||
       this.style == null ||
-      mxUtils.getValue(this.style, mxConstants.STYLE_BACKGROUND_OUTLINE, 0) ===
-        0
+      toBool(
+        mxUtils.getValue(
+          this.style,
+          mxConstants.STYLE_BACKGROUND_OUTLINE,
+          0
+        ) === false
+      )
     ) {
       c.setShadow(false);
       this.paintForeground(c, x, y, w, h);
@@ -989,9 +1015,7 @@ class mxShape {
   getArcSize = (w, h) => {
     let r = 0;
 
-    if (
-      mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1'
-    ) {
+    if (toBool(mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0))) {
       r = Math.min(
         w / 2,
         Math.min(
@@ -1004,12 +1028,13 @@ class mxShape {
         )
       );
     } else {
-      const f =
+      const f = parseFloat(
         mxUtils.getValue(
           this.style,
           mxConstants.STYLE_ARCSIZE,
           mxConstants.RECTANGLE_ROUNDING_FACTOR * 100
-        ) / 100;
+        ) / 100
+      );
       r = Math.min(w * f, h * f);
     }
 
@@ -1085,7 +1110,7 @@ class mxShape {
 
         if (
           rounded &&
-          (dx != 0 || dy != 0) &&
+          (dx !== 0 || dy !== 0) &&
           (exclude == null || mxUtils.indexOf(exclude, i - 1) < 0)
         ) {
           // Draws a line from the last point to the current
@@ -1131,7 +1156,7 @@ class mxShape {
         }
 
         pt = tmp;
-        i++;
+        i += 1;
       }
 
       if (close) {
@@ -1282,17 +1307,21 @@ class mxShape {
         mxConstants.STYLE_DIRECTION,
         this.direction
       );
-      this.flipH =
-        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, 0) === 1;
-      this.flipV =
-        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, 0) === 1;
+      this.flipH = toBool(
+        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, 0)
+      );
+      this.flipV = toBool(
+        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, 0)
+      );
 
       // Legacy support for stencilFlipH/V
       if (this.stencil != null) {
-        this.flipH =
-          mxUtils.getValue(this.style, 'stencilFlipH', 0) === 1 || this.flipH;
-        this.flipV =
-          mxUtils.getValue(this.style, 'stencilFlipV', 0) === 1 || this.flipV;
+        this.flipH = toBool(
+          mxUtils.getValue(this.style, 'stencilFlipH', 0) || this.flipH
+        );
+        this.flipV =toBool(
+          mxUtils.getValue(this.style, 'stencilFlipV', 0) || this.flipV
+        );
       }
 
       if (
@@ -1304,35 +1333,37 @@ class mxShape {
         this.flipV = tmp;
       }
 
-      this.isShadow =
+      this.isShadow = toBool(
         mxUtils.getValue(
           this.style,
           mxConstants.STYLE_SHADOW,
           this.isShadow
-        ) === 1;
-      this.isDashed =
+        ));
+      this.isDashed = toBool(
         mxUtils.getValue(
           this.style,
           mxConstants.STYLE_DASHED,
           this.isDashed
-        ) === 1;
-      this.isRounded =
+        ));
+      this.isRounded = toBool(
         mxUtils.getValue(
           this.style,
           mxConstants.STYLE_ROUNDED,
           this.isRounded
-        ) === 1;
-      this.glass =
-        mxUtils.getValue(this.style, mxConstants.STYLE_GLASS, this.glass) === 1;
+        ));
+      this.glass = toBool(
+        mxUtils.getValue(
+          this.style,
+          mxConstants.STYLE_GLASS,
+          this.glass
+        ));
 
       if (this.fill === mxConstants.NONE) {
         this.fill = null;
       }
-
       if (this.gradient === mxConstants.NONE) {
         this.gradient = null;
       }
-
       if (this.stroke === mxConstants.NONE) {
         this.stroke = null;
       }
@@ -1415,7 +1446,7 @@ class mxShape {
         this.augmentBoundingBox(bbox);
         const rot = this.getShapeRotation();
 
-        if (rot != 0) {
+        if (rot !== 0) {
           bbox = mxUtils.getBoundingBox(bbox, rot);
         }
       }
@@ -1491,8 +1522,10 @@ class mxShape {
   getTextRotation = () => {
     let rot = this.getRotation();
 
-    if (mxUtils.getValue(this.style, mxConstants.STYLE_HORIZONTAL, 1) != 1) {
-      rot += verticalTextRotation;
+    if (
+      !toBool(mxUtils.getValue(this.style, mxConstants.STYLE_HORIZONTAL, 1))
+    ) {
+      rot += this.verticalTextRotation || -90;  // WARNING WARNING!!!! ===============================================================================================
     }
 
     return rot;
@@ -1561,7 +1594,7 @@ class mxShape {
         if (gradient != null) {
           gradient.mxRefCount = (gradient.mxRefCount || 0) - 1;
 
-          if (gradient.mxRefCount == 0 && gradient.parentNode != null) {
+          if (gradient.mxRefCount === 0 && gradient.parentNode != null) {
             gradient.parentNode.removeChild(gradient);
           }
         }

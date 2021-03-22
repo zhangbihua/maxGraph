@@ -294,7 +294,7 @@ class mxDefaultPopupMenu {
     conditions.nocell = cell == null;
     conditions.ncells = editor.graph.getSelectionCount() > 1;
     conditions.notRoot =
-      model.getRoot() != model.getParent(editor.graph.getDefaultParent());
+      model.getRoot() !== model.getParent(editor.graph.getDefaultParent());
     conditions.cell = cell != null;
 
     const isCell = cell != null && editor.graph.getSelectionCount() === 1;

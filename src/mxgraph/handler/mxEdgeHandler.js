@@ -1105,43 +1105,41 @@ class mxEdgeHandler {
     let overrideY = false;
 
     if (tt > 0 && this.isSnapToTerminalsEvent(me)) {
-      function snapToPoint(pt) {
+
+      const snapToPoint = pt => {
         if (pt != null) {
           const { x } = pt;
-
           if (Math.abs(point.x - x) < tt) {
             point.x = x;
             overrideX = true;
           }
 
           const { y } = pt;
-
           if (Math.abs(point.y - y) < tt) {
             point.y = y;
             overrideY = true;
           }
         }
-      }
+      };
 
       // Temporary function
-      function snapToTerminal(terminal) {
+      const snapToTerminal = terminal => {
         if (terminal != null) {
-          snapToPoint.call(
-            this,
+          snapToPoint(
             new mxPoint(
               view.getRoutingCenterX(terminal),
               view.getRoutingCenterY(terminal)
             )
           );
         }
-      }
+      };
 
-      snapToTerminal.call(this, this.state.getVisibleTerminalState(true));
-      snapToTerminal.call(this, this.state.getVisibleTerminalState(false));
+      snapToTerminal(this.state.getVisibleTerminalState(true));
+      snapToTerminal(this.state.getVisibleTerminalState(false));
 
       if (this.state.absolutePoints != null) {
         for (let i = 0; i < this.state.absolutePoints.length; i += 1) {
-          snapToPoint.call(this, this.state.absolutePoints[i]);
+          snapToPoint(this.state.absolutePoints[i]);
         }
       }
     }
@@ -1339,7 +1337,7 @@ class mxEdgeHandler {
               }
             }
 
-            function checkRemove(idx, tmp) {
+            const checkRemove = (idx, tmp) => {
               if (
                 idx > 0 &&
                 idx < abs.length - 1 &&
@@ -1355,7 +1353,7 @@ class mxEdgeHandler {
                 points.splice(idx - 1, 1);
                 result = points;
               }
-            }
+            };
 
             // LATER: Check if other points can be removed if a segment is made straight
             checkRemove(this.index, pt);

@@ -3,6 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxCellMarker from "./mxCellMarker";
 
 class mxCellTracker extends mxCellMarker {
   /**
@@ -123,7 +124,7 @@ class mxCellTracker extends mxCellMarker {
       this.destroyed = true;
 
       this.graph.removeMouseListener(this);
-      destroy.apply(this);
+      super.destroy();
     }
   };
 }

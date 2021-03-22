@@ -913,7 +913,7 @@ class mxConnectionHandler extends mxEventSource {
         this.constraintHandler.currentConstraint !== null) ||
       (this.previous !== null &&
         this.error === null &&
-        (this.icons === null || (this.icons !== null && this.icon !== null)))
+        (this.icons === null || this.icon !== null))
     );
   };
 
@@ -923,7 +923,7 @@ class mxConnectionHandler extends mxEventSource {
    * Handles the event by initiating a new connection.
    */
   mouseDown = (sender, me) => {
-    this.mouseDownCounter++;
+    this.mouseDownCounter += 1;
 
     if (
       this.isEnabled() &&
@@ -1627,7 +1627,7 @@ class mxConnectionHandler extends mxEventSource {
       );
       const rad = -theta * (Math.PI / 180);
 
-      if (theta != 0) {
+      if (theta !== 0) {
         next = mxUtils.getRotatedPoint(
           new mxPoint(next.x, next.y),
           Math.cos(rad),
@@ -1644,7 +1644,7 @@ class mxConnectionHandler extends mxEventSource {
       );
 
       if (tmp != null) {
-        if (theta != 0) {
+        if (theta !== 0) {
           tmp = mxUtils.getRotatedPoint(
             new mxPoint(tmp.x, tmp.y),
             Math.cos(-rad),
@@ -1696,7 +1696,7 @@ class mxConnectionHandler extends mxEventSource {
    * Adds the waypoint for the given event to <waypoints>.
    */
   addWaypointForEvent = me => {
-    const point = mxUtils.convertPoint(
+    let point = mxUtils.convertPoint(
       this.graph.container,
       me.getX(),
       me.getY()
@@ -1714,7 +1714,7 @@ class mxConnectionHandler extends mxEventSource {
       }
 
       const { scale } = this.graph.view;
-      const point = new mxPoint(
+      point = new mxPoint(
         this.graph.snap(me.getGraphX() / scale) * scale,
         this.graph.snap(me.getGraphY() / scale) * scale
       );
@@ -2010,7 +2010,7 @@ class mxConnectionHandler extends mxEventSource {
             model.setGeometry(edge, this.edgeState.cell.geometry);
           }
 
-          const parent = model.getParent(source);
+          parent = model.getParent(source);
 
           // Inserts edge before source
           if (this.isInsertBefore(edge, source, target, evt, dropTarget)) {

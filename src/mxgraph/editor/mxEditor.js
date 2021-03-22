@@ -29,6 +29,9 @@ import mxEvent from '../util/mxEvent';
 import mxRootChange from '../model/atomic_changes/mxRootChange';
 import mxValueChange from '../model/atomic_changes/mxValueChange';
 import mxCellAttributeChange from '../model/atomic_changes/mxCellAttributeChange';
+import mxPrintPreview from "../view/mxPrintPreview";
+import mxClipboard from "../util/mxClipboard";
+import mxLog from "../util/mxLog";
 
 /**
  * Installs the required language resources at class
@@ -1729,9 +1732,9 @@ class mxEditor extends mxEventSource {
         if (
           change instanceof mxRootChange ||
           (change instanceof mxValueChange &&
-            change.cell == this.graph.model.root) ||
+            change.cell === this.graph.model.root) ||
           (change instanceof mxCellAttributeChange &&
-            change.cell == this.graph.model.root)
+            change.cell === this.graph.model.root)
         ) {
           this.fireEvent(new mxEventObject(mxEvent.ROOT));
           break;

@@ -210,7 +210,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    */
   connect = (edge, terminal, isSource, isClone, me) => {
     const model = this.graph.getModel();
-    const geo = model.getGeometry(edge);
+    let geo = model.getGeometry(edge);
     let result = null;
 
     // Merges adjacent edge segments
@@ -240,7 +240,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
     model.beginUpdate();
     try {
       if (result != null) {
-        let geo = model.getGeometry(edge);
+        geo = model.getGeometry(edge);
 
         if (geo != null) {
           geo = geo.clone();
@@ -374,8 +374,8 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
 
         for (let i = 0; i < pts.length - 1; i += 1) {
           if (this.bends[i + 1] != null) {
-            const p0 = pts[i];
-            const pe = pts[i + 1];
+            p0 = pts[i];
+            pe = pts[i + 1];
             const pt = new mxPoint(
               p0.x + (pe.x - p0.x) / 2,
               p0.y + (pe.y - p0.y) / 2

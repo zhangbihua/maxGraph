@@ -223,7 +223,7 @@ class mxConstraintHandler {
     if (
       cell == null &&
       point != null &&
-      (me.getGraphX() != point.x || me.getGraphY() != point.y)
+      (me.getGraphX() !== point.x || me.getGraphY() !== point.y)
     ) {
       cell = this.graph.getCellAt(point.x, point.y);
     }

@@ -10,6 +10,7 @@ import mxImageShape from "../shape/mxImageShape";
 import mxRectangle from "../util/mxRectangle";
 import mxRectangleShape from "../shape/mxRectangleShape";
 import mxConstants from "../util/mxConstants";
+import mxEvent from "../util/mxEvent";
 
 class mxHandle {
   /**

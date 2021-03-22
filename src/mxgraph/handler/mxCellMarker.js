@@ -402,7 +402,7 @@ class mxCellMarker extends mxEventSource {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy = () => {
+  destroy() {
     this.graph.getView().removeListener(this.resetHandler);
     this.graph.getModel().removeListener(this.resetHandler);
     this.highlight.destroy();

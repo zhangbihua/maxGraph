@@ -834,12 +834,12 @@ class mxGraphHandler {
         return (
           state.cell != null &&
           ((!this.cloning && this.isCellMoving(state.cell)) ||
-            (state.cell != (this.target || parent) &&
+            (state.cell !== (this.target || parent) &&
               !ignore &&
               !connected.get(state) &&
               (this.target == null ||
                 this.graph.model.getChildCount(this.target) >= 2) &&
-              p != (this.target || parent)))
+              p !== (this.target || parent)))
         );
       };
     }
@@ -954,7 +954,7 @@ class mxGraphHandler {
    * Returns true if the given cell is a valid drop target.
    */
   isValidDropTarget = (target, me) => {
-    return this.graph.model.getParent(this.cell) != target;
+    return this.graph.model.getParent(this.cell) !== target;
   };
 
   /**
@@ -1040,7 +1040,7 @@ class mxGraphHandler {
         let highlight = false;
 
         if (state != null && (clone || this.isValidDropTarget(target, me))) {
-          if (this.target != target) {
+          if (this.target !== target) {
             this.target = target;
             this.setHighlightColor(mxConstants.DROP_TARGET_COLOR);
           }
@@ -1052,7 +1052,7 @@ class mxGraphHandler {
           if (
             this.connectOnDrop &&
             cell != null &&
-            this.cells.length == 1 &&
+            this.cells.length === 1 &&
             graph.getModel().isVertex(cell) &&
             graph.isCellConnectable(cell)
           ) {
@@ -1104,7 +1104,7 @@ class mxGraphHandler {
 
         this.checkPreview();
 
-        if (this.currentDx != delta.x || this.currentDy != delta.y) {
+        if (this.currentDx !== delta.x || this.currentDy !== delta.y) {
           this.currentDx = delta.x;
           this.currentDy = delta.y;
           this.updatePreview();
@@ -1198,7 +1198,7 @@ class mxGraphHandler {
             const realState = this.graph.view.getState(state.cell);
 
             // Checks if cell was removed or replaced
-            if (realState != state) {
+            if (realState !== state) {
               state.destroy();
 
               if (realState != null) {
@@ -1273,7 +1273,7 @@ class mxGraphHandler {
       }
 
       // Resets the handler if everything was removed
-      if (states.length == 0) {
+      if (states.length === 0) {
         this.reset();
       } else {
         // Redraws connected edges
@@ -1454,7 +1454,7 @@ class mxGraphHandler {
         if (
           state.control != null &&
           state.control.node != null &&
-          state.control.node.style.visibility == 'hidden'
+          state.control.node.style.visibility === 'hidden'
         ) {
           state.control.node.style.visibility = '';
         }
@@ -1487,7 +1487,7 @@ class mxGraphHandler {
    * force - Forces an update of the handler regardless of the last used value.
    */
   setHandlesVisibleForCells = (cells, visible, force) => {
-    if (force || this.handlesVisible != visible) {
+    if (force || this.handlesVisible !== visible) {
       this.handlesVisible = visible;
 
       for (let i = 0; i < cells.length; i += 1) {
@@ -1655,7 +1655,7 @@ class mxGraphHandler {
           mxUtils.getValue(pState.style, mxConstants.STYLE_ROTATION) || 0
         );
 
-        if (alpha != 0) {
+        if (alpha !== 0) {
           const cos = Math.cos(-alpha);
           const sin = Math.sin(-alpha);
           const cx = new mxPoint(pState.getCenterX(), pState.getCenterY());
@@ -1760,7 +1760,7 @@ class mxGraphHandler {
       (this.graph.model.isEdge(state.cell) ||
         this.graph.model.isVertex(state.cell)) &&
       this.graph.isCellDeletable(state.cell) &&
-      this.graph.model.getChildCount(state.cell) == 0 &&
+      this.graph.model.getChildCount(state.cell) === 0 &&
       this.graph.isTransparentState(state)
     );
   };

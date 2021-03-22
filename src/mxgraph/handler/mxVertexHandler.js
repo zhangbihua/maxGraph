@@ -973,7 +973,7 @@ class mxVertexHandler {
     let dx = this.state.x + this.state.width / 2 - point.x;
     let dy = this.state.y + this.state.height / 2 - point.y;
     this.currentAlpha =
-      dx != 0 ? (Math.atan(dy / dx) * 180) / Math.PI + 90 : dy < 0 ? 180 : 0;
+      dx !== 0 ? (Math.atan(dy / dx) * 180) / Math.PI + 90 : dy < 0 ? 180 : 0;
 
     if (dx > 0) {
       this.currentAlpha -= 180;
@@ -1952,61 +1952,52 @@ class mxVertexHandler {
           );
           const cos = Math.cos(alpha);
           const sin = Math.sin(alpha);
-
           const da = Math.round((alpha * 4) / Math.PI);
 
           const ct = new mxPoint(s.getCenterX(), s.getCenterY());
           let pt = mxUtils.getRotatedPoint(new mxPoint(s.x, s.y), cos, sin, ct);
-
           this.moveSizerTo(this.sizers[0], pt.x, pt.y);
           this.sizers[0].setCursor(crs[mxUtils.mod(0 + da, crs.length)]);
 
           pt.x = cx;
           pt.y = s.y;
           pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
-
           this.moveSizerTo(this.sizers[1], pt.x, pt.y);
           this.sizers[1].setCursor(crs[mxUtils.mod(1 + da, crs.length)]);
 
           pt.x = r;
           pt.y = s.y;
           pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
-
           this.moveSizerTo(this.sizers[2], pt.x, pt.y);
           this.sizers[2].setCursor(crs[mxUtils.mod(2 + da, crs.length)]);
 
           pt.x = s.x;
           pt.y = cy;
           pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
-
           this.moveSizerTo(this.sizers[3], pt.x, pt.y);
           this.sizers[3].setCursor(crs[mxUtils.mod(7 + da, crs.length)]);
 
           pt.x = r;
           pt.y = cy;
           pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
-
           this.moveSizerTo(this.sizers[4], pt.x, pt.y);
           this.sizers[4].setCursor(crs[mxUtils.mod(3 + da, crs.length)]);
 
           pt.x = s.x;
           pt.y = b;
           pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
-
           this.moveSizerTo(this.sizers[5], pt.x, pt.y);
           this.sizers[5].setCursor(crs[mxUtils.mod(6 + da, crs.length)]);
 
           pt.x = cx;
           pt.y = b;
           pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
-
           this.moveSizerTo(this.sizers[6], pt.x, pt.y);
           this.sizers[6].setCursor(crs[mxUtils.mod(5 + da, crs.length)]);
 
           pt.x = r;
           pt.y = b;
           pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
-
           this.moveSizerTo(this.sizers[7], pt.x, pt.y);
           this.sizers[7].setCursor(crs[mxUtils.mod(4 + da, crs.length)]);
 
