@@ -9,6 +9,7 @@ import mxRectangle from '../util/mxRectangle';
 import mxEvent from '../util/mxEvent';
 import mxClient from '../mxClient';
 import mxConstants from '../util/mxConstants';
+import mxText from "../shape/mxText";
 
 class mxCellEditor {
   /**
@@ -593,75 +594,76 @@ class mxCellEditor {
             this.bounds.x += m.x * tmp;
           }
         } else {
-          let bds = mxRectangle.fromRectangle(state);
-          const hpos = mxUtils.getValue(
+          let bounds = mxRectangle.fromRectangle(state);
+          let hpos = mxUtils.getValue(
             state.style,
             mxConstants.STYLE_LABEL_POSITION,
             mxConstants.ALIGN_CENTER
           );
-          const vpos = mxUtils.getValue(
+          let vpos = mxUtils.getValue(
             state.style,
             mxConstants.STYLE_VERTICAL_LABEL_POSITION,
             mxConstants.ALIGN_MIDDLE
           );
 
-          bds =
+          bounds =
             state.shape != null &&
             hpos === mxConstants.ALIGN_CENTER &&
             vpos === mxConstants.ALIGN_MIDDLE
-              ? state.shape.getLabelBounds(bds)
-              : bds;
+              ? state.shape.getLabelBounds(bounds)
+              : bounds;
 
           if (lw != null) {
-            bds.width = parseFloat(lw) * scale;
+            bounds.width = parseFloat(lw) * scale;
           }
 
           if (
             !state.view.graph.cellRenderer.legacySpacing ||
             state.style[mxConstants.STYLE_OVERFLOW] !== 'width'
           ) {
+            const dummyMXText = new mxText(); // FIXME!!!! ===================================================================================================
             const spacing =
               parseInt(state.style[mxConstants.STYLE_SPACING] || 2) * scale;
             const spacingTop =
               (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) +
-                this.baseSpacingTop) *
+                dummyMXText.baseSpacingTop) *
                 scale +
               spacing;
             const spacingRight =
               (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) +
-                this.baseSpacingRight) *
+                dummyMXText.baseSpacingRight) *
                 scale +
               spacing;
             const spacingBottom =
               (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) +
-                this.baseSpacingBottom) *
+                dummyMXText.baseSpacingBottom) *
                 scale +
               spacing;
             const spacingLeft =
               (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) +
-                this.baseSpacingLeft) *
+                dummyMXText.baseSpacingLeft) *
                 scale +
               spacing;
 
-            const hpos = mxUtils.getValue(
+            hpos = mxUtils.getValue(
               state.style,
               mxConstants.STYLE_LABEL_POSITION,
               mxConstants.ALIGN_CENTER
             );
-            const vpos = mxUtils.getValue(
+            vpos = mxUtils.getValue(
               state.style,
               mxConstants.STYLE_VERTICAL_LABEL_POSITION,
               mxConstants.ALIGN_MIDDLE
             );
 
-            bds = new mxRectangle(
-              bds.x + spacingLeft,
-              bds.y + spacingTop,
-              bds.width -
+            bounds = new mxRectangle(
+              bounds.x + spacingLeft,
+              bounds.y + spacingTop,
+              bounds.width -
                 (hpos === mxConstants.ALIGN_CENTER && lw == null
                   ? spacingLeft + spacingRight
                   : 0),
-              bds.height -
+              bounds.height -
                 (vpos === mxConstants.ALIGN_MIDDLE
                   ? spacingTop + spacingBottom
                   : 0)
@@ -669,10 +671,10 @@ class mxCellEditor {
           }
 
           this.bounds = new mxRectangle(
-            bds.x + state.absoluteOffset.x,
-            bds.y + state.absoluteOffset.y,
-            bds.width,
-            bds.height
+            bounds.x + state.absoluteOffset.x,
+            bounds.y + state.absoluteOffset.y,
+            bounds.width,
+            bounds.height
           );
         }
 
@@ -1130,26 +1132,27 @@ class mxCellEditor {
     ) {
       result = state.shape.getLabelBounds(mxRectangle.fromRectangle(state));
     } else {
+      const dummyMXText = new mxText(); // FIXME!!!! ===================================================================================================
       const spacing =
         parseInt(state.style[mxConstants.STYLE_SPACING] || 0) * scale;
       const spacingTop =
         (parseInt(state.style[mxConstants.STYLE_SPACING_TOP] || 0) +
-          baseSpacingTop) *
+          dummyMXText.baseSpacingTop) *
           scale +
         spacing;
       const spacingRight =
         (parseInt(state.style[mxConstants.STYLE_SPACING_RIGHT] || 0) +
-          baseSpacingRight) *
+          dummyMXText.baseSpacingRight) *
           scale +
         spacing;
       const spacingBottom =
         (parseInt(state.style[mxConstants.STYLE_SPACING_BOTTOM] || 0) +
-          baseSpacingBottom) *
+          dummyMXText.baseSpacingBottom) *
           scale +
         spacing;
       const spacingLeft =
         (parseInt(state.style[mxConstants.STYLE_SPACING_LEFT] || 0) +
-          baseSpacingLeft) *
+          dummyMXText.baseSpacingLeft) *
           scale +
         spacing;
 
