@@ -8,6 +8,7 @@ import mxClient from '../mxClient';
 import mxToolbar from '../util/mxToolbar';
 import mxGeometry from '../model/mxGeometry';
 import mxUtils from '../util/mxUtils';
+import mxEvent from "../util/mxEvent";
 
 class mxDefaultToolbar {
   /**

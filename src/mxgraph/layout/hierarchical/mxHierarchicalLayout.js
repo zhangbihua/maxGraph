@@ -3,6 +3,15 @@
  * Copyright (c) 2006-2018, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxGraphLayout from "../mxGraphLayout";
+import mxConstants from "../../util/mxConstants";
+import mxHierarchicalEdgeStyle from "./mxHierarchicalEdgeStyle";
+import mxDictionary from "../../util/mxDictionary";
+import mxGraphHierarchyModel from "./model/mxGraphHierarchyModel";
+import mxObjectIdentity from "../../util/mxObjectIdentity";
+import mxMinimumCycleRemover from "./stage/mxMinimumCycleRemover";
+import mxMedianHybridCrossingReduction from "./stage/mxMedianHybridCrossingReduction";
+import mxCoordinateAssignment from "./stage/mxCoordinateAssignment";
 
 class mxHierarchicalLayout extends mxGraphLayout {
   /**
@@ -224,7 +233,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     this.parentY = null;
 
     if (
-      parent != this.root &&
+      parent !== this.root &&
       model.isVertex(parent) != null &&
       this.maintainParentLocation
     ) {

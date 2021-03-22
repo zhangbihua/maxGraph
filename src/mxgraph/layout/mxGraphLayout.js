@@ -178,7 +178,7 @@ class mxGraphLayout {
           if (edgeCount > 0) {
             for (let i = 0; i < edgeCount; i += 1) {
               const e = this.graph.model.getEdgeAt(vertex, i);
-              const isSource = this.graph.model.getTerminal(e, true) == vertex;
+              const isSource = this.graph.model.getTerminal(e, true) === vertex;
 
               if (!directed || isSource) {
                 const next = this.graph.view.getVisibleTerminal(e, !isSource);
@@ -204,18 +204,18 @@ class mxGraphLayout {
    */
   isAncestor = (parent, child, traverseAncestors) => {
     if (!traverseAncestors) {
-      return this.graph.model.getParent(child) == parent;
+      return this.graph.model.getParent(child) === parent;
     }
 
-    if (child == parent) {
+    if (child === parent) {
       return false;
     }
 
-    while (child != null && child != parent) {
+    while (child != null && child !== parent) {
       child = this.graph.model.getParent(child);
     }
 
-    return child == parent;
+    return child === parent;
   };
 
   /**
@@ -302,13 +302,13 @@ class mxGraphLayout {
   getParentOffset = parent => {
     const result = new mxPoint();
 
-    if (parent != null && parent != this.parent) {
+    if (parent != null && parent !== this.parent) {
       const model = this.graph.getModel();
 
       if (model.isAncestor(this.parent, parent)) {
         let parentGeo = model.getGeometry(parent);
 
-        while (parent != this.parent) {
+        while (parent !== this.parent) {
           result.x += parentGeo.x;
           result.y += parentGeo.y;
 
@@ -407,7 +407,7 @@ class mxGraphLayout {
       if (this.parent != null) {
         const parent = model.getParent(cell);
 
-        if (parent != null && parent != this.parent) {
+        if (parent != null && parent !== this.parent) {
           const parentOffset = this.getParentOffset(parent);
 
           x -= parentOffset.x;
@@ -415,7 +415,7 @@ class mxGraphLayout {
         }
       }
 
-      if (geometry.x != x || geometry.y != y) {
+      if (geometry.x !== x || geometry.y !== y) {
         geometry = geometry.clone();
         geometry.x = x;
         geometry.y = y;
@@ -470,7 +470,7 @@ class mxGraphLayout {
       const parent = this.graph.getModel().getParent(cell);
       geo = geo.clone();
 
-      if (parent != null && parent != this.parent) {
+      if (parent != null && parent !== this.parent) {
         const parentOffset = this.getParentOffset(parent);
         geo.x += parentOffset.x;
         geo.y += parentOffset.y;

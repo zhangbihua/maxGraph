@@ -3,6 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxGraphAbstractHierarchyCell from "./mxGraphAbstractHierarchyCell";
+import mxObjectIdentity from "../../../util/mxObjectIdentity";
 
 class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
   /**

@@ -4,6 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
+import mxUtils from "../../../util/mxUtils";
+import mxCellPath from "../../../model/mxCellPath";
 
 class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
   /**
@@ -62,7 +64,7 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
         // Ancestor hashes only line up within a swimlane
         const isAncestor =
           parent != null &&
-          parent.swimlaneIndex == node.swimlaneIndex &&
+          parent.swimlaneIndex === node.swimlaneIndex &&
           node.isAncestor(parent);
 
         // If the source->target swimlane indices go from higher to
@@ -71,7 +73,7 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
           parent != null &&
           connectingEdge != null &&
           parent.swimlaneIndex < node.swimlaneIndex &&
-          connectingEdge.source == node;
+          connectingEdge.source === node;
 
         if (isAncestor) {
           connectingEdge.invert();

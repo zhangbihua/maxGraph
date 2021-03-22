@@ -3,6 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxGraphAbstractHierarchyCell from "./mxGraphAbstractHierarchyCell";
+import mxObjectIdentity from "../../../util/mxObjectIdentity";
 
 class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
   /**
@@ -84,7 +86,7 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
       for (let i = 0; i < this.connectsAsTarget.length; i += 1) {
         const edge = this.connectsAsTarget[i];
 
-        if (edge.maxRank == -1 || edge.maxRank == layer + 1) {
+        if (edge.maxRank === -1 || edge.maxRank === layer + 1) {
           // Either edge is not in any rank or
           // no dummy nodes in edge, add node of other side of edge
           this.nextLayerConnectedCells[0].push(edge.source);
@@ -111,7 +113,7 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
       for (let i = 0; i < this.connectsAsSource.length; i += 1) {
         const edge = this.connectsAsSource[i];
 
-        if (edge.minRank == -1 || edge.minRank == layer - 1) {
+        if (edge.minRank === -1 || edge.minRank === layer - 1) {
           // No dummy nodes in edge, add node of other side of edge
           this.previousLayerConnectedCells[0].push(edge.target);
         } else {
@@ -163,7 +165,7 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
       otherNode.hashCode != null &&
       this.hashCode.length < otherNode.hashCode.length
     ) {
-      if (this.hashCode == otherNode.hashCode) {
+      if (this.hashCode === otherNode.hashCode) {
         return true;
       }
 
@@ -176,7 +178,7 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
       // the arrays are different length, and we do not want to
       // perform another array copy.
       for (let i = 0; i < this.hashCode.length; i += 1) {
-        if (this.hashCode[i] != otherNode.hashCode[i]) {
+        if (this.hashCode[i] !== otherNode.hashCode[i]) {
           return false;
         }
       }

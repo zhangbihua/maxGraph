@@ -3,6 +3,10 @@
  * Copyright (c) 2006-2018, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxUtils from "../../../util/mxUtils";
+import mxGraphHierarchyNode from "./mxGraphHierarchyNode";
+import mxGraphHierarchyEdge from "./mxGraphHierarchyEdge";
+import mxCellPath from "../../../model/mxCellPath";
 
 class mxSwimlaneModel {
   /**
@@ -152,7 +156,7 @@ class mxSwimlaneModel {
 
           if (
             internalTargetCell != null &&
-            internalVertices[i] != internalTargetCell
+            internalVertices[i] !== internalTargetCell
           ) {
             internalEdge.target = internalTargetCell;
 
@@ -201,8 +205,8 @@ class mxSwimlaneModel {
       this.vertexMapper.put(vertices[i], internalVertices[i]);
       internalVertices[i].swimlaneIndex = -1;
 
-      for (let ii = 0; ii < swimlanes.length; ii++) {
-        if (graph.model.getParent(vertices[i]) == swimlanes[ii]) {
+      for (let ii = 0; ii < swimlanes.length; ii += 1) {
+        if (graph.model.getParent(vertices[i]) === swimlanes[ii]) {
           internalVertices[i].swimlaneIndex = ii;
           break;
         }
@@ -216,12 +220,12 @@ class mxSwimlaneModel {
       // Create internal edges, but don't do any rank assignment yet
       // First use the information from the greedy cycle remover to
       // invert the leftward edges internally
-      for (let j = 0; j < conns.length; j++) {
+      for (let j = 0; j < conns.length; j += 1) {
         const cell = layout.getVisibleTerminal(conns[j], false);
 
         // Looking for outgoing edges only
         if (
-          cell != vertices[i] &&
+          cell !== vertices[i] &&
           layout.graph.model.isVertex(cell) &&
           !layout.isVertexIgnored(cell)
         ) {
@@ -253,7 +257,7 @@ class mxSwimlaneModel {
           ) {
             const internalEdge = new mxGraphHierarchyEdge(undirectedEdges);
 
-            for (let k = 0; k < undirectedEdges.length; k++) {
+            for (let k = 0; k < undirectedEdges.length; k += 1) {
               const edge = undirectedEdges[k];
               this.edgeMapper.put(edge, internalEdge);
 
@@ -315,7 +319,7 @@ class mxSwimlaneModel {
     const upperRank = [];
 
     for (let i = this.ranksPerGroup.length - 1; i >= 0; i--) {
-      if (i == this.ranksPerGroup.length - 1) {
+      if (i === this.ranksPerGroup.length - 1) {
         lowerRank[i] = 0;
       } else {
         lowerRank[i] = upperRank[i + 1] + 1;
@@ -355,7 +359,7 @@ class mxSwimlaneModel {
       for (let i = 0; i < layerDeterminingEdges.length; i += 1) {
         const internalEdge = layerDeterminingEdges[i];
 
-        if (internalEdge.temp[0] == 5270620) {
+        if (internalEdge.temp[0] === 5270620) {
           // This edge has been scanned, get the layer of the
           // node on the other end
           const otherNode = internalEdge.source;
@@ -388,7 +392,7 @@ class mxSwimlaneModel {
             const otherNode = internalEdge.target;
 
             // Only add node if it hasn't been assigned a layer
-            if (otherNode.temp[0] == -1) {
+            if (otherNode.temp[0] === -1) {
               startNodes.push(otherNode);
 
               // Mark this other node as neither being
@@ -407,7 +411,7 @@ class mxSwimlaneModel {
         const removedCell = startNodes.shift();
         startNodes.push(internalNode);
 
-        if (removedCell == internalNode && startNodes.length == 1) {
+        if (removedCell === internalNode && startNodes.length === 1) {
           // This is an error condition, we can't get out of
           // this loop. It could happen for more than one node
           // but that's a lot harder to detect. Log the error
@@ -495,7 +499,7 @@ class mxSwimlaneModel {
               mxUtils.clone(seen, null, true),
               0
             );
-          } else if (root.swimlaneIndex == targetNode.swimlaneIndex) {
+          } else if (root.swimlaneIndex === targetNode.swimlaneIndex) {
             this.maxChainDfs(
               root,
               targetNode,
@@ -542,7 +546,7 @@ class mxSwimlaneModel {
 
     this.visit(
       (parent, node, edge, layer, seen) => {
-        if (seen == 0 && node.maxRank < 0 && node.minRank < 0) {
+        if (seen === 0 && node.maxRank < 0 && node.minRank < 0) {
           rankList[node.temp[0]].push(node);
           node.maxRank = node.temp[0];
           node.minRank = node.temp[0];
@@ -620,7 +624,7 @@ class mxSwimlaneModel {
         }
       }
 
-      this.dfsCount++;
+      this.dfsCount += 1;
     }
   };
 
@@ -723,7 +727,7 @@ class mxSwimlaneModel {
         // start of the parent hash code does not equal the start of
         // this nodes hash code, indicating the code was set on a
         // previous run of this dfs.
-        if (root.hashCode == null || root.hashCode[0] != parent.hashCode[0]) {
+        if (root.hashCode == null || root.hashCode[0] !== parent.hashCode[0]) {
           const hashCodeLength = parent.hashCode.length + 1;
           root.hashCode = parent.hashCode.slice();
           root.hashCode[hashCodeLength - 1] = childHash;

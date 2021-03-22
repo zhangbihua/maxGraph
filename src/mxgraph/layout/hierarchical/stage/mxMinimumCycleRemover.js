@@ -4,6 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
+import mxUtils from "../../../util/mxUtils";
 
 class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
   /**

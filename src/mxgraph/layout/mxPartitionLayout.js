@@ -5,7 +5,7 @@
  */
 
 import mxRectangle from '../util/mxRectangle';
-import mxGraphLayout from "./mxGraphLayout";
+import mxGraphLayout from './mxGraphLayout';
 
 class mxPartitionLayout extends mxGraphLayout {
   /**

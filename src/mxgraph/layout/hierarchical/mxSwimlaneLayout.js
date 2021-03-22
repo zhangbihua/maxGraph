@@ -4,6 +4,17 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxGraphLayout from "../mxGraphLayout";
+import mxConstants from "../../util/mxConstants";
+import mxHierarchicalEdgeStyle from "./mxHierarchicalEdgeStyle";
+import mxDictionary from "../../util/mxDictionary";
+import mxRectangle from "../../util/mxRectangle";
+import mxSwimlaneModel from "./model/mxSwimlaneModel";
+import mxObjectIdentity from "../../util/mxObjectIdentity";
+import mxSwimlaneOrdering from "./stage/mxSwimlaneOrdering";
+import mxMedianHybridCrossingReduction from "./stage/mxMedianHybridCrossingReduction";
+import mxCoordinateAssignment from "./stage/mxCoordinateAssignment";
+
 class mxSwimlaneLayout extends mxGraphLayout {
   /**
    * Variable: roots
@@ -237,7 +248,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     this.parentY = null;
 
     if (
-      parent != this.root &&
+      parent !== this.root &&
       model.isVertex(parent) != null &&
       this.maintainParentLocation
     ) {
@@ -256,7 +267,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     for (let i = 0; i < swimlanes.length; i += 1) {
       const children = this.graph.getChildCells(swimlanes[i]);
 
-      if (children == null || children.length == 0) {
+      if (children == null || children.length === 0) {
         const vertex = this.graph.insertVertex(
           swimlanes[i],
           null,
@@ -371,7 +382,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
         const newGeo = geo.clone();
 
         const leftGroupBorder =
-          i == 0 ? this.parentBorder : this.interRankCellSpacing / 2;
+          i === 0 ? this.parentBorder : this.interRankCellSpacing / 2;
         const w = size.width + leftGroupBorder;
         const x = childBounds[i].x - w;
         const y = layoutBounds.y - this.parentBorder;
@@ -427,19 +438,19 @@ class mxSwimlaneLayout extends mxGraphLayout {
           for (let k = 0; k < conns.length; k++) {
             const src = this.getVisibleTerminal(conns[k], true);
 
-            if (src == cell) {
+            if (src === cell) {
               // Only count connection within this swimlane
               const other = this.getVisibleTerminal(conns[k], false);
 
               if (model.isAncestor(parent, other)) {
-                fanOut++;
+                fanOut += 1;
               }
             } else if (model.isAncestor(parent, src)) {
-              fanIn++;
+              fanIn += 1;
             }
           }
 
-          if (fanIn == 0 && fanOut > 0) {
+          if (fanIn === 0 && fanOut > 0) {
             roots.push(cell);
           }
 
@@ -452,7 +463,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
         }
       }
 
-      if (roots.length == 0 && best != null) {
+      if (roots.length === 0 && best != null) {
         roots.push(best);
       }
     }
@@ -499,16 +510,16 @@ class mxSwimlaneLayout extends mxGraphLayout {
       const target = this.getVisibleTerminal(edges[i], false);
 
       if (
-        source == target ||
-        (source != target &&
-          ((target == cell &&
+        source === target ||
+        (source !== target &&
+          ((target === cell &&
             (this.parent == null ||
               this.graph.isValidAncestor(
                 source,
                 this.parent,
                 this.traverseAncestors
               ))) ||
-            (source == cell &&
+            (source === cell &&
               (this.parent == null ||
                 this.graph.isValidAncestor(
                   target,
@@ -613,7 +624,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
           filledVertexSet
         );
 
-        if (candidateRoots.length == 0) {
+        if (candidateRoots.length === 0) {
           laneCounter++;
           continue;
         }
@@ -701,8 +712,8 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
     if (
       model.isVertex(cell) &&
-      cell != this.parent &&
-      model.getParent(cell) != this.parent &&
+      cell !== this.parent &&
+      model.getParent(cell) !== this.parent &&
       this.graph.isCellVisible(cell)
     ) {
       result[mxObjectIdentity.get(cell)] = cell;
@@ -710,7 +721,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
     if (
       this.traverseAncestors ||
-      (cell == this.parent && this.graph.isCellVisible(cell))
+      (cell === this.parent && this.graph.isCellVisible(cell))
     ) {
       const childCount = model.getChildCount(cell);
 
@@ -768,8 +779,8 @@ class mxSwimlaneLayout extends mxGraphLayout {
       const trg = this.getVisibleTerminal(edges[i], false);
 
       if (
-        (src == source && trg == target) ||
-        (!directed && src == target && trg == source)
+        (src === source && trg === target) ||
+        (!directed && src === target && trg === source)
       ) {
         result.push(edges[i]);
       }
@@ -831,7 +842,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
         for (let i = 0; i < edges.length; i += 1) {
           let otherVertex = this.getVisibleTerminal(edges[i], true);
-          const isSource = otherVertex == vertex;
+          const isSource = otherVertex === vertex;
 
           if (isSource) {
             otherVertex = this.getVisibleTerminal(edges[i], false);
@@ -858,7 +869,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
           // vertex is greater than that of this vertex
           if (
             otherIndex > swimlaneIndex ||
-            ((!directed || isSource) && otherIndex == swimlaneIndex)
+            ((!directed || isSource) && otherIndex === swimlaneIndex)
           ) {
             currentComp = this.traverse(
               otherVertex,

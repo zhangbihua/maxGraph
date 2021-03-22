@@ -204,7 +204,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
   isVertexIgnored = vertex => {
     return (
       super.isVertexIgnored(vertex) ||
-      this.graph.getConnections(vertex).length == 0
+      this.graph.getConnections(vertex).length === 0
     );
   };
 
@@ -321,7 +321,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
       this.temperature = this.initialTemp;
 
       // If max number of iterations has not been set, guess it
-      if (this.maxIterations == 0) {
+      if (this.maxIterations === 0) {
         this.maxIterations = 20 * Math.sqrt(n);
       }
 
@@ -452,7 +452,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
         const j = this.neighbours[i][k];
 
         // Do not proceed self-loops
-        if (i != j && this.isMoveable[i] && this.isMoveable[j]) {
+        if (i !== j && this.isMoveable[i] && this.isMoveable[j]) {
           const xDelta = this.cellLocation[i][0] - this.cellLocation[j][0];
           const yDelta = this.cellLocation[i][1] - this.cellLocation[j][1];
 

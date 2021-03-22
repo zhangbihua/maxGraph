@@ -4,8 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDictionary from 'FIXME';
-import mxPoint from 'FIXME';
+import mxDictionary from "../util/mxDictionary";
+import mxPoint from "../util/mxPoint";
+import mxGraphLayout from "./mxGraphLayout";
 
 class mxCompactTreeLayout extends mxGraphLayout {
   /**

@@ -3,6 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxGraphLayout from "./mxGraphLayout";
+import mxRectangle from "../util/mxRectangle";
+import mxUtils from "../util/mxUtils";
+import mxConstants from "../util/mxConstants";
 
 class mxStackLayout extends mxGraphLayout {
   /**
@@ -199,7 +203,7 @@ class mxStackLayout extends mxGraphLayout {
       for (i = 0; i < childCount; i += 1) {
         const child = model.getChildAt(parent, i);
 
-        if (child != cell) {
+        if (child !== cell) {
           const bounds = model.getGeometry(child);
 
           if (bounds != null) {
@@ -240,7 +244,7 @@ class mxStackLayout extends mxGraphLayout {
     if (
       this.graph.container != null &&
       ((pgeo == null && model.isLayer(parent)) ||
-        parent == this.graph.getView().currentRoot)
+        parent === this.graph.getView().currentRoot)
     ) {
       const width = this.graph.container.offsetWidth - 1;
       const height = this.graph.container.offsetHeight - 1;
@@ -274,12 +278,12 @@ class mxStackLayout extends mxGraphLayout {
         const geo2 = this.graph.getCellGeometry(c2);
 
         return this.horizontal
-          ? geo1.x == geo2.x
+          ? geo1.x === geo2.x
             ? 0
             : geo1.x > geo2.x > 0
             ? 1
             : -1
-          : geo1.y == geo2.y
+          : geo1.y === geo2.y
           ? 0
           : geo1.y > geo2.y > 0
           ? 1
@@ -343,7 +347,7 @@ class mxStackLayout extends mxGraphLayout {
           mxConstants.DEFAULT_STARTSIZE
         );
         const horz =
-          mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true) == 1;
+          mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true) === 1;
 
         if (pgeo != null) {
           if (horz) {
@@ -353,7 +357,7 @@ class mxStackLayout extends mxGraphLayout {
           }
         }
 
-        if (horizontal == horz) {
+        if (horizontal === horz) {
           fillValue -= start;
         }
 
@@ -528,10 +532,10 @@ class mxStackLayout extends mxGraphLayout {
 
     if (
       geo2 == null ||
-      geo.x != geo2.x ||
-      geo.y != geo2.y ||
-      geo.width != geo2.width ||
-      geo.height != geo2.height
+      geo.x !== geo2.x ||
+      geo.y !== geo2.y ||
+      geo.width !== geo2.width ||
+      geo.height !== geo2.height
     ) {
       this.graph.getModel().setGeometry(child, geo);
     }
@@ -573,10 +577,10 @@ class mxStackLayout extends mxGraphLayout {
     }
 
     if (
-      pgeo.x != pgeo2.x ||
-      pgeo.y != pgeo2.y ||
-      pgeo.width != pgeo2.width ||
-      pgeo.height != pgeo2.height
+      pgeo.x !== pgeo2.x ||
+      pgeo.y !== pgeo2.y ||
+      pgeo.width !== pgeo2.width ||
+      pgeo.height !== pgeo2.height
     ) {
       model.setGeometry(parent, pgeo2);
     }
