@@ -10,6 +10,7 @@ import mxUtils from '../util/mxUtils';
 import mxPoint from '../util/mxPoint';
 import mxSvgCanvas2D from '../util/mxSvgCanvas2D';
 import mxShape from './mxShape';
+import mxRectangle from "../util/mxRectangle";
 
 class mxText extends mxShape {
   /**

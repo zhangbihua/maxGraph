@@ -39,6 +39,30 @@ class mxPoint {
     }
   }
 
+  get x() {
+    return this._x || 0;
+  }
+
+  set x(x) {
+    x = parseFloat(x);
+    if (Number.isNaN(x)) {
+      throw new Error('Invalid x supplied');
+    }
+    this._x = x;
+  }
+
+  get y() {
+    return this._y || 0;
+  }
+
+  set y(y) {
+    y = parseFloat(y);
+    if (Number.isNaN(y)) {
+      throw new Error('Invalid y supplied');
+    }
+    this._y = y;
+  }
+
   /**
    * Function: equals
    *

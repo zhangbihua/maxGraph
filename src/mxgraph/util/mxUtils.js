@@ -10,6 +10,15 @@ import mxConstants from './mxConstants';
 import mxObjectIdentity from './mxObjectIdentity';
 import mxPoint from './mxPoint';
 import mxDictionary from './mxDictionary';
+import mxCellPath from '../model/mxCellPath';
+import mxRectangle from './mxRectangle';
+import mxTemporaryCellStates from '../view/mxTemporaryCellStates';
+import mxCodec from '../io/mxCodec';
+import mxWindow from './mxWindow';
+import mxResources from './mxResources';
+import mxEvent from './mxEvent';
+import mxDragSource from './mxDragSource';
+import mxLog from './mxLog';
 
 const mxUtils = {
   /**
@@ -216,7 +225,6 @@ const mxUtils = {
   findNode: (node, attr, value) => {
     if (node.nodeType === mxConstants.NODETYPE_ELEMENT) {
       const tmp = node.getAttribute(attr);
-
       if (tmp != null && tmp == value) {
         return node;
       }
@@ -226,14 +234,11 @@ const mxUtils = {
 
     while (node != null) {
       const result = mxUtils.findNode(node, attr, value);
-
       if (result != null) {
         return result;
       }
-
       node = node.nextSibling;
     }
-
     return null;
   },
 

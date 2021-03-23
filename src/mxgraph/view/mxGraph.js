@@ -6047,6 +6047,8 @@ class mxGraph extends mxEventSource {
     dy = dy != null ? dy : 0;
     clone = clone != null ? clone : false;
 
+    //alert(`moveCells: ${cells} ${dx} ${dy} ${clone} ${target}`)
+
     if (cells != null && (dx !== 0 || dy !== 0 || clone || target != null)) {
       // Removes descendants with ancestors in cells to avoid multiple moving
       cells = this.model.getTopmostCells(cells);
@@ -6149,18 +6151,12 @@ class mxGraph extends mxEventSource {
         this.fireEvent(
           new mxEventObject(
             mxEvent.MOVE_CELLS,
-            'cells',
-            cells,
-            'dx',
-            dx,
-            'dy',
-            dy,
-            'clone',
-            clone,
-            'target',
-            target,
-            'event',
-            evt
+            'cells', cells,
+            'dx', dx,
+            'dy', dy,
+            'clone', clone,
+            'target', target,
+            'event', evt
           )
         );
       } finally {
@@ -6205,14 +6201,10 @@ class mxGraph extends mxEventSource {
         this.fireEvent(
           new mxEventObject(
             mxEvent.CELLS_MOVED,
-            'cells',
-            cells,
-            'dx',
-            dx,
-            'dy',
-            dy,
-            'disconnect',
-            disconnect
+            'cells', cells,
+            'dx', dx,
+            'dy', dy,
+            'disconnect', disconnect
           )
         );
       } finally {
@@ -6228,24 +6220,24 @@ class mxGraph extends mxEventSource {
    * translated geometry in the model as an atomic change.
    */
   translateCell = (cell, dx, dy) => {
-    let geo = this.model.getGeometry(cell);
+    let geometry = this.model.getGeometry(cell);
 
-    if (geo != null) {
+    if (geometry != null) {
       dx = parseFloat(dx);
       dy = parseFloat(dy);
-      geo = geo.clone();
-      geo.translate(dx, dy);
+      geometry = geometry.clone();
+      geometry.translate(dx, dy);
 
       if (
-        !geo.relative &&
+        !geometry.relative &&
         this.model.isVertex(cell) &&
         !this.isAllowNegativeCoordinates()
       ) {
-        geo.x = Math.max(0, parseFloat(geo.x));
-        geo.y = Math.max(0, parseFloat(geo.y));
+        geometry.x = Math.max(0, geometry.x);
+        geometry.y = Math.max(0, geometry.y);
       }
 
-      if (geo.relative && !this.model.isEdge(cell)) {
+      if (geometry.relative && !this.model.isEdge(cell)) {
         const parent = this.model.getParent(cell);
         let angle = 0;
 
@@ -6268,15 +6260,15 @@ class mxGraph extends mxEventSource {
           dy = pt.y;
         }
 
-        if (geo.offset == null) {
-          geo.offset = new mxPoint(dx, dy);
+        if (geometry.offset == null) {
+          geometry.offset = new mxPoint(dx, dy);
         } else {
-          geo.offset.x = parseFloat(geo.offset.x) + dx;
-          geo.offset.y = parseFloat(geo.offset.y) + dy;
+          geometry.offset.x = parseFloat(geometry.offset.x) + dx;
+          geometry.offset.y = parseFloat(geometry.offset.y) + dy;
         }
       }
 
-      this.model.setGeometry(cell, geo);
+      this.model.setGeometry(cell, geometry);
     }
   };
 

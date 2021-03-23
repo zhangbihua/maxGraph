@@ -159,8 +159,8 @@ class mxArrowConnector extends mxShape {
 
     while (
       i0 < pts.length - 1 &&
-      pts[i0].x == pts[0].x &&
-      pts[i0].y == pts[0].y
+      pts[i0].x === pts[0].x &&
+      pts[i0].y === pts[0].y
     ) {
       i0++;
     }
@@ -169,7 +169,7 @@ class mxArrowConnector extends mxShape {
     const dy = pts[i0].y - pts[0].y;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (dist == 0) {
+    if (dist === 0) {
       return;
     }
 
@@ -249,7 +249,7 @@ class mxArrowConnector extends mxShape {
 
       dist1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
 
-      if (dist1 != 0) {
+      if (dist1 !== 0) {
         nx1 = dx1 / dist1;
         ny1 = dy1 / dist1;
 
@@ -262,7 +262,7 @@ class mxArrowConnector extends mxShape {
 
         const dist2 = Math.sqrt(nx2 * nx2 + ny2 * ny2);
 
-        if (dist2 != 0) {
+        if (dist2 !== 0) {
           nx2 /= dist2;
           ny2 /= dist2;
 
@@ -272,7 +272,7 @@ class mxArrowConnector extends mxShape {
             Math.min(this.strokewidth / 200 + 0.04, 0.35)
           );
           const angleFactor =
-            pos != 0 && isRounded
+            pos !== 0 && isRounded
               ? Math.max(0.1, strokeWidthFactor)
               : Math.max(tmp, 0.06);
 
@@ -281,7 +281,7 @@ class mxArrowConnector extends mxShape {
           const inX = pts[i + 1].x - (ny2 * edgeWidth) / 2 / angleFactor;
           const inY = pts[i + 1].y + (nx2 * edgeWidth) / 2 / angleFactor;
 
-          if (pos == 0 || !isRounded) {
+          if (pos === 0 || !isRounded) {
             // If the two segments are aligned, or if we're not drawing curved sections between segments
             // just draw straight to the intersection point
             c.lineTo(outX, outY);
@@ -291,7 +291,7 @@ class mxArrowConnector extends mxShape {
                 c.lineTo(x, y);
               });
             })(inX, inY);
-          } else if (pos == -1) {
+          } else if (pos === -1) {
             const c1x = inX + ny * edgeWidth;
             const c1y = inY - nx * edgeWidth;
             const c2x = inX + ny1 * edgeWidth;
@@ -526,7 +526,7 @@ class mxArrowConnector extends mxShape {
         this.style,
         mxConstants.STYLE_STARTARROW,
         mxConstants.NONE
-      ) != mxConstants.NONE
+      ) !== mxConstants.NONE
     );
   };
 
@@ -541,7 +541,7 @@ class mxArrowConnector extends mxShape {
         this.style,
         mxConstants.STYLE_ENDARROW,
         mxConstants.NONE
-      ) != mxConstants.NONE
+      ) !== mxConstants.NONE
     );
   };
 }

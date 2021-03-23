@@ -6,6 +6,7 @@
 
 import mxPoint from '../util/mxPoint';
 import mxRectangle from '../util/mxRectangle';
+import mxUtils from '../util/mxUtils';
 
 class mxGeometry extends mxRectangle {
   /**
@@ -162,7 +163,7 @@ class mxGeometry extends mxRectangle {
    * calling this method and setting the geometry of the cell using
    * <mxGraphModel.setGeometry>.
    */
-  swap = () => {
+  swap() {
     if (this.alternateBounds != null) {
       const old = new mxRectangle(this.x, this.y, this.width, this.height);
 
@@ -186,7 +187,7 @@ class mxGeometry extends mxRectangle {
    * isSource - Boolean that specifies if the source or target point
    * should be returned.
    */
-  getTerminalPoint = isSource => {
+  getTerminalPoint(isSource) {
     return isSource ? this.sourcePoint : this.targetPoint;
   };
 
@@ -202,7 +203,7 @@ class mxGeometry extends mxRectangle {
    * isSource - Boolean that specifies if the source or target point
    * should be set.
    */
-  setTerminalPoint = (point, isSource) => {
+  setTerminalPoint(point, isSource) {
     if (isSource) {
       this.sourcePoint = point;
     } else {
@@ -225,7 +226,7 @@ class mxGeometry extends mxRectangle {
    * angle - Number that specifies the rotation angle in degrees.
    * cx - <mxPoint> that specifies the center of the rotation.
    */
-  rotate = (angle, cx) => {
+  rotate(angle, cx) {
     const rad = mxUtils.toRadians(angle);
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
@@ -265,6 +266,30 @@ class mxGeometry extends mxRectangle {
     }
   };
 
+  get width() {
+    return this._width || 0;
+  }
+
+  set width(width) {
+    width = parseFloat(width);
+    if (Number.isNaN(width)) {
+      throw new Error('Invalid width supplied');
+    }
+    this._width = width;
+  }
+
+  get height() {
+    return this._height || 0;
+  }
+
+  set height(height) {
+    height = parseFloat(height);
+    if (Number.isNaN(height)) {
+      throw new Error('Invalid height supplied');
+    }
+    this._height = height;
+  }
+
   /**
    * Function: translate
    *
@@ -279,34 +304,34 @@ class mxGeometry extends mxRectangle {
    * dx - Number that specifies the x-coordinate of the translation.
    * dy - Number that specifies the y-coordinate of the translation.
    */
-  translate = (dx, dy) => {
+  translate(dx, dy) {
     dx = parseFloat(dx);
     dy = parseFloat(dy);
 
     // Translates the geometry
     if (!this.relative) {
-      this.x = parseFloat(this.x) + dx;
-      this.y = parseFloat(this.y) + dy;
+      this.x = this.x + dx;
+      this.y = this.y + dy;
     }
 
     // Translates the source point
     if (this.sourcePoint != null) {
-      this.sourcePoint.x = parseFloat(this.sourcePoint.x) + dx;
-      this.sourcePoint.y = parseFloat(this.sourcePoint.y) + dy;
+      this.sourcePoint.x = this.sourcePoint.x + dx;
+      this.sourcePoint.y = this.sourcePoint.y + dy;
     }
 
     // Translates the target point
     if (this.targetPoint != null) {
-      this.targetPoint.x = parseFloat(this.targetPoint.x) + dx;
-      this.targetPoint.y = parseFloat(this.targetPoint.y) + dy;
+      this.targetPoint.x = this.targetPoint.x + dx;
+      this.targetPoint.y = this.targetPoint.y + dy;
     }
 
     // Translate the control points
     if (this.TRANSLATE_CONTROL_POINTS && this.points != null) {
       for (let i = 0; i < this.points.length; i += 1) {
         if (this.points[i] != null) {
-          this.points[i].x = parseFloat(this.points[i].x) + dx;
-          this.points[i].y = parseFloat(this.points[i].y) + dy;
+          this.points[i].x = this.points[i].x + dx;
+          this.points[i].y = this.points[i].y + dy;
         }
       }
     }
@@ -327,43 +352,43 @@ class mxGeometry extends mxRectangle {
    * sy - Number that specifies the vertical scale factor.
    * fixedAspect - Optional boolean to keep the aspect ratio fixed.
    */
-  scale = (sx, sy, fixedAspect) => {
+  scale(sx, sy, fixedAspect) {
     sx = parseFloat(sx);
     sy = parseFloat(sy);
 
     // Translates the source point
     if (this.sourcePoint != null) {
-      this.sourcePoint.x = parseFloat(this.sourcePoint.x) * sx;
-      this.sourcePoint.y = parseFloat(this.sourcePoint.y) * sy;
+      this.sourcePoint.x = this.sourcePoint.x * sx;
+      this.sourcePoint.y = this.sourcePoint.y * sy;
     }
 
     // Translates the target point
     if (this.targetPoint != null) {
-      this.targetPoint.x = parseFloat(this.targetPoint.x) * sx;
-      this.targetPoint.y = parseFloat(this.targetPoint.y) * sy;
+      this.targetPoint.x = this.targetPoint.x * sx;
+      this.targetPoint.y = this.targetPoint.y * sy;
     }
 
     // Translate the control points
     if (this.points != null) {
       for (let i = 0; i < this.points.length; i += 1) {
         if (this.points[i] != null) {
-          this.points[i].x = parseFloat(this.points[i].x) * sx;
-          this.points[i].y = parseFloat(this.points[i].y) * sy;
+          this.points[i].x = this.points[i].x * sx;
+          this.points[i].y = this.points[i].y * sy;
         }
       }
     }
 
     // Translates the geometry
     if (!this.relative) {
-      this.x = parseFloat(this.x) * sx;
-      this.y = parseFloat(this.y) * sy;
+      this.x = this.x * sx;
+      this.y = this.y * sy;
 
       if (fixedAspect) {
         sy = sx = Math.min(sx, sy);
       }
 
-      this.width = parseFloat(this.width) * sx;
-      this.height = parseFloat(this.height) * sy;
+      this.width = this.width * sx;
+      this.height = this.height * sy;
     }
   };
 
@@ -372,7 +397,7 @@ class mxGeometry extends mxRectangle {
    *
    * Returns true if the given object equals this geometry.
    */
-  equals = obj => {
+  equals(obj) {
     return (
       super.equals(obj) &&
       this.relative === obj.relative &&
