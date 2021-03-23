@@ -4,13 +4,13 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectCodec from 'FIXME';
-import mxValueChange from 'FIXME';
-import mxStyleChange from 'FIXME';
-import mxGeometryChange from 'FIXME';
-import mxCollapseChange from 'FIXME';
-import mxVisibleChange from 'FIXME';
-import mxCellAttributeChange from 'FIXME';
+import mxObjectCodec from './mxObjectCodec';
+import mxValueChange from '../model/atomic_changes/mxValueChange';
+import mxStyleChange from '../model/atomic_changes/mxStyleChange';
+import mxGeometryChange from '../model/atomic_changes/mxGeometryChange';
+import mxCollapseChange from '../model/atomic_changes/mxCollapseChange';
+import mxVisibleChange from '../model/atomic_changes/mxVisibleChange';
+import mxCellAttributeChange from '../model/atomic_changes/mxCellAttributeChange';
 import mxCodecRegistry from './mxCodecRegistry';
 
 class mxGenericChangeCodec extends mxObjectCodec {

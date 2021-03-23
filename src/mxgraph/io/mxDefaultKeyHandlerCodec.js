@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectCodec from 'FIXME';
-import mxDefaultKeyHandler from 'FIXME';
+import mxObjectCodec from './mxObjectCodec';
+import mxDefaultKeyHandler from '../editor/mxDefaultKeyHandler';
 import mxCodecRegistry from './mxCodecRegistry';
 
 class mxDefaultKeyHandlerCodec extends mxObjectCodec {

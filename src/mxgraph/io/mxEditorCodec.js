@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxEditor from 'FIXME';
-import mxWindow from 'FIXME';
-import mxObjectCodec from 'FIXME';
+import mxEditor from '../editor/mxEditor';
+import mxWindow from '../util/mxWindow';
+import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
 
 class mxEditorCodec extends mxObjectCodec {

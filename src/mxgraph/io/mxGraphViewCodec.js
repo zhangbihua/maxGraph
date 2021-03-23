@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxGraphView from 'FIXME';
-import mxObjectCodec from 'FIXME';
+import mxGraphView from '../view/mxGraphView';
+import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
 
 class mxGraphViewCodec extends mxObjectCodec {

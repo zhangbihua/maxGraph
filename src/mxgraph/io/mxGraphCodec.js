@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxGraph from 'FIXME';
+import mxGraph from '../view/mxGraph';
 import mxCodecRegistry from './mxCodecRegistry';
 
 class mxGraphCodec extends mxObjectCodec {

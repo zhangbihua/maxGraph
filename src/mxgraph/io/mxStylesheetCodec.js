@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxStylesheet from 'FIXME';
+import mxStylesheet from '../view/mxStylesheet';
 import mxUtils from '../util/mxUtils';
 import mxCodecRegistry from './mxCodecRegistry';
 

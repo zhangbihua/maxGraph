@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDefaultPopupMenu from 'FIXME';
+import mxDefaultPopupMenu from '../editor/mxDefaultPopupMenu';
 import mxCodecRegistry from './mxCodecRegistry';
 
 class mxDefaultPopupMenuCodec extends mxObjectCodec {

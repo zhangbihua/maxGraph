@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectCodec from 'FIXME';
-import mxDefaultToolbar from 'FIXME';
+import mxObjectCodec from './mxObjectCodec';
+import mxDefaultToolbar from '../editor/mxDefaultToolbar';
 import mxCodecRegistry from './mxCodecRegistry';
 
 class mxDefaultToolbarCodec extends mxObjectCodec {

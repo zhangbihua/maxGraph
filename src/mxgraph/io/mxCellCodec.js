@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxCell from 'FIXME';
+import mxCell from '../model/mxCell';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
 
