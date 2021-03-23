@@ -3,10 +3,10 @@
  * Copyright (c) 2006-2018, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxUtils from "../../../util/mxUtils";
-import mxGraphHierarchyNode from "./mxGraphHierarchyNode";
-import mxGraphHierarchyEdge from "./mxGraphHierarchyEdge";
-import mxCellPath from "../../../model/mxCellPath";
+import mxUtils from '../../../util/mxUtils';
+import mxGraphHierarchyNode from './mxGraphHierarchyNode';
+import mxGraphHierarchyEdge from './mxGraphHierarchyEdge';
+import mxCellPath from '../../../model/mxCellPath';
 
 class mxSwimlaneModel {
   /**
@@ -195,7 +195,7 @@ class mxSwimlaneModel {
    * internalVertices - The array of <mxGraphHierarchyNodes> to have their
    * information filled in using the real vertices.
    */
-  createInternalCells = (layout, vertices, internalVertices) => {
+  createInternalCells(layout, vertices, internalVertices) {
     const graph = layout.getGraph();
     const { swimlanes } = layout;
 
@@ -288,7 +288,7 @@ class mxSwimlaneModel {
       // Ensure temp variable is cleared from any previous use
       internalVertices[i].temp[0] = 0;
     }
-  };
+  }
 
   /**
    * Function: initialRank
@@ -297,7 +297,7 @@ class mxSwimlaneModel {
    * or sinks and working through each node in the relevant edge direction.
    * Starting at the sinks is basically a longest path layering algorithm.
    */
-  initialRank = () => {
+  initialRank() {
     this.ranksPerGroup = [];
 
     const startNodes = [];
@@ -446,7 +446,7 @@ class mxSwimlaneModel {
     //      currentMaxLayer = internalNode.temp[0];
     //    }
     //  }
-  };
+  }
 
   /**
    * Function: maxChainDfs
@@ -466,7 +466,7 @@ class mxSwimlaneModel {
    * chainCount - the number of edges in the chain of vertices going through
    * the current swimlane
    */
-  maxChainDfs = (parent, root, connectingEdge, seen, chainCount) => {
+  maxChainDfs(parent, root, connectingEdge, seen, chainCount) {
     if (root != null) {
       const rootId = mxCellPath.create(root.cell);
 
@@ -511,7 +511,7 @@ class mxSwimlaneModel {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: fixRanks
@@ -519,7 +519,7 @@ class mxSwimlaneModel {
    * Fixes the layer assignments to the values stored in the nodes. Also needs
    * to create dummy nodes for edges that cross layers.
    */
-  fixRanks = () => {
+  fixRanks() {
     const rankList = [];
     this.ranks = [];
 
@@ -579,7 +579,7 @@ class mxSwimlaneModel {
       false,
       null
     );
-  };
+  }
 
   /**
    * Function: visit
@@ -592,7 +592,7 @@ class mxSwimlaneModel {
    * trackAncestors - Whether or not the search is to keep track all nodes
    * directly above this one in the search path.
    */
-  visit = (visitor, dfsRoots, trackAncestors, seenNodes) => {
+  visit(visitor, dfsRoots, trackAncestors, seenNodes) {
     // Run dfs through on all roots
     if (dfsRoots != null) {
       for (let i = 0; i < dfsRoots.length; i += 1) {
@@ -626,7 +626,7 @@ class mxSwimlaneModel {
 
       this.dfsCount += 1;
     }
-  };
+  }
 
   /**
    * Function: dfs
@@ -644,7 +644,7 @@ class mxSwimlaneModel {
    * ancestor node of the current node
    * layer - the layer on the dfs tree ( not the same as the model ranks )
    */
-  dfs = (parent, root, connectingEdge, visitor, seen, layer) => {
+  dfs(parent, root, connectingEdge, visitor, seen, layer) {
     if (root != null) {
       const rootId = root.id;
 
@@ -668,7 +668,7 @@ class mxSwimlaneModel {
         visitor(parent, root, connectingEdge, layer, 1);
       }
     }
-  };
+  }
 
   /**
    * Function: extendedDfs
@@ -690,7 +690,7 @@ class mxSwimlaneModel {
    * childHash - the new hash code for this node
    * layer - the layer on the dfs tree ( not the same as the model ranks )
    */
-  extendedDfs = (
+  extendedDfs(
     parent,
     root,
     connectingEdge,
@@ -699,7 +699,7 @@ class mxSwimlaneModel {
     ancestors,
     childHash,
     layer
-  ) => {
+  ) {
     // Explanation of custom hash set. Previously, the ancestors variable
     // was passed through the dfs as a HashSet. The ancestors were copied
     // into a new HashSet and when the new child was processed it was also
@@ -789,7 +789,7 @@ class mxSwimlaneModel {
         visitor(parent, root, connectingEdge, layer, 1);
       }
     }
-  };
+  }
 }
 
 export default mxSwimlaneModel;

@@ -3,15 +3,15 @@
  * Copyright (c) 2006-2018, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxGraphLayout from "../mxGraphLayout";
-import mxConstants from "../../util/mxConstants";
-import mxHierarchicalEdgeStyle from "./mxHierarchicalEdgeStyle";
-import mxDictionary from "../../util/mxDictionary";
-import mxGraphHierarchyModel from "./model/mxGraphHierarchyModel";
-import mxObjectIdentity from "../../util/mxObjectIdentity";
-import mxMinimumCycleRemover from "./stage/mxMinimumCycleRemover";
-import mxMedianHybridCrossingReduction from "./stage/mxMedianHybridCrossingReduction";
-import mxCoordinateAssignment from "./stage/mxCoordinateAssignment";
+import mxGraphLayout from '../mxGraphLayout';
+import mxConstants from '../../util/mxConstants';
+import mxHierarchicalEdgeStyle from './mxHierarchicalEdgeStyle';
+import mxDictionary from '../../util/mxDictionary';
+import mxGraphHierarchyModel from './model/mxGraphHierarchyModel';
+import mxObjectIdentity from '../../util/mxObjectIdentity';
+import mxMinimumCycleRemover from './stage/mxMinimumCycleRemover';
+import mxMedianHybridCrossingReduction from './stage/mxMedianHybridCrossingReduction';
+import mxCoordinateAssignment from './stage/mxCoordinateAssignment';
 
 class mxHierarchicalLayout extends mxGraphLayout {
   /**
@@ -191,9 +191,9 @@ class mxHierarchicalLayout extends mxGraphLayout {
    *
    * Returns the internal <mxGraphHierarchyModel> for this layout algorithm.
    */
-  getModel = () => {
+  getModel() {
     return this.model;
-  };
+  }
 
   /**
    * Function: execute
@@ -205,7 +205,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * parent - Parent <mxCell> that contains the children to be laid out.
    * roots - Optional starting roots of the layout.
    */
-  execute = (parent, roots) => {
+  execute(parent, roots) {
     this.parent = parent;
     const { model } = this.graph;
     this.edgesCache = new mxDictionary();
@@ -286,7 +286,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     } finally {
       model.endUpdate();
     }
-  };
+  }
 
   /**
    * Function: findRoots
@@ -302,7 +302,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * parent - <mxCell> whose children should be checked.
    * vertices - array of vertices to limit search to
    */
-  findRoots = (parent, vertices) => {
+  findRoots(parent, vertices) {
     const roots = [];
 
     if (parent != null && vertices != null) {
@@ -347,7 +347,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     }
 
     return roots;
-  };
+  }
 
   /**
    * Function: getEdges
@@ -358,7 +358,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    *
    * cell - <mxCell> whose edges should be returned.
    */
-  getEdges = cell => {
+  getEdges(cell) {
     const cachedEdges = this.edgesCache.get(cell);
 
     if (cachedEdges != null) {
@@ -404,7 +404,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     this.edgesCache.put(cell, result);
 
     return result;
-  };
+  }
 
   /**
    * Function: getVisibleTerminal
@@ -416,7 +416,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * edge - <mxCell> whose edges should be returned.
    * source - Boolean that specifies whether the source or target terminal is to be returned
    */
-  getVisibleTerminal = (edge, source) => {
+  getVisibleTerminal(edge, source) {
     let terminalCache = this.edgesTargetTermCache;
 
     if (source) {
@@ -452,7 +452,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     }
 
     return terminal;
-  };
+  }
 
   /**
    * Function: run
@@ -462,7 +462,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * routing changes made. It runs each stage of the layout that has been
    * created.
    */
-  run = parent => {
+  run(parent) {
     // Separate out unconnected hierarchies
     const hierarchyVertices = [];
     const allVertexSet = [];
@@ -565,14 +565,14 @@ class mxHierarchicalLayout extends mxGraphLayout {
       this.crossingStage(parent);
       initialX = this.placementStage(initialX, parent);
     }
-  };
+  }
 
   /**
    * Function: filterDescendants
    *
    * Creates an array of descendant cells
    */
-  filterDescendants = (cell, result) => {
+  filterDescendants(cell, result) {
     const { model } = this.graph;
 
     if (
@@ -599,7 +599,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: isPort
@@ -611,12 +611,12 @@ class mxHierarchicalLayout extends mxGraphLayout {
    *
    * cell - <mxCell> that represents the port.
    */
-  isPort = cell => {
+  isPort(cell) {
     if (cell != null && cell.geometry != null) {
       return cell.geometry.relative;
     }
     return false;
-  };
+  }
 
   /**
    * Function: getEdgesBetween
@@ -630,7 +630,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * target -
    * directed -
    */
-  getEdgesBetween = (source, target, directed) => {
+  getEdgesBetween(source, target, directed) {
     directed = directed != null ? directed : false;
     const edges = this.getEdges(source);
     const result = [];
@@ -650,7 +650,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     }
 
     return result;
-  };
+  }
 
   /**
    * Traverses the (directed) graph invoking the given function for each
@@ -668,7 +668,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * null for the first step of the traversal.
    * allVertices - Array of cell paths for the visited cells.
    */
-  traverse = (
+  traverse(
     vertex,
     directed,
     edge,
@@ -676,7 +676,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     currentComp,
     hierarchyVertices,
     filledVertexSet
-  ) => {
+  ) {
     if (vertex != null && allVertices != null) {
       // Has this vertex been seen before in any traversal
       // And if the filled vertex set is populated, only
@@ -766,44 +766,44 @@ class mxHierarchicalLayout extends mxGraphLayout {
     }
 
     return currentComp;
-  };
+  }
 
   /**
    * Function: cycleStage
    *
    * Executes the cycle stage using mxMinimumCycleRemover.
    */
-  cycleStage = parent => {
+  cycleStage(parent) {
     const cycleStage = new mxMinimumCycleRemover(this);
     cycleStage.execute(parent);
-  };
+  }
 
   /**
    * Function: layeringStage
    *
    * Implements first stage of a Sugiyama layout.
    */
-  layeringStage = () => {
+  layeringStage() {
     this.model.initialRank();
     this.model.fixRanks();
-  };
+  }
 
   /**
    * Function: crossingStage
    *
    * Executes the crossing stage using mxMedianHybridCrossingReduction.
    */
-  crossingStage = parent => {
+  crossingStage(parent) {
     const crossingStage = new mxMedianHybridCrossingReduction(this);
     crossingStage.execute(parent);
-  };
+  }
 
   /**
    * Function: placementStage
    *
    * Executes the placement stage using mxCoordinateAssignment.
    */
-  placementStage = (initialX, parent) => {
+  placementStage(initialX, parent) {
     const placementStage = new mxCoordinateAssignment(
       this,
       this.intraCellSpacing,
@@ -816,7 +816,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     placementStage.execute(parent);
 
     return placementStage.limitX + this.interHierarchySpacing;
-  };
+  }
 }
 
 export default mxHierarchicalLayout;

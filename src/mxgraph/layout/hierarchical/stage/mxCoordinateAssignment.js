@@ -4,12 +4,12 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
-import mxConstants from "../../../util/mxConstants";
-import mxLog from "../../../util/mxLog";
-import WeightedCellSorter from "../../WeightedCellSorter";
-import mxDictionary from "../../../util/mxDictionary";
-import mxPoint from "../../../util/mxPoint";
-import mxHierarchicalEdgeStyle from "../mxHierarchicalEdgeStyle";
+import mxConstants from '../../../util/mxConstants';
+import mxLog from '../../../util/mxLog';
+import WeightedCellSorter from '../../WeightedCellSorter';
+import mxDictionary from '../../../util/mxDictionary';
+import mxPoint from '../../../util/mxPoint';
+import mxHierarchicalEdgeStyle from '../mxHierarchicalEdgeStyle';
 
 class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
   /**
@@ -229,7 +229,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
   /**
    * Utility method to display current positions
    */
-  printStatus = () => {
+  printStatus() {
     const model = this.layout.getModel();
     mxLog.show();
 
@@ -248,14 +248,14 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     }
 
     mxLog.writeln('====================================');
-  };
+  }
 
   /**
    * Function: execute
    *
    * A basic horizontal coordinate assignment algorithm
    */
-  execute = parent => {
+  execute(parent) {
     this.jettyPositions = Object();
     const model = this.layout.getModel();
     this.currentXDelta = 0.0;
@@ -313,14 +313,14 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     }
 
     this.setCellLocations(this.layout.getGraph(), model);
-  };
+  }
 
   /**
    * Function: minNode
    *
    * Performs one median positioning sweep in both directions
    */
-  minNode = model => {
+  minNode(model) {
     // Queue all nodes
     const nodeList = [];
 
@@ -476,7 +476,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       cellWrapper.visited = false;
       count += 1;
     }
-  };
+  }
 
   /**
    * Function: medianPos
@@ -488,7 +488,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * i - the iteration of the whole process
    * model - an internal model of the hierarchical layout
    */
-  medianPos = (i, model) => {
+  medianPos(i, model) {
     // Reverse sweep direction each time through this method
     const downwardSweep = i % 2 === 0;
 
@@ -501,7 +501,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         this.rankMedianPosition(j + 1, model, j);
       }
     }
-  };
+  }
 
   /**
    * Function: rankMedianPosition
@@ -515,7 +515,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * nextRankValue - the layer number whose connected cels are to be laid out
    * relative to
    */
-  rankMedianPosition = (rankValue, model, nextRankValue) => {
+  rankMedianPosition(rankValue, model, nextRankValue) {
     const rank = model.ranks[rankValue];
 
     // Form an array of the order in which the cell are to be processed
@@ -661,7 +661,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
       weightedValues[i].visited = true;
     }
-  };
+  }
 
   /**
    * Function: calculatedWeightedValue
@@ -674,7 +674,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * currentCell - the cell whose weight is to be calculated
    * collection - the cells the specified cell is connected to
    */
-  calculatedWeightedValue = (currentCell, collection) => {
+  calculatedWeightedValue(currentCell, collection) {
     let totalWeight = 0;
 
     for (let i = 0; i < collection.length; i += 1) {
@@ -690,7 +690,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     }
 
     return totalWeight;
-  };
+  }
 
   /**
    * Function: medianXValue
@@ -703,7 +703,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * connectedCells - the cells the candidate connects to on this level
    * rankValue - the layer number of this rank
    */
-  medianXValue = (connectedCells, rankValue) => {
+  medianXValue(connectedCells, rankValue) {
     if (connectedCells.length === 0) {
       return 0;
     }
@@ -727,7 +727,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     const rightMedian = medianValues[medianPoint];
 
     return (leftMedian + rightMedian) / 2;
-  };
+  }
 
   /**
    * Function: initialCoords
@@ -741,7 +741,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * facade - the facade describing the input graph
    * model - an internal model of the hierarchical layout
    */
-  initialCoords = (facade, model) => {
+  initialCoords(facade, model) {
     this.calculateWidestRank(facade, model);
 
     // Sweep up and down from the widest rank
@@ -756,7 +756,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         this.rankCoordinates(i, facade, model);
       }
     }
-  };
+  }
 
   /**
    * Function: rankCoordinates
@@ -772,7 +772,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * graph - the facade describing the input graph
    * model - an internal model of the hierarchical layout
    */
-  rankCoordinates = (rankValue, graph, model) => {
+  rankCoordinates(rankValue, graph, model) {
     const rank = model.ranks[rankValue];
     let maxY = 0.0;
     let localX =
@@ -829,7 +829,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     if (boundsWarning == true) {
       mxLog.warn('At least one cell has no bounds');
     }
-  };
+  }
 
   /**
    * Function: calculateWidestRank
@@ -842,7 +842,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * graph - the facade describing the input graph
    * model - an internal model of the hierarchical layout
    */
-  calculateWidestRank = (graph, model) => {
+  calculateWidestRank(graph, model) {
     // Starting y co-ordinate
     let y = -this.interRankCellSpacing;
 
@@ -938,7 +938,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         cell.setY(rankValue, y);
       }
     }
-  };
+  }
 
   /**
    * Function: minPath
@@ -951,7 +951,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * graph - the facade describing the input graph
    * model - an internal model of the hierarchical layout
    */
-  minPath = (graph, model) => {
+  minPath(graph, model) {
     // Work down and up each edge with at least 2 control points
     // trying to straighten each one out. If the same number of
     // straight segments are formed in both directions, the
@@ -1050,7 +1050,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: repositionValid
@@ -1065,7 +1065,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * rank - the layer of the cell
    * position - the x position being sought
    */
-  repositionValid = (model, cell, rank, position) => {
+  repositionValid(model, cell, rank, position) {
     const rankArray = model.ranks[rank];
     let rankIndex = -1;
 
@@ -1114,7 +1114,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       return rightLimit >= position;
     }
     return true;
-  };
+  }
 
   /**
    * Function: setCellLocations
@@ -1127,7 +1127,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * graph - the input graph
    * model - the layout model
    */
-  setCellLocations = (graph, model) => {
+  setCellLocations(graph, model) {
     this.rankTopY = [];
     this.rankBottomY = [];
 
@@ -1161,7 +1161,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     for (let i = 0; i < edges.length; i += 1) {
       this.setEdgePosition(edges[i]);
     }
-  };
+  }
 
   /**
    * Function: localEdgeProcessing
@@ -1172,7 +1172,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    *
    * model - the layout model
    */
-  localEdgeProcessing = model => {
+  localEdgeProcessing(model) {
     // Iterate through each vertex, look at the edges connected in
     // both directions.
     for (let rankIndex = 0; rankIndex < model.ranks.length; rankIndex += 1) {
@@ -1299,14 +1299,14 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: setEdgePosition
    *
    * Fixes the control points
    */
-  setEdgePosition = cell => {
+  setEdgePosition(cell) {
     // For parallel edges we need to seperate out the points a
     // little
     let offsetX = 0;
@@ -1533,7 +1533,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
       cell.temp[0] = 101207;
     }
-  };
+  }
 
   /**
    * Function: setVertexLocation
@@ -1544,7 +1544,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    *
    * cell - the vertex to position
    */
-  setVertexLocation = cell => {
+  setVertexLocation(cell) {
     const realCell = cell.cell;
     const positionX = cell.x[0] - cell.width / 2;
     const positionY = cell.y[0] - cell.height / 2;
@@ -1568,7 +1568,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     }
 
     this.limitX = Math.max(this.limitX, positionX + cell.width);
-  };
+  }
 
   /**
    * Function: processReversedEdge
@@ -1580,9 +1580,9 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * edge - the hierarchical model edge
    * realEdge - the real edge in the graph
    */
-  processReversedEdge = (graph, model) => {
+  processReversedEdge(graph, model) {
     // hook for subclassers
-  };
+  }
 }
 
 export default mxCoordinateAssignment;

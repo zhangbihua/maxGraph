@@ -65,45 +65,45 @@ class mxEventObject {
    *
    * Returns <name>.
    */
-  getName = () => {
+  getName() {
     return this.name;
-  };
+  }
 
   /**
    * Function: getProperties
    *
    * Returns <properties>.
    */
-  getProperties = () => {
+  getProperties() {
     return this.properties;
-  };
+  }
 
   /**
    * Function: getProperty
    *
    * Returns the property for the given key.
    */
-  getProperty = key => {
+  getProperty(key) {
     return this.properties[key];
-  };
+  }
 
   /**
    * Function: isConsumed
    *
    * Returns true if the event has been consumed.
    */
-  isConsumed = () => {
+  isConsumed() {
     return this.consumed;
-  };
+  }
 
   /**
    * Function: consume
    *
    * Consumes the event.
    */
-  consume = () => {
+  consume() {
     this.consumed = true;
-  };
+  }
 }
 
 export default mxEventObject;

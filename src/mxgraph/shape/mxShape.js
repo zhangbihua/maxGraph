@@ -9,7 +9,7 @@ import mxConstants from '../util/mxConstants';
 import mxPoint from '../util/mxPoint';
 import mxSvgCanvas2D from '../util/mxSvgCanvas2D';
 import mxEvent from '../util/mxEvent';
-import mxClient from "../mxClient";
+import mxClient from '../mxClient';
 
 const toBool = i => {
   if (i === 0) return false;
@@ -238,7 +238,7 @@ class mxShape {
    *
    * container - DOM node that will contain the shape.
    */
-  init = container => {
+  init(container) {
     if (this.node == null) {
       this.node = this.create(container);
 
@@ -246,14 +246,14 @@ class mxShape {
         container.appendChild(this.node);
       }
     }
-  };
+  }
 
   /**
    * Function: initStyles
    *
    * Sets the styles to their default values.
    */
-  initStyles = container => {
+  initStyles(container) {
     this.strokewidth = 1;
     this.rotation = 0;
     this.opacity = 100;
@@ -261,7 +261,7 @@ class mxShape {
     this.strokeOpacity = 100;
     this.flipH = false;
     this.flipV = false;
-  };
+  }
 
   /**
    * Function: isHtmlAllowed
@@ -269,16 +269,16 @@ class mxShape {
    * Returns true if HTML is allowed for this shape. This implementation always
    * returns false.
    */
-  isHtmlAllowed = () => {
+  isHtmlAllowed() {
     return false;
-  };
+  }
 
   /**
    * Function: getSvgScreenOffset
    *
    * Returns 0, or 0.5 if <strokewidth> % 2 == 1.
    */
-  getSvgScreenOffset = () => {
+  getSvgScreenOffset() {
     const sw =
       this.stencil && this.stencil.strokewidth !== 'inherit'
         ? Number(this.stencil.strokewidth)
@@ -287,7 +287,7 @@ class mxShape {
     return mxUtils.mod(Math.max(1, Math.round(sw * this.scale)), 2) === 1
       ? 0.5
       : 0;
-  };
+  }
 
   /**
    * Function: create
@@ -301,7 +301,7 @@ class mxShape {
    *
    * container - DOM node that will contain the shape.
    */
-  create = container => {
+  create(container) {
     let node = null;
 
     if (container != null && container.ownerSVGElement != null) {
@@ -311,16 +311,16 @@ class mxShape {
     }
 
     return node;
-  };
+  }
 
   /**
    * Function: createSvg
    *
    * Creates and returns the SVG node(s) to represent this shape.
    */
-  createSvg = () => {
+  createSvg() {
     return document.createElementNS(mxConstants.NS_SVG, 'g');
-  };
+  }
 
   /**
    * Function: createHtml
@@ -329,12 +329,12 @@ class mxShape {
    * this shape. This implementation falls back to <createVml>
    * so that the HTML creation is optional.
    */
-  createHtml = () => {
+  createHtml() {
     const node = document.createElement('div');
     node.style.position = 'absolute';
 
     return node;
-  };
+  }
 
   /**
    * Function: reconfigure
@@ -342,9 +342,9 @@ class mxShape {
    * Reconfigures this shape. This will update the colors etc in
    * addition to the bounds or points.
    */
-  reconfigure = () => {
+  reconfigure() {
     this.redraw();
-  };
+  }
 
   /**
    * Function: redraw
@@ -376,7 +376,7 @@ class mxShape {
    *
    * Removes all child nodes and resets all CSS.
    */
-  clear = () => {
+  clear() {
     if (this.node.ownerSVGElement != null) {
       while (this.node.lastChild != null) {
         this.node.removeChild(this.node.lastChild);
@@ -387,18 +387,23 @@ class mxShape {
       }`;
       this.node.innerHTML = '';
     }
-  };
+  }
 
   /**
    * Function: updateBoundsFromPoints
    *
    * Updates the bounds based on the points.
    */
-  updateBoundsFromPoints = () => {
+  updateBoundsFromPoints() {
     const pts = this.points;
 
     if (pts != null && pts.length > 0 && pts[0] != null) {
-      this.bounds = new mxRectangle(Math.round(pts[0].x), Math.round(pts[0].y), 1, 1);
+      this.bounds = new mxRectangle(
+        Math.round(pts[0].x),
+        Math.round(pts[0].y),
+        1,
+        1
+      );
 
       for (let i = 1; i < this.points.length; i += 1) {
         if (pts[i] != null) {
@@ -408,7 +413,7 @@ class mxShape {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: getLabelBounds
@@ -417,7 +422,7 @@ class mxShape {
    * given scaled and translated bounds of the shape. This method should not
    * change the rectangle in-place. This implementation returns the given rect.
    */
-  getLabelBounds = rect => {
+  getLabelBounds(rect) {
     const d = mxUtils.getValue(
       this.style,
       mxConstants.STYLE_DIRECTION,
@@ -474,7 +479,7 @@ class mxShape {
       return r;
     }
     return rect;
-  };
+  }
 
   /**
    * Function: getLabelMargins
@@ -483,16 +488,16 @@ class mxShape {
    * computing the label bounds as an <mxRectangle>, where the bottom and right
    * margin are defined in the width and height of the rectangle, respectively.
    */
-  getLabelMargins = rect => {
+  getLabelMargins(rect) {
     return null;
-  };
+  }
 
   /**
    * Function: checkBounds
    *
    * Returns true if the bounds are not null and all of its variables are numeric.
    */
-  checkBounds = () => {
+  checkBounds() {
     return (
       !Number.isNaN(this.scale) &&
       Number.isFinite(this.scale) &&
@@ -505,14 +510,14 @@ class mxShape {
       this.bounds.width > 0 &&
       this.bounds.height > 0
     );
-  };
+  }
 
   /**
    * Function: redrawShape
    *
    * Updates the SVG shape.
    */
-  redrawShape = () => {
+  redrawShape() {
     const canvas = this.createCanvas();
 
     if (canvas != null) {
@@ -530,14 +535,14 @@ class mxShape {
 
       this.destroyCanvas(canvas);
     }
-  };
+  }
 
   /**
    * Function: createCanvas
    *
    * Creates a new canvas for drawing this shape. May return null.
    */
-  createCanvas = () => {
+  createCanvas() {
     let canvas = null;
 
     // LATER: Check if reusing existing DOM nodes improves performance
@@ -562,14 +567,14 @@ class mxShape {
     }
 
     return canvas;
-  };
+  }
 
   /**
    * Function: createSvgCanvas
    *
    * Creates and returns an <mxSvgCanvas2D> for rendering this shape.
    */
-  createSvgCanvas = () => {
+  createSvgCanvas() {
     const canvas = new mxSvgCanvas2D(this.node, false);
     canvas.strokeTolerance = this.pointerEvents ? this.svgStrokeTolerance : 0;
     canvas.pointerEventsValue = this.svgPointerEvents;
@@ -591,26 +596,26 @@ class mxShape {
     }
 
     return canvas;
-  };
+  }
 
   /**
    * Function: redrawHtml
    *
    * Allow optimization by replacing VML with HTML.
    */
-  redrawHtmlShape = () => {
+  redrawHtmlShape() {
     // LATER: Refactor methods
     this.updateHtmlBounds(this.node);
     this.updateHtmlFilters(this.node);
     this.updateHtmlColors(this.node);
-  };
+  }
 
   /**
    * Function: updateHtmlFilters
    *
    * Allow optimization by replacing VML with HTML.
    */
-  updateHtmlFilters = node => {
+  updateHtmlFilters(node) {
     let f = '';
 
     if (this.opacity < 100) {
@@ -661,14 +666,14 @@ class mxShape {
     }
 
     node.style.filter = f;
-  };
+  }
 
   /**
    * Function: updateHtmlColors
    *
    * Allow optimization by replacing VML with HTML.
    */
-  updateHtmlColors = node => {
+  updateHtmlColors(node) {
     let color = this.stroke;
 
     if (color != null && color !== mxConstants.NONE) {
@@ -700,14 +705,14 @@ class mxShape {
     } else {
       this.setTransparentBackgroundImage(node);
     }
-  };
+  }
 
   /**
    * Function: updateHtmlBounds
    *
    * Allow optimization by replacing VML with HTML.
    */
-  updateHtmlBounds = node => {
+  updateHtmlBounds(node) {
     let sw =
       document.documentMode >= 9 ? 0 : Math.ceil(this.strokewidth * this.scale);
     node.style.borderWidth = `${Math.max(1, sw)}px`;
@@ -722,7 +727,7 @@ class mxShape {
 
     node.style.width = `${Math.round(Math.max(0, this.bounds.width + sw))}px`;
     node.style.height = `${Math.round(Math.max(0, this.bounds.height + sw))}px`;
-  };
+  }
 
   /**
    * Function: destroyCanvas
@@ -730,7 +735,7 @@ class mxShape {
    * Destroys the given canvas which was used for drawing. This implementation
    * increments the reference counts on all shared gradients used in the canvas.
    */
-  destroyCanvas = canvas => {
+  destroyCanvas(canvas) {
     // Manages reference counts
     if (canvas instanceof mxSvgCanvas2D) {
       // Increments ref counts
@@ -745,28 +750,28 @@ class mxShape {
       this.releaseSvgGradients(this.oldGradients);
       this.oldGradients = canvas.gradients;
     }
-  };
+  }
 
   /**
    * Function: beforePaint
    *
    * Invoked before paint is called.
    */
-  beforePaint = c => {};
+  beforePaint(c) {}
 
   /**
    * Function: afterPaint
    *
    * Invokes after paint was called.
    */
-  afterPaint = c => {};
+  afterPaint(c) {}
 
   /**
    * Function: paint
    *
    * Generic rendering code.
    */
-  paint = c => {
+  paint(c) {
     let strokeDrawn = false;
 
     if (c != null && this.outline) {
@@ -869,7 +874,7 @@ class mxShape {
       c.rect(x, y, w, h);
       c.stroke();
     }
-  };
+  }
 
   /**
    * Function: configureCanvas
@@ -936,16 +941,16 @@ class mxShape {
    *
    * Returns the bounding box for the gradient box for this shape.
    */
-  getGradientBounds = (c, x, y, w, h) => {
+  getGradientBounds(c, x, y, w, h) {
     return new mxRectangle(x, y, w, h);
-  };
+  }
 
   /**
    * Function: updateTransform
    *
    * Sets the scale and rotation on the given canvas.
    */
-  updateTransform = (c, x, y, w, h) => {
+  updateTransform(c, x, y, w, h) {
     // NOTE: Currently, scale is implemented in state and canvas. This will
     // move to canvas in a later version, so that the states are unscaled
     // and untranslated and do not need an update after zooming or panning.
@@ -957,14 +962,14 @@ class mxShape {
       x + w / 2,
       y + h / 2
     );
-  };
+  }
 
   /**
    * Function: paintVertexShape
    *
    * Paints the vertex shape.
    */
-  paintVertexShape = (c, x, y, w, h) => {
+  paintVertexShape(c, x, y, w, h) {
     this.paintBackground(c, x, y, w, h);
 
     if (
@@ -981,38 +986,42 @@ class mxShape {
       c.setShadow(false);
       this.paintForeground(c, x, y, w, h);
     }
-  };
+  }
 
   /**
    * Function: paintBackground
    *
    * Hook for subclassers. This implementation is empty.
    */
-  paintBackground = (c, x, y, w, h) => {};
+  paintBackground(c, x, y, w, h) {}
 
   /**
    * Function: paintForeground
    *
    * Hook for subclassers. This implementation is empty.
    */
-  paintForeground = (c, x, y, w, h) => {};
+  paintForeground(c, x, y, w, h) {}
 
   /**
    * Function: paintEdgeShape
    *
    * Hook for subclassers. This implementation is empty.
    */
-  paintEdgeShape = (c, pts) => {};
+  paintEdgeShape(c, pts) {}
 
   /**
    * Function: getArcSize
    *
    * Returns the arc size for the given dimension.
    */
-  getArcSize = (w, h) => {
+  getArcSize(w, h) {
     let r = 0;
 
-    if (toBool(mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0))) {
+    if (
+      toBool(
+        mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0)
+      )
+    ) {
       r = Math.min(
         w / 2,
         Math.min(
@@ -1036,14 +1045,14 @@ class mxShape {
     }
 
     return r;
-  };
+  }
 
   /**
    * Function: paintGlassEffect
    *
    * Paints the glass gradient effect.
    */
-  paintGlassEffect = (c, x, y, w, h, arc) => {
+  paintGlassEffect(c, x, y, w, h, arc) {
     const sw = Math.ceil(this.strokewidth / 2);
     const size = 0.4;
 
@@ -1067,14 +1076,14 @@ class mxShape {
 
     c.close();
     c.fill();
-  };
+  }
 
   /**
    * Function: addPoints
    *
    * Paints the given points with rounded corners.
    */
-  addPoints = (c, pts, rounded, arcSize, close, exclude, initialMove) => {
+  addPoints(c, pts, rounded, arcSize, close, exclude, initialMove) {
     if (pts != null && pts.length > 0) {
       initialMove = initialMove != null ? initialMove : true;
       const pe = pts[pts.length - 1];
@@ -1162,7 +1171,7 @@ class mxShape {
         c.lineTo(pe.x, pe.y);
       }
     }
-  };
+  }
 
   /**
    * Function: resetStyles
@@ -1316,7 +1325,7 @@ class mxShape {
         this.flipH = toBool(
           mxUtils.getValue(this.style, 'stencilFlipH', 0) || this.flipH
         );
-        this.flipV =toBool(
+        this.flipV = toBool(
           mxUtils.getValue(this.style, 'stencilFlipV', 0) || this.flipV
         );
       }
@@ -1331,29 +1340,17 @@ class mxShape {
       }
 
       this.isShadow = toBool(
-        mxUtils.getValue(
-          this.style,
-          mxConstants.STYLE_SHADOW,
-          this.isShadow
-        ));
+        mxUtils.getValue(this.style, mxConstants.STYLE_SHADOW, this.isShadow)
+      );
       this.isDashed = toBool(
-        mxUtils.getValue(
-          this.style,
-          mxConstants.STYLE_DASHED,
-          this.isDashed
-        ));
+        mxUtils.getValue(this.style, mxConstants.STYLE_DASHED, this.isDashed)
+      );
       this.isRounded = toBool(
-        mxUtils.getValue(
-          this.style,
-          mxConstants.STYLE_ROUNDED,
-          this.isRounded
-        ));
+        mxUtils.getValue(this.style, mxConstants.STYLE_ROUNDED, this.isRounded)
+      );
       this.glass = toBool(
-        mxUtils.getValue(
-          this.style,
-          mxConstants.STYLE_GLASS,
-          this.glass
-        ));
+        mxUtils.getValue(this.style, mxConstants.STYLE_GLASS, this.glass)
+      );
 
       if (this.fill === mxConstants.NONE) {
         this.fill = null;
@@ -1376,7 +1373,7 @@ class mxShape {
    *
    * cursor - The cursor to be used.
    */
-  setCursor = cursor => {
+  setCursor(cursor) {
     if (cursor == null) {
       cursor = '';
     }
@@ -1386,25 +1383,25 @@ class mxShape {
     if (this.node != null) {
       this.node.style.cursor = cursor;
     }
-  };
+  }
 
   /**
    * Function: getCursor
    *
    * Returns the current cursor.
    */
-  getCursor = () => {
+  getCursor() {
     return this.cursor;
-  };
+  }
 
   /**
    * Function: isRoundable
    *
    * Hook for subclassers.
    */
-  isRoundable = () => {
+  isRoundable() {
     return false;
-  };
+  }
 
   /**
    * Function: updateBoundingBox
@@ -1458,7 +1455,7 @@ class mxShape {
    * Returns a new rectangle that represents the bounding box of the bare shape
    * with no shadows or strokewidths.
    */
-  createBoundingBox = () => {
+  createBoundingBox() {
     const bb = this.bounds.clone();
 
     if (
@@ -1471,7 +1468,7 @@ class mxShape {
     }
 
     return bb;
-  };
+  }
 
   /**
    * Function: augmentBoundingBox
@@ -1493,47 +1490,47 @@ class mxShape {
    *
    * Returns true if the bounds should be inverted.
    */
-  isPaintBoundsInverted = () => {
+  isPaintBoundsInverted() {
     // Stencil implements inversion via aspect
     return (
       this.stencil == null &&
       (this.direction === mxConstants.DIRECTION_NORTH ||
         this.direction === mxConstants.DIRECTION_SOUTH)
     );
-  };
+  }
 
   /**
    * Function: getRotation
    *
    * Returns the rotation from the style.
    */
-  getRotation = () => {
+  getRotation() {
     return this.rotation != null ? this.rotation : 0;
-  };
+  }
 
   /**
    * Function: getTextRotation
    *
    * Returns the rotation for the text label.
    */
-  getTextRotation = () => {
+  getTextRotation() {
     let rot = this.getRotation();
 
     if (
       !toBool(mxUtils.getValue(this.style, mxConstants.STYLE_HORIZONTAL, 1))
     ) {
-      rot += this.verticalTextRotation || -90;  // WARNING WARNING!!!! ===============================================================================================
+      rot += this.verticalTextRotation || -90; // WARNING WARNING!!!! ===============================================================================================
     }
 
     return rot;
-  };
+  }
 
   /**
    * Function: getShapeRotation
    *
    * Returns the actual rotation of the shape.
    */
-  getShapeRotation = () => {
+  getShapeRotation() {
     let rot = this.getRotation();
 
     if (this.direction != null) {
@@ -1547,14 +1544,14 @@ class mxShape {
     }
 
     return rot;
-  };
+  }
 
   /**
    * Function: createTransparentSvgRectangle
    *
    * Adds a transparent rectangle that catches all events.
    */
-  createTransparentSvgRectangle = (x, y, w, h) => {
+  createTransparentSvgRectangle(x, y, w, h) {
     const rect = document.createElementNS(mxConstants.NS_SVG, 'rect');
     rect.setAttribute('x', x);
     rect.setAttribute('y', y);
@@ -1565,7 +1562,7 @@ class mxShape {
     rect.setAttribute('pointer-events', 'all');
 
     return rect;
-  };
+  }
 
   /**
    * Function: setTransparentBackgroundImage
@@ -1574,16 +1571,16 @@ class mxShape {
    *
    * Paints the line shape.
    */
-  setTransparentBackgroundImage = node => {
+  setTransparentBackgroundImage(node) {
     node.style.backgroundImage = `url('${mxClient.imageBasePath}/transparent.gif')`;
-  };
+  }
 
   /**
    * Function: releaseSvgGradients
    *
    * Paints the line shape.
    */
-  releaseSvgGradients = grads => {
+  releaseSvgGradients(grads) {
     if (grads != null) {
       for (const key in grads) {
         const gradient = grads[key];
@@ -1597,7 +1594,7 @@ class mxShape {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: destroy
@@ -1605,7 +1602,7 @@ class mxShape {
    * Destroys the shape by removing it from the DOM and releasing the DOM
    * node associated with the shape using <mxEvent.release>.
    */
-  destroy = () => {
+  destroy() {
     if (this.node != null) {
       mxEvent.release(this.node);
 
@@ -1619,7 +1616,7 @@ class mxShape {
     // Decrements refCount and removes unused
     this.releaseSvgGradients(this.oldGradients);
     this.oldGradients = null;
-  };
+  }
 }
 
 export default mxShape;

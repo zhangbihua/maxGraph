@@ -50,19 +50,19 @@ class mxArrow extends mxShape {
    *
    * Augments the bounding box with the edge width and markers.
    */
-  augmentBoundingBox = bbox => {
+  augmentBoundingBox(bbox) {
     super.augmentBoundingBox.apply(bbox);
 
     const w = Math.max(this.arrowWidth, this.endSize);
     bbox.grow((w / 2 + this.strokewidth) * this.scale);
-  };
+  }
 
   /**
    * Function: paintEdgeShape
    *
    * Paints the line shape.
    */
-  paintEdgeShape = (c, pts) => {
+  paintEdgeShape(c, pts) {
     // Geometry of arrow
     const spacing = mxConstants.ARROW_SPACING;
     const width = mxConstants.ARROW_WIDTH;
@@ -108,7 +108,7 @@ class mxArrow extends mxShape {
     c.close();
 
     c.fillAndStroke();
-  };
+  }
 }
 
 export default mxArrow;

@@ -68,19 +68,19 @@ class mxPoint {
    *
    * Returns true if the given object equals this point.
    */
-  equals = obj => {
+  equals(obj) {
     return obj != null && obj.x == this.x && obj.y == this.y;
-  };
+  }
 
   /**
    * Function: clone
    *
    * Returns a clone of this <mxPoint>.
    */
-  clone = () => {
+  clone() {
     // Handles subclasses as well
     return mxUtils.clone(this);
-  };
+  }
 }
 
 export default mxPoint;

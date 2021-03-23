@@ -5,7 +5,7 @@
  */
 import mxConstants from '../util/mxConstants';
 import mxEvent from '../util/mxEvent';
-import mxRectangle from "../util/mxRectangle";
+import mxRectangle from '../util/mxRectangle';
 
 class mxCellHighlight {
   /**
@@ -113,20 +113,20 @@ class mxCellHighlight {
    *
    * color - String that represents the new highlight color.
    */
-  setHighlightColor = color => {
+  setHighlightColor(color) {
     this.highlightColor = color;
 
     if (this.shape != null) {
       this.shape.stroke = color;
     }
-  };
+  }
 
   /**
    * Function: drawHighlight
    *
    * Creates and returns the highlight shape for the given state.
    */
-  drawHighlight = () => {
+  drawHighlight() {
     this.shape = this.createShape();
     this.repaint();
 
@@ -139,14 +139,14 @@ class mxCellHighlight {
         this.shape.node.parentNode.firstChild
       );
     }
-  };
+  }
 
   /**
    * Function: createShape
    *
    * Creates and returns the highlight shape for the given state.
    */
-  createShape = () => {
+  createShape() {
     const shape = this.graph.cellRenderer.createShape(this.state);
 
     shape.svgStrokeTolerance = this.graph.tolerance;
@@ -168,23 +168,23 @@ class mxCellHighlight {
     }
 
     return shape;
-  };
+  }
 
   /**
    * Function: getStrokeWidth
    *
    * Returns the stroke width.
    */
-  getStrokeWidth = state => {
+  getStrokeWidth(state) {
     return this.strokeWidth;
-  };
+  }
 
   /**
    * Function: repaint
    *
    * Updates the highlight after a change of the model or view.
    */
-  repaint = () => {
+  repaint() {
     if (this.state != null && this.shape != null) {
       this.shape.scale = this.state.view.scale;
 
@@ -213,23 +213,23 @@ class mxCellHighlight {
 
       this.shape.redraw();
     }
-  };
+  }
 
   /**
    * Function: hide
    *
    * Resets the state of the cell marker.
    */
-  hide = () => {
+  hide() {
     this.highlight(null);
-  };
+  }
 
   /**
    * Function: mark
    *
    * Marks the <markedState> and fires a <mark> event.
    */
-  highlight = state => {
+  highlight(state) {
     if (this.state !== state) {
       if (this.shape != null) {
         this.shape.destroy();
@@ -242,14 +242,14 @@ class mxCellHighlight {
         this.drawHighlight();
       }
     }
-  };
+  }
 
   /**
    * Function: isHighlightAt
    *
    * Returns true if this highlight is at the given position.
    */
-  isHighlightAt = (x, y) => {
+  isHighlightAt(x, y) {
     let hit = false;
 
     if (this.shape != null && document.elementFromPoint != null) {
@@ -266,14 +266,14 @@ class mxCellHighlight {
     }
 
     return hit;
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy = () => {
+  destroy() {
     this.graph.getView().removeListener(this.resetHandler);
     this.graph.getView().removeListener(this.repaintHandler);
     this.graph.getModel().removeListener(this.repaintHandler);
@@ -282,7 +282,7 @@ class mxCellHighlight {
       this.shape.destroy();
       this.shape = null;
     }
-  };
+  }
 }
 
 export default mxCellHighlight;

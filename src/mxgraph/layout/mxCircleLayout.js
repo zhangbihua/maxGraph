@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxGraphLayout from "./mxGraphLayout";
+import mxGraphLayout from './mxGraphLayout';
 
 class mxCircleLayout extends mxGraphLayout {
   /**
@@ -87,7 +87,7 @@ class mxCircleLayout extends mxGraphLayout {
    *
    * Implements <mxGraphLayout.execute>.
    */
-  execute = parent => {
+  execute(parent) {
     const model = this.graph.getModel();
 
     // Moves the vertices to build a circle. Makes sure the
@@ -146,7 +146,7 @@ class mxCircleLayout extends mxGraphLayout {
     } finally {
       model.endUpdate();
     }
-  };
+  }
 
   /**
    * Function: getRadius
@@ -154,9 +154,9 @@ class mxCircleLayout extends mxGraphLayout {
    * Returns the radius to be used for the given vertex count. Max is the maximum
    * width or height of all vertices in the layout.
    */
-  getRadius = (count, max) => {
+  getRadius(count, max) {
     return Math.max((count * max) / Math.PI, this.radius);
-  };
+  }
 
   /**
    * Function: circle
@@ -165,7 +165,7 @@ class mxCircleLayout extends mxGraphLayout {
    * of vertices and the given radius. This is called from
    * <execute>.
    */
-  circle = (vertices, r, left, top) => {
+  circle(vertices, r, left, top) {
     const vertexCount = vertices.length;
     const phi = (2 * Math.PI) / vertexCount;
 
@@ -178,7 +178,7 @@ class mxCircleLayout extends mxGraphLayout {
         );
       }
     }
-  };
+  }
 }
 
 export default mxCircleLayout;

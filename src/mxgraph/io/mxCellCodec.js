@@ -61,32 +61,32 @@ class mxCellCodec extends mxObjectCodec {
    *
    * Returns true since this is a cell codec.
    */
-  isCellCodec = () => {
+  isCellCodec() {
     return true;
-  };
+  }
 
   /**
    * Overidden to disable conversion of value to number.
    */
-  isNumericAttribute = (dec, attr, obj) => {
+  isNumericAttribute(dec, attr, obj) {
     return (
       attr.nodeName !== 'value' && super.isNumericAttribute(dec, attr, obj)
     );
-  };
+  }
 
   /**
    * Function: isExcluded
    *
    * Excludes user objects that are XML nodes.
    */
-  isExcluded = (obj, attr, value, isWrite) => {
+  isExcluded(obj, attr, value, isWrite) {
     return (
       super.isExcluded(obj, attr, value, isWrite) ||
       (isWrite &&
         attr === 'value' &&
         value.nodeType === mxConstants.NODETYPE_ELEMENT)
     );
-  };
+  }
 
   /**
    * Function: afterEncode
@@ -94,7 +94,7 @@ class mxCellCodec extends mxObjectCodec {
    * Encodes an <mxCell> and wraps the XML up inside the
    * XML of the user object (inversion).
    */
-  afterEncode = (enc, obj, node) => {
+  afterEncode(enc, obj, node) {
     if (
       obj.value != null &&
       obj.value.nodeType === mxConstants.NODETYPE_ELEMENT
@@ -114,7 +114,7 @@ class mxCellCodec extends mxObjectCodec {
     }
 
     return node;
-  };
+  }
 
   /**
    * Function: beforeDecode
@@ -122,7 +122,7 @@ class mxCellCodec extends mxObjectCodec {
    * Decodes an <mxCell> and uses the enclosing XML node as
    * the user object for the cell (inversion).
    */
-  beforeDecode = (dec, node, obj) => {
+  beforeDecode(dec, node, obj) {
     let inner = node.cloneNode(true);
     const classname = this.getName();
 
@@ -180,7 +180,7 @@ class mxCellCodec extends mxObjectCodec {
     }
 
     return inner;
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxCellCodec());

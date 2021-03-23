@@ -4,16 +4,16 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxGraphLayout from "../mxGraphLayout";
-import mxConstants from "../../util/mxConstants";
-import mxHierarchicalEdgeStyle from "./mxHierarchicalEdgeStyle";
-import mxDictionary from "../../util/mxDictionary";
-import mxRectangle from "../../util/mxRectangle";
-import mxSwimlaneModel from "./model/mxSwimlaneModel";
-import mxObjectIdentity from "../../util/mxObjectIdentity";
-import mxSwimlaneOrdering from "./stage/mxSwimlaneOrdering";
-import mxMedianHybridCrossingReduction from "./stage/mxMedianHybridCrossingReduction";
-import mxCoordinateAssignment from "./stage/mxCoordinateAssignment";
+import mxGraphLayout from '../mxGraphLayout';
+import mxConstants from '../../util/mxConstants';
+import mxHierarchicalEdgeStyle from './mxHierarchicalEdgeStyle';
+import mxDictionary from '../../util/mxDictionary';
+import mxRectangle from '../../util/mxRectangle';
+import mxSwimlaneModel from './model/mxSwimlaneModel';
+import mxObjectIdentity from '../../util/mxObjectIdentity';
+import mxSwimlaneOrdering from './stage/mxSwimlaneOrdering';
+import mxMedianHybridCrossingReduction from './stage/mxMedianHybridCrossingReduction';
+import mxCoordinateAssignment from './stage/mxCoordinateAssignment';
 
 class mxSwimlaneLayout extends mxGraphLayout {
   /**
@@ -206,9 +206,9 @@ class mxSwimlaneLayout extends mxGraphLayout {
    *
    * Returns the internal <mxSwimlaneModel> for this layout algorithm.
    */
-  getModel = () => {
+  getModel() {
     return this.model;
-  };
+  }
 
   /**
    * Function: execute
@@ -220,7 +220,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * parent - Parent <mxCell> that contains the children to be laid out.
    * swimlanes - Ordered array of swimlanes to be laid out
    */
-  execute = (parent, swimlanes) => {
+  execute(parent, swimlanes) {
     this.parent = parent;
     const { model } = this.graph;
     this.edgesCache = new mxDictionary();
@@ -309,7 +309,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     } finally {
       model.endUpdate();
     }
-  };
+  }
 
   /**
    * Function: updateGroupBounds
@@ -318,7 +318,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * all child vertices.
    *
    */
-  updateGroupBounds = () => {
+  updateGroupBounds() {
     // Get all vertices and edge in the layout
     const cells = [];
     const { model } = this;
@@ -398,7 +398,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
         this.graph.moveCells(children, -x, geo.y - y);
       }
     }
-  };
+  }
 
   /**
    * Function: findRoots
@@ -414,7 +414,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * parent - <mxCell> whose children should be checked.
    * vertices - array of vertices to limit search to
    */
-  findRoots = (parent, vertices) => {
+  findRoots(parent, vertices) {
     const roots = [];
 
     if (parent != null && vertices != null) {
@@ -469,7 +469,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     }
 
     return roots;
-  };
+  }
 
   /**
    * Function: getEdges
@@ -480,7 +480,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    *
    * cell - <mxCell> whose edges should be returned.
    */
-  getEdges = cell => {
+  getEdges(cell) {
     const cachedEdges = this.edgesCache.get(cell);
 
     if (cachedEdges != null) {
@@ -534,7 +534,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     this.edgesCache.put(cell, result);
 
     return result;
-  };
+  }
 
   /**
    * Function: getVisibleTerminal
@@ -546,7 +546,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * edge - <mxCell> whose edges should be returned.
    * source - Boolean that specifies whether the source or target terminal is to be returned
    */
-  getVisibleTerminal = (edge, source) => {
+  getVisibleTerminal(edge, source) {
     let terminalCache = this.edgesTargetTermCache;
 
     if (source) {
@@ -582,7 +582,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     }
 
     return terminal;
-  };
+  }
 
   /**
    * Function: run
@@ -592,7 +592,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * routing changes made. It runs each stage of the layout that has been
    * created.
    */
-  run = parent => {
+  run(parent) {
     // Separate out unconnected hierarchies
     const hierarchyVertices = [];
     const allVertexSet = Object();
@@ -700,14 +700,14 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
     this.crossingStage(parent);
     this.placementStage(0, parent);
-  };
+  }
 
   /**
    * Function: filterDescendants
    *
    * Creates an array of descendant cells
    */
-  filterDescendants = (cell, result) => {
+  filterDescendants(cell, result) {
     const { model } = this.graph;
 
     if (
@@ -735,7 +735,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: isPort
@@ -747,13 +747,13 @@ class mxSwimlaneLayout extends mxGraphLayout {
    *
    * cell - <mxCell> that represents the port.
    */
-  isPort = cell => {
+  isPort(cell) {
     if (cell.geometry.relative) {
       return true;
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: getEdgesBetween
@@ -767,7 +767,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * target -
    * directed -
    */
-  getEdgesBetween = (source, target, directed) => {
+  getEdgesBetween(source, target, directed) {
     directed = directed != null ? directed : false;
     const edges = this.getEdges(source);
     const result = [];
@@ -787,7 +787,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     }
 
     return result;
-  };
+  }
 
   /**
    * Traverses the (directed) graph invoking the given function for each
@@ -806,7 +806,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * allVertices - Array of cell paths for the visited cells.
    * swimlaneIndex - the laid out order index of the swimlane vertex is contained in
    */
-  traverse = (
+  traverse(
     vertex,
     directed,
     edge,
@@ -815,7 +815,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     hierarchyVertices,
     filledVertexSet,
     swimlaneIndex
-  ) => {
+  ) {
     if (vertex != null && allVertices != null) {
       // Has this vertex been seen before in any traversal
       // And if the filled vertex set is populated, only
@@ -903,44 +903,44 @@ class mxSwimlaneLayout extends mxGraphLayout {
     }
 
     return currentComp;
-  };
+  }
 
   /**
    * Function: cycleStage
    *
    * Executes the cycle stage using mxMinimumCycleRemover.
    */
-  cycleStage = parent => {
+  cycleStage(parent) {
     const cycleStage = new mxSwimlaneOrdering(this);
     cycleStage.execute(parent);
-  };
+  }
 
   /**
    * Function: layeringStage
    *
    * Implements first stage of a Sugiyama layout.
    */
-  layeringStage = () => {
+  layeringStage() {
     this.model.initialRank();
     this.model.fixRanks();
-  };
+  }
 
   /**
    * Function: crossingStage
    *
    * Executes the crossing stage using mxMedianHybridCrossingReduction.
    */
-  crossingStage = parent => {
+  crossingStage(parent) {
     const crossingStage = new mxMedianHybridCrossingReduction(this);
     crossingStage.execute(parent);
-  };
+  }
 
   /**
    * Function: placementStage
    *
    * Executes the placement stage using mxCoordinateAssignment.
    */
-  placementStage = (initialX, parent) => {
+  placementStage(initialX, parent) {
     const placementStage = new mxCoordinateAssignment(
       this,
       this.intraCellSpacing,
@@ -953,7 +953,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     placementStage.execute(parent);
 
     return placementStage.limitX + this.interHierarchySpacing;
-  };
+  }
 }
 
 export default mxSwimlaneLayout;

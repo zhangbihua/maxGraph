@@ -40,16 +40,16 @@ class mxRhombus extends mxShape {
    *
    * Adds roundable support.
    */
-  isRoundable = () => {
+  isRoundable() {
     return true;
-  };
+  }
 
   /**
    * Function: paintVertexShape
    *
    * Generic painting implementation.
    */
-  paintVertexShape = (c, x, y, w, h) => {
+  paintVertexShape(c, x, y, w, h) {
     const hw = w / 2;
     const hh = h / 2;
 
@@ -73,7 +73,7 @@ class mxRhombus extends mxShape {
       true
     );
     c.fillAndStroke();
-  };
+  }
 }
 
 export default mxRhombus;

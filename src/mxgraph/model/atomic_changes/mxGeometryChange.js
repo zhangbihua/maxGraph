@@ -22,7 +22,7 @@ class mxGeometryChange {
    * Changes the geometry of <cell> ro <previous> using
    * <mxGraphModel.geometryForCellChanged>.
    */
-  execute = () => {
+  execute() {
     if (this.cell != null) {
       this.geometry = this.previous;
       this.previous = this.model.geometryForCellChanged(
@@ -30,7 +30,7 @@ class mxGeometryChange {
         this.previous
       );
     }
-  };
+  }
 }
 
 export default mxGeometryChange;

@@ -28,16 +28,16 @@ class mxDefaultPopupMenuCodec extends mxObjectCodec {
    *
    * Returns null.
    */
-  encode = (enc, obj) => {
+  encode(enc, obj) {
     return null;
-  };
+  }
 
   /**
    * Function: decode
    *
    * Uses the given node as the config for <mxDefaultPopupMenu>.
    */
-  decode = (dec, node, into) => {
+  decode(dec, node, into) {
     const inc = node.getElementsByTagName('include')[0];
 
     if (inc != null) {
@@ -47,7 +47,7 @@ class mxDefaultPopupMenuCodec extends mxObjectCodec {
     }
 
     return into;
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxDefaultPopupMenuCodec());

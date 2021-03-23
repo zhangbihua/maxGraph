@@ -61,24 +61,24 @@ class mxArrowConnector extends mxShape {
    *
    * Hook for subclassers.
    */
-  isRoundable = () => {
+  isRoundable() {
     return true;
-  };
+  }
 
   /**
    * Variable: resetStyles
    *
    * Overrides mxShape to reset spacing.
    */
-  resetStyles = () => {
+  resetStyles() {
     super.resetStyles();
     this.arrowSpacing = mxConstants.ARROW_SPACING;
-  };
+  }
 
   /**
    * Overrides apply to get smooth transition from default start- and endsize.
    */
-  apply = state => {
+  apply(state) {
     super.apply(state);
 
     if (this.style != null) {
@@ -95,14 +95,14 @@ class mxArrowConnector extends mxShape {
           mxConstants.ARROW_SIZE / 5
         ) * 3;
     }
-  };
+  }
 
   /**
    * Function: augmentBoundingBox
    *
    * Augments the bounding box with the edge width and markers.
    */
-  augmentBoundingBox = bbox => {
+  augmentBoundingBox(bbox) {
     super.augmentBoundingBox(bbox);
 
     let w = this.getEdgeWidth();
@@ -116,14 +116,14 @@ class mxArrowConnector extends mxShape {
     }
 
     bbox.grow((w / 2 + this.strokewidth) * this.scale);
-  };
+  }
 
   /**
    * Function: paintEdgeShape
    *
    * Paints the line shape.
    */
-  paintEdgeShape = (c, pts) => {
+  paintEdgeShape(c, pts) {
     // Geometry of arrow
     let strokeWidth = this.strokewidth;
 
@@ -426,14 +426,14 @@ class mxArrowConnector extends mxShape {
         c.end();
       }
     }
-  };
+  }
 
   /**
    * Function: paintMarker
    *
    * Paints the marker.
    */
-  paintMarker = (
+  paintMarker(
     c,
     ptX,
     ptY,
@@ -444,7 +444,7 @@ class mxArrowConnector extends mxShape {
     edgeWidth,
     spacing,
     initialMove
-  ) => {
+  ) {
     const widthArrowRatio = edgeWidth / arrowWidth;
     const orthx = (edgeWidth * ny) / 2;
     const orthy = (-edgeWidth * nx) / 2;
@@ -468,59 +468,59 @@ class mxArrowConnector extends mxShape {
       ptY + orthy / widthArrowRatio + spaceY
     );
     c.lineTo(ptX + orthx + spaceX, ptY + orthy + spaceY);
-  };
+  }
 
   /**
    * Function: isArrowRounded
    *
    * Returns wether the arrow is rounded
    */
-  isArrowRounded = () => {
+  isArrowRounded() {
     return this.isRounded;
-  };
+  }
 
   /**
    * Function: getStartArrowWidth
    *
    * Returns the width of the start arrow
    */
-  getStartArrowWidth = () => {
+  getStartArrowWidth() {
     return mxConstants.ARROW_WIDTH;
-  };
+  }
 
   /**
    * Function: getEndArrowWidth
    *
    * Returns the width of the end arrow
    */
-  getEndArrowWidth = () => {
+  getEndArrowWidth() {
     return mxConstants.ARROW_WIDTH;
-  };
+  }
 
   /**
    * Function: getEdgeWidth
    *
    * Returns the width of the body of the edge
    */
-  getEdgeWidth = () => {
+  getEdgeWidth() {
     return mxConstants.ARROW_WIDTH / 3;
-  };
+  }
 
   /**
    * Function: isOpenEnded
    *
    * Returns whether the ends of the shape are drawn
    */
-  isOpenEnded = () => {
+  isOpenEnded() {
     return false;
-  };
+  }
 
   /**
    * Function: isMarkerStart
    *
    * Returns whether the start marker is drawn
    */
-  isMarkerStart = () => {
+  isMarkerStart() {
     return (
       mxUtils.getValue(
         this.style,
@@ -528,14 +528,14 @@ class mxArrowConnector extends mxShape {
         mxConstants.NONE
       ) !== mxConstants.NONE
     );
-  };
+  }
 
   /**
    * Function: isMarkerEnd
    *
    * Returns whether the end marker is drawn
    */
-  isMarkerEnd = () => {
+  isMarkerEnd() {
     return (
       mxUtils.getValue(
         this.style,
@@ -543,7 +543,7 @@ class mxArrowConnector extends mxShape {
         mxConstants.NONE
       ) !== mxConstants.NONE
     );
-  };
+  }
 }
 
 export default mxArrowConnector;

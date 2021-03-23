@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxEvent from "../util/mxEvent";
-import mxUtils from "../util/mxUtils";
+import mxEvent from '../util/mxEvent';
+import mxUtils from '../util/mxUtils';
 
 class mxKeyHandler {
   /**
@@ -145,9 +145,9 @@ class mxKeyHandler {
    * Returns true if events are handled. This implementation returns
    * <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
@@ -158,9 +158,9 @@ class mxKeyHandler {
    *
    * enabled - Boolean that specifies the new enabled state.
    */
-  setEnabled = enabled => {
+  setEnabled(enabled) {
     this.enabled = enabled;
-  };
+  }
 
   /**
    * Function: bindKey
@@ -173,9 +173,9 @@ class mxKeyHandler {
    * code - Integer that specifies the keycode.
    * funct - JavaScript function that takes the key event as an argument.
    */
-  bindKey = (code, funct) => {
+  bindKey(code, funct) {
     this.normalKeys[code] = funct;
-  };
+  }
 
   /**
    * Function: bindShiftKey
@@ -188,9 +188,9 @@ class mxKeyHandler {
    * code - Integer that specifies the keycode.
    * funct - JavaScript function that takes the key event as an argument.
    */
-  bindShiftKey = (code, funct) => {
+  bindShiftKey(code, funct) {
     this.shiftKeys[code] = funct;
-  };
+  }
 
   /**
    * Function: bindControlKey
@@ -203,9 +203,9 @@ class mxKeyHandler {
    * code - Integer that specifies the keycode.
    * funct - JavaScript function that takes the key event as an argument.
    */
-  bindControlKey = (code, funct) => {
+  bindControlKey(code, funct) {
     this.controlKeys[code] = funct;
-  };
+  }
 
   /**
    * Function: bindControlShiftKey
@@ -218,9 +218,9 @@ class mxKeyHandler {
    * code - Integer that specifies the keycode.
    * funct - JavaScript function that takes the key event as an argument.
    */
-  bindControlShiftKey = (code, funct) => {
+  bindControlShiftKey(code, funct) {
     this.controlShiftKeys[code] = funct;
-  };
+  }
 
   /**
    * Function: isControlDown
@@ -231,9 +231,9 @@ class mxKeyHandler {
    *
    * evt - Key event whose control key pressed state should be returned.
    */
-  isControlDown = evt => {
+  isControlDown(evt) {
     return mxEvent.isControlDown(evt);
-  };
+  }
 
   /**
    * Function: getFunction
@@ -245,7 +245,7 @@ class mxKeyHandler {
    *
    * evt - Key event whose associated function should be returned.
    */
-  getFunction = evt => {
+  getFunction(evt) {
     if (evt != null && !mxEvent.isAltDown(evt)) {
       if (this.isControlDown(evt)) {
         if (mxEvent.isShiftDown(evt)) {
@@ -260,7 +260,7 @@ class mxKeyHandler {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: isGraphEvent
@@ -274,7 +274,7 @@ class mxKeyHandler {
    *
    * evt - Key event that represents the keystroke.
    */
-  isGraphEvent = evt => {
+  isGraphEvent(evt) {
     const source = mxEvent.getSource(evt);
 
     // Accepts events from the target object or
@@ -290,7 +290,7 @@ class mxKeyHandler {
 
     // Accepts events from inside the container
     return mxUtils.isAncestorNode(this.graph.container, source);
-  };
+  }
 
   /**
    * Function: keyDown
@@ -304,7 +304,7 @@ class mxKeyHandler {
    *
    * evt - Key event that represents the keystroke.
    */
-  keyDown = evt => {
+  keyDown(evt) {
     if (this.isEnabledForEvent(evt)) {
       // Cancels the editing if escape is pressed
       if (evt.keyCode === 27 /* Escape */) {
@@ -321,7 +321,7 @@ class mxKeyHandler {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: isEnabledForEvent
@@ -336,14 +336,14 @@ class mxKeyHandler {
    *
    * evt - Key event that represents the keystroke.
    */
-  isEnabledForEvent = evt => {
+  isEnabledForEvent(evt) {
     return (
       this.graph.isEnabled() &&
       !mxEvent.isConsumed(evt) &&
       this.isGraphEvent(evt) &&
       this.isEnabled()
     );
-  };
+  }
 
   /**
    * Function: isEventIgnored
@@ -355,9 +355,9 @@ class mxKeyHandler {
    *
    * evt - Key event that represents the keystroke.
    */
-  isEventIgnored = evt => {
+  isEventIgnored(evt) {
     return this.graph.isEditing();
-  };
+  }
 
   /**
    * Function: escape
@@ -371,11 +371,11 @@ class mxKeyHandler {
    * evt - Key event that represents the keystroke. Possible keycode in this
    * case is 27 (ESCAPE).
    */
-  escape = evt => {
+  escape(evt) {
     if (this.graph.isEscapeEnabled()) {
       this.graph.escape(evt);
     }
-  };
+  }
 
   /**
    * Function: destroy
@@ -384,14 +384,14 @@ class mxKeyHandler {
    * normally not need to be called, it is called automatically when the
    * window unloads (in IE).
    */
-  destroy = () => {
+  destroy() {
     if (this.target != null && this.keydownHandler != null) {
       mxEvent.removeListener(this.target, 'keydown', this.keydownHandler);
       this.keydownHandler = null;
     }
 
     this.target = null;
-  };
+  }
 }
 
 export default mxKeyHandler;

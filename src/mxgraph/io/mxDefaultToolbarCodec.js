@@ -26,9 +26,9 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
    *
    * Returns null.
    */
-  encode = (enc, obj) => {
+  encode(enc, obj) {
     return null;
-  };
+  }
 
   /**
    * Function: decode
@@ -122,7 +122,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
    * </mxDefaultToolbar>
    * (end)
    */
-  decode = (dec, node, into) => {
+  decode(dec, node, into) {
     if (into != null) {
       const { editor } = into;
       node = node.firstChild;
@@ -288,7 +288,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
     }
 
     return into;
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxDefaultToolbarCodec());

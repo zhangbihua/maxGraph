@@ -327,27 +327,27 @@ class mxGraphHandler {
    *
    * Returns <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
    *
    * Sets <enabled>.
    */
-  setEnabled = value => {
+  setEnabled(value) {
     this.enabled = value;
-  };
+  }
 
   /**
    * Function: isCloneEnabled
    *
    * Returns <cloneEnabled>.
    */
-  isCloneEnabled = () => {
+  isCloneEnabled() {
     return this.cloneEnabled;
-  };
+  }
 
   /**
    * Function: setCloneEnabled
@@ -358,63 +358,63 @@ class mxGraphHandler {
    *
    * value - Boolean that specifies the new clone enabled state.
    */
-  setCloneEnabled = value => {
+  setCloneEnabled(value) {
     this.cloneEnabled = value;
-  };
+  }
 
   /**
    * Function: isMoveEnabled
    *
    * Returns <moveEnabled>.
    */
-  isMoveEnabled = () => {
+  isMoveEnabled() {
     return this.moveEnabled;
-  };
+  }
 
   /**
    * Function: setMoveEnabled
    *
    * Sets <moveEnabled>.
    */
-  setMoveEnabled = value => {
+  setMoveEnabled(value) {
     this.moveEnabled = value;
-  };
+  }
 
   /**
    * Function: isSelectEnabled
    *
    * Returns <selectEnabled>.
    */
-  isSelectEnabled = () => {
+  isSelectEnabled() {
     return this.selectEnabled;
-  };
+  }
 
   /**
    * Function: setSelectEnabled
    *
    * Sets <selectEnabled>.
    */
-  setSelectEnabled = value => {
+  setSelectEnabled(value) {
     this.selectEnabled = value;
-  };
+  }
 
   /**
    * Function: isRemoveCellsFromParent
    *
    * Returns <removeCellsFromParent>.
    */
-  isRemoveCellsFromParent = () => {
+  isRemoveCellsFromParent() {
     return this.removeCellsFromParent;
-  };
+  }
 
   /**
    * Function: setRemoveCellsFromParent
    *
    * Sets <removeCellsFromParent>.
    */
-  setRemoveCellsFromParent = value => {
+  setRemoveCellsFromParent(value) {
     this.removeCellsFromParent = value;
-  };
+  }
 
   /**
    * Function: isPropagateSelectionCell
@@ -422,7 +422,7 @@ class mxGraphHandler {
    * Returns true if the given cell and parent should propagate
    * selection state to the parent.
    */
-  isPropagateSelectionCell = (cell, immediate, me) => {
+  isPropagateSelectionCell(cell, immediate, me) {
     const parent = this.graph.model.getParent(cell);
 
     if (immediate) {
@@ -444,7 +444,7 @@ class mxGraphHandler {
       (this.graph.isToggleEvent(me.getEvent()) ||
         !this.graph.isCellSelected(parent))
     );
-  };
+  }
 
   /**
    * Function: getInitialCellForEvent
@@ -452,7 +452,7 @@ class mxGraphHandler {
    * Hook to return initial cell for the given event. This returns
    * the topmost cell that is not a swimlane or is selected.
    */
-  getInitialCellForEvent = me => {
+  getInitialCellForEvent(me) {
     let state = me.getState();
 
     if (
@@ -478,14 +478,14 @@ class mxGraphHandler {
     }
 
     return state != null ? state.cell : null;
-  };
+  }
 
   /**
    * Function: isDelayedSelection
    *
    * Returns true if the cell or one of its ancestors is selected.
    */
-  isDelayedSelection = (cell, me) => {
+  isDelayedSelection(cell, me) {
     if (
       !this.graph.isToggleEvent(me.getEvent()) ||
       !mxEvent.isAltDown(me.getEvent())
@@ -503,14 +503,14 @@ class mxGraphHandler {
       this.graph.isToggleEvent(me.getEvent()) &&
       !mxEvent.isAltDown(me.getEvent())
     );
-  };
+  }
 
   /**
    * Function: selectDelayed
    *
    * Implements the delayed selection for the given mouse event.
    */
-  selectDelayed = me => {
+  selectDelayed(me) {
     if (!this.graph.popupMenuHandler.isPopupTrigger(me)) {
       let cell = me.getCell();
 
@@ -520,14 +520,14 @@ class mxGraphHandler {
 
       this.selectCellForEvent(cell, me);
     }
-  };
+  }
 
   /**
    * Function: selectCellForEvent
    *
    * Selects the given cell for the given <mxMouseEvent>.
    */
-  selectCellForEvent = (cell, me) => {
+  selectCellForEvent(cell, me) {
     const state = this.graph.view.getState(cell);
 
     if (state != null) {
@@ -556,7 +556,7 @@ class mxGraphHandler {
     }
 
     return cell;
-  };
+  }
 
   /**
    * Function: consumeMouseEvent
@@ -577,9 +577,9 @@ class mxGraphHandler {
    * }
    * </code>
    */
-  consumeMouseEvent = (evtName, me) => {
+  consumeMouseEvent(evtName, me) {
     me.consume();
-  };
+  }
 
   /**
    * Function: mouseDown
@@ -588,7 +588,7 @@ class mxGraphHandler {
    * it. By consuming the event all subsequent events of the gesture are
    * redirected to this handler.
    */
-  mouseDown = (sender, me) => {
+  mouseDown(sender, me) {
     if (
       !me.isConsumed() &&
       this.isEnabled() &&
@@ -628,14 +628,14 @@ class mxGraphHandler {
         this.consumeMouseEvent(mxEvent.MOUSE_DOWN, me);
       }
     }
-  };
+  }
 
   /**
    * Function: getGuideStates
    *
    * Creates an array of cell states which should be used as guides.
    */
-  getGuideStates = () => {
+  getGuideStates() {
     const parent = this.graph.getDefaultParent();
     const model = this.graph.getModel();
 
@@ -651,7 +651,7 @@ class mxGraphHandler {
     return this.graph.view.getCellStates(
       model.filterDescendants(filter, parent)
     );
-  };
+  }
 
   /**
    * Function: getCells
@@ -665,12 +665,12 @@ class mxGraphHandler {
    *
    * initialCell - <mxCell> that triggered this handler.
    */
-  getCells = initialCell => {
+  getCells(initialCell) {
     if (!this.delayedSelection && this.graph.isCellMovable(initialCell)) {
       return [initialCell];
     }
     return this.graph.getMovableCells(this.graph.getSelectionCells());
-  };
+  }
 
   /**
    * Function: getPreviewBounds
@@ -678,7 +678,7 @@ class mxGraphHandler {
    * Returns the <mxRectangle> used as the preview bounds for
    * moving the given cells.
    */
-  getPreviewBounds = cells => {
+  getPreviewBounds(cells) {
     const bounds = this.getBoundingBox(cells);
 
     if (bounds != null) {
@@ -709,7 +709,7 @@ class mxGraphHandler {
     }
 
     return bounds;
-  };
+  }
 
   /**
    * Function: getBoundingBox
@@ -724,7 +724,7 @@ class mxGraphHandler {
    *
    * cells - Array of <mxCells> whose bounding box should be returned.
    */
-  getBoundingBox = cells => {
+  getBoundingBox(cells) {
     let result = null;
 
     if (cells != null && cells.length > 0) {
@@ -756,14 +756,14 @@ class mxGraphHandler {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: createPreviewShape
    *
    * Creates the shape used to draw the preview for the given bounds.
    */
-  createPreviewShape = bounds => {
+  createPreviewShape(bounds) {
     const shape = new mxRectangleShape(bounds, null, this.previewColor);
     shape.isDashed = true;
 
@@ -787,14 +787,14 @@ class mxGraphHandler {
     }
 
     return shape;
-  };
+  }
 
   /**
    * Function: start
    *
    * Starts the handling of the mouse gesture.
    */
-  start = (cell, x, y, cells) => {
+  start(cell, x, y, cells) {
     this.cell = cell;
     this.first = mxUtils.convertPoint(this.graph.container, x, y);
     this.cells = cells != null ? cells : this.getCells(this.cell);
@@ -843,14 +843,14 @@ class mxGraphHandler {
         );
       };
     }
-  };
+  }
 
   /**
    * Function: addStates
    *
    * Adds the states for the given cell recursively to the given dictionary.
    */
-  addStates = (cell, dict) => {
+  addStates(cell, dict) {
     const state = this.graph.view.getState(cell);
     let count = 0;
 
@@ -866,16 +866,16 @@ class mxGraphHandler {
     }
 
     return count;
-  };
+  }
 
   /**
    * Function: isCellMoving
    *
    * Returns true if the given cell is currently being moved.
    */
-  isCellMoving = cell => {
+  isCellMoving(cell) {
     return this.allCells.get(cell) != null;
-  };
+  }
 
   /**
    * Function: useGuidesForEvent
@@ -883,26 +883,26 @@ class mxGraphHandler {
    * Returns true if the guides should be used for the given <mxMouseEvent>.
    * This implementation returns <mxGuide.isEnabledForEvent>.
    */
-  useGuidesForEvent = me => {
+  useGuidesForEvent(me) {
     return this.guide != null
       ? this.guide.isEnabledForEvent(me.getEvent()) &&
           !this.graph.isConstrainedEvent(me.getEvent())
       : true;
-  };
+  }
 
   /**
    * Function: snap
    *
    * Snaps the given vector to the grid and returns the given mxPoint instance.
    */
-  snap = vector => {
+  snap(vector) {
     const scale = this.scaleGrid ? this.graph.view.scale : 1;
 
     vector.x = this.graph.snap(vector.x / scale) * scale;
     vector.y = this.graph.snap(vector.y / scale) * scale;
 
     return vector;
-  };
+  }
 
   /**
    * Function: getDelta
@@ -910,7 +910,7 @@ class mxGraphHandler {
    * Returns an <mxPoint> that represents the vector for moving the cells
    * for the given <mxMouseEvent>.
    */
-  getDelta = me => {
+  getDelta(me) {
     const point = mxUtils.convertPoint(
       this.graph.container,
       me.getX(),
@@ -921,21 +921,21 @@ class mxGraphHandler {
       point.x - this.first.x - this.graph.panDx,
       point.y - this.first.y - this.graph.panDy
     );
-  };
+  }
 
   /**
    * Function: updateHint
    *
    * Hook for subclassers do show details while the handler is active.
    */
-  updateHint = me => {};
+  updateHint(me) {}
 
   /**
    * Function: removeHint
    *
    * Hooks for subclassers to hide details when the handler gets inactive.
    */
-  removeHint = () => {};
+  removeHint() {}
 
   /**
    * Function: roundLength
@@ -944,25 +944,25 @@ class mxGraphHandler {
    * numbers coming in should be rounded if no half steps are allowed (ie for non
    * aligned standard moving where pixel steps should be preferred).
    */
-  roundLength = length => {
+  roundLength(length) {
     return Math.round(length * 100) / 100;
-  };
+  }
 
   /**
    * Function: isValidDropTarget
    *
    * Returns true if the given cell is a valid drop target.
    */
-  isValidDropTarget = (target, me) => {
+  isValidDropTarget(target, me) {
     return this.graph.model.getParent(this.cell) !== target;
-  };
+  }
 
   /**
    * Function: checkPreview
    *
    * Updates the preview if cloning state has changed.
    */
-  checkPreview = () => {
+  checkPreview() {
     if (this.livePreviewActive && this.cloning) {
       this.resetLivePreview();
       this.livePreviewActive = false;
@@ -978,7 +978,7 @@ class mxGraphHandler {
     } else if (!this.livePreviewUsed && this.shape == null) {
       this.shape = this.createPreviewShape(this.bounds);
     }
-  };
+  }
 
   /**
    * Function: mouseMove
@@ -986,7 +986,7 @@ class mxGraphHandler {
    * Handles the event by highlighting possible drop targets and updating the
    * preview.
    */
-  mouseMove = (sender, me) => {
+  mouseMove(sender, me) {
     const { graph } = this;
 
     if (
@@ -1145,14 +1145,14 @@ class mxGraphHandler {
         me.sourceState.setCursor(cursor);
       }
     }
-  };
+  }
 
   /**
    * Function: updatePreview
    *
    * Updates the bounds of the preview shape.
    */
-  updatePreview = remote => {
+  updatePreview(remote) {
     if (this.livePreviewUsed && !remote) {
       if (this.cells != null) {
         this.setHandlesVisibleForCells(
@@ -1164,14 +1164,14 @@ class mxGraphHandler {
     } else {
       this.updatePreviewShape();
     }
-  };
+  }
 
   /**
    * Function: updatePreviewShape
    *
    * Updates the bounds of the preview shape.
    */
-  updatePreviewShape = () => {
+  updatePreviewShape() {
     if (this.shape != null && this.pBounds != null) {
       this.shape.bounds = new mxRectangle(
         Math.round(this.pBounds.x + this.currentDx),
@@ -1181,14 +1181,14 @@ class mxGraphHandler {
       );
       this.shape.redraw();
     }
-  };
+  }
 
   /**
    * Function: updateLivePreview
    *
    * Updates the bounds of the preview shape.
    */
-  updateLivePreview = (dx, dy) => {
+  updateLivePreview(dx, dy) {
     if (!this.suspended) {
       const states = [];
 
@@ -1352,14 +1352,14 @@ class mxGraphHandler {
         this.resetPreviewStates(states);
       }
     }
-  };
+  }
 
   /**
    * Function: redrawHandles
    *
    * Redraws the preview shape for the given states array.
    */
-  redrawHandles = states => {
+  redrawHandles(states) {
     for (let i = 0; i < states.length; i += 1) {
       const handler = this.graph.selectionCellsHandler.getHandler(
         states[i][0].cell
@@ -1369,25 +1369,25 @@ class mxGraphHandler {
         handler.redraw(true);
       }
     }
-  };
+  }
 
   /**
    * Function: resetPreviewStates
    *
    * Resets the given preview states array.
    */
-  resetPreviewStates = states => {
+  resetPreviewStates(states) {
     for (let i = 0; i < states.length; i += 1) {
       states[i][0].setState(states[i][1]);
     }
-  };
+  }
 
   /**
    * Function: suspend
    *
    * Suspends the livew preview.
    */
-  suspend = () => {
+  suspend() {
     if (!this.suspended) {
       if (this.livePreviewUsed) {
         this.updateLivePreview(0, 0);
@@ -1403,14 +1403,14 @@ class mxGraphHandler {
 
       this.suspended = true;
     }
-  };
+  }
 
   /**
    * Function: resume
    *
    * Suspends the livew preview.
    */
-  resume = () => {
+  resume() {
     if (this.suspended) {
       this.suspended = null;
 
@@ -1426,14 +1426,14 @@ class mxGraphHandler {
         this.guide.setVisible(true);
       }
     }
-  };
+  }
 
   /**
    * Function: resetLivePreview
    *
    * Resets the livew preview.
    */
-  resetLivePreview = () => {
+  resetLivePreview() {
     if (this.allCells != null) {
       this.allCells.visit((key, state) => {
         // Restores event handling
@@ -1473,7 +1473,7 @@ class mxGraphHandler {
       // Repaints all invalid states
       this.graph.view.validate();
     }
-  };
+  }
 
   /**
    * Function: setHandlesVisibleForCells
@@ -1486,7 +1486,7 @@ class mxGraphHandler {
    * visible - Boolean that specifies if the handles should be visible.
    * force - Forces an update of the handler regardless of the last used value.
    */
-  setHandlesVisibleForCells = (cells, visible, force) => {
+  setHandlesVisibleForCells(cells, visible, force) {
     if (force || this.handlesVisible !== visible) {
       this.handlesVisible = visible;
 
@@ -1502,7 +1502,7 @@ class mxGraphHandler {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: setHighlightColor
@@ -1513,18 +1513,18 @@ class mxGraphHandler {
    *
    * color - String that represents the new highlight color.
    */
-  setHighlightColor = color => {
+  setHighlightColor(color) {
     if (this.highlight != null) {
       this.highlight.setHighlightColor(color);
     }
-  };
+  }
 
   /**
    * Function: mouseUp
    *
    * Handles the event by applying the changes to the selection cells.
    */
-  mouseUp = (sender, me) => {
+  mouseUp(sender, me) {
     if (!me.isConsumed()) {
       if (this.livePreviewUsed) {
         this.resetLivePreview();
@@ -1598,14 +1598,14 @@ class mxGraphHandler {
     }
 
     this.reset();
-  };
+  }
 
   /**
    * Function: reset
    *
    * Resets the state of this handler.
    */
-  reset = () => {
+  reset() {
     if (this.livePreviewUsed) {
       this.resetLivePreview();
       this.setHandlesVisibleForCells(
@@ -1633,7 +1633,7 @@ class mxGraphHandler {
     this.first = null;
     this.cells = null;
     this.cell = null;
-  };
+  }
 
   /**
    * Function: shouldRemoveCellsFromParent
@@ -1641,7 +1641,7 @@ class mxGraphHandler {
    * Returns true if the given cells should be removed from the parent for the specified
    * mousereleased event.
    */
-  shouldRemoveCellsFromParent = (parent, cells, evt) => {
+  shouldRemoveCellsFromParent(parent, cells, evt) {
     if (this.graph.getModel().isVertex(parent)) {
       const pState = this.graph.getView().getState(parent);
 
@@ -1667,14 +1667,14 @@ class mxGraphHandler {
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: moveCells
    *
    * Moves the given cells by the specified amount.
    */
-  moveCells = (cells, dx, dy, clone, target, evt) => {
+  moveCells(cells, dx, dy, clone, target, evt) {
     if (clone) {
       cells = this.graph.getCloneableCells(cells);
     }
@@ -1745,14 +1745,14 @@ class mxGraphHandler {
     if (this.isSelectEnabled() && this.scrollOnMove) {
       this.graph.scrollCellToVisible(cells[0]);
     }
-  };
+  }
 
   /**
    * Function: shouldRemoveParent
    *
    * Returns true if the given parent should be removed after removal of child cells.
    */
-  shouldRemoveParent = parent => {
+  shouldRemoveParent(parent) {
     const state = this.graph.view.getState(parent);
 
     return (
@@ -1763,14 +1763,14 @@ class mxGraphHandler {
       this.graph.model.getChildCount(state.cell) === 0 &&
       this.graph.isTransparentState(state)
     );
-  };
+  }
 
   /**
    * Function: destroyShapes
    *
    * Destroy the preview and highlight shapes.
    */
-  destroyShapes = () => {
+  destroyShapes() {
     // Destroys the preview dashed rectangle
     if (this.shape != null) {
       this.shape.destroy();
@@ -1787,14 +1787,14 @@ class mxGraphHandler {
       this.highlight.destroy();
       this.highlight = null;
     }
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy = () => {
+  destroy() {
     this.graph.removeMouseListener(this);
     this.graph.removeListener(this.panHandler);
 
@@ -1814,7 +1814,7 @@ class mxGraphHandler {
 
     this.destroyShapes();
     this.removeHint();
-  };
+  }
 }
 
 export default mxGraphHandler;

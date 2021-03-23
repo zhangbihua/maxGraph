@@ -26,7 +26,7 @@ class mxChildChange {
    * removes or restores the cell's
    * connections.
    */
-  execute = () => {
+  execute() {
     if (this.child != null) {
       let tmp = this.model.getParent(this.child);
       const tmp2 = tmp != null ? tmp.getIndex(this.child) : 0;
@@ -50,7 +50,7 @@ class mxChildChange {
       this.index = this.previousIndex;
       this.previousIndex = tmp2;
     }
-  };
+  }
 
   /**
    * Function: disconnect
@@ -59,7 +59,7 @@ class mxChildChange {
    * terminals and stores the previous terminal in the
    * cell's terminals.
    */
-  connect = (cell, isConnect) => {
+  connect(cell, isConnect) {
     isConnect = isConnect != null ? isConnect : true;
 
     const source = cell.getTerminal(true);
@@ -89,7 +89,7 @@ class mxChildChange {
     for (let i = 0; i < childCount; i += 1) {
       this.connect(this.model.getChildAt(cell, i), isConnect);
     }
-  };
+  }
 }
 
 export default mxChildChange;

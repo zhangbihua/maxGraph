@@ -22,11 +22,11 @@ class mxValueChange {
    * Changes the value of <cell> to <previous> using
    * <mxGraphModel.valueForCellChanged>.
    */
-  execute = () => {
+  execute() {
     if (this.cell != null) {
       this.value = this.previous;
       this.previous = this.model.valueForCellChanged(this.cell, this.previous);
     }
-  };
+  }
 }
 export default mxValueChange;

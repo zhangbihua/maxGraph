@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxGraphLayout from "./mxGraphLayout";
+import mxGraphLayout from './mxGraphLayout';
 
 class mxCompositeLayout extends mxGraphLayout {
   /**
@@ -61,13 +61,13 @@ class mxCompositeLayout extends mxGraphLayout {
    * Implements <mxGraphLayout.moveCell> by calling move on <master> or the first
    * layout in <layouts>.
    */
-  moveCell = (cell, x, y) => {
+  moveCell(cell, x, y) {
     if (this.master != null) {
       this.master.moveCell.apply(this.master, [cell, x, y]);
     } else {
       this.layouts[0].moveCell.apply(this.layouts[0], [cell, x, y]);
     }
-  };
+  }
 
   /**
    * Function: execute
@@ -75,7 +75,7 @@ class mxCompositeLayout extends mxGraphLayout {
    * Implements <mxGraphLayout.execute> by executing all <layouts> in a
    * single transaction.
    */
-  execute = parent => {
+  execute(parent) {
     const model = this.graph.getModel();
 
     model.beginUpdate();
@@ -86,7 +86,7 @@ class mxCompositeLayout extends mxGraphLayout {
     } finally {
       model.endUpdate();
     }
-  };
+  }
 }
 
 export default mxCompositeLayout;

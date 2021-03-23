@@ -4,13 +4,13 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "../util/mxUtils";
-import mxPoint from "../util/mxPoint";
-import mxImageShape from "../shape/mxImageShape";
-import mxRectangle from "../util/mxRectangle";
-import mxRectangleShape from "../shape/mxRectangleShape";
-import mxConstants from "../util/mxConstants";
-import mxEvent from "../util/mxEvent";
+import mxUtils from '../util/mxUtils';
+import mxPoint from '../util/mxPoint';
+import mxImageShape from '../shape/mxImageShape';
+import mxRectangle from '../util/mxRectangle';
+import mxRectangleShape from '../shape/mxRectangleShape';
+import mxConstants from '../util/mxConstants';
+import mxEvent from '../util/mxEvent';
 
 class mxHandle {
   /**
@@ -61,37 +61,37 @@ class mxHandle {
    *
    * Hook for subclassers to return the current position of the handle.
    */
-  getPosition = bounds => {};
+  getPosition(bounds) {}
 
   /**
    * Function: setPosition
    *
    * Hooks for subclassers to update the style in the <state>.
    */
-  setPosition = (bounds, pt, me) => {};
+  setPosition(bounds, pt, me) {}
 
   /**
    * Function: execute
    *
    * Hook for subclassers to execute the handle.
    */
-  execute = me => {};
+  execute(me) {}
 
   /**
    * Function: copyStyle
    *
    * Sets the cell style with the given name to the corresponding value in <state>.
    */
-  copyStyle = key => {
+  copyStyle(key) {
     this.graph.setCellStyles(key, this.state.style[key], [this.state.cell]);
-  };
+  }
 
   /**
    * Function: processEvent
    *
    * Processes the given <mxMouseEvent> and invokes <setPosition>.
    */
-  processEvent = me => {
+  processEvent(me) {
     const { scale } = this.graph.view;
     const tr = this.graph.view.translate;
     let pt = new mxPoint(
@@ -119,7 +119,7 @@ class mxHandle {
     );
     this.setPosition(this.state.getPaintBounds(), pt, me);
     this.redraw();
-  };
+  }
 
   /**
    * Function: positionChanged
@@ -127,7 +127,7 @@ class mxHandle {
    * Should be called after <setPosition> in <processEvent>.
    * This repaints the state using <mxCellRenderer>.
    */
-  positionChanged = () => {
+  positionChanged() {
     if (this.state.text != null) {
       this.state.text.apply(this.state);
     }
@@ -137,20 +137,20 @@ class mxHandle {
     }
 
     this.graph.cellRenderer.redraw(this.state, true);
-  };
+  }
 
   /**
    * Function: getRotation
    *
    * Returns the rotation defined in the style of the cell.
    */
-  getRotation = () => {
+  getRotation() {
     if (this.state.shape != null) {
       return this.state.shape.getRotation();
     }
 
     return 0;
-  };
+  }
 
   /**
    * Function: getTotalRotation
@@ -158,20 +158,20 @@ class mxHandle {
    * Returns the rotation from the style and the rotation from the direction of
    * the cell.
    */
-  getTotalRotation = () => {
+  getTotalRotation() {
     if (this.state.shape != null) {
       return this.state.shape.getShapeRotation();
     }
 
     return 0;
-  };
+  }
 
   /**
    * Function: init
    *
    * Creates and initializes the shapes required for this handle.
    */
-  init = () => {
+  init() {
     const html = this.isHtmlRequired();
 
     if (this.image != null) {
@@ -185,14 +185,14 @@ class mxHandle {
     }
 
     this.initShape(html);
-  };
+  }
 
   /**
    * Function: createShape
    *
    * Creates and returns the shape for this handle.
    */
-  createShape = html => {
+  createShape(html) {
     const bounds = new mxRectangle(
       0,
       0,
@@ -205,14 +205,14 @@ class mxHandle {
       mxConstants.HANDLE_FILLCOLOR,
       mxConstants.HANDLE_STROKECOLOR
     );
-  };
+  }
 
   /**
    * Function: initShape
    *
    * Initializes <shape> and sets its cursor.
    */
-  initShape = html => {
+  initShape(html) {
     if (html && this.shape.isHtmlAllowed()) {
       this.shape.dialect = mxConstants.DIALECT_STRICTHTML;
       this.shape.init(this.graph.container);
@@ -229,14 +229,14 @@ class mxHandle {
 
     mxEvent.redirectMouseEvents(this.shape.node, this.graph, this.state);
     this.shape.node.style.cursor = this.cursor;
-  };
+  }
 
   /**
    * Function: redraw
    *
    * Renders the shape for this handle.
    */
-  redraw = () => {
+  redraw() {
     if (this.shape != null && this.state.shape != null) {
       let pt = this.getPosition(this.state.getPaintBounds());
 
@@ -257,7 +257,7 @@ class mxHandle {
         this.shape.redraw();
       }
     }
-  };
+  }
 
   /**
    * Function: isHtmlRequired
@@ -265,33 +265,33 @@ class mxHandle {
    * Returns true if this handle should be rendered in HTML. This returns true if
    * the text node is in the graph container.
    */
-  isHtmlRequired = () => {
+  isHtmlRequired() {
     return (
       this.state.text != null &&
       this.state.text.node.parentNode === this.graph.container
     );
-  };
+  }
 
   /**
    * Function: rotatePoint
    *
    * Rotates the point by the given angle.
    */
-  rotatePoint = (pt, alpha) => {
+  rotatePoint(pt, alpha) {
     const bounds = this.state.getCellBounds();
     const cx = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
     const cos = Math.cos(alpha);
     const sin = Math.sin(alpha);
 
     return mxUtils.getRotatedPoint(pt, cos, sin, cx);
-  };
+  }
 
   /**
    * Function: flipPoint
    *
    * Flips the given point vertically and/or horizontally.
    */
-  flipPoint = pt => {
+  flipPoint(pt) {
     if (this.state.shape != null) {
       const bounds = this.state.getCellBounds();
 
@@ -305,7 +305,7 @@ class mxHandle {
     }
 
     return pt;
-  };
+  }
 
   /**
    * Function: snapPoint
@@ -313,48 +313,48 @@ class mxHandle {
    * Snaps the given point to the grid if ignore is false. This modifies
    * the given point in-place and also returns it.
    */
-  snapPoint = (pt, ignore) => {
+  snapPoint(pt, ignore) {
     if (!ignore) {
       pt.x = this.graph.snap(pt.x);
       pt.y = this.graph.snap(pt.y);
     }
 
     return pt;
-  };
+  }
 
   /**
    * Function: setVisible
    *
    * Shows or hides this handle.
    */
-  setVisible = visible => {
+  setVisible(visible) {
     if (this.shape != null && this.shape.node != null) {
       this.shape.node.style.display = visible ? '' : 'none';
     }
-  };
+  }
 
   /**
    * Function: reset
    *
    * Resets the state of this handle by setting its visibility to true.
    */
-  reset = () => {
+  reset() {
     this.setVisible(true);
     this.state.style = this.graph.getCellStyle(this.state.cell);
     this.positionChanged();
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys this handle.
    */
-  destroy = () => {
+  destroy() {
     if (this.shape != null) {
       this.shape.destroy();
       this.shape = null;
     }
-  };
+  }
 }
 
 export default mxHandle;

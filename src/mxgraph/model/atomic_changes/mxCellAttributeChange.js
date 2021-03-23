@@ -44,7 +44,7 @@ class mxCellAttributeChange {
    * Changes the attribute of the cell's user object by
    * using <mxCell.setAttribute>.
    */
-  execute = () => {
+  execute() {
     if (this.cell != null) {
       const tmp = this.cell.getAttribute(this.attribute);
 
@@ -56,7 +56,7 @@ class mxCellAttributeChange {
 
       this.previous = tmp;
     }
-  };
+  }
 }
 
 export default mxCellAttributeChange;

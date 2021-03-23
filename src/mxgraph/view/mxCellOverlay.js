@@ -164,7 +164,7 @@ class mxCellOverlay extends mxEventSource {
    * state - <mxCellState> that represents the current state of the
    * associated cell.
    */
-  getBounds = state => {
+  getBounds(state) {
     const isEdge = state.view.graph.getModel().isEdge(state.cell);
     const s = state.view.scale;
     let pt = null;
@@ -209,7 +209,7 @@ class mxCellOverlay extends mxEventSource {
       w * s,
       h * s
     );
-  };
+  }
 
   /**
    * Function: toString
@@ -217,9 +217,9 @@ class mxCellOverlay extends mxEventSource {
    * Returns the textual representation of the overlay to be used as the
    * tooltip. This implementation returns <tooltip>.
    */
-  toString = () => {
+  toString() {
     return this.tooltip;
-  };
+  }
 }
 
 export default mxCellOverlay;

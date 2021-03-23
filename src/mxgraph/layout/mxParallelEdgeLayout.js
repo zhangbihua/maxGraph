@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from "../util/mxPoint";
-import mxGraphLayout from "./mxGraphLayout";
-import mxObjectIdentity from "../util/mxObjectIdentity";
+import mxPoint from '../util/mxPoint';
+import mxGraphLayout from './mxGraphLayout';
+import mxObjectIdentity from '../util/mxObjectIdentity';
 
 class mxParallelEdgeLayout extends mxGraphLayout {
   /**
@@ -76,7 +76,7 @@ class mxParallelEdgeLayout extends mxGraphLayout {
    *
    * Implements <mxGraphLayout.execute>.
    */
-  execute = (parent, cells) => {
+  execute(parent, cells) {
     const lookup = this.findParallels(parent, cells);
 
     this.graph.model.beginUpdate();
@@ -91,14 +91,14 @@ class mxParallelEdgeLayout extends mxGraphLayout {
     } finally {
       this.graph.model.endUpdate();
     }
-  };
+  }
 
   /**
    * Function: findParallels
    *
    * Finds the parallel edges in the given parent.
    */
-  findParallels = (parent, cells) => {
+  findParallels(parent, cells) {
     const lookup = [];
 
     const addCell = cell => {
@@ -129,7 +129,7 @@ class mxParallelEdgeLayout extends mxGraphLayout {
     }
 
     return lookup;
-  };
+  }
 
   /**
    * Function: getEdgeId
@@ -138,7 +138,7 @@ class mxParallelEdgeLayout extends mxGraphLayout {
    * edge direction and is built using the visible terminal of the given
    * edge.
    */
-  getEdgeId = edge => {
+  getEdgeId(edge) {
     const view = this.graph.getView();
 
     // Cannot used cached visible terminal because this could be triggered in BEFORE_UNDO
@@ -172,14 +172,14 @@ class mxParallelEdgeLayout extends mxGraphLayout {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: layout
    *
    * Lays out the parallel edges in the given array.
    */
-  layout = parallels => {
+  layout(parallels) {
     const edge = parallels[0];
     const view = this.graph.getView();
     const model = this.graph.getModel();
@@ -228,18 +228,18 @@ class mxParallelEdgeLayout extends mxGraphLayout {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: route
    *
    * Routes the given edge via the given point.
    */
-  route = (edge, x, y) => {
+  route(edge, x, y) {
     if (this.graph.isCellMovable(edge)) {
       this.setEdgePoints(edge, [new mxPoint(x, y)]);
     }
-  };
+  }
 }
 
 export default mxParallelEdgeLayout;

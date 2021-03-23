@@ -40,7 +40,7 @@ class mxCloud extends mxActor {
    *
    * Draws the path for this shape.
    */
-  redrawPath = (c, x, y, w, h) => {
+  redrawPath(c, x, y, w, h) {
     c.moveTo(0.25 * w, 0.25 * h);
     c.curveTo(0.05 * w, 0.25 * h, 0, 0.5 * h, 0.16 * w, 0.55 * h);
     c.curveTo(0, 0.66 * h, 0.18 * w, 0.9 * h, 0.31 * w, 0.8 * h);
@@ -49,7 +49,7 @@ class mxCloud extends mxActor {
     c.curveTo(w, 0.3 * h, 0.8 * w, 0.1 * h, 0.625 * w, 0.2 * h);
     c.curveTo(0.5 * w, 0.05 * h, 0.3 * w, 0.05 * h, 0.25 * w, 0.25 * h);
     c.close();
-  };
+  }
 }
 
 export default mxCloud;

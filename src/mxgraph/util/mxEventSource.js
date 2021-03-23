@@ -61,36 +61,36 @@ class mxEventSource {
    *
    * Returns <eventsEnabled>.
    */
-  isEventsEnabled = () => {
+  isEventsEnabled() {
     return this.eventsEnabled;
-  };
+  }
 
   /**
    * Function: setEventsEnabled
    *
    * Sets <eventsEnabled>.
    */
-  setEventsEnabled = value => {
+  setEventsEnabled(value) {
     this.eventsEnabled = value;
-  };
+  }
 
   /**
    * Function: getEventSource
    *
    * Returns <eventSource>.
    */
-  getEventSource = () => {
+  getEventSource() {
     return this.eventSource;
-  };
+  }
 
   /**
    * Function: setEventSource
    *
    * Sets <eventSource>.
    */
-  setEventSource = value => {
+  setEventSource(value) {
     this.eventSource = value;
-  };
+  }
 
   /**
    * Function: addListener
@@ -100,21 +100,21 @@ class mxEventSource {
    *
    * The parameters of the listener are the sender and an <mxEventObject>.
    */
-  addListener = (name, funct) => {
+  addListener(name, funct) {
     if (this.eventListeners == null) {
       this.eventListeners = [];
     }
 
     this.eventListeners.push(name);
     this.eventListeners.push(funct);
-  };
+  }
 
   /**
    * Function: removeListener
    *
    * Removes all occurrences of the given listener from <eventListeners>.
    */
-  removeListener = funct => {
+  removeListener(funct) {
     if (this.eventListeners != null) {
       let i = 0;
 
@@ -126,7 +126,7 @@ class mxEventSource {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: fireEvent
@@ -147,7 +147,7 @@ class mxEventSource {
    * sender - Optional sender to be passed to the listener. Default value is
    * the return value of <getEventSource>.
    */
-  fireEvent = (evt, sender) => {
+  fireEvent(evt, sender) {
     if (this.eventListeners != null && this.isEventsEnabled()) {
       if (evt == null) {
         evt = new mxEventObject();
@@ -171,7 +171,7 @@ class mxEventSource {
         }
       }
     }
-  };
+  }
 }
 
 export default mxEventSource;

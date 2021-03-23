@@ -54,14 +54,14 @@ class mxCellStatePreview {
    *
    * Returns true if this contains no entries.
    */
-  isEmpty = () => {
+  isEmpty() {
     return this.count === 0;
-  };
+  }
 
   /**
    * Function: moveState
    */
-  moveState = (state, dx, dy, add, includeEdges) => {
+  moveState(state, dx, dy, add, includeEdges) {
     add = add != null ? add : true;
     includeEdges = includeEdges != null ? includeEdges : true;
 
@@ -85,12 +85,12 @@ class mxCellStatePreview {
     }
 
     return delta.point;
-  };
+  }
 
   /**
    * Function: show
    */
-  show = visitor => {
+  show(visitor) {
     this.deltas.visit(
       mxUtils.bind(this, (key, delta) => {
         this.translateState(delta.state, delta.point.x, delta.point.y);
@@ -107,12 +107,12 @@ class mxCellStatePreview {
         );
       })
     );
-  };
+  }
 
   /**
    * Function: translateState
    */
-  translateState = (state, dx, dy) => {
+  translateState(state, dx, dy) {
     if (state != null) {
       const model = this.graph.getModel();
 
@@ -143,12 +143,12 @@ class mxCellStatePreview {
         );
       }
     }
-  };
+  }
 
   /**
    * Function: revalidateState
    */
-  revalidateState = (state, dx, dy, visitor) => {
+  revalidateState(state, dx, dy, visitor) {
     if (state != null) {
       const model = this.graph.getModel();
 
@@ -193,12 +193,12 @@ class mxCellStatePreview {
         );
       }
     }
-  };
+  }
 
   /**
    * Function: addEdges
    */
-  addEdges = state => {
+  addEdges(state) {
     const model = this.graph.getModel();
     const edgeCount = model.getEdgeCount(state.cell);
 
@@ -209,7 +209,7 @@ class mxCellStatePreview {
         this.moveState(s, 0, 0);
       }
     }
-  };
+  }
 }
 
 export default mxCellStatePreview;

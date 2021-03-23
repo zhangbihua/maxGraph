@@ -27,24 +27,24 @@ class mxModelCodec extends mxObjectCodec {
    * cell nodes as produced by the <mxCellCodec>. The sequence is
    * wrapped-up in a node with the name root.
    */
-  encodeObject = (enc, obj, node) => {
+  encodeObject(enc, obj, node) {
     const rootNode = enc.document.createElement('root');
     enc.encodeCell(obj.getRoot(), rootNode);
     node.appendChild(rootNode);
-  };
+  }
 
   /**
    * Function: decodeChild
    *
    * Overrides decode child to handle special child nodes.
    */
-  decodeChild = (dec, child, obj) => {
+  decodeChild(dec, child, obj) {
     if (child.nodeName === 'root') {
       this.decodeRoot(dec, child, obj);
     } else {
       decodeChild.apply(this, [dec, child, obj]);
     }
-  };
+  }
 
   /**
    * Function: decodeRoot
@@ -52,7 +52,7 @@ class mxModelCodec extends mxObjectCodec {
    * Reads the cells into the graph model. All cells
    * are children of the root element in the node.
    */
-  decodeRoot = (dec, root, model) => {
+  decodeRoot(dec, root, model) {
     let rootCell = null;
     let tmp = root.firstChild;
 
@@ -70,7 +70,7 @@ class mxModelCodec extends mxObjectCodec {
     if (rootCell != null) {
       model.setRoot(rootCell);
     }
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxModelCodec());

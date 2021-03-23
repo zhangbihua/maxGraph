@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from "../util/mxPoint";
-import mxGraphLayout from "./mxGraphLayout";
-import mxUtils from "../util/mxUtils";
+import mxPoint from '../util/mxPoint';
+import mxGraphLayout from './mxGraphLayout';
+import mxUtils from '../util/mxUtils';
 
 class mxEdgeLabelLayout extends mxGraphLayout {
   /**
@@ -41,7 +41,7 @@ class mxEdgeLabelLayout extends mxGraphLayout {
    *
    * Implements <mxGraphLayout.execute>.
    */
-  execute = parent => {
+  execute(parent) {
     const { view } = this.graph;
     const model = this.graph.getModel();
 
@@ -64,14 +64,14 @@ class mxEdgeLabelLayout extends mxGraphLayout {
     }
 
     this.placeLabels(vertices, edges);
-  };
+  }
 
   /**
    * Function: placeLabels
    *
    * Places the labels of the given edges.
    */
-  placeLabels = (v, e) => {
+  placeLabels(v, e) {
     const model = this.graph.getModel();
 
     // Moves the vertices to build a circle. Makes sure the
@@ -99,14 +99,14 @@ class mxEdgeLabelLayout extends mxGraphLayout {
     } finally {
       model.endUpdate();
     }
-  };
+  }
 
   /**
    * Function: avoid
    *
    * Places the labels of the given edges.
    */
-  avoid = (edge, vertex) => {
+  avoid(edge, vertex) {
     const model = this.graph.getModel();
     const labRect = edge.text.boundingBox;
 
@@ -142,7 +142,7 @@ class mxEdgeLabelLayout extends mxGraphLayout {
         model.setGeometry(edge.cell, g);
       }
     }
-  };
+  }
 }
 
 export default mxEdgeLabelLayout;

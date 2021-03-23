@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDictionary from "../util/mxDictionary";
-import mxPoint from "../util/mxPoint";
-import mxGraphLayout from "./mxGraphLayout";
+import mxDictionary from '../util/mxDictionary';
+import mxPoint from '../util/mxPoint';
+import mxGraphLayout from './mxGraphLayout';
 
 class mxCompactTreeLayout extends mxGraphLayout {
   /**
@@ -231,21 +231,21 @@ class mxCompactTreeLayout extends mxGraphLayout {
    *
    * vertex - <mxCell> whose ignored state should be returned.
    */
-  isVertexIgnored = vertex => {
+  isVertexIgnored(vertex) {
     return (
       super.isVertexIgnored(vertex) ||
       this.graph.getConnections(vertex).length == 0
     );
-  };
+  }
 
   /**
    * Function: isHorizontal
    *
    * Returns <horizontal>.
    */
-  isHorizontal = () => {
+  isHorizontal() {
     return this.horizontal;
-  };
+  }
 
   /**
    * Function: execute
@@ -262,7 +262,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * root - Optional <mxCell> that will be used as the root of the tree.
    * Overrides <root> if specified.
    */
-  execute = (parent, root) => {
+  execute(parent, root) {
     this.parent = parent;
     const model = this.graph.getModel();
 
@@ -407,14 +407,14 @@ class mxCompactTreeLayout extends mxGraphLayout {
         model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: moveNode
    *
    * Moves the specified node and all of its children by the given amount.
    */
-  moveNode = (node, dx, dy) => {
+  moveNode(node, dx, dy) {
     node.x += dx;
     node.y += dy;
     this.apply(node);
@@ -425,14 +425,14 @@ class mxCompactTreeLayout extends mxGraphLayout {
       this.moveNode(child, dx, dy);
       child = child.next;
     }
-  };
+  }
 
   /**
    * Function: sortOutgoingEdges
    *
    * Called if <sortEdges> is true to sort the array of outgoing edges in place.
    */
-  sortOutgoingEdges = (source, edges) => {
+  sortOutgoingEdges(source, edges) {
     const lookup = new mxDictionary();
 
     edges.sort((e1, e2) => {
@@ -454,7 +454,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
 
       return mxCellPath.compare(p1, p2);
     });
-  };
+  }
 
   /**
    * Function: findRankHeights
@@ -462,7 +462,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * Stores the maximum height (relative to the layout
    * direction) of cells in each rank
    */
-  findRankHeights = (node, rank) => {
+  findRankHeights(node, rank) {
     if (
       this.maxRankHeight[rank] == null ||
       this.maxRankHeight[rank] < node.height
@@ -476,7 +476,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
       this.findRankHeights(child, rank + 1);
       child = child.next;
     }
-  };
+  }
 
   /**
    * Function: setCellHeights
@@ -484,7 +484,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * Set the cells heights (relative to the layout
    * direction) when the tops of each rank are to be aligned
    */
-  setCellHeights = (node, rank) => {
+  setCellHeights(node, rank) {
     if (
       this.maxRankHeight[rank] != null &&
       this.maxRankHeight[rank] > node.height
@@ -498,7 +498,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
       this.setCellHeights(child, rank + 1);
       child = child.next;
     }
-  };
+  }
 
   /**
    * Function: dfs
@@ -507,7 +507,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * Makes sure the specified parent is never left by the
    * algorithm.
    */
-  dfs = (cell, parent) => {
+  dfs(cell, parent) {
     const id = mxCellPath.create(cell);
     let node = null;
 
@@ -571,7 +571,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
     }
 
     return node;
-  };
+  }
 
   /**
    * Function: layout
@@ -579,7 +579,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * Starts the actual compact tree layout algorithm
    * at the given node.
    */
-  layout = node => {
+  layout(node) {
     if (node != null) {
       let { child } = node;
 
@@ -594,12 +594,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
         this.layoutLeaf(node);
       }
     }
-  };
+  }
 
   /**
    * Function: horizontalLayout
    */
-  horizontalLayout = (node, x0, y0, bounds) => {
+  horizontalLayout(node, x0, y0, bounds) {
     node.x += x0 + node.offsetX;
     node.y += y0 + node.offsetY;
     bounds = this.apply(node, bounds);
@@ -623,12 +623,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
     }
 
     return bounds;
-  };
+  }
 
   /**
    * Function: verticalLayout
    */
-  verticalLayout = (node, parent, x0, y0, bounds) => {
+  verticalLayout(node, parent, x0, y0, bounds) {
     node.x += x0 + node.offsetY;
     node.y += y0 + node.offsetX;
     bounds = this.apply(node, bounds);
@@ -653,12 +653,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
     }
 
     return bounds;
-  };
+  }
 
   /**
    * Function: attachParent
    */
-  attachParent = (node, height) => {
+  attachParent(node, height) {
     const x = this.nodeDistance + this.levelDistance;
     const y2 = (height - node.width) / 2 - this.nodeDistance;
     const y1 = y2 + node.width + 2 * this.nodeDistance - height;
@@ -676,12 +676,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
       0,
       this.createLine(x, y2, node.contour.lowerHead)
     );
-  };
+  }
 
   /**
    * Function: layoutLeaf
    */
-  layoutLeaf = node => {
+  layoutLeaf(node) {
     const dist = 2 * this.nodeDistance;
 
     node.contour.upperTail = this.createLine(node.height + dist, 0);
@@ -692,12 +692,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
       0,
       node.contour.lowerTail
     );
-  };
+  }
 
   /**
    * Function: join
    */
-  join = node => {
+  join(node) {
     const dist = 2 * this.nodeDistance;
 
     let { child } = node;
@@ -716,12 +716,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
     }
 
     return sum;
-  };
+  }
 
   /**
    * Function: merge
    */
-  merge = (p1, p2) => {
+  merge(p1, p2) {
     let x = 0;
     let y = 0;
     let total = 0;
@@ -760,12 +760,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
     p1.lowerHead = p2.lowerHead;
 
     return total;
-  };
+  }
 
   /**
    * Function: offset
    */
-  offset = (p1, p2, a1, a2, b1, b2) => {
+  offset(p1, p2, a1, a2, b1, b2) {
     let d = 0;
 
     if (b1 <= p1 || p1 + a1 <= 0) {
@@ -798,12 +798,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
       return d;
     }
     return 0;
-  };
+  }
 
   /**
    * Function: bridge
    */
-  bridge = (line1, x1, y1, line2, x2, y2) => {
+  bridge(line1, x1, y1, line2, x2, y2) {
     const dx = x2 + line2.dx - x1;
     let dy = 0;
     let s = 0;
@@ -819,12 +819,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
     line1.next = this.createLine(0, y2 + line2.dy - dy - y1, r);
 
     return r;
-  };
+  }
 
   /**
    * Function: createNode
    */
-  createNode = cell => {
+  createNode(cell) {
     const node = {};
     node.cell = cell;
     node.x = 0;
@@ -849,12 +849,12 @@ class mxCompactTreeLayout extends mxGraphLayout {
     node.contour = {};
 
     return node;
-  };
+  }
 
   /**
    * Function: apply
    */
-  apply = (node, bounds) => {
+  apply(node, bounds) {
     const model = this.graph.getModel();
     const { cell } = node;
     let g = model.getGeometry(cell);
@@ -887,19 +887,19 @@ class mxCompactTreeLayout extends mxGraphLayout {
     }
 
     return bounds;
-  };
+  }
 
   /**
    * Function: createLine
    */
-  createLine = (dx, dy, next) => {
+  createLine(dx, dy, next) {
     const line = {};
     line.dx = dx;
     line.dy = dy;
     line.next = next;
 
     return line;
-  };
+  }
 
   /**
    * Function: adjustParents
@@ -908,7 +908,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * implementation adjusts the group to just fit around the children with
    * a padding.
    */
-  adjustParents = () => {
+  adjustParents() {
     const tmp = [];
 
     for (const id in this.parentsChanged) {
@@ -923,14 +923,14 @@ class mxCompactTreeLayout extends mxGraphLayout {
       this.groupPaddingBottom,
       this.groupPaddingLeft
     );
-  };
+  }
 
   /**
    * Function: localEdgeProcessing
    *
    * Moves the specified node and all of its children by the given amount.
    */
-  localEdgeProcessing = node => {
+  localEdgeProcessing(node) {
     this.processNodeOutgoing(node);
     let { child } = node;
 
@@ -938,14 +938,14 @@ class mxCompactTreeLayout extends mxGraphLayout {
       this.localEdgeProcessing(child);
       child = child.next;
     }
-  };
+  }
 
   /**
    * Function: processNodeOutgoing
    *
    * Separates the x position of edges as they connect to vertices
    */
-  processNodeOutgoing = node => {
+  processNodeOutgoing(node) {
     let { child } = node;
     const parentCell = node.cell;
 
@@ -1038,7 +1038,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
 
       maxYOffset = Math.max(maxYOffset, currentYOffset);
     }
-  };
+  }
 }
 
 export default mxCompactTreeLayout;

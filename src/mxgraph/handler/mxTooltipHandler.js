@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxEvent from '../util/mxEvent';
-import mxUtils from "../util/mxUtils";
-import mxConstants from "../util/mxConstants";
+import mxUtils from '../util/mxUtils';
+import mxConstants from '../util/mxConstants';
 
 class mxTooltipHandler {
   /**
@@ -96,9 +96,9 @@ class mxTooltipHandler {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
@@ -106,34 +106,34 @@ class mxTooltipHandler {
    * Enables or disables event handling. This implementation
    * updates <enabled>.
    */
-  setEnabled = enabled => {
+  setEnabled(enabled) {
     this.enabled = enabled;
-  };
+  }
 
   /**
    * Function: isHideOnHover
    *
    * Returns <hideOnHover>.
    */
-  isHideOnHover = () => {
+  isHideOnHover() {
     return this.hideOnHover;
-  };
+  }
 
   /**
    * Function: setHideOnHover
    *
    * Sets <hideOnHover>.
    */
-  setHideOnHover = value => {
+  setHideOnHover(value) {
     this.hideOnHover = value;
-  };
+  }
 
   /**
    * Function: init
    *
    * Initializes the DOM nodes required for this tooltip handler.
    */
-  init = () => {
+  init() {
     if (document.body != null) {
       this.div = document.createElement('div');
       this.div.className = 'mxTooltip';
@@ -149,16 +149,16 @@ class mxTooltipHandler {
         }
       });
     }
-  };
+  }
 
   /**
    * Function: getStateForEvent
    *
    * Returns the <mxCellState> to be used for showing a tooltip for this event.
    */
-  getStateForEvent = me => {
+  getStateForEvent(me) {
     return me.getState();
-  };
+  }
 
   /**
    * Function: mouseDown
@@ -167,17 +167,17 @@ class mxTooltipHandler {
    * event all subsequent events of the gesture are redirected to this
    * handler.
    */
-  mouseDown = (sender, me) => {
+  mouseDown(sender, me) {
     this.reset(me, false);
     this.hideTooltip();
-  };
+  }
 
   /**
    * Function: mouseMove
    *
    * Handles the event by updating the rubberband selection.
    */
-  mouseMove = (sender, me) => {
+  mouseMove(sender, me) {
     if (me.getX() !== this.lastX || me.getY() !== this.lastY) {
       this.reset(me, true);
       const state = this.getStateForEvent(me);
@@ -197,7 +197,7 @@ class mxTooltipHandler {
 
     this.lastX = me.getX();
     this.lastY = me.getY();
-  };
+  }
 
   /**
    * Function: mouseUp
@@ -205,29 +205,29 @@ class mxTooltipHandler {
    * Handles the event by resetting the tooltip timer or hiding the existing
    * tooltip.
    */
-  mouseUp = (sender, me) => {
+  mouseUp(sender, me) {
     this.reset(me, true);
     this.hideTooltip();
-  };
+  }
 
   /**
    * Function: resetTimer
    *
    * Resets the timer.
    */
-  resetTimer = () => {
+  resetTimer() {
     if (this.thread != null) {
       window.clearTimeout(this.thread);
       this.thread = null;
     }
-  };
+  }
 
   /**
    * Function: reset
    *
    * Resets and/or restarts the timer to trigger the display of the tooltip.
    */
-  reset = (me, restart, state) => {
+  reset(me, restart, state) {
     if (!this.ignoreTouchEvents || mxEvent.isMouseEvent(me.getEvent())) {
       this.resetTimer();
       state = state != null ? state : this.getStateForEvent(me);
@@ -261,29 +261,29 @@ class mxTooltipHandler {
         }, this.delay);
       }
     }
-  };
+  }
 
   /**
    * Function: hide
    *
    * Hides the tooltip and resets the timer.
    */
-  hide = () => {
+  hide() {
     this.resetTimer();
     this.hideTooltip();
-  };
+  }
 
   /**
    * Function: hideTooltip
    *
    * Hides the tooltip.
    */
-  hideTooltip = () => {
+  hideTooltip() {
     if (this.div != null) {
       this.div.style.visibility = 'hidden';
       this.div.innerHTML = '';
     }
-  };
+  }
 
   /**
    * Function: show
@@ -291,7 +291,7 @@ class mxTooltipHandler {
    * Shows the tooltip for the specified cell and optional index at the
    * specified location (with a vertical offset of 10 pixels).
    */
-  show = (tip, x, y) => {
+  show(tip, x, y) {
     if (!this.destroyed && tip != null && tip.length > 0) {
       // Initializes the DOM nodes if required
       if (this.div == null) {
@@ -316,14 +316,14 @@ class mxTooltipHandler {
       this.div.style.visibility = '';
       mxUtils.fit(this.div);
     }
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy = () => {
+  destroy() {
     if (!this.destroyed) {
       this.graph.removeMouseListener(this);
       mxEvent.release(this.div);
@@ -335,7 +335,7 @@ class mxTooltipHandler {
       this.destroyed = true;
       this.div = null;
     }
-  };
+  }
 }
 
 export default mxTooltipHandler;

@@ -59,19 +59,19 @@ class mxActor extends mxShape {
    *
    * Redirects to redrawPath for subclasses to work.
    */
-  paintVertexShape = (c, x, y, w, h) => {
+  paintVertexShape(c, x, y, w, h) {
     c.translate(x, y);
     c.begin();
     this.redrawPath(c, x, y, w, h);
     c.fillAndStroke();
-  };
+  }
 
   /**
    * Function: redrawPath
    *
    * Draws the path for this shape.
    */
-  redrawPath = (c, x, y, w, h) => {
+  redrawPath(c, x, y, w, h) {
     const width = w / 3;
     c.moveTo(0, h);
     c.curveTo(0, (3 * h) / 5, 0, (2 * h) / 5, w / 2, (2 * h) / 5);
@@ -79,7 +79,7 @@ class mxActor extends mxShape {
     c.curveTo(w / 2 + width, 0, w / 2 + width, (2 * h) / 5, w / 2, (2 * h) / 5);
     c.curveTo(w, (2 * h) / 5, w, (3 * h) / 5, w, h);
     c.close();
-  };
+  }
 }
 
 export default mxActor;

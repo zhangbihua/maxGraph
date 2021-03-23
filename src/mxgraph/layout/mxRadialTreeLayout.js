@@ -130,12 +130,12 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
    *
    * vertex - <mxCell> whose ignored state should be returned.
    */
-  isVertexIgnored = vertex => {
+  isVertexIgnored(vertex) {
     return (
       super.isVertexIgnored(vertex) ||
       this.graph.getConnections(vertex).length === 0
     );
-  };
+  }
 
   /**
    * Function: execute
@@ -151,7 +151,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
    * parent - <mxCell> whose children should be laid out.
    * root - Optional <mxCell> that will be used as the root of the tree.
    */
-  execute = (parent, root) => {
+  execute(parent, root) {
     this.parent = parent;
 
     this.useBoundingBox = false;
@@ -254,7 +254,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
         );
       }
     }
-  };
+  }
 
   /**
    * Function: calcRowDims
@@ -266,7 +266,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
    * row - Array of internal nodes, the children of which are to be processed.
    * rowNum - Integer indicating which row is being processed.
    */
-  calcRowDims = (row, rowNum) => {
+  calcRowDims(row, rowNum) {
     if (row == null || row.length === 0) {
       return;
     }
@@ -315,7 +315,7 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
     if (rowHasChildren) {
       this.calcRowDims(this.row[rowNum], rowNum + 1);
     }
-  };
+  }
 }
 
 export default mxRadialTreeLayout;

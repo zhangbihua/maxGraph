@@ -3,8 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxGraphAbstractHierarchyCell from "./mxGraphAbstractHierarchyCell";
-import mxObjectIdentity from "../../../util/mxObjectIdentity";
+import mxGraphAbstractHierarchyCell from './mxGraphAbstractHierarchyCell';
+import mxObjectIdentity from '../../../util/mxObjectIdentity';
 
 class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
   /**
@@ -69,16 +69,16 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
    *
    * Returns the integer value of the layer that this node resides in
    */
-  getRankValue = layer => {
+  getRankValue(layer) {
     return this.maxRank;
-  };
+  }
 
   /**
    * Function: getNextLayerConnectedCells
    *
    * Returns the cells this cell connects to on the next layer up
    */
-  getNextLayerConnectedCells = layer => {
+  getNextLayerConnectedCells(layer) {
     if (this.nextLayerConnectedCells == null) {
       this.nextLayerConnectedCells = [];
       this.nextLayerConnectedCells[0] = [];
@@ -98,14 +98,14 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
     }
 
     return this.nextLayerConnectedCells[0];
-  };
+  }
 
   /**
    * Function: getPreviousLayerConnectedCells
    *
    * Returns the cells this cell connects to on the next layer down
    */
-  getPreviousLayerConnectedCells = layer => {
+  getPreviousLayerConnectedCells(layer) {
     if (this.previousLayerConnectedCells == null) {
       this.previousLayerConnectedCells = [];
       this.previousLayerConnectedCells[0] = [];
@@ -124,39 +124,39 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
     }
 
     return this.previousLayerConnectedCells[0];
-  };
+  }
 
   /**
    * Function: isVertex
    *
    * Returns true.
    */
-  isVertex = () => {
+  isVertex() {
     return true;
-  };
+  }
 
   /**
    * Function: getGeneralPurposeVariable
    *
    * Gets the value of temp for the specified layer
    */
-  getGeneralPurposeVariable = layer => {
+  getGeneralPurposeVariable(layer) {
     return this.temp[0];
-  };
+  }
 
   /**
    * Function: setGeneralPurposeVariable
    *
    * Set the value of temp for the specified layer
    */
-  setGeneralPurposeVariable = (layer, value) => {
+  setGeneralPurposeVariable(layer, value) {
     this.temp[0] = value;
-  };
+  }
 
   /**
    * Function: isAncestor
    */
-  isAncestor = otherNode => {
+  isAncestor(otherNode) {
     // Firstly, the hash code of this node needs to be shorter than the
     // other node
     if (
@@ -187,16 +187,16 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: getCoreCell
    *
    * Gets the core vertex associated with this wrapper
    */
-  getCoreCell = () => {
+  getCoreCell() {
     return this.cell;
-  };
+  }
 }
 
 export default mxGraphHierarchyNode;

@@ -174,7 +174,7 @@ class mxMultiplicity {
    * sourceOut - Number of outgoing edges from the source terminal.
    * targetIn - Number of incoming edges for the target terminal.
    */
-  check = (graph, edge, source, target, sourceOut, targetIn) => {
+  check(graph, edge, source, target, sourceOut, targetIn) {
     let error = '';
 
     if (
@@ -203,7 +203,7 @@ class mxMultiplicity {
     }
 
     return error.length > 0 ? error : null;
-  };
+  }
 
   /**
    * Function: checkNeighbors
@@ -211,7 +211,7 @@ class mxMultiplicity {
    * Checks if there are any valid neighbours in <validNeighbors>. This is only
    * called if <validNeighbors> is a non-empty array.
    */
-  checkNeighbors = (graph, edge, source, target) => {
+  checkNeighbors(graph, edge, source, target) {
     const sourceValue = graph.model.getValue(source);
     const targetValue = graph.model.getValue(target);
     let isValid = !this.validNeighborsAllowed;
@@ -228,7 +228,7 @@ class mxMultiplicity {
     }
 
     return isValid;
-  };
+  }
 
   /**
    * Function: checkTerminal
@@ -237,18 +237,18 @@ class mxMultiplicity {
    * given cell is the source or target of the given edge, depending on
    * <source>. This implementation uses <checkType> on the terminal's value.
    */
-  checkTerminal = (graph, terminal, edge) => {
+  checkTerminal(graph, terminal, edge) {
     const value = graph.model.getValue(terminal);
 
     return this.checkType(graph, value, this.type, this.attr, this.value);
-  };
+  }
 
   /**
    * Function: checkType
    *
    * Checks the type of the given value.
    */
-  checkType = (graph, value, type, attr, attrValue) => {
+  checkType(graph, value, type, attr, attrValue) {
     if (value != null) {
       if (!Number.isNaN(value.nodeType)) {
         // Checks if value is a DOM node
@@ -257,7 +257,7 @@ class mxMultiplicity {
       return value === type;
     }
     return false;
-  };
+  }
 }
 
 export default mxMultiplicity;

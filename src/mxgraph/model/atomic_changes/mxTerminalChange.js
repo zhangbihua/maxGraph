@@ -23,7 +23,7 @@ class mxTerminalChange {
    * Changes the terminal of <cell> to <previous> using
    * <mxGraphModel.terminalForCellChanged>.
    */
-  execute = () => {
+  execute() {
     if (this.cell != null) {
       this.terminal = this.previous;
       this.previous = this.model.terminalForCellChanged(
@@ -32,7 +32,7 @@ class mxTerminalChange {
         this.source
       );
     }
-  };
+  }
 }
 
 export default mxTerminalChange;

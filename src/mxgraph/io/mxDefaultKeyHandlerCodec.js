@@ -26,9 +26,9 @@ class mxDefaultKeyHandlerCodec extends mxObjectCodec {
    *
    * Returns null.
    */
-  encode = (enc, obj) => {
+  encode(enc, obj) {
     return null;
-  };
+  }
 
   /**
    * Function: decode
@@ -62,7 +62,7 @@ class mxDefaultKeyHandlerCodec extends mxObjectCodec {
    * See also: <mxDefaultKeyHandler.bindAction>,
    * http://www.js-examples.com/page/tutorials__key_codes.html
    */
-  decode = (dec, node, into) => {
+  decode(dec, node, into) {
     if (into != null) {
       const { editor } = into;
       node = node.firstChild;
@@ -81,7 +81,7 @@ class mxDefaultKeyHandlerCodec extends mxObjectCodec {
     }
 
     return into;
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxDefaultKeyHandlerCodec());

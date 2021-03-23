@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
-import mxUtils from "../../../util/mxUtils";
+import mxUtils from '../../../util/mxUtils';
 
 class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
   /**
@@ -37,7 +37,7 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
    * and creates the resulting laid out graph within that facade for further
    * use.
    */
-  execute = parent => {
+  execute(parent) {
     const model = this.layout.getModel();
     const seenNodes = {};
     const unseenNodesArray = model.vertexMapper.getValues();
@@ -107,7 +107,7 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
       true,
       seenNodesCopy
     );
-  };
+  }
 }
 
 export default mxMinimumCycleRemover;

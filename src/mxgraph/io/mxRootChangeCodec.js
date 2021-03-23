@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxRootChange from 'FIXME';
+import mxRootChange from '../model/atomic_changes/mxRootChange';
 import mxCodecRegistry from './mxCodecRegistry';
 
 class mxRootChangeCodec extends mxObjectCodec {
@@ -30,11 +30,11 @@ class mxRootChangeCodec extends mxObjectCodec {
    *
    * Encodes the child recursively.
    */
-  afterEncode = (enc, obj, node) => {
+  afterEncode(enc, obj, node) {
     enc.encodeCell(obj.root, node);
 
     return node;
-  };
+  }
 
   /**
    * Function: beforeDecode
@@ -42,7 +42,7 @@ class mxRootChangeCodec extends mxObjectCodec {
    * Decodes the optional children as cells
    * using the respective decoder.
    */
-  beforeDecode = (dec, node, obj) => {
+  beforeDecode(dec, node, obj) {
     if (
       node.firstChild != null &&
       node.firstChild.nodeType === mxConstants.NODETYPE_ELEMENT
@@ -66,18 +66,18 @@ class mxRootChangeCodec extends mxObjectCodec {
     }
 
     return node;
-  };
+  }
 
   /**
    * Function: afterDecode
    *
    * Restores the state by assigning the previous value.
    */
-  afterDecode = (dec, node, obj) => {
+  afterDecode(dec, node, obj) {
     obj.previous = obj.root;
 
     return obj;
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxRootChangeCodec());

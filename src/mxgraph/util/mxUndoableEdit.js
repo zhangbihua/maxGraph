@@ -101,18 +101,18 @@ class mxUndoableEdit {
    *
    * Returns true if the this edit contains no changes.
    */
-  isEmpty = () => {
+  isEmpty() {
     return this.changes.length == 0;
-  };
+  }
 
   /**
    * Function: isSignificant
    *
    * Returns <significant>.
    */
-  isSignificant = () => {
+  isSignificant() {
     return this.significant;
-  };
+  }
 
   /**
    * Function: add
@@ -120,9 +120,9 @@ class mxUndoableEdit {
    * Adds the specified change to this edit. The change is an object that is
    * expected to either have an undo and redo, or an execute function.
    */
-  add = change => {
+  add(change) {
     this.changes.push(change);
-  };
+  }
 
   /**
    * Function: notify
@@ -130,7 +130,7 @@ class mxUndoableEdit {
    * Hook to notify any listeners of the changes after an <undo> or <redo>
    * has been carried out. This implementation is empty.
    */
-  notify = () => {};
+  notify() {}
 
   /**
    * Function: die
@@ -138,14 +138,14 @@ class mxUndoableEdit {
    * Hook to free resources after the edit has been removed from the command
    * history. This implementation is empty.
    */
-  die = () => {};
+  die() {}
 
   /**
    * Function: undo
    *
    * Undoes all changes in this edit.
    */
-  undo = () => {
+  undo() {
     if (!this.undone) {
       this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
       const count = this.changes.length;
@@ -171,14 +171,14 @@ class mxUndoableEdit {
     }
 
     this.notify();
-  };
+  }
 
   /**
    * Function: redo
    *
    * Redoes all changes in this edit.
    */
-  redo = () => {
+  redo() {
     if (!this.redone) {
       this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
       const count = this.changes.length;
@@ -204,7 +204,7 @@ class mxUndoableEdit {
     }
 
     this.notify();
-  };
+  }
 }
 
 export default mxUndoableEdit;

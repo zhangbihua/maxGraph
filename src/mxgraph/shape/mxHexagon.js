@@ -27,7 +27,7 @@ class mxHexagon extends mxActor {
    *
    * Draws the path for this shape.
    */
-  redrawPath = (c, x, y, w, h) => {
+  redrawPath(c, x, y, w, h) {
     const arcSize =
       mxUtils.getValue(
         this.style,
@@ -48,7 +48,7 @@ class mxHexagon extends mxActor {
       arcSize,
       true
     );
-  };
+  }
 }
 
 export default mxHexagon;

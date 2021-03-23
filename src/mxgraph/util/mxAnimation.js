@@ -47,23 +47,23 @@ class mxAnimation extends mxEventSource {
    *
    * Returns true if the animation is running.
    */
-  isRunning = () => {
+  isRunning() {
     return this.thread != null;
-  };
+  }
 
   /**
    * Function: startAnimation
    *
    * Starts the animation by repeatedly invoking updateAnimation.
    */
-  startAnimation = () => {
+  startAnimation() {
     if (this.thread == null) {
       this.thread = window.setInterval(
         this.updateAnimation.bind(this),
         this.delay
       );
     }
-  };
+  }
 
   /**
    * Function: updateAnimation
@@ -72,22 +72,22 @@ class mxAnimation extends mxEventSource {
    * when finished, startAnimation to resume. This is called whenever the
    * timer fires and fires an mxEvent.EXECUTE event with no properties.
    */
-  updateAnimation = () => {
+  updateAnimation() {
     this.fireEvent(new mxEventObject(mxEvent.EXECUTE));
-  };
+  }
 
   /**
    * Function: stopAnimation
    *
    * Stops the animation by deleting the timer and fires an <mxEvent.DONE>.
    */
-  stopAnimation = () => {
+  stopAnimation() {
     if (this.thread != null) {
       window.clearInterval(this.thread);
       this.thread = null;
       this.fireEvent(new mxEventObject(mxEvent.DONE));
     }
-  };
+  }
 }
 
 export default mxAnimation;

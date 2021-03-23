@@ -55,7 +55,7 @@ class WeightedCellSorter {
    *
    * Compares two WeightedCellSorters.
    */
-  compare = (a, b) => {
+  compare(a, b) {
     if (a != null && b != null) {
       if (b.weightedValue > a.weightedValue) {
         return -1;
@@ -69,7 +69,7 @@ class WeightedCellSorter {
       return 1;
     }
     return 0;
-  };
+  }
 }
 
 export default WeightedCellSorter;

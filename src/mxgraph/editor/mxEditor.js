@@ -29,9 +29,9 @@ import mxEvent from '../util/mxEvent';
 import mxRootChange from '../model/atomic_changes/mxRootChange';
 import mxValueChange from '../model/atomic_changes/mxValueChange';
 import mxCellAttributeChange from '../model/atomic_changes/mxCellAttributeChange';
-import mxPrintPreview from "../view/mxPrintPreview";
-import mxClipboard from "../util/mxClipboard";
-import mxLog from "../util/mxLog";
+import mxPrintPreview from '../view/mxPrintPreview';
+import mxClipboard from '../util/mxClipboard';
+import mxLog from '../util/mxLog';
 
 /**
  * Installs the required language resources at class
@@ -929,18 +929,18 @@ class mxEditor extends mxEventSource {
    *
    * Returns <modified>.
    */
-  isModified = () => {
+  isModified() {
     return this.modified;
-  };
+  }
 
   /**
    * Function: setModified
    *
    * Sets <modified> to the specified boolean value.
    */
-  setModified = value => {
+  setModified(value) {
     this.modified = value;
-  };
+  }
 
   /**
    * Function: addActions
@@ -1001,7 +1001,7 @@ class mxEditor extends mxEventSource {
    * toggleOutline - Shows or hides the outline window.
    * toggleConsole - Shows or hides the console window.
    */
-  addActions = () => {
+  addActions() {
     this.addAction('save', editor => {
       editor.save();
     });
@@ -1372,7 +1372,7 @@ class mxEditor extends mxEventSource {
     this.addAction('toggleConsole', editor => {
       mxLog.setVisible(!mxLog.isVisible());
     });
-  };
+  }
 
   /**
    * Function: configure
@@ -1389,7 +1389,7 @@ class mxEditor extends mxEventSource {
    *
    * node - XML node that contains the configuration.
    */
-  configure = node => {
+  configure(node) {
     if (node != null) {
       // Creates a decoder for the XML data
       // and uses it to configure the editor
@@ -1400,7 +1400,7 @@ class mxEditor extends mxEventSource {
       // command history
       this.resetHistory();
     }
-  };
+  }
 
   /**
    * Function: resetFirstTime
@@ -1408,22 +1408,22 @@ class mxEditor extends mxEventSource {
    * Resets the cookie that is used to remember if the editor has already
    * been used.
    */
-  resetFirstTime = () => {
+  resetFirstTime() {
     document.cookie =
       'mxgraph=seen; expires=Fri, 27 Jul 2001 02:47:11 UTC; path=/';
-  };
+  }
 
   /**
    * Function: resetHistory
    *
    * Resets the command history, modified state and counters.
    */
-  resetHistory = () => {
+  resetHistory() {
     this.lastSnapshot = new Date().getTime();
     this.undoManager.clear();
     this.ignoredChanges = 0;
     this.setModified(false);
-  };
+  }
 
   /**
    * Function: addAction
@@ -1447,9 +1447,9 @@ class mxEditor extends mxEventSource {
    * });
    * (end)
    */
-  addAction = (actionname, funct) => {
+  addAction(actionname, funct) {
     this.actions[actionname] = funct;
-  };
+  }
 
   /**
    * Function: execute
@@ -1467,7 +1467,7 @@ class mxEditor extends mxEventSource {
    * editor.execute("showProperties", cell);
    * (end)
    */
-  execute = (actionname, cell, evt) => {
+  execute(actionname, cell, evt) {
     const action = this.actions[actionname];
 
     if (action != null) {
@@ -1486,25 +1486,25 @@ class mxEditor extends mxEventSource {
     } else {
       mxUtils.error(`Cannot find action ${actionname}`, 280, true);
     }
-  };
+  }
 
   /**
    * Function: addTemplate
    *
    * Adds the specified template under the given name in <templates>.
    */
-  addTemplate = (name, template) => {
+  addTemplate(name, template) {
     this.templates[name] = template;
-  };
+  }
 
   /**
    * Function: getTemplate
    *
    * Returns the template for the given name.
    */
-  getTemplate = name => {
+  getTemplate(name) {
     return this.templates[name];
-  };
+  }
 
   /**
    * Function: createGraph
@@ -1512,7 +1512,7 @@ class mxEditor extends mxEventSource {
    * Creates the <graph> for the editor. The graph is created with no
    * container and is initialized from <setGraphContainer>.
    */
-  createGraph = () => {
+  createGraph() {
     const graph = new mxGraph(null, null, this.graphRenderHint);
 
     // Enables rubberband, tooltips, panning
@@ -1555,14 +1555,14 @@ class mxEditor extends mxEventSource {
     this.createLayoutManager(graph);
 
     return graph;
-  };
+  }
 
   /**
    * Function: createSwimlaneManager
    *
    * Sets the graph's container using <mxGraph.init>.
    */
-  createSwimlaneManager = graph => {
+  createSwimlaneManager(graph) {
     const swimlaneMgr = new mxSwimlaneManager(graph, false);
 
     swimlaneMgr.isHorizontal = mxUtils.bind(this, () => {
@@ -1574,7 +1574,7 @@ class mxEditor extends mxEventSource {
     };
 
     return swimlaneMgr;
-  };
+  }
 
   /**
    * Function: createLayoutManager
@@ -1582,7 +1582,7 @@ class mxEditor extends mxEventSource {
    * Creates a layout manager for the swimlane and diagram layouts, that
    * is, the locally defined inter- and intraswimlane layouts.
    */
-  createLayoutManager = graph => {
+  createLayoutManager(graph) {
     const layoutMgr = new mxLayoutManager(graph);
 
     const self = this; // closure
@@ -1622,14 +1622,14 @@ class mxEditor extends mxEventSource {
     };
 
     return layoutMgr;
-  };
+  }
 
   /**
    * Function: setGraphContainer
    *
    * Sets the graph's container using <mxGraph.init>.
    */
-  setGraphContainer = container => {
+  setGraphContainer(container) {
     if (this.graph.container == null) {
       // Creates the graph instance inside the given container and render hint
       // this.graph = new mxGraph(container, null, this.graphRenderHint);
@@ -1644,7 +1644,7 @@ class mxEditor extends mxEventSource {
         mxEvent.disableContextMenu(container);
       }
     }
-  };
+  }
 
   /**
    * Function: installDblClickHandler
@@ -1652,7 +1652,7 @@ class mxEditor extends mxEventSource {
    * Overrides <mxGraph.dblClick> to invoke <dblClickAction>
    * on a cell and reset the selection tool in the toolbar.
    */
-  installDblClickHandler = graph => {
+  installDblClickHandler(graph) {
     // Installs a listener for double click events
     graph.addListener(
       mxEvent.DOUBLE_CLICK,
@@ -1665,14 +1665,14 @@ class mxEditor extends mxEventSource {
         }
       })
     );
-  };
+  }
 
   /**
    * Function: installUndoHandler
    *
    * Adds the <undoManager> to the graph model and the view.
    */
-  installUndoHandler = graph => {
+  installUndoHandler(graph) {
     const listener = (sender, evt) => {
       const edit = evt.getProperty('edit');
       this.undoManager.undoableEditHappened(edit);
@@ -1689,21 +1689,21 @@ class mxEditor extends mxEventSource {
 
     this.undoManager.addListener(mxEvent.UNDO, undoHandler);
     this.undoManager.addListener(mxEvent.REDO, undoHandler);
-  };
+  }
 
   /**
    * Function: installDrillHandler
    *
    * Installs listeners for dispatching the <root> event.
    */
-  installDrillHandler = graph => {
+  installDrillHandler(graph) {
     const listener = mxUtils.bind(this, sender => {
       this.fireEvent(new mxEventObject(mxEvent.ROOT));
     });
 
     graph.getView().addListener(mxEvent.DOWN, listener);
     graph.getView().addListener(mxEvent.UP, listener);
-  };
+  }
 
   /**
    * Function: installChangeHandler
@@ -1712,7 +1712,7 @@ class mxEditor extends mxEventSource {
    * the graph. On each change of the root, this implementation
    * fires a <root> event.
    */
-  installChangeHandler = graph => {
+  installChangeHandler(graph) {
     const listener = (sender, evt) => {
       // Updates the modified state
       this.setModified(true);
@@ -1743,7 +1743,7 @@ class mxEditor extends mxEventSource {
     };
 
     graph.getModel().addListener(mxEvent.CHANGE, listener);
-  };
+  }
 
   /**
    * Function: installInsertHandler
@@ -1751,7 +1751,7 @@ class mxEditor extends mxEventSource {
    * Installs the handler for invoking <insertFunction> if
    * one is defined.
    */
-  installInsertHandler = graph => {
+  installInsertHandler(graph) {
     const self = this; // closure
     const insertHandler = {
       mouseDown: (sender, me) => {
@@ -1785,7 +1785,7 @@ class mxEditor extends mxEventSource {
     };
 
     graph.addMouseListener(insertHandler);
-  };
+  }
 
   /**
    * Function: createDiagramLayout
@@ -1793,7 +1793,7 @@ class mxEditor extends mxEventSource {
    * Creates the layout instance used to layout the
    * swimlanes in the diagram.
    */
-  createDiagramLayout = () => {
+  createDiagramLayout() {
     const gs = this.graph.gridSize;
     const layout = new mxStackLayout(
       this.graph,
@@ -1809,7 +1809,7 @@ class mxEditor extends mxEventSource {
     };
 
     return layout;
-  };
+  }
 
   /**
    * Function: createSwimlaneLayout
@@ -1817,27 +1817,27 @@ class mxEditor extends mxEventSource {
    * Creates the layout instance used to layout the
    * children of each swimlane.
    */
-  createSwimlaneLayout = () => {
+  createSwimlaneLayout() {
     return new mxCompactTreeLayout(this.graph, this.horizontalFlow);
-  };
+  }
 
   /**
    * Function: createToolbar
    *
    * Creates the <toolbar> with no container.
    */
-  createToolbar = () => {
+  createToolbar() {
     return new mxDefaultToolbar(null, this);
-  };
+  }
 
   /**
    * Function: setToolbarContainer
    *
    * Initializes the toolbar for the given container.
    */
-  setToolbarContainer = container => {
+  setToolbarContainer(container) {
     this.toolbar.init(container);
-  };
+  }
 
   /**
    * Function: setStatusContainer
@@ -1852,7 +1852,7 @@ class mxEditor extends mxEventSource {
    *
    * container - DOM node that will contain the statusbar.
    */
-  setStatusContainer = container => {
+  setStatusContainer(container) {
     if (this.status == null) {
       this.status = container;
 
@@ -1878,7 +1878,7 @@ class mxEditor extends mxEventSource {
         );
       });
     }
-  };
+  }
 
   /**
    * Function: setStatus
@@ -1890,11 +1890,11 @@ class mxEditor extends mxEventSource {
    * message - String the specified the message to
    * be displayed.
    */
-  setStatus = message => {
+  setStatus(message) {
     if (this.status != null && message != null) {
       this.status.innerHTML = message;
     }
-  };
+  }
 
   /**
    * Function: setTitleContainer
@@ -1906,14 +1906,14 @@ class mxEditor extends mxEventSource {
    *
    * container - DOM node that will contain the title.
    */
-  setTitleContainer = container => {
+  setTitleContainer(container) {
     this.addListener(
       mxEvent.ROOT,
       mxUtils.bind(this, sender => {
         container.innerHTML = this.getTitle();
       })
     );
-  };
+  }
 
   /**
    * Function: treeLayout
@@ -1928,12 +1928,12 @@ class mxEditor extends mxEventSource {
    * horizontal - Optional boolean to specify the tree's
    * orientation. Default is true.
    */
-  treeLayout = (cell, horizontal) => {
+  treeLayout(cell, horizontal) {
     if (cell != null) {
       const layout = new mxCompactTreeLayout(this.graph, horizontal);
       layout.execute(cell);
     }
-  };
+  }
 
   /**
    * Function: getTitle
@@ -1941,7 +1941,7 @@ class mxEditor extends mxEventSource {
    * Returns the string value for the current root of the
    * diagram.
    */
-  getTitle = () => {
+  getTitle() {
     let title = '';
     const { graph } = this;
     let cell = graph.getCurrentRoot();
@@ -1961,7 +1961,7 @@ class mxEditor extends mxEventSource {
     const prefix = this.getRootTitle();
 
     return prefix + title;
-  };
+  }
 
   /**
    * Function: getRootTitle
@@ -1969,28 +1969,28 @@ class mxEditor extends mxEventSource {
    * Returns the string value of the root cell in
    * <mxGraph.model>.
    */
-  getRootTitle = () => {
+  getRootTitle() {
     const root = this.graph.getModel().getRoot();
     return this.graph.convertValueToString(root);
-  };
+  }
 
   /**
    * Function: undo
    *
    * Undo the last change in <graph>.
    */
-  undo = () => {
+  undo() {
     this.undoManager.undo();
-  };
+  }
 
   /**
    * Function: redo
    *
    * Redo the last change in <graph>.
    */
-  redo = () => {
+  redo() {
     this.undoManager.redo();
-  };
+  }
 
   /**
    * Function: groupCells
@@ -1999,11 +1999,11 @@ class mxEditor extends mxEventSource {
    * <mxGraph.groupCells>, using the grid size of the graph as the spacing
    * in the group's content area.
    */
-  groupCells = () => {
+  groupCells() {
     const border =
       this.groupBorderSize != null ? this.groupBorderSize : this.graph.gridSize;
     return this.graph.groupCells(this.createGroup(), border);
-  };
+  }
 
   /**
    * Function: createGroup
@@ -2011,11 +2011,11 @@ class mxEditor extends mxEventSource {
    * Creates and returns a clone of <defaultGroup> to be used
    * as a new group cell in <group>.
    */
-  createGroup = () => {
+  createGroup() {
     const model = this.graph.getModel();
 
     return model.cloneCell(this.defaultGroup);
-  };
+  }
 
   /**
    * Function: open
@@ -2040,7 +2040,7 @@ class mxEditor extends mxEventSource {
    *
    * filename - URL of the file to be opened.
    */
-  open = filename => {
+  open(filename) {
     if (filename != null) {
       const xml = mxUtils.load(filename).getXml();
       this.readGraphModel(xml.documentElement);
@@ -2048,7 +2048,7 @@ class mxEditor extends mxEventSource {
 
       this.fireEvent(new mxEventObject(mxEvent.OPEN, 'filename', filename));
     }
-  };
+  }
 
   /**
    * Function: readGraphModel
@@ -2056,11 +2056,11 @@ class mxEditor extends mxEventSource {
    * Reads the specified XML node into the existing graph model and resets
    * the command history and modified state.
    */
-  readGraphModel = node => {
+  readGraphModel(node) {
     const dec = new mxCodec(node.ownerDocument);
     dec.decode(node, this.graph.getModel());
     this.resetHistory();
-  };
+  }
 
   /**
    * Function: save
@@ -2082,7 +2082,7 @@ class mxEditor extends mxEventSource {
    * }
    * (end)
    */
-  save = (url, linefeed) => {
+  save(url, linefeed) {
     // Gets the URL to post the data to
     url = url || this.getUrlPost();
 
@@ -2097,7 +2097,7 @@ class mxEditor extends mxEventSource {
 
     // Dispatches a save event
     this.fireEvent(new mxEventObject(mxEvent.SAVE, 'url', url));
-  };
+  }
 
   /**
    * Function: postDiagram
@@ -2121,7 +2121,7 @@ class mxEditor extends mxEventSource {
    * });
    * (end)
    */
-  postDiagram = (url, data) => {
+  postDiagram(url, data) {
     if (this.escapePostData) {
       data = encodeURIComponent(data);
     }
@@ -2139,7 +2139,7 @@ class mxEditor extends mxEventSource {
         )
       );
     });
-  };
+  }
 
   /**
    * Function: writeGraphModel
@@ -2159,13 +2159,13 @@ class mxEditor extends mxEventSource {
    * linefeed - Optional character to be used as the linefeed. Default is
    * <linefeed>.
    */
-  writeGraphModel = linefeed => {
+  writeGraphModel(linefeed) {
     linefeed = linefeed != null ? linefeed : this.linefeed;
     const enc = new mxCodec();
     const node = enc.encode(this.graph.getModel());
 
     return mxUtils.getXml(node, linefeed);
-  };
+  }
 
   /**
    * Function: getUrlPost
@@ -2174,9 +2174,9 @@ class mxEditor extends mxEventSource {
    * in <save>. The default implementation returns <urlPost>,
    * adding <code>?draft=true</code>.
    */
-  getUrlPost = () => {
+  getUrlPost() {
     return this.urlPost;
-  };
+  }
 
   /**
    * Function: getUrlImage
@@ -2187,9 +2187,9 @@ class mxEditor extends mxEventSource {
    * in the image action to create an image. This implementation
    * returns <urlImage>.
    */
-  getUrlImage = () => {
+  getUrlImage() {
     return this.urlImage;
-  };
+  }
 
   /**
    * Function: swapStyles
@@ -2197,7 +2197,7 @@ class mxEditor extends mxEventSource {
    * Swaps the styles for the given names in the graph's
    * stylesheet and refreshes the graph.
    */
-  swapStyles = (first, second) => {
+  swapStyles(first, second) {
     const style = this.graph.getStylesheet().styles[second];
     this.graph
       .getView()
@@ -2205,7 +2205,7 @@ class mxEditor extends mxEventSource {
       .putCellStyle(second, this.graph.getStylesheet().styles[first]);
     this.graph.getStylesheet().putCellStyle(first, style);
     this.graph.refresh();
-  };
+  }
 
   /**
    * Function: showProperties
@@ -2214,7 +2214,7 @@ class mxEditor extends mxEventSource {
    * cell. The content area of the dialog is created using
    * <createProperties>.
    */
-  showProperties = cell => {
+  showProperties(cell) {
     cell = cell || this.graph.getSelectionCell();
 
     // Uses the root node for the properties dialog
@@ -2274,16 +2274,16 @@ class mxEditor extends mxEventSource {
         this.properties.setVisible(true);
       }
     }
-  };
+  }
 
   /**
    * Function: isPropertiesVisible
    *
    * Returns true if the properties dialog is currently visible.
    */
-  isPropertiesVisible = () => {
+  isPropertiesVisible() {
     return this.properties != null;
-  };
+  }
 
   /**
    * Function: createProperties
@@ -2293,7 +2293,7 @@ class mxEditor extends mxEventSource {
    * works for user objects that are XML nodes and display all the
    * node attributes in a form.
    */
-  createProperties = cell => {
+  createProperties(cell) {
     const model = this.graph.getModel();
     const value = model.getValue(cell);
 
@@ -2414,19 +2414,19 @@ class mxEditor extends mxEventSource {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: hideProperties
    *
    * Hides the properties dialog.
    */
-  hideProperties = () => {
+  hideProperties() {
     if (this.properties != null) {
       this.properties.destroy();
       this.properties = null;
     }
-  };
+  }
 
   /**
    * Function: showTasks
@@ -2450,7 +2450,7 @@ class mxEditor extends mxEventSource {
    * };
    * (end)
    */
-  showTasks = () => {
+  showTasks() {
     if (this.tasks == null) {
       const div = document.createElement('div');
       div.style.padding = '4px';
@@ -2489,21 +2489,21 @@ class mxEditor extends mxEventSource {
     }
 
     this.tasks.setVisible(true);
-  };
+  }
 
   /**
    * Function: refreshTasks
    *
    * Updates the contents of the tasks window using <createTasks>.
    */
-  refreshTasks = div => {
+  refreshTasks(div) {
     if (this.tasks != null) {
       const div = this.tasks.content;
       mxEvent.release(div);
       div.innerHTML = '';
       this.createTasks(div);
     }
-  };
+  }
 
   /**
    * Function: createTasks
@@ -2514,9 +2514,9 @@ class mxEditor extends mxEventSource {
    * is a possible change of state in the editor.
    * Default implementation is empty.
    */
-  createTasks = div => {
+  createTasks(div) {
     // override
-  };
+  }
 
   /**
    * Function: showHelp
@@ -2526,7 +2526,7 @@ class mxEditor extends mxEventSource {
    * for the <code>urlHelp</code> key or <urlHelp> if the resource
    * is undefined.
    */
-  showHelp = tasks => {
+  showHelp(tasks) {
     if (this.help == null) {
       const frame = document.createElement('iframe');
       frame.setAttribute('src', mxResources.get('urlHelp') || this.urlHelp);
@@ -2574,7 +2574,7 @@ class mxEditor extends mxEventSource {
     }
 
     this.help.setVisible(true);
-  };
+  }
 
   /**
    * Function: showOutline
@@ -2582,7 +2582,7 @@ class mxEditor extends mxEventSource {
    * Shows the outline window. If the window does not exist, then it is
    * created using an <mxOutline>.
    */
-  showOutline = () => {
+  showOutline() {
     const create = this.outline == null;
 
     if (create) {
@@ -2623,7 +2623,7 @@ class mxEditor extends mxEventSource {
     // Finally shows the outline
     this.outline.setVisible(true);
     this.outline.outline.update(true);
-  };
+  }
 
   /**
    * Function: setMode
@@ -2637,7 +2637,7 @@ class mxEditor extends mxEventSource {
    * connections if mouse over cell hotspot. See <mxConnectionHandler>.
    * pan - Pans using the left mouse button, new connections are disabled.
    */
-  setMode = modename => {
+  setMode(modename) {
     if (modename === 'select') {
       this.graph.panningHandler.useLeftButtonForPanning = false;
       this.graph.setConnectable(false);
@@ -2648,7 +2648,7 @@ class mxEditor extends mxEventSource {
       this.graph.panningHandler.useLeftButtonForPanning = true;
       this.graph.setConnectable(false);
     }
-  };
+  }
 
   /**
    * Function: createPopupMenu
@@ -2657,9 +2657,9 @@ class mxEditor extends mxEventSource {
    * panning handler. The redirection is setup in
    * <setToolbarContainer>.
    */
-  createPopupMenu = (menu, cell, evt) => {
+  createPopupMenu(menu, cell, evt) {
     this.popupHandler.createMenu(this, menu, cell, evt);
-  };
+  }
 
   /**
    * Function: createEdge
@@ -2669,7 +2669,7 @@ class mxEditor extends mxEventSource {
    * edge will be overridden with the value returned by
    * <getEdgeStyle>.
    */
-  createEdge = (source, target) => {
+  createEdge(source, target) {
     // Clones the defaultedge prototype
     let e = null;
 
@@ -2693,7 +2693,7 @@ class mxEditor extends mxEventSource {
     }
 
     return e;
-  };
+  }
 
   /**
    * Function: getEdgeStyle
@@ -2702,9 +2702,9 @@ class mxEditor extends mxEventSource {
    * The function is used in <createEdge> when new edges
    * are created in the graph.
    */
-  getEdgeStyle = () => {
+  getEdgeStyle() {
     return this.defaultEdgeStyle;
-  };
+  }
 
   /**
    * Function: consumeCycleAttribute
@@ -2713,7 +2713,7 @@ class mxEditor extends mxEventSource {
    * or null, if not attribute should be used in the
    * specified cell.
    */
-  consumeCycleAttribute = cell => {
+  consumeCycleAttribute(cell) {
     return this.cycleAttributeValues != null &&
       this.cycleAttributeValues.length > 0 &&
       this.graph.isSwimlane(cell)
@@ -2721,7 +2721,7 @@ class mxEditor extends mxEventSource {
           this.cycleAttributeIndex++ % this.cycleAttributeValues.length
         ]
       : null;
-  };
+  }
 
   /**
    * Function: cycleAttribute
@@ -2730,7 +2730,7 @@ class mxEditor extends mxEventSource {
    * as the value for the <cycleAttributeName> key in
    * the given cell's style.
    */
-  cycleAttribute = cell => {
+  cycleAttribute(cell) {
     if (this.cycleAttributeName != null) {
       const value = this.consumeCycleAttribute(cell);
 
@@ -2738,7 +2738,7 @@ class mxEditor extends mxEventSource {
         cell.setStyle(`${cell.getStyle()};${this.cycleAttributeName}=${value}`);
       }
     }
-  };
+  }
 
   /**
    * Function: addVertex
@@ -2746,7 +2746,7 @@ class mxEditor extends mxEventSource {
    * Adds the given vertex as a child of parent at the specified
    * x and y coordinate and fires an <addVertex> event.
    */
-  addVertex = (parent, vertex, x, y) => {
+  addVertex(parent, vertex, x, y) {
     const model = this.graph.getModel();
 
     while (parent != null && !this.graph.isValidDropTarget(parent)) {
@@ -2838,7 +2838,7 @@ class mxEditor extends mxEventSource {
     }
 
     return vertex;
-  };
+  }
 
   /**
    * Function: destroy
@@ -2847,7 +2847,7 @@ class mxEditor extends mxEventSource {
    * normally need to be called, it is called automatically when the window
    * unloads.
    */
-  destroy = () => {
+  destroy() {
     if (!this.destroyed) {
       this.destroyed = true;
 
@@ -2882,7 +2882,7 @@ class mxEditor extends mxEventSource {
       this.status = null;
       this.templates = null;
     }
-  };
+  }
 }
 
 export default mxEditor;

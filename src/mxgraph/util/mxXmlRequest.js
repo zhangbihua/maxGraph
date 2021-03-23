@@ -178,43 +178,43 @@ class mxXmlRequest {
    *
    * Returns <binary>.
    */
-  isBinary = () => {
+  isBinary() {
     return this.binary;
-  };
+  }
 
   /**
    * Function: setBinary
    *
    * Sets <binary>.
    */
-  setBinary = value => {
+  setBinary(value) {
     this.binary = value;
-  };
+  }
 
   /**
    * Function: getText
    *
    * Returns the response as a string.
    */
-  getText = () => {
+  getText() {
     return this.request.responseText;
-  };
+  }
 
   /**
    * Function: isReady
    *
    * Returns true if the response is ready.
    */
-  isReady = () => {
+  isReady() {
     return this.request.readyState === 4;
-  };
+  }
 
   /**
    * Function: getDocumentElement
    *
    * Returns the document element of the response XML document.
    */
-  getDocumentElement = () => {
+  getDocumentElement() {
     const doc = this.getXml();
 
     if (doc != null) {
@@ -222,7 +222,7 @@ class mxXmlRequest {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: getXml
@@ -230,7 +230,7 @@ class mxXmlRequest {
    * Returns the response as an XML document. Use <getDocumentElement> to get
    * the document element of the XML document.
    */
-  getXml = () => {
+  getXml() {
     let xml = this.request.responseXML;
 
     // Handles missing response headers in IE, the first condition handles
@@ -243,7 +243,7 @@ class mxXmlRequest {
     }
 
     return xml;
-  };
+  }
 
   /**
    * Function: getStatus
@@ -251,16 +251,16 @@ class mxXmlRequest {
    * Returns the status as a number, eg. 404 for "Not found" or 200 for "OK".
    * Note: The NS_ERROR_NOT_AVAILABLE for invalid responses cannot be cought.
    */
-  getStatus = () => {
+  getStatus() {
     return this.request != null ? this.request.status : null;
-  };
+  }
 
   /**
    * Function: create
    *
    * Creates and returns the inner <request> object.
    */
-  create = () => {
+  create() {
     const req = new XMLHttpRequest();
 
     // TODO: Check for overrideMimeType required here?
@@ -269,7 +269,7 @@ class mxXmlRequest {
     }
 
     return req;
-  };
+  }
 
   /**
    * Function: send
@@ -286,7 +286,7 @@ class mxXmlRequest {
    * timeout - Optional timeout in ms before calling ontimeout.
    * ontimeout - Optional function to execute on timeout.
    */
-  send = (onload, onerror, timeout, ontimeout) => {
+  send(onload, onerror, timeout, ontimeout) {
     this.request = this.create();
 
     if (this.request != null) {
@@ -324,7 +324,7 @@ class mxXmlRequest {
 
       this.request.send(this.params);
     }
-  };
+  }
 
   /**
    * Function: setRequestHeaders
@@ -350,14 +350,14 @@ class mxXmlRequest {
    * Use the code above before calling <send> if you require a
    * multipart/form-data request.
    */
-  setRequestHeaders = (request, params) => {
+  setRequestHeaders(request, params) {
     if (params != null) {
       request.setRequestHeader(
         'Content-Type',
         'application/x-www-form-urlencoded'
       );
     }
-  };
+  }
 
   /**
    * Function: simulate
@@ -370,7 +370,7 @@ class mxXmlRequest {
    * docs - Document that contains the form element.
    * target - Target to send the form result to.
    */
-  simulate = (doc, target) => {
+  simulate(doc, target) {
     doc = doc || document;
     let old = null;
 
@@ -425,7 +425,7 @@ class mxXmlRequest {
     if (old != null) {
       window.onbeforeunload = old;
     }
-  };
+  }
 }
 
 export default mxXmlRequest;

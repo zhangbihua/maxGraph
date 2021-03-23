@@ -10,7 +10,7 @@ import mxUtils from '../util/mxUtils';
 import mxPoint from '../util/mxPoint';
 import mxSvgCanvas2D from '../util/mxSvgCanvas2D';
 import mxShape from './mxShape';
-import mxRectangle from "../util/mxRectangle";
+import mxRectangle from '../util/mxRectangle';
 
 class mxText extends mxShape {
   /**
@@ -210,25 +210,25 @@ class mxText extends mxShape {
    * Returns true if HTML is allowed for this shape. This implementation returns
    * true if the browser is not in IE8 standards mode.
    */
-  isHtmlAllowed = () => {
+  isHtmlAllowed() {
     return document.documentMode !== 8 || mxClient.IS_EM;
-  };
+  }
 
   /**
    * Function: getSvgScreenOffset
    *
    * Disables offset in IE9 for crisper image output.
    */
-  getSvgScreenOffset = () => {
+  getSvgScreenOffset() {
     return 0;
-  };
+  }
 
   /**
    * Function: checkBounds
    *
    * Returns true if the bounds are not null and all of its variables are numeric.
    */
-  checkBounds = () => {
+  checkBounds() {
     return (
       !isNaN(this.scale) &&
       isFinite(this.scale) &&
@@ -239,14 +239,14 @@ class mxText extends mxShape {
       !isNaN(this.bounds.width) &&
       !isNaN(this.bounds.height)
     );
-  };
+  }
 
   /**
    * Function: paint
    *
    * Generic rendering code.
    */
-  paint = (c, update) => {
+  paint(c, update) {
     // Scale is passed-through to canvas
     const s = this.scale;
     const x = this.bounds.x / s;
@@ -324,14 +324,14 @@ class mxText extends mxShape {
         dir
       );
     }
-  };
+  }
 
   /**
    * Function: redraw
    *
    * Renders the text using the given DOM nodes.
    */
-  redraw = () => {
+  redraw() {
     if (
       this.visible &&
       this.checkBounds() &&
@@ -380,14 +380,14 @@ class mxText extends mxShape {
         this.lastValue = null;
       }
     }
-  };
+  }
 
   /**
    * Function: resetStyles
    *
    * Resets all styles.
    */
-  resetStyles = () => {
+  resetStyles() {
     super.resetStyles();
 
     this.color = 'black';
@@ -406,7 +406,7 @@ class mxText extends mxShape {
     delete this.border;
     this.textDirection = mxConstants.DEFAULT_TEXT_DIRECTION;
     delete this.margin;
-  };
+  }
 
   /**
    * Function: apply
@@ -417,7 +417,7 @@ class mxText extends mxShape {
    *
    * state - <mxCellState> of the corresponding cell.
    */
-  apply = state => {
+  apply(state) {
     const old = this.spacing;
     super.apply(state);
 
@@ -517,7 +517,7 @@ class mxText extends mxShape {
 
     this.flipV = null;
     this.flipH = null;
-  };
+  }
 
   /**
    * Function: getAutoDirection
@@ -527,7 +527,7 @@ class mxText extends mxShape {
    * depending on the contents of <value>. This is not invoked for HTML, wrapped
    * content or if <value> is a DOM node.
    */
-  getAutoDirection = () => {
+  getAutoDirection() {
     // Looks for strong (directional) characters
     const tmp = /[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(
       this.value
@@ -537,14 +537,14 @@ class mxText extends mxShape {
     return tmp != null && tmp.length > 0 && tmp[0] > 'z'
       ? mxConstants.TEXT_DIRECTION_RTL
       : mxConstants.TEXT_DIRECTION_LTR;
-  };
+  }
 
   /**
    * Function: getContentNode
    *
    * Returns the node that contains the rendered input.
    */
-  getContentNode = () => {
+  getContentNode() {
     let result = this.node;
 
     if (result != null) {
@@ -558,14 +558,14 @@ class mxText extends mxShape {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: updateBoundingBox
    *
    * Updates the <boundingBox> for this shape using the given node and position.
    */
-  updateBoundingBox = () => {
+  updateBoundingBox() {
     let { node } = this;
     this.boundingBox = this.bounds.clone();
     const rot = this.getTextRotation();
@@ -710,27 +710,27 @@ class mxText extends mxShape {
         this.unrotatedBoundingBox = null;
       }
     }
-  };
+  }
 
   /**
    * Function: getShapeRotation
    *
    * Returns 0 to avoid using rotation in the canvas via updateTransform.
    */
-  getShapeRotation = () => {
+  getShapeRotation() {
     return 0;
-  };
+  }
 
   /**
    * Function: getTextRotation
    *
    * Returns the rotation for the text label of the corresponding shape.
    */
-  getTextRotation = () => {
+  getTextRotation() {
     return this.state != null && this.state.shape != null
       ? this.state.shape.getTextRotation()
       : 0;
-  };
+  }
 
   /**
    * Function: isPaintBoundsInverted
@@ -738,20 +738,20 @@ class mxText extends mxShape {
    * Inverts the bounds if <mxShape.isBoundsInverted> returns true or if the
    * horizontal style is false.
    */
-  isPaintBoundsInverted = () => {
+  isPaintBoundsInverted() {
     return (
       !this.horizontal &&
       this.state != null &&
       this.state.view.graph.model.isVertex(this.state.cell)
     );
-  };
+  }
 
   /**
    * Function: configureCanvas
    *
    * Sets the state of the canvas for drawing the shape.
    */
-  configureCanvas = (c, x, y, w, h) => {
+  configureCanvas(c, x, y, w, h) {
     super.configureCanvas(c, x, y, w, h);
 
     c.setFontColor(this.color);
@@ -760,14 +760,14 @@ class mxText extends mxShape {
     c.setFontFamily(this.family);
     c.setFontSize(this.size);
     c.setFontStyle(this.fontStyle);
-  };
+  }
 
   /**
    * Function: getHtmlValue
    *
    * Private helper function to create SVG elements
    */
-  getHtmlValue = () => {
+  getHtmlValue() {
     let val = this.value;
 
     if (this.dialect !== mxConstants.DIALECT_STRICTHTML) {
@@ -779,14 +779,14 @@ class mxText extends mxShape {
     val = this.replaceLinefeeds ? val.replace(/\n/g, '<br/>') : val;
 
     return val;
-  };
+  }
 
   /**
    * Function: getTextCss
    *
    * Private helper function to create SVG elements
    */
-  getTextCss = () => {
+  getTextCss() {
     const lh = mxConstants.ABSOLUTE_LINE_HEIGHT
       ? `${this.size * mxConstants.LINE_HEIGHT}px`
       : mxConstants.LINE_HEIGHT;
@@ -831,14 +831,14 @@ class mxText extends mxShape {
     }
 
     return css;
-  };
+  }
 
   /**
    * Function: redrawHtmlShape
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  redrawHtmlShape = () => {
+  redrawHtmlShape() {
     if (mxClient.IS_SVG) {
       this.redrawHtmlShapeWithCss3();
     } else {
@@ -862,14 +862,14 @@ class mxText extends mxShape {
 
       this.updateHtmlTransform();
     }
-  };
+  }
 
   /**
    * Function: redrawHtmlShapeWithCss3
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  redrawHtmlShapeWithCss3 = () => {
+  redrawHtmlShapeWithCss3() {
     const w = Math.max(0, Math.round(this.bounds.width / this.scale));
     const h = Math.max(0, Math.round(this.bounds.height / this.scale));
     const flex =
@@ -932,14 +932,14 @@ class mxText extends mxShape {
         this.node.firstChild.setAttribute('style', item);
       }
     );
-  };
+  }
 
   /**
    * Function: updateHtmlTransform
    *
    * Returns the spacing as an <mxPoint>.
    */
-  updateHtmlTransform = () => {
+  updateHtmlTransform() {
     const theta = this.getTextRotation();
     const { style } = this.node;
     const dx = this.margin.x;
@@ -982,14 +982,14 @@ class mxText extends mxShape {
     } else {
       style.opacity = '';
     }
-  };
+  }
 
   /**
    * Function: updateInnerHtml
    *
    * Sets the inner HTML of the given element to the <value>.
    */
-  updateInnerHtml = elt => {
+  updateInnerHtml(elt) {
     if (mxUtils.isNode(this.value)) {
       elt.innerHTML = this.value.outerHTML;
     } else {
@@ -1007,14 +1007,14 @@ class mxText extends mxShape {
 
       elt.innerHTML = val;
     }
-  };
+  }
 
   /**
    * Function: updateHtmlFilter
    *
    * Rotated text rendering quality is bad for IE9 quirks/IE8 standards
    */
-  updateHtmlFilter = () => {
+  updateHtmlFilter() {
     const { style } = this.node;
     const dx = this.margin.x;
     let dy = this.margin.y;
@@ -1160,14 +1160,14 @@ class mxText extends mxShape {
     style.zoom = s;
     style.left = `${Math.round(this.bounds.x + left_fix - w / 2)}px`;
     style.top = `${Math.round(this.bounds.y + top_fix - h / 2 + dy)}px`;
-  };
+  }
 
   /**
    * Function: updateValue
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  updateValue = () => {
+  updateValue() {
     if (mxUtils.isNode(this.value)) {
       this.node.innerHTML = '';
       this.node.appendChild(this.value);
@@ -1245,14 +1245,14 @@ class mxText extends mxShape {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: updateFont
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  updateFont = node => {
+  updateFont(node) {
     const { style } = node;
 
     style.lineHeight = mxConstants.ABSOLUTE_LINE_HEIGHT
@@ -1303,14 +1303,14 @@ class mxText extends mxShape {
     } else {
       style.textAlign = 'left';
     }
-  };
+  }
 
   /**
    * Function: updateSize
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  updateSize = (node, enableWrap) => {
+  updateSize(node, enableWrap) {
     const w = Math.max(0, Math.round(this.bounds.width / this.scale));
     const h = Math.max(0, Math.round(this.bounds.height / this.scale));
     const { style } = node;
@@ -1374,23 +1374,23 @@ class mxText extends mxShape {
     } else {
       style.whiteSpace = 'nowrap';
     }
-  };
+  }
 
   /**
    * Function: getMargin
    *
    * Returns the spacing as an <mxPoint>.
    */
-  updateMargin = () => {
+  updateMargin() {
     this.margin = mxUtils.getAlignmentAsPoint(this.align, this.valign);
-  };
+  }
 
   /**
    * Function: getSpacing
    *
    * Returns the spacing as an <mxPoint>.
    */
-  getSpacing = () => {
+  getSpacing() {
     let dx = 0;
     let dy = 0;
 
@@ -1411,7 +1411,7 @@ class mxText extends mxShape {
     }
 
     return new mxPoint(dx, dy);
-  };
+  }
 }
 
 export default mxText;

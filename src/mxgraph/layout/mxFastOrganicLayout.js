@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxObjectIdentity from "../util/mxObjectIdentity";
+import mxObjectIdentity from '../util/mxObjectIdentity';
 import mxGraphLayout from './mxGraphLayout';
 
 class mxFastOrganicLayout extends mxGraphLayout {
@@ -201,12 +201,12 @@ class mxFastOrganicLayout extends mxGraphLayout {
    *
    * vertex - <mxCell> whose ignored state should be returned.
    */
-  isVertexIgnored = vertex => {
+  isVertexIgnored(vertex) {
     return (
       super.isVertexIgnored(vertex) ||
       this.graph.getConnections(vertex).length === 0
     );
-  };
+  }
 
   /**
    * Function: execute
@@ -214,7 +214,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * Implements <mxGraphLayout.execute>. This operates on all children of the
    * given parent where <isVertexIgnored> returns false.
    */
-  execute = parent => {
+  execute(parent) {
     const model = this.graph.getModel();
     this.vertexArray = [];
     let cells = this.graph.getChildVertices(parent);
@@ -393,7 +393,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
     } finally {
       model.endUpdate();
     }
-  };
+  }
 
   /**
    * Function: calcPositions
@@ -402,7 +402,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * local cache of cell positions. Limits the displacement to the current
    * temperature.
    */
-  calcPositions = () => {
+  calcPositions() {
     for (let index = 0; index < this.vertexArray.length; index += 1) {
       if (this.isMoveable[index]) {
         // Get the distance of displacement for this node for this
@@ -435,7 +435,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
         this.cellLocation[index][1] += newYDisp;
       }
     }
-  };
+  }
 
   /**
    * Function: calcAttraction
@@ -443,7 +443,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * Calculates the attractive forces between all laid out nodes linked by
    * edges
    */
-  calcAttraction = () => {
+  calcAttraction() {
     // Check the neighbours of each vertex and calculate the attractive
     // force of the edge connecting them
     for (let i = 0; i < this.vertexArray.length; i += 1) {
@@ -481,14 +481,14 @@ class mxFastOrganicLayout extends mxGraphLayout {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: calcRepulsion
    *
    * Calculates the repulsive forces between all laid out nodes
    */
-  calcRepulsion = () => {
+  calcRepulsion() {
     const vertexCount = this.vertexArray.length;
 
     for (let i = 0; i < vertexCount; i += 1) {
@@ -537,7 +537,7 @@ class mxFastOrganicLayout extends mxGraphLayout {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: reduceTemperature
@@ -545,10 +545,10 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * Reduces the temperature of the layout from an initial setting in a linear
    * fashion to zero.
    */
-  reduceTemperature = () => {
+  reduceTemperature() {
     this.temperature =
       this.initialTemp * (1.0 - this.iteration / this.maxIterations);
-  };
+  }
 }
 
 export default mxFastOrganicLayout;

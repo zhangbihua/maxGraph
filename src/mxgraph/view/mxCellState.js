@@ -182,7 +182,7 @@ class mxCellState extends mxRectangle {
    * border - Optional border to be added around the perimeter bounds.
    * bounds - Optional <mxRectangle> to be used as the initial bounds.
    */
-  getPerimeterBounds = (border, bounds) => {
+  getPerimeterBounds(border, bounds) {
     border = border || 0;
     bounds =
       bounds != null
@@ -213,7 +213,7 @@ class mxCellState extends mxRectangle {
     }
 
     return bounds;
-  };
+  }
 
   /**
    * Function: setAbsoluteTerminalPoint
@@ -226,7 +226,7 @@ class mxCellState extends mxRectangle {
    * isSource - Boolean that specifies if the first or last point should
    * be assigned.
    */
-  setAbsoluteTerminalPoint = (point, isSource) => {
+  setAbsoluteTerminalPoint(point, isSource) {
     if (isSource) {
       if (this.absolutePoints == null) {
         this.absolutePoints = [];
@@ -246,14 +246,14 @@ class mxCellState extends mxRectangle {
     } else {
       this.absolutePoints[this.absolutePoints.length - 1] = point;
     }
-  };
+  }
 
   /**
    * Function: setCursor
    *
    * Sets the given cursor on the shape and text shape.
    */
-  setCursor = cursor => {
+  setCursor(cursor) {
     if (this.shape != null) {
       this.shape.setCursor(cursor);
     }
@@ -261,7 +261,7 @@ class mxCellState extends mxRectangle {
     if (this.text != null) {
       this.text.setCursor(cursor);
     }
-  };
+  }
 
   /**
    * Function: getVisibleTerminal
@@ -273,11 +273,11 @@ class mxCellState extends mxRectangle {
    * source - Boolean that specifies if the source or target cell should be
    * returned.
    */
-  getVisibleTerminal = source => {
+  getVisibleTerminal(source) {
     const tmp = this.getVisibleTerminalState(source);
 
     return tmp != null ? tmp.cell : null;
-  };
+  }
 
   /**
    * Function: getVisibleTerminalState
@@ -289,9 +289,9 @@ class mxCellState extends mxRectangle {
    * source - Boolean that specifies if the source or target state should be
    * returned.
    */
-  getVisibleTerminalState = source => {
+  getVisibleTerminalState(source) {
     return source ? this.visibleSourceState : this.visibleTargetState;
-  };
+  }
 
   /**
    * Function: setVisibleTerminalState
@@ -303,22 +303,22 @@ class mxCellState extends mxRectangle {
    * terminalState - <mxCellState> that represents the terminal.
    * source - Boolean that specifies if the source or target state should be set.
    */
-  setVisibleTerminalState = (terminalState, source) => {
+  setVisibleTerminalState(terminalState, source) {
     if (source) {
       this.visibleSourceState = terminalState;
     } else {
       this.visibleTargetState = terminalState;
     }
-  };
+  }
 
   /**
    * Function: getCellBounds
    *
    * Returns the unscaled, untranslated bounds.
    */
-  getCellBounds = () => {
+  getCellBounds() {
     return this.cellBounds;
-  };
+  }
 
   /**
    * Function: getPaintBounds
@@ -327,16 +327,16 @@ class mxCellState extends mxRectangle {
    * <getCellBounds> but with a 90 degree rotation if the shape's
    * isPaintBoundsInverted returns true.
    */
-  getPaintBounds = () => {
+  getPaintBounds() {
     return this.paintBounds;
-  };
+  }
 
   /**
    * Function: updateCachedBounds
    *
    * Updates the cellBounds and paintBounds.
    */
-  updateCachedBounds = () => {
+  updateCachedBounds() {
     const tr = this.view.translate;
     const s = this.view.scale;
     this.cellBounds = new mxRectangle(
@@ -350,14 +350,14 @@ class mxCellState extends mxRectangle {
     if (this.shape != null && this.shape.isPaintBoundsInverted()) {
       this.paintBounds.rotate90();
     }
-  };
+  }
 
   /**
    * Destructor: setState
    *
    * Copies all fields from the given state to this state.
    */
-  setState = state => {
+  setState(state) {
     this.view = state.view;
     this.cell = state.cell;
     this.style = state.style;
@@ -374,14 +374,14 @@ class mxCellState extends mxRectangle {
     this.height = state.height;
     this.unscaledWidth = state.unscaledWidth;
     this.unscaledHeight = state.unscaledHeight;
-  };
+  }
 
   /**
    * Function: clone
    *
    * Returns a clone of this <mxPoint>.
    */
-  clone = () => {
+  clone() {
     const clone = new mxCellState(this.view, this.cell, this.style);
 
     // Clones the absolute points
@@ -416,16 +416,16 @@ class mxCellState extends mxRectangle {
     clone.unscaledHeight = this.unscaledHeight;
 
     return clone;
-  };
+  }
 
   /**
    * Destructor: destroy
    *
    * Destroys the state and all associated resources.
    */
-  destroy = () => {
+  destroy() {
     this.view.graph.cellRenderer.destroy(this);
-  };
+  }
 }
 
 export default mxCellState;

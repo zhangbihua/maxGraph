@@ -118,9 +118,9 @@ class mxAbstractCanvas2D {
    *
    * Create a new <mxUrlConverter> and returns it.
    */
-  createUrlConverter = () => {
+  createUrlConverter() {
     return new mxUrlConverter();
-  };
+  }
 
   /**
    * Function: reset
@@ -137,7 +137,7 @@ class mxAbstractCanvas2D {
    *
    * Creates the state of the this canvas.
    */
-  createState = () => {
+  createState() {
     return {
       dx: 0,
       dy: 0,
@@ -173,16 +173,16 @@ class mxAbstractCanvas2D {
       rotationCx: 0,
       rotationCy: 0,
     };
-  };
+  }
 
   /**
    * Function: format
    *
    * Rounds all numbers to integers.
    */
-  format = value => {
+  format(value) {
     return Math.round(parseFloat(value));
-  };
+  }
 
   /**
    * Function: addOp
@@ -212,7 +212,7 @@ class mxAbstractCanvas2D {
    *
    * Rotates the given point and returns the result as an <mxPoint>.
    */
-  rotatePoint = (x, y, theta, cx, cy) => {
+  rotatePoint(x, y, theta, cx, cy) {
     const rad = theta * (Math.PI / 180);
 
     return mxUtils.getRotatedPoint(
@@ -221,300 +221,300 @@ class mxAbstractCanvas2D {
       Math.sin(rad),
       new mxPoint(cx, cy)
     );
-  };
+  }
 
   /**
    * Function: save
    *
    * Saves the current state.
    */
-  save = () => {
+  save() {
     this.states.push(this.state);
     this.state = mxUtils.clone(this.state);
-  };
+  }
 
   /**
    * Function: restore
    *
    * Restores the current state.
    */
-  restore = () => {
+  restore() {
     if (this.states.length > 0) {
       this.state = this.states.pop();
     }
-  };
+  }
 
   /**
    * Function: setLink
    *
    * Sets the current link. Hook for subclassers.
    */
-  setLink = link => {
+  setLink(link) {
     // nop
-  };
+  }
 
   /**
    * Function: scale
    *
    * Scales the current state.
    */
-  scale = value => {
+  scale(value) {
     this.state.scale *= value;
     this.state.strokeWidth *= value;
-  };
+  }
 
   /**
    * Function: translate
    *
    * Translates the current state.
    */
-  translate = (dx, dy) => {
+  translate(dx, dy) {
     this.state.dx += dx;
     this.state.dy += dy;
-  };
+  }
 
   /**
    * Function: rotate
    *
    * Rotates the current state.
    */
-  rotate = (theta, flipH, flipV, cx, cy) => {
+  rotate(theta, flipH, flipV, cx, cy) {
     // nop
-  };
+  }
 
   /**
    * Function: setAlpha
    *
    * Sets the current alpha.
    */
-  setAlpha = value => {
+  setAlpha(value) {
     this.state.alpha = value;
-  };
+  }
 
   /**
    * Function: setFillAlpha
    *
    * Sets the current solid fill alpha.
    */
-  setFillAlpha = value => {
+  setFillAlpha(value) {
     this.state.fillAlpha = value;
-  };
+  }
 
   /**
    * Function: setStrokeAlpha
    *
    * Sets the current stroke alpha.
    */
-  setStrokeAlpha = value => {
+  setStrokeAlpha(value) {
     this.state.strokeAlpha = value;
-  };
+  }
 
   /**
    * Function: setFillColor
    *
    * Sets the current fill color.
    */
-  setFillColor = value => {
+  setFillColor(value) {
     if (value === mxConstants.NONE) {
       value = null;
     }
 
     this.state.fillColor = value;
     this.state.gradientColor = null;
-  };
+  }
 
   /**
    * Function: setGradient
    *
    * Sets the current gradient.
    */
-  setGradient = (color1, color2, x, y, w, h, direction, alpha1, alpha2) => {
+  setGradient(color1, color2, x, y, w, h, direction, alpha1, alpha2) {
     const s = this.state;
     s.fillColor = color1;
     s.gradientFillAlpha = alpha1 != null ? alpha1 : 1;
     s.gradientColor = color2;
     s.gradientAlpha = alpha2 != null ? alpha2 : 1;
     s.gradientDirection = direction;
-  };
+  }
 
   /**
    * Function: setStrokeColor
    *
    * Sets the current stroke color.
    */
-  setStrokeColor = value => {
+  setStrokeColor(value) {
     if (value === mxConstants.NONE) {
       value = null;
     }
 
     this.state.strokeColor = value;
-  };
+  }
 
   /**
    * Function: setStrokeWidth
    *
    * Sets the current stroke width.
    */
-  setStrokeWidth = value => {
+  setStrokeWidth(value) {
     this.state.strokeWidth = value;
-  };
+  }
 
   /**
    * Function: setDashed
    *
    * Enables or disables dashed lines.
    */
-  setDashed = (value, fixDash) => {
+  setDashed(value, fixDash) {
     this.state.dashed = value;
     this.state.fixDash = fixDash;
-  };
+  }
 
   /**
    * Function: setDashPattern
    *
    * Sets the current dash pattern.
    */
-  setDashPattern = value => {
+  setDashPattern(value) {
     this.state.dashPattern = value;
-  };
+  }
 
   /**
    * Function: setLineCap
    *
    * Sets the current line cap.
    */
-  setLineCap = value => {
+  setLineCap(value) {
     this.state.lineCap = value;
-  };
+  }
 
   /**
    * Function: setLineJoin
    *
    * Sets the current line join.
    */
-  setLineJoin = value => {
+  setLineJoin(value) {
     this.state.lineJoin = value;
-  };
+  }
 
   /**
    * Function: setMiterLimit
    *
    * Sets the current miter limit.
    */
-  setMiterLimit = value => {
+  setMiterLimit(value) {
     this.state.miterLimit = value;
-  };
+  }
 
   /**
    * Function: setFontColor
    *
    * Sets the current font color.
    */
-  setFontColor = value => {
+  setFontColor(value) {
     if (value === mxConstants.NONE) {
       value = null;
     }
 
     this.state.fontColor = value;
-  };
+  }
 
   /**
    * Function: setFontBackgroundColor
    *
    * Sets the current font background color.
    */
-  setFontBackgroundColor = value => {
+  setFontBackgroundColor(value) {
     if (value === mxConstants.NONE) {
       value = null;
     }
 
     this.state.fontBackgroundColor = value;
-  };
+  }
 
   /**
    * Function: setFontBorderColor
    *
    * Sets the current font border color.
    */
-  setFontBorderColor = value => {
+  setFontBorderColor(value) {
     if (value === mxConstants.NONE) {
       value = null;
     }
 
     this.state.fontBorderColor = value;
-  };
+  }
 
   /**
    * Function: setFontSize
    *
    * Sets the current font size.
    */
-  setFontSize = value => {
+  setFontSize(value) {
     this.state.fontSize = parseFloat(value);
-  };
+  }
 
   /**
    * Function: setFontFamily
    *
    * Sets the current font family.
    */
-  setFontFamily = value => {
+  setFontFamily(value) {
     this.state.fontFamily = value;
-  };
+  }
 
   /**
    * Function: setFontStyle
    *
    * Sets the current font style.
    */
-  setFontStyle = value => {
+  setFontStyle(value) {
     if (value == null) {
       value = 0;
     }
 
     this.state.fontStyle = value;
-  };
+  }
 
   /**
    * Function: setShadow
    *
    * Enables or disables and configures the current shadow.
    */
-  setShadow = enabled => {
+  setShadow(enabled) {
     this.state.shadow = enabled;
-  };
+  }
 
   /**
    * Function: setShadowColor
    *
    * Enables or disables and configures the current shadow.
    */
-  setShadowColor = value => {
+  setShadowColor(value) {
     if (value === mxConstants.NONE) {
       value = null;
     }
 
     this.state.shadowColor = value;
-  };
+  }
 
   /**
    * Function: setShadowAlpha
    *
    * Enables or disables and configures the current shadow.
    */
-  setShadowAlpha = value => {
+  setShadowAlpha(value) {
     this.state.shadowAlpha = value;
-  };
+  }
 
   /**
    * Function: setShadowOffset
    *
    * Enables or disables and configures the current shadow.
    */
-  setShadowOffset = (dx, dy) => {
+  setShadowOffset(dx, dy) {
     this.state.shadowDx = dx;
     this.state.shadowDy = dy;
-  };
+  }
 
   /**
    * Function: begin
@@ -532,36 +532,36 @@ class mxAbstractCanvas2D {
    *
    *  Moves the current path the given coordinates.
    */
-  moveTo = (x, y) => {
+  moveTo(x, y) {
     this.addOp(this.moveOp, x, y);
-  };
+  }
 
   /**
    * Function: lineTo
    *
    * Draws a line to the given coordinates. Uses moveTo with the op argument.
    */
-  lineTo = (x, y) => {
+  lineTo(x, y) {
     this.addOp(this.lineOp, x, y);
-  };
+  }
 
   /**
    * Function: quadTo
    *
    * Adds a quadratic curve to the current path.
    */
-  quadTo = (x1, y1, x2, y2) => {
+  quadTo(x1, y1, x2, y2) {
     this.addOp(this.quadOp, x1, y1, x2, y2);
-  };
+  }
 
   /**
    * Function: curveTo
    *
    * Adds a bezier curve to the current path.
    */
-  curveTo = (x1, y1, x2, y2, x3, y3) => {
+  curveTo(x1, y1, x2, y2, x3, y3) {
     this.addOp(this.curveOp, x1, y1, x2, y2, x3, y3);
-  };
+  }
 
   /**
    * Function: arcTo
@@ -569,7 +569,7 @@ class mxAbstractCanvas2D {
    * Adds the given arc to the current path. This is a synthetic operation that
    * is broken down into curves.
    */
-  arcTo = (rx, ry, angle, largeArcFlag, sweepFlag, x, y) => {
+  arcTo(rx, ry, angle, largeArcFlag, sweepFlag, x, y) {
     const curves = mxUtils.arcToCurves(
       this.lastX,
       this.lastY,
@@ -594,23 +594,23 @@ class mxAbstractCanvas2D {
         );
       }
     }
-  };
+  }
 
   /**
    * Function: close
    *
    * Closes the current path.
    */
-  close = (x1, y1, x2, y2, x3, y3) => {
+  close(x1, y1, x2, y2, x3, y3) {
     this.addOp(this.closeOp);
-  };
+  }
 
   /**
    * Function: end
    *
    * Empty implementation for backwards compatibility. This will be removed.
    */
-  end = () => {};
+  end() {}
 }
 
 export default mxAbstractCanvas2D;

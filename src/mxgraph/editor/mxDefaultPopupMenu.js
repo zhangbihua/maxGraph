@@ -155,14 +155,14 @@ class mxDefaultPopupMenu {
    * cell - Optional <mxCell> which is under the mousepointer.
    * evt - Optional mouse event which triggered the menu.
    */
-  createMenu = (editor, menu, cell, evt) => {
+  createMenu(editor, menu, cell, evt) {
     if (this.config != null) {
       const conditions = this.createConditions(editor, cell, evt);
       const item = this.config.firstChild;
 
       this.addItems(editor, menu, cell, evt, conditions, item, null);
     }
-  };
+  }
 
   /**
    * Function: addItems
@@ -179,7 +179,7 @@ class mxDefaultPopupMenu {
    * item - XML node that represents the current menu item.
    * parent - DOM node that represents the parent menu item.
    */
-  addItems = (editor, menu, cell, evt, conditions, item, parent) => {
+  addItems(editor, menu, cell, evt, conditions, item, parent) {
     let addSeparator = false;
 
     while (item != null) {
@@ -233,7 +233,7 @@ class mxDefaultPopupMenu {
 
       item = item.nextSibling;
     }
-  };
+  }
 
   /**
    * Function: addAction
@@ -256,7 +256,7 @@ class mxDefaultPopupMenu {
    * enabled - Optional boolean that specifies if the menu item is enabled.
    * Default is true.
    */
-  addAction = (
+  addAction(
     menu,
     editor,
     lab,
@@ -267,7 +267,7 @@ class mxDefaultPopupMenu {
     parent,
     iconCls,
     enabled
-  ) => {
+  ) {
     const clickHandler = evt => {
       if (typeof funct === 'function') {
         funct.call(editor, editor, cell, evt);
@@ -277,14 +277,14 @@ class mxDefaultPopupMenu {
       }
     };
     return menu.addItem(lab, icon, clickHandler, parent, iconCls, enabled);
-  };
+  }
 
   /**
    * Function: createConditions
    *
    * Evaluates the default conditions for the given context.
    */
-  createConditions = (editor, cell, evt) => {
+  createConditions(editor, cell, evt) {
     // Creates array with conditions
     const model = editor.graph.getModel();
     const childCount = model.getChildCount(cell);
@@ -318,7 +318,7 @@ class mxDefaultPopupMenu {
     }
 
     return conditions;
-  };
+  }
 }
 
 export default mxDefaultPopupMenu;

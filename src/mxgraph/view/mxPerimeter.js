@@ -470,7 +470,7 @@ const mxPerimeter = {
         if (px == cx) {
           if (py <= y) {
             return new mxPoint(cx, y);
-          } else if (py >= y + h) {
+          } if (py >= y + h) {
             return new mxPoint(cx, y + h);
           }
         } else if (px < x) {
@@ -488,13 +488,13 @@ const mxPerimeter = {
         } else if (px == x) {
           if (py < cy) {
             return new mxPoint(x, y + h / 4);
-          } else if (py > cy) {
+          } if (py > cy) {
             return new mxPoint(x, y + (3 * h) / 4);
           }
         } else if (px == x + w) {
           if (py < cy) {
             return new mxPoint(x + w, y + h / 4);
-          } else if (py > cy) {
+          } if (py > cy) {
             return new mxPoint(x + w, y + (3 * h) / 4);
           }
         }
@@ -538,7 +538,7 @@ const mxPerimeter = {
         } else if (py < y) {
           if (px == x + w / 4) {
             return new mxPoint(x + w / 4, y);
-          } else if (px == x + (3 * w) / 4) {
+          } if (px == x + (3 * w) / 4) {
             return new mxPoint(x + (3 * w) / 4, y);
           }
         } else if (py > y + h) {
@@ -550,13 +550,13 @@ const mxPerimeter = {
         } else if (py == y) {
           if (px < cx) {
             return new mxPoint(x + w / 4, y);
-          } else if (px > cx) {
+          } if (px > cx) {
             return new mxPoint(x + (3 * w) / 4, y);
           }
         } else if (py == y + h) {
           if (px < cx) {
             return new mxPoint(x + w / 4, y + h);
-          } else if (py > cy) {
+          } if (py > cy) {
             return new mxPoint(x + (3 * w) / 4, y + h);
           }
         }
@@ -662,13 +662,13 @@ const mxPerimeter = {
           return new mxPoint(x + Math.floor(0.75 * w), y);
         } if (alpha == pi - beta) {
           return new mxPoint(x + Math.floor(0.25 * w), y);
-        } else if (alpha == pi || alpha == -pi) {
+        } if (alpha == pi || alpha == -pi) {
           return new mxPoint(x, y + Math.floor(0.5 * h));
-        } else if (alpha == 0) {
+        } if (alpha == 0) {
           return new mxPoint(x + w, y + Math.floor(0.5 * h));
-        } else if (alpha == -beta) {
+        } if (alpha == -beta) {
           return new mxPoint(x + Math.floor(0.75 * w), y + h);
-        } else if (alpha == -pi + beta) {
+        } if (alpha == -pi + beta) {
           return new mxPoint(x + Math.floor(0.25 * w), y + h);
         }
 

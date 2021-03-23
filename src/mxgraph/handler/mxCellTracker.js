@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxCellMarker from "./mxCellMarker";
+import mxCellMarker from './mxCellMarker';
 
 class mxCellTracker extends mxCellMarker {
   /**
@@ -91,7 +91,7 @@ class mxCellTracker extends mxCellMarker {
    *
    * Ignores the event. The event is not consumed.
    */
-  mouseDown = (sender, me) => {};
+  mouseDown(sender, me) {}
 
   /**
    * Function: mouseMove
@@ -99,18 +99,18 @@ class mxCellTracker extends mxCellMarker {
    * Handles the event by highlighting the cell under the mousepointer if it
    * is over the hotspot region of the cell.
    */
-  mouseMove = (sender, me) => {
+  mouseMove(sender, me) {
     if (this.isEnabled()) {
       this.process(me);
     }
-  };
+  }
 
   /**
    * Function: mouseUp
    *
    * Handles the event by reseting the highlight.
    */
-  mouseUp = (sender, me) => {};
+  mouseUp(sender, me) {}
 
   /**
    * Function: destroy
@@ -119,14 +119,14 @@ class mxCellTracker extends mxCellMarker {
    * normally need to be called. It is called automatically when the window
    * unloads.
    */
-  destroy = () => {
+  destroy() {
     if (!this.destroyed) {
       this.destroyed = true;
 
       this.graph.removeMouseListener(this);
       super.destroy();
     }
-  };
+  }
 }
 
 export default mxCellTracker;

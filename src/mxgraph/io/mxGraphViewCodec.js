@@ -30,9 +30,9 @@ class mxGraphViewCodec extends mxObjectCodec {
    * starting at the model's root. This returns the
    * top-level graph node of the recursive encoding.
    */
-  encode = (enc, view) => {
+  encode(enc, view) {
     return this.encodeCell(enc, view, view.graph.getModel().getRoot());
-  };
+  }
 
   /**
    * Function: encodeCell
@@ -54,7 +54,7 @@ class mxGraphViewCodec extends mxObjectCodec {
    * values from the cell style are added as attribute
    * values to the node.
    */
-  encodeCell = (enc, view, cell) => {
+  encodeCell(enc, view, cell) {
     const model = view.graph.getModel();
     const state = view.getState(cell);
     const parent = model.getParent(cell);
@@ -167,7 +167,7 @@ class mxGraphViewCodec extends mxObjectCodec {
       }
     }
     return node;
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxGraphViewCodec());

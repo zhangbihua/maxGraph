@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
-import mxUtils from "../../../util/mxUtils";
-import mxCellPath from "../../../model/mxCellPath";
+import mxUtils from '../../../util/mxUtils';
+import mxCellPath from '../../../model/mxCellPath';
 
 class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
   /**
@@ -38,7 +38,7 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
    * and creates the resulting laid out graph within that facade for further
    * use.
    */
-  execute = parent => {
+  execute(parent) {
     const model = this.layout.getModel();
     const seenNodes = {};
     const unseenNodes = mxUtils.clone(model.vertexMapper, null, true);
@@ -97,7 +97,7 @@ class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
       true,
       null
     );
-  };
+  }
 }
 
 export default mxSwimlaneOrdering;

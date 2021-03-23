@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
-import MedianCellSorter from "./MedianCellSorter";
+import MedianCellSorter from './MedianCellSorter';
 
 class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
   /**
@@ -107,7 +107,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * Performs a vertex ordering within ranks as described by Gansner et al
    * 1993
    */
-  execute = parent => {
+  execute(parent) {
     const model = this.layout.getModel();
 
     // Stores initial ordering as being the best one found so far
@@ -181,7 +181,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     }
 
     model.ranks = ranks;
-  };
+  }
 
   /**
    * Function: calculateCrossings
@@ -194,7 +194,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    *
    * model - the internal model describing the hierarchy
    */
-  calculateCrossings = model => {
+  calculateCrossings(model) {
     const numRanks = model.ranks.length;
     let totalCrossings = 0;
 
@@ -203,7 +203,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     }
 
     return totalCrossings;
-  };
+  }
 
   /**
    * Function: calculateRankCrossing
@@ -217,7 +217,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * i -  the topmost rank of the pair ( higher rank value )
    * model - the internal model describing the hierarchy
    */
-  calculateRankCrossing = (i, model) => {
+  calculateRankCrossing(i, model) {
     let totalCrossings = 0;
     const rank = model.ranks[i];
     const previousRank = model.ranks[i - 1];
@@ -282,7 +282,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
     }
 
     return totalCrossings;
-  };
+  }
 
   /**
    * Function: transpose
@@ -295,7 +295,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * mainLoopIteration - the iteration number of the main loop
    * model - the internal model describing the hierarchy
    */
-  transpose = (mainLoopIteration, model) => {
+  transpose(mainLoopIteration, model) {
     let improved = true;
 
     // Track the number of iterations in case of looping
@@ -450,7 +450,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: weightedMedian
@@ -463,7 +463,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * iteration - the iteration number of the main loop
    * model - the internal model describing the hierarchy
    */
-  weightedMedian = (iteration, model) => {
+  weightedMedian(iteration, model) {
     // Reverse sweep direction each time through this method
     const downwardSweep = iteration % 2 === 0;
     if (downwardSweep) {
@@ -475,7 +475,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
         this.medianRank(j, downwardSweep);
       }
     }
-  };
+  }
 
   /**
    * Function: medianRank
@@ -488,7 +488,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * rankValue - the layer number of this rank
    * downwardSweep - whether or not this is a downward sweep through the graph
    */
-  medianRank = (rankValue, downwardSweep) => {
+  medianRank(rankValue, downwardSweep) {
     const numCellsForRank = this.nestedBestRanks[rankValue].length;
     const medianValues = [];
     const reservedPositions = [];
@@ -546,7 +546,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
         cell.setGeneralPurposeVariable(rankValue, i);
       }
     }
-  };
+  }
 
   /**
    * Function: medianValue
@@ -561,7 +561,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * specified cell
    * rankValue - the rank that the connected cell lie upon
    */
-  medianValue = (connectedCells, rankValue) => {
+  medianValue(connectedCells, rankValue) {
     const medianValues = [];
     let arrayCount = 0;
 
@@ -593,7 +593,7 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
         medianValues[medianPoint] * leftMedian) /
       (leftMedian + rightMedian)
     );
-  };
+  }
 }
 
 export default mxMedianHybridCrossingReduction;

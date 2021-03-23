@@ -34,11 +34,11 @@ class mxTerminalChangeCodec extends mxObjectCodec {
    *
    * Restores the state by assigning the previous value.
    */
-  afterDecode = (dec, node, obj) => {
+  afterDecode(dec, node, obj) {
     obj.previous = obj.terminal;
 
     return obj;
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxTerminalChangeCodec());

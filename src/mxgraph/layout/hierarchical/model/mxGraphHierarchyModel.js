@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDictionary from "../../../util/mxDictionary";
+import mxDictionary from '../../../util/mxDictionary';
 
 class mxGraphHierarchyModel {
   /**
@@ -186,7 +186,7 @@ class mxGraphHierarchyModel {
    * internalVertices - The array of <mxGraphHierarchyNodes> to have their
    * information filled in using the real vertices.
    */
-  createInternalCells = (layout, vertices, internalVertices) => {
+  createInternalCells(layout, vertices, internalVertices) {
     const graph = layout.getGraph();
 
     // Create internal edges
@@ -270,7 +270,7 @@ class mxGraphHierarchyModel {
       // Ensure temp variable is cleared from any previous use
       internalVertices[i].temp[0] = 0;
     }
-  };
+  }
 
   /**
    * Function: initialRank
@@ -279,7 +279,7 @@ class mxGraphHierarchyModel {
    * or sinks and working through each node in the relevant edge direction.
    * Starting at the sinks is basically a longest path layering algorithm.
    */
-  initialRank = () => {
+  initialRank() {
     const startNodes = [];
 
     if (this.roots != null) {
@@ -404,7 +404,7 @@ class mxGraphHierarchyModel {
     // Reset the maxRank to that which would be expected for a from-sink
     // scan
     this.maxRank = this.SOURCESCANSTARTRANK - this.maxRank;
-  };
+  }
 
   /**
    * Function: fixRanks
@@ -412,7 +412,7 @@ class mxGraphHierarchyModel {
    * Fixes the layer assignments to the values stored in the nodes. Also needs
    * to create dummy nodes for edges that cross layers.
    */
-  fixRanks = () => {
+  fixRanks() {
     const rankList = [];
     this.ranks = [];
 
@@ -472,7 +472,7 @@ class mxGraphHierarchyModel {
       false,
       null
     );
-  };
+  }
 
   /**
    * Function: visit
@@ -485,7 +485,7 @@ class mxGraphHierarchyModel {
    * trackAncestors - Whether or not the search is to keep track all nodes
    * directly above this one in the search path.
    */
-  visit = (visitor, dfsRoots, trackAncestors, seenNodes) => {
+  visit(visitor, dfsRoots, trackAncestors, seenNodes) {
     // Run dfs through on all roots
     if (dfsRoots != null) {
       for (let i = 0; i < dfsRoots.length; i += 1) {
@@ -519,7 +519,7 @@ class mxGraphHierarchyModel {
 
       this.dfsCount++;
     }
-  };
+  }
 
   /**
    * Function: dfs
@@ -537,7 +537,7 @@ class mxGraphHierarchyModel {
    * ancestor node of the current node
    * layer - the layer on the dfs tree ( not the same as the model ranks )
    */
-  dfs = (parent, root, connectingEdge, visitor, seen, layer) => {
+  dfs(parent, root, connectingEdge, visitor, seen, layer) {
     if (root != null) {
       const rootId = root.id;
 
@@ -561,7 +561,7 @@ class mxGraphHierarchyModel {
         visitor(parent, root, connectingEdge, layer, 1);
       }
     }
-  };
+  }
 
   /**
    * Function: extendedDfs
@@ -583,7 +583,7 @@ class mxGraphHierarchyModel {
    * childHash - the new hash code for this node
    * layer - the layer on the dfs tree ( not the same as the model ranks )
    */
-  extendedDfs = (
+  extendedDfs(
     parent,
     root,
     connectingEdge,
@@ -592,7 +592,7 @@ class mxGraphHierarchyModel {
     ancestors,
     childHash,
     layer
-  ) => {
+  ) {
     // Explanation of custom hash set. Previously, the ancestors variable
     // was passed through the dfs as a HashSet. The ancestors were copied
     // into a new HashSet and when the new child was processed it was also
@@ -658,7 +658,7 @@ class mxGraphHierarchyModel {
         visitor(parent, root, connectingEdge, layer, 1);
       }
     }
-  };
+  }
 }
 
 export default mxGraphHierarchyModel;

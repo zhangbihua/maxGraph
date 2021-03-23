@@ -7,10 +7,10 @@ import mxImage from '../util/mxImage';
 import mxClient from '../mxClient';
 import mxConstants from '../util/mxConstants';
 import mxEvent from '../util/mxEvent';
-import mxUtils from "../util/mxUtils";
-import mxRectangle from "../util/mxRectangle";
-import mxImageShape from "../shape/mxImageShape";
-import mxRectangleShape from "../shape/mxRectangleShape";
+import mxUtils from '../util/mxUtils';
+import mxRectangle from '../util/mxRectangle';
+import mxImageShape from '../shape/mxImageShape';
+import mxRectangleShape from '../shape/mxRectangleShape';
 
 class mxConstraintHandler {
   /**
@@ -87,9 +87,9 @@ class mxConstraintHandler {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
@@ -101,16 +101,16 @@ class mxConstraintHandler {
    *
    * enabled - Boolean that specifies the new enabled state.
    */
-  setEnabled = enabled => {
+  setEnabled(enabled) {
     this.enabled = enabled;
-  };
+  }
 
   /**
    * Function: reset
    *
    * Resets the state of this handler.
    */
-  reset = () => {
+  reset() {
     if (this.focusIcons != null) {
       for (let i = 0; i < this.focusIcons.length; i += 1) {
         this.focusIcons[i].destroy();
@@ -129,7 +129,7 @@ class mxConstraintHandler {
     this.currentPoint = null;
     this.currentFocus = null;
     this.focusPoints = null;
-  };
+  }
 
   /**
    * Function: getTolerance
@@ -141,18 +141,18 @@ class mxConstraintHandler {
    *
    * me - <mxMouseEvent> whose tolerance should be returned.
    */
-  getTolerance = me => {
+  getTolerance(me) {
     return this.graph.getTolerance();
-  };
+  }
 
   /**
    * Function: getImageForConstraint
    *
    * Returns the tolerance to be used for intersecting connection points.
    */
-  getImageForConstraint = (state, constraint, point) => {
+  getImageForConstraint(state, constraint, point) {
     return this.pointImage;
-  };
+  }
 
   /**
    * Function: isEventIgnored
@@ -160,25 +160,25 @@ class mxConstraintHandler {
    * Returns true if the given <mxMouseEvent> should be ignored in <update>. This
    * implementation always returns false.
    */
-  isEventIgnored = (me, source) => {
+  isEventIgnored(me, source) {
     return false;
-  };
+  }
 
   /**
    * Function: isStateIgnored
    *
    * Returns true if the given state should be ignored. This always returns false.
    */
-  isStateIgnored = (state, source) => {
+  isStateIgnored(state, source) {
     return false;
-  };
+  }
 
   /**
    * Function: destroyIcons
    *
    * Destroys the <focusIcons> if they exist.
    */
-  destroyIcons = () => {
+  destroyIcons() {
     if (this.focusIcons != null) {
       for (let i = 0; i < this.focusIcons.length; i += 1) {
         this.focusIcons[i].destroy();
@@ -187,19 +187,19 @@ class mxConstraintHandler {
       this.focusIcons = null;
       this.focusPoints = null;
     }
-  };
+  }
 
   /**
    * Function: destroyFocusHighlight
    *
    * Destroys the <focusHighlight> if one exists.
    */
-  destroyFocusHighlight = () => {
+  destroyFocusHighlight() {
     if (this.focusHighlight != null) {
       this.focusHighlight.destroy();
       this.focusHighlight = null;
     }
-  };
+  }
 
   /**
    * Function: isKeepFocusEvent
@@ -207,16 +207,16 @@ class mxConstraintHandler {
    * Returns true if the current focused state should not be changed for the given event.
    * This returns true if shift and alt are pressed.
    */
-  isKeepFocusEvent = me => {
+  isKeepFocusEvent(me) {
     return mxEvent.isShiftDown(me.getEvent());
-  };
+  }
 
   /**
    * Function: getCellForEvent
    *
    * Returns the cell for the given event.
    */
-  getCellForEvent = (me, point) => {
+  getCellForEvent(me, point) {
     let cell = me.getCell();
 
     // Gets cell under actual point if different from event location
@@ -241,7 +241,7 @@ class mxConstraintHandler {
     }
 
     return this.graph.isCellLocked(cell) ? null : cell;
-  };
+  }
 
   /**
    * Function: update
@@ -249,7 +249,7 @@ class mxConstraintHandler {
    * Updates the state of this handler based on the given <mxMouseEvent>.
    * Source is a boolean indicating if the cell is a source or target.
    */
-  update = (me, source, existingEdge, point) => {
+  update(me, source, existingEdge, point) {
     if (this.isEnabled() && !this.isEventIgnored(me)) {
       // Lazy installation of mouseleave handler
       if (this.mouseleaveHandler == null && this.graph.container != null) {
@@ -332,7 +332,7 @@ class mxConstraintHandler {
 
             if (this.focusHighlight == null) {
               const hl = this.createHighlightShape();
-              hl.dialect = mxConstants.DIALECT_SVG
+              hl.dialect = mxConstants.DIALECT_SVG;
               hl.pointerEvents = false;
 
               hl.init(this.graph.getView().getOverlayPane());
@@ -359,7 +359,7 @@ class mxConstraintHandler {
       this.currentFocus = null;
       this.currentPoint = null;
     }
-  };
+  }
 
   /**
    * Function: redraw
@@ -368,7 +368,7 @@ class mxConstraintHandler {
    * the handler is not enabled then the outline is painted, but the constraints
    * are ignored.
    */
-  redraw = () => {
+  redraw() {
     if (
       this.currentFocus != null &&
       this.constraints != null &&
@@ -399,7 +399,7 @@ class mxConstraintHandler {
         this.focusPoints[i] = cp;
       }
     }
-  };
+  }
 
   /**
    * Function: setFocus
@@ -408,7 +408,7 @@ class mxConstraintHandler {
    * the handler is not enabled then the outline is painted, but the constraints
    * are ignored.
    */
-  setFocus = (me, state, source) => {
+  setFocus(me, state, source) {
     this.constraints =
       state != null &&
       !this.isStateIgnored(state, source) &&
@@ -484,7 +484,7 @@ class mxConstraintHandler {
       this.destroyIcons();
       this.destroyFocusHighlight();
     }
-  };
+  }
 
   /**
    * Function: createHighlightShape
@@ -493,7 +493,7 @@ class mxConstraintHandler {
    *
    * Returns true if the given icon intersects the given point.
    */
-  createHighlightShape = () => {
+  createHighlightShape() {
     const hl = new mxRectangleShape(
       null,
       this.highlightColor,
@@ -503,23 +503,23 @@ class mxConstraintHandler {
     hl.opacity = mxConstants.HIGHLIGHT_OPACITY;
 
     return hl;
-  };
+  }
 
   /**
    * Function: intersects
    *
    * Returns true if the given icon intersects the given rectangle.
    */
-  intersects = (icon, mouse, source, existingEdge) => {
+  intersects(icon, mouse, source, existingEdge) {
     return mxUtils.intersects(icon.bounds, mouse);
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroy this handler.
    */
-  destroy = () => {
+  destroy() {
     this.reset();
 
     if (this.resetHandler != null) {
@@ -537,7 +537,7 @@ class mxConstraintHandler {
       );
       this.mouseleaveHandler = null;
     }
-  };
+  }
 }
 
 export default mxConstraintHandler;

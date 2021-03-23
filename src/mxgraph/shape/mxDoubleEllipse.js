@@ -64,17 +64,17 @@ class mxDoubleEllipse extends mxShape {
    *
    * Paints the background.
    */
-  paintBackground = (c, x, y, w, h) => {
+  paintBackground(c, x, y, w, h) {
     c.ellipse(x, y, w, h);
     c.fillAndStroke();
-  };
+  }
 
   /**
    * Function: paintForeground
    *
    * Paints the foreground.
    */
-  paintForeground = (c, x, y, w, h) => {
+  paintForeground(c, x, y, w, h) {
     if (!this.outline) {
       const margin = mxUtils.getValue(
         this.style,
@@ -93,14 +93,14 @@ class mxDoubleEllipse extends mxShape {
 
       c.stroke();
     }
-  };
+  }
 
   /**
    * Function: getLabelBounds
    *
    * Returns the bounds for the label.
    */
-  getLabelBounds = rect => {
+  getLabelBounds(rect) {
     const margin =
       mxUtils.getValue(
         this.style,
@@ -117,7 +117,7 @@ class mxDoubleEllipse extends mxShape {
       rect.width - 2 * margin,
       rect.height - 2 * margin
     );
-  };
+  }
 }
 
 export default mxDoubleEllipse;

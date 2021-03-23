@@ -127,9 +127,9 @@ class mxRubberband {
    * Returns true if events are handled. This implementation returns
    * <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
@@ -137,9 +137,9 @@ class mxRubberband {
    * Enables or disables event handling. This implementation updates
    * <enabled>.
    */
-  setEnabled = enabled => {
+  setEnabled(enabled) {
     this.enabled = enabled;
-  };
+  }
 
   /**
    * Function: isForceRubberbandEvent
@@ -147,9 +147,9 @@ class mxRubberband {
    * Returns true if the given <mxMouseEvent> should start rubberband selection.
    * This implementation returns true if the alt key is pressed.
    */
-  isForceRubberbandEvent = me => {
+  isForceRubberbandEvent(me) {
     return mxEvent.isAltDown(me.getEvent());
-  };
+  }
 
   /**
    * Function: mouseDown
@@ -158,7 +158,7 @@ class mxRubberband {
    * event all subsequent events of the gesture are redirected to this
    * handler.
    */
-  mouseDown = (sender, me) => {
+  mouseDown(sender, me) {
     if (
       !me.isConsumed() &&
       this.isEnabled() &&
@@ -179,14 +179,14 @@ class mxRubberband {
       // not selecting anything while we're rubberbanding.
       me.consume(false);
     }
-  };
+  }
 
   /**
    * Function: start
    *
    * Sets the start point for the rubberband selection.
    */
-  start = (x, y) => {
+  start(x, y) {
     this.first = new mxPoint(x, y);
 
     const { container } = this.graph;
@@ -218,14 +218,14 @@ class mxRubberband {
         this.dropHandler
       );
     }
-  };
+  }
 
   /**
    * Function: mouseMove
    *
    * Handles the event by updating therubberband selection.
    */
-  mouseMove = (sender, me) => {
+  mouseMove(sender, me) {
     if (!me.isConsumed() && this.first != null) {
       const origin = mxUtils.getScrollOrigin(this.graph.container);
       const offset = mxUtils.getOffset(this.graph.container);
@@ -250,14 +250,14 @@ class mxRubberband {
         me.consume();
       }
     }
-  };
+  }
 
   /**
    * Function: createShape
    *
    * Creates the rubberband selection shape.
    */
-  createShape = () => {
+  createShape() {
     if (this.sharedDiv == null) {
       this.sharedDiv = document.createElement('div');
       this.sharedDiv.className = 'mxRubberband';
@@ -272,16 +272,16 @@ class mxRubberband {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: isActive
    *
    * Returns true if this handler is active.
    */
-  isActive = (sender, me) => {
+  isActive(sender, me) {
     return this.div != null && this.div.style.display !== 'none';
-  };
+  }
 
   /**
    * Function: mouseUp
@@ -289,7 +289,7 @@ class mxRubberband {
    * Handles the event by selecting the region of the rubberband using
    * <mxGraph.selectRegion>.
    */
-  mouseUp = (sender, me) => {
+  mouseUp(sender, me) {
     const active = this.isActive();
     this.reset();
 
@@ -297,7 +297,7 @@ class mxRubberband {
       this.execute(me.getEvent());
       me.consume();
     }
-  };
+  }
 
   /**
    * Function: execute
@@ -305,17 +305,17 @@ class mxRubberband {
    * Resets the state of this handler and selects the current region
    * for the given event.
    */
-  execute = evt => {
+  execute(evt) {
     const rect = new mxRectangle(this.x, this.y, this.width, this.height);
     this.graph.selectRegion(rect, evt);
-  };
+  }
 
   /**
    * Function: reset
    *
    * Resets the state of the rubberband selection.
    */
-  reset = () => {
+  reset() {
     if (this.div != null) {
       if (mxClient.IS_SVG && this.fadeOut) {
         const temp = this.div;
@@ -344,26 +344,26 @@ class mxRubberband {
     this.currentY = 0;
     this.first = null;
     this.div = null;
-  };
+  }
 
   /**
    * Function: update
    *
    * Sets <currentX> and <currentY> and calls <repaint>.
    */
-  update = (x, y) => {
+  update(x, y) {
     this.currentX = x;
     this.currentY = y;
 
     this.repaint();
-  };
+  }
 
   /**
    * Function: repaint
    *
    * Computes the bounding box and updates the style of the <div>.
    */
-  repaint = () => {
+  repaint() {
     if (this.div != null) {
       const x = this.currentX - this.graph.panDx;
       const y = this.currentY - this.graph.panDy;
@@ -381,7 +381,7 @@ class mxRubberband {
       this.div.style.width = `${Math.max(1, this.width)}px`;
       this.div.style.height = `${Math.max(1, this.height)}px`;
     }
-  };
+  }
 
   /**
    * Function: destroy
@@ -390,7 +390,7 @@ class mxRubberband {
    * normally not need to be called, it is called automatically when the
    * window unloads.
    */
-  destroy = () => {
+  destroy() {
     if (!this.destroyed) {
       this.destroyed = true;
       this.graph.removeMouseListener(this);
@@ -402,7 +402,7 @@ class mxRubberband {
         this.sharedDiv = null;
       }
     }
-  };
+  }
 }
 
 export default mxRubberband;

@@ -186,54 +186,54 @@ class mxDragSource {
    *
    * Returns <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
    *
    * Sets <enabled>.
    */
-  setEnabled = value => {
+  setEnabled(value) {
     this.enabled = value;
-  };
+  }
 
   /**
    * Function: isGuidesEnabled
    *
    * Returns <guidesEnabled>.
    */
-  isGuidesEnabled = () => {
+  isGuidesEnabled() {
     return this.guidesEnabled;
-  };
+  }
 
   /**
    * Function: setGuidesEnabled
    *
    * Sets <guidesEnabled>.
    */
-  setGuidesEnabled = value => {
+  setGuidesEnabled(value) {
     this.guidesEnabled = value;
-  };
+  }
 
   /**
    * Function: isGridEnabled
    *
    * Returns <gridEnabled>.
    */
-  isGridEnabled = () => {
+  isGridEnabled() {
     return this.gridEnabled;
-  };
+  }
 
   /**
    * Function: setGridEnabled
    *
    * Sets <gridEnabled>.
    */
-  setGridEnabled = value => {
+  setGridEnabled(value) {
     this.gridEnabled = value;
-  };
+  }
 
   /**
    * Function: getGraphForEvent
@@ -241,9 +241,9 @@ class mxDragSource {
    * Returns the graph for the given mouse event. This implementation returns
    * null.
    */
-  getGraphForEvent = evt => {
+  getGraphForEvent(evt) {
     return null;
-  };
+  }
 
   /**
    * Function: getDropTarget
@@ -251,9 +251,9 @@ class mxDragSource {
    * Returns the drop target for the given graph and coordinates. This
    * implementation uses <mxGraph.getCellAt>.
    */
-  getDropTarget = (graph, x, y, evt) => {
+  getDropTarget(graph, x, y, evt) {
     return graph.getCellAt(x, y);
-  };
+  }
 
   /**
    * Function: createDragElement
@@ -261,9 +261,9 @@ class mxDragSource {
    * Creates and returns a clone of the <dragElementPrototype> or the <element>
    * if the former is not defined.
    */
-  createDragElement = evt => {
+  createDragElement(evt) {
     return this.element.cloneNode(true);
-  };
+  }
 
   /**
    * Function: createPreviewElement
@@ -271,25 +271,25 @@ class mxDragSource {
    * Creates and returns an element which can be used as a preview in the given
    * graph.
    */
-  createPreviewElement = graph => {
+  createPreviewElement(graph) {
     return null;
-  };
+  }
 
   /**
    * Function: isActive
    *
    * Returns true if this drag source is active.
    */
-  isActive = () => {
+  isActive() {
     return this.mouseMoveHandler != null;
-  };
+  }
 
   /**
    * Function: reset
    *
    * Stops and removes everything and restores the state of the object.
    */
-  reset = () => {
+  reset() {
     if (this.currentGraph != null) {
       this.dragExit(this.currentGraph);
       this.currentGraph = null;
@@ -298,7 +298,7 @@ class mxDragSource {
     this.removeDragElement();
     this.removeListeners();
     this.stopDrag();
-  };
+  }
 
   /**
    * Function: mouseDown
@@ -321,7 +321,7 @@ class mxDragSource {
    * };
    * (end)
    */
-  mouseDown = evt => {
+  mouseDown(evt) {
     if (
       this.enabled &&
       !mxEvent.isConsumed(evt) &&
@@ -347,14 +347,14 @@ class mxDragSource {
         );
       }
     }
-  };
+  }
 
   /**
    * Function: startDrag
    *
    * Creates the <dragElement> using <createDragElement>.
    */
-  startDrag = evt => {
+  startDrag(evt) {
     this.dragElement = this.createDragElement(evt);
     this.dragElement.style.position = 'absolute';
     this.dragElement.style.zIndex = this.dragElementZIndex;
@@ -363,26 +363,26 @@ class mxDragSource {
     if (this.checkEventSource && mxClient.IS_SVG) {
       this.dragElement.style.pointerEvents = 'none';
     }
-  };
+  }
 
   /**
    * Function: stopDrag
    *
    * Invokes <removeDragElement>.
    */
-  stopDrag = () => {
+  stopDrag() {
     // LATER: This used to have a mouse event. If that is still needed we need to add another
     // final call to the DnD protocol to add a cleanup step in the case of escape press, which
     // is not associated with a mouse event and which currently calles this method.
     this.removeDragElement();
-  };
+  }
 
   /**
    * Function: removeDragElement
    *
    * Removes and destroys the <dragElement>.
    */
-  removeDragElement = () => {
+  removeDragElement() {
     if (this.dragElement != null) {
       if (this.dragElement.parentNode != null) {
         this.dragElement.parentNode.removeChild(this.dragElement);
@@ -390,28 +390,28 @@ class mxDragSource {
 
       this.dragElement = null;
     }
-  };
+  }
 
   /**
    * Function: getElementForEvent
    *
    * Returns the topmost element under the given event.
    */
-  getElementForEvent = evt => {
+  getElementForEvent(evt) {
     return mxEvent.isTouchEvent(evt) || mxEvent.isPenEvent(evt)
       ? document.elementFromPoint(
           mxEvent.getClientX(evt),
           mxEvent.getClientY(evt)
         )
       : mxEvent.getSource(evt);
-  };
+  }
 
   /**
    * Function: graphContainsEvent
    *
    * Returns true if the given graph contains the given event.
    */
-  graphContainsEvent = (graph, evt) => {
+  graphContainsEvent(graph, evt) {
     const x = mxEvent.getClientX(evt);
     const y = mxEvent.getClientY(evt);
     const offset = mxUtils.getOffset(graph.container);
@@ -432,7 +432,7 @@ class mxDragSource {
       x <= offset.x - origin.x + graph.container.offsetWidth &&
       y <= offset.y - origin.y + graph.container.offsetHeight
     );
-  };
+  }
 
   /**
    * Function: mouseMove
@@ -441,7 +441,7 @@ class mxDragSource {
    * <currentGraph>, calling <dragEnter> and <dragExit> on the new and old graph,
    * respectively, and invokes <dragOver> if <currentGraph> is not null.
    */
-  mouseMove = evt => {
+  mouseMove(evt) {
     let graph = this.getGraphForEvent(evt);
 
     // Checks if event is inside the bounds of the graph container
@@ -493,7 +493,7 @@ class mxDragSource {
     }
 
     mxEvent.consume(evt);
-  };
+  }
 
   /**
    * Function: mouseUp
@@ -501,7 +501,7 @@ class mxDragSource {
    * Processes the mouse up event and invokes <drop>, <dragExit> and <stopDrag>
    * as required.
    */
-  mouseUp = evt => {
+  mouseUp(evt) {
     if (this.currentGraph != null) {
       if (
         this.currentPoint != null &&
@@ -524,14 +524,14 @@ class mxDragSource {
     this.removeListeners();
 
     mxEvent.consume(evt);
-  };
+  }
 
   /**
    * Function: removeListeners
    *
    * Actives the given graph as a drop target.
    */
-  removeListeners = () => {
+  removeListeners() {
     if (this.eventSource != null) {
       mxEvent.removeGestureListeners(
         this.eventSource,
@@ -550,14 +550,14 @@ class mxDragSource {
     );
     this.mouseMoveHandler = null;
     this.mouseUpHandler = null;
-  };
+  }
 
   /**
    * Function: dragEnter
    *
    * Actives the given graph as a drop target.
    */
-  dragEnter = (graph, evt) => {
+  dragEnter(graph, evt) {
     graph.isMouseDown = true;
     graph.isMouseTrigger = mxEvent.isMouseEvent(evt);
     this.previewElement = this.createPreviewElement(graph);
@@ -587,14 +587,14 @@ class mxDragSource {
 
     // Consumes all events in the current graph before they are fired
     graph.addListener(mxEvent.FIRE_MOUSE_EVENT, this.eventConsumer);
-  };
+  }
 
   /**
    * Function: dragExit
    *
    * Deactivates the given graph as a drop target.
    */
-  dragExit = (graph, evt) => {
+  dragExit(graph, evt) {
     this.currentDropTarget = null;
     this.currentPoint = null;
     graph.isMouseDown = false;
@@ -619,7 +619,7 @@ class mxDragSource {
       this.currentHighlight.destroy();
       this.currentHighlight = null;
     }
-  };
+  }
 
   /**
    * Function: dragOver
@@ -627,7 +627,7 @@ class mxDragSource {
    * Implements autoscroll, updates the <currentPoint>, highlights any drop
    * targets and updates the preview.
    */
-  dragOver = (graph, evt) => {
+  dragOver(graph, evt) {
     const offset = mxUtils.getOffset(graph.container);
     const origin = mxUtils.getScrollOrigin(graph.container);
     let x = mxEvent.getClientX(evt) - offset.x + origin.x - graph.panDx;
@@ -693,7 +693,7 @@ class mxDragSource {
     }
 
     this.currentPoint = new mxPoint(x, y);
-  };
+  }
 
   /**
    * Function: drop
@@ -701,7 +701,7 @@ class mxDragSource {
    * Returns the drop target for the given graph and coordinates. This
    * implementation uses <mxGraph.getCellAt>.
    */
-  drop = (graph, evt, dropTarget, x, y) => {
+  drop(graph, evt, dropTarget, x, y) {
     this.dropHandler(graph, evt, dropTarget, x, y);
 
     // Had to move this to after the insert because it will
@@ -711,7 +711,7 @@ class mxDragSource {
     if (graph.container.style.visibility !== 'hidden') {
       graph.container.focus();
     }
-  };
+  }
 }
 
 export default mxDragSource;

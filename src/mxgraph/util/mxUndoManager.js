@@ -110,36 +110,36 @@ class mxUndoManager extends mxEventSource {
    *
    * Returns true if the history is empty.
    */
-  isEmpty = () => {
+  isEmpty() {
     return this.history.length == 0;
-  };
+  }
 
   /**
    * Function: clear
    *
    * Clears the command history.
    */
-  clear = () => {
+  clear() {
     this.history = [];
     this.indexOfNextAdd = 0;
     this.fireEvent(new mxEventObject(mxEvent.CLEAR));
-  };
+  }
 
   /**
    * Function: canUndo
    *
    * Returns true if an undo is possible.
    */
-  canUndo = () => {
+  canUndo() {
     return this.indexOfNextAdd > 0;
-  };
+  }
 
   /**
    * Function: undo
    *
    * Undoes the last change.
    */
-  undo = () => {
+  undo() {
     while (this.indexOfNextAdd > 0) {
       const edit = this.history[--this.indexOfNextAdd];
       edit.undo();
@@ -149,23 +149,23 @@ class mxUndoManager extends mxEventSource {
         break;
       }
     }
-  };
+  }
 
   /**
    * Function: canRedo
    *
    * Returns true if a redo is possible.
    */
-  canRedo = () => {
+  canRedo() {
     return this.indexOfNextAdd < this.history.length;
-  };
+  }
 
   /**
    * Function: redo
    *
    * Redoes the last change.
    */
-  redo = () => {
+  redo() {
     const n = this.history.length;
 
     while (this.indexOfNextAdd < n) {
@@ -177,14 +177,14 @@ class mxUndoManager extends mxEventSource {
         break;
       }
     }
-  };
+  }
 
   /**
    * Function: undoableEditHappened
    *
    * Method to be called to add new undoable edits to the <history>.
    */
-  undoableEditHappened = undoableEdit => {
+  undoableEditHappened(undoableEdit) {
     this.trim();
 
     if (this.size > 0 && this.size == this.history.length) {
@@ -194,7 +194,7 @@ class mxUndoManager extends mxEventSource {
     this.history.push(undoableEdit);
     this.indexOfNextAdd = this.history.length;
     this.fireEvent(new mxEventObject(mxEvent.ADD, 'edit', undoableEdit));
-  };
+  }
 
   /**
    * Function: trim
@@ -202,7 +202,7 @@ class mxUndoManager extends mxEventSource {
    * Removes all pending steps after <indexOfNextAdd> from the history,
    * invoking die on each edit. This is called from <undoableEditHappened>.
    */
-  trim = () => {
+  trim() {
     if (this.history.length > this.indexOfNextAdd) {
       const edits = this.history.splice(
         this.indexOfNextAdd,
@@ -213,7 +213,7 @@ class mxUndoManager extends mxEventSource {
         edits[i].die();
       }
     }
-  };
+  }
 }
 
 export default mxUndoManager;

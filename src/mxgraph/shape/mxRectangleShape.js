@@ -42,7 +42,7 @@ class mxRectangleShape extends mxShape {
    *
    * Returns true for non-rounded, non-rotated shapes with no glass gradient.
    */
-  isHtmlAllowed = () => {
+  isHtmlAllowed() {
     let events = true;
 
     if (this.style != null) {
@@ -57,14 +57,14 @@ class mxRectangleShape extends mxShape {
       this.rotation == 0 &&
       (events || (this.fill != null && this.fill != mxConstants.NONE))
     );
-  };
+  }
 
   /**
    * Function: paintBackground
    *
    * Generic background painting implementation.
    */
-  paintBackground = (c, x, y, w, h) => {
+  paintBackground(c, x, y, w, h) {
     let events = true;
 
     if (this.style != null) {
@@ -117,23 +117,23 @@ class mxRectangleShape extends mxShape {
 
       c.fillAndStroke();
     }
-  };
+  }
 
   /**
    * Function: isRoundable
    *
    * Adds roundable support.
    */
-  isRoundable = (c, x, y, w, h) => {
+  isRoundable(c, x, y, w, h) {
     return true;
-  };
+  }
 
   /**
    * Function: paintForeground
    *
    * Generic background painting implementation.
    */
-  paintForeground = (c, x, y, w, h) => {
+  paintForeground(c, x, y, w, h) {
     if (
       this.glass &&
       !this.outline &&
@@ -149,7 +149,7 @@ class mxRectangleShape extends mxShape {
         this.getArcSize(w + this.strokewidth, h + this.strokewidth)
       );
     }
-  };
+  }
 }
 
 export default mxRectangleShape;

@@ -345,9 +345,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Rounds all numbers to 2 decimal points.
    */
-  format = value => {
+  format(value) {
     return parseFloat(parseFloat(value).toFixed(2));
-  };
+  }
 
   /**
    * Function: getBaseUrl
@@ -357,7 +357,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * workaround for the fact that window.location.search is empty if there is
    * no search string behind the question mark.
    */
-  getBaseUrl = () => {
+  getBaseUrl() {
     let { href } = window.location;
     const hash = href.lastIndexOf('#');
 
@@ -366,24 +366,24 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     return href;
-  };
+  }
 
   /**
    * Function: reset
    *
    * Returns any offsets for rendering pixels.
    */
-  reset = () => {
+  reset() {
     super.reset();
     this.gradients = [];
-  };
+  }
 
   /**
    * Function: createStyle
    *
    * Creates the optional style section.
    */
-  createStyle = x => {
+  createStyle(x) {
     const style = this.createElement('style');
     style.setAttribute('type', 'text/css');
     mxUtils.write(
@@ -392,14 +392,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     );
 
     return style;
-  };
+  }
 
   /**
    * Function: createElement
    *
    * Private helper function to create SVG elements
    */
-  createElement = (tagName, namespace) => {
+  createElement(tagName, namespace) {
     if (this.root.ownerDocument.createElementNS != null) {
       return this.root.ownerDocument.createElementNS(
         namespace || mxConstants.NS_SVG,
@@ -413,14 +413,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     return elt;
-  };
+  }
 
   /**
    * Function: getAlternateText
    *
    * Returns the alternate text string for the given foreignObject.
    */
-  getAlternateText = (
+  getAlternateText(
     fo,
     x,
     y,
@@ -434,16 +434,16 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     overflow,
     clip,
     rotation
-  ) => {
+  ) {
     return str != null ? this.foAltText : null;
-  };
+  }
 
   /**
    * Function: getAlternateContent
    *
    * Returns the alternate content for the given foreignObject.
    */
-  createAlternateContent = (
+  createAlternateContent(
     fo,
     x,
     y,
@@ -457,7 +457,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     overflow,
     clip,
     rotation
-  ) => {
+  ) {
     const text = this.getAlternateText(
       fo,
       x,
@@ -534,14 +534,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       return alt;
     }
     return null;
-  };
+  }
 
   /**
    * Function: createGradientId
    *
    * Private helper function to create SVG elements
    */
-  createGradientId = (start, end, alpha1, alpha2, direction) => {
+  createGradientId(start, end, alpha1, alpha2, direction) {
     // Removes illegal characters from gradient ID
     if (start.charAt(0) === '#') {
       start = start.substring(1);
@@ -576,14 +576,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     return `mx-gradient-${start}-${end}-${dir}`;
-  };
+  }
 
   /**
    * Function: getSvgGradient
    *
    * Private helper function to create SVG elements
    */
-  getSvgGradient = (start, end, alpha1, alpha2, direction) => {
+  getSvgGradient(start, end, alpha1, alpha2, direction) {
     const id = this.createGradientId(start, end, alpha1, alpha2, direction);
     let gradient = this.gradients[id];
 
@@ -626,14 +626,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     return gradient.getAttribute('id');
-  };
+  }
 
   /**
    * Function: createSvgGradient
    *
    * Creates the given SVG gradient.
    */
-  createSvgGradient = (start, end, alpha1, alpha2, direction) => {
+  createSvgGradient(start, end, alpha1, alpha2, direction) {
     const gradient = this.createElement('linearGradient');
     gradient.setAttribute('x1', '0%');
     gradient.setAttribute('y1', '0%');
@@ -665,14 +665,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     gradient.appendChild(stop);
 
     return gradient;
-  };
+  }
 
   /**
    * Function: addNode
    *
    * Private helper function to create SVG elements
    */
-  addNode = (filled, stroked) => {
+  addNode(filled, stroked) {
     const { node } = this;
     const s = this.state;
 
@@ -744,14 +744,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
 
       this.node = null;
     }
-  };
+  }
 
   /**
    * Function: updateFill
    *
    * Transfers the stroke attributes from <state> to <node>.
    */
-  updateFill = () => {
+  updateFill() {
     const s = this.state;
 
     if (s.alpha < 1 || s.fillAlpha < 1) {
@@ -779,26 +779,26 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         this.node.setAttribute('fill', String(s.fillColor).toLowerCase());
       }
     }
-  };
+  }
 
   /**
    * Function: getCurrentStrokeWidth
    *
    * Returns the current stroke width (>= 1), ie. max(1, this.format(this.state.strokeWidth * this.state.scale)).
    */
-  getCurrentStrokeWidth = () => {
+  getCurrentStrokeWidth() {
     return Math.max(
       this.minStrokeWidth,
       Math.max(0.01, this.format(this.state.strokeWidth * this.state.scale))
     );
-  };
+  }
 
   /**
    * Function: updateStroke
    *
    * Transfers the stroke attributes from <state> to <node>.
    */
-  updateStroke = () => {
+  updateStroke() {
     const s = this.state;
 
     this.node.setAttribute('stroke', String(s.strokeColor).toLowerCase());
@@ -823,14 +823,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         this.createDashPattern((s.fixDash ? 1 : s.strokeWidth) * s.scale)
       );
     }
-  };
+  }
 
   /**
    * Function: updateStrokeAttributes
    *
    * Transfers the stroke attributes from <state> to <node>.
    */
-  updateStrokeAttributes = () => {
+  updateStrokeAttributes() {
     const s = this.state;
 
     // Linejoin miter is default in SVG
@@ -856,14 +856,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     if (s.miterLimit != null && (!this.styleEnabled || s.miterLimit !== 10)) {
       this.node.setAttribute('stroke-miterlimit', s.miterLimit);
     }
-  };
+  }
 
   /**
    * Function: createDashPattern
    *
    * Creates the SVG dash pattern for the given state.
    */
-  createDashPattern = scale => {
+  createDashPattern(scale) {
     const pat = [];
 
     if (typeof this.state.dashPattern === 'string') {
@@ -877,14 +877,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     return pat.join(' ');
-  };
+  }
 
   /**
    * Function: createTolerance
    *
    * Creates a hit detection tolerance shape for the given node.
    */
-  createTolerance = node => {
+  createTolerance(node) {
     const tol = node.cloneNode(true);
     const sw =
       parseFloat(tol.getAttribute('stroke-width') || 1) + this.strokeTolerance;
@@ -895,14 +895,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     tol.setAttribute('fill', 'none');
     tol.setAttribute('stroke', 'white');
     return tol;
-  };
+  }
 
   /**
    * Function: createShadow
    *
    * Creates a shadow for the given node.
    */
-  createShadow = node => {
+  createShadow(node) {
     const shadow = node.cloneNode(true);
     const s = this.state;
 
@@ -927,14 +927,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     shadow.setAttribute('opacity', s.shadowAlpha);
 
     return shadow;
-  };
+  }
 
   /**
    * Function: setLink
    *
    * Experimental implementation for hyperlinks.
    */
-  setLink = link => {
+  setLink(link) {
     if (link == null) {
       this.root = this.originalRoot;
     } else {
@@ -953,14 +953,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       this.root.appendChild(node);
       this.root = node;
     }
-  };
+  }
 
   /**
    * Function: rotate
    *
    * Sets the rotation of the canvas. Note that rotation cannot be concatenated.
    */
-  rotate = (theta, flipH, flipV, cx, cy) => {
+  rotate(theta, flipH, flipV, cx, cy) {
     if (theta !== 0 || flipH || flipV) {
       const s = this.state;
       cx += s.dx;
@@ -1002,24 +1002,24 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       s.rotationCx = cx;
       s.rotationCy = cy;
     }
-  };
+  }
 
   /**
    * Function: begin
    *
    * Extends superclass to create path.
    */
-  begin = () => {
+  begin() {
     super.begin();
     this.node = this.createElement('path');
-  };
+  }
 
   /**
    * Function: rect
    *
    * Private helper function to create SVG elements
    */
-  rect = (x, y, w, h) => {
+  rect(x, y, w, h) {
     const s = this.state;
     const n = this.createElement('rect');
     n.setAttribute('x', this.format((x + s.dx) * s.scale));
@@ -1028,14 +1028,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     n.setAttribute('height', this.format(h * s.scale));
 
     this.node = n;
-  };
+  }
 
   /**
    * Function: roundrect
    *
    * Private helper function to create SVG elements
    */
-  roundrect = (x, y, w, h, dx, dy) => {
+  roundrect(x, y, w, h, dx, dy) {
     this.rect(x, y, w, h);
 
     if (dx > 0) {
@@ -1045,14 +1045,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     if (dy > 0) {
       this.node.setAttribute('ry', this.format(dy * this.state.scale));
     }
-  };
+  }
 
   /**
    * Function: ellipse
    *
    * Private helper function to create SVG elements
    */
-  ellipse = (x, y, w, h) => {
+  ellipse(x, y, w, h) {
     const s = this.state;
     const n = this.createElement('ellipse');
     // No rounding for consistent output with 1.x
@@ -1061,14 +1061,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     n.setAttribute('rx', (w / 2) * s.scale);
     n.setAttribute('ry', (h / 2) * s.scale);
     this.node = n;
-  };
+  }
 
   /**
    * Function: image
    *
    * Private helper function to create SVG elements
    */
-  image = (x, y, w, h, src, aspect, flipH, flipV) => {
+  image(x, y, w, h, src, aspect, flipH, flipV) {
     src = this.converter.convert(src);
 
     // LATER: Add option for embedding images as base64.
@@ -1132,14 +1132,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     this.root.appendChild(node);
-  };
+  }
 
   /**
    * Function: convertHtml
    *
    * Converts the given HTML string to XHTML.
    */
-  convertHtml = val => {
+  convertHtml(val) {
     const doc = new DOMParser().parseFromString(val, 'text/html');
 
     if (doc != null) {
@@ -1156,14 +1156,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     return val;
-  };
+  }
 
   /**
    * Function: createDiv
    *
    * Private helper function to create SVG elements
    */
-  createDiv = str => {
+  createDiv(str) {
     let val = str;
 
     if (!mxUtils.isNode(val)) {
@@ -1203,24 +1203,12 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
 
     // NOTE: FF 3.6 crashes if content CSS contains "height:100%"
     return mxUtils.parseXml(val).documentElement;
-  };
+  }
 
   /**
    * Updates existing DOM nodes for text rendering. LATER: Merge common parts with text function below.
    */
-  updateText = (
-    x,
-    y,
-    w,
-    h,
-    align,
-    valign,
-    wrap,
-    overflow,
-    clip,
-    rotation,
-    node
-  ) => {
+  updateText(x, y, w, h, align, valign, wrap, overflow, clip, rotation, node) {
     if (
       node != null &&
       node.firstChild != null &&
@@ -1240,14 +1228,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         node.firstChild
       );
     }
-  };
+  }
 
   /**
    * Function: addForeignObject
    *
    * Creates a foreignObject for the given string and adds it to the given root.
    */
-  addForeignObject = (
+  addForeignObject(
     x,
     y,
     w,
@@ -1263,7 +1251,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     dir,
     div,
     root
-  ) => {
+  ) {
     const group = this.createElement('g');
     const fo = this.createElement('foreignObject');
 
@@ -1324,12 +1312,12 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     root.appendChild(group);
-  };
+  }
 
   /**
    * Updates existing DOM nodes for text rendering.
    */
-  updateTextNodes = (
+  updateTextNodes(
     x,
     y,
     w,
@@ -1341,7 +1329,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     clip,
     rotation,
     g
-  ) => {
+  ) {
     const s = this.state.scale;
 
     D.createCss(
@@ -1432,14 +1420,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         }
       }
     );
-  };
+  }
 
   /**
    * Function: getTextCss
    *
    * Private helper function to create SVG elements
    */
-  getTextCss = () => {
+  getTextCss() {
     const s = this.state;
     const lh = mxConstants.ABSOLUTE_LINE_HEIGHT
       ? `${s.fontSize * mxConstants.LINE_HEIGHT}px`
@@ -1481,7 +1469,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     return css;
-  };
+  }
 
   /**
    * Function: text
@@ -1491,7 +1479,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * foreignObject is supported and <foEnabled> is true. (This means IE9 and later
    * does currently not support HTML text as part of shapes.)
    */
-  text = (
+  text(
     x,
     y,
     w,
@@ -1505,7 +1493,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     clip,
     rotation,
     dir
-  ) => {
+  ) {
     if (this.textEnabled && str != null) {
       rotation = rotation != null ? rotation : 0;
 
@@ -1553,14 +1541,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         );
       }
     }
-  };
+  }
 
   /**
    * Function: createClip
    *
    * Creates a clip for the given coordinates.
    */
-  createClip = (x, y, w, h) => {
+  createClip(x, y, w, h) {
     x = Math.round(x);
     y = Math.round(y);
     w = Math.round(w);
@@ -1588,7 +1576,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     clip.appendChild(rect);
 
     return clip;
-  };
+  }
 
   /**
    * Function: plainText
@@ -1596,7 +1584,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Paints the given text. Possible values for format are empty string for
    * plain text and html for HTML markup.
    */
-  plainText = (
+  plainText(
     x,
     y,
     w,
@@ -1609,7 +1597,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     clip,
     rotation,
     dir
-  ) => {
+  ) {
     rotation = rotation != null ? rotation : 0;
     const s = this.state;
     const size = s.fontSize;
@@ -1759,7 +1747,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       valign,
       overflow
     );
-  };
+  }
 
   /**
    * Function: updateFont
@@ -1767,7 +1755,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * Updates the text properties for the given node. (NOTE: For this to work in
    * IE, the given node must be a text or tspan element.)
    */
-  updateFont = node => {
+  updateFont(node) {
     const s = this.state;
 
     node.setAttribute('fill', s.fontColor);
@@ -1803,14 +1791,14 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     if (txtDecor.length > 0) {
       node.setAttribute('text-decoration', txtDecor.join(' '));
     }
-  };
+  }
 
   /**
    * Function: addTextBackground
    *
    * Background color and border
    */
-  addTextBackground = (node, str, x, y, w, h, align, valign, overflow) => {
+  addTextBackground(node, str, x, y, w, h, align, valign, overflow) {
     const s = this.state;
 
     if (s.fontBackgroundColor != null || s.fontBorderColor != null) {
@@ -1925,34 +1913,34 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         node.insertBefore(n, node.firstChild);
       }
     }
-  };
+  }
 
   /**
    * Function: stroke
    *
    * Paints the outline of the current path.
    */
-  stroke = () => {
+  stroke() {
     this.addNode(false, true);
-  };
+  }
 
   /**
    * Function: fill
    *
    * Fills the current path.
    */
-  fill = () => {
+  fill() {
     this.addNode(true, false);
-  };
+  }
 
   /**
    * Function: fillAndStroke
    *
    * Fills and paints the outline of the current path.
    */
-  fillAndStroke = () => {
+  fillAndStroke() {
     this.addNode(true, true);
-  };
+  }
 }
 
 export default mxSvgCanvas2D;

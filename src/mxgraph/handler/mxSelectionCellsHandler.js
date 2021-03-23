@@ -98,63 +98,63 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Returns <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
    *
    * Sets <enabled>.
    */
-  setEnabled = value => {
+  setEnabled(value) {
     this.enabled = value;
-  };
+  }
 
   /**
    * Function: getHandler
    *
    * Returns the handler for the given cell.
    */
-  getHandler = cell => {
+  getHandler(cell) {
     return this.handlers.get(cell);
-  };
+  }
 
   /**
    * Function: isHandled
    *
    * Returns true if the given cell has a handler.
    */
-  isHandled = cell => {
+  isHandled(cell) {
     return this.getHandler(cell) != null;
-  };
+  }
 
   /**
    * Function: reset
    *
    * Resets all handlers.
    */
-  reset = () => {
+  reset() {
     this.handlers.visit((key, handler) => {
       handler.reset.apply(handler);
     });
-  };
+  }
 
   /**
    * Function: getHandledSelectionCells
    *
    * Reloads or updates all handlers.
    */
-  getHandledSelectionCells = () => {
+  getHandledSelectionCells() {
     return this.graph.getSelectionCells();
-  };
+  }
 
   /**
    * Function: refresh
    *
    * Reloads or updates all handlers.
    */
-  refresh = () => {
+  refresh() {
     // Removes all existing handlers
     const oldHandlers = this.handlers;
     this.handlers = new mxDictionary();
@@ -214,23 +214,23 @@ class mxSelectionCellsHandler extends mxEventSource {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: isHandlerActive
    *
    * Returns true if the given handler is active and should not be redrawn.
    */
-  isHandlerActive = handler => {
+  isHandlerActive(handler) {
     return handler.index != null;
-  };
+  }
 
   /**
    * Function: updateHandler
    *
    * Updates the handler for the given shape if one exists.
    */
-  updateHandler = state => {
+  updateHandler(state) {
     let handler = this.handlers.remove(state.cell);
 
     if (handler != null) {
@@ -250,14 +250,14 @@ class mxSelectionCellsHandler extends mxEventSource {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: mouseDown
    *
    * Redirects the given event to the handlers.
    */
-  mouseDown = (sender, me) => {
+  mouseDown(sender, me) {
     if (this.graph.isEnabled() && this.isEnabled()) {
       const args = [sender, me];
 
@@ -265,14 +265,14 @@ class mxSelectionCellsHandler extends mxEventSource {
         handler.mouseDown.apply(handler, args);
       });
     }
-  };
+  }
 
   /**
    * Function: mouseMove
    *
    * Redirects the given event to the handlers.
    */
-  mouseMove = (sender, me) => {
+  mouseMove(sender, me) {
     if (this.graph.isEnabled() && this.isEnabled()) {
       const args = [sender, me];
 
@@ -280,14 +280,14 @@ class mxSelectionCellsHandler extends mxEventSource {
         handler.mouseMove.apply(handler, args);
       });
     }
-  };
+  }
 
   /**
    * Function: mouseUp
    *
    * Redirects the given event to the handlers.
    */
-  mouseUp = (sender, me) => {
+  mouseUp(sender, me) {
     if (this.graph.isEnabled() && this.isEnabled()) {
       const args = [sender, me];
 
@@ -295,14 +295,14 @@ class mxSelectionCellsHandler extends mxEventSource {
         handler.mouseUp.apply(handler, args);
       });
     }
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy = () => {
+  destroy() {
     this.graph.removeMouseListener(this);
 
     if (this.refreshHandler != null) {
@@ -311,7 +311,7 @@ class mxSelectionCellsHandler extends mxEventSource {
       this.graph.getView().removeListener(this.refreshHandler);
       this.refreshHandler = null;
     }
-  };
+  }
 }
 
 export default mxSelectionCellsHandler;

@@ -98,9 +98,9 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * Returns <singleSelection> as a boolean.
    */
-  isSingleSelection = () => {
+  isSingleSelection() {
     return this.singleSelection;
-  };
+  }
 
   /**
    * Function: setSingleSelection
@@ -112,31 +112,31 @@ class mxGraphSelectionModel extends mxEventSource {
    * singleSelection - Boolean that specifies the new value for
    * <singleSelection>.
    */
-  setSingleSelection = singleSelection => {
+  setSingleSelection(singleSelection) {
     this.singleSelection = singleSelection;
-  };
+  }
 
   /**
    * Function: isSelected
    *
    * Returns true if the given <mxCell> is selected.
    */
-  isSelected = cell => {
+  isSelected(cell) {
     if (cell != null) {
       return mxUtils.indexOf(this.cells, cell) >= 0;
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: isEmpty
    *
    * Returns true if no cells are currently selected.
    */
-  isEmpty = () => {
+  isEmpty() {
     return this.cells.length === 0;
-  };
+  }
 
   /**
    * Function: clear
@@ -144,9 +144,9 @@ class mxGraphSelectionModel extends mxEventSource {
    * Clears the selection and fires a <change> event if the selection was not
    * empty.
    */
-  clear = () => {
+  clear() {
     this.changeSelection(null, this.cells);
-  };
+  }
 
   /**
    * Function: setCell
@@ -157,11 +157,11 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to be selected.
    */
-  setCell = cell => {
+  setCell(cell) {
     if (cell != null) {
       this.setCells([cell]);
     }
-  };
+  }
 
   /**
    * Function: setCells
@@ -172,7 +172,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cells - Array of <mxCells> to be selected.
    */
-  setCells = cells => {
+  setCells(cells) {
     if (cells != null) {
       if (this.singleSelection) {
         cells = [this.getFirstSelectableCell(cells)];
@@ -188,14 +188,14 @@ class mxGraphSelectionModel extends mxEventSource {
 
       this.changeSelection(tmp, this.cells);
     }
-  };
+  }
 
   /**
    * Function: getFirstSelectableCell
    *
    * Returns the first selectable cell in the given array of cells.
    */
-  getFirstSelectableCell = cells => {
+  getFirstSelectableCell(cells) {
     if (cells != null) {
       for (let i = 0; i < cells.length; i += 1) {
         if (this.graph.isCellSelectable(cells[i])) {
@@ -205,7 +205,7 @@ class mxGraphSelectionModel extends mxEventSource {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: addCell
@@ -216,11 +216,11 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to add to the selection.
    */
-  addCell = cell => {
+  addCell(cell) {
     if (cell != null) {
       this.addCells([cell]);
     }
-  };
+  }
 
   /**
    * Function: addCells
@@ -232,7 +232,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cells - Array of <mxCells> to add to the selection.
    */
-  addCells = cells => {
+  addCells(cells) {
     if (cells != null) {
       let remove = null;
 
@@ -254,7 +254,7 @@ class mxGraphSelectionModel extends mxEventSource {
 
       this.changeSelection(tmp, remove);
     }
-  };
+  }
 
   /**
    * Function: removeCell
@@ -266,16 +266,16 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to remove from the selection.
    */
-  removeCell = cell => {
+  removeCell(cell) {
     if (cell != null) {
       this.removeCells([cell]);
     }
-  };
+  }
 
   /**
    * Function: removeCells
    */
-  removeCells = cells => {
+  removeCells(cells) {
     if (cells != null) {
       const tmp = [];
 
@@ -287,7 +287,7 @@ class mxGraphSelectionModel extends mxEventSource {
 
       this.changeSelection(null, tmp);
     }
-  };
+  }
 
   /**
    * Function: changeSelection
@@ -299,7 +299,7 @@ class mxGraphSelectionModel extends mxEventSource {
    * added - Array of <mxCell> to add to the selection.
    * remove - Array of <mxCell> to remove from the selection.
    */
-  changeSelection = (added, removed) => {
+  changeSelection(added, removed) {
     if (
       (added != null && added.length > 0 && added[0] != null) ||
       (removed != null && removed.length > 0 && removed[0] != null)
@@ -310,7 +310,7 @@ class mxGraphSelectionModel extends mxEventSource {
       edit.add(change);
       this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
     }
-  };
+  }
 
   /**
    * Function: cellAdded
@@ -322,11 +322,11 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to add to the selection.
    */
-  cellAdded = cell => {
+  cellAdded(cell) {
     if (cell != null && !this.isSelected(cell)) {
       this.cells.push(cell);
     }
-  };
+  }
 
   /**
    * Function: cellRemoved
@@ -338,7 +338,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to remove from the selection.
    */
-  cellRemoved = cell => {
+  cellRemoved(cell) {
     if (cell != null) {
       const index = mxUtils.indexOf(this.cells, cell);
 
@@ -346,7 +346,7 @@ class mxGraphSelectionModel extends mxEventSource {
         this.cells.splice(index, 1);
       }
     }
-  };
+  }
 }
 
 export default mxGraphSelectionModel;

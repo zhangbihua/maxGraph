@@ -142,9 +142,9 @@ class mxPopupMenu extends mxEventSource {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
@@ -152,9 +152,9 @@ class mxPopupMenu extends mxEventSource {
    * Enables or disables event handling. This implementation
    * updates <enabled>.
    */
-  setEnabled = enabled => {
+  setEnabled(enabled) {
     this.enabled = enabled;
-  };
+  }
 
   /**
    * Function: isPopupTrigger
@@ -166,12 +166,12 @@ class mxPopupMenu extends mxEventSource {
    *
    * me - <mxMouseEvent> that represents the mouse event.
    */
-  isPopupTrigger = me => {
+  isPopupTrigger(me) {
     return (
       me.isPopupTrigger() ||
       (this.useLeftButtonForPopup && mxEvent.isLeftMouseButton(me.getEvent()))
     );
-  };
+  }
 
   /**
    * Function: addItem
@@ -194,16 +194,7 @@ class mxPopupMenu extends mxEventSource {
    * Default is true.
    * noHover - Optional boolean to disable hover state.
    */
-  addItem = (
-    title,
-    image,
-    funct,
-    parent,
-    iconCls,
-    enabled,
-    active,
-    noHover
-  ) => {
+  addItem(title, image, funct, parent, iconCls, enabled, active, noHover) {
     parent = parent || this;
     this.itemCount++;
 
@@ -344,17 +335,17 @@ class mxPopupMenu extends mxEventSource {
     }
 
     return tr;
-  };
+  }
 
   /**
    * Adds a checkmark to the given menuitem.
    */
-  addCheckmark = (item, img) => {
+  addCheckmark(item, img) {
     const td = item.firstChild.nextSibling;
     td.style.backgroundImage = `url('${img}')`;
     td.style.backgroundRepeat = 'no-repeat';
     td.style.backgroundPosition = '2px 50%';
-  };
+  }
 
   /**
    * Function: createSubmenu
@@ -367,7 +358,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * parent - An item returned by <addItem>.
    */
-  createSubmenu = parent => {
+  createSubmenu(parent) {
     parent.table = document.createElement('table');
     parent.table.className = 'mxPopupMenu';
 
@@ -389,14 +380,14 @@ class mxPopupMenu extends mxEventSource {
     // Last column of the submenu item in the parent menu
     td = parent.firstChild.nextSibling.nextSibling;
     td.appendChild(img);
-  };
+  }
 
   /**
    * Function: showSubmenu
    *
    * Shows the submenu inside the given parent row.
    */
-  showSubmenu = (parent, row) => {
+  showSubmenu(parent, row) {
     if (row.div != null) {
       row.div.style.left = `${parent.div.offsetLeft +
         row.offsetLeft +
@@ -424,7 +415,7 @@ class mxPopupMenu extends mxEventSource {
 
       mxUtils.fit(row.div);
     }
-  };
+  }
 
   /**
    * Function: addSeparator
@@ -437,7 +428,7 @@ class mxPopupMenu extends mxEventSource {
    * parent - Optional item returned by <addItem>.
    * force - Optional boolean to ignore <smartSeparators>. Default is false.
    */
-  addSeparator = (parent, force) => {
+  addSeparator(parent, force) {
     parent = parent || this;
 
     if (this.smartSeparators && !force) {
@@ -464,7 +455,7 @@ class mxPopupMenu extends mxEventSource {
 
       parent.tbody.appendChild(tr);
     }
-  };
+  }
 
   /**
    * Function: popup
@@ -480,7 +471,7 @@ class mxPopupMenu extends mxEventSource {
    * }
    * (end)
    */
-  popup = (x, y, cell, evt) => {
+  popup(x, y, cell, evt) {
     if (this.div != null && this.tbody != null && this.factoryMethod != null) {
       this.div.style.left = `${x}px`;
       this.div.style.top = `${y}px`;
@@ -499,34 +490,34 @@ class mxPopupMenu extends mxEventSource {
         this.fireEvent(new mxEventObject(mxEvent.SHOW));
       }
     }
-  };
+  }
 
   /**
    * Function: isMenuShowing
    *
    * Returns true if the menu is showing.
    */
-  isMenuShowing = () => {
+  isMenuShowing() {
     return this.div != null && this.div.parentNode == document.body;
-  };
+  }
 
   /**
    * Function: showMenu
    *
    * Shows the menu.
    */
-  showMenu = () => {
+  showMenu() {
     // Fits the div inside the viewport
     document.body.appendChild(this.div);
     mxUtils.fit(this.div);
-  };
+  }
 
   /**
    * Function: hideMenu
    *
    * Removes the menu and all submenus.
    */
-  hideMenu = () => {
+  hideMenu() {
     if (this.div != null) {
       if (this.div.parentNode != null) {
         this.div.parentNode.removeChild(this.div);
@@ -536,7 +527,7 @@ class mxPopupMenu extends mxEventSource {
       this.containsItems = false;
       this.fireEvent(new mxEventObject(mxEvent.HIDE));
     }
-  };
+  }
 
   /**
    * Function: hideSubmenu
@@ -547,7 +538,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * parent - An item returned by <addItem>.
    */
-  hideSubmenu = parent => {
+  hideSubmenu(parent) {
     if (parent.activeRow != null) {
       this.hideSubmenu(parent.activeRow);
 
@@ -557,14 +548,14 @@ class mxPopupMenu extends mxEventSource {
 
       parent.activeRow = null;
     }
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy = () => {
+  destroy() {
     if (this.div != null) {
       mxEvent.release(this.div);
 
@@ -574,7 +565,7 @@ class mxPopupMenu extends mxEventSource {
 
       this.div = null;
     }
-  };
+  }
 }
 
 export default mxPopupMenu;

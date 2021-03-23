@@ -93,74 +93,74 @@ class mxGraphAbstractHierarchyCell {
    *
    * Returns the cells this cell connects to on the next layer up
    */
-  getNextLayerConnectedCells = layer => {
+  getNextLayerConnectedCells(layer) {
     return null;
-  };
+  }
 
   /**
    * Function: getPreviousLayerConnectedCells
    *
    * Returns the cells this cell connects to on the next layer down
    */
-  getPreviousLayerConnectedCells = layer => {
+  getPreviousLayerConnectedCells(layer) {
     return null;
-  };
+  }
 
   /**
    * Function: isEdge
    *
    * Returns whether or not this cell is an edge
    */
-  isEdge = () => {
+  isEdge() {
     return false;
-  };
+  }
 
   /**
    * Function: isVertex
    *
    * Returns whether or not this cell is a node
    */
-  isVertex = () => {
+  isVertex() {
     return false;
-  };
+  }
 
   /**
    * Function: getGeneralPurposeVariable
    *
    * Gets the value of temp for the specified layer
    */
-  getGeneralPurposeVariable = layer => {
+  getGeneralPurposeVariable(layer) {
     return null;
-  };
+  }
 
   /**
    * Function: setGeneralPurposeVariable
    *
    * Set the value of temp for the specified layer
    */
-  setGeneralPurposeVariable = (layer, value) => {
+  setGeneralPurposeVariable(layer, value) {
     return null;
-  };
+  }
 
   /**
    * Function: setX
    *
    * Set the value of x for the specified layer
    */
-  setX = (layer, value) => {
+  setX(layer, value) {
     if (this.isVertex()) {
       this.x[0] = value;
     } else if (this.isEdge()) {
       this.x[layer - this.minRank - 1] = value;
     }
-  };
+  }
 
   /**
    * Function: getX
    *
    * Gets the value of x on the specified layer
    */
-  getX = layer => {
+  getX(layer) {
     if (this.isVertex()) {
       return this.x[0];
     }
@@ -169,20 +169,20 @@ class mxGraphAbstractHierarchyCell {
     }
 
     return 0.0;
-  };
+  }
 
   /**
    * Function: setY
    *
    * Set the value of y for the specified layer
    */
-  setY = (layer, value) => {
+  setY(layer, value) {
     if (this.isVertex()) {
       this.y[0] = value;
     } else if (this.isEdge()) {
       this.y[layer - this.minRank - 1] = value;
     }
-  };
+  }
 }
 
 export default mxGraphAbstractHierarchyCell;

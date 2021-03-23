@@ -174,7 +174,7 @@ class mxGeometry extends mxRectangle {
 
       this.alternateBounds = old;
     }
-  };
+  }
 
   /**
    * Function: getTerminalPoint
@@ -189,7 +189,7 @@ class mxGeometry extends mxRectangle {
    */
   getTerminalPoint(isSource) {
     return isSource ? this.sourcePoint : this.targetPoint;
-  };
+  }
 
   /**
    * Function: setTerminalPoint
@@ -211,7 +211,7 @@ class mxGeometry extends mxRectangle {
     }
 
     return point;
-  };
+  }
 
   /**
    * Function: rotate
@@ -264,7 +264,7 @@ class mxGeometry extends mxRectangle {
         }
       }
     }
-  };
+  }
 
   get width() {
     return this._width || 0;
@@ -310,8 +310,8 @@ class mxGeometry extends mxRectangle {
 
     // Translates the geometry
     if (!this.relative) {
-      this.x = this.x + dx;
-      this.y = this.y + dy;
+      this.x += dx;
+      this.y += dy;
     }
 
     // Translates the source point
@@ -335,7 +335,7 @@ class mxGeometry extends mxRectangle {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: scale
@@ -380,17 +380,17 @@ class mxGeometry extends mxRectangle {
 
     // Translates the geometry
     if (!this.relative) {
-      this.x = this.x * sx;
-      this.y = this.y * sy;
+      this.x *= sx;
+      this.y *= sy;
 
       if (fixedAspect) {
         sy = sx = Math.min(sx, sy);
       }
 
-      this.width = this.width * sx;
-      this.height = this.height * sy;
+      this.width *= sx;
+      this.height *= sy;
     }
-  };
+  }
 
   /**
    * Function: equals
@@ -416,7 +416,7 @@ class mxGeometry extends mxRectangle {
       ((this.offset == null && obj.offset == null) ||
         (this.offset != null && this.offset.equals(obj.offset)))
     );
-  };
+  }
 }
 
 export default mxGeometry;

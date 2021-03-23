@@ -94,7 +94,7 @@ class mxMorphing extends mxAnimation {
    *
    * Animation step.
    */
-  updateAnimation = () => {
+  updateAnimation() {
     super.updateAnimation();
     const move = new mxCellStatePreview(this.graph);
 
@@ -114,23 +114,23 @@ class mxMorphing extends mxAnimation {
     if (move.isEmpty() || this.step++ >= this.steps) {
       this.stopAnimation();
     }
-  };
+  }
 
   /**
    * Function: show
    *
    * Shows the changes in the given <mxCellStatePreview>.
    */
-  show = move => {
+  show(move) {
     move.show();
-  };
+  }
 
   /**
    * Function: animateCell
    *
    * Animates the given cell state using <mxCellStatePreview.moveState>.
    */
-  animateCell = (cell, move, recurse) => {
+  animateCell(cell, move, recurse) {
     const state = this.graph.getView().getState(cell);
     let delta = null;
 
@@ -164,7 +164,7 @@ class mxMorphing extends mxAnimation {
         );
       }
     }
-  };
+  }
 
   /**
    * Function: stopRecursion
@@ -172,9 +172,9 @@ class mxMorphing extends mxAnimation {
    * Returns true if the animation should not recursively find more
    * deltas for children if the given parent state has been animated.
    */
-  stopRecursion = (state, delta) => {
+  stopRecursion(state, delta) {
     return delta != null && (delta.x != 0 || delta.y != 0);
-  };
+  }
 
   /**
    * Function: getDelta
@@ -182,7 +182,7 @@ class mxMorphing extends mxAnimation {
    * Returns the vector between the current rendered state and the future
    * location of the state after the display will be updated.
    */
-  getDelta = state => {
+  getDelta(state) {
     const origin = this.getOriginForCell(state.cell);
     const translate = this.graph.getView().getTranslate();
     const scale = this.graph.getView().getScale();
@@ -190,7 +190,7 @@ class mxMorphing extends mxAnimation {
     const y = state.y / scale - translate.y;
 
     return new mxPoint((origin.x - x) * scale, (origin.y - y) * scale);
-  };
+  }
 
   /**
    * Function: getOriginForCell
@@ -199,7 +199,7 @@ class mxMorphing extends mxAnimation {
    * by using caching inside this method as the result per cell never changes
    * during the lifecycle of this object.
    */
-  getOriginForCell = cell => {
+  getOriginForCell(cell) {
     let result = null;
 
     if (cell != null) {
@@ -229,7 +229,7 @@ class mxMorphing extends mxAnimation {
     }
 
     return result;
-  };
+  }
 }
 
 export default mxMorphing;

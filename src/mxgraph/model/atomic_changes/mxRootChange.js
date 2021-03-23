@@ -21,10 +21,10 @@ class mxRootChange {
    * Carries out a change of the root using
    * <mxGraphModel.rootChanged>.
    */
-  execute = () => {
+  execute() {
     this.root = this.previous;
     this.previous = this.model.rootChanged(this.previous);
-  };
+  }
 }
 
 export default mxRootChange;

@@ -51,7 +51,7 @@ class mxGenericChangeCodec extends mxObjectCodec {
    *
    * Restores the state by assigning the previous value.
    */
-  afterDecode = (dec, node, obj) => {
+  afterDecode(dec, node, obj) {
     // Allows forward references in sessions. This is a workaround
     // for the sequence of edits in mxGraph.moveCells and cellsAdded.
     if (mxUtils.isNode(obj.cell)) {
@@ -60,7 +60,7 @@ class mxGenericChangeCodec extends mxObjectCodec {
 
     obj.previous = obj[this.variable];
     return obj;
-  };
+  }
 }
 
 // Registers the codecs

@@ -177,7 +177,7 @@ class mxOutline {
    *
    * Creates the <mxGraph> used in the outline.
    */
-  createGraph = container => {
+  createGraph(container) {
     const graph = new mxGraph(
       container,
       this.source.getModel(),
@@ -188,14 +188,14 @@ class mxOutline {
     graph.autoScroll = false;
 
     return graph;
-  };
+  }
 
   /**
    * Function: init
    *
    * Initializes the outline inside the given container.
    */
-  init = container => {
+  init(container) {
     this.outline = this.createGraph(container);
 
     // Do not repaint when suspended
@@ -302,7 +302,7 @@ class mxOutline {
     this.selectionBorder.node.style.cursor = 'move';
 
     this.update(false);
-  };
+  }
 
   /**
    * Function: isEnabled
@@ -310,9 +310,9 @@ class mxOutline {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
@@ -324,9 +324,9 @@ class mxOutline {
    *
    * value - Boolean that specifies the new enabled state.
    */
-  setEnabled = value => {
+  setEnabled(value) {
     this.enabled = value;
-  };
+  }
 
   /**
    * Function: setZoomEnabled
@@ -338,25 +338,25 @@ class mxOutline {
    *
    * value - Boolean that specifies the new enabled state.
    */
-  setZoomEnabled = value => {
+  setZoomEnabled(value) {
     this.sizer.node.style.visibility = value ? 'visible' : 'hidden';
-  };
+  }
 
   /**
    * Function: refresh
    *
    * Invokes <update> and revalidate the outline. This method is deprecated.
    */
-  refresh = () => {
+  refresh() {
     this.update(true);
-  };
+  }
 
   /**
    * Function: createSizer
    *
    * Creates the shape used as the sizer.
    */
-  createSizer = () => {
+  createSizer() {
     if (this.sizerImage != null) {
       const sizer = new mxImageShape(
         new mxRectangle(0, 0, this.sizerImage.width, this.sizerImage.height),
@@ -374,46 +374,46 @@ class mxOutline {
     sizer.dialect = this.outline.dialect;
 
     return sizer;
-  };
+  }
 
   /**
    * Function: getSourceContainerSize
    *
    * Returns the size of the source container.
    */
-  getSourceContainerSize = () => {
+  getSourceContainerSize() {
     return new mxRectangle(
       0,
       0,
       this.source.container.scrollWidth,
       this.source.container.scrollHeight
     );
-  };
+  }
 
   /**
    * Function: getOutlineOffset
    *
    * Returns the offset for drawing the outline graph.
    */
-  getOutlineOffset = scale => {
+  getOutlineOffset(scale) {
     return null;
-  };
+  }
 
   /**
    * Function: getSourceGraphBounds
    *
    * Returns the graph bound boxing of the source.
    */
-  getSourceGraphBounds = () => {
+  getSourceGraphBounds() {
     return this.source.getGraphBounds();
-  };
+  }
 
   /**
    * Function: update
    *
    * Updates the outline.
    */
-  update = revalidate => {
+  update(revalidate) {
     if (
       this.source != null &&
       this.source.container != null &&
@@ -558,14 +558,14 @@ class mxOutline {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: mouseDown
    *
    * Handles the event by starting a translation or zoom.
    */
-  mouseDown = (sender, me) => {
+  mouseDown(sender, me) {
     if (this.enabled && this.showViewport) {
       const tol = !mxEvent.isMouseEvent(me.getEvent())
         ? this.source.tolerance
@@ -599,7 +599,7 @@ class mxOutline {
     }
 
     me.consume();
-  };
+  }
 
   /**
    * Function: mouseMove
@@ -607,7 +607,7 @@ class mxOutline {
    * Handles the event by previewing the viewrect in <graph> and updating the
    * rectangle that represents the viewrect in the outline.
    */
-  mouseMove = (sender, me) => {
+  mouseMove(sender, me) {
     if (this.active) {
       this.selectionBorder.node.style.display = this.showViewport ? '' : 'none';
       this.sizer.node.style.display = this.selectionBorder.node.style.display;
@@ -664,7 +664,7 @@ class mxOutline {
 
       me.consume();
     }
-  };
+  }
 
   /**
    * Function: getTranslateForEvent
@@ -688,16 +688,16 @@ class mxOutline {
    * };
    * (end)
    */
-  getTranslateForEvent = me => {
+  getTranslateForEvent(me) {
     return new mxPoint(me.getX() - this.startX, me.getY() - this.startY);
-  };
+  }
 
   /**
    * Function: mouseUp
    *
    * Handles the event by applying the translation or zoom to <graph>.
    */
-  mouseUp = (sender, me) => {
+  mouseUp(sender, me) {
     if (this.active) {
       const delta = this.getTranslateForEvent(me);
       let dx = delta.x;
@@ -735,14 +735,14 @@ class mxOutline {
       this.index = null;
       this.active = false;
     }
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroy this outline and removes all listeners from <source>.
    */
-  destroy = () => {
+  destroy() {
     if (this.source != null) {
       this.source.removeListener(this.panHandler);
       this.source.removeListener(this.refreshHandler);
@@ -771,7 +771,7 @@ class mxOutline {
       this.sizer.destroy();
       this.sizer = null;
     }
-  };
+  }
 }
 
 export default mxOutline;

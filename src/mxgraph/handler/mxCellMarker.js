@@ -7,8 +7,8 @@ import mxEventSource from '../util/mxEventSource';
 import mxConstants from '../util/mxConstants';
 import mxCellHighlight from './mxCellHighlight';
 import mxEventObject from '../util/mxEventObject';
-import mxEvent from "../util/mxEvent";
-import mxUtils from "../util/mxUtils";
+import mxEvent from '../util/mxEvent';
+import mxUtils from '../util/mxUtils';
 
 class mxCellMarker extends mxEventSource {
   /**
@@ -142,9 +142,9 @@ class mxCellMarker extends mxEventSource {
    *
    * enabled - Boolean that specifies the new enabled state.
    */
-  setEnabled = enabled => {
+  setEnabled(enabled) {
     this.enabled = enabled;
-  };
+  }
 
   /**
    * Function: isEnabled
@@ -152,86 +152,86 @@ class mxCellMarker extends mxEventSource {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setHotspot
    *
    * Sets the <hotspot>.
    */
-  setHotspot = hotspot => {
+  setHotspot(hotspot) {
     this.hotspot = hotspot;
-  };
+  }
 
   /**
    * Function: getHotspot
    *
    * Returns the <hotspot>.
    */
-  getHotspot = () => {
+  getHotspot() {
     return this.hotspot;
-  };
+  }
 
   /**
    * Function: setHotspotEnabled
    *
    * Specifies whether the hotspot should be used in <intersects>.
    */
-  setHotspotEnabled = enabled => {
+  setHotspotEnabled(enabled) {
     this.hotspotEnabled = enabled;
-  };
+  }
 
   /**
    * Function: isHotspotEnabled
    *
    * Returns true if hotspot is used in <intersects>.
    */
-  isHotspotEnabled = () => {
+  isHotspotEnabled() {
     return this.hotspotEnabled;
-  };
+  }
 
   /**
    * Function: hasValidState
    *
    * Returns true if <validState> is not null.
    */
-  hasValidState = () => {
+  hasValidState() {
     return this.validState != null;
-  };
+  }
 
   /**
    * Function: getValidState
    *
    * Returns the <validState>.
    */
-  getValidState = () => {
+  getValidState() {
     return this.validState;
-  };
+  }
 
   /**
    * Function: getMarkedState
    *
    * Returns the <markedState>.
    */
-  getMarkedState = () => {
+  getMarkedState() {
     return this.markedState;
-  };
+  }
 
   /**
    * Function: reset
    *
    * Resets the state of the cell marker.
    */
-  reset = () => {
+  reset() {
     this.validState = null;
 
     if (this.markedState != null) {
       this.markedState = null;
       this.unmark();
     }
-  };
+  }
 
   /**
    * Function: process
@@ -243,7 +243,7 @@ class mxCellMarker extends mxEventSource {
    * regardless of the marker color. The state is returned regardless of the
    * marker color and valid state.
    */
-  process = me => {
+  process(me) {
     let state = null;
 
     if (this.isEnabled()) {
@@ -252,14 +252,14 @@ class mxCellMarker extends mxEventSource {
     }
 
     return state;
-  };
+  }
 
   /**
    * Function: setCurrentState
    *
    * Sets and marks the current valid state.
    */
-  setCurrentState = (state, me, color) => {
+  setCurrentState(state, me, color) {
     const isValid = state != null ? this.isValidState(state) : false;
     color =
       color != null
@@ -283,14 +283,14 @@ class mxCellMarker extends mxEventSource {
         this.unmark();
       }
     }
-  };
+  }
 
   /**
    * Function: markCell
    *
    * Marks the given cell using the given color, or <validColor> if no color is specified.
    */
-  markCell = (cell, color) => {
+  markCell(cell, color) {
     const state = this.graph.getView().getState(cell);
 
     if (state != null) {
@@ -298,27 +298,27 @@ class mxCellMarker extends mxEventSource {
       this.markedState = state;
       this.mark();
     }
-  };
+  }
 
   /**
    * Function: mark
    *
    * Marks the <markedState> and fires a <mark> event.
    */
-  mark = () => {
+  mark() {
     this.highlight.setHighlightColor(this.currentColor);
     this.highlight.highlight(this.markedState);
     this.fireEvent(new mxEventObject(mxEvent.MARK, 'state', this.markedState));
-  };
+  }
 
   /**
    * Function: unmark
    *
    * Hides the marker and fires a <mark> event.
    */
-  unmark = () => {
+  unmark() {
     this.mark();
-  };
+  }
 
   /**
    * Function: isValidState
@@ -327,9 +327,9 @@ class mxCellMarker extends mxEventSource {
    * returns true, then the state is stored in <validState>. The return value
    * of this method is used as the argument for <getMarkerColor>.
    */
-  isValidState = state => {
+  isValidState(state) {
     return true;
-  };
+  }
 
   /**
    * Function: getMarkerColor
@@ -337,9 +337,9 @@ class mxCellMarker extends mxEventSource {
    * Returns the valid- or invalidColor depending on the value of isValid.
    * The given <mxCellState> is ignored by this implementation.
    */
-  getMarkerColor = (evt, state, isValid) => {
+  getMarkerColor(evt, state, isValid) {
     return isValid ? this.validColor : this.invalidColor;
-  };
+  }
 
   /**
    * Function: getState
@@ -347,13 +347,13 @@ class mxCellMarker extends mxEventSource {
    * Uses <getCell>, <getStateToMark> and <intersects> to return the
    * <mxCellState> for the given <mxMouseEvent>.
    */
-  getState = me => {
+  getState(me) {
     const view = this.graph.getView();
     const cell = this.getCell(me);
     const state = this.getStateToMark(view.getState(cell));
 
     return state != null && this.intersects(state, me) ? state : null;
-  };
+  }
 
   /**
    * Function: getCell
@@ -363,7 +363,7 @@ class mxCellMarker extends mxEventSource {
    */
   getCell(me) {
     return me.getCell();
-  };
+  }
 
   /**
    * Function: getStateToMark
@@ -371,9 +371,9 @@ class mxCellMarker extends mxEventSource {
    * Returns the <mxCellState> to be marked for the given <mxCellState> under
    * the mouse. This returns the given state.
    */
-  getStateToMark = state => {
+  getStateToMark(state) {
     return state;
-  };
+  }
 
   /**
    * Function: intersects
@@ -382,7 +382,7 @@ class mxCellMarker extends mxEventSource {
    * This returns true if the <hotspot> is 0 or the coordinates are inside
    * the hotspot for the given cell state.
    */
-  intersects = (state, me) => {
+  intersects(state, me) {
     if (this.hotspotEnabled) {
       return mxUtils.intersectsHotspot(
         state,
@@ -395,7 +395,7 @@ class mxCellMarker extends mxEventSource {
     }
 
     return true;
-  };
+  }
 
   /**
    * Function: destroy
@@ -406,7 +406,7 @@ class mxCellMarker extends mxEventSource {
     this.graph.getView().removeListener(this.resetHandler);
     this.graph.getModel().removeListener(this.resetHandler);
     this.highlight.destroy();
-  };
+  }
 }
 
 export default mxCellMarker;

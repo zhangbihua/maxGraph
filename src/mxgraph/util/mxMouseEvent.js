@@ -97,83 +97,83 @@ class mxMouseEvent {
    *
    * Returns <evt>.
    */
-  getEvent = () => {
+  getEvent() {
     return this.evt;
-  };
+  }
 
   /**
    * Function: getSource
    *
    * Returns the target DOM element using <mxEvent.getSource> for <evt>.
    */
-  getSource = () => {
+  getSource() {
     return mxEvent.getSource(this.evt);
-  };
+  }
 
   /**
    * Function: isSource
    *
    * Returns true if the given <mxShape> is the source of <evt>.
    */
-  isSource = shape => {
+  isSource(shape) {
     if (shape != null) {
       return mxUtils.isAncestorNode(shape.node, this.getSource());
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: getX
    *
    * Returns <evt.clientX>.
    */
-  getX = () => {
+  getX() {
     return mxEvent.getClientX(this.getEvent());
-  };
+  }
 
   /**
    * Function: getY
    *
    * Returns <evt.clientY>.
    */
-  getY = () => {
+  getY() {
     return mxEvent.getClientY(this.getEvent());
-  };
+  }
 
   /**
    * Function: getGraphX
    *
    * Returns <graphX>.
    */
-  getGraphX = () => {
+  getGraphX() {
     return this.graphX;
-  };
+  }
 
   /**
    * Function: getGraphY
    *
    * Returns <graphY>.
    */
-  getGraphY = () => {
+  getGraphY() {
     return this.graphY;
-  };
+  }
 
   /**
    * Function: getState
    *
    * Returns <state>.
    */
-  getState = () => {
+  getState() {
     return this.state;
-  };
+  }
 
   /**
    * Function: getCell
    *
    * Returns the <mxCell> in <state> is not null.
    */
-  getCell = () => {
+  getCell() {
     const state = this.getState();
 
     if (state != null) {
@@ -181,25 +181,25 @@ class mxMouseEvent {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: isPopupTrigger
    *
    * Returns true if the event is a popup trigger.
    */
-  isPopupTrigger = () => {
+  isPopupTrigger() {
     return mxEvent.isPopupTrigger(this.getEvent());
-  };
+  }
 
   /**
    * Function: isConsumed
    *
    * Returns <consumed>.
    */
-  isConsumed = () => {
+  isConsumed() {
     return this.consumed;
-  };
+  }
 
   /**
    * Function: consume
@@ -214,7 +214,7 @@ class mxMouseEvent {
    * preventDefault - Specifies if the native event should be canceled. Default
    * is true.
    */
-  consume = preventDefault => {
+  consume(preventDefault) {
     preventDefault =
       preventDefault != null
         ? preventDefault
@@ -226,7 +226,7 @@ class mxMouseEvent {
 
     // Sets local consumed state
     this.consumed = true;
-  };
+  }
 }
 
 export default mxMouseEvent;

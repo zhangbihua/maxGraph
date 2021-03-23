@@ -354,9 +354,9 @@ class mxPrintPreview {
    *
    * Returns <wnd>.
    */
-  getWindow = () => {
+  getWindow() {
     return this.wnd;
-  };
+  }
 
   /**
    * Function: getDocType
@@ -365,10 +365,10 @@ class mxPrintPreview {
    * page. This implementation returns an X-UA meta tag for IE5 in quirks mode,
    * IE8 in IE8 standards mode and edge in IE9 standards mode.
    */
-  getDoctype = () => {
+  getDoctype() {
     const dt = '';
     return dt;
-  };
+  }
 
   /**
    * Function: appendGraph
@@ -381,13 +381,13 @@ class mxPrintPreview {
    * targetWindow - Optional window that should be used for rendering. If
    * this is specified then no HEAD tag, CSS and BODY tag will be written.
    */
-  appendGraph = (graph, scale, x0, y0, forcePageBreaks, keepOpen) => {
+  appendGraph(graph, scale, x0, y0, forcePageBreaks, keepOpen) {
     this.graph = graph;
     this.scale = scale != null ? scale : 1 / graph.pageScale;
     this.x0 = x0;
     this.y0 = y0;
     this.open(null, null, forcePageBreaks, keepOpen);
-  };
+  }
 
   /**
    * Function: open
@@ -401,7 +401,7 @@ class mxPrintPreview {
    * targetWindow - Optional window that should be used for rendering. If
    * this is specified then no HEAD tag, CSS and BODY tag will be written.
    */
-  open = (css, targetWindow, forcePageBreaks, keepOpen) => {
+  open(css, targetWindow, forcePageBreaks, keepOpen) {
     // Closing the window while the page is being rendered may cause an
     // exception in IE. This and any other exceptions are simply ignored.
     const previousInitializeOverlay = this.graph.cellRenderer.initializeOverlay;
@@ -629,25 +629,25 @@ class mxPrintPreview {
     }
 
     return this.wnd;
-  };
+  }
 
   /**
    * Function: addPageBreak
    *
    * Adds a page break to the given document.
    */
-  addPageBreak = doc => {
+  addPageBreak(doc) {
     const hr = doc.createElement('hr');
     hr.className = 'mxPageBreak';
     doc.body.appendChild(hr);
-  };
+  }
 
   /**
    * Function: closeDocument
    *
    * Writes the closing tags for body and page after calling <writePostfix>.
    */
-  closeDocument = () => {
+  closeDocument() {
     try {
       if (this.wnd != null && this.wnd.document != null) {
         const doc = this.wnd.document;
@@ -663,7 +663,7 @@ class mxPrintPreview {
     } catch (e) {
       // ignore any errors resulting from wnd no longer being available
     }
-  };
+  }
 
   /**
    * Function: writeHead
@@ -671,7 +671,7 @@ class mxPrintPreview {
    * Writes the HEAD section into the given document, without the opening
    * and closing HEAD tags.
    */
-  writeHead = (doc, css) => {
+  writeHead(doc, css) {
     if (this.title != null) {
       doc.writeln(`<title>${this.title}</title>`);
     }
@@ -706,23 +706,23 @@ class mxPrintPreview {
     }
 
     doc.writeln('</style>');
-  };
+  }
 
   /**
    * Function: writePostfix
    *
    * Called before closing the body of the page. This implementation is empty.
    */
-  writePostfix = doc => {
+  writePostfix(doc) {
     // empty
-  };
+  }
 
   /**
    * Function: createPageSelector
    *
    * Creates the page selector table.
    */
-  createPageSelector = (vpages, hpages) => {
+  createPageSelector(vpages, hpages) {
     const doc = this.wnd.document;
     const table = doc.createElement('table');
     table.className = 'mxPageSelector';
@@ -756,7 +756,7 @@ class mxPrintPreview {
     table.appendChild(tbody);
 
     return table;
-  };
+  }
 
   /**
    * Function: renderPage
@@ -775,7 +775,7 @@ class mxPrintPreview {
    * Takes the inner div as the argument.
    * pageNumber - Integer representing the page number.
    */
-  renderPage = (w, h, dx, dy, content, pageNumber) => {
+  renderPage(w, h, dx, dy, content, pageNumber) {
     const doc = this.wnd.document;
     let div = document.createElement('div');
     let arg = null;
@@ -836,14 +836,14 @@ class mxPrintPreview {
     content(arg);
 
     return div;
-  };
+  }
 
   /**
    * Function: getRoot
    *
    * Returns the root cell for painting the graph.
    */
-  getRoot = () => {
+  getRoot() {
     let root = this.graph.view.currentRoot;
 
     if (root == null) {
@@ -851,7 +851,7 @@ class mxPrintPreview {
     }
 
     return root;
-  };
+  }
 
   /**
    * Function: useCssTransforms
@@ -860,9 +860,9 @@ class mxPrintPreview {
    * This returns true if foreignObject is supported and we're not in Safari
    * as it has clipping bugs for transformed CSS content with foreignObjects.
    */
-  useCssTransforms = () => {
+  useCssTransforms() {
     return !mxClient.NO_FO && !mxClient.IS_SF;
-  };
+  }
 
   /**
    * Function: addGraphFragment
@@ -878,7 +878,7 @@ class mxPrintPreview {
    * div - Div that contains the output.
    * clip - Contains the clipping rectangle as an <mxRectangle>.
    */
-  addGraphFragment = (dx, dy, scale, pageNumber, div, clip) => {
+  addGraphFragment(dx, dy, scale, pageNumber, div, clip) {
     const view = this.graph.getView();
     const previousContainer = this.graph.container;
     this.graph.container = div;
@@ -1022,23 +1022,23 @@ class mxPrintPreview {
       temp.destroy();
       view.setEventsEnabled(eventsEnabled);
     }
-  };
+  }
 
   /**
    * Function: getLinkForCellState
    *
    * Returns the link for the given cell state. This returns null.
    */
-  getLinkForCellState = state => {
+  getLinkForCellState(state) {
     return this.graph.getLinkForCell(state.cell);
-  };
+  }
 
   /**
    * Function: insertBackgroundImage
    *
    * Inserts the background image into the given div.
    */
-  insertBackgroundImage = (div, dx, dy) => {
+  insertBackgroundImage(div, dx, dy) {
     const bg = this.graph.backgroundImage;
 
     if (bg != null) {
@@ -1052,25 +1052,25 @@ class mxPrintPreview {
 
       div.insertBefore(img, div.firstChild);
     }
-  };
+  }
 
   /**
    * Function: getCoverPages
    *
    * Returns the pages to be added before the print output. This returns null.
    */
-  getCoverPages = () => {
+  getCoverPages() {
     return null;
-  };
+  }
 
   /**
    * Function: getAppendices
    *
    * Returns the pages to be added after the print output. This returns null.
    */
-  getAppendices = () => {
+  getAppendices() {
     return null;
-  };
+  }
 
   /**
    * Function: print
@@ -1081,25 +1081,25 @@ class mxPrintPreview {
    *
    * css - Optional CSS string to be used in the head section.
    */
-  print = css => {
+  print(css) {
     const wnd = this.open(css);
 
     if (wnd != null) {
       wnd.print();
     }
-  };
+  }
 
   /**
    * Function: close
    *
    * Closes the print preview window.
    */
-  close = () => {
+  close() {
     if (this.wnd != null) {
       this.wnd.close();
       this.wnd = null;
     }
-  };
+  }
 }
 
 export default mxPrintPreview;

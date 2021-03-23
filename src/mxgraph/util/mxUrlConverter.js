@@ -41,7 +41,7 @@ class mxUrlConverter {
    *
    * Private helper function to update the base URL.
    */
-  updateBaseUrl = () => {
+  updateBaseUrl() {
     this.baseDomain = `${location.protocol}//${location.host}`;
     this.baseUrl = this.baseDomain + location.pathname;
     const tmp = this.baseUrl.lastIndexOf('/');
@@ -50,68 +50,68 @@ class mxUrlConverter {
     if (tmp > 0) {
       this.baseUrl = this.baseUrl.substring(0, tmp + 1);
     }
-  };
+  }
 
   /**
    * Function: isEnabled
    *
    * Returns <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
    *
    * Sets <enabled>.
    */
-  setEnabled = value => {
+  setEnabled(value) {
     this.enabled = value;
-  };
+  }
 
   /**
    * Function: getBaseUrl
    *
    * Returns <baseUrl>.
    */
-  getBaseUrl = () => {
+  getBaseUrl() {
     return this.baseUrl;
-  };
+  }
 
   /**
    * Function: setBaseUrl
    *
    * Sets <baseUrl>.
    */
-  setBaseUrl = value => {
+  setBaseUrl(value) {
     this.baseUrl = value;
-  };
+  }
 
   /**
    * Function: getBaseDomain
    *
    * Returns <baseDomain>.
    */
-  getBaseDomain = () => {
+  getBaseDomain() {
     return this.baseDomain;
-  };
+  }
 
   /**
    * Function: setBaseDomain
    *
    * Sets <baseDomain>.
    */
-  setBaseDomain = value => {
+  setBaseDomain(value) {
     this.baseDomain = value;
-  };
+  }
 
   /**
    * Function: isRelativeUrl
    *
    * Returns true if the given URL is relative.
    */
-  isRelativeUrl = url => {
+  isRelativeUrl(url) {
     return (
       url != null &&
       url.substring(0, 2) != '//' &&
@@ -120,7 +120,7 @@ class mxUrlConverter {
       url.substring(0, 10) != 'data:image' &&
       url.substring(0, 7) != 'file://'
     );
-  };
+  }
 
   /**
    * Function: convert
@@ -128,7 +128,7 @@ class mxUrlConverter {
    * Converts the given URL to an absolute URL with protol and domain.
    * Relative URLs are first converted to absolute URLs.
    */
-  convert = url => {
+  convert(url) {
     if (this.isEnabled() && this.isRelativeUrl(url)) {
       if (this.getBaseUrl() == null) {
         this.updateBaseUrl();
@@ -142,7 +142,7 @@ class mxUrlConverter {
     }
 
     return url;
-  };
+  }
 }
 
 export default mxUrlConverter;

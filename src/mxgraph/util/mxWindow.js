@@ -308,7 +308,7 @@ class mxWindow extends mxEventSource {
    *
    * Initializes the DOM tree that represents the window.
    */
-  init = (x, y, width, height, style) => {
+  init(x, y, width, height, style) {
     style = style != null ? style : 'mxWindow';
 
     this.div = document.createElement('div');
@@ -384,7 +384,7 @@ class mxWindow extends mxEventSource {
     mxEvent.addGestureListeners(this.table, activator);
 
     this.hide();
-  };
+  }
 
   /**
    * Function: setTitle
@@ -392,7 +392,7 @@ class mxWindow extends mxEventSource {
    * Sets the window title to the given string. HTML markup inside the title
    * will be escaped.
    */
-  setTitle = title => {
+  setTitle(title) {
     // Removes all text content nodes (normally just one)
     let child = this.title.firstChild;
 
@@ -408,14 +408,14 @@ class mxWindow extends mxEventSource {
 
     mxUtils.write(this.title, title || '');
     this.title.appendChild(this.buttons);
-  };
+  }
 
   /**
    * Function: setScrollable
    *
    * Sets if the window contents should be scrollable.
    */
-  setScrollable = scrollable => {
+  setScrollable(scrollable) {
     // Workaround for hang in Presto 2.5.22 (Opera 10.5)
     if (
       navigator.userAgent == null ||
@@ -427,14 +427,14 @@ class mxWindow extends mxEventSource {
         this.contentWrapper.style.overflow = 'hidden';
       }
     }
-  };
+  }
 
   /**
    * Function: activate
    *
    * Puts the window on top of all other windows.
    */
-  activate = () => {
+  activate() {
     if (mxWindow.activeWindow !== this) {
       const style = mxUtils.getCurrentStyle(this.getElement());
       const index = style != null ? style.zIndex : 3;
@@ -455,38 +455,38 @@ class mxWindow extends mxEventSource {
         new mxEventObject(mxEvent.ACTIVATE, 'previousWindow', previousWindow)
       );
     }
-  };
+  }
 
   /**
    * Function: getElement
    *
    * Returuns the outermost DOM node that makes up the window.
    */
-  getElement = () => {
+  getElement() {
     return this.div;
-  };
+  }
 
   /**
    * Function: fit
    *
    * Makes sure the window is inside the client area of the window.
    */
-  fit = () => {
+  fit() {
     mxUtils.fit(this.div);
-  };
+  }
 
   /**
    * Function: isResizable
    *
    * Returns true if the window is resizable.
    */
-  isResizable = () => {
+  isResizable() {
     if (this.resize != null) {
       return this.resize.style.display != 'none';
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: setResizable
@@ -502,7 +502,7 @@ class mxWindow extends mxEventSource {
    * }
    * (end)
    */
-  setResizable = resizable => {
+  setResizable(resizable) {
     if (resizable) {
       if (this.resize == null) {
         this.resize = document.createElement('img');
@@ -576,14 +576,14 @@ class mxWindow extends mxEventSource {
     } else if (this.resize != null) {
       this.resize.style.display = 'none';
     }
-  };
+  }
 
   /**
    * Function: setSize
    *
    * Sets the size of the window.
    */
-  setSize = (width, height) => {
+  setSize(width, height) {
     width = Math.max(this.minimumSize.width, width);
     height = Math.max(this.minimumSize.height, height);
 
@@ -597,16 +597,16 @@ class mxWindow extends mxEventSource {
     this.contentWrapper.style.height = `${this.div.offsetHeight -
       this.title.offsetHeight -
       this.contentHeightCorrection}px`;
-  };
+  }
 
   /**
    * Function: setMinimizable
    *
    * Sets if the window is minimizable.
    */
-  setMinimizable = minimizable => {
+  setMinimizable(minimizable) {
     this.minimize.style.display = minimizable ? '' : 'none';
-  };
+  }
 
   /**
    * Function: getMinimumSize
@@ -615,16 +615,16 @@ class mxWindow extends mxEventSource {
    * A width or height of 0 means keep the existing width or height. This
    * implementation returns the height of the window title and keeps the width.
    */
-  getMinimumSize = () => {
+  getMinimumSize() {
     return new mxRectangle(0, 0, 0, this.title.offsetHeight);
-  };
+  }
 
   /**
    * Function: installMinimizeHandler
    *
    * Installs the event listeners required for minimizing the window.
    */
-  installMinimizeHandler = () => {
+  installMinimizeHandler() {
     this.minimize = document.createElement('img');
 
     this.minimize.setAttribute('src', this.minimizeImage);
@@ -691,23 +691,23 @@ class mxWindow extends mxEventSource {
     };
 
     mxEvent.addGestureListeners(this.minimize, funct);
-  };
+  }
 
   /**
    * Function: setMaximizable
    *
    * Sets if the window is maximizable.
    */
-  setMaximizable = maximizable => {
+  setMaximizable(maximizable) {
     this.maximize.style.display = maximizable ? '' : 'none';
-  };
+  }
 
   /**
    * Function: installMaximizeHandler
    *
    * Installs the event listeners required for maximizing the window.
    */
-  installMaximizeHandler = () => {
+  installMaximizeHandler() {
     this.maximize = document.createElement('img');
 
     this.maximize.setAttribute('src', this.maximizeImage);
@@ -810,14 +810,14 @@ class mxWindow extends mxEventSource {
 
     mxEvent.addGestureListeners(this.maximize, funct);
     mxEvent.addListener(this.title, 'dblclick', funct);
-  };
+  }
 
   /**
    * Function: installMoveHandler
    *
    * Installs the event listeners required for moving the window.
    */
-  installMoveHandler = () => {
+  installMoveHandler() {
     this.title.style.cursor = 'move';
 
     mxEvent.addGestureListeners(this.title, evt => {
@@ -856,35 +856,35 @@ class mxWindow extends mxEventSource {
     if (mxClient.IS_POINTER) {
       this.title.style.touchAction = 'none';
     }
-  };
+  }
 
   /**
    * Function: setLocation
    *
    * Sets the upper, left corner of the window.
    */
-  setLocation = (x, y) => {
+  setLocation(x, y) {
     this.div.style.left = `${x}px`;
     this.div.style.top = `${y}px`;
-  };
+  }
 
   /**
    * Function: getX
    *
    * Returns the current position on the x-axis.
    */
-  getX = () => {
+  getX() {
     return parseInt(this.div.style.left);
-  };
+  }
 
   /**
    * Function: getY
    *
    * Returns the current position on the y-axis.
    */
-  getY = () => {
+  getY() {
     return parseInt(this.div.style.top);
-  };
+  }
 
   /**
    * Function: installCloseHandler
@@ -892,7 +892,7 @@ class mxWindow extends mxEventSource {
    * Adds the <closeImage> as a new image node in <closeImg> and installs the
    * <close> event.
    */
-  installCloseHandler = () => {
+  installCloseHandler() {
     this.closeImg = document.createElement('img');
 
     this.closeImg.setAttribute('src', this.closeImage);
@@ -914,7 +914,7 @@ class mxWindow extends mxEventSource {
 
       mxEvent.consume(evt);
     });
-  };
+  }
 
   /**
    * Function: setImage
@@ -925,7 +925,7 @@ class mxWindow extends mxEventSource {
    *
    * image - URL of the image to be used.
    */
-  setImage = image => {
+  setImage(image) {
     this.image = document.createElement('img');
     this.image.setAttribute('src', image);
     this.image.setAttribute('align', 'left');
@@ -934,7 +934,7 @@ class mxWindow extends mxEventSource {
     this.image.style.marginTop = '-2px';
 
     this.title.insertBefore(this.image, this.title.firstChild);
-  };
+  }
 
   /**
    * Function: setClosable
@@ -945,22 +945,22 @@ class mxWindow extends mxEventSource {
    *
    * closable - Boolean specifying if the window should be closable.
    */
-  setClosable = closable => {
+  setClosable(closable) {
     this.closeImg.style.display = closable ? '' : 'none';
-  };
+  }
 
   /**
    * Function: isVisible
    *
    * Returns true if the window is visible.
    */
-  isVisible = () => {
+  isVisible() {
     if (this.div != null) {
       return this.div.style.display != 'none';
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: setVisible
@@ -971,7 +971,7 @@ class mxWindow extends mxEventSource {
    *
    * visible - Boolean indicating if the window should be made visible.
    */
-  setVisible = visible => {
+  setVisible(visible) {
     if (this.div != null && this.isVisible() != visible) {
       if (visible) {
         this.show();
@@ -979,14 +979,14 @@ class mxWindow extends mxEventSource {
         this.hide();
       }
     }
-  };
+  }
 
   /**
    * Function: show
    *
    * Shows the window.
    */
-  show = () => {
+  show() {
     this.div.style.display = '';
     this.activate();
 
@@ -1002,17 +1002,17 @@ class mxWindow extends mxEventSource {
     }
 
     this.fireEvent(new mxEventObject(mxEvent.SHOW));
-  };
+  }
 
   /**
    * Function: hide
    *
    * Hides the window.
    */
-  hide = () => {
+  hide() {
     this.div.style.display = 'none';
     this.fireEvent(new mxEventObject(mxEvent.HIDE));
-  };
+  }
 
   /**
    * Function: destroy
@@ -1020,7 +1020,7 @@ class mxWindow extends mxEventSource {
    * Destroys the window and removes all associated resources. Fires a
    * <destroy> event prior to destroying the window.
    */
-  destroy = () => {
+  destroy() {
     this.fireEvent(new mxEventObject(mxEvent.DESTROY));
 
     if (this.div != null) {
@@ -1032,7 +1032,7 @@ class mxWindow extends mxEventSource {
     this.title = null;
     this.content = null;
     this.contentWrapper = null;
-  };
+  }
 }
 
 export default mxWindow;

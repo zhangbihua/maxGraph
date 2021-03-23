@@ -92,7 +92,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * Initializes the shapes required for this vertex handler.
    */
-  init = () => {
+  init() {
     // Supercall
     super.init();
 
@@ -104,7 +104,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
         this.graph.tooltipHandler.hide();
       })
     );
-  };
+  }
 
   /**
    * Function: isSelectOnPopup
@@ -112,9 +112,9 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Hook for returning if a cell should be selected for a given <mxMouseEvent>.
    * This implementation returns <selectOnPopup>.
    */
-  isSelectOnPopup = me => {
+  isSelectOnPopup(me) {
     return this.selectOnPopup;
-  };
+  }
 
   /**
    * Function: mouseDown
@@ -122,7 +122,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Handles the event by initiating the panning. By consuming the event all
    * subsequent events of the gesture are redirected to this handler.
    */
-  mouseDown = (sender, me) => {
+  mouseDown(sender, me) {
     if (this.isEnabled() && !mxEvent.isMultiTouchEvent(me.getEvent())) {
       // Hides the popupmenu if is is being displayed
       this.hideMenu();
@@ -133,14 +133,14 @@ class mxPopupMenuHandler extends mxPopupMenu {
       this.popupTrigger = this.isPopupTrigger(me);
       this.inTolerance = true;
     }
-  };
+  }
 
   /**
    * Function: mouseMove
    *
    * Handles the event by updating the panning on the graph.
    */
-  mouseMove = (sender, me) => {
+  mouseMove(sender, me) {
     // Popup trigger may change on mouseUp so ignore it
     if (this.inTolerance && this.screenX != null && this.screenY != null) {
       if (
@@ -152,7 +152,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
         this.inTolerance = false;
       }
     }
-  };
+  }
 
   /**
    * Function: mouseUp
@@ -160,7 +160,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Handles the event by setting the translation on the view or showing the
    * popupmenu.
    */
-  mouseUp = (sender, me) => {
+  mouseUp(sender, me) {
     if (
       this.popupTrigger &&
       this.inTolerance &&
@@ -198,29 +198,29 @@ class mxPopupMenuHandler extends mxPopupMenu {
 
     this.popupTrigger = false;
     this.inTolerance = false;
-  };
+  }
 
   /**
    * Function: getCellForPopupEvent
    *
    * Hook to return the cell for the mouse up popup trigger handling.
    */
-  getCellForPopupEvent = me => {
+  getCellForPopupEvent(me) {
     return me.getCell();
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy = () => {
+  destroy() {
     this.graph.removeMouseListener(this);
     this.graph.removeListener(this.gestureHandler);
 
     // Supercall
     super.destroy();
-  };
+  }
 }
 
 export default mxPopupMenuHandler;

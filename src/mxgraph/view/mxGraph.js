@@ -45,7 +45,7 @@ import mxRootChange from '../model/atomic_changes/mxRootChange';
 import mxStyleChange from '../model/atomic_changes/mxStyleChange';
 import mxTerminalChange from '../model/atomic_changes/mxTerminalChange';
 import mxValueChange from '../model/atomic_changes/mxValueChange';
-import mxPolyline from "../shape/mxPolyline";
+import mxPolyline from '../shape/mxPolyline';
 
 class mxGraph extends mxEventSource {
   /**
@@ -1685,7 +1685,7 @@ class mxGraph extends mxEventSource {
    *
    * container - DOM node that will contain the graph display.
    */
-  init = container => {
+  init(container) {
     this.container = container;
 
     // Initializes the in-place editor
@@ -1711,17 +1711,17 @@ class mxGraph extends mxEventSource {
         }
       })
     );
-  };
+  }
 
   // TODO: Document me!!
-  batchUpdate = fn => {
+  batchUpdate(fn) {
     this.getModel().beginUpdate();
     try {
       fn();
     } finally {
       this.getModel().endUpdate();
     }
-  };
+  }
 
   /**
    * Function: createHandlers
@@ -1729,7 +1729,7 @@ class mxGraph extends mxEventSource {
    * Creates the tooltip-, panning-, connection- and graph-handler (in this
    * order). This is called in the constructor before <init> is called.
    */
-  createHandlers = () => {
+  createHandlers() {
     this.tooltipHandler = this.createTooltipHandler();
     this.tooltipHandler.setEnabled(false);
     this.selectionCellsHandler = this.createSelectionCellsHandler();
@@ -1739,160 +1739,160 @@ class mxGraph extends mxEventSource {
     this.panningHandler = this.createPanningHandler();
     this.panningHandler.panningEnabled = false;
     this.popupMenuHandler = this.createPopupMenuHandler();
-  };
+  }
 
   /**
    * Function: createTooltipHandler
    *
    * Creates and returns a new <mxTooltipHandler> to be used in this graph.
    */
-  createTooltipHandler = () => {
+  createTooltipHandler() {
     return new mxTooltipHandler(this);
-  };
+  }
 
   /**
    * Function: createSelectionCellsHandler
    *
    * Creates and returns a new <mxTooltipHandler> to be used in this graph.
    */
-  createSelectionCellsHandler = () => {
+  createSelectionCellsHandler() {
     return new mxSelectionCellsHandler(this);
-  };
+  }
 
   /**
    * Function: createConnectionHandler
    *
    * Creates and returns a new <mxConnectionHandler> to be used in this graph.
    */
-  createConnectionHandler = () => {
+  createConnectionHandler() {
     return new mxConnectionHandler(this);
-  };
+  }
 
   /**
    * Function: createGraphHandler
    *
    * Creates and returns a new <mxGraphHandler> to be used in this graph.
    */
-  createGraphHandler = () => {
+  createGraphHandler() {
     return new mxGraphHandler(this);
-  };
+  }
 
   /**
    * Function: createPanningHandler
    *
    * Creates and returns a new <mxPanningHandler> to be used in this graph.
    */
-  createPanningHandler = () => {
+  createPanningHandler() {
     return new mxPanningHandler(this);
-  };
+  }
 
   /**
    * Function: createPopupMenuHandler
    *
    * Creates and returns a new <mxPopupMenuHandler> to be used in this graph.
    */
-  createPopupMenuHandler = () => {
+  createPopupMenuHandler() {
     return new mxPopupMenuHandler(this);
-  };
+  }
 
   /**
    * Function: createSelectionModel
    *
    * Creates a new <mxGraphSelectionModel> to be used in this graph.
    */
-  createSelectionModel = () => {
+  createSelectionModel() {
     return new mxGraphSelectionModel(this);
-  };
+  }
 
   /**
    * Function: createStylesheet
    *
    * Creates a new <mxGraphSelectionModel> to be used in this graph.
    */
-  createStylesheet = () => {
+  createStylesheet() {
     return new mxStylesheet();
-  };
+  }
 
   /**
    * Function: createGraphView
    *
    * Creates a new <mxGraphView> to be used in this graph.
    */
-  createGraphView = () => {
+  createGraphView() {
     return new mxGraphView(this);
-  };
+  }
 
   /**
    * Function: createCellRenderer
    *
    * Creates a new <mxCellRenderer> to be used in this graph.
    */
-  createCellRenderer = () => {
+  createCellRenderer() {
     return new mxCellRenderer();
-  };
+  }
 
   /**
    * Function: createCellEditor
    *
    * Creates a new <mxCellEditor> to be used in this graph.
    */
-  createCellEditor = () => {
+  createCellEditor() {
     return new mxCellEditor(this);
-  };
+  }
 
   /**
    * Function: getModel
    *
    * Returns the <mxGraphModel> that contains the cells.
    */
-  getModel = () => {
+  getModel() {
     return this.model;
-  };
+  }
 
   /**
    * Function: getView
    *
    * Returns the <mxGraphView> that contains the <mxCellStates>.
    */
-  getView = () => {
+  getView() {
     return this.view;
-  };
+  }
 
   /**
    * Function: getStylesheet
    *
    * Returns the <mxStylesheet> that defines the style.
    */
-  getStylesheet = () => {
+  getStylesheet() {
     return this.stylesheet;
-  };
+  }
 
   /**
    * Function: setStylesheet
    *
    * Sets the <mxStylesheet> that defines the style.
    */
-  setStylesheet = stylesheet => {
+  setStylesheet(stylesheet) {
     this.stylesheet = stylesheet;
-  };
+  }
 
   /**
    * Function: getSelectionModel
    *
    * Returns the <mxGraphSelectionModel> that contains the selection.
    */
-  getSelectionModel = () => {
+  getSelectionModel() {
     return this.selectionModel;
-  };
+  }
 
   /**
    * Function: setSelectionModel
    *
    * Sets the <mxSelectionModel> that contains the selection.
    */
-  setSelectionModel = selectionModel => {
+  setSelectionModel(selectionModel) {
     this.selectionModel = selectionModel;
-  };
+  }
 
   /**
    * Function: getSelectionCellsForChanges
@@ -1905,7 +1905,7 @@ class mxGraph extends mxEventSource {
    * change should be ignored.
    *
    */
-  getSelectionCellsForChanges = (changes, ignoreFn) => {
+  getSelectionCellsForChanges(changes, ignoreFn) {
     const dict = new mxDictionary();
     const cells = [];
 
@@ -1946,7 +1946,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: graphModelChanged
@@ -1958,7 +1958,7 @@ class mxGraph extends mxEventSource {
    *
    * changes - Array that contains the individual changes.
    */
-  graphModelChanged = changes => {
+  graphModelChanged(changes) {
     for (let i = 0; i < changes.length; i += 1) {
       this.processChange(changes[i]);
     }
@@ -1966,14 +1966,14 @@ class mxGraph extends mxEventSource {
     this.updateSelection();
     this.view.validate();
     this.sizeDidChange();
-  };
+  }
 
   /**
    * Function: updateSelection
    *
    * Removes selection cells that are not in the model from the selection.
    */
-  updateSelection = () => {
+  updateSelection() {
     const cells = this.getSelectionCells();
     const removed = [];
 
@@ -1995,7 +1995,7 @@ class mxGraph extends mxEventSource {
     }
 
     this.removeSelectionCells(removed);
-  };
+  }
 
   /**
    * Function: processChange
@@ -2008,7 +2008,7 @@ class mxGraph extends mxEventSource {
    *
    * change - Object that represents the change on the model.
    */
-  processChange = change => {
+  processChange(change) {
     // Resets the view settings, removes all cells and clears
     // the selection if the root changes.
     if (change instanceof mxRootChange) {
@@ -2090,7 +2090,7 @@ class mxGraph extends mxEventSource {
     else if (change.cell != null && change.cell instanceof mxCell) {
       this.removeStateForCell(change.cell);
     }
-  };
+  }
 
   /**
    * Function: removeStateForCell
@@ -2102,7 +2102,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that was removed from the model.
    */
-  removeStateForCell = cell => {
+  removeStateForCell(cell) {
     const childCount = this.model.getChildCount(cell);
 
     for (let i = 0; i < childCount; i += 1) {
@@ -2111,7 +2111,7 @@ class mxGraph extends mxEventSource {
 
     this.view.invalidate(cell, false, true);
     this.view.removeState(cell);
-  };
+  }
 
   /**
    * Group: Overlays
@@ -2128,7 +2128,7 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> to add the overlay for.
    * overlay - <mxCellOverlay> to be added for the cell.
    */
-  addCellOverlay = (cell, overlay) => {
+  addCellOverlay(cell, overlay) {
     if (cell.overlays == null) {
       cell.overlays = [];
     }
@@ -2147,7 +2147,7 @@ class mxGraph extends mxEventSource {
     );
 
     return overlay;
-  };
+  }
 
   /**
    * Function: getCellOverlays
@@ -2159,9 +2159,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose overlays should be returned.
    */
-  getCellOverlays = cell => {
+  getCellOverlays(cell) {
     return cell.overlays;
-  };
+  }
 
   /**
    * Function: removeCellOverlay
@@ -2175,7 +2175,7 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> whose overlay should be removed.
    * overlay - Optional <mxCellOverlay> to be removed.
    */
-  removeCellOverlay = (cell, overlay) => {
+  removeCellOverlay(cell, overlay) {
     if (overlay == null) {
       this.removeCellOverlays(cell);
     } else {
@@ -2210,7 +2210,7 @@ class mxGraph extends mxEventSource {
     }
 
     return overlay;
-  };
+  }
 
   /**
    * Function: removeCellOverlays
@@ -2223,7 +2223,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose overlays should be removed
    */
-  removeCellOverlays = cell => {
+  removeCellOverlays(cell) {
     const { overlays } = cell;
 
     if (overlays != null) {
@@ -2250,7 +2250,7 @@ class mxGraph extends mxEventSource {
     }
 
     return overlays;
-  };
+  }
 
   /**
    * Function: clearCellOverlays
@@ -2265,7 +2265,7 @@ class mxGraph extends mxEventSource {
    * cell - Optional <mxCell> that represents the root of the subtree to
    * remove the overlays from. Default is the root in the model.
    */
-  clearCellOverlays = cell => {
+  clearCellOverlays(cell) {
     cell = cell != null ? cell : this.model.getRoot();
     this.removeCellOverlays(cell);
 
@@ -2276,7 +2276,7 @@ class mxGraph extends mxEventSource {
       const child = this.model.getChildAt(cell, i);
       this.clearCellOverlays(child); // recurse
     }
-  };
+  }
 
   /**
    * Function: setCellWarning
@@ -2302,7 +2302,7 @@ class mxGraph extends mxEventSource {
    * isSelect - Optional boolean indicating if a click on the overlay
    * should select the corresponding cell. Default is false.
    */
-  setCellWarning = (cell, warning, img, isSelect) => {
+  setCellWarning(cell, warning, img, isSelect) {
     if (warning != null && warning.length > 0) {
       img = img != null ? img : this.warningImage;
 
@@ -2327,7 +2327,7 @@ class mxGraph extends mxEventSource {
     this.removeCellOverlays(cell);
 
     return null;
-  };
+  }
 
   /**
    * Group: In-place editing
@@ -2343,9 +2343,9 @@ class mxGraph extends mxEventSource {
    *
    * evt - Optional mouse event that triggered the editing.
    */
-  startEditing = evt => {
+  startEditing(evt) {
     this.startEditingAtCell(null, evt);
-  };
+  }
 
   /**
    * Function: startEditingAtCell
@@ -2359,7 +2359,7 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> to start the in-place editor for.
    * evt - Optional mouse event that triggered the editing.
    */
-  startEditingAtCell = (cell, evt) => {
+  startEditingAtCell(cell, evt) {
     if (evt == null || !mxEvent.isMultiTouchEvent(evt)) {
       if (cell == null) {
         cell = this.getSelectionCell();
@@ -2379,7 +2379,7 @@ class mxGraph extends mxEventSource {
         );
       }
     }
-  };
+  }
 
   /**
    * Function: getEditingValue
@@ -2394,9 +2394,9 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> for which the initial editing value should be returned.
    * evt - Optional mouse event that triggered the editor.
    */
-  getEditingValue = (cell, evt) => {
+  getEditingValue(cell, evt) {
     return this.convertValueToString(cell);
-  };
+  }
 
   /**
    * Function: stopEditing
@@ -2408,12 +2408,12 @@ class mxGraph extends mxEventSource {
    * cancel - Boolean that specifies if the current editing value
    * should be stored.
    */
-  stopEditing = cancel => {
+  stopEditing(cancel) {
     this.cellEditor.stopEditing(cancel);
     this.fireEvent(
       new mxEventObject(mxEvent.EDITING_STOPPED, 'cancel', cancel)
     );
-  };
+  }
 
   /**
    * Function: labelChanged
@@ -2428,7 +2428,7 @@ class mxGraph extends mxEventSource {
    * value - New label to be assigned.
    * evt - Optional event that triggered the change.
    */
-  labelChanged = (cell, value, evt) => {
+  labelChanged(cell, value, evt) {
     this.model.beginUpdate();
     try {
       const old = cell.value;
@@ -2451,7 +2451,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cell;
-  };
+  }
 
   /**
    * Function: cellLabelChanged
@@ -2484,7 +2484,7 @@ class mxGraph extends mxEventSource {
    * value - New label to be assigned.
    * autoSize - Boolean that specifies if <cellSizeUpdated> should be called.
    */
-  cellLabelChanged = (cell, value, autoSize) => {
+  cellLabelChanged(cell, value, autoSize) {
     this.model.beginUpdate();
     try {
       this.model.setValue(cell, value);
@@ -2495,7 +2495,7 @@ class mxGraph extends mxEventSource {
     } finally {
       this.model.endUpdate();
     }
-  };
+  }
 
   /**
    * Group: Event processing
@@ -2510,9 +2510,9 @@ class mxGraph extends mxEventSource {
    *
    * evt - Mouseevent that represents the keystroke.
    */
-  escape = evt => {
+  escape(evt) {
     this.fireEvent(new mxEventObject(mxEvent.ESCAPE, 'event', evt));
-  };
+  }
 
   /**
    * Function: click
@@ -2544,7 +2544,7 @@ class mxGraph extends mxEventSource {
    *
    * me - <mxMouseEvent> that represents the single click.
    */
-  click = me => {
+  click(me) {
     const evt = me.getEvent();
     let cell = me.getCell();
     const mxe = new mxEventObject(mxEvent.CLICK, 'event', evt, 'cell', cell);
@@ -2622,14 +2622,14 @@ class mxGraph extends mxEventSource {
         this.clearSelection();
       }
     }
-  };
+  }
 
   /**
    * Function: isSiblingSelected
    *
    * Returns true if any sibling of the given cell is selected.
    */
-  isSiblingSelected = cell => {
+  isSiblingSelected(cell) {
     const { model } = this;
     const parent = model.getParent(cell);
     const childCount = model.getChildCount(parent);
@@ -2643,7 +2643,7 @@ class mxGraph extends mxEventSource {
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: dblClick
@@ -2685,7 +2685,7 @@ class mxGraph extends mxEventSource {
    * evt - Mouseevent that represents the doubleclick.
    * cell - Optional <mxCell> under the mousepointer.
    */
-  dblClick = (evt, cell) => {
+  dblClick(evt, cell) {
     const mxe = new mxEventObject(
       mxEvent.DOUBLE_CLICK,
       'event',
@@ -2707,7 +2707,7 @@ class mxGraph extends mxEventSource {
       this.startEditingAtCell(cell, evt);
       mxEvent.consume(evt);
     }
-  };
+  }
 
   /**
    * Function: tapAndHold
@@ -2719,7 +2719,7 @@ class mxGraph extends mxEventSource {
    * me - <mxMouseEvent> that represents the touch event.
    * state - Optional <mxCellState> that is associated with the event.
    */
-  tapAndHold = me => {
+  tapAndHold(me) {
     const evt = me.getEvent();
     const mxe = new mxEventObject(
       mxEvent.TAP_AND_HOLD,
@@ -2770,7 +2770,7 @@ class mxGraph extends mxEventSource {
         );
       }
     }
-  };
+  }
 
   /**
    * Function: scrollPointToVisible
@@ -2778,7 +2778,7 @@ class mxGraph extends mxEventSource {
    * Scrolls the graph to the given point, extending the graph container if
    * specified.
    */
-  scrollPointToVisible = (x, y, extend, border) => {
+  scrollPointToVisible(x, y, extend, border) {
     if (
       !this.timerAutoScroll &&
       (this.ignoreScrollbars || mxUtils.hasScrollbars(this.container))
@@ -2864,16 +2864,16 @@ class mxGraph extends mxEventSource {
 
       this.panningManager.panTo(x + this.panDx, y + this.panDy);
     }
-  };
+  }
 
   /**
    * Function: createPanningManager
    *
    * Creates and returns an <mxPanningManager>.
    */
-  createPanningManager = () => {
+  createPanningManager() {
     return new mxPanningManager(this);
-  };
+  }
 
   /**
    * Function: getBorderSizes
@@ -2882,7 +2882,7 @@ class mxGraph extends mxEventSource {
    * container. The left, top, right and bottom borders are stored in the x, y,
    * width and height of the returned <mxRectangle>, respectively.
    */
-  getBorderSizes = () => {
+  getBorderSizes() {
     const css = mxUtils.getCurrentStyle(this.container);
 
     return new mxRectangle(
@@ -2903,14 +2903,14 @@ class mxGraph extends mxEventSource {
           ? mxUtils.parseCssNumber(css.borderBottomWidth)
           : 0)
     );
-  };
+  }
 
   /**
    * Function: getPreferredPageSize
    *
    * Returns the preferred size of the background page if <preferPageSize> is true.
    */
-  getPreferredPageSize = (bounds, width, height) => {
+  getPreferredPageSize(bounds, width, height) {
     const { scale } = this.view;
     const tr = this.view.translate;
     const fmt = this.pageFormat;
@@ -2931,7 +2931,7 @@ class mxGraph extends mxEventSource {
       hCount * page.width + 2 + tr.x,
       vCount * page.height + 2 + tr.y
     );
-  };
+  }
 
   /**
    * Function: fit
@@ -2979,7 +2979,7 @@ class mxGraph extends mxEventSource {
    * ignored. Default is false.
    * maxHeight - Optional maximum height.
    */
-  fit = (
+  fit(
     border,
     keepOrigin,
     margin,
@@ -2987,7 +2987,7 @@ class mxGraph extends mxEventSource {
     ignoreWidth,
     ignoreHeight,
     maxHeight
-  ) => {
+  ) {
     if (this.container != null) {
       border = border != null ? border : this.getBorder();
       keepOrigin = keepOrigin != null ? keepOrigin : false;
@@ -3089,7 +3089,7 @@ class mxGraph extends mxEventSource {
     }
 
     return this.view.scale;
-  };
+  }
 
   /**
    * Function: sizeDidChange
@@ -3098,7 +3098,7 @@ class mxGraph extends mxEventSource {
    * a <size> event after updating the clipping region of the SVG element in
    * SVG-bases browsers.
    */
-  sizeDidChange = () => {
+  sizeDidChange() {
     const bounds = this.getGraphBounds();
 
     if (this.container != null) {
@@ -3158,14 +3158,14 @@ class mxGraph extends mxEventSource {
     }
 
     this.fireEvent(new mxEventObject(mxEvent.SIZE, 'bounds', bounds));
-  };
+  }
 
   /**
    * Function: doResizeContainer
    *
    * Resizes the container for the given graph width and height.
    */
-  doResizeContainer = (width, height) => {
+  doResizeContainer(width, height) {
     if (this.maximumContainerSize != null) {
       width = Math.min(this.maximumContainerSize.width, width);
       height = Math.min(this.maximumContainerSize.height, height);
@@ -3173,7 +3173,7 @@ class mxGraph extends mxEventSource {
 
     this.container.style.width = `${Math.ceil(width)}px`;
     this.container.style.height = `${Math.ceil(height)}px`;
-  };
+  }
 
   /**
    * Function: updatePageBreaks
@@ -3186,7 +3186,7 @@ class mxGraph extends mxEventSource {
    * width - Specifies the width of the container in pixels.
    * height - Specifies the height of the container in pixels.
    */
-  updatePageBreaks = (visible, width, height) => {
+  updatePageBreaks(visible, width, height) {
     const { scale } = this.view;
     const tr = this.view.translate;
     const fmt = this.pageFormat;
@@ -3285,7 +3285,7 @@ class mxGraph extends mxEventSource {
 
     drawPageBreaks(this.horizontalPageBreaks);
     drawPageBreaks(this.verticalPageBreaks);
-  };
+  }
 
   /**
    * Group: Cell styles
@@ -3302,11 +3302,11 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> whose style should be returned as an array.
    * ignoreState - Optional boolean that specifies if the cell state should be ignored.
    */
-  getCurrentCellStyle = (cell, ignoreState) => {
+  getCurrentCellStyle(cell, ignoreState) {
     const state = ignoreState ? null : this.view.getState(cell);
 
     return state != null ? state.style : this.getCellStyle(cell);
-  };
+  }
 
   /**
    * Function: getCellStyle
@@ -3322,7 +3322,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose style should be returned as an array.
    */
-  getCellStyle = cell => {
+  getCellStyle(cell) {
     const stylename = this.model.getStyle(cell);
     let style = null;
 
@@ -3346,7 +3346,7 @@ class mxGraph extends mxEventSource {
     }
 
     return style;
-  };
+  }
 
   /**
    * Function: postProcessCellStyle
@@ -3355,7 +3355,7 @@ class mxGraph extends mxEventSource {
    * turns short data URIs as defined in mxImageBundle to data URIs as
    * defined in RFC 2397 of the IETF.
    */
-  postProcessCellStyle = style => {
+  postProcessCellStyle(style) {
     if (style != null) {
       const key = style[mxConstants.STYLE_IMAGE];
       let image = this.getImageFromBundles(key);
@@ -3391,7 +3391,7 @@ class mxGraph extends mxEventSource {
     }
 
     return style;
-  };
+  }
 
   /**
    * Function: setCellStyle
@@ -3405,7 +3405,7 @@ class mxGraph extends mxEventSource {
    * cells - Optional array of <mxCells> to set the style for. Default is the
    * selection cells.
    */
-  setCellStyle = (style, cells) => {
+  setCellStyle(style, cells) {
     cells = cells || this.getSelectionCells();
 
     if (cells != null) {
@@ -3418,7 +3418,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: toggleCellStyle
@@ -3435,11 +3435,11 @@ class mxGraph extends mxEventSource {
    * cell - Optional <mxCell> whose style should be modified. Default is
    * the selection cell.
    */
-  toggleCellStyle = (key, defaultValue, cell) => {
+  toggleCellStyle(key, defaultValue, cell) {
     cell = cell || this.getSelectionCell();
 
     return this.toggleCellStyles(key, defaultValue, [cell]);
-  };
+  }
 
   /**
    * Function: toggleCellStyles
@@ -3457,7 +3457,7 @@ class mxGraph extends mxEventSource {
    * cells - Optional array of <mxCells> whose styles should be modified.
    * Default is the selection cells.
    */
-  toggleCellStyles = (key, defaultValue, cells) => {
+  toggleCellStyles(key, defaultValue, cells) {
     defaultValue = defaultValue != null ? defaultValue : false;
     cells = cells || this.getSelectionCells();
     let value = null;
@@ -3469,7 +3469,7 @@ class mxGraph extends mxEventSource {
     }
 
     return value;
-  };
+  }
 
   /**
    * Function: setCellStyles
@@ -3487,10 +3487,10 @@ class mxGraph extends mxEventSource {
    * cells - Optional array of <mxCells> to change the style for. Default is
    * the selection cells.
    */
-  setCellStyles = (key, value, cells) => {
+  setCellStyles(key, value, cells) {
     cells = cells || this.getSelectionCells();
     mxUtils.setCellStyles(this.model, cells, key, value);
-  };
+  }
 
   /**
    * Function: toggleCellStyleFlags
@@ -3505,9 +3505,9 @@ class mxGraph extends mxEventSource {
    * cells - Optional array of <mxCells> to change the style for. Default is
    * the selection cells.
    */
-  toggleCellStyleFlags = (key, flag, cells) => {
+  toggleCellStyleFlags(key, flag, cells) {
     this.setCellStyleFlags(key, flag, null, cells);
-  };
+  }
 
   /**
    * Function: setCellStyleFlags
@@ -3523,7 +3523,7 @@ class mxGraph extends mxEventSource {
    * cells - Optional array of <mxCells> to change the style for. Default is
    * the selection cells.
    */
-  setCellStyleFlags = (key, flag, value, cells) => {
+  setCellStyleFlags(key, flag, value, cells) {
     cells = cells || this.getSelectionCells();
 
     if (cells != null && cells.length > 0) {
@@ -3535,7 +3535,7 @@ class mxGraph extends mxEventSource {
 
       mxUtils.setCellStyleFlags(this.model, cells, key, flag, value);
     }
-  };
+  }
 
   /**
    * Group: Cell alignment and orientation
@@ -3554,7 +3554,7 @@ class mxGraph extends mxEventSource {
    * cells - Array of <mxCells> to be aligned.
    * param - Optional coordinate for the alignment.
    */
-  alignCells = (align, cells, param) => {
+  alignCells(align, cells, param) {
     if (cells == null) {
       cells = this.getSelectionCells();
     }
@@ -3645,7 +3645,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: flipEdge
@@ -3676,7 +3676,7 @@ class mxGraph extends mxEventSource {
    *
    * edge - <mxCell> whose style should be changed.
    */
-  flipEdge = edge => {
+  flipEdge(edge) {
     if (edge != null && this.alternateEdgeStyle != null) {
       this.model.beginUpdate();
       try {
@@ -3697,23 +3697,23 @@ class mxGraph extends mxEventSource {
     }
 
     return edge;
-  };
+  }
 
   /**
    * Function: addImageBundle
    *
    * Adds the specified <mxImageBundle>.
    */
-  addImageBundle = bundle => {
+  addImageBundle(bundle) {
     this.imageBundles.push(bundle);
-  };
+  }
 
   /**
    * Function: removeImageBundle
    *
    * Removes the specified <mxImageBundle>.
    */
-  removeImageBundle = bundle => {
+  removeImageBundle(bundle) {
     const tmp = [];
 
     for (let i = 0; i < this.imageBundles.length; i += 1) {
@@ -3723,7 +3723,7 @@ class mxGraph extends mxEventSource {
     }
 
     this.imageBundles = tmp;
-  };
+  }
 
   /**
    * Function: getImageFromBundles
@@ -3731,7 +3731,7 @@ class mxGraph extends mxEventSource {
    * Searches all <imageBundles> for the specified key and returns the value
    * for the first match or null if the key is not found.
    */
-  getImageFromBundles = key => {
+  getImageFromBundles(key) {
     if (key != null) {
       for (let i = 0; i < this.imageBundles.length; i += 1) {
         const image = this.imageBundles[i].getImage(key);
@@ -3743,7 +3743,7 @@ class mxGraph extends mxEventSource {
     }
 
     return null;
-  };
+  }
 
   /**
    * Group: Order
@@ -3762,7 +3762,7 @@ class mxGraph extends mxEventSource {
    * cells - Array of <mxCells> to move to the background. If null is
    * specified then the selection cells are used.
    */
-  orderCells = (back, cells) => {
+  orderCells(back, cells) {
     if (cells == null) {
       cells = mxUtils.sortCells(this.getSelectionCells(), true);
     }
@@ -3778,7 +3778,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: cellsOrdered
@@ -3791,7 +3791,7 @@ class mxGraph extends mxEventSource {
    * cells - Array of <mxCells> whose order should be changed.
    * back - Boolean that specifies if the cells should be moved to back.
    */
-  cellsOrdered = (cells, back) => {
+  cellsOrdered(cells, back) {
     if (cells != null) {
       this.model.beginUpdate();
       try {
@@ -3816,7 +3816,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Group: Grouping
@@ -3840,7 +3840,7 @@ class mxGraph extends mxEventSource {
    * cells - Optional array of <mxCells> to be grouped. If null is specified
    * then the selection cells are used.
    */
-  groupCells = (group, border, cells) => {
+  groupCells(group, border, cells) {
     if (cells == null) {
       cells = mxUtils.sortCells(this.getSelectionCells(), true);
     }
@@ -3907,7 +3907,7 @@ class mxGraph extends mxEventSource {
     }
 
     return group;
-  };
+  }
 
   /**
    * Function: getCellsForGroup
@@ -3915,7 +3915,7 @@ class mxGraph extends mxEventSource {
    * Returns the cells with the same parent as the first cell
    * in the given array.
    */
-  getCellsForGroup = cells => {
+  getCellsForGroup(cells) {
     const result = [];
 
     if (cells != null && cells.length > 0) {
@@ -3931,14 +3931,14 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: getBoundsForGroup
    *
    * Returns the bounds to be used for the given group and children.
    */
-  getBoundsForGroup = (group, children, border) => {
+  getBoundsForGroup(group, children, border) {
     const result = this.getBoundingBoxFromGeometry(children, true);
 
     if (result != null) {
@@ -3961,7 +3961,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: createGroupCell
@@ -3981,13 +3981,13 @@ class mxGraph extends mxEventSource {
    *   return group;
    * };
    */
-  createGroupCell = cells => {
+  createGroupCell(cells) {
     const group = new mxCell('');
     group.setVertex(true);
     group.setConnectable(false);
 
     return group;
-  };
+  }
 
   /**
    * Function: ungroupCells
@@ -4001,7 +4001,7 @@ class mxGraph extends mxEventSource {
    * cells - Array of cells to be ungrouped. If null is specified then the
    * selection cells are used.
    */
-  ungroupCells = cells => {
+  ungroupCells(cells) {
     let result = [];
 
     if (cells == null) {
@@ -4049,14 +4049,14 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: getCellsForUngroup
    *
    * Returns the selection cells that can be ungrouped.
    */
-  getCellsForUngroup = () => {
+  getCellsForUngroup() {
     const cells = this.getSelectionCells();
 
     // Finds the cells with children
@@ -4072,7 +4072,7 @@ class mxGraph extends mxEventSource {
     }
 
     return tmp;
-  };
+  }
 
   /**
    * Function: removeCellsAfterUngroup
@@ -4083,9 +4083,9 @@ class mxGraph extends mxEventSource {
    *
    * cells - Array of <mxCells> that were ungrouped.
    */
-  removeCellsAfterUngroup = cells => {
+  removeCellsAfterUngroup(cells) {
     this.cellsRemoved(this.addAllEdges(cells));
-  };
+  }
 
   /**
    * Function: removeCellsFromParent
@@ -4097,7 +4097,7 @@ class mxGraph extends mxEventSource {
    *
    * cells - Array of <mxCells> to be removed from their parents.
    */
-  removeCellsFromParent = cells => {
+  removeCellsFromParent(cells) {
     if (cells == null) {
       cells = this.getSelectionCells();
     }
@@ -4114,7 +4114,7 @@ class mxGraph extends mxEventSource {
       this.model.endUpdate();
     }
     return cells;
-  };
+  }
 
   /**
    * Function: updateGroupBounds
@@ -4136,7 +4136,7 @@ class mxGraph extends mxEventSource {
    * bottomBorder - Optional top border to be added in the group. Default is 0.
    * leftBorder - Optional top border to be added in the group. Default is 0.
    */
-  updateGroupBounds = (
+  updateGroupBounds(
     cells,
     border,
     moveGroup,
@@ -4144,7 +4144,7 @@ class mxGraph extends mxEventSource {
     rightBorder,
     bottomBorder,
     leftBorder
-  ) => {
+  ) {
     if (cells == null) {
       cells = this.getSelectionCells();
     }
@@ -4215,7 +4215,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: getBoundingBox
@@ -4227,7 +4227,7 @@ class mxGraph extends mxEventSource {
    *
    * cells - Array of <mxCells> whose bounding box should be returned.
    */
-  getBoundingBox = cells => {
+  getBoundingBox(cells) {
     let result = null;
 
     if (cells != null && cells.length > 0) {
@@ -4250,7 +4250,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Group: Cell cloning, insertion and removal
@@ -4270,9 +4270,9 @@ class mxGraph extends mxEventSource {
    * keepPosition - Optional boolean indicating if the position of the cells should
    * be updated to reflect the lost parent cell. Default is false.
    */
-  cloneCell = (cell, allowInvalidEdges, mapping, keepPosition) => {
+  cloneCell(cell, allowInvalidEdges, mapping, keepPosition) {
     return this.cloneCells([cell], allowInvalidEdges, mapping, keepPosition)[0];
-  };
+  }
 
   /**
    * Function: cloneCells
@@ -4291,7 +4291,7 @@ class mxGraph extends mxEventSource {
    * keepPosition - Optional boolean indicating if the position of the cells should
    * be updated to reflect the lost parent cell. Default is false.
    */
-  cloneCells = (cells, allowInvalidEdges, mapping, keepPosition) => {
+  cloneCells(cells, allowInvalidEdges, mapping, keepPosition) {
     allowInvalidEdges = allowInvalidEdges != null ? allowInvalidEdges : true;
     let clones = null;
 
@@ -4395,7 +4395,7 @@ class mxGraph extends mxEventSource {
     }
 
     return clones;
-  };
+  }
 
   /**
    * Function: insertVertex
@@ -4488,7 +4488,7 @@ class mxGraph extends mxEventSource {
    *
    * Hook method that creates the new vertex for <insertVertex>.
    */
-  createVertex = (parent, id, value, x, y, width, height, style, relative) => {
+  createVertex(parent, id, value, x, y, width, height, style, relative) {
     // Creates the geometry for the vertex
     const geometry = new mxGeometry(x, y, width, height);
     geometry.relative = relative != null ? relative : false;
@@ -4500,7 +4500,7 @@ class mxGraph extends mxEventSource {
     vertex.setConnectable(true);
 
     return vertex;
-  };
+  }
 
   /**
    * Function: insertEdge
@@ -4554,14 +4554,14 @@ class mxGraph extends mxEventSource {
    * are set when the edge is added to the model.
    *
    */
-  createEdge = (parent, id, value, source, target, style) => {
+  createEdge(parent, id, value, source, target, style) {
     // Creates the edge
     const edge = new mxCell(value, new mxGeometry(), style);
     edge.setId(id);
     edge.setEdge(true);
     edge.geometry.relative = true;
     return edge;
-  };
+  }
 
   /**
    * Function: addEdge
@@ -4579,9 +4579,9 @@ class mxGraph extends mxEventSource {
    * target - Optional <mxCell> that represents the target terminal.
    * index - Optional index to insert the cells at. Default is to append.
    */
-  addEdge = (edge, parent, source, target, index) => {
+  addEdge(edge, parent, source, target, index) {
     return this.addCell(edge, parent, index, source, target);
-  };
+  }
 
   /**
    * Function: addCell
@@ -4599,9 +4599,9 @@ class mxGraph extends mxEventSource {
    * source - Optional <mxCell> that represents the source terminal.
    * target - Optional <mxCell> that represents the target terminal.
    */
-  addCell = (cell, parent, index, source, target) => {
+  addCell(cell, parent, index, source, target) {
     return this.addCells([cell], parent, index, source, target)[0];
-  };
+  }
 
   /**
    * Function: addCells
@@ -4622,7 +4622,7 @@ class mxGraph extends mxEventSource {
    * absolute - Optional boolean indicating of cells should be kept at
    * their absolute position. Default is false.
    */
-  addCells = (cells, parent, index, source, target, absolute) => {
+  addCells(cells, parent, index, source, target, absolute) {
     if (parent == null) {
       parent = this.getDefaultParent();
     }
@@ -4662,7 +4662,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: cellsAdded
@@ -4670,7 +4670,7 @@ class mxGraph extends mxEventSource {
    * Adds the specified cells to the given parent. This method fires
    * <mxEvent.CELLS_ADDED> while the transaction is in progress.
    */
-  cellsAdded = (
+  cellsAdded(
     cells,
     parent,
     index,
@@ -4679,7 +4679,7 @@ class mxGraph extends mxEventSource {
     absolute,
     constrain,
     extend
-  ) => {
+  ) {
     if (cells != null && parent != null && index != null) {
       this.model.beginUpdate();
       try {
@@ -4783,7 +4783,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: autoSizeCell
@@ -4796,7 +4796,7 @@ class mxGraph extends mxEventSource {
    * recurse - Optional boolean which specifies if all descendants should be
    * autosized. Default is true.
    */
-  autoSizeCell = (cell, recurse) => {
+  autoSizeCell(cell, recurse) {
     recurse = recurse != null ? recurse : true;
 
     if (recurse) {
@@ -4810,7 +4810,7 @@ class mxGraph extends mxEventSource {
     if (this.getModel().isVertex(cell) && this.isAutoSizeCell(cell)) {
       this.updateCellSize(cell);
     }
-  };
+  }
 
   /**
    * Function: removeCells
@@ -4827,7 +4827,7 @@ class mxGraph extends mxEventSource {
    * includeEdges - Optional boolean which specifies if all connected edges
    * should be removed as well. Default is true.
    */
-  removeCells = (cells, includeEdges) => {
+  removeCells(cells, includeEdges) {
     includeEdges = includeEdges != null ? includeEdges : true;
 
     if (cells == null) {
@@ -4876,7 +4876,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: cellsRemoved
@@ -4888,7 +4888,7 @@ class mxGraph extends mxEventSource {
    *
    * cells - Array of <mxCells> to remove.
    */
-  cellsRemoved = cells => {
+  cellsRemoved(cells) {
     if (cells != null && cells.length > 0) {
       const { scale } = this.view;
       const tr = this.view.translate;
@@ -4982,7 +4982,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: splitEdge
@@ -5004,7 +5004,7 @@ class mxGraph extends mxEventSource {
    * parent - Optional parent to insert the cell. If null the parent of
    * the edge is used.
    */
-  splitEdge = (edge, cells, newEdge, dx, dy, x, y, parent) => {
+  splitEdge(edge, cells, newEdge, dx, dy, x, y, parent) {
     dx = dx || 0;
     dy = dy || 0;
 
@@ -5078,7 +5078,7 @@ class mxGraph extends mxEventSource {
     }
 
     return newEdge;
-  };
+  }
 
   /**
    * Group: Cell visibility
@@ -5100,7 +5100,7 @@ class mxGraph extends mxEventSource {
    * includeEdges - Optional boolean indicating if the visible state of all
    * connected edges should be changed as well. Default is true.
    */
-  toggleCells = (show, cells, includeEdges) => {
+  toggleCells(show, cells, includeEdges) {
     if (cells == null) {
       cells = this.getSelectionCells();
     }
@@ -5129,7 +5129,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: cellsToggled
@@ -5141,7 +5141,7 @@ class mxGraph extends mxEventSource {
    * cells - Array of <mxCells> whose visible state should be changed.
    * show - Boolean that specifies the visible state to be assigned.
    */
-  cellsToggled = (cells, show) => {
+  cellsToggled(cells, show) {
     if (cells != null && cells.length > 0) {
       this.model.beginUpdate();
       try {
@@ -5152,7 +5152,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Group: Folding
@@ -5177,7 +5177,7 @@ class mxGraph extends mxEventSource {
    * checked. Default is false.
    * evt - Optional native event that triggered the invocation.
    */
-  foldCells = (collapse, recurse, cells, checkFoldable, evt) => {
+  foldCells(collapse, recurse, cells, checkFoldable, evt) {
     recurse = recurse != null ? recurse : false;
 
     if (cells == null) {
@@ -5205,7 +5205,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: cellsFolded
@@ -5223,7 +5223,7 @@ class mxGraph extends mxEventSource {
    * checkFoldable - Optional boolean indicating of isCellFoldable should be
    * checked. Default is false.
    */
-  cellsFolded = (cells, collapse, recurse, checkFoldable) => {
+  cellsFolded(cells, collapse, recurse, checkFoldable) {
     if (cells != null && cells.length > 0) {
       this.model.beginUpdate();
       try {
@@ -5263,7 +5263,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: swapBounds
@@ -5276,7 +5276,7 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> for which the bounds should be swapped.
    * willCollapse - Boolean indicating if the cell is going to be collapsed.
    */
-  swapBounds = (cell, willCollapse) => {
+  swapBounds(cell, willCollapse) {
     if (cell != null) {
       let geo = this.model.getGeometry(cell);
 
@@ -5289,7 +5289,7 @@ class mxGraph extends mxEventSource {
         this.model.setGeometry(cell, geo);
       }
     }
-  };
+  }
 
   /**
    * Function: updateAlternateBounds
@@ -5307,7 +5307,7 @@ class mxGraph extends mxEventSource {
    * g - <mxGeometry> for which the alternate bounds should be updated.
    * willCollapse - Boolean indicating if the cell is going to be collapsed.
    */
-  updateAlternateBounds = (cell, geo, willCollapse) => {
+  updateAlternateBounds(cell, geo, willCollapse) {
     if (cell != null && geo != null) {
       const style = this.getCurrentCellStyle(cell);
 
@@ -5360,7 +5360,7 @@ class mxGraph extends mxEventSource {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: addAllEdges
@@ -5368,18 +5368,18 @@ class mxGraph extends mxEventSource {
    * Returns an array with the given cells and all edges that are connected
    * to a cell or one of its descendants.
    */
-  addAllEdges = cells => {
+  addAllEdges(cells) {
     const allCells = cells.slice();
 
     return mxUtils.removeDuplicates(allCells.concat(this.getAllEdges(cells)));
-  };
+  }
 
   /**
    * Function: getAllEdges
    *
    * Returns all edges connected to the given cells or its descendants.
    */
-  getAllEdges = cells => {
+  getAllEdges(cells) {
     let edges = [];
 
     if (cells != null) {
@@ -5397,7 +5397,7 @@ class mxGraph extends mxEventSource {
     }
 
     return edges;
-  };
+  }
 
   /**
    * Group: Cell sizing
@@ -5414,7 +5414,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose size should be updated.
    */
-  updateCellSize = (cell, ignoreChildren) => {
+  updateCellSize(cell, ignoreChildren) {
     ignoreChildren = ignoreChildren != null ? ignoreChildren : false;
 
     this.model.beginUpdate();
@@ -5434,7 +5434,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cell;
-  };
+  }
 
   /**
    * Function: cellSizeUpdated
@@ -5446,7 +5446,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> for which the size should be changed.
    */
-  cellSizeUpdated = (cell, ignoreChildren) => {
+  cellSizeUpdated(cell, ignoreChildren) {
     if (cell != null) {
       this.model.beginUpdate();
       try {
@@ -5536,7 +5536,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: getPreferredSizeForCell
@@ -5566,7 +5566,7 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> for which the preferred size should be returned.
    * textWidth - Optional maximum text width for word wrapping.
    */
-  getPreferredSizeForCell = (cell, textWidth) => {
+  getPreferredSizeForCell(cell, textWidth) {
     let result = null;
 
     if (cell != null) {
@@ -5658,7 +5658,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: resizeCell
@@ -5671,9 +5671,9 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> whose bounds should be changed.
    * bounds - <mxRectangle> that represents the new bounds.
    */
-  resizeCell = (cell, bounds, recurse) => {
+  resizeCell(cell, bounds, recurse) {
     return this.resizeCells([cell], [bounds], recurse)[0];
-  };
+  }
 
   /**
    * Function: resizeCells
@@ -5687,7 +5687,7 @@ class mxGraph extends mxEventSource {
    * cells - Array of <mxCells> whose bounds should be changed.
    * bounds - Array of <mxRectangles> that represent the new bounds.
    */
-  resizeCells = (cells, bounds, recurse) => {
+  resizeCells(cells, bounds, recurse) {
     recurse = recurse != null ? recurse : this.isRecursiveResize();
 
     this.model.beginUpdate();
@@ -5709,7 +5709,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: cellsResized
@@ -5757,7 +5757,7 @@ class mxGraph extends mxEventSource {
    * bounds - Array of <mxRectangles> that represent the new bounds.
    * recurse - Optional boolean that specifies if the children should be resized.
    */
-  cellsResized = (cells, bounds, recurse) => {
+  cellsResized(cells, bounds, recurse) {
     recurse = recurse != null ? recurse : false;
     const prev = [];
 
@@ -5795,7 +5795,7 @@ class mxGraph extends mxEventSource {
     }
 
     return prev;
-  };
+  }
 
   /**
    * Function: cellResized
@@ -5810,7 +5810,7 @@ class mxGraph extends mxEventSource {
    * ignoreRelative - Boolean that indicates if relative cells should be ignored.
    * recurse - Optional boolean that specifies if the children should be resized.
    */
-  cellResized = (cell, bounds, ignoreRelative, recurse) => {
+  cellResized(cell, bounds, ignoreRelative, recurse) {
     const prev = this.model.getGeometry(cell);
 
     if (
@@ -5860,7 +5860,7 @@ class mxGraph extends mxEventSource {
     }
 
     return prev;
-  };
+  }
 
   /**
    * Function: resizeChildCells
@@ -5873,7 +5873,7 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> that has been resized.
    * newGeo - <mxGeometry> that represents the new bounds.
    */
-  resizeChildCells = (cell, newGeo) => {
+  resizeChildCells(cell, newGeo) {
     const geo = this.model.getGeometry(cell);
     const dx = geo.width !== 0 ? newGeo.width / geo.width : 1;
     const dy = geo.height !== 0 ? newGeo.height / geo.height : 1;
@@ -5882,7 +5882,7 @@ class mxGraph extends mxEventSource {
     for (let i = 0; i < childCount; i += 1) {
       this.scaleCell(this.model.getChildAt(cell, i), dx, dy, true);
     }
-  };
+  }
 
   /**
    * Function: constrainChildCells
@@ -5893,13 +5893,13 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that has been resized.
    */
-  constrainChildCells = cell => {
+  constrainChildCells(cell) {
     const childCount = this.model.getChildCount(cell);
 
     for (let i = 0; i < childCount; i += 1) {
       this.constrainChild(this.model.getChildAt(cell, i));
     }
-  };
+  }
 
   /**
    * Function: scaleCell
@@ -5914,7 +5914,7 @@ class mxGraph extends mxEventSource {
    * dy - Vertical scaling factor.
    * recurse - Boolean indicating if the child cells should be scaled.
    */
-  scaleCell = (cell, dx, dy, recurse) => {
+  scaleCell(cell, dx, dy, recurse) {
     let geo = this.model.getGeometry(cell);
 
     if (geo != null) {
@@ -5957,7 +5957,7 @@ class mxGraph extends mxEventSource {
         this.model.setGeometry(cell, geo);
       }
     }
-  };
+  }
 
   /**
    * Function: extendParent
@@ -5969,7 +5969,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that has been resized.
    */
-  extendParent = cell => {
+  extendParent(cell) {
     if (cell != null) {
       const parent = this.model.getParent(cell);
       let p = this.getCellGeometry(parent);
@@ -5991,7 +5991,7 @@ class mxGraph extends mxEventSource {
         }
       }
     }
-  };
+  }
 
   /**
    * Group: Cell moving
@@ -6013,9 +6013,9 @@ class mxGraph extends mxEventSource {
    * evt - Mouseevent that triggered the invocation.
    * mapping - Optional mapping for existing clones.
    */
-  importCells = (cells, dx, dy, target, evt, mapping) => {
+  importCells(cells, dx, dy, target, evt, mapping) {
     return this.moveCells(cells, dx, dy, true, target, evt, mapping);
-  };
+  }
 
   /**
    * Function: moveCells
@@ -6042,12 +6042,12 @@ class mxGraph extends mxEventSource {
    * evt - Mouseevent that triggered the invocation.
    * mapping - Optional mapping for existing clones.
    */
-  moveCells = (cells, dx, dy, clone, target, evt, mapping) => {
+  moveCells(cells, dx, dy, clone, target, evt, mapping) {
     dx = dx != null ? dx : 0;
     dy = dy != null ? dy : 0;
     clone = clone != null ? clone : false;
 
-    //alert(`moveCells: ${cells} ${dx} ${dy} ${clone} ${target}`)
+    // alert(`moveCells: ${cells} ${dx} ${dy} ${clone} ${target}`)
 
     if (cells != null && (dx !== 0 || dy !== 0 || clone || target != null)) {
       // Removes descendants with ancestors in cells to avoid multiple moving
@@ -6151,12 +6151,18 @@ class mxGraph extends mxEventSource {
         this.fireEvent(
           new mxEventObject(
             mxEvent.MOVE_CELLS,
-            'cells', cells,
-            'dx', dx,
-            'dy', dy,
-            'clone', clone,
-            'target', target,
-            'event', evt
+            'cells',
+            cells,
+            'dx',
+            dx,
+            'dy',
+            dy,
+            'clone',
+            clone,
+            'target',
+            target,
+            'event',
+            evt
           )
         );
       } finally {
@@ -6165,7 +6171,7 @@ class mxGraph extends mxEventSource {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: cellsMoved
@@ -6174,7 +6180,7 @@ class mxGraph extends mxEventSource {
    * using disconnectGraph is disconnect is true. This method fires
    * <mxEvent.CELLS_MOVED> while the transaction is in progress.
    */
-  cellsMoved = (cells, dx, dy, disconnect, constrain, extend) => {
+  cellsMoved(cells, dx, dy, disconnect, constrain, extend) {
     if (cells != null && (dx !== 0 || dy !== 0)) {
       extend = extend != null ? extend : false;
 
@@ -6201,17 +6207,21 @@ class mxGraph extends mxEventSource {
         this.fireEvent(
           new mxEventObject(
             mxEvent.CELLS_MOVED,
-            'cells', cells,
-            'dx', dx,
-            'dy', dy,
-            'disconnect', disconnect
+            'cells',
+            cells,
+            'dx',
+            dx,
+            'dy',
+            dy,
+            'disconnect',
+            disconnect
           )
         );
       } finally {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: translateCell
@@ -6219,7 +6229,7 @@ class mxGraph extends mxEventSource {
    * Translates the geometry of the given cell and stores the new,
    * translated geometry in the model as an atomic change.
    */
-  translateCell = (cell, dx, dy) => {
+  translateCell(cell, dx, dy) {
     let geometry = this.model.getGeometry(cell);
 
     if (geometry != null) {
@@ -6270,7 +6280,7 @@ class mxGraph extends mxEventSource {
 
       this.model.setGeometry(cell, geometry);
     }
-  };
+  }
 
   /**
    * Function: getCellContainmentArea
@@ -6281,7 +6291,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> for which the area should be returned.
    */
-  getCellContainmentArea = cell => {
+  getCellContainmentArea(cell) {
     if (cell != null && !this.model.isEdge(cell)) {
       const parent = this.model.getParent(cell);
 
@@ -6336,7 +6346,7 @@ class mxGraph extends mxEventSource {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: getMaximumGraphBounds
@@ -6344,9 +6354,9 @@ class mxGraph extends mxEventSource {
    * Returns the bounds inside which the diagram should be kept as an
    * <mxRectangle>.
    */
-  getMaximumGraphBounds = () => {
+  getMaximumGraphBounds() {
     return this.maximumGraphBounds;
-  };
+  }
 
   /**
    * Function: constrainChild
@@ -6361,7 +6371,7 @@ class mxGraph extends mxEventSource {
    * cells - <mxCell> which should be constrained.
    * sizeFirst - Specifies if the size should be changed first. Default is true.
    */
-  constrainChild = (cell, sizeFirst) => {
+  constrainChild(cell, sizeFirst) {
     sizeFirst = sizeFirst != null ? sizeFirst : true;
 
     if (cell != null) {
@@ -6482,7 +6492,7 @@ class mxGraph extends mxEventSource {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: resetEdges
@@ -6495,7 +6505,7 @@ class mxGraph extends mxEventSource {
    * cells - Array of <mxCells> for which the connected edges should be
    * reset.
    */
-  resetEdges = cells => {
+  resetEdges(cells) {
     if (cells != null) {
       // Prepares faster cells lookup
       const dict = new mxDictionary();
@@ -6535,7 +6545,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: resetEdge
@@ -6546,7 +6556,7 @@ class mxGraph extends mxEventSource {
    *
    * edge - <mxCell> whose points should be reset.
    */
-  resetEdge = edge => {
+  resetEdge(edge) {
     let geo = this.model.getGeometry(edge);
 
     // Resets the control points
@@ -6557,7 +6567,7 @@ class mxGraph extends mxEventSource {
     }
 
     return edge;
-  };
+  }
 
   /**
    * Group: Cell connecting and connection constraints
@@ -6568,7 +6578,7 @@ class mxGraph extends mxEventSource {
    *
    * Returns the constraint used to connect to the outline of the given state.
    */
-  getOutlineConstraint = (point, terminalState, me) => {
+  getOutlineConstraint(point, terminalState, me) {
     if (terminalState.shape != null) {
       const bounds = this.view.getPerimeterBounds(terminalState);
       const direction = terminalState.style[mxConstants.STYLE_DIRECTION];
@@ -6655,7 +6665,7 @@ class mxGraph extends mxEventSource {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: getAllConnectionConstraints
@@ -6669,7 +6679,7 @@ class mxGraph extends mxEventSource {
    * terminal - <mxCellState> that represents the terminal.
    * source - Boolean that specifies if the terminal is the source or target.
    */
-  getAllConnectionConstraints = (terminal, source) => {
+  getAllConnectionConstraints(terminal, source) {
     if (
       terminal != null &&
       terminal.shape != null &&
@@ -6679,7 +6689,7 @@ class mxGraph extends mxEventSource {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: getConnectionConstraint
@@ -6693,7 +6703,7 @@ class mxGraph extends mxEventSource {
    * terminal - <mxCellState> that represents the terminal.
    * source - Boolean indicating if the terminal is the source or target.
    */
-  getConnectionConstraint = (edge, terminal, source) => {
+  getConnectionConstraint(edge, terminal, source) {
     let point = null;
     const x =
       edge.style[source ? mxConstants.STYLE_EXIT_X : mxConstants.STYLE_ENTRY_X];
@@ -6739,7 +6749,7 @@ class mxGraph extends mxEventSource {
     }
 
     return new mxConnectionConstraint(point, perimeter, null, dx, dy);
-  };
+  }
 
   /**
    * Function: setConnectionConstraint
@@ -6756,7 +6766,7 @@ class mxGraph extends mxEventSource {
    * constraint - Optional <mxConnectionConstraint> to be used for this
    * connection.
    */
-  setConnectionConstraint = (edge, terminal, source, constraint) => {
+  setConnectionConstraint(edge, terminal, source, constraint) {
     if (constraint != null) {
       this.model.beginUpdate();
 
@@ -6834,7 +6844,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: getConnectionPoint
@@ -6848,7 +6858,7 @@ class mxGraph extends mxEventSource {
    * constraint - <mxConnectionConstraint> that represents the connection point
    * constraint as returned by <getConnectionConstraint>.
    */
-  getConnectionPoint = (vertex, constraint, round) => {
+  getConnectionPoint(vertex, constraint, round) {
     round = round != null ? round : true;
     let point = null;
 
@@ -6961,7 +6971,7 @@ class mxGraph extends mxEventSource {
     }
 
     return point;
-  };
+  }
 
   /**
    * Function: connectCell
@@ -6978,7 +6988,7 @@ class mxGraph extends mxEventSource {
    * constraint - Optional <mxConnectionConstraint> to be used for this
    * connection.
    */
-  connectCell = (edge, terminal, source, constraint) => {
+  connectCell(edge, terminal, source, constraint) {
     this.model.beginUpdate();
     try {
       const previous = this.model.getTerminal(edge, source);
@@ -7001,7 +7011,7 @@ class mxGraph extends mxEventSource {
     }
 
     return edge;
-  };
+  }
 
   /**
    * Function: cellConnected
@@ -7017,7 +7027,7 @@ class mxGraph extends mxEventSource {
    * source - Boolean indicating if the new terminal is the source or target.
    * constraint - <mxConnectionConstraint> to be used for this connection.
    */
-  cellConnected = (edge, terminal, source, constraint) => {
+  cellConnected(edge, terminal, source, constraint) {
     if (edge != null) {
       this.model.beginUpdate();
       try {
@@ -7066,7 +7076,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: disconnectGraph
@@ -7078,7 +7088,7 @@ class mxGraph extends mxEventSource {
    *
    * cells - Array of <mxCells> to be disconnected.
    */
-  disconnectGraph = cells => {
+  disconnectGraph(cells) {
     if (cells != null) {
       this.model.beginUpdate();
       try {
@@ -7161,7 +7171,7 @@ class mxGraph extends mxEventSource {
         this.model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Group: Drilldown
@@ -7173,9 +7183,9 @@ class mxGraph extends mxEventSource {
    * Returns the current root of the displayed cell hierarchy. This is a
    * shortcut to <mxGraphView.currentRoot> in <view>.
    */
-  getCurrentRoot = () => {
+  getCurrentRoot() {
     return this.view.currentRoot;
-  };
+  }
 
   /**
    * Function: getTranslateForRoot
@@ -7211,9 +7221,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that represents the root.
    */
-  getTranslateForRoot = cell => {
+  getTranslateForRoot(cell) {
     return null;
-  };
+  }
 
   /**
    * Function: isPort
@@ -7240,9 +7250,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that represents the port.
    */
-  isPort = cell => {
+  isPort(cell) {
     return false;
-  };
+  }
 
   /**
    * Function: getTerminalForPort
@@ -7255,9 +7265,9 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> that represents the port.
    * source - If the cell is the source or target port.
    */
-  getTerminalForPort = (cell, source) => {
+  getTerminalForPort(cell, source) {
     return this.model.getParent(cell);
-  };
+  }
 
   /**
    * Function: getChildOffsetForCell
@@ -7273,9 +7283,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose offset should be returned.
    */
-  getChildOffsetForCell = cell => {
+  getChildOffsetForCell(cell) {
     return null;
-  };
+  }
 
   /**
    * Function: enterGroup
@@ -7289,14 +7299,14 @@ class mxGraph extends mxEventSource {
    * cell - Optional <mxCell> to be used as the new root. Default is the
    * selection cell.
    */
-  enterGroup = cell => {
+  enterGroup(cell) {
     cell = cell || this.getSelectionCell();
 
     if (cell != null && this.isValidRoot(cell)) {
       this.view.setCurrentRoot(cell);
       this.clearSelection();
     }
-  };
+  }
 
   /**
    * Function: exitGroup
@@ -7304,7 +7314,7 @@ class mxGraph extends mxEventSource {
    * Changes the current root to the next valid root in the displayed cell
    * hierarchy.
    */
-  exitGroup = () => {
+  exitGroup() {
     const root = this.model.getRoot();
     const current = this.getCurrentRoot();
 
@@ -7335,7 +7345,7 @@ class mxGraph extends mxEventSource {
         this.setSelectionCell(current);
       }
     }
-  };
+  }
 
   /**
    * Function: home
@@ -7343,7 +7353,7 @@ class mxGraph extends mxEventSource {
    * Uses the root of the model as the root of the displayed cell hierarchy
    * and selects the previous root.
    */
-  home = () => {
+  home() {
     const current = this.getCurrentRoot();
 
     if (current != null) {
@@ -7354,7 +7364,7 @@ class mxGraph extends mxEventSource {
         this.setSelectionCell(current);
       }
     }
-  };
+  }
 
   /**
    * Function: isValidRoot
@@ -7366,9 +7376,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> which should be checked as a possible root.
    */
-  isValidRoot = cell => {
+  isValidRoot(cell) {
     return cell != null;
-  };
+  }
 
   /**
    * Group: Graph display
@@ -7380,9 +7390,9 @@ class mxGraph extends mxEventSource {
    * Returns the bounds of the visible graph. Shortcut to
    * <mxGraphView.getGraphBounds>. See also: <getBoundingBoxFromGeometry>.
    */
-  getGraphBounds = () => {
+  getGraphBounds() {
     return this.view.getGraphBounds();
-  };
+  }
 
   /**
    * Function: getCellBounds
@@ -7398,7 +7408,7 @@ class mxGraph extends mxEventSource {
    * includeDescendants - Optional boolean that specifies if the bounds
    * of all descendants should be included. Default is false.
    */
-  getCellBounds = (cell, includeEdges, includeDescendants) => {
+  getCellBounds(cell, includeEdges, includeDescendants) {
     let cells = [cell];
 
     // Includes all connected edges
@@ -7428,7 +7438,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: getBoundingBoxFromGeometry
@@ -7466,7 +7476,7 @@ class mxGraph extends mxEventSource {
    * includeEdges - Specifies if edge bounds should be included by computing
    * the bounding box for all points in geometry. Default is false.
    */
-  getBoundingBoxFromGeometry = (cells, includeEdges) => {
+  getBoundingBoxFromGeometry(cells, includeEdges) {
     includeEdges = includeEdges != null ? includeEdges : false;
     let result = null;
     let tmp;
@@ -7583,7 +7593,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: refresh
@@ -7596,12 +7606,12 @@ class mxGraph extends mxEventSource {
    *
    * cell - Optional <mxCell> for which the cell states should be cleared.
    */
-  refresh = cell => {
+  refresh(cell) {
     this.view.clear(cell, cell == null);
     this.view.validate();
     this.sizeDidChange();
     this.fireEvent(new mxEventObject(mxEvent.REFRESH));
-  };
+  }
 
   /**
    * Function: snap
@@ -7612,20 +7622,20 @@ class mxGraph extends mxEventSource {
    *
    * value - Numeric value to be snapped to the grid.
    */
-  snap = value => {
+  snap(value) {
     if (this.gridEnabled) {
       value = Math.round(value / this.gridSize) * this.gridSize;
     }
 
     return value;
-  };
+  }
 
   /**
    * Function: snapDelta
    *
    * Snaps the given delta with the given scaled bounds.
    */
-  snapDelta = (delta, bounds, ignoreGrid, ignoreHorizontal, ignoreVertical) => {
+  snapDelta(delta, bounds, ignoreGrid, ignoreHorizontal, ignoreVertical) {
     const t = this.view.translate;
     const s = this.view.scale;
 
@@ -7676,7 +7686,7 @@ class mxGraph extends mxEventSource {
     }
 
     return delta;
-  };
+  }
 
   /**
    * Function: panGraph
@@ -7690,7 +7700,7 @@ class mxGraph extends mxEventSource {
    * dx - Amount to shift the graph along the x-axis.
    * dy - Amount to shift the graph along the y-axis.
    */
-  panGraph = (dx, dy) => {
+  panGraph(dx, dy) {
     if (this.useScrollbarsForPanning && mxUtils.hasScrollbars(this.container)) {
       this.container.scrollLeft = -dx;
       this.container.scrollTop = -dy;
@@ -7791,32 +7801,32 @@ class mxGraph extends mxEventSource {
 
       this.fireEvent(new mxEventObject(mxEvent.PAN));
     }
-  };
+  }
 
   /**
    * Function: zoomIn
    *
    * Zooms into the graph by <zoomFactor>.
    */
-  zoomIn = () => {
+  zoomIn() {
     this.zoom(this.zoomFactor);
-  };
+  }
 
   /**
    * Function: zoomOut
    *
    * Zooms out of the graph by <zoomFactor>.
    */
-  zoomOut = () => {
+  zoomOut() {
     this.zoom(1 / this.zoomFactor);
-  };
+  }
 
   /**
    * Function: zoomActual
    *
    * Resets the zoom and panning in the view.
    */
-  zoomActual = () => {
+  zoomActual() {
     if (this.view.scale === 1) {
       this.view.setTranslate(0, 0);
     } else {
@@ -7825,7 +7835,7 @@ class mxGraph extends mxEventSource {
 
       this.view.setScale(1);
     }
-  };
+  }
 
   /**
    * Function: zoomTo
@@ -7833,9 +7843,9 @@ class mxGraph extends mxEventSource {
    * Zooms the graph to the given scale with an optional boolean center
    * argument, which is passd to <zoom>.
    */
-  zoomTo = (scale, center) => {
+  zoomTo(scale, center) {
     this.zoom(scale / this.view.scale, center);
-  };
+  }
 
   /**
    * Function: center
@@ -7851,7 +7861,7 @@ class mxGraph extends mxEventSource {
    * cx - Optional float that specifies the horizontal center. Default is 0.5.
    * cy - Optional float that specifies the vertical center. Default is 0.5.
    */
-  center = (horizontal, vertical, cx, cy) => {
+  center(horizontal, vertical, cx, cy) {
     horizontal = horizontal != null ? horizontal : true;
     vertical = vertical != null ? vertical : true;
     cx = cx != null ? cx : 0.5;
@@ -7896,7 +7906,7 @@ class mxGraph extends mxEventSource {
       this.container.scrollLeft = (sw - cw) / 2;
       this.container.scrollTop = (sh - ch) / 2;
     }
-  };
+  }
 
   /**
    * Function: zoom
@@ -7905,7 +7915,7 @@ class mxGraph extends mxEventSource {
    * argument that keeps the graph scrolled to the center. If the center argument
    * is omitted, then <centerZoom> will be used as its value.
    */
-  zoom = (factor, center) => {
+  zoom(factor, center) {
     center = center != null ? center : this.centerZoom;
     const scale = Math.round(this.view.scale * factor * 100) / 100;
     const state = this.view.getState(this.getSelectionCell());
@@ -7977,7 +7987,7 @@ class mxGraph extends mxEventSource {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: zoomToRect
@@ -7993,7 +8003,7 @@ class mxGraph extends mxEventSource {
    * rect - The un-scaled and un-translated rectangluar region that should be just visible
    * after the operation
    */
-  zoomToRect = rect => {
+  zoomToRect(rect) {
     const scaleX = this.container.clientWidth / rect.width;
     const scaleY = this.container.clientHeight / rect.height;
     const aspectFactor = scaleX / scaleY;
@@ -8056,7 +8066,7 @@ class mxGraph extends mxEventSource {
       this.container.scrollLeft = Math.round(rect.x * scale);
       this.container.scrollTop = Math.round(rect.y * scale);
     }
-  };
+  }
 
   /**
    * Function: scrollCellToVisible
@@ -8077,7 +8087,7 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> to be made visible.
    * center - Optional boolean flag. Default is false.
    */
-  scrollCellToVisible = (cell, center) => {
+  scrollCellToVisible(cell, center) {
     const x = -this.view.translate.x;
     const y = -this.view.translate.y;
 
@@ -8111,7 +8121,7 @@ class mxGraph extends mxEventSource {
         this.view.setTranslate(tr2.x, tr2.y);
       }
     }
-  };
+  }
 
   /**
    * Function: scrollRectToVisible
@@ -8122,7 +8132,7 @@ class mxGraph extends mxEventSource {
    *
    * rect - <mxRectangle> to be made visible.
    */
-  scrollRectToVisible = rect => {
+  scrollRectToVisible(rect) {
     let isChanged = false;
 
     if (rect != null) {
@@ -8203,7 +8213,7 @@ class mxGraph extends mxEventSource {
     }
 
     return isChanged;
-  };
+  }
 
   /**
    * Function: getCellGeometry
@@ -8217,9 +8227,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose geometry should be returned.
    */
-  getCellGeometry = cell => {
+  getCellGeometry(cell) {
     return this.model.getGeometry(cell);
-  };
+  }
 
   /**
    * Function: isCellVisible
@@ -8236,9 +8246,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose visible state should be returned.
    */
-  isCellVisible = cell => {
+  isCellVisible(cell) {
     return this.model.isVisible(cell);
-  };
+  }
 
   /**
    * Function: isCellCollapsed
@@ -8255,9 +8265,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose collapsed state should be returned.
    */
-  isCellCollapsed = cell => {
+  isCellCollapsed(cell) {
     return this.model.isCollapsed(cell);
-  };
+  }
 
   /**
    * Function: isCellConnectable
@@ -8271,9 +8281,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose connectable state should be returned.
    */
-  isCellConnectable = cell => {
+  isCellConnectable(cell) {
     return this.model.isConnectable(cell);
-  };
+  }
 
   /**
    * Function: isOrthogonal
@@ -8285,7 +8295,7 @@ class mxGraph extends mxEventSource {
    *
    * edge - <mxCellState> that represents the edge.
    */
-  isOrthogonal = edge => {
+  isOrthogonal(edge) {
     const orthogonal = edge.style[mxConstants.STYLE_ORTHOGONAL];
 
     if (orthogonal != null) {
@@ -8302,7 +8312,7 @@ class mxGraph extends mxEventSource {
       tmp === mxEdgeStyle.EntityRelation ||
       tmp === mxEdgeStyle.OrthConnector
     );
-  };
+  }
 
   /**
    * Function: isLoop
@@ -8313,12 +8323,12 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> that represents a potential loop.
    */
-  isLoop = state => {
+  isLoop(state) {
     const src = state.getVisibleTerminalState(true);
     const trg = state.getVisibleTerminalState(false);
 
     return src != null && src == trg;
-  };
+  }
 
   /**
    * Function: isCloneEvent
@@ -8326,9 +8336,9 @@ class mxGraph extends mxEventSource {
    * Returns true if the given event is a clone event. This implementation
    * returns true if control is pressed.
    */
-  isCloneEvent = evt => {
+  isCloneEvent(evt) {
     return mxEvent.isControlDown(evt);
-  };
+  }
 
   /**
    * Function: isTransparentClickEvent
@@ -8337,9 +8347,9 @@ class mxGraph extends mxEventSource {
    * returns true the cell behind the selected cell will be selected. This
    * implementation returns false;
    */
-  isTransparentClickEvent = evt => {
+  isTransparentClickEvent(evt) {
     return false;
-  };
+  }
 
   /**
    * Function: isToggleEvent
@@ -8348,29 +8358,29 @@ class mxGraph extends mxEventSource {
    * returns true if the meta key (Cmd) is pressed on Macs or if control is
    * pressed on any other platform.
    */
-  isToggleEvent = evt => {
+  isToggleEvent(evt) {
     return mxClient.IS_MAC
       ? mxEvent.isMetaDown(evt)
       : mxEvent.isControlDown(evt);
-  };
+  }
 
   /**
    * Function: isGridEnabledEvent
    *
    * Returns true if the given mouse event should be aligned to the grid.
    */
-  isGridEnabledEvent = evt => {
+  isGridEnabledEvent(evt) {
     return evt != null && !mxEvent.isAltDown(evt);
-  };
+  }
 
   /**
    * Function: isConstrainedEvent
    *
    * Returns true if the given mouse event should be aligned to the grid.
    */
-  isConstrainedEvent = evt => {
+  isConstrainedEvent(evt) {
     return mxEvent.isShiftDown(evt);
-  };
+  }
 
   /**
    * Function: isIgnoreTerminalEvent
@@ -8378,9 +8388,9 @@ class mxGraph extends mxEventSource {
    * Returns true if the given mouse event should not allow any connections to be
    * made. This implementation returns false.
    */
-  isIgnoreTerminalEvent = evt => {
+  isIgnoreTerminalEvent(evt) {
     return false;
-  };
+  }
 
   /**
    * Group: Validation
@@ -8392,9 +8402,9 @@ class mxGraph extends mxEventSource {
    * Displays the given validation error in a dialog. This implementation uses
    * mxUtils.alert.
    */
-  validationAlert = message => {
+  validationAlert(message) {
     mxUtils.alert(message);
-  };
+  }
 
   /**
    * Function: isEdgeValid
@@ -8408,9 +8418,9 @@ class mxGraph extends mxEventSource {
    * source - <mxCell> that represents the source terminal.
    * target - <mxCell> that represents the target terminal.
    */
-  isEdgeValid = (edge, source, target) => {
+  isEdgeValid(edge, source, target) {
     return this.getEdgeValidationError(edge, source, target) == null;
-  };
+  }
 
   /**
    * Function: getEdgeValidationError
@@ -8453,7 +8463,7 @@ class mxGraph extends mxEventSource {
    * source - <mxCell> that represents the source terminal.
    * target - <mxCell> that represents the target terminal.
    */
-  getEdgeValidationError = (edge, source, target) => {
+  getEdgeValidationError(edge, source, target) {
     if (
       edge != null &&
       !this.isAllowDanglingEdges() &&
@@ -8530,7 +8540,7 @@ class mxGraph extends mxEventSource {
     }
 
     return this.allowDanglingEdges ? null : '';
-  };
+  }
 
   /**
    * Function: validateEdge
@@ -8544,9 +8554,9 @@ class mxGraph extends mxEventSource {
    * source - <mxCell> that represents the source terminal.
    * target - <mxCell> that represents the target terminal.
    */
-  validateEdge = (edge, source, target) => {
+  validateEdge(edge, source, target) {
     return null;
-  };
+  }
 
   /**
    * Function: validateGraph
@@ -8564,7 +8574,7 @@ class mxGraph extends mxEventSource {
    * the graph root.
    * context - Object that represents the global validation state.
    */
-  validateGraph = (cell, context) => {
+  validateGraph(cell, context) {
     cell = cell != null ? cell : this.model.getRoot();
     context = context != null ? context : {};
 
@@ -8626,7 +8636,7 @@ class mxGraph extends mxEventSource {
     }
 
     return warning.length > 0 || !isValid ? warning : null;
-  };
+  }
 
   /**
    * Function: getCellValidationError
@@ -8639,7 +8649,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> for which the multiplicities should be checked.
    */
-  getCellValidationError = cell => {
+  getCellValidationError(cell) {
     const outCount = this.model.getDirectedEdgeCount(cell, true);
     const inCount = this.model.getDirectedEdgeCount(cell, false);
     const value = this.model.getValue(cell);
@@ -8666,7 +8676,7 @@ class mxGraph extends mxEventSource {
     }
 
     return error.length > 0 ? error : null;
-  };
+  }
 
   /**
    * Function: validateCell
@@ -8680,9 +8690,9 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> that represents the cell to validate.
    * context - Object that represents the global validation state.
    */
-  validateCell = (cell, context) => {
+  validateCell(cell, context) {
     return null;
-  };
+  }
 
   /**
    * Group: Graph appearance
@@ -8693,9 +8703,9 @@ class mxGraph extends mxEventSource {
    *
    * Returns the <backgroundImage> as an <mxImage>.
    */
-  getBackgroundImage = () => {
+  getBackgroundImage() {
     return this.backgroundImage;
-  };
+  }
 
   /**
    * Function: setBackgroundImage
@@ -8706,9 +8716,9 @@ class mxGraph extends mxEventSource {
    *
    * image - New <mxImage> to be used for the background.
    */
-  setBackgroundImage = image => {
+  setBackgroundImage(image) {
     this.backgroundImage = image;
-  };
+  }
 
   /**
    * Function: getFoldingImage
@@ -8716,7 +8726,7 @@ class mxGraph extends mxEventSource {
    * Returns the <mxImage> used to display the collapsed state of
    * the specified cell state. This returns null for all edges.
    */
-  getFoldingImage = state => {
+  getFoldingImage(state) {
     if (
       state != null &&
       this.foldingEnabled &&
@@ -8730,7 +8740,7 @@ class mxGraph extends mxEventSource {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: convertValueToString
@@ -8757,7 +8767,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose textual representation should be returned.
    */
-  convertValueToString = cell => {
+  convertValueToString(cell) {
     const value = this.model.getValue(cell);
 
     if (value != null) {
@@ -8770,7 +8780,7 @@ class mxGraph extends mxEventSource {
     }
 
     return '';
-  };
+  }
 
   /**
    * Function: getLabel
@@ -8824,7 +8834,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose label should be returned.
    */
-  getLabel = cell => {
+  getLabel(cell) {
     let result = '';
 
     if (this.labelsVisible && cell != null) {
@@ -8836,7 +8846,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: isHtmlLabel
@@ -8848,27 +8858,27 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose label should be displayed as HTML markup.
    */
-  isHtmlLabel = cell => {
+  isHtmlLabel(cell) {
     return this.isHtmlLabels();
-  };
+  }
 
   /**
    * Function: isHtmlLabels
    *
    * Returns <htmlLabels>.
    */
-  isHtmlLabels = () => {
+  isHtmlLabels() {
     return this.htmlLabels;
-  };
+  }
 
   /**
    * Function: setHtmlLabels
    *
    * Sets <htmlLabels>.
    */
-  setHtmlLabels = value => {
+  setHtmlLabels(value) {
     this.htmlLabels = value;
-  };
+  }
 
   /**
    * Function: isWrapping
@@ -8915,11 +8925,11 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCell> whose label should be wrapped.
    */
-  isWrapping = cell => {
+  isWrapping(cell) {
     return (
       this.getCurrentCellStyle(cell)[mxConstants.STYLE_WHITE_SPACE] === 'wrap'
     );
-  };
+  }
 
   /**
    * Function: isLabelClipped
@@ -8933,11 +8943,11 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCell> whose label should be clipped.
    */
-  isLabelClipped = cell => {
+  isLabelClipped(cell) {
     return (
       this.getCurrentCellStyle(cell)[mxConstants.STYLE_OVERFLOW] === 'hidden'
     );
-  };
+  }
 
   /**
    * Function: getTooltip
@@ -8958,7 +8968,7 @@ class mxGraph extends mxEventSource {
    * x - X-coordinate of the mouse.
    * y - Y-coordinate of the mouse.
    */
-  getTooltip = (state, node, x, y) => {
+  getTooltip(state, node, x, y) {
     let tip = null;
 
     if (state != null) {
@@ -9002,7 +9012,7 @@ class mxGraph extends mxEventSource {
     }
 
     return tip;
-  };
+  }
 
   /**
    * Function: getTooltipForCell
@@ -9026,7 +9036,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose tooltip should be returned.
    */
-  getTooltipForCell = cell => {
+  getTooltipForCell(cell) {
     let tip = null;
 
     if (cell != null && cell.getTooltip != null) {
@@ -9036,7 +9046,7 @@ class mxGraph extends mxEventSource {
     }
 
     return tip;
-  };
+  }
 
   /**
    * Function: getLinkForCell
@@ -9048,9 +9058,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose tooltip should be returned.
    */
-  getLinkForCell = cell => {
+  getLinkForCell(cell) {
     return null;
-  };
+  }
 
   /**
    * Function: getCursorForMouseEvent
@@ -9062,9 +9072,9 @@ class mxGraph extends mxEventSource {
    *
    * me - <mxMouseEvent> whose cursor should be returned.
    */
-  getCursorForMouseEvent = me => {
+  getCursorForMouseEvent(me) {
     return this.getCursorForCell(me.getCell());
-  };
+  }
 
   /**
    * Function: getCursorForCell
@@ -9076,9 +9086,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose cursor should be returned.
    */
-  getCursorForCell = cell => {
+  getCursorForCell(cell) {
     return null;
-  };
+  }
 
   /**
    * Function: getStartSize
@@ -9093,7 +9103,7 @@ class mxGraph extends mxEventSource {
    * swimlane - <mxCell> whose start size should be returned.
    * ignoreState - Optional boolean that specifies if cell state should be ignored.
    */
-  getStartSize = (swimlane, ignoreState) => {
+  getStartSize(swimlane, ignoreState) {
     const result = new mxRectangle();
     const style = this.getCurrentCellStyle(swimlane, ignoreState);
     const size = parseInt(
@@ -9111,14 +9121,14 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: getSwimlaneDirection
    *
    * Returns the direction for the given swimlane style.
    */
-  getSwimlaneDirection = style => {
+  getSwimlaneDirection(style) {
     const dir = mxUtils.getValue(
       style,
       mxConstants.STYLE_DIRECTION,
@@ -9153,7 +9163,7 @@ class mxGraph extends mxEventSource {
       mxConstants.DIRECTION_SOUTH,
       mxConstants.DIRECTION_WEST,
     ][mxUtils.mod(n, 4)];
-  };
+  }
 
   /**
    * Function: getActualStartSize
@@ -9168,7 +9178,7 @@ class mxGraph extends mxEventSource {
    * swimlane - <mxCell> whose start size should be returned.
    * ignoreState - Optional boolean that specifies if cell state should be ignored.
    */
-  getActualStartSize = (swimlane, ignoreState) => {
+  getActualStartSize(swimlane, ignoreState) {
     const result = new mxRectangle();
 
     if (this.isSwimlane(swimlane, ignoreState)) {
@@ -9194,7 +9204,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: getImage
@@ -9207,11 +9217,11 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> whose image URL should be returned.
    */
-  getImage = state => {
+  getImage(state) {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_IMAGE]
       : null;
-  };
+  }
 
   /**
    * Function: isTransparentState
@@ -9222,7 +9232,7 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> to check.
    */
-  isTransparentState = state => {
+  isTransparentState(state) {
     let result = false;
     if (state != null) {
       const stroke = mxUtils.getValue(
@@ -9241,7 +9251,7 @@ class mxGraph extends mxEventSource {
         this.getImage(state) == null;
     }
     return result;
-  };
+  }
 
   /**
    * Function: getVerticalAlign
@@ -9255,12 +9265,12 @@ class mxGraph extends mxEventSource {
    * state - <mxCellState> whose vertical alignment should be
    * returned.
    */
-  getVerticalAlign = state => {
+  getVerticalAlign(state) {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_VERTICAL_ALIGN] ||
           mxConstants.ALIGN_MIDDLE
       : null;
-  };
+  }
 
   /**
    * Function: getIndicatorColor
@@ -9274,11 +9284,11 @@ class mxGraph extends mxEventSource {
    * state - <mxCellState> whose indicator color should be
    * returned.
    */
-  getIndicatorColor = state => {
+  getIndicatorColor(state) {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_INDICATOR_COLOR]
       : null;
-  };
+  }
 
   /**
    * Function: getIndicatorGradientColor
@@ -9292,11 +9302,11 @@ class mxGraph extends mxEventSource {
    * state - <mxCellState> whose indicator gradient color should be
    * returned.
    */
-  getIndicatorGradientColor = state => {
+  getIndicatorGradientColor(state) {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_INDICATOR_GRADIENTCOLOR]
       : null;
-  };
+  }
 
   /**
    * Function: getIndicatorShape
@@ -9309,11 +9319,11 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> whose indicator shape should be returned.
    */
-  getIndicatorShape = state => {
+  getIndicatorShape(state) {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_INDICATOR_SHAPE]
       : null;
-  };
+  }
 
   /**
    * Function: getIndicatorImage
@@ -9326,20 +9336,20 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> whose indicator image should be returned.
    */
-  getIndicatorImage = state => {
+  getIndicatorImage(state) {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_INDICATOR_IMAGE]
       : null;
-  };
+  }
 
   /**
    * Function: getBorder
    *
    * Returns the value of <border>.
    */
-  getBorder = () => {
+  getBorder() {
     return this.border;
-  };
+  }
 
   /**
    * Function: setBorder
@@ -9350,9 +9360,9 @@ class mxGraph extends mxEventSource {
    *
    * value - Positive integer that represents the border to be used.
    */
-  setBorder = value => {
+  setBorder(value) {
     this.border = value;
-  };
+  }
 
   /**
    * Function: isSwimlane
@@ -9366,7 +9376,7 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> to be checked.
    * ignoreState - Optional boolean that specifies if the cell state should be ignored.
    */
-  isSwimlane = (cell, ignoreState) => {
+  isSwimlane(cell, ignoreState) {
     if (
       cell != null &&
       this.model.getParent(cell) !== this.model.getRoot() &&
@@ -9379,7 +9389,7 @@ class mxGraph extends mxEventSource {
     }
 
     return false;
-  };
+  }
 
   /**
    * Group: Graph behaviour
@@ -9390,9 +9400,9 @@ class mxGraph extends mxEventSource {
    *
    * Returns <resizeContainer>.
    */
-  isResizeContainer = () => {
+  isResizeContainer() {
     return this.resizeContainer;
-  };
+  }
 
   /**
    * Function: setResizeContainer
@@ -9403,18 +9413,18 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if the container should be resized.
    */
-  setResizeContainer = value => {
+  setResizeContainer(value) {
     this.resizeContainer = value;
-  };
+  }
 
   /**
    * Function: isEnabled
    *
    * Returns true if the graph is <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
@@ -9426,18 +9436,18 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if the graph should be enabled.
    */
-  setEnabled = value => {
+  setEnabled(value) {
     this.enabled = value;
-  };
+  }
 
   /**
    * Function: isEscapeEnabled
    *
    * Returns <escapeEnabled>.
    */
-  isEscapeEnabled = () => {
+  isEscapeEnabled() {
     return this.escapeEnabled;
-  };
+  }
 
   /**
    * Function: setEscapeEnabled
@@ -9448,45 +9458,45 @@ class mxGraph extends mxEventSource {
    *
    * enabled - Boolean indicating if escape should be enabled.
    */
-  setEscapeEnabled = value => {
+  setEscapeEnabled(value) {
     this.escapeEnabled = value;
-  };
+  }
 
   /**
    * Function: isInvokesStopCellEditing
    *
    * Returns <invokesStopCellEditing>.
    */
-  isInvokesStopCellEditing = () => {
+  isInvokesStopCellEditing() {
     return this.invokesStopCellEditing;
-  };
+  }
 
   /**
    * Function: setInvokesStopCellEditing
    *
    * Sets <invokesStopCellEditing>.
    */
-  setInvokesStopCellEditing = value => {
+  setInvokesStopCellEditing(value) {
     this.invokesStopCellEditing = value;
-  };
+  }
 
   /**
    * Function: isEnterStopsCellEditing
    *
    * Returns <enterStopsCellEditing>.
    */
-  isEnterStopsCellEditing = () => {
+  isEnterStopsCellEditing() {
     return this.enterStopsCellEditing;
-  };
+  }
 
   /**
    * Function: setEnterStopsCellEditing
    *
    * Sets <enterStopsCellEditing>.
    */
-  setEnterStopsCellEditing = value => {
+  setEnterStopsCellEditing(value) {
     this.enterStopsCellEditing = value;
-  };
+  }
 
   /**
    * Function: isCellLocked
@@ -9499,14 +9509,14 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose locked state should be returned.
    */
-  isCellLocked = cell => {
+  isCellLocked(cell) {
     const geometry = this.model.getGeometry(cell);
 
     return (
       this.isCellsLocked() ||
       (geometry != null && this.model.isVertex(cell) && geometry.relative)
     );
-  };
+  }
 
   /**
    * Function: isCellsLocked
@@ -9519,9 +9529,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose locked state should be returned.
    */
-  isCellsLocked = () => {
+  isCellsLocked() {
     return this.cellsLocked;
-  };
+  }
 
   /**
    * Function: setCellsLocked
@@ -9533,23 +9543,23 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean that defines the new value for <cellsLocked>.
    */
-  setCellsLocked = value => {
+  setCellsLocked(value) {
     this.cellsLocked = value;
-  };
+  }
 
   /**
    * Function: getCloneableCells
    *
    * Returns the cells which may be exported in the given array of cells.
    */
-  getCloneableCells = cells => {
+  getCloneableCells(cells) {
     return this.model.filterCells(
       cells,
       mxUtils.bind(this, cell => {
         return this.isCellCloneable(cell);
       })
     );
-  };
+  }
 
   /**
    * Function: isCellCloneable
@@ -9562,11 +9572,11 @@ class mxGraph extends mxEventSource {
    *
    * cell - Optional <mxCell> whose cloneable state should be returned.
    */
-  isCellCloneable = cell => {
+  isCellCloneable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     return this.isCellsCloneable() && style[mxConstants.STYLE_CLONEABLE] !== 0;
-  };
+  }
 
   /**
    * Function: isCellsCloneable
@@ -9574,9 +9584,9 @@ class mxGraph extends mxEventSource {
    * Returns <cellsCloneable>, that is, if the graph allows cloning of cells
    * by using control-drag.
    */
-  isCellsCloneable = () => {
+  isCellsCloneable() {
     return this.cellsCloneable;
-  };
+  }
 
   /**
    * Function: setCellsCloneable
@@ -9589,23 +9599,23 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if the graph should be cloneable.
    */
-  setCellsCloneable = value => {
+  setCellsCloneable(value) {
     this.cellsCloneable = value;
-  };
+  }
 
   /**
    * Function: getExportableCells
    *
    * Returns the cells which may be exported in the given array of cells.
    */
-  getExportableCells = cells => {
+  getExportableCells(cells) {
     return this.model.filterCells(
       cells,
       mxUtils.bind(this, cell => {
         return this.canExportCell(cell);
       })
     );
-  };
+  }
 
   /**
    * Function: canExportCell
@@ -9617,23 +9627,23 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that represents the cell to be exported.
    */
-  canExportCell = cell => {
+  canExportCell(cell) {
     return this.exportEnabled;
-  };
+  }
 
   /**
    * Function: getImportableCells
    *
    * Returns the cells which may be imported in the given array of cells.
    */
-  getImportableCells = cells => {
+  getImportableCells(cells) {
     return this.model.filterCells(
       cells,
       mxUtils.bind(this, cell => {
         return this.canImportCell(cell);
       })
     );
-  };
+  }
 
   /**
    * Function: canImportCell
@@ -9645,9 +9655,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that represents the cell to be imported.
    */
-  canImportCell = cell => {
+  canImportCell(cell) {
     return this.importEnabled;
-  };
+  }
 
   /**
    * Function: isCellSelectable
@@ -9676,41 +9686,41 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose selectable state should be returned.
    */
-  isCellSelectable = cell => {
+  isCellSelectable(cell) {
     return this.isCellsSelectable();
-  };
+  }
 
   /**
    * Function: isCellsSelectable
    *
    * Returns <cellsSelectable>.
    */
-  isCellsSelectable = () => {
+  isCellsSelectable() {
     return this.cellsSelectable;
-  };
+  }
 
   /**
    * Function: setCellsSelectable
    *
    * Sets <cellsSelectable>.
    */
-  setCellsSelectable = value => {
+  setCellsSelectable(value) {
     this.cellsSelectable = value;
-  };
+  }
 
   /**
    * Function: getDeletableCells
    *
    * Returns the cells which may be exported in the given array of cells.
    */
-  getDeletableCells = cells => {
+  getDeletableCells(cells) {
     return this.model.filterCells(
       cells,
       mxUtils.bind(this, cell => {
         return this.isCellDeletable(cell);
       })
     );
-  };
+  }
 
   /**
    * Function: isCellDeletable
@@ -9723,20 +9733,20 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose deletable state should be returned.
    */
-  isCellDeletable = cell => {
+  isCellDeletable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     return this.isCellsDeletable() && style[mxConstants.STYLE_DELETABLE] !== 0;
-  };
+  }
 
   /**
    * Function: isCellsDeletable
    *
    * Returns <cellsDeletable>.
    */
-  isCellsDeletable = () => {
+  isCellsDeletable() {
     return this.cellsDeletable;
-  };
+  }
 
   /**
    * Function: setCellsDeletable
@@ -9747,9 +9757,9 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if the graph should allow deletion of cells.
    */
-  setCellsDeletable = value => {
+  setCellsDeletable(value) {
     this.cellsDeletable = value;
-  };
+  }
 
   /**
    * Function: isLabelMovable
@@ -9762,13 +9772,13 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose label should be moved.
    */
-  isLabelMovable = cell => {
+  isLabelMovable(cell) {
     return (
       !this.isCellLocked(cell) &&
       ((this.model.isEdge(cell) && this.edgeLabelsMovable) ||
         (this.model.isVertex(cell) && this.vertexLabelsMovable))
     );
-  };
+  }
 
   /**
    * Function: isCellRotatable
@@ -9780,25 +9790,25 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose rotatable state should be returned.
    */
-  isCellRotatable = cell => {
+  isCellRotatable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     return style[mxConstants.STYLE_ROTATABLE] !== 0;
-  };
+  }
 
   /**
    * Function: getMovableCells
    *
    * Returns the cells which are movable in the given array of cells.
    */
-  getMovableCells = cells => {
+  getMovableCells(cells) {
     return this.model.filterCells(
       cells,
       mxUtils.bind(this, cell => {
         return this.isCellMovable(cell);
       })
     );
-  };
+  }
 
   /**
    * Function: isCellMovable
@@ -9811,7 +9821,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose movable state should be returned.
    */
-  isCellMovable = cell => {
+  isCellMovable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     return (
@@ -9819,16 +9829,16 @@ class mxGraph extends mxEventSource {
       !this.isCellLocked(cell) &&
       style[mxConstants.STYLE_MOVABLE] !== 0
     );
-  };
+  }
 
   /**
    * Function: isCellsMovable
    *
    * Returns <cellsMovable>.
    */
-  isCellsMovable = () => {
+  isCellsMovable() {
     return this.cellsMovable;
-  };
+  }
 
   /**
    * Function: setCellsMovable
@@ -9840,18 +9850,18 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if the graph should allow moving of cells.
    */
-  setCellsMovable = value => {
+  setCellsMovable(value) {
     this.cellsMovable = value;
-  };
+  }
 
   /**
    * Function: isGridEnabled
    *
    * Returns <gridEnabled> as a boolean.
    */
-  isGridEnabled = () => {
+  isGridEnabled() {
     return this.gridEnabled;
-  };
+  }
 
   /**
    * Function: setGridEnabled
@@ -9862,18 +9872,18 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if the grid should be enabled.
    */
-  setGridEnabled = value => {
+  setGridEnabled(value) {
     this.gridEnabled = value;
-  };
+  }
 
   /**
    * Function: isPortsEnabled
    *
    * Returns <portsEnabled> as a boolean.
    */
-  isPortsEnabled = () => {
+  isPortsEnabled() {
     return this.portsEnabled;
-  };
+  }
 
   /**
    * Function: setPortsEnabled
@@ -9884,90 +9894,90 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if the ports should be enabled.
    */
-  setPortsEnabled = value => {
+  setPortsEnabled(value) {
     this.portsEnabled = value;
-  };
+  }
 
   /**
    * Function: getGridSize
    *
    * Returns <gridSize>.
    */
-  getGridSize = () => {
+  getGridSize() {
     return this.gridSize;
-  };
+  }
 
   /**
    * Function: setGridSize
    *
    * Sets <gridSize>.
    */
-  setGridSize = value => {
+  setGridSize(value) {
     this.gridSize = value;
-  };
+  }
 
   /**
    * Function: getTolerance
    *
    * Returns <tolerance>.
    */
-  getTolerance = () => {
+  getTolerance() {
     return this.tolerance;
-  };
+  }
 
   /**
    * Function: setTolerance
    *
    * Sets <tolerance>.
    */
-  setTolerance = value => {
+  setTolerance(value) {
     this.tolerance = value;
-  };
+  }
 
   /**
    * Function: isVertexLabelsMovable
    *
    * Returns <vertexLabelsMovable>.
    */
-  isVertexLabelsMovable = () => {
+  isVertexLabelsMovable() {
     return this.vertexLabelsMovable;
-  };
+  }
 
   /**
    * Function: setVertexLabelsMovable
    *
    * Sets <vertexLabelsMovable>.
    */
-  setVertexLabelsMovable = value => {
+  setVertexLabelsMovable(value) {
     this.vertexLabelsMovable = value;
-  };
+  }
 
   /**
    * Function: isEdgeLabelsMovable
    *
    * Returns <edgeLabelsMovable>.
    */
-  isEdgeLabelsMovable = () => {
+  isEdgeLabelsMovable() {
     return this.edgeLabelsMovable;
-  };
+  }
 
   /**
    * Function: isEdgeLabelsMovable
    *
    * Sets <edgeLabelsMovable>.
    */
-  setEdgeLabelsMovable = value => {
+  setEdgeLabelsMovable(value) {
     this.edgeLabelsMovable = value;
-  };
+  }
 
   /**
    * Function: isSwimlaneNesting
    *
    * Returns <swimlaneNesting> as a boolean.
    */
-  isSwimlaneNesting = () => {
+  isSwimlaneNesting() {
     return this.swimlaneNesting;
-  };
+  }
 
   /**
    * Function: setSwimlaneNesting
@@ -9979,18 +9989,18 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if swimlanes can be nested.
    */
-  setSwimlaneNesting = value => {
+  setSwimlaneNesting(value) {
     this.swimlaneNesting = value;
-  };
+  }
 
   /**
    * Function: isSwimlaneSelectionEnabled
    *
    * Returns <swimlaneSelectionEnabled> as a boolean.
    */
-  isSwimlaneSelectionEnabled = () => {
+  isSwimlaneSelectionEnabled() {
     return this.swimlaneSelectionEnabled;
-  };
+  }
 
   /**
    * Function: setSwimlaneSelectionEnabled
@@ -10003,18 +10013,18 @@ class mxGraph extends mxEventSource {
    * value - Boolean indicating if swimlanes content areas
    * should be selected when the mouse is released over them.
    */
-  setSwimlaneSelectionEnabled = value => {
+  setSwimlaneSelectionEnabled(value) {
     this.swimlaneSelectionEnabled = value;
-  };
+  }
 
   /**
    * Function: isMultigraph
    *
    * Returns <multigraph> as a boolean.
    */
-  isMultigraph = () => {
+  isMultigraph() {
     return this.multigraph;
-  };
+  }
 
   /**
    * Function: setMultigraph
@@ -10027,18 +10037,18 @@ class mxGraph extends mxEventSource {
    * value - Boolean indicating if the graph allows multiple connections
    * between the same pair of vertices.
    */
-  setMultigraph = value => {
+  setMultigraph(value) {
     this.multigraph = value;
-  };
+  }
 
   /**
    * Function: isAllowLoops
    *
    * Returns <allowLoops> as a boolean.
    */
-  isAllowLoops = () => {
+  isAllowLoops() {
     return this.allowLoops;
-  };
+  }
 
   /**
    * Function: setAllowDanglingEdges
@@ -10050,18 +10060,18 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if dangling edges are allowed.
    */
-  setAllowDanglingEdges = value => {
+  setAllowDanglingEdges(value) {
     this.allowDanglingEdges = value;
-  };
+  }
 
   /**
    * Function: isAllowDanglingEdges
    *
    * Returns <allowDanglingEdges> as a boolean.
    */
-  isAllowDanglingEdges = () => {
+  isAllowDanglingEdges() {
     return this.allowDanglingEdges;
-  };
+  }
 
   /**
    * Function: setConnectableEdges
@@ -10072,18 +10082,18 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if edges should be connectable.
    */
-  setConnectableEdges = value => {
+  setConnectableEdges(value) {
     this.connectableEdges = value;
-  };
+  }
 
   /**
    * Function: isConnectableEdges
    *
    * Returns <connectableEdges> as a boolean.
    */
-  isConnectableEdges = () => {
+  isConnectableEdges() {
     return this.connectableEdges;
-  };
+  }
 
   /**
    * Function: setCloneInvalidEdges
@@ -10096,18 +10106,18 @@ class mxGraph extends mxEventSource {
    * value - Boolean indicating if cloned invalid edges should be
    * inserted into the graph or ignored.
    */
-  setCloneInvalidEdges = value => {
+  setCloneInvalidEdges(value) {
     this.cloneInvalidEdges = value;
-  };
+  }
 
   /**
    * Function: isCloneInvalidEdges
    *
    * Returns <cloneInvalidEdges> as a boolean.
    */
-  isCloneInvalidEdges = () => {
+  isCloneInvalidEdges() {
     return this.cloneInvalidEdges;
-  };
+  }
 
   /**
    * Function: setAllowLoops
@@ -10118,18 +10128,18 @@ class mxGraph extends mxEventSource {
    *
    * value - Boolean indicating if loops are allowed.
    */
-  setAllowLoops = value => {
+  setAllowLoops(value) {
     this.allowLoops = value;
-  };
+  }
 
   /**
    * Function: isDisconnectOnMove
    *
    * Returns <disconnectOnMove> as a boolean.
    */
-  isDisconnectOnMove = () => {
+  isDisconnectOnMove() {
     return this.disconnectOnMove;
-  };
+  }
 
   /**
    * Function: setDisconnectOnMove
@@ -10142,18 +10152,18 @@ class mxGraph extends mxEventSource {
    * value - Boolean indicating if edges should be disconnected
    * when moved.
    */
-  setDisconnectOnMove = value => {
+  setDisconnectOnMove(value) {
     this.disconnectOnMove = value;
-  };
+  }
 
   /**
    * Function: isDropEnabled
    *
    * Returns <dropEnabled> as a boolean.
    */
-  isDropEnabled = () => {
+  isDropEnabled() {
     return this.dropEnabled;
-  };
+  }
 
   /**
    * Function: setDropEnabled
@@ -10166,18 +10176,18 @@ class mxGraph extends mxEventSource {
    * dropEnabled - Boolean indicating if the graph should allow dropping
    * of cells into other cells.
    */
-  setDropEnabled = value => {
+  setDropEnabled(value) {
     this.dropEnabled = value;
-  };
+  }
 
   /**
    * Function: isSplitEnabled
    *
    * Returns <splitEnabled> as a boolean.
    */
-  isSplitEnabled = () => {
+  isSplitEnabled() {
     return this.splitEnabled;
-  };
+  }
 
   /**
    * Function: setSplitEnabled
@@ -10190,9 +10200,9 @@ class mxGraph extends mxEventSource {
    * dropEnabled - Boolean indicating if the graph should allow dropping
    * of cells into other cells.
    */
-  setSplitEnabled = value => {
+  setSplitEnabled(value) {
     this.splitEnabled = value;
-  };
+  }
 
   /**
    * Function: isCellResizable
@@ -10206,7 +10216,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose resizable state should be returned.
    */
-  isCellResizable = cell => {
+  isCellResizable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     const r =
@@ -10215,16 +10225,16 @@ class mxGraph extends mxEventSource {
       mxUtils.getValue(style, mxConstants.STYLE_RESIZABLE, '1') != '0';
     // alert(r);
     return r;
-  };
+  }
 
   /**
    * Function: isCellsResizable
    *
    * Returns <cellsResizable>.
    */
-  isCellsResizable = () => {
+  isCellsResizable() {
     return this.cellsResizable;
-  };
+  }
 
   /**
    * Function: setCellsResizable
@@ -10237,9 +10247,9 @@ class mxGraph extends mxEventSource {
    * value - Boolean indicating if the graph should allow resizing of
    * cells.
    */
-  setCellsResizable = value => {
+  setCellsResizable(value) {
     this.cellsResizable = value;
-  };
+  }
 
   /**
    * Function: isTerminalPointMovable
@@ -10255,9 +10265,9 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> whose terminal point should be moved.
    * source - Boolean indicating if the source or target terminal should be moved.
    */
-  isTerminalPointMovable = (cell, source) => {
+  isTerminalPointMovable(cell, source) {
     return true;
-  };
+  }
 
   /**
    * Function: isCellBendable
@@ -10270,7 +10280,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose bendable state should be returned.
    */
-  isCellBendable = cell => {
+  isCellBendable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     return (
@@ -10278,16 +10288,16 @@ class mxGraph extends mxEventSource {
       !this.isCellLocked(cell) &&
       style[mxConstants.STYLE_BENDABLE] !== 0
     );
-  };
+  }
 
   /**
    * Function: isCellsBendable
    *
    * Returns <cellsBenadable>.
    */
-  isCellsBendable = () => {
+  isCellsBendable() {
     return this.cellsBendable;
-  };
+  }
 
   /**
    * Function: setCellsBendable
@@ -10300,9 +10310,9 @@ class mxGraph extends mxEventSource {
    * value - Boolean indicating if the graph should allow bending of
    * edges.
    */
-  setCellsBendable = value => {
+  setCellsBendable(value) {
     this.cellsBendable = value;
-  };
+  }
 
   /**
    * Function: isCellEditable
@@ -10315,7 +10325,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose editable state should be returned.
    */
-  isCellEditable = cell => {
+  isCellEditable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     return (
@@ -10323,16 +10333,16 @@ class mxGraph extends mxEventSource {
       !this.isCellLocked(cell) &&
       style[mxConstants.STYLE_EDITABLE] != 0
     );
-  };
+  }
 
   /**
    * Function: isCellsEditable
    *
    * Returns <cellsEditable>.
    */
-  isCellsEditable = () => {
+  isCellsEditable() {
     return this.cellsEditable;
-  };
+  }
 
   /**
    * Function: setCellsEditable
@@ -10345,9 +10355,9 @@ class mxGraph extends mxEventSource {
    * value - Boolean indicating if the graph should allow in-place
    * editing.
    */
-  setCellsEditable = value => {
+  setCellsEditable(value) {
     this.cellsEditable = value;
-  };
+  }
 
   /**
    * Function: isCellDisconnectable
@@ -10363,27 +10373,27 @@ class mxGraph extends mxEventSource {
    * source - Boolean indicating if the source or target terminal is to be
    * disconnected.
    */
-  isCellDisconnectable = (cell, terminal, source) => {
+  isCellDisconnectable(cell, terminal, source) {
     return this.isCellsDisconnectable() && !this.isCellLocked(cell);
-  };
+  }
 
   /**
    * Function: isCellsDisconnectable
    *
    * Returns <cellsDisconnectable>.
    */
-  isCellsDisconnectable = () => {
+  isCellsDisconnectable() {
     return this.cellsDisconnectable;
-  };
+  }
 
   /**
    * Function: setCellsDisconnectable
    *
    * Sets <cellsDisconnectable>.
    */
-  setCellsDisconnectable = value => {
+  setCellsDisconnectable(value) {
     this.cellsDisconnectable = value;
-  };
+  }
 
   /**
    * Function: isValidSource
@@ -10396,14 +10406,14 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that represents a possible source or null.
    */
-  isValidSource = cell => {
+  isValidSource(cell) {
     return (
       (cell == null && this.allowDanglingEdges) ||
       (cell != null &&
         (!this.model.isEdge(cell) || this.connectableEdges) &&
         this.isCellConnectable(cell))
     );
-  };
+  }
 
   /**
    * Function: isValidTarget
@@ -10415,9 +10425,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that represents a possible target or null.
    */
-  isValidTarget = cell => {
+  isValidTarget(cell) {
     return this.isValidSource(cell);
-  };
+  }
 
   /**
    * Function: isValidConnection
@@ -10433,9 +10443,9 @@ class mxGraph extends mxEventSource {
    * source - <mxCell> that represents the source cell.
    * target - <mxCell> that represents the target cell.
    */
-  isValidConnection = (source, target) => {
+  isValidConnection(source, target) {
     return this.isValidSource(source) && this.isValidTarget(target);
-  };
+  }
 
   /**
    * Function: setConnectable
@@ -10447,18 +10457,18 @@ class mxGraph extends mxEventSource {
    *
    * connectable - Boolean indicating if new connections should be allowed.
    */
-  setConnectable = connectable => {
+  setConnectable(connectable) {
     this.connectionHandler.setEnabled(connectable);
-  };
+  }
 
   /**
    * Function: isConnectable
    *
    * Returns true if the <connectionHandler> is enabled.
    */
-  isConnectable = () => {
+  isConnectable() {
     return this.connectionHandler.isEnabled();
-  };
+  }
 
   /**
    * Function: setTooltips
@@ -10470,9 +10480,9 @@ class mxGraph extends mxEventSource {
    *
    * enabled - Boolean indicating if tooltips should be enabled.
    */
-  setTooltips = enabled => {
+  setTooltips(enabled) {
     this.tooltipHandler.setEnabled(enabled);
-  };
+  }
 
   /**
    * Function: setPanning
@@ -10484,9 +10494,9 @@ class mxGraph extends mxEventSource {
    *
    * enabled - Boolean indicating if panning should be enabled.
    */
-  setPanning = enabled => {
+  setPanning(enabled) {
     this.panningHandler.panningEnabled = enabled;
-  };
+  }
 
   /**
    * Function: isEditing
@@ -10499,7 +10509,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that should be checked.
    */
-  isEditing = cell => {
+  isEditing(cell) {
     if (this.cellEditor != null) {
       const editingCell = this.cellEditor.getEditingCell();
 
@@ -10507,7 +10517,7 @@ class mxGraph extends mxEventSource {
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: isAutoSizeCell
@@ -10521,20 +10531,20 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that should be resized.
    */
-  isAutoSizeCell = cell => {
+  isAutoSizeCell(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     return this.isAutoSizeCells() || style[mxConstants.STYLE_AUTOSIZE] == 1;
-  };
+  }
 
   /**
    * Function: isAutoSizeCells
    *
    * Returns <autoSizeCells>.
    */
-  isAutoSizeCells = () => {
+  isAutoSizeCells() {
     return this.autoSizeCells;
-  };
+  }
 
   /**
    * Function: setAutoSizeCells
@@ -10549,9 +10559,9 @@ class mxGraph extends mxEventSource {
    * value - Boolean indicating if cells should be resized
    * automatically.
    */
-  setAutoSizeCells = value => {
+  setAutoSizeCells(value) {
     this.autoSizeCells = value;
-  };
+  }
 
   /**
    * Function: isExtendParent
@@ -10564,18 +10574,18 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that has been resized.
    */
-  isExtendParent = cell => {
+  isExtendParent(cell) {
     return !this.getModel().isEdge(cell) && this.isExtendParents();
-  };
+  }
 
   /**
    * Function: isExtendParents
    *
    * Returns <extendParents>.
    */
-  isExtendParents = () => {
+  isExtendParents() {
     return this.extendParents;
-  };
+  }
 
   /**
    * Function: setExtendParents
@@ -10586,18 +10596,18 @@ class mxGraph extends mxEventSource {
    *
    * value - New boolean value for <extendParents>.
    */
-  setExtendParents = value => {
+  setExtendParents(value) {
     this.extendParents = value;
-  };
+  }
 
   /**
    * Function: isExtendParentsOnAdd
    *
    * Returns <extendParentsOnAdd>.
    */
-  isExtendParentsOnAdd = cell => {
+  isExtendParentsOnAdd(cell) {
     return this.extendParentsOnAdd;
-  };
+  }
 
   /**
    * Function: setExtendParentsOnAdd
@@ -10608,18 +10618,18 @@ class mxGraph extends mxEventSource {
    *
    * value - New boolean value for <extendParentsOnAdd>.
    */
-  setExtendParentsOnAdd = value => {
+  setExtendParentsOnAdd(value) {
     this.extendParentsOnAdd = value;
-  };
+  }
 
   /**
    * Function: isExtendParentsOnMove
    *
    * Returns <extendParentsOnMove>.
    */
-  isExtendParentsOnMove = () => {
+  isExtendParentsOnMove() {
     return this.extendParentsOnMove;
-  };
+  }
 
   /**
    * Function: setExtendParentsOnMove
@@ -10630,9 +10640,9 @@ class mxGraph extends mxEventSource {
    *
    * value - New boolean value for <extendParentsOnAdd>.
    */
-  setExtendParentsOnMove = value => {
+  setExtendParentsOnMove(value) {
     this.extendParentsOnMove = value;
-  };
+  }
 
   /**
    * Function: isRecursiveResize
@@ -10643,9 +10653,9 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> that is being resized.
    */
-  isRecursiveResize = state => {
+  isRecursiveResize(state) {
     return this.recursiveResize;
-  };
+  }
 
   /**
    * Function: setRecursiveResize
@@ -10656,9 +10666,9 @@ class mxGraph extends mxEventSource {
    *
    * value - New boolean value for <recursiveResize>.
    */
-  setRecursiveResize = value => {
+  setRecursiveResize(value) {
     this.recursiveResize = value;
-  };
+  }
 
   /**
    * Function: isConstrainChild
@@ -10672,66 +10682,66 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that should be constrained.
    */
-  isConstrainChild = cell => {
+  isConstrainChild(cell) {
     return (
       this.isConstrainChildren() &&
       !this.getModel().isEdge(this.getModel().getParent(cell))
     );
-  };
+  }
 
   /**
    * Function: isConstrainChildren
    *
    * Returns <constrainChildren>.
    */
-  isConstrainChildren = () => {
+  isConstrainChildren() {
     return this.constrainChildren;
-  };
+  }
 
   /**
    * Function: setConstrainChildren
    *
    * Sets <constrainChildren>.
    */
-  setConstrainChildren = value => {
+  setConstrainChildren(value) {
     this.constrainChildren = value;
-  };
+  }
 
   /**
    * Function: isConstrainRelativeChildren
    *
    * Returns <constrainRelativeChildren>.
    */
-  isConstrainRelativeChildren = () => {
+  isConstrainRelativeChildren() {
     return this.constrainRelativeChildren;
-  };
+  }
 
   /**
    * Function: setConstrainRelativeChildren
    *
    * Sets <constrainRelativeChildren>.
    */
-  setConstrainRelativeChildren = value => {
+  setConstrainRelativeChildren(value) {
     this.constrainRelativeChildren = value;
-  };
+  }
 
   /**
    * Function: isConstrainChildren
    *
    * Returns <allowNegativeCoordinates>.
    */
-  isAllowNegativeCoordinates = () => {
+  isAllowNegativeCoordinates() {
     return this.allowNegativeCoordinates;
-  };
+  }
 
   /**
    * Function: setConstrainChildren
    *
    * Sets <allowNegativeCoordinates>.
    */
-  setAllowNegativeCoordinates = value => {
+  setAllowNegativeCoordinates(value) {
     this.allowNegativeCoordinates = value;
-  };
+  }
 
   /**
    * Function: getOverlap
@@ -10747,9 +10757,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> for which the overlap ratio should be returned.
    */
-  getOverlap = cell => {
+  getOverlap(cell) {
     return this.isAllowOverlapParent(cell) ? this.defaultOverlap : 0;
-  };
+  }
 
   /**
    * Function: isAllowOverlapParent
@@ -10761,23 +10771,23 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that represents the child to be checked.
    */
-  isAllowOverlapParent = cell => {
+  isAllowOverlapParent(cell) {
     return false;
-  };
+  }
 
   /**
    * Function: getFoldableCells
    *
    * Returns the cells which are movable in the given array of cells.
    */
-  getFoldableCells = (cells, collapse) => {
+  getFoldableCells(cells, collapse) {
     return this.model.filterCells(
       cells,
       mxUtils.bind(this, cell => {
         return this.isCellFoldable(cell, collapse);
       })
     );
-  };
+  }
 
   /**
    * Function: isCellFoldable
@@ -10790,14 +10800,14 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose foldable state should be returned.
    */
-  isCellFoldable = (cell, collapse) => {
+  isCellFoldable(cell, collapse) {
     const style = this.getCurrentCellStyle(cell);
 
     return (
       this.model.getChildCount(cell) > 0 &&
       style[mxConstants.STYLE_FOLDABLE] != 0
     );
-  };
+  }
 
   /**
    * Function: isValidDropTarget
@@ -10813,7 +10823,7 @@ class mxGraph extends mxEventSource {
    * cells - <mxCells> that should be dropped into the target.
    * evt - Mouseevent that triggered the invocation.
    */
-  isValidDropTarget = (cell, cells, evt) => {
+  isValidDropTarget(cell, cells, evt) {
     return (
       cell != null &&
       ((this.isSplitEnabled() && this.isSplitTarget(cell, cells, evt)) ||
@@ -10822,7 +10832,7 @@ class mxGraph extends mxEventSource {
             (this.model.getChildCount(cell) > 0 &&
               !this.isCellCollapsed(cell)))))
     );
-  };
+  }
 
   /**
    * Function: isSplitTarget
@@ -10836,7 +10846,7 @@ class mxGraph extends mxEventSource {
    * cells - <mxCells> that should split the edge.
    * evt - Mouseevent that triggered the invocation.
    */
-  isSplitTarget = (target, cells, evt) => {
+  isSplitTarget(target, cells, evt) {
     if (
       this.model.isEdge(target) &&
       cells != null &&
@@ -10858,7 +10868,7 @@ class mxGraph extends mxEventSource {
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: getDropTarget
@@ -10878,7 +10888,7 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> that is under the mousepointer.
    * clone - Optional boolean to indicate of cells will be cloned.
    */
-  getDropTarget = (cells, evt, cell, clone) => {
+  getDropTarget(cells, evt, cell, clone) {
     if (!this.isSwimlaneNesting()) {
       for (let i = 0; i < cells.length; i += 1) {
         if (this.isSwimlane(cells[i])) {
@@ -10930,7 +10940,7 @@ class mxGraph extends mxEventSource {
     }
 
     return !this.model.isLayer(cell) && parent == null ? cell : null;
-  };
+  }
 
   /**
    * Group: Cell retrieval
@@ -10944,7 +10954,7 @@ class mxGraph extends mxEventSource {
    * this function should be used as the parent for new cells (aka default
    * layer).
    */
-  getDefaultParent = () => {
+  getDefaultParent() {
     let parent = this.getCurrentRoot();
 
     if (parent == null) {
@@ -10957,7 +10967,7 @@ class mxGraph extends mxEventSource {
     }
 
     return parent;
-  };
+  }
 
   /**
    * Function: setDefaultParent
@@ -10965,9 +10975,9 @@ class mxGraph extends mxEventSource {
    * Sets the <defaultParent> to the given cell. Set this to null to return
    * the first child of the root in getDefaultParent.
    */
-  setDefaultParent = cell => {
+  setDefaultParent(cell) {
     this.defaultParent = cell;
-  };
+  }
 
   /**
    * Function: getSwimlane
@@ -10979,13 +10989,13 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> for which the ancestor swimlane should be returned.
    */
-  getSwimlane = cell => {
+  getSwimlane(cell) {
     while (cell != null && !this.isSwimlane(cell)) {
       cell = this.model.getParent(cell);
     }
 
     return cell;
-  };
+  }
 
   /**
    * Function: getSwimlaneAt
@@ -11000,7 +11010,7 @@ class mxGraph extends mxEventSource {
    * parent - <mxCell> that should be used as the root of the recursion.
    * Default is <defaultParent>.
    */
-  getSwimlaneAt = (x, y, parent) => {
+  getSwimlaneAt(x, y, parent) {
     if (parent == null) {
       parent = this.getCurrentRoot();
 
@@ -11033,7 +11043,7 @@ class mxGraph extends mxEventSource {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: getCellAt
@@ -11058,7 +11068,7 @@ class mxGraph extends mxEventSource {
    * ignoreFn - Optional function that returns true if cell should be ignored.
    * The function is passed the cell state and the x and y parameter.
    */
-  getCellAt = (x, y, parent, vertices, edges, ignoreFn) => {
+  getCellAt(x, y, parent, vertices, edges, ignoreFn) {
     vertices = vertices != null ? vertices : true;
     edges = edges != null ? edges : true;
 
@@ -11099,7 +11109,7 @@ class mxGraph extends mxEventSource {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: intersects
@@ -11113,7 +11123,7 @@ class mxGraph extends mxEventSource {
    * x - X-coordinate of the location to be checked.
    * y - Y-coordinate of the location to be checked.
    */
-  intersects = (state, x, y) => {
+  intersects(state, x, y) {
     if (state != null) {
       const pts = state.absolutePoints;
 
@@ -11152,7 +11162,7 @@ class mxGraph extends mxEventSource {
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: hitsSwimlaneContent
@@ -11166,7 +11176,7 @@ class mxGraph extends mxEventSource {
    * x - X-coordinate of the mouse event.
    * y - Y-coordinate of the mouse event.
    */
-  hitsSwimlaneContent = (swimlane, x, y) => {
+  hitsSwimlaneContent(swimlane, x, y) {
     const state = this.getView().getState(swimlane);
     const size = this.getStartSize(swimlane);
 
@@ -11184,7 +11194,7 @@ class mxGraph extends mxEventSource {
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: getChildVertices
@@ -11195,9 +11205,9 @@ class mxGraph extends mxEventSource {
    *
    * parent - <mxCell> whose children should be returned.
    */
-  getChildVertices = parent => {
+  getChildVertices(parent) {
     return this.getChildCells(parent, true, false);
-  };
+  }
 
   /**
    * Function: getChildEdges
@@ -11208,9 +11218,9 @@ class mxGraph extends mxEventSource {
    *
    * parent - <mxCell> whose child vertices should be returned.
    */
-  getChildEdges = parent => {
+  getChildEdges(parent) {
     return this.getChildCells(parent, false, true);
-  };
+  }
 
   /**
    * Function: getChildCells
@@ -11226,7 +11236,7 @@ class mxGraph extends mxEventSource {
    * edges - Optional boolean that specifies if child edges should
    * be returned. Default is false.
    */
-  getChildCells = (parent, vertices, edges) => {
+  getChildCells(parent, vertices, edges) {
     parent = parent != null ? parent : this.getDefaultParent();
     vertices = vertices != null ? vertices : false;
     edges = edges != null ? edges : false;
@@ -11242,7 +11252,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: getConnections
@@ -11255,9 +11265,9 @@ class mxGraph extends mxEventSource {
    * parent - Optional parent of the opposite end for a connection to be
    * returned.
    */
-  getConnections = (cell, parent) => {
+  getConnections(cell, parent) {
     return this.getEdges(cell, parent, true, true, false);
-  };
+  }
 
   /**
    * Function: getIncomingEdges
@@ -11272,9 +11282,9 @@ class mxGraph extends mxEventSource {
    * parent - Optional parent of the opposite end for an edge to be
    * returned.
    */
-  getIncomingEdges = (cell, parent) => {
+  getIncomingEdges(cell, parent) {
     return this.getEdges(cell, parent, true, false, false);
-  };
+  }
 
   /**
    * Function: getOutgoingEdges
@@ -11289,9 +11299,9 @@ class mxGraph extends mxEventSource {
    * parent - Optional parent of the opposite end for an edge to be
    * returned.
    */
-  getOutgoingEdges = (cell, parent) => {
+  getOutgoingEdges(cell, parent) {
     return this.getEdges(cell, parent, false, true, false);
-  };
+  }
 
   /**
    * Function: getEdges
@@ -11317,7 +11327,7 @@ class mxGraph extends mxEventSource {
    * need be an ancestral parent, true, or the direct parent, false.
    * Default is false
    */
-  getEdges = (cell, parent, incoming, outgoing, includeLoops, recurse) => {
+  getEdges(cell, parent, incoming, outgoing, includeLoops, recurse) {
     incoming = incoming != null ? incoming : true;
     outgoing = outgoing != null ? outgoing : true;
     includeLoops = includeLoops != null ? includeLoops : true;
@@ -11367,7 +11377,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: isValidAncestor
@@ -11382,11 +11392,11 @@ class mxGraph extends mxEventSource {
    * parent - <mxCell> the possible parent cell
    * recurse - boolean whether or not to recurse the child ancestors
    */
-  isValidAncestor = (cell, parent, recurse) => {
+  isValidAncestor(cell, parent, recurse) {
     return recurse
       ? this.model.isAncestor(parent, cell)
       : this.model.getParent(cell) == parent;
-  };
+  }
 
   /**
    * Function: getOpposites
@@ -11405,7 +11415,7 @@ class mxGraph extends mxEventSource {
    * targets - Optional boolean that specifies if targer terminals should be
    * included in the result. Default is true.
    */
-  getOpposites = (edges, terminal, sources, targets) => {
+  getOpposites(edges, terminal, sources, targets) {
     sources = sources != null ? sources : true;
     targets = targets != null ? targets : true;
 
@@ -11458,7 +11468,7 @@ class mxGraph extends mxEventSource {
     }
 
     return terminals;
-  };
+  }
 
   /**
    * Function: getEdgesBetween
@@ -11473,7 +11483,7 @@ class mxGraph extends mxEventSource {
    * target -
    * directed -
    */
-  getEdgesBetween = (source, target, directed) => {
+  getEdgesBetween(source, target, directed) {
     directed = directed != null ? directed : false;
     const edges = this.getEdges(source);
     const result = [];
@@ -11501,7 +11511,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: getPointForEvent
@@ -11515,7 +11525,7 @@ class mxGraph extends mxEventSource {
    * addOffset - Optional boolean that specifies if the position should be
    * offset by half of the <gridSize>. Default is true.
    */
-  getPointForEvent = (evt, addOffset) => {
+  getPointForEvent(evt, addOffset) {
     const p = mxUtils.convertPoint(
       this.container,
       mxEvent.getClientX(evt),
@@ -11530,7 +11540,7 @@ class mxGraph extends mxEventSource {
     p.y = this.snap(p.y / s - tr.y - off);
 
     return p;
-  };
+  }
 
   /**
    * Function: getCells
@@ -11554,7 +11564,7 @@ class mxGraph extends mxEventSource {
    * includeDescendants - Optional boolean flag to add descendants to the result.
    * Default is false.
    */
-  getCells = (
+  getCells(
     x,
     y,
     width,
@@ -11564,7 +11574,7 @@ class mxGraph extends mxEventSource {
     intersection,
     ignoreFn,
     includeDescendants
-  ) => {
+  ) {
     result = result != null ? result : [];
 
     if (width > 0 || height > 0 || intersection != null) {
@@ -11634,7 +11644,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: getCellsBeyond
@@ -11654,7 +11664,7 @@ class mxGraph extends mxEventSource {
    * bottomHalfpane - Boolean indicating if the cells in the bottom halfpane
    * from the origin should be returned.
    */
-  getCellsBeyond = (x0, y0, parent, rightHalfpane, bottomHalfpane) => {
+  getCellsBeyond(x0, y0, parent, rightHalfpane, bottomHalfpane) {
     const result = [];
 
     if (rightHalfpane || bottomHalfpane) {
@@ -11682,7 +11692,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: findTreeRoots
@@ -11701,7 +11711,7 @@ class mxGraph extends mxEventSource {
    * should be counted for a tree root. If false then outgoing edges will be
    * counted. Default is false.
    */
-  findTreeRoots = (parent, isolate, invert) => {
+  findTreeRoots(parent, isolate, invert) {
     isolate = isolate != null ? isolate : false;
     invert = invert != null ? invert : false;
     const roots = [];
@@ -11752,7 +11762,7 @@ class mxGraph extends mxEventSource {
     }
 
     return roots;
-  };
+  }
 
   /**
    * Function: traverse
@@ -11787,7 +11797,7 @@ class mxGraph extends mxEventSource {
    * inverse - Optional boolean to traverse in inverse direction. Default is false.
    * This is ignored if directed is false.
    */
-  traverse = (vertex, directed, func, edge, visited, inverse) => {
+  traverse(vertex, directed, func, edge, visited, inverse) {
     if (func != null && vertex != null) {
       directed = directed != null ? directed : true;
       inverse = inverse != null ? inverse : false;
@@ -11814,7 +11824,7 @@ class mxGraph extends mxEventSource {
         }
       }
     }
-  };
+  }
 
   /**
    * Group: Selection
@@ -11829,54 +11839,54 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> for which the selection state should be returned.
    */
-  isCellSelected = cell => {
+  isCellSelected(cell) {
     return this.getSelectionModel().isSelected(cell);
-  };
+  }
 
   /**
    * Function: isSelectionEmpty
    *
    * Returns true if the selection is empty.
    */
-  isSelectionEmpty = () => {
+  isSelectionEmpty() {
     return this.getSelectionModel().isEmpty();
-  };
+  }
 
   /**
    * Function: clearSelection
    *
    * Clears the selection using <mxGraphSelectionModel.clear>.
    */
-  clearSelection = () => {
+  clearSelection() {
     return this.getSelectionModel().clear();
-  };
+  }
 
   /**
    * Function: getSelectionCount
    *
    * Returns the number of selected cells.
    */
-  getSelectionCount = () => {
+  getSelectionCount() {
     return this.getSelectionModel().cells.length;
-  };
+  }
 
   /**
    * Function: getSelectionCell
    *
    * Returns the first cell from the array of selected <mxCells>.
    */
-  getSelectionCell = () => {
+  getSelectionCell() {
     return this.getSelectionModel().cells[0];
-  };
+  }
 
   /**
    * Function: getSelectionCells
    *
    * Returns the array of selected <mxCells>.
    */
-  getSelectionCells = () => {
+  getSelectionCells() {
     return this.getSelectionModel().cells.slice();
-  };
+  }
 
   /**
    * Function: setSelectionCell
@@ -11887,9 +11897,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> to be selected.
    */
-  setSelectionCell = cell => {
+  setSelectionCell(cell) {
     this.getSelectionModel().setCell(cell);
-  };
+  }
 
   /**
    * Function: setSelectionCells
@@ -11900,9 +11910,9 @@ class mxGraph extends mxEventSource {
    *
    * cells - Array of <mxCells> to be selected.
    */
-  setSelectionCells = cells => {
+  setSelectionCells(cells) {
     this.getSelectionModel().setCells(cells);
-  };
+  }
 
   /**
    * Function: addSelectionCell
@@ -11913,9 +11923,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> to be add to the selection.
    */
-  addSelectionCell = cell => {
+  addSelectionCell(cell) {
     this.getSelectionModel().addCell(cell);
-  };
+  }
 
   /**
    * Function: addSelectionCells
@@ -11926,9 +11936,9 @@ class mxGraph extends mxEventSource {
    *
    * cells - Array of <mxCells> to be added to the selection.
    */
-  addSelectionCells = cells => {
+  addSelectionCells(cells) {
     this.getSelectionModel().addCells(cells);
-  };
+  }
 
   /**
    * Function: removeSelectionCell
@@ -11939,9 +11949,9 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> to be removed from the selection.
    */
-  removeSelectionCell = cell => {
+  removeSelectionCell(cell) {
     this.getSelectionModel().removeCell(cell);
-  };
+  }
 
   /**
    * Function: removeSelectionCells
@@ -11952,9 +11962,9 @@ class mxGraph extends mxEventSource {
    *
    * cells - Array of <mxCells> to be removed from the selection.
    */
-  removeSelectionCells = cells => {
+  removeSelectionCells(cells) {
     this.getSelectionModel().removeCells(cells);
-  };
+  }
 
   /**
    * Function: selectRegion
@@ -11967,48 +11977,48 @@ class mxGraph extends mxEventSource {
    * rect - <mxRectangle> that represents the region to be selected.
    * evt - Mouseevent that triggered the selection.
    */
-  selectRegion = (rect, evt) => {
+  selectRegion(rect, evt) {
     const cells = this.getCells(rect.x, rect.y, rect.width, rect.height);
     this.selectCellsForEvent(cells, evt);
 
     return cells;
-  };
+  }
 
   /**
    * Function: selectNextCell
    *
    * Selects the next cell.
    */
-  selectNextCell = () => {
+  selectNextCell() {
     this.selectCell(true);
-  };
+  }
 
   /**
    * Function: selectPreviousCell
    *
    * Selects the previous cell.
    */
-  selectPreviousCell = () => {
+  selectPreviousCell() {
     this.selectCell();
-  };
+  }
 
   /**
    * Function: selectParentCell
    *
    * Selects the parent cell.
    */
-  selectParentCell = () => {
+  selectParentCell() {
     this.selectCell(false, true);
-  };
+  }
 
   /**
    * Function: selectChildCell
    *
    * Selects the first child cell.
    */
-  selectChildCell = () => {
+  selectChildCell() {
     this.selectCell(false, false, true);
-  };
+  }
 
   /**
    * Function: selectCell
@@ -12022,7 +12032,7 @@ class mxGraph extends mxEventSource {
    * isParent - Boolean indicating if the parent cell should be selected.
    * isChild - Boolean indicating if the first child cell should be selected.
    */
-  selectCell = (isNext, isParent, isChild) => {
+  selectCell(isNext, isParent, isChild) {
     const sel = this.selectionModel;
     const cell = sel.cells.length > 0 ? sel.cells[0] : null;
 
@@ -12067,7 +12077,7 @@ class mxGraph extends mxEventSource {
         this.setSelectionCell(child);
       }
     }
-  };
+  }
 
   /**
    * Function: selectAll
@@ -12083,7 +12093,7 @@ class mxGraph extends mxEventSource {
    * descendants - Optional boolean specifying whether all descendants should be
    * selected. Default is false.
    */
-  selectAll = (parent, descendants) => {
+  selectAll(parent, descendants) {
     parent = parent || this.getDefaultParent();
 
     const cells = descendants
@@ -12098,25 +12108,25 @@ class mxGraph extends mxEventSource {
     if (cells != null) {
       this.setSelectionCells(cells);
     }
-  };
+  }
 
   /**
    * Function: selectVertices
    *
    * Select all vertices inside the given parent or the default parent.
    */
-  selectVertices = (parent, selectGroups) => {
+  selectVertices(parent, selectGroups) {
     this.selectCells(true, false, parent, selectGroups);
-  };
+  }
 
   /**
    * Function: selectVertices
    *
    * Select all vertices inside the given parent or the default parent.
    */
-  selectEdges = parent => {
+  selectEdges(parent) {
     this.selectCells(false, true, parent);
-  };
+  }
 
   /**
    * Function: selectCells
@@ -12135,7 +12145,7 @@ class mxGraph extends mxEventSource {
    * selectGroups - Optional boolean that specifies if groups should be
    * selected. Default is false.
    */
-  selectCells = (vertices, edges, parent, selectGroups) => {
+  selectCells(vertices, edges, parent, selectGroups) {
     parent = parent || this.getDefaultParent();
 
     const filter = mxUtils.bind(this, cell => {
@@ -12154,7 +12164,7 @@ class mxGraph extends mxEventSource {
     if (cells != null) {
       this.setSelectionCells(cells);
     }
-  };
+  }
 
   /**
    * Function: selectCellForEvent
@@ -12168,7 +12178,7 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> to be selected.
    * evt - Optional mouseevent that triggered the selection.
    */
-  selectCellForEvent = (cell, evt) => {
+  selectCellForEvent(cell, evt) {
     const isSelected = this.isCellSelected(cell);
 
     if (this.isToggleEvent(evt)) {
@@ -12180,7 +12190,7 @@ class mxGraph extends mxEventSource {
     } else if (!isSelected || this.getSelectionCount() != 1) {
       this.setSelectionCell(cell);
     }
-  };
+  }
 
   /**
    * Function: selectCellsForEvent
@@ -12194,13 +12204,13 @@ class mxGraph extends mxEventSource {
    * cells - Array of <mxCells> to be selected.
    * evt - Optional mouseevent that triggered the selection.
    */
-  selectCellsForEvent = (cells, evt) => {
+  selectCellsForEvent(cells, evt) {
     if (this.isToggleEvent(evt)) {
       this.addSelectionCells(cells);
     } else {
       this.setSelectionCells(cells);
     }
-  };
+  }
 
   /**
    * Group: Selection state
@@ -12217,7 +12227,7 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> whose handler should be created.
    */
-  createHandler = state => {
+  createHandler(state) {
     let result = null;
 
     if (state != null) {
@@ -12239,7 +12249,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: createVertexHandler
@@ -12250,9 +12260,9 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> to create the handler for.
    */
-  createVertexHandler = state => {
+  createVertexHandler(state) {
     return new mxVertexHandler(state);
-  };
+  }
 
   /**
    * Function: createEdgeHandler
@@ -12263,7 +12273,7 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> to create the handler for.
    */
-  createEdgeHandler = (state, edgeStyle) => {
+  createEdgeHandler(state, edgeStyle) {
     let result = null;
 
     if (
@@ -12283,7 +12293,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: createEdgeSegmentHandler
@@ -12294,9 +12304,9 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> to create the handler for.
    */
-  createEdgeSegmentHandler = state => {
+  createEdgeSegmentHandler(state) {
     return new mxEdgeSegmentHandler(state);
-  };
+  }
 
   /**
    * Function: createElbowEdgeHandler
@@ -12307,9 +12317,9 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> to create the handler for.
    */
-  createElbowEdgeHandler = state => {
+  createElbowEdgeHandler(state) {
     return new mxElbowEdgeHandler(state);
-  };
+  }
 
   /**
    * Group: Graph events
@@ -12326,13 +12336,13 @@ class mxGraph extends mxEventSource {
    *
    * listener - Listener to be added to the graph event listeners.
    */
-  addMouseListener = listener => {
+  addMouseListener(listener) {
     if (this.mouseListeners == null) {
       this.mouseListeners = [];
     }
 
     this.mouseListeners.push(listener);
-  };
+  }
 
   /**
    * Function: removeMouseListener
@@ -12343,7 +12353,7 @@ class mxGraph extends mxEventSource {
    *
    * listener - Listener to be removed from the graph event listeners.
    */
-  removeMouseListener = listener => {
+  removeMouseListener(listener) {
     if (this.mouseListeners != null) {
       for (let i = 0; i < this.mouseListeners.length; i += 1) {
         if (this.mouseListeners[i] === listener) {
@@ -12352,7 +12362,7 @@ class mxGraph extends mxEventSource {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: updateMouseEvent
@@ -12365,7 +12375,7 @@ class mxGraph extends mxEventSource {
    * me - <mxMouseEvent> to be updated.
    * evtName - Name of the mouse event.
    */
-  updateMouseEvent = (me, evtName) => {
+  updateMouseEvent(me, evtName) {
     if (me.graphX == null || me.graphY == null) {
       const pt = mxUtils.convertPoint(this.container, me.getX(), me.getY());
 
@@ -12397,14 +12407,14 @@ class mxGraph extends mxEventSource {
     }
 
     return me;
-  };
+  }
 
   /**
    * Function: getStateForEvent
    *
    * Returns the state for the given touch event.
    */
-  getStateForTouchEvent = evt => {
+  getStateForTouchEvent(evt) {
     const x = mxEvent.getClientX(evt);
     const y = mxEvent.getClientY(evt);
 
@@ -12413,14 +12423,14 @@ class mxGraph extends mxEventSource {
     const pt = mxUtils.convertPoint(this.container, x, y);
 
     return this.view.getState(this.getCellAt(pt.x, pt.y));
-  };
+  }
 
   /**
    * Function: isEventIgnored
    *
    * Returns true if the event should be ignored in <fireMouseEvent>.
    */
-  isEventIgnored = (evtName, me, sender) => {
+  isEventIgnored(evtName, me, sender) {
     const mouseEvent = mxEvent.isMouseEvent(me.getEvent());
     let result = false;
 
@@ -12520,14 +12530,14 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: isSyntheticEventIgnored
    *
    * Hook for ignoring synthetic mouse events after touchend in Firefox.
    */
-  isSyntheticEventIgnored = (evtName, me, sender) => {
+  isSyntheticEventIgnored(evtName, me, sender) {
     let result = false;
     const mouseEvent = mxEvent.isMouseEvent(me.getEvent());
 
@@ -12544,7 +12554,7 @@ class mxGraph extends mxEventSource {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: isEventSourceIgnored
@@ -12559,7 +12569,7 @@ class mxGraph extends mxEventSource {
    * evtName - The name of the event.
    * me - <mxMouseEvent> that should be ignored.
    */
-  isEventSourceIgnored = (evtName, me) => {
+  isEventSourceIgnored(evtName, me) {
     const source = me.getSource();
     const name = source.nodeName != null ? source.nodeName.toLowerCase() : '';
     const candidate =
@@ -12578,7 +12588,7 @@ class mxGraph extends mxEventSource {
           source.type !== 'submit' &&
           source.type !== 'file'))
     );
-  };
+  }
 
   /**
    * Function: getEventState
@@ -12590,9 +12600,9 @@ class mxGraph extends mxEventSource {
    *
    * <mxCellState> - State whose event source should be returned.
    */
-  getEventState = state => {
+  getEventState(state) {
     return state;
-  };
+  }
 
   /**
    * Function: fireMouseEvent
@@ -12608,7 +12618,7 @@ class mxGraph extends mxEventSource {
    * me - <mxMouseEvent> to be fired.
    * sender - Optional sender argument. Default is this.
    */
-  fireMouseEvent = (evtName, me, sender) => {
+  fireMouseEvent(evtName, me, sender) {
     if (this.isEventSourceIgnored(evtName, me)) {
       if (this.tooltipHandler != null) {
         this.tooltipHandler.hide();
@@ -12834,19 +12844,19 @@ class mxGraph extends mxEventSource {
 
       this.consumeMouseEvent(evtName, me, sender);
     }
-  };
+  }
 
   /**
    * Function: consumeMouseEvent
    *
    * Consumes the given <mxMouseEvent> if it's a touchStart event.
    */
-  consumeMouseEvent = (evtName, me, sender) => {
+  consumeMouseEvent(evtName, me, sender) {
     // Workaround for duplicate click in Windows 8 with Chrome/FF/Opera with touch
     if (evtName === mxEvent.MOUSE_DOWN && mxEvent.isTouchEvent(me.getEvent())) {
       me.consume(false);
     }
-  };
+  }
 
   /**
    * Function: fireGestureEvent
@@ -12883,20 +12893,20 @@ class mxGraph extends mxEventSource {
    * evt - Gestureend event that represents the gesture.
    * cell - Optional <mxCell> associated with the gesture.
    */
-  fireGestureEvent = (evt, cell) => {
+  fireGestureEvent(evt, cell) {
     // Resets double tap event handling when gestures take place
     this.lastTouchTime = 0;
     this.fireEvent(
       new mxEventObject(mxEvent.GESTURE, 'event', evt, 'cell', cell)
     );
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys the graph and all its resources.
    */
-  destroy = () => {
+  destroy() {
     if (!this.destroyed) {
       this.destroyed = true;
 
@@ -12939,7 +12949,7 @@ class mxGraph extends mxEventSource {
 
       this.container = null;
     }
-  };
+  }
 }
 
 /**

@@ -73,16 +73,16 @@ class mxPartitionLayout extends mxGraphLayout {
    *
    * Returns <horizontal>.
    */
-  isHorizontal = () => {
+  isHorizontal() {
     return this.horizontal;
-  };
+  }
 
   /**
    * Function: moveCell
    *
    * Implements <mxGraphLayout.moveCell>.
    */
-  moveCell = (cell, x, y) => {
+  moveCell(cell, x, y) {
     const model = this.graph.getModel();
     const parent = model.getParent(cell);
 
@@ -114,7 +114,7 @@ class mxPartitionLayout extends mxGraphLayout {
 
       model.add(parent, cell, idx);
     }
-  };
+  }
 
   /**
    * Function: execute
@@ -122,7 +122,7 @@ class mxPartitionLayout extends mxGraphLayout {
    * Implements <mxGraphLayout.execute>. All children where <isVertexIgnored>
    * returns false and <isVertexMovable> returns true are modified.
    */
-  execute = parent => {
+  execute(parent) {
     const horizontal = this.isHorizontal();
     const model = this.graph.getModel();
     let pgeo = model.getGeometry(parent);
@@ -212,7 +212,7 @@ class mxPartitionLayout extends mxGraphLayout {
         }
       }
     }
-  };
+  }
 }
 
 export default mxPartitionLayout;

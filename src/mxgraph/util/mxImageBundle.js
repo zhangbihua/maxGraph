@@ -75,9 +75,9 @@ class mxImageBundle {
    * Adds the specified entry to the map. The entry is an object with a value and
    * fallback property as specified in the arguments.
    */
-  putImage = (key, value, fallback) => {
+  putImage(key, value, fallback) {
     this.images[key] = { value, fallback };
-  };
+  }
 
   /**
    * Function: getImage
@@ -86,7 +86,7 @@ class mxImageBundle {
    * or fallback, depending on <alt>. The fallback is returned if
    * <alt> is true, the value is returned otherwise.
    */
-  getImage = key => {
+  getImage(key) {
     let result = null;
 
     if (key != null) {
@@ -98,7 +98,7 @@ class mxImageBundle {
     }
 
     return result;
-  };
+  }
 }
 
 export default mxImageBundle;

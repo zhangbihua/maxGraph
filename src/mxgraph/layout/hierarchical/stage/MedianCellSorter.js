@@ -8,7 +8,7 @@ class MedianCellSorter {
    *
    * Compares two MedianCellSorters.
    */
-  compare = (a, b) => {
+  compare(a, b) {
     if (a != null && b != null) {
       if (b.medianValue > a.medianValue) {
         return -1;
@@ -19,7 +19,7 @@ class MedianCellSorter {
       return 0;
     }
     return 0;
-  };
+  }
 }
 
 export default MedianCellSorter;

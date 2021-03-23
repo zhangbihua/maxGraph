@@ -22,7 +22,7 @@ class mxVisibleChange {
    * Changes the visible state of <cell> to <previous> using
    * <mxGraphModel.visibleStateForCellChanged>.
    */
-  execute = () => {
+  execute() {
     if (this.cell != null) {
       this.visible = this.previous;
       this.previous = this.model.visibleStateForCellChanged(
@@ -30,7 +30,7 @@ class mxVisibleChange {
         this.previous
       );
     }
-  };
+  }
 }
 
 export default mxVisibleChange;

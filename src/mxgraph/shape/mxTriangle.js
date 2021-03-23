@@ -28,16 +28,16 @@ class mxTriangle extends mxActor {
    *
    * Adds roundable support.
    */
-  isRoundable = () => {
+  isRoundable() {
     return true;
-  };
+  }
 
   /**
    * Function: redrawPath
    *
    * Draws the path for this shape.
    */
-  redrawPath = (c, x, y, w, h) => {
+  redrawPath(c, x, y, w, h) {
     const arcSize =
       mxUtils.getValue(
         this.style,
@@ -51,7 +51,7 @@ class mxTriangle extends mxActor {
       arcSize,
       true
     );
-  };
+  }
 }
 
 export default mxTriangle;

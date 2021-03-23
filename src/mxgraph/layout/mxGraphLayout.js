@@ -4,11 +4,11 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDictionary from "../util/mxDictionary";
+import mxDictionary from '../util/mxDictionary';
 import mxRectangle from '../util/mxRectangle';
-import mxGeometry from "../model/mxGeometry";
-import mxPoint from "../util/mxPoint";
-import mxConstants from "../util/mxConstants";
+import mxGeometry from '../model/mxGeometry';
+import mxPoint from '../util/mxPoint';
+import mxConstants from '../util/mxConstants';
 
 class mxGraphLayout {
   /**
@@ -74,7 +74,7 @@ class mxGraphLayout {
    * x - X-coordinate of the new cell location.
    * y - Y-coordinate of the new cell location.
    */
-  moveCell = (cell, x, y) => {};
+  moveCell(cell, x, y) {}
 
   /**
    * Function: resizeCell
@@ -89,7 +89,7 @@ class mxGraphLayout {
    * cell - <mxCell> which has been moved.
    * bounds - <mxRectangle> that represents the new cell bounds.
    */
-  resizeCell = (cell, bounds) => {};
+  resizeCell(cell, bounds) {}
 
   /**
    * Function: execute
@@ -100,16 +100,16 @@ class mxGraphLayout {
    *
    * parent - <mxCell> whose children should be layed out.
    */
-  execute = parent => {};
+  execute(parent) {}
 
   /**
    * Function: getGraph
    *
    * Returns the graph that this layout operates on.
    */
-  getGraph = () => {
+  getGraph() {
     return this.graph;
-  };
+  }
 
   /**
    * Function: getConstraint
@@ -128,9 +128,9 @@ class mxGraphLayout {
    * source - Optional boolean that specifies if the connection is incoming
    * or outgoing. Default is null.
    */
-  getConstraint = (key, cell, edge, source) => {
+  getConstraint(key, cell, edge, source) {
     return this.graph.getCurrentCellStyle(cell)[key];
-  };
+  }
 
   /**
    * Function: traverse
@@ -163,7 +163,7 @@ class mxGraphLayout {
    * null for the first step of the traversal.
    * visited - Optional <mxDictionary> of cell paths for the visited cells.
    */
-  traverse = (vertex, directed, func, edge, visited) => {
+  traverse(vertex, directed, func, edge, visited) {
     if (func != null && vertex != null) {
       directed = directed != null ? directed : true;
       visited = visited || new mxDictionary();
@@ -189,7 +189,7 @@ class mxGraphLayout {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: isAncestor
@@ -202,7 +202,7 @@ class mxGraphLayout {
    * child - <mxCell> that specifies the child.
    * traverseAncestors - boolean whether to
    */
-  isAncestor = (parent, child, traverseAncestors) => {
+  isAncestor(parent, child, traverseAncestors) {
     if (!traverseAncestors) {
       return this.graph.model.getParent(child) === parent;
     }
@@ -216,7 +216,7 @@ class mxGraphLayout {
     }
 
     return child === parent;
-  };
+  }
 
   /**
    * Function: isVertexMovable
@@ -229,9 +229,9 @@ class mxGraphLayout {
    *
    * cell - <mxCell> whose movable state should be returned.
    */
-  isVertexMovable = cell => {
+  isVertexMovable(cell) {
     return this.graph.isCellMovable(cell);
-  };
+  }
 
   /**
    * Function: isVertexIgnored
@@ -243,12 +243,12 @@ class mxGraphLayout {
    *
    * vertex - <mxCell> whose ignored state should be returned.
    */
-  isVertexIgnored = vertex => {
+  isVertexIgnored(vertex) {
     return (
       !this.graph.getModel().isVertex(vertex) ||
       !this.graph.isCellVisible(vertex)
     );
-  };
+  }
 
   /**
    * Function: isEdgeIgnored
@@ -260,7 +260,7 @@ class mxGraphLayout {
    *
    * cell - <mxCell> whose ignored state should be returned.
    */
-  isEdgeIgnored = edge => {
+  isEdgeIgnored(edge) {
     const model = this.graph.getModel();
 
     return (
@@ -269,29 +269,29 @@ class mxGraphLayout {
       model.getTerminal(edge, true) == null ||
       model.getTerminal(edge, false) == null
     );
-  };
+  }
 
   /**
    * Function: setEdgeStyleEnabled
    *
    * Disables or enables the edge style of the given edge.
    */
-  setEdgeStyleEnabled = (edge, value) => {
+  setEdgeStyleEnabled(edge, value) {
     this.graph.setCellStyles(mxConstants.STYLE_NOEDGESTYLE, value ? '0' : '1', [
       edge,
     ]);
-  };
+  }
 
   /**
    * Function: setOrthogonalEdge
    *
    * Disables or enables orthogonal end segments of the given edge.
    */
-  setOrthogonalEdge = (edge, value) => {
+  setOrthogonalEdge(edge, value) {
     this.graph.setCellStyles(mxConstants.STYLE_ORTHOGONAL, value ? '1' : '0', [
       edge,
     ]);
-  };
+  }
 
   /**
    * Function: getParentOffset
@@ -299,7 +299,7 @@ class mxGraphLayout {
    * Determines the offset of the given parent to the parent
    * of the layout
    */
-  getParentOffset = parent => {
+  getParentOffset(parent) {
     const result = new mxPoint();
 
     if (parent != null && parent !== this.parent) {
@@ -320,7 +320,7 @@ class mxGraphLayout {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: setEdgePoints
@@ -328,7 +328,7 @@ class mxGraphLayout {
    * Replaces the array of mxPoints in the geometry of the given edge
    * with the given array of mxPoints.
    */
-  setEdgePoints = (edge, points) => {
+  setEdgePoints(edge, points) {
     if (edge != null) {
       const { model } = this.graph;
       let geometry = model.getGeometry(edge);
@@ -354,7 +354,7 @@ class mxGraphLayout {
       geometry.points = points;
       model.setGeometry(edge, geometry);
     }
-  };
+  }
 
   /**
    * Function: setVertexLocation
@@ -371,7 +371,7 @@ class mxGraphLayout {
    * x - Integer that defines the x-coordinate of the new location.
    * y - Integer that defines the y-coordinate of the new location.
    */
-  setVertexLocation = (cell, x, y) => {
+  setVertexLocation(cell, x, y) {
     const model = this.graph.getModel();
     let geometry = model.getGeometry(cell);
     let result = null;
@@ -425,7 +425,7 @@ class mxGraphLayout {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: getVertexBounds
@@ -433,7 +433,7 @@ class mxGraphLayout {
    * Returns an <mxRectangle> that defines the bounds of the given cell or
    * the bounding box if <useBoundingBox> is true.
    */
-  getVertexBounds = cell => {
+  getVertexBounds(cell) {
     let geo = this.graph.getModel().getGeometry(cell);
 
     // Checks for oversize label bounding box and corrects
@@ -478,21 +478,21 @@ class mxGraphLayout {
     }
 
     return new mxRectangle(geo.x, geo.y, geo.width, geo.height);
-  };
+  }
 
   /**
    * Function: arrangeGroups
    *
    * Shortcut to <mxGraph.updateGroupBounds> with moveGroup set to true.
    */
-  arrangeGroups = (
+  arrangeGroups(
     cells,
     border,
     topBorder,
     rightBorder,
     bottomBorder,
     leftBorder
-  ) => {
+  ) {
     return this.graph.updateGroupBounds(
       cells,
       border,
@@ -502,7 +502,7 @@ class mxGraphLayout {
       bottomBorder,
       leftBorder
     );
-  };
+  }
 }
 
 export default mxGraphLayout;

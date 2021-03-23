@@ -52,9 +52,9 @@ class mxImageShape extends mxRectangleShape {
    *
    * Disables offset in IE9 for crisper image output.
    */
-  getSvgScreenOffset = () => {
+  getSvgScreenOffset() {
     return 0;
-  };
+  }
 
   /**
    * Function: apply
@@ -73,7 +73,7 @@ class mxImageShape extends mxRectangleShape {
    *
    * state - <mxCellState> of the corresponding cell.
    */
-  apply = state => {
+  apply(state) {
     super.apply(state);
 
     this.fill = null;
@@ -90,7 +90,7 @@ class mxImageShape extends mxRectangleShape {
       this.flipV =
         this.flipV || mxUtils.getValue(this.style, 'imageFlipV', 0) === 1;
     }
-  };
+  }
 
   /**
    * Function: isHtmlAllowed
@@ -98,9 +98,9 @@ class mxImageShape extends mxRectangleShape {
    * Returns true if HTML is allowed for this shape. This implementation always
    * returns false.
    */
-  isHtmlAllowed = () => {
+  isHtmlAllowed() {
     return !this.preserveImageAspect;
-  };
+  }
 
   /**
    * Function: createHtml
@@ -109,28 +109,28 @@ class mxImageShape extends mxRectangleShape {
    * this shape. This implementation falls back to <createVml>
    * so that the HTML creation is optional.
    */
-  createHtml = () => {
+  createHtml() {
     const node = document.createElement('div');
     node.style.position = 'absolute';
 
     return node;
-  };
+  }
 
   /**
    * Function: isRoundable
    *
    * Disables inherited roundable support.
    */
-  isRoundable = (c, x, y, w, h) => {
+  isRoundable(c, x, y, w, h) {
     return false;
-  };
+  }
 
   /**
    * Function: paintVertexShape
    *
    * Generic background painting implementation.
    */
-  paintVertexShape = (c, x, y, w, h) => {
+  paintVertexShape(c, x, y, w, h) {
     if (this.image != null) {
       const fill = mxUtils.getValue(
         this.style,
@@ -169,14 +169,14 @@ class mxImageShape extends mxRectangleShape {
     } else {
       this.paintBackground(c, x, y, w, h);
     }
-  };
+  }
 
   /**
    * Function: redraw
    *
    * Overrides <mxShape.redraw> to preserve the aspect ratio of images.
    */
-  redrawHtmlShape = () => {
+  redrawHtmlShape() {
     this.node.style.left = `${Math.round(this.bounds.x)}px`;
     this.node.style.top = `${Math.round(this.bounds.y)}px`;
     this.node.style.width = `${Math.max(0, Math.round(this.bounds.width))}px`;
@@ -241,7 +241,7 @@ class mxImageShape extends mxRectangleShape {
     } else {
       this.setTransparentBackgroundImage(this.node);
     }
-  };
+  }
 }
 
 export default mxImageShape;

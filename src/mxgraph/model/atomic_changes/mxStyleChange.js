@@ -22,12 +22,12 @@ class mxStyleChange {
    * Changes the style of <cell> to <previous> using
    * <mxGraphModel.styleForCellChanged>.
    */
-  execute = () => {
+  execute() {
     if (this.cell != null) {
       this.style = this.previous;
       this.previous = this.model.styleForCellChanged(this.cell, this.previous);
     }
-  };
+  }
 }
 
 export default mxStyleChange;

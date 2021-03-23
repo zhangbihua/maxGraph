@@ -46,7 +46,7 @@ class mxLine extends mxShape {
    *
    * Redirects to redrawPath for subclasses to work.
    */
-  paintVertexShape = (c, x, y, w, h) => {
+  paintVertexShape(c, x, y, w, h) {
     c.begin();
 
     if (this.vertical) {
@@ -60,7 +60,7 @@ class mxLine extends mxShape {
     }
 
     c.stroke();
-  };
+  }
 }
 
 export default mxLine;

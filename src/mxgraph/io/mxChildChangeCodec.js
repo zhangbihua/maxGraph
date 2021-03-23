@@ -43,20 +43,20 @@ class mxChildChangeCodec extends mxObjectCodec {
    * child as an attribute rather than a child node, in
    * which case it's always a reference.
    */
-  isReference = (obj, attr, value, isWrite) => {
+  isReference(obj, attr, value, isWrite) {
     if (attr === 'child' && (!isWrite || obj.model.contains(obj.previous))) {
       return true;
     }
 
     return mxUtils.indexOf(this.idrefs, attr) >= 0;
-  };
+  }
 
   /**
    * Function: isExcluded
    *
    * Excludes references to parent or previous if not in the model.
    */
-  isExcluded = (obj, attr, value, write) => {
+  isExcluded(obj, attr, value, write) {
     return (
       super.isExcluded(obj, attr, value, write) ||
       (write &&
@@ -64,7 +64,7 @@ class mxChildChangeCodec extends mxObjectCodec {
         (attr === 'previous' || attr === 'parent') &&
         !obj.model.contains(value))
     );
-  };
+  }
 
   /**
    * Function: afterEncode
@@ -72,7 +72,7 @@ class mxChildChangeCodec extends mxObjectCodec {
    * Encodes the child recusively and adds the result
    * to the given node.
    */
-  afterEncode = (enc, obj, node) => {
+  afterEncode(enc, obj, node) {
     if (this.isReference(obj, 'child', obj.child, true)) {
       // Encodes as reference (id)
       node.setAttribute('child', enc.getId(obj.child));
@@ -86,7 +86,7 @@ class mxChildChangeCodec extends mxObjectCodec {
     }
 
     return node;
-  };
+  }
 
   /**
    * Function: beforeDecode
@@ -94,7 +94,7 @@ class mxChildChangeCodec extends mxObjectCodec {
    * Decodes the any child nodes as using the respective
    * codec from the registry.
    */
-  beforeDecode = (dec, node, obj) => {
+  beforeDecode(dec, node, obj) {
     if (
       node.firstChild != null &&
       node.firstChild.nodeType === mxConstants.NODETYPE_ELEMENT
@@ -134,14 +134,14 @@ class mxChildChangeCodec extends mxObjectCodec {
     }
 
     return node;
-  };
+  }
 
   /**
    * Function: afterDecode
    *
    * Restores object state in the child change.
    */
-  afterDecode = (dec, node, obj) => {
+  afterDecode(dec, node, obj) {
     // Cells are decoded here after a complete transaction so the previous
     // parent must be restored on the cell for the case where the cell was
     // added. This is needed for the local model to identify the cell as a
@@ -161,7 +161,7 @@ class mxChildChangeCodec extends mxObjectCodec {
     }
 
     return obj;
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxChildChangeCodec());

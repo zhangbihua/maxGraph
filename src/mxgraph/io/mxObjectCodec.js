@@ -269,18 +269,18 @@ class mxObjectCodec {
    * if that is different than what this returns. The default implementation
    * returns the classname of the template class.
    */
-  getName = () => {
+  getName() {
     return mxUtils.getFunctionName(this.template.constructor);
-  };
+  }
 
   /**
    * Function: cloneTemplate
    *
    * Returns a new instance of the template for this codec.
    */
-  cloneTemplate = () => {
+  cloneTemplate() {
     return new this.template.constructor();
-  };
+  }
 
   /**
    * Function: getFieldName
@@ -290,7 +290,7 @@ class mxObjectCodec {
    * the input if there is no reverse mapping for the
    * given name.
    */
-  getFieldName = attributename => {
+  getFieldName(attributename) {
     if (attributename != null) {
       const mapped = this.reverse[attributename];
 
@@ -300,7 +300,7 @@ class mxObjectCodec {
     }
 
     return attributename;
-  };
+  }
 
   /**
    * Function: getAttributeName
@@ -310,7 +310,7 @@ class mxObjectCodec {
    * the input if there is no mapping for the
    * given name.
    */
-  getAttributeName = fieldname => {
+  getAttributeName(fieldname) {
     if (fieldname != null) {
       const mapped = this.mapping[fieldname];
 
@@ -320,7 +320,7 @@ class mxObjectCodec {
     }
 
     return fieldname;
-  };
+  }
 
   /**
    * Function: isExcluded
@@ -337,12 +337,12 @@ class mxObjectCodec {
    * write - Boolean indicating if the field is being encoded or decoded.
    * Write is true if the field is being encoded, else it is being decoded.
    */
-  isExcluded = (obj, attr, value, write) => {
+  isExcluded(obj, attr, value, write) {
     return (
       attr == mxObjectIdentity.FIELD_NAME ||
       mxUtils.indexOf(this.exclude, attr) >= 0
     );
-  };
+  }
 
   /**
    * Function: isReference
@@ -359,9 +359,9 @@ class mxObjectCodec {
    * write - Boolean indicating if the field is being encoded or decoded.
    * Write is true if the field is being encoded, else it is being decoded.
    */
-  isReference = (obj, attr, value, write) => {
+  isReference(obj, attr, value, write) {
     return mxUtils.indexOf(this.idrefs, attr) >= 0;
-  };
+  }
 
   /**
    * Function: encode
@@ -405,14 +405,14 @@ class mxObjectCodec {
    * enc - <mxCodec> that controls the encoding process.
    * obj - Object to be encoded.
    */
-  encode = (enc, obj) => {
+  encode(enc, obj) {
     const node = enc.document.createElement(this.getName());
 
     obj = this.beforeEncode(enc, obj, node);
     this.encodeObject(enc, obj, node);
 
     return this.afterEncode(enc, obj, node);
-  };
+  }
 
   /**
    * Function: encodeObject
@@ -426,7 +426,7 @@ class mxObjectCodec {
    * obj - Object to be encoded.
    * node - XML node that contains the encoded object.
    */
-  encodeObject = (enc, obj, node) => {
+  encodeObject(enc, obj, node) {
     enc.setAttribute(node, 'id', enc.getId(obj));
 
     for (const i in obj) {
@@ -441,7 +441,7 @@ class mxObjectCodec {
         this.encodeValue(enc, obj, name, value, node);
       }
     }
-  };
+  }
 
   /**
    * Function: encodeValue
@@ -458,7 +458,7 @@ class mxObjectCodec {
    * value - Value of the property to be encoded.
    * node - XML node that contains the encoded object.
    */
-  encodeValue = (enc, obj, name, value, node) => {
+  encodeValue(enc, obj, name, value, node) {
     if (value != null) {
       if (this.isReference(obj, name, value, true)) {
         const tmp = enc.getId(value);
@@ -482,7 +482,7 @@ class mxObjectCodec {
         this.writeAttribute(enc, obj, name, value, node);
       }
     }
-  };
+  }
 
   /**
    * Function: writeAttribute
@@ -490,20 +490,20 @@ class mxObjectCodec {
    * Writes the given value into node using <writePrimitiveAttribute>
    * or <writeComplexAttribute> depending on the type of the value.
    */
-  writeAttribute = (enc, obj, name, value, node) => {
+  writeAttribute(enc, obj, name, value, node) {
     if (typeof value !== 'object' /* primitive type */) {
       this.writePrimitiveAttribute(enc, obj, name, value, node);
     } /* complex type */ else {
       this.writeComplexAttribute(enc, obj, name, value, node);
     }
-  };
+  }
 
   /**
    * Function: writePrimitiveAttribute
    *
    * Writes the given value as an attribute of the given node.
    */
-  writePrimitiveAttribute = (enc, obj, name, value, node) => {
+  writePrimitiveAttribute(enc, obj, name, value, node) {
     value = this.convertAttributeToXml(enc, obj, name, value, node);
 
     if (name == null) {
@@ -519,14 +519,14 @@ class mxObjectCodec {
     } else if (typeof value !== 'function') {
       enc.setAttribute(node, name, value);
     }
-  };
+  }
 
   /**
    * Function: writeComplexAttribute
    *
    * Writes the given value as a child node of the given node.
    */
-  writeComplexAttribute = (enc, obj, name, value, node) => {
+  writeComplexAttribute(enc, obj, name, value, node) {
     const child = enc.encode(value);
 
     if (child != null) {
@@ -540,7 +540,7 @@ class mxObjectCodec {
         `mxObjectCodec.encode: No node for ${this.getName()}.${name}: ${value}`
       );
     }
-  };
+  }
 
   /**
    * Function: convertAttributeToXml
@@ -555,7 +555,7 @@ class mxObjectCodec {
    * name - Name of the attribute to be converted.
    * value - Value to be converted.
    */
-  convertAttributeToXml = (enc, obj, name, value) => {
+  convertAttributeToXml(enc, obj, name, value) {
     // Makes sure to encode boolean values as numeric values
     if (this.isBooleanAttribute(enc, obj, name, value)) {
       // Checks if the value is true (do not use the value as is, because
@@ -564,7 +564,7 @@ class mxObjectCodec {
     }
 
     return value;
-  };
+  }
 
   /**
    * Function: isBooleanAttribute
@@ -578,11 +578,11 @@ class mxObjectCodec {
    * name - Name of the attribute to be converted.
    * value - Value of the attribute to be converted.
    */
-  isBooleanAttribute = (enc, obj, name, value) => {
+  isBooleanAttribute(enc, obj, name, value) {
     return (
       typeof value.length === 'undefined' && (value == true || value == false)
     );
-  };
+  }
 
   /**
    * Function: convertAttributeFromXml
@@ -596,7 +596,7 @@ class mxObjectCodec {
    * attr - XML attribute to be converted.
    * obj - Objec to convert the attribute for.
    */
-  convertAttributeFromXml = (dec, attr, obj) => {
+  convertAttributeFromXml(dec, attr, obj) {
     let { value } = attr;
 
     if (this.isNumericAttribute(dec, attr, obj)) {
@@ -608,7 +608,7 @@ class mxObjectCodec {
     }
 
     return value;
-  };
+  }
 
   /**
    * Function: isNumericAttribute
@@ -621,7 +621,7 @@ class mxObjectCodec {
    * attr - XML attribute to be converted.
    * obj - Objec to convert the attribute for.
    */
-  isNumericAttribute = (dec, attr, obj) => {
+  isNumericAttribute(dec, attr, obj) {
     // Handles known numeric attributes for generic objects
     const result =
       (obj.constructor === mxGeometry &&
@@ -634,7 +634,7 @@ class mxObjectCodec {
       mxUtils.isNumeric(attr.value);
 
     return result;
-  };
+  }
 
   /**
    * Function: beforeEncode
@@ -650,9 +650,9 @@ class mxObjectCodec {
    * obj - Object to be encoded.
    * node - XML node to encode the object into.
    */
-  beforeEncode = (enc, obj, node) => {
+  beforeEncode(enc, obj, node) {
     return obj;
-  };
+  }
 
   /**
    * Function: afterEncode
@@ -669,9 +669,9 @@ class mxObjectCodec {
    * obj - Object to be encoded.
    * node - XML node that represents the default encoding.
    */
-  afterEncode = (enc, obj, node) => {
+  afterEncode(enc, obj, node) {
     return node;
-  };
+  }
 
   /**
    * Function: decode
@@ -727,7 +727,7 @@ class mxObjectCodec {
    * node - XML node to be decoded.
    * into - Optional objec to encode the node into.
    */
-  decode = (dec, node, into) => {
+  decode(dec, node, into) {
     const id = node.getAttribute('id');
     let obj = dec.objects[id];
 
@@ -743,7 +743,7 @@ class mxObjectCodec {
     this.decodeNode(dec, node, obj);
 
     return this.afterDecode(dec, node, obj);
-  };
+  }
 
   /**
    * Function: decodeNode
@@ -756,12 +756,12 @@ class mxObjectCodec {
    * node - XML node to be decoded.
    * obj - Objec to encode the node into.
    */
-  decodeNode = (dec, node, obj) => {
+  decodeNode(dec, node, obj) {
     if (node != null) {
       this.decodeAttributes(dec, node, obj);
       this.decodeChildren(dec, node, obj);
     }
-  };
+  }
 
   /**
    * Function: decodeAttributes
@@ -774,7 +774,7 @@ class mxObjectCodec {
    * node - XML node to be decoded.
    * obj - Objec to encode the node into.
    */
-  decodeAttributes = (dec, node, obj) => {
+  decodeAttributes(dec, node, obj) {
     const attrs = node.attributes;
 
     if (attrs != null) {
@@ -782,7 +782,7 @@ class mxObjectCodec {
         this.decodeAttribute(dec, attrs[i], obj);
       }
     }
-  };
+  }
 
   /**
    * Function: isIgnoredAttribute
@@ -796,9 +796,9 @@ class mxObjectCodec {
    * attr - XML attribute to be decoded.
    * obj - Objec to encode the attribute into.
    */
-  isIgnoredAttribute = (dec, attr, obj) => {
+  isIgnoredAttribute(dec, attr, obj) {
     return attr.nodeName === 'as' || attr.nodeName === 'id';
-  };
+  }
 
   /**
    * Function: decodeAttribute
@@ -811,7 +811,7 @@ class mxObjectCodec {
    * attr - XML attribute to be decoded.
    * obj - Objec to encode the attribute into.
    */
-  decodeAttribute = (dec, attr, obj) => {
+  decodeAttribute(dec, attr, obj) {
     if (!this.isIgnoredAttribute(dec, attr, obj)) {
       const name = attr.nodeName;
 
@@ -840,7 +840,7 @@ class mxObjectCodec {
         obj[name] = value;
       }
     }
-  };
+  }
 
   /**
    * Function: decodeChildren
@@ -853,7 +853,7 @@ class mxObjectCodec {
    * node - XML node to be decoded.
    * obj - Objec to encode the node into.
    */
-  decodeChildren = (dec, node, obj) => {
+  decodeChildren(dec, node, obj) {
     let child = node.firstChild;
 
     while (child != null) {
@@ -868,7 +868,7 @@ class mxObjectCodec {
 
       child = tmp;
     }
-  };
+  }
 
   /**
    * Function: decodeChild
@@ -881,7 +881,7 @@ class mxObjectCodec {
    * child - XML child element to be decoded.
    * obj - Objec to encode the node into.
    */
-  decodeChild = (dec, child, obj) => {
+  decodeChild(dec, child, obj) {
     const fieldname = this.getFieldName(child.getAttribute('as'));
 
     if (fieldname == null || !this.isExcluded(obj, fieldname, child, false)) {
@@ -904,7 +904,7 @@ class mxObjectCodec {
         throw new Error(`${e.message} for ${child.nodeName}`);
       }
     }
-  };
+  }
 
   /**
    * Function: getFieldTemplate
@@ -916,7 +916,7 @@ class mxObjectCodec {
    * required to override this to return the correct collection instance
    * based on the encoded child.
    */
-  getFieldTemplate = (obj, fieldname, child) => {
+  getFieldTemplate(obj, fieldname, child) {
     let template = obj[fieldname];
 
     // Non-empty arrays are replaced completely
@@ -925,7 +925,7 @@ class mxObjectCodec {
     }
 
     return template;
-  };
+  }
 
   /**
    * Function: addObjectValue
@@ -937,7 +937,7 @@ class mxObjectCodec {
    * collection. For strongly typed languages it may be required to
    * override this with the correct code to add an entry to an object.
    */
-  addObjectValue = (obj, fieldname, value, template) => {
+  addObjectValue(obj, fieldname, value, template) {
     if (value != null && value !== template) {
       if (fieldname != null && fieldname.length > 0) {
         obj[fieldname] = value;
@@ -946,7 +946,7 @@ class mxObjectCodec {
       }
       // mxLog.debug('Decoded '+mxUtils.getFunctionName(obj.constructor)+'.'+fieldname+': '+value);
     }
-  };
+  }
 
   /**
    * Function: processInclude
@@ -961,7 +961,7 @@ class mxObjectCodec {
    * node - XML node to be checked.
    * into - Optional object to pass-thru to the codec.
    */
-  processInclude = (dec, node, into) => {
+  processInclude(dec, node, into) {
     if (node.nodeName === 'include') {
       const name = node.getAttribute('name');
 
@@ -981,7 +981,7 @@ class mxObjectCodec {
     }
 
     return false;
-  };
+  }
 
   /**
    * Function: beforeDecode
@@ -1001,9 +1001,9 @@ class mxObjectCodec {
    * node - XML node to be decoded.
    * obj - Object to encode the node into.
    */
-  beforeDecode = (dec, node, obj) => {
+  beforeDecode(dec, node, obj) {
     return node;
-  };
+  }
 
   /**
    * Function: afterDecode
@@ -1019,9 +1019,9 @@ class mxObjectCodec {
    * node - XML node to be decoded.
    * obj - Object that represents the default decoding.
    */
-  afterDecode = (dec, node, obj) => {
+  afterDecode(dec, node, obj) {
     return obj;
-  };
+  }
 }
 
 export default mxObjectCodec;

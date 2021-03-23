@@ -3,8 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxGraphAbstractHierarchyCell from "./mxGraphAbstractHierarchyCell";
-import mxObjectIdentity from "../../../util/mxObjectIdentity";
+import mxGraphAbstractHierarchyCell from './mxGraphAbstractHierarchyCell';
+import mxObjectIdentity from '../../../util/mxObjectIdentity';
 
 class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
   /**
@@ -72,19 +72,19 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
    *
    * Inverts the direction of this internal edge(s)
    */
-  invert = layer => {
+  invert(layer) {
     const temp = this.source;
     this.source = this.target;
     this.target = temp;
     this.isReversed = !this.isReversed;
-  };
+  }
 
   /**
    * Function: getNextLayerConnectedCells
    *
    * Returns the cells this cell connects to on the next layer up
    */
-  getNextLayerConnectedCells = layer => {
+  getNextLayerConnectedCells(layer) {
     if (this.nextLayerConnectedCells == null) {
       this.nextLayerConnectedCells = [];
 
@@ -100,14 +100,14 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
     }
 
     return this.nextLayerConnectedCells[layer - this.minRank - 1];
-  };
+  }
 
   /**
    * Function: getPreviousLayerConnectedCells
    *
    * Returns the cells this cell connects to on the next layer down
    */
-  getPreviousLayerConnectedCells = layer => {
+  getPreviousLayerConnectedCells(layer) {
     if (this.previousLayerConnectedCells == null) {
       this.previousLayerConnectedCells = [];
 
@@ -123,47 +123,47 @@ class mxGraphHierarchyEdge extends mxGraphAbstractHierarchyCell {
     }
 
     return this.previousLayerConnectedCells[layer - this.minRank - 1];
-  };
+  }
 
   /**
    * Function: isEdge
    *
    * Returns true.
    */
-  isEdge = () => {
+  isEdge() {
     return true;
-  };
+  }
 
   /**
    * Function: getGeneralPurposeVariable
    *
    * Gets the value of temp for the specified layer
    */
-  getGeneralPurposeVariable = layer => {
+  getGeneralPurposeVariable(layer) {
     return this.temp[layer - this.minRank - 1];
-  };
+  }
 
   /**
    * Function: setGeneralPurposeVariable
    *
    * Set the value of temp for the specified layer
    */
-  setGeneralPurposeVariable = (layer, value) => {
+  setGeneralPurposeVariable(layer, value) {
     this.temp[layer - this.minRank - 1] = value;
-  };
+  }
 
   /**
    * Function: getCoreCell
    *
    * Gets the first core edge associated with this wrapper
    */
-  getCoreCell = () => {
+  getCoreCell() {
     if (this.edges != null && this.edges.length > 0) {
       return this.edges[0];
     }
 
     return null;
-  };
+  }
 }
 
 export default mxGraphHierarchyEdge;

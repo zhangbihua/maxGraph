@@ -115,9 +115,9 @@ class mxAutoSaveManager extends mxEventSource {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
-  isEnabled = () => {
+  isEnabled() {
     return this.enabled;
-  };
+  }
 
   /**
    * Function: setEnabled
@@ -129,16 +129,16 @@ class mxAutoSaveManager extends mxEventSource {
    *
    * enabled - Boolean that specifies the new enabled state.
    */
-  setEnabled = value => {
+  setEnabled(value) {
     this.enabled = value;
-  };
+  }
 
   /**
    * Function: setGraph
    *
    * Sets the graph that the layouts operate on.
    */
-  setGraph = graph => {
+  setGraph(graph) {
     if (this.graph != null) {
       this.graph.getModel().removeListener(this.changeHandler);
     }
@@ -148,23 +148,23 @@ class mxAutoSaveManager extends mxEventSource {
     if (this.graph != null) {
       this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
     }
-  };
+  }
 
   /**
    * Function: save
    *
    * Empty hook that is called if the graph should be saved.
    */
-  save = () => {
+  save() {
     // empty
-  };
+  }
 
   /**
    * Function: graphModelChanged
    *
    * Invoked when the graph model has changed.
    */
-  graphModelChanged = changes => {
+  graphModelChanged(changes) {
     const now = new Date().getTime();
     const dt = (now - this.lastSnapshot) / 1000;
 
@@ -179,26 +179,26 @@ class mxAutoSaveManager extends mxEventSource {
       // Increments the number of ignored changes
       this.ignoredChanges++;
     }
-  };
+  }
 
   /**
    * Function: reset
    *
    * Resets all counters.
    */
-  reset = () => {
+  reset() {
     this.lastSnapshot = new Date().getTime();
     this.ignoredChanges = 0;
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Removes all handlers from the <graph> and deletes the reference to it.
    */
-  destroy = () => {
+  destroy() {
     this.setGraph(null);
-  };
+  }
 }
 
 export default mxAutoSaveManager;

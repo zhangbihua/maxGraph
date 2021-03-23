@@ -91,7 +91,7 @@ class mxToolbar extends mxEventSource {
    * factoryMethod - Optional factory method for popup menu, eg.
    * (menu, evt, cell)=> { menu.addItem('Hello, World!'); }
    */
-  addItem = (title, icon, funct, pressedIcon, style, factoryMethod) => {
+  addItem(title, icon, funct, pressedIcon, style, factoryMethod) {
     const img = document.createElement(icon != null ? 'img' : 'button');
     const initialClassName =
       style || (factoryMethod != null ? 'mxToolbarMode' : 'mxToolbarItem');
@@ -180,7 +180,7 @@ class mxToolbar extends mxEventSource {
     mxEvent.addListener(img, 'mouseout', mouseHandler);
 
     return img;
-  };
+  }
 
   /**
    * Function: addCombo
@@ -192,7 +192,7 @@ class mxToolbar extends mxEventSource {
    *
    * style - Optional style classname. Default is mxToolbarCombo.
    */
-  addCombo = style => {
+  addCombo(style) {
     const div = document.createElement('div');
     div.style.display = 'inline';
     div.className = 'mxToolbarComboContainer';
@@ -204,7 +204,7 @@ class mxToolbar extends mxEventSource {
     this.container.appendChild(div);
 
     return select;
-  };
+  }
 
   /**
    * Function: addActionCombo
@@ -218,7 +218,7 @@ class mxToolbar extends mxEventSource {
    * title - String that specifies the title of the default element.
    * style - Optional style classname. Default is mxToolbarCombo.
    */
-  addActionCombo = (title, style) => {
+  addActionCombo(title, style) {
     const select = document.createElement('select');
     select.className = style || 'mxToolbarCombo';
     this.addOption(select, title, null);
@@ -235,7 +235,7 @@ class mxToolbar extends mxEventSource {
     this.container.appendChild(select);
 
     return select;
-  };
+  }
 
   /**
    * Function: addOption
@@ -250,7 +250,7 @@ class mxToolbar extends mxEventSource {
    * title - String that specifies the title of the option.
    * value - Specifies the value associated with this option.
    */
-  addOption = (combo, title, value) => {
+  addOption(combo, title, value) {
     const option = document.createElement('option');
     mxUtils.writeln(option, title);
 
@@ -263,7 +263,7 @@ class mxToolbar extends mxEventSource {
     combo.appendChild(option);
 
     return option;
-  };
+  }
 
   /**
    * Function: addSwitchMode
@@ -272,7 +272,7 @@ class mxToolbar extends mxEventSource {
    * be selected at a time. The currently selected item is the default item
    * after a reset of the toolbar.
    */
-  addSwitchMode = (title, icon, funct, pressedIcon, style) => {
+  addSwitchMode(title, icon, funct, pressedIcon, style) {
     const img = document.createElement('img');
     img.initialClassName = style || 'mxToolbarMode';
     img.className = img.initialClassName;
@@ -324,7 +324,7 @@ class mxToolbar extends mxEventSource {
     }
 
     return img;
-  };
+  }
 
   /**
    * Function: addMode
@@ -336,7 +336,7 @@ class mxToolbar extends mxEventSource {
    * The function argument uses the following signature: funct(evt, cell) where
    * evt is the native mouse event and cell is the cell under the mouse.
    */
-  addMode = (title, icon, funct, pressedIcon, style, toggle) => {
+  addMode(title, icon, funct, pressedIcon, style, toggle) {
     toggle = toggle != null ? toggle : true;
     const img = document.createElement(icon != null ? 'img' : 'button');
 
@@ -370,7 +370,7 @@ class mxToolbar extends mxEventSource {
     this.container.appendChild(img);
 
     return img;
-  };
+  }
 
   /**
    * Function: selectMode
@@ -379,7 +379,7 @@ class mxToolbar extends mxEventSource {
    * DOM node as selected. This function fires a select event with the given
    * function as a parameter.
    */
-  selectMode = (domNode, funct) => {
+  selectMode(domNode, funct) {
     if (this.selectedMode != domNode) {
       if (this.selectedMode != null) {
         const tmp = this.selectedMode.altIcon;
@@ -404,7 +404,7 @@ class mxToolbar extends mxEventSource {
 
       this.fireEvent(new mxEventObject(mxEvent.SELECT, 'function', funct));
     }
-  };
+  }
 
   /**
    * Function: resetMode
@@ -412,14 +412,14 @@ class mxToolbar extends mxEventSource {
    * Selects the default mode and resets the state of the previously selected
    * mode.
    */
-  resetMode = forced => {
+  resetMode(forced) {
     if ((forced || !this.noReset) && this.selectedMode != this.defaultMode) {
       // The last selected switch mode will be activated
       // so the function was already executed and is
       // no longer required here
       this.selectMode(this.defaultMode, this.defaultFunction);
     }
-  };
+  }
 
   /**
    * Function: addSeparator
@@ -430,39 +430,39 @@ class mxToolbar extends mxEventSource {
    *
    * icon - URL of the separator icon.
    */
-  addSeparator = icon => {
+  addSeparator(icon) {
     return this.addItem(null, icon, null);
-  };
+  }
 
   /**
    * Function: addBreak
    *
    * Adds a break to the container.
    */
-  addBreak = () => {
+  addBreak() {
     mxUtils.br(this.container);
-  };
+  }
 
   /**
    * Function: addLine
    *
    * Adds a horizontal line to the container.
    */
-  addLine = () => {
+  addLine() {
     const hr = document.createElement('hr');
 
     hr.style.marginRight = '6px';
     hr.setAttribute('size', '1');
 
     this.container.appendChild(hr);
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Removes the toolbar and all its associated resources.
    */
-  destroy = () => {
+  destroy() {
     mxEvent.release(this.container);
     this.container = null;
     this.defaultMode = null;
@@ -472,7 +472,7 @@ class mxToolbar extends mxEventSource {
     if (this.menu != null) {
       this.menu.destroy();
     }
-  };
+  }
 }
 
 export default mxToolbar;

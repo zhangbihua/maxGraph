@@ -9,7 +9,7 @@ import mxRectangle from '../util/mxRectangle';
 import mxEvent from '../util/mxEvent';
 import mxClient from '../mxClient';
 import mxConstants from '../util/mxConstants';
-import mxText from "../shape/mxText";
+import mxText from '../shape/mxText';
 
 class mxCellEditor {
   /**
@@ -274,7 +274,7 @@ class mxCellEditor {
    * Creates the <textarea> and installs the event listeners. The key handler
    * updates the <modified> state.
    */
-  init = () => {
+  init() {
     this.textarea = document.createElement('div');
     this.textarea.className = 'mxCellEditor mxPlainTextEditor';
     this.textarea.contentEditable = true;
@@ -288,53 +288,53 @@ class mxCellEditor {
       ? 'absolute'
       : 'relative';
     this.installListeners(this.textarea);
-  };
+  }
 
   /**
    * Function: applyValue
    *
    * Called in <stopEditing> if cancel is false to invoke <mxGraph.labelChanged>.
    */
-  applyValue = (state, value) => {
+  applyValue(state, value) {
     this.graph.labelChanged(state.cell, value, this.trigger);
-  };
+  }
 
   /**
    * Function: setAlign
    *
    * Sets the temporary horizontal alignment for the current editing session.
    */
-  setAlign = align => {
+  setAlign(align) {
     if (this.textarea != null) {
       this.textarea.style.textAlign = align;
     }
 
     this.align = align;
     this.resize();
-  };
+  }
 
   /**
    * Function: getInitialValue
    *
    * Gets the initial editing value for the given cell.
    */
-  getInitialValue = (state, trigger) => {
+  getInitialValue(state, trigger) {
     let result = mxUtils.htmlEntities(
       this.graph.getEditingValue(state.cell, trigger),
       false
     );
     result = mxUtils.replaceTrailingNewlines(result, '<div><br></div>');
     return result.replace(/\n/g, '<br>');
-  };
+  }
 
   /**
    * Function: getCurrentValue
    *
    * Returns the current editing value.
    */
-  getCurrentValue = state => {
+  getCurrentValue(state) {
     return mxUtils.extractTextWithWhitespace(this.textarea.childNodes);
-  };
+  }
 
   /**
    * Function: isCancelEditingKeyEvent
@@ -342,21 +342,21 @@ class mxCellEditor {
    * Returns true if <escapeCancelsEditing> is true and shift, control and meta
    * are not pressed.
    */
-  isCancelEditingKeyEvent = evt => {
+  isCancelEditingKeyEvent(evt) {
     return (
       this.escapeCancelsEditing ||
       mxEvent.isShiftDown(evt) ||
       mxEvent.isControlDown(evt) ||
       mxEvent.isMetaDown(evt)
     );
-  };
+  }
 
   /**
    * Function: installListeners
    *
    * Installs listeners for focus, change and standard key event handling.
    */
-  installListeners = elt => {
+  installListeners(elt) {
     // Applies value if text is dragged
     // LATER: Gesture mouse events ignored for starting move
     mxEvent.addListener(
@@ -469,7 +469,7 @@ class mxCellEditor {
     mxEvent.addListener(window, 'resize', resizeHandler);
     mxEvent.addListener(elt, 'cut', resizeHandler);
     mxEvent.addListener(elt, 'paste', resizeHandler);
-  };
+  }
 
   /**
    * Function: isStopEditingEvent
@@ -478,7 +478,7 @@ class mxCellEditor {
    * returns true if F2 is pressed of if <mxGraph.enterStopsCellEditing> is true
    * and enter is pressed without control or shift.
    */
-  isStopEditingEvent = evt => {
+  isStopEditingEvent(evt) {
     return (
       evt.keyCode === 113 /* F2 */ ||
       (this.graph.isEnterStopsCellEditing() &&
@@ -486,23 +486,23 @@ class mxCellEditor {
         !mxEvent.isControlDown(evt) &&
         !mxEvent.isShiftDown(evt))
     );
-  };
+  }
 
   /**
    * Function: isEventSource
    *
    * Returns true if this editor is the source for the given native event.
    */
-  isEventSource = evt => {
+  isEventSource(evt) {
     return mxEvent.getSource(evt) === this.textarea;
-  };
+  }
 
   /**
    * Function: resize
    *
    * Returns <modified>.
    */
-  resize = () => {
+  resize() {
     const state = this.graph.getView().getState(this.editingCell);
 
     if (state == null) {
@@ -746,16 +746,16 @@ class mxCellEditor {
         }`
       );
     }
-  };
+  }
 
   /**
    * Function: focusLost
    *
    * Called if the textarea has lost focus.
    */
-  focusLost = () => {
+  focusLost() {
     this.stopEditing(!this.graph.isInvokesStopCellEditing());
-  };
+  }
 
   /**
    * Function: getBackgroundColor
@@ -763,9 +763,9 @@ class mxCellEditor {
    * Returns the background color for the in-place editor. This implementation
    * always returns null.
    */
-  getBackgroundColor = state => {
+  getBackgroundColor(state) {
     return null;
-  };
+  }
 
   /**
    * Function: isLegacyEditor
@@ -777,7 +777,7 @@ class mxCellEditor {
    * implementation returns true for IE8- and quirks mode or if the CSS position
    * of the SVG element is not absolute.
    */
-  isLegacyEditor = () => {
+  isLegacyEditor() {
     let absoluteRoot = false;
 
     if (mxClient.IS_SVG) {
@@ -793,7 +793,7 @@ class mxCellEditor {
     }
 
     return !absoluteRoot;
-  };
+  }
 
   /**
    * Function: startEditing
@@ -805,7 +805,7 @@ class mxCellEditor {
    * cell - <mxCell> to start editing.
    * trigger - Optional mouse event that triggered the editor.
    */
-  startEditing = (cell, trigger) => {
+  startEditing(cell, trigger) {
     this.stopEditing(true);
     this.align = null;
 
@@ -971,23 +971,23 @@ class mxCellEditor {
         // ignore
       }
     }
-  };
+  }
 
   /**
    * Function: isSelectText
    *
    * Returns <selectText>.
    */
-  isSelectText = () => {
+  isSelectText() {
     return this.selectText;
-  };
+  }
 
   /**
    * Function: clearSelection
    *
    * Clears the selection.
    */
-  clearSelection = () => {
+  clearSelection() {
     let selection = null;
 
     if (window.getSelection) {
@@ -1003,14 +1003,14 @@ class mxCellEditor {
         selection.removeAllRanges();
       }
     }
-  };
+  }
 
   /**
    * Function: stopEditing
    *
    * Stops the editor and applies the value if cancel is false.
    */
-  stopEditing = cancel => {
+  stopEditing(cancel) {
     cancel = cancel || false;
 
     if (this.editingCell != null) {
@@ -1069,7 +1069,7 @@ class mxCellEditor {
       this.textarea = null;
       this.align = null;
     }
-  };
+  }
 
   /**
    * Function: prepareTextarea
@@ -1077,14 +1077,14 @@ class mxCellEditor {
    * Prepares the textarea for getting its value in <stopEditing>.
    * This implementation removes the extra trailing linefeed in Firefox.
    */
-  prepareTextarea = () => {
+  prepareTextarea() {
     if (
       this.textarea.lastChild != null &&
       this.textarea.lastChild.nodeName === 'BR'
     ) {
       this.textarea.removeChild(this.textarea.lastChild);
     }
-  };
+  }
 
   /**
    * Function: isHideLabel
@@ -1092,16 +1092,16 @@ class mxCellEditor {
    * Returns true if the label should be hidden while the cell is being
    * edited.
    */
-  isHideLabel = state => {
+  isHideLabel(state) {
     return true;
-  };
+  }
 
   /**
    * Function: getMinimumSize
    *
    * Returns the minimum width and height for editing the given state.
    */
-  getMinimumSize = state => {
+  getMinimumSize(state) {
     const { scale } = this.graph.getView();
 
     return new mxRectangle(
@@ -1110,14 +1110,14 @@ class mxCellEditor {
       state.text == null ? 30 : state.text.size * scale + 20,
       this.textarea.style.textAlign === 'left' ? 120 : 40
     );
-  };
+  }
 
   /**
    * Function: getEditorBounds
    *
    * Returns the <mxRectangle> that defines the bounds of the editor.
    */
-  getEditorBounds = state => {
+  getEditorBounds(state) {
     const isEdge = this.graph.getModel().isEdge(state.cell);
     const { scale } = this.graph.getView();
     const minSize = this.getMinimumSize(state);
@@ -1250,7 +1250,7 @@ class mxCellEditor {
       Math.round(result.width),
       Math.round(result.height)
     );
-  };
+  }
 
   /**
    * Function: getEmptyLabelText
@@ -1264,9 +1264,9 @@ class mxCellEditor {
    * cell - <mxCell> for which a text for an empty editing box should be
    * returned.
    */
-  getEmptyLabelText = cell => {
+  getEmptyLabelText(cell) {
     return this.emptyLabelText;
-  };
+  }
 
   /**
    * Function: getEditingCell
@@ -1274,16 +1274,16 @@ class mxCellEditor {
    * Returns the cell that is currently being edited or null if no cell is
    * being edited.
    */
-  getEditingCell = () => {
+  getEditingCell() {
     return this.editingCell;
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys the editor and removes all associated resources.
    */
-  destroy = () => {
+  destroy() {
     if (this.textarea != null) {
       mxEvent.release(this.textarea);
 
@@ -1303,7 +1303,7 @@ class mxCellEditor {
       this.graph.view.removeListener(this.zoomHandler);
       this.zoomHandler = null;
     }
-  };
+  }
 }
 
 export default mxCellEditor;

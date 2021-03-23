@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxConstants from "./mxConstants";
+import mxConstants from './mxConstants';
 
 /**
  * Class: mxGuide
@@ -81,9 +81,9 @@ class mxGuide {
    *
    * Sets the <mxCellStates> that should be used for alignment.
    */
-  setStates = states => {
+  setStates(states) {
     this.states = states;
-  };
+  }
 
   /**
    * Function: isEnabledForEvent
@@ -91,20 +91,20 @@ class mxGuide {
    * Returns true if the guide should be enabled for the given native event. This
    * implementation always returns true.
    */
-  isEnabledForEvent = evt => {
+  isEnabledForEvent(evt) {
     return true;
-  };
+  }
 
   /**
    * Function: getGuideTolerance
    *
    * Returns the tolerance for the guides. Default value is gridSize / 2.
    */
-  getGuideTolerance = gridEnabled => {
+  getGuideTolerance(gridEnabled) {
     return gridEnabled && this.graph.gridEnabled
       ? this.graph.gridSize / 2
       : this.tolerance;
-  };
+  }
 
   /**
    * Function: createGuideShape
@@ -117,7 +117,7 @@ class mxGuide {
    *
    * horizontal - Boolean that specifies which guide should be created.
    */
-  createGuideShape = horizontal => {
+  createGuideShape(horizontal) {
     const guide = new mxPolyline(
       [],
       mxConstants.GUIDE_COLOR,
@@ -126,23 +126,23 @@ class mxGuide {
     guide.isDashed = true;
 
     return guide;
-  };
+  }
 
   /**
    * Function: isStateIgnored
    *
    * Returns true if the given state should be ignored.
    */
-  isStateIgnored = state => {
+  isStateIgnored(state) {
     return false;
-  };
+  }
 
   /**
    * Function: move
    *
    * Moves the <bounds> by the given <mxPoint> and returnt the snapped point.
    */
-  move = (bounds, delta, gridEnabled, clone) => {
+  move(bounds, delta, gridEnabled, clone) {
     if (
       this.states != null &&
       (this.horizontal || this.vertical) &&
@@ -348,14 +348,14 @@ class mxGuide {
     }
 
     return delta;
-  };
+  }
 
   /**
    * Function: getDelta
    *
    * Rounds to pixels for virtual states (eg. page guides)
    */
-  getDelta = (bounds, stateX, dx, stateY, dy) => {
+  getDelta(bounds, stateX, dx, stateY, dy) {
     const s = this.graph.view.scale;
 
     if (this.rounded || (stateX != null && stateX.cell == null)) {
@@ -367,32 +367,32 @@ class mxGuide {
     }
 
     return new mxPoint(dx, dy);
-  };
+  }
 
   /**
    * Function: getGuideColor
    *
    * Returns the color for the given state.
    */
-  getGuideColor = (state, horizontal) => {
+  getGuideColor(state, horizontal) {
     return mxConstants.GUIDE_COLOR;
-  };
+  }
 
   /**
    * Function: hide
    *
    * Hides all current guides.
    */
-  hide = () => {
+  hide() {
     this.setVisible(false);
-  };
+  }
 
   /**
    * Function: setVisible
    *
    * Shows or hides the current guides.
    */
-  setVisible = visible => {
+  setVisible(visible) {
     if (this.guideX != null) {
       this.guideX.node.style.visibility = visible ? 'visible' : 'hidden';
     }
@@ -400,14 +400,14 @@ class mxGuide {
     if (this.guideY != null) {
       this.guideY.node.style.visibility = visible ? 'visible' : 'hidden';
     }
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys all resources that this object uses.
    */
-  destroy = () => {
+  destroy() {
     if (this.guideX != null) {
       this.guideX.destroy();
       this.guideX = null;
@@ -417,7 +417,7 @@ class mxGuide {
       this.guideY.destroy();
       this.guideY = null;
     }
-  };
+  }
 }
 
 export default mxGuide;

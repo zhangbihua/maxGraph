@@ -91,7 +91,7 @@ class mxEditorCodec extends mxObjectCodec {
    * </ui>
    * (end)
    */
-  afterDecode = (dec, node, obj) => {
+  afterDecode(dec, node, obj) {
     // Assigns the specified templates for edges
     const defaultEdge = node.getAttribute('defaultEdge');
 
@@ -109,14 +109,14 @@ class mxEditorCodec extends mxObjectCodec {
     }
 
     return obj;
-  };
+  }
 
   /**
    * Function: decodeChild
    *
    * Overrides decode child to handle special child nodes.
    */
-  decodeChild = (dec, child, obj) => {
+  decodeChild(dec, child, obj) {
     if (child.nodeName === 'Array') {
       const role = child.getAttribute('as');
 
@@ -130,14 +130,14 @@ class mxEditorCodec extends mxObjectCodec {
     }
 
     super.decodeChild.apply(this, [dec, child, obj]);
-  };
+  }
 
   /**
    * Function: decodeUi
    *
    * Decodes the ui elements from the given node.
    */
-  decodeUi = (dec, node, editor) => {
+  decodeUi(dec, node, editor) {
     let tmp = node.firstChild;
     while (tmp != null) {
       if (tmp.nodeName === 'add') {
@@ -195,14 +195,14 @@ class mxEditorCodec extends mxObjectCodec {
 
       tmp = tmp.nextSibling;
     }
-  };
+  }
 
   /**
    * Function: decodeTemplates
    *
    * Decodes the cells from the given node as templates.
    */
-  decodeTemplates = (dec, node, editor) => {
+  decodeTemplates(dec, node, editor) {
     if (editor.templates == null) {
       editor.templates = [];
     }
@@ -225,7 +225,7 @@ class mxEditorCodec extends mxObjectCodec {
         editor.templates[name] = dec.decodeCell(child);
       }
     }
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxEditorCodec());

@@ -49,7 +49,7 @@ class mxImageExport {
    *
    * Draws the given state and all its descendants to the given canvas.
    */
-  drawState = (state, canvas) => {
+  drawState(state, canvas) {
     if (state != null) {
       this.visitStatesRecursive(state, canvas, () => {
         this.drawCellState(state, canvas);
@@ -62,14 +62,14 @@ class mxImageExport {
         });
       }
     }
-  };
+  }
 
   /**
    * Function: visitStatesRecursive
    *
    * Visits the given state and all its descendants to the given canvas recursively.
    */
-  visitStatesRecursive = (state, canvas, visitor) => {
+  visitStatesRecursive(state, canvas, visitor) {
     if (state != null) {
       visitor(state, canvas);
 
@@ -83,23 +83,23 @@ class mxImageExport {
         this.visitStatesRecursive(childState, canvas, visitor);
       }
     }
-  };
+  }
 
   /**
    * Function: getLinkForCellState
    *
    * Returns the link for the given cell state and canvas. This returns null.
    */
-  getLinkForCellState = (state, canvas) => {
+  getLinkForCellState(state, canvas) {
     return null;
-  };
+  }
 
   /**
    * Function: drawCellState
    *
    * Draws the given state to the given canvas.
    */
-  drawCellState = (state, canvas) => {
+  drawCellState(state, canvas) {
     // Experimental feature
     const link = this.getLinkForCellState(state, canvas);
 
@@ -114,14 +114,14 @@ class mxImageExport {
     if (link != null) {
       canvas.setLink(null);
     }
-  };
+  }
 
   /**
    * Function: drawShape
    *
    * Draws the shape of the given state.
    */
-  drawShape = (state, canvas) => {
+  drawShape(state, canvas) {
     if (state.shape instanceof mxShape && state.shape.checkBounds()) {
       canvas.save();
 
@@ -131,14 +131,14 @@ class mxImageExport {
 
       canvas.restore();
     }
-  };
+  }
 
   /**
    * Function: drawText
    *
    * Draws the text of the given state.
    */
-  drawText = (state, canvas) => {
+  drawText(state, canvas) {
     if (state.text != null && state.text.checkBounds()) {
       canvas.save();
 
@@ -148,7 +148,7 @@ class mxImageExport {
 
       canvas.restore();
     }
-  };
+  }
 
   /**
    * Function: drawOverlays
@@ -156,7 +156,7 @@ class mxImageExport {
    * Draws the overlays for the given state. This is called if <includeOverlays>
    * is true.
    */
-  drawOverlays = (state, canvas) => {
+  drawOverlays(state, canvas) {
     if (state.overlays != null) {
       state.overlays.visit((id, shape) => {
         if (shape instanceof mxShape) {
@@ -164,7 +164,7 @@ class mxImageExport {
         }
       });
     }
-  };
+  }
 }
 
 export default mxImageExport;

@@ -54,16 +54,16 @@ class mxSwimlane extends mxShape {
    *
    * Adds roundable support.
    */
-  isRoundable = (c, x, y, w, h) => {
+  isRoundable(c, x, y, w, h) {
     return true;
-  };
+  }
 
   /**
    * Function: getTitleSize
    *
    * Returns the title size.
    */
-  getTitleSize = () => {
+  getTitleSize() {
     return Math.max(
       0,
       mxUtils.getValue(
@@ -72,14 +72,14 @@ class mxSwimlane extends mxShape {
         mxConstants.DEFAULT_STARTSIZE
       )
     );
-  };
+  }
 
   /**
    * Function: getLabelBounds
    *
    * Returns the bounding box for the label.
    */
-  getLabelBounds = rect => {
+  getLabelBounds(rect) {
     const start = this.getTitleSize();
     const bounds = new mxRectangle(rect.x, rect.y, rect.width, rect.height);
     const horizontal = this.isHorizontal();
@@ -124,14 +124,14 @@ class mxSwimlane extends mxShape {
     }
 
     return bounds;
-  };
+  }
 
   /**
    * Function: getGradientBounds
    *
    * Returns the bounding box for the gradient box for this shape.
    */
-  getGradientBounds = (c, x, y, w, h) => {
+  getGradientBounds(c, x, y, w, h) {
     let start = this.getTitleSize();
 
     if (this.isHorizontal()) {
@@ -140,14 +140,14 @@ class mxSwimlane extends mxShape {
     }
     start = Math.min(start, w);
     return new mxRectangle(x, y, start, h);
-  };
+  }
 
   /**
    * Function: getSwimlaneArcSize
    *
    * Returns the arcsize for the swimlane.
    */
-  getSwimlaneArcSize = (w, h, start) => {
+  getSwimlaneArcSize(w, h, start) {
     if (
       mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1'
     ) {
@@ -171,23 +171,23 @@ class mxSwimlane extends mxShape {
       ) / 100;
 
     return start * f * 3;
-  };
+  }
 
   /**
    * Function: isHorizontal
    *
    * Paints the swimlane vertex shape.
    */
-  isHorizontal = () => {
+  isHorizontal() {
     return mxUtils.getValue(this.style, mxConstants.STYLE_HORIZONTAL, 1) == 1;
-  };
+  }
 
   /**
    * Function: paintVertexShape
    *
    * Paints the swimlane vertex shape.
    */
-  paintVertexShape = (c, x, y, w, h) => {
+  paintVertexShape(c, x, y, w, h) {
     let start = this.getTitleSize();
     const fill = mxUtils.getValue(
       this.style,
@@ -239,14 +239,14 @@ class mxSwimlane extends mxShape {
       c.setShadow(false);
       this.paintGlassEffect(c, 0, 0, w, start, r);
     }
-  };
+  }
 
   /**
    * Function: paintSwimlane
    *
    * Paints the swimlane vertex shape.
    */
-  paintSwimlane = (c, x, y, w, h, start, fill, swimlaneLine) => {
+  paintSwimlane(c, x, y, w, h, start, fill, swimlaneLine) {
     c.begin();
 
     let events = true;
@@ -322,14 +322,14 @@ class mxSwimlane extends mxShape {
     if (swimlaneLine) {
       this.paintDivider(c, x, y, w, h, start, fill == mxConstants.NONE);
     }
-  };
+  }
 
   /**
    * Function: paintRoundedSwimlane
    *
    * Paints the swimlane vertex shape.
    */
-  paintRoundedSwimlane = (c, x, y, w, h, start, r, fill, swimlaneLine) => {
+  paintRoundedSwimlane(c, x, y, w, h, start, r, fill, swimlaneLine) {
     c.begin();
 
     let events = true;
@@ -413,14 +413,14 @@ class mxSwimlane extends mxShape {
     if (swimlaneLine) {
       this.paintDivider(c, x, y, w, h, start, fill == mxConstants.NONE);
     }
-  };
+  }
 
   /**
    * Function: paintDivider
    *
    * Paints the divider between swimlane title and content area.
    */
-  paintDivider = (c, x, y, w, h, start, shadow) => {
+  paintDivider(c, x, y, w, h, start, shadow) {
     if (!shadow) {
       c.setShadow(false);
     }
@@ -436,14 +436,14 @@ class mxSwimlane extends mxShape {
     }
 
     c.stroke();
-  };
+  }
 
   /**
    * Function: paintSeparator
    *
    * Paints the vertical or horizontal separator line between swimlanes.
    */
-  paintSeparator = (c, x, y, w, h, start, color) => {
+  paintSeparator(c, x, y, w, h, start, color) {
     if (color != mxConstants.NONE) {
       c.setStrokeColor(color);
       c.setDashed(true);
@@ -460,14 +460,14 @@ class mxSwimlane extends mxShape {
       c.stroke();
       c.setDashed(false);
     }
-  };
+  }
 
   /**
    * Function: getImageBounds
    *
    * Paints the swimlane vertex shape.
    */
-  getImageBounds = (x, y, w, h) => {
+  getImageBounds(x, y, w, h) {
     if (this.isHorizontal()) {
       return new mxRectangle(
         x + w - this.imageSize,
@@ -477,7 +477,7 @@ class mxSwimlane extends mxShape {
       );
     }
     return new mxRectangle(x, y, this.imageSize, this.imageSize);
-  };
+  }
 }
 
 export default mxSwimlane;

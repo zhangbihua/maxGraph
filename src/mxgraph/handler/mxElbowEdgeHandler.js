@@ -4,14 +4,14 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxEdgeHandler from './mxEdgeHandler';
-import mxConstants from "../util/mxConstants";
-import mxEvent from "../util/mxEvent";
-import mxPoint from "../util/mxPoint";
-import mxEdgeStyle from "../view/mxEdgeStyle";
-import mxResources from "../util/mxResources";
-import mxRectangle from "../util/mxRectangle";
-import mxUtils from "../util/mxUtils";
-import mxClient from "../mxClient";
+import mxConstants from '../util/mxConstants';
+import mxEvent from '../util/mxEvent';
+import mxPoint from '../util/mxPoint';
+import mxEdgeStyle from '../view/mxEdgeStyle';
+import mxResources from '../util/mxResources';
+import mxRectangle from '../util/mxRectangle';
+import mxUtils from '../util/mxUtils';
+import mxClient from '../mxClient';
 
 class mxElbowEdgeHandler extends mxEdgeHandler {
   /**
@@ -56,7 +56,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    *
    * Overrides <mxEdgeHandler.createBends> to create custom bends.
    */
-  createBends = () => {
+  createBends() {
     const bends = [];
 
     // Source
@@ -84,7 +84,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
     bends.push(bend);
 
     return bends;
-  };
+  }
 
   /**
    * Function: createVirtualBend
@@ -92,7 +92,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * Creates a virtual bend that supports double clicking and calls
    * <mxGraph.flipEdge>.
    */
-  createVirtualBend = dblClickHandler => {
+  createVirtualBend(dblClickHandler) {
     const bend = this.createHandleShape();
     this.initBend(bend, dblClickHandler);
 
@@ -103,14 +103,14 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
     }
 
     return bend;
-  };
+  }
 
   /**
    * Function: getCursorForBend
    *
    * Returns the cursor to be used for the bend.
    */
-  getCursorForBend = () => {
+  getCursorForBend() {
     return this.state.style[mxConstants.STYLE_EDGE] ===
       mxEdgeStyle.TopToBottom ||
       this.state.style[mxConstants.STYLE_EDGE] ===
@@ -123,14 +123,14 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
           mxConstants.ELBOW_VERTICAL)
       ? 'row-resize'
       : 'col-resize';
-  };
+  }
 
   /**
    * Function: getTooltipForNode
    *
    * Returns the tooltip for the given node.
    */
-  getTooltipForNode = node => {
+  getTooltipForNode(node) {
     let tip = null;
 
     if (
@@ -143,7 +143,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
     }
 
     return tip;
-  };
+  }
 
   /**
    * Function: convertPoint
@@ -156,7 +156,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * point - <mxPoint> to be converted.
    * gridEnabled - Boolean that specifies if the grid should be applied.
    */
-  convertPoint = (point, gridEnabled) => {
+  convertPoint(point, gridEnabled) {
     const scale = this.graph.getView().getScale();
     const tr = this.graph.getView().getTranslate();
     const { origin } = this.state;
@@ -170,7 +170,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
     point.y = Math.round(point.y / scale - tr.y - origin.y);
 
     return point;
-  };
+  }
 
   /**
    * Function: redrawInnerBends
@@ -182,7 +182,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * p0 - <mxPoint> that represents the location of the first point.
    * pe - <mxPoint> that represents the location of the last point.
    */
-  redrawInnerBends = (p0, pe) => {
+  redrawInnerBends(p0, pe) {
     const g = this.graph.getModel().getGeometry(this.state.cell);
     const pts = this.state.absolutePoints;
     let pt = null;
@@ -241,7 +241,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
     if (this.manageLabelHandle) {
       this.checkLabelHandle(this.bends[1].bounds);
     }
-  };
+  }
 }
 
 export default mxElbowEdgeHandler;

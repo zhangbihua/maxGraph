@@ -76,7 +76,7 @@ class mxStylesheet {
    *
    * Creates and returns the default vertex style.
    */
-  createDefaultVertexStyle = () => {
+  createDefaultVertexStyle() {
     const style = {};
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
     style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
@@ -86,14 +86,14 @@ class mxStylesheet {
     style[mxConstants.STYLE_STROKECOLOR] = '#6482B9';
     style[mxConstants.STYLE_FONTCOLOR] = '#774400';
     return style;
-  };
+  }
 
   /**
    * Function: createDefaultEdgeStyle
    *
    * Creates and returns the default edge style.
    */
-  createDefaultEdgeStyle = () => {
+  createDefaultEdgeStyle() {
     const style = {};
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
     style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
@@ -102,7 +102,7 @@ class mxStylesheet {
     style[mxConstants.STYLE_STROKECOLOR] = '#6482B9';
     style[mxConstants.STYLE_FONTCOLOR] = '#446299';
     return style;
-  };
+  }
 
   /**
    * Function: putDefaultVertexStyle
@@ -113,36 +113,36 @@ class mxStylesheet {
    * Parameters:
    * style - Key, value pairs that define the style.
    */
-  putDefaultVertexStyle = style => {
+  putDefaultVertexStyle(style) {
     this.putCellStyle('defaultVertex', style);
-  };
+  }
 
   /**
    * Function: putDefaultEdgeStyle
    *
    * Sets the default style for edges using defaultEdge as the stylename.
    */
-  putDefaultEdgeStyle = style => {
+  putDefaultEdgeStyle(style) {
     this.putCellStyle('defaultEdge', style);
-  };
+  }
 
   /**
    * Function: getDefaultVertexStyle
    *
    * Returns the default style for vertices.
    */
-  getDefaultVertexStyle = () => {
+  getDefaultVertexStyle() {
     return this.styles.defaultVertex;
-  };
+  }
 
   /**
    * Function: getDefaultEdgeStyle
    *
    * Sets the default style for edges.
    */
-  getDefaultEdgeStyle = () => {
+  getDefaultEdgeStyle() {
     return this.styles.defaultEdge;
-  };
+  }
 
   /**
    * Function: putCellStyle
@@ -181,9 +181,9 @@ class mxStylesheet {
    * name - Name for the style to be stored.
    * style - Key, value pairs that define the style.
    */
-  putCellStyle = (name, style) => {
+  putCellStyle(name, style) {
     this.styles[name] = style;
-  };
+  }
 
   /**
    * Function: getCellStyle
@@ -197,7 +197,7 @@ class mxStylesheet {
    * style.
    * defaultStyle - Default style to be returned if no style can be found.
    */
-  getCellStyle = (name, defaultStyle) => {
+  getCellStyle(name, defaultStyle) {
     let style = defaultStyle;
 
     if (name != null && name.length > 0) {
@@ -238,7 +238,7 @@ class mxStylesheet {
       }
     }
     return style;
-  };
+  }
 }
 
 export default mxStylesheet;

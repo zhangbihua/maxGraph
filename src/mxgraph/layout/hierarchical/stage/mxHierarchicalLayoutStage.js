@@ -25,7 +25,7 @@ class mxHierarchicalLayoutStage {
    * and creates the resulting laid out graph within that facade for further
    * use.
    */
-  execute = parent => {};
+  execute(parent) {}
 }
 
 export default mxHierarchicalLayoutStage;

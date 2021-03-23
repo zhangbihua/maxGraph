@@ -22,7 +22,7 @@ class mxCollapseChange {
    * Changes the collapsed state of <cell> to <previous> using
    * <mxGraphModel.collapsedStateForCellChanged>.
    */
-  execute = () => {
+  execute() {
     if (this.cell != null) {
       this.collapsed = this.previous;
       this.previous = this.model.collapsedStateForCellChanged(
@@ -30,7 +30,7 @@ class mxCollapseChange {
         this.previous
       );
     }
-  };
+  }
 }
 
 export default mxCollapseChange;

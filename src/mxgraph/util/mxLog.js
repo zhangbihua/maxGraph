@@ -4,10 +4,10 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxClient from "../mxClient";
-import mxEvent from "./mxEvent";
-import mxUtils from "./mxUtils";
-import mxWindow from "./mxWindow";
+import mxClient from '../mxClient';
+import mxEvent from './mxEvent';
+import mxUtils from './mxUtils';
+import mxWindow from './mxWindow';
 
 const mxLog = {
   /**

@@ -91,7 +91,7 @@ class mxDivResizer {
    *
    * Updates the style of the DIV after the window has been resized.
    */
-  resize = () => {
+  resize() {
     const w = this.getDocumentWidth();
     const h = this.getDocumentHeight();
 
@@ -121,7 +121,7 @@ class mxDivResizer {
     ) {
       this.div.style.height = `${h - t - b}px`;
     }
-  };
+  }
 
   /**
    * Function: getDocumentWidth
@@ -129,9 +129,9 @@ class mxDivResizer {
    * Hook for subclassers to return the width of the document (without
    * scrollbars).
    */
-  getDocumentWidth = () => {
+  getDocumentWidth() {
     return document.body.clientWidth;
-  };
+  }
 
   /**
    * Function: getDocumentHeight
@@ -139,9 +139,9 @@ class mxDivResizer {
    * Hook for subclassers to return the height of the document (without
    * scrollbars).
    */
-  getDocumentHeight = () => {
+  getDocumentHeight() {
     return document.body.clientHeight;
-  };
+  }
 }
 
 export default mxDivResizer;

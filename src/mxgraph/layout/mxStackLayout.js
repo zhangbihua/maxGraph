@@ -3,10 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxGraphLayout from "./mxGraphLayout";
-import mxRectangle from "../util/mxRectangle";
-import mxUtils from "../util/mxUtils";
-import mxConstants from "../util/mxConstants";
+import mxGraphLayout from './mxGraphLayout';
+import mxRectangle from '../util/mxRectangle';
+import mxUtils from '../util/mxUtils';
+import mxConstants from '../util/mxConstants';
 
 class mxStackLayout extends mxGraphLayout {
   /**
@@ -173,16 +173,16 @@ class mxStackLayout extends mxGraphLayout {
    *
    * Returns <horizontal>.
    */
-  isHorizontal = () => {
+  isHorizontal() {
     return this.horizontal;
-  };
+  }
 
   /**
    * Function: moveCell
    *
    * Implements <mxGraphLayout.moveCell>.
    */
-  moveCell = (cell, x, y) => {
+  moveCell(cell, x, y) {
     const model = this.graph.getModel();
     const parent = model.getParent(cell);
     const horizontal = this.isHorizontal();
@@ -226,7 +226,7 @@ class mxStackLayout extends mxGraphLayout {
 
       model.add(parent, cell, idx);
     }
-  };
+  }
 
   /**
    * Function: getParentSize
@@ -234,7 +234,7 @@ class mxStackLayout extends mxGraphLayout {
    * Returns the size for the parent container or the size of the graph
    * container if the parent is a layer or the root of the model.
    */
-  getParentSize = parent => {
+  getParentSize(parent) {
     const model = this.graph.getModel();
     let pgeo = model.getGeometry(parent);
 
@@ -252,14 +252,14 @@ class mxStackLayout extends mxGraphLayout {
     }
 
     return pgeo;
-  };
+  }
 
   /**
    * Function: getLayoutCells
    *
    * Returns the cells to be layouted.
    */
-  getLayoutCells = parent => {
+  getLayoutCells(parent) {
     const model = this.graph.getModel();
     const childCount = model.getChildCount(parent);
     const cells = [];
@@ -292,14 +292,14 @@ class mxStackLayout extends mxGraphLayout {
     }
 
     return cells;
-  };
+  }
 
   /**
    * Function: snap
    *
    * Snaps the given value to the grid size.
    */
-  snap = value => {
+  snap(value) {
     if (this.gridSize != null && this.gridSize > 0) {
       value = Math.max(value, this.gridSize);
 
@@ -310,7 +310,7 @@ class mxStackLayout extends mxGraphLayout {
     }
 
     return value;
-  };
+  }
 
   /**
    * Function: execute
@@ -320,7 +320,7 @@ class mxStackLayout extends mxGraphLayout {
    * Only children where <isVertexIgnored> returns false are taken into
    * account.
    */
-  execute = parent => {
+  execute(parent) {
     if (parent != null) {
       const pgeo = this.getParentSize(parent);
       const horizontal = this.isHorizontal();
@@ -515,7 +515,7 @@ class mxStackLayout extends mxGraphLayout {
         model.endUpdate();
       }
     }
-  };
+  }
 
   /**
    * Function: setChildGeometry
@@ -527,7 +527,7 @@ class mxStackLayout extends mxGraphLayout {
    * child - The given child of <mxCell>.
    * geo - The specific geometry of <mxGeometry>.
    */
-  setChildGeometry = (child, geo) => {
+  setChildGeometry(child, geo) {
     const geo2 = this.graph.getCellGeometry(child);
 
     if (
@@ -539,7 +539,7 @@ class mxStackLayout extends mxGraphLayout {
     ) {
       this.graph.getModel().setGeometry(child, geo);
     }
-  };
+  }
 
   /**
    * Function: updateParentGeometry
@@ -552,7 +552,7 @@ class mxStackLayout extends mxGraphLayout {
    * pgeo - The new <mxGeometry> for parent.
    * last - The last <mxGeometry>.
    */
-  updateParentGeometry = (parent, pgeo, last) => {
+  updateParentGeometry(parent, pgeo, last) {
     const horizontal = this.isHorizontal();
     const model = this.graph.getModel();
 
@@ -584,7 +584,7 @@ class mxStackLayout extends mxGraphLayout {
     ) {
       model.setGeometry(parent, pgeo2);
     }
-  };
+  }
 }
 
 export default mxStackLayout;

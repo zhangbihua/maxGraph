@@ -39,10 +39,10 @@ class mxEllipse extends mxShape {
    *
    * Paints the ellipse shape.
    */
-  paintVertexShape = (c, x, y, w, h) => {
+  paintVertexShape(c, x, y, w, h) {
     c.ellipse(x, y, w, h);
     c.fillAndStroke();
-  };
+  }
 }
 
 export default mxEllipse;

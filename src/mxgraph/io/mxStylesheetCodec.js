@@ -35,7 +35,7 @@ class mxStylesheetCodec extends mxObjectCodec {
    * Encodes a stylesheet. See <decode> for a description of the
    * format.
    */
-  encode = (enc, obj) => {
+  encode(enc, obj) {
     const node = enc.document.createElement(this.getName());
 
     for (const i in obj.styles) {
@@ -63,14 +63,14 @@ class mxStylesheetCodec extends mxObjectCodec {
     }
 
     return node;
-  };
+  }
 
   /**
    * Function: getStringValue
    *
    * Returns the string for encoding the given value.
    */
-  getStringValue = (key, value) => {
+  getStringValue(key, value) {
     const type = typeof value;
 
     if (type === 'function') {
@@ -80,7 +80,7 @@ class mxStylesheetCodec extends mxObjectCodec {
     }
 
     return value;
-  };
+  }
 
   /**
    * Function: decode
@@ -123,7 +123,7 @@ class mxStylesheetCodec extends mxObjectCodec {
    * </mxStylesheet>
    * (end)
    */
-  decode = (dec, node, into) => {
+  decode(dec, node, into) {
     const obj = into || new this.template.constructor();
     const id = node.getAttribute('id');
 
@@ -194,7 +194,7 @@ class mxStylesheetCodec extends mxObjectCodec {
     }
 
     return obj;
-  };
+  }
 }
 
 mxCodecRegistry.register(new mxStylesheetCodec());

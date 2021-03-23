@@ -42,9 +42,9 @@ class mxForm {
    *
    * Returns the table that contains this form.
    */
-  getTable = () => {
+  getTable() {
     return this.table;
-  };
+  }
 
   /**
    * Function: addButtons
@@ -52,7 +52,7 @@ class mxForm {
    * Helper method to add an OK and Cancel button using the respective
    * functions.
    */
-  addButtons = (okFunct, cancelFunct) => {
+  addButtons(okFunct, cancelFunct) {
     const tr = document.createElement('tr');
     let td = document.createElement('td');
     tr.appendChild(td);
@@ -78,28 +78,28 @@ class mxForm {
 
     tr.appendChild(td);
     this.body.appendChild(tr);
-  };
+  }
 
   /**
    * Function: addText
    *
    * Adds an input for the given name, type and value and returns it.
    */
-  addText = (name, value, type) => {
+  addText(name, value, type) {
     const input = document.createElement('input');
 
     input.setAttribute('type', type || 'text');
     input.value = value;
 
     return this.addField(name, input);
-  };
+  }
 
   /**
    * Function: addCheckbox
    *
    * Adds a checkbox for the given name and value and returns the textfield.
    */
-  addCheckbox = (name, value) => {
+  addCheckbox(name, value) {
     const input = document.createElement('input');
 
     input.setAttribute('type', 'checkbox');
@@ -111,14 +111,14 @@ class mxForm {
     }
 
     return input;
-  };
+  }
 
   /**
    * Function: addTextarea
    *
    * Adds a textarea for the given name and value and returns the textarea.
    */
-  addTextarea = (name, value, rows) => {
+  addTextarea(name, value, rows) {
     const input = document.createElement('textarea');
 
     if (mxClient.IS_NS) {
@@ -129,14 +129,14 @@ class mxForm {
     input.value = value;
 
     return this.addField(name, input);
-  };
+  }
 
   /**
    * Function: addCombo
    *
    * Adds a combo for the given name and returns the combo.
    */
-  addCombo = (name, isMultiSelect, size) => {
+  addCombo(name, isMultiSelect, size) {
     const select = document.createElement('select');
 
     if (size != null) {
@@ -148,14 +148,14 @@ class mxForm {
     }
 
     return this.addField(name, select);
-  };
+  }
 
   /**
    * Function: addOption
    *
    * Adds an option for the given label to the specified combo.
    */
-  addOption = (combo, label, value, isSelected) => {
+  addOption(combo, label, value, isSelected) {
     const option = document.createElement('option');
 
     mxUtils.writeln(option, label);
@@ -166,7 +166,7 @@ class mxForm {
     }
 
     combo.appendChild(option);
-  };
+  }
 
   /**
    * Function: addField
@@ -174,7 +174,7 @@ class mxForm {
    * Adds a new row with the name and the input field in two columns and
    * returns the given input.
    */
-  addField = (name, input) => {
+  addField(name, input) {
     const tr = document.createElement('tr');
     let td = document.createElement('td');
     mxUtils.write(td, name);
@@ -186,7 +186,7 @@ class mxForm {
     this.body.appendChild(tr);
 
     return input;
-  };
+  }
 }
 
 export default mxForm;

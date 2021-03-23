@@ -58,7 +58,7 @@ class mxCylinder extends mxShape {
    *
    * Redirects to redrawPath for subclasses to work.
    */
-  paintVertexShape = (c, x, y, w, h) => {
+  paintVertexShape(c, x, y, w, h) {
     c.translate(x, y);
     c.begin();
     this.redrawPath(c, x, y, w, h, false);
@@ -74,23 +74,23 @@ class mxCylinder extends mxShape {
       this.redrawPath(c, x, y, w, h, true);
       c.stroke();
     }
-  };
+  }
 
   /**
    * Function: getCylinderSize
    *
    * Returns the cylinder size.
    */
-  getCylinderSize = (x, y, w, h) => {
+  getCylinderSize(x, y, w, h) {
     return Math.min(this.maxHeight, Math.round(h / 5));
-  };
+  }
 
   /**
    * Function: redrawPath
    *
    * Draws the path for this shape.
    */
-  redrawPath = (c, x, y, w, h, isForeground) => {
+  redrawPath(c, x, y, w, h, isForeground) {
     const dy = this.getCylinderSize(x, y, w, h);
 
     if (
@@ -114,7 +114,7 @@ class mxCylinder extends mxShape {
       c.curveTo(w, h + dy / 3, 0, h + dy / 3, 0, h - dy);
       c.close();
     }
-  };
+  }
 }
 
 export default mxCylinder;

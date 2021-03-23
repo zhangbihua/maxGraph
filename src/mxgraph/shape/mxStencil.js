@@ -293,7 +293,7 @@ class mxStencil extends mxShape {
    *
    * Reads <w0>, <h0>, <aspect>, <bgNodes> and <fgNodes> from <desc>.
    */
-  parseDescription = () => {
+  parseDescription() {
     // LATER: Preprocess nodes for faster painting
     this.fgNode = this.desc.getElementsByTagName('foreground')[0];
     this.bgNode = this.desc.getElementsByTagName('background')[0];
@@ -312,7 +312,7 @@ class mxStencil extends mxShape {
     // by the minimum scaling that is used to draw the shape (sx, sy).
     const sw = this.desc.getAttribute('strokewidth');
     this.strokewidth = sw != null ? sw : '1';
-  };
+  }
 
   /**
    * Function: parseConstraints
@@ -320,7 +320,7 @@ class mxStencil extends mxShape {
    * Reads the constraints from <desc> into <constraints> using
    * <parseConstraint>.
    */
-  parseConstraints = () => {
+  parseConstraints() {
     const conns = this.desc.getElementsByTagName('connections')[0];
 
     if (conns != null) {
@@ -334,21 +334,21 @@ class mxStencil extends mxShape {
         }
       }
     }
-  };
+  }
 
   /**
    * Function: parseConstraint
    *
    * Parses the given XML node and returns its <mxConnectionConstraint>.
    */
-  parseConstraint = node => {
+  parseConstraint(node) {
     const x = Number(node.getAttribute('x'));
     const y = Number(node.getAttribute('y'));
     const perimeter = node.getAttribute('perimeter') == '1';
     const name = node.getAttribute('name');
 
     return new mxConnectionConstraint(new mxPoint(x, y), perimeter, name);
-  };
+  }
 
   /**
    * Function: evaluateTextAttribute
@@ -357,7 +357,7 @@ class mxStencil extends mxShape {
    * is used as a key to <mxResources.get> if the localized attribute in the text
    * node is 1 or if <defaultLocalized> is true.
    */
-  evaluateTextAttribute = (node, attribute, shape) => {
+  evaluateTextAttribute(node, attribute, shape) {
     let result = this.evaluateAttribute(node, attribute, shape);
     const loc = node.getAttribute('localized');
 
@@ -366,7 +366,7 @@ class mxStencil extends mxShape {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: evaluateAttribute
@@ -376,7 +376,7 @@ class mxStencil extends mxShape {
    * a function it is invoked with <shape> as the only argument and the return
    * value is used as the attribute value to be returned.
    */
-  evaluateAttribute = (node, attribute, shape) => {
+  evaluateAttribute(node, attribute, shape) {
     let result = node.getAttribute(attribute);
 
     if (result == null) {
@@ -392,14 +392,14 @@ class mxStencil extends mxShape {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: drawShape
    *
    * Draws this stencil inside the given bounds.
    */
-  drawShape = (canvas, shape, x, y, w, h) => {
+  drawShape(canvas, shape, x, y, w, h) {
     const stack = canvas.states.slice();
 
     // TODO: Internal structure (array of special structs?), relative and absolute
@@ -470,25 +470,14 @@ class mxStencil extends mxShape {
     if (canvas.states.length != stack.length) {
       canvas.states = stack;
     }
-  };
+  }
 
   /**
    * Function: drawChildren
    *
    * Draws this stencil inside the given bounds.
    */
-  drawChildren = (
-    canvas,
-    shape,
-    x,
-    y,
-    w,
-    h,
-    node,
-    aspect,
-    disableShadow,
-    paint
-  ) => {
+  drawChildren(canvas, shape, x, y, w, h, node, aspect, disableShadow, paint) {
     if (node != null && w > 0 && h > 0) {
       let tmp = node.firstChild;
 
@@ -500,7 +489,7 @@ class mxStencil extends mxShape {
         tmp = tmp.nextSibling;
       }
     }
-  };
+  }
 
   /**
    * Function: computeAspect
@@ -515,7 +504,7 @@ class mxStencil extends mxShape {
    * bounds - <mxRectangle> that should contain the stencil.
    * direction - Optional direction of the shape to be darwn.
    */
-  computeAspect = (shape, x, y, w, h, direction) => {
+  computeAspect(shape, x, y, w, h, direction) {
     let x0 = x;
     let y0 = y;
     let sx = w / this.w0;
@@ -550,14 +539,14 @@ class mxStencil extends mxShape {
     }
 
     return new mxRectangle(x0, y0, sx, sy);
-  };
+  }
 
   /**
    * Function: drawNode
    *
    * Draws this stencil inside the given bounds.
    */
-  drawNode = (canvas, shape, node, aspect, disableShadow, paint) => {
+  drawNode(canvas, shape, node, aspect, disableShadow, paint) {
     const name = node.nodeName;
     const x0 = aspect.x;
     const y0 = aspect.y;
@@ -847,7 +836,7 @@ class mxStencil extends mxShape {
         canvas.setShadow(false);
       }
     }
-  };
+  }
 }
 
 export default mxStencil;

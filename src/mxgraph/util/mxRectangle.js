@@ -57,37 +57,37 @@ class mxRectangle extends mxPoint {
    *
    * Sets this rectangle to the specified values
    */
-  setRect = (x, y, w, h) => {
+  setRect(x, y, w, h) {
     this.x = x;
     this.y = y;
     this.width = w;
     this.height = h;
-  };
+  }
 
   /**
    * Function: getCenterX
    *
    * Returns the x-coordinate of the center point.
    */
-  getCenterX = () => {
+  getCenterX() {
     return this.x + this.width / 2;
-  };
+  }
 
   /**
    * Function: getCenterY
    *
    * Returns the y-coordinate of the center point.
    */
-  getCenterY = () => {
+  getCenterY() {
     return this.y + this.height / 2;
-  };
+  }
 
   /**
    * Function: add
    *
    * Adds the given rectangle to this rectangle.
    */
-  add = rect => {
+  add(rect) {
     if (rect != null) {
       const minX = Math.min(this.x, rect.x);
       const minY = Math.min(this.y, rect.y);
@@ -99,14 +99,14 @@ class mxRectangle extends mxPoint {
       this.width = maxX - minX;
       this.height = maxY - minY;
     }
-  };
+  }
 
   /**
    * Function: intersect
    *
    * Changes this rectangle to where it overlaps with the given rectangle.
    */
-  intersect = rect => {
+  intersect(rect) {
     if (rect != null) {
       const r1 = this.x + this.width;
       const r2 = rect.x + rect.width;
@@ -119,7 +119,7 @@ class mxRectangle extends mxPoint {
       this.width = Math.min(r1, r2) - this.x;
       this.height = Math.min(b1, b2) - this.y;
     }
-  };
+  }
 
   /**
    * Function: grow
@@ -128,37 +128,37 @@ class mxRectangle extends mxPoint {
    * the given amount from the x- and y-coordinates and adds twice the amount
    * to the width and height.
    */
-  grow = amount => {
+  grow(amount) {
     this.x -= amount;
     this.y -= amount;
     this.width += 2 * amount;
     this.height += 2 * amount;
 
     return this;
-  };
+  }
 
   /**
    * Function: getPoint
    *
    * Returns the top, left corner as a new <mxPoint>.
    */
-  getPoint = () => {
+  getPoint() {
     return new mxPoint(this.x, this.y);
-  };
+  }
 
   /**
    * Function: rotate90
    *
    * Rotates this rectangle by 90 degree around its center point.
    */
-  rotate90 = () => {
+  rotate90() {
     const t = (this.width - this.height) / 2;
     this.x += t;
     this.y -= t;
     const tmp = this.width;
     this.width = this.height;
     this.height = tmp;
-  };
+  }
 
   /**
    * Function: equals

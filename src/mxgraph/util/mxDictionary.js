@@ -33,20 +33,20 @@ class mxDictionary {
    *
    * Clears the dictionary.
    */
-  clear = () => {
+  clear() {
     this.map = {};
-  };
+  }
 
   /**
    * Function: get
    *
    * Returns the value for the given key.
    */
-  get = key => {
+  get(key) {
     const id = mxObjectIdentity.get(key);
 
     return this.map[id];
-  };
+  }
 
   /**
    * Function: put
@@ -54,13 +54,13 @@ class mxDictionary {
    * Stores the value under the given key and returns the previous
    * value for that key.
    */
-  put = (key, value) => {
+  put(key, value) {
     const id = mxObjectIdentity.get(key);
     const previous = this.map[id];
     this.map[id] = value;
 
     return previous;
-  };
+  }
 
   /**
    * Function: remove
@@ -68,20 +68,20 @@ class mxDictionary {
    * Removes the value for the given key and returns the value that
    * has been removed.
    */
-  remove = key => {
+  remove(key) {
     const id = mxObjectIdentity.get(key);
     const previous = this.map[id];
     delete this.map[id];
 
     return previous;
-  };
+  }
 
   /**
    * Function: getKeys
    *
    * Returns all keys as an array.
    */
-  getKeys = () => {
+  getKeys() {
     const result = [];
 
     for (const key in this.map) {
@@ -89,14 +89,14 @@ class mxDictionary {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: getValues
    *
    * Returns all values as an array.
    */
-  getValues = () => {
+  getValues() {
     const result = [];
 
     for (const key in this.map) {
@@ -104,7 +104,7 @@ class mxDictionary {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: visit
@@ -117,11 +117,11 @@ class mxDictionary {
    *
    * visitor - A function that takes the key and value as arguments.
    */
-  visit = visitor => {
+  visit(visitor) {
     for (const key in this.map) {
       visitor(key, this.map[key]);
     }
-  };
+  }
 }
 
 export default mxDictionary;

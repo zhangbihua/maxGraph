@@ -116,13 +116,13 @@ class mxTemporaryCellStates {
    *
    * Returns the top, left corner as a new <mxPoint>.
    */
-  destroy = () => {
+  destroy() {
     this.view.setScale(this.oldScale);
     this.view.setStates(this.oldStates);
     this.view.setGraphBounds(this.oldBounds);
     this.view.validateCellState = this.oldValidateCellState;
     this.view.graph.cellRenderer.doRedrawShape = this.oldDoRedrawShape;
-  };
+  }
 }
 
 export default mxTemporaryCellStates;

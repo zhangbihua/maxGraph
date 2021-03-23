@@ -8,7 +8,7 @@ import mxClient from '../mxClient';
 import mxToolbar from '../util/mxToolbar';
 import mxGeometry from '../model/mxGeometry';
 import mxUtils from '../util/mxUtils';
-import mxEvent from "../util/mxEvent";
+import mxEvent from '../util/mxEvent';
 
 class mxDefaultToolbar {
   /**
@@ -105,7 +105,7 @@ class mxDefaultToolbar {
    *
    * container - DOM node that contains the toolbar.
    */
-  init = container => {
+  init(container) {
     if (container != null) {
       this.toolbar = new mxToolbar(container);
 
@@ -134,7 +134,7 @@ class mxDefaultToolbar {
       this.editor.graph.addListener(mxEvent.DOUBLE_CLICK, this.resetHandler);
       this.editor.addListener(mxEvent.ESCAPE, this.resetHandler);
     }
-  };
+  }
 
   /**
    * Function: addItem
@@ -149,14 +149,14 @@ class mxDefaultToolbar {
    * action - Name of the action to execute when the item is clicked.
    * pressed - Optional URL of the icon for the pressed state.
    */
-  addItem = (title, icon, action, pressed) => {
+  addItem(title, icon, action, pressed) {
     const clickHandler = () => {
       if (action != null && action.length > 0) {
         this.editor.execute(action);
       }
     };
     return this.toolbar.addItem(title, icon, clickHandler, pressed);
-  };
+  }
 
   /**
    * Function: addSeparator
@@ -168,10 +168,10 @@ class mxDefaultToolbar {
    * icon - Optional URL of the icon that represents the vertical separator.
    * Default is <mxClient.imageBasePath> + '/separator.gif'.
    */
-  addSeparator = icon => {
+  addSeparator(icon) {
     icon = icon || `${mxClient.imageBasePath}/separator.gif`;
     this.toolbar.addSeparator(icon);
-  };
+  }
 
   /**
    * Function: addCombo
@@ -179,9 +179,9 @@ class mxDefaultToolbar {
    * Helper method to invoke <mxToolbar.addCombo> on <toolbar> and return the
    * resulting DOM node.
    */
-  addCombo = () => {
+  addCombo() {
     return this.toolbar.addCombo();
-  };
+  }
 
   /**
    * Function: addActionCombo
@@ -193,9 +193,9 @@ class mxDefaultToolbar {
    *
    * title - String that represents the title of the combo.
    */
-  addActionCombo = title => {
+  addActionCombo(title) {
     return this.toolbar.addActionCombo(title);
-  };
+  }
 
   /**
    * Function: addActionOption
@@ -210,13 +210,13 @@ class mxDefaultToolbar {
    * title - String that represents the title of the combo.
    * action - Name of the action to execute in <editor>.
    */
-  addActionOption = (combo, title, action) => {
+  addActionOption(combo, title, action) {
     const clickHandler = mxUtils.bind(this, () => {
       this.editor.execute(action);
     });
 
     this.addOption(combo, title, clickHandler);
-  };
+  }
 
   /**
    * Function: addOption
@@ -230,9 +230,9 @@ class mxDefaultToolbar {
    * title - String that represents the title of the combo.
    * value - Object that represents the value of the option.
    */
-  addOption = (combo, title, value) => {
+  addOption(combo, title, value) {
     return this.toolbar.addOption(combo, title, value);
-  };
+  }
 
   /**
    * Function: addMode
@@ -251,7 +251,7 @@ class mxDefaultToolbar {
    * first and only argument that is executed after the mode has been
    * selected.
    */
-  addMode = (title, icon, mode, pressed, funct) => {
+  addMode(title, icon, mode, pressed, funct) {
     const clickHandler = () => {
       this.editor.setMode(mode);
 
@@ -260,7 +260,7 @@ class mxDefaultToolbar {
       }
     };
     return this.toolbar.addSwitchMode(title, icon, clickHandler, pressed);
-  };
+  }
 
   /**
    * Function: addPrototype
@@ -283,7 +283,7 @@ class mxDefaultToolbar {
    * toggle - Optional boolean that specifies if the item can be toggled.
    * Default is true.
    */
-  addPrototype = (title, icon, ptype, pressed, insert, toggle) => {
+  addPrototype(title, icon, ptype, pressed, insert, toggle) {
     // Creates a wrapper function that is in charge of constructing
     // the new cell instance to be inserted into the graph
     const factory = mxUtils.bind(this, () => {
@@ -328,7 +328,7 @@ class mxDefaultToolbar {
     this.installDropHandler(img, dropHandler);
 
     return img;
-  };
+  }
 
   /**
    * Function: drop
@@ -343,7 +343,7 @@ class mxDefaultToolbar {
    * evt - Mouse event that represents the drop.
    * target - Optional <mxCell> that represents the drop target.
    */
-  drop = (vertex, evt, target) => {
+  drop(vertex, evt, target) {
     const { graph } = this.editor;
     const model = graph.getModel();
 
@@ -363,7 +363,7 @@ class mxDefaultToolbar {
     } else {
       this.connect(vertex, evt, target);
     }
-  };
+  }
 
   /**
    * Function: insert
@@ -377,7 +377,7 @@ class mxDefaultToolbar {
    * evt - Mouse event that represents the drop.
    * parent - Optional <mxCell> that represents the parent.
    */
-  insert = (vertex, evt, target) => {
+  insert(vertex, evt, target) {
     const { graph } = this.editor;
 
     if (graph.canImportCell(vertex)) {
@@ -396,7 +396,7 @@ class mxDefaultToolbar {
     }
 
     return null;
-  };
+  }
 
   /**
    * Function: connect
@@ -407,7 +407,7 @@ class mxDefaultToolbar {
    * evt - Mouse event that represents the drop.
    * source - Optional <mxCell> that represents the source terminal.
    */
-  connect = (vertex, evt, source) => {
+  connect(vertex, evt, source) {
     const { graph } = this.editor;
     const model = graph.getModel();
 
@@ -464,7 +464,7 @@ class mxDefaultToolbar {
       graph.setSelectionCells([vertex, edge]);
       graph.scrollCellToVisible(vertex);
     }
-  };
+  }
 
   /**
    * Function: installDropHandler
@@ -477,7 +477,7 @@ class mxDefaultToolbar {
    * img - DOM node that represents the image.
    * dropHandler - Function that handles a drop of the image.
    */
-  installDropHandler = (img, dropHandler) => {
+  installDropHandler(img, dropHandler) {
     const sprite = document.createElement('img');
     sprite.setAttribute('src', img.getAttribute('src'));
 
@@ -494,7 +494,7 @@ class mxDefaultToolbar {
       mxUtils.makeDraggable(img, this.editor.graph, dropHandler, sprite);
       mxEvent.removeListener(sprite, 'load', loader);
     });
-  };
+  }
 
   /**
    * Function: destroy
@@ -504,7 +504,7 @@ class mxDefaultToolbar {
    * <toolbar> is destroyed automatically when the window unloads (in IE) by
    * <mxEditor>.
    */
-  destroy = () => {
+  destroy() {
     if (this.resetHandler != null) {
       this.editor.graph.removeListener('dblclick', this.resetHandler);
       this.editor.removeListener('escape', this.resetHandler);
@@ -515,7 +515,7 @@ class mxDefaultToolbar {
       this.toolbar.destroy();
       this.toolbar = null;
     }
-  };
+  }
 }
 
 export default mxDefaultToolbar;

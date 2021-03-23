@@ -96,7 +96,7 @@ class mxDefaultKeyHandler {
    * control - Optional boolean that specifies if control must be pressed.
    * Default is false.
    */
-  bindAction = (code, action, control) => {
+  bindAction(code, action, control) {
     const keyHandler = () => {
       this.editor.execute(action);
     };
@@ -108,7 +108,7 @@ class mxDefaultKeyHandler {
       // Binds the function to the normal keycode
       this.handler.bindKey(code, keyHandler);
     }
-  };
+  }
 
   /**
    * Function: destroy
@@ -117,10 +117,10 @@ class mxDefaultKeyHandler {
    * not need to be called, the <handler> is destroyed automatically when the
    * window unloads (in IE) by <mxEditor>.
    */
-  destroy = () => {
+  destroy() {
     this.handler.destroy();
     this.handler = null;
-  };
+  }
 }
 
 export default mxDefaultKeyHandler;

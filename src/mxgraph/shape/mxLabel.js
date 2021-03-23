@@ -66,7 +66,7 @@ class mxLabel extends mxRectangleShape {
    *
    * Initializes the shape and the <indicator>.
    */
-  init = container => {
+  init(container) {
     super.init(container);
 
     if (this.indicatorShape != null) {
@@ -74,7 +74,7 @@ class mxLabel extends mxRectangleShape {
       this.indicator.dialect = this.dialect;
       this.indicator.init(this.node);
     }
-  };
+  }
 
   /**
    * Function: redraw
@@ -82,7 +82,7 @@ class mxLabel extends mxRectangleShape {
    * Reconfigures this shape. This will update the colors of the indicator
    * and reconfigure it if required.
    */
-  redraw = () => {
+  redraw() {
     if (this.indicator != null) {
       this.indicator.fill = this.indicatorColor;
       this.indicator.stroke = this.indicatorStrokeColor;
@@ -91,7 +91,7 @@ class mxLabel extends mxRectangleShape {
       this.indicator.redraw();
     }
     super.redraw();
-  };
+  }
 
   /**
    * Function: isHtmlAllowed
@@ -99,31 +99,31 @@ class mxLabel extends mxRectangleShape {
    * Returns true for non-rounded, non-rotated shapes with no glass gradient and
    * no indicator shape.
    */
-  isHtmlAllowed = () => {
+  isHtmlAllowed() {
     return (
       super.isHtmlAllowed() &&
       this.indicatorColor == null &&
       this.indicatorShape == null
     );
-  };
+  }
 
   /**
    * Function: paintForeground
    *
    * Generic background painting implementation.
    */
-  paintForeground = (c, x, y, w, h) => {
+  paintForeground(c, x, y, w, h) {
     this.paintImage(c, x, y, w, h);
     this.paintIndicator(c, x, y, w, h);
     super.paintForeground(c, x, y, w, h);
-  };
+  }
 
   /**
    * Function: paintImage
    *
    * Generic background painting implementation.
    */
-  paintImage = (c, x, y, w, h) => {
+  paintImage(c, x, y, w, h) {
     if (this.image != null) {
       const bounds = this.getImageBounds(x, y, w, h);
       c.image(
@@ -137,14 +137,14 @@ class mxLabel extends mxRectangleShape {
         false
       );
     }
-  };
+  }
 
   /**
    * Function: getImageBounds
    *
    * Generic background painting implementation.
    */
-  getImageBounds = (x, y, w, h) => {
+  getImageBounds(x, y, w, h) {
     const align = mxUtils.getValue(
       this.style,
       mxConstants.STYLE_IMAGE_ALIGN,
@@ -188,14 +188,14 @@ class mxLabel extends mxRectangleShape {
     }
 
     return new mxRectangle(x, y, width, height);
-  };
+  }
 
   /**
    * Function: paintIndicator
    *
    * Generic background painting implementation.
    */
-  paintIndicator = (c, x, y, w, h) => {
+  paintIndicator(c, x, y, w, h) {
     if (this.indicator != null) {
       this.indicator.bounds = this.getIndicatorBounds(x, y, w, h);
       this.indicator.paint(c);
@@ -212,14 +212,14 @@ class mxLabel extends mxRectangleShape {
         false
       );
     }
-  };
+  }
 
   /**
    * Function: getIndicatorBounds
    *
    * Generic background painting implementation.
    */
-  getIndicatorBounds = (x, y, w, h) => {
+  getIndicatorBounds(x, y, w, h) {
     const align = mxUtils.getValue(
       this.style,
       mxConstants.STYLE_IMAGE_ALIGN,
@@ -261,14 +261,14 @@ class mxLabel extends mxRectangleShape {
     }
 
     return new mxRectangle(x, y, width, height);
-  };
+  }
 
   /**
    * Function: redrawHtmlShape
    *
    * Generic background painting implementation.
    */
-  redrawHtmlShape = () => {
+  redrawHtmlShape() {
     super.redrawHtmlShape();
 
     // Removes all children
@@ -299,7 +299,7 @@ class mxLabel extends mxRectangleShape {
 
       this.node.appendChild(node);
     }
-  };
+  }
 }
 
 export default mxLabel;

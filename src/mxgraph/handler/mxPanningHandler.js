@@ -205,45 +205,45 @@ class mxPanningHandler extends mxEventSource {
    *
    * Returns true if the handler is currently active.
    */
-  isActive = () => {
+  isActive() {
     return this.active || this.initialScale != null;
-  };
+  }
 
   /**
    * Function: isPanningEnabled
    *
    * Returns <panningEnabled>.
    */
-  isPanningEnabled = () => {
+  isPanningEnabled() {
     return this.panningEnabled;
-  };
+  }
 
   /**
    * Function: setPanningEnabled
    *
    * Sets <panningEnabled>.
    */
-  setPanningEnabled = value => {
+  setPanningEnabled(value) {
     this.panningEnabled = value;
-  };
+  }
 
   /**
    * Function: isPinchEnabled
    *
    * Returns <pinchEnabled>.
    */
-  isPinchEnabled = () => {
+  isPinchEnabled() {
     return this.pinchEnabled;
-  };
+  }
 
   /**
    * Function: setPinchEnabled
    *
    * Sets <pinchEnabled>.
    */
-  setPinchEnabled = value => {
+  setPinchEnabled(value) {
     this.pinchEnabled = value;
-  };
+  }
 
   /**
    * Function: isPanningTrigger
@@ -252,7 +252,7 @@ class mxPanningHandler extends mxEventSource {
    * given cell. This returns true if control-shift is pressed or if
    * <usePopupTrigger> is true and the event is a popup trigger.
    */
-  isPanningTrigger = me => {
+  isPanningTrigger(me) {
     const evt = me.getEvent();
 
     return (
@@ -262,7 +262,7 @@ class mxPanningHandler extends mxEventSource {
       (mxEvent.isControlDown(evt) && mxEvent.isShiftDown(evt)) ||
       (this.usePopupTrigger && mxEvent.isPopupTrigger(evt))
     );
-  };
+  }
 
   /**
    * Function: isForcePanningEvent
@@ -271,9 +271,9 @@ class mxPanningHandler extends mxEventSource {
    * implementation always returns true if <ignoreCell> is true or for
    * multi touch events.
    */
-  isForcePanningEvent = me => {
+  isForcePanningEvent(me) {
     return this.ignoreCell || mxEvent.isMultiTouchEvent(me.getEvent());
-  };
+  }
 
   /**
    * Function: mouseDown
@@ -281,7 +281,7 @@ class mxPanningHandler extends mxEventSource {
    * Handles the event by initiating the panning. By consuming the event all
    * subsequent events of the gesture are redirected to this handler.
    */
-  mouseDown = (sender, me) => {
+  mouseDown(sender, me) {
     this.mouseDownEvent = me;
 
     if (
@@ -293,14 +293,14 @@ class mxPanningHandler extends mxEventSource {
       this.start(me);
       this.consumePanningTrigger(me);
     }
-  };
+  }
 
   /**
    * Function: start
    *
    * Starts panning at the given event.
    */
-  start = me => {
+  start(me) {
     this.dx0 = -this.graph.container.scrollLeft;
     this.dy0 = -this.graph.container.scrollTop;
 
@@ -311,7 +311,7 @@ class mxPanningHandler extends mxEventSource {
     this.dy = null;
 
     this.panningTrigger = true;
-  };
+  }
 
   /**
    * Function: consumePanningTrigger
@@ -341,16 +341,16 @@ class mxPanningHandler extends mxEventSource {
    * };
    * (end)
    */
-  consumePanningTrigger = me => {
+  consumePanningTrigger(me) {
     me.consume();
-  };
+  }
 
   /**
    * Function: mouseMove
    *
    * Handles the event by updating the panning on the graph.
    */
-  mouseMove = (sender, me) => {
+  mouseMove(sender, me) {
     this.dx = me.getX() - this.startX;
     this.dy = me.getY() - this.startY;
 
@@ -383,7 +383,7 @@ class mxPanningHandler extends mxEventSource {
     if (this.active || this.panningTrigger) {
       me.consume();
     }
-  };
+  }
 
   /**
    * Function: mouseUp
@@ -391,7 +391,7 @@ class mxPanningHandler extends mxEventSource {
    * Handles the event by setting the translation on the view or showing the
    * popupmenu.
    */
-  mouseUp = (sender, me) => {
+  mouseUp(sender, me) {
     if (this.active) {
       if (this.dx != null && this.dy != null) {
         // Ignores if scrollbars have been used for panning
@@ -412,14 +412,14 @@ class mxPanningHandler extends mxEventSource {
     }
 
     this.reset();
-  };
+  }
 
   /**
    * Function: zoomGraph
    *
    * Zooms the graph to the given value and consumed the event if needed.
    */
-  zoomGraph = evt => {
+  zoomGraph(evt) {
     let value = Math.round(this.initialScale * evt.scale * 100) / 100;
 
     if (this.minScale != null) {
@@ -434,41 +434,41 @@ class mxPanningHandler extends mxEventSource {
       this.graph.zoomTo(value);
       mxEvent.consume(evt);
     }
-  };
+  }
 
   /**
    * Function: reset
    *
    * Resets the state of this handler.
    */
-  reset = () => {
+  reset() {
     this.panningTrigger = false;
     this.mouseDownEvent = null;
     this.active = false;
     this.dx = null;
     this.dy = null;
-  };
+  }
 
   /**
    * Function: panGraph
    *
    * Pans <graph> by the given amount.
    */
-  panGraph = (dx, dy) => {
+  panGraph(dx, dy) {
     this.graph.getView().setTranslate(dx, dy);
-  };
+  }
 
   /**
    * Function: destroy
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy = () => {
+  destroy() {
     this.graph.removeMouseListener(this);
     this.graph.removeListener(this.forcePanningHandler);
     this.graph.removeListener(this.gestureHandler);
     mxEvent.removeListener(document, 'mouseup', this.mouseUpListener);
-  };
+  }
 }
 
 export default mxPanningHandler;

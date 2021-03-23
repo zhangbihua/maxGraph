@@ -41,18 +41,18 @@ class mxConnector extends mxPolyline {
    * Updates the <boundingBox> for this shape using <createBoundingBox> and
    * <augmentBoundingBox> and stores the result in <boundingBox>.
    */
-  updateBoundingBox = () => {
+  updateBoundingBox() {
     this.useSvgBoundingBox =
       this.style != null && this.style[mxConstants.STYLE_CURVED] === 1;
     super.updateBoundingBox();
-  };
+  }
 
   /**
    * Function: paintEdgeShape
    *
    * Paints the line shape.
    */
-  paintEdgeShape = (c, pts) => {
+  paintEdgeShape(c, pts) {
     // The indirection via functions for markers is needed in
     // order to apply the offsets before painting the line and
     // paint the markers after painting the line.
@@ -73,7 +73,7 @@ class mxConnector extends mxPolyline {
     if (targetMarker != null) {
       targetMarker();
     }
-  };
+  }
 
   /**
    * Function: createMarker
@@ -81,7 +81,7 @@ class mxConnector extends mxPolyline {
    * Prepares the marker by adding offsets in pts and returning a function to
    * paint the marker.
    */
-  createMarker = (c, pts, source) => {
+  createMarker(c, pts, source) {
     let result = null;
     const n = pts.length;
     const type = mxUtils.getValue(
@@ -141,14 +141,14 @@ class mxConnector extends mxPolyline {
     }
 
     return result;
-  };
+  }
 
   /**
    * Function: augmentBoundingBox
    *
    * Augments the bounding box with the strokewidth and shadow offsets.
    */
-  augmentBoundingBox = bbox => {
+  augmentBoundingBox(bbox) {
     super.augmentBoundingBox(bbox);
 
     // Adds marker sizes
@@ -188,7 +188,7 @@ class mxConnector extends mxPolyline {
     }
 
     bbox.grow(size * this.scale);
-  };
+  }
 }
 
 export default mxConnector;
