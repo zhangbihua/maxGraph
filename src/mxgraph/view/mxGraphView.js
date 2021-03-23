@@ -20,6 +20,7 @@ import mxCellState from './mxCellState';
 import mxUndoableEdit from '../util/mxUndoableEdit';
 import mxImageShape from '../shape/mxImageShape';
 import mxMouseEvent from '../util/mxMouseEvent';
+import mxStyleRegistry from "./mxStyleRegistry";
 
 class mxGraphView extends mxEventSource {
   EMPTY_POINT = new mxPoint();

@@ -6,6 +6,10 @@
 
 import mxUtils from '../util/mxUtils';
 import mxCellPath from '../model/mxCellPath';
+import mxCodecRegistry from "./mxCodecRegistry";
+import mxConstants from "../util/mxConstants";
+import mxCell from "../model/mxCell";
+import mxLog from "../util/mxLog";
 
 class mxCodec {
   /**

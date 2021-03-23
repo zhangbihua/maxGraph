@@ -4,6 +4,13 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxUtils from "../util/mxUtils";
+import mxObjectIdentity from "../util/mxObjectIdentity";
+import mxLog from "../util/mxLog";
+import mxGeometry from "../model/mxGeometry";
+import mxPoint from "../util/mxPoint";
+import mxConstants from "../util/mxConstants";
+
 class mxObjectCodec {
   /**
    * Variable: allowEval
@@ -602,7 +609,7 @@ class mxObjectCodec {
     if (this.isNumericAttribute(dec, attr, obj)) {
       value = parseFloat(value);
 
-      if (isNaN(value) || !isFinite(value)) {
+      if (Number.isNaN(value) || !Number.isFinite(value)) {
         value = 0;
       }
     }

@@ -4,6 +4,42 @@
   Drop example for mxGraph. This example demonstrates handling
   native drag and drop of images (requires modern browser).
 -->
+
+import React from 'react';
+import mxEvent from '../mxgraph/util/mxEvent';
+import mxGraph from '../mxgraph/view/mxGraph';
+import mxRubberband from '../mxgraph/handler/mxRubberband';
+
+class MYNAMEHERE extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render = () => {
+    // A container for the graph
+    return (
+      <>
+        <h1></h1>
+
+        <div
+          ref={el => {
+            this.el = el;
+          }}
+          style={{
+
+          }}
+        />
+      </>
+    );
+  };
+
+  componentDidMount = () => {
+
+  };
+}
+
+export default MYNAMEHERE;
+
 <html>
 <head>
 	<title>Drop example for mxGraph</title>

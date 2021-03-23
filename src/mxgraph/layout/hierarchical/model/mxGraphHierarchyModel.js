@@ -5,6 +5,9 @@
  */
 
 import mxDictionary from '../../../util/mxDictionary';
+import mxGraphHierarchyNode from "./mxGraphHierarchyNode";
+import mxGraphHierarchyEdge from "./mxGraphHierarchyEdge";
+import mxUtils from "../../../util/mxUtils";
 
 class mxGraphHierarchyModel {
   /**

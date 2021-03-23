@@ -7,6 +7,10 @@
 import mxConnectionConstraint from '../view/mxConnectionConstraint';
 import mxRectangle from '../util/mxRectangle';
 import mxShape from './mxShape';
+import mxResources from "../util/mxResources";
+import mxUtils from "../util/mxUtils";
+import mxConstants from "../util/mxConstants";
+import mxStencilRegistry from "./mxStencilRegistry";
 
 class mxStencil extends mxShape {
   /**

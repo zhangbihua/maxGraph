@@ -5,6 +5,7 @@
  */
 import mxConstants from '../util/mxConstants';
 import mxPerimeter from './mxPerimeter';
+import mxUtils from "../util/mxUtils";
 
 class mxStylesheet {
   /**
@@ -218,7 +219,7 @@ class mxStylesheet {
           const key = tmp.substring(0, pos);
           const value = tmp.substring(pos + 1);
 
-          if (value == mxConstants.NONE) {
+          if (value === mxConstants.NONE) {
             delete style[key];
           } else if (mxUtils.isNumeric(value)) {
             style[key] = parseFloat(value);
