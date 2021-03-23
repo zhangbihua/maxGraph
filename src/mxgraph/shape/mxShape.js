@@ -779,14 +779,14 @@ class mxShape {
 
       c.stroke = (...args) => {
         strokeDrawn = true;
-        stroke.apply(this, args);
+        stroke.apply(c, args);
       };
 
       const { fillAndStroke } = c;
 
       c.fillAndStroke = (...args) => {
         strokeDrawn = true;
-        fillAndStroke.apply(this, args);
+        fillAndStroke.apply(c, args);
       };
     }
 

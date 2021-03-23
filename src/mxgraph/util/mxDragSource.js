@@ -6,6 +6,11 @@
 import mxRectangle from './mxRectangle';
 import mxCellHighlight from '../handler/mxCellHighlight';
 import mxUtils from './mxUtils';
+import mxEvent from "./mxEvent";
+import mxClient from "../mxClient";
+import mxGuide from "./mxGuide";
+import mxConstants from "./mxConstants";
+import mxPoint from "./mxPoint";
 
 class mxDragSource {
   /**
@@ -175,7 +180,7 @@ class mxDragSource {
       const evtName = evt.getProperty('eventName');
       const me = evt.getProperty('event');
 
-      if (evtName != mxEvent.MOUSE_DOWN) {
+      if (evtName !== mxEvent.MOUSE_DOWN) {
         me.consume();
       }
     };
@@ -419,7 +424,7 @@ class mxDragSource {
     let elt = this.getElementForEvent(evt);
 
     if (this.checkEventSource) {
-      while (elt != null && elt != graph.container) {
+      while (elt != null && elt !== graph.container) {
         elt = elt.parentNode;
       }
     }
@@ -449,7 +454,7 @@ class mxDragSource {
       graph = null;
     }
 
-    if (graph != this.currentGraph) {
+    if (graph !== this.currentGraph) {
       if (this.currentGraph != null) {
         this.dragExit(this.currentGraph, evt);
       }
@@ -468,7 +473,7 @@ class mxDragSource {
     if (
       this.dragElement != null &&
       (this.previewElement == null ||
-        this.previewElement.style.visibility != 'visible')
+        this.previewElement.style.visibility !== 'visible')
     ) {
       let x = mxEvent.getClientX(evt);
       let y = mxEvent.getClientY(evt);
@@ -506,7 +511,7 @@ class mxDragSource {
       if (
         this.currentPoint != null &&
         (this.previewElement == null ||
-          this.previewElement.style.visibility != 'hidden')
+          this.previewElement.style.visibility !== 'hidden')
       ) {
         const { scale } = this.currentGraph.view;
         const tr = this.currentGraph.view.translate;

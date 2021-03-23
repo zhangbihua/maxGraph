@@ -1,16 +1,18 @@
-<!--
-  Copyright (c) 2006-2013, JGraph Ltd
-  
-  Consistuent example for mxGraph. This example demonstrates using
-  cells as parts of other cells.
--->
+/**
+ * Copyright (c) 2006-2013, JGraph Ltd
+ *
+ * Consistuent example for mxGraph. This example demonstrates using
+ * cells as parts of other cells.
+ */
 
 import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxGraphHandler from "../mxgraph/handler/mxGraphHandler";
+import mxClient from "../mxgraph/mxClient";
 
-class MYNAMEHERE extends React.Component {
+class Constituent extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -19,127 +21,94 @@ class MYNAMEHERE extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1></h1>
+        <h1>Consistuent example for mxGraph</h1>
 
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-
+            position: 'relative',
+            overflow: 'hidden',
+            width: '321px',
+            height: '241px',
+            background: 'url("editors/images/grid.gif")',
+            cursor: 'default',
           }}
         />
       </>
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
+    class MyCustomGraphHandler extends mxGraphHandler {
+      /**
+       * Redirects start drag to parent.
+       */
+      getInitialCellForEvent(me) {
+        let cell = super.getInitialCellForEvent(me);
+        if (this.graph.isPart(cell)) {
+          cell = this.graph.getModel().getParent(cell);
+        }
+        return cell;
+      }
+    }
 
-  };
+    // Disables the built-in context menu
+    mxEvent.disableContextMenu(this.el);
+
+    class MyCustomGraph extends mxGraph {
+      foldingEnabled = false;
+
+      recursiveResize = true;
+
+      isPart(cell) {
+        // Helper method to mark parts with constituent=1 in the style
+        return this.getCurrentCellStyle(cell).constituent == '1';
+      }
+
+      selectCellForEvent(cell, evt) {
+        // Redirects selection to parent
+        if (this.isPart(cell)) {
+          cell = this.model.getParent(cell);
+        }
+        super.selectCellForEvent(cell, evt);
+      }
+
+      createGraphHandler() {
+        return new MyCustomGraphHandler(this);
+      }
+    }
+
+    // Creates the graph inside the given container
+    const graph = new MyCustomGraph(this.el);
+
+    // Enables rubberband selection
+    new mxRubberband(graph);
+
+    // Gets the default parent for inserting new cells. This
+    // is normally the first child of the root (ie. layer 0).
+    const parent = graph.getDefaultParent();
+
+    // Adds cells to the model in a single step
+    graph.getModel().beginUpdate();
+    try {
+      const v1 = graph.insertVertex(parent, null, '', 20, 20, 120, 70);
+      const v2 = graph.insertVertex(
+        v1,
+        null,
+        'Constituent',
+        20,
+        20,
+        80,
+        30,
+        'constituent=1;'
+      );
+    } finally {
+      // Updates the display
+      graph.getModel().endUpdate();
+    }
+  }
 }
 
-export default MYNAMEHERE;
-
-
-<html>
-<head>
-	<title>Consistuent example for mxGraph</title>
-
-	<!-- Sets the basepath for the library if not in same directory -->
-	<script type="text/javascript">
-		mxBasePath = '../src';
-	</script>
-
-	<!-- Loads and initializes the library -->
-	<script type="text/javascript" src="../src/js/mxClient.js"></script>
-
-	<!-- Example code -->
-	<script type="text/javascript">
-		
-		/**
-		 * Redirects start drag to parent.
-		 */
-		let graphHandlerGetInitialCellForEvent = mxGraphHandler.prototype.getInitialCellForEvent;
-		mxGraphHandler.prototype.getInitialCellForEvent = function(me)
-		{
-			let cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
-			
-			if (this.graph.isPart(cell))
-			{
-				cell = this.graph.getModel().getParent(cell)
-			}
-			
-			return cell;
-		};
-
-		// Program starts here. Creates a sample graph in the
-		// DOM node with the specified ID. This function is invoked
-		// from the onLoad event handler of the document (see below).
-		function main(container)
-		{
-			// Checks if the browser is supported
-			if (!mxClient.isBrowserSupported())
-			{
-				// Displays an error message if the browser is not supported.
-				mxUtils.error('Browser is not supported!', 200, false);
-			}
-			else
-			{
-				// Disables the built-in context menu
-				mxEvent.disableContextMenu(container);
-				
-				// Creates the graph inside the given container
-				let graph = new mxGraph(container);
-				graph.foldingEnabled = false;
-				graph.recursiveResize = true;
-				
-				// Helper method to mark parts with constituent=1 in the style
-				graph.isPart = function(cell)
-				{
-					return this.getCurrentCellStyle(cell)['constituent'] == '1';
-				};
-				
-				// Redirects selection to parent
-				graph.selectCellForEvent = function(cell)
-				{
-					if (this.isPart(cell))
-					{
-						cell = this.model.getParent(cell);
-					}
-					
-					mxGraph.prototype.selectCellForEvent.apply(this, arguments);
-				};
-				
-				// Enables rubberband selection
-				new mxRubberband(graph);
-				
-				// Gets the default parent for inserting new cells. This
-				// is normally the first child of the root (ie. layer 0).
-				let parent = graph.getDefaultParent();
-								
-				// Adds cells to the model in a single step
-				graph.getModel().beginUpdate();
-				try
-				{
-					var v1 = graph.insertVertex(parent, null, '', 20, 20, 120, 70);
-					var v2 = graph.insertVertex(v1, null, 'Constituent', 20, 20, 80, 30, 'constituent=1;');
-				}
-				finally
-				{
-					// Updates the display
-					graph.getModel().endUpdate();
-				}
-			}
-		};
-	</script>
-</head>
-
-<!-- Page passes the container for the graph to the program -->
-<body onload="main(document.getElementById('graphContainer'))">
-
-	<!-- Creates a container for the graph with a grid wallpaper -->
-	<div id="graphContainer"
-		style="position:relative;overflow:hidden;width:321px;height:241px;background:url('editors/images/grid.gif');cursor:default;">
-	</div>
-</body>
-</html>
+export default Constituent;

@@ -32,8 +32,8 @@ class Boundary extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '821px',
-            height: '641px',
+            width: '321px',
+            height: '241px',
             background: 'url("editors/images/grid.gif")',
             cursor: 'default'
           }}

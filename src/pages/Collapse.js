@@ -1,16 +1,15 @@
-<!--
-  Copyright (c) 2006-2013, JGraph Ltd
-  
-  Collapse example for mxGraph. This example demonstrates changing
-  the style of a cell based on its collapsed state.
--->
+/**
+ * Copyright (c) 2006-2013, JGraph Ltd
+ *
+ * Collapse example for mxGraph. This example demonstrates changing
+ * the style of a cell based on its collapsed state.
+ */
 
 import React from 'react';
-import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
-import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxRectangle from '../mxgraph/util/mxRectangle';
 
-class MYNAMEHERE extends React.Component {
+class Collapse extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -19,14 +18,19 @@ class MYNAMEHERE extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1></h1>
+        <h1>Collapse example for mxGraph</h1>
 
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-
+            position: 'relative',
+            overflow: 'hidden',
+            width: '321px',
+            height: '241px',
+            background: "url('editors/images/grid.gif')",
+            cursor: 'default',
           }}
         />
       </>
@@ -34,77 +38,45 @@ class MYNAMEHERE extends React.Component {
   };
 
   componentDidMount = () => {
+    const graph = new mxGraph(this.el);
+    const parent = graph.getDefaultParent();
 
+    // Extends mxGraphModel.getStyle to show an image when collapsed
+    const modelGetStyle = graph.model.getStyle;
+    graph.model.getStyle = function(cell) {
+      if (cell != null) {
+        let style = modelGetStyle.apply(this, arguments);
+
+        if (this.isCollapsed(cell)) {
+          style =
+            `${style};shape=image;image=http://www.jgraph.com/images/mxgraph.gif;` +
+            `noLabel=1;imageBackground=#C3D9FF;imageBorder=#6482B9`;
+        }
+
+        return style;
+      }
+
+      return null;
+    };
+
+    graph.getModel().beginUpdate();
+    try {
+      const v1 = graph.insertVertex(
+        parent,
+        null,
+        'Container',
+        20,
+        20,
+        200,
+        200,
+        'shape=swimlane;startSize=20;'
+      );
+      v1.geometry.alternateBounds = new mxRectangle(0, 0, 110, 70);
+      const v11 = graph.insertVertex(v1, null, 'Hello,', 10, 40, 120, 80);
+    } finally {
+      graph.getModel().endUpdate();
+    }
   };
 }
 
-export default MYNAMEHERE;
-
-
-<html>
-<head>
-	<title>Collapse example for mxGraph</title>
-
-	<!-- Sets the basepath for the library if not in same directory -->
-	<script type="text/javascript">
-		mxBasePath = '../src';
-	</script>
-
-	<!-- Loads and initializes the library -->
-	<script type="text/javascript" src="../src/js/mxClient.js"></script>
-
-	<!-- Example code -->
-	<script type="text/javascript">
-		// Program starts here. Creates a sample graph in the
-		// DOM node with the specified ID. This function is invoked
-		// from the onLoad event handler of the document (see below).
-		function main(container)
-		{
-			let graph = new mxGraph(container);
-			let parent = graph.getDefaultParent();
-			
-			// Extends mxGraphModel.getStyle to show an image when collapsed
-			let modelGetStyle = graph.model.getStyle;
-			graph.model.getStyle = function(cell)
-			{
-				if (cell != null)
-				{
-					let style = modelGetStyle.apply(this, arguments);
-					
-					if (this.isCollapsed(cell))
-					{
-						style = style + ';shape=image;image=http://www.jgraph.com/images/mxgraph.gif;' +
-							'noLabel=1;imageBackground=#C3D9FF;imageBorder=#6482B9';
-					}
-					
-					return style;
-				}
-				
-				return null;
-			};
-			
-			graph.getModel().beginUpdate();
-			try
-			{
-				var v1 = graph.insertVertex(parent, null, 'Container', 20, 20, 200, 200,
-					'shape=swimlane;startSize=20;');
-				v1.geometry.alternateBounds = new mxRectangle(0, 0, 110, 70);
-				var v11 = graph.insertVertex(v1, null, 'Hello,', 10, 40, 120, 80);
-			}
-			finally
-			{
-				graph.getModel().endUpdate();
-			}
-		};
-	</script>
-</head>
-
-<!-- Page passes the container for the graph to the program -->
-<body onload="main(document.getElementById('graphContainer'))">
-
-	<!-- Creates a container for the graph with a grid wallpaper -->
-	<div id="graphContainer"
-		style="position:relative;overflow:hidden;width:321px;height:241px;background:url('editors/images/grid.gif');cursor:default;">
-	</div>
-</body>
-</html>
+export default Collapse;

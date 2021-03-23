@@ -6,6 +6,7 @@
 import mxShape from './mxShape';
 import mxRectangle from '../util/mxRectangle';
 import mxConstants from '../util/mxConstants';
+import mxUtils from "../util/mxUtils";
 
 class mxSwimlane extends mxShape {
   /**
@@ -89,20 +90,20 @@ class mxSwimlane extends mxShape {
 
     // East is default
     const shapeVertical =
-      this.direction == mxConstants.DIRECTION_NORTH ||
-      this.direction == mxConstants.DIRECTION_SOUTH;
+      this.direction === mxConstants.DIRECTION_NORTH ||
+      this.direction === mxConstants.DIRECTION_SOUTH;
     const realHorizontal = horizontal == !shapeVertical;
 
     const realFlipH =
       !realHorizontal &&
       flipH !=
-        (this.direction == mxConstants.DIRECTION_SOUTH ||
-          this.direction == mxConstants.DIRECTION_WEST);
+        (this.direction === mxConstants.DIRECTION_SOUTH ||
+          this.direction === mxConstants.DIRECTION_WEST);
     const realFlipV =
       realHorizontal &&
       flipV !=
-        (this.direction == mxConstants.DIRECTION_SOUTH ||
-          this.direction == mxConstants.DIRECTION_WEST);
+        (this.direction === mxConstants.DIRECTION_SOUTH ||
+          this.direction === mxConstants.DIRECTION_WEST);
 
     // Shape is horizontal
     if (!shapeVertical) {
