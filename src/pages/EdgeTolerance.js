@@ -1,161 +1,129 @@
-<!--
-  Copyright (c) 2006-2013, JGraph Ltd
-  
-  Edge tolerance example for mxGraph. This example demonstrates increasing
-  the tolerance for hit detection on edges.
--->
+/**
+ * Copyright (c) 2006-2013, JGraph Ltd
+ *
+ * Edge tolerance example for mxGraph. This example demonstrates increasing
+ * the tolerance for hit detection on edges.
+ */
 
 import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
-import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxUtils from '../mxgraph/util/mxUtils';
 
-class MYNAMEHERE extends React.Component {
+class EdgeTolerance extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
-        <h1></h1>
-
+        <h1>Edge tolerance example for mxGraph</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-
+            overflow: 'hidden',
+            width: '641px',
+            height: '481px',
+            background: "url('editors/images/grid.gif')",
+            cursor: 'default',
           }}
         />
       </>
     );
-  };
+  }
 
-  componentDidMount = () => {
+  componentDidMount() {
+    let el = this.el;
 
-  };
+    class MyCustomGraph extends mxGraph {
+      fireMouseEvent(evtName, me, sender) {
+        // Overrides the mouse event dispatching mechanism to update the
+        // cell which is associated with the event in case the native hit
+        // detection did not return anything.
+
+        // Checks if native hit detection did not return anything
+        if (me.getState() == null) {
+          // Updates the graph coordinates in the event since we need
+          // them here. Storing them in the event means the overridden
+          // method doesn't have to do this again.
+          if (me.graphX == null || me.graphY == null) {
+            const pt = mxUtils.convertPoint(el, me.getX(), me.getY());
+
+            me.graphX = pt.x;
+            me.graphY = pt.y;
+          }
+
+          const cell = this.getCellAt(me.graphX, me.graphY);
+
+          if (this.getModel().isEdge(cell)) {
+            me.state = this.view.getState(cell);
+
+            if (me.state != null && me.state.shape != null) {
+              this.container.style.cursor = me.state.shape.node.style.cursor;
+            }
+          }
+        }
+
+        if (me.state == null) {
+          this.container.style.cursor = 'default';
+        }
+
+        super.fireMouseEvent(evtName, me, sender);
+      };
+
+      dblClick(evt, cell) {
+        // Overrides double click handling to use the tolerance
+        if (cell == null) {
+          const pt = mxUtils.convertPoint(
+            el,
+            mxEvent.getClientX(evt),
+            mxEvent.getClientY(evt)
+          );
+          cell = this.getCellAt(pt.x, pt.y);
+        }
+
+        super.dblClick(evt, cell);
+      };
+    }
+
+    // Creates the graph inside the given container
+    const graph = new MyCustomGraph(this.el);
+    graph.setTolerance(20);
+
+    // Gets the default parent for inserting new cells. This
+    // is normally the first child of the root (ie. layer 0).
+    const parent = graph.getDefaultParent();
+
+    // Adds cells to the model in a single step
+    graph.getModel().beginUpdate();
+    try {
+      const v1 = graph.insertVertex(parent, null, 'Hello,', 120, 120, 80, 30);
+      const v2 = graph.insertVertex(parent, null, 'World!', 400, 250, 80, 30);
+      const e1 = graph.insertEdge(
+        parent,
+        null,
+        '',
+        v1,
+        v2,
+        'edgeStyle=orthogonalEdgeStyle;'
+      );
+      const e2 = graph.insertEdge(
+        parent,
+        null,
+        '',
+        v2,
+        v1,
+        'edgeStyle=orthogonalEdgeStyle;'
+      );
+    } finally {
+      // Updates the display
+      graph.getModel().endUpdate();
+    }
+  }
 }
 
-export default MYNAMEHERE;
-
-
-<html>
-<head>
-	<title>Edge tolerance example for mxGraph</title>
-
-	<!-- Sets the basepath for the library if not in same directory -->
-	<script type="text/javascript">
-		mxBasePath = '../src';
-	</script>
-
-	<!-- Loads and initializes the library -->
-	<script type="text/javascript" src="../src/js/mxClient.js"></script>
-
-	<!-- Example code -->
-	<script type="text/javascript">
-		// Program starts here. Creates a sample graph in the
-		// DOM node with the specified ID. This function is invoked
-		// from the onLoad event handler of the document (see below).
-		function main(container)
-		{
-			// Checks if the browser is supported
-			if (!mxClient.isBrowserSupported())
-			{
-				// Displays an error message if the browser is not supported.
-				mxUtils.error('Browser is not supported!', 200, false);
-			}
-			else
-			{
-				// Overrides the mouse event dispatching mechanism to update the
-				// cell which is associated with the event in case the native hit
-				// detection did not return anything.
-				let mxGraphFireMouseEvent = mxGraph.prototype.fireMouseEvent;
-				mxGraph.prototype.fireMouseEvent = function(evtName, me, sender)
-				{
-					// Checks if native hit detection did not return anything
-					if (me.getState() == null)
-					{
-						// Updates the graph coordinates in the event since we need
-						// them here. Storing them in the event means the overridden
-						// method doesn't have to do this again.
-						if (me.graphX == null || me.graphY == null)
-						{
-							let pt = mxUtils.convertPoint(this.container, me.getX(), me.getY());
-							
-							me.graphX = pt.x;
-							me.graphY = pt.y;
-						}
-						
-						let cell = this.getCellAt(me.graphX, me.graphY);
-						
-						if (this.getModel().isEdge(cell))
-						{
-							me.state = this.view.getState(cell);
-							
-							if (me.state != null && me.state.shape != null)
-							{
-								graph.container.style.cursor = me.state.shape.node.style.cursor;
-							}
-						}
-					}
-					
-					if (me.state == null)
-					{
-						graph.container.style.cursor = 'default';
-					}
-					
-					mxGraphFireMouseEvent.apply(this, arguments);
-				};
-				
-				// Overrides double click handling to use the tolerance
-				let mxGraphDblClick = mxGraph.prototype.dblClick;
-				mxGraph.prototype.dblClick = function(evt, cell)
-				{
-					if (cell == null)
-					{
-						let pt = mxUtils.convertPoint(this.container,
-							mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-						cell = this.getCellAt(pt.x, pt.y);
-					}
-					
-					mxGraphDblClick.call(this, evt, cell);
-				};
-
-				// Creates the graph inside the given container
-				let graph = new mxGraph(container);
-				graph.setTolerance(20);
-
-				// Gets the default parent for inserting new cells. This
-				// is normally the first child of the root (ie. layer 0).
-				let parent = graph.getDefaultParent();
-								
-				// Adds cells to the model in a single step
-				graph.getModel().beginUpdate();
-				try
-				{
-					var v1 = graph.insertVertex(parent, null, 'Hello,', 120, 120, 80, 30);
-					var v2 = graph.insertVertex(parent, null, 'World!', 400, 250, 80, 30);
-					var e1 = graph.insertEdge(parent, null, '', v1, v2, 'edgeStyle=orthogonalEdgeStyle;');
-					var e2 = graph.insertEdge(parent, null, '', v2, v1, 'edgeStyle=orthogonalEdgeStyle;');
-				}
-				finally
-				{
-					// Updates the display
-					graph.getModel().endUpdate();
-				}
-			}
-		};
-	</script>
-</head>
-
-<!-- Page passes the container for the graph to the program -->
-<body onload="main(document.getElementById('graphContainer'))">
-
-	<!-- Creates a container for the graph with a grid wallpaper -->
-	<div id="graphContainer"
-		style="overflow:hidden;width:641px;height:481px;background:url('editors/images/grid.gif');cursor:default;">
-	</div>
-</body>
-</html>
+export default EdgeTolerance;

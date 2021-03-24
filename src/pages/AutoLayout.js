@@ -164,7 +164,7 @@ class AutoLayout extends React.Component {
         graph.stopEditing(false);
 
         const pt = mxUtils.convertPoint(
-          graph.this.el,
+          graph.container,
           mxEvent.getClientX(evt2),
           mxEvent.getClientY(evt2)
         );

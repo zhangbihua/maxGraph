@@ -1,201 +1,162 @@
-<!--
-  Copyright (c) 2006-2013, JGraph Ltd
-  
-  Editing example for mxGraph. This example demonstrates using the in-place
-  editor trigger to specify the editing value and write the new value into
-  a specific field of the user object. Wrapping and DOM nodes as labels are
-  also demonstrated here.
--->
+/**
+ * Copyright (c) 2006-2013, JGraph Ltd
+ *
+ * Editing example for mxGraph. This example demonstrates using the in-place
+ * editor trigger to specify the editing value and write the new value into
+ * a specific field of the user object. Wrapping and DOM nodes as labels are
+ * also demonstrated here.
+ */
 
 import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
-import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxKeyHandler from '../mxgraph/handler/mxKeyHandler';
 
-class MYNAMEHERE extends React.Component {
+class Editing extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
-        <h1></h1>
-
+        <h1>Editing example for mxGraph</h1>
+        Double-click the upper/lower half of the cell to edit different fields
+        of the user object.
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-
+            overflow: 'hidden',
+            position: 'relative',
+            width: '321px',
+            height: '241px',
+            background: "url('editors/images/grid.gif')",
           }}
         />
       </>
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
+    class MyCustomGraph extends mxGraph {
+      getLabel(cell) {
+        // Returns a HTML representation of the cell where the
+        // upper half is the first value, lower half is second
+        // value
 
-  };
+        const table = document.createElement('table');
+        table.style.height = '100%';
+        table.style.width = '100%';
+
+        const body = document.createElement('tbody');
+        const tr1 = document.createElement('tr');
+        const td1 = document.createElement('td');
+        td1.style.textAlign = 'center';
+        td1.style.fontSize = '12px';
+        td1.style.color = '#774400';
+        mxUtils.write(td1, cell.value.first);
+
+        const tr2 = document.createElement('tr');
+        const td2 = document.createElement('td');
+        td2.style.textAlign = 'center';
+        td2.style.fontSize = '12px';
+        td2.style.color = '#774400';
+        mxUtils.write(td2, cell.value.second);
+
+        tr1.appendChild(td1);
+        tr2.appendChild(td2);
+        body.appendChild(tr1);
+        body.appendChild(tr2);
+        table.appendChild(body);
+
+        return table;
+      }
+
+      getEditingValue(cell, evt) {
+        // Returns the editing value for the given cell and event
+        evt.fieldname = this.__getFieldnameForEvent(cell, evt);
+        return cell.value[evt.fieldname] || '';
+      }
+
+      __getFieldnameForEvent(cell, evt) {
+        // Helper method that returns the fieldname to be used for
+        // a mouse event
+        if (evt != null) {
+          // Finds the relative coordinates inside the cell
+          const point = mxUtils.convertPoint(
+            this.container,
+            mxEvent.getClientX(evt),
+            mxEvent.getClientY(evt)
+          );
+          const state = this.getView().getState(cell);
+
+          if (state != null) {
+            point.x -= state.x;
+            point.y -= state.y;
+
+            // Returns second if mouse in second half of cell
+            if (point.y > state.height / 2) {
+              return 'second';
+            }
+          }
+        }
+        return 'first';
+      }
+
+      labelChanged(cell, newValue, trigger) {
+        // Sets the new value for the given cell and trigger
+        const name = trigger != null ? trigger.fieldname : null;
+
+        if (name != null) {
+          // Clones the user object for correct undo and puts
+          // the new value in the correct field.
+          const value = mxUtils.clone(cell.value);
+          value[name] = newValue;
+          newValue = value;
+
+          super.labelChanged(cell, newValue, trigger);
+        }
+      }
+    }
+
+    // Creates the graph inside the given container
+    const graph = new MyCustomGraph(this.el);
+    graph.setHtmlLabels(true);
+
+    // Adds handling of return and escape keystrokes for editing
+    const keyHandler = new mxKeyHandler(graph);
+
+    // Sample user objects with 2 fields
+    const value = {};
+    value.first = 'First value';
+    value.second = 'Second value';
+
+    // Gets the default parent for inserting new cells. This
+    // is normally the first child of the root (ie. layer 0).
+    const parent = graph.getDefaultParent();
+
+    // Adds cells to the model in a single step
+    graph.getModel().beginUpdate();
+    try {
+      const v1 = graph.insertVertex(
+        parent,
+        null,
+        value,
+        100,
+        60,
+        120,
+        80,
+        'overflow=fill;'
+      );
+    } finally {
+      // Updates the display
+      graph.getModel().endUpdate();
+    }
+  }
 }
 
-export default MYNAMEHERE;
-
-
-<html>
-<head>
-	<title>Editing example for mxGraph</title>
-
-	<!-- Sets the basepath for the library if not in same directory -->
-	<script type="text/javascript">
-		mxBasePath = '../src';
-	</script>
-
-	<!-- Loads and initializes the library -->
-	<script type="text/javascript" src="../src/js/mxClient.js"></script>
-
-	<!-- Example code -->
-	<script type="text/javascript">
-
-		// Program starts here. Creates a sample graph in the
-		// DOM node with the specified ID. This function is invoked
-		// from the onLoad event handler of the document (see below).
-		function main(container)
-		{
-			// Checks if the browser is supported
-			if (!mxClient.isBrowserSupported())
-			{
-				// Displays an error message if the browser is not supported
-				mxUtils.error('Browser is not supported!', 200, false);
-			}
-			else
-			{
-				// Creates the graph inside the given container
-				let graph = new mxGraph(container);
-				graph.setHtmlLabels(true);
-				
-				// Adds handling of return and escape keystrokes for editing
-				let keyHandler = new mxKeyHandler(graph);
-				
-				// Helper method that returns the fieldname to be used for
-				// a mouse event
-				let getFieldnameForEvent = function(cell, evt)
-				{
-					if (evt != null)
-					{
-						// Finds the relative coordinates inside the cell
-						let point = mxUtils.convertPoint(graph.container,
-							mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-						let state = graph.getView().getState(cell);
-						
-						if (state != null)
-						{
-							point.x -= state.x;
-							point.y -= state.y;
-							
-							// Returns second if mouse in second half of cell
-							if (point.y > state.height / 2)
-							{
-								return 'second';
-							}
-						}
-					}
-					
-					return 'first';
-				};
-				
-				// Returns a HTML representation of the cell where the
-				// upper half is the first value, lower half is second
-				// value
-				graph.getLabel = function(cell)
-				{
-					let table = document.createElement('table');
-					table.style.height = '100%';
-					table.style.width = '100%';
-					
-					let body = document.createElement('tbody');
-					var tr1 = document.createElement('tr');
-					var td1 = document.createElement('td');
-					td1.style.textAlign = 'center';
-					td1.style.fontSize = '12px';
-					td1.style.color = '#774400';
-					mxUtils.write(td1, cell.value.first);
-					
-					var tr2 = document.createElement('tr');
-					var td2 = document.createElement('td');
-					td2.style.textAlign = 'center';
-					td2.style.fontSize = '12px';
-					td2.style.color = '#774400';
-					mxUtils.write(td2, cell.value.second);
-					
-					tr1.appendChild(td1);
-					tr2.appendChild(td2);
-					body.appendChild(tr1);
-					body.appendChild(tr2);
-					table.appendChild(body);
-					
-					return table;
-				};
-				
-				// Returns the editing value for the given cell and event
-				graph.getEditingValue = function(cell, evt)
-				{
-					evt.fieldname = getFieldnameForEvent(cell, evt);
-
-					return cell.value[evt.fieldname] || '';
-				};
-								
-				// Sets the new value for the given cell and trigger
-				graph.labelChanged = function(cell, newValue, trigger)
-				{
-					let name = (trigger != null) ? trigger.fieldname : null;
-					
-					if (name != null)
-					{
-						// Clones the user object for correct undo and puts
-						// the new value in the correct field.
-						let value = mxUtils.clone(cell.value);
-						value[name] = newValue;
-						newValue = value;
-						
-						mxGraph.prototype.labelChanged.apply(this, arguments);
-					}
-				};
-				
-				// Sample user objects with 2 fields
-				let value = {};
-				value.first = 'First value';
-				value.second = 'Second value';
-				
-				// Gets the default parent for inserting new cells. This
-				// is normally the first child of the root (ie. layer 0).
-				let parent = graph.getDefaultParent();
-								
-				// Adds cells to the model in a single step
-				graph.getModel().beginUpdate();
-				try
-				{
-					var v1 = graph.insertVertex(parent, null, value, 100, 60, 120, 80, 'overflow=fill;');
-				}
-				finally
-				{
-					// Updates the display
-					graph.getModel().endUpdate();
-				}
-			}
-		};
-	</script>
-</head>
-
-<!-- Page passes the container for the graph to the program -->
-<body onload="main(document.getElementById('graphContainer'))">
-	<p>
-	  Double-click the upper/lower half of the cell to edit different fields of the user object.
-	</p>
-	<!-- Creates a container for the graph with a grid wallpaper -->
-	<div id="graphContainer"
-		style="overflow:hidden;position:relative;width:321px;height:241px;background:url('editors/images/grid.gif')">
-	</div>
-</body>
-</html>
+export default Editing;

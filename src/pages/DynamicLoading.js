@@ -1,16 +1,21 @@
-<!--
-  Copyright (c) 2006-2013, JGraph Ltd
-  
-  Dynamic loading example for mxGraph. This example demonstrates loading
-  graph model data dynamically to limit the number of cells in the model.
--->
+/**
+ * Copyright (c) 2006-2013, JGraph Ltd
+ *
+ * Dynamic loading example for mxGraph. This example demonstrates loading
+ * graph model data dynamically to limit the number of cells in the model.
+ */
 
 import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
-import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxText from '../mxgraph/shape/mxText';
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxCodec from '../mxgraph/io/mxCodec';
+import mxEffects from '../mxgraph/util/mxEffects';
+import mxPerimeter from '../mxgraph/view/mxPerimeter';
 
-class MYNAMEHERE extends React.Component {
+class DynamicLoading extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -19,14 +24,19 @@ class MYNAMEHERE extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1></h1>
+        <h1>Dynamic loading example for mxGraph</h1>
 
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-
+            overflow: 'visible',
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            background: "url('editors/images/grid.gif')",
+            cursor: 'default',
           }}
         />
       </>
@@ -34,251 +44,187 @@ class MYNAMEHERE extends React.Component {
   };
 
   componentDidMount = () => {
+    let requestId = 0;
 
+    // Speedup the animation
+    mxText.prototype.enableBoundingBox = false;
+
+    // Creates the graph inside the given container
+    const graph = new mxGraph(this.el);
+
+    // Disables all built-in interactions
+    graph.setEnabled(false);
+
+    // Handles clicks on cells
+    graph.addListener(mxEvent.CLICK, function(sender, evt) {
+      const cell = evt.getProperty('cell');
+
+      if (cell != null) {
+        load(graph, cell);
+      }
+    });
+
+    // Changes the default vertex style in-place
+    const style = graph.getStylesheet().getDefaultVertexStyle();
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
+    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
+    style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
+
+    // Gets the default parent for inserting new cells. This
+    // is normally the first child of the root (ie. layer 0).
+    const parent = graph.getDefaultParent();
+
+    const cx = graph.container.clientWidth / 2;
+    const cy = graph.container.clientHeight / 2;
+
+    const cell = graph.insertVertex(
+      parent,
+      '0-0',
+      '0-0',
+      cx - 20,
+      cy - 15,
+      60,
+      40
+    );
+
+    // Animates the changes in the graph model
+    graph.getModel().addListener(mxEvent.CHANGE, function(sender, evt) {
+      const { changes } = evt.getProperty('edit');
+      mxEffects.animateChanges(graph, changes);
+    });
+
+    // Loads the links for the given cell into the given graph
+    // by requesting the respective data in the server-side
+    // (implemented for this demo using the server-function)
+    function load(graph, cell) {
+      if (graph.getModel().isVertex(cell)) {
+        const cx = graph.container.clientWidth / 2;
+        const cy = graph.container.clientHeight / 2;
+
+        // Gets the default parent for inserting new cells. This
+        // is normally the first child of the root (ie. layer 0).
+        const parent = graph.getDefaultParent();
+
+        // Adds cells to the model in a single step
+        graph.getModel().beginUpdate();
+        try {
+          const xml = server(cell.id);
+          const doc = mxUtils.parseXml(xml);
+          const dec = new mxCodec(doc);
+          const model = dec.decode(doc.documentElement);
+
+          // Removes all cells which are not in the response
+          for (var key in graph.getModel().cells) {
+            const tmp = graph.getModel().getCell(key);
+
+            if (tmp != cell && graph.getModel().isVertex(tmp)) {
+              graph.removeCells([tmp]);
+            }
+          }
+
+          // Merges the response model with the client model
+          graph.getModel().mergeChildren(model.getRoot().getChildAt(0), parent);
+
+          // Moves the given cell to the center
+          let geo = graph.getModel().getGeometry(cell);
+
+          if (geo != null) {
+            geo = geo.clone();
+            geo.x = cx - geo.width / 2;
+            geo.y = cy - geo.height / 2;
+
+            graph.getModel().setGeometry(cell, geo);
+          }
+
+          // Creates a list of the new vertices, if there is more
+          // than the center vertex which might have existed
+          // previously, then this needs to be changed to analyze
+          // the target model before calling mergeChildren above
+          const vertices = [];
+
+          for (var key in graph.getModel().cells) {
+            const tmp = graph.getModel().getCell(key);
+
+            if (tmp != cell && model.isVertex(tmp)) {
+              vertices.push(tmp);
+
+              // Changes the initial location "in-place"
+              // to get a nice animation effect from the
+              // center to the radius of the circle
+              const geo = model.getGeometry(tmp);
+
+              if (geo != null) {
+                geo.x = cx - geo.width / 2;
+                geo.y = cy - geo.height / 2;
+              }
+            }
+          }
+
+          // Arranges the response in a circle
+          const cellCount = vertices.length;
+          const phi = (2 * Math.PI) / cellCount;
+          const r = Math.min(
+            graph.container.clientWidth / 4,
+            graph.container.clientHeight / 4
+          );
+
+          for (let i = 0; i < cellCount; i++) {
+            let geo = graph.getModel().getGeometry(vertices[i]);
+
+            if (geo != null) {
+              geo = geo.clone();
+              geo.x += r * Math.sin(i * phi);
+              geo.y += r * Math.cos(i * phi);
+
+              graph.getModel().setGeometry(vertices[i], geo);
+            }
+          }
+        } finally {
+          // Updates the display
+          graph.getModel().endUpdate();
+        }
+      }
+    }
+
+    // Simulates the existence of a server that can crawl the
+    // big graph with a certain depth and create a graph model
+    // for the traversed cells, which is then sent to the client
+    function server(cellId) {
+      // Increments the request ID as a prefix for the cell IDs
+      requestId++;
+
+      // Creates a local graph with no display
+      const graph = new mxGraph();
+
+      // Gets the default parent for inserting new cells. This
+      // is normally the first child of the root (ie. layer 0).
+      const parent = graph.getDefaultParent();
+
+      // Adds cells to the model in a single step
+      graph.getModel().beginUpdate();
+      try {
+        const v0 = graph.insertVertex(parent, cellId, 'Dummy', 0, 0, 60, 40);
+        const cellCount = parseInt(Math.random() * 16) + 4;
+
+        // Creates the random links and cells for the response
+        for (let i = 0; i < cellCount; i++) {
+          const id = `${requestId}-${i}`;
+          const v = graph.insertVertex(parent, id, id, 0, 0, 60, 40);
+          const e = graph.insertEdge(parent, null, `Link ${i}`, v0, v);
+        }
+      } finally {
+        // Updates the display
+        graph.getModel().endUpdate();
+      }
+
+      const enc = new mxCodec();
+      const node = enc.encode(graph.getModel());
+
+      return mxUtils.getXml(node);
+    }
+
+    load(graph, cell);
   };
 }
 
-export default MYNAMEHERE;
-
-
-<html>
-<head>
-	<title>Dynamic loading example for mxGraph</title>
-
-	<!-- Sets the basepath for the library if not in same directory -->
-	<script type="text/javascript">
-		mxBasePath = '../src';
-	</script>
-
-	<!-- Loads and initializes the library -->
-	<script type="text/javascript" src="../src/js/mxClient.js"></script>
-
-	<!-- Example code -->
-	<script type="text/javascript">
-		// Program starts here. Creates a sample graph in the
-		// DOM node with the specified ID. This function is invoked
-		// from the onLoad event handler of the document (see below).
-		
-		// Global variable to make sure each cell in a response has
-		// a unique ID throughout the complete life of the program,
-		// in a real-life setup each cell should have an external
-		// ID on the business object or else the cell ID should be
-		// globally unique for the lifetime of the graph model.
-		let requestId = 0;
-		
-		function main(container)
-		{
-			// Checks if browser is supported
-			if (!mxClient.isBrowserSupported())
-			{
-				// Displays an error message if the browser is
-				// not supported.
-				mxUtils.error('Browser is not supported!', 200, false);
-			}
-			else
-			{
-				// Speedup the animation
-				mxText.prototype.enableBoundingBox = false;
-				
-				// Creates the graph inside the given container
-				let graph = new mxGraph(container);
-				
-				// Disables all built-in interactions
-				graph.setEnabled(false);
-
-				// Handles clicks on cells
-				graph.addListener(mxEvent.CLICK, function(sender, evt)
-				{
-					let cell = evt.getProperty('cell');
-
-					if (cell != null)
-					{
-						load(graph, cell);
-					}
-				});
-
-				// Changes the default vertex style in-place
-				let style = graph.getStylesheet().getDefaultVertexStyle();
-				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
-				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-				style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-								
-				// Gets the default parent for inserting new cells. This
-				// is normally the first child of the root (ie. layer 0).
-				let parent = graph.getDefaultParent();
-
-				let cx = graph.container.clientWidth / 2;
-				let cy = graph.container.clientHeight / 2;
-				
-				let cell = graph.insertVertex(parent, '0-0', '0-0', cx - 20, cy - 15, 60, 40);
-
-				// Animates the changes in the graph model
-				graph.getModel().addListener(mxEvent.CHANGE, function(sender, evt)
-				{
-					let changes = evt.getProperty('edit').changes;
-					mxEffects.animateChanges(graph, changes);
-				});
-
-				load(graph, cell);
-			}
-		};
-
-		// Loads the links for the given cell into the given graph
-		// by requesting the respective data in the server-side
-		// (implemented for this demo using the server-function)
-		function load(graph, cell)
-		{
-			if (graph.getModel().isVertex(cell))
-			{
-				let cx = graph.container.clientWidth / 2;
-				let cy = graph.container.clientHeight / 2;
-				
-				// Gets the default parent for inserting new cells. This
-				// is normally the first child of the root (ie. layer 0).
-				let parent = graph.getDefaultParent();
-
-				// Adds cells to the model in a single step
-				graph.getModel().beginUpdate();
-				try
-				{
-					let xml = server(cell.id);
-					let doc = mxUtils.parseXml(xml);
-					let dec = new mxCodec(doc);
-					let model = dec.decode(doc.documentElement);
-
-					// Removes all cells which are not in the response
-					for (var key in graph.getModel().cells)
-					{
-						let tmp = graph.getModel().getCell(key);
-						
-						if (tmp != cell &&
-							graph.getModel().isVertex(tmp))
-						{
-							graph.removeCells([tmp]);
-						}
-					}
-
-					// Merges the response model with the client model
-					graph.getModel().mergeChildren(model.getRoot().getChildAt(0), parent);
-
-					// Moves the given cell to the center
-					let geo = graph.getModel().getGeometry(cell);
-
-					if (geo != null)
-					{
-						geo = geo.clone();
-						geo.x = cx - geo.width / 2;
-						geo.y = cy - geo.height / 2;
-
-						graph.getModel().setGeometry(cell, geo);
-					}
-
-					// Creates a list of the new vertices, if there is more
-					// than the center vertex which might have existed
-					// previously, then this needs to be changed to analyze
-					// the target model before calling mergeChildren above
-					let vertices = [];
-					
-					for (var key in graph.getModel().cells)
-					{
-						let tmp = graph.getModel().getCell(key);
-						
-						if (tmp != cell && model.isVertex(tmp))
-						{
-							vertices.push(tmp);
-
-							// Changes the initial location "in-place"
-							// to get a nice animation effect from the
-							// center to the radius of the circle
-							let geo = model.getGeometry(tmp);
-
-							if (geo != null)
-							{
-								geo.x = cx - geo.width / 2;
-								geo.y = cy - geo.height / 2;
-							}
-						}
-					}
-					
-					// Arranges the response in a circle
-					let cellCount = vertices.length;
-					let phi = 2 * Math.PI / cellCount;
-					let r = Math.min(graph.container.clientWidth / 4,
-							graph.container.clientHeight / 4);
-					
-					for (let i = 0; i < cellCount; i++)
-					{
-						let geo = graph.getModel().getGeometry(vertices[i]);
-						
-						if (geo != null)
-						{
-							geo = geo.clone();
-							geo.x += r * Math.sin(i * phi);
-							geo.y += r * Math.cos(i * phi);
-
-							graph.getModel().setGeometry(vertices[i], geo);
-						}
-					}
-				}
-				finally
-				{
-					// Updates the display
-					graph.getModel().endUpdate();
-				}
-			}
-		};
-
-		// Simulates the existence of a server that can crawl the
-		// big graph with a certain depth and create a graph model
-		// for the traversed cells, which is then sent to the client
-		function server(cellId)
-		{
-			// Increments the request ID as a prefix for the cell IDs
-			requestId++;
-
-			// Creates a local graph with no display
-			let graph = new mxGraph();
-			
-			// Gets the default parent for inserting new cells. This
-			// is normally the first child of the root (ie. layer 0).
-			let parent = graph.getDefaultParent();
-
-			// Adds cells to the model in a single step
-			graph.getModel().beginUpdate();
-			try
-			{
-				var v0 = graph.insertVertex(parent, cellId, 'Dummy', 0, 0, 60, 40);
-				let cellCount = parseInt(Math.random() * 16) + 4;
-
-				// Creates the random links and cells for the response
-				for (let i = 0; i < cellCount; i++)
-				{
-					let id = requestId + '-' + i;
-					let v = graph.insertVertex(parent, id, id, 0, 0, 60, 40);
-					let e = graph.insertEdge(parent, null, 'Link ' + i, v0, v);
-				}
-			}
-			finally
-			{
-				// Updates the display
-				graph.getModel().endUpdate();
-			}
-
-			let enc = new mxCodec();
-			let node = enc.encode(graph.getModel());
-			
-			return mxUtils.getXml(node);
-		};
-	</script>
-</head>
-
-<!-- Page passes the container for the graph to the program -->
-<body onload="main(document.getElementById('graphContainer'))" style="overflow:hidden;">
-
-	<!-- Creates a container for the graph with a grid wallpaper. Make sure to define the position
-		and overflow attributes! See comments on the adding of the size-listener on line 54 ff!  -->
-	<div id="graphContainer"
-		style="overflow:visible;position:absolute;width:100%;height:100%;background:url('editors/images/grid.gif');cursor:default;">
-	</div>
-</body>
-</html>
+export default DynamicLoading;

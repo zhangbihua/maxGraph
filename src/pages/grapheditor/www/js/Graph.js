@@ -3,6 +3,7 @@
  */
 // Workaround for allowing target="_blank" in HTML sanitizer
 // see https://code.google.com/p/google-caja/issues/detail?can=2&q=&colspec=ID%20Type%20Status%20Priority%20Owner%20Summary&groupby=&sort=&id=1296
+const mxUtils = require("../../../../mxgraph/util/mxUtils");
 if (typeof html4 !== 'undefined')
 {
 	html4.ATTRIBS['a::target'] = 0;

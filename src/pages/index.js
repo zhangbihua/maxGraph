@@ -12,13 +12,28 @@ import Control from "./Control";
 import ContextIcons from "./ContextIcons";
 import Collapse from "./Collapse";
 import Constituent from "./Constituent";
+import DynamicLoading from "./DynamicLoading";
+import Drop from "./Drop";
+import DynamicStyle from "./DynamicStyle";
+import DynamicToolbar from "./DynamicToolbar";
+import EdgeTolerance from "./EdgeTolerance";
+import Editing from "./Editing";
+import Tree from "./Tree";
+import Validation from "./Validation";
+import SwimLanes from "./SwimLanes";
+import Wrapping from "./Wrapping";
+import Windows from "./Windows";
+import Visibility from "./Visibility";
+import UserObject from "./UserObject";
 
 export default function Home() {
   return (
-    <div style={{
-      width: '1000px',
-      margin: '0 auto'
-    }}>
+    <div
+      style={{
+        width: '1000px',
+        margin: '0 auto',
+      }}
+    >
       <HelloWorld />
       <Anchors />
       <AutoLayout />
@@ -31,6 +46,21 @@ export default function Home() {
       <ContextIcons />
       <Control />
       <DragSource />
+      <Drop />
+      {/*<DynamicLoading />*/}
+      <DynamicStyle />
+      <DynamicToolbar />
+      <EdgeTolerance />
+      <Editing />
+
+      <SwimLanes />
+      <Tree />
+
+      <UserObject />
+      <Validation />
+      <Visibility />
+      <Windows />
+      <Wrapping />
     </div>
   );
 }
