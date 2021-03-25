@@ -9,11 +9,12 @@
  */
 
 import React from 'react';
-import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxUtils from "../mxgraph/util/mxUtils";
+import mxCodec from "../mxgraph/io/mxCodec";
 
-class MYNAMEHERE extends React.Component {
+class Template extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -23,13 +24,17 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>Hello, World!</h1>
-
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-
+            overflow: 'hidden',
+            position: 'relative',
+            width: '321px',
+            height: '241px',
+            background: "url('/mxgraph/javascript/examples/editors/images/grid.gif')",
+            cursor: 'default'
           }}
         />
       </>
@@ -37,42 +42,19 @@ class MYNAMEHERE extends React.Component {
   };
 
   componentDidMount() {
+    // Creates the graph inside the given container
+    let graph = new mxGraph(this.el);
 
+    // Adds rubberband selection to the graph
+    new mxRubberband(graph);
+
+    let doc = mxUtils.parseXml(xml);
+    let codec = new mxCodec(doc);
+    codec.decode(doc.documentElement, graph.getModel());
   };
 }
 
-export default MYNAMEHERE;
+export default Template;
 
 
-    function main(container, xml)
-    {
-      // Checks if the browser is supported
-      if (!mxClient.isBrowserSupported())
-      {
-        // Displays an error message if the browser is not supported.
-        mxUtils.error('Browser is not supported!', 200, false);
-      }
-      else
-      {
-        // Creates the graph inside the given container
-        let graph = new mxGraph(container);
 
-        // Adds rubberband selection to the graph
-        new mxRubberband(graph);
-
-        let doc = mxUtils.parseXml(xml);
-        let codec = new mxCodec(doc);
-        codec.decode(doc.documentElement, graph.getModel());
-      }
-    };
-  </script>
-</head>
-
-<!-- Page passes the container for the graph to the program -->
-<body onload="main(document.getElementById('graphContainer'), '%graph%');">
-
-  <!-- Creates a container for the graph with a grid wallpaper -->
-  <div id="graphContainer" style="overflow:hidden;position:relative;width:321px;height:241px;background:url('/mxgraph/javascript/examples/editors/images/grid.gif');cursor:default;">
-  </div>
-</body>
-</html>

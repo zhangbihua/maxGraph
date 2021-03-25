@@ -7,6 +7,10 @@
 import mxDictionary from '../util/mxDictionary';
 import mxPoint from '../util/mxPoint';
 import mxGraphLayout from './mxGraphLayout';
+import mxCellPath from "../model/mxCellPath";
+import mxRectangle from "../util/mxRectangle";
+import mxUtils from "../util/mxUtils";
+import WeightedCellSorter from "./WeightedCellSorter";
 
 class mxCompactTreeLayout extends mxGraphLayout {
   /**

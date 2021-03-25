@@ -4,6 +4,12 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxEventSource from "../util/mxEventSource";
+import mxUtils from "../util/mxUtils";
+import mxEvent from "../util/mxEvent";
+import mxConstants from "../util/mxConstants";
+import mxRectangle from "../util/mxRectangle";
+
 class mxSwimlaneManager extends mxEventSource {
   /**
    * Variable: graph

@@ -22,9 +22,21 @@ import Tree from "./Tree";
 import Validation from "./Validation";
 import SwimLanes from "./SwimLanes";
 import Wrapping from "./Wrapping";
-import Windows from "./Windows";
+//import Windows from "./Windows";
 import Visibility from "./Visibility";
 import UserObject from "./UserObject";
+import Toolbar from "./Toolbar";
+import Thread from "./Thread";
+//import Template from "./Template";
+import Stylesheet from "./Stylesheet";
+import Stencils from "./Stencils";
+import SecondLabel from "./SecondLabel";
+import Shape from "./Shape";
+import Resources from "./Resources";
+import RadialTreeLayout from "./RadialTreeLayout";
+import PortRefs from "./PortRefs";
+import Permissions from "./Permissions";
+import Perimeter from "./Perimeter";
 
 export default function Home() {
   return (
@@ -53,13 +65,25 @@ export default function Home() {
       <EdgeTolerance />
       <Editing />
 
+      <Perimeter />
+      <Permissions />
+      <PortRefs />
+      <RadialTreeLayout />
+      <Resources />
+      <SecondLabel />
+      <Shape />
+      {/*<Stencils />*/}
+      <Stylesheet />
       <SwimLanes />
+      {/*<Template />*/}
+      <Thread />
+      <Toolbar />
       <Tree />
 
       <UserObject />
       <Validation />
       <Visibility />
-      <Windows />
+      {/*<Windows />*/}
       <Wrapping />
     </div>
   );

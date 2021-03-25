@@ -5,6 +5,8 @@
  */
 import mxShape from './mxShape';
 import mxPoint from '../util/mxPoint';
+import mxUtils from "../util/mxUtils";
+import mxConstants from "../util/mxConstants";
 
 class mxRhombus extends mxShape {
   /**

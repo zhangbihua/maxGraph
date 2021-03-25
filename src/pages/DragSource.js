@@ -123,7 +123,7 @@ class DragSource extends React.Component {
     const img = mxUtils.createImage('images/icons48/gear.png');
     img.style.width = '48px';
     img.style.height = '48px';
-    document.body.appendChild(img);
+    this.el.appendChild(img);
 
     // Creates the element that is being for the actual preview.
     const dragElt = document.createElement('div');

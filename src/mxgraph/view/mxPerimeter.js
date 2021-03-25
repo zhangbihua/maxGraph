@@ -6,6 +6,7 @@
 
 import mxUtils from '../util/mxUtils';
 import mxPoint from '../util/mxPoint';
+import mxConstants from "../util/mxConstants";
 
 const mxPerimeter = {
   /**
