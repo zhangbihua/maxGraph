@@ -43,13 +43,21 @@ import Orthogonal from "./Orthogonal";
 import OrgChart from "./OrgChart";
 import OffPage from "./OffPage";
 import Morph from "./Morph";
+import Monitor from "./Monitor";
+import Merge from "./Merge";
+import Markers from "./Markers";
+import LOD from "./LOD";
+import Layers from "./Layers";
+import Labels from "./Labels";
+import LabelPosition from "./LabelPosition";
+import JsonData from "./JsonData";
 
 export default function Home() {
   return (
     <div
       style={{
         width: '1000px',
-        margin: '0 auto',
+        margin: '0 auto'
       }}
     >
       <HelloWorld />
@@ -71,6 +79,14 @@ export default function Home() {
       <EdgeTolerance />
       <Editing />
 
+      <JsonData />
+      <LabelPosition />
+      <Labels />
+      <Layers />
+      <LOD />
+      <Markers />
+      <Merge />
+      <Monitor />
       <Morph />
       <OffPage />
       <OrgChart />

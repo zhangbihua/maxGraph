@@ -8,9 +8,14 @@
 import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
-import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxCellOverlay from '../mxgraph/view/mxCellOverlay';
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxCodec from '../mxgraph/io/mxCodec';
+import mxPerimeter from "../mxgraph/view/mxPerimeter";
+import mxEdgeStyle from "../mxgraph/view/mxEdgeStyle";
 
-class MYNAMEHERE extends React.Component {
+class Monitor extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -20,194 +25,180 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>mxGraph Workflow Monitor</h1>
-
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-
+            overflow: 'hidden',
+            position: 'relative',
+            width: '861px',
+            height: '406px',
+            cursor: 'default',
           }}
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
+    mxConstants.SHADOWCOLOR = '#e0e0e0';
 
-  };
-}
+    // Creates the graph inside the given container
+    const graph = createGraph(this.el);
 
-export default MYNAMEHERE;
+    // Creates a process display using the activity names as IDs to refer to the elements
+    const xml =
+      '<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/>' +
+      '<mxCell id="2" value="Claim Handling Process" style="swimlane" vertex="1" parent="1"><mxGeometry x="1" width="850" height="400" as="geometry"/></mxCell>' +
+      '<mxCell id="3" value="Claim Manager" style="swimlane" vertex="1" parent="2"><mxGeometry x="30" width="820" height="200" as="geometry"/></mxCell>' +
+      '<mxCell id="5" value="" style="start" vertex="1" parent="3"><mxGeometry x="40" y="85" width="30" height="30" as="geometry"/></mxCell>' +
+      '<mxCell id="AuthorizeClaim" value="Authorize&#xa;Claim" vertex="1" parent="3"><mxGeometry x="90" y="80" width="100" height="40" as="geometry"/></mxCell>' +
+      '<mxCell id="6" value="X" style="step" vertex="1" parent="3"><mxGeometry x="210" y="85" width="30" height="30" as="geometry"/></mxCell>' +
+      '<mxCell id="ApproveClaim" value="Approve&#xa;Claim" vertex="1" parent="3"><mxGeometry x="260" y="80" width="100" height="40" as="geometry"/></mxCell>' +
+      '<mxCell id="7" value="X" style="step" vertex="1" parent="3"><mxGeometry x="380" y="85" width="30" height="30" as="geometry"/></mxCell>' +
+      '<mxCell id="8" value="" edge="1" parent="3" source="5" target="AuthorizeClaim"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="9" value="" edge="1" parent="3" source="AuthorizeClaim" target="6"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="10" value="" edge="1" parent="3" source="6" target="ApproveClaim"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="11" value="" edge="1" parent="3" source="ApproveClaim" target="7"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="12" value="" edge="1" parent="3" source="7" target="AuthorizeClaim"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="140" y="40"/></Array></mxGeometry></mxCell>' +
+      '<mxCell id="ReviewClaim" value="Review&#xa;Claim" vertex="1" parent="3"><mxGeometry x="480" y="80" width="100" height="40" as="geometry"/></mxCell>' +
+      '<mxCell id="22" value="X" style="step" vertex="1" parent="3"><mxGeometry x="600" y="85" width="30" height="30" as="geometry"/></mxCell>' +
+      '<mxCell id="23" value="" edge="1" parent="3" source="ReviewClaim" target="22"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="ApproveReviewedClaim" value="Approve Rev.&#xa;Claim" vertex="1" parent="3"><mxGeometry x="650" y="80" width="100" height="40" as="geometry"/></mxCell>' +
+      '<mxCell id="26" value="" edge="1" parent="3" source="22" target="ApproveReviewedClaim"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="27" value="X" style="step" vertex="1" parent="3"><mxGeometry x="770" y="85" width="30" height="30" as="geometry"/></mxCell>' +
+      '<mxCell id="28" value="" edge="1" target="27" parent="3" source="ApproveReviewedClaim"><mxGeometry relative="1" as="geometry"><mxPoint x="740" y="100" as="sourcePoint"/><mxPoint x="760" y="100" as="targetPoint"/></mxGeometry></mxCell>' +
+      '<mxCell id="32" value="" edge="1" parent="3" source="27" target="ReviewClaim"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="665" y="160"/></Array></mxGeometry></mxCell>' +
+      '<mxCell id="4" value="Accountant" style="swimlane" vertex="1" parent="2"><mxGeometry x="30" y="200" width="820" height="200" as="geometry"/></mxCell>' +
+      '<mxCell id="EnterAccountingData" value="Enter&#xa;Data" vertex="1" parent="4"><mxGeometry x="430" y="80" width="100" height="40" as="geometry"/></mxCell>' +
+      '<mxCell id="14" value="X" style="step" vertex="1" parent="4"><mxGeometry x="550" y="85" width="30" height="30" as="geometry"/></mxCell>' +
+      '<mxCell id="15" value="" edge="1" parent="4" source="EnterAccountingData" target="14"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="CheckAccountingData" value="Check&#xa;Data" vertex="1" parent="4"><mxGeometry x="600" y="80" width="100" height="40" as="geometry"/></mxCell>' +
+      '<mxCell id="16" value="" edge="1" parent="4" source="14" target="CheckAccountingData"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="17" value="X" style="step" vertex="1" parent="4"><mxGeometry x="720" y="85" width="30" height="30" as="geometry"/></mxCell>' +
+      '<mxCell id="18" value="" edge="1" parent="4" source="CheckAccountingData" target="17"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="19" value="" style="end" vertex="1" parent="4"><mxGeometry x="770" y="85" width="30" height="30" as="geometry"/></mxCell>' +
+      '<mxCell id="20" value="" edge="1" parent="4" source="17" target="19"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="31" value="" edge="1" parent="4" source="17" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="625" y="160"/></Array></mxGeometry></mxCell>' +
+      '<mxCell id="13" value="" edge="1" parent="2" source="7" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"/></mxCell>' +
+      '<mxCell id="24" value="" edge="1" parent="2" source="14" target="ReviewClaim" style="edgeStyle=none"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="595" y="180"/><mxPoint x="480" y="180"/><mxPoint x="480" y="100"/></Array></mxGeometry></mxCell>' +
+      '<mxCell id="29" value="" edge="1" parent="2" source="22" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="469" y="40"/></Array></mxGeometry></mxCell>' +
+      '<mxCell id="30" value="" edge="1" parent="2" source="27" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="469" y="40"/></Array></mxGeometry></mxCell>' +
+      '<mxCell id="33" value="" edge="1" parent="2" source="6" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="255" y="200"/></Array></mxGeometry></mxCell>' +
+      '</root></mxGraphModel>';
+    const doc = mxUtils.parseXml(xml);
+    const codec = new mxCodec(doc);
+    codec.decode(doc.documentElement, graph.getModel());
 
-    function main(container)
-    {
-      // Checks if the browser is supported
-      if (!mxClient.isBrowserSupported())
-      {
-        // Displays an error message if the browser is not supported.
-        mxUtils.error('Browser is not supported!', 200, false);
-      }
-      else
-      {
-        mxConstants.SHADOWCOLOR = '#e0e0e0';
-
-        // Creates the graph inside the given container
-        let graph = createGraph(container);
-
-        // Creates a process display using the activity names as IDs to refer to the elements
-        let xml = '<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/>'+
-          '<mxCell id="2" value="Claim Handling Process" style="swimlane" vertex="1" parent="1"><mxGeometry x="1" width="850" height="400" as="geometry"/></mxCell>'+
-          '<mxCell id="3" value="Claim Manager" style="swimlane" vertex="1" parent="2"><mxGeometry x="30" width="820" height="200" as="geometry"/></mxCell>'+
-          '<mxCell id="5" value="" style="start" vertex="1" parent="3"><mxGeometry x="40" y="85" width="30" height="30" as="geometry"/></mxCell>'+
-          '<mxCell id="AuthorizeClaim" value="Authorize&#xa;Claim" vertex="1" parent="3"><mxGeometry x="90" y="80" width="100" height="40" as="geometry"/></mxCell>'+
-          '<mxCell id="6" value="X" style="step" vertex="1" parent="3"><mxGeometry x="210" y="85" width="30" height="30" as="geometry"/></mxCell>'+
-          '<mxCell id="ApproveClaim" value="Approve&#xa;Claim" vertex="1" parent="3"><mxGeometry x="260" y="80" width="100" height="40" as="geometry"/></mxCell>'+
-          '<mxCell id="7" value="X" style="step" vertex="1" parent="3"><mxGeometry x="380" y="85" width="30" height="30" as="geometry"/></mxCell>'+
-          '<mxCell id="8" value="" edge="1" parent="3" source="5" target="AuthorizeClaim"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="9" value="" edge="1" parent="3" source="AuthorizeClaim" target="6"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="10" value="" edge="1" parent="3" source="6" target="ApproveClaim"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="11" value="" edge="1" parent="3" source="ApproveClaim" target="7"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="12" value="" edge="1" parent="3" source="7" target="AuthorizeClaim"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="140" y="40"/></Array></mxGeometry></mxCell>'+
-          '<mxCell id="ReviewClaim" value="Review&#xa;Claim" vertex="1" parent="3"><mxGeometry x="480" y="80" width="100" height="40" as="geometry"/></mxCell>'+
-          '<mxCell id="22" value="X" style="step" vertex="1" parent="3"><mxGeometry x="600" y="85" width="30" height="30" as="geometry"/></mxCell>'+
-          '<mxCell id="23" value="" edge="1" parent="3" source="ReviewClaim" target="22"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="ApproveReviewedClaim" value="Approve Rev.&#xa;Claim" vertex="1" parent="3"><mxGeometry x="650" y="80" width="100" height="40" as="geometry"/></mxCell>'+
-          '<mxCell id="26" value="" edge="1" parent="3" source="22" target="ApproveReviewedClaim"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="27" value="X" style="step" vertex="1" parent="3"><mxGeometry x="770" y="85" width="30" height="30" as="geometry"/></mxCell>'+
-          '<mxCell id="28" value="" edge="1" target="27" parent="3" source="ApproveReviewedClaim"><mxGeometry relative="1" as="geometry"><mxPoint x="740" y="100" as="sourcePoint"/><mxPoint x="760" y="100" as="targetPoint"/></mxGeometry></mxCell>'+
-          '<mxCell id="32" value="" edge="1" parent="3" source="27" target="ReviewClaim"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="665" y="160"/></Array></mxGeometry></mxCell>'+
-          '<mxCell id="4" value="Accountant" style="swimlane" vertex="1" parent="2"><mxGeometry x="30" y="200" width="820" height="200" as="geometry"/></mxCell>'+
-          '<mxCell id="EnterAccountingData" value="Enter&#xa;Data" vertex="1" parent="4"><mxGeometry x="430" y="80" width="100" height="40" as="geometry"/></mxCell>'+
-          '<mxCell id="14" value="X" style="step" vertex="1" parent="4"><mxGeometry x="550" y="85" width="30" height="30" as="geometry"/></mxCell>'+
-          '<mxCell id="15" value="" edge="1" parent="4" source="EnterAccountingData" target="14"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="CheckAccountingData" value="Check&#xa;Data" vertex="1" parent="4"><mxGeometry x="600" y="80" width="100" height="40" as="geometry"/></mxCell>'+
-          '<mxCell id="16" value="" edge="1" parent="4" source="14" target="CheckAccountingData"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="17" value="X" style="step" vertex="1" parent="4"><mxGeometry x="720" y="85" width="30" height="30" as="geometry"/></mxCell>'+
-          '<mxCell id="18" value="" edge="1" parent="4" source="CheckAccountingData" target="17"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="19" value="" style="end" vertex="1" parent="4"><mxGeometry x="770" y="85" width="30" height="30" as="geometry"/></mxCell>'+
-          '<mxCell id="20" value="" edge="1" parent="4" source="17" target="19"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="31" value="" edge="1" parent="4" source="17" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="625" y="160"/></Array></mxGeometry></mxCell>'+
-          '<mxCell id="13" value="" edge="1" parent="2" source="7" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"/></mxCell>'+
-          '<mxCell id="24" value="" edge="1" parent="2" source="14" target="ReviewClaim" style="edgeStyle=none"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="595" y="180"/><mxPoint x="480" y="180"/><mxPoint x="480" y="100"/></Array></mxGeometry></mxCell>'+
-          '<mxCell id="29" value="" edge="1" parent="2" source="22" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="469" y="40"/></Array></mxGeometry></mxCell>'+
-          '<mxCell id="30" value="" edge="1" parent="2" source="27" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="469" y="40"/></Array></mxGeometry></mxCell>'+
-          '<mxCell id="33" value="" edge="1" parent="2" source="6" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="255" y="200"/></Array></mxGeometry></mxCell>'+
-          '</root></mxGraphModel>';
-        let doc = mxUtils.parseXml(xml);
-        let codec = new mxCodec(doc);
-        codec.decode(doc.documentElement, graph.getModel());
-      }
-
-      // Creates a button to invoke the refresh function
-      document.body.appendChild(mxUtils.button('Update', function(evt)
-      {
+    // Creates a button to invoke the refresh function
+    document.body.appendChild(
+      mxUtils.button('Update', function(evt) {
         // XML is normally fetched from URL at server using mxUtils.get - this is a client-side
         // string with randomized states to demonstrate the idea of the workflow monitor
-        let xml = '<process><update id="ApproveClaim" state="'+getState()+'"/><update id="AuthorizeClaim" state="'+getState()+'"/>'+
-          '<update id="CheckAccountingData" state="'+getState()+'"/><update id="ReviewClaim" state="'+getState()+'"/>'+
-          '<update id="ApproveReviewedClaim" state="'+getState()+'"/><update id="EnterAccountingData" state="'+getState()+'"/></process>';
+        const xml =
+          `<process><update id="ApproveClaim" state="${getState()}"/><update id="AuthorizeClaim" state="${getState()}"/>` +
+          `<update id="CheckAccountingData" state="${getState()}"/><update id="ReviewClaim" state="${getState()}"/>` +
+          `<update id="ApproveReviewedClaim" state="${getState()}"/><update id="EnterAccountingData" state="${getState()}"/></process>`;
         update(graph, xml);
-      }));
-    };
+      })
+    );
 
     /**
      * Updates the display of the given graph using the XML data
      */
-    function update(graph, xml)
-    {
-      if (xml != null && xml.length > 0)
-      {
-        let doc = mxUtils.parseXml(xml);
+    function update(graph, xml) {
+      if (xml != null && xml.length > 0) {
+        const doc = mxUtils.parseXml(xml);
 
-        if (doc != null && doc.documentElement != null)
-        {
-          let model = graph.getModel();
-          let nodes = doc.documentElement.getElementsByTagName('update');
+        if (doc != null && doc.documentElement != null) {
+          const model = graph.getModel();
+          const nodes = doc.documentElement.getElementsByTagName('update');
 
-          if (nodes != null && nodes.length > 0)
-          {
+          if (nodes != null && nodes.length > 0) {
             model.beginUpdate();
 
-            try
-            {
-              for (let i = 0; i < nodes.length; i++)
-              {
+            try {
+              for (let i = 0; i < nodes.length; i++) {
                 // Processes the activity nodes inside the process node
-                let id = nodes[i].getAttribute('id');
-                let state = nodes[i].getAttribute('state');
+                const id = nodes[i].getAttribute('id');
+                const state = nodes[i].getAttribute('state');
 
                 // Gets the cell for the given activity name from the model
-                let cell = model.getCell(id);
+                const cell = model.getCell(id);
 
                 // Updates the cell color and adds some tooltip information
-                if (cell != null)
-                {
+                if (cell != null) {
                   // Resets the fillcolor and the overlay
-                  graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, 'white', [cell]);
+                  graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, 'white', [
+                    cell,
+                  ]);
                   graph.removeCellOverlays(cell);
 
                   // Changes the cell color for the known states
-                  if (state == 'Running')
-                  {
-                    graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#f8cecc', [cell]);
-                  }
-                  else if (state == 'Waiting')
-                  {
-                    graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#fff2cc', [cell]);
-                  }
-                  else if (state == 'Completed')
-                  {
-                    graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#d4e1f5', [cell]);
+                  if (state == 'Running') {
+                    graph.setCellStyles(
+                      mxConstants.STYLE_FILLCOLOR,
+                      '#f8cecc',
+                      [cell]
+                    );
+                  } else if (state == 'Waiting') {
+                    graph.setCellStyles(
+                      mxConstants.STYLE_FILLCOLOR,
+                      '#fff2cc',
+                      [cell]
+                    );
+                  } else if (state == 'Completed') {
+                    graph.setCellStyles(
+                      mxConstants.STYLE_FILLCOLOR,
+                      '#d4e1f5',
+                      [cell]
+                    );
                   }
 
                   // Adds tooltip information using an overlay icon
-                  if (state != 'Init')
-                  {
+                  if (state != 'Init') {
                     // Sets the overlay for the cell in the graph
-                    graph.addCellOverlay(cell, createOverlay(graph.warningImage, 'State: '+state));
+                    graph.addCellOverlay(
+                      cell,
+                      createOverlay(graph.warningImage, `State: ${state}`)
+                    );
                   }
                 }
               } // for
-            }
-            finally
-            {
+            } finally {
               model.endUpdate();
             }
           }
         }
       }
-    };
+    }
 
     /**
      * Creates an overlay object using the given tooltip and text for the alert window
      * which is being displayed on click.
      */
-    function createOverlay(image, tooltip)
-    {
-      let overlay = new mxCellOverlay(image, tooltip);
+    function createOverlay(image, tooltip) {
+      const overlay = new mxCellOverlay(image, tooltip);
 
       // Installs a handler for clicks on the overlay
-      overlay.addListener(mxEvent.CLICK, function(sender, evt)
-      {
-        mxUtils.alert(tooltip + '\nLast update: ' + new Date());
+      overlay.addListener(mxEvent.CLICK, function(sender, evt) {
+        mxUtils.alert(`${tooltip}\nLast update: ${new Date()}`);
       });
 
       return overlay;
-    };
+    }
 
     /**
      * Creates and returns an empty graph inside the given container.
      */
-    function createGraph(container)
-    {
-      let graph = new mxGraph(container);
+    function createGraph(container) {
+      const graph = new mxGraph(container);
       graph.setTooltips(true);
       graph.setEnabled(false);
 
       // Disables folding
-      graph.isCellFoldable = function(cell, collapse)
-      {
+      graph.isCellFoldable = function(cell, collapse) {
         return false;
       };
 
@@ -276,40 +267,26 @@ export default MYNAMEHERE;
       graph.getStylesheet().putCellStyle('end', style);
 
       return graph;
-    };
+    }
 
     /**
      * Returns a random state.
      */
-    function getState()
-    {
+    function getState() {
       let state = 'Init';
-      let rnd = Math.random() * 4;
+      const rnd = Math.random() * 4;
 
-      if (rnd > 3)
-      {
+      if (rnd > 3) {
         state = 'Completed';
-      }
-      else if (rnd > 2)
-      {
+      } else if (rnd > 2) {
         state = 'Running';
-      }
-      else if (rnd > 1)
-      {
+      } else if (rnd > 1) {
         state = 'Waiting';
       }
 
       return state;
-    };
-  </script>
-</head>
+    }
+  }
+}
 
-<!-- Page passes the container and control to the main function -->
-<body onload="main(document.getElementById('graphContainer'));">
-
-  <!-- Acts as a container for the graph -->
-  <div id="graphContainer" style="overflow:hidden;position:relative;width:861px;height:406px;cursor:default;">
-  </div>
-  <br>
-</body>
-</html>
+export default Monitor;
