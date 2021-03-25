@@ -6,6 +6,7 @@
 import mxRectangle from '../util/mxRectangle';
 import mxConstants from '../util/mxConstants';
 import mxRectangleShape from './mxRectangleShape';
+import mxUtils from "../util/mxUtils";
 
 class mxLabel extends mxRectangleShape {
   /**
@@ -169,18 +170,18 @@ class mxLabel extends mxRectangleShape {
       mxUtils.getNumber(this.style, mxConstants.STYLE_SPACING, this.spacing) +
       5;
 
-    if (align == mxConstants.ALIGN_CENTER) {
+    if (align === mxConstants.ALIGN_CENTER) {
       x += (w - width) / 2;
-    } else if (align == mxConstants.ALIGN_RIGHT) {
+    } else if (align === mxConstants.ALIGN_RIGHT) {
       x += w - width - spacing;
     } // default is left
     else {
       x += spacing;
     }
 
-    if (valign == mxConstants.ALIGN_TOP) {
+    if (valign === mxConstants.ALIGN_TOP) {
       y += spacing;
-    } else if (valign == mxConstants.ALIGN_BOTTOM) {
+    } else if (valign === mxConstants.ALIGN_BOTTOM) {
       y += h - height - spacing;
     } // default is middle
     else {
@@ -242,9 +243,9 @@ class mxLabel extends mxRectangleShape {
     );
     const spacing = this.spacing + 5;
 
-    if (align == mxConstants.ALIGN_RIGHT) {
+    if (align === mxConstants.ALIGN_RIGHT) {
       x += w - width - spacing;
-    } else if (align == mxConstants.ALIGN_CENTER) {
+    } else if (align === mxConstants.ALIGN_CENTER) {
       x += (w - width) / 2;
     } // default is left
     else {

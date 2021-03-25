@@ -37,6 +37,12 @@ import RadialTreeLayout from "./RadialTreeLayout";
 import PortRefs from "./PortRefs";
 import Permissions from "./Permissions";
 import Perimeter from "./Perimeter";
+import PageBreaks from "./PageBreaks";
+import Overlays from "./Overlays";
+import Orthogonal from "./Orthogonal";
+import OrgChart from "./OrgChart";
+import OffPage from "./OffPage";
+import Morph from "./Morph";
 
 export default function Home() {
   return (
@@ -65,6 +71,12 @@ export default function Home() {
       <EdgeTolerance />
       <Editing />
 
+      <Morph />
+      <OffPage />
+      <OrgChart />
+      <Orthogonal />
+      <Overlays />
+      <PageBreaks />
       <Perimeter />
       <Permissions />
       <PortRefs />
