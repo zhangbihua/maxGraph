@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
+ * Converted to ES9 syntax/React by David Morrissey 2021
  */
 
 import React from 'react';
