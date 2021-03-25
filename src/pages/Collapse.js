@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Collapse. This example demonstrates changing
- * the style of a cell based on its collapsed state.
  */
 
 import React from 'react';
@@ -19,6 +16,8 @@ class Collapse extends React.Component {
     return (
       <>
         <h1>Collapse</h1>
+        This example demonstrates changing
+        the style of a cell based on its collapsed state.
 
         <div
           ref={el => {

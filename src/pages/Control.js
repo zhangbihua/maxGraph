@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Control. This example demonstrates adding
- * controls to specific cells in a graph.
  */
 
 import React from 'react';
@@ -25,6 +22,9 @@ class Control extends React.Component {
     return (
       <>
         <h1>Control</h1>
+        This example demonstrates adding
+        controls to specific cells in a graph.
+
         <div
           ref={el => {
             this.el = el;

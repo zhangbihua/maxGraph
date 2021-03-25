@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Hello, World!. This example demonstrates using
-  the isPort hook for visually connecting to another cell.
  */
 
 import React from 'react';
@@ -25,6 +22,9 @@ class HelloPort extends React.Component {
     return (
       <>
         <h1>Hello, World!</h1>
+        This example demonstrates using
+        the isPort hook for visually connecting to another cell.
+
         <div
           ref={el => {
             this.el = el;

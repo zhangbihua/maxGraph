@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Drop. This example demonstrates handling
- * native drag and drop of images (requires modern browser).
  */
 
 import React from 'react';
@@ -22,6 +19,8 @@ class Drop extends React.Component {
     return (
       <>
         <h1>Drop</h1>
+        This example demonstrates handling native drag and
+        drop of images (requires modern browser).
 
         <div
           ref={el => {

@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Anchors. This example demonstrates defining
- * fixed connection points for all shapes.
  */
 
 import React from 'react';
@@ -99,6 +96,9 @@ class Anchors extends React.Component {
     return (
       <>
         <h1>Anchors</h1>
+        This example demonstrates defining
+        fixed connection points for all shapes.
+
         <div
           ref={el => {
             this.el = el;

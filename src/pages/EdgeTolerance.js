@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Edge tolerance. This example demonstrates increasing
- * the tolerance for hit detection on edges.
  */
 
 import React from 'react';
@@ -20,6 +17,9 @@ class EdgeTolerance extends React.Component {
     return (
       <>
         <h1>Edge tolerance</h1>
+        This example demonstrates increasing
+        the tolerance for hit detection on edges.
+
         <div
           ref={el => {
             this.el = el;

@@ -1,9 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Graphlayout. This example demonstrates using
-  automatic graph layouts and listening to changes of the graph size
-  to keep the container size in sync.
  */
 
 import React from 'react';
@@ -13,7 +9,7 @@ import mxRubberband from '../mxgraph/handler/mxRubberband';
 import mxUtils from "../mxgraph/util/mxUtils";
 import mxCircleLayout from "../mxgraph/layout/mxCircleLayout";
 
-class MYNAMEHERE extends React.Component {
+class GraphLayout extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -23,6 +19,9 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>Graphlayout</h1>
+        This example demonstrates using
+        automatic graph layouts and listening to changes of the graph size
+        to keep the container size in sync.
 
         <div
           ref={el => {
@@ -41,7 +40,7 @@ class MYNAMEHERE extends React.Component {
   };
 }
 
-export default MYNAMEHERE;
+export default GraphLayout;
 
     function main(container)
     {

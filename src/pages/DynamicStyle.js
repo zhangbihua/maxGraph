@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Dynamic Style. This example demonstrates changing
- * the style of a cell dynamically by overriding mxGraphModel.getStyle.
  */
 
 import React from 'react';
@@ -21,6 +18,8 @@ class DynamicStyle extends React.Component {
     return (
       <>
         <h1>Dynamic Style</h1>
+        This example demonstrates changing the style of a cell
+        dynamically by overriding mxGraphModel.getStyle.
 
         <div
           ref={el => {

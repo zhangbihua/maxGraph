@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Grid. This example demonstrates drawing
-  a grid dynamically using HTML 5 canvas.
  */
 
 import React from 'react';
@@ -24,6 +21,9 @@ class Grid extends React.Component {
     return (
       <>
         <h1>Grid</h1>
+        This example demonstrates drawing
+        a grid dynamically using HTML 5 canvas.
+
         <div
           ref={el => {
             this.el = el;

@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Autolayout. This example demonstrates running
- * and animating a layout algorithm after every change to a graph.
  */
 
 import React from 'react';
@@ -30,6 +27,9 @@ class AutoLayout extends React.Component {
     return (
       <>
         <h1>Auto layout</h1>
+        This example demonstrates running
+        and animating a layout algorithm after every change to a graph.
+
         <div
           ref={el => {
             this.el = el;

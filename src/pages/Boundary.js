@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Boundary. This example demonstrates
- * implementing boundary events in BPMN diagrams.
  */
 
 import React from 'react';
@@ -24,6 +21,8 @@ class Boundary extends React.Component {
     return (
       <>
         <h1>Boundary</h1>
+        This example demonstrates
+        implementing boundary events in BPMN diagrams.
 
         <div
           ref={el => {

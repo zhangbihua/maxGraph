@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Context icons. This example demonstrates adding
- * icons to selected vertices to carry out special operations.
  */
 
 import React from 'react';
@@ -23,6 +20,9 @@ class ContextIcons extends React.Component {
     return (
       <>
         <h1>Context icons</h1>
+        This example demonstrates adding
+        icons to selected vertices to carry out special operations.
+
         <div
           ref={el => {
             this.el = el;

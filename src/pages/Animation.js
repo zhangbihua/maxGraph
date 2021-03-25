@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2017, JGraph Ltd
- *
- * Animation. This example demonstrates using
- * SVG animations on edges to visualize the flow in a pipe.
  */
 
 import React from 'react';
@@ -19,6 +16,8 @@ class Animation extends React.Component {
     return (
       <>
         <h1>Animation</h1>
+        This example demonstrates using
+        SVG animations on edges to visualize the flow in a pipe.
 
         <div
           ref={el => {

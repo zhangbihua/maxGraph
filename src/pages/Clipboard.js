@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Clipboard. This example demonstrates using the
- * clipboard for providing cross-tab and cross-browser copy and paste.
  */
 
 import React from 'react';
@@ -25,6 +22,8 @@ class Clipboard extends React.Component {
     return (
       <>
         <h1>Clipboard</h1>
+        This example demonstrates using the clipboard
+        for providing cross-tab and cross-browser copy and paste.
 
         <div
           ref={el => {

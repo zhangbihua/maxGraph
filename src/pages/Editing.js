@@ -1,10 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Editing. This example demonstrates using the in-place
- * editor trigger to specify the editing value and write the new value into
- * a specific field of the user object. Wrapping and DOM nodes as labels are
- * also demonstrated here.
  */
 
 import React from 'react';
@@ -23,6 +18,11 @@ class Editing extends React.Component {
     return (
       <>
         <h1>Editing</h1>
+        This example demonstrates using the in-place
+        editor trigger to specify the editing value and write the new value into
+        a specific field of the user object. Wrapping and DOM nodes as labels are
+        also demonstrated here.<br/><br/>
+
         Double-click the upper/lower half of the cell to edit different fields
         of the user object.
         <div

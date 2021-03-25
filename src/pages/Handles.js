@@ -1,7 +1,5 @@
 /**
  * Copyright (c) 2006-2014, JGraph Ltd
-  
-  Handles. This example demonstrates using mxHandle to change custom styles interactively.
  */
 
 import React from 'react';
@@ -26,6 +24,8 @@ class Handles extends React.Component {
     return (
       <>
         <h1>Handles</h1>
+        This example demonstrates using mxHandle to change custom styles interactively.
+
         <div
           ref={el => {
             this.el = el;

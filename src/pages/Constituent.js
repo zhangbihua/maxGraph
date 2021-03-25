@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Consistuent. This example demonstrates using
- * cells as parts of other cells.
  */
 
 import React from 'react';
@@ -10,7 +7,6 @@ import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 import mxGraphHandler from "../mxgraph/handler/mxGraphHandler";
-import mxClient from "../mxgraph/mxClient";
 
 class Constituent extends React.Component {
   constructor(props) {
@@ -21,7 +17,9 @@ class Constituent extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Consistuent</h1>
+        <h1>Constituent</h1>
+        This example demonstrates using
+        cells as parts of other cells.
 
         <div
           ref={el => {

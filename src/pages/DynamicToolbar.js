@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Dynamic toolbar. This example demonstrates changing the
- * state of the toolbar at runtime.
  */
 
 import React from 'react';
@@ -28,6 +25,8 @@ class DynamicToolbar extends React.Component {
     return (
       <>
         <h1>Toolbar</h1>
+        This example demonstrates changing the state
+        of the toolbar at runtime.
 
         <div
           ref={el => {

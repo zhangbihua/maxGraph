@@ -1,9 +1,6 @@
 /*
  *  Copyright (c) 2006-2018, JGraph Ltd
  *  Converted to ES9 syntax/React by David Morrissey 2021
- *
- *  Hello, World!. This example demonstrates using
- *  a DOM node to create a graph and adding vertices and edges.
  */
 
 import React from 'react';
@@ -21,6 +18,8 @@ class HelloWorld extends React.Component {
     return (
       <>
         <h1>Hello, World!</h1>
+        This example demonstrates using
+        a DOM node to create a graph and adding vertices and edges.
 
         <div
           ref={el => {

@@ -1,9 +1,5 @@
 /**
- *Copyright (c) 2006-2013, JGraph Ltd
- *
- * File I/O. This example demonstrates reading an
- * XML file, writing a custom parser, applying an automatic layout and
- * defining a 2-way edge.
+ * Copyright (c) 2006-2013, JGraph Ltd
  */
 
 import React from 'react';
@@ -28,6 +24,10 @@ class FileIO extends React.Component {
     return (
       <>
         <h1>File I/O</h1>
+        This example demonstrates reading an
+        XML file, writing a custom parser, applying an automatic layout and
+        defining a 2-way edge.
+
         <div
           ref={el => {
             this.el = el;

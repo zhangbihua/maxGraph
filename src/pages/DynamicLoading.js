@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Dynamic loading. This example demonstrates loading
- * graph model data dynamically to limit the number of cells in the model.
  */
 
 import React from 'react';
@@ -25,6 +22,8 @@ class DynamicLoading extends React.Component {
     return (
       <>
         <h1>Dynamic loading</h1>
+        This example demonstrates loading graph model data
+        dynamically to limit the number of cells in the model.
 
         <div
           ref={el => {

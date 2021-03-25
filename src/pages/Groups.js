@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Groups. This example demonstrates using
-  cells as parts of other cells.
  */
 
 import React from 'react';
@@ -21,6 +18,9 @@ class Groups extends React.Component {
     return (
       <>
         <h1>Hello, World!</h1>
+        This example demonstrates using
+        cells as parts of other cells.
+
         <div
           ref={el => {
             this.el = el;

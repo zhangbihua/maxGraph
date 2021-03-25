@@ -1,13 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Events. This example demonstrates creating
- * a graph container and using the mxDivResizer to update the size,
- * interaction on the graph, including marquee selection, custom
- * tooltips, context menu handling and changing the default menu
- * opacity. It also demonstrates how to use an edgestyle in the
- * default stylesheet, and handle the doubleclick on the adjustment
- * point. See also: overlays.html for click event handling.
  */
 
 import React from 'react';
@@ -34,6 +26,13 @@ class Events extends React.Component {
     return (
       <>
         <h1>Events</h1>
+        Events. This example demonstrates creating
+        a graph container and using the mxDivResizer to update the size,
+        interaction on the graph, including marquee selection, custom
+        tooltips, context menu handling and changing the default menu
+        opacity. It also demonstrates how to use an edgestyle in the
+        default stylesheet, and handle the doubleclick on the adjustment
+        point. See also: overlays.html for click event handling.
 
         <div
           ref={el => {

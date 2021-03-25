@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Dragsource. This example demonstrates using
- * one drag source for multiple graphs and changing the drag icon.
  */
 
 import React from 'react';
@@ -27,6 +24,8 @@ class DragSource extends React.Component {
     return (
       <>
         <h1>Dragsource</h1>
+        This example demonstrates using one drag source
+        for multiple graphs and changing the drag icon.
 
         <div
           ref={el => {

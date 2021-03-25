@@ -69,7 +69,7 @@ export default function Home() {
   return (
     <div
       style={{
-        width: '1000px',
+        width: '900px',
         margin: '0 auto'
       }}
     >

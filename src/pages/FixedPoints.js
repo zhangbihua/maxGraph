@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Fixed points. This example demonstrates using
-  fixed connection points for connecting edges to vertices.
  */
 
 import React from 'react';
@@ -26,6 +23,8 @@ class FixedPoints extends React.Component {
     return (
       <>
         <h1>Fixed points</h1>
+        This example demonstrates using
+        fixed connection points for connecting edges to vertices.
 
         <div
           ref={el => {

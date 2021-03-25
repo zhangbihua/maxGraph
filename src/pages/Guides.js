@@ -1,11 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Guides. This example demonstrates the guides
-  feature which aligns the current selection to the existing vertices
-  in the graph. This feature is in RFC state. Creating a grid using
-  a canvas and installing a key handler for cursor keys is also
-  demonstrated here, as well as snapping waypoints to terminals.
  */
 
 import React from 'react';
@@ -28,6 +22,12 @@ class Guides extends React.Component {
     return (
       <>
         <h1>Guides</h1>
+        This example demonstrates the guides
+        feature which aligns the current selection to the existing vertices
+        in the graph. This feature is in RFC state. Creating a grid using
+        a canvas and installing a key handler for cursor keys is also
+        demonstrated here, as well as snapping waypoints to terminals.
+
         <div
           ref={el => {
             this.el = el;

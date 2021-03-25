@@ -1,9 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Codec. This example demonstrates dynamically
- * creating a graph from XML and encoding the model into XML, as well
- * as changing the default style for edges in-place.
  */
 
 import React from 'react';
@@ -14,7 +10,7 @@ import mxUtils from "../mxgraph/util/mxUtils";
 import mxConstants from "../mxgraph/util/mxConstants";
 import mxEdgeStyle from "../mxgraph/view/mxEdgeStyle";
 
-class MYNAMEHERE extends React.Component {
+class Codec extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -24,6 +20,9 @@ class MYNAMEHERE extends React.Component {
     return (
         <>
           <h1>Codec</h1>
+          This example demonstrates dynamically
+          creating a graph from XML and encoding the model into XML, as well
+          as changing the default style for edges in-place.
 
           This graph is embedded in the page.
           <div className="mxgraph" style="position:relative;overflow:auto;">&lt;mxGraphModel&gt;&lt;root&gt;&lt;mxCell

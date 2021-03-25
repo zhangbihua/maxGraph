@@ -1,12 +1,8 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  FixedIcon. This example demonstrates
-  customizing the icon position in the mxLabel shape.
  */
 
 import React from 'react';
-import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 import mxUtils from "../mxgraph/util/mxUtils";
@@ -24,6 +20,9 @@ class FixedIcon extends React.Component {
     return (
       <>
         <h1>Fixed icon</h1>
+        This example demonstrates
+        customizing the icon position in the mxLabel shape.
+
         <div
           ref={el => {
             this.el = el;

@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Extend canvas. This example demonstrates implementing
- * an infinite canvas with scrollbars.
  */
 
 import React from 'react';
@@ -23,6 +20,8 @@ class ExtendCanvas extends React.Component {
     return (
       <>
         <h1>Extend canvas</h1>
+        This example demonstrates implementing
+        an infinite canvas with scrollbars.
 
         <div
           ref={el => {
