@@ -61,6 +61,9 @@ import Handles from "./Handles";
 import Guides from "./Guides";
 import Groups from "./Groups";
 import Grid from "./Grid";
+import Folding from "./Folding";
+import FixedPoints from "./FixedPoints";
+import FixedIcon from "./FixedIcon";
 
 export default function Home() {
   return (
@@ -88,7 +91,9 @@ export default function Home() {
       <DynamicToolbar />
       <EdgeTolerance />
       <Editing />
-
+      <FixedIcon />
+      <FixedPoints />
+      <Folding />
       <Grid />
       <Groups />
       <Guides />
