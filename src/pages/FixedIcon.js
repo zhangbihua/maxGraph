@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  FixedIcon example for mxGraph. This example demonstrates
+  FixedIcon. This example demonstrates
   customizing the icon position in the mxLabel shape.
  */
 
@@ -23,7 +23,7 @@ class FixedIcon extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Fixed icon example for mxGraph</h1>
+        <h1>Fixed icon</h1>
         <div
           ref={el => {
             this.el = el;
@@ -31,7 +31,6 @@ class FixedIcon extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

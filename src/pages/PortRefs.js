@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Portsrefs example for mxGraph. This example demonstrates referencing
+  Portsrefs. This example demonstrates referencing
   connection points by ID. The main difference to the implementation
   where the connection point is stored in the connecting edge is that
   changes to the original port will be reflected in all existing
@@ -39,7 +39,6 @@ class PortRefs extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

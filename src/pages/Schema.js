@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Schema example for mxGraph. This example demonstrates implementing
+  Schema. This example demonstrates implementing
   a SQL schema editor.
  */
 

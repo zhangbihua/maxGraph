@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Visible example for mxGraph. This example demonstrates using
+ * Visible. This example demonstrates using
  * various solutions for hiding and showing cells.
  */
 
@@ -19,7 +19,7 @@ class Visibility extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Visibility example for mxGraph</h1>
+        <h1>Visibility</h1>
         <div
           ref={el => {
             this.el = el;
@@ -27,10 +27,14 @@ class Visibility extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
@@ -79,19 +83,19 @@ class Visibility extends React.Component {
     }
 
     // Dynamic conditions (requires refresh)
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Cond 1', function() {
         showOne = !showOne;
         graph.refresh();
       })
     );
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Cond 2', function() {
         showTwo = !showTwo;
         graph.refresh();
       })
     );
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Cond 3', function() {
         showThree = !showThree;
         graph.refresh();
@@ -99,7 +103,7 @@ class Visibility extends React.Component {
     );
 
     // Explicit show/hide
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Toggle cell', function() {
         graph.toggleCells(!graph.getModel().isVisible(v1), [v1], true);
       })
@@ -108,7 +112,7 @@ class Visibility extends React.Component {
     // Explicit remove/add
     let removed = null;
 
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Add/remove cell', function() {
         if (removed != null) {
           graph.addCells(removed);

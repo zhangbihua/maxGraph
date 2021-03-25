@@ -2,7 +2,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Touch example for mxGraph. This example demonstrates handling of touch,
+  Touch. This example demonstrates handling of touch,
   mouse and pointer events.
  */
 
@@ -20,7 +20,7 @@ class MYNAMEHERE extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Touch example for mxGraph</h1>
+        <h1>Touch</h1>
 
         <div
           ref={el => {

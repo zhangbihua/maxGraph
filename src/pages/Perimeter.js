@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Perimeter example for mxGraph. This example demonstrates how to
+  Perimeter. This example demonstrates how to
   avoid edge and label intersections.
  */
 
@@ -21,7 +21,7 @@ class Perimeter extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Perimeter example for mxGraph</h1>
+        <h1>Perimeter</h1>
         <div
           ref={el => {
             this.el = el;
@@ -29,7 +29,6 @@ class Perimeter extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

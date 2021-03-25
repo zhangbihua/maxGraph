@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Collapse example for mxGraph. This example demonstrates changing
+ * Collapse. This example demonstrates changing
  * the style of a cell based on its collapsed state.
  */
 
@@ -18,7 +18,7 @@ class Collapse extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Collapse example for mxGraph</h1>
+        <h1>Collapse</h1>
 
         <div
           ref={el => {
@@ -27,7 +27,6 @@ class Collapse extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

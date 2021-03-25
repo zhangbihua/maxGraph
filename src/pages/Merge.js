@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Merge example for mxGraph. This example demonstrates using
+  Merge. This example demonstrates using
   the mergeChildren function to merge two graphs.
  */
 
@@ -20,7 +20,7 @@ class Merge extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Merge example for mxGraph</h1>
+        <h1>Merge</h1>
         <div
           ref={el => {
             this.el = el;

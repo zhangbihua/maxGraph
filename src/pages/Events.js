@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Events example for mxGraph. This example demonstrates creating
+ * Events. This example demonstrates creating
  * a graph container and using the mxDivResizer to update the size,
  * interaction on the graph, including marquee selection, custom
  * tooltips, context menu handling and changing the default menu
@@ -33,7 +33,7 @@ class Events extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Events example for mxGraph</h1>
+        <h1>Events</h1>
 
         <div
           ref={el => {

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Graphlayout example for mxGraph. This example demonstrates using
+  Graphlayout. This example demonstrates using
   automatic graph layouts and listening to changes of the graph size
   to keep the container size in sync.
  */
@@ -10,6 +10,8 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxUtils from "../mxgraph/util/mxUtils";
+import mxCircleLayout from "../mxgraph/layout/mxCircleLayout";
 
 class MYNAMEHERE extends React.Component {
   constructor(props) {
@@ -20,7 +22,7 @@ class MYNAMEHERE extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Graphlayout example for mxGraph</h1>
+        <h1>Graphlayout</h1>
 
         <div
           ref={el => {
@@ -94,7 +96,7 @@ export default MYNAMEHERE;
         let animate = document.getElementById('animate');
 
         // Adds a button to execute the layout
-        document.body.insertBefore(mxUtils.button('Circle Layout',
+        this.el2.insertBefore(mxUtils.button('Circle Layout',
           function(evt)
           {
             graph.getModel().beginUpdate();

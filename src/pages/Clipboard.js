@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Clipboard example for mxGraph. This example demonstrates using the
+ * Clipboard. This example demonstrates using the
  * clipboard for providing cross-tab and cross-browser copy and paste.
  */
 
@@ -24,7 +24,7 @@ class Clipboard extends React.Component {
     // A this.el for the graph
     return (
       <>
-        <h1>Clipboard example for mxGraph</h1>
+        <h1>Clipboard</h1>
 
         <div
           ref={el => {
@@ -33,7 +33,6 @@ class Clipboard extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

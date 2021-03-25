@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
 
- Second label example for mxGraph. This example demonstrates how to
+ Second label. This example demonstrates how to
  add another string label to vertices.
  */
 
@@ -23,7 +23,7 @@ class SecondLabel extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Second label example for mxGraph</h1>
+        <h1>Second label</h1>
 
         <div
           ref={el => {
@@ -32,9 +32,13 @@ class SecondLabel extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
@@ -221,21 +225,19 @@ class SecondLabel extends React.Component {
     }
 
     // Adds a button to execute the layout
-    document.body.insertBefore(
+    this.el2.appendChild(
       mxUtils.button('Toggle Child Vertices', function(evt) {
         relativeChildVerticesVisible = !relativeChildVerticesVisible;
         graph.refresh();
-      }),
-      document.body.firstChild
+      })
     );
 
     // Adds a button to execute the layout
-    document.body.insertBefore(
+    this.el2.appendChild(
       mxUtils.button('Toggle IDs', function(evt) {
         secondLabelVisible = !secondLabelVisible;
         graph.refresh();
-      }),
-      document.body.firstChild
+      })
     );
   }
 }

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Consistuent example for mxGraph. This example demonstrates using
+ * Consistuent. This example demonstrates using
  * cells as parts of other cells.
  */
 
@@ -21,7 +21,7 @@ class Constituent extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Consistuent example for mxGraph</h1>
+        <h1>Consistuent</h1>
 
         <div
           ref={el => {
@@ -30,7 +30,6 @@ class Constituent extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: 'url("editors/images/grid.gif")',
             cursor: 'default',

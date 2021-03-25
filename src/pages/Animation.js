@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2017, JGraph Ltd
  *
- * Animation example for mxGraph. This example demonstrates using
+ * Animation. This example demonstrates using
  * SVG animations on edges to visualize the flow in a pipe.
  */
 
@@ -18,7 +18,7 @@ class Animation extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Animation example for mxGraph</h1>
+        <h1>Animation</h1>
 
         <div
           ref={el => {
@@ -27,7 +27,6 @@ class Animation extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: 'url("editors/images/grid.gif")',
             cursor: 'default',

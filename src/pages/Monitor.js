@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Monitor example for mxGraph. This eample demonstrates using a
+  Monitor. This eample demonstrates using a
   graph to display the current state of a workflow.
  */
 
@@ -32,9 +32,13 @@ class Monitor extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '861px',
             height: '406px',
             cursor: 'default',
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
@@ -92,7 +96,7 @@ class Monitor extends React.Component {
     codec.decode(doc.documentElement, graph.getModel());
 
     // Creates a button to invoke the refresh function
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Update', function(evt) {
         // XML is normally fetched from URL at server using mxUtils.get - this is a client-side
         // string with randomized states to demonstrate the idea of the workflow monitor

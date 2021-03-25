@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Edge tolerance example for mxGraph. This example demonstrates increasing
+ * Edge tolerance. This example demonstrates increasing
  * the tolerance for hit detection on edges.
  */
 
@@ -19,14 +19,13 @@ class EdgeTolerance extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Edge tolerance example for mxGraph</h1>
+        <h1>Edge tolerance</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
             overflow: 'hidden',
-            width: '641px',
             height: '481px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Control example for mxGraph. This example demonstrates adding
+ * Control. This example demonstrates adding
  * controls to specific cells in a graph.
  */
 
@@ -24,14 +24,13 @@ class Control extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Control example for mxGraph</h1>
+        <h1>Control</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
             overflow: 'hidden',
-            width: '621px',
             height: '441px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

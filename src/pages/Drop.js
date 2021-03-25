@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Drop example for mxGraph. This example demonstrates handling
+ * Drop. This example demonstrates handling
  * native drag and drop of images (requires modern browser).
  */
 
@@ -21,7 +21,7 @@ class Drop extends React.Component {
     // A this.el for the graph
     return (
       <>
-        <h1>Drop example for mxGraph</h1>
+        <h1>Drop</h1>
 
         <div
           ref={el => {
@@ -30,7 +30,6 @@ class Drop extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '621px',
             height: '441px',
             background: `url('editors/images/grid.gif')`,
             cursor: 'default',

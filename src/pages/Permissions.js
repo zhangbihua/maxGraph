@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
 
- Hello, World! example for mxGraph. This example demonstrates creating
+ Hello, World!. This example demonstrates creating
  permissions to define the available operations a the graph.
  */
 
@@ -35,13 +35,18 @@ class Permissions extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Permissions example for mxGraph</h1>
+        <h1>Permissions</h1>
 
         <div
           ref={el => {
             this.el = el;
           }}
-          style={{}}
+          style={{
+            position: 'relative',
+            overflow: 'hidden',
+            height: '300px',
+            //background: "url('editors/images/grid.gif')",
+          }}
         />
       </>
     );

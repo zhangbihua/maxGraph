@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Toolbar example for mxGraph. This example demonstrates using
+  Toolbar. This example demonstrates using
   existing cells as templates for creating new cells.
  */
 
@@ -27,7 +27,7 @@ class Toolbar extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Toolbar example for mxGraph</h1>
+        <h1>Toolbar</h1>
 
         <div
           ref={el => {
@@ -36,10 +36,14 @@ class Toolbar extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '600px',
             height: '400px',
             border: 'gray dotted 1px',
             cursor: 'default',
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
@@ -160,11 +164,7 @@ class Toolbar extends React.Component {
       }
     );
 
-    button.style.position = 'absolute';
-    button.style.left = '2px';
-    button.style.top = '2px';
-
-    document.body.appendChild(button);
+    this.el2.appendChild(button);
   }
 
   addToolbarItem(graph, toolbar, prototype, image) {

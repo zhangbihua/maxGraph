@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  HTML label example for mxGraph. This example demonstrates using
+  HTML label. This example demonstrates using
   HTML labels that are connected to the state of the user object.
  */
 
@@ -19,7 +19,7 @@ class MYNAMEHERE extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>HTML label example for mxGraph</h1>
+        <h1>HTML label</h1>
 
         <div
           ref={el => {

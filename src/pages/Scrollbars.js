@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2015, JGraph Ltd
   
-  Scrollbars example for mxGraph. This example demonstrates using
+  Scrollbars. This example demonstrates using
   a scrollable table with different sections in a cell label.
  */
 
@@ -19,7 +19,7 @@ class MYNAMEHERE extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Scrollbars example for mxGraph</h1>
+        <h1>Scrollbars</h1>
 
         <div
           ref={el => {

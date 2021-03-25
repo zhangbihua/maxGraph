@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  UIConfig example for mxGraph. This example demonstrates using a config
+  UIConfig. This example demonstrates using a config
   file to configure the toolbar and popup menu in mxEditor.
  */
 

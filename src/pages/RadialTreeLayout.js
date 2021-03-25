@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2014, JGraph Ltd
   
-  Hierarchical Layout example for mxGraph. This example demonstrates the
+  Hierarchical Layout. This example demonstrates the
   use of the hierarchical and organic layouts. Note that the hierarchical
   layout requires another script tag in the head of the page.
  */
@@ -22,7 +22,7 @@ class RadialTreeLayout extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hierarchical Layout example for mxGraph</h1>
+        <h1>Hierarchical Layout</h1>
         <div
           ref={el => {
             this.el = el;
@@ -31,7 +31,6 @@ class RadialTreeLayout extends React.Component {
             position: 'relative',
             overflow: 'auto',
             height: '800px',
-            width: '1000px',
             borderTop: 'gray 1px solid',
           }}
         />

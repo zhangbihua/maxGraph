@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Validation example for mxGraph. This example demonstrates using
+ * Validation. This example demonstrates using
  * multiplicities for automatically validating a graph.
  */
 
@@ -23,7 +23,7 @@ class Validation extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Validation example for mxGraph</h1>
+        <h1>Validation</h1>
 
         <div
           ref={el => {
@@ -32,7 +32,6 @@ class Validation extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '281px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

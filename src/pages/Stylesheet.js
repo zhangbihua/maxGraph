@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Stylesheet example for mxGraph. This example demonstrates using
+  Stylesheet. This example demonstrates using
   a custom stylesheet and control points in edges, as well as
   overriding the getLabel and getTooltip function to return
   dynamic information, and making a supercall in JavaScript.
@@ -22,7 +22,7 @@ class Stylesheet extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Stylesheet example for mxGraph</h1>
+        <h1>Stylesheet</h1>
         <div
           ref={el => {
             this.el = el;
@@ -30,7 +30,6 @@ class Stylesheet extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '621px',
             height: '311px',
             cursor: 'default',
           }}

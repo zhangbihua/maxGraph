@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Guides example for mxGraph. This example demonstrates the guides
+  Guides. This example demonstrates the guides
   feature which aligns the current selection to the existing vertices
   in the graph. This feature is in RFC state. Creating a grid using
   a canvas and installing a key handler for cursor keys is also
@@ -27,14 +27,13 @@ class Guides extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Guides example for mxGraph</h1>
+        <h1>Guides</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
             overflow: 'hidden',
-            width: '801px',
             height: '601px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

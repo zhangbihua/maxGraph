@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  JQuery example for mxGraph. This example demonstrates using
+  JQuery. This example demonstrates using
   a JQuery plugin to generate labels for vertices on the fly.
  */
 

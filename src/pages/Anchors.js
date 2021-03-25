@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Anchors example for mxGraph. This example demonstrates defining
+ * Anchors. This example demonstrates defining
  * fixed connection points for all shapes.
  */
 
@@ -98,7 +98,7 @@ class Anchors extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Anchors example for mxGraph</h1>
+        <h1>Anchors</h1>
         <div
           ref={el => {
             this.el = el;
@@ -106,7 +106,6 @@ class Anchors extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: 'url("editors/images/grid.gif")',
             cursor: 'default',

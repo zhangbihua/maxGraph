@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Swimlanes example for mxGraph. This example demonstrates using
+  Swimlanes. This example demonstrates using
   swimlanes for pools and lanes and adding cells and edges between
   them. This also demonstrates using the stack layout as an
   automatic layout.
@@ -33,8 +33,7 @@ class SwimLanes extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Swimlanes example for mxGraph</h1>
-
+        <h1>Swimlanes</h1>
         <div
           ref={el => {
             this.el = el;
@@ -42,7 +41,6 @@ class SwimLanes extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '600px',
             height: '400px',
             border: 'gray dotted 1px',
             cursor: 'default',

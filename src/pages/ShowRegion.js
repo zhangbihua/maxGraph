@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Showregion example for mxGraph. This example demonstrates using a custom
+  Showregion. This example demonstrates using a custom
   rubberband handler to show the selected region in a new window.
  */
 
@@ -9,6 +9,10 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxConstants from "../mxgraph/util/mxConstants";
+import mxPopupMenu from "../mxgraph/util/mxPopupMenu";
+import mxRectangle from "../mxgraph/util/mxRectangle";
+import mxUtils from "../mxgraph/util/mxUtils";
 
 class MYNAMEHERE extends React.Component {
   constructor(props) {
@@ -19,7 +23,7 @@ class MYNAMEHERE extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Showregion example for mxGraph</h1>
+        <h1>Showregion</h1>
 
         <div
           ref={el => {
@@ -90,7 +94,7 @@ export default MYNAMEHERE;
       else
       {
         // Disables built-in context menu
-        mxEvent.disableContextMenu(document.body);
+        mxEvent.disableContextMenu(this.el);
 
         // Changes some default colors
         mxConstants.HANDLE_FILLCOLOR = '#99ccff';

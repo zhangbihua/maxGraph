@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Context icons example for mxGraph. This example demonstrates adding
+ * Context icons. This example demonstrates adding
  * icons to selected vertices to carry out special operations.
  */
 
@@ -22,14 +22,13 @@ class ContextIcons extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Context icons example for mxGraph</h1>
+        <h1>Context icons</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

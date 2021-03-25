@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Autolayout example for mxGraph. This example demonstrates running
+ * Autolayout. This example demonstrates running
  * and animating a layout algorithm after every change to a graph.
  */
 
@@ -29,7 +29,7 @@ class AutoLayout extends React.Component {
     // A this.el for the graph
     return (
       <>
-        <h1>Auto layout example for mxGraph</h1>
+        <h1>Auto layout</h1>
         <div
           ref={el => {
             this.el = el;
@@ -37,7 +37,6 @@ class AutoLayout extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '821px',
             height: '641px',
             background: 'url("editors/images/grid.gif")',
             cursor: 'default',

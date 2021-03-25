@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Stencils example for mxGraph. This example demonstrates using
+  Stencils. This example demonstrates using
   an XML file to define new stencils to be used as shapes. See
   docs/stencils.xsd for the XML schema file.
  */
@@ -31,7 +31,7 @@ class Stencils extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Stencils example for mxGraph</h1>
+        <h1>Stencils</h1>
         <div
           ref={el => {
             this.el = el;
@@ -39,7 +39,6 @@ class Stencils extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '601px',
             height: '401px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

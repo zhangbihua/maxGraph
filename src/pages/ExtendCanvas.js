@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Extend canvas example for mxGraph. This example demonstrates implementing
+ * Extend canvas. This example demonstrates implementing
  * an infinite canvas with scrollbars.
  */
 
@@ -22,7 +22,7 @@ class ExtendCanvas extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Extend canvas example for mxGraph</h1>
+        <h1>Extend canvas</h1>
 
         <div
           ref={el => {
@@ -31,7 +31,6 @@ class ExtendCanvas extends React.Component {
           style={{
             position: 'relative',
             overflow: 'auto',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

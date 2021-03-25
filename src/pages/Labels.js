@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Labels example for mxGraph. This example demonstrates the use of wrapping
+  Labels. This example demonstrates the use of wrapping
   and clipping for HTML labels of vertices, truncating labels to fit the
   size of a vertex, and manually placing vertex labels and relative children
   that act as "sublabels".
@@ -23,18 +23,15 @@ class Labels extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hello, World! example for mxGraph</h1>
+        <h1>Hello, World!</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-            position: 'absolute',
-            top: '0px',
-            left: '0px',
+            position: 'relative',
             overflow: 'hidden',
-            width: '100%',
-            height: '100%',
+            height: '300px',
             background: "url('editors/images/grid.gif')",
           }}
         />

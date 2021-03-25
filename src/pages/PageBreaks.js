@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Pagebreaks example for mxGraph. This example demonstrates using the
+  Pagebreaks. This example demonstrates using the
   pageBreaksVisible and preferPageSize switches and adding headers and
   footers to print output.
  */
@@ -23,7 +23,7 @@ class PageBreaks extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Pagebreaks example for mxGraph</h1>
+        <h1>Pagebreaks</h1>
 
         <div
           ref={el => {
@@ -32,10 +32,14 @@ class PageBreaks extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '641px',
             height: '481px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
@@ -90,26 +94,26 @@ class PageBreaks extends React.Component {
       graph.getModel().endUpdate();
     }
 
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Toggle Page Breaks', function(evt) {
         graph.pageBreaksVisible = !graph.pageBreaksVisible;
         graph.sizeDidChange();
       })
     );
 
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Zoom In', function(evt) {
         graph.zoomIn();
       })
     );
 
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Zoom Out', function(evt) {
         graph.zoomOut();
       })
     );
 
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Print', function(evt) {
         // Matches actual printer paper size and avoids blank pages
         const scale = 0.5;
@@ -172,7 +176,7 @@ class PageBreaks extends React.Component {
       })
     );
 
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Reset View', function(evt) {
         graph.view.scaleAndTranslate(0.15, 0, 0);
       })

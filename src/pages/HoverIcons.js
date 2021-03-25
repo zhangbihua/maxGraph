@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
 
-  Hover icons example for mxGraph. This example demonstrates showing
+  Hover icons. This example demonstrates showing
   icons on vertices as mouse hovers over them.
  */
 
@@ -23,7 +23,7 @@ class HoverIcons extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hover icons example for mxGraph</h1>
+        <h1>Hover icons</h1>
 
         <div
           ref={el => {
@@ -31,7 +31,6 @@ class HoverIcons extends React.Component {
           }}
           style={{
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Dragsource example for mxGraph. This example demonstrates using
+ * Dragsource. This example demonstrates using
  * one drag source for multiple graphs and changing the drag icon.
  */
 
@@ -26,7 +26,7 @@ class DragSource extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Dragsource example for mxGraph</h1>
+        <h1>Dragsource</h1>
 
         <div
           ref={el => {

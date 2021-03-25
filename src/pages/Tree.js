@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Tree example for mxGraph. This example demonstrates folding
+ * Tree. This example demonstrates folding
  * of subtrees in a acyclic graph (tree).
  */
 
@@ -30,7 +30,7 @@ class Tree extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Tree example for mxGraph</h1>
+        <h1>Tree</h1>
 
         <div
           ref={el => {
@@ -39,7 +39,6 @@ class Tree extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '500px',
             height: '400px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default'

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Dynamic Style example for mxGraph. This example demonstrates changing
+ * Dynamic Style. This example demonstrates changing
  * the style of a cell dynamically by overriding mxGraphModel.getStyle.
  */
 
@@ -20,7 +20,7 @@ class DynamicStyle extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Dynamic Style example for mxGraph</h1>
+        <h1>Dynamic Style</h1>
 
         <div
           ref={el => {
@@ -28,7 +28,6 @@ class DynamicStyle extends React.Component {
           }}
           style={{
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
           }}

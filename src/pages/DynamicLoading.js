@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Dynamic loading example for mxGraph. This example demonstrates loading
+ * Dynamic loading. This example demonstrates loading
  * graph model data dynamically to limit the number of cells in the model.
  */
 
@@ -24,7 +24,7 @@ class DynamicLoading extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Dynamic loading example for mxGraph</h1>
+        <h1>Dynamic loading</h1>
 
         <div
           ref={el => {
@@ -33,7 +33,6 @@ class DynamicLoading extends React.Component {
           style={{
             overflow: 'visible',
             position: 'absolute',
-            width: '100%',
             height: '100%',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

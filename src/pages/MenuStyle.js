@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Menustyle example for mxGraph. This example demonstrates using
+  Menustyle. This example demonstrates using
   CSS to style the mxPopupMenu.
  */
 
@@ -19,7 +19,7 @@ class MYNAMEHERE extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Menustyle example for mxGraph</h1>
+        <h1>Menustyle</h1>
 
         <div
           ref={el => {

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Layers example for mxGraph. This example demonstrates using
+  Layers. This example demonstrates using
   multiple layers to contain cells.
  */
 
@@ -21,7 +21,7 @@ class Layers extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Layers example for mxGraph</h1>
+        <h1>Layers</h1>
         <div
           ref={el => {
             this.el = el;
@@ -29,9 +29,13 @@ class Layers extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
@@ -114,13 +118,13 @@ class Layers extends React.Component {
       model.endUpdate();
     }
 
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Layer 0', function() {
         model.setVisible(layer0, !model.isVisible(layer0));
       })
     );
 
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Layer 1', function() {
         model.setVisible(layer1, !model.isVisible(layer1));
       })

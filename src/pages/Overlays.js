@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Overlays example for mxGraph. This example demonstrates cell
+  Overlays. This example demonstrates cell
   highlighting, overlays and handling click and double click
   events. See also: events.html for more event handling.
  */
@@ -23,7 +23,7 @@ class Overlays extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Overlays example for mxGraph</h1>
+        <h1>Overlays</h1>
         <div
           ref={el => {
             this.el = el;
@@ -31,7 +31,6 @@ class Overlays extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
           }}

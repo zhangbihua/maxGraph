@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Offpage example for mxGraph. This example demonstrates creating
+  Offpage. This example demonstrates creating
   offpage connectors in a graph and loading a new diagram on a
   single click.
  */
@@ -22,7 +22,7 @@ class OffPage extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Offpage connector example for mxGraph</h1>
+        <h1>Offpage connector</h1>
 
         <div
           ref={el => {

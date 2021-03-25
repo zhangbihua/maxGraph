@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Markers example for mxGraph. This example demonstrates creating
+  Markers. This example demonstrates creating
   custom markers and customizing the built-in markers.
  */
 
@@ -24,7 +24,7 @@ class Markers extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Markers example for mxGraph</h1>
+        <h1>Markers</h1>
         <div
           ref={el => {
             this.el = el;
@@ -32,7 +32,6 @@ class Markers extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '641px',
             height: '381px',
             border: '1px solid gray',
             cursor: 'default',

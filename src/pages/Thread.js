@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Thread example for mxGraph. This example demonstrates setting
+  Thread. This example demonstrates setting
   overlays in mxGraph from within a timed function.
  */
 
@@ -17,14 +17,13 @@ class Thread extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Thread example for mxGraph</h1>
+        <h1>Thread</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
           }}

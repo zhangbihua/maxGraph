@@ -2,7 +2,7 @@
  *  Copyright (c) 2006-2018, JGraph Ltd
  *  Converted to ES9 syntax/React by David Morrissey 2021
  *
- *  Hello, World! example for mxGraph. This example demonstrates using
+ *  Hello, World!. This example demonstrates using
  *  a DOM node to create a graph and adding vertices and edges.
  */
 
@@ -20,7 +20,7 @@ class HelloWorld extends React.Component {
     // A container for the graph with a grid wallpaper
     return (
       <>
-        <h1>Hello, World! example for mxGraph</h1>
+        <h1>Hello, World!</h1>
 
         <div
           ref={el => {
@@ -29,7 +29,6 @@ class HelloWorld extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

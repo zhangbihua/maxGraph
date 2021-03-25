@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
 
-  Orgchart example for mxGraph. This example demonstrates using
+  Orgchart. This example demonstrates using
   automatic layouts, fit to page zoom and poster print (across
   multiple pages).
  */
@@ -34,7 +34,7 @@ class OrgChart extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Orgchart example for mxGraph</h1>
+        <h1>Orgchart</h1>
         <div
           ref={el => {
             this.el = el;

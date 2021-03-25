@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
 
- JSON data example for mxGraph. This example demonstrates using
+ JSON data. This example demonstrates using
  JSON to encode/decode parts of the graph model in mxCodec.
  */
 
@@ -30,7 +30,7 @@ class JsonData extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>JSON data example for mxGraph</h1>
+        <h1>JSON data</h1>
         <div
           ref={el => {
             this.el = el;
@@ -38,7 +38,6 @@ class JsonData extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

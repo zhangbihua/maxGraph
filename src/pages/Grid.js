@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Grid example for mxGraph. This example demonstrates drawing
+  Grid. This example demonstrates drawing
   a grid dynamically using HTML 5 canvas.
  */
 
@@ -23,14 +23,13 @@ class Grid extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Grid example for mxGraph</h1>
+        <h1>Grid</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
             overflow: 'hidden',
-            width: '641px',
             height: '481px',
             cursor: 'default',
           }}
@@ -45,7 +44,7 @@ class Grid extends React.Component {
   }
 
   componentDidMount() {
-    mxEvent.disableContextMenu(document.body);
+    mxEvent.disableContextMenu(this.el);
 
     // Creates the graph inside the given container
     const graph = new mxGraph(this.el);

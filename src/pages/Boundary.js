@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Boundary example for mxGraph. This example demonstrates
+ * Boundary. This example demonstrates
  * implementing boundary events in BPMN diagrams.
  */
 
@@ -23,7 +23,7 @@ class Boundary extends React.Component {
     // A this.el for the graph
     return (
       <>
-        <h1>Boundary example for mxGraph</h1>
+        <h1>Boundary</h1>
 
         <div
           ref={el => {
@@ -32,7 +32,6 @@ class Boundary extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: 'url("editors/images/grid.gif")',
             cursor: 'default'

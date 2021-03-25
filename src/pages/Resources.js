@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2018, JGraph Ltd
   
-  Resources example for mxGraph. This example demonstrates disabling the Synchronous
+  Resources. This example demonstrates disabling the Synchronous
   XMLHttpRequest on main thread warning.
  */
 
@@ -20,7 +20,7 @@ class Resources extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Resources example for mxGraph</h1>
+        <h1>Resources</h1>
 
         <div
           ref={el => {
@@ -29,7 +29,6 @@ class Resources extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

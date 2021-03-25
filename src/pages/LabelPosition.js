@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Label Position example for mxGraph. This example demonstrates the use of the
+  Label Position. This example demonstrates the use of the
   label position styles to set the position of vertex labels.
  */
 
@@ -17,7 +17,7 @@ class LabelPosition extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Label Position example for mxGraph</h1>
+        <h1>Label Position</h1>
         <div
           ref={el => {
             this.el = el;

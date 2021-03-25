@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Level of detail example for mxGraph. This example demonstrates
+  Level of detail. This example demonstrates
   implementing a level of detail per cell.
  */
 
@@ -18,7 +18,7 @@ class LOD extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Level of detail example for mxGraph</h1>
+        <h1>Level of detail</h1>
         <div
           ref={el => {
             this.el = el;
@@ -26,7 +26,6 @@ class LOD extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '621px',
             height: '441px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

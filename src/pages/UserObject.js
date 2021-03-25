@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  User object example for mxGraph. This example demonstrates using
+  User object. This example demonstrates using
   XML objects as values for cells.
  */
 
@@ -26,7 +26,7 @@ class UserObject extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>User object example for mxGraph</h1>
+        <h1>User object</h1>
 
         <table style={{
           position: 'relative'
@@ -38,7 +38,6 @@ class UserObject extends React.Component {
                 style={{
                   border: 'solid 1px black',
                   overflow: 'hidden',
-                  width: '321px',
                   height: '241px',
                   cursor: 'default'
                 }}
@@ -55,6 +54,10 @@ class UserObject extends React.Component {
             </td>
           </tr>
         </table>
+
+        <div
+          ref={el => {this.el2 = el;}}
+        />
       </>
     );
   }
@@ -179,7 +182,7 @@ class UserObject extends React.Component {
     new mxRubberband(graph);
 
     // Adds an option to view the XML of the graph
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('View XML', function() {
         const encoder = new mxCodec();
         const node = encoder.encode(graph.getModel());

@@ -1,7 +1,7 @@
 /**
  *Copyright (c) 2006-2013, JGraph Ltd
  *
- * File I/O example for mxGraph. This example demonstrates reading an
+ * File I/O. This example demonstrates reading an
  * XML file, writing a custom parser, applying an automatic layout and
  * defining a 2-way edge.
  */
@@ -27,19 +27,21 @@ class FileIO extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>File I/O example for mxGraph</h1>
+        <h1>File I/O</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-            position: 'absolute',
+            position: 'relative',
             overflow: 'auto',
-            top: '36px',
-            bottom: '0px',
-            left: '0px',
-            right: '0px',
+            height: '80vh',
             borderTop: 'gray 1px solid',
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
@@ -98,7 +100,7 @@ class FileIO extends React.Component {
         layout.forceConstant = 140;
 
         // Adds a button to execute the layout
-        document.body.appendChild(
+        this.el2.appendChild(
           mxUtils.button('Arrange', function(evt) {
             const parent = graph.getDefaultParent();
             layout.execute(parent);

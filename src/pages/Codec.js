@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Codec example for mxGraph. This example demonstrates dynamically
+ * Codec. This example demonstrates dynamically
  * creating a graph from XML and encoding the model into XML, as well
  * as changing the default style for edges in-place.
  */
@@ -23,7 +23,7 @@ class MYNAMEHERE extends React.Component {
     // Contains a graph description which will be converted
     return (
         <>
-          <h1>Codec example for mxGraph</h1>
+          <h1>Codec</h1>
 
           This graph is embedded in the page.
           <div className="mxgraph" style="position:relative;overflow:auto;">&lt;mxGraphModel&gt;&lt;root&gt;&lt;mxCell

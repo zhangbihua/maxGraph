@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Orthogonal example for mxGraph. This example demonstrates the use
+  Orthogonal. This example demonstrates the use
   of port constraints and orthogonal edge styles and handlers.
  */
 
@@ -26,7 +26,7 @@ class Orthogonal extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Orthogonal example for mxGraph</h1>
+        <h1>Orthogonal</h1>
         <div
           ref={el => {
             this.el = el;
@@ -34,7 +34,6 @@ class Orthogonal extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

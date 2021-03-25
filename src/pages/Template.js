@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Template example for mxGraph. This is used as a template HTML file by the
+  Template. This is used as a template HTML file by the
   backends to demonstrate the deployment of the client with a graph embedded
   in the page as XML data (see graph variable in the onload-handler).
   
@@ -31,7 +31,6 @@ class Template extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '321px',
             height: '241px',
             background: "url('/mxgraph/javascript/examples/editors/images/grid.gif')",
             cursor: 'default'

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Indicators example for mxGraph. This example demonstrates the use of
+  Indicators. This example demonstrates the use of
   indicators, which are small subshapes inside a parent shape, typically
   an mxLabel.
  */
@@ -21,7 +21,7 @@ class Indicators extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Indicators example for mxGraph</h1>
+        <h1>Indicators</h1>
         <div
           ref={el => {
             this.el = el;

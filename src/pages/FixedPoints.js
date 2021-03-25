@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Fixed points example for mxGraph. This example demonstrates using
+  Fixed points. This example demonstrates using
   fixed connection points for connecting edges to vertices.
  */
 
@@ -25,7 +25,7 @@ class FixedPoints extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Fixed points example for mxGraph</h1>
+        <h1>Fixed points</h1>
 
         <div
           ref={el => {
@@ -34,7 +34,6 @@ class FixedPoints extends React.Component {
           style={{
             overflow: 'hidden',
             position: 'relative',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Morph example for mxGraph. This example demonstrates using
+  Morph. This example demonstrates using
   mxMorphing for simple cell animations.
  */
 
@@ -21,7 +21,7 @@ class Morph extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hello, World! example for mxGraph</h1>
+        <h1>Hello, World!</h1>
         <div
           ref={el => {
             this.el = el;
@@ -29,10 +29,14 @@ class Morph extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
@@ -68,7 +72,7 @@ class Morph extends React.Component {
 
     let mult = 1;
 
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('Morph', function() {
         graph.clearSelection();
 

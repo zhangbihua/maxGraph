@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Ports example for mxGraph. This example demonstrates implementing
+  Ports. This example demonstrates implementing
   ports as child vertices with relative positions and drag and drop
   as well as the use of images and HTML in cells.
  */
@@ -11,7 +11,7 @@ import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 
-class MYNAMEHERE extends React.Component {
+class Ports extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -39,7 +39,7 @@ class MYNAMEHERE extends React.Component {
   };
 }
 
-export default MYNAMEHERE;
+export default Ports;
 
 
 

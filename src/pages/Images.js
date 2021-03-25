@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Images example for mxGraph. This example demonstrates using
+  Images. This example demonstrates using
   background images and images for for the label- and image-shape.
  */
 
@@ -24,7 +24,7 @@ class Images extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Images example for mxGraph</h1>
+        <h1>Images</h1>
         <div
           ref={el => {
             this.el = el;
@@ -32,7 +32,6 @@ class Images extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '360px',
             height: '200px',
             cursor: 'default',
           }}

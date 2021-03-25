@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Windows example for mxGraph. This example demonstrates using
+ * Windows. This example demonstrates using
  * the mxWindow class for displaying windows.
  */
 
@@ -23,7 +23,7 @@ class Windows extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Windows example for mxGraph</h1>
+        <h1>Windows</h1>
         <div
           ref={el => {
             this.el = el;
@@ -31,7 +31,6 @@ class Windows extends React.Component {
           style={{
             overflow: 'auto',
             position: 'relative',
-            width: '500px',
             height: '500px',
             background: 'lightyellow',
             cursor: 'default',

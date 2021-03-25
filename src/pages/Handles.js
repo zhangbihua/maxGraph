@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2014, JGraph Ltd
   
-  Handles example for mxGraph. This example demonstrates using mxHandle to change custom styles interactively.
+  Handles. This example demonstrates using mxHandle to change custom styles interactively.
  */
 
 import React from 'react';
@@ -25,7 +25,7 @@ class Handles extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Handles example for mxGraph</h1>
+        <h1>Handles</h1>
         <div
           ref={el => {
             this.el = el;
@@ -33,10 +33,14 @@ class Handles extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '621px',
             height: '441px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
@@ -258,12 +262,12 @@ class Handles extends React.Component {
       graph.getModel().endUpdate();
     }
 
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('+', function() {
         graph.zoomIn();
       })
     );
-    document.body.appendChild(
+    this.el2.appendChild(
       mxUtils.button('-', function() {
         graph.zoomOut();
       })

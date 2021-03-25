@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Dynamic toolbar example for mxGraph. This example demonstrates changing the
+ * Dynamic toolbar. This example demonstrates changing the
  * state of the toolbar at runtime.
  */
 
@@ -27,7 +27,7 @@ class DynamicToolbar extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Toolbar example for mxGraph</h1>
+        <h1>Toolbar</h1>
 
         <div
           ref={el => {
@@ -35,7 +35,6 @@ class DynamicToolbar extends React.Component {
           }}
           style={{
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             position: "relative"

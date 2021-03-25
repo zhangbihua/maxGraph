@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Hoverstyle example for mxGraph. This example shows hot to change
+  Hoverstyle. This example shows hot to change
   the style of a vertex on mouseover.
  */
 
@@ -20,7 +20,7 @@ class HoverStyle extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hoverstyle example for mxGraph</h1>
+        <h1>Hoverstyle</h1>
         <div
           ref={el => {
             this.el = el;
@@ -28,7 +28,6 @@ class HoverStyle extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

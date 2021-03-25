@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Hello, World! example for mxGraph. This example demonstrates using
+  Hello, World!. This example demonstrates using
   the isPort hook for visually connecting to another cell.
  */
 
@@ -24,14 +24,13 @@ class HelloPort extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hello, World! example for mxGraph</h1>
+        <h1>Hello, World!</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Folding example for mxGraph. This example demonstrates
+ * Folding. This example demonstrates
  * using a layout to implement a nested group structure.
  */
 
@@ -21,7 +21,7 @@ class Folding extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Folding example for mxGraph</h1>
+        <h1>Folding</h1>
         <div
           ref={el => {
             this.el = el;
@@ -29,7 +29,6 @@ class Folding extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

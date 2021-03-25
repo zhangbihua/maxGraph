@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Map example for mxGraph. This example demonstrates using
+  Map. This example demonstrates using
   a graph container as a Google Maps overlay.
  */
 
@@ -19,7 +19,7 @@ class MYNAMEHERE extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Google maps example for mxGraph</h1>
+        <h1>Google maps</h1>
 
         <div
           ref={el => {

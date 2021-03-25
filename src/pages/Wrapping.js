@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
  *
- * Wrapping example for mxGraph. This example demonstrates using HTML markup and
+ * Wrapping. This example demonstrates using HTML markup and
  * word-wrapping in vertex and edge labels.
  */
 
@@ -17,7 +17,7 @@ class Wrapping extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Wrapping example for mxGraph</h1>
+        <h1>Wrapping</h1>
 
         <div
           ref={el => {
@@ -26,7 +26,6 @@ class Wrapping extends React.Component {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            width: '341px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
   
-  Groups example for mxGraph. This example demonstrates using
+  Groups. This example demonstrates using
   cells as parts of other cells.
  */
 
@@ -20,14 +20,13 @@ class Groups extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hello, World! example for mxGraph</h1>
+        <h1>Hello, World!</h1>
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
             overflow: 'hidden',
-            width: '321px',
             height: '241px',
             background: "url('editors/images/grid.gif')",
             cursor: 'default',
