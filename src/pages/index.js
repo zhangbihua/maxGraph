@@ -59,6 +59,8 @@ import HierarchicalLayout from "./HierarchicalLayout";
 import HelloPort from "./HelloPort";
 import Handles from "./Handles";
 import Guides from "./Guides";
+import Groups from "./Groups";
+import Grid from "./Grid";
 
 export default function Home() {
   return (
@@ -87,6 +89,8 @@ export default function Home() {
       <EdgeTolerance />
       <Editing />
 
+      <Grid />
+      <Groups />
       <Guides />
       <Handles />
       <HelloPort />
