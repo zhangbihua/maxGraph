@@ -22,9 +22,7 @@ class Control extends React.Component {
     return (
       <>
         <h1>Control</h1>
-        This example demonstrates adding
-        controls to specific cells in a graph.
-
+        This example demonstrates adding controls to specific cells in a graph.
         <div
           ref={el => {
             this.el = el;
@@ -46,10 +44,6 @@ class Control extends React.Component {
   };
 
   componentDidMount = () => {
-    // Creates the graph inside the given container
-    const graph = new mxGraph(this.el);
-    graph.setPanning(true);
-
     // Specifies the URL and size of the new control
     const deleteImage = new mxImage(
       'editors/images/overlays/forbidden.png',
@@ -57,94 +51,101 @@ class Control extends React.Component {
       16
     );
 
-    // Overridden to add an additional control to the state at creation time
-    const mxCellRendererCreateControl = mxCellRenderer.prototype.createControl;
-    mxCellRenderer.prototype.createControl = function(state) {
-      mxCellRendererCreateControl.apply(this, arguments);
+    class MyCustomCellRenderer extends mxCellRenderer {
+      createControl(state) {
+        super.createControl(state);
 
-      const { graph } = state.view;
+        const { graph } = state.view;
 
-      if (graph.getModel().isVertex(state.cell)) {
-        if (state.deleteControl == null) {
-          const b = new mxRectangle(
-            0,
-            0,
-            deleteImage.width,
-            deleteImage.height
-          );
-          state.deleteControl = new mxImageShape(b, deleteImage.src);
-          state.deleteControl.dialect = graph.dialect;
-          state.deleteControl.preserveImageAspect = false;
-
-          this.initControl(state, state.deleteControl, false, function(evt) {
-            if (graph.isEnabled()) {
-              graph.removeCells([state.cell]);
-              mxEvent.consume(evt);
-            }
-          });
-        }
-      } else if (state.deleteControl != null) {
-        state.deleteControl.destroy();
-        state.deleteControl = null;
-      }
-    };
-
-    // Helper function to compute the bounds of the control
-    const getDeleteControlBounds = function(state) {
-      if (state.deleteControl != null) {
-        const oldScale = state.deleteControl.scale;
-        const w = state.deleteControl.bounds.width / oldScale;
-        const h = state.deleteControl.bounds.height / oldScale;
-        const s = state.view.scale;
-
-        return state.view.graph.getModel().isEdge(state.cell)
-          ? new mxRectangle(
-              state.x + state.width / 2 - (w / 2) * s,
-              state.y + state.height / 2 - (h / 2) * s,
-              w * s,
-              h * s
-            )
-          : new mxRectangle(
-              state.x + state.width - w * s,
-              state.y,
-              w * s,
-              h * s
+        if (graph.getModel().isVertex(state.cell)) {
+          if (state.deleteControl == null) {
+            const b = new mxRectangle(
+              0,
+              0,
+              deleteImage.width,
+              deleteImage.height
             );
-      }
+            state.deleteControl = new mxImageShape(b, deleteImage.src);
+            state.deleteControl.dialect = graph.dialect;
+            state.deleteControl.preserveImageAspect = false;
 
-      return null;
-    };
-
-    // Overridden to update the scale and bounds of the control
-    const mxCellRendererRedrawControl = mxCellRenderer.prototype.redrawControl;
-    mxCellRenderer.prototype.redrawControl = function(state) {
-      mxCellRendererRedrawControl.apply(this, arguments);
-
-      if (state.deleteControl != null) {
-        const bounds = getDeleteControlBounds(state);
-        const s = state.view.scale;
-
-        if (
-          state.deleteControl.scale !== s ||
-          !state.deleteControl.bounds.equals(bounds)
-        ) {
-          state.deleteControl.bounds = bounds;
-          state.deleteControl.scale = s;
-          state.deleteControl.redraw();
+            this.initControl(state, state.deleteControl, false, function(evt) {
+              if (graph.isEnabled()) {
+                graph.removeCells([state.cell]);
+                mxEvent.consume(evt);
+              }
+            });
+          }
+        } else if (state.deleteControl != null) {
+          state.deleteControl.destroy();
+          state.deleteControl = null;
         }
       }
-    };
 
-    // Overridden to remove the control if the state is destroyed
-    const mxCellRendererDestroy = mxCellRenderer.prototype.destroy;
-    mxCellRenderer.prototype.destroy = function(state) {
-      mxCellRendererDestroy.apply(this, arguments);
+      getDeleteControlBounds(state) {
+        // Helper function to compute the bounds of the control
+        if (state.deleteControl != null) {
+          const oldScale = state.deleteControl.scale;
+          const w = state.deleteControl.bounds.width / oldScale;
+          const h = state.deleteControl.bounds.height / oldScale;
+          const s = state.view.scale;
 
-      if (state.deleteControl != null) {
-        state.deleteControl.destroy();
-        state.deleteControl = null;
+          return state.view.graph.getModel().isEdge(state.cell)
+            ? new mxRectangle(
+                state.x + state.width / 2 - (w / 2) * s,
+                state.y + state.height / 2 - (h / 2) * s,
+                w * s,
+                h * s
+              )
+            : new mxRectangle(
+                state.x + state.width - w * s,
+                state.y,
+                w * s,
+                h * s
+              );
+        }
+        return null;
       }
-    };
+
+      redrawControl(state) {
+        // Overridden to update the scale and bounds of the control
+        super.redrawControl(state);
+
+        if (state.deleteControl != null) {
+          const bounds = this.getDeleteControlBounds(state);
+          const s = state.view.scale;
+
+          if (
+            state.deleteControl.scale !== s ||
+            !state.deleteControl.bounds.equals(bounds)
+          ) {
+            state.deleteControl.bounds = bounds;
+            state.deleteControl.scale = s;
+            state.deleteControl.redraw();
+          }
+        }
+      }
+
+      destroy(state) {
+        // Overridden to remove the control if the state is destroyed
+        super.destroy(state);
+
+        if (state.deleteControl != null) {
+          state.deleteControl.destroy();
+          state.deleteControl = null;
+        }
+      }
+    }
+
+    class MyCustomGraph extends mxGraph {
+      createCellRenderer() {
+        return new MyCustomCellRenderer();
+      }
+    }
+
+    // Creates the graph inside the given container
+    const graph = new MyCustomGraph(this.el);
+    graph.setPanning(true);
 
     // Uncomment the following if you want the container
     // to fit the size of the graph
