@@ -19,7 +19,7 @@ function Preview({ sourceKey, content }) {
             hide source
           </span>
           <div style={{clear: "both", resize: "both", maxHeight: "50vh", overflow: "auto"}}>
-            <SourceCodeDisplay language="javascript" code={examplesListing[sourceKey]} />
+            <SourceCodeDisplay language="javascript" code={examplesListing[sourceKey]||''} />
           </div>
         </div>
       ) : (
