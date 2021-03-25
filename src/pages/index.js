@@ -51,6 +51,14 @@ import Layers from "./Layers";
 import Labels from "./Labels";
 import LabelPosition from "./LabelPosition";
 import JsonData from "./JsonData";
+import Indicators from "./Indicators";
+import Images from "./Images";
+import HoverIcons from "./HoverIcons";
+import HoverStyle from "./HoverStyle";
+import HierarchicalLayout from "./HierarchicalLayout";
+import HelloPort from "./HelloPort";
+import Handles from "./Handles";
+import Guides from "./Guides";
 
 export default function Home() {
   return (
@@ -79,6 +87,14 @@ export default function Home() {
       <EdgeTolerance />
       <Editing />
 
+      <Guides />
+      <Handles />
+      <HelloPort />
+      {/*<HierarchicalLayout />*/}
+      <HoverStyle />
+      <HoverIcons />
+      <Images />
+      <Indicators />
       <JsonData />
       <LabelPosition />
       <Labels />

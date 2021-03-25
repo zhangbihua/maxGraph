@@ -4,6 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxShape from './mxShape';
+import mxConstants from "../util/mxConstants";
 
 class mxArrow extends mxShape {
   /**

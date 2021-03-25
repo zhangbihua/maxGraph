@@ -9,8 +9,13 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxEdgeStyle from '../mxgraph/view/mxEdgeStyle';
+import mxPoint from '../mxgraph/util/mxPoint';
+import mxCodec from '../mxgraph/io/mxCodec';
+import mxUtils from '../mxgraph/util/mxUtils';
 
-class MYNAMEHERE extends React.Component {
+class HelloPort extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -20,140 +25,99 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>Hello, World! example for mxGraph</h1>
-
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-
+            overflow: 'hidden',
+            width: '321px',
+            height: '241px',
+            background: "url('editors/images/grid.gif')",
+            cursor: 'default',
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
+    // Creates the graph inside the given container
+    const graph = new mxGraph(this.el);
+    graph.setConnectable(true);
+    graph.setTooltips(true);
 
-  };
+    // Sets the default edge style
+    const style = graph.getStylesheet().getDefaultEdgeStyle();
+    style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+
+    // Ports are not used as terminals for edges, they are
+    // only used to compute the graphical connection point
+    graph.isPort = function(cell) {
+      const geo = this.getCellGeometry(cell);
+
+      return geo != null ? geo.relative : false;
+    };
+
+    // Implements a tooltip that shows the actual
+    // source and target of an edge
+    graph.getTooltipForCell = function(cell) {
+      if (this.model.isEdge(cell)) {
+        return `${this.convertValueToString(
+          this.model.getTerminal(cell, true)
+        )} => ${this.convertValueToString(
+          this.model.getTerminal(cell, false)
+        )}`;
+      }
+
+      return mxGraph.prototype.getTooltipForCell.apply(this, arguments);
+    };
+
+    // Removes the folding icon and disables any folding
+    graph.isCellFoldable = function(cell) {
+      return false;
+    };
+
+    // Enables rubberband selection
+    new mxRubberband(graph);
+
+    // Gets the default parent for inserting new cells. This
+    // is normally the first child of the root (ie. layer 0).
+    const parent = graph.getDefaultParent();
+
+    // Adds cells to the model in a single step
+    graph.getModel().beginUpdate();
+    try {
+      const v1 = graph.insertVertex(parent, null, 'Hello', 20, 80, 80, 30);
+      v1.setConnectable(false);
+      const v11 = graph.insertVertex(v1, null, '', 1, 1, 10, 10);
+      v11.geometry.offset = new mxPoint(-5, -5);
+      v11.geometry.relative = true;
+      const v12 = graph.insertVertex(v1, null, '', 1, 0, 10, 10);
+      v12.geometry.offset = new mxPoint(-5, -5);
+      v12.geometry.relative = true;
+      const v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
+      const v3 = graph.insertVertex(parent, null, 'World2', 200, 20, 80, 30);
+      var e1 = graph.insertEdge(parent, null, '', v11, v2);
+      var e1 = graph.insertEdge(parent, null, '', v12, v3);
+    } finally {
+      // Updates the display
+      graph.getModel().endUpdate();
+    }
+
+    const button = mxUtils.button('View XML', function() {
+      const encoder = new mxCodec();
+      const node = encoder.encode(graph.getModel());
+      mxUtils.popup(mxUtils.getPrettyXml(node), true);
+    });
+
+    this.el2.appendChild(button);
+  }
 }
 
-export default MYNAMEHERE;
-
-
-<html>
-<head>
-  <title></title>
-
-  <!-- Sets the basepath for the library if not in same directory -->
-  <script type="text/javascript">
-    mxBasePath = '../src';
-  </script>
-
-  <!-- Loads and initializes the library -->
-  <script type="text/javascript" src="../src/js/mxClient.js"></script>
-
-  <!-- Example code -->
-  <script type="text/javascript">
-    // Program starts here. Creates a sample graph in the
-    // DOM node with the specified ID. This function is invoked
-    // from the onLoad event handler of the document (see below).
-    function main(container)
-    {
-      // Checks if the browser is supported
-      if (!mxClient.isBrowserSupported())
-      {
-        // Displays an error message if the browser is not supported.
-        mxUtils.error('Browser is not supported!', 200, false);
-      }
-      else
-      {
-        // Creates the graph inside the given container
-        let graph = new mxGraph(container);
-        graph.setConnectable(true);
-        graph.setTooltips(true);
-
-        // Sets the default edge style
-        let style = graph.getStylesheet().getDefaultEdgeStyle();
-        style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-
-        // Ports are not used as terminals for edges, they are
-        // only used to compute the graphical connection point
-        graph.isPort = function(cell)
-        {
-          let geo = this.getCellGeometry(cell);
-
-          return (geo != null) ? geo.relative : false;
-        };
-
-        // Implements a tooltip that shows the actual
-        // source and target of an edge
-        graph.getTooltipForCell = function(cell)
-        {
-          if (this.model.isEdge(cell))
-          {
-            return this.convertValueToString(this.model.getTerminal(cell, true)) + ' => ' +
-              this.convertValueToString(this.model.getTerminal(cell, false))
-          }
-
-          return mxGraph.prototype.getTooltipForCell.apply(this, arguments);
-        };
-
-        // Removes the folding icon and disables any folding
-        graph.isCellFoldable = function(cell)
-        {
-          return false;
-        };
-
-        // Enables rubberband selection
-        new mxRubberband(graph);
-
-        // Gets the default parent for inserting new cells. This
-        // is normally the first child of the root (ie. layer 0).
-        let parent = graph.getDefaultParent();
-
-        // Adds cells to the model in a single step
-        graph.getModel().beginUpdate();
-        try
-        {
-          var v1 = graph.insertVertex(parent, null, 'Hello', 20, 80, 80, 30);
-          v1.setConnectable(false);
-          var v11 = graph.insertVertex(v1, null, '', 1, 1, 10, 10);
-          v11.geometry.offset = new mxPoint(-5, -5);
-          v11.geometry.relative = true;
-          var v12 = graph.insertVertex(v1, null, '', 1, 0, 10, 10);
-          v12.geometry.offset = new mxPoint(-5, -5);
-          v12.geometry.relative = true;
-          var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-          var v3 = graph.insertVertex(parent, null, 'World2', 200, 20, 80, 30);
-          var e1 = graph.insertEdge(parent, null, '', v11, v2);
-          var e1 = graph.insertEdge(parent, null, '', v12, v3);
-        }
-        finally
-        {
-          // Updates the display
-          graph.getModel().endUpdate();
-        }
-
-        let button = mxUtils.button('View XML', function()
-        {
-          let encoder = new mxCodec();
-          let node = encoder.encode(graph.getModel());
-          mxUtils.popup(mxUtils.getPrettyXml(node), true);
-        });
-
-        document.body.insertBefore(button, container.nextSibling);
-      }
-    };
-  </script>
-</head>
-
-<!-- Page passes the container for the graph to the program -->
-<body onload="main(document.getElementById('graphContainer'))">
-
-  <!-- Creates a container for the graph with a grid wallpaper -->
-  <div id="graphContainer"
-    style="overflow:hidden;width:321px;height:241px;background:url('editors/images/grid.gif');cursor:default;">
-  </div>
-</body>
-</html>
+export default HelloPort;

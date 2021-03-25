@@ -9,8 +9,13 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxRectangle from '../mxgraph/util/mxRectangle';
+import mxImage from '../mxgraph/util/mxImage';
+import mxPerimeter from "../mxgraph/view/mxPerimeter";
 
-class MYNAMEHERE extends React.Component {
+class Images extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -20,94 +25,94 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>Images example for mxGraph</h1>
-
         <div
           ref={el => {
             this.el = el;
           }}
           style={{
-
+            position: 'relative',
+            overflow: 'hidden',
+            width: '360px',
+            height: '200px',
+            cursor: 'default',
           }}
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
+    // Creates the graph inside the given container
+    const graph = new mxGraph(this.el);
 
-  };
-}
+    // Sets a background image and restricts child movement to its bounds
+    graph.setBackgroundImage(
+      new mxImage('images/gradient_background.jpg', 360, 200)
+    );
+    graph.maximumGraphBounds = new mxRectangle(0, 0, 360, 200);
 
-export default MYNAMEHERE;
+    // Resizes the container but never make it bigger than the background
+    graph.minimumContainerSize = new mxRectangle(0, 0, 360, 200);
+    graph.setResizeContainer(true);
 
+    // Disables basic selection and cell handling
+    // graph.setEnabled(false);
+    configureStylesheet(graph);
 
-<html>
-<head>
-  <title></title>
+    // Gets the default parent for inserting new cells. This
+    // is normally the first child of the root (ie. layer 0).
+    const parent = graph.getDefaultParent();
 
-  <!-- Sets the basepath for the library if not in same directory -->
-  <script type="text/javascript">
-    mxBasePath = '../src';
-  </script>
+    // Adds cells to the model in a single step
+    graph.getModel().beginUpdate();
+    try {
+      var v1 = graph.insertVertex(
+        parent,
+        null,
+        'First Line\nSecond Line',
+        20,
+        10,
+        80,
+        100,
+        'bottom'
+      );
+      var v1 = graph.insertVertex(
+        parent,
+        null,
+        'First Line\nSecond Line',
+        130,
+        10,
+        80,
+        100,
+        'top'
+      );
+      var v1 = graph.insertVertex(parent, null, '', 230, 10, 100, 100, 'image');
+      var v2 = graph.insertVertex(
+        parent,
+        null,
+        'First Line\nSecond Line',
+        20,
+        130,
+        140,
+        60,
+        'right'
+      );
+      var v2 = graph.insertVertex(
+        parent,
+        null,
+        'First Line\nSecond Line',
+        180,
+        130,
+        140,
+        60,
+        'left'
+      );
+    } finally {
+      // Updates the display
+      graph.getModel().endUpdate();
+    }
 
-  <!-- Loads and initializes the library -->
-  <script type="text/javascript" src="../src/js/mxClient.js"></script>
-
-  <!-- Example code -->
-  <script type="text/javascript">
-
-    // Program starts here. Creates a sample graph in the
-    // DOM node with the specified ID. This function is invoked
-    // from the onLoad event handler of the document (see below).
-    function main(container)
-    {
-      // Checks if the browser is supported
-      if (!mxClient.isBrowserSupported())
-      {
-        // Displays an error message if the browser is not supported.
-        mxUtils.error('Browser is not supported!', 200, false);
-      }
-      else
-      {
-        // Creates the graph inside the given container
-        let graph = new mxGraph(container);
-
-        // Sets a background image and restricts child movement to its bounds
-        graph.setBackgroundImage(new mxImage('images/gradient_background.jpg', 360, 200));
-        graph.maximumGraphBounds = new mxRectangle(0, 0, 360, 200);
-
-        // Resizes the container but never make it bigger than the background
-        graph.minimumContainerSize = new mxRectangle(0, 0, 360, 200);
-        graph.setResizeContainer(true);
-
-        // Disables basic selection and cell handling
-        //graph.setEnabled(false);
-        configureStylesheet(graph);
-
-        // Gets the default parent for inserting new cells. This
-        // is normally the first child of the root (ie. layer 0).
-        let parent = graph.getDefaultParent();
-
-        // Adds cells to the model in a single step
-        graph.getModel().beginUpdate();
-        try
-        {
-          var v1 = graph.insertVertex(parent, null, 'First Line\nSecond Line', 20, 10, 80, 100, 'bottom');
-          var v1 = graph.insertVertex(parent, null, 'First Line\nSecond Line', 130, 10, 80, 100, 'top');
-          var v1 = graph.insertVertex(parent, null, '', 230, 10, 100, 100, 'image');
-          var v2 = graph.insertVertex(parent, null, 'First Line\nSecond Line', 20, 130, 140, 60, 'right');
-          var v2 = graph.insertVertex(parent, null, 'First Line\nSecond Line', 180, 130, 140, 60, 'left');
-        }
-        finally
-        {
-          // Updates the display
-          graph.getModel().endUpdate();
-        }
-      }
-    };
-
-    function configureStylesheet(graph)
-    {
+    function configureStylesheet(graph) {
       let style = {};
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
       style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
@@ -151,15 +156,8 @@ export default MYNAMEHERE;
       delete style[mxConstants.STYLE_SPACING_LEFT];
       style[mxConstants.STYLE_SPACING_RIGHT] = '55';
       graph.getStylesheet().putCellStyle('left', style);
-    };
-  </script>
-</head>
+    }
+  }
+}
 
-<!-- Page passes the container for the graph to the program -->
-<body onload="main(document.getElementById('graphContainer'))">
-
-  <!-- Creates a container for the graph -->
-  <div id="graphContainer" style="position:relative;overflow:hidden;width:360px;height:200px;cursor:default;">
-  </div>
-</body>
-</html>
+export default Images;
