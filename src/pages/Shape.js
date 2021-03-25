@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Shape. This example demonstrates how to
-  implement and use a custom shape.
  */
 
 import React from 'react';
@@ -21,6 +18,8 @@ class Shape extends React.Component {
     return (
       <>
         <h1>Shape</h1>
+        This example demonstrates how to
+        implement and use a custom shape.
 
         <div
           ref={el => {

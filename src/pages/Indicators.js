@@ -1,9 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Indicators. This example demonstrates the use of
-  indicators, which are small subshapes inside a parent shape, typically
-  an mxLabel.
  */
 
 import React from 'react';
@@ -22,6 +18,10 @@ class Indicators extends React.Component {
     return (
       <>
         <h1>Indicators</h1>
+        This example demonstrates the use of
+        indicators, which are small subshapes inside a parent shape, typically
+        an mxLabel.
+
         <div
           ref={el => {
             this.el = el;

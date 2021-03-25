@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Validation. This example demonstrates using
- * multiplicities for automatically validating a graph.
  */
 
 import React from 'react';
@@ -24,6 +21,8 @@ class Validation extends React.Component {
     return (
       <>
         <h1>Validation</h1>
+        This example demonstrates using
+        multiplicities for automatically validating a graph.
 
         <div
           ref={el => {

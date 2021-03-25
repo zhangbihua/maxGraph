@@ -1,8 +1,7 @@
 /**
  * Copyright (c) 2006-2015, JGraph Ltd
   
-  Scrollbars. This example demonstrates using
-  a scrollable table with different sections in a cell label.
+
  */
 
 import React from 'react';
@@ -10,7 +9,7 @@ import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 
-class MYNAMEHERE extends React.Component {
+class Scrollbars extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -20,6 +19,8 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>Scrollbars</h1>
+        This example demonstrates using
+        a scrollable table with different sections in a cell label.
 
         <div
           ref={el => {
@@ -38,7 +39,7 @@ class MYNAMEHERE extends React.Component {
   };
 }
 
-export default MYNAMEHERE;
+export default Scrollbars;
 
 
   <style type="text/css" media="screen">

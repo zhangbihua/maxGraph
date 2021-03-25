@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Images. This example demonstrates using
-  background images and images for for the label- and image-shape.
  */
 
 import React from 'react';
@@ -25,6 +22,9 @@ class Images extends React.Component {
     return (
       <>
         <h1>Images</h1>
+        This example demonstrates using
+        background images and images for for the label- and image-shape.
+        
         <div
           ref={el => {
             this.el = el;

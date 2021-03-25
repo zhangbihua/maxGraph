@@ -1,9 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Overlays. This example demonstrates cell
-  highlighting, overlays and handling click and double click
-  events. See also: events.html for more event handling.
  */
 
 import React from 'react';
@@ -24,6 +20,10 @@ class Overlays extends React.Component {
     return (
       <>
         <h1>Overlays</h1>
+        This example demonstrates cell
+        highlighting, overlays and handling click and double click
+        events. See also: events.html for more event handling.
+
         <div
           ref={el => {
             this.el = el;

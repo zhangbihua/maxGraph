@@ -1,10 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Labels. This example demonstrates the use of wrapping
-  and clipping for HTML labels of vertices, truncating labels to fit the
-  size of a vertex, and manually placing vertex labels and relative children
-  that act as "sublabels".
  */
 
 import React from 'react';
@@ -24,6 +19,11 @@ class Labels extends React.Component {
     return (
       <>
         <h1>Hello, World!</h1>
+        This example demonstrates the use of wrapping
+        and clipping for HTML labels of vertices, truncating labels to fit the
+        size of a vertex, and manually placing vertex labels and relative children
+        that act as "sublabels".
+
         <div
           ref={el => {
             this.el = el;

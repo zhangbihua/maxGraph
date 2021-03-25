@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-
-  Hover icons. This example demonstrates showing
-  icons on vertices as mouse hovers over them.
  */
 
 import React from 'react';
@@ -24,6 +21,8 @@ class HoverIcons extends React.Component {
     return (
       <>
         <h1>Hover icons</h1>
+        This example demonstrates showing
+        icons on vertices as mouse hovers over them.
 
         <div
           ref={el => {

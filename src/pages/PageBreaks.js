@@ -1,9 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Pagebreaks. This example demonstrates using the
-  pageBreaksVisible and preferPageSize switches and adding headers and
-  footers to print output.
  */
 
 import React from 'react';
@@ -24,6 +20,9 @@ class PageBreaks extends React.Component {
     return (
       <>
         <h1>Pagebreaks</h1>
+        This example demonstrates using the
+        pageBreaksVisible and preferPageSize switches and adding headers and
+        footers to print output.
 
         <div
           ref={el => {

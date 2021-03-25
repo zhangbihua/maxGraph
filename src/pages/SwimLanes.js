@@ -1,10 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Swimlanes. This example demonstrates using
-  swimlanes for pools and lanes and adding cells and edges between
-  them. This also demonstrates using the stack layout as an
-  automatic layout.
  */
 
 import React from 'react';
@@ -34,6 +29,11 @@ class SwimLanes extends React.Component {
     return (
       <>
         <h1>Swimlanes</h1>
+        This example demonstrates using
+        swimlanes for pools and lanes and adding cells and edges between
+        them. This also demonstrates using the stack layout as an
+        automatic layout.
+
         <div
           ref={el => {
             this.el = el;

@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  HTML label. This example demonstrates using
-  HTML labels that are connected to the state of the user object.
  */
 
 import React from 'react';
@@ -20,6 +17,8 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>HTML label</h1>
+        This example demonstrates using
+        HTML labels that are connected to the state of the user object.
 
         <div
           ref={el => {

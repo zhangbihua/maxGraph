@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  UIConfig. This example demonstrates using a config
-  file to configure the toolbar and popup menu in mxEditor.
  */
 
 import React from 'react';
@@ -20,6 +17,8 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>UIConfig example</h1>
+        This example demonstrates using a config
+        file to configure the toolbar and popup menu in mxEditor.
 
         <div
           ref={el => {

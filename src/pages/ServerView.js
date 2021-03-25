@@ -1,10 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Server-View. This example demonstrates using
-  a server-side image of the graph as the diagram in the client. This
-  may be used to improve drawing-speed in older browser and on devices
-  with slower processors.
  */
 
 import React from 'react';
@@ -22,6 +17,10 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>mxGraph using Server-side Image</h1>
+        This example demonstrates using
+        a server-side image of the graph as the diagram in the client. This
+        may be used to improve drawing-speed in older browser and on devices
+        with slower processors.
 
         <div
           ref={el => {

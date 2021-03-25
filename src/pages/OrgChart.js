@@ -43,7 +43,7 @@ class OrgChart extends React.Component {
             zIndex: 1,
             position: 'relative',
             overflow: 'hidden',
-            height: '80vh',
+            height: '50vh',
             background: 'transparent',
             borderStyle: 'solid',
             borderColor: 'lightgray',

@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-
- JSON data. This example demonstrates using
- JSON to encode/decode parts of the graph model in mxCodec.
  */
 
 import React from 'react';
@@ -31,6 +28,9 @@ class JsonData extends React.Component {
     return (
       <>
         <h1>JSON data</h1>
+        This example demonstrates using
+        JSON to encode/decode parts of the graph model in mxCodec.
+
         <div
           ref={el => {
             this.el = el;

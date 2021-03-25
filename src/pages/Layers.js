@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Layers. This example demonstrates using
-  multiple layers to contain cells.
  */
 
 import React from 'react';
@@ -22,6 +19,9 @@ class Layers extends React.Component {
     return (
       <>
         <h1>Layers</h1>
+        This example demonstrates using
+        multiple layers to contain cells.
+
         <div
           ref={el => {
             this.el = el;

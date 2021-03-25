@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  User object. This example demonstrates using
-  XML objects as values for cells.
  */
 
 import React from 'react';
@@ -27,6 +24,8 @@ class UserObject extends React.Component {
     return (
       <>
         <h1>User object</h1>
+        This example demonstrates using
+        XML objects as values for cells.
 
         <table style={{
           position: 'relative'

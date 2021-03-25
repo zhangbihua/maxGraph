@@ -1,8 +1,7 @@
 /**
  * Copyright (c) 2006-2018, JGraph Ltd
   
-  Resources. This example demonstrates disabling the Synchronous
-  XMLHttpRequest on main thread warning.
+
  */
 
 import React from 'react';
@@ -21,6 +20,8 @@ class Resources extends React.Component {
     return (
       <>
         <h1>Resources</h1>
+        This example demonstrates disabling the Synchronous
+        XMLHttpRequest on main thread warning.
 
         <div
           ref={el => {

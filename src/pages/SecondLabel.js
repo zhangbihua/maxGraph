@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-
- Second label. This example demonstrates how to
- add another string label to vertices.
  */
 
 import React from 'react';
@@ -24,6 +21,8 @@ class SecondLabel extends React.Component {
     return (
       <>
         <h1>Second label</h1>
+        This example demonstrates how to
+        add another string label to vertices.
 
         <div
           ref={el => {

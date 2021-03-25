@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Map. This example demonstrates using
-  a graph container as a Google Maps overlay.
  */
 
 import React from 'react';
@@ -10,7 +7,7 @@ import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 
-class MYNAMEHERE extends React.Component {
+class Map extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -20,6 +17,8 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>Google maps</h1>
+        This example demonstrates using
+        a graph container as a Google Maps overlay.
 
         <div
           ref={el => {
@@ -38,7 +37,7 @@ class MYNAMEHERE extends React.Component {
   };
 }
 
-export default MYNAMEHERE;
+export default Map;
 
 
 <html>

@@ -10,7 +10,7 @@ import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 
-class MYNAMEHERE extends React.Component {
+class MenuStyle extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -38,7 +38,7 @@ class MYNAMEHERE extends React.Component {
   };
 }
 
-export default MYNAMEHERE;
+export default MenuStyle;
 
 
 <html>

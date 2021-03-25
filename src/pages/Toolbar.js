@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Toolbar. This example demonstrates using
-  existing cells as templates for creating new cells.
  */
 
 import React from 'react';
@@ -28,6 +25,8 @@ class Toolbar extends React.Component {
     return (
       <>
         <h1>Toolbar</h1>
+        This example demonstrates using
+        existing cells as templates for creating new cells.
 
         <div
           ref={el => {

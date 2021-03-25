@@ -1,9 +1,5 @@
 /**
  * Copyright (c) 2006-2014, JGraph Ltd
-  
-  Hierarchical Layout. This example demonstrates the
-  use of the hierarchical and organic layouts. Note that the hierarchical
-  layout requires another script tag in the head of the page.
  */
 
 import React from 'react';
@@ -23,6 +19,10 @@ class RadialTreeLayout extends React.Component {
     return (
       <>
         <h1>Hierarchical Layout</h1>
+        This example demonstrates the
+        use of the hierarchical and organic layouts. Note that the hierarchical
+        layout requires another script tag in the head of the page.
+
         <div
           ref={el => {
             this.el = el;

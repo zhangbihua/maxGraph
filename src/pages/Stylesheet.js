@@ -1,10 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Stylesheet. This example demonstrates using
-  a custom stylesheet and control points in edges, as well as
-  overriding the getLabel and getTooltip function to return
-  dynamic information, and making a supercall in JavaScript.
  */
 
 import React from 'react';
@@ -23,6 +18,11 @@ class Stylesheet extends React.Component {
     return (
       <>
         <h1>Stylesheet</h1>
+        This example demonstrates using
+        a custom stylesheet and control points in edges, as well as
+        overriding the getLabel and getTooltip function to return
+        dynamic information, and making a supercall in JavaScript.
+
         <div
           ref={el => {
             this.el = el;

@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Morph. This example demonstrates using
-  mxMorphing for simple cell animations.
  */
 
 import React from 'react';
@@ -21,7 +18,10 @@ class Morph extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hello, World!</h1>
+        <h1>Morph</h1>
+        This example demonstrates using
+        mxMorphing for simple cell animations.
+
         <div
           ref={el => {
             this.el = el;

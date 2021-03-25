@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Tree. This example demonstrates folding
- * of subtrees in a acyclic graph (tree).
  */
 
 import React from 'react';
@@ -31,6 +28,8 @@ class Tree extends React.Component {
     return (
       <>
         <h1>Tree</h1>
+        This example demonstrates folding
+        of subtrees in a acyclic graph (tree).
 
         <div
           ref={el => {

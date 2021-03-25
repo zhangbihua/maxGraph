@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Monitor. This eample demonstrates using a
-  graph to display the current state of a workflow.
  */
 
 import React from 'react';
@@ -25,6 +22,9 @@ class Monitor extends React.Component {
     return (
       <>
         <h1>mxGraph Workflow Monitor</h1>
+        This example demonstrates using a
+        graph to display the current state of a workflow.
+
         <div
           ref={el => {
             this.el = el;

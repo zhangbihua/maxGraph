@@ -1,9 +1,6 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Touch. This example demonstrates handling of touch,
-  mouse and pointer events.
  */
 
 import React from 'react';
@@ -11,7 +8,7 @@ import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 
-class MYNAMEHERE extends React.Component {
+class Touch extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -21,6 +18,8 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>Touch</h1>
+        This example demonstrates handling of touch,
+        mouse and pointer events.
 
         <div
           ref={el => {
@@ -39,7 +38,7 @@ class MYNAMEHERE extends React.Component {
   };
 }
 
-export default MYNAMEHERE;
+export default Touch;
 
 
   <style type="text/css">

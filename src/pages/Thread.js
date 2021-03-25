@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Thread. This example demonstrates setting
-  overlays in mxGraph from within a timed function.
  */
 
 import React from 'react';
@@ -18,6 +15,9 @@ class Thread extends React.Component {
     return (
       <>
         <h1>Thread</h1>
+        This example demonstrates setting
+        overlays in mxGraph from within a timed function.
+
         <div
           ref={el => {
             this.el = el;

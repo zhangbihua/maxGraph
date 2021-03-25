@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Wrapping. This example demonstrates using HTML markup and
- * word-wrapping in vertex and edge labels.
  */
 
 import React from 'react';
@@ -18,6 +15,8 @@ class Wrapping extends React.Component {
     return (
       <>
         <h1>Wrapping</h1>
+        This example demonstrates using HTML markup and
+        word-wrapping in vertex and edge labels.
 
         <div
           ref={el => {

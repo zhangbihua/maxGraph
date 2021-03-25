@@ -1,9 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Offpage. This example demonstrates creating
-  offpage connectors in a graph and loading a new diagram on a
-  single click.
  */
 
 import React from 'react';
@@ -23,6 +19,9 @@ class OffPage extends React.Component {
     return (
       <>
         <h1>Offpage connector</h1>
+        This example demonstrates creating
+        offpage connectors in a graph and loading a new diagram on a
+        single click.
 
         <div
           ref={el => {

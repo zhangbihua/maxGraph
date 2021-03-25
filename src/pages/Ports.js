@@ -1,9 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Ports. This example demonstrates implementing
-  ports as child vertices with relative positions and drag and drop
-  as well as the use of images and HTML in cells.
  */
 
 import React from 'react';
@@ -21,6 +17,9 @@ class Ports extends React.Component {
     return (
       <>
         <h1>Ports example</h1>
+        This example demonstrates implementing
+        ports as child vertices with relative positions and drag and drop
+        as well as the use of images and HTML in cells.
 
         <div
           ref={el => {

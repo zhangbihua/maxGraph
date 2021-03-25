@@ -117,7 +117,7 @@ export default function Home() {
       <OrgChart />
       <Orthogonal />
       <Overlays />
-      <PageBreaks />
+      {/*<PageBreaks />*/}
       <Perimeter />
       <Permissions />
       <PortRefs />

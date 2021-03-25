@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Showregion. This example demonstrates using a custom
-  rubberband handler to show the selected region in a new window.
  */
 
 import React from 'react';
@@ -14,7 +11,7 @@ import mxPopupMenu from "../mxgraph/util/mxPopupMenu";
 import mxRectangle from "../mxgraph/util/mxRectangle";
 import mxUtils from "../mxgraph/util/mxUtils";
 
-class MYNAMEHERE extends React.Component {
+class ShowRegion extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -24,6 +21,8 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>Showregion</h1>
+        This example demonstrates using a custom
+        rubberband handler to show the selected region in a new window.
 
         <div
           ref={el => {
@@ -42,7 +41,7 @@ class MYNAMEHERE extends React.Component {
   };
 }
 
-export default MYNAMEHERE;
+export default ShowRegion;
 
   <style type="text/css">
     body div.mxPopupMenu {

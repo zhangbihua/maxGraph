@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
- *
- * Visible. This example demonstrates using
- * various solutions for hiding and showing cells.
  */
 
 import React from 'react';
@@ -20,6 +17,9 @@ class Visibility extends React.Component {
     return (
       <>
         <h1>Visibility</h1>
+        This example demonstrates using
+        various solutions for hiding and showing cells.
+
         <div
           ref={el => {
             this.el = el;

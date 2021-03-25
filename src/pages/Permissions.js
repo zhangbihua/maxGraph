@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-
- Hello, World!. This example demonstrates creating
- permissions to define the available operations a the graph.
  */
 
 import React from 'react';
@@ -36,6 +33,8 @@ class Permissions extends React.Component {
     return (
       <>
         <h1>Permissions</h1>
+        This example demonstrates creating
+        permissions to define the available operations a the graph.
 
         <div
           ref={el => {

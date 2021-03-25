@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  JQuery. This example demonstrates using
-  a JQuery plugin to generate labels for vertices on the fly.
  */
 
 import React from 'react';
@@ -10,7 +7,7 @@ import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 
-class MYNAMEHERE extends React.Component {
+class JQuery extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -20,6 +17,8 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>JQuery plugin for labels</h1>
+        This example demonstrates using
+        a JQuery plugin to generate labels for vertices on the fly.
 
         <div
           ref={el => {

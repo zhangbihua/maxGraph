@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Hoverstyle. This example shows hot to change
-  the style of a vertex on mouseover.
  */
 
 import React from 'react';
@@ -21,6 +18,9 @@ class HoverStyle extends React.Component {
     return (
       <>
         <h1>Hoverstyle</h1>
+        This example shows hot to change
+        the style of a vertex on mouseover.
+
         <div
           ref={el => {
             this.el = el;

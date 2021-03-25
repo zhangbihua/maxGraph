@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Perimeter. This example demonstrates how to
-  avoid edge and label intersections.
  */
 
 import React from 'react';
@@ -22,6 +19,9 @@ class Perimeter extends React.Component {
     return (
       <>
         <h1>Perimeter</h1>
+        This example demonstrates how to
+        avoid edge and label intersections.
+
         <div
           ref={el => {
             this.el = el;

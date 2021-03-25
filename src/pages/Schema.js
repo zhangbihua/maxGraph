@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Schema. This example demonstrates implementing
-  a SQL schema editor.
  */
 
 import React from 'react';
@@ -10,7 +7,7 @@ import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 
-class MYNAMEHERE extends React.Component {
+class Schema extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -20,6 +17,8 @@ class MYNAMEHERE extends React.Component {
     return (
       <>
         <h1>Schema example</h1>
+        This example demonstrates implementing
+        a SQL schema editor.
 
         <div
           ref={el => {

@@ -1,11 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Portsrefs. This example demonstrates referencing
-  connection points by ID. The main difference to the implementation
-  where the connection point is stored in the connecting edge is that
-  changes to the original port will be reflected in all existing
-  connections since they reference that port.
  */
 
 import React from 'react';
@@ -31,6 +25,11 @@ class PortRefs extends React.Component {
     return (
       <>
         <h1>Port References Example</h1>
+        This example demonstrates referencing
+        connection points by ID. The main difference to the implementation
+        where the connection point is stored in the connecting edge is that
+        changes to the original port will be reflected in all existing
+        connections since they reference that port.
 
         <div
           ref={el => {

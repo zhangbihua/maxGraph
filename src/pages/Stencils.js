@@ -1,9 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Stencils. This example demonstrates using
-  an XML file to define new stencils to be used as shapes. See
-  docs/stencils.xsd for the XML schema file.
  */
 
 import React from 'react';
@@ -32,6 +28,10 @@ class Stencils extends React.Component {
     return (
       <>
         <h1>Stencils</h1>
+        This example demonstrates using
+        an XML file to define new stencils to be used as shapes. See
+        docs/stencils.xsd for the XML schema file.
+
         <div
           ref={el => {
             this.el = el;

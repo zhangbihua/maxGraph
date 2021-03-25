@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Orthogonal. This example demonstrates the use
-  of port constraints and orthogonal edge styles and handlers.
  */
 
 import React from 'react';
@@ -27,6 +24,9 @@ class Orthogonal extends React.Component {
     return (
       <>
         <h1>Orthogonal</h1>
+        This example demonstrates the use
+        of port constraints and orthogonal edge styles and handlers.
+
         <div
           ref={el => {
             this.el = el;

@@ -1,8 +1,5 @@
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
-  
-  Merge. This example demonstrates using
-  the mergeChildren function to merge two graphs.
  */
 
 import React from 'react';
@@ -21,6 +18,9 @@ class Merge extends React.Component {
     return (
       <>
         <h1>Merge</h1>
+        This example demonstrates using
+        the mergeChildren function to merge two graphs.
+
         <div
           ref={el => {
             this.el = el;
