@@ -221,4 +221,4 @@ class Codec extends React.Component {
   };
 }
 
-export default MYNAMEHERE;
+export default Codec;
