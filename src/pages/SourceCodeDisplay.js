@@ -57,7 +57,7 @@ export class SourceCodeDisplay extends Component {
             }}
             className={`language-${this.props.language}`}
           >
-            {this.props.code.trim()}
+            {(this.props.code || '').trim()}
           </code>
         </pre>
       </>
