@@ -53,12 +53,8 @@ class Events extends React.Component {
     }
 
     const container = document.createElement('div');
-    container.style.position = 'absolute';
     container.style.overflow = 'hidden';
-    container.style.left = '0px';
-    container.style.top = '0px';
-    container.style.right = '0px';
-    container.style.bottom = '0px';
+    container.style.height = '400px';
     container.style.background = 'url("editors/images/grid.gif")';
 
     // Disables built-in context menu
