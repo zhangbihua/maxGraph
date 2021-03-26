@@ -162,9 +162,23 @@ class Control extends React.Component {
     // Adds cells to the model in a single step
     graph.getModel().beginUpdate();
     try {
-      const v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-      const v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-      const e1 = graph.insertEdge(parent, null, '', v1, v2);
+      const v1 = graph.insertVertex({
+        parent,
+        value: 'Hello,',
+        position: [20, 20],
+        size: [80, 30],
+      });
+      const v2 = graph.insertVertex({
+        parent,
+        value: 'World!',
+        position: [200, 150],
+        size: [80, 30],
+      });
+      const e1 = graph.insertEdge({
+        parent,
+        source: v1,
+        target: v2,
+      });
     } finally {
       // Updates the display
       graph.getModel().endUpdate();
@@ -173,13 +187,13 @@ class Control extends React.Component {
     graph.centerZoom = false;
 
     this.el2.appendChild(
-      mxUtils.button('Zoom In', function() {
+      mxUtils.button('Zoom In', () => {
         graph.zoomIn();
       })
     );
 
     this.el2.appendChild(
-      mxUtils.button('Zoom Out', function() {
+      mxUtils.button('Zoom Out', () => {
         graph.zoomOut();
       })
     );

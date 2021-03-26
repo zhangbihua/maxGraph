@@ -38,16 +38,36 @@ class DragSource extends React.Component {
   };
 
   componentDidMount = () => {
-    // Enables guides
-    mxGraphHandler.prototype.guidesEnabled = true;
+    class MyCustomGuide extends mxGuide {
+      isEnabledForEvent(evt) {
+        // Alt disables guides
+        return !mxEvent.isAltDown(evt);
+      }
+    }
 
-    // Alt disables guides
-    mxGuide.prototype.isEnabledForEvent = function(evt) {
-      return !mxEvent.isAltDown(evt);
-    };
+    class MyCustomGraphHandler extends mxGraphHandler {
+      // Enables guides
+      guidesEnabled = true;
 
-    // Enables snapping waypoints to terminals
-    mxEdgeHandler.prototype.snapToTerminals = true;
+      createGuide() {
+        return new MyCustomGuide(this.graph, this.getGuideStates());
+      }
+    }
+
+    class MyCustomEdgeHandler extends mxEdgeHandler {
+      // Enables snapping waypoints to terminals
+      snapToTerminals = true;
+    }
+
+    class MyCustomGraph extends mxGraph {
+      createGraphHandler() {
+        return new MyCustomGraphHandler(this);
+      }
+
+      createEdgeHandler(state, edgeStyle) {
+        return new MyCustomEdgeHandler(state, edgeStyle);
+      }
+    }
 
     const graphs = [];
 
@@ -63,7 +83,7 @@ class DragSource extends React.Component {
 
       this.el.appendChild(container);
 
-      var graph = new mxGraph(container);
+      const graph = new MyCustomGraph(container);
       graph.gridSize = 30;
 
       // Uncomment the following if you want the container
@@ -78,28 +98,38 @@ class DragSource extends React.Component {
       const parent = graph.getDefaultParent();
 
       // Adds cells to the model in a single step
-      graph.getModel().beginUpdate();
-      try {
-        const v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-        const v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-        const e1 = graph.insertEdge(parent, null, '', v1, v2);
-      } finally {
-        // Updates the display
-        graph.getModel().endUpdate();
-      }
+      graph.batchUpdate(() => {
+        const v1 = graph.insertVertex({
+          parent,
+          value: 'Hello,',
+          position: [20, 20],
+          size: [80, 30],
+        });
+        const v2 = graph.insertVertex({
+          parent,
+          value: 'World!',
+          position: [200, 150],
+          size: [80, 30],
+        });
+        const e1 = graph.insertEdge({
+          parent,
+          source: v1,
+          target: v2,
+        });
+      });
 
       graphs.push(graph);
     }
 
     // Returns the graph under the mouse
-    const graphF = function(evt) {
+    const graphF = evt => {
       const x = mxEvent.getClientX(evt);
       const y = mxEvent.getClientY(evt);
       const elt = document.elementFromPoint(x, y);
 
-      for (let i = 0; i < graphs.length; i++) {
-        if (mxUtils.isAncestorNode(graphs[i].container, elt)) {
-          return graphs[i];
+      for (const graph of graphs) {
+        if (mxUtils.isAncestorNode(graph.container, elt)) {
+          return graph;
         }
       }
 
@@ -107,7 +137,7 @@ class DragSource extends React.Component {
     };
 
     // Inserts a cell at the given location
-    const funct = function(graph, evt, target, x, y) {
+    const funct = (graph, evt, target, x, y) => {
       const cell = new mxCell('Test', new mxGeometry(0, 0, 120, 40));
       cell.vertex = true;
       const cells = graph.importCells([cell], x, y, target);
@@ -141,14 +171,14 @@ class DragSource extends React.Component {
       dragElt,
       null,
       null,
-      graph.autoscroll,
+      graphs[0].autoscroll,
       true
     );
 
     // Redirects feature to global switch. Note that this feature should only be used
     // if the the x and y arguments are used in funct to insert the cell.
-    ds.isGuidesEnabled = function() {
-      return graph.graphHandler.guidesEnabled;
+    ds.isGuidesEnabled = () => {
+      return graphs[0].graphHandler.guidesEnabled;
     };
 
     // Restores original drag icon while outside of graph

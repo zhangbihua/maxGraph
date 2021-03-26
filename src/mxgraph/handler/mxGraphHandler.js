@@ -789,6 +789,10 @@ class mxGraphHandler {
     return shape;
   }
 
+  createGuide() {
+    return new mxGuide(this.graph, this.getGuideStates());
+  }
+
   /**
    * Function: start
    *
@@ -809,7 +813,7 @@ class mxGraphHandler {
     }
 
     if (this.guidesEnabled) {
-      this.guide = new mxGuide(this.graph, this.getGuideStates());
+      this.guide = this.createGuide();
       const parent = this.graph.model.getParent(cell);
       const ignore = this.graph.model.getChildCount(parent) < 2;
 

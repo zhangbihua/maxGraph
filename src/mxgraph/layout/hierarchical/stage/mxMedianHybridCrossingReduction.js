@@ -64,20 +64,6 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
   function;
 
   /**
-   * Variable: medianValue
-   *
-   * The weighted value of the cell stored.
-   */
-  medianValue = 0;
-
-  /**
-   * Variable: cell
-   *
-   * The cell whose median value is being calculated
-   */
-  cell = false;
-
-  /**
    * Class: mxMedianHybridCrossingReduction
    *
    * Sets the horizontal locations of node and edge dummy nodes on each layer.

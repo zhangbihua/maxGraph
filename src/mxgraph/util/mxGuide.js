@@ -4,6 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxConstants from './mxConstants';
+import mxPoint from "./mxPoint";
+import mxPolyline from "../shape/mxPolyline";
 
 /**
  * Class: mxGuide

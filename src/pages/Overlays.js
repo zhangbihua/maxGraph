@@ -53,7 +53,7 @@ class Overlays extends React.Component {
 
     // Installs a handler for click events in the graph
     // that toggles the overlay for the respective cell
-    graph.addListener(mxEvent.CLICK, function(sender, evt) {
+    graph.addListener(mxEvent.CLICK, (sender, evt) => {
       const cell = evt.getProperty('cell');
 
       if (cell != null) {
@@ -67,7 +67,7 @@ class Overlays extends React.Component {
           );
 
           // Installs a handler for clicks on the overlay
-          overlay.addListener(mxEvent.CLICK, function(sender, evt2) {
+          overlay.addListener(mxEvent.CLICK, (sender, evt2) => {
             mxUtils.alert('Overlay clicked');
           });
 
@@ -81,7 +81,7 @@ class Overlays extends React.Component {
 
     // Installs a handler for double click events in the graph
     // that shows an alert box
-    graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
+    graph.addListener(mxEvent.DOUBLE_CLICK, (sender, evt) => {
       const cell = evt.getProperty('cell');
       mxUtils.alert(`Doubleclick: ${cell != null ? 'Cell' : 'Graph'}`);
       evt.consume();
@@ -92,23 +92,25 @@ class Overlays extends React.Component {
     const parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
-      const v1 = graph.insertVertex(parent, null, 'Click,', 20, 20, 60, 40);
-      const v2 = graph.insertVertex(
+    graph.batchUpdate(() => {
+      const v1 = graph.insertVertex({
         parent,
-        null,
-        'Doubleclick',
-        200,
-        150,
-        100,
-        40
-      );
-      const e1 = graph.insertEdge(parent, null, '', v1, v2);
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
-    }
+        value: 'Click,',
+        position: [20, 20],
+        size: [60, 40],
+      });
+      const v2 = graph.insertVertex({
+        parent,
+        value: 'Doubleclick',
+        position: [200, 150],
+        size: [100, 40],
+      });
+      const e1 = graph.insertEdge({
+        parent,
+        source: v1,
+        target: v2,
+      });
+    });
   }
 }
 
