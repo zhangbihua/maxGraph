@@ -15,7 +15,7 @@ class Folding extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -38,7 +38,7 @@ class Folding extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     // Enables crisp rendering of rectangles in SVG
     mxConstants.ENTITY_SEGMENT = 20;
 

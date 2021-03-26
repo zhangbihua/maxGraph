@@ -19,7 +19,7 @@ class FixedPoints extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -42,7 +42,7 @@ class FixedPoints extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     // Snaps to fixed points
     mxConstraintHandler.prototype.intersects = function(
       icon,

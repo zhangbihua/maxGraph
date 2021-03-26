@@ -19,7 +19,7 @@ class RadialTreeLayout extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hierarchical Layout</h1>
+        <h1>Radial Tree (Hierarchical) Layout</h1>
         This example demonstrates the use of the hierarchical and organic
         layouts. Note that the hierarchical layout requires another script tag
         in the head of the page.

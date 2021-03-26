@@ -16,7 +16,7 @@ class ContextIcons extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -38,7 +38,7 @@ class ContextIcons extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     class mxVertexToolHandler extends mxVertexHandler {
       // Defines a subclass for mxVertexHandler that adds a set of clickable
       // icons to every selected vertex.

@@ -18,7 +18,7 @@ class Control extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -44,7 +44,7 @@ class Control extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     // Specifies the URL and size of the new control
     const deleteImage = new mxImage(
       'editors/images/overlays/forbidden.png',

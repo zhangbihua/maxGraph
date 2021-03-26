@@ -19,7 +19,7 @@ class Labels extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hello, World!</h1>
+        <h1>Labels</h1>
         This example demonstrates the use of wrapping and clipping for HTML
         labels of vertices, truncating labels to fit the size of a vertex, and
         manually placing vertex labels and relative children that act as

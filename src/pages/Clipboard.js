@@ -18,7 +18,7 @@ class Clipboard extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -41,7 +41,7 @@ class Clipboard extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     // Disables the built-in context menu
     mxEvent.disableContextMenu(this.el);
 

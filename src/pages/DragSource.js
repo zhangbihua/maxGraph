@@ -20,7 +20,7 @@ class DragSource extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -37,7 +37,7 @@ class DragSource extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     class MyCustomGuide extends mxGuide {
       isEnabledForEvent(evt) {
         // Alt disables guides

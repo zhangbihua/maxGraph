@@ -18,7 +18,7 @@ class Groups extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hello, World!</h1>
+        <h1>Groups</h1>
         This example demonstrates using cells as parts of other cells.
         <div
           ref={el => {

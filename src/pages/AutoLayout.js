@@ -23,7 +23,7 @@ class AutoLayout extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -46,7 +46,7 @@ class AutoLayout extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     mxEvent.disableContextMenu(this.el);
 
     class MyCustomCellRenderer extends mxCellRenderer {

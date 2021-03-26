@@ -16,7 +16,7 @@ class FixedIcon extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -39,7 +39,7 @@ class FixedIcon extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     // Overrides the image bounds code to change the position
     mxLabel.prototype.getImageBounds = function(x, y, w, h) {
       const iw = mxUtils.getValue(

@@ -22,7 +22,7 @@ class Monitor extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>mxGraph Workflow Monitor</h1>
+        <h1>Workflow Monitor</h1>
         This example demonstrates using a graph to display the current state of
         a workflow.
         <div

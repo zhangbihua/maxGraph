@@ -22,7 +22,7 @@ class HelloPort extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Hello, World!</h1>
+        <h1>Hello Port</h1>
         This example demonstrates using the isPort hook for visually connecting
         to another cell.
         <div

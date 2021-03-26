@@ -11,18 +11,20 @@ import mxKeyHandler from '../mxgraph/handler/mxKeyHandler';
 import mxImage from '../mxgraph/util/mxImage';
 import mxUtils from '../mxgraph/util/mxUtils';
 
-function Permission(locked, createEdges, editEdges, editVertices, cloneCells) {
-  this.locked = locked != null ? locked : false;
-  this.createEdges = createEdges != null ? createEdges : true;
-  this.editEdges = editEdges != null ? editEdges : true;
-  this.editVertices = editVertices != null ? editVertices : true;
-  this.cloneCells = cloneCells != null ? cloneCells : true;
-}
+class Permission {
+  constructor(locked, createEdges, editEdges, editVertices, cloneCells) {
+    this.locked = locked != null ? locked : false;
+    this.createEdges = createEdges != null ? createEdges : true;
+    this.editEdges = editEdges != null ? editEdges : true;
+    this.editVertices = editVertices != null ? editVertices : true;
+    this.cloneCells = cloneCells != null ? cloneCells : true;
+  }
 
-Permission.prototype.apply = function(graph) {
-  graph.setConnectable(this.createEdges);
-  graph.setCellsLocked(this.locked);
-};
+  apply(graph) {
+    graph.setConnectable(this.createEdges);
+    graph.setCellsLocked(this.locked);
+  }
+}
 
 class Permissions extends React.Component {
   constructor(props) {

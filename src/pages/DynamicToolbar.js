@@ -25,7 +25,7 @@ class DynamicToolbar extends React.Component {
     // A container for the graph
     return (
       <>
-        <h1>Toolbar</h1>
+        <h1>Dynamic Toolbar</h1>
         This example demonstrates changing the state of the toolbar at runtime.
         <div
           ref={el => {
@@ -64,7 +64,7 @@ class DynamicToolbar extends React.Component {
     this.el.appendChild(tbContainer);
 
     // Creates new toolbar without event processing
-    const toolbar = new mxToolbar(tbContainer);
+    const toolbar = (this.toolbar = new mxToolbar(tbContainer));
     toolbar.enabled = false;
 
     // Creates the div for the graph
@@ -82,7 +82,7 @@ class DynamicToolbar extends React.Component {
     // Creates the model and the graph inside the container
     // using the fastest rendering available on the browser
     const model = new mxGraphModel();
-    const graph = new mxGraph(container, model);
+    const graph = (this.graph = new mxGraph(container, model));
 
     // Enables new connections in the graph
     graph.setConnectable(true);
@@ -92,34 +92,34 @@ class DynamicToolbar extends React.Component {
     const keyHandler = new mxKeyHandler(graph);
     const rubberband = new mxRubberband(graph);
 
-    const addVertex = (icon, w, h, style) => {
-      const vertex = new mxCell(null, new mxGeometry(0, 0, w, h), style);
-      vertex.setVertex(true);
+    this.addVertex('editors/images/rectangle.gif', 100, 40, '');
+    this.addVertex('editors/images/rounded.gif', 100, 40, 'shape=rounded');
+    this.addVertex('editors/images/ellipse.gif', 40, 40, 'shape=ellipse');
+    this.addVertex('editors/images/rhombus.gif', 40, 40, 'shape=rhombus');
+    this.addVertex('editors/images/triangle.gif', 40, 40, 'shape=triangle');
+    this.addVertex('editors/images/cylinder.gif', 40, 40, 'shape=cylinder');
+    this.addVertex('editors/images/actor.gif', 30, 40, 'shape=actor');
+  }
 
-      const img = this.addToolbarItem(graph, toolbar, vertex, icon);
-      img.enabled = true;
+  addVertex(icon, w, h, style) {
+    const vertex = new mxCell(null, new mxGeometry(0, 0, w, h), style);
+    vertex.setVertex(true);
 
-      graph.getSelectionModel().addListener(mxEvent.CHANGE, function() {
-        const tmp = graph.isSelectionEmpty();
-        mxUtils.setOpacity(img, tmp ? 100 : 20);
-        img.enabled = tmp;
-      });
-    };
+    const img = this.addToolbarItem(this.graph, this.toolbar, vertex, icon);
+    img.enabled = true;
 
-    addVertex('editors/images/rectangle.gif', 100, 40, '');
-    addVertex('editors/images/rounded.gif', 100, 40, 'shape=rounded');
-    addVertex('editors/images/ellipse.gif', 40, 40, 'shape=ellipse');
-    addVertex('editors/images/rhombus.gif', 40, 40, 'shape=rhombus');
-    addVertex('editors/images/triangle.gif', 40, 40, 'shape=triangle');
-    addVertex('editors/images/cylinder.gif', 40, 40, 'shape=cylinder');
-    addVertex('editors/images/actor.gif', 30, 40, 'shape=actor');
+    this.graph.getSelectionModel().addListener(mxEvent.CHANGE, () => {
+      const tmp = this.graph.isSelectionEmpty();
+      mxUtils.setOpacity(img, tmp ? 100 : 20);
+      img.enabled = tmp;
+    });
   }
 
   addToolbarItem(graph, toolbar, prototype, image) {
     // Function that is executed when the image is dropped on
     // the graph. The cell argument points to the cell under
     // the mousepointer if there is one.
-    const funct = function(graph, evt, cell, x, y) {
+    const funct = (graph, evt, cell, x, y) => {
       graph.stopEditing(false);
 
       const vertex = graph.getModel().cloneCell(prototype);
@@ -131,7 +131,7 @@ class DynamicToolbar extends React.Component {
     };
 
     // Creates the image which is used as the drag icon (preview)
-    const img = toolbar.addMode(null, image, function(evt, cell) {
+    const img = toolbar.addMode(null, image, (evt, cell) => {
       const pt = this.graph.getPointForEvent(evt);
       funct(graph, evt, cell, pt.x, pt.y);
     });
@@ -139,20 +139,19 @@ class DynamicToolbar extends React.Component {
     // Disables dragging if element is disabled. This is a workaround
     // for wrong event order in IE. Following is a dummy listener that
     // is invoked as the last listener in IE.
-    mxEvent.addListener(img, 'mousedown', function(evt) {
+    mxEvent.addListener(img, 'mousedown', evt => {
       // do nothing
     });
 
     // This listener is always called first before any other listener
     // in all browsers.
-    mxEvent.addListener(img, 'mousedown', function(evt) {
+    mxEvent.addListener(img, 'mousedown', evt => {
       if (img.enabled == false) {
         mxEvent.consume(evt);
       }
     });
 
     mxUtils.makeDraggable(img, graph, funct);
-
     return img;
   }
 }

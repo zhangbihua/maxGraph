@@ -18,7 +18,7 @@ class DynamicLoading extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -41,7 +41,7 @@ class DynamicLoading extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     let requestId = 0;
 
     // Speedup the animation

@@ -13,7 +13,7 @@ class Collapse extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -36,7 +36,7 @@ class Collapse extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     class MyCustomModel extends mxGraphModel {
       getStyle(cell) {
         // Extends mxGraphModel.getStyle to show an image when collapsed

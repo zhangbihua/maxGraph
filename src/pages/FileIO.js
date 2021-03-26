@@ -20,7 +20,7 @@ class FileIO extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -47,7 +47,7 @@ class FileIO extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     // Program starts here. Creates a sample graph in the
     // DOM node with the specified ID. This function is invoked
     // from the onLoad event handler of the document (see below).

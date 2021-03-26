@@ -13,7 +13,7 @@ class HelloWorld extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph with a grid wallpaper
     return (
       <>
@@ -36,7 +36,7 @@ class HelloWorld extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     // Create a sample graph in the DOM node with the specified ID.
     mxEvent.disableContextMenu(this.el); // Disable the built-in context menu
     const graph = new mxGraph(this.el); // Create the graph inside the given container

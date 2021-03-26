@@ -107,7 +107,7 @@ class Anchors extends React.Component {
     }
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>

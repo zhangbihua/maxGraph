@@ -12,7 +12,7 @@ class Animation extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -35,7 +35,7 @@ class Animation extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     const graph = new mxGraph(this.el);
     graph.setEnabled(false);
     const parent = graph.getDefaultParent();

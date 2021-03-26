@@ -142,22 +142,17 @@ class Drop extends React.Component {
               data = `data:image/svg+xml,${btoa(
                 mxUtils.getXml(svgs[0], '\n')
               )}`;
-              graph.insertVertex(
-                null,
-                null,
-                '',
-                x,
-                y,
-                w,
-                h,
-                `shape=image;image=${data};`
-              );
+              graph.insertVertex({
+                position: [x, y],
+                size: [w, h],
+                style: `shape=image;image=${data};`,
+              });
             }
           }
         } else {
           const img = new Image();
 
-          img.onload = function() {
+          img.onload = () => {
             const w = Math.max(1, img.width);
             const h = Math.max(1, img.height);
 
@@ -170,16 +165,11 @@ class Drop extends React.Component {
                 data.substring(data.indexOf(',', semi + 1));
             }
 
-            graph.insertVertex(
-              null,
-              null,
-              '',
-              x,
-              y,
-              w,
-              h,
-              `shape=image;image=${data};`
-            );
+            graph.insertVertex({
+              position: [x, y],
+              size: [w, h],
+              style: `shape=image;image=${data};`,
+            });
           };
 
           img.src = data;

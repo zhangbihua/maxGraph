@@ -14,7 +14,7 @@ class Constituent extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>

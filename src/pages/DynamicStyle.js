@@ -14,7 +14,7 @@ class DynamicStyle extends React.Component {
     super(props);
   }
 
-  render = () => {
+  render() {
     // A container for the graph
     return (
       <>
@@ -35,7 +35,7 @@ class DynamicStyle extends React.Component {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     // Creates the graph inside the given container
     const graph = new mxGraph(this.el);
 
