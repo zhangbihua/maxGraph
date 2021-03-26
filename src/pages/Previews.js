@@ -27,7 +27,7 @@ function Preview({ sourceKey, content }) {
             }}
           >
             <SourceCodeDisplay
-              language="javascript"
+              language="jsx"
               code={examplesListing[sourceKey] || ''}
             />
           </div>
