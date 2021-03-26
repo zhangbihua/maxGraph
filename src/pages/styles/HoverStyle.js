@@ -4,10 +4,10 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
 import mxGraph from '../../mxgraph/view/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxConstants from '../../mxgraph/util/mxConstants';
+import mxUtils from "../../mxgraph/util/mxUtils";
 
 class HoverStyle extends React.Component {
   constructor(props) {
