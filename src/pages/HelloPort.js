@@ -23,9 +23,8 @@ class HelloPort extends React.Component {
     return (
       <>
         <h1>Hello, World!</h1>
-        This example demonstrates using
-        the isPort hook for visually connecting to another cell.
-
+        This example demonstrates using the isPort hook for visually connecting
+        to another cell.
         <div
           ref={el => {
             this.el = el;

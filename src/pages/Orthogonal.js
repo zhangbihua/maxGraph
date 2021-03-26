@@ -7,13 +7,13 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxGraphHandler from "../mxgraph/handler/mxGraphHandler";
-import mxGuide from "../mxgraph/util/mxGuide";
-import mxEdgeHandler from "../mxgraph/handler/mxEdgeHandler";
-import mxConnectionHandler from "../mxgraph/handler/mxConnectionHandler";
-import mxGraphView from "../mxgraph/view/mxGraphView";
-import mxPoint from "../mxgraph/util/mxPoint";
-import mxCellState from "../mxgraph/view/mxCellState";
+import mxGraphHandler from '../mxgraph/handler/mxGraphHandler';
+import mxGuide from '../mxgraph/util/mxGuide';
+import mxEdgeHandler from '../mxgraph/handler/mxEdgeHandler';
+import mxConnectionHandler from '../mxgraph/handler/mxConnectionHandler';
+import mxGraphView from '../mxgraph/view/mxGraphView';
+import mxPoint from '../mxgraph/util/mxPoint';
+import mxCellState from '../mxgraph/view/mxCellState';
 
 class Orthogonal extends React.Component {
   constructor(props) {
@@ -25,9 +25,8 @@ class Orthogonal extends React.Component {
     return (
       <>
         <h1>Orthogonal</h1>
-        This example demonstrates the use
-        of port constraints and orthogonal edge styles and handlers.
-
+        This example demonstrates the use of port constraints and orthogonal
+        edge styles and handlers.
         <div
           ref={el => {
             this.el = el;

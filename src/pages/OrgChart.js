@@ -15,15 +15,15 @@ import mxUtils from '../mxgraph/util/mxUtils';
 import mxCellOverlay from '../mxgraph/view/mxCellOverlay';
 import mxImage from '../mxgraph/util/mxImage';
 import mxPoint from '../mxgraph/util/mxPoint';
-import mxConstants from "../mxgraph/util/mxConstants";
-import mxWindow from "../mxgraph/util/mxWindow";
-import mxToolbar from "../mxgraph/util/mxToolbar";
-import mxLayoutManager from "../mxgraph/view/mxLayoutManager";
-import mxEdgeStyle from "../mxgraph/view/mxEdgeStyle";
-import mxCompactTreeLayout from "../mxgraph/layout/mxCompactTreeLayout";
-import mxKeyHandler from "../mxgraph/handler/mxKeyHandler";
-import mxClient from "../mxgraph/mxClient";
-import mxOutline from "../mxgraph/view/mxOutline";
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxWindow from '../mxgraph/util/mxWindow';
+import mxToolbar from '../mxgraph/util/mxToolbar';
+import mxLayoutManager from '../mxgraph/view/mxLayoutManager';
+import mxEdgeStyle from '../mxgraph/view/mxEdgeStyle';
+import mxCompactTreeLayout from '../mxgraph/layout/mxCompactTreeLayout';
+import mxKeyHandler from '../mxgraph/handler/mxKeyHandler';
+import mxClient from '../mxgraph/mxClient';
+import mxOutline from '../mxgraph/view/mxOutline';
 
 class OrgChart extends React.Component {
   constructor(props) {
@@ -47,6 +47,11 @@ class OrgChart extends React.Component {
             background: 'transparent',
             borderStyle: 'solid',
             borderColor: 'lightgray',
+          }}
+        />
+        <div
+          ref={el => {
+            this.el2 = el;
           }}
         />
       </>
@@ -238,7 +243,7 @@ class OrgChart extends React.Component {
 
     const content = document.createElement('div');
     content.style.padding = '4px';
-
+    this.el2.appendChild(content);
     const tb = new mxToolbar(content);
 
     tb.addItem('Zoom In', 'images/zoom_in32.png', function(evt) {
@@ -267,12 +272,6 @@ class OrgChart extends React.Component {
         preview.open();
       }
     });
-
-    let wnd = new mxWindow('Tools', content, 0, 0, 200, 66, false);
-    wnd.setMaximizable(false);
-    wnd.setScrollable(false);
-    wnd.setResizable(false);
-    wnd.setVisible(true);
 
     // Function to create the entries in the popupmenu
     function createPopupMenu(graph, menu, cell, evt) {

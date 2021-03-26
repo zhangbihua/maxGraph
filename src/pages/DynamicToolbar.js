@@ -26,9 +26,7 @@ class DynamicToolbar extends React.Component {
     return (
       <>
         <h1>Toolbar</h1>
-        This example demonstrates changing the state
-        of the toolbar at runtime.
-
+        This example demonstrates changing the state of the toolbar at runtime.
         <div
           ref={el => {
             this.el = el;
@@ -37,7 +35,7 @@ class DynamicToolbar extends React.Component {
             overflow: 'hidden',
             height: '241px',
             background: "url('editors/images/grid.gif')",
-            position: "relative"
+            position: 'relative',
           }}
         />
       </>

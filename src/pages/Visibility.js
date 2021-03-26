@@ -18,9 +18,8 @@ class Visibility extends React.Component {
     return (
       <>
         <h1>Visibility</h1>
-        This example demonstrates using
-        various solutions for hiding and showing cells.
-
+        This example demonstrates using various solutions for hiding and showing
+        cells.
         <div
           ref={el => {
             this.el = el;

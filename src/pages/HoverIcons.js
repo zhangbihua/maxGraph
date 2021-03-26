@@ -9,8 +9,8 @@ import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 import mxConnectionHandler from '../mxgraph/handler/mxConnectionHandler';
 import mxUtils from '../mxgraph/util/mxUtils';
-import mxRectangle from "../mxgraph/util/mxRectangle";
-import mxImage from "../mxgraph/util/mxImage";
+import mxRectangle from '../mxgraph/util/mxRectangle';
+import mxImage from '../mxgraph/util/mxImage';
 
 class HoverIcons extends React.Component {
   constructor(props) {
@@ -22,9 +22,8 @@ class HoverIcons extends React.Component {
     return (
       <>
         <h1>Hover icons</h1>
-        This example demonstrates showing
-        icons on vertices as mouse hovers over them.
-
+        This example demonstrates showing icons on vertices as mouse hovers over
+        them.
         <div
           ref={el => {
             this.el = el;

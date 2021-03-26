@@ -7,7 +7,7 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxConstants from "../mxgraph/util/mxConstants";
+import mxConstants from '../mxgraph/util/mxConstants';
 
 class HoverStyle extends React.Component {
   constructor(props) {
@@ -19,9 +19,7 @@ class HoverStyle extends React.Component {
     return (
       <>
         <h1>Hoverstyle</h1>
-        This example shows hot to change
-        the style of a vertex on mouseover.
-
+        This example shows hot to change the style of a vertex on mouseover.
         <div
           ref={el => {
             this.el = el;

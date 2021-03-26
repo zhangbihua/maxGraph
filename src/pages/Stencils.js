@@ -7,17 +7,17 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxUtils from "../mxgraph/util/mxUtils";
-import mxConstants from "../mxgraph/util/mxConstants";
-import mxPoint from "../mxgraph/util/mxPoint";
-import mxStencilRegistry from "../mxgraph/shape/mxStencilRegistry";
-import mxCellRenderer from "../mxgraph/view/mxCellRenderer";
-import mxShape from "../mxgraph/shape/mxShape";
-import mxVertexHandler from "../mxgraph/handler/mxVertexHandler";
-import mxCellHighlight from "../mxgraph/handler/mxCellHighlight";
-import mxEdgeHandler from "../mxgraph/handler/mxEdgeHandler";
-import mxConnectionHandler from "../mxgraph/handler/mxConnectionHandler";
-import mxStencil from "../mxgraph/shape/mxStencil";
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxPoint from '../mxgraph/util/mxPoint';
+import mxStencilRegistry from '../mxgraph/shape/mxStencilRegistry';
+import mxCellRenderer from '../mxgraph/view/mxCellRenderer';
+import mxShape from '../mxgraph/shape/mxShape';
+import mxVertexHandler from '../mxgraph/handler/mxVertexHandler';
+import mxCellHighlight from '../mxgraph/handler/mxCellHighlight';
+import mxEdgeHandler from '../mxgraph/handler/mxEdgeHandler';
+import mxConnectionHandler from '../mxgraph/handler/mxConnectionHandler';
+import mxStencil from '../mxgraph/shape/mxStencil';
 
 class Stencils extends React.Component {
   constructor(props) {
@@ -29,10 +29,8 @@ class Stencils extends React.Component {
     return (
       <>
         <h1>Stencils</h1>
-        This example demonstrates using
-        an XML file to define new stencils to be used as shapes. See
-        docs/stencils.xsd for the XML schema file.
-
+        This example demonstrates using an XML file to define new stencils to be
+        used as shapes. See docs/stencils.xsd for the XML schema file.
         <div
           ref={el => {
             this.el = el;

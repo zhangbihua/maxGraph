@@ -7,7 +7,7 @@ import React from 'react';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxConstants from '../mxgraph/util/mxConstants';
 import mxCylinder from '../mxgraph/shape/mxCylinder';
-import mxCellRenderer from "../mxgraph/view/mxCellRenderer";
+import mxCellRenderer from '../mxgraph/view/mxCellRenderer';
 
 class Shape extends React.Component {
   constructor(props) {
@@ -19,9 +19,7 @@ class Shape extends React.Component {
     return (
       <>
         <h1>Shape</h1>
-        This example demonstrates how to
-        implement and use a custom shape.
-
+        This example demonstrates how to implement and use a custom shape.
         <div
           ref={el => {
             this.el = el;

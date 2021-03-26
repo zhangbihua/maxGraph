@@ -7,8 +7,8 @@ import React from 'react';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
 import mxKeyHandler from '../mxgraph/handler/mxKeyHandler';
-import mxConstants from "../mxgraph/util/mxConstants";
-import mxRectangle from "../mxgraph/util/mxRectangle";
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxRectangle from '../mxgraph/util/mxRectangle';
 
 class Labels extends React.Component {
   constructor(props) {
@@ -20,11 +20,10 @@ class Labels extends React.Component {
     return (
       <>
         <h1>Hello, World!</h1>
-        This example demonstrates the use of wrapping
-        and clipping for HTML labels of vertices, truncating labels to fit the
-        size of a vertex, and manually placing vertex labels and relative children
-        that act as "sublabels".
-
+        This example demonstrates the use of wrapping and clipping for HTML
+        labels of vertices, truncating labels to fit the size of a vertex, and
+        manually placing vertex labels and relative children that act as
+        "sublabels".
         <div
           ref={el => {
             this.el = el;

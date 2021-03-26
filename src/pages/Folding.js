@@ -20,8 +20,8 @@ class Folding extends React.Component {
     return (
       <>
         <h1>Folding</h1>
-        This example demonstrates using a layout to implement a nested group structure.
-
+        This example demonstrates using a layout to implement a nested group
+        structure.
         <div
           ref={el => {
             this.el = el;

@@ -20,9 +20,8 @@ class Drop extends React.Component {
     return (
       <>
         <h1>Drop</h1>
-        This example demonstrates handling native drag and
-        drop of images (requires modern browser).
-
+        This example demonstrates handling native drag and drop of images
+        (requires modern browser).
         <div
           ref={el => {
             this.el = el;

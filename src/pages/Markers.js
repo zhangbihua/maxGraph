@@ -23,9 +23,8 @@ class Markers extends React.Component {
     return (
       <>
         <h1>Markers</h1>
-        This example demonstrates creating
-        custom markers and customizing the built-in markers.
-
+        This example demonstrates creating custom markers and customizing the
+        built-in markers.
         <div
           ref={el => {
             this.el = el;

@@ -10,7 +10,7 @@ import mxPoint from '../mxgraph/util/mxPoint';
 import mxRectangle from '../mxgraph/util/mxRectangle';
 import mxConstants from '../mxgraph/util/mxConstants';
 import mxRectangleShape from '../mxgraph/shape/mxRectangleShape';
-import mxText from "../mxgraph/shape/mxText";
+import mxText from '../mxgraph/shape/mxText';
 
 class SecondLabel extends React.Component {
   constructor(props) {
@@ -22,9 +22,7 @@ class SecondLabel extends React.Component {
     return (
       <>
         <h1>Second label</h1>
-        This example demonstrates how to
-        add another string label to vertices.
-
+        This example demonstrates how to add another string label to vertices.
         <div
           ref={el => {
             this.el = el;

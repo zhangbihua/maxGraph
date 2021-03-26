@@ -16,9 +16,8 @@ class LabelPosition extends React.Component {
     return (
       <>
         <h1>Label Position</h1>
-        This example demonstrates the use of the
-        label position styles to set the position of vertex labels.
-
+        This example demonstrates the use of the label position styles to set
+        the position of vertex labels.
         <div
           ref={el => {
             this.el = el;

@@ -21,9 +21,8 @@ class ExtendCanvas extends React.Component {
     return (
       <>
         <h1>Extend canvas</h1>
-        This example demonstrates implementing
-        an infinite canvas with scrollbars.
-
+        This example demonstrates implementing an infinite canvas with
+        scrollbars.
         <div
           ref={el => {
             this.el = el;

@@ -11,7 +11,7 @@ import mxHierarchicalLayout from '../mxgraph/layout/hierarchical/mxHierarchicalL
 import mxFastOrganicLayout from '../mxgraph/layout/mxFastOrganicLayout';
 import mxConstants from '../mxgraph/util/mxConstants';
 import mxPerimeter from '../mxgraph/view/mxPerimeter';
-import mxUtils from "../mxgraph/util/mxUtils";
+import mxUtils from '../mxgraph/util/mxUtils';
 
 class HierarchicalLayout extends React.Component {
   constructor(props) {
@@ -23,10 +23,9 @@ class HierarchicalLayout extends React.Component {
     return (
       <>
         <h1>Hierarchical Layout</h1>
-        This example demonstrates the
-        use of the hierarchical and organic layouts. Note that the hierarchical
-        layout requires another script tag in the head of the page.
-
+        This example demonstrates the use of the hierarchical and organic
+        layouts. Note that the hierarchical layout requires another script tag
+        in the head of the page.
         <div
           ref={el => {
             this.el = el;

@@ -22,9 +22,8 @@ class Validation extends React.Component {
     return (
       <>
         <h1>Validation</h1>
-        This example demonstrates using
-        multiplicities for automatically validating a graph.
-
+        This example demonstrates using multiplicities for automatically
+        validating a graph.
         <div
           ref={el => {
             this.el = el;

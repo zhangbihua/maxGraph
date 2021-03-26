@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 import SourceCodeDisplay from './SourceCodeDisplay';
 import examplesListing from './examplesListing.json';
@@ -18,8 +18,18 @@ function Preview({ sourceKey, content }) {
           >
             hide source
           </span>
-          <div style={{clear: "both", resize: "both", maxHeight: "50vh", overflow: "auto"}}>
-            <SourceCodeDisplay language="javascript" code={examplesListing[sourceKey]||''} />
+          <div
+            style={{
+              clear: 'both',
+              resize: 'both',
+              maxHeight: '50vh',
+              overflow: 'auto',
+            }}
+          >
+            <SourceCodeDisplay
+              language="javascript"
+              code={examplesListing[sourceKey] || ''}
+            />
           </div>
         </div>
       ) : (

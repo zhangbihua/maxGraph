@@ -21,10 +21,8 @@ class Overlays extends React.Component {
     return (
       <>
         <h1>Overlays</h1>
-        This example demonstrates cell
-        highlighting, overlays and handling click and double click
-        events. See also: events.html for more event handling.
-
+        This example demonstrates cell highlighting, overlays and handling click
+        and double click events. See also: events.html for more event handling.
         <div
           ref={el => {
             this.el = el;

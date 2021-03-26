@@ -18,9 +18,8 @@ class EdgeTolerance extends React.Component {
     return (
       <>
         <h1>Edge tolerance</h1>
-        This example demonstrates increasing
-        the tolerance for hit detection on edges.
-
+        This example demonstrates increasing the tolerance for hit detection on
+        edges.
         <div
           ref={el => {
             this.el = el;
@@ -37,7 +36,7 @@ class EdgeTolerance extends React.Component {
   }
 
   componentDidMount() {
-    let el = this.el;
+    const { el } = this;
 
     class MyCustomGraph extends mxGraph {
       fireMouseEvent(evtName, me, sender) {
@@ -73,7 +72,7 @@ class EdgeTolerance extends React.Component {
         }
 
         super.fireMouseEvent(evtName, me, sender);
-      };
+      }
 
       dblClick(evt, cell) {
         // Overrides double click handling to use the tolerance
@@ -87,7 +86,7 @@ class EdgeTolerance extends React.Component {
         }
 
         super.dblClick(evt, cell);
-      };
+      }
     }
 
     // Creates the graph inside the given container

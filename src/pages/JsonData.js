@@ -29,9 +29,8 @@ class JsonData extends React.Component {
     return (
       <>
         <h1>JSON data</h1>
-        This example demonstrates using
-        JSON to encode/decode parts of the graph model in mxCodec.
-
+        This example demonstrates using JSON to encode/decode parts of the graph
+        model in mxCodec.
         <div
           ref={el => {
             this.el = el;

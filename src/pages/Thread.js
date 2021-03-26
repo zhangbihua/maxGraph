@@ -16,9 +16,8 @@ class Thread extends React.Component {
     return (
       <>
         <h1>Thread</h1>
-        This example demonstrates setting
-        overlays in mxGraph from within a timed function.
-
+        This example demonstrates setting overlays in mxGraph from within a
+        timed function.
         <div
           ref={el => {
             this.el = el;

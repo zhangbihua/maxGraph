@@ -6,8 +6,8 @@
 import React from 'react';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxConstants from "../mxgraph/util/mxConstants";
-import mxPerimeter from "../mxgraph/view/mxPerimeter";
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxPerimeter from '../mxgraph/view/mxPerimeter';
 
 class Merge extends React.Component {
   constructor(props) {
@@ -19,9 +19,8 @@ class Merge extends React.Component {
     return (
       <>
         <h1>Merge</h1>
-        This example demonstrates using
-        the mergeChildren function to merge two graphs.
-
+        This example demonstrates using the mergeChildren function to merge two
+        graphs.
         <div
           ref={el => {
             this.el = el;

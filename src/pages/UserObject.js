@@ -7,13 +7,13 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxUtils from "../mxgraph/util/mxUtils";
-import mxConstants from "../mxgraph/util/mxConstants";
-import mxForm from "../mxgraph/util/mxForm";
-import mxCellAttributeChange from "../mxgraph/model/atomic_changes/mxCellAttributeChange";
-import mxKeyHandler from "../mxgraph/handler/mxKeyHandler";
-import mxRectangle from "../mxgraph/util/mxRectangle";
-import mxEdgeStyle from "../mxgraph/view/mxEdgeStyle";
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxForm from '../mxgraph/util/mxForm';
+import mxCellAttributeChange from '../mxgraph/model/atomic_changes/mxCellAttributeChange';
+import mxKeyHandler from '../mxgraph/handler/mxKeyHandler';
+import mxRectangle from '../mxgraph/util/mxRectangle';
+import mxEdgeStyle from '../mxgraph/view/mxEdgeStyle';
 
 class UserObject extends React.Component {
   constructor(props) {
@@ -25,38 +25,43 @@ class UserObject extends React.Component {
     return (
       <>
         <h1>User object</h1>
-        This example demonstrates using
-        XML objects as values for cells.
-
-        <table style={{
-          position: 'relative'
-        }}>
+        This example demonstrates using XML objects as values for cells.
+        <table
+          style={{
+            position: 'relative',
+          }}
+        >
           <tr>
             <td>
               <div
-                ref={el => {this.el = el;}}
+                ref={el => {
+                  this.el = el;
+                }}
                 style={{
                   border: 'solid 1px black',
                   overflow: 'hidden',
                   height: '241px',
-                  cursor: 'default'
+                  cursor: 'default',
                 }}
               />
             </td>
             <td valign="top">
               <div
-                ref={el => {this.propertiesEl = el;}}
+                ref={el => {
+                  this.propertiesEl = el;
+                }}
                 style={{
                   border: 'solid 1px black',
-                  padding: '10px'
+                  padding: '10px',
                 }}
               />
             </td>
           </tr>
         </table>
-
         <div
-          ref={el => {this.el2 = el;}}
+          ref={el => {
+            this.el2 = el;
+          }}
         />
       </>
     );

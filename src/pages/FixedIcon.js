@@ -6,10 +6,10 @@
 import React from 'react';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxUtils from "../mxgraph/util/mxUtils";
-import mxConstants from "../mxgraph/util/mxConstants";
-import mxLabel from "../mxgraph/shape/mxLabel";
-import mxRectangle from "../mxgraph/util/mxRectangle";
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxLabel from '../mxgraph/shape/mxLabel';
+import mxRectangle from '../mxgraph/util/mxRectangle';
 
 class FixedIcon extends React.Component {
   constructor(props) {
@@ -21,9 +21,8 @@ class FixedIcon extends React.Component {
     return (
       <>
         <h1>Fixed icon</h1>
-        This example demonstrates
-        customizing the icon position in the mxLabel shape.
-
+        This example demonstrates customizing the icon position in the mxLabel
+        shape.
         <div
           ref={el => {
             this.el = el;

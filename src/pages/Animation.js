@@ -5,7 +5,7 @@
 
 import React from 'react';
 import mxGraph from '../mxgraph/view/mxGraph';
-import mxPoint from "../mxgraph/util/mxPoint";
+import mxPoint from '../mxgraph/util/mxPoint';
 
 class Animation extends React.Component {
   constructor(props) {
@@ -17,9 +17,8 @@ class Animation extends React.Component {
     return (
       <>
         <h1>Animation</h1>
-        This example demonstrates using
-        SVG animations on edges to visualize the flow in a pipe.
-
+        This example demonstrates using SVG animations on edges to visualize the
+        flow in a pipe.
         <div
           ref={el => {
             this.el = el;

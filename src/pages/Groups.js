@@ -6,8 +6,8 @@
 import React from 'react';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxGraphHandler from "../mxgraph/handler/mxGraphHandler";
-import mxPopupMenuHandler from "../mxgraph/handler/mxPopupMenuHandler";
+import mxGraphHandler from '../mxgraph/handler/mxGraphHandler';
+import mxPopupMenuHandler from '../mxgraph/handler/mxPopupMenuHandler';
 
 class Groups extends React.Component {
   constructor(props) {
@@ -19,9 +19,7 @@ class Groups extends React.Component {
     return (
       <>
         <h1>Hello, World!</h1>
-        This example demonstrates using
-        cells as parts of other cells.
-
+        This example demonstrates using cells as parts of other cells.
         <div
           ref={el => {
             this.el = el;

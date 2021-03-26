@@ -7,8 +7,8 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxCellTracker from "../mxgraph/handler/mxCellTracker";
-import mxConstants from "../mxgraph/util/mxConstants";
+import mxCellTracker from '../mxgraph/handler/mxCellTracker';
+import mxConstants from '../mxgraph/util/mxConstants';
 
 class OffPage extends React.Component {
   constructor(props) {
@@ -20,10 +20,8 @@ class OffPage extends React.Component {
     return (
       <>
         <h1>Offpage connector</h1>
-        This example demonstrates creating
-        offpage connectors in a graph and loading a new diagram on a
-        single click.
-
+        This example demonstrates creating offpage connectors in a graph and
+        loading a new diagram on a single click.
         <div
           ref={el => {
             this.el = el;

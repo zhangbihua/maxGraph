@@ -29,9 +29,7 @@ class Tree extends React.Component {
     return (
       <>
         <h1>Tree</h1>
-        This example demonstrates folding
-        of subtrees in a acyclic graph (tree).
-
+        This example demonstrates folding of subtrees in a acyclic graph (tree).
         <div
           ref={el => {
             this.el = el;
@@ -41,7 +39,7 @@ class Tree extends React.Component {
             overflow: 'hidden',
             height: '400px',
             background: "url('editors/images/grid.gif')",
-            cursor: 'default'
+            cursor: 'default',
           }}
         />
       </>

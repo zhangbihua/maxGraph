@@ -6,14 +6,14 @@
 import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
-import mxCellTracker from "../mxgraph/handler/mxCellTracker";
-import mxConstants from "../mxgraph/util/mxConstants";
-import mxUtils from "../mxgraph/util/mxUtils";
-import mxFastOrganicLayout from "../mxgraph/layout/mxFastOrganicLayout";
-import mxEventObject from "../mxgraph/util/mxEventObject";
-import mxCodec from "../mxgraph/io/mxCodec";
-import mxPerimeter from "../mxgraph/view/mxPerimeter";
-import mxClient from "../mxgraph/mxClient";
+import mxCellTracker from '../mxgraph/handler/mxCellTracker';
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxFastOrganicLayout from '../mxgraph/layout/mxFastOrganicLayout';
+import mxEventObject from '../mxgraph/util/mxEventObject';
+import mxCodec from '../mxgraph/io/mxCodec';
+import mxPerimeter from '../mxgraph/view/mxPerimeter';
+import mxClient from '../mxgraph/mxClient';
 
 class FileIO extends React.Component {
   constructor(props) {
@@ -25,10 +25,8 @@ class FileIO extends React.Component {
     return (
       <>
         <h1>File I/O</h1>
-        This example demonstrates reading an
-        XML file, writing a custom parser, applying an automatic layout and
-        defining a 2-way edge.
-
+        This example demonstrates reading an XML file, writing a custom parser,
+        applying an automatic layout and defining a 2-way edge.
         <div
           ref={el => {
             this.el = el;

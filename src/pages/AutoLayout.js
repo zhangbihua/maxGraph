@@ -70,7 +70,7 @@ class AutoLayout extends React.Component {
             );
           });
         }
-      };
+      }
     }
 
     class MyCustomEdgeHandler extends mxEdgeHandler {

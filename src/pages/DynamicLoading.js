@@ -23,9 +23,8 @@ class DynamicLoading extends React.Component {
     return (
       <>
         <h1>Dynamic loading</h1>
-        This example demonstrates loading graph model data
-        dynamically to limit the number of cells in the model.
-
+        This example demonstrates loading graph model data dynamically to limit
+        the number of cells in the model.
         <div
           ref={el => {
             this.el = el;

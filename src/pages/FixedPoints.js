@@ -24,9 +24,8 @@ class FixedPoints extends React.Component {
     return (
       <>
         <h1>Fixed points</h1>
-        This example demonstrates using
-        fixed connection points for connecting edges to vertices.
-
+        This example demonstrates using fixed connection points for connecting
+        edges to vertices.
         <div
           ref={el => {
             this.el = el;

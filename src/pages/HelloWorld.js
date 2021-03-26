@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2006-2018, JGraph Ltd
+ * Copyright (c) 2006-2018, JGraph Ltd
  * Converted to ES9 syntax/React by David Morrissey 2021
  */
 
@@ -18,9 +18,8 @@ class HelloWorld extends React.Component {
     return (
       <>
         <h1>Hello, World!</h1>
-        This example demonstrates using
-        a DOM node to create a graph and adding vertices and edges.
-
+        This example demonstrates using a DOM node to create a graph and adding
+        vertices and edges.
         <div
           ref={el => {
             this.el = el;
@@ -38,9 +37,6 @@ class HelloWorld extends React.Component {
   };
 
   componentDidMount = () => {
-    // FIXME!!
-    const mxBasePath = '../src';
-
     // Create a sample graph in the DOM node with the specified ID.
     mxEvent.disableContextMenu(this.el); // Disable the built-in context menu
     const graph = new mxGraph(this.el); // Create the graph inside the given container

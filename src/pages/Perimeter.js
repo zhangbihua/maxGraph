@@ -7,8 +7,8 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxUtils from "../mxgraph/util/mxUtils";
-import mxGraphView from "../mxgraph/view/mxGraphView";
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxGraphView from '../mxgraph/view/mxGraphView';
 
 class Perimeter extends React.Component {
   constructor(props) {
@@ -20,9 +20,7 @@ class Perimeter extends React.Component {
     return (
       <>
         <h1>Perimeter</h1>
-        This example demonstrates how to
-        avoid edge and label intersections.
-
+        This example demonstrates how to avoid edge and label intersections.
         <div
           ref={el => {
             this.el = el;

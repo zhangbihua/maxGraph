@@ -6,6 +6,7 @@
 import React from 'react';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRectangle from '../mxgraph/util/mxRectangle';
+import mxGraphModel from '../mxgraph/model/mxGraphModel';
 
 class Collapse extends React.Component {
   constructor(props) {
@@ -17,9 +18,8 @@ class Collapse extends React.Component {
     return (
       <>
         <h1>Collapse</h1>
-        This example demonstrates changing
-        the style of a cell based on its collapsed state.
-
+        This example demonstrates changing the style of a cell based on its
+        collapsed state.
         <div
           ref={el => {
             this.el = el;
@@ -37,44 +37,42 @@ class Collapse extends React.Component {
   };
 
   componentDidMount = () => {
-    const graph = new mxGraph(this.el);
+    class MyCustomModel extends mxGraphModel {
+      getStyle(cell) {
+        // Extends mxGraphModel.getStyle to show an image when collapsed
+        if (cell != null) {
+          let style = super.getStyle(cell);
+          if (this.isCollapsed(cell)) {
+            style =
+              `${style};shape=image;image=http://www.jgraph.com/images/mxgraph.gif;` +
+              `noLabel=1;imageBackground=#C3D9FF;imageBorder=#6482B9`;
+          }
+          return style;
+        }
+        return null;
+      }
+    }
+
+    const graph = new mxGraph(this.el, new MyCustomModel());
     const parent = graph.getDefaultParent();
 
-    // Extends mxGraphModel.getStyle to show an image when collapsed
-    const modelGetStyle = graph.model.getStyle;
-    graph.model.getStyle = function(cell) {
-      if (cell != null) {
-        let style = modelGetStyle.apply(this, arguments);
-
-        if (this.isCollapsed(cell)) {
-          style =
-            `${style};shape=image;image=http://www.jgraph.com/images/mxgraph.gif;` +
-            `noLabel=1;imageBackground=#C3D9FF;imageBorder=#6482B9`;
-        }
-
-        return style;
-      }
-
-      return null;
-    };
-
-    graph.getModel().beginUpdate();
-    try {
-      const v1 = graph.insertVertex(
+    graph.batchUpdate(() => {
+      const v1 = graph.insertVertex({
         parent,
-        null,
-        'Container',
-        20,
-        20,
-        200,
-        200,
-        'shape=swimlane;startSize=20;'
-      );
+        value: 'Container',
+        position: [20, 20],
+        size: [200, 200],
+        style: 'shape=swimlane;startSize=20;',
+      });
       v1.geometry.alternateBounds = new mxRectangle(0, 0, 110, 70);
-      const v11 = graph.insertVertex(v1, null, 'Hello,', 10, 40, 120, 80);
-    } finally {
-      graph.getModel().endUpdate();
-    }
+
+      const v11 = graph.insertVertex({
+        parent: v1,
+        value: 'Hello,',
+        position: [10, 40],
+        size: [120, 80],
+      });
+    });
   };
 }
 

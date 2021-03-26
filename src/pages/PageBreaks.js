@@ -7,9 +7,9 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxUtils from "../mxgraph/util/mxUtils";
-import mxConstants from "../mxgraph/util/mxConstants";
-import mxPrintPreview from "../mxgraph/view/mxPrintPreview";
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxConstants from '../mxgraph/util/mxConstants';
+import mxPrintPreview from '../mxgraph/view/mxPrintPreview';
 
 class PageBreaks extends React.Component {
   constructor(props) {
@@ -21,10 +21,8 @@ class PageBreaks extends React.Component {
     return (
       <>
         <h1>Pagebreaks</h1>
-        This example demonstrates using the
-        pageBreaksVisible and preferPageSize switches and adding headers and
-        footers to print output.
-
+        This example demonstrates using the pageBreaksVisible and preferPageSize
+        switches and adding headers and footers to print output.
         <div
           ref={el => {
             this.el = el;

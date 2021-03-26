@@ -11,9 +11,9 @@ import mxCell from '../mxgraph/model/mxCell';
 import mxGeometry from '../mxgraph/model/mxGeometry';
 import mxUtils from '../mxgraph/util/mxUtils';
 import mxDragSource from '../mxgraph/util/mxDragSource';
-import mxGraphHandler from "../mxgraph/handler/mxGraphHandler";
-import mxGuide from "../mxgraph/util/mxGuide";
-import mxEdgeHandler from "../mxgraph/handler/mxEdgeHandler";
+import mxGraphHandler from '../mxgraph/handler/mxGraphHandler';
+import mxGuide from '../mxgraph/util/mxGuide';
+import mxEdgeHandler from '../mxgraph/handler/mxEdgeHandler';
 
 class DragSource extends React.Component {
   constructor(props) {
@@ -25,9 +25,8 @@ class DragSource extends React.Component {
     return (
       <>
         <h1>Dragsource</h1>
-        This example demonstrates using one drag source
-        for multiple graphs and changing the drag icon.
-
+        This example demonstrates using one drag source for multiple graphs and
+        changing the drag icon.
         <div
           ref={el => {
             this.el = el;

@@ -17,9 +17,7 @@ class LOD extends React.Component {
     return (
       <>
         <h1>Level of detail</h1>
-        This example demonstrates
-        implementing a level of detail per cell.
-
+        This example demonstrates implementing a level of detail per cell.
         <div
           ref={el => {
             this.el = el;

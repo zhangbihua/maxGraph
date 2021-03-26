@@ -7,7 +7,7 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxGraphHandler from "../mxgraph/handler/mxGraphHandler";
+import mxGraphHandler from '../mxgraph/handler/mxGraphHandler';
 
 class Constituent extends React.Component {
   constructor(props) {
@@ -19,9 +19,7 @@ class Constituent extends React.Component {
     return (
       <>
         <h1>Constituent</h1>
-        This example demonstrates using
-        cells as parts of other cells.
-
+        This example demonstrates using cells as parts of other cells.
         <div
           ref={el => {
             this.el = el;
@@ -39,6 +37,9 @@ class Constituent extends React.Component {
   };
 
   componentDidMount() {
+    // Disables the built-in context menu
+    mxEvent.disableContextMenu(this.el);
+
     class MyCustomGraphHandler extends mxGraphHandler {
       /**
        * Redirects start drag to parent.
@@ -51,9 +52,6 @@ class Constituent extends React.Component {
         return cell;
       }
     }
-
-    // Disables the built-in context menu
-    mxEvent.disableContextMenu(this.el);
 
     class MyCustomGraph extends mxGraph {
       foldingEnabled = false;
@@ -89,23 +87,20 @@ class Constituent extends React.Component {
     const parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
-      const v1 = graph.insertVertex(parent, null, '', 20, 20, 120, 70);
-      const v2 = graph.insertVertex(
-        v1,
-        null,
-        'Constituent',
-        20,
-        20,
-        80,
-        30,
-        'constituent=1;'
-      );
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
-    }
+    graph.batchUpdate(() => {
+      const v1 = graph.insertVertex({
+        parent,
+        position: [20, 20],
+        size: [120, 70],
+      });
+      const v2 = graph.insertVertex({
+        parent: v1,
+        value: 'Constituent',
+        position: [20, 20],
+        size: [80, 30],
+        style: 'constituent=1;',
+      });
+    });
   }
 }
 

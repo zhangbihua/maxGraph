@@ -16,9 +16,8 @@ class Wrapping extends React.Component {
     return (
       <>
         <h1>Wrapping</h1>
-        This example demonstrates using HTML markup and
-        word-wrapping in vertex and edge labels.
-
+        This example demonstrates using HTML markup and word-wrapping in vertex
+        and edge labels.
         <div
           ref={el => {
             this.el = el;

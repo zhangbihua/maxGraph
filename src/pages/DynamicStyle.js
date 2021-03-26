@@ -19,9 +19,8 @@ class DynamicStyle extends React.Component {
     return (
       <>
         <h1>Dynamic Style</h1>
-        This example demonstrates changing the style of a cell
-        dynamically by overriding mxGraphModel.getStyle.
-
+        This example demonstrates changing the style of a cell dynamically by
+        overriding mxGraphModel.getStyle.
         <div
           ref={el => {
             this.el = el;

@@ -17,8 +17,8 @@ import mxUtils from '../mxgraph/util/mxUtils';
 import mxEditor from '../mxgraph/editor/mxEditor';
 import mxConnectionHandler from '../mxgraph/handler/mxConnectionHandler';
 import mxImage from '../mxgraph/util/mxImage';
-import mxLayoutManager from "../mxgraph/view/mxLayoutManager";
-import mxEdgeStyle from "../mxgraph/view/mxEdgeStyle";
+import mxLayoutManager from '../mxgraph/view/mxLayoutManager';
+import mxEdgeStyle from '../mxgraph/view/mxEdgeStyle';
 
 class SwimLanes extends React.Component {
   constructor(props) {
@@ -30,11 +30,9 @@ class SwimLanes extends React.Component {
     return (
       <>
         <h1>Swimlanes</h1>
-        This example demonstrates using
-        swimlanes for pools and lanes and adding cells and edges between
-        them. This also demonstrates using the stack layout as an
-        automatic layout.
-
+        This example demonstrates using swimlanes for pools and lanes and adding
+        cells and edges between them. This also demonstrates using the stack
+        layout as an automatic layout.
         <div
           ref={el => {
             this.el = el;

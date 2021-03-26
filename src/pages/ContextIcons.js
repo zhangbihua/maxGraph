@@ -21,9 +21,8 @@ class ContextIcons extends React.Component {
     return (
       <>
         <h1>Context icons</h1>
-        This example demonstrates adding
-        icons to selected vertices to carry out special operations.
-
+        This example demonstrates adding icons to selected vertices to carry out
+        special operations.
         <div
           ref={el => {
             this.el = el;

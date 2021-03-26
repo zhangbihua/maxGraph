@@ -11,8 +11,8 @@
 import React from 'react';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
-import mxUtils from "../mxgraph/util/mxUtils";
-import mxCodec from "../mxgraph/io/mxCodec";
+import mxUtils from '../mxgraph/util/mxUtils';
+import mxCodec from '../mxgraph/io/mxCodec';
 
 class Template extends React.Component {
   constructor(props) {
@@ -32,28 +32,26 @@ class Template extends React.Component {
             overflow: 'hidden',
             position: 'relative',
             height: '241px',
-            background: "url('/mxgraph/javascript/examples/editors/images/grid.gif')",
-            cursor: 'default'
+            background:
+              "url('/mxgraph/javascript/examples/editors/images/grid.gif')",
+            cursor: 'default',
           }}
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     // Creates the graph inside the given container
-    let graph = new mxGraph(this.el);
+    const graph = new mxGraph(this.el);
 
     // Adds rubberband selection to the graph
     new mxRubberband(graph);
 
-    let doc = mxUtils.parseXml(xml);
-    let codec = new mxCodec(doc);
+    const doc = mxUtils.parseXml(xml);
+    const codec = new mxCodec(doc);
     codec.decode(doc.documentElement, graph.getModel());
-  };
+  }
 }
 
 export default Template;
-
-
-

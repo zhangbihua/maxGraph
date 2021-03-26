@@ -20,9 +20,7 @@ class Layers extends React.Component {
     return (
       <>
         <h1>Layers</h1>
-        This example demonstrates using
-        multiple layers to contain cells.
-
+        This example demonstrates using multiple layers to contain cells.
         <div
           ref={el => {
             this.el = el;

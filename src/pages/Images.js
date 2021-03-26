@@ -11,7 +11,7 @@ import mxConstants from '../mxgraph/util/mxConstants';
 import mxUtils from '../mxgraph/util/mxUtils';
 import mxRectangle from '../mxgraph/util/mxRectangle';
 import mxImage from '../mxgraph/util/mxImage';
-import mxPerimeter from "../mxgraph/view/mxPerimeter";
+import mxPerimeter from '../mxgraph/view/mxPerimeter';
 
 class Images extends React.Component {
   constructor(props) {
@@ -23,9 +23,8 @@ class Images extends React.Component {
     return (
       <>
         <h1>Images</h1>
-        This example demonstrates using
-        background images and images for for the label- and image-shape.
-        
+        This example demonstrates using background images and images for for the
+        label- and image-shape.
         <div
           ref={el => {
             this.el = el;

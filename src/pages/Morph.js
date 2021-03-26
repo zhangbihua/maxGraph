@@ -20,9 +20,7 @@ class Morph extends React.Component {
     return (
       <>
         <h1>Morph</h1>
-        This example demonstrates using
-        mxMorphing for simple cell animations.
-
+        This example demonstrates using mxMorphing for simple cell animations.
         <div
           ref={el => {
             this.el = el;

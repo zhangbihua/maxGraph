@@ -7,7 +7,7 @@ import React from 'react';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxConstants from '../mxgraph/util/mxConstants';
 import mxEdgeStyle from '../mxgraph/view/mxEdgeStyle';
-import mxPerimeter from "../mxgraph/view/mxPerimeter";
+import mxPerimeter from '../mxgraph/view/mxPerimeter';
 
 class Stylesheet extends React.Component {
   constructor(props) {
@@ -19,11 +19,9 @@ class Stylesheet extends React.Component {
     return (
       <>
         <h1>Stylesheet</h1>
-        This example demonstrates using
-        a custom stylesheet and control points in edges, as well as
-        overriding the getLabel and getTooltip function to return
-        dynamic information, and making a supercall in JavaScript.
-
+        This example demonstrates using a custom stylesheet and control points
+        in edges, as well as overriding the getLabel and getTooltip function to
+        return dynamic information, and making a supercall in JavaScript.
         <div
           ref={el => {
             this.el = el;

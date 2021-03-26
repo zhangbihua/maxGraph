@@ -26,9 +26,8 @@ class Toolbar extends React.Component {
     return (
       <>
         <h1>Toolbar</h1>
-        This example demonstrates using
-        existing cells as templates for creating new cells.
-
+        This example demonstrates using existing cells as templates for creating
+        new cells.
         <div
           ref={el => {
             this.el = el;

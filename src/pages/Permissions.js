@@ -34,9 +34,8 @@ class Permissions extends React.Component {
     return (
       <>
         <h1>Permissions</h1>
-        This example demonstrates creating
-        permissions to define the available operations a the graph.
-
+        This example demonstrates creating permissions to define the available
+        operations a the graph.
         <div
           ref={el => {
             this.el = el;
@@ -45,7 +44,7 @@ class Permissions extends React.Component {
             position: 'relative',
             overflow: 'hidden',
             height: '300px',
-            //background: "url('editors/images/grid.gif')",
+            // background: "url('editors/images/grid.gif')",
           }}
         />
       </>

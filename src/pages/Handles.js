@@ -25,8 +25,8 @@ class Handles extends React.Component {
     return (
       <>
         <h1>Handles</h1>
-        This example demonstrates using mxHandle to change custom styles interactively.
-
+        This example demonstrates using mxHandle to change custom styles
+        interactively.
         <div
           ref={el => {
             this.el = el;

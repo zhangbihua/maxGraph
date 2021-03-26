@@ -10,8 +10,8 @@ import mxConstants from '../mxgraph/util/mxConstants';
 import mxCellOverlay from '../mxgraph/view/mxCellOverlay';
 import mxUtils from '../mxgraph/util/mxUtils';
 import mxCodec from '../mxgraph/io/mxCodec';
-import mxPerimeter from "../mxgraph/view/mxPerimeter";
-import mxEdgeStyle from "../mxgraph/view/mxEdgeStyle";
+import mxPerimeter from '../mxgraph/view/mxPerimeter';
+import mxEdgeStyle from '../mxgraph/view/mxEdgeStyle';
 
 class Monitor extends React.Component {
   constructor(props) {
@@ -23,9 +23,8 @@ class Monitor extends React.Component {
     return (
       <>
         <h1>mxGraph Workflow Monitor</h1>
-        This example demonstrates using a
-        graph to display the current state of a workflow.
-
+        This example demonstrates using a graph to display the current state of
+        a workflow.
         <div
           ref={el => {
             this.el = el;

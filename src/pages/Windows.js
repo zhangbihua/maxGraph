@@ -22,9 +22,8 @@ class Windows extends React.Component {
     return (
       <>
         <h1>Windows</h1>
-        This example demonstrates using
-        the mxWindow class for displaying windows.
-
+        This example demonstrates using the mxWindow class for displaying
+        windows.
         <div
           ref={el => {
             this.el = el;
