@@ -24,13 +24,12 @@ class AutoLayout extends React.Component {
   }
 
   render = () => {
-    // A this.el for the graph
+    // A container for the graph
     return (
       <>
         <h1>Auto layout</h1>
-        This example demonstrates running
-        and animating a layout algorithm after every change to a graph.
-
+        This example demonstrates running and animating a layout algorithm after
+        every change to a graph.
         <div
           ref={el => {
             this.el = el;
@@ -50,36 +49,49 @@ class AutoLayout extends React.Component {
   componentDidMount = () => {
     mxEvent.disableContextMenu(this.el);
 
-    const mxCellRendererInstallCellOverlayListeners =
-      mxCellRenderer.prototype.installCellOverlayListeners;
-    mxCellRenderer.prototype.installCellOverlayListeners = function(
-      state,
-      overlay,
-      shape
-    ) {
-      mxCellRendererInstallCellOverlayListeners.apply(this, arguments);
+    class MyCustomCellRenderer extends mxCellRenderer {
+      installCellOverlayListeners(state, overlay, shape) {
+        super.installCellOverlayListeners(state, overlay, shape);
 
-      mxEvent.addListener(
-        shape.node,
-        mxClient.IS_POINTER ? 'pointerdown' : 'mousedown',
-        function(evt) {
-          overlay.fireEvent(
-            new mxEventObject('pointerdown', 'event', evt, 'state', state)
-          );
+        mxEvent.addListener(
+          shape.node,
+          mxClient.IS_POINTER ? 'pointerdown' : 'mousedown',
+          function(evt) {
+            overlay.fireEvent(
+              new mxEventObject('pointerdown', 'event', evt, 'state', state)
+            );
+          }
+        );
+
+        if (!mxClient.IS_POINTER && mxClient.IS_TOUCH) {
+          mxEvent.addListener(shape.node, 'touchstart', function(evt) {
+            overlay.fireEvent(
+              new mxEventObject('pointerdown', 'event', evt, 'state', state)
+            );
+          });
         }
-      );
+      };
+    }
 
-      if (!mxClient.IS_POINTER && mxClient.IS_TOUCH) {
-        mxEvent.addListener(shape.node, 'touchstart', function(evt) {
-          overlay.fireEvent(
-            new mxEventObject('pointerdown', 'event', evt, 'state', state)
-          );
-        });
+    class MyCustomEdgeHandler extends mxEdgeHandler {
+      connect(edge, terminal, isSource, isClone, me) {
+        super.connect(edge, terminal, isSource, isClone, me);
+        executeLayout();
       }
-    };
+    }
+
+    class MyCustomGraph extends mxGraph {
+      createEdgeHandler(state, edgeStyle) {
+        return new MyCustomEdgeHandler(state, edgeStyle);
+      }
+
+      createCellRenderer() {
+        return new MyCustomCellRenderer();
+      }
+    }
 
     // Creates the graph inside the given this.el
-    const graph = new mxGraph(this.el);
+    const graph = new MyCustomGraph(this.el);
     graph.setPanning(true);
     graph.panningHandler.useLeftButtonForPanning = true;
     graph.setAllowDanglingEdges(false);
@@ -94,7 +106,7 @@ class AutoLayout extends React.Component {
     const parent = graph.getDefaultParent();
 
     const layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
-    const executeLayout = function(change, post) {
+    const executeLayout = (change, post) => {
       graph.getModel().beginUpdate();
       try {
         if (change != null) {
@@ -106,15 +118,12 @@ class AutoLayout extends React.Component {
       } finally {
         // New API for animating graph layout results asynchronously
         const morph = new mxMorphing(graph);
-        morph.addListener(
-          mxEvent.DONE,
-          mxUtils.bind(this, function() {
-            graph.getModel().endUpdate();
-            if (post != null) {
-              post();
-            }
-          })
-        );
+        morph.addListener(mxEvent.DONE, () => {
+          graph.getModel().endUpdate();
+          if (post != null) {
+            post();
+          }
+        });
         morph.startAnimation();
       }
     };
@@ -136,18 +145,19 @@ class AutoLayout extends React.Component {
 
         executeLayout(
           function() {
-            v2 = graph.insertVertex(
+            v2 = graph.insertVertex({
               parent,
-              null,
-              'World!',
-              geo.x,
-              geo.y,
-              80,
-              30
-            );
+              value: 'World!',
+              position: [geo.x, geo.y],
+              size: [80, 30],
+            });
             addOverlay(v2);
             graph.view.refresh(v2);
-            const e1 = graph.insertEdge(parent, null, '', cell, v2);
+            const e1 = graph.insertEdge({
+              parent,
+              source: cell,
+              target: v2,
+            });
           },
           function() {
             graph.scrollCellToVisible(v2);
@@ -182,24 +192,17 @@ class AutoLayout extends React.Component {
     graph.getModel().beginUpdate();
     let v1;
     try {
-      v1 = graph.insertVertex(parent, null, 'Hello,', 0, 0, 80, 30);
+      v1 = graph.insertVertex({
+        parent,
+        value: 'Hello,',
+        position: [0, 0],
+        size: [80, 30],
+      });
       addOverlay(v1);
     } finally {
       // Updates the display
       graph.getModel().endUpdate();
     }
-
-    const edgeHandleConnect = mxEdgeHandler.prototype.connect;
-    mxEdgeHandler.prototype.connect = function(
-      edge,
-      terminal,
-      isSource,
-      isClone,
-      me
-    ) {
-      edgeHandleConnect.apply(this, arguments);
-      executeLayout();
-    };
 
     graph.resizeCell = function() {
       mxGraph.prototype.resizeCell.apply(this, arguments);

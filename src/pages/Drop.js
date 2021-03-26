@@ -16,7 +16,7 @@ class Drop extends React.Component {
   }
 
   render() {
-    // A this.el for the graph
+    // A container for the graph
     return (
       <>
         <h1>Drop</h1>

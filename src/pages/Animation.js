@@ -47,34 +47,27 @@ class Animation extends React.Component {
 
     graph.getModel().beginUpdate();
     try {
-      const v1 = graph.insertVertex(
+      const v1 = graph.insertVertex({
         parent,
-        null,
-        'Pump',
-        20,
-        20,
-        60,
-        60,
-        vertexStyle
-      );
-      const v2 = graph.insertVertex(
+        value: 'Pump',
+        position: [20, 20],
+        size: [60, 60],
+        style: vertexStyle,
+      });
+      const v2 = graph.insertVertex({
         parent,
-        null,
-        'Tank',
-        200,
-        150,
-        60,
-        60,
-        vertexStyle
-      );
-      var e1 = graph.insertEdge(
+        value: 'Tank',
+        position: [200, 150],
+        size: [60, 60],
+        style: vertexStyle,
+      });
+      var e1 = graph.insertEdge({
         parent,
-        null,
-        '',
-        v1,
-        v2,
-        'strokeWidth=3;endArrow=block;endSize=2;endFill=1;strokeColor=black;rounded=1;'
-      );
+        source: v1,
+        target: v2,
+        style:
+          'strokeWidth=3;endArrow=block;endSize=2;endFill=1;strokeColor=black;rounded=1;',
+      });
       e1.geometry.points = [new mxPoint(230, 50)];
       graph.orderCells(true, [e1]);
     } finally {

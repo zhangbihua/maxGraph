@@ -19,13 +19,12 @@ class Clipboard extends React.Component {
   }
 
   render = () => {
-    // A this.el for the graph
+    // A container for the graph
     return (
       <>
         <h1>Clipboard</h1>
-        This example demonstrates using the clipboard
-        for providing cross-tab and cross-browser copy and paste.
-
+        This example demonstrates using the clipboard for providing cross-tab
+        and cross-browser copy and paste.
         <div
           ref={el => {
             this.el = el;
@@ -277,7 +276,7 @@ class Clipboard extends React.Component {
       }
     };
 
-    // Cross-browser function to fetch text from paste events
+    // Function to fetch text from paste events
     const extractGraphModelFromEvent = function(evt) {
       let data = null;
 
@@ -286,22 +285,18 @@ class Clipboard extends React.Component {
           evt.dataTransfer != null ? evt.dataTransfer : evt.clipboardData;
 
         if (provider != null) {
-          if (document.documentMode === 10 || document.documentMode === 11) {
-            data = provider.getData('Text');
-          } else {
-            data =
-              mxUtils.indexOf(provider.types, 'text/html') >= 0
-                ? provider.getData('text/html')
-                : null;
+          data =
+            mxUtils.indexOf(provider.types, 'text/html') >= 0
+              ? provider.getData('text/html')
+              : null;
 
-            if (
-              mxUtils.indexOf(
-                provider.types,
-                'text/plain' && (data == null || data.length === 0)
-              )
-            ) {
-              data = provider.getData('text/plain');
-            }
+          if (
+            mxUtils.indexOf(
+              provider.types,
+              'text/plain' && (data == null || data.length === 0)
+            )
+          ) {
+            data = provider.getData('text/plain');
           }
         }
       }
@@ -343,15 +338,21 @@ class Clipboard extends React.Component {
     const parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
-      const v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-      const v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-      const e1 = graph.insertEdge(parent, null, '', v1, v2);
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
-    }
+    graph.batchUpdate(() => {
+      const v1 = graph.insertVertex({
+        parent,
+        value: 'Hello,',
+        position: [20, 20],
+        size: [80, 30],
+      });
+      const v2 = graph.insertVertex({
+        parent,
+        value: 'World!',
+        position: [200, 150],
+        size: [80, 30],
+      });
+      const e1 = graph.insertEdge({ parent, source: v1, target: v2 });
+    });
   };
 }
 

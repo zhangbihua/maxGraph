@@ -4533,7 +4533,7 @@ class mxGraph extends mxEventSource {
       const params = args[0];
       parent = params.parent;
       id = params.id;
-      value = params.value;
+      value = params.value || '';
       source = params.source;
       target = params.target;
       style = params.style;

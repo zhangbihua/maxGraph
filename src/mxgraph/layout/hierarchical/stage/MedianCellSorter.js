@@ -1,4 +1,18 @@
 class MedianCellSorter {
+  /**
+   * Variable: medianValue
+   *
+   * The weighted value of the cell stored.
+   */
+  medianValue = 0;
+
+  /**
+   * Variable: cell
+   *
+   * The cell whose median value is being calculated
+   */
+  cell = false;
+
   constructor() {
     // empty
   }
