@@ -180,11 +180,11 @@ const mxEdgeStyle = {
       );
 
       if (
-        constraint != mxConstants.DIRECTION_MASK_NONE &&
+        constraint !== mxConstants.DIRECTION_MASK_NONE &&
         constraint !=
           mxConstants.DIRECTION_MASK_WEST + mxConstants.DIRECTION_MASK_EAST
       ) {
-        isTargetLeft = constraint == mxConstants.DIRECTION_MASK_WEST;
+        isTargetLeft = constraint === mxConstants.DIRECTION_MASK_WEST;
       }
     }
 

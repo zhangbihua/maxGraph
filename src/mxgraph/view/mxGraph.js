@@ -1638,9 +1638,9 @@ class mxGraph extends mxEventSource {
 
     if (mxClient.IS_SVG) {
       this.dialect = mxConstants.DIALECT_SVG;
-    } else if (renderHint == mxConstants.RENDERING_HINT_FASTEST) {
+    } else if (renderHint === mxConstants.RENDERING_HINT_FASTEST) {
       this.dialect = mxConstants.DIALECT_STRICTHTML;
-    } else if (renderHint == mxConstants.RENDERING_HINT_FASTER) {
+    } else if (renderHint === mxConstants.RENDERING_HINT_FASTER) {
       this.dialect = mxConstants.DIALECT_PREFERHTML;
     } // default for VML
     else {
@@ -2833,7 +2833,7 @@ class mxGraph extends mxEventSource {
           c.scrollTop += border - dy;
 
           if (old == c.scrollTop && extend) {
-            if (this.dialect == mxConstants.DIALECT_SVG) {
+            if (this.dialect === mxConstants.DIALECT_SVG) {
               const root = this.view.getDrawPane().ownerSVGElement;
               const height = this.container.scrollHeight + border - dy;
 
@@ -3140,7 +3140,7 @@ class mxGraph extends mxEventSource {
       width = Math.ceil(width);
       height = Math.ceil(height);
 
-      if (this.dialect == mxConstants.DIALECT_SVG) {
+      if (this.dialect === mxConstants.DIALECT_SVG) {
         const root = this.view.getDrawPane().ownerSVGElement;
 
         if (root != null) {
@@ -3665,7 +3665,7 @@ class mxGraph extends mxEventSource {
    *     let style = this.getCurrentCellStyle(edge);
    *     let elbow = mxUtils.getValue(style, mxConstants.STYLE_ELBOW,
    *         mxConstants.ELBOW_HORIZONTAL);
-   *     let value = (elbow == mxConstants.ELBOW_HORIZONTAL) ?
+   *     let value = (elbow === mxConstants.ELBOW_HORIZONTAL) ?
    *         mxConstants.ELBOW_VERTICAL : mxConstants.ELBOW_HORIZONTAL;
    *     this.setCellStyles(mxConstants.STYLE_ELBOW, value, [edge]);
    *   }
@@ -6888,11 +6888,11 @@ class mxGraph extends mxEventSource {
           1
         ) == 1
       ) {
-        if (direction == mxConstants.DIRECTION_NORTH) {
+        if (direction === mxConstants.DIRECTION_NORTH) {
           r1 += 270;
-        } else if (direction == mxConstants.DIRECTION_WEST) {
+        } else if (direction === mxConstants.DIRECTION_WEST) {
           r1 += 180;
-        } else if (direction == mxConstants.DIRECTION_SOUTH) {
+        } else if (direction === mxConstants.DIRECTION_SOUTH) {
           r1 += 90;
         }
 

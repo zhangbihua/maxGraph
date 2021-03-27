@@ -867,7 +867,7 @@ class mxObjectCodec {
       const tmp = child.nextSibling;
 
       if (
-        child.nodeType == mxConstants.NODETYPE_ELEMENT &&
+        child.nodeType === mxConstants.NODETYPE_ELEMENT &&
         !this.processInclude(dec, child, obj)
       ) {
         this.decodeChild(dec, child, obj);

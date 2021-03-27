@@ -258,7 +258,7 @@ class mxSwimlane extends mxShape {
         '1';
     }
 
-    if (!events && (this.fill == null || this.fill == mxConstants.NONE)) {
+    if (!events && (this.fill == null || this.fill === mxConstants.NONE)) {
       c.pointerEvents = false;
     }
 
@@ -270,11 +270,11 @@ class mxSwimlane extends mxShape {
       c.fillAndStroke();
 
       if (start < h) {
-        if (fill == mxConstants.NONE || !events) {
+        if (fill === mxConstants.NONE || !events) {
           c.pointerEvents = false;
         }
 
-        if (fill != mxConstants.NONE) {
+        if (fill !== mxConstants.NONE) {
           c.setFillColor(fill);
         }
 
@@ -284,7 +284,7 @@ class mxSwimlane extends mxShape {
         c.lineTo(w, h);
         c.lineTo(w, start);
 
-        if (fill == mxConstants.NONE) {
+        if (fill === mxConstants.NONE) {
           c.stroke();
         } else {
           c.fillAndStroke();
@@ -298,11 +298,11 @@ class mxSwimlane extends mxShape {
       c.fillAndStroke();
 
       if (start < w) {
-        if (fill == mxConstants.NONE || !events) {
+        if (fill === mxConstants.NONE || !events) {
           c.pointerEvents = false;
         }
 
-        if (fill != mxConstants.NONE) {
+        if (fill !== mxConstants.NONE) {
           c.setFillColor(fill);
         }
 
@@ -312,7 +312,7 @@ class mxSwimlane extends mxShape {
         c.lineTo(w, h);
         c.lineTo(start, h);
 
-        if (fill == mxConstants.NONE) {
+        if (fill === mxConstants.NONE) {
           c.stroke();
         } else {
           c.fillAndStroke();
@@ -321,7 +321,7 @@ class mxSwimlane extends mxShape {
     }
 
     if (swimlaneLine) {
-      this.paintDivider(c, x, y, w, h, start, fill == mxConstants.NONE);
+      this.paintDivider(c, x, y, w, h, start, fill === mxConstants.NONE);
     }
   }
 
@@ -341,7 +341,7 @@ class mxSwimlane extends mxShape {
         '1';
     }
 
-    if (!events && (this.fill == null || this.fill == mxConstants.NONE)) {
+    if (!events && (this.fill == null || this.fill === mxConstants.NONE)) {
       c.pointerEvents = false;
     }
 
@@ -355,11 +355,11 @@ class mxSwimlane extends mxShape {
       c.fillAndStroke();
 
       if (start < h) {
-        if (fill == mxConstants.NONE || !events) {
+        if (fill === mxConstants.NONE || !events) {
           c.pointerEvents = false;
         }
 
-        if (fill != mxConstants.NONE) {
+        if (fill !== mxConstants.NONE) {
           c.setFillColor(fill);
         }
 
@@ -371,7 +371,7 @@ class mxSwimlane extends mxShape {
         c.quadTo(w, h, w, h - r);
         c.lineTo(w, start);
 
-        if (fill == mxConstants.NONE) {
+        if (fill === mxConstants.NONE) {
           c.stroke();
         } else {
           c.fillAndStroke();
@@ -387,11 +387,11 @@ class mxSwimlane extends mxShape {
       c.fillAndStroke();
 
       if (start < w) {
-        if (fill == mxConstants.NONE || !events) {
+        if (fill === mxConstants.NONE || !events) {
           c.pointerEvents = false;
         }
 
-        if (fill != mxConstants.NONE) {
+        if (fill !== mxConstants.NONE) {
           c.setFillColor(fill);
         }
 
@@ -403,7 +403,7 @@ class mxSwimlane extends mxShape {
         c.quadTo(w, 0, w - r, 0);
         c.lineTo(start, 0);
 
-        if (fill == mxConstants.NONE) {
+        if (fill === mxConstants.NONE) {
           c.stroke();
         } else {
           c.fillAndStroke();
@@ -412,7 +412,7 @@ class mxSwimlane extends mxShape {
     }
 
     if (swimlaneLine) {
-      this.paintDivider(c, x, y, w, h, start, fill == mxConstants.NONE);
+      this.paintDivider(c, x, y, w, h, start, fill === mxConstants.NONE);
     }
   }
 
@@ -445,7 +445,7 @@ class mxSwimlane extends mxShape {
    * Paints the vertical or horizontal separator line between swimlanes.
    */
   paintSeparator(c, x, y, w, h, start, color) {
-    if (color != mxConstants.NONE) {
+    if (color !== mxConstants.NONE) {
       c.setStrokeColor(color);
       c.setDashed(true);
       c.begin();

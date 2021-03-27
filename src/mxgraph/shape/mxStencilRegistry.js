@@ -12,7 +12,7 @@
  *
  * while (shape != null)
  * {
- *    if (shape.nodeType == mxConstants.NODETYPE_ELEMENT)
+ *    if (shape.nodeType === mxConstants.NODETYPE_ELEMENT)
  *   {
  *     mxStencilRegistry.addStencil(shape.getAttribute('name'), new mxStencil(shape));
  *   }

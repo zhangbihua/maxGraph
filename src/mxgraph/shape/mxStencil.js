@@ -486,7 +486,7 @@ class mxStencil extends mxShape {
       let tmp = node.firstChild;
 
       while (tmp != null) {
-        if (tmp.nodeType == mxConstants.NODETYPE_ELEMENT) {
+        if (tmp.nodeType === mxConstants.NODETYPE_ELEMENT) {
           this.drawNode(canvas, shape, tmp, aspect, disableShadow, paint);
         }
 
@@ -627,7 +627,7 @@ class mxStencil extends mxShape {
           let childNode = node.firstChild;
 
           while (childNode != null) {
-            if (childNode.nodeType == mxConstants.NODETYPE_ELEMENT) {
+            if (childNode.nodeType === mxConstants.NODETYPE_ELEMENT) {
               this.drawNode(
                 canvas,
                 shape,

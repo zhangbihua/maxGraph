@@ -539,7 +539,7 @@ class mxCellRenderer {
     if (
       mxClient.IS_SVG &&
       mxClient.NO_FO &&
-      shape.dialect != mxConstants.DIALECT_SVG
+      shape.dialect !== mxConstants.DIALECT_SVG
     ) {
       shape.init(state.view.graph.container);
     } else {

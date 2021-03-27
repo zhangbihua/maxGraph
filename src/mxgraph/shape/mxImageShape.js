@@ -82,13 +82,13 @@ class mxImageShape extends mxRectangleShape {
 
     if (this.style != null) {
       this.preserveImageAspect =
-        mxUtils.getNumber(this.style, mxConstants.STYLE_IMAGE_ASPECT, 1) === 1;
+        mxUtils.getNumber(this.style, mxConstants.STYLE_IMAGE_ASPECT, 1) == 1;
 
       // Legacy support for imageFlipH/V
       this.flipH =
-        this.flipH || mxUtils.getValue(this.style, 'imageFlipH', 0) === 1;
+        this.flipH || mxUtils.getValue(this.style, 'imageFlipH', 0) == 1;
       this.flipV =
-        this.flipV || mxUtils.getValue(this.style, 'imageFlipV', 0) === 1;
+        this.flipV || mxUtils.getValue(this.style, 'imageFlipV', 0) == 1;
     }
   }
 

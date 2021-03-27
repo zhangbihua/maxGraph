@@ -54,8 +54,8 @@ class mxRectangleShape extends mxShape {
     return (
       !this.isRounded &&
       !this.glass &&
-      this.rotation == 0 &&
-      (events || (this.fill != null && this.fill != mxConstants.NONE))
+      this.rotation === 0 &&
+      (events || (this.fill != null && this.fill !== mxConstants.NONE))
     );
   }
 
@@ -138,7 +138,7 @@ class mxRectangleShape extends mxShape {
       this.glass &&
       !this.outline &&
       this.fill != null &&
-      this.fill != mxConstants.NONE
+      this.fill !== mxConstants.NONE
     ) {
       this.paintGlassEffect(
         c,

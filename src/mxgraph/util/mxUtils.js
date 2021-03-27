@@ -1506,7 +1506,7 @@ const mxUtils = {
 
     if (value == null) {
       value = defaultValue;
-    } else if (value == mxConstants.NONE) {
+    } else if (value === mxConstants.NONE) {
       value = null;
     }
 
@@ -2089,10 +2089,10 @@ const mxUtils = {
 
     if (
       (flipV &&
-        (d == mxConstants.DIRECTION_SOUTH ||
-          d == mxConstants.DIRECTION_NORTH)) ||
+        (d === mxConstants.DIRECTION_SOUTH ||
+          d === mxConstants.DIRECTION_NORTH)) ||
       (flipH &&
-        (d == mxConstants.DIRECTION_EAST || d == mxConstants.DIRECTION_WEST))
+        (d === mxConstants.DIRECTION_EAST || d === mxConstants.DIRECTION_WEST))
     ) {
       const tmp = m.x;
       m.x = m.width;
@@ -2101,10 +2101,10 @@ const mxUtils = {
 
     if (
       (flipH &&
-        (d == mxConstants.DIRECTION_SOUTH ||
-          d == mxConstants.DIRECTION_NORTH)) ||
+        (d === mxConstants.DIRECTION_SOUTH ||
+          d === mxConstants.DIRECTION_NORTH)) ||
       (flipV &&
-        (d == mxConstants.DIRECTION_EAST || d == mxConstants.DIRECTION_WEST))
+        (d === mxConstants.DIRECTION_EAST || d === mxConstants.DIRECTION_WEST))
     ) {
       const tmp = m.y;
       m.y = m.height;
@@ -2113,17 +2113,17 @@ const mxUtils = {
 
     const m2 = mxRectangle.fromRectangle(m);
 
-    if (d == mxConstants.DIRECTION_SOUTH) {
+    if (d === mxConstants.DIRECTION_SOUTH) {
       m2.y = m.x;
       m2.x = m.height;
       m2.width = m.y;
       m2.height = m.width;
-    } else if (d == mxConstants.DIRECTION_WEST) {
+    } else if (d === mxConstants.DIRECTION_WEST) {
       m2.y = m.height;
       m2.x = m.width;
       m2.width = m.x;
       m2.height = m.y;
-    } else if (d == mxConstants.DIRECTION_NORTH) {
+    } else if (d === mxConstants.DIRECTION_NORTH) {
       m2.y = m.width;
       m2.x = m.y;
       m2.width = m.height;
@@ -3216,16 +3216,16 @@ const mxUtils = {
     let dy = -0.5;
 
     // Horizontal alignment
-    if (align == mxConstants.ALIGN_LEFT) {
+    if (align === mxConstants.ALIGN_LEFT) {
       dx = 0;
-    } else if (align == mxConstants.ALIGN_RIGHT) {
+    } else if (align === mxConstants.ALIGN_RIGHT) {
       dx = -1;
     }
 
     // Vertical alignment
-    if (valign == mxConstants.ALIGN_TOP) {
+    if (valign === mxConstants.ALIGN_TOP) {
       dy = 0;
-    } else if (valign == mxConstants.ALIGN_BOTTOM) {
+    } else if (valign === mxConstants.ALIGN_BOTTOM) {
       dy = -1;
     }
 
@@ -3272,11 +3272,11 @@ const mxUtils = {
 
     // Sets the font style
     if (fontStyle != null) {
-      if ((fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD) {
+      if ((fontStyle & mxConstants.FONT_BOLD) === mxConstants.FONT_BOLD) {
         div.style.fontWeight = 'bold';
       }
 
-      if ((fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC) {
+      if ((fontStyle & mxConstants.FONT_ITALIC) === mxConstants.FONT_ITALIC) {
         div.style.fontStyle = 'italic';
       }
 
@@ -3350,7 +3350,7 @@ const mxUtils = {
     const { drawPane } = view;
     const { overlayPane } = view;
 
-    if (graph.dialect == mxConstants.DIALECT_SVG) {
+    if (graph.dialect === mxConstants.DIALECT_SVG) {
       view.drawPane = document.createElementNS(mxConstants.NS_SVG, 'g');
       view.canvas.appendChild(view.drawPane);
 
