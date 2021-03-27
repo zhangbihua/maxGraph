@@ -2886,3 +2886,5 @@ class mxEditor extends mxEventSource {
 }
 
 export default mxEditor;
+import("../io/mxEditorCodec");
+

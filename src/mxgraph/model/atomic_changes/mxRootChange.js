@@ -28,3 +28,5 @@ class mxRootChange {
 }
 
 export default mxRootChange;
+import("../../io/mxRootChangeCodec");
+

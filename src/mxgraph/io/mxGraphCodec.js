@@ -6,6 +6,7 @@
 
 import mxGraph from '../view/mxGraph';
 import mxCodecRegistry from './mxCodecRegistry';
+import mxObjectCodec from "./mxObjectCodec";
 
 class mxGraphCodec extends mxObjectCodec {
   /**

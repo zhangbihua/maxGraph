@@ -34,3 +34,5 @@ class mxGeometryChange {
 }
 
 export default mxGeometryChange;
+import("../../io/mxGenericChangeCodec");
+

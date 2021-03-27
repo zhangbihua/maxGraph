@@ -7,6 +7,10 @@
 import mxStylesheet from '../view/mxStylesheet';
 import mxUtils from '../util/mxUtils';
 import mxCodecRegistry from './mxCodecRegistry';
+import mxConstants from "../util/mxConstants";
+import mxLog from "../util/mxLog";
+import mxStyleRegistry from "../view/mxStyleRegistry";
+import mxObjectCodec from "./mxObjectCodec";
 
 class mxStylesheetCodec extends mxObjectCodec {
   /**

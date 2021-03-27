@@ -293,7 +293,7 @@ class mxCell {
    * Returns true if the cell is a vertex.
    */
   isVertex() {
-    return this.vertex != 0;
+    return !!this.vertex;
   }
 
   /**
@@ -316,7 +316,7 @@ class mxCell {
    * Returns true if the cell is an edge.
    */
   isEdge() {
-    return this.edge != 0;
+    return !!this.edge;
   }
 
   /**
@@ -339,7 +339,7 @@ class mxCell {
    * Returns true if the cell is connectable.
    */
   isConnectable() {
-    return this.connectable != 0;
+    return !!this.connectable;
   }
 
   /**
@@ -361,7 +361,7 @@ class mxCell {
    * Returns true if the cell is visibile.
    */
   isVisible() {
-    return this.visible != 0;
+    return !!this.visible;
   }
 
   /**
@@ -383,7 +383,7 @@ class mxCell {
    * Returns true if the cell is collapsed.
    */
   isCollapsed() {
-    return this.collapsed != 0;
+    return !!this.collapsed;
   }
 
   /**
@@ -452,7 +452,6 @@ class mxCell {
     } else {
       this.target = terminal;
     }
-
     return terminal;
   }
 
@@ -510,7 +509,7 @@ class mxCell {
       if (index == null) {
         index = this.getChildCount();
 
-        if (child.getParent() == this) {
+        if (child.getParent() === this) {
           index--;
         }
       }
@@ -543,16 +542,13 @@ class mxCell {
    */
   remove(index) {
     let child = null;
-
     if (this.children != null && index >= 0) {
       child = this.getChildAt(index);
-
       if (child != null) {
         this.children.splice(index, 1);
         child.setParent(null);
       }
     }
-
     return child;
   }
 
@@ -621,7 +617,7 @@ class mxCell {
 
       if (
         this.edges == null ||
-        edge.getTerminal(!isOutgoing) != this ||
+        edge.getTerminal(!isOutgoing) !== this ||
         mxUtils.indexOf(this.edges, edge) < 0
       ) {
         if (this.edges == null) {
@@ -648,7 +644,7 @@ class mxCell {
    */
   removeEdge(edge, isOutgoing) {
     if (edge != null) {
-      if (edge.getTerminal(!isOutgoing) != this && this.edges != null) {
+      if (edge.getTerminal(!isOutgoing) !== this && this.edges != null) {
         const index = this.getEdgeIndex(edge);
 
         if (index >= 0) {
@@ -779,3 +775,4 @@ class mxCell {
 }
 
 export default mxCell;
+import("../io/mxCellCodec");

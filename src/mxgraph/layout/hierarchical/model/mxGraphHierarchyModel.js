@@ -138,7 +138,7 @@ class mxGraphHierarchyModel {
           let targetCell = layout.getVisibleTerminal(realEdge, false);
           let internalTargetCell = this.vertexMapper.get(targetCell);
 
-          if (internalVertices[i] == internalTargetCell) {
+          if (internalVertices[i] === internalTargetCell) {
             // If there are parallel edges going between two vertices and not all are in the same direction
             // you can have navigated across one direction when doing the cycle reversal that isn't the same
             // direction as the first real edge in the array above. When that happens the if above catches
@@ -150,11 +150,11 @@ class mxGraphHierarchyModel {
 
           if (
             internalTargetCell != null &&
-            internalVertices[i] != internalTargetCell
+            internalVertices[i] !== internalTargetCell
           ) {
             internalEdge.target = internalTargetCell;
 
-            if (internalTargetCell.connectsAsTarget.length == 0) {
+            if (internalTargetCell.connectsAsTarget.length === 0) {
               internalTargetCell.connectsAsTarget = [];
             }
 
@@ -210,7 +210,7 @@ class mxGraphHierarchyModel {
 
         // Looking for outgoing edges only
         if (
-          cell != vertices[i] &&
+          cell !== vertices[i] &&
           layout.graph.model.isVertex(cell) &&
           !layout.isVertexIgnored(cell)
         ) {
@@ -324,7 +324,7 @@ class mxGraphHierarchyModel {
       for (let i = 0; i < layerDeterminingEdges.length; i += 1) {
         const internalEdge = layerDeterminingEdges[i];
 
-        if (internalEdge.temp[0] == 5270620) {
+        if (internalEdge.temp[0] === 5270620) {
           // This edge has been scanned, get the layer of the
           // node on the other end
           const otherNode = internalEdge.source;
@@ -354,7 +354,7 @@ class mxGraphHierarchyModel {
             const otherNode = internalEdge.target;
 
             // Only add node if it hasn't been assigned a layer
-            if (otherNode.temp[0] == -1) {
+            if (otherNode.temp[0] === -1) {
               startNodes.push(otherNode);
 
               // Mark this other node as neither being
@@ -373,7 +373,7 @@ class mxGraphHierarchyModel {
         const removedCell = startNodes.shift();
         startNodes.push(internalNode);
 
-        if (removedCell == internalNode && startNodes.length == 1) {
+        if (removedCell === internalNode && startNodes.length === 1) {
           // This is an error condition, we can't get out of
           // this loop. It could happen for more than one node
           // but that's a lot harder to detect. Log the error

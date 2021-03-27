@@ -238,7 +238,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
   isVertexIgnored(vertex) {
     return (
       super.isVertexIgnored(vertex) ||
-      this.graph.getConnections(vertex).length == 0
+      this.graph.getConnections(vertex).length === 0
     );
   }
 
@@ -323,7 +323,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
       this.parentY = null;
 
       if (
-        parent != this.root &&
+        parent !== this.root &&
         model.isVertex(parent) != null &&
         this.maintainParentLocation
       ) {
@@ -381,7 +381,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
               dy = Math.abs(y0 - bounds.y);
             }
 
-            if (dx != 0 || dy != 0) {
+            if (dx !== 0 || dy !== 0) {
               this.moveNode(this.node, dx, dy);
             }
 
@@ -448,7 +448,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
         lookup.put(end1, p1);
       }
 
-      const end2 = e2.getTerminal(e2.getTerminal(false) == source);
+      const end2 = e2.getTerminal(e2.getTerminal(false) === source);
       let p2 = lookup.get(end2);
 
       if (p2 == null) {
@@ -812,7 +812,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
     let dy = 0;
     let s = 0;
 
-    if (line2.dx == 0) {
+    if (line2.dx === 0) {
       dy = line2.dy;
     } else {
       s = dx * line2.dy;

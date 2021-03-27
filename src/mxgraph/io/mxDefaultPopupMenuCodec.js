@@ -6,6 +6,7 @@
 
 import mxDefaultPopupMenu from '../editor/mxDefaultPopupMenu';
 import mxCodecRegistry from './mxCodecRegistry';
+import mxObjectCodec from "./mxObjectCodec";
 
 class mxDefaultPopupMenuCodec extends mxObjectCodec {
   /**

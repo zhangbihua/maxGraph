@@ -34,3 +34,5 @@ class mxCollapseChange {
 }
 
 export default mxCollapseChange;
+import("../../io/mxGenericChangeCodec");
+

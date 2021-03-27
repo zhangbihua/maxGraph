@@ -7,6 +7,8 @@
 import mxCell from '../model/mxCell';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
+import mxUtils from "../util/mxUtils";
+import mxConstants from "../util/mxConstants";
 
 class mxCellCodec extends mxObjectCodec {
   /**

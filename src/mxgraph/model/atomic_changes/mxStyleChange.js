@@ -31,3 +31,5 @@ class mxStyleChange {
 }
 
 export default mxStyleChange;
+import("../../io/mxGenericChangeCodec");
+

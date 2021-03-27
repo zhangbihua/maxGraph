@@ -36,3 +36,5 @@ class mxTerminalChange {
 }
 
 export default mxTerminalChange;
+import("../../io/mxTerminalChangeCodec");
+

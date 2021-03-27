@@ -4,12 +4,13 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from "../util/mxUtils";
 import mxObjectIdentity from "../util/mxObjectIdentity";
 import mxLog from "../util/mxLog";
 import mxGeometry from "../model/mxGeometry";
 import mxPoint from "../util/mxPoint";
 import mxConstants from "../util/mxConstants";
+import mxUtils from "../util/mxUtils";
+
 
 class mxObjectCodec {
   /**
@@ -277,7 +278,7 @@ class mxObjectCodec {
    * returns the classname of the template class.
    */
   getName() {
-    return mxUtils.getFunctionName(this.template.constructor);
+    return this.template.constructor.name;
   }
 
   /**
@@ -971,11 +972,9 @@ class mxObjectCodec {
   processInclude(dec, node, into) {
     if (node.nodeName === 'include') {
       const name = node.getAttribute('name');
-
       if (name != null) {
         try {
           const xml = mxUtils.load(name).getDocumentElement();
-
           if (xml != null) {
             dec.decode(xml, into);
           }
@@ -983,10 +982,8 @@ class mxObjectCodec {
           // ignore
         }
       }
-
       return true;
     }
-
     return false;
   }
 

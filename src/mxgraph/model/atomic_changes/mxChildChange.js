@@ -93,3 +93,5 @@ class mxChildChange {
 }
 
 export default mxChildChange;
+import("../../io/mxChildChangeCodec");
+

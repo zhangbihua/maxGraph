@@ -8,6 +8,7 @@ import mxUtils from './mxUtils';
 import mxEventObject from './mxEventObject';
 import mxClient from '../mxClient';
 import mxEvent from './mxEvent';
+import "../io/mxDefaultPopupMenuCodec";
 
 class mxPopupMenu extends mxEventSource {
   /**

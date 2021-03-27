@@ -738,9 +738,9 @@ class mxStencil extends mxShape {
 
             // Depends on flipping
             const flipH =
-              mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPH, 0) === 1;
+              mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPH, 0) == 1;
             const flipV =
-              mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPV, 0) === 1;
+              mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPV, 0) == 1;
 
             if (flipH && flipV) {
               rotation -= dr;

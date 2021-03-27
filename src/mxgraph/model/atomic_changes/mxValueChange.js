@@ -29,4 +29,7 @@ class mxValueChange {
     }
   }
 }
+
 export default mxValueChange;
+import("../../io/mxGenericChangeCodec");
+

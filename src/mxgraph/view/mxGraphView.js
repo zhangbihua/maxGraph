@@ -1637,17 +1637,17 @@ class mxGraphView extends mxEventSource {
 
           if (this.graph.model.isVertex(terminal.cell)) {
             flipH =
-              mxUtils.getValue(terminal.style, mxConstants.STYLE_FLIPH, 0) === 1;
+              mxUtils.getValue(terminal.style, mxConstants.STYLE_FLIPH, 0) == 1;
             flipV =
-              mxUtils.getValue(terminal.style, mxConstants.STYLE_FLIPV, 0) === 1;
+              mxUtils.getValue(terminal.style, mxConstants.STYLE_FLIPV, 0) == 1;
 
             // Legacy support for stencilFlipH/V
             if (terminal.shape != null && terminal.shape.stencil != null) {
               flipH =
-                mxUtils.getValue(terminal.style, 'stencilFlipH', 0) === 1 ||
+                mxUtils.getValue(terminal.style, 'stencilFlipH', 0) == 1 ||
                 flipH;
               flipV =
-                mxUtils.getValue(terminal.style, 'stencilFlipV', 0) === 1 ||
+                mxUtils.getValue(terminal.style, 'stencilFlipV', 0) == 1 ||
                 flipV;
             }
 
@@ -2817,3 +2817,5 @@ class mxGraphView extends mxEventSource {
 }
 
 export default mxGraphView;
+import("../io/mxGraphViewCodec");
+

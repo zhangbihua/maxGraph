@@ -347,7 +347,7 @@ class mxStackLayout extends mxGraphLayout {
           mxConstants.DEFAULT_STARTSIZE
         );
         const horz =
-          mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true) === 1;
+          mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true) == 1;
 
         if (pgeo != null) {
           if (horz) {

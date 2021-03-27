@@ -14,7 +14,6 @@ import mxEventObject from '../util/mxEventObject';
 import mxEvent from '../util/mxEvent';
 import mxPoint from '../util/mxPoint';
 
-import mxCellAttributeChange from './atomic_changes/mxCellAttributeChange';
 import mxChildChange from './atomic_changes/mxChildChange';
 import mxCollapseChange from './atomic_changes/mxCollapseChange';
 import mxGeometryChange from './atomic_changes/mxGeometryChange';
@@ -531,7 +530,7 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> that represents the possible root.
    */
   isRoot(cell) {
-    return cell != null && this.root == cell;
+    return cell != null && this.root === cell;
   }
 
   /**
@@ -559,11 +558,11 @@ class mxGraphModel extends mxEventSource {
    * child - <mxCell> that specifies the child.
    */
   isAncestor(parent, child) {
-    while (child != null && child != parent) {
+    while (child != null && child !== parent) {
       child = this.getParent(child);
     }
 
-    return child == parent;
+    return child === parent;
   }
 
   /**
@@ -607,13 +606,13 @@ class mxGraphModel extends mxEventSource {
    * index - Optional integer that specifies the index of the child.
    */
   add(parent, child, index) {
-    if (child != parent && parent != null && child != null) {
+    if (child !== parent && parent != null && child != null) {
       // Appends the child if no index was specified
       if (index == null) {
         index = this.getChildCount(parent);
       }
 
-      const parentChanged = parent != this.getParent(child);
+      const parentChanged = parent !== this.getParent(child);
       this.execute(new mxChildChange(this, parent, child, index));
 
       // Maintains the edges parents by moving the edges
@@ -658,7 +657,7 @@ class mxGraphModel extends mxEventSource {
       if (cell.getId() != null) {
         let collision = this.getCell(cell.getId());
 
-        if (collision != cell) {
+        if (collision !== cell) {
           // Creates new Id for the cell
           // as long as there is a collision
           while (collision != null) {
@@ -2166,3 +2165,5 @@ class mxGraphModel extends mxEventSource {
 // Atomic changes
 //
 export default mxGraphModel;
+import("../io/mxModelCodec");
+

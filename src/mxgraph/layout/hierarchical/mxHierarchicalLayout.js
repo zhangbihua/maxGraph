@@ -321,14 +321,14 @@ class mxHierarchicalLayout extends mxGraphLayout {
           for (let k = 0; k < conns.length; k++) {
             const src = this.getVisibleTerminal(conns[k], true);
 
-            if (src == cell) {
+            if (src === cell) {
               fanOut++;
             } else {
               fanIn++;
             }
           }
 
-          if (fanIn == 0 && fanOut > 0) {
+          if (fanIn === 0 && fanOut > 0) {
             roots.push(cell);
           }
 
@@ -341,7 +341,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
         }
       }
 
-      if (roots.length == 0 && best != null) {
+      if (roots.length === 0 && best != null) {
         roots.push(best);
       }
     }
@@ -388,12 +388,12 @@ class mxHierarchicalLayout extends mxGraphLayout {
       const target = this.getVisibleTerminal(edges[i], false);
 
       if (
-        source == target ||
-        (source != target &&
-          ((target == cell &&
+        source === target ||
+        (source !== target &&
+          ((target === cell &&
             (this.parent == null ||
               this.isAncestor(this.parent, source, this.traverseAncestors))) ||
-            (source == cell &&
+            (source === cell &&
               (this.parent == null ||
                 this.isAncestor(this.parent, target, this.traverseAncestors)))))
       ) {
@@ -577,7 +577,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
     if (
       model.isVertex(cell) &&
-      cell != this.parent &&
+      cell !== this.parent &&
       this.graph.isCellVisible(cell)
     ) {
       result[mxObjectIdentity.get(cell)] = cell;
@@ -585,7 +585,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
     if (
       this.traverseAncestors ||
-      (cell == this.parent && this.graph.isCellVisible(cell))
+      (cell === this.parent && this.graph.isCellVisible(cell))
     ) {
       const childCount = model.getChildCount(cell);
 
@@ -642,8 +642,8 @@ class mxHierarchicalLayout extends mxGraphLayout {
       const trg = this.getVisibleTerminal(edges[i], false);
 
       if (
-        (src == source && trg == target) ||
-        (!directed && src == target && trg == source)
+        (src === source && trg === target) ||
+        (!directed && src === target && trg === source)
       ) {
         result.push(edges[i]);
       }
@@ -717,12 +717,12 @@ class mxHierarchicalLayout extends mxGraphLayout {
             let netCount = 1;
 
             for (let j = 0; j < edges.length; j++) {
-              if (j == i) {
+              if (j === i) {
               } else {
                 const isSource2 = edgeIsSource[j];
                 const otherTerm = this.getVisibleTerminal(edges[j], !isSource2);
 
-                if (otherTerm == next) {
+                if (otherTerm === next) {
                   if (isSource2) {
                     netCount++;
                   } else {

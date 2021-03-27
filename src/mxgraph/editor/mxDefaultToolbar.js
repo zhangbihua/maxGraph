@@ -519,3 +519,5 @@ class mxDefaultToolbar {
 }
 
 export default mxDefaultToolbar;
+import("../io/mxDefaultToolbarCodec");
+

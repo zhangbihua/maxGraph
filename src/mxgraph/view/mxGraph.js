@@ -6631,10 +6631,10 @@ class mxGraph extends mxEventSource {
           terminalState.shape.stencil != null
         ) {
           flipH =
-            mxUtils.getValue(terminalState.style, 'stencilFlipH', 0) === 1 ||
+            mxUtils.getValue(terminalState.style, 'stencilFlipH', 0) == 1 ||
             flipH;
           flipV =
-            mxUtils.getValue(terminalState.style, 'stencilFlipV', 0) === 1 ||
+            mxUtils.getValue(terminalState.style, 'stencilFlipV', 0) == 1 ||
             flipV;
         }
 
@@ -12974,3 +12974,5 @@ if (mxClient.mxLoadResources) {
 }
 
 export default mxGraph;
+import("../io/mxGraphCodec");
+

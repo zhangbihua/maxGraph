@@ -6,6 +6,8 @@
 
 import mxRootChange from '../model/atomic_changes/mxRootChange';
 import mxCodecRegistry from './mxCodecRegistry';
+import mxConstants from "../util/mxConstants";
+import mxObjectCodec from "./mxObjectCodec";
 
 class mxRootChangeCodec extends mxObjectCodec {
   /**

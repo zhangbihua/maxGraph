@@ -4,7 +4,6 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from '../util/mxUtils';
 import mxObjectCodec from './mxObjectCodec';
 
 const mxCodecRegistry = {
@@ -70,7 +69,7 @@ const mxCodecRegistry = {
       const name = codec.getName();
       mxCodecRegistry.codecs[name] = codec;
 
-      const classname = mxUtils.getFunctionName(codec.template.constructor);
+      const classname = codec.template.constructor.name;
 
       if (classname !== name) {
         mxCodecRegistry.addAlias(classname, name);
@@ -99,11 +98,11 @@ const mxCodecRegistry = {
    *
    * ctor - JavaScript constructor function.
    */
-  getCodec: ctor => {
+  getCodec: constructor_ => {
     let codec = null;
 
-    if (ctor != null) {
-      let name = mxUtils.getFunctionName(ctor);
+    if (constructor_ != null) {
+      let name = constructor_.name;
       const tmp = mxCodecRegistry.aliases[name];
 
       if (tmp != null) {
@@ -116,7 +115,7 @@ const mxCodecRegistry = {
       // if no codec has been previously defined.
       if (codec == null) {
         try {
-          codec = new mxObjectCodec(new ctor());
+          codec = new mxObjectCodec(new constructor_());
           mxCodecRegistry.register(codec);
         } catch (e) {
           // ignore

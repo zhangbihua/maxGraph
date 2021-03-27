@@ -34,3 +34,5 @@ class mxVisibleChange {
 }
 
 export default mxVisibleChange;
+import("../../io/mxGenericChangeCodec");
+

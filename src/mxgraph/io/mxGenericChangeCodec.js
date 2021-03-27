@@ -12,6 +12,7 @@ import mxCollapseChange from '../model/atomic_changes/mxCollapseChange';
 import mxVisibleChange from '../model/atomic_changes/mxVisibleChange';
 import mxCellAttributeChange from '../model/atomic_changes/mxCellAttributeChange';
 import mxCodecRegistry from './mxCodecRegistry';
+import mxUtils from "../util/mxUtils";
 
 class mxGenericChangeCodec extends mxObjectCodec {
   /**
@@ -64,17 +65,19 @@ class mxGenericChangeCodec extends mxObjectCodec {
 }
 
 // Registers the codecs
-mxCodecRegistry.register(mxGenericChangeCodec(new mxValueChange(), 'value'));
-mxCodecRegistry.register(mxGenericChangeCodec(new mxStyleChange(), 'style'));
+mxCodecRegistry.register(new mxGenericChangeCodec(new mxValueChange(), 'value'));
+mxCodecRegistry.register(new mxGenericChangeCodec(new mxStyleChange(), 'style'));
 mxCodecRegistry.register(
-  mxGenericChangeCodec(new mxGeometryChange(), 'geometry')
+  new mxGenericChangeCodec(new mxGeometryChange(), 'geometry')
 );
 mxCodecRegistry.register(
-  mxGenericChangeCodec(new mxCollapseChange(), 'collapsed')
+  new mxGenericChangeCodec(new mxCollapseChange(), 'collapsed')
 );
 mxCodecRegistry.register(
-  mxGenericChangeCodec(new mxVisibleChange(), 'visible')
+  new mxGenericChangeCodec(new mxVisibleChange(), 'visible')
 );
 mxCodecRegistry.register(
-  mxGenericChangeCodec(new mxCellAttributeChange(), 'value')
+  new mxGenericChangeCodec(new mxCellAttributeChange(), 'value')
 );
+
+export default mxGenericChangeCodec;

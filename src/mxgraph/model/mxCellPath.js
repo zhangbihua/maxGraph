@@ -89,15 +89,12 @@ const mxCellPath = {
    */
   resolve: (root, path) => {
     let parent = root;
-
     if (path != null) {
       const tokens = path.split(mxCellPath.PATH_SEPARATOR);
-
       for (let i = 0; i < tokens.length; i += 1) {
         parent = parent.getChildAt(parseInt(tokens[i]));
       }
     }
-
     return parent;
   },
 
@@ -112,30 +109,26 @@ const mxCellPath = {
     let comp = 0;
 
     for (let i = 0; i < min; i += 1) {
-      if (p1[i] != p2[i]) {
-        if (p1[i].length == 0 || p2[i].length == 0) {
-          comp = p1[i] == p2[i] ? 0 : p1[i] > p2[i] ? 1 : -1;
+      if (p1[i] !== p2[i]) {
+        if (p1[i].length === 0 || p2[i].length === 0) {
+          comp = p1[i] === p2[i] ? 0 : p1[i] > p2[i] ? 1 : -1;
         } else {
-          var t1 = parseInt(p1[i]);
-          var t2 = parseInt(p2[i]);
-
-          comp = t1 == t2 ? 0 : t1 > t2 ? 1 : -1;
+          const t1 = parseInt(p1[i]);
+          const t2 = parseInt(p2[i]);
+          comp = t1 === t2 ? 0 : t1 > t2 ? 1 : -1;
         }
-
         break;
       }
     }
 
     // Compares path length if both paths are equal to this point
     if (comp === 0) {
-      var t1 = p1.length;
-      var t2 = p2.length;
-
+      const t1 = p1.length;
+      const t2 = p2.length;
       if (t1 !== t2) {
         comp = t1 > t2 ? 1 : -1;
       }
     }
-
     return comp;
   },
 };
