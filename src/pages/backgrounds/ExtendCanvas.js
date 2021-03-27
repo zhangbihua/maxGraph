@@ -40,32 +40,26 @@ class ExtendCanvas extends React.Component {
   }
 
   componentDidMount() {
-    const config = {
-      panningHandler: {
-        ignoreCell: true,
-      },
-    };
-
     // Disables the built-in context menu
     mxEvent.disableContextMenu(this.el);
 
-    class MyCustomGraph extends mxGraph {
-      /**
-       * Specifies the size of the size for "tiles" to be used for a graph with
-       * scrollbars but no visible background page. A good value is large
-       * enough to reduce the number of repaints that is caused for auto-
-       * translation, which depends on this value, and small enough to give
-       * a small empty buffer around the graph. Default is 400x400.
-       */
-      scrollTileSize = new mxRectangle(0, 0, 400, 400);
+    /**
+     * Specifies the size of the size for "tiles" to be used for a graph with
+     * scrollbars but no visible background page. A good value is large
+     * enough to reduce the number of repaints that is caused for auto-
+     * translation, which depends on this value, and small enough to give
+     * a small empty buffer around the graph. Default is 400x400.
+     */
+    const scrollTileSize = new mxRectangle(0, 0, 400, 400);
 
+    class MyCustomGraph extends mxGraph {
       /**
        * Returns the padding for pages in page view with scrollbars.
        */
       getPagePadding() {
         return new mxPoint(
-          Math.max(0, Math.round(graph.container.offsetWidth - 34)),
-          Math.max(0, Math.round(graph.container.offsetHeight - 34))
+          Math.max(0, Math.round(this.container.offsetWidth - 34)),
+          Math.max(0, Math.round(this.container.offsetHeight - 34))
         );
       }
 
@@ -80,7 +74,7 @@ class ExtendCanvas extends React.Component {
               this.pageFormat.width * this.pageScale,
               this.pageFormat.height * this.pageScale
             )
-          : this.scrollTileSize;
+          : scrollTileSize;
       }
 
       /**
@@ -92,7 +86,7 @@ class ExtendCanvas extends React.Component {
       getPageLayout() {
         const size = this.pageVisible
           ? this.getPageSize()
-          : this.scrollTileSize;
+          : scrollTileSize;
         const bounds = this.getGraphBounds();
 
         if (bounds.width === 0 || bounds.height === 0) {
@@ -139,12 +133,12 @@ class ExtendCanvas extends React.Component {
             (2 * pad.y) / this.view.scale + pages.height * size.height
           );
 
-          const min = graph.minimumGraphSize;
+          const min = this.minimumGraphSize;
 
           // LATER: Fix flicker of scrollbar size in IE quirks mode
           // after delayed call in window.resize event handler
           if (min == null || min.width !== minw || min.height !== minh) {
-            graph.minimumGraphSize = new mxRectangle(0, 0, minw, minh);
+            this.minimumGraphSize = new mxRectangle(0, 0, minw, minh);
           }
 
           // Updates auto-translate to include padding and graph size
@@ -162,24 +156,23 @@ class ExtendCanvas extends React.Component {
             // NOTE: THIS INVOKES THIS METHOD AGAIN. UNFORTUNATELY THERE IS NO WAY AROUND THIS SINCE THE
             // BOUNDS ARE KNOWN AFTER THE VALIDATION AND SETTING THE TRANSLATE TRIGGERS A REVALIDATION.
             // SHOULD MOVE TRANSLATE/SCALE TO VIEW.
-            const tx = graph.view.translate.x;
-            const ty = graph.view.translate.y;
+            const tx = this.view.translate.x;
+            const ty = this.view.translate.y;
 
-            graph.view.setTranslate(dx, dy);
-            graph.container.scrollLeft += (dx - tx) * graph.view.scale;
-            graph.container.scrollTop += (dy - ty) * graph.view.scale;
+            this.view.setTranslate(dx, dy);
+            this.container.scrollLeft += (dx - tx) * this.view.scale;
+            this.container.scrollTop += (dy - ty) * this.view.scale;
 
             this.autoTranslate = false;
             return;
           }
-
           super.sizeDidChange();
         }
       }
     }
 
     // Creates the graph inside the given container
-    const graph = new MyCustomGraph(this.el);
+    const graph = this.graph = new MyCustomGraph(this.el);
     graph.panningHandler.ignoreCell = true;
     graph.setPanning(true);
 
@@ -250,15 +243,15 @@ class ExtendCanvas extends React.Component {
     });
 
     // Sets initial scrollbar positions
-    window.setTimeout(function() {
+    window.setTimeout(() => {
       const bounds = graph.getGraphBounds();
       const width = Math.max(
         bounds.width,
-        graph.scrollTileSize.width * graph.view.scale
+        scrollTileSize.width * graph.view.scale
       );
       const height = Math.max(
         bounds.height,
-        graph.scrollTileSize.height * graph.view.scale
+        scrollTileSize.height * graph.view.scale
       );
       graph.container.scrollTop = Math.floor(
         Math.max(
