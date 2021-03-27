@@ -6,7 +6,7 @@
 
 import mxUtils from '../util/mxUtils';
 import mxPoint from '../util/mxPoint';
-import mxConstants from "../util/mxConstants";
+import mxConstants from '../util/mxConstants';
 
 const mxPerimeter = {
   /**
@@ -158,10 +158,10 @@ const mxPerimeter = {
     const dx = parseInt(px - cx);
     const dy = parseInt(py - cy);
 
-    if (dx == 0 && dy != 0) {
+    if (dx === 0 && dy !== 0) {
       return new mxPoint(cx, cy + (b * dy) / Math.abs(dy));
     }
-    if (dx == 0 && dy == 0) {
+    if (dx === 0 && dy === 0) {
       return new mxPoint(px, py);
     }
 
@@ -239,13 +239,13 @@ const mxPerimeter = {
     const py = next.y;
 
     // Special case for intersecting the diamond's corners
-    if (cx == px) {
+    if (cx === px) {
       if (cy > py) {
         return new mxPoint(cx, y); // top
       }
       return new mxPoint(cx, y + h); // bottom
     }
-    if (cy == py) {
+    if (cy === py) {
       if (cx > px) {
         return new mxPoint(x, cy); // left
       }
@@ -287,8 +287,8 @@ const mxPerimeter = {
     const direction =
       vertex != null ? vertex.style[mxConstants.STYLE_DIRECTION] : null;
     const vertical =
-      direction == mxConstants.DIRECTION_NORTH ||
-      direction == mxConstants.DIRECTION_SOUTH;
+      direction === mxConstants.DIRECTION_NORTH ||
+      direction === mxConstants.DIRECTION_SOUTH;
 
     const { x } = bounds;
     const { y } = bounds;
@@ -302,14 +302,14 @@ const mxPerimeter = {
     let corner = new mxPoint(x + w, cy);
     let end = new mxPoint(x, y + h);
 
-    if (direction == mxConstants.DIRECTION_NORTH) {
+    if (direction === mxConstants.DIRECTION_NORTH) {
       start = end;
       corner = new mxPoint(cx, y);
       end = new mxPoint(x + w, y + h);
-    } else if (direction == mxConstants.DIRECTION_SOUTH) {
+    } else if (direction === mxConstants.DIRECTION_SOUTH) {
       corner = new mxPoint(cx, y + h);
       end = new mxPoint(x + w, y);
-    } else if (direction == mxConstants.DIRECTION_WEST) {
+    } else if (direction === mxConstants.DIRECTION_WEST) {
       start = new mxPoint(x + w, y);
       corner = new mxPoint(x, cy);
       end = new mxPoint(x + w, y + h);
@@ -324,8 +324,8 @@ const mxPerimeter = {
     let base = false;
 
     if (
-      direction == mxConstants.DIRECTION_NORTH ||
-      direction == mxConstants.DIRECTION_WEST
+      direction === mxConstants.DIRECTION_NORTH ||
+      direction === mxConstants.DIRECTION_WEST
     ) {
       base = alpha > -t && alpha < t;
     } else {
@@ -345,11 +345,11 @@ const mxPerimeter = {
         } else {
           result = new mxPoint(start.x, next.y);
         }
-      } else if (direction == mxConstants.DIRECTION_NORTH) {
+      } else if (direction === mxConstants.DIRECTION_NORTH) {
         result = new mxPoint(x + w / 2 + (h * Math.tan(alpha)) / 2, y + h);
-      } else if (direction == mxConstants.DIRECTION_SOUTH) {
+      } else if (direction === mxConstants.DIRECTION_SOUTH) {
         result = new mxPoint(x + w / 2 - (h * Math.tan(alpha)) / 2, y);
-      } else if (direction == mxConstants.DIRECTION_WEST) {
+      } else if (direction === mxConstants.DIRECTION_WEST) {
         result = new mxPoint(x + w, y + h / 2 + (w * Math.tan(alpha)) / 2);
       } else {
         result = new mxPoint(x, y + h / 2 - (w * Math.tan(alpha)) / 2);
@@ -361,7 +361,7 @@ const mxPerimeter = {
         if (next.y >= y && next.y <= y + h) {
           pt.x = vertical
             ? cx
-            : direction == mxConstants.DIRECTION_WEST
+            : direction === mxConstants.DIRECTION_WEST
             ? x + w
             : x;
           pt.y = next.y;
@@ -369,7 +369,7 @@ const mxPerimeter = {
           pt.x = next.x;
           pt.y = !vertical
             ? cy
-            : direction == mxConstants.DIRECTION_NORTH
+            : direction === mxConstants.DIRECTION_NORTH
             ? y + h
             : y;
         }
@@ -450,8 +450,8 @@ const mxPerimeter = {
           )
         : mxConstants.DIRECTION_EAST;
     const vertical =
-      direction == mxConstants.DIRECTION_NORTH ||
-      direction == mxConstants.DIRECTION_SOUTH;
+      direction === mxConstants.DIRECTION_NORTH ||
+      direction === mxConstants.DIRECTION_SOUTH;
     let a = new mxPoint();
     let b = new mxPoint();
 
@@ -468,7 +468,7 @@ const mxPerimeter = {
     if (orthogonal) {
       if (vertical) {
         // Special cases where intersects with hexagon corners
-        if (px == cx) {
+        if (px === cx) {
           if (py <= y) {
             return new mxPoint(cx, y);
           }
@@ -476,27 +476,27 @@ const mxPerimeter = {
             return new mxPoint(cx, y + h);
           }
         } else if (px < x) {
-          if (py == y + h / 4) {
+          if (py === y + h / 4) {
             return new mxPoint(x, y + h / 4);
           }
-          if (py == y + (3 * h) / 4) {
+          if (py === y + (3 * h) / 4) {
             return new mxPoint(x, y + (3 * h) / 4);
           }
         } else if (px > x + w) {
-          if (py == y + h / 4) {
+          if (py === y + h / 4) {
             return new mxPoint(x + w, y + h / 4);
           }
-          if (py == y + (3 * h) / 4) {
+          if (py === y + (3 * h) / 4) {
             return new mxPoint(x + w, y + (3 * h) / 4);
           }
-        } else if (px == x) {
+        } else if (px === x) {
           if (py < cy) {
             return new mxPoint(x, y + h / 4);
           }
           if (py > cy) {
             return new mxPoint(x, y + (3 * h) / 4);
           }
-        } else if (px == x + w) {
+        } else if (px === x + w) {
           if (py < cy) {
             return new mxPoint(x + w, y + h / 4);
           }
@@ -504,10 +504,10 @@ const mxPerimeter = {
             return new mxPoint(x + w, y + (3 * h) / 4);
           }
         }
-        if (py == y) {
+        if (py === y) {
           return new mxPoint(cx, y);
         }
-        if (py == y + h) {
+        if (py === y + h) {
           return new mxPoint(cx, y + h);
         }
 
@@ -536,7 +536,7 @@ const mxPerimeter = {
         }
       } else {
         // Special cases where intersects with hexagon corners
-        if (py == cy) {
+        if (py === cy) {
           if (px <= x) {
             return new mxPoint(x, y + h / 2);
           }
@@ -544,27 +544,27 @@ const mxPerimeter = {
             return new mxPoint(x + w, y + h / 2);
           }
         } else if (py < y) {
-          if (px == x + w / 4) {
+          if (px === x + w / 4) {
             return new mxPoint(x + w / 4, y);
           }
-          if (px == x + (3 * w) / 4) {
+          if (px === x + (3 * w) / 4) {
             return new mxPoint(x + (3 * w) / 4, y);
           }
         } else if (py > y + h) {
-          if (px == x + w / 4) {
+          if (px === x + w / 4) {
             return new mxPoint(x + w / 4, y + h);
           }
-          if (px == x + (3 * w) / 4) {
+          if (px === x + (3 * w) / 4) {
             return new mxPoint(x + (3 * w) / 4, y + h);
           }
-        } else if (py == y) {
+        } else if (py === y) {
           if (px < cx) {
             return new mxPoint(x + w / 4, y);
           }
           if (px > cx) {
             return new mxPoint(x + (3 * w) / 4, y);
           }
-        } else if (py == y + h) {
+        } else if (py === y + h) {
           if (px < cx) {
             return new mxPoint(x + w / 4, y + h);
           }
@@ -572,10 +572,10 @@ const mxPerimeter = {
             return new mxPoint(x + (3 * w) / 4, y + h);
           }
         }
-        if (px == x) {
+        if (px === x) {
           return new mxPoint(x, cy);
         }
-        if (px == x + w) {
+        if (px === x + w) {
           return new mxPoint(x + w, cy);
         }
 
@@ -631,22 +631,22 @@ const mxPerimeter = {
         const beta = Math.atan2(h / 4, w / 2);
 
         // Special cases where intersects with hexagon corners
-        if (alpha == beta) {
+        if (alpha === beta) {
           return new mxPoint(x + w, y + Math.floor(0.25 * h));
         }
-        if (alpha == pi2) {
+        if (alpha === pi2) {
           return new mxPoint(x + Math.floor(0.5 * w), y);
         }
-        if (alpha == pi - beta) {
+        if (alpha === pi - beta) {
           return new mxPoint(x, y + Math.floor(0.25 * h));
         }
-        if (alpha == -beta) {
+        if (alpha === -beta) {
           return new mxPoint(x + w, y + Math.floor(0.75 * h));
         }
-        if (alpha == -pi2) {
+        if (alpha === -pi2) {
           return new mxPoint(x + Math.floor(0.5 * w), y + h);
         }
-        if (alpha == -pi + beta) {
+        if (alpha === -pi + beta) {
           return new mxPoint(x, y + Math.floor(0.75 * h));
         }
 
@@ -676,22 +676,22 @@ const mxPerimeter = {
         const beta = Math.atan2(h / 2, w / 4);
 
         // Special cases where intersects with hexagon corners
-        if (alpha == beta) {
+        if (alpha === beta) {
           return new mxPoint(x + Math.floor(0.75 * w), y);
         }
-        if (alpha == pi - beta) {
+        if (alpha === pi - beta) {
           return new mxPoint(x + Math.floor(0.25 * w), y);
         }
-        if (alpha == pi || alpha == -pi) {
+        if (alpha === pi || alpha === -pi) {
           return new mxPoint(x, y + Math.floor(0.5 * h));
         }
-        if (alpha == 0) {
+        if (alpha === 0) {
           return new mxPoint(x + w, y + Math.floor(0.5 * h));
         }
-        if (alpha == -beta) {
+        if (alpha === -beta) {
           return new mxPoint(x + Math.floor(0.75 * w), y + h);
         }
-        if (alpha == -pi + beta) {
+        if (alpha === -pi + beta) {
           return new mxPoint(x + Math.floor(0.25 * w), y + h);
         }
 

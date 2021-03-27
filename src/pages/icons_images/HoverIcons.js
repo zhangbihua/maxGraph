@@ -49,77 +49,85 @@ class HoverIcons extends React.Component {
     );
 
     // Defines a new class for all icons
-    function mxIconSet(state) {
-      this.images = [];
-      const { graph } = state.view;
+    class mxIconSet {
+      constructor(state) {
+        this.images = [];
+        const { graph } = state.view;
 
-      // Icon1
-      let img = mxUtils.createImage('images/copy.png');
-      img.setAttribute('title', 'Duplicate');
-      img.style.position = 'absolute';
-      img.style.cursor = 'pointer';
-      img.style.width = '16px';
-      img.style.height = '16px';
-      img.style.left = `${state.x + state.width}px`;
-      img.style.top = `${state.y + state.height}px`;
+        // Icon1
+        let img = mxUtils.createImage('images/copy.png');
+        img.setAttribute('title', 'Duplicate');
+        Object.assign(img.style, {
+          cursor: 'pointer',
+          width: '16px',
+          height: '16px',
+          position: 'absolute',
+          left: `${state.x + state.width}px`,
+          top: `${state.y + state.height}px`,
+        });
 
-      mxEvent.addGestureListeners(img, evt => {
-        const s = graph.gridSize;
-        graph.setSelectionCells(graph.moveCells([state.cell], s, s, true));
-        mxEvent.consume(evt);
-        this.destroy();
-      });
+        mxEvent.addGestureListeners(img, evt => {
+          const s = graph.gridSize;
+          graph.setSelectionCells(graph.moveCells([state.cell], s, s, true));
+          mxEvent.consume(evt);
+          this.destroy();
+        });
 
-      state.view.graph.container.appendChild(img);
-      this.images.push(img);
+        state.view.graph.container.appendChild(img);
+        this.images.push(img);
 
-      // Delete
-      img = mxUtils.createImage('images/delete2.png');
-      img.setAttribute('title', 'Delete');
-      img.style.position = 'absolute';
-      img.style.cursor = 'pointer';
-      img.style.width = '16px';
-      img.style.height = '16px';
-      img.style.left = `${state.x + state.width}px`;
-      img.style.top = `${state.y - 16}px`;
+        // Delete
+        img = mxUtils.createImage('images/delete2.png');
+        img.setAttribute('title', 'Delete');
+        Object.assign(img.style, {
+          cursor: 'pointer',
+          width: '16px',
+          height: '16px',
+          position: 'absolute',
+          left: `${state.x + state.width}px`,
+          top: `${state.y - 16}px`,
+        });
 
-      mxEvent.addGestureListeners(img, evt => {
-        // Disables dragging the image
-        mxEvent.consume(evt);
-      });
+        mxEvent.addGestureListeners(img, evt => {
+          // Disables dragging the image
+          mxEvent.consume(evt);
+        });
 
-      mxEvent.addListener(img, 'click', evt => {
-        graph.removeCells([state.cell]);
-        mxEvent.consume(evt);
-        this.destroy();
-      });
+        mxEvent.addListener(img, 'click', evt => {
+          graph.removeCells([state.cell]);
+          mxEvent.consume(evt);
+          this.destroy();
+        });
 
-      state.view.graph.container.appendChild(img);
-      this.images.push(img);
-    }
-
-    mxIconSet.prototype.destroy = function() {
-      if (this.images != null) {
-        for (let i = 0; i < this.images.length; i++) {
-          const img = this.images[i];
-          img.parentNode.removeChild(img);
-        }
+        state.view.graph.container.appendChild(img);
+        this.images.push(img);
       }
 
-      this.images = null;
-    };
+      destroy() {
+        if (this.images != null) {
+          for (const img of this.images) {
+            img.parentNode.removeChild(img);
+          }
+        }
+        this.images = null;
+      }
+    }
 
     // Creates the graph inside the given container
     const graph = new mxGraph(this.el);
     graph.setConnectable(true);
 
+    // Enables rubberband selection
+    new mxRubberband(graph);
+
     // Defines the tolerance before removing the icons
-    const iconTolerance = 20;
+    const ICON_TOLERANCE = 20;
 
     // Shows icons if the mouse is over a cell
     graph.addMouseListener({
       currentState: null,
       currentIconSet: null,
+
       mouseDown(sender, me) {
         // Hides icons on mouse down
         if (this.currentState != null) {
@@ -127,19 +135,19 @@ class HoverIcons extends React.Component {
           this.currentState = null;
         }
       },
+
       mouseMove(sender, me) {
         if (
           this.currentState != null &&
-          (me.getState() == this.currentState || me.getState() == null)
+          (me.getState() === this.currentState || me.getState() == null)
         ) {
-          const tol = iconTolerance;
+          const tol = ICON_TOLERANCE;
           const tmp = new mxRectangle(
             me.getGraphX() - tol,
             me.getGraphY() - tol,
             2 * tol,
             2 * tol
           );
-
           if (mxUtils.intersects(tmp, this.currentState)) {
             return;
           }
@@ -147,7 +155,7 @@ class HoverIcons extends React.Component {
 
         let tmp = graph.view.getState(me.getCell());
 
-        // Ignores everything but vertices
+        // Ignore everything but vertices
         if (
           graph.isMouseDown ||
           (tmp != null && !graph.getModel().isVertex(tmp.cell))
@@ -155,24 +163,26 @@ class HoverIcons extends React.Component {
           tmp = null;
         }
 
-        if (tmp != this.currentState) {
+        if (tmp !== this.currentState) {
           if (this.currentState != null) {
             this.dragLeave(me.getEvent(), this.currentState);
           }
 
           this.currentState = tmp;
-
           if (this.currentState != null) {
             this.dragEnter(me.getEvent(), this.currentState);
           }
         }
       },
+
       mouseUp(sender, me) {},
+
       dragEnter(evt, state) {
         if (this.currentIconSet == null) {
           this.currentIconSet = new mxIconSet(state);
         }
       },
+
       dragLeave(evt, state) {
         if (this.currentIconSet != null) {
           this.currentIconSet.destroy();
@@ -181,23 +191,30 @@ class HoverIcons extends React.Component {
       },
     });
 
-    // Enables rubberband selection
-    new mxRubberband(graph);
-
     // Gets the default parent for inserting new cells. This
     // is normally the first child of the root (ie. layer 0).
     const parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
-      const v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-      const v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-      const e1 = graph.insertEdge(parent, null, '', v1, v2);
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
-    }
+    graph.batchUpdate(() => {
+      const v1 = graph.insertVertex({
+        parent,
+        value: 'Hello,',
+        position: [20, 20],
+        size: [80, 30],
+      });
+      const v2 = graph.insertVertex({
+        parent,
+        value: 'World!',
+        position: [200, 150],
+        size: [80, 30],
+      });
+      const e1 = graph.insertEdge({
+        parent,
+        source: v1,
+        target: v2,
+      });
+    });
   }
 }
 

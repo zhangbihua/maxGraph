@@ -322,19 +322,19 @@ class mxCellRenderer {
    * the respective color on the shape.
    */
   resolveColor(state, field, key) {
-    const shape = key == mxConstants.STYLE_FONTCOLOR ? state.text : state.shape;
+    const shape = key === mxConstants.STYLE_FONTCOLOR ? state.text : state.shape;
 
     if (shape != null) {
       const { graph } = state.view;
       const value = shape[field];
       let referenced = null;
 
-      if (value == 'inherit') {
+      if (value === 'inherit') {
         referenced = graph.model.getParent(state.cell);
-      } else if (value == 'swimlane') {
+      } else if (value === 'swimlane') {
         shape[field] =
-          key == mxConstants.STYLE_STROKECOLOR ||
-          key == mxConstants.STYLE_FONTCOLOR
+          key === mxConstants.STYLE_STROKECOLOR ||
+          key === mxConstants.STYLE_FONTCOLOR
             ? '#000000'
             : '#ffffff';
 
@@ -346,17 +346,17 @@ class mxCellRenderer {
 
         referenced = graph.getSwimlane(referenced);
         key = graph.swimlaneIndicatorColorAttribute;
-      } else if (value == 'indicated' && state.shape != null) {
+      } else if (value === 'indicated' && state.shape != null) {
         shape[field] = state.shape.indicatorColor;
       } else if (
-        key != mxConstants.STYLE_FILLCOLOR &&
-        value == mxConstants.STYLE_FILLCOLOR &&
+        key !== mxConstants.STYLE_FILLCOLOR &&
+        value === mxConstants.STYLE_FILLCOLOR &&
         state.shape != null
       ) {
         shape[field] = state.style[mxConstants.STYLE_FILLCOLOR];
       } else if (
-        key != mxConstants.STYLE_STROKECOLOR &&
-        value == mxConstants.STYLE_STROKECOLOR &&
+        key !== mxConstants.STYLE_STROKECOLOR &&
+        value === mxConstants.STYLE_STROKECOLOR &&
         state.shape != null
       ) {
         shape[field] = state.style[mxConstants.STYLE_STROKECOLOR];
@@ -368,9 +368,9 @@ class mxCellRenderer {
 
         if (rstate != null) {
           const rshape =
-            key == mxConstants.STYLE_FONTCOLOR ? rstate.text : rstate.shape;
+            key === mxConstants.STYLE_FONTCOLOR ? rstate.text : rstate.shape;
 
-          if (rshape != null && field != 'indicatorColor') {
+          if (rshape != null && field !== 'indicatorColor') {
             shape[field] = rshape[field];
           } else {
             shape[field] = rstate.style[key];
@@ -487,8 +487,8 @@ class mxCellRenderer {
               new mxMouseEvent(evt, state)
             );
             forceGetCell =
-              graph.dialect != mxConstants.DIALECT_SVG &&
-              mxEvent.getSource(evt).nodeName == 'IMG';
+              graph.dialect !== mxConstants.DIALECT_SVG &&
+              mxEvent.getSource(evt).nodeName === 'IMG';
           }
         }),
         mxUtils.bind(this, evt => {
@@ -727,7 +727,7 @@ class mxCellRenderer {
     const isForceHtml =
       graph.isHtmlLabel(state.cell) &&
       mxClient.NO_FO &&
-      graph.dialect == mxConstants.DIALECT_SVG;
+      graph.dialect === mxConstants.DIALECT_SVG;
 
     if (isForceHtml) {
       control.dialect = mxConstants.DIALECT_PREFERHTML;
@@ -847,8 +847,8 @@ class mxCellRenderer {
       let result = state;
 
       if (
-        (graph.dialect != mxConstants.DIALECT_SVG &&
-          mxEvent.getSource(evt).nodeName == 'IMG') ||
+        (graph.dialect !== mxConstants.DIALECT_SVG &&
+          mxEvent.getSource(evt).nodeName === 'IMG') ||
         mxClient.IS_TOUCH
       ) {
         const x = mxEvent.getClientX(evt);
@@ -1292,7 +1292,7 @@ class mxCellRenderer {
         const bounds = shape.overlay.getBounds(state);
 
         if (!state.view.graph.getModel().isEdge(state.cell)) {
-          if (state.shape != null && rot != 0) {
+          if (state.shape != null && rot !== 0) {
             let cx = bounds.getCenterX();
             let cy = bounds.getCenterY();
 
@@ -1313,7 +1313,7 @@ class mxCellRenderer {
         if (
           forced ||
           shape.bounds == null ||
-          shape.scale != state.view.scale ||
+          shape.scale !== state.view.scale ||
           !shape.bounds.equals(bounds)
         ) {
           shape.bounds = bounds;
@@ -1345,9 +1345,9 @@ class mxCellRenderer {
 
       if (
         forced ||
-        state.control.scale != s ||
+        state.control.scale !== s ||
         !state.control.bounds.equals(bounds) ||
-        state.control.rotation != r
+        state.control.rotation !== r
       ) {
         state.control.rotation = r;
         state.control.bounds = bounds;
@@ -1386,7 +1386,7 @@ class mxCellRenderer {
             cy -= t;
           }
 
-          if (rot != 0) {
+          if (rot !== 0) {
             const rad = mxUtils.toRadians(rot);
             const cos = Math.cos(rad);
             const sin = Math.sin(rad);
@@ -1439,11 +1439,11 @@ class mxCellRenderer {
     for (let i = 0; i < shapes.length; i += 1) {
       if (shapes[i] != null && shapes[i].node != null) {
         const html =
-          shapes[i].node.parentNode != state.view.getDrawPane() &&
-          shapes[i].node.parentNode != state.view.getOverlayPane();
+          shapes[i].node.parentNode !== state.view.getDrawPane() &&
+          shapes[i].node.parentNode !== state.view.getOverlayPane();
         const temp = html ? htmlNode : node;
 
-        if (temp != null && temp.nextSibling != shapes[i].node) {
+        if (temp != null && temp.nextSibling !== shapes[i].node) {
           if (temp.nextSibling == null) {
             temp.parentNode.appendChild(shapes[i].node);
           } else {
@@ -1451,18 +1451,18 @@ class mxCellRenderer {
           }
         } else if (temp == null) {
           // Special case: First HTML node should be first sibling after canvas
-          if (shapes[i].node.parentNode == state.view.graph.container) {
+          if (shapes[i].node.parentNode === state.view.graph.container) {
             let { canvas } = state.view;
 
             while (
               canvas != null &&
-              canvas.parentNode != state.view.graph.container
+              canvas.parentNode !== state.view.graph.container
             ) {
               canvas = canvas.parentNode;
             }
 
             if (canvas != null && canvas.nextSibling != null) {
-              if (canvas.nextSibling != shapes[i].node) {
+              if (canvas.nextSibling !== shapes[i].node) {
                 shapes[i].node.parentNode.insertBefore(
                   shapes[i].node,
                   canvas.nextSibling
@@ -1553,7 +1553,7 @@ class mxCellRenderer {
       state.shape != null &&
       state.shape.style != null &&
       state.style != null &&
-      state.shape.style[mxConstants.STYLE_SHAPE] !=
+      state.shape.style[mxConstants.STYLE_SHAPE] !==
         state.style[mxConstants.STYLE_SHAPE]
     ) {
       state.shape.destroy();
@@ -1563,7 +1563,7 @@ class mxCellRenderer {
     if (
       state.shape == null &&
       state.view.graph.container != null &&
-      state.cell != state.view.currentRoot &&
+      state.cell !== state.view.currentRoot &&
       (model.isVertex(state.cell) || model.isEdge(state.cell))
     ) {
       state.shape = this.createShape(state);

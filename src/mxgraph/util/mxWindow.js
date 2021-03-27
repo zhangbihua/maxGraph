@@ -485,7 +485,7 @@ class mxWindow extends mxEventSource {
    */
   isResizable() {
     if (this.resize != null) {
-      return this.resize.style.display != 'none';
+      return this.resize.style.display !== 'none';
     }
 
     return false;
@@ -732,7 +732,7 @@ class mxWindow extends mxEventSource {
     const funct = evt => {
       this.activate();
 
-      if (this.maximize.style.display != 'none') {
+      if (this.maximize.style.display !== 'none') {
         if (!maximized) {
           maximized = true;
 
@@ -767,7 +767,7 @@ class mxWindow extends mxEventSource {
 
           const style = mxUtils.getCurrentStyle(this.contentWrapper);
 
-          if (style.overflow == 'auto' || this.resize != null) {
+          if (style.overflow === 'auto' || this.resize != null) {
             this.contentWrapper.style.height = `${this.div.offsetHeight -
               this.title.offsetHeight -
               this.contentHeightCorrection}px`;
@@ -791,7 +791,7 @@ class mxWindow extends mxEventSource {
 
           const style = mxUtils.getCurrentStyle(this.contentWrapper);
 
-          if (style.overflow == 'auto' || this.resize != null) {
+          if (style.overflow === 'auto' || this.resize != null) {
             this.contentWrapper.style.height = `${this.div.offsetHeight -
               this.title.offsetHeight -
               this.contentHeightCorrection}px`;
@@ -959,7 +959,7 @@ class mxWindow extends mxEventSource {
    */
   isVisible() {
     if (this.div != null) {
-      return this.div.style.display != 'none';
+      return this.div.style.display !== 'none';
     }
 
     return false;
@@ -975,7 +975,7 @@ class mxWindow extends mxEventSource {
    * visible - Boolean indicating if the window should be made visible.
    */
   setVisible(visible) {
-    if (this.div != null && this.isVisible() != visible) {
+    if (this.div != null && this.isVisible() !== visible) {
       if (visible) {
         this.show();
       } else {

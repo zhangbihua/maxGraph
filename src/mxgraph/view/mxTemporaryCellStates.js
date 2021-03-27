@@ -60,13 +60,10 @@ class mxTemporaryCellStates {
 
         state.shape.paint = c => {
           const link = getLinkForCellState(state);
-
           if (link != null) {
             c.setLink(link);
           }
-
           oldPaint.apply(this, [c]);
-
           if (link != null) {
             c.setLink(null);
           }
@@ -99,14 +96,12 @@ class mxTemporaryCellStates {
         const bounds = view.getBoundingBox(
           view.validateCellState(view.validateCell(cells[i]))
         );
-
         if (bbox == null) {
           bbox = bounds;
         } else {
           bbox.add(bounds);
         }
       }
-
       view.setGraphBounds(bbox || new mxRectangle());
     }
   }

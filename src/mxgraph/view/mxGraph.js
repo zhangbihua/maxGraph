@@ -4448,6 +4448,8 @@ class mxGraph extends mxEventSource {
     let height;
     let style;
     let relative;
+    let geometryClass;
+    let cellClass;
 
     if (args.length === 1) {
       // If only a single parameter, treat as an object
@@ -4464,9 +4466,14 @@ class mxGraph extends mxEventSource {
 
       style = params.style;
       relative = params.relative;
+
+      geometryClass = params.geometryClass;
+      cellClass = params.cellClass;
+
     } else {
       // Otherwise treat as arguments
-      [parent, id, value, x, y, width, height, style, relative] = args;
+      [parent, id, value, x, y, width, height, style, relative,
+        geometryClass, cellClass] = args;
     }
 
     const vertex = this.createVertex(
@@ -4478,7 +4485,9 @@ class mxGraph extends mxEventSource {
       width,
       height,
       style,
-      relative
+      relative,
+      geometryClass,
+      cellClass
     );
     return this.addCell(vertex, parent);
   };
@@ -4488,13 +4497,15 @@ class mxGraph extends mxEventSource {
    *
    * Hook method that creates the new vertex for <insertVertex>.
    */
-  createVertex(parent, id, value, x, y, width, height, style, relative) {
+  createVertex(parent, id, value, x, y, width, height, style, relative,
+               geometryClass, cellClass) {
+
     // Creates the geometry for the vertex
-    const geometry = new mxGeometry(x, y, width, height);
+    const geometry = new (geometryClass || mxGeometry)(x, y, width, height);
     geometry.relative = relative != null ? relative : false;
 
     // Creates the vertex
-    const vertex = new mxCell(value, geometry, style);
+    const vertex = new (cellClass || mxCell)(value, geometry, style);
     vertex.setId(id);
     vertex.setVertex(true);
     vertex.setConnectable(true);

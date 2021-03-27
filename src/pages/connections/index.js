@@ -12,11 +12,11 @@ export default function _Connections() {
   return (
     <PageTabs curPageURL="/connections">
       <Preview sourceKey="Anchors" content={<Anchors />} />
-      <Preview sourceKey="EdgeTolerance" content={<EdgeTolerance />} />
+      {/*<Preview sourceKey="EdgeTolerance" content={<EdgeTolerance />} />
       <Preview sourceKey="FixedPoints" content={<FixedPoints />} />
       <Preview sourceKey="HelloPort" content={<HelloPort />} />
       <Preview sourceKey="Orthogonal" content={<Orthogonal />} />
-      <Preview sourceKey="PortRefs" content={<PortRefs />} />
+      <Preview sourceKey="PortRefs" content={<PortRefs />} />*/}
     </PageTabs>
   );
 }

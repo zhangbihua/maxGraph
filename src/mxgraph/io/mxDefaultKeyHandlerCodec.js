@@ -75,11 +75,9 @@ class mxDefaultKeyHandlerCodec extends mxObjectCodec {
 
           into.bindAction(as, action, control);
         }
-
         node = node.nextSibling;
       }
     }
-
     return into;
   }
 }

@@ -8,6 +8,7 @@ import mxUtils from '../util/mxUtils';
 import mxPoint from '../util/mxPoint';
 import mxCellState from './mxCellState';
 import mxConstants from '../util/mxConstants';
+import mxRectangle from "../util/mxRectangle";
 
 const mxEdgeStyle = {
   /**
@@ -203,14 +204,14 @@ const mxEdgeStyle = {
       const arr = new mxPoint(xe + dx, ye);
 
       // Adds intermediate points if both go out on same side
-      if (isSourceLeft == isTargetLeft) {
+      if (isSourceLeft === isTargetLeft) {
         const x = isSourceLeft
           ? Math.min(x0, xe) - segment
           : Math.max(x0, xe) + segment;
 
         result.push(new mxPoint(x, y0));
         result.push(new mxPoint(x, ye));
-      } else if (dep.x < arr.x == isSourceLeft) {
+      } else if (dep.x < arr.x === isSourceLeft) {
         const midY = y0 + (ye - y0) / 2;
 
         result.push(dep);
@@ -278,8 +279,8 @@ const mxEdgeStyle = {
       );
 
       if (
-        dir == mxConstants.DIRECTION_NORTH ||
-        dir == mxConstants.DIRECTION_SOUTH
+        dir === mxConstants.DIRECTION_NORTH ||
+        dir === mxConstants.DIRECTION_SOUTH
       ) {
         x = view.getRoutingCenterX(source);
         dx = seg;
@@ -292,16 +293,16 @@ const mxEdgeStyle = {
         if (pt != null) {
           x = pt.x;
           dy = Math.max(Math.abs(y - pt.y), dy);
-        } else if (dir == mxConstants.DIRECTION_NORTH) {
+        } else if (dir === mxConstants.DIRECTION_NORTH) {
           y = source.y - 2 * dx;
-        } else if (dir == mxConstants.DIRECTION_SOUTH) {
+        } else if (dir === mxConstants.DIRECTION_SOUTH) {
           y = source.y + source.height + 2 * dx;
-        } else if (dir == mxConstants.DIRECTION_EAST) {
+        } else if (dir === mxConstants.DIRECTION_EAST) {
           x = source.x - 2 * dy;
         } else {
           x = source.x + source.width + 2 * dy;
         }
-      } else if (pt != null) {
+      } else if (pt !== null) {
         x = view.getRoutingCenterX(source);
         dx = Math.max(Math.abs(x - pt.x), dy);
         y = pt.y;
@@ -352,7 +353,7 @@ const mxEdgeStyle = {
           target.x + target.width
         );
 
-        vertical = left == right;
+        vertical = left === right;
 
         if (!vertical) {
           const top = Math.max(source.y, target.y);
@@ -361,7 +362,7 @@ const mxEdgeStyle = {
             target.y + target.height
           );
 
-          horizontal = top == bottom;
+          horizontal = top === bottom;
         }
       }
     }
@@ -369,7 +370,7 @@ const mxEdgeStyle = {
     if (
       !horizontal &&
       (vertical ||
-        state.style[mxConstants.STYLE_ELBOW] == mxConstants.ELBOW_VERTICAL)
+        state.style[mxConstants.STYLE_ELBOW] === mxConstants.ELBOW_VERTICAL)
     ) {
       mxEdgeStyle.TopToBottom(state, source, target, points, result);
     } else {
@@ -439,7 +440,7 @@ const mxEdgeStyle = {
         result.push(new mxPoint(x, y2));
       }
 
-      if (result.length == 1) {
+      if (result.length === 1) {
         if (pt != null) {
           if (
             !mxUtils.contains(target, x, pt.y) &&
@@ -515,8 +516,8 @@ const mxEdgeStyle = {
         result.push(new mxPoint(x, y));
       }
 
-      if (result.length == 1) {
-        if (pt != null && result.length == 1) {
+      if (result.length === 1) {
+        if (pt != null && result.length === 1) {
           if (
             !mxUtils.contains(target, pt.x, y) &&
             !mxUtils.contains(source, pt.x, y)
@@ -616,7 +617,7 @@ const mxEdgeStyle = {
         }
       }
 
-      if (hints.length == 0) {
+      if (hints.length === 0) {
         return;
       }
 
@@ -659,8 +660,8 @@ const mxEdgeStyle = {
       // at source and target segments only
       for (let i = 0; i < 2; i += 1) {
         const fixedVertAlign =
-          currentPt != null && currentPt.x == currentHint.x;
-        const fixedHozAlign = currentPt != null && currentPt.y == currentHint.y;
+          currentPt != null && currentPt.x === currentHint.x;
+        const fixedHozAlign = currentPt != null && currentPt.y === currentHint.y;
 
         const inHozChan =
           currentTerm != null &&
@@ -696,9 +697,9 @@ const mxEdgeStyle = {
           if (vertChan || hozChan) {
             horizontal = hozChan;
 
-            if (i == 1) {
+            if (i === 1) {
               // Work back from target end
-              horizontal = hints.length % 2 == 0 ? hozChan : vertChan;
+              horizontal = hints.length % 2 === 0 ? hozChan : vertChan;
             }
 
             break;
@@ -721,7 +722,7 @@ const mxEdgeStyle = {
 
       if (
         horizontal &&
-        ((pts[0] != null && pts[0].y != hint.y) ||
+        ((pts[0] != null && pts[0].y !== hint.y) ||
           (pts[0] == null &&
             source != null &&
             (hint.y < source.y || hint.y > source.y + source.height)))
@@ -729,7 +730,7 @@ const mxEdgeStyle = {
         pushPoint(new mxPoint(pt.x, hint.y));
       } else if (
         !horizontal &&
-        ((pts[0] != null && pts[0].x != hint.x) ||
+        ((pts[0] != null && pts[0].x !== hint.x) ||
           (pts[0] == null &&
             source != null &&
             (hint.x < source.x || hint.x > source.x + source.width)))
@@ -778,7 +779,7 @@ const mxEdgeStyle = {
       if (hint != null) {
         if (
           horizontal &&
-          ((pts[lastInx] != null && pts[lastInx].y != hint.y) ||
+          ((pts[lastInx] != null && pts[lastInx].y !== hint.y) ||
             (pts[lastInx] == null &&
               target != null &&
               (hint.y < target.y || hint.y > target.y + target.height)))
@@ -786,7 +787,7 @@ const mxEdgeStyle = {
           pushPoint(new mxPoint(pt.x, hint.y));
         } else if (
           !horizontal &&
-          ((pts[lastInx] != null && pts[lastInx].x != hint.x) ||
+          ((pts[lastInx] != null && pts[lastInx].x !== hint.x) ||
             (pts[lastInx] == null &&
               target != null &&
               (hint.x < target.x || hint.x > target.x + target.width)))
@@ -956,7 +957,7 @@ const mxEdgeStyle = {
       )
     );
 
-    if (value == 'auto') {
+    if (value === 'auto') {
       // Computes the automatic jetty size
       const type = mxUtils.getValue(
         state.style,
@@ -964,7 +965,7 @@ const mxEdgeStyle = {
         mxConstants.NONE
       );
 
-      if (type != mxConstants.NONE) {
+      if (type !== mxConstants.NONE) {
         const size = mxUtils.getNumber(
           state.style,
           isSource ? mxConstants.STYLE_STARTSIZE : mxConstants.STYLE_ENDSIZE,
@@ -1094,7 +1095,7 @@ const mxEdgeStyle = {
     // console.log('sourceBuffer', sourceBuffer);
     // console.log('targetBuffer', targetBuffer);
     // Workaround for loop routing within buffer zone
-    if (source != null && target == source) {
+    if (source != null && target === source) {
       targetBuffer = Math.max(sourceBuffer, targetBuffer);
       sourceBuffer = targetBuffer;
     }
@@ -1150,7 +1151,7 @@ const mxEdgeStyle = {
 
       // console.log('source rotation', rotation);
 
-      if (rotation != 0) {
+      if (rotation !== 0) {
         const newRect = mxUtils.getBoundingBox(
           new mxRectangle(sourceX, sourceY, sourceWidth, sourceHeight),
           rotation
@@ -1173,7 +1174,7 @@ const mxEdgeStyle = {
 
       // console.log('target rotation', rotation);
 
-      if (rotation != 0) {
+      if (rotation !== 0) {
         const newRect = mxUtils.getBoundingBox(
           new mxRectangle(targetX, targetY, targetWidth, targetHeight),
           rotation
@@ -1232,7 +1233,7 @@ const mxEdgeStyle = {
       quad = 3;
 
       // Special case on x = 0 and negative y
-      if (dx == 0) {
+      if (dx === 0) {
         quad = 2;
       }
     }
@@ -1331,15 +1332,15 @@ const mxEdgeStyle = {
 
     // If the preferred port isn't available, switch it
     for (let i = 0; i < 2; i += 1) {
-      if (dir[i] != 0x0) {
+      if (dir[i] !== 0x0) {
         continue;
       }
 
-      if ((horPref[i] & portConstraint[i]) == 0) {
+      if ((horPref[i] & portConstraint[i]) === 0) {
         horPref[i] = mxUtils.reversePortConstraints(horPref[i]);
       }
 
-      if ((vertPref[i] & portConstraint[i]) == 0) {
+      if ((vertPref[i] & portConstraint[i]) === 0) {
         vertPref[i] = mxUtils.reversePortConstraints(vertPref[i]);
       }
 
@@ -1391,11 +1392,11 @@ const mxEdgeStyle = {
     // If the list contains gaps, compact it
 
     for (let i = 0; i < 2; i += 1) {
-      if (dir[i] != 0x0) {
+      if (dir[i] !== 0x0) {
         continue;
       }
 
-      if ((prefOrdering[i][0] & portConstraint[i]) == 0) {
+      if ((prefOrdering[i][0] & portConstraint[i]) === 0) {
         prefOrdering[i][0] = prefOrdering[i][1];
       }
 
@@ -1408,7 +1409,7 @@ const mxEdgeStyle = {
         dirPref[i] = dirPref[i] << 8;
       }
 
-      if ((dirPref[i] & 0xf00) == 0) {
+      if ((dirPref[i] & 0xf00) === 0) {
         dirPref[i] = (dirPref[i] & 0xf) | (dirPref[i] >> 8);
       }
 

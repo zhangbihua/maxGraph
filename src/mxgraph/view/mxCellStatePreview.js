@@ -124,7 +124,7 @@ class mxCellStatePreview {
         // the first phase so that edge terminal points will
         // be updated in the second phase
         if (
-          (dx != 0 || dy != 0) &&
+          (dx !== 0 || dy !== 0) &&
           geo != null &&
           (!geo.relative || this.deltas.get(state.cell) != null)
         ) {
@@ -163,7 +163,7 @@ class mxCellStatePreview {
 
       // Moves selection vertices which are relative
       if (
-        (dx != 0 || dy != 0) &&
+        (dx !== 0 || dy !== 0) &&
         geo != null &&
         geo.relative &&
         model.isVertex(state.cell) &&

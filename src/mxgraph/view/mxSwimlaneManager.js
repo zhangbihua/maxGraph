@@ -4,11 +4,11 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxEventSource from "../util/mxEventSource";
-import mxUtils from "../util/mxUtils";
-import mxEvent from "../util/mxEvent";
-import mxConstants from "../util/mxConstants";
-import mxRectangle from "../util/mxRectangle";
+import mxEventSource from '../util/mxEventSource';
+import mxUtils from '../util/mxUtils';
+import mxEvent from '../util/mxEvent';
+import mxConstants from '../util/mxConstants';
+import mxRectangle from '../util/mxRectangle';
 
 class mxSwimlaneManager extends mxEventSource {
   /**
@@ -276,7 +276,7 @@ class mxSwimlaneManager extends mxEventSource {
     for (let i = 0; i < childCount; i += 1) {
       const child = model.getChildAt(parent, i);
 
-      if (child != swimlane && !this.isSwimlaneIgnored(child)) {
+      if (child !== swimlane && !this.isSwimlaneIgnored(child)) {
         geo = model.getGeometry(child);
 
         if (geo != null) {
@@ -371,8 +371,8 @@ class mxSwimlaneManager extends mxEventSource {
 
         if (geo != null) {
           if (
-            (parentHorizontal && geo.height != h) ||
-            (!parentHorizontal && geo.width != w)
+            (parentHorizontal && geo.height !== h) ||
+            (!parentHorizontal && geo.width !== w)
           ) {
             geo = geo.clone();
 

@@ -6,6 +6,10 @@
 import mxPoint from '../util/mxPoint';
 import mxRectangle from '../util/mxRectangle';
 import mxTemporaryCellStates from './mxTemporaryCellStates';
+import mxEvent from '../util/mxEvent';
+import mxClient from '../mxClient';
+import mxUtils from '../util/mxUtils';
+import mxConstants from '../util/mxConstants';
 
 class mxPrintPreview {
   /**
@@ -783,7 +787,7 @@ class mxPrintPreview {
     try {
       // Workaround for ignored clipping in IE 9 standards
       // when printing with page breaks and HTML labels.
-      if (dx != 0 || dy != 0) {
+      if (dx !== 0 || dy !== 0) {
         div.style.position = 'relative';
         div.style.width = `${w}px`;
         div.style.height = `${h}px`;
@@ -889,7 +893,7 @@ class mxPrintPreview {
     const overlayPane = view.getOverlayPane();
     const realScale = scale;
 
-    if (this.graph.dialect == mxConstants.DIALECT_SVG) {
+    if (this.graph.dialect === mxConstants.DIALECT_SVG) {
       view.createSvg();
 
       // Uses CSS transform for scaling
@@ -981,7 +985,7 @@ class mxPrintPreview {
         const name = tmp.nodeName.toLowerCase();
 
         // Note: Width and height are required in FF 11
-        if (name == 'svg') {
+        if (name === 'svg') {
           tmp.style.overflow = 'hidden';
           tmp.style.position = 'relative';
           tmp.style.top = `${this.marginTop}px`;
@@ -991,7 +995,7 @@ class mxPrintPreview {
           tmp.style.height = '';
         }
         // Tries to fetch all text labels and only text labels
-        else if (tmp.style.cursor != 'default' && name != 'div') {
+        else if (tmp.style.cursor !== 'default' && name !== 'div') {
           tmp.parentNode.removeChild(tmp);
         }
 
