@@ -4,17 +4,17 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxCellMarker from './mxCellMarker';
-import mxPoint from '../util/mxPoint';
+import mxPoint from '../util/datatypes/mxPoint';
 import mxConstants from '../util/mxConstants';
 import mxUtils from '../util/mxUtils';
 import mxImageShape from '../shape/mxImageShape';
 import mxRectangleShape from '../shape/mxRectangleShape';
-import mxConnectionConstraint from '../view/mxConnectionConstraint';
-import mxEvent from '../util/mxEvent';
+import mxConnectionConstraint from '../view/connection/mxConnectionConstraint';
+import mxEvent from '../util/event/mxEvent';
 import mxConstraintHandler from './mxConstraintHandler';
-import mxRectangle from '../util/mxRectangle';
+import mxRectangle from '../util/datatypes/mxRectangle';
 import mxClient from '../mxClient';
-import mxEdgeStyle from '../view/mxEdgeStyle';
+import mxEdgeStyle from '../view/style/mxEdgeStyle';
 
 class mxEdgeHandler {
   /**

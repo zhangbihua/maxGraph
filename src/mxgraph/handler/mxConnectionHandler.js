@@ -4,19 +4,19 @@
  */
 import mxGeometry from '../model/mxGeometry';
 import mxCell from '../model/mxCell';
-import mxPoint from '../util/mxPoint';
-import mxEventObject from '../util/mxEventObject';
-import mxEvent from '../util/mxEvent';
+import mxPoint from '../util/datatypes/mxPoint';
+import mxEventObject from '../util/event/mxEventObject';
+import mxEvent from '../util/event/mxEvent';
 import mxConstants from '../util/mxConstants';
 import mxUtils from '../util/mxUtils';
-import mxMouseEvent from '../util/mxMouseEvent';
+import mxMouseEvent from '../util/event/mxMouseEvent';
 import mxImageShape from '../shape/mxImageShape';
 import mxCellMarker from './mxCellMarker';
 import mxConstraintHandler from './mxConstraintHandler';
 import mxPolyline from '../shape/mxPolyline';
-import mxEventSource from '../util/mxEventSource';
-import mxRectangle from '../util/mxRectangle';
-import mxLog from '../util/mxLog';
+import mxEventSource from '../util/event/mxEventSource';
+import mxRectangle from '../util/datatypes/mxRectangle';
+import mxLog from '../util/gui/mxLog';
 
 class mxConnectionHandler extends mxEventSource {
   /**

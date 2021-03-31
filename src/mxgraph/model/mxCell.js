@@ -8,6 +8,10 @@ import mxUtils from '../util/mxUtils';
 import mxConstants from '../util/mxConstants';
 
 class mxCell {
+  // TODO: Document me!
+  // used by invalidate() of mxGraphView
+  invalidating: boolean = false;
+
   /**
    * Variable: id
    *

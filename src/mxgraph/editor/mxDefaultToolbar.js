@@ -5,10 +5,10 @@
  */
 
 import mxClient from '../mxClient';
-import mxToolbar from '../util/mxToolbar';
+import mxToolbar from '../util/gui/mxToolbar';
 import mxGeometry from '../model/mxGeometry';
 import mxUtils from '../util/mxUtils';
-import mxEvent from '../util/mxEvent';
+import mxEvent from '../util/event/mxEvent';
 
 class mxDefaultToolbar {
   /**
@@ -520,4 +520,3 @@ class mxDefaultToolbar {
 
 export default mxDefaultToolbar;
 import("../io/mxDefaultToolbarCodec");
-

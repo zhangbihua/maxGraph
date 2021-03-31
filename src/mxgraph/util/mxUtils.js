@@ -3,22 +3,22 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEffects from './mxEffects';
-import mxXmlRequest from './mxXmlRequest';
+import mxEffects from './animate/mxEffects';
+import mxXmlRequest from './network/mxXmlRequest';
 import mxClient from '../mxClient';
 import mxConstants from './mxConstants';
 import mxObjectIdentity from './mxObjectIdentity';
-import mxPoint from './mxPoint';
-import mxDictionary from './mxDictionary';
+import mxPoint from './datatypes/mxPoint';
+import mxDictionary from './datatypes/mxDictionary';
 import mxCellPath from '../model/mxCellPath';
-import mxRectangle from './mxRectangle';
-import mxTemporaryCellStates from '../view/mxTemporaryCellStates';
+import mxRectangle from './datatypes/mxRectangle';
+import mxTemporaryCellStates from '../view/cell/mxTemporaryCellStates';
 import mxCodec from '../io/mxCodec';
-import mxWindow from './mxWindow';
+import mxWindow from './gui/mxWindow';
 import mxResources from './mxResources';
-import mxEvent from './mxEvent';
-import mxDragSource from './mxDragSource';
-import mxLog from './mxLog';
+import mxEvent from './event/mxEvent';
+import mxDragSource from './drag_pan/mxDragSource';
+import mxLog from './gui/mxLog';
 
 const mxUtils = {
   /**
@@ -1455,12 +1455,18 @@ const mxUtils = {
    */
   getValue: (array, key, defaultValue) => {
     let value = array != null ? array[key] : null;
-
     if (value == null) {
       value = defaultValue;
     }
-
     return value;
+  },
+
+  getStringValue: (array, key, defaultValue) => {
+    let value = array != null ? array[key] : null;
+    if (value == null) {
+      value = defaultValue;
+    }
+    return value == null ? null : String(value);
   },
 
   /**

@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxRectangle from '../util/mxRectangle';
+import mxRectangle from '../util/datatypes/mxRectangle';
 import mxConstants from '../util/mxConstants';
 import mxRectangleShape from './mxRectangleShape';
 import mxUtils from "../util/mxUtils";

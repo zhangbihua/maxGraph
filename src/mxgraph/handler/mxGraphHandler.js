@@ -5,15 +5,15 @@
  */
 
 import mxClient from '../mxClient';
-import mxEvent from '../util/mxEvent';
+import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 import mxRectangleShape from '../shape/mxRectangleShape';
 import mxGuide from '../util/mxGuide';
-import mxPoint from '../util/mxPoint';
+import mxPoint from '../util/datatypes/mxPoint';
 import mxConstants from '../util/mxConstants';
-import mxDictionary from '../util/mxDictionary';
+import mxDictionary from '../util/datatypes/mxDictionary';
 import mxCellHighlight from './mxCellHighlight';
-import mxRectangle from '../util/mxRectangle';
+import mxRectangle from '../util/datatypes/mxRectangle';
 
 class mxGraphHandler {
   /**

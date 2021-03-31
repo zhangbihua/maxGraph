@@ -4,11 +4,11 @@
  */
 
 import mxUtils from '../util/mxUtils';
-import mxEvent from '../util/mxEvent';
-import mxPoint from '../util/mxPoint';
-import mxMouseEvent from '../util/mxMouseEvent';
+import mxEvent from '../util/event/mxEvent';
+import mxPoint from '../util/datatypes/mxPoint';
+import mxMouseEvent from '../util/event/mxMouseEvent';
 import mxClient from '../mxClient';
-import mxRectangle from '../util/mxRectangle';
+import mxRectangle from '../util/datatypes/mxRectangle';
 
 class mxRubberband {
   /**

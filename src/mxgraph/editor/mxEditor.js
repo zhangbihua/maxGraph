@@ -4,34 +4,34 @@
  */
 
 import mxDefaultPopupMenu from './mxDefaultPopupMenu';
-import mxUndoManager from '../util/mxUndoManager';
+import mxUndoManager from '../util/undo/mxUndoManager';
 import mxDefaultKeyHandler from './mxDefaultKeyHandler';
-import mxEventSource from '../util/mxEventSource';
+import mxEventSource from '../util/event/mxEventSource';
 import mxResources from '../util/mxResources';
 import mxClient from '../mxClient';
 import mxCompactTreeLayout from '../layout/mxCompactTreeLayout';
 import mxDefaultToolbar from './mxDefaultToolbar';
 import mxStackLayout from '../layout/mxStackLayout';
-import mxEventObject from '../util/mxEventObject';
+import mxEventObject from '../util/event/mxEventObject';
 import mxUtils from '../util/mxUtils';
 import mxCodec from '../io/mxCodec';
-import mxWindow from '../util/mxWindow';
-import mxForm from '../util/mxForm';
-import mxOutline from '../view/mxOutline';
+import mxWindow from '../util/gui/mxWindow';
+import mxForm from '../util/gui/mxForm';
+import mxOutline from '../view/graph/mxOutline';
 import mxCell from '../model/mxCell';
 import mxGeometry from '../model/mxGeometry';
 import mxConstants from '../util/mxConstants';
-import mxGraph from '../view/mxGraph';
-import mxSwimlaneManager from '../view/mxSwimlaneManager';
-import mxLayoutManager from '../view/mxLayoutManager';
+import mxGraph from '../view/graph/mxGraph';
+import mxSwimlaneManager from '../view/graph/mxSwimlaneManager';
+import mxLayoutManager from '../view/graph/mxLayoutManager';
 import mxRubberband from '../handler/mxRubberband';
-import mxEvent from '../util/mxEvent';
+import mxEvent from '../util/event/mxEvent';
 import mxRootChange from '../model/atomic_changes/mxRootChange';
 import mxValueChange from '../model/atomic_changes/mxValueChange';
 import mxCellAttributeChange from '../model/atomic_changes/mxCellAttributeChange';
-import mxPrintPreview from '../view/mxPrintPreview';
-import mxClipboard from '../util/mxClipboard';
-import mxLog from '../util/mxLog';
+import mxPrintPreview from '../view/graph/mxPrintPreview';
+import mxClipboard from '../util/storage/mxClipboard';
+import mxLog from '../util/gui/mxLog';
 
 /**
  * Installs the required language resources at class

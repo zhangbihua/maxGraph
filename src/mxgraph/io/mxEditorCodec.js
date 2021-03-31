@@ -5,7 +5,7 @@
  */
 
 import mxEditor from '../editor/mxEditor';
-import mxWindow from '../util/mxWindow';
+import mxWindow from '../util/gui/mxWindow';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
 

@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxShape from './mxShape';
-import mxRectangle from '../util/mxRectangle';
+import mxRectangle from '../util/datatypes/mxRectangle';
 import mxConstants from '../util/mxConstants';
 import mxUtils from "../util/mxUtils";
 

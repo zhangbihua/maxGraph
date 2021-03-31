@@ -4,10 +4,10 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDictionary from '../util/mxDictionary';
-import mxRectangle from '../util/mxRectangle';
+import mxDictionary from '../util/datatypes/mxDictionary';
+import mxRectangle from '../util/datatypes/mxRectangle';
 import mxGeometry from '../model/mxGeometry';
-import mxPoint from '../util/mxPoint';
+import mxPoint from '../util/datatypes/mxPoint';
 import mxConstants from '../util/mxConstants';
 
 class mxGraphLayout {

@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxConnectionConstraint from '../view/mxConnectionConstraint';
-import mxRectangle from '../util/mxRectangle';
+import mxConnectionConstraint from '../view/connection/mxConnectionConstraint';
+import mxRectangle from '../util/datatypes/mxRectangle';
 import mxShape from './mxShape';
 import mxResources from "../util/mxResources";
 import mxUtils from "../util/mxUtils";

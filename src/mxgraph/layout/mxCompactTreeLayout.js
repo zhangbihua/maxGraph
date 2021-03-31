@@ -4,11 +4,11 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDictionary from '../util/mxDictionary';
-import mxPoint from '../util/mxPoint';
+import mxDictionary from '../util/datatypes/mxDictionary';
+import mxPoint from '../util/datatypes/mxPoint';
 import mxGraphLayout from './mxGraphLayout';
 import mxCellPath from "../model/mxCellPath";
-import mxRectangle from "../util/mxRectangle";
+import mxRectangle from "../util/datatypes/mxRectangle";
 import mxUtils from "../util/mxUtils";
 import WeightedCellSorter from "./WeightedCellSorter";
 

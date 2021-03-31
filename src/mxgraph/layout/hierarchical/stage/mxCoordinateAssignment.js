@@ -5,10 +5,10 @@
  */
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
 import mxConstants from '../../../util/mxConstants';
-import mxLog from '../../../util/mxLog';
+import mxLog from '../../../util/gui/mxLog';
 import WeightedCellSorter from '../../WeightedCellSorter';
-import mxDictionary from '../../../util/mxDictionary';
-import mxPoint from '../../../util/mxPoint';
+import mxDictionary from '../../../util/datatypes/mxDictionary';
+import mxPoint from '../../../util/datatypes/mxPoint';
 import mxHierarchicalEdgeStyle from '../mxHierarchicalEdgeStyle';
 
 class mxCoordinateAssignment extends mxHierarchicalLayoutStage {

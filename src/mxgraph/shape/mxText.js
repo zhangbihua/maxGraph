@@ -7,10 +7,11 @@
 import mxClient from '../mxClient';
 import mxConstants from '../util/mxConstants';
 import mxUtils from '../util/mxUtils';
-import mxPoint from '../util/mxPoint';
-import mxSvgCanvas2D from '../util/mxSvgCanvas2D';
+import mxPoint from '../util/datatypes/mxPoint';
+import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 import mxShape from './mxShape';
-import mxRectangle from '../util/mxRectangle';
+import mxRectangle from '../util/datatypes/mxRectangle';
+import mxCellState from "../view/cell/mxCellState";
 
 class mxText extends mxShape {
   /**
@@ -19,7 +20,7 @@ class mxText extends mxShape {
    * Specifies the spacing to be added to the top spacing. Default is 0. Use the
    * value 5 here to get the same label positions as in mxGraph 1.x.
    */
-  baseSpacingTop = 0;
+  baseSpacingTop: number = 0;
 
   /**
    * Variable: baseSpacingBottom
@@ -27,21 +28,21 @@ class mxText extends mxShape {
    * Specifies the spacing to be added to the bottom spacing. Default is 0. Use the
    * value 1 here to get the same label positions as in mxGraph 1.x.
    */
-  baseSpacingBottom = 0;
+  baseSpacingBottom: number = 0;
 
   /**
    * Variable: baseSpacingLeft
    *
    * Specifies the spacing to be added to the left spacing. Default is 0.
    */
-  baseSpacingLeft = 0;
+  baseSpacingLeft: number = 0;
 
   /**
    * Variable: baseSpacingRight
    *
    * Specifies the spacing to be added to the right spacing. Default is 0.
    */
-  baseSpacingRight = 0;
+  baseSpacingRight: number = 0;
 
   /**
    * Variable: replaceLinefeeds
@@ -49,14 +50,14 @@ class mxText extends mxShape {
    * Specifies if linefeeds in HTML labels should be replaced with BR tags.
    * Default is true.
    */
-  replaceLinefeeds = true;
+  replaceLinefeeds: boolean = true;
 
   /**
    * Variable: verticalTextRotation
    *
    * Rotation for vertical text. Default is -90 (bottom to top).
    */
-  verticalTextRotation = -90;
+  verticalTextRotation: number = -90;
 
   /**
    * Variable: ignoreClippedStringSize
@@ -66,7 +67,7 @@ class mxText extends mxShape {
    * true, then the bounding box will be set to <bounds>. Default is true.
    * <ignoreStringSize> has precedence over this switch.
    */
-  ignoreClippedStringSize = true;
+  ignoreClippedStringSize: boolean = true;
 
   /**
    * Variable: ignoreStringSize
@@ -75,7 +76,7 @@ class mxText extends mxShape {
    * boundingBox will not ignore the actual size of the string, otherwise
    * <bounds> will be used instead. Default is false.
    */
-  ignoreStringSize = false;
+  ignoreStringSize: boolean = false;
 
   /**
    * Variable: textWidthPadding
@@ -84,21 +85,21 @@ class mxText extends mxShape {
    * This is needed to make sure no clipping is applied to borders. Default is 4
    * for IE 8 standards mode and 3 for all others.
    */
-  textWidthPadding = 3;
+  textWidthPadding: number = 3;
 
   /**
    * Variable: lastValue
    *
    * Contains the last rendered text value. Used for caching.
    */
-  lastValue = null;
+  lastValue: string | null = null;
 
   /**
    * Variable: cacheEnabled
    *
    * Specifies if caching for HTML labels should be enabled. Default is true.
    */
-  cacheEnabled = true;
+  cacheEnabled: boolean = true;
 
   /**
    * Class: mxText
@@ -210,7 +211,7 @@ class mxText extends mxShape {
    * Returns true if HTML is allowed for this shape. This implementation returns
    * true if the browser is not in IE8 standards mode.
    */
-  isHtmlAllowed() {
+  isHtmlAllowed(): boolean {
     return document.documentMode !== 8 || mxClient.IS_EM;
   }
 
@@ -219,7 +220,7 @@ class mxText extends mxShape {
    *
    * Disables offset in IE9 for crisper image output.
    */
-  getSvgScreenOffset() {
+  getSvgScreenOffset(): number {
     return 0;
   }
 
@@ -228,7 +229,7 @@ class mxText extends mxShape {
    *
    * Returns true if the bounds are not null and all of its variables are numeric.
    */
-  checkBounds() {
+  checkBounds(): boolean {
     return (
       !isNaN(this.scale) &&
       isFinite(this.scale) &&
@@ -246,7 +247,9 @@ class mxText extends mxShape {
    *
    * Generic rendering code.
    */
-  paint(c, update) {
+  paint(c: mxSvgCanvas2D,
+        update: boolean=false): void {
+
     // Scale is passed-through to canvas
     const s = this.scale;
     const x = this.bounds.x / s;
@@ -331,7 +334,7 @@ class mxText extends mxShape {
    *
    * Renders the text using the given DOM nodes.
    */
-  redraw() {
+  redraw(): void {
     if (
       this.visible &&
       this.checkBounds() &&
@@ -387,7 +390,7 @@ class mxText extends mxShape {
    *
    * Resets all styles.
    */
-  resetStyles() {
+  resetStyles(): void {
     super.resetStyles();
 
     this.color = 'black';
@@ -417,16 +420,12 @@ class mxText extends mxShape {
    *
    * state - <mxCellState> of the corresponding cell.
    */
-  apply(state) {
+  apply(state: mxCellState): void {
     const old = this.spacing;
     super.apply(state);
 
     if (this.style != null) {
-      this.fontStyle = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_FONTSTYLE,
-        this.fontStyle
-      );
+      this.fontStyle = this.style.fontStyle || this.fontStyle;
       this.family = mxUtils.getValue(
         this.style,
         mxConstants.STYLE_FONTFAMILY,
@@ -1310,7 +1309,9 @@ class mxText extends mxShape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  updateSize(node, enableWrap) {
+  updateSize(node: HTMLElement,
+             enableWrap: boolean=false) {
+
     const w = Math.max(0, Math.round(this.bounds.width / this.scale));
     const h = Math.max(0, Math.round(this.bounds.height / this.scale));
     const { style } = node;
@@ -1381,7 +1382,7 @@ class mxText extends mxShape {
    *
    * Returns the spacing as an <mxPoint>.
    */
-  updateMargin() {
+  updateMargin(): void {
     this.margin = mxUtils.getAlignmentAsPoint(this.align, this.valign);
   }
 
@@ -1390,7 +1391,7 @@ class mxText extends mxShape {
    *
    * Returns the spacing as an <mxPoint>.
    */
-  getSpacing() {
+  getSpacing(): mxPoint {
     let dx = 0;
     let dy = 0;
 

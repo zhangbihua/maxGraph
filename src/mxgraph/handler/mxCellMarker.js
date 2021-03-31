@@ -3,11 +3,11 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEventSource from '../util/mxEventSource';
+import mxEventSource from '../util/event/mxEventSource';
 import mxConstants from '../util/mxConstants';
 import mxCellHighlight from './mxCellHighlight';
-import mxEventObject from '../util/mxEventObject';
-import mxEvent from '../util/mxEvent';
+import mxEventObject from '../util/event/mxEventObject';
+import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 
 class mxCellMarker extends mxEventSource {

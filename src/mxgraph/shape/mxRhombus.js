@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxShape from './mxShape';
-import mxPoint from '../util/mxPoint';
+import mxPoint from '../util/datatypes/mxPoint';
 import mxUtils from "../util/mxUtils";
 import mxConstants from "../util/mxConstants";
 

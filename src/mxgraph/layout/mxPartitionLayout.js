@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxRectangle from '../util/mxRectangle';
+import mxRectangle from '../util/datatypes/mxRectangle';
 import mxGraphLayout from './mxGraphLayout';
 
 class mxPartitionLayout extends mxGraphLayout {

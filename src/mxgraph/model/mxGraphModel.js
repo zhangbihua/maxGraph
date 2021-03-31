@@ -3,16 +3,16 @@
  * Copyright (c) 2006-2018, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEventSource from '../util/mxEventSource';
-import mxUndoableEdit from '../util/mxUndoableEdit';
+import mxEventSource from '../util/event/mxEventSource';
+import mxUndoableEdit from '../util/undo/mxUndoableEdit';
 import mxCellPath from './mxCellPath';
-import mxDictionary from '../util/mxDictionary';
+import mxDictionary from '../util/datatypes/mxDictionary';
 import mxObjectIdentity from '../util/mxObjectIdentity';
 import mxCell from './mxCell';
 import mxUtils from '../util/mxUtils';
-import mxEventObject from '../util/mxEventObject';
-import mxEvent from '../util/mxEvent';
-import mxPoint from '../util/mxPoint';
+import mxEventObject from '../util/event/mxEventObject';
+import mxEvent from '../util/event/mxEvent';
+import mxPoint from '../util/datatypes/mxPoint';
 
 import mxChildChange from './atomic_changes/mxChildChange';
 import mxCollapseChange from './atomic_changes/mxCollapseChange';

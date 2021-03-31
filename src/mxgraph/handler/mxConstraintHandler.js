@@ -3,12 +3,12 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxImage from '../util/mxImage';
+import mxImage from '../util/image/mxImage';
 import mxClient from '../mxClient';
 import mxConstants from '../util/mxConstants';
-import mxEvent from '../util/mxEvent';
+import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
-import mxRectangle from '../util/mxRectangle';
+import mxRectangle from '../util/datatypes/mxRectangle';
 import mxImageShape from '../shape/mxImageShape';
 import mxRectangleShape from '../shape/mxRectangleShape';
 

@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxDictionary from '../../../util/mxDictionary';
+import mxDictionary from '../../../util/datatypes/mxDictionary';
 import mxGraphHierarchyNode from "./mxGraphHierarchyNode";
 import mxGraphHierarchyEdge from "./mxGraphHierarchyEdge";
 import mxUtils from "../../../util/mxUtils";

@@ -3,9 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxPoint from '../util/mxPoint';
+import mxPoint from '../util/datatypes/mxPoint';
 import mxConstants from '../util/mxConstants';
-import mxRectangle from '../util/mxRectangle';
+import mxRectangle from '../util/datatypes/mxRectangle';
 import mxUtils from '../util/mxUtils';
 import mxElbowEdgeHandler from './mxElbowEdgeHandler';
 

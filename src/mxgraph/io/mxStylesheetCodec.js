@@ -4,12 +4,12 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxStylesheet from '../view/mxStylesheet';
+import mxStylesheet from '../view/style/mxStylesheet';
 import mxUtils from '../util/mxUtils';
 import mxCodecRegistry from './mxCodecRegistry';
 import mxConstants from "../util/mxConstants";
-import mxLog from "../util/mxLog";
-import mxStyleRegistry from "../view/mxStyleRegistry";
+import mxLog from "../util/gui/mxLog";
+import mxStyleRegistry from "../view/style/mxStyleRegistry";
 import mxObjectCodec from "./mxObjectCodec";
 
 class mxStylesheetCodec extends mxObjectCodec {

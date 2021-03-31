@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxEvent from '../util/mxEvent';
+import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 import "../io/mxDefaultKeyHandlerCodec";
 

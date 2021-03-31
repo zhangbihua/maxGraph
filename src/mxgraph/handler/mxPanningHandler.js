@@ -3,10 +3,10 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxEventSource from '../util/mxEventSource';
+import mxEventSource from '../util/event/mxEventSource';
 import mxUtils from '../util/mxUtils';
-import mxEventObject from '../util/mxEventObject';
-import mxEvent from '../util/mxEvent';
+import mxEventObject from '../util/event/mxEventObject';
+import mxEvent from '../util/event/mxEvent';
 
 class mxPanningHandler extends mxEventSource {
   /**

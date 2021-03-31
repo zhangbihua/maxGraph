@@ -3,8 +3,8 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxPopupMenu from '../util/mxPopupMenu';
-import mxEvent from '../util/mxEvent';
+import mxPopupMenu from '../util/gui/mxPopupMenu';
+import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 
 class mxPopupMenuHandler extends mxPopupMenu {

@@ -5,12 +5,12 @@
  */
 
 import mxUtils from '../util/mxUtils';
-import mxPoint from '../util/mxPoint';
+import mxPoint from '../util/datatypes/mxPoint';
 import mxImageShape from '../shape/mxImageShape';
-import mxRectangle from '../util/mxRectangle';
+import mxRectangle from '../util/datatypes/mxRectangle';
 import mxRectangleShape from '../shape/mxRectangleShape';
 import mxConstants from '../util/mxConstants';
-import mxEvent from '../util/mxEvent';
+import mxEvent from '../util/event/mxEvent';
 
 class mxHandle {
   /**
