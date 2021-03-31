@@ -5,7 +5,7 @@
  */
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxConstants from '../util/mxConstants';
-import mxRectangleShape from './mxRectangleShape';
+import mxRectangleShape from './node/mxRectangleShape';
 import mxUtils from "../util/mxUtils";
 
 class mxLabel extends mxRectangleShape {

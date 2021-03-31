@@ -6,7 +6,7 @@
 
 import mxPoint from '../util/datatypes/mxPoint';
 import mxGraphLayout from './mxGraphLayout';
-import mxObjectIdentity from '../util/mxObjectIdentity';
+import mxObjectIdentity from '../util/datatypes/mxObjectIdentity';
 
 class mxParallelEdgeLayout extends mxGraphLayout {
   /**

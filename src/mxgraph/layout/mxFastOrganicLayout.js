@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxObjectIdentity from '../util/mxObjectIdentity';
+import mxObjectIdentity from '../util/datatypes/mxObjectIdentity';
 import mxGraphLayout from './mxGraphLayout';
 
 class mxFastOrganicLayout extends mxGraphLayout {

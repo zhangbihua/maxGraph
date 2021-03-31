@@ -7,7 +7,7 @@ import mxEffects from './animate/mxEffects';
 import mxXmlRequest from './network/mxXmlRequest';
 import mxClient from '../mxClient';
 import mxConstants from './mxConstants';
-import mxObjectIdentity from './mxObjectIdentity';
+import mxObjectIdentity from './datatypes/mxObjectIdentity';
 import mxPoint from './datatypes/mxPoint';
 import mxDictionary from './datatypes/mxDictionary';
 import mxCellPath from '../model/mxCellPath';

@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectIdentity from '../mxObjectIdentity';
+import mxObjectIdentity from './mxObjectIdentity';
 
 class mxDictionary {
   /**

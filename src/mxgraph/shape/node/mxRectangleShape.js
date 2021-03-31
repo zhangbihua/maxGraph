@@ -4,9 +4,9 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxConstants from '../util/mxConstants';
-import mxUtils from '../util/mxUtils';
-import mxShape from './mxShape';
+import mxConstants from '../../util/mxConstants';
+import mxUtils from '../../util/mxUtils';
+import mxShape from '../mxShape';
 
 class mxRectangleShape extends mxShape {
   /**

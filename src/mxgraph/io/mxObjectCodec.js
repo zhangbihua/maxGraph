@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectIdentity from "../util/mxObjectIdentity";
+import mxObjectIdentity from "../util/datatypes/mxObjectIdentity";
 import mxLog from "../util/gui/mxLog";
 import mxGeometry from "../model/mxGeometry";
 import mxPoint from "../util/datatypes/mxPoint";

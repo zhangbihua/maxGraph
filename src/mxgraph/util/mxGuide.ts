@@ -3,9 +3,15 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+
 import mxConstants from './mxConstants';
 import mxPoint from "./datatypes/mxPoint";
-import mxPolyline from "../shape/mxPolyline";
+import mxPolyline from "../shape/edge/mxPolyline";
+import mxCellState from "../view/cell/mxCellState";
+import mxShape from "../shape/mxShape";
+import mxRectangle from './datatypes/mxRectangle';
+import mxGraph from '../view/graph/mxGraph';
+import mxEventObject from './event/mxEventObject';
 
 /**
  * Class: mxGuide
@@ -22,58 +28,60 @@ class mxGuide {
    *
    * Reference to the enclosing <mxGraph> instance.
    */
-  graph = null;
+  graph: mxGraph = null;
 
   /**
    * Variable: states
    *
    * Contains the <mxCellStates> that are used for alignment.
    */
-  states = null;
+  states: mxCellState[] = null;
 
   /**
    * Variable: horizontal
    *
    * Specifies if horizontal guides are enabled. Default is true.
    */
-  horizontal = true;
+  horizontal: boolean = true;
 
   /**
    * Variable: vertical
    *
    * Specifies if vertical guides are enabled. Default is true.
    */
-  vertical = true;
+  vertical: boolean = true;
 
   /**
    * Variable: guideX
    *
    * Holds the <mxShape> for the horizontal guide.
    */
-  guideX = null;
+  guideX: mxShape | null = null;
 
   /**
    * Variable: guideY
    *
    * Holds the <mxShape> for the vertical guide.
    */
-  guideY = null;
+  guideY: mxShape | null = null;
 
   /**
    * Variable: rounded
    *
    * Specifies if rounded coordinates should be used. Default is false.
    */
-  rounded = false;
+  rounded: boolean = false;
 
   /**
    * Variable: tolerance
    *
    * Default tolerance in px if grid is disabled. Default is 2.
    */
-  tolerance = 2;
+  tolerance: number = 2;
 
-  constructor(graph, states) {
+  constructor(graph: mxGraph,
+              states: mxCellState[]) {
+
     this.graph = graph;
     this.setStates(states);
   }
@@ -83,7 +91,7 @@ class mxGuide {
    *
    * Sets the <mxCellStates> that should be used for alignment.
    */
-  setStates(states) {
+  setStates(states: mxCellState[]): void {
     this.states = states;
   }
 
@@ -93,7 +101,7 @@ class mxGuide {
    * Returns true if the guide should be enabled for the given native event. This
    * implementation always returns true.
    */
-  isEnabledForEvent(evt) {
+  isEnabledForEvent(evt: mxEventObject | null=null): boolean {
     return true;
   }
 
@@ -119,14 +127,13 @@ class mxGuide {
    *
    * horizontal - Boolean that specifies which guide should be created.
    */
-  createGuideShape(horizontal) {
+  createGuideShape(horizontal: boolean=false) {  // TODO: Should vertical guides be supported here?? ============================
     const guide = new mxPolyline(
       [],
       mxConstants.GUIDE_COLOR,
       mxConstants.GUIDE_STROKEWIDTH
     );
     guide.isDashed = true;
-
     return guide;
   }
 
@@ -135,16 +142,19 @@ class mxGuide {
    *
    * Returns true if the given state should be ignored.
    */
-  isStateIgnored(state) {
+  isStateIgnored(state: mxCellState | null=null) {
     return false;
   }
 
   /**
    * Function: move
    *
-   * Moves the <bounds> by the given <mxPoint> and returnt the snapped point.
+   * Moves the <bounds> by the given <mxPoint> and return the snapped point.
    */
-  move(bounds, delta, gridEnabled, clone) {
+  move(bounds: mxRectangle | null=null,
+       delta: mxPoint | null=null,
+       gridEnabled: boolean=false,
+       clone: boolean=false) {
     if (
       this.states != null &&
       (this.horizontal || this.vertical) &&
@@ -172,7 +182,7 @@ class mxGuide {
       const middle = b.getCenterY();
 
       // Snaps the left, center and right to the given x-coordinate
-      function snapX(x, state, centerAlign) {
+      const snapX = (x, state, centerAlign) => {
         let override = false;
 
         if (centerAlign && Math.abs(x - center) < ttX) {
@@ -211,7 +221,7 @@ class mxGuide {
       }
 
       // Snaps the top, middle or bottom to the given y-coordinate
-      function snapY(y, state, centerAlign) {
+      const snapY = (y, state, centerAlign) => {
         let override = false;
 
         if (centerAlign && Math.abs(y - middle) < ttY) {
@@ -255,25 +265,25 @@ class mxGuide {
         if (state != null && !this.isStateIgnored(state)) {
           // Align x
           if (this.horizontal) {
-            snapX.call(this, state.getCenterX(), state, true);
-            snapX.call(this, state.x, state, false);
-            snapX.call(this, state.x + state.width, state, false);
+            snapX(state.getCenterX(), state, true);
+            snapX(state.x, state, false);
+            snapX(state.x + state.width, state, false);
 
             // Aligns left and right of shape to center of page
             if (state.cell == null) {
-              snapX.call(this, state.getCenterX(), state, false);
+              snapX(state.getCenterX(), state, false);
             }
           }
 
           // Align y
           if (this.vertical) {
-            snapY.call(this, state.getCenterY(), state, true);
-            snapY.call(this, state.y, state, false);
-            snapY.call(this, state.y + state.height, state, false);
+            snapY(state.getCenterY(), state, true);
+            snapY(state.y, state, false);
+            snapY(state.y + state.height, state, false);
 
             // Aligns left and right of shape to center of page
             if (state.cell == null) {
-              snapY.call(this, state.getCenterY(), state, false);
+              snapY(state.getCenterY(), state, false);
             }
           }
         }
@@ -357,17 +367,19 @@ class mxGuide {
    *
    * Rounds to pixels for virtual states (eg. page guides)
    */
-  getDelta(bounds, stateX, dx, stateY, dy) {
-    const s = this.graph.view.scale;
+  getDelta(bounds: mxRectangle,
+           stateX: mxCellState | null=null,
+           dx: number,
+           stateY: mxCellState | null=null,
+           dy: number): mxPoint {
 
+    const s = this.graph.view.scale;
     if (this.rounded || (stateX != null && stateX.cell == null)) {
       dx = Math.round((bounds.x + dx) / s) * s - bounds.x;
     }
-
     if (this.rounded || (stateY != null && stateY.cell == null)) {
       dy = Math.round((bounds.y + dy) / s) * s - bounds.y;
     }
-
     return new mxPoint(dx, dy);
   }
 
@@ -376,7 +388,8 @@ class mxGuide {
    *
    * Returns the color for the given state.
    */
-  getGuideColor(state, horizontal) {
+  getGuideColor(state: mxCellState,
+                horizontal: boolean | null): string {
     return mxConstants.GUIDE_COLOR;
   }
 
@@ -385,7 +398,7 @@ class mxGuide {
    *
    * Hides all current guides.
    */
-  hide() {
+  hide(): void {
     this.setVisible(false);
   }
 
@@ -394,11 +407,10 @@ class mxGuide {
    *
    * Shows or hides the current guides.
    */
-  setVisible(visible) {
+  setVisible(visible: boolean): void {
     if (this.guideX != null) {
       this.guideX.node.style.visibility = visible ? 'visible' : 'hidden';
     }
-
     if (this.guideY != null) {
       this.guideY.node.style.visibility = visible ? 'visible' : 'hidden';
     }
@@ -409,12 +421,11 @@ class mxGuide {
    *
    * Destroys all resources that this object uses.
    */
-  destroy() {
+  destroy(): void {
     if (this.guideX != null) {
       this.guideX.destroy();
       this.guideX = null;
     }
-
     if (this.guideY != null) {
       this.guideY.destroy();
       this.guideY = null;

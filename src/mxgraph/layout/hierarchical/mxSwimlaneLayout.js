@@ -10,7 +10,7 @@ import mxHierarchicalEdgeStyle from './mxHierarchicalEdgeStyle';
 import mxDictionary from '../../util/datatypes/mxDictionary';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxSwimlaneModel from './model/mxSwimlaneModel';
-import mxObjectIdentity from '../../util/mxObjectIdentity';
+import mxObjectIdentity from '../../util/datatypes/mxObjectIdentity';
 import mxSwimlaneOrdering from './stage/mxSwimlaneOrdering';
 import mxMedianHybridCrossingReduction from './stage/mxMedianHybridCrossingReduction';
 import mxCoordinateAssignment from './stage/mxCoordinateAssignment';

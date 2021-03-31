@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxConstants from '../util/mxConstants';
+import mxConstants from '../../util/mxConstants';
 
 const mxMarker = {
   /**

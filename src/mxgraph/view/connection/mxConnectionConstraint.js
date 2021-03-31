@@ -4,21 +4,23 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+import mxPoint from "../../util/datatypes/mxPoint";
+
 class mxConnectionConstraint {
   /**
    * Variable: point
    *
    * <mxPoint> that specifies the fixed location of the connection point.
    */
-  point = null;
+  point: mxPoint = null;
 
   /**
    * Variable: perimeter
    *
    * Boolean that specifies if the point should be projected onto the perimeter
-   * of the terminal.
+   * of the terminal. Default is true.
    */
-  perimeter = null;
+  perimeter: boolean = true;
 
   /**
    * Variable: name

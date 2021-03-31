@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from './mxUtils';
+import mxUtils from '../mxUtils';
 
 const mxObjectIdentity = {
   /**

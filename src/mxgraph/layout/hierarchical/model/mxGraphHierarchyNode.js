@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxGraphAbstractHierarchyCell from './mxGraphAbstractHierarchyCell';
-import mxObjectIdentity from '../../../util/mxObjectIdentity';
+import mxObjectIdentity from '../../../util/datatypes/mxObjectIdentity';
 
 class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
   /**

@@ -46,7 +46,7 @@ import mxRootChange from '../../model/atomic_changes/mxRootChange';
 import mxStyleChange from '../../model/atomic_changes/mxStyleChange';
 import mxTerminalChange from '../../model/atomic_changes/mxTerminalChange';
 import mxValueChange from '../../model/atomic_changes/mxValueChange';
-import mxPolyline from '../../shape/mxPolyline';
+import mxPolyline from '../../shape/edge/mxPolyline';
 import mxCellState from '../cell/mxCellState';
 
 class mxGraph extends mxEventSource {
@@ -4539,13 +4539,13 @@ class mxGraph extends mxEventSource {
    * target - <mxCell> that defines the target of the edge.
    * style - Optional string that defines the cell style.
    */
-  insertEdge = (...args) => {
-    let parent;
-    let id;
-    let value;
-    let source;
-    let target;
-    let style;
+  insertEdge(...args: any[]): mxCell {
+    let parent: mxCell;
+    let id: number | null;
+    let value: any; // note me - can be a string or a class instance!!!
+    let source: mxCell;
+    let target: mxCell;
+    let style: string;  // TODO: Also allow for an object or class instance??
 
     if (args.length === 1) {
       // If only a single parameter, treat as an object
@@ -4574,7 +4574,13 @@ class mxGraph extends mxEventSource {
    * are set when the edge is added to the model.
    *
    */
-  createEdge(parent, id, value, source, target, style) {
+  createEdge(parent: mxCell | null=null,
+             id,
+             value,
+             source: mxCell | null=null,
+             target: mxCell | null=null,
+             style: ) {
+
     // Creates the edge
     const edge = new mxCell(value, new mxGeometry(), style);
     edge.setId(id);
@@ -4619,7 +4625,12 @@ class mxGraph extends mxEventSource {
    * source - Optional <mxCell> that represents the source terminal.
    * target - Optional <mxCell> that represents the target terminal.
    */
-  addCell(cell, parent, index, source, target) {
+  addCell(cell: mxCell,
+          parent: mxCell | null=null,
+          index: number | null=null,
+          source: mxCell | null=null,
+          target: mxCell | null=null): mxCell {
+
     return this.addCells([cell], parent, index, source, target)[0];
   }
 
@@ -4642,7 +4653,13 @@ class mxGraph extends mxEventSource {
    * absolute - Optional boolean indicating of cells should be kept at
    * their absolute position. Default is false.
    */
-  addCells(cells, parent, index, source, target, absolute) {
+  addCells(cells: mxCell[],
+           parent: mxCell | null=null,
+           index: number | null=null,
+           source: mxCell | null=null,
+           target: mxCell | null=null,
+           absolute: boolean=false) {
+
     if (parent == null) {
       parent = this.getDefaultParent();
     }

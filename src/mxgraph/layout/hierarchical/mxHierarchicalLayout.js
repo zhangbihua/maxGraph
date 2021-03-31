@@ -8,7 +8,7 @@ import mxConstants from '../../util/mxConstants';
 import mxHierarchicalEdgeStyle from './mxHierarchicalEdgeStyle';
 import mxDictionary from '../../util/datatypes/mxDictionary';
 import mxGraphHierarchyModel from './model/mxGraphHierarchyModel';
-import mxObjectIdentity from '../../util/mxObjectIdentity';
+import mxObjectIdentity from '../../util/datatypes/mxObjectIdentity';
 import mxMinimumCycleRemover from './stage/mxMinimumCycleRemover';
 import mxMedianHybridCrossingReduction from './stage/mxMedianHybridCrossingReduction';
 import mxCoordinateAssignment from './stage/mxCoordinateAssignment';

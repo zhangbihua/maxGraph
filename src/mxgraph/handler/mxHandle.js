@@ -6,9 +6,9 @@
 
 import mxUtils from '../util/mxUtils';
 import mxPoint from '../util/datatypes/mxPoint';
-import mxImageShape from '../shape/mxImageShape';
+import mxImageShape from '../shape/node/mxImageShape';
 import mxRectangle from '../util/datatypes/mxRectangle';
-import mxRectangleShape from '../shape/mxRectangleShape';
+import mxRectangleShape from '../shape/node/mxRectangleShape';
 import mxConstants from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 

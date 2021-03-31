@@ -4,10 +4,10 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxRectangle from '../util/datatypes/mxRectangle';
-import mxShape from './mxShape';
-import mxConstants from '../util/mxConstants';
-import mxUtils from '../util/mxUtils';
+import mxRectangle from '../../util/datatypes/mxRectangle';
+import mxShape from '../mxShape';
+import mxConstants from '../../util/mxConstants';
+import mxUtils from '../../util/mxUtils';
 
 class mxDoubleEllipse extends mxShape {
   /**

@@ -10,21 +10,21 @@ class mxEventObject {
    *
    * Holds the name.
    */
-  name = null;
+  name: string | null = null;
 
   /**
    * Variable: properties
    *
    * Holds the properties as an associative array.
    */
-  properties = null;
+  properties: any = null;
 
   /**
    * Variable: consumed
    *
    * Holds the consumed state. Default is false.
    */
-  consumed = false;
+  consumed: boolean = false;
 
   /**
    * Class: mxEventObject
@@ -49,7 +49,9 @@ class mxEventObject {
    * new mxEventObject("eventName", key1, val1, .., keyN, valN)
    * (end)
    */
-  constructor(name, ...args) {
+  constructor(name: string,
+              ...args: any[]) {
+
     this.name = name;
     this.properties = [];
 
@@ -65,7 +67,7 @@ class mxEventObject {
    *
    * Returns <name>.
    */
-  getName() {
+  getName(): string {
     return this.name;
   }
 
@@ -74,7 +76,7 @@ class mxEventObject {
    *
    * Returns <properties>.
    */
-  getProperties() {
+  getProperties(): any {
     return this.properties;
   }
 
@@ -83,7 +85,7 @@ class mxEventObject {
    *
    * Returns the property for the given key.
    */
-  getProperty(key) {
+  getProperty(key: string): any {
     return this.properties[key];
   }
 
@@ -92,7 +94,7 @@ class mxEventObject {
    *
    * Returns true if the event has been consumed.
    */
-  isConsumed() {
+  isConsumed(): boolean {
     return this.consumed;
   }
 
@@ -101,7 +103,7 @@ class mxEventObject {
    *
    * Consumes the event.
    */
-  consume() {
+  consume(): void {
     this.consumed = true;
   }
 }

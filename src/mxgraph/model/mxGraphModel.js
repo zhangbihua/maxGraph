@@ -7,7 +7,7 @@ import mxEventSource from '../util/event/mxEventSource';
 import mxUndoableEdit from '../util/undo/mxUndoableEdit';
 import mxCellPath from './mxCellPath';
 import mxDictionary from '../util/datatypes/mxDictionary';
-import mxObjectIdentity from '../util/mxObjectIdentity';
+import mxObjectIdentity from '../util/datatypes/mxObjectIdentity';
 import mxCell from './mxCell';
 import mxUtils from '../util/mxUtils';
 import mxEventObject from '../util/event/mxEventObject';

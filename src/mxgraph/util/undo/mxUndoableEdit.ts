@@ -6,6 +6,7 @@
 
 import mxEvent from '../event/mxEvent';
 import mxEventObject from '../event/mxEventObject';
+import mxEventSource from "../event/mxEventSource";
 
 class mxUndoableEdit {
   /**
@@ -13,7 +14,7 @@ class mxUndoableEdit {
    *
    * Specifies the source of the edit.
    */
-  source = null;
+  source: mxEventSource | null = null;
 
   /**
    * Variable: changes
@@ -22,7 +23,7 @@ class mxUndoableEdit {
    * expected to either have an undo and redo function, or an execute
    * function. Default is an empty array.
    */
-  changes = null;
+  changes: any[] = [];
 
   /**
    * Variable: significant
@@ -30,21 +31,21 @@ class mxUndoableEdit {
    * Specifies if the undoable change is significant.
    * Default is true.
    */
-  significant = null;
+  significant: boolean = true;
 
   /**
    * Variable: undone
    *
    * Specifies if this edit has been undone. Default is false.
    */
-  undone = false;
+  undone: boolean = false;
 
   /**
    * Variable: redone
    *
    * Specifies if this edit has been redone. Default is false.
    */
-  redone = false;
+  redone: boolean = false;
 
   /**
    * Class: mxUndoableEdit
@@ -90,10 +91,11 @@ class mxUndoableEdit {
    *
    * Constructs a new undoable edit for the given source.
    */
-  constructor(source, significant) {
+  constructor(source: mxEventSource,
+              significant: boolean=true) {
     this.source = source;
     this.changes = [];
-    this.significant = significant != null ? significant : true;
+    this.significant = significant;
   }
 
   /**
@@ -101,8 +103,8 @@ class mxUndoableEdit {
    *
    * Returns true if the this edit contains no changes.
    */
-  isEmpty() {
-    return this.changes.length == 0;
+  isEmpty(): boolean {
+    return this.changes.length === 0;
   }
 
   /**
@@ -110,7 +112,7 @@ class mxUndoableEdit {
    *
    * Returns <significant>.
    */
-  isSignificant() {
+  isSignificant(): boolean {
     return this.significant;
   }
 
@@ -120,7 +122,7 @@ class mxUndoableEdit {
    * Adds the specified change to this edit. The change is an object that is
    * expected to either have an undo and redo, or an execute function.
    */
-  add(change) {
+  add(change: any): void { // FIXME!!!
     this.changes.push(change);
   }
 
@@ -130,7 +132,7 @@ class mxUndoableEdit {
    * Hook to notify any listeners of the changes after an <undo> or <redo>
    * has been carried out. This implementation is empty.
    */
-  notify() {}
+  notify(): void {}
 
   /**
    * Function: die
@@ -138,14 +140,14 @@ class mxUndoableEdit {
    * Hook to free resources after the edit has been removed from the command
    * history. This implementation is empty.
    */
-  die() {}
+  die(): void {}
 
   /**
    * Function: undo
    *
    * Undoes all changes in this edit.
    */
-  undo() {
+  undo(): void {
     if (!this.undone) {
       this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
       const count = this.changes.length;
@@ -169,7 +171,6 @@ class mxUndoableEdit {
       this.redone = false;
       this.source.fireEvent(new mxEventObject(mxEvent.END_EDIT));
     }
-
     this.notify();
   }
 
@@ -178,7 +179,7 @@ class mxUndoableEdit {
    *
    * Redoes all changes in this edit.
    */
-  redo() {
+  redo(): void {
     if (!this.redone) {
       this.source.fireEvent(new mxEventObject(mxEvent.START_EDIT));
       const count = this.changes.length;
@@ -202,7 +203,6 @@ class mxUndoableEdit {
       this.redone = true;
       this.source.fireEvent(new mxEventObject(mxEvent.END_EDIT));
     }
-
     this.notify();
   }
 }

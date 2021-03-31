@@ -9,8 +9,8 @@ import mxConstants from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 import mxRectangle from '../util/datatypes/mxRectangle';
-import mxImageShape from '../shape/mxImageShape';
-import mxRectangleShape from '../shape/mxRectangleShape';
+import mxImageShape from '../shape/node/mxImageShape';
+import mxRectangleShape from '../shape/node/mxRectangleShape';
 
 class mxConstraintHandler {
   /**
