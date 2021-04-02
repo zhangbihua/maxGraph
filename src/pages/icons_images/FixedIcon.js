@@ -4,12 +4,12 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxConstants from '../../mxgraph/util/mxConstants';
 import mxLabel from '../../mxgraph/shape/mxLabel';
-import mxRectangle from '../../mxgraph/util/mxRectangle';
+import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
 
 class FixedIcon extends React.Component {
   constructor(props) {

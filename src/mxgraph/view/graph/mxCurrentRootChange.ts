@@ -1,9 +1,9 @@
 import mxGraphView from "./mxGraphView";
 import mxEventObject from "../../util/event/mxEventObject";
 import mxPoint from "../../util/datatypes/mxPoint";
-import mxCell from "../../model/mxCell";
+import mxCell from "../cell/mxCell";
 import mxEvent from "../../util/event/mxEvent";
-import mxGraphModel from "../../model/mxGraphModel";
+import mxGraphModel from "./mxGraphModel";
 
 class mxCurrentRootChange {
   view: mxGraphView;

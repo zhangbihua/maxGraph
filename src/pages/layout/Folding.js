@@ -4,10 +4,10 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxEdgeStyle from '../../mxgraph/view/mxEdgeStyle';
-import mxLayoutManager from '../../mxgraph/view/mxLayoutManager';
+import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
+import mxLayoutManager from '../../mxgraph/view/graph/mxLayoutManager';
 import mxStackLayout from '../../mxgraph/layout/mxStackLayout';
 
 class Folding extends React.Component {

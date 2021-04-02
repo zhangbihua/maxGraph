@@ -4,10 +4,10 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
-import mxCell from '../../mxgraph/model/mxCell';
-import mxGraphModel from '../../mxgraph/model/mxGraphModel';
-import mxPoint from '../../mxgraph/util/mxPoint';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
+import mxCell from '../../mxgraph/view/cell/mxCell';
+import mxGraphModel from '../../mxgraph/view/graph/mxGraphModel';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
 import mxUtils from '../../mxgraph/util/mxUtils';
 
 class Layers extends React.Component {

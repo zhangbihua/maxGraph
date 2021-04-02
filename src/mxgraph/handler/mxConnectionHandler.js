@@ -2,8 +2,8 @@
  * Copyright (c) 2006-2016, JGraph Ltd
  * Copyright (c) 2006-2016, Gaudenz Alder
  */
-import mxGeometry from '../model/mxGeometry';
-import mxCell from '../model/mxCell';
+import mxGeometry from '../util/datatypes/mxGeometry';
+import mxCell from '../view/cell/mxCell';
 import mxPoint from '../util/datatypes/mxPoint';
 import mxEventObject from '../util/event/mxEventObject';
 import mxEvent from '../util/event/mxEvent';

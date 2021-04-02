@@ -5,7 +5,7 @@
  */
 
 import mxObjectCodec from './mxObjectCodec';
-import mxTerminalChange from '../model/atomic_changes/mxTerminalChange';
+import mxTerminalChange from '../atomic_changes/mxTerminalChange';
 import mxCodecRegistry from "./mxCodecRegistry";
 
 class mxTerminalChangeCodec extends mxObjectCodec {

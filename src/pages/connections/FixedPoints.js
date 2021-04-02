@@ -4,15 +4,15 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxConstraintHandler from '../../mxgraph/handler/mxConstraintHandler';
 import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
 import mxEdgeHandler from '../../mxgraph/handler/mxEdgeHandler';
-import mxConnectionConstraint from '../../mxgraph/view/mxConnectionConstraint';
-import mxPoint from '../../mxgraph/util/mxPoint';
-import mxCellState from '../../mxgraph/view/mxCellState';
+import mxConnectionConstraint from '../../mxgraph/view/connection/mxConnectionConstraint';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
+import mxCellState from '../../mxgraph/view/cell/mxCellState';
 
 class FixedPoints extends React.Component {
   constructor(props) {

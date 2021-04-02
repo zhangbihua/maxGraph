@@ -4,11 +4,11 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
-import mxImage from '../../mxgraph/util/mxImage';
+import mxImage from '../../mxgraph/util/image/mxImage';
 import mxUtils from '../../mxgraph/util/mxUtils';
 
 class Permission {

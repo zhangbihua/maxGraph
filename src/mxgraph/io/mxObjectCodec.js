@@ -6,7 +6,7 @@
 
 import mxObjectIdentity from "../util/datatypes/mxObjectIdentity";
 import mxLog from "../util/gui/mxLog";
-import mxGeometry from "../model/mxGeometry";
+import mxGeometry from "../util/datatypes/mxGeometry";
 import mxPoint from "../util/datatypes/mxPoint";
 import mxConstants from "../util/mxConstants";
 import mxUtils from "../util/mxUtils";

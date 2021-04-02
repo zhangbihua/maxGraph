@@ -164,7 +164,7 @@ class mxCellOverlay extends mxEventSource {
    * state - <mxCellState> that represents the current state of the
    * associated cell.
    */
-  getBounds(state) {
+  getBounds(state: mxCellState) {
     const isEdge = state.view.graph.getModel().isEdge(state.cell);
     const s = state.view.scale;
     let pt = null;

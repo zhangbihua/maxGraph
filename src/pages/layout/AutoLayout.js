@@ -4,19 +4,19 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxClient from '../../mxgraph/mxClient';
-import mxMorphing from '../../mxgraph/util/mxMorphing';
+import mxMorphing from '../../mxgraph/util/animate/mxMorphing';
 import mxEdgeHandler from '../../mxgraph/handler/mxEdgeHandler';
 import mxHierarchicalLayout from '../../mxgraph/layout/hierarchical/mxHierarchicalLayout';
 import mxConstants from '../../mxgraph/util/mxConstants';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxCellOverlay from '../../mxgraph/view/mxCellOverlay';
-import mxImage from '../../mxgraph/util/mxImage';
-import mxEventObject from '../../mxgraph/util/mxEventObject';
-import mxCellRenderer from '../../mxgraph/view/mxCellRenderer';
+import mxCellOverlay from '../../mxgraph/view/cell/mxCellOverlay';
+import mxImage from '../../mxgraph/util/image/mxImage';
+import mxEventObject from '../../mxgraph/util/event/mxEventObject';
+import mxCellRenderer from '../../mxgraph/view/cell/mxCellRenderer';
 
 class AutoLayout extends React.Component {
   constructor(props) {

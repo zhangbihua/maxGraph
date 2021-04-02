@@ -4,16 +4,16 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxConstraintHandler from '../../mxgraph/handler/mxConstraintHandler';
-import mxImage from '../../mxgraph/util/mxImage';
+import mxImage from '../../mxgraph/util/image/mxImage';
 import mxShape from '../../mxgraph/shape/mxShape';
 import mxTriangle from '../../mxgraph/shape/mxTriangle';
 import mxEdgeHandler from '../../mxgraph/handler/mxEdgeHandler';
-import mxConnectionConstraint from '../../mxgraph/view/mxConnectionConstraint';
-import mxPoint from '../../mxgraph/util/mxPoint';
+import mxConnectionConstraint from '../../mxgraph/view/connection/mxConnectionConstraint';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
 import mxConstants from '../../mxgraph/util/mxConstants';
 
 class PortRefs extends React.Component {

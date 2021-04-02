@@ -4,20 +4,20 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
-import mxPoint from '../../mxgraph/util/mxPoint';
-import mxGraphView from '../../mxgraph/view/mxGraphView';
-import mxCellRenderer from '../../mxgraph/view/mxCellRenderer';
-import mxCylinder from '../../mxgraph/shape/mxCylinder';
-import mxImage from '../../mxgraph/util/mxImage';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
+import mxGraphView from '../../mxgraph/view/graph/mxGraphView';
+import mxCellRenderer from '../../mxgraph/view/cell/mxCellRenderer';
+import mxCylinder from '../../mxgraph/shape/node/mxCylinder';
+import mxImage from '../../mxgraph/util/image/mxImage';
 import mxConstants from '../../mxgraph/util/mxConstants';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 import mxCompactTreeLayout from '../../mxgraph/layout/mxCompactTreeLayout';
-import mxLayoutManager from '../../mxgraph/view/mxLayoutManager';
-import mxRectangle from '../../mxgraph/util/mxRectangle';
+import mxLayoutManager from '../../mxgraph/view/graph/mxLayoutManager';
+import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxClient from '../../mxgraph/mxClient';
-import mxEdgeStyle from '../../mxgraph/view/mxEdgeStyle';
+import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
 
 class Tree extends React.Component {
   constructor(props) {

@@ -4,17 +4,17 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxEdgeStyle from '../../mxgraph/view/mxEdgeStyle';
+import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
-import mxLayoutManager from '../../mxgraph/view/mxLayoutManager';
+import mxLayoutManager from '../../mxgraph/view/graph/mxLayoutManager';
 import mxParallelEdgeLayout from '../../mxgraph/layout/mxParallelEdgeLayout';
 import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
-import mxImage from '../../mxgraph/util/mxImage';
+import mxImage from '../../mxgraph/util/image/mxImage';
 import mxClient from '../../mxgraph/mxClient';
 
 class Events extends React.Component {

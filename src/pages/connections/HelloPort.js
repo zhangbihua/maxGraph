@@ -4,12 +4,12 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxEdgeStyle from '../../mxgraph/view/mxEdgeStyle';
-import mxPoint from '../../mxgraph/util/mxPoint';
+import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
 import mxCodec from '../../mxgraph/io/mxCodec';
 import mxUtils from '../../mxgraph/util/mxUtils';
 

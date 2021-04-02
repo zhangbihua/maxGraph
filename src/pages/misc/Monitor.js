@@ -4,14 +4,14 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxCellOverlay from '../../mxgraph/view/mxCellOverlay';
+import mxCellOverlay from '../../mxgraph/view/cell/mxCellOverlay';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxCodec from '../../mxgraph/io/mxCodec';
-import mxPerimeter from '../../mxgraph/view/mxPerimeter';
-import mxEdgeStyle from '../../mxgraph/view/mxEdgeStyle';
+import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
+import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
 
 class Monitor extends React.Component {
   constructor(props) {

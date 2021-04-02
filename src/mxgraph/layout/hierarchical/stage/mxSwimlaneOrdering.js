@@ -5,7 +5,7 @@
  */
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
 import mxUtils from '../../../util/mxUtils';
-import mxCellPath from '../../../model/mxCellPath';
+import mxCellPath from '../../../view/cell/mxCellPath';
 
 class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
   /**

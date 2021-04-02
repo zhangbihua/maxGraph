@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
-import mxPoint from '../../mxgraph/util/mxPoint';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
 
 class Animation extends React.Component {
   constructor(props) {

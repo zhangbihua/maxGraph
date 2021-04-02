@@ -4,13 +4,13 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxHierarchicalLayout from '../../mxgraph/layout/hierarchical/mxHierarchicalLayout';
 import mxFastOrganicLayout from '../../mxgraph/layout/mxFastOrganicLayout';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxPerimeter from '../../mxgraph/view/mxPerimeter';
+import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
 import mxUtils from '../../mxgraph/util/mxUtils';
 
 class HierarchicalLayout extends React.Component {

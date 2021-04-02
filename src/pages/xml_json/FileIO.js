@@ -4,15 +4,15 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxCellTracker from '../../mxgraph/handler/mxCellTracker';
 import mxConstants from '../../mxgraph/util/mxConstants';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxFastOrganicLayout from '../../mxgraph/layout/mxFastOrganicLayout';
-import mxEventObject from '../../mxgraph/util/mxEventObject';
+import mxEventObject from '../../mxgraph/util/event/mxEventObject';
 import mxCodec from '../../mxgraph/io/mxCodec';
-import mxPerimeter from '../../mxgraph/view/mxPerimeter';
+import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
 import mxClient from '../../mxgraph/mxClient';
 
 class FileIO extends React.Component {

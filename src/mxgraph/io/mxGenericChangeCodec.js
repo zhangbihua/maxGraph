@@ -5,12 +5,12 @@
  */
 
 import mxObjectCodec from './mxObjectCodec';
-import mxValueChange from '../model/atomic_changes/mxValueChange';
-import mxStyleChange from '../model/atomic_changes/mxStyleChange';
-import mxGeometryChange from '../model/atomic_changes/mxGeometryChange';
-import mxCollapseChange from '../model/atomic_changes/mxCollapseChange';
-import mxVisibleChange from '../model/atomic_changes/mxVisibleChange';
-import mxCellAttributeChange from '../model/atomic_changes/mxCellAttributeChange';
+import mxValueChange from '../atomic_changes/mxValueChange';
+import mxStyleChange from '../atomic_changes/mxStyleChange';
+import mxGeometryChange from '../atomic_changes/mxGeometryChange';
+import mxCollapseChange from '../atomic_changes/mxCollapseChange';
+import mxVisibleChange from '../atomic_changes/mxVisibleChange';
+import mxCellAttributeChange from '../atomic_changes/mxCellAttributeChange';
 import mxCodecRegistry from './mxCodecRegistry';
 import mxUtils from "../util/mxUtils";
 

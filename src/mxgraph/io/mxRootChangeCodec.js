@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxRootChange from '../model/atomic_changes/mxRootChange';
+import mxRootChange from '../atomic_changes/mxRootChange';
 import mxCodecRegistry from './mxCodecRegistry';
 import mxConstants from "../util/mxConstants";
 import mxObjectCodec from "./mxObjectCodec";

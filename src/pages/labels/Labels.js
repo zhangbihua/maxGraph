@@ -4,11 +4,11 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxRectangle from '../../mxgraph/util/mxRectangle';
+import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
 
 class Labels extends React.Component {
   constructor(props) {

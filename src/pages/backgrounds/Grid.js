@@ -4,13 +4,13 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
-import mxPoint from '../../mxgraph/util/mxPoint';
-import mxLog from '../../mxgraph/util/mxLog';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
+import mxLog from '../../mxgraph/util/gui/mxLog';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxGraphView from '../../mxgraph/view/mxGraphView';
+import mxGraphView from '../../mxgraph/view/graph/mxGraphView';
 
 class Grid extends React.Component {
   constructor(props) {

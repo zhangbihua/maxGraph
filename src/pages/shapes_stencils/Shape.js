@@ -4,10 +4,10 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxCylinder from '../../mxgraph/shape/mxCylinder';
-import mxCellRenderer from '../../mxgraph/view/mxCellRenderer';
+import mxCylinder from '../../mxgraph/shape/node/mxCylinder';
+import mxCellRenderer from '../../mxgraph/view/cell/mxCellRenderer';
 
 class Shape extends React.Component {
   constructor(props) {

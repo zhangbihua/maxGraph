@@ -4,9 +4,9 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
-import mxRectangle from '../../mxgraph/util/mxRectangle';
-import mxGraphModel from '../../mxgraph/model/mxGraphModel';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
+import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
+import mxGraphModel from '../../mxgraph/view/graph/mxGraphModel';
 
 class Collapse extends React.Component {
   constructor(props) {

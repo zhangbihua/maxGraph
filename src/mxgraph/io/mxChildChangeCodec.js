@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxChildChange from '../model/atomic_changes/mxChildChange';
+import mxChildChange from '../atomic_changes/mxChildChange';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
 import mxUtils from '../util/mxUtils';

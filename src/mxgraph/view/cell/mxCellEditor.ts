@@ -11,7 +11,7 @@ import mxClient from '../../mxClient';
 import mxConstants from '../../util/mxConstants';
 import mxText from '../../shape/mxText';
 import mxGraph from '../graph/mxGraph';
-import mxCell from '../../model/mxCell';
+import mxCell from './mxCell';
 import mxMouseEvent from '../../util/event/mxMouseEvent';
 import mxCellState from './mxCellState';
 
@@ -341,7 +341,7 @@ class mxCellEditor {
    *
    * Returns the current editing value.
    */
-  getCurrentValue(state) {
+  getCurrentValue(state: mxCellState) {
     return mxUtils.extractTextWithWhitespace(this.textarea.childNodes);
   }
 

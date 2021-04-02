@@ -4,13 +4,13 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxRectangle from '../../mxgraph/util/mxRectangle';
-import mxImage from '../../mxgraph/util/mxImage';
+import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
+import mxImage from '../../mxgraph/util/image/mxImage';
 
 class HoverIcons extends React.Component {
   constructor(props) {

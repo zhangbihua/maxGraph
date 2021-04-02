@@ -4,14 +4,14 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxClipboard from '../../mxgraph/util/mxClipboard';
+import mxClipboard from '../../mxgraph/util/storage/mxClipboard';
 import mxClient from '../../mxgraph/mxClient';
 import mxCodec from '../../mxgraph/io/mxCodec';
-import mxGraphModel from '../../mxgraph/model/mxGraphModel';
+import mxGraphModel from '../../mxgraph/view/graph/mxGraphModel';
 
 class Clipboard extends React.Component {
   constructor(props) {

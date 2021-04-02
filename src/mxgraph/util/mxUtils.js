@@ -10,7 +10,7 @@ import mxConstants from './mxConstants';
 import mxObjectIdentity from './datatypes/mxObjectIdentity';
 import mxPoint from './datatypes/mxPoint';
 import mxDictionary from './datatypes/mxDictionary';
-import mxCellPath from '../model/mxCellPath';
+import mxCellPath from '../view/cell/mxCellPath';
 import mxRectangle from './datatypes/mxRectangle';
 import mxTemporaryCellStates from '../view/cell/mxTemporaryCellStates';
 import mxCodec from '../io/mxCodec';

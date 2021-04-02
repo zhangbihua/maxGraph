@@ -3,10 +3,10 @@ import mxResources from '../../util/mxResources';
 import mxLog from '../../util/gui/mxLog';
 import mxEvent from '../../util/event/mxEvent';
 import mxGraphSelectionModel from "./mxGraphSelectionModel";
-import mxCell from '../../model/mxCell';
+import mxCell from '../cell/mxCell';
 
 class mxSelectionChange {
-  selectionModel: mxGraphSelectionModel
+  selectionModel: mxGraphSelectionModel;
   added: mxCell[];
   removed: mxCell[];
 

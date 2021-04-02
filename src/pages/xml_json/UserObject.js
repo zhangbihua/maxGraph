@@ -4,16 +4,16 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxForm from '../../mxgraph/util/mxForm';
-import mxCellAttributeChange from '../../mxgraph/model/atomic_changes/mxCellAttributeChange';
+import mxForm from '../../mxgraph/util/gui/mxForm';
+import mxCellAttributeChange from '../../mxgraph/atomic_changes/mxCellAttributeChange';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
-import mxRectangle from '../../mxgraph/util/mxRectangle';
-import mxEdgeStyle from '../../mxgraph/view/mxEdgeStyle';
+import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
+import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
 
 class UserObject extends React.Component {
   constructor(props) {

@@ -4,14 +4,14 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxRectangle from '../../mxgraph/util/mxRectangle';
-import mxCellRenderer from '../../mxgraph/view/mxCellRenderer';
-import mxImageShape from '../../mxgraph/shape/mxImageShape';
-import mxImage from '../../mxgraph/util/mxImage';
+import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
+import mxCellRenderer from '../../mxgraph/view/cell/mxCellRenderer';
+import mxImageShape from '../../mxgraph/shape/node/mxImageShape';
+import mxImage from '../../mxgraph/util/image/mxImage';
 
 class Control extends React.Component {
   constructor(props) {

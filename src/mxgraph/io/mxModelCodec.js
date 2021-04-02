@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxGraphModel from '../model/mxGraphModel';
+import mxGraphModel from '../view/graph/mxGraphModel';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
 

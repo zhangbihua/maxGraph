@@ -7,23 +7,23 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
-import mxPrintPreview from '../../mxgraph/view/mxPrintPreview';
+import mxPrintPreview from '../../mxgraph/view/graph/mxPrintPreview';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxCellOverlay from '../../mxgraph/view/mxCellOverlay';
-import mxImage from '../../mxgraph/util/mxImage';
-import mxPoint from '../../mxgraph/util/mxPoint';
+import mxCellOverlay from '../../mxgraph/view/cell/mxCellOverlay';
+import mxImage from '../../mxgraph/util/image/mxImage';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxWindow from '../../mxgraph/util/mxWindow';
-import mxToolbar from '../../mxgraph/util/mxToolbar';
-import mxLayoutManager from '../../mxgraph/view/mxLayoutManager';
-import mxEdgeStyle from '../../mxgraph/view/mxEdgeStyle';
+import mxWindow from '../../mxgraph/util/gui/mxWindow';
+import mxToolbar from '../../mxgraph/util/gui/mxToolbar';
+import mxLayoutManager from '../../mxgraph/view/graph/mxLayoutManager';
+import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
 import mxCompactTreeLayout from '../../mxgraph/layout/mxCompactTreeLayout';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 import mxClient from '../../mxgraph/mxClient';
-import mxOutline from '../../mxgraph/view/mxOutline';
+import mxOutline from '../../mxgraph/view/graph/mxOutline';
 
 class OrgChart extends React.Component {
   constructor(props) {

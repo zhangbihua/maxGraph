@@ -4,10 +4,10 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
-import mxMorphing from '../../mxgraph/util/mxMorphing';
+import mxMorphing from '../../mxgraph/util/animate/mxMorphing';
 import mxUtils from '../../mxgraph/util/mxUtils';
 
 class Morph extends React.Component {

@@ -4,14 +4,14 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
-import mxPoint from '../../mxgraph/util/mxPoint';
-import mxCellRenderer from '../../mxgraph/view/mxCellRenderer';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
+import mxCellRenderer from '../../mxgraph/view/cell/mxCellRenderer';
 import mxEdgeHandler from '../../mxgraph/handler/mxEdgeHandler';
 import mxGraphHandler from '../../mxgraph/handler/mxGraphHandler';
-import mxCylinder from '../../mxgraph/shape/mxCylinder';
-import mxMarker from '../../mxgraph/shape/mxMarker';
-import mxArrow from '../../mxgraph/shape/mxArrow';
+import mxCylinder from '../../mxgraph/shape/node/mxCylinder';
+import mxMarker from '../../mxgraph/shape/edge/mxMarker';
+import mxArrow from '../../mxgraph/shape/edge/mxArrow';
 
 class Markers extends React.Component {
   constructor(props) {

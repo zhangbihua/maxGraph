@@ -6,7 +6,7 @@
 
 import mxClient from '../mxClient';
 import mxToolbar from '../util/gui/mxToolbar';
-import mxGeometry from '../model/mxGeometry';
+import mxGeometry from '../util/datatypes/mxGeometry';
 import mxUtils from '../util/mxUtils';
 import mxEvent from '../util/event/mxEvent';
 

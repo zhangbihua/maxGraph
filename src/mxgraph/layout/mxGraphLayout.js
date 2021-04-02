@@ -6,7 +6,7 @@
 
 import mxDictionary from '../util/datatypes/mxDictionary';
 import mxRectangle from '../util/datatypes/mxRectangle';
-import mxGeometry from '../model/mxGeometry';
+import mxGeometry from '../util/datatypes/mxGeometry';
 import mxPoint from '../util/datatypes/mxPoint';
 import mxConstants from '../util/mxConstants';
 

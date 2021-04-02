@@ -4,12 +4,12 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxClient from '../../mxgraph/mxClient';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxMultiplicity from '../../mxgraph/view/mxMultiplicity';
+import mxMultiplicity from '../../mxgraph/view/connection/mxMultiplicity';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 
 class Validation extends React.Component {

@@ -6,7 +6,7 @@
 import mxUtils from '../../../util/mxUtils';
 import mxGraphHierarchyNode from './mxGraphHierarchyNode';
 import mxGraphHierarchyEdge from './mxGraphHierarchyEdge';
-import mxCellPath from '../../../model/mxCellPath';
+import mxCellPath from '../../../view/cell/mxCellPath';
 
 class mxSwimlaneModel {
   /**

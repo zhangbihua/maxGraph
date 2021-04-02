@@ -4,21 +4,21 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
-import mxPoint from '../../mxgraph/util/mxPoint';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
 import mxStackLayout from '../../mxgraph/layout/mxStackLayout';
-import mxSwimlaneManager from '../../mxgraph/view/mxSwimlaneManager';
-import mxGraphModel from '../../mxgraph/model/mxGraphModel';
+import mxSwimlaneManager from '../../mxgraph/view/graph/mxSwimlaneManager';
+import mxGraphModel from '../../mxgraph/view/graph/mxGraphModel';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxPerimeter from '../../mxgraph/view/mxPerimeter';
+import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxEditor from '../../mxgraph/editor/mxEditor';
 import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
-import mxImage from '../../mxgraph/util/mxImage';
-import mxLayoutManager from '../../mxgraph/view/mxLayoutManager';
-import mxEdgeStyle from '../../mxgraph/view/mxEdgeStyle';
+import mxImage from '../../mxgraph/util/image/mxImage';
+import mxLayoutManager from '../../mxgraph/view/graph/mxLayoutManager';
+import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
 
 class SwimLanes extends React.Component {
   constructor(props) {

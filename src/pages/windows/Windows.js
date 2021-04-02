@@ -4,11 +4,11 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
-import mxLog from '../../mxgraph/util/mxLog';
-import mxWindow from '../../mxgraph/util/mxWindow';
+import mxLog from '../../mxgraph/util/gui/mxLog';
+import mxWindow from '../../mxgraph/util/gui/mxWindow';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxUtils from '../../mxgraph/util/mxUtils';
 
 class LOD extends React.Component {

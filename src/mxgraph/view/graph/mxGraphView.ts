@@ -22,10 +22,11 @@ import mxImageShape from '../../shape/node/mxImageShape';
 import mxMouseEvent from '../../util/event/mxMouseEvent';
 import mxStyleRegistry from '../style/mxStyleRegistry';
 import mxGraph from "./mxGraph";
-import mxCell from '../../model/mxCell';
+import mxCell from '../cell/mxCell';
 import mxImage from '../../util/image/mxImage';
 import mxCurrentRootChange from "./mxCurrentRootChange";
-import mxGraphModel from '../../model/mxGraphModel';
+import mxGraphModel from './mxGraphModel';
+import mxShape from '../../shape/mxShape';
 
 const validateBool = x => {
   if (x === true || x === false) {
@@ -45,6 +46,10 @@ const validateString = x => {
 }
 
 class mxGraphView extends mxEventSource {
+  // TODO: Document me!
+  backgroundImage: mxImageShape | null;
+  backgroundPageShape: mxShape | null;
+
   EMPTY_POINT = new mxPoint();
 
   _canvas: HTMLElement;
@@ -492,7 +497,7 @@ class mxGraphView extends mxEventSource {
    *
    * cells - Array of <mxCells> whose bounds should be returned.
    */
-  getBounds(cells: [mxCell]): [mxRectangle] {
+  getBounds(cells: mxCell[]): mxRectangle {
     let result = null;
 
     if (cells != null && cells.length > 0) {
@@ -713,7 +718,7 @@ class mxGraphView extends mxEventSource {
    * cell - Optional <mxCell> to be used as the root of the validation.
    * Default is <currentRoot> or the root of the model.
    */
-  validate(cell) {
+  validate(cell: mxCell | null=null) {
     const t0 = mxLog.enter('mxGraphView.validate');
     window.status =
       mxResources.get(this.updatingDocumentResource) ||
@@ -1007,8 +1012,8 @@ class mxGraphView extends mxEventSource {
    * visible - Optional boolean indicating if the cell should be visible. Default
    * is true.
    */
-  validateCell(cell, visible) {
-    visible = visible != null ? visible : true;
+  validateCell(cell: mxCell,
+               visible: boolean=true) {
 
     if (cell != null) {
       visible = visible && this.graph.isCellVisible(cell);
@@ -1029,7 +1034,6 @@ class mxGraphView extends mxEventSource {
         }
       }
     }
-
     return cell;
   }
 
@@ -1100,7 +1104,6 @@ class mxGraphView extends mxEventSource {
         }
       }
     }
-
     return state;
   }
 
@@ -1113,7 +1116,7 @@ class mxGraphView extends mxEventSource {
    *
    * state - <mxCellState> to be updated.
    */
-  updateCellState(state) {
+  updateCellState(state: mxCellState) {
     state.absoluteOffset.x = 0;
     state.absoluteOffset.y = 0;
     state.origin.x = 0;
@@ -1277,7 +1280,7 @@ class mxGraphView extends mxEventSource {
    *
    * state - <mxCellState> whose absolute offset should be updated.
    */
-  updateVertexLabelOffset(state) {
+  updateVertexLabelOffset(state: mxCellState) {
     const h = mxUtils.getValue(
       state.style,
       mxConstants.STYLE_LABEL_POSITION,
@@ -1363,7 +1366,7 @@ class mxGraphView extends mxEventSource {
    *
    * state - <mxCellState> that represents the cell state.
    */
-  stateValidated(state) {
+  stateValidated(state: mxCellState) {
     const fg =
       (this.graph.getModel().isEdge(state.cell) &&
         this.graph.keepEdgesInForeground) ||
@@ -1482,7 +1485,7 @@ class mxGraphView extends mxEventSource {
    *
    * edge - <mxCellState> whose bounds should be updated.
    */
-  updateBoundsFromStencil(state) {
+  updateBoundsFromStencil(state: mxCellState) {
     let previous = null;
 
     if (
@@ -1854,7 +1857,7 @@ class mxGraphView extends mxEventSource {
    *
    * Returns the x-coordinate of the center point for automatic routing.
    */
-  getRoutingCenterX(state) {
+  getRoutingCenterX(state: mxCellState) {
     const f =
       state.style != null
         ? parseFloat(state.style[mxConstants.STYLE_ROUTING_CENTER_X]) || 0
@@ -1867,7 +1870,7 @@ class mxGraphView extends mxEventSource {
    *
    * Returns the y-coordinate of the center point for automatic routing.
    */
-  getRoutingCenterY(state) {
+  getRoutingCenterY(state: mxCellState) {
     const f =
       state.style != null
         ? parseFloat(state.style[mxConstants.STYLE_ROUTING_CENTER_Y]) || 0
@@ -1933,7 +1936,7 @@ class mxGraphView extends mxEventSource {
    *
    * Returns the perimeter function for the given state.
    */
-  getPerimeterFunction(state) {
+  getPerimeterFunction(state: mxCellState) {
     let perimeter = state.style[mxConstants.STYLE_PERIMETER];
 
     // Converts string values to objects
@@ -2031,7 +2034,7 @@ class mxGraphView extends mxEventSource {
    *
    * state - <mxCellState> whose bounds should be updated.
    */
-  updateEdgeBounds(state) {
+  updateEdgeBounds(state: mxCellState) {
     const points = state.absolutePoints;
     const p0 = points[0];
     const pe = points[points.length - 1];
@@ -2268,7 +2271,7 @@ class mxGraphView extends mxEventSource {
    *
    * state - <mxCellState> whose absolute offset should be updated.
    */
-  updateEdgeLabelOffset(state) {
+  updateEdgeLabelOffset(state: mxCellState) {
     const points = state.absolutePoints;
 
     state.absoluteOffset.x = state.getCenterX();

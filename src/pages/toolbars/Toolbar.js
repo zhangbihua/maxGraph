@@ -4,16 +4,16 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxDragSource from '../../mxgraph/util/mxDragSource';
-import mxGraphModel from '../../mxgraph/model/mxGraphModel';
-import mxToolbar from '../../mxgraph/util/mxToolbar';
+import mxDragSource from '../../mxgraph/util/drag_pan/mxDragSource';
+import mxGraphModel from '../../mxgraph/view/graph/mxGraphModel';
+import mxToolbar from '../../mxgraph/util/gui/mxToolbar';
 import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
-import mxImage from '../../mxgraph/util/mxImage';
-import mxGeometry from '../../mxgraph/model/mxGeometry';
-import mxCell from '../../mxgraph/model/mxCell';
+import mxImage from '../../mxgraph/util/image/mxImage';
+import mxGeometry from '../../mxgraph/util/datatypes/mxGeometry';
+import mxCell from '../../mxgraph/view/cell/mxCell';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 
 class Toolbar extends React.Component {

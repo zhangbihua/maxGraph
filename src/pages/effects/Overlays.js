@@ -4,11 +4,11 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxCellTracker from '../../mxgraph/handler/mxCellTracker';
-import mxCellOverlay from '../../mxgraph/view/mxCellOverlay';
-import mxImage from '../../mxgraph/util/mxImage';
+import mxCellOverlay from '../../mxgraph/view/cell/mxCellOverlay';
+import mxImage from '../../mxgraph/util/image/mxImage';
 import mxUtils from '../../mxgraph/util/mxUtils';
 
 class Overlays extends React.Component {

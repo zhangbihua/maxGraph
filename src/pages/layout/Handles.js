@@ -4,15 +4,15 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxVertexHandler from '../../mxgraph/handler/mxVertexHandler';
-import mxCellRenderer from '../../mxgraph/view/mxCellRenderer';
-import mxRectangle from '../../mxgraph/util/mxRectangle';
-import mxCylinder from '../../mxgraph/shape/mxCylinder';
-import mxPoint from '../../mxgraph/util/mxPoint';
+import mxCellRenderer from '../../mxgraph/view/cell/mxCellRenderer';
+import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
+import mxCylinder from '../../mxgraph/shape/node/mxCylinder';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
 import mxHandle from '../../mxgraph/handler/mxHandle';
 
 class Handles extends React.Component {

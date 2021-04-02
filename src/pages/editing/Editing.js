@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 

@@ -4,14 +4,14 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxConstants from '../../mxgraph/util/mxConstants';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxRectangle from '../../mxgraph/util/mxRectangle';
-import mxImage from '../../mxgraph/util/mxImage';
-import mxPerimeter from '../../mxgraph/view/mxPerimeter';
+import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
+import mxImage from '../../mxgraph/util/image/mxImage';
+import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
 
 class Images extends React.Component {
   constructor(props) {

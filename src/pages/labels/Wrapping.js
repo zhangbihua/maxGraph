@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 
 class Wrapping extends React.Component {
   constructor(props) {
