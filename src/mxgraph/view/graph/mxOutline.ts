@@ -17,6 +17,21 @@ import mxClient from '../../mxClient';
 import mxImage from '../../util/image/mxImage';
 
 class mxOutline {
+  // TODO: Document me!!
+  sizer: mxRectangleShape;
+  selectionBorder: mxRectangleShape;
+  updateHandler: Function | null;
+  refreshHandler: Function | null;
+  panHandler: Function | null;
+  active: boolean | null;
+  bounds: mxRectangle | null;
+  zoom: number;
+  startX: number;
+  startY: number;
+  dx0: number;
+  dy0: number;
+  index: number;
+
   /**
    * Function: source
    *
@@ -302,7 +317,7 @@ class mxOutline {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
-  isEnabled() {
+  isEnabled(): boolean {
     return this.enabled;
   }
 
@@ -316,7 +331,7 @@ class mxOutline {
    *
    * value - Boolean that specifies the new enabled state.
    */
-  setEnabled(value) {
+  setEnabled(value: boolean): void {
     this.enabled = value;
   }
 
@@ -330,7 +345,7 @@ class mxOutline {
    *
    * value - Boolean that specifies the new enabled state.
    */
-  setZoomEnabled(value) {
+  setZoomEnabled(value: boolean): void {
     this.sizer.node.style.visibility = value ? 'visible' : 'hidden';
   }
 
@@ -339,7 +354,7 @@ class mxOutline {
    *
    * Invokes <update> and revalidate the outline. This method is deprecated.
    */
-  refresh() {
+  refresh(): void {
     this.update(true);
   }
 
@@ -348,23 +363,22 @@ class mxOutline {
    *
    * Creates the shape used as the sizer.
    */
-  createSizer() {
+  createSizer(): mxRectangleShape {
     if (this.sizerImage != null) {
       const sizer = new mxImageShape(
         new mxRectangle(0, 0, this.sizerImage.width, this.sizerImage.height),
         this.sizerImage.src
       );
       sizer.dialect = this.outline.dialect;
-
       return sizer;
     }
+
     const sizer = new mxRectangleShape(
       new mxRectangle(0, 0, this.sizerSize, this.sizerSize),
       mxConstants.OUTLINE_HANDLE_FILLCOLOR,
       mxConstants.OUTLINE_HANDLE_STROKECOLOR
     );
     sizer.dialect = this.outline.dialect;
-
     return sizer;
   }
 
@@ -405,7 +419,7 @@ class mxOutline {
    *
    * Updates the outline.
    */
-  update(revalidate) {
+  update(revalidate: boolean=false) {
     if (
       this.source != null &&
       this.source.container != null &&
@@ -562,18 +576,12 @@ class mxOutline {
       const tol = !mxEvent.isMouseEvent(me.getEvent())
         ? this.source.tolerance
         : 0;
-      const hit =
-        this.source.allowHandleBoundsCheck && tol > 0
-          ? new mxRectangle(
-              me.getGraphX() - tol,
-              me.getGraphY() - tol,
-              2 * tol,
-              2 * tol
-            )
+      const hit = tol > 0
+          ? new mxRectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol)
           : null;
       this.zoom =
-        me.isSource(this.sizer) ||
-        (hit != null && mxUtils.intersects(shape.bounds, hit));
+          me.isSource(this.sizer)
+          || (hit != null && mxUtils.intersects(shape.bounds, hit));
       this.startX = me.getX();
       this.startY = me.getY();
       this.active = true;

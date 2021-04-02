@@ -31,7 +31,7 @@ import mxDictionary from '../../util/datatypes/mxDictionary';
 import mxEventObject from '../../util/event/mxEventObject';
 import mxPoint from '../../util/datatypes/mxPoint';
 import mxShape from '../../shape/mxShape';
-import mxCellState from "./mxCellState";
+import mxCellState from "../../util/datatypes/mxCellState";
 import mxCell from "./mxCell";
 
 class mxCellRenderer {
@@ -49,21 +49,21 @@ class mxCellRenderer {
    *
    * Defines the default shape for edges. Default is <mxConnector>.
    */
-  defaultEdgeShape: mxShape = mxConnector;
+  defaultEdgeShape: typeof mxShape = mxConnector;
 
   /**
    * Variable: defaultVertexShape
    *
    * Defines the default shape for vertices. Default is <mxRectangleShape>.
    */
-  defaultVertexShape: mxShape = mxRectangleShape;
+  defaultVertexShape: typeof mxShape = mxRectangleShape;
 
   /**
    * Variable: defaultTextShape
    *
    * Defines the default shape for labels. Default is <mxText>.
    */
-  defaultTextShape: mxShape = mxText;
+  defaultTextShape: typeof mxShape = mxText;
 
   /**
    * Variable: legacyControlPosition
@@ -220,7 +220,7 @@ class mxCellRenderer {
    *
    * Returns the shape for the given name from <defaultShapes>.
    */
-  getShape(name: string): mxShape {
+  getShape(name: string): typeof mxShape {
     return name != null ? mxCellRenderer.defaultShapes[name] : null;
   }
 
@@ -231,13 +231,11 @@ class mxCellRenderer {
    */
   getShapeConstructor(state: mxCellState) {
     let ctor = this.getShape(state.style[mxConstants.STYLE_SHAPE]);
-
     if (ctor == null) {
       ctor = state.view.graph.getModel().isEdge(state.cell)
         ? this.defaultEdgeShape
         : this.defaultVertexShape;
     }
-
     return ctor;
   }
 

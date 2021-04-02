@@ -7,7 +7,7 @@ import mxEdgeHandler from './mxEdgeHandler';
 import mxConstants from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 import mxPoint from '../util/datatypes/mxPoint';
-import mxEdgeStyle from '../view/style/mxEdgeStyle';
+import mxEdgeStyle from '../util/datatypes/style/mxEdgeStyle';
 import mxResources from '../util/mxResources';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxUtils from '../util/mxUtils';

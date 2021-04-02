@@ -325,7 +325,7 @@ class mxLayoutManager extends mxEventSource {
    * Executes all layouts which have been scheduled during the
    * changes.
    */
-  getCellsForChange(change) {
+  getCellsForChange(change: ) {
     if (change instanceof mxChildChange) {
       return this.addCellsWithLayout(
         change.child,
@@ -350,7 +350,8 @@ class mxLayoutManager extends mxEventSource {
    *
    * Adds all ancestors of the given cell that have a layout.
    */
-  addCellsWithLayout(cell, result) {
+  addCellsWithLayout(cell: mxCell,
+                     result: mxCell[]=[]): mxCell[] {
     return this.addDescendantsWithLayout(
       cell,
       this.addAncestorsWithLayout(cell, result)
@@ -377,7 +378,6 @@ class mxLayoutManager extends mxEventSource {
         this.addAncestorsWithLayout(model.getParent(cell), result);
       }
     }
-
     return result;
   }
 
@@ -387,7 +387,7 @@ class mxLayoutManager extends mxEventSource {
    * Adds all descendants of the given cell that have a layout.
    */
   addDescendantsWithLayout(cell: mxCell,
-                           result: any[]=[]): any[] {
+                           result: mxCell[]=[]): mxCell[] {
 
     if (cell != null && this.hasLayout(cell)) {
       const model = this.getGraph().getModel();

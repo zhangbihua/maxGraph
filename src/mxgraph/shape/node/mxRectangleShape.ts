@@ -32,14 +32,14 @@ class mxRectangleShape extends mxShape {
    * 1. This is stored in <strokewidth>.
    */
   constructor(bounds: mxRectangle,
-              fill: string,
-              stroke: string,
-              strokewidth: number) {
+              fill: string='#FFFFFF',
+              stroke: string='#000000',
+              strokewidth: number=1) {
     super();
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth != null ? strokewidth : 1;
+    this.strokewidth = strokewidth;
   }
 
   /**

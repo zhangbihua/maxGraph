@@ -4,11 +4,11 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxUtils from '../../util/mxUtils';
-import mxPoint from '../../util/datatypes/mxPoint';
-import mxCellState from '../cell/mxCellState';
-import mxConstants from '../../util/mxConstants';
-import mxRectangle from "../../util/datatypes/mxRectangle";
+import mxUtils from '../../mxUtils';
+import mxPoint from '../mxPoint';
+import mxCellState from '../mxCellState';
+import mxConstants from '../../mxConstants';
+import mxRectangle from "../mxRectangle";
 
 const mxEdgeStyle = {
   /**

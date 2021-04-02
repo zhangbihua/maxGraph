@@ -3,9 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxConstants from '../../util/mxConstants';
+import mxConstants from '../../mxConstants';
 import mxPerimeter from './mxPerimeter';
-import mxUtils from '../../util/mxUtils';
+import mxUtils from '../../mxUtils';
 
 class mxStylesheet {
   /**
@@ -243,4 +243,4 @@ class mxStylesheet {
 }
 
 export default mxStylesheet;
-import("../../io/mxStylesheetCodec");
+import("../../../io/mxStylesheetCodec");

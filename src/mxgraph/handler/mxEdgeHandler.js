@@ -14,7 +14,7 @@ import mxEvent from '../util/event/mxEvent';
 import mxConstraintHandler from './mxConstraintHandler';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxClient from '../mxClient';
-import mxEdgeStyle from '../view/style/mxEdgeStyle';
+import mxEdgeStyle from '../util/datatypes/style/mxEdgeStyle';
 
 class mxEdgeHandler {
   /**

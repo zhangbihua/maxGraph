@@ -16,11 +16,11 @@ import mxEvent from '../../util/event/mxEvent';
 import mxUtils from '../../util/mxUtils';
 import mxLog from '../../util/gui/mxLog';
 import mxResources from '../../util/mxResources';
-import mxCellState from '../cell/mxCellState';
+import mxCellState from '../../util/datatypes/mxCellState';
 import mxUndoableEdit from '../../util/undo/mxUndoableEdit';
 import mxImageShape from '../../shape/node/mxImageShape';
 import mxMouseEvent from '../../util/event/mxMouseEvent';
-import mxStyleRegistry from '../style/mxStyleRegistry';
+import mxStyleRegistry from '../../util/datatypes/style/mxStyleRegistry';
 import mxGraph from "./mxGraph";
 import mxCell from '../cell/mxCell';
 import mxImage from '../../util/image/mxImage';
@@ -2497,28 +2497,28 @@ class mxGraphView extends mxEventSource {
         mxEvent.addListener(
           container,
           'gesturestart',
-          mxUtils.bind(this, evt => {
+          evt => {
             graph.fireGestureEvent(evt);
             mxEvent.consume(evt);
-          })
+          }
         );
 
         mxEvent.addListener(
           container,
           'gesturechange',
-          mxUtils.bind(this, evt => {
+          evt => {
             graph.fireGestureEvent(evt);
             mxEvent.consume(evt);
-          })
+          }
         );
 
         mxEvent.addListener(
           container,
           'gestureend',
-          mxUtils.bind(this, evt => {
+          evt => {
             graph.fireGestureEvent(evt);
             mxEvent.consume(evt);
-          })
+          }
         );
       }
 

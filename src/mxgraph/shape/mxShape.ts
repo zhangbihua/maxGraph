@@ -10,7 +10,9 @@ import mxPoint from '../util/datatypes/mxPoint';
 import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 import mxEvent from '../util/event/mxEvent';
 import mxClient from '../mxClient';
-import mxCellState from "../view/cell/mxCellState";
+import mxCellState from "../util/datatypes/mxCellState";
+import mxAbstractCanvas2D from '../util/canvas/mxAbstractCanvas2D';
+import mxStencil from "../shape/node/mxStencil";
 
 const toBool = i => {
   if (i === 0) return false;
@@ -37,14 +39,17 @@ class mxShape {
   endSize: number | null;
   startArrow: FIXME;
   endArrow: FIXME;
-  rotation: string;
   direction: string;
   flipH: boolean;
   flipV: boolean;
   isShadow: boolean;
   isDashed: boolean;
   isRounded: boolean;
-  glass: number;
+  rotation: number;
+  cursor: string;
+  verticalTextRotation: number;
+  oldGradients: any[] | null;
+  glass: boolean;
 
   /**
    * Variable: dialect
@@ -94,7 +99,7 @@ class mxShape {
    *
    * Holds the outermost DOM node that represents this shape.
    */
-  node: HTMLElement | null = null;
+  node: Element | null = null;
 
   /**
    * Variable: state
@@ -277,7 +282,7 @@ class mxShape {
    *
    * Sets the styles to their default values.
    */
-  initStyles(container) {
+  initStyles(container: HTMLElement | null=null) {
     this.strokewidth = 1;
     this.rotation = 0;
     this.opacity = 100;
@@ -302,7 +307,7 @@ class mxShape {
    *
    * Returns 0, or 0.5 if <strokewidth> % 2 == 1.
    */
-  getSvgScreenOffset() {
+  getSvgScreenOffset(): number {
     const sw =
       this.stencil && this.stencil.strokewidth !== 'inherit'
         ? Number(this.stencil.strokewidth)
@@ -325,16 +330,8 @@ class mxShape {
    *
    * container - DOM node that will contain the shape.
    */
-  create(container) {
-    let node = null;
-
-    if (container != null && container.ownerSVGElement != null) {
-      node = this.createSvg(container);
-    } else {
-      node = this.createHtml(container);
-    }
-
-    return node;
+  create(container: Element): Element {
+    return this.createSvg(container);
   }
 
   /**
@@ -342,22 +339,8 @@ class mxShape {
    *
    * Creates and returns the SVG node(s) to represent this shape.
    */
-  createSvg() {
+  createSvg(container: Element): Element {
     return document.createElementNS(mxConstants.NS_SVG, 'g');
-  }
-
-  /**
-   * Function: createHtml
-   *
-   * Creates and returns the HTML DOM node(s) to represent
-   * this shape. This implementation falls back to <createVml>
-   * so that the HTML creation is optional.
-   */
-  createHtml() {
-    const node = document.createElement('div');
-    node.style.position = 'absolute';
-
-    return node;
   }
 
   /**
@@ -366,7 +349,7 @@ class mxShape {
    * Reconfigures this shape. This will update the colors etc in
    * addition to the bounds or points.
    */
-  reconfigure() {
+  reconfigure(): void {
     this.redraw();
   }
 
@@ -375,7 +358,7 @@ class mxShape {
    *
    * Creates and returns the SVG node(s) to represent this shape.
    */
-  redraw() {
+  redraw(): void {
     this.updateBoundsFromPoints();
 
     if (this.visible && this.checkBounds()) {
@@ -394,16 +377,9 @@ class mxShape {
    *
    * Removes all child nodes and resets all CSS.
    */
-  clear() {
-    if (this.node.ownerSVGElement != null) {
-      while (this.node.lastChild != null) {
-        this.node.removeChild(this.node.lastChild);
-      }
-    } else {
-      this.node.style.cssText = `position:absolute;${
-        this.cursor != null ? `cursor:${this.cursor};` : ''
-      }`;
-      this.node.innerHTML = '';
+  clear(): void {
+    while (this.node.lastChild != null) {
+      this.node.removeChild(this.node.lastChild);
     }
   }
 
@@ -412,7 +388,7 @@ class mxShape {
    *
    * Updates the bounds based on the points.
    */
-  updateBoundsFromPoints() {
+  updateBoundsFromPoints(): void {
     const pts = this.points;
 
     if (pts != null && pts.length > 0 && pts[0] != null) {
@@ -440,7 +416,7 @@ class mxShape {
    * given scaled and translated bounds of the shape. This method should not
    * change the rectangle in-place. This implementation returns the given rect.
    */
-  getLabelBounds(rect) {
+  getLabelBounds(rect: mxRectangle): mxRectangle {
     const d = mxUtils.getValue(
       this.style,
       mxConstants.STYLE_DIRECTION,
@@ -487,14 +463,13 @@ class mxShape {
         [flipH, flipV] = [flipV, flipH];
       }
 
-      const r = mxUtils.getDirectedBounds(
-        rect,
-        labelMargins,
-        this.style,
-        flipH,
-        flipV
+      return mxUtils.getDirectedBounds(
+          rect,
+          labelMargins,
+          this.style,
+          flipH,
+          flipV
       );
-      return r;
     }
     return rect;
   }
@@ -506,7 +481,7 @@ class mxShape {
    * computing the label bounds as an <mxRectangle>, where the bottom and right
    * margin are defined in the width and height of the rectangle, respectively.
    */
-  getLabelMargins(rect) {
+  getLabelMargins(rect: mxRectangle | null=null): mxRectangle | null {
     return null;
   }
 
@@ -515,7 +490,7 @@ class mxShape {
    *
    * Returns true if the bounds are not null and all of its variables are numeric.
    */
-  checkBounds() {
+  checkBounds(): boolean {
     return (
       !Number.isNaN(this.scale) &&
       Number.isFinite(this.scale) &&
@@ -535,7 +510,7 @@ class mxShape {
    *
    * Updates the SVG shape.
    */
-  redrawShape() {
+  redrawShape(): void {
     const canvas = this.createCanvas();
 
     if (canvas != null) {
@@ -560,13 +535,8 @@ class mxShape {
    *
    * Creates a new canvas for drawing this shape. May return null.
    */
-  createCanvas() {
-    let canvas = null;
-
-    // LATER: Check if reusing existing DOM nodes improves performance
-    if (this.node.ownerSVGElement != null) {
-      canvas = this.createSvgCanvas();
-    }
+  createCanvas(): mxSvgCanvas2D {
+    let canvas = this.createSvgCanvas();
 
     if (canvas != null && this.outline) {
       canvas.setStrokeWidth(this.strokewidth);
@@ -591,7 +561,7 @@ class mxShape {
    *
    * Creates and returns an <mxSvgCanvas2D> for rendering this shape.
    */
-  createSvgCanvas() {
+  createSvgCanvas(): mxSvgCanvas2D {
     const canvas = new mxSvgCanvas2D(this.node, false);
     canvas.strokeTolerance = this.pointerEvents ? this.svgStrokeTolerance : 0;
     canvas.pointerEventsValue = this.svgPointerEvents;
@@ -611,7 +581,6 @@ class mxShape {
         return Math.round(parseFloat(value));
       };
     }
-
     return canvas;
   }
 
@@ -621,7 +590,7 @@ class mxShape {
    * Destroys the given canvas which was used for drawing. This implementation
    * increments the reference counts on all shared gradients used in the canvas.
    */
-  destroyCanvas(canvas) {
+  destroyCanvas(canvas: mxSvgCanvas2D): void {
     // Manages reference counts
     if (canvas instanceof mxSvgCanvas2D) {
       // Increments ref counts
@@ -643,21 +612,21 @@ class mxShape {
    *
    * Invoked before paint is called.
    */
-  beforePaint(c) {}
+  beforePaint(c: mxSvgCanvas2D): void {}
 
   /**
    * Function: afterPaint
    *
    * Invokes after paint was called.
    */
-  afterPaint(c) {}
+  afterPaint(c: mxSvgCanvas2D): void {}
 
   /**
    * Function: paint
    *
    * Generic rendering code.
    */
-  paint(c) {
+  paint(c: mxSvgCanvas2D): void {
     let strokeDrawn = false;
 
     if (c != null && this.outline) {
@@ -921,11 +890,11 @@ class mxShape {
       );
     } else {
       const f = parseFloat(
-        mxUtils.getValue(
-          this.style,
-          mxConstants.STYLE_ARCSIZE,
-          mxConstants.RECTANGLE_ROUNDING_FACTOR * 100
-        ) / 100
+        String(mxUtils.getValue(
+            this.style,
+            mxConstants.STYLE_ARCSIZE,
+            mxConstants.RECTANGLE_ROUNDING_FACTOR * 100
+        ) / 100)
       );
       r = Math.min(w * f, h * f);
     }
@@ -1495,7 +1464,6 @@ class mxShape {
       if (this.node.parentNode != null) {
         this.node.parentNode.removeChild(this.node);
       }
-
       this.node = null;
     }
 

@@ -8,7 +8,7 @@ import mxImage from '../../util/image/mxImage';
 import mxEventObject from '../../util/event/mxEventObject';
 import mxEventSource from '../../util/event/mxEventSource';
 import mxEvent from '../../util/event/mxEvent';
-import mxEdgeStyle from '../style/mxEdgeStyle';
+import mxEdgeStyle from '../../util/datatypes/style/mxEdgeStyle';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxPanningManager from '../../util/drag_pan/mxPanningManager';
 import mxTooltipHandler from '../../handler/mxTooltipHandler';
@@ -36,7 +36,7 @@ import mxResources from '../../util/mxResources';
 import mxGeometry from '../../util/datatypes/mxGeometry';
 import mxCell from '../cell/mxCell';
 import mxGraphModel from './mxGraphModel';
-import mxStylesheet from '../style/mxStylesheet';
+import mxStylesheet from '../../util/datatypes/style/mxStylesheet';
 import mxConstants from '../../util/mxConstants';
 import mxMultiplicity from "../connection/mxMultiplicity";
 
@@ -47,7 +47,7 @@ import mxStyleChange from '../../atomic_changes/mxStyleChange';
 import mxTerminalChange from '../../atomic_changes/mxTerminalChange';
 import mxValueChange from '../../atomic_changes/mxValueChange';
 import mxPolyline from '../../shape/edge/mxPolyline';
-import mxCellState from '../cell/mxCellState';
+import mxCellState from '../../util/datatypes/mxCellState';
 
 class mxGraph extends mxEventSource {
   // TODO: Document me!
@@ -12974,7 +12974,7 @@ class mxGraph extends mxEventSource {
    * cell - Optional <mxCell> associated with the gesture.
    */
   fireGestureEvent(evt: mxEventObject,
-                   cell: mxCell): void {
+                   cell: mxCell | null=null): void {
     // Resets double tap event handling when gestures take place
     this.lastTouchTime = 0;
     this.fireEvent(

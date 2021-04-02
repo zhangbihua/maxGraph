@@ -13,7 +13,7 @@ import mxText from '../../shape/mxText';
 import mxGraph from '../graph/mxGraph';
 import mxCell from './mxCell';
 import mxMouseEvent from '../../util/event/mxMouseEvent';
-import mxCellState from './mxCellState';
+import mxCellState from '../../util/datatypes/mxCellState';
 
 class mxCellEditor {
   // TODO: Document me!

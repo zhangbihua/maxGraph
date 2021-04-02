@@ -11,7 +11,7 @@ import mxPoint from '../util/datatypes/mxPoint';
 import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 import mxShape from './mxShape';
 import mxRectangle from '../util/datatypes/mxRectangle';
-import mxCellState from "../view/cell/mxCellState";
+import mxCellState from "../util/datatypes/mxCellState";
 
 class mxText extends mxShape {
   /**

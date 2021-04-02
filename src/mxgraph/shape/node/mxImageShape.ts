@@ -9,6 +9,8 @@ import mxConstants from '../../util/mxConstants';
 import mxRectangleShape from './mxRectangleShape';
 import mxAbstractCanvas2D from "../../util/canvas/mxAbstractCanvas2D";
 import mxRectangle from '../../util/datatypes/mxRectangle';
+import mxCell from "../../view/cell/mxCell";
+import mxCellState from "../../util/datatypes/mxCellState";
 
 class mxImageShape extends mxRectangleShape {
   // TODO: Document me!!
@@ -41,29 +43,27 @@ class mxImageShape extends mxRectangleShape {
    * fill - String that defines the fill color. This is stored in <fill>.
    * stroke - String that defines the stroke color. This is stored in <stroke>.
    * strokewidth - Optional integer that defines the stroke width. Default is
-   * 0. This is stored in <strokewidth>.
+   * 1. This is stored in <strokewidth>.
    */
   constructor(bounds: mxRectangle,
               image: string,
-              fill: string,
-              stroke: string,
-              strokewidth: number=0) {
+              fill: string='#FFFFFF',
+              stroke: string='#000000',
+              strokewidth: number=1) {
 
     super();
     this.bounds = bounds;
     this.image = image;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth != null ? strokewidth : 1;
+    this.strokewidth = strokewidth;
     this.shadow = false;
   }
 
   /**
    * Function: getSvgScreenOffset
-   *
-   * Disables offset in IE9 for crisper image output.
    */
-  getSvgScreenOffset() {
+  getSvgScreenOffset(): number {
     return 0;
   }
 
@@ -84,7 +84,7 @@ class mxImageShape extends mxRectangleShape {
    *
    * state - <mxCellState> of the corresponding cell.
    */
-  apply(state) {
+  apply(state: mxCellState) {
     super.apply(state);
 
     this.fill = null;
@@ -109,7 +109,7 @@ class mxImageShape extends mxRectangleShape {
    * Returns true if HTML is allowed for this shape. This implementation always
    * returns false.
    */
-  isHtmlAllowed() {
+  isHtmlAllowed(): boolean {
     return !this.preserveImageAspect;
   }
 
@@ -120,7 +120,7 @@ class mxImageShape extends mxRectangleShape {
    * this shape. This implementation falls back to <createVml>
    * so that the HTML creation is optional.
    */
-  createHtml() {
+  createHtml(): HTMLElement {
     const node = document.createElement('div');
     node.style.position = 'absolute';
     return node;
@@ -135,7 +135,7 @@ class mxImageShape extends mxRectangleShape {
               x: number,
               y: number,
               w: number,
-              h: number) {
+              h: number): boolean {
     return false;
   }
 
