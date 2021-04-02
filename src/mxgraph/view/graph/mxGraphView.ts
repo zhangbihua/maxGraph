@@ -1921,8 +1921,9 @@ class mxGraphView extends mxEventSource {
    * terminal - <mxCellState> that represents the terminal.
    * border - Number that adds a border between the shape and the perimeter.
    */
-  getPerimeterBounds(terminal, border) {
-    border = border != null ? border : 0;
+  getPerimeterBounds(terminal: mxCell | null=null,
+                     border: number=0): mxRectangle | null {
+
     if (terminal != null) {
       border += parseFloat(
         terminal.style[mxConstants.STYLE_PERIMETER_SPACING] || 0

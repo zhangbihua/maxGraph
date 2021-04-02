@@ -1092,97 +1092,37 @@ class mxShape {
     this.state = state;
     this.style = state.style;
 
+    const ifNotNullElse = (value1, default_) => {
+      if (value1 != null) {
+        return value1;
+      }
+      return default_;
+    }
+
     if (this.style != null) {
-      this.fill = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_FILLCOLOR,
-        this.fill
-      );
-      this.gradient = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_GRADIENTCOLOR,
-        this.gradient
-      );
-      this.gradientDirection = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_GRADIENT_DIRECTION,
-        this.gradientDirection
-      );
-      this.opacity = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_OPACITY,
-        this.opacity
-      );
-      this.fillOpacity = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_FILL_OPACITY,
-        this.fillOpacity
-      );
-      this.strokeOpacity = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_STROKE_OPACITY,
-        this.strokeOpacity
-      );
-      this.stroke = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_STROKECOLOR,
-        this.stroke
-      );
-      this.strokewidth = mxUtils.getNumber(
-        this.style,
-        mxConstants.STYLE_STROKEWIDTH,
-        this.strokewidth
-      );
-      this.spacing = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_SPACING,
-        this.spacing
-      );
-      this.startSize = mxUtils.getNumber(
-        this.style,
-        mxConstants.STYLE_STARTSIZE,
-        this.startSize
-      );
-      this.endSize = mxUtils.getNumber(
-        this.style,
-        mxConstants.STYLE_ENDSIZE,
-        this.endSize
-      );
-      this.startArrow = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_STARTARROW,
-        this.startArrow
-      );
-      this.endArrow = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_ENDARROW,
-        this.endArrow
-      );
-      this.rotation = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_ROTATION,
-        this.rotation
-      );
-      this.direction = mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_DIRECTION,
-        this.direction
-      );
-      this.flipH = toBool(
-        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, 0)
-      );
-      this.flipV = toBool(
-        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, 0)
-      );
+      this.fill = ifNotNullElse(this.style.fillColor, this.fill)
+      this.gradient = ifNotNullElse(this.style.gradientColor, this.gradient);
+      this.gradientDirection = ifNotNullElse(this.style.gradientDirection, this.gradientDirection);
+      this.opacity = ifNotNullElse(this.style.opacity, this.opacity);
+      this.fillOpacity = ifNotNullElse(this.style.fillOpacity, this.fillOpacity);
+      this.strokeOpacity = ifNotNullElse(this.style.strokeOpacity, this.strokeOpacity);
+      this.stroke = ifNotNullElse(this.style.strokeColor, this.stroke);
+      this.strokewidth = ifNotNullElse(this.style.strokeWidth, this.strokewidth);
+      this.spacing = ifNotNullElse(this.style.spacing, this.spacing);
+      this.startSize = ifNotNullElse(this.style.startSize, this.startSize);
+      this.endSize = ifNotNullElse(this.style.endSize, this.endSize);
+      this.startArrow = ifNotNullElse(this.style.startArrow, this.startArrow);
+      this.endArrow = ifNotNullElse(this.style.endArrow, this.endArrow);
+      this.rotation = ifNotNullElse(this.style.rotation, this.rotation);
+      this.direction = ifNotNullElse(this.style.direction, this.direction);
+
+      this.flipH = toBool(ifNotNullElse(this.style.flipH, 0));
+      this.flipV = toBool(ifNotNullElse(this.style.flipV, 0));
 
       // Legacy support for stencilFlipH/V
       if (this.stencil != null) {
-        this.flipH = toBool(
-          mxUtils.getValue(this.style, 'stencilFlipH', 0) || this.flipH
-        );
-        this.flipV = toBool(
-          mxUtils.getValue(this.style, 'stencilFlipV', 0) || this.flipV
-        );
+        this.flipH = toBool(ifNotNullElse(this.style.stencilFlipH, this.flipH || 0));
+        this.flipV = toBool(ifNotNullElse(this.style.stencilFlipV, this.flipV || 0));
       }
 
       if (
@@ -1194,18 +1134,10 @@ class mxShape {
         this.flipV = tmp;
       }
 
-      this.isShadow = toBool(
-        mxUtils.getValue(this.style, mxConstants.STYLE_SHADOW, this.isShadow)
-      );
-      this.isDashed = toBool(
-        mxUtils.getValue(this.style, mxConstants.STYLE_DASHED, this.isDashed)
-      );
-      this.isRounded = toBool(
-        mxUtils.getValue(this.style, mxConstants.STYLE_ROUNDED, this.isRounded)
-      );
-      this.glass = toBool(
-        mxUtils.getValue(this.style, mxConstants.STYLE_GLASS, this.glass)
-      );
+      this.isShadow = toBool(ifNotNullElse(this.style.shadow, this.isShadow));
+      this.isDashed = toBool(ifNotNullElse(this.style.dashed, this.isDashed));
+      this.isRounded = toBool(ifNotNullElse(this.style.rounded, this.isRounded));
+      this.glass = toBool(ifNotNullElse(this.style.glass, this.glass));
 
       if (this.fill === mxConstants.NONE) {
         this.fill = null;
@@ -1228,7 +1160,7 @@ class mxShape {
    *
    * cursor - The cursor to be used.
    */
-  setCursor(cursor: string | null=null) {
+  setCursor(cursor: string | null=null): void {
     if (cursor == null) {
       cursor = '';
     }
@@ -1301,7 +1233,6 @@ class mxShape {
           bbox = mxUtils.getBoundingBox(bbox, rot);
         }
       }
-
       this.boundingBox = bbox;
     }
   }

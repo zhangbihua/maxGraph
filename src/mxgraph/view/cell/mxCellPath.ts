@@ -3,17 +3,24 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-const mxCellPath = {
-  /**
-   * Class: mxCellPath
-   *
-   * Implements a mechanism for temporary cell Ids.
-   *
+import mxCell from "./mxCell";
+
+/**
+ * Class: mxCellPath
+ *
+ * Implements a mechanism for temporary cell Ids.
+ */
+class mxCellPath {
+  /*
    * Variable: PATH_SEPARATOR
    *
    * Defines the separator between the path components. Default is ".".
    */
-  PATH_SEPARATOR: '.',
+  static PATH_SEPARATOR = '.';
+
+  constructor() {
+    throw new Error("Static class can't be instantiated!")
+  }
 
   /**
    * Function: create
@@ -26,7 +33,7 @@ const mxCellPath = {
    *
    * cell - Cell whose path should be returned.
    */
-  create: cell => {
+  static create(cell: mxCell): string {
     let result = '';
 
     if (cell != null) {
@@ -41,15 +48,13 @@ const mxCellPath = {
       }
     }
 
-    // Removes trailing separator
+    // Remove trailing separator
     const n = result.length;
-
     if (n > 1) {
       result = result.substring(0, n - 1);
     }
-
     return result;
-  },
+  }
 
   /**
    * Function: getParentPath
@@ -61,7 +66,7 @@ const mxCellPath = {
    *
    * path - Path whose parent path should be returned.
    */
-  getParentPath: path => {
+  static getParentPath(path: string): string | null {
     if (path != null) {
       const index = path.lastIndexOf(mxCellPath.PATH_SEPARATOR);
 
@@ -72,9 +77,8 @@ const mxCellPath = {
         return '';
       }
     }
-
     return null;
-  },
+  }
 
   /**
    * Function: resolve
@@ -87,7 +91,7 @@ const mxCellPath = {
    * root - Root cell of the path to be resolved.
    * path - String that defines the path.
    */
-  resolve: (root, path) => {
+  static resolve(root: mxCell, path: string): mxCell | null {
     let parent = root;
     if (path != null) {
       const tokens = path.split(mxCellPath.PATH_SEPARATOR);
@@ -96,7 +100,7 @@ const mxCellPath = {
       }
     }
     return parent;
-  },
+  }
 
   /**
    * Function: compare
@@ -104,7 +108,7 @@ const mxCellPath = {
    * Compares the given cell paths and returns -1 if p1 is smaller, 0 if
    * p1 is equal and 1 if p1 is greater than p2.
    */
-  compare: (p1, p2) => {
+  static compare(p1: string, p2: string): number {
     const min = Math.min(p1.length, p2.length);
     let comp = 0;
 
@@ -130,7 +134,7 @@ const mxCellPath = {
       }
     }
     return comp;
-  },
-};
+  }
+}
 
 export default mxCellPath;

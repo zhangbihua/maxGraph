@@ -15,6 +15,9 @@ import mxCell from "../cell/mxCell";
 import mxGraph from "./mxGraph";
 
 class mxGraphSelectionModel extends mxEventSource {
+  // TODO: Document me!!
+  cells: mxCell[];
+
   /**
    * Variable: doneResource
    *

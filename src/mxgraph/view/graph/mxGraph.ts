@@ -75,6 +75,8 @@ class mxGraph extends mxEventSource {
   mouseMoveRedirect: Function;
   mouseUpRedirect: Function;
   lastEvent: any; // FIXME: Check if this can be more specific - DOM events or mxEventObjects!
+  horizontalPageBreaks: any[];
+  verticalPageBreaks: any[];
 
   /**
    * Variable: mouseListeners
@@ -2516,7 +2518,7 @@ class mxGraph extends mxEventSource {
    */
   cellLabelChanged(cell: mxCell,
                    value: any,
-                   autoSize: boolean=false) {
+                   autoSize: boolean=false): void {
 
     this.model.beginUpdate();
     try {
@@ -2542,7 +2544,7 @@ class mxGraph extends mxEventSource {
    *
    * evt - Mouseevent that represents the keystroke.
    */
-  escape(evt) {
+  escape(evt: mxMouseEvent): void {
     this.fireEvent(new mxEventObject(mxEvent.ESCAPE, 'event', evt));
   }
 
@@ -2576,7 +2578,7 @@ class mxGraph extends mxEventSource {
    *
    * me - <mxMouseEvent> that represents the single click.
    */
-  click(me) {
+  click(me: mxMouseEvent): boolean {
     const evt = me.getEvent();
     let cell = me.getCell();
     const mxe = new mxEventObject(mxEvent.CLICK, 'event', evt, 'cell', cell);
@@ -2654,6 +2656,8 @@ class mxGraph extends mxEventSource {
         this.clearSelection();
       }
     }
+
+    return false;
   }
 
   /**
@@ -2661,19 +2665,17 @@ class mxGraph extends mxEventSource {
    *
    * Returns true if any sibling of the given cell is selected.
    */
-  isSiblingSelected(cell: mxCell) {
+  isSiblingSelected(cell: mxCell): boolean {
     const { model } = this;
     const parent = model.getParent(cell);
     const childCount = model.getChildCount(parent);
 
     for (let i = 0; i < childCount; i += 1) {
       const child = model.getChildAt(parent, i);
-
       if (cell !== child && this.isCellSelected(child)) {
         return true;
       }
     }
-
     return false;
   }
 
@@ -2815,7 +2817,7 @@ class mxGraph extends mxEventSource {
   scrollPointToVisible(x: number,
                        y: number,
                        extend: boolean,
-                       border: number=20) {
+                       border: number=20): void {
 
     if (
       !this.timerAutoScroll &&
@@ -2907,7 +2909,7 @@ class mxGraph extends mxEventSource {
    *
    * Creates and returns an <mxPanningManager>.
    */
-  createPanningManager() {
+  createPanningManager(): mxPanningManager {
     return new mxPanningManager(this);
   }
 
@@ -2946,7 +2948,10 @@ class mxGraph extends mxEventSource {
    *
    * Returns the preferred size of the background page if <preferPageSize> is true.
    */
-  getPreferredPageSize(bounds, width, height): mxRectangle {
+  getPreferredPageSize(bounds: mxRectangle,
+                       width: number,
+                       height: number): mxRectangle {
+
     const { scale } = this.view;
     const tr = this.view.translate;
     const fmt = this.pageFormat;
@@ -3015,15 +3020,14 @@ class mxGraph extends mxEventSource {
    * ignored. Default is false.
    * maxHeight - Optional maximum height.
    */
-  fit(
-    border: number | null=this.getBorder(),
-    keepOrigin: boolean=false,
-    margin: number=0,
-    enabled: boolean=true,
-    ignoreWidth: boolean=false,
-    ignoreHeight: boolean=false,
-    maxHeight: number | null=null
-  ) {
+  fit(border: number | null=this.getBorder(),
+      keepOrigin: boolean=false,
+      margin: number=0,
+      enabled: boolean=true,
+      ignoreWidth: boolean=false,
+      ignoreHeight: boolean=false,
+      maxHeight: number | null=null): number {
+
     if (this.container != null) {
       // Adds spacing and border from css
       const cssBorder = this.getBorderSizes();
@@ -3115,7 +3119,6 @@ class mxGraph extends mxEventSource {
         }
       }
     }
-
     return this.view.scale;
   }
 
@@ -3184,7 +3187,6 @@ class mxGraph extends mxEventSource {
 
       this.updatePageBreaks(this.pageBreaksVisible, width, height);
     }
-
     this.fireEvent(new mxEventObject(mxEvent.SIZE, 'bounds', bounds));
   }
 
@@ -3193,12 +3195,13 @@ class mxGraph extends mxEventSource {
    *
    * Resizes the container for the given graph width and height.
    */
-  doResizeContainer(width, height) {
+  doResizeContainer(width: number,
+                    height: number): void {
+
     if (this.maximumContainerSize != null) {
       width = Math.min(this.maximumContainerSize.width, width);
       height = Math.min(this.maximumContainerSize.height, height);
     }
-
     this.container.style.width = `${Math.ceil(width)}px`;
     this.container.style.height = `${Math.ceil(height)}px`;
   }
@@ -3214,7 +3217,10 @@ class mxGraph extends mxEventSource {
    * width - Specifies the width of the container in pixels.
    * height - Specifies the height of the container in pixels.
    */
-  updatePageBreaks(visible, width, height) {
+  updatePageBreaks(visible: boolean,
+                   width: number,
+                   height: number) {
+
     const { scale } = this.view;
     const tr = this.view.translate;
     const fmt = this.pageFormat;
@@ -3330,9 +3336,10 @@ class mxGraph extends mxEventSource {
    * cell - <mxCell> whose style should be returned as an array.
    * ignoreState - Optional boolean that specifies if the cell state should be ignored.
    */
-  getCurrentCellStyle(cell, ignoreState: boolean=false) {
-    const state = ignoreState ? null : this.view.getState(cell);
+  getCurrentCellStyle(cell: mxCell,
+                      ignoreState: boolean=false): any {
 
+    const state = ignoreState ? null : this.view.getState(cell);
     return state != null ? state.style : this.getCellStyle(cell);
   }
 
@@ -3350,7 +3357,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose style should be returned as an array.
    */
-  getCellStyle(cell: mxCell) {
+  getCellStyle(cell: mxCell): any {
     const stylename = this.model.getStyle(cell);
     let style = null;
 
@@ -3372,7 +3379,6 @@ class mxGraph extends mxEventSource {
     if (style == null) {
       style = {};
     }
-
     return style;
   }
 
@@ -3383,7 +3389,7 @@ class mxGraph extends mxEventSource {
    * turns short data URIs as defined in mxImageBundle to data URIs as
    * defined in RFC 2397 of the IETF.
    */
-  postProcessCellStyle(style) {
+  postProcessCellStyle(style: any): any {
     if (style != null) {
       const key = style[mxConstants.STYLE_IMAGE];
       let image = this.getImageFromBundles(key);
@@ -3417,7 +3423,6 @@ class mxGraph extends mxEventSource {
         style[mxConstants.STYLE_IMAGE] = image;
       }
     }
-
     return style;
   }
 
@@ -3433,8 +3438,8 @@ class mxGraph extends mxEventSource {
    * cells - Optional array of <mxCells> to set the style for. Default is the
    * selection cells.
    */
-  setCellStyle(style, cells) {
-    cells = cells || this.getSelectionCells();
+  setCellStyle(style: any,
+               cells: mxCell[] | null=this.getSelectionCells()) {
 
     if (cells != null) {
       this.model.beginUpdate();
@@ -3463,8 +3468,9 @@ class mxGraph extends mxEventSource {
    * cell - Optional <mxCell> whose style should be modified. Default is
    * the selection cell.
    */
-  toggleCellStyle(key, defaultValue, cell) {
-    cell = cell || this.getSelectionCell();
+  toggleCellStyle(key: string,
+                  defaultValue: boolean=false,
+                  cell: mxCell | null=this.getSelectionCell()) {
 
     return this.toggleCellStyles(key, defaultValue, [cell]);
   }
@@ -6343,7 +6349,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> for which the area should be returned.
    */
-  getCellContainmentArea(cell: mxCell) {
+  getCellContainmentArea(cell: mxCell): mxRectangle | null {
     if (cell != null && !this.model.isEdge(cell)) {
       const parent = this.model.getParent(cell);
 
@@ -6406,7 +6412,7 @@ class mxGraph extends mxEventSource {
    * Returns the bounds inside which the diagram should be kept as an
    * <mxRectangle>.
    */
-  getMaximumGraphBounds() {
+  getMaximumGraphBounds(): mxRectangle | null {
     return this.maximumGraphBounds;
   }
 
@@ -6424,7 +6430,7 @@ class mxGraph extends mxEventSource {
    * sizeFirst - Specifies if the size should be changed first. Default is true.
    */
   constrainChild(cell: mxCell,
-                 sizeFirst: boolean=true) {
+                 sizeFirst: boolean=true): void {
 
     if (cell != null) {
       let geo = this.getCellGeometry(cell);
@@ -6557,7 +6563,7 @@ class mxGraph extends mxEventSource {
    * cells - Array of <mxCells> for which the connected edges should be
    * reset.
    */
-  resetEdges(cells: mxCell[]) {
+  resetEdges(cells: mxCell[]): void {
     if (cells != null) {
       // Prepares faster cells lookup
       const dict = new mxDictionary();
@@ -6608,7 +6614,7 @@ class mxGraph extends mxEventSource {
    *
    * edge - <mxCell> whose points should be reset.
    */
-  resetEdge(edge) {
+  resetEdge(edge: mxCell): mxCell | null {
     let geo = this.model.getGeometry(edge);
 
     // Resets the control points
@@ -6617,7 +6623,6 @@ class mxGraph extends mxEventSource {
       geo.points = [];
       this.model.setGeometry(edge, geo);
     }
-
     return edge;
   }
 
@@ -6630,7 +6635,10 @@ class mxGraph extends mxEventSource {
    *
    * Returns the constraint used to connect to the outline of the given state.
    */
-  getOutlineConstraint(point, terminalState, me) {
+  getOutlineConstraint(point: mxPoint,
+                       terminalState: mxCellState,
+                       me: mxMouseEvent) {
+
     if (terminalState.shape != null) {
       const bounds = this.view.getPerimeterBounds(terminalState);
       const direction = terminalState.style[mxConstants.STYLE_DIRECTION];

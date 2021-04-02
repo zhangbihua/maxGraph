@@ -7,6 +7,9 @@
 import mxUtils from '../../util/mxUtils';
 import mxPoint from '../../util/datatypes/mxPoint';
 import mxDictionary from '../../util/datatypes/mxDictionary';
+import mxCellState from "../../util/datatypes/mxCellState";
+import mxCell from "./mxCell";
+import mxGraph from "../graph/mxGraph";
 
 class mxCellStatePreview {
   /**
@@ -14,21 +17,21 @@ class mxCellStatePreview {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph = null;
+  graph: mxGraph | null = null;
 
   /**
    * Variable: deltas
    *
    * Reference to the enclosing <mxGraph>.
    */
-  deltas = null;
+  deltas: mxDictionary | null = null;
 
   /**
    * Variable: count
    *
    * Contains the number of entries in the map.
    */
-  count = 0;
+  count: number = 0;
 
   /**
    *
@@ -44,7 +47,7 @@ class mxCellStatePreview {
    *
    * graph - Reference to the enclosing <mxGraph>.
    */
-  constructor(graph) {
+  constructor(graph: mxGraph) {
     this.deltas = new mxDictionary();
     this.graph = graph;
   }
@@ -54,16 +57,18 @@ class mxCellStatePreview {
    *
    * Returns true if this contains no entries.
    */
-  isEmpty() {
+  isEmpty(): boolean {
     return this.count === 0;
   }
 
   /**
    * Function: moveState
    */
-  moveState(state, dx, dy, add, includeEdges) {
-    add = add != null ? add : true;
-    includeEdges = includeEdges != null ? includeEdges : true;
+  moveState(state: mxCellState,
+            dx: number,
+            dy: number,
+            add: boolean=true,
+            includeEdges: boolean=true): mxPoint {
 
     let delta = this.deltas.get(state.cell);
 
@@ -83,14 +88,13 @@ class mxCellStatePreview {
     if (includeEdges) {
       this.addEdges(state);
     }
-
     return delta.point;
   }
 
   /**
    * Function: show
    */
-  show(visitor) {
+  show(visitor: Function | null=null) {
     this.deltas.visit(
       mxUtils.bind(this, (key, delta) => {
         this.translateState(delta.state, delta.point.x, delta.point.y);
@@ -112,7 +116,10 @@ class mxCellStatePreview {
   /**
    * Function: translateState
    */
-  translateState(state, dx, dy) {
+  translateState(state: mxCellState,
+                 dx: number,
+                 dy: number) {
+
     if (state != null) {
       const model = this.graph.getModel();
 
@@ -148,7 +155,11 @@ class mxCellStatePreview {
   /**
    * Function: revalidateState
    */
-  revalidateState(state, dx, dy, visitor) {
+  revalidateState(state: mxCellState | null=null,
+                  dx: number,
+                  dy: number,
+                  visitor: Function | null=null): void {
+
     if (state != null) {
       const model = this.graph.getModel();
 
@@ -198,7 +209,7 @@ class mxCellStatePreview {
   /**
    * Function: addEdges
    */
-  addEdges(state) {
+  addEdges(state: mxCellState): void {
     const model = this.graph.getModel();
     const edgeCount = model.getEdgeCount(state.cell);
 
