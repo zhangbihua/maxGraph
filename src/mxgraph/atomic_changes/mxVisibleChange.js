@@ -1,14 +1,14 @@
+/**
+ * Class: mxVisibleChange
+ *
+ * Action to change a cell's visible state in a model.
+ *
+ * Constructor: mxVisibleChange
+ *
+ * Constructs a change of a visible state in the
+ * specified model.
+ */
 class mxVisibleChange {
-  /**
-   * Class: mxVisibleChange
-   *
-   * Action to change a cell's visible state in a model.
-   *
-   * Constructor: mxVisibleChange
-   *
-   * Constructs a change of a visible state in the
-   * specified model.
-   */
   constructor(model, cell, visible) {
     this.model = model;
     this.cell = cell;
@@ -34,5 +34,4 @@ class mxVisibleChange {
 }
 
 export default mxVisibleChange;
-import("../io/mxGenericChangeCodec");
-
+import('../serialization/mxGenericChangeCodec');

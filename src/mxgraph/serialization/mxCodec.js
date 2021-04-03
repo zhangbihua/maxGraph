@@ -6,12 +6,126 @@
 
 import mxUtils from '../util/mxUtils';
 import mxCellPath from '../view/cell/mxCellPath';
-import mxCodecRegistry from "./mxCodecRegistry";
-import mxConstants from "../util/mxConstants";
-import mxCell from "../view/cell/mxCell";
-import mxLog from "../util/gui/mxLog";
+import mxCodecRegistry from './mxCodecRegistry';
+import mxConstants from '../util/mxConstants';
+import mxCell from '../view/cell/mxCell';
+import mxLog from '../util/gui/mxLog';
 
+/**
+ * Class: mxCodec
+ *
+ * XML codec for JavaScript object graphs. See <mxObjectCodec> for a
+ * description of the general encoding/decoding scheme. This class uses the
+ * codecs registered in <mxCodecRegistry> for encoding/decoding each object.
+ *
+ * References:
+ *
+ * In order to resolve references, especially forward references, the mxCodec
+ * constructor must be given the document that contains the referenced
+ * elements.
+ *
+ * Examples:
+ *
+ * The following code is used to encode a graph model.
+ *
+ * (code)
+ * let encoder = new mxCodec();
+ * let result = encoder.encode(graph.getModel());
+ * let xml = mxUtils.getXml(result);
+ * (end)
+ *
+ * Example:
+ *
+ * Using the code below, an XML document is decoded into an existing model. The
+ * document may be obtained using one of the functions in mxUtils for loading
+ * an XML file, eg. <mxUtils.get>, or using <mxUtils.parseXml> for parsing an
+ * XML string.
+ *
+ * (code)
+ * let doc = mxUtils.parseXml(xmlString);
+ * let codec = new mxCodec(doc);
+ * codec.decode(doc.documentElement, graph.getModel());
+ * (end)
+ *
+ * Example:
+ *
+ * This example demonstrates parsing a list of isolated cells into an existing
+ * graph model. Note that the cells do not have a parent reference so they can
+ * be added anywhere in the cell hierarchy after parsing.
+ *
+ * (code)
+ * let xml = '<root><mxCell id="2" value="Hello," vertex="1"><mxGeometry x="20" y="20" width="80" height="30" as="geometry"/></mxCell><mxCell id="3" value="World!" vertex="1"><mxGeometry x="200" y="150" width="80" height="30" as="geometry"/></mxCell><mxCell id="4" value="" edge="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell></root>';
+ * let doc = mxUtils.parseXml(xml);
+ * let codec = new mxCodec(doc);
+ * let elt = doc.documentElement.firstChild;
+ * let cells = [];
+ *
+ * while (elt != null)
+ * {
+ *   cells.push(codec.decode(elt));
+ *   elt = elt.nextSibling;
+ * }
+ *
+ * graph.addCells(cells);
+ * (end)
+ *
+ * Example:
+ *
+ * Using the following code, the selection cells of a graph are encoded and the
+ * output is displayed in a dialog box.
+ *
+ * (code)
+ * let enc = new mxCodec();
+ * let cells = graph.getSelectionCells();
+ * mxUtils.alert(mxUtils.getPrettyXml(enc.encode(cells)));
+ * (end)
+ *
+ * Newlines in the XML can be converted to <br>, in which case a '<br>' argument
+ * must be passed to <mxUtils.getXml> as the second argument.
+ *
+ * Debugging:
+ *
+ * For debugging I/O you can use the following code to get the sequence of
+ * encoded objects:
+ *
+ * (code)
+ * let oldEncode = encode;
+ * encode = (obj)=>
+ * {
+ *   mxLog.show();
+ *   mxLog.debug('mxCodec.encode: obj='+mxUtils.getFunctionName(obj.constructor));
+ *
+ *   return oldEncode.apply(this, arguments);
+ * };
+ * (end)
+ *
+ * Note that the I/O system adds object codecs for new object automatically. For
+ * decoding those objects, the constructor should be written as follows:
+ *
+ * (code)
+ * let MyObj = (name)=>
+ * {
+ *   // ...
+ * };
+ * (end)
+ *
+ * Constructor: mxCodec
+ *
+ * Constructs an XML encoder/decoder for the specified
+ * owner document.
+ *
+ * Parameters:
+ *
+ * document - Optional XML document that contains the data.
+ * If no document is specified then a new document is created
+ * using <mxUtils.createXmlDocument>.
+ */
 class mxCodec {
+  constructor(document) {
+    this.document = document || mxUtils.createXmlDocument();
+    this.objects = [];
+  }
+
   /**
    * Variable: document
    *
@@ -39,120 +153,6 @@ class mxCodec {
    * Specifies if default values should be encoded. Default is false.
    */
   encodeDefaults = false;
-
-  /**
-   * Class: mxCodec
-   *
-   * XML codec for JavaScript object graphs. See <mxObjectCodec> for a
-   * description of the general encoding/decoding scheme. This class uses the
-   * codecs registered in <mxCodecRegistry> for encoding/decoding each object.
-   *
-   * References:
-   *
-   * In order to resolve references, especially forward references, the mxCodec
-   * constructor must be given the document that contains the referenced
-   * elements.
-   *
-   * Examples:
-   *
-   * The following code is used to encode a graph model.
-   *
-   * (code)
-   * let encoder = new mxCodec();
-   * let result = encoder.encode(graph.getModel());
-   * let xml = mxUtils.getXml(result);
-   * (end)
-   *
-   * Example:
-   *
-   * Using the code below, an XML document is decoded into an existing model. The
-   * document may be obtained using one of the functions in mxUtils for loading
-   * an XML file, eg. <mxUtils.get>, or using <mxUtils.parseXml> for parsing an
-   * XML string.
-   *
-   * (code)
-   * let doc = mxUtils.parseXml(xmlString);
-   * let codec = new mxCodec(doc);
-   * codec.decode(doc.documentElement, graph.getModel());
-   * (end)
-   *
-   * Example:
-   *
-   * This example demonstrates parsing a list of isolated cells into an existing
-   * graph model. Note that the cells do not have a parent reference so they can
-   * be added anywhere in the cell hierarchy after parsing.
-   *
-   * (code)
-   * let xml = '<root><mxCell id="2" value="Hello," vertex="1"><mxGeometry x="20" y="20" width="80" height="30" as="geometry"/></mxCell><mxCell id="3" value="World!" vertex="1"><mxGeometry x="200" y="150" width="80" height="30" as="geometry"/></mxCell><mxCell id="4" value="" edge="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell></root>';
-   * let doc = mxUtils.parseXml(xml);
-   * let codec = new mxCodec(doc);
-   * let elt = doc.documentElement.firstChild;
-   * let cells = [];
-   *
-   * while (elt != null)
-   * {
-   *   cells.push(codec.decode(elt));
-   *   elt = elt.nextSibling;
-   * }
-   *
-   * graph.addCells(cells);
-   * (end)
-   *
-   * Example:
-   *
-   * Using the following code, the selection cells of a graph are encoded and the
-   * output is displayed in a dialog box.
-   *
-   * (code)
-   * let enc = new mxCodec();
-   * let cells = graph.getSelectionCells();
-   * mxUtils.alert(mxUtils.getPrettyXml(enc.encode(cells)));
-   * (end)
-   *
-   * Newlines in the XML can be converted to <br>, in which case a '<br>' argument
-   * must be passed to <mxUtils.getXml> as the second argument.
-   *
-   * Debugging:
-   *
-   * For debugging I/O you can use the following code to get the sequence of
-   * encoded objects:
-   *
-   * (code)
-   * let oldEncode = encode;
-   * encode = (obj)=>
-   * {
-   *   mxLog.show();
-   *   mxLog.debug('mxCodec.encode: obj='+mxUtils.getFunctionName(obj.constructor));
-   *
-   *   return oldEncode.apply(this, arguments);
-   * };
-   * (end)
-   *
-   * Note that the I/O system adds object codecs for new object automatically. For
-   * decoding those objects, the constructor should be written as follows:
-   *
-   * (code)
-   * let MyObj = (name)=>
-   * {
-   *   // ...
-   * };
-   * (end)
-   *
-   * Constructor: mxCodec
-   *
-   * Constructs an XML encoder/decoder for the specified
-   * owner document.
-   *
-   * Parameters:
-   *
-   * document - Optional XML document that contains the data.
-   * If no document is specified then a new document is created
-   * using <mxUtils.createXmlDocument>.
-   */
-  constructor(document) {
-    this.document = document || mxUtils.createXmlDocument();
-    this.objects = [];
-  }
 
   /**
    * Function: putObject

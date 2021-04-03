@@ -6,7 +6,31 @@
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
 import MedianCellSorter from './MedianCellSorter';
 
+/**
+ * Class: mxMedianHybridCrossingReduction
+ *
+ * Sets the horizontal locations of node and edge dummy nodes on each layer.
+ * Uses median down and up weighings as well heuristic to straighten edges as
+ * far as possible.
+ *
+ * Constructor: mxMedianHybridCrossingReduction
+ *
+ * Creates a coordinate assignment.
+ *
+ * Arguments:
+ *
+ * intraCellSpacing - the minimum buffer between cells on the same rank
+ * interRankCellSpacing - the minimum distance between cells on adjacent ranks
+ * orientation - the position of the root node(s) relative to the graph
+ * initialX - the leftmost coordinate node placement starts at
+ */
 class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
+  constructor(layout) {
+    super();
+
+    this.layout = layout;
+  }
+
   /**
    * Variable: layout
    *
@@ -62,30 +86,6 @@ class mxMedianHybridCrossingReduction extends mxHierarchicalLayoutStage {
    * Constructs a new median cell sorter.
    */
   function;
-
-  /**
-   * Class: mxMedianHybridCrossingReduction
-   *
-   * Sets the horizontal locations of node and edge dummy nodes on each layer.
-   * Uses median down and up weighings as well heuristic to straighten edges as
-   * far as possible.
-   *
-   * Constructor: mxMedianHybridCrossingReduction
-   *
-   * Creates a coordinate assignment.
-   *
-   * Arguments:
-   *
-   * intraCellSpacing - the minimum buffer between cells on the same rank
-   * interRankCellSpacing - the minimum distance between cells on adjacent ranks
-   * orientation - the position of the root node(s) relative to the graph
-   * initialX - the leftmost coordinate node placement starts at
-   */
-  constructor(layout) {
-    super();
-
-    this.layout = layout;
-  }
 
   /**
    * Function: execute

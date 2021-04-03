@@ -5,7 +5,7 @@
  */
 import mxPoint from '../datatypes/mxPoint';
 import mxCellStatePreview from '../../view/cell/mxCellStatePreview';
-import mxAnimation from "./mxAnimation";
+import mxAnimation from './mxAnimation';
 
 class mxMorphing extends mxAnimation {
   /**

@@ -7,7 +7,39 @@ import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 import mxConstants from '../util/mxConstants';
 
+/**
+ * Class: mxTooltipHandler
+ *
+ * Graph event handler that displays tooltips. <mxGraph.getTooltip> is used to
+ * get the tooltip for a cell or handle. This handler is built-into
+ * <mxGraph.tooltipHandler> and enabled using <mxGraph.setTooltips>.
+ *
+ * Example:
+ *
+ * (code>
+ * new mxTooltipHandler(graph);
+ * (end)
+ *
+ * Constructor: mxTooltipHandler
+ *
+ * Constructs an event handler that displays tooltips with the specified
+ * delay (in milliseconds). If no delay is specified then a default delay
+ * of 500 ms (0.5 sec) is used.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ * delay - Optional delay in milliseconds.
+ */
 class mxTooltipHandler {
+  constructor(graph, delay) {
+    if (graph != null) {
+      this.graph = graph;
+      this.delay = delay || 500;
+      this.graph.addMouseListener(this);
+    }
+  }
+
   /**
    * Variable: zIndex
    *
@@ -57,38 +89,6 @@ class mxTooltipHandler {
    * Specifies if events are handled. Default is true.
    */
   enabled = true;
-
-  /**
-   * Class: mxTooltipHandler
-   *
-   * Graph event handler that displays tooltips. <mxGraph.getTooltip> is used to
-   * get the tooltip for a cell or handle. This handler is built-into
-   * <mxGraph.tooltipHandler> and enabled using <mxGraph.setTooltips>.
-   *
-   * Example:
-   *
-   * (code>
-   * new mxTooltipHandler(graph);
-   * (end)
-   *
-   * Constructor: mxTooltipHandler
-   *
-   * Constructs an event handler that displays tooltips with the specified
-   * delay (in milliseconds). If no delay is specified then a default delay
-   * of 500 ms (0.5 sec) is used.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   * delay - Optional delay in milliseconds.
-   */
-  constructor(graph, delay) {
-    if (graph != null) {
-      this.graph = graph;
-      this.delay = delay || 500;
-      this.graph.addMouseListener(this);
-    }
-  }
 
   /**
    * Function: isEnabled

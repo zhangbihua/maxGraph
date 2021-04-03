@@ -7,19 +7,22 @@
 import mxPoint from './mxPoint';
 import mxRectangle from './mxRectangle';
 import mxConstants from '../mxConstants';
-import mxCell from "../../view/cell/mxCell";
-import mxGraphView from "../../view/graph/mxGraphView";
-import mxShape from "../../shape/mxShape";
-import mxText from "../../shape/mxText";
+import mxCell from '../../view/cell/mxCell';
+import mxGraphView from '../../view/graph/mxGraphView';
+import mxShape from '../../shape/mxShape';
+import mxText from '../../shape/mxText';
 
 class mxCellState extends mxRectangle {
   // TODO: Document me!!
   cellBounds: mxRectangle;
+
   paintBounds: mxRectangle;
+
   boundingBox: mxRectangle;
 
   // Used by mxCellRenderer's createControl()
   control: mxShape;
+
   // Used by mxCellRenderer's createCellOverlays()
   overlays: any[];
 
@@ -43,7 +46,7 @@ class mxCellState extends mxRectangle {
    * Contains an array of key, value pairs that represent the style of the
    * cell.
    */
-  style: any | null = null;   // TODO: Important - make the style type more strictly typed to allow for typescript checking of individual properties!!!
+  style: any | null = null; // TODO: Important - make the style type more strictly typed to allow for typescript checking of individual properties!!!
 
   /**
    * Variable: invalidStyle
@@ -174,9 +177,7 @@ class mxCellState extends mxRectangle {
    * cell - <mxCell> that this state represents.
    * style - Array of key, value pairs that constitute the style.
    */
-  constructor(view: mxGraphView,
-              cell: mxCell,
-              style: {}) {
+  constructor(view: mxGraphView, cell: mxCell, style: {}) {
     super(mxConstants.DO_NOTHING);
 
     this.view = view;
@@ -198,10 +199,15 @@ class mxCellState extends mxRectangle {
    * border - Optional border to be added around the perimeter bounds.
    * bounds - Optional <mxRectangle> to be used as the initial bounds.
    */
-  getPerimeterBounds(border: number=0,
-                     bounds: mxRectangle=new mxRectangle(
-                         this.x, this.y, this.width, this.height
-                     )): mxRectangle {
+  getPerimeterBounds(
+    border: number = 0,
+    bounds: mxRectangle = new mxRectangle(
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    )
+  ): mxRectangle {
     if (
       this.shape != null &&
       this.shape.stencil != null &&
@@ -238,8 +244,7 @@ class mxCellState extends mxRectangle {
    * isSource - Boolean that specifies if the first or last point should
    * be assigned.
    */
-  setAbsoluteTerminalPoint(point: mxPoint,
-                           isSource: boolean=false): void {
+  setAbsoluteTerminalPoint(point: mxPoint, isSource: boolean = false): void {
     if (isSource) {
       if (this.absolutePoints == null) {
         this.absolutePoints = [];
@@ -285,7 +290,7 @@ class mxCellState extends mxRectangle {
    * source - Boolean that specifies if the source or target cell should be
    * returned.
    */
-  getVisibleTerminal(source: boolean=false): mxCell | null {
+  getVisibleTerminal(source: boolean = false): mxCell | null {
     const tmp = this.getVisibleTerminalState(source);
     return tmp != null ? tmp.cell : null;
   }
@@ -300,7 +305,7 @@ class mxCellState extends mxRectangle {
    * source - Boolean that specifies if the source or target state should be
    * returned.
    */
-  getVisibleTerminalState(source: boolean=false): mxCellState | null {
+  getVisibleTerminalState(source: boolean = false): mxCellState | null {
     return source ? this.visibleSourceState : this.visibleTargetState;
   }
 
@@ -314,8 +319,10 @@ class mxCellState extends mxRectangle {
    * terminalState - <mxCellState> that represents the terminal.
    * source - Boolean that specifies if the source or target state should be set.
    */
-  setVisibleTerminalState(terminalState: mxCellState,
-                          source: boolean=false): void {
+  setVisibleTerminalState(
+    terminalState: mxCellState,
+    source: boolean = false
+  ): void {
     if (source) {
       this.visibleSourceState = terminalState;
     } else {

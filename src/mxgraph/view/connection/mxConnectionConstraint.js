@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxPoint from "../../util/datatypes/mxPoint";
+import mxPoint from '../../util/datatypes/mxPoint';
 
 class mxConnectionConstraint {
   /**

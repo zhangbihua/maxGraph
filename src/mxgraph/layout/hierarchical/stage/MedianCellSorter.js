@@ -1,4 +1,8 @@
 class MedianCellSorter {
+  constructor() {
+    // empty
+  }
+
   /**
    * Variable: medianValue
    *
@@ -12,10 +16,6 @@ class MedianCellSorter {
    * The cell whose median value is being calculated
    */
   cell = false;
-
-  constructor() {
-    // empty
-  }
 
   /**
    * Function: compare

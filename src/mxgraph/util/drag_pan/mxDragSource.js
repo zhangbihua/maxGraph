@@ -6,11 +6,11 @@
 import mxRectangle from '../datatypes/mxRectangle';
 import mxCellHighlight from '../../handler/mxCellHighlight';
 import mxUtils from '../mxUtils';
-import mxEvent from "../event/mxEvent";
-import mxClient from "../../mxClient";
-import mxGuide from "../mxGuide";
-import mxConstants from "../mxConstants";
-import mxPoint from "../datatypes/mxPoint";
+import mxEvent from '../event/mxEvent';
+import mxClient from '../../mxClient';
+import mxGuide from '../mxGuide';
+import mxConstants from '../mxConstants';
+import mxPoint from '../datatypes/mxPoint';
 
 class mxDragSource {
   /**

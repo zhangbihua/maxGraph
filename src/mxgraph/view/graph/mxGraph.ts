@@ -13028,4 +13028,4 @@ if (mxClient.mxLoadResources) {
 }
 
 export default mxGraph;
-import("../../io/mxGraphCodec");
+import("../../serialization/mxGraphCodec");

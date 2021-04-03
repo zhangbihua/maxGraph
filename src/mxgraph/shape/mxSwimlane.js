@@ -6,42 +6,34 @@
 import mxShape from './mxShape';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxConstants from '../util/mxConstants';
-import mxUtils from "../util/mxUtils";
+import mxUtils from '../util/mxUtils';
 
+/**
+ * Class: mxSwimlane
+ *
+ * Extends <mxShape> to implement a swimlane shape. This shape is registered
+ * under <mxConstants.SHAPE_SWIMLANE> in <mxCellRenderer>. Use the
+ * <mxConstants.STYLE_STYLE_STARTSIZE> to define the size of the title
+ * region, <mxConstants.STYLE_SWIMLANE_FILLCOLOR> for the content area fill,
+ * <mxConstants.STYLE_SEPARATORCOLOR> to draw an additional vertical separator
+ * and <mxConstants.STYLE_SWIMLANE_LINE> to hide the line between the title
+ * region and the content area. The <mxConstants.STYLE_HORIZONTAL> affects
+ * the orientation of this shape, not only its label.
+ *
+ * Constructor: mxSwimlane
+ *
+ * Constructs a new swimlane shape.
+ *
+ * Parameters:
+ *
+ * bounds - <mxRectangle> that defines the bounds. This is stored in
+ * <mxShape.bounds>.
+ * fill - String that defines the fill color. This is stored in <fill>.
+ * stroke - String that defines the stroke color. This is stored in <stroke>.
+ * strokewidth - Optional integer that defines the stroke width. Default is
+ * 1. This is stored in <strokewidth>.
+ */
 class mxSwimlane extends mxShape {
-  /**
-   * Variable: imageSize
-   *
-   * Default imagewidth and imageheight if an image but no imagewidth
-   * and imageheight are defined in the style. Value is 16.
-   */
-  imageSize = 16;
-
-  /**
-   * Class: mxSwimlane
-   *
-   * Extends <mxShape> to implement a swimlane shape. This shape is registered
-   * under <mxConstants.SHAPE_SWIMLANE> in <mxCellRenderer>. Use the
-   * <mxConstants.STYLE_STYLE_STARTSIZE> to define the size of the title
-   * region, <mxConstants.STYLE_SWIMLANE_FILLCOLOR> for the content area fill,
-   * <mxConstants.STYLE_SEPARATORCOLOR> to draw an additional vertical separator
-   * and <mxConstants.STYLE_SWIMLANE_LINE> to hide the line between the title
-   * region and the content area. The <mxConstants.STYLE_HORIZONTAL> affects
-   * the orientation of this shape, not only its label.
-   *
-   * Constructor: mxSwimlane
-   *
-   * Constructs a new swimlane shape.
-   *
-   * Parameters:
-   *
-   * bounds - <mxRectangle> that defines the bounds. This is stored in
-   * <mxShape.bounds>.
-   * fill - String that defines the fill color. This is stored in <fill>.
-   * stroke - String that defines the stroke color. This is stored in <stroke>.
-   * strokewidth - Optional integer that defines the stroke width. Default is
-   * 1. This is stored in <strokewidth>.
-   */
   constructor(bounds, fill, stroke, strokewidth) {
     super(mxConstants.DO_NOTHING);
     this.bounds = bounds;
@@ -49,6 +41,14 @@ class mxSwimlane extends mxShape {
     this.stroke = stroke;
     this.strokewidth = strokewidth != null ? strokewidth : 1;
   }
+
+  /**
+   * Variable: imageSize
+   *
+   * Default imagewidth and imageheight if an image but no imagewidth
+   * and imageheight are defined in the style. Value is 16.
+   */
+  imageSize = 16;
 
   /**
    * Function: isRoundable

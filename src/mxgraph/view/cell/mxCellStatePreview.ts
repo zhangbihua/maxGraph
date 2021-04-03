@@ -7,9 +7,9 @@
 import mxUtils from '../../util/mxUtils';
 import mxPoint from '../../util/datatypes/mxPoint';
 import mxDictionary from '../../util/datatypes/mxDictionary';
-import mxCellState from "../../util/datatypes/mxCellState";
-import mxCell from "./mxCell";
-import mxGraph from "../graph/mxGraph";
+import mxCellState from '../../util/datatypes/mxCellState';
+import mxCell from './mxCell';
+import mxGraph from '../graph/mxGraph';
 
 class mxCellStatePreview {
   /**
@@ -64,12 +64,13 @@ class mxCellStatePreview {
   /**
    * Function: moveState
    */
-  moveState(state: mxCellState,
-            dx: number,
-            dy: number,
-            add: boolean=true,
-            includeEdges: boolean=true): mxPoint {
-
+  moveState(
+    state: mxCellState,
+    dx: number,
+    dy: number,
+    add: boolean = true,
+    includeEdges: boolean = true
+  ): mxPoint {
     let delta = this.deltas.get(state.cell);
 
     if (delta == null) {
@@ -94,7 +95,7 @@ class mxCellStatePreview {
   /**
    * Function: show
    */
-  show(visitor: Function | null=null) {
+  show(visitor: Function | null = null) {
     this.deltas.visit(
       mxUtils.bind(this, (key, delta) => {
         this.translateState(delta.state, delta.point.x, delta.point.y);
@@ -116,10 +117,7 @@ class mxCellStatePreview {
   /**
    * Function: translateState
    */
-  translateState(state: mxCellState,
-                 dx: number,
-                 dy: number) {
-
+  translateState(state: mxCellState, dx: number, dy: number) {
     if (state != null) {
       const model = this.graph.getModel();
 
@@ -155,11 +153,12 @@ class mxCellStatePreview {
   /**
    * Function: revalidateState
    */
-  revalidateState(state: mxCellState | null=null,
-                  dx: number,
-                  dy: number,
-                  visitor: Function | null=null): void {
-
+  revalidateState(
+    state: mxCellState | null = null,
+    dx: number,
+    dy: number,
+    visitor: Function | null = null
+  ): void {
     if (state != null) {
       const model = this.graph.getModel();
 

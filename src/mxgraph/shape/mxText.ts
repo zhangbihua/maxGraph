@@ -11,7 +11,7 @@ import mxPoint from '../util/datatypes/mxPoint';
 import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 import mxShape from './mxShape';
 import mxRectangle from '../util/datatypes/mxRectangle';
-import mxCellState from "../util/datatypes/mxCellState";
+import mxCellState from '../util/datatypes/mxCellState';
 
 class mxText extends mxShape {
   /**
@@ -247,9 +247,7 @@ class mxText extends mxShape {
    *
    * Generic rendering code.
    */
-  paint(c: mxSvgCanvas2D,
-        update: boolean=false): void {
-
+  paint(c: mxSvgCanvas2D, update: boolean = false): void {
     // Scale is passed-through to canvas
     const s = this.scale;
     const x = this.bounds.x / s;
@@ -1309,9 +1307,7 @@ class mxText extends mxShape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  updateSize(node: HTMLElement,
-             enableWrap: boolean=false) {
-
+  updateSize(node: HTMLElement, enableWrap: boolean = false) {
     const w = Math.max(0, Math.round(this.bounds.width / this.scale));
     const h = Math.max(0, Math.round(this.bounds.height / this.scale));
     const { style } = node;

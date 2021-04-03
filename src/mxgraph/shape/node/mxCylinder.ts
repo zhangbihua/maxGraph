@@ -6,9 +6,44 @@
 import mxShape from '../mxShape';
 import mxConstants from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
-import mxAbstractCanvas2D from "../../util/canvas/mxAbstractCanvas2D";
+import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
+import mxSvgCanvas2D from "../../util/canvas/mxSvgCanvas2D";
+import mxRectangle from "../../util/datatypes/mxRectangle";
 
+/**
+ * Class: mxCylinder
+ *
+ * Extends <mxShape> to implement an cylinder shape. If a
+ * custom shape with one filled area and an overlay path is
+ * needed, then this shape's <redrawPath> should be overridden.
+ * This shape is registered under <mxConstants.SHAPE_CYLINDER>
+ * in <mxCellRenderer>.
+ *
+ * Constructor: mxCylinder
+ *
+ * Constructs a new cylinder shape.
+ *
+ * Parameters:
+ *
+ * bounds - <mxRectangle> that defines the bounds. This is stored in
+ * <mxShape.bounds>.
+ * fill - String that defines the fill color. This is stored in <fill>.
+ * stroke - String that defines the stroke color. This is stored in <stroke>.
+ * strokewidth - Optional integer that defines the stroke width. Default is
+ * 1. This is stored in <strokewidth>.
+ */
 class mxCylinder extends mxShape {
+  constructor(bounds: mxRectangle,
+              fill: string,
+              stroke: string,
+              strokewidth: number=1) {
+    super();
+    this.bounds = bounds;
+    this.fill = fill;
+    this.stroke = stroke;
+    this.strokewidth = strokewidth;
+  }
+
   /**
    * Variable: maxHeight
    *
@@ -25,45 +60,17 @@ class mxCylinder extends mxShape {
   svgStrokeTolerance = 0;
 
   /**
-   * Class: mxCylinder
-   *
-   * Extends <mxShape> to implement an cylinder shape. If a
-   * custom shape with one filled area and an overlay path is
-   * needed, then this shape's <redrawPath> should be overridden.
-   * This shape is registered under <mxConstants.SHAPE_CYLINDER>
-   * in <mxCellRenderer>.
-   *
-   * Constructor: mxCylinder
-   *
-   * Constructs a new cylinder shape.
-   *
-   * Parameters:
-   *
-   * bounds - <mxRectangle> that defines the bounds. This is stored in
-   * <mxShape.bounds>.
-   * fill - String that defines the fill color. This is stored in <fill>.
-   * stroke - String that defines the stroke color. This is stored in <stroke>.
-   * strokewidth - Optional integer that defines the stroke width. Default is
-   * 1. This is stored in <strokewidth>.
-   */
-  constructor(bounds, fill, stroke, strokewidth) {
-    super();
-    this.bounds = bounds;
-    this.fill = fill;
-    this.stroke = stroke;
-    this.strokewidth = strokewidth != null ? strokewidth : 1;
-  }
-
-  /**
    * Function: paintVertexShape
    *
    * Redirects to redrawPath for subclasses to work.
    */
-  paintVertexShape(c: mxAbstractCanvas2D,
-                   x: number,
-                   y: number,
-                   w: number,
-                   h: number) {
+  paintVertexShape(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ): void {
     c.translate(x, y);
     c.begin();
     this.redrawPath(c, x, y, w, h, false);
@@ -86,7 +93,10 @@ class mxCylinder extends mxShape {
    *
    * Returns the cylinder size.
    */
-  getCylinderSize(x, y, w, h) {
+  getCylinderSize(x: number,
+                  y: number,
+                  w: number,
+                  h: number): number {
     return Math.min(this.maxHeight, Math.round(h / 5));
   }
 
@@ -95,12 +105,14 @@ class mxCylinder extends mxShape {
    *
    * Draws the path for this shape.
    */
-  redrawPath(c: mxAbstractCanvas2D,
-             x: number,
-             y: number,
-             w: number,
-             h: number,
-             isForeground: boolean=false) {
+  redrawPath(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    isForeground: boolean = false
+  ): void {
     const dy = this.getCylinderSize(x, y, w, h);
 
     if (

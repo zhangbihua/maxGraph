@@ -7,27 +7,27 @@ import mxShape from '../mxShape';
 import mxConstants from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 
+/**
+ * Class: mxPolyline
+ *
+ * Extends <mxShape> to implement a polyline (a line with multiple points).
+ * This shape is registered under <mxConstants.SHAPE_POLYLINE> in
+ * <mxCellRenderer>.
+ *
+ * Constructor: mxPolyline
+ *
+ * Constructs a new polyline shape.
+ *
+ * Parameters:
+ *
+ * points - Array of <mxPoints> that define the points. This is stored in
+ * <mxShape.points>.
+ * stroke - String that defines the stroke color. Default is 'black'. This is
+ * stored in <stroke>.
+ * strokewidth - Optional integer that defines the stroke width. Default is
+ * 1. This is stored in <strokewidth>.
+ */
 class mxPolyline extends mxShape {
-  /**
-   * Class: mxPolyline
-   *
-   * Extends <mxShape> to implement a polyline (a line with multiple points).
-   * This shape is registered under <mxConstants.SHAPE_POLYLINE> in
-   * <mxCellRenderer>.
-   *
-   * Constructor: mxPolyline
-   *
-   * Constructs a new polyline shape.
-   *
-   * Parameters:
-   *
-   * points - Array of <mxPoints> that define the points. This is stored in
-   * <mxShape.points>.
-   * stroke - String that defines the stroke color. Default is 'black'. This is
-   * stored in <stroke>.
-   * strokewidth - Optional integer that defines the stroke width. Default is
-   * 1. This is stored in <strokewidth>.
-   */
   constructor(points, stroke, strokewidth) {
     super();
     this.points = points;

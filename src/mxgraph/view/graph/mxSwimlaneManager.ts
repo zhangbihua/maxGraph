@@ -9,7 +9,7 @@ import mxUtils from '../../util/mxUtils';
 import mxEvent from '../../util/event/mxEvent';
 import mxConstants from '../../util/mxConstants';
 import mxRectangle from '../../util/datatypes/mxRectangle';
-import mxGraph from "./mxGraph";
+import mxGraph from './mxGraph';
 
 class mxSwimlaneManager extends mxEventSource {
   /**
@@ -78,10 +78,12 @@ class mxSwimlaneManager extends mxEventSource {
    *
    * graph - Reference to the enclosing graph.
    */
-  constructor(graph: mxGraph,
-              horizontal: boolean=true,
-              addEnabled: boolean=true,
-              resizeEnabled: boolean=true) {
+  constructor(
+    graph: mxGraph,
+    horizontal: boolean = true,
+    addEnabled: boolean = true,
+    resizeEnabled: boolean = true
+  ) {
     super();
 
     this.horizontal = horizontal;

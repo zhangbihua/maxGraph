@@ -10,7 +10,52 @@ import mxGeometry from '../util/datatypes/mxGeometry';
 import mxUtils from '../util/mxUtils';
 import mxEvent from '../util/event/mxEvent';
 
+/**
+ * Class: mxDefaultToolbar
+ *
+ * Toolbar for the editor. This modifies the state of the graph
+ * or inserts new cells upon mouse clicks.
+ *
+ * Example:
+ *
+ * Create a toolbar with a button to copy the selection into the clipboard,
+ * and a combo box with one action to paste the selection from the clipboard
+ * into the graph.
+ *
+ * (code)
+ * let toolbar = new mxDefaultToolbar(container, editor);
+ * toolbar.addItem('Copy', null, 'copy');
+ *
+ * let combo = toolbar.addActionCombo('More actions...');
+ * toolbar.addActionOption(combo, 'Paste', 'paste');
+ * (end)
+ *
+ * Codec:
+ *
+ * This class uses the <mxDefaultToolbarCodec> to read configuration
+ * data into an existing instance. See <mxDefaultToolbarCodec> for a
+ * description of the configuration format.
+ *
+ * Constructor: mxDefaultToolbar
+ *
+ * Constructs a new toolbar for the given container and editor. The
+ * container and editor may be null if a prototypical instance for a
+ * <mxDefaultKeyHandlerCodec> is created.
+ *
+ * Parameters:
+ *
+ * container - DOM node that contains the toolbar.
+ * editor - Reference to the enclosing <mxEditor>.
+ */
 class mxDefaultToolbar {
+  constructor(container, editor) {
+    this.editor = editor;
+
+    if (container != null && editor != null) {
+      this.init(container);
+    }
+  }
+
   /**
    * Variable: editor
    *
@@ -48,51 +93,6 @@ class mxDefaultToolbar {
    * connectable elements. Default is false.
    */
   connectOnDrop = false;
-
-  /**
-   * Class: mxDefaultToolbar
-   *
-   * Toolbar for the editor. This modifies the state of the graph
-   * or inserts new cells upon mouse clicks.
-   *
-   * Example:
-   *
-   * Create a toolbar with a button to copy the selection into the clipboard,
-   * and a combo box with one action to paste the selection from the clipboard
-   * into the graph.
-   *
-   * (code)
-   * let toolbar = new mxDefaultToolbar(container, editor);
-   * toolbar.addItem('Copy', null, 'copy');
-   *
-   * let combo = toolbar.addActionCombo('More actions...');
-   * toolbar.addActionOption(combo, 'Paste', 'paste');
-   * (end)
-   *
-   * Codec:
-   *
-   * This class uses the <mxDefaultToolbarCodec> to read configuration
-   * data into an existing instance. See <mxDefaultToolbarCodec> for a
-   * description of the configuration format.
-   *
-   * Constructor: mxDefaultToolbar
-   *
-   * Constructs a new toolbar for the given container and editor. The
-   * container and editor may be null if a prototypical instance for a
-   * <mxDefaultKeyHandlerCodec> is created.
-   *
-   * Parameters:
-   *
-   * container - DOM node that contains the toolbar.
-   * editor - Reference to the enclosing <mxEditor>.
-   */
-  constructor(container, editor) {
-    this.editor = editor;
-
-    if (container != null && editor != null) {
-      this.init(container);
-    }
-  }
 
   /**
    * Function: init
@@ -519,4 +519,4 @@ class mxDefaultToolbar {
 }
 
 export default mxDefaultToolbar;
-import("../io/mxDefaultToolbarCodec");
+import('../serialization/mxDefaultToolbarCodec');

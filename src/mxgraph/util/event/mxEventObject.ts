@@ -49,9 +49,7 @@ class mxEventObject {
    * new mxEventObject("eventName", key1, val1, .., keyN, valN)
    * (end)
    */
-  constructor(name: string,
-              ...args: any[]) {
-
+  constructor(name: string, ...args: any[]) {
     this.name = name;
     this.properties = [];
 

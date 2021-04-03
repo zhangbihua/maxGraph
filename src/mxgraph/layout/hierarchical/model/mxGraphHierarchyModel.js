@@ -5,100 +5,35 @@
  */
 
 import mxDictionary from '../../../util/datatypes/mxDictionary';
-import mxGraphHierarchyNode from "./mxGraphHierarchyNode";
-import mxGraphHierarchyEdge from "./mxGraphHierarchyEdge";
-import mxUtils from "../../../util/mxUtils";
+import mxGraphHierarchyNode from './mxGraphHierarchyNode';
+import mxGraphHierarchyEdge from './mxGraphHierarchyEdge';
+import mxUtils from '../../../util/mxUtils';
 
+/**
+ * Class: mxGraphHierarchyModel
+ *
+ * Internal model of a hierarchical graph. This model stores nodes and edges
+ * equivalent to the real graph nodes and edges, but also stores the rank of the
+ * cells, the order within the ranks and the new candidate locations of cells.
+ * The internal model also reverses edge direction were appropriate , ignores
+ * self-loop and groups parallels together under one edge object.
+ *
+ * Constructor: mxGraphHierarchyModel
+ *
+ * Creates an internal ordered graph model using the vertices passed in. If
+ * there are any, leftward edge need to be inverted in the internal model
+ *
+ * Arguments:
+ *
+ * graph - the facade describing the graph to be operated on
+ * vertices - the vertices for this hierarchy
+ * ordered - whether or not the vertices are already ordered
+ * deterministic - whether or not this layout should be deterministic on each
+ * tightenToSource - whether or not to tighten vertices towards the sources
+ * scanRanksFromSinks - Whether rank assignment is from the sinks or sources.
+ * usage
+ */
 class mxGraphHierarchyModel {
-  /**
-   * Variable: maxRank
-   *
-   * Stores the largest rank number allocated
-   */
-  maxRank = null;
-
-  /**
-   * Variable: vertexMapper
-   *
-   * Map from graph vertices to internal model nodes.
-   */
-  vertexMapper = null;
-
-  /**
-   * Variable: edgeMapper
-   *
-   * Map from graph edges to internal model edges
-   */
-  edgeMapper = null;
-
-  /**
-   * Variable: ranks
-   *
-   * Mapping from rank number to actual rank
-   */
-  ranks = null;
-
-  /**
-   * Variable: roots
-   *
-   * Store of roots of this hierarchy model, these are real graph cells, not
-   * internal cells
-   */
-  roots = null;
-
-  /**
-   * Variable: parent
-   *
-   * The parent cell whose children are being laid out
-   */
-  parent = null;
-
-  /**
-   * Variable: dfsCount
-   *
-   * Count of the number of times the ancestor dfs has been used.
-   */
-  dfsCount = 0;
-
-  /**
-   * Variable: SOURCESCANSTARTRANK
-   *
-   * High value to start source layering scan rank value from.
-   */
-  SOURCESCANSTARTRANK = 100000000;
-
-  /**
-   * Variable: tightenToSource
-   *
-   * Whether or not to tighten the assigned ranks of vertices up towards
-   * the source cells.
-   */
-  tightenToSource = false;
-
-  /**
-   * Class: mxGraphHierarchyModel
-   *
-   * Internal model of a hierarchical graph. This model stores nodes and edges
-   * equivalent to the real graph nodes and edges, but also stores the rank of the
-   * cells, the order within the ranks and the new candidate locations of cells.
-   * The internal model also reverses edge direction were appropriate , ignores
-   * self-loop and groups parallels together under one edge object.
-   *
-   * Constructor: mxGraphHierarchyModel
-   *
-   * Creates an internal ordered graph model using the vertices passed in. If
-   * there are any, leftward edge need to be inverted in the internal model
-   *
-   * Arguments:
-   *
-   * graph - the facade describing the graph to be operated on
-   * vertices - the vertices for this hierarchy
-   * ordered - whether or not the vertices are already ordered
-   * deterministic - whether or not this layout should be deterministic on each
-   * tightenToSource - whether or not to tighten vertices towards the sources
-   * scanRanksFromSinks - Whether rank assignment is from the sinks or sources.
-   * usage
-   */
   constructor(layout, vertices, roots, parent, tightenToSource) {
     const graph = layout.getGraph();
     this.tightenToSource = tightenToSource;
@@ -175,6 +110,71 @@ class mxGraphHierarchyModel {
       internalVertices[i].temp[0] = 1;
     }
   }
+
+  /**
+   * Variable: maxRank
+   *
+   * Stores the largest rank number allocated
+   */
+  maxRank = null;
+
+  /**
+   * Variable: vertexMapper
+   *
+   * Map from graph vertices to internal model nodes.
+   */
+  vertexMapper = null;
+
+  /**
+   * Variable: edgeMapper
+   *
+   * Map from graph edges to internal model edges
+   */
+  edgeMapper = null;
+
+  /**
+   * Variable: ranks
+   *
+   * Mapping from rank number to actual rank
+   */
+  ranks = null;
+
+  /**
+   * Variable: roots
+   *
+   * Store of roots of this hierarchy model, these are real graph cells, not
+   * internal cells
+   */
+  roots = null;
+
+  /**
+   * Variable: parent
+   *
+   * The parent cell whose children are being laid out
+   */
+  parent = null;
+
+  /**
+   * Variable: dfsCount
+   *
+   * Count of the number of times the ancestor dfs has been used.
+   */
+  dfsCount = 0;
+
+  /**
+   * Variable: SOURCESCANSTARTRANK
+   *
+   * High value to start source layering scan rank value from.
+   */
+  SOURCESCANSTARTRANK = 100000000;
+
+  /**
+   * Variable: tightenToSource
+   *
+   * Whether or not to tighten the assigned ranks of vertices up towards
+   * the source cells.
+   */
+  tightenToSource = false;
 
   /**
    * Function: createInternalCells

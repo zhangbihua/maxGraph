@@ -8,7 +8,7 @@ import mxPoint from '../util/datatypes/mxPoint';
 import mxActor from './mxActor';
 import mxUtils from '../util/mxUtils';
 import mxConstants from '../util/mxConstants';
-import mxAbstractCanvas2D from "../util/canvas/mxAbstractCanvas2D";
+import mxAbstractCanvas2D from '../util/canvas/mxAbstractCanvas2D';
 
 class mxTriangle extends mxActor {
   /**
@@ -38,12 +38,13 @@ class mxTriangle extends mxActor {
    *
    * Draws the path for this shape.
    */
-  redrawPath(c: mxAbstractCanvas2D,
-             x: number,
-             y: number,
-             w: number,
-             h: number): void {
-
+  redrawPath(
+    c: mxAbstractCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ): void {
     const arcSize: number =
       mxUtils.getValue(
         this.style,

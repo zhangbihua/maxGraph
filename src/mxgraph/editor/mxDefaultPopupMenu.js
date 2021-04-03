@@ -6,7 +6,39 @@
 import mxResources from '../util/mxResources';
 import mxUtils from '../util/mxUtils';
 
+/**
+ * Class: mxDefaultPopupMenu
+ *
+ * Creates popupmenus for mouse events. This object holds an XML node
+ * which is a description of the popup menu to be created. In
+ * <createMenu>, the configuration is applied to the context and
+ * the resulting menu items are added to the menu dynamically. See
+ * <createMenu> for a description of the configuration format.
+ *
+ * This class does not create the DOM nodes required for the popup menu, it
+ * only parses an XML description to invoke the respective methods on an
+ * <mxPopupMenu> each time the menu is displayed.
+ *
+ * Codec:
+ *
+ * This class uses the <mxDefaultPopupMenuCodec> to read configuration
+ * data into an existing instance, however, the actual parsing is done
+ * by this class during program execution, so the format is described
+ * below.
+ *
+ * Constructor: mxDefaultPopupMenu
+ *
+ * Constructs a new popupmenu-factory based on given configuration.
+ *
+ * Paramaters:
+ *
+ * config - XML node that contains the configuration data.
+ */
 class mxDefaultPopupMenu {
+  constructor(config) {
+    this.config = config;
+  }
+
   /**
    * Variable: imageBasePath
    *
@@ -22,38 +54,6 @@ class mxDefaultPopupMenu {
    * respective conditions evaluate to true for the given arguments.
    */
   config = null;
-
-  /**
-   * Class: mxDefaultPopupMenu
-   *
-   * Creates popupmenus for mouse events. This object holds an XML node
-   * which is a description of the popup menu to be created. In
-   * <createMenu>, the configuration is applied to the context and
-   * the resulting menu items are added to the menu dynamically. See
-   * <createMenu> for a description of the configuration format.
-   *
-   * This class does not create the DOM nodes required for the popup menu, it
-   * only parses an XML description to invoke the respective methods on an
-   * <mxPopupMenu> each time the menu is displayed.
-   *
-   * Codec:
-   *
-   * This class uses the <mxDefaultPopupMenuCodec> to read configuration
-   * data into an existing instance, however, the actual parsing is done
-   * by this class during program execution, so the format is described
-   * below.
-   *
-   * Constructor: mxDefaultPopupMenu
-   *
-   * Constructs a new popupmenu-factory based on given configuration.
-   *
-   * Paramaters:
-   *
-   * config - XML node that contains the configuration data.
-   */
-  constructor(config) {
-    this.config = config;
-  }
 
   /**
    * Function: createMenu

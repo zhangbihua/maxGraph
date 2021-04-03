@@ -7,7 +7,36 @@
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxGraphLayout from './mxGraphLayout';
 
+/**
+ * Class: mxPartitionLayout
+ *
+ * Extends <mxGraphLayout> for partitioning the parent cell vertically or
+ * horizontally by filling the complete area with the child cells. A horizontal
+ * layout partitions the height of the given parent whereas a a non-horizontal
+ * layout partitions the width. If the parent is a layer (that is, a child of
+ * the root node), then the current graph size is partitioned. The children do
+ * not need to be connected for this layout to work.
+ *
+ * Example:
+ *
+ * (code)
+ * let layout = new mxPartitionLayout(graph, true, 10, 20);
+ * layout.execute(graph.getDefaultParent());
+ * (end)
+ *
+ * Constructor: mxPartitionLayout
+ *
+ * Constructs a new stack layout layout for the specified graph,
+ * spacing, orientation and offset.
+ */
 class mxPartitionLayout extends mxGraphLayout {
+  constructor(graph, horizontal, spacing, border) {
+    super(graph);
+    this.horizontal = horizontal != null ? horizontal : true;
+    this.spacing = spacing || 0;
+    this.border = border || 0;
+  }
+
   /**
    * Variable: horizontal
    *
@@ -38,35 +67,6 @@ class mxPartitionLayout extends mxGraphLayout {
    * Boolean that specifies if vertices should be resized. Default is true.
    */
   resizeVertices = true;
-
-  /**
-   * Class: mxPartitionLayout
-   *
-   * Extends <mxGraphLayout> for partitioning the parent cell vertically or
-   * horizontally by filling the complete area with the child cells. A horizontal
-   * layout partitions the height of the given parent whereas a a non-horizontal
-   * layout partitions the width. If the parent is a layer (that is, a child of
-   * the root node), then the current graph size is partitioned. The children do
-   * not need to be connected for this layout to work.
-   *
-   * Example:
-   *
-   * (code)
-   * let layout = new mxPartitionLayout(graph, true, 10, 20);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * Constructor: mxPartitionLayout
-   *
-   * Constructs a new stack layout layout for the specified graph,
-   * spacing, orientation and offset.
-   */
-  constructor(graph, horizontal, spacing, border) {
-    super(graph);
-    this.horizontal = horizontal != null ? horizontal : true;
-    this.spacing = spacing || 0;
-    this.border = border || 0;
-  }
 
   /**
    * Function: isHorizontal

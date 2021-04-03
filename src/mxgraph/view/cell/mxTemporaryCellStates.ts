@@ -10,12 +10,13 @@
 
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxDictionary from '../../util/datatypes/mxDictionary';
-import mxGraphView from "../graph/mxGraphView";
-import mxCell from "./mxCell";
-import mxCellState from "../../util/datatypes/mxCellState";
+import mxGraphView from '../graph/mxGraphView';
+import mxCell from './mxCell';
+import mxCellState from '../../util/datatypes/mxCellState';
 
 class mxTemporaryCellStates {
   oldValidateCellState: Function | null;
+
   oldDoRedrawShape: Function | null;
 
   /**
@@ -38,12 +39,13 @@ class mxTemporaryCellStates {
    */
   oldScale: number = 0;
 
-  constructor(view: mxGraphView,
-              scale: number=1,
-              cells: mxCell[],
-              isCellVisibleFn: Function | null=null,
-              getLinkForCellState: Function | null=null) {
-
+  constructor(
+    view: mxGraphView,
+    scale: number = 1,
+    cells: mxCell[],
+    isCellVisibleFn: Function | null = null,
+    getLinkForCellState: Function | null = null
+  ) {
     this.view = view;
 
     // Stores the previous state

@@ -10,7 +10,62 @@ import mxEventObject from '../util/event/mxEventObject';
 import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 
+/**
+ * Class: mxCellMarker
+ *
+ * A helper class to process mouse locations and highlight cells.
+ *
+ * Helper class to highlight cells. To add a cell marker to an existing graph
+ * for highlighting all cells, the following code is used:
+ *
+ * (code)
+ * let marker = new mxCellMarker(graph);
+ * graph.addMouseListener({
+ *   mouseDown: ()=> {},
+ *   mouseMove: (sender, me)=>
+ *   {
+ *     marker.process(me);
+ *   },
+ *   mouseUp: ()=> {}
+ * });
+ * (end)
+ *
+ * Event: mxEvent.MARK
+ *
+ * Fires after a cell has been marked or unmarked. The <code>state</code>
+ * property contains the marked <mxCellState> or null if no state is marked.
+ *
+ * Constructor: mxCellMarker
+ *
+ * Constructs a new cell marker.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ * validColor - Optional marker color for valid states. Default is
+ * <mxConstants.DEFAULT_VALID_COLOR>.
+ * invalidColor - Optional marker color for invalid states. Default is
+ * <mxConstants.DEFAULT_INVALID_COLOR>.
+ * hotspot - Portion of the width and hight where a state intersects a
+ * given coordinate pair. A value of 0 means always highlight. Default is
+ * <mxConstants.DEFAULT_HOTSPOT>.
+ */
 class mxCellMarker extends mxEventSource {
+  constructor(graph, validColor, invalidColor, hotspot) {
+    super();
+
+    if (graph != null) {
+      this.graph = graph;
+      this.validColor =
+        validColor != null ? validColor : mxConstants.DEFAULT_VALID_COLOR;
+      this.invalidColor =
+        invalidColor != null ? invalidColor : mxConstants.DEFAULT_INVALID_COLOR;
+      this.hotspot = hotspot != null ? hotspot : mxConstants.DEFAULT_HOTSPOT;
+
+      this.highlight = new mxCellHighlight(graph);
+    }
+  }
+
   /**
    * Variable: graph
    *
@@ -76,61 +131,6 @@ class mxCellMarker extends mxEventSource {
    * Holds the marked <mxCellState>.
    */
   markedState = null;
-
-  /**
-   * Class: mxCellMarker
-   *
-   * A helper class to process mouse locations and highlight cells.
-   *
-   * Helper class to highlight cells. To add a cell marker to an existing graph
-   * for highlighting all cells, the following code is used:
-   *
-   * (code)
-   * let marker = new mxCellMarker(graph);
-   * graph.addMouseListener({
-   *   mouseDown: ()=> {},
-   *   mouseMove: (sender, me)=>
-   *   {
-   *     marker.process(me);
-   *   },
-   *   mouseUp: ()=> {}
-   * });
-   * (end)
-   *
-   * Event: mxEvent.MARK
-   *
-   * Fires after a cell has been marked or unmarked. The <code>state</code>
-   * property contains the marked <mxCellState> or null if no state is marked.
-   *
-   * Constructor: mxCellMarker
-   *
-   * Constructs a new cell marker.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   * validColor - Optional marker color for valid states. Default is
-   * <mxConstants.DEFAULT_VALID_COLOR>.
-   * invalidColor - Optional marker color for invalid states. Default is
-   * <mxConstants.DEFAULT_INVALID_COLOR>.
-   * hotspot - Portion of the width and hight where a state intersects a
-   * given coordinate pair. A value of 0 means always highlight. Default is
-   * <mxConstants.DEFAULT_HOTSPOT>.
-   */
-  constructor(graph, validColor, invalidColor, hotspot) {
-    super();
-
-    if (graph != null) {
-      this.graph = graph;
-      this.validColor =
-        validColor != null ? validColor : mxConstants.DEFAULT_VALID_COLOR;
-      this.invalidColor =
-        invalidColor != null ? invalidColor : mxConstants.DEFAULT_INVALID_COLOR;
-      this.hotspot = hotspot != null ? hotspot : mxConstants.DEFAULT_HOTSPOT;
-
-      this.highlight = new mxCellHighlight(graph);
-    }
-  }
 
   /**
    * Function: setEnabled

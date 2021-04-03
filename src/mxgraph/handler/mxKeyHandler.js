@@ -6,9 +6,90 @@
 
 import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
-import "../io/mxDefaultKeyHandlerCodec";
+import '../serialization/mxDefaultKeyHandlerCodec';
 
+/**
+ * Class: mxKeyHandler
+ *
+ * Event handler that listens to keystroke events. This is not a singleton,
+ * however, it is normally only required once if the target is the document
+ * element (default).
+ *
+ * This handler installs a key event listener in the topmost DOM node and
+ * processes all events that originate from descandants of <mxGraph.container>
+ * or from the topmost DOM node. The latter means that all unhandled keystrokes
+ * are handled by this object regardless of the focused state of the <graph>.
+ *
+ * Example:
+ *
+ * The following example creates a key handler that listens to the delete key
+ * (46) and deletes the selection cells if the graph is enabled.
+ *
+ * (code)
+ * let keyHandler = new mxKeyHandler(graph);
+ * keyHandler.bindKey(46, (evt)=>
+ * {
+ *   if (graph.isEnabled())
+ *   {
+ *     graph.removeCells();
+ *   }
+ * });
+ * (end)
+ *
+ * Keycodes:
+ *
+ * See http://tinyurl.com/yp8jgl or http://tinyurl.com/229yqw for a list of
+ * keycodes or install a key event listener into the document element and print
+ * the key codes of the respective events to the console.
+ *
+ * To support the Command key and the Control key on the Mac, the following
+ * code can be used.
+ *
+ * (code)
+ * keyHandler.getFunction = (evt)=>
+ * {
+ *   if (evt != null)
+ *   {
+ *     return (mxEvent.isControlDown(evt) || (mxClient.IS_MAC && evt.metaKey)) ? this.controlKeys[evt.keyCode] : this.normalKeys[evt.keyCode];
+ *   }
+ *
+ *   return null;
+ * };
+ * (end)
+ *
+ * Constructor: mxKeyHandler
+ *
+ * Constructs an event handler that executes functions bound to specific
+ * keystrokes.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the associated <mxGraph>.
+ * target - Optional reference to the event target. If null, the document
+ * element is used as the event target, that is, the object where the key
+ * event listener is installed.
+ */
 class mxKeyHandler {
+  constructor(graph, target) {
+    if (graph != null) {
+      this.graph = graph;
+      this.target = target || document.documentElement;
+
+      // Creates the arrays to map from keycodes to functions
+      this.normalKeys = [];
+      this.shiftKeys = [];
+      this.controlKeys = [];
+      this.controlShiftKeys = [];
+
+      this.keydownHandler = evt => {
+        this.keyDown(evt);
+      };
+
+      // Installs the keystroke listener in the target
+      mxEvent.addListener(this.target, 'keydown', this.keydownHandler);
+    }
+  }
+
   /**
    * Variable: graph
    *
@@ -58,87 +139,6 @@ class mxKeyHandler {
    * Specifies if events are handled. Default is true.
    */
   enabled = true;
-
-  /**
-   * Class: mxKeyHandler
-   *
-   * Event handler that listens to keystroke events. This is not a singleton,
-   * however, it is normally only required once if the target is the document
-   * element (default).
-   *
-   * This handler installs a key event listener in the topmost DOM node and
-   * processes all events that originate from descandants of <mxGraph.container>
-   * or from the topmost DOM node. The latter means that all unhandled keystrokes
-   * are handled by this object regardless of the focused state of the <graph>.
-   *
-   * Example:
-   *
-   * The following example creates a key handler that listens to the delete key
-   * (46) and deletes the selection cells if the graph is enabled.
-   *
-   * (code)
-   * let keyHandler = new mxKeyHandler(graph);
-   * keyHandler.bindKey(46, (evt)=>
-   * {
-   *   if (graph.isEnabled())
-   *   {
-   *     graph.removeCells();
-   *   }
-   * });
-   * (end)
-   *
-   * Keycodes:
-   *
-   * See http://tinyurl.com/yp8jgl or http://tinyurl.com/229yqw for a list of
-   * keycodes or install a key event listener into the document element and print
-   * the key codes of the respective events to the console.
-   *
-   * To support the Command key and the Control key on the Mac, the following
-   * code can be used.
-   *
-   * (code)
-   * keyHandler.getFunction = (evt)=>
-   * {
-   *   if (evt != null)
-   *   {
-   *     return (mxEvent.isControlDown(evt) || (mxClient.IS_MAC && evt.metaKey)) ? this.controlKeys[evt.keyCode] : this.normalKeys[evt.keyCode];
-   *   }
-   *
-   *   return null;
-   * };
-   * (end)
-   *
-   * Constructor: mxKeyHandler
-   *
-   * Constructs an event handler that executes functions bound to specific
-   * keystrokes.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the associated <mxGraph>.
-   * target - Optional reference to the event target. If null, the document
-   * element is used as the event target, that is, the object where the key
-   * event listener is installed.
-   */
-  constructor(graph, target) {
-    if (graph != null) {
-      this.graph = graph;
-      this.target = target || document.documentElement;
-
-      // Creates the arrays to map from keycodes to functions
-      this.normalKeys = [];
-      this.shiftKeys = [];
-      this.controlKeys = [];
-      this.controlShiftKeys = [];
-
-      this.keydownHandler = evt => {
-        this.keyDown(evt);
-      };
-
-      // Installs the keystroke listener in the target
-      mxEvent.addListener(this.target, 'keydown', this.keydownHandler);
-    }
-  }
 
   /**
    * Function: isEnabled

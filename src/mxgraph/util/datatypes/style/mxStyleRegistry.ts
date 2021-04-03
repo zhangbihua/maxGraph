@@ -5,8 +5,8 @@
  */
 
 import mxConstants from '../../mxConstants';
-import mxEdgeStyle from "./mxEdgeStyle";
-import mxPerimeter from "./mxPerimeter";
+import mxEdgeStyle from './mxEdgeStyle';
+import mxPerimeter from './mxPerimeter';
 
 const mxStyleRegistry = {
   /**

@@ -7,8 +7,8 @@
 import mxUtils from '../../mxUtils';
 import mxPoint from '../mxPoint';
 import mxConstants from '../../mxConstants';
-import mxRectangle from "../mxRectangle";
-import mxCellState from "../mxCellState";
+import mxRectangle from '../mxRectangle';
+import mxCellState from '../mxCellState';
 
 const mxPerimeter = {
   /**
@@ -90,11 +90,12 @@ const mxPerimeter = {
    * of the perimeter and the line between the next and the center point is
    * returned.
    */
-  RectanglePerimeter(bounds: mxRectangle,
-                     vertex: mxCellState,
-                     next: mxPoint,
-                     orthogonal: boolean=false): mxPoint {
-
+  RectanglePerimeter(
+    bounds: mxRectangle,
+    vertex: mxCellState,
+    next: mxPoint,
+    orthogonal: boolean = false
+  ): mxPoint {
     const cx = bounds.getCenterX();
     const cy = bounds.getCenterY();
     const dx = next.x - cx;
@@ -151,10 +152,12 @@ const mxPerimeter = {
    * Describes an elliptic perimeter. See <RectanglePerimeter>
    * for a description of the parameters.
    */
-  EllipsePerimeter(bounds: mxRectangle,
-                   vertex: mxCellState,
-                   next: mxPoint,
-                   orthogonal: boolean=false): mxPoint {
+  EllipsePerimeter(
+    bounds: mxRectangle,
+    vertex: mxCellState,
+    next: mxPoint,
+    orthogonal: boolean = false
+  ): mxPoint {
     const { x } = bounds;
     const { y } = bounds;
     const a = bounds.width / 2;
@@ -237,10 +240,12 @@ const mxPerimeter = {
    * Describes a rhombus (aka diamond) perimeter. See <RectanglePerimeter>
    * for a description of the parameters.
    */
-  RhombusPerimeter(bounds: mxRectangle,
-                   vertex: mxCellState,
-                   next: mxPoint,
-                   orthogonal: boolean=false): mxPoint {
+  RhombusPerimeter(
+    bounds: mxRectangle,
+    vertex: mxCellState,
+    next: mxPoint,
+    orthogonal: boolean = false
+  ): mxPoint {
     const { x } = bounds;
     const { y } = bounds;
     const w = bounds.width;
@@ -297,10 +302,12 @@ const mxPerimeter = {
    * Describes a triangle perimeter. See <RectanglePerimeter>
    * for a description of the parameters.
    */
-  TrianglePerimeter(bounds: mxRectangle,
-                    vertex: mxCellState,
-                    next: mxPoint,
-                    orthogonal: boolean=false): mxPoint {
+  TrianglePerimeter(
+    bounds: mxRectangle,
+    vertex: mxCellState,
+    next: mxPoint,
+    orthogonal: boolean = false
+  ): mxPoint {
     const direction =
       vertex != null ? vertex.style[mxConstants.STYLE_DIRECTION] : null;
     const vertical =
@@ -439,11 +446,12 @@ const mxPerimeter = {
    * Describes a hexagon perimeter. See <RectanglePerimeter>
    * for a description of the parameters.
    */
-  HexagonPerimeter(bounds: mxRectangle,
-                   vertex: mxCellState,
-                   next: mxPoint,
-                   orthogonal: boolean=false): mxPoint {
-
+  HexagonPerimeter(
+    bounds: mxRectangle,
+    vertex: mxCellState,
+    next: mxPoint,
+    orthogonal: boolean = false
+  ): mxPoint {
     const { x } = bounds;
     const { y } = bounds;
     const w = bounds.width;

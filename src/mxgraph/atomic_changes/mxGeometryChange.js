@@ -1,14 +1,14 @@
+/**
+ * Class: mxGeometryChange
+ *
+ * Action to change a cell's geometry in a model.
+ *
+ * Constructor: mxGeometryChange
+ *
+ * Constructs a change of a geometry in the
+ * specified model.
+ */
 class mxGeometryChange {
-  /**
-   * Class: mxGeometryChange
-   *
-   * Action to change a cell's geometry in a model.
-   *
-   * Constructor: mxGeometryChange
-   *
-   * Constructs a change of a geometry in the
-   * specified model.
-   */
   constructor(model, cell, geometry) {
     this.model = model;
     this.cell = cell;
@@ -34,5 +34,5 @@ class mxGeometryChange {
 }
 
 export default mxGeometryChange;
-import("../io/mxGenericChangeCodec");
+import("../serialization/mxGenericChangeCodec");
 

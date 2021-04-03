@@ -7,12 +7,23 @@
 import mxStylesheet from '../util/datatypes/style/mxStylesheet';
 import mxUtils from '../util/mxUtils';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxConstants from "../util/mxConstants";
-import mxLog from "../util/gui/mxLog";
-import mxStyleRegistry from "../util/datatypes/style/mxStyleRegistry";
-import mxObjectCodec from "./mxObjectCodec";
+import mxConstants from '../util/mxConstants';
+import mxLog from '../util/gui/mxLog';
+import mxStyleRegistry from '../util/datatypes/style/mxStyleRegistry';
+import mxObjectCodec from './mxObjectCodec';
 
+/**
+ * Class: mxStylesheetCodec
+ *
+ * Codec for <mxStylesheet>s. This class is created and registered
+ * dynamically at load time and used implicitly via <mxCodec>
+ * and the <mxCodecRegistry>.
+ */
 class mxStylesheetCodec extends mxObjectCodec {
+  constructor() {
+    super(new mxStylesheet());
+  }
+
   /**
    * Variable: allowEval
    *
@@ -21,17 +32,6 @@ class mxStylesheetCodec extends mxObjectCodec {
    * may contain user input.
    */
   static allowEval = true;
-
-  /**
-   * Class: mxStylesheetCodec
-   *
-   * Codec for <mxStylesheet>s. This class is created and registered
-   * dynamically at load time and used implicitly via <mxCodec>
-   * and the <mxCodecRegistry>.
-   */
-  constructor() {
-    super(new mxStylesheet());
-  }
 
   /**
    * Function: encode

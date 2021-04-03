@@ -8,14 +8,14 @@ import mxGraphModel from '../view/graph/mxGraphModel';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
 
+/**
+ * Class: mxModelCodec
+ *
+ * Codec for <mxGraphModel>s. This class is created and registered
+ * dynamically at load time and used implicitly via <mxCodec>
+ * and the <mxCodecRegistry>.
+ */
 class mxModelCodec extends mxObjectCodec {
-  /**
-   * Class: mxModelCodec
-   *
-   * Codec for <mxGraphModel>s. This class is created and registered
-   * dynamically at load time and used implicitly via <mxCodec>
-   * and the <mxCodecRegistry>.
-   */
   constructor() {
     super(new mxGraphModel());
   }

@@ -1,14 +1,14 @@
+/**
+ * Class: mxChildChange
+ *
+ * Action to add or remove a child in a model.
+ *
+ * Constructor: mxChildChange
+ *
+ * Constructs a change of a child in the
+ * specified model.
+ */
 class mxChildChange {
-  /**
-   * Class: mxChildChange
-   *
-   * Action to add or remove a child in a model.
-   *
-   * Constructor: mxChildChange
-   *
-   * Constructs a change of a child in the
-   * specified model.
-   */
   constructor(model, parent, child, index) {
     this.model = model;
     this.parent = parent;
@@ -93,5 +93,4 @@ class mxChildChange {
 }
 
 export default mxChildChange;
-import("../io/mxChildChangeCodec");
-
+import('../serialization/mxChildChangeCodec');

@@ -6,7 +6,28 @@
 import mxGraphAbstractHierarchyCell from './mxGraphAbstractHierarchyCell';
 import mxObjectIdentity from '../../../util/datatypes/mxObjectIdentity';
 
+/**
+ * Class: mxGraphHierarchyNode
+ *
+ * An abstraction of a hierarchical edge for the hierarchy layout
+ *
+ * Constructor: mxGraphHierarchyNode
+ *
+ * Constructs an internal node to represent the specified real graph cell
+ *
+ * Arguments:
+ *
+ * cell - the real graph cell this node represents
+ */
 class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
+  constructor(cell) {
+    super(cell);
+    this.cell = cell;
+    this.id = mxObjectIdentity.get(cell);
+    this.connectsAsTarget = [];
+    this.connectsAsSource = [];
+  }
+
   /**
    * Variable: cell
    *
@@ -42,27 +63,6 @@ class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell {
    * of copying HashSets
    */
   hashCode = false;
-
-  /**
-   * Class: mxGraphHierarchyNode
-   *
-   * An abstraction of a hierarchical edge for the hierarchy layout
-   *
-   * Constructor: mxGraphHierarchyNode
-   *
-   * Constructs an internal node to represent the specified real graph cell
-   *
-   * Arguments:
-   *
-   * cell - the real graph cell this node represents
-   */
-  constructor(cell) {
-    super(cell);
-    this.cell = cell;
-    this.id = mxObjectIdentity.get(cell);
-    this.connectsAsTarget = [];
-    this.connectsAsSource = [];
-  }
 
   /**
    * Function: getRankValue

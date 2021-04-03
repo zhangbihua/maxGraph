@@ -6,13 +6,14 @@
 
 import mxUtils from '../../util/mxUtils';
 import mxConstants from '../../util/mxConstants';
-import mxGeometry from "../../util/datatypes/mxGeometry";
-import mxCellOverlay from "./mxCellOverlay";
+import mxGeometry from '../../util/datatypes/mxGeometry';
+import mxCellOverlay from './mxCellOverlay';
 
 class mxCell {
   // TODO: Document me!
   // used by invalidate() of mxGraphView
   invalidating: boolean = false;
+
   onInit: Function | null = null;
 
   // used by addCellOverlay() of mxGraph
@@ -198,12 +199,11 @@ class mxCell {
    * geometry - Optional <mxGeometry> that specifies the geometry.
    * style - Optional formatted string that defines the style.
    */
-  //onInit: Function | null;
-
-  constructor(value: any=null,
-              geometry: mxGeometry=null,
-              style: string=null) {
-
+  constructor(
+      value: any = null,
+      geometry: mxGeometry | null = null,
+      style: string | null = null
+  ) {
     this.value = value;
     this.setGeometry(geometry);
     this.setStyle(style);
@@ -288,7 +288,7 @@ class mxCell {
    *
    * Returns a string that describes the <style>.
    */
-  getStyle(): string {
+  getStyle(): any {
     return this.style;
   }
 
@@ -307,7 +307,7 @@ class mxCell {
    * Returns true if the cell is a vertex.
    */
   isVertex(): boolean {
-    return !!this.vertex;
+    return this.vertex;
   }
 
   /**
@@ -330,7 +330,7 @@ class mxCell {
    * Returns true if the cell is an edge.
    */
   isEdge(): boolean {
-    return !!this.edge;
+    return this.edge;
   }
 
   /**
@@ -343,7 +343,7 @@ class mxCell {
    *
    * edge - Boolean that specifies if the cell is an edge.
    */
-  setEdge(edge) {
+  setEdge(edge: boolean) {
     this.edge = edge;
   }
 
@@ -353,7 +353,7 @@ class mxCell {
    * Returns true if the cell is connectable.
    */
   isConnectable(): boolean {
-    return !!this.connectable;
+    return this.connectable;
   }
 
   /**
@@ -375,7 +375,7 @@ class mxCell {
    * Returns true if the cell is visibile.
    */
   isVisible(): boolean {
-    return !!this.visible;
+    return this.visible;
   }
 
   /**
@@ -397,7 +397,7 @@ class mxCell {
    * Returns true if the cell is collapsed.
    */
   isCollapsed(): boolean {
-    return !!this.collapsed;
+    return this.collapsed;
   }
 
   /**
@@ -431,7 +431,7 @@ class mxCell {
    *
    * parent - <mxCell> that represents the new parent.
    */
-  setParent(parent: mxCell): void {
+  setParent(parent: mxCell | null): void {
     this.parent = parent;
   }
 
@@ -445,7 +445,7 @@ class mxCell {
    * source - Boolean that specifies if the source terminal should be
    * returned.
    */
-  getTerminal(source: boolean=false): mxCell | null {
+  getTerminal(source: boolean = false): mxCell | null {
     return source ? this.source : this.target;
   }
 
@@ -460,7 +460,8 @@ class mxCell {
    * isSource - Boolean that specifies if the source or target terminal
    * should be set.
    */
-  setTerminal(terminal, isSource) {
+  setTerminal(terminal: mxCell | null,
+              isSource: boolean): mxCell | null {
     if (isSource) {
       this.source = terminal;
     } else {
@@ -474,7 +475,7 @@ class mxCell {
    *
    * Returns the number of child cells.
    */
-  getChildCount() {
+  getChildCount(): number {
     return this.children == null ? 0 : this.children.length;
   }
 
@@ -487,7 +488,7 @@ class mxCell {
    *
    * child - Child whose index should be returned.
    */
-  getIndex(child) {
+  getIndex(child: mxCell): number {
     return mxUtils.indexOf(this.children, child);
   }
 
@@ -500,7 +501,7 @@ class mxCell {
    *
    * index - Integer that specifies the child to be returned.
    */
-  getChildAt(index) {
+  getChildAt(index: number): mxCell | null {
     return this.children == null ? null : this.children[index];
   }
 
@@ -518,7 +519,9 @@ class mxCell {
    * index - Optional integer that specifies the index at which the child
    * should be inserted into the child array.
    */
-  insert(child, index) {
+  insert(child: mxCell | null=null,
+         index: number | null=null) {
+    
     if (child != null) {
       if (index == null) {
         index = this.getChildCount();
@@ -570,7 +573,7 @@ class mxCell {
    *
    * Removes the cell from its parent.
    */
-  removeFromParent() {
+  removeFromParent(): void {
     if (this.parent != null) {
       const index = this.parent.getIndex(this);
       this.parent.remove(index);
@@ -582,7 +585,7 @@ class mxCell {
    *
    * Returns the number of edges in the edge array.
    */
-  getEdgeCount() {
+  getEdgeCount(): number {
     return this.edges == null ? 0 : this.edges.length;
   }
 
@@ -595,7 +598,7 @@ class mxCell {
    *
    * edge - <mxCell> whose index in <edges> should be returned.
    */
-  getEdgeIndex(edge) {
+  getEdgeIndex(edge: mxCell): number {
     return mxUtils.indexOf(this.edges, edge);
   }
 
@@ -608,7 +611,7 @@ class mxCell {
    *
    * index - Integer that specifies the index of the edge to be returned.
    */
-  getEdgeAt(index) {
+  getEdgeAt(index: number): mxCell | null {
     return this.edges == null ? null : this.edges[index];
   }
 
@@ -623,7 +626,9 @@ class mxCell {
    * edge - <mxCell> to be inserted into the edge array.
    * isOutgoing - Boolean that specifies if the edge is outgoing.
    */
-  insertEdge(edge, isOutgoing) {
+  insertEdge(edge: mxCell,
+             isOutgoing: boolean) {
+
     if (edge != null) {
       edge.removeFromTerminal(isOutgoing);
       edge.setTerminal(this, isOutgoing);
@@ -653,7 +658,9 @@ class mxCell {
    * edge - <mxCell> to be removed from the edge array.
    * isOutgoing - Boolean that specifies if the edge is outgoing.
    */
-  removeEdge(edge, isOutgoing) {
+  removeEdge(edge: mxCell,
+             isOutgoing: boolean=false) {
+
     if (edge != null) {
       if (edge.getTerminal(!isOutgoing) !== this && this.edges != null) {
         const index = this.getEdgeIndex(edge);
@@ -662,10 +669,8 @@ class mxCell {
           this.edges.splice(index, 1);
         }
       }
-
       edge.setTerminal(null, isOutgoing);
     }
-
     return edge;
   }
 
@@ -679,7 +684,7 @@ class mxCell {
    * isSource - Boolean that specifies if the edge should be removed from its
    * source or target terminal.
    */
-  removeFromTerminal(isSource) {
+  removeFromTerminal(isSource: boolean): void {
     const terminal = this.getTerminal(isSource);
     if (terminal != null) {
       terminal.removeEdge(this, isSource);
@@ -696,13 +701,13 @@ class mxCell {
    *
    * name - Name of the attribute.
    */
-  hasAttribute(name) {
+  hasAttribute(name: string): boolean {
     const userObject = this.getValue();
     return userObject != null &&
-      userObject.nodeType === mxConstants.NODETYPE_ELEMENT &&
-      userObject.hasAttribute
-      ? userObject.hasAttribute(name)
-      : userObject.getAttribute(name) != null;
+        (userObject.nodeType === mxConstants.NODETYPE_ELEMENT &&
+          userObject.hasAttribute
+          ? userObject.hasAttribute(name)
+          : userObject.getAttribute(name) != null);
   }
 
   /**
@@ -717,7 +722,9 @@ class mxCell {
    * defaultValue - Optional default value to use if the attribute has no
    * value.
    */
-  getAttribute(name, defaultValue) {
+  getAttribute(name: string,
+               defaultValue: any): any {
+
     const userObject = this.getValue();
     const val =
       userObject != null && userObject.nodeType === mxConstants.NODETYPE_ELEMENT
@@ -780,4 +787,4 @@ class mxCell {
 }
 
 export default mxCell;
-import("../../io/mxCellCodec");
+import('../../serialization/mxCellCodec');

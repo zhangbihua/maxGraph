@@ -11,8 +11,8 @@ import mxClient from '../../mxClient';
 import mxUtils from '../../util/mxUtils';
 import mxSelectionChange from './mxSelectionChange';
 import mxEvent from '../../util/event/mxEvent';
-import mxCell from "../cell/mxCell";
-import mxGraph from "./mxGraph";
+import mxCell from '../cell/mxCell';
+import mxGraph from './mxGraph';
 
 class mxGraphSelectionModel extends mxEventSource {
   // TODO: Document me!!
@@ -217,7 +217,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to add to the selection.
    */
-  addCell(cell: mxCell | null=null): void {
+  addCell(cell: mxCell | null = null): void {
     if (cell != null) {
       this.addCells([cell]);
     }
@@ -265,7 +265,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to remove from the selection.
    */
-  removeCell(cell: mxCell | null=null): void {
+  removeCell(cell: mxCell | null = null): void {
     if (cell != null) {
       this.removeCells([cell]);
     }
@@ -274,7 +274,7 @@ class mxGraphSelectionModel extends mxEventSource {
   /**
    * Function: removeCells
    */
-  removeCells(cells: mxCell[] | null=null): void {
+  removeCells(cells: mxCell[] | null = null): void {
     if (cells != null) {
       const tmp = [];
       for (let i = 0; i < cells.length; i += 1) {
@@ -296,8 +296,7 @@ class mxGraphSelectionModel extends mxEventSource {
    * added - Array of <mxCell> to add to the selection.
    * remove - Array of <mxCell> to remove from the selection.
    */
-  changeSelection(added: mxCell[],
-                  removed: mxCell[]): void {
+  changeSelection(added: mxCell[], removed: mxCell[]): void {
     if (
       (added != null && added.length > 0 && added[0] != null) ||
       (removed != null && removed.length > 0 && removed[0] != null)

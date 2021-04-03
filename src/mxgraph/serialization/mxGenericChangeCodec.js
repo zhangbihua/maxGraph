@@ -12,36 +12,36 @@ import mxCollapseChange from '../atomic_changes/mxCollapseChange';
 import mxVisibleChange from '../atomic_changes/mxVisibleChange';
 import mxCellAttributeChange from '../atomic_changes/mxCellAttributeChange';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxUtils from "../util/mxUtils";
+import mxUtils from '../util/mxUtils';
 
+/**
+ * Class: mxGenericChangeCodec
+ *
+ * Codec for <mxValueChange>s, <mxStyleChange>s, <mxGeometryChange>s,
+ * <mxCollapseChange>s and <mxVisibleChange>s. This class is created
+ * and registered dynamically at load time and used implicitly
+ * via <mxCodec> and the <mxCodecRegistry>.
+ *
+ * Transient Fields:
+ *
+ * - model
+ * - previous
+ *
+ * Reference Fields:
+ *
+ * - cell
+ *
+ * Constructor: mxGenericChangeCodec
+ *
+ * Factory function that creates a <mxObjectCodec> for
+ * the specified change and fieldname.
+ *
+ * Parameters:
+ *
+ * obj - An instance of the change object.
+ * variable - The fieldname for the change data.
+ */
 class mxGenericChangeCodec extends mxObjectCodec {
-  /**
-   * Class: mxGenericChangeCodec
-   *
-   * Codec for <mxValueChange>s, <mxStyleChange>s, <mxGeometryChange>s,
-   * <mxCollapseChange>s and <mxVisibleChange>s. This class is created
-   * and registered dynamically at load time and used implicitly
-   * via <mxCodec> and the <mxCodecRegistry>.
-   *
-   * Transient Fields:
-   *
-   * - model
-   * - previous
-   *
-   * Reference Fields:
-   *
-   * - cell
-   *
-   * Constructor: mxGenericChangeCodec
-   *
-   * Factory function that creates a <mxObjectCodec> for
-   * the specified change and fieldname.
-   *
-   * Parameters:
-   *
-   * obj - An instance of the change object.
-   * variable - The fieldname for the change data.
-   */
   constructor(obj, variable) {
     super(obj, ['model', 'previous'], ['cell']);
     this.variable = variable;
@@ -65,8 +65,12 @@ class mxGenericChangeCodec extends mxObjectCodec {
 }
 
 // Registers the codecs
-mxCodecRegistry.register(new mxGenericChangeCodec(new mxValueChange(), 'value'));
-mxCodecRegistry.register(new mxGenericChangeCodec(new mxStyleChange(), 'style'));
+mxCodecRegistry.register(
+  new mxGenericChangeCodec(new mxValueChange(), 'value')
+);
+mxCodecRegistry.register(
+  new mxGenericChangeCodec(new mxStyleChange(), 'style')
+);
 mxCodecRegistry.register(
   new mxGenericChangeCodec(new mxGeometryChange(), 'geometry')
 );

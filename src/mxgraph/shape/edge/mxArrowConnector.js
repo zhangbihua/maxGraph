@@ -7,43 +7,35 @@ import mxShape from '../mxShape';
 import mxConstants from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 
+/**
+ * Class: mxArrowConnector
+ *
+ * Extends <mxShape> to implement an new rounded arrow shape with support for
+ * waypoints and double arrows. (The shape is used to represent edges, not
+ * vertices.) This shape is registered under <mxConstants.SHAPE_ARROW_CONNECTOR>
+ * in <mxCellRenderer>.
+ *
+ * Constructor: mxArrowConnector
+ *
+ * Constructs a new arrow shape.
+ *
+ * Parameters:
+ *
+ * points - Array of <mxPoints> that define the points. This is stored in
+ * <mxShape.points>.
+ * fill - String that defines the fill color. This is stored in <fill>.
+ * stroke - String that defines the stroke color. This is stored in <stroke>.
+ * strokewidth - Optional integer that defines the stroke width. Default is
+ * 1. This is stored in <strokewidth>.
+ * arrowWidth - Optional integer that defines the arrow width. Default is
+ * <mxConstants.ARROW_WIDTH>. This is stored in <arrowWidth>.
+ * spacing - Optional integer that defines the spacing between the arrow shape
+ * and its endpoints. Default is <mxConstants.ARROW_SPACING>. This is stored in
+ * <spacing>.
+ * endSize - Optional integer that defines the size of the arrowhead. Default
+ * is <mxConstants.ARROW_SIZE>. This is stored in <endSize>.
+ */
 class mxArrowConnector extends mxShape {
-  /**
-   * Variable: useSvgBoundingBox
-   *
-   * Allows to use the SVG bounding box in SVG. Default is false for performance
-   * reasons.
-   */
-  useSvgBoundingBox = true;
-
-  /**
-   * Class: mxArrowConnector
-   *
-   * Extends <mxShape> to implement an new rounded arrow shape with support for
-   * waypoints and double arrows. (The shape is used to represent edges, not
-   * vertices.) This shape is registered under <mxConstants.SHAPE_ARROW_CONNECTOR>
-   * in <mxCellRenderer>.
-   *
-   * Constructor: mxArrowConnector
-   *
-   * Constructs a new arrow shape.
-   *
-   * Parameters:
-   *
-   * points - Array of <mxPoints> that define the points. This is stored in
-   * <mxShape.points>.
-   * fill - String that defines the fill color. This is stored in <fill>.
-   * stroke - String that defines the stroke color. This is stored in <stroke>.
-   * strokewidth - Optional integer that defines the stroke width. Default is
-   * 1. This is stored in <strokewidth>.
-   * arrowWidth - Optional integer that defines the arrow width. Default is
-   * <mxConstants.ARROW_WIDTH>. This is stored in <arrowWidth>.
-   * spacing - Optional integer that defines the spacing between the arrow shape
-   * and its endpoints. Default is <mxConstants.ARROW_SPACING>. This is stored in
-   * <spacing>.
-   * endSize - Optional integer that defines the size of the arrowhead. Default
-   * is <mxConstants.ARROW_SIZE>. This is stored in <endSize>.
-   */
   constructor(points, fill, stroke, strokewidth, arrowWidth, spacing, endSize) {
     super();
     this.points = points;
@@ -55,6 +47,14 @@ class mxArrowConnector extends mxShape {
     this.startSize = mxConstants.ARROW_SIZE / 5;
     this.endSize = endSize != null ? endSize : mxConstants.ARROW_SIZE / 5;
   }
+
+  /**
+   * Variable: useSvgBoundingBox
+   *
+   * Allows to use the SVG bounding box in SVG. Default is false for performance
+   * reasons.
+   */
+  useSvgBoundingBox = true;
 
   /**
    * Function: isRoundable

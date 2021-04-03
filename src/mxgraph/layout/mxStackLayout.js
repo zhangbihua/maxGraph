@@ -8,7 +8,35 @@ import mxRectangle from '../util/datatypes/mxRectangle';
 import mxUtils from '../util/mxUtils';
 import mxConstants from '../util/mxConstants';
 
+/**
+ * Class: mxStackLayout
+ *
+ * Extends <mxGraphLayout> to create a horizontal or vertical stack of the
+ * child vertices. The children do not need to be connected for this layout
+ * to work.
+ *
+ * Example:
+ *
+ * (code)
+ * let layout = new mxStackLayout(graph, true);
+ * layout.execute(graph.getDefaultParent());
+ * (end)
+ *
+ * Constructor: mxStackLayout
+ *
+ * Constructs a new stack layout layout for the specified graph,
+ * spacing, orientation and offset.
+ */
 class mxStackLayout extends mxGraphLayout {
+  constructor(graph, horizontal, spacing, x0, y0, border) {
+    super(graph);
+    this.horizontal = horizontal != null ? horizontal : true;
+    this.spacing = spacing != null ? spacing : 0;
+    this.x0 = x0 != null ? x0 : 0;
+    this.y0 = y0 != null ? y0 : 0;
+    this.border = border != null ? border : 0;
+  }
+
   /**
    * Variable: horizontal
    *
@@ -139,34 +167,6 @@ class mxStackLayout extends mxGraphLayout {
    * Grid size for alignment of position and size. Default is 0.
    */
   gridSize = 0;
-
-  /**
-   * Class: mxStackLayout
-   *
-   * Extends <mxGraphLayout> to create a horizontal or vertical stack of the
-   * child vertices. The children do not need to be connected for this layout
-   * to work.
-   *
-   * Example:
-   *
-   * (code)
-   * let layout = new mxStackLayout(graph, true);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * Constructor: mxStackLayout
-   *
-   * Constructs a new stack layout layout for the specified graph,
-   * spacing, orientation and offset.
-   */
-  constructor(graph, horizontal, spacing, x0, y0, border) {
-    super(graph);
-    this.horizontal = horizontal != null ? horizontal : true;
-    this.spacing = spacing != null ? spacing : 0;
-    this.x0 = x0 != null ? x0 : 0;
-    this.y0 = y0 != null ? y0 : 0;
-    this.border = border != null ? border : 0;
-  }
 
   /**
    * Function: isHorizontal

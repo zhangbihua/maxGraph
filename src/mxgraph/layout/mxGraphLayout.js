@@ -10,7 +10,32 @@ import mxGeometry from '../util/datatypes/mxGeometry';
 import mxPoint from '../util/datatypes/mxPoint';
 import mxConstants from '../util/mxConstants';
 
+/**
+ * Class: mxGraphLayout
+ *
+ * Base class for all layout algorithms in mxGraph. Main public functions are
+ * <moveCell> for handling a moved cell within a layouted parent, and <execute> for
+ * running the layout on a given parent cell.
+ *
+ * Known Subclasses:
+ *
+ * <mxCircleLayout>, <mxCompactTreeLayout>, <mxCompositeLayout>,
+ * <mxFastOrganicLayout>, <mxParallelEdgeLayout>, <mxPartitionLayout>,
+ * <mxStackLayout>
+ *
+ * Constructor: mxGraphLayout
+ *
+ * Constructs a new layout using the given layouts.
+ *
+ * Arguments:
+ *
+ * graph - Enclosing
+ */
 class mxGraphLayout {
+  constructor(graph) {
+    this.graph = graph;
+  }
+
   /**
    * Variable: graph
    *
@@ -32,31 +57,6 @@ class mxGraphLayout {
    * The parent cell of the layout, if any
    */
   parent = null;
-
-  /**
-   * Class: mxGraphLayout
-   *
-   * Base class for all layout algorithms in mxGraph. Main public functions are
-   * <moveCell> for handling a moved cell within a layouted parent, and <execute> for
-   * running the layout on a given parent cell.
-   *
-   * Known Subclasses:
-   *
-   * <mxCircleLayout>, <mxCompactTreeLayout>, <mxCompositeLayout>,
-   * <mxFastOrganicLayout>, <mxParallelEdgeLayout>, <mxPartitionLayout>,
-   * <mxStackLayout>
-   *
-   * Constructor: mxGraphLayout
-   *
-   * Constructs a new layout using the given layouts.
-   *
-   * Arguments:
-   *
-   * graph - Enclosing
-   */
-  constructor(graph) {
-    this.graph = graph;
-  }
 
   /**
    * Function: moveCell

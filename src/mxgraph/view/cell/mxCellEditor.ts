@@ -18,10 +18,15 @@ import mxCellState from '../../util/datatypes/mxCellState';
 class mxCellEditor {
   // TODO: Document me!
   changeHandler: Function | null;
+
   zoomHandler: Function | null;
+
   clearOnChange: boolean = false;
+
   bounds: mxRectangle | null = null;
+
   resizeThread: number | null;
+
   textDirection: '' | 'auto' | 'ltr' | 'rtl' | null;
 
   /**
@@ -389,21 +394,17 @@ class mxCellEditor {
     );
 
     // Updates modified state and handles placeholder text
-    mxEvent.addListener(
-      elt,
-      'keydown',
-      evt => {
-        if (!mxEvent.isConsumed(evt)) {
-          if (this.isStopEditingEvent(evt)) {
-            this.graph.stopEditing(false);
-            mxEvent.consume(evt);
-          } else if (evt.keyCode === 27 /* Escape */) {
-            this.graph.stopEditing(this.isCancelEditingKeyEvent(evt));
-            mxEvent.consume(evt);
-          }
+    mxEvent.addListener(elt, 'keydown', evt => {
+      if (!mxEvent.isConsumed(evt)) {
+        if (this.isStopEditingEvent(evt)) {
+          this.graph.stopEditing(false);
+          mxEvent.consume(evt);
+        } else if (evt.keyCode === 27 /* Escape */) {
+          this.graph.stopEditing(this.isCancelEditingKeyEvent(evt));
+          mxEvent.consume(evt);
         }
       }
-    );
+    });
 
     // Keypress only fires if printable key was pressed and handles removing the empty placeholder
     const keypressHandler = evt => {
@@ -464,13 +465,10 @@ class mxCellEditor {
           window.clearTimeout(this.resizeThread);
         }
 
-        this.resizeThread = window.setTimeout(
-          () => {
-            this.resizeThread = null;
-            this.resize();
-          },
-          0
-        );
+        this.resizeThread = window.setTimeout(() => {
+          this.resizeThread = null;
+          this.resize();
+        }, 0);
       }
     });
 
@@ -519,10 +517,7 @@ class mxCellEditor {
       const { scale } = this.graph.getView();
       let m = null;
 
-      if (
-        !this.autoSize ||
-        state.style.overflow === 'fill'
-      ) {
+      if (!this.autoSize || state.style.overflow === 'fill') {
         // Specifies the bounds of the editor box
         this.bounds = this.getEditorBounds(state);
         this.textarea.style.width = `${Math.round(
@@ -627,21 +622,34 @@ class mxCellEditor {
             state.style[mxConstants.STYLE_OVERFLOW] !== 'width'
           ) {
             const dummy = new mxText(); // FIXME!!!! ===================================================================================================
-            const spacing =
-              parseInt(state.style.spacing || 2) * scale;
+            const spacing = parseInt(state.style.spacing || 2) * scale;
             const spacingTop =
-              (parseInt(state.style.spacingTop || 0) + dummy.baseSpacingTop) * scale + spacing;
+              (parseInt(state.style.spacingTop || 0) + dummy.baseSpacingTop) *
+                scale +
+              spacing;
             const spacingRight =
-              (parseInt(state.style.spacingRight || 0) + dummy.baseSpacingRight) * scale + spacing;
+              (parseInt(state.style.spacingRight || 0) +
+                dummy.baseSpacingRight) *
+                scale +
+              spacing;
             const spacingBottom =
-              (parseInt(state.style.spacingBottom || 0) + dummy.baseSpacingBottom) * scale + spacing;
+              (parseInt(state.style.spacingBottom || 0) +
+                dummy.baseSpacingBottom) *
+                scale +
+              spacing;
             const spacingLeft =
-              (parseInt(state.style.spacingLeft || 0) + dummy.baseSpacingLeft) * scale + spacing;
+              (parseInt(state.style.spacingLeft || 0) + dummy.baseSpacingLeft) *
+                scale +
+              spacing;
 
-            hpos = state.style.labelPosition != null ?
-                state.style.labelPosition : 'center';
-            vpos = state.style.verticalLabelPosition != null ?
-                state.style.verticalLabelPosition : 'middle';
+            hpos =
+              state.style.labelPosition != null
+                ? state.style.labelPosition
+                : 'center';
+            vpos =
+              state.style.verticalLabelPosition != null
+                ? state.style.verticalLabelPosition
+                : 'middle';
 
             bounds = new mxRectangle(
               bounds.x + spacingLeft,
@@ -764,9 +772,7 @@ class mxCellEditor {
    * cell - <mxCell> to start editing.
    * trigger - Optional mouse event that triggered the editor.
    */
-  startEditing(cell: mxCell,
-               trigger: mxMouseEvent | null=null): void {
-
+  startEditing(cell: mxCell, trigger: mxMouseEvent | null = null): void {
     this.stopEditing(true);
     this.align = null;
 
@@ -784,10 +790,14 @@ class mxCellEditor {
     if (state != null) {
       // Configures the style of the in-place editor
       const { scale } = this.graph.getView();
-      const size = state.style.fontSize != null ?
-          state.style.fontSize : mxConstants.DEFAULT_FONTSIZE;
-      const family = state.style.fontFamily != null ?
-          state.style.fontFamily : mxConstants.DEFAULT_FONTFAMILY;
+      const size =
+        state.style.fontSize != null
+          ? state.style.fontSize
+          : mxConstants.DEFAULT_FONTSIZE;
+      const family =
+        state.style.fontFamily != null
+          ? state.style.fontFamily
+          : mxConstants.DEFAULT_FONTFAMILY;
       const color = mxUtils.getValue(
         state.style,
         mxConstants.STYLE_FONTCOLOR,
@@ -823,8 +833,10 @@ class mxCellEditor {
       this.textarea.style.outline = 'none';
       this.textarea.style.color = color;
 
-      let dir = (this.textDirection = state.style.textDirection != null ?
-          state.style.textDirection : mxConstants.DEFAULT_TEXT_DIRECTION);
+      let dir = (this.textDirection =
+        state.style.textDirection != null
+          ? state.style.textDirection
+          : mxConstants.DEFAULT_TEXT_DIRECTION);
 
       if (dir === 'auto') {
         if (
@@ -922,7 +934,7 @@ class mxCellEditor {
    * Clears the selection.
    */
   clearSelection() {
-    let selection = window.getSelection();
+    const selection = window.getSelection();
 
     if (selection != null) {
       if (selection.empty) {
@@ -938,7 +950,7 @@ class mxCellEditor {
    *
    * Stops the editor and applies the value if cancel is false.
    */
-  stopEditing(cancel: boolean=false) {
+  stopEditing(cancel: boolean = false) {
     if (this.editingCell != null) {
       if (this.textNode != null) {
         this.textNode.style.visibility = 'visible';
@@ -1018,7 +1030,7 @@ class mxCellEditor {
    * Returns true if the label should be hidden while the cell is being
    * edited.
    */
-  isHideLabel(state: mxCellState | null=null): boolean {
+  isHideLabel(state: mxCellState | null = null): boolean {
     return true;
   }
 
@@ -1059,16 +1071,22 @@ class mxCellEditor {
       result = state.shape.getLabelBounds(mxRectangle.fromRectangle(state));
     } else {
       const dummy = new mxText(); // FIXME!!!! ===================================================================================================
-      const spacing: number =
-        parseInt(state.style.spacing || 0) * scale;
+      const spacing: number = parseInt(state.style.spacing || 0) * scale;
       const spacingTop: number =
-        (parseInt(state.style.spacingTop || 0) + dummy.baseSpacingTop) * scale + spacing;
+        (parseInt(state.style.spacingTop || 0) + dummy.baseSpacingTop) * scale +
+        spacing;
       const spacingRight: number =
-        (parseInt(state.style.spacingRight || 0) + dummy.baseSpacingRight) * scale + spacing;
+        (parseInt(state.style.spacingRight || 0) + dummy.baseSpacingRight) *
+          scale +
+        spacing;
       const spacingBottom: number =
-        (parseInt(state.style.spacingBottom || 0) + dummy.baseSpacingBottom) * scale + spacing;
+        (parseInt(state.style.spacingBottom || 0) + dummy.baseSpacingBottom) *
+          scale +
+        spacing;
       const spacingLeft: number =
-        (parseInt(state.style.spacingLeft || 0) + dummy.baseSpacingLeft) * scale + spacing;
+        (parseInt(state.style.spacingLeft || 0) + dummy.baseSpacingLeft) *
+          scale +
+        spacing;
 
       result = new mxRectangle(
         state.x,
@@ -1076,10 +1094,14 @@ class mxCellEditor {
         Math.max(minWidth, state.width - spacingLeft - spacingRight),
         Math.max(minHeight, state.height - spacingTop - spacingBottom)
       );
-      const hpos: string = state.style.labelPosition != null ?
-          state.style.labelPosition : 'center';
-      const vpos: string = state.style.verticalLabelPosition != null ?
-          state.style.verticalLabelPosition : 'middle';
+      const hpos: string =
+        state.style.labelPosition != null
+          ? state.style.labelPosition
+          : 'center';
+      const vpos: string =
+        state.style.verticalLabelPosition != null
+          ? state.style.verticalLabelPosition
+          : 'middle';
 
       result =
         state.shape != null && hpos === 'center' && vpos === 'middle'
@@ -1136,8 +1158,10 @@ class mxCellEditor {
           result.x += state.width;
         }
 
-        const vertical: string = state.style.verticalLabelPosition != null ?
-          state.style.verticalLabelPosition : 'middle';
+        const vertical: string =
+          state.style.verticalLabelPosition != null
+            ? state.style.verticalLabelPosition
+            : 'middle';
 
         if (vertical === 'top') {
           result.y -= state.height;
@@ -1167,7 +1191,7 @@ class mxCellEditor {
    * cell - <mxCell> for which a text for an empty editing box should be
    * returned.
    */
-  getEmptyLabelText(cell: mxCell | null=null): string | null {
+  getEmptyLabelText(cell: mxCell | null = null): string | null {
     return this.emptyLabelText;
   }
 

@@ -6,26 +6,26 @@
 
 import mxGraph from '../view/graph/mxGraph';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxObjectCodec from "./mxObjectCodec";
+import mxObjectCodec from './mxObjectCodec';
 
+/**
+ * Class: mxGraphCodec
+ *
+ * Codec for <mxGraph>s. This class is created and registered
+ * dynamically at load time and used implicitly via <mxCodec>
+ * and the <mxCodecRegistry>.
+ *
+ * Transient Fields:
+ *
+ * - graphListeners
+ * - eventListeners
+ * - view
+ * - container
+ * - cellRenderer
+ * - editor
+ * - selection
+ */
 class mxGraphCodec extends mxObjectCodec {
-  /**
-   * Class: mxGraphCodec
-   *
-   * Codec for <mxGraph>s. This class is created and registered
-   * dynamically at load time and used implicitly via <mxCodec>
-   * and the <mxCodecRegistry>.
-   *
-   * Transient Fields:
-   *
-   * - graphListeners
-   * - eventListeners
-   * - view
-   * - container
-   * - cellRenderer
-   * - editor
-   * - selection
-   */
   constructor() {
     super(new mxGraph(), [
       'graphListeners',

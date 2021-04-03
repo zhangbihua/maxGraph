@@ -8,29 +8,29 @@ import mxPolyline from './mxPolyline';
 import mxUtils from '../../util/mxUtils';
 import mxMarker from './mxMarker';
 
+/**
+ * Class: mxConnector
+ *
+ * Extends <mxShape> to implement a connector shape. The connector
+ * shape allows for arrow heads on either side.
+ *
+ * This shape is registered under <mxConstants.SHAPE_CONNECTOR> in
+ * <mxCellRenderer>.
+ *
+ * Constructor: mxConnector
+ *
+ * Constructs a new connector shape.
+ *
+ * Parameters:
+ *
+ * points - Array of <mxPoints> that define the points. This is stored in
+ * <mxShape.points>.
+ * stroke - String that defines the stroke color. This is stored in <stroke>.
+ * Default is 'black'.
+ * strokewidth - Optional integer that defines the stroke width. Default is
+ * 1. This is stored in <strokewidth>.
+ */
 class mxConnector extends mxPolyline {
-  /**
-   * Class: mxConnector
-   *
-   * Extends <mxShape> to implement a connector shape. The connector
-   * shape allows for arrow heads on either side.
-   *
-   * This shape is registered under <mxConstants.SHAPE_CONNECTOR> in
-   * <mxCellRenderer>.
-   *
-   * Constructor: mxConnector
-   *
-   * Constructs a new connector shape.
-   *
-   * Parameters:
-   *
-   * points - Array of <mxPoints> that define the points. This is stored in
-   * <mxShape.points>.
-   * stroke - String that defines the stroke color. This is stored in <stroke>.
-   * Default is 'black'.
-   * strokewidth - Optional integer that defines the stroke width. Default is
-   * 1. This is stored in <strokewidth>.
-   */
   constructor(points, stroke, strokewidth) {
     super(points, stroke, strokewidth);
   }

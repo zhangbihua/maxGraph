@@ -10,25 +10,25 @@ import mxCodecRegistry from './mxCodecRegistry';
 import mxUtils from '../util/mxUtils';
 import mxConstants from '../util/mxConstants';
 
+/**
+ * Class: mxChildChangeCodec
+ *
+ * Codec for <mxChildChange>s. This class is created and registered
+ * dynamically at load time and used implicitly via <mxCodec> and
+ * the <mxCodecRegistry>.
+ *
+ * Transient Fields:
+ *
+ * - model
+ * - previous
+ * - previousIndex
+ * - child
+ *
+ * Reference Fields:
+ *
+ * - parent
+ */
 class mxChildChangeCodec extends mxObjectCodec {
-  /**
-   * Class: mxChildChangeCodec
-   *
-   * Codec for <mxChildChange>s. This class is created and registered
-   * dynamically at load time and used implicitly via <mxCodec> and
-   * the <mxCodecRegistry>.
-   *
-   * Transient Fields:
-   *
-   * - model
-   * - previous
-   * - previousIndex
-   * - child
-   *
-   * Reference Fields:
-   *
-   * - parent
-   */
   constructor() {
     super(
       new mxChildChange(),

@@ -9,9 +9,8 @@ import mxEventObject from '../event/mxEventObject';
 import mxEventSource from '../event/mxEventSource';
 import mxUtils from '../mxUtils';
 import mxEvent from '../event/mxEvent';
-import mxClient from "../../mxClient";
-import mxConstants from "../mxConstants";
-
+import mxClient from '../../mxClient';
+import mxConstants from '../mxConstants';
 
 class mxWindow extends mxEventSource {
   /**

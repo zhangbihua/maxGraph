@@ -8,17 +8,17 @@ import mxGraphView from '../view/graph/mxGraphView';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
 
+/**
+ * Class: mxGraphViewCodec
+ *
+ * Custom encoder for <mxGraphView>s. This class is created
+ * and registered dynamically at load time and used implicitly via
+ * <mxCodec> and the <mxCodecRegistry>. This codec only writes views
+ * into a XML format that can be used to create an image for
+ * the graph, that is, it contains absolute coordinates with
+ * computed perimeters, edge styles and cell styles.
+ */
 class mxGraphViewCodec extends mxObjectCodec {
-  /**
-   * Class: mxGraphViewCodec
-   *
-   * Custom encoder for <mxGraphView>s. This class is created
-   * and registered dynamically at load time and used implicitly via
-   * <mxCodec> and the <mxCodecRegistry>. This codec only writes views
-   * into a XML format that can be used to create an image for
-   * the graph, that is, it contains absolute coordinates with
-   * computed perimeters, edge styles and cell styles.
-   */
   constructor() {
     super(new mxGraphView());
   }

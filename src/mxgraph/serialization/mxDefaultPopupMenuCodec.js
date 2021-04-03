@@ -6,20 +6,20 @@
 
 import mxDefaultPopupMenu from '../editor/mxDefaultPopupMenu';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxObjectCodec from "./mxObjectCodec";
+import mxObjectCodec from './mxObjectCodec';
 
+/**
+ * Class: mxDefaultPopupMenuCodec
+ *
+ * Custom codec for configuring <mxDefaultPopupMenu>s. This class is created
+ * and registered dynamically at load time and used implicitly via
+ * <mxCodec> and the <mxCodecRegistry>. This codec only reads configuration
+ * data for existing popup menus, it does not encode or create menus. Note
+ * that this codec only passes the configuration node to the popup menu,
+ * which uses the config to dynamically create menus. See
+ * <mxDefaultPopupMenu.createMenu>.
+ */
 class mxDefaultPopupMenuCodec extends mxObjectCodec {
-  /**
-   * Class: mxDefaultPopupMenuCodec
-   *
-   * Custom codec for configuring <mxDefaultPopupMenu>s. This class is created
-   * and registered dynamically at load time and used implicitly via
-   * <mxCodec> and the <mxCodecRegistry>. This codec only reads configuration
-   * data for existing popup menus, it does not encode or create menus. Note
-   * that this codec only passes the configuration node to the popup menu,
-   * which uses the config to dynamically create menus. See
-   * <mxDefaultPopupMenu.createMenu>.
-   */
   constructor() {
     super(new mxDefaultPopupMenu());
   }

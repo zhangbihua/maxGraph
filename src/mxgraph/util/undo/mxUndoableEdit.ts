@@ -6,15 +6,65 @@
 
 import mxEvent from '../event/mxEvent';
 import mxEventObject from '../event/mxEventObject';
-import mxEventSource from "../event/mxEventSource";
+import mxEventSource from '../event/mxEventSource';
 
+/**
+ * Class: mxUndoableEdit
+ *
+ * Implements a composite undoable edit. Here is an example for a custom change
+ * which gets executed via the model:
+ *
+ * (code)
+ * function CustomChange(model, name)
+ * {
+ *   this.model = model;
+ *   this.name = name;
+ *   this.previous = name;
+ * };
+ *
+ * execute = ()=>
+ * {
+ *   let tmp = this.model.name;
+ *   this.model.name = this.previous;
+ *   this.previous = tmp;
+ * };
+ *
+ * let name = prompt('Enter name');
+ * graph.model.execute(new CustomChange(graph.model, name));
+ * (end)
+ *
+ * Event: mxEvent.EXECUTED
+ *
+ * Fires between START_EDIT and END_EDIT after an atomic change was executed.
+ * The <code>change</code> property contains the change that was executed.
+ *
+ * Event: mxEvent.START_EDIT
+ *
+ * Fires before a set of changes will be executed in <undo> or <redo>.
+ * This event contains no properties.
+ *
+ * Event: mxEvent.END_EDIT
+ *
+ * Fires after a set of changeswas executed in <undo> or <redo>.
+ * This event contains no properties.
+ *
+ * Constructor: mxUndoableEdit
+ *
+ * Constructs a new undoable edit for the given source.
+ */
 class mxUndoableEdit {
+  constructor(source: mxEventSource, significant: boolean = true) {
+    this.source = source;
+    this.changes = [];
+    this.significant = significant;
+  }
+
   /**
    * Variable: source
    *
    * Specifies the source of the edit.
    */
-  source: mxEventSource | null = null;
+  source: mxEventSource;
 
   /**
    * Variable: changes
@@ -48,57 +98,6 @@ class mxUndoableEdit {
   redone: boolean = false;
 
   /**
-   * Class: mxUndoableEdit
-   *
-   * Implements a composite undoable edit. Here is an example for a custom change
-   * which gets executed via the model:
-   *
-   * (code)
-   * function CustomChange(model, name)
-   * {
-   *   this.model = model;
-   *   this.name = name;
-   *   this.previous = name;
-   * };
-   *
-   * execute = ()=>
-   * {
-   *   let tmp = this.model.name;
-   *   this.model.name = this.previous;
-   *   this.previous = tmp;
-   * };
-   *
-   * let name = prompt('Enter name');
-   * graph.model.execute(new CustomChange(graph.model, name));
-   * (end)
-   *
-   * Event: mxEvent.EXECUTED
-   *
-   * Fires between START_EDIT and END_EDIT after an atomic change was executed.
-   * The <code>change</code> property contains the change that was executed.
-   *
-   * Event: mxEvent.START_EDIT
-   *
-   * Fires before a set of changes will be executed in <undo> or <redo>.
-   * This event contains no properties.
-   *
-   * Event: mxEvent.END_EDIT
-   *
-   * Fires after a set of changeswas executed in <undo> or <redo>.
-   * This event contains no properties.
-   *
-   * Constructor: mxUndoableEdit
-   *
-   * Constructs a new undoable edit for the given source.
-   */
-  constructor(source: mxEventSource,
-              significant: boolean=true) {
-    this.source = source;
-    this.changes = [];
-    this.significant = significant;
-  }
-
-  /**
    * Function: isEmpty
    *
    * Returns true if the this edit contains no changes.
@@ -122,7 +121,8 @@ class mxUndoableEdit {
    * Adds the specified change to this edit. The change is an object that is
    * expected to either have an undo and redo, or an execute function.
    */
-  add(change: any): void { // FIXME!!!
+  add(change: any): void {
+    // FIXME!!!
     this.changes.push(change);
   }
 

@@ -1,14 +1,17 @@
-import mxGraphView from "./mxGraphView";
-import mxEventObject from "../../util/event/mxEventObject";
-import mxPoint from "../../util/datatypes/mxPoint";
-import mxCell from "../cell/mxCell";
-import mxEvent from "../../util/event/mxEvent";
-import mxGraphModel from "./mxGraphModel";
+import mxGraphView from './mxGraphView';
+import mxEventObject from '../../util/event/mxEventObject';
+import mxPoint from '../../util/datatypes/mxPoint';
+import mxCell from '../cell/mxCell';
+import mxEvent from '../../util/event/mxEvent';
+import mxGraphModel from './mxGraphModel';
 
 class mxCurrentRootChange {
   view: mxGraphView;
+
   root: mxCell;
+
   previous: mxCell;
+
   isUp: boolean;
 
   /**
@@ -65,14 +68,15 @@ class mxCurrentRootChange {
       this.view.refresh();
     }
 
-    const name: string = this.isUp ?
-        mxEvent.UP : mxEvent.DOWN;
+    const name: string = this.isUp ? mxEvent.UP : mxEvent.DOWN;
 
     this.view.fireEvent(
       new mxEventObject(
         name,
-        'root', this.view.currentRoot,
-        'previous', this.previous
+        'root',
+        this.view.currentRoot,
+        'previous',
+        this.previous
       )
     );
     this.isUp = !this.isUp;

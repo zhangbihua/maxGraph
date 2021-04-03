@@ -15,7 +15,31 @@ import mxSwimlaneOrdering from './stage/mxSwimlaneOrdering';
 import mxMedianHybridCrossingReduction from './stage/mxMedianHybridCrossingReduction';
 import mxCoordinateAssignment from './stage/mxCoordinateAssignment';
 
+/**
+ * Class: mxSwimlaneLayout
+ *
+ * A hierarchical layout algorithm.
+ *
+ * Constructor: mxSwimlaneLayout
+ *
+ * Constructs a new hierarchical layout algorithm.
+ *
+ * Arguments:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ * orientation - Optional constant that defines the orientation of this
+ * layout.
+ * deterministic - Optional boolean that specifies if this layout should be
+ * deterministic. Default is true.
+ */
 class mxSwimlaneLayout extends mxGraphLayout {
+  constructor(graph, orientation, deterministic) {
+    super(graph);
+    this.orientation =
+      orientation != null ? orientation : mxConstants.DIRECTION_NORTH;
+    this.deterministic = deterministic != null ? deterministic : true;
+  }
+
   /**
    * Variable: roots
    *
@@ -176,30 +200,6 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * Default is <mxHierarchicalEdgeStyle.POLYLINE>.
    */
   edgeStyle = mxHierarchicalEdgeStyle.POLYLINE;
-
-  /**
-   * Class: mxSwimlaneLayout
-   *
-   * A hierarchical layout algorithm.
-   *
-   * Constructor: mxSwimlaneLayout
-   *
-   * Constructs a new hierarchical layout algorithm.
-   *
-   * Arguments:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   * orientation - Optional constant that defines the orientation of this
-   * layout.
-   * deterministic - Optional boolean that specifies if this layout should be
-   * deterministic. Default is true.
-   */
-  constructor(graph, orientation, deterministic) {
-    super(graph);
-    this.orientation =
-      orientation != null ? orientation : mxConstants.DIRECTION_NORTH;
-    this.deterministic = deterministic != null ? deterministic : true;
-  }
 
   /**
    * Function: getModel

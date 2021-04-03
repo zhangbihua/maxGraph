@@ -11,7 +11,43 @@ import mxDictionary from '../../../util/datatypes/mxDictionary';
 import mxPoint from '../../../util/datatypes/mxPoint';
 import mxHierarchicalEdgeStyle from '../mxHierarchicalEdgeStyle';
 
+/**
+ * Class: mxCoordinateAssignment
+ *
+ * Sets the horizontal locations of node and edge dummy nodes on each layer.
+ * Uses median down and up weighings as well as heuristics to straighten edges as
+ * far as possible.
+ *
+ * Constructor: mxCoordinateAssignment
+ *
+ * Creates a coordinate assignment.
+ *
+ * Arguments:
+ *
+ * intraCellSpacing - the minimum buffer between cells on the same rank
+ * interRankCellSpacing - the minimum distance between cells on adjacent ranks
+ * orientation - the position of the root node(s) relative to the graph
+ * initialX - the leftmost coordinate node placement starts at
+ */
 class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
+  constructor(
+    layout,
+    intraCellSpacing,
+    interRankCellSpacing,
+    orientation,
+    initialX,
+    parallelEdgeSpacing
+  ) {
+    super();
+
+    this.layout = layout;
+    this.intraCellSpacing = intraCellSpacing;
+    this.interRankCellSpacing = interRankCellSpacing;
+    this.orientation = orientation;
+    this.initialX = initialX;
+    this.parallelEdgeSpacing = parallelEdgeSpacing;
+  }
+
   /**
    * Variable: layout
    *
@@ -189,42 +225,6 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * Padding added to resized parents Default is 10.
    */
   groupPadding = 10;
-
-  /**
-   * Class: mxCoordinateAssignment
-   *
-   * Sets the horizontal locations of node and edge dummy nodes on each layer.
-   * Uses median down and up weighings as well as heuristics to straighten edges as
-   * far as possible.
-   *
-   * Constructor: mxCoordinateAssignment
-   *
-   * Creates a coordinate assignment.
-   *
-   * Arguments:
-   *
-   * intraCellSpacing - the minimum buffer between cells on the same rank
-   * interRankCellSpacing - the minimum distance between cells on adjacent ranks
-   * orientation - the position of the root node(s) relative to the graph
-   * initialX - the leftmost coordinate node placement starts at
-   */
-  constructor(
-    layout,
-    intraCellSpacing,
-    interRankCellSpacing,
-    orientation,
-    initialX,
-    parallelEdgeSpacing
-  ) {
-    super();
-
-    this.layout = layout;
-    this.intraCellSpacing = intraCellSpacing;
-    this.interRankCellSpacing = interRankCellSpacing;
-    this.orientation = orientation;
-    this.initialX = initialX;
-    this.parallelEdgeSpacing = parallelEdgeSpacing;
-  }
 
   /**
    * Utility method to display current positions

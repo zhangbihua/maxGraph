@@ -6,23 +6,23 @@
 
 import mxRootChange from '../atomic_changes/mxRootChange';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxConstants from "../util/mxConstants";
-import mxObjectCodec from "./mxObjectCodec";
+import mxConstants from '../util/mxConstants';
+import mxObjectCodec from './mxObjectCodec';
 
+/**
+ * Class: mxRootChangeCodec
+ *
+ * Codec for <mxRootChange>s. This class is created and registered
+ * dynamically at load time and used implicitly via <mxCodec> and
+ * the <mxCodecRegistry>.
+ *
+ * Transient Fields:
+ *
+ * - model
+ * - previous
+ * - root
+ */
 class mxRootChangeCodec extends mxObjectCodec {
-  /**
-   * Class: mxRootChangeCodec
-   *
-   * Codec for <mxRootChange>s. This class is created and registered
-   * dynamically at load time and used implicitly via <mxCodec> and
-   * the <mxCodecRegistry>.
-   *
-   * Transient Fields:
-   *
-   * - model
-   * - previous
-   * - root
-   */
   constructor() {
     super(new mxRootChange(), ['model', 'previous', 'root']);
   }

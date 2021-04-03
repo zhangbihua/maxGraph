@@ -31,8 +31,8 @@ import mxDictionary from '../../util/datatypes/mxDictionary';
 import mxEventObject from '../../util/event/mxEventObject';
 import mxPoint from '../../util/datatypes/mxPoint';
 import mxShape from '../../shape/mxShape';
-import mxCellState from "../../util/datatypes/mxCellState";
-import mxCell from "./mxCell";
+import mxCellState from '../../util/datatypes/mxCellState';
+import mxCell from './mxCell';
 
 class mxCellRenderer {
   /**
@@ -319,7 +319,8 @@ class mxCellRenderer {
    * the respective color on the shape.
    */
   resolveColor(state, field, key) {
-    const shape = key === mxConstants.STYLE_FONTCOLOR ? state.text : state.shape;
+    const shape =
+      key === mxConstants.STYLE_FONTCOLOR ? state.text : state.shape;
 
     if (shape != null) {
       const { graph } = state.view;
@@ -403,10 +404,7 @@ class mxCellRenderer {
     const { graph } = state.view;
     const isEdge = graph.getModel().isEdge(state.cell);
 
-    if (
-      state.style.fontSize > 0 ||
-      state.style.fontSize == null
-    ) {
+    if (state.style.fontSize > 0 || state.style.fontSize == null) {
       // Avoids using DOM node for empty labels
       const isForceHtml =
         graph.isHtmlLabel(state.cell) ||
@@ -435,9 +433,8 @@ class mxCellRenderer {
         state.style.labelPadding,
         state.style.textDirection || mxConstants.DEFAULT_TEXT_DIRECTION
       );
-      state.text.opacity = state.style.textOpacity == null
-        ? 100
-        : state.style.textOpacity;
+      state.text.opacity =
+        state.style.textOpacity == null ? 100 : state.style.textOpacity;
       state.text.dialect = isForceHtml
         ? mxConstants.DIALECT_STRICTHTML
         : state.view.graph.dialect;
@@ -472,7 +469,10 @@ class mxCellRenderer {
         state.text.node,
         evt => {
           if (this.isLabelEvent(state, evt)) {
-            graph.fireMouseEvent(mxEvent.MOUSE_DOWN, new mxMouseEvent(evt, state));
+            graph.fireMouseEvent(
+              mxEvent.MOUSE_DOWN,
+              new mxMouseEvent(evt, state)
+            );
             forceGetCell =
               graph.dialect !== mxConstants.DIALECT_SVG &&
               mxEvent.getSource(evt).nodeName === 'IMG';
@@ -480,12 +480,18 @@ class mxCellRenderer {
         },
         evt => {
           if (this.isLabelEvent(state, evt)) {
-            graph.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt, getState(evt)));
+            graph.fireMouseEvent(
+              mxEvent.MOUSE_MOVE,
+              new mxMouseEvent(evt, getState(evt))
+            );
           }
         },
         evt => {
           if (this.isLabelEvent(state, evt)) {
-            graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt, getState(evt)));
+            graph.fireMouseEvent(
+              mxEvent.MOUSE_UP,
+              new mxMouseEvent(evt, getState(evt))
+            );
             forceGetCell = false;
           }
         }
@@ -493,16 +499,12 @@ class mxCellRenderer {
 
       // Uses double click timeout in mxGraph for quirks mode
       if (graph.nativeDblClickEnabled) {
-        mxEvent.addListener(
-          state.text.node,
-          'dblclick',
-          evt => {
-            if (this.isLabelEvent(state, evt)) {
-              graph.dblClick(evt, state.cell);
-              mxEvent.consume(evt);
-            }
+        mxEvent.addListener(state.text.node, 'dblclick', evt => {
+          if (this.isLabelEvent(state, evt)) {
+            graph.dblClick(evt, state.cell);
+            mxEvent.consume(evt);
           }
-        );
+        });
       }
     }
   }
@@ -698,11 +700,7 @@ class mxCellRenderer {
    * handleEvents - Boolean indicating if mousedown and mousemove should fire events via the graph.
    * clickHandler - Optional function to implement clicks on the control.
    */
-  initControl(state,
-              control,
-              handleEvents,
-              clickHandler) {
-
+  initControl(state, control, handleEvents, clickHandler) {
     const { graph } = state.view;
 
     // In the special case where the label is in HTML and the display is SVG the image
@@ -877,16 +875,12 @@ class mxCellRenderer {
 
     // Uses double click timeout in mxGraph for quirks mode
     if (graph.nativeDblClickEnabled) {
-      mxEvent.addListener(
-        state.shape.node,
-        'dblclick',
-        evt => {
-          if (this.isShapeEvent(state, evt)) {
-            graph.dblClick(evt, state.cell);
-            mxEvent.consume(evt);
-          }
+      mxEvent.addListener(state.shape.node, 'dblclick', evt => {
+        if (this.isShapeEvent(state, evt)) {
+          graph.dblClick(evt, state.cell);
+          mxEvent.consume(evt);
         }
-      );
+      });
     }
   }
 
@@ -1178,9 +1172,7 @@ class mxCellRenderer {
    * state - <mxCellState> whose label bounds should be rotated.
    * bounds - <mxRectangle> the rectangle to be rotated.
    */
-  rotateLabelBounds(state: mxCellState,
-                    bounds: mxRectangle) {
-
+  rotateLabelBounds(state: mxCellState, bounds: mxRectangle) {
     bounds.y -= state.text.margin.y * bounds.height;
     bounds.x -= state.text.margin.x * bounds.width;
 
@@ -1490,9 +1482,9 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose shapes should be returned.
    */
-  getShapesForState(state: mxCellState): [mxShape | null,
-                                          mxText | null,
-                                          mxShape | null] {
+  getShapesForState(
+    state: mxCellState
+  ): [mxShape | null, mxText | null, mxShape | null] {
     return [state.shape, state.text, state.control];
   }
 
@@ -1512,10 +1504,11 @@ class mxCellRenderer {
    * be drawn into the DOM. If this is false then redraw and/or reconfigure
    * will not be called on the shape.
    */
-  redraw(state: mxCellState,
-         force: boolean=false,
-         rendering: boolean=true): void {
-
+  redraw(
+    state: mxCellState,
+    force: boolean = false,
+    rendering: boolean = true
+  ): void {
     const shapeChanged = this.redrawShape(state, force, rendering);
 
     if (state.shape != null && rendering) {
@@ -1534,10 +1527,11 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose label should be redrawn.
    */
-  redrawShape(state: mxCellState,
-              force: boolean=false,
-              rendering: boolean=true): boolean {
-
+  redrawShape(
+    state: mxCellState,
+    force: boolean = false,
+    rendering: boolean = true
+  ): boolean {
     const { model } = state.view.graph;
     let shapeChanged = false;
 

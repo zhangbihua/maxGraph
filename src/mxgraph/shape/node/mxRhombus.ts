@@ -5,36 +5,39 @@
  */
 import mxShape from '../mxShape';
 import mxPoint from '../../util/datatypes/mxPoint';
-import mxUtils from "../../util/mxUtils";
-import mxConstants from "../../util/mxConstants";
-import mxRectangle from "../../util/datatypes/mxRectangle";
-import mxAbstractCanvas2D from "../../util/canvas/mxAbstractCanvas2D";
+import mxUtils from '../../util/mxUtils';
+import mxConstants from '../../util/mxConstants';
+import mxRectangle from '../../util/datatypes/mxRectangle';
+import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
+import mxSvgCanvas2D from "../../util/canvas/mxSvgCanvas2D";
 
+/**
+ * Class: mxRhombus
+ *
+ * Extends <mxShape> to implement a rhombus (aka diamond) shape.
+ * This shape is registered under <mxConstants.SHAPE_RHOMBUS>
+ * in <mxCellRenderer>.
+ *
+ * Constructor: mxRhombus
+ *
+ * Constructs a new rhombus shape.
+ *
+ * Parameters:
+ *
+ * bounds - <mxRectangle> that defines the bounds. This is stored in
+ * <mxShape.bounds>.
+ * fill - String that defines the fill color. This is stored in <fill>.
+ * stroke - String that defines the stroke color. This is stored in <stroke>.
+ * strokewidth - Optional integer that defines the stroke width. Default is
+ * 1. This is stored in <strokewidth>.
+ */
 class mxRhombus extends mxShape {
-  /**
-   * Class: mxRhombus
-   *
-   * Extends <mxShape> to implement a rhombus (aka diamond) shape.
-   * This shape is registered under <mxConstants.SHAPE_RHOMBUS>
-   * in <mxCellRenderer>.
-   *
-   * Constructor: mxRhombus
-   *
-   * Constructs a new rhombus shape.
-   *
-   * Parameters:
-   *
-   * bounds - <mxRectangle> that defines the bounds. This is stored in
-   * <mxShape.bounds>.
-   * fill - String that defines the fill color. This is stored in <fill>.
-   * stroke - String that defines the stroke color. This is stored in <stroke>.
-   * strokewidth - Optional integer that defines the stroke width. Default is
-   * 1. This is stored in <strokewidth>.
-   */
-  constructor(bounds: mxRectangle,
-              fill: string,
-              stroke: string,
-              strokewidth: number=1) {
+  constructor(
+    bounds: mxRectangle,
+    fill: string,
+    stroke: string,
+    strokewidth: number = 1
+  ) {
     super();
     this.bounds = bounds;
     this.fill = fill;
@@ -56,12 +59,13 @@ class mxRhombus extends mxShape {
    *
    * Generic painting implementation.
    */
-  paintVertexShape(c: mxAbstractCanvas2D,
-                   x: number,
-                   y: number,
-                   w: number,
-                   h: number) {
-
+  paintVertexShape(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ) {
     const hw = w / 2;
     const hh = h / 2;
 

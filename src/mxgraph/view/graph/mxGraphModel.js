@@ -458,7 +458,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - Optional <mxCell> that specifies the child.
    */
-  getRoot(cell: mxCell | null=null): mxCell {
+  getRoot(cell: mxCell | null = null): mxCell {
     let root = cell || this.root;
     if (cell != null) {
       while (cell != null) {
@@ -2163,5 +2163,4 @@ class mxGraphModel extends mxEventSource {
 // Atomic changes
 //
 export default mxGraphModel;
-import("../../io/mxModelCodec");
-
+import('../../serialization/mxModelCodec');

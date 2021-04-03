@@ -7,7 +7,35 @@ import mxPopupMenu from '../util/gui/mxPopupMenu';
 import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 
+/**
+ * Class: mxPopupMenuHandler
+ *
+ * Event handler that creates popupmenus.
+ *
+ * Constructor: mxPopupMenuHandler
+ *
+ * Constructs an event handler that creates a <mxPopupMenu>.
+ */
 class mxPopupMenuHandler extends mxPopupMenu {
+  constructor(graph, factoryMethod) {
+    super();
+
+    if (graph != null) {
+      this.graph = graph;
+      this.factoryMethod = factoryMethod;
+      this.graph.addMouseListener(this);
+
+      // Does not show menu if any touch gestures take place after the trigger
+      this.gestureHandler = (sender, eo) => {
+        this.inTolerance = false;
+      };
+
+      this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
+
+      this.init();
+    }
+  }
+
   /**
    * Variable: graph
    *
@@ -58,34 +86,6 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Screen Y-coordinate of the mouse down event.
    */
   screenY = null;
-
-  /**
-   * Class: mxPopupMenuHandler
-   *
-   * Event handler that creates popupmenus.
-   *
-   * Constructor: mxPopupMenuHandler
-   *
-   * Constructs an event handler that creates a <mxPopupMenu>.
-   */
-  constructor(graph, factoryMethod) {
-    super();
-
-    if (graph != null) {
-      this.graph = graph;
-      this.factoryMethod = factoryMethod;
-      this.graph.addMouseListener(this);
-
-      // Does not show menu if any touch gestures take place after the trigger
-      this.gestureHandler = (sender, eo) => {
-        this.inTolerance = false;
-      };
-
-      this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
-
-      this.init();
-    }
-  }
 
   /**
    * Function: init

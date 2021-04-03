@@ -7,34 +7,39 @@
 import mxConstants from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 import mxShape from '../mxShape';
-import mxAbstractCanvas2D from "../../util/canvas/mxAbstractCanvas2D";
+import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
 import mxRectangle from '../../util/datatypes/mxRectangle';
+import mxSvgCanvas2D from "../../util/canvas/mxSvgCanvas2D";
 
+/**
+ * Class: mxRectangleShape
+ *
+ * Extends <mxShape> to implement a rectangle shape.
+ * This shape is registered under <mxConstants.SHAPE_RECTANGLE>
+ * in <mxCellRenderer>.
+ *
+ * Constructor: mxRectangleShape
+ *
+ * Constructs a new rectangle shape.
+ *
+ * Parameters:
+ *
+ * bounds - <mxRectangle> that defines the bounds. This is stored in
+ * <mxShape.bounds>.
+ * fill - String that defines the fill color. This is stored in <fill>.
+ * stroke - String that defines the stroke color. This is stored in <stroke>.
+ * strokewidth - Optional integer that defines the stroke width. Default is
+ * 1. This is stored in <strokewidth>.
+ */
 class mxRectangleShape extends mxShape {
-  /**
-   * Class: mxRectangleShape
-   *
-   * Extends <mxShape> to implement a rectangle shape.
-   * This shape is registered under <mxConstants.SHAPE_RECTANGLE>
-   * in <mxCellRenderer>.
-   *
-   * Constructor: mxRectangleShape
-   *
-   * Constructs a new rectangle shape.
-   *
-   * Parameters:
-   *
-   * bounds - <mxRectangle> that defines the bounds. This is stored in
-   * <mxShape.bounds>.
-   * fill - String that defines the fill color. This is stored in <fill>.
-   * stroke - String that defines the stroke color. This is stored in <stroke>.
-   * strokewidth - Optional integer that defines the stroke width. Default is
-   * 1. This is stored in <strokewidth>.
-   */
-  constructor(bounds: mxRectangle,
-              fill: string='#FFFFFF',
-              stroke: string='#000000',
-              strokewidth: number=1) {
+  strokewidth: number;
+  
+  constructor(
+    bounds: mxRectangle | null=null,
+    fill: string = '#FFFFFF',
+    stroke: string = '#000000',
+    strokewidth: number = 1
+  ) {
     super();
     this.bounds = bounds;
     this.fill = fill;
@@ -69,11 +74,13 @@ class mxRectangleShape extends mxShape {
    *
    * Generic background painting implementation.
    */
-  paintBackground(c: mxAbstractCanvas2D,
-                  x: number,
-                  y: number,
-                  w: number,
-                  h: number): void {
+  paintBackground(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ): void {
     let events = true;
 
     if (this.style != null) {
@@ -133,11 +140,13 @@ class mxRectangleShape extends mxShape {
    *
    * Adds roundable support.
    */
-  isRoundable(c: mxAbstractCanvas2D,
-              x: number,
-              y: number,
-              w: number,
-              h: number): boolean {
+  isRoundable(
+    c: mxAbstractCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ): boolean {
     return true;
   }
 
@@ -146,11 +155,13 @@ class mxRectangleShape extends mxShape {
    *
    * Generic background painting implementation.
    */
-  paintForeground(c: mxAbstractCanvas2D,
-                  x: number,
-                  y: number,
-                  w: number,
-                  h: number): void {
+  paintForeground(
+    c: mxAbstractCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ): void {
     if (
       this.glass &&
       !this.outline &&

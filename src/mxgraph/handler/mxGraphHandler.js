@@ -15,7 +15,122 @@ import mxDictionary from '../util/datatypes/mxDictionary';
 import mxCellHighlight from './mxCellHighlight';
 import mxRectangle from '../util/datatypes/mxRectangle';
 
+/**
+ * Class: mxGraphHandler
+ *
+ * Graph event handler that handles selection. Individual cells are handled
+ * separately using <mxVertexHandler> or one of the edge handlers. These
+ * handlers are created using <mxGraph.createHandler> in
+ * <mxGraphSelectionModel.cellAdded>.
+ *
+ * To avoid the container to scroll a moved cell into view, set
+ * <scrollAfterMove> to false.
+ *
+ * Constructor: mxGraphHandler
+ *
+ * Constructs an event handler that creates handles for the
+ * selection cells.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ */
 class mxGraphHandler {
+  constructor(graph) {
+    this.graph = graph;
+    this.graph.addMouseListener(this);
+
+    // Repaints the handler after autoscroll
+    this.panHandler = () => {
+      if (!this.suspended) {
+        this.updatePreview();
+        this.updateHint();
+      }
+    };
+
+    this.graph.addListener(mxEvent.PAN, this.panHandler);
+
+    // Handles escape keystrokes
+    this.escapeHandler = mxUtils.bind(this, (sender, evt) => {
+      this.reset();
+    });
+
+    this.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
+
+    // Updates the preview box for remote changes
+    this.refreshHandler = (sender, evt) => {
+      // Merges multiple pending calls
+      if (this.refreshThread) {
+        window.clearTimeout(this.refreshThread);
+      }
+
+      // Waits for the states and handlers to be updated
+      this.refreshThread = window.setTimeout(
+        mxUtils.bind(this, () => {
+          this.refreshThread = null;
+
+          if (this.first != null && !this.suspended) {
+            // Updates preview with no translate to compute bounding box
+            const dx = this.currentDx;
+            const dy = this.currentDy;
+            this.currentDx = 0;
+            this.currentDy = 0;
+            this.updatePreview();
+            this.bounds = this.graph.getView().getBounds(this.cells);
+            this.pBounds = this.getPreviewBounds(this.cells);
+
+            if (this.pBounds == null && !this.livePreviewUsed) {
+              this.reset();
+            } else {
+              // Restores translate and updates preview
+              this.currentDx = dx;
+              this.currentDy = dy;
+              this.updatePreview();
+              this.updateHint();
+
+              if (this.livePreviewUsed) {
+                // Forces update to ignore last visible state
+                this.setHandlesVisibleForCells(
+                  this.graph.selectionCellsHandler.getHandledSelectionCells(),
+                  false,
+                  true
+                );
+                this.updatePreview();
+              }
+            }
+          }
+        }),
+        0
+      );
+    };
+
+    this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
+    this.graph.addListener(mxEvent.REFRESH, this.refreshHandler);
+
+    this.keyHandler = e => {
+      if (
+        this.graph.container != null &&
+        this.graph.container.style.visibility !== 'hidden' &&
+        this.first != null &&
+        !this.suspended
+      ) {
+        const clone =
+          this.graph.isCloneEvent(e) &&
+          this.graph.isCellsCloneable() &&
+          this.isCloneEnabled();
+
+        if (clone !== this.cloning) {
+          this.cloning = clone;
+          this.checkPreview();
+          this.updatePreview();
+        }
+      }
+    };
+
+    mxEvent.addListener(document, 'keydown', this.keyHandler);
+    mxEvent.addListener(document, 'keyup', this.keyHandler);
+  }
+
   /**
    * Variable: graph
    *
@@ -206,121 +321,6 @@ class mxGraphHandler {
    * SVG support.
    */
   allowLivePreview = mxClient.IS_SVG;
-
-  /**
-   * Class: mxGraphHandler
-   *
-   * Graph event handler that handles selection. Individual cells are handled
-   * separately using <mxVertexHandler> or one of the edge handlers. These
-   * handlers are created using <mxGraph.createHandler> in
-   * <mxGraphSelectionModel.cellAdded>.
-   *
-   * To avoid the container to scroll a moved cell into view, set
-   * <scrollAfterMove> to false.
-   *
-   * Constructor: mxGraphHandler
-   *
-   * Constructs an event handler that creates handles for the
-   * selection cells.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   */
-  constructor(graph) {
-    this.graph = graph;
-    this.graph.addMouseListener(this);
-
-    // Repaints the handler after autoscroll
-    this.panHandler = () => {
-      if (!this.suspended) {
-        this.updatePreview();
-        this.updateHint();
-      }
-    };
-
-    this.graph.addListener(mxEvent.PAN, this.panHandler);
-
-    // Handles escape keystrokes
-    this.escapeHandler = mxUtils.bind(this, (sender, evt) => {
-      this.reset();
-    });
-
-    this.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
-
-    // Updates the preview box for remote changes
-    this.refreshHandler = (sender, evt) => {
-      // Merges multiple pending calls
-      if (this.refreshThread) {
-        window.clearTimeout(this.refreshThread);
-      }
-
-      // Waits for the states and handlers to be updated
-      this.refreshThread = window.setTimeout(
-        mxUtils.bind(this, () => {
-          this.refreshThread = null;
-
-          if (this.first != null && !this.suspended) {
-            // Updates preview with no translate to compute bounding box
-            const dx = this.currentDx;
-            const dy = this.currentDy;
-            this.currentDx = 0;
-            this.currentDy = 0;
-            this.updatePreview();
-            this.bounds = this.graph.getView().getBounds(this.cells);
-            this.pBounds = this.getPreviewBounds(this.cells);
-
-            if (this.pBounds == null && !this.livePreviewUsed) {
-              this.reset();
-            } else {
-              // Restores translate and updates preview
-              this.currentDx = dx;
-              this.currentDy = dy;
-              this.updatePreview();
-              this.updateHint();
-
-              if (this.livePreviewUsed) {
-                // Forces update to ignore last visible state
-                this.setHandlesVisibleForCells(
-                  this.graph.selectionCellsHandler.getHandledSelectionCells(),
-                  false,
-                  true
-                );
-                this.updatePreview();
-              }
-            }
-          }
-        }),
-        0
-      );
-    };
-
-    this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
-    this.graph.addListener(mxEvent.REFRESH, this.refreshHandler);
-
-    this.keyHandler = e => {
-      if (
-        this.graph.container != null &&
-        this.graph.container.style.visibility !== 'hidden' &&
-        this.first != null &&
-        !this.suspended
-      ) {
-        const clone =
-          this.graph.isCloneEvent(e) &&
-          this.graph.isCellsCloneable() &&
-          this.isCloneEnabled();
-
-        if (clone !== this.cloning) {
-          this.cloning = clone;
-          this.checkPreview();
-          this.updatePreview();
-        }
-      }
-    };
-
-    mxEvent.addListener(document, 'keydown', this.keyHandler);
-    mxEvent.addListener(document, 'keyup', this.keyHandler);
-  }
 
   /**
    * Function: isEnabled

@@ -243,4 +243,4 @@ class mxStylesheet {
 }
 
 export default mxStylesheet;
-import("../../../io/mxStylesheetCodec");
+import('../../../serialization/mxStylesheetCodec');

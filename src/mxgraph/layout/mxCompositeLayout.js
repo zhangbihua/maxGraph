@@ -5,7 +5,41 @@
  */
 import mxGraphLayout from './mxGraphLayout';
 
+/**
+ * Class: mxCompositeLayout
+ *
+ * Allows to compose multiple layouts into a single layout. The master layout
+ * is the layout that handles move operations if another layout than the first
+ * element in <layouts> should be used. The <master> layout is not executed as
+ * the code assumes that it is part of <layouts>.
+ *
+ * Example:
+ * (code)
+ * let first = new mxFastOrganicLayout(graph);
+ * let second = new mxParallelEdgeLayout(graph);
+ * let layout = new mxCompositeLayout(graph, [first, second], first);
+ * layout.execute(graph.getDefaultParent());
+ * (end)
+ *
+ * Constructor: mxCompositeLayout
+ *
+ * Constructs a new layout using the given layouts. The graph instance is
+ * required for creating the transaction that contains all layouts.
+ *
+ * Arguments:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ * layouts - Array of <mxGraphLayouts>.
+ * master - Optional layout that handles moves. If no layout is given then
+ * the first layout of the above array is used to handle moves.
+ */
 class mxCompositeLayout extends mxGraphLayout {
+  constructor(graph, layouts, master) {
+    super(graph);
+    this.layouts = layouts;
+    this.master = master;
+  }
+
   /**
    * Variable: layouts
    *
@@ -20,40 +54,6 @@ class mxCompositeLayout extends mxGraphLayout {
    * then the first layout in <layouts> is used.
    */
   master = null;
-
-  /**
-   * Class: mxCompositeLayout
-   *
-   * Allows to compose multiple layouts into a single layout. The master layout
-   * is the layout that handles move operations if another layout than the first
-   * element in <layouts> should be used. The <master> layout is not executed as
-   * the code assumes that it is part of <layouts>.
-   *
-   * Example:
-   * (code)
-   * let first = new mxFastOrganicLayout(graph);
-   * let second = new mxParallelEdgeLayout(graph);
-   * let layout = new mxCompositeLayout(graph, [first, second], first);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * Constructor: mxCompositeLayout
-   *
-   * Constructs a new layout using the given layouts. The graph instance is
-   * required for creating the transaction that contains all layouts.
-   *
-   * Arguments:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   * layouts - Array of <mxGraphLayouts>.
-   * master - Optional layout that handles moves. If no layout is given then
-   * the first layout of the above array is used to handle moves.
-   */
-  constructor(graph, layouts, master) {
-    super(graph);
-    this.layouts = layouts;
-    this.master = master;
-  }
 
   /**
    * Function: moveCell

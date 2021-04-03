@@ -7,49 +7,49 @@
 import mxCell from '../view/cell/mxCell';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxUtils from "../util/mxUtils";
-import mxConstants from "../util/mxConstants";
+import mxUtils from '../util/mxUtils';
+import mxConstants from '../util/mxConstants';
 
+/**
+ * Class: mxCellCodec
+ *
+ * Codec for <mxCell>s. This class is created and registered
+ * dynamically at load time and used implicitly via <mxCodec>
+ * and the <mxCodecRegistry>.
+ *
+ * Transient Fields:
+ *
+ * - children
+ * - edges
+ * - overlays
+ * - mxTransient
+ *
+ * Reference Fields:
+ *
+ * - parent
+ * - source
+ * - target
+ *
+ * Transient fields can be added using the following code:
+ *
+ * mxCodecRegistry.getCodec(mxCell).exclude.push('name_of_field');
+ *
+ * To subclass <mxCell>, replace the template and add an alias as
+ * follows.
+ *
+ * (code)
+ * function CustomCell(value, geometry, style)
+ * {
+ *   mxCell.apply(this, arguments);
+ * }
+ *
+ * mxUtils.extend(CustomCell, mxCell);
+ *
+ * mxCodecRegistry.getCodec(mxCell).template = new CustomCell();
+ * mxCodecRegistry.addAlias('CustomCell', 'mxCell');
+ * (end)
+ */
 class mxCellCodec extends mxObjectCodec {
-  /**
-   * Class: mxCellCodec
-   *
-   * Codec for <mxCell>s. This class is created and registered
-   * dynamically at load time and used implicitly via <mxCodec>
-   * and the <mxCodecRegistry>.
-   *
-   * Transient Fields:
-   *
-   * - children
-   * - edges
-   * - overlays
-   * - mxTransient
-   *
-   * Reference Fields:
-   *
-   * - parent
-   * - source
-   * - target
-   *
-   * Transient fields can be added using the following code:
-   *
-   * mxCodecRegistry.getCodec(mxCell).exclude.push('name_of_field');
-   *
-   * To subclass <mxCell>, replace the template and add an alias as
-   * follows.
-   *
-   * (code)
-   * function CustomCell(value, geometry, style)
-   * {
-   *   mxCell.apply(this, arguments);
-   * }
-   *
-   * mxUtils.extend(CustomCell, mxCell);
-   *
-   * mxCodecRegistry.getCodec(mxCell).template = new CustomCell();
-   * mxCodecRegistry.addAlias('CustomCell', 'mxCell');
-   * (end)
-   */
   constructor() {
     super(
       new mxCell(),

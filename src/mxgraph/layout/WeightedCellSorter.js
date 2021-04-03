@@ -1,4 +1,20 @@
+/**
+ * Class: WeightedCellSorter
+ *
+ * A utility class used to track cells whilst sorting occurs on the weighted
+ * sum of their connected edges. Does not violate (x.compareTo(y)==0) ==
+ * (x.equals(y))
+ *
+ * Constructor: WeightedCellSorter
+ *
+ * Constructs a new weighted cell sorted for the given cell and weight.
+ */
 class WeightedCellSorter {
+  constructor(cell, weightedValue) {
+    this.cell = cell;
+    this.weightedValue = weightedValue;
+  }
+
   /**
    * Variable: weightedValue
    *
@@ -33,22 +49,6 @@ class WeightedCellSorter {
    * The cell whose median value is being calculated.
    */
   cell = null;
-
-  /**
-   * Class: WeightedCellSorter
-   *
-   * A utility class used to track cells whilst sorting occurs on the weighted
-   * sum of their connected edges. Does not violate (x.compareTo(y)==0) ==
-   * (x.equals(y))
-   *
-   * Constructor: WeightedCellSorter
-   *
-   * Constructs a new weighted cell sorted for the given cell and weight.
-   */
-  constructor(cell, weightedValue) {
-    this.cell = cell;
-    this.weightedValue = weightedValue;
-  }
 
   /**
    * Function: compare

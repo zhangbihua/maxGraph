@@ -4,15 +4,223 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
-import mxObjectIdentity from "../util/datatypes/mxObjectIdentity";
-import mxLog from "../util/gui/mxLog";
-import mxGeometry from "../util/datatypes/mxGeometry";
-import mxPoint from "../util/datatypes/mxPoint";
-import mxConstants from "../util/mxConstants";
-import mxUtils from "../util/mxUtils";
+import mxObjectIdentity from '../util/datatypes/mxObjectIdentity';
+import mxLog from '../util/gui/mxLog';
+import mxGeometry from '../util/datatypes/mxGeometry';
+import mxPoint from '../util/datatypes/mxPoint';
+import mxConstants from '../util/mxConstants';
+import mxUtils from '../util/mxUtils';
 
-
+/**
+ * Class: mxObjectCodec
+ *
+ * Generic codec for JavaScript objects that implements a mapping between
+ * JavaScript objects and XML nodes that maps each field or element to an
+ * attribute or child node, and vice versa.
+ *
+ * Atomic Values:
+ *
+ * Consider the following example.
+ *
+ * (code)
+ * let obj = {};
+ * obj.foo = "Foo";
+ * obj.bar = "Bar";
+ * (end)
+ *
+ * This object is encoded into an XML node using the following.
+ *
+ * (code)
+ * let enc = new mxCodec();
+ * let node = enc.encode(obj);
+ * (end)
+ *
+ * The output of the encoding may be viewed using <mxLog> as follows.
+ *
+ * (code)
+ * mxLog.show();
+ * mxLog.debug(mxUtils.getPrettyXml(node));
+ * (end)
+ *
+ * Finally, the result of the encoding looks as follows.
+ *
+ * (code)
+ * <Object foo="Foo" bar="Bar"/>
+ * (end)
+ *
+ * In the above output, the foo and bar fields have been mapped to attributes
+ * with the same names, and the name of the constructor was used for the
+ * nodename.
+ *
+ * Booleans:
+ *
+ * Since booleans are numbers in JavaScript, all boolean values are encoded
+ * into 1 for true and 0 for false. The decoder also accepts the string true
+ * and false for boolean values.
+ *
+ * Objects:
+ *
+ * The above scheme is applied to all atomic fields, that is, to all non-object
+ * fields of an object. For object fields, a child node is created with a
+ * special attribute that contains the fieldname. This special attribute is
+ * called "as" and hence, as is a reserved word that should not be used for a
+ * fieldname.
+ *
+ * Consider the following example where foo is an object and bar is an atomic
+ * property of foo.
+ *
+ * (code)
+ * let obj = {foo: {bar: "Bar"}};
+ * (end)
+ *
+ * This will be mapped to the following XML structure by mxObjectCodec.
+ *
+ * (code)
+ * <Object>
+ *   <Object bar="Bar" as="foo"/>
+ * </Object>
+ * (end)
+ *
+ * In the above output, the inner Object node contains the as-attribute that
+ * specifies the fieldname in the enclosing object. That is, the field foo was
+ * mapped to a child node with an as-attribute that has the value foo.
+ *
+ * Arrays:
+ *
+ * Arrays are special objects that are either associative, in which case each
+ * key, value pair is treated like a field where the key is the fieldname, or
+ * they are a sequence of atomic values and objects, which is mapped to a
+ * sequence of child nodes. For object elements, the above scheme is applied
+ * without the use of the special as-attribute for creating each child. For
+ * atomic elements, a special add-node is created with the value stored in the
+ * value-attribute.
+ *
+ * For example, the following array contains one atomic value and one object
+ * with a field called bar. Furthermore it contains two associative entries
+ * called bar with an atomic value, and foo with an object value.
+ *
+ * (code)
+ * let obj = ["Bar", {bar: "Bar"}];
+ * obj["bar"] = "Bar";
+ * obj["foo"] = {bar: "Bar"};
+ * (end)
+ *
+ * This array is represented by the following XML nodes.
+ *
+ * (code)
+ * <Array bar="Bar">
+ *   <add value="Bar"/>
+ *   <Object bar="Bar"/>
+ *   <Object bar="Bar" as="foo"/>
+ * </Array>
+ * (end)
+ *
+ * The Array node name is the name of the constructor. The additional
+ * as-attribute in the last child contains the key of the associative entry,
+ * whereas the second last child is part of the array sequence and does not
+ * have an as-attribute.
+ *
+ * References:
+ *
+ * Objects may be represented as child nodes or attributes with ID values,
+ * which are used to lookup the object in a table within <mxCodec>. The
+ * <isReference> function is in charge of deciding if a specific field should
+ * be encoded as a reference or not. Its default implementation returns true if
+ * the fieldname is in <idrefs>, an array of strings that is used to configure
+ * the <mxObjectCodec>.
+ *
+ * Using this approach, the mapping does not guarantee that the referenced
+ * object itself exists in the document. The fields that are encoded as
+ * references must be carefully chosen to make sure all referenced objects
+ * exist in the document, or may be resolved by some other means if necessary.
+ *
+ * For example, in the case of the graph model all cells are stored in a tree
+ * whose root is referenced by the model's root field. A tree is a structure
+ * that is well suited for an XML representation, however, the additional edges
+ * in the graph model have a reference to a source and target cell, which are
+ * also contained in the tree. To handle this case, the source and target cell
+ * of an edge are treated as references, whereas the children are treated as
+ * objects. Since all cells are contained in the tree and no edge references a
+ * source or target outside the tree, this setup makes sure all referenced
+ * objects are contained in the document.
+ *
+ * In the case of a tree structure we must further avoid infinite recursion by
+ * ignoring the parent reference of each child. This is done by returning true
+ * in <isExcluded>, whose default implementation uses the array of excluded
+ * fieldnames passed to the mxObjectCodec constructor.
+ *
+ * References are only used for cells in mxGraph. For defining other
+ * referencable object types, the codec must be able to work out the ID of an
+ * object. This is done by implementing <mxCodec.reference>. For decoding a
+ * reference, the XML node with the respective id-attribute is fetched from the
+ * document, decoded, and stored in a lookup table for later reference. For
+ * looking up external objects, <mxCodec.lookup> may be implemented.
+ *
+ * Expressions:
+ *
+ * For decoding JavaScript expressions, the add-node may be used with a text
+ * content that contains the JavaScript expression. For example, the following
+ * creates a field called foo in the enclosing object and assigns it the value
+ * of <mxConstants.ALIGN_LEFT>.
+ *
+ * (code)
+ * <Object>
+ *   <add as="foo">mxConstants.ALIGN_LEFT</add>
+ * </Object>
+ * (end)
+ *
+ * The resulting object has a field called foo with the value "left". Its XML
+ * representation looks as follows.
+ *
+ * (code)
+ * <Object foo="left"/>
+ * (end)
+ *
+ * This means the expression is evaluated at decoding time and the result of
+ * the evaluation is stored in the respective field. Valid expressions are all
+ * JavaScript expressions, including function definitions, which are mapped to
+ * functions on the resulting object.
+ *
+ * Expressions are only evaluated if <allowEval> is true.
+ *
+ * Constructor: mxObjectCodec
+ *
+ * Constructs a new codec for the specified template object.
+ * The variables in the optional exclude array are ignored by
+ * the codec. Variables in the optional idrefs array are
+ * turned into references in the XML. The optional mapping
+ * may be used to map from variable names to XML attributes.
+ * The argument is created as follows:
+ *
+ * (code)
+ * let mapping = {};
+ * mapping['variableName'] = 'attribute-name';
+ * (end)
+ *
+ * Parameters:
+ *
+ * template - Prototypical instance of the object to be
+ * encoded/decoded.
+ * exclude - Optional array of fieldnames to be ignored.
+ * idrefs - Optional array of fieldnames to be converted to/from
+ * references.
+ * mapping - Optional mapping from field- to attributenames.
+ */
 class mxObjectCodec {
+  constructor(template, exclude, idrefs, mapping) {
+    this.template = template;
+
+    this.exclude = exclude != null ? exclude : [];
+    this.idrefs = idrefs != null ? idrefs : [];
+    this.mapping = mapping != null ? mapping : [];
+
+    this.reverse = {};
+
+    for (const i in this.mapping) {
+      this.reverse[this.mapping[i]] = i;
+    }
+  }
+
   /**
    * Variable: allowEval
    *
@@ -58,215 +266,6 @@ class mxObjectCodec {
    * Maps from from XML attribute names to fieldnames.
    */
   reverse = null;
-
-  /**
-   * Class: mxObjectCodec
-   *
-   * Generic codec for JavaScript objects that implements a mapping between
-   * JavaScript objects and XML nodes that maps each field or element to an
-   * attribute or child node, and vice versa.
-   *
-   * Atomic Values:
-   *
-   * Consider the following example.
-   *
-   * (code)
-   * let obj = {};
-   * obj.foo = "Foo";
-   * obj.bar = "Bar";
-   * (end)
-   *
-   * This object is encoded into an XML node using the following.
-   *
-   * (code)
-   * let enc = new mxCodec();
-   * let node = enc.encode(obj);
-   * (end)
-   *
-   * The output of the encoding may be viewed using <mxLog> as follows.
-   *
-   * (code)
-   * mxLog.show();
-   * mxLog.debug(mxUtils.getPrettyXml(node));
-   * (end)
-   *
-   * Finally, the result of the encoding looks as follows.
-   *
-   * (code)
-   * <Object foo="Foo" bar="Bar"/>
-   * (end)
-   *
-   * In the above output, the foo and bar fields have been mapped to attributes
-   * with the same names, and the name of the constructor was used for the
-   * nodename.
-   *
-   * Booleans:
-   *
-   * Since booleans are numbers in JavaScript, all boolean values are encoded
-   * into 1 for true and 0 for false. The decoder also accepts the string true
-   * and false for boolean values.
-   *
-   * Objects:
-   *
-   * The above scheme is applied to all atomic fields, that is, to all non-object
-   * fields of an object. For object fields, a child node is created with a
-   * special attribute that contains the fieldname. This special attribute is
-   * called "as" and hence, as is a reserved word that should not be used for a
-   * fieldname.
-   *
-   * Consider the following example where foo is an object and bar is an atomic
-   * property of foo.
-   *
-   * (code)
-   * let obj = {foo: {bar: "Bar"}};
-   * (end)
-   *
-   * This will be mapped to the following XML structure by mxObjectCodec.
-   *
-   * (code)
-   * <Object>
-   *   <Object bar="Bar" as="foo"/>
-   * </Object>
-   * (end)
-   *
-   * In the above output, the inner Object node contains the as-attribute that
-   * specifies the fieldname in the enclosing object. That is, the field foo was
-   * mapped to a child node with an as-attribute that has the value foo.
-   *
-   * Arrays:
-   *
-   * Arrays are special objects that are either associative, in which case each
-   * key, value pair is treated like a field where the key is the fieldname, or
-   * they are a sequence of atomic values and objects, which is mapped to a
-   * sequence of child nodes. For object elements, the above scheme is applied
-   * without the use of the special as-attribute for creating each child. For
-   * atomic elements, a special add-node is created with the value stored in the
-   * value-attribute.
-   *
-   * For example, the following array contains one atomic value and one object
-   * with a field called bar. Furthermore it contains two associative entries
-   * called bar with an atomic value, and foo with an object value.
-   *
-   * (code)
-   * let obj = ["Bar", {bar: "Bar"}];
-   * obj["bar"] = "Bar";
-   * obj["foo"] = {bar: "Bar"};
-   * (end)
-   *
-   * This array is represented by the following XML nodes.
-   *
-   * (code)
-   * <Array bar="Bar">
-   *   <add value="Bar"/>
-   *   <Object bar="Bar"/>
-   *   <Object bar="Bar" as="foo"/>
-   * </Array>
-   * (end)
-   *
-   * The Array node name is the name of the constructor. The additional
-   * as-attribute in the last child contains the key of the associative entry,
-   * whereas the second last child is part of the array sequence and does not
-   * have an as-attribute.
-   *
-   * References:
-   *
-   * Objects may be represented as child nodes or attributes with ID values,
-   * which are used to lookup the object in a table within <mxCodec>. The
-   * <isReference> function is in charge of deciding if a specific field should
-   * be encoded as a reference or not. Its default implementation returns true if
-   * the fieldname is in <idrefs>, an array of strings that is used to configure
-   * the <mxObjectCodec>.
-   *
-   * Using this approach, the mapping does not guarantee that the referenced
-   * object itself exists in the document. The fields that are encoded as
-   * references must be carefully chosen to make sure all referenced objects
-   * exist in the document, or may be resolved by some other means if necessary.
-   *
-   * For example, in the case of the graph model all cells are stored in a tree
-   * whose root is referenced by the model's root field. A tree is a structure
-   * that is well suited for an XML representation, however, the additional edges
-   * in the graph model have a reference to a source and target cell, which are
-   * also contained in the tree. To handle this case, the source and target cell
-   * of an edge are treated as references, whereas the children are treated as
-   * objects. Since all cells are contained in the tree and no edge references a
-   * source or target outside the tree, this setup makes sure all referenced
-   * objects are contained in the document.
-   *
-   * In the case of a tree structure we must further avoid infinite recursion by
-   * ignoring the parent reference of each child. This is done by returning true
-   * in <isExcluded>, whose default implementation uses the array of excluded
-   * fieldnames passed to the mxObjectCodec constructor.
-   *
-   * References are only used for cells in mxGraph. For defining other
-   * referencable object types, the codec must be able to work out the ID of an
-   * object. This is done by implementing <mxCodec.reference>. For decoding a
-   * reference, the XML node with the respective id-attribute is fetched from the
-   * document, decoded, and stored in a lookup table for later reference. For
-   * looking up external objects, <mxCodec.lookup> may be implemented.
-   *
-   * Expressions:
-   *
-   * For decoding JavaScript expressions, the add-node may be used with a text
-   * content that contains the JavaScript expression. For example, the following
-   * creates a field called foo in the enclosing object and assigns it the value
-   * of <mxConstants.ALIGN_LEFT>.
-   *
-   * (code)
-   * <Object>
-   *   <add as="foo">mxConstants.ALIGN_LEFT</add>
-   * </Object>
-   * (end)
-   *
-   * The resulting object has a field called foo with the value "left". Its XML
-   * representation looks as follows.
-   *
-   * (code)
-   * <Object foo="left"/>
-   * (end)
-   *
-   * This means the expression is evaluated at decoding time and the result of
-   * the evaluation is stored in the respective field. Valid expressions are all
-   * JavaScript expressions, including function definitions, which are mapped to
-   * functions on the resulting object.
-   *
-   * Expressions are only evaluated if <allowEval> is true.
-   *
-   * Constructor: mxObjectCodec
-   *
-   * Constructs a new codec for the specified template object.
-   * The variables in the optional exclude array are ignored by
-   * the codec. Variables in the optional idrefs array are
-   * turned into references in the XML. The optional mapping
-   * may be used to map from variable names to XML attributes.
-   * The argument is created as follows:
-   *
-   * (code)
-   * let mapping = {};
-   * mapping['variableName'] = 'attribute-name';
-   * (end)
-   *
-   * Parameters:
-   *
-   * template - Prototypical instance of the object to be
-   * encoded/decoded.
-   * exclude - Optional array of fieldnames to be ignored.
-   * idrefs - Optional array of fieldnames to be converted to/from
-   * references.
-   * mapping - Optional mapping from field- to attributenames.
-   */
-  constructor(template, exclude, idrefs, mapping) {
-    this.template = template;
-
-    this.exclude = exclude != null ? exclude : [];
-    this.idrefs = idrefs != null ? idrefs : [];
-    this.mapping = mapping != null ? mapping : [];
-
-    this.reverse = {};
-
-    for (const i in this.mapping) {
-      this.reverse[this.mapping[i]] = i;
-    }
-  }
 
   /**
    * Function: getName

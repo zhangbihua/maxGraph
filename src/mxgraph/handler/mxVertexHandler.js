@@ -14,7 +14,46 @@ import mxUtils from '../util/mxUtils';
 import mxClient from '../mxClient';
 import mxGraphHandler from './mxGraphHandler';
 
+/**
+ * Class: mxVertexHandler
+ *
+ * Event handler for resizing cells. This handler is automatically created in
+ * <mxGraph.createHandler>.
+ *
+ * Constructor: mxVertexHandler
+ *
+ * Constructs an event handler that allows to resize vertices
+ * and groups.
+ *
+ * Parameters:
+ *
+ * state - <mxCellState> of the cell to be resized.
+ */
 class mxVertexHandler {
+  constructor(state) {
+    if (state != null) {
+      this.state = state;
+      this.init();
+
+      // Handles escape keystrokes
+      this.escapeHandler = (sender, evt) => {
+        if (this.livePreview && this.index != null) {
+          // Redraws the live preview
+          this.state.view.graph.cellRenderer.redraw(this.state, true);
+
+          // Redraws connected edges
+          this.state.view.invalidate(this.state.cell);
+          this.state.invalid = false;
+          this.state.view.validate();
+        }
+
+        this.reset();
+      };
+
+      this.state.view.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
+    }
+  }
+
   /**
    * Variable: graph
    *
@@ -156,45 +195,6 @@ class mxVertexHandler {
    * if <manageSizers> is true and the sizers are offset vertically.
    */
   verticalOffset = 0;
-
-  /**
-   * Class: mxVertexHandler
-   *
-   * Event handler for resizing cells. This handler is automatically created in
-   * <mxGraph.createHandler>.
-   *
-   * Constructor: mxVertexHandler
-   *
-   * Constructs an event handler that allows to resize vertices
-   * and groups.
-   *
-   * Parameters:
-   *
-   * state - <mxCellState> of the cell to be resized.
-   */
-  constructor(state) {
-    if (state != null) {
-      this.state = state;
-      this.init();
-
-      // Handles escape keystrokes
-      this.escapeHandler = (sender, evt) => {
-        if (this.livePreview && this.index != null) {
-          // Redraws the live preview
-          this.state.view.graph.cellRenderer.redraw(this.state, true);
-
-          // Redraws connected edges
-          this.state.view.invalidate(this.state.cell);
-          this.state.invalid = false;
-          this.state.view.validate();
-        }
-
-        this.reset();
-      };
-
-      this.state.view.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
-    }
-  }
 
   /**
    * Function: init

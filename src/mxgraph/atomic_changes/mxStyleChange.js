@@ -1,14 +1,14 @@
+/**
+ * Class: mxStyleChange
+ *
+ * Action to change a cell's style in a model.
+ *
+ * Constructor: mxStyleChange
+ *
+ * Constructs a change of a style in the
+ * specified model.
+ */
 class mxStyleChange {
-  /**
-   * Class: mxStyleChange
-   *
-   * Action to change a cell's style in a model.
-   *
-   * Constructor: mxStyleChange
-   *
-   * Constructs a change of a style in the
-   * specified model.
-   */
   constructor(model, cell, style) {
     this.model = model;
     this.cell = cell;
@@ -31,5 +31,4 @@ class mxStyleChange {
 }
 
 export default mxStyleChange;
-import("../io/mxGenericChangeCodec");
-
+import('../serialization/mxGenericChangeCodec');

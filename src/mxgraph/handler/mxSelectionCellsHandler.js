@@ -9,7 +9,55 @@ import mxEventObject from '../util/event/mxEventObject';
 import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 
+/**
+ * Class: mxSelectionCellsHandler
+ *
+ * An event handler that manages cell handlers and invokes their mouse event
+ * processing functions.
+ *
+ * Group: Events
+ *
+ * Event: mxEvent.ADD
+ *
+ * Fires if a cell has been added to the selection. The <code>state</code>
+ * property contains the <mxCellState> that has been added.
+ *
+ * Event: mxEvent.REMOVE
+ *
+ * Fires if a cell has been remove from the selection. The <code>state</code>
+ * property contains the <mxCellState> that has been removed.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ */
 class mxSelectionCellsHandler extends mxEventSource {
+  constructor(graph) {
+    super();
+
+    this.graph = graph;
+    this.handlers = new mxDictionary();
+    this.graph.addMouseListener(this);
+
+    this.refreshHandler = (sender, evt) => {
+      if (this.isEnabled()) {
+        this.refresh();
+      }
+    };
+
+    this.graph
+      .getSelectionModel()
+      .addListener(mxEvent.CHANGE, this.refreshHandler);
+    this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
+    this.graph.getView().addListener(mxEvent.SCALE, this.refreshHandler);
+    this.graph.getView().addListener(mxEvent.TRANSLATE, this.refreshHandler);
+    this.graph
+      .getView()
+      .addListener(mxEvent.SCALE_AND_TRANSLATE, this.refreshHandler);
+    this.graph.getView().addListener(mxEvent.DOWN, this.refreshHandler);
+    this.graph.getView().addListener(mxEvent.UP, this.refreshHandler);
+  }
+
   /**
    * Variable: graph
    *
@@ -44,54 +92,6 @@ class mxSelectionCellsHandler extends mxEventSource {
    * <mxDictionary> that maps from cells to handlers.
    */
   handlers = null;
-
-  /**
-   * Class: mxSelectionCellsHandler
-   *
-   * An event handler that manages cell handlers and invokes their mouse event
-   * processing functions.
-   *
-   * Group: Events
-   *
-   * Event: mxEvent.ADD
-   *
-   * Fires if a cell has been added to the selection. The <code>state</code>
-   * property contains the <mxCellState> that has been added.
-   *
-   * Event: mxEvent.REMOVE
-   *
-   * Fires if a cell has been remove from the selection. The <code>state</code>
-   * property contains the <mxCellState> that has been removed.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   */
-  constructor(graph) {
-    super();
-
-    this.graph = graph;
-    this.handlers = new mxDictionary();
-    this.graph.addMouseListener(this);
-
-    this.refreshHandler = (sender, evt) => {
-      if (this.isEnabled()) {
-        this.refresh();
-      }
-    };
-
-    this.graph
-      .getSelectionModel()
-      .addListener(mxEvent.CHANGE, this.refreshHandler);
-    this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
-    this.graph.getView().addListener(mxEvent.SCALE, this.refreshHandler);
-    this.graph.getView().addListener(mxEvent.TRANSLATE, this.refreshHandler);
-    this.graph
-      .getView()
-      .addListener(mxEvent.SCALE_AND_TRANSLATE, this.refreshHandler);
-    this.graph.getView().addListener(mxEvent.DOWN, this.refreshHandler);
-    this.graph.getView().addListener(mxEvent.UP, this.refreshHandler);
-  }
 
   /**
    * Function: isEnabled

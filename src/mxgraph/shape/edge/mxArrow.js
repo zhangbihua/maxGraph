@@ -4,37 +4,37 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxShape from '../mxShape';
-import mxConstants from "../../util/mxConstants";
+import mxConstants from '../../util/mxConstants';
 
+/**
+ * Class: mxArrow
+ *
+ * Extends <mxShape> to implement an arrow shape. (The shape
+ * is used to represent edges, not vertices.)
+ * This shape is registered under <mxConstants.SHAPE_ARROW>
+ * in <mxCellRenderer>.
+ *
+ * Constructor: mxArrow
+ *
+ * Constructs a new arrow shape.
+ *
+ * Parameters:
+ *
+ * points - Array of <mxPoints> that define the points. This is stored in
+ * <mxShape.points>.
+ * fill - String that defines the fill color. This is stored in <fill>.
+ * stroke - String that defines the stroke color. This is stored in <stroke>.
+ * strokewidth - Optional integer that defines the stroke width. Default is
+ * 1. This is stored in <strokewidth>.
+ * arrowWidth - Optional integer that defines the arrow width. Default is
+ * <mxConstants.ARROW_WIDTH>. This is stored in <arrowWidth>.
+ * spacing - Optional integer that defines the spacing between the arrow shape
+ * and its endpoints. Default is <mxConstants.ARROW_SPACING>. This is stored in
+ * <spacing>.
+ * endSize - Optional integer that defines the size of the arrowhead. Default
+ * is <mxConstants.ARROW_SIZE>. This is stored in <endSize>.
+ */
 class mxArrow extends mxShape {
-  /**
-   * Class: mxArrow
-   *
-   * Extends <mxShape> to implement an arrow shape. (The shape
-   * is used to represent edges, not vertices.)
-   * This shape is registered under <mxConstants.SHAPE_ARROW>
-   * in <mxCellRenderer>.
-   *
-   * Constructor: mxArrow
-   *
-   * Constructs a new arrow shape.
-   *
-   * Parameters:
-   *
-   * points - Array of <mxPoints> that define the points. This is stored in
-   * <mxShape.points>.
-   * fill - String that defines the fill color. This is stored in <fill>.
-   * stroke - String that defines the stroke color. This is stored in <stroke>.
-   * strokewidth - Optional integer that defines the stroke width. Default is
-   * 1. This is stored in <strokewidth>.
-   * arrowWidth - Optional integer that defines the arrow width. Default is
-   * <mxConstants.ARROW_WIDTH>. This is stored in <arrowWidth>.
-   * spacing - Optional integer that defines the spacing between the arrow shape
-   * and its endpoints. Default is <mxConstants.ARROW_SPACING>. This is stored in
-   * <spacing>.
-   * endSize - Optional integer that defines the size of the arrowhead. Default
-   * is <mxConstants.ARROW_SIZE>. This is stored in <endSize>.
-   */
   constructor(points, fill, stroke, strokewidth, arrowWidth, spacing, endSize) {
     super();
     this.points = points;

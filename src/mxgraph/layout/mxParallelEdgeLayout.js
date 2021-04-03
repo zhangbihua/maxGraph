@@ -8,7 +8,54 @@ import mxPoint from '../util/datatypes/mxPoint';
 import mxGraphLayout from './mxGraphLayout';
 import mxObjectIdentity from '../util/datatypes/mxObjectIdentity';
 
+/**
+ * Class: mxParallelEdgeLayout
+ *
+ * Extends <mxGraphLayout> for arranging parallel edges. This layout works
+ * on edges for all pairs of vertices where there is more than one edge
+ * connecting the latter.
+ *
+ * Example:
+ *
+ * (code)
+ * let layout = new mxParallelEdgeLayout(graph);
+ * layout.execute(graph.getDefaultParent());
+ * (end)
+ *
+ * To run the layout for the parallel edges of a changed edge only, the
+ * following code can be used.
+ *
+ * (code)
+ * let layout = new mxParallelEdgeLayout(graph);
+ *
+ * graph.addListener(mxEvent.CELL_CONNECTED, (sender, evt)=>
+ * {
+ *   let model = graph.getModel();
+ *   let edge = evt.getProperty('edge');
+ *   let src = model.getTerminal(edge, true);
+ *   let trg = model.getTerminal(edge, false);
+ *
+ *   layout.isEdgeIgnored = (edge2)=>
+ *   {
+ *     var src2 = model.getTerminal(edge2, true);
+ *     var trg2 = model.getTerminal(edge2, false);
+ *
+ *     return !(model.isEdge(edge2) && ((src == src2 && trg == trg2) || (src == trg2 && trg == src2)));
+ *   };
+ *
+ *   layout.execute(graph.getDefaultParent());
+ * });
+ * (end)
+ *
+ * Constructor: mxParallelEdgeLayout
+ *
+ * Constructs a new parallel edge layout for the specified graph.
+ */
 class mxParallelEdgeLayout extends mxGraphLayout {
+  constructor(graph) {
+    super(graph);
+  }
+
   /**
    * Variable: spacing
    *
@@ -23,53 +70,6 @@ class mxParallelEdgeLayout extends mxGraphLayout {
    * parallel. Default is false.
    */
   checkOverlap = false;
-
-  /**
-   * Class: mxParallelEdgeLayout
-   *
-   * Extends <mxGraphLayout> for arranging parallel edges. This layout works
-   * on edges for all pairs of vertices where there is more than one edge
-   * connecting the latter.
-   *
-   * Example:
-   *
-   * (code)
-   * let layout = new mxParallelEdgeLayout(graph);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * To run the layout for the parallel edges of a changed edge only, the
-   * following code can be used.
-   *
-   * (code)
-   * let layout = new mxParallelEdgeLayout(graph);
-   *
-   * graph.addListener(mxEvent.CELL_CONNECTED, (sender, evt)=>
-   * {
-   *   let model = graph.getModel();
-   *   let edge = evt.getProperty('edge');
-   *   let src = model.getTerminal(edge, true);
-   *   let trg = model.getTerminal(edge, false);
-   *
-   *   layout.isEdgeIgnored = (edge2)=>
-   *   {
-   *     var src2 = model.getTerminal(edge2, true);
-   *     var trg2 = model.getTerminal(edge2, false);
-   *
-   *     return !(model.isEdge(edge2) && ((src == src2 && trg == trg2) || (src == trg2 && trg == src2)));
-   *   };
-   *
-   *   layout.execute(graph.getDefaultParent());
-   * });
-   * (end)
-   *
-   * Constructor: mxParallelEdgeLayout
-   *
-   * Constructs a new parallel edge layout for the specified graph.
-   */
-  constructor(graph) {
-    super(graph);
-  }
 
   /**
    * Function: execute

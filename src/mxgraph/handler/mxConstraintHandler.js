@@ -12,7 +12,47 @@ import mxRectangle from '../util/datatypes/mxRectangle';
 import mxImageShape from '../shape/node/mxImageShape';
 import mxRectangleShape from '../shape/node/mxRectangleShape';
 
+/**
+ * Class: mxConstraintHandler
+ *
+ * Handles constraints on connection targets. This class is in charge of
+ * showing fixed points when the mouse is over a vertex and handles constraints
+ * to establish new connections.
+ *
+ * Constructor: mxConstraintHandler
+ *
+ * Constructs an new constraint handler.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ * factoryMethod - Optional function to create the edge. The function takes
+ * the source and target <mxCell> as the first and second argument and
+ * returns the <mxCell> that represents the new edge.
+ */
 class mxConstraintHandler {
+  constructor(graph) {
+    this.graph = graph;
+
+    // Adds a graph model listener to update the current focus on changes
+    this.resetHandler = (sender, evt) => {
+      if (
+        this.currentFocus != null &&
+        this.graph.view.getState(this.currentFocus.cell) == null
+      ) {
+        this.reset();
+      } else {
+        this.redraw();
+      }
+    };
+
+    this.graph.model.addListener(mxEvent.CHANGE, this.resetHandler);
+    this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.resetHandler);
+    this.graph.view.addListener(mxEvent.TRANSLATE, this.resetHandler);
+    this.graph.view.addListener(mxEvent.SCALE, this.resetHandler);
+    this.graph.addListener(mxEvent.ROOT, this.resetHandler);
+  }
+
   /**
    * Variable: pointImage
    *
@@ -40,46 +80,6 @@ class mxConstraintHandler {
    * Specifies the color for the highlight. Default is <mxConstants.DEFAULT_VALID_COLOR>.
    */
   highlightColor = mxConstants.DEFAULT_VALID_COLOR;
-
-  /**
-   * Class: mxConstraintHandler
-   *
-   * Handles constraints on connection targets. This class is in charge of
-   * showing fixed points when the mouse is over a vertex and handles constraints
-   * to establish new connections.
-   *
-   * Constructor: mxConstraintHandler
-   *
-   * Constructs an new constraint handler.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   * factoryMethod - Optional function to create the edge. The function takes
-   * the source and target <mxCell> as the first and second argument and
-   * returns the <mxCell> that represents the new edge.
-   */
-  constructor(graph) {
-    this.graph = graph;
-
-    // Adds a graph model listener to update the current focus on changes
-    this.resetHandler = (sender, evt) => {
-      if (
-        this.currentFocus != null &&
-        this.graph.view.getState(this.currentFocus.cell) == null
-      ) {
-        this.reset();
-      } else {
-        this.redraw();
-      }
-    };
-
-    this.graph.model.addListener(mxEvent.CHANGE, this.resetHandler);
-    this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.resetHandler);
-    this.graph.view.addListener(mxEvent.TRANSLATE, this.resetHandler);
-    this.graph.view.addListener(mxEvent.SCALE, this.resetHandler);
-    this.graph.addListener(mxEvent.ROOT, this.resetHandler);
-  }
 
   /**
    * Function: isEnabled

@@ -5,7 +5,36 @@
  */
 import mxGraphLayout from './mxGraphLayout';
 
+/**
+ * Class: mxCircleLayout
+ *
+ * Extends <mxGraphLayout> to implement a circular layout for a given radius.
+ * The vertices do not need to be connected for this layout to work and all
+ * connections between vertices are not taken into account.
+ *
+ * Example:
+ *
+ * (code)
+ * let layout = new mxCircleLayout(graph);
+ * layout.execute(graph.getDefaultParent());
+ * (end)
+ *
+ * Constructor: mxCircleLayout
+ *
+ * Constructs a new circular layout for the specified radius.
+ *
+ * Arguments:
+ *
+ * graph - <mxGraph> that contains the cells.
+ * radius - Optional radius as an int. Default is 100.
+ */
 class mxCircleLayout extends mxGraphLayout {
+  constructor(graph, radius) {
+    super(graph);
+    // mxGraphLayout.call(this, graph);
+    this.radius = radius != null ? radius : 100;
+  }
+
   /**
    * Variable: radius
    *
@@ -52,35 +81,6 @@ class mxCircleLayout extends mxGraphLayout {
    * modified by the result. Default is true.
    */
   disableEdgeStyle = true;
-
-  /**
-   * Class: mxCircleLayout
-   *
-   * Extends <mxGraphLayout> to implement a circular layout for a given radius.
-   * The vertices do not need to be connected for this layout to work and all
-   * connections between vertices are not taken into account.
-   *
-   * Example:
-   *
-   * (code)
-   * let layout = new mxCircleLayout(graph);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * Constructor: mxCircleLayout
-   *
-   * Constructs a new circular layout for the specified radius.
-   *
-   * Arguments:
-   *
-   * graph - <mxGraph> that contains the cells.
-   * radius - Optional radius as an int. Default is 100.
-   */
-  constructor(graph, radius) {
-    super(graph);
-    // mxGraphLayout.call(this, graph);
-    this.radius = radius != null ? radius : 100;
-  }
 
   /**
    * Function: execute

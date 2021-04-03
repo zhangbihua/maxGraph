@@ -1,14 +1,14 @@
+/**
+ * Class: mxValueChange
+ *
+ * Action to change a user object in a model.
+ *
+ * Constructor: mxValueChange
+ *
+ * Constructs a change of a user object in the
+ * specified model.
+ */
 class mxValueChange {
-  /**
-   * Class: mxValueChange
-   *
-   * Action to change a user object in a model.
-   *
-   * Constructor: mxValueChange
-   *
-   * Constructs a change of a user object in the
-   * specified model.
-   */
   constructor(model, cell, value) {
     this.model = model;
     this.cell = cell;
@@ -31,5 +31,4 @@ class mxValueChange {
 }
 
 export default mxValueChange;
-import("../io/mxGenericChangeCodec");
-
+import('../serialization/mxGenericChangeCodec');

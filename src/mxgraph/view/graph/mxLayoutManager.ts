@@ -14,8 +14,8 @@ import mxGeometryChange from '../../atomic_changes/mxGeometryChange';
 import mxVisibleChange from '../../atomic_changes/mxVisibleChange';
 import mxStyleChange from '../../atomic_changes/mxStyleChange';
 import mxEventObject from '../../util/event/mxEventObject';
-import mxCell from "../cell/mxCell";
-import mxGraph from "./mxGraph";
+import mxCell from '../cell/mxCell';
+import mxGraph from './mxGraph';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 
 class mxLayoutManager extends mxEventSource {
@@ -224,8 +224,7 @@ class mxLayoutManager extends mxEventSource {
    * check if a layout exists for the given cell. This is called
    * from <hasLayout>.
    */
-  getLayout(cell: mxCell,
-            eventName: string): any {
+  getLayout(cell: mxCell, eventName: string): any {
     return null;
   }
 
@@ -285,10 +284,11 @@ class mxLayoutManager extends mxEventSource {
    * cell - Array of <mxCells> that have been resized.
    * bounds - <mxRectangle> taht represents the new bounds.
    */
-  cellsResized(cells: mxCell[] | null=null,
-               bounds: mxRectangle | null=null,
-               prev) {
-
+  cellsResized(
+    cells: mxCell[] | null = null,
+    bounds: mxRectangle | null = null,
+    prev
+  ) {
     if (cells != null && bounds != null) {
       const model = this.getGraph().getModel();
 
@@ -354,9 +354,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * Adds all ancestors of the given cell that have a layout.
    */
-  addCellsWithLayout(cell: mxCell,
-                     result: mxCell[]=[]): mxCell[] {
-
+  addCellsWithLayout(cell: mxCell, result: mxCell[] = []): mxCell[] {
     return this.addDescendantsWithLayout(
       cell,
       this.addAncestorsWithLayout(cell, result)
@@ -368,9 +366,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * Adds all ancestors of the given cell that have a layout.
    */
-  addAncestorsWithLayout(cell: mxCell,
-                         result: mxCell[]=[]): mxCell[] {
-
+  addAncestorsWithLayout(cell: mxCell, result: mxCell[] = []): mxCell[] {
     if (cell != null) {
       const layout = this.hasLayout(cell);
 
@@ -391,9 +387,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * Adds all descendants of the given cell that have a layout.
    */
-  addDescendantsWithLayout(cell: mxCell,
-                           result: mxCell[]=[]): mxCell[] {
-
+  addDescendantsWithLayout(cell: mxCell, result: mxCell[] = []): mxCell[] {
     if (cell != null && this.hasLayout(cell)) {
       const model = this.getGraph().getModel();
 
@@ -428,9 +422,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * Executes all layouts which have been scheduled during the changes.
    */
-  layoutCells(cells: mxCell[],
-              bubble: boolean=false): void {
-
+  layoutCells(cells: mxCell[], bubble: boolean = false): void {
     if (cells.length > 0) {
       // Invokes the layouts while removing duplicates
       const model = this.getGraph().getModel();
@@ -439,7 +431,7 @@ class mxLayoutManager extends mxEventSource {
       try {
         let last = null;
 
-        for (let cell of cells) {
+        for (const cell of cells) {
           if (cell !== model.getRoot() && cell !== last) {
             this.executeLayout(cell, bubble);
             last = cell;
@@ -458,8 +450,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * Executes the given layout on the given parent.
    */
-  executeLayout(cell: mxCell,
-                bubble: boolean=false): void {
+  executeLayout(cell: mxCell, bubble: boolean = false): void {
     const layout = this.getLayout(
       cell,
       bubble ? mxEvent.BEGIN_UPDATE : mxEvent.END_UPDATE

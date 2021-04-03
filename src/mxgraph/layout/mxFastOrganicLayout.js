@@ -6,7 +6,29 @@
 import mxObjectIdentity from '../util/datatypes/mxObjectIdentity';
 import mxGraphLayout from './mxGraphLayout';
 
+/**
+ * Class: mxFastOrganicLayout
+ *
+ * Extends <mxGraphLayout> to implement a fast organic layout algorithm.
+ * The vertices need to be connected for this layout to work, vertices
+ * with no connections are ignored.
+ *
+ * Example:
+ *
+ * (code)
+ * let layout = new mxFastOrganicLayout(graph);
+ * layout.execute(graph.getDefaultParent());
+ * (end)
+ *
+ * Constructor: mxCompactTreeLayout
+ *
+ * Constructs a new fast organic layout for the specified graph.
+ */
 class mxFastOrganicLayout extends mxGraphLayout {
+  constructor(graph) {
+    super(graph);
+  }
+
   /**
    * Variable: useInputOrigin
    *
@@ -168,28 +190,6 @@ class mxFastOrganicLayout extends mxGraphLayout {
    * set to false, then the layout exits in the following iteration.
    */
   allowedToRun = true;
-
-  /**
-   * Class: mxFastOrganicLayout
-   *
-   * Extends <mxGraphLayout> to implement a fast organic layout algorithm.
-   * The vertices need to be connected for this layout to work, vertices
-   * with no connections are ignored.
-   *
-   * Example:
-   *
-   * (code)
-   * let layout = new mxFastOrganicLayout(graph);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * Constructor: mxCompactTreeLayout
-   *
-   * Constructs a new fast organic layout for the specified graph.
-   */
-  constructor(graph) {
-    super(graph);
-  }
 
   /**
    * Function: isVertexIgnored

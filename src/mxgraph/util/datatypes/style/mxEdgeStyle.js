@@ -8,7 +8,7 @@ import mxUtils from '../../mxUtils';
 import mxPoint from '../mxPoint';
 import mxCellState from '../mxCellState';
 import mxConstants from '../../mxConstants';
-import mxRectangle from "../mxRectangle";
+import mxRectangle from '../mxRectangle';
 
 const mxEdgeStyle = {
   /**
@@ -661,7 +661,8 @@ const mxEdgeStyle = {
       for (let i = 0; i < 2; i += 1) {
         const fixedVertAlign =
           currentPt != null && currentPt.x === currentHint.x;
-        const fixedHozAlign = currentPt != null && currentPt.y === currentHint.y;
+        const fixedHozAlign =
+          currentPt != null && currentPt.y === currentHint.y;
 
         const inHozChan =
           currentTerm != null &&

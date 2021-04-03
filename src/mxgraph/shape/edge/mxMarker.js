@@ -5,7 +5,7 @@
  */
 import mxConstants from '../../util/mxConstants';
 
-const mxMarker = {
+class mxMarker {
   /**
    * Class: mxMarker
    *
@@ -16,7 +16,7 @@ const mxMarker = {
    *
    * Maps from markers names to functions to paint the markers.
    */
-  markers: [],
+  static markers: [];
 
   /**
    * Function: addMarker
@@ -24,16 +24,16 @@ const mxMarker = {
    * Adds a factory method that updates a given endpoint and returns a
    * function to paint the marker onto the given canvas.
    */
-  addMarker: (type, funct) => {
+  static addMarker(type, funct) {
     mxMarker.markers[type] = funct;
-  },
+  }
 
   /**
    * Function: createMarker
    *
    * Returns a function to paint the given marker.
    */
-  createMarker: (
+  static createMarker(
     canvas,
     shape,
     type,
@@ -44,14 +44,13 @@ const mxMarker = {
     source,
     sw,
     filled
-  ) => {
+  ) {
     const funct = mxMarker.markers[type];
-
     return funct != null
       ? funct(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
       : null;
-  },
-};
+  }
+}
 
 /**
  * Adds the classic and block marker factory method.

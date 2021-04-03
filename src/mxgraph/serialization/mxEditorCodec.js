@@ -9,23 +9,23 @@ import mxWindow from '../util/gui/mxWindow';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
 
+/**
+ * Class: mxEditorCodec
+ *
+ * Codec for <mxEditor>s. This class is created and registered
+ * dynamically at load time and used implicitly via <mxCodec>
+ * and the <mxCodecRegistry>.
+ *
+ * Transient Fields:
+ *
+ * - modified
+ * - lastSnapshot
+ * - ignoredChanges
+ * - undoManager
+ * - graphContainer
+ * - toolbarContainer
+ */
 class mxEditorCodec extends mxObjectCodec {
-  /**
-   * Class: mxEditorCodec
-   *
-   * Codec for <mxEditor>s. This class is created and registered
-   * dynamically at load time and used implicitly via <mxCodec>
-   * and the <mxCodecRegistry>.
-   *
-   * Transient Fields:
-   *
-   * - modified
-   * - lastSnapshot
-   * - ignoredChanges
-   * - undoManager
-   * - graphContainer
-   * - toolbarContainer
-   */
   constructor() {
     super(new mxEditor(), [
       'modified',

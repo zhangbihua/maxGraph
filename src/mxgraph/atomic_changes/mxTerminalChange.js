@@ -1,14 +1,14 @@
+/**
+ * Class: mxTerminalChange
+ *
+ * Action to change a terminal in a model.
+ *
+ * Constructor: mxTerminalChange
+ *
+ * Constructs a change of a terminal in the
+ * specified model.
+ */
 class mxTerminalChange {
-  /**
-   * Class: mxTerminalChange
-   *
-   * Action to change a terminal in a model.
-   *
-   * Constructor: mxTerminalChange
-   *
-   * Constructs a change of a terminal in the
-   * specified model.
-   */
   constructor(model, cell, terminal, source) {
     this.model = model;
     this.cell = cell;
@@ -36,5 +36,5 @@ class mxTerminalChange {
 }
 
 export default mxTerminalChange;
-import("../io/mxTerminalChangeCodec");
+import("../serialization/mxTerminalChangeCodec");
 

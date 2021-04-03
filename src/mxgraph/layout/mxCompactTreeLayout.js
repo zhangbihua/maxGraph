@@ -7,12 +7,37 @@
 import mxDictionary from '../util/datatypes/mxDictionary';
 import mxPoint from '../util/datatypes/mxPoint';
 import mxGraphLayout from './mxGraphLayout';
-import mxCellPath from "../view/cell/mxCellPath";
-import mxRectangle from "../util/datatypes/mxRectangle";
-import mxUtils from "../util/mxUtils";
-import WeightedCellSorter from "./WeightedCellSorter";
+import mxCellPath from '../view/cell/mxCellPath';
+import mxRectangle from '../util/datatypes/mxRectangle';
+import mxUtils from '../util/mxUtils';
+import WeightedCellSorter from './WeightedCellSorter';
 
+/**
+ * Class: mxCompactTreeLayout
+ *
+ * Extends <mxGraphLayout> to implement a compact tree (Moen) algorithm. This
+ * layout is suitable for graphs that have no cycles (trees). Vertices that are
+ * not connected to the tree will be ignored by this layout.
+ *
+ * Example:
+ *
+ * (code)
+ * let layout = new mxCompactTreeLayout(graph);
+ * layout.execute(graph.getDefaultParent());
+ * (end)
+ *
+ * Constructor: mxCompactTreeLayout
+ *
+ * Constructs a new compact tree layout for the specified graph
+ * and orientation.
+ */
 class mxCompactTreeLayout extends mxGraphLayout {
+  constructor(graph, horizontal, invert) {
+    super(graph);
+    this.horizontal = horizontal != null ? horizontal : true;
+    this.invert = invert != null ? invert : false;
+  }
+
   /**
    * Variable: horizontal
    *
@@ -199,31 +224,6 @@ class mxCompactTreeLayout extends mxGraphLayout {
    * , this value is only exposed to assist with post-processing functionality
    */
   node = null;
-
-  /**
-   * Class: mxCompactTreeLayout
-   *
-   * Extends <mxGraphLayout> to implement a compact tree (Moen) algorithm. This
-   * layout is suitable for graphs that have no cycles (trees). Vertices that are
-   * not connected to the tree will be ignored by this layout.
-   *
-   * Example:
-   *
-   * (code)
-   * let layout = new mxCompactTreeLayout(graph);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * Constructor: mxCompactTreeLayout
-   *
-   * Constructs a new compact tree layout for the specified graph
-   * and orientation.
-   */
-  constructor(graph, horizontal, invert) {
-    super(graph);
-    this.horizontal = horizontal != null ? horizontal : true;
-    this.invert = invert != null ? invert : false;
-  }
 
   /**
    * Function: isVertexIgnored

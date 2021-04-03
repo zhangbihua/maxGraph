@@ -4,18 +4,18 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+/**
+ * Class: mxHierarchicalLayoutStage
+ *
+ * The specific layout interface for hierarchical layouts. It adds a
+ * <code>run</code> method with a parameter for the hierarchical layout model
+ * that is shared between the layout stages.
+ *
+ * Constructor: mxHierarchicalLayoutStage
+ *
+ * Constructs a new hierarchical layout stage.
+ */
 class mxHierarchicalLayoutStage {
-  /**
-   * Class: mxHierarchicalLayoutStage
-   *
-   * The specific layout interface for hierarchical layouts. It adds a
-   * <code>run</code> method with a parameter for the hierarchical layout model
-   * that is shared between the layout stages.
-   *
-   * Constructor: mxHierarchicalLayoutStage
-   *
-   * Constructs a new hierarchical layout stage.
-   */
   constructor() {}
 
   /**

@@ -13,7 +13,7 @@ import mxDictionary from './datatypes/mxDictionary';
 import mxCellPath from '../view/cell/mxCellPath';
 import mxRectangle from './datatypes/mxRectangle';
 import mxTemporaryCellStates from '../view/cell/mxTemporaryCellStates';
-import mxCodec from '../io/mxCodec';
+import mxCodec from '../serialization/mxCodec';
 import mxWindow from './gui/mxWindow';
 import mxResources from './mxResources';
 import mxEvent from './event/mxEvent';

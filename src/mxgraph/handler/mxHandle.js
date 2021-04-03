@@ -12,7 +12,29 @@ import mxRectangleShape from '../shape/node/mxRectangleShape';
 import mxConstants from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 
+/**
+ * Class: mxHandle
+ *
+ * Implements a single custom handle for vertices.
+ *
+ * Constructor: mxHandle
+ *
+ * Constructs a new handle for the given state.
+ *
+ * Parameters:
+ *
+ * state - <mxCellState> of the cell to be handled.
+ */
 class mxHandle {
+  constructor(state, cursor, image, shape) {
+    this.graph = state.view.graph;
+    this.state = state;
+    this.cursor = cursor != null ? cursor : this.cursor;
+    this.image = image != null ? image : this.image;
+    this.shape = shape != null ? shape : null;
+    this.init();
+  }
+
   /**
    * Variable: cursor
    *
@@ -33,28 +55,6 @@ class mxHandle {
    * Default is false.
    */
   ignoreGrid = false;
-
-  /**
-   * Class: mxHandle
-   *
-   * Implements a single custom handle for vertices.
-   *
-   * Constructor: mxHandle
-   *
-   * Constructs a new handle for the given state.
-   *
-   * Parameters:
-   *
-   * state - <mxCellState> of the cell to be handled.
-   */
-  constructor(state, cursor, image, shape) {
-    this.graph = state.view.graph;
-    this.state = state;
-    this.cursor = cursor != null ? cursor : this.cursor;
-    this.image = image != null ? image : this.image;
-    this.shape = shape != null ? shape : null;
-    this.init();
-  }
 
   /**
    * Function: getPosition

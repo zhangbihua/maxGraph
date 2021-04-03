@@ -1,14 +1,14 @@
+/**
+ * Class: mxRootChange
+ *
+ * Action to change the root in a model.
+ *
+ * Constructor: mxRootChange
+ *
+ * Constructs a change of the root in the
+ * specified model.
+ */
 class mxRootChange {
-  /**
-   * Class: mxRootChange
-   *
-   * Action to change the root in a model.
-   *
-   * Constructor: mxRootChange
-   *
-   * Constructs a change of the root in the
-   * specified model.
-   */
   constructor(model, root) {
     this.model = model;
     this.root = root;
@@ -28,5 +28,4 @@ class mxRootChange {
 }
 
 export default mxRootChange;
-import("../io/mxRootChangeCodec");
-
+import('../serialization/mxRootChangeCodec');

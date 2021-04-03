@@ -10,7 +10,67 @@ import mxMouseEvent from '../util/event/mxMouseEvent';
 import mxClient from '../mxClient';
 import mxRectangle from '../util/datatypes/mxRectangle';
 
+/**
+ * Class: mxRubberband
+ *
+ * Event handler that selects rectangular regions. This is not built-into
+ * <mxGraph>. To enable rubberband selection in a graph, use the following code.
+ *
+ * Example:
+ *
+ * (code)
+ * let rubberband = new mxRubberband(graph);
+ * (end)
+ *
+ * Constructor: mxRubberband
+ *
+ * Constructs an event handler that selects rectangular regions in the graph
+ * using rubberband selection.
+ */
 class mxRubberband {
+  constructor(graph) {
+    if (graph != null) {
+      this.graph = graph;
+      this.graph.addMouseListener(this);
+
+      // Handles force rubberband event
+      this.forceRubberbandHandler = (sender, evt) => {
+        const evtName = evt.getProperty('eventName');
+        const me = evt.getProperty('event');
+
+        if (evtName === mxEvent.MOUSE_DOWN && this.isForceRubberbandEvent(me)) {
+          const offset = mxUtils.getOffset(this.graph.container);
+          const origin = mxUtils.getScrollOrigin(this.graph.container);
+          origin.x -= offset.x;
+          origin.y -= offset.y;
+          this.start(me.getX() + origin.x, me.getY() + origin.y);
+          me.consume(false);
+        }
+      };
+
+      this.graph.addListener(
+        mxEvent.FIRE_MOUSE_EVENT,
+        this.forceRubberbandHandler
+      );
+
+      // Repaints the marquee after autoscroll
+      this.panHandler = mxUtils.bind(this, () => {
+        this.repaint();
+      });
+
+      this.graph.addListener(mxEvent.PAN, this.panHandler);
+
+      // Does not show menu if any touch gestures take place after the trigger
+      this.gestureHandler = (sender, eo) => {
+        if (this.first != null) {
+          this.reset();
+        }
+      };
+
+      this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
+    }
+  }
+
   /**
    * Variable: defaultOpacity
    *
@@ -60,66 +120,6 @@ class mxRubberband {
    * Optional fade out effect. Default is false.
    */
   fadeOut = false;
-
-  /**
-   * Class: mxRubberband
-   *
-   * Event handler that selects rectangular regions. This is not built-into
-   * <mxGraph>. To enable rubberband selection in a graph, use the following code.
-   *
-   * Example:
-   *
-   * (code)
-   * let rubberband = new mxRubberband(graph);
-   * (end)
-   *
-   * Constructor: mxRubberband
-   *
-   * Constructs an event handler that selects rectangular regions in the graph
-   * using rubberband selection.
-   */
-  constructor(graph) {
-    if (graph != null) {
-      this.graph = graph;
-      this.graph.addMouseListener(this);
-
-      // Handles force rubberband event
-      this.forceRubberbandHandler = (sender, evt) => {
-        const evtName = evt.getProperty('eventName');
-        const me = evt.getProperty('event');
-
-        if (evtName === mxEvent.MOUSE_DOWN && this.isForceRubberbandEvent(me)) {
-          const offset = mxUtils.getOffset(this.graph.container);
-          const origin = mxUtils.getScrollOrigin(this.graph.container);
-          origin.x -= offset.x;
-          origin.y -= offset.y;
-          this.start(me.getX() + origin.x, me.getY() + origin.y);
-          me.consume(false);
-        }
-      };
-
-      this.graph.addListener(
-        mxEvent.FIRE_MOUSE_EVENT,
-        this.forceRubberbandHandler
-      );
-
-      // Repaints the marquee after autoscroll
-      this.panHandler = mxUtils.bind(this, () => {
-        this.repaint();
-      });
-
-      this.graph.addListener(mxEvent.PAN, this.panHandler);
-
-      // Does not show menu if any touch gestures take place after the trigger
-      this.gestureHandler = (sender, eo) => {
-        if (this.first != null) {
-          this.reset();
-        }
-      };
-
-      this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
-    }
-  }
 
   /**
    * Function: isEnabled

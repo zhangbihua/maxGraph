@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxCell from "./mxCell";
+import mxCell from './mxCell';
 
 /**
  * Class: mxCellPath
@@ -19,7 +19,7 @@ class mxCellPath {
   static PATH_SEPARATOR = '.';
 
   constructor() {
-    throw new Error("Static class can't be instantiated!")
+    throw new Error("Static class can't be instantiated!");
   }
 
   /**

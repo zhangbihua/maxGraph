@@ -6,9 +6,33 @@
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxConstants from '../util/mxConstants';
 import mxRectangleShape from './node/mxRectangleShape';
-import mxUtils from "../util/mxUtils";
+import mxUtils from '../util/mxUtils';
 
+/**
+ * Class: mxLabel
+ *
+ * Extends <mxShape> to implement an image shape with a label.
+ * This shape is registered under <mxConstants.SHAPE_LABEL> in
+ * <mxCellRenderer>.
+ *
+ * Constructor: mxLabel
+ *
+ * Constructs a new label shape.
+ *
+ * Parameters:
+ *
+ * bounds - <mxRectangle> that defines the bounds. This is stored in
+ * <mxShape.bounds>.
+ * fill - String that defines the fill color. This is stored in <fill>.
+ * stroke - String that defines the stroke color. This is stored in <stroke>.
+ * strokewidth - Optional integer that defines the stroke width. Default is
+ * 1. This is stored in <strokewidth>.
+ */
 class mxLabel extends mxRectangleShape {
+  constructor(bounds, fill, stroke, strokewidth) {
+    super(bounds, fill, stroke, strokewidth);
+  }
+
   /**
    * Variable: imageSize
    *
@@ -37,30 +61,6 @@ class mxLabel extends mxRectangleShape {
    * Default spacing between image and indicator. Default is 2.
    */
   indicatorSpacing = 2;
-
-  /**
-   * Class: mxLabel
-   *
-   * Extends <mxShape> to implement an image shape with a label.
-   * This shape is registered under <mxConstants.SHAPE_LABEL> in
-   * <mxCellRenderer>.
-   *
-   * Constructor: mxLabel
-   *
-   * Constructs a new label shape.
-   *
-   * Parameters:
-   *
-   * bounds - <mxRectangle> that defines the bounds. This is stored in
-   * <mxShape.bounds>.
-   * fill - String that defines the fill color. This is stored in <fill>.
-   * stroke - String that defines the stroke color. This is stored in <stroke>.
-   * strokewidth - Optional integer that defines the stroke width. Default is
-   * 1. This is stored in <strokewidth>.
-   */
-  constructor(bounds, fill, stroke, strokewidth) {
-    super(bounds, fill, stroke, strokewidth);
-  }
 
   /**
    * Function: init

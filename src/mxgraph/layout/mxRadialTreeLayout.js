@@ -5,7 +5,29 @@
  */
 import mxCompactTreeLayout from './mxCompactTreeLayout';
 
+/**
+ * Class: mxRadialTreeLayout
+ *
+ * Extends <mxGraphLayout> to implement a radial tree algorithm. This
+ * layout is suitable for graphs that have no cycles (trees). Vertices that are
+ * not connected to the tree will be ignored by this layout.
+ *
+ * Example:
+ *
+ * (code)
+ * let layout = new mxRadialTreeLayout(graph);
+ * layout.execute(graph.getDefaultParent());
+ * (end)
+ *
+ * Constructor: mxRadialTreeLayout
+ *
+ * Constructs a new radial tree layout for the specified graph
+ */
 class mxRadialTreeLayout extends mxCompactTreeLayout {
+  constructor(graph) {
+    super(graph, false);
+  }
+
   /**
    * Variable: angleOffset
    *
@@ -97,28 +119,6 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
    * Array of vertices on each row
    */
   row = [];
-
-  /**
-   * Class: mxRadialTreeLayout
-   *
-   * Extends <mxGraphLayout> to implement a radial tree algorithm. This
-   * layout is suitable for graphs that have no cycles (trees). Vertices that are
-   * not connected to the tree will be ignored by this layout.
-   *
-   * Example:
-   *
-   * (code)
-   * let layout = new mxRadialTreeLayout(graph);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * Constructor: mxRadialTreeLayout
-   *
-   * Constructs a new radial tree layout for the specified graph
-   */
-  constructor(graph) {
-    super(graph, false);
-  }
 
   /**
    * Function: isVertexIgnored

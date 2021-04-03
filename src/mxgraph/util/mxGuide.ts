@@ -5,10 +5,10 @@
  */
 
 import mxConstants from './mxConstants';
-import mxPoint from "./datatypes/mxPoint";
-import mxPolyline from "../shape/edge/mxPolyline";
-import mxCellState from "./datatypes/mxCellState";
-import mxShape from "../shape/mxShape";
+import mxPoint from './datatypes/mxPoint';
+import mxPolyline from '../shape/edge/mxPolyline';
+import mxCellState from './datatypes/mxCellState';
+import mxShape from '../shape/mxShape';
 import mxRectangle from './datatypes/mxRectangle';
 import mxGraph from '../view/graph/mxGraph';
 import mxEventObject from './event/mxEventObject';
@@ -79,9 +79,7 @@ class mxGuide {
    */
   tolerance: number = 2;
 
-  constructor(graph: mxGraph,
-              states: mxCellState[]) {
-
+  constructor(graph: mxGraph, states: mxCellState[]) {
     this.graph = graph;
     this.setStates(states);
   }
@@ -101,7 +99,7 @@ class mxGuide {
    * Returns true if the guide should be enabled for the given native event. This
    * implementation always returns true.
    */
-  isEnabledForEvent(evt: mxEventObject | null=null): boolean {
+  isEnabledForEvent(evt: mxEventObject | null = null): boolean {
     return true;
   }
 
@@ -127,7 +125,8 @@ class mxGuide {
    *
    * horizontal - Boolean that specifies which guide should be created.
    */
-  createGuideShape(horizontal: boolean=false) {  // TODO: Should vertical guides be supported here?? ============================
+  createGuideShape(horizontal: boolean = false) {
+    // TODO: Should vertical guides be supported here?? ============================
     const guide = new mxPolyline(
       [],
       mxConstants.GUIDE_COLOR,
@@ -142,7 +141,7 @@ class mxGuide {
    *
    * Returns true if the given state should be ignored.
    */
-  isStateIgnored(state: mxCellState | null=null) {
+  isStateIgnored(state: mxCellState | null = null) {
     return false;
   }
 
@@ -151,10 +150,12 @@ class mxGuide {
    *
    * Moves the <bounds> by the given <mxPoint> and return the snapped point.
    */
-  move(bounds: mxRectangle | null=null,
-       delta: mxPoint | null=null,
-       gridEnabled: boolean=false,
-       clone: boolean=false) {
+  move(
+    bounds: mxRectangle | null = null,
+    delta: mxPoint | null = null,
+    gridEnabled: boolean = false,
+    clone: boolean = false
+  ) {
     if (
       this.states != null &&
       (this.horizontal || this.vertical) &&
@@ -218,7 +219,7 @@ class mxGuide {
         }
 
         overrideX = overrideX || override;
-      }
+      };
 
       // Snaps the top, middle or bottom to the given y-coordinate
       const snapY = (y, state, centerAlign) => {
@@ -257,7 +258,7 @@ class mxGuide {
         }
 
         overrideY = overrideY || override;
-      }
+      };
 
       for (let i = 0; i < this.states.length; i += 1) {
         const state = this.states[i];
@@ -367,12 +368,13 @@ class mxGuide {
    *
    * Rounds to pixels for virtual states (eg. page guides)
    */
-  getDelta(bounds: mxRectangle,
-           stateX: mxCellState | null=null,
-           dx: number,
-           stateY: mxCellState | null=null,
-           dy: number): mxPoint {
-
+  getDelta(
+    bounds: mxRectangle,
+    stateX: mxCellState | null = null,
+    dx: number,
+    stateY: mxCellState | null = null,
+    dy: number
+  ): mxPoint {
     const s = this.graph.view.scale;
     if (this.rounded || (stateX != null && stateX.cell == null)) {
       dx = Math.round((bounds.x + dx) / s) * s - bounds.x;
@@ -388,8 +390,7 @@ class mxGuide {
    *
    * Returns the color for the given state.
    */
-  getGuideColor(state: mxCellState,
-                horizontal: boolean | null): string {
+  getGuideColor(state: mxCellState, horizontal: boolean | null): string {
     return mxConstants.GUIDE_COLOR;
   }
 

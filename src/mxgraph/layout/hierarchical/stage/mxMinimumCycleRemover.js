@@ -6,29 +6,29 @@
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
 import mxUtils from '../../../util/mxUtils';
 
+/**
+ * Class: mxMinimumCycleRemover
+ *
+ * An implementation of the first stage of the Sugiyama layout. Straightforward
+ * longest path calculation of layer assignment
+ *
+ * Constructor: mxMinimumCycleRemover
+ *
+ * Creates a cycle remover for the given internal model.
+ */
 class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
+  constructor(layout) {
+    super();
+
+    this.layout = layout;
+  }
+
   /**
    * Variable: layout
    *
    * Reference to the enclosing <mxHierarchicalLayout>.
    */
   layout = null;
-
-  /**
-   * Class: mxMinimumCycleRemover
-   *
-   * An implementation of the first stage of the Sugiyama layout. Straightforward
-   * longest path calculation of layer assignment
-   *
-   * Constructor: mxMinimumCycleRemover
-   *
-   * Creates a cycle remover for the given internal model.
-   */
-  constructor(layout) {
-    super();
-
-    this.layout = layout;
-  }
 
   /**
    * Function: execute

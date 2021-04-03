@@ -10,7 +10,7 @@ import mxPoint from '../datatypes/mxPoint';
 import mxPopupMenu from './mxPopupMenu';
 import mxEventSource from '../event/mxEventSource';
 import mxEventObject from '../event/mxEventObject';
-import mxClient from "../../mxClient";
+import mxClient from '../../mxClient';
 
 class mxToolbar extends mxEventSource {
   /**

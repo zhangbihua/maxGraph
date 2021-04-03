@@ -19,17 +19,29 @@ import mxImage from '../../util/image/mxImage';
 class mxOutline {
   // TODO: Document me!!
   sizer: mxRectangleShape;
+
   selectionBorder: mxRectangleShape;
+
   updateHandler: Function | null;
+
   refreshHandler: Function | null;
+
   panHandler: Function | null;
+
   active: boolean | null;
+
   bounds: mxRectangle | null;
+
   zoom: number;
+
   startX: number;
+
   startY: number;
+
   dx0: number;
+
   dy0: number;
+
   index: number;
 
   /**
@@ -52,9 +64,9 @@ class mxOutline {
    * Renderhint to be used for the outline graph. Default is faster.
    */
   graphRenderHint:
-      mxConstants.RENDERING_HINT_EXACT |
-      mxConstants.RENDERING_HINT_FASTER |
-      mxConstants.RENDERING_HINT_FASTEST = mxConstants.RENDERING_HINT_FASTER;
+    | mxConstants.RENDERING_HINT_EXACT
+    | mxConstants.RENDERING_HINT_FASTER
+    | mxConstants.RENDERING_HINT_FASTEST = mxConstants.RENDERING_HINT_FASTER;
 
   /**
    * Variable: enabled
@@ -171,8 +183,7 @@ class mxOutline {
    * source - <mxGraph> to create the outline for.
    * container - DOM node that will contain the outline.
    */
-  constructor(source: mxGraph,
-              container: HTMLElement | null=null) {
+  constructor(source: mxGraph, container: HTMLElement | null = null) {
     this.source = source;
 
     if (container != null) {
@@ -419,7 +430,7 @@ class mxOutline {
    *
    * Updates the outline.
    */
-  update(revalidate: boolean=false) {
+  update(revalidate: boolean = false) {
     if (
       this.source != null &&
       this.source.container != null &&
@@ -576,12 +587,18 @@ class mxOutline {
       const tol = !mxEvent.isMouseEvent(me.getEvent())
         ? this.source.tolerance
         : 0;
-      const hit = tol > 0
-          ? new mxRectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol)
+      const hit =
+        tol > 0
+          ? new mxRectangle(
+              me.getGraphX() - tol,
+              me.getGraphY() - tol,
+              2 * tol,
+              2 * tol
+            )
           : null;
       this.zoom =
-          me.isSource(this.sizer)
-          || (hit != null && mxUtils.intersects(shape.bounds, hit));
+        me.isSource(this.sizer) ||
+        (hit != null && mxUtils.intersects(shape.bounds, hit));
       this.startX = me.getX();
       this.startY = me.getY();
       this.active = true;

@@ -13,7 +13,27 @@ import mxRectangle from '../util/datatypes/mxRectangle';
 import mxUtils from '../util/mxUtils';
 import mxClient from '../mxClient';
 
+/**
+ * Class: mxElbowEdgeHandler
+ *
+ * Graph event handler that reconnects edges and modifies control points and
+ * the edge label location. Uses <mxTerminalMarker> for finding and
+ * highlighting new source and target vertices. This handler is automatically
+ * created in <mxGraph.createHandler>. It extends <mxEdgeHandler>.
+ *
+ * Constructor: mxEdgeHandler
+ *
+ * Constructs an edge handler for the specified <mxCellState>.
+ *
+ * Parameters:
+ *
+ * state - <mxCellState> of the cell to be modified.
+ */
 class mxElbowEdgeHandler extends mxEdgeHandler {
+  constructor(state) {
+    super(state);
+  }
+
   /**
    * Specifies if a double click on the middle handle should call
    * <mxGraph.flipEdge>. Default is true.
@@ -30,26 +50,6 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    */
   doubleClickOrientationResource =
     mxClient.language !== 'none' ? 'doubleClickOrientation' : '';
-
-  /**
-   * Class: mxElbowEdgeHandler
-   *
-   * Graph event handler that reconnects edges and modifies control points and
-   * the edge label location. Uses <mxTerminalMarker> for finding and
-   * highlighting new source and target vertices. This handler is automatically
-   * created in <mxGraph.createHandler>. It extends <mxEdgeHandler>.
-   *
-   * Constructor: mxEdgeHandler
-   *
-   * Constructs an edge handler for the specified <mxCellState>.
-   *
-   * Parameters:
-   *
-   * state - <mxCellState> of the cell to be modified.
-   */
-  constructor(state) {
-    super(state);
-  }
 
   /**
    * Function: createBends

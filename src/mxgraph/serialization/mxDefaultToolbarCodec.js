@@ -8,15 +8,15 @@ import mxObjectCodec from './mxObjectCodec';
 import mxDefaultToolbar from '../editor/mxDefaultToolbar';
 import mxCodecRegistry from './mxCodecRegistry';
 
+/**
+ * Class: mxDefaultToolbarCodec
+ *
+ * Custom codec for configuring <mxDefaultToolbar>s. This class is created
+ * and registered dynamically at load time and used implicitly via
+ * <mxCodec> and the <mxCodecRegistry>. This codec only reads configuration
+ * data for existing toolbars handlers, it does not encode or create toolbars.
+ */
 class mxDefaultToolbarCodec extends mxObjectCodec {
-  /**
-   * Class: mxDefaultToolbarCodec
-   *
-   * Custom codec for configuring <mxDefaultToolbar>s. This class is created
-   * and registered dynamically at load time and used implicitly via
-   * <mxCodec> and the <mxCodecRegistry>. This codec only reads configuration
-   * data for existing toolbars handlers, it does not encode or create toolbars.
-   */
   constructor() {
     super(new mxDefaultToolbar());
   }

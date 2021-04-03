@@ -6,17 +6,81 @@
 import mxConstants from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 import mxRectangle from '../util/datatypes/mxRectangle';
-import mxCellState from "../util/datatypes/mxCellState";
-import mxGraph from "../view/graph/mxGraph";
-import mxShape from "../shape/mxShape";
+import mxCellState from '../util/datatypes/mxCellState';
+import mxGraph from '../view/graph/mxGraph';
+import mxShape from '../shape/mxShape';
 
+/**
+ * Class: mxCellHighlight
+ *
+ * A helper class to highlight cells. Here is an example for a given cell.
+ *
+ * (code)
+ * let highlight = new mxCellHighlight(graph, '#ff0000', 2);
+ * highlight.highlight(graph.view.getState(cell)));
+ * (end)
+ *
+ * Constructor: mxCellHighlight
+ *
+ * Constructs a cell highlight.
+ */
 class mxCellHighlight {
+  constructor(
+    graph: mxGraph | null = null,
+    highlightColor: string = mxConstants.DEFAULT_VALID_COLOR,
+    strokeWidth: number = mxConstants.HIGHLIGHT_STROKEWIDTH,
+    dashed: boolean = false
+  ) {
+    if (graph != null) {
+      this.graph = graph;
+      this.highlightColor = highlightColor;
+      this.strokeWidth = strokeWidth;
+      this.dashed = dashed;
+      this.opacity = mxConstants.HIGHLIGHT_OPACITY;
+
+      // Updates the marker if the graph changes
+      this.repaintHandler = () => {
+        // Updates reference to state
+        if (this.state != null) {
+          const tmp = this.graph.view.getState(this.state.cell);
+
+          if (tmp == null) {
+            this.hide();
+          } else {
+            this.state = tmp;
+            this.repaint();
+          }
+        }
+      };
+
+      this.graph.getView().addListener(mxEvent.SCALE, this.repaintHandler);
+      this.graph.getView().addListener(mxEvent.TRANSLATE, this.repaintHandler);
+      this.graph
+        .getView()
+        .addListener(mxEvent.SCALE_AND_TRANSLATE, this.repaintHandler);
+      this.graph.getModel().addListener(mxEvent.CHANGE, this.repaintHandler);
+
+      // Hides the marker if the current root changes
+      this.resetHandler = () => {
+        this.hide();
+      };
+
+      this.graph.getView().addListener(mxEvent.DOWN, this.resetHandler);
+      this.graph.getView().addListener(mxEvent.UP, this.resetHandler);
+    }
+  }
+
   // TODO: Document me!!
   highlightColor: string | null;
+
   strokeWidth: number | null;
+
   dashed: boolean | null;
+
   opacity: number | null;
+
   repaintHandler: Function | null;
+
   shape: mxShape | null;
 
   /**
@@ -56,64 +120,6 @@ class mxCellHighlight {
    * should be hidden.
    */
   resetHandler: Function | null = null;
-
-  /**
-   * Class: mxCellHighlight
-   *
-   * A helper class to highlight cells. Here is an example for a given cell.
-   *
-   * (code)
-   * let highlight = new mxCellHighlight(graph, '#ff0000', 2);
-   * highlight.highlight(graph.view.getState(cell)));
-   * (end)
-   *
-   * Constructor: mxCellHighlight
-   *
-   * Constructs a cell highlight.
-   */
-  constructor(graph: mxGraph | null=null,
-              highlightColor: string=mxConstants.DEFAULT_VALID_COLOR,
-              strokeWidth: number=mxConstants.HIGHLIGHT_STROKEWIDTH,
-              dashed: boolean=false) {
-
-    if (graph != null) {
-      this.graph = graph;
-      this.highlightColor = highlightColor;
-      this.strokeWidth = strokeWidth;
-      this.dashed = dashed;
-      this.opacity = mxConstants.HIGHLIGHT_OPACITY;
-
-      // Updates the marker if the graph changes
-      this.repaintHandler = () => {
-        // Updates reference to state
-        if (this.state != null) {
-          const tmp = this.graph.view.getState(this.state.cell);
-
-          if (tmp == null) {
-            this.hide();
-          } else {
-            this.state = tmp;
-            this.repaint();
-          }
-        }
-      };
-
-      this.graph.getView().addListener(mxEvent.SCALE, this.repaintHandler);
-      this.graph.getView().addListener(mxEvent.TRANSLATE, this.repaintHandler);
-      this.graph
-        .getView()
-        .addListener(mxEvent.SCALE_AND_TRANSLATE, this.repaintHandler);
-      this.graph.getModel().addListener(mxEvent.CHANGE, this.repaintHandler);
-
-      // Hides the marker if the current root changes
-      this.resetHandler = () => {
-        this.hide();
-      };
-
-      this.graph.getView().addListener(mxEvent.DOWN, this.resetHandler);
-      this.graph.getView().addListener(mxEvent.UP, this.resetHandler);
-    }
-  }
 
   /**
    * Function: setHighlightColor
@@ -186,7 +192,7 @@ class mxCellHighlight {
    *
    * Returns the stroke width.
    */
-  getStrokeWidth(state: mxCellState | null=null): number {
+  getStrokeWidth(state: mxCellState | null = null): number {
     return this.strokeWidth;
   }
 
@@ -259,9 +265,7 @@ class mxCellHighlight {
    *
    * Returns true if this highlight is at the given position.
    */
-  isHighlightAt(x: number,
-                y: number): boolean {
-
+  isHighlightAt(x: number, y: number): boolean {
     let hit = false;
     if (this.shape != null && document.elementFromPoint != null) {
       let elt: Node & ParentNode = document.elementFromPoint(x, y);

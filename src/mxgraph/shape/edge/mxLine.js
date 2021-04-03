@@ -5,34 +5,27 @@
  */
 import mxShape from '../mxShape';
 
+/**
+ * Class: mxLine
+ *
+ * Extends <mxShape> to implement a horizontal line shape.
+ * This shape is registered under <mxConstants.SHAPE_LINE> in
+ * <mxCellRenderer>.
+ *
+ * Constructor: mxLine
+ *
+ * Constructs a new line shape.
+ *
+ * Parameters:
+ *
+ * bounds - <mxRectangle> that defines the bounds. This is stored in
+ * <mxShape.bounds>.
+ * stroke - String that defines the stroke color. Default is 'black'. This is
+ * stored in <stroke>.
+ * strokewidth - Optional integer that defines the stroke width. Default is
+ * 1. This is stored in <strokewidth>.
+ */
 class mxLine extends mxShape {
-  /**
-   * Function: vertical
-   *
-   * Whether to paint a vertical line.
-   */
-  vertical = false;
-
-  /**
-   * Class: mxLine
-   *
-   * Extends <mxShape> to implement a horizontal line shape.
-   * This shape is registered under <mxConstants.SHAPE_LINE> in
-   * <mxCellRenderer>.
-   *
-   * Constructor: mxLine
-   *
-   * Constructs a new line shape.
-   *
-   * Parameters:
-   *
-   * bounds - <mxRectangle> that defines the bounds. This is stored in
-   * <mxShape.bounds>.
-   * stroke - String that defines the stroke color. Default is 'black'. This is
-   * stored in <stroke>.
-   * strokewidth - Optional integer that defines the stroke width. Default is
-   * 1. This is stored in <strokewidth>.
-   */
   constructor(bounds, stroke, strokewidth, vertical) {
     super();
     this.bounds = bounds;
@@ -40,6 +33,13 @@ class mxLine extends mxShape {
     this.strokewidth = strokewidth != null ? strokewidth : 1;
     this.vertical = vertical != null ? vertical : this.vertical;
   }
+
+  /**
+   * Function: vertical
+   *
+   * Whether to paint a vertical line.
+   */
+  vertical = false;
 
   /**
    * Function: paintVertexShape

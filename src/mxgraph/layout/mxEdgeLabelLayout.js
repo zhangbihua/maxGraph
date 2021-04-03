@@ -8,30 +8,30 @@ import mxPoint from '../util/datatypes/mxPoint';
 import mxGraphLayout from './mxGraphLayout';
 import mxUtils from '../util/mxUtils';
 
+/**
+ * Class: mxEdgeLabelLayout
+ *
+ * Extends <mxGraphLayout> to implement an edge label layout. This layout
+ * makes use of cell states, which means the graph must be validated in
+ * a graph view (so that the label bounds are available) before this layout
+ * can be executed.
+ *
+ * Example:
+ *
+ * (code)
+ * let layout = new mxEdgeLabelLayout(graph);
+ * layout.execute(graph.getDefaultParent());
+ * (end)
+ *
+ * Constructor: mxEdgeLabelLayout
+ *
+ * Constructs a new edge label layout.
+ *
+ * Arguments:
+ *
+ * graph - <mxGraph> that contains the cells.
+ */
 class mxEdgeLabelLayout extends mxGraphLayout {
-  /**
-   * Class: mxEdgeLabelLayout
-   *
-   * Extends <mxGraphLayout> to implement an edge label layout. This layout
-   * makes use of cell states, which means the graph must be validated in
-   * a graph view (so that the label bounds are available) before this layout
-   * can be executed.
-   *
-   * Example:
-   *
-   * (code)
-   * let layout = new mxEdgeLabelLayout(graph);
-   * layout.execute(graph.getDefaultParent());
-   * (end)
-   *
-   * Constructor: mxEdgeLabelLayout
-   *
-   * Constructs a new edge label layout.
-   *
-   * Arguments:
-   *
-   * graph - <mxGraph> that contains the cells.
-   */
   constructor(graph, radius) {
     super(graph);
   }

@@ -1,14 +1,14 @@
+/**
+ * Class: mxCollapseChange
+ *
+ * Action to change a cell's collapsed state in a model.
+ *
+ * Constructor: mxCollapseChange
+ *
+ * Constructs a change of a collapsed state in the
+ * specified model.
+ */
 class mxCollapseChange {
-  /**
-   * Class: mxCollapseChange
-   *
-   * Action to change a cell's collapsed state in a model.
-   *
-   * Constructor: mxCollapseChange
-   *
-   * Constructs a change of a collapsed state in the
-   * specified model.
-   */
   constructor(model, cell, collapsed) {
     this.model = model;
     this.cell = cell;
@@ -34,5 +34,4 @@ class mxCollapseChange {
 }
 
 export default mxCollapseChange;
-import("../io/mxGenericChangeCodec");
-
+import('../serialization/mxGenericChangeCodec');
