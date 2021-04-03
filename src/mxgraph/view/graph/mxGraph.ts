@@ -7286,7 +7286,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> that represents the root.
    */
-  getTranslateForRoot(cell: mxCell) {
+  getTranslateForRoot(cell: mxCell): any {
     return null;
   }
 

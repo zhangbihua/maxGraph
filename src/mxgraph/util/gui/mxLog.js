@@ -9,17 +9,17 @@ import mxEvent from '../event/mxEvent';
 import mxUtils from '../mxUtils';
 import mxWindow from './mxWindow';
 
-const mxLog = {
-  /**
-   * Class: mxLog
-   *
-   * A singleton class that implements a simple console.
-   *
-   * Variable: consoleName
-   *
-   * Specifies the name of the console window. Default is 'Console'.
-   */
-  consoleName: 'Console',
+/**
+ * Class: mxLog
+ *
+ * A singleton class that implements a simple console.
+ *
+ * Variable: consoleName
+ *
+ * Specifies the name of the console window. Default is 'Console'.
+ */
+class mxLog {
+  static consoleName = 'Console';
 
   /**
    * Variable: TRACE
@@ -27,7 +27,7 @@ const mxLog = {
    * Specified if the output for <enter> and <leave> should be visible in the
    * console. Default is false.
    */
-  TRACE: false,
+  static TRACE = false;
 
   /**
    * Variable: DEBUG
@@ -35,7 +35,7 @@ const mxLog = {
    * Specifies if the output for <debug> should be visible in the console.
    * Default is true.
    */
-  DEBUG: true,
+  static DEBUG = true;
 
   /**
    * Variable: WARN
@@ -43,14 +43,14 @@ const mxLog = {
    * Specifies if the output for <warn> should be visible in the console.
    * Default is true.
    */
-  WARN: true,
+  static WARN = true;
 
   /**
    * Variable: buffer
    *
    * Buffer for pre-initialized content.
    */
-  buffer: '',
+  static buffer = '';
 
   /**
    * Function: init
@@ -59,7 +59,7 @@ const mxLog = {
    * point to a non-null value. This is called from within <setVisible> if the
    * log has not yet been initialized.
    */
-  init: () => {
+  static init() {
     if (mxLog.window == null && document.body != null) {
       const title = `${mxLog.consoleName} - mxGraph ${mxClient.VERSION}`;
 
@@ -103,16 +103,16 @@ const mxLog = {
       table.appendChild(tbody);
 
       // Adds various debugging buttons
-      mxLog.addButton('Info', function(evt) {
+      mxLog.addButton('Info', function (evt) {
         mxLog.info();
       });
 
-      mxLog.addButton('DOM', function(evt) {
+      mxLog.addButton('DOM', function (evt) {
         const content = mxUtils.getInnerHtml(document.body);
         mxLog.debug(content);
       });
 
-      mxLog.addButton('Trace', function(evt) {
+      mxLog.addButton('Trace', function (evt) {
         mxLog.TRACE = !mxLog.TRACE;
 
         if (mxLog.TRACE) {
@@ -122,7 +122,7 @@ const mxLog = {
         }
       });
 
-      mxLog.addButton('Copy', function(evt) {
+      mxLog.addButton('Copy', function (evt) {
         try {
           mxUtils.copy(mxLog.textarea.value);
         } catch (err) {
@@ -130,7 +130,7 @@ const mxLog = {
         }
       });
 
-      mxLog.addButton('Show', function(evt) {
+      mxLog.addButton('Show', function (evt) {
         try {
           mxUtils.popup(mxLog.textarea.value);
         } catch (err) {
@@ -138,7 +138,7 @@ const mxLog = {
         }
       });
 
-      mxLog.addButton('Clear', function(evt) {
+      mxLog.addButton('Clear', function (evt) {
         mxLog.textarea.value = '';
       });
 
@@ -191,57 +191,57 @@ const mxLog = {
         mxLog.textarea.style.height = '92px';
       }
     }
-  },
+  }
 
   /**
    * Function: info
    *
    * Writes the current navigator information to the console.
    */
-  info: () => {
+  static info() {
     mxLog.writeln(mxUtils.toString(navigator));
-  },
+  }
 
   /**
    * Function: addButton
    *
    * Adds a button to the console using the given label and function.
    */
-  addButton: (lab, funct) => {
+  static addButton(lab, funct) {
     const button = document.createElement('button');
     mxUtils.write(button, lab);
     mxEvent.addListener(button, 'click', funct);
     mxLog.td.appendChild(button);
-  },
+  }
 
   /**
    * Function: isVisible
    *
    * Returns true if the console is visible.
    */
-  isVisible: () => {
+  static isVisible() {
     if (mxLog.window != null) {
       return mxLog.window.isVisible();
     }
 
     return false;
-  },
+  }
 
   /**
    * Function: show
    *
    * Shows the console.
    */
-  show: () => {
+  static show() {
     mxLog.setVisible(true);
-  },
+  }
 
   /**
    * Function: setVisible
    *
    * Shows or hides the console.
    */
-  setVisible: visible => {
+  setVisible(visible) {
     if (mxLog.window == null) {
       mxLog.init();
     }
@@ -249,7 +249,7 @@ const mxLog = {
     if (mxLog.window != null) {
       mxLog.window.setVisible(visible);
     }
-  },
+  }
 
   /**
    * Function: enter
@@ -267,13 +267,12 @@ const mxLog = {
    * mxLog.leave('World!', t0);
    * (end)
    */
-  enter: string => {
+  static enter(string) {
     if (mxLog.TRACE) {
       mxLog.writeln(`Entering ${string}`);
-
       return new Date().getTime();
     }
-  },
+  }
 
   /**
    * Function: leave
@@ -283,12 +282,12 @@ const mxLog = {
    * between the current time and t0 in milliseconds.
    * See <enter> for an example.
    */
-  leave: (string, t0) => {
+  static leave(string, t0) {
     if (mxLog.TRACE) {
       const dt = t0 !== 0 ? ` (${new Date().getTime() - t0} ms)` : '';
       mxLog.writeln(`Leaving ${string}${dt}`);
     }
-  },
+  }
 
   /**
    * Function: debug
@@ -302,11 +301,11 @@ const mxLog = {
    * mxLog.debug('Hello, World!');
    * (end)
    */
-  debug(...args) {
+  static debug(...args) {
     if (mxLog.DEBUG) {
       mxLog.writeln(...args);
     }
-  },
+  }
 
   /**
    * Function: warn
@@ -320,18 +319,18 @@ const mxLog = {
    * mxLog.warn('Hello, World!');
    * (end)
    */
-  warn(...args) {
+  static warn(...args) {
     if (mxLog.WARN) {
       mxLog.writeln(...args);
     }
-  },
+  }
 
   /**
    * Function: write
    *
    * Adds the specified strings to the console.
    */
-  write() {
+  static write() {
     let string = '';
 
     for (let i = 0; i < arguments.length; i += 1) {
@@ -358,7 +357,7 @@ const mxLog = {
     } else {
       mxLog.buffer += string;
     }
-  },
+  }
 
   /**
    * Function: writeln
@@ -366,7 +365,7 @@ const mxLog = {
    * Adds the specified strings to the console, appending a linefeed at the
    * end of each string.
    */
-  writeln() {
+  static writeln() {
     let string = '';
 
     for (let i = 0; i < arguments.length; i += 1) {
@@ -378,7 +377,7 @@ const mxLog = {
     }
 
     mxLog.write(`${string}\n`);
-  },
+  }
 };
 
 export default mxLog;

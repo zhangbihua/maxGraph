@@ -37,7 +37,7 @@ class mxSelectionChange {
    * Changes the current root of the view.
    */
   execute() {
-    const t0: number | null = mxLog.enter('mxSelectionChange.execute');
+    const t0: any = mxLog.enter('mxSelectionChange.execute');
 
     window.status =
       mxResources.get(this.selectionModel.updatingSelectionResource) ||

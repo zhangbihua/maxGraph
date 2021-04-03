@@ -22,6 +22,7 @@ import mxStyleChange from '../../atomic_changes/mxStyleChange';
 import mxTerminalChange from '../../atomic_changes/mxTerminalChange';
 import mxValueChange from '../../atomic_changes/mxValueChange';
 import mxVisibleChange from '../../atomic_changes/mxVisibleChange';
+import mxGeometry from "../../util/datatypes/mxGeometry";
 
 class mxGraphModel extends mxEventSource {
   /**
@@ -31,14 +32,14 @@ class mxGraphModel extends mxEventSource {
    * layers of the diagram as child cells. That is, the actual elements of the
    * diagram are supposed to live in the third generation of cells and below.
    */
-  root = null;
+  root: mxCell | null = null;
 
   /**
    * Variable: cells
    *
    * Maps from Ids to cells.
    */
-  cells = null;
+  cells: any = {};
 
   /**
    * Variable: maintainEdgeParent
@@ -46,7 +47,7 @@ class mxGraphModel extends mxEventSource {
    * Specifies if edges should automatically be moved into the nearest common
    * ancestor of their terminals. Default is true.
    */
-  maintainEdgeParent = true;
+  maintainEdgeParent: boolean = true;
 
   /**
    * Variable: ignoreRelativeEdgeParent
@@ -54,7 +55,7 @@ class mxGraphModel extends mxEventSource {
    * Specifies if relative edge parents should be ignored for finding the nearest
    * common ancestors of an edge's terminals. Default is true.
    */
-  ignoreRelativeEdgeParent = true;
+  ignoreRelativeEdgeParent: boolean = true;
 
   /**
    * Variable: createIds
@@ -62,28 +63,28 @@ class mxGraphModel extends mxEventSource {
    * Specifies if the model should automatically create Ids for new cells.
    * Default is true.
    */
-  createIds = true;
+  createIds: boolean = true;
 
   /**
    * Variable: prefix
    *
    * Defines the prefix of new Ids. Default is an empty string.
    */
-  prefix = '';
+  prefix: string = '';
 
   /**
    * Variable: postfix
    *
    * Defines the postfix of new Ids. Default is an empty string.
    */
-  postfix = '';
+  postfix: string = '';
 
   /**
    * Variable: nextId
    *
    * Specifies the next Id to be created. Initial value is 0.
    */
-  nextId = 0;
+  nextId: number = 0;
 
   /**
    * Variable: currentEdit
@@ -92,7 +93,7 @@ class mxGraphModel extends mxEventSource {
    * closed then a new object is created for this variable using
    * <createUndoableEdit>.
    */
-  currentEdit = null;
+  currentEdit: any = null;
 
   /**
    * Variable: updateLevel
@@ -102,14 +103,14 @@ class mxGraphModel extends mxEventSource {
    * it. When the counter reaches 0, the transaction is closed and the
    * respective events are fired. Initial value is 0.
    */
-  updateLevel = 0;
+  updateLevel: number = 0;
 
   /**
    * Variable: endingUpdate
    *
    * True if the program flow is currently inside endUpdate.
    */
-  endingUpdate = false;
+  endingUpdate: boolean = false;
 
   /**
    * Class: mxGraphModel
@@ -302,7 +303,7 @@ class mxGraphModel extends mxEventSource {
    *
    * root - <mxCell> that represents the root cell.
    */
-  constructor(root) {
+  constructor(root: mxCell) {
     super();
     this.currentEdit = this.createUndoableEdit();
 
@@ -318,7 +319,7 @@ class mxGraphModel extends mxEventSource {
    *
    * Sets a new root using <createRoot>.
    */
-  clear() {
+  clear(): void {
     this.setRoot(this.createRoot());
   }
 
@@ -327,7 +328,7 @@ class mxGraphModel extends mxEventSource {
    *
    * Returns <createIds>.
    */
-  isCreateIds() {
+  isCreateIds(): boolean {
     return this.createIds;
   }
 
@@ -336,7 +337,7 @@ class mxGraphModel extends mxEventSource {
    *
    * Sets <createIds>.
    */
-  setCreateIds(value) {
+  setCreateIds(value: boolean): void {
     this.createIds = value;
   }
 
@@ -345,10 +346,9 @@ class mxGraphModel extends mxEventSource {
    *
    * Creates a new root cell with a default layer (child 0).
    */
-  createRoot() {
+  createRoot(): mxCell {
     const cell = new mxCell();
     cell.insert(new mxCell());
-
     return cell;
   }
 
@@ -362,7 +362,7 @@ class mxGraphModel extends mxEventSource {
    *
    * id - A string representing the Id of the cell.
    */
-  getCell(id) {
+  getCell(id: string): mxCell | null {
     return this.cells != null ? this.cells[id] : null;
   }
 
@@ -372,9 +372,10 @@ class mxGraphModel extends mxEventSource {
    * Returns the cells from the given array where the given filter function
    * returns true.
    */
-  filterCells(cells, filter) {
-    let result = null;
+  filterCells(cells: mxCell[] | null,
+              filter: Function): mxCell[] | null {
 
+    let result = null;
     if (cells != null) {
       result = [];
 
@@ -384,7 +385,6 @@ class mxGraphModel extends mxEventSource {
         }
       }
     }
-
     return result;
   }
 
@@ -397,7 +397,7 @@ class mxGraphModel extends mxEventSource {
    *
    * parent - <mxCell> whose descendants should be returned.
    */
-  getDescendants(parent) {
+  getDescendants(parent: mxCell): mxCell[] {
     return this.filterDescendants(null, parent);
   }
 
@@ -425,9 +425,10 @@ class mxGraphModel extends mxEventSource {
    * and returns a boolean.
    * parent - Optional <mxCell> that is used as the root of the recursion.
    */
-  filterDescendants(filter, parent) {
+  filterDescendants(filter: Function | null,
+                    parent: mxCell): mxCell[] {
     // Creates a new array for storing the result
-    let result = [];
+    let result: mxCell[] = [];
 
     // Recursion starts at the root of the model
     parent = parent || this.getRoot();
@@ -440,9 +441,8 @@ class mxGraphModel extends mxEventSource {
 
     // Visits the children of the cell
     const childCount = this.getChildCount(parent);
-
     for (let i = 0; i < childCount; i += 1) {
-      const child = this.getChildAt(parent, i);
+      const child = <mxCell>this.getChildAt(parent, i);
       result = result.concat(this.filterDescendants(filter, child));
     }
 
@@ -458,7 +458,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - Optional <mxCell> that specifies the child.
    */
-  getRoot(cell: mxCell | null = null): mxCell {
+  getRoot(cell: mxCell | null = null): mxCell | null {
     let root = cell || this.root;
     if (cell != null) {
       while (cell != null) {
@@ -489,9 +489,8 @@ class mxGraphModel extends mxEventSource {
    *
    * root - <mxCell> that specifies the new root.
    */
-  setRoot(root) {
+  setRoot(root: mxCell | null): mxCell | null {
     this.execute(new mxRootChange(this, root));
-
     return root;
   }
 
@@ -505,7 +504,7 @@ class mxGraphModel extends mxEventSource {
    *
    * root - <mxCell> that specifies the new root.
    */
-  rootChanged(root) {
+  rootChanged(root: mxCell | null): mxCell | null {
     const oldRoot = this.root;
     this.root = root;
 
@@ -527,7 +526,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that represents the possible root.
    */
-  isRoot(cell) {
+  isRoot(cell: mxCell) {
     return cell != null && this.root === cell;
   }
 
@@ -540,7 +539,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that represents the possible layer.
    */
-  isLayer(cell) {
+  isLayer(cell: mxCell | null) {
     return this.isRoot(this.getParent(cell));
   }
 
@@ -555,11 +554,12 @@ class mxGraphModel extends mxEventSource {
    * parent - <mxCell> that specifies the parent.
    * child - <mxCell> that specifies the child.
    */
-  isAncestor(parent, child) {
+  isAncestor(parent: mxCell | null,
+             child: mxCell | null) {
+
     while (child != null && child !== parent) {
       child = this.getParent(child);
     }
-
     return child === parent;
   }
 
@@ -572,7 +572,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that specifies the cell.
    */
-  contains(cell) {
+  contains(cell: mxCell | null) {
     return this.isAncestor(this.root, cell);
   }
 
@@ -585,7 +585,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose parent should be returned.
    */
-  getParent(cell: mxCell): mxCell {
+  getParent(cell: mxCell | null): mxCell | null {
     return cell != null ? cell.getParent() : null;
   }
 
@@ -603,7 +603,10 @@ class mxGraphModel extends mxEventSource {
    * child - <mxCell> that specifies the child to be inserted.
    * index - Optional integer that specifies the index of the child.
    */
-  add(parent, child, index) {
+  add(parent: mxCell | null,
+      child: mxCell | null,
+      index: number): mxCell | null {
+
     if (child !== parent && parent != null && child != null) {
       // Appends the child if no index was specified
       if (index == null) {
@@ -619,7 +622,6 @@ class mxGraphModel extends mxEventSource {
         this.updateEdgeParents(child);
       }
     }
-
     return child;
   }
 
@@ -645,7 +647,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that specifies the cell that has been added.
    */
-  cellAdded(cell) {
+  cellAdded(cell: mxCell | null): void {
     if (cell != null) {
       // Creates an Id for the cell if not Id exists
       if (cell.getId() == null && this.createIds) {
@@ -653,14 +655,14 @@ class mxGraphModel extends mxEventSource {
       }
 
       if (cell.getId() != null) {
-        let collision = this.getCell(cell.getId());
+        let collision: mxCell | null = this.getCell(<string>cell.getId());
 
         if (collision !== cell) {
           // Creates new Id for the cell
           // as long as there is a collision
           while (collision != null) {
             cell.setId(this.createId(cell));
-            collision = this.getCell(cell.getId());
+            collision = this.getCell(<string>cell.getId());
           }
 
           // Lazily creates the cells dictionary
@@ -668,13 +670,13 @@ class mxGraphModel extends mxEventSource {
             this.cells = {};
           }
 
-          this.cells[cell.getId()] = cell;
+          this.cells[<string>cell.getId()] = cell;
         }
       }
 
       // Makes sure IDs of deleted cells are not reused
       if (mxUtils.isNumeric(cell.getId())) {
-        this.nextId = Math.max(this.nextId, cell.getId());
+        this.nextId = Math.max(this.nextId, parseInt(<string>cell.getId()));
       }
 
       // Recursively processes child cells
@@ -698,10 +700,9 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> to create the Id for.
    */
-  createId(cell) {
+  createId(cell: mxCell): string {
     const id = this.nextId;
     this.nextId++;
-
     return this.prefix + id + this.postfix;
   }
 
@@ -711,7 +712,9 @@ class mxGraphModel extends mxEventSource {
    * Updates the parent for all edges that are connected to cell or one of
    * its descendants using <updateEdgeParent>.
    */
-  updateEdgeParents(cell, root) {
+  updateEdgeParents(cell: mxCell,
+                    root: mxCell | null=null): void {
+
     // Gets the topmost node of the hierarchy
     root = root || this.getRoot(cell);
 
@@ -719,7 +722,7 @@ class mxGraphModel extends mxEventSource {
     const childCount = this.getChildCount(cell);
 
     for (let i = 0; i < childCount; i += 1) {
-      const child = this.getChildAt(cell, i);
+      const child = <mxCell>this.getChildAt(cell, i);
       this.updateEdgeParents(child, root);
     }
 
@@ -754,7 +757,9 @@ class mxGraphModel extends mxEventSource {
    * edge - <mxCell> that specifies the edge.
    * root - <mxCell> that represents the current root of the model.
    */
-  updateEdgeParent(edge, root) {
+  updateEdgeParent(edge: mxCell | null,
+                   root: mxCell | null): void {
+
     let source = this.getTerminal(edge, true);
     let target = this.getTerminal(edge, false);
     let cell = null;
@@ -801,7 +806,7 @@ class mxGraphModel extends mxEventSource {
           const dx = origin2.x - origin1.x;
           const dy = origin2.y - origin1.y;
 
-          geo = geo.clone();
+          geo = <mxGeometry>geo.clone();
           geo.translate(-dx, -dy);
           this.setGeometry(edge, geo);
         }
@@ -817,7 +822,7 @@ class mxGraphModel extends mxEventSource {
    * Returns the absolute, accumulated origin for the children inside the
    * given parent as an <mxPoint>.
    */
-  getOrigin(cell) {
+  getOrigin(cell: mxCell | null): mxPoint {
     let result = null;
 
     if (cell != null) {
@@ -834,7 +839,6 @@ class mxGraphModel extends mxEventSource {
     } else {
       result = new mxPoint();
     }
-
     return result;
   }
 
@@ -848,7 +852,9 @@ class mxGraphModel extends mxEventSource {
    * cell1 - <mxCell> that specifies the first cell in the tree.
    * cell2 - <mxCell> that specifies the second cell in the tree.
    */
-  getNearestCommonAncestor(cell1, cell2) {
+  getNearestCommonAncestor(cell1: mxCell | null,
+                           cell2: mxCell | null): mxCell | null {
+
     if (cell1 != null && cell2 != null) {
       // Creates the cell path for the second cell
       let path = mxCellPath.create(cell2);
@@ -857,7 +863,7 @@ class mxGraphModel extends mxEventSource {
         // Bubbles through the ancestors of the first
         // cell to find the nearest common ancestor.
         let cell = cell1;
-        let current = mxCellPath.create(cell);
+        let current: string | null = mxCellPath.create(cell);
 
         // Inverts arguments
         if (path.length < current.length) {
@@ -868,7 +874,7 @@ class mxGraphModel extends mxEventSource {
         }
 
         while (cell != null) {
-          const parent = this.getParent(cell);
+          const parent = <mxCell>this.getParent(cell);
 
           // Checks if the cell path is equal to the beginning of the given cell path
           if (
@@ -878,12 +884,11 @@ class mxGraphModel extends mxEventSource {
             return cell;
           }
 
-          current = mxCellPath.getParentPath(current);
+          current = mxCellPath.getParentPath(<string>current);
           cell = parent;
         }
       }
     }
-
     return null;
   }
 
@@ -898,7 +903,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that should be removed.
    */
-  remove(cell) {
+  remove(cell: mxCell) {
     if (cell === this.root) {
       this.setRoot(null);
     } else if (this.getParent(cell) != null) {
@@ -917,17 +922,18 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that specifies the cell that has been removed.
    */
-  cellRemoved(cell) {
+  cellRemoved(cell: mxCell) {
     if (cell != null && this.cells != null) {
       // Recursively processes child cells
       const childCount = this.getChildCount(cell);
 
       for (let i = childCount - 1; i >= 0; i--) {
-        this.cellRemoved(this.getChildAt(cell, i));
+        this.cellRemoved(<mxCell>this.getChildAt(cell, i));
       }
 
       // Removes the dictionary entry for the cell
       if (this.cells != null && cell.getId() != null) {
+        // @ts-ignore
         delete this.cells[cell.getId()];
       }
     }
@@ -946,8 +952,11 @@ class mxGraphModel extends mxEventSource {
    * index - Optional integer that defines the index of the child
    * in the parent's child array.
    */
-  parentForCellChanged(cell, parent, index) {
-    const previous = this.getParent(cell);
+  parentForCellChanged(cell: mxCell,
+                       parent: mxCell | null,
+                       index: number) {
+
+    const previous = <mxCell>this.getParent(cell);
 
     if (parent != null) {
       if (parent !== previous || previous.getIndex(cell) !== index) {
@@ -967,7 +976,6 @@ class mxGraphModel extends mxEventSource {
     } else if (pre && !par) {
       this.cellRemoved(cell);
     }
-
     return previous;
   }
 
@@ -980,7 +988,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose number of children should be returned.
    */
-  getChildCount(cell) {
+  getChildCount(cell: mxCell | null) {
     return cell != null ? cell.getChildCount() : 0;
   }
 
@@ -994,7 +1002,8 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> that represents the parent.
    * index - Integer that specifies the index of the child to be returned.
    */
-  getChildAt(cell, index) {
+  getChildAt(cell: mxCell | null,
+             index: number): mxCell | null {
     return cell != null ? cell.getChildAt(index) : null;
   }
 
@@ -1008,7 +1017,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> the represents the parent.
    */
-  getChildren(cell) {
+  getChildren(cell: mxCell): mxCell[] | null {
     return cell != null ? cell.children : null;
   }
 
@@ -1021,7 +1030,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose child vertices should be returned.
    */
-  getChildVertices(parent) {
+  getChildVertices(parent: mxCell | null) {
     return this.getChildCells(parent, true, false);
   }
 
@@ -1034,7 +1043,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose child edges should be returned.
    */
-  getChildEdges(parent) {
+  getChildEdges(parent: mxCell | null): (mxCell | null)[] {
     return this.getChildCells(parent, false, true);
   }
 
@@ -1052,15 +1061,15 @@ class mxGraphModel extends mxEventSource {
    * edges - Boolean indicating if child edges should be returned.
    * Default is false.
    */
-  getChildCells(parent, vertices, edges) {
-    vertices = vertices != null ? vertices : false;
-    edges = edges != null ? edges : false;
+  getChildCells(parent: mxCell | null,
+                vertices: boolean=false,
+                edges: boolean=false): (mxCell | null)[] {
 
     const childCount = this.getChildCount(parent);
     const result = [];
 
     for (let i = 0; i < childCount; i += 1) {
-      const child = this.getChildAt(parent, i);
+      const child = <mxCell>this.getChildAt(parent, i);
 
       if (
         (!edges && !vertices) ||
@@ -1070,7 +1079,6 @@ class mxGraphModel extends mxEventSource {
         result.push(child);
       }
     }
-
     return result;
   }
 
@@ -1085,7 +1093,8 @@ class mxGraphModel extends mxEventSource {
    * edge - <mxCell> that specifies the edge.
    * isSource - Boolean indicating which end of the edge should be returned.
    */
-  getTerminal(edge, isSource) {
+  getTerminal(edge: mxCell | null,
+              isSource: boolean=false) {
     return edge != null ? edge.getTerminal(isSource) : null;
   }
 
@@ -1104,14 +1113,16 @@ class mxGraphModel extends mxEventSource {
    * isSource - Boolean indicating if the terminal is the new source or
    * target terminal of the edge.
    */
-  setTerminal(edge, terminal, isSource) {
+  setTerminal(edge: mxCell | null,
+              terminal: mxCell | null,
+              isSource: boolean): mxCell | null {
+
     const terminalChanged = terminal !== this.getTerminal(edge, isSource);
     this.execute(new mxTerminalChange(this, edge, terminal, isSource));
 
     if (this.maintainEdgeParent && terminalChanged) {
       this.updateEdgeParent(edge, this.getRoot());
     }
-
     return terminal;
   }
 
@@ -1127,7 +1138,10 @@ class mxGraphModel extends mxEventSource {
    * source - <mxCell> that specifies the new source terminal.
    * target - <mxCell> that specifies the new target terminal.
    */
-  setTerminals(edge, source, target) {
+  setTerminals(edge: mxCell | null,
+               source: mxCell | null,
+               target: mxCell | null): void {
+
     this.beginUpdate();
     try {
       this.setTerminal(edge, source, true);
@@ -1150,15 +1164,16 @@ class mxGraphModel extends mxEventSource {
    * isSource - Boolean indicating if the terminal is the new source or
    * target terminal of the edge.
    */
-  terminalForCellChanged(edge, terminal, isSource) {
-    const previous = this.getTerminal(edge, isSource);
+  terminalForCellChanged(edge: mxCell | null,
+                         terminal: mxCell | null,
+                         isSource: boolean=false): mxCell | null {
 
+    const previous = this.getTerminal(edge, isSource);
     if (terminal != null) {
       terminal.insertEdge(edge, isSource);
     } else if (previous != null) {
       previous.removeEdge(edge, isSource);
     }
-
     return previous;
   }
 
@@ -1171,7 +1186,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that represents the vertex.
    */
-  getEdgeCount(cell) {
+  getEdgeCount(cell: mxCell): number {
     return cell != null ? cell.getEdgeCount() : 0;
   }
 
@@ -1186,7 +1201,8 @@ class mxGraphModel extends mxEventSource {
    * index - Integer that specifies the index of the edge
    * to return.
    */
-  getEdgeAt(cell, index) {
+  getEdgeAt(cell: mxCell,
+            index: number): mxCell | null {
     return cell != null ? cell.getEdgeAt(index) : null;
   }
 
@@ -1203,18 +1219,18 @@ class mxGraphModel extends mxEventSource {
    * incoming edges should be returned.
    * ignoredEdge - <mxCell> that represents an edge to be ignored.
    */
-  getDirectedEdgeCount(cell, outgoing, ignoredEdge) {
+  getDirectedEdgeCount(cell: mxCell,
+                       outgoing: boolean,
+                       ignoredEdge: mxCell): number {
     let count = 0;
     const edgeCount = this.getEdgeCount(cell);
 
     for (let i = 0; i < edgeCount; i += 1) {
       const edge = this.getEdgeAt(cell, i);
-
       if (edge !== ignoredEdge && this.getTerminal(edge, outgoing) === cell) {
         count += 1;
       }
     }
-
     return count;
   }
 
@@ -1228,7 +1244,7 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> whose edges should be returned.
    *
    */
-  getConnections(cell) {
+  getConnections(cell: mxCell) {
     return this.getEdges(cell, true, true, false);
   }
 
@@ -1242,7 +1258,7 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> whose incoming edges should be returned.
    *
    */
-  getIncomingEdges(cell) {
+  getIncomingEdges(cell: mxCell): (mxCell | null)[] {
     return this.getEdges(cell, true, false, false);
   }
 
@@ -1256,7 +1272,7 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> whose outgoing edges should be returned.
    *
    */
-  getOutgoingEdges(cell) {
+  getOutgoingEdges(cell: mxCell): (mxCell | null)[] {
     return this.getEdges(cell, false, true, false);
   }
 
@@ -1278,10 +1294,10 @@ class mxGraphModel extends mxEventSource {
    * includeLoops - Optional boolean that specifies if loops should be returned.
    * Default is true.
    */
-  getEdges(cell, incoming, outgoing, includeLoops) {
-    incoming = incoming != null ? incoming : true;
-    outgoing = outgoing != null ? outgoing : true;
-    includeLoops = includeLoops != null ? includeLoops : true;
+  getEdges(cell: mxCell,
+           incoming: boolean=true,
+           outgoing: boolean=true,
+           includeLoops: boolean=true) {
 
     const edgeCount = this.getEdgeCount(cell);
     const result = [];
@@ -1319,8 +1335,9 @@ class mxGraphModel extends mxEventSource {
    * directed - Optional boolean that specifies if the direction of the
    * edge should be taken into account. Default is false.
    */
-  getEdgesBetween(source, target, directed) {
-    directed = directed != null ? directed : false;
+  getEdgesBetween(source: mxCell,
+                  target: mxCell,
+                  directed: boolean=false) {
 
     const tmp1 = this.getEdgeCount(source);
     const tmp2 = this.getEdgeCount(target);
@@ -1371,9 +1388,10 @@ class mxGraphModel extends mxEventSource {
    * targets - Boolean that specifies if target terminals should be contained
    * in the result. Default is true.
    */
-  getOpposites(edges, terminal, sources, targets) {
-    sources = sources != null ? sources : true;
-    targets = targets != null ? targets : true;
+  getOpposites(edges: mxCell[],
+               terminal: mxCell,
+               sources: boolean=true,
+               targets: boolean=true): mxCell[] {
 
     const terminals = [];
 
@@ -1422,7 +1440,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cells - Array of <mxCells> whose topmost ancestors should be returned.
    */
-  getTopmostCells(cells) {
+  getTopmostCells(cells: mxCell[]): mxCell[] {
     const dict = new mxDictionary();
     const tmp = [];
 
@@ -1461,7 +1479,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that represents the possible vertex.
    */
-  isVertex(cell) {
+  isVertex(cell: mxCell): boolean {
     return cell != null ? cell.isVertex() : false;
   }
 
@@ -1474,7 +1492,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that represents the possible edge.
    */
-  isEdge(cell) {
+  isEdge(cell: mxCell | null): boolean {
     return cell != null ? cell.isEdge() : false;
   }
 
@@ -1489,7 +1507,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose connectable state should be returned.
    */
-  isConnectable(cell) {
+  isConnectable(cell: mxCell | null) {
     return cell != null ? cell.isConnectable() : false;
   }
 
@@ -1502,7 +1520,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose user object should be returned.
    */
-  getValue(cell) {
+  getValue(cell: mxCell | null) {
     return cell != null ? cell.getValue() : null;
   }
 
@@ -1517,9 +1535,9 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> whose user object should be changed.
    * value - Object that defines the new user object.
    */
-  setValue(cell, value) {
+  setValue(cell: mxCell,
+           value: any): any {
     this.execute(new mxValueChange(this, cell, value));
-
     return value;
   }
 
@@ -1543,7 +1561,8 @@ class mxGraphModel extends mxEventSource {
    * };
    * (end)
    */
-  valueForCellChanged(cell, value) {
+  valueForCellChanged(cell: mxCell,
+                      value: any): any {
     return cell.valueChanged(value);
   }
 
@@ -1556,7 +1575,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose geometry should be returned.
    */
-  getGeometry(cell) {
+  getGeometry(cell: mxCell | null): mxGeometry | null {
     return cell != null ? cell.getGeometry() : null;
   }
 
@@ -1572,11 +1591,12 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> whose geometry should be changed.
    * geometry - <mxGeometry> that defines the new geometry.
    */
-  setGeometry(cell, geometry) {
+  setGeometry(cell: mxCell | null,
+              geometry: mxGeometry): mxGeometry {
+
     if (geometry !== this.getGeometry(cell)) {
       this.execute(new mxGeometryChange(this, cell, geometry));
     }
-
     return geometry;
   }
 
@@ -1586,10 +1606,11 @@ class mxGraphModel extends mxEventSource {
    * Inner callback to update the <mxGeometry> of the given <mxCell> using
    * <mxCell.setGeometry> and return the previous <mxGeometry>.
    */
-  geometryForCellChanged(cell, geometry) {
+  geometryForCellChanged(cell: mxCell,
+                         geometry: mxGeometry): mxGeometry | null {
+
     const previous = this.getGeometry(cell);
     cell.setGeometry(geometry);
-
     return previous;
   }
 
@@ -1602,7 +1623,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose style should be returned.
    */
-  getStyle(cell) {
+  getStyle(cell: mxCell): any {
     return cell != null ? cell.getStyle() : null;
   }
 
@@ -1618,11 +1639,12 @@ class mxGraphModel extends mxEventSource {
    * style - String of the form [stylename;|key=value;] to specify
    * the new cell style.
    */
-  setStyle(cell, style) {
+  setStyle(cell: mxCell,
+           style: any): any {
+
     if (style !== this.getStyle(cell)) {
       this.execute(new mxStyleChange(this, cell, style));
     }
-
     return style;
   }
 
@@ -1638,10 +1660,11 @@ class mxGraphModel extends mxEventSource {
    * style - String of the form [stylename;|key=value;] to specify
    * the new cell style.
    */
-  styleForCellChanged(cell, style) {
+  styleForCellChanged(cell: mxCell,
+                      style: any): mxCell | null {
+
     const previous = this.getStyle(cell);
     cell.setStyle(style);
-
     return previous;
   }
 
@@ -1654,7 +1677,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose collapsed state should be returned.
    */
-  isCollapsed(cell) {
+  isCollapsed(cell: mxCell): boolean {
     return cell != null ? cell.isCollapsed() : false;
   }
 
@@ -1669,11 +1692,12 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> whose collapsed state should be changed.
    * collapsed - Boolean that specifies the new collpased state.
    */
-  setCollapsed(cell, collapsed) {
+  setCollapsed(cell: mxCell,
+               collapsed: boolean): boolean {
+
     if (collapsed !== this.isCollapsed(cell)) {
       this.execute(new mxCollapseChange(this, cell, collapsed));
     }
-
     return collapsed;
   }
 
@@ -1689,10 +1713,11 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> that specifies the cell to be updated.
    * collapsed - Boolean that specifies the new collpased state.
    */
-  collapsedStateForCellChanged(cell, collapsed) {
+  collapsedStateForCellChanged(cell: mxCell,
+                               collapsed: boolean): boolean {
+
     const previous = this.isCollapsed(cell);
     cell.setCollapsed(collapsed);
-
     return previous;
   }
 
@@ -1705,7 +1730,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose visible state should be returned.
    */
-  isVisible(cell) {
+  isVisible(cell: mxCell): boolean {
     return cell != null ? cell.isVisible() : false;
   }
 
@@ -1720,11 +1745,12 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> whose visible state should be changed.
    * visible - Boolean that specifies the new visible state.
    */
-  setVisible(cell, visible) {
+  setVisible(cell: mxCell,
+             visible: boolean) {
+
     if (visible !== this.isVisible(cell)) {
       this.execute(new mxVisibleChange(this, cell, visible));
     }
-
     return visible;
   }
 
@@ -1740,10 +1766,10 @@ class mxGraphModel extends mxEventSource {
    * cell - <mxCell> that specifies the cell to be updated.
    * visible - Boolean that specifies the new visible state.
    */
-  visibleStateForCellChanged(cell, visible) {
+  visibleStateForCellChanged(cell: mxCell,
+                             visible: boolean): boolean {
     const previous = this.isVisible(cell);
     cell.setVisible(visible);
-
     return previous;
   }
 
@@ -1762,7 +1788,7 @@ class mxGraphModel extends mxEventSource {
    *
    * change - Object that described the change.
    */
-  execute(change) {
+  execute(change: any): void {
     change.execute();
     this.beginUpdate();
     this.currentEdit.add(change);
@@ -1811,7 +1837,7 @@ class mxGraphModel extends mxEventSource {
    * graph.addCells([v1, v2]).
    * (end)
    */
-  beginUpdate() {
+  beginUpdate(): void {
     this.updateLevel += 1;
     this.fireEvent(new mxEventObject(mxEvent.BEGIN_UPDATE));
 
@@ -1834,7 +1860,7 @@ class mxGraphModel extends mxEventSource {
    * function is invoked, that is, on undo and redo of
    * the edit.
    */
-  endUpdate() {
+  endUpdate(): void {
     this.updateLevel -= 1;
 
     if (this.updateLevel === 0) {
@@ -1875,11 +1901,8 @@ class mxGraphModel extends mxEventSource {
    * significant - Optional boolean that specifies if the edit to be created is
    * significant. Default is true.
    */
-  createUndoableEdit(significant) {
-    const edit = new mxUndoableEdit(
-      this,
-      significant != null ? significant : true
-    );
+  createUndoableEdit(significant: boolean=true): any {
+    const edit = new mxUndoableEdit(this, significant);
 
     edit.notify = () => {
       // LATER: Remove changes property (deprecated)
@@ -1906,12 +1929,13 @@ class mxGraphModel extends mxEventSource {
    * id in the target model are reconnected to reflect the terminals of the
    * source edges.
    */
-  mergeChildren(from, to, cloneAllEdges) {
-    cloneAllEdges = cloneAllEdges != null ? cloneAllEdges : true;
+  mergeChildren(from: mxCell,
+                to: mxCell,
+                cloneAllEdges: boolean=true) : void {
 
     this.beginUpdate();
     try {
-      const mapping = {};
+      const mapping: any = {};
       this.mergeChildrenImpl(from, to, cloneAllEdges, mapping);
 
       // Post-processes all edges in the mapping and
@@ -1946,16 +1970,20 @@ class mxGraphModel extends mxEventSource {
    * cell to the target cell with the same id or the clone of the source cell
    * that was inserted into this model.
    */
-  mergeChildrenImpl(from, to, cloneAllEdges, mapping) {
+  mergeChildrenImpl(from: mxCell,
+                    to: mxCell,
+                    cloneAllEdges: boolean,
+                    mapping: any={}) {
+
     this.beginUpdate();
     try {
       const childCount = from.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        const cell = from.getChildAt(i);
+        const cell = <mxCell>from.getChildAt(i);
 
         if (typeof cell.getId === 'function') {
-          const id = cell.getId();
+          const id: string = <string>cell.getId();
           let target =
             id != null && (!this.isEdge(cell) || !cloneAllEdges)
               ? this.getCell(id)
@@ -1982,7 +2010,7 @@ class mxGraphModel extends mxEventSource {
           mapping[mxCellPath.create(cell)] = target;
 
           // Recurses
-          this.mergeChildrenImpl(cell, target, cloneAllEdges, mapping);
+          this.mergeChildrenImpl(cell, <mxCell>target, cloneAllEdges, mapping);
         }
       }
     } finally {
@@ -2000,14 +2028,14 @@ class mxGraphModel extends mxEventSource {
    *
    * cells - Array of cells whose parents should be returned.
    */
-  getParents(cells) {
+  getParents(cells: mxCell[] | null) {
     const parents = [];
 
     if (cells != null) {
       const dict = new mxDictionary();
 
-      for (let i = 0; i < cells.length; i += 1) {
-        const parent = this.getParent(cells[i]);
+      for (const cell of cells) {
+        const parent = this.getParent(cell);
 
         if (parent != null && !dict.get(parent)) {
           dict.put(parent, true);
@@ -2015,7 +2043,6 @@ class mxGraphModel extends mxEventSource {
         }
       }
     }
-
     return parents;
   }
 
@@ -2035,11 +2062,11 @@ class mxGraphModel extends mxEventSource {
    * includeChildren - Optional boolean indicating if the cells should be cloned
    * with all descendants. Default is true.
    */
-  cloneCell(cell, includeChildren) {
+  cloneCell(cell: mxCell | null,
+            includeChildren: boolean): mxCell | null {
     if (cell != null) {
       return this.cloneCells([cell], includeChildren)[0];
     }
-
     return null;
   }
 
@@ -2058,10 +2085,11 @@ class mxGraphModel extends mxEventSource {
    * with all descendants. Default is true.
    * mapping - Optional mapping for existing clones.
    */
-  cloneCells(cells, includeChildren, mapping) {
-    includeChildren = includeChildren != null ? includeChildren : true;
-    mapping = mapping != null ? mapping : {};
-    const clones = [];
+  cloneCells(cells: mxCell[],
+             includeChildren: boolean=true,
+             mapping: any={}): (mxCell | null)[] {
+
+    const clones: (mxCell | null)[] = [];
 
     for (let i = 0; i < cells.length; i += 1) {
       if (cells[i] != null) {
@@ -2076,7 +2104,6 @@ class mxGraphModel extends mxEventSource {
         this.restoreClone(clones[i], cells[i], mapping);
       }
     }
-
     return clones;
   }
 
@@ -2085,7 +2112,10 @@ class mxGraphModel extends mxEventSource {
    *
    * Inner helper method for cloning cells recursively.
    */
-  cloneCellImpl(cell, mapping, includeChildren) {
+  cloneCellImpl(cell: mxCell,
+                mapping: any,
+                includeChildren: boolean): mxCell {
+
     const ident = mxObjectIdentity.get(cell);
     let clone = mapping[ident];
 
@@ -2098,7 +2128,7 @@ class mxGraphModel extends mxEventSource {
 
         for (let i = 0; i < childCount; i += 1) {
           const cloneChild = this.cloneCellImpl(
-            this.getChildAt(cell, i),
+            <mxCell>this.getChildAt(cell, i),
             mapping,
             true
           );
@@ -2106,7 +2136,6 @@ class mxGraphModel extends mxEventSource {
         }
       }
     }
-
     return clone;
   }
 
@@ -2116,7 +2145,7 @@ class mxGraphModel extends mxEventSource {
    * Hook for cloning the cell. This returns cell.clone() or
    * any possible exceptions.
    */
-  cellCloned(cell) {
+  cellCloned(cell: mxCell): mxCell {
     return cell.clone();
   }
 
@@ -2126,29 +2155,28 @@ class mxGraphModel extends mxEventSource {
    * Inner helper method for restoring the connections in
    * a network of cloned cells.
    */
-  restoreClone(clone, cell, mapping) {
+  restoreClone(clone: mxCell | null,
+               cell: mxCell | null,
+               mapping: any): void {
+
     const source = this.getTerminal(cell, true);
 
     if (source != null) {
       const tmp = mapping[mxObjectIdentity.get(source)];
-
       if (tmp != null) {
         tmp.insertEdge(clone, true);
       }
     }
 
     const target = this.getTerminal(cell, false);
-
     if (target != null) {
       const tmp = mapping[mxObjectIdentity.get(target)];
-
       if (tmp != null) {
         tmp.insertEdge(clone, false);
       }
     }
 
     const childCount = this.getChildCount(clone);
-
     for (let i = 0; i < childCount; i += 1) {
       this.restoreClone(
         this.getChildAt(clone, i),

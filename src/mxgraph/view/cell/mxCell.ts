@@ -24,7 +24,7 @@ class mxCell {
    *
    * Holds the Id. Default is null.
    */
-  id: number | null = null;
+  id: string | null = null;
 
   /**
    * Variable: value
@@ -218,7 +218,7 @@ class mxCell {
    *
    * Returns the Id of the cell as a string.
    */
-  getId(): number | null {
+  getId(): string | null {
     return this.id;
   }
 
@@ -227,7 +227,7 @@ class mxCell {
    *
    * Sets the Id of the cell to the given string.
    */
-  setId(id: number): void {
+  setId(id: string): void {
     this.id = id;
   }
 
@@ -626,7 +626,7 @@ class mxCell {
    * edge - <mxCell> to be inserted into the edge array.
    * isOutgoing - Boolean that specifies if the edge is outgoing.
    */
-  insertEdge(edge: mxCell,
+  insertEdge(edge: mxCell | null,
              isOutgoing: boolean) {
 
     if (edge != null) {
@@ -658,8 +658,8 @@ class mxCell {
    * edge - <mxCell> to be removed from the edge array.
    * isOutgoing - Boolean that specifies if the edge is outgoing.
    */
-  removeEdge(edge: mxCell,
-             isOutgoing: boolean=false) {
+  removeEdge(edge: mxCell | null,
+             isOutgoing: boolean=false): mxCell | null {
 
     if (edge != null) {
       if (edge.getTerminal(!isOutgoing) !== this && this.edges != null) {
