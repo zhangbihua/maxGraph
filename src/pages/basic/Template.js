@@ -12,7 +12,7 @@ import React from 'react';
 import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxCodec from '../../mxgraph/io/mxCodec';
+import mxCodec from '../../mxgraph/serialization/mxCodec';
 
 class Template extends React.Component {
   constructor(props) {

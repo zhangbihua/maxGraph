@@ -10,7 +10,7 @@ import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxGraphHandler from '../../mxgraph/handler/mxGraphHandler';
 import mxEdgeHandler from '../../mxgraph/handler/mxEdgeHandler';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
+import mxEdgeStyle from '../../mxgraph/util/datatypes/style/mxEdgeStyle';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 
 class Guides extends React.Component {

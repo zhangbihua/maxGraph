@@ -11,8 +11,8 @@ import mxConstants from '../../mxgraph/util/mxConstants';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxFastOrganicLayout from '../../mxgraph/layout/mxFastOrganicLayout';
 import mxEventObject from '../../mxgraph/util/event/mxEventObject';
-import mxCodec from '../../mxgraph/io/mxCodec';
-import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
+import mxCodec from '../../mxgraph/serialization/mxCodec';
+import mxPerimeter from '../../mxgraph/util/datatypes/style/mxPerimeter';
 import mxClient from '../../mxgraph/mxClient';
 
 class FileIO extends React.Component {

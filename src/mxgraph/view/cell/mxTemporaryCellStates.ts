@@ -13,6 +13,7 @@ import mxDictionary from '../../util/datatypes/mxDictionary';
 import mxGraphView from '../graph/mxGraphView';
 import mxCell from './mxCell';
 import mxCellState from '../../util/datatypes/mxCellState';
+import mxShape from "../../shape/mxShape";
 
 class mxTemporaryCellStates {
   oldValidateCellState: Function | null;
@@ -27,7 +28,7 @@ class mxTemporaryCellStates {
   /**
    * Variable: oldStates
    */
-  oldStates: mxCellState | null = null;
+  oldStates: mxDictionary | null = null;
 
   /**
    * Variable: oldBounds
@@ -59,10 +60,11 @@ class mxTemporaryCellStates {
 
     // Overrides doRedrawShape and paint shape to add links on shapes
     if (getLinkForCellState != null) {
-      view.graph.cellRenderer.doRedrawShape = state => {
-        const oldPaint = state.shape.paint;
+      view.graph.cellRenderer.doRedrawShape = (state: mxCellState) => {
+        const shape = <mxShape>state?.shape;
+        const oldPaint = shape.paint;
 
-        state.shape.paint = c => {
+        shape.paint = c => {
           const link = getLinkForCellState(state);
           if (link != null) {
             c.setLink(link);
@@ -73,15 +75,15 @@ class mxTemporaryCellStates {
           }
         };
 
-        self.oldDoRedrawShape.apply(view.graph.cellRenderer, [state]);
-        state.shape.paint = oldPaint;
+        (<Function>self.oldDoRedrawShape).apply(view.graph.cellRenderer, [state]);
+        shape.paint = oldPaint;
       };
     }
 
     // Overrides validateCellState to ignore invisible cells
     view.validateCellState = (cell, recurse) => {
       if (cell == null || isCellVisibleFn == null || isCellVisibleFn(cell)) {
-        return self.oldValidateCellState.apply(view, [cell, recurse]);
+        return (<Function>self.oldDoRedrawShape).apply(view, [cell, recurse]);
       }
       return null;
     };
@@ -116,11 +118,14 @@ class mxTemporaryCellStates {
    * Returns the top, left corner as a new <mxPoint>.
    */
   destroy(): void {
-    this.view.setScale(this.oldScale);
-    this.view.setStates(this.oldStates);
-    this.view.setGraphBounds(this.oldBounds);
-    this.view.validateCellState = this.oldValidateCellState;
-    this.view.graph.cellRenderer.doRedrawShape = this.oldDoRedrawShape;
+    const view = <mxGraphView>this.view;
+    view.setScale(this.oldScale);
+    view.setStates(this.oldStates);
+    view.setGraphBounds(<mxRectangle>this.oldBounds);
+    // @ts-ignore
+    view.validateCellState = <Function>this.oldValidateCellState;
+    // @ts-ignore
+    view.graph.cellRenderer.doRedrawShape = <Function>this.oldDoRedrawShape;
   }
 }
 

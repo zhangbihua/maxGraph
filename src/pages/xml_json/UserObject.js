@@ -13,7 +13,7 @@ import mxForm from '../../mxgraph/util/gui/mxForm';
 import mxCellAttributeChange from '../../mxgraph/atomic_changes/mxCellAttributeChange';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
-import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
+import mxEdgeStyle from '../../mxgraph/util/datatypes/style/mxEdgeStyle';
 
 class UserObject extends React.Component {
   constructor(props) {

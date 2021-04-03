@@ -17,6 +17,7 @@ import mxEventObject from '../../util/event/mxEventObject';
 import mxCell from '../cell/mxCell';
 import mxGraph from './mxGraph';
 import mxRectangle from '../../util/datatypes/mxRectangle';
+import mxMouseEvent from "../../util/event/mxMouseEvent";
 
 class mxLayoutManager extends mxEventSource {
   /**
@@ -97,21 +98,21 @@ class mxLayoutManager extends mxEventSource {
     super();
 
     // Executes the layout before the changes are dispatched
-    this.undoHandler = (sender, evt) => {
+    this.undoHandler = (sender: any, evt: mxEventObject) => {
       if (this.isEnabled()) {
         this.beforeUndo(evt.getProperty('edit'));
       }
     };
 
     // Notifies the layout of a move operation inside a parent
-    this.moveHandler = (sender, evt) => {
+    this.moveHandler = (sender: any, evt: mxEventObject) => {
       if (this.isEnabled()) {
         this.cellsMoved(evt.getProperty('cells'), evt.getProperty('event'));
       }
     };
 
     // Notifies the layout of a move operation inside a parent
-    this.resizeHandler = (sender, evt) => {
+    this.resizeHandler = (sender: any, evt: mxEventObject) => {
       if (this.isEnabled()) {
         this.cellsResized(
           evt.getProperty('cells'),
@@ -144,7 +145,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * enabled - Boolean that specifies the new enabled state.
    */
-  setEnabled(enabled) {
+  setEnabled(enabled: boolean) {
     this.enabled = enabled;
   }
 
@@ -155,7 +156,7 @@ class mxLayoutManager extends mxEventSource {
    * should be executed whenever a cell layout (layout of the children of
    * a cell) has been executed. This implementation returns <bubbling>.
    */
-  isBubbling() {
+  isBubbling(): boolean {
     return this.bubbling;
   }
 
@@ -164,7 +165,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * Sets <bubbling>.
    */
-  setBubbling(value) {
+  setBubbling(value: boolean): void {
     this.bubbling = value;
   }
 
@@ -173,7 +174,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * Returns the graph that this layout operates on.
    */
-  getGraph() {
+  getGraph(): mxGraph | null {
     return this.graph;
   }
 
@@ -182,7 +183,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * Sets the graph that the layouts operate on.
    */
-  setGraph(graph: mxGraph): void {
+  setGraph(graph: mxGraph | null): void {
     if (this.graph != null) {
       const model = this.graph.getModel();
       model.removeListener(this.undoHandler);
@@ -238,7 +239,7 @@ class mxLayoutManager extends mxEventSource {
    * cell - Array of <mxCells> that have been moved.
    * evt - Mouse event that represents the mousedown.
    */
-  beforeUndo(undoableEdit) {
+  beforeUndo(undoableEdit: any): void {
     this.executeLayoutForCells(this.getCellsForChanges(undoableEdit.changes));
   }
 
@@ -252,14 +253,16 @@ class mxLayoutManager extends mxEventSource {
    * cell - Array of <mxCells> that have been moved.
    * evt - Mouse event that represents the mousedown.
    */
-  cellsMoved(cells, evt) {
+  cellsMoved(cells: mxCell[],
+             evt: mxMouseEvent): void {
+
     if (cells != null && evt != null) {
       const point = mxUtils.convertPoint(
-        this.getGraph().container,
+        (<mxGraph>this.getGraph()).container,
         mxEvent.getClientX(evt),
         mxEvent.getClientY(evt)
       );
-      const model = this.getGraph().getModel();
+      const model = (<mxGraph>this.getGraph()).getModel();
 
       for (let i = 0; i < cells.length; i += 1) {
         const layout = this.getLayout(
@@ -282,24 +285,23 @@ class mxLayoutManager extends mxEventSource {
    * Parameters:
    *
    * cell - Array of <mxCells> that have been resized.
-   * bounds - <mxRectangle> taht represents the new bounds.
+   * bounds - <mxRectangle> that represents the new bounds.
    */
   cellsResized(
     cells: mxCell[] | null = null,
-    bounds: mxRectangle | null = null,
-    prev
-  ) {
+    bounds: mxRectangle[] | null = null,
+    prev: mxCell[] | null = null
+  ): void {
     if (cells != null && bounds != null) {
-      const model = this.getGraph().getModel();
+      const model = (<mxGraph>this.getGraph()).getModel();
 
       for (let i = 0; i < cells.length; i += 1) {
         const layout = this.getLayout(
           model.getParent(cells[i]),
           mxEvent.RESIZE_CELLS
         );
-
         if (layout != null) {
-          layout.resizeCell(cells[i], bounds[i], prev[i]);
+          layout.resizeCell(cells[i], bounds[i], prev?.[i]);
         }
       }
     }
@@ -311,7 +313,7 @@ class mxLayoutManager extends mxEventSource {
    * Returns the cells for which a layout should be executed.
    */
   getCellsForChanges(changes: any[]): mxCell[] {
-    let result = [];
+    let result: mxCell[] = [];
     for (const change of changes) {
       if (change instanceof mxRootChange) {
         return [];
@@ -375,7 +377,7 @@ class mxLayoutManager extends mxEventSource {
       }
 
       if (this.isBubbling()) {
-        const model = this.getGraph().getModel();
+        const model = (<mxGraph>this.getGraph()).getModel();
         this.addAncestorsWithLayout(model.getParent(cell), result);
       }
     }
@@ -389,7 +391,7 @@ class mxLayoutManager extends mxEventSource {
    */
   addDescendantsWithLayout(cell: mxCell, result: mxCell[] = []): mxCell[] {
     if (cell != null && this.hasLayout(cell)) {
-      const model = this.getGraph().getModel();
+      const model = (<mxGraph>this.getGraph()).getModel();
 
       for (let i = 0; i < model.getChildCount(cell); i += 1) {
         const child = model.getChildAt(cell, i);
@@ -425,7 +427,7 @@ class mxLayoutManager extends mxEventSource {
   layoutCells(cells: mxCell[], bubble: boolean = false): void {
     if (cells.length > 0) {
       // Invokes the layouts while removing duplicates
-      const model = this.getGraph().getModel();
+      const model = (<mxGraph>this.getGraph()).getModel();
 
       model.beginUpdate();
       try {
@@ -450,7 +452,8 @@ class mxLayoutManager extends mxEventSource {
    *
    * Executes the given layout on the given parent.
    */
-  executeLayout(cell: mxCell, bubble: boolean = false): void {
+  executeLayout(cell: mxCell,
+                bubble: boolean=false): void {
     const layout = this.getLayout(
       cell,
       bubble ? mxEvent.BEGIN_UPDATE : mxEvent.END_UPDATE

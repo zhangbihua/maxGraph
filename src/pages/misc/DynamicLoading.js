@@ -9,9 +9,9 @@ import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxText from '../../mxgraph/shape/mxText';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxCodec from '../../mxgraph/io/mxCodec';
+import mxCodec from '../../mxgraph/serialization/mxCodec';
 import mxEffects from '../../mxgraph/util/animate/mxEffects';
-import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
+import mxPerimeter from '../../mxgraph/util/datatypes/style/mxPerimeter';
 
 class DynamicLoading extends React.Component {
   constructor(props) {

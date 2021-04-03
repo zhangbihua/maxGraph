@@ -11,7 +11,7 @@ import mxConstants from '../../mxgraph/util/mxConstants';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
 import mxImage from '../../mxgraph/util/image/mxImage';
-import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
+import mxPerimeter from '../../mxgraph/util/datatypes/style/mxPerimeter';
 
 class Images extends React.Component {
   constructor(props) {

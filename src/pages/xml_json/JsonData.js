@@ -7,10 +7,10 @@ import React from 'react';
 import mxEvent from '../../mxgraph/util/event/mxEvent';
 import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
-import mxCodecRegistry from '../../mxgraph/io/mxCodecRegistry';
-import mxObjectCodec from '../../mxgraph/io/mxObjectCodec';
+import mxCodecRegistry from '../../mxgraph/serialization/mxCodecRegistry';
+import mxObjectCodec from '../../mxgraph/serialization/mxObjectCodec';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxCodec from '../../mxgraph/io/mxCodec';
+import mxCodec from '../../mxgraph/serialization/mxCodec';
 
 class JsonData extends React.Component {
   // Adds an option to view the XML of the graph

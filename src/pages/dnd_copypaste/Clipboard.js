@@ -10,7 +10,7 @@ import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxClipboard from '../../mxgraph/util/storage/mxClipboard';
 import mxClient from '../../mxgraph/mxClient';
-import mxCodec from '../../mxgraph/io/mxCodec';
+import mxCodec from '../../mxgraph/serialization/mxCodec';
 import mxGraphModel from '../../mxgraph/view/graph/mxGraphModel';
 
 class Clipboard extends React.Component {

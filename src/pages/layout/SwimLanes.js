@@ -12,13 +12,13 @@ import mxStackLayout from '../../mxgraph/layout/mxStackLayout';
 import mxSwimlaneManager from '../../mxgraph/view/graph/mxSwimlaneManager';
 import mxGraphModel from '../../mxgraph/view/graph/mxGraphModel';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
+import mxPerimeter from '../../mxgraph/util/datatypes/style/mxPerimeter';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxEditor from '../../mxgraph/editor/mxEditor';
 import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
 import mxImage from '../../mxgraph/util/image/mxImage';
 import mxLayoutManager from '../../mxgraph/view/graph/mxLayoutManager';
-import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
+import mxEdgeStyle from '../../mxgraph/util/datatypes/style/mxEdgeStyle';
 
 class SwimLanes extends React.Component {
   constructor(props) {

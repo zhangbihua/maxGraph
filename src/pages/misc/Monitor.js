@@ -9,9 +9,9 @@ import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxConstants from '../../mxgraph/util/mxConstants';
 import mxCellOverlay from '../../mxgraph/view/cell/mxCellOverlay';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxCodec from '../../mxgraph/io/mxCodec';
-import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
-import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
+import mxCodec from '../../mxgraph/serialization/mxCodec';
+import mxPerimeter from '../../mxgraph/util/datatypes/style/mxPerimeter';
+import mxEdgeStyle from '../../mxgraph/util/datatypes/style/mxEdgeStyle';
 
 class Monitor extends React.Component {
   constructor(props) {

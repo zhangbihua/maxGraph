@@ -9,7 +9,7 @@ import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
+import mxEdgeStyle from '../../mxgraph/util/datatypes/style/mxEdgeStyle';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 import mxLayoutManager from '../../mxgraph/view/graph/mxLayoutManager';
 import mxParallelEdgeLayout from '../../mxgraph/layout/mxParallelEdgeLayout';

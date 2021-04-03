@@ -17,7 +17,7 @@ import mxLayoutManager from '../../mxgraph/view/graph/mxLayoutManager';
 import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
 import mxUtils from '../../mxgraph/util/mxUtils';
 import mxClient from '../../mxgraph/mxClient';
-import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
+import mxEdgeStyle from '../../mxgraph/util/datatypes/style/mxEdgeStyle';
 
 class Tree extends React.Component {
   constructor(props) {

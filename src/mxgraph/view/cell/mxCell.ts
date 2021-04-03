@@ -218,7 +218,7 @@ class mxCell {
    *
    * Returns the Id of the cell as a string.
    */
-  getId(): number {
+  getId(): number | null {
     return this.id;
   }
 
@@ -279,7 +279,7 @@ class mxCell {
    *
    * Sets the <mxGeometry> to be used as the <geometry>.
    */
-  setGeometry(geometry: mxGeometry): void {
+  setGeometry(geometry: mxGeometry | null): void {
     this.geometry = geometry;
   }
 
@@ -297,7 +297,7 @@ class mxCell {
    *
    * Sets the string to be used as the <style>.
    */
-  setStyle(style: string): void {
+  setStyle(style: string | null): void {
     this.style = style;
   }
 

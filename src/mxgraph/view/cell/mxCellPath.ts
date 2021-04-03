@@ -92,11 +92,11 @@ class mxCellPath {
    * path - String that defines the path.
    */
   static resolve(root: mxCell, path: string): mxCell | null {
-    let parent = root;
+    let parent: mxCell | null | undefined = root;
     if (path != null) {
       const tokens = path.split(mxCellPath.PATH_SEPARATOR);
       for (let i = 0; i < tokens.length; i += 1) {
-        parent = parent.getChildAt(parseInt(tokens[i]));
+        parent = parent?.getChildAt(parseInt(tokens[i])) || null;
       }
     }
     return parent;

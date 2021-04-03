@@ -6,8 +6,8 @@
 import React from 'react';
 import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
-import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
+import mxEdgeStyle from '../../mxgraph/util/datatypes/style/mxEdgeStyle';
+import mxPerimeter from '../../mxgraph/util/datatypes/style/mxPerimeter';
 
 class Stylesheet extends React.Component {
   constructor(props) {

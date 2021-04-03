@@ -8,9 +8,9 @@ import mxEvent from '../../mxgraph/util/event/mxEvent';
 import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
+import mxEdgeStyle from '../../mxgraph/util/datatypes/style/mxEdgeStyle';
 import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
-import mxCodec from '../../mxgraph/io/mxCodec';
+import mxCodec from '../../mxgraph/serialization/mxCodec';
 import mxUtils from '../../mxgraph/util/mxUtils';
 
 class HelloPort extends React.Component {

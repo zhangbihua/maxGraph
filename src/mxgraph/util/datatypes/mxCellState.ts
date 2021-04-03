@@ -14,17 +14,17 @@ import mxText from '../../shape/mxText';
 
 class mxCellState extends mxRectangle {
   // TODO: Document me!!
-  cellBounds: mxRectangle;
+  cellBounds: mxRectangle | undefined;
 
-  paintBounds: mxRectangle;
+  paintBounds: mxRectangle | undefined;
 
-  boundingBox: mxRectangle;
+  boundingBox: mxRectangle | undefined;
 
   // Used by mxCellRenderer's createControl()
-  control: mxShape;
+  control: mxShape | undefined;
 
   // Used by mxCellRenderer's createCellOverlays()
-  overlays: any[];
+  overlays: any[] | null | undefined;
 
   /**
    * Variable: view
@@ -76,7 +76,7 @@ class mxCellState extends mxRectangle {
    * Holds an array of <mxPoints> that represent the absolute points of an
    * edge.
    */
-  absolutePoints: mxPoint[] | null = null;
+  absolutePoints: (mxPoint | null)[] | null = null;
 
   /**
    * Variable: absoluteOffset
@@ -336,7 +336,7 @@ class mxCellState extends mxRectangle {
    * Returns the unscaled, untranslated bounds.
    */
   getCellBounds(): mxRectangle {
-    return this.cellBounds;
+    return <mxRectangle>this.cellBounds;
   }
 
   /**
@@ -347,7 +347,7 @@ class mxCellState extends mxRectangle {
    * isPaintBoundsInverted returns true.
    */
   getPaintBounds(): mxRectangle {
-    return this.paintBounds;
+    return <mxRectangle>this.paintBounds;
   }
 
   /**
@@ -356,8 +356,10 @@ class mxCellState extends mxRectangle {
    * Updates the cellBounds and paintBounds.
    */
   updateCachedBounds(): void {
-    const tr = this.view.translate;
-    const s = this.view.scale;
+    const view = <mxGraphView>this.view;
+
+    const tr = view.translate;
+    const s = view.scale;
     this.cellBounds = new mxRectangle(
       this.x / s - tr.x,
       this.y / s - tr.y,
@@ -401,14 +403,14 @@ class mxCellState extends mxRectangle {
    * Returns a clone of this <mxPoint>.
    */
   clone(): mxCellState {
-    const clone = new mxCellState(this.view, this.cell, this.style);
+    const clone = new mxCellState(<mxGraphView>this.view, <mxCell>this.cell, this.style);
 
     // Clones the absolute points
     if (this.absolutePoints != null) {
       clone.absolutePoints = [];
 
       for (let i = 0; i < this.absolutePoints.length; i += 1) {
-        clone.absolutePoints[i] = this.absolutePoints[i].clone();
+        clone.absolutePoints[i] = (<mxPoint[]>this.absolutePoints)[i].clone();
       }
     }
 
@@ -443,7 +445,7 @@ class mxCellState extends mxRectangle {
    * Destroys the state and all associated resources.
    */
   destroy(): void {
-    this.view.graph.cellRenderer.destroy(this);
+    (<mxGraphView>this.view).graph.cellRenderer.destroy(this);
   }
 }
 

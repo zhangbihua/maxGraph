@@ -6,7 +6,7 @@
 import React from 'react';
 import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
-import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
+import mxPerimeter from '../../mxgraph/util/datatypes/style/mxPerimeter';
 import mxConstants from '../../mxgraph/util/mxConstants';
 import mxRadialTreeLayout from '../../mxgraph/layout/mxRadialTreeLayout';
 

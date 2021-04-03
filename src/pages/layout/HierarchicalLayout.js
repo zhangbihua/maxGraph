@@ -10,7 +10,7 @@ import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxHierarchicalLayout from '../../mxgraph/layout/hierarchical/mxHierarchicalLayout';
 import mxFastOrganicLayout from '../../mxgraph/layout/mxFastOrganicLayout';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
+import mxPerimeter from '../../mxgraph/util/datatypes/style/mxPerimeter';
 import mxUtils from '../../mxgraph/util/mxUtils';
 
 class HierarchicalLayout extends React.Component {

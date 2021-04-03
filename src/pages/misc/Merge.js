@@ -7,7 +7,7 @@ import React from 'react';
 import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
 import mxConstants from '../../mxgraph/util/mxConstants';
-import mxPerimeter from '../../mxgraph/view/style/mxPerimeter';
+import mxPerimeter from '../../mxgraph/util/datatypes/style/mxPerimeter';
 
 class Merge extends React.Component {
   constructor(props) {

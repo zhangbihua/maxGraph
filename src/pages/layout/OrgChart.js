@@ -19,7 +19,7 @@ import mxConstants from '../../mxgraph/util/mxConstants';
 import mxWindow from '../../mxgraph/util/gui/mxWindow';
 import mxToolbar from '../../mxgraph/util/gui/mxToolbar';
 import mxLayoutManager from '../../mxgraph/view/graph/mxLayoutManager';
-import mxEdgeStyle from '../../mxgraph/view/style/mxEdgeStyle';
+import mxEdgeStyle from '../../mxgraph/util/datatypes/style/mxEdgeStyle';
 import mxCompactTreeLayout from '../../mxgraph/layout/mxCompactTreeLayout';
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 import mxClient from '../../mxgraph/mxClient';

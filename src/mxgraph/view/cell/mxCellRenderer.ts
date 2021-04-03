@@ -63,7 +63,7 @@ class mxCellRenderer {
    *
    * Defines the default shape for labels. Default is <mxText>.
    */
-  defaultTextShape: typeof mxShape = mxText;
+  defaultTextShape: typeof mxText = mxText;
 
   /**
    * Variable: legacyControlPosition
@@ -1642,7 +1642,7 @@ class mxCellRenderer {
    * Invokes redraw on the shape of the given state.
    */
   doRedrawShape(state: mxCellState) {
-    state.shape.redraw();
+    state.shape?.redraw();
   }
 
   /**
@@ -1650,7 +1650,8 @@ class mxCellRenderer {
    *
    * Returns true if the given shape must be repainted.
    */
-  isShapeInvalid(state, shape) {
+  isShapeInvalid(state: mxCellState, 
+                 shape: mxShape): boolean {
     return (
       shape.bounds == null ||
       shape.scale !== state.view.scale ||
