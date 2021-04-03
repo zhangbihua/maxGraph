@@ -12,6 +12,7 @@ import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxGraph from './mxGraph';
 import mxEventObject from "../../util/event/mxEventObject";
 import mxCell from "../cell/mxCell";
+import mxGeometry from "../../util/datatypes/mxGeometry";
 
 class mxSwimlaneManager extends mxEventSource {
   /**
@@ -280,7 +281,7 @@ class mxSwimlaneManager extends mxEventSource {
 
     // Finds the first valid sibling swimlane as reference
     for (let i = 0; i < childCount; i += 1) {
-      const child = model.getChildAt(parent, i);
+      const child = <mxCell>model.getChildAt(parent, i);
 
       if (child !== swimlane && !this.isSwimlaneIgnored(child)) {
         geo = model.getGeometry(child);
@@ -326,7 +327,7 @@ class mxSwimlaneManager extends mxEventSource {
 
               while (current != null) {
                 top = current;
-                current = model.getParent(current);
+                current = <mxCell>model.getParent(current);
                 const tmp = (<mxGraph>this.graph).isSwimlane(current)
                   ? (<mxGraph>this.graph).getStartSize(current)
                   : new mxRectangle();
@@ -376,7 +377,7 @@ class mxSwimlaneManager extends mxEventSource {
       const horizontal = this.isCellHorizontal(swimlane);
 
       if (!this.isSwimlaneIgnored(swimlane)) {
-        let geo = model.getGeometry(swimlane);
+        let geo = <mxGeometry>model.getGeometry(swimlane);
 
         if (geo != null) {
           if (
