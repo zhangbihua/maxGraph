@@ -169,7 +169,7 @@ class mxShape {
 
   verticalTextRotation: number | null = null;
 
-  oldGradients: any[] | null | null = null;
+  oldGradients: any[] | null = null;
 
   glass: boolean | null = null;
 
@@ -333,7 +333,7 @@ class mxShape {
     const sw =
       this.stencil && this.stencil.strokewidth !== 'inherit'
         ? Number(this.stencil.strokewidth)
-        : this.strokewidth;
+        : <number>this.strokewidth;
 
     return mxUtils.mod(Math.max(1, Math.round(sw * this.scale)), 2) === 1
       ? 0.5
@@ -448,10 +448,10 @@ class mxShape {
       [bounds.width, bounds.height] = [bounds.height, bounds.width];
     }
 
-    let labelMargins = this.getLabelMargins(bounds);
+    let labelMargins: mxRectangle | null = this.getLabelMargins(bounds);
 
     if (labelMargins != null) {
-      labelMargins = (<mxRectangle>labelMargins).copy();
+      labelMargins = <mxRectangle>(<mxRectangle>labelMargins).clone();
 
       let flipH = toBool(
         mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, false)
@@ -466,10 +466,10 @@ class mxShape {
         this.state.text != null &&
         this.state.text.isPaintBoundsInverted()
       ) {
-        const tmp = labelMargins.x;
-        labelMargins.x = labelMargins.height;
-        labelMargins.height = labelMargins.width;
-        labelMargins.width = labelMargins.y;
+        const tmp = <number>labelMargins.x;
+        labelMargins.x = <number>labelMargins.height;
+        labelMargins.height = <number>labelMargins.width;
+        labelMargins.width = <number>labelMargins.y;
         labelMargins.y = tmp;
 
         [flipH, flipV] = [flipV, flipH];

@@ -303,7 +303,7 @@ class mxGraphModel extends mxEventSource {
    *
    * root - <mxCell> that represents the root cell.
    */
-  constructor(root: mxCell) {
+  constructor(root: mxCell | null=null) {
     super();
     this.currentEdit = this.createUndoableEdit();
 
@@ -1221,7 +1221,7 @@ class mxGraphModel extends mxEventSource {
    */
   getDirectedEdgeCount(cell: mxCell,
                        outgoing: boolean,
-                       ignoredEdge: mxCell): number {
+                       ignoredEdge: mxCell | null=null): number {
     let count = 0;
     const edgeCount = this.getEdgeCount(cell);
 

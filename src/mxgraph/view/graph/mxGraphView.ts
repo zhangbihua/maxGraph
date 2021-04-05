@@ -27,6 +27,7 @@ import mxImage from '../../util/image/mxImage';
 import mxCurrentRootChange from './mxCurrentRootChange';
 import mxGraphModel from './mxGraphModel';
 import mxShape from '../../shape/mxShape';
+import mxGeometry from "../../util/datatypes/mxGeometry";
 
 const validateBool = (x: any) => {
   if (x === true || x === false) {
@@ -575,7 +576,7 @@ class mxGraphView extends mxEventSource {
    *
    * root - <mxCell> that specifies the root of the displayed cell hierarchy.
    */
-  setCurrentRoot(root: mxCell): mxCell {
+  setCurrentRoot(root: mxCell | null): mxCell {
     if (this.currentRoot != root) {
       const change = new mxCurrentRootChange(this, root);
       change.execute();
@@ -1667,7 +1668,11 @@ class mxGraphView extends mxEventSource {
    *
    * Returns the edge style function to be used to render the given edge state.
    */
-  getEdgeStyle(edge, points, source, target) {
+  getEdgeStyle(edge,
+               points,
+               source,
+               target) {
+
     let edgeStyle = this.isLoopStyleEnabled(edge, points, source, target)
       ? mxUtils.getValue(
           edge.style,
@@ -1834,14 +1839,17 @@ class mxGraphView extends mxEventSource {
    * returned.
    * border - Optional border between the perimeter and the shape.
    */
-  getPerimeterPoint(terminal, next, orthogonal, border) {
+  getPerimeterPoint(terminal: mxCellState,
+                    next,
+                    orthogonal,
+                    border: number=0) {
     let point = null;
 
     if (terminal != null) {
       const perimeter = this.getPerimeterFunction(terminal);
 
       if (perimeter != null && next != null) {
-        const bounds = this.getPerimeterBounds(terminal, border);
+        const bounds = <mxRectangle>this.getPerimeterBounds(terminal, border);
 
         if (bounds.width > 0 || bounds.height > 0) {
           point = new mxPoint(next.x, next.y);
@@ -1964,7 +1972,7 @@ class mxGraphView extends mxEventSource {
    * border - Number that adds a border between the shape and the perimeter.
    */
   getPerimeterBounds(
-    terminal: mxCell | null = null,
+    terminal: mxCellState | null = null,
     border: number = 0
   ): mxRectangle | null {
     if (terminal != null) {
@@ -1972,7 +1980,7 @@ class mxGraphView extends mxEventSource {
         terminal.style[mxConstants.STYLE_PERIMETER_SPACING] || 0
       );
     }
-    return terminal.getPerimeterBounds(border * this.scale, 0);
+    return (<mxCellState>terminal).getPerimeterBounds(border * this.scale);
   }
 
   /**
@@ -2011,7 +2019,10 @@ class mxGraphView extends mxEventSource {
    * source - Boolean indicating if the next point for the source or target
    * should be returned.
    */
-  getNextPoint(edge, opposite, source) {
+  getNextPoint(edge: mxCellState,
+               opposite: mxCellState | null,
+               source: boolean=false) {
+
     const pts = edge.absolutePoints;
     let point = null;
 
@@ -2079,7 +2090,7 @@ class mxGraphView extends mxEventSource {
    * state - <mxCellState> whose bounds should be updated.
    */
   updateEdgeBounds(state: mxCellState) {
-    const points = state.absolutePoints;
+    const points = <mxPoint[]>state.absolutePoints;
     const p0 = points[0];
     const pe = points[points.length - 1];
 
@@ -2145,13 +2156,14 @@ class mxGraphView extends mxEventSource {
    * state - <mxCellState> that represents the state of the parent edge.
    * geometry - <mxGeometry> that represents the relative location.
    */
-  getPoint(state, geometry) {
+  getPoint(state: mxCellState,
+           geometry: mxGeometry): mxPoint {
     let x = state.getCenterX();
     let y = state.getCenterY();
 
     if (state.segments != null && (geometry == null || geometry.relative)) {
       const gx = geometry != null ? geometry.x / 2 : 0;
-      const pointCount = state.absolutePoints.length;
+      const pointCount = (<mxPoint[]>state.absolutePoints).length;
       const dist = Math.round((gx + 0.5) * state.length);
       let segment = state.segments[0];
       let length = 0;
@@ -2163,8 +2175,8 @@ class mxGraphView extends mxEventSource {
       }
 
       const factor = segment === 0 ? 0 : (dist - length) / segment;
-      const p0 = state.absolutePoints[index - 1];
-      const pe = state.absolutePoints[index];
+      const p0 = (<mxPoint[]>state.absolutePoints)[index - 1];
+      const pe = (<mxPoint[]>state.absolutePoints)[index];
 
       if (p0 != null && pe != null) {
         let gy = 0;
@@ -2213,20 +2225,25 @@ class mxGraphView extends mxEventSource {
    * x - Specifies the x-coordinate of the absolute label location.
    * y - Specifies the y-coordinate of the absolute label location.
    */
-  getRelativePoint(edgeState, x, y) {
+  getRelativePoint(edgeState: mxCellState,
+                   x: number,
+                   y: number) {
+
     const model = this.graph.getModel();
     const geometry = model.getGeometry(edgeState.cell);
 
     if (geometry != null) {
-      const pointCount = edgeState.absolutePoints.length;
+      const absolutePoints = (<mxPoint[]>edgeState.absolutePoints);
+      const pointCount = absolutePoints.length;
 
       if (geometry.relative && pointCount > 1) {
         const totalLength = edgeState.length;
-        const { segments } = edgeState;
+        let { segments } = edgeState;
+        segments = <number[]>segments;
 
         // Works out which line segment the point of the label is closest to
-        let p0 = edgeState.absolutePoints[0];
-        let pe = edgeState.absolutePoints[1];
+        let p0 = absolutePoints[0];
+        let pe = absolutePoints[1];
         let minDist = mxUtils.ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
         let length = 0;
         let index = 0;
@@ -2234,7 +2251,7 @@ class mxGraphView extends mxEventSource {
 
         for (let i = 2; i < pointCount; i += 1) {
           p0 = pe;
-          pe = edgeState.absolutePoints[i];
+          pe = absolutePoints[i];
           const dist = mxUtils.ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
           tmp += segments[i - 2];
 
@@ -2246,8 +2263,8 @@ class mxGraphView extends mxEventSource {
         }
 
         const seg = segments[index];
-        p0 = edgeState.absolutePoints[index];
-        pe = edgeState.absolutePoints[index + 1];
+        p0 = absolutePoints[index];
+        pe = absolutePoints[index + 1];
 
         const x2 = p0.x;
         const y2 = p0.y;
@@ -2369,8 +2386,10 @@ class mxGraphView extends mxEventSource {
    * create - Optional boolean indicating if a new state should be created
    * if it does not yet exist. Default is false.
    */
-  getState(cell: mxCell | null, create: boolean = false) {
-    let state: mxCellState = null;
+  getState(cell: mxCell | null=null,
+           create: boolean=false) {
+
+    let state: mxCellState | null = null;
 
     if (cell != null) {
       state = this.states.get(cell);
