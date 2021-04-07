@@ -8,6 +8,7 @@ import mxPoint from '../../util/datatypes/mxPoint';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxEventSource from '../../util/event/mxEventSource';
 import mxImage from '../../util/image/mxImage';
+import mxCellState from "../../util/datatypes/mxCellState";
 
 class mxCellOverlay extends mxEventSource {
   /**
@@ -48,14 +49,14 @@ class mxCellOverlay extends mxEventSource {
    * Holds the offset as an <mxPoint>. The offset will be scaled according to the
    * current scale.
    */
-  offset = null;
+  offset: mxPoint | null = null;
 
   /**
    * Variable: cursor
    *
    * Holds the cursor for the overlay. Default is 'help'.
    */
-  cursor = null;
+  cursor: string = 'help';
 
   /**
    * Variable: defaultOverlap
@@ -63,7 +64,7 @@ class mxCellOverlay extends mxEventSource {
    * Defines the overlapping for the overlay, that is, the proportional distance
    * from the origin to the point defined by the alignment. Default is 0.5.
    */
-  defaultOverlap = 0.5;
+  defaultOverlap: number = 0.5;
 
   /**
    * Class: mxCellOverlay
@@ -119,16 +120,18 @@ class mxCellOverlay extends mxEventSource {
    * values are <ALIGN_TOP>, <ALIGN_MIDDLE> and <ALIGN_BOTTOM>
    * (default).
    */
-  constructor(image, tooltip, align, verticalAlign, offset, cursor) {
+  constructor(image: mxImage,
+              tooltip: string | null=null,
+              align: string='right',
+              verticalAlign: string='bottom',
+              offset: mxPoint=new mxPoint(),
+              cursor: string='help') {
     super();
 
     this.image = image;
     this.tooltip = tooltip;
-    this.align = align != null ? align : this.align;
-    this.verticalAlign =
-      verticalAlign != null ? verticalAlign : this.verticalAlign;
-    this.offset = offset != null ? offset : new mxPoint();
-    this.cursor = cursor != null ? cursor : 'help';
+    this.offset = offset;
+    this.cursor = cursor;
   }
 
   /**

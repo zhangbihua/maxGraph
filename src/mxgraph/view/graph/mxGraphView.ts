@@ -1668,12 +1668,12 @@ class mxGraphView extends mxEventSource {
    *
    * Returns the edge style function to be used to render the given edge state.
    */
-  getEdgeStyle(edge,
-               points,
-               source,
-               target) {
+  getEdgeStyle(edge: mxCell,
+               points: mxPoint[],
+               source: mxCell,
+               target: mxCell): any {
 
-    let edgeStyle = this.isLoopStyleEnabled(edge, points, source, target)
+    let edgeStyle: any = this.isLoopStyleEnabled(edge, points, source, target)
       ? mxUtils.getValue(
           edge.style,
           mxConstants.STYLE_LOOP,

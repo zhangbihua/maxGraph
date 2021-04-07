@@ -605,7 +605,7 @@ class mxGraphModel extends mxEventSource {
    */
   add(parent: mxCell | null,
       child: mxCell | null,
-      index: number): mxCell | null {
+      index: number | null=null): mxCell | null {
 
     if (child !== parent && parent != null && child != null) {
       // Appends the child if no index was specified
@@ -1677,7 +1677,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose collapsed state should be returned.
    */
-  isCollapsed(cell: mxCell): boolean {
+  isCollapsed(cell: mxCell | null): boolean {
     return cell != null ? cell.isCollapsed() : false;
   }
 
