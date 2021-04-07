@@ -10,7 +10,7 @@ class mxEventObject {
    *
    * Holds the name.
    */
-  name: string | null = null;
+  name: string = '';
 
   /**
    * Variable: properties

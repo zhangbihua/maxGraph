@@ -210,7 +210,7 @@ class mxLayoutManager extends mxEventSource {
    * <getLayout> will return a layout for the given cell for
    * <mxEvent.BEGIN_UPDATE> or <mxEvent.END_UPDATE>.
    */
-  hasLayout(cell: mxCell): boolean {
+  hasLayout(cell: mxCell | null): boolean {
     return !!this.getLayout(cell, mxEvent.LAYOUT_CELLS);
   }
 
@@ -225,7 +225,7 @@ class mxLayoutManager extends mxEventSource {
    * check if a layout exists for the given cell. This is called
    * from <hasLayout>.
    */
-  getLayout(cell: mxCell, eventName: string): any {
+  getLayout(cell: mxCell | null, eventName: string): any {
     return null;
   }
 
@@ -378,7 +378,7 @@ class mxLayoutManager extends mxEventSource {
 
       if (this.isBubbling()) {
         const model = (<mxGraph>this.getGraph()).getModel();
-        this.addAncestorsWithLayout(model.getParent(cell), result);
+        this.addAncestorsWithLayout(<mxCell>model.getParent(cell), result);
       }
     }
     return result;
@@ -394,7 +394,7 @@ class mxLayoutManager extends mxEventSource {
       const model = (<mxGraph>this.getGraph()).getModel();
 
       for (let i = 0; i < model.getChildCount(cell); i += 1) {
-        const child = model.getChildAt(cell, i);
+        const child = <mxCell>model.getChildAt(cell, i);
 
         if (this.hasLayout(child)) {
           result.push(child);

@@ -28,89 +28,26 @@ import mxCurrentRootChange from './mxCurrentRootChange';
 import mxGraphModel from './mxGraphModel';
 import mxShape from '../../shape/mxShape';
 import mxGeometry from "../../util/datatypes/mxGeometry";
-
-const validateBool = (x: any) => {
-  if (x === true || x === false) {
-    return x;
-  }
-  throw new Error(
-    `Unsupported value: ${x} - must be either ` +
-      `true or false (boolean values) only.`
-  );
-};
-
-const validateString = (x: any) => {
-  if (!(typeof x === 'string')) {
-    throw new Error(`Unsupported value: ${x} - must be a string.`);
-  }
-  return x;
-};
+import mxConnectionConstraint from "../connection/mxConnectionConstraint";
+import mxPopupMenuHandler from "../../handler/mxPopupMenuHandler";
 
 class mxGraphView extends mxEventSource {
   // TODO: Document me!
-  backgroundImage: mxImageShape | null;
+  backgroundImage: mxImageShape | null=null;
 
-  backgroundPageShape: mxShape | null;
+  backgroundPageShape: mxShape | null=null;
 
-  EMPTY_POINT = new mxPoint();
+  EMPTY_POINT: mxPoint = new mxPoint();
 
-  _canvas: HTMLElement;
+  canvas: SVGElement | null=null;
 
-  /**
-   * Function: get canvas
-   *
-   * Returns the DOM node that contains the background-, draw- and
-   * overlay- and decoratorpanes.
-   */
-  get canvas(): HTMLElement {
-    return this._canvas;
-  }
+  backgroundPane: SVGElement | null=null;
 
-  _backgroundPane: HTMLElement;
+  drawPane: SVGElement | null=null;
 
-  /**
-   * Function: get backgroundPane
-   *
-   * Returns the DOM node that represents the background layer.
-   */
-  get backgroundPane(): HTMLElement {
-    return this._backgroundPane;
-  }
+  overlayPane: SVGElement | null=null;
 
-  _drawPane: HTMLElement;
-
-  /**
-   * Function: get drawPane
-   *
-   * Returns the DOM node that represents the main drawing layer.
-   */
-  get drawPane(): HTMLElement {
-    return this._drawPane;
-  }
-
-  _overlayPane: HTMLElement;
-
-  /**
-   * Function: get overlayPane
-   *
-   * Returns the DOM node that represents the layer above the drawing layer.
-   */
-  get overlayPane(): HTMLElement {
-    return this._overlayPane;
-  }
-
-  _decoratorPane: HTMLElement;
-
-  /**
-   * Function: get decoratorPane
-   *
-   * Returns the DOM node that represents the topmost drawing layer.
-   */
-  get decoratorPane(): HTMLElement {
-    return this._decoratorPane;
-  }
-
-  _doneResource: string = mxClient.language !== 'none' ? 'done' : '';
+  decoratorPane: SVGElement | null=null;
 
   /**
    * Variable: doneResource
@@ -119,31 +56,17 @@ class mxGraphView extends mxEventSource {
    * If the resource for this key does not exist then the value is used as
    * the status message. Default is 'done'.
    */
-  get doneResource() {
-    return this._doneResource;
-  }
-
-  set doneResource(value: string) {
-    this._doneResource = validateString(value);
-  }
+  doneResource: string = mxClient.language !== 'none' ? 'done' : '';
 
   /**
-   * Function: updatingDocumentResource
+   * Variable: updatingDocumentResource
    *
    * Specifies the resource key for the status message while the document is
    * being updated. If the resource for this key does not exist then the
    * value is used as the status message. Default is 'updatingDocument'.
    */
-  _updatingDocumentResource: string =
+  updatingDocumentResource: string =
     mxClient.language !== 'none' ? 'updatingDocument' : '';
-
-  get updatingDocumentResource() {
-    return this._updatingDocumentResource;
-  }
-
-  set updatingDocumentResource(value: string) {
-    this._updatingDocumentResource = validateString(value);
-  }
 
   /**
    * Variable: allowEval
@@ -153,15 +76,7 @@ class mxGraphView extends mxEventSource {
    * to objects using <mxStyleRegistry>. Default is false. NOTE: Enabling this
    * switch carries a possible security risk.
    */
-  _allowEval: boolean = false;
-
-  get allowEval() {
-    return this._allowEval;
-  }
-
-  set allowEval(value) {
-    this._allowEval = validateBool(value);
-  }
+  allowEval: boolean = false;
 
   /**
    * Variable: captureDocumentGesture
@@ -169,129 +84,35 @@ class mxGraphView extends mxEventSource {
    * Specifies if a gesture should be captured when it goes outside of the
    * graph container. Default is true.
    */
-  _captureDocumentGesture: boolean = true;
-
-  get captureDocumentGesture() {
-    return this._captureDocumentGesture;
-  }
-
-  set captureDocumentGesture(value) {
-    this._captureDocumentGesture = validateBool(value);
-    // this.refresh();
-  }
-
-  _rendering: boolean = true;
+  captureDocumentGesture: boolean = true;
 
   /**
-   * Function: get rendering
+   * Function: getRendering
    *
    * Returns if shapes should be created, updated and destroyed using the
    * methods of <mxCellRenderer> in <graph>. Default is true.
    *
    * Returns <rendering>.
    */
-  get rendering(): boolean {
-    return this._rendering;
-  }
-
-  /**
-   * Function: set rendering
-   *
-   * Sets whether shapes should be created, updated and destroyed using the
-   * methods of <mxCellRenderer> in <graph>. Default is true.
-   *
-   * Sets <rendering>.
-   */
-  set rendering(value: boolean) {
-    this._rendering = validateBool(value);
-  }
-
-  _graph: mxGraph = null;
+  rendering: boolean = true;
 
   /**
    * Function: get graph
    *
    * Returns reference to the enclosing <mxGraph>.
    */
-  get graph(): mxGraph {
-    return this._graph;
-  }
+  graph: mxGraph | null = null;
 
   /**
    * Variable: currentRoot
    *
    * <mxCell> that acts as the root of the displayed cell hierarchy.
    */
-  _currentRoot: mxCell = null;
+  currentRoot: mxCell | null = null;
 
-  get currentRoot(): mxCell {
-    return this._currentRoot;
-  }
+  graphBounds: mxRectangle = new mxRectangle();
 
-  set currentRoot(value: mxCell) {
-    this._currentRoot = value;
-  }
-
-  _graphBounds: mxRectangle = new mxRectangle();
-
-  /**
-   * Function: get graphBounds
-   *
-   * Returns the <mxRectangle> that caches the scales and translated bounds of the current view.
-   */
-  get graphBounds(): mxRectangle {
-    return this._graphBounds;
-  }
-
-  /**
-   * Function: set graphBounds
-   *
-   * Sets <graphBounds>.
-   */
-  set graphBounds(value: mxRectangle) {
-    this._graphBounds = value;
-    // this.refresh();
-  }
-
-  _scale: number = 1;
-
-  /**
-   * Function: get scale
-   *
-   * Returns the <scale>. Default is 1 (100%).
-   */
-  get scale(): number {
-    return this._scale;
-  }
-
-  /**
-   * Function: set scale
-   *
-   * Sets the scale and fires a <scale> event before calling <revalidate> followed
-   * by <mxGraph.sizeDidChange>.
-   *
-   * Parameters:
-   *
-   * value - Decimal value that specifies the new scale (1 is 100%).
-   */
-  set scale(value: number) {
-    const previousScale: number = this._scale;
-    if (previousScale !== value) {
-      this._scale = value;
-      if (this.isEventsEnabled()) {
-        this.viewStateChanged();
-      }
-    }
-    this.fireEvent(
-      new mxEventObject(
-        mxEvent.SCALE,
-        'scale',
-        value,
-        'previousScale',
-        previousScale
-      )
-    );
-  }
+  scale: number = 1;
 
   /**
    * Variable: translate
@@ -299,75 +120,9 @@ class mxGraphView extends mxEventSource {
    * <mxPoint> that specifies the current translation. Default is a new
    * empty <mxPoint>.
    */
-  _translate: mxPoint = new mxPoint();
+  translate: mxPoint = new mxPoint();
 
-  /**
-   * Function: getTranslate
-   *
-   * Returns the <translate>.
-   */
-  get translate() {
-    return this._translate;
-  }
-
-  /**
-   * Function: set translate
-   *
-   * Sets the translation and fires a <translate> event before calling
-   * <revalidate> followed by <mxGraph.sizeDidChange>. The translation is the
-   * negative of the origin.
-   *
-   * Parameters:
-   *
-   * dx - X-coordinate of the translation.
-   * dy - Y-coordinate of the translation.
-   */
-  set translate(value: mxPoint) {
-    const previousTranslate = new mxPoint(this._translate.x, this._translate.y);
-    const dx = value.x;
-    const dy = value.y;
-
-    if (this._translate.x !== dx || this._translate.y !== dy) {
-      this._translate.x = dx;
-      this._translate.y = dy;
-
-      if (this.isEventsEnabled()) {
-        this.viewStateChanged();
-      }
-    }
-
-    this.fireEvent(
-      new mxEventObject(
-        mxEvent.TRANSLATE,
-        'translate',
-        this.translate,
-        'previousTranslate',
-        previousTranslate
-      )
-    );
-  }
-
-  _states: mxDictionary = new mxDictionary();
-
-  /**
-   * Function: get states
-   *
-   * Returns <states>.
-   */
-  get states(): mxDictionary {
-    return this._states;
-  }
-
-  /**
-   * Function: set states
-   *
-   * Sets <states>.
-   */
-  set states(value: mxDictionary) {
-    this._states = value;
-  }
-
-  _updateStyle: boolean = false;
+  states: mxDictionary = new mxDictionary();
 
   /**
    * get updateStyle
@@ -376,37 +131,35 @@ class mxGraphView extends mxEventSource {
    * is false then the style is only updated if the state is created or if the
    * style of the cell was changed. Default is false.
    */
-  get updateStyle(): boolean {
-    return this._updateStyle;
-  }
+  updateStyle: boolean = false;
 
   /**
    * Variable: lastNode
    *
    * During validation, this contains the last DOM node that was processed.
    */
-  lastNode: HTMLElement = null;
+  lastNode: HTMLElement | null = null;
 
   /**
    * Variable: lastHtmlNode
    *
    * During validation, this contains the last HTML DOM node that was processed.
    */
-  lastHtmlNode: HTMLElement = null;
+  lastHtmlNode: HTMLElement | null = null;
 
   /**
    * Variable: lastForegroundNode
    *
    * During validation, this contains the last edge's DOM node that was processed.
    */
-  lastForegroundNode: HTMLElement = null;
+  lastForegroundNode: HTMLElement | null = null;
 
   /**
    * Variable: lastForegroundHtmlNode
    *
    * During validation, this contains the last edge HTML DOM node that was processed.
    */
-  lastForegroundHtmlNode: HTMLElement = null;
+  lastForegroundHtmlNode: HTMLElement | null = null;
 
   /**
    * Class: mxGraphView
@@ -461,33 +214,109 @@ class mxGraphView extends mxEventSource {
   constructor(graph: mxGraph) {
     super();
 
-    this._graph = graph;
+    this.graph = graph;
   }
 
   // Backwards compatibility getters/setters
 
+  /**
+   * Function: get graphBounds
+   *
+   * Returns the <mxRectangle> that caches the scales and translated bounds of the current view.
+   */
   getGraphBounds(): mxRectangle {
     return this.graphBounds;
   }
 
+  /**
+   * Function: setGraphBounds
+   *
+   * Sets <graphBounds>.
+   */
   setGraphBounds(value: mxRectangle) {
     this.graphBounds = value;
   }
 
+  /**
+   * Function: get scale
+   *
+   * Returns the <scale>. Default is 1 (100%).
+   */
   getScale(): number {
     return this.scale;
   }
 
-  setScale(value) {
-    this.scale = value;
+  /**
+   * Function: setScale
+   *
+   * Sets the scale and fires a <scale> event before calling <revalidate> followed
+   * by <mxGraph.sizeDidChange>.
+   *
+   * Parameters:
+   *
+   * value - Decimal value that specifies the new scale (1 is 100%).
+   */
+  setScale(value: number) {
+    const previousScale: number = this.scale;
+    if (previousScale !== value) {
+      this.scale = value;
+      if (this.isEventsEnabled()) {
+        this.viewStateChanged();
+      }
+    }
+    this.fireEvent(
+        new mxEventObject(
+            mxEvent.SCALE,
+            'scale',
+            value,
+            'previousScale',
+            previousScale
+        )
+    );
   }
 
+  /**
+   * Function: getTranslate
+   *
+   * Returns the <translate>.
+   */
   getTranslate(): mxPoint {
     return this.translate;
   }
 
+  /**
+   * Function: setTranslate
+   *
+   * Sets the translation and fires a <translate> event before calling
+   * <revalidate> followed by <mxGraph.sizeDidChange>. The translation is the
+   * negative of the origin.
+   *
+   * Parameters:
+   *
+   * dx - X-coordinate of the translation.
+   * dy - Y-coordinate of the translation.
+   */
   setTranslate(dx: number, dy: number) {
-    this.translate = new mxPoint(dx, dy);
+    const previousTranslate = new mxPoint(this.translate.x, this.translate.y);
+
+    if (this.translate.x !== dx || this.translate.y !== dy) {
+      this.translate.x = dx;
+      this.translate.y = dy;
+
+      if (this.isEventsEnabled()) {
+        this.viewStateChanged();
+      }
+    }
+
+    this.fireEvent(
+        new mxEventObject(
+            mxEvent.TRANSLATE,
+            'translate',
+            this.translate,
+            'previousTranslate',
+            previousTranslate
+        )
+    );
   }
 
   isRendering(): boolean {
@@ -506,31 +335,67 @@ class mxGraphView extends mxEventSource {
     this.allowEval = value;
   }
 
+  /**
+   * Function: getStates
+   *
+   * Returns <states>.
+   */
   getStates() {
     return this.states;
   }
 
-  setStates(value) {
+  /**
+   * Function: set states
+   *
+   * Sets <states>.
+   */
+  setStates(value: any): void {
     this.states = value;
   }
 
-  getCanvas(): HTMLElement {
+  /**
+   * Function: getCanvas
+   *
+   * Returns the DOM node that contains the background-, draw- and
+   * overlay- and decoratorpanes.
+   */
+  getCanvas(): SVGElement | null {
     return this.canvas;
   }
 
-  getBackgroundPane(): HTMLElement {
+  /**
+   * Function: getBackgroundPane
+   *
+   * Returns the DOM node that represents the background layer.
+   */
+  getBackgroundPane(): SVGElement | null {
     return this.backgroundPane;
   }
 
-  getDrawPane(): HTMLElement {
+  /**
+   * Function: getDrawPane
+   *
+   * Returns the DOM node that represents the main drawing layer.
+   */
+  getDrawPane(): SVGElement | null {
     return this.drawPane;
   }
 
-  getOverlayPane(): HTMLElement {
+  /**
+   * Function: get overlayPane
+   *
+   * Returns the DOM node that represents the layer above the drawing layer.
+   */
+  getOverlayPane(): SVGElement | null {
     return this.overlayPane;
   }
 
-  getDecoratorPane(): HTMLElement {
+  /**
+   * Function: get decoratorPane
+   *
+   * Returns the DOM node that represents the topmost drawing layer.
+   */
+  getDecoratorPane(): SVGElement | null {
     return this.decoratorPane;
   }
 
@@ -543,11 +408,11 @@ class mxGraphView extends mxEventSource {
    *
    * cells - Array of <mxCells> whose bounds should be returned.
    */
-  getBounds(cells: mxCell[]): mxRectangle {
+  getBounds(cells: mxCell[]): mxRectangle | null {
     let result = null;
 
     if (cells != null && cells.length > 0) {
-      const model = this.graph.getModel();
+      const model = (<mxGraph>this.graph).getModel();
 
       for (let i = 0; i < cells.length; i += 1) {
         if (model.isVertex(cells[i]) || model.isEdge(cells[i])) {
@@ -576,16 +441,16 @@ class mxGraphView extends mxEventSource {
    *
    * root - <mxCell> that specifies the root of the displayed cell hierarchy.
    */
-  setCurrentRoot(root: mxCell | null): mxCell {
+  setCurrentRoot(root: mxCell | null): mxCell | null {
     if (this.currentRoot != root) {
-      const change = new mxCurrentRootChange(this, root);
+      const change = new mxCurrentRootChange(this, <mxCell>root);
       change.execute();
 
       const edit = new mxUndoableEdit(this, true);
       edit.add(change);
 
       this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
-      this.graph.sizeDidChange();
+      (<mxGraph>this.graph).sizeDidChange();
 
       this.currentRoot = root;
     }
@@ -604,7 +469,10 @@ class mxGraphView extends mxEventSource {
    * dx - X-coordinate of the translation.
    * dy - Y-coordinate of the translation.
    */
-  scaleAndTranslate(scale, dx, dy) {
+  scaleAndTranslate(scale: number,
+                    dx: number,
+                    dy: number): void {
+
     const previousScale = this.scale;
     const previousTranslate = new mxPoint(this.translate.x, this.translate.y);
 
@@ -645,7 +513,7 @@ class mxGraphView extends mxEventSource {
    */
   viewStateChanged() {
     this.revalidate();
-    this.graph.sizeDidChange();
+    (<mxGraph>this.graph).sizeDidChange();
   }
 
   /**
@@ -688,10 +556,10 @@ class mxGraphView extends mxEventSource {
     force: boolean = false,
     recurse: boolean = true
   ) {
-    const model: mxGraphModel = this.graph.getModel();
+    const model: mxGraphModel = (<mxGraph>this.graph).getModel();
     cell = cell || model.getRoot();
 
-    this.removeState(cell);
+    this.removeState(<mxCell>cell);
 
     if (recurse && (force || cell != this.currentRoot)) {
       const childCount: number = model.getChildCount(cell);
@@ -720,10 +588,10 @@ class mxGraphView extends mxEventSource {
     recurse: boolean = true,
     includeEdges: boolean = true
   ) {
-    const model: mxGraphModel = this.graph.getModel();
-    const state: mxCellState = this.getState(cell);
+    const model: mxGraphModel = (<mxGraph>this.graph).getModel();
+    const state: mxCellState = <mxCellState>this.getState(cell);
 
-    cell = cell || model.getRoot();
+    cell = <mxCell>(cell || model.getRoot());
 
     if (state != null) {
       state.invalid = true;
@@ -776,11 +644,11 @@ class mxGraphView extends mxEventSource {
 
     const graphBounds = this.getBoundingBox(
       this.validateCellState(
-        this.validateCell(
+        <mxCell>this.validateCell(
           cell ||
             (this.currentRoot != null
               ? this.currentRoot
-              : this.graph.getModel().getRoot())
+              : (<mxGraph>this.graph).getModel().getRoot())
         )
       )
     );
@@ -825,7 +693,7 @@ class mxGraphView extends mxEventSource {
    * recurse - Optional boolean indicating if the children should be included.
    * Default is true.
    */
-  getBoundingBox(state: mxCellState | null = null, recurse: boolean = true) {
+  getBoundingBox(state: mxCellState | null = null, recurse: boolean = true): mxRectangle {
     let bbox = null;
 
     if (state != null) {
@@ -843,7 +711,7 @@ class mxGraphView extends mxEventSource {
       }
 
       if (recurse) {
-        const model = this.graph.getModel();
+        const model = (<mxGraph>this.graph).getModel();
         const childCount = model.getChildCount(state.cell);
 
         for (let i = 0; i < childCount; i += 1) {
@@ -873,7 +741,7 @@ class mxGraphView extends mxEventSource {
    *
    * bounds - <mxRectangle> that represents the bounds of the shape.
    */
-  createBackgroundPageShape(bounds) {
+  createBackgroundPageShape(bounds: mxRectangle): mxRectangleShape {
     return new mxRectangleShape(bounds, 'white', 'black');
   }
 
@@ -893,7 +761,7 @@ class mxGraphView extends mxEventSource {
    * Validates the background image.
    */
   validateBackgroundImage() {
-    const bg = this.graph.getBackgroundImage();
+    const bg = (<mxGraph>this.graph).getBackgroundImage();
 
     if (bg != null) {
       if (
@@ -907,7 +775,7 @@ class mxGraphView extends mxEventSource {
         const bounds = new mxRectangle(0, 0, 1, 1);
 
         this.backgroundImage = new mxImageShape(bounds, bg.src);
-        this.backgroundImage.dialect = this.graph.dialect;
+        this.backgroundImage.dialect = (<mxGraph>this.graph).dialect;
         this.backgroundImage.init(this.backgroundPane);
         this.backgroundImage.redraw();
       }
@@ -925,25 +793,27 @@ class mxGraphView extends mxEventSource {
    * Validates the background page.
    */
   validateBackgroundPage(): void {
-    if (this.graph.pageVisible) {
+    const graph = <mxGraph>this.graph;
+
+    if (graph.pageVisible) {
       const bounds = this.getBackgroundPageBounds();
 
       if (this.backgroundPageShape == null) {
         this.backgroundPageShape = this.createBackgroundPageShape(bounds);
         this.backgroundPageShape.scale = this.scale;
         this.backgroundPageShape.isShadow = true;
-        this.backgroundPageShape.dialect = this.graph.dialect;
+        this.backgroundPageShape.dialect = (<mxGraph>this.graph).dialect;
         this.backgroundPageShape.init(this.backgroundPane);
         this.backgroundPageShape.redraw();
 
         // Adds listener for double click handling on background
-        if (this.graph.nativeDblClickEnabled) {
+        if (graph.nativeDblClickEnabled) {
           mxEvent.addListener(
             this.backgroundPageShape.node,
             'dblclick',
-            mxUtils.bind(this, evt => {
-              this.graph.dblClick(evt);
-            })
+            (evt: MouseEvent) => {
+              graph.dblClick(evt);
+            }
           );
         }
 
@@ -951,31 +821,31 @@ class mxGraphView extends mxEventSource {
         // container and finishing the handling of a single gesture
         mxEvent.addGestureListeners(
           this.backgroundPageShape.node,
-          mxUtils.bind(this, evt => {
-            this.graph.fireMouseEvent(
+            (evt: Event) => {
+            graph.fireMouseEvent(
               mxEvent.MOUSE_DOWN,
               new mxMouseEvent(evt)
             );
-          }),
-          mxUtils.bind(this, evt => {
+          },
+          (evt: Event) => {
             // Hides the tooltip if mouse is outside container
             if (
-              this.graph.tooltipHandler != null &&
-              this.graph.tooltipHandler.isHideOnHover()
+                graph.tooltipHandler != null &&
+                graph.tooltipHandler.isHideOnHover()
             ) {
-              this.graph.tooltipHandler.hide();
+              graph.tooltipHandler.hide();
             }
 
-            if (this.graph.isMouseDown && !mxEvent.isConsumed(evt)) {
-              this.graph.fireMouseEvent(
+            if (graph.isMouseDown && !mxEvent.isConsumed(evt)) {
+              graph.fireMouseEvent(
                 mxEvent.MOUSE_MOVE,
                 new mxMouseEvent(evt)
               );
             }
-          }),
-          mxUtils.bind(this, evt => {
-            this.graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
-          })
+          },
+            (evt: Event) => {
+            graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
+          }
         );
       } else {
         this.backgroundPageShape.scale = this.scale;
@@ -999,8 +869,8 @@ class mxGraphView extends mxEventSource {
    * Returns the bounds for the background page.
    */
   getBackgroundPageBounds(): mxRectangle {
-    const fmt = this.graph.pageFormat;
-    const ps = this.scale * this.graph.pageScale;
+    const fmt = (<mxGraph>this.graph).pageFormat;
+    const ps = this.scale * (<mxGraph>this.graph).pageScale;
 
     return new mxRectangle(
       this.scale * this.translate.x,
@@ -1039,10 +909,11 @@ class mxGraphView extends mxEventSource {
    */
   redrawBackgroundImage(backgroundImage: mxImageShape, bg: mxImage): void {
     backgroundImage.scale = this.scale;
-    backgroundImage.bounds.x = this.scale * this.translate.x;
-    backgroundImage.bounds.y = this.scale * this.translate.y;
-    backgroundImage.bounds.width = this.scale * bg.width;
-    backgroundImage.bounds.height = this.scale * bg.height;
+    const bounds = <mxRectangle>backgroundImage.bounds;
+    bounds.x = this.scale * this.translate.x;
+    bounds.y = this.scale * this.translate.y;
+    bounds.width = this.scale * bg.width;
+    bounds.height = this.scale * bg.height;
     backgroundImage.redraw();
   }
 
@@ -1059,20 +930,21 @@ class mxGraphView extends mxEventSource {
    * visible - Optional boolean indicating if the cell should be visible. Default
    * is true.
    */
-  validateCell(cell: mxCell, visible: boolean = true) {
+  validateCell(cell: mxCell | null=null,
+               visible: boolean = true): mxCell | null {
     if (cell != null) {
-      visible = visible && this.graph.isCellVisible(cell);
+      visible = visible && (<mxGraph>this.graph).isCellVisible(cell);
       const state = this.getState(cell, visible);
 
       if (state != null && !visible) {
         this.removeState(cell);
       } else {
-        const model = this.graph.getModel();
+        const model = (<mxGraph>this.graph).getModel();
         const childCount = model.getChildCount(cell);
 
         for (let i = 0; i < childCount; i += 1) {
           this.validateCell(
-            model.getChildAt(cell, i),
+            <mxCell>model.getChildAt(cell, i),
             visible &&
               (!this.isCellCollapsed(cell) || cell === this.currentRoot)
           );
@@ -1100,26 +972,26 @@ class mxGraphView extends mxEventSource {
       state = this.getState(cell);
 
       if (state != null) {
-        const model = this.graph.getModel();
+        const model = (<mxGraph>this.graph).getModel();
 
         if (state.invalid) {
           state.invalid = false;
 
           if (state.style == null || state.invalidStyle) {
-            state.style = this.graph.getCellStyle(state.cell);
+            state.style = (<mxGraph>this.graph).getCellStyle(<mxCell>state.cell);
             state.invalidStyle = false;
           }
 
           if (cell !== this.currentRoot) {
-            this.validateCellState(model.getParent(cell), false);
+            this.validateCellState(<mxCell>model.getParent(cell), false);
           }
 
           state.setVisibleTerminalState(
-            this.validateCellState(this.getVisibleTerminal(cell, true), false),
+            <mxCellState>this.validateCellState(<mxCell>this.getVisibleTerminal(cell, true), false),
             true
           );
           state.setVisibleTerminalState(
-            this.validateCellState(this.getVisibleTerminal(cell, false), false),
+              <mxCellState>this.validateCellState(<mxCell>this.getVisibleTerminal(cell, false), false),
             false
           );
 
@@ -1127,7 +999,7 @@ class mxGraphView extends mxEventSource {
 
           // Repaint happens immediately after the cell is validated
           if (cell !== this.currentRoot && !state.invalid) {
-            this.graph.cellRenderer.redraw(state, false, this.isRendering());
+            (<mxGraph>this.graph).cellRenderer.redraw(state, false, this.isRendering());
 
             // Handles changes to invertex paintbounds after update of rendering shape
             state.updateCachedBounds();
@@ -1142,7 +1014,7 @@ class mxGraphView extends mxEventSource {
 
           const childCount = model.getChildCount(cell);
           for (let i = 0; i < childCount; i += 1) {
-            this.validateCellState(model.getChildAt(cell, i));
+            this.validateCellState(<mxCell>model.getChildAt(cell, i));
           }
         }
       }
@@ -1160,58 +1032,61 @@ class mxGraphView extends mxEventSource {
    * state - <mxCellState> to be updated.
    */
   updateCellState(state: mxCellState) {
-    state.absoluteOffset.x = 0;
-    state.absoluteOffset.y = 0;
-    state.origin.x = 0;
-    state.origin.y = 0;
+    const absoluteOffset = <mxPoint>state.absoluteOffset;
+    const origin = <mxPoint>state.origin;
+
+    absoluteOffset.x = 0;
+    absoluteOffset.y = 0;
+    origin.x = 0;
+    origin.y = 0;
     state.length = 0;
 
     if (state.cell !== this.currentRoot) {
-      const model = this.graph.getModel();
-      const pState = this.getState(model.getParent(state.cell));
+      const model = (<mxGraph>this.graph).getModel();
+      const pState = <mxCellState>this.getState(model.getParent(state.cell));
 
       if (pState != null && pState.cell !== this.currentRoot) {
-        state.origin.x += pState.origin.x;
-        state.origin.y += pState.origin.y;
+        origin.x += (<mxPoint>pState.origin).x;
+        origin.y += (<mxPoint>pState.origin).y;
       }
 
-      let offset = this.graph.getChildOffsetForCell(state.cell);
+      let offset = (<mxGraph>this.graph).getChildOffsetForCell(<mxCell>state.cell);
 
       if (offset != null) {
-        state.origin.x += offset.x;
-        state.origin.y += offset.y;
+        origin.x += offset.x;
+        origin.y += offset.y;
       }
 
-      const geo = this.graph.getCellGeometry(state.cell);
+      const geo = (<mxGraph>this.graph).getCellGeometry(<mxCell>state.cell);
 
       if (geo != null) {
         if (!model.isEdge(state.cell)) {
-          offset = geo.offset != null ? geo.offset : this.EMPTY_POINT;
+          offset = <mxPoint>(geo.offset != null ? geo.offset : this.EMPTY_POINT);
 
           if (geo.relative && pState != null) {
             if (model.isEdge(pState.cell)) {
               const origin = this.getPoint(pState, geo);
 
               if (origin != null) {
-                state.origin.x +=
-                  origin.x / this.scale - pState.origin.x - this.translate.x;
-                state.origin.y +=
-                  origin.y / this.scale - pState.origin.y - this.translate.y;
+                origin.x +=
+                  origin.x / this.scale - (<mxPoint>pState.origin).x - this.translate.x;
+                origin.y +=
+                  origin.y / this.scale - (<mxPoint>pState.origin).y - this.translate.y;
               }
             } else {
-              state.origin.x += geo.x * pState.unscaledWidth + offset.x;
-              state.origin.y += geo.y * pState.unscaledHeight + offset.y;
+              origin.x += geo.x * <number>pState.unscaledWidth + offset.x;
+              origin.y += geo.y * <number>pState.unscaledHeight + offset.y;
             }
           } else {
-            state.absoluteOffset.x = this.scale * offset.x;
-            state.absoluteOffset.y = this.scale * offset.y;
-            state.origin.x += geo.x;
-            state.origin.y += geo.y;
+            absoluteOffset.x = this.scale * offset.x;
+            absoluteOffset.y = this.scale * offset.y;
+            origin.x += geo.x;
+            origin.y += geo.y;
           }
         }
 
-        state.x = this.scale * (this.translate.x + state.origin.x);
-        state.y = this.scale * (this.translate.y + state.origin.y);
+        state.x = this.scale * (this.translate.x + origin.x);
+        state.y = this.scale * (this.translate.y + origin.y);
         state.width = this.scale * geo.width;
         state.unscaledWidth = geo.width;
         state.height = this.scale * geo.height;
@@ -1237,8 +1112,8 @@ class mxGraphView extends mxEventSource {
    * view. This implementation uses <mxGraph.isCellVisible> but it can be
    * overidden to use a separate condition.
    */
-  isCellCollapsed(cell) {
-    return this.graph.isCellCollapsed(cell);
+  isCellCollapsed(cell: mxCell): boolean {
+    return (<mxGraph>this.graph).isCellCollapsed(cell);
   }
 
   /**
@@ -1246,8 +1121,10 @@ class mxGraphView extends mxEventSource {
    *
    * Validates the given cell state.
    */
-  updateVertexState(state, geo) {
-    const model = this.graph.getModel();
+  updateVertexState(state: mxCellState,
+                    geo: mxGeometry) {
+
+    const model = (<mxGraph>this.graph).getModel();
     const pState = this.getState(model.getParent(state.cell));
 
     if (geo.relative && pState != null && !model.isEdge(pState.cell)) {
@@ -1273,18 +1150,20 @@ class mxGraphView extends mxEventSource {
    *
    * Validates the given cell state.
    */
-  updateEdgeState(state, geo) {
-    const source = state.getVisibleTerminalState(true);
-    const target = state.getVisibleTerminalState(false);
+  updateEdgeState(state: mxCellState,
+                  geo: mxGeometry) {
+
+    const source = <mxCellState>state.getVisibleTerminalState(true);
+    const target = <mxCellState>state.getVisibleTerminalState(false);
 
     // This will remove edges with no terminals and no terminal points
     // as such edges are invalid and produce NPEs in the edge styles.
     // Also removes connected edges that have no visible terminals.
     if (
-      (this.graph.model.getTerminal(state.cell, true) != null &&
+      ((<mxGraphModel>(<mxGraph>this.graph).model).getTerminal(state.cell, true) != null &&
         source == null) ||
       (source == null && geo.getTerminalPoint(true) == null) ||
-      (this.graph.model.getTerminal(state.cell, false) != null &&
+      ((<mxGraphModel>(<mxGraph>this.graph).model).getTerminal(state.cell, false) != null &&
         target == null) ||
       (target == null && geo.getTerminalPoint(false) == null)
     ) {
@@ -1343,8 +1222,10 @@ class mxGraphView extends mxEventSource {
         lw = state.width;
       }
 
+      // @ts-ignore
       state.absoluteOffset.x -= lw;
     } else if (h === mxConstants.ALIGN_RIGHT) {
+      // @ts-ignore
       state.absoluteOffset.x += state.width;
     } else if (h === mxConstants.ALIGN_CENTER) {
       const lw = mxUtils.getValue(
@@ -1369,6 +1250,7 @@ class mxGraphView extends mxEventSource {
         }
 
         if (dx !== 0) {
+          // @ts-ignore
           state.absoluteOffset.x -= (lw * this.scale - state.width) * dx;
         }
       }
@@ -1381,8 +1263,10 @@ class mxGraphView extends mxEventSource {
     );
 
     if (v === mxConstants.ALIGN_TOP) {
+      // @ts-ignore
       state.absoluteOffset.y -= state.height;
     } else if (v === mxConstants.ALIGN_BOTTOM) {
+      // @ts-ignore
       state.absoluteOffset.y += state.height;
     }
   }
@@ -1392,7 +1276,7 @@ class mxGraphView extends mxEventSource {
    *
    * Resets the current validation state.
    */
-  resetValidationState() {
+  resetValidationState(): void {
     this.lastNode = null;
     this.lastHtmlNode = null;
     this.lastForegroundNode = null;
@@ -1409,17 +1293,18 @@ class mxGraphView extends mxEventSource {
    *
    * state - <mxCellState> that represents the cell state.
    */
-  stateValidated(state: mxCellState) {
+  stateValidated(state: mxCellState): void {
+    const graph = (<mxGraph>this.graph);
     const fg =
-      (this.graph.getModel().isEdge(state.cell) &&
-        this.graph.keepEdgesInForeground) ||
-      (this.graph.getModel().isVertex(state.cell) &&
-        this.graph.keepEdgesInBackground);
+      (graph.getModel().isEdge(state.cell) &&
+        graph.keepEdgesInForeground) ||
+      (graph.getModel().isVertex(<mxCell>state.cell) &&
+        graph.keepEdgesInBackground);
     const htmlNode = fg
       ? this.lastForegroundHtmlNode || this.lastHtmlNode
       : this.lastHtmlNode;
     const node = fg ? this.lastForegroundNode || this.lastNode : this.lastNode;
-    const result = this.graph.cellRenderer.insertStateAfter(
+    const result = graph.cellRenderer.insertStateAfter(
       state,
       node,
       htmlNode
@@ -1446,18 +1331,20 @@ class mxGraphView extends mxEventSource {
    * source - <mxCellState> which represents the source terminal.
    * target - <mxCellState> which represents the target terminal.
    */
-  updateFixedTerminalPoints(edge, source, target) {
+  updateFixedTerminalPoints(edge: mxCellState,
+                            source: mxCellState,
+                            target: mxCellState): void {
     this.updateFixedTerminalPoint(
       edge,
       source,
       true,
-      this.graph.getConnectionConstraint(edge, source, true)
+      (<mxGraph>this.graph).getConnectionConstraint(edge, source, true)
     );
     this.updateFixedTerminalPoint(
       edge,
       target,
       false,
-      this.graph.getConnectionConstraint(edge, target, false)
+      (<mxGraph>this.graph).getConnectionConstraint(edge, target, false)
     );
   }
 
@@ -1473,9 +1360,14 @@ class mxGraphView extends mxEventSource {
    * source - Boolean that specifies if the terminal is the source.
    * constraint - <mxConnectionConstraint> that specifies the connection.
    */
-  updateFixedTerminalPoint(edge, terminal, source, constraint) {
+  updateFixedTerminalPoint(edge: mxCellState,
+                           terminal: mxCellState,
+                           source: boolean,
+                           constraint: mxConnectionConstraint) {
+
+
     edge.setAbsoluteTerminalPoint(
-      this.getFixedTerminalPoint(edge, terminal, source, constraint),
+      <mxPoint>this.getFixedTerminalPoint(edge, terminal, source, constraint),
       source
     );
   }
@@ -1492,18 +1384,21 @@ class mxGraphView extends mxEventSource {
    * source - Boolean that specifies if the terminal is the source.
    * constraint - <mxConnectionConstraint> that specifies the connection.
    */
-  getFixedTerminalPoint(edge, terminal, source, constraint) {
+  getFixedTerminalPoint(edge: mxCellState,
+                        terminal: mxCellState,
+                        source: boolean,
+                        constraint: mxConnectionConstraint): mxPoint | null {
     let pt = null;
 
     if (constraint != null) {
-      pt = this.graph.getConnectionPoint(terminal, constraint, false); // FIXME Rounding introduced bugs when calculating label positions -> , this.graph.isOrthogonal(edge));
+      pt = (<mxGraph>this.graph).getConnectionPoint(terminal, constraint, false); // FIXME Rounding introduced bugs when calculating label positions -> , this.graph.isOrthogonal(edge));
     }
 
     if (pt == null && terminal == null) {
       const s = this.scale;
       const tr = this.translate;
-      const orig = edge.origin;
-      const geo = this.graph.getCellGeometry(edge.cell);
+      const orig = <mxPoint>edge.origin;
+      const geo = <mxGeometry>(<mxGraph>this.graph).getCellGeometry(<mxCell>edge.cell);
       pt = geo.getTerminalPoint(source);
 
       if (pt != null) {
@@ -1569,15 +1464,19 @@ class mxGraphView extends mxEventSource {
    * source - <mxCellState> that represents the source terminal.
    * target - <mxCellState> that represents the target terminal.
    */
-  updatePoints(edge, points, source, target) {
+  updatePoints(edge: mxCellState,
+               points: mxPoint[],
+               source: mxCellState,
+               target: mxCellState) {
+
     if (edge != null) {
       const pts = [];
-      pts.push(edge.absolutePoints[0]);
+      pts.push((<mxPoint[]>edge.absolutePoints)[0]);
       const edgeStyle = this.getEdgeStyle(edge, points, source, target);
 
       if (edgeStyle != null) {
-        const src = this.getTerminalPort(edge, source, true);
-        const trg = this.getTerminalPort(edge, target, false);
+        const src = <mxCellState>this.getTerminalPort(edge, source, true);
+        const trg = <mxCellState>this.getTerminalPort(edge, target, false);
 
         // Uses the stencil bounds for routing and restores after routing
         const srcBounds = this.updateBoundsFromStencil(src);
@@ -1612,7 +1511,7 @@ class mxGraphView extends mxEventSource {
         }
       }
 
-      const tmp = edge.absolutePoints;
+      const tmp = <mxPoint[]>edge.absolutePoints;
       pts.push(tmp[tmp.length - 1]);
 
       edge.absolutePoints = pts;
@@ -1624,9 +1523,12 @@ class mxGraphView extends mxEventSource {
    *
    * Transforms the given control point to an absolute point.
    */
-  transformControlPoint(state, pt, ignoreScale) {
+  transformControlPoint(state: mxCellState,
+                        pt: mxPoint,
+                        ignoreScale: boolean=false): mxPoint | null {
+
     if (state != null && pt != null) {
-      const orig = state.origin;
+      const orig = <mxPoint>state.origin;
       const scale = ignoreScale ? 1 : this.scale;
 
       return new mxPoint(
@@ -1645,9 +1547,13 @@ class mxGraphView extends mxEventSource {
    * returns true if the given edge is a loop and does not have connections constraints
    * associated.
    */
-  isLoopStyleEnabled(edge, points, source, target) {
-    const sc = this.graph.getConnectionConstraint(edge, source, true);
-    const tc = this.graph.getConnectionConstraint(edge, target, false);
+  isLoopStyleEnabled(edge: mxCellState,
+                     points: mxPoint[],
+                     source: mxCellState,
+                     target: mxCellState): boolean {
+
+    const sc = (<mxGraph>this.graph).getConnectionConstraint(edge, source, true);
+    const tc = (<mxGraph>this.graph).getConnectionConstraint(edge, target, false);
 
     if (
       (points == null || points.length < 2) &&
@@ -1668,16 +1574,16 @@ class mxGraphView extends mxEventSource {
    *
    * Returns the edge style function to be used to render the given edge state.
    */
-  getEdgeStyle(edge: mxCell,
+  getEdgeStyle(edge: mxCellState,
                points: mxPoint[],
-               source: mxCell,
-               target: mxCell): any {
+               source: mxCellState,
+               target: mxCellState): any {
 
     let edgeStyle: any = this.isLoopStyleEnabled(edge, points, source, target)
       ? mxUtils.getValue(
           edge.style,
           mxConstants.STYLE_LOOP,
-          this.graph.defaultLoopStyle
+            (<mxGraph>this.graph).defaultLoopStyle
         )
       : !mxUtils.getValue(edge.style, mxConstants.STYLE_NOEDGESTYLE, false)
       ? edge.style[mxConstants.STYLE_EDGE]
@@ -1710,8 +1616,10 @@ class mxGraphView extends mxEventSource {
    * source - <mxCellState> that represents the source terminal.
    * target - <mxCellState> that represents the target terminal.
    */
-  updateFloatingTerminalPoints(state, source, target) {
-    const pts = state.absolutePoints;
+  updateFloatingTerminalPoints(state: mxCellState,
+                               source: mxCellState,
+                               target: mxCellState) {
+    const pts = <mxPoint[]>state.absolutePoints;
     const p0 = pts[0];
     const pe = pts[pts.length - 1];
 
@@ -1737,9 +1645,13 @@ class mxGraphView extends mxEventSource {
    * end - <mxCellState> for the terminal on the other side of the edge.
    * source - Boolean indicating if start is the source terminal state.
    */
-  updateFloatingTerminalPoint(edge, start, end, source) {
+  updateFloatingTerminalPoint(edge: mxCellState,
+                              start: mxCellState,
+                              end: mxCellState,
+                              source: boolean) {
+
     edge.setAbsoluteTerminalPoint(
-      this.getFloatingTerminalPoint(edge, start, end, source),
+      <mxPoint>this.getFloatingTerminalPoint(edge, start, end, source),
       source
     );
   }
@@ -1757,11 +1669,15 @@ class mxGraphView extends mxEventSource {
    * end - <mxCellState> for the terminal on the other side of the edge.
    * source - Boolean indicating if start is the source terminal state.
    */
-  getFloatingTerminalPoint(edge, start, end, source) {
-    start = this.getTerminalPort(edge, start, source);
+  getFloatingTerminalPoint(edge: mxCellState,
+                           start: mxCellState,
+                           end: mxCellState,
+                           source: boolean): mxPoint | null {
+
+    start = <mxCellState>this.getTerminalPort(edge, start, source);
     let next = this.getNextPoint(edge, end, source);
 
-    const orth = this.graph.isOrthogonal(edge);
+    const orth = (<mxGraph>this.graph).isOrthogonal(edge);
     const alpha = mxUtils.toRadians(
       Number(start.style[mxConstants.STYLE_ROTATION] || '0')
     );
@@ -1783,7 +1699,7 @@ class mxGraphView extends mxEventSource {
           : mxConstants.STYLE_TARGET_PERIMETER_SPACING
       ] || 0
     );
-    let pt = this.getPerimeterPoint(start, next, alpha === 0 && orth, border);
+    let pt = this.getPerimeterPoint(start, <mxPoint>next, alpha === 0 && orth, border);
 
     if (alpha !== 0) {
       const cos = Math.cos(alpha);
@@ -1806,14 +1722,17 @@ class mxGraphView extends mxEventSource {
    * terminal - <mxCellState> that represents the terminal.
    * source - Boolean indicating if the given terminal is the source terminal.
    */
-  getTerminalPort(state, terminal, source) {
+  getTerminalPort(state: mxCellState,
+                  terminal: mxCellState,
+                  source: boolean=false): mxCellState | null {
+
     const key = source
       ? mxConstants.STYLE_SOURCE_PORT
       : mxConstants.STYLE_TARGET_PORT;
     const id = mxUtils.getValue(state.style, key);
 
     if (id != null) {
-      const tmp = this.getState(this.graph.getModel().getCell(id), false);
+      const tmp = this.getState((<mxGraph>this.graph).getModel().getCell(id), false);
 
       // Only uses ports where a cell state exists
       if (tmp != null) {
@@ -1840,8 +1759,8 @@ class mxGraphView extends mxEventSource {
    * border - Optional border between the perimeter and the shape.
    */
   getPerimeterPoint(terminal: mxCellState,
-                    next,
-                    orthogonal,
+                    next: mxPoint,
+                    orthogonal: boolean,
                     border: number=0) {
     let point = null;
 
@@ -1856,7 +1775,7 @@ class mxGraphView extends mxEventSource {
           let flipH = false;
           let flipV = false;
 
-          if (this.graph.model.isVertex(terminal.cell)) {
+          if ((<mxGraphModel>(<mxGraph>this.graph).model).isVertex(terminal.cell)) {
             flipH =
               mxUtils.getValue(terminal.style, mxConstants.STYLE_FLIPH, 0) == 1;
             flipV =
@@ -1988,7 +1907,7 @@ class mxGraphView extends mxEventSource {
    *
    * Returns the perimeter function for the given state.
    */
-  getPerimeterFunction(state: mxCellState) {
+  getPerimeterFunction(state: mxCellState): Function | null {
     let perimeter = state.style[mxConstants.STYLE_PERIMETER];
 
     // Converts string values to objects
@@ -2021,7 +1940,7 @@ class mxGraphView extends mxEventSource {
    */
   getNextPoint(edge: mxCellState,
                opposite: mxCellState | null,
-               source: boolean=false) {
+               source: boolean=false): mxPoint | null {
 
     const pts = edge.absolutePoints;
     let point = null;
@@ -2051,13 +1970,15 @@ class mxGraphView extends mxEventSource {
    * source - Boolean that specifies if the source or target terminal
    * should be returned.
    */
-  getVisibleTerminal(edge, source) {
-    const model = this.graph.getModel();
+  getVisibleTerminal(edge: mxCell,
+                     source: boolean) {
+
+    const model = (<mxGraph>this.graph).getModel();
     let result = model.getTerminal(edge, source);
     let best = result;
 
     while (result != null && result != this.currentRoot) {
-      if (!this.graph.isCellVisible(best) || this.isCellCollapsed(result)) {
+      if (!(<mxGraph>this.graph).isCellVisible(best) || this.isCellCollapsed(result)) {
         best = result;
       }
 
@@ -2157,7 +2078,7 @@ class mxGraphView extends mxEventSource {
    * geometry - <mxGeometry> that represents the relative location.
    */
   getPoint(state: mxCellState,
-           geometry: mxGeometry): mxPoint {
+           geometry: mxGeometry | null=null): mxPoint {
     let x = state.getCenterX();
     let y = state.getCenterY();
 
@@ -2229,7 +2150,7 @@ class mxGraphView extends mxEventSource {
                    x: number,
                    y: number) {
 
-    const model = this.graph.getModel();
+    const model = (<mxGraph>this.graph).getModel();
     const geometry = model.getGeometry(edgeState.cell);
 
     if (geometry != null) {
@@ -2334,12 +2255,12 @@ class mxGraphView extends mxEventSource {
    */
   updateEdgeLabelOffset(state: mxCellState) {
     const points = state.absolutePoints;
-
-    state.absoluteOffset.x = state.getCenterX();
-    state.absoluteOffset.y = state.getCenterY();
+    const absoluteOffset = <mxPoint>state.absoluteOffset;
+    absoluteOffset.x = state.getCenterX();
+    absoluteOffset.y = state.getCenterY();
 
     if (points != null && points.length > 0 && state.segments != null) {
-      const geometry = this.graph.getCellGeometry(state.cell);
+      const geometry = <mxGeometry>(<mxGraph>this.graph).getCellGeometry(<mxCell>state.cell);
 
       if (geometry.relative) {
         const offset = this.getPoint(state, geometry);
@@ -2367,8 +2288,8 @@ class mxGraphView extends mxEventSource {
           const x = p0.x + dx / 2 + x0 * this.scale;
           const y = p0.y + dy / 2 + y0 * this.scale;
 
-          state.absoluteOffset.x = x;
-          state.absoluteOffset.y = y;
+          absoluteOffset.x = x;
+          absoluteOffset.y = y;
         }
       }
     }
@@ -2397,13 +2318,13 @@ class mxGraphView extends mxEventSource {
       if (
         create &&
         (state == null || this.updateStyle) &&
-        this.graph.isCellVisible(cell)
+          (<mxGraph>this.graph).isCellVisible(cell)
       ) {
         if (state == null) {
           state = this.createState(cell);
           this.states.put(cell, state);
         } else {
-          state.style = this.graph.getCellStyle(cell);
+          state.style = (<mxGraph>this.graph).getCellStyle(cell);
         }
       }
     }
@@ -2418,7 +2339,7 @@ class mxGraphView extends mxEventSource {
    * have less elements than the given array. If no argument is given, then
    * this returns <states>.
    */
-  getCellStates(cells: mxCell[] | null): mxCellState[] | null {
+  getCellStates(cells: mxCell[] | null): mxCellState[] | mxDictionary | null {
     if (cells == null) {
       return this.states;
     }
@@ -2442,14 +2363,14 @@ class mxGraphView extends mxEventSource {
    *
    * cell - <mxCell> for which the <mxCellState> should be removed.
    */
-  removeState(cell: mxCell): mxCellState {
-    let state: mxCellState = null;
+  removeState(cell: mxCell): mxCellState | null {
+    let state: mxCellState | null = null;
 
     if (cell != null) {
       state = this.states.remove(cell);
 
       if (state != null) {
-        this.graph.cellRenderer.destroy(state);
+        (<mxGraph>this.graph).cellRenderer.destroy(state);
         state.invalid = true;
         state.destroy();
       }
@@ -2468,7 +2389,7 @@ class mxGraphView extends mxEventSource {
    * cell - <mxCell> for which a new <mxCellState> should be created.
    */
   createState(cell: mxCell): mxCellState {
-    return new mxCellState(this, cell, this.graph.getCellStyle(cell));
+    return new mxCellState(this, cell, (<mxGraph>this.graph).getCellStyle(cell));
   }
 
   /**
@@ -2477,14 +2398,15 @@ class mxGraphView extends mxEventSource {
    * Returns true if the event origin is one of the drawing panes or
    * containers of the view.
    */
-  isContainerEvent(evt) {
+  isContainerEvent(evt: Event | MouseEvent) {
     const source = mxEvent.getSource(evt);
 
     return (
-      source === this.graph.container ||
+      source === (<mxGraph>this.graph).container ||
       source.parentNode === this.backgroundPane ||
       (source.parentNode != null &&
         source.parentNode.parentNode === this.backgroundPane) ||
+      // @ts-ignore
       source === this.canvas.parentNode ||
       source === this.canvas ||
       source === this.backgroundPane ||
@@ -2500,19 +2422,21 @@ class mxGraphView extends mxEventSource {
    * Returns true if the event origin is one of the scrollbars of the
    * container in IE. Such events are ignored.
    */
-  isScrollEvent(evt) {
-    const offset = mxUtils.getOffset(this.graph.container);
+  isScrollEvent(evt: MouseEvent) {
+    const graph = <mxGraph>this.graph;
+    const offset = mxUtils.getOffset(graph.container);
     const pt = new mxPoint(evt.clientX - offset.x, evt.clientY - offset.y);
+    const container = <HTMLElement>graph.container;
 
-    const outWidth = this.graph.container.offsetWidth;
-    const inWidth = this.graph.container.clientWidth;
+    const outWidth = container.offsetWidth;
+    const inWidth = container.clientWidth;
 
     if (outWidth > inWidth && pt.x > inWidth + 2 && pt.x <= outWidth) {
       return true;
     }
 
-    const outHeight = this.graph.container.offsetHeight;
-    const inHeight = this.graph.container.clientHeight;
+    const outHeight = container.offsetHeight;
+    const inHeight = container.clientHeight;
 
     return outHeight > inHeight && pt.y > inHeight + 2 && pt.y <= outHeight;
   }
@@ -2528,12 +2452,7 @@ class mxGraphView extends mxEventSource {
 
     // Creates the DOM nodes for the respective display dialect
     const { graph } = this;
-
-    if (graph.dialect === mxConstants.DIALECT_SVG) {
-      this.createSvg();
-    } else {
-      this.createHtml();
-    }
+    this.createSvg();
   }
 
   /**
@@ -2542,60 +2461,62 @@ class mxGraphView extends mxEventSource {
    * Installs the required listeners in the container.
    */
   installListeners() {
-    const { graph } = this;
+    const graph = <mxGraph>this.graph;
     const { container } = graph;
 
     if (container != null) {
       // Support for touch device gestures (eg. pinch to zoom)
       // Double-tap handling is implemented in mxGraph.fireMouseEvent
       if (mxClient.IS_TOUCH) {
-        mxEvent.addListener(container, 'gesturestart', evt => {
+        mxEvent.addListener(container, 'gesturestart', (evt: MouseEvent) => {
           graph.fireGestureEvent(evt);
           mxEvent.consume(evt);
         });
 
-        mxEvent.addListener(container, 'gesturechange', evt => {
+        mxEvent.addListener(container, 'gesturechange', (evt: MouseEvent) => {
           graph.fireGestureEvent(evt);
           mxEvent.consume(evt);
         });
 
-        mxEvent.addListener(container, 'gestureend', evt => {
+        mxEvent.addListener(container, 'gestureend', (evt: MouseEvent) => {
           graph.fireGestureEvent(evt);
           mxEvent.consume(evt);
         });
       }
 
       // Fires event only for one pointer per gesture
-      let pointerId = null;
+      let pointerId: number | null = null;
 
       // Adds basic listeners for graph event dispatching
       mxEvent.addGestureListeners(
         container,
-        mxUtils.bind(this, evt => {
+          (evt: MouseEvent) => {
           // Condition to avoid scrollbar events starting a rubberband selection
           if (
             this.isContainerEvent(evt) &&
             ((!mxClient.IS_GC && !mxClient.IS_SF) || !this.isScrollEvent(evt))
           ) {
             graph.fireMouseEvent(mxEvent.MOUSE_DOWN, new mxMouseEvent(evt));
+            // @ts-ignore
             pointerId = evt.pointerId;
           }
-        }),
-        mxUtils.bind(this, evt => {
-          if (
+        },
+          (evt: Event) => {
+            if (
             this.isContainerEvent(evt) &&
+                // @ts-ignore
             (pointerId == null || evt.pointerId === pointerId)
           ) {
             graph.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt));
           }
-        }),
-        mxUtils.bind(this, evt => {
+        },
+          (evt: Event) => {
           if (this.isContainerEvent(evt)) {
             graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
           }
 
           pointerId = null;
-        })
+        }
       );
 
       // Adds listener for double click handling on background, this does always
@@ -2604,17 +2525,17 @@ class mxGraphView extends mxEventSource {
       mxEvent.addListener(
         container,
         'dblclick',
-        mxUtils.bind(this, evt => {
+          (evt: MouseEvent) => {
           if (this.isContainerEvent(evt)) {
             graph.dblClick(evt);
           }
-        })
+        }
       );
 
       // Workaround for touch events which started on some DOM node
       // on top of the container, in which case the cells under the
       // mouse for the move and up events are not detected.
-      const getState = evt => {
+      const getState = (evt: Event) => {
         let state = null;
 
         // Workaround for touch events which started on some DOM node
@@ -2627,7 +2548,7 @@ class mxGraphView extends mxEventSource {
           // Dispatches the drop event to the graph which
           // consumes and executes the source function
           const pt = mxUtils.convertPoint(container, x, y);
-          state = graph.view.getState(graph.getCellAt(pt.x, pt.y));
+          state = (<mxGraphView>graph.view).getState(graph.getCellAt(pt.x, pt.y));
         }
 
         return state;
@@ -2638,14 +2559,14 @@ class mxGraphView extends mxEventSource {
       // Implemented via graph event dispatch loop to avoid duplicate events
       // in Firefox and Chrome
       graph.addMouseListener({
-        mouseDown: (sender, me) => {
-          graph.popupMenuHandler.hideMenu();
+        mouseDown: (sender: any, me: mxMouseEvent) => {
+          (<mxPopupMenuHandler>graph.popupMenuHandler).hideMenu();
         },
         mouseMove: () => {},
         mouseUp: () => {},
       });
 
-      this.moveHandler = mxUtils.bind(this, evt => {
+      this.moveHandler = (evt: Event) => {
         // Hides the tooltip if mouse is outside container
         if (
           graph.tooltipHandler != null &&
@@ -2668,9 +2589,9 @@ class mxGraphView extends mxEventSource {
             new mxMouseEvent(evt, getState(evt))
           );
         }
-      });
+      };
 
-      this.endHandler = mxUtils.bind(this, evt => {
+      this.endHandler = (evt: Event) => {
         if (
           this.captureDocumentGesture &&
           graph.isMouseDown &&
@@ -2681,7 +2602,7 @@ class mxGraphView extends mxEventSource {
         ) {
           graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
         }
-      });
+      };
 
       mxEvent.addGestureListeners(
         document,
@@ -2693,105 +2614,29 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: createHtml
-   *
-   * Creates the DOM nodes for the HTML display.
-   */
-  createHtml() {
-    const { container } = this.graph;
-
-    if (container != null) {
-      this.canvas = this.createHtmlPane('100%', '100%');
-      this.canvas.style.overflow = 'hidden';
-
-      // Uses minimal size for inner DIVs on Canvas. This is required
-      // for correct event processing in IE. If we have an overlapping
-      // DIV then the events on the cells are only fired for labels.
-      this.backgroundPane = this.createHtmlPane('1px', '1px');
-      this.drawPane = this.createHtmlPane('1px', '1px');
-      this.overlayPane = this.createHtmlPane('1px', '1px');
-      this.decoratorPane = this.createHtmlPane('1px', '1px');
-
-      this.canvas.appendChild(this.backgroundPane);
-      this.canvas.appendChild(this.drawPane);
-      this.canvas.appendChild(this.overlayPane);
-      this.canvas.appendChild(this.decoratorPane);
-
-      container.appendChild(this.canvas);
-      this.updateContainerStyle(container);
-    }
-  }
-
-  /**
-   * Function: updateHtmlCanvasSize
-   *
-   * Updates the size of the HTML canvas.
-   */
-  updateHtmlCanvasSize(width, height) {
-    if (this.graph.container != null) {
-      const ow = this.graph.container.offsetWidth;
-      const oh = this.graph.container.offsetHeight;
-
-      if (ow < width) {
-        this.canvas.style.width = `${width}px`;
-      } else {
-        this.canvas.style.width = '100%';
-      }
-
-      if (oh < height) {
-        this.canvas.style.height = `${height}px`;
-      } else {
-        this.canvas.style.height = '100%';
-      }
-    }
-  }
-
-  /**
-   * Function: createHtmlPane
-   *
-   * Creates and returns a drawing pane in HTML (DIV).
-   */
-  createHtmlPane(width, height) {
-    const pane = document.createElement('DIV');
-
-    if (width != null && height != null) {
-      pane.style.position = 'absolute';
-      pane.style.left = '0px';
-      pane.style.top = '0px';
-
-      pane.style.width = width;
-      pane.style.height = height;
-    } else {
-      pane.style.position = 'relative';
-    }
-
-    return pane;
-  }
-
-  /**
    * Function: createSvg
    *
    * Creates and returns the DOM nodes for the SVG display.
    */
   createSvg() {
-    const { container } = this.graph;
-    this.canvas = document.createElementNS(mxConstants.NS_SVG, 'g');
+    const { container } = <mxGraph>this.graph;
+    const canvas = this.canvas = document.createElementNS("http://www.w3.org/2000/svg", 'g');
 
     // For background image
-    this.backgroundPane = document.createElementNS(mxConstants.NS_SVG, 'g');
-    this.canvas.appendChild(this.backgroundPane);
+    this.backgroundPane = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+    canvas.appendChild(this.backgroundPane);
 
     // Adds two layers (background is early feature)
-    this.drawPane = document.createElementNS(mxConstants.NS_SVG, 'g');
-    this.canvas.appendChild(this.drawPane);
+    this.drawPane = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+    canvas.appendChild(this.drawPane);
 
-    this.overlayPane = document.createElementNS(mxConstants.NS_SVG, 'g');
-    this.canvas.appendChild(this.overlayPane);
+    this.overlayPane = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+    canvas.appendChild(this.overlayPane);
 
-    this.decoratorPane = document.createElementNS(mxConstants.NS_SVG, 'g');
-    this.canvas.appendChild(this.decoratorPane);
+    this.decoratorPane = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+    canvas.appendChild(this.decoratorPane);
 
-    const root = document.createElementNS(mxConstants.NS_SVG, 'svg');
+    const root = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
     root.style.left = '0px';
     root.style.top = '0px';
     root.style.width = '100%';
@@ -2813,7 +2658,7 @@ class mxGraphView extends mxEventSource {
    *
    * Updates the style of the container after installing the SVG DOM elements.
    */
-  updateContainerStyle(container) {
+  updateContainerStyle(container: HTMLElement) {
     // Workaround for offset of container
     const style = mxUtils.getCurrentStyle(container);
 
@@ -2833,7 +2678,7 @@ class mxGraphView extends mxEventSource {
    * Destroys the view and all its resources.
    */
   destroy() {
-    let root = this.canvas != null ? this.canvas.ownerSVGElement : null;
+    let root: SVGElement | null = this.canvas != null ? this.canvas.ownerSVGElement : null;
 
     if (root == null) {
       root = this.canvas;
@@ -2847,7 +2692,7 @@ class mxGraphView extends mxEventSource {
         this.moveHandler,
         this.endHandler
       );
-      mxEvent.release(this.graph.container);
+      mxEvent.release((<mxGraph>this.graph).container);
       root.parentNode.removeChild(root);
 
       this.moveHandler = null;
@@ -2859,6 +2704,9 @@ class mxGraphView extends mxEventSource {
       this.decoratorPane = null;
     }
   }
+
+  endHandler: Function | null=null;
+  moveHandler: Function | null=null;
 }
 
 export default mxGraphView;

@@ -245,7 +245,7 @@ const mxPerimeter = {
     vertex: mxCellState,
     next: mxPoint,
     orthogonal: boolean = false
-  ): mxPoint {
+  ): mxPoint | null {
     const { x } = bounds;
     const { y } = bounds;
     const w = bounds.width;
@@ -307,7 +307,7 @@ const mxPerimeter = {
     vertex: mxCellState,
     next: mxPoint,
     orthogonal: boolean = false
-  ): mxPoint {
+  ): mxPoint | null {
     const direction =
       vertex != null ? vertex.style[mxConstants.STYLE_DIRECTION] : null;
     const vertical =
@@ -451,7 +451,7 @@ const mxPerimeter = {
     vertex: mxCellState,
     next: mxPoint,
     orthogonal: boolean = false
-  ): mxPoint {
+  ): mxPoint | null {
     const { x } = bounds;
     const { y } = bounds;
     const w = bounds.width;
@@ -467,7 +467,7 @@ const mxPerimeter = {
     const pi = Math.PI;
     const pi2 = Math.PI / 2;
 
-    let result = new mxPoint(cx, cy);
+    let result: mxPoint | null = new mxPoint(cx, cy);
 
     const direction =
       vertex != null

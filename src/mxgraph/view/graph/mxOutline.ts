@@ -18,45 +18,45 @@ import mxImage from '../../util/image/mxImage';
 
 class mxOutline {
   // TODO: Document me!!
-  sizer: mxRectangleShape;
+  sizer: mxRectangleShape | null=null;
 
-  selectionBorder: mxRectangleShape;
+  selectionBorder: mxRectangleShape | null=null;
 
-  updateHandler: Function | null;
+  updateHandler: Function | null=null;
 
-  refreshHandler: Function | null;
+  refreshHandler: Function | null=null;
 
-  panHandler: Function | null;
+  panHandler: Function | null=null;
 
-  active: boolean | null;
+  active: boolean | null=null;
 
-  bounds: mxRectangle | null;
+  bounds: mxRectangle | null=null;
 
-  zoom: number;
+  zoom: number | null=null;
 
-  startX: number;
+  startX: number | null=null;
 
-  startY: number;
+  startY: number | null=null;
 
-  dx0: number;
+  dx0: number | null=null;
 
-  dy0: number;
+  dy0: number | null=null;
 
-  index: number;
+  index: number | null=null;
 
   /**
    * Function: source
    *
    * Reference to the source <mxGraph>.
    */
-  source: mxGraph | null = null;
+  source: mxGraph;
 
   /**
    * Function: outline
    *
    * Reference to the <mxGraph> that renders the outline.
    */
-  outline: mxGraph | null = null;
+  outline: mxGraph;
 
   /**
    * Function: graphRenderHint
@@ -213,7 +213,7 @@ class mxOutline {
    *
    * Initializes the outline inside the given container.
    */
-  init(container) {
+  init(container: HTMLElement) {
     this.outline = this.createGraph(container);
 
     // Do not repaint when suspended
@@ -224,12 +224,10 @@ class mxOutline {
       }
     });
 
-    // Enables faster painting in SVG
-    if (mxClient.IS_SVG) {
-      const node = this.outline.getView().getCanvas().parentNode;
-      node.setAttribute('shape-rendering', 'optimizeSpeed');
-      node.setAttribute('image-rendering', 'optimizeSpeed');
-    }
+    // Enable faster painting in SVG
+    const node = <SVGElement>this.outline.getView().getCanvas().parentNode;
+    node.setAttribute('shape-rendering', 'optimizeSpeed');
+    node.setAttribute('image-rendering', 'optimizeSpeed');
 
     // Hides cursors and labels
     this.outline.labelsVisible = this.labelsVisible;

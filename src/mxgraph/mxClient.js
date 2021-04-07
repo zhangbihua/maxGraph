@@ -419,13 +419,6 @@ const mxClient = {
     document.location.href.indexOf('https://') < 0,
 
   /**
-   * Variable: defaultBundles
-   *
-   * Contains the base names of the default bundles if mxLoadResources is false.
-   */
-  defaultBundles: [],
-
-  /**
    * Function: isBrowserSupported
    *
    * Returns true if the current browser is supported, that is, if
@@ -481,30 +474,6 @@ const mxClient = {
 
     const head = doc.getElementsByTagName('head')[0];
     head.appendChild(link);
-  },
-
-  /**
-   * Function: loadResources
-   *
-   * Helper method to load the default bundles if mxLoadResources is false.
-   *
-   * Parameters:
-   *
-   * fn - Function to call after all resources have been loaded.
-   * lan - Optional string to pass to <mxResources.add>.
-   */
-  loadResources: (fn, lan) => {
-    let pending = mxClient.defaultBundles.length;
-
-    function callback() {
-      if (--pending === 0) {
-        fn();
-      }
-    }
-
-    for (let i = 0; i < mxClient.defaultBundles.length; i += 1) {
-      mxResources.add(mxClient.defaultBundles[i], lan, callback);
-    }
   },
 };
 

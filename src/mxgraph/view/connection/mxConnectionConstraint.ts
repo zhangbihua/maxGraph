@@ -12,7 +12,7 @@ class mxConnectionConstraint {
    *
    * <mxPoint> that specifies the fixed location of the connection point.
    */
-  point: mxPoint = null;
+  point: mxPoint | null = null;
 
   /**
    * Variable: perimeter
@@ -27,21 +27,21 @@ class mxConnectionConstraint {
    *
    * Optional string that specifies the name of the constraint.
    */
-  name = null;
+  name: string | null = null;
 
   /**
    * Variable: dx
    *
    * Optional float that specifies the horizontal offset of the constraint.
    */
-  dx = null;
+  dx: number | null = null;
 
   /**
    * Variable: dy
    *
    * Optional float that specifies the vertical offset of the constraint.
    */
-  dy = null;
+  dy: number | null = null;
 
   /**
    * Class: mxConnectionConstraint
@@ -61,7 +61,11 @@ class mxConnectionConstraint {
    * perimeter - Optional boolean that specifies if the fixed point should be
    * projected onto the perimeter of the terminal. Default is true.
    */
-  constructor(point, perimeter, name, dx, dy) {
+  constructor(point: mxPoint | null=null,
+              perimeter: boolean=true,
+              name: string='',
+              dx: number | null=null,
+              dy: number | null=null) {
     this.point = point;
     this.perimeter = perimeter != null ? perimeter : true;
     this.name = name;

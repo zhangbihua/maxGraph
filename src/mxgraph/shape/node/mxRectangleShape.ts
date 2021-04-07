@@ -156,7 +156,7 @@ class mxRectangleShape extends mxShape {
    * Generic background painting implementation.
    */
   paintForeground(
-    c: mxAbstractCanvas2D,
+    c: mxSvgCanvas2D,
     x: number,
     y: number,
     w: number,

@@ -99,7 +99,7 @@ class mxShape {
    *
    * container - DOM node that will contain the shape.
    */
-  init(container: HTMLElement | null = null) {
+  init(container: SVGElement | null = null) {
     if (this.node == null) {
       this.node = this.create(container);
 
@@ -114,7 +114,7 @@ class mxShape {
    *
    * Sets the styles to their default values.
    */
-  initStyles(container: HTMLElement | null = null) {
+  initStyles(container: SVGElement | null = null) {
     this.strokewidth = 1;
     this.rotation = 0;
     this.opacity = 100;
@@ -153,15 +153,15 @@ class mxShape {
 
   direction: string | null = null;
 
-  flipH: boolean | null = null;
+  flipH: boolean = false;
 
-  flipV: boolean | null = null;
+  flipV: boolean = false;
 
-  isShadow: boolean | null = null;
+  isShadow: boolean | null = false;
 
-  isDashed: boolean | null = null;
+  isDashed: boolean | null = false;
 
-  isRounded: boolean | null = null;
+  isRounded: boolean | null = false;
 
   rotation: number | null = null;
 
@@ -171,7 +171,7 @@ class mxShape {
 
   oldGradients: any[] | null = null;
 
-  glass: boolean | null = null;
+  glass: boolean | null = false;
 
   /**
    * Variable: dialect
@@ -349,7 +349,7 @@ class mxShape {
    *
    * container - DOM node that will contain the shape.
    */
-  create(container: HTMLElement | null): SVGGElement {
+  create(container: SVGElement | null): SVGGElement {
     return document.createElementNS("http://www.w3.org/2000/svg", "g");
   }
 

@@ -11,6 +11,7 @@ import mxCell from '../../view/cell/mxCell';
 import mxGraphView from '../../view/graph/mxGraphView';
 import mxShape from '../../shape/mxShape';
 import mxText from '../../shape/mxText';
+import mxGraph from "../../view/graph/mxGraph";
 
 class mxCellState extends mxRectangle {
   // TODO: Document me!!
@@ -244,7 +245,8 @@ class mxCellState extends mxRectangle {
    * isSource - Boolean that specifies if the first or last point should
    * be assigned.
    */
-  setAbsoluteTerminalPoint(point: mxPoint, isSource: boolean = false): void {
+  setAbsoluteTerminalPoint(point: mxPoint,
+                           isSource: boolean=false): void {
     if (isSource) {
       if (this.absolutePoints == null) {
         this.absolutePoints = [];
@@ -445,7 +447,7 @@ class mxCellState extends mxRectangle {
    * Destroys the state and all associated resources.
    */
   destroy(): void {
-    (<mxGraphView>this.view).graph.cellRenderer.destroy(this);
+    (<mxGraph>(<mxGraphView>this.view).graph).cellRenderer.destroy(this);
   }
 }
 

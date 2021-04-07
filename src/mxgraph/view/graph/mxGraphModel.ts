@@ -526,7 +526,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that represents the possible root.
    */
-  isRoot(cell: mxCell) {
+  isRoot(cell: mxCell | null=null): boolean {
     return cell != null && this.root === cell;
   }
 
@@ -539,7 +539,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that represents the possible layer.
    */
-  isLayer(cell: mxCell | null) {
+  isLayer(cell: mxCell | null): boolean {
     return this.isRoot(this.getParent(cell));
   }
 
@@ -555,7 +555,7 @@ class mxGraphModel extends mxEventSource {
    * child - <mxCell> that specifies the child.
    */
   isAncestor(parent: mxCell | null,
-             child: mxCell | null) {
+             child: mxCell | null): boolean {
 
     while (child != null && child !== parent) {
       child = this.getParent(child);
@@ -572,7 +572,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that specifies the cell.
    */
-  contains(cell: mxCell | null) {
+  contains(cell: mxCell | null): boolean {
     return this.isAncestor(this.root, cell);
   }
 
@@ -1479,7 +1479,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> that represents the possible vertex.
    */
-  isVertex(cell: mxCell): boolean {
+  isVertex(cell: mxCell | null): boolean {
     return cell != null ? cell.isVertex() : false;
   }
 

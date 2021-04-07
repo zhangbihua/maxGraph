@@ -19,7 +19,7 @@ const mxStyleRegistry = {
    *
    * Maps from strings to objects.
    */
-  values: [],
+  values: <any>{},
 
   /**
    * Function: putValue
@@ -44,7 +44,7 @@ const mxStyleRegistry = {
    *
    * Returns the name for the given value.
    */
-  getName: (value: any): string => {
+  getName: (value: any): string | null => {
     for (const key in mxStyleRegistry.values) {
       if (mxStyleRegistry.values[key] === value) {
         return key;

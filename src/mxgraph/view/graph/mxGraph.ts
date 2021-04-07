@@ -2403,7 +2403,7 @@ class mxGraph extends mxEventSource {
    * evt - Optional mouse event that triggered the editing.
    */
   startEditingAtCell(cell: mxCell | null=null,
-                     evt: mxMouseEvent): void {
+                     evt: MouseEvent): void {
     if (evt == null || !mxEvent.isMultiTouchEvent(evt)) {
       if (cell == null) {
         cell = this.getSelectionCell();
@@ -2728,7 +2728,7 @@ class mxGraph extends mxEventSource {
    * evt - Mouseevent that represents the doubleclick.
    * cell - Optional <mxCell> under the mousepointer.
    */
-  dblClick(evt: mxMouseEvent,
+  dblClick(evt: MouseEvent,
            cell: mxCell | null=null): void {
 
     const mxe = new mxEventObject(
@@ -3519,7 +3519,7 @@ class mxGraph extends mxEventSource {
    * the selection cells.
    */
   setCellStyles(key: string,
-                value: string | null=null,
+                value: string | number | null=null,
                 cells: mxCell[]=this.getSelectionCells()) {
 
     mxUtils.setCellStyles(this.model, cells, key, value);
@@ -6812,7 +6812,7 @@ class mxGraph extends mxEventSource {
    * terminal - <mxCellState> that represents the terminal.
    * source - Boolean indicating if the terminal is the source or target.
    */
-  getConnectionConstraint(edge: mxCell,
+  getConnectionConstraint(edge: mxCellState,
                           terminal: mxCellState,
                           source: boolean=false): mxConnectionConstraint {
     let point = null;
@@ -7402,7 +7402,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose offset should be returned.
    */
-  getChildOffsetForCell(cell: mxCell) {
+  getChildOffsetForCell(cell: mxCell): mxPoint | null {
     return null;
   }
 
@@ -8384,7 +8384,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> whose visible state should be returned.
    */
-  isCellVisible(cell: mxCell): boolean {
+  isCellVisible(cell: mxCell | null): boolean {
     return this.getModel().isVisible(cell);
   }
 
@@ -8473,7 +8473,7 @@ class mxGraph extends mxEventSource {
    * Returns true if the given event is a clone event. This implementation
    * returns true if control is pressed.
    */
-  isCloneEvent(evt: mxEventObject): boolean {
+  isCloneEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return mxEvent.isControlDown(evt);
   }
 
@@ -8484,7 +8484,7 @@ class mxGraph extends mxEventSource {
    * returns true the cell behind the selected cell will be selected. This
    * implementation returns false;
    */
-  isTransparentClickEvent(evt: mxEventObject): boolean {
+  isTransparentClickEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return false;
   }
 
@@ -8495,7 +8495,7 @@ class mxGraph extends mxEventSource {
    * returns true if the meta key (Cmd) is pressed on Macs or if control is
    * pressed on any other platform.
    */
-  isToggleEvent(evt: mxEventObject): boolean {
+  isToggleEvent(evt: mxEventObject | mxMouseEvent | mxMouseEvent): boolean {
     return mxClient.IS_MAC
       ? mxEvent.isMetaDown(evt)
       : mxEvent.isControlDown(evt);
@@ -8506,7 +8506,7 @@ class mxGraph extends mxEventSource {
    *
    * Returns true if the given mouse event should be aligned to the grid.
    */
-  isGridEnabledEvent(evt: mxEventObject): boolean {
+  isGridEnabledEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return evt != null && !mxEvent.isAltDown(evt);
   }
 
@@ -8515,7 +8515,7 @@ class mxGraph extends mxEventSource {
    *
    * Returns true if the given mouse event should be aligned to the grid.
    */
-  isConstrainedEvent(evt: mxEventObject): boolean {
+  isConstrainedEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return mxEvent.isShiftDown(evt);
   }
 
@@ -8525,7 +8525,7 @@ class mxGraph extends mxEventSource {
    * Returns true if the given mouse event should not allow any connections to be
    * made. This implementation returns false.
    */
-  isIgnoreTerminalEvent(evt: mxEventObject): boolean {
+  isIgnoreTerminalEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return false;
   }
 
@@ -12586,7 +12586,7 @@ class mxGraph extends mxEventSource {
    *
    * Returns the state for the given touch event.
    */
-  getStateForTouchEvent(evt: mxEventObject) {
+  getStateForTouchEvent(evt: mxMouseEvent) {
     const x = mxEvent.getClientX(evt);
     const y = mxEvent.getClientY(evt);
 
@@ -12798,7 +12798,7 @@ class mxGraph extends mxEventSource {
    */
   fireMouseEvent(evtName: string,
                  me: mxMouseEvent,
-                 sender: any=this) {
+                 sender: any=this): void {
 
     if (this.isEventSourceIgnored(evtName, me)) {
       if (this.tooltipHandler != null) {
@@ -13076,7 +13076,7 @@ class mxGraph extends mxEventSource {
    * evt - Gestureend event that represents the gesture.
    * cell - Optional <mxCell> associated with the gesture.
    */
-  fireGestureEvent(evt: mxEventObject,
+  fireGestureEvent(evt: MouseEvent,
                    cell: mxCell | null=null): void {
     // Resets double tap event handling when gestures take place
     this.lastTouchTime = 0;
@@ -13110,16 +13110,6 @@ class mxGraph extends mxEventSource {
       }
     }
   }
-}
-
-/**
- * Installs the required language resources at class
- * loading time.
- */
-if (mxClient.mxLoadResources) {
-  mxResources.add(`${mxClient.basePath}/resources/graph`);
-} else {
-  mxClient.defaultBundles.push(`${mxClient.basePath}/resources/graph`);
 }
 
 export default mxGraph;
