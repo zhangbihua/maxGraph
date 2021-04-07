@@ -14,6 +14,7 @@ import mxGraphView from '../graph/mxGraphView';
 import mxCell from './mxCell';
 import mxCellState from '../../util/datatypes/mxCellState';
 import mxShape from "../../shape/mxShape";
+import mxGraph from "../graph/mxGraph";
 
 class mxTemporaryCellStates {
   oldValidateCellState: Function | null;
@@ -54,13 +55,13 @@ class mxTemporaryCellStates {
     this.oldBounds = view.getGraphBounds();
     this.oldStates = view.getStates();
     this.oldScale = view.getScale();
-    this.oldDoRedrawShape = view.graph.cellRenderer.doRedrawShape;
+    this.oldDoRedrawShape = (<mxGraph>view.graph).cellRenderer.doRedrawShape;
 
     const self = this;
 
     // Overrides doRedrawShape and paint shape to add links on shapes
     if (getLinkForCellState != null) {
-      view.graph.cellRenderer.doRedrawShape = (state: mxCellState) => {
+      (<mxGraph>view.graph).cellRenderer.doRedrawShape = (state: mxCellState) => {
         const shape = <mxShape>state?.shape;
         const oldPaint = shape.paint;
 
@@ -75,7 +76,7 @@ class mxTemporaryCellStates {
           }
         };
 
-        (<Function>self.oldDoRedrawShape).apply(view.graph.cellRenderer, [state]);
+        (<Function>self.oldDoRedrawShape).apply((<mxGraph>view.graph).cellRenderer, [state]);
         shape.paint = oldPaint;
       };
     }
@@ -100,7 +101,7 @@ class mxTemporaryCellStates {
       // the model so that the original cells are not modified
       for (const cell of cells) {
         const bounds = view.getBoundingBox(
-          view.validateCellState(view.validateCell(cell))
+          view.validateCellState(<mxCell>view.validateCell(<mxCell>cell))
         );
         if (bbox == null) {
           bbox = bounds;

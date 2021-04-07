@@ -157,11 +157,11 @@ class mxShape {
 
   flipV: boolean = false;
 
-  isShadow: boolean | null = false;
+  isShadow: boolean = false;
 
-  isDashed: boolean | null = false;
+  isDashed: boolean = false;
 
-  isRounded: boolean | null = false;
+  isRounded: boolean = false;
 
   rotation: number | null = null;
 
@@ -171,7 +171,7 @@ class mxShape {
 
   oldGradients: any[] | null = null;
 
-  glass: boolean | null = false;
+  glass: boolean = false;
 
   /**
    * Variable: dialect
@@ -1084,10 +1084,11 @@ class mxShape {
     this.startArrow = null;
     this.endArrow = null;
     this.direction = null;
-    this.isShadow = null;
-    this.isDashed = null;
-    this.isRounded = null;
-    this.glass = null;
+
+    this.isShadow = false;
+    this.isDashed = false;
+    this.isRounded = false;
+    this.glass = false;
   }
 
   /**

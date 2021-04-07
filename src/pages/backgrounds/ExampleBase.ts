@@ -5,7 +5,7 @@ class ExampleBase {
     this.props = props;
   }
 
-  appendToElement(element): HTMLElement {
+  appendToElement(element: HTMLElement): HTMLElement {
     const html: string = this.getHTML();
     const cont: HTMLElement =
         document.createElement('div');

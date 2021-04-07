@@ -12,6 +12,8 @@ import mxShape from '../shape/mxShape';
 import mxRectangle from './datatypes/mxRectangle';
 import mxGraph from '../view/graph/mxGraph';
 import mxEventObject from './event/mxEventObject';
+import mxGraphView from "../view/graph/mxGraphView";
+import mxCell from "../view/cell/mxCell";
 
 /**
  * Class: mxGuide
@@ -28,14 +30,14 @@ class mxGuide {
    *
    * Reference to the enclosing <mxGraph> instance.
    */
-  graph: mxGraph = null;
+  graph: mxGraph;
 
   /**
    * Variable: states
    *
    * Contains the <mxCellStates> that are used for alignment.
    */
-  states: mxCellState[] = null;
+  states: mxCellState[] | null = null;
 
   /**
    * Variable: horizontal
@@ -108,7 +110,7 @@ class mxGuide {
    *
    * Returns the tolerance for the guides. Default value is gridSize / 2.
    */
-  getGuideTolerance(gridEnabled) {
+  getGuideTolerance(gridEnabled: boolean=false) {
     return gridEnabled && this.graph.gridEnabled
       ? this.graph.gridSize / 2
       : this.tolerance;
@@ -152,7 +154,7 @@ class mxGuide {
    */
   move(
     bounds: mxRectangle | null = null,
-    delta: mxPoint | null = null,
+    delta: mxPoint,
     gridEnabled: boolean = false,
     clone: boolean = false
   ) {
@@ -168,10 +170,10 @@ class mxGuide {
       b.x += delta.x;
       b.y += delta.y;
       let overrideX = false;
-      let stateX = null;
+      let stateX: mxCellState | null = null;
       let valueX = null;
       let overrideY = false;
-      let stateY = null;
+      let stateY: mxCellState | null = null;
       let valueY = null;
       let ttX = tt;
       let ttY = tt;
@@ -183,7 +185,7 @@ class mxGuide {
       const middle = b.getCenterY();
 
       // Snaps the left, center and right to the given x-coordinate
-      const snapX = (x, state, centerAlign) => {
+      const snapX = (x: number, state: mxCellState, centerAlign: boolean) => {
         let override = false;
 
         if (centerAlign && Math.abs(x - center) < ttX) {
@@ -222,7 +224,7 @@ class mxGuide {
       };
 
       // Snaps the top, middle or bottom to the given y-coordinate
-      const snapY = (y, state, centerAlign) => {
+      const snapY = (y: number, state: mxCellState, centerAlign: boolean) => {
         let override = false;
 
         if (centerAlign && Math.abs(y - middle) < ttY) {
@@ -295,18 +297,19 @@ class mxGuide {
       delta = this.getDelta(bounds, stateX, delta.x, stateY, delta.y);
 
       // Redraws the guides
-      const c = this.graph.container;
+      const c = <HTMLElement>this.graph.container;
 
       if (!overrideX && this.guideX != null) {
-        this.guideX.node.style.visibility = 'hidden';
+        (<SVGElement>this.guideX.node).style.visibility = 'hidden';
       } else if (this.guideX != null) {
         let minY = null;
         let maxY = null;
 
-        if (stateX != null && bounds != null) {
+        if (stateX != null) {
           minY = Math.min(bounds.y + delta.y - this.graph.panDy, stateX.y);
           maxY = Math.max(
             bounds.y + bounds.height + delta.y - this.graph.panDy,
+              // @ts-ignore
             stateX.y + stateX.height
           );
         }
@@ -324,12 +327,12 @@ class mxGuide {
         }
 
         this.guideX.stroke = this.getGuideColor(stateX, true);
-        this.guideX.node.style.visibility = 'visible';
+        (<SVGElement>this.guideX.node).style.visibility = 'visible';
         this.guideX.redraw();
       }
 
       if (!overrideY && this.guideY != null) {
-        this.guideY.node.style.visibility = 'hidden';
+        (<SVGElement>this.guideY.node).style.visibility = 'hidden';
       } else if (this.guideY != null) {
         let minX = null;
         let maxX = null;
@@ -338,6 +341,7 @@ class mxGuide {
           minX = Math.min(bounds.x + delta.x - this.graph.panDx, stateY.x);
           maxX = Math.max(
             bounds.x + bounds.width + delta.x - this.graph.panDx,
+              // @ts-ignore
             stateY.x + stateY.width
           );
         }
@@ -355,7 +359,7 @@ class mxGuide {
         }
 
         this.guideY.stroke = this.getGuideColor(stateY, false);
-        this.guideY.node.style.visibility = 'visible';
+        (<SVGElement>this.guideY.node).style.visibility = 'visible';
         this.guideY.redraw();
       }
     }
@@ -375,7 +379,7 @@ class mxGuide {
     stateY: mxCellState | null = null,
     dy: number
   ): mxPoint {
-    const s = this.graph.view.scale;
+    const s = (<mxGraphView>this.graph.view).scale;
     if (this.rounded || (stateX != null && stateX.cell == null)) {
       dx = Math.round((bounds.x + dx) / s) * s - bounds.x;
     }
@@ -390,7 +394,7 @@ class mxGuide {
    *
    * Returns the color for the given state.
    */
-  getGuideColor(state: mxCellState, horizontal: boolean | null): string {
+  getGuideColor(state: mxCellState | null, horizontal: boolean | null): string {
     return mxConstants.GUIDE_COLOR;
   }
 
@@ -410,10 +414,10 @@ class mxGuide {
    */
   setVisible(visible: boolean): void {
     if (this.guideX != null) {
-      this.guideX.node.style.visibility = visible ? 'visible' : 'hidden';
+      (<SVGElement>this.guideX.node).style.visibility = visible ? 'visible' : 'hidden';
     }
     if (this.guideY != null) {
-      this.guideY.node.style.visibility = visible ? 'visible' : 'hidden';
+      (<SVGElement>this.guideY.node).style.visibility = visible ? 'visible' : 'hidden';
     }
   }
 

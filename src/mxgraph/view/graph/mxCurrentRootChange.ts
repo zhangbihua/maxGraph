@@ -4,6 +4,7 @@ import mxPoint from '../../util/datatypes/mxPoint';
 import mxCell from '../cell/mxCell';
 import mxEvent from '../../util/event/mxEvent';
 import mxGraphModel from './mxGraphModel';
+import mxGraph from "./mxGraph";
 
 class mxCurrentRootChange {
   view: mxGraphView;
@@ -30,8 +31,8 @@ class mxCurrentRootChange {
     this.isUp = root == null;
 
     if (!this.isUp) {
-      let tmp: mxCell = this.view.currentRoot;
-      const model: mxGraphModel = this.view.graph.getModel();
+      let tmp: mxCell | null = this.view.currentRoot;
+      const model: mxGraphModel = (<mxGraph>this.view.graph).getModel();
 
       while (tmp != null) {
         if (tmp === root) {
@@ -51,9 +52,9 @@ class mxCurrentRootChange {
   execute(): void {
     const tmp = this.view.currentRoot;
     this.view.currentRoot = this.previous;
-    this.previous = tmp;
+    this.previous = <mxCell>tmp;
 
-    const translate = this.view.graph.getTranslateForRoot(
+    const translate = (<mxGraph>this.view.graph).getTranslateForRoot(
       this.view.currentRoot
     );
 

@@ -179,12 +179,12 @@ class mxGraphSelectionModel extends mxEventSource {
   setCells(cells: mxCell[]): void {
     if (cells != null) {
       if (this.singleSelection) {
-        cells = [this.getFirstSelectableCell(cells)];
+        cells = [<mxCell>this.getFirstSelectableCell(cells)];
       }
 
       const tmp = [];
       for (let i = 0; i < cells.length; i += 1) {
-        if (this.graph.isCellSelectable(cells[i])) {
+        if ((<mxGraph>this.graph).isCellSelectable(cells[i])) {
           tmp.push(cells[i]);
         }
       }
@@ -200,7 +200,7 @@ class mxGraphSelectionModel extends mxEventSource {
   getFirstSelectableCell(cells: mxCell[]): mxCell | null {
     if (cells != null) {
       for (let i = 0; i < cells.length; i += 1) {
-        if (this.graph.isCellSelectable(cells[i])) {
+        if ((<mxGraph>this.graph).isCellSelectable(cells[i])) {
           return cells[i];
         }
       }
@@ -238,14 +238,14 @@ class mxGraphSelectionModel extends mxEventSource {
       let remove = null;
       if (this.singleSelection) {
         remove = this.cells;
-        cells = [this.getFirstSelectableCell(cells)];
+        cells = [<mxCell>this.getFirstSelectableCell(cells)];
       }
 
       const tmp = [];
       for (let i = 0; i < cells.length; i += 1) {
         if (
           !this.isSelected(cells[i]) &&
-          this.graph.isCellSelectable(cells[i])
+          (<mxGraph>this.graph).isCellSelectable(cells[i])
         ) {
           tmp.push(cells[i]);
         }
@@ -296,12 +296,13 @@ class mxGraphSelectionModel extends mxEventSource {
    * added - Array of <mxCell> to add to the selection.
    * remove - Array of <mxCell> to remove from the selection.
    */
-  changeSelection(added: mxCell[], removed: mxCell[]): void {
+  changeSelection(added: mxCell[] | null=null,
+                  removed: mxCell[] | null=null): void {
     if (
       (added != null && added.length > 0 && added[0] != null) ||
       (removed != null && removed.length > 0 && removed[0] != null)
     ) {
-      const change = new mxSelectionChange(this, added, removed);
+      const change = new mxSelectionChange(this, added || [], removed || []);
       change.execute();
       const edit = new mxUndoableEdit(this, false);
       edit.add(change);

@@ -48,9 +48,9 @@ import mxRectangle from 'mxgraph/util/datatypes/mxRectangle';
  * 1. This is stored in <strokewidth>.
  */
 class mxActor extends mxShape {
-  constructor(bounds: mxRectangle,
-              fill: string,
-              stroke: string,
+  constructor(bounds: mxRectangle | null=null,
+              fill: string | null=null,
+              stroke: string | null=null,
               strokewidth: number=1) {
     super();
     this.bounds = bounds;
