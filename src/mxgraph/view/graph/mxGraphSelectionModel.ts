@@ -161,7 +161,7 @@ class mxGraphSelectionModel extends mxEventSource {
    *
    * cell - <mxCell> to be selected.
    */
-  setCell(cell: mxCell): void {
+  setCell(cell: mxCell | null): void {
     if (cell != null) {
       this.setCells([cell]);
     }

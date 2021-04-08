@@ -32,12 +32,10 @@ import mxSvgCanvas2D from "../../util/canvas/mxSvgCanvas2D";
  * 1. This is stored in <strokewidth>.
  */
 class mxRectangleShape extends mxShape {
-  strokewidth: number;
-  
   constructor(
     bounds: mxRectangle | null=null,
-    fill: string = '#FFFFFF',
-    stroke: string = '#000000',
+    fill: string | null = '#FFFFFF',
+    stroke: string | null = '#000000',
     strokewidth: number = 1
   ) {
     super();
@@ -46,6 +44,9 @@ class mxRectangleShape extends mxShape {
     this.stroke = stroke;
     this.strokewidth = strokewidth;
   }
+
+  // TODO: Document me!
+  strokewidth: number;
 
   /**
    * Function: isHtmlAllowed

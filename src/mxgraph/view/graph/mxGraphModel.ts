@@ -1094,7 +1094,7 @@ class mxGraphModel extends mxEventSource {
    * isSource - Boolean indicating which end of the edge should be returned.
    */
   getTerminal(edge: mxCell | null,
-              isSource: boolean=false) {
+              isSource: boolean=false): mxCell | null {
     return edge != null ? edge.getTerminal(isSource) : null;
   }
 
@@ -1623,7 +1623,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose style should be returned.
    */
-  getStyle(cell: mxCell): any {
+  getStyle(cell: mxCell | null): any {
     return cell != null ? cell.getStyle() : null;
   }
 
@@ -1730,7 +1730,7 @@ class mxGraphModel extends mxEventSource {
    *
    * cell - <mxCell> whose visible state should be returned.
    */
-  isVisible(cell: mxCell): boolean {
+  isVisible(cell: mxCell | null): boolean {
     return cell != null ? cell.isVisible() : false;
   }
 

@@ -15,6 +15,136 @@ import mxCellState from '../util/datatypes/mxCellState';
 
 class mxText extends mxShape {
   /**
+   * Class: mxText
+   *
+   * Extends <mxShape> to implement a text shape. To change vertical text from
+   * bottom to top to top to bottom, the following code can be used:
+   *
+   * (code)
+   * verticalTextRotation = 90;
+   * (end)
+   *
+   * Constructor: mxText
+   *
+   * Constructs a new text shape.
+   *
+   * Parameters:
+   *
+   * value - String that represents the text to be displayed. This is stored in
+   * <value>.
+   * bounds - <mxRectangle> that defines the bounds. This is stored in
+   * <mxShape.bounds>.
+   * align - Specifies the horizontal alignment. Default is ''. This is stored in
+   * <align>.
+   * valign - Specifies the vertical alignment. Default is ''. This is stored in
+   * <valign>.
+   * color - String that specifies the text color. Default is 'black'. This is
+   * stored in <color>.
+   * family - String that specifies the font family. Default is
+   * <mxConstants.DEFAULT_FONTFAMILY>. This is stored in <family>.
+   * size - Integer that specifies the font size. Default is
+   * <mxConstants.DEFAULT_FONTSIZE>. This is stored in <size>.
+   * fontStyle - Specifies the font style. Default is 0. This is stored in
+   * <fontStyle>.
+   * spacing - Integer that specifies the global spacing. Default is 2. This is
+   * stored in <spacing>.
+   * spacingTop - Integer that specifies the top spacing. Default is 0. The
+   * sum of the spacing and this is stored in <spacingTop>.
+   * spacingRight - Integer that specifies the right spacing. Default is 0. The
+   * sum of the spacing and this is stored in <spacingRight>.
+   * spacingBottom - Integer that specifies the bottom spacing. Default is 0.The
+   * sum of the spacing and this is stored in <spacingBottom>.
+   * spacingLeft - Integer that specifies the left spacing. Default is 0. The
+   * sum of the spacing and this is stored in <spacingLeft>.
+   * horizontal - Boolean that specifies if the label is horizontal. Default is
+   * true. This is stored in <horizontal>.
+   * background - String that specifies the background color. Default is null.
+   * This is stored in <background>.
+   * border - String that specifies the label border color. Default is null.
+   * This is stored in <border>.
+   * wrap - Specifies if word-wrapping should be enabled. Default is false.
+   * This is stored in <wrap>.
+   * clipped - Specifies if the label should be clipped. Default is false.
+   * This is stored in <clipped>.
+   * overflow - Value of the overflow style. Default is 'visible'.
+   */
+  constructor(
+    value: string,
+    bounds: mxRectangle,
+    align: string=mxConstants.ALIGN_CENTER,
+    valign: string=mxConstants.ALIGN_MIDDLE,
+    color: string='black',
+    family: string=mxConstants.DEFAULT_FONTFAMILY,
+    size: number=mxConstants.DEFAULT_FONTSIZE,
+    fontStyle: number=mxConstants.DEFAULT_FONTSTYLE,
+    spacing: number=2,
+    spacingTop: number=0,
+    spacingRight: number=0,
+    spacingBottom: number=0,
+    spacingLeft: number=0,
+    horizontal: boolean=true,
+    background: string | null=null,
+    border: string | null=null,
+    wrap: boolean=false,
+    clipped: boolean=false,
+    overflow: string='visible',
+    labelPadding: number=0,
+    textDirection
+  ) {
+    super();
+    this.value = value;
+    this.bounds = bounds;
+    this.color = color;
+    this.align = align;
+    this.valign = valign;
+    this.family = family;
+    this.size = size;
+    this.fontStyle = fontStyle;
+    this.spacing = parseInt(String(spacing || 2));
+    this.spacingTop = parseInt(String(spacing || 2)) + parseInt(String(spacingTop || 0));
+    this.spacingRight = parseInt(String(spacing || 2)) + parseInt(String(spacingRight || 0));
+    this.spacingBottom = parseInt(String(spacing || 2)) + parseInt(String(spacingBottom || 0));
+    this.spacingLeft = parseInt(String(spacing || 2)) + parseInt(String(spacingLeft || 0));
+    this.horizontal = horizontal;
+    this.background = background;
+    this.border = border;
+    this.wrap = wrap;
+    this.clipped = clipped;
+    this.overflow = overflow;
+    this.labelPadding = labelPadding;
+    this.textDirection = textDirection;
+    this.rotation = 0;
+    this.updateMargin();
+  }
+
+  // TODO: Document me!
+  value: string;
+  bounds: mxRectangle;
+  align: string=mxConstants.ALIGN_CENTER;
+  valign: string=mxConstants.ALIGN_MIDDLE;
+  color: string='black';
+  family: string=mxConstants.DEFAULT_FONTFAMILY;
+  size: number=mxConstants.DEFAULT_FONTSIZE;
+  fontStyle: number=mxConstants.DEFAULT_FONTSTYLE;
+  spacing: number=2;
+  spacingTop: number=0;
+  spacingRight: number=0;
+  spacingBottom: number=0;
+  spacingLeft: number=0;
+  horizontal: boolean=true;
+  background: string | null=null;
+  border: string | null=null;
+  wrap: boolean=false;
+  clipped: boolean=false;
+  overflow: string='visible';
+  labelPadding: number=0;
+  textDirection;
+  margin: mxRectangle | null=null;
+  unrotatedBoundingBox: mxRectangle | null=null;
+  flipH: boolean=false;
+  flipV: boolean=false;
+
+  /**
    * Variable: baseSpacingTop
    *
    * Specifies the spacing to be added to the top spacing. Default is 0. Use the
@@ -79,15 +209,6 @@ class mxText extends mxShape {
   ignoreStringSize: boolean = false;
 
   /**
-   * Variable: textWidthPadding
-   *
-   * Specifies the padding to be added to the text width for the bounding box.
-   * This is needed to make sure no clipping is applied to borders. Default is 4
-   * for IE 8 standards mode and 3 for all others.
-   */
-  textWidthPadding: number = 3;
-
-  /**
    * Variable: lastValue
    *
    * Contains the last rendered text value. Used for caching.
@@ -102,123 +223,7 @@ class mxText extends mxShape {
   cacheEnabled: boolean = true;
 
   /**
-   * Class: mxText
-   *
-   * Extends <mxShape> to implement a text shape. To change vertical text from
-   * bottom to top to top to bottom, the following code can be used:
-   *
-   * (code)
-   * verticalTextRotation = 90;
-   * (end)
-   *
-   * Constructor: mxText
-   *
-   * Constructs a new text shape.
-   *
-   * Parameters:
-   *
-   * value - String that represents the text to be displayed. This is stored in
-   * <value>.
-   * bounds - <mxRectangle> that defines the bounds. This is stored in
-   * <mxShape.bounds>.
-   * align - Specifies the horizontal alignment. Default is ''. This is stored in
-   * <align>.
-   * valign - Specifies the vertical alignment. Default is ''. This is stored in
-   * <valign>.
-   * color - String that specifies the text color. Default is 'black'. This is
-   * stored in <color>.
-   * family - String that specifies the font family. Default is
-   * <mxConstants.DEFAULT_FONTFAMILY>. This is stored in <family>.
-   * size - Integer that specifies the font size. Default is
-   * <mxConstants.DEFAULT_FONTSIZE>. This is stored in <size>.
-   * fontStyle - Specifies the font style. Default is 0. This is stored in
-   * <fontStyle>.
-   * spacing - Integer that specifies the global spacing. Default is 2. This is
-   * stored in <spacing>.
-   * spacingTop - Integer that specifies the top spacing. Default is 0. The
-   * sum of the spacing and this is stored in <spacingTop>.
-   * spacingRight - Integer that specifies the right spacing. Default is 0. The
-   * sum of the spacing and this is stored in <spacingRight>.
-   * spacingBottom - Integer that specifies the bottom spacing. Default is 0.The
-   * sum of the spacing and this is stored in <spacingBottom>.
-   * spacingLeft - Integer that specifies the left spacing. Default is 0. The
-   * sum of the spacing and this is stored in <spacingLeft>.
-   * horizontal - Boolean that specifies if the label is horizontal. Default is
-   * true. This is stored in <horizontal>.
-   * background - String that specifies the background color. Default is null.
-   * This is stored in <background>.
-   * border - String that specifies the label border color. Default is null.
-   * This is stored in <border>.
-   * wrap - Specifies if word-wrapping should be enabled. Default is false.
-   * This is stored in <wrap>.
-   * clipped - Specifies if the label should be clipped. Default is false.
-   * This is stored in <clipped>.
-   * overflow - Value of the overflow style. Default is 'visible'.
-   */
-  constructor(
-    value,
-    bounds,
-    align,
-    valign,
-    color,
-    family,
-    size,
-    fontStyle,
-    spacing,
-    spacingTop,
-    spacingRight,
-    spacingBottom,
-    spacingLeft,
-    horizontal,
-    background,
-    border,
-    wrap,
-    clipped,
-    overflow,
-    labelPadding,
-    textDirection
-  ) {
-    super();
-    this.value = value;
-    this.bounds = bounds;
-    this.color = color != null ? color : 'black';
-    this.align = align != null ? align : mxConstants.ALIGN_CENTER;
-    this.valign = valign != null ? valign : mxConstants.ALIGN_MIDDLE;
-    this.family = family != null ? family : mxConstants.DEFAULT_FONTFAMILY;
-    this.size = size != null ? size : mxConstants.DEFAULT_FONTSIZE;
-    this.fontStyle =
-      fontStyle != null ? fontStyle : mxConstants.DEFAULT_FONTSTYLE;
-    this.spacing = parseInt(spacing || 2);
-    this.spacingTop = this.spacing + parseInt(spacingTop || 0);
-    this.spacingRight = this.spacing + parseInt(spacingRight || 0);
-    this.spacingBottom = this.spacing + parseInt(spacingBottom || 0);
-    this.spacingLeft = this.spacing + parseInt(spacingLeft || 0);
-    this.horizontal = horizontal != null ? horizontal : true;
-    this.background = background;
-    this.border = border;
-    this.wrap = wrap != null ? wrap : false;
-    this.clipped = clipped != null ? clipped : false;
-    this.overflow = overflow != null ? overflow : 'visible';
-    this.labelPadding = labelPadding != null ? labelPadding : 0;
-    this.textDirection = textDirection;
-    this.rotation = 0;
-    this.updateMargin();
-  }
-
-  /**
-   * Function: isHtmlAllowed
-   *
-   * Returns true if HTML is allowed for this shape. This implementation returns
-   * true if the browser is not in IE8 standards mode.
-   */
-  isHtmlAllowed(): boolean {
-    return document.documentMode !== 8 || mxClient.IS_EM;
-  }
-
-  /**
    * Function: getSvgScreenOffset
-   *
-   * Disables offset in IE9 for crisper image output.
    */
   getSvgScreenOffset(): number {
     return 0;
@@ -342,32 +347,17 @@ class mxText extends mxShape {
         this.dialect === mxConstants.DIALECT_STRICTHTML)
     ) {
       if (this.node.nodeName === 'DIV') {
-        if (mxClient.IS_SVG) {
-          this.redrawHtmlShapeWithCss3();
-        } else {
-          this.updateSize(
-            this.node,
-            this.state == null || this.state.view.textDiv == null
-          );
-
-          this.updateHtmlTransform();
-        }
-
+        this.redrawHtmlShape();
         this.updateBoundingBox();
       } else {
         const canvas = this.createCanvas();
 
-        if (canvas != null && canvas.updateText != null) {
-          // Specifies if events should be handled
-          canvas.pointerEvents = this.pointerEvents;
+        // Specifies if events should be handled
+        canvas.pointerEvents = this.pointerEvents;
 
-          this.paint(canvas, true);
-          this.destroyCanvas(canvas);
-          this.updateBoundingBox();
-        } else {
-          // Fallback if canvas does not support updateText (VML)
-          super.redraw();
-        }
+        this.paint(canvas, true);
+        this.destroyCanvas(canvas);
+        this.updateBoundingBox();
       }
     } else {
       super.redraw();
@@ -406,7 +396,7 @@ class mxText extends mxShape {
     delete this.background;
     delete this.border;
     this.textDirection = mxConstants.DEFAULT_TEXT_DIRECTION;
-    delete this.margin;
+    this.margin = null;
   }
 
   /**
@@ -553,7 +543,6 @@ class mxText extends mxShape {
         result = result.firstChild.firstChild.firstChild.firstChild.firstChild;
       }
     }
-
     return result;
   }
 
@@ -596,74 +585,39 @@ class mxText extends mxShape {
       let ow = null;
       let oh = null;
 
-      if (node.ownerSVGElement != null) {
-        if (
-          node.firstChild != null &&
-          node.firstChild.firstChild != null &&
-          node.firstChild.firstChild.nodeName === 'foreignObject'
-        ) {
-          // Uses second inner DIV for font metrics
-          node = node.firstChild.firstChild.firstChild.firstChild;
-          oh = node.offsetHeight * this.scale;
+      if (
+        node.firstChild != null &&
+        node.firstChild.firstChild != null &&
+        node.firstChild.firstChild.nodeName === 'foreignObject'
+      ) {
+        // Uses second inner DIV for font metrics
+        node = node.firstChild.firstChild.firstChild.firstChild;
+        oh = node.offsetHeight * this.scale;
 
-          if (this.overflow === 'width') {
-            ow = this.boundingBox.width;
-          } else {
-            ow = node.offsetWidth * this.scale;
-          }
+        if (this.overflow === 'width') {
+          ow = this.boundingBox.width;
         } else {
-          try {
-            const b = node.getBBox();
-
-            // Workaround for bounding box of empty string
-            if (
-              typeof this.value === 'string' &&
-              mxUtils.trim(this.value) == 0
-            ) {
-              this.boundingBox = null;
-            } else if (b.width === 0 && b.height === 0) {
-              this.boundingBox = null;
-            } else {
-              this.boundingBox = new mxRectangle(b.x, b.y, b.width, b.height);
-            }
-
-            return;
-          } catch (e) {
-            // Ignores NS_ERROR_FAILURE in FF if container display is none.
-          }
+          ow = node.offsetWidth * this.scale;
         }
       } else {
-        const td = this.state != null ? this.state.view.textDiv : null;
+        try {
+          const b = node.getBBox();
 
-        // Use cached offset size
-        if (this.offsetWidth != null && this.offsetHeight != null) {
-          ow = this.offsetWidth * this.scale;
-          oh = this.offsetHeight * this.scale;
-        } else {
-          // Cannot get node size while container hidden so a
-          // shared temporary DIV is used for text measuring
-          if (td != null) {
-            this.updateFont(td);
-            this.updateSize(td, false);
-            this.updateInnerHtml(td);
-
-            node = td;
-          }
-
-          let sizeDiv = node;
-
+          // Workaround for bounding box of empty string
           if (
-            sizeDiv.firstChild != null &&
-            sizeDiv.firstChild.nodeName === 'DIV'
+            typeof this.value === 'string' &&
+            mxUtils.trim(this.value) == 0
           ) {
-            sizeDiv = sizeDiv.firstChild;
+            this.boundingBox = null;
+          } else if (b.width === 0 && b.height === 0) {
+            this.boundingBox = null;
+          } else {
+            this.boundingBox = new mxRectangle(b.x, b.y, b.width, b.height);
           }
 
-          this.offsetWidth = sizeDiv.offsetWidth + this.textWidthPadding;
-          this.offsetHeight = sizeDiv.offsetHeight;
-
-          ow = this.offsetWidth * this.scale;
-          oh = this.offsetHeight * this.scale;
+          return;
+        } catch (e) {
+          // Ignores NS_ERROR_FAILURE in FF if container display is none.
         }
       }
 
@@ -680,7 +634,7 @@ class mxText extends mxShape {
     if (this.boundingBox != null) {
       if (rot !== 0) {
         // Accounts for pre-rotated x and y
-        const bbox = mxUtils.getBoundingBox(
+        const bbox = <mxRectangle>mxUtils.getBoundingBox(
           new mxRectangle(
             this.margin.x * this.boundingBox.width,
             this.margin.y * this.boundingBox.height,
@@ -836,37 +790,6 @@ class mxText extends mxShape {
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
   redrawHtmlShape() {
-    if (mxClient.IS_SVG) {
-      this.redrawHtmlShapeWithCss3();
-    } else {
-      const { style } = this.node;
-
-      // Resets CSS styles
-      style.whiteSpace = 'normal';
-      style.overflow = '';
-      style.width = '';
-      style.height = '';
-
-      this.updateValue();
-      this.updateFont(this.node);
-      this.updateSize(
-        this.node,
-        this.state == null || this.state.view.textDiv == null
-      );
-
-      this.offsetWidth = null;
-      this.offsetHeight = null;
-
-      this.updateHtmlTransform();
-    }
-  }
-
-  /**
-   * Function: redrawHtmlShapeWithCss3
-   *
-   * Updates the HTML node(s) to reflect the latest bounds and scale.
-   */
-  redrawHtmlShapeWithCss3() {
     const w = Math.max(0, Math.round(this.bounds.width / this.scale));
     const h = Math.max(0, Math.round(this.bounds.height / this.scale));
     const flex =
@@ -932,56 +855,6 @@ class mxText extends mxShape {
   }
 
   /**
-   * Function: updateHtmlTransform
-   *
-   * Returns the spacing as an <mxPoint>.
-   */
-  updateHtmlTransform() {
-    const theta = this.getTextRotation();
-    const { style } = this.node;
-    const dx = this.margin.x;
-    const dy = this.margin.y;
-
-    if (theta !== 0) {
-      mxUtils.setPrefixedStyle(
-        style,
-        'transformOrigin',
-        `${-dx * 100}%` + ` ${-dy * 100}%`
-      );
-      mxUtils.setPrefixedStyle(
-        style,
-        'transform',
-        `translate(${dx * 100}%` +
-          `,${dy * 100}%) ` +
-          `scale(${this.scale}) rotate(${theta}deg)`
-      );
-    } else {
-      mxUtils.setPrefixedStyle(style, 'transformOrigin', '0% 0%');
-      mxUtils.setPrefixedStyle(
-        style,
-        'transform',
-        `scale(${this.scale}) ` + `translate(${dx * 100}%` + `,${dy * 100}%)`
-      );
-    }
-
-    style.left = `${Math.round(
-      this.bounds.x -
-        Math.ceil(
-          dx * (this.overflow !== 'fill' && this.overflow !== 'width' ? 3 : 1)
-        )
-    )}px`;
-    style.top = `${Math.round(
-      this.bounds.y - dy * (this.overflow !== 'fill' ? 3 : 1)
-    )}px`;
-
-    if (this.opacity < 100) {
-      style.opacity = this.opacity / 100;
-    } else {
-      style.opacity = '';
-    }
-  }
-
-  /**
    * Function: updateInnerHtml
    *
    * Sets the inner HTML of the given element to the <value>.
@@ -1004,159 +877,6 @@ class mxText extends mxShape {
 
       elt.innerHTML = val;
     }
-  }
-
-  /**
-   * Function: updateHtmlFilter
-   *
-   * Rotated text rendering quality is bad for IE9 quirks/IE8 standards
-   */
-  updateHtmlFilter() {
-    const { style } = this.node;
-    const dx = this.margin.x;
-    let dy = this.margin.y;
-    const s = this.scale;
-
-    // Resets filter before getting offsetWidth
-    mxUtils.setOpacity(this.node, this.opacity);
-
-    // Adds 1 to match table height in 1.x
-    let ow = 0;
-    let oh = 0;
-    const td = this.state != null ? this.state.view.textDiv : null;
-    let sizeDiv = this.node;
-
-    // Fallback for hidden text rendering in IE quirks mode
-    if (td != null) {
-      td.style.overflow = '';
-      td.style.height = '';
-      td.style.width = '';
-
-      this.updateFont(td);
-      this.updateSize(td, false);
-      this.updateInnerHtml(td);
-
-      const w = Math.round(this.bounds.width / this.scale);
-
-      if (this.wrap && w > 0) {
-        td.style.whiteSpace = 'normal';
-        td.style.wordWrap = mxConstants.WORD_WRAP;
-        ow = w;
-
-        if (this.clipped) {
-          ow = Math.min(ow, this.bounds.width);
-        }
-
-        td.style.width = `${ow}px`;
-      } else {
-        td.style.whiteSpace = 'nowrap';
-      }
-
-      sizeDiv = td;
-
-      if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName === 'DIV') {
-        sizeDiv = sizeDiv.firstChild;
-
-        if (this.wrap && td.style.wordWrap === 'break-word') {
-          sizeDiv.style.width = '100%';
-        }
-      }
-
-      // Required to update the height of the text box after wrapping width is known
-      if (!this.clipped && this.wrap && w > 0) {
-        ow = sizeDiv.offsetWidth + this.textWidthPadding;
-        td.style.width = `${ow}px`;
-      }
-
-      oh = sizeDiv.offsetHeight + 2;
-    } else if (
-      sizeDiv.firstChild != null &&
-      sizeDiv.firstChild.nodeName === 'DIV'
-    ) {
-      sizeDiv = sizeDiv.firstChild;
-      oh = sizeDiv.offsetHeight;
-    }
-
-    ow = sizeDiv.offsetWidth + this.textWidthPadding;
-
-    if (this.clipped) {
-      oh = Math.min(oh, this.bounds.height);
-    }
-
-    let w = this.bounds.width / s;
-    let h = this.bounds.height / s;
-
-    // Handles special case for live preview with no wrapper DIV and no textDiv
-    if (this.overflow === 'fill') {
-      oh = h;
-      ow = w;
-    } else if (this.overflow === 'width') {
-      oh = sizeDiv.scrollHeight;
-      ow = w;
-    }
-
-    // Stores for later use
-    this.offsetWidth = ow;
-    this.offsetHeight = oh;
-
-    h = oh;
-
-    if (this.overflow !== 'fill' && this.overflow !== 'width') {
-      if (this.clipped) {
-        ow = Math.min(w, ow);
-      }
-
-      w = ow;
-    }
-
-    h *= s;
-    w *= s;
-
-    // Rotation case is handled via VML canvas
-    let rad = this.getTextRotation() * (Math.PI / 180);
-
-    // Precalculate cos and sin for the rotation
-    const real_cos = parseFloat(parseFloat(Math.cos(rad)).toFixed(8));
-    const real_sin = parseFloat(parseFloat(Math.sin(-rad)).toFixed(8));
-
-    rad %= 2 * Math.PI;
-
-    if (rad < 0) {
-      rad += 2 * Math.PI;
-    }
-
-    rad %= Math.PI;
-
-    if (rad > Math.PI / 2) {
-      rad = Math.PI - rad;
-    }
-
-    const cos = Math.cos(rad);
-    const sin = Math.sin(-rad);
-
-    const tx = w * -(dx + 0.5);
-    const ty = h * -(dy + 0.5);
-
-    const top_fix = (h - h * cos + w * sin) / 2 + real_sin * tx - real_cos * ty;
-    const left_fix =
-      (w - w * cos + h * sin) / 2 - real_cos * tx - real_sin * ty;
-
-    if (rad !== 0) {
-      const f = `progid:DXImageTransform.Microsoft.Matrix(M11=${real_cos}, M12=${real_sin}, M21=${-real_sin}, M22=${real_cos}, sizingMethod='auto expand')`;
-
-      if (style.filter != null && style.filter.length > 0) {
-        style.filter += ` ${f}`;
-      } else {
-        style.filter = f;
-      }
-    }
-
-    // Workaround for rendering offsets
-    dy = 0;
-
-    style.zoom = s;
-    style.left = `${Math.round(this.bounds.x + left_fix - w / 2)}px`;
-    style.top = `${Math.round(this.bounds.y + top_fix - h / 2 + dy)}px`;
   }
 
   /**

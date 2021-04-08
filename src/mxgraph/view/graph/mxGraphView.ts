@@ -101,7 +101,7 @@ class mxGraphView extends mxEventSource {
    *
    * Returns reference to the enclosing <mxGraph>.
    */
-  graph: mxGraph | null = null;
+  graph: mxGraph;
 
   /**
    * Variable: currentRoot
@@ -1548,9 +1548,9 @@ class mxGraphView extends mxEventSource {
    * associated.
    */
   isLoopStyleEnabled(edge: mxCellState,
-                     points: mxPoint[],
-                     source: mxCellState,
-                     target: mxCellState): boolean {
+                     points: mxPoint[]=[],
+                     source: mxCellState | null=null,
+                     target: mxCellState | null=null): boolean {
 
     const sc = (<mxGraph>this.graph).getConnectionConstraint(edge, source, true);
     const tc = (<mxGraph>this.graph).getConnectionConstraint(edge, target, false);
@@ -1575,9 +1575,9 @@ class mxGraphView extends mxEventSource {
    * Returns the edge style function to be used to render the given edge state.
    */
   getEdgeStyle(edge: mxCellState,
-               points: mxPoint[],
-               source: mxCellState,
-               target: mxCellState): any {
+               points: mxPoint[]=[],
+               source: mxCellState | null=null,
+               target: mxCellState | null=null): any {
 
     let edgeStyle: any = this.isLoopStyleEnabled(edge, points, source, target)
       ? mxUtils.getValue(
@@ -1970,7 +1970,7 @@ class mxGraphView extends mxEventSource {
    * source - Boolean that specifies if the source or target terminal
    * should be returned.
    */
-  getVisibleTerminal(edge: mxCell,
+  getVisibleTerminal(edge: mxCell | null,
                      source: boolean) {
 
     const model = (<mxGraph>this.graph).getModel();

@@ -63,7 +63,7 @@ class mxConnectionConstraint {
    */
   constructor(point: mxPoint | null=null,
               perimeter: boolean=true,
-              name: string='',
+              name: string | null=null,
               dx: number | null=null,
               dy: number | null=null) {
     this.point = point;

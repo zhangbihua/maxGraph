@@ -49,7 +49,7 @@ class mxCellOverlay extends mxEventSource {
    * Holds the offset as an <mxPoint>. The offset will be scaled according to the
    * current scale.
    */
-  offset: mxPoint | null = null;
+  offset: mxPoint = new mxPoint();
 
   /**
    * Variable: cursor
@@ -172,11 +172,12 @@ class mxCellOverlay extends mxEventSource {
     const s = state.view.scale;
     let pt = null;
 
-    const w = this.image.width;
-    const h = this.image.height;
+    const image = <mxImage>this.image;
+    const w = image.width;
+    const h = image.height;
 
     if (isEdge) {
-      const pts = state.absolutePoints;
+      const pts = <mxPoint[]>state.absolutePoints;
 
       if (pts.length % 2 === 1) {
         pt = pts[Math.floor(pts.length / 2)];

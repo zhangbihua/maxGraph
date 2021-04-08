@@ -33,6 +33,7 @@ import mxPoint from '../../util/datatypes/mxPoint';
 import mxShape from '../../shape/mxShape';
 import mxCellState from '../../util/datatypes/mxCellState';
 import mxCell from './mxCell';
+import mxGraphModel from "../graph/mxGraphModel";
 
 class mxCellRenderer {
   /**
@@ -56,7 +57,7 @@ class mxCellRenderer {
    *
    * Defines the default shape for vertices. Default is <mxRectangleShape>.
    */
-  defaultVertexShape: typeof mxShape = mxRectangleShape;
+  defaultVertexShape: typeof mxRectangleShape = mxRectangleShape;
 
   /**
    * Variable: defaultTextShape
@@ -1532,7 +1533,8 @@ class mxCellRenderer {
     force: boolean = false,
     rendering: boolean = true
   ): boolean {
-    const { model } = state.view.graph;
+    const model = <mxGraphModel>state.view.graph.model;
+
     let shapeChanged = false;
 
     // Forces creation of new shape if shape style has changed

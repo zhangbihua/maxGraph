@@ -488,7 +488,7 @@ class mxCell {
    *
    * child - Child whose index should be returned.
    */
-  getIndex(child: mxCell): number {
+  getIndex(child: mxCell | null): number {
     return mxUtils.indexOf(this.children, child);
   }
 

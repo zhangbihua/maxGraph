@@ -15,31 +15,31 @@ import mxGraph from "../../view/graph/mxGraph";
 
 class mxCellState extends mxRectangle {
   // TODO: Document me!!
-  cellBounds: mxRectangle | undefined;
+  cellBounds: mxRectangle | null = null;
 
-  paintBounds: mxRectangle | undefined;
+  paintBounds: mxRectangle | null = null;
 
-  boundingBox: mxRectangle | undefined;
+  boundingBox: mxRectangle | null = null;
 
   // Used by mxCellRenderer's createControl()
-  control: mxShape | undefined;
+  control: mxShape | null = null;
 
   // Used by mxCellRenderer's createCellOverlays()
-  overlays: any[] | null | undefined;
+  overlays: any[] | null = null;
 
   /**
    * Variable: view
    *
    * Reference to the enclosing <mxGraphView>.
    */
-  view: mxGraphView | null = null;
+  view: mxGraphView;
 
   /**
    * Variable: cell
    *
    * Reference to the <mxCell> that is represented by this state.
    */
-  cell: mxCell | null = null;
+  cell: mxCell;
 
   /**
    * Variable: style
@@ -47,7 +47,7 @@ class mxCellState extends mxRectangle {
    * Contains an array of key, value pairs that represent the style of the
    * cell.
    */
-  style: any | null = null; // TODO: Important - make the style type more strictly typed to allow for typescript checking of individual properties!!!
+  style: any; // TODO: Important - make the style type more strictly typed to allow for typescript checking of individual properties!!!
 
   /**
    * Variable: invalidStyle
@@ -69,7 +69,7 @@ class mxCellState extends mxRectangle {
    * <mxPoint> that holds the origin for all child cells. Default is a new
    * empty <mxPoint>.
    */
-  origin: mxPoint | null = null;
+  origin: mxPoint;
 
   /**
    * Variable: absolutePoints
@@ -86,7 +86,7 @@ class mxCellState extends mxRectangle {
    * absolute coordinates of the label position. For vertices, this is the
    * offset of the label relative to the top, left corner of the vertex.
    */
-  absoluteOffset: mxPoint | null = null;
+  absoluteOffset: mxPoint;
 
   /**
    * Variable: visibleSourceState

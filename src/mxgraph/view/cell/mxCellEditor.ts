@@ -14,8 +14,141 @@ import mxGraph from '../graph/mxGraph';
 import mxCell from './mxCell';
 import mxMouseEvent from '../../util/event/mxMouseEvent';
 import mxCellState from '../../util/datatypes/mxCellState';
+import mxShape from "../../shape/mxShape";
+import mxEventObject from "../../util/event/mxEventObject";
 
+/**
+ * Class: mxCellEditor
+ *
+ * In-place editor for the graph. To control this editor, use
+ * <mxGraph.invokesStopCellEditing>, <mxGraph.enterStopsCellEditing> and
+ * <mxGraph.escapeEnabled>. If <mxGraph.enterStopsCellEditing> is true then
+ * ctrl-enter or shift-enter can be used to create a linefeed. The F2 and
+ * escape keys can always be used to stop editing.
+ *
+ * To customize the location of the textbox in the graph, override
+ * <getEditorBounds> as follows:
+ *
+ * (code)
+ * graph.cellEditor.getEditorBounds = (state)=>
+ * {
+ *   let result = getEditorBounds.apply(this, arguments);
+ *
+ *   if (this.graph.getModel().isEdge(state.cell))
+ *   {
+ *     result.x = state.getCenterX() - result.width / 2;
+ *     result.y = state.getCenterY() - result.height / 2;
+ *   }
+ *
+ *   return result;
+ * };
+ * (end)
+ *
+ * Note that this hook is only called if <autoSize> is false. If <autoSize> is true,
+ * then <mxShape.getLabelBounds> is used to compute the current bounds of the textbox.
+ *
+ * The textarea uses the mxCellEditor CSS class. You can modify this class in
+ * your custom CSS. Note: You should modify the CSS after loading the client
+ * in the page.
+ *
+ * Example:
+ *
+ * To only allow numeric input in the in-place editor, use the following code.
+ *
+ * (code)
+ * let text = graph.cellEditor.textarea;
+ *
+ * mxEvent.addListener(text, 'keydown', function (evt)
+ * {
+ *   if (!(evt.keyCode >= 48 && evt.keyCode <= 57) &&
+ *       !(evt.keyCode >= 96 && evt.keyCode <= 105))
+ *   {
+ *     mxEvent.consume(evt);
+ *   }
+ * });
+ * (end)
+ *
+ * Placeholder:
+ *
+ * To implement a placeholder for cells without a label, use the
+ * <emptyLabelText> variable.
+ *
+ * Resize in Chrome:
+ *
+ * Resize of the textarea is disabled by default. If you want to enable
+ * this feature extend <init> and set this.textarea.style.resize = ''.
+ *
+ * To start editing on a key press event, the container of the graph
+ * should have focus or a focusable parent should be used to add the
+ * key press handler as follows.
+ *
+ * (code)
+ * mxEvent.addListener(graph.container, 'keypress', mxUtils.bind(this, (evt)=>
+ * {
+ *   if (!graph.isEditing() && !graph.isSelectionEmpty() && evt.which !== 0 &&
+ *       !mxEvent.isAltDown(evt) && !mxEvent.isControlDown(evt) && !mxEvent.isMetaDown(evt))
+ *   {
+ *     graph.startEditing();
+ *
+ *     if (mxClient.IS_FF)
+ *     {
+ *       graph.cellEditor.textarea.value = String.fromCharCode(evt.which);
+ *     }
+ *   }
+ * }));
+ * (end)
+ *
+ * To allow focus for a DIV, and hence to receive key press events, some browsers
+ * require it to have a valid tabindex attribute. In this case the following
+ * code may be used to keep the container focused.
+ *
+ * (code)
+ * let graphFireMouseEvent = graph.fireMouseEvent;
+ * graph.fireMouseEvent = (evtName, me, sender)=>
+ * {
+ *   if (evtName == mxEvent.MOUSE_DOWN)
+ *   {
+ *     this.container.focus();
+ *   }
+ *
+ *   graphFireMouseEvent.apply(this, arguments);
+ * };
+ * (end)
+ *
+ * Constructor: mxCellEditor
+ *
+ * Constructs a new in-place editor for the specified graph.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ */
 class mxCellEditor {
+  constructor(graph: mxGraph) {
+    this.graph = graph;
+
+    // Stops editing after zoom changes
+    this.zoomHandler = () => {
+      if (this.graph.isEditing()) {
+        this.resize();
+      }
+    };
+
+    // Handling of deleted cells while editing
+    this.changeHandler = (sender: any) => {
+      if (
+          this.editingCell != null &&
+          this.graph.getView().getState(this.editingCell, false) == null
+      ) {
+        this.stopEditing(true);
+      }
+    };
+
+    this.graph.view.addListener(mxEvent.SCALE, this.zoomHandler);
+    this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.zoomHandler);
+    this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
+  }
+
   // TODO: Document me!
   changeHandler: Function | null;
 
@@ -25,16 +158,16 @@ class mxCellEditor {
 
   bounds: mxRectangle | null = null;
 
-  resizeThread: number | null;
+  resizeThread: number | null = null;
 
-  textDirection: '' | 'auto' | 'ltr' | 'rtl' | null;
+  textDirection: '' | 'auto' | 'ltr' | 'rtl' | null = null;
 
   /**
    * Variable: graph
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: mxGraph = null;
+  graph: mxGraph;
 
   /**
    * Variable: textarea
@@ -42,21 +175,21 @@ class mxCellEditor {
    * Holds the DIV that is used for text editing. Note that this may be null before the first
    * edit. Instantiated in <init>.
    */
-  textarea: HTMLElement = null;
+  textarea: HTMLElement | null = null;
 
   /**
    * Variable: editingCell
    *
    * Reference to the <mxCell> that is currently being edited.
    */
-  editingCell: mxCell = null;
+  editingCell: mxCell | null = null;
 
   /**
    * Variable: trigger
    *
    * Reference to the event that was used to start editing.
    */
-  trigger: mxMouseEvent = null;
+  trigger: mxMouseEvent | null = null;
 
   /**
    * Variable: modified
@@ -106,7 +239,7 @@ class mxCellEditor {
    *
    * Reference to the label DOM node that has been hidden.
    */
-  textNode: HTMLElement | null = null;
+  textNode: SVGGElement | null = null;
 
   /**
    * Variable: zIndex
@@ -154,137 +287,6 @@ class mxCellEditor {
   align: string | null = null;
 
   /**
-   * Class: mxCellEditor
-   *
-   * In-place editor for the graph. To control this editor, use
-   * <mxGraph.invokesStopCellEditing>, <mxGraph.enterStopsCellEditing> and
-   * <mxGraph.escapeEnabled>. If <mxGraph.enterStopsCellEditing> is true then
-   * ctrl-enter or shift-enter can be used to create a linefeed. The F2 and
-   * escape keys can always be used to stop editing.
-   *
-   * To customize the location of the textbox in the graph, override
-   * <getEditorBounds> as follows:
-   *
-   * (code)
-   * graph.cellEditor.getEditorBounds = (state)=>
-   * {
-   *   let result = getEditorBounds.apply(this, arguments);
-   *
-   *   if (this.graph.getModel().isEdge(state.cell))
-   *   {
-   *     result.x = state.getCenterX() - result.width / 2;
-   *     result.y = state.getCenterY() - result.height / 2;
-   *   }
-   *
-   *   return result;
-   * };
-   * (end)
-   *
-   * Note that this hook is only called if <autoSize> is false. If <autoSize> is true,
-   * then <mxShape.getLabelBounds> is used to compute the current bounds of the textbox.
-   *
-   * The textarea uses the mxCellEditor CSS class. You can modify this class in
-   * your custom CSS. Note: You should modify the CSS after loading the client
-   * in the page.
-   *
-   * Example:
-   *
-   * To only allow numeric input in the in-place editor, use the following code.
-   *
-   * (code)
-   * let text = graph.cellEditor.textarea;
-   *
-   * mxEvent.addListener(text, 'keydown', function (evt)
-   * {
-   *   if (!(evt.keyCode >= 48 && evt.keyCode <= 57) &&
-   *       !(evt.keyCode >= 96 && evt.keyCode <= 105))
-   *   {
-   *     mxEvent.consume(evt);
-   *   }
-   * });
-   * (end)
-   *
-   * Placeholder:
-   *
-   * To implement a placeholder for cells without a label, use the
-   * <emptyLabelText> variable.
-   *
-   * Resize in Chrome:
-   *
-   * Resize of the textarea is disabled by default. If you want to enable
-   * this feature extend <init> and set this.textarea.style.resize = ''.
-   *
-   * To start editing on a key press event, the container of the graph
-   * should have focus or a focusable parent should be used to add the
-   * key press handler as follows.
-   *
-   * (code)
-   * mxEvent.addListener(graph.container, 'keypress', mxUtils.bind(this, (evt)=>
-   * {
-   *   if (!graph.isEditing() && !graph.isSelectionEmpty() && evt.which !== 0 &&
-   *       !mxEvent.isAltDown(evt) && !mxEvent.isControlDown(evt) && !mxEvent.isMetaDown(evt))
-   *   {
-   *     graph.startEditing();
-   *
-   *     if (mxClient.IS_FF)
-   *     {
-   *       graph.cellEditor.textarea.value = String.fromCharCode(evt.which);
-   *     }
-   *   }
-   * }));
-   * (end)
-   *
-   * To allow focus for a DIV, and hence to receive key press events, some browsers
-   * require it to have a valid tabindex attribute. In this case the following
-   * code may be used to keep the container focused.
-   *
-   * (code)
-   * let graphFireMouseEvent = graph.fireMouseEvent;
-   * graph.fireMouseEvent = (evtName, me, sender)=>
-   * {
-   *   if (evtName == mxEvent.MOUSE_DOWN)
-   *   {
-   *     this.container.focus();
-   *   }
-   *
-   *   graphFireMouseEvent.apply(this, arguments);
-   * };
-   * (end)
-   *
-   * Constructor: mxCellEditor
-   *
-   * Constructs a new in-place editor for the specified graph.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   */
-  constructor(graph: mxGraph) {
-    this.graph = graph;
-
-    // Stops editing after zoom changes
-    this.zoomHandler = () => {
-      if (this.graph.isEditing()) {
-        this.resize();
-      }
-    };
-
-    // Handling of deleted cells while editing
-    this.changeHandler = sender => {
-      if (
-        this.editingCell != null &&
-        this.graph.getView().getState(this.editingCell, false) == null
-      ) {
-        this.stopEditing(true);
-      }
-    };
-
-    this.graph.view.addListener(mxEvent.SCALE, this.zoomHandler);
-    this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.zoomHandler);
-    this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
-  }
-
-  /**
    * Function: init
    *
    * Creates the <textarea> and installs the event listeners. The key handler
@@ -309,8 +311,8 @@ class mxCellEditor {
    *
    * Called in <stopEditing> if cancel is false to invoke <mxGraph.labelChanged>.
    */
-  applyValue(state: mxCellState, value): void {
-    this.graph.labelChanged(state.cell, value, this.trigger);
+  applyValue(state: mxCellState, value: any): void {
+    this.graph.labelChanged(state.cell, value, <mxMouseEvent>this.trigger);
   }
 
   /**
@@ -318,7 +320,7 @@ class mxCellEditor {
    *
    * Sets the temporary horizontal alignment for the current editing session.
    */
-  setAlign(align) {
+  setAlign(align: string): void {
     if (this.textarea != null) {
       this.textarea.style.textAlign = align;
     }
@@ -332,7 +334,7 @@ class mxCellEditor {
    *
    * Gets the initial editing value for the given cell.
    */
-  getInitialValue(state, trigger) {
+  getInitialValue(state: mxCellState, trigger: mxEventObject | mxMouseEvent) {
     let result = mxUtils.htmlEntities(
       this.graph.getEditingValue(state.cell, trigger),
       false
@@ -347,6 +349,7 @@ class mxCellEditor {
    * Returns the current editing value.
    */
   getCurrentValue(state: mxCellState) {
+    // @ts-ignore
     return mxUtils.extractTextWithWhitespace(this.textarea.childNodes);
   }
 
@@ -356,7 +359,7 @@ class mxCellEditor {
    * Returns true if <escapeCancelsEditing> is true and shift, control and meta
    * are not pressed.
    */
-  isCancelEditingKeyEvent(evt) {
+  isCancelEditingKeyEvent(evt: KeyboardEvent) {
     return (
       this.escapeCancelsEditing ||
       mxEvent.isShiftDown(evt) ||
@@ -370,31 +373,31 @@ class mxCellEditor {
    *
    * Installs listeners for focus, change and standard key event handling.
    */
-  installListeners(elt) {
+  installListeners(elt: HTMLElement) {
     // Applies value if text is dragged
     // LATER: Gesture mouse events ignored for starting move
     mxEvent.addListener(
       elt,
       'dragstart',
-      mxUtils.bind(this, evt => {
+      (evt: Event) => {
         this.graph.stopEditing(false);
         mxEvent.consume(evt);
-      })
+      }
     );
 
     // Applies value if focus is lost
     mxEvent.addListener(
       elt,
       'blur',
-      mxUtils.bind(this, evt => {
+      (evt: Event) => {
         if (this.blurEnabled) {
           this.focusLost();
         }
-      })
+      }
     );
 
     // Updates modified state and handles placeholder text
-    mxEvent.addListener(elt, 'keydown', evt => {
+    mxEvent.addListener(elt, 'keydown', (evt: KeyboardEvent) => {
       if (!mxEvent.isConsumed(evt)) {
         if (this.isStopEditingEvent(evt)) {
           this.graph.stopEditing(false);
@@ -407,7 +410,7 @@ class mxCellEditor {
     });
 
     // Keypress only fires if printable key was pressed and handles removing the empty placeholder
-    const keypressHandler = evt => {
+    const keypressHandler = (evt: KeyboardEvent) => {
       if (this.editingCell != null) {
         // Clears the initial empty label on the first keystroke
         // and workaround for FF which fires keypress for delete and backspace
@@ -428,18 +431,20 @@ class mxCellEditor {
     mxEvent.addListener(elt, 'paste', keypressHandler);
 
     // Handler for updating the empty label text value after a change
-    const keyupHandler = evt => {
+    const keyupHandler = (evt: KeyboardEvent) => {
       if (this.editingCell != null) {
         // Uses an optional text value for sempty labels which is cleared
         // when the first keystroke appears. This makes it easier to see
         // that a label is being edited even if the label is empty.
         // In Safari and FF, an empty text is represented by <BR> which isn't enough to force a valid size
+        const textarea = <HTMLElement>this.textarea;
+
         if (
-          this.textarea.innerHTML.length === 0 ||
-          this.textarea.innerHTML === '<br>'
+            textarea.innerHTML.length === 0 ||
+            textarea.innerHTML === '<br>'
         ) {
-          this.textarea.innerHTML = this.getEmptyLabelText();
-          this.clearOnChange = this.textarea.innerHTML.length > 0;
+          textarea.innerHTML = this.getEmptyLabelText();
+          this.clearOnChange = textarea.innerHTML.length > 0;
         } else {
           this.clearOnChange = false;
         }
@@ -453,7 +458,7 @@ class mxCellEditor {
     // Adds automatic resizing of the textbox while typing using input, keyup and/or DOM change events
     const evtName = 'input';
 
-    const resizeHandler = mxUtils.bind(this, evt => {
+    const resizeHandler = (evt: Event) => {
       if (
         this.editingCell != null &&
         this.autoSize &&
@@ -470,7 +475,7 @@ class mxCellEditor {
           this.resize();
         }, 0);
       }
-    });
+    };
 
     mxEvent.addListener(elt, evtName, resizeHandler);
     mxEvent.addListener(window, 'resize', resizeHandler);
@@ -485,7 +490,7 @@ class mxCellEditor {
    * returns true if F2 is pressed of if <mxGraph.enterStopsCellEditing> is true
    * and enter is pressed without control or shift.
    */
-  isStopEditingEvent(evt) {
+  isStopEditingEvent(evt: KeyboardEvent) {
     return (
       evt.keyCode === 113 /* F2 */ ||
       (this.graph.isEnterStopsCellEditing() &&
@@ -500,7 +505,7 @@ class mxCellEditor {
    *
    * Returns true if this editor is the source for the given native event.
    */
-  isEventSource(evt): boolean {
+  isEventSource(evt: Event): boolean {
     return mxEvent.getSource(evt) === this.textarea;
   }
 
@@ -519,7 +524,7 @@ class mxCellEditor {
 
       if (!this.autoSize || state.style.overflow === 'fill') {
         // Specifies the bounds of the editor box
-        this.bounds = this.getEditorBounds(state);
+        this.bounds = <mxRectangle>this.getEditorBounds(state);
         this.textarea.style.width = `${Math.round(
           this.bounds.width / scale
         )}px`;
@@ -621,6 +626,7 @@ class mxCellEditor {
             !state.view.graph.cellRenderer.legacySpacing ||
             state.style[mxConstants.STYLE_OVERFLOW] !== 'width'
           ) {
+            // @ts-ignore
             const dummy = new mxText(); // FIXME!!!! ===================================================================================================
             const spacing = parseInt(state.style.spacing || 2) * scale;
             const spacingTop =
@@ -758,7 +764,7 @@ class mxCellEditor {
    * Returns the background color for the in-place editor. This implementation
    * always returns null.
    */
-  getBackgroundColor(state): string | null {
+  getBackgroundColor(state: mxCellState): string | null {
     return null;
   }
 
@@ -772,7 +778,7 @@ class mxCellEditor {
    * cell - <mxCell> to start editing.
    * trigger - Optional mouse event that triggered the editor.
    */
-  startEditing(cell: mxCell, trigger: MouseEvent | null = null): void {
+  startEditing(cell: mxCell, trigger: mxMouseEvent | null = null): void {
     this.stopEditing(true);
     this.align = null;
 
@@ -819,19 +825,20 @@ class mxCellEditor {
         txtDecor.push('line-through');
       }
 
-      this.textarea.style.lineHeight = mxConstants.ABSOLUTE_LINE_HEIGHT
+      const textarea = <HTMLElement>this.textarea;
+      textarea.style.lineHeight = mxConstants.ABSOLUTE_LINE_HEIGHT
         ? `${Math.round(size * mxConstants.LINE_HEIGHT)}px`
         : String(mxConstants.LINE_HEIGHT);
-      this.textarea.style.backgroundColor = this.getBackgroundColor(state);
-      this.textarea.style.textDecoration = txtDecor.join(' ');
-      this.textarea.style.fontWeight = bold ? 'bold' : 'normal';
-      this.textarea.style.fontStyle = italic ? 'italic' : '';
-      this.textarea.style.fontSize = `${Math.round(size)}px`;
-      this.textarea.style.zIndex = String(this.zIndex);
-      this.textarea.style.fontFamily = family;
-      this.textarea.style.textAlign = align;
-      this.textarea.style.outline = 'none';
-      this.textarea.style.color = color;
+      textarea.style.backgroundColor = this.getBackgroundColor(state) || 'transparent';
+      textarea.style.textDecoration = txtDecor.join(' ');
+      textarea.style.fontWeight = bold ? 'bold' : 'normal';
+      textarea.style.fontStyle = italic ? 'italic' : '';
+      textarea.style.fontSize = `${Math.round(size)}px`;
+      textarea.style.zIndex = String(this.zIndex);
+      textarea.style.fontFamily = family;
+      textarea.style.textAlign = align;
+      textarea.style.outline = 'none';
+      textarea.style.color = color;
 
       let dir = (this.textDirection =
         state.style.textDirection != null
@@ -849,30 +856,31 @@ class mxCellEditor {
       }
 
       if (dir === 'ltr' || dir === 'rtl') {
-        this.textarea.setAttribute('dir', dir);
+        textarea.setAttribute('dir', dir);
       } else {
-        this.textarea.removeAttribute('dir');
+        textarea.removeAttribute('dir');
       }
 
       // Sets the initial editing value
-      this.textarea.innerHTML = this.getInitialValue(state, trigger) || '';
-      this.initialValue = this.textarea.innerHTML;
+      textarea.innerHTML = this.getInitialValue(state, <mxMouseEvent>trigger) || '';
+      this.initialValue = textarea.innerHTML;
 
       // Uses an optional text value for empty labels which is cleared
       // when the first keystroke appears. This makes it easier to see
       // that a label is being edited even if the label is empty.
       if (
-        this.textarea.innerHTML.length === 0 ||
-        this.textarea.innerHTML === '<br>'
+          textarea.innerHTML.length === 0 ||
+          textarea.innerHTML === '<br>'
       ) {
-        this.textarea.innerHTML = this.getEmptyLabelText();
+        textarea.innerHTML = <string>this.getEmptyLabelText();
         this.clearOnChange = true;
       } else {
         this.clearOnChange =
-          this.textarea.innerHTML === this.getEmptyLabelText();
+            textarea.innerHTML === this.getEmptyLabelText();
       }
 
-      this.graph.container.appendChild(this.textarea);
+      // @ts-ignore
+      this.graph.container.appendChild(textarea);
 
       // Update this after firing all potential events that could update the cleanOnChange flag
       this.editingCell = cell;
@@ -880,13 +888,14 @@ class mxCellEditor {
       this.textNode = null;
 
       if (state.text != null && this.isHideLabel(state)) {
-        this.textNode = state.text.node;
+        this.textNode = <SVGGElement>state.text.node;
         this.textNode.style.visibility = 'hidden';
       }
 
       // Workaround for initial offsetHeight not ready for heading in markup
       if (
         this.autoSize &&
+        // @ts-ignore
         (this.graph.model.isEdge(state.cell) ||
           state.style[mxConstants.STYLE_OVERFLOW] !== 'fill')
       ) {
@@ -903,15 +912,15 @@ class mxCellEditor {
       // Workaround for NS_ERROR_FAILURE in FF
       try {
         // Prefers blinking cursor over no selected text if empty
-        this.textarea.focus();
+        textarea.focus();
 
         if (
           this.isSelectText() &&
-          this.textarea.innerHTML.length > 0 &&
-          (this.textarea.innerHTML !== this.getEmptyLabelText() ||
+            textarea.innerHTML.length > 0 &&
+          (textarea.innerHTML !== this.getEmptyLabelText() ||
             !this.clearOnChange)
         ) {
-          document.execCommand('selectAll', false, null);
+          document.execCommand('selectAll', false);
         }
       } catch (e) {
         // ignore
@@ -958,30 +967,31 @@ class mxCellEditor {
       }
 
       const state = !cancel ? this.graph.view.getState(this.editingCell) : null;
+      const textarea = <HTMLElement>this.textarea;
 
       const initial = this.initialValue;
       this.initialValue = null;
       this.editingCell = null;
       this.trigger = null;
       this.bounds = null;
-      this.textarea.blur();
+      textarea.blur();
       this.clearSelection();
 
-      if (this.textarea.parentNode != null) {
-        this.textarea.parentNode.removeChild(this.textarea);
+      if (textarea.parentNode != null) {
+        textarea.parentNode.removeChild(textarea);
       }
 
       if (
         this.clearOnChange &&
-        this.textarea.innerHTML === this.getEmptyLabelText()
+          textarea.innerHTML === this.getEmptyLabelText()
       ) {
-        this.textarea.innerHTML = '';
+        textarea.innerHTML = '';
         this.clearOnChange = false;
       }
 
       if (
         state != null &&
-        (this.textarea.innerHTML !== initial || this.align != null)
+        (textarea.innerHTML !== initial || this.align != null)
       ) {
         this.prepareTextarea();
         const value = this.getCurrentValue(state);
@@ -1016,11 +1026,12 @@ class mxCellEditor {
    * This implementation removes the extra trailing linefeed in Firefox.
    */
   prepareTextarea(): void {
+    const textarea = <HTMLElement>this.textarea;
     if (
-      this.textarea.lastChild != null &&
-      this.textarea.lastChild.nodeName === 'BR'
+        textarea.lastChild != null &&
+        textarea.lastChild.nodeName === 'BR'
     ) {
-      this.textarea.removeChild(this.textarea.lastChild);
+      textarea.removeChild(textarea.lastChild);
     }
   }
 
@@ -1041,12 +1052,13 @@ class mxCellEditor {
    */
   getMinimumSize(state: mxCellState): mxRectangle {
     const { scale } = this.graph.getView();
+    const textarea = <HTMLElement>this.textarea;
 
     return new mxRectangle(
       0,
       0,
       state.text == null ? 30 : state.text.size * scale + 20,
-      this.textarea.style.textAlign === 'left' ? 120 : 40
+      textarea.style.textAlign === 'left' ? 120 : 40
     );
   }
 
@@ -1068,8 +1080,9 @@ class mxCellEditor {
       state.view.graph.cellRenderer.legacySpacing &&
       state.style[mxConstants.STYLE_OVERFLOW] === 'fill'
     ) {
-      result = state.shape.getLabelBounds(mxRectangle.fromRectangle(state));
+      result = (<mxShape>state.shape).getLabelBounds(mxRectangle.fromRectangle(state));
     } else {
+      // @ts-ignore
       const dummy = new mxText(); // FIXME!!!! ===================================================================================================
       const spacing: number = parseInt(state.style.spacing || 0) * scale;
       const spacingTop: number =
@@ -1146,7 +1159,7 @@ class mxCellEditor {
 
       // Applies the horizontal and vertical label positions
       if (this.graph.getModel().isVertex(state.cell)) {
-        const horizontal: string = mxUtils.getStringValue(
+        const horizontal: string = <string>mxUtils.getStringValue(
           state.style,
           mxConstants.STYLE_LABEL_POSITION,
           mxConstants.ALIGN_CENTER
@@ -1191,8 +1204,8 @@ class mxCellEditor {
    * cell - <mxCell> for which a text for an empty editing box should be
    * returned.
    */
-  getEmptyLabelText(cell: mxCell | null = null): string | null {
-    return this.emptyLabelText;
+  getEmptyLabelText(cell: mxCell | null = null): string {
+    return this.emptyLabelText || '';
   }
 
   /**
