@@ -134,7 +134,7 @@ class mxShape {
   indicatorShape: typeof mxShape | null=null;
 
   // Assigned in mxCellHighlight
-  opacity: number | null=100;
+  opacity: number=100;
   isDashed: boolean=false;
 
   fill: string | null = null;
@@ -143,13 +143,13 @@ class mxShape {
 
   gradientDirection: string | null = null;
 
-  fillOpacity: number | null = null;
+  fillOpacity: number = 100;
 
-  strokeOpacity: number | null = null;
+  strokeOpacity: number | null = 100;
 
   stroke: string | null = null;
 
-  strokewidth: number | null = null;
+  strokewidth: number | null = 1;
 
   spacing: number | null = null;
 
@@ -171,9 +171,9 @@ class mxShape {
 
   isRounded: boolean = false;
 
-  rotation: number | null = null;
+  rotation: number = 0;
 
-  cursor: string | null = null;
+  cursor: string = '';
 
   verticalTextRotation: number | null = null;
 
