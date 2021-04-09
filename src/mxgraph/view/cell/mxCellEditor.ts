@@ -354,7 +354,7 @@ class mxCellEditor {
   // getInitialValue(state: mxCellState, trigger: Event): string;
   getInitialValue(state: mxCellState, trigger: mxEventObject | mxMouseEvent) {
     let result = mxUtils.htmlEntities(
-      this.graph.getEditingValue(state.cell, trigger),
+      <string>this.graph.getEditingValue(state.cell, trigger),
       false
     );
     result = mxUtils.replaceTrailingNewlines(result, '<div><br></div>');

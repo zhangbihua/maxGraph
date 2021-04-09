@@ -262,6 +262,7 @@ class mxText extends mxShape {
       let val = this.value;
 
       if (!realHtml && fmt === 'html') {
+        // @ts-ignore
         val = mxUtils.htmlEntities(val, false);
       }
 
@@ -719,6 +720,7 @@ class mxText extends mxShape {
     let val = this.value;
 
     if (this.dialect !== mxConstants.DIALECT_STRICTHTML) {
+      // @ts-ignore
       val = mxUtils.htmlEntities(val, false);
     }
 
@@ -805,8 +807,8 @@ class mxText extends mxShape {
       this.wrap,
       this.overflow,
       this.clipped,
-      this.background != null ? mxUtils.htmlEntities(this.background) : null,
-      this.border != null ? mxUtils.htmlEntities(this.border) : null,
+      this.background != null ? mxUtils.htmlEntities(this.background, true) : null,
+      this.border != null ? mxUtils.htmlEntities(this.border, true) : null,
       flex,
       block,
       this.scale,
@@ -879,7 +881,7 @@ class mxText extends mxShape {
 
       if (this.dialect !== mxConstants.DIALECT_STRICTHTML) {
         // LATER: Can be cached in updateValue
-        val = mxUtils.htmlEntities(val, false);
+        val = mxUtils.htmlEntities(<string>val, false);
       }
 
       // Handles trailing newlines to make sure they are visible in rendering output
@@ -907,7 +909,7 @@ class mxText extends mxShape {
       let val = this.value;
 
       if (this.dialect !== mxConstants.DIALECT_STRICTHTML) {
-        val = mxUtils.htmlEntities(val, false);
+        val = mxUtils.htmlEntities(<string>val, false);
       }
 
       // Handles trailing newlines to make sure they are visible in rendering output
@@ -934,11 +936,11 @@ class mxText extends mxShape {
         let css = '';
 
         if (bg != null) {
-          css += `background-color:${mxUtils.htmlEntities(bg)};`;
+          css += `background-color:${mxUtils.htmlEntities(bg, true)};`;
         }
 
         if (bd != null) {
-          css += `border:1px solid ${mxUtils.htmlEntities(bd)};`;
+          css += `border:1px solid ${mxUtils.htmlEntities(bd, true)};`;
         }
 
         // Wrapper DIV for background, zoom needed for inline in quirks

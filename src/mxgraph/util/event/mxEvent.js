@@ -629,9 +629,9 @@ class mxEvent {
    * Consumes the given event.
    *
    * @param evt Native event to be consumed.
-   * @param preventDefault Optional boolean to prevent the default for the event.
+   * @param {boolean} [preventDefault=true] Optional boolean to prevent the default for the event.
    * Default is true.
-   * @param stopPropagation Option boolean to stop event propagation. Default is
+   * @param {boolean} [stopPropagation=true] Option boolean to stop event propagation. Default is
    * true.
    */
   // static consume(evt: Event, preventDefault?: boolean, stopPropagation?: boolean): void;

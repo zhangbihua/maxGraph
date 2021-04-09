@@ -8073,7 +8073,7 @@ class mxGraph extends mxEventSource {
       ) {
         tip = this.collapseExpandResource;
         tip = mxUtils
-          .htmlEntities(mxResources.get(tip) || tip)
+          .htmlEntities(mxResources.get(tip) || tip, true)
           .replace(/\\n/g, '<br>');
       }
 
@@ -10913,16 +10913,12 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: selectCellForEvent
-   *
    * Selects the given cell by either adding it to the selection or
    * replacing the selection depending on whether the given mouse event is a
    * toggle event.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to be selected.
-   * evt - Optional mouseevent that triggered the selection.
+   * @param cell {@link mxCell} to be selected.
+   * @param evt Optional mouseevent that triggered the selection.
    */
   selectCellForEvent(cell: mxCell,
                      evt: mxMouseEvent): void {
@@ -10939,17 +10935,6 @@ class mxGraph extends mxEventSource {
     }
   }
 
-  /**
-   * Selects the given cell by either adding it to the selection or
-   * replacing the selection depending on whether the given mouse event is a
-   * toggle event.
-   *
-   * @param cell {@link mxCell} to be selected.
-   * @param evt Optional mouseevent that triggered the selection.
-  
-    */
-  selectCellForEvent(cell: mxCell, evt?: MouseEvent): void;
-  
   /**
    * Selects the given cells by either adding them to the selection or
    * replacing the selection depending on whether the given mouse event is a
