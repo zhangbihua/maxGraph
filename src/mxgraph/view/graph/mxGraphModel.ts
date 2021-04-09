@@ -2113,11 +2113,11 @@ class mxGraphModel extends mxEventSource {
    * Inner helper method for cloning cells recursively.
    */
   cloneCellImpl(cell: mxCell,
-                mapping: any,
+                mapping: any={},
                 includeChildren: boolean): mxCell {
 
     const ident = mxObjectIdentity.get(cell);
-    let clone = mapping[ident];
+    let clone = mapping ? mapping[ident] : null;
 
     if (clone == null) {
       clone = this.cellCloned(cell);

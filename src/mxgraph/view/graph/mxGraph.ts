@@ -6071,7 +6071,7 @@ class mxGraph extends mxEventSource {
               dy: number,
               target: mxCell | null=null,
               evt: mxMouseEvent,
-              mapping: any): mxCell[] | null {
+              mapping: any={}): mxCell[] | null {
     return this.moveCells(cells, dx, dy, true, target, evt, mapping);
   }
 
