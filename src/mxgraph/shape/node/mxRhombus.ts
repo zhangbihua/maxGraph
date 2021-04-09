@@ -12,24 +12,10 @@ import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
 import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 
 /**
- * Class: mxRhombus
- *
- * Extends <mxShape> to implement a rhombus (aka diamond) shape.
- * This shape is registered under <mxConstants.SHAPE_RHOMBUS>
- * in <mxCellRenderer>.
- *
- * Constructor: mxRhombus
- *
- * Constructs a new rhombus shape.
- *
- * Parameters:
- *
- * bounds - <mxRectangle> that defines the bounds. This is stored in
- * <mxShape.bounds>.
- * fill - String that defines the fill color. This is stored in <fill>.
- * stroke - String that defines the stroke color. This is stored in <stroke>.
- * strokewidth - Optional integer that defines the stroke width. Default is
- * 1. This is stored in <strokewidth>.
+ * Extends {@link mxShape} to implement a rhombus (aka diamond) shape.
+ * This shape is registered under {@link mxConstants.SHAPE_RHOMBUS} in {@link mxCellRenderer}.
+ * @class mxRhombus
+ * @extends {mxShape}
  */
 class mxRhombus extends mxShape {
   constructor(
@@ -46,19 +32,22 @@ class mxRhombus extends mxShape {
   }
 
   /**
-   * Function: isRoundable
-   *
    * Adds roundable support.
    */
+  // isRoundable(): boolean;
   isRoundable(): boolean {
     return true;
   }
 
   /**
-   * Function: paintVertexShape
-   *
    * Generic painting implementation.
+   * @param {mxAbstractCanvas2D} c
+   * @param {number} x
+   * @param {number} y
+   * @param {number} w
+   * @param {number} h
    */
+  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintVertexShape(
     c: mxSvgCanvas2D,
     x: number,

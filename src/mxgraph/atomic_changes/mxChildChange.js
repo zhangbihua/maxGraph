@@ -1,12 +1,12 @@
 /**
- * Class: mxChildChange
- *
  * Action to add or remove a child in a model.
  *
  * Constructor: mxChildChange
  *
  * Constructs a change of a child in the
  * specified model.
+ *
+ * @class mxChildChange
  */
 class mxChildChange {
   constructor(model, parent, child, index) {
@@ -19,13 +19,12 @@ class mxChildChange {
   }
 
   /**
-   * Function: execute
-   *
-   * Changes the parent of <child> using
+   * Changes the parent of {@link child}` using
    * <mxGraphModel.parentForCellChanged> and
    * removes or restores the cell's
    * connections.
    */
+  // execute(): void;
   execute() {
     if (this.child != null) {
       let tmp = this.model.getParent(this.child);
@@ -53,12 +52,13 @@ class mxChildChange {
   }
 
   /**
-   * Function: disconnect
-   *
    * Disconnects the given cell recursively from its
    * terminals and stores the previous terminal in the
    * cell's terminals.
+   *
+   * @warning doc from mxGraph source code is incorrect
    */
+  // connect(cell: mxCell, isConnect: boolean): void;
   connect(cell, isConnect) {
     isConnect = isConnect != null ? isConnect : true;
 

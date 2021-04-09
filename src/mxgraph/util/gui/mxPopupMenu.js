@@ -51,6 +51,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Initializes the shapes required for this vertex handler.
    */
+  // init(): void;
   init() {
     // Adds the inner table
     this.table = document.createElement('table');
@@ -75,13 +76,15 @@ class mxPopupMenu extends mxEventSource {
    *
    * URL of the image to be used for the submenu icon.
    */
+  // submenuImage: string;
   submenuImage = `${mxClient.imageBasePath}/submenu.gif`;
 
   /**
    * Variable: zIndex
    *
-   * Specifies the zIndex for the popupmenu and its shadow. Default is 10006.
+   * Specifies the zIndex for the popupmenu and its shadow. Default is 1006.
    */
+  // zIndex: number;
   zIndex = 10006;
 
   /**
@@ -91,6 +94,7 @@ class mxPopupMenu extends mxEventSource {
    * current panning handler, the <mxCell> under the mouse and the mouse
    * event that triggered the call as arguments.
    */
+  // factoryMethod: (handler: mxPopupMenuHandler, cell: mxCell, me: mxMouseEvent) => any;
   factoryMethod = null;
 
   /**
@@ -99,6 +103,7 @@ class mxPopupMenu extends mxEventSource {
    * Specifies if popupmenus should be activated by clicking the left mouse
    * button. Default is false.
    */
+  // useLeftButtonForPopup: boolean;
   useLeftButtonForPopup = false;
 
   /**
@@ -106,6 +111,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Specifies if events are handled. Default is true.
    */
+  // enabled: boolean;
   enabled = true;
 
   /**
@@ -113,6 +119,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Contains the number of times <addItem> has been called for a new menu.
    */
+  // itemCount: number;
   itemCount = 0;
 
   /**
@@ -120,6 +127,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Specifies if submenus should be expanded on mouseover. Default is false.
    */
+  // autoExpand: boolean;
   autoExpand = false;
 
   /**
@@ -128,6 +136,7 @@ class mxPopupMenu extends mxEventSource {
    * Specifies if separators should only be added if a menu item follows them.
    * Default is false.
    */
+  // smartSeparators: boolean;
   smartSeparators = false;
 
   /**
@@ -135,6 +144,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Specifies if any labels should be visible. Default is true.
    */
+  // labels: boolean;
   labels = true;
 
   /**
@@ -143,6 +153,7 @@ class mxPopupMenu extends mxEventSource {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
+  // isEnabled(): boolean;
   isEnabled() {
     return this.enabled;
   }
@@ -153,6 +164,7 @@ class mxPopupMenu extends mxEventSource {
    * Enables or disables event handling. This implementation
    * updates <enabled>.
    */
+  // setEnabled(enabled: boolean): void;
   setEnabled(enabled) {
     this.enabled = enabled;
   }
@@ -167,6 +179,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * me - <mxMouseEvent> that represents the mouse event.
    */
+  // isPopupTrigger(me: mxMouseEvent): boolean;
   isPopupTrigger(me) {
     return (
       me.isPopupTrigger() ||
@@ -341,6 +354,7 @@ class mxPopupMenu extends mxEventSource {
   /**
    * Adds a checkmark to the given menuitem.
    */
+  // addCheckmark(item: Element, img: string): void;
   addCheckmark(item, img) {
     const td = item.firstChild.nextSibling;
     td.style.backgroundImage = `url('${img}')`;
@@ -359,6 +373,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * parent - An item returned by <addItem>.
    */
+  // createSubmenu(parent: Element): void;
   createSubmenu(parent) {
     parent.table = document.createElement('table');
     parent.table.className = 'mxPopupMenu';
@@ -388,6 +403,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Shows the submenu inside the given parent row.
    */
+  // showSubmenu(parent: Element, row: Element): void;
   showSubmenu(parent, row) {
     if (row.div != null) {
       row.div.style.left = `${parent.div.offsetLeft +
@@ -429,6 +445,7 @@ class mxPopupMenu extends mxEventSource {
    * parent - Optional item returned by <addItem>.
    * force - Optional boolean to ignore <smartSeparators>. Default is false.
    */
+  // addSeparator(parent?: Element, force?: boolean): void;
   addSeparator(parent, force) {
     parent = parent || this;
 
@@ -466,12 +483,13 @@ class mxPopupMenu extends mxEventSource {
    * Example:
    *
    * (code)
-   * graph.panningHandler.popup = (x, y, cell, evt)=>
+   * graph.panningHandler.popup(x, y, cell, evt)
    * {
    *   mxUtils.alert('Hello, World!');
    * }
    * (end)
    */
+  // popup(x: number, y: number, cell: mxCell, evt: Event): void;
   popup(x, y, cell, evt) {
     if (this.div != null && this.tbody != null && this.factoryMethod != null) {
       this.div.style.left = `${x}px`;
@@ -498,6 +516,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Returns true if the menu is showing.
    */
+  // isMenuShowing(): boolean;
   isMenuShowing() {
     return this.div != null && this.div.parentNode == document.body;
   }
@@ -507,6 +526,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Shows the menu.
    */
+  // showMenu(): void;
   showMenu() {
     // Fits the div inside the viewport
     document.body.appendChild(this.div);
@@ -518,6 +538,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Removes the menu and all submenus.
    */
+  // hideMenu(): void;
   hideMenu() {
     if (this.div != null) {
       if (this.div.parentNode != null) {
@@ -539,6 +560,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * parent - An item returned by <addItem>.
    */
+  // hideSubmenu(parent: Element): void;
   hideSubmenu(parent) {
     if (parent.activeRow != null) {
       this.hideSubmenu(parent.activeRow);
@@ -556,6 +578,7 @@ class mxPopupMenu extends mxEventSource {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
+  // destroy(): void;
   destroy() {
     if (this.div != null) {
       mxEvent.release(this.div);

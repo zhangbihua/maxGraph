@@ -7,32 +7,11 @@ import mxResources from '../util/mxResources';
 import mxUtils from '../util/mxUtils';
 
 /**
- * Class: mxDefaultPopupMenu
+ * Creates popupmenus for mouse events.  This object holds an XML node which is a description of the popup menu to be created.  In {@link createMenu}, the configuration is applied to the context and the resulting menu items are added to the menu dynamically.  See {@link createMenu} for a description of the configuration format.
+ * This class does not create the DOM nodes required for the popup menu, it only parses an XML description to invoke the respective methods on an {@link mxPopupMenu} each time the menu is displayed.
  *
- * Creates popupmenus for mouse events. This object holds an XML node
- * which is a description of the popup menu to be created. In
- * <createMenu>, the configuration is applied to the context and
- * the resulting menu items are added to the menu dynamically. See
- * <createMenu> for a description of the configuration format.
- *
- * This class does not create the DOM nodes required for the popup menu, it
- * only parses an XML description to invoke the respective methods on an
- * <mxPopupMenu> each time the menu is displayed.
- *
- * Codec:
- *
- * This class uses the <mxDefaultPopupMenuCodec> to read configuration
- * data into an existing instance, however, the actual parsing is done
- * by this class during program execution, so the format is described
- * below.
- *
- * Constructor: mxDefaultPopupMenu
- *
- * Constructs a new popupmenu-factory based on given configuration.
- *
- * Paramaters:
- *
- * config - XML node that contains the configuration data.
+ * @Codec
+ * This class uses the {@link mxDefaultPopupMenuCodec} to read configuration data into an existing instance, however, the actual parsing is done by this class during program execution, so the format is described below.
  */
 class mxDefaultPopupMenu {
   constructor(config) {
@@ -40,29 +19,25 @@ class mxDefaultPopupMenu {
   }
 
   /**
-   * Variable: imageBasePath
+   * Base path for all icon attributes in the config.  Default is null.
    *
-   * Base path for all icon attributes in the config. Default is null.
+   * @default null
    */
+  // imageBasePath: string;
   imageBasePath = null;
 
   /**
-   * Variable: config
-   *
-   * XML node used as the description of new menu items. This node is
-   * used in <createMenu> to dynamically create the menu items if their
-   * respective conditions evaluate to true for the given arguments.
+   * XML node used as the description of new menu items.  This node is used in {@link createMenu} to dynamically create the menu items if their respective conditions evaluate to true for the given arguments.
    */
+  // config: Element;
   config = null;
 
   /**
-   * Function: createMenu
-   *
-   * This function is called from <mxEditor> to add items to the
-   * given menu based on <config>. The config is a sequence of
+   * This function is called from {@link mxEditor} to add items to the
+   * given menu based on {@link config}. The config is a sequence of
    * the following nodes and attributes.
    *
-   * Child Nodes:
+   * @ChildNodes:
    *
    * add - Adds a new menu item. See below for attributes.
    * separator - Adds a separator. No attributes.
@@ -71,7 +46,7 @@ class mxDefaultPopupMenu {
    * The add-node may have a child node that defines a function to be invoked
    * before the action is executed (or instead of an action to be executed).
    *
-   * Attributes:
+   * @Attributes:
    *
    * as - Resource key for the label (needs entry in property file).
    * action - Name of the action to execute in enclosing editor.
@@ -82,7 +57,7 @@ class mxDefaultPopupMenu {
    * should be enabled.
    * name - Name of custom condition. Only for condition nodes.
    *
-   * Conditions:
+   * @Conditions:
    *
    * nocell - No cell under the mouse.
    * ncells - More than one cell selected.
@@ -94,28 +69,28 @@ class mxDefaultPopupMenu {
    * validRoot - Exactly one cell which is a possible root under mouse.
    * swimlane - Exactly one cell which is a swimlane under mouse.
    *
-   * Example:
+   * @Example:
    *
    * To add a new item for a given action to the popupmenu:
    *
-   * (code)
+   * ```
    * <mxDefaultPopupMenu as="popupHandler">
    *   <add as="delete" action="delete" icon="images/delete.gif" if="cell"/>
    * </mxDefaultPopupMenu>
-   * (end)
+   * ```
    *
    * To add a new item for a custom function:
    *
-   * (code)
+   * ```
    * <mxDefaultPopupMenu as="popupHandler">
    *   <add as="action1"><![CDATA[
-   *    function (editor, cell, evt)
-   *    {
-   *      editor.execute('action1', cell, 'myArg');
-   *    }
+   *		function (editor, cell, evt)
+   *		{
+   *			editor.execute('action1', cell, 'myArg');
+   *		}
    *   ]]></add>
    * </mxDefaultPopupMenu>
-   * (end)
+   * ```
    *
    * The above example invokes action1 with an additional third argument via
    * the editor instance. The third argument is passed to the function that
@@ -123,38 +98,39 @@ class mxDefaultPopupMenu {
    * function defined in the text content is executed, otherwise first the
    * function and then the action defined in the action-attribute is
    * executed. The function in the text content has 3 arguments, namely the
-   * <mxEditor> instance, the <mxCell> instance under the mouse, and the
+   * {@link mxEditor} instance, the {@link mxCell} instance under the mouse, and the
    * native mouse event.
    *
    * Custom Conditions:
    *
    * To add a new condition for popupmenu items:
    *
-   * (code)
+   * ```
    * <condition name="condition1"><![CDATA[
    *   function (editor, cell, evt)
    *   {
    *     return cell != null;
    *   }
    * ]]></condition>
-   * (end)
+   * ```
    *
    * The new condition can then be used in any item as follows:
    *
-   * (code)
+   * ```
    * <add as="action1" action="action1" icon="action1.gif" if="condition1"/>
-   * (end)
+   * ```
    *
    * The order in which the items and conditions appear is not significant as
-   * all connditions are evaluated before any items are created.
+   * all conditions are evaluated before any items are created.
    *
    * Parameters:
    *
-   * editor - Enclosing <mxEditor> instance.
-   * menu - <mxPopupMenu> that is used for adding items and separators.
-   * cell - Optional <mxCell> which is under the mousepointer.
-   * evt - Optional mouse event which triggered the menu.
+   * @param editor - Enclosing {@link mxEditor} instance.
+   * @param menu - {@link mxPopupMenu} that is used for adding items and separators.
+   * @param cell - Optional {@link mxCell} which is under the mousepointer.
+   * @param evt - Optional mouse event which triggered the menu.
    */
+  // createMenu(editor: mxEditor, menu: mxPopupMenu, cell?: mxCell, evt?: MouseEvent): void;
   createMenu(editor, menu, cell, evt) {
     if (this.config != null) {
       const conditions = this.createConditions(editor, cell, evt);
@@ -280,10 +256,13 @@ class mxDefaultPopupMenu {
   }
 
   /**
-   * Function: createConditions
-   *
    * Evaluates the default conditions for the given context.
+   *
+   * @param editor
+   * @param cell
+   * @param evt
    */
+  // createConditions(editor: mxEditor, cell: mxCell, evt: MouseEvent): void;
   createConditions(editor, cell, evt) {
     // Creates array with conditions
     const model = editor.graph.getModel();

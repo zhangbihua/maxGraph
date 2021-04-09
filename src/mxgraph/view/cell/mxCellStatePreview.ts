@@ -14,17 +14,9 @@ import mxGraphView from "../graph/mxGraphView";
 
 /**
  *
- * Class: mxCellStatePreview
+ * @class mxCellStatePreview
  *
  * Implements a live preview for moving cells.
- *
- * Constructor: mxCellStatePreview
- *
- * Constructs a move preview for the given graph.
- *
- * Parameters:
- *
- * graph - Reference to the enclosing <mxGraph>.
  */
 class mxCellStatePreview {
   constructor(graph: mxGraph) {
@@ -33,38 +25,43 @@ class mxCellStatePreview {
   }
 
   /**
-   * Variable: graph
-   *
    * Reference to the enclosing <mxGraph>.
    */
+  // graph: mxGraph;
   graph: mxGraph;
 
   /**
-   * Variable: deltas
-   *
    * Reference to the enclosing <mxGraph>.
    */
+  // deltas: mxDictionary;
   deltas: mxDictionary;
 
   /**
-   * Variable: count
-   *
    * Contains the number of entries in the map.
    */
+  // count: number;
   count: number = 0;
 
   /**
-   * Function: isEmpty
-   *
    * Returns true if this contains no entries.
    */
+  // isEmpty(): boolean;
   isEmpty(): boolean {
     return this.count === 0;
   }
 
   /**
-   * Function: moveState
+   *
+   *
+   * @param {mxCellState} state
+   * @param {number} dx
+   * @param {number} dy
+   * @param {boolean} add
+   * @param {boolean} includeEdges
+   * @return {*}  {mxPoint}
+   * @memberof mxCellStatePreview
    */
+  // moveState(state: mxCellState, dx: number, dy: number, add: boolean, includeEdges: boolean): mxPoint;
   moveState(
     state: mxCellState,
     dx: number,
@@ -94,8 +91,12 @@ class mxCellStatePreview {
   }
 
   /**
-   * Function: show
+   *
+   *
+   * @param {Function} visitor
+   * @memberof mxCellStatePreview
    */
+  // show(visitor: Function): void;
   show(visitor: Function | null = null) {
     this.deltas.visit((key: string, delta: any) => {
       this.translateState(delta.state, delta.point.x, delta.point.y);
@@ -112,8 +113,14 @@ class mxCellStatePreview {
   }
 
   /**
-   * Function: translateState
+   *
+   *
+   * @param {mxCellState} state
+   * @param {number} dx
+   * @param {number} dy
+   * @memberof mxCellStatePreview
    */
+  // translateState(state: mxCellState, dx: number, dy: number): void;
   translateState(state: mxCellState, dx: number, dy: number) {
     if (state != null) {
       const model = this.graph.getModel();
@@ -148,8 +155,15 @@ class mxCellStatePreview {
   }
 
   /**
-   * Function: revalidateState
+   *
+   *
+   * @param {mxCellState} state
+   * @param {number} dx
+   * @param {number} dy
+   * @param {Function} visitor
+   * @memberof mxCellStatePreview
    */
+  // revalidateState(state: mxCellState, dx: number, dy: number, visitor: Function): void;
   revalidateState(
     state: mxCellState | null = null,
     dx: number,
@@ -203,8 +217,12 @@ class mxCellStatePreview {
   }
 
   /**
-   * Function: addEdges
+   *
+   *
+   * @param {mxCellState} state
+   * @memberof mxCellStatePreview
    */
+  // addEdges(state: mxCellState): void;
   addEdges(state: mxCellState): void {
     const model = this.graph.getModel();
     const edgeCount = model.getEdgeCount(<mxCell>state.cell);

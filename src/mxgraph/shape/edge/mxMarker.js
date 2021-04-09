@@ -6,25 +6,24 @@
 import mxConstants from '../../util/mxConstants';
 
 /**
- * Class: mxMarker
- *
- * A static class that implements all markers for SVG using a
- * registry. NOTE: The signatures in this class will change.
+ * A static class that implements all markers for VML and SVG using a registry.
+ * NOTE: The signatures in this class will change.
+ * @class mxMarker
  */
 class mxMarker {
-  /*
-   * Variable: markers
-   *
+  /**
    * Maps from markers names to functions to paint the markers.
+   *
+   * Mapping: the attribute name on the object is the marker type, the associated value is the function to paint the marker
    */
+  // static markers: object;
   static markers = [];
 
   /**
-   * Function: addMarker
-   *
    * Adds a factory method that updates a given endpoint and returns a
    * function to paint the marker onto the given canvas.
    */
+  // static addMarker(type: string, funct: Function): void;
   static addMarker(type, funct) {
     mxMarker.markers[type] = funct;
   }

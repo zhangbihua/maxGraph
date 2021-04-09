@@ -13,23 +13,16 @@ import mxEventObject from '../event/mxEventObject';
 import mxClient from '../../mxClient';
 
 /**
- * Class: mxToolbar
- *
  * Creates a toolbar inside a given DOM node. The toolbar may contain icons,
  * buttons and combo boxes.
  *
- * Event: mxEvent.SELECT
+ * ### Event: mxEvent.SELECT
  *
  * Fires when an item was selected in the toolbar. The <code>function</code>
  * property contains the function that was selected in <selectMode>.
  *
- * Constructor: mxToolbar
- *
- * Constructs a toolbar in the specified container.
- *
- * Parameters:
- *
- * container - DOM node that contains the toolbar.
+ * @class mxToolbar
+ * @extends {mxEventSource}
  */
 class mxToolbar extends mxEventSource {
   constructor(container) {
@@ -38,32 +31,27 @@ class mxToolbar extends mxEventSource {
   }
 
   /**
-   * Variable: container
-   *
    * Reference to the DOM nodes that contains the toolbar.
    */
+  // container: HTMLElement | null;
   container = null;
 
   /**
-   * Variable: enabled
-   *
    * Specifies if events are handled. Default is true.
    */
+  // enabled: boolean;
   enabled = true;
 
   /**
-   * Variable: noReset
-   *
    * Specifies if <resetMode> requires a forced flag of true for resetting
    * the current mode in the toolbar. Default is false. This is set to true
    * if the toolbar item is double clicked to avoid a reset after a single
    * use of the item.
    */
+  // noReset: boolean;
   noReset = false;
 
   /**
-   * Variable: updateDefaultMode
-   *
    * Boolean indicating if the default mode should be the last selected
    * switch mode or the first inserted switch mode. Default is true, that
    * is the last selected switch mode is the default mode. The default mode
@@ -72,6 +60,7 @@ class mxToolbar extends mxEventSource {
    * of what was last selected. Otherwise, the selected item after a reset is
    * the previously selected item.
    */
+  // updateDefaultMode: boolean;
   updateDefaultMode = true;
 
   /**
@@ -184,15 +173,12 @@ class mxToolbar extends mxEventSource {
   }
 
   /**
-   * Function: addCombo
-   *
    * Adds and returns a new SELECT element using the given style. The element
    * is placed inside a DIV with the mxToolbarComboContainer style classname.
    *
-   * Parameters:
-   *
-   * style - Optional style classname. Default is mxToolbarCombo.
+   * @param style - Optional style classname. Default is mxToolbarCombo.
    */
+  // addCombo(style?: string): HTMLSelectElement;
   addCombo(style) {
     const div = document.createElement('div');
     div.style.display = 'inline';
@@ -208,17 +194,14 @@ class mxToolbar extends mxEventSource {
   }
 
   /**
-   * Function: addActionCombo
-   *
    * Adds and returns a new SELECT element using the given title as the
    * default element. The selection is reset to this element after each
    * change.
    *
-   * Parameters:
-   *
-   * title - String that specifies the title of the default element.
-   * style - Optional style classname. Default is mxToolbarCombo.
+   * @param title - String that specifies the title of the default element.
+   * @param style - Optional style classname. Default is mxToolbarCombo.
    */
+  // addActionCombo(title: string, style?: string): HTMLSelectElement;
   addActionCombo(title, style) {
     const select = document.createElement('select');
     select.className = style || 'mxToolbarCombo';
@@ -239,18 +222,15 @@ class mxToolbar extends mxEventSource {
   }
 
   /**
-   * Function: addOption
-   *
    * Adds and returns a new OPTION element inside the given SELECT element.
    * If the given value is a function then it is stored in the option's funct
    * field.
    *
-   * Parameters:
-   *
-   * combo - SELECT element that will contain the new entry.
-   * title - String that specifies the title of the option.
-   * value - Specifies the value associated with this option.
+   * @param combo - SELECT element that will contain the new entry.
+   * @param title - String that specifies the title of the option.
+   * @param value - Specifies the value associated with this option.
    */
+  // addOption(combo: HTMLSelectElement, title: string, value: string): HTMLOptionElement;
   addOption(combo, title, value) {
     const option = document.createElement('option');
     mxUtils.writeln(option, title);
@@ -374,12 +354,11 @@ class mxToolbar extends mxEventSource {
   }
 
   /**
-   * Function: selectMode
-   *
    * Resets the state of the previously selected mode and displays the given
    * DOM node as selected. This function fires a select event with the given
    * function as a parameter.
    */
+  // selectMode(domNode: HTMLImageElement, funct: Function): void;
   selectMode(domNode, funct) {
     if (this.selectedMode != domNode) {
       if (this.selectedMode != null) {
@@ -408,11 +387,10 @@ class mxToolbar extends mxEventSource {
   }
 
   /**
-   * Function: resetMode
-   *
    * Selects the default mode and resets the state of the previously selected
    * mode.
    */
+  // resetMode(forced: boolean): void;
   resetMode(forced) {
     if ((forced || !this.noReset) && this.selectedMode != this.defaultMode) {
       // The last selected switch mode will be activated
@@ -423,32 +401,29 @@ class mxToolbar extends mxEventSource {
   }
 
   /**
-   * Function: addSeparator
-   *
    * Adds the specifies image as a separator.
    *
    * Parameters:
    *
-   * icon - URL of the separator icon.
+   * @param icon - URL of the separator icon.
    */
+  // addSeparator(icon: string): HTMLImageElement;
   addSeparator(icon) {
     return this.addItem(null, icon, null);
   }
 
   /**
-   * Function: addBreak
-   *
    * Adds a break to the container.
    */
+  // addBreak(): void;
   addBreak() {
     mxUtils.br(this.container);
   }
 
   /**
-   * Function: addLine
-   *
    * Adds a horizontal line to the container.
    */
+  // addLine(): void;
   addLine() {
     const hr = document.createElement('hr');
 
@@ -459,10 +434,9 @@ class mxToolbar extends mxEventSource {
   }
 
   /**
-   * Function: destroy
-   *
    * Removes the toolbar and all its associated resources.
    */
+  // destroy(): void;
   destroy() {
     mxEvent.release(this.container);
     this.container = null;

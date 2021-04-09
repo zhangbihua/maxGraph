@@ -34,39 +34,40 @@ class mxLabel extends mxRectangleShape {
   }
 
   /**
-   * Variable: imageSize
-   *
-   * Default width and height for the image. Default is
-   * <mxConstants.DEFAULT_IMAGESIZE>.
+   * Default width and height for the image.
+   * @default mxConstants.DEFAULT_IMAGESIZE
    */
+  // imageSize: number;
   imageSize = mxConstants.DEFAULT_IMAGESIZE;
 
   /**
-   * Variable: spacing
-   *
-   * Default value for image spacing. Default is 2.
+   * Default value for image spacing
+   * @type {number}
+   * @default 2
    */
+  // spacing: number;
   spacing = 2;
 
   /**
-   * Variable: indicatorSize
-   *
-   * Default width and height for the indicicator. Default is 10.
+   * Default width and height for the indicicator.
+   * @type {number}
+   * @default 10
    */
+  // indicatorSize: number;
   indicatorSize = 10;
 
   /**
-   * Variable: indicatorSpacing
-   *
-   * Default spacing between image and indicator. Default is 2.
+   * Default spacing between image and indicator
+   * @default 2
+   * @type {number}
    */
+  // indicatorSpacing: number;
   indicatorSpacing = 2;
 
   /**
-   * Function: init
-   *
    * Initializes the shape and the <indicator>.
    */
+  // init(container: HTMLElement): void;
   init(container) {
     super.init(container);
 
@@ -78,11 +79,10 @@ class mxLabel extends mxRectangleShape {
   }
 
   /**
-   * Function: redraw
-   *
    * Reconfigures this shape. This will update the colors of the indicator
    * and reconfigure it if required.
    */
+  // redraw(): void;
   redraw() {
     if (this.indicator != null) {
       this.indicator.fill = this.indicatorColor;
@@ -95,11 +95,10 @@ class mxLabel extends mxRectangleShape {
   }
 
   /**
-   * Function: isHtmlAllowed
-   *
    * Returns true for non-rounded, non-rotated shapes with no glass gradient and
    * no indicator shape.
    */
+  // isHtmlAllowed(): boolean;
   isHtmlAllowed() {
     return (
       super.isHtmlAllowed() &&
@@ -109,10 +108,14 @@ class mxLabel extends mxRectangleShape {
   }
 
   /**
-   * Function: paintForeground
-   *
    * Generic background painting implementation.
+   * @param {mxAbstractCanvas2D} c
+   * @param {number} x
+   * @param {number} y
+   * @param {number} w
+   * @param {number} h
    */
+  // paintForeground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintForeground(c, x, y, w, h) {
     this.paintImage(c, x, y, w, h);
     this.paintIndicator(c, x, y, w, h);
@@ -120,10 +123,14 @@ class mxLabel extends mxRectangleShape {
   }
 
   /**
-   * Function: paintImage
-   *
    * Generic background painting implementation.
+   * @param {mxAbstractCanvas2D} c
+   * @param {number} x
+   * @param {number} y
+   * @param {number} w
+   * @param {number} h
    */
+  // paintImage(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintImage(c, x, y, w, h) {
     if (this.image != null) {
       const bounds = this.getImageBounds(x, y, w, h);
@@ -141,10 +148,13 @@ class mxLabel extends mxRectangleShape {
   }
 
   /**
-   * Function: getImageBounds
-   *
    * Generic background painting implementation.
+   * @param {number} x
+   * @param {number} y
+   * @param {number} w
+   * @param {number} h
    */
+  // getImageBounds(x: number, y: number, w: number, h: number): mxRectangle;
   getImageBounds(x, y, w, h) {
     const align = mxUtils.getValue(
       this.style,
@@ -192,10 +202,14 @@ class mxLabel extends mxRectangleShape {
   }
 
   /**
-   * Function: paintIndicator
-   *
    * Generic background painting implementation.
+   * @param {mxAbstractCanvas2D} c
+   * @param {number} x
+   * @param {number} y
+   * @param {number} w
+   * @param {number} h
    */
+  // paintIndicator(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintIndicator(c, x, y, w, h) {
     if (this.indicator != null) {
       this.indicator.bounds = this.getIndicatorBounds(x, y, w, h);
@@ -216,10 +230,14 @@ class mxLabel extends mxRectangleShape {
   }
 
   /**
-   * Function: getIndicatorBounds
-   *
    * Generic background painting implementation.
+   * @param {number} x
+   * @param {number} y
+   * @param {number} w
+   * @param {number} h
+   * @returns {mxRectangle}
    */
+  // getIndicatorBounds(x: number, y: number, w: number, h: number): mxRectangle;
   getIndicatorBounds(x, y, w, h) {
     const align = mxUtils.getValue(
       this.style,
@@ -265,10 +283,9 @@ class mxLabel extends mxRectangleShape {
   }
 
   /**
-   * Function: redrawHtmlShape
-   *
    * Generic background painting implementation.
    */
+  // redrawHtmlShape(): void;
   redrawHtmlShape() {
     super.redrawHtmlShape();
 

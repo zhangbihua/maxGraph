@@ -19,9 +19,10 @@ class mxGeometryChange {
   /**
    * Function: execute
    *
-   * Changes the geometry of <cell> ro <previous> using
+   * Changes the geometry of {@link cell}` ro {@link previous}` using
    * <mxGraphModel.geometryForCellChanged>.
    */
+  // execute(): void;
   execute() {
     if (this.cell != null) {
       this.geometry = this.previous;

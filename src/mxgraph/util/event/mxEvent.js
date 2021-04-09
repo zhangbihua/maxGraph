@@ -26,25 +26,26 @@ try {
 }
 
 /**
- * Class: mxEvent
+ * @class mxEvent
  *
  * Cross-browser DOM event support. For internal event handling,
- * <mxEventSource> and the graph event dispatch loop in <mxGraph> are used.
+ * {@link mxEventSource} and the graph event dispatch loop in {@link mxGraph} are used.
  *
- * Memory Leaks:
+ * ### Memory Leaks:
  *
  * Use this class for adding and removing listeners to/from DOM nodes. The
- * <removeAllListeners> function is provided to remove all listeners that
- * have been added using <addListener>. The function should be invoked when
+ * {@link removeAllListeners} function is provided to remove all listeners that
+ * have been added using {@link addListener}. The function should be invoked when
  * the last reference is removed in the JavaScript code, typically when the
  * referenced DOM node is removed from the DOM.
  */
 class mxEvent {
   /**
-   * Function: addListener
-   *
-   * Binds the function to the specified event on the given element.
+   * Binds the function to the specified event on the given element. Use
+   * {@link mxUtils.bind} in order to bind the "this" keyword inside the function
+   * to a given execution scope.
    */
+  // static addListener(element: Node | Window, eventName: string, funct: Function): void;
   static addListener(element, eventName, funct) {
     element.addEventListener(
       eventName,
@@ -59,10 +60,9 @@ class mxEvent {
   }
 
   /**
-   * Function: removeListener
-   *
    * Removes the specified listener from the given element.
    */
+  // static removeListener(element: Node | Window, eventName: string, funct: Function): void;
   static removeListener(element, eventName, funct) {
     element.removeEventListener(eventName, funct, false);
 
@@ -84,10 +84,9 @@ class mxEvent {
   }
 
   /**
-   * Function: removeAllListeners
-   *
    * Removes all listeners from the given element.
    */
+  // static removeAllListeners(element: Node | Window): void;
   static removeAllListeners(element) {
     const list = element.mxListenerList;
 
@@ -259,14 +258,11 @@ class mxEvent {
   }
 
   /**
-   * Function: release
-   *
    * Removes the known listeners from the given DOM node and its descendants.
    *
-   * Parameters:
-   *
-   * element - DOM node to remove the listeners from.
+   * @param element DOM node to remove the listeners from.
    */
+  // static release(element: Node | Window): void;
   static release(element) {
     try {
       if (element != null) {
@@ -286,8 +282,6 @@ class mxEvent {
   }
 
   /**
-   * Function: addMouseWheelListener
-   *
    * Installs the given function as a handler for mouse wheel events. The
    * function has two arguments: the mouse event and a boolean that specifies
    * if the wheel was moved up or down.
@@ -295,24 +289,23 @@ class mxEvent {
    * This has been tested with IE 6 and 7, Firefox (all versions), Opera and
    * Safari. It does currently not work on Safari for Mac.
    *
-   * Example:
+   * ### Example
    *
-   * (code)
-   * mxEvent.addMouseWheelListener(function (evt, up, pinch)
+   * @example
+   * ```javascript
+   * mxEvent.addMouseWheelListener(function (evt, up)
    * {
    *   mxLog.show();
    *   mxLog.debug('mouseWheel: up='+up);
    * });
-   *(end)
+   * ```
    *
-   * Parameters:
-   *
-   * funct - Handler function that takes the event argument, a boolean argument
-   * for the mousewheel direction and a boolean to specify if the underlying
-   * event was a pinch gesture on a touch device.
-   * target - Target for installing the listener in Google Chrome. See
+   * @param funct Handler function that takes the event argument and a boolean up
+   * argument for the mousewheel direction.
+   * @param target Target for installing the listener in Google Chrome. See
    * https://www.chromestatus.com/features/6662647093133312.
    */
+  // static addMouseWheelListener(funct: (event: Event, up: boolean) => void, target?: Node | Window): void;
   static addMouseWheelListener(funct, target) {
     if (funct != null) {
       const wheelHandler = evt => {
@@ -418,10 +411,9 @@ class mxEvent {
   }
 
   /**
-   * Function: disableContextMenu
-   *
    * Disables the context menu for the given element.
    */
+  // static disableContextMenu(element: Node): void;
   static disableContextMenu(element) {
     mxEvent.addListener(element, 'contextmenu', evt => {
       if (evt.preventDefault) {
@@ -441,19 +433,17 @@ class mxEvent {
   }
 
   /**
-   * Function: isConsumed
-   *
-   * Returns true if the event has been consumed using <consume>.
+   * Returns true if the event has been consumed using {@link consume}.
    */
+  // static isConsumed(evt: mxEventObject | mxMouseEvent | Event): boolean;
   static isConsumed(evt) {
     return evt.isConsumed != null && evt.isConsumed;
   }
 
   /**
-   * Function: isTouchEvent
-   *
    * Returns true if the event was generated using a touch device (not a pen or mouse).
    */
+  // static isTouchEvent(evt: Event): boolean;
   static isTouchEvent(evt) {
     return evt.pointerType != null
       ? evt.pointerType == 'touch' ||
@@ -464,10 +454,9 @@ class mxEvent {
   }
 
   /**
-   * Function: isPenEvent
-   *
    * Returns true if the event was generated using a pen (not a touch device or mouse).
    */
+  // static isPenEvent(evt: Event): boolean;
   static isPenEvent(evt) {
     return evt.pointerType != null
       ? evt.pointerType == 'pen' || evt.pointerType === evt.MSPOINTER_TYPE_PEN
@@ -477,10 +466,9 @@ class mxEvent {
   }
 
   /**
-   * Function: isMultiTouchEvent
-   *
    * Returns true if the event was generated using a touch device (not a pen or mouse).
    */
+  // static isMultiTouchEvent(evt: Event): boolean;
   static isMultiTouchEvent(evt) {
     return (
       evt.type != null &&
@@ -491,10 +479,9 @@ class mxEvent {
   }
 
   /**
-   * Function: isMouseEvent
-   *
    * Returns true if the event was generated using a mouse (not a pen or touch device).
    */
+  // static isMouseEvent(evt: Event): boolean;
   static isMouseEvent(evt) {
     return evt.pointerType != null
       ? evt.pointerType == 'mouse' ||
@@ -505,13 +492,12 @@ class mxEvent {
   }
 
   /**
-   * Function: isLeftMouseButton
-   *
    * Returns true if the left mouse button is pressed for the given event.
    * To check if a button is pressed during a mouseMove you should use the
-   * <mxGraph.isMouseDown> property. Note that this returns true in Firefox
+   * {@link mxGraph.isMouseDown} property. Note that this returns true in Firefox
    * for control+left-click on the Mac.
    */
+  // static isLeftMouseButton(evt: MouseEvent): boolean;
   static isLeftMouseButton(evt) {
     // Special case for mousemove and mousedown we check the buttons
     // if it exists because which is 0 even if no button is pressed
@@ -528,12 +514,11 @@ class mxEvent {
   }
 
   /**
-   * Function: isMiddleMouseButton
-   *
    * Returns true if the middle mouse button is pressed for the given event.
    * To check if a button is pressed during a mouseMove you should use the
-   * <mxGraph.isMouseDown> property.
+   * {@link mxGraph.isMouseDown} property.
    */
+  // static isMiddleMouseButton(evt: MouseEvent): boolean;
   static isMiddleMouseButton(evt) {
     if ('which' in evt) {
       return evt.which === 2;
@@ -542,12 +527,11 @@ class mxEvent {
   }
 
   /**
-   * Function: isRightMouseButton
-   *
    * Returns true if the right mouse button was pressed. Note that this
    * button might not be available on some systems. For handling a popup
-   * trigger <isPopupTrigger> should be used.
+   * trigger {@link isPopupTrigger} should be used.
    */
+  // static isRightMouseButton(evt: MouseEvent): boolean;
   static isRightMouseButton(evt) {
     if ('which' in evt) {
       return evt.which === 3;
@@ -556,12 +540,11 @@ class mxEvent {
   }
 
   /**
-   * Function: isPopupTrigger
-   *
    * Returns true if the event is a popup trigger. This implementation
    * returns true if the right button or the left button and control was
    * pressed on a Mac.
    */
+  // static isPopupTrigger(evt: Event): boolean;
   static isPopupTrigger(evt) {
     return (
       mxEvent.isRightMouseButton(evt) ||
@@ -574,46 +557,41 @@ class mxEvent {
   }
 
   /**
-   * Function: isShiftDown
-   *
    * Returns true if the shift key is pressed for the given event.
    */
+  // static isShiftDown(evt: MouseEvent): boolean;
   static isShiftDown(evt) {
     return evt != null ? evt.shiftKey : false;
   }
 
   /**
-   * Function: isAltDown
-   *
    * Returns true if the alt key is pressed for the given event.
    */
+  // static isAltDown(evt: MouseEvent): boolean;
   static isAltDown(evt) {
     return evt != null ? evt.altKey : false;
   }
 
   /**
-   * Function: isControlDown
-   *
    * Returns true if the control key is pressed for the given event.
    */
+  // static isControlDown(evt: MouseEvent): boolean;
   static isControlDown(evt) {
     return evt != null ? evt.ctrlKey : false;
   }
 
   /**
-   * Function: isMetaDown
-   *
    * Returns true if the meta key is pressed for the given event.
    */
+  // static isMetaDown(evt: MouseEvent): boolean;
   static isMetaDown(evt) {
     return evt != null ? evt.metaKey : false;
   }
 
   /**
-   * Function: getMainEvent
-   *
    * Returns the touch or mouse event that contains the mouse coordinates.
    */
+  // static getMainEvent(e: MouseEvent): MouseEvent;
   static getMainEvent(e) {
     if (
       (e.type == 'touchstart' || e.type == 'touchmove') &&
@@ -632,36 +610,31 @@ class mxEvent {
   }
 
   /**
-   * Function: getClientX
-   *
    * Returns true if the meta key is pressed for the given event.
    */
+  // static getClientX(e: TouchEvent | MouseEvent): number;
   static getClientX(e) {
     return mxEvent.getMainEvent(e).clientX;
   }
 
   /**
-   * Function: getClientY
-   *
    * Returns true if the meta key is pressed for the given event.
    */
+  // static getClientY(e: TouchEvent | MouseEvent): number;
   static getClientY(e) {
     return mxEvent.getMainEvent(e).clientY;
   }
 
   /**
-   * Function: consume
-   *
    * Consumes the given event.
    *
-   * Parameters:
-   *
-   * evt - Native event to be consumed.
-   * preventDefault - Optional boolean to prevent the default for the event.
+   * @param evt Native event to be consumed.
+   * @param preventDefault Optional boolean to prevent the default for the event.
    * Default is true.
-   * stopPropagation - Option boolean to stop event propagation. Default is
+   * @param stopPropagation Option boolean to stop event propagation. Default is
    * true.
    */
+  // static consume(evt: Event, preventDefault?: boolean, stopPropagation?: boolean): void;
   static consume(evt, preventDefault, stopPropagation) {
     preventDefault = preventDefault != null ? preventDefault : true;
     stopPropagation = stopPropagation != null ? stopPropagation : true;
@@ -692,41 +665,40 @@ class mxEvent {
   //
 
   /**
-   * Variable: LABEL_HANDLE
-   *
    * Index for the label handle in an mxMouseEvent. This should be a negative
-   * value that does not interfere with any possible handle indices. Default
-   * is -1.
+   * value that does not interfere with any possible handle indices.
+   * @default -1
    */
+  // static LABEL_HANDLE: -1;
   static LABEL_HANDLE = -1;
 
   /**
-   * Variable: ROTATION_HANDLE
-   *
    * Index for the rotation handle in an mxMouseEvent. This should be a
    * negative value that does not interfere with any possible handle indices.
-   * Default is -2.
+   * @default -2
    */
+  // static ROTATION_HANDLE: -2;
   static ROTATION_HANDLE = -2;
 
   /**
-   * Variable: CUSTOM_HANDLE
-   *
    * Start index for the custom handles in an mxMouseEvent. This should be a
    * negative value and is the start index which is decremented for each
-   * custom handle. Default is -100.
+   * custom handle.
+   * @default -100
    */
+  // static CUSTOM_HANDLE: -100;
   static CUSTOM_HANDLE = -100;
 
   /**
-   * Variable: VIRTUAL_HANDLE
-   *
    * Start index for the virtual handles in an mxMouseEvent. This should be a
    * negative value and is the start index which is decremented for each
-   * virtual handle. Default is -100000. This assumes that there are no more
+   * virtual handle.
+   * This assumes that there are no more
    * than VIRTUAL_HANDLE - CUSTOM_HANDLE custom handles.
    *
+   * @default -100000
    */
+  // static VIRTUAL_HANDLE: -100000;
   static VIRTUAL_HANDLE = -100000;
 
   //
@@ -734,675 +706,579 @@ class mxEvent {
   //
 
   /**
-   * Variable: MOUSE_DOWN
-   *
    * Specifies the event name for mouseDown.
    */
+  // static MOUSE_DOWN: 'mouseDown';
   static MOUSE_DOWN = 'mouseDown';
 
   /**
-   * Variable: MOUSE_MOVE
-   *
    * Specifies the event name for mouseMove.
    */
+  // static MOUSE_MOVE: 'mouseMove';
   static MOUSE_MOVE = 'mouseMove';
 
   /**
-   * Variable: MOUSE_UP
-   *
    * Specifies the event name for mouseUp.
    */
+  // static MOUSE_UP: 'mouseUp';
   static MOUSE_UP = 'mouseUp';
 
   /**
-   * Variable: ACTIVATE
-   *
    * Specifies the event name for activate.
    */
+  // static ACTIVATE: 'activate';
   static ACTIVATE = 'activate';
 
   /**
-   * Variable: RESIZE_START
-   *
    * Specifies the event name for resizeStart.
    */
+  // static RESIZE_START: 'resizeStart';
   static RESIZE_START = 'resizeStart';
 
   /**
-   * Variable: RESIZE
-   *
    * Specifies the event name for resize.
    */
+  // static RESIZE: 'resize';
   static RESIZE = 'resize';
 
   /**
-   * Variable: RESIZE_END
-   *
    * Specifies the event name for resizeEnd.
    */
+  // static RESIZE_END: 'resizeEnd';
   static RESIZE_END = 'resizeEnd';
 
   /**
-   * Variable: MOVE_START
-   *
    * Specifies the event name for moveStart.
    */
+  // static MOVE_START: 'moveStart';
   static MOVE_START = 'moveStart';
 
   /**
-   * Variable: MOVE
-   *
    * Specifies the event name for move.
    */
+  // static MOVE: 'move';
   static MOVE = 'move';
 
   /**
-   * Variable: MOVE_END
-   *
    * Specifies the event name for moveEnd.
    */
+  // static MOVE_END: 'moveEnd';
   static MOVE_END = 'moveEnd';
 
   /**
-   * Variable: PAN_START
-   *
    * Specifies the event name for panStart.
    */
+  // static PAN_START: 'panStart';
   static PAN_START = 'panStart';
 
   /**
-   * Variable: PAN
-   *
    * Specifies the event name for pan.
    */
+  // static PAN: 'pan';
   static PAN = 'pan';
 
   /**
-   * Variable: PAN_END
-   *
    * Specifies the event name for panEnd.
    */
+  // static PAN_END: 'panEnd';
   static PAN_END = 'panEnd';
 
   /**
-   * Variable: MINIMIZE
-   *
    * Specifies the event name for minimize.
    */
+  // static MINIMIZE: 'minimize';
   static MINIMIZE = 'minimize';
 
   /**
-   * Variable: NORMALIZE
-   *
    * Specifies the event name for normalize.
    */
+  // static NORMALIZE: 'normalize';
   static NORMALIZE = 'normalize';
 
   /**
-   * Variable: MAXIMIZE
-   *
    * Specifies the event name for maximize.
    */
+  // static MAXIMIZE: 'maximize';
   static MAXIMIZE = 'maximize';
 
   /**
-   * Variable: HIDE
-   *
    * Specifies the event name for hide.
    */
+  // static HIDE: 'hide';
   static HIDE = 'hide';
 
   /**
-   * Variable: SHOW
-   *
    * Specifies the event name for show.
    */
+  // static SHOW: 'show';
   static SHOW = 'show';
 
   /**
-   * Variable: CLOSE
-   *
    * Specifies the event name for close.
    */
+  // static CLOSE: 'close';
   static CLOSE = 'close';
 
   /**
-   * Variable: DESTROY
-   *
    * Specifies the event name for destroy.
    */
+  // static DESTROY: 'destroy';
   static DESTROY = 'destroy';
 
   /**
-   * Variable: REFRESH
-   *
    * Specifies the event name for refresh.
    */
+  // static REFRESH: 'refresh';
   static REFRESH = 'refresh';
 
   /**
-   * Variable: SIZE
-   *
    * Specifies the event name for size.
    */
+  // static SIZE: 'size';
   static SIZE = 'size';
 
   /**
-   * Variable: SELECT
-   *
    * Specifies the event name for select.
    */
+  // static SELECT: 'select';
   static SELECT = 'select';
 
   /**
-   * Variable: FIRED
-   *
    * Specifies the event name for fired.
    */
+  // static FIRED: 'fired';
   static FIRED = 'fired';
 
   /**
-   * Variable: FIRE_MOUSE_EVENT
-   *
    * Specifies the event name for fireMouseEvent.
    */
+  // static FIRE_MOUSE_EVENT: 'fireMouseEvent';
   static FIRE_MOUSE_EVENT = 'fireMouseEvent';
 
   /**
-   * Variable: GESTURE
-   *
    * Specifies the event name for gesture.
    */
+  // static GESTURE: 'gesture';
   static GESTURE = 'gesture';
 
   /**
-   * Variable: TAP_AND_HOLD
-   *
    * Specifies the event name for tapAndHold.
    */
+  // static TAP_AND_HOLD: 'tapAndHold';
   static TAP_AND_HOLD = 'tapAndHold';
 
   /**
-   * Variable: GET
-   *
    * Specifies the event name for get.
    */
+  // static GET: 'get';
   static GET = 'get';
 
   /**
-   * Variable: RECEIVE
-   *
    * Specifies the event name for receive.
    */
+  // static RECEIVE: 'receive';
   static RECEIVE = 'receive';
 
   /**
-   * Variable: CONNECT
-   *
    * Specifies the event name for connect.
    */
+  // static CONNECT: 'connect';
   static CONNECT = 'connect';
 
   /**
-   * Variable: DISCONNECT
-   *
    * Specifies the event name for disconnect.
    */
+  // static DISCONNECT: 'disconnect';
   static DISCONNECT = 'disconnect';
 
   /**
-   * Variable: SUSPEND
-   *
    * Specifies the event name for suspend.
    */
+  // static SUSPEND: 'suspend';
   static SUSPEND = 'suspend';
 
   /**
-   * Variable: RESUME
-   *
    * Specifies the event name for suspend.
    */
+  // static RESUME: 'resume';
   static RESUME = 'resume';
 
   /**
-   * Variable: MARK
-   *
    * Specifies the event name for mark.
    */
+  // static MARK: 'mark';
   static MARK = 'mark';
 
   /**
-   * Variable: ROOT
-   *
    * Specifies the event name for root.
    */
+  // static ROOT: 'root';
   static ROOT = 'root';
 
   /**
-   * Variable: POST
-   *
    * Specifies the event name for post.
    */
+  // static POST: 'post';
   static POST = 'post';
 
   /**
-   * Variable: OPEN
-   *
    * Specifies the event name for open.
    */
+  // static OPEN: 'open';
   static OPEN = 'open';
 
   /**
-   * Variable: SAVE
-   *
    * Specifies the event name for open.
    */
+  // static SAVE: 'save';
   static SAVE = 'save';
 
   /**
-   * Variable: BEFORE_ADD_VERTEX
-   *
    * Specifies the event name for beforeAddVertex.
    */
+  // static BEFORE_ADD_VERTEX: 'beforeAddVertex';
   static BEFORE_ADD_VERTEX = 'beforeAddVertex';
 
   /**
-   * Variable: ADD_VERTEX
-   *
    * Specifies the event name for addVertex.
    */
+  // static ADD_VERTEX: 'addVertex';
   static ADD_VERTEX = 'addVertex';
 
   /**
-   * Variable: AFTER_ADD_VERTEX
-   *
    * Specifies the event name for afterAddVertex.
    */
+  // static AFTER_ADD_VERTEX: 'afterAddVertex';
   static AFTER_ADD_VERTEX = 'afterAddVertex';
 
   /**
-   * Variable: DONE
-   *
    * Specifies the event name for done.
    */
+  // static DONE: 'done';
   static DONE = 'done';
 
   /**
-   * Variable: EXECUTE
-   *
    * Specifies the event name for execute.
    */
+  // static EXECUTE: 'execute';
   static EXECUTE = 'execute';
 
   /**
-   * Variable: EXECUTED
-   *
    * Specifies the event name for executed.
    */
+  // static EXECUTED: 'executed';
   static EXECUTED = 'executed';
 
   /**
-   * Variable: BEGIN_UPDATE
-   *
    * Specifies the event name for beginUpdate.
    */
+  // static BEGIN_UPDATE: 'beginUpdate';
   static BEGIN_UPDATE = 'beginUpdate';
 
   /**
-   * Variable: START_EDIT
-   *
    * Specifies the event name for startEdit.
    */
+  // static START_EDIT: 'startEdit';
   static START_EDIT = 'startEdit';
 
   /**
-   * Variable: END_UPDATE
-   *
    * Specifies the event name for endUpdate.
    */
+  // static END_UPDATE: 'endUpdate';
   static END_UPDATE = 'endUpdate';
 
   /**
-   * Variable: END_EDIT
-   *
    * Specifies the event name for endEdit.
    */
+  // static END_EDIT: 'endEdit';
   static END_EDIT = 'endEdit';
 
   /**
-   * Variable: BEFORE_UNDO
-   *
    * Specifies the event name for beforeUndo.
    */
+  // static BEFORE_UNDO: 'beforeUndo';
   static BEFORE_UNDO = 'beforeUndo';
 
   /**
-   * Variable: UNDO
-   *
    * Specifies the event name for undo.
    */
+  // static UNDO: 'undo';
   static UNDO = 'undo';
 
   /**
-   * Variable: REDO
-   *
    * Specifies the event name for redo.
    */
+  // static REDO: 'redo';
   static REDO = 'redo';
 
   /**
-   * Variable: CHANGE
-   *
    * Specifies the event name for change.
    */
+  // static CHANGE: 'change';
   static CHANGE = 'change';
 
   /**
-   * Variable: NOTIFY
-   *
    * Specifies the event name for notify.
    */
+  // static NOTIFY: 'notify';
   static NOTIFY = 'notify';
 
   /**
-   * Variable: LAYOUT_CELLS
-   *
    * Specifies the event name for layoutCells.
    */
+  // static LAYOUT_CELLS: 'layoutCells';
   static LAYOUT_CELLS = 'layoutCells';
 
   /**
-   * Variable: CLICK
-   *
    * Specifies the event name for click.
    */
+  // static CLICK: 'click';
   static CLICK = 'click';
 
   /**
-   * Variable: SCALE
-   *
    * Specifies the event name for scale.
    */
+  // static SCALE: 'scale';
   static SCALE = 'scale';
 
   /**
-   * Variable: TRANSLATE
-   *
    * Specifies the event name for translate.
    */
+  // static TRANSLATE: 'translate';
   static TRANSLATE = 'translate';
 
   /**
-   * Variable: SCALE_AND_TRANSLATE
-   *
    * Specifies the event name for scaleAndTranslate.
    */
+  // static SCALE_AND_TRANSLATE: 'scaleAndTranslate';
   static SCALE_AND_TRANSLATE = 'scaleAndTranslate';
 
   /**
-   * Variable: UP
-   *
    * Specifies the event name for up.
    */
+  // static UP: 'up';
   static UP = 'up';
 
   /**
-   * Variable: DOWN
-   *
    * Specifies the event name for down.
    */
+  // static DOWN: 'down';
   static DOWN = 'down';
 
   /**
-   * Variable: ADD
-   *
    * Specifies the event name for add.
    */
+  // static ADD: 'add';
   static ADD = 'add';
 
   /**
-   * Variable: REMOVE
-   *
    * Specifies the event name for remove.
    */
+  // static REMOVE: 'remove';
   static REMOVE = 'remove';
 
   /**
-   * Variable: CLEAR
-   *
    * Specifies the event name for clear.
    */
+  // static CLEAR: 'clear';
   static CLEAR = 'clear';
 
   /**
-   * Variable: ADD_CELLS
-   *
    * Specifies the event name for addCells.
    */
+  // static ADD_CELLS: 'addCells';
   static ADD_CELLS = 'addCells';
 
   /**
-   * Variable: CELLS_ADDED
-   *
    * Specifies the event name for cellsAdded.
    */
+  // static CELLS_ADDED: 'cellsAdded';
   static CELLS_ADDED = 'cellsAdded';
 
   /**
-   * Variable: MOVE_CELLS
-   *
    * Specifies the event name for moveCells.
    */
+  // static MOVE_CELLS: 'moveCells';
   static MOVE_CELLS = 'moveCells';
 
   /**
-   * Variable: CELLS_MOVED
-   *
    * Specifies the event name for cellsMoved.
    */
+  // static CELLS_MOVED: 'cellsMoved';
   static CELLS_MOVED = 'cellsMoved';
 
   /**
-   * Variable: RESIZE_CELLS
-   *
    * Specifies the event name for resizeCells.
    */
+  // static RESIZE_CELLS: 'resizeCells';
   static RESIZE_CELLS = 'resizeCells';
 
   /**
-   * Variable: CELLS_RESIZED
-   *
    * Specifies the event name for cellsResized.
    */
+  // static CELLS_RESIZED: 'cellsResized';
   static CELLS_RESIZED = 'cellsResized';
 
   /**
-   * Variable: TOGGLE_CELLS
-   *
    * Specifies the event name for toggleCells.
    */
+  // static TOGGLE_CELLS: 'toggleCells';
   static TOGGLE_CELLS = 'toggleCells';
 
   /**
-   * Variable: CELLS_TOGGLED
-   *
    * Specifies the event name for cellsToggled.
    */
+  // static CELLS_TOGGLED: 'cellsToggled';
   static CELLS_TOGGLED = 'cellsToggled';
 
   /**
-   * Variable: ORDER_CELLS
-   *
    * Specifies the event name for orderCells.
    */
+  // static ORDER_CELLS: 'orderCells';
   static ORDER_CELLS = 'orderCells';
 
   /**
-   * Variable: CELLS_ORDERED
-   *
    * Specifies the event name for cellsOrdered.
    */
+  // static CELLS_ORDERED: 'cellsOrdered';
   static CELLS_ORDERED = 'cellsOrdered';
 
   /**
-   * Variable: REMOVE_CELLS
-   *
    * Specifies the event name for removeCells.
    */
+  // static REMOVE_CELLS: 'removeCells';
   static REMOVE_CELLS = 'removeCells';
 
   /**
-   * Variable: CELLS_REMOVED
-   *
    * Specifies the event name for cellsRemoved.
    */
+  // static CELLS_REMOVED: 'cellsRemoved';
   static CELLS_REMOVED = 'cellsRemoved';
 
   /**
-   * Variable: GROUP_CELLS
-   *
    * Specifies the event name for groupCells.
    */
+  // static GROUP_CELLS: 'groupCells';
   static GROUP_CELLS = 'groupCells';
 
   /**
-   * Variable: UNGROUP_CELLS
-   *
    * Specifies the event name for ungroupCells.
    */
+  // static UNGROUP_CELLS: 'ungroupCells';
   static UNGROUP_CELLS = 'ungroupCells';
 
   /**
-   * Variable: REMOVE_CELLS_FROM_PARENT
-   *
    * Specifies the event name for removeCellsFromParent.
    */
+  // static REMOVE_CELLS_FROM_PARENT: 'removeCellsFromParent';
   static REMOVE_CELLS_FROM_PARENT = 'removeCellsFromParent';
 
   /**
-   * Variable: FOLD_CELLS
-   *
    * Specifies the event name for foldCells.
    */
+  // static FOLD_CELLS: 'foldCells';
   static FOLD_CELLS = 'foldCells';
 
   /**
-   * Variable: CELLS_FOLDED
-   *
    * Specifies the event name for cellsFolded.
    */
+  // static CELLS_FOLDED: 'cellsFolded';
   static CELLS_FOLDED = 'cellsFolded';
 
   /**
-   * Variable: ALIGN_CELLS
-   *
    * Specifies the event name for alignCells.
    */
+  // static ALIGN_CELLS: 'alignCells';
   static ALIGN_CELLS = 'alignCells';
 
   /**
-   * Variable: LABEL_CHANGED
-   *
    * Specifies the event name for labelChanged.
    */
+  // static LABEL_CHANGED: 'labelChanged';
   static LABEL_CHANGED = 'labelChanged';
 
   /**
-   * Variable: CONNECT_CELL
-   *
    * Specifies the event name for connectCell.
    */
+  // static CONNECT_CELL: 'connectCell';
   static CONNECT_CELL = 'connectCell';
 
   /**
-   * Variable: CELL_CONNECTED
-   *
    * Specifies the event name for cellConnected.
    */
+  // static CELL_CONNECTED: 'cellConnected';
   static CELL_CONNECTED = 'cellConnected';
 
   /**
-   * Variable: SPLIT_EDGE
-   *
    * Specifies the event name for splitEdge.
    */
+  // static SPLIT_EDGE: 'splitEdge';
   static SPLIT_EDGE = 'splitEdge';
 
   /**
-   * Variable: FLIP_EDGE
-   *
    * Specifies the event name for flipEdge.
    */
+  // static FLIP_EDGE: 'flipEdge';
   static FLIP_EDGE = 'flipEdge';
 
   /**
-   * Variable: START_EDITING
-   *
    * Specifies the event name for startEditing.
    */
+  // static START_EDITING: 'startEditing';
   static START_EDITING = 'startEditing';
 
   /**
-   * Variable: EDITING_STARTED
-   *
    * Specifies the event name for editingStarted.
    */
+  // static EDITING_STARTED: 'editingStarted';
   static EDITING_STARTED = 'editingStarted';
 
   /**
-   * Variable: EDITING_STOPPED
-   *
    * Specifies the event name for editingStopped.
    */
+  // static EDITING_STOPPED: 'editingStopped';
   static EDITING_STOPPED = 'editingStopped';
 
   /**
-   * Variable: ADD_OVERLAY
-   *
    * Specifies the event name for addOverlay.
    */
+  // static ADD_OVERLAY: 'addOverlay';
   static ADD_OVERLAY = 'addOverlay';
 
   /**
-   * Variable: REMOVE_OVERLAY
-   *
    * Specifies the event name for removeOverlay.
    */
+  // static REMOVE_OVERLAY: 'removeOverlay';
   static REMOVE_OVERLAY = 'removeOverlay';
 
   /**
-   * Variable: UPDATE_CELL_SIZE
-   *
    * Specifies the event name for updateCellSize.
    */
+  // static UPDATE_CELL_SIZE: 'updateCellSize';
   static UPDATE_CELL_SIZE = 'updateCellSize';
 
   /**
-   * Variable: ESCAPE
-   *
    * Specifies the event name for escape.
    */
+  // static ESCAPE: 'escape';
   static ESCAPE = 'escape';
 
   /**
-   * Variable: DOUBLE_CLICK
-   *
    * Specifies the event name for doubleClick.
    */
+  // static DOUBLE_CLICK: 'doubleClick';
   static DOUBLE_CLICK = 'doubleClick';
 
   /**
-   * Variable: START
-   *
    * Specifies the event name for start.
    */
+  // static START: 'start';
   static START = 'start';
 
   /**
-   * Variable: RESET
-   *
    * Specifies the event name for reset.
    */
+  // static RESET: 'reset';
   static RESET = 'reset';
 
   /**

@@ -1,6 +1,4 @@
 /**
- * Class: mxTerminalChange
- *
  * Action to change a terminal in a model.
  *
  * Constructor: mxTerminalChange
@@ -18,11 +16,10 @@ class mxTerminalChange {
   }
 
   /**
-   * Function: execute
-   *
-   * Changes the terminal of <cell> to <previous> using
+   * Changes the terminal of {@link cell}` to {@link previous}` using
    * <mxGraphModel.terminalForCellChanged>.
    */
+  // execute(): void;
   execute() {
     if (this.cell != null) {
       this.terminal = this.previous;

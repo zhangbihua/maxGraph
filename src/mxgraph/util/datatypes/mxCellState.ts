@@ -72,6 +72,7 @@ class mxCellState extends mxRectangle {
    *
    * Reference to the enclosing <mxGraphView>.
    */
+  // view: mxGraphView;
   view: mxGraphView;
 
   /**
@@ -79,6 +80,7 @@ class mxCellState extends mxRectangle {
    *
    * Reference to the <mxCell> that is represented by this state.
    */
+  // cell: mxCell;
   cell: mxCell;
 
   /**
@@ -87,6 +89,7 @@ class mxCellState extends mxRectangle {
    * Contains an array of key, value pairs that represent the style of the
    * cell.
    */
+  // style: { [key: string]: any };
   style: any; // TODO: Important - make the style type more strictly typed to allow for typescript checking of individual properties!!!
 
   /**
@@ -101,6 +104,7 @@ class mxCellState extends mxRectangle {
    *
    * Specifies if the state is invalid. Default is true.
    */
+  // invalid: boolean;
   invalid: boolean = true;
 
   /**
@@ -109,6 +113,7 @@ class mxCellState extends mxRectangle {
    * <mxPoint> that holds the origin for all child cells. Default is a new
    * empty <mxPoint>.
    */
+  // origin: mxPoint;
   origin: mxPoint;
 
   /**
@@ -117,6 +122,7 @@ class mxCellState extends mxRectangle {
    * Holds an array of <mxPoints> that represent the absolute points of an
    * edge.
    */
+  // absolutePoints: mxPoint[];
   absolutePoints: (mxPoint | null)[] | null = null;
 
   /**
@@ -126,6 +132,7 @@ class mxCellState extends mxRectangle {
    * absolute coordinates of the label position. For vertices, this is the
    * offset of the label relative to the top, left corner of the vertex.
    */
+  // absoluteOffset: mxPoint;
   absoluteOffset: mxPoint;
 
   /**
@@ -133,6 +140,7 @@ class mxCellState extends mxRectangle {
    *
    * Caches the visible source terminal state.
    */
+  // visibleSourceState: mxCellState;
   visibleSourceState: mxCellState | null = null;
 
   /**
@@ -140,6 +148,7 @@ class mxCellState extends mxRectangle {
    *
    * Caches the visible target terminal state.
    */
+  // visibleTargetState: mxCellState;
   visibleTargetState: mxCellState | null = null;
 
   /**
@@ -147,6 +156,7 @@ class mxCellState extends mxRectangle {
    *
    * Caches the distance between the end points for an edge.
    */
+  // terminalDistance: number;
   terminalDistance: number = 0;
 
   /**
@@ -154,6 +164,7 @@ class mxCellState extends mxRectangle {
    *
    * Caches the length of an edge.
    */
+  // length: number;
   length: number = 0;
 
   /**
@@ -162,6 +173,7 @@ class mxCellState extends mxRectangle {
    * Array of numbers that represent the cached length of each segment of the
    * edge.
    */
+  // segments: number[];
   segments: number[] | null = null;
 
   /**
@@ -169,6 +181,7 @@ class mxCellState extends mxRectangle {
    *
    * Holds the <mxShape> that represents the cell graphically.
    */
+  // shape: mxShape;
   shape: mxShape | null = null;
 
   /**
@@ -177,6 +190,7 @@ class mxCellState extends mxRectangle {
    * Holds the <mxText> that represents the label of the cell. Thi smay be
    * null if the cell has no label.
    */
+  // text: mxText;
   text: mxText | null = null;
 
   /**
@@ -184,6 +198,7 @@ class mxCellState extends mxRectangle {
    *
    * Holds the unscaled width of the state.
    */
+  // unscaledWidth: number;
   unscaledWidth: number | null = null;
 
   /**
@@ -204,6 +219,7 @@ class mxCellState extends mxRectangle {
    * border - Optional border to be added around the perimeter bounds.
    * bounds - Optional <mxRectangle> to be used as the initial bounds.
    */
+  // getPerimeterBounds(border?: number, bounds?: mxRectangle): mxRectangle;
   getPerimeterBounds(
     border: number = 0,
     bounds: mxRectangle = new mxRectangle(
@@ -249,6 +265,7 @@ class mxCellState extends mxRectangle {
    * isSource - Boolean that specifies if the first or last point should
    * be assigned.
    */
+  // setAbsoluteTerminalPoint(point: mxPoint, isSource: boolean): void;
   setAbsoluteTerminalPoint(point: mxPoint,
                            isSource: boolean=false): void {
     if (isSource) {
@@ -277,6 +294,7 @@ class mxCellState extends mxRectangle {
    *
    * Sets the given cursor on the shape and text shape.
    */
+  // setCursor(cursor: string): void;
   setCursor(cursor: string): void {
     if (this.shape != null) {
       this.shape.setCursor(cursor);
@@ -296,6 +314,7 @@ class mxCellState extends mxRectangle {
    * source - Boolean that specifies if the source or target cell should be
    * returned.
    */
+  // getVisibleTerminal(source: boolean): mxCell;
   getVisibleTerminal(source: boolean = false): mxCell | null {
     const tmp = this.getVisibleTerminalState(source);
     return tmp != null ? tmp.cell : null;
@@ -311,6 +330,7 @@ class mxCellState extends mxRectangle {
    * source - Boolean that specifies if the source or target state should be
    * returned.
    */
+  // getVisibleTerminalState(source?: boolean): mxCellState;
   getVisibleTerminalState(source: boolean = false): mxCellState | null {
     return source ? this.visibleSourceState : this.visibleTargetState;
   }
@@ -325,6 +345,7 @@ class mxCellState extends mxRectangle {
    * terminalState - <mxCellState> that represents the terminal.
    * source - Boolean that specifies if the source or target state should be set.
    */
+  // setVisibleTerminalState(terminalState: mxCellState, source: boolean): void;
   setVisibleTerminalState(
     terminalState: mxCellState,
     source: boolean = false
@@ -341,6 +362,7 @@ class mxCellState extends mxRectangle {
    *
    * Returns the unscaled, untranslated bounds.
    */
+  // getCellBounds(): mxRectangle;
   getCellBounds(): mxRectangle {
     return <mxRectangle>this.cellBounds;
   }
@@ -352,6 +374,7 @@ class mxCellState extends mxRectangle {
    * <getCellBounds> but with a 90 degree rotation if the shape's
    * isPaintBoundsInverted returns true.
    */
+  // getPaintBounds(): mxRectangle;
   getPaintBounds(): mxRectangle {
     return <mxRectangle>this.paintBounds;
   }
@@ -361,6 +384,7 @@ class mxCellState extends mxRectangle {
    *
    * Updates the cellBounds and paintBounds.
    */
+  // updateCachedBounds(): void;
   updateCachedBounds(): void {
     const view = <mxGraphView>this.view;
 
@@ -384,6 +408,7 @@ class mxCellState extends mxRectangle {
    *
    * Copies all fields from the given state to this state.
    */
+  // setState(state: mxCellState): void;
   setState(state: mxCellState): void {
     this.view = state.view;
     this.cell = state.cell;
@@ -408,6 +433,7 @@ class mxCellState extends mxRectangle {
    *
    * Returns a clone of this <mxPoint>.
    */
+  // clone(): mxCellState;
   clone(): mxCellState {
     const clone = new mxCellState(<mxGraphView>this.view, <mxCell>this.cell, this.style);
 
@@ -450,6 +476,7 @@ class mxCellState extends mxRectangle {
    *
    * Destroys the state and all associated resources.
    */
+  // destroy(): void;
   destroy(): void {
     (<mxGraph>(<mxGraphView>this.view).graph).cellRenderer.destroy(this);
   }

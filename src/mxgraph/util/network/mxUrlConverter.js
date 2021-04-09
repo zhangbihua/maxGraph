@@ -20,6 +20,7 @@ class mxUrlConverter {
    *
    * Specifies if the converter is enabled. Default is true.
    */
+  // enabled: boolean;
   enabled = true;
 
   /**
@@ -27,6 +28,7 @@ class mxUrlConverter {
    *
    * Specifies the base URL to be used as a prefix for relative URLs.
    */
+  // baseUrl: string;
   baseUrl = null;
 
   /**
@@ -34,6 +36,7 @@ class mxUrlConverter {
    *
    * Specifies the base domain to be used as a prefix for absolute URLs.
    */
+  // baseDomain: string;
   baseDomain = null;
 
   /**
@@ -41,6 +44,7 @@ class mxUrlConverter {
    *
    * Private helper function to update the base URL.
    */
+  // updateBaseUrl(): void;
   updateBaseUrl() {
     this.baseDomain = `${location.protocol}//${location.host}`;
     this.baseUrl = this.baseDomain + location.pathname;
@@ -57,6 +61,7 @@ class mxUrlConverter {
    *
    * Returns <enabled>.
    */
+  // isEnabled(): boolean;
   isEnabled() {
     return this.enabled;
   }
@@ -66,6 +71,7 @@ class mxUrlConverter {
    *
    * Sets <enabled>.
    */
+  // setEnabled(value: boolean): void;
   setEnabled(value) {
     this.enabled = value;
   }
@@ -75,6 +81,7 @@ class mxUrlConverter {
    *
    * Returns <baseUrl>.
    */
+  // getBaseUrl(): string;
   getBaseUrl() {
     return this.baseUrl;
   }
@@ -84,6 +91,7 @@ class mxUrlConverter {
    *
    * Sets <baseUrl>.
    */
+  // setBaseUrl(value: string): void;
   setBaseUrl(value) {
     this.baseUrl = value;
   }
@@ -93,6 +101,7 @@ class mxUrlConverter {
    *
    * Returns <baseDomain>.
    */
+  // getBaseDomain(): string;
   getBaseDomain() {
     return this.baseDomain;
   }
@@ -102,6 +111,7 @@ class mxUrlConverter {
    *
    * Sets <baseDomain>.
    */
+  // setBaseDomain(value: string): void;
   setBaseDomain(value) {
     this.baseDomain = value;
   }
@@ -111,6 +121,7 @@ class mxUrlConverter {
    *
    * Returns true if the given URL is relative.
    */
+  // isRelativeUrl(url: string): boolean;
   isRelativeUrl(url) {
     return (
       url != null &&
@@ -128,6 +139,7 @@ class mxUrlConverter {
    * Converts the given URL to an absolute URL with protol and domain.
    * Relative URLs are first converted to absolute URLs.
    */
+  // convert(url: string): string;
   convert(url) {
     if (this.isEnabled() && this.isRelativeUrl(url)) {
       if (this.getBaseUrl() == null) {

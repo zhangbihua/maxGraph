@@ -11,84 +11,87 @@ import mxRectangle from '../mxRectangle';
 import mxCellState from '../mxCellState';
 
 /**
- * Class: mxPerimeter
+ * @class mxPerimeter
  *
  * Provides various perimeter functions to be used in a style
- * as the value of <mxConstants.STYLE_PERIMETER>. Perimeters for
+ * as the value of {@link mxConstants.STYLE_PERIMETER}. Perimeters for
  * rectangle, circle, rhombus and triangle are available.
  *
- * Example:
+ * ### Example
  *
- * (code)
+ * @example
+ * ```javascript
  * <add as="perimeter">mxPerimeter.RectanglePerimeter</add>
- * (end)
+ * ```
  *
- * Or programmatically:
+ * ### Or programmatically
  *
- * (code)
+ * @example
+ * ```javascript
  * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
- * (end)
+ * ```
  *
  * When adding new perimeter functions, it is recommended to use the
  * mxPerimeter-namespace as follows:
  *
- * (code)
- * mxPerimeter.CustomPerimeter = (bounds, vertex, next, orthogonal) =>
+ * @example
+ * ```javascript
+ * mxPerimeter.CustomPerimeter = function (bounds, vertex, next, orthogonal)
  * {
- *   let x = 0; // Calculate x-coordinate
- *   let y = 0; // Calculate y-coordainte
+ *   var x = 0; // Calculate x-coordinate
+ *   var y = 0; // Calculate y-coordainte
  *
  *   return new mxPoint(x, y);
  * }
- * (end)
+ * ```
  *
- * The new perimeter should then be registered in the <mxStyleRegistry> as follows:
- * (code)
+ * #### The new perimeter should then be registered in the {@link mxStyleRegistry} as follows
+ * @example
+ * ```javascript
  * mxStyleRegistry.putValue('customPerimeter', mxPerimeter.CustomPerimeter);
- * (end)
+ * ```
  *
- * The custom perimeter above can now be used in a specific vertex as follows:
+ * #### The custom perimeter above can now be used in a specific vertex as follows:
  *
- * (code)
+ * @example
+ * ```javascript
  * model.setStyle(vertex, 'perimeter=customPerimeter');
- * (end)
+ * ```
  *
- * Note that the key of the <mxStyleRegistry> entry for the function should
- * be used in string values, unless <mxGraphView.allowEval> is true, in
+ * Note that the key of the {@link mxStyleRegistry} entry for the function should
+ * be used in string values, unless {@link mxGraphView.allowEval} is true, in
  * which case you can also use mxPerimeter.CustomPerimeter for the value in
  * the cell style above.
  *
- * Or it can be used for all vertices in the graph as follows:
+ * #### Or it can be used for all vertices in the graph as follows:
  *
- * (code)
- * let style = graph.getStylesheet().getDefaultVertexStyle();
+ * @example
+ * ```javascript
+ * var style = graph.getStylesheet().getDefaultVertexStyle();
  * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.CustomPerimeter;
- * (end)
+ * ```
  *
  * Note that the object can be used directly when programmatically setting
- * the value, but the key in the <mxStyleRegistry> should be used when
+ * the value, but the key in the {@link mxStyleRegistry} should be used when
  * setting the value via a key, value pair in a cell style.
  *
- * The parameters are explained in <RectanglePerimeter>.
+ * The parameters are explained in {@link RectanglePerimeter}.
  */
 class mxPerimeter {
   /**
-   * Function: RectanglePerimeter
-   *
    * Describes a rectangular perimeter for the given bounds.
    *
-   * Parameters:
-   *
-   * bounds - <mxRectangle> that represents the absolute bounds of the
+   * @param bounds {@link mxRectangle} that represents the absolute bounds of the
    * vertex.
-   * vertex - <mxCellState> that represents the vertex.
-   * next - <mxPoint> that represents the nearest neighbour point on the
+   * @param vertex {@link mxCellState} that represents the vertex.
+   * @param next {@link mxPoint} that represents the nearest neighbour point on the
    * given edge.
-   * orthogonal - Boolean that specifies if the orthogonal projection onto
+   * @param orthogonal Boolean that specifies if the orthogonal projection onto
    * the perimeter should be returned. If this is false then the intersection
    * of the perimeter and the line between the next and the center point is
    * returned.
    */
+  // static RectanglePerimeter(bounds: mxRectangle, vertex: mxCellState, next: mxPoint, orthogonal?: boolean): mxPoint;
   static RectanglePerimeter(
     bounds: mxRectangle,
     vertex: mxCellState,
@@ -146,11 +149,10 @@ class mxPerimeter {
   }
 
   /**
-   * Function: EllipsePerimeter
-   *
-   * Describes an elliptic perimeter. See <RectanglePerimeter>
+   * Describes an elliptic perimeter. See {@link RectanglePerimeter}
    * for a description of the parameters.
    */
+  // static EllipsePerimeter(bounds: mxRectangle, vertex: mxCellState, next: mxPoint, orthogonal?: boolean): mxPoint;
   static EllipsePerimeter(
     bounds: mxRectangle,
     vertex: mxCellState,
@@ -234,11 +236,10 @@ class mxPerimeter {
   }
 
   /**
-   * Function: RhombusPerimeter
-   *
-   * Describes a rhombus (aka diamond) perimeter. See <RectanglePerimeter>
+   * Describes a rhombus (aka diamond) perimeter. See {@link RectanglePerimeter}
    * for a description of the parameters.
    */
+  // static RhombusPerimeter(bounds: mxRectangle, vertex: mxCellState, next: mxPoint, orthogonal?: boolean): mxPoint;
   static RhombusPerimeter(
     bounds: mxRectangle,
     vertex: mxCellState,
@@ -296,11 +297,10 @@ class mxPerimeter {
   }
 
   /**
-   * Function: TrianglePerimeter
-   *
-   * Describes a triangle perimeter. See <RectanglePerimeter>
+   * Describes a triangle perimeter. See {@link RectanglePerimeter}
    * for a description of the parameters.
    */
+  // static TrianglePerimeter(bounds: mxRectangle, vertex: mxCellState, next: mxPoint, orthogonal?: boolean): mxPoint;
   static TrianglePerimeter(
     bounds: mxRectangle,
     vertex: mxCellState,
@@ -440,11 +440,10 @@ class mxPerimeter {
   }
 
   /**
-   * Function: HexagonPerimeter
-   *
-   * Describes a hexagon perimeter. See <RectanglePerimeter>
+   * Describes a hexagon perimeter. See {@link RectanglePerimeter}
    * for a description of the parameters.
    */
+  // static HexagonPerimeter(bounds: mxRectangle, vertex: mxCellState, next: mxPoint, orthogonal?: boolean): mxPoint;
   static HexagonPerimeter(
     bounds: mxRectangle,
     vertex: mxCellState,

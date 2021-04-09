@@ -63,6 +63,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Reference to the enclosing <mxGraph>.
    */
+  // graph: mxGraph;
   graph = null;
 
   /**
@@ -70,6 +71,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Specifies if events are handled. Default is true.
    */
+  // enabled: boolean;
   enabled = true;
 
   /**
@@ -77,6 +79,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Keeps a reference to an event listener for later removal.
    */
+  // refreshHandler: any;
   refreshHandler = null;
 
   /**
@@ -84,6 +87,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Defines the maximum number of handlers to paint individually. Default is 100.
    */
+  // maxHandlers: number;
   maxHandlers = 100;
 
   /**
@@ -91,6 +95,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * <mxDictionary> that maps from cells to handlers.
    */
+  // handlers: mxDictionary<any>;
   handlers = null;
 
   /**
@@ -98,6 +103,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Returns <enabled>.
    */
+  // isEnabled(): boolean;
   isEnabled() {
     return this.enabled;
   }
@@ -107,6 +113,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Sets <enabled>.
    */
+  // setEnabled(value: boolean): void;
   setEnabled(value) {
     this.enabled = value;
   }
@@ -116,6 +123,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Returns the handler for the given cell.
    */
+  // getHandler(cell: mxCell): any;
   getHandler(cell) {
     return this.handlers.get(cell);
   }
@@ -134,6 +142,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Resets all handlers.
    */
+  // reset(): void;
   reset() {
     this.handlers.visit((key, handler) => {
       handler.reset.apply(handler);
@@ -154,6 +163,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Reloads or updates all handlers.
    */
+  // refresh(): void;
   refresh() {
     // Removes all existing handlers
     const oldHandlers = this.handlers;
@@ -221,6 +231,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Returns true if the given handler is active and should not be redrawn.
    */
+  // isHandlerActive(handler: any): boolean;
   isHandlerActive(handler) {
     return handler.index != null;
   }
@@ -230,6 +241,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Updates the handler for the given shape if one exists.
    */
+  // updateHandler(state: mxCellState): void;
   updateHandler(state) {
     let handler = this.handlers.remove(state.cell);
 
@@ -257,6 +269,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Redirects the given event to the handlers.
    */
+  // mouseDown(sender: Event, me: Event): void;
   mouseDown(sender, me) {
     if (this.graph.isEnabled() && this.isEnabled()) {
       const args = [sender, me];
@@ -272,6 +285,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Redirects the given event to the handlers.
    */
+  // mouseMove(sender: Event, me: Event): void;
   mouseMove(sender, me) {
     if (this.graph.isEnabled() && this.isEnabled()) {
       const args = [sender, me];
@@ -287,6 +301,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Redirects the given event to the handlers.
    */
+  // mouseUp(sender: Event, me: Event): void;
   mouseUp(sender, me) {
     if (this.graph.isEnabled() && this.isEnabled()) {
       const args = [sender, me];
@@ -302,6 +317,7 @@ class mxSelectionCellsHandler extends mxEventSource {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
+  // destroy(): void;
   destroy() {
     this.graph.removeMouseListener(this);
 

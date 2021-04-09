@@ -8,32 +8,10 @@ import mxConstants from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 
 /**
- * Class: mxArrowConnector
+ * Extends {@link mxShape} to implement an new rounded arrow shape with support for waypoints and double arrows. The
+ * shape is used to represent edges, not vertices.
  *
- * Extends <mxShape> to implement an new rounded arrow shape with support for
- * waypoints and double arrows. (The shape is used to represent edges, not
- * vertices.) This shape is registered under <mxConstants.SHAPE_ARROW_CONNECTOR>
- * in <mxCellRenderer>.
- *
- * Constructor: mxArrowConnector
- *
- * Constructs a new arrow shape.
- *
- * Parameters:
- *
- * points - Array of <mxPoints> that define the points. This is stored in
- * <mxShape.points>.
- * fill - String that defines the fill color. This is stored in <fill>.
- * stroke - String that defines the stroke color. This is stored in <stroke>.
- * strokewidth - Optional integer that defines the stroke width. Default is
- * 1. This is stored in <strokewidth>.
- * arrowWidth - Optional integer that defines the arrow width. Default is
- * <mxConstants.ARROW_WIDTH>. This is stored in <arrowWidth>.
- * spacing - Optional integer that defines the spacing between the arrow shape
- * and its endpoints. Default is <mxConstants.ARROW_SPACING>. This is stored in
- * <spacing>.
- * endSize - Optional integer that defines the size of the arrowhead. Default
- * is <mxConstants.ARROW_SIZE>. This is stored in <endSize>.
+ * This shape is registered under {@link mxConstants.SHAPE_ARROW_CONNECTOR} in {@link mxCellRenderer}.
  */
 class mxArrowConnector extends mxShape {
   constructor(points, fill, stroke, strokewidth, arrowWidth, spacing, endSize) {
@@ -49,11 +27,10 @@ class mxArrowConnector extends mxShape {
   }
 
   /**
-   * Variable: useSvgBoundingBox
-   *
-   * Allows to use the SVG bounding box in SVG. Default is false for performance
-   * reasons.
+   * Allows to use the SVG bounding box in SVG.
+   * @defaultValue `false` for performance reasons.
    */
+  // useSvgBoundingBox: boolean;
   useSvgBoundingBox = true;
 
   /**
@@ -66,10 +43,9 @@ class mxArrowConnector extends mxShape {
   }
 
   /**
-   * Variable: resetStyles
-   *
    * Overrides mxShape to reset spacing.
    */
+  // resetStyles(): void;
   resetStyles() {
     super.resetStyles();
     this.arrowSpacing = mxConstants.ARROW_SPACING;
@@ -78,6 +54,7 @@ class mxArrowConnector extends mxShape {
   /**
    * Overrides apply to get smooth transition from default start- and endsize.
    */
+  // apply(state: mxCellState): void;
   apply(state) {
     super.apply(state);
 
@@ -98,10 +75,9 @@ class mxArrowConnector extends mxShape {
   }
 
   /**
-   * Function: augmentBoundingBox
-   *
    * Augments the bounding box with the edge width and markers.
    */
+  // augmentBoundingBox(bbox: mxRectangle): void;
   augmentBoundingBox(bbox) {
     super.augmentBoundingBox(bbox);
 
@@ -119,10 +95,9 @@ class mxArrowConnector extends mxShape {
   }
 
   /**
-   * Function: paintEdgeShape
-   *
    * Paints the line shape.
    */
+  // paintEdgeShape(c: mxAbstractCanvas2D, pts: mxPoint[]): void;
   paintEdgeShape(c, pts) {
     // Geometry of arrow
     let strokeWidth = this.strokewidth;
@@ -471,55 +446,49 @@ class mxArrowConnector extends mxShape {
   }
 
   /**
-   * Function: isArrowRounded
-   *
-   * Returns wether the arrow is rounded
+   * @returns whether the arrow is rounded
    */
+  // isArrowRounded(): boolean;
   isArrowRounded() {
     return this.isRounded;
   }
 
   /**
-   * Function: getStartArrowWidth
-   *
-   * Returns the width of the start arrow
+   * @returns the width of the start arrow
    */
+  // getStartArrowWidth(): number;
   getStartArrowWidth() {
     return mxConstants.ARROW_WIDTH;
   }
 
   /**
-   * Function: getEndArrowWidth
-   *
-   * Returns the width of the end arrow
+   * @returns the width of the end arrow
    */
+  // getEndArrowWidth(): number;
   getEndArrowWidth() {
     return mxConstants.ARROW_WIDTH;
   }
 
   /**
-   * Function: getEdgeWidth
-   *
-   * Returns the width of the body of the edge
+   * @returns the width of the body of the edge
    */
+  // getEdgeWidth(): number;
   getEdgeWidth() {
     return mxConstants.ARROW_WIDTH / 3;
   }
 
   /**
-   * Function: isOpenEnded
-   *
-   * Returns whether the ends of the shape are drawn
+   * @returns whether the ends of the shape are drawn
    */
+  // isOpenEnded(): boolean;
   isOpenEnded() {
     return false;
   }
 
   /**
-   * Function: isMarkerStart
-   *
-   * Returns whether the start marker is drawn
+   * @returns whether the start marker is drawn
    */
+  // isMarkerStart(): boolean;
   isMarkerStart() {
     return (
       mxUtils.getValue(
@@ -531,10 +500,9 @@ class mxArrowConnector extends mxShape {
   }
 
   /**
-   * Function: isMarkerEnd
-   *
-   * Returns whether the end marker is drawn
+   * @returns whether the end marker is drawn
    */
+  // isMarkerEnd(): boolean;
   isMarkerEnd() {
     return (
       mxUtils.getValue(

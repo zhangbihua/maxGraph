@@ -3463,6 +3463,47 @@
     ],
     {
       "constructor": [
+        "constructor(view: mxGraphView, root: mxCell);",
+        [
+          "/**",
+          " * @constructor mxCurrentRootChange",
+          " *",
+          " * Constructs a change of the current root in the given view.",
+          " */"
+        ]
+      ],
+      "execute": [
+        "execute(): void;",
+        [
+          "/**",
+          " * Changes the current root of the view.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxGraph": [
+    [
+      "/**",
+      " * Extends {@link mxEventSource} to implement a graph component for",
+      " * the browser. This is the main class of the package. To activate",
+      " * panning and connections use {@link setPanning} and {@link setConnectable}.",
+      " * For rubberband selection you must create a new instance of",
+      " * {@link mxRubberband}. The following listeners are added to",
+      " * {@link mouseListeners} by default:",
+      " *",
+      " * - tooltipHandler: {@link mxTooltipHandler} that displays tooltips",
+      " * - panningHandler: {@link mxPanningHandler} for panning and popup menus",
+      " * - connectionHandler: {@link mxConnectionHandler} for creating connections",
+      " * - graphHandler: {@link mxGraphHandler} for moving and cloning cells",
+      " *",
+      " * These listeners will be called in the above order if they are enabled.",
+      " * @class mxGraph",
+      " * @extends {mxEventSource}",
+      " */"
+    ],
+    {
+      "constructor": [
         "constructor(container: HTMLElement, model?: mxGraphModel, renderHint?: string, stylesheet?: mxStylesheet);",
         [
           "/**",
@@ -3523,14 +3564,6 @@
           " * @param renderHint Optional string that specifies the display accuracy and",
           " * performance. Default is mxConstants.DIALECT_MIXEDHTML (for IE).",
           " * @param stylesheet Optional {@link mxStylesheet} to be used in the graph.",
-          " */"
-        ]
-      ],
-      "execute": [
-        "execute(): void;",
-        [
-          "/**",
-          " * Changes the current root of the view.",
           " */"
         ]
       ],
@@ -10776,23 +10809,14 @@
     null,
     {
       "constructor": [
-        "constructor(graph: mxGraph, horizontal?: boolean, invert?: boolean);",
-        [
-          "/**",
-          " * Constructs a new compact tree layout for the specified graph",
-          " * and orientation.",
-          " * @param {mxGraph} graph",
-          " * @param {boolean} [horizontal]",
-          " * @param {boolean} [invert]",
-          " */"
-        ]
+        "constructor(graph: mxGraph, horizontal?: boolean, spacing?: number, x0?: number, y0?: number, border?: number);",
+        null
       ],
       "horizontal": [
         "horizontal: boolean;",
         [
           "/**",
           " * Specifies the orientation of the layout.",
-          " * @default true",
           " */"
         ]
       ],
@@ -10880,9 +10904,7 @@
         "resizeParent: boolean;",
         [
           "/**",
-          " * If the parents should be resized to match the width/height of the",
-          " * children. Default is true.",
-          " * @default true",
+          " * If the parent should be resized to match the width/height of the stack.",
           " */"
         ]
       ],
@@ -10938,7 +10960,7 @@
         "isHorizontal(): boolean;",
         [
           "/**",
-          " * Returns {@link horizontal}.",
+          " * Returns horizontal.",
           " */"
         ]
       ],
@@ -10975,17 +10997,10 @@
         ]
       ],
       "execute": [
-        "execute(parent: mxCell, root?: mxCell): void;",
+        "execute(parent: mxCell): void;",
         [
           "/**",
-          " * Implements {@link mxGraphLayout.execute}.",
-          " *",
-          " * If the parent has any connected edges, then it is used as the root of",
-          " * the tree. Else, {@link mxGraph.findTreeRoots} will be used to find a suitable",
-          " * root node within the set of children of the given parent.",
-          " *",
-          " * @param parent  {@link mxCell} whose children should be laid out.",
-          " * @param root    Optional {@link mxCell} that will be used as the root of the tree. Overrides {@link root} if specified.",
+          " * Implements mxGraphLayout.execute.",
           " */"
         ]
       ],
@@ -11056,6 +11071,49 @@
       "next": [
         "next: _mxCompactTreeLayoutLine;",
         null
+      ]
+    }
+  ],
+  "mxCompactTreeLayout": [
+    [
+      "/**",
+      " * @class mxCompactTreeLayout",
+      " * @extends {mxGraphLayout}",
+      " *",
+      " * Extends {@link mxGraphLayout} to implement a compact tree (Moen) algorithm. This",
+      " * layout is suitable for graphs that have no cycles (trees). Vertices that are",
+      " * not connected to the tree will be ignored by this layout.",
+      " *",
+      " * ### Example",
+      " *",
+      " * @example",
+      " * ```javascript",
+      " * var layout = new mxCompactTreeLayout(graph);",
+      " * layout.execute(graph.getDefaultParent());",
+      " * ```",
+      " */"
+    ],
+    {
+      "constructor": [
+        "constructor(graph: mxGraph, horizontal?: boolean, invert?: boolean);",
+        [
+          "/**",
+          " * Constructs a new compact tree layout for the specified graph",
+          " * and orientation.",
+          " * @param {mxGraph} graph",
+          " * @param {boolean} [horizontal]",
+          " * @param {boolean} [invert]",
+          " */"
+        ]
+      ],
+      "horizontal": [
+        "horizontal: boolean;",
+        [
+          "/**",
+          " * Specifies the orientation of the layout.",
+          " * @default true",
+          " */"
+        ]
       ],
       "invert": [
         "invert: boolean;",
@@ -11063,6 +11121,16 @@
           "/**",
           " * Specifies if edge directions should be inverted.",
           " * @default false.",
+          " */"
+        ]
+      ],
+      "resizeParent": [
+        "resizeParent: boolean;",
+        [
+          "/**",
+          " * If the parents should be resized to match the width/height of the",
+          " * children. Default is true.",
+          " * @default true",
           " */"
         ]
       ],
@@ -11272,6 +11340,29 @@
           " * vertex. This returns true if the cell has no connections.",
           " *",
           " * @param vertex {@link mxCell} whose ignored state should be returned.",
+          " */"
+        ]
+      ],
+      "isHorizontal": [
+        "isHorizontal(): boolean;",
+        [
+          "/**",
+          " * Returns {@link horizontal}.",
+          " */"
+        ]
+      ],
+      "execute": [
+        "execute(parent: mxCell, root?: mxCell): void;",
+        [
+          "/**",
+          " * Implements {@link mxGraphLayout.execute}.",
+          " *",
+          " * If the parent has any connected edges, then it is used as the root of",
+          " * the tree. Else, {@link mxGraph.findTreeRoots} will be used to find a suitable",
+          " * root node within the set of children of the given parent.",
+          " *",
+          " * @param parent  {@link mxCell} whose children should be laid out.",
+          " * @param root    Optional {@link mxCell} that will be used as the root of the tree. Overrides {@link root} if specified.",
           " */"
         ]
       ],
@@ -19209,7 +19300,12 @@
           " * Removes all handlers from the <graph> and deletes the reference to it.",
           " */"
         ]
-      ],
+      ]
+    }
+  ],
+  "mxLog": [
+    null,
+    {
       "consoleName": [
         "consoleName: 'Console';",
         [
@@ -28727,8 +28823,14 @@
     ],
     {
       "constructor": [
-        "constructor(graph: mxGraph);",
-        null
+        "constructor(value?: any, geometry?: mxGeometry, style?: string);",
+        [
+          "/**",
+          " * @param {*} value               Optional object that represents the cell value.",
+          " * @param {mxGeometry} geometry   Optional <mxGeometry> that specifies the geometry.",
+          " * @param {string} style          Optional formatted string that defines the style.",
+          " */"
+        ]
       ],
       "overlays": [
         "overlays: Array<mxCellOverlay>;",
@@ -29194,14 +29296,16 @@
         ]
       ],
       "insertEdge": [
-        "insertEdge(parent: mxCell, id: string, value: any, source: mxCell, target: mxCell, style: string): mxCell;",
+        "insertEdge(edge: mxCell, isOutgoing: boolean): mxCell;",
         [
           "/**",
-          " * Function: insertEdge",
+          " * Inserts the specified edge into the edge array and returns the edge.",
+          " * Will update the respective terminal reference of the edge.",
           " *",
-          " * Creates, inserts and returns the new edge for the given parameters. This",
-          " * implementation does only use <createEdge> if <factoryMethod> is defined,",
-          " * otherwise <mxGraph.insertEdge> will be used.",
+          " * Parameters:",
+          " *",
+          " * @param edge              <mxCell> to be inserted into the edge array.",
+          " * @param isOutgoing Boolean that specifies if the edge is outgoing.",
           " */"
         ]
       ],
@@ -29297,6 +29401,15 @@
           " * Returns a clone of the cell's user object.",
           " */"
         ]
+      ]
+    }
+  ],
+  "mxElbowEdgeHandler": [
+    null,
+    {
+      "constructor": [
+        "constructor(state: mxCellState);",
+        null
       ],
       "flipEnabled": [
         "flipEnabled: boolean;",
@@ -29326,7 +29439,7 @@
           "/**",
           " * Function: createBends",
           " *",
-          " * Adds custom bends for the center of each segment.",
+          " * Overrides <mxEdgeHandler.createBends> to create custom bends.",
           " */"
         ]
       ],
@@ -29352,24 +29465,23 @@
         ]
       ],
       "getTooltipForNode": [
-        "getTooltipForNode(node: any): string;",
+        "getTooltipForNode(node: Element): string;",
         [
           "/**",
           " * Function: getTooltipForNode",
           " *",
-          " * Returns no tooltips.",
+          " * Returns the tooltip for the given node.",
           " */"
         ]
       ],
       "convertPoint": [
-        "convertPoint(point: mxPoint, gridEnabled: boolean): void;",
+        "convertPoint(point: mxPoint, gridEnabled: boolean): mxPoint;",
         [
           "/**",
           " * Function: convertPoint",
           " *",
           " * Converts the given point in-place from screen to unscaled, untranslated",
-          " * graph coordinates and applies the grid. Returns the given, modified",
-          " * point instance.",
+          " * graph coordinates and applies the grid.",
           " *",
           " * Parameters:",
           " *",
@@ -29384,7 +29496,40 @@
           "/**",
           " * Function: redrawInnerBends",
           " *",
-          " * Updates the position of the custom bends.",
+          " * Updates and redraws the inner bends.",
+          " *",
+          " * Parameters:",
+          " *",
+          " * p0 - <mxPoint> that represents the location of the first point.",
+          " * pe - <mxPoint> that represents the location of the last point.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxCellHighlight": [
+    [
+      "/**",
+      " * A helper class to highlight cells. Here is an example for a given cell.",
+      " *",
+      " * @example",
+      " * ```javascript",
+      " * var highlight = new mxCellHighlight(graph, '#ff0000', 2);",
+      " * highlight.highlight(graph.view.getState(cell)));",
+      " * ```",
+      " */"
+    ],
+    {
+      "constructor": [
+        "constructor(graph: mxGraph, highlightColor?: string, strokeWidth?: number, dashed?: boolean);",
+        [
+          "/**",
+          " * Constructs a cell highlight.",
+          " *",
+          " * @param graph",
+          " * @param highlightColor  default {@link mxConstants.DEFAULT_VALID_COLOR}",
+          " * @param strokeWidth     default {@link mxConstants.HIGHLIGHT_STROKEWIDTH}",
+          " * @param dashed          default false",
           " */"
         ]
       ],
@@ -29398,12 +29543,11 @@
         ]
       ],
       "graph": [
-        "graph: mxGraph;",
+        "graph: boolean;",
         [
           "/**",
-          " * Variable: graph",
-          " *",
-          " * Reference to the enclosing <mxGraph>.",
+          " * Reference to the enclosing {@link mxGraph}.",
+          " * @default true",
           " */"
         ]
       ],
@@ -29411,9 +29555,8 @@
         "state: mxCellState;",
         [
           "/**",
-          " * Variable: state",
-          " *",
-          " * Reference to the <mxCellState> being modified.",
+          " * Reference to the {@link mxCellState}.",
+          " * @default null",
           " */"
         ]
       ],
@@ -29439,13 +29582,9 @@
         "setHighlightColor(color: string): void;",
         [
           "/**",
-          " * Function: setHighlightColor",
-          " *",
           " * Sets the color of the rectangle used to highlight drop targets.",
           " *",
-          " * Parameters:",
-          " *",
-          " * color - String that represents the new highlight color.",
+          " * @param {string} color - String that represents the new highlight color.",
           " */"
         ]
       ],
@@ -29461,9 +29600,7 @@
         "createShape(): mxShape;",
         [
           "/**",
-          " * Function: createShape",
-          " *",
-          " * Creates the preview shape for new connections.",
+          " * Creates and returns the highlight shape for the given state.",
           " */"
         ]
       ],
@@ -29511,12 +29648,15 @@
         "destroy(): void;",
         [
           "/**",
-          " * Function: destroy",
-          " *",
           " * Destroys the handler and all its resources and DOM nodes.",
           " */"
         ]
-      ],
+      ]
+    }
+  ],
+  "mxGraphHandler": [
+    null,
+    {
       "cell": [
         "cell: mxCell;",
         null
@@ -29527,14 +29667,7 @@
       ],
       "first": [
         "first: mxPoint;",
-        [
-          "/**",
-          " * Variable: first",
-          " *",
-          " * Holds the <mxPoint> where the mouseDown took place while the handler is",
-          " * active.",
-          " */"
-        ]
+        null
       ],
       "bounds": [
         "bounds: mxRectangle;",
@@ -29555,6 +29688,16 @@
       "cellCount": [
         "cellCount: number;",
         null
+      ],
+      "graph": [
+        "graph: mxGraph;",
+        [
+          "/**",
+          " * Variable: graph",
+          " *",
+          " * Reference to the enclosing <mxGraph>.",
+          " */"
+        ]
       ],
       "maxCells": [
         "maxCells: number;",
@@ -29745,7 +29888,7 @@
           "/**",
           " * Variable: shape",
           " *",
-          " * Holds the <mxShape> that represents the preview edge.",
+          " * Reference to the <mxShape> that represents the preview.",
           " */"
         ]
       ],
@@ -29781,6 +29924,16 @@
       ],
       "allowLivePreview": [
         "allowLivePreview: boolean;",
+        [
+          "/**",
+          " * Variable allowLivePreview",
+          " *",
+          " * If live preview is allowed on this system.  Default is true for systems with SVG support.",
+          " */"
+        ]
+      ],
+      "constructor": [
+        "constructor(graph: mxGraph);",
         [
           "/**",
           " * Variable allowLivePreview",
@@ -29938,12 +30091,14 @@
         ]
       ],
       "mouseDown": [
-        "mouseDown(sender: Event, me: Event): void;",
+        "mouseDown(sender: any, me: mxMouseEvent): void;",
         [
           "/**",
           " * Function: mouseDown",
           " *",
-          " * Redirects the given event to the handlers.",
+          " * Handles the event by selecing the given cell and creating a handle for",
+          " * it. By consuming the event all subsequent events of the gesture are",
+          " * redirected to this handler.",
           " */"
         ]
       ],
@@ -30024,12 +30179,12 @@
         ]
       ],
       "start": [
-        "start(state: mxCellState, x: number, y: number, edgeState: mxCellState): void;",
+        "start(cell: mxCell, x: number, y: number): void;",
         [
           "/**",
           " * Function: start",
           " *",
-          " * Starts a new connection for the given state and coordinates.",
+          " * Starts the handling of the mouse gesture.",
           " */"
         ]
       ],
@@ -30066,7 +30221,7 @@
         ]
       ],
       "updateHint": [
-        "updateHint(me: mxMouseEvent, point: mxPoint): void;",
+        "updateHint(me: mxMouseEvent): void;",
         [
           "/**",
           " * Function: updateHint",
@@ -30091,17 +30246,18 @@
           "/**",
           " * Function: roundLength",
           " *",
-          " * Hook for rounding the unscaled width or height. This uses Math.round.",
+          " * Hook for rounding the unscaled vector. This uses Math.round.",
           " */"
         ]
       ],
       "mouseMove": [
-        "mouseMove(sender: Event, me: Event): void;",
+        "mouseMove(sender: any, me: mxMouseEvent): void;",
         [
           "/**",
           " * Function: mouseMove",
           " *",
-          " * Redirects the given event to the handlers.",
+          " * Handles the event by highlighting possible drop targets and updating the",
+          " * preview.",
           " */"
         ]
       ],
@@ -30115,13 +30271,27 @@
           " */"
         ]
       ],
+      "setHighlightColor": [
+        "setHighlightColor(color: string): void;",
+        [
+          "/**",
+          " * Function: setHighlightColor",
+          " *",
+          " * Sets the color of the rectangle used to highlight drop targets.",
+          " *",
+          " * Parameters:",
+          " *",
+          " * color - String that represents the new highlight color.",
+          " */"
+        ]
+      ],
       "mouseUp": [
-        "mouseUp(sender: Event, me: Event): void;",
+        "mouseUp(sender: any, me: mxMouseEvent): void;",
         [
           "/**",
           " * Function: mouseUp",
           " *",
-          " * Redirects the given event to the handlers.",
+          " * Handles the event by applying the changes to the selection cells.",
           " */"
         ]
       ],
@@ -30141,7 +30311,7 @@
           "/**",
           " * Function: reset",
           " *",
-          " * Resets all handlers.",
+          " * Resets the state of this handler.",
           " */"
         ]
       ],
@@ -30176,9 +30346,63 @@
           " */"
         ]
       ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Function: destroy",
+          " *",
+          " * Destroys the handler and all its resources and DOM nodes.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxEdgeHandler": [
+    [
+      "/**",
+      " * Graph event handler that reconnects edges and modifies control points and the edge",
+      " * label location.",
+      " * Uses <mxTerminalMarker> for finding and highlighting new source and target vertices.",
+      " * This handler is automatically created in mxGraph.createHandler for each selected edge.",
+      " * **To enable adding/removing control points, the following code can be used**",
+      " * @example",
+      " * ```",
+      " * mxEdgeHandler.prototype.addEnabled = true;",
+      " * mxEdgeHandler.prototype.removeEnabled = true;",
+      " * ```",
+      " * Note: This experimental feature is not recommended for production use.",
+      " * @class mxEdgeHandler",
+      " */"
+    ],
+    {
       "labelHandleImage": [
         "labelHandleImage: mxImage;",
         null
+      ],
+      "constructor": [
+        "constructor(state: mxCellState);",
+        null
+      ],
+      "graph": [
+        "graph: mxGraph;",
+        [
+          "/**",
+          " * Variable: graph",
+          " *",
+          " * Reference to the enclosing <mxGraph>.",
+          " */"
+        ]
+      ],
+      "state": [
+        "state: mxCellState;",
+        [
+          "/**",
+          " * Variable: state",
+          " *",
+          " * Reference to the <mxCellState> being modified.",
+          " */"
+        ]
       ],
       "marker": [
         "marker: any;",
@@ -30186,7 +30410,7 @@
           "/**",
           " * Variable: marker",
           " *",
-          " * Holds the <mxTerminalMarker> used for finding source and target cells.",
+          " * Holds the <mxTerminalMarker> which is used for highlighting terminals.",
           " */"
         ]
       ],
@@ -30202,12 +30426,22 @@
         ]
       ],
       "error": [
-        "error: any;",
+        "error: string;",
         [
           "/**",
           " * Variable: error",
           " *",
-          " * Holds the current validation error while connections are being created.",
+          " * Holds the current validation error while a connection is being changed.",
+          " */"
+        ]
+      ],
+      "shape": [
+        "shape: mxShape;",
+        [
+          "/**",
+          " * Variable: shape",
+          " *",
+          " * Holds the <mxShape> that represents the preview edge.",
           " */"
         ]
       ],
@@ -30228,6 +30462,16 @@
           " * Variable: labelShape",
           " *",
           " * Holds the <mxShape> that represents the label position.",
+          " */"
+        ]
+      ],
+      "cloneEnabled": [
+        "cloneEnabled: boolean;",
+        [
+          "/**",
+          " * Variable: cloneEnabled",
+          " *",
+          " * Specifies if cloning by control-drag is enabled. Default is true.",
           " */"
         ]
       ],
@@ -30403,9 +30647,7 @@
           "/**",
           " * Function: init",
           " *",
-          " * Initializes the shapes required for this connection handler. This should",
-          " * be invoked if <mxGraph.container> is assigned after the connection",
-          " * handler has been created.",
+          " * Initializes the shapes required for this edge handler.",
           " */"
         ]
       ],
@@ -30551,7 +30793,7 @@
           " * Function: validateConnection",
           " *",
           " * Returns the error message or an empty string if the connection for the",
-          " * given source target pair is not valid. Otherwise it returns null. This",
+          " * given source, target pair is not valid. Otherwise it returns null. This",
           " * implementation uses <mxGraph.getEdgeValidationError>.",
           " *",
           " * Parameters:",
@@ -30673,6 +30915,30 @@
           " */"
         ]
       ],
+      "mouseDown": [
+        "mouseDown(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseDown",
+          " *",
+          " * Handles the event by checking if a special element of the handler",
+          " * was clicked, in which case the index parameter is non-null. The",
+          " * indices may be one of <LABEL_HANDLE> or the number of the respective",
+          " * control point. The source and target points are used for reconnecting",
+          " * the edge.",
+          " */"
+        ]
+      ],
+      "start": [
+        "start(x: number, y: number, index: number): void;",
+        [
+          "/**",
+          " * Function: start",
+          " *",
+          " * Starts the handling of the mouse gesture.",
+          " */"
+        ]
+      ],
       "clonePreviewState": [
         "clonePreviewState(point: mxPoint, terminal: mxCell): mxCellState;",
         [
@@ -30691,6 +30957,36 @@
           " *",
           " * Returns the tolerance for the guides. Default value is",
           " * gridSize * scale / 2.",
+          " */"
+        ]
+      ],
+      "updateHint": [
+        "updateHint(me: mxMouseEvent, point: mxPoint): void;",
+        [
+          "/**",
+          " * Function: updateHint",
+          " *",
+          " * Hook for subclassers do show details while the handler is active.",
+          " */"
+        ]
+      ],
+      "removeHint": [
+        "removeHint(): void;",
+        [
+          "/**",
+          " * Function: removeHint",
+          " *",
+          " * Hooks for subclassers to hide details when the handler gets inactive.",
+          " */"
+        ]
+      ],
+      "roundLength": [
+        "roundLength(length: number): number;",
+        [
+          "/**",
+          " * Function: roundLength",
+          " *",
+          " * Hook for rounding the unscaled width or height. This uses Math.round.",
           " */"
         ]
       ],
@@ -30725,12 +31021,17 @@
         ]
       ],
       "getPreviewPoints": [
-        "getPreviewPoints(point: mxPoint): mxPoint[];",
+        "getPreviewPoints(pt: mxPoint, me?: mxMouseEvent): mxPoint[];",
         [
           "/**",
           " * Function: getPreviewPoints",
           " *",
           " * Updates the given preview state taking into account the state of the constraint handler.",
+          " *",
+          " * Parameters:",
+          " *",
+          " * pt - <mxPoint> that contains the current pointer position.",
+          " * me - Optional <mxMouseEvent> that contains the current event.",
           " */"
         ]
       ],
@@ -30755,6 +31056,37 @@
           " */"
         ]
       ],
+      "mouseMove": [
+        "mouseMove(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseMove",
+          " *",
+          " * Handles the event by updating the preview.",
+          " */"
+        ]
+      ],
+      "mouseUp": [
+        "mouseUp(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseUp",
+          " *",
+          " * Handles the event to applying the previewed changes on the edge by",
+          " * using <moveLabel>, <connect> or <changePoints>.",
+          " */"
+        ]
+      ],
+      "reset": [
+        "reset(): void;",
+        [
+          "/**",
+          " * Function: reset",
+          " *",
+          " * Resets the state of this handler.",
+          " */"
+        ]
+      ],
       "setPreviewColor": [
         "setPreviewColor(color: string): void;",
         [
@@ -30762,6 +31094,23 @@
           " * Function: setPreviewColor",
           " *",
           " * Sets the color of the preview to the given value.",
+          " */"
+        ]
+      ],
+      "convertPoint": [
+        "convertPoint(point: mxPoint, gridEnabled: boolean): void;",
+        [
+          "/**",
+          " * Function: convertPoint",
+          " *",
+          " * Converts the given point in-place from screen to unscaled, untranslated",
+          " * graph coordinates and applies the grid. Returns the given, modified",
+          " * point instance.",
+          " *",
+          " * Parameters:",
+          " *",
+          " * point - <mxPoint> to be converted.",
+          " * gridEnabled - Boolean that specifies if the grid should be applied.",
           " */"
         ]
       ],
@@ -30782,21 +31131,23 @@
         ]
       ],
       "connect": [
-        "connect(source: mxCell, target: mxCell, evt: MouseEvent, dropTarget: mxCell): void;",
+        "connect(edge: mxCell, terminal: mxCell, isSource: boolean, isClone: boolean, me: mxMouseEvent): mxCell;",
         [
           "/**",
           " * Function: connect",
           " *",
-          " * Connects the given source and target using a new edge. This",
-          " * implementation uses <createEdge> to create the edge.",
+          " * Changes the terminal or terminal point of the given edge in the graph",
+          " * model.",
           " *",
           " * Parameters:",
           " *",
-          " * source - <mxCell> that represents the source terminal.",
-          " * target - <mxCell> that represents the target terminal.",
-          " * evt - Mousedown event of the connect gesture.",
-          " * dropTarget - <mxCell> that represents the cell under the mouse when it was",
-          " * released.",
+          " * edge - <mxCell> that represents the edge to be reconnected.",
+          " * terminal - <mxCell> that represents the new terminal.",
+          " * isSource - Boolean indicating if the new terminal is the source or",
+          " * target terminal.",
+          " * isClone - Boolean indicating if the new connection should be a clone of",
+          " * the old edge.",
+          " * me - <mxMouseEvent> that contains the mouse up event.",
           " */"
         ]
       ],
@@ -30866,7 +31217,7 @@
           "/**",
           " * Function: redraw",
           " *",
-          " * Overridden to invoke <refresh> before the redraw.",
+          " * Redraws the preview, and the bends- and label control points.",
           " */"
         ]
       ],
@@ -30890,6 +31241,21 @@
           " */"
         ]
       ],
+      "redrawInnerBends": [
+        "redrawInnerBends(p0: mxPoint, pe: mxPoint): void;",
+        [
+          "/**",
+          " * Function: redrawInnerBends",
+          " *",
+          " * Updates and redraws the inner bends.",
+          " *",
+          " * Parameters:",
+          " *",
+          " * p0 - <mxPoint> that represents the location of the first point.",
+          " * pe - <mxPoint> that represents the location of the last point.",
+          " */"
+        ]
+      ],
       "checkLabelHandle": [
         "checkLabelHandle(b: mxRectangle): void;",
         [
@@ -30907,8 +31273,7 @@
           "/**",
           " * Function: drawPreview",
           " *",
-          " * Redraws the preview edge using the color and width returned by",
-          " * <getEdgeColor> and <getEdgeWidth>.",
+          " * Redraws the preview.",
           " */"
         ]
       ],
@@ -30918,7 +31283,7 @@
           "/**",
           " * Function: refresh",
           " *",
-          " * Reloads or updates all handlers.",
+          " * Refreshes the bends of this handler.",
           " */"
         ]
       ],
@@ -30932,6 +31297,27 @@
           " */"
         ]
       ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Function: destroy",
+          " *",
+          " * Destroys the handler and all its resources and DOM nodes. This does",
+          " * normally not need to be called as handlers are destroyed automatically",
+          " * when the corresponding cell is deselected.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxEdgeSegmentHandler": [
+    null,
+    {
+      "constructor": [
+        "constructor(state: mxCellState);",
+        null
+      ],
       "getCurrentPoints": [
         "getCurrentPoints(): mxPoint[];",
         [
@@ -30939,6 +31325,16 @@
           " * Function: getCurrentPoints",
           " *",
           " * Returns the current absolute points.",
+          " */"
+        ]
+      ],
+      "getPreviewPoints": [
+        "getPreviewPoints(point: mxPoint): mxPoint[];",
+        [
+          "/**",
+          " * Function: getPreviewPoints",
+          " *",
+          " * Updates the given preview state taking into account the state of the constraint handler.",
           " */"
         ]
       ],
@@ -30951,6 +31347,79 @@
           " * Overridden to perform optimization of the edge style result.",
           " */"
         ]
+      ],
+      "connect": [
+        "connect(edge: mxCell, terminal: mxCell, isSource: boolean, isClone: boolean, me: mxMouseEvent): mxCell;",
+        [
+          "/**",
+          " * Overriden to merge edge segments.",
+          " */"
+        ]
+      ],
+      "getTooltipForNode": [
+        "getTooltipForNode(node: any): string;",
+        [
+          "/**",
+          " * Function: getTooltipForNode",
+          " *",
+          " * Returns no tooltips.",
+          " */"
+        ]
+      ],
+      "start": [
+        "start(x: number, y: number, index: number): void;",
+        [
+          "/**",
+          " * Function: createBends",
+          " *",
+          " * Adds custom bends for the center of each segment.",
+          " */"
+        ]
+      ],
+      "// createBends": [
+        "// createBends(): mxShape[];",
+        [
+          "/**",
+          " * Function: createBends",
+          " *",
+          " * Adds custom bends for the center of each segment.",
+          " */"
+        ]
+      ],
+      "redraw": [
+        "redraw(): void;",
+        [
+          "/**",
+          " * Function: redraw",
+          " *",
+          " * Overridden to invoke <refresh> before the redraw.",
+          " */"
+        ]
+      ],
+      "redrawInnerBends": [
+        "redrawInnerBends(p0: mxPoint, pe: mxPoint): void;",
+        [
+          "/**",
+          " * Function: redrawInnerBends",
+          " *",
+          " * Updates the position of the custom bends.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxRubberband": [
+    [
+      "/**",
+      " * Event handler that selects rectangular regions.",
+      " * This is not built-into [mxGraph].",
+      " * To enable rubberband selection in a graph, use the following code.",
+      " */"
+    ],
+    {
+      "graph": [
+        "graph: mxGraph;",
+        null
       ],
       "fadeOut": [
         "fadeOut: boolean;",
@@ -30965,6 +31434,57 @@
         [
           "/**",
           " * Specifies the default opacity to be used for the rubberband div.  Default is 20.",
+          " */"
+        ]
+      ],
+      "constructor": [
+        "constructor(graph: mxGraph);",
+        [
+          "/**",
+          " * Constructs an event handler that selects rectangular regions in the graph using rubberband selection.",
+          " */"
+        ]
+      ],
+      "createShape": [
+        "createShape(): HTMLElement;",
+        [
+          "/**",
+          " * Creates the rubberband selection shape.",
+          " */"
+        ]
+      ],
+      "isEnabled": [
+        "isEnabled(): boolean;",
+        [
+          "/**",
+          " * Creates the rubberband selection shape.",
+          " */"
+        ]
+      ],
+      "start": [
+        "start(x: number, y: number): void;",
+        [
+          "/**",
+          " * Creates the rubberband selection shape.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxPanningHandler": [
+    null,
+    {
+      "constructor": [
+        "constructor(graph: mxGraph);",
+        null
+      ],
+      "graph": [
+        "graph: mxGraph;",
+        [
+          "/**",
+          " * Variable: graph",
+          " *",
+          " * Reference to the enclosing <mxGraph>.",
           " */"
         ]
       ],
@@ -31175,6 +31695,27 @@
           " */"
         ]
       ],
+      "mouseDown": [
+        "mouseDown(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseDown",
+          " *",
+          " * Handles the event by initiating the panning. By consuming the event all",
+          " * subsequent events of the gesture are redirected to this handler.",
+          " */"
+        ]
+      ],
+      "start": [
+        "start(me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: start",
+          " *",
+          " * Starts panning at the given event.",
+          " */"
+        ]
+      ],
       "consumePanningTrigger": [
         "consumePanningTrigger(me: mxMouseEvent): void;",
         [
@@ -31208,6 +31749,38 @@
           " */"
         ]
       ],
+      "mouseMove": [
+        "mouseMove(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseMove",
+          " *",
+          " * Handles the event by updating the panning on the graph.",
+          " */"
+        ]
+      ],
+      "mouseUp": [
+        "mouseUp(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseUp",
+          " *",
+          " * Handles the event by setting the translation on the view or showing the",
+          " * popupmenu.",
+          " */"
+        ]
+      ],
+      "reset": [
+        "reset(): void;",
+        [
+          "/**",
+          " * Function: mouseUp",
+          " *",
+          " * Handles the event by setting the translation on the view or showing the",
+          " * popupmenu.",
+          " */"
+        ]
+      ],
       "panGraph": [
         "panGraph(dx: number, dy: number): void;",
         [
@@ -31218,9 +31791,38 @@
           " */"
         ]
       ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Function: destroy",
+          " *",
+          " * Destroys the handler and all its resources and DOM nodes.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxConnectionHandler": [
+    null,
+    {
       "sourceConstraint": [
         "sourceConstraint: mxConnectionConstraint;",
         null
+      ],
+      "constructor": [
+        "constructor(graph: mxGraph, factoryMethod?: (source: mxCell, target: mxCell, style?: string) => mxCell);",
+        null
+      ],
+      "graph": [
+        "graph: mxGraph;",
+        [
+          "/**",
+          " * Variable: graph",
+          " *",
+          " * Reference to the enclosing <mxGraph>.",
+          " */"
+        ]
       ],
       "factoryMethod": [
         "factoryMethod: (source: mxCell, target: mxCell, style?: string) => mxCell;",
@@ -31281,6 +31883,16 @@
           " */"
         ]
       ],
+      "enabled": [
+        "enabled: boolean;",
+        [
+          "/**",
+          " * Variable: enabled",
+          " *",
+          " * Specifies if events are handled. Default is true.",
+          " */"
+        ]
+      ],
       "select": [
         "select: boolean;",
         [
@@ -31306,6 +31918,37 @@
           " */"
         ]
       ],
+      "marker": [
+        "marker: any;",
+        [
+          "/**",
+          " * Variable: marker",
+          " *",
+          " * Holds the <mxTerminalMarker> used for finding source and target cells.",
+          " */"
+        ]
+      ],
+      "constraintHandler": [
+        "constraintHandler: mxConstraintHandler;",
+        [
+          "/**",
+          " * Variable: constraintHandler",
+          " *",
+          " * Holds the <mxConstraintHandler> used for drawing and highlighting",
+          " * constraints.",
+          " */"
+        ]
+      ],
+      "error": [
+        "error: any;",
+        [
+          "/**",
+          " * Variable: error",
+          " *",
+          " * Holds the current validation error while connections are being created.",
+          " */"
+        ]
+      ],
       "waypointsEnabled": [
         "waypointsEnabled: boolean;",
         [
@@ -31326,6 +31969,17 @@
           " * Specifies if the connection handler should ignore the state of the mouse",
           " * button when highlighting the source. Default is false, that is, the",
           " * handler only highlights the source if no button is being pressed.",
+          " */"
+        ]
+      ],
+      "first": [
+        "first: mxPoint;",
+        [
+          "/**",
+          " * Variable: first",
+          " *",
+          " * Holds the <mxPoint> where the mouseDown took place while the handler is",
+          " * active.",
           " */"
         ]
       ],
@@ -31396,6 +32050,18 @@
           " */"
         ]
       ],
+      "outlineConnect": [
+        "outlineConnect: boolean;",
+        [
+          "/**",
+          " * Variable: outlineConnect",
+          " *",
+          " * Specifies if connections to the outline of a highlighted target should be",
+          " * enabled. This will allow to place the connection point along the outline of",
+          " * the highlighted target. Default is false.",
+          " */"
+        ]
+      ],
       "livePreview": [
         "livePreview: boolean;",
         [
@@ -31425,6 +32091,32 @@
           " *",
           " * Specifies if new edges should be inserted before the source vertex in the",
           " * cell hierarchy. Default is false for backwards compatibility.",
+          " */"
+        ]
+      ],
+      "isEnabled": [
+        "isEnabled(): boolean;",
+        [
+          "/**",
+          " * Function: isEnabled",
+          " *",
+          " * Returns true if events are handled. This implementation",
+          " * returns <enabled>.",
+          " */"
+        ]
+      ],
+      "setEnabled": [
+        "setEnabled(enabled: boolean): void;",
+        [
+          "/**",
+          " * Function: setEnabled",
+          " *",
+          " * Enables or disables event handling. This implementation",
+          " * updates <enabled>.",
+          " *",
+          " * Parameters:",
+          " *",
+          " * enabled - Boolean that specifies the new enabled state.",
           " */"
         ]
       ],
@@ -31471,6 +32163,59 @@
           " */"
         ]
       ],
+      "createShape": [
+        "createShape(): mxShape;",
+        [
+          "/**",
+          " * Function: createShape",
+          " *",
+          " * Creates the preview shape for new connections.",
+          " */"
+        ]
+      ],
+      "init": [
+        "init(): void;",
+        [
+          "/**",
+          " * Function: init",
+          " *",
+          " * Initializes the shapes required for this connection handler. This should",
+          " * be invoked if <mxGraph.container> is assigned after the connection",
+          " * handler has been created.",
+          " */"
+        ]
+      ],
+      "isConnectableCell": [
+        "isConnectableCell(cell: mxCell): boolean;",
+        [
+          "/**",
+          " * Function: isConnectableCell",
+          " *",
+          " * Returns true if the given cell is connectable. This is a hook to",
+          " * disable floating connections. This implementation returns true.",
+          " */"
+        ]
+      ],
+      "createMarker": [
+        "createMarker(): mxCellMarker;",
+        [
+          "/**",
+          " * Function: createMarker",
+          " *",
+          " * Creates and returns the <mxCellMarker> used in <marker>.",
+          " */"
+        ]
+      ],
+      "start": [
+        "start(state: mxCellState, x: number, y: number, edgeState: mxCellState): void;",
+        [
+          "/**",
+          " * Function: start",
+          " *",
+          " * Starts a new connection for the given state and coordinates.",
+          " */"
+        ]
+      ],
       "isConnecting": [
         "isConnecting(): boolean;",
         [
@@ -31510,6 +32255,23 @@
           " * Parameters:",
           " *",
           " * cell - <mxCell> that represents the target terminal.",
+          " */"
+        ]
+      ],
+      "validateConnection": [
+        "validateConnection(source: mxCell, target: mxCell): string;",
+        [
+          "/**",
+          " * Function: validateConnection",
+          " *",
+          " * Returns the error message or an empty string if the connection for the",
+          " * given source target pair is not valid. Otherwise it returns null. This",
+          " * implementation uses <mxGraph.getEdgeValidationError>.",
+          " *",
+          " * Parameters:",
+          " *",
+          " * source - <mxCell> that represents the source terminal.",
+          " * target - <mxCell> that represents the target terminal.",
           " */"
         ]
       ],
@@ -31610,6 +32372,16 @@
           " */"
         ]
       ],
+      "mouseDown": [
+        "mouseDown(sender: Event, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseDown",
+          " *",
+          " * Handles the event by initiating a new connection.",
+          " */"
+        ]
+      ],
       "isImmediateConnectSource": [
         "isImmediateConnectSource(state: mxCellState): boolean;",
         [
@@ -31641,6 +32413,17 @@
           " *   return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));",
           " * };",
           " * (end)",
+          " */"
+        ]
+      ],
+      "isOutlineConnectEvent": [
+        "isOutlineConnectEvent(me: mxMouseEvent): boolean;",
+        [
+          "/**",
+          " * Function: isOutlineConnectEvent",
+          " *",
+          " * Returns true if <outlineConnect> is true and the source of the event is the outline shape",
+          " * or shift is pressed.",
           " */"
         ]
       ],
@@ -31683,6 +32466,17 @@
           " *",
           " * Called to snap the given point to the current preview. This snaps to the",
           " * first point of the preview if alt is not pressed.",
+          " */"
+        ]
+      ],
+      "mouseMove": [
+        "mouseMove(sender: mxMouseEvent, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseMove",
+          " *",
+          " * Handles the event by updating the preview edge or by highlighting",
+          " * a possible source or target terminal.",
           " */"
         ]
       ],
@@ -31768,6 +32562,37 @@
           " */"
         ]
       ],
+      "mouseUp": [
+        "mouseUp(sender: mxMouseEvent, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseUp",
+          " *",
+          " * Handles the event by inserting the new connection.",
+          " */"
+        ]
+      ],
+      "reset": [
+        "reset(): void;",
+        [
+          "/**",
+          " * Function: reset",
+          " *",
+          " * Resets the state of this handler.",
+          " */"
+        ]
+      ],
+      "drawPreview": [
+        "drawPreview(): void;",
+        [
+          "/**",
+          " * Function: drawPreview",
+          " *",
+          " * Redraws the preview edge using the color and width returned by",
+          " * <getEdgeColor> and <getEdgeWidth>.",
+          " */"
+        ]
+      ],
       "updatePreview": [
         "updatePreview(valid: boolean): void;",
         [
@@ -31816,6 +32641,25 @@
           " */"
         ]
       ],
+      "connect": [
+        "connect(source: mxCell, target: mxCell, evt: MouseEvent, dropTarget: mxCell): void;",
+        [
+          "/**",
+          " * Function: connect",
+          " *",
+          " * Connects the given source and target using a new edge. This",
+          " * implementation uses <createEdge> to create the edge.",
+          " *",
+          " * Parameters:",
+          " *",
+          " * source - <mxCell> that represents the source terminal.",
+          " * target - <mxCell> that represents the target terminal.",
+          " * evt - Mousedown event of the connect gesture.",
+          " * dropTarget - <mxCell> that represents the cell under the mouse when it was",
+          " * released.",
+          " */"
+        ]
+      ],
       "selectCells": [
         "selectCells(edge: mxCell, target: mxCell): void;",
         [
@@ -31824,6 +32668,18 @@
           " *",
           " * Selects the given edge after adding a new connection. The target argument",
           " * contains the target vertex if one has been inserted.",
+          " */"
+        ]
+      ],
+      "insertEdge": [
+        "insertEdge(parent: mxCell, id: string, value: any, source: mxCell, target: mxCell, style: string): mxCell;",
+        [
+          "/**",
+          " * Function: insertEdge",
+          " *",
+          " * Creates, inserts and returns the new edge for the given parameters. This",
+          " * implementation does only use <createEdge> if <factoryMethod> is defined,",
+          " * otherwise <mxGraph.insertEdge> will be used.",
           " */"
         ]
       ],
@@ -31874,6 +32730,47 @@
           " */"
         ]
       ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Function: destroy",
+          " *",
+          " * Destroys the handler and all its resources and DOM nodes. This should be",
+          " * called on all instances. It is called automatically for the built-in",
+          " * instance created for each <mxGraph>.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxSelectionCellsHandler": [
+    null,
+    {
+      "constructor": [
+        "constructor(graph: mxGraph);",
+        null
+      ],
+      "graph": [
+        "graph: mxGraph;",
+        [
+          "/**",
+          " * Variable: graph",
+          " *",
+          " * Reference to the enclosing <mxGraph>.",
+          " */"
+        ]
+      ],
+      "enabled": [
+        "enabled: boolean;",
+        [
+          "/**",
+          " * Variable: enabled",
+          " *",
+          " * Specifies if events are handled. Default is true.",
+          " */"
+        ]
+      ],
       "refreshHandler": [
         "refreshHandler: any;",
         [
@@ -31904,6 +32801,26 @@
           " */"
         ]
       ],
+      "isEnabled": [
+        "isEnabled(): boolean;",
+        [
+          "/**",
+          " * Function: isEnabled",
+          " *",
+          " * Returns <enabled>.",
+          " */"
+        ]
+      ],
+      "setEnabled": [
+        "setEnabled(value: boolean): void;",
+        [
+          "/**",
+          " * Function: setEnabled",
+          " *",
+          " * Sets <enabled>.",
+          " */"
+        ]
+      ],
       "getHandler": [
         "getHandler(cell: mxCell): any;",
         [
@@ -31911,6 +32828,26 @@
           " * Function: getHandler",
           " *",
           " * Returns the handler for the given cell.",
+          " */"
+        ]
+      ],
+      "reset": [
+        "reset(): void;",
+        [
+          "/**",
+          " * Function: reset",
+          " *",
+          " * Resets all handlers.",
+          " */"
+        ]
+      ],
+      "refresh": [
+        "refresh(): void;",
+        [
+          "/**",
+          " * Function: refresh",
+          " *",
+          " * Reloads or updates all handlers.",
           " */"
         ]
       ],
@@ -31933,6 +32870,46 @@
           " * Updates the handler for the given shape if one exists.",
           " */"
         ]
+      ],
+      "mouseDown": [
+        "mouseDown(sender: Event, me: Event): void;",
+        [
+          "/**",
+          " * Function: mouseDown",
+          " *",
+          " * Redirects the given event to the handlers.",
+          " */"
+        ]
+      ],
+      "mouseMove": [
+        "mouseMove(sender: Event, me: Event): void;",
+        [
+          "/**",
+          " * Function: mouseMove",
+          " *",
+          " * Redirects the given event to the handlers.",
+          " */"
+        ]
+      ],
+      "mouseUp": [
+        "mouseUp(sender: Event, me: Event): void;",
+        [
+          "/**",
+          " * Function: mouseUp",
+          " *",
+          " * Redirects the given event to the handlers.",
+          " */"
+        ]
+      ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Function: destroy",
+          " *",
+          " * Destroys the handler and all its resources and DOM nodes.",
+          " */"
+        ]
       ]
     }
   ],
@@ -31946,14 +32923,16 @@
     ],
     {
       "constructor": [
-        "constructor(graph: mxGraph, color: string, funct?: Function);",
+        "constructor(state: mxCellState, cursor: string, image: mxImage, shape: mxShape);",
         [
           "/**",
-          " * Constructs an event handler that highlights cells.",
+          " * Constructs a new handle for the given state.",
           " *",
-          " * @param graph   Reference to the enclosing {@link mxGraph}.",
-          " * @param color   Color of the highlight. Default is blue.",
-          " * @param funct   Optional JavaScript function that is used to override {@link mxCellMarker.getCell}.",
+          " * @param {mxCellState} state   {@link mxCellState} of the cell to be handled.",
+          " * @param {string} cursor",
+          " * @param {mxImage} image",
+          " * @param {mxShape} shape",
+          " * @memberof mxHandle",
           " */"
         ]
       ],
@@ -32051,9 +33030,7 @@
         "init(): void;",
         [
           "/**",
-          " * Function: init",
-          " *",
-          " * Initializes the DOM nodes required for this tooltip handler.",
+          " * Creates and initializes the shapes required for this handle.",
           " */"
         ]
       ],
@@ -32077,9 +33054,7 @@
         "redraw(): void;",
         [
           "/**",
-          " * Function: redraw",
-          " *",
-          " * Redraws the handles and the preview.",
+          " * Renders the shape for this handle.",
           " */"
         ]
       ],
@@ -32126,12 +33101,10 @@
         ]
       ],
       "reset": [
-        "reset(me: mxMouseEvent, restart: boolean, state: mxCellState): void;",
+        "reset(): void;",
         [
           "/**",
-          " * Function: reset",
-          " *",
-          " * Resets and/or restarts the timer to trigger the display of the tooltip.",
+          " * Resets the state of this handle by setting its visibility to true.",
           " */"
         ]
       ],
@@ -32139,11 +33112,26 @@
         "destroy(): void;",
         [
           "/**",
-          " * Function: destroy",
-          " *",
-          " * Destroys the object and all its resources and DOM nodes. This doesn't",
-          " * normally need to be called. It is called automatically when the window",
-          " * unloads.",
+          " * Destroys this handle.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxKeyHandler": [
+    null,
+    {
+      "constructor": [
+        "constructor(graph: mxGraph, target?: EventTarget);",
+        [
+          "/**",
+          " * Constructs an event handler that executes functions bound to specific keystrokes.",
+          " * @author 鸿则 <hungtcs@163.com>",
+          " * @date 2020-01-09",
+          " * @param {mxGraph} graph Reference to the associated mxGraph.",
+          " * @param {*} target      Optional reference to the event target.",
+          " *                        If null, the document element is used as the event target, that is,",
+          " *                        the object where the key event listener is installed.",
           " */"
         ]
       ],
@@ -32314,6 +33302,15 @@
           " * Destroys the handler and all its references into the DOM.  This does normally not need to be called, it is called automatically when the window unloads (in IE).",
           " */"
         ]
+      ]
+    }
+  ],
+  "mxPopupMenuHandler": [
+    null,
+    {
+      "constructor": [
+        "constructor(graph: mxGraph, factoryMethod?: (handler: mxPopupMenuHandler, cell: mxCell, me: mxMouseEvent) => any);",
+        null
       ],
       "graph": [
         "graph: mxGraph;",
@@ -32387,6 +33384,16 @@
           " */"
         ]
       ],
+      "init": [
+        "init(): void;",
+        [
+          "/**",
+          " * Function: init",
+          " *",
+          " * Initializes the shapes required for this vertex handler.",
+          " */"
+        ]
+      ],
       "isSelectOnPopup": [
         "isSelectOnPopup(me: mxMouseEvent): boolean;",
         [
@@ -32402,7 +33409,10 @@
         "mouseDown(sender: any, me: mxMouseEvent): void;",
         [
           "/**",
-          " * Ignores the event. The event is not consumed.",
+          " * Function: mouseDown",
+          " *",
+          " * Handles the event by initiating the panning. By consuming the event all",
+          " * subsequent events of the gesture are redirected to this handler.",
           " */"
         ]
       ],
@@ -32410,8 +33420,9 @@
         "mouseMove(sender: any, me: mxMouseEvent): void;",
         [
           "/**",
-          " * Handles the event by highlighting the cell under the mousepointer if it",
-          " * is over the hotspot region of the cell.",
+          " * Function: mouseMove",
+          " *",
+          " * Handles the event by updating the panning on the graph.",
           " */"
         ]
       ],
@@ -32419,7 +33430,10 @@
         "mouseUp(sender: any, me: mxMouseEvent): void;",
         [
           "/**",
-          " * Handles the event by resetting the highlight.",
+          " * Function: mouseUp",
+          " *",
+          " * Handles the event by setting the translation on the view or showing the",
+          " * popupmenu.",
           " */"
         ]
       ],
@@ -32430,6 +33444,42 @@
           " * Function: getCellForPopupEvent",
           " *",
           " * Hook to return the cell for the mouse up popup trigger handling.",
+          " */"
+        ]
+      ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Function: destroy",
+          " *",
+          " * Destroys the handler and all its resources and DOM nodes.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxConstraintHandler": [
+    [
+      "/**",
+      " * Handles constraints on connection targets. This class is in charge of",
+      " * showing fixed points when the mouse is over a vertex and handles constraints",
+      " * to establish new connections.",
+      " *",
+      " * @class mxConstraintHandler",
+      " */"
+    ],
+    {
+      "constructor": [
+        "constructor(graph: mxGraph, factoryMethod?: (source: mxCell, target: mxCell) => mxCell);",
+        [
+          "/**",
+          " * Constructs an new constraint handler.",
+          " *",
+          " * @param {mxGraph} graph - Reference to the enclosing {@link mxGraph}.",
+          " * @param {(source: mxCell, target: mxCell) => mxCell} [factoryMethod] - Optional function to create the edge.",
+          " * The function takes the source and target {@link mxCell} as the first and second argument and",
+          " * returns the {@link mxCell} that represents the new edge.",
           " */"
         ]
       ],
@@ -32500,12 +33550,18 @@
           " */"
         ]
       ],
+      "graph": [
+        "graph: mxGraph;",
+        [
+          "/**",
+          " * Reference to the enclosing {@link mxGraph}.",
+          " */"
+        ]
+      ],
       "enabled": [
         "enabled: boolean;",
         [
           "/**",
-          " * Variable: enabled",
-          " *",
           " * Specifies if events are handled. Default is true.",
           " */"
         ]
@@ -32522,10 +33578,8 @@
         "isEnabled(): boolean;",
         [
           "/**",
-          " * Function: isEnabled",
-          " *",
           " * Returns true if events are handled. This implementation",
-          " * returns <enabled>.",
+          " * returns {@link enabled}.",
           " */"
         ]
       ],
@@ -32533,10 +33587,20 @@
         "setEnabled(enabled: boolean): void;",
         [
           "/**",
-          " * Function: setEnabled",
-          " *",
           " * Enables or disables event handling. This implementation",
-          " * updates <enabled>.",
+          " * updates {@link enabled}.",
+          " *",
+          " * Parameters:",
+          " *",
+          " * @param {boolean} enabled - Boolean that specifies the new enabled state.",
+          " */"
+        ]
+      ],
+      "reset": [
+        "reset(): void;",
+        [
+          "/**",
+          " * Resets the state of this handler.",
           " */"
         ]
       ],
@@ -32620,6 +33684,16 @@
           " */"
         ]
       ],
+      "redraw": [
+        "redraw(): void;",
+        [
+          "/**",
+          " * Transfers the focus to the given state as a source or target terminal. If",
+          " * the handler is not enabled then the outline is painted, but the constraints",
+          " * are ignored.",
+          " */"
+        ]
+      ],
       "setFocus": [
         "setFocus(me: mxMouseEvent, state: mxCellState, source: mxCell): void;",
         [
@@ -32641,14 +33715,47 @@
         ]
       ],
       "intersects": [
-        "intersects(state: mxCellState, me: mxMouseEvent): boolean;",
+        "intersects(icon: mxShape, mouse: mxRectangle, source: mxCell, existingEdge: mxCell): boolean;",
         [
           "/**",
-          " * Function: intersects",
+          " * Returns true if the given icon intersects the given rectangle.",
+          " */"
+        ]
+      ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Destroy this handler.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxCellMarker": [
+    null,
+    {
+      "constructor": [
+        "constructor(graph: mxGraph, validColor: string, invalidColor: string, hotspot: number);",
+        null
+      ],
+      "graph": [
+        "graph: mxGraph;",
+        [
+          "/**",
+          " * Variable: graph",
           " *",
-          " * Returns true if the given coordinate pair intersects the given state.",
-          " * This returns true if the <hotspot> is 0 or the coordinates are inside",
-          " * the hotspot for the given cell state.",
+          " * Reference to the enclosing <mxGraph>.",
+          " */"
+        ]
+      ],
+      "enabled": [
+        "enabled: boolean;",
+        [
+          "/**",
+          " * Variable: enabled",
+          " *",
+          " * Specifies if the marker is enabled. Default is true.",
           " */"
         ]
       ],
@@ -32725,6 +33832,32 @@
           " */"
         ]
       ],
+      "setEnabled": [
+        "setEnabled(enabled: boolean): void;",
+        [
+          "/**",
+          " * Function: setEnabled",
+          " *",
+          " * Enables or disables event handling. This implementation",
+          " * updates <enabled>.",
+          " *",
+          " * Parameters:",
+          " *",
+          " * enabled - Boolean that specifies the new enabled state.",
+          " */"
+        ]
+      ],
+      "isEnabled": [
+        "isEnabled(): boolean;",
+        [
+          "/**",
+          " * Function: isEnabled",
+          " *",
+          " * Returns true if events are handled. This implementation",
+          " * returns <enabled>.",
+          " */"
+        ]
+      ],
       "setHotspot": [
         "setHotspot(hotspot: number): void;",
         [
@@ -32792,6 +33925,16 @@
           " * Function: getMarkedState",
           " *",
           " * Returns the <markedState>.",
+          " */"
+        ]
+      ],
+      "reset": [
+        "reset(): void;",
+        [
+          "/**",
+          " * Function: reset",
+          " *",
+          " * Resets the state of the cell marker.",
           " */"
         ]
       ],
@@ -32903,6 +34046,47 @@
           " *",
           " * Returns the <mxCellState> to be marked for the given <mxCellState> under",
           " * the mouse. This returns the given state.",
+          " */"
+        ]
+      ],
+      "intersects": [
+        "intersects(state: mxCellState, me: mxMouseEvent): boolean;",
+        [
+          "/**",
+          " * Function: intersects",
+          " *",
+          " * Returns true if the given coordinate pair intersects the given state.",
+          " * This returns true if the <hotspot> is 0 or the coordinates are inside",
+          " * the hotspot for the given cell state.",
+          " */"
+        ]
+      ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Function: destroy",
+          " *",
+          " * Destroys the handler and all its resources and DOM nodes.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxVertexHandler": [
+    null,
+    {
+      "constructor": [
+        "constructor(state: mxCellState);",
+        null
+      ],
+      "graph": [
+        "graph: mxGraph;",
+        [
+          "/**",
+          " * Variable: graph",
+          " *",
+          " * Reference to the enclosing <mxGraph>.",
           " */"
         ]
       ],
@@ -33085,6 +34269,16 @@
           " */"
         ]
       ],
+      "init": [
+        "init(): void;",
+        [
+          "/**",
+          " * Function: init",
+          " *",
+          " * Initializes the shapes required for this vertex handler.",
+          " */"
+        ]
+      ],
       "isRotationHandleVisible": [
         "isRotationHandleVisible(): boolean;",
         [
@@ -33263,6 +34457,18 @@
           " */"
         ]
       ],
+      "mouseDown": [
+        "mouseDown(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseDown",
+          " *",
+          " * Handles the event if a handle has been clicked. By consuming the",
+          " * event all subsequent events of the gesture are redirected to this",
+          " * handler.",
+          " */"
+        ]
+      ],
       "isLivePreviewBorder": [
         "isLivePreviewBorder(): boolean;",
         [
@@ -33358,6 +34564,16 @@
           " */"
         ]
       ],
+      "mouseMove": [
+        "mouseMove(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseMove",
+          " *",
+          " * Handles the event by updating the preview.",
+          " */"
+        ]
+      ],
       "moveLabel": [
         "moveLabel(me: mxMouseEvent): void;",
         [
@@ -33398,6 +34614,16 @@
           " */"
         ]
       ],
+      "mouseUp": [
+        "mouseUp(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseUp",
+          " *",
+          " * Handles the event by applying the changes to the geometry.",
+          " */"
+        ]
+      ],
       "isRecursiveResize": [
         "isRecursiveResize(state: mxCellState, me: mxMouseEvent): boolean;",
         [
@@ -33432,6 +34658,16 @@
           " *",
           " * cell - <mxCell> to be rotated.",
           " * angle - Angle in degrees.",
+          " */"
+        ]
+      ],
+      "reset": [
+        "reset(): void;",
+        [
+          "/**",
+          " * Function: reset",
+          " *",
+          " * Resets the state of this handler.",
           " */"
         ]
       ],
@@ -33502,6 +34738,16 @@
           " */"
         ]
       ],
+      "redraw": [
+        "redraw(): void;",
+        [
+          "/**",
+          " * Function: redraw",
+          " *",
+          " * Redraws the handles and the preview.",
+          " */"
+        ]
+      ],
       "getHandlePadding": [
         "getHandlePadding(): mxPoint;",
         [
@@ -33563,6 +34809,25 @@
           " */"
         ]
       ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Function: destroy",
+          " *",
+          " * Destroys the handler and all its resources and DOM nodes.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxTooltipHandler": [
+    null,
+    {
+      "constructor": [
+        "constructor(graph: mxGraph, delay?: number);",
+        null
+      ],
       "zIndex": [
         "zIndex: number;",
         [
@@ -33570,6 +34835,16 @@
           " * Variable: zIndex",
           " *",
           " * Specifies the zIndex for the tooltip and its shadow. Default is 10005.",
+          " */"
+        ]
+      ],
+      "graph": [
+        "graph: mxGraph;",
+        [
+          "/**",
+          " * Variable: graph",
+          " *",
+          " * Reference to the enclosing <mxGraph>.",
           " */"
         ]
       ],
@@ -33614,6 +34889,38 @@
           " */"
         ]
       ],
+      "enabled": [
+        "enabled: boolean;",
+        [
+          "/**",
+          " * Variable: enabled",
+          " *",
+          " * Specifies if events are handled. Default is true.",
+          " */"
+        ]
+      ],
+      "isEnabled": [
+        "isEnabled(): boolean;",
+        [
+          "/**",
+          " * Function: isEnabled",
+          " *",
+          " * Returns true if events are handled. This implementation",
+          " * returns <enabled>.",
+          " */"
+        ]
+      ],
+      "setEnabled": [
+        "setEnabled(enabled: boolean): void;",
+        [
+          "/**",
+          " * Function: setEnabled",
+          " *",
+          " * Enables or disables event handling. This implementation",
+          " * updates <enabled>.",
+          " */"
+        ]
+      ],
       "isHideOnHover": [
         "isHideOnHover(): boolean;",
         [
@@ -33634,6 +34941,16 @@
           " */"
         ]
       ],
+      "init": [
+        "init(): void;",
+        [
+          "/**",
+          " * Function: init",
+          " *",
+          " * Initializes the DOM nodes required for this tooltip handler.",
+          " */"
+        ]
+      ],
       "getStateForEvent": [
         "getStateForEvent(me: mxMouseEvent): mxCellState;",
         [
@@ -33644,6 +34961,39 @@
           " */"
         ]
       ],
+      "mouseDown": [
+        "mouseDown(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseDown",
+          " *",
+          " * Handles the event by initiating a rubberband selection. By consuming the",
+          " * event all subsequent events of the gesture are redirected to this",
+          " * handler.",
+          " */"
+        ]
+      ],
+      "mouseMove": [
+        "mouseMove(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseMove",
+          " *",
+          " * Handles the event by updating the rubberband selection.",
+          " */"
+        ]
+      ],
+      "mouseUp": [
+        "mouseUp(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Function: mouseUp",
+          " *",
+          " * Handles the event by resetting the tooltip timer or hiding the existing",
+          " * tooltip.",
+          " */"
+        ]
+      ],
       "resetTimer": [
         "resetTimer(): void;",
         [
@@ -33651,6 +35001,16 @@
           " * Function: resetTimer",
           " *",
           " * Resets the timer.",
+          " */"
+        ]
+      ],
+      "reset": [
+        "reset(me: mxMouseEvent, restart: boolean, state: mxCellState): void;",
+        [
+          "/**",
+          " * Function: reset",
+          " *",
+          " * Resets and/or restarts the timer to trigger the display of the tooltip.",
           " */"
         ]
       ],
@@ -33682,6 +35042,126 @@
           " *",
           " * Shows the tooltip for the specified cell and optional index at the",
           " * specified location (with a vertical offset of 10 pixels).",
+          " */"
+        ]
+      ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Function: destroy",
+          " *",
+          " * Destroys the handler and all its resources and DOM nodes.",
+          " */"
+        ]
+      ]
+    }
+  ],
+  "mxCellTracker": [
+    [
+      "/**",
+      " * Event handler that highlights cells",
+      " *",
+      " * @example",
+      " * ```javascript",
+      " * new mxCellTracker(graph, '#00FF00');",
+      " * ```",
+      " *",
+      " * For detecting dragEnter, dragOver and dragLeave on cells, the following code can be used:",
+      " * @example",
+      " * ```javascript",
+      " * graph.addMouseListener(",
+      " * {",
+      " *   cell: null,",
+      " *   mouseDown: function(sender, me) { },",
+      " *   mouseMove: function(sender, me)",
+      " *   {",
+      " *     var tmp = me.getCell();",
+      " *",
+      " *     if (tmp != this.cell)",
+      " *     {",
+      " *       if (this.cell != null)",
+      " *       {",
+      " *         this.dragLeave(me.getEvent(), this.cell);",
+      " *       }",
+      " *",
+      " *       this.cell = tmp;",
+      " *",
+      " *       if (this.cell != null)",
+      " *       {",
+      " *         this.dragEnter(me.getEvent(), this.cell);",
+      " *       }",
+      " *     }",
+      " *",
+      " *     if (this.cell != null)",
+      " *     {",
+      " *       this.dragOver(me.getEvent(), this.cell);",
+      " *     }",
+      " *   },",
+      " *   mouseUp: function(sender, me) { },",
+      " *   dragEnter: function(evt, cell)",
+      " *   {",
+      " *     mxLog.debug('dragEnter', cell.value);",
+      " *   },",
+      " *   dragOver: function(evt, cell)",
+      " *   {",
+      " *     mxLog.debug('dragOver', cell.value);",
+      " *   },",
+      " *   dragLeave: function(evt, cell)",
+      " *   {",
+      " *     mxLog.debug('dragLeave', cell.value);",
+      " *   }",
+      " * });",
+      " * ```",
+      " */"
+    ],
+    {
+      "constructor": [
+        "constructor(graph: mxGraph, color: string, funct?: Function);",
+        [
+          "/**",
+          " * Constructs an event handler that highlights cells.",
+          " *",
+          " * @param graph   Reference to the enclosing {@link mxGraph}.",
+          " * @param color   Color of the highlight. Default is blue.",
+          " * @param funct   Optional JavaScript function that is used to override {@link mxCellMarker.getCell}.",
+          " */"
+        ]
+      ],
+      "mouseDown": [
+        "mouseDown(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Ignores the event. The event is not consumed.",
+          " */"
+        ]
+      ],
+      "mouseMove": [
+        "mouseMove(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Handles the event by highlighting the cell under the mousepointer if it",
+          " * is over the hotspot region of the cell.",
+          " */"
+        ]
+      ],
+      "mouseUp": [
+        "mouseUp(sender: any, me: mxMouseEvent): void;",
+        [
+          "/**",
+          " * Handles the event by resetting the highlight.",
+          " */"
+        ]
+      ],
+      "destroy": [
+        "destroy(): void;",
+        [
+          "/**",
+          " * Function: destroy",
+          " *",
+          " * Destroys the object and all its resources and DOM nodes. This doesn't",
+          " * normally need to be called. It is called automatically when the window",
+          " * unloads.",
           " */"
         ]
       ]
@@ -33775,7 +35255,185 @@
           " * @param ctor - JavaScript constructor function.",
           " */"
         ]
-      ],
+      ]
+    }
+  ],
+  "mxObjectCodec": [
+    [
+      "/**",
+      " * Generic codec for JavaScript objects that implements a mapping between",
+      " * JavaScript objects and XML nodes that maps each field or element to an",
+      " * attribute or child node, and vice versa.",
+      " *",
+      " * ### Atomic Values",
+      " *",
+      " * Consider the following example.",
+      " *",
+      " * ```javascript",
+      " * var obj = new Object();",
+      " * obj.foo = \"Foo\";",
+      " * obj.bar = \"Bar\";",
+      " * ```",
+      " *",
+      " * This object is encoded into an XML node using the following.",
+      " *",
+      " * ```javascript",
+      " * var enc = new mxCodec();",
+      " * var node = enc.encode(obj);",
+      " * ```",
+      " *",
+      " * The output of the encoding may be viewed using {@link mxLog} as follows.",
+      " *",
+      " * ```javascript",
+      " * mxLog.show();",
+      " * mxLog.debug(mxUtils.getPrettyXml(node));",
+      " * ```",
+      " *",
+      " * Finally, the result of the encoding looks as follows.",
+      " *",
+      " * ```javascript",
+      " * <Object foo=\"Foo\" bar=\"Bar\"/>",
+      " * ```",
+      " *",
+      " * In the above output, the foo and bar fields have been mapped to attributes",
+      " * with the same names, and the name of the constructor was used for the",
+      " * nodename.",
+      " *",
+      " * ### Booleans",
+      " *",
+      " * Since booleans are numbers in JavaScript, all boolean values are encoded",
+      " * into 1 for true and 0 for false. The decoder also accepts the string true",
+      " * and false for boolean values.",
+      " *",
+      " * ### Objects",
+      " *",
+      " * The above scheme is applied to all atomic fields, that is, to all non-object",
+      " * fields of an object. For object fields, a child node is created with a",
+      " * special attribute that contains the fieldname. This special attribute is",
+      " * called \"as\" and hence, as is a reserved word that should not be used for a",
+      " * fieldname.",
+      " *",
+      " * Consider the following example where foo is an object and bar is an atomic",
+      " * property of foo.",
+      " *",
+      " * ```javascript",
+      " * var obj = {foo: {bar: \"Bar\"}};",
+      " * ```",
+      " *",
+      " * This will be mapped to the following XML structure by mxObjectCodec.",
+      " *",
+      " * ```javascript",
+      " * <Object>",
+      " *   <Object bar=\"Bar\" as=\"foo\"/>",
+      " * </Object>",
+      " * ```",
+      " *",
+      " * In the above output, the inner Object node contains the as-attribute that",
+      " * specifies the fieldname in the enclosing object. That is, the field foo was",
+      " * mapped to a child node with an as-attribute that has the value foo.",
+      " *",
+      " * ### Arrays",
+      " *",
+      " * Arrays are special objects that are either associative, in which case each",
+      " * key, value pair is treated like a field where the key is the fieldname, or",
+      " * they are a sequence of atomic values and objects, which is mapped to a",
+      " * sequence of child nodes. For object elements, the above scheme is applied",
+      " * without the use of the special as-attribute for creating each child. For",
+      " * atomic elements, a special add-node is created with the value stored in the",
+      " * value-attribute.",
+      " *",
+      " * For example, the following array contains one atomic value and one object",
+      " * with a field called bar. Furthermore it contains two associative entries",
+      " * called bar with an atomic value, and foo with an object value.",
+      " *",
+      " * ```javascript",
+      " * var obj = [\"Bar\", {bar: \"Bar\"}];",
+      " * obj[\"bar\"] = \"Bar\";",
+      " * obj[\"foo\"] = {bar: \"Bar\"};",
+      " * ```",
+      " *",
+      " * This array is represented by the following XML nodes.",
+      " *",
+      " * ```javascript",
+      " * <Array bar=\"Bar\">",
+      " *   <add value=\"Bar\"/>",
+      " *   <Object bar=\"Bar\"/>",
+      " *   <Object bar=\"Bar\" as=\"foo\"/>",
+      " * </Array>",
+      " * ```",
+      " *",
+      " * The Array node name is the name of the constructor. The additional",
+      " * as-attribute in the last child contains the key of the associative entry,",
+      " * whereas the second last child is part of the array sequence and does not",
+      " * have an as-attribute.",
+      " *",
+      " * ### References",
+      " *",
+      " * Objects may be represented as child nodes or attributes with ID values,",
+      " * which are used to lookup the object in a table within {@link mxCodec}. The",
+      " * {@link isReference} function is in charge of deciding if a specific field should",
+      " * be encoded as a reference or not. Its default implementation returns true if",
+      " * the fieldname is in {@link idrefs}, an array of strings that is used to configure",
+      " * the {@link mxObjectCodec}.",
+      " *",
+      " * Using this approach, the mapping does not guarantee that the referenced",
+      " * object itself exists in the document. The fields that are encoded as",
+      " * references must be carefully chosen to make sure all referenced objects",
+      " * exist in the document, or may be resolved by some other means if necessary.",
+      " *",
+      " * For example, in the case of the graph model all cells are stored in a tree",
+      " * whose root is referenced by the model's root field. A tree is a structure",
+      " * that is well suited for an XML representation, however, the additional edges",
+      " * in the graph model have a reference to a source and target cell, which are",
+      " * also contained in the tree. To handle this case, the source and target cell",
+      " * of an edge are treated as references, whereas the children are treated as",
+      " * objects. Since all cells are contained in the tree and no edge references a",
+      " * source or target outside the tree, this setup makes sure all referenced",
+      " * objects are contained in the document.",
+      " *",
+      " * In the case of a tree structure we must further avoid infinite recursion by",
+      " * ignoring the parent reference of each child. This is done by returning true",
+      " * in {@link isExcluded}, whose default implementation uses the array of excluded",
+      " * fieldnames passed to the mxObjectCodec constructor.",
+      " *",
+      " * References are only used for cells in mxGraph. For defining other",
+      " * referencable object types, the codec must be able to work out the ID of an",
+      " * object. This is done by implementing {@link mxCodec.reference}. For decoding a",
+      " * reference, the XML node with the respective id-attribute is fetched from the",
+      " * document, decoded, and stored in a lookup table for later reference. For",
+      " * looking up external objects, {@link mxCodec.lookup} may be implemented.",
+      " *",
+      " * ### Expressions",
+      " *",
+      " * For decoding JavaScript expressions, the add-node may be used with a text",
+      " * content that contains the JavaScript expression. For example, the following",
+      " * creates a field called foo in the enclosing object and assigns it the value",
+      " * of {@link mxConstants.ALIGN_LEFT}.",
+      " *",
+      " * ```javascript",
+      " * <Object>",
+      " *   <add as=\"foo\">mxConstants.ALIGN_LEFT</add>",
+      " * </Object>",
+      " * ```",
+      " *",
+      " * The resulting object has a field called foo with the value \"left\". Its XML",
+      " * representation looks as follows.",
+      " *",
+      " * ```javascript",
+      " * <Object foo=\"left\"/>",
+      " * ```",
+      " *",
+      " * This means the expression is evaluated at decoding time and the result of",
+      " * the evaluation is stored in the respective field. Valid expressions are all",
+      " * JavaScript expressions, including function definitions, which are mapped to",
+      " * functions on the resulting object.",
+      " *",
+      " * Expressions are only evaluated if {@link allowEval} is true.",
+      " *",
+      " * @class mxObjectCodec",
+      " */"
+    ],
+    {
       "constructor": [
         "constructor(template: any, exclude?: Array<string>, idrefs?: Array<string>, mapping?: { [key: string]: string });",
         [

@@ -83,6 +83,7 @@ class mxCellRenderer {
    *
    * Defines the default shape for edges. Default is <mxConnector>.
    */
+  // defaultEdgeShape: mxConnector;
   defaultEdgeShape: typeof mxShape = mxConnector;
 
   /**
@@ -90,6 +91,7 @@ class mxCellRenderer {
    *
    * Defines the default shape for vertices. Default is <mxRectangleShape>.
    */
+  // defaultVertexShape: mxRectangleShape;
   defaultVertexShape: typeof mxRectangleShape = mxRectangleShape;
 
   /**
@@ -97,6 +99,7 @@ class mxCellRenderer {
    *
    * Defines the default shape for labels. Default is <mxText>.
    */
+  // defaultTextShape: mxText;
   defaultTextShape: typeof mxText = mxText;
 
   /**
@@ -105,6 +108,7 @@ class mxCellRenderer {
    * Specifies if the folding icon should ignore the horizontal
    * orientation of a swimlane. Default is true.
    */
+  // legacyControlPosition: boolean;
   legacyControlPosition: boolean = true;
 
   /**
@@ -113,6 +117,7 @@ class mxCellRenderer {
    * Specifies if spacing and label position should be ignored if overflow is
    * fill or width. Default is true for backwards compatiblity.
    */
+  // legacySpacing: boolean;
   legacySpacing: boolean = true;
 
   /**
@@ -120,6 +125,7 @@ class mxCellRenderer {
    *
    * Anti-aliasing option for new shapes. Default is true.
    */
+  // antiAlias: boolean;
   antiAlias: boolean = true;
 
   /**
@@ -127,6 +133,7 @@ class mxCellRenderer {
    *
    * Minimum stroke width for SVG output.
    */
+  // minSvgStrokeWidth: number;
   minSvgStrokeWidth: number = 1;
 
   /**
@@ -135,25 +142,20 @@ class mxCellRenderer {
    * Specifies if the enabled state of the graph should be ignored in the control
    * click handler (to allow folding in disabled graphs). Default is false.
    */
+  // forceControlClickHandler: boolean;
   forceControlClickHandler: boolean = false;
 
   /**
-   * Function: registerShape
-   *
-   * Registers the given constructor under the specified key in this instance
-   * of the renderer.
-   *
-   * Example:
-   *
-   * (code)
+   * Registers the given constructor under the specified key in this instance of the renderer.
+   * @example
+   * ```
    * mxCellRenderer.registerShape(mxConstants.SHAPE_RECTANGLE, mxRectangleShape);
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * key - String representing the shape name.
-   * shape - Constructor of the <mxShape> subclass.
+   * @param key the shape name.
+   * @param shape constructor of the {@link mxShape} subclass.
    */
+  // static registerShape(key: string, shape: new (...args: any) => mxShape): void;
   static registerShape(key: string, shape: typeof mxShape) {
     mxCellRenderer.defaultShapes[key] = shape;
   };
@@ -168,6 +170,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the shape should be initialized.
    */
+  // initializeShape(state: mxCellState): void;
   initializeShape(state: mxCellState) {
     (<mxShape>state.shape).dialect = state.view.graph.dialect;
     this.configureShape(state);
@@ -183,6 +186,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the shape should be created.
    */
+  // createShape(state: mxCellState): mxShape;
   createShape(state: mxCellState): mxShape | null {
     let shape = null;
 
@@ -211,6 +215,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the indicator shape should be created.
    */
+  // createIndicatorShape(state: mxCellState): void;
   createIndicatorShape(state: mxCellState): void {
     // @ts-ignore
     state.shape.indicatorShape = this.getShape(
@@ -223,6 +228,7 @@ class mxCellRenderer {
    *
    * Returns the shape for the given name from <defaultShapes>.
    */
+  // getShape(name: string): mxShape;
   getShape(name: string): typeof mxShape {
     // @ts-ignore
     return name != null ? mxCellRenderer.defaultShapes[name] : null;
@@ -233,6 +239,7 @@ class mxCellRenderer {
    *
    * Returns the constructor to be used for creating the shape.
    */
+  // getShapeConstructor(state: mxCellState): any;
   getShapeConstructor(state: mxCellState) {
     let ctor = this.getShape(state.style[mxConstants.STYLE_SHAPE]);
     if (ctor == null) {
@@ -252,6 +259,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the shape should be configured.
    */
+  // configureShape(state: mxCellState): void;
   configureShape(state: mxCellState) {
     const shape = <any>state.shape;
     shape.apply(state);
@@ -272,6 +280,7 @@ class mxCellRenderer {
    * This implementation resolves these keywords on the fill, stroke
    * and gradient color keys.
    */
+  // postConfigureShape(state: mxCellState): void;
   postConfigureShape(state: mxCellState) {
     if (state.shape != null) {
       this.resolveColor(
@@ -289,9 +298,10 @@ class mxCellRenderer {
   /**
    * Function: checkPlaceholderStyles
    *
-   * Checks if the style of the given <mxCellState> contains 'inherit',
-   * 'indicated' or 'swimlane' for colors that support those keywords.
+   * Resolves special keywords 'inherit', 'indicated' and 'swimlane' and sets
+   * the respective color on the shape.
    */
+  // checkPlaceholderStyles(state: mxCellState): boolean;
   checkPlaceholderStyles(state: mxCellState) {
     // LATER: Check if the color has actually changed
     if (state.style != null) {
@@ -318,6 +328,7 @@ class mxCellRenderer {
    * Resolves special keywords 'inherit', 'indicated' and 'swimlane' and sets
    * the respective color on the shape.
    */
+  // resolveColor(state: mxCellState, field: string, key: string): void;
   resolveColor(state: mxCellState, field: string, key: string) {
     const shape =
       key === mxConstants.STYLE_FONTCOLOR ? state.text : state.shape;
@@ -398,6 +409,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the label should be created.
    */
+  // getLabelValue(state: mxCellState): string;
   getLabelValue(state: mxCellState) {
     return state.view.graph.getLabel(state.cell);
   }
@@ -411,6 +423,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the label should be created.
    */
+  // createLabel(state: mxCellState, value: string): void;
   createLabel(state: mxCellState, value: any) {
     const { graph } = state.view;
     const isEdge = graph.getModel().isEdge(state.cell);
@@ -529,6 +542,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose label should be initialized.
    */
+  // initializeLabel(state: mxCellState, shape: mxShape): void;
   initializeLabel(state: mxCellState, shape: mxShape) {
     if (
       mxClient.IS_SVG &&
@@ -550,6 +564,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the overlay should be created.
    */
+  // createCellOverlays(state: mxCellState): void;
   createCellOverlays(state: mxCellState) {
     const { graph } = state.view;
     const overlays = graph.getCellOverlays(state.cell);
@@ -605,6 +620,7 @@ class mxCellRenderer {
    * state - <mxCellState> for which the overlay should be created.
    * overlay - <mxImageShape> that represents the overlay.
    */
+  // initializeOverlay(state: mxCellState, overlay: mxImageShape): void;
   initializeOverlay(state: mxCellState, overlay: mxImageShape): void {
     overlay.init(state.view.getOverlayPane());
   }
@@ -615,6 +631,7 @@ class mxCellRenderer {
    * Installs the listeners for the given <mxCellState>, <mxCellOverlay> and
    * <mxShape> that represents the overlay.
    */
+  // installCellOverlayListeners(state: mxCellState, overlay: mxCellOverlay, shape: mxShape): void;
   installCellOverlayListeners(state: mxCellState,
                               overlay: mxCellOverlay,
                               shape: mxShape) {
@@ -658,6 +675,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the control should be created.
    */
+  // createControl(state: mxCellState): void;
   createControl(state: mxCellState) {
     const { graph } = state.view;
     const image = graph.getFoldingImage(state);
@@ -691,6 +709,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose control click handler should be returned.
    */
+  // createControlClickHandler(state: mxCellState): void;
   createControlClickHandler(state: mxCellState): Function {
     const { graph } = state.view;
 
@@ -715,6 +734,7 @@ class mxCellRenderer {
    * handleEvents - Boolean indicating if mousedown and mousemove should fire events via the graph.
    * clickHandler - Optional function to implement clicks on the control.
    */
+  // initControl(state: mxCellState, control: mxShape, handleEvents: boolean, clickHandler?: Function): Element;
   initControl(state: mxCellState,
               control: mxShape,
               handleEvents: boolean,
@@ -813,6 +833,7 @@ class mxCellRenderer {
    * state - <mxCellState> whose shape fired the event.
    * evt - Mouse event which was fired.
    */
+  // isShapeEvent(state: mxCellState, evt: MouseEvent): boolean;
   isShapeEvent(state: mxCellState, evt: mxMouseEvent | MouseEvent) {
     return true;
   }
@@ -828,6 +849,7 @@ class mxCellRenderer {
    * state - <mxCellState> whose label fired the event.
    * evt - Mouse event which was fired.
    */
+  // isLabelEvent(state: mxCellState, evt: MouseEvent): boolean;
   isLabelEvent(state: mxCellState, evt: mxMouseEvent | MouseEvent) {
     return true;
   }
@@ -841,6 +863,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the event listeners should be isntalled.
    */
+  // installListeners(state: mxCellState): void;
   installListeners(state: mxCellState) {
     const { graph } = state.view;
 
@@ -917,6 +940,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose label should be redrawn.
    */
+  // redrawLabel(state: mxCellState, forced?: boolean): void;
   redrawLabel(state: mxCellState, forced: boolean) {
     const { graph } = state.view;
     const value = this.getLabelValue(state);
@@ -1015,6 +1039,7 @@ class mxCellRenderer {
    * state - <mxCellState> whose label should be checked.
    * shape - <mxText> shape to be checked.
    */
+  // isTextShapeInvalid(state: mxCellState, shape: mxText): boolean;
   isTextShapeInvalid(state: mxCellState, shape: mxText): boolean {
     function check(property: string, stylename: string, defaultValue: any) {
       let result = false;
@@ -1079,6 +1104,7 @@ class mxCellRenderer {
    *
    * shape - <mxText> shape to be redrawn.
    */
+  // redrawLabelShape(shape: mxText): void;
   redrawLabelShape(shape: mxShape): void {
     shape.redraw();
   }
@@ -1092,6 +1118,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose label scale should be returned.
    */
+  // getTextScale(state: mxCellState): number;
   getTextScale(state: mxCellState): number {
     return state.view.scale;
   }
@@ -1105,6 +1132,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose label bounds should be returned.
    */
+  // getLabelBounds(state: mxCellState): mxRectangle;
   getLabelBounds(state: mxCellState): mxRectangle {
     const { graph } = state.view;
     const { scale } = state.view;
@@ -1203,6 +1231,7 @@ class mxCellRenderer {
    * state - <mxCellState> whose label bounds should be rotated.
    * bounds - <mxRectangle> the rectangle to be rotated.
    */
+  // rotateLabelBounds(state: mxCellState, bounds: mxRectangle): void;
   rotateLabelBounds(state: mxCellState, bounds: mxRectangle) {
     // @ts-ignore
     bounds.y -= state.text.margin.y * bounds.height;
@@ -1291,6 +1320,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose overlays should be redrawn.
    */
+  // redrawCellOverlays(state: mxCellState, forced?: boolean): void;
   redrawCellOverlays(state: mxCellState, forced: boolean=false) {
     this.createCellOverlays(state);
 
@@ -1349,6 +1379,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose control should be redrawn.
    */
+  // redrawControl(state: mxCellState, forced?: boolean): void;
   redrawControl(state: mxCellState, forced: boolean=false) {
     const image = state.view.graph.getFoldingImage(state);
 
@@ -1383,6 +1414,7 @@ class mxCellRenderer {
    * Returns the bounds to be used to draw the control (folding icon) of the
    * given state.
    */
+  // getControlBounds(state: mxCellState, w: number, h: number): mxRectangle;
   getControlBounds(state: mxCellState, w: number, h: number): mxRectangle | null {
     if (state.control != null) {
       const s = state.view.scale;
@@ -1452,6 +1484,7 @@ class mxCellRenderer {
    * htmlNode - Node in the graph container after which the shapes should be inserted that
    * will not go into the <drawPane> (eg. HTML labels without foreignObjects).
    */
+  // insertStateAfter(state: mxCellState, node: Element, htmlNode: HTMLElement): void;
   insertStateAfter(state: mxCellState,
                    node: HTMLElement | SVGElement | null,
                    htmlNode: HTMLElement | SVGElement | null) {
@@ -1541,6 +1574,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose shapes should be returned.
    */
+  // getShapesForState(state: mxCellState): mxShape[];
   getShapesForState(
     state: mxCellState
   ): [mxShape | null, mxText | null, mxShape | null] {
@@ -1563,6 +1597,7 @@ class mxCellRenderer {
    * be drawn into the DOM. If this is false then redraw and/or reconfigure
    * will not be called on the shape.
    */
+  // redraw(state: mxCellState, force?: boolean, rendering?: boolean): void;
   redraw(
     state: mxCellState,
     force: boolean = false,
@@ -1586,6 +1621,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> whose label should be redrawn.
    */
+  // redrawShape(state: mxCellState, force?: boolean, rendering?: boolean): void;
   redrawShape(
     state: mxCellState,
     force: boolean = false,
@@ -1703,6 +1739,7 @@ class mxCellRenderer {
    *
    * Invokes redraw on the shape of the given state.
    */
+  // doRedrawShape(state: mxCellState): void;
   doRedrawShape(state: mxCellState) {
     state.shape?.redraw();
   }
@@ -1712,6 +1749,7 @@ class mxCellRenderer {
    *
    * Returns true if the given shape must be repainted.
    */
+  // isShapeInvalid(state: mxCellState, shape: mxShape): boolean;
   isShapeInvalid(state: mxCellState, 
                  shape: mxShape): boolean {
     return (
@@ -1732,6 +1770,7 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the shapes should be destroyed.
    */
+  // destroy(state: mxCellState): void;
   destroy(state: mxCellState) {
     if (state.shape != null) {
       if (state.text != null) {

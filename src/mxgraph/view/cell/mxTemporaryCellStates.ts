@@ -94,30 +94,38 @@ class mxTemporaryCellStates {
   oldDoRedrawShape: Function | null;
 
   /**
-   * Variable: view
+   * Holds the width of the rectangle.
+   * @default 0
    */
+  // view: number;
   view: mxGraphView | null = null;
 
   /**
-   * Variable: oldStates
+   * Holds the height of the rectangle.
+   * @default 0
    */
+  // oldStates: number;
   oldStates: mxDictionary | null = null;
 
   /**
-   * Variable: oldBounds
+   * Holds the height of the rectangle.
+   * @default 0
    */
+  // oldBounds: number;
   oldBounds: mxRectangle | null = null;
 
   /**
-   * Variable: oldScale
+   * Holds the height of the rectangle.
+   * @default 0
    */
+  // oldScale: number;
   oldScale: number = 0;
 
   /**
-   * Function: destroy
-   *
-   * Returns the top, left corner as a new <mxPoint>.
+   * Holds the height of the rectangle.
+   * @default 0
    */
+  // destroy(): void;
   destroy(): void {
     const view = <mxGraphView>this.view;
     view.setScale(this.oldScale);

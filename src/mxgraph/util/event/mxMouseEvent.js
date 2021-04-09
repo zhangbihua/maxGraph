@@ -52,6 +52,7 @@ class mxMouseEvent {
    *
    * Holds the consumed state of this event.
    */
+  // consumed: boolean;
   consumed = false;
 
   /**
@@ -59,6 +60,7 @@ class mxMouseEvent {
    *
    * Holds the inner event object.
    */
+  // evt: Event;
   evt = null;
 
   /**
@@ -67,6 +69,7 @@ class mxMouseEvent {
    * Holds the x-coordinate of the event in the graph. This value is set in
    * <mxGraph.fireMouseEvent>.
    */
+  // graphX: number;
   graphX = null;
 
   /**
@@ -75,6 +78,7 @@ class mxMouseEvent {
    * Holds the y-coordinate of the event in the graph. This value is set in
    * <mxGraph.fireMouseEvent>.
    */
+  // graphY: number;
   graphY = null;
 
   /**
@@ -82,6 +86,7 @@ class mxMouseEvent {
    *
    * Holds the optional <mxCellState> associated with this event.
    */
+  // state: mxCellState;
   state = null;
 
   /**
@@ -90,6 +95,7 @@ class mxMouseEvent {
    * Holds the <mxCellState> that was passed to the constructor. This can be
    * different from <state> depending on the result of <mxGraph.getEventState>.
    */
+  // sourceState: mxCellState;
   sourceState = null;
 
   /**
@@ -97,6 +103,7 @@ class mxMouseEvent {
    *
    * Returns <evt>.
    */
+  // getEvent(): MouseEvent;
   getEvent() {
     return this.evt;
   }
@@ -106,6 +113,7 @@ class mxMouseEvent {
    *
    * Returns the target DOM element using <mxEvent.getSource> for <evt>.
    */
+  // getSource(): Element;
   getSource() {
     return mxEvent.getSource(this.evt);
   }
@@ -115,6 +123,7 @@ class mxMouseEvent {
    *
    * Returns true if the given <mxShape> is the source of <evt>.
    */
+  // isSource(shape: mxShape): boolean;
   isSource(shape) {
     if (shape != null) {
       return mxUtils.isAncestorNode(shape.node, this.getSource());
@@ -128,6 +137,7 @@ class mxMouseEvent {
    *
    * Returns <evt.clientX>.
    */
+  // getX(): number;
   getX() {
     return mxEvent.getClientX(this.getEvent());
   }
@@ -137,6 +147,7 @@ class mxMouseEvent {
    *
    * Returns <evt.clientY>.
    */
+  // getY(): number;
   getY() {
     return mxEvent.getClientY(this.getEvent());
   }
@@ -146,6 +157,7 @@ class mxMouseEvent {
    *
    * Returns <graphX>.
    */
+  // getGraphX(): number;
   getGraphX() {
     return this.graphX;
   }
@@ -155,6 +167,7 @@ class mxMouseEvent {
    *
    * Returns <graphY>.
    */
+  // getGraphY(): number;
   getGraphY() {
     return this.graphY;
   }
@@ -164,6 +177,7 @@ class mxMouseEvent {
    *
    * Returns <state>.
    */
+  // getState(): mxCellState;
   getState() {
     return this.state;
   }
@@ -173,6 +187,7 @@ class mxMouseEvent {
    *
    * Returns the <mxCell> in <state> is not null.
    */
+  // getCell(): mxCell;
   getCell() {
     const state = this.getState();
 
@@ -188,6 +203,7 @@ class mxMouseEvent {
    *
    * Returns true if the event is a popup trigger.
    */
+  // isPopupTrigger(): boolean;
   isPopupTrigger() {
     return mxEvent.isPopupTrigger(this.getEvent());
   }
@@ -197,6 +213,7 @@ class mxMouseEvent {
    *
    * Returns <consumed>.
    */
+  // isConsumed(): boolean;
   isConsumed() {
     return this.consumed;
   }
@@ -214,6 +231,7 @@ class mxMouseEvent {
    * preventDefault - Specifies if the native event should be canceled. Default
    * is true.
    */
+  // consume(preventDefault?: boolean): void;
   consume(preventDefault) {
     preventDefault =
       preventDefault != null

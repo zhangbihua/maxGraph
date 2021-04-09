@@ -14,58 +14,15 @@ import mxRectangle from '../util/datatypes/mxRectangle';
 import mxCellState from '../util/datatypes/mxCellState';
 
 /**
- * Class: mxText
- *
- * Extends <mxShape> to implement a text shape. To change vertical text from
- * bottom to top to top to bottom, the following code can be used:
- *
- * (code)
- * verticalTextRotation = 90;
- * (end)
- *
- * Constructor: mxText
- *
- * Constructs a new text shape.
- *
- * Parameters:
- *
- * value - String that represents the text to be displayed. This is stored in
- * <value>.
- * bounds - <mxRectangle> that defines the bounds. This is stored in
- * <mxShape.bounds>.
- * align - Specifies the horizontal alignment. Default is ''. This is stored in
- * <align>.
- * valign - Specifies the vertical alignment. Default is ''. This is stored in
- * <valign>.
- * color - String that specifies the text color. Default is 'black'. This is
- * stored in <color>.
- * family - String that specifies the font family. Default is
- * <mxConstants.DEFAULT_FONTFAMILY>. This is stored in <family>.
- * size - Integer that specifies the font size. Default is
- * <mxConstants.DEFAULT_FONTSIZE>. This is stored in <size>.
- * fontStyle - Specifies the font style. Default is 0. This is stored in
- * <fontStyle>.
- * spacing - Integer that specifies the global spacing. Default is 2. This is
- * stored in <spacing>.
- * spacingTop - Integer that specifies the top spacing. Default is 0. The
- * sum of the spacing and this is stored in <spacingTop>.
- * spacingRight - Integer that specifies the right spacing. Default is 0. The
- * sum of the spacing and this is stored in <spacingRight>.
- * spacingBottom - Integer that specifies the bottom spacing. Default is 0.The
- * sum of the spacing and this is stored in <spacingBottom>.
- * spacingLeft - Integer that specifies the left spacing. Default is 0. The
- * sum of the spacing and this is stored in <spacingLeft>.
- * horizontal - Boolean that specifies if the label is horizontal. Default is
- * true. This is stored in <horizontal>.
- * background - String that specifies the background color. Default is null.
- * This is stored in <background>.
- * border - String that specifies the label border color. Default is null.
- * This is stored in <border>.
- * wrap - Specifies if word-wrapping should be enabled. Default is false.
- * This is stored in <wrap>.
- * clipped - Specifies if the label should be clipped. Default is false.
- * This is stored in <clipped>.
- * overflow - Value of the overflow style. Default is 'visible'.
+ * Extends mxShape to implement a text shape.
+ * To change vertical text from bottom to top to top to bottom,
+ * the following code can be used:
+ * @example
+ * ```javascript
+ * mxText.prototype.verticalTextRotation = 90;
+ * ```
+ * @class mxText
+ * @extends {mxShape}
  */
 class mxText extends mxShape {
   constructor(
@@ -152,6 +109,7 @@ class mxText extends mxShape {
    * Specifies the spacing to be added to the top spacing. Default is 0. Use the
    * value 5 here to get the same label positions as in mxGraph 1.x.
    */
+  // baseSpacingTop: number;
   baseSpacingTop: number = 0;
 
   /**
@@ -160,6 +118,7 @@ class mxText extends mxShape {
    * Specifies the spacing to be added to the bottom spacing. Default is 0. Use the
    * value 1 here to get the same label positions as in mxGraph 1.x.
    */
+  // baseSpacingBottom: number;
   baseSpacingBottom: number = 0;
 
   /**
@@ -167,6 +126,7 @@ class mxText extends mxShape {
    *
    * Specifies the spacing to be added to the left spacing. Default is 0.
    */
+  // baseSpacingLeft: number;
   baseSpacingLeft: number = 0;
 
   /**
@@ -174,6 +134,7 @@ class mxText extends mxShape {
    *
    * Specifies the spacing to be added to the right spacing. Default is 0.
    */
+  // baseSpacingRight: number;
   baseSpacingRight: number = 0;
 
   /**
@@ -182,6 +143,7 @@ class mxText extends mxShape {
    * Specifies if linefeeds in HTML labels should be replaced with BR tags.
    * Default is true.
    */
+  // replaceLinefeeds: boolean;
   replaceLinefeeds: boolean = true;
 
   /**
@@ -189,6 +151,7 @@ class mxText extends mxShape {
    *
    * Rotation for vertical text. Default is -90 (bottom to top).
    */
+  // verticalTextRotation: number;
   verticalTextRotation: number = -90;
 
   /**
@@ -199,6 +162,7 @@ class mxText extends mxShape {
    * true, then the bounding box will be set to <bounds>. Default is true.
    * <ignoreStringSize> has precedence over this switch.
    */
+  // ignoreClippedStringSize: boolean;
   ignoreClippedStringSize: boolean = true;
 
   /**
@@ -208,6 +172,7 @@ class mxText extends mxShape {
    * boundingBox will not ignore the actual size of the string, otherwise
    * <bounds> will be used instead. Default is false.
    */
+  // ignoreStringSize: boolean;
   ignoreStringSize: boolean = false;
 
   /**
@@ -215,6 +180,7 @@ class mxText extends mxShape {
    *
    * Contains the last rendered text value. Used for caching.
    */
+  // lastValue: string;
   lastValue: string | HTMLElement | SVGGElement | null = null;
 
   /**
@@ -222,11 +188,15 @@ class mxText extends mxShape {
    *
    * Specifies if caching for HTML labels should be enabled. Default is true.
    */
+  // cacheEnabled: boolean;
   cacheEnabled: boolean = true;
 
   /**
    * Function: getSvgScreenOffset
+   *
+   * Disables offset in IE9 for crisper image output.
    */
+  // getSvgScreenOffset(): 0 | 0.5;
   getSvgScreenOffset(): number {
     return 0;
   }
@@ -236,6 +206,7 @@ class mxText extends mxShape {
    *
    * Returns true if the bounds are not null and all of its variables are numeric.
    */
+  // checkBounds(): boolean;
   checkBounds(): boolean {
     return (
       !isNaN(this.scale) &&
@@ -254,6 +225,7 @@ class mxText extends mxShape {
    *
    * Generic rendering code.
    */
+  // paint(c: mxAbstractCanvas2D, update?: boolean): void;
   paint(c: mxSvgCanvas2D, update: boolean = false): void {
     // Scale is passed-through to canvas
     const s = this.scale;
@@ -339,6 +311,7 @@ class mxText extends mxShape {
    *
    * Renders the text using the given DOM nodes.
    */
+  // redraw(): void;
   redraw(): void {
     if (
       this.visible &&
@@ -381,6 +354,7 @@ class mxText extends mxShape {
    *
    * Resets all styles.
    */
+  // resetStyles(): void;
   resetStyles(): void {
     super.resetStyles();
 
@@ -411,6 +385,7 @@ class mxText extends mxShape {
    *
    * state - <mxCellState> of the corresponding cell.
    */
+  // apply(state: mxCellState): void;
   apply(state: mxCellState): void {
     const old = this.spacing;
     super.apply(state);
@@ -517,6 +492,7 @@ class mxText extends mxShape {
    * depending on the contents of <value>. This is not invoked for HTML, wrapped
    * content or if <value> is a DOM node.
    */
+  // getAutoDirection(): string;
   getAutoDirection() {
     // Looks for strong (directional) characters
     const tmp = /[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(
@@ -556,6 +532,7 @@ class mxText extends mxShape {
    *
    * Updates the <boundingBox> for this shape using the given node and position.
    */
+  // updateBoundingBox(): void;
   updateBoundingBox() {
     let { node } = this;
     this.boundingBox = this.bounds.clone();
@@ -679,6 +656,7 @@ class mxText extends mxShape {
    *
    * Returns 0 to avoid using rotation in the canvas via updateTransform.
    */
+  // getShapeRotation(): 0;
   getShapeRotation() {
     return 0;
   }
@@ -688,6 +666,7 @@ class mxText extends mxShape {
    *
    * Returns the rotation for the text label of the corresponding shape.
    */
+  // getTextRotation(): number;
   getTextRotation() {
     return this.state != null && this.state.shape != null
       ? this.state.shape.getTextRotation()
@@ -700,6 +679,7 @@ class mxText extends mxShape {
    * Inverts the bounds if <mxShape.isBoundsInverted> returns true or if the
    * horizontal style is false.
    */
+  // isPaintBoundsInverted(): boolean;
   isPaintBoundsInverted() {
     return (
       !this.horizontal &&
@@ -714,6 +694,7 @@ class mxText extends mxShape {
    *
    * Sets the state of the canvas for drawing the shape.
    */
+  // configureCanvas(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   configureCanvas(c: mxSvgCanvas2D,
                   x: number,
                   y: number,
@@ -805,6 +786,7 @@ class mxText extends mxShape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
+  // redrawHtmlShape(): void;
   redrawHtmlShape() {
     const w = Math.max(0, Math.round(this.bounds.width / this.scale));
     const h = Math.max(0, Math.round(this.bounds.height / this.scale));
@@ -883,10 +865,11 @@ class mxText extends mxShape {
   }
 
   /**
-   * Function: updateInnerHtml
+   * Function: setInnerHtml
    *
    * Sets the inner HTML of the given element to the <value>.
    */
+  // updateInnerHtml(elt: HTMLElement): void;
   updateInnerHtml(elt: HTMLElement) {
     if (mxUtils.isNode(this.value)) {
       // @ts-ignore
@@ -913,6 +896,7 @@ class mxText extends mxShape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
+  // updateValue(): void;
   updateValue() {
     const node = <SVGGElement>this.node;
 
@@ -1000,6 +984,7 @@ class mxText extends mxShape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
+  // updateFont(node: HTMLElement): void;
   updateFont(node: HTMLElement | SVGGElement) {
     const { style } = node;
 
@@ -1059,6 +1044,7 @@ class mxText extends mxShape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
+  // updateSize(node: HTMLElement, enableWrap: boolean): void;
   updateSize(node: HTMLElement, enableWrap: boolean = false) {
     const w = Math.max(0, Math.round(this.bounds.width / this.scale));
     const h = Math.max(0, Math.round(this.bounds.height / this.scale));
@@ -1131,6 +1117,7 @@ class mxText extends mxShape {
    *
    * Returns the spacing as an <mxPoint>.
    */
+  // updateMargin(): void;
   updateMargin(): void {
     this.margin = mxUtils.getAlignmentAsPoint(this.align, this.valign);
   }
@@ -1140,6 +1127,7 @@ class mxText extends mxShape {
    *
    * Returns the spacing as an <mxPoint>.
    */
+  // getSpacing(): mxPoint;
   getSpacing(): mxPoint {
     let dx = 0;
     let dy = 0;

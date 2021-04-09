@@ -6,13 +6,8 @@ import mxGraphSelectionModel from './mxGraphSelectionModel';
 import mxCell from '../cell/mxCell';
 
 /**
- * Class: mxSelectionChange
- *
+ * @class mxSelectionChange
  * Action to change the current root in a view.
- *
- * Constructor: mxCurrentRootChange
- *
- * Constructs a change of the current root in the given view.
  */
 class mxSelectionChange {
   constructor(
@@ -32,10 +27,9 @@ class mxSelectionChange {
   removed: mxCell[];
 
   /**
-   * Function: execute
-   *
    * Changes the current root of the view.
    */
+  // execute(): void;
   execute() {
     const t0: any = mxLog.enter('mxSelectionChange.execute');
 

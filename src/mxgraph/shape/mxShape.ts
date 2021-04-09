@@ -26,62 +26,47 @@ const toBool = (i: any): boolean => {
 };
 
 /**
- * Class: mxShape
+ * Base class for all shapes.
+ * A shape in mxGraph is a separate implementation for SVG, VML and HTML.
+ * Which implementation to use is controlled by the dialect property which
+ * is assigned from within the mxCellRenderer when the shape is created.
+ * The dialect must be assigned for a shape, and it does normally depend on
+ * the browser and the configuration of the graph (see mxGraph rendering hint).
  *
- * Base class for all shapes. A shape in mxGraph is a
- * separate implementation for SVG, VML and HTML. Which
- * implementation to use is controlled by the <dialect>
- * property which is assigned from within the <mxCellRenderer>
- * when the shape is created. The dialect must be assigned
- * for a shape, and it does normally depend on the browser and
- * the confiuration of the graph (see <mxGraph> rendering hint).
+ * For each supported shape in SVG and VML, a corresponding shape exists in
+ * mxGraph, namely for text, image, rectangle, rhombus, ellipse and polyline.
+ * The other shapes are a combination of these shapes (eg. label and swimlane)
+ * or they consist of one or more (filled) path objects (eg. actor and cylinder).
+ * The HTML implementation is optional but may be required for a HTML-only view
+ * of the graph.
  *
- * For each supported shape in SVG and VML, a corresponding
- * shape exists in mxGraph, namely for text, image, rectangle,
- * rhombus, ellipse and polyline. The other shapes are a
- * combination of these shapes (eg. label and swimlane)
- * or they consist of one or more (filled) path objects
- * (eg. actor and cylinder). The HTML implementation is
- * optional but may be required for a HTML-only view of
- * the graph.
- *
- * Custom Shapes:
- *
+ * ### Custom Shapes
  * To extend from this class, the basic code looks as follows.
- * In the special case where the custom shape consists only of
- * one filled region or one filled region and an additional stroke
- * the <mxActor> and <mxCylinder> should be subclassed,
- * respectively.
- *
- * (code)
+ * In the special case where the custom shape consists only of one filled region
+ * or one filled region and an additional stroke the mxActor and mxCylinder
+ * should be subclassed, respectively.
+ * @example
+ * ```javascript
  * function CustomShape() { }
  *
  * CustomShape.prototype = new mxShape();
- * constructor = CustomShape;
- * (end)
- *
- * To register a custom shape in an existing graph instance,
- * one must register the shape under a new name in the graph's
- * cell renderer as follows:
- *
- * (code)
+ * CustomShape.prototype.constructor = CustomShape;
+ * ```
+ * To register a custom shape in an existing graph instance, one must register the
+ * shape under a new name in the graph’s cell renderer as follows:
+ * @example
+ * ```javascript
  * mxCellRenderer.registerShape('customShape', CustomShape);
- * (end)
- *
+ * ```
  * The second argument is the name of the constructor.
- *
- * In order to use the shape you can refer to the given name above
- * in a stylesheet. For example, to change the shape for the default
- * vertex style, the following code is used:
- *
- * (code)
- * let style = graph.getStylesheet().getDefaultVertexStyle();
+ * In order to use the shape you can refer to the given name above in a stylesheet.
+ * For example, to change the shape for the default vertex style, the following code
+ * is used:
+ * @example
+ * ```javascript
+ * var style = graph.getStylesheet().getDefaultVertexStyle();
  * style[mxConstants.STYLE_SHAPE] = 'customShape';
- * (end)
- *
- * Constructor: mxShape
- *
- * Constructs a new shape.
+ * ```
  */
 class mxShape {
   constructor(stencil: mxStencil | null=null) {
@@ -100,6 +85,7 @@ class mxShape {
    *
    * container - DOM node that will contain the shape.
    */
+  // init(container: Element): void;
   init(container: HTMLElement | SVGElement | null = null) {
     if (this.node == null) {
       this.node = this.create(container);
@@ -115,6 +101,7 @@ class mxShape {
    *
    * Sets the styles to their default values.
    */
+  // initStyles(container: Element): void;
   initStyles(container: SVGElement | null = null) {
     this.strokewidth = 1;
     this.rotation = 0;
@@ -187,6 +174,7 @@ class mxShape {
    * Holds the dialect in which the shape is to be painted.
    * This can be one of the DIALECT constants in <mxConstants>.
    */
+  // dialect: string;
   dialect: string | null = null;
 
   /**
@@ -194,6 +182,7 @@ class mxShape {
    *
    * Holds the scale in which the shape is being painted.
    */
+  // scale: number;
   scale: number = 1;
 
   /**
@@ -201,6 +190,7 @@ class mxShape {
    *
    * Rendering hint for configuring the canvas.
    */
+  // antiAlias: boolean;
   antiAlias: boolean = true;
 
   /**
@@ -208,6 +198,7 @@ class mxShape {
    *
    * Minimum stroke width for SVG output.
    */
+  // minSvgStrokeWidth: number;
   minSvgStrokeWidth: number = 1;
 
   /**
@@ -215,6 +206,7 @@ class mxShape {
    *
    * Holds the <mxRectangle> that specifies the bounds of this shape.
    */
+  // bounds: mxRectangle;
   bounds: mxRectangle | null = null;
 
   /**
@@ -222,6 +214,7 @@ class mxShape {
    *
    * Holds the array of <mxPoints> that specify the points of this shape.
    */
+  // points: mxPoint[];
   points: (mxPoint | null)[] | null = null;
 
   /**
@@ -229,6 +222,7 @@ class mxShape {
    *
    * Holds the outermost DOM node that represents this shape.
    */
+  // node: HTMLElement;
   node: SVGGElement | null = null;
 
   /**
@@ -236,14 +230,16 @@ class mxShape {
    *
    * Optional reference to the corresponding <mxCellState>.
    */
-  state: mxCellState | null = null;
+  // state?: mxCellState;
+  state?: mxCellState | null = null;
 
   /**
    * Variable: style
    *
    * Optional reference to the style of the corresponding <mxCellState>.
    */
-  style: any = null;
+  // style?: { [key: string]: any };
+  style?: any = null;
 
   /**
    * Variable: boundingBox
@@ -251,6 +247,7 @@ class mxShape {
    * Contains the bounding box of the shape, that is, the smallest rectangle
    * that includes all pixels of the shape.
    */
+  // boundingBox: mxRectangle;
   boundingBox: mxRectangle | null = null;
 
   /**
@@ -258,6 +255,7 @@ class mxShape {
    *
    * Holds the <mxStencil> that defines the shape.
    */
+  // stencil: mxStencil;
   stencil: mxStencil | null = null;
 
   /**
@@ -266,6 +264,7 @@ class mxShape {
    * Event-tolerance for SVG strokes (in px). Default is 8. This is only passed
    * to the canvas in <createSvgCanvas> if <pointerEvents> is true.
    */
+  // svgStrokeTolerance: number;
   svgStrokeTolerance: number = 8;
 
   /**
@@ -273,13 +272,15 @@ class mxShape {
    *
    * Specifies if pointer events should be handled. Default is true.
    */
+  // pointerEvents: boolean;
   pointerEvents: boolean = true;
 
   /**
    * Variable: svgPointerEvents
    *
-   * Specifies if pointer events should be handled. Default is 'all', meaning they will be.
+   * Specifies if pointer events should be handled. Default is true.
    */
+  // svgPointerEvents: 'all';
   svgPointerEvents: string = 'all';
 
   /**
@@ -288,6 +289,7 @@ class mxShape {
    * Specifies if pointer events outside of shape should be handled. Default
    * is false.
    */
+  // shapePointerEvents: boolean;
   shapePointerEvents: boolean = false;
 
   /**
@@ -296,6 +298,7 @@ class mxShape {
    * Specifies if pointer events outside of stencils should be handled. Default
    * is false. Set this to true for backwards compatibility with the 1.x branch.
    */
+  // stencilPointerEvents: boolean;
   stencilPointerEvents: boolean = false;
 
   /**
@@ -306,6 +309,7 @@ class mxShape {
    * not be painted for outlines. Default is false. This should be set before
    * calling <apply>.
    */
+  // outline: boolean;
   outline: boolean = false;
 
   /**
@@ -313,13 +317,16 @@ class mxShape {
    *
    * Specifies if the shape is visible. Default is true.
    */
+  // visible: boolean;
   visible: boolean = true;
 
   /**
    * Variable: useSvgBoundingBox
    *
-   * Allows to use the SVG bounding box in SVG. Default is true.
+   * Allows to use the SVG bounding box in SVG. Default is false for performance
+   * reasons.
    */
+  // useSvgBoundingBox: boolean;
   useSvgBoundingBox: boolean = true;
 
   /**
@@ -328,6 +335,7 @@ class mxShape {
    * Returns true if HTML is allowed for this shape. This implementation always
    * returns false.
    */
+  // isHtmlAllowed(): boolean;
   isHtmlAllowed() {
     return false;
   }
@@ -337,6 +345,7 @@ class mxShape {
    *
    * Returns 0, or 0.5 if <strokewidth> % 2 == 1.
    */
+  // getSvgScreenOffset(): number;
   getSvgScreenOffset(): number {
     const sw =
       this.stencil && this.stencil.strokewidth !== 'inherit'
@@ -351,12 +360,16 @@ class mxShape {
   /**
    * Function: create
    *
-   * Creates and returns the SVG node(s) to represent this shape.
+   * Creates and returns the DOM node(s) for the shape in
+   * the given container. This implementation invokes
+   * <createSvg>, <createHtml> or <createVml> depending
+   * on the <dialect> and style settings.
    *
    * Parameters:
    *
    * container - DOM node that will contain the shape.
    */
+  // create(container: Element): Element;
   create(container: SVGElement | HTMLElement | null): SVGGElement {
     return document.createElementNS("http://www.w3.org/2000/svg", "g");
   }
@@ -367,6 +380,7 @@ class mxShape {
    * Reconfigures this shape. This will update the colors etc in
    * addition to the bounds or points.
    */
+  // reconfigure(): void;
   reconfigure(): void {
     this.redraw();
   }
@@ -376,6 +390,7 @@ class mxShape {
    *
    * Creates and returns the SVG node(s) to represent this shape.
    */
+  // redraw(): void;
   redraw(): void {
     if (!this.node) return;
     this.updateBoundsFromPoints();
@@ -396,6 +411,7 @@ class mxShape {
    *
    * Removes all child nodes and resets all CSS.
    */
+  // clear(): void;
   clear(): void {
     if (!this.node) return;
     while (this.node.lastChild != null) {
@@ -408,6 +424,7 @@ class mxShape {
    *
    * Updates the bounds based on the points.
    */
+  // updateBoundsFromPoints(): void;
   updateBoundsFromPoints(): void {
     const pts = this.points;
 
@@ -436,6 +453,7 @@ class mxShape {
    * given scaled and translated bounds of the shape. This method should not
    * change the rectangle in-place. This implementation returns the given rect.
    */
+  // getLabelBounds(rect: mxRectangle): mxRectangle;
   getLabelBounds(rect: mxRectangle): mxRectangle {
     const d = mxUtils.getValue(
       this.style,
@@ -501,6 +519,7 @@ class mxShape {
    * computing the label bounds as an <mxRectangle>, where the bottom and right
    * margin are defined in the width and height of the rectangle, respectively.
    */
+  // getLabelMargins(rect: mxRectangle): mxRectangle | null;
   getLabelMargins(rect: mxRectangle | null = null): mxRectangle | null {
     return null;
   }
@@ -510,6 +529,7 @@ class mxShape {
    *
    * Returns true if the bounds are not null and all of its variables are numeric.
    */
+  // checkBounds(): boolean;
   checkBounds(): boolean {
     return (
       !Number.isNaN(this.scale) &&
@@ -528,8 +548,9 @@ class mxShape {
   /**
    * Function: redrawShape
    *
-   * Updates the SVG shape.
+   * Updates the SVG or VML shape.
    */
+  // redrawShape(): void;
   redrawShape(): void {
     if (!this.node) return;
     const canvas = this.createCanvas();
@@ -556,6 +577,7 @@ class mxShape {
    *
    * Creates a new canvas for drawing this shape. May return null.
    */
+  // createCanvas(): Element;
   createCanvas(): mxSvgCanvas2D {
     const canvas = this.createSvgCanvas();
 
@@ -582,6 +604,7 @@ class mxShape {
    *
    * Creates and returns an <mxSvgCanvas2D> for rendering this shape.
    */
+  // createSvgCanvas(): mxSvgCanvas2D;
   createSvgCanvas(): mxSvgCanvas2D {
     const canvas = new mxSvgCanvas2D(this.node, false);
     canvas.strokeTolerance = this.pointerEvents ? this.svgStrokeTolerance : 0;
@@ -643,10 +666,9 @@ class mxShape {
   afterPaint(c: mxSvgCanvas2D): void {}
 
   /**
-   * Function: paint
-   *
    * Generic rendering code.
    */
+  // paint(c: mxAbstractCanvas2D): void;
   paint(c: mxSvgCanvas2D): void {
     let strokeDrawn = false;
 
@@ -741,10 +763,9 @@ class mxShape {
   }
 
   /**
-   * Function: configureCanvas
-   *
    * Sets the state of the canvas for drawing the shape.
    */
+  // configureCanvas(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   configureCanvas(c: mxSvgCanvas2D,
                   x: number,
                   y: number,
@@ -809,6 +830,7 @@ class mxShape {
    *
    * Returns the bounding box for the gradient box for this shape.
    */
+  // getGradientBounds(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): mxRectangle;
   getGradientBounds(c: mxSvgCanvas2D,
                     x: number,
                     y: number,
@@ -822,6 +844,7 @@ class mxShape {
    *
    * Sets the scale and rotation on the given canvas.
    */
+  // updateTransform(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   updateTransform(c: mxSvgCanvas2D,
                   x: number,
                   y: number,
@@ -845,6 +868,7 @@ class mxShape {
    *
    * Paints the vertex shape.
    */
+  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintVertexShape(c: mxSvgCanvas2D,
                    x: number,
                    y: number,
@@ -873,6 +897,7 @@ class mxShape {
    *
    * Hook for subclassers. This implementation is empty.
    */
+  // paintBackground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintBackground(c: mxSvgCanvas2D,
                   x: number,
                   y: number,
@@ -880,10 +905,9 @@ class mxShape {
                   h: number) {}
 
   /**
-   * Function: paintForeground
-   *
    * Hook for subclassers. This implementation is empty.
    */
+  // paintForeground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintForeground(c: mxSvgCanvas2D,
                   x: number,
                   y: number,
@@ -895,6 +919,7 @@ class mxShape {
    *
    * Hook for subclassers. This implementation is empty.
    */
+  // paintEdgeShape(c: mxAbstractCanvas2D, pts: mxPoint[]): void;
   paintEdgeShape(c: mxSvgCanvas2D,
                  pts: mxPoint[]): void {}
 
@@ -903,6 +928,7 @@ class mxShape {
    *
    * Returns the arc size for the given dimension.
    */
+  // getArcSize(w: number, h: number): number;
   getArcSize(w: number, h: number): number {
     let r = 0;
 
@@ -942,6 +968,7 @@ class mxShape {
    *
    * Paints the glass gradient effect.
    */
+  // paintGlassEffect(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number, arc: number): void;
   paintGlassEffect(c: mxSvgCanvas2D,
                    x: number,
                    y: number,
@@ -1079,6 +1106,7 @@ class mxShape {
    *
    * Resets all styles.
    */
+  // resetStyles(): void;
   resetStyles() {
     this.initStyles();
 
@@ -1135,6 +1163,7 @@ class mxShape {
    *
    * state - <mxCellState> of the corresponding cell.
    */
+  // apply(state: mxCellState): void;
   apply(state: mxCellState) {
     this.state = state;
     this.style = state.style;
@@ -1225,6 +1254,7 @@ class mxShape {
    *
    * cursor - The cursor to be used.
    */
+  // setCursor(cursor: string): void;
   setCursor(cursor: string | null = null): void {
     if (cursor == null) {
       cursor = '';
@@ -1240,15 +1270,15 @@ class mxShape {
    *
    * Returns the current cursor.
    */
+  // getCursor(): string;
   getCursor(): string {
     return <string>this.cursor;
   }
 
   /**
-   * Function: isRoundable
-   *
    * Hook for subclassers.
    */
+  // isRoundable(): boolean;
   isRoundable(
     c: mxSvgCanvas2D,
     x: number,
@@ -1265,6 +1295,7 @@ class mxShape {
    * Updates the <boundingBox> for this shape using <createBoundingBox> and
    * <augmentBoundingBox> and stores the result in <boundingBox>.
    */
+  // updateBoundingBox(): void;
   updateBoundingBox() {
     // Tries to get bounding box from SVG subsystem
     // LATER: Use getBoundingClientRect for fallback in VML
@@ -1310,6 +1341,7 @@ class mxShape {
    * Returns a new rectangle that represents the bounding box of the bare shape
    * with no shadows or strokewidths.
    */
+  // createBoundingBox(): mxRectangle;
   createBoundingBox() {
     const bb = (<mxRectangle>this.bounds).clone();
     if (
@@ -1324,10 +1356,9 @@ class mxShape {
   }
 
   /**
-   * Function: augmentBoundingBox
-   *
    * Augments the bounding box with the strokewidth and shadow offsets.
    */
+  // augmentBoundingBox(bbox: mxRectangle): void;
   augmentBoundingBox(bbox: mxRectangle): void {
     if (this.isShadow) {
       bbox.width += Math.ceil(mxConstants.SHADOW_OFFSET_X * this.scale);
@@ -1342,6 +1373,7 @@ class mxShape {
    *
    * Returns true if the bounds should be inverted.
    */
+  // isPaintBoundsInverted(): boolean;
   isPaintBoundsInverted(): boolean {
     // Stencil implements inversion via aspect
     return (
@@ -1356,6 +1388,7 @@ class mxShape {
    *
    * Returns the rotation from the style.
    */
+  // getRotation(): number;
   getRotation(): number {
     return this.rotation != null ? this.rotation : 0;
   }
@@ -1365,6 +1398,7 @@ class mxShape {
    *
    * Returns the rotation for the text label.
    */
+  // getTextRotation(): number;
   getTextRotation(): number {
     let rot = this.getRotation();
     if (
@@ -1380,6 +1414,7 @@ class mxShape {
    *
    * Returns the actual rotation of the shape.
    */
+  // getShapeRotation(): number;
   getShapeRotation(): number {
     let rot = this.getRotation();
     if (this.direction != null) {
@@ -1399,6 +1434,7 @@ class mxShape {
    *
    * Adds a transparent rectangle that catches all events.
    */
+  // createTransparentSvgRectangle(x: number, y: number, w: number, h: number): Element;
   createTransparentSvgRectangle(x: number,
                                 y: number,
                                 w: number,
@@ -1422,6 +1458,7 @@ class mxShape {
    *
    * Paints the line shape.
    */
+  // setTransparentBackgroundImage(node: Element): void;
   setTransparentBackgroundImage(node: SVGElement): void {
     node.style.backgroundImage = `url('${mxClient.imageBasePath}/transparent.gif')`;
   }
@@ -1431,6 +1468,7 @@ class mxShape {
    *
    * Paints the line shape.
    */
+  // releaseSvgGradients(grads: any[]): void;
   releaseSvgGradients(grads: any): void {
     if (grads != null) {
       for (const key in grads) {
@@ -1453,6 +1491,7 @@ class mxShape {
    * Destroys the shape by removing it from the DOM and releasing the DOM
    * node associated with the shape using <mxEvent.release>.
    */
+  // destroy(): void;
   destroy(): void {
     if (this.node != null) {
       mxEvent.release(this.node);

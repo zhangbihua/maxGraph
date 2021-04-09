@@ -38,6 +38,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * Specifies if a double click on the middle handle should call
    * <mxGraph.flipEdge>. Default is true.
    */
+  // flipEnabled: boolean;
   flipEnabled = true;
 
   /**
@@ -48,6 +49,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * exist then the value is used as the error message. Default is
    * 'doubleClickOrientation'.
    */
+  // doubleClickOrientationResource: string;
   doubleClickOrientationResource =
     mxClient.language !== 'none' ? 'doubleClickOrientation' : '';
 
@@ -92,6 +94,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * Creates a virtual bend that supports double clicking and calls
    * <mxGraph.flipEdge>.
    */
+  // createVirtualBend(dblClickHandler: (evt: Event) => void): mxRectangleShape;
   createVirtualBend(dblClickHandler) {
     const bend = this.createHandleShape();
     this.initBend(bend, dblClickHandler);
@@ -110,6 +113,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    *
    * Returns the cursor to be used for the bend.
    */
+  // getCursorForBend(): string;
   getCursorForBend() {
     return this.state.style[mxConstants.STYLE_EDGE] ===
       mxEdgeStyle.TopToBottom ||
@@ -130,6 +134,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    *
    * Returns the tooltip for the given node.
    */
+  // getTooltipForNode(node: Element): string;
   getTooltipForNode(node) {
     let tip = null;
 
@@ -156,6 +161,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * point - <mxPoint> to be converted.
    * gridEnabled - Boolean that specifies if the grid should be applied.
    */
+  // convertPoint(point: mxPoint, gridEnabled: boolean): mxPoint;
   convertPoint(point, gridEnabled) {
     const scale = this.graph.getView().getScale();
     const tr = this.graph.getView().getTranslate();
@@ -182,6 +188,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    * p0 - <mxPoint> that represents the location of the first point.
    * pe - <mxPoint> that represents the location of the last point.
    */
+  // redrawInnerBends(p0: mxPoint, pe: mxPoint): void;
   redrawInnerBends(p0, pe) {
     const g = this.graph.getModel().getGeometry(this.state.cell);
     const pts = this.state.absolutePoints;

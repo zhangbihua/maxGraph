@@ -54,601 +54,21 @@ import mxShape from "../../shape/mxShape";
 import mxLabel from "../../shape/mxLabel";
 
 /**
- * Class: mxGraph
- *
- * Extends <mxEventSource> to implement a graph component for
+ * Extends {@link mxEventSource} to implement a graph component for
  * the browser. This is the main class of the package. To activate
- * panning and connections use <setPanning> and <setConnectable>.
+ * panning and connections use {@link setPanning} and {@link setConnectable}.
  * For rubberband selection you must create a new instance of
- * <mxRubberband>. The following listeners are added to
- * <mouseListeners> by default:
+ * {@link mxRubberband}. The following listeners are added to
+ * {@link mouseListeners} by default:
  *
- * - <tooltipHandler>: <mxTooltipHandler> that displays tooltips
- * - <panningHandler>: <mxPanningHandler> for panning and popup menus
- * - <connectionHandler>: <mxConnectionHandler> for creating connections
- * - <graphHandler>: <mxGraphHandler> for moving and cloning cells
+ * - tooltipHandler: {@link mxTooltipHandler} that displays tooltips
+ * - panningHandler: {@link mxPanningHandler} for panning and popup menus
+ * - connectionHandler: {@link mxConnectionHandler} for creating connections
+ * - graphHandler: {@link mxGraphHandler} for moving and cloning cells
  *
  * These listeners will be called in the above order if they are enabled.
- *
- * Background Images:
- *
- * To display a background image, set the image, image width and
- * image height using <setBackgroundImage>. If one of the
- * above values has changed then the <view>'s <mxGraphView.validate>
- * should be invoked.
- *
- * Cell Images:
- *
- * To use images in cells, a shape must be specified in the default
- * vertex style (or any named style). Possible shapes are
- * <mxConstants.SHAPE_IMAGE> and <mxConstants.SHAPE_LABEL>.
- * The code to change the shape used in the default vertex style,
- * the following code is used:
- *
- * (code)
- * let style = graph.getStylesheet().getDefaultVertexStyle();
- * style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
- * (end)
- *
- * For the default vertex style, the image to be displayed can be
- * specified in a cell's style using the <mxConstants.STYLE_IMAGE>
- * key and the image URL as a value, for example:
- *
- * (code)
- * image=http://www.example.com/image.gif
- * (end)
- *
- * For a named style, the the stylename must be the first element
- * of the cell style:
- *
- * (code)
- * stylename;image=http://www.example.com/image.gif
- * (end)
- *
- * A cell style can have any number of key=value pairs added, divided
- * by a semicolon as follows:
- *
- * (code)
- * [stylename;|key=value;]
- * (end)
- *
- * Labels:
- *
- * The cell labels are defined by <getLabel> which uses <convertValueToString>
- * if <labelsVisible> is true. If a label must be rendered as HTML markup, then
- * <isHtmlLabel> should return true for the respective cell. If all labels
- * contain HTML markup, <htmlLabels> can be set to true. NOTE: Enabling HTML
- * labels carries a possible security risk (see the section on security in
- * the manual).
- *
- * If wrapping is needed for a label, then <isHtmlLabel> and <isWrapping> must
- * return true for the cell whose label should be wrapped. See <isWrapping> for
- * an example.
- *
- * If clipping is needed to keep the rendering of a HTML label inside the
- * bounds of its vertex, then <isClipping> should return true for the
- * respective cell.
- *
- * By default, edge labels are movable and vertex labels are fixed. This can be
- * changed by setting <edgeLabelsMovable> and <vertexLabelsMovable>, or by
- * overriding <isLabelMovable>.
- *
- * In-place Editing:
- *
- * In-place editing is started with a doubleclick or by typing F2.
- * Programmatically, <edit> is used to check if the cell is editable
- * (<isCellEditable>) and call <startEditingAtCell>, which invokes
- * <mxCellEditor.startEditing>. The editor uses the value returned
- * by <getEditingValue> as the editing value.
- *
- * After in-place editing, <labelChanged> is called, which invokes
- * <mxGraphModel.setValue>, which in turn calls
- * <mxGraphModel.valueForCellChanged> via <mxValueChange>.
- *
- * The event that triggers in-place editing is passed through to the
- * <cellEditor>, which may take special actions depending on the type of the
- * event or mouse location, and is also passed to <getEditingValue>. The event
- * is then passed back to the event processing functions which can perform
- * specific actions based on the trigger event.
- *
- * Tooltips:
- *
- * Tooltips are implemented by <getTooltip>, which calls <getTooltipForCell>
- * if a cell is under the mousepointer. The default implementation checks if
- * the cell has a getTooltip function and calls it if it exists. Hence, in order
- * to provide custom tooltips, the cell must provide a getTooltip function, or
- * one of the two above functions must be overridden.
- *
- * Typically, for custom cell tooltips, the latter function is overridden as
- * follows:
- *
- * (code)
- * graph.getTooltipForCell = (cell)=>
- * {
- *   let label = this.convertValueToString(cell);
- *   return 'Tooltip for '+label;
- * }
- * (end)
- *
- * When using a config file, the function is overridden in the mxGraph section
- * using the following entry:
- *
- * (code)
- * <add as="getTooltipForCell"><![CDATA[
- *   (cell)=>
- *   {
- *     let label = this.convertValueToString(cell);
- *     return 'Tooltip for '+label;
- *   }
- * ]]></add>
- * (end)
- *
- * "this" refers to the graph in the implementation, so for example to check if
- * a cell is an edge, you use this.getModel().isEdge(cell)
- *
- * For replacing the default implementation of <getTooltipForCell> (rather than
- * replacing the function on a specific instance), the following code should be
- * used after loading the JavaScript files, but before creating a new mxGraph
- * instance using <mxGraph>:
- *
- * (code)
- * getTooltipForCell = (cell)=>
- * {
- *   let label = this.convertValueToString(cell);
- *   return 'Tooltip for '+label;
- * }
- * (end)
- *
- * Shapes & Styles:
- *
- * The implementation of new shapes is demonstrated in the examples. We'll assume
- * that we have implemented a custom shape with the name BoxShape which we want
- * to use for drawing vertices. To use this shape, it must first be registered in
- * the cell renderer as follows:
- *
- * (code)
- * mxCellRenderer.registerShape('box', BoxShape);
- * (end)
- *
- * The code registers the BoxShape constructor under the name box in the cell
- * renderer of the graph. The shape can now be referenced using the shape-key in
- * a style definition. (The cell renderer contains a set of additional shapes,
- * namely one for each constant with a SHAPE-prefix in <mxConstants>.)
- *
- * Styles are a collection of key, value pairs and a stylesheet is a collection
- * of named styles. The names are referenced by the cellstyle, which is stored
- * in <mxCell.style> with the following format: [stylename;|key=value;]. The
- * string is resolved to a collection of key, value pairs, where the keys are
- * overridden with the values in the string.
- *
- * When introducing a new shape, the name under which the shape is registered
- * must be used in the stylesheet. There are three ways of doing this:
- *
- *   - By changing the default style, so that all vertices will use the new
- *     shape
- *   - By defining a new style, so that only vertices with the respective
- *     cellstyle will use the new shape
- *   - By using shape=box in the cellstyle's optional list of key, value pairs
- *     to be overridden
- *
- * In the first case, the code to fetch and modify the default style for
- * vertices is as follows:
- *
- * (code)
- * let style = graph.getStylesheet().getDefaultVertexStyle();
- * style[mxConstants.STYLE_SHAPE] = 'box';
- * (end)
- *
- * The code takes the default vertex style, which is used for all vertices that
- * do not have a specific cellstyle, and modifies the value for the shape-key
- * in-place to use the new BoxShape for drawing vertices. This is done by
- * assigning the box value in the second line, which refers to the name of the
- * BoxShape in the cell renderer.
- *
- * In the second case, a collection of key, value pairs is created and then
- * added to the stylesheet under a new name. In order to distinguish the
- * shapename and the stylename we'll use boxstyle for the stylename:
- *
- * (code)
- * let style = {};
- * style[mxConstants.STYLE_SHAPE] = 'box';
- * style[mxConstants.STYLE_STROKECOLOR] = '#000000';
- * style[mxConstants.STYLE_FONTCOLOR] = '#000000';
- * graph.getStylesheet().putCellStyle('boxstyle', style);
- * (end)
- *
- * The code adds a new style with the name boxstyle to the stylesheet. To use
- * this style with a cell, it must be referenced from the cellstyle as follows:
- *
- * (code)
- * let vertex = graph.insertVertex(parent, null, 'Hello, World!', 20, 20, 80, 20,
- *         'boxstyle');
- * (end)
- *
- * To summarize, each new shape must be registered in the <mxCellRenderer> with
- * a unique name. That name is then used as the value of the shape-key in a
- * default or custom style. If there are multiple custom shapes, then there
- * should be a separate style for each shape.
- *
- * Inheriting Styles:
- *
- * For fill-, stroke-, gradient-, font- and indicatorColors special keywords
- * can be used. The inherit keyword for one of these colors will inherit the
- * color for the same key from the parent cell. The swimlane keyword does the
- * same, but inherits from the nearest swimlane in the ancestor hierarchy.
- * Finally, the indicated keyword will use the color of the indicator as the
- * color for the given key.
- *
- * Scrollbars:
- *
- * The <containers> overflow CSS property defines if scrollbars are used to
- * display the graph. For values of 'auto' or 'scroll', the scrollbars will
- * be shown. Note that the <resizeContainer> flag is normally not used
- * together with scrollbars, as it will resize the container to match the
- * size of the graph after each change.
- *
- * Multiplicities and Validation:
- *
- * To control the possible connections in mxGraph, <getEdgeValidationError> is
- * used. The default implementation of the function uses <multiplicities>,
- * which is an array of <mxMultiplicity>. Using this class allows to establish
- * simple multiplicities, which are enforced by the graph.
- *
- * The <mxMultiplicity> uses <mxCell.is> to determine for which terminals it
- * applies. The default implementation of <mxCell.is> works with DOM nodes (XML
- * nodes) and checks if the given type parameter matches the nodeName of the
- * node (case insensitive). Optionally, an attributename and value can be
- * specified which are also checked.
- *
- * <getEdgeValidationError> is called whenever the connectivity of an edge
- * changes. It returns an empty string or an error message if the edge is
- * invalid or null if the edge is valid. If the returned string is not empty
- * then it is displayed as an error message.
- *
- * <mxMultiplicity> allows to specify the multiplicity between a terminal and
- * its possible neighbors. For example, if any rectangle may only be connected
- * to, say, a maximum of two circles you can add the following rule to
- * <multiplicities>:
- *
- * (code)
- * graph.multiplicities.push(new mxMultiplicity(
- *   true, 'rectangle', null, null, 0, 2, ['circle'],
- *   'Only 2 targets allowed',
- *   'Only shape targets allowed'));
- * (end)
- *
- * This will display the first error message whenever a rectangle is connected
- * to more than two circles and the second error message if a rectangle is
- * connected to anything but a circle.
- *
- * For certain multiplicities, such as a minimum of 1 connection, which cannot
- * be enforced at cell creation time (unless the cell is created together with
- * the connection), mxGraph offers <validate> which checks all multiplicities
- * for all cells and displays the respective error messages in an overlay icon
- * on the cells.
- *
- * If a cell is collapsed and contains validation errors, a respective warning
- * icon is attached to the collapsed cell.
- *
- * Auto-Layout:
- *
- * For automatic layout, the <getLayout> hook is provided in <mxLayoutManager>.
- * It can be overridden to return a layout algorithm for the children of a
- * given cell.
- *
- * Unconnected edges:
- *
- * The default values for all switches are designed to meet the requirements of
- * general diagram drawing applications. A very typical set of settings to
- * avoid edges that are not connected is the following:
- *
- * (code)
- * graph.setAllowDanglingEdges(false);
- * graph.setDisconnectOnMove(false);
- * (end)
- *
- * Setting the <cloneInvalidEdges> switch to true is optional. This switch
- * controls if edges are inserted after a copy, paste or clone-drag if they are
- * invalid. For example, edges are invalid if copied or control-dragged without
- * having selected the corresponding terminals and allowDanglingEdges is
- * false, in which case the edges will not be cloned if the switch is false.
- *
- * Output:
- *
- * To produce an XML representation for a diagram, the following code can be
- * used.
- *
- * (code)
- * let enc = new mxCodec(mxUtils.createXmlDocument());
- * let node = enc.encode(graph.getModel());
- * (end)
- *
- * This will produce an XML node than can be handled using the DOM API or
- * turned into a string representation using the following code:
- *
- * (code)
- * let xml = mxUtils.getXml(node);
- * (end)
- *
- * To obtain a formatted string, mxUtils.getPrettyXml can be used instead.
- *
- * This string can now be stored in a local persistent storage (for example
- * using Google Gears) or it can be passed to a backend using mxUtils.post as
- * follows. The url variable is the URL of the Java servlet, PHP page or HTTP
- * handler, depending on the server.
- *
- * (code)
- * let xmlString = encodeURIComponent(mxUtils.getXml(node));
- * mxUtils.post(url, 'xml='+xmlString, (req)=>
- * {
- *   // Process server response using req of type mxXmlRequest
- * });
- * (end)
- *
- * Input:
- *
- * To load an XML representation of a diagram into an existing graph object
- * mxUtils.load can be used as follows. The url variable is the URL of the Java
- * servlet, PHP page or HTTP handler that produces the XML string.
- *
- * (code)
- * let xmlDoc = mxUtils.load(url).getXml();
- * let node = xmlDoc.documentElement;
- * let dec = new mxCodec(node.ownerDocument);
- * dec.decode(node, graph.getModel());
- * (end)
- *
- * For creating a page that loads the client and a diagram using a single
- * request please refer to the deployment examples in the backends.
- *
- * Functional dependencies:
- *
- * (see images/callgraph.png)
- *
- * Resources:
- *
- * resources/graph - Language resources for mxGraph
- *
- * Group: Events
- *
- * Event: mxEvent.ROOT
- *
- * Fires if the root in the model has changed. This event has no properties.
- *
- * Event: mxEvent.ALIGN_CELLS
- *
- * Fires between begin- and endUpdate in <alignCells>. The <code>cells</code>
- * and <code>align</code> properties contain the respective arguments that were
- * passed to <alignCells>.
- *
- * Event: mxEvent.FLIP_EDGE
- *
- * Fires between begin- and endUpdate in <flipEdge>. The <code>edge</code>
- * property contains the edge passed to <flipEdge>.
- *
- * Event: mxEvent.ORDER_CELLS
- *
- * Fires between begin- and endUpdate in <orderCells>. The <code>cells</code>
- * and <code>back</code> properties contain the respective arguments that were
- * passed to <orderCells>.
- *
- * Event: mxEvent.CELLS_ORDERED
- *
- * Fires between begin- and endUpdate in <cellsOrdered>. The <code>cells</code>
- * and <code>back</code> arguments contain the respective arguments that were
- * passed to <cellsOrdered>.
- *
- * Event: mxEvent.GROUP_CELLS
- *
- * Fires between begin- and endUpdate in <groupCells>. The <code>group</code>,
- * <code>cells</code> and <code>border</code> arguments contain the respective
- * arguments that were passed to <groupCells>.
- *
- * Event: mxEvent.UNGROUP_CELLS
- *
- * Fires between begin- and endUpdate in <ungroupCells>. The <code>cells</code>
- * property contains the array of cells that was passed to <ungroupCells>.
- *
- * Event: mxEvent.REMOVE_CELLS_FROM_PARENT
- *
- * Fires between begin- and endUpdate in <removeCellsFromParent>. The
- * <code>cells</code> property contains the array of cells that was passed to
- * <removeCellsFromParent>.
- *
- * Event: mxEvent.ADD_CELLS
- *
- * Fires between begin- and endUpdate in <addCells>. The <code>cells</code>,
- * <code>parent</code>, <code>index</code>, <code>source</code> and
- * <code>target</code> properties contain the respective arguments that were
- * passed to <addCells>.
- *
- * Event: mxEvent.CELLS_ADDED
- *
- * Fires between begin- and endUpdate in <cellsAdded>. The <code>cells</code>,
- * <code>parent</code>, <code>index</code>, <code>source</code>,
- * <code>target</code> and <code>absolute</code> properties contain the
- * respective arguments that were passed to <cellsAdded>.
- *
- * Event: mxEvent.REMOVE_CELLS
- *
- * Fires between begin- and endUpdate in <removeCells>. The <code>cells</code>
- * and <code>includeEdges</code> arguments contain the respective arguments
- * that were passed to <removeCells>.
- *
- * Event: mxEvent.CELLS_REMOVED
- *
- * Fires between begin- and endUpdate in <cellsRemoved>. The <code>cells</code>
- * argument contains the array of cells that was removed.
- *
- * Event: mxEvent.SPLIT_EDGE
- *
- * Fires between begin- and endUpdate in <splitEdge>. The <code>edge</code>
- * property contains the edge to be splitted, the <code>cells</code>,
- * <code>newEdge</code>, <code>dx</code> and <code>dy</code> properties contain
- * the respective arguments that were passed to <splitEdge>.
- *
- * Event: mxEvent.TOGGLE_CELLS
- *
- * Fires between begin- and endUpdate in <toggleCells>. The <code>show</code>,
- * <code>cells</code> and <code>includeEdges</code> properties contain the
- * respective arguments that were passed to <toggleCells>.
- *
- * Event: mxEvent.FOLD_CELLS
- *
- * Fires between begin- and endUpdate in <foldCells>. The
- * <code>collapse</code>, <code>cells</code> and <code>recurse</code>
- * properties contain the respective arguments that were passed to <foldCells>.
- *
- * Event: mxEvent.CELLS_FOLDED
- *
- * Fires between begin- and endUpdate in cellsFolded. The
- * <code>collapse</code>, <code>cells</code> and <code>recurse</code>
- * properties contain the respective arguments that were passed to
- * <cellsFolded>.
- *
- * Event: mxEvent.UPDATE_CELL_SIZE
- *
- * Fires between begin- and endUpdate in <updateCellSize>. The
- * <code>cell</code> and <code>ignoreChildren</code> properties contain the
- * respective arguments that were passed to <updateCellSize>.
- *
- * Event: mxEvent.RESIZE_CELLS
- *
- * Fires between begin- and endUpdate in <resizeCells>. The <code>cells</code>
- * and <code>bounds</code> properties contain the respective arguments that
- * were passed to <resizeCells>.
- *
- * Event: mxEvent.CELLS_RESIZED
- *
- * Fires between begin- and endUpdate in <cellsResized>. The <code>cells</code>
- * and <code>bounds</code> properties contain the respective arguments that
- * were passed to <cellsResized>.
- *
- * Event: mxEvent.MOVE_CELLS
- *
- * Fires between begin- and endUpdate in <moveCells>. The <code>cells</code>,
- * <code>dx</code>, <code>dy</code>, <code>clone</code>, <code>target</code>
- * and <code>event</code> properties contain the respective arguments that
- * were passed to <moveCells>.
- *
- * Event: mxEvent.CELLS_MOVED
- *
- * Fires between begin- and endUpdate in <cellsMoved>. The <code>cells</code>,
- * <code>dx</code>, <code>dy</code> and <code>disconnect</code> properties
- * contain the respective arguments that were passed to <cellsMoved>.
- *
- * Event: mxEvent.CONNECT_CELL
- *
- * Fires between begin- and endUpdate in <connectCell>. The <code>edge</code>,
- * <code>terminal</code> and <code>source</code> properties contain the
- * respective arguments that were passed to <connectCell>.
- *
- * Event: mxEvent.CELL_CONNECTED
- *
- * Fires between begin- and endUpdate in <cellConnected>. The
- * <code>edge</code>, <code>terminal</code> and <code>source</code> properties
- * contain the respective arguments that were passed to <cellConnected>.
- *
- * Event: mxEvent.REFRESH
- *
- * Fires after <refresh> was executed. This event has no properties.
- *
- * Event: mxEvent.CLICK
- *
- * Fires in <click> after a click event. The <code>event</code> property
- * contains the original mouse event and <code>cell</code> property contains
- * the cell under the mouse or null if the background was clicked.
- *
- * Event: mxEvent.DOUBLE_CLICK
- *
- * Fires in <dblClick> after a double click. The <code>event</code> property
- * contains the original mouse event and the <code>cell</code> property
- * contains the cell under the mouse or null if the background was clicked.
- *
- * Event: mxEvent.GESTURE
- *
- * Fires in <fireGestureEvent> after a touch gesture. The <code>event</code>
- * property contains the original gesture end event and the <code>cell</code>
- * property contains the optional cell associated with the gesture.
- *
- * Event: mxEvent.TAP_AND_HOLD
- *
- * Fires in <tapAndHold> if a tap and hold event was detected. The <code>event</code>
- * property contains the initial touch event and the <code>cell</code> property
- * contains the cell under the mouse or null if the background was clicked.
- *
- * Event: mxEvent.FIRE_MOUSE_EVENT
- *
- * Fires in <fireMouseEvent> before the mouse listeners are invoked. The
- * <code>eventName</code> property contains the event name and the
- * <code>event</code> property contains the <mxMouseEvent>.
- *
- * Event: mxEvent.SIZE
- *
- * Fires after <sizeDidChange> was executed. The <code>bounds</code> property
- * contains the new graph bounds.
- *
- * Event: mxEvent.START_EDITING
- *
- * Fires before the in-place editor starts in <startEditingAtCell>. The
- * <code>cell</code> property contains the cell that is being edited and the
- * <code>event</code> property contains the optional event argument that was
- * passed to <startEditingAtCell>.
- *
- * Event: mxEvent.EDITING_STARTED
- *
- * Fires after the in-place editor starts in <startEditingAtCell>. The
- * <code>cell</code> property contains the cell that is being edited and the
- * <code>event</code> property contains the optional event argument that was
- * passed to <startEditingAtCell>.
- *
- * Event: mxEvent.EDITING_STOPPED
- *
- * Fires after the in-place editor stops in <stopEditing>.
- *
- * Event: mxEvent.LABEL_CHANGED
- *
- * Fires between begin- and endUpdate in <cellLabelChanged>. The
- * <code>cell</code> property contains the cell, the <code>value</code>
- * property contains the new value for the cell, the <code>old</code> property
- * contains the old value and the optional <code>event</code> property contains
- * the mouse event that started the edit.
- *
- * Event: mxEvent.ADD_OVERLAY
- *
- * Fires after an overlay is added in <addCellOverlay>. The <code>cell</code>
- * property contains the cell and the <code>overlay</code> property contains
- * the <mxCellOverlay> that was added.
- *
- * Event: mxEvent.REMOVE_OVERLAY
- *
- * Fires after an overlay is removed in <removeCellOverlay> and
- * <removeCellOverlays>. The <code>cell</code> property contains the cell and
- * the <code>overlay</code> property contains the <mxCellOverlay> that was
- * removed.
- *
- * Constructor: mxGraph
- *
- * Constructs a new mxGraph in the specified container. Model is an optional
- * mxGraphModel. If no model is provided, a new mxGraphModel instance is
- * used as the model. The container must have a valid owner document prior
- * to calling this function in Internet Explorer.
- *
- * Example:
- *
- * To create a graph inside a DOM node with an id of graph:
- * (code)
- * let container = document.getElementById('graph');
- * let graph = new mxGraph(container);
- * (end)
- *
- * Parameters:
- *
- * container - Optional DOM node that acts as a container for the graph.
- * If this is null then the container can be initialized later using
- * <init>.
- * model - Optional <mxGraphModel> that constitutes the graph data.
- * stylesheet - Optional <mxStylesheet> to be used in the graph.
+ * @class mxGraph
+ * @extends {mxEventSource}
  */
 class mxGraph extends mxEventSource {
   constructor(container: HTMLElement,
@@ -697,14 +117,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: init
+   * Initializes the {@link container} and creates the respective datastructures.
    *
-   * Initializes the <container> and creates the respective datastructures.
-   *
-   * Parameters:
-   *
-   * container - DOM node that will contain the graph display.
+   * @param container DOM node that will contain the graph display.
    */
+  // init(container: HTMLElement): void;
   init(container: HTMLElement): void {
     this.container = container;
 
@@ -763,151 +180,135 @@ class mxGraph extends mxEventSource {
   paintBackground: Function | null = null;
 
   /**
-   * Variable: mouseListeners
-   *
-   * Holds the mouse event listeners. See <fireMouseEvent>.
+   * Holds the mouse event listeners. See {@link fireMouseEvent}.
    */
+  // mouseListeners: any[];
   mouseListeners: any[] | null = null;
 
   /**
    * Group: Variables
    */
   /**
-   * Variable: isMouseDown
-   *
    * Holds the state of the mouse button.
    */
+  // isMouseDown: boolean;
   isMouseDown: boolean = false;
 
   /**
-   * Variable: model
-   *
-   * Holds the <mxGraphModel> that contains the cells to be displayed.
+   * Holds the {@link mxGraphModel} that contains the cells to be displayed.
    */
+  // model: mxGraphModel;
   model: mxGraphModel | null = null;
 
   /**
-   * Variable: view
-   *
-   * Holds the <mxGraphView> that caches the <mxCellStates> for the cells.
+   * Holds the {@link mxGraphView} that caches the {@link mxCellState}s for the cells.
    */
+  // view: mxGraphView;
   view: mxGraphView;
 
   /**
-   * Variable: stylesheet
-   *
-   * Holds the <mxStylesheet> that defines the appearance of the cells.
-   *
-   *
-   * Example:
+   * Holds the {@link mxStylesheet} that defines the appearance of the cells.
    *
    * Use the following code to read a stylesheet into an existing graph.
    *
-   * (code)
-   * let req = mxUtils.load('stylesheet.xml');
-   * let root = req.getDocumentElement();
-   * let dec = new mxCodec(root.ownerDocument);
+   * @example
+   * ```javascript
+   * var req = mxUtils.load('stylesheet.xml');
+   * var root = req.getDocumentElement();
+   * var dec = new mxCodec(root.ownerDocument);
    * dec.decode(root, graph.stylesheet);
-   * (end)
+   * ```
    */
+  // stylesheet: mxStylesheet;
   stylesheet: mxStylesheet | null = null;
 
   /**
-   * Variable: selectionModel
-   *
-   * Holds the <mxGraphSelectionModel> that models the current selection.
+   * Holds the {@link mxGraphSelectionModel} that models the current selection.
    */
+  // selectionModel: mxGraphSelectionModel;
   selectionModel: mxGraphSelectionModel | null = null;
 
   /**
-   * Variable: cellEditor
-   *
-   * Holds the <mxCellEditor> that is used as the in-place editing.
+   * Holds the {@link mxCellEditor} that is used as the in-place editing.
    */
+  // cellEditor: mxCellEditor;
   cellEditor: mxCellEditor | null = null;
 
   /**
-   * Variable: cellRenderer
-   *
-   * Holds the <mxCellRenderer> for rendering the cells in the graph.
+   * Holds the {@link mxCellRenderer} for rendering the cells in the graph.
    */
+  // cellRenderer: mxCellRenderer;
   cellRenderer: mxCellRenderer;
 
   /**
-   * Variable: multiplicities
-   *
-   * An array of <mxMultiplicities> describing the allowed
+   * An array of {@link mxMultiplicity} describing the allowed
    * connections in a graph.
    */
+  // multiplicities: mxMultiplicity[];
   multiplicities: mxMultiplicity[] | null = null;
 
   /**
-   * Variable: renderHint
-   *
    * RenderHint as it was passed to the constructor.
    */
+  // renderHint: any;
   renderHint: string | null = null;
 
   /**
-   * Variable: dialect
-   *
    * Dialect to be used for drawing the graph. Possible values are all
-   * constants in <mxConstants> with a DIALECT-prefix.
+   * constants in {@link mxConstants} with a DIALECT-prefix.
    */
+  // dialect: mxDialectConstants;
   dialect: 'svg' | 'mixedHtml' | 'preferHtml' | 'strictHtml' = 'svg';
 
   /**
-   * Variable: gridSize
-   *
-   * Specifies the grid size. Default is 10.
+   * Specifies the grid size.
+   * @default 10
    */
+  // gridSize: number;
   gridSize: number = 10;
 
   /**
-   * Variable: gridEnabled
-   *
-   * Specifies if the grid is enabled. This is used in <snap>. Default is
-   * true.
+   * Specifies if the grid is enabled. This is used in {@link snap}.
+   * @default true
    */
+  // gridEnabled: boolean;
   gridEnabled: boolean = true;
 
   /**
-   * Variable: portsEnabled
-   *
-   * Specifies if ports are enabled. This is used in <cellConnected> to update
-   * the respective style. Default is true.
+   * Specifies if ports are enabled. This is used in {@link cellConnected} to update
+   * the respective style.
+   * @default true
    */
+  // portsEnabled: boolean;
   portsEnabled: boolean = true;
 
   /**
-   * Variable: nativeDoubleClickEnabled
-   *
-   * Specifies if native double click events should be detected. Default is true.
+   * Specifies if native double click events should be detected.
+   * @default true
    */
+  // nativeDblClickEnabled: boolean;
   nativeDblClickEnabled: boolean = true;
 
   /**
-   * Variable: doubleTapEnabled
-   *
    * Specifies if double taps on touch-based devices should be handled as a
-   * double click. Default is true.
+   * double click.
+   * @default true
    */
+  // doubleTapEnabled: boolean;
   doubleTapEnabled: boolean = true;
 
   /**
-   * Variable: doubleTapTimeout
-   *
-   * Specifies the timeout for double taps and non-native double clicks. Default
-   * is 500 ms.
+   * Specifies the timeout in milliseconds for double taps and non-native double clicks.
+   * @default 500
    */
+  // doubleTapTimeout: number;
   doubleTapTimeout: number = 500;
 
   /**
-   * Variable: doubleTapTolerance
-   *
-   * Specifies the tolerance for double taps and double clicks in quirks mode.
-   * Default is 25 pixels.
+   * Specifies the tolerance in pixels for double taps and double clicks in quirks mode.
+   * @default 25
    */
+  // doubleTapTolerance: number;
   doubleTapTolerance: number = 25;
 
   /**
@@ -918,758 +319,727 @@ class mxGraph extends mxEventSource {
   lastTouchX: number = 0;
 
   /**
-   * Variable: lastTouchY
-   *
-   * Holds the y-coordinate of the last touch event for double tap detection.
+   * Holds the x-coordinate of the last touch event for double tap detection.
    */
+  // lastTouchY: number;
   lastTouchY: number = 0;
 
   /**
-   * Variable: lastTouchTime
-   *
    * Holds the time of the last touch event for double click detection.
    */
+  // lastTouchTime: number;
   lastTouchTime: number = 0;
 
   /**
-   * Variable: tapAndHoldEnabled
-   *
    * Specifies if tap and hold should be used for starting connections on touch-based
-   * devices. Default is true.
+   * devices.
+   * @default true
    */
+  // tapAndHoldEnabled: boolean;
   tapAndHoldEnabled: boolean = true;
 
   /**
-   * Variable: tapAndHoldDelay
-   *
-   * Specifies the time for a tap and hold. Default is 500 ms.
+   * Specifies the time in milliseconds for a tap and hold.
+   * @default 500
    */
+  // tapAndHoldDelay: number;
   tapAndHoldDelay: number = 500;
 
   /**
-   * Variable: tapAndHoldInProgress
-   *
-   * True if the timer for tap and hold events is running.
+   * `True` if the timer for tap and hold events is running.
    */
+  // tapAndHoldInProgress: boolean;
   tapAndHoldInProgress: boolean = false;
 
   /**
-   * Variable: tapAndHoldValid
-   *
-   * True as long as the timer is running and the touch events
-   * stay within the given <tapAndHoldTolerance>.
+   * `True` as long as the timer is running and the touch events
+   * stay within the given {@link tapAndHoldTolerance}.
    */
+  // tapAndHoldValid: boolean;
   tapAndHoldValid: boolean = false;
 
   /**
-   * Variable: initialTouchX
-   *
-   * Holds the x-coordinate of the intial touch event for tap and hold.
+   * Holds the x-coordinate of the initial touch event for tap and hold.
    */
+  // initialTouchX: number;
   initialTouchX: number = 0;
 
   /**
-   * Variable: initialTouchY
-   *
-   * Holds the y-coordinate of the intial touch event for tap and hold.
+   * Holds the y-coordinate of the initial touch event for tap and hold.
    */
+  // initialTouchY: number;
   initialTouchY: number = 0;
 
   /**
-   * Variable: tolerance
-   *
-   * Tolerance for a move to be handled as a single click.
-   * Default is 4 pixels.
+   * Tolerance in pixels for a move to be handled as a single click.
+   * @default 4
    */
+  // tolerance: number;
   tolerance: number = 4;
 
   /**
-   * Variable: defaultOverlap
-   *
-   * Value returned by <getOverlap> if <isAllowOverlapParent> returns
-   * true for the given cell. <getOverlap> is used in <constrainChild> if
-   * <isConstrainChild> returns true. The value specifies the
+   * Value returned by {@link getOverlap} if {@link isAllowOverlapParent} returns
+   * `true` for the given cell. {@link getOverlap} is used in {@link constrainChild} if
+   * {@link isConstrainChild} returns `true`. The value specifies the
    * portion of the child which is allowed to overlap the parent.
    */
+  // defaultOverlap: number;
   defaultOverlap: number = 0.5;
 
   /**
-   * Variable: defaultParent
-   *
    * Specifies the default parent to be used to insert new cells.
-   * This is used in <getDefaultParent>. Default is null.
+   * This is used in {@link getDefaultParent}.
+   * @default null
    */
+  // defaultParent: mxCell;
   defaultParent: mxCell | null = null;
 
   /**
-   * Variable: alternateEdgeStyle
-   *
    * Specifies the alternate edge style to be used if the main control point
-   * on an edge is being doubleclicked. Default is null.
+   * on an edge is being double clicked.
+   * @default null
    */
+  // alternateEdgeStyle: string;
   alternateEdgeStyle: string | null = null;
 
   /**
-   * Variable: backgroundImage
+   * Specifies the {@link mxImage} to be returned by {@link getBackgroundImage}.
+   * @default null
    *
-   * Specifies the <mxImage> to be returned by <getBackgroundImage>. Default
-   * is null.
-   *
-   * Example:
-   *
-   * (code)
-   * let img = new mxImage('http://www.example.com/maps/examplemap.jpg', 1024, 768);
+   * @example
+   * ```javascript
+   * var img = new mxImage('http://www.example.com/maps/examplemap.jpg', 1024, 768);
    * graph.setBackgroundImage(img);
    * graph.view.validate();
-   * (end)
+   * ```
    */
+  // backgroundImage: mxImage;
   backgroundImage: mxImage | null = null;
 
   /**
-   * Variable: pageVisible
-   *
-   * Specifies if the background page should be visible. Default is false.
+   * Specifies if the background page should be visible.
    * Not yet implemented.
+   * @default false
    */
+  // pageVisible: boolean;
   pageVisible: boolean = false;
 
   /**
-   * Variable: pageBreaksVisible
-   *
-   * Specifies if a dashed line should be drawn between multiple pages. Default
-   * is false. If you change this value while a graph is being displayed then you
-   * should call <sizeDidChange> to force an update of the display.
+   * Specifies if a dashed line should be drawn between multiple pages.
+   * If you change this value while a graph is being displayed then you
+   * should call {@link sizeDidChange} to force an update of the display.
+   * @default false
    */
+  // pageBreaksVisible: boolean;
   pageBreaksVisible: boolean = false;
 
   /**
-   * Variable: pageBreakColor
-   *
-   * Specifies the color for page breaks. Default is 'gray'.
+   * Specifies the color for page breaks.
+   * @default gray
    */
+  // pageBreakColor: string;
   pageBreakColor: string = 'gray';
 
   /**
-   * Variable: pageBreakDashed
-   *
-   * Specifies the page breaks should be dashed. Default is true.
+   * Specifies the page breaks should be dashed.
+   * @default true
    */
+  // pageBreakDashed: boolean;
   pageBreakDashed: boolean = true;
 
   /**
-   * Variable: minPageBreakDist
-   *
-   * Specifies the minimum distance for page breaks to be visible. Default is
-   * 20 (in pixels).
+   * Specifies the minimum distance in pixels for page breaks to be visible.
+   * @default 20
    */
+  // minPageBreakDist: number;
   minPageBreakDist: number = 20;
 
   /**
-   * Variable: preferPageSize
-   *
    * Specifies if the graph size should be rounded to the next page number in
-   * <sizeDidChange>. This is only used if the graph container has scrollbars.
-   * Default is false.
+   * {@link sizeDidChange}. This is only used if the graph container has scrollbars.
+   * @default false
    */
+  // preferPageSize: boolean;
   preferPageSize: boolean = false;
 
   /**
-   * Variable: pageFormat
-   *
-   * Specifies the page format for the background page. Default is
-   * <mxConstants.PAGE_FORMAT_A4_PORTRAIT>. This is used as the default in
-   * <mxPrintPreview> and for painting the background page if <pageVisible> is
-   * true and the pagebreaks if <pageBreaksVisible> is true.
+   * Specifies the page format for the background page.
+   * This is used as the default in {@link mxPrintPreview} and for painting the background page
+   * if {@link pageVisible} is `true` and the page breaks if {@link pageBreaksVisible} is `true`.
+   * @default {@link mxConstants.PAGE_FORMAT_A4_PORTRAIT}
    */
+  // pageFormat: mxRectangle;
   pageFormat: mxRectangle = mxConstants.PAGE_FORMAT_A4_PORTRAIT;
 
   /**
-   * Variable: pageScale
-   *
-   * Specifies the scale of the background page. Default is 1.5.
+   * Specifies the scale of the background page.
    * Not yet implemented.
+   * @default 1.5
    */
+  // pageScale: number;
   pageScale: number = 1.5;
 
   /**
-   * Variable: enabled
-   *
-   * Specifies the return value for <isEnabled>. Default is true.
+   * Specifies the return value for {@link isEnabled}.
+   * @default true
    */
+  // enabled: boolean;
   enabled: boolean = true;
 
   /**
-   * Variable: escapeEnabled
-   *
-   * Specifies if <mxKeyHandler> should invoke <escape> when the escape key
-   * is pressed. Default is true.
+   * Specifies if {@link mxKeyHandler} should invoke {@link escape} when the escape key
+   * is pressed.
+   * @default true
    */
+  // escapeEnabled: boolean;
   escapeEnabled: boolean = true;
 
   /**
-   * Variable: invokesStopCellEditing
-   *
-   * If true, when editing is to be stopped by way of selection changing,
+   * If `true`, when editing is to be stopped by way of selection changing,
    * data in diagram changing or other means stopCellEditing is invoked, and
    * changes are saved. This is implemented in a focus handler in
-   * <mxCellEditor>. Default is true.
+   * {@link mxCellEditor}.
+   * @default true
    */
+  // invokesStopCellEditing: boolean;
   invokesStopCellEditing: boolean = true;
 
   /**
-   * Variable: enterStopsCellEditing
-   *
-   * If true, pressing the enter key without pressing control or shift will stop
-   * editing and accept the new value. This is used in <mxCellEditor> to stop
+   * If `true`, pressing the enter key without pressing control or shift will stop
+   * editing and accept the new value. This is used in {@link mxCellEditor} to stop
    * cell editing. Note: You can always use F2 and escape to stop editing.
-   * Default is false.
+   * @default false
    */
+  // enterStopsCellEditing: boolean;
   enterStopsCellEditing: boolean = false;
 
   /**
-   * Variable: useScrollbarsForPanning
-   *
-   * Specifies if scrollbars should be used for panning in <panGraph> if
+   * Specifies if scrollbars should be used for panning in {@link panGraph} if
    * any scrollbars are available. If scrollbars are enabled in CSS, but no
    * scrollbars appear because the graph is smaller than the container size,
-   * then no panning occurs if this is true. Default is true.
+   * then no panning occurs if this is `true`.
+   * @default true
    */
+  // useScrollbarsForPanning: boolean;
   useScrollbarsForPanning: boolean = true;
 
   /**
-   * Variable: exportEnabled
-   *
-   * Specifies the return value for <canExportCell>. Default is true.
+   * Specifies the return value for {@link canExportCell}.
+   * @default true
    */
+  // exportEnabled: boolean;
   exportEnabled: boolean = true;
 
   /**
-   * Variable: importEnabled
-   *
-   * Specifies the return value for <canImportCell>. Default is true.
+   * Specifies the return value for {@link canImportCell}.
+   * @default true
    */
+  // importEnabled: boolean;
   importEnabled: boolean = true;
 
   /**
-   * Variable: cellsLocked
-   *
-   * Specifies the return value for <isCellLocked>. Default is false.
+   * Specifies the return value for {@link isCellLocked}.
+   * @default false
    */
+  // cellsLocked: boolean;
   cellsLocked: boolean = false;
 
   /**
-   * Variable: cellsCloneable
-   *
-   * Specifies the return value for <isCellCloneable>. Default is true.
+   * Specifies the return value for {@link isCellCloneable}.
+   * @default true
    */
+  // cellsCloneable: boolean;
   cellsCloneable: boolean = true;
 
   /**
-   * Variable: foldingEnabled
-   *
    * Specifies if folding (collapse and expand via an image icon in the graph
-   * should be enabled). Default is true.
+   * should be enabled).
+   * @default true
    */
+  // foldingEnabled: boolean;
   foldingEnabled: boolean = true;
 
   /**
-   * Variable: cellsEditable
-   *
-   * Specifies the return value for <isCellEditable>. Default is true.
+   * Specifies the return value for {@link isCellEditable}.
+   * @default true
    */
+  // cellsEditable: boolean;
   cellsEditable: boolean = true;
 
   /**
-   * Variable: cellsDeletable
-   *
-   * Specifies the return value for <isCellDeletable>. Default is true.
+   * Specifies the return value for {@link isCellDeletable}.
+   * @default true
    */
+  // cellsDeletable: boolean;
   cellsDeletable: boolean = true;
 
   /**
-   * Variable: cellsMovable
-   *
-   * Specifies the return value for <isCellMovable>. Default is true.
+   * Specifies the return value for {@link isCellMovable}.
+   * @default true
    */
+  // cellsMovable: boolean;
   cellsMovable: boolean = true;
 
   /**
-   * Variable: edgeLabelsMovable
-   *
-   * Specifies the return value for edges in <isLabelMovable>. Default is true.
+   * Specifies the return value for edges in {@link isLabelMovable}.
+   * @default true
    */
+  // edgeLabelsMovable: boolean;
   edgeLabelsMovable: boolean = true;
 
   /**
-   * Variable: vertexLabelsMovable
-   *
-   * Specifies the return value for vertices in <isLabelMovable>. Default is false.
+   * Specifies the return value for vertices in {@link isLabelMovable}.
+   * @default false
    */
+  // vertexLabelsMovable: boolean;
   vertexLabelsMovable: boolean = false;
 
   /**
-   * Variable: dropEnabled
-   *
-   * Specifies the return value for <isDropEnabled>. Default is false.
+   * Specifies the return value for {@link isDropEnabled}.
+   * @default false
    */
+  // dropEnabled: boolean;
   dropEnabled: boolean = false;
 
   /**
-   * Variable: splitEnabled
-   *
    * Specifies if dropping onto edges should be enabled. This is ignored if
-   * <dropEnabled> is false. If enabled, it will call <splitEdge> to carry
-   * out the drop operation. Default is true.
+   * {@link dropEnabled} is `false`. If enabled, it will call {@link splitEdge} to carry
+   * out the drop operation.
+   * @default true
    */
+  // splitEnabled: boolean;
   splitEnabled: boolean = true;
 
   /**
-   * Variable: cellsResizable
-   *
-   * Specifies the return value for <isCellResizable>. Default is true.
+   * Specifies the return value for {@link isCellsResizable}.
+   * @default true
    */
+  // cellsResizable: boolean;
   cellsResizable: boolean = true;
 
   /**
-   * Variable: cellsBendable
-   *
-   * Specifies the return value for <isCellsBendable>. Default is true.
+   * Specifies the return value for {@link isCellsBendable}.
+   * @default true
    */
+  // cellsBendable: boolean;
   cellsBendable: boolean = true;
 
   /**
-   * Variable: cellsSelectable
-   *
-   * Specifies the return value for <isCellSelectable>. Default is true.
+   * Specifies the return value for {@link isCellsSelectable}.
+   * @default true
    */
+  // cellsSelectable: boolean;
   cellsSelectable: boolean = true;
 
   /**
-   * Variable: cellsDisconnectable
-   *
-   * Specifies the return value for <isCellDisconntable>. Default is true.
+   * Specifies the return value for {@link isCellsDisconnectable}.
+   * @default true
    */
+  // cellsDisconnectable: boolean;
   cellsDisconnectable: boolean = true;
 
   /**
-   * Variable: autoSizeCells
-   *
    * Specifies if the graph should automatically update the cell size after an
-   * edit. This is used in <isAutoSizeCell>. Default is false.
+   * edit. This is used in {@link isAutoSizeCell}.
+   * @default false
    */
+  // autoSizeCells: boolean;
   autoSizeCells: boolean = false;
 
   /**
-   * Variable: autoSizeCellsOnAdd
-   *
-   * Specifies if autoSize style should be applied when cells are added. Default is false.
+   * Specifies if autoSize style should be applied when cells are added.
+   * @default false
    */
+  // autoSizeCellsOnAdd: boolean;
   autoSizeCellsOnAdd: boolean = false;
 
   /**
-   * Variable: autoScroll
-   *
    * Specifies if the graph should automatically scroll if the mouse goes near
    * the container edge while dragging. This is only taken into account if the
-   * container has scrollbars. Default is true.
+   * container has scrollbars.
    *
-   * If you need this to work without scrollbars then set <ignoreScrollbars> to
-   * true. Please consult the <ignoreScrollbars> for details. In general, with
-   * no scrollbars, the use of <allowAutoPanning> is recommended.
+   * If you need this to work without scrollbars then set {@link ignoreScrollbars} to
+   * true. Please consult the {@link ignoreScrollbars} for details. In general, with
+   * no scrollbars, the use of {@link allowAutoPanning} is recommended.
+   * @default true
    */
+  // autoScroll: boolean;
   autoScroll: boolean = true;
 
   /**
-   * Variable: ignoreScrollbars
-   *
    * Specifies if the graph should automatically scroll regardless of the
    * scrollbars. This will scroll the container using positive values for
    * scroll positions (ie usually only rightwards and downwards). To avoid
-   * possible conflicts with panning, set <translateToScrollPosition> to true.
+   * possible conflicts with panning, set {@link translateToScrollPosition} to `true`.
    */
+  // ignoreScrollbars: boolean;
   ignoreScrollbars: boolean = false;
 
   /**
-   * Variable: translateToScrollPosition
-   *
    * Specifies if the graph should automatically convert the current scroll
    * position to a translate in the graph view when a mouseUp event is received.
-   * This can be used to avoid conflicts when using <autoScroll> and
-   * <ignoreScrollbars> with no scrollbars in the container.
+   * This can be used to avoid conflicts when using {@link autoScroll} and
+   * {@link ignoreScrollbars} with no scrollbars in the container.
    */
+  // translateToScrollPosition: boolean;
   translateToScrollPosition: boolean = false;
 
   /**
-   * Variable: timerAutoScroll
-   *
    * Specifies if autoscrolling should be carried out via mxPanningManager even
-   * if the container has scrollbars. This disables <scrollPointToVisible> and
-   * uses <mxPanningManager> instead. If this is true then <autoExtend> is
+   * if the container has scrollbars. This disables {@link scrollPointToVisible} and
+   * uses {@link mxPanningManager} instead. If this is true then {@link autoExtend} is
    * disabled. It should only be used with a scroll buffer or when scollbars
-   * are visible and scrollable in all directions. Default is false.
+   * are visible and scrollable in all directions.
+   * @default false
    */
+  // timerAutoScroll: boolean;
   timerAutoScroll: boolean = false;
 
   /**
-   * Variable: allowAutoPanning
-   *
-   * Specifies if panning via <panGraph> should be allowed to implement autoscroll
-   * if no scrollbars are available in <scrollPointToVisible>. To enable panning
-   * inside the container, near the edge, set <mxPanningManager.border> to a
-   * positive value. Default is false.
+   * Specifies if panning via {@link panGraph} should be allowed to implement autoscroll
+   * if no scrollbars are available in {@link scrollPointToVisible}. To enable panning
+   * inside the container, near the edge, set {@link mxPanningManager.border} to a
+   * positive value.
+   * @default false
    */
+  // allowAutoPanning: boolean;
   allowAutoPanning: boolean = false;
 
   /**
-   * Variable: autoExtend
-   *
    * Specifies if the size of the graph should be automatically extended if the
    * mouse goes near the container edge while dragging. This is only taken into
-   * account if the container has scrollbars. Default is true. See <autoScroll>.
+   * account if the container has scrollbars. See {@link autoScroll}.
+   * @default true
    */
+  // autoExtend: boolean;
   autoExtend: boolean = true;
 
   /**
-   * Variable: maximumGraphBounds
-   *
-   * <mxRectangle> that specifies the area in which all cells in the diagram
-   * should be placed. Uses in <getMaximumGraphBounds>. Use a width or height of
-   * 0 if you only want to give a upper, left corner.
+   * {@link mxRectangle} that specifies the area in which all cells in the diagram
+   * should be placed. Uses in {@link getMaximumGraphBounds}. Use a width or height of
+   * `0` if you only want to give a upper, left corner.
    */
+  // maximumGraphBounds: mxRectangle;
   maximumGraphBounds: mxRectangle | null = null;
 
   /**
-   * Variable: minimumGraphSize
-   *
-   * <mxRectangle> that specifies the minimum size of the graph. This is ignored
-   * if the graph container has no scrollbars. Default is null.
+   * {@link mxRectangle} that specifies the minimum size of the graph. This is ignored
+   * if the graph container has no scrollbars.
+   * @default null
    */
+  // minimumGraphSize: mxRectangle;
   minimumGraphSize: mxRectangle | null = null;
 
   /**
-   * Variable: minimumContainerSize
-   *
-   * <mxRectangle> that specifies the minimum size of the <container> if
-   * <resizeContainer> is true.
+   * {@link mxRectangle} that specifies the minimum size of the {@link container} if
+   * {@link resizeContainer} is `true`.
    */
+  // minimumContainerSize: mxRectangle;
   minimumContainerSize: mxRectangle | null = null;
 
   /**
-   * Variable: maximumContainerSize
-   *
-   * <mxRectangle> that specifies the maximum size of the container if
-   * <resizeContainer> is true.
+   * {@link mxRectangle} that specifies the maximum size of the container if
+   * {@link resizeContainer} is `true`.
    */
+  // maximumContainerSize: mxRectangle;
   maximumContainerSize: mxRectangle | null = null;
 
   /**
-   * Variable: resizeContainer
-   *
    * Specifies if the container should be resized to the graph size when
-   * the graph size has changed. Default is false.
+   * the graph size has changed.
+   * @default false
    */
+  // resizeContainer: boolean;
   resizeContainer: boolean = false;
 
   /**
-   * Variable: border
-   *
    * Border to be added to the bottom and right side when the container is
-   * being resized after the graph has been changed. Default is 0.
+   * being resized after the graph has been changed.
+   * @default 0
    */
+  // border: number;
   border: number = 0;
 
   /**
-   * Variable: keepEdgesInForeground
-   *
    * Specifies if edges should appear in the foreground regardless of their order
-   * in the model. If <keepEdgesInForeground> and <keepEdgesInBackground> are
-   * both true then the normal order is applied. Default is false.
+   * in the model. If {@link keepEdgesInForeground} and {@link keepEdgesInBackground} are
+   * both `true` then the normal order is applied.
+   * @default false
    */
+  // keepEdgesInForeground: boolean;
   keepEdgesInForeground: boolean = false;
 
   /**
-   * Variable: keepEdgesInBackground
-   *
    * Specifies if edges should appear in the background regardless of their order
-   * in the model. If <keepEdgesInForeground> and <keepEdgesInBackground> are
-   * both true then the normal order is applied. Default is false.
+   * in the model. If {@link keepEdgesInForeground} and {@link keepEdgesInBackground} are
+   * both `true` then the normal order is applied.
+   * @default false
    */
+  // keepEdgesInBackground: boolean;
   keepEdgesInBackground: boolean = false;
 
   /**
-   * Variable: allowNegativeCoordinates
-   *
-   * Specifies if negative coordinates for vertices are allowed. Default is true.
+   * Specifies if negative coordinates for vertices are allowed.
+   * @default true
    */
+  // allowNegativeCoordinates: boolean;
   allowNegativeCoordinates: boolean = true;
 
   /**
-   * Variable: constrainChildren
-   *
    * Specifies if a child should be constrained inside the parent bounds after a
-   * move or resize of the child. Default is true.
+   * move or resize of the child.
+   * @default true
    */
+  // constrainChildren: boolean;
   constrainChildren: boolean = true;
 
   /**
-   * Variable: constrainRelativeChildren
-   *
    * Specifies if child cells with relative geometries should be constrained
-   * inside the parent bounds, if <constrainChildren> is true, and/or the
-   * <maximumGraphBounds>. Default is false.
+   * inside the parent bounds, if {@link constrainChildren} is `true`, and/or the
+   * {@link maximumGraphBounds}.
+   * @default false
    */
+  // constrainRelativeChildren: boolean;
   constrainRelativeChildren: boolean = false;
 
   /**
-   * Variable: extendParents
-   *
    * Specifies if a parent should contain the child bounds after a resize of
-   * the child. Default is true. This has precedence over <constrainChildren>.
+   * the child. This has precedence over {@link constrainChildren}.
+   * @default true
    */
+  // extendParents: boolean;
   extendParents: boolean = true;
 
   /**
-   * Variable: extendParentsOnAdd
-   *
-   * Specifies if parents should be extended according to the <extendParents>
-   * switch if cells are added. Default is true.
+   * Specifies if parents should be extended according to the {@link extendParents}
+   * switch if cells are added.
+   * @default true
    */
+  // extendParentsOnAdd: boolean;
   extendParentsOnAdd: boolean = true;
 
   /**
-   * Variable: extendParentsOnAdd
-   *
-   * Specifies if parents should be extended according to the <extendParents>
-   * switch if cells are added. Default is false for backwards compatiblity.
+   * Specifies if parents should be extended according to the {@link extendParents}
+   * switch if cells are added.
+   * @default false (for backwards compatibility)
    */
+  // extendParentsOnMove: boolean;
   extendParentsOnMove: boolean = false;
 
   /**
-   * Variable: recursiveResize
-   *
-   * Specifies the return value for <isRecursiveResize>. Default is
-   * false for backwards compatiblity.
+   * Specifies the return value for {@link isRecursiveResize}.
+   * @default false (for backwards compatibility)
    */
+  // recursiveResize: boolean;
   recursiveResize: boolean = false;
 
   /**
-   * Variable: collapseToPreferredSize
-   *
    * Specifies if the cell size should be changed to the preferred size when
-   * a cell is first collapsed. Default is true.
+   * a cell is first collapsed.
+   * @default true
    */
+  // collapseToPreferredSize: boolean;
   collapseToPreferredSize: boolean = true;
 
   /**
-   * Variable: zoomFactor
-   *
-   * Specifies the factor used for <zoomIn> and <zoomOut>. Default is 1.2
-   * (120%).
+   * Specifies the factor used for {@link zoomIn} and {@link zoomOut}.
+   * @default 1.2 (120%)
    */
+  // zoomFactor: number;
   zoomFactor: number = 1.2;
 
   /**
-   * Variable: keepSelectionVisibleOnZoom
-   *
-   * Specifies if the viewport should automatically contain the selection cells
-   * after a zoom operation. Default is false.
+   * Specifies if the viewport should automatically contain the selection cells after a zoom operation.
+   * @default false
    */
+  // keepSelectionVisibleOnZoom: boolean;
   keepSelectionVisibleOnZoom: boolean = false;
 
   /**
-   * Variable: centerZoom
-   *
    * Specifies if the zoom operations should go into the center of the actual
-   * diagram rather than going from top, left. Default is true.
+   * diagram rather than going from top, left.
+   * @default true
    */
+  // centerZoom: boolean;
   centerZoom: boolean = true;
 
   /**
-   * Variable: resetViewOnRootChange
-   *
    * Specifies if the scale and translate should be reset if the root changes in
-   * the model. Default is true.
+   * the model.
+   * @default true
    */
+  // resetViewOnRootChange: boolean;
   resetViewOnRootChange: boolean = true;
 
   /**
-   * Variable: resetEdgesOnResize
-   *
    * Specifies if edge control points should be reset after the resize of a
-   * connected cell. Default is false.
+   * connected cell.
+   * @default false
    */
+  // resetEdgesOnResize: boolean;
   resetEdgesOnResize: boolean = false;
 
   /**
-   * Variable: resetEdgesOnMove
-   *
    * Specifies if edge control points should be reset after the move of a
-   * connected cell. Default is false.
+   * connected cell.
+   * @default false
    */
+  // resetEdgesOnMove: boolean;
   resetEdgesOnMove: boolean = false;
 
   /**
-   * Variable: resetEdgesOnConnect
-   *
    * Specifies if edge control points should be reset after the the edge has been
-   * reconnected. Default is true.
+   * reconnected.
+   * @default true
    */
+  // resetEdgesOnConnect: boolean;
   resetEdgesOnConnect: boolean = true;
 
   /**
-   * Variable: allowLoops
-   *
-   * Specifies if loops (aka self-references) are allowed. Default is false.
+   * Specifies if loops (aka self-references) are allowed.
+   * @default false
    */
+  // allowLoops: boolean;
   allowLoops: boolean = false;
 
   /**
-   * Variable: defaultLoopStyle
-   *
-   * <mxEdgeStyle> to be used for loops. This is a fallback for loops if the
-   * <mxConstants.STYLE_LOOP> is undefined. Default is <mxEdgeStyle.Loop>.
+   * {@link mxEdgeStyle} to be used for loops. This is a fallback for loops if the
+   * {@link mxConstants.STYLE_LOOP} is undefined.
+   * @default {@link mxEdgeStyle.Loop}
    */
+  // defaultLoopStyle: any;
   defaultLoopStyle = mxEdgeStyle.Loop;
 
   /**
-   * Variable: multigraph
-   *
    * Specifies if multiple edges in the same direction between the same pair of
-   * vertices are allowed. Default is true.
+   * vertices are allowed.
+   * @default true
    */
+  // multigraph: boolean;
   multigraph: boolean = true;
 
   /**
-   * Variable: connectableEdges
-   *
-   * Specifies if edges are connectable. Default is false. This overrides the
-   * connectable field in edges.
+   * Specifies if edges are connectable. This overrides the connectable field in edges.
+   * @default false
    */
+  // connectableEdges: boolean;
   connectableEdges: boolean = false;
 
   /**
-   * Variable: allowDanglingEdges
-   *
    * Specifies if edges with disconnected terminals are allowed in the graph.
-   * Default is true.
+   * @default true
    */
+  // allowDanglingEdges: boolean;
   allowDanglingEdges: boolean = true;
 
   /**
-   * Variable: cloneInvalidEdges
-   *
    * Specifies if edges that are cloned should be validated and only inserted
-   * if they are valid. Default is true.
+   * if they are valid.
+   * @default true
    */
+  // cloneInvalidEdges: boolean;
   cloneInvalidEdges: boolean = false;
 
   /**
-   * Variable: disconnectOnMove
-   *
    * Specifies if edges should be disconnected from their terminals when they
-   * are moved. Default is true.
+   * are moved.
+   * @default true
    */
+  // disconnectOnMove: boolean;
   disconnectOnMove: boolean = true;
 
   /**
-   * Variable: labelsVisible
-   *
-   * Specifies if labels should be visible. This is used in <getLabel>. Default
+   * Specifies if labels should be visible. This is used in {@link getLabel}. Default
    * is true.
    */
+  // labelsVisible: boolean;
   labelsVisible: boolean = true;
 
   /**
-   * Variable: htmlLabels
-   *
-   * Specifies the return value for <isHtmlLabel>. Default is false.
+   * Specifies the return value for {@link isHtmlLabel}.
+   * @default false
    */
+  // htmlLabels: boolean;
   htmlLabels: boolean = false;
 
   /**
-   * Variable: swimlaneSelectionEnabled
-   *
    * Specifies if swimlanes should be selectable via the content if the
-   * mouse is released. Default is true.
+   * mouse is released.
+   * @default true
    */
+  // swimlaneSelectionEnabled: boolean;
   swimlaneSelectionEnabled: boolean = true;
 
   /**
-   * Variable: swimlaneNesting
-   *
-   * Specifies if nesting of swimlanes is allowed. Default is true.
+   * Specifies if nesting of swimlanes is allowed.
+   * @default true
    */
+  // swimlaneNesting: boolean;
   swimlaneNesting: boolean = true;
 
   /**
-   * Variable: swimlaneIndicatorColorAttribute
-   *
    * The attribute used to find the color for the indicator if the indicator
-   * color is set to 'swimlane'. Default is <mxConstants.STYLE_FILLCOLOR>.
+   * color is set to 'swimlane'.
+   * @default {@link mxConstants.STYLE_FILLCOLOR}
    */
+  // swimlaneIndicatorColorAttribute: string;
   swimlaneIndicatorColorAttribute: string = mxConstants.STYLE_FILLCOLOR;
 
   /**
-   * Variable: imageBundles
-   *
    * Holds the list of image bundles.
    */
+  // imageBundles: mxImageBundle[];
   imageBundles: mxImageBundle[] = [];
 
   /**
-   * Variable: minFitScale
-   *
-   * Specifies the minimum scale to be applied in <fit>. Default is 0.1. Set this
-   * to null to allow any value.
+   * Specifies the minimum scale to be applied in {@link fit}. Set this to `null` to allow any value.
+   * @default 0.1
    */
+  // minFitScale: number;
   minFitScale: number = 0.1;
 
   /**
-   * Variable: maxFitScale
-   *
-   * Specifies the maximum scale to be applied in <fit>. Default is 8. Set this
-   * to null to allow any value.
+   * Specifies the maximum scale to be applied in {@link fit}. Set this to `null` to allow any value.
+   * @default 8
    */
+  // maxFitScale: number;
   maxFitScale: number = 8;
 
   /**
-   * Variable: panDx
-   *
-   * Current horizontal panning value. Default is 0.
+   * Current horizontal panning value.
+   * @default 0
    */
+  // panDx: number;
   panDx: number = 0;
 
   /**
-   * Variable: panDy
-   *
-   * Current vertical panning value. Default is 0.
+   * Current vertical panning value.
+   * @default 0
    */
+  // panDy: number;
   panDy: number = 0;
 
   /**
-   * Variable: collapsedImage
-   *
-   * Specifies the <mxImage> to indicate a collapsed state.
+   * Specifies the {@link mxImage} to indicate a collapsed state.
    * Default value is mxClient.imageBasePath + '/collapsed.gif'
    */
+  // collapsedImage: mxImage;
   collapsedImage: mxImage = new mxImage(`${mxClient.imageBasePath}/collapsed.gif`, 9, 9);
 
   /**
-   * Variable: expandedImage
-   *
-   * Specifies the <mxImage> to indicate a expanded state.
+   * Specifies the {@link mxImage} to indicate a expanded state.
    * Default value is mxClient.imageBasePath + '/expanded.gif'
    */
+  // expandedImage: mxImage;
   expandedImage: mxImage = new mxImage(`${mxClient.imageBasePath}/expanded.gif`, 9, 9);
 
   /**
-   * Variable: warningImage
-   *
-   * Specifies the <mxImage> for the image to be used to display a warning
-   * overlay. See <setCellWarning>. Default value is mxClient.imageBasePath +
+   * Specifies the {@link mxImage} for the image to be used to display a warning
+   * overlay. See {@link setCellWarning}. Default value is mxClient.imageBasePath +
    * '/warning'.  The extension for the image depends on the platform. It is
    * '.png' on the Mac and '.gif' on all other platforms.
    */
+  // warningImage: mxImage;
   warningImage: mxImage = new mxImage(
     `${mxClient.imageBasePath}/warning${mxClient.IS_MAC ? '.png' : '.gif'}`,
     16,
@@ -1677,34 +1047,32 @@ class mxGraph extends mxEventSource {
   );
 
   /**
-   * Variable: alreadyConnectedResource
-   *
    * Specifies the resource key for the error message to be displayed in
    * non-multigraphs when two vertices are already connected. If the resource
    * for this key does not exist then the value is used as the error message.
-   * Default is 'alreadyConnected'.
+   * @default 'alreadyConnected'
    */
+  // alreadyConnectedResource: string;
   alreadyConnectedResource: string =
     mxClient.language != 'none' ? 'alreadyConnected' : '';
 
   /**
-   * Variable: containsValidationErrorsResource
-   *
    * Specifies the resource key for the warning message to be displayed when
    * a collapsed cell contains validation errors. If the resource for this
    * key does not exist then the value is used as the warning message.
-   * Default is 'containsValidationErrors'.
+   * @default 'containsValidationErrors'
    */
+  // containsValidationErrorsResource: string;
   containsValidationErrorsResource: string =
     mxClient.language != 'none' ? 'containsValidationErrors' : '';
 
   /**
-   * Variable: collapseExpandResource
-   *
    * Specifies the resource key for the tooltip on the collapse/expand icon.
    * If the resource for this key does not exist then the value is used as
-   * the tooltip. Default is 'collapse-expand'.
+   * the tooltip.
+   * @default 'collapse-expand'
    */
+  // collapseExpandResource: string;
   collapseExpandResource: string =
       mxClient.language != 'none' ? 'collapse-expand' : '';
 
@@ -1719,11 +1087,10 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: createHandlers
-   *
    * Creates the tooltip-, panning-, connection- and graph-handler (in this
-   * order). This is called in the constructor before <init> is called.
+   * order). This is called in the constructor before {@link init} is called.
    */
+  // createHandlers(): void;
   createHandlers(): void {
     this.tooltipHandler = this.createTooltipHandler();
     this.tooltipHandler.setEnabled(false);
@@ -1737,154 +1104,137 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: createTooltipHandler
-   *
-   * Creates and returns a new <mxTooltipHandler> to be used in this graph.
+   * Creates and returns a new {@link mxTooltipHandler} to be used in this graph.
    */
+  // createTooltipHandler(): mxTooltipHandler;
   createTooltipHandler(): mxTooltipHandler {
     return new mxTooltipHandler(this);
   }
 
   /**
-   * Function: createSelectionCellsHandler
-   *
-   * Creates and returns a new <mxTooltipHandler> to be used in this graph.
+   * Creates and returns a new {@link mxTooltipHandler} to be used in this graph.
    */
+  // createSelectionCellsHandler: mxSelectionCellsHandler;
   createSelectionCellsHandler(): mxSelectionCellsHandler {
     return new mxSelectionCellsHandler(this);
   }
 
   /**
-   * Function: createConnectionHandler
-   *
-   * Creates and returns a new <mxConnectionHandler> to be used in this graph.
+   * Creates and returns a new {@link mxConnectionHandler} to be used in this graph.
    */
+  // createConnectionHandler(): mxConnectionHandler;
   createConnectionHandler(): mxConnectionHandler {
     return new mxConnectionHandler(this);
   }
 
   /**
-   * Function: createGraphHandler
-   *
-   * Creates and returns a new <mxGraphHandler> to be used in this graph.
+   * Creates and returns a new {@link mxGraphHandler} to be used in this graph.
    */
+  // createGraphHandler(): mxGraphHandler;
   createGraphHandler(): mxGraphHandler {
     return new mxGraphHandler(this);
   }
 
   /**
-   * Function: createPanningHandler
-   *
-   * Creates and returns a new <mxPanningHandler> to be used in this graph.
+   * Creates and returns a new {@link mxPanningHandler} to be used in this graph.
    */
+  // createPanningHandler(): mxPanningHandler;
   createPanningHandler(): mxPanningHandler {
     return new mxPanningHandler(this);
   }
 
   /**
-   * Function: createPopupMenuHandler
-   *
-   * Creates and returns a new <mxPopupMenuHandler> to be used in this graph.
+   * Creates and returns a new {@link mxPopupMenuHandler} to be used in this graph.
    */
+  // createPopupMenuHandler(): mxPopupMenuHandler;
   createPopupMenuHandler(): mxPopupMenuHandler {
     return new mxPopupMenuHandler(this);
   }
 
   /**
-   * Function: createSelectionModel
-   *
-   * Creates a new <mxGraphSelectionModel> to be used in this graph.
+   * Creates a new {@link mxGraphSelectionModel} to be used in this graph.
    */
+  // createSelectionModel(): mxGraphSelectionModel;
   createSelectionModel(): mxGraphSelectionModel {
     return new mxGraphSelectionModel(this);
   }
 
   /**
-   * Function: createStylesheet
-   *
-   * Creates a new <mxGraphSelectionModel> to be used in this graph.
+   * Creates a new {@link mxGraphSelectionModel} to be used in this graph.
    */
+  // createStylesheet(): mxStylesheet;
   createStylesheet(): mxStylesheet {
     return new mxStylesheet();
   }
 
   /**
-   * Function: createGraphView
-   *
-   * Creates a new <mxGraphView> to be used in this graph.
+   * Creates a new {@link mxGraphView} to be used in this graph.
    */
+  // createGraphView(): mxGraphView;
   createGraphView(): mxGraphView {
     return new mxGraphView(this);
   }
 
   /**
-   * Function: createCellRenderer
-   *
-   * Creates a new <mxCellRenderer> to be used in this graph.
+   * Creates a new {@link mxCellRenderer} to be used in this graph.
    */
+  // createCellRenderer(): mxCellRenderer;
   createCellRenderer(): mxCellRenderer {
     return new mxCellRenderer();
   }
 
   /**
-   * Function: createCellEditor
-   *
-   * Creates a new <mxCellEditor> to be used in this graph.
+   * Creates a new {@link mxCellEditor} to be used in this graph.
    */
+  // createCellEditor(): mxCellEditor;
   createCellEditor(): mxCellEditor {
     return new mxCellEditor(this);
   }
 
   /**
-   * Function: getModel
-   *
-   * Returns the <mxGraphModel> that contains the cells.
+   * Returns the {@link mxGraphModel} that contains the cells.
    */
+  // getModel(): mxGraphModel;
   getModel(): mxGraphModel {
     return <mxGraphModel>this.model;
   }
 
   /**
-   * Function: getView
-   *
-   * Returns the <mxGraphView> that contains the <mxCellStates>.
+   * Returns the {@link mxGraphView} that contains the {@link mxCellStates}.
    */
+  // getView(): mxGraphView;
   getView(): mxGraphView {
     return <mxGraphView>this.view;
   }
 
   /**
-   * Function: getStylesheet
-   *
-   * Returns the <mxStylesheet> that defines the style.
+   * Returns the {@link mxStylesheet} that defines the style.
    */
+  // getStylesheet(): mxStylesheet;
   getStylesheet(): mxStylesheet | null {
     return this.stylesheet;
   }
 
   /**
-   * Function: setStylesheet
-   *
-   * Sets the <mxStylesheet> that defines the style.
+   * Sets the {@link mxStylesheet} that defines the style.
    */
+  // setStylesheet(stylesheet: mxStylesheet): void;
   setStylesheet(stylesheet: mxStylesheet | null): void {
     this.stylesheet = stylesheet;
   }
 
   /**
-   * Function: getSelectionModel
-   *
-   * Returns the <mxGraphSelectionModel> that contains the selection.
+   * Returns the {@link mxGraphSelectionModel} that contains the selection.
    */
+  // getSelectionModel(): mxGraphSelectionModel;
   getSelectionModel(): mxGraphSelectionModel {
     return <mxGraphSelectionModel>this.selectionModel;
   }
 
   /**
-   * Function: setSelectionModel
-   *
-   * Sets the <mxSelectionModel> that contains the selection.
+   * Sets the {@link mxSelectionModel} that contains the selection.
    */
+  // setSelectionModel(selectionModel: mxGraphSelectionModel): void;
   setSelectionModel(selectionModel: mxGraphSelectionModel): void {
     this.selectionModel = selectionModel;
   }
@@ -1945,15 +1295,12 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: graphModelChanged
-   *
-   * Called when the graph model changes. Invokes <processChange> on each
+   * Called when the graph model changes. Invokes {@link processChange} on each
    * item of the given array to update the view accordingly.
    *
-   * Parameters:
-   *
-   * changes - Array that contains the individual changes.
+   * @param changes Array that contains the individual changes.
    */
+  // graphModelChanged(changes: any[]): void;
   graphModelChanged(changes: any[]) {
     for (let i = 0; i < changes.length; i += 1) {
       this.processChange(changes[i]);
@@ -1965,10 +1312,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: updateSelection
-   *
    * Removes selection cells that are not in the model from the selection.
    */
+  // updateSelection(): void;
   updateSelection(): void {
     const cells = this.getSelectionCells();
     const removed = [];
@@ -1993,16 +1339,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: processChange
-   *
    * Processes the given change and invalidates the respective cached data
-   * in <view>. This fires a <root> event if the root has changed in the
+   * in {@link view}. This fires a {@link root} event if the root has changed in the
    * model.
    *
-   * Parameters:
-   *
-   * change - Object that represents the change on the model.
+   * @param {(mxRootChange|mxChildChange|mxTerminalChange|mxGeometryChange|mxValueChange|mxStyleChange)} change - Object that represents the change on the model.
    */
+  // processChange(change: any): void;
   processChange(change: any): void {
     // Resets the view settings, removes all cells and clears
     // the selection if the root changes.
@@ -2088,15 +1431,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: removeStateForCell
-   *
    * Removes all cached information for the given cell and its descendants.
    * This is called when a cell was removed from the model.
    *
    * Paramters:
    *
-   * cell - <mxCell> that was removed from the model.
+   * @param cell {@link mxCell} that was removed from the model.
    */
+  // removeStateForCell(cell: mxCell): void;
   removeStateForCell(cell: mxCell) {
     const childCount = this.getModel().getChildCount(cell);
 
@@ -2113,16 +1455,13 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: addCellOverlay
+   * Adds an {@link mxCellOverlay} for the specified cell. This method fires an
+   * {@link addoverlay} event and returns the new {@link mxCellOverlay}.
    *
-   * Adds an <mxCellOverlay> for the specified cell. This method fires an
-   * <addoverlay> event and returns the new <mxCellOverlay>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> to add the overlay for.
-   * overlay - <mxCellOverlay> to be added for the cell.
+   * @param cell {@link mxCell} to add the overlay for.
+   * @param overlay {@link mxCellOverlay} to be added for the cell.
    */
+  // addCellOverlay(cell: mxCell, overlay: mxCellOverlay): mxCellOverlay;
   addCellOverlay(cell: mxCell,
                  overlay: mxCellOverlay): mxCellOverlay {
     if (cell.overlays == null) {
@@ -2143,31 +1482,25 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getCellOverlays
-   *
-   * Returns the array of <mxCellOverlays> for the given cell or null, if
+   * Returns the array of {@link mxCellOverlays} for the given cell or null, if
    * no overlays are defined.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose overlays should be returned.
+   * @param cell {@link mxCell} whose overlays should be returned.
    */
+  // getCellOverlays(cell: mxCell): mxCellOverlay[];
   getCellOverlays(cell: mxCell) {
     return cell.overlays;
   }
 
   /**
-   * Function: removeCellOverlay
+   * Removes and returns the given {@link mxCellOverlay} from the given cell. This
+   * method fires a {@link removeoverlay} event. If no overlay is given, then all
+   * overlays are removed using {@link removeOverlays}.
    *
-   * Removes and returns the given <mxCellOverlay> from the given cell. This
-   * method fires a <removeoverlay> event. If no overlay is given, then all
-   * overlays are removed using <removeOverlays>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose overlay should be removed.
-   * overlay - Optional <mxCellOverlay> to be removed.
+   * @param cell {@link mxCell} whose overlay should be removed.
+   * @param overlay Optional {@link mxCellOverlay} to be removed.
    */
+  // removeCellOverlay(cell: mxCell, overlay: mxCellOverlay): mxCellOverlay;
   removeCellOverlay(cell: mxCell,
                     overlay: mxCellOverlay | null=null): any {
 
@@ -2208,16 +1541,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: removeCellOverlays
+   * Removes all {@link mxCellOverlays} from the given cell. This method
+   * fires a {@link removeoverlay} event for each {@link mxCellOverlay} and returns
+   * the array of {@link mxCellOverlays} that was removed from the cell.
    *
-   * Removes all <mxCellOverlays> from the given cell. This method
-   * fires a <removeoverlay> event for each <mxCellOverlay> and returns
-   * the array of <mxCellOverlays> that was removed from the cell.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose overlays should be removed
+   * @param cell {@link mxCell} whose overlays should be removed
    */
+  // removeCellOverlays(cell: mxCell): mxCellOverlay[];
   removeCellOverlays(cell: mxCell): any[] {
     const { overlays } = cell;
 
@@ -2248,18 +1578,15 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: clearCellOverlays
-   *
-   * Removes all <mxCellOverlays> in the graph for the given cell and all its
+   * Removes all {@link mxCellOverlays} in the graph for the given cell and all its
    * descendants. If no cell is specified then all overlays are removed from
-   * the graph. This implementation uses <removeCellOverlays> to remove the
+   * the graph. This implementation uses {@link removeCellOverlays} to remove the
    * overlays from the individual cells.
    *
-   * Parameters:
-   *
-   * cell - Optional <mxCell> that represents the root of the subtree to
+   * @param cell Optional {@link mxCell} that represents the root of the subtree to
    * remove the overlays from. Default is the root in the model.
    */
+  // clearCellOverlays(cell: mxCell): void;
   clearCellOverlays(cell: mxCell | null=null): void {
     cell = cell != null ? cell : this.getModel().getRoot();
     this.removeCellOverlays(<mxCell>cell);
@@ -2274,29 +1601,25 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: setCellWarning
-   *
    * Creates an overlay for the given cell using the warning and image or
-   * <warningImage> and returns the new <mxCellOverlay>. The warning is
+   * {@link warningImage} and returns the new {@link mxCellOverlay}. The warning is
    * displayed as a tooltip in a red font and may contain HTML markup. If
    * the warning is null or a zero length string, then all overlays are
    * removed from the cell.
    *
-   * Example:
+   * @example
+   * ```javascript
+   * graph.setCellWarning(cell, '{@link b}Warning:</b>: Hello, World!');
+   * ```
    *
-   * (code)
-   * graph.setCellWarning(cell, '<b>Warning:</b>: Hello, World!');
-   * (end)
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose warning should be set.
-   * warning - String that represents the warning to be displayed.
-   * img - Optional <mxImage> to be used for the overlay. Default is
-   * <warningImage>.
-   * isSelect - Optional boolean indicating if a click on the overlay
-   * should select the corresponding cell. Default is false.
+   * @param cell {@link mxCell} whose warning should be set.
+   * @param warning String that represents the warning to be displayed.
+   * @param img Optional {@link mxImage} to be used for the overlay. Default is
+   * {@link warningImage}.
+   * @param isSelect Optional boolean indicating if a click on the overlay
+   * should select the corresponding cell. Default is `false`.
    */
+  // setCellWarning(cell: mxCell, warning: string, img?: mxImage, isSelect?: boolean): mxCellOverlay;
   setCellWarning(cell: mxCell,
                  warning: string | null=null,
                  img: mxImage | null=null,
@@ -2333,31 +1656,25 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: startEditing
-   *
-   * Calls <startEditingAtCell> using the given cell or the first selection
+   * Calls {@link startEditingAtCell} using the given cell or the first selection
    * cell.
    *
-   * Parameters:
-   *
-   * evt - Optional mouse event that triggered the editing.
+   * @param evt Optional mouse event that triggered the editing.
    */
+  // startEditing(evt?: MouseEvent): void;
   startEditing(evt: MouseEvent) {
     this.startEditingAtCell(null, evt);
   }
 
   /**
-   * Function: startEditingAtCell
-   *
-   * Fires a <startEditing> event and invokes <mxCellEditor.startEditing>
-   * on <editor>. After editing was started, a <editingStarted> event is
+   * Fires a {@link startEditing} event and invokes {@link mxCellEditor.startEditing}
+   * on {@link editor}. After editing was started, a {@link editingStarted} event is
    * fired.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to start the in-place editor for.
-   * evt - Optional mouse event that triggered the editing.
+   * @param cell {@link mxCell} to start the in-place editor for.
+   * @param evt Optional mouse event that triggered the editing.
    */
+  // startEditingAtCell(cell?: mxCell, evt?: MouseEvent): void;
   startEditingAtCell(cell: mxCell | null=null,
                      evt: MouseEvent): void {
     if (evt == null || !mxEvent.isMultiTouchEvent(evt)) {
@@ -2381,33 +1698,27 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getEditingValue
-   *
    * Returns the initial value for in-place editing. This implementation
-   * returns <convertValueToString> for the given cell. If this function is
-   * overridden, then <mxGraphModel.valueForCellChanged> should take care
+   * returns {@link convertValueToString} for the given cell. If this function is
+   * overridden, then {@link mxGraphModel.valueForCellChanged} should take care
    * of correctly storing the actual new value inside the user object.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the initial editing value should be returned.
-   * evt - Optional mouse event that triggered the editor.
+   * @param cell {@link mxCell} for which the initial editing value should be returned.
+   * @param evt Optional mouse event that triggered the editor.
    */
+  // getEditingValue(cell: mxCell, evt: MouseEvent): string;
   getEditingValue(cell: mxCell,
                   evt: mxEventObject | mxMouseEvent): string | null {
     return this.convertValueToString(cell);
   }
 
   /**
-   * Function: stopEditing
+   * Stops the current editing  and fires a {@link editingStopped} event.
    *
-   * Stops the current editing  and fires a <editingStopped> event.
-   *
-   * Parameters:
-   *
-   * cancel - Boolean that specifies if the current editing value
-   * shouldn't be stored.
+   * @param cancel Boolean that specifies if the current editing value
+   * should be stored.
    */
+  // stopEditing(cancel: boolean): void;
   stopEditing(cancel: boolean=false): void {
     (<mxCellEditor>this.cellEditor).stopEditing(cancel);
     this.fireEvent(
@@ -2416,18 +1727,15 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: labelChanged
-   *
    * Sets the label of the specified cell to the given value using
-   * <cellLabelChanged> and fires <mxEvent.LABEL_CHANGED> while the
+   * {@link cellLabelChanged} and fires {@link mxEvent.LABEL_CHANGED} while the
    * transaction is in progress. Returns the cell whose label was changed.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose label should be changed.
-   * value - New label to be assigned.
-   * evt - Optional event that triggered the change.
+   * @param cell {@link mxCell} whose label should be changed.
+   * @param value New label to be assigned.
+   * @param evt Optional event that triggered the change.
    */
+  // labelChanged(cell: mxCell, value: any, evt?: MouseEvent): mxCell;
   labelChanged(cell: mxCell,
                value: any,
                evt: mxMouseEvent | mxEventObject): mxCell {
@@ -2452,36 +1760,33 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: cellLabelChanged
-   *
    * Sets the new label for a cell. If autoSize is true then
-   * <cellSizeUpdated> will be called.
+   * {@link cellSizeUpdated} will be called.
    *
    * In the following example, the function is extended to map changes to
-   * attributes in an XML node, as shown in <convertValueToString>.
+   * attributes in an XML node, as shown in {@link convertValueToString}.
    * Alternatively, the handling of this can be implemented as shown in
-   * <mxGraphModel.valueForCellChanged> without the need to clone the
+   * {@link mxGraphModel.valueForCellChanged} without the need to clone the
    * user object.
    *
-   * (code)
-   * let graphCellLabelChanged = graph.cellLabelChanged;
-   * graph.cellLabelChanged = (cell, newValue, autoSize)=>
+   * ```javascript
+   * var graphCellLabelChanged = graph.cellLabelChanged;
+   * graph.cellLabelChanged = function(cell, newValue, autoSize)
    * {
-   *   // Cloned for correct undo/redo
-   *   let elt = cell.value.cloneNode(true);
+   * 	// Cloned for correct undo/redo
+   * 	var elt = cell.value.cloneNode(true);
    *  elt.setAttribute('label', newValue);
    *
    *  newValue = elt;
    *  graphCellLabelChanged.apply(this, arguments);
    * };
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose label should be changed.
-   * value - New label to be assigned.
-   * autoSize - Boolean that specifies if <cellSizeUpdated> should be called.
+   * @param cell {@link mxCell} whose label should be changed.
+   * @param value New label to be assigned.
+   * @param autoSize Boolean that specifies if {@link cellSizeUpdated} should be called.
    */
+  // cellLabelChanged(cell: mxCell, value: any, autoSize?: boolean): void;
   cellLabelChanged(cell: mxCell,
                    value: any,
                    autoSize: boolean=false): void {
@@ -2502,35 +1807,30 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: escape
-   *
    * Processes an escape keystroke.
    *
-   * Parameters:
-   *
-   * evt - Mouseevent that represents the keystroke.
+   * @param evt Mouseevent that represents the keystroke.
    */
+  // escape(evt?: MouseEvent): void;
   escape(evt: mxMouseEvent): void {
     this.fireEvent(new mxEventObject(mxEvent.ESCAPE, 'event', evt));
   }
 
   /**
-   * Function: click
-   *
-   * Processes a singleclick on an optional cell and fires a <click> event.
+   * Processes a singleclick on an optional cell and fires a {@link click} event.
    * The click event is fired initially. If the graph is enabled and the
    * event has not been consumed, then the cell is selected using
-   * <selectCellForEvent> or the selection is cleared using
-   * <clearSelection>. The events consumed state is set to true if the
-   * corresponding <mxMouseEvent> has been consumed.
+   * {@link selectCellForEvent} or the selection is cleared using
+   * {@link clearSelection}. The events consumed state is set to true if the
+   * corresponding {@link mxMouseEvent} has been consumed.
    *
    * To handle a click event, use the following code.
    *
-   * (code)
-   * graph.addListener(mxEvent.CLICK, (sender, evt)=>
+   * ```javascript
+   * graph.addListener(mxEvent.CLICK, function(sender, evt)
    * {
-   *   let e = evt.getProperty('event'); // mouse event
-   *   let cell = evt.getProperty('cell'); // cell may be null
+   *   var e = evt.getProperty('event'); // mouse event
+   *   var cell = evt.getProperty('cell'); // cell may be null
    *
    *   if (cell != null)
    *   {
@@ -2538,12 +1838,11 @@ class mxGraph extends mxEventSource {
    *     evt.consume();
    *   }
    * });
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * me - <mxMouseEvent> that represents the single click.
+   * @param me {@link mxMouseEvent} that represents the single click.
    */
+  // click(me: mxMouseEvent): void;
   click(me: mxMouseEvent): boolean {
     const evt = me.getEvent();
     let cell = me.getCell();
@@ -2626,10 +1925,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isSiblingSelected
-   *
    * Returns true if any sibling of the given cell is selected.
    */
+  // isSiblingSelected(cell: mxCell): boolean;
   isSiblingSelected(cell: mxCell): boolean {
     const model = this.getModel();
     const parent = model.getParent(cell);
@@ -2645,45 +1943,42 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: dblClick
-   *
-   * Processes a doubleclick on an optional cell and fires a <dblclick>
+   * Processes a doubleclick on an optional cell and fires a {@link dblclick}
    * event. The event is fired initially. If the graph is enabled and the
-   * event has not been consumed, then <edit> is called with the given
+   * event has not been consumed, then {@link edit} is called with the given
    * cell. The event is ignored if no cell was specified.
    *
    * Example for overriding this method.
    *
-   * (code)
-   * graph.dblClick = (evt, cell)=>
+   * ```javascript
+   * graph.dblClick = function(evt, cell)
    * {
-   *   let mxe = new mxEventObject(mxEvent.DOUBLE_CLICK, 'event', evt, 'cell', cell);
+   *   var mxe = new mxEventObject(mxEvent.DOUBLE_CLICK, 'event', evt, 'cell', cell);
    *   this.fireEvent(mxe);
    *
    *   if (this.isEnabled() && !mxEvent.isConsumed(evt) && !mxe.isConsumed())
    *   {
-   *      mxUtils.alert('Hello, World!');
+   * 	   mxUtils.alert('Hello, World!');
    *     mxe.consume();
    *   }
    * }
-   * (end)
+   * ```
    *
    * Example listener for this event.
    *
-   * (code)
-   * graph.addListener(mxEvent.DOUBLE_CLICK, (sender, evt)=>
+   * ```javascript
+   * graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt)
    * {
-   *   let cell = evt.getProperty('cell');
+   *   var cell = evt.getProperty('cell');
    *   // do something with the cell and consume the
    *   // event to prevent in-place editing from start
    * });
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * evt - Mouseevent that represents the doubleclick.
-   * cell - Optional <mxCell> under the mousepointer.
+   * @param evt Mouseevent that represents the doubleclick.
+   * @param cell Optional {@link mxCell} under the mousepointer.
    */
+  // dblClick(evt: MouseEvent, cell?: mxCell): void;
   dblClick(evt: MouseEvent,
            cell: mxCell | null=null): void {
 
@@ -2711,15 +2006,12 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: tapAndHold
+   * Handles the {@link mxMouseEvent} by highlighting the {@link mxCellState}.
    *
-   * Handles the <mxMouseEvent> by highlighting the <mxCellState>.
-   *
-   * Parameters:
-   *
-   * me - <mxMouseEvent> that represents the touch event.
-   * state - Optional <mxCellState> that is associated with the event.
+   * @param me {@link mxMouseEvent} that represents the touch event.
+   * @param state Optional {@link mxCellState} that is associated with the event.
    */
+  // tapAndHold(me: mxMouseEvent): void;
   tapAndHold(me: mxMouseEvent): void {
     const evt = me.getEvent();
     const mxe = new mxEventObject(
@@ -2776,11 +2068,10 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: scrollPointToVisible
-   *
    * Scrolls the graph to the given point, extending the graph container if
    * specified.
    */
+  // scrollPointToVisible(x: number, y: number, extend?: boolean, border?: number): void;
   scrollPointToVisible(x: number,
                        y: number,
                        extend: boolean,
@@ -2862,21 +2153,19 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: createPanningManager
-   *
-   * Creates and returns an <mxPanningManager>.
+   * Creates and returns an {@link mxPanningManager}.
    */
+  // createPanningManager(): mxPanningManager;
   createPanningManager(): mxPanningManager {
     return new mxPanningManager(this);
   }
 
   /**
-   * Function: getBorderSizes
-   *
    * Returns the size of the border and padding on all four sides of the
    * container. The left, top, right and bottom borders are stored in the x, y,
-   * width and height of the returned <mxRectangle>, respectively.
+   * width and height of the returned {@link mxRectangle}, respectively.
    */
+  // getBorderSizes(): mxRectangle;
   getBorderSizes(): mxRectangle {
     const css = <CSSStyleDeclaration>mxUtils.getCurrentStyle(this.container);
 
@@ -2901,10 +2190,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getPreferredPageSize
-   *
-   * Returns the preferred size of the background page if <preferPageSize> is true.
+   * Returns the preferred size of the background page if {@link preferPageSize} is true.
    */
+  // getPreferredPageSize(bounds: mxRectangle, width: number, height: number): mxRectangle;
   getPreferredPageSize(bounds: mxRectangle,
                        width: number,
                        height: number): mxRectangle {
@@ -3080,12 +2368,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: sizeDidChange
-   *
    * Called when the size of the graph has changed. This implementation fires
-   * a <size> event after updating the clipping region of the SVG element in
+   * a {@link size} event after updating the clipping region of the SVG element in
    * SVG-bases browsers.
    */
+  // sizeDidChange(): void;
   sizeDidChange(): void {
     const bounds = this.getGraphBounds();
 
@@ -3144,10 +2431,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: doResizeContainer
-   *
    * Resizes the container for the given graph width and height.
    */
+  // doResizeContainer(width: number, height: number): void;
   doResizeContainer(width: number,
                     height: number): void {
 
@@ -3161,16 +2447,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: updatePageBreaks
+   * Invokes from {@link sizeDidChange} to redraw the page breaks.
    *
-   * Invokes from <sizeDidChange> to redraw the page breaks.
-   *
-   * Parameters:
-   *
-   * visible - Boolean that specifies if page breaks should be shown.
-   * width - Specifies the width of the container in pixels.
-   * height - Specifies the height of the container in pixels.
+   * @param visible Boolean that specifies if page breaks should be shown.
+   * @param width Specifies the width of the container in pixels.
+   * @param height Specifies the height of the container in pixels.
    */
+  // updatePageBreaks(visible: boolean, width: number, height: number): void;
   updatePageBreaks(visible: boolean,
                    width: number,
                    height: number) {
@@ -3280,16 +2563,13 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: getCurrentCellStyle
-   *
    * Returns the style for the given cell from the cell state, if one exists,
-   * or using <getCellStyle>.
+   * or using {@link getCellStyle}.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose style should be returned as an array.
-   * ignoreState - Optional boolean that specifies if the cell state should be ignored.
+   * @param cell {@link mxCell} whose style should be returned as an array.
+   * @param ignoreState Optional boolean that specifies if the cell state should be ignored.
    */
+  // getCurrentCellStyle(cell: mxCell, ignoreState?: boolean): StyleMap;
   getCurrentCellStyle(cell: mxCell | null,
                       ignoreState: boolean=false): any {
 
@@ -3298,8 +2578,6 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getCellStyle
-   *
    * Returns an array of key, value pairs representing the cell style for the
    * given cell. If no string is defined in the model that specifies the
    * style, then the default style for the cell is returned or an empty object,
@@ -3307,10 +2585,9 @@ class mxGraph extends mxEventSource {
    * for the given cell and use the cached style in the state before using
    * this method.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose style should be returned as an array.
+   * @param cell {@link mxCell} whose style should be returned as an array.
    */
+  // getCellStyle(cell: mxCell): StyleMap;
   getCellStyle(cell: mxCell | null): any {
     const stylename = this.getModel().getStyle(cell);
     let style = null;
@@ -3338,12 +2615,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: postProcessCellStyle
-   *
    * Tries to resolve the value for the image style in the image bundles and
    * turns short data URIs as defined in mxImageBundle to data URIs as
    * defined in RFC 2397 of the IETF.
    */
+  // postProcessCellStyle(style: StyleMap): StyleMap;
   postProcessCellStyle(style: any): any {
     if (style != null) {
       const key = style[mxConstants.STYLE_IMAGE];
@@ -3382,17 +2658,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: setCellStyle
-   *
    * Sets the style of the specified cells. If no cells are given, then the
    * selection cells are changed.
    *
-   * Parameters:
-   *
-   * style - String representing the new style of the cells.
-   * cells - Optional array of <mxCells> to set the style for. Default is the
+   * @param style String representing the new style of the cells.
+   * @param cells Optional array of {@link mxCell} to set the style for. Default is the
    * selection cells.
    */
+  // setCellStyle(style: string, cells?: mxCell[]): void;
   setCellStyle(style: any,
                cells: mxCell[] | null=this.getSelectionCells()) {
 
@@ -3409,20 +2682,19 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: toggleCellStyle
-   *
    * Toggles the boolean value for the given key in the style of the given cell
    * and returns the new value as 0 or 1. If no cell is specified then the
    * selection cell is used.
    *
    * Parameter:
    *
-   * key - String representing the key for the boolean value to be toggled.
-   * defaultValue - Optional boolean default value if no value is defined.
-   * Default is false.
-   * cell - Optional <mxCell> whose style should be modified. Default is
+   * @param key String representing the key for the boolean value to be toggled.
+   * @param defaultValue Optional boolean default value if no value is defined.
+   * Default is `false`.
+   * @param cell Optional {@link mxCell} whose style should be modified. Default is
    * the selection cell.
    */
+  // toggleCellStyle(key: string, defaultValue?: boolean, cell?: mxCell): any;
   toggleCellStyle(key: string,
                   defaultValue: boolean=false,
                   cell: mxCell | null=this.getSelectionCell()) {
@@ -3431,21 +2703,20 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: toggleCellStyles
-   *
    * Toggles the boolean value for the given key in the style of the given cells
    * and returns the new value as 0 or 1. If no cells are specified, then the
    * selection cells are used. For example, this can be used to toggle
-   * <mxConstants.STYLE_ROUNDED> or any other style with a boolean value.
+   * {@link mxConstants.STYLE_ROUNDED} or any other style with a boolean value.
    *
    * Parameter:
    *
-   * key - String representing the key for the boolean value to be toggled.
-   * defaultValue - Optional boolean default value if no value is defined.
-   * Default is false.
-   * cells - Optional array of <mxCells> whose styles should be modified.
+   * @param key String representing the key for the boolean value to be toggled.
+   * @param defaultValue Optional boolean default value if no value is defined.
+   * Default is `false`.
+   * @param cells Optional array of {@link mxCell} whose styles should be modified.
    * Default is the selection cells.
    */
+  // toggleCellStyles(key: string, defaultValue?: boolean, cells?: mxCell[]): any;
   toggleCellStyles(key: string,
                    defaultValue: boolean=false,
                    cells: (mxCell | null)[]=this.getSelectionCells()) {
@@ -3461,21 +2732,18 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: setCellStyles
-   *
    * Sets the key to value in the styles of the given cells. This will modify
    * the existing cell styles in-place and override any existing assignment
    * for the given key. If no cells are specified, then the selection cells
    * are changed. If no value is specified, then the respective key is
    * removed from the styles.
    *
-   * Parameters:
-   *
-   * key - String representing the key to be assigned.
-   * value - String representing the new value for the key.
-   * cells - Optional array of <mxCells> to change the style for. Default is
+   * @param key String representing the key to be assigned.
+   * @param value String representing the new value for the key.
+   * @param cells Optional array of {@link mxCell} to change the style for. Default is
    * the selection cells.
    */
+  // setCellStyles(key: string, value: any, cells?: mxCell[]): void;
   setCellStyles(key: string,
                 value: string | number | null=null,
                 cells: (mxCell | null)[]=this.getSelectionCells()) {
@@ -3484,18 +2752,15 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: toggleCellStyleFlags
-   *
    * Toggles the given bit for the given key in the styles of the specified
    * cells.
    *
-   * Parameters:
-   *
-   * key - String representing the key to toggle the flag in.
-   * flag - Integer that represents the bit to be toggled.
-   * cells - Optional array of <mxCells> to change the style for. Default is
+   * @param key String representing the key to toggle the flag in.
+   * @param flag Integer that represents the bit to be toggled.
+   * @param cells Optional array of {@link mxCell} to change the style for. Default is
    * the selection cells.
    */
+  // toggleCellStyleFlags(key: string, flag: number, cells?: mxCell[]): void;
   toggleCellStyleFlags(key: string,
                        flag: number,
                        cells: mxCell[]=this.getSelectionCells()) {
@@ -3504,19 +2769,16 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: setCellStyleFlags
-   *
    * Sets or toggles the given bit for the given key in the styles of the
    * specified cells.
    *
-   * Parameters:
-   *
-   * key - String representing the key to toggle the flag in.
-   * flag - Integer that represents the bit to be toggled.
-   * value - Boolean value to be used or null if the value should be toggled.
-   * cells - Optional array of <mxCells> to change the style for. Default is
+   * @param key String representing the key to toggle the flag in.
+   * @param flag Integer that represents the bit to be toggled.
+   * @param value Boolean value to be used or null if the value should be toggled.
+   * @param cells Optional array of {@link mxCell} to change the style for. Default is
    * the selection cells.
    */
+  // setCellStyleFlags(key: string, flag: number, value: boolean, cells?: mxCell[]): void;
   setCellStyleFlags(key: string,
                     flag: number,
                     value: boolean | null=null,
@@ -3537,18 +2799,15 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: alignCells
-   *
    * Aligns the given cells vertically or horizontally according to the given
    * alignment using the optional parameter as the coordinate.
    *
-   * Parameters:
-   *
-   * align - Specifies the alignment. Possible values are all constants in
+   * @param align Specifies the alignment. Possible values are all constants in
    * mxConstants with an ALIGN prefix.
-   * cells - Array of <mxCells> to be aligned.
-   * param - Optional coordinate for the alignment.
+   * @param cells Array of {@link mxCell} to be aligned.
+   * @param param Optional coordinate for the alignment.
    */
+  // alignCells(align: string, cells: mxCell[], param?: any): mxCell[];
   alignCells(align: string,
              cells: mxCell[],
              param: number | null=null) {
@@ -3646,34 +2905,31 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: flipEdge
-   *
    * Toggles the style of the given edge between null (or empty) and
-   * <alternateEdgeStyle>. This method fires <mxEvent.FLIP_EDGE> while the
+   * {@link alternateEdgeStyle}. This method fires {@link mxEvent.FLIP_EDGE} while the
    * transaction is in progress. Returns the edge that was flipped.
    *
    * Here is an example that overrides this implementation to invert the
-   * value of <mxConstants.STYLE_ELBOW> without removing any existing styles.
+   * value of {@link mxConstants.STYLE_ELBOW} without removing any existing styles.
    *
-   * (code)
-   * graph.flipEdge = (edge)=>
+   * ```javascript
+   * graph.flipEdge = function(edge)
    * {
    *   if (edge != null)
    *   {
-   *     let style = this.getCurrentCellStyle(edge);
-   *     let elbow = mxUtils.getValue(style, mxConstants.STYLE_ELBOW,
+   *     var style = this.getCurrentCellStyle(edge);
+   *     var elbow = mxUtils.getValue(style, mxConstants.STYLE_ELBOW,
    *         mxConstants.ELBOW_HORIZONTAL);
-   *     let value = (elbow === mxConstants.ELBOW_HORIZONTAL) ?
+   *     var value = (elbow == mxConstants.ELBOW_HORIZONTAL) ?
    *         mxConstants.ELBOW_VERTICAL : mxConstants.ELBOW_HORIZONTAL;
    *     this.setCellStyles(mxConstants.STYLE_ELBOW, value, [edge]);
    *   }
    * };
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * edge - <mxCell> whose style should be changed.
+   * @param edge {@link mxCell} whose style should be changed.
    */
+  // flipEdge(edge: mxCell): mxCell;
   flipEdge(edge: mxCell): mxCell {
     if (edge != null && this.alternateEdgeStyle != null) {
       this.getModel().beginUpdate();
@@ -3697,19 +2953,17 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: addImageBundle
-   *
-   * Adds the specified <mxImageBundle>.
+   * Adds the specified {@link mxImageBundle}.
    */
+  // addImageBundle(bundle: mxImageBundle): void;
   addImageBundle(bundle: mxImageBundle): void {
     this.imageBundles.push(bundle);
   }
 
   /**
-   * Function: removeImageBundle
-   *
-   * Removes the specified <mxImageBundle>.
+   * Removes the specified {@link mxImageBundle}.
    */
+  // removeImageBundle(bundle: mxImageBundle): void;
   removeImageBundle(bundle: mxImageBundle) {
     const tmp = [];
     for (let i = 0; i < this.imageBundles.length; i += 1) {
@@ -3721,11 +2975,10 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getImageFromBundles
-   *
-   * Searches all <imageBundles> for the specified key and returns the value
+   * Searches all {@link imageBundles} for the specified key and returns the value
    * for the first match or null if the key is not found.
    */
+  // getImageFromBundles(key: string): string;
   getImageFromBundles(key: string) {
     if (key != null) {
       for (let i = 0; i < this.imageBundles.length; i += 1) {
@@ -3743,18 +2996,15 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: orderCells
-   *
    * Moves the given cells to the front or back. The change is carried out
-   * using <cellsOrdered>. This method fires <mxEvent.ORDER_CELLS> while the
+   * using {@link cellsOrdered}. This method fires {@link mxEvent.ORDER_CELLS} while the
    * transaction is in progress.
    *
-   * Parameters:
-   *
-   * back - Boolean that specifies if the cells should be moved to back.
-   * cells - Array of <mxCells> to move to the background. If null is
+   * @param back Boolean that specifies if the cells should be moved to back.
+   * @param cells Array of {@link mxCell} to move to the background. If null is
    * specified then the selection cells are used.
    */
+  // orderCells(back: boolean, cells?: mxCell[]): mxCell[];
   orderCells(back: boolean=false,
              cells: mxCell[]=this.getSelectionCells()): mxCell[] {
 
@@ -3775,16 +3025,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: cellsOrdered
-   *
    * Moves the given cells to the front or back. This method fires
-   * <mxEvent.CELLS_ORDERED> while the transaction is in progress.
+   * {@link mxEvent.CELLS_ORDERED} while the transaction is in progress.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> whose order should be changed.
-   * back - Boolean that specifies if the cells should be moved to back.
+   * @param cells Array of {@link mxCell} whose order should be changed.
+   * @param back Boolean that specifies if the cells should be moved to back.
    */
+  // cellsOrdered(cells: mxCell[], back?: boolean): void;
   cellsOrdered(cells: mxCell[],
                back: boolean=false) {
 
@@ -3819,23 +3066,20 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: groupCells
-   *
    * Adds the cells into the given group. The change is carried out using
-   * <cellsAdded>, <cellsMoved> and <cellsResized>. This method fires
-   * <mxEvent.GROUP_CELLS> while the transaction is in progress. Returns the
+   * {@link cellsAdded}, {@link cellsMoved} and {@link cellsResized}. This method fires
+   * {@link mxEvent.GROUP_CELLS} while the transaction is in progress. Returns the
    * new group. A group is only created if there is at least one entry in the
    * given array of cells.
    *
-   * Parameters:
-   *
-   * group - <mxCell> that represents the target group. If null is specified
-   * then a new group is created using <createGroupCell>.
-   * border - Optional integer that specifies the border between the child
-   * area and the group bounds. Default is 0.
-   * cells - Optional array of <mxCells> to be grouped. If null is specified
+   * @param group {@link mxCell} that represents the target group. If `null` is specified
+   * then a new group is created using {@link createGroupCell}.
+   * @param border Optional integer that specifies the border between the child
+   * area and the group bounds. Default is `0`.
+   * @param cells Optional array of {@link mxCell} to be grouped. If `null` is specified
    * then the selection cells are used.
    */
+  // groupCells(group: mxCell | null, border?: number, cells?: mxCell[]): mxCell;
   groupCells(group: mxCell,
              border: number=0,
              cells: mxCell[]=mxUtils.sortCells(this.getSelectionCells(), true)) {
@@ -3904,11 +3148,10 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getCellsForGroup
-   *
    * Returns the cells with the same parent as the first cell
    * in the given array.
    */
+  // getCellsForGroup(cells: mxCell[]): mxCell[];
   getCellsForGroup(cells: mxCell[]) {
     const result = [];
     if (cells != null && cells.length > 0) {
@@ -3926,10 +3169,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getBoundsForGroup
-   *
    * Returns the bounds to be used for the given group and children.
    */
+  // getBoundsForGroup(group: mxCell, children: mxCell[], border?: number): mxRectangle;
   getBoundsForGroup(group: mxCell,
                     children: mxCell[],
                     border: number | null) {
@@ -3959,23 +3201,22 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: createGroupCell
-   *
-   * Hook for creating the group cell to hold the given array of <mxCells> if
-   * no group cell was given to the <group> function.
+   * Hook for creating the group cell to hold the given array of {@link mxCell} if
+   * no group cell was given to the {@link group} function.
    *
    * The following code can be used to set the style of new group cells.
    *
-   * (code)
-   * let graphCreateGroupCell = graph.createGroupCell;
-   * graph.createGroupCell = (cells)=>
+   * ```javascript
+   * var graphCreateGroupCell = graph.createGroupCell;
+   * graph.createGroupCell = function(cells)
    * {
-   *   let group = graphCreateGroupCell.apply(this, arguments);
+   *   var group = graphCreateGroupCell.apply(this, arguments);
    *   group.setStyle('group');
    *
    *   return group;
    * };
    */
+  // createGroupCell(cells: mxCell[]): mxCell;
   createGroupCell(cells: mxCell[]) {
     const group = new mxCell('');
     group.setVertex(true);
@@ -3985,17 +3226,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: ungroupCells
-   *
    * Ungroups the given cells by moving the children the children to their
    * parents parent and removing the empty groups. Returns the children that
    * have been removed from the groups.
    *
-   * Parameters:
-   *
-   * cells - Array of cells to be ungrouped. If null is specified then the
+   * @param cells Array of cells to be ungrouped. If null is specified then the
    * selection cells are used.
    */
+  // ungroupCells(cells: mxCell[]): mxCell[];
   ungroupCells(cells: mxCell[]) {
     let result: mxCell[] = [];
 
@@ -4068,28 +3306,22 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: removeCellsAfterUngroup
+   * Hook to remove the groups after {@link ungroupCells}.
    *
-   * Hook to remove the groups after <ungroupCells>.
-   *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> that were ungrouped.
+   * @param cells Array of {@link mxCell} that were ungrouped.
    */
+  // removeCellsAfterUngroup(cells: mxCell[]): void;
   removeCellsAfterUngroup(cells: mxCell[]) {
     this.cellsRemoved(this.addAllEdges(cells));
   }
 
   /**
-   * Function: removeCellsFromParent
-   *
    * Removes the specified cells from their parents and adds them to the
    * default parent. Returns the cells that were removed from their parents.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to be removed from their parents.
+   * @param cells Array of {@link mxCell} to be removed from their parents.
    */
+  // removeCellsFromParent(cells: mxCell[]): mxCell[];
   removeCellsFromParent(cells: mxCell[]) {
     if (cells == null) {
       cells = this.getSelectionCells();
@@ -4211,15 +3443,12 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getBoundingBox
+   * Returns the bounding box for the given array of {@link mxCell}. The bounding box for
+   * each cell and its descendants is computed using {@link mxGraphView.getBoundingBox}.
    *
-   * Returns the bounding box for the given array of <mxCells>. The bounding box for
-   * each cell and its descendants is computed using <mxGraphView.getBoundingBox>.
-   *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> whose bounding box should be returned.
+   * @param cells Array of {@link mxCell} whose bounding box should be returned.
    */
+  // getBoundingBox(cells: mxCell[]): mxRectangle;
   getBoundingBox(cells: mxCell[]) {
     let result = null;
 
@@ -4249,19 +3478,16 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: cloneCell
+   * Returns the clone for the given cell. Uses {@link cloneCells}.
    *
-   * Returns the clone for the given cell. Uses <cloneCells>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> to be cloned.
-   * allowInvalidEdges - Optional boolean that specifies if invalid edges
-   * should be cloned. Default is true.
-   * mapping - Optional mapping for existing clones.
-   * keepPosition - Optional boolean indicating if the position of the cells should
-   * be updated to reflect the lost parent cell. Default is false.
+   * @param cell {@link mxCell} to be cloned.
+   * @param allowInvalidEdges Optional boolean that specifies if invalid edges
+   * should be cloned. Default is `true`.
+   * @param mapping Optional mapping for existing clones.
+   * @param keepPosition Optional boolean indicating if the position of the cells should
+   * be updated to reflect the lost parent cell. Default is `false`.
    */
+  // cloneCell(cell: mxCell, allowInvalidEdges?: boolean, mapping?: any, keepPosition?: boolean): mxCell[];
   cloneCell(cell: mxCell,
             allowInvalidEdges: boolean=false,
             mapping: any=null,
@@ -4271,22 +3497,19 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: cloneCells
-   *
    * Returns the clones for the given cells. The clones are created recursively
-   * using <mxGraphModel.cloneCells>. If the terminal of an edge is not in the
+   * using {@link mxGraphModel.cloneCells}. If the terminal of an edge is not in the
    * given array, then the respective end is assigned a terminal point and the
    * terminal is removed.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to be cloned.
-   * allowInvalidEdges - Optional boolean that specifies if invalid edges
-   * should be cloned. Default is true.
-   * mapping - Optional mapping for existing clones.
-   * keepPosition - Optional boolean indicating if the position of the cells should
-   * be updated to reflect the lost parent cell. Default is false.
+   * @param cells Array of {@link mxCell} to be cloned.
+   * @param allowInvalidEdges Optional boolean that specifies if invalid edges
+   * should be cloned. Default is `true`.
+   * @param mapping Optional mapping for existing clones.
+   * @param keepPosition Optional boolean indicating if the position of the cells should
+   * be updated to reflect the lost parent cell. Default is `false`.
    */
+  // cloneCells(cells: mxCell[], allowInvalidEdges?: boolean, mapping?: any, keepPosition?: boolean): mxCell[];
   cloneCells(cells: mxCell[],
              allowInvalidEdges: boolean=true,
              mapping: any={},
@@ -4512,22 +3735,19 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: insertEdge
-   *
-   * Adds a new edge into the given parent <mxCell> using value as the user
+   * Adds a new edge into the given parent {@link mxCell} using value as the user
    * object and the given source and target as the terminals of the new edge.
    * The id and style are used for the respective properties of the new
-   * <mxCell>, which is returned.
+   * {@link mxCell}, which is returned.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> that specifies the parent of the new edge.
-   * id - Optional string that defines the Id of the new edge.
-   * value - JavaScript object to be used as the user object.
-   * source - <mxCell> that defines the source of the edge.
-   * target - <mxCell> that defines the target of the edge.
-   * style - Optional string that defines the cell style.
+   * @param parent {@link mxCell} that specifies the parent of the new edge.
+   * @param id Optional string that defines the Id of the new edge.
+   * @param value JavaScript object to be used as the user object.
+   * @param source {@link mxCell} that defines the source of the edge.
+   * @param target {@link mxCell} that defines the target of the edge.
+   * @param style Optional string that defines the cell style.
    */
+  // insertEdge(parent: mxCell, id: string | null, value: any, source: mxCell, target: mxCell, style?: string): mxCell;
   insertEdge(...args: any[]): mxCell {
     let parent: mxCell;
     let id: string = '';
@@ -4556,13 +3776,12 @@ class mxGraph extends mxEventSource {
   };
 
   /**
-   * Function: createEdge
-   *
-   * Hook method that creates the new edge for <insertEdge>. This
+   * Hook method that creates the new edge for {@link insertEdge}. This
    * implementation does not set the source and target of the edge, these
    * are set when the edge is added to the model.
    *
    */
+  // createEdge(parent: mxCell, id: string | null, value: any, source: mxCell, target: mxCell, style?: string): mxCell;
   createEdge(parent: mxCell | null=null,
              id: string,
              value: any,
@@ -4579,21 +3798,18 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: addEdge
-   *
    * Adds the edge to the parent and connects it to the given source and
    * target terminals. This is a shortcut method. Returns the edge that was
    * added.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> to be inserted into the given parent.
-   * parent - <mxCell> that represents the new parent. If no parent is
+   * @param edge {@link mxCell} to be inserted into the given parent.
+   * @param parent {@link mxCell} that represents the new parent. If no parent is
    * given then the default parent is used.
-   * source - Optional <mxCell> that represents the source terminal.
-   * target - Optional <mxCell> that represents the target terminal.
-   * index - Optional index to insert the cells at. Default is to append.
+   * @param source Optional {@link mxCell} that represents the source terminal.
+   * @param target Optional {@link mxCell} that represents the target terminal.
+   * @param index Optional index to insert the cells at. Default is 'to append'.
    */
+  // addEdge(edge: mxCell, parent?: mxCell, source?: mxCell, target?: mxCell, index?: number): mxCell;
   addEdge(edge: mxCell,
           parent: mxCell | null=null,
           source: mxCell | null=null,
@@ -4604,21 +3820,18 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: addCell
-   *
    * Adds the cell to the parent and connects it to the given source and
    * target terminals. This is a shortcut method. Returns the cell that was
    * added.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to be inserted into the given parent.
-   * parent - <mxCell> that represents the new parent. If no parent is
+   * @param cell {@link mxCell} to be inserted into the given parent.
+   * @param parent {@link mxCell} that represents the new parent. If no parent is
    * given then the default parent is used.
-   * index - Optional index to insert the cells at. Default is to append.
-   * source - Optional <mxCell> that represents the source terminal.
-   * target - Optional <mxCell> that represents the target terminal.
+   * @param index Optional index to insert the cells at. Default is 'to append'.
+   * @param source Optional {@link mxCell} that represents the source terminal.
+   * @param target Optional {@link mxCell} that represents the target terminal.
    */
+  // addCell(cell: mxCell, parent?: mxCell, index?: number, source?: mxCell, target?: mxCell): mxCell;
   addCell(cell: mxCell,
           parent: mxCell | null=null,
           index: number | null=null,
@@ -4811,16 +4024,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: autoSizeCell
-   *
    * Resizes the specified cell to just fit around the its label and/or children
    *
-   * Parameters:
-   *
-   * cell - <mxCells> to be resized.
-   * recurse - Optional boolean which specifies if all descendants should be
-   * autosized. Default is true.
+   * @param cell {@link mxCell} to be resized.
+   * @param recurse Optional boolean which specifies if all descendants should be
+   * autosized. Default is `true`.
    */
+  // autoSizeCell(cell: mxCell, recurse?: boolean): void;
   autoSizeCell(cell: mxCell,
                recurse: boolean=true) {
 
@@ -4838,20 +4048,17 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: removeCells
-   *
    * Removes the given cells from the graph including all connected edges if
-   * includeEdges is true. The change is carried out using <cellsRemoved>.
-   * This method fires <mxEvent.REMOVE_CELLS> while the transaction is in
+   * includeEdges is true. The change is carried out using {@link cellsRemoved}.
+   * This method fires {@link mxEvent.REMOVE_CELLS} while the transaction is in
    * progress. The removed cells are returned as an array.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to remove. If null is specified then the
+   * @param cells Array of {@link mxCell} to remove. If null is specified then the
    * selection cells which are deletable are used.
-   * includeEdges - Optional boolean which specifies if all connected edges
-   * should be removed as well. Default is true.
+   * @param includeEdges Optional boolean which specifies if all connected edges
+   * should be removed as well. Default is `true`.
    */
+  // removeCells(cells: mxCell[], includeEdges?: boolean): mxCell[];
   removeCells(cells: mxCell[] | null=null,
               includeEdges: boolean=true) {
 
@@ -4906,15 +4113,12 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: cellsRemoved
-   *
    * Removes the given cells from the model. This method fires
-   * <mxEvent.CELLS_REMOVED> while the transaction is in progress.
+   * {@link mxEvent.CELLS_REMOVED} while the transaction is in progress.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to remove.
+   * @param cells Array of {@link mxCell} to remove.
    */
+  // cellsRemoved(cells: mxCell[]): void;
   cellsRemoved(cells: mxCell[]) {
     if (cells != null && cells.length > 0) {
       const { scale } = this.view;
@@ -5117,21 +4321,18 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: toggleCells
-   *
    * Sets the visible state of the specified cells and all connected edges
-   * if includeEdges is true. The change is carried out using <cellsToggled>.
-   * This method fires <mxEvent.TOGGLE_CELLS> while the transaction is in
+   * if includeEdges is true. The change is carried out using {@link cellsToggled}.
+   * This method fires {@link mxEvent.TOGGLE_CELLS} while the transaction is in
    * progress. Returns the cells whose visible state was changed.
    *
-   * Parameters:
-   *
-   * show - Boolean that specifies the visible state to be assigned.
-   * cells - Array of <mxCells> whose visible state should be changed. If
+   * @param show Boolean that specifies the visible state to be assigned.
+   * @param cells Array of {@link mxCell} whose visible state should be changed. If
    * null is specified then the selection cells are used.
-   * includeEdges - Optional boolean indicating if the visible state of all
-   * connected edges should be changed as well. Default is true.
+   * @param includeEdges Optional boolean indicating if the visible state of all
+   * connected edges should be changed as well. Default is `true`.
    */
+  // toggleCells(show: boolean, cells: mxCell[], includeEdges: boolean): mxCell[];
   toggleCells(show: boolean=false,
               cells: mxCell[]=this.getSelectionCells(),
               includeEdges: boolean=true): mxCell[] | null {
@@ -5162,15 +4363,12 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: cellsToggled
-   *
    * Sets the visible state of the specified cells.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> whose visible state should be changed.
-   * show - Boolean that specifies the visible state to be assigned.
+   * @param cells Array of {@link mxCell} whose visible state should be changed.
+   * @param show Boolean that specifies the visible state to be assigned.
    */
+  // cellsToggled(cells: mxCell[], show: boolean): void;
   cellsToggled(cells: mxCell[] | null=null,
                show: boolean=false): void {
 
@@ -5191,24 +4389,21 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: foldCells
-   *
    * Sets the collapsed state of the specified cells and all descendants
-   * if recurse is true. The change is carried out using <cellsFolded>.
-   * This method fires <mxEvent.FOLD_CELLS> while the transaction is in
+   * if recurse is true. The change is carried out using {@link cellsFolded}.
+   * This method fires {@link mxEvent.FOLD_CELLS} while the transaction is in
    * progress. Returns the cells whose collapsed state was changed.
    *
-   * Parameters:
-   *
-   * collapsed - Boolean indicating the collapsed state to be assigned.
-   * recurse - Optional boolean indicating if the collapsed state of all
-   * descendants should be set. Default is false.
-   * cells - Array of <mxCells> whose collapsed state should be set. If
+   * @param collapse Boolean indicating the collapsed state to be assigned.
+   * @param recurse Optional boolean indicating if the collapsed state of all
+   * descendants should be set. Default is `false`.
+   * @param cells Array of {@link mxCell} whose collapsed state should be set. If
    * null is specified then the foldable selection cells are used.
-   * checkFoldable - Optional boolean indicating of isCellFoldable should be
-   * checked. Default is false.
-   * evt - Optional native event that triggered the invocation.
+   * @param checkFoldable Optional boolean indicating of isCellFoldable should be
+   * checked. Default is `false`.
+   * @param evt Optional native event that triggered the invocation.
    */
+  // foldCells(collapse: boolean, recurse: boolean, cells: mxCell[], checkFoldable?: boolean, evt?: Event): mxCell[];
   foldCells(collapse: boolean=false,
             recurse: boolean=false,
             cells: mxCell[] | null=null,
@@ -5242,21 +4437,18 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: cellsFolded
-   *
    * Sets the collapsed state of the specified cells. This method fires
-   * <mxEvent.CELLS_FOLDED> while the transaction is in progress. Returns the
+   * {@link mxEvent.CELLS_FOLDED} while the transaction is in progress. Returns the
    * cells whose collapsed state was changed.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> whose collapsed state should be set.
-   * collapsed - Boolean indicating the collapsed state to be assigned.
-   * recurse - Boolean indicating if the collapsed state of all descendants
+   * @param cells Array of {@link mxCell} whose collapsed state should be set.
+   * @param collapse Boolean indicating the collapsed state to be assigned.
+   * @param recurse Boolean indicating if the collapsed state of all descendants
    * should be set.
-   * checkFoldable - Optional boolean indicating of isCellFoldable should be
-   * checked. Default is false.
+   * @param checkFoldable Optional boolean indicating of isCellFoldable should be
+   * checked. Default is `false`.
    */
+  // cellsFolded(cells: mxCell[], collapse: boolean, recurse: boolean, checkFoldable?: boolean): void;
   cellsFolded(cells: mxCell[] | null=null,
               collapse: boolean=false,
               recurse: boolean=false,
@@ -5304,16 +4496,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: swapBounds
-   *
    * Swaps the alternate and the actual bounds in the geometry of the given
-   * cell invoking <updateAlternateBounds> before carrying out the swap.
+   * cell invoking {@link updateAlternateBounds} before carrying out the swap.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the bounds should be swapped.
-   * willCollapse - Boolean indicating if the cell is going to be collapsed.
+   * @param cell {@link mxCell} for which the bounds should be swapped.
+   * @param willCollapse Boolean indicating if the cell is going to be collapsed.
    */
+  // swapBounds(cell: mxCell, willCollapse: boolean): void;
   swapBounds(cell: mxCell | null,
              willCollapse: boolean=false): void {
 
@@ -5331,21 +4520,18 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: updateAlternateBounds
-   *
    * Updates or sets the alternate bounds in the given geometry for the given
    * cell depending on whether the cell is going to be collapsed. If no
    * alternate bounds are defined in the geometry and
-   * <collapseToPreferredSize> is true, then the preferred size is used for
+   * {@link collapseToPreferredSize} is true, then the preferred size is used for
    * the alternate bounds. The top, left corner is always kept at the same
    * location.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the geometry is being udpated.
-   * g - <mxGeometry> for which the alternate bounds should be updated.
-   * willCollapse - Boolean indicating if the cell is going to be collapsed.
+   * @param cell {@link mxCell} for which the geometry is being udpated.
+   * @param g {@link mxGeometry} for which the alternate bounds should be updated.
+   * @param willCollapse Boolean indicating if the cell is going to be collapsed.
    */
+  // updateAlternateBounds(cell: mxCell, geo: mxGeometry, willCollapse: boolean): void;
   updateAlternateBounds(cell: mxCell | null=null,
                         geo: mxGeometry | null=null,
                         willCollapse: boolean=false): void {
@@ -5405,21 +4591,19 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: addAllEdges
-   *
    * Returns an array with the given cells and all edges that are connected
    * to a cell or one of its descendants.
    */
+  // addAllEdges(cells: mxCell[]): mxCell[];
   addAllEdges(cells: mxCell[]): mxCell[] {
     const allCells = cells.slice();
     return mxUtils.removeDuplicates(allCells.concat(this.getAllEdges(cells)));
   }
 
   /**
-   * Function: getAllEdges
-   *
    * Returns all edges connected to the given cells or its descendants.
    */
+  // getAllEdges(cells: mxCell[]): mxCell[];
   getAllEdges(cells: mxCell[] | null): mxCell[] {
     let edges: mxCell[] = [];
     if (cells != null) {
@@ -5443,16 +4627,13 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: updateCellSize
-   *
-   * Updates the size of the given cell in the model using <cellSizeUpdated>.
-   * This method fires <mxEvent.UPDATE_CELL_SIZE> while the transaction is in
+   * Updates the size of the given cell in the model using {@link cellSizeUpdated}.
+   * This method fires {@link mxEvent.UPDATE_CELL_SIZE} while the transaction is in
    * progress. Returns the cell whose size was updated.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose size should be updated.
+   * @param cell {@link mxCell} whose size should be updated.
    */
+  // updateCellSize(cell: mxCell, ignoreChildren?: boolean): mxCell;
   updateCellSize(cell: mxCell,
                  ignoreChildren: boolean=false) {
 
@@ -5473,15 +4654,12 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: cellSizeUpdated
-   *
    * Updates the size of the given cell in the model using
-   * <getPreferredSizeForCell> to get the new size.
+   * {@link getPreferredSizeForCell} to get the new size.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the size should be changed.
+   * @param cell {@link mxCell} for which the size should be changed.
    */
+  // cellSizeUpdated(cell: mxCell, ignoreChildren: boolean): void;
   cellSizeUpdated(cell: mxCell | null=null,
                   ignoreChildren: boolean=false): void {
 
@@ -5577,18 +4755,16 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getPreferredSizeForCell
-   *
-   * Returns the preferred width and height of the given <mxCell> as an
-   * <mxRectangle>. To implement a minimum width, add a new style eg.
+   * Returns the preferred width and height of the given {@link mxCell} as an
+   * {@link mxRectangle}. To implement a minimum width, add a new style eg.
    * minWidth in the vertex and override this method as follows.
    *
-   * (code)
-   * let graphGetPreferredSizeForCell = graph.getPreferredSizeForCell;
-   * graph.getPreferredSizeForCell = (cell)=>
+   * ```javascript
+   * var graphGetPreferredSizeForCell = graph.getPreferredSizeForCell;
+   * graph.getPreferredSizeForCell = function(cell)
    * {
-   *   let result = graphGetPreferredSizeForCell.apply(this, arguments);
-   *   let style = this.getCellStyle(cell);
+   *   var result = graphGetPreferredSizeForCell.apply(this, arguments);
+   *   var style = this.getCellStyle(cell);
    *
    *   if (style['minWidth'] > 0)
    *   {
@@ -5597,13 +4773,12 @@ class mxGraph extends mxEventSource {
    *
    *   return result;
    * };
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the preferred size should be returned.
-   * textWidth - Optional maximum text width for word wrapping.
+   * @param cell {@link mxCell} for which the preferred size should be returned.
+   * @param textWidth Optional maximum text width for word wrapping.
    */
+  // getPreferredSizeForCell(cell: mxCell, textWidth?: number): mxRectangle;
   getPreferredSizeForCell(cell: mxCell,
                           textWidth: number | null=null): mxRectangle | null {
     let result = null;
@@ -5700,16 +4875,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: resizeCell
-   *
-   * Sets the bounds of the given cell using <resizeCells>. Returns the
+   * Sets the bounds of the given cell using {@link resizeCells}. Returns the
    * cell which was passed to the function.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose bounds should be changed.
-   * bounds - <mxRectangle> that represents the new bounds.
+   * @param cell {@link mxCell} whose bounds should be changed.
+   * @param bounds {@link mxRectangle} that represents the new bounds.
    */
+  // resizeCell(cell: mxCell, bounds: mxRectangle, recurse?: boolean): mxCell[];
   resizeCell(cell: mxCell,
              bounds: mxRectangle,
              recurse: boolean=false): mxCell {
@@ -5718,17 +4890,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: resizeCells
-   *
-   * Sets the bounds of the given cells and fires a <mxEvent.RESIZE_CELLS>
+   * Sets the bounds of the given cells and fires a {@link mxEvent.RESIZE_CELLS}
    * event while the transaction is in progress. Returns the cells which
    * have been passed to the function.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> whose bounds should be changed.
-   * bounds - Array of <mxRectangles> that represent the new bounds.
+   * @param cells Array of {@link mxCell} whose bounds should be changed.
+   * @param bounds Array of {@link mxRectangles} that represent the new bounds.
    */
+  // resizeCells(cells: mxCell[], bounds: mxRectangle[], recurse: boolean): mxCell[];
   resizeCells(cells: mxCell[],
               bounds: mxRectangle[],
               recurse: boolean=this.isRecursiveResize()): mxCell[] {
@@ -5754,32 +4923,30 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: cellsResized
-   *
-   * Sets the bounds of the given cells and fires a <mxEvent.CELLS_RESIZED>
-   * event. If <extendParents> is true, then the parent is extended if a
+   * Sets the bounds of the given cells and fires a {@link mxEvent.CELLS_RESIZED}
+   * event. If {@link extendParents} is true, then the parent is extended if a
    * child size is changed so that it overlaps with the parent.
    *
    * The following example shows how to control group resizes to make sure
    * that all child cells stay within the group.
    *
-   * (code)
-   * graph.addListener(mxEvent.CELLS_RESIZED, (sender, evt)=>
+   * ```javascript
+   * graph.addListener(mxEvent.CELLS_RESIZED, function(sender, evt)
    * {
-   *   let cells = evt.getProperty('cells');
+   *   var cells = evt.getProperty('cells');
    *
    *   if (cells != null)
    *   {
-   *     for (let i = 0; i < cells.length; i += 1)
+   *     for (var i = 0; i < cells.length; i++)
    *     {
    *       if (graph.getModel().getChildCount(cells[i]) > 0)
    *       {
-   *         let geo = graph.getCellGeometry(cells[i]);
+   *         var geo = graph.getCellGeometry(cells[i]);
    *
    *         if (geo != null)
    *         {
-   *           let children = graph.getChildCells(cells[i], true, true);
-   *           let bounds = graph.getBoundingBoxFromGeometry(children, true);
+   *           var children = graph.getChildCells(cells[i], true, true);
+   *           var bounds = graph.getBoundingBoxFromGeometry(children, true);
    *
    *           geo = geo.clone();
    *           geo.width = Math.max(geo.width, bounds.width);
@@ -5791,14 +4958,13 @@ class mxGraph extends mxEventSource {
    *     }
    *   }
    * });
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> whose bounds should be changed.
-   * bounds - Array of <mxRectangles> that represent the new bounds.
-   * recurse - Optional boolean that specifies if the children should be resized.
+   * @param cells Array of {@link mxCell} whose bounds should be changed.
+   * @param bounds Array of {@link mxRectangles} that represent the new bounds.
+   * @param recurse Optional boolean that specifies if the children should be resized.
    */
+  // cellsResized(cells: mxCell[], bounds: mxRectangle[], recurse?: boolean): mxGeometry[];
   cellsResized(cells: mxCell[] | null=null,
                bounds: mxRectangle[] | null=null,
                recurse: boolean=false): any[] {
@@ -5842,18 +5008,15 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: cellResized
-   *
    * Resizes the parents recursively so that they contain the complete area
    * of the resized child cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose bounds should be changed.
-   * bounds - <mxRectangles> that represent the new bounds.
-   * ignoreRelative - Boolean that indicates if relative cells should be ignored.
-   * recurse - Optional boolean that specifies if the children should be resized.
+   * @param cell {@link mxCell} whose bounds should be changed.
+   * @param bounds {@link mxRectangles} that represent the new bounds.
+   * @param ignoreRelative Boolean that indicates if relative cells should be ignored.
+   * @param recurse Optional boolean that specifies if the children should be resized.
    */
+  // cellResized(cell: mxCell, bounds: mxRectangle, ignoreRelative?: boolean, recurse?: boolean): mxGeometry;
   cellResized(cell: mxCell,
               bounds: mxRectangle,
               ignoreRelative: boolean=false,
@@ -5910,16 +5073,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: resizeChildCells
-   *
    * Resizes the child cells of the given cell for the given new geometry with
    * respect to the current geometry of the cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that has been resized.
-   * newGeo - <mxGeometry> that represents the new bounds.
+   * @param cell {@link mxCell} that has been resized.
+   * @param newGeo {@link mxGeometry} that represents the new bounds.
    */
+  // resizeChildCells(cell: mxCell, newGeo: mxGeometry): void;
   resizeChildCells(cell: mxCell,
                    newGeo: mxGeometry): void {
 
@@ -5934,14 +5094,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: constrainChildCells
+   * Constrains the children of the given cell using {@link constrainChild}.
    *
-   * Constrains the children of the given cell using <constrainChild>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> that has been resized.
+   * @param cell {@link mxCell} that has been resized.
    */
+  // constrainChildCells(cell: mxCell): void;
   constrainChildCells(cell: mxCell) {
     const childCount = this.getModel().getChildCount(cell);
 
@@ -5951,18 +5108,15 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: scaleCell
-   *
    * Scales the points, position and size of the given cell according to the
    * given vertical and horizontal scaling factors.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose geometry should be scaled.
-   * dx - Horizontal scaling factor.
-   * dy - Vertical scaling factor.
-   * recurse - Boolean indicating if the child cells should be scaled.
+   * @param cell {@link mxCell} whose geometry should be scaled.
+   * @param dx Horizontal scaling factor.
+   * @param dy Vertical scaling factor.
+   * @param recurse Boolean indicating if the child cells should be scaled.
    */
+  // scaleCell(cell: mxCell, dx: number, dy: number, recurse?: boolean): void;
   scaleCell(cell: mxCell,
             dx: number,
             dy: number,
@@ -6013,15 +5167,12 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: extendParent
-   *
    * Resizes the parents recursively so that they contain the complete area
    * of the resized child cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that has been resized.
+   * @param cell {@link mxCell} that has been resized.
    */
+  // extendParent(cell: mxCell): void;
   extendParent(cell: mxCell | null=null): void {
     if (cell != null) {
       const parent = <mxCell>this.getModel().getParent(cell);
@@ -6051,21 +5202,18 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: importCells
-   *
    * Clones and inserts the given cells into the graph using the move
    * method and returns the inserted cells. This shortcut is used if
    * cells are inserted via datatransfer.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to be imported.
-   * dx - Integer that specifies the x-coordinate of the vector. Default is 0.
-   * dy - Integer that specifies the y-coordinate of the vector. Default is 0.
-   * target - <mxCell> that represents the new parent of the cells.
-   * evt - Mouseevent that triggered the invocation.
-   * mapping - Optional mapping for existing clones.
+   * @param cells Array of {@link mxCell} to be imported.
+   * @param dx Integer that specifies the x-coordinate of the vector. Default is `0`.
+   * @param dy Integer that specifies the y-coordinate of the vector. Default is `0`.
+   * @param target {@link mxCell} that represents the new parent of the cells.
+   * @param evt Mouseevent that triggered the invocation.
+   * @param mapping Optional mapping for existing clones.
    */
+  // importCells(cells: mxCell[], dx: number, dy: number, target: mxCell, evt?: Event, mapping?: any): mxCell[];
   importCells(cells: mxCell[] | null=null,
               dx: number,
               dy: number,
@@ -6290,11 +5438,10 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: translateCell
-   *
    * Translates the geometry of the given cell and stores the new,
    * translated geometry in the model as an atomic change.
    */
+  // translateCell(cell: mxCell, dx: number, dy: number): void;
   translateCell(cell: mxCell,
                 dx: number,
                 dy: number): void {
@@ -6350,14 +5497,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getCellContainmentArea
+   * Returns the {@link mxRectangle} inside which a cell is to be kept.
    *
-   * Returns the <mxRectangle> inside which a cell is to be kept.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the area should be returned.
+   * @param cell {@link mxCell} for which the area should be returned.
    */
+  // getCellContainmentArea(cell: mxCell): mxRectangle;
   getCellContainmentArea(cell: mxCell): mxRectangle | null {
     if (cell != null && !this.getModel().isEdge(cell)) {
       const parent = this.getModel().getParent(cell);
@@ -6415,28 +5559,24 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getMaximumGraphBounds
-   *
    * Returns the bounds inside which the diagram should be kept as an
-   * <mxRectangle>.
+   * {@link mxRectangle}.
    */
+  // getMaximumGraphBounds(): mxRectangle;
   getMaximumGraphBounds(): mxRectangle | null {
     return this.maximumGraphBounds;
   }
 
   /**
-   * Function: constrainChild
-   *
    * Keeps the given cell inside the bounds returned by
-   * <getCellContainmentArea> for its parent, according to the rules defined by
-   * <getOverlap> and <isConstrainChild>. This modifies the cell's geometry
+   * {@link getCellContainmentArea} for its parent, according to the rules defined by
+   * {@link getOverlap} and {@link isConstrainChild}. This modifies the cell's geometry
    * in-place and does not clone it.
    *
-   * Parameters:
-   *
-   * cells - <mxCell> which should be constrained.
-   * sizeFirst - Specifies if the size should be changed first. Default is true.
+   * @param cell {@link mxCell} which should be constrained.
+   * @param sizeFirst Specifies if the size should be changed first. Default is `true`.
    */
+  // constrainChild(cell: mxCell, sizeFirst?: boolean): void;
   constrainChild(cell: mxCell,
                  sizeFirst: boolean=true): void {
 
@@ -6561,16 +5701,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: resetEdges
-   *
    * Resets the control points of the edges that are connected to the given
    * cells if not both ends of the edge are in the given cells array.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> for which the connected edges should be
+   * @param cells Array of {@link mxCell} for which the connected edges should be
    * reset.
    */
+  // resetEdges(cells: mxCell[]): void;
   resetEdges(cells: mxCell[]): void {
     if (cells != null) {
       // Prepares faster cells lookup
@@ -6614,14 +5751,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: resetEdge
-   *
    * Resets the control points of the given edge.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> whose points should be reset.
+   * @param edge {@link mxCell} whose points should be reset.
    */
+  // resetEdge(edge: mxCell): mxCell;
   resetEdge(edge: mxCell): mxCell | null {
     let geo = this.getModel().getGeometry(edge);
 
@@ -6639,10 +5773,9 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: getOutlineConstraint
-   *
    * Returns the constraint used to connect to the outline of the given state.
    */
+  // getOutlineConstraint(point: mxPoint, terminalState: mxCellState, me: mxMouseEvent): mxConnectionConstraint;
   getOutlineConstraint(point: mxPoint,
                        terminalState: mxCellState,
                        me: mxMouseEvent): mxConnectionConstraint | null {
@@ -6735,17 +5868,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getAllConnectionConstraints
+   * Returns an array of all {@link mxConnectionConstraints} for the given terminal. If
+   * the shape of the given terminal is a {@link mxStencilShape} then the constraints
+   * of the corresponding {@link mxStencil} are returned.
    *
-   * Returns an array of all <mxConnectionConstraints> for the given terminal. If
-   * the shape of the given terminal is a <mxStencilShape> then the constraints
-   * of the corresponding <mxStencil> are returned.
-   *
-   * Parameters:
-   *
-   * terminal - <mxCellState> that represents the terminal.
-   * source - Boolean that specifies if the terminal is the source or target.
+   * @param terminal {@link mxCellState} that represents the terminal.
+   * @param source Boolean that specifies if the terminal is the source or target.
    */
+  // getAllConnectionConstraints(terminal: mxCellState, source?: boolean): mxConnectionConstraint[];
   getAllConnectionConstraints(terminal: mxCellState,
                               source: boolean): mxConnectionConstraint[] | null {
     if (
@@ -6759,17 +5889,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getConnectionConstraint
+   * Returns an {@link mxConnectionConstraint} that describes the given connection
+   * point. This result can then be passed to {@link getConnectionPoint}.
    *
-   * Returns an <mxConnectionConstraint> that describes the given connection
-   * point. This result can then be passed to <getConnectionPoint>.
-   *
-   * Parameters:
-   *
-   * edge - <mxCellState> that represents the edge.
-   * terminal - <mxCellState> that represents the terminal.
-   * source - Boolean indicating if the terminal is the source or target.
+   * @param edge {@link mxCellState} that represents the edge.
+   * @param terminal {@link mxCellState} that represents the terminal.
+   * @param source Boolean indicating if the terminal is the source or target.
    */
+  // getConnectionConstraint(edge: mxCellState, terminal: mxCellState, source?: boolean): mxConnectionConstraint;
   getConnectionConstraint(edge: mxCellState,
                           terminal: mxCellState | null=null,
                           source: boolean=false): mxConnectionConstraint {
@@ -6813,20 +5940,17 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: setConnectionConstraint
-   *
-   * Sets the <mxConnectionConstraint> that describes the given connection point.
+   * Sets the {@link mxConnectionConstraint} that describes the given connection point.
    * If no constraint is given then nothing is changed. To remove an existing
    * constraint from the given edge, use an empty constraint instead.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> that represents the edge.
-   * terminal - <mxCell> that represents the terminal.
-   * source - Boolean indicating if the terminal is the source or target.
-   * constraint - Optional <mxConnectionConstraint> to be used for this
+   * @param edge {@link mxCell} that represents the edge.
+   * @param terminal {@link mxCell} that represents the terminal.
+   * @param source Boolean indicating if the terminal is the source or target.
+   * @param constraint Optional {@link mxConnectionConstraint} to be used for this
    * connection.
    */
+  // setConnectionConstraint(edge: mxCell, terminal: mxCell, source: boolean, constraint?: mxConnectionConstraint): void;
   setConnectionConstraint(edge: mxCell,
                           terminal: mxCell,
                           source: boolean=false,
@@ -6912,17 +6036,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getConnectionPoint
-   *
    * Returns the nearest point in the list of absolute points or the center
    * of the opposite terminal.
    *
-   * Parameters:
-   *
-   * vertex - <mxCellState> that represents the vertex.
-   * constraint - <mxConnectionConstraint> that represents the connection point
-   * constraint as returned by <getConnectionConstraint>.
+   * @param vertex {@link mxCellState} that represents the vertex.
+   * @param constraint {@link mxConnectionConstraint} that represents the connection point
+   * constraint as returned by {@link getConnectionConstraint}.
    */
+  // getConnectionPoint(vertex: mxCellState, constraint: mxConnectionConstraint, round?: boolean): mxPoint;
   getConnectionPoint(vertex: mxCellState,
                      constraint: mxConnectionConstraint,
                      round: boolean=true): mxPoint {
@@ -7040,20 +6161,17 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: connectCell
-   *
    * Connects the specified end of the given edge to the given terminal
-   * using <cellConnected> and fires <mxEvent.CONNECT_CELL> while the
+   * using {@link cellConnected} and fires {@link mxEvent.CONNECT_CELL} while the
    * transaction is in progress. Returns the updated edge.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> whose terminal should be updated.
-   * terminal - <mxCell> that represents the new terminal to be used.
-   * source - Boolean indicating if the new terminal is the source or target.
-   * constraint - Optional <mxConnectionConstraint> to be used for this
+   * @param edge {@link mxCell} whose terminal should be updated.
+   * @param terminal {@link mxCell} that represents the new terminal to be used.
+   * @param source Boolean indicating if the new terminal is the source or target.
+   * @param constraint Optional {@link mxConnectionConstraint} to be used for this
    * connection.
    */
+  // connectCell(edge: mxCell, terminal: mxCell, source: boolean, constraint?: mxConnectionConstraint): mxCell;
   connectCell(edge: mxCell,
               terminal: mxCell,
               source: boolean=false,
@@ -7083,19 +6201,16 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: cellConnected
-   *
    * Sets the new terminal for the given edge and resets the edge points if
-   * <resetEdgesOnConnect> is true. This method fires
-   * <mxEvent.CELL_CONNECTED> while the transaction is in progress.
+   * {@link resetEdgesOnConnect} is true. This method fires
+   * {@link mxEvent.CELL_CONNECTED} while the transaction is in progress.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> whose terminal should be updated.
-   * terminal - <mxCell> that represents the new terminal to be used.
-   * source - Boolean indicating if the new terminal is the source or target.
-   * constraint - <mxConnectionConstraint> to be used for this connection.
+   * @param edge {@link mxCell} whose terminal should be updated.
+   * @param terminal {@link mxCell} that represents the new terminal to be used.
+   * @param source Boolean indicating if the new terminal is the source or target.
+   * @param constraint {@link mxConnectionConstraint} to be used for this connection.
    */
+  // cellConnected(edge: mxCell, terminal: mxCell, source: boolean, constraint: mxConnectionConstraint): void;
   cellConnected(
     edge: mxCell,
     terminal: mxCell,
@@ -7153,15 +6268,12 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: disconnectGraph
-   *
    * Disconnects the given edges from the terminals which are not in the
    * given array.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to be disconnected.
+   * @param cells Array of {@link mxCell} to be disconnected.
    */
+  // disconnectGraph(cells: mxCell[]): void;
   disconnectGraph(cells: mxCell[] | null) {
     if (cells != null) {
       this.getModel().beginUpdate();
@@ -7254,32 +6366,28 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: getCurrentRoot
-   *
    * Returns the current root of the displayed cell hierarchy. This is a
-   * shortcut to <mxGraphView.currentRoot> in <view>.
+   * shortcut to {@link mxGraphView.currentRoot} in {@link view}.
    */
+  // getCurrentRoot(): mxCell;
   getCurrentRoot(): mxCell | null {
     return this.getView().currentRoot;
   }
 
   /**
-   * Function: getTranslateForRoot
-   *
    * Returns the translation to be used if the given cell is the root cell as
-   * an <mxPoint>. This implementation returns null.
-   *
-   * Example:
+   * an {@link mxPoint}. This implementation returns null.
    *
    * To keep the children at their absolute position while stepping into groups,
    * this function can be overridden as follows.
    *
-   * (code)
-   * let offset = new mxPoint(0, 0);
+   * @example
+   * ```javascript
+   * var offset = new mxPoint(0, 0);
    *
    * while (cell != null)
    * {
-   *   let geo = this.getModel().getGeometry(cell);
+   *   var geo = this.model.getGeometry(cell);
    *
    *   if (geo != null)
    *   {
@@ -7287,23 +6395,20 @@ class mxGraph extends mxEventSource {
    *     offset.y -= geo.y;
    *   }
    *
-   *   cell = this.getModel().getParent(cell);
+   *   cell = this.model.getParent(cell);
    * }
    *
    * return offset;
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the root.
+   * @param cell {@link mxCell} that represents the root.
    */
+  // getTranslateForRoot(cell: mxCell): mxPoint;
   getTranslateForRoot(cell: mxCell): any {
     return null;
   }
 
   /**
-   * Function: isPort
-   *
    * Returns true if the given cell is a "port", that is, when connecting to
    * it, the cell returned by getTerminalForPort should be used as the
    * terminal and the port should be referenced by the ID in either the
@@ -7313,69 +6418,59 @@ class mxGraph extends mxEventSource {
    *
    * A typical implementation is the following:
    *
-   * (code)
-   * graph.isPort = (cell)=>
+   * ```javascript
+   * graph.isPort = function(cell)
    * {
-   *   let geo = this.getCellGeometry(cell);
+   *   var geo = this.getCellGeometry(cell);
    *
    *   return (geo != null) ? geo.relative : false;
    * };
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the port.
+   * @param cell {@link mxCell} that represents the port.
    */
+  // isPort(cell: mxCell): boolean;
   isPort(cell: mxCell) {
     return false;
   }
 
   /**
-   * Function: getTerminalForPort
-   *
    * Returns the terminal to be used for a given port. This implementation
    * always returns the parent cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the port.
-   * source - If the cell is the source or target port.
+   * @param cell {@link mxCell} that represents the port.
+   * @param source If the cell is the source or target port.
    */
+  // getTerminalForPort(cell: mxCell, source: boolean): mxCell;
   getTerminalForPort(cell: mxCell,
                      source: boolean=false): mxCell | null {
     return this.getModel().getParent(cell);
   }
 
   /**
-   * Function: getChildOffsetForCell
-   *
    * Returns the offset to be used for the cells inside the given cell. The
-   * root and layer cells may be identified using <mxGraphModel.isRoot> and
-   * <mxGraphModel.isLayer>. For all other current roots, the
-   * <mxGraphView.currentRoot> field points to the respective cell, so that
-   * the following holds: cell == this.getView().currentRoot. This implementation
+   * root and layer cells may be identified using {@link mxGraphModel.isRoot} and
+   * {@link mxGraphModel.isLayer}. For all other current roots, the
+   * {@link mxGraphView.currentRoot} field points to the respective cell, so that
+   * the following holds: cell == this.view.currentRoot. This implementation
    * returns null.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose offset should be returned.
+   * @param cell {@link mxCell} whose offset should be returned.
    */
+  // getChildOffsetForCell(cell: mxCell): number;
   getChildOffsetForCell(cell: mxCell): mxPoint | null {
     return null;
   }
 
   /**
-   * Function: enterGroup
-   *
    * Uses the given cell as the root of the displayed cell hierarchy. If no
    * cell is specified then the selection cell is used. The cell is only used
-   * if <isValidRoot> returns true.
+   * if {@link isValidRoot} returns true.
    *
-   * Parameters:
-   *
-   * cell - Optional <mxCell> to be used as the new root. Default is the
+   * @param cell Optional {@link mxCell} to be used as the new root. Default is the
    * selection cell.
    */
+  // enterGroup(cell: mxCell): void;
   enterGroup(cell: mxCell): void {
     cell = cell || this.getSelectionCell();
 
@@ -7386,11 +6481,10 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: exitGroup
-   *
    * Changes the current root to the next valid root in the displayed cell
    * hierarchy.
    */
+  // exitGroup(): void;
   exitGroup(): void {
     const root = this.getModel().getRoot();
     const current = this.getCurrentRoot();
@@ -7425,11 +6519,10 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: home
-   *
    * Uses the root of the model as the root of the displayed cell hierarchy
    * and selects the previous root.
    */
+  // home(): void;
   home() {
     const current = this.getCurrentRoot();
 
@@ -7444,15 +6537,12 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isValidRoot
-   *
    * Returns true if the given cell is a valid root for the cell display
    * hierarchy. This implementation returns true for all non-null values.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> which should be checked as a possible root.
+   * @param cell {@link mxCell} which should be checked as a possible root.
    */
+  // isValidRoot(cell: mxCell): boolean;
   isValidRoot(cell: mxCell) {
     return cell != null;
   }
@@ -7462,29 +6552,25 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: getGraphBounds
-   *
    * Returns the bounds of the visible graph. Shortcut to
-   * <mxGraphView.getGraphBounds>. See also: <getBoundingBoxFromGeometry>.
+   * {@link mxGraphView.getGraphBounds}. See also: {@link getBoundingBoxFromGeometry}.
    */
+  // getGraphBounds(): mxRectangle;
   getGraphBounds(): mxRectangle {
     return this.getView().getGraphBounds();
   }
 
   /**
-   * Function: getCellBounds
-   *
    * Returns the scaled, translated bounds for the given cell. See
-   * <mxGraphView.getBounds> for arrays.
+   * {@link mxGraphView.getBounds} for arrays.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose bounds should be returned.
-   * includeEdge - Optional boolean that specifies if the bounds of
-   * the connected edges should be included. Default is false.
-   * includeDescendants - Optional boolean that specifies if the bounds
-   * of all descendants should be included. Default is false.
+   * @param cell {@link mxCell} whose bounds should be returned.
+   * @param includeEdges Optional boolean that specifies if the bounds of
+   * the connected edges should be included. Default is `false`.
+   * @param includeDescendants Optional boolean that specifies if the bounds
+   * of all descendants should be included. Default is `false`.
    */
+  // getCellBounds(cell: mxCell, includeEdges?: boolean, includeDescendants?: boolean): mxRectangle;
   getCellBounds(cell: mxCell,
                 includeEdges: boolean=false,
                 includeDescendants: boolean=false): mxRectangle | null {
@@ -7520,41 +6606,38 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getBoundingBoxFromGeometry
-   *
    * Returns the bounding box for the geometries of the vertices in the
    * given array of cells. This can be used to find the graph bounds during
    * a layout operation (ie. before the last endUpdate) as follows:
    *
-   * (code)
-   * let cells = graph.getChildCells(graph.getDefaultParent(), true, true);
-   * let bounds = graph.getBoundingBoxFromGeometry(cells, true);
-   * (end)
+   * ```javascript
+   * var cells = graph.getChildCells(graph.getDefaultParent(), true, true);
+   * var bounds = graph.getBoundingBoxFromGeometry(cells, true);
+   * ```
    *
    * This can then be used to move cells to the origin:
    *
-   * (code)
+   * ```javascript
    * if (bounds.x < 0 || bounds.y < 0)
    * {
    *   graph.moveCells(cells, -Math.min(bounds.x, 0), -Math.min(bounds.y, 0))
    * }
-   * (end)
+   * ```
    *
    * Or to translate the graph view:
    *
-   * (code)
+   * ```javascript
    * if (bounds.x < 0 || bounds.y < 0)
    * {
    *   graph.view.setTranslate(-Math.min(bounds.x, 0), -Math.min(bounds.y, 0));
    * }
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> whose bounds should be returned.
-   * includeEdges - Specifies if edge bounds should be included by computing
-   * the bounding box for all points in geometry. Default is false.
+   * @param cells Array of {@link mxCell} whose bounds should be returned.
+   * @param includeEdges Specifies if edge bounds should be included by computing
+   * the bounding box for all points in geometry. Default is `false`.
    */
+  // getBoundingBoxFromGeometry(cells: mxCell[], includeEdges?: boolean): mxRectangle;
   getBoundingBoxFromGeometry(cells: mxCell[],
                              includeEdges: boolean=false): mxRectangle | null {
 
@@ -7676,16 +6759,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: refresh
-   *
    * Clears all cell states or the states for the hierarchy starting at the
    * given cell and validates the graph. This fires a refresh event as the
    * last step.
    *
-   * Parameters:
-   *
-   * cell - Optional <mxCell> for which the cell states should be cleared.
+   * @param cell Optional {@link mxCell} for which the cell states should be cleared.
    */
+  // refresh(cell?: mxCell): void;
   refresh(cell: mxCell | null=null): void {
     this.getView().clear(cell, cell == null);
     this.getView().validate();
@@ -7694,14 +6774,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: snap
+   * Snaps the given numeric value to the grid if {@link gridEnabled} is true.
    *
-   * Snaps the given numeric value to the grid if <gridEnabled> is true.
-   *
-   * Parameters:
-   *
-   * value - Numeric value to be snapped to the grid.
+   * @param value Numeric value to be snapped to the grid.
    */
+  // snap(value: number): number;
   snap(value: number): number {
     if (this.gridEnabled) {
       value = Math.round(value / this.gridSize) * this.gridSize;
@@ -7772,17 +6849,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: panGraph
-   *
    * Shifts the graph display by the given amount. This is used to preview
-   * panning operations, use <mxGraphView.setTranslate> to set a persistent
-   * translation of the view. Fires <mxEvent.PAN>.
+   * panning operations, use {@link mxGraphView.setTranslate} to set a persistent
+   * translation of the view. Fires {@link mxEvent.PAN}.
    *
-   * Parameters:
-   *
-   * dx - Amount to shift the graph along the x-axis.
-   * dy - Amount to shift the graph along the y-axis.
+   * @param dx Amount to shift the graph along the x-axis.
+   * @param dy Amount to shift the graph along the y-axis.
    */
+  // panGraph(dx: number, dy: number): void;
   panGraph(dx: number,
            dy: number): void {
 
@@ -7889,28 +6963,25 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: zoomIn
-   *
-   * Zooms into the graph by <zoomFactor>.
+   * Zooms into the graph by {@link zoomFactor}.
    */
+  // zoomIn(): void;
   zoomIn(): void {
     this.zoom(this.zoomFactor);
   }
 
   /**
-   * Function: zoomOut
-   *
-   * Zooms out of the graph by <zoomFactor>.
+   * Zooms out of the graph by {@link zoomFactor}.
    */
+  // zoomOut(): void;
   zoomOut(): void {
     this.zoom(1 / this.zoomFactor);
   }
 
   /**
-   * Function: zoomActual
-   *
    * Resets the zoom and panning in the view.
    */
+  // zoomActual(): void;
   zoomActual(): void {
     if (this.getView().scale === 1) {
       this.getView().setTranslate(0, 0);
@@ -7923,30 +6994,26 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: zoomTo
-   *
    * Zooms the graph to the given scale with an optional boolean center
-   * argument, which is passd to <zoom>.
+   * argument, which is passd to {@link zoom}.
    */
+  // zoomTo(scale: number, center?: boolean): void;
   zoomTo(scale: number,
          center: boolean=false): void {
     this.zoom(scale / this.getView().scale, center);
   }
 
   /**
-   * Function: center
-   *
    * Centers the graph in the container.
    *
-   * Parameters:
-   *
-   * horizontal - Optional boolean that specifies if the graph should be centered
-   * horizontally. Default is true.
-   * vertical - Optional boolean that specifies if the graph should be centered
-   * vertically. Default is true.
-   * cx - Optional float that specifies the horizontal center. Default is 0.5.
-   * cy - Optional float that specifies the vertical center. Default is 0.5.
+   * @param horizontal Optional boolean that specifies if the graph should be centered
+   * horizontally. Default is `true`.
+   * @param vertical Optional boolean that specifies if the graph should be centered
+   * vertically. Default is `true`.
+   * @param cx Optional float that specifies the horizontal center. Default is `0.5`.
+   * @param cy Optional float that specifies the vertical center. Default is `0.5`.
    */
+  // center(horizontal?: boolean, vertical?: boolean, cx?: number, cy?: number): void;
   center(horizontal: boolean=true,
          vertical: boolean=true,
          cx: number=0.5,
@@ -8000,12 +7067,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: zoom
-   *
    * Zooms the graph using the given factor. Center is an optional boolean
    * argument that keeps the graph scrolled to the center. If the center argument
-   * is omitted, then <centerZoom> will be used as its value.
+   * is omitted, then {@link centerZoom} will be used as its value.
    */
+  // zoom(factor: number, center: boolean): void;
   zoom(factor: number,
        center: boolean=this.centerZoom): void {
 
@@ -8083,19 +7149,16 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: zoomToRect
-   *
    * Zooms the graph to the specified rectangle. If the rectangle does not have same aspect
    * ratio as the display container, it is increased in the smaller relative dimension only
    * until the aspect match. The original rectangle is centralised within this expanded one.
    *
    * Note that the input rectangular must be un-scaled and un-translated.
    *
-   * Parameters:
-   *
-   * rect - The un-scaled and un-translated rectangluar region that should be just visible
+   * @param rect The un-scaled and un-translated rectangluar region that should be just visible
    * after the operation
    */
+  // zoomToRect(rect: mxRectangle): void;
   zoomToRect(rect: mxRectangle): void {
     const container = <HTMLElement>this.container;
     const scaleX = container.clientWidth / rect.width;
@@ -8163,24 +7226,21 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: scrollCellToVisible
-   *
    * Pans the graph so that it shows the given cell. Optionally the cell may
    * be centered in the container.
    *
-   * To center a given graph if the <container> has no scrollbars, use the following code.
+   * To center a given graph if the {@link container} has no scrollbars, use the following code.
    *
    * [code]
-   * let bounds = graph.getGraphBounds();
+   * var bounds = graph.getGraphBounds();
    * graph.view.setTranslate(-bounds.x - (bounds.width - container.clientWidth) / 2,
-   *                -bounds.y - (bounds.height - container.clientHeight) / 2);
+   * 						   -bounds.y - (bounds.height - container.clientHeight) / 2);
    * [/code]
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to be made visible.
-   * center - Optional boolean flag. Default is false.
+   * @param cell {@link mxCell} to be made visible.
+   * @param center Optional boolean flag. Default is `false`.
    */
+  // scrollCellToVisible(cell: mxCell, center?: boolean): void;
   scrollCellToVisible(cell: mxCell,
                       center: boolean=false): void {
 
@@ -8220,14 +7280,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: scrollRectToVisible
-   *
    * Pans the graph so that it shows the given rectangle.
    *
-   * Parameters:
-   *
-   * rect - <mxRectangle> to be made visible.
+   * @param rect {@link mxRectangle} to be made visible.
    */
+  // scrollRectToVisible(rect: mxRectangle): boolean;
   scrollRectToVisible(rect: mxRectangle): boolean {
     let isChanged = false;
 
@@ -8312,85 +7369,70 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getCellGeometry
-   *
-   * Returns the <mxGeometry> for the given cell. This implementation uses
-   * <mxGraphModel.getGeometry>. Subclasses can override this to implement
+   * Returns the {@link mxGeometry} for the given cell. This implementation uses
+   * {@link mxGraphModel.getGeometry}. Subclasses can override this to implement
    * specific geometries for cells in only one graph, that is, it can return
    * geometries that depend on the current state of the view.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose geometry should be returned.
+   * @param cell {@link mxCell} whose geometry should be returned.
    */
+  // getCellGeometry(cell: mxCell): mxGeometry;
   getCellGeometry(cell: mxCell): mxGeometry | null {
     return this.getModel().getGeometry(cell);
   }
 
   /**
-   * Function: isCellVisible
-   *
    * Returns true if the given cell is visible in this graph. This
-   * implementation uses <mxGraphModel.isVisible>. Subclassers can override
+   * implementation uses {@link mxGraphModel.isVisible}. Subclassers can override
    * this to implement specific visibility for cells in only one graph, that
    * is, without affecting the visible state of the cell.
    *
    * When using dynamic filter expressions for cell visibility, then the
    * graph should be revalidated after the filter expression has changed.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose visible state should be returned.
+   * @param cell {@link mxCell} whose visible state should be returned.
    */
+  // isCellVisible(cell: mxCell): boolean;
   isCellVisible(cell: mxCell | null): boolean {
     return this.getModel().isVisible(cell);
   }
 
   /**
-   * Function: isCellCollapsed
-   *
    * Returns true if the given cell is collapsed in this graph. This
-   * implementation uses <mxGraphModel.isCollapsed>. Subclassers can override
+   * implementation uses {@link mxGraphModel.isCollapsed}. Subclassers can override
    * this to implement specific collapsed states for cells in only one graph,
    * that is, without affecting the collapsed state of the cell.
    *
    * When using dynamic filter expressions for the collapsed state, then the
    * graph should be revalidated after the filter expression has changed.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose collapsed state should be returned.
+   * @param cell {@link mxCell} whose collapsed state should be returned.
    */
+  // isCellCollapsed(cell: mxCell): boolean;
   isCellCollapsed(cell: mxCell | null): boolean {
     return this.getModel().isCollapsed(cell);
   }
 
   /**
-   * Function: isCellConnectable
-   *
    * Returns true if the given cell is connectable in this graph. This
-   * implementation uses <mxGraphModel.isConnectable>. Subclassers can override
+   * implementation uses {@link mxGraphModel.isConnectable}. Subclassers can override
    * this to implement specific connectable states for cells in only one graph,
    * that is, without affecting the connectable state of the cell in the model.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose connectable state should be returned.
+   * @param cell {@link mxCell} whose connectable state should be returned.
    */
+  // isCellConnectable(cell: mxCell): boolean;
   isCellConnectable(cell: mxCell): boolean {
     return this.getModel().isConnectable(cell);
   }
 
   /**
-   * Function: isOrthogonal
-   *
    * Returns true if perimeter points should be computed such that the
    * resulting edge has only horizontal or vertical segments.
    *
-   * Parameters:
-   *
-   * edge - <mxCellState> that represents the edge.
+   * @param edge {@link mxCellState} that represents the edge.
    */
+  // isOrthogonal(edge: mxCellState): boolean;
   isOrthogonal(edge: mxCellState): boolean {
     const orthogonal = edge.style[mxConstants.STYLE_ORTHOGONAL];
 
@@ -8411,14 +7453,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isLoop
-   *
    * Returns true if the given cell state is a loop.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> that represents a potential loop.
+   * @param state {@link mxCellState} that represents a potential loop.
    */
+  // isLoop(state: mxCellState): boolean;
   isLoop(state: mxCellState): boolean {
     const src = state.getVisibleTerminalState(true);
     const trg = state.getVisibleTerminalState(false);
@@ -8426,33 +7465,30 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCloneEvent
-   *
    * Returns true if the given event is a clone event. This implementation
    * returns true if control is pressed.
    */
+  // isCloneEvent(evt: MouseEvent): boolean;
   isCloneEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return mxEvent.isControlDown(evt);
   }
 
   /**
-   * Function: isTransparentClickEvent
-   *
    * Hook for implementing click-through behaviour on selected cells. If this
    * returns true the cell behind the selected cell will be selected. This
    * implementation returns false;
    */
+  // isTransparentClickEvent(evt: MouseEvent): boolean;
   isTransparentClickEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return false;
   }
 
   /**
-   * Function: isToggleEvent
-   *
    * Returns true if the given event is a toggle event. This implementation
    * returns true if the meta key (Cmd) is pressed on Macs or if control is
    * pressed on any other platform.
    */
+  // isToggleEvent(evt: MouseEvent): boolean;
   isToggleEvent(evt: mxEventObject | mxMouseEvent | mxMouseEvent): boolean {
     return mxClient.IS_MAC
       ? mxEvent.isMetaDown(evt)
@@ -8460,29 +7496,26 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isGridEnabledEvent
-   *
    * Returns true if the given mouse event should be aligned to the grid.
    */
+  // isGridEnabledEvent(evt: MouseEvent): boolean;
   isGridEnabledEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return evt != null && !mxEvent.isAltDown(evt);
   }
 
   /**
-   * Function: isConstrainedEvent
-   *
    * Returns true if the given mouse event should be aligned to the grid.
    */
+  // isConstrainedEvent(evt: MouseEvent): boolean;
   isConstrainedEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return mxEvent.isShiftDown(evt);
   }
 
   /**
-   * Function: isIgnoreTerminalEvent
-   *
    * Returns true if the given mouse event should not allow any connections to be
    * made. This implementation returns false.
    */
+  // isIgnoreTerminalEvent(evt: MouseEvent): boolean;
   isIgnoreTerminalEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return false;
   }
@@ -8492,27 +7525,23 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: validationAlert
-   *
    * Displays the given validation error in a dialog. This implementation uses
    * mxUtils.alert.
    */
+  // validationAlert(message: string): void;
   validationAlert(message: any): void {
     mxUtils.alert(message);
   }
 
   /**
-   * Function: isEdgeValid
-   *
-   * Checks if the return value of <getEdgeValidationError> for the given
+   * Checks if the return value of {@link getEdgeValidationError} for the given
    * arguments is null.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> that represents the edge to validate.
-   * source - <mxCell> that represents the source terminal.
-   * target - <mxCell> that represents the target terminal.
+   * @param edge {@link mxCell} that represents the edge to validate.
+   * @param source {@link mxCell} that represents the source terminal.
+   * @param target {@link mxCell} that represents the target terminal.
    */
+  // isEdgeValid(edge: mxCell, source: mxCell, target: mxCell): boolean;
   isEdgeValid(edge: mxCell,
               source: mxCell,
               target: mxCell): boolean {
@@ -8520,15 +7549,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getEdgeValidationError
-   *
    * Returns the validation error message to be displayed when inserting or
    * changing an edges' connectivity. A return value of null means the edge
    * is valid, a return value of '' means it's not valid, but do not display
    * an error message. Any other (non-empty) string returned from this method
    * is displayed as an error message when trying to connect an edge to a
-   * source and target. This implementation uses the <multiplicities>, and
-   * checks <multigraph>, <allowDanglingEdges> and <allowLoops> to generate
+   * source and target. This implementation uses the {@link multiplicities}, and
+   * checks {@link multigraph}, {@link allowDanglingEdges} and {@link allowLoops} to generate
    * validation errors.
    *
    * For extending this method with specific checks for source/target cells,
@@ -8536,12 +7563,12 @@ class mxGraph extends mxEventSource {
    * the edge is invalid with no error message, a non-null string specifies
    * the error message, and null means the edge is valid.
    *
-   * (code)
-   * graph.getEdgeValidationError = (edge, source, target)=>
+   * ```javascript
+   * graph.getEdgeValidationError = function(edge, source, target)
    * {
    *   if (source != null && target != null &&
-   *     this.getModel().getValue(source) != null &&
-   *     this.getModel().getValue(target) != null)
+   *     this.model.getValue(source) != null &&
+   *     this.model.getValue(target) != null)
    *   {
    *     if (target is not valid for source)
    *     {
@@ -8552,14 +7579,13 @@ class mxGraph extends mxEventSource {
    *   // "Supercall"
    *   return getEdgeValidationError.apply(this, arguments);
    * }
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * edge - <mxCell> that represents the edge to validate.
-   * source - <mxCell> that represents the source terminal.
-   * target - <mxCell> that represents the target terminal.
+   * @param edge {@link mxCell} that represents the edge to validate.
+   * @param source {@link mxCell} that represents the source terminal.
+   * @param target {@link mxCell} that represents the target terminal.
    */
+  // getEdgeValidationError(edge: mxCell, source: mxCell, target: mxCell): string;
   getEdgeValidationError(edge: mxCell | null=null,
                          source: mxCell | null=null,
                          target: mxCell | null=null): string | null {
@@ -8641,17 +7667,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: validateEdge
-   *
    * Hook method for subclassers to return an error message for the given
    * edge and terminals. This implementation returns null.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> that represents the edge to validate.
-   * source - <mxCell> that represents the source terminal.
-   * target - <mxCell> that represents the target terminal.
+   * @param edge {@link mxCell} that represents the edge to validate.
+   * @param source {@link mxCell} that represents the source terminal.
+   * @param target {@link mxCell} that represents the target terminal.
    */
+  // validateEdge(edge: mxCell, source: mxCell, target: mxCell): string | null;
   validateEdge(edge: mxCell,
                source: mxCell,
                target: mxCell): void | null {
@@ -8659,21 +7682,20 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: validateGraph
-   *
    * Validates the graph by validating each descendant of the given cell or
    * the root of the model. Context is an object that contains the validation
    * state for the complete validation run. The validation errors are
-   * attached to their cells using <setCellWarning>. Returns null in the case of
+   * attached to their cells using {@link setCellWarning}. Returns null in the case of
    * successful validation or an array of strings (warnings) in the case of
    * failed validations.
    *
    * Paramters:
    *
-   * cell - Optional <mxCell> to start the validation recursion. Default is
+   * @param cell Optional {@link mxCell} to start the validation recursion. Default is
    * the graph root.
-   * context - Object that represents the global validation state.
+   * @param context Object that represents the global validation state.
    */
+  // validateGraph(cell: mxCell, context: any): string | null;
   validateGraph(cell: mxCell | null=null,
                 context: any): string | null {
 
@@ -8740,16 +7762,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getCellValidationError
-   *
-   * Checks all <multiplicities> that cannot be enforced while the graph is
+   * Checks all {@link multiplicities} that cannot be enforced while the graph is
    * being modified, namely, all multiplicities that require a minimum of
    * 1 edge.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the multiplicities should be checked.
+   * @param cell {@link mxCell} for which the multiplicities should be checked.
    */
+  // getCellValidationError(cell: mxCell): string | null;
   getCellValidationError(cell: mxCell): string | null {
     const outCount = this.getModel().getDirectedEdgeCount(cell, true);
     const inCount = this.getModel().getDirectedEdgeCount(cell, false);
@@ -8779,17 +7798,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: validateCell
-   *
    * Hook method for subclassers to return an error message for the given
    * cell and validation context. This implementation returns null. Any HTML
    * breaks will be converted to linefeeds in the calling method.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the cell to validate.
-   * context - Object that represents the global validation state.
+   * @param cell {@link mxCell} that represents the cell to validate.
+   * @param context Object that represents the global validation state.
    */
+  // validateCell(cell: mxCell, context: any): string | null;
   validateCell(cell: mxCell,
                context: mxCellState): void | null {
     return null;
@@ -8800,33 +7816,28 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: getBackgroundImage
-   *
-   * Returns the <backgroundImage> as an <mxImage>.
+   * Returns the {@link backgroundImage} as an {@link mxImage}.
    */
+  // getBackgroundImage(): mxImage;
   getBackgroundImage(): mxImage | null {
     return this.backgroundImage;
   }
 
   /**
-   * Function: setBackgroundImage
+   * Sets the new {@link backgroundImage}.
    *
-   * Sets the new <backgroundImage>.
-   *
-   * Parameters:
-   *
-   * image - New <mxImage> to be used for the background.
+   * @param image New {@link mxImage} to be used for the background.
    */
+  // setBackgroundImage(image: mxImage): void;
   setBackgroundImage(image: mxImage | null): void {
     this.backgroundImage = image;
   }
 
   /**
-   * Function: getFoldingImage
-   *
-   * Returns the <mxImage> used to display the collapsed state of
+   * Returns the {@link mxImage} used to display the collapsed state of
    * the specified cell state. This returns null for all edges.
    */
+  // getFoldingImage(state: mxCellState): mxImage;
   getFoldingImage(state: mxCellState): mxImage | null {
     if (
       state != null &&
@@ -8843,30 +7854,27 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: convertValueToString
-   *
    * Returns the textual representation for the given cell. This
    * implementation returns the nodename or string-representation of the user
    * object.
    *
-   * Example:
    *
    * The following returns the label attribute from the cells user
    * object if it is an XML node.
    *
-   * (code)
-   * graph.convertValueToString = (cell)=>
+   * @example
+   * ```javascript
+   * graph.convertValueToString = function(cell)
    * {
-   *   return cell.getAttribute('label');
+   * 	return cell.getAttribute('label');
    * }
-   * (end)
+   * ```
    *
-   * See also: <cellLabelChanged>.
+   * See also: {@link cellLabelChanged}.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose textual representation should be returned.
+   * @param cell {@link mxCell} whose textual representation should be returned.
    */
+  // convertValueToString(cell: mxCell): string;
   convertValueToString(cell: mxCell): string | null {
     const value = this.getModel().getValue(cell);
 
@@ -8882,27 +7890,25 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getLabel
-   *
    * Returns a string or DOM node that represents the label for the given
-   * cell. This implementation uses <convertValueToString> if <labelsVisible>
+   * cell. This implementation uses {@link convertValueToString} if {@link labelsVisible}
    * is true. Otherwise it returns an empty string.
    *
    * To truncate a label to match the size of the cell, the following code
    * can be used.
    *
-   * (code)
-   * graph.getLabel = (cell)=>
+   * ```javascript
+   * graph.getLabel = function(cell)
    * {
-   *   let label = getLabel.apply(this, arguments);
+   *   var label = getLabel.apply(this, arguments);
    *
-   *   if (label != null && this.getModel().isVertex(cell))
+   *   if (label != null && this.model.isVertex(cell))
    *   {
-   *     let geo = this.getCellGeometry(cell);
+   *     var geo = this.getCellGeometry(cell);
    *
    *     if (geo != null)
    *     {
-   *       let max = parseInt(geo.width / 8);
+   *       var max = parseInt(geo.width / 8);
    *
    *       if (label.length > max)
    *       {
@@ -8912,27 +7918,26 @@ class mxGraph extends mxEventSource {
    *   }
    *   return mxUtils.htmlEntities(label);
    * }
-   * (end)
+   * ```
    *
    * A resize listener is needed in the graph to force a repaint of the label
    * after a resize.
    *
-   * (code)
-   * graph.addListener(mxEvent.RESIZE_CELLS, (sender, evt)=>
+   * ```javascript
+   * graph.addListener(mxEvent.RESIZE_CELLS, function(sender, evt)
    * {
-   *   let cells = evt.getProperty('cells');
+   *   var cells = evt.getProperty('cells');
    *
-   *   for (let i = 0; i < cells.length; i += 1)
+   *   for (var i = 0; i < cells.length; i++)
    *   {
-   *     this.getView().removeState(cells[i]);
+   *     this.view.removeState(cells[i]);
    *   }
    * });
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose label should be returned.
+   * @param cell {@link mxCell} whose label should be returned.
    */
+  // getLabel(cell: mxCell): string | Node;
   getLabel(cell: mxCell): string | null {
     let result: string | null = '';
 
@@ -8947,61 +7952,54 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isHtmlLabel
-   *
    * Returns true if the label must be rendered as HTML markup. The default
-   * implementation returns <htmlLabels>.
+   * implementation returns {@link htmlLabels}.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose label should be displayed as HTML markup.
+   * @param cell {@link mxCell} whose label should be displayed as HTML markup.
    */
+  // isHtmlLabel(cell: mxCell): boolean;
   isHtmlLabel(cell: mxCell): boolean {
     return this.isHtmlLabels();
   }
 
   /**
-   * Function: isHtmlLabels
-   *
-   * Returns <htmlLabels>.
+   * Returns {@link htmlLabels}.
    */
+  // isHtmlLabels(): boolean;
   isHtmlLabels(): boolean {
     return this.htmlLabels;
   }
 
   /**
-   * Function: setHtmlLabels
-   *
-   * Sets <htmlLabels>.
+   * Sets {@link htmlLabels}.
    */
+  // setHtmlLabels(value: boolean): void;
   setHtmlLabels(value: boolean) {
     this.htmlLabels = value;
   }
 
   /**
-   * Function: isWrapping
-   *
    * This enables wrapping for HTML labels.
    *
    * Returns true if no white-space CSS style directive should be used for
    * displaying the given cells label. This implementation returns true if
-   * <mxConstants.STYLE_WHITE_SPACE> in the style of the given cell is 'wrap'.
+   * {@link mxConstants.STYLE_WHITE_SPACE} in the style of the given cell is 'wrap'.
    *
    * This is used as a workaround for IE ignoring the white-space directive
    * of child elements if the directive appears in a parent element. It
    * should be overridden to return true if a white-space directive is used
    * in the HTML markup that represents the given cells label. In order for
-   * HTML markup to work in labels, <isHtmlLabel> must also return true
+   * HTML markup to work in labels, {@link isHtmlLabel} must also return true
    * for the given cell.
    *
-   * Example:
+   * @example
    *
-   * (code)
-   * graph.getLabel = (cell)=>
+   * ```javascript
+   * graph.getLabel = function(cell)
    * {
-   *   let tmp = getLabel.apply(this, arguments); // "supercall"
+   *   var tmp = getLabel.apply(this, arguments); // "supercall"
    *
-   *   if (this.getModel().isEdge(cell))
+   *   if (this.model.isEdge(cell))
    *   {
    *     tmp = '<div style="width: 150px; white-space:normal;">'+tmp+'</div>';
    *   }
@@ -9009,20 +8007,19 @@ class mxGraph extends mxEventSource {
    *   return tmp;
    * }
    *
-   * graph.isWrapping = (state)=>
+   * graph.isWrapping = function(state)
    * {
-   *    return this.getModel().isEdge(state.cell);
+   * 	 return this.model.isEdge(state.cell);
    * }
-   * (end)
+   * ```
    *
    * Makes sure no edge label is wider than 150 pixels, otherwise the content
    * is wrapped. Note: No width must be specified for wrapped vertex labels as
    * the vertex defines the width in its geometry.
    *
-   * Parameters:
-   *
-   * state - <mxCell> whose label should be wrapped.
+   * @param state {@link mxCell} whose label should be wrapped.
    */
+  // isWrapping(cell: mxCell): boolean;
   isWrapping(cell: mxCell): boolean {
     return (
       this.getCurrentCellStyle(cell)[mxConstants.STYLE_WHITE_SPACE] === 'wrap'
@@ -9030,17 +8027,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isLabelClipped
-   *
    * Returns true if the overflow portion of labels should be hidden. If this
    * returns true then vertex labels will be clipped to the size of the vertices.
-   * This implementation returns true if <mxConstants.STYLE_OVERFLOW> in the
+   * This implementation returns true if {@link mxConstants.STYLE_OVERFLOW} in the
    * style of the given cell is 'hidden'.
    *
-   * Parameters:
-   *
-   * state - <mxCell> whose label should be clipped.
+   * @param state {@link mxCell} whose label should be clipped.
    */
+  // isLabelClipped(cell: mxCell): boolean;
   isLabelClipped(cell: mxCell): boolean {
     return (
       this.getCurrentCellStyle(cell)[mxConstants.STYLE_OVERFLOW] === 'hidden'
@@ -9048,24 +8042,21 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getTooltip
-   *
    * Returns the string or DOM node that represents the tooltip for the given
    * state, node and coordinate pair. This implementation checks if the given
    * node is a folding icon or overlay and returns the respective tooltip. If
    * this does not result in a tooltip, the handler for the cell is retrieved
-   * from <selectionCellsHandler> and the optional getTooltipForNode method is
-   * called. If no special tooltip exists here then <getTooltipForCell> is used
+   * from {@link selectionCellsHandler} and the optional getTooltipForNode method is
+   * called. If no special tooltip exists here then {@link getTooltipForCell} is used
    * with the cell in the given state as the argument to return a tooltip for the
    * given state.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose tooltip should be returned.
-   * node - DOM node that is currently under the mouse.
-   * x - X-coordinate of the mouse.
-   * y - Y-coordinate of the mouse.
+   * @param state {@link mxCellState} whose tooltip should be returned.
+   * @param node DOM node that is currently under the mouse.
+   * @param x X-coordinate of the mouse.
+   * @param y Y-coordinate of the mouse.
    */
+  // getTooltip(state: mxCellState, node: Node, x: number, y: number): string;
   getTooltip(state: mxCellState,
              node: HTMLElement,
              x: number,
@@ -9119,27 +8110,24 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getTooltipForCell
-   *
    * Returns the string or DOM node to be used as the tooltip for the given
    * cell. This implementation uses the cells getTooltip function if it
-   * exists, or else it returns <convertValueToString> for the cell.
+   * exists, or else it returns {@link convertValueToString} for the cell.
    *
-   * Example:
+   * @example
    *
-   * (code)
-   * graph.getTooltipForCell = (cell)=>
+   * ```javascript
+   * graph.getTooltipForCell = function(cell)
    * {
    *   return 'Hello, World!';
    * }
-   * (end)
+   * ```
    *
    * Replaces all tooltips with the string Hello, World!
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose tooltip should be returned.
+   * @param cell {@link mxCell} whose tooltip should be returned.
    */
+  // getTooltipForCell(cell: mxCell): string;
   getTooltipForCell(cell: mxCell): string | null {
     let tip = null;
 
@@ -9153,60 +8141,48 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getLinkForCell
-   *
    * Returns the string to be used as the link for the given cell. This
    * implementation returns null.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose tooltip should be returned.
+   * @param cell {@link mxCell} whose tooltip should be returned.
    */
+  // getLinkForCell(cell: mxCell): any;
   getLinkForCell(cell: mxCell): string | null {
     return null;
   }
 
   /**
-   * Function: getCursorForMouseEvent
-   *
    * Returns the cursor value to be used for the CSS of the shape for the
-   * given event. This implementation calls <getCursorForCell>.
+   * given event. This implementation calls {@link getCursorForCell}.
    *
-   * Parameters:
-   *
-   * me - <mxMouseEvent> whose cursor should be returned.
+   * @param me {@link mxMouseEvent} whose cursor should be returned.
    */
+  // getCursorForMouseEvent(me: mxMouseEvent): string;
   getCursorForMouseEvent(me: mxMouseEvent): string | null {
     return this.getCursorForCell(me.getCell());
   }
 
   /**
-   * Function: getCursorForCell
-   *
    * Returns the cursor value to be used for the CSS of the shape for the
    * given cell. This implementation returns null.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose cursor should be returned.
+   * @param cell {@link mxCell} whose cursor should be returned.
    */
+  // getCursorForCell(cell: mxCell): string;
   getCursorForCell(cell: mxCell): string | null {
     return null;
   }
 
   /**
-   * Function: getStartSize
-   *
    * Returns the start size of the given swimlane, that is, the width or
    * height of the part that contains the title, depending on the
-   * horizontal style. The return value is an <mxRectangle> with either
+   * horizontal style. The return value is an {@link mxRectangle} with either
    * width or height set as appropriate.
    *
-   * Parameters:
-   *
-   * swimlane - <mxCell> whose start size should be returned.
-   * ignoreState - Optional boolean that specifies if cell state should be ignored.
+   * @param swimlane {@link mxCell} whose start size should be returned.
+   * @param ignoreState Optional boolean that specifies if cell state should be ignored.
    */
+  // getStartSize(swimlane: mxCell, ignoreState?: boolean): mxRectangle;
   getStartSize(swimlane: mxCell,
                ignoreState: boolean=false): mxRectangle {
 
@@ -9229,10 +8205,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getSwimlaneDirection
-   *
    * Returns the direction for the given swimlane style.
    */
+  // getSwimlaneDirection(style: string): string;
   getSwimlaneDirection(style: any): string {
     const dir = mxUtils.getValue(
       style,
@@ -9271,18 +8246,15 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getActualStartSize
-   *
    * Returns the actual start size of the given swimlane taking into account
    * direction and horizontal and vertial flip styles. The start size is
-   * returned as an <mxRectangle> where top, left, bottom, right start sizes
+   * returned as an {@link mxRectangle} where top, left, bottom, right start sizes
    * are returned as x, y, height and width, respectively.
    *
-   * Parameters:
-   *
-   * swimlane - <mxCell> whose start size should be returned.
-   * ignoreState - Optional boolean that specifies if cell state should be ignored.
+   * @param swimlane {@link mxCell} whose start size should be returned.
+   * @param ignoreState Optional boolean that specifies if cell state should be ignored.
    */
+  // getActualStartSize(swimlane: mxCell, ignoreState?: boolean): mxRectangle;
   getActualStartSize(swimlane: mxCell,
                      ignoreState: boolean=false): mxRectangle {
     const result = new mxRectangle();
@@ -9312,16 +8284,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getImage
-   *
    * Returns the image URL for the given cell state. This implementation
-   * returns the value stored under <mxConstants.STYLE_IMAGE> in the cell
+   * returns the value stored under {@link mxConstants.STYLE_IMAGE} in the cell
    * style.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose image URL should be returned.
+   * @param state {@link mxCellState} whose image URL should be returned.
    */
+  // getImage(state: mxCellState): string;
   getImage(state: mxCellState): mxImage | null {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_IMAGE]
@@ -9329,14 +8298,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isTransparentState
-   *
    * Returns true if the given state has no stroke- or fillcolor and no image.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> to check.
+   * @param state {@link mxCellState} to check.
    */
+  // isTransparentState(state: mxCellState): boolean;
   isTransparentState(state: mxCellState): boolean {
     let result = false;
     if (state != null) {
@@ -9359,17 +8325,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getVerticalAlign
-   *
    * Returns the vertical alignment for the given cell state. This
    * implementation returns the value stored under
-   * <mxConstants.STYLE_VERTICAL_ALIGN> in the cell style.
+   * {@link mxConstants.STYLE_VERTICAL_ALIGN} in the cell style.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose vertical alignment should be
+   * @param state {@link mxCellState} whose vertical alignment should be
    * returned.
    */
+  // getVerticalAlign(state: mxCellState): string;
   getVerticalAlign(state: mxCellState): string | null {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_VERTICAL_ALIGN] ||
@@ -9378,17 +8341,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getIndicatorColor
-   *
    * Returns the indicator color for the given cell state. This
    * implementation returns the value stored under
-   * <mxConstants.STYLE_INDICATOR_COLOR> in the cell style.
+   * {@link mxConstants.STYLE_INDICATOR_COLOR} in the cell style.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose indicator color should be
+   * @param state {@link mxCellState} whose indicator color should be
    * returned.
    */
+  // getIndicatorColor(state: mxCellState): string;
   getIndicatorColor(state: mxCellState): string | null {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_INDICATOR_COLOR]
@@ -9396,17 +8356,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getIndicatorGradientColor
-   *
    * Returns the indicator gradient color for the given cell state. This
    * implementation returns the value stored under
-   * <mxConstants.STYLE_INDICATOR_GRADIENTCOLOR> in the cell style.
+   * {@link mxConstants.STYLE_INDICATOR_GRADIENTCOLOR} in the cell style.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose indicator gradient color should be
+   * @param state {@link mxCellState} whose indicator gradient color should be
    * returned.
    */
+  // getIndicatorGradientColor(state: mxCellState): string;
   getIndicatorGradientColor(state: mxCellState): string | null {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_INDICATOR_GRADIENTCOLOR]
@@ -9414,16 +8371,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getIndicatorShape
-   *
    * Returns the indicator shape for the given cell state. This
    * implementation returns the value stored under
-   * <mxConstants.STYLE_INDICATOR_SHAPE> in the cell style.
+   * {@link mxConstants.STYLE_INDICATOR_SHAPE} in the cell style.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose indicator shape should be returned.
+   * @param state {@link mxCellState} whose indicator shape should be returned.
    */
+  // getIndicatorShape(state: mxCellState): any;
   getIndicatorShape(state: mxCellState): string | null {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_INDICATOR_SHAPE]
@@ -9431,16 +8385,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getIndicatorImage
-   *
    * Returns the indicator image for the given cell state. This
    * implementation returns the value stored under
-   * <mxConstants.STYLE_INDICATOR_IMAGE> in the cell style.
+   * {@link mxConstants.STYLE_INDICATOR_IMAGE} in the cell style.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose indicator image should be returned.
+   * @param state {@link mxCellState} whose indicator image should be returned.
    */
+  // getIndicatorImage(state: mxCellState): any;
   getIndicatorImage(state: mxCellState): mxImage | null {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_INDICATOR_IMAGE]
@@ -9448,39 +8399,32 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getBorder
-   *
-   * Returns the value of <border>.
+   * Returns the value of {@link border}.
    */
+  // getBorder(): number;
   getBorder(): number {
     return this.border;
   }
 
   /**
-   * Function: setBorder
+   * Sets the value of {@link border}.
    *
-   * Sets the value of <border>.
-   *
-   * Parameters:
-   *
-   * value - Positive integer that represents the border to be used.
+   * @param value Positive integer that represents the border to be used.
    */
+  // setBorder(value: number): void;
   setBorder(value: number) {
     this.border = value;
   }
 
   /**
-   * Function: isSwimlane
-   *
    * Returns true if the given cell is a swimlane in the graph. A swimlane is
    * a container cell with some specific behaviour. This implementation
-   * checks if the shape associated with the given cell is a <mxSwimlane>.
+   * checks if the shape associated with the given cell is a {@link mxSwimlane}.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to be checked.
-   * ignoreState - Optional boolean that specifies if the cell state should be ignored.
+   * @param cell {@link mxCell} to be checked.
+   * @param ignoreState Optional boolean that specifies if the cell state should be ignored.
    */
+  // isSwimlane(cell: mxCell, ignoreState?: boolean): boolean;
   isSwimlane(cell: mxCell,
              ignoreState: boolean=false): boolean {
     if (
@@ -9501,119 +8445,100 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: isResizeContainer
-   *
-   * Returns <resizeContainer>.
+   * Returns {@link resizeContainer}.
    */
+  // isResizeContainer(): boolean;
   isResizeContainer(): boolean {
     return this.resizeContainer;
   }
 
   /**
-   * Function: setResizeContainer
+   * Sets {@link resizeContainer}.
    *
-   * Sets <resizeContainer>.
-   *
-   * Parameters:
-   *
-   * value - Boolean indicating if the container should be resized.
+   * @param value Boolean indicating if the container should be resized.
    */
+  // setResizeContainer(value: boolean): void;
   setResizeContainer(value: boolean) {
     this.resizeContainer = value;
   }
 
   /**
-   * Function: isEnabled
-   *
-   * Returns true if the graph is <enabled>.
+   * Returns true if the graph is {@link enabled}.
    */
+  // isEnabled(): boolean;
   isEnabled(): boolean {
     return this.enabled;
   }
 
   /**
-   * Function: setEnabled
-   *
    * Specifies if the graph should allow any interactions. This
-   * implementation updates <enabled>.
+   * implementation updates {@link enabled}.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if the graph should be enabled.
+   * @param value Boolean indicating if the graph should be enabled.
    */
+  // setEnabled(value: boolean): void;
   setEnabled(value: boolean): void {
     this.enabled = value;
   }
 
   /**
-   * Function: isEscapeEnabled
-   *
-   * Returns <escapeEnabled>.
+   * Returns {@link escapeEnabled}.
    */
+  // isEscapeEnabled(): boolean;
   isEscapeEnabled(): boolean {
     return this.escapeEnabled;
   }
 
   /**
-   * Function: setEscapeEnabled
+   * Sets {@link escapeEnabled}.
    *
-   * Sets <escapeEnabled>.
-   *
-   * Parameters:
-   *
-   * enabled - Boolean indicating if escape should be enabled.
+   * @param enabled Boolean indicating if escape should be enabled.
    */
+  // setEscapeEnabled(value: boolean): void;
   setEscapeEnabled(value: boolean): void {
     this.escapeEnabled = value;
   }
 
   /**
-   * Function: isInvokesStopCellEditing
-   *
-   * Returns <invokesStopCellEditing>.
+   * Returns {@link invokesStopCellEditing}.
    */
+  // isInvokesStopCellEditing(): boolean;
   isInvokesStopCellEditing(): boolean {
     return this.invokesStopCellEditing;
   }
 
   /**
-   * Function: setInvokesStopCellEditing
-   *
-   * Sets <invokesStopCellEditing>.
+   * Sets {@link invokesStopCellEditing}.
    */
+  // setInvokesStopCellEditing(value: boolean): void;
   setInvokesStopCellEditing(value: boolean): void {
     this.invokesStopCellEditing = value;
   }
 
   /**
-   * Function: isEnterStopsCellEditing
-   *
-   * Returns <enterStopsCellEditing>.
+   * Returns {@link enterStopsCellEditing}.
    */
+  // isEnterStopsCellEditing(): boolean;
   isEnterStopsCellEditing(): boolean {
     return this.enterStopsCellEditing;
   }
 
   /**
-   * Function: setEnterStopsCellEditing
-   *
-   * Sets <enterStopsCellEditing>.
+   * Sets {@link enterStopsCellEditing}.
    */
+  // setEnterStopsCellEditing(value: boolean): void;
   setEnterStopsCellEditing(value: boolean): void {
     this.enterStopsCellEditing = value;
   }
 
   /**
-   * Function: isCellLocked
-   *
    * Returns true if the given cell may not be moved, sized, bended,
    * disconnected, edited or selected. This implementation returns true for
-   * all vertices with a relative geometry if <locked> is false.
+   * all vertices with a relative geometry if {@link locked} is false.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose locked state should be returned.
+   * @param cell {@link mxCell} whose locked state should be returned.
    */
+  // isCellLocked(cell: mxCell): boolean;
   isCellLocked(cell: mxCell): boolean {
     const geometry = this.getModel().getGeometry(cell);
 
@@ -9624,35 +8549,32 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellsLocked
-   *
-   * Returns true if every cell may not be moved, sized, bended,
+   * Returns true if the given cell may not be moved, sized, bended,
    * disconnected, edited or selected. This implementation returns true for
-   * all vertices with a relative geometry if <locked> is false.
+   * all vertices with a relative geometry if {@link locked} is false.
+   *
+   * @param cell {@link mxCell} whose locked state should be returned.
    */
+  // isCellsLocked(): boolean;
   isCellsLocked(): boolean {
     return this.cellsLocked;
   }
 
   /**
-   * Function: setCellsLocked
-   *
    * Sets if any cell may be moved, sized, bended, disconnected, edited or
    * selected.
    *
-   * Parameters:
-   *
-   * value - Boolean that defines the new value for <cellsLocked>.
+   * @param value Boolean that defines the new value for {@link cellsLocked}.
    */
+  // setCellsLocked(value: boolean): void;
   setCellsLocked(value: boolean) {
     this.cellsLocked = value;
   }
 
   /**
-   * Function: getCloneableCells
-   *
    * Returns the cells which may be exported in the given array of cells.
    */
+  // getCloneableCells(cells: mxCell[]): mxCell[];
   getCloneableCells(cells: mxCell[]): mxCell[] | null {
     return this.getModel().filterCells(
       cells, (cell: mxCell) => {
@@ -9662,51 +8584,43 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellCloneable
-   *
    * Returns true if the given cell is cloneable. This implementation returns
-   * <isCellsCloneable> for all cells unless a cell style specifies
-   * <mxConstants.STYLE_CLONEABLE> to be 0.
+   * {@link isCellsCloneable} for all cells unless a cell style specifies
+   * {@link mxConstants.STYLE_CLONEABLE} to be 0.
    *
-   * Parameters:
-   *
-   * cell - Optional <mxCell> whose cloneable state should be returned.
+   * @param cell Optional {@link mxCell} whose cloneable state should be returned.
    */
+  // isCellCloneable(cell: mxCell): boolean;
   isCellCloneable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
     return this.isCellsCloneable() && style[mxConstants.STYLE_CLONEABLE] !== 0;
   }
 
   /**
-   * Function: isCellsCloneable
-   *
-   * Returns <cellsCloneable>, that is, if the graph allows cloning of cells
+   * Returns {@link cellsCloneable}, that is, if the graph allows cloning of cells
    * by using control-drag.
    */
+  // isCellsCloneable(): boolean;
   isCellsCloneable(): boolean {
     return this.cellsCloneable;
   }
 
   /**
-   * Function: setCellsCloneable
-   *
    * Specifies if the graph should allow cloning of cells by holding down the
    * control key while cells are being moved. This implementation updates
-   * <cellsCloneable>.
+   * {@link cellsCloneable}.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if the graph should be cloneable.
+   * @param value Boolean indicating if the graph should be cloneable.
    */
+  // setCellsCloneable(value: boolean): void;
   setCellsCloneable(value: boolean): void {
     this.cellsCloneable = value;
   }
 
   /**
-   * Function: getExportableCells
-   *
    * Returns the cells which may be exported in the given array of cells.
    */
+  // getExportableCells(cells: mxCell[]): mxCell[];
   getExportableCells(cells: mxCell[]): mxCell[] | null {
     return this.getModel().filterCells(
       cells, (cell: mxCell) => {
@@ -9716,24 +8630,20 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: canExportCell
-   *
    * Returns true if the given cell may be exported to the clipboard. This
-   * implementation returns <exportEnabled> for all cells.
+   * implementation returns {@link exportEnabled} for all cells.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the cell to be exported.
+   * @param cell {@link mxCell} that represents the cell to be exported.
    */
+  // canExportCell(cell: mxCell): boolean;
   canExportCell(cell: mxCell | null=null): boolean {
     return this.exportEnabled;
   }
 
   /**
-   * Function: getImportableCells
-   *
    * Returns the cells which may be imported in the given array of cells.
    */
+  // getImportableCells(cells: mxCell[]): mxCell[];
   getImportableCells(cells: mxCell[]): mxCell[] | null {
     return this.getModel().filterCells(
       cells, (cell: mxCell) => {
@@ -9743,73 +8653,64 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: canImportCell
-   *
    * Returns true if the given cell may be imported from the clipboard.
-   * This implementation returns <importEnabled> for all cells.
+   * This implementation returns {@link importEnabled} for all cells.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the cell to be imported.
+   * @param cell {@link mxCell} that represents the cell to be imported.
    */
+  // canImportCell(cell: mxCell): boolean;
   canImportCell(cell: mxCell | null=null): boolean {
     return this.importEnabled;
   }
 
   /**
-   * Function: isCellSelectable
-   *
    * Returns true if the given cell is selectable. This implementation
-   * returns <cellsSelectable>.
+   * returns {@link cellsSelectable}.
    *
    * To add a new style for making cells (un)selectable, use the following code.
    *
-   * (code)
-   * isCellSelectable = (cell)=>
+   * ```javascript
+   * isCellSelectable = function(cell)
    * {
-   *   let style = this.getCurrentCellStyle(cell);
+   *   var style = this.getCurrentCellStyle(cell);
    *
    *   return this.isCellsSelectable() && !this.isCellLocked(cell) && style['selectable'] != 0;
    * };
-   * (end)
+   * ```
    *
    * You can then use the new style as shown in this example.
    *
-   * (code)
+   * ```javascript
    * graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30, 'selectable=0');
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose selectable state should be returned.
+   * @param cell {@link mxCell} whose selectable state should be returned.
    */
+  // isCellSelectable(cell: mxCell): boolean;
   isCellSelectable(cell: mxCell): boolean {
     return this.isCellsSelectable();
   }
 
   /**
-   * Function: isCellsSelectable
-   *
-   * Returns <cellsSelectable>.
+   * Returns {@link cellsSelectable}.
    */
+  // isCellsSelectable(): boolean;
   isCellsSelectable(): boolean {
     return this.cellsSelectable;
   }
 
   /**
-   * Function: setCellsSelectable
-   *
-   * Sets <cellsSelectable>.
+   * Sets {@link cellsSelectable}.
    */
+  // setCellsSelectable(value: boolean): void;
   setCellsSelectable(value: boolean): void {
     this.cellsSelectable = value;
   }
 
   /**
-   * Function: getDeletableCells
-   *
    * Returns the cells which may be exported in the given array of cells.
    */
+  // getDeletableCells(cells: mxCell[]): mxCell[];
   getDeletableCells(cells: mxCell[]): mxCell[] | null {
     return this.getModel().filterCells(
       cells, (cell: mxCell) => {
@@ -9819,54 +8720,44 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellDeletable
-   *
    * Returns true if the given cell is moveable. This returns
-   * <cellsDeletable> for all given cells if a cells style does not specify
-   * <mxConstants.STYLE_DELETABLE> to be 0.
+   * {@link cellsDeletable} for all given cells if a cells style does not specify
+   * {@link mxConstants.STYLE_DELETABLE} to be 0.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose deletable state should be returned.
+   * @param cell {@link mxCell} whose deletable state should be returned.
    */
+  // isCellDeletable(cell: mxCell): boolean;
   isCellDeletable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
     return this.isCellsDeletable() && style[mxConstants.STYLE_DELETABLE] !== 0;
   }
 
   /**
-   * Function: isCellsDeletable
-   *
-   * Returns <cellsDeletable>.
+   * Returns {@link cellsDeletable}.
    */
+  // isCellsDeletable(): boolean;
   isCellsDeletable(): boolean {
     return this.cellsDeletable;
   }
 
   /**
-   * Function: setCellsDeletable
+   * Sets {@link cellsDeletable}.
    *
-   * Sets <cellsDeletable>.
-   *
-   * Parameters:
-   *
-   * value - Boolean indicating if the graph should allow deletion of cells.
+   * @param value Boolean indicating if the graph should allow deletion of cells.
    */
+  // setCellsDeletable(value: boolean): void;
   setCellsDeletable(value: boolean): void {
     this.cellsDeletable = value;
   }
 
   /**
-   * Function: isLabelMovable
-   *
    * Returns true if the given edges's label is moveable. This returns
-   * <movable> for all given cells if <isLocked> does not return true
+   * {@link movable} for all given cells if {@link isLocked} does not return true
    * for the given cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose label should be moved.
+   * @param cell {@link mxCell} whose label should be moved.
    */
+  // isLabelMovable(cell: mxCell): boolean;
   isLabelMovable(cell: mxCell): boolean {
     return (
       !this.isCellLocked(cell) &&
@@ -9876,25 +8767,21 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellRotatable
-   *
    * Returns true if the given cell is rotatable. This returns true for the given
-   * cell if its style does not specify <mxConstants.STYLE_ROTATABLE> to be 0.
+   * cell if its style does not specify {@link mxConstants.STYLE_ROTATABLE} to be 0.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose rotatable state should be returned.
+   * @param cell {@link mxCell} whose rotatable state should be returned.
    */
+  // isCellRotatable(cell: mxCell): boolean;
   isCellRotatable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
     return style[mxConstants.STYLE_ROTATABLE] !== 0;
   }
 
   /**
-   * Function: getMovableCells
-   *
    * Returns the cells which are movable in the given array of cells.
    */
+  // getMovableCells(cells: mxCell[]): mxCell[];
   getMovableCells(cells: mxCell[]): mxCell[] | null {
     return this.getModel().filterCells(
       cells, (cell: mxCell) => {
@@ -9904,16 +8791,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellMovable
+   * Returns true if the given cell is moveable. This returns {@link cellsMovable}
+   * for all given cells if {@link isCellLocked} does not return true for the given
+   * cell and its style does not specify {@link mxConstants.STYLE_MOVABLE} to be 0.
    *
-   * Returns true if the given cell is moveable. This returns <cellsMovable>
-   * for all given cells if <isCellLocked> does not return true for the given
-   * cell and its style does not specify <mxConstants.STYLE_MOVABLE> to be 0.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose movable state should be returned.
+   * @param cell {@link mxCell} whose movable state should be returned.
    */
+  // isCellMovable(cell: mxCell): boolean;
   isCellMovable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
 
@@ -9925,390 +8809,327 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellsMovable
-   *
-   * Returns <cellsMovable>.
+   * Returns {@link cellsMovable}.
    */
+  // isCellsMovable(): boolean;
   isCellsMovable(): boolean {
     return this.cellsMovable;
   }
 
   /**
-   * Function: setCellsMovable
-   *
    * Specifies if the graph should allow moving of cells. This implementation
-   * updates <cellsMsovable>.
+   * updates {@link cellsMsovable}.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if the graph should allow moving of cells.
+   * @param value Boolean indicating if the graph should allow moving of cells.
    */
+  // setCellsMovable(value: boolean): void;
   setCellsMovable(value: boolean): void {
     this.cellsMovable = value;
   }
 
   /**
-   * Function: isGridEnabled
-   *
-   * Returns <gridEnabled> as a boolean.
+   * Returns {@link gridEnabled} as a boolean.
    */
+  // isGridEnabled(): boolean;
   isGridEnabled(): boolean {
     return this.gridEnabled;
   }
 
   /**
-   * Function: setGridEnabled
-   *
    * Specifies if the grid should be enabled.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if the grid should be enabled.
+   * @param value Boolean indicating if the grid should be enabled.
    */
+  // setGridEnabled(value: boolean): void;
   setGridEnabled(value: boolean): void {
     this.gridEnabled = value;
   }
 
   /**
-   * Function: isPortsEnabled
-   *
-   * Returns <portsEnabled> as a boolean.
+   * Returns {@link portsEnabled} as a boolean.
    */
+  // isPortsEnabled(): boolean;
   isPortsEnabled(): boolean {
     return this.portsEnabled;
   }
 
   /**
-   * Function: setPortsEnabled
-   *
    * Specifies if the ports should be enabled.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if the ports should be enabled.
+   * @param value Boolean indicating if the ports should be enabled.
    */
+  // setPortsEnabled(value: boolean): void;
   setPortsEnabled(value: boolean): void {
     this.portsEnabled = value;
   }
 
   /**
-   * Function: getGridSize
-   *
-   * Returns <gridSize>.
+   * Returns {@link gridSize}.
    */
+  // getGridSize(): number;
   getGridSize(): number {
     return this.gridSize;
   }
 
   /**
-   * Function: setGridSize
-   *
-   * Sets <gridSize>.
+   * Sets {@link gridSize}.
    */
+  // setGridSize(value: number): void;
   setGridSize(value: number): void {
     this.gridSize = value;
   }
 
   /**
-   * Function: getTolerance
-   *
-   * Returns <tolerance>.
+   * Returns {@link tolerance}.
    */
+  // getTolerance(): number;
   getTolerance(): number {
     return this.tolerance;
   }
 
   /**
-   * Function: setTolerance
-   *
-   * Sets <tolerance>.
+   * Sets {@link tolerance}.
    */
+  // setTolerance(value: number): void;
   setTolerance(value: number): void {
     this.tolerance = value;
   }
 
   /**
-   * Function: isVertexLabelsMovable
-   *
-   * Returns <vertexLabelsMovable>.
+   * Returns {@link vertexLabelsMovable}.
    */
+  // isVertexLabelsMovable(): boolean;
   isVertexLabelsMovable(): boolean {
     return this.vertexLabelsMovable;
   }
 
   /**
-   * Function: setVertexLabelsMovable
-   *
-   * Sets <vertexLabelsMovable>.
+   * Sets {@link vertexLabelsMovable}.
    */
+  // setVertexLabelsMovable(value: boolean): void;
   setVertexLabelsMovable(value: boolean): void {
     this.vertexLabelsMovable = value;
   }
 
   /**
-   * Function: isEdgeLabelsMovable
-   *
-   * Returns <edgeLabelsMovable>.
+   * Returns {@link edgeLabelsMovable}.
    */
+  // isEdgeLabelsMovable(): boolean;
   isEdgeLabelsMovable(): boolean {
     return this.edgeLabelsMovable;
   }
 
   /**
-   * Function: isEdgeLabelsMovable
-   *
-   * Sets <edgeLabelsMovable>.
+   * Sets {@link edgeLabelsMovable}.
    */
+  // setEdgeLabelsMovable(value: boolean): void;
   setEdgeLabelsMovable(value: boolean): void {
     this.edgeLabelsMovable = value;
   }
 
   /**
-   * Function: isSwimlaneNesting
-   *
-   * Returns <swimlaneNesting> as a boolean.
+   * Returns {@link swimlaneNesting} as a boolean.
    */
+  // isSwimlaneNesting(): boolean;
   isSwimlaneNesting(): boolean {
     return this.swimlaneNesting;
   }
 
   /**
-   * Function: setSwimlaneNesting
-   *
    * Specifies if swimlanes can be nested by drag and drop. This is only
    * taken into account if dropEnabled is true.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if swimlanes can be nested.
+   * @param value Boolean indicating if swimlanes can be nested.
    */
+  // setSwimlaneNesting(value: boolean): void;
   setSwimlaneNesting(value: boolean): void {
     this.swimlaneNesting = value;
   }
 
   /**
-   * Function: isSwimlaneSelectionEnabled
-   *
-   * Returns <swimlaneSelectionEnabled> as a boolean.
+   * Returns {@link swimlaneSelectionEnabled} as a boolean.
    */
+  // isSwimlaneSelectionEnabled(): boolean;
   isSwimlaneSelectionEnabled(): boolean {
     return this.swimlaneSelectionEnabled;
   }
 
   /**
-   * Function: setSwimlaneSelectionEnabled
-   *
    * Specifies if swimlanes should be selected if the mouse is released
    * over their content area.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if swimlanes content areas
+   * @param value Boolean indicating if swimlanes content areas
    * should be selected when the mouse is released over them.
    */
+  // setSwimlaneSelectionEnabled(value: boolean): void;
   setSwimlaneSelectionEnabled(value: boolean): void {
     this.swimlaneSelectionEnabled = value;
   }
 
   /**
-   * Function: isMultigraph
-   *
-   * Returns <multigraph> as a boolean.
+   * Returns {@link multigraph} as a boolean.
    */
+  // isMultigraph(): boolean;
   isMultigraph() {
     return this.multigraph;
   }
 
   /**
-   * Function: setMultigraph
-   *
    * Specifies if the graph should allow multiple connections between the
    * same pair of vertices.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if the graph allows multiple connections
+   * @param value Boolean indicating if the graph allows multiple connections
    * between the same pair of vertices.
    */
+  // setMultigraph(value: boolean): void;
   setMultigraph(value: boolean): void {
     this.multigraph = value;
   }
 
   /**
-   * Function: isAllowLoops
-   *
-   * Returns <allowLoops> as a boolean.
+   * Returns {@link allowLoops} as a boolean.
    */
+  // isAllowLoops(): boolean;
   isAllowLoops(): boolean {
     return this.allowLoops;
   }
 
   /**
-   * Function: setAllowDanglingEdges
-   *
    * Specifies if dangling edges are allowed, that is, if edges are allowed
    * that do not have a source and/or target terminal defined.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if dangling edges are allowed.
+   * @param value Boolean indicating if dangling edges are allowed.
    */
+  // setAllowDanglingEdges(value: boolean): void;
   setAllowDanglingEdges(value: boolean): void {
     this.allowDanglingEdges = value;
   }
 
   /**
-   * Function: isAllowDanglingEdges
-   *
-   * Returns <allowDanglingEdges> as a boolean.
+   * Returns {@link allowDanglingEdges} as a boolean.
    */
+  // isAllowDanglingEdges(): boolean;
   isAllowDanglingEdges(): boolean {
     return this.allowDanglingEdges;
   }
 
   /**
-   * Function: setConnectableEdges
-   *
    * Specifies if edges should be connectable.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if edges should be connectable.
+   * @param value Boolean indicating if edges should be connectable.
    */
+  // setConnectableEdges(value: boolean): void;
   setConnectableEdges(value: boolean): void {
     this.connectableEdges = value;
   }
 
   /**
-   * Function: isConnectableEdges
-   *
-   * Returns <connectableEdges> as a boolean.
+   * Returns {@link connectableEdges} as a boolean.
    */
+  // isConnectableEdges(): boolean;
   isConnectableEdges(): boolean {
     return this.connectableEdges;
   }
 
   /**
-   * Function: setCloneInvalidEdges
-   *
    * Specifies if edges should be inserted when cloned but not valid wrt.
-   * <getEdgeValidationError>. If false such edges will be silently ignored.
+   * {@link getEdgeValidationError}. If false such edges will be silently ignored.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if cloned invalid edges should be
+   * @param value Boolean indicating if cloned invalid edges should be
    * inserted into the graph or ignored.
    */
+  // setCloneInvalidEdges(value: boolean): void;
   setCloneInvalidEdges(value: boolean): void {
     this.cloneInvalidEdges = value;
   }
 
   /**
-   * Function: isCloneInvalidEdges
-   *
-   * Returns <cloneInvalidEdges> as a boolean.
+   * Returns {@link cloneInvalidEdges} as a boolean.
    */
+  // isCloneInvalidEdges(): boolean;
   isCloneInvalidEdges(): boolean {
     return this.cloneInvalidEdges;
   }
 
   /**
-   * Function: setAllowLoops
-   *
    * Specifies if loops are allowed.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if loops are allowed.
+   * @param value Boolean indicating if loops are allowed.
    */
+  // setAllowLoops(value: boolean): void;
   setAllowLoops(value: boolean) {
     this.allowLoops = value;
   }
 
   /**
-   * Function: isDisconnectOnMove
-   *
-   * Returns <disconnectOnMove> as a boolean.
+   * Returns {@link disconnectOnMove} as a boolean.
    */
+  // isDisconnectOnMove(): boolean;
   isDisconnectOnMove(): boolean {
     return this.disconnectOnMove;
   }
 
   /**
-   * Function: setDisconnectOnMove
-   *
    * Specifies if edges should be disconnected when moved. (Note: Cloned
    * edges are always disconnected.)
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if edges should be disconnected
+   * @param value Boolean indicating if edges should be disconnected
    * when moved.
    */
+  // setDisconnectOnMove(value: boolean): void;
   setDisconnectOnMove(value: boolean): void {
     this.disconnectOnMove = value;
   }
 
   /**
-   * Function: isDropEnabled
-   *
-   * Returns <dropEnabled> as a boolean.
+   * Returns {@link dropEnabled} as a boolean.
    */
+  // isDropEnabled(): boolean;
   isDropEnabled(): boolean {
     return this.dropEnabled;
   }
 
   /**
-   * Function: setDropEnabled
-   *
    * Specifies if the graph should allow dropping of cells onto or into other
    * cells.
    *
-   * Parameters:
-   *
-   * dropEnabled - Boolean indicating if the graph should allow dropping
+   * @param dropEnabled Boolean indicating if the graph should allow dropping
    * of cells into other cells.
    */
+  // setDropEnabled(value: boolean): void;
   setDropEnabled(value: boolean): void {
     this.dropEnabled = value;
   }
 
   /**
-   * Function: isSplitEnabled
-   *
-   * Returns <splitEnabled> as a boolean.
+   * Returns {@link splitEnabled} as a boolean.
    */
+  // isSplitEnabled(): boolean;
   isSplitEnabled(): boolean {
     return this.splitEnabled;
   }
 
   /**
-   * Function: setSplitEnabled
-   *
    * Specifies if the graph should allow dropping of cells onto or into other
    * cells.
    *
-   * Parameters:
-   *
-   * dropEnabled - Boolean indicating if the graph should allow dropping
+   * @param dropEnabled Boolean indicating if the graph should allow dropping
    * of cells into other cells.
    */
+  // setSplitEnabled(value: boolean): void;
   setSplitEnabled(value: boolean): void {
     this.splitEnabled = value;
   }
 
   /**
-   * Function: isCellResizable
-   *
    * Returns true if the given cell is resizable. This returns
-   * <cellsResizable> for all given cells if <isCellLocked> does not return
+   * {@link cellsResizable} for all given cells if {@link isCellLocked} does not return
    * true for the given cell and its style does not specify
-   * <mxConstants.STYLE_RESIZABLE> to be 0.
+   * {@link mxConstants.STYLE_RESIZABLE} to be 0.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose resizable state should be returned.
+   * @param cell {@link mxCell} whose resizable state should be returned.
    */
+  // isCellResizable(cell: mxCell): boolean;
   isCellResizable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
 
@@ -10321,59 +9142,49 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellsResizable
-   *
-   * Returns <cellsResizable>.
+   * Returns {@link cellsResizable}.
    */
+  // isCellsResizable(): boolean;
   isCellsResizable(): boolean {
     return this.cellsResizable;
   }
 
   /**
-   * Function: setCellsResizable
-   *
    * Specifies if the graph should allow resizing of cells. This
-   * implementation updates <cellsResizable>.
+   * implementation updates {@link cellsResizable}.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if the graph should allow resizing of
+   * @param value Boolean indicating if the graph should allow resizing of
    * cells.
    */
+  // setCellsResizable(value: boolean): void;
   setCellsResizable(value: boolean): void {
     this.cellsResizable = value;
   }
 
   /**
-   * Function: isTerminalPointMovable
-   *
    * Returns true if the given terminal point is movable. This is independent
-   * from <isCellConnectable> and <isCellDisconnectable> and controls if terminal
+   * from {@link isCellConnectable} and {@link isCellDisconnectable} and controls if terminal
    * points can be moved in the graph if the edge is not connected. Note that it
    * is required for this to return true to connect unconnected edges. This
    * implementation returns true.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose terminal point should be moved.
-   * source - Boolean indicating if the source or target terminal should be moved.
+   * @param cell {@link mxCell} whose terminal point should be moved.
+   * @param source Boolean indicating if the source or target terminal should be moved.
    */
+  // isTerminalPointMovable(cell: mxCell, source?: boolean): boolean;
   isTerminalPointMovable(cell: mxCell,
                          source: boolean): boolean {
     return true;
   }
 
   /**
-   * Function: isCellBendable
+   * Returns true if the given cell is bendable. This returns {@link cellsBendable}
+   * for all given cells if {@link isLocked} does not return true for the given
+   * cell and its style does not specify {@link mxConstants.STYLE_BENDABLE} to be 0.
    *
-   * Returns true if the given cell is bendable. This returns <cellsBendable>
-   * for all given cells if <isLocked> does not return true for the given
-   * cell and its style does not specify <mxConstants.STYLE_BENDABLE> to be 0.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose bendable state should be returned.
+   * @param cell {@link mxCell} whose bendable state should be returned.
    */
+  // isCellBendable(cell: mxCell): boolean;
   isCellBendable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
 
@@ -10385,40 +9196,33 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellsBendable
-   *
-   * Returns <cellsBenadable>.
+   * Returns {@link cellsBenadable}.
    */
+  // isCellsBendable(): boolean;
   isCellsBendable(): boolean {
     return this.cellsBendable;
   }
 
   /**
-   * Function: setCellsBendable
-   *
    * Specifies if the graph should allow bending of edges. This
-   * implementation updates <bendable>.
+   * implementation updates {@link bendable}.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if the graph should allow bending of
+   * @param value Boolean indicating if the graph should allow bending of
    * edges.
    */
+  // setCellsBendable(value: boolean): void;
   setCellsBendable(value: boolean) {
     this.cellsBendable = value;
   }
 
   /**
-   * Function: isCellEditable
+   * Returns true if the given cell is editable. This returns {@link cellsEditable} for
+   * all given cells if {@link isCellLocked} does not return true for the given cell
+   * and its style does not specify {@link mxConstants.STYLE_EDITABLE} to be 0.
    *
-   * Returns true if the given cell is editable. This returns <cellsEditable> for
-   * all given cells if <isCellLocked> does not return true for the given cell
-   * and its style does not specify <mxConstants.STYLE_EDITABLE> to be 0.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose editable state should be returned.
+   * @param cell {@link mxCell} whose editable state should be returned.
    */
+  // isCellEditable(cell: mxCell): boolean;
   isCellEditable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
 
@@ -10430,43 +9234,36 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellsEditable
-   *
-   * Returns <cellsEditable>.
+   * Returns {@link cellsEditable}.
    */
+  // isCellsEditable(): boolean;
   isCellsEditable(): boolean {
     return this.cellsEditable;
   }
 
   /**
-   * Function: setCellsEditable
-   *
    * Specifies if the graph should allow in-place editing for cell labels.
-   * This implementation updates <cellsEditable>.
+   * This implementation updates {@link cellsEditable}.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if the graph should allow in-place
+   * @param value Boolean indicating if the graph should allow in-place
    * editing.
    */
+  // setCellsEditable(value: boolean): void;
   setCellsEditable(value: boolean): void {
     this.cellsEditable = value;
   }
 
   /**
-   * Function: isCellDisconnectable
-   *
    * Returns true if the given cell is disconnectable from the source or
-   * target terminal. This returns <isCellsDisconnectable> for all given
-   * cells if <isCellLocked> does not return true for the given cell.
+   * target terminal. This returns {@link isCellsDisconnectable} for all given
+   * cells if {@link isCellLocked} does not return true for the given cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose disconnectable state should be returned.
-   * terminal - <mxCell> that represents the source or target terminal.
-   * source - Boolean indicating if the source or target terminal is to be
+   * @param cell {@link mxCell} whose disconnectable state should be returned.
+   * @param terminal {@link mxCell} that represents the source or target terminal.
+   * @param source Boolean indicating if the source or target terminal is to be
    * disconnected.
    */
+  // isCellDisconnectable(cell: mxCell, terminal: mxCell, source?: boolean): boolean;
   isCellDisconnectable(cell: mxCell,
                        terminal: mxCell | null=null,
                        source: boolean=false): boolean {
@@ -10474,34 +9271,29 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellsDisconnectable
-   *
-   * Returns <cellsDisconnectable>.
+   * Returns {@link cellsDisconnectable}.
    */
+  // isCellsDisconnectable(): boolean;
   isCellsDisconnectable(): boolean {
     return this.cellsDisconnectable;
   }
 
   /**
-   * Function: setCellsDisconnectable
-   *
-   * Sets <cellsDisconnectable>.
+   * Sets {@link cellsDisconnectable}.
    */
+  // setCellsDisconnectable(value: boolean): void;
   setCellsDisconnectable(value: boolean): void {
     this.cellsDisconnectable = value;
   }
 
   /**
-   * Function: isValidSource
-   *
    * Returns true if the given cell is a valid source for new connections.
    * This implementation returns true for all non-null values and is
-   * called by is called by <isValidConnection>.
+   * called by is called by {@link isValidConnection}.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents a possible source or null.
+   * @param cell {@link mxCell} that represents a possible source or null.
    */
+  // isValidSource(cell: mxCell): boolean;
   isValidSource(cell: mxCell): boolean {
     return (
       (cell == null && this.allowDanglingEdges) ||
@@ -10512,99 +9304,80 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isValidTarget
+   * Returns {@link isValidSource} for the given cell. This is called by
+   * {@link isValidConnection}.
    *
-   * Returns <isValidSource> for the given cell. This is called by
-   * <isValidConnection>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents a possible target or null.
+   * @param cell {@link mxCell} that represents a possible target or null.
    */
+  // isValidTarget(cell: mxCell): boolean;
   isValidTarget(cell: mxCell): boolean {
     return this.isValidSource(cell);
   }
 
   /**
-   * Function: isValidConnection
-   *
    * Returns true if the given target cell is a valid target for source.
    * This is a boolean implementation for not allowing connections between
-   * certain pairs of vertices and is called by <getEdgeValidationError>.
-   * This implementation returns true if <isValidSource> returns true for
-   * the source and <isValidTarget> returns true for the target.
+   * certain pairs of vertices and is called by {@link getEdgeValidationError}.
+   * This implementation returns true if {@link isValidSource} returns true for
+   * the source and {@link isValidTarget} returns true for the target.
    *
-   * Parameters:
-   *
-   * source - <mxCell> that represents the source cell.
-   * target - <mxCell> that represents the target cell.
+   * @param source {@link mxCell} that represents the source cell.
+   * @param target {@link mxCell} that represents the target cell.
    */
+  // isValidConnection(source: mxCell, target: mxCell): boolean;
   isValidConnection(source: mxCell, target: mxCell): boolean {
     return this.isValidSource(source) && this.isValidTarget(target);
   }
 
   /**
-   * Function: setConnectable
-   *
    * Specifies if the graph should allow new connections. This implementation
-   * updates <mxConnectionHandler.enabled> in <connectionHandler>.
+   * updates {@link mxConnectionHandler.enabled} in {@link connectionHandler}.
    *
-   * Parameters:
-   *
-   * connectable - Boolean indicating if new connections should be allowed.
+   * @param connectable Boolean indicating if new connections should be allowed.
    */
+  // setConnectable(connectable: boolean): void;
   setConnectable(connectable: boolean): void {
     (<mxConnectionHandler>this.connectionHandler).setEnabled(connectable);
   }
 
   /**
-   * Function: isConnectable
-   *
-   * Returns true if the <connectionHandler> is enabled.
+   * Returns true if the {@link connectionHandler} is enabled.
    */
+  // isConnectable(): boolean;
   isConnectable(): boolean {
     return (<mxConnectionHandler>this.connectionHandler).isEnabled();
   }
 
   /**
-   * Function: setTooltips
-   *
    * Specifies if tooltips should be enabled. This implementation updates
-   * <mxTooltipHandler.enabled> in <tooltipHandler>.
+   * {@link mxTooltipHandler.enabled} in {@link tooltipHandler}.
    *
-   * Parameters:
-   *
-   * enabled - Boolean indicating if tooltips should be enabled.
+   * @param enabled Boolean indicating if tooltips should be enabled.
    */
+  // setTooltips(enabled: boolean): void;
   setTooltips(enabled: boolean): void {
     (<mxTooltipHandler>this.tooltipHandler).setEnabled(enabled);
   }
 
   /**
-   * Function: setPanning
-   *
    * Specifies if panning should be enabled. This implementation updates
-   * <mxPanningHandler.panningEnabled> in <panningHandler>.
+   * {@link mxPanningHandler.panningEnabled} in {@link panningHandler}.
    *
-   * Parameters:
-   *
-   * enabled - Boolean indicating if panning should be enabled.
+   * @param enabled Boolean indicating if panning should be enabled.
    */
+  // setPanning(enabled: boolean): void;
   setPanning(enabled: boolean): void {
     (<mxPanningHandler>this.panningHandler).panningEnabled = enabled;
   }
 
   /**
-   * Function: isEditing
-   *
    * Returns true if the given cell is currently being edited.
    * If no cell is specified then this returns true if any
    * cell is currently being edited.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that should be checked.
+   * @param cell {@link mxCell} that should be checked.
    */
+  // isEditing(cell?: mxCell): boolean;
   isEditing(cell: mxCell | null=null): boolean {
     if (this.cellEditor != null) {
       const editingCell = this.cellEditor.getEditingCell();
@@ -10614,17 +9387,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isAutoSizeCell
-   *
    * Returns true if the size of the given cell should automatically be
    * updated after a change of the label. This implementation returns
-   * <autoSizeCells> or checks if the cell style does specify
-   * <mxConstants.STYLE_AUTOSIZE> to be 1.
+   * {@link autoSizeCells} or checks if the cell style does specify
+   * {@link mxConstants.STYLE_AUTOSIZE} to be 1.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that should be resized.
+   * @param cell {@link mxCell} that should be resized.
    */
+  // isAutoSizeCell(cell: mxCell): boolean;
   isAutoSizeCell(cell: mxCell) {
     const style = this.getCurrentCellStyle(cell);
 
@@ -10632,150 +9402,122 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isAutoSizeCells
-   *
-   * Returns <autoSizeCells>.
+   * Returns {@link autoSizeCells}.
    */
+  // isAutoSizeCells(): boolean;
   isAutoSizeCells() {
     return this.autoSizeCells;
   }
 
   /**
-   * Function: setAutoSizeCells
-   *
    * Specifies if cell sizes should be automatically updated after a label
-   * change. This implementation sets <autoSizeCells> to the given parameter.
+   * change. This implementation sets {@link autoSizeCells} to the given parameter.
    * To update the size of cells when the cells are added, set
-   * <autoSizeCellsOnAdd> to true.
+   * {@link autoSizeCellsOnAdd} to true.
    *
-   * Parameters:
-   *
-   * value - Boolean indicating if cells should be resized
+   * @param value Boolean indicating if cells should be resized
    * automatically.
    */
+  // setAutoSizeCells(value: boolean): void;
   setAutoSizeCells(value: boolean) {
     this.autoSizeCells = value;
   }
 
   /**
-   * Function: isExtendParent
-   *
    * Returns true if the parent of the given cell should be extended if the
    * child has been resized so that it overlaps the parent. This
-   * implementation returns <isExtendParents> if the cell is not an edge.
+   * implementation returns {@link isExtendParents} if the cell is not an edge.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that has been resized.
+   * @param cell {@link mxCell} that has been resized.
    */
+  // isExtendParent(cell: mxCell): boolean;
   isExtendParent(cell: mxCell): boolean {
     return !this.getModel().isEdge(cell) && this.isExtendParents();
   }
 
   /**
-   * Function: isExtendParents
-   *
-   * Returns <extendParents>.
+   * Returns {@link extendParents}.
    */
+  // isExtendParents(): boolean;
   isExtendParents(): boolean {
     return this.extendParents;
   }
 
   /**
-   * Function: setExtendParents
+   * Sets {@link extendParents}.
    *
-   * Sets <extendParents>.
-   *
-   * Parameters:
-   *
-   * value - New boolean value for <extendParents>.
+   * @param value New boolean value for {@link extendParents}.
    */
+  // setExtendParents(value: boolean): void;
   setExtendParents(value: boolean) {
     this.extendParents = value;
   }
 
   /**
-   * Function: isExtendParentsOnAdd
-   *
-   * Returns <extendParentsOnAdd>.
+   * Returns {@link extendParentsOnAdd}.
    */
+  // isExtendParentsOnAdd(cell: mxCell): boolean;
   isExtendParentsOnAdd(cell: mxCell): boolean {
     return this.extendParentsOnAdd;
   }
 
   /**
-   * Function: setExtendParentsOnAdd
+   * Sets {@link extendParentsOnAdd}.
    *
-   * Sets <extendParentsOnAdd>.
-   *
-   * Parameters:
-   *
-   * value - New boolean value for <extendParentsOnAdd>.
+   * @param value New boolean value for {@link extendParentsOnAdd}.
    */
+  // setExtendParentsOnAdd(value: boolean): void;
   setExtendParentsOnAdd(value: boolean) {
     this.extendParentsOnAdd = value;
   }
 
   /**
-   * Function: isExtendParentsOnMove
-   *
-   * Returns <extendParentsOnMove>.
+   * Returns {@link extendParentsOnMove}.
    */
+  // isExtendParentsOnMove(): boolean;
   isExtendParentsOnMove(): boolean {
     return this.extendParentsOnMove;
   }
 
   /**
-   * Function: setExtendParentsOnMove
+   * Sets {@link extendParentsOnMove}.
    *
-   * Sets <extendParentsOnMove>.
-   *
-   * Parameters:
-   *
-   * value - New boolean value for <extendParentsOnAdd>.
+   * @param value New boolean value for {@link extendParentsOnAdd}.
    */
+  // setExtendParentsOnMove(value: boolean): void;
   setExtendParentsOnMove(value: boolean) {
     this.extendParentsOnMove = value;
   }
 
   /**
-   * Function: isRecursiveResize
+   * Returns {@link recursiveResize}.
    *
-   * Returns <recursiveResize>.
-   *
-   * Parameters:
-   *
-   * state - <mxCellState> that is being resized.
+   * @param state {@link mxCellState} that is being resized.
    */
+  // isRecursiveResize(state?: mxCellState): boolean;
   isRecursiveResize(state: mxCellState | null=null): boolean {
     return this.recursiveResize;
   }
 
   /**
-   * Function: setRecursiveResize
+   * Sets {@link recursiveResize}.
    *
-   * Sets <recursiveResize>.
-   *
-   * Parameters:
-   *
-   * value - New boolean value for <recursiveResize>.
+   * @param value New boolean value for {@link recursiveResize}.
    */
+  // setRecursiveResize(value: boolean): void;
   setRecursiveResize(value: boolean): void {
     this.recursiveResize = value;
   }
 
   /**
-   * Function: isConstrainChild
-   *
    * Returns true if the given cell should be kept inside the bounds of its
-   * parent according to the rules defined by <getOverlap> and
-   * <isAllowOverlapParent>. This implementation returns false for all children
-   * of edges and <isConstrainChildren> otherwise.
+   * parent according to the rules defined by {@link getOverlap} and
+   * {@link isAllowOverlapParent}. This implementation returns false for all children
+   * of edges and {@link isConstrainChildren} otherwise.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that should be constrained.
+   * @param cell {@link mxCell} that should be constrained.
    */
+  // isConstrainChild(cell: mxCell): boolean;
   isConstrainChild(cell: mxCell): boolean {
     return (
       this.isConstrainChildren() &&
@@ -10784,96 +9526,83 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isConstrainChildren
-   *
-   * Returns <constrainChildren>.
+   * Returns {@link constrainChildren}.
    */
+  // isConstrainChildren(): boolean;
   isConstrainChildren(): boolean {
     return this.constrainChildren;
   }
 
   /**
-   * Function: setConstrainChildren
-   *
-   * Sets <constrainChildren>.
+   * Sets {@link constrainChildren}.
    */
+  // setConstrainChildren(value: boolean): void;
   setConstrainChildren(value: boolean) {
     this.constrainChildren = value;
   }
 
   /**
-   * Function: isConstrainRelativeChildren
-   *
-   * Returns <constrainRelativeChildren>.
+   * Returns {@link constrainRelativeChildren}.
    */
+  // isConstrainRelativeChildren(): boolean;
   isConstrainRelativeChildren(): boolean {
     return this.constrainRelativeChildren;
   }
 
   /**
-   * Function: setConstrainRelativeChildren
-   *
-   * Sets <constrainRelativeChildren>.
+   * Sets {@link constrainRelativeChildren}.
    */
+  // setConstrainRelativeChildren(value: boolean): void;
   setConstrainRelativeChildren(value: boolean) {
     this.constrainRelativeChildren = value;
   }
 
   /**
-   * Function: isConstrainChildren
-   *
-   * Returns <allowNegativeCoordinates>.
+   * Returns {@link allowNegativeCoordinates}.
    */
+  // isAllowNegativeCoordinates(): boolean;
   isAllowNegativeCoordinates(): boolean {
     return this.allowNegativeCoordinates;
   }
 
   /**
-   * Function: setConstrainChildren
-   *
-   * Sets <allowNegativeCoordinates>.
+   * Sets {@link allowNegativeCoordinates}.
    */
+  // setAllowNegativeCoordinates(value: boolean): void;
   setAllowNegativeCoordinates(value: boolean) {
     this.allowNegativeCoordinates = value;
   }
 
   /**
-   * Function: getOverlap
-   *
    * Returns a decimal number representing the amount of the width and height
    * of the given cell that is allowed to overlap its parent. A value of 0
    * means all children must stay inside the parent, 1 means the child is
    * allowed to be placed outside of the parent such that it touches one of
-   * the parents sides. If <isAllowOverlapParent> returns false for the given
+   * the parents sides. If {@link isAllowOverlapParent} returns false for the given
    * cell, then this method returns 0.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the overlap ratio should be returned.
+   * @param cell {@link mxCell} for which the overlap ratio should be returned.
    */
+  // getOverlap(cell: mxCell): number;
   getOverlap(cell: mxCell): number {
     return this.isAllowOverlapParent(cell) ? this.defaultOverlap : 0;
   }
 
   /**
-   * Function: isAllowOverlapParent
-   *
    * Returns true if the given cell is allowed to be placed outside of the
    * parents area.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the child to be checked.
+   * @param cell {@link mxCell} that represents the child to be checked.
    */
+  // isAllowOverlapParent(cell: mxCell): boolean;
   isAllowOverlapParent(cell: mxCell): boolean {
     return false;
   }
 
   /**
-   * Function: getFoldableCells
-   *
    * Returns the cells which are movable in the given array of cells.
    */
+  // getFoldableCells(cells: mxCell[], collapse: boolean): mxCell[];
   getFoldableCells(cells: mxCell[],
                    collapse: boolean=false): mxCell[] | null {
     return this.getModel().filterCells(
@@ -10884,16 +9613,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isCellFoldable
-   *
    * Returns true if the given cell is foldable. This implementation
    * returns true if the cell has at least one child and its style
-   * does not specify <mxConstants.STYLE_FOLDABLE> to be 0.
+   * does not specify {@link mxConstants.STYLE_FOLDABLE} to be 0.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose foldable state should be returned.
+   * @param cell {@link mxCell} whose foldable state should be returned.
    */
+  // isCellFoldable(cell: mxCell, collapse: boolean): boolean;
   isCellFoldable(cell: mxCell,
                  collapse: boolean=false): boolean {
 
@@ -10905,19 +9631,16 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isValidDropTarget
-   *
    * Returns true if the given cell is a valid drop target for the specified
-   * cells. If <splitEnabled> is true then this returns <isSplitTarget> for
+   * cells. If {@link splitEnabled} is true then this returns {@link isSplitTarget} for
    * the given arguments else it returns true if the cell is not collapsed
    * and its child count is greater than 0.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the possible drop target.
-   * cells - <mxCells> that should be dropped into the target.
-   * evt - Mouseevent that triggered the invocation.
+   * @param cell {@link mxCell} that represents the possible drop target.
+   * @param cells {@link mxCell} that should be dropped into the target.
+   * @param evt Mouseevent that triggered the invocation.
    */
+  // isValidDropTarget(cell: mxCell, cells: mxCell[], evt: Event): boolean;
   isValidDropTarget(cell: mxCell,
                     cells: mxCell[],
                     evt: mxMouseEvent): boolean {
@@ -10933,17 +9656,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isSplitTarget
-   *
    * Returns true if the given edge may be splitted into two edges with the
    * given cell as a new terminal between the two.
    *
-   * Parameters:
-   *
-   * target - <mxCell> that represents the edge to be splitted.
-   * cells - <mxCells> that should split the edge.
-   * evt - Mouseevent that triggered the invocation.
+   * @param target {@link mxCell} that represents the edge to be splitted.
+   * @param cells {@link mxCell} that should split the edge.
+   * @param evt Mouseevent that triggered the invocation.
    */
+  // isSplitTarget(target: mxCell, cells: mxCell[], evt: Event): boolean;
   isSplitTarget(target: mxCell,
                 cells: mxCell[],
                 evt: mxMouseEvent): boolean {
@@ -10971,23 +9691,20 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getDropTarget
-   *
    * Returns the given cell if it is a drop target for the given cells or the
    * nearest ancestor that may be used as a drop target for the given cells.
-   * If the given array contains a swimlane and <swimlaneNesting> is false
+   * If the given array contains a swimlane and {@link swimlaneNesting} is false
    * then this always returns null. If no cell is given, then the bottommost
    * swimlane at the location of the given event is returned.
    *
-   * This function should only be used if <isDropEnabled> returns true.
+   * This function should only be used if {@link isDropEnabled} returns true.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> which are to be dropped onto the target.
-   * evt - Mouseevent for the drag and drop.
-   * cell - <mxCell> that is under the mousepointer.
-   * clone - Optional boolean to indicate of cells will be cloned.
+   * @param cells Array of {@link mxCell} which are to be dropped onto the target.
+   * @param evt Mouseevent for the drag and drop.
+   * @param cell {@link mxCell} that is under the mousepointer.
+   * @param clone Optional boolean to indicate of cells will be cloned.
    */
+  // getDropTarget(cells: mxCell[], evt: Event, cell: mxCell, clone?: boolean): mxCell;
   getDropTarget(cells: mxCell[],
                 evt: mxMouseEvent,
                 cell: mxCell | null=null,
@@ -11050,13 +9767,12 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: getDefaultParent
-   *
-   * Returns <defaultParent> or <mxGraphView.currentRoot> or the first child
-   * child of <mxGraphModel.root> if both are null. The value returned by
+   * Returns {@link defaultParent} or {@link mxGraphView.currentRoot} or the first child
+   * child of {@link mxGraphModel.root} if both are null. The value returned by
    * this function should be used as the parent for new cells (aka default
    * layer).
    */
+  // getDefaultParent(): mxCell;
   getDefaultParent(): mxCell {
     let parent = this.getCurrentRoot();
 
@@ -11072,25 +9788,21 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: setDefaultParent
-   *
-   * Sets the <defaultParent> to the given cell. Set this to null to return
+   * Sets the {@link defaultParent} to the given cell. Set this to null to return
    * the first child of the root in getDefaultParent.
    */
+  // setDefaultParent(cell: mxCell): void;
   setDefaultParent(cell: mxCell | null): void {
     this.defaultParent = cell;
   }
 
   /**
-   * Function: getSwimlane
-   *
    * Returns the nearest ancestor of the given cell which is a swimlane, or
    * the given cell, if it is itself a swimlane.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the ancestor swimlane should be returned.
+   * @param cell {@link mxCell} for which the ancestor swimlane should be returned.
    */
+  // getSwimlane(cell: mxCell): mxCell;
   getSwimlane(cell: mxCell | null=null): mxCell | null {
     while (cell != null && !this.isSwimlane(cell)) {
       cell = <mxCell>this.getModel().getParent(cell);
@@ -11099,18 +9811,15 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getSwimlaneAt
-   *
    * Returns the bottom-most swimlane that intersects the given point (x, y)
    * in the cell hierarchy that starts at the given parent.
    *
-   * Parameters:
-   *
-   * x - X-coordinate of the location to be checked.
-   * y - Y-coordinate of the location to be checked.
-   * parent - <mxCell> that should be used as the root of the recursion.
-   * Default is <defaultParent>.
+   * @param x X-coordinate of the location to be checked.
+   * @param y Y-coordinate of the location to be checked.
+   * @param parent {@link mxCell} that should be used as the root of the recursion.
+   * Default is {@link defaultParent}.
    */
+  // getSwimlaneAt(x: number, y: number, parent: mxCell): mxCell;
   getSwimlaneAt(x: number,
                 y: number,
                 parent: mxCell=this.getDefaultParent()): mxCell | null {
@@ -11149,28 +9858,25 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getCellAt
-   *
    * Returns the bottom-most cell that intersects the given point (x, y) in
    * the cell hierarchy starting at the given parent. This will also return
    * swimlanes if the given location intersects the content area of the
-   * swimlane. If this is not desired, then the <hitsSwimlaneContent> may be
+   * swimlane. If this is not desired, then the {@link hitsSwimlaneContent} may be
    * used if the returned cell is a swimlane to determine if the location
    * is inside the content area or on the actual title of the swimlane.
    *
-   * Parameters:
-   *
-   * x - X-coordinate of the location to be checked.
-   * y - Y-coordinate of the location to be checked.
-   * parent - <mxCell> that should be used as the root of the recursion.
+   * @param x X-coordinate of the location to be checked.
+   * @param y Y-coordinate of the location to be checked.
+   * @param parent {@link mxCell} that should be used as the root of the recursion.
    * Default is current root of the view or the root of the model.
-   * vertices - Optional boolean indicating if vertices should be returned.
-   * Default is true.
-   * edges - Optional boolean indicating if edges should be returned. Default
-   * is true.
-   * ignoreFn - Optional function that returns true if cell should be ignored.
+   * @param vertices Optional boolean indicating if vertices should be returned.
+   * Default is `true`.
+   * @param edges Optional boolean indicating if edges should be returned. Default
+   * is `true`.
+   * @param ignoreFn Optional function that returns true if cell should be ignored.
    * The function is passed the cell state and the x and y parameter.
    */
+  // getCellAt(x: number, y: number, parent?: mxCell, vertices?: boolean, edges?: boolean, ignoreFn?: Function): mxCell;
   getCellAt(x: number,
             y: number,
             parent: mxCell | null=null,
@@ -11217,17 +9923,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: intersects
-   *
    * Returns the bottom-most cell that intersects the given point (x, y) in
    * the cell hierarchy that starts at the given parent.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> that represents the cell state.
-   * x - X-coordinate of the location to be checked.
-   * y - Y-coordinate of the location to be checked.
+   * @param state {@link mxCellState} that represents the cell state.
+   * @param x X-coordinate of the location to be checked.
+   * @param y Y-coordinate of the location to be checked.
    */
+  // intersects(state: mxCellState, x: number, y: number): mxCell;
   intersects(state: mxCellState | null=null,
              x: number,
              y: number): boolean {
@@ -11272,17 +9975,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: hitsSwimlaneContent
-   *
    * Returns true if the given coordinate pair is inside the content
    * are of the given swimlane.
    *
-   * Parameters:
-   *
-   * swimlane - <mxCell> that specifies the swimlane.
-   * x - X-coordinate of the mouse event.
-   * y - Y-coordinate of the mouse event.
+   * @param swimlane {@link mxCell} that specifies the swimlane.
+   * @param x X-coordinate of the mouse event.
+   * @param y Y-coordinate of the mouse event.
    */
+  // hitsSwimlaneContent(swimlane: mxCell, x: number, y: number): boolean;
   hitsSwimlaneContent(swimlane: mxCell,
                       x: number,
                       y: number): boolean {
@@ -11306,45 +10006,36 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getChildVertices
-   *
    * Returns the visible child vertices of the given parent.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> whose children should be returned.
+   * @param parent {@link mxCell} whose children should be returned.
    */
+  // getChildVertices(parent: mxCell): mxCell[];
   getChildVertices(parent: mxCell): (mxCell | null)[] {
     return this.getChildCells(parent, true, false);
   }
 
   /**
-   * Function: getChildEdges
-   *
    * Returns the visible child edges of the given parent.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> whose child vertices should be returned.
+   * @param parent {@link mxCell} whose child vertices should be returned.
    */
+  // getChildEdges(parent: mxCell): mxCell[];
   getChildEdges(parent: mxCell): (mxCell | null)[] {
     return this.getChildCells(parent, false, true);
   }
 
   /**
-   * Function: getChildCells
-   *
    * Returns the visible child vertices or edges in the given parent. If
    * vertices and edges is false, then all children are returned.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> whose children should be returned.
-   * vertices - Optional boolean that specifies if child vertices should
-   * be returned. Default is false.
-   * edges - Optional boolean that specifies if child edges should
-   * be returned. Default is false.
+   * @param parent {@link mxCell} whose children should be returned.
+   * @param vertices Optional boolean that specifies if child vertices should
+   * be returned. Default is `false`.
+   * @param edges Optional boolean that specifies if child edges should
+   * be returned. Default is `false`.
    */
+  // getChildCells(parent: mxCell, vertices?: boolean, edges?: boolean): mxCell[];
   getChildCells(parent: mxCell | null=this.getDefaultParent(),
                 vertices: boolean=false,
                 edges: boolean=false): (mxCell | null)[] {
@@ -11362,52 +10053,43 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getConnections
-   *
    * Returns all visible edges connected to the given cell without loops.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose connections should be returned.
-   * parent - Optional parent of the opposite end for a connection to be
+   * @param cell {@link mxCell} whose connections should be returned.
+   * @param parent Optional parent of the opposite end for a connection to be
    * returned.
    */
+  // getConnections(cell: mxCell, parent: mxCell): mxCell[];
   getConnections(cell: mxCell,
                  parent: mxCell | null=null): mxCell[] {
     return this.getEdges(cell, parent, true, true, false);
   }
 
   /**
-   * Function: getIncomingEdges
-   *
    * Returns the visible incoming edges for the given cell. If the optional
    * parent argument is specified, then only child edges of the given parent
    * are returned.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose incoming edges should be returned.
-   * parent - Optional parent of the opposite end for an edge to be
+   * @param cell {@link mxCell} whose incoming edges should be returned.
+   * @param parent Optional parent of the opposite end for an edge to be
    * returned.
    */
+  // getIncomingEdges(cell: mxCell, parent: mxCell): mxCell[];
   getIncomingEdges(cell: mxCell,
                    parent: mxCell | null=null): mxCell[] {
     return this.getEdges(cell, parent, true, false, false);
   }
 
   /**
-   * Function: getOutgoingEdges
-   *
    * Returns the visible outgoing edges for the given cell. If the optional
    * parent argument is specified, then only child edges of the given parent
    * are returned.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose outgoing edges should be returned.
-   * parent - Optional parent of the opposite end for an edge to be
+   * @param cell {@link mxCell} whose outgoing edges should be returned.
+   * @param parent Optional parent of the opposite end for an edge to be
    * returned.
    */
+  // getOutgoingEdges(cell: mxCell, parent?: mxCell): mxCell[];
   getOutgoingEdges(cell: mxCell,
                    parent: mxCell | null=null): mxCell[] {
     return this.getEdges(cell, parent, false, true, false);
@@ -11490,18 +10172,15 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isValidAncestor
-   *
    * Returns whether or not the specified parent is a valid
    * ancestor of the specified cell, either direct or indirectly
    * based on whether ancestor recursion is enabled.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> the possible child cell
-   * parent - <mxCell> the possible parent cell
-   * recurse - boolean whether or not to recurse the child ancestors
+   * @param cell {@link mxCell} the possible child cell
+   * @param parent {@link mxCell} the possible parent cell
+   * @param recurse boolean whether or not to recurse the child ancestors
    */
+  // isValidAncestor(cell: mxCell, parent: mxCell, recurse?: boolean): boolean;
   isValidAncestor(cell: mxCell,
                   parent: mxCell,
                   recurse: boolean=false): boolean {
@@ -11512,22 +10191,19 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getOpposites
-   *
    * Returns all distinct visible opposite cells for the specified terminal
    * on the given edges.
    *
-   * Parameters:
-   *
-   * edges - Array of <mxCells> that contains the edges whose opposite
+   * @param edges Array of {@link mxCell} that contains the edges whose opposite
    * terminals should be returned.
-   * terminal - Terminal that specifies the end whose opposite should be
+   * @param terminal Terminal that specifies the end whose opposite should be
    * returned.
-   * sources - Optional boolean that specifies if source terminals should be
-   * included in the result. Default is true.
-   * targets - Optional boolean that specifies if targer terminals should be
-   * included in the result. Default is true.
+   * @param sources Optional boolean that specifies if source terminals should be
+   * included in the result. Default is `true`.
+   * @param targets Optional boolean that specifies if targer terminals should be
+   * included in the result. Default is `true`.
    */
+  // getOpposites(edges: mxCell[], terminal: mxCellState, sources?: boolean, targets?: boolean): mxCellState[];
   getOpposites(edges: mxCell[],
                terminal: mxCell | null=null,
                sources: boolean=true,
@@ -11584,18 +10260,15 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getEdgesBetween
-   *
    * Returns the edges between the given source and target. This takes into
    * account collapsed and invisible cells and returns the connected edges
    * as displayed on the screen.
-   *
-   * Parameters:
    *
    * source -
    * target -
    * directed -
    */
+  // getEdgesBetween(source: mxCell, target: mxCell, directed?: boolean): mxCell[];
   getEdgesBetween(source: mxCell,
                   target: mxCell,
                   directed: boolean=false) {
@@ -11628,17 +10301,14 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getPointForEvent
+   * Returns an {@link mxPoint} representing the given event in the unscaled,
+   * non-translated coordinate space of {@link container} and applies the grid.
    *
-   * Returns an <mxPoint> representing the given event in the unscaled,
-   * non-translated coordinate space of <container> and applies the grid.
-   *
-   * Parameters:
-   *
-   * evt - Mousevent that contains the mouse pointer location.
-   * addOffset - Optional boolean that specifies if the position should be
-   * offset by half of the <gridSize>. Default is true.
+   * @param evt Mousevent that contains the mouse pointer location.
+   * @param addOffset Optional boolean that specifies if the position should be
+   * offset by half of the {@link gridSize}. Default is `true`.
    */
+  // getPointForEvent(evt: MouseEvent, addOffset: boolean): mxPoint;
   getPointForEvent(evt: mxMouseEvent,
                    addOffset: boolean=true) {
 
@@ -11658,27 +10328,20 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getCells
-   *
    * Returns the child vertices and edges of the given parent that are contained
    * in the given rectangle. The result is added to the optional result array,
    * which is returned. If no result array is specified then a new array is
    * created and returned.
    *
-   * Parameters:
-   *
-   * x - X-coordinate of the rectangle.
-   * y - Y-coordinate of the rectangle.
-   * width - Width of the rectangle.
-   * height - Height of the rectangle.
-   * parent - <mxCell> that should be used as the root of the recursion.
+   * @param x X-coordinate of the rectangle.
+   * @param y Y-coordinate of the rectangle.
+   * @param width Width of the rectangle.
+   * @param height Height of the rectangle.
+   * @param parent {@link mxCell} that should be used as the root of the recursion.
    * Default is current root of the view or the root of the model.
-   * result - Optional array to store the result in.
-   * intersection - Optional <mxRectangle> to check vertices for intersection.
-   * ignoreFn - Optional function to check if a cell state is ignored.
-   * includeDescendants - Optional boolean flag to add descendants to the result.
-   * Default is false.
+   * @param result Optional array to store the result in.
    */
+  // getCells(x: number, y: number, width: number, height: number, parent?: mxCell, result?: mxCell[]): mxCell[];
   getCells(x: number,
            y: number,
            width: number,
@@ -11814,22 +10477,19 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: findTreeRoots
-   *
    * Returns all children in the given parent which do not have incoming
    * edges. If the result is empty then the with the greatest difference
    * between incoming and outgoing edges is returned.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> whose children should be checked.
-   * isolate - Optional boolean that specifies if edges should be ignored if
+   * @param parent {@link mxCell} whose children should be checked.
+   * @param isolate Optional boolean that specifies if edges should be ignored if
    * the opposite end is not a child of the given parent cell. Default is
    * false.
-   * invert - Optional boolean that specifies if outgoing or incoming edges
+   * @param invert Optional boolean that specifies if outgoing or incoming edges
    * should be counted for a tree root. If false then outgoing edges will be
-   * counted. Default is false.
+   * counted. Default is `false`.
    */
+  // findTreeRoots(parent: mxCell, isolate?: boolean, invert?: boolean): mxCell[];
   findTreeRoots(parent: mxCell,
                 isolate: boolean=false,
                 invert: boolean=false): mxCell[] {
@@ -11956,152 +10616,123 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: isCellSelected
-   *
    * Returns true if the given cell is selected.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the selection state should be returned.
+   * @param cell {@link mxCell} for which the selection state should be returned.
    */
+  // isCellSelected(cell: mxCell): boolean;
   isCellSelected(cell: mxCell): boolean {
     return this.getSelectionModel().isSelected(cell);
   }
 
   /**
-   * Function: isSelectionEmpty
-   *
    * Returns true if the selection is empty.
    */
+  // isSelectionEmpty(): boolean;
   isSelectionEmpty(): boolean {
     return this.getSelectionModel().isEmpty();
   }
 
   /**
-   * Function: clearSelection
-   *
-   * Clears the selection using <mxGraphSelectionModel.clear>.
+   * Clears the selection using {@link mxGraphSelectionModel.clear}.
    */
+  // clearSelection(): void;
   clearSelection(): void {
     return this.getSelectionModel().clear();
   }
 
   /**
-   * Function: getSelectionCount
-   *
    * Returns the number of selected cells.
    */
+  // getSelectionCount(): number;
   getSelectionCount(): number {
     return this.getSelectionModel().cells.length;
   }
 
   /**
-   * Function: getSelectionCell
-   *
-   * Returns the first cell from the array of selected <mxCells>.
+   * Returns the first cell from the array of selected {@link mxCell}.
    */
+  // getSelectionCell(): mxCell;
   getSelectionCell(): mxCell {
     return this.getSelectionModel().cells[0];
   }
 
   /**
-   * Function: getSelectionCells
-   *
-   * Returns the array of selected <mxCells>.
+   * Returns the array of selected {@link mxCell}.
    */
+  // getSelectionCells(): mxCell[];
   getSelectionCells(): mxCell[] {
     return this.getSelectionModel().cells.slice();
   }
 
   /**
-   * Function: setSelectionCell
-   *
    * Sets the selection cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to be selected.
+   * @param cell {@link mxCell} to be selected.
    */
+  // setSelectionCell(cell: mxCell): void;
   setSelectionCell(cell: mxCell | null): void {
     this.getSelectionModel().setCell(cell);
   }
 
   /**
-   * Function: setSelectionCells
-   *
    * Sets the selection cell.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to be selected.
+   * @param cells Array of {@link mxCell} to be selected.
    */
+  // setSelectionCells(cells: mxCell[]): void;
   setSelectionCells(cells: mxCell[]): void {
     this.getSelectionModel().setCells(cells);
   }
 
   /**
-   * Function: addSelectionCell
-   *
    * Adds the given cell to the selection.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to be add to the selection.
+   * @param cell {@link mxCell} to be add to the selection.
    */
+  // addSelectionCell(cell: mxCell): void;
   addSelectionCell(cell: mxCell): void {
     this.getSelectionModel().addCell(cell);
   }
 
   /**
-   * Function: addSelectionCells
-   *
    * Adds the given cells to the selection.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to be added to the selection.
+   * @param cells Array of {@link mxCell} to be added to the selection.
    */
+  // addSelectionCells(cells: mxCell[]): void;
   addSelectionCells(cells: mxCell[]): void {
     this.getSelectionModel().addCells(cells);
   }
 
   /**
-   * Function: removeSelectionCell
-   *
    * Removes the given cell from the selection.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to be removed from the selection.
+   * @param cell {@link mxCell} to be removed from the selection.
    */
+  // removeSelectionCell(cell: mxCell): void;
   removeSelectionCell(cell: mxCell): void {
     this.getSelectionModel().removeCell(cell);
   }
 
   /**
-   * Function: removeSelectionCells
-   *
    * Removes the given cells from the selection.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to be removed from the selection.
+   * @param cells Array of {@link mxCell} to be removed from the selection.
    */
+  // removeSelectionCells(cells: mxCell[]): void;
   removeSelectionCells(cells: mxCell[]): void {
     this.getSelectionModel().removeCells(cells);
   }
 
   /**
-   * Function: selectRegion
-   *
    * Selects and returns the cells inside the given rectangle for the
    * specified event.
    *
-   * Parameters:
-   *
-   * rect - <mxRectangle> that represents the region to be selected.
-   * evt - Mouseevent that triggered the selection.
+   * @param rect {@link mxRectangle} that represents the region to be selected.
+   * @param evt Mouseevent that triggered the selection.
    */
+  // selectRegion(rect: mxRectangle, evt: Event): mxCell[];
   selectRegion(rect: mxRectangle,
                evt: mxMouseEvent): mxCell[] | null {
     const cells = this.getCells(rect.x, rect.y, rect.width, rect.height);
@@ -12110,53 +10741,46 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: selectNextCell
-   *
    * Selects the next cell.
    */
+  // selectNextCell(): void;
   selectNextCell(): void {
     this.selectCell(true);
   }
 
   /**
-   * Function: selectPreviousCell
-   *
    * Selects the previous cell.
    */
+  // selectPreviousCell(): void;
   selectPreviousCell(): void {
     this.selectCell();
   }
 
   /**
-   * Function: selectParentCell
-   *
    * Selects the parent cell.
    */
+  // selectParentCell(): void;
   selectParentCell(): void {
     this.selectCell(false, true);
   }
 
   /**
-   * Function: selectChildCell
-   *
    * Selects the first child cell.
    */
+  // selectChildCell(): void;
   selectChildCell(): void {
     this.selectCell(false, false, true);
   }
 
   /**
-   * Function: selectCell
-   *
    * Selects the next, parent, first child or previous cell, if all arguments
    * are false.
    *
-   * Parameters:
-   *
-   * isNext - Boolean indicating if the next cell should be selected.
-   * isParent - Boolean indicating if the parent cell should be selected.
-   * isChild - Boolean indicating if the first child cell should be selected.
+   * @param isNext Boolean indicating if the next cell should be selected.
+   * @param isParent Boolean indicating if the parent cell should be selected.
+   * @param isChild Boolean indicating if the first child cell should be selected.
    */
+  // selectCell(isNext?: boolean, isParent?: boolean, isChild?: boolean): void;
   selectCell(isNext: boolean=false,
              isParent: boolean=false,
              isChild: boolean=false): void {
@@ -12208,19 +10832,16 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: selectAll
-   *
    * Selects all children of the given parent cell or the children of the
    * default parent if no parent is specified. To select leaf vertices and/or
-   * edges use <selectCells>.
+   * edges use {@link selectCells}.
    *
-   * Parameters:
-   *
-   * parent - Optional <mxCell> whose children should be selected.
-   * Default is <defaultParent>.
-   * descendants - Optional boolean specifying whether all descendants should be
-   * selected. Default is false.
+   * @param parent Optional {@link mxCell} whose children should be selected.
+   * Default is {@link defaultParent}.
+   * @param descendants Optional boolean specifying whether all descendants should be
+   * selected. Default is `false`.
    */
+  // selectAll(parent: mxCell, descendants?: boolean): void;
   selectAll(parent: mxCell=this.getDefaultParent(),
             descendants: boolean=false): void {
 
@@ -12239,41 +10860,36 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: selectVertices
-   *
    * Select all vertices inside the given parent or the default parent.
    */
+  // selectVertices(parent: mxCell, selectGroups: boolean): void;
   selectVertices(parent: mxCell,
                  selectGroups: boolean=false): void {
     this.selectCells(true, false, parent, selectGroups);
   }
 
   /**
-   * Function: selectVertices
-   *
    * Select all vertices inside the given parent or the default parent.
    */
+  // selectEdges(parent: mxCell): void;
   selectEdges(parent: mxCell): void {
     this.selectCells(false, true, parent);
   }
 
   /**
-   * Function: selectCells
-   *
    * Selects all vertices and/or edges depending on the given boolean
    * arguments recursively, starting at the given parent or the default
-   * parent if no parent is specified. Use <selectAll> to select all cells.
+   * parent if no parent is specified. Use {@link selectAll} to select all cells.
    * For vertices, only cells with no children are selected.
    *
-   * Parameters:
-   *
-   * vertices - Boolean indicating if vertices should be selected.
-   * edges - Boolean indicating if edges should be selected.
-   * parent - Optional <mxCell> that acts as the root of the recursion.
-   * Default is <defaultParent>.
-   * selectGroups - Optional boolean that specifies if groups should be
-   * selected. Default is false.
+   * @param vertices Boolean indicating if vertices should be selected.
+   * @param edges Boolean indicating if edges should be selected.
+   * @param parent Optional {@link mxCell} that acts as the root of the recursion.
+   * Default is {@link defaultParent}.
+   * @param selectGroups Optional boolean that specifies if groups should be
+   * selected. Default is `false`.
    */
+  // selectCells(vertices: boolean, edges: boolean, parent?: mxCell, selectGroups?: boolean): void;
   selectCells(vertices: boolean=false,
               edges: boolean=false,
               parent: mxCell=this.getDefaultParent(),
@@ -12324,17 +10940,25 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: selectCellsForEvent
+   * Selects the given cell by either adding it to the selection or
+   * replacing the selection depending on whether the given mouse event is a
+   * toggle event.
    *
+   * @param cell {@link mxCell} to be selected.
+   * @param evt Optional mouseevent that triggered the selection.
+  
+    */
+  selectCellForEvent(cell: mxCell, evt?: MouseEvent): void;
+  
+  /**
    * Selects the given cells by either adding them to the selection or
    * replacing the selection depending on whether the given mouse event is a
    * toggle event.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to be selected.
-   * evt - Optional mouseevent that triggered the selection.
+   * @param cells Array of {@link mxCell} to be selected.
+   * @param evt Optional mouseevent that triggered the selection.
    */
+  // selectCellsForEvent(cells: mxCell[], evt?: MouseEvent): void;
   selectCellsForEvent(cells: mxCell[],
                       evt: mxMouseEvent) {
     if (this.isToggleEvent(evt)) {
@@ -12349,16 +10973,13 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: createHandler
-   *
    * Creates a new handler for the given cell state. This implementation
-   * returns a new <mxEdgeHandler> of the corresponding cell is an edge,
-   * otherwise it returns an <mxVertexHandler>.
+   * returns a new {@link mxEdgeHandler} of the corresponding cell is an edge,
+   * otherwise it returns an {@link mxVertexHandler}.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose handler should be created.
+   * @param state {@link mxCellState} whose handler should be created.
    */
+  // createHandler(state: mxCellState): mxVertexHandler | mxEdgeHandler;
   createHandler(state: mxCellState | null=null): mxEdgeHandler | mxVertexHandler | null {
     let result: mxEdgeHandler | mxVertexHandler | null = null;
 
@@ -12383,27 +11004,21 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: createVertexHandler
+   * Hooks to create a new {@link mxVertexHandler} for the given {@link mxCellState}.
    *
-   * Hooks to create a new <mxVertexHandler> for the given <mxCellState>.
-   *
-   * Parameters:
-   *
-   * state - <mxCellState> to create the handler for.
+   * @param state {@link mxCellState} to create the handler for.
    */
+  // createVertexHandler(state: mxCellState): mxVertexHandler;
   createVertexHandler(state: mxCellState): mxVertexHandler {
     return new mxVertexHandler(state);
   }
 
   /**
-   * Function: createEdgeHandler
+   * Hooks to create a new {@link mxEdgeHandler} for the given {@link mxCellState}.
    *
-   * Hooks to create a new <mxEdgeHandler> for the given <mxCellState>.
-   *
-   * Parameters:
-   *
-   * state - <mxCellState> to create the handler for.
+   * @param state {@link mxCellState} to create the handler for.
    */
+  // createEdgeHandler(state: mxCellState, edgeStyle: any): mxEdgeHandler;
   createEdgeHandler(state: mxCellState,
                     edgeStyle: any): mxEdgeHandler {
 
@@ -12427,27 +11042,21 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: createEdgeSegmentHandler
+   * Hooks to create a new {@link mxEdgeSegmentHandler} for the given {@link mxCellState}.
    *
-   * Hooks to create a new <mxEdgeSegmentHandler> for the given <mxCellState>.
-   *
-   * Parameters:
-   *
-   * state - <mxCellState> to create the handler for.
+   * @param state {@link mxCellState} to create the handler for.
    */
+  // createEdgeSegmentHandler(state: mxCellState): mxEdgeSegmentHandler;
   createEdgeSegmentHandler(state: mxCellState): mxEdgeSegmentHandler {
     return new mxEdgeSegmentHandler(state);
   }
 
   /**
-   * Function: createElbowEdgeHandler
+   * Hooks to create a new {@link mxElbowEdgeHandler} for the given {@link mxCellState}.
    *
-   * Hooks to create a new <mxElbowEdgeHandler> for the given <mxCellState>.
-   *
-   * Parameters:
-   *
-   * state - <mxCellState> to create the handler for.
+   * @param state {@link mxCellState} to create the handler for.
    */
+  // createElbowEdgeHandler(state: mxCellState): mxElbowEdgeHandler;
   createElbowEdgeHandler(state: mxCellState) {
     return new mxElbowEdgeHandler(state);
   }
@@ -12457,16 +11066,13 @@ class mxGraph extends mxEventSource {
    */
 
   /**
-   * Function: addMouseListener
-   *
    * Adds a listener to the graph event dispatch loop. The listener
    * must implement the mouseDown, mouseMove and mouseUp methods
-   * as shown in the <mxMouseEvent> class.
+   * as shown in the {@link mxMouseEvent} class.
    *
-   * Parameters:
-   *
-   * listener - Listener to be added to the graph event listeners.
+   * @param listener Listener to be added to the graph event listeners.
    */
+  // addMouseListener(listener: { [key: string]: (sender: mxEventSource, me: mxMouseEvent) => void }): void;
   addMouseListener(listener: any): void {
     if (this.mouseListeners == null) {
       this.mouseListeners = [];
@@ -12475,14 +11081,11 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: removeMouseListener
-   *
    * Removes the specified graph listener.
    *
-   * Parameters:
-   *
-   * listener - Listener to be removed from the graph event listeners.
+   * @param listener Listener to be removed from the graph event listeners.
    */
+  // removeMouseListener(listener: { [key: string]: (sender: mxEventSource, me: mxMouseEvent) => void }): void;
   removeMouseListener(listener: any) {
     if (this.mouseListeners != null) {
       for (let i = 0; i < this.mouseListeners.length; i += 1) {
@@ -12495,16 +11098,13 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: updateMouseEvent
-   *
-   * Sets the graphX and graphY properties if the given <mxMouseEvent> if
+   * Sets the graphX and graphY properties if the given {@link mxMouseEvent} if
    * required and returned the event.
    *
-   * Parameters:
-   *
-   * me - <mxMouseEvent> to be updated.
-   * evtName - Name of the mouse event.
+   * @param me {@link mxMouseEvent} to be updated.
+   * @param evtName Name of the mouse event.
    */
+  // updateMouseEvent(me: mxMouseEvent, evtName: string): mxMouseEvent;
   updateMouseEvent(me: mxMouseEvent,
                    evtName: string) {
 
@@ -12542,10 +11142,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getStateForEvent
-   *
    * Returns the state for the given touch event.
    */
+  // getStateForTouchEvent(evt: MouseEvent | TouchEvent): mxCellState;
   getStateForTouchEvent(evt: mxMouseEvent) {
     const x = mxEvent.getClientX(evt);
     const y = mxEvent.getClientY(evt);
@@ -12558,10 +11157,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isEventIgnored
-   *
-   * Returns true if the event should be ignored in <fireMouseEvent>.
+   * Returns true if the event should be ignored in {@link fireMouseEvent}.
    */
+  // isEventIgnored(evtName: string, me: mxMouseEvent, sender: mxEventSource): boolean;
   isEventIgnored(evtName: string,
                  me: mxMouseEvent,
                  sender: any): boolean {
@@ -12668,10 +11266,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isSyntheticEventIgnored
-   *
    * Hook for ignoring synthetic mouse events after touchend in Firefox.
    */
+  // isSyntheticEventIgnored(evtName: string, me: mxMouseEvent, sender: mxEventSource): boolean;
   isSyntheticEventIgnored(evtName: string,
                           me: mxMouseEvent,
                           sender: any): boolean {
@@ -12693,18 +11290,15 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: isEventSourceIgnored
-   *
-   * Returns true if the event should be ignored in <fireMouseEvent>. This
+   * Returns true if the event should be ignored in {@link fireMouseEvent}. This
    * implementation returns true for select, option and input (if not of type
    * checkbox, radio, button, submit or file) event sources if the event is not
    * a mouse event or a left mouse button press event.
    *
-   * Parameters:
-   *
-   * evtName - The name of the event.
-   * me - <mxMouseEvent> that should be ignored.
+   * @param evtName The name of the event.
+   * @param me {@link mxMouseEvent} that should be ignored.
    */
+  // isEventSourceIgnored(evtName: string, me: mxMouseEvent): boolean;
   isEventSourceIgnored(evtName: string,
                        me: mxMouseEvent): boolean {
 
@@ -12729,33 +11323,27 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: getEventState
-   *
-   * Returns the <mxCellState> to be used when firing the mouse event for the
+   * Returns the {@link mxCellState} to be used when firing the mouse event for the
    * given state. This implementation returns the given state.
    *
-   * Parameters:
-   *
-   * <mxCellState> - State whose event source should be returned.
+   * {@link mxCellState} - State whose event source should be returned.
    */
+  // getEventState(state: mxCellState): mxCellState;
   getEventState(state: mxCellState) {
     return state;
   }
 
   /**
-   * Function: fireMouseEvent
-   *
    * Dispatches the given event in the graph event dispatch loop. Possible
-   * event names are <mxEvent.MOUSE_DOWN>, <mxEvent.MOUSE_MOVE> and
-   * <mxEvent.MOUSE_UP>. All listeners are invoked for all events regardless
+   * event names are {@link mxEvent.MOUSE_DOWN}, {@link mxEvent.MOUSE_MOVE} and
+   * {@link mxEvent.MOUSE_UP}. All listeners are invoked for all events regardless
    * of the consumed state of the event.
    *
-   * Parameters:
-   *
-   * evtName - String that specifies the type of event to be dispatched.
-   * me - <mxMouseEvent> to be fired.
-   * sender - Optional sender argument. Default is this.
+   * @param evtName String that specifies the type of event to be dispatched.
+   * @param me {@link mxMouseEvent} to be fired.
+   * @param sender Optional sender argument. Default is `this`.
    */
+  // fireMouseEvent(evtName: string, me: mxMouseEvent, sender?: mxEventSource): void;
   fireMouseEvent(evtName: string,
                  me: mxMouseEvent,
                  sender: any=this): void {
@@ -12988,10 +11576,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: consumeMouseEvent
-   *
-   * Consumes the given <mxMouseEvent> if it's a touchStart event.
+   * Consumes the given {@link mxMouseEvent} if it's a touchStart event.
    */
+  // consumeMouseEvent(evtName: string, me: mxMouseEvent, sender: mxEventSource): void;
   consumeMouseEvent(evtName: string,
                     me: mxMouseEvent,
                     sender: any=this) {
@@ -13002,40 +11589,37 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: fireGestureEvent
-   *
-   * Dispatches a <mxEvent.GESTURE> event. The following example will resize the
+   * Dispatches a {@link mxEvent.GESTURE} event. The following example will resize the
    * cell under the mouse based on the scale property of the native touch event.
    *
-   * (code)
-   * graph.addListener(mxEvent.GESTURE, (sender, eo)=>
+   * ```javascript
+   * graph.addListener(mxEvent.GESTURE, function(sender, eo)
    * {
-   *   let evt = eo.getProperty('event');
-   *   let state = graph.view.getState(eo.getProperty('cell'));
+   *   var evt = eo.getProperty('event');
+   *   var state = graph.view.getState(eo.getProperty('cell'));
    *
    *   if (graph.isEnabled() && graph.isCellResizable(state.cell) && Math.abs(1 - evt.scale) > 0.2)
    *   {
-   *     let scale = graph.view.scale;
-   *     let tr = graph.view.translate;
+   *     var scale = graph.view.scale;
+   *     var tr = graph.view.translate;
    *
-   *     let w = state.width * evt.scale;
-   *     let h = state.height * evt.scale;
-   *     let x = state.x - (w - state.width) / 2;
-   *     let y = state.y - (h - state.height) / 2;
+   *     var w = state.width * evt.scale;
+   *     var h = state.height * evt.scale;
+   *     var x = state.x - (w - state.width) / 2;
+   *     var y = state.y - (h - state.height) / 2;
    *
-   *     let bounds = new mxRectangle(graph.snap(x / scale) - tr.x,
-   *         graph.snap(y / scale) - tr.y, graph.snap(w / scale), graph.snap(h / scale));
+   *     var bounds = new mxRectangle(graph.snap(x / scale) - tr.x,
+   *     		graph.snap(y / scale) - tr.y, graph.snap(w / scale), graph.snap(h / scale));
    *     graph.resizeCell(state.cell, bounds);
    *     eo.consume();
    *   }
    * });
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * evt - Gestureend event that represents the gesture.
-   * cell - Optional <mxCell> associated with the gesture.
+   * @param evt Gestureend event that represents the gesture.
+   * @param cell Optional {@link mxCell} associated with the gesture.
    */
+  // fireGestureEvent(evt: any, cell?: mxCell): void;
   fireGestureEvent(evt: MouseEvent,
                    cell: mxCell | null=null): void {
     // Resets double tap event handling when gestures take place
@@ -13046,10 +11630,9 @@ class mxGraph extends mxEventSource {
   }
 
   /**
-   * Function: destroy
-   *
    * Destroys the graph and all its resources.
    */
+  // destroy(): void;
   destroy(): void {
     if (!this.destroyed) {
       this.destroyed = true;

@@ -11,21 +11,9 @@ import mxClient from '../mxClient';
 import mxRectangle from '../util/datatypes/mxRectangle';
 
 /**
- * Class: mxRubberband
- *
- * Event handler that selects rectangular regions. This is not built-into
- * <mxGraph>. To enable rubberband selection in a graph, use the following code.
- *
- * Example:
- *
- * (code)
- * let rubberband = new mxRubberband(graph);
- * (end)
- *
- * Constructor: mxRubberband
- *
- * Constructs an event handler that selects rectangular regions in the graph
- * using rubberband selection.
+ * Event handler that selects rectangular regions.
+ * This is not built-into [mxGraph].
+ * To enable rubberband selection in a graph, use the following code.
  */
 class mxRubberband {
   constructor(graph) {
@@ -72,11 +60,9 @@ class mxRubberband {
   }
 
   /**
-   * Variable: defaultOpacity
-   *
-   * Specifies the default opacity to be used for the rubberband div. Default
-   * is 20.
+   * Specifies the default opacity to be used for the rubberband div.  Default is 20.
    */
+  // defaultOpacity: number;
   defaultOpacity = 20;
 
   /**
@@ -115,18 +101,15 @@ class mxRubberband {
   currentY = 0;
 
   /**
-   * Variable: fadeOut
-   *
-   * Optional fade out effect. Default is false.
+   * Optional fade out effect.  Default is false.
    */
+  // fadeOut: boolean;
   fadeOut = false;
 
   /**
-   * Function: isEnabled
-   *
-   * Returns true if events are handled. This implementation returns
-   * <enabled>.
+   * Creates the rubberband selection shape.
    */
+  // isEnabled(): boolean;
   isEnabled() {
     return this.enabled;
   }
@@ -182,10 +165,9 @@ class mxRubberband {
   }
 
   /**
-   * Function: start
-   *
-   * Sets the start point for the rubberband selection.
+   * Creates the rubberband selection shape.
    */
+  // start(x: number, y: number): void;
   start(x, y) {
     this.first = new mxPoint(x, y);
 
@@ -253,10 +235,9 @@ class mxRubberband {
   }
 
   /**
-   * Function: createShape
-   *
    * Creates the rubberband selection shape.
    */
+  // createShape(): HTMLElement;
   createShape() {
     if (this.sharedDiv == null) {
       this.sharedDiv = document.createElement('div');

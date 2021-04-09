@@ -616,16 +616,13 @@ const mxUtils = {
   },
 
   /**
-   * Function: htmlEntities
-   *
    * Replaces characters (less than, greater than, newlines and quotes) with
    * their HTML entities in the given string and returns the result.
    *
-   * Parameters:
-   *
-   * s - String that contains the characters to be converted.
-   * newline - If newlines should be replaced. Default is true.
+   * @param {string} s String that contains the characters to be converted.
+   * @param {boolean} newline If newlines should be replaced. Default is true.
    */
+  // htmlEntities(s: string, newline: boolean): string;
   htmlEntities: (s, newline) => {
     s = String(s || '');
 

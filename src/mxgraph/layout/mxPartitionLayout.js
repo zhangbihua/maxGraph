@@ -8,8 +8,6 @@ import mxRectangle from '../util/datatypes/mxRectangle';
 import mxGraphLayout from './mxGraphLayout';
 
 /**
- * Class: mxPartitionLayout
- *
  * Extends <mxGraphLayout> for partitioning the parent cell vertically or
  * horizontally by filling the complete area with the child cells. A horizontal
  * layout partitions the height of the given parent whereas a a non-horizontal
@@ -19,15 +17,12 @@ import mxGraphLayout from './mxGraphLayout';
  *
  * Example:
  *
- * (code)
- * let layout = new mxPartitionLayout(graph, true, 10, 20);
+ * @example
+ * ```javascript
+ * var layout = new mxPartitionLayout(graph, true, 10, 20);
  * layout.execute(graph.getDefaultParent());
- * (end)
- *
- * Constructor: mxPartitionLayout
- *
- * Constructs a new stack layout layout for the specified graph,
- * spacing, orientation and offset.
+ * ```
+ * @class
  */
 class mxPartitionLayout extends mxGraphLayout {
   constructor(graph, horizontal, spacing, border) {
@@ -38,50 +33,49 @@ class mxPartitionLayout extends mxGraphLayout {
   }
 
   /**
-   * Variable: horizontal
-   *
    * Boolean indicating the direction in which the space is partitioned.
    * Default is true.
    */
+  // horizontal: boolean;
   horizontal = null;
 
   /**
-   * Variable: spacing
-   *
    * Integer that specifies the absolute spacing in pixels between the
    * children. Default is 0.
    */
+  // spacing: number;
   spacing = null;
 
   /**
-   * Variable: border
-   *
    * Integer that specifies the absolute inset in pixels for the parent that
    * contains the children. Default is 0.
    */
+  // border: number;
   border = null;
 
   /**
-   * Variable: resizeVertices
-   *
    * Boolean that specifies if vertices should be resized. Default is true.
    */
+  // resizeVertices: boolean;
   resizeVertices = true;
 
   /**
-   * Function: isHorizontal
-   *
    * Returns <horizontal>.
    */
+  // isHorizontal(): boolean;
   isHorizontal() {
     return this.horizontal;
   }
 
   /**
-   * Function: moveCell
+   * Implements {@link mxGraphLayout.moveCell}.
    *
-   * Implements <mxGraphLayout.moveCell>.
+   * @param {mxCell} cell
+   * @param {number} x
+   * @param {number} y
+   * @memberof mxPartitionLayout
    */
+  // moveCell(cell: mxCell, x: number, y: number): void;
   moveCell(cell, x, y) {
     const model = this.graph.getModel();
     const parent = model.getParent(cell);
@@ -117,11 +111,10 @@ class mxPartitionLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: execute
-   *
    * Implements <mxGraphLayout.execute>. All children where <isVertexIgnored>
    * returns false and <isVertexMovable> returns true are modified.
    */
+  // execute(parent: mxCell): void;
   execute(parent) {
     const horizontal = this.isHorizontal();
     const model = this.graph.getModel();

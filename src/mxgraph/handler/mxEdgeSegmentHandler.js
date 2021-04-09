@@ -20,6 +20,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Returns the current absolute points.
    */
+  // getCurrentPoints(): mxPoint[];
   getCurrentPoints() {
     let pts = this.state.absolutePoints;
 
@@ -55,6 +56,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Updates the given preview state taking into account the state of the constraint handler.
    */
+  // getPreviewPoints(point: mxPoint): mxPoint[];
   getPreviewPoints(point) {
     if (this.isSource || this.isTarget) {
       return super.getPreviewPoints(point);
@@ -112,6 +114,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Overridden to perform optimization of the edge style result.
    */
+  // updatePreviewState(edge: mxCell, point: mxPoint, terminalState: mxCellState, me: mxMouseEvent): void;
   updatePreviewState(edge, point, terminalState, me) {
     super.updatePreviewState(edge, point, terminalState, me);
 
@@ -208,6 +211,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
   /**
    * Overriden to merge edge segments.
    */
+  // connect(edge: mxCell, terminal: mxCell, isSource: boolean, isClone: boolean, me: mxMouseEvent): mxCell;
   connect(edge, terminal, isSource, isClone, me) {
     const model = this.graph.getModel();
     let geo = model.getGeometry(edge);
@@ -263,15 +267,17 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Returns no tooltips.
    */
+  // getTooltipForNode(node: any): string;
   getTooltipForNode(node) {
     return null;
   }
 
   /**
-   * Function: start
+   * Function: createBends
    *
-   * Starts the handling of the mouse gesture.
+   * Adds custom bends for the center of each segment.
    */
+  // start(x: number, y: number, index: number): void;
   start(x, y, index) {
     super.start(x, y, index);
 
@@ -336,6 +342,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Overridden to invoke <refresh> before the redraw.
    */
+  // redraw(): void;
   redraw() {
     this.refresh();
     super.redraw();
@@ -346,6 +353,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Updates the position of the custom bends.
    */
+  // redrawInnerBends(p0: mxPoint, pe: mxPoint): void;
   redrawInnerBends(p0, pe) {
     if (this.graph.isCellBendable(this.state.cell)) {
       const pts = this.getCurrentPoints();

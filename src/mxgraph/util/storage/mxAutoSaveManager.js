@@ -6,29 +6,21 @@
 import mxEventSource from '../event/mxEventSource';
 
 /**
- * Class: mxAutoSaveManager
- *
  * Manager for automatically saving diagrams. The <save> hook must be
  * implemented.
  *
- * Example:
- *
- * (code)
- * let mgr = new mxAutoSaveManager(editor.graph);
- * mgr.save = ()=>
+ * @example
+ * ```javascript
+ * var mgr = new mxAutoSaveManager(editor.graph);
+ * mgr.save()
  * {
  *   mxLog.show();
  *   mxLog.debug('save');
  * };
- * (end)
+ * ```
  *
- * Constructor: mxAutoSaveManager
- *
- * Constructs a new automatic layout for the given graph.
- *
- * Arguments:
- *
- * graph - Reference to the enclosing graph.
+ * @class mxAutoSaveManager
+ * @extends mxEventSource
  */
 class mxAutoSaveManager extends mxEventSource {
   constructor(graph) {
@@ -45,98 +37,85 @@ class mxAutoSaveManager extends mxEventSource {
   }
 
   /**
-   * Variable: graph
-   *
    * Reference to the enclosing <mxGraph>.
    */
+  // graph: mxGraph;
   graph = null;
 
   /**
-   * Variable: autoSaveDelay
-   *
    * Minimum amount of seconds between two consecutive autosaves. Eg. a
    * value of 1 (s) means the graph is not stored more than once per second.
    * Default is 10.
    */
+  // autoSaveDelay: number;
   autoSaveDelay = 10;
 
   /**
-   * Variable: autoSaveThrottle
-   *
    * Minimum amount of seconds between two consecutive autosaves triggered by
    * more than <autoSaveThreshhold> changes within a timespan of less than
    * <autoSaveDelay> seconds. Eg. a value of 1 (s) means the graph is not
    * stored more than once per second even if there are more than
    * <autoSaveThreshold> changes within that timespan. Default is 2.
    */
+  // autoSaveThrottle: number;
   autoSaveThrottle = 2;
 
   /**
-   * Variable: autoSaveThreshold
-   *
    * Minimum amount of ignored changes before an autosave. Eg. a value of 2
    * means after 2 change of the graph model the autosave will trigger if the
    * condition below is true. Default is 5.
    */
+  // autoSaveThreshold: number;
   autoSaveThreshold = 5;
 
   /**
-   * Variable: ignoredChanges
-   *
    * Counter for ignored changes in autosave.
    */
+  // ignoredChanges: number;
   ignoredChanges = 0;
 
   /**
-   * Variable: lastSnapshot
-   *
    * Used for autosaving. See <autosave>.
    */
+  // lastSnapshot: number;
   lastSnapshot = 0;
 
   /**
-   * Variable: enabled
-   *
    * Specifies if event handling is enabled. Default is true.
    */
+  // enabled: boolean;
   enabled = true;
 
   /**
-   * Variable: changeHandler
-   *
    * Holds the function that handles graph model changes.
    */
+  // changeHandler: Function;
   changeHandler = null;
 
   /**
-   * Function: isEnabled
-   *
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
+  // isEnabled(): boolean;
   isEnabled() {
     return this.enabled;
   }
 
   /**
-   * Function: setEnabled
-   *
    * Enables or disables event handling. This implementation
    * updates <enabled>.
    *
-   * Parameters:
-   *
-   * enabled - Boolean that specifies the new enabled state.
+   * @param enabled - Boolean that specifies the new enabled state.
    */
+  // setEnabled(value: boolean): void;
   setEnabled(value) {
     this.enabled = value;
   }
 
   /**
-   * Function: setGraph
-   *
    * Sets the graph that the layouts operate on.
    */
+  // setGraph(graph: mxGraph): void;
   setGraph(graph) {
     if (this.graph != null) {
       this.graph.getModel().removeListener(this.changeHandler);
@@ -150,19 +129,17 @@ class mxAutoSaveManager extends mxEventSource {
   }
 
   /**
-   * Function: save
-   *
    * Empty hook that is called if the graph should be saved.
    */
+  // save(): void;
   save() {
     // empty
   }
 
   /**
-   * Function: graphModelChanged
-   *
    * Invoked when the graph model has changed.
    */
+  // graphModelChanged(changes: any): void;
   graphModelChanged(changes) {
     const now = new Date().getTime();
     const dt = (now - this.lastSnapshot) / 1000;
@@ -181,20 +158,18 @@ class mxAutoSaveManager extends mxEventSource {
   }
 
   /**
-   * Function: reset
-   *
    * Resets all counters.
    */
+  // reset(): void;
   reset() {
     this.lastSnapshot = new Date().getTime();
     this.ignoredChanges = 0;
   }
 
   /**
-   * Function: destroy
-   *
    * Removes all handlers from the <graph> and deletes the reference to it.
    */
+  // destroy(): void;
   destroy() {
     this.setGraph(null);
   }

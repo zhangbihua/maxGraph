@@ -19,9 +19,10 @@ class mxVisibleChange {
   /**
    * Function: execute
    *
-   * Changes the visible state of <cell> to <previous> using
+   * Changes the visible state of {@link cell}` to {@link previous}` using
    * <mxGraphModel.visibleStateForCellChanged>.
    */
+  // execute(): void;
   execute() {
     if (this.cell != null) {
       this.visible = this.previous;

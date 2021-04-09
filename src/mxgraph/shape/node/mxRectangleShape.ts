@@ -12,24 +12,10 @@ import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 
 /**
- * Class: mxRectangleShape
- *
- * Extends <mxShape> to implement a rectangle shape.
- * This shape is registered under <mxConstants.SHAPE_RECTANGLE>
- * in <mxCellRenderer>.
- *
- * Constructor: mxRectangleShape
- *
- * Constructs a new rectangle shape.
- *
- * Parameters:
- *
- * bounds - <mxRectangle> that defines the bounds. This is stored in
- * <mxShape.bounds>.
- * fill - String that defines the fill color. This is stored in <fill>.
- * stroke - String that defines the stroke color. This is stored in <stroke>.
- * strokewidth - Optional integer that defines the stroke width. Default is
- * 1. This is stored in <strokewidth>.
+ * Extends {@link mxShape} to implement a rectangle shape.
+ * This shape is registered under {@link mxConstants.SHAPE_RECTANGLE} in {@link mxCellRenderer}.
+ * @class mxRectangleShape
+ * @extends {mxShape}
  */
 class mxRectangleShape extends mxShape {
   constructor(
@@ -49,10 +35,9 @@ class mxRectangleShape extends mxShape {
   strokewidth: number;
 
   /**
-   * Function: isHtmlAllowed
-   *
    * Returns true for non-rounded, non-rotated shapes with no glass gradient.
    */
+  // isHtmlAllowed(): boolean;
   isHtmlAllowed(): boolean {
     let events = true;
 
@@ -71,10 +56,9 @@ class mxRectangleShape extends mxShape {
   }
 
   /**
-   * Function: paintBackground
-   *
    * Generic background painting implementation.
    */
+  // paintBackground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintBackground(
     c: mxSvgCanvas2D,
     x: number,
@@ -137,10 +121,9 @@ class mxRectangleShape extends mxShape {
   }
 
   /**
-   * Function: isRoundable
-   *
    * Adds roundable support.
    */
+  // isRoundable(c?: mxAbstractCanvas2D, x?: number, y?: number, w?: number, h?: number): boolean;
   isRoundable(
     c: mxAbstractCanvas2D,
     x: number,
@@ -152,10 +135,9 @@ class mxRectangleShape extends mxShape {
   }
 
   /**
-   * Function: paintForeground
-   *
    * Generic background painting implementation.
    */
+  // paintForeground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintForeground(
     c: mxSvgCanvas2D,
     x: number,

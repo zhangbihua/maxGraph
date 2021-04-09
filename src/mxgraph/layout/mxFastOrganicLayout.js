@@ -30,51 +30,39 @@ class mxFastOrganicLayout extends mxGraphLayout {
   }
 
   /**
-   * Variable: useInputOrigin
-   *
-   * Specifies if the top left corner of the input cells should be the origin
-   * of the layout result. Default is true.
+   * Specifies if the top left corner of the input cells should be the origin of the layout result.  Default is true.
    */
+  // useInputOrigin: boolean;
   useInputOrigin = true;
 
   /**
-   * Variable: resetEdges
-   *
-   * Specifies if all edge points of traversed edges should be removed.
-   * Default is true.
+   * Specifies if all edge points of traversed edges should be removed.  Default is true.
    */
+  // resetEdges: boolean;
   resetEdges = true;
 
   /**
-   * Variable: disableEdgeStyle
-   *
-   * Specifies if the STYLE_NOEDGESTYLE flag should be set on edges that are
-   * modified by the result. Default is true.
+   * Specifies if the STYLE_NOEDGESTYLE flag should be set on edges that are modified by the result.  Default is true.
    */
+  // disableEdgeStyle: boolean;
   disableEdgeStyle = true;
 
   /**
-   * Variable: forceConstant
-   *
-   * The force constant by which the attractive forces are divided and the
-   * replusive forces are multiple by the square of. The value equates to the
-   * average radius there is of free space around each node. Default is 50.
+   * The force constant by which the attractive forces are divided and the replusive forces are multiple by the square of.  The value equates to the average radius there is of free space around each node.  Default is 50.
    */
+  // forceConstant: number;
   forceConstant = 50;
 
   /**
-   * Variable: forceConstantSquared
-   *
    * Cache of <forceConstant>^2 for performance.
    */
+  // forceConstantSquared: any;
   forceConstantSquared = 0;
 
   /**
-   * Variable: minDistanceLimit
-   *
-   * Minimal distance limit. Default is 2. Prevents of
-   * dividing by zero.
+   * Minimal distance limit.  Default is 2.  Prevents of dividing by zero.
    */
+  // minDistanceLimit: number;
   minDistanceLimit = 2;
 
   /**
@@ -86,10 +74,9 @@ class mxFastOrganicLayout extends mxGraphLayout {
   maxDistanceLimit = 500;
 
   /**
-   * Variable: minDistanceLimitSquared
-   *
-   * Cached version of <minDistanceLimit> squared.
+   * Cached version of minDistanceLimit squared.
    */
+  // minDistanceLimitSquared: number;
   minDistanceLimitSquared = 4;
 
   /**

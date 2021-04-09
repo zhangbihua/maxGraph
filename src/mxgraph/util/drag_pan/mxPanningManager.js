@@ -196,6 +196,7 @@ class mxPanningManager {
    *
    * Damper value for the panning. Default is 1/6.
    */
+  // damper: number;
   damper = 1 / 6;
 
   /**
@@ -203,6 +204,7 @@ class mxPanningManager {
    *
    * Delay in milliseconds for the panning. Default is 10.
    */
+  // delay: number;
   delay = 10;
 
   /**
@@ -210,6 +212,7 @@ class mxPanningManager {
    *
    * Specifies if mouse events outside of the component should be handled. Default is true.
    */
+  // handleMouseOut: boolean;
   handleMouseOut = true;
 
   /**
@@ -217,6 +220,7 @@ class mxPanningManager {
    *
    * Border to handle automatic panning inside the component. Default is 0 (disabled).
    */
+  // border: number;
   border = 0;
 }
 

@@ -27,6 +27,7 @@ class mxPoint {
    *
    * Holds the x-coordinate of the point. Default is 0.
    */
+  // x: number;
   x = null;
 
   /**
@@ -34,6 +35,7 @@ class mxPoint {
    *
    * Holds the y-coordinate of the point. Default is 0.
    */
+  // y: number;
   y = null;
 
   get x() {
@@ -65,6 +67,7 @@ class mxPoint {
    *
    * Returns true if the given object equals this point.
    */
+  // equals(obj: mxPoint): boolean;
   equals(obj) {
     return obj != null && obj.x == this.x && obj.y == this.y;
   }
@@ -74,6 +77,7 @@ class mxPoint {
    *
    * Returns a clone of this <mxPoint>.
    */
+  // clone(): mxPoint;
   clone() {
     // Handles subclasses as well
     return mxUtils.clone(this);

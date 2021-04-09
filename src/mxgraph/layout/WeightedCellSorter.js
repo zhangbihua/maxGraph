@@ -1,13 +1,10 @@
 /**
- * Class: WeightedCellSorter
+ * @class WeightedCellSorter
  *
  * A utility class used to track cells whilst sorting occurs on the weighted
  * sum of their connected edges. Does not violate (x.compareTo(y)==0) ==
  * (x.equals(y))
  *
- * Constructor: WeightedCellSorter
- *
- * Constructs a new weighted cell sorted for the given cell and weight.
  */
 class WeightedCellSorter {
   constructor(cell, weightedValue) {
@@ -16,45 +13,39 @@ class WeightedCellSorter {
   }
 
   /**
-   * Variable: weightedValue
-   *
    * The weighted value of the cell stored.
    */
+  // weightedValue: number;
   weightedValue = 0;
 
   /**
-   * Variable: nudge
-   *
    * Whether or not to flip equal weight values.
    */
+  // nudge: boolean;
   nudge = false;
 
   /**
-   * Variable: visited
-   *
    * Whether or not this cell has been visited in the current assignment.
    */
+  // visited: boolean;
   visited = false;
 
   /**
-   * Variable: rankIndex
-   *
    * The index this cell is in the model rank.
    */
+  // rankIndex: number;
   rankIndex = null;
 
   /**
-   * Variable: cell
-   *
    * The cell whose median value is being calculated.
    */
+  // cell: mxCell;
   cell = null;
 
   /**
-   * Function: compare
-   *
    * Compares two WeightedCellSorters.
    */
+  // compare(a: WeightedCellSorter, b: WeightedCellSorter): number;
   compare(a, b) {
     if (a != null && b != null) {
       if (b.weightedValue > a.weightedValue) {

@@ -6,27 +6,23 @@
 import mxCellMarker from './mxCellMarker';
 
 /**
- * Class: mxCellTracker
+ * Event handler that highlights cells
  *
- * Event handler that highlights cells. Inherits from <mxCellMarker>.
- *
- * Example:
- *
- * (code)
+ * @example
+ * ```javascript
  * new mxCellTracker(graph, '#00FF00');
- * (end)
+ * ```
  *
- * For detecting dragEnter, dragOver and dragLeave on cells, the following
- * code can be used:
- *
- * (code)
+ * For detecting dragEnter, dragOver and dragLeave on cells, the following code can be used:
+ * @example
+ * ```javascript
  * graph.addMouseListener(
  * {
  *   cell: null,
- *   mouseDown: (sender, me)=> { },
- *   mouseMove: (sender, me)=>
+ *   mouseDown: function(sender, me) { },
+ *   mouseMove: function(sender, me)
  *   {
- *     let tmp = me.getCell();
+ *     var tmp = me.getCell();
  *
  *     if (tmp != this.cell)
  *     {
@@ -48,32 +44,21 @@ import mxCellMarker from './mxCellMarker';
  *       this.dragOver(me.getEvent(), this.cell);
  *     }
  *   },
- *   mouseUp: (sender, me)=> { },
- *   dragEnter: (evt, cell)=>
+ *   mouseUp: function(sender, me) { },
+ *   dragEnter: function(evt, cell)
  *   {
  *     mxLog.debug('dragEnter', cell.value);
  *   },
- *   dragOver: (evt, cell)=>
+ *   dragOver: function(evt, cell)
  *   {
  *     mxLog.debug('dragOver', cell.value);
  *   },
- *   dragLeave: (evt, cell)=>
+ *   dragLeave: function(evt, cell)
  *   {
  *     mxLog.debug('dragLeave', cell.value);
  *   }
  * });
- * (end)
- *
- * Constructor: mxCellTracker
- *
- * Constructs an event handler that highlights cells.
- *
- * Parameters:
- *
- * graph - Reference to the enclosing <mxGraph>.
- * color - Color of the highlight. Default is blue.
- * funct - Optional JavaScript function that is used to override
- * <mxCellMarker.getCell>.
+ * ```
  */
 class mxCellTracker extends mxCellMarker {
   constructor(graph, color, funct) {
@@ -87,18 +72,16 @@ class mxCellTracker extends mxCellMarker {
   }
 
   /**
-   * Function: mouseDown
-   *
    * Ignores the event. The event is not consumed.
    */
+  // mouseDown(sender: any, me: mxMouseEvent): void;
   mouseDown(sender, me) {}
 
   /**
-   * Function: mouseMove
-   *
    * Handles the event by highlighting the cell under the mousepointer if it
    * is over the hotspot region of the cell.
    */
+  // mouseMove(sender: any, me: mxMouseEvent): void;
   mouseMove(sender, me) {
     if (this.isEnabled()) {
       this.process(me);
@@ -106,10 +89,9 @@ class mxCellTracker extends mxCellMarker {
   }
 
   /**
-   * Function: mouseUp
-   *
-   * Handles the event by reseting the highlight.
+   * Handles the event by resetting the highlight.
    */
+  // mouseUp(sender: any, me: mxMouseEvent): void;
   mouseUp(sender, me) {}
 
   /**
@@ -119,6 +101,7 @@ class mxCellTracker extends mxCellMarker {
    * normally need to be called. It is called automatically when the window
    * unloads.
    */
+  // destroy(): void;
   destroy() {
     if (!this.destroyed) {
       this.destroyed = true;

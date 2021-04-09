@@ -15,43 +15,36 @@ import mxCell from '../cell/mxCell';
 import mxGraph from './mxGraph';
 
 /**
- * Class: mxGraphSelectionModel
+ * @class mxGraphSelectionModel
  *
  * Implements the selection model for a graph. Here is a listener that handles
  * all removed selection cells.
  *
- * (code)
- * graph.getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt)=>
+ * @example
+ * ```javascript
+ * graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
  * {
- *   let cells = evt.getProperty('added');
+ *   var cells = evt.getProperty('added');
  *
- *   for (let i = 0; i < cells.length; i += 1)
+ *   for (var i = 0; i < cells.length; i++)
  *   {
  *     // Handle cells[i]...
  *   }
  * });
- * (end)
+ * ```
  *
- * Event: mxEvent.UNDO
+ * ### Event: mxEvent.UNDO
  *
- * Fires after the selection was changed in <changeSelection>. The
- * <code>edit</code> property contains the <mxUndoableEdit> which contains the
- * <mxSelectionChange>.
+ * Fires after the selection was changed in {@link changeSelection}. The
+ * `edit` property contains the {@link mxUndoableEdit} which contains the
+ * {@link mxSelectionChange}.
  *
- * Event: mxEvent.CHANGE
+ * ### Event: mxEvent.CHANGE
  *
- * Fires after the selection changes by executing an <mxSelectionChange>. The
- * <code>added</code> and <code>removed</code> properties contain arrays of
+ * Fires after the selection changes by executing an {@link mxSelectionChange}. The
+ * `added` and `removed` properties contain arrays of
  * cells that have been added to or removed from the selection, respectively.
  * The names are inverted due to historic reasons. This cannot be changed.
- *
- * Constructor: mxGraphSelectionModel
- *
- * Constructs a new graph selection model for the given <mxGraph>.
- *
- * Parameters:
- *
- * graph - Reference to the enclosing <mxGraph>.
  */
 class mxGraphSelectionModel extends mxEventSource {
   constructor(graph: mxGraph) {
@@ -65,67 +58,58 @@ class mxGraphSelectionModel extends mxEventSource {
   cells: mxCell[];
 
   /**
-   * Variable: doneResource
-   *
    * Specifies the resource key for the status message after a long operation.
    * If the resource for this key does not exist then the value is used as
    * the status message. Default is 'done'.
    */
+  // doneResource: 'done' | '';
   doneResource: string = mxClient.language !== 'none' ? 'done' : '';
 
   /**
-   * Variable: updatingSelectionResource
-   *
    * Specifies the resource key for the status message while the selection is
    * being updated. If the resource for this key does not exist then the
    * value is used as the status message. Default is 'updatingSelection'.
    */
+  // updatingSelectionResource: 'updatingSelection' | '';
   updatingSelectionResource: string =
     mxClient.language !== 'none' ? 'updatingSelection' : '';
 
   /**
-   * Variable: graph
-   *
-   * Reference to the enclosing <mxGraph>.
+   * Reference to the enclosing {@link mxGraph}.
    */
+  // graph: mxGraph;
   graph: mxGraph | null = null;
 
   /**
-   * Variable: singleSelection
-   *
    * Specifies if only one selected item at a time is allowed.
    * Default is false.
    */
+  // singleSelection: boolean;
   singleSelection: boolean = false;
 
   /**
-   * Function: isSingleSelection
-   *
-   * Returns <singleSelection> as a boolean.
+   * Returns {@link singleSelection} as a boolean.
    */
+  // isSingleSelection(): boolean;
   isSingleSelection(): boolean {
     return this.singleSelection;
   }
 
   /**
-   * Function: setSingleSelection
+   * Sets the {@link singleSelection} flag.
    *
-   * Sets the <singleSelection> flag.
-   *
-   * Parameters:
-   *
-   * singleSelection - Boolean that specifies the new value for
-   * <singleSelection>.
+   * @param {boolean} singleSelection Boolean that specifies the new value for
+   * {@link singleSelection}.
    */
+  // setSingleSelection(singleSelection: boolean): void;
   setSingleSelection(singleSelection: boolean): void {
     this.singleSelection = singleSelection;
   }
 
   /**
-   * Function: isSelected
-   *
-   * Returns true if the given <mxCell> is selected.
+   * Returns true if the given {@link mxCell} is selected.
    */
+  // isSelected(cell: mxCell): boolean;
   isSelected(cell: mxCell): boolean {
     if (cell != null) {
       return mxUtils.indexOf(this.cells, cell) >= 0;
@@ -134,33 +118,28 @@ class mxGraphSelectionModel extends mxEventSource {
   }
 
   /**
-   * Function: isEmpty
-   *
    * Returns true if no cells are currently selected.
    */
+  // isEmpty(): boolean;
   isEmpty(): boolean {
     return this.cells.length === 0;
   }
 
   /**
-   * Function: clear
-   *
-   * Clears the selection and fires a <change> event if the selection was not
+   * Clears the selection and fires a {@link change} event if the selection was not
    * empty.
    */
+  // clear(): void;
   clear(): void {
     this.changeSelection(null, this.cells);
   }
 
   /**
-   * Function: setCell
+   * Selects the specified {@link mxCell} using {@link setCells}.
    *
-   * Selects the specified <mxCell> using <setCells>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> to be selected.
+   * @param cell {@link mxCell} to be selected.
    */
+  // setCell(cell: mxCell): void;
   setCell(cell: mxCell | null): void {
     if (cell != null) {
       this.setCells([cell]);
@@ -168,14 +147,11 @@ class mxGraphSelectionModel extends mxEventSource {
   }
 
   /**
-   * Function: setCells
+   * Selects the given array of {@link mxCell} and fires a {@link change} event.
    *
-   * Selects the given array of <mxCells> and fires a <change> event.
-   *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to be selected.
+   * @param cells Array of {@link mxCell} to be selected.
    */
+  // setCells(cells: Array<mxCell>): void;
   setCells(cells: mxCell[]): void {
     if (cells != null) {
       if (this.singleSelection) {
@@ -193,10 +169,9 @@ class mxGraphSelectionModel extends mxEventSource {
   }
 
   /**
-   * Function: getFirstSelectableCell
-   *
    * Returns the first selectable cell in the given array of cells.
    */
+  // getFirstSelectableCell(cells: Array<mxCell>): mxCell;
   getFirstSelectableCell(cells: mxCell[]): mxCell | null {
     if (cells != null) {
       for (let i = 0; i < cells.length; i += 1) {
@@ -209,14 +184,11 @@ class mxGraphSelectionModel extends mxEventSource {
   }
 
   /**
-   * Function: addCell
+   * Adds the given {@link mxCell} to the selection and fires a {@link select} event.
    *
-   * Adds the given <mxCell> to the selection and fires a <select> event.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> to add to the selection.
+   * @param cell {@link mxCell} to add to the selection.
    */
+  // addCell(cell: mxCell): void;
   addCell(cell: mxCell | null = null): void {
     if (cell != null) {
       this.addCells([cell]);
@@ -224,15 +196,12 @@ class mxGraphSelectionModel extends mxEventSource {
   }
 
   /**
-   * Function: addCells
-   *
-   * Adds the given array of <mxCells> to the selection and fires a <select>
+   * Adds the given array of {@link mxCell} to the selection and fires a {@link select}
    * event.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> to add to the selection.
+   * @param cells Array of {@link mxCell} to add to the selection.
    */
+  // addCells(cells: Array<mxCell>): void;
   addCells(cells: mxCell[]): void {
     if (cells != null) {
       let remove = null;
@@ -256,15 +225,12 @@ class mxGraphSelectionModel extends mxEventSource {
   }
 
   /**
-   * Function: removeCell
-   *
-   * Removes the specified <mxCell> from the selection and fires a <select>
+   * Removes the specified {@link mxCell} from the selection and fires a {@link select}
    * event for the remaining cells.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to remove from the selection.
+   * @param cell {@link mxCell} to remove from the selection.
    */
+  // removeCell(cell: mxCell): void;
   removeCell(cell: mxCell | null = null): void {
     if (cell != null) {
       this.removeCells([cell]);
@@ -272,8 +238,12 @@ class mxGraphSelectionModel extends mxEventSource {
   }
 
   /**
-   * Function: removeCells
+   * Removes the specified {@link mxCell} from the selection and fires a {@link select}
+   * event for the remaining cells.
+   *
+   * @param cell {@link mxCell} to remove from the selection.
    */
+  // removeCells(cells: Array<mxCell>): void;
   removeCells(cells: mxCell[] | null = null): void {
     if (cells != null) {
       const tmp = [];
@@ -287,15 +257,12 @@ class mxGraphSelectionModel extends mxEventSource {
   }
 
   /**
-   * Function: changeSelection
+   * Adds/removes the specified arrays of {@link mxCell} to/from the selection.
    *
-   * Adds/removes the specified arrays of <mxCell> to/from the selection.
-   *
-   * Parameters:
-   *
-   * added - Array of <mxCell> to add to the selection.
-   * remove - Array of <mxCell> to remove from the selection.
+   * @param added Array of {@link mxCell} to add to the selection.
+   * @param remove Array of {@link mxCell} to remove from the selection.
    */
+  // changeSelection(added: Array<mxCell>, removed: Array<mxCell>): void;
   changeSelection(added: mxCell[] | null=null,
                   removed: mxCell[] | null=null): void {
     if (
@@ -311,15 +278,14 @@ class mxGraphSelectionModel extends mxEventSource {
   }
 
   /**
-   * Function: cellAdded
-   *
-   * Inner callback to add the specified <mxCell> to the selection. No event
+   * Inner callback to add the specified {@link mxCell} to the selection. No event
    * is fired in this implementation.
    *
    * Paramters:
    *
-   * cell - <mxCell> to add to the selection.
+   * @param cell {@link mxCell} to add to the selection.
    */
+  // cellAdded(cell: mxCell): void;
   cellAdded(cell: mxCell): void {
     if (cell != null && !this.isSelected(cell)) {
       this.cells.push(cell);
@@ -327,15 +293,12 @@ class mxGraphSelectionModel extends mxEventSource {
   }
 
   /**
-   * Function: cellRemoved
-   *
-   * Inner callback to remove the specified <mxCell> from the selection. No
+   * Inner callback to remove the specified {@link mxCell} from the selection. No
    * event is fired in this implementation.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to remove from the selection.
+   * @param cell {@link mxCell} to remove from the selection.
    */
+  // cellRemoved(cell: mxCell): void;
   cellRemoved(cell: mxCell): void {
     if (cell != null) {
       const index = mxUtils.indexOf(this.cells, cell);

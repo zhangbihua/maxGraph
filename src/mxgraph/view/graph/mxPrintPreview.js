@@ -12,79 +12,84 @@ import mxUtils from '../../util/mxUtils';
 import mxConstants from '../../util/mxConstants';
 
 /**
- * Class: mxPrintPreview
+ * @class mxPrintPreview
  *
  * Implements printing of a diagram across multiple pages. The following opens
  * a print preview for an existing graph:
  *
- * (code)
- * let preview = new mxPrintPreview(graph);
+ * @example
+ * ```javascript
+ * var preview = new mxPrintPreview(graph);
  * preview.open();
- * (end)
+ * ```
  *
- * Use <mxUtils.getScaleForPageCount> as follows in order to print the graph
+ * Use {@link mxUtils.getScaleForPageCount} as follows in order to print the graph
  * across a given number of pages:
  *
- * (code)
- * let pageCount = mxUtils.prompt('Enter page count', '1');
+ * @example
+ * ```javascript
+ * var pageCount = mxUtils.prompt('Enter page count', '1');
  *
  * if (pageCount != null)
  * {
- *   let scale = mxUtils.getScaleForPageCount(pageCount, graph);
- *   let preview = new mxPrintPreview(graph, scale);
+ *   var scale = mxUtils.getScaleForPageCount(pageCount, graph);
+ *   var preview = new mxPrintPreview(graph, scale);
  *   preview.open();
  * }
- * (end)
+ * ```
  *
- * Additional pages:
+ * ### Additional pages
  *
- * To add additional pages before and after the output, <getCoverPages> and
- * <getAppendices> can be used, respectively.
+ * To add additional pages before and after the output, {@link getCoverPages} and
+ * {@link getAppendices} can be used, respectively.
  *
- * (code)
- * let preview = new mxPrintPreview(graph, 1);
+ * @example
+ * ```javascript
+ * var preview = new mxPrintPreview(graph, 1);
  *
- * preview.getCoverPages = (w, h)=>
+ * preview.getCoverPages(w, h)
  * {
- *   return [this.renderPage(w, h, 0, 0, mxUtils.bind(this, (div)=>
+ *   return [this.renderPage(w, h, 0, 0, mxUtils.bind(this, function(div)
  *   {
  *     div.innerHTML = '<div style="position:relative;margin:4px;">Cover Page</p>'
  *   }))];
  * };
  *
- * preview.getAppendices = (w, h)=>
+ * preview.getAppendices(w, h)
  * {
- *   return [this.renderPage(w, h, 0, 0, mxUtils.bind(this, (div)=>
+ *   return [this.renderPage(w, h, 0, 0, mxUtils.bind(this, function(div)
  *   {
  *     div.innerHTML = '<div style="position:relative;margin:4px;">Appendix</p>'
  *   }))];
  * };
  *
  * preview.open();
- * (end)
+ * ```
  *
- * CSS:
+ * ### CSS
  *
  * The CSS from the original page is not carried over to the print preview.
- * To add CSS to the page, use the css argument in the <open> function or
- * override <writeHead> to add the respective link tags as follows:
+ * To add CSS to the page, use the css argument in the {@link open} function or
+ * override {@link writeHead} to add the respective link tags as follows:
  *
- * (code)
- * let writeHead = preview.writeHead;
- * preview.writeHead = (doc, css)=>
+ * @example
+ * ```javascript
+ * var writeHead = preview.writeHead;
+ * preview.writeHead(doc, css)
  * {
  *   writeHead.apply(this, arguments);
  *   doc.writeln('<link rel="stylesheet" type="text/css" href="style.css">');
  * };
- * (end)
+ * ```
  *
- * Padding:
+ * ### Padding
  *
  * To add a padding to the page in the preview (but not the print output), use
  * the following code:
  *
- * (code)
- * preview.writeHead = (doc)=>
+ * @example
+ * ```javascript
+ * preview.writeHead(doc)
  * {
  *   writeHead.apply(this, arguments);
  *
@@ -94,20 +99,21 @@ import mxConstants from '../../util/mxConstants';
  *   doc.writeln('}');
  *   doc.writeln('</style>');
  * };
- * (end)
+ * ```
  *
- * Headers:
+ * ### Headers
  *
  * Apart from setting the title argument in the mxPrintPreview constructor you
- * can override <renderPage> as follows to add a header to any page:
+ * can override {@link renderPage} as follows to add a header to any page:
  *
- * (code)
- * let oldRenderPage = renderPage;
- * renderPage = (w, h, x, y, content, pageNumber)=>
+ * @example
+ * ```javascript
+ * var oldRenderPage = renderPage;
+ * renderPage(w, h, x, y, content, pageNumber)
  * {
- *   let div = oldRenderPage.apply(this, arguments);
+ *   var div = oldRenderPage.apply(this, arguments);
  *
- *   let header = document.createElement('div');
+ *   var header = document.createElement('div');
  *   header.style.position = 'absolute';
  *   header.style.top = '0px';
  *   header.style.width = '100%';
@@ -117,69 +123,47 @@ import mxConstants from '../../util/mxConstants';
  *
  *   return div;
  * };
- * (end)
+ * ```
  *
  * The pageNumber argument contains the number of the current page, starting at
  * 1. To display a header on the first page only, check pageNumber and add a
  * vertical offset in the constructor call for the height of the header.
  *
- * Page Format:
+ * ### Page Format
  *
- * For landscape printing, use <mxConstants.PAGE_FORMAT_A4_LANDSCAPE> as
- * the pageFormat in <mxUtils.getScaleForPageCount> and <mxPrintPreview>.
+ * For landscape printing, use {@link mxConstants.PAGE_FORMAT_A4_LANDSCAPE} as
+ * the pageFormat in {@link mxUtils.getScaleForPageCount} and {@link mxPrintPreview}.
  * Keep in mind that one can not set the defaults for the print dialog
  * of the operating system from JavaScript so the user must manually choose
  * a page format that matches this setting.
  *
- * You can try passing the following CSS directive to <open> to set the
+ * You can try passing the following CSS directive to {@link open} to set the
  * page format in the print dialog to landscape. However, this CSS
  * directive seems to be ignored in most major browsers, including IE.
  *
- * (code)
+ * @example
+ * ```javascript
  * @page {
  *   size: landscape;
  * }
- * (end)
+ * ```
  *
  * Note that the print preview behaves differently in IE when used from the
  * filesystem or via HTTP so printing should always be tested via HTTP.
  *
- * If you are using a DOCTYPE in the source page you can override <getDoctype>
+ * If you are using a DOCTYPE in the source page you can override {@link getDoctype}
  * and provide the same DOCTYPE for the print preview if required. Here is
  * an example for IE8 standards mode.
  *
- * (code)
- * let preview = new mxPrintPreview(graph);
- * preview.getDoctype = ()=>
+ * @example
+ * ```javascript
+ * var preview = new mxPrintPreview(graph);
+ * preview.getDoctype()
  * {
  *   return '<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=8" ><![endif]-->';
  * };
  * preview.open();
- * (end)
- *
- * Constructor: mxPrintPreview
- *
- * Constructs a new print preview for the given parameters.
- *
- * Parameters:
- *
- * graph - <mxGraph> to be previewed.
- * scale - Optional scale of the output. Default is 1 / <mxGraph.pageScale>.
- * pageFormat - <mxRectangle> that specifies the page format (in pixels).
- * border - Border in pixels along each side of every page. Note that the
- * actual print function in the browser will add another border for
- * printing.
- * This should match the page format of the printer. Default uses the
- * <mxGraph.pageFormat> of the given graph.
- * x0 - Optional left offset of the output. Default is 0.
- * y0 - Optional top offset of the output. Default is 0.
- * borderColor - Optional color of the page border. Default is no border.
- * Note that a border is sometimes useful to highlight the printed page
- * border in the print preview of the browser.
- * title - Optional string that is used for the window title. Default
- * is 'Printer-friendly version'.
- * pageSelector - Optional boolean that specifies if the page selector
- * should appear in the window with the print preview. Default is true.
+ * ```
  */
 class mxPrintPreview {
   constructor(
@@ -207,168 +191,155 @@ class mxPrintPreview {
   }
 
   /**
-   * Variable: graph
-   *
-   * Reference to the <mxGraph> that should be previewed.
+   * Reference to the {@link mxGraph} that should be previewed.
    */
+  // graph: mxGraph;
   graph = null;
 
   /**
-   * Variable: pageFormat
-   *
-   * Holds the <mxRectangle> that defines the page format.
+   * Holds the {@link mxRectangle} that defines the page format.
    */
+  // pageFormat: mxRectangle;
   pageFormat = null;
 
   /**
-   * Variable: scale
-   *
    * Holds the scale of the print preview.
    */
+  // scale: number;
   scale = null;
 
   /**
-   * Variable: border
-   *
    * The border inset around each side of every page in the preview. This is set
    * to 0 if autoOrigin is false.
+   * @default 0
    */
+  // border: number;
   border = 0;
 
   /**
-   * Variable: marginTop
-   *
-   * The margin at the top of the page (number). Default is 0.
+   * The margin at the top of the page (number).
+   * @default 0
    */
+  // marginTop: number;
   marginTop = 0;
 
   /**
-   * Variable: marginBottom
-   *
-   * The margin at the bottom of the page (number). Default is 0.
+   * The margin at the bottom of the page (number).
+   * @default 0
    */
+  // marginBottom: number;
   marginBottom = 0;
 
   /**
-   * Variable: x0
-   *
    * Holds the horizontal offset of the output.
    */
+  // x0: number;
   x0 = 0;
 
   /**
-   * Variable: y0
-   *
    * Holds the vertical offset of the output.
    */
+  // y0: number;
   y0 = 0;
 
   /**
-   * Variable: autoOrigin
-   *
    * Specifies if the origin should be automatically computed based on the top,
    * left corner of the actual diagram contents. The required offset will be added
-   * to <x0> and <y0> in <open>. Default is true.
+   * to {@link x0} and {@link y0} in {@link open}.
+   * @default true
    */
+  // autoOrigin: boolean;
   autoOrigin = true;
 
   /**
-   * Variable: printOverlays
-   *
-   * Specifies if overlays should be printed. Default is false.
+   * Specifies if overlays should be printed.
+   * @default false
    */
+  // printOverlays: boolean;
   printOverlays = false;
 
   /**
-   * Variable: printControls
-   *
    * Specifies if controls (such as folding icons) should be printed. Default is
    * false.
    */
+  // printControls: boolean;
   printControls = false;
 
   /**
-   * Variable: printBackgroundImage
-   *
-   * Specifies if the background image should be printed. Default is false.
+   * Specifies if the background image should be printed.
+   * @default false
    */
+  // printBackgroundImage: boolean;
   printBackgroundImage = false;
 
   /**
-   * Variable: backgroundColor
-   *
-   * Holds the color value for the page background color. Default is #ffffff.
+   * Holds the color value for the page background color.
+   * @default '#ffffff'
    */
+  // backgroundColor: string;
   backgroundColor = '#ffffff';
 
   /**
-   * Variable: borderColor
-   *
    * Holds the color value for the page border.
    */
+  // borderColor: string;
   borderColor = null;
 
   /**
-   * Variable: title
-   *
    * Holds the title of the preview window.
    */
+  // title: string;
   title = null;
 
   /**
-   * Variable: pageSelector
-   *
    * Boolean that specifies if the page selector should be
-   * displayed. Default is true.
+   * displayed.
+   * @default true
    */
+  // pageSelector: boolean;
   pageSelector = null;
 
   /**
-   * Variable: wnd
-   *
    * Reference to the preview window.
    */
+  // wnd: Window;
   wnd = null;
 
   /**
-   * Variable: targetWindow
-   *
-   * Assign any window here to redirect the rendering in <open>.
+   * Assign any window here to redirect the rendering in {@link open}.
    */
+  // targetWindow: Window;
   targetWindow = null;
 
   /**
-   * Variable: pageCount
-   *
    * Holds the actual number of pages in the preview.
    */
+  // pageCount: number;
   pageCount = 0;
 
   /**
-   * Variable: clipping
-   *
    * Specifies is clipping should be used to avoid creating too many cell states
    * in large diagrams. The bounding box of the cells in the original diagram is
-   * used if this is enabled. Default is true.
+   * used if this is enabled.
+   * @default true
    */
+  // clipping: boolean;
   clipping = true;
 
   /**
-   * Function: getWindow
-   *
-   * Returns <wnd>.
+   * Returns {@link wnd}.
    */
+  // getWindow(): Window;
   getWindow() {
     return this.wnd;
   }
 
   /**
-   * Function: getDocType
-   *
    * Returns the string that should go before the HTML tag in the print preview
    * page. This implementation returns an X-UA meta tag for IE5 in quirks mode,
    * IE8 in IE8 standards mode and edge in IE9 standards mode.
    */
+  // getDoctype(): string;
   getDoctype() {
     const dt = '';
     return dt;
@@ -394,17 +365,14 @@ class mxPrintPreview {
   }
 
   /**
-   * Function: open
-   *
    * Shows the print preview window. The window is created here if it does
    * not exist.
    *
-   * Parameters:
-   *
-   * css - Optional CSS string to be used in the head section.
-   * targetWindow - Optional window that should be used for rendering. If
+   * @param css Optional CSS string to be used in the head section.
+   * @param targetWindow Optional window that should be used for rendering. If
    * this is specified then no HEAD tag, CSS and BODY tag will be written.
    */
+  // open(css?: string, targetWindow?: Window, forcePageBreaks?: boolean, keepOpen?: boolean): Window;
   open(css, targetWindow, forcePageBreaks, keepOpen) {
     // Closing the window while the page is being rendered may cause an
     // exception in IE. This and any other exceptions are simply ignored.
@@ -636,10 +604,9 @@ class mxPrintPreview {
   }
 
   /**
-   * Function: addPageBreak
-   *
    * Adds a page break to the given document.
    */
+  // addPageBreak(doc: Document): void;
   addPageBreak(doc) {
     const hr = doc.createElement('hr');
     hr.className = 'mxPageBreak';
@@ -647,10 +614,9 @@ class mxPrintPreview {
   }
 
   /**
-   * Function: closeDocument
-   *
-   * Writes the closing tags for body and page after calling <writePostfix>.
+   * Writes the closing tags for body and page after calling {@link writePostfix}.
    */
+  // closeDocument(): void;
   closeDocument() {
     try {
       if (this.wnd != null && this.wnd.document != null) {
@@ -670,11 +636,10 @@ class mxPrintPreview {
   }
 
   /**
-   * Function: writeHead
-   *
    * Writes the HEAD section into the given document, without the opening
    * and closing HEAD tags.
    */
+  // writeHead(doc: Document, css: string): void;
   writeHead(doc, css) {
     if (this.title != null) {
       doc.writeln(`<title>${this.title}</title>`);
@@ -713,19 +678,17 @@ class mxPrintPreview {
   }
 
   /**
-   * Function: writePostfix
-   *
    * Called before closing the body of the page. This implementation is empty.
    */
+  // writePostfix(doc: Document): any;
   writePostfix(doc) {
     // empty
   }
 
   /**
-   * Function: createPageSelector
-   *
    * Creates the page selector table.
    */
+  // createPageSelector(vpages: number, hpages: number): HTMLTableElement;
   createPageSelector(vpages, hpages) {
     const doc = this.wnd.document;
     const table = doc.createElement('table');
@@ -763,22 +726,19 @@ class mxPrintPreview {
   }
 
   /**
-   * Function: renderPage
-   *
    * Creates a DIV that prints a single page of the given
    * graph using the given scale and returns the DIV that
    * represents the page.
    *
-   * Parameters:
-   *
-   * w - Width of the page in pixels.
-   * h - Height of the page in pixels.
-   * dx - Optional horizontal page offset in pixels (used internally).
-   * dy - Optional vertical page offset in pixels (used internally).
-   * content - Callback that adds the HTML content to the inner div of a page.
+   * @param w Width of the page in pixels.
+   * @param h Height of the page in pixels.
+   * @param dx Optional horizontal page offset in pixels (used internally).
+   * @param dy Optional vertical page offset in pixels (used internally).
+   * @param content Callback that adds the HTML content to the inner div of a page.
    * Takes the inner div as the argument.
-   * pageNumber - Integer representing the page number.
+   * @param pageNumber Integer representing the page number.
    */
+  // renderPage(w: number, h: number, dx?: number, dy?: number, content?: Function, pageNumber?: number): HTMLDivElement;
   renderPage(w, h, dx, dy, content, pageNumber) {
     const doc = this.wnd.document;
     let div = document.createElement('div');
@@ -843,10 +803,9 @@ class mxPrintPreview {
   }
 
   /**
-   * Function: getRoot
-   *
    * Returns the root cell for painting the graph.
    */
+  // getRoot(): mxCell;
   getRoot() {
     let root = this.graph.view.currentRoot;
 
@@ -1029,19 +988,17 @@ class mxPrintPreview {
   }
 
   /**
-   * Function: getLinkForCellState
-   *
    * Returns the link for the given cell state. This returns null.
    */
+  // getLinkForCellState(state: mxCellState): string;
   getLinkForCellState(state) {
     return this.graph.getLinkForCell(state.cell);
   }
 
   /**
-   * Function: insertBackgroundImage
-   *
    * Inserts the background image into the given div.
    */
+  // insertBackgroundImage(div: HTMLDivElement, dx: number, dy: number): void;
   insertBackgroundImage(div, dx, dy) {
     const bg = this.graph.backgroundImage;
 
@@ -1059,32 +1016,29 @@ class mxPrintPreview {
   }
 
   /**
-   * Function: getCoverPages
-   *
    * Returns the pages to be added before the print output. This returns null.
    */
+  // getCoverPages(): any;
   getCoverPages() {
     return null;
   }
 
   /**
-   * Function: getAppendices
-   *
    * Returns the pages to be added after the print output. This returns null.
    */
+  // getAppendices(): any;
   getAppendices() {
     return null;
   }
 
   /**
-   * Function: print
-   *
    * Opens the print preview and shows the print dialog.
    *
    * Parameters:
    *
-   * css - Optional CSS string to be used in the head section.
+   * @param css Optional CSS string to be used in the head section.
    */
+  // print(css?: string): void;
   print(css) {
     const wnd = this.open(css);
 
@@ -1094,10 +1048,9 @@ class mxPrintPreview {
   }
 
   /**
-   * Function: close
-   *
    * Closes the print preview window.
    */
+  // close(): void;
   close() {
     if (this.wnd != null) {
       this.wnd.close();

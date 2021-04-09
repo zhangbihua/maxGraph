@@ -7,48 +7,24 @@ import mxUtils from '../../util/mxUtils';
 import mxResources from '../../util/mxResources';
 
 /**
- * Class: mxMultiplicity
+ * @class mxMultiplicity
  *
  * Defines invalid connections along with the error messages that they produce.
  * To add or remove rules on a graph, you must add/remove instances of this
- * class to <mxGraph.multiplicities>.
+ * class to {@link mxGraph.multiplicities}.
  *
- * Example:
+ * ### Example
  *
- * (code)
+ * @example
+ * ```javascript
  * graph.multiplicities.push(new mxMultiplicity(
  *   true, 'rectangle', null, null, 0, 2, ['circle'],
  *   'Only 2 targets allowed',
  *   'Only circle targets allowed'));
- * (end)
+ * ```
  *
  * Defines a rule where each rectangle must be connected to no more than 2
  * circles and no other types of targets are allowed.
- *
- * Constructor: mxMultiplicity
- *
- * Instantiate class mxMultiplicity in order to describe allowed
- * connections in a graph. Not all constraints can be enforced while
- * editing, some must be checked at validation time. The <countError> and
- * <typeError> are treated as resource keys in <mxResources>.
- *
- * Parameters:
- *
- * source - Boolean indicating if this rule applies to the source or target
- * terminal.
- * type - Type of the source or target terminal that this rule applies to.
- * See <type> for more information.
- * attr - Optional attribute name to match the source or target terminal.
- * value - Optional attribute value to match the source or target terminal.
- * min - Minimum number of edges for this rule. Default is 1.
- * max - Maximum number of edges for this rule. n means infinite. Default
- * is n.
- * validNeighbors - Array of types of the opposite terminal for which this
- * rule applies.
- * countError - Error to be displayed for invalid number of edges.
- * typeError - Error to be displayed for invalid opposite terminals.
- * validNeighborsAllowed - Optional boolean indicating if the array of
- * opposite types should be valid or invalid.
  */
 class mxMultiplicity {
   constructor(
@@ -77,103 +53,92 @@ class mxMultiplicity {
   }
 
   /**
-   * Variable: type
-   *
    * Defines the type of the source or target terminal. The type is a string
-   * passed to <mxUtils.isNode> together with the source or target vertex
+   * passed to {@link mxUtils.isNode} together with the source or target vertex
    * value as the first argument.
    */
+  // type: string;
   type = null;
 
   /**
-   * Variable: attr
-   *
    * Optional string that specifies the attributename to be passed to
-   * <mxUtils.isNode> to check if the rule applies to a cell.
+   * {@link mxUtils.isNode} to check if the rule applies to a cell.
    */
+  // attr: string;
   attr = null;
 
   /**
-   * Variable: value
-   *
    * Optional string that specifies the value of the attribute to be passed
-   * to <mxUtils.isNode> to check if the rule applies to a cell.
+   * to {@link mxUtils.isNode} to check if the rule applies to a cell.
    */
+  // value: string;
   value = null;
 
   /**
-   * Variable: source
-   *
    * Boolean that specifies if the rule is applied to the source or target
    * terminal of an edge.
    */
+  // source: boolean;
   source = null;
 
   /**
-   * Variable: min
-   *
    * Defines the minimum number of connections for which this rule applies.
-   * Default is 0.
+   *
+   * @default 0
    */
+  // min: number;
   min = null;
 
   /**
-   * Variable: max
-   *
    * Defines the maximum number of connections for which this rule applies.
-   * A value of 'n' means unlimited times. Default is 'n'.
+   * A value of 'n' means unlimited times.
+   * @default 'n'
    */
+  // max: number | 'n';
   max = null;
 
   /**
-   * Variable: validNeighbors
-   *
    * Holds an array of strings that specify the type of neighbor for which
-   * this rule applies. The strings are used in <mxCell.is> on the opposite
+   * this rule applies. The strings are used in {@link mxCell.is} on the opposite
    * terminal to check if the rule applies to the connection.
    */
+  // validNeighbors: Array<string>;
   validNeighbors = null;
 
   /**
-   * Variable: validNeighborsAllowed
-   *
    * Boolean indicating if the list of validNeighbors are those that are allowed
    * for this rule or those that are not allowed for this rule.
    */
+  // validNeighborsAllowed: boolean;
   validNeighborsAllowed = true;
 
   /**
-   * Variable: countError
-   *
    * Holds the localized error message to be displayed if the number of
-   * connections for which the rule applies is smaller than <min> or greater
-   * than <max>.
+   * connections for which the rule applies is smaller than {@link min} or greater
+   * than {@link max}.
    */
+  // countError: string;
   countError = null;
 
   /**
-   * Variable: typeError
-   *
    * Holds the localized error message to be displayed if the type of the
    * neighbor for a connection does not match the rule.
    */
+  // typeError: string;
   typeError = null;
 
   /**
-   * Function: check
-   *
    * Checks the multiplicity for the given arguments and returns the error
    * for the given connection or null if the multiplicity does not apply.
    *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph> instance.
-   * edge - <mxCell> that represents the edge to validate.
-   * source - <mxCell> that represents the source terminal.
-   * target - <mxCell> that represents the target terminal.
-   * sourceOut - Number of outgoing edges from the source terminal.
-   * targetIn - Number of incoming edges for the target terminal.
+   * @param graph Reference to the enclosing {@link mxGraph} instance.
+   * @param edge {@link mxCell} that represents the edge to validate.
+   * @param source {@link mxCell} that represents the source terminal.
+   * @param target {@link mxCell} that represents the target terminal.
+   * @param sourceOut Number of outgoing edges from the source terminal.
+   * @param targetIn Number of incoming edges for the target terminal.
    */
+  // check(graph: mxGraph, edge: mxCell, source: mxCell, target: mxCell, sourceOut: number, targetIn: number): string;
   check(graph, edge, source, target, sourceOut, targetIn) {
     let error = '';
 
@@ -206,11 +171,10 @@ class mxMultiplicity {
   }
 
   /**
-   * Function: checkNeighbors
-   *
-   * Checks if there are any valid neighbours in <validNeighbors>. This is only
-   * called if <validNeighbors> is a non-empty array.
+   * Checks if there are any valid neighbours in {@link validNeighbors}. This is only
+   * called if {@link validNeighbors} is a non-empty array.
    */
+  // checkNeighbors(graph: mxGraph, edge: mxCell, source: mxCell, target: mxCell): boolean;
   checkNeighbors(graph, edge, source, target) {
     const sourceValue = graph.model.getValue(source);
     const targetValue = graph.model.getValue(target);
@@ -231,12 +195,11 @@ class mxMultiplicity {
   }
 
   /**
-   * Function: checkTerminal
-   *
    * Checks the given terminal cell and returns true if this rule applies. The
    * given cell is the source or target of the given edge, depending on
-   * <source>. This implementation uses <checkType> on the terminal's value.
+   * {@link source}. This implementation uses {@link checkType} on the terminal's value.
    */
+  // checkTerminal(graph: mxGraph, terminal: mxCell, edge: mxCell): boolean;
   checkTerminal(graph, terminal, edge) {
     const value = graph.model.getValue(terminal);
 
@@ -244,10 +207,9 @@ class mxMultiplicity {
   }
 
   /**
-   * Function: checkType
-   *
    * Checks the type of the given value.
    */
+  // checkType(graph: mxCell, value: string, type: string, attr: string, attrValue: any): boolean;
   checkType(graph, value, type, attr, attrValue) {
     if (value != null) {
       if (!Number.isNaN(value.nodeType)) {

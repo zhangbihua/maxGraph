@@ -10,10 +10,6 @@ import mxGraph from "./mxGraph";
  * Class: mxCurrentRootChange
  *
  * Action to change the current root in a view.
- *
- * Constructor: mxCurrentRootChange
- *
- * Constructs a change of the current root in the given view.
  */
 class mxCurrentRootChange {
   constructor(view: mxGraphView, root: mxCell) {
@@ -45,10 +41,9 @@ class mxCurrentRootChange {
   isUp: boolean;
 
   /**
-   * Function: execute
-   *
    * Changes the current root of the view.
    */
+  // execute(): void;
   execute(): void {
     const tmp = this.view.currentRoot;
     this.view.currentRoot = this.previous;

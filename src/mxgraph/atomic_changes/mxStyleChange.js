@@ -1,12 +1,7 @@
 /**
- * Class: mxStyleChange
- *
  * Action to change a cell's style in a model.
  *
- * Constructor: mxStyleChange
- *
- * Constructs a change of a style in the
- * specified model.
+ * @class mxStyleChange
  */
 class mxStyleChange {
   constructor(model, cell, style) {
@@ -19,9 +14,10 @@ class mxStyleChange {
   /**
    * Function: execute
    *
-   * Changes the style of <cell> to <previous> using
+   * Changes the style of {@link cell}` to {@link previous}` using
    * <mxGraphModel.styleForCellChanged>.
    */
+  // execute(): void;
   execute() {
     if (this.cell != null) {
       this.style = this.previous;

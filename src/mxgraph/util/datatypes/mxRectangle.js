@@ -31,6 +31,7 @@ class mxRectangle extends mxPoint {
    *
    * Holds the width of the rectangle. Default is 0.
    */
+  // width: number;
   width = null;
 
   /**
@@ -38,6 +39,7 @@ class mxRectangle extends mxPoint {
    *
    * Holds the height of the rectangle. Default is 0.
    */
+  // height: number;
   height = null;
 
   /**
@@ -45,6 +47,7 @@ class mxRectangle extends mxPoint {
    *
    * Returns a new <mxRectangle> which is a copy of the given rectangle.
    */
+  // static fromRectangle(rect: mxRectangle): mxRectangle;
   static fromRectangle = rect => {
     return new mxRectangle(rect.x, rect.y, rect.width, rect.height);
   };
@@ -54,6 +57,7 @@ class mxRectangle extends mxPoint {
    *
    * Sets this rectangle to the specified values
    */
+  // setRect(x: number, y: number, w: number, h: number): void;
   setRect(x, y, w, h) {
     this.x = x;
     this.y = y;
@@ -66,6 +70,7 @@ class mxRectangle extends mxPoint {
    *
    * Returns the x-coordinate of the center point.
    */
+  // getCenterX(): number;
   getCenterX() {
     return this.x + this.width / 2;
   }
@@ -75,6 +80,7 @@ class mxRectangle extends mxPoint {
    *
    * Returns the y-coordinate of the center point.
    */
+  // getCenterY(): number;
   getCenterY() {
     return this.y + this.height / 2;
   }
@@ -84,6 +90,7 @@ class mxRectangle extends mxPoint {
    *
    * Adds the given rectangle to this rectangle.
    */
+  // add(rect: mxRectangle): void;
   add(rect) {
     if (rect != null) {
       const minX = Math.min(this.x, rect.x);
@@ -103,6 +110,7 @@ class mxRectangle extends mxPoint {
    *
    * Changes this rectangle to where it overlaps with the given rectangle.
    */
+  // intersect(rect: mxRectangle): void;
   intersect(rect) {
     if (rect != null) {
       const r1 = this.x + this.width;
@@ -125,6 +133,7 @@ class mxRectangle extends mxPoint {
    * the given amount from the x- and y-coordinates and adds twice the amount
    * to the width and height.
    */
+  // grow(amount: number): void;
   grow(amount) {
     this.x -= amount;
     this.y -= amount;
@@ -139,6 +148,7 @@ class mxRectangle extends mxPoint {
    *
    * Returns the top, left corner as a new <mxPoint>.
    */
+  // getPoint(): mxPoint;
   getPoint() {
     return new mxPoint(this.x, this.y);
   }
@@ -148,6 +158,7 @@ class mxRectangle extends mxPoint {
    *
    * Rotates this rectangle by 90 degree around its center point.
    */
+  // rotate90(): void;
   rotate90() {
     const t = (this.width - this.height) / 2;
     this.x += t;
@@ -162,6 +173,7 @@ class mxRectangle extends mxPoint {
    *
    * Returns true if the given object equals this rectangle.
    */
+  // equals(obj: mxRectangle): boolean;
   equals(obj) {
     return (
       obj != null &&

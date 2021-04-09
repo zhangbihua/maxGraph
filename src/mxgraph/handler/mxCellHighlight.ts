@@ -11,18 +11,13 @@ import mxGraph from '../view/graph/mxGraph';
 import mxShape from '../shape/mxShape';
 
 /**
- * Class: mxCellHighlight
- *
  * A helper class to highlight cells. Here is an example for a given cell.
  *
- * (code)
- * let highlight = new mxCellHighlight(graph, '#ff0000', 2);
+ * @example
+ * ```javascript
+ * var highlight = new mxCellHighlight(graph, '#ff0000', 2);
  * highlight.highlight(graph.view.getState(cell)));
- * (end)
- *
- * Constructor: mxCellHighlight
- *
- * Constructs a cell highlight.
+ * ```
  */
 class mxCellHighlight {
   constructor(
@@ -85,52 +80,46 @@ class mxCellHighlight {
   shape: mxShape | null=null;
 
   /**
-   * Variable: keepOnTop
-   *
-   * Specifies if the highlights should appear on top of everything
-   * else in the overlay pane. Default is false.
+   * Specifies if the highlights should appear on top of everything else in the overlay pane.
+   * @default false
    */
+  // keepOnTop: boolean;
   keepOnTop: boolean = false;
 
   /**
-   * Variable: graph
-   *
-   * Reference to the enclosing <mxGraph>.
+   * Reference to the enclosing {@link mxGraph}.
+   * @default true
    */
+  // graph: boolean;
   graph: mxGraph | null = null;
 
   /**
-   * Variable: state
-   *
-   * Reference to the <mxCellState>.
+   * Reference to the {@link mxCellState}.
+   * @default null
    */
+  // state: mxCellState;
   state: mxCellState | null = null;
 
   /**
-   * Variable: spacing
-   *
    * Specifies the spacing between the highlight for vertices and the vertex.
-   * Default is 2.
+   * @default 2
    */
+  // spacing: number;
   spacing: number = 2;
 
   /**
-   * Variable: resetHandler
-   *
-   * Holds the handler that automatically invokes reset if the highlight
-   * should be hidden.
+   * Holds the handler that automatically invokes reset if the highlight should be hidden.
+   * @default null
    */
+  // resetHandler: any;
   resetHandler: Function | null = null;
 
   /**
-   * Function: setHighlightColor
-   *
    * Sets the color of the rectangle used to highlight drop targets.
    *
-   * Parameters:
-   *
-   * color - String that represents the new highlight color.
+   * @param {string} color - String that represents the new highlight color.
    */
+  // setHighlightColor(color: string): void;
   setHighlightColor(color: string): void {
     this.highlightColor = color;
 
@@ -140,10 +129,9 @@ class mxCellHighlight {
   }
 
   /**
-   * Function: drawHighlight
-   *
    * Creates and returns the highlight shape for the given state.
    */
+  // drawHighlight(): void;
   drawHighlight(): void {
     this.shape = this.createShape();
     this.repaint();
@@ -164,10 +152,9 @@ class mxCellHighlight {
   }
 
   /**
-   * Function: createShape
-   *
    * Creates and returns the highlight shape for the given state.
    */
+  // createShape(): mxShape;
   createShape(): mxShape {
     const shape = <mxShape>(<mxGraph>this.graph).cellRenderer.createShape(<mxCellState>this.state);
 
@@ -193,19 +180,17 @@ class mxCellHighlight {
   }
 
   /**
-   * Function: getStrokeWidth
-   *
-   * Returns the stroke width.
+   * Updates the highlight after a change of the model or view.
    */
+  // getStrokeWidth(state: mxCellState): number;
   getStrokeWidth(state: mxCellState | null = null): number | null {
     return this.strokeWidth;
   }
 
   /**
-   * Function: repaint
-   *
    * Updates the highlight after a change of the model or view.
    */
+  // repaint(): void;
   repaint(): void {
     if (this.state != null && this.shape != null) {
       this.shape.scale = this.state.view.scale;
@@ -239,19 +224,17 @@ class mxCellHighlight {
   }
 
   /**
-   * Function: hide
-   *
    * Resets the state of the cell marker.
    */
+  // hide(): void;
   hide(): void {
     this.highlight(null);
   }
 
   /**
-   * Function: mark
-   *
    * Marks the <markedState> and fires a <mark> event.
    */
+  // highlight(state: mxCellState): void;
   highlight(state: mxCellState | null=null): void {
     if (this.state !== state) {
       if (this.shape != null) {
@@ -267,10 +250,9 @@ class mxCellHighlight {
   }
 
   /**
-   * Function: isHighlightAt
-   *
    * Returns true if this highlight is at the given position.
    */
+  // isHighlightAt(x: number, y: number): boolean;
   isHighlightAt(x: number, y: number): boolean {
     let hit = false;
     if (this.shape != null && document.elementFromPoint != null) {
@@ -288,10 +270,9 @@ class mxCellHighlight {
   }
 
   /**
-   * Function: destroy
-   *
    * Destroys the handler and all its resources and DOM nodes.
    */
+  // destroy(): void;
   destroy(): void {
     const graph = <mxGraph>this.graph;
     graph.getView().removeListener(this.resetHandler);

@@ -11,25 +11,17 @@ import mxPoint from '../util/datatypes/mxPoint';
 import mxConstants from '../util/mxConstants';
 
 /**
- * Class: mxGraphLayout
+ * @class mxGraphLayout
  *
  * Base class for all layout algorithms in mxGraph. Main public functions are
- * <moveCell> for handling a moved cell within a layouted parent, and <execute> for
+ * {@link moveCell} for handling a moved cell within a layouted parent, and {@link execute} for
  * running the layout on a given parent cell.
  *
  * Known Subclasses:
  *
- * <mxCircleLayout>, <mxCompactTreeLayout>, <mxCompositeLayout>,
- * <mxFastOrganicLayout>, <mxParallelEdgeLayout>, <mxPartitionLayout>,
- * <mxStackLayout>
- *
- * Constructor: mxGraphLayout
- *
- * Constructs a new layout using the given layouts.
- *
- * Arguments:
- *
- * graph - Enclosing
+ * {@link mxCircleLayout}, {@link mxCompactTreeLayout}, {@link mxCompositeLayout},
+ * {@link mxFastOrganicLayout}, {@link mxParallelEdgeLayout}, {@link mxPartitionLayout},
+ * {@link mxStackLayout}
  */
 class mxGraphLayout {
   constructor(graph) {
@@ -37,30 +29,25 @@ class mxGraphLayout {
   }
 
   /**
-   * Variable: graph
-   *
-   * Reference to the enclosing <mxGraph>.
+   * Reference to the enclosing {@link mxGraph}.
    */
+  // graph: mxGraph;
   graph = null;
 
   /**
-   * Variable: useBoundingBox
-   *
    * Boolean indicating if the bounding box of the label should be used if
    * its available. Default is true.
    */
+  // useBoundingBox: boolean;
   useBoundingBox = true;
 
   /**
-   * Variable: parent
-   *
    * The parent cell of the layout, if any
    */
+  // parent: mxCell;
   parent = null;
 
   /**
-   * Function: moveCell
-   *
    * Notified when a cell is being moved in a parent that has automatic
    * layout to update the cell state (eg. index) so that the outcome of the
    * layout will position the vertex as close to the point (x, y) as
@@ -68,12 +55,11 @@ class mxGraphLayout {
    *
    * Empty implementation.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> which has been moved.
-   * x - X-coordinate of the new cell location.
-   * y - Y-coordinate of the new cell location.
+   * @param cell {@link mxCell} which has been moved.
+   * @param x X-coordinate of the new cell location.
+   * @param y Y-coordinate of the new cell location.
    */
+  // moveCell(cell: mxCell, x: number, y: number): void;
   moveCell(cell, x, y) {}
 
   /**
@@ -92,49 +78,40 @@ class mxGraphLayout {
   resizeCell(cell, bounds) {}
 
   /**
-   * Function: execute
-   *
    * Executes the layout algorithm for the children of the given parent.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> whose children should be layed out.
+   * @param parent {@link mxCell} whose children should be layed out.
    */
+  // execute(parent: mxCell): void;
   execute(parent) {}
 
   /**
-   * Function: getGraph
-   *
    * Returns the graph that this layout operates on.
    */
+  // getGraph(): mxGraph;
   getGraph() {
     return this.graph;
   }
 
   /**
-   * Function: getConstraint
-   *
    * Returns the constraint for the given key and cell. The optional edge and
    * source arguments are used to return inbound and outgoing routing-
    * constraints for the given edge and vertex. This implementation always
    * returns the value for the given key in the style of the given cell.
    *
-   * Parameters:
-   *
-   * key - Key of the constraint to be returned.
-   * cell - <mxCell> whose constraint should be returned.
-   * edge - Optional <mxCell> that represents the connection whose constraint
+   * @param key Key of the constraint to be returned.
+   * @param cell {@link mxCell} whose constraint should be returned.
+   * @param edge Optional {@link mxCell} that represents the connection whose constraint
    * should be returned. Default is null.
-   * source - Optional boolean that specifies if the connection is incoming
+   * @param source Optional boolean that specifies if the connection is incoming
    * or outgoing. Default is null.
    */
+  // getConstraint(key: string, cell: mxCell, edge?: mxCell, source?: boolean): any;
   getConstraint(key, cell, edge, source) {
     return this.graph.getCurrentCellStyle(cell)[key];
   }
 
   /**
-   * Function: traverse
-   *
    * Traverses the (directed) graph invoking the given function for each
    * visited vertex and edge. The function is invoked with the current vertex
    * and the incoming edge as a parameter. This implementation makes sure
@@ -145,24 +122,23 @@ class mxGraphLayout {
    *
    * (code)
    * mxLog.show();
-   * let cell = graph.getSelectionCell();
-   * graph.traverse(cell, false, (vertex, edge)=>
+   * var cell = graph.getSelectionCell();
+   * graph.traverse(cell, false, function(vertex, edge)
    * {
    *   mxLog.debug(graph.getLabel(vertex));
    * });
    * (end)
    *
-   * Parameters:
-   *
-   * vertex - <mxCell> that represents the vertex where the traversal starts.
-   * directed - Optional boolean indicating if edges should only be traversed
+   * @param vertex {@link mxCell} that represents the vertex where the traversal starts.
+   * @param directed Optional boolean indicating if edges should only be traversed
    * from source to target. Default is true.
-   * func - Visitor function that takes the current vertex and the incoming
+   * @param func Visitor function that takes the current vertex and the incoming
    * edge as arguments. The traversal stops if the function returns false.
-   * edge - Optional <mxCell> that represents the incoming edge. This is
+   * @param edge Optional {@link mxCell} that represents the incoming edge. This is
    * null for the first step of the traversal.
-   * visited - Optional <mxDictionary> of cell paths for the visited cells.
+   * @param visited Optional {@link mxDictionary} of cell paths for the visited cells.
    */
+  // traverse(vertex: mxCell, directed?: boolean, func?: Function, edge?: mxCell, visited?: mxDictionary): void;
   traverse(vertex, directed, func, edge, visited) {
     if (func != null && vertex != null) {
       directed = directed != null ? directed : true;
@@ -192,16 +168,13 @@ class mxGraphLayout {
   }
 
   /**
-   * Function: isAncestor
-   *
    * Returns true if the given parent is an ancestor of the given child.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> that specifies the parent.
-   * child - <mxCell> that specifies the child.
-   * traverseAncestors - boolean whether to
+   * @param parent {@link mxCell} that specifies the parent.
+   * @param child {@link mxCell} that specifies the child.
+   * @param traverseAncestors boolean whether to
    */
+  // isAncestor(parent: mxCell, child: mxCell, traverseAncestors?: boolean): boolean;
   isAncestor(parent, child, traverseAncestors) {
     if (!traverseAncestors) {
       return this.graph.model.getParent(child) === parent;
@@ -219,30 +192,24 @@ class mxGraphLayout {
   }
 
   /**
-   * Function: isVertexMovable
-   *
-   * Returns a boolean indicating if the given <mxCell> is movable or
+   * Returns a boolean indicating if the given {@link mxCell} is movable or
    * bendable by the algorithm. This implementation returns true if the given
    * cell is movable in the graph.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose movable state should be returned.
+   * @param cell {@link mxCell} whose movable state should be returned.
    */
+  // isVertexMovable(cell: mxCell): boolean;
   isVertexMovable(cell) {
     return this.graph.isCellMovable(cell);
   }
 
   /**
-   * Function: isVertexIgnored
-   *
-   * Returns a boolean indicating if the given <mxCell> should be ignored by
+   * Returns a boolean indicating if the given {@link mxCell} should be ignored by
    * the algorithm. This implementation returns false for all vertices.
    *
-   * Parameters:
-   *
-   * vertex - <mxCell> whose ignored state should be returned.
+   * @param vertex {@link mxCell} whose ignored state should be returned.
    */
+  // isVertexIgnored(vertex: mxCell): boolean;
   isVertexIgnored(vertex) {
     return (
       !this.graph.getModel().isVertex(vertex) ||
@@ -251,15 +218,12 @@ class mxGraphLayout {
   }
 
   /**
-   * Function: isEdgeIgnored
-   *
-   * Returns a boolean indicating if the given <mxCell> should be ignored by
+   * Returns a boolean indicating if the given {@link mxCell} should be ignored by
    * the algorithm. This implementation returns false for all vertices.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose ignored state should be returned.
+   * @param cell {@link mxCell} whose ignored state should be returned.
    */
+  // isEdgeIgnored(edge: mxCell): boolean;
   isEdgeIgnored(edge) {
     const model = this.graph.getModel();
 
@@ -272,10 +236,9 @@ class mxGraphLayout {
   }
 
   /**
-   * Function: setEdgeStyleEnabled
-   *
    * Disables or enables the edge style of the given edge.
    */
+  // setEdgeStyleEnabled(edge: mxCell, value: any): void;
   setEdgeStyleEnabled(edge, value) {
     this.graph.setCellStyles(mxConstants.STYLE_NOEDGESTYLE, value ? '0' : '1', [
       edge,
@@ -283,10 +246,9 @@ class mxGraphLayout {
   }
 
   /**
-   * Function: setOrthogonalEdge
-   *
    * Disables or enables orthogonal end segments of the given edge.
    */
+  // setOrthogonalEdge(edge: mxCell, value: any): void;
   setOrthogonalEdge(edge, value) {
     this.graph.setCellStyles(mxConstants.STYLE_ORTHOGONAL, value ? '1' : '0', [
       edge,
@@ -294,11 +256,10 @@ class mxGraphLayout {
   }
 
   /**
-   * Function: getParentOffset
-   *
    * Determines the offset of the given parent to the parent
    * of the layout
    */
+  // getParentOffset(parent: mxCell): mxPoint;
   getParentOffset(parent) {
     const result = new mxPoint();
 
@@ -323,11 +284,10 @@ class mxGraphLayout {
   }
 
   /**
-   * Function: setEdgePoints
-   *
    * Replaces the array of mxPoints in the geometry of the given edge
    * with the given array of mxPoints.
    */
+  // setEdgePoints(edge: mxCell, points: Array<mxPoint>): void;
   setEdgePoints(edge, points) {
     if (edge != null) {
       const { model } = this.graph;
@@ -357,20 +317,17 @@ class mxGraphLayout {
   }
 
   /**
-   * Function: setVertexLocation
-   *
    * Sets the new position of the given cell taking into account the size of
-   * the bounding box if <useBoundingBox> is true. The change is only carried
+   * the bounding box if {@link useBoundingBox} is true. The change is only carried
    * out if the new location is not equal to the existing location, otherwise
    * the geometry is not replaced with an updated instance. The new or old
    * bounds are returned (including overlapping labels).
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose geometry is to be set.
-   * x - Integer that defines the x-coordinate of the new location.
-   * y - Integer that defines the y-coordinate of the new location.
+   * @param cell {@link mxCell} whose geometry is to be set.
+   * @param x Integer that defines the x-coordinate of the new location.
+   * @param y Integer that defines the y-coordinate of the new location.
    */
+  // setVertexLocation(cell: mxCell, x: number, y: number): mxRectangle;
   setVertexLocation(cell, x, y) {
     const model = this.graph.getModel();
     let geometry = model.getGeometry(cell);
@@ -428,11 +385,10 @@ class mxGraphLayout {
   }
 
   /**
-   * Function: getVertexBounds
-   *
-   * Returns an <mxRectangle> that defines the bounds of the given cell or
-   * the bounding box if <useBoundingBox> is true.
+   * Returns an {@link mxRectangle} that defines the bounds of the given cell or
+   * the bounding box if {@link useBoundingBox} is true.
    */
+  // getVertexBounds(cell: mxCell): mxRectangle;
   getVertexBounds(cell) {
     let geo = this.graph.getModel().getGeometry(cell);
 

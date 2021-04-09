@@ -1,12 +1,10 @@
 /**
- * Class: mxValueChange
- *
  * Action to change a user object in a model.
- *
- * Constructor: mxValueChange
  *
  * Constructs a change of a user object in the
  * specified model.
+ *
+ * @class mxValueChange
  */
 class mxValueChange {
   constructor(model, cell, value) {
@@ -17,11 +15,10 @@ class mxValueChange {
   }
 
   /**
-   * Function: execute
-   *
-   * Changes the value of <cell> to <previous> using
+   * Changes the value of {@link cell}` to {@link previous}` using
    * <mxGraphModel.valueForCellChanged>.
    */
+  // execute(): void;
   execute() {
     if (this.cell != null) {
       this.value = this.previous;

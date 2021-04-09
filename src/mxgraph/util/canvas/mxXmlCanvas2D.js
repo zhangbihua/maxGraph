@@ -49,25 +49,23 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Variable: textEnabled
-   *
-   * Specifies if text output should be enabled. Default is true.
+   * Specifies if text output should be enabled.
+   * @default true
    */
+  // textEnabled: boolean;
   textEnabled = true;
 
   /**
-   * Variable: compressed
-   *
    * Specifies if the output should be compressed by removing redundant calls.
-   * Default is true.
+   * @default true
    */
+  // compressed: boolean;
   compressed = true;
 
   /**
-   * Function: writeDefaults
-   *
-   * Writes the rendering defaults to <root>:
+   * Writes the rendering defaults to {@link root}:
    */
+  // writeDefaults(): void;
   writeDefaults() {
     let elem;
 
@@ -96,28 +94,25 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: format
-   *
    * Returns a formatted number with 2 decimal places.
    */
+  // format(value: string): number;
   format(value) {
     return parseFloat(parseFloat(value).toFixed(2));
   }
 
   /**
-   * Function: createElement
-   *
-   * Creates the given element using the owner document of <root>.
+   * Creates the given element using the owner document of {@link root}.
    */
+  // createElement(name: string): Element;
   createElement(name) {
     return this.root.ownerDocument.createElement(name);
   }
 
   /**
-   * Function: save
-   *
    * Saves the drawing state.
    */
+  // save(): void;
   save() {
     if (this.compressed) {
       super.save();
@@ -126,10 +121,9 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: restore
-   *
    * Restores the drawing state.
    */
+  // restore(): void;
   restore() {
     if (this.compressed) {
       super.restore();
@@ -138,14 +132,11 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: scale
-   *
    * Scales the output.
    *
-   * Parameters:
-   *
-   * scale - Number that represents the scale where 1 is equal to 100%.
+   * @param scale Number that represents the scale where 1 is equal to 100%.
    */
+  // scale(value: number): void;
   scale(value) {
     const elem = this.createElement('scale');
     elem.setAttribute('scale', value);
@@ -153,15 +144,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: translate
-   *
    * Translates the output.
    *
-   * Parameters:
-   *
-   * dx - Number that specifies the horizontal translation.
-   * dy - Number that specifies the vertical translation.
+   * @param dx Number that specifies the horizontal translation.
+   * @param dy Number that specifies the vertical translation.
    */
+  // translate(dx: number, dy: number): void;
   translate(dx, dy) {
     const elem = this.createElement('translate');
     elem.setAttribute('dx', this.format(dx));
@@ -170,19 +158,16 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: rotate
-   *
    * Rotates and/or flips the output around a given center. (Note: Due to
    * limitations in VML, the rotation cannot be concatenated.)
    *
-   * Parameters:
-   *
-   * theta - Number that represents the angle of the rotation (in degrees).
-   * flipH - Boolean indicating if the output should be flipped horizontally.
-   * flipV - Boolean indicating if the output should be flipped vertically.
-   * cx - Number that represents the x-coordinate of the rotation center.
-   * cy - Number that represents the y-coordinate of the rotation center.
+   * @param theta Number that represents the angle of the rotation (in degrees).
+   * @param flipH Boolean indicating if the output should be flipped horizontally.
+   * @param flipV Boolean indicating if the output should be flipped vertically.
+   * @param cx Number that represents the x-coordinate of the rotation center.
+   * @param cy Number that represents the y-coordinate of the rotation center.
    */
+  // rotate(theta: number, flipH: boolean, flipV: boolean, cx: number, cy: number): void;
   rotate(theta, flipH, flipV, cx, cy) {
     const elem = this.createElement('rotate');
 
@@ -197,15 +182,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setAlpha
-   *
    * Sets the current alpha.
    *
-   * Parameters:
-   *
-   * value - Number that represents the new alpha. Possible values are between
+   * @param value Number that represents the new alpha. Possible values are between
    * 1 (opaque) and 0 (transparent).
    */
+  // setAlpha(value: number): void;
   setAlpha(value) {
     if (this.compressed) {
       if (this.state.alpha === value) {
@@ -220,15 +202,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setFillAlpha
-   *
    * Sets the current fill alpha.
    *
-   * Parameters:
-   *
-   * value - Number that represents the new fill alpha. Possible values are between
+   * @param value Number that represents the new fill alpha. Possible values are between
    * 1 (opaque) and 0 (transparent).
    */
+  // setFillAlpha(value: number): void;
   setFillAlpha(value) {
     if (this.compressed) {
       if (this.state.fillAlpha === value) {
@@ -243,15 +222,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setStrokeAlpha
-   *
    * Sets the current stroke alpha.
    *
-   * Parameters:
-   *
-   * value - Number that represents the new stroke alpha. Possible values are between
+   * @param value Number that represents the new stroke alpha. Possible values are between
    * 1 (opaque) and 0 (transparent).
    */
+  // setStrokeAlpha(value: number): void;
   setStrokeAlpha(value) {
     if (this.compressed) {
       if (this.state.strokeAlpha === value) {
@@ -266,14 +242,11 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setFillColor
-   *
    * Sets the current fill color.
    *
-   * Parameters:
-   *
-   * value - Hexadecimal representation of the color or 'none'.
+   * @param value Hexadecimal representation of the color or 'none'.
    */
+  // setFillColor(value: string): void;
   setFillColor(value) {
     if (value === mxConstants.NONE) {
       value = null;
@@ -341,14 +314,11 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setStrokeColor
-   *
    * Sets the current stroke color.
    *
-   * Parameters:
-   *
-   * value - Hexadecimal representation of the color or 'none'.
+   * @param value Hexadecimal representation of the color or 'none'.
    */
+  // setStrokeColor(value: string): void;
   setStrokeColor(value) {
     if (value === mxConstants.NONE) {
       value = null;
@@ -367,14 +337,11 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setStrokeWidth
-   *
    * Sets the current stroke width.
    *
-   * Parameters:
-   *
-   * value - Numeric representation of the stroke width.
+   * @param value Numeric representation of the stroke width.
    */
+  // setStrokeWidth(value: number): void;
   setStrokeWidth(value) {
     if (this.compressed) {
       if (this.state.strokeWidth === value) {
@@ -389,16 +356,14 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setDashed
-   *
    * Enables or disables dashed lines.
    *
-   * Parameters:
-   *
-   * value - Boolean that specifies if dashed lines should be enabled.
-   * value - Boolean that specifies if the stroke width should be ignored
-   * for the dash pattern. Default is false.
+   * @param value Boolean that specifies if dashed lines should be enabled.
+   * @param value Boolean that specifies if the stroke width should be ignored
+   * for the dash pattern.
+   * @default false
    */
+  // setDashed(value: boolean, fixDash: boolean): void;
   setDashed(value, fixDash) {
     if (this.compressed) {
       if (this.state.dashed === value) {
@@ -418,17 +383,15 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setDashPattern
+   * Sets the current dash pattern.
+   * @default '3 3'
    *
-   * Sets the current dash pattern. Default is '3 3'.
-   *
-   * Parameters:
-   *
-   * value - String that represents the dash pattern, which is a sequence of
+   * @param value String that represents the dash pattern, which is a sequence of
    * numbers defining the length of the dashes and the length of the spaces
    * between the dashes. The lengths are relative to the line width - a length
    * of 1 is equals to the line width.
    */
+  // setDashPattern(value: string): void;
   setDashPattern(value) {
     if (this.compressed) {
       if (this.state.dashPattern === value) {
@@ -443,15 +406,13 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setLineCap
+   * Sets the line cap.
+   * @default 'flat' which corresponds to 'butt' in SVG
    *
-   * Sets the line cap. Default is 'flat' which corresponds to 'butt' in SVG.
-   *
-   * Parameters:
-   *
-   * value - String that represents the line cap. Possible values are flat, round
+   * @param value String that represents the line cap. Possible values are flat, round
    * and square.
    */
+  // setLineCap(value: string): void;
   setLineCap(value) {
     if (this.compressed) {
       if (this.state.lineCap === value) {
@@ -466,15 +427,13 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setLineJoin
+   * Sets the line join.
+   * @default 'miter'
    *
-   * Sets the line join. Default is 'miter'.
-   *
-   * Parameters:
-   *
-   * value - String that represents the line join. Possible values are miter,
+   * @param value String that represents the line join. Possible values are miter,
    * round and bevel.
    */
+  // setLineJoin(value: string): void;
   setLineJoin(value) {
     if (this.compressed) {
       if (this.state.lineJoin === value) {
@@ -489,14 +448,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setMiterLimit
+   * Sets the miter limit.
+   * @default 10
    *
-   * Sets the miter limit. Default is 10.
-   *
-   * Parameters:
-   *
-   * value - Number that represents the miter limit.
+   * @param value Number that represents the miter limit.
    */
+  // setMiterLimit(value: number): void;
   setMiterLimit(value) {
     if (this.compressed) {
       if (this.state.miterLimit === value) {
@@ -511,14 +468,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setFontColor
+   * Sets the current font color.
+   * @default '#000000'
    *
-   * Sets the current font color. Default is '#000000'.
-   *
-   * Parameters:
-   *
-   * value - Hexadecimal representation of the color or 'none'.
+   * @param value Hexadecimal representation of the color or 'none'.
    */
+  // setFontColor(value: string): void;
   setFontColor(value) {
     if (this.textEnabled) {
       if (value === mxConstants.NONE) {
@@ -539,14 +494,11 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setFontBackgroundColor
-   *
    * Sets the current font background color.
    *
-   * Parameters:
-   *
-   * value - Hexadecimal representation of the color or 'none'.
+   * @param value Hexadecimal representation of the color or 'none'.
    */
+  // setFontBackgroundColor(value: string): void;
   setFontBackgroundColor(value) {
     if (this.textEnabled) {
       if (value === mxConstants.NONE) {
@@ -567,14 +519,11 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setFontBorderColor
-   *
    * Sets the current font border color.
    *
-   * Parameters:
-   *
-   * value - Hexadecimal representation of the color or 'none'.
+   * @param value Hexadecimal representation of the color or 'none'.
    */
+  // setFontBorderColor(value: string): void;
   setFontBorderColor(value) {
     if (this.textEnabled) {
       if (value === mxConstants.NONE) {
@@ -595,14 +544,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setFontSize
+   * Sets the current font size.
+   * @default {@link mxConstants.DEFAULT_FONTSIZE}
    *
-   * Sets the current font size. Default is <mxConstants.DEFAULT_FONTSIZE>.
-   *
-   * Parameters:
-   *
-   * value - Numeric representation of the font size.
+   * @param value Numeric representation of the font size.
    */
+  // setFontSize(value: number): void;
   setFontSize(value) {
     if (this.textEnabled) {
       if (this.compressed) {
@@ -619,15 +566,13 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setFontFamily
+   * Sets the current font family.
+   * @default {@link mxConstants.DEFAULT_FONTFAMILY}
    *
-   * Sets the current font family. Default is <mxConstants.DEFAULT_FONTFAMILY>.
-   *
-   * Parameters:
-   *
-   * value - String representation of the font family. This handles the same
+   * @param value String representation of the font family. This handles the same
    * values as the CSS font-family property.
    */
+  // setFontFamily(value: string): void;
   setFontFamily(value) {
     if (this.textEnabled) {
       if (this.compressed) {
@@ -644,15 +589,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setFontStyle
-   *
    * Sets the current font style.
    *
-   * Parameters:
-   *
-   * value - Numeric representation of the font family. This is the sum of the
-   * font styles from <mxConstants>.
+   * @param value Numeric representation of the font family. This is the sum of the
+   * font styles from {@link mxConstants}.
    */
+  // setFontStyle(value: string): void;
   setFontStyle(value) {
     if (this.textEnabled) {
       if (value == null) {
@@ -673,14 +615,11 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setShadow
-   *
    * Enables or disables shadows.
    *
-   * Parameters:
-   *
-   * value - Boolean that specifies if shadows should be enabled.
+   * @param value Boolean that specifies if shadows should be enabled.
    */
+  // setShadow(value: boolean): void;
   setShadow(value) {
     if (this.compressed) {
       if (this.state.shadow === value) {
@@ -695,14 +634,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setShadowColor
+   * Sets the current shadow color. Default {@link mxConstants.SHADOWCOLOR}
    *
-   * Sets the current shadow color. Default is <mxConstants.SHADOWCOLOR>.
    *
-   * Parameters:
-   *
-   * value - Hexadecimal representation of the color or 'none'.
+   * @param value Hexadecimal representation of the color or 'none'.
    */
+  // setShadowColor(value: string): void;
   setShadowColor(value) {
     if (this.compressed) {
       if (value === mxConstants.NONE) {
@@ -722,15 +659,11 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setShadowAlpha
+   * Sets the current shadows alpha. Default is {@link mxConstants.SHADOW_OPACITY}
    *
-   * Sets the current shadows alpha. Default is <mxConstants.SHADOW_OPACITY>.
-   *
-   * Parameters:
-   *
-   * value - Number that represents the new alpha. Possible values are between
-   * 1 (opaque) and 0 (transparent).
+   * @param value Number that represents the new alpha. Possible values are between 1 (opaque) and 0 (transparent).
    */
+  // setShadowAlpha(value: number): void;
   setShadowAlpha(value) {
     if (this.compressed) {
       if (this.state.shadowAlpha === value) {
@@ -745,15 +678,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setShadowOffset
-   *
    * Sets the current shadow offset.
    *
-   * Parameters:
-   *
-   * dx - Number that represents the horizontal offset of the shadow.
-   * dy - Number that represents the vertical offset of the shadow.
+   * @param dx Number that represents the horizontal offset of the shadow.
+   * @param dy Number that represents the vertical offset of the shadow.
    */
+  // setShadowOffset(dx: number, dy: number): void;
   setShadowOffset(dx, dy) {
     if (this.compressed) {
       if (this.state.shadowDx === dx && this.state.shadowDy === dy) {
@@ -769,17 +699,14 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: rect
-   *
    * Puts a rectangle into the drawing buffer.
    *
-   * Parameters:
-   *
-   * x - Number that represents the x-coordinate of the rectangle.
-   * y - Number that represents the y-coordinate of the rectangle.
-   * w - Number that represents the width of the rectangle.
-   * h - Number that represents the height of the rectangle.
+   * @param x Number that represents the x-coordinate of the rectangle.
+   * @param y Number that represents the y-coordinate of the rectangle.
+   * @param w Number that represents the width of the rectangle.
+   * @param h Number that represents the height of the rectangle.
    */
+  // rect(x: number, y: number, w: number, h: number): void;
   rect(x, y, w, h) {
     const elem = this.createElement('rect');
     elem.setAttribute('x', this.format(x));
@@ -790,19 +717,16 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: roundrect
-   *
    * Puts a rounded rectangle into the drawing buffer.
    *
-   * Parameters:
-   *
-   * x - Number that represents the x-coordinate of the rectangle.
-   * y - Number that represents the y-coordinate of the rectangle.
-   * w - Number that represents the width of the rectangle.
-   * h - Number that represents the height of the rectangle.
-   * dx - Number that represents the horizontal rounding.
-   * dy - Number that represents the vertical rounding.
+   * @param x Number that represents the x-coordinate of the rectangle.
+   * @param y Number that represents the y-coordinate of the rectangle.
+   * @param w Number that represents the width of the rectangle.
+   * @param h Number that represents the height of the rectangle.
+   * @param dx Number that represents the horizontal rounding.
+   * @param dy Number that represents the vertical rounding.
    */
+  // roundrect(x: number, y: number, w: number, h: number, dx: number, dy: number): void;
   roundrect(x, y, w, h, dx, dy) {
     const elem = this.createElement('roundrect');
     elem.setAttribute('x', this.format(x));
@@ -815,17 +739,14 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: ellipse
-   *
    * Puts an ellipse into the drawing buffer.
    *
-   * Parameters:
-   *
-   * x - Number that represents the x-coordinate of the ellipse.
-   * y - Number that represents the y-coordinate of the ellipse.
-   * w - Number that represents the width of the ellipse.
-   * h - Number that represents the height of the ellipse.
+   * @param x Number that represents the x-coordinate of the ellipse.
+   * @param y Number that represents the y-coordinate of the ellipse.
+   * @param w Number that represents the width of the ellipse.
+   * @param h Number that represents the height of the ellipse.
    */
+  // ellipse(x: number, y: number, w: number, h: number): void;
   ellipse(x, y, w, h) {
     const elem = this.createElement('ellipse');
     elem.setAttribute('x', this.format(x));
@@ -868,10 +789,9 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: begin
-   *
    * Starts a new path and puts it into the drawing buffer.
    */
+  // begin(): void;
   begin() {
     this.root.appendChild(this.createElement('begin'));
     this.lastX = 0;
@@ -879,15 +799,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: moveTo
-   *
    * Moves the current path the given point.
    *
-   * Parameters:
-   *
-   * x - Number that represents the x-coordinate of the point.
-   * y - Number that represents the y-coordinate of the point.
+   * @param x Number that represents the x-coordinate of the point.
+   * @param y Number that represents the y-coordinate of the point.
    */
+  // moveTo(x: number, y: number): void;
   moveTo(x, y) {
     const elem = this.createElement('move');
     elem.setAttribute('x', this.format(x));
@@ -898,15 +815,12 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: lineTo
-   *
    * Draws a line to the given coordinates.
    *
-   * Parameters:
-   *
-   * x - Number that represents the x-coordinate of the endpoint.
-   * y - Number that represents the y-coordinate of the endpoint.
+   * @param x Number that represents the x-coordinate of the endpoint.
+   * @param y Number that represents the y-coordinate of the endpoint.
    */
+  // lineTo(x: number, y: number): void;
   lineTo(x, y) {
     const elem = this.createElement('line');
     elem.setAttribute('x', this.format(x));
@@ -917,17 +831,14 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: quadTo
-   *
    * Adds a quadratic curve to the current path.
    *
-   * Parameters:
-   *
-   * x1 - Number that represents the x-coordinate of the control point.
-   * y1 - Number that represents the y-coordinate of the control point.
-   * x2 - Number that represents the x-coordinate of the endpoint.
-   * y2 - Number that represents the y-coordinate of the endpoint.
+   * @param x1 Number that represents the x-coordinate of the control point.
+   * @param y1 Number that represents the y-coordinate of the control point.
+   * @param x2 Number that represents the x-coordinate of the endpoint.
+   * @param y2 Number that represents the y-coordinate of the endpoint.
    */
+  // quadTo(x1: number, y1: number, x2: number, y2: number): void;
   quadTo(x1, y1, x2, y2) {
     const elem = this.createElement('quad');
     elem.setAttribute('x1', this.format(x1));
@@ -940,19 +851,16 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: curveTo
-   *
    * Adds a bezier curve to the current path.
    *
-   * Parameters:
-   *
-   * x1 - Number that represents the x-coordinate of the first control point.
-   * y1 - Number that represents the y-coordinate of the first control point.
-   * x2 - Number that represents the x-coordinate of the second control point.
-   * y2 - Number that represents the y-coordinate of the second control point.
-   * x3 - Number that represents the x-coordinate of the endpoint.
-   * y3 - Number that represents the y-coordinate of the endpoint.
+   * @param x1 Number that represents the x-coordinate of the first control point.
+   * @param y1 Number that represents the y-coordinate of the first control point.
+   * @param x2 Number that represents the x-coordinate of the second control point.
+   * @param y2 Number that represents the y-coordinate of the second control point.
+   * @param x3 Number that represents the x-coordinate of the endpoint.
+   * @param y3 Number that represents the y-coordinate of the endpoint.
    */
+  // curveTo(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number): void;
   curveTo(x1, y1, x2, y2, x3, y3) {
     const elem = this.createElement('curve');
     elem.setAttribute('x1', this.format(x1));
@@ -967,10 +875,9 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: close
-   *
    * Closes the current path.
    */
+  // close(): void;
   close() {
     this.root.appendChild(this.createElement('close'));
   }
@@ -1064,28 +971,25 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: stroke
-   *
    * Paints the outline of the current drawing buffer.
    */
+  // stroke(): void;
   stroke() {
     this.root.appendChild(this.createElement('stroke'));
   }
 
   /**
-   * Function: fill
-   *
    * Fills the current drawing buffer.
    */
+  // fill(): void;
   fill() {
     this.root.appendChild(this.createElement('fill'));
   }
 
   /**
-   * Function: fillAndStroke
-   *
    * Fills the current drawing buffer and its outline.
    */
+  // fillAndStroke(): void;
   fillAndStroke() {
     this.root.appendChild(this.createElement('fillstroke'));
   }

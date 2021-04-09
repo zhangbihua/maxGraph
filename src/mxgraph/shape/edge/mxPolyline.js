@@ -36,37 +36,33 @@ class mxPolyline extends mxShape {
   }
 
   /**
-   * Function: getRotation
-   *
    * Returns 0.
    */
+  // getRotation(): number;
   getRotation() {
     return 0;
   }
 
   /**
-   * Function: getShapeRotation
-   *
    * Returns 0.
    */
+  // getShapeRotation(): number;
   getShapeRotation() {
     return 0;
   }
 
   /**
-   * Function: isPaintBoundsInverted
-   *
    * Returns false.
    */
+  // isPaintBoundsInverted(): boolean;
   isPaintBoundsInverted() {
     return false;
   }
 
   /**
-   * Function: paintEdgeShape
-   *
    * Paints the line shape.
    */
+  // paintEdgeShape(c: mxAbstractCanvas2D, pts: Array<mxPoint>): void;
   paintEdgeShape(c, pts) {
     const prev = c.pointerEventsValue;
     c.pointerEventsValue = 'stroke';
@@ -81,10 +77,9 @@ class mxPolyline extends mxShape {
   }
 
   /**
-   * Function: paintLine
-   *
    * Paints the line shape.
    */
+  // paintLine(c: mxAbstractCanvas2D, pts: Array<mxPoint>, rounded?: boolean): void;
   paintLine(c, pts, rounded) {
     const arcSize =
       mxUtils.getValue(
@@ -98,10 +93,9 @@ class mxPolyline extends mxShape {
   }
 
   /**
-   * Function: paintCurvedLine
-   *
-   * Paints a curved line.
+   * Paints the line shape.
    */
+  // paintCurvedLine(c: mxAbstractCanvas2D, pts: Array<mxPoint>): void;
   paintCurvedLine(c, pts) {
     c.begin();
 

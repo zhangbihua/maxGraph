@@ -11,13 +11,9 @@ import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
 import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 
 /**
- * Class: mxHexagon
- *
  * Implementation of the hexagon shape.
- *
- * Constructor: mxHexagon
- *
- * Constructs a new hexagon shape.
+ * @class mxHexagon
+ * @extends {mxActor}
  */
 class mxHexagon extends mxActor {
   constructor() {
@@ -25,10 +21,14 @@ class mxHexagon extends mxActor {
   }
 
   /**
-   * Function: redrawPath
-   *
    * Draws the path for this shape.
+   * @param {mxAbstractCanvas2D} c
+   * @param {number} x
+   * @param {number} y
+   * @param {number} w
+   * @param {number} h
    */
+  // redrawPath(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   redrawPath(c: mxSvgCanvas2D, x: number, y: number, w: number, h: number) {
     const arcSize =
       mxUtils.getValue(

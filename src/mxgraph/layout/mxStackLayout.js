@@ -38,150 +38,125 @@ class mxStackLayout extends mxGraphLayout {
   }
 
   /**
-   * Variable: horizontal
-   *
-   * Specifies the orientation of the layout. Default is true.
+   * Specifies the orientation of the layout.
    */
+  // horizontal: boolean;
   horizontal = null;
 
   /**
-   * Variable: spacing
-   *
-   * Specifies the spacing between the cells. Default is 0.
+   * Specifies the spacing between the cells.
    */
+  // spacing: number;
   spacing = null;
 
   /**
-   * Variable: x0
-   *
-   * Specifies the horizontal origin of the layout. Default is 0.
+   * Specifies the horizontal origin of the layout.
    */
+  // x0: number;
   x0 = null;
 
   /**
-   * Variable: y0
-   *
-   * Specifies the vertical origin of the layout. Default is 0.
+   * Specifies the vertical origin of the layout.
    */
+  // y0: number;
   y0 = null;
 
   /**
-   * Variable: border
-   *
-   * Border to be added if fill is true. Default is 0.
+   * Border to be added if fill is true.
    */
+  // border: number;
   border = 0;
 
   /**
-   * Variable: marginTop
-   *
-   * Top margin for the child area. Default is 0.
+   * Top margin for the child area.
    */
+  // marginTop: number;
   marginTop = 0;
 
   /**
-   * Variable: marginLeft
-   *
-   * Top margin for the child area. Default is 0.
+   * Top margin for the child area.
    */
+  // marginLeft: number;
   marginLeft = 0;
 
   /**
-   * Variable: marginRight
-   *
-   * Top margin for the child area. Default is 0.
+   * Top margin for the child area.
    */
+  // marginRight: number;
   marginRight = 0;
 
   /**
-   * Variable: marginBottom
-   *
-   * Top margin for the child area. Default is 0.
+   * Top margin for the child area.
    */
+  // marginBottom: number;
   marginBottom = 0;
 
   /**
-   * Variable: keepFirstLocation
-   *
-   * Boolean indicating if the location of the first cell should be
-   * kept, that is, it will not be moved to x0 or y0. Default is false.
+   * Boolean indicating if the location of the first cell should be kept, that is, it will not be moved to x0 or y0.
    */
+  // keepFirstLocation: boolean;
   keepFirstLocation = false;
 
   /**
-   * Variable: fill
-   *
-   * Boolean indicating if dimension should be changed to fill out the parent
-   * cell. Default is false.
+   * Boolean indicating if dimension should be changed to fill out the parent cell.
    */
+  // fill: boolean;
   fill = false;
 
   /**
-   * Variable: resizeParent
-   *
-   * If the parent should be resized to match the width/height of the
-   * stack. Default is false.
+   * If the parent should be resized to match the width/height of the stack.
    */
+  // resizeParent: boolean;
   resizeParent = false;
 
   /**
-   * Variable: resizeParentMax
-   *
    * Use maximum of existing value and new value for resize of parent.
-   * Default is false.
    */
+  // resizeParentMax: boolean;
   resizeParentMax = false;
 
   /**
-   * Variable: resizeLast
-   *
-   * If the last element should be resized to fill out the parent. Default is
-   * false. If <resizeParent> is true then this is ignored.
+   * If the last element should be resized to fill out the parent.
    */
+  // resizeLast: boolean;
   resizeLast = false;
 
   /**
-   * Variable: wrap
-   *
-   * Value at which a new column or row should be created. Default is null.
+   * Value at which a new column or row should be created.
    */
+  // wrap: boolean;
   wrap = null;
 
   /**
-   * Variable: borderCollapse
-   *
-   * If the strokeWidth should be ignored. Default is true.
+   * If the strokeWidth should be ignored.
    */
+  // borderCollapse: boolean;
   borderCollapse = true;
 
   /**
-   * Variable: allowGaps
-   *
-   * If gaps should be allowed in the stack. Default is false.
+   * If gaps should be allowed in the stack.
    */
+  // allowGaps: boolean;
   allowGaps = false;
 
   /**
-   * Variable: gridSize
-   *
-   * Grid size for alignment of position and size. Default is 0.
+   * Grid size for alignment of position and size.
    */
+  // gridSize: number;
   gridSize = 0;
 
   /**
-   * Function: isHorizontal
-   *
-   * Returns <horizontal>.
+   * Returns horizontal.
    */
+  // isHorizontal(): boolean;
   isHorizontal() {
     return this.horizontal;
   }
 
   /**
-   * Function: moveCell
-   *
-   * Implements <mxGraphLayout.moveCell>.
+   * Implements mxGraphLayout.moveCell.
    */
+  // moveCell(cell: mxCell, x: number, y: number): void;
   moveCell(cell, x, y) {
     const model = this.graph.getModel();
     const parent = model.getParent(cell);
@@ -229,11 +204,9 @@ class mxStackLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: getParentSize
-   *
-   * Returns the size for the parent container or the size of the graph
-   * container if the parent is a layer or the root of the model.
+   * Returns the size for the parent container or the size of the graph container if the parent is a layer or the root of the model.
    */
+  // getParentSize(): void;
   getParentSize(parent) {
     const model = this.graph.getModel();
     let pgeo = model.getGeometry(parent);
@@ -255,10 +228,9 @@ class mxStackLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: getLayoutCells
-   *
    * Returns the cells to be layouted.
    */
+  // getLayoutCells(parent: mxCell): Array<mxCell>;
   getLayoutCells(parent) {
     const model = this.graph.getModel();
     const childCount = model.getChildCount(parent);
@@ -295,10 +267,9 @@ class mxStackLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: snap
-   *
    * Snaps the given value to the grid size.
    */
+  // snap(): void;
   snap(value) {
     if (this.gridSize != null && this.gridSize > 0) {
       value = Math.max(value, this.gridSize);
@@ -313,13 +284,9 @@ class mxStackLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: execute
-   *
-   * Implements <mxGraphLayout.execute>.
-   *
-   * Only children where <isVertexIgnored> returns false are taken into
-   * account.
+   * Implements mxGraphLayout.execute.
    */
+  // execute(parent: mxCell): void;
   execute(parent) {
     if (parent != null) {
       const pgeo = this.getParentSize(parent);

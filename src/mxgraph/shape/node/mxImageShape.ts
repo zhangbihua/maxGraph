@@ -13,25 +13,11 @@ import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 import mxCellOverlay from '../../view/cell/mxCellOverlay';
 
 /**
- * Class: mxImageShape
+ * Extends {@link mxShape} to implement an image shape.
+ * This shape is registered under {@link mxConstants.SHAPE_IMAGE} in {@link mxCellRenderer}.
  *
- * Extends <mxShape> to implement an image shape. This shape is registered
- * under <mxConstants.SHAPE_IMAGE> in <mxCellRenderer>.
- *
- * Constructor: mxImageShape
- *
- * Constructs a new image shape.
- *
- * Parameters:
- *
- * bounds - <mxRectangle> that defines the bounds. This is stored in
- * <mxShape.bounds>.
- * image - String that specifies the URL of the image. This is stored in
- * <image>.
- * fill - String that defines the fill color. This is stored in <fill>.
- * stroke - String that defines the stroke color. This is stored in <stroke>.
- * strokewidth - Optional integer that defines the stroke width. Default is
- * 1. This is stored in <strokewidth>.
+ * @class mxImageShape
+ * @extends {mxRectangleShape}
  */
 class mxImageShape extends mxRectangleShape {
   constructor(
@@ -59,36 +45,34 @@ class mxImageShape extends mxRectangleShape {
   overlay: mxCellOverlay | null = null;
 
   /**
-   * Variable: preserveImageAspect
-   *
    * Switch to preserve image aspect. Default is true.
+   * @default true
    */
+  // preserveImageAspect: boolean;
   preserveImageAspect = true;
 
   /**
-   * Function: getSvgScreenOffset
+   * Disables offset in IE9 for crisper image output.
    */
+  // getSvgScreenOffset(): number;
   getSvgScreenOffset(): number {
     return 0;
   }
 
   /**
-   * Function: apply
+   * Overrides {@link mxShape.apply} to replace the fill and stroke colors with the
+   * respective values from {@link mxConstants.STYLE_IMAGE_BACKGROUND} and
+   * {@link mxConstants.STYLE_IMAGE_BORDER}.
    *
-   * Overrides <mxShape.apply> to replace the fill and stroke colors with the
-   * respective values from <mxConstants.STYLE_IMAGE_BACKGROUND> and
-   * <mxConstants.STYLE_IMAGE_BORDER>.
-   *
-   * Applies the style of the given <mxCellState> to the shape. This
+   * Applies the style of the given {@link mxCellState} to the shape. This
    * implementation assigns the following styles to local fields:
    *
-   * - <mxConstants.STYLE_IMAGE_BACKGROUND> => fill
-   * - <mxConstants.STYLE_IMAGE_BORDER> => stroke
+   * - {@link mxConstants.STYLE_IMAGE_BACKGROUND} => fill
+   * - {@link mxConstants.STYLE_IMAGE_BORDER} => stroke
    *
-   * Parameters:
-   *
-   * state - <mxCellState> of the corresponding cell.
+   * @param {mxCellState} state   {@link mxCellState} of the corresponding cell.
    */
+  // apply(state: mxCellState): void;
   apply(state: mxCellState) {
     super.apply(state);
 
@@ -109,22 +93,20 @@ class mxImageShape extends mxRectangleShape {
   }
 
   /**
-   * Function: isHtmlAllowed
-   *
    * Returns true if HTML is allowed for this shape. This implementation always
    * returns false.
    */
+  // isHtmlAllowed(): boolean;
   isHtmlAllowed(): boolean {
     return !this.preserveImageAspect;
   }
 
   /**
-   * Function: createHtml
-   *
    * Creates and returns the HTML DOM node(s) to represent
    * this shape. This implementation falls back to <createVml>
    * so that the HTML creation is optional.
    */
+  // createHtml(): HTMLElement;
   createHtml(): HTMLElement {
     const node = document.createElement('div');
     node.style.position = 'absolute';
@@ -132,10 +114,9 @@ class mxImageShape extends mxRectangleShape {
   }
 
   /**
-   * Function: isRoundable
-   *
    * Disables inherited roundable support.
    */
+  // isRoundable(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): boolean;
   isRoundable(
     c: mxSvgCanvas2D,
     x: number,
@@ -147,10 +128,9 @@ class mxImageShape extends mxRectangleShape {
   }
 
   /**
-   * Function: paintVertexShape
-   *
    * Generic background painting implementation.
    */
+  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintVertexShape(
     c: mxSvgCanvas2D,
     x: number,

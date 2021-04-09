@@ -12,53 +12,54 @@ import mxCell from '../view/cell/mxCell';
 import mxLog from '../util/gui/mxLog';
 
 /**
- * Class: mxCodec
- *
- * XML codec for JavaScript object graphs. See <mxObjectCodec> for a
+ * XML codec for JavaScript object graphs. See {@link mxObjectCodec} for a
  * description of the general encoding/decoding scheme. This class uses the
- * codecs registered in <mxCodecRegistry> for encoding/decoding each object.
+ * codecs registered in {@link mxCodecRegistry} for encoding/decoding each object.
  *
- * References:
+ * ### References
  *
  * In order to resolve references, especially forward references, the mxCodec
  * constructor must be given the document that contains the referenced
  * elements.
  *
- * Examples:
+ * ### Examples
  *
  * The following code is used to encode a graph model.
  *
- * (code)
- * let encoder = new mxCodec();
- * let result = encoder.encode(graph.getModel());
- * let xml = mxUtils.getXml(result);
- * (end)
+ * @example
+ * ```javascript
+ * var encoder = new mxCodec();
+ * var result = encoder.encode(graph.getModel());
+ * var xml = mxUtils.getXml(result);
+ * ```
  *
- * Example:
+ * #### Example
  *
  * Using the code below, an XML document is decoded into an existing model. The
  * document may be obtained using one of the functions in mxUtils for loading
- * an XML file, eg. <mxUtils.get>, or using <mxUtils.parseXml> for parsing an
+ * an XML file, eg. {@link mxUtils.get}, or using {@link mxUtils.parseXml} for parsing an
  * XML string.
  *
- * (code)
- * let doc = mxUtils.parseXml(xmlString);
- * let codec = new mxCodec(doc);
+ * @example
+ * ```javascript
+ * var doc = mxUtils.parseXml(xmlString);
+ * var codec = new mxCodec(doc);
  * codec.decode(doc.documentElement, graph.getModel());
- * (end)
+ * ```
  *
- * Example:
+ * #### Example
  *
  * This example demonstrates parsing a list of isolated cells into an existing
  * graph model. Note that the cells do not have a parent reference so they can
  * be added anywhere in the cell hierarchy after parsing.
  *
- * (code)
- * let xml = '<root><mxCell id="2" value="Hello," vertex="1"><mxGeometry x="20" y="20" width="80" height="30" as="geometry"/></mxCell><mxCell id="3" value="World!" vertex="1"><mxGeometry x="200" y="150" width="80" height="30" as="geometry"/></mxCell><mxCell id="4" value="" edge="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell></root>';
- * let doc = mxUtils.parseXml(xml);
- * let codec = new mxCodec(doc);
- * let elt = doc.documentElement.firstChild;
- * let cells = [];
+ * @example
+ * ```javascript
+ * var xml = '<root><mxCell id="2" value="Hello," vertex="1"><mxGeometry x="20" y="20" width="80" height="30" as="geometry"/></mxCell><mxCell id="3" value="World!" vertex="1"><mxGeometry x="200" y="150" width="80" height="30" as="geometry"/></mxCell><mxCell id="4" value="" edge="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell></root>';
+ * var doc = mxUtils.parseXml(xml);
+ * var codec = new mxCodec(doc);
+ * var elt = doc.documentElement.firstChild;
+ * var cells = [];
  *
  * while (elt != null)
  * {
@@ -67,58 +68,52 @@ import mxLog from '../util/gui/mxLog';
  * }
  *
  * graph.addCells(cells);
- * (end)
+ * ```
  *
- * Example:
+ * #### Example
  *
  * Using the following code, the selection cells of a graph are encoded and the
  * output is displayed in a dialog box.
  *
- * (code)
- * let enc = new mxCodec();
- * let cells = graph.getSelectionCells();
+ * @example
+ * ```javascript
+ * var enc = new mxCodec();
+ * var cells = graph.getSelectionCells();
  * mxUtils.alert(mxUtils.getPrettyXml(enc.encode(cells)));
- * (end)
+ * ```
  *
  * Newlines in the XML can be converted to <br>, in which case a '<br>' argument
- * must be passed to <mxUtils.getXml> as the second argument.
+ * must be passed to {@link mxUtils.getXml} as the second argument.
  *
- * Debugging:
+ * ### Debugging
  *
  * For debugging I/O you can use the following code to get the sequence of
  * encoded objects:
  *
- * (code)
- * let oldEncode = encode;
- * encode = (obj)=>
+ * @example
+ * ```javascript
+ * var oldEncode = encode;
+ * encode(obj)
  * {
  *   mxLog.show();
  *   mxLog.debug('mxCodec.encode: obj='+mxUtils.getFunctionName(obj.constructor));
  *
  *   return oldEncode.apply(this, arguments);
  * };
- * (end)
+ * ```
  *
  * Note that the I/O system adds object codecs for new object automatically. For
  * decoding those objects, the constructor should be written as follows:
  *
- * (code)
- * let MyObj = (name)=>
+ * @example
+ * ```javascript
+ * var MyObj(name)
  * {
  *   // ...
  * };
- * (end)
+ * ```
  *
- * Constructor: mxCodec
- *
- * Constructs an XML encoder/decoder for the specified
- * owner document.
- *
- * Parameters:
- *
- * document - Optional XML document that contains the data.
- * If no document is specified then a new document is created
- * using <mxUtils.createXmlDocument>.
+ * @class mxCodec
  */
 class mxCodec {
   constructor(document) {
@@ -127,43 +122,36 @@ class mxCodec {
   }
 
   /**
-   * Variable: document
-   *
    * The owner document of the codec.
    */
+  // document: XMLDocument;
   document = null;
 
   /**
-   * Variable: objects
-   *
    * Maps from IDs to objects.
    */
+  // objects: Array<string>;
   objects = null;
 
   /**
-   * Variable: elements
-   *
    * Lookup table for resolving IDs to elements.
    */
+  // elements: Array<any>;
   elements = null;
 
   /**
-   * Variable: encodeDefaults
-   *
    * Specifies if default values should be encoded. Default is false.
    */
+  // encodeDefaults: boolean;
   encodeDefaults = false;
 
   /**
-   * Function: putObject
-   *
    * Assoiates the given object with the given ID and returns the given object.
    *
-   * Parameters
-   *
-   * id - ID for the object to be associated with.
-   * obj - Object to be associated with the ID.
+   * @param id ID for the object to be associated with.
+   * @param obj Object to be associated with the ID.
    */
+  // putObject(id: string, obj: any): any;
   putObject(id, obj) {
     this.objects[id] = obj;
 
@@ -171,13 +159,12 @@ class mxCodec {
   }
 
   /**
-   * Function: getObject
-   *
    * Returns the decoded object for the element with the specified ID in
-   * <document>. If the object is not known then <lookup> is used to find an
+   * {@link document}. If the object is not known then {@link lookup} is used to find an
    * object. If no object is found, then the element with the respective ID
-   * from the document is parsed using <decode>.
+   * from the document is parsed using {@link decode}.
    */
+  // getObject(id: string): any;
   getObject(id) {
     let obj = null;
 
@@ -201,38 +188,32 @@ class mxCodec {
   }
 
   /**
-   * Function: lookup
-   *
    * Hook for subclassers to implement a custom lookup mechanism for cell IDs.
    * This implementation always returns null.
    *
    * Example:
    *
-   * (code)
-   * let codec = new mxCodec();
-   * codec.lookup = (id)=>
+   * ```javascript
+   * var codec = new mxCodec();
+   * codec.lookup(id)
    * {
    *   return model.getCell(id);
    * };
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * id - ID of the object to be returned.
+   * @param id ID of the object to be returned.
    */
+  // lookup(id: string): any;
   lookup(id) {
     return null;
   }
 
   /**
-   * Function: getElementById
+   * Returns the element with the given ID from {@link document}.
    *
-   * Returns the element with the given ID from <document>.
-   *
-   * Parameters:
-   *
-   * id - String that contains the ID.
+   * @param id String that contains the ID.
    */
+  // getElementById(id: string): Element;
   getElementById(id) {
     this.updateElements();
 
@@ -240,14 +221,11 @@ class mxCodec {
   }
 
   /**
-   * Function: updateElements
+   * Returns the element with the given ID from {@link document}.
    *
-   * Returns the element with the given ID from <document>.
-   *
-   * Parameters:
-   *
-   * id - String that contains the ID.
+   * @param id String that contains the ID.
    */
+  // updateElements(): void;
   updateElements() {
     if (this.elements == null) {
       this.elements = {};
@@ -259,10 +237,9 @@ class mxCodec {
   }
 
   /**
-   * Function: addElement
-   *
-   * Adds the given element to <elements> if it has an ID.
+   * Adds the given element to {@link elements} if it has an ID.
    */
+  // addElement(node: Node): void;
   addElement(node) {
     if (node.nodeType === mxConstants.NODETYPE_ELEMENT) {
       const id = node.getAttribute('id');
@@ -285,18 +262,15 @@ class mxCodec {
   }
 
   /**
-   * Function: getId
-   *
    * Returns the ID of the specified object. This implementation
-   * calls <reference> first and if that returns null handles
-   * the object as an <mxCell> by returning their IDs using
-   * <mxCell.getId>. If no ID exists for the given cell, then
-   * an on-the-fly ID is generated using <mxCellPath.create>.
+   * calls {@link reference} first and if that returns null handles
+   * the object as an {@link mxCell} by returning their IDs using
+   * {@link mxCell.getId}. If no ID exists for the given cell, then
+   * an on-the-fly ID is generated using {@link mxCellPath.create}.
    *
-   * Parameters:
-   *
-   * obj - Object to return the ID for.
+   * @param obj Object to return the ID for.
    */
+  // getId(obj: any): string;
   getId(obj) {
     let id = null;
 
@@ -321,40 +295,34 @@ class mxCodec {
   }
 
   /**
-   * Function: reference
-   *
    * Hook for subclassers to implement a custom method
    * for retrieving IDs from objects. This implementation
    * always returns null.
    *
    * Example:
    *
-   * (code)
-   * let codec = new mxCodec();
-   * codec.reference = (obj)=>
+   * ```javascript
+   * var codec = new mxCodec();
+   * codec.reference(obj)
    * {
    *   return obj.getCustomId();
    * };
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * obj - Object whose ID should be returned.
+   * @param obj Object whose ID should be returned.
    */
+  // reference(obj: any): any;
   reference(obj) {
     return null;
   }
 
   /**
-   * Function: encode
-   *
    * Encodes the specified object and returns the resulting
    * XML node.
    *
-   * Parameters:
-   *
-   * obj - Object to be encoded.
+   * @param obj Object to be encoded.
    */
+  // encode(obj: any): XMLDocument;
   encode(obj) {
     let node = null;
 
@@ -378,8 +346,6 @@ class mxCodec {
   }
 
   /**
-   * Function: decode
-   *
    * Decodes the given XML node. The optional "into"
    * argument specifies an existing object to be
    * used. If no object is given, then a new instance
@@ -388,11 +354,10 @@ class mxCodec {
    * The function returns the passed in object or
    * the new instance if no object was given.
    *
-   * Parameters:
-   *
-   * node - XML node to be decoded.
-   * into - Optional object to be decodec into.
+   * @param node XML node to be decoded.
+   * @param into Optional object to be decodec into.
    */
+  // decode(node: Node, into?: any): any;
   decode(node, into) {
     this.updateElements();
     let obj = null;
@@ -420,25 +385,22 @@ class mxCodec {
   }
 
   /**
-   * Function: encodeCell
-   *
    * Encoding of cell hierarchies is built-into the core, but
    * is a higher-level function that needs to be explicitely
-   * used by the respective object encoders (eg. <mxModelCodec>,
-   * <mxChildChangeCodec> and <mxRootChangeCodec>). This
+   * used by the respective object encoders (eg. {@link mxModelCodec},
+   * {@link mxChildChangeCodec} and {@link mxRootChangeCodec}). This
    * implementation writes the given cell and its children as a
    * (flat) sequence into the given node. The children are not
    * encoded if the optional includeChildren is false. The
    * function is in charge of adding the result into the
    * given node and has no return value.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to be encoded.
-   * node - Parent XML node to add the encoded cell into.
-   * includeChildren - Optional boolean indicating if the
+   * @param cell {@link mxCell} to be encoded.
+   * @param node Parent XML node to add the encoded cell into.
+   * @param includeChildren Optional boolean indicating if the
    * function should include all descendents. Default is true.
    */
+  // encodeCell(cell: mxCell, node: Node, includeChildren?: boolean): void;
   encodeCell(cell, node, includeChildren) {
     node.appendChild(this.encode(cell));
 
@@ -452,12 +414,11 @@ class mxCodec {
   }
 
   /**
-   * Function: isCellCodec
-   *
    * Returns true if the given codec is a cell codec. This uses
-   * <mxCellCodec.isCellCodec> to check if the codec is of the
+   * {@link mxCellCodec.isCellCodec} to check if the codec is of the
    * given type.
    */
+  // isCellCodec(codec: mxCodec): boolean;
   isCellCodec(codec) {
     if (codec != null && typeof codec.isCellCodec === 'function') {
       return codec.isCellCodec();
@@ -467,22 +428,19 @@ class mxCodec {
   }
 
   /**
-   * Function: decodeCell
-   *
    * Decodes cells that have been encoded using inversion, ie.
    * where the user object is the enclosing node in the XML,
    * and restores the group and graph structure in the cells.
-   * Returns a new <mxCell> instance that represents the
+   * Returns a new {@link mxCell} instance that represents the
    * given node.
    *
-   * Parameters:
-   *
-   * node - XML node that contains the cell data.
-   * restoreStructures - Optional boolean indicating whether
+   * @param node XML node that contains the cell data.
+   * @param restoreStructures Optional boolean indicating whether
    * the graph structure should be restored by calling insert
    * and insertEdge on the parent and terminals, respectively.
    * Default is true.
    */
+  // decodeCell(node: Node, restoreStructures?: boolean): mxCell;
   decodeCell(node, restoreStructures) {
     restoreStructures = restoreStructures != null ? restoreStructures : true;
     let cell = null;
@@ -520,10 +478,9 @@ class mxCodec {
   }
 
   /**
-   * Function: insertIntoGraph
-   *
    * Inserts the given cell into its parent and terminal cells.
    */
+  // insertIntoGraph(cell: mxCell): void;
   insertIntoGraph(cell) {
     const { parent } = cell;
     const source = cell.getTerminal(true);
@@ -552,18 +509,15 @@ class mxCodec {
   }
 
   /**
-   * Function: setAttribute
-   *
    * Sets the attribute on the specified node to value. This is a
    * helper method that makes sure the attribute and value arguments
    * are not null.
    *
-   * Parameters:
-   *
-   * node - XML node to set the attribute for.
-   * attributes - Attributename to be set.
-   * value - New value of the attribute.
+   * @param node XML node to set the attribute for.
+   * @param attributes Attributename to be set.
+   * @param value New value of the attribute.
    */
+  // setAttribute(node: Node, attribute: string, value: any): void;
   setAttribute(node, attribute, value) {
     if (attribute != null && value != null) {
       node.setAttribute(attribute, value);

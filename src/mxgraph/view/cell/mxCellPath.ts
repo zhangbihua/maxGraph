@@ -6,25 +6,21 @@
 import mxCell from './mxCell';
 
 /**
- * Class: mxCellPath
- *
  * Implements a mechanism for temporary cell Ids.
+ * @class mxCellPath
  */
 class mxCellPath {
   constructor() {
     throw new Error("Static class can't be instantiated!");
   }
 
-  /*
-   * Variable: PATH_SEPARATOR
-   *
+  /**
    * Defines the separator between the path components. Default is ".".
    */
+  // static PATH_SEPARATOR: string;
   static PATH_SEPARATOR = '.';
 
   /**
-   * Function: create
-   *
    * Creates the cell path for the given cell. The cell path is a
    * concatenation of the indices of all ancestors on the (finite) path to
    * the root, eg. "0.0.0.1".
@@ -33,6 +29,7 @@ class mxCellPath {
    *
    * cell - Cell whose path should be returned.
    */
+  // static create(cell: mxCell): string;
   static create(cell: mxCell): string {
     let result = '';
 
@@ -57,8 +54,6 @@ class mxCellPath {
   }
 
   /**
-   * Function: getParentPath
-   *
    * Returns the path for the parent of the cell represented by the given
    * path. Returns null if the given path has no parent.
    *
@@ -66,6 +61,7 @@ class mxCellPath {
    *
    * path - Path whose parent path should be returned.
    */
+  // static getParentPath(path: string): string;
   static getParentPath(path: string): string | null {
     if (path != null) {
       const index = path.lastIndexOf(mxCellPath.PATH_SEPARATOR);
@@ -81,8 +77,6 @@ class mxCellPath {
   }
 
   /**
-   * Function: resolve
-   *
    * Returns the cell for the specified cell path using the given root as the
    * root of the path.
    *
@@ -91,6 +85,7 @@ class mxCellPath {
    * root - Root cell of the path to be resolved.
    * path - String that defines the path.
    */
+  // static resolve(root: string, path: string): string;
   static resolve(root: mxCell, path: string): mxCell | null {
     let parent: mxCell | null | undefined = root;
     if (path != null) {
@@ -103,11 +98,10 @@ class mxCellPath {
   }
 
   /**
-   * Function: compare
-   *
    * Compares the given cell paths and returns -1 if p1 is smaller, 0 if
    * p1 is equal and 1 if p1 is greater than p2.
    */
+  // static compare(p1: string, p2: string): number;
   static compare(p1: string, p2: string): number {
     const min = Math.min(p1.length, p2.length);
     let comp = 0;

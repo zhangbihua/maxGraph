@@ -20,12 +20,11 @@ import mxWindow from './mxWindow';
  */
 class mxLog {
   /**
-   * Function: init
-   *
-   * Initializes the DOM node for the console. This requires document.body to
-   * point to a non-null value. This is called from within <setVisible> if the
-   * log has not yet been initialized.
+   * Initializes the DOM node for the console.
+   * This requires document.body to point to a non-null value.
+   * This is called from within setVisible if the log has not yet been initialized.
    */
+  // static init(): void;
   static init() {
     if (mxLog.window == null && document.body != null) {
       const title = `${mxLog.consoleName} - mxGraph ${mxClient.VERSION}`;
@@ -194,19 +193,17 @@ class mxLog {
   static buffer = '';
 
   /**
-   * Function: info
-   *
    * Writes the current navigator information to the console.
    */
+  // static info(): void;
   static info() {
     mxLog.writeln(mxUtils.toString(navigator));
   }
 
   /**
-   * Function: addButton
-   *
    * Adds a button to the console using the given label and function.
    */
+  // static addButton(lab: string, funct: Function): void;
   static addButton(lab, funct) {
     const button = document.createElement('button');
     mxUtils.write(button, lab);
@@ -215,10 +212,9 @@ class mxLog {
   }
 
   /**
-   * Function: isVisible
-   *
    * Returns true if the console is visible.
    */
+  // static isVisible(): boolean;
   static isVisible() {
     if (mxLog.window != null) {
       return mxLog.window.isVisible();
@@ -228,10 +224,9 @@ class mxLog {
   }
 
   /**
-   * Function: show
-   *
    * Shows the console.
    */
+  // static show(): void;
   static show() {
     mxLog.setVisible(true);
   }
@@ -252,21 +247,9 @@ class mxLog {
   }
 
   /**
-   * Function: enter
-   *
-   * Writes the specified string to the console
-   * if <TRACE> is true and returns the current
-   * time in milliseconds.
-   *
-   * Example:
-   *
-   * (code)
-   * mxLog.show();
-   * var t0 = mxLog.enter('Hello');
-   * // Do something
-   * mxLog.leave('World!', t0);
-   * (end)
+   * Writes the specified string to the console if TRACE is true and returns the current time in milliseconds.
    */
+  // static enter(string: string): void;
   static enter(string) {
     if (mxLog.TRACE) {
       mxLog.writeln(`Entering ${string}`);
@@ -290,17 +273,9 @@ class mxLog {
   }
 
   /**
-   * Function: debug
-   *
-   * Adds all arguments to the console if <DEBUG> is enabled.
-   *
-   * Example:
-   *
-   * (code)
-   * mxLog.show();
-   * mxLog.debug('Hello, World!');
-   * (end)
+   * Adds all arguments to the console if DEBUG is enabled.
    */
+  // static debug(message: string): void;
   static debug(...args) {
     if (mxLog.DEBUG) {
       mxLog.writeln(...args);
@@ -308,17 +283,9 @@ class mxLog {
   }
 
   /**
-   * Function: warn
-   *
-   * Adds all arguments to the console if <WARN> is enabled.
-   *
-   * Example:
-   *
-   * (code)
-   * mxLog.show();
-   * mxLog.warn('Hello, World!');
-   * (end)
+   * Adds all arguments to the console if WARN is enabled.
    */
+  // static warn(message: string): void;
   static warn(...args) {
     if (mxLog.WARN) {
       mxLog.writeln(...args);
@@ -326,10 +293,9 @@ class mxLog {
   }
 
   /**
-   * Function: write
-   *
    * Adds the specified strings to the console.
    */
+  // static write(): void;
   static write() {
     let string = '';
 
@@ -360,11 +326,9 @@ class mxLog {
   }
 
   /**
-   * Function: writeln
-   *
-   * Adds the specified strings to the console, appending a linefeed at the
-   * end of each string.
+   * Adds the specified strings to the console, appending a linefeed at the end of each string.
    */
+  // static writeln(): void;
   static writeln() {
     let string = '';
 

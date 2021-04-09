@@ -6,22 +6,15 @@
 import mxCompactTreeLayout from './mxCompactTreeLayout';
 
 /**
- * Class: mxRadialTreeLayout
- *
- * Extends <mxGraphLayout> to implement a radial tree algorithm. This
+ * Extends {@link mxGraphLayout} to implement a radial tree algorithm. This
  * layout is suitable for graphs that have no cycles (trees). Vertices that are
  * not connected to the tree will be ignored by this layout.
  *
- * Example:
- *
- * (code)
- * let layout = new mxRadialTreeLayout(graph);
+ * @example
+ * ```javascript
+ * var layout = new mxRadialTreeLayout(graph);
  * layout.execute(graph.getDefaultParent());
- * (end)
- *
- * Constructor: mxRadialTreeLayout
- *
- * Constructs a new radial tree layout for the specified graph
+ * ```
  */
 class mxRadialTreeLayout extends mxCompactTreeLayout {
   constructor(graph) {
@@ -29,74 +22,71 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
   }
 
   /**
-   * Variable: angleOffset
-   *
    * The initial offset to compute the angle position.
+   * @default 0.5
    */
+  // angleOffset: number;
   angleOffset = 0.5;
 
   /**
-   * Variable: rootx
-   *
    * The X co-ordinate of the root cell
+   * @default 0
    */
+  // rootx: number;
   rootx = 0;
 
   /**
-   * Variable: rooty
-   *
    * The Y co-ordinate of the root cell
+   * @default 0
    */
+  // rooty: number;
   rooty = 0;
 
   /**
-   * Variable: levelDistance
-   *
-   * Holds the levelDistance. Default is 120.
+   * Holds the levelDistance.
+   * @default 120
    */
+  // levelDistance: number;
   levelDistance = 120;
 
   /**
-   * Variable: nodeDistance
-   *
-   * Holds the nodeDistance. Default is 10.
+   * Holds the nodeDistance.
+   * @default 10
    */
+  // nodeDistance: number;
   nodeDistance = 10;
 
   /**
-   * Variable: autoRadius
-   *
    * Specifies if the radios should be computed automatically
+   * @default false
    */
+  // autoRadius: boolean;
   autoRadius = false;
 
   /**
-   * Variable: sortEdges
-   *
    * Specifies if edges should be sorted according to the order of their
    * opposite terminal cell in the model.
+   * @default false
    */
+  // sortEdges: boolean;
   sortEdges = false;
 
   /**
-   * Variable: rowMinX
-   *
    * Array of leftmost x coordinate of each row
    */
+  // rowMinX: Array<number>;
   rowMinX = [];
 
   /**
-   * Variable: rowMaxX
-   *
    * Array of rightmost x coordinate of each row
    */
+  // rowMaxX: Array<number>;
   rowMaxX = [];
 
   /**
-   * Variable: rowMinCenX
-   *
    * Array of x coordinate of leftmost vertex of each row
    */
+  // rowMinCenX: Array<number>;
   rowMinCenX = [];
 
   /**
@@ -104,32 +94,28 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
    *
    * Array of x coordinate of rightmost vertex of each row
    */
+  // rowMaxCenX: Array<number>;
   rowMaxCenX = [];
 
   /**
-   * Variable: rowRadi
-   *
    * Array of y deltas of each row behind root vertex, also the radius in the tree
    */
+  // rowRadi: Array<number>;
   rowRadi = [];
 
   /**
-   * Variable: row
-   *
    * Array of vertices on each row
    */
+  // row: Array<mxCell>;
   row = [];
 
   /**
-   * Function: isVertexIgnored
+   * Returns a boolean indicating if the given {@link mxCell} should be ignored as a vertex.
    *
-   * Returns a boolean indicating if the given <mxCell> should be ignored as a
-   * vertex. This returns true if the cell has no connections.
-   *
-   * Parameters:
-   *
-   * vertex - <mxCell> whose ignored state should be returned.
+   * @param vertex {@link mxCell} whose ignored state should be returned.
+   * @return true if the cell has no connections.
    */
+  // isVertexIgnored(vertex: mxCell): boolean;
   isVertexIgnored(vertex) {
     return (
       super.isVertexIgnored(vertex) ||
@@ -148,9 +134,10 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
    *
    * Parameters:
    *
-   * parent - <mxCell> whose children should be laid out.
-   * root - Optional <mxCell> that will be used as the root of the tree.
+   * @param parent    {@link mxCell} whose children should be laid out.
+   * @param root      Optional {@link mxCell} that will be used as the root of the tree.
    */
+  // execute(parent: mxCell, root?: mxCell): void;
   execute(parent, root) {
     this.parent = parent;
 
@@ -257,15 +244,12 @@ class mxRadialTreeLayout extends mxCompactTreeLayout {
   }
 
   /**
-   * Function: calcRowDims
-   *
    * Recursive function to calculate the dimensions of each row
    *
-   * Parameters:
-   *
-   * row - Array of internal nodes, the children of which are to be processed.
-   * rowNum - Integer indicating which row is being processed.
+   * @param row      Array of internal nodes, the children of which are to be processed.
+   * @param rowNum   Integer indicating which row is being processed.
    */
+  // calcRowDims(row: Array<number>, rowNum: number): void;
   calcRowDims(row, rowNum) {
     if (row == null || row.length === 0) {
       return;

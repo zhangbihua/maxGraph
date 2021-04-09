@@ -12,19 +12,19 @@ import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
 import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 
 /**
- * Class: mxDoubleEllipse
+ * Extends {@link mxShape} to implement a double ellipse shape.
  *
- * Extends <mxShape> to implement a double ellipse shape. This shape is
- * registered under <mxConstants.SHAPE_DOUBLE_ELLIPSE> in <mxCellRenderer>.
+ * This shape is registered under {@link mxConstants.SHAPE_DOUBLE_ELLIPSE} in {@link mxCellRenderer}.
+ *
  * Use the following override to only fill the inner ellipse in this shape:
- *
- * (code)
- * paintVertexShape = (c, x, y, w, h)=>
+ * @example
+ * ```javascript
+ * mxDoubleEllipse.prototype.paintVertexShape = function(c, x, y, w, h)
  * {
  *   c.ellipse(x, y, w, h);
  *   c.stroke();
  *
- *   let inset = mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));
+ *   var inset = mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));
  *   x += inset;
  *   y += inset;
  *   w -= 2 * inset;
@@ -37,20 +37,7 @@ import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
  *
  *   c.fillAndStroke();
  * };
- * (end)
- *
- * Constructor: mxDoubleEllipse
- *
- * Constructs a new ellipse shape.
- *
- * Parameters:
- *
- * bounds - <mxRectangle> that defines the bounds. This is stored in
- * <mxShape.bounds>.
- * fill - String that defines the fill color. This is stored in <fill>.
- * stroke - String that defines the stroke color. This is stored in <stroke>.
- * strokewidth - Optional integer that defines the stroke width. Default is
- * 1. This is stored in <strokewidth>.
+ * ```
  */
 class mxDoubleEllipse extends mxShape {
   strokewidth: number;
@@ -69,10 +56,9 @@ class mxDoubleEllipse extends mxShape {
   }
 
   /**
-   * Function: paintBackground
-   *
    * Paints the background.
    */
+  // paintBackground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintBackground(
     c: mxSvgCanvas2D,
     x: number,
@@ -85,10 +71,9 @@ class mxDoubleEllipse extends mxShape {
   }
 
   /**
-   * Function: paintForeground
-   *
    * Paints the foreground.
    */
+  // paintForeground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintForeground(
     c: mxSvgCanvas2D,
     x: number,
@@ -117,10 +102,9 @@ class mxDoubleEllipse extends mxShape {
   }
 
   /**
-   * Function: getLabelBounds
-   *
-   * Returns the bounds for the label.
+   * @returns the bounds for the label.
    */
+  // getLabelBounds(rect: mxRectangle): mxRectangle;
   getLabelBounds(rect: mxRectangle) {
     const margin =
       mxUtils.getValue(

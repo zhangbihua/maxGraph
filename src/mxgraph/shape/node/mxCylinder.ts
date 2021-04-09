@@ -11,26 +11,10 @@ import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 
 /**
- * Class: mxCylinder
+ * Extends {@link mxShape} to implement an cylinder shape. If a custom shape with one filled area and an overlay path is
+ * needed, then this shape's {@link redrawPath} should be overridden.
  *
- * Extends <mxShape> to implement an cylinder shape. If a
- * custom shape with one filled area and an overlay path is
- * needed, then this shape's <redrawPath> should be overridden.
- * This shape is registered under <mxConstants.SHAPE_CYLINDER>
- * in <mxCellRenderer>.
- *
- * Constructor: mxCylinder
- *
- * Constructs a new cylinder shape.
- *
- * Parameters:
- *
- * bounds - <mxRectangle> that defines the bounds. This is stored in
- * <mxShape.bounds>.
- * fill - String that defines the fill color. This is stored in <fill>.
- * stroke - String that defines the stroke color. This is stored in <stroke>.
- * strokewidth - Optional integer that defines the stroke width. Default is
- * 1. This is stored in <strokewidth>.
+ * This shape is registered under {@link mxConstants.SHAPE_CYLINDER} in {@link mxCellRenderer}.
  */
 class mxCylinder extends mxShape {
   constructor(
@@ -47,25 +31,21 @@ class mxCylinder extends mxShape {
   }
 
   /**
-   * Variable: maxHeight
-   *
-   * Defines the maximum height of the top and bottom part
-   * of the cylinder shape.
+   * Defines the maximum height of the top and bottom part of the cylinder shape.
    */
+  // maxHeight: number;
   maxHeight = 40;
 
   /**
-   * Variable: svgStrokeTolerance
-   *
    * Sets stroke tolerance to 0 for SVG.
    */
+  // svgStrokeTolerance: number;
   svgStrokeTolerance = 0;
 
   /**
-   * Function: paintVertexShape
-   *
    * Redirects to redrawPath for subclasses to work.
    */
+  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintVertexShape(
     c: mxSvgCanvas2D,
     x: number,
@@ -91,19 +71,17 @@ class mxCylinder extends mxShape {
   }
 
   /**
-   * Function: getCylinderSize
-   *
-   * Returns the cylinder size.
+   * Redirects to redrawPath for subclasses to work.
    */
+  // getCylinderSize(x: number, y: number, w: number, h: number): number;
   getCylinderSize(x: number, y: number, w: number, h: number): number {
     return Math.min(this.maxHeight, Math.round(h / 5));
   }
 
   /**
-   * Function: redrawPath
-   *
    * Draws the path for this shape.
    */
+  // redrawPath(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number, isForeground: boolean): void;
   redrawPath(
     c: mxSvgCanvas2D,
     x: number,

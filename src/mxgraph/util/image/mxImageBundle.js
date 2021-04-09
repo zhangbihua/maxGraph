@@ -60,6 +60,7 @@ class mxImageBundle {
    *
    * Maps from keys to images.
    */
+  // images: { [key: string]: { value: string; fallback: Function } };
   images = null;
 
   /**
@@ -67,6 +68,7 @@ class mxImageBundle {
    *
    * Specifies if the fallback representation should be returned.
    */
+  // alt: boolean;
   alt = null;
 
   /**
@@ -75,6 +77,7 @@ class mxImageBundle {
    * Adds the specified entry to the map. The entry is an object with a value and
    * fallback property as specified in the arguments.
    */
+  // putImage(key: string, value: string, fallback: Function): void;
   putImage(key, value, fallback) {
     this.images[key] = { value, fallback };
   }
@@ -86,6 +89,7 @@ class mxImageBundle {
    * or fallback, depending on <alt>. The fallback is returned if
    * <alt> is true, the value is returned otherwise.
    */
+  // getImage(key: string): string;
   getImage(key) {
     let result = null;
 

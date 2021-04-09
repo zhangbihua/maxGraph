@@ -18,15 +18,14 @@ const useAbsoluteIds =
   document.getElementsByTagName('base').length > 0;
 
 /**
- * Class: mxSvgCanvas2D
+ * Extends {@link mxAbstractCanvas2D} to implement a canvas for SVG. This canvas writes all calls as SVG output to the
+ * given SVG root node.
  *
- * Extends <mxAbstractCanvas2D> to implement a canvas for SVG. This canvas writes all
- * calls as SVG output to the given SVG root node.
- *
- * (code)
- * let svgDoc = mxUtils.createXmlDocument();
- * let root = (svgDoc.createElementNS != null) ?
- *     svgDoc.createElementNS(mxConstants.NS_SVG, 'svg') : svgDoc.createElement('svg');
+ * @example
+ * ```javascript
+ * var svgDoc = mxUtils.createXmlDocument();
+ * var root = (svgDoc.createElementNS != null) ?
+ * 		svgDoc.createElementNS(mxConstants.NS_SVG, 'svg') : svgDoc.createElement('svg');
  *
  * if (svgDoc.createElementNS == null)
  * {
@@ -38,36 +37,23 @@ const useAbsoluteIds =
  *   root.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', mxConstants.NS_XLINK);
  * }
  *
- * let bounds = graph.getGraphBounds();
+ * var bounds = graph.getGraphBounds();
  * root.setAttribute('width', (bounds.x + bounds.width + 4) + 'px');
  * root.setAttribute('height', (bounds.y + bounds.height + 4) + 'px');
  * root.setAttribute('version', '1.1');
  *
  * svgDoc.appendChild(root);
  *
- * let svgCanvas = new D(root);
- * (end)
+ * var svgCanvas = new mxSvgCanvas2D(root);
+ * ```
  *
- * A description of the public API is available in <mxXmlCanvas2D>.
  *
  * To disable anti-aliasing in the output, use the following code.
- *
- * (code)
+ * @example
+ * ```javascript
  * graph.view.canvas.ownerSVGElement.setAttribute('shape-rendering', 'crispEdges');
- * (end)
- *
+ * ```
  * Or set the respective attribute in the SVG element directly.
- *
- * Constructor: mxSvgCanvas2D
- *
- * Constructs a new SVG canvas.
- *
- * Parameters:
- *
- * root - SVG container for the output.
- * styleEnabled - Optional boolean that specifies if a style section should be
- * added. The style section sets the default font-size, font-family and
- * stroke-miterlimit globally. Default is false.
  */
 class mxSvgCanvas2D extends mxAbstractCanvas2D {
   constructor(root, styleEnabled) {
@@ -142,113 +128,108 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Variable: path
-   *
    * Holds the current DOM node.
    */
+  // node: Element;
   node = null;
 
   /**
-   * Variable: matchHtmlAlignment
-   *
    * Specifies if plain text output should match the vertical HTML alignment.
-   * Defaul is true.
+   * @default true.
    */
+  // matchHtmlAlignment: boolean;
   matchHtmlAlignment = true;
 
   /**
-   * Variable: textEnabled
-   *
-   * Specifies if text output should be enabled. Default is true.
+   * Specifies if text output should be enabled.
+   * @default true
    */
+  // textEnabled: boolean;
   textEnabled = true;
 
   /**
-   * Variable: foEnabled
-   *
-   * Specifies if use of foreignObject for HTML markup is allowed. Default is true.
+   * Specifies if use of foreignObject for HTML markup is allowed.
+   * @default true
    */
+  // foEnabled: boolean;
   foEnabled = true;
 
   /**
-   * Variable: foAltText
-   *
-   * Specifies the fallback text for unsupported foreignObjects in exported
-   * documents. Default is '[Object]'. If this is set to null then no fallback
-   * text is added to the exported document.
+   * Specifies the fallback text for unsupported foreignObjects in exported documents.
+   * If this is set to `null` then no fallback text is added to the exported document.
+   * @default [Object]
    */
+  // foAltText: string;
   foAltText = '[Object]';
 
   /**
-   * Variable: foOffset
-   *
    * Offset to be used for foreignObjects.
+   * @default 0
    */
+  // foOffset: number;
   foOffset = 0;
 
   /**
-   * Variable: textOffset
-   *
    * Offset to be used for text elements.
+   * @default 0
    */
+  // textOffset: number;
   textOffset = 0;
 
   /**
-   * Variable: imageOffset
-   *
    * Offset to be used for image elements.
+   * @default 0
    */
+  // imageOffset: number;
   imageOffset = 0;
 
   /**
-   * Variable: strokeTolerance
-   *
    * Adds transparent paths for strokes.
+   * @default 0
    */
+  // strokeTolerance: number;
   strokeTolerance = 0;
 
   /**
-   * Variable: minStrokeWidth
-   *
    * Minimum stroke width for output.
+   * @default 1
    */
+  // minStrokeWidth: number;
   minStrokeWidth = 1;
 
   /**
-   * Variable: refCount
-   *
    * Local counter for references in SVG export.
+   * @default 0
    */
+  // refCount: number;
   refCount = 0;
 
   /**
-   * Variable: lineHeightCorrection
-   *
-   * Correction factor for <mxConstants.LINE_HEIGHT> in HTML output. Default is 1.
+   * Correction factor for {@link mxConstants.LINE_HEIGHT} in HTML output.
+   * @default 1
    */
+  // lineHeightCorrection: number;
   lineHeightCorrection = 1;
 
   /**
-   * Variable: pointerEventsValue
-   *
-   * Default value for active pointer events. Default is all.
+   * Default value for active pointer events.
+   * @default all
    */
+  // pointerEventsValue: string;
   pointerEventsValue = 'all';
 
   /**
-   * Variable: fontMetricsPadding
-   *
-   * Padding to be added for text that is not wrapped to account for differences
-   * in font metrics on different platforms in pixels. Default is 10.
+   * Padding to be added for text that is not wrapped to account for differences in font metrics on different platforms in pixels.
+   * @default 10.
    */
+  // fontMetricsPadding: number;
   fontMetricsPadding = 10;
 
   /**
-   * Variable: cacheOffsetSize
-   *
-   * Specifies if offsetWidth and offsetHeight should be cached. Default is true.
-   * This is used to speed up repaint of text in <updateText>.
+   * Specifies if offsetWidth and offsetHeight should be cached. This is used to speed up repaint of text in {@link updateText}.
+   * @default true
    */
+  // cacheOffsetSize: boolean;
   cacheOffsetSize = true;
 
   /**
@@ -341,22 +322,20 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   };
 
   /**
-   * Function: format
-   *
    * Rounds all numbers to 2 decimal points.
    */
+  // format(value: string): number;
   format(value) {
     return parseFloat(parseFloat(value).toFixed(2));
   }
 
   /**
-   * Function: getBaseUrl
-   *
    * Returns the URL of the page without the hash part. This needs to use href to
    * include any search part with no params (ie question mark alone). This is a
    * workaround for the fact that window.location.search is empty if there is
    * no search string behind the question mark.
    */
+  // getBaseUrl(): string;
   getBaseUrl() {
     let { href } = window.location;
     const hash = href.lastIndexOf('#');
@@ -369,20 +348,18 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: reset
-   *
    * Returns any offsets for rendering pixels.
    */
+  // reset(): void;
   reset() {
     super.reset();
     this.gradients = [];
   }
 
   /**
-   * Function: createStyle
-   *
    * Creates the optional style section.
    */
+  // createStyle(x?: any): HTMLElement;
   createStyle(x) {
     const style = this.createElement('style');
     style.setAttribute('type', 'text/css');
@@ -395,10 +372,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: createElement
-   *
    * Private helper function to create SVG elements
    */
+  // createElement(tagName: string, namespace?: string): HTMLElement;
   createElement(tagName, namespace) {
     if (this.root.ownerDocument.createElementNS != null) {
       return this.root.ownerDocument.createElementNS(
@@ -537,10 +513,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: createGradientId
-   *
    * Private helper function to create SVG elements
    */
+  // createGradientId(start: string, end: string, alpha1: string, alpha2: string, direction: string): string;
   createGradientId(start, end, alpha1, alpha2, direction) {
     // Removes illegal characters from gradient ID
     if (start.charAt(0) === '#') {
@@ -579,10 +554,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: getSvgGradient
-   *
    * Private helper function to create SVG elements
    */
+  // getSvgGradient(start: string, end: string, alpha1: string, alpha2: string, direction: string): string;
   getSvgGradient(start, end, alpha1, alpha2, direction) {
     const id = this.createGradientId(start, end, alpha1, alpha2, direction);
     let gradient = this.gradients[id];
@@ -629,10 +603,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: createSvgGradient
-   *
    * Creates the given SVG gradient.
    */
+  // createSvgGradient(start: string, end: string, alpha1: string, alpha2: string, direction: string): Element;
   createSvgGradient(start, end, alpha1, alpha2, direction) {
     const gradient = this.createElement('linearGradient');
     gradient.setAttribute('x1', '0%');
@@ -668,10 +641,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: addNode
-   *
    * Private helper function to create SVG elements
    */
+  // addNode(filled: boolean, stroked: boolean): void;
   addNode(filled, stroked) {
     const { node } = this;
     const s = this.state;
@@ -747,10 +719,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: updateFill
-   *
    * Transfers the stroke attributes from <state> to <node>.
    */
+  // updateFill(): void;
   updateFill() {
     const s = this.state;
 
@@ -782,10 +753,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: getCurrentStrokeWidth
-   *
    * Returns the current stroke width (>= 1), ie. max(1, this.format(this.state.strokeWidth * this.state.scale)).
    */
+  // getCurrentStrokeWidth(): number;
   getCurrentStrokeWidth() {
     return Math.max(
       this.minStrokeWidth,
@@ -794,10 +764,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: updateStroke
-   *
-   * Transfers the stroke attributes from <state> to <node>.
+   * Transfers the stroke attributes from {@link mxAbstractCanvas2D.state} to {@link node}.
    */
+  // updateStroke(): void;
   updateStroke() {
     const s = this.state;
 
@@ -826,10 +795,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: updateStrokeAttributes
-   *
-   * Transfers the stroke attributes from <state> to <node>.
+   * Transfers the stroke attributes from {@link mxAbstractCanvas2D.state} to {@link node}.
    */
+  // updateStrokeAttributes(): void;
   updateStrokeAttributes() {
     const s = this.state;
 
@@ -859,10 +827,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: createDashPattern
-   *
    * Creates the SVG dash pattern for the given state.
    */
+  // createDashPattern(scale: number): string;
   createDashPattern(scale) {
     const pat = [];
 
@@ -880,10 +847,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: createTolerance
-   *
    * Creates a hit detection tolerance shape for the given node.
    */
+  // createTolerance(node: Element): Element;
   createTolerance(node) {
     const tol = node.cloneNode(true);
     const sw =
@@ -898,10 +864,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: createShadow
-   *
    * Creates a shadow for the given node.
    */
+  // createShadow(node: Element): Element;
   createShadow(node) {
     const shadow = node.cloneNode(true);
     const s = this.state;
@@ -930,10 +895,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: setLink
-   *
    * Experimental implementation for hyperlinks.
    */
+  // setLink(link: string): void;
   setLink(link) {
     if (link == null) {
       this.root = this.originalRoot;
@@ -956,10 +920,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: rotate
-   *
    * Sets the rotation of the canvas. Note that rotation cannot be concatenated.
    */
+  // rotate(theta: number, flipH: boolean, flipV: boolean, cx: number, cy: number): void;
   rotate(theta, flipH, flipV, cx, cy) {
     if (theta !== 0 || flipH || flipV) {
       const s = this.state;
@@ -1005,20 +968,18 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: begin
-   *
    * Extends superclass to create path.
    */
+  // begin(): void;
   begin() {
     super.begin();
     this.node = this.createElement('path');
   }
 
   /**
-   * Function: rect
-   *
    * Private helper function to create SVG elements
    */
+  // rect(x: number, y: number, w: number, h: number): void;
   rect(x, y, w, h) {
     const s = this.state;
     const n = this.createElement('rect');
@@ -1031,10 +992,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: roundrect
-   *
    * Private helper function to create SVG elements
    */
+  // roundrect(x: number, y: number, w: number, h: number, dx: number, dy: number): void;
   roundrect(x, y, w, h, dx, dy) {
     this.rect(x, y, w, h);
 
@@ -1048,10 +1008,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: ellipse
-   *
    * Private helper function to create SVG elements
    */
+  // ellipse(x: number, y: number, w: number, h: number): void;
   ellipse(x, y, w, h) {
     const s = this.state;
     const n = this.createElement('ellipse');
@@ -1135,10 +1094,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: convertHtml
-   *
    * Converts the given HTML string to XHTML.
    */
+  // convertHtml(val: string): string;
   convertHtml(val) {
     const doc = new DOMParser().parseFromString(val, 'text/html');
 
@@ -1159,10 +1117,10 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: createDiv
-   *
    * Private helper function to create SVG elements
+   * Note: signature changed in mxgraph 4.1.0
    */
+  // createDiv(str: string): HTMLElement;
   createDiv(str) {
     let val = str;
 
@@ -1423,10 +1381,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: getTextCss
-   *
    * Private helper function to create SVG elements
    */
+  // getTextCss(): string;
   getTextCss() {
     const s = this.state;
     const lh = mxConstants.ABSOLUTE_LINE_HEIGHT
@@ -1544,10 +1501,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: createClip
-   *
    * Creates a clip for the given coordinates.
    */
+  // createClip(x: number, y: number, w: number, h: number): Element;
   createClip(x, y, w, h) {
     x = Math.round(x);
     y = Math.round(y);
@@ -1750,11 +1706,10 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: updateFont
-   *
    * Updates the text properties for the given node. (NOTE: For this to work in
    * IE, the given node must be a text or tspan element.)
    */
+  // updateFont(node: Element): void;
   updateFont(node) {
     const s = this.state;
 
@@ -1916,28 +1871,25 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   }
 
   /**
-   * Function: stroke
-   *
    * Paints the outline of the current path.
    */
+  // stroke(): void;
   stroke() {
     this.addNode(false, true);
   }
 
   /**
-   * Function: fill
-   *
    * Fills the current path.
    */
+  // fill(): void;
   fill() {
     this.addNode(true, false);
   }
 
   /**
-   * Function: fillAndStroke
-   *
    * Fills and paints the outline of the current path.
    */
+  // fillAndStroke(): void;
   fillAndStroke() {
     this.addNode(true, true);
   }

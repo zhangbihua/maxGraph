@@ -10,30 +10,27 @@ import mxGeometry from '../../util/datatypes/mxGeometry';
 import mxCellOverlay from './mxCellOverlay';
 
 /**
- * Class: mxCell
- *
  * Cells are the elements of the graph model. They represent the state
  * of the groups, vertices and edges in a graph.
  *
- * Custom attributes:
- *
+ * ### Custom attributes
  * For custom attributes we recommend using an XML node as the value of a cell.
- * The following code can be used to create a cell with an XML node as the
- * value:
- *
- * (code)
- * let doc = mxUtils.createXmlDocument();
- * let node = doc.createElement('MyNode')
+ * The following code can be used to create a cell with an XML node as the value:
+ * @example
+ * ```javascript
+ * var doc = mxUtils.createXmlDocument();
+ * var node = doc.createElement('MyNode')
  * node.setAttribute('label', 'MyLabel');
  * node.setAttribute('attribute1', 'value1');
  * graph.insertVertex(graph.getDefaultParent(), null, node, 40, 40, 80, 30);
- * (end)
+ * ```
  *
- * For the label to work, <mxGraph.convertValueToString> and
- * <mxGraph.cellLabelChanged> should be overridden as follows:
+ * For the label to work, {@link mxGraph.convertValueToString} and
+ * {@link mxGraph.cellLabelChanged} should be overridden as follows:
  *
- * (code)
- * graph.convertValueToString = (cell)=>
+ * @example
+ * ```javascript
+ * graph.convertValueToString(cell)
  * {
  *   if (mxUtils.isNode(cell.value))
  *   {
@@ -41,35 +38,21 @@ import mxCellOverlay from './mxCellOverlay';
  *   }
  * };
  *
- * let cellLabelChanged = graph.cellLabelChanged;
- * graph.cellLabelChanged = (cell, newValue, autoSize)=>
+ * var cellLabelChanged = graph.cellLabelChanged;
+ * graph.cellLabelChanged(cell, newValue, autoSize)
  * {
  *   if (mxUtils.isNode(cell.value))
  *   {
  *     // Clones the value for correct undo/redo
- *     let elt = cell.value.cloneNode(true);
+ *     var elt = cell.value.cloneNode(true);
  *     elt.setAttribute('label', newValue);
  *     newValue = elt;
  *   }
  *
  *   cellLabelChanged.apply(this, arguments);
  * };
- * (end)
- *
- * Callback: onInit
- *
- * Called from within the constructor.
- *
- * Constructor: mxCell
- *
- * Constructs a new cell to be used in a graph model.
- * This method invokes <onInit> upon completion.
- *
- * Parameters:
- *
- * value - Optional object that represents the cell value.
- * geometry - Optional <mxGeometry> that specifies the geometry.
- * style - Optional formatted string that defines the style.
+ * ```
+ * @class mxCell
  */
 class mxCell {
   constructor(
@@ -96,113 +79,98 @@ class mxCell {
   overlays: mxCellOverlay[] | null = null;
 
   /**
-   * Variable: id
-   *
    * Holds the Id. Default is null.
    */
+  // id: string;
   id: string | null = null;
 
   /**
-   * Variable: value
-   *
    * Holds the user object. Default is null.
    */
+  // value: any;
   value: any = null;
 
   /**
-   * Variable: geometry
-   *
    * Holds the <mxGeometry>. Default is null.
    */
+  // geometry: mxGeometry;
   geometry: mxGeometry | null = null;
 
   /**
-   * Variable: style
-   *
    * Holds the style as a string of the form [(stylename|key=value);]. Default is
    * null.
    */
+  // style: string;
   style: string | null = null;
 
   /**
-   * Variable: vertex
-   *
    * Specifies whether the cell is a vertex. Default is false.
    */
+  // vertex: boolean;
   vertex: boolean = false;
 
   /**
-   * Variable: edge
-   *
    * Specifies whether the cell is an edge. Default is false.
    */
+  // edge: boolean;
   edge: boolean = false;
 
   /**
-   * Variable: connectable
-   *
    * Specifies whether the cell is connectable. Default is true.
    */
+  // connectable: boolean;
   connectable: boolean = true;
 
   /**
-   * Variable: visible
-   *
    * Specifies whether the cell is visible. Default is true.
    */
+  // visible: boolean;
   visible: boolean = true;
 
   /**
-   * Variable: collapsed
-   *
    * Specifies whether the cell is collapsed. Default is false.
    */
+  // collapsed: boolean;
   collapsed: boolean = false;
 
   /**
-   * Variable: parent
-   *
    * Reference to the parent cell.
    */
+  // parent: mxCell;
   parent: mxCell | null = null;
 
   /**
-   * Variable: source
-   *
    * Reference to the source terminal.
    */
+  // source: mxCell;
   source: mxCell | null = null;
 
   /**
-   * Variable: target
-   *
    * Reference to the target terminal.
    */
+  // target: mxCell;
   target: mxCell | null = null;
 
   /**
-   * Variable: children
-   *
    * Holds the child cells.
    */
+  // children: Array<mxCell>;
   children: mxCell[] | null = null;
 
   /**
-   * Variable: edges
-   *
    * Holds the edges.
    */
+  // edges: Array<mxCell>;
   edges: mxCell[] | null = null;
 
   /**
-   * Variable: mxTransient
-   *
    * List of members that should not be cloned inside <clone>. This field is
    * passed to <mxUtils.clone> and is not made persistent in <mxCellCodec>.
    * This is not a convention for all classes, it is only used in this class
    * to mark transient fields since transient modifiers are not supported by
    * the language.
    */
+  // mxTransient: Array<string>;
   mxTransient: string[] = [
     'id',
     'value',
@@ -214,51 +182,46 @@ class mxCell {
   ];
 
   /**
-   * Function: getId
-   *
    * Returns the Id of the cell as a string.
    */
+  // getId(): string;
   getId(): string | null {
     return this.id;
   }
 
   /**
-   * Function: setId
-   *
    * Sets the Id of the cell to the given string.
    */
+  // setId(id: string): void;
   setId(id: string): void {
     this.id = id;
   }
 
   /**
-   * Function: getValue
-   *
    * Returns the user object of the cell. The user
    * object is stored in <value>.
    */
+  // getValue(): any;
   getValue(): any {
     return this.value;
   }
 
   /**
-   * Function: setValue
-   *
    * Sets the user object of the cell. The user object
    * is stored in <value>.
    */
+  // setValue(value: any): void;
   setValue(value: number): void {
     this.value = value;
   }
 
   /**
-   * Function: valueChanged
-   *
    * Changes the user object after an in-place edit
    * and returns the previous value. This implementation
    * replaces the user object with the given value and
    * returns the old user object.
    */
+  // valueChanged(newValue: any): any;
   valueChanged(newValue: any): any {
     const previous = this.getValue();
     this.setValue(newValue);
@@ -266,200 +229,180 @@ class mxCell {
   }
 
   /**
-   * Function: getGeometry
-   *
    * Returns the <mxGeometry> that describes the <geometry>.
    */
+  // getGeometry(): mxGeometry;
   getGeometry(): mxGeometry | null {
     return this.geometry;
   }
 
   /**
-   * Function: setGeometry
-   *
    * Sets the <mxGeometry> to be used as the <geometry>.
    */
+  // setGeometry(geometry: mxGeometry): void;
   setGeometry(geometry: mxGeometry | null): void {
     this.geometry = geometry;
   }
 
   /**
-   * Function: getStyle
-   *
    * Returns a string that describes the <style>.
    */
+  // getStyle(): string;
   getStyle(): any {
     return this.style;
   }
 
   /**
-   * Function: setStyle
-   *
    * Sets the string to be used as the <style>.
    */
+  // setStyle(style: string): void;
   setStyle(style: string | null): void {
     this.style = style;
   }
 
   /**
-   * Function: isVertex
-   *
    * Returns true if the cell is a vertex.
    */
+  // isVertex(): boolean;
   isVertex(): boolean {
     return this.vertex;
   }
 
   /**
-   * Function: setVertex
-   *
    * Specifies if the cell is a vertex. This should only be assigned at
    * construction of the cell and not be changed during its lifecycle.
    *
    * Parameters:
    *
-   * vertex - Boolean that specifies if the cell is a vertex.
+   * @param vertex Boolean that specifies if the cell is a vertex.
    */
+  // setVertex(vertex: boolean): void;
   setVertex(vertex: boolean) {
     this.vertex = vertex;
   }
 
   /**
-   * Function: isEdge
-   *
    * Returns true if the cell is an edge.
    */
+  // isEdge(): boolean;
   isEdge(): boolean {
     return this.edge;
   }
 
   /**
-   * Function: setEdge
-   *
    * Specifies if the cell is an edge. This should only be assigned at
    * construction of the cell and not be changed during its lifecycle.
    *
    * Parameters:
    *
-   * edge - Boolean that specifies if the cell is an edge.
+   * @param edge Boolean that specifies if the cell is an edge.
    */
+  // setEdge(edge: boolean): void;
   setEdge(edge: boolean) {
     this.edge = edge;
   }
 
   /**
-   * Function: isConnectable
-   *
    * Returns true if the cell is connectable.
    */
+  // isConnectable(): boolean;
   isConnectable(): boolean {
     return this.connectable;
   }
 
   /**
-   * Function: setConnectable
-   *
    * Sets the connectable state.
    *
    * Parameters:
    *
-   * connectable - Boolean that specifies the new connectable state.
+   * @param connectable Boolean that specifies the new connectable state.
    */
+  // setConnectable(connectable: boolean): void;
   setConnectable(connectable: boolean) {
     this.connectable = connectable;
   }
 
   /**
-   * Function: isVisible
-   *
    * Returns true if the cell is visibile.
    */
+  // isVisible(): boolean;
   isVisible(): boolean {
     return this.visible;
   }
 
   /**
-   * Function: setVisible
-   *
    * Specifies if the cell is visible.
    *
    * Parameters:
    *
-   * visible - Boolean that specifies the new visible state.
+   * @param visible Boolean that specifies the new visible state.
    */
+  // setVisible(visible: boolean): void;
   setVisible(visible: boolean): void {
     this.visible = visible;
   }
 
   /**
-   * Function: isCollapsed
-   *
    * Returns true if the cell is collapsed.
    */
+  // isCollapsed(): boolean;
   isCollapsed(): boolean {
     return this.collapsed;
   }
 
   /**
-   * Function: setCollapsed
-   *
    * Sets the collapsed state.
    *
    * Parameters:
    *
-   * collapsed - Boolean that specifies the new collapsed state.
+   * @param collapsed Boolean that specifies the new collapsed state.
    */
+  // setCollapsed(collapsed: boolean): void;
   setCollapsed(collapsed: boolean): void {
     this.collapsed = collapsed;
   }
 
   /**
-   * Function: getParent
-   *
    * Returns the cell's parent.
    */
+  // getParent(): mxCell;
   getParent(): mxCell | null {
     return this.parent;
   }
 
   /**
-   * Function: setParent
-   *
    * Sets the parent cell.
    *
    * Parameters:
    *
-   * parent - <mxCell> that represents the new parent.
+   * @param parent<mxCell> that represents the new parent.
    */
+  // setParent(parent: mxCell): void;
   setParent(parent: mxCell | null): void {
     this.parent = parent;
   }
 
   /**
-   * Function: getTerminal
-   *
    * Returns the source or target terminal.
    *
    * Parameters:
    *
-   * source - Boolean that specifies if the source terminal should be
+   * @param source Boolean that specifies if the source terminal should be
    * returned.
    */
+  // getTerminal(source: boolean): mxCell;
   getTerminal(source: boolean = false): mxCell | null {
     return source ? this.source : this.target;
   }
 
   /**
-   * Function: setTerminal
-   *
    * Sets the source or target terminal and returns the new terminal.
    *
-   * Parameters:
-   *
-   * terminal - <mxCell> that represents the new source or target terminal.
-   * isSource - Boolean that specifies if the source or target terminal
+   * @param {mxCell} terminal     mxCell that represents the new source or target terminal.
+   * @param {boolean} isSource  boolean that specifies if the source or target terminal
    * should be set.
    */
+  // setTerminal(terminal: mxCell, isSource: boolean): mxCell;
   setTerminal(terminal: mxCell | null, isSource: boolean): mxCell | null {
     if (isSource) {
       this.source = terminal;
@@ -470,43 +413,38 @@ class mxCell {
   }
 
   /**
-   * Function: getChildCount
-   *
    * Returns the number of child cells.
    */
+  // getChildCount(): number;
   getChildCount(): number {
     return this.children == null ? 0 : this.children.length;
   }
 
   /**
-   * Function: getIndex
-   *
    * Returns the index of the specified child in the child array.
    *
    * Parameters:
    *
-   * child - Child whose index should be returned.
+   * @param childChild whose index should be returned.
    */
+  // getIndex(child: mxCell): number;
   getIndex(child: mxCell | null): number {
     return mxUtils.indexOf(this.children, child);
   }
 
   /**
-   * Function: getChildAt
-   *
    * Returns the child at the specified index.
    *
    * Parameters:
    *
-   * index - Integer that specifies the child to be returned.
+   * @param indexInteger that specifies the child to be returned.
    */
+  // getChildAt(index: number): mxCell;
   getChildAt(index: number): mxCell | null {
     return this.children == null ? null : this.children[index];
   }
 
   /**
-   * Function: insert
-   *
    * Inserts the specified child into the child array at the specified index
    * and updates the parent reference of the child. If not childIndex is
    * specified then the child is appended to the child array. Returns the
@@ -514,10 +452,11 @@ class mxCell {
    *
    * Parameters:
    *
-   * child - <mxCell> to be inserted or appended to the child array.
-   * index - Optional integer that specifies the index at which the child
+   * @param child<mxCell> to be inserted or appended to the child array.
+   * @param indexOptional integer that specifies the index at which the child
    * should be inserted into the child array.
    */
+  // insert(child: mxCell, index: number): mxCell;
   insert(child: mxCell | null = null, index: number | null = null) {
     if (child != null) {
       if (index == null) {
@@ -542,17 +481,16 @@ class mxCell {
   }
 
   /**
-   * Function: remove
-   *
    * Removes the child at the specified index from the child array and
    * returns the child that was removed. Will remove the parent reference of
    * the child.
    *
    * Parameters:
    *
-   * index - Integer that specifies the index of the child to be
+   * @param indexInteger that specifies the index of the child to be
    * removed.
    */
+  // remove(index: number): mxCell;
   remove(index: number): mxCell | null {
     let child = null;
     if (this.children != null && index >= 0) {
@@ -566,10 +504,9 @@ class mxCell {
   }
 
   /**
-   * Function: removeFromParent
-   *
    * Removes the cell from its parent.
    */
+  // removeFromParent(): mxCell;
   removeFromParent(): void {
     if (this.parent != null) {
       const index = this.parent.getIndex(this);
@@ -578,51 +515,47 @@ class mxCell {
   }
 
   /**
-   * Function: getEdgeCount
-   *
    * Returns the number of edges in the edge array.
    */
+  // getEdgeCount(): number;
   getEdgeCount(): number {
     return this.edges == null ? 0 : this.edges.length;
   }
 
   /**
-   * Function: getEdgeIndex
-   *
    * Returns the index of the specified edge in <edges>.
    *
    * Parameters:
    *
-   * edge - <mxCell> whose index in <edges> should be returned.
+   * @param edge<mxCell> whose index in <edges> should be returned.
    */
+  // getEdgeIndex(edge: mxCell): number;
   getEdgeIndex(edge: mxCell): number {
     return mxUtils.indexOf(this.edges, edge);
   }
 
   /**
-   * Function: getEdgeAt
-   *
    * Returns the edge at the specified index in <edges>.
    *
    * Parameters:
    *
-   * index - Integer that specifies the index of the edge to be returned.
+   * @param indexInteger that specifies the index of the edge to be returned.
    */
+  // getEdgeAt(index: number): mxCell;
   getEdgeAt(index: number): mxCell | null {
     return this.edges == null ? null : this.edges[index];
   }
 
   /**
-   * Function: insertEdge
-   *
    * Inserts the specified edge into the edge array and returns the edge.
    * Will update the respective terminal reference of the edge.
    *
    * Parameters:
    *
-   * edge - <mxCell> to be inserted into the edge array.
-   * isOutgoing - Boolean that specifies if the edge is outgoing.
+   * @param edge              <mxCell> to be inserted into the edge array.
+   * @param isOutgoing Boolean that specifies if the edge is outgoing.
    */
+  // insertEdge(edge: mxCell, isOutgoing: boolean): mxCell;
   insertEdge(edge: mxCell | null, isOutgoing: boolean) {
     if (edge != null) {
       edge.removeFromTerminal(isOutgoing);
@@ -643,16 +576,15 @@ class mxCell {
   }
 
   /**
-   * Function: removeEdge
-   *
    * Removes the specified edge from the edge array and returns the edge.
    * Will remove the respective terminal reference from the edge.
    *
    * Parameters:
    *
-   * edge - <mxCell> to be removed from the edge array.
-   * isOutgoing - Boolean that specifies if the edge is outgoing.
+   * @param edge<mxCell> to be removed from the edge array.
+   * @param isOutgoing Boolean that specifies if the edge is outgoing.
    */
+  // removeEdge(edge: mxCell, isOutgoing: boolean): mxCell;
   removeEdge(edge: mxCell | null, isOutgoing: boolean = false): mxCell | null {
     if (edge != null) {
       if (edge.getTerminal(!isOutgoing) !== this && this.edges != null) {
@@ -668,15 +600,13 @@ class mxCell {
   }
 
   /**
-   * Function: removeFromTerminal
-   *
    * Removes the edge from its source or target terminal.
    *
    * Parameters:
    *
-   * isSource - Boolean that specifies if the edge should be removed from its
-   * source or target terminal.
+   * @param isSource Boolean that specifies if the edge should be removed from its source or target terminal.
    */
+  // removeFromTerminal(isSource: boolean): mxCell;
   removeFromTerminal(isSource: boolean): void {
     const terminal = this.getTerminal(isSource);
     if (terminal != null) {
@@ -685,15 +615,14 @@ class mxCell {
   }
 
   /**
-   * Function: hasAttribute
-   *
    * Returns true if the user object is an XML node that contains the given
    * attribute.
    *
    * Parameters:
    *
-   * name - Name of the attribute.
+   * @param nameName nameName of the attribute.
    */
+  // hasAttribute(name: string): boolean;
   hasAttribute(name: string): boolean {
     const userObject = this.getValue();
     return (
@@ -706,17 +635,16 @@ class mxCell {
   }
 
   /**
-   * Function: getAttribute
-   *
    * Returns the specified attribute from the user object if it is an XML
    * node.
    *
    * Parameters:
    *
-   * name - Name of the attribute whose value should be returned.
-   * defaultValue - Optional default value to use if the attribute has no
+   * @param nameName              of the attribute whose value should be returned.
+   * @param defaultValueOptional  default value to use if the attribute has no
    * value.
    */
+  // getAttribute(name: string, defaultValue: any): any;
   getAttribute(name: string, defaultValue: any): any {
     const userObject = this.getValue();
     const val =
@@ -727,15 +655,14 @@ class mxCell {
   }
 
   /**
-   * Function: setAttribute
-   *
    * Sets the specified attribute on the user object if it is an XML node.
    *
    * Parameters:
    *
-   * name - Name of the attribute whose value should be set.
-   * value - New value of the attribute.
+   * @param nameName    of the attribute whose value should be set.
+   * @param valueNew    value of the attribute.
    */
+  // setAttribute(name: string, value: any): void;
   setAttribute(name: string, value: any): void {
     const userObject = this.getValue();
     if (
@@ -747,12 +674,11 @@ class mxCell {
   }
 
   /**
-   * Function: clone
-   *
    * Returns a clone of the cell. Uses <cloneValue> to clone
    * the user object. All fields in <mxTransient> are ignored
    * during the cloning.
    */
+  // clone(): mxCell;
   clone(): mxCell {
     const clone = mxUtils.clone(this, this.mxTransient);
     clone.setValue(this.cloneValue());
@@ -760,10 +686,9 @@ class mxCell {
   }
 
   /**
-   * Function: cloneValue
-   *
    * Returns a clone of the cell's user object.
    */
+  // cloneValue(): any;
   cloneValue(): any {
     let value = this.getValue();
     if (value != null) {

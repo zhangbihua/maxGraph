@@ -11,37 +11,33 @@ import mxChildChange from '../../atomic_changes/mxChildChange';
 import mxStyleChange from '../../atomic_changes/mxStyleChange';
 
 /**
- * Class: mxEffects
- *
  * Provides animation effects.
+ *
+ * @class mxEffects
  */
 class mxEffects {
   /**
-   * Function: animateChanges
-   *
    * Asynchronous animated move operation. See also: <mxMorphing>.
    *
-   * Example:
-   *
-   * (code)
-   * graph.model.addListener(mxEvent.CHANGE, (sender, evt)=>
+   * @example
+   * ```javascript
+   * graph.model.addListener(mxEvent.CHANGE, function(sender, evt)
    * {
-   *   let changes = evt.getProperty('edit').changes;
+   *   var changes = evt.getProperty('edit').changes;
    *
    *   if (changes.length < 10)
    *   {
    *     mxEffects.animateChanges(graph, changes);
    *   }
    * });
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * graph - <mxGraph> that received the changes.
-   * changes - Array of changes to be animated.
-   * done - Optional function argument that is invoked after the
+   * @param graph - <mxGraph> that received the changes.
+   * @param changes - Array of changes to be animated.
+   * @param done - Optional function argument that is invoked after the
    * last step of the animation.
    */
+  // static animateChanges(graph: mxGraph, changes: Array<any>, done?: Function): void;
   static animateChanges(graph, changes, done) {
     const maxStep = 10;
     let step = 0;
@@ -120,16 +116,13 @@ class mxEffects {
   }
 
   /**
-   * Function: cascadeOpacity
-   *
    * Sets the opacity on the given cell and its descendants.
    *
-   * Parameters:
-   *
-   * graph - <mxGraph> that contains the cells.
-   * cell - <mxCell> to set the opacity for.
-   * opacity - New value for the opacity in %.
+   * @param graph - <mxGraph> that contains the cells.
+   * @param cell - <mxCell> to set the opacity for.
+   * @param opacity - New value for the opacity in %.
    */
+  // static cascadeOpacity(graph: mxGraph, cell: mxCell, opacity: number): void;
   static cascadeOpacity(graph, cell, opacity) {
     // Fades all children
     const childCount = graph.model.getChildCount(cell);

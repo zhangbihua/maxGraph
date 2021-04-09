@@ -9,27 +9,16 @@ import mxGraphLayout from './mxGraphLayout';
 import mxUtils from '../util/mxUtils';
 
 /**
- * Class: mxEdgeLabelLayout
- *
  * Extends <mxGraphLayout> to implement an edge label layout. This layout
  * makes use of cell states, which means the graph must be validated in
  * a graph view (so that the label bounds are available) before this layout
  * can be executed.
  *
- * Example:
- *
- * (code)
- * let layout = new mxEdgeLabelLayout(graph);
+ * @example
+ * ```javascript
+ * var layout = new mxEdgeLabelLayout(graph);
  * layout.execute(graph.getDefaultParent());
- * (end)
- *
- * Constructor: mxEdgeLabelLayout
- *
- * Constructs a new edge label layout.
- *
- * Arguments:
- *
- * graph - <mxGraph> that contains the cells.
+ * ```
  */
 class mxEdgeLabelLayout extends mxGraphLayout {
   constructor(graph, radius) {
@@ -37,10 +26,9 @@ class mxEdgeLabelLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: execute
-   *
-   * Implements <mxGraphLayout.execute>.
+   * Implements {@link mxGraphLayout.execute}
    */
+  // execute(parent: mxCell): void;
   execute(parent) {
     const { view } = this.graph;
     const model = this.graph.getModel();
@@ -67,10 +55,12 @@ class mxEdgeLabelLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: placeLabels
-   *
    * Places the labels of the given edges.
+   *
+   * @param v   vertexes
+   * @param e   edges
    */
+  // placeLabels(v: Array<mxCell>, e: Array<mxCell>): void;
   placeLabels(v, e) {
     const model = this.graph.getModel();
 
@@ -102,10 +92,9 @@ class mxEdgeLabelLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: avoid
-   *
    * Places the labels of the given edges.
    */
+  // avoid(edge: mxCell, vertex: mxCell): void;
   avoid(edge, vertex) {
     const model = this.graph.getModel();
     const labRect = edge.text.boundingBox;

@@ -13,23 +13,20 @@ import mxUtils from '../util/mxUtils';
 import WeightedCellSorter from './WeightedCellSorter';
 
 /**
- * Class: mxCompactTreeLayout
+ * @class mxCompactTreeLayout
+ * @extends {mxGraphLayout}
  *
- * Extends <mxGraphLayout> to implement a compact tree (Moen) algorithm. This
+ * Extends {@link mxGraphLayout} to implement a compact tree (Moen) algorithm. This
  * layout is suitable for graphs that have no cycles (trees). Vertices that are
  * not connected to the tree will be ignored by this layout.
  *
- * Example:
+ * ### Example
  *
- * (code)
- * let layout = new mxCompactTreeLayout(graph);
+ * @example
+ * ```javascript
+ * var layout = new mxCompactTreeLayout(graph);
  * layout.execute(graph.getDefaultParent());
- * (end)
- *
- * Constructor: mxCompactTreeLayout
- *
- * Constructs a new compact tree layout for the specified graph
- * and orientation.
+ * ```
  */
 class mxCompactTreeLayout extends mxGraphLayout {
   constructor(graph, horizontal, invert) {
@@ -39,202 +36,188 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Variable: horizontal
-   *
-   * Specifies the orientation of the layout. Default is true.
+   * Specifies the orientation of the layout.
+   * @default true
    */
+  // horizontal: boolean;
   horizontal = null;
 
   /**
-   * Variable: invert
-   *
-   * Specifies if edge directions should be inverted. Default is false.
+   * Specifies if edge directions should be inverted.
+   * @default false.
    */
+  // invert: boolean;
   invert = null;
 
   /**
-   * Variable: resizeParent
-   *
    * If the parents should be resized to match the width/height of the
    * children. Default is true.
+   * @default true
    */
+  // resizeParent: boolean;
   resizeParent = true;
 
   /**
-   * Variable: maintainParentLocation
-   *
    * Specifies if the parent location should be maintained, so that the
    * top, left corner stays the same before and after execution of
    * the layout. Default is false for backwards compatibility.
+   * @default false
    */
+  // maintainParentLocation: boolean;
   maintainParentLocation = false;
 
   /**
-   * Variable: groupPadding
-   *
-   * Padding added to resized parents. Default is 10.
+   * Padding added to resized parents.
+   * @default 10
    */
+  // groupPadding: boolean;
   groupPadding = 10;
 
   /**
-   * Variable: groupPaddingTop
-   *
-   * Top padding added to resized parents. Default is 0.
+   * Top padding added to resized parents.
+   * @default 0
    */
+  // groupPaddingTop: boolean;
   groupPaddingTop = 0;
 
   /**
-   * Variable: groupPaddingRight
-   *
-   * Right padding added to resized parents. Default is 0.
+   * Right padding added to resized parents.
+   * @default 0
    */
+  // groupPaddingRight: boolean;
   groupPaddingRight = 0;
 
   /**
-   * Variable: groupPaddingBottom
-   *
-   * Bottom padding added to resized parents. Default is 0.
+   * Bottom padding added to resized parents.
+   * @default 0
    */
+  // groupPaddingBottom: boolean;
   groupPaddingBottom = 0;
 
   /**
-   * Variable: groupPaddingLeft
-   *
-   * Left padding added to resized parents. Default is 0.
+   * Left padding added to resized parents.
+   * @default 0
    */
+  // groupPaddingLeft: boolean;
   groupPaddingLeft = 0;
 
   /**
-   * Variable: parentsChanged
-   *
    * A set of the parents that need updating based on children
    * process as part of the layout.
    */
+  // parentsChanged: { [id: string]: mxCell };
   parentsChanged = null;
 
   /**
-   * Variable: moveTree
-   *
    * Specifies if the tree should be moved to the top, left corner
-   * if it is inside a top-level layer. Default is false.
+   * if it is inside a top-level layer.
+   * @default false
    */
+  // moveTree: boolean;
   moveTree = false;
 
   /**
-   * Variable: visited
-   *
    * Specifies if the tree should be moved to the top, left corner
-   * if it is inside a top-level layer. Default is false.
+   * if it is inside a top-level layer.
+   * @default false
    */
+  // visited: boolean;
   visited = null;
 
   /**
-   * Variable: levelDistance
-   *
-   * Holds the levelDistance. Default is 10.
+   * Holds the levelDistance.
+   * @default 10
    */
+  // levelDistance: number;
   levelDistance = 10;
 
   /**
-   * Variable: nodeDistance
-   *
-   * Holds the nodeDistance. Default is 20.
+   * Holds the nodeDistance.
+   * @default 20
    */
+  // nodeDistance: number;
   nodeDistance = 20;
 
   /**
-   * Variable: resetEdges
-   *
    * Specifies if all edge points of traversed edges should be removed.
-   * Default is true.
+   *
+   * @default true
    */
+  // resetEdges: boolean;
   resetEdges = true;
 
   /**
-   * Variable: prefHozEdgeSep
-   *
    * The preferred horizontal distance between edges exiting a vertex.
    */
+  // prefHozEdgeSep: boolean;
   prefHozEdgeSep = 5;
 
   /**
-   * Variable: prefVertEdgeOff
-   *
    * The preferred vertical offset between edges exiting a vertex.
    */
+  // prefVertEdgeOff: boolean;
   prefVertEdgeOff = 4;
 
   /**
-   * Variable: minEdgeJetty
-   *
    * The minimum distance for an edge jetty from a vertex.
    */
+  // minEdgeJetty: boolean;
   minEdgeJetty = 8;
 
   /**
-   * Variable: channelBuffer
-   *
    * The size of the vertical buffer in the center of inter-rank channels
    * where edge control points should not be placed.
    */
+  // channelBuffer: boolean;
   channelBuffer = 4;
 
   /**
-   * Variable: edgeRouting
-   *
    * Whether or not to apply the internal tree edge routing.
    */
+  // edgeRouting: boolean;
   edgeRouting = true;
 
   /**
-   * Variable: sortEdges
-   *
    * Specifies if edges should be sorted according to the order of their
    * opposite terminal cell in the model.
    */
+  // sortEdges: boolean;
   sortEdges = false;
 
   /**
-   * Variable: alignRanks
-   *
    * Whether or not the tops of cells in each rank should be aligned
    * across the rank
    */
+  // alignRanks: boolean;
   alignRanks = false;
 
   /**
-   * Variable: maxRankHeight
-   *
    * An array of the maximum height of cells (relative to the layout direction)
    * per rank
    */
+  // maxRankHeight: Array<number>;
   maxRankHeight = null;
 
   /**
-   * Variable: root
-   *
    * The cell to use as the root of the tree
    */
+  // root: mxCell;
   root = null;
 
   /**
-   * Variable: node
-   *
    * The internal node representation of the root cell. Do not set directly
    * , this value is only exposed to assist with post-processing functionality
    */
+  // node: _mxCompactTreeLayoutNode;
   node = null;
 
   /**
-   * Function: isVertexIgnored
-   *
-   * Returns a boolean indicating if the given <mxCell> should be ignored as a
+   * Returns a boolean indicating if the given {@link mxCell} should be ignored as a
    * vertex. This returns true if the cell has no connections.
    *
-   * Parameters:
-   *
-   * vertex - <mxCell> whose ignored state should be returned.
+   * @param vertex {@link mxCell} whose ignored state should be returned.
    */
+  // isVertexIgnored(vertex: mxCell): boolean;
   isVertexIgnored(vertex) {
     return (
       super.isVertexIgnored(vertex) ||
@@ -243,29 +226,24 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: isHorizontal
-   *
-   * Returns <horizontal>.
+   * Returns {@link horizontal}.
    */
+  // isHorizontal(): boolean;
   isHorizontal() {
     return this.horizontal;
   }
 
   /**
-   * Function: execute
-   *
-   * Implements <mxGraphLayout.execute>.
+   * Implements {@link mxGraphLayout.execute}.
    *
    * If the parent has any connected edges, then it is used as the root of
-   * the tree. Else, <mxGraph.findTreeRoots> will be used to find a suitable
+   * the tree. Else, {@link mxGraph.findTreeRoots} will be used to find a suitable
    * root node within the set of children of the given parent.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> whose children should be laid out.
-   * root - Optional <mxCell> that will be used as the root of the tree.
-   * Overrides <root> if specified.
+   * @param parent  {@link mxCell} whose children should be laid out.
+   * @param root    Optional {@link mxCell} that will be used as the root of the tree. Overrides {@link root} if specified.
    */
+  // execute(parent: mxCell, root?: mxCell): void;
   execute(parent, root) {
     this.parent = parent;
     const model = this.graph.getModel();
@@ -414,10 +392,9 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: moveNode
-   *
    * Moves the specified node and all of its children by the given amount.
    */
+  // moveNode(node: any, dx: number, dy: number): void;
   moveNode(node, dx, dy) {
     node.x += dx;
     node.y += dy;
@@ -432,10 +409,9 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: sortOutgoingEdges
-   *
-   * Called if <sortEdges> is true to sort the array of outgoing edges in place.
+   * Called if {@link sortEdges} is true to sort the array of outgoing edges in place.
    */
+  // sortOutgoingEdges(source: mxCell, edges: Array<mxCell>): void;
   sortOutgoingEdges(source, edges) {
     const lookup = new mxDictionary();
 
@@ -461,11 +437,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: findRankHeights
-   *
    * Stores the maximum height (relative to the layout
    * direction) of cells in each rank
    */
+  // findRankHeights(node: any, rank: number): void;
   findRankHeights(node, rank) {
     if (
       this.maxRankHeight[rank] == null ||
@@ -483,11 +458,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: setCellHeights
-   *
    * Set the cells heights (relative to the layout
    * direction) when the tops of each rank are to be aligned
    */
+  // setCellHeights(node: any, rank: number): void;
   setCellHeights(node, rank) {
     if (
       this.maxRankHeight[rank] != null &&
@@ -578,11 +552,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: layout
-   *
    * Starts the actual compact tree layout algorithm
    * at the given node.
    */
+  // layout(node: any): void;
   layout(node) {
     if (node != null) {
       let { child } = node;
@@ -601,8 +574,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: horizontalLayout
+   * Starts the actual compact tree layout algorithm
+   * at the given node.
    */
+  // horizontalLayout(node: any, x0: number, y0: number, bounds: mxRectangle): mxRectangle;
   horizontalLayout(node, x0, y0, bounds) {
     node.x += x0 + node.offsetX;
     node.y += y0 + node.offsetY;
@@ -630,8 +605,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: verticalLayout
+   * Starts the actual compact tree layout algorithm
+   * at the given node.
    */
+  // verticalLayout(node: any, parent: mxCell, x0: number, y0: number, bounds: mxRectangle): mxRectangle;
   verticalLayout(node, parent, x0, y0, bounds) {
     node.x += x0 + node.offsetY;
     node.y += y0 + node.offsetX;
@@ -660,8 +637,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: attachParent
+   * Starts the actual compact tree layout algorithm
+   * at the given node.
    */
+  // attachParent(node: any, height: number): void;
   attachParent(node, height) {
     const x = this.nodeDistance + this.levelDistance;
     const y2 = (height - node.width) / 2 - this.nodeDistance;
@@ -683,8 +662,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: layoutLeaf
+   * Starts the actual compact tree layout algorithm
+   * at the given node.
    */
+  // layoutLeaf(node: any): void;
   layoutLeaf(node) {
     const dist = 2 * this.nodeDistance;
 
@@ -699,8 +680,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: join
+   * Starts the actual compact tree layout algorithm
+   * at the given node.
    */
+  // join(node: any): number;
   join(node) {
     const dist = 2 * this.nodeDistance;
 
@@ -723,8 +706,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: merge
+   * Starts the actual compact tree layout algorithm
+   * at the given node.
    */
+  // merge(p1: any, p2: any): number;
   merge(p1, p2) {
     let x = 0;
     let y = 0;
@@ -767,8 +752,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: offset
+   * Starts the actual compact tree layout algorithm
+   * at the given node.
    */
+  // offset(p1: number, p2: number, a1: number, a2: number, b1: number, b2: number): number;
   offset(p1, p2, a1, a2, b1, b2) {
     let d = 0;
 
@@ -826,8 +813,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: createNode
+   * Starts the actual compact tree layout algorithm
+   * at the given node.
    */
+  // createNode(cell: mxCell): _mxCompactTreeLayoutNode;
   createNode(cell) {
     const node = {};
     node.cell = cell;
@@ -856,8 +845,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: apply
+   * Starts the actual compact tree layout algorithm
+   * at the given node.
    */
+  // apply(node: any, bounds: mxRectangle): mxRectangle;
   apply(node, bounds) {
     const model = this.graph.getModel();
     const { cell } = node;
@@ -894,8 +885,10 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: createLine
+   * Starts the actual compact tree layout algorithm
+   * at the given node.
    */
+  // createLine(dx: number, dy: number, next: any): _mxCompactTreeLayoutLine;
   createLine(dx, dy, next) {
     const line = {};
     line.dx = dx;
@@ -906,12 +899,11 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: adjustParents
-   *
    * Adjust parent cells whose child geometries have changed. The default
    * implementation adjusts the group to just fit around the children with
    * a padding.
    */
+  // adjustParents(): void;
   adjustParents() {
     const tmp = [];
 
@@ -930,10 +922,9 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: localEdgeProcessing
-   *
    * Moves the specified node and all of its children by the given amount.
    */
+  // localEdgeProcessing(node: _mxCompactTreeLayoutNode): void;
   localEdgeProcessing(node) {
     this.processNodeOutgoing(node);
     let { child } = node;
@@ -945,10 +936,9 @@ class mxCompactTreeLayout extends mxGraphLayout {
   }
 
   /**
-   * Function: processNodeOutgoing
-   *
    * Separates the x position of edges as they connect to vertices
    */
+  // processNodeOutgoing(node: _mxCompactTreeLayoutNode): void;
   processNodeOutgoing(node) {
     let { child } = node;
     const parentCell = node.cell;

@@ -7,63 +7,56 @@
 import mxObjectCodec from './mxObjectCodec';
 
 /**
- * Class: mxCodecRegistry
- *
  * Singleton class that acts as a global registry for codecs.
  *
- * Adding an <mxCodec>:
+ * ### Adding an <mxCodec>:
  *
- * 1. Define a default codec with a new instance of the
- * object to be handled.
+ * 1. Define a default codec with a new instance of the object to be handled.
  *
- * (code)
- * let codec = new mxObjectCodec(new mxGraphModel());
- * (end)
+ *     ```javascript
+ *     var codec = new mxObjectCodec(new mxGraphModel());
+ *     ```
  *
- * 2. Define the functions required for encoding and decoding
- * objects.
+ * 2. Define the functions required for encoding and decoding objects.
  *
- * (code)
- * codec.encode = (enc, obj)=> { ... }
- * codec.decode = (dec, node, into)=> { ... }
- * (end)
+ *     ```javascript
+ *     codec.encode = function(enc, obj) { ... }
+ *     codec.decode = function(dec, node, into) { ... }
+ *     ```
  *
  * 3. Register the codec in the <mxCodecRegistry>.
  *
- * (code)
- * mxCodecRegistry.register(codec);
- * (end)
+ *     ```javascript
+ *     mxCodecRegistry.register(codec);
+ *     ```
  *
- * <mxObjectCodec.decode> may be used to either create a new
+ * {@link mxObjectCodec.decode} may be used to either create a new
  * instance of an object or to configure an existing instance,
  * in which case the into argument points to the existing
  * object. In this case, we say the codec "configures" the
  * object.
  *
- * Variable: codecs
- *
- * Maps from constructor names to codecs.
+ * @class mxCodecRegistry
  */
 class mxCodecRegistry {
   static codecs = [];
 
   /**
-   * Variable: aliases
-   *
    * Maps from classnames to codecnames.
+   * @static
    */
+  // static aliases: { [key: string]: any };
   static aliases = [];
 
   /**
-   * Function: register
-   *
    * Registers a new codec and associates the name of the template
    * constructor in the codec with the codec object.
    *
-   * Parameters:
+   * @static
    *
-   * codec - <mxObjectCodec> to be registered.
+   * @param codec - {@link mxObjectCodec} to be registered.
    */
+  // static register(codec: mxObjectCodec): mxObjectCodec;
   static register(codec) {
     if (codec != null) {
       const name = codec.getName();
@@ -79,24 +72,23 @@ class mxCodecRegistry {
   }
 
   /**
-   * Function: addAlias
-   *
    * Adds an alias for mapping a classname to a codecname.
+   * @static
    */
+  // static addAlias(classname: string, codecname: string): void;
   static addAlias(classname, codecname) {
     mxCodecRegistry.aliases[classname] = codecname;
   }
 
   /**
-   * Function: getCodec
-   *
    * Returns a codec that handles objects that are constructed
    * using the given constructor.
    *
-   * Parameters:
+   * @static
    *
-   * ctor - JavaScript constructor function.
+   * @param ctor - JavaScript constructor function.
    */
+  // static getCodec(ctor: any): mxObjectCodec;
   static getCodec(constructor_) {
     let codec = null;
 

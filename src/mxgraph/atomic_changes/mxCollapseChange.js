@@ -19,9 +19,10 @@ class mxCollapseChange {
   /**
    * Function: execute
    *
-   * Changes the collapsed state of <cell> to <previous> using
+   * Changes the collapsed state of {@link cell}` to {@link previous}` using
    * <mxGraphModel.collapsedStateForCellChanged>.
    */
+  // execute(): void;
   execute() {
     if (this.cell != null) {
       this.collapsed = this.previous;

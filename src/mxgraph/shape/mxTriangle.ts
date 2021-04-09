@@ -12,13 +12,9 @@ import mxAbstractCanvas2D from '../util/canvas/mxAbstractCanvas2D';
 import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 
 /**
- * Class: mxTriangle
- *
  * Implementation of the triangle shape.
- *
- * Constructor: mxTriangle
- *
- * Constructs a new triangle shape.
+ * @class mxTriangle
+ * @extends {mxActor}
  */
 class mxTriangle extends mxActor {
   constructor() {
@@ -26,19 +22,23 @@ class mxTriangle extends mxActor {
   }
 
   /**
-   * Function: isRoundable
-   *
    * Adds roundable support.
+   * @returns {boolean}
    */
+  // isRoundable(): boolean;
   isRoundable(): boolean {
     return true;
   }
 
   /**
-   * Function: redrawPath
-   *
    * Draws the path for this shape.
+   * @param {mxAbstractCanvas2D} c
+   * @param {number} x
+   * @param {number} y
+   * @param {number} w
+   * @param {number} h
    */
+  // redrawPath(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   redrawPath(
     c: mxSvgCanvas2D,
     x: number,

@@ -9,29 +9,18 @@ import mxConstants from '../util/mxConstants';
 import mxUtils from '../util/mxUtils';
 
 /**
- * Class: mxSwimlane
+ * Extends {@link mxShape} to implement a swimlane shape.
+ * This shape is registered under {@link mxConstants.SHAPE_SWIMLANE} in {@link mxCellRenderer}.
+ * Use the {@link mxConstants.STYLE_STYLE_STARTSIZE} to define the size of the title
+ * region, {@link mxConstants.STYLE_SWIMLANE_FILLCOLOR} for the content area fill,
+ * {@link mxConstants.STYLE_SEPARATORCOLOR} to draw an additional vertical separator and
+ * {@link mxConstants.STYLE_SWIMLANE_LINE} to hide the line between the title region and
+ * the content area.
+ * The {@link mxConstants.STYLE_HORIZONTAL} affects the orientation of this shape,
+ * not only its label.
  *
- * Extends <mxShape> to implement a swimlane shape. This shape is registered
- * under <mxConstants.SHAPE_SWIMLANE> in <mxCellRenderer>. Use the
- * <mxConstants.STYLE_STYLE_STARTSIZE> to define the size of the title
- * region, <mxConstants.STYLE_SWIMLANE_FILLCOLOR> for the content area fill,
- * <mxConstants.STYLE_SEPARATORCOLOR> to draw an additional vertical separator
- * and <mxConstants.STYLE_SWIMLANE_LINE> to hide the line between the title
- * region and the content area. The <mxConstants.STYLE_HORIZONTAL> affects
- * the orientation of this shape, not only its label.
- *
- * Constructor: mxSwimlane
- *
- * Constructs a new swimlane shape.
- *
- * Parameters:
- *
- * bounds - <mxRectangle> that defines the bounds. This is stored in
- * <mxShape.bounds>.
- * fill - String that defines the fill color. This is stored in <fill>.
- * stroke - String that defines the stroke color. This is stored in <stroke>.
- * strokewidth - Optional integer that defines the stroke width. Default is
- * 1. This is stored in <strokewidth>.
+ * @class mxSwimlane
+ * @extends {mxShape}
  */
 class mxSwimlane extends mxShape {
   constructor(bounds, fill, stroke, strokewidth) {
@@ -43,27 +32,33 @@ class mxSwimlane extends mxShape {
   }
 
   /**
-   * Variable: imageSize
    *
    * Default imagewidth and imageheight if an image but no imagewidth
    * and imageheight are defined in the style. Value is 16.
+   * @type {number}
+   * @default 16
    */
+  // imageSize: number;
   imageSize = 16;
 
   /**
-   * Function: isRoundable
-   *
    * Adds roundable support.
+   * @param {mxAbstractCanvas2D} c
+   * @param {number} x
+   * @param {number} y
+   * @param {number} w
+   * @param {number} h
+   * @returns {boolean}
    */
+  // isRoundable(c?: mxAbstractCanvas2D, x?: number, y?: number, w?: number, h?: number): boolean;
   isRoundable(c, x, y, w, h) {
     return true;
   }
 
   /**
-   * Function: getTitleSize
-   *
-   * Returns the title size.
+   * Returns the bounding box for the gradient box for this shape.
    */
+  // getTitleSize(): number;
   getTitleSize() {
     return Math.max(
       0,
@@ -76,10 +71,9 @@ class mxSwimlane extends mxShape {
   }
 
   /**
-   * Function: getLabelBounds
-   *
-   * Returns the bounding box for the label.
+   * Returns the bounding box for the gradient box for this shape.
    */
+  // getLabelBounds(rect: mxRectangle): mxRectangle;
   getLabelBounds(rect) {
     const start = this.getTitleSize();
     const bounds = new mxRectangle(rect.x, rect.y, rect.width, rect.height);
@@ -128,10 +122,9 @@ class mxSwimlane extends mxShape {
   }
 
   /**
-   * Function: getGradientBounds
-   *
    * Returns the bounding box for the gradient box for this shape.
    */
+  // getGradientBounds(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): mxRectangle;
   getGradientBounds(c, x, y, w, h) {
     let start = this.getTitleSize();
 
@@ -175,19 +168,17 @@ class mxSwimlane extends mxShape {
   }
 
   /**
-   * Function: isHorizontal
-   *
    * Paints the swimlane vertex shape.
    */
+  // isHorizontal(): boolean;
   isHorizontal() {
     return mxUtils.getValue(this.style, mxConstants.STYLE_HORIZONTAL, 1) == 1;
   }
 
   /**
-   * Function: paintVertexShape
-   *
    * Paints the swimlane vertex shape.
    */
+  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintVertexShape(c, x, y, w, h) {
     let start = this.getTitleSize();
     const fill = mxUtils.getValue(
@@ -464,10 +455,9 @@ class mxSwimlane extends mxShape {
   }
 
   /**
-   * Function: getImageBounds
-   *
    * Paints the swimlane vertex shape.
    */
+  // getImageBounds(x: number, y: number, w: number, h: number): mxRectangle;
   getImageBounds(x, y, w, h) {
     if (this.isHorizontal()) {
       return new mxRectangle(

@@ -9,35 +9,37 @@ import mxGraph from '../../view/graph/mxGraph';
 import mxGraphModel from "../../view/graph/mxGraphModel";
 
 /**
- * Class: mxClipboard
+ * @class
  *
  * Singleton that implements a clipboard for graph cells.
  *
- * Example:
+ * ### Example:
  *
- * (code)
+ * @example
+ * ```javascript
  * mxClipboard.copy(graph);
  * mxClipboard.paste(graph2);
- * (end)
+ * ```
  *
  * This copies the selection cells from the graph to the clipboard and
  * pastes them into graph2.
  *
- * For fine-grained control of the clipboard data the <mxGraph.canExportCell>
- * and <mxGraph.canImportCell> functions can be overridden.
+ * For fine-grained control of the clipboard data the {@link mxGraph.canExportCell}
+ * and {@link mxGraph.canImportCell} functions can be overridden.
  *
  * To restore previous parents for pasted cells, the implementation for
- * <copy> and <paste> can be changed as follows.
+ * {@link copy} and {@link paste} can be changed as follows.
  *
- * (code)
- * mxClipboard.copy = (graph, cells)=>
+ * @example
+ * ```javascript
+ * mxClipboard.copy = function(graph, cells)
  * {
  *   cells = cells || graph.getSelectionCells();
- *   let result = graph.getExportableCells(cells);
+ *   var result = graph.getExportableCells(cells);
  *
- *   mxClipboard.parents = {};
+ *   mxClipboard.parents = new Object();
  *
- *   for (let i = 0; i < result.length; i += 1)
+ *   for (var i = 0; i < result.length; i++)
  *   {
  *     mxClipboard.parents[i] = graph.model.getParent(cells[i]);
  *   }
@@ -48,20 +50,20 @@ import mxGraphModel from "../../view/graph/mxGraphModel";
  *   return result;
  * };
  *
- * mxClipboard.paste = (graph)=>
+ * mxClipboard.paste = function(graph)
  * {
  *   if (!mxClipboard.isEmpty())
  *   {
- *     let cells = graph.getImportableCells(mxClipboard.getCells());
- *     let delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
- *     let parent = graph.getDefaultParent();
+ *     var cells = graph.getImportableCells(mxClipboard.getCells());
+ *     var delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
+ *     var parent = graph.getDefaultParent();
  *
  *     graph.model.beginUpdate();
  *     try
  *     {
- *       for (let i = 0; i < cells.length; i += 1)
+ *       for (var i = 0; i < cells.length; i++)
  *       {
- *         let tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
+ *         var tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
  *              mxClipboard.parents[i] : parent;
  *         cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
  *       }
@@ -76,70 +78,61 @@ import mxGraphModel from "../../view/graph/mxGraphModel";
  *     graph.setSelectionCells(cells);
  *   }
  * };
- * (end)
+ * ```
  */
 class mxClipboard {
-  /*
-   * Variable: STEPSIZE
-   *
+  /**
    * Defines the step size to offset the cells after each paste operation.
    * Default is 10.
    */
+  // static STEPSIZE: number;
   static STEPSIZE: number = 10;
 
   /**
-   * Variable: insertCount
-   *
    * Counts the number of times the clipboard data has been inserted.
    */
+  // static insertCount: number;
   static insertCount: number = 1;
 
   /**
-   * Variable: cells
-   *
-   * Holds the array of <mxCells> currently in the clipboard.
+   * Holds the array of {@link mxCell} currently in the clipboard.
    */
+  // static cells: Array<mxCell>;
   static cells: mxCell[] | null = null;
 
   /**
-   * Function: setCells
-   *
-   * Sets the cells in the clipboard. Fires a <mxEvent.CHANGE> event.
+   * Sets the cells in the clipboard. Fires a {@link mxEvent.CHANGE} event.
    */
+  // static setCells(cells: Array<mxCell>): void;
   static setCells(cells: mxCell[] | null) {
     mxClipboard.cells = cells;
   }
 
   /**
-   * Function: getCells
-   *
    * Returns  the cells in the clipboard.
    */
+  // static getCells(): Array<mxCell>;
   static getCells() {
     return mxClipboard.cells;
   }
 
   /**
-   * Function: isEmpty
-   *
    * Returns true if the clipboard currently has not data stored.
    */
+  // static isEmpty(): boolean;
   static isEmpty() {
     return mxClipboard.getCells() == null;
   }
 
   /**
-   * Function: cut
-   *
-   * Cuts the given array of <mxCells> from the specified graph.
+   * Cuts the given array of {@link mxCell} from the specified graph.
    * If cells is null then the selection cells of the graph will
    * be used. Returns the cells that have been cut from the graph.
    *
-   * Parameters:
-   *
-   * graph - <mxGraph> that contains the cells to be cut.
-   * cells - Optional array of <mxCells> to be cut.
+   * @param graph - {@link mxGraph} that contains the cells to be cut.
+   * @param cells - Optional array of {@link mxCell} to be cut.
    */
+  // static cut(graph: mxGraph, cells?: Array<mxCell>): Array<mxCell>;
   static cut(graph: mxGraph, cells: mxCell[] | null) {
     cells = mxClipboard.copy(graph, cells);
     mxClipboard.insertCount = 0;
@@ -149,32 +142,26 @@ class mxClipboard {
   }
 
   /**
-   * Function: removeCells
-   *
    * Hook to remove the given cells from the given graph after
    * a cut operation.
    *
-   * Parameters:
-   *
-   * graph - <mxGraph> that contains the cells to be cut.
-   * cells - Array of <mxCells> to be cut.
+   * @param graph - {@link mxGraph} that contains the cells to be cut.
+   * @param cells - Array of {@link mxCell} to be cut.
    */
+  // static removeCells(graph: mxGraph, cells: Array<mxCell>): void;
   static removeCells(graph: mxGraph, cells: mxCell[] | null) {
     graph.removeCells(cells);
   }
 
   /**
-   * Function: copy
-   *
-   * Copies the given array of <mxCells> from the specified
-   * graph to <cells>. Returns the original array of cells that has
+   * Copies the given array of {@link mxCell} from the specified
+   * graph to {@link cells}. Returns the original array of cells that has
    * been cloned. Descendants of cells in the array are ignored.
    *
-   * Parameters:
-   *
-   * graph - <mxGraph> that contains the cells to be copied.
-   * cells - Optional array of <mxCells> to be copied.
+   * @param graph - {@link mxGraph} that contains the cells to be copied.
+   * @param cells - Optional array of {@link mxCell} to be copied.
    */
+  // static copy(graph: mxGraph, cells?: Array<mxCell>): Array<mxCell>;
   static copy(graph: mxGraph, cells: mxCell[] | null): mxCell[] | null {
     cells = cells || graph.getSelectionCells();
     const result = graph.getExportableCells((<mxGraphModel>graph.model).getTopmostCells(cells));
@@ -185,20 +172,17 @@ class mxClipboard {
   }
 
   /**
-   * Function: paste
-   *
-   * Pastes the <cells> into the specified graph restoring
-   * the relation to <parents>, if possible. If the parents
+   * Pastes the {@link cells} into the specified graph restoring
+   * the relation to {@link parents}, if possible. If the parents
    * are no longer in the graph or invisible then the
    * cells are added to the graph's default or into the
    * swimlane under the cell's new location if one exists.
-   * The cells are added to the graph using <mxGraph.importCells>
+   * The cells are added to the graph using {@link mxGraph.importCells}
    * and returned.
    *
-   * Parameters:
-   *
-   * graph - <mxGraph> to paste the <cells> into.
+   * @param graph - {@link mxGraph} to paste the {@link cells} into.
    */
+  // static paste(graph: mxGraph): Array<mxCell>;
   static paste(graph: mxGraph) {
     let cells = null;
 

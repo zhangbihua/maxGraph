@@ -59,6 +59,7 @@ class mxVertexHandler {
    *
    * Reference to the enclosing <mxGraph>.
    */
+  // graph: mxGraph;
   graph = null;
 
   /**
@@ -66,6 +67,7 @@ class mxVertexHandler {
    *
    * Reference to the <mxCellState> being modified.
    */
+  // state: mxCellState;
   state = null;
 
   /**
@@ -74,6 +76,7 @@ class mxVertexHandler {
    * Specifies if only one sizer handle at the bottom, right corner should be
    * used. Default is false.
    */
+  // singleSizer: boolean;
   singleSizer = false;
 
   /**
@@ -81,6 +84,7 @@ class mxVertexHandler {
    *
    * Holds the index of the current handle.
    */
+  // index: number;
   index = null;
 
   /**
@@ -89,6 +93,7 @@ class mxVertexHandler {
    * Specifies if the bounds of handles should be used for hit-detection in IE or
    * if <tolerance> > 0. Default is true.
    */
+  // allowHandleBoundsCheck: boolean;
   allowHandleBoundsCheck = true;
 
   /**
@@ -96,6 +101,7 @@ class mxVertexHandler {
    *
    * Optional <mxImage> to be used as handles. Default is null.
    */
+  // handleImage: mxImage;
   handleImage = null;
 
   /**
@@ -110,6 +116,7 @@ class mxVertexHandler {
    *
    * Optional tolerance for hit-detection in <getHandleForEvent>. Default is 0.
    */
+  // tolerance: number;
   tolerance = 0;
 
   /**
@@ -117,6 +124,7 @@ class mxVertexHandler {
    *
    * Specifies if a rotation handle should be visible. Default is false.
    */
+  // rotationEnabled: boolean;
   rotationEnabled = false;
 
   /**
@@ -125,6 +133,7 @@ class mxVertexHandler {
    * Specifies if the parent should be highlighted if a child cell is selected.
    * Default is false.
    */
+  // parentHighlightEnabled: boolean;
   parentHighlightEnabled = false;
 
   /**
@@ -133,6 +142,7 @@ class mxVertexHandler {
    * Specifies if rotation steps should be "rasterized" depening on the distance
    * to the handle. Default is true.
    */
+  // rotationRaster: boolean;
   rotationRaster = true;
 
   /**
@@ -140,6 +150,7 @@ class mxVertexHandler {
    *
    * Specifies the cursor for the rotation handle. Default is 'crosshair'.
    */
+  // rotationCursor: string;
   rotationCursor = 'crosshair';
 
   /**
@@ -148,6 +159,7 @@ class mxVertexHandler {
    * Specifies if resize should change the cell in-place. This is an experimental
    * feature for non-touch devices. Default is false.
    */
+  // livePreview: boolean;
   livePreview = false;
 
   /**
@@ -163,6 +175,7 @@ class mxVertexHandler {
    * Specifies if sizers should be hidden and spaced if the vertex is small.
    * Default is false.
    */
+  // manageSizers: boolean;
   manageSizers = false;
 
   /**
@@ -171,6 +184,7 @@ class mxVertexHandler {
    * Specifies if the size of groups should be constrained by the children.
    * Default is false.
    */
+  // constrainGroupByChildren: boolean;
   constrainGroupByChildren = false;
 
   /**
@@ -178,6 +192,7 @@ class mxVertexHandler {
    *
    * Vertical spacing for rotation icon. Default is -16.
    */
+  // rotationHandleVSpacing: number;
   rotationHandleVSpacing = -16;
 
   /**
@@ -186,6 +201,7 @@ class mxVertexHandler {
    * The horizontal offset for the handles. This is updated in <redrawHandles>
    * if <manageSizers> is true and the sizers are offset horizontally.
    */
+  // horizontalOffset: number;
   horizontalOffset = 0;
 
   /**
@@ -194,6 +210,7 @@ class mxVertexHandler {
    * The horizontal offset for the handles. This is updated in <redrawHandles>
    * if <manageSizers> is true and the sizers are offset vertically.
    */
+  // verticalOffset: number;
   verticalOffset = 0;
 
   /**
@@ -201,6 +218,7 @@ class mxVertexHandler {
    *
    * Initializes the shapes required for this vertex handler.
    */
+  // init(): void;
   init() {
     this.graph = this.state.view.graph;
     this.selectionBounds = this.getSelectionBounds(this.state);
@@ -315,6 +333,7 @@ class mxVertexHandler {
    *
    * Returns true if the rotation handle should be showing.
    */
+  // isRotationHandleVisible(): boolean;
   isRotationHandleVisible() {
     return (
       this.graph.isEnabled() &&
@@ -330,6 +349,7 @@ class mxVertexHandler {
    *
    * Returns true if the aspect ratio if the cell should be maintained.
    */
+  // isConstrainedEvent(me: mxMouseEvent): boolean;
   isConstrainedEvent(me) {
     return (
       mxEvent.isShiftDown(me.getEvent()) ||
@@ -342,6 +362,7 @@ class mxVertexHandler {
    *
    * Returns true if the center of the vertex should be maintained during the resize.
    */
+  // isCenteredEvent(state: mxCellState, me: mxMouseEvent): boolean;
   isCenteredEvent(state, me) {
     return false;
   }
@@ -351,6 +372,7 @@ class mxVertexHandler {
    *
    * Returns an array of custom handles. This implementation returns null.
    */
+  // createCustomHandles(): any[];
   createCustomHandles() {
     return null;
   }
@@ -360,6 +382,7 @@ class mxVertexHandler {
    *
    * Initializes the shapes required for this vertex handler.
    */
+  // updateMinBounds(): void;
   updateMinBounds() {
     const children = this.graph.getChildCells(this.state.cell);
 
@@ -388,6 +411,7 @@ class mxVertexHandler {
    * Returns the mxRectangle that defines the bounds of the selection
    * border.
    */
+  // getSelectionBounds(state: mxCellState): mxRectangle;
   getSelectionBounds(state) {
     return new mxRectangle(
       Math.round(state.x),
@@ -402,6 +426,7 @@ class mxVertexHandler {
    *
    * Creates the shape used to draw the selection border.
    */
+  // createParentHighlightShape(bounds: mxRectangle): mxRectangleShape;
   createParentHighlightShape(bounds) {
     return this.createSelectionShape(bounds);
   }
@@ -411,6 +436,7 @@ class mxVertexHandler {
    *
    * Creates the shape used to draw the selection border.
    */
+  // createSelectionShape(bounds: mxRectangle): mxRectangleShape;
   createSelectionShape(bounds) {
     const shape = new mxRectangleShape(
       mxRectangle.fromRectangle(bounds),
@@ -428,6 +454,7 @@ class mxVertexHandler {
    *
    * Returns <mxConstants.VERTEX_SELECTION_COLOR>.
    */
+  // getSelectionColor(): string;
   getSelectionColor() {
     return mxConstants.VERTEX_SELECTION_COLOR;
   }
@@ -437,6 +464,7 @@ class mxVertexHandler {
    *
    * Returns <mxConstants.VERTEX_SELECTION_STROKEWIDTH>.
    */
+  // getSelectionStrokeWidth(): number;
   getSelectionStrokeWidth() {
     return mxConstants.VERTEX_SELECTION_STROKEWIDTH;
   }
@@ -446,6 +474,7 @@ class mxVertexHandler {
    *
    * Returns <mxConstants.VERTEX_SELECTION_DASHED>.
    */
+  // isSelectionDashed(): boolean;
   isSelectionDashed() {
     return mxConstants.VERTEX_SELECTION_DASHED;
   }
@@ -456,6 +485,7 @@ class mxVertexHandler {
    * Creates a sizer handle for the specified cursor and index and returns
    * the new <mxRectangleShape> that represents the handle.
    */
+  // createSizer(cursor: string, index: number, size: number, fillColor: string): mxRectangleShape;
   createSizer(cursor, index, size, fillColor) {
     size = size || mxConstants.HANDLE_SIZE;
 
@@ -498,6 +528,7 @@ class mxVertexHandler {
    * Returns true if the sizer for the given index is visible.
    * This returns true for all given indices.
    */
+  // isSizerVisible(index: number): boolean;
   isSizerVisible(index) {
     return true;
   }
@@ -509,6 +540,7 @@ class mxVertexHandler {
    * index. Only images and rectangles should be returned if support for HTML
    * labels with not foreign objects is required.
    */
+  // createSizerShape(bounds: mxRectangle, index: number, fillColor: string): mxShape;
   createSizerShape(bounds, index, fillColor) {
     if (this.handleImage != null) {
       bounds = new mxRectangle(
@@ -544,6 +576,7 @@ class mxVertexHandler {
    * Helper method to create an <mxRectangle> around the given centerpoint
    * with a width and height of 2*s or 6, if no s is given.
    */
+  // moveSizerTo(shape: mxRectangleShape, x: number, y: number): void;
   moveSizerTo(shape, x, y) {
     if (shape != null) {
       shape.bounds.x = Math.floor(x - shape.bounds.width / 2);
@@ -562,6 +595,7 @@ class mxVertexHandler {
    * Returns the index of the handle for the given event. This returns the index
    * of the sizer from where the event originated or <mxEvent.LABEL_INDEX>.
    */
+  // getHandleForEvent(me: mxMouseEvent): number;
   getHandleForEvent(me) {
     // Connection highlight may consume events before they reach sizer handle
     const tol = !mxEvent.isMouseEvent(me.getEvent()) ? this.tolerance : 1;
@@ -636,6 +670,7 @@ class mxVertexHandler {
    * Returns true if the given event allows custom handles to be changed. This
    * implementation returns true.
    */
+  // isCustomHandleEvent(me: mxMouseEvent): boolean;
   isCustomHandleEvent(me) {
     return true;
   }
@@ -647,6 +682,7 @@ class mxVertexHandler {
    * event all subsequent events of the gesture are redirected to this
    * handler.
    */
+  // mouseDown(sender: any, me: mxMouseEvent): void;
   mouseDown(sender, me) {
     if (!me.isConsumed() && this.graph.isEnabled()) {
       const handle = this.getHandleForEvent(me);
@@ -664,6 +700,7 @@ class mxVertexHandler {
    * Called if <livePreview> is enabled to check if a border should be painted.
    * This implementation returns true if the shape is transparent.
    */
+  // isLivePreviewBorder(): boolean;
   isLivePreviewBorder() {
     return (
       this.state.shape != null &&
@@ -677,6 +714,7 @@ class mxVertexHandler {
    *
    * Starts the handling of the mouse gesture.
    */
+  // start(x: number, y: number, index: number): void;
   start(x, y, index) {
     if (this.selectionBorder != null) {
       this.livePreviewActive =
@@ -794,6 +832,7 @@ class mxVertexHandler {
    *
    * Shortcut to <hideSizers>.
    */
+  // setHandlesVisible(visible: boolean): void;
   setHandlesVisible(visible) {
     this.handlesVisible = visible;
 
@@ -817,6 +856,7 @@ class mxVertexHandler {
    *
    * Starts the handling of the mouse gesture.
    */
+  // hideSizers(): void;
   hideSizers() {
     this.setHandlesVisible(false);
   }
@@ -828,6 +868,7 @@ class mxVertexHandler {
    * <mxGraph.tolerance>. If the event is a mouse event then the tolerance is
    * ignored.
    */
+  // checkTolerance(me: mxMouseEvent): void;
   checkTolerance(me) {
     if (this.inTolerance && this.startX != null && this.startY != null) {
       if (
@@ -845,6 +886,7 @@ class mxVertexHandler {
    *
    * Hook for subclassers do show details while the handler is active.
    */
+  // updateHint(me: mxMouseEvent): void;
   updateHint(me) {}
 
   /**
@@ -852,6 +894,7 @@ class mxVertexHandler {
    *
    * Hooks for subclassers to hide details when the handler gets inactive.
    */
+  // removeHint(): void;
   removeHint() {}
 
   /**
@@ -859,6 +902,7 @@ class mxVertexHandler {
    *
    * Hook for rounding the angle. This uses Math.round.
    */
+  // roundAngle(angle: number): number;
   roundAngle(angle) {
     return Math.round(angle * 10) / 10;
   }
@@ -868,6 +912,7 @@ class mxVertexHandler {
    *
    * Hook for rounding the unscaled width or height. This uses Math.round.
    */
+  // roundLength(length: number): number;
   roundLength(length) {
     return Math.round(length * 100) / 100;
   }
@@ -877,6 +922,7 @@ class mxVertexHandler {
    *
    * Handles the event by updating the preview.
    */
+  // mouseMove(sender: any, me: mxMouseEvent): void;
   mouseMove(sender, me) {
     if (!me.isConsumed() && this.index != null) {
       // Checks tolerance for ignoring single clicks
@@ -946,10 +992,11 @@ class mxVertexHandler {
   }
 
   /**
-   * Function: moveLabel
+   * Function: rotateVertex
    *
-   * Moves the label.
+   * Rotates the vertex.
    */
+  // moveLabel(me: mxMouseEvent): void;
   moveLabel(me) {
     const point = new mxPoint(me.getGraphX(), me.getGraphY());
     const tr = this.graph.view.translate;
@@ -972,6 +1019,7 @@ class mxVertexHandler {
    *
    * Rotates the vertex.
    */
+  // rotateVertex(me: mxMouseEvent): void;
   rotateVertex(me) {
     const point = new mxPoint(me.getGraphX(), me.getGraphY());
     let dx = this.state.x + this.state.width / 2 - point.x;
@@ -1014,10 +1062,11 @@ class mxVertexHandler {
   }
 
   /**
-   * Function: resizeVertex
+   * Function: rotateVertex
    *
-   * Risizes the vertex.
+   * Rotates the vertex.
    */
+  // resizeVertex(me: mxMouseEvent): void;
   resizeVertex(me) {
     const ct = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
     const alpha = mxUtils.toRadians(
@@ -1201,6 +1250,7 @@ class mxVertexHandler {
    *
    * Repaints the live preview.
    */
+  // updateLivePreview(me: mxMouseEvent): void;
   updateLivePreview(me) {
     // TODO: Apply child offset to children in live preview
     const { scale } = this.graph.view;
@@ -1293,6 +1343,7 @@ class mxVertexHandler {
    *
    * Handles the event by applying the changes to the geometry.
    */
+  // mouseUp(sender: any, me: mxMouseEvent): void;
   mouseUp(sender, me) {
     if (this.index != null && this.state != null) {
       const point = new mxPoint(me.getGraphX(), me.getGraphY());
@@ -1380,16 +1431,11 @@ class mxVertexHandler {
   }
 
   /**
-   * Function: isRecursiveResize
+   * Function: rotateCell
    *
-   * Returns the recursiveResize of the give state.
-   *
-   * Parameters:
-   *
-   * state - the given <mxCellState>. This implementation takes
-   * the value of this state.
-   * me - the mouse event.
+   * Rotates the given cell to the given rotation.
    */
+  // isRecursiveResize(state: mxCellState, me: mxMouseEvent): boolean;
   isRecursiveResize(state, me) {
     return this.graph.isRecursiveResize(this.state);
   }
@@ -1401,6 +1447,7 @@ class mxVertexHandler {
    * This code is executed as part of the model transaction. This implementation
    * is empty.
    */
+  // rotateClick(): void;
   rotateClick() {}
 
   /**
@@ -1413,6 +1460,7 @@ class mxVertexHandler {
    * cell - <mxCell> to be rotated.
    * angle - Angle in degrees.
    */
+  // rotateCell(cell: mxCell, angle: number, parent: mxCell): void;
   rotateCell(cell, angle, parent) {
     if (angle !== 0) {
       const model = this.graph.getModel();
@@ -1453,6 +1501,7 @@ class mxVertexHandler {
    *
    * Resets the state of this handler.
    */
+  // reset(): void;
   reset() {
     if (
       this.sizers != null &&
@@ -1584,6 +1633,7 @@ class mxVertexHandler {
    *
    * Moves the children of the given cell by the given vector.
    */
+  // moveChildren(cell: mxCell, dx: number, dy: number): void;
   moveChildren(cell, dx, dy) {
     const model = this.graph.getModel();
     const childCount = model.getChildCount(cell);
@@ -1795,6 +1845,7 @@ class mxVertexHandler {
    *
    * Redraws the handles and the preview.
    */
+  // redraw(): void;
   redraw(ignoreHandles) {
     this.selectionBounds = this.getSelectionBounds(this.state);
     this.bounds = new mxRectangle(
@@ -1813,6 +1864,7 @@ class mxVertexHandler {
   /**
    * Returns the padding to be used for drawing handles for the current <bounds>.
    */
+  // getHandlePadding(): mxPoint;
   getHandlePadding() {
     // KNOWN: Tolerance depends on event type (eg. 0 for mouse events)
     const result = new mxPoint(0, 0);
@@ -1849,7 +1901,7 @@ class mxVertexHandler {
    * Redraws the handles. To hide certain handles the following code can be used.
    *
    * (code)
-   * redrawHandles = ()=>
+   * redrawHandles()
    * {
    *   mxVertexHandlerRedrawHandles.apply(this, arguments);
    *
@@ -1861,6 +1913,7 @@ class mxVertexHandler {
    * };
    * (end)
    */
+  // redrawHandles(): void;
   redrawHandles() {
     let s = this.getSizerBounds();
     const tol = this.tolerance;
@@ -2068,6 +2121,7 @@ class mxVertexHandler {
    *
    * Returns an <mxPoint> that defines the rotation handle position.
    */
+  // getRotationHandlePosition(): mxPoint;
   getRotationHandlePosition() {
     return new mxPoint(
       this.bounds.x + this.bounds.width / 2,
@@ -2092,6 +2146,7 @@ class mxVertexHandler {
    *
    * Updates the highlight of the parent if <parentHighlightEnabled> is true.
    */
+  // updateParentHighlight(): void;
   updateParentHighlight() {
     if (!this.isDestroyed()) {
       const visible = this.isParentHighlightVisible();
@@ -2151,6 +2206,7 @@ class mxVertexHandler {
    *
    * Redraws the preview.
    */
+  // drawPreview(): void;
   drawPreview() {
     if (this.preview != null) {
       this.preview.bounds = this.bounds;
@@ -2197,6 +2253,7 @@ class mxVertexHandler {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
+  // destroy(): void;
   destroy() {
     if (this.escapeHandler != null) {
       this.state.view.graph.removeListener(this.escapeHandler);

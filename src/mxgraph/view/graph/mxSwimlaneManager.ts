@@ -15,20 +15,13 @@ import mxCell from "../cell/mxCell";
 import mxGeometry from "../../util/datatypes/mxGeometry";
 
 /**
- * Class: mxSwimlaneManager
+ * @class mxSwimlaneManager
+ * @extends mxEventSource
  *
  * Manager for swimlanes and nested swimlanes that sets the size of newly added
  * swimlanes to that of their siblings, and propagates changes to the size of a
- * swimlane to its siblings, if <siblings> is true, and its ancestors, if
- * <bubbling> is true.
- *
- * Constructor: mxSwimlaneManager
- *
- * Constructs a new swimlane manager for the given graph.
- *
- * Arguments:
- *
- * graph - Reference to the enclosing graph.
+ * swimlane to its siblings, if {@link siblings} is true, and its ancestors, if
+ * {@link bubbling} is true.
  */
 class mxSwimlaneManager extends mxEventSource {
   constructor(
@@ -59,147 +52,132 @@ class mxSwimlaneManager extends mxEventSource {
   }
 
   /**
-   * Variable: graph
-   *
-   * Reference to the enclosing <mxGraph>.
+   * Reference to the enclosing {@link mxGraph}.
    */
+  // graph: mxGraph;
   graph: mxGraph | null = null;
 
   /**
-   * Variable: enabled
-   *
-   * Specifies if event handling is enabled. Default is true.
+   * Specifies if event handling is enabled.
+   * @default true
    */
+  // enabled: boolean;
   enabled: boolean = true;
 
   /**
-   * Variable: horizontal
-   *
-   * Specifies the orientation of the swimlanes. Default is true.
+   * Specifies the orientation of the swimlanes.
+   * @default true
    */
+  // horizontal: boolean;
   horizontal: boolean = true;
 
   /**
-   * Variable: addEnabled
-   *
    * Specifies if newly added cells should be resized to match the size of their
-   * existing siblings. Default is true.
+   * existing siblings.
+   * @default true
    */
+  // addEnabled: boolean;
   addEnabled: boolean = true;
 
   /**
-   * Variable: resizeEnabled
-   *
-   * Specifies if resizing of swimlanes should be handled. Default is true.
+   * Specifies if resizing of swimlanes should be handled.
+   * @default true
    */
+  // resizeEnabled: boolean;
   resizeEnabled: boolean = true;
 
   /**
-   * Variable: moveHandler
-   *
    * Holds the function that handles the move event.
    */
+  // addHandler: Function;
   addHandler: Function | null = null;
 
   /**
-   * Variable: moveHandler
-   *
    * Holds the function that handles the move event.
    */
+  // resizeHandler: Function;
   resizeHandler: Function | null = null;
 
   /**
-   * Function: isEnabled
-   *
    * Returns true if events are handled. This implementation
-   * returns <enabled>.
+   * returns {@link enabled}.
    */
+  // isEnabled(): boolean;
   isEnabled(): boolean {
     return this.enabled;
   }
 
   /**
-   * Function: setEnabled
-   *
    * Enables or disables event handling. This implementation
-   * updates <enabled>.
+   * updates {@link enabled}.
    *
-   * Parameters:
-   *
-   * enabled - Boolean that specifies the new enabled state.
+   * @param enabled Boolean that specifies the new enabled state.
    */
+  // setEnabled(value: boolean): void;
   setEnabled(value: boolean): void {
     this.enabled = value;
   }
 
   /**
-   * Function: isHorizontal
-   *
-   * Returns <horizontal>.
+   * Returns {@link horizontal}.
    */
+  // isHorizontal(): boolean;
   isHorizontal(): boolean {
     return this.horizontal;
   }
 
   /**
-   * Function: setHorizontal
-   *
-   * Sets <horizontal>.
+   * Sets {@link horizontal}.
    */
+  // setHorizontal(value: boolean): void;
   setHorizontal(value: boolean): void {
     this.horizontal = value;
   }
 
   /**
-   * Function: isAddEnabled
-   *
-   * Returns <addEnabled>.
+   * Returns {@link addEnabled}.
    */
+  // isAddEnabled(): boolean;
   isAddEnabled(): boolean {
     return this.addEnabled;
   }
 
   /**
-   * Function: setAddEnabled
-   *
-   * Sets <addEnabled>.
+   * Sets {@link addEnabled}.
    */
+  // setAddEnabled(value: boolean): void;
   setAddEnabled(value: boolean): void {
     this.addEnabled = value;
   }
 
   /**
-   * Function: isResizeEnabled
-   *
-   * Returns <resizeEnabled>.
+   * Returns {@link resizeEnabled}.
    */
+  // isResizeEnabled(): boolean;
   isResizeEnabled(): boolean {
     return this.resizeEnabled;
   }
 
   /**
-   * Function: setResizeEnabled
-   *
-   * Sets <resizeEnabled>.
+   * Sets {@link resizeEnabled}.
    */
+  // setResizeEnabled(value: boolean): void;
   setResizeEnabled(value: boolean): void {
     this.resizeEnabled = value;
   }
 
   /**
-   * Function: getGraph
-   *
    * Returns the graph that this manager operates on.
    */
+  // getGraph(): mxGraph;
   getGraph(): mxGraph | null {
     return this.graph;
   }
 
   /**
-   * Function: setGraph
-   *
    * Sets the graph that the manager operates on.
    */
+  // setGraph(graph: mxGraph): void;
   setGraph(graph: mxGraph | null): void {
     if (this.graph != null) {
       this.graph.removeListener(this.addHandler);
@@ -215,20 +193,18 @@ class mxSwimlaneManager extends mxEventSource {
   }
 
   /**
-   * Function: isSwimlaneIgnored
-   *
    * Returns true if the given swimlane should be ignored.
    */
+  // isSwimlaneIgnored(swimlane: mxCell): boolean;
   isSwimlaneIgnored(swimlane: mxCell): boolean {
     return !((<mxGraph>this.getGraph()).isSwimlane(swimlane));
   }
 
   /**
-   * Function: isCellHorizontal
-   *
    * Returns true if the given cell is horizontal. If the given cell is not a
    * swimlane, then the global orientation is returned.
    */
+  // isCellHorizontal(cell: mxCell): boolean;
   isCellHorizontal(cell: mxCell): boolean {
     if ((<mxGraph>this.graph).isSwimlane(cell)) {
       const style = (<mxGraph>this.graph).getCellStyle(cell);
@@ -238,14 +214,11 @@ class mxSwimlaneManager extends mxEventSource {
   }
 
   /**
-   * Function: cellsAdded
-   *
    * Called if any cells have been added.
    *
-   * Parameters:
-   *
-   * cell - Array of <mxCells> that have been added.
+   * @param cell Array of {@link mxCell} that have been added.
    */
+  // cellsAdded(cells: Array<mxCell>): void;
   cellsAdded(cells: mxCell[]): void {
     if (cells != null) {
       const model = (<mxGraph>this.graph).getModel();
@@ -264,15 +237,12 @@ class mxSwimlaneManager extends mxEventSource {
   }
 
   /**
-   * Function: swimlaneAdded
-   *
    * Updates the size of the given swimlane to match that of any existing
    * siblings swimlanes.
    *
-   * Parameters:
-   *
-   * swimlane - <mxCell> that represents the new swimlane.
+   * @param swimlane {@link mxCell} that represents the new swimlane.
    */
+  // swimlaneAdded(swimlane: mxCell): void;
   swimlaneAdded(swimlane: mxCell): void {
     const model = (<mxGraph>this.getGraph()).getModel();
     const parent = model.getParent(swimlane);
@@ -300,15 +270,12 @@ class mxSwimlaneManager extends mxEventSource {
   }
 
   /**
-   * Function: cellsResized
+   * Called if any cells have been resizes. Calls {@link swimlaneResized} for all
+   * swimlanes where {@link isSwimlaneIgnored} returns false.
    *
-   * Called if any cells have been resizes. Calls <swimlaneResized> for all
-   * swimlanes where <isSwimlaneIgnored> returns false.
-   *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> whose size was changed.
+   * @param cells Array of {@link mxCell} whose size was changed.
    */
+  // cellsResized(cells: Array<mxCell>): void;
   cellsResized(cells: mxCell[] | null): void {
     if (cells != null) {
       const model = (<mxGraph>this.getGraph()).getModel();
@@ -355,16 +322,13 @@ class mxSwimlaneManager extends mxEventSource {
   }
 
   /**
-   * Function: resizeSwimlane
-   *
-   * Called from <cellsResized> for all swimlanes that are not ignored to update
+   * Called from {@link cellsResized} for all swimlanes that are not ignored to update
    * the size of the siblings and the size of the parent swimlanes, recursively,
-   * if <bubbling> is true.
+   * if {@link bubbling} is true.
    *
-   * Parameters:
-   *
-   * swimlane - <mxCell> whose size has changed.
+   * @param swimlane {@link mxCell} whose size has changed.
    */
+  // resizeSwimlane(swimlane: mxCell, w: number, h: number, parentHorizontal: boolean): void;
   resizeSwimlane(swimlane: mxCell,
                  w: number,
                  h: number,
@@ -415,10 +379,9 @@ class mxSwimlaneManager extends mxEventSource {
   }
 
   /**
-   * Function: destroy
-   *
-   * Removes all handlers from the <graph> and deletes the reference to it.
+   * Removes all handlers from the {@link graph} and deletes the reference to it.
    */
+  // destroy(): void;
   destroy(): void {
     this.setGraph(null);
   }

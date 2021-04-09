@@ -11,11 +11,11 @@
  * To change the attributeName in the cell's user object
  * to attributeValue, use the following code:
  *
- * (code)
+ * ```javascript
  * model.beginUpdate();
  * try
  * {
- *   let edit = new mxCellAttributeChange(
+ *   var edit = new mxCellAttributeChange(
  *     cell, attributeName, attributeValue);
  *   model.execute(edit);
  * }
@@ -23,12 +23,12 @@
  * {
  *   model.endUpdate();
  * }
- * (end)
+ * ```
  *
  * Constructor: mxCellAttributeChange
  *
  * Constructs a change of a attribute of the DOM node
- * stored as the value of the given <mxCell>.
+ * stored as the value of the given {@link mxCell}`.
  */
 class mxCellAttributeChange {
   constructor(cell, attribute, value) {
@@ -44,6 +44,7 @@ class mxCellAttributeChange {
    * Changes the attribute of the cell's user object by
    * using <mxCell.setAttribute>.
    */
+  // execute(): void;
   execute() {
     if (this.cell != null) {
       const tmp = this.cell.getAttribute(this.attribute);

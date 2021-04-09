@@ -41,6 +41,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * Reference to the enclosing <mxGraph>.
    */
+  // graph: mxGraph;
   graph = null;
 
   /**
@@ -49,6 +50,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Specifies if cells should be selected if a popupmenu is displayed for
    * them. Default is true.
    */
+  // selectOnPopup: boolean;
   selectOnPopup = true;
 
   /**
@@ -57,6 +59,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Specifies if cells should be deselected if a popupmenu is displayed for
    * the diagram background. Default is true.
    */
+  // clearSelectionOnBackground: boolean;
   clearSelectionOnBackground = true;
 
   /**
@@ -64,6 +67,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * X-coordinate of the mouse down event.
    */
+  // triggerX: number;
   triggerX = null;
 
   /**
@@ -71,6 +75,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * Y-coordinate of the mouse down event.
    */
+  // triggerY: number;
   triggerY = null;
 
   /**
@@ -78,6 +83,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * Screen X-coordinate of the mouse down event.
    */
+  // screenX: number;
   screenX = null;
 
   /**
@@ -85,6 +91,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * Screen Y-coordinate of the mouse down event.
    */
+  // screenY: number;
   screenY = null;
 
   /**
@@ -92,6 +99,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * Initializes the shapes required for this vertex handler.
    */
+  // init(): void;
   init() {
     // Supercall
     super.init();
@@ -112,6 +120,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Hook for returning if a cell should be selected for a given <mxMouseEvent>.
    * This implementation returns <selectOnPopup>.
    */
+  // isSelectOnPopup(me: mxMouseEvent): boolean;
   isSelectOnPopup(me) {
     return this.selectOnPopup;
   }
@@ -122,6 +131,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Handles the event by initiating the panning. By consuming the event all
    * subsequent events of the gesture are redirected to this handler.
    */
+  // mouseDown(sender: any, me: mxMouseEvent): void;
   mouseDown(sender, me) {
     if (this.isEnabled() && !mxEvent.isMultiTouchEvent(me.getEvent())) {
       // Hides the popupmenu if is is being displayed
@@ -140,6 +150,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * Handles the event by updating the panning on the graph.
    */
+  // mouseMove(sender: any, me: mxMouseEvent): void;
   mouseMove(sender, me) {
     // Popup trigger may change on mouseUp so ignore it
     if (this.inTolerance && this.screenX != null && this.screenY != null) {
@@ -160,6 +171,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    * Handles the event by setting the translation on the view or showing the
    * popupmenu.
    */
+  // mouseUp(sender: any, me: mxMouseEvent): void;
   mouseUp(sender, me) {
     if (
       this.popupTrigger &&
@@ -205,6 +217,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * Hook to return the cell for the mouse up popup trigger handling.
    */
+  // getCellForPopupEvent(me: mxMouseEvent): mxCell;
   getCellForPopupEvent(me) {
     return me.getCell();
   }
@@ -214,6 +227,7 @@ class mxPopupMenuHandler extends mxPopupMenu {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
+  // destroy(): void;
   destroy() {
     this.graph.removeMouseListener(this);
     this.graph.removeListener(this.gestureHandler);

@@ -8,18 +8,10 @@ import mxEventObject from '../event/mxEventObject';
 import mxEvent from '../event/mxEvent';
 
 /**
- *
- * Class: mxAnimation
- *
  * Implements a basic animation in JavaScript.
  *
- * Constructor: mxAnimation
- *
- * Constructs an animation.
- *
- * Parameters:
- *
- * graph - Reference to the enclosing <mxGraph>.
+ * @class mxAnimation
+ * @extends {mxEventSource}
  */
 class mxAnimation extends mxEventSource {
   constructor(delay) {
@@ -28,33 +20,29 @@ class mxAnimation extends mxEventSource {
   }
 
   /**
-   * Variable: delay
-   *
    * Specifies the delay between the animation steps. Defaul is 30ms.
    */
+  // delay: number;
   delay = null;
 
   /**
-   * Variable: thread
-   *
    * Reference to the thread while the animation is running.
    */
+  // thread: number;
   thread = null;
 
   /**
-   * Function: isRunning
-   *
    * Returns true if the animation is running.
    */
+  // isRunning(): boolean;
   isRunning() {
     return this.thread != null;
   }
 
   /**
-   * Function: startAnimation
-   *
    * Starts the animation by repeatedly invoking updateAnimation.
    */
+  // startAnimation(): void;
   startAnimation() {
     if (this.thread == null) {
       this.thread = window.setInterval(
@@ -65,21 +53,19 @@ class mxAnimation extends mxEventSource {
   }
 
   /**
-   * Function: updateAnimation
-   *
    * Hook for subclassers to implement the animation. Invoke stopAnimation
    * when finished, startAnimation to resume. This is called whenever the
    * timer fires and fires an mxEvent.EXECUTE event with no properties.
    */
+  // updateAnimation(): void;
   updateAnimation() {
     this.fireEvent(new mxEventObject(mxEvent.EXECUTE));
   }
 
   /**
-   * Function: stopAnimation
-   *
    * Stops the animation by deleting the timer and fires an <mxEvent.DONE>.
    */
+  // stopAnimation(): void;
   stopAnimation() {
     if (this.thread != null) {
       window.clearInterval(this.thread);

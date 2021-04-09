@@ -35,6 +35,7 @@ class mxGuide {
    *
    * Reference to the enclosing <mxGraph> instance.
    */
+  // graph: mxGraph;
   graph: mxGraph;
 
   /**
@@ -42,6 +43,7 @@ class mxGuide {
    *
    * Contains the <mxCellStates> that are used for alignment.
    */
+  // states: mxCellState[];
   states: mxCellState[] | null = null;
 
   /**
@@ -49,6 +51,7 @@ class mxGuide {
    *
    * Specifies if horizontal guides are enabled. Default is true.
    */
+  // horizontal: boolean;
   horizontal: boolean = true;
 
   /**
@@ -56,20 +59,23 @@ class mxGuide {
    *
    * Specifies if vertical guides are enabled. Default is true.
    */
+  // vertical: boolean;
   vertical: boolean = true;
 
   /**
-   * Variable: guideX
+   * Variable: vertical
    *
    * Holds the <mxShape> for the horizontal guide.
    */
+  // guideX: mxShape;
   guideX: mxShape | null = null;
 
   /**
-   * Variable: guideY
+   * Variable: vertical
    *
    * Holds the <mxShape> for the vertical guide.
    */
+  // guideY: mxShape;
   guideY: mxShape | null = null;
 
   /**
@@ -91,6 +97,7 @@ class mxGuide {
    *
    * Sets the <mxCellStates> that should be used for alignment.
    */
+  // setStates(states: mxCellState[]): void;
   setStates(states: mxCellState[]): void {
     this.states = states;
   }
@@ -101,6 +108,7 @@ class mxGuide {
    * Returns true if the guide should be enabled for the given native event. This
    * implementation always returns true.
    */
+  // isEnabledForEvent(evt: Event): boolean;
   isEnabledForEvent(evt: mxEventObject | null = null): boolean {
     return true;
   }
@@ -110,6 +118,7 @@ class mxGuide {
    *
    * Returns the tolerance for the guides. Default value is gridSize / 2.
    */
+  // getGuideTolerance(): number;
   getGuideTolerance(gridEnabled: boolean=false) {
     return gridEnabled && this.graph.gridEnabled
       ? this.graph.gridSize / 2
@@ -127,6 +136,7 @@ class mxGuide {
    *
    * horizontal - Boolean that specifies which guide should be created.
    */
+  // createGuideShape(horizontal: boolean): mxPolyline;
   createGuideShape(horizontal: boolean = false) {
     // TODO: Should vertical guides be supported here?? ============================
     const guide = new mxPolyline(
@@ -139,10 +149,10 @@ class mxGuide {
   }
 
   /**
-   * Function: isStateIgnored
-   *
    * Returns true if the given state should be ignored.
+   * @param state
    */
+  // isStateIgnored(state: mxCellState): boolean;
   isStateIgnored(state: mxCellState | null = null) {
     return false;
   }
@@ -150,8 +160,9 @@ class mxGuide {
   /**
    * Function: move
    *
-   * Moves the <bounds> by the given <mxPoint> and return the snapped point.
+   * Moves the <bounds> by the given <mxPoint> and returnt the snapped point.
    */
+  // move(bounds: mxRectangle, delta: mxPoint, gridEnabled: boolean, clone: boolean): mxPoint;
   move(
     bounds: mxRectangle | null = null,
     delta: mxPoint,
@@ -390,10 +401,11 @@ class mxGuide {
   }
 
   /**
-   * Function: getGuideColor
+   * Function: hide
    *
-   * Returns the color for the given state.
+   * Hides all current guides.
    */
+  // getGuideColor(state: mxCellState, horizontal: any): string;
   getGuideColor(state: mxCellState | null, horizontal: boolean | null): string {
     return mxConstants.GUIDE_COLOR;
   }
@@ -403,6 +415,7 @@ class mxGuide {
    *
    * Hides all current guides.
    */
+  // hide(): void;
   hide(): void {
     this.setVisible(false);
   }
@@ -412,6 +425,7 @@ class mxGuide {
    *
    * Shows or hides the current guides.
    */
+  // setVisible(visible: boolean): void;
   setVisible(visible: boolean): void {
     if (this.guideX != null) {
       (<SVGElement>this.guideX.node).style.visibility = visible ? 'visible' : 'hidden';
@@ -426,6 +440,7 @@ class mxGuide {
    *
    * Destroys all resources that this object uses.
    */
+  // destroy(): void;
   destroy(): void {
     if (this.guideX != null) {
       this.guideX.destroy();

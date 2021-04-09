@@ -20,7 +20,7 @@ for path in list(Path('.').rglob('./*/*.js')) + list(Path('.').rglob('./*/*.ts')
         if defs[clsname][0]:
             pattern = r'(/\*(?:(?!\*/).)*\*/)\s*\nclass %s\b' % clsname
             replace_with = '\n'.join(defs[clsname][0])
-            replace_with += '\nclass %s\b' % clsname
+            replace_with += '\nclass %s' % clsname
             replace_with = replace_with.replace('\\u', '').replace('\\x', '')
             text = re.sub(pattern, replace_with, text, flags=re.DOTALL)
 
@@ -39,6 +39,9 @@ for path in list(Path('.').rglob('./*/*.js')) + list(Path('.').rglob('./*/*.ts')
             text = re.sub(pattern, replace_with, text, flags=re.DOTALL)
 
         print(text)
+
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(text)
 
 
 

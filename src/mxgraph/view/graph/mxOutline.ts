@@ -17,44 +17,50 @@ import mxImage from '../../util/image/mxImage';
 import mxEventObject from "../../util/event/mxEventObject";
 
 /**
- * Class: mxOutline
+ * @class mxOutline
  *
- * Implements an outline (aka overview) for a graph. Set <updateOnPan> to true
+ * Implements an outline (aka overview) for a graph. Set {@link updateOnPan} to true
  * to enable updates while the source graph is panning.
  *
- * Example:
+ * ### Example
  *
- * (code)
- * let outline = new mxOutline(graph, div);
- * (end)
+ * @example
+ * ```javascript
+ * var outline = new mxOutline(graph, div);
+ * ```
+ *
+ * If an outline is used in an {@link mxWindow} in IE8 standards mode, the following
+ * code makes sure that the shadow filter is not inherited and that any
+ * transparent elements in the graph do not show the page background, but the
+ * background of the graph container.
+ *
+ * @example
+ * ```javascript
+ * if (document.documentMode == 8)
+ * {
+ *   container.style.filter = 'progid:DXImageTransform.Microsoft.alpha(opacity=100)';
+ * }
+ * ```
  *
  * To move the graph to the top, left corner the following code can be used.
  *
- * (code)
- * let scale = graph.view.scale;
- * let bounds = graph.getGraphBounds();
+ * @example
+ * ```javascript
+ * var scale = graph.view.scale;
+ * var bounds = graph.getGraphBounds();
  * graph.view.setTranslate(-bounds.x / scale, -bounds.y / scale);
- * (end)
+ * ```
  *
  * To toggle the suspended mode, the following can be used.
  *
- * (code)
+ * @example
+ * ```javascript
  * outline.suspended = !outln.suspended;
  * if (!outline.suspended)
  * {
  *   outline.update(true);
  * }
- * (end)
- *
- * Constructor: mxOutline
- *
- * Constructs a new outline for the specified graph inside the given
- * container.
- *
- * Parameters:
- *
- * source - <mxGraph> to create the outline for.
- * container - DOM node that will contain the outline.
+ * ```
  */
 class mxOutline {
   constructor(source: mxGraph, container: HTMLElement | null = null) {
@@ -66,10 +72,9 @@ class mxOutline {
   }
 
   /**
-   * Function: init
-   *
    * Initializes the outline inside the given container.
    */
+  // init(container: HTMLElement): void;
   init(container: HTMLElement) {
     this.outline = this.createGraph(container);
 
@@ -210,106 +215,105 @@ class mxOutline {
   index: number | null=null;
 
   /**
-   * Function: source
-   *
-   * Reference to the source <mxGraph>.
+   * Reference to the source {@link mxGraph}.
    */
+  // source: mxGraph;
   source: mxGraph;
 
   /**
-   * Function: outline
-   *
-   * Reference to the <mxGraph> that renders the outline.
+   * Reference to the {@link mxGraph} that renders the outline.
    */
+  // outline: mxGraph;
   outline: mxGraph | null=null;
 
   /**
-   * Function: graphRenderHint
-   *
-   * Renderhint to be used for the outline graph. Default is exact.
+   * Renderhint to be used for the outline graph.
+   * @default faster
    */
+  // graphRenderHint: string;
   graphRenderHint: string = 'exact';
 
   /**
-   * Variable: enabled
-   *
-   * Specifies if events are handled. Default is true.
+   * Specifies if events are handled.
+   * @default true
    */
+  // enabled: boolean;
   enabled: boolean = true;
 
   /**
-   * Variable: showViewport
-   *
-   * Specifies a viewport rectangle should be shown. Default is true.
+   * Specifies a viewport rectangle should be shown.
+   * @default true
    */
+  // showViewport: boolean;
   showViewport: boolean = true;
 
   /**
-   * Variable: border
-   *
-   * Border to be added at the bottom and right. Default is 10.
+   * Border to be added at the bottom and right.
+   * @default 10
    */
+  // border: number;
   border: number = 10;
 
   /**
-   * Variable: enabled
-   *
-   * Specifies the size of the sizer handler. Default is 8.
+   * Specifies the size of the sizer handler.
+   * @default 8
    */
+  // sizerSize: number;
   sizerSize: number = 8;
 
   /**
-   * Variable: labelsVisible
-   *
-   * Specifies if labels should be visible in the outline. Default is false.
+   * Specifies if labels should be visible in the outline.
+   * @default false
    */
+  // labelsVisible: boolean;
   labelsVisible: boolean = false;
 
   /**
-   * Variable: updateOnPan
-   *
-   * Specifies if <update> should be called for <mxEvent.PAN> in the source
-   * graph. Default is false.
+   * Specifies if {@link update} should be called for {@link mxEvent.PAN} in the source
+   * graph.
+   * @default false
    */
+  // updateOnPan: boolean;
   updateOnPan: boolean = false;
 
   /**
-   * Variable: sizerImage
-   *
-   * Optional <mxImage> to be used for the sizer. Default is null.
+   * Optional {@link mxImage} to be used for the sizer.
+   * @default null
    */
+  // sizerImage: mxImage;
   sizerImage: mxImage | null = null;
 
   /**
-   * Variable: minScale
-   *
-   * Minimum scale to be used. Default is 0.0001.
+   * Minimum scale to be used.
+   * @default 0.0001
    */
+  // minScale: number;
   minScale: number = 0.0001;
 
   /**
-   * Variable: suspended
-   *
-   * Optional boolean flag to suspend updates. Default is false. This flag will
+   * Optional boolean flag to suspend updates. This flag will
    * also suspend repaints of the outline. To toggle this switch, use the
    * following code.
    *
-   * (code)
+   * @default false
+   *
+   * @example
+   * ```javascript
    * nav.suspended = !nav.suspended;
    *
    * if (!nav.suspended)
    * {
    *   nav.update(true);
    * }
-   * (end)
+   * ```
    */
+  // suspended: boolean;
   suspended: boolean = false;
 
   /**
-   * Function: createGraph
-   *
-   * Creates the <mxGraph> used in the outline.
+   * Creates the {@link mxGraph} used in the outline.
    */
+  // createGraph(container: HTMLElement): mxGraph;
   createGraph(container: HTMLElement): mxGraph {
     const graph = new mxGraph(
       container,
@@ -323,58 +327,49 @@ class mxOutline {
   }
 
   /**
-   * Function: isEnabled
-   *
    * Returns true if events are handled. This implementation
-   * returns <enabled>.
+   * returns {@link enabled}.
    */
+  // isEnabled(): boolean;
   isEnabled(): boolean {
     return this.enabled;
   }
 
   /**
-   * Function: setEnabled
-   *
    * Enables or disables event handling. This implementation
-   * updates <enabled>.
+   * updates {@link enabled}.
    *
-   * Parameters:
-   *
-   * value - Boolean that specifies the new enabled state.
+   * @param value Boolean that specifies the new enabled state.
    */
+  // setEnabled(value: boolean): void;
   setEnabled(value: boolean): void {
     this.enabled = value;
   }
 
   /**
-   * Function: setZoomEnabled
-   *
    * Enables or disables the zoom handling by showing or hiding the respective
    * handle.
    *
-   * Parameters:
-   *
-   * value - Boolean that specifies the new enabled state.
+   * @param value Boolean that specifies the new enabled state.
    */
+  // setZoomEnabled(value: boolean): void;
   setZoomEnabled(value: boolean): void {
     // @ts-ignore
     this.sizer.node.style.visibility = value ? 'visible' : 'hidden';
   }
 
   /**
-   * Function: refresh
-   *
-   * Invokes <update> and revalidate the outline. This method is deprecated.
+   * Invokes {@link update} and revalidate the outline. This method is deprecated.
    */
+  // refresh(): void;
   refresh(): void {
     this.update(true);
   }
 
   /**
-   * Function: createSizer
-   *
    * Creates the shape used as the sizer.
    */
+  // createSizer(): mxShape;
   createSizer(): mxRectangleShape {
     const outline = <mxGraph>this.outline;
     if (this.sizerImage != null) {
@@ -396,10 +391,9 @@ class mxOutline {
   }
 
   /**
-   * Function: getSourceContainerSize
-   *
    * Returns the size of the source container.
    */
+  // getSourceContainerSize(): mxRectangle;
   getSourceContainerSize() {
     return new mxRectangle(
       0,
@@ -410,28 +404,25 @@ class mxOutline {
   }
 
   /**
-   * Function: getOutlineOffset
-   *
    * Returns the offset for drawing the outline graph.
    */
+  // getOutlineOffset(scale?: number): mxPoint;
   getOutlineOffset(scale: number): mxPoint | null {  // TODO: Should number -> mxPoint?
     return null;
   }
 
   /**
-   * Function: getSourceGraphBounds
-   *
-   * Returns the graph bound boxing of the source.
+   * Returns the offset for drawing the outline graph.
    */
+  // getSourceGraphBounds(): mxRectangle;
   getSourceGraphBounds() {
     return this.source.getGraphBounds();
   }
 
   /**
-   * Function: update
-   *
    * Updates the outline.
    */
+  // update(revalidate: boolean): void;
   update(revalidate: boolean = false) {
     if (
       this.source != null &&
@@ -582,10 +573,9 @@ class mxOutline {
   }
 
   /**
-   * Function: mouseDown
-   *
    * Handles the event by starting a translation or zoom.
    */
+  // mouseDown(sender: mxEventSource, me: mxMouseEvent): void;
   mouseDown(sender: any, me: mxMouseEvent) {
     if (this.enabled && this.showViewport) {
       const tol = !mxEvent.isMouseEvent(me.getEvent())
@@ -625,11 +615,10 @@ class mxOutline {
   }
 
   /**
-   * Function: mouseMove
-   *
-   * Handles the event by previewing the viewrect in <graph> and updating the
+   * Handles the event by previewing the viewrect in {@link graph} and updating the
    * rectangle that represents the viewrect in the outline.
    */
+  // mouseMove(sender: mxEventSource, me: mxMouseEvent): void;
   mouseMove(sender: any, me: mxMouseEvent) {
     if (this.active) {
       const myBounds = <mxRectangle>this.bounds;
@@ -698,36 +687,35 @@ class mxOutline {
   }
 
   /**
-   * Function: getTranslateForEvent
-   *
    * Gets the translate for the given mouse event. Here is an example to limit
    * the outline to stay within positive coordinates:
    *
-   * (code)
-   * outline.getTranslateForEvent = (me)=>
+   * @example
+   * ```javascript
+   * outline.getTranslateForEvent(me)
    * {
-   *   let pt = new mxPoint(me.getX() - this.startX, me.getY() - this.startY);
+   *   var pt = new mxPoint(me.getX() - this.startX, me.getY() - this.startY);
    *
    *   if (!this.zoom)
    *   {
-   *     let tr = this.source.view.translate;
+   *     var tr = this.source.view.translate;
    *     pt.x = Math.max(tr.x * this.outline.view.scale, pt.x);
    *     pt.y = Math.max(tr.y * this.outline.view.scale, pt.y);
    *   }
    *
    *   return pt;
    * };
-   * (end)
+   * ```
    */
+  // getTranslateForEvent(me: mxMouseEvent): mxPoint;
   getTranslateForEvent(me: mxMouseEvent) {
     return new mxPoint(me.getX() - <number>this.startX, me.getY() - <number>this.startY);
   }
 
   /**
-   * Function: mouseUp
-   *
-   * Handles the event by applying the translation or zoom to <graph>.
+   * Handles the event by applying the translation or zoom to {@link graph}.
    */
+  // mouseUp(sender: mxEventSource, me: mxMouseEvent): void;
   mouseUp(sender: any, me: mxMouseEvent) {
     if (this.active) {
       const delta = this.getTranslateForEvent(me);
@@ -772,10 +760,9 @@ class mxOutline {
   }
 
   /**
-   * Function: destroy
-   *
-   * Destroy this outline and removes all listeners from <source>.
+   * Destroy this outline and removes all listeners from {@link source}.
    */
+  // destroy(): void;
   destroy() {
     if (this.source != null) {
       this.source.removeListener(this.panHandler);

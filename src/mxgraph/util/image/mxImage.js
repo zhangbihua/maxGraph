@@ -25,6 +25,7 @@ class mxImage {
    *
    * String that specifies the URL of the image.
    */
+  // src: string;
   src = null;
 
   /**
@@ -32,6 +33,7 @@ class mxImage {
    *
    * Integer that specifies the width of the image.
    */
+  // width: number;
   width = null;
 
   /**
@@ -39,6 +41,7 @@ class mxImage {
    *
    * Integer that specifies the height of the image.
    */
+  // height: number;
   height = null;
 }
 

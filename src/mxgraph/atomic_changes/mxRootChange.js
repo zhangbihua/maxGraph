@@ -1,12 +1,12 @@
 /**
- * Class: mxRootChange
- *
  * Action to change the root in a model.
  *
  * Constructor: mxRootChange
  *
  * Constructs a change of the root in the
  * specified model.
+ *
+ * @class mxRootChange
  */
 class mxRootChange {
   constructor(model, root) {
@@ -16,11 +16,10 @@ class mxRootChange {
   }
 
   /**
-   * Function: execute
-   *
    * Carries out a change of the root using
    * <mxGraphModel.rootChanged>.
    */
+  // execute(): void;
   execute() {
     this.root = this.previous;
     this.previous = this.model.rootChanged(this.previous);

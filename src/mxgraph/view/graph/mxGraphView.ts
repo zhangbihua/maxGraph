@@ -32,54 +32,47 @@ import mxConnectionConstraint from "../connection/mxConnectionConstraint";
 import mxPopupMenuHandler from "../../handler/mxPopupMenuHandler";
 
 /**
- * Class: mxGraphView
+ * @class mxGraphView
+ * @extends {mxEventSource}
  *
- * Extends <mxEventSource> to implement a view for a graph. This class is in
+ * Extends {@link mxEventSource} to implement a view for a graph. This class is in
  * charge of computing the absolute coordinates for the relative child
  * geometries, the points for perimeters and edge styles and keeping them
- * cached in <mxCellStates> for faster retrieval. The states are updated
+ * cached in {@link mxCellStates} for faster retrieval. The states are updated
  * whenever the model or the view state (translate, scale) changes. The scale
  * and translate are honoured in the bounds.
  *
- * Event: mxEvent.UNDO
+ * #### Event: mxEvent.UNDO
  *
- * Fires after the root was changed in <setCurrentRoot>. The <code>edit</code>
- * property contains the <mxUndoableEdit> which contains the
- * <mxCurrentRootChange>.
+ * Fires after the root was changed in {@link setCurrentRoot}. The `edit`
+ * property contains the {@link mxUndoableEdit} which contains the
+ * {@link mxCurrentRootChange}.
  *
- * Event: mxEvent.SCALE_AND_TRANSLATE
+ * #### Event: mxEvent.SCALE_AND_TRANSLATE
  *
- * Fires after the scale and translate have been changed in <scaleAndTranslate>.
- * The <code>scale</code>, <code>previousScale</code>, <code>translate</code>
- * and <code>previousTranslate</code> properties contain the new and previous
+ * Fires after the scale and translate have been changed in {@link scaleAndTranslate}.
+ * The `scale`, `previousScale`, `translate`
+ * and `previousTranslate` properties contain the new and previous
  * scale and translate, respectively.
  *
- * Event: mxEvent.SCALE
+ * #### Event: mxEvent.SCALE
  *
- * Fires after the scale was changed in <setScale>. The <code>scale</code> and
- * <code>previousScale</code> properties contain the new and previous scale.
+ * Fires after the scale was changed in {@link setScale}. The `scale` and
+ * `previousScale` properties contain the new and previous scale.
  *
- * Event: mxEvent.TRANSLATE
+ * #### Event: mxEvent.TRANSLATE
  *
- * Fires after the translate was changed in <setTranslate>. The
- * <code>translate</code> and <code>previousTranslate</code> properties contain
+ * Fires after the translate was changed in {@link setTranslate}. The
+ * `translate` and `previousTranslate` properties contain
  * the new and previous value for translate.
  *
- * Event: mxEvent.DOWN and mxEvent.UP
+ * #### Event: mxEvent.DOWN and mxEvent.UP
  *
- * Fire if the current root is changed by executing an <mxCurrentRootChange>.
+ * Fire if the current root is changed by executing an {@link mxCurrentRootChange}.
  * The event name depends on the location of the root in the cell hierarchy
- * with respect to the current root. The <code>root</code> and
- * <code>previous</code> properties contain the new and previous root,
+ * with respect to the current root. The `root` and
+ * `previous` properties contain the new and previous root,
  * respectively.
- *
- * Constructor: mxGraphView
- *
- * Constructs a new view for the given <mxGraph>.
- *
- * Parameters:
- *
- * graph - Reference to the enclosing <mxGraph>.
  */
 class mxGraphView extends mxEventSource {
   constructor(graph: mxGraph) {
@@ -106,64 +99,55 @@ class mxGraphView extends mxEventSource {
   decoratorPane: SVGElement | null=null;
 
   /**
-   * Variable: doneResource
-   *
    * Specifies the resource key for the status message after a long operation.
    * If the resource for this key does not exist then the value is used as
    * the status message. Default is 'done'.
    */
+  // doneResource: 'done' | '';
   doneResource: string = mxClient.language !== 'none' ? 'done' : '';
 
   /**
-   * Variable: updatingDocumentResource
-   *
    * Specifies the resource key for the status message while the document is
    * being updated. If the resource for this key does not exist then the
    * value is used as the status message. Default is 'updatingDocument'.
    */
+  // updatingDocumentResource: 'updatingDocument' | '';
   updatingDocumentResource: string =
     mxClient.language !== 'none' ? 'updatingDocument' : '';
 
   /**
-   * Variable: allowEval
-   *
    * Specifies if string values in cell styles should be evaluated using
-   * <mxUtils.eval>. This will only be used if the string values can't be mapped
-   * to objects using <mxStyleRegistry>. Default is false. NOTE: Enabling this
+   * {@link mxUtils.eval}. This will only be used if the string values can't be mapped
+   * to objects using {@link mxStyleRegistry}. Default is false. NOTE: Enabling this
    * switch carries a possible security risk.
    */
+  // allowEval: boolean;
   allowEval: boolean = false;
 
   /**
-   * Variable: captureDocumentGesture
-   *
    * Specifies if a gesture should be captured when it goes outside of the
    * graph container. Default is true.
    */
+  // captureDocumentGesture: boolean;
   captureDocumentGesture: boolean = true;
 
   /**
-   * Function: getRendering
-   *
-   * Returns if shapes should be created, updated and destroyed using the
-   * methods of <mxCellRenderer> in <graph>. Default is true.
-   *
-   * Returns <rendering>.
+   * Specifies if shapes should be created, updated and destroyed using the
+   * methods of {@link mxCellRenderer} in {@link graph}. Default is true.
    */
+  // rendering: boolean;
   rendering: boolean = true;
 
   /**
-   * Function: get graph
-   *
-   * Returns reference to the enclosing <mxGraph>.
+   * Reference to the enclosing {@link mxGraph}.
    */
+  // graph: mxGraph;
   graph: mxGraph;
 
   /**
-   * Variable: currentRoot
-   *
-   * <mxCell> that acts as the root of the displayed cell hierarchy.
+   * {@link mxCell} that acts as the root of the displayed cell hierarchy.
    */
+  // currentRoot: mxCell;
   currentRoot: mxCell | null = null;
 
   graphBounds: mxRectangle = new mxRectangle();
@@ -171,89 +155,77 @@ class mxGraphView extends mxEventSource {
   scale: number = 1;
 
   /**
-   * Variable: translate
-   *
-   * <mxPoint> that specifies the current translation. Default is a new
-   * empty <mxPoint>.
+   * {@link mxPoint} that specifies the current translation. Default is a new
+   * empty {@link mxPoint}.
    */
+  // translate: mxPoint;
   translate: mxPoint = new mxPoint();
 
   states: mxDictionary = new mxDictionary();
 
   /**
-   * get updateStyle
-   *
    * Specifies if the style should be updated in each validation step. If this
    * is false then the style is only updated if the state is created or if the
    * style of the cell was changed. Default is false.
    */
+  // updateStyle: boolean;
   updateStyle: boolean = false;
 
   /**
-   * Variable: lastNode
-   *
    * During validation, this contains the last DOM node that was processed.
    */
+  // lastNode: Element;
   lastNode: HTMLElement | SVGElement | null = null;
 
   /**
-   * Variable: lastHtmlNode
-   *
    * During validation, this contains the last HTML DOM node that was processed.
    */
+  // lastHtmlNode: HTMLElement;
   lastHtmlNode: HTMLElement | SVGElement | null = null;
 
   /**
-   * Variable: lastForegroundNode
-   *
    * During validation, this contains the last edge's DOM node that was processed.
    */
+  // lastForegroundNode: Element;
   lastForegroundNode: HTMLElement | SVGElement | null = null;
 
   /**
-   * Variable: lastForegroundHtmlNode
-   *
    * During validation, this contains the last edge HTML DOM node that was processed.
    */
+  // lastForegroundHtmlNode: HTMLElement;
   lastForegroundHtmlNode: HTMLElement | SVGElement | null = null;
 
   /**
-   * Function: getGraphBounds
-   *
-   * Returns the <mxRectangle> that caches the scales and translated bounds of the current view.
+   * Returns {@link graphBounds}.
    */
+  // getGraphBounds(): mxRectangle;
   getGraphBounds(): mxRectangle {
     return this.graphBounds;
   }
 
   /**
-   * Function: setGraphBounds
-   *
-   * Sets <graphBounds>.
+   * Sets {@link graphBounds}.
    */
+  // setGraphBounds(value: mxRectangle): void;
   setGraphBounds(value: mxRectangle) {
     this.graphBounds = value;
   }
 
   /**
-   * Function: getScale
-   *
-   * Returns the <scale>. Default is 1 (100%).
+   * Returns the {@link scale}.
    */
+  // getScale(): number;
   getScale(): number {
     return this.scale;
   }
 
   /**
-   * Function: setScale
+   * Sets the scale and fires a {@link scale} event before calling {@link revalidate} followed
+   * by {@link mxGraph.sizeDidChange}.
    *
-   * Sets the scale and fires a <scale> event before calling <revalidate> followed
-   * by <mxGraph.sizeDidChange>.
-   *
-   * Parameters:
-   *
-   * value - Decimal value that specifies the new scale (1 is 100%).
+   * @param value Decimal value that specifies the new scale (1 is 100%).
    */
+  // setScale(value: number): void;
   setScale(value: number) {
     const previousScale: number = this.scale;
     if (previousScale !== value) {
@@ -274,26 +246,22 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getTranslate
-   *
-   * Returns the <translate>.
+   * Returns the {@link translate}.
    */
+  // getTranslate(): mxPoint;
   getTranslate(): mxPoint {
     return this.translate;
   }
 
   /**
-   * Function: setTranslate
-   *
-   * Sets the translation and fires a <translate> event before calling
-   * <revalidate> followed by <mxGraph.sizeDidChange>. The translation is the
+   * Sets the translation and fires a {@link translate} event before calling
+   * {@link revalidate} followed by {@link mxGraph.sizeDidChange}. The translation is the
    * negative of the origin.
    *
-   * Parameters:
-   *
-   * dx - X-coordinate of the translation.
-   * dy - Y-coordinate of the translation.
+   * @param dx X-coordinate of the translation.
+   * @param dy Y-coordinate of the translation.
    */
+  // setTranslate(dx: number, dy: number): void;
   setTranslate(dx: number, dy: number) {
     const previousTranslate = new mxPoint(this.translate.x, this.translate.y);
 
@@ -334,78 +302,68 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getStates
-   *
-   * Returns <states>.
+   * Returns {@link states}.
    */
+  // getStates(): mxDictionary<mxCellState>;
   getStates() {
     return this.states;
   }
 
   /**
-   * Function: set states
-   *
-   * Sets <states>.
+   * Sets {@link states}.
    */
+  // setStates(value: mxDictionary<mxCellState>): void;
   setStates(value: any): void {
     this.states = value;
   }
 
   /**
-   * Function: getCanvas
-   *
    * Returns the DOM node that contains the background-, draw- and
    * overlay- and decoratorpanes.
    */
+  // getCanvas(): SVGElement;
   getCanvas(): SVGElement | null {
     return this.canvas;
   }
 
   /**
-   * Function: getBackgroundPane
-   *
    * Returns the DOM node that represents the background layer.
    */
+  // getBackgroundPane(): Element;
   getBackgroundPane(): SVGElement | null {
     return this.backgroundPane;
   }
 
   /**
-   * Function: getDrawPane
-   *
    * Returns the DOM node that represents the main drawing layer.
    */
+  // getDrawPane(): Element;
   getDrawPane(): SVGElement | null {
     return this.drawPane;
   }
 
   /**
-   * Function: get overlayPane
-   *
    * Returns the DOM node that represents the layer above the drawing layer.
    */
+  // getOverlayPane(): Element;
   getOverlayPane(): SVGElement | null {
     return this.overlayPane;
   }
 
   /**
-   * Function: get decoratorPane
-   *
    * Returns the DOM node that represents the topmost drawing layer.
    */
+  // getDecoratorPane(): Element;
   getDecoratorPane(): SVGElement | null {
     return this.decoratorPane;
   }
 
   /**
-   * Function: getBounds
+   * Returns the union of all {@link mxCellStates} for the given array of {@link mxCell}.
    *
-   * Returns the union of all <mxCellStates> for the given array of <mxCells>.
-   *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> whose bounds should be returned.
+   * @param cells Array of {@link mxCell} whose bounds should be returned.
    */
+  // getBounds(cells: mxCell[]): mxRectangle;
   getBounds(cells: mxCell[]): mxRectangle | null {
     let result = null;
 
@@ -430,15 +388,12 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: setCurrentRoot
+   * Sets and returns the current root and fires an {@link undo} event before
+   * calling {@link mxGraph.sizeDidChange}.
    *
-   * Sets and returns the current root and fires an <undo> event before
-   * calling <mxGraph.sizeDidChange>.
-   *
-   * Parameters:
-   *
-   * root - <mxCell> that specifies the root of the displayed cell hierarchy.
+   * @param root {@link mxCell} that specifies the root of the displayed cell hierarchy.
    */
+  // setCurrentRoot(root: mxCell): mxCell;
   setCurrentRoot(root: mxCell | null): mxCell | null {
     if (this.currentRoot != root) {
       const change = new mxCurrentRootChange(this, <mxCell>root);
@@ -456,17 +411,14 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: scaleAndTranslate
+   * Sets the scale and translation and fires a {@link scale} and {@link translate} event
+   * before calling {@link revalidate} followed by {@link mxGraph.sizeDidChange}.
    *
-   * Sets the scale and translation and fires a <scale> and <translate> event
-   * before calling <revalidate> followed by <mxGraph.sizeDidChange>.
-   *
-   * Parameters:
-   *
-   * scale - Decimal value that specifies the new scale (1 is 100%).
-   * dx - X-coordinate of the translation.
-   * dy - Y-coordinate of the translation.
+   * @param scale Decimal value that specifies the new scale (1 is 100%).
+   * @param dx X-coordinate of the translation.
+   * @param dy Y-coordinate of the translation.
    */
+  // scaleAndTranslate(scale: number, dx: number, dy: number): void;
   scaleAndTranslate(scale: number,
                     dx: number,
                     dy: number): void {
@@ -505,20 +457,18 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: viewStateChanged
-   *
-   * Invoked after <scale> and/or <translate> has changed.
+   * Invoked after {@link scale} and/or {@link translate} has changed.
    */
+  // viewStateChanged(): void;
   viewStateChanged() {
     this.revalidate();
     (<mxGraph>this.graph).sizeDidChange();
   }
 
   /**
-   * Function: refresh
-   *
-   * Clears the view if <currentRoot> is not null and revalidates.
+   * Clears the view if {@link currentRoot} is not null and revalidates.
    */
+  // refresh(): void;
   refresh() {
     if (this.currentRoot != null) {
       this.clear();
@@ -527,28 +477,24 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: revalidate
-   *
    * Revalidates the complete view with all cell states.
    */
+  // revalidate(): void;
   revalidate() {
     this.invalidate();
     this.validate();
   }
 
   /**
-   * Function: clear
-   *
    * Removes the state of the given cell and all descendants if the given
    * cell is not the current root.
    *
-   * Parameters:
-   *
-   * cell - Optional <mxCell> for which the state should be removed. Default
+   * @param cell Optional {@link mxCell} for which the state should be removed. Default
    * is the root of the model.
-   * force - Boolean indicating if the current root should be ignored for
+   * @param force Boolean indicating if the current root should be ignored for
    * recursion.
    */
+  // clear(cell?: mxCell, force?: boolean, recurse?: boolean): void;
   clear(
     cell: mxCell | null = null,
     force: boolean = false,
@@ -571,16 +517,13 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: invalidate
-   *
    * Invalidates the state of the given cell, all its descendants and
    * connected edges.
    *
-   * Parameters:
-   *
-   * cell - Optional <mxCell> to be invalidated. Default is the root of the
+   * @param cell Optional {@link mxCell} to be invalidated. Default is the root of the
    * model.
    */
+  // invalidate(cell: mxCell, recurse: boolean, includeEdges: boolean): void;
   invalidate(
     cell: mxCell | null = null,
     recurse: boolean = true,
@@ -621,17 +564,14 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: validate
+   * Calls {@link validateCell} and {@link validateCellState} and updates the {@link graphBounds}
+   * using {@link getBoundingBox}. Finally the background is validated using
+   * {@link validateBackground}.
    *
-   * Calls <validateCell> and <validateCellState> and updates the <graphBounds>
-   * using <getBoundingBox>. Finally the background is validated using
-   * <validateBackground>.
-   *
-   * Parameters:
-   *
-   * cell - Optional <mxCell> to be used as the root of the validation.
-   * Default is <currentRoot> or the root of the model.
+   * @param cell Optional {@link mxCell} to be used as the root of the validation.
+   * Default is {@link currentRoot} or the root of the model.
    */
+  // validate(cell?: mxCell): void;
   validate(cell: mxCell | null = null) {
     const t0 = mxLog.enter('mxGraphView.validate');
     window.status =
@@ -662,11 +602,10 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getEmptyBounds
-   *
    * Returns the bounds for an empty graph. This returns a rectangle at
-   * <translate> with the size of 0 x 0.
+   * {@link translate} with the size of 0 x 0.
    */
+  // getEmptyBounds(): mxRectangle;
   getEmptyBounds() {
     return new mxRectangle(
       this.translate.x * this.scale,
@@ -675,17 +614,14 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getBoundingBox
-   *
    * Returns the bounding box of the shape and the label for the given
-   * <mxCellState> and its children if recurse is true.
+   * {@link mxCellState} and its children if recurse is true.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose bounding box should be returned.
-   * recurse - Optional boolean indicating if the children should be included.
+   * @param state {@link mxCellState} whose bounding box should be returned.
+   * @param recurse Optional boolean indicating if the children should be included.
    * Default is true.
    */
+  // getBoundingBox(state: mxCellState, recurse: boolean): mxRectangle;
   getBoundingBox(state: mxCellState | null = null, recurse: boolean = true): mxRectangle {
     let bbox = null;
 
@@ -726,33 +662,28 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: createBackgroundPageShape
-   *
    * Creates and returns the shape used as the background page.
    *
-   * Parameters:
-   *
-   * bounds - <mxRectangle> that represents the bounds of the shape.
+   * @param bounds {@link mxRectangle} that represents the bounds of the shape.
    */
+  // createBackgroundPageShape(bounds: mxRectangle): mxRectangleShape;
   createBackgroundPageShape(bounds: mxRectangle): mxRectangleShape {
     return new mxRectangleShape(bounds, 'white', 'black');
   }
 
   /**
-   * Function: validateBackground
-   *
-   * Calls <validateBackgroundImage> and <validateBackgroundPage>.
+   * Calls {@link validateBackgroundImage} and {@link validateBackgroundPage}.
    */
+  // validateBackground(): void;
   validateBackground() {
     this.validateBackgroundImage();
     this.validateBackgroundPage();
   }
 
   /**
-   * Function: validateBackgroundImage
-   *
    * Validates the background image.
    */
+  // validateBackgroundImage(): void;
   validateBackgroundImage() {
     const bg = (<mxGraph>this.graph).getBackgroundImage();
 
@@ -781,10 +712,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: validateBackgroundPage
-   *
    * Validates the background page.
    */
+  // validateBackgroundPage(): void;
   validateBackgroundPage(): void {
     const graph = <mxGraph>this.graph;
 
@@ -852,10 +782,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getBackgroundPageBounds
-   *
    * Returns the bounds for the background page.
    */
+  // getBackgroundPageBounds(): mxRectangle;
   getBackgroundPageBounds(): mxRectangle {
     const fmt = (<mxGraph>this.graph).pageFormat;
     const ps = this.scale * (<mxGraph>this.graph).pageScale;
@@ -869,8 +798,6 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: redrawBackgroundImage
-   *
    * Updates the bounds and redraws the background image.
    *
    * Example:
@@ -878,8 +805,9 @@ class mxGraphView extends mxEventSource {
    * If the background image should not be scaled, this can be replaced with
    * the following.
    *
-   * (code)
-   * redrawBackground = (backgroundImage, bg)=>
+   * @example
+   * ```javascript
+   * redrawBackground(backgroundImage, bg)
    * {
    *   backgroundImage.bounds.x = this.translate.x;
    *   backgroundImage.bounds.y = this.translate.y;
@@ -888,13 +816,12 @@ class mxGraphView extends mxEventSource {
    *
    *   backgroundImage.redraw();
    * };
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * backgroundImage - <mxImageShape> that represents the background image.
-   * bg - <mxImage> that specifies the image and its dimensions.
+   * @param backgroundImage {@link mxImageShape} that represents the background image.
+   * @param bg {@link mxImage} that specifies the image and its dimensions.
    */
+  // redrawBackgroundImage(backgroundImage: mxImageShape, bg: mxImage): void;
   redrawBackgroundImage(backgroundImage: mxImageShape, bg: mxImage): void {
     backgroundImage.scale = this.scale;
     const bounds = <mxRectangle>backgroundImage.bounds;
@@ -906,18 +833,15 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: validateCell
-   *
    * Recursively creates the cell state for the given cell if visible is true and
    * the given cell is visible. If the cell is not visible but the state exists
-   * then it is removed using <removeState>.
+   * then it is removed using {@link removeState}.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose <mxCellState> should be created.
-   * visible - Optional boolean indicating if the cell should be visible. Default
+   * @param cell {@link mxCell} whose {@link mxCellState} should be created.
+   * @param visible Optional boolean indicating if the cell should be visible. Default
    * is true.
    */
+  // validateCell(cell: mxCell, visible?: boolean): void;
   validateCell(cell: mxCell | null=null,
                visible: boolean = true): mxCell | null {
     if (cell != null) {
@@ -943,16 +867,13 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: validateCellState
+   * Validates and repaints the {@link mxCellState} for the given {@link mxCell}.
    *
-   * Validates and repaints the <mxCellState> for the given <mxCell>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose <mxCellState> should be validated.
-   * recurse - Optional boolean indicating if the children of the cell should be
+   * @param cell {@link mxCell} whose {@link mxCellState} should be validated.
+   * @param recurse Optional boolean indicating if the children of the cell should be
    * validated. Default is true.
    */
+  // validateCellState(cell: mxCell, recurse?: boolean): void;
   validateCellState(cell: mxCell, recurse: boolean = true): mxCellState | null {
     let state: mxCellState | null = null;
 
@@ -1011,14 +932,11 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updateCellState
+   * Updates the given {@link mxCellState}.
    *
-   * Updates the given <mxCellState>.
-   *
-   * Parameters:
-   *
-   * state - <mxCellState> to be updated.
+   * @param state {@link mxCellState} to be updated.
    */
+  // updateCellState(state: mxCellState): void;
   updateCellState(state: mxCellState) {
     const absoluteOffset = <mxPoint>state.absoluteOffset;
     const origin = <mxPoint>state.origin;
@@ -1094,21 +1012,19 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: isCellCollapsed
-   *
    * Returns true if the children of the given cell should not be visible in the
-   * view. This implementation uses <mxGraph.isCellVisible> but it can be
+   * view. This implementation uses {@link mxGraph.isCellVisible} but it can be
    * overidden to use a separate condition.
    */
+  // isCellCollapsed(cell: mxCell): boolean;
   isCellCollapsed(cell: mxCell): boolean {
     return (<mxGraph>this.graph).isCellCollapsed(cell);
   }
 
   /**
-   * Function: updateVertexState
-   *
    * Validates the given cell state.
    */
+  // updateVertexState(state: mxCellState, geo: mxGeometry): void;
   updateVertexState(state: mxCellState,
                     geo: mxGeometry) {
 
@@ -1134,10 +1050,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updateEdgeState
-   *
    * Validates the given cell state.
    */
+  // updateEdgeState(state: mxCellState, geo: mxGeometry): void;
   updateEdgeState(state: mxCellState,
                   geo: mxGeometry) {
 
@@ -1181,15 +1096,12 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updateVertexLabelOffset
-   *
    * Updates the absoluteOffset of the given vertex cell state. This takes
    * into account the label position styles.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose absolute offset should be updated.
+   * @param state {@link mxCellState} whose absolute offset should be updated.
    */
+  // updateVertexLabelOffset(state: mxCellState): void;
   updateVertexLabelOffset(state: mxCellState) {
     const h = mxUtils.getValue(
       state.style,
@@ -1260,10 +1172,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: resetValidationState
-   *
    * Resets the current validation state.
    */
+  // resetValidationState(): void;
   resetValidationState(): void {
     this.lastNode = null;
     this.lastHtmlNode = null;
@@ -1272,15 +1183,12 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: stateValidated
-   *
-   * Invoked when a state has been processed in <validatePoints>. This is used
+   * Invoked when a state has been processed in {@link validatePoints}. This is used
    * to update the order of the DOM nodes of the shape.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> that represents the cell state.
+   * @param state {@link mxCellState} that represents the cell state.
    */
+  // stateValidated(state: mxCellState): void;
   stateValidated(state: mxCellState): void {
     const graph = (<mxGraph>this.graph);
     const fg =
@@ -1308,17 +1216,14 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updateFixedTerminalPoints
-   *
    * Sets the initial absolute terminal points in the given state before the edge
    * style is computed.
    *
-   * Parameters:
-   *
-   * edge - <mxCellState> whose initial terminal points should be updated.
-   * source - <mxCellState> which represents the source terminal.
-   * target - <mxCellState> which represents the target terminal.
+   * @param edge {@link mxCellState} whose initial terminal points should be updated.
+   * @param source {@link mxCellState} which represents the source terminal.
+   * @param target {@link mxCellState} which represents the target terminal.
    */
+  // updateFixedTerminalPoints(edge: mxCellState, source: mxCellState, target: mxCellState): void;
   updateFixedTerminalPoints(edge: mxCellState,
                             source: mxCellState,
                             target: mxCellState): void {
@@ -1401,16 +1306,13 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updateBoundsFromStencil
-   *
    * Updates the bounds of the given cell state to reflect the bounds of the stencil
-   * if it has a fixed aspect and returns the previous bounds as an <mxRectangle> if
+   * if it has a fixed aspect and returns the previous bounds as an {@link mxRectangle} if
    * the bounds have been modified or null otherwise.
    *
-   * Parameters:
-   *
-   * edge - <mxCellState> whose bounds should be updated.
+   * @param edge {@link mxCellState} whose bounds should be updated.
    */
+  // updateBoundsFromStencil(state: mxCellState): mxRectangle;
   updateBoundsFromStencil(state: mxCellState) {
     let previous = null;
 
@@ -1440,18 +1342,15 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updatePoints
-   *
    * Updates the absolute points in the given state using the specified array
-   * of <mxPoints> as the relative points.
+   * of {@link mxPoints} as the relative points.
    *
-   * Parameters:
-   *
-   * edge - <mxCellState> whose absolute points should be updated.
-   * points - Array of <mxPoints> that constitute the relative points.
-   * source - <mxCellState> that represents the source terminal.
-   * target - <mxCellState> that represents the target terminal.
+   * @param edge {@link mxCellState} whose absolute points should be updated.
+   * @param points Array of {@link mxPoints} that constitute the relative points.
+   * @param source {@link mxCellState} that represents the source terminal.
+   * @param target {@link mxCellState} that represents the target terminal.
    */
+  // updatePoints(edge: mxCellState, points: mxPoint[], source: mxCellState, target: mxCellState): void;
   updatePoints(edge: mxCellState,
                points: mxPoint[],
                source: mxCellState,
@@ -1507,10 +1406,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: transformControlPoint
-   *
    * Transforms the given control point to an absolute point.
    */
+  // transformControlPoint(state: mxCellState, pt: mxPoint): mxPoint;
   transformControlPoint(state: mxCellState,
                         pt: mxPoint,
                         ignoreScale: boolean=false): mxPoint | null {
@@ -1528,13 +1426,11 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: isLoopStyleEnabled
-   *
-   * Returns true if the given edge should be routed with <mxGraph.defaultLoopStyle>
-   * or the <mxConstants.STYLE_LOOP> defined for the given edge. This implementation
-   * returns true if the given edge is a loop and does not have connections constraints
-   * associated.
+   * Returns true if the given edge should be routed with {@link mxGraph.defaultLoopStyle}
+   * or the {@link mxConstants.STYLE_LOOP} defined for the given edge. This implementation
+   * returns true if the given edge is a loop and does not
    */
+  // isLoopStyleEnabled(edge: mxCellState, points: mxPoint[], source: mxCellState, target: mxCellState): boolean;
   isLoopStyleEnabled(edge: mxCellState,
                      points: mxPoint[]=[],
                      source: mxCellState | null=null,
@@ -1558,10 +1454,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getEdgeStyle
-   *
    * Returns the edge style function to be used to render the given edge state.
    */
+  // getEdgeStyle(edge: mxCellState, points: mxPoint[], source: mxCellState, target: mxCellState): any;
   getEdgeStyle(edge: mxCellState,
                points: mxPoint[]=[],
                source: mxCellState | null=null,
@@ -1593,17 +1488,14 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updateFloatingTerminalPoints
-   *
    * Updates the terminal points in the given state after the edge style was
    * computed for the edge.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose terminal points should be updated.
-   * source - <mxCellState> that represents the source terminal.
-   * target - <mxCellState> that represents the target terminal.
+   * @param state {@link mxCellState} whose terminal points should be updated.
+   * @param source {@link mxCellState} that represents the source terminal.
+   * @param target {@link mxCellState} that represents the target terminal.
    */
+  // updateFloatingTerminalPoints(state: mxCellState, source: mxCellState, target: mxCellState): void;
   updateFloatingTerminalPoints(state: mxCellState,
                                source: mxCellState,
                                target: mxCellState) {
@@ -1621,18 +1513,15 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updateFloatingTerminalPoint
-   *
    * Updates the absolute terminal point in the given state for the given
    * start and end state, where start is the source if source is true.
    *
-   * Parameters:
-   *
-   * edge - <mxCellState> whose terminal point should be updated.
-   * start - <mxCellState> for the terminal on "this" side of the edge.
-   * end - <mxCellState> for the terminal on the other side of the edge.
-   * source - Boolean indicating if start is the source terminal state.
+   * @param edge {@link mxCellState} whose terminal point should be updated.
+   * @param start {@link mxCellState} for the terminal on "this" side of the edge.
+   * @param end {@link mxCellState} for the terminal on the other side of the edge.
+   * @param source Boolean indicating if start is the source terminal state.
    */
+  // updateFloatingTerminalPoint(edge: mxCellState, start: mxCellState, end: mxCellState, source: boolean): void;
   updateFloatingTerminalPoint(edge: mxCellState,
                               start: mxCellState,
                               end: mxCellState,
@@ -1645,18 +1534,15 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getFloatingTerminalPoint
-   *
    * Returns the floating terminal point for the given edge, start and end
    * state, where start is the source if source is true.
    *
-   * Parameters:
-   *
-   * edge - <mxCellState> whose terminal point should be returned.
-   * start - <mxCellState> for the terminal on "this" side of the edge.
-   * end - <mxCellState> for the terminal on the other side of the edge.
-   * source - Boolean indicating if start is the source terminal state.
+   * @param edge {@link mxCellState} whose terminal point should be returned.
+   * @param start {@link mxCellState} for the terminal on "this" side of the edge.
+   * @param end {@link mxCellState} for the terminal on the other side of the edge.
+   * @param source Boolean indicating if start is the source terminal state.
    */
+  // getFloatingTerminalPoint(edge: mxCellState, start: mxCellState, end: mxCellState, source: boolean): mxPoint;
   getFloatingTerminalPoint(edge: mxCellState,
                            start: mxCellState,
                            end: mxCellState,
@@ -1699,17 +1585,14 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getTerminalPort
-   *
-   * Returns an <mxCellState> that represents the source or target terminal or
+   * Returns an {@link mxCellState} that represents the source or target terminal or
    * port for the given edge.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> that represents the state of the edge.
-   * terminal - <mxCellState> that represents the terminal.
-   * source - Boolean indicating if the given terminal is the source terminal.
+   * @param state {@link mxCellState} that represents the state of the edge.
+   * @param terminal {@link mxCellState} that represents the terminal.
+   * @param source Boolean indicating if the given terminal is the source terminal.
    */
+  // getTerminalPort(state: mxCellState, terminal: mxCellState, source: boolean): mxCellState;
   getTerminalPort(state: mxCellState,
                   terminal: mxCellState,
                   source: boolean=false): mxCellState | null {
@@ -1731,21 +1614,18 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getPerimeterPoint
-   *
-   * Returns an <mxPoint> that defines the location of the intersection point between
+   * Returns an {@link mxPoint} that defines the location of the intersection point between
    * the perimeter and the line between the center of the shape and the given point.
    *
-   * Parameters:
-   *
-   * terminal - <mxCellState> for the source or target terminal.
-   * next - <mxPoint> that lies outside of the given terminal.
-   * orthogonal - Boolean that specifies if the orthogonal projection onto
+   * @param terminal {@link mxCellState} for the source or target terminal.
+   * @param next {@link mxPoint} that lies outside of the given terminal.
+   * @param orthogonal Boolean that specifies if the orthogonal projection onto
    * the perimeter should be returned. If this is false then the intersection
    * of the perimeter and the line between the next and the center point is
    * returned.
-   * border - Optional border between the perimeter and the shape.
+   * @param border Optional border between the perimeter and the shape.
    */
+  // getPerimeterPoint(terminal: mxCellState, next: mxPoint, orthogonal: boolean, border: number): mxPoint;
   getPerimeterPoint(terminal: mxCellState,
                     next: mxPoint,
                     orthogonal: boolean,
@@ -1810,10 +1690,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getRoutingCenterX
-   *
    * Returns the x-coordinate of the center point for automatic routing.
    */
+  // getRoutingCenterX(state: mxCellState): number;
   getRoutingCenterX(state: mxCellState) {
     const f =
       state.style != null
@@ -1823,10 +1702,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getRoutingCenterY
-   *
    * Returns the y-coordinate of the center point for automatic routing.
    */
+  // getRoutingCenterY(state: mxCellState): number;
   getRoutingCenterY(state: mxCellState) {
     const f =
       state.style != null
@@ -1836,31 +1714,30 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getPerimeterBounds
-   *
    * Returns the perimeter bounds for the given terminal, edge pair as an
-   * <mxRectangle>.
+   * {@link mxRectangle}.
    *
    * If you have a model where each terminal has a relative child that should
    * act as the graphical endpoint for a connection from/to the terminal, then
    * this method can be replaced as follows:
    *
-   * (code)
-   * let oldGetPerimeterBounds = getPerimeterBounds;
-   * getPerimeterBounds = (terminal, edge, isSource)=>
+   * @example
+   * ```javascript
+   * var oldGetPerimeterBounds = getPerimeterBounds;
+   * getPerimeterBounds(terminal, edge, isSource)
    * {
-   *   let model = this.graph.getModel();
-   *   let childCount = model.getChildCount(terminal.cell);
+   *   var model = this.graph.getModel();
+   *   var childCount = model.getChildCount(terminal.cell);
    *
    *   if (childCount > 0)
    *   {
-   *     let child = model.getChildAt(terminal.cell, 0);
-   *     let geo = model.getGeometry(child);
+   *     var child = model.getChildAt(terminal.cell, 0);
+   *     var geo = model.getGeometry(child);
    *
    *     if (geo != null &&
    *         geo.relative)
    *     {
-   *       let state = this.getState(child);
+   *       var state = this.getState(child);
    *
    *       if (state != null)
    *       {
@@ -1871,13 +1748,12 @@ class mxGraphView extends mxEventSource {
    *
    *   return oldGetPerimeterBounds.apply(this, arguments);
    * };
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * terminal - <mxCellState> that represents the terminal.
-   * border - Number that adds a border between the shape and the perimeter.
+   * @param {mxCellState} terminal mxCellState that represents the terminal.
+   * @param {number} border Number that adds a border between the shape and the perimeter.
    */
+  // getPerimeterBounds(terminal: mxCellState, border?: number): mxRectangle;
   getPerimeterBounds(
     terminal: mxCellState | null = null,
     border: number = 0
@@ -1891,10 +1767,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getPerimeterFunction
-   *
    * Returns the perimeter function for the given state.
    */
+  // getPerimeterFunction(state: mxCellState): any;
   getPerimeterFunction(state: mxCellState): Function | null {
     let perimeter = state.style[mxConstants.STYLE_PERIMETER];
 
@@ -1914,18 +1789,15 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getNextPoint
-   *
    * Returns the nearest point in the list of absolute points or the center
    * of the opposite terminal.
    *
-   * Parameters:
-   *
-   * edge - <mxCellState> that represents the edge.
-   * opposite - <mxCellState> that represents the opposite terminal.
-   * source - Boolean indicating if the next point for the source or target
+   * @param edge {@link mxCellState} that represents the edge.
+   * @param opposite {@link mxCellState} that represents the opposite terminal.
+   * @param source Boolean indicating if the next point for the source or target
    * should be returned.
    */
+  // getNextPoint(edge: mxCellState, opposite: mxCellState, source: boolean): mxPoint;
   getNextPoint(edge: mxCellState,
                opposite: mxCellState | null,
                source: boolean=false): mxPoint | null {
@@ -1946,18 +1818,15 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getVisibleTerminal
-   *
    * Returns the nearest ancestor terminal that is visible. The edge appears
    * to be connected to this terminal on the display. The result of this method
-   * is cached in <mxCellState.getVisibleTerminalState>.
+   * is cached in {@link mxCellState.getVisibleTerminalState}.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> whose visible terminal should be returned.
-   * source - Boolean that specifies if the source or target terminal
+   * @param edge {@link mxCell} whose visible terminal should be returned.
+   * @param source Boolean that specifies if the source or target terminal
    * should be returned.
    */
+  // getVisibleTerminal(edge: mxCell, source: boolean): mxCell;
   getVisibleTerminal(edge: mxCell | null,
                      source: boolean) {
 
@@ -1987,17 +1856,14 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updateEdgeBounds
-   *
    * Updates the given state using the bounding box of t
    * he absolute points.
-   * Also updates <mxCellState.terminalDistance>, <mxCellState.length> and
-   * <mxCellState.segments>.
+   * Also updates {@link mxCellState.terminalDistance}, {@link mxCellState.length} and
+   * {@link mxCellState.segments}.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose bounds should be updated.
+   * @param state {@link mxCellState} whose bounds should be updated.
    */
+  // updateEdgeBounds(state: mxCellState): void;
   updateEdgeBounds(state: mxCellState) {
     const points = <mxPoint[]>state.absolutePoints;
     const p0 = points[0];
@@ -2054,17 +1920,14 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getPoint
-   *
    * Returns the absolute point on the edge for the given relative
-   * <mxGeometry> as an <mxPoint>. The edge is represented by the given
-   * <mxCellState>.
+   * {@link mxGeometry} as an {@link mxPoint}. The edge is represented by the given
+   * {@link mxCellState}.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> that represents the state of the parent edge.
-   * geometry - <mxGeometry> that represents the relative location.
+   * @param state {@link mxCellState} that represents the state of the parent edge.
+   * @param geometry {@link mxGeometry} that represents the relative location.
    */
+  // getPoint(state: mxCellState, geometry: mxGeometry): mxPoint;
   getPoint(state: mxCellState,
            geometry: mxGeometry | null=null): mxPoint {
     let x = state.getCenterX();
@@ -2123,17 +1986,14 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getRelativePoint
-   *
    * Gets the relative point that describes the given, absolute label
    * position for the given edge state.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> that represents the state of the parent edge.
-   * x - Specifies the x-coordinate of the absolute label location.
-   * y - Specifies the y-coordinate of the absolute label location.
+   * @param state {@link mxCellState} that represents the state of the parent edge.
+   * @param x Specifies the x-coordinate of the absolute label location.
+   * @param y Specifies the y-coordinate of the absolute label location.
    */
+  // getRelativePoint(edgeState: mxCellState, x: number, y: number): mxPoint;
   getRelativePoint(edgeState: mxCellState,
                    x: number,
                    y: number) {
@@ -2228,19 +2088,16 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updateEdgeLabelOffset
-   *
-   * Updates <mxCellState.absoluteOffset> for the given state. The absolute
+   * Updates {@link mxCellState.absoluteOffset} for the given state. The absolute
    * offset is normally used for the position of the edge label. Is is
    * calculated from the geometry as an absolute offset from the center
    * between the two endpoints if the geometry is absolute, or as the
    * relative distance between the center along the line and the absolute
    * orthogonal distance if the geometry is relative.
    *
-   * Parameters:
-   *
-   * state - <mxCellState> whose absolute offset should be updated.
+   * @param state {@link mxCellState} whose absolute offset should be updated.
    */
+  // updateEdgeLabelOffset(state: mxCellState): void;
   updateEdgeLabelOffset(state: mxCellState) {
     const points = state.absolutePoints;
     const absoluteOffset = <mxPoint>state.absoluteOffset;
@@ -2284,17 +2141,14 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getState
-   *
-   * Returns the <mxCellState> for the given cell. If create is true, then
+   * Returns the {@link mxCellState} for the given cell. If create is true, then
    * the state is created if it does not yet exist.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the <mxCellState> should be returned.
-   * create - Optional boolean indicating if a new state should be created
+   * @param cell {@link mxCell} for which the {@link mxCellState} should be returned.
+   * @param create Optional boolean indicating if a new state should be created
    * if it does not yet exist. Default is false.
    */
+  // getState(cell: mxCell, create?: boolean): mxCellState;
   getState(cell: mxCell | null=null,
            create: boolean=false) {
 
@@ -2320,13 +2174,12 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: getCellStates
-   *
-   * Returns the <mxCellStates> for the given array of <mxCells>. The array
+   * Returns the {@link mxCellStates} for the given array of {@link mxCell}. The array
    * contains all states that are not null, that is, the returned array may
    * have less elements than the given array. If no argument is given, then
-   * this returns <states>.
+   * this returns {@link states}.
    */
+  // getCellStates(cells: mxCell[]): mxCellState[];
   getCellStates(cells: mxCell[] | null): mxCellState[] | mxDictionary | null {
     if (cells == null) {
       return this.states;
@@ -2343,14 +2196,11 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: removeState
+   * Removes and returns the {@link mxCellState} for the given cell.
    *
-   * Removes and returns the <mxCellState> for the given cell.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> for which the <mxCellState> should be removed.
+   * @param cell {@link mxCell} for which the {@link mxCellState} should be removed.
    */
+  // removeState(cell: mxCell): mxCellState;
   removeState(cell: mxCell): mxCellState | null {
     let state: mxCellState | null = null;
 
@@ -2367,25 +2217,21 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: createState
+   * Creates and returns an {@link mxCellState} for the given cell and initializes
+   * it using {@link mxCellRenderer.initialize}.
    *
-   * Creates and returns an <mxCellState> for the given cell and initializes
-   * it using <mxCellRenderer.initialize>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> for which a new <mxCellState> should be created.
+   * @param cell {@link mxCell} for which a new {@link mxCellState} should be created.
    */
+  // createState(cell: mxCell): mxCellState;
   createState(cell: mxCell): mxCellState {
     return new mxCellState(this, cell, (<mxGraph>this.graph).getCellStyle(cell));
   }
 
   /**
-   * Function: isContainerEvent
-   *
    * Returns true if the event origin is one of the drawing panes or
    * containers of the view.
    */
+  // isContainerEvent(evt: Event): boolean;
   isContainerEvent(evt: Event | MouseEvent) {
     const source = mxEvent.getSource(evt);
 
@@ -2405,11 +2251,10 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: isScrollEvent
-   *
    * Returns true if the event origin is one of the scrollbars of the
    * container in IE. Such events are ignored.
    */
+  // isScrollEvent(evt: Event): boolean;
   isScrollEvent(evt: MouseEvent) {
     const graph = <mxGraph>this.graph;
     const offset = mxUtils.getOffset(graph.container);
@@ -2430,11 +2275,10 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: init
-   *
    * Initializes the graph event dispatch loop for the specified container
-   * and invokes <create> to create the required DOM nodes for the display.
+   * and invokes {@link create} to create the required DOM nodes for the display.
    */
+  // init(): void;
   init() {
     this.installListeners();
 
@@ -2444,10 +2288,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: installListeners
-   *
    * Installs the required listeners in the container.
    */
+  // installListeners(): void;
   installListeners() {
     const graph = <mxGraph>this.graph;
     const { container } = graph;
@@ -2602,10 +2445,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: createSvg
-   *
    * Creates and returns the DOM nodes for the SVG display.
    */
+  // createSvg(): Element;
   createSvg() {
     const { container } = <mxGraph>this.graph;
     const canvas = this.canvas = document.createElementNS("http://www.w3.org/2000/svg", 'g');
@@ -2642,10 +2484,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: updateContainerStyle
-   *
    * Updates the style of the container after installing the SVG DOM elements.
    */
+  // updateContainerStyle(container: Element): void;
   updateContainerStyle(container: HTMLElement) {
     // Workaround for offset of container
     const style = mxUtils.getCurrentStyle(container);
@@ -2661,10 +2502,9 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: destroy
-   *
    * Destroys the view and all its resources.
    */
+  // destroy(): void;
   destroy() {
     let root: SVGElement | null = this.canvas != null ? this.canvas.ownerSVGElement : null;
 

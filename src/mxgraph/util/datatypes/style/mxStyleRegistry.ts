@@ -9,7 +9,7 @@ import mxEdgeStyle from './mxEdgeStyle';
 import mxPerimeter from './mxPerimeter';
 
 /**
- * Class: mxStyleRegistry
+ * @class mxStyleRegistry
  *
  * Singleton class that acts as a global converter from string to object values
  * in a style. This is currently only used to perimeters and edge styles.

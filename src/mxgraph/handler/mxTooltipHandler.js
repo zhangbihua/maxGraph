@@ -45,6 +45,7 @@ class mxTooltipHandler {
    *
    * Specifies the zIndex for the tooltip and its shadow. Default is 10005.
    */
+  // zIndex: number;
   zIndex = 10005;
 
   /**
@@ -52,6 +53,7 @@ class mxTooltipHandler {
    *
    * Reference to the enclosing <mxGraph>.
    */
+  // graph: mxGraph;
   graph = null;
 
   /**
@@ -59,6 +61,7 @@ class mxTooltipHandler {
    *
    * Delay to show the tooltip in milliseconds. Default is 500.
    */
+  // delay: number;
   delay = null;
 
   /**
@@ -66,6 +69,7 @@ class mxTooltipHandler {
    *
    * Specifies if touch and pen events should be ignored. Default is true.
    */
+  // ignoreTouchEvents: boolean;
   ignoreTouchEvents = true;
 
   /**
@@ -74,6 +78,7 @@ class mxTooltipHandler {
    * Specifies if the tooltip should be hidden if the mouse is moved over the
    * current cell. Default is false.
    */
+  // hideOnHover: boolean;
   hideOnHover = false;
 
   /**
@@ -81,6 +86,7 @@ class mxTooltipHandler {
    *
    * True if this handler was destroyed using <destroy>.
    */
+  // destroyed: boolean;
   destroyed = false;
 
   /**
@@ -88,6 +94,7 @@ class mxTooltipHandler {
    *
    * Specifies if events are handled. Default is true.
    */
+  // enabled: boolean;
   enabled = true;
 
   /**
@@ -96,6 +103,7 @@ class mxTooltipHandler {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
+  // isEnabled(): boolean;
   isEnabled() {
     return this.enabled;
   }
@@ -106,6 +114,7 @@ class mxTooltipHandler {
    * Enables or disables event handling. This implementation
    * updates <enabled>.
    */
+  // setEnabled(enabled: boolean): void;
   setEnabled(enabled) {
     this.enabled = enabled;
   }
@@ -115,6 +124,7 @@ class mxTooltipHandler {
    *
    * Returns <hideOnHover>.
    */
+  // isHideOnHover(): boolean;
   isHideOnHover() {
     return this.hideOnHover;
   }
@@ -124,6 +134,7 @@ class mxTooltipHandler {
    *
    * Sets <hideOnHover>.
    */
+  // setHideOnHover(value: boolean): void;
   setHideOnHover(value) {
     this.hideOnHover = value;
   }
@@ -133,6 +144,7 @@ class mxTooltipHandler {
    *
    * Initializes the DOM nodes required for this tooltip handler.
    */
+  // init(): void;
   init() {
     if (document.body != null) {
       this.div = document.createElement('div');
@@ -156,6 +168,7 @@ class mxTooltipHandler {
    *
    * Returns the <mxCellState> to be used for showing a tooltip for this event.
    */
+  // getStateForEvent(me: mxMouseEvent): mxCellState;
   getStateForEvent(me) {
     return me.getState();
   }
@@ -167,6 +180,7 @@ class mxTooltipHandler {
    * event all subsequent events of the gesture are redirected to this
    * handler.
    */
+  // mouseDown(sender: any, me: mxMouseEvent): void;
   mouseDown(sender, me) {
     this.reset(me, false);
     this.hideTooltip();
@@ -177,6 +191,7 @@ class mxTooltipHandler {
    *
    * Handles the event by updating the rubberband selection.
    */
+  // mouseMove(sender: any, me: mxMouseEvent): void;
   mouseMove(sender, me) {
     if (me.getX() !== this.lastX || me.getY() !== this.lastY) {
       this.reset(me, true);
@@ -205,6 +220,7 @@ class mxTooltipHandler {
    * Handles the event by resetting the tooltip timer or hiding the existing
    * tooltip.
    */
+  // mouseUp(sender: any, me: mxMouseEvent): void;
   mouseUp(sender, me) {
     this.reset(me, true);
     this.hideTooltip();
@@ -215,6 +231,7 @@ class mxTooltipHandler {
    *
    * Resets the timer.
    */
+  // resetTimer(): void;
   resetTimer() {
     if (this.thread != null) {
       window.clearTimeout(this.thread);
@@ -227,6 +244,7 @@ class mxTooltipHandler {
    *
    * Resets and/or restarts the timer to trigger the display of the tooltip.
    */
+  // reset(me: mxMouseEvent, restart: boolean, state: mxCellState): void;
   reset(me, restart, state) {
     if (!this.ignoreTouchEvents || mxEvent.isMouseEvent(me.getEvent())) {
       this.resetTimer();
@@ -268,6 +286,7 @@ class mxTooltipHandler {
    *
    * Hides the tooltip and resets the timer.
    */
+  // hide(): void;
   hide() {
     this.resetTimer();
     this.hideTooltip();
@@ -278,6 +297,7 @@ class mxTooltipHandler {
    *
    * Hides the tooltip.
    */
+  // hideTooltip(): void;
   hideTooltip() {
     if (this.div != null) {
       this.div.style.visibility = 'hidden';
@@ -291,6 +311,7 @@ class mxTooltipHandler {
    * Shows the tooltip for the specified cell and optional index at the
    * specified location (with a vertical offset of 10 pixels).
    */
+  // show(tip: string, x: number, y: number): void;
   show(tip, x, y) {
     if (!this.destroyed && tip != null && tip.length > 0) {
       // Initializes the DOM nodes if required
@@ -323,6 +344,7 @@ class mxTooltipHandler {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
+  // destroy(): void;
   destroy() {
     if (!this.destroyed) {
       this.graph.removeMouseListener(this);

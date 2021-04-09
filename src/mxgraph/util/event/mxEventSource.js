@@ -40,6 +40,7 @@ class mxEventSource {
    * contains the event name followed by the respective listener for each
    * registered listener.
    */
+  // eventListeners: any[];
   eventListeners = null;
 
   /**
@@ -47,6 +48,7 @@ class mxEventSource {
    *
    * Specifies if events can be fired. Default is true.
    */
+  // eventsEnabled: boolean;
   eventsEnabled = true;
 
   /**
@@ -54,6 +56,7 @@ class mxEventSource {
    *
    * Optional source for events. Default is null.
    */
+  // eventSource: any;
   eventSource = null;
 
   /**
@@ -61,6 +64,7 @@ class mxEventSource {
    *
    * Returns <eventsEnabled>.
    */
+  // isEventsEnabled(): boolean;
   isEventsEnabled() {
     return this.eventsEnabled;
   }
@@ -70,6 +74,7 @@ class mxEventSource {
    *
    * Sets <eventsEnabled>.
    */
+  // setEventsEnabled(value: boolean): void;
   setEventsEnabled(value) {
     this.eventsEnabled = value;
   }
@@ -79,6 +84,7 @@ class mxEventSource {
    *
    * Returns <eventSource>.
    */
+  // getEventSource(): any;
   getEventSource() {
     return this.eventSource;
   }
@@ -88,6 +94,7 @@ class mxEventSource {
    *
    * Sets <eventSource>.
    */
+  // setEventSource(value: any): void;
   setEventSource(value) {
     this.eventSource = value;
   }
@@ -100,6 +107,7 @@ class mxEventSource {
    *
    * The parameters of the listener are the sender and an <mxEventObject>.
    */
+  // addListener(name: string, funct: (...args: any[]) => any): void;
   addListener(name, funct) {
     if (this.eventListeners == null) {
       this.eventListeners = [];
@@ -114,6 +122,7 @@ class mxEventSource {
    *
    * Removes all occurrences of the given listener from <eventListeners>.
    */
+  // removeListener(funct: (...args: any[]) => any): void;
   removeListener(funct) {
     if (this.eventListeners != null) {
       let i = 0;
@@ -147,6 +156,7 @@ class mxEventSource {
    * sender - Optional sender to be passed to the listener. Default value is
    * the return value of <getEventSource>.
    */
+  // fireEvent(evt: mxEventObject, sender: any): void;
   fireEvent(evt, sender) {
     if (this.eventListeners != null && this.isEventsEnabled()) {
       if (evt == null) {

@@ -84,6 +84,7 @@ class mxCellOverlay extends mxEventSource {
    *
    * Holds the <mxImage> to be used as the icon.
    */
+  // image: mxImage;
   image: mxImage | null = null;
 
   /**
@@ -91,7 +92,8 @@ class mxCellOverlay extends mxEventSource {
    *
    * Holds the optional string to be used as the tooltip.
    */
-  tooltip: string | null = null;
+  // tooltip?: string;
+  tooltip?: string | null = null;
 
   /**
    * Variable: align
@@ -100,6 +102,7 @@ class mxCellOverlay extends mxEventSource {
    * <mxConstants.ALIGN_RIGHT>. For edges, the overlay always appears in the
    * center of the edge.
    */
+  // align: string;
   align: 'left' | 'center' | 'right' = 'right';
 
   /**
@@ -109,6 +112,7 @@ class mxCellOverlay extends mxEventSource {
    * <mxConstants.ALIGN_BOTTOM>. For edges, the overlay always appears in the
    * center of the edge.
    */
+  // verticalAlign: string;
   verticalAlign: 'top' | 'middle' | 'bottom' = 'bottom';
 
   /**
@@ -117,6 +121,7 @@ class mxCellOverlay extends mxEventSource {
    * Holds the offset as an <mxPoint>. The offset will be scaled according to the
    * current scale.
    */
+  // offset: mxPoint;
   offset: mxPoint = new mxPoint();
 
   /**
@@ -124,6 +129,7 @@ class mxCellOverlay extends mxEventSource {
    *
    * Holds the cursor for the overlay. Default is 'help'.
    */
+  // cursor: string;
   cursor: string = 'help';
 
   /**
@@ -132,6 +138,7 @@ class mxCellOverlay extends mxEventSource {
    * Defines the overlapping for the overlay, that is, the proportional distance
    * from the origin to the point defined by the alignment. Default is 0.5.
    */
+  // defaultOverlap: number;
   defaultOverlap: number = 0.5;
 
   /**
@@ -146,13 +153,13 @@ class mxCellOverlay extends mxEventSource {
    * orthogonal offset in px).
    *
    * (code)
-   * overlay.getBounds = (state)=>
+   * overlay.getBounds = function(state)
    * {
-   *   let bounds = getBounds.apply(this, arguments);
+   *   var bounds = getBounds.apply(this, arguments);
    *
    *   if (state.view.graph.getModel().isEdge(state.cell))
    *   {
-   *     let pt = state.view.getPoint(state, {x: 0, y: 0, relative: true});
+   *     var pt = state.view.getPoint(state, {x: 0, y: 0, relative: true});
    *
    *     bounds.x = pt.x - bounds.width / 2;
    *     bounds.y = pt.y - bounds.height / 2;
@@ -167,6 +174,7 @@ class mxCellOverlay extends mxEventSource {
    * state - <mxCellState> that represents the current state of the
    * associated cell.
    */
+  // getBounds(state: mxCellState): mxRectangle;
   getBounds(state: mxCellState) {
     const isEdge = state.view.graph.getModel().isEdge(state.cell);
     const s = state.view.scale;
@@ -225,6 +233,7 @@ class mxCellOverlay extends mxEventSource {
    * Returns the textual representation of the overlay to be used as the
    * tooltip. This implementation returns <tooltip>.
    */
+  // toString(): string;
   toString() {
     return this.tooltip;
   }

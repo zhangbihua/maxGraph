@@ -25,15 +25,13 @@ import mxVisibleChange from '../../atomic_changes/mxVisibleChange';
 import mxGeometry from "../../util/datatypes/mxGeometry";
 
 /**
- * Class: mxGraphModel
- *
- * Extends <mxEventSource> to implement a graph model. The graph model acts as
+ * Extends {@link mxEventSource} to implement a graph model. The graph model acts as
  * a wrapper around the cells which are in charge of storing the actual graph
  * datastructure. The model acts as a transactional wrapper with event
  * notification for all changes, whereas the cells contain the atomic
  * operations for updating the actual datastructure.
  *
- * Layers:
+ * ### Layers
  *
  * The cell hierarchy in the model must have a top-level root cell which
  * contains the layers (typically one default layer), which in turn contain the
@@ -43,10 +41,10 @@ import mxGeometry from "../../util/datatypes/mxGeometry";
  *
  * Layers are useful for hiding and showing groups of cells, or for placing
  * groups of cells on top of other cells in the display. To identify a layer,
- * the <isLayer> function is used. It returns true if the parent of the given
+ * the {@link isLayer} function is used. It returns true if the parent of the given
  * cell is the root of the model.
  *
- * Events:
+ * ### Events
  *
  * See events section for more details. There is a new set of events for
  * tracking transactional changes as they happen. The events are called
@@ -54,97 +52,97 @@ import mxGeometry from "../../util/datatypes/mxGeometry";
  * and endEdit for the terminal endUpdate. The executed event contains a
  * property called change which represents the change after execution.
  *
- * Encoding the model:
+ * ### Encoding the model
  *
- * To encode a graph model, use the following code:
+ * #### To encode a graph model, use the following code:
  *
- * (code)
- * let enc = new mxCodec();
- * let node = enc.encode(graph.getModel());
- * (end)
+ * ```javascript
+ * var enc = new mxCodec();
+ * var node = enc.encode(graph.getModel());
+ * ```
  *
  * This will create an XML node that contains all the model information.
  *
- * Encoding and decoding changes:
+ * #### Encoding and decoding changes:
  *
  * For the encoding of changes, a graph model listener is required that encodes
  * each change from the given array of changes.
  *
- * (code)
- * model.addListener(mxEvent.CHANGE, (sender, evt)=>
+ * ```javascript
+ * model.addListener(mxEvent.CHANGE, function(sender, evt)
  * {
- *   let changes = evt.getProperty('edit').changes;
- *   let nodes = [];
- *   let codec = new mxCodec();
+ *   var changes = evt.getProperty('edit').changes;
+ *   var nodes = [];
+ *   var codec = new mxCodec();
  *
- *   for (let i = 0; i < changes.length; i += 1)
+ *   for (var i = 0; i < changes.length; i++)
  *   {
  *     nodes.push(codec.encode(changes[i]));
  *   }
  *   // do something with the nodes
  * });
- * (end)
+ * ```
  *
  * For the decoding and execution of changes, the codec needs a lookup function
  * that allows it to resolve cell IDs as follows:
  *
- * (code)
- * let codec = new mxCodec();
- * codec.lookup = (id)=>
+ * ```javascript
+ * var codec = new mxCodec();
+ * codec.lookup(id)
  * {
  *   return model.getCell(id);
  * }
- * (end)
+ * ```
  *
  * For each encoded change (represented by a node), the following code can be
  * used to carry out the decoding and create a change object.
  *
- * (code)
- * let changes = [];
- * let change = codec.decode(node);
+ * ```javascript
+ * var changes = [];
+ * var change = codec.decode(node);
  * change.model = model;
  * change.execute();
  * changes.push(change);
- * (end)
+ * ```
  *
  * The changes can then be dispatched using the model as follows.
  *
- * (code)
- * let edit = new mxUndoableEdit(model, false);
+ * ```javascript
+ * var edit = new mxUndoableEdit(model, false);
  * edit.changes = changes;
  *
- * edit.notify = ()=>
+ * edit.notify()
  * {
  *   edit.source.fireEvent(new mxEventObject(mxEvent.CHANGE,
- *     'edit', edit, 'changes', edit.changes));
+ *   	'edit', edit, 'changes', edit.changes));
  *   edit.source.fireEvent(new mxEventObject(mxEvent.NOTIFY,
- *     'edit', edit, 'changes', edit.changes));
+ *   	'edit', edit, 'changes', edit.changes));
  * }
  *
  * model.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
  * model.fireEvent(new mxEventObject(mxEvent.CHANGE,
- *     'edit', edit, 'changes', changes));
- * (end)
+ *    'edit', edit, 'changes', changes));
+ * ```
  *
  * Event: mxEvent.CHANGE
  *
- * Fires when an undoable edit is dispatched. The <code>edit</code> property
- * contains the <mxUndoableEdit>. The <code>changes</code> property contains
+ * Fires when an undoable edit is dispatched. The `edit` property
+ * contains the {@link mxUndoableEdit}. The `changes` property contains
  * the array of atomic changes inside the undoable edit. The changes property
- * is <strong>deprecated</strong>, please use edit.changes instead.
+ * is **deprecated**, please use edit.changes instead.
  *
- * Example:
+ * ### Example
  *
  * For finding newly inserted cells, the following code can be used:
  *
- * (code)
- * graph.model.addListener(mxEvent.CHANGE, (sender, evt)=>
+ * ```javascript
+ * graph.model.addListener(mxEvent.CHANGE, function(sender, evt)
  * {
- *   let changes = evt.getProperty('edit').changes;
+ *   var changes = evt.getProperty('edit').changes;
  *
- *   for (let i = 0; i < changes.length; i += 1)
+ *   for (var i = 0; i < changes.length; i++)
  *   {
- *     let change = changes[i];
+ *     var change = changes[i];
  *
  *     if (change instanceof mxChildChange &&
  *       change.change.previous == null)
@@ -154,8 +152,7 @@ import mxGeometry from "../../util/datatypes/mxGeometry";
  *     }
  *   }
  * });
- * (end)
- *
+ * ```
  *
  * Event: mxEvent.NOTIFY
  *
@@ -167,53 +164,46 @@ import mxGeometry from "../../util/datatypes/mxGeometry";
  * Event: mxEvent.EXECUTE
  *
  * Fires between begin- and endUpdate and after an atomic change was executed
- * in the model. The <code>change</code> property contains the atomic change
+ * in the model. The `change` property contains the atomic change
  * that was executed.
  *
  * Event: mxEvent.EXECUTED
  *
  * Fires between START_EDIT and END_EDIT after an atomic change was executed.
- * The <code>change</code> property contains the change that was executed.
+ * The `change` property contains the change that was executed.
  *
  * Event: mxEvent.BEGIN_UPDATE
  *
- * Fires after the <updateLevel> was incremented in <beginUpdate>. This event
+ * Fires after the {@link updateLevel} was incremented in {@link beginUpdate}. This event
  * contains no properties.
  *
  * Event: mxEvent.START_EDIT
  *
- * Fires after the <updateLevel> was changed from 0 to 1. This event
+ * Fires after the {@link updateLevel} was changed from 0 to 1. This event
  * contains no properties.
  *
  * Event: mxEvent.END_UPDATE
  *
- * Fires after the <updateLevel> was decreased in <endUpdate> but before any
- * notification or change dispatching. The <code>edit</code> property contains
- * the <currentEdit>.
+ * Fires after the {@link updateLevel} was decreased in {@link endUpdate} but before any
+ * notification or change dispatching. The `edit` property contains
+ * the {@link currentEdit}.
  *
  * Event: mxEvent.END_EDIT
  *
- * Fires after the <updateLevel> was changed from 1 to 0. This event
+ * Fires after the {@link updateLevel} was changed from 1 to 0. This event
  * contains no properties.
  *
  * Event: mxEvent.BEFORE_UNDO
  *
  * Fires before the change is dispatched after the update level has reached 0
- * in <endUpdate>. The <code>edit</code> property contains the <curreneEdit>.
+ * in {@link endUpdate}. The `edit` property contains the {@link curreneEdit}.
  *
  * Event: mxEvent.UNDO
  *
- * Fires after the change was dispatched in <endUpdate>. The <code>edit</code>
- * property contains the <currentEdit>.
+ * Fires after the change was dispatched in {@link endUpdate}. The `edit`
+ * property contains the {@link currentEdit}.
  *
- * Constructor: mxGraphModel
- *
- * Constructs a new graph model. If no root is specified then a new root
- * <mxCell> with a default layer is created.
- *
- * Parameters:
- *
- * root - <mxCell> that represents the root cell.
+ * @class mxGraphModel
  */
 class mxGraphModel extends mxEventSource {
   constructor(root: mxCell | null=null) {
@@ -228,124 +218,109 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Variable: root
-   *
    * Holds the root cell, which in turn contains the cells that represent the
    * layers of the diagram as child cells. That is, the actual elements of the
    * diagram are supposed to live in the third generation of cells and below.
    */
+  // root: mxCell;
   root: mxCell | null = null;
 
   /**
-   * Variable: cells
-   *
    * Maps from Ids to cells.
    */
+  // cells: any;
   cells: any = {};
 
   /**
-   * Variable: maintainEdgeParent
-   *
    * Specifies if edges should automatically be moved into the nearest common
    * ancestor of their terminals. Default is true.
    */
+  // maintainEdgeParent: boolean;
   maintainEdgeParent: boolean = true;
 
   /**
-   * Variable: ignoreRelativeEdgeParent
-   *
    * Specifies if relative edge parents should be ignored for finding the nearest
    * common ancestors of an edge's terminals. Default is true.
    */
+  // ignoreRelativeEdgeParent: boolean;
   ignoreRelativeEdgeParent: boolean = true;
 
   /**
-   * Variable: createIds
-   *
    * Specifies if the model should automatically create Ids for new cells.
    * Default is true.
    */
+  // createIds: boolean;
   createIds: boolean = true;
 
   /**
-   * Variable: prefix
-   *
    * Defines the prefix of new Ids. Default is an empty string.
    */
+  // prefix: string;
   prefix: string = '';
 
   /**
-   * Variable: postfix
-   *
    * Defines the postfix of new Ids. Default is an empty string.
    */
+  // postfix: string;
   postfix: string = '';
 
   /**
-   * Variable: nextId
-   *
    * Specifies the next Id to be created. Initial value is 0.
    */
+  // nextId: number | string;
   nextId: number = 0;
 
   /**
-   * Variable: currentEdit
-   *
    * Holds the changes for the current transaction. If the transaction is
    * closed then a new object is created for this variable using
-   * <createUndoableEdit>.
+   * {@link createUndoableEdit}.
    */
+  // currentEdit: any;
   currentEdit: any = null;
 
   /**
-   * Variable: updateLevel
-   *
-   * Counter for the depth of nested transactions. Each call to <beginUpdate>
-   * will increment this number and each call to <endUpdate> will decrement
+   * Counter for the depth of nested transactions. Each call to {@link beginUpdate}
+   * will increment this number and each call to {@link endUpdate} will decrement
    * it. When the counter reaches 0, the transaction is closed and the
    * respective events are fired. Initial value is 0.
    */
+  // updateLevel: number;
   updateLevel: number = 0;
 
   /**
-   * Variable: endingUpdate
-   *
    * True if the program flow is currently inside endUpdate.
    */
+  // endingUpdate: boolean;
   endingUpdate: boolean = false;
 
   /**
-   * Function: clear
-   *
-   * Sets a new root using <createRoot>.
+   * Sets a new root using {@link createRoot}.
    */
+  // clear(): void;
   clear(): void {
     this.setRoot(this.createRoot());
   }
 
   /**
-   * Function: isCreateIds
-   *
-   * Returns <createIds>.
+   * Returns {@link createIds}.
    */
+  // isCreateIds(): boolean;
   isCreateIds(): boolean {
     return this.createIds;
   }
 
   /**
-   * Function: setCreateIds
-   *
-   * Sets <createIds>.
+   * Sets {@link createIds}.
    */
+  // setCreateIds(value: boolean): void;
   setCreateIds(value: boolean): void {
     this.createIds = value;
   }
 
   /**
-   * Function: createRoot
-   *
    * Creates a new root cell with a default layer (child 0).
    */
+  // createRoot(): mxCell;
   createRoot(): mxCell {
     const cell = new mxCell();
     cell.insert(new mxCell());
@@ -353,25 +328,21 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getCell
-   *
-   * Returns the <mxCell> for the specified Id or null if no cell can be
+   * Returns the {@link mxCell} for the specified Id or null if no cell can be
    * found for the given Id.
    *
-   * Parameters:
-   *
-   * id - A string representing the Id of the cell.
+   * @param {string} id  A string representing the Id of the cell.
    */
+  // getCell(id: string): mxCell;
   getCell(id: string): mxCell | null {
     return this.cells != null ? this.cells[id] : null;
   }
 
   /**
-   * Function: filterCells
-   *
    * Returns the cells from the given array where the given filter function
    * returns true.
    */
+  // filterCells(cells: Array<mxCell>, filter: (...args: any) => boolean): Array<mxCell>;
   filterCells(cells: mxCell[] | null,
               filter: Function): mxCell[] | null {
 
@@ -389,42 +360,36 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getDescendants
-   *
    * Returns all descendants of the given cell and the cell itself in an array.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> whose descendants should be returned.
+   * @param {mxCell} parent  whose descendants should be returned.
    */
+  // getDescendants(parent: mxCell): Array<mxCell>;
   getDescendants(parent: mxCell): mxCell[] {
     return this.filterDescendants(null, parent);
   }
 
   /**
-   * Function: filterDescendants
-   *
    * Visits all cells recursively and applies the specified filter function
    * to each cell. If the function returns true then the cell is added
    * to the resulting array. The parent and result paramters are optional.
-   * If parent is not specified then the recursion starts at <root>.
+   * If parent is not specified then the recursion starts at {@link root}.
    *
    * Example:
    * The following example extracts all vertices from a given model:
-   * (code)
-   * let filter = (cell)=>
+   * ```javascript
+   * var filter(cell)
    * {
-   *   return model.isVertex(cell);
+   * 	return model.isVertex(cell);
    * }
-   * let vertices = model.filterDescendants(filter);
-   * (end)
+   * var vertices = model.filterDescendants(filter);
+   * ```
    *
-   * Parameters:
-   *
-   * filter - JavaScript function that takes an <mxCell> as an argument
+   * @param filter  JavaScript function that takes an {@link mxCell} as an argument
    * and returns a boolean.
-   * parent - Optional <mxCell> that is used as the root of the recursion.
+   * @param parent  Optional {@link mxCell} that is used as the root of the recursion.
    */
+  // filterDescendants(filter: (...args: any) => boolean, parent?: mxCell): Array<mxCell>;
   filterDescendants(filter: Function | null,
                     parent: mxCell): mxCell[] {
     // Creates a new array for storing the result
@@ -450,14 +415,11 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getRoot
-   *
    * Returns the root of the model or the topmost parent of the given cell.
    *
-   * Parameters:
-   *
-   * cell - Optional <mxCell> that specifies the child.
+   * @param cell  Optional {@link mxCell} that specifies the child.
    */
+  // getRoot(cell?: mxCell): mxCell;
   getRoot(cell: mxCell | null = null): mxCell | null {
     let root = cell || this.root;
     if (cell != null) {
@@ -470,40 +432,34 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: setRoot
-   *
-   * Sets the <root> of the model using <mxRootChange> and adds the change to
+   * Sets the {@link root} of the model using {@link mxRootChange} and adds the change to
    * the current transaction. This resets all datastructures in the model and
    * is the preferred way of clearing an existing model. Returns the new
    * root.
    *
    * Example:
    *
-   * (code)
-   * let root = new mxCell();
+   * ```javascript
+   * var root = new mxCell();
    * root.insert(new mxCell());
    * model.setRoot(root);
-   * (end)
+   * ```
    *
-   * Parameters:
-   *
-   * root - <mxCell> that specifies the new root.
+   * @param {mxCell} root  that specifies the new root.
    */
+  // setRoot(root: mxCell): mxCell;
   setRoot(root: mxCell | null): mxCell | null {
     this.execute(new mxRootChange(this, root));
     return root;
   }
 
   /**
-   * Function: rootChanged
-   *
    * Inner callback to change the root of the model and update the internal
-   * datastructures, such as <cells> and <nextId>. Returns the previous root.
+   * datastructures, such as {@link cells} and {@link nextId}. Returns the previous root.
    *
-   * Parameters:
-   *
-   * root - <mxCell> that specifies the new root.
+   * @param {mxCell} root  that specifies the new root.
    */
+  // rootChanged(root: mxCell): mxCell;
   rootChanged(root: mxCell | null): mxCell | null {
     const oldRoot = this.root;
     this.root = root;
@@ -517,43 +473,34 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: isRoot
-   *
    * Returns true if the given cell is the root of the model and a non-null
    * value.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the possible root.
+   * @param {mxCell} cell  that represents the possible root.
    */
+  // isRoot(cell: mxCell): boolean;
   isRoot(cell: mxCell | null=null): boolean {
     return cell != null && this.root === cell;
   }
 
   /**
-   * Function: isLayer
+   * Returns true if {@link isRoot} returns true for the parent of the given cell.
    *
-   * Returns true if <isRoot> returns true for the parent of the given cell.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the possible layer.
+   * @param {mxCell} cell  that represents the possible layer.
    */
+  // isLayer(cell: mxCell): boolean;
   isLayer(cell: mxCell | null): boolean {
     return this.isRoot(this.getParent(cell));
   }
 
   /**
-   * Function: isAncestor
-   *
    * Returns true if the given parent is an ancestor of the given child. Note
    * returns true if child == parent.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> that specifies the parent.
-   * child - <mxCell> that specifies the child.
+   * @param {mxCell} parent  that specifies the parent.
+   * @param {mxCell} child  that specifies the child.
    */
+  // isAncestor(parent: mxCell, child: mxCell): boolean;
   isAncestor(parent: mxCell | null,
              child: mxCell | null): boolean {
 
@@ -564,45 +511,36 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: contains
+   * Returns true if the model contains the given {@link mxCell}.
    *
-   * Returns true if the model contains the given <mxCell>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> that specifies the cell.
+   * @param {mxCell} cell  that specifies the cell.
    */
+  // contains(cell: mxCell): boolean;
   contains(cell: mxCell | null): boolean {
     return this.isAncestor(this.root, cell);
   }
 
   /**
-   * Function: getParent
-   *
    * Returns the parent of the given cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose parent should be returned.
+   * @param {mxCell} cell  whose parent should be returned.
    */
+  // getParent(cell: mxCell): mxCell;
   getParent(cell: mxCell | null): mxCell | null {
     return cell != null ? cell.getParent() : null;
   }
 
   /**
-   * Function: add
-   *
    * Adds the specified child to the parent at the given index using
-   * <mxChildChange> and adds the change to the current transaction. If no
+   * {@link mxChildChange} and adds the change to the current transaction. If no
    * index is specified then the child is appended to the parent's array of
    * children. Returns the inserted child.
    *
-   * Parameters:
-   *
-   * parent - <mxCell> that specifies the parent to contain the child.
-   * child - <mxCell> that specifies the child to be inserted.
-   * index - Optional integer that specifies the index of the child.
+   * @param {mxCell} parent  that specifies the parent to contain the child.
+   * @param {mxCell} child  that specifies the child to be inserted.
+   * @param index  Optional integer that specifies the index of the child.
    */
+  // add(parent: mxCell, child: mxCell, index?: number): mxCell;
   add(parent: mxCell | null,
       child: mxCell | null,
       index: number | null=null): mxCell | null {
@@ -626,9 +564,7 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: cellAdded
-   *
-   * Inner callback to update <cells> when a cell has been added. This
+   * Inner callback to update {@link cells} when a cell has been added. This
    * implementation resolves collisions by creating new Ids. To change the
    * ID of a cell after it was inserted into the model, use the following
    * code:
@@ -637,16 +573,15 @@ class mxGraphModel extends mxEventSource {
    * delete model.cells[cell.getId()];
    * cell.setId(newId);
    * model.cells[cell.getId()] = cell;
-   * (end)
+   * ```
    *
    * If the change of the ID should be part of the command history, then the
    * cell should be removed from the model and a clone with the new ID should
    * be reinserted into the model instead.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that specifies the cell that has been added.
+   * @param {mxCell} cell  that specifies the cell that has been added.
    */
+  // cellAdded(cell: mxCell): void;
   cellAdded(cell: mxCell | null): void {
     if (cell != null) {
       // Creates an Id for the cell if not Id exists
@@ -689,17 +624,14 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: createId
-   *
    * Hook method to create an Id for the specified cell. This implementation
-   * concatenates <prefix>, id and <postfix> to create the Id and increments
-   * <nextId>. The cell is ignored by this implementation, but can be used in
+   * concatenates {@link prefix}, id and {@link postfix} to create the Id and increments
+   * {@link nextId}. The cell is ignored by this implementation, but can be used in
    * overridden methods to prefix the Ids with eg. the cell type.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to create the Id for.
+   * @param {mxCell} cell  to create the Id for.
    */
+  // createId(cell: mxCell): string;
   createId(cell: mxCell): string {
     const id = this.nextId;
     this.nextId++;
@@ -707,11 +639,10 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: updateEdgeParents
-   *
    * Updates the parent for all edges that are connected to cell or one of
-   * its descendants using <updateEdgeParent>.
+   * its descendants using {@link updateEdgeParent}.
    */
+  // updateEdgeParents(cell: mxCell, root: mxCell): void;
   updateEdgeParents(cell: mxCell,
                     root: mxCell | null=null): void {
 
@@ -747,16 +678,13 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: updateEdgeParent
-   *
-   * Inner callback to update the parent of the specified <mxCell> to the
+   * Inner callback to update the parent of the specified {@link mxCell} to the
    * nearest-common-ancestor of its two terminals.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> that specifies the edge.
-   * root - <mxCell> that represents the current root of the model.
+   * @param {mxCell} edge  that specifies the edge.
+   * @param {mxCell} root  that represents the current root of the model.
    */
+  // updateEdgeParent(edge: mxCell, root: mxCell): void;
   updateEdgeParent(edge: mxCell | null,
                    root: mxCell | null): void {
 
@@ -817,11 +745,10 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getOrigin
-   *
    * Returns the absolute, accumulated origin for the children inside the
-   * given parent as an <mxPoint>.
+   * given parent as an {@link mxPoint}.
    */
+  // getOrigin(cell: mxCell): mxPoint;
   getOrigin(cell: mxCell | null): mxPoint {
     let result = null;
 
@@ -843,15 +770,12 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getNearestCommonAncestor
-   *
    * Returns the nearest common ancestor for the specified cells.
    *
-   * Parameters:
-   *
-   * cell1 - <mxCell> that specifies the first cell in the tree.
-   * cell2 - <mxCell> that specifies the second cell in the tree.
+   * @param {mxCell} cell1  that specifies the first cell in the tree.
+   * @param {mxCell} cell2  that specifies the second cell in the tree.
    */
+  // getNearestCommonAncestor(cell1: mxCell, cell2: mxCell): mxCell;
   getNearestCommonAncestor(cell1: mxCell | null,
                            cell2: mxCell | null): mxCell | null {
 
@@ -893,16 +817,13 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: remove
-   *
-   * Removes the specified cell from the model using <mxChildChange> and adds
+   * Removes the specified cell from the model using {@link mxChildChange} and adds
    * the change to the current transaction. This operation will remove the
    * cell and all of its children from the model. Returns the removed cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that should be removed.
+   * @param {mxCell} cell  that should be removed.
    */
+  // remove(cell: mxCell): mxCell;
   remove(cell: mxCell) {
     if (cell === this.root) {
       this.setRoot(null);
@@ -914,14 +835,11 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: cellRemoved
+   * Inner callback to update {@link cells} when a cell has been removed.
    *
-   * Inner callback to update <cells> when a cell has been removed.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> that specifies the cell that has been removed.
+   * @param {mxCell} cell  that specifies the cell that has been removed.
    */
+  // cellRemoved(cell: mxCell): void;
   cellRemoved(cell: mxCell) {
     if (cell != null && this.cells != null) {
       // Recursively processes child cells
@@ -940,18 +858,15 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: parentForCellChanged
-   *
    * Inner callback to update the parent of a cell using <mxCell.insert>
    * on the parent and return the previous parent.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> to update the parent for.
-   * parent - <mxCell> that specifies the new parent of the cell.
-   * index - Optional integer that defines the index of the child
+   * @param {mxCell} cell  to update the parent for.
+   * @param {mxCell} parent  that specifies the new parent of the cell.
+   * @param index  Optional integer that defines the index of the child
    * in the parent's child array.
    */
+  // parentForCellChanged(cell: mxCell, parent: mxCell, index: number): mxCell;
   parentForCellChanged(cell: mxCell,
                        parent: mxCell | null,
                        index: number) {
@@ -980,87 +895,69 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getChildCount
-   *
    * Returns the number of children in the given cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose number of children should be returned.
+   * @param {mxCell} cell  whose number of children should be returned.
    */
+  // getChildCount(cell?: mxCell): number;
   getChildCount(cell: mxCell | null) {
     return cell != null ? cell.getChildCount() : 0;
   }
 
   /**
-   * Function: getChildAt
+   * Returns the child of the given {@link mxCell} at the given index.
    *
-   * Returns the child of the given <mxCell> at the given index.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the parent.
-   * index - Integer that specifies the index of the child to be returned.
+   * @param {mxCell} cell  that represents the parent.
+   * @param index  Integer that specifies the index of the child to be returned.
    */
+  // getChildAt(cell: mxCell, index: number): mxCell;
   getChildAt(cell: mxCell | null,
              index: number): mxCell | null {
     return cell != null ? cell.getChildAt(index) : null;
   }
 
   /**
-   * Function: getChildren
-   *
-   * Returns all children of the given <mxCell> as an array of <mxCells>. The
+   * Returns all children of the given {@link mxCell} as an array of {@link mxCell}. The
    * return value should be only be read.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> the represents the parent.
+   * @param {mxCell} cell  the represents the parent.
    */
+  // getChildren(cell: mxCell): Array<mxCell>;
   getChildren(cell: mxCell): mxCell[] | null {
     return cell != null ? cell.children : null;
   }
 
   /**
-   * Function: getChildVertices
-   *
    * Returns the child vertices of the given parent.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose child vertices should be returned.
+   * @param {mxCell} cell  whose child vertices should be returned.
    */
+  // getChildVertices(parent: mxCell): Array<mxCell>;
   getChildVertices(parent: mxCell | null) {
     return this.getChildCells(parent, true, false);
   }
 
   /**
-   * Function: getChildEdges
-   *
    * Returns the child edges of the given parent.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose child edges should be returned.
+   * @param {mxCell} cell  whose child edges should be returned.
    */
+  // getChildEdges(parent: mxCell): Array<mxCell>;
   getChildEdges(parent: mxCell | null): (mxCell | null)[] {
     return this.getChildCells(parent, false, true);
   }
 
   /**
-   * Function: getChildCells
-   *
    * Returns the children of the given cell that are vertices and/or edges
    * depending on the arguments.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> the represents the parent.
-   * vertices - Boolean indicating if child vertices should be returned.
+   * @param {mxCell} cell  the represents the parent.
+   * @param vertices  Boolean indicating if child vertices should be returned.
    * Default is false.
-   * edges - Boolean indicating if child edges should be returned.
+   * @param edges  Boolean indicating if child edges should be returned.
    * Default is false.
    */
+  // getChildCells(parent: mxCell, vertices: boolean, edges: boolean): Array<mxCell>;
   getChildCells(parent: mxCell | null,
                 vertices: boolean=false,
                 edges: boolean=false): (mxCell | null)[] {
@@ -1083,36 +980,30 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getTerminal
-   *
-   * Returns the source or target <mxCell> of the given edge depending on the
+   * Returns the source or target {@link mxCell} of the given edge depending on the
    * value of the boolean parameter.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> that specifies the edge.
-   * isSource - Boolean indicating which end of the edge should be returned.
+   * @param {mxCell} edge  that specifies the edge.
+   * @param isSource  Boolean indicating which end of the edge should be returned.
    */
+  // getTerminal(edge: mxCell, isSource: boolean): mxCell;
   getTerminal(edge: mxCell | null,
               isSource: boolean=false): mxCell | null {
     return edge != null ? edge.getTerminal(isSource) : null;
   }
 
   /**
-   * Function: setTerminal
-   *
-   * Sets the source or target terminal of the given <mxCell> using
-   * <mxTerminalChange> and adds the change to the current transaction.
-   * This implementation updates the parent of the edge using <updateEdgeParent>
+   * Sets the source or target terminal of the given {@link mxCell} using
+   * {@link mxTerminalChange} and adds the change to the current transaction.
+   * This implementation updates the parent of the edge using {@link updateEdgeParent}
    * if required.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> that specifies the edge.
-   * terminal - <mxCell> that specifies the new terminal.
-   * isSource - Boolean indicating if the terminal is the new source or
+   * @param {mxCell} edge  that specifies the edge.
+   * @param {mxCell} terminal  that specifies the new terminal.
+   * @param isSource  Boolean indicating if the terminal is the new source or
    * target terminal of the edge.
    */
+  // setTerminal(edge: mxCell, terminal: mxCell, isSource: boolean): mxCell;
   setTerminal(edge: mxCell | null,
               terminal: mxCell | null,
               isSource: boolean): mxCell | null {
@@ -1127,17 +1018,14 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: setTerminals
+   * Sets the source and target {@link mxCell} of the given {@link mxCell} in a single
+   * transaction using {@link setTerminal} for each end of the edge.
    *
-   * Sets the source and target <mxCell> of the given <mxCell> in a single
-   * transaction using <setTerminal> for each end of the edge.
-   *
-   * Parameters:
-   *
-   * edge - <mxCell> that specifies the edge.
-   * source - <mxCell> that specifies the new source terminal.
-   * target - <mxCell> that specifies the new target terminal.
+   * @param {mxCell} edge  that specifies the edge.
+   * @param {mxCell} source  that specifies the new source terminal.
+   * @param {mxCell} target  that specifies the new target terminal.
    */
+  // setTerminals(edge: mxCell, source: mxCell, target: mxCell): void;
   setTerminals(edge: mxCell | null,
                source: mxCell | null,
                target: mxCell | null): void {
@@ -1152,18 +1040,15 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: terminalForCellChanged
-   *
    * Inner helper function to update the terminal of the edge using
    * <mxCell.insertEdge> and return the previous terminal.
    *
-   * Parameters:
-   *
-   * edge - <mxCell> that specifies the edge to be updated.
-   * terminal - <mxCell> that specifies the new terminal.
-   * isSource - Boolean indicating if the terminal is the new source or
+   * @param {mxCell} edge  that specifies the edge to be updated.
+   * @param {mxCell} terminal  that specifies the new terminal.
+   * @param isSource  Boolean indicating if the terminal is the new source or
    * target terminal of the edge.
    */
+  // terminalForCellChanged(edge: mxCell, terminal: mxCell, isSource: boolean): mxCell;
   terminalForCellChanged(edge: mxCell | null,
                          terminal: mxCell | null,
                          isSource: boolean=false): mxCell | null {
@@ -1178,47 +1063,38 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getEdgeCount
-   *
    * Returns the number of distinct edges connected to the given cell.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the vertex.
+   * @param {mxCell} cell  that represents the vertex.
    */
+  // getEdgeCount(cell: mxCell): number;
   getEdgeCount(cell: mxCell): number {
     return cell != null ? cell.getEdgeCount() : 0;
   }
 
   /**
-   * Function: getEdgeAt
-   *
    * Returns the edge of cell at the given index.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that specifies the vertex.
-   * index - Integer that specifies the index of the edge
+   * @param {mxCell} cell  that specifies the vertex.
+   * @param index  Integer that specifies the index of the edge
    * to return.
    */
+  // getEdgeAt(cell: mxCell, index: number): mxCell;
   getEdgeAt(cell: mxCell,
             index: number): mxCell | null {
     return cell != null ? cell.getEdgeAt(index) : null;
   }
 
   /**
-   * Function: getDirectedEdgeCount
-   *
    * Returns the number of incoming or outgoing edges, ignoring the given
    * edge.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose edge count should be returned.
-   * outgoing - Boolean that specifies if the number of outgoing or
+   * @param {mxCell} cell  whose edge count should be returned.
+   * @param outgoing  Boolean that specifies if the number of outgoing or
    * incoming edges should be returned.
-   * ignoredEdge - <mxCell> that represents an edge to be ignored.
+   * @param {mxCell} ignoredEdge  that represents an edge to be ignored.
    */
+  // getDirectedEdgeCount(cell: mxCell, outgoing: boolean, ignoredEdge: boolean): number;
   getDirectedEdgeCount(cell: mxCell,
                        outgoing: boolean,
                        ignoredEdge: mxCell | null=null): number {
@@ -1235,65 +1111,53 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getConnections
-   *
    * Returns all edges of the given cell without loops.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose edges should be returned.
+   * @param {mxCell} cell  whose edges should be returned.
    *
    */
+  // getConnections(cell: mxCell): Array<mxCell>;
   getConnections(cell: mxCell) {
     return this.getEdges(cell, true, true, false);
   }
 
   /**
-   * Function: getIncomingEdges
-   *
    * Returns the incoming edges of the given cell without loops.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose incoming edges should be returned.
+   * @param {mxCell} cell  whose incoming edges should be returned.
    *
    */
+  // getIncomingEdges(cell: mxCell): Array<mxCell>;
   getIncomingEdges(cell: mxCell): (mxCell | null)[] {
     return this.getEdges(cell, true, false, false);
   }
 
   /**
-   * Function: getOutgoingEdges
-   *
    * Returns the outgoing edges of the given cell without loops.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose outgoing edges should be returned.
+   * @param {mxCell} cell  whose outgoing edges should be returned.
    *
    */
+  // getOutgoingEdges(cell: mxCell): Array<mxCell>;
   getOutgoingEdges(cell: mxCell): (mxCell | null)[] {
     return this.getEdges(cell, false, true, false);
   }
 
   /**
-   * Function: getEdges
-   *
    * Returns all distinct edges connected to this cell as a new array of
-   * <mxCells>. If at least one of incoming or outgoing is true, then loops
+   * {@link mxCell}. If at least one of incoming or outgoing is true, then loops
    * are ignored, otherwise if both are false, then all edges connected to
    * the given cell are returned including loops.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that specifies the cell.
-   * incoming - Optional boolean that specifies if incoming edges should be
+   * @param {mxCell} cell  that specifies the cell.
+   * @param incoming  Optional boolean that specifies if incoming edges should be
    * returned. Default is true.
-   * outgoing - Optional boolean that specifies if outgoing edges should be
+   * @param outgoing  Optional boolean that specifies if outgoing edges should be
    * returned. Default is true.
-   * includeLoops - Optional boolean that specifies if loops should be returned.
+   * @param includeLoops  Optional boolean that specifies if loops should be returned.
    * Default is true.
    */
+  // getEdges(cell: mxCell, incoming?: boolean, outgoing?: boolean, includeLoops?: boolean): Array<mxCell>;
   getEdges(cell: mxCell,
            incoming: boolean=true,
            outgoing: boolean=true,
@@ -1320,21 +1184,18 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getEdgesBetween
-   *
    * Returns all edges between the given source and target pair. If directed
    * is true, then only edges from the source to the target are returned,
    * otherwise, all edges between the two cells are returned.
    *
-   * Parameters:
-   *
-   * source - <mxCell> that defines the source terminal of the edge to be
+   * @param {mxCell} source  that defines the source terminal of the edge to be
    * returned.
-   * target - <mxCell> that defines the target terminal of the edge to be
+   * @param {mxCell} target  that defines the target terminal of the edge to be
    * returned.
-   * directed - Optional boolean that specifies if the direction of the
+   * @param directed  Optional boolean that specifies if the direction of the
    * edge should be taken into account. Default is false.
    */
+  // getEdgesBetween(source: mxCell, target: mxCell, directed?: boolean): Array<mxCell>;
   getEdgesBetween(source: mxCell,
                   target: mxCell,
                   directed: boolean=false) {
@@ -1373,21 +1234,18 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getOpposites
-   *
    * Returns all opposite vertices wrt terminal for the given edges, only
    * returning sources and/or targets as specified. The result is returned
-   * as an array of <mxCells>.
+   * as an array of {@link mxCell}.
    *
-   * Parameters:
-   *
-   * edges - Array of <mxCells> that contain the edges to be examined.
-   * terminal - <mxCell> that specifies the known end of the edges.
-   * sources - Boolean that specifies if source terminals should be contained
+   * @param edges  Array of {@link mxCell} that contain the edges to be examined.
+   * @param {mxCell} terminal  that specifies the known end of the edges.
+   * @param sources  Boolean that specifies if source terminals should be contained
    * in the result. Default is true.
-   * targets - Boolean that specifies if target terminals should be contained
+   * @param targets  Boolean that specifies if target terminals should be contained
    * in the result. Default is true.
    */
+  // getOpposites(edges: Array<mxCell>, terminal: mxCell, sources?: boolean, targets?: boolean): Array<mxCell>;
   getOpposites(edges: mxCell[],
                terminal: mxCell,
                sources: boolean=true,
@@ -1430,16 +1288,13 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getTopmostCells
-   *
    * Returns the topmost cells of the hierarchy in an array that contains no
-   * descendants for each <mxCell> that it contains. Duplicates should be
+   * descendants for each {@link mxCell} that it contains. Duplicates should be
    * removed in the cells array to improve performance.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCells> whose topmost ancestors should be returned.
+   * @param cells  Array of {@link mxCell} whose topmost ancestors should be returned.
    */
+  // getTopmostCells(cells: Array<mxCell>): Array<mxCell>;
   getTopmostCells(cells: mxCell[]): mxCell[] {
     const dict = new mxDictionary();
     const tmp = [];
@@ -1471,70 +1326,55 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: isVertex
-   *
    * Returns true if the given cell is a vertex.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the possible vertex.
+   * @param {mxCell} cell  that represents the possible vertex.
    */
+  // isVertex(cell: mxCell): boolean;
   isVertex(cell: mxCell | null): boolean {
     return cell != null ? cell.isVertex() : false;
   }
 
   /**
-   * Function: isEdge
-   *
    * Returns true if the given cell is an edge.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that represents the possible edge.
+   * @param {mxCell} cell  that represents the possible edge.
    */
+  // isEdge(cell: mxCell): boolean;
   isEdge(cell: mxCell | null): boolean {
     return cell != null ? cell.isEdge() : false;
   }
 
   /**
-   * Function: isConnectable
-   *
-   * Returns true if the given <mxCell> is connectable. If <edgesConnectable>
+   * Returns true if the given {@link mxCell} is connectable. If {@link edgesConnectable}
    * is false, then this function returns false for all edges else it returns
    * the return value of <mxCell.isConnectable>.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose connectable state should be returned.
+   * @param {mxCell} cell  whose connectable state should be returned.
    */
+  // isConnectable(cell: mxCell): boolean;
   isConnectable(cell: mxCell | null) {
     return cell != null ? cell.isConnectable() : false;
   }
 
   /**
-   * Function: getValue
+   * Returns the user object of the given {@link mxCell} using <mxCell.getValue>.
    *
-   * Returns the user object of the given <mxCell> using <mxCell.getValue>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose user object should be returned.
+   * @param {mxCell} cell  whose user object should be returned.
    */
+  // getValue(cell: mxCell): any;
   getValue(cell: mxCell | null) {
     return cell != null ? cell.getValue() : null;
   }
 
   /**
-   * Function: setValue
-   *
-   * Sets the user object of then given <mxCell> using <mxValueChange>
+   * Sets the user object of then given {@link mxCell} using {@link mxValueChange}
    * and adds the change to the current transaction.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose user object should be changed.
-   * value - Object that defines the new user object.
+   * @param {mxCell} cell  whose user object should be changed.
+   * @param value  Object that defines the new user object.
    */
+  // setValue(cell: mxCell, value: any): any;
   setValue(cell: mxCell,
            value: any): any {
     this.execute(new mxValueChange(this, cell, value));
@@ -1542,55 +1382,48 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: valueForCellChanged
-   *
-   * Inner callback to update the user object of the given <mxCell>
+   * Inner callback to update the user object of the given {@link mxCell}
    * using <mxCell.valueChanged> and return the previous value,
    * that is, the return value of <mxCell.valueChanged>.
    *
    * To change a specific attribute in an XML node, the following code can be
    * used.
    *
-   * (code)
-   * graph.getModel().valueForCellChanged = (cell, value)=>
+   * ```javascript
+   * graph.getModel().valueForCellChanged(cell, value)
    * {
-   *   let previous = cell.value.getAttribute('label');
+   *   var previous = cell.value.getAttribute('label');
    *   cell.value.setAttribute('label', value);
    *
    *   return previous;
    * };
-   * (end)
+   * ```
    */
+  // valueForCellChanged(cell: mxCell, value: any): any;
   valueForCellChanged(cell: mxCell,
                       value: any): any {
     return cell.valueChanged(value);
   }
 
   /**
-   * Function: getGeometry
+   * Returns the {@link mxGeometry} of the given {@link mxCell}.
    *
-   * Returns the <mxGeometry> of the given <mxCell>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose geometry should be returned.
+   * @param {mxCell} cell  whose geometry should be returned.
    */
+  // getGeometry(cell: mxCell): mxGeometry;
   getGeometry(cell: mxCell | null): mxGeometry | null {
     return cell != null ? cell.getGeometry() : null;
   }
 
   /**
-   * Function: setGeometry
+   * Sets the {@link mxGeometry} of the given {@link mxCell}. The actual update
+   * of the cell is carried out in {@link geometryForCellChanged}. The
+   * {@link mxGeometryChange} action is used to encapsulate the change.
    *
-   * Sets the <mxGeometry> of the given <mxCell>. The actual update
-   * of the cell is carried out in <geometryForCellChanged>. The
-   * <mxGeometryChange> action is used to encapsulate the change.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose geometry should be changed.
-   * geometry - <mxGeometry> that defines the new geometry.
+   * @param {mxCell} cell  whose geometry should be changed.
+   * @param {mxGeometry} geometry  that defines the new geometry.
    */
+  // setGeometry(cell: mxCell, geometry: mxGeometry): mxGeometry;
   setGeometry(cell: mxCell | null,
               geometry: mxGeometry): mxGeometry {
 
@@ -1601,11 +1434,10 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: geometryForCellChanged
-   *
-   * Inner callback to update the <mxGeometry> of the given <mxCell> using
-   * <mxCell.setGeometry> and return the previous <mxGeometry>.
+   * Inner callback to update the {@link mxGeometry} of the given {@link mxCell} using
+   * <mxCell.setGeometry> and return the previous {@link mxGeometry}.
    */
+  // geometryForCellChanged(cell: mxCell, geometry: mxGeometry): mxGeometry;
   geometryForCellChanged(cell: mxCell,
                          geometry: mxGeometry): mxGeometry | null {
 
@@ -1615,30 +1447,24 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getStyle
+   * Returns the style of the given {@link mxCell}.
    *
-   * Returns the style of the given <mxCell>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose style should be returned.
+   * @param {mxCell} cell  whose style should be returned.
    */
+  // getStyle(cell: mxCell): string | null;
   getStyle(cell: mxCell | null): any {
     return cell != null ? cell.getStyle() : null;
   }
 
   /**
-   * Function: setStyle
-   *
-   * Sets the style of the given <mxCell> using <mxStyleChange> and
+   * Sets the style of the given {@link mxCell} using {@link mxStyleChange} and
    * adds the change to the current transaction.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose style should be changed.
-   * style - String of the form [stylename;|key=value;] to specify
+   * @param {mxCell} cell  whose style should be changed.
+   * @param style  String of the form [stylename;|key=value;] to specify
    * the new cell style.
    */
+  // setStyle(cell: mxCell, style: string): string;
   setStyle(cell: mxCell,
            style: any): any {
 
@@ -1649,17 +1475,14 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: styleForCellChanged
-   *
-   * Inner callback to update the style of the given <mxCell>
+   * Inner callback to update the style of the given {@link mxCell}
    * using <mxCell.setStyle> and return the previous style.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that specifies the cell to be updated.
-   * style - String of the form [stylename;|key=value;] to specify
+   * @param {mxCell} cell  that specifies the cell to be updated.
+   * @param style  String of the form [stylename;|key=value;] to specify
    * the new cell style.
    */
+  // styleForCellChanged(cell: mxCell, style: string): string;
   styleForCellChanged(cell: mxCell,
                       style: any): mxCell | null {
 
@@ -1669,29 +1492,23 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: isCollapsed
+   * Returns true if the given {@link mxCell} is collapsed.
    *
-   * Returns true if the given <mxCell> is collapsed.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose collapsed state should be returned.
+   * @param {mxCell} cell  whose collapsed state should be returned.
    */
+  // isCollapsed(cell: mxCell): boolean;
   isCollapsed(cell: mxCell | null): boolean {
     return cell != null ? cell.isCollapsed() : false;
   }
 
   /**
-   * Function: setCollapsed
-   *
-   * Sets the collapsed state of the given <mxCell> using <mxCollapseChange>
+   * Sets the collapsed state of the given {@link mxCell} using {@link mxCollapseChange}
    * and adds the change to the current transaction.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose collapsed state should be changed.
-   * collapsed - Boolean that specifies the new collpased state.
+   * @param {mxCell} cell  whose collapsed state should be changed.
+   * @param collapsed  Boolean that specifies the new collpased state.
    */
+  // setCollapsed(cell: mxCell, collapsed: boolean): boolean;
   setCollapsed(cell: mxCell,
                collapsed: boolean): boolean {
 
@@ -1702,17 +1519,14 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: collapsedStateForCellChanged
-   *
    * Inner callback to update the collapsed state of the
-   * given <mxCell> using <mxCell.setCollapsed> and return
+   * given {@link mxCell} using <mxCell.setCollapsed> and return
    * the previous collapsed state.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that specifies the cell to be updated.
-   * collapsed - Boolean that specifies the new collpased state.
+   * @param {mxCell} cell  that specifies the cell to be updated.
+   * @param collapsed  Boolean that specifies the new collpased state.
    */
+  // collapsedStateForCellChanged(cell: mxCell, collapsed: boolean): boolean;
   collapsedStateForCellChanged(cell: mxCell,
                                collapsed: boolean): boolean {
 
@@ -1722,29 +1536,23 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: isVisible
+   * Returns true if the given {@link mxCell} is visible.
    *
-   * Returns true if the given <mxCell> is visible.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> whose visible state should be returned.
+   * @param {mxCell} cell  whose visible state should be returned.
    */
+  // isVisible(cell: mxCell): boolean;
   isVisible(cell: mxCell | null): boolean {
     return cell != null ? cell.isVisible() : false;
   }
 
   /**
-   * Function: setVisible
-   *
-   * Sets the visible state of the given <mxCell> using <mxVisibleChange> and
+   * Sets the visible state of the given {@link mxCell} using {@link mxVisibleChange} and
    * adds the change to the current transaction.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> whose visible state should be changed.
-   * visible - Boolean that specifies the new visible state.
+   * @param {mxCell} cell  whose visible state should be changed.
+   * @param visible  Boolean that specifies the new visible state.
    */
+  // setVisible(cell: mxCell, visible: boolean): boolean;
   setVisible(cell: mxCell,
              visible: boolean) {
 
@@ -1755,17 +1563,14 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: visibleStateForCellChanged
-   *
    * Inner callback to update the visible state of the
-   * given <mxCell> using <mxCell.setCollapsed> and return
+   * given {@link mxCell} using <mxCell.setCollapsed> and return
    * the previous visible state.
    *
-   * Parameters:
-   *
-   * cell - <mxCell> that specifies the cell to be updated.
-   * visible - Boolean that specifies the new visible state.
+   * @param {mxCell} cell  that specifies the cell to be updated.
+   * @param visible  Boolean that specifies the new visible state.
    */
+  // visibleStateForCellChanged(cell: mxCell, visible: boolean): boolean;
   visibleStateForCellChanged(cell: mxCell,
                              visible: boolean): boolean {
     const previous = this.isVisible(cell);
@@ -1774,20 +1579,17 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: execute
-   *
    * Executes the given edit and fires events if required. The edit object
    * requires an execute function which is invoked. The edit is added to the
-   * <currentEdit> between <beginUpdate> and <endUpdate> calls, so that
+   * {@link currentEdit} between {@link beginUpdate} and {@link endUpdate} calls, so that
    * events will be fired if this execute is an individual transaction, that
-   * is, if no previous <beginUpdate> calls have been made without calling
-   * <endUpdate>. This implementation fires an <execute> event before
+   * is, if no previous {@link beginUpdate} calls have been made without calling
+   * {@link endUpdate}. This implementation fires an {@link execute} event before
    * executing the given change.
    *
-   * Parameters:
-   *
-   * change - Object that described the change.
+   * @param change  Object that described the change.
    */
+  // execute(change: any): void;
   execute(change: any): void {
     change.execute();
     this.beginUpdate();
@@ -1799,25 +1601,23 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: beginUpdate
+   * Increments the {@link updateLevel} by one. The event notification
+   * is queued until {@link updateLevel} reaches 0 by use of
+   * {@link endUpdate}.
    *
-   * Increments the <updateLevel> by one. The event notification
-   * is queued until <updateLevel> reaches 0 by use of
-   * <endUpdate>.
-   *
-   * All changes on <mxGraphModel> are transactional,
+   * All changes on {@link mxGraphModel} are transactional,
    * that is, they are executed in a single undoable change
    * on the model (without transaction isolation).
    * Therefore, if you want to combine any
    * number of changes into a single undoable change,
    * you should group any two or more API calls that
-   * modify the graph model between <beginUpdate>
-   * and <endUpdate> calls as shown here:
+   * modify the graph model between {@link beginUpdate}
+   * and {@link endUpdate} calls as shown here:
    *
-   * (code)
-   * let model = graph.getModel();
-   * let parent = graph.getDefaultParent();
-   * let index = model.getChildCount(parent);
+   * ```javascript
+   * var model = graph.getModel();
+   * var parent = graph.getDefaultParent();
+   * var index = model.getChildCount(parent);
    * model.beginUpdate();
    * try
    * {
@@ -1828,15 +1628,16 @@ class mxGraphModel extends mxEventSource {
    * {
    *   model.endUpdate();
    * }
-   * (end)
+   * ```
    *
    * Of course there is a shortcut for appending a
    * sequence of cells into the default parent:
    *
-   * (code)
+   * ```javascript
    * graph.addCells([v1, v2]).
-   * (end)
+   * ```
    */
+  // beginUpdate(): void;
   beginUpdate(): void {
     this.updateLevel += 1;
     this.fireEvent(new mxEventObject(mxEvent.BEGIN_UPDATE));
@@ -1847,19 +1648,18 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: endUpdate
+   * Decrements the {@link updateLevel} by one and fires an {@link undo}
+   * event if the {@link updateLevel} reaches 0. This function
+   * indirectly fires a {@link change} event by invoking the notify
+   * function on the {@link currentEdit} und then creates a new
+   * {@link currentEdit} using {@link createUndoableEdit}.
    *
-   * Decrements the <updateLevel> by one and fires an <undo>
-   * event if the <updateLevel> reaches 0. This function
-   * indirectly fires a <change> event by invoking the notify
-   * function on the <currentEdit> und then creates a new
-   * <currentEdit> using <createUndoableEdit>.
-   *
-   * The <undo> event is fired only once per edit, whereas
-   * the <change> event is fired whenever the notify
+   * The {@link undo} event is fired only once per edit, whereas
+   * the {@link change} event is fired whenever the notify
    * function is invoked, that is, on undo and redo of
    * the edit.
    */
+  // endUpdate(): void;
   endUpdate(): void {
     this.updateLevel -= 1;
 
@@ -1890,17 +1690,14 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: createUndoableEdit
+   * Creates a new {@link mxUndoableEdit} that implements the
+   * notify function to fire a {@link change} and {@link notify} event
+   * through the {@link mxUndoableEdit}'s source.
    *
-   * Creates a new <mxUndoableEdit> that implements the
-   * notify function to fire a <change> and <notify> event
-   * through the <mxUndoableEdit>'s source.
-   *
-   * Parameters:
-   *
-   * significant - Optional boolean that specifies if the edit to be created is
+   * @param significant  Optional boolean that specifies if the edit to be created is
    * significant. Default is true.
    */
+  // createUndoableEdit(significant?: boolean): mxUndoableEdit;
   createUndoableEdit(significant: boolean=true): any {
     const edit = new mxUndoableEdit(this, significant);
 
@@ -1918,8 +1715,6 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: mergeChildren
-   *
    * Merges the children of the given cell into the given target cell inside
    * this model. All cells are cloned unless there is a corresponding cell in
    * the model with the same id, in which case the source cell is ignored and
@@ -1929,6 +1724,7 @@ class mxGraphModel extends mxEventSource {
    * id in the target model are reconnected to reflect the terminals of the
    * source edges.
    */
+  // mergeChildren(from: mxGraphModel, to: mxGraphModel, cloneAllEdges?: boolean): void;
   mergeChildren(from: mxCell,
                 to: mxCell,
                 cloneAllEdges: boolean=true) : void {
@@ -1963,13 +1759,12 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: mergeChildren
-   *
    * Clones the children of the source cell into the given target cell in
    * this model and adds an entry to the mapping that maps from the source
    * cell to the target cell with the same id or the clone of the source cell
    * that was inserted into this model.
    */
+  // mergeChildrenImpl(from: mxGraphModel, to: mxGraphModel, cloneAllEdges: boolean, mapping: any): void;
   mergeChildrenImpl(from: mxCell,
                     to: mxCell,
                     cloneAllEdges: boolean,
@@ -2019,15 +1814,12 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: getParents
-   *
    * Returns an array that represents the set (no duplicates) of all parents
    * for the given array of cells.
    *
-   * Parameters:
-   *
-   * cells - Array of cells whose parents should be returned.
+   * @param cells  Array of cells whose parents should be returned.
    */
+  // getParents(cells: Array<mxCell>): Array<mxCell>;
   getParents(cells: mxCell[] | null) {
     const parents = [];
 
@@ -2051,17 +1843,12 @@ class mxGraphModel extends mxEventSource {
   //
 
   /**
-   * Function: cloneCell
+   * Returns a deep clone of the given {@link mxCell}` (including
+   * the children) which is created using {@link cloneCells}`.
    *
-   * Returns a deep clone of the given <mxCell> (including
-   * the children) which is created using <cloneCells>.
-   *
-   * Parameters:
-   *
-   * cell - <mxCell> to be cloned.
-   * includeChildren - Optional boolean indicating if the cells should be cloned
-   * with all descendants. Default is true.
+   * @param {mxCell} cell  to be cloned.
    */
+  // cloneCell(cell: mxCell): mxCell;
   cloneCell(cell: mxCell | null,
             includeChildren: boolean): mxCell | null {
     if (cell != null) {
@@ -2071,20 +1858,17 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: cloneCells
-   *
-   * Returns an array of clones for the given array of <mxCells>.
+   * Returns an array of clones for the given array of {@link mxCell}`.
    * Depending on the value of includeChildren, a deep clone is created for
    * each cell. Connections are restored based if the corresponding
    * cell is contained in the passed in array.
    *
-   * Parameters:
-   *
-   * cells - Array of <mxCell> to be cloned.
-   * includeChildren - Optional boolean indicating if the cells should be cloned
-   * with all descendants. Default is true.
-   * mapping - Optional mapping for existing clones.
+   * @param cells  Array of {@link mxCell}` to be cloned.
+   * @param includeChildren  Boolean indicating if the cells should be cloned
+   * with all descendants.
+   * @param mapping  Optional mapping for existing clones.
    */
+  // cloneCells(cells: Array<mxCell>, includeChildren?: boolean, mapping?: any): Array<mxCell>;
   cloneCells(cells: mxCell[],
              includeChildren: boolean=true,
              mapping: any={}): (mxCell | null)[] {
@@ -2108,10 +1892,9 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: cloneCellImpl
-   *
    * Inner helper method for cloning cells recursively.
    */
+  // cloneCellImpl(cell: mxCell, mapping?: any, includeChildren?: boolean): mxCell;
   cloneCellImpl(cell: mxCell,
                 mapping: any={},
                 includeChildren: boolean): mxCell {
@@ -2140,21 +1923,19 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Function: cellCloned
-   *
    * Hook for cloning the cell. This returns cell.clone() or
    * any possible exceptions.
    */
+  // cellCloned(cell: mxCell): mxCell;
   cellCloned(cell: mxCell): mxCell {
     return cell.clone();
   }
 
   /**
-   * Function: restoreClone
-   *
    * Inner helper method for restoring the connections in
    * a network of cloned cells.
    */
+  // restoreClone(clone: mxCell, cell: mxCell, mapping?: any): void;
   restoreClone(clone: mxCell | null,
                cell: mxCell | null,
                mapping: any): void {

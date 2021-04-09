@@ -8,44 +8,27 @@ import mxShape from './mxShape';
 import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 
 /**
- * Class: mxActor
+ * Extends {@link mxShape} to implement an actor shape. If a custom shape with one
+ * filled area is needed, then this shape's {@link redrawPath} method should be overridden.
  *
- * Extends <mxShape> to implement an actor shape. If a custom shape with one
- * filled area is needed, then this shape's <redrawPath> should be overridden.
+ * This shape is registered under {@link mxConstants.SHAPE_ACTOR} in {@link mxCellRenderer}.
  *
- * Example:
- *
- * (code)
+ * @example
+ * ```javascript
  * function SampleShape() { }
  *
  * SampleShape.prototype = new mxActor();
- * constructor = vsAseShape;
+ * SampleShape.prototype.constructor = vsAseShape;
  *
  * mxCellRenderer.registerShape('sample', SampleShape);
- * redrawPath = (path, x, y, w, h)=>
+ * SampleShape.prototype.redrawPath = function(path, x, y, w, h)
  * {
  *   path.moveTo(0, 0);
  *   path.lineTo(w, h);
  *   // ...
  *   path.close();
  * }
- * (end)
- *
- * This shape is registered under <mxConstants.SHAPE_ACTOR> in
- * <mxCellRenderer>.
- *
- * Constructor: mxActor
- *
- * Constructs a new actor shape.
- *
- * Parameters:
- *
- * bounds - <mxRectangle> that defines the bounds. This is stored in
- * <mxShape.bounds>.
- * fill - String that defines the fill color. This is stored in <fill>.
- * stroke - String that defines the stroke color. This is stored in <stroke>.
- * strokewidth - Optional integer that defines the stroke width. Default is
- * 1. This is stored in <strokewidth>.
+ * ```
  */
 class mxActor extends mxShape {
   constructor(
@@ -62,10 +45,9 @@ class mxActor extends mxShape {
   }
 
   /**
-   * Function: paintVertexShape
-   *
    * Redirects to redrawPath for subclasses to work.
    */
+  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintVertexShape(
     c: mxSvgCanvas2D,
     x: number,
@@ -80,10 +62,9 @@ class mxActor extends mxShape {
   }
 
   /**
-   * Function: redrawPath
-   *
    * Draws the path for this shape.
    */
+  // redrawPath(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   redrawPath(
     c: mxSvgCanvas2D,
     x: number,

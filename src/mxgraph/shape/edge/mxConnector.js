@@ -9,26 +9,12 @@ import mxUtils from '../../util/mxUtils';
 import mxMarker from './mxMarker';
 
 /**
- * Class: mxConnector
+ * Extends {@link mxShape} to implement a connector shape.
+ * The connector shape allows for arrow heads on either side.
+ * This shape is registered under {@link mxConstants.SHAPE_CONNECTOR} in {@link mxCellRenderer}.
  *
- * Extends <mxShape> to implement a connector shape. The connector
- * shape allows for arrow heads on either side.
- *
- * This shape is registered under <mxConstants.SHAPE_CONNECTOR> in
- * <mxCellRenderer>.
- *
- * Constructor: mxConnector
- *
- * Constructs a new connector shape.
- *
- * Parameters:
- *
- * points - Array of <mxPoints> that define the points. This is stored in
- * <mxShape.points>.
- * stroke - String that defines the stroke color. This is stored in <stroke>.
- * Default is 'black'.
- * strokewidth - Optional integer that defines the stroke width. Default is
- * 1. This is stored in <strokewidth>.
+ * @class mxConnector
+ * @extends {mxPolyline}
  */
 class mxConnector extends mxPolyline {
   constructor(points, stroke, strokewidth) {
@@ -36,11 +22,10 @@ class mxConnector extends mxPolyline {
   }
 
   /**
-   * Function: updateBoundingBox
-   *
-   * Updates the <boundingBox> for this shape using <createBoundingBox> and
-   * <augmentBoundingBox> and stores the result in <boundingBox>.
+   * Updates the <boundingBox> for this shape using <createBoundingBox>
+   * and augmentBoundingBox and stores the result in <boundingBox>.
    */
+  // updateBoundingBox(): void;
   updateBoundingBox() {
     this.useSvgBoundingBox =
       this.style != null && this.style[mxConstants.STYLE_CURVED] === 1;
@@ -48,10 +33,9 @@ class mxConnector extends mxPolyline {
   }
 
   /**
-   * Function: paintEdgeShape
-   *
    * Paints the line shape.
    */
+  // paintEdgeShape(c: mxAbstractCanvas2D, pts: mxPoint[]): void;
   paintEdgeShape(c, pts) {
     // The indirection via functions for markers is needed in
     // order to apply the offsets before painting the line and
@@ -76,11 +60,9 @@ class mxConnector extends mxPolyline {
   }
 
   /**
-   * Function: createMarker
-   *
-   * Prepares the marker by adding offsets in pts and returning a function to
-   * paint the marker.
+   * Prepares the marker by adding offsets in pts and returning a function to paint the marker.
    */
+  // createMarker(c: mxAbstractCanvas2D, pts: mxPoint[], source: boolean): mxMarker;
   createMarker(c, pts, source) {
     let result = null;
     const n = pts.length;
@@ -144,10 +126,9 @@ class mxConnector extends mxPolyline {
   }
 
   /**
-   * Function: augmentBoundingBox
-   *
    * Augments the bounding box with the strokewidth and shadow offsets.
    */
+  // augmentBoundingBox(bbox: mxRectangle): void;
   augmentBoundingBox(bbox) {
     super.augmentBoundingBox(bbox);
 
