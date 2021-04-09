@@ -88,7 +88,7 @@ class mxEvent {
    *
    * Removes all listeners from the given element.
    */
-  static removeAllListenerselement() {
+  static removeAllListeners(element) {
     const list = element.mxListenerList;
 
     if (list != null) {
@@ -267,7 +267,7 @@ class mxEvent {
    *
    * element - DOM node to remove the listeners from.
    */
-  static releaseelement() {
+  static release(element) {
     try {
       if (element != null) {
         mxEvent.removeAllListeners(element);
@@ -422,7 +422,7 @@ class mxEvent {
    *
    * Disables the context menu for the given element.
    */
-  static disableContextMenuelement() {
+  static disableContextMenu(element) {
     mxEvent.addListener(element, 'contextmenu', evt => {
       if (evt.preventDefault) {
         evt.preventDefault();
