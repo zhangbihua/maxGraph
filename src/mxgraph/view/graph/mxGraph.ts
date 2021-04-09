@@ -1712,7 +1712,7 @@ class mxGraph extends mxEventSource {
   batchUpdate(fn: Function): void {
     (<mxGraphModel>this.getModel()).beginUpdate();
     try {
-      fn();
+      fn()
     } finally {
       (<mxGraphModel>this.getModel()).endUpdate();
     }

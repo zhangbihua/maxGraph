@@ -169,7 +169,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    *
    * Or set the respective attribute in the SVG element directly.
    *
-   * Constructor: D
+   * Constructor: mxSvgCanvas2D
    *
    * Constructs a new SVG canvas.
    *
@@ -1332,7 +1332,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   ) {
     const s = this.state.scale;
 
-    D.createCss(
+    mxSvgCanvas2D.createCss(
       w + 2,
       h,
       align,
@@ -1564,7 +1564,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       tmp = `${id}-${++counter}`;
     }
 
-    clip = this.createElement('clipPath');
+    const clip = this.createElement('clipPath');
     clip.setAttribute('id', tmp);
 
     const rect = this.createElement('rect');

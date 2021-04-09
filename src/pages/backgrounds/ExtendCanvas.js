@@ -4,12 +4,12 @@
  */
 
 import React from 'react';
-import mxEvent from '../../mxgraph/util/mxEvent';
-import mxGraph from '../../mxgraph/view/mxGraph';
+import mxEvent from '../../mxgraph/util/event/mxEvent';
+import mxGraph from '../../mxgraph/view/graph/mxGraph';
 import mxRubberband from '../../mxgraph/handler/mxRubberband';
-import mxRectangle from '../../mxgraph/util/mxRectangle';
+import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
 import mxUtils from '../../mxgraph/util/mxUtils';
-import mxPoint from '../../mxgraph/util/mxPoint';
+import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
 
 class ExtendCanvas extends React.Component {
   constructor(props) {
