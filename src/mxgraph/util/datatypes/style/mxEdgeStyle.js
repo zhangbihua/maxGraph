@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
+ * Type definitions from the typed-mxgraph project
  */
 
 import mxUtils from '../../mxUtils';
@@ -847,9 +848,9 @@ class mxEdgeStyle {
     }
   }
 
-  static orthBuffer = 10
+  static orthBuffer = 10;
 
-  static orthPointsFallback = true
+  static orthPointsFallback = true;
 
   static dirVectors = [
     [-1, 0],
@@ -859,7 +860,7 @@ class mxEdgeStyle {
     [-1, 0],
     [0, -1],
     [1, 0],
-  ]
+  ];
 
   static wayPoints1 = [
     [0, 0],
@@ -874,7 +875,7 @@ class mxEdgeStyle {
     [0, 0],
     [0, 0],
     [0, 0],
-  ]
+  ];
 
   static routePatterns = [
     [
@@ -901,49 +902,50 @@ class mxEdgeStyle {
       [1057, 513, 1090, 514, 2184, 2562, 2564],
       [1057, 2561, 1090, 514, 2568, 2308],
     ],
-  ]
+  ];
 
   static inlineRoutePatterns = [
     [null, [2114, 2568], null, null],
     [null, [514, 2081, 2114, 2568], null, null],
     [null, [2114, 2561], null, null],
     [[2081, 2562], [1057, 2114, 2568], [2184, 2562], null],
-  ]
-  static vertexSeperations = []
+  ];
+
+  static vertexSeperations = [];
 
   static limits = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]
+  ];
 
-  static LEFT_MASK = 32
+  static LEFT_MASK = 32;
 
-  static TOP_MASK = 64
+  static TOP_MASK = 64;
 
-  static RIGHT_MASK = 128
+  static RIGHT_MASK = 128;
 
-  static BOTTOM_MASK = 256
+  static BOTTOM_MASK = 256;
 
-  static LEFT = 1
+  static LEFT = 1;
 
-  static TOP = 2
+  static TOP = 2;
 
-  static RIGHT = 4
+  static RIGHT = 4;
 
-  static BOTTOM = 8
+  static BOTTOM = 8;
 
   // TODO remove magic numbers
-  static SIDE_MASK = 480
+  static SIDE_MASK = 480;
   // mxEdgeStyle.LEFT_MASK | mxEdgeStyle.TOP_MASK | mxEdgeStyle.RIGHT_MASK
   // | mxEdgeStyle.BOTTOM_MASK,
 
-  static CENTER_MASK = 512
+  static CENTER_MASK = 512;
 
-  static SOURCE_MASK = 1024
+  static SOURCE_MASK = 1024;
 
-  static TARGET_MASK = 2048
+  static TARGET_MASK = 2048;
 
-  static VERTEX_MASK = 3072
+  static VERTEX_MASK = 3072;
   // mxEdgeStyle.SOURCE_MASK | mxEdgeStyle.TARGET_MASK,
 
   static getJettySize(state, isSource) {
@@ -1064,7 +1066,13 @@ class mxEdgeStyle {
    * edge.
    *
    */
-  static OrthConnector(state, sourceScaled, targetScaled, controlHints, result) {
+  static OrthConnector(
+    state,
+    sourceScaled,
+    targetScaled,
+    controlHints,
+    result
+  ) {
     const { graph } = state.view;
     const sourceEdge =
       source == null ? false : graph.getModel().isEdge(source.cell);

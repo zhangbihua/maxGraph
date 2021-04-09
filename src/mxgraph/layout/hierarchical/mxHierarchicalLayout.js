@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2018, JGraph Ltd
  * Copyright (c) 2006-2018, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
+ * Type definitions from the typed-mxgraph project
  */
 import mxGraphLayout from '../mxGraphLayout';
 import mxConstants from '../../util/mxConstants';

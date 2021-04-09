@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
+ * Type definitions from the typed-mxgraph project
  */
 
 import mxPoint from '../../util/datatypes/mxPoint';
@@ -12,11 +13,11 @@ import mxPoint from '../../util/datatypes/mxPoint';
  */
 class mxConnectionConstraint {
   constructor(
-      point: mxPoint | null = null,
-      perimeter: boolean = true,
-      name: string | null = null,
-      dx: number | null = null,
-      dy: number | null = null
+    point: mxPoint | null = null,
+    perimeter: boolean = true,
+    name: string | null = null,
+    dx: number | null = null,
+    dy: number | null = null
   ) {
     this.point = point;
     this.perimeter = perimeter != null ? perimeter : true;

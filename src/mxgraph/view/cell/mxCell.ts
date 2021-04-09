@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
+ * Type definitions from the typed-mxgraph project
  */
 
 import mxUtils from '../../util/mxUtils';
@@ -56,9 +57,9 @@ import mxCellOverlay from './mxCellOverlay';
  */
 class mxCell {
   constructor(
-      value: any = null,
-      geometry: mxGeometry | null = null,
-      style: string | null = null
+    value: any = null,
+    geometry: mxGeometry | null = null,
+    style: string | null = null
   ) {
     this.value = value;
     this.setGeometry(geometry);
@@ -694,7 +695,7 @@ class mxCell {
     if (value != null) {
       if (typeof value.clone === 'function') {
         value = value.clone();
-      } else if (!isNaN(value.nodeType)) {
+      } else if (!Number.isNaN(value.nodeType)) {
         value = value.cloneNode(true);
       }
     }

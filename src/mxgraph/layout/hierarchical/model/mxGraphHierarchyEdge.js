@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
+ * Type definitions from the typed-mxgraph project
  */
 import mxGraphAbstractHierarchyCell from './mxGraphAbstractHierarchyCell';
 import mxObjectIdentity from '../../../util/datatypes/mxObjectIdentity';

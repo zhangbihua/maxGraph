@@ -11,9 +11,9 @@ import mxCell from '../cell/mxCell';
  */
 class mxSelectionChange {
   constructor(
-      selectionModel: mxGraphSelectionModel,
-      added: mxCell[] = [],
-      removed: mxCell[] = []
+    selectionModel: mxGraphSelectionModel,
+    added: mxCell[] = [],
+    removed: mxCell[] = []
   ) {
     this.selectionModel = selectionModel;
     this.added = added.slice();
