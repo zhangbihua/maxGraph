@@ -19,39 +19,6 @@ import mxWindow from './mxWindow';
  * Specifies the name of the console window. Default is 'Console'.
  */
 class mxLog {
-  static consoleName = 'Console';
-
-  /**
-   * Variable: TRACE
-   *
-   * Specified if the output for <enter> and <leave> should be visible in the
-   * console. Default is false.
-   */
-  static TRACE = false;
-
-  /**
-   * Variable: DEBUG
-   *
-   * Specifies if the output for <debug> should be visible in the console.
-   * Default is true.
-   */
-  static DEBUG = true;
-
-  /**
-   * Variable: WARN
-   *
-   * Specifies if the output for <warn> should be visible in the console.
-   * Default is true.
-   */
-  static WARN = true;
-
-  /**
-   * Variable: buffer
-   *
-   * Buffer for pre-initialized content.
-   */
-  static buffer = '';
-
   /**
    * Function: init
    *
@@ -192,6 +159,39 @@ class mxLog {
       }
     }
   }
+
+  static consoleName = 'Console';
+
+  /**
+   * Variable: TRACE
+   *
+   * Specified if the output for <enter> and <leave> should be visible in the
+   * console. Default is false.
+   */
+  static TRACE = false;
+
+  /**
+   * Variable: DEBUG
+   *
+   * Specifies if the output for <debug> should be visible in the console.
+   * Default is true.
+   */
+  static DEBUG = true;
+
+  /**
+   * Variable: WARN
+   *
+   * Specifies if the output for <warn> should be visible in the console.
+   * Default is true.
+   */
+  static WARN = true;
+
+  /**
+   * Variable: buffer
+   *
+   * Buffer for pre-initialized content.
+   */
+  static buffer = '';
 
   /**
    * Function: info

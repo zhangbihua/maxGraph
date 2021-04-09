@@ -7,7 +7,47 @@ import mxAbstractCanvas2D from './mxAbstractCanvas2D';
 import mxConstants from '../mxConstants';
 import mxUtils from '../mxUtils';
 
+/**
+ * Class: mxXmlCanvas2D
+ *
+ * Base class for all canvases. The following methods make up the public
+ * interface of the canvas 2D for all painting in mxGraph:
+ *
+ * - <save>, <restore>
+ * - <scale>, <translate>, <rotate>
+ * - <setAlpha>, <setFillAlpha>, <setStrokeAlpha>, <setFillColor>, <setGradient>,
+ *   <setStrokeColor>, <setStrokeWidth>, <setDashed>, <setDashPattern>, <setLineCap>,
+ *   <setLineJoin>, <setMiterLimit>
+ * - <setFontColor>, <setFontBackgroundColor>, <setFontBorderColor>, <setFontSize>,
+ *   <setFontFamily>, <setFontStyle>
+ * - <setShadow>, <setShadowColor>, <setShadowAlpha>, <setShadowOffset>
+ * - <rect>, <roundrect>, <ellipse>, <image>, <text>
+ * - <begin>, <moveTo>, <lineTo>, <quadTo>, <curveTo>
+ * - <stroke>, <fill>, <fillAndStroke>
+ *
+ * <mxAbstractCanvas2D.arcTo> is an additional method for drawing paths. This is
+ * a synthetic method, meaning that it is turned into a sequence of curves by
+ * default. Subclassers may add native support for arcs.
+ *
+ * Constructor: D
+ *
+ * Constructs a new abstract canvas.
+ */
 class mxXmlCanvas2D extends mxAbstractCanvas2D {
+  constructor(root) {
+    super();
+
+    /**
+     * Variable: root
+     *
+     * Reference to the container for the SVG content.
+     */
+    this.root = root;
+
+    // Writes default settings;
+    this.writeDefaults();
+  }
+
   /**
    * Variable: textEnabled
    *
@@ -22,46 +62,6 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * Default is true.
    */
   compressed = true;
-
-  /**
-   * Class: D
-   *
-   * Base class for all canvases. The following methods make up the public
-   * interface of the canvas 2D for all painting in mxGraph:
-   *
-   * - <save>, <restore>
-   * - <scale>, <translate>, <rotate>
-   * - <setAlpha>, <setFillAlpha>, <setStrokeAlpha>, <setFillColor>, <setGradient>,
-   *   <setStrokeColor>, <setStrokeWidth>, <setDashed>, <setDashPattern>, <setLineCap>,
-   *   <setLineJoin>, <setMiterLimit>
-   * - <setFontColor>, <setFontBackgroundColor>, <setFontBorderColor>, <setFontSize>,
-   *   <setFontFamily>, <setFontStyle>
-   * - <setShadow>, <setShadowColor>, <setShadowAlpha>, <setShadowOffset>
-   * - <rect>, <roundrect>, <ellipse>, <image>, <text>
-   * - <begin>, <moveTo>, <lineTo>, <quadTo>, <curveTo>
-   * - <stroke>, <fill>, <fillAndStroke>
-   *
-   * <mxAbstractCanvas2D.arcTo> is an additional method for drawing paths. This is
-   * a synthetic method, meaning that it is turned into a sequence of curves by
-   * default. Subclassers may add native support for arcs.
-   *
-   * Constructor: D
-   *
-   * Constructs a new abstract canvas.
-   */
-  constructor(root) {
-    super();
-
-    /**
-     * Variable: root
-     *
-     * Reference to the container for the SVG content.
-     */
-    this.root = root;
-
-    // Writes default settings;
-    this.writeDefaults();
-  }
 
   /**
    * Function: writeDefaults

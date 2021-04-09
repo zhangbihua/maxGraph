@@ -4,7 +4,22 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+/**
+ * Class: mxImage
+ *
+ * Encapsulates the URL, width and height of an image.
+ *
+ * Constructor: mxImage
+ *
+ * Constructs a new image.
+ */
 class mxImage {
+  constructor(src, width, height) {
+    this.src = src;
+    this.width = width;
+    this.height = height;
+  }
+
   /**
    * Variable: src
    *
@@ -25,21 +40,6 @@ class mxImage {
    * Integer that specifies the height of the image.
    */
   height = null;
-
-  /**
-   * Class: mxImage
-   *
-   * Encapsulates the URL, width and height of an image.
-   *
-   * Constructor: mxImage
-   *
-   * Constructs a new image.
-   */
-  constructor(src, width, height) {
-    this.src = src;
-    this.width = width;
-    this.height = height;
-  }
 }
 
 export default mxImage;

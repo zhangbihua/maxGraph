@@ -12,262 +12,190 @@ import mxEvent from '../event/mxEvent';
 import mxClient from '../../mxClient';
 import mxConstants from '../mxConstants';
 
+/**
+ * Class: mxWindow
+ *
+ * Basic window inside a document.
+ *
+ * Examples:
+ *
+ * Creating a simple window.
+ *
+ * (code)
+ * let tb = document.createElement('div');
+ * let wnd = new mxWindow('Title', tb, 100, 100, 200, 200, true, true);
+ * wnd.setVisible(true);
+ * (end)
+ *
+ * Creating a window that contains an iframe.
+ *
+ * (code)
+ * let frame = document.createElement('iframe');
+ * frame.setAttribute('width', '192px');
+ * frame.setAttribute('height', '172px');
+ * frame.setAttribute('src', 'http://www.example.com/');
+ * frame.style.backgroundColor = 'white';
+ *
+ * let w = document.body.clientWidth;
+ * let h = (document.body.clientHeight || document.documentElement.clientHeight);
+ * let wnd = new mxWindow('Title', frame, (w-200)/2, (h-200)/3, 200, 200);
+ * wnd.setVisible(true);
+ * (end)
+ *
+ * To limit the movement of a window, eg. to keep it from being moved beyond
+ * the top, left corner the following method can be overridden (recommended):
+ *
+ * (code)
+ * wnd.setLocation = (x, y)=>
+ * {
+ *   x = Math.max(0, x);
+ *   y = Math.max(0, y);
+ *   setLocation.apply(this, arguments);
+ * };
+ * (end)
+ *
+ * Or the following event handler can be used:
+ *
+ * (code)
+ * wnd.addListener(mxEvent.MOVE, (e)=>
+ * {
+ *   wnd.setLocation(Math.max(0, wnd.getX()), Math.max(0, wnd.getY()));
+ * });
+ * (end)
+ *
+ * To keep a window inside the current window:
+ *
+ * (code)
+ * mxEvent.addListener(window, 'resize', mxUtils.bind(this, ()=>
+ * {
+ *   let iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+ *   let ih = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+ *
+ *   let x = this.window.getX();
+ *   let y = this.window.getY();
+ *
+ *   if (x + this.window.table.clientWidth > iw)
+ *   {
+ *     x = Math.max(0, iw - this.window.table.clientWidth);
+ *   }
+ *
+ *   if (y + this.window.table.clientHeight > ih)
+ *   {
+ *     y = Math.max(0, ih - this.window.table.clientHeight);
+ *   }
+ *
+ *   if (this.window.getX() != x || this.window.getY() != y)
+ *   {
+ *     this.window.setLocation(x, y);
+ *   }
+ * }));
+ * (end)
+ *
+ * Event: mxEvent.MOVE_START
+ *
+ * Fires before the window is moved. The <code>event</code> property contains
+ * the corresponding mouse event.
+ *
+ * Event: mxEvent.MOVE
+ *
+ * Fires while the window is being moved. The <code>event</code> property
+ * contains the corresponding mouse event.
+ *
+ * Event: mxEvent.MOVE_END
+ *
+ * Fires after the window is moved. The <code>event</code> property contains
+ * the corresponding mouse event.
+ *
+ * Event: mxEvent.RESIZE_START
+ *
+ * Fires before the window is resized. The <code>event</code> property contains
+ * the corresponding mouse event.
+ *
+ * Event: mxEvent.RESIZE
+ *
+ * Fires while the window is being resized. The <code>event</code> property
+ * contains the corresponding mouse event.
+ *
+ * Event: mxEvent.RESIZE_END
+ *
+ * Fires after the window is resized. The <code>event</code> property contains
+ * the corresponding mouse event.
+ *
+ * Event: mxEvent.MAXIMIZE
+ *
+ * Fires after the window is maximized. The <code>event</code> property
+ * contains the corresponding mouse event.
+ *
+ * Event: mxEvent.MINIMIZE
+ *
+ * Fires after the window is minimized. The <code>event</code> property
+ * contains the corresponding mouse event.
+ *
+ * Event: mxEvent.NORMALIZE
+ *
+ * Fires after the window is normalized, that is, it returned from
+ * maximized or minimized state. The <code>event</code> property contains the
+ * corresponding mouse event.
+ *
+ * Event: mxEvent.ACTIVATE
+ *
+ * Fires after a window is activated. The <code>previousWindow</code> property
+ * contains the previous window. The event sender is the active window.
+ *
+ * Event: mxEvent.SHOW
+ *
+ * Fires after the window is shown. This event has no properties.
+ *
+ * Event: mxEvent.HIDE
+ *
+ * Fires after the window is hidden. This event has no properties.
+ *
+ * Event: mxEvent.CLOSE
+ *
+ * Fires before the window is closed. The <code>event</code> property contains
+ * the corresponding mouse event.
+ *
+ * Event: mxEvent.DESTROY
+ *
+ * Fires before the window is destroyed. This event has no properties.
+ *
+ * Constructor: mxWindow
+ *
+ * Constructs a new window with the given dimension and title to display
+ * the specified content. The window elements use the given style as a
+ * prefix for the classnames of the respective window elements, namely,
+ * the window title and window pane. The respective postfixes are appended
+ * to the given stylename as follows:
+ *
+ *   style - Base style for the window.
+ *   style+Title - Style for the window title.
+ *   style+Pane - Style for the window pane.
+ *
+ * The default value for style is mxWindow, resulting in the following
+ * classnames for the window elements: mxWindow, mxWindowTitle and
+ * mxWindowPane.
+ *
+ * If replaceNode is given then the window replaces the given DOM node in
+ * the document.
+ *
+ * Parameters:
+ *
+ * title - String that represents the title of the new window.
+ * content - DOM node that is used as the window content.
+ * x - X-coordinate of the window location.
+ * y - Y-coordinate of the window location.
+ * width - Width of the window.
+ * height - Optional height of the window. Default is to match the height
+ * of the content at the specified width.
+ * minimizable - Optional boolean indicating if the window is minimizable.
+ * Default is true.
+ * movable - Optional boolean indicating if the window is movable. Default
+ * is true.
+ * replaceNode - Optional DOM node that the window should replace.
+ * style - Optional base classname for the window elements. Default is
+ * mxWindow.
+ */
 class mxWindow extends mxEventSource {
-  /**
-   * Variable: closeImage
-   *
-   * URL of the image to be used for the close icon in the titlebar.
-   */
-  closeImage = `${mxClient.imageBasePath}/close.gif`;
-
-  /**
-   * Variable: minimizeImage
-   *
-   * URL of the image to be used for the minimize icon in the titlebar.
-   */
-  minimizeImage = `${mxClient.imageBasePath}/minimize.gif`;
-
-  /**
-   * Variable: normalizeImage
-   *
-   * URL of the image to be used for the normalize icon in the titlebar.
-   */
-  normalizeImage = `${mxClient.imageBasePath}/normalize.gif`;
-
-  /**
-   * Variable: maximizeImage
-   *
-   * URL of the image to be used for the maximize icon in the titlebar.
-   */
-  maximizeImage = `${mxClient.imageBasePath}/maximize.gif`;
-
-  /**
-   * Variable: resizeImage
-   *
-   * URL of the image to be used for the resize icon.
-   */
-  resizeImage = `${mxClient.imageBasePath}/resize.gif`;
-
-  /**
-   * Variable: visible
-   *
-   * Boolean flag that represents the visible state of the window.
-   */
-  visible = false;
-
-  /**
-   * Variable: minimumSize
-   *
-   * <mxRectangle> that specifies the minimum width and height of the window.
-   * Default is (50, 40).
-   */
-  minimumSize = new mxRectangle(0, 0, 50, 40);
-
-  /**
-   * Variable: destroyOnClose
-   *
-   * Specifies if the window should be destroyed when it is closed. If this
-   * is false then the window is hidden using <setVisible>. Default is true.
-   */
-  destroyOnClose = true;
-
-  /**
-   * Variable: title
-   *
-   * Reference to the DOM node (TD) that contains the title.
-   */
-  title = null;
-
-  /**
-   * Variable: content
-   *
-   * Reference to the DOM node that represents the window content.
-   */
-  content = null;
-
-  /**
-   * Class: mxWindow
-   *
-   * Basic window inside a document.
-   *
-   * Examples:
-   *
-   * Creating a simple window.
-   *
-   * (code)
-   * let tb = document.createElement('div');
-   * let wnd = new mxWindow('Title', tb, 100, 100, 200, 200, true, true);
-   * wnd.setVisible(true);
-   * (end)
-   *
-   * Creating a window that contains an iframe.
-   *
-   * (code)
-   * let frame = document.createElement('iframe');
-   * frame.setAttribute('width', '192px');
-   * frame.setAttribute('height', '172px');
-   * frame.setAttribute('src', 'http://www.example.com/');
-   * frame.style.backgroundColor = 'white';
-   *
-   * let w = document.body.clientWidth;
-   * let h = (document.body.clientHeight || document.documentElement.clientHeight);
-   * let wnd = new mxWindow('Title', frame, (w-200)/2, (h-200)/3, 200, 200);
-   * wnd.setVisible(true);
-   * (end)
-   *
-   * To limit the movement of a window, eg. to keep it from being moved beyond
-   * the top, left corner the following method can be overridden (recommended):
-   *
-   * (code)
-   * wnd.setLocation = (x, y)=>
-   * {
-   *   x = Math.max(0, x);
-   *   y = Math.max(0, y);
-   *   setLocation.apply(this, arguments);
-   * };
-   * (end)
-   *
-   * Or the following event handler can be used:
-   *
-   * (code)
-   * wnd.addListener(mxEvent.MOVE, (e)=>
-   * {
-   *   wnd.setLocation(Math.max(0, wnd.getX()), Math.max(0, wnd.getY()));
-   * });
-   * (end)
-   *
-   * To keep a window inside the current window:
-   *
-   * (code)
-   * mxEvent.addListener(window, 'resize', mxUtils.bind(this, ()=>
-   * {
-   *   let iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-   *   let ih = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-   *
-   *   let x = this.window.getX();
-   *   let y = this.window.getY();
-   *
-   *   if (x + this.window.table.clientWidth > iw)
-   *   {
-   *     x = Math.max(0, iw - this.window.table.clientWidth);
-   *   }
-   *
-   *   if (y + this.window.table.clientHeight > ih)
-   *   {
-   *     y = Math.max(0, ih - this.window.table.clientHeight);
-   *   }
-   *
-   *   if (this.window.getX() != x || this.window.getY() != y)
-   *   {
-   *     this.window.setLocation(x, y);
-   *   }
-   * }));
-   * (end)
-   *
-   * Event: mxEvent.MOVE_START
-   *
-   * Fires before the window is moved. The <code>event</code> property contains
-   * the corresponding mouse event.
-   *
-   * Event: mxEvent.MOVE
-   *
-   * Fires while the window is being moved. The <code>event</code> property
-   * contains the corresponding mouse event.
-   *
-   * Event: mxEvent.MOVE_END
-   *
-   * Fires after the window is moved. The <code>event</code> property contains
-   * the corresponding mouse event.
-   *
-   * Event: mxEvent.RESIZE_START
-   *
-   * Fires before the window is resized. The <code>event</code> property contains
-   * the corresponding mouse event.
-   *
-   * Event: mxEvent.RESIZE
-   *
-   * Fires while the window is being resized. The <code>event</code> property
-   * contains the corresponding mouse event.
-   *
-   * Event: mxEvent.RESIZE_END
-   *
-   * Fires after the window is resized. The <code>event</code> property contains
-   * the corresponding mouse event.
-   *
-   * Event: mxEvent.MAXIMIZE
-   *
-   * Fires after the window is maximized. The <code>event</code> property
-   * contains the corresponding mouse event.
-   *
-   * Event: mxEvent.MINIMIZE
-   *
-   * Fires after the window is minimized. The <code>event</code> property
-   * contains the corresponding mouse event.
-   *
-   * Event: mxEvent.NORMALIZE
-   *
-   * Fires after the window is normalized, that is, it returned from
-   * maximized or minimized state. The <code>event</code> property contains the
-   * corresponding mouse event.
-   *
-   * Event: mxEvent.ACTIVATE
-   *
-   * Fires after a window is activated. The <code>previousWindow</code> property
-   * contains the previous window. The event sender is the active window.
-   *
-   * Event: mxEvent.SHOW
-   *
-   * Fires after the window is shown. This event has no properties.
-   *
-   * Event: mxEvent.HIDE
-   *
-   * Fires after the window is hidden. This event has no properties.
-   *
-   * Event: mxEvent.CLOSE
-   *
-   * Fires before the window is closed. The <code>event</code> property contains
-   * the corresponding mouse event.
-   *
-   * Event: mxEvent.DESTROY
-   *
-   * Fires before the window is destroyed. This event has no properties.
-   *
-   * Constructor: mxWindow
-   *
-   * Constructs a new window with the given dimension and title to display
-   * the specified content. The window elements use the given style as a
-   * prefix for the classnames of the respective window elements, namely,
-   * the window title and window pane. The respective postfixes are appended
-   * to the given stylename as follows:
-   *
-   *   style - Base style for the window.
-   *   style+Title - Style for the window title.
-   *   style+Pane - Style for the window pane.
-   *
-   * The default value for style is mxWindow, resulting in the following
-   * classnames for the window elements: mxWindow, mxWindowTitle and
-   * mxWindowPane.
-   *
-   * If replaceNode is given then the window replaces the given DOM node in
-   * the document.
-   *
-   * Parameters:
-   *
-   * title - String that represents the title of the new window.
-   * content - DOM node that is used as the window content.
-   * x - X-coordinate of the window location.
-   * y - Y-coordinate of the window location.
-   * width - Width of the window.
-   * height - Optional height of the window. Default is to match the height
-   * of the content at the specified width.
-   * minimizable - Optional boolean indicating if the window is minimizable.
-   * Default is true.
-   * movable - Optional boolean indicating if the window is movable. Default
-   * is true.
-   * replaceNode - Optional DOM node that the window should replace.
-   * style - Optional base classname for the window elements. Default is
-   * mxWindow.
-   */
   constructor(
     title,
     content,
@@ -387,6 +315,78 @@ class mxWindow extends mxEventSource {
 
     this.hide();
   }
+
+  /**
+   * Variable: closeImage
+   *
+   * URL of the image to be used for the close icon in the titlebar.
+   */
+  closeImage = `${mxClient.imageBasePath}/close.gif`;
+
+  /**
+   * Variable: minimizeImage
+   *
+   * URL of the image to be used for the minimize icon in the titlebar.
+   */
+  minimizeImage = `${mxClient.imageBasePath}/minimize.gif`;
+
+  /**
+   * Variable: normalizeImage
+   *
+   * URL of the image to be used for the normalize icon in the titlebar.
+   */
+  normalizeImage = `${mxClient.imageBasePath}/normalize.gif`;
+
+  /**
+   * Variable: maximizeImage
+   *
+   * URL of the image to be used for the maximize icon in the titlebar.
+   */
+  maximizeImage = `${mxClient.imageBasePath}/maximize.gif`;
+
+  /**
+   * Variable: resizeImage
+   *
+   * URL of the image to be used for the resize icon.
+   */
+  resizeImage = `${mxClient.imageBasePath}/resize.gif`;
+
+  /**
+   * Variable: visible
+   *
+   * Boolean flag that represents the visible state of the window.
+   */
+  visible = false;
+
+  /**
+   * Variable: minimumSize
+   *
+   * <mxRectangle> that specifies the minimum width and height of the window.
+   * Default is (50, 40).
+   */
+  minimumSize = new mxRectangle(0, 0, 50, 40);
+
+  /**
+   * Variable: destroyOnClose
+   *
+   * Specifies if the window should be destroyed when it is closed. If this
+   * is false then the window is hidden using <setVisible>. Default is true.
+   */
+  destroyOnClose = true;
+
+  /**
+   * Variable: title
+   *
+   * Reference to the DOM node (TD) that contains the title.
+   */
+  title = null;
+
+  /**
+   * Variable: content
+   *
+   * Reference to the DOM node that represents the window content.
+   */
+  content = null;
 
   /**
    * Function: setTitle

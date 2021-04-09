@@ -20,24 +20,24 @@ import mxEvent from './event/mxEvent';
 import mxDragSource from './drag_pan/mxDragSource';
 import mxLog from './gui/mxLog';
 
+/**
+ * Class: mxUtils
+ *
+ * A singleton class that provides cross-browser helper methods.
+ * This is a global functionality. To access the functions in this
+ * class, use the global classname appended by the functionname.
+ * You may have to load chrome://global/content/contentAreaUtils.js
+ * to disable certain security restrictions in Mozilla for the <open>,
+ * <save>, <saveAs> and <copy> function.
+ *
+ * For example, the following code displays an error message:
+ *
+ * (code)
+ * mxUtils.error('Browser is not supported!', 200, false);
+ * (end)
+ */
 const mxUtils = {
-  /**
-   * Class: mxUtils
-   *
-   * A singleton class that provides cross-browser helper methods.
-   * This is a global functionality. To access the functions in this
-   * class, use the global classname appended by the functionname.
-   * You may have to load chrome://global/content/contentAreaUtils.js
-   * to disable certain security restrictions in Mozilla for the <open>,
-   * <save>, <saveAs> and <copy> function.
-   *
-   * For example, the following code displays an error message:
-   *
-   * (code)
-   * mxUtils.error('Browser is not supported!', 200, false);
-   * (end)
-   *
-   * Variable: errorResource
+  /* Variable: errorResource
    *
    * Specifies the resource key for the title of the error window. If the
    * resource for this key does not exist then the value is used as

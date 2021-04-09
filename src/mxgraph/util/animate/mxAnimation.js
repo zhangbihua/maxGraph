@@ -3,12 +3,30 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxUtils from '../mxUtils';
 import mxEventSource from '../event/mxEventSource';
 import mxEventObject from '../event/mxEventObject';
 import mxEvent from '../event/mxEvent';
 
+/**
+ *
+ * Class: mxAnimation
+ *
+ * Implements a basic animation in JavaScript.
+ *
+ * Constructor: mxAnimation
+ *
+ * Constructs an animation.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ */
 class mxAnimation extends mxEventSource {
+  constructor(delay) {
+    super();
+    this.delay = delay != null ? delay : 20;
+  }
+
   /**
    * Variable: delay
    *
@@ -22,25 +40,6 @@ class mxAnimation extends mxEventSource {
    * Reference to the thread while the animation is running.
    */
   thread = null;
-
-  /**
-   *
-   * Class: mxAnimation
-   *
-   * Implements a basic animation in JavaScript.
-   *
-   * Constructor: mxAnimation
-   *
-   * Constructs an animation.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   */
-  constructor(delay) {
-    super();
-    this.delay = delay != null ? delay : 20;
-  }
 
   /**
    * Function: isRunning

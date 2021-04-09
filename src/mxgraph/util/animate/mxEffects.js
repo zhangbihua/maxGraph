@@ -4,14 +4,18 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxUtils from '../mxUtils';
+import mxGeometryChange from '../../atomic_changes/mxGeometryChange';
+import mxTerminalChange from '../../atomic_changes/mxTerminalChange';
+import mxValueChange from '../../atomic_changes/mxValueChange';
+import mxChildChange from '../../atomic_changes/mxChildChange';
+import mxStyleChange from '../../atomic_changes/mxStyleChange';
 
-const mxEffects = {
-  /**
-   * Class: mxEffects
-   *
-   * Provides animation effects.
-   */
-
+/**
+ * Class: mxEffects
+ *
+ * Provides animation effects.
+ */
+class mxEffects {
   /**
    * Function: animateChanges
    *
@@ -38,7 +42,7 @@ const mxEffects = {
    * done - Optional function argument that is invoked after the
    * last step of the animation.
    */
-  animateChanges: (graph, changes, done) => {
+  static animateChanges(graph, changes, done) {
     const maxStep = 10;
     let step = 0;
 
@@ -113,7 +117,7 @@ const mxEffects = {
 
     let delay = 30;
     animate();
-  },
+  }
 
   /**
    * Function: cascadeOpacity
@@ -126,7 +130,7 @@ const mxEffects = {
    * cell - <mxCell> to set the opacity for.
    * opacity - New value for the opacity in %.
    */
-  cascadeOpacity: (graph, cell, opacity) => {
+  static cascadeOpacity(graph, cell, opacity) {
     // Fades all children
     const childCount = graph.model.getChildCount(cell);
 
@@ -152,14 +156,14 @@ const mxEffects = {
         }
       }
     }
-  },
+  }
 
   /**
    * Function: fadeOut
    *
    * Asynchronous fade-out operation.
    */
-  fadeOut: (node, from, remove, step, delay, isEnabled) => {
+  static fadeOut(node, from, remove, step, delay, isEnabled) {
     step = step || 40;
     delay = delay || 30;
 
@@ -190,7 +194,7 @@ const mxEffects = {
         node.parentNode.removeChild(node);
       }
     }
-  },
-};
+  }
+}
 
 export default mxEffects;

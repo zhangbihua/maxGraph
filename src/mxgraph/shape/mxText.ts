@@ -13,61 +13,61 @@ import mxShape from './mxShape';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxCellState from '../util/datatypes/mxCellState';
 
+/**
+ * Class: mxText
+ *
+ * Extends <mxShape> to implement a text shape. To change vertical text from
+ * bottom to top to top to bottom, the following code can be used:
+ *
+ * (code)
+ * verticalTextRotation = 90;
+ * (end)
+ *
+ * Constructor: mxText
+ *
+ * Constructs a new text shape.
+ *
+ * Parameters:
+ *
+ * value - String that represents the text to be displayed. This is stored in
+ * <value>.
+ * bounds - <mxRectangle> that defines the bounds. This is stored in
+ * <mxShape.bounds>.
+ * align - Specifies the horizontal alignment. Default is ''. This is stored in
+ * <align>.
+ * valign - Specifies the vertical alignment. Default is ''. This is stored in
+ * <valign>.
+ * color - String that specifies the text color. Default is 'black'. This is
+ * stored in <color>.
+ * family - String that specifies the font family. Default is
+ * <mxConstants.DEFAULT_FONTFAMILY>. This is stored in <family>.
+ * size - Integer that specifies the font size. Default is
+ * <mxConstants.DEFAULT_FONTSIZE>. This is stored in <size>.
+ * fontStyle - Specifies the font style. Default is 0. This is stored in
+ * <fontStyle>.
+ * spacing - Integer that specifies the global spacing. Default is 2. This is
+ * stored in <spacing>.
+ * spacingTop - Integer that specifies the top spacing. Default is 0. The
+ * sum of the spacing and this is stored in <spacingTop>.
+ * spacingRight - Integer that specifies the right spacing. Default is 0. The
+ * sum of the spacing and this is stored in <spacingRight>.
+ * spacingBottom - Integer that specifies the bottom spacing. Default is 0.The
+ * sum of the spacing and this is stored in <spacingBottom>.
+ * spacingLeft - Integer that specifies the left spacing. Default is 0. The
+ * sum of the spacing and this is stored in <spacingLeft>.
+ * horizontal - Boolean that specifies if the label is horizontal. Default is
+ * true. This is stored in <horizontal>.
+ * background - String that specifies the background color. Default is null.
+ * This is stored in <background>.
+ * border - String that specifies the label border color. Default is null.
+ * This is stored in <border>.
+ * wrap - Specifies if word-wrapping should be enabled. Default is false.
+ * This is stored in <wrap>.
+ * clipped - Specifies if the label should be clipped. Default is false.
+ * This is stored in <clipped>.
+ * overflow - Value of the overflow style. Default is 'visible'.
+ */
 class mxText extends mxShape {
-  /**
-   * Class: mxText
-   *
-   * Extends <mxShape> to implement a text shape. To change vertical text from
-   * bottom to top to top to bottom, the following code can be used:
-   *
-   * (code)
-   * verticalTextRotation = 90;
-   * (end)
-   *
-   * Constructor: mxText
-   *
-   * Constructs a new text shape.
-   *
-   * Parameters:
-   *
-   * value - String that represents the text to be displayed. This is stored in
-   * <value>.
-   * bounds - <mxRectangle> that defines the bounds. This is stored in
-   * <mxShape.bounds>.
-   * align - Specifies the horizontal alignment. Default is ''. This is stored in
-   * <align>.
-   * valign - Specifies the vertical alignment. Default is ''. This is stored in
-   * <valign>.
-   * color - String that specifies the text color. Default is 'black'. This is
-   * stored in <color>.
-   * family - String that specifies the font family. Default is
-   * <mxConstants.DEFAULT_FONTFAMILY>. This is stored in <family>.
-   * size - Integer that specifies the font size. Default is
-   * <mxConstants.DEFAULT_FONTSIZE>. This is stored in <size>.
-   * fontStyle - Specifies the font style. Default is 0. This is stored in
-   * <fontStyle>.
-   * spacing - Integer that specifies the global spacing. Default is 2. This is
-   * stored in <spacing>.
-   * spacingTop - Integer that specifies the top spacing. Default is 0. The
-   * sum of the spacing and this is stored in <spacingTop>.
-   * spacingRight - Integer that specifies the right spacing. Default is 0. The
-   * sum of the spacing and this is stored in <spacingRight>.
-   * spacingBottom - Integer that specifies the bottom spacing. Default is 0.The
-   * sum of the spacing and this is stored in <spacingBottom>.
-   * spacingLeft - Integer that specifies the left spacing. Default is 0. The
-   * sum of the spacing and this is stored in <spacingLeft>.
-   * horizontal - Boolean that specifies if the label is horizontal. Default is
-   * true. This is stored in <horizontal>.
-   * background - String that specifies the background color. Default is null.
-   * This is stored in <background>.
-   * border - String that specifies the label border color. Default is null.
-   * This is stored in <border>.
-   * wrap - Specifies if word-wrapping should be enabled. Default is false.
-   * This is stored in <wrap>.
-   * clipped - Specifies if the label should be clipped. Default is false.
-   * This is stored in <clipped>.
-   * overflow - Value of the overflow style. Default is 'visible'.
-   */
   constructor(
     value: string,
     bounds: mxRectangle,

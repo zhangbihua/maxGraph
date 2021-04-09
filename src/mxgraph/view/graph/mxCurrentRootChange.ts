@@ -6,24 +6,16 @@ import mxEvent from '../../util/event/mxEvent';
 import mxGraphModel from './mxGraphModel';
 import mxGraph from "./mxGraph";
 
+/**
+ * Class: mxCurrentRootChange
+ *
+ * Action to change the current root in a view.
+ *
+ * Constructor: mxCurrentRootChange
+ *
+ * Constructs a change of the current root in the given view.
+ */
 class mxCurrentRootChange {
-  view: mxGraphView;
-
-  root: mxCell;
-
-  previous: mxCell;
-
-  isUp: boolean;
-
-  /**
-   * Class: mxCurrentRootChange
-   *
-   * Action to change the current root in a view.
-   *
-   * Constructor: mxCurrentRootChange
-   *
-   * Constructs a change of the current root in the given view.
-   */
   constructor(view: mxGraphView, root: mxCell) {
     this.view = view;
     this.root = root;
@@ -43,6 +35,14 @@ class mxCurrentRootChange {
       }
     }
   }
+
+  view: mxGraphView;
+
+  root: mxCell;
+
+  previous: mxCell;
+
+  isUp: boolean;
 
   /**
    * Function: execute

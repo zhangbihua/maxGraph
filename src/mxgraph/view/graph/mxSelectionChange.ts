@@ -5,31 +5,31 @@ import mxEvent from '../../util/event/mxEvent';
 import mxGraphSelectionModel from './mxGraphSelectionModel';
 import mxCell from '../cell/mxCell';
 
+/**
+ * Class: mxSelectionChange
+ *
+ * Action to change the current root in a view.
+ *
+ * Constructor: mxCurrentRootChange
+ *
+ * Constructs a change of the current root in the given view.
+ */
 class mxSelectionChange {
-  selectionModel: mxGraphSelectionModel;
-
-  added: mxCell[];
-
-  removed: mxCell[];
-
-  /**
-   * Class: mxSelectionChange
-   *
-   * Action to change the current root in a view.
-   *
-   * Constructor: mxCurrentRootChange
-   *
-   * Constructs a change of the current root in the given view.
-   */
   constructor(
-    selectionModel: mxGraphSelectionModel,
-    added: mxCell[] = [],
-    removed: mxCell[] = []
+      selectionModel: mxGraphSelectionModel,
+      added: mxCell[] = [],
+      removed: mxCell[] = []
   ) {
     this.selectionModel = selectionModel;
     this.added = added.slice();
     this.removed = removed.slice();
   }
+
+  selectionModel: mxGraphSelectionModel;
+
+  added: mxCell[];
+
+  removed: mxCell[];
 
   /**
    * Function: execute

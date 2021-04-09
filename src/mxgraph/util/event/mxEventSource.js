@@ -6,7 +6,33 @@
 
 import mxEventObject from './mxEventObject';
 
+/**
+ * Class: mxEventSource
+ *
+ * Base class for objects that dispatch named events. To create a subclass that
+ * inherits from mxEventSource, the following code is used.
+ *
+ * (code)
+ * function MyClass() { };
+ *
+ * MyClass.prototype = new mxEventSource();
+ * constructor = MyClass;
+ * (end)
+ *
+ * Known Subclasses:
+ *
+ * <mxGraphModel>, <mxGraph>, <mxGraphView>, <mxEditor>, <mxCellOverlay>,
+ * <mxToolbar>, <mxWindow>
+ *
+ * Constructor: mxEventSource
+ *
+ * Constructs a new event source.
+ */
 class mxEventSource {
+  constructor(eventSource) {
+    this.setEventSource(eventSource);
+  }
+
   /**
    * Variable: eventListeners
    *
@@ -29,32 +55,6 @@ class mxEventSource {
    * Optional source for events. Default is null.
    */
   eventSource = null;
-
-  /**
-   * Class: mxEventSource
-   *
-   * Base class for objects that dispatch named events. To create a subclass that
-   * inherits from mxEventSource, the following code is used.
-   *
-   * (code)
-   * function MyClass() { };
-   *
-   * MyClass.prototype = new mxEventSource();
-   * constructor = MyClass;
-   * (end)
-   *
-   * Known Subclasses:
-   *
-   * <mxGraphModel>, <mxGraph>, <mxGraphView>, <mxEditor>, <mxCellOverlay>,
-   * <mxToolbar>, <mxWindow>
-   *
-   * Constructor: mxEventSource
-   *
-   * Constructs a new event source.
-   */
-  constructor(eventSource) {
-    this.setEventSource(eventSource);
-  }
 
   /**
    * Function: isEventsEnabled

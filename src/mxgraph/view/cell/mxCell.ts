@@ -9,7 +9,83 @@ import mxConstants from '../../util/mxConstants';
 import mxGeometry from '../../util/datatypes/mxGeometry';
 import mxCellOverlay from './mxCellOverlay';
 
+/**
+ * Class: mxCell
+ *
+ * Cells are the elements of the graph model. They represent the state
+ * of the groups, vertices and edges in a graph.
+ *
+ * Custom attributes:
+ *
+ * For custom attributes we recommend using an XML node as the value of a cell.
+ * The following code can be used to create a cell with an XML node as the
+ * value:
+ *
+ * (code)
+ * let doc = mxUtils.createXmlDocument();
+ * let node = doc.createElement('MyNode')
+ * node.setAttribute('label', 'MyLabel');
+ * node.setAttribute('attribute1', 'value1');
+ * graph.insertVertex(graph.getDefaultParent(), null, node, 40, 40, 80, 30);
+ * (end)
+ *
+ * For the label to work, <mxGraph.convertValueToString> and
+ * <mxGraph.cellLabelChanged> should be overridden as follows:
+ *
+ * (code)
+ * graph.convertValueToString = (cell)=>
+ * {
+ *   if (mxUtils.isNode(cell.value))
+ *   {
+ *     return cell.getAttribute('label', '')
+ *   }
+ * };
+ *
+ * let cellLabelChanged = graph.cellLabelChanged;
+ * graph.cellLabelChanged = (cell, newValue, autoSize)=>
+ * {
+ *   if (mxUtils.isNode(cell.value))
+ *   {
+ *     // Clones the value for correct undo/redo
+ *     let elt = cell.value.cloneNode(true);
+ *     elt.setAttribute('label', newValue);
+ *     newValue = elt;
+ *   }
+ *
+ *   cellLabelChanged.apply(this, arguments);
+ * };
+ * (end)
+ *
+ * Callback: onInit
+ *
+ * Called from within the constructor.
+ *
+ * Constructor: mxCell
+ *
+ * Constructs a new cell to be used in a graph model.
+ * This method invokes <onInit> upon completion.
+ *
+ * Parameters:
+ *
+ * value - Optional object that represents the cell value.
+ * geometry - Optional <mxGeometry> that specifies the geometry.
+ * style - Optional formatted string that defines the style.
+ */
 class mxCell {
+  constructor(
+      value: any = null,
+      geometry: mxGeometry | null = null,
+      style: string | null = null
+  ) {
+    this.value = value;
+    this.setGeometry(geometry);
+    this.setStyle(style);
+
+    if (this.onInit != null) {
+      this.onInit();
+    }
+  }
+
   // TODO: Document me!
   // used by invalidate() of mxGraphView
   invalidating: boolean = false;
@@ -136,82 +212,6 @@ class mxCell {
     'children',
     'edges',
   ];
-
-  /**
-   * Class: mxCell
-   *
-   * Cells are the elements of the graph model. They represent the state
-   * of the groups, vertices and edges in a graph.
-   *
-   * Custom attributes:
-   *
-   * For custom attributes we recommend using an XML node as the value of a cell.
-   * The following code can be used to create a cell with an XML node as the
-   * value:
-   *
-   * (code)
-   * let doc = mxUtils.createXmlDocument();
-   * let node = doc.createElement('MyNode')
-   * node.setAttribute('label', 'MyLabel');
-   * node.setAttribute('attribute1', 'value1');
-   * graph.insertVertex(graph.getDefaultParent(), null, node, 40, 40, 80, 30);
-   * (end)
-   *
-   * For the label to work, <mxGraph.convertValueToString> and
-   * <mxGraph.cellLabelChanged> should be overridden as follows:
-   *
-   * (code)
-   * graph.convertValueToString = (cell)=>
-   * {
-   *   if (mxUtils.isNode(cell.value))
-   *   {
-   *     return cell.getAttribute('label', '')
-   *   }
-   * };
-   *
-   * let cellLabelChanged = graph.cellLabelChanged;
-   * graph.cellLabelChanged = (cell, newValue, autoSize)=>
-   * {
-   *   if (mxUtils.isNode(cell.value))
-   *   {
-   *     // Clones the value for correct undo/redo
-   *     let elt = cell.value.cloneNode(true);
-   *     elt.setAttribute('label', newValue);
-   *     newValue = elt;
-   *   }
-   *
-   *   cellLabelChanged.apply(this, arguments);
-   * };
-   * (end)
-   *
-   * Callback: onInit
-   *
-   * Called from within the constructor.
-   *
-   * Constructor: mxCell
-   *
-   * Constructs a new cell to be used in a graph model.
-   * This method invokes <onInit> upon completion.
-   *
-   * Parameters:
-   *
-   * value - Optional object that represents the cell value.
-   * geometry - Optional <mxGeometry> that specifies the geometry.
-   * style - Optional formatted string that defines the style.
-   */
-  constructor(
-    value: any = null,
-    geometry: mxGeometry | null = null,
-    style: string | null = null
-  ) {
-    this.value = value;
-    this.setGeometry(geometry);
-    this.setStyle(style);
-
-    if (this.onInit != null) {
-      this.onInit();
-    }
-  }
 
   /**
    * Function: getId

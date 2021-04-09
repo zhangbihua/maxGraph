@@ -4,45 +4,45 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+/**
+ * Class: mxImageExport
+ *
+ * Creates a new image export instance to be used with an export canvas. Here
+ * is an example that uses this class to create an image via a backend using
+ * <mxXmlExportCanvas>.
+ *
+ * (code)
+ * let xmlDoc = mxUtils.createXmlDocument();
+ * let root = xmlDoc.createElement('output');
+ * xmlDoc.appendChild(root);
+ *
+ * let xmlCanvas = new mxXmlCanvas2D(root);
+ * let imgExport = new mxImageExport();
+ * imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
+ *
+ * let bounds = graph.getGraphBounds();
+ * let w = Math.ceil(bounds.x + bounds.width);
+ * let h = Math.ceil(bounds.y + bounds.height);
+ *
+ * let xml = mxUtils.getXml(root);
+ * new mxXmlRequest('export', 'format=png&w=' + w +
+ *     '&h=' + h + '&bg=#F9F7ED&xml=' + encodeURIComponent(xml))
+ *     .simulate(document, '_blank');
+ * (end)
+ *
+ * Constructor: mxImageExport
+ *
+ * Constructs a new image export.
+ */
 class mxImageExport {
+  constructor() {}
+
   /**
    * Variable: includeOverlays
    *
    * Specifies if overlays should be included in the export. Default is false.
    */
   includeOverlays = false;
-
-  /**
-   * Class: mxImageExport
-   *
-   * Creates a new image export instance to be used with an export canvas. Here
-   * is an example that uses this class to create an image via a backend using
-   * <mxXmlExportCanvas>.
-   *
-   * (code)
-   * let xmlDoc = mxUtils.createXmlDocument();
-   * let root = xmlDoc.createElement('output');
-   * xmlDoc.appendChild(root);
-   *
-   * let xmlCanvas = new mxXmlCanvas2D(root);
-   * let imgExport = new mxImageExport();
-   * imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
-   *
-   * let bounds = graph.getGraphBounds();
-   * let w = Math.ceil(bounds.x + bounds.width);
-   * let h = Math.ceil(bounds.y + bounds.height);
-   *
-   * let xml = mxUtils.getXml(root);
-   * new mxXmlRequest('export', 'format=png&w=' + w +
-   *     '&h=' + h + '&bg=#F9F7ED&xml=' + encodeURIComponent(xml))
-   *     .simulate(document, '_blank');
-   * (end)
-   *
-   * Constructor: mxImageExport
-   *
-   * Constructs a new image export.
-   */
-  constructor() {}
 
   /**
    * Function: drawState

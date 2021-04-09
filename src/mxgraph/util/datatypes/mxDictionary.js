@@ -6,27 +6,27 @@
 
 import mxObjectIdentity from './mxObjectIdentity';
 
+/**
+ * Class: mxDictionary
+ *
+ * A wrapper class for an associative array with object keys. Note: This
+ * implementation uses <mxObjectIdentitiy> to turn object keys into strings.
+ *
+ * Constructor: mxEventSource
+ *
+ * Constructs a new dictionary which allows object to be used as keys.
+ */
 class mxDictionary {
+  constructor() {
+    this.clear();
+  }
+
   /**
    * Function: map
    *
    * Stores the (key, value) pairs in this dictionary.
    */
   map = null;
-
-  /**
-   * Class: mxDictionary
-   *
-   * A wrapper class for an associative array with object keys. Note: This
-   * implementation uses <mxObjectIdentitiy> to turn object keys into strings.
-   *
-   * Constructor: mxEventSource
-   *
-   * Constructs a new dictionary which allows object to be used as keys.
-   */
-  constructor() {
-    this.clear();
-  }
 
   /**
    * Function: clear

@@ -17,7 +17,130 @@ const useAbsoluteIds =
   !mxClient.IS_EDGE &&
   document.getElementsByTagName('base').length > 0;
 
+/**
+ * Class: mxSvgCanvas2D
+ *
+ * Extends <mxAbstractCanvas2D> to implement a canvas for SVG. This canvas writes all
+ * calls as SVG output to the given SVG root node.
+ *
+ * (code)
+ * let svgDoc = mxUtils.createXmlDocument();
+ * let root = (svgDoc.createElementNS != null) ?
+ *     svgDoc.createElementNS(mxConstants.NS_SVG, 'svg') : svgDoc.createElement('svg');
+ *
+ * if (svgDoc.createElementNS == null)
+ * {
+ *   root.setAttribute('xmlns', mxConstants.NS_SVG);
+ *   root.setAttribute('xmlns:xlink', mxConstants.NS_XLINK);
+ * }
+ * else
+ * {
+ *   root.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', mxConstants.NS_XLINK);
+ * }
+ *
+ * let bounds = graph.getGraphBounds();
+ * root.setAttribute('width', (bounds.x + bounds.width + 4) + 'px');
+ * root.setAttribute('height', (bounds.y + bounds.height + 4) + 'px');
+ * root.setAttribute('version', '1.1');
+ *
+ * svgDoc.appendChild(root);
+ *
+ * let svgCanvas = new D(root);
+ * (end)
+ *
+ * A description of the public API is available in <mxXmlCanvas2D>.
+ *
+ * To disable anti-aliasing in the output, use the following code.
+ *
+ * (code)
+ * graph.view.canvas.ownerSVGElement.setAttribute('shape-rendering', 'crispEdges');
+ * (end)
+ *
+ * Or set the respective attribute in the SVG element directly.
+ *
+ * Constructor: mxSvgCanvas2D
+ *
+ * Constructs a new SVG canvas.
+ *
+ * Parameters:
+ *
+ * root - SVG container for the output.
+ * styleEnabled - Optional boolean that specifies if a style section should be
+ * added. The style section sets the default font-size, font-family and
+ * stroke-miterlimit globally. Default is false.
+ */
 class mxSvgCanvas2D extends mxAbstractCanvas2D {
+  constructor(root, styleEnabled) {
+    super();
+
+    /**
+     * Variable: root
+     *
+     * Reference to the container for the SVG content.
+     */
+    this.root = root;
+
+    /**
+     * Variable: gradients
+     *
+     * Local cache of gradients for quick lookups.
+     */
+    this.gradients = [];
+
+    /**
+     * Variable: defs
+     *
+     * Reference to the defs section of the SVG document. Only for export.
+     */
+    this.defs = null;
+
+    /**
+     * Variable: styleEnabled
+     *
+     * Stores the value of styleEnabled passed to the constructor.
+     */
+    this.styleEnabled = styleEnabled != null ? styleEnabled : false;
+
+    let svg = null;
+
+    // Adds optional defs section for export
+    if (root.ownerDocument !== document) {
+      let node = root;
+
+      // Finds owner SVG element in XML DOM
+      while (node != null && node.nodeName !== 'svg') {
+        node = node.parentNode;
+      }
+
+      svg = node;
+    }
+
+    if (svg != null) {
+      // Tries to get existing defs section
+      const tmp = svg.getElementsByTagName('defs');
+
+      if (tmp.length > 0) {
+        this.defs = svg.getElementsByTagName('defs')[0];
+      }
+
+      // Adds defs section if none exists
+      if (this.defs == null) {
+        this.defs = this.createElement('defs');
+
+        if (svg.firstChild != null) {
+          svg.insertBefore(this.defs, svg.firstChild);
+        } else {
+          svg.appendChild(this.defs);
+        }
+      }
+
+      // Adds stylesheet
+      if (this.styleEnabled) {
+        this.defs.appendChild(this.createStyle());
+      }
+    }
+  }
+
   /**
    * Variable: path
    *
@@ -127,129 +250,6 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
    * This is used to speed up repaint of text in <updateText>.
    */
   cacheOffsetSize = true;
-
-  /**
-   * Class: D
-   *
-   * Extends <mxAbstractCanvas2D> to implement a canvas for SVG. This canvas writes all
-   * calls as SVG output to the given SVG root node.
-   *
-   * (code)
-   * let svgDoc = mxUtils.createXmlDocument();
-   * let root = (svgDoc.createElementNS != null) ?
-   *     svgDoc.createElementNS(mxConstants.NS_SVG, 'svg') : svgDoc.createElement('svg');
-   *
-   * if (svgDoc.createElementNS == null)
-   * {
-   *   root.setAttribute('xmlns', mxConstants.NS_SVG);
-   *   root.setAttribute('xmlns:xlink', mxConstants.NS_XLINK);
-   * }
-   * else
-   * {
-   *   root.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', mxConstants.NS_XLINK);
-   * }
-   *
-   * let bounds = graph.getGraphBounds();
-   * root.setAttribute('width', (bounds.x + bounds.width + 4) + 'px');
-   * root.setAttribute('height', (bounds.y + bounds.height + 4) + 'px');
-   * root.setAttribute('version', '1.1');
-   *
-   * svgDoc.appendChild(root);
-   *
-   * let svgCanvas = new D(root);
-   * (end)
-   *
-   * A description of the public API is available in <mxXmlCanvas2D>.
-   *
-   * To disable anti-aliasing in the output, use the following code.
-   *
-   * (code)
-   * graph.view.canvas.ownerSVGElement.setAttribute('shape-rendering', 'crispEdges');
-   * (end)
-   *
-   * Or set the respective attribute in the SVG element directly.
-   *
-   * Constructor: mxSvgCanvas2D
-   *
-   * Constructs a new SVG canvas.
-   *
-   * Parameters:
-   *
-   * root - SVG container for the output.
-   * styleEnabled - Optional boolean that specifies if a style section should be
-   * added. The style section sets the default font-size, font-family and
-   * stroke-miterlimit globally. Default is false.
-   */
-  constructor(root, styleEnabled) {
-    super();
-
-    /**
-     * Variable: root
-     *
-     * Reference to the container for the SVG content.
-     */
-    this.root = root;
-
-    /**
-     * Variable: gradients
-     *
-     * Local cache of gradients for quick lookups.
-     */
-    this.gradients = [];
-
-    /**
-     * Variable: defs
-     *
-     * Reference to the defs section of the SVG document. Only for export.
-     */
-    this.defs = null;
-
-    /**
-     * Variable: styleEnabled
-     *
-     * Stores the value of styleEnabled passed to the constructor.
-     */
-    this.styleEnabled = styleEnabled != null ? styleEnabled : false;
-
-    let svg = null;
-
-    // Adds optional defs section for export
-    if (root.ownerDocument !== document) {
-      let node = root;
-
-      // Finds owner SVG element in XML DOM
-      while (node != null && node.nodeName !== 'svg') {
-        node = node.parentNode;
-      }
-
-      svg = node;
-    }
-
-    if (svg != null) {
-      // Tries to get existing defs section
-      const tmp = svg.getElementsByTagName('defs');
-
-      if (tmp.length > 0) {
-        this.defs = svg.getElementsByTagName('defs')[0];
-      }
-
-      // Adds defs section if none exists
-      if (this.defs == null) {
-        this.defs = this.createElement('defs');
-
-        if (svg.firstChild != null) {
-          svg.insertBefore(this.defs, svg.firstChild);
-        } else {
-          svg.appendChild(this.defs);
-        }
-      }
-
-      // Adds stylesheet
-      if (this.styleEnabled) {
-        this.defs.appendChild(this.createStyle());
-      }
-    }
-  }
 
   /**
    * Updates existing DOM nodes for text rendering.

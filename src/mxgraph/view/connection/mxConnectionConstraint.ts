@@ -6,7 +6,39 @@
 
 import mxPoint from '../../util/datatypes/mxPoint';
 
+/**
+ * Class: mxConnectionConstraint
+ *
+ * Defines an object that contains the constraints about how to connect one
+ * side of an edge to its terminal.
+ *
+ * Constructor: mxConnectionConstraint
+ *
+ * Constructs a new connection constraint for the given point and boolean
+ * arguments.
+ *
+ * Parameters:
+ *
+ * point - Optional <mxPoint> that specifies the fixed location of the point
+ * in relative coordinates. Default is null.
+ * perimeter - Optional boolean that specifies if the fixed point should be
+ * projected onto the perimeter of the terminal. Default is true.
+ */
 class mxConnectionConstraint {
+  constructor(
+      point: mxPoint | null = null,
+      perimeter: boolean = true,
+      name: string | null = null,
+      dx: number | null = null,
+      dy: number | null = null
+  ) {
+    this.point = point;
+    this.perimeter = perimeter != null ? perimeter : true;
+    this.name = name;
+    this.dx = dx || 0;
+    this.dy = dy || 0;
+  }
+
   /**
    * Variable: point
    *
@@ -42,38 +74,6 @@ class mxConnectionConstraint {
    * Optional float that specifies the vertical offset of the constraint.
    */
   dy: number | null = null;
-
-  /**
-   * Class: mxConnectionConstraint
-   *
-   * Defines an object that contains the constraints about how to connect one
-   * side of an edge to its terminal.
-   *
-   * Constructor: mxConnectionConstraint
-   *
-   * Constructs a new connection constraint for the given point and boolean
-   * arguments.
-   *
-   * Parameters:
-   *
-   * point - Optional <mxPoint> that specifies the fixed location of the point
-   * in relative coordinates. Default is null.
-   * perimeter - Optional boolean that specifies if the fixed point should be
-   * projected onto the perimeter of the terminal. Default is true.
-   */
-  constructor(
-    point: mxPoint | null = null,
-    perimeter: boolean = true,
-    name: string | null = null,
-    dx: number | null = null,
-    dy: number | null = null
-  ) {
-    this.point = point;
-    this.perimeter = perimeter != null ? perimeter : true;
-    this.name = name;
-    this.dx = dx || 0;
-    this.dy = dy || 0;
-  }
 }
 
 export default mxConnectionConstraint;

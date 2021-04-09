@@ -12,7 +12,31 @@ import mxEventSource from '../event/mxEventSource';
 import mxEventObject from '../event/mxEventObject';
 import mxClient from '../../mxClient';
 
+/**
+ * Class: mxToolbar
+ *
+ * Creates a toolbar inside a given DOM node. The toolbar may contain icons,
+ * buttons and combo boxes.
+ *
+ * Event: mxEvent.SELECT
+ *
+ * Fires when an item was selected in the toolbar. The <code>function</code>
+ * property contains the function that was selected in <selectMode>.
+ *
+ * Constructor: mxToolbar
+ *
+ * Constructs a toolbar in the specified container.
+ *
+ * Parameters:
+ *
+ * container - DOM node that contains the toolbar.
+ */
 class mxToolbar extends mxEventSource {
+  constructor(container) {
+    super();
+    this.container = container;
+  }
+
   /**
    * Variable: container
    *
@@ -49,30 +73,6 @@ class mxToolbar extends mxEventSource {
    * the previously selected item.
    */
   updateDefaultMode = true;
-
-  /**
-   * Class: mxToolbar
-   *
-   * Creates a toolbar inside a given DOM node. The toolbar may contain icons,
-   * buttons and combo boxes.
-   *
-   * Event: mxEvent.SELECT
-   *
-   * Fires when an item was selected in the toolbar. The <code>function</code>
-   * property contains the function that was selected in <selectMode>.
-   *
-   * Constructor: mxToolbar
-   *
-   * Constructs a toolbar in the specified container.
-   *
-   * Parameters:
-   *
-   * container - DOM node that contains the toolbar.
-   */
-  constructor(container) {
-    super();
-    this.container = container;
-  }
 
   /**
    * Function: addItem

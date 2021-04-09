@@ -25,6 +25,11 @@ import mxCell from "../view/cell/mxCell";
  * Constructs a new guide object.
  */
 class mxGuide {
+  constructor(graph: mxGraph, states: mxCellState[]) {
+    this.graph = graph;
+    this.setStates(states);
+  }
+
   /**
    * Variable: graph
    *
@@ -80,11 +85,6 @@ class mxGuide {
    * Default tolerance in px if grid is disabled. Default is 2.
    */
   tolerance: number = 2;
-
-  constructor(graph: mxGraph, states: mxCellState[]) {
-    this.graph = graph;
-    this.setStates(states);
-  }
 
   /**
    * Function: setStates

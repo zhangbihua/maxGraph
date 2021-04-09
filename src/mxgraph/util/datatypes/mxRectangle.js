@@ -3,6 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+
+import mxPoint from './mxPoint';
+
 /**
  * Class: mxRectangle
  *
@@ -14,10 +17,15 @@
  * Constructs a new rectangle for the optional parameters. If no parameters
  * are given then the respective default values are used.
  */
-
-import mxPoint from './mxPoint';
-
 class mxRectangle extends mxPoint {
+  constructor(x, y, width, height) {
+    super(x, y, width, height);
+
+    // replace super of mxPoint
+    this.width = width != null ? width : 0;
+    this.height = height != null ? height : 0;
+  }
+
   /**
    * Variable: width
    *
@@ -31,14 +39,6 @@ class mxRectangle extends mxPoint {
    * Holds the height of the rectangle. Default is 0.
    */
   height = null;
-
-  constructor(x, y, width, height) {
-    super(x, y, width, height);
-
-    // replace super of mxPoint
-    this.width = width != null ? width : 0;
-    this.height = height != null ? height : 0;
-  }
 
   /**
    * Function: fromRectangle

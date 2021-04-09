@@ -4,40 +4,12 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+/**
+ * Class: mxPanningManager
+ *
+ * Implements a handler for panning.
+ */
 class mxPanningManager {
-  /**
-   * Variable: damper
-   *
-   * Damper value for the panning. Default is 1/6.
-   */
-  damper = 1 / 6;
-
-  /**
-   * Variable: delay
-   *
-   * Delay in milliseconds for the panning. Default is 10.
-   */
-  delay = 10;
-
-  /**
-   * Variable: handleMouseOut
-   *
-   * Specifies if mouse events outside of the component should be handled. Default is true.
-   */
-  handleMouseOut = true;
-
-  /**
-   * Variable: border
-   *
-   * Border to handle automatic panning inside the component. Default is 0 (disabled).
-   */
-  border = 0;
-
-  /**
-   * Class: mxPanningManager
-   *
-   * Implements a handler for panning.
-   */
   constructor(graph) {
     this.thread = null;
     this.active = false;
@@ -218,6 +190,34 @@ class mxPanningManager {
       mxEvent.removeListener(document, 'mouseup', this.mouseUpListener);
     };
   }
+
+  /**
+   * Variable: damper
+   *
+   * Damper value for the panning. Default is 1/6.
+   */
+  damper = 1 / 6;
+
+  /**
+   * Variable: delay
+   *
+   * Delay in milliseconds for the panning. Default is 10.
+   */
+  delay = 10;
+
+  /**
+   * Variable: handleMouseOut
+   *
+   * Specifies if mouse events outside of the component should be handled. Default is true.
+   */
+  handleMouseOut = true;
+
+  /**
+   * Variable: border
+   *
+   * Border to handle automatic panning inside the component. Default is 0 (disabled).
+   */
+  border = 0;
 }
 
 export default mxPanningManager;

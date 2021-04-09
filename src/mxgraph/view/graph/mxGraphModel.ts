@@ -24,7 +24,209 @@ import mxValueChange from '../../atomic_changes/mxValueChange';
 import mxVisibleChange from '../../atomic_changes/mxVisibleChange';
 import mxGeometry from "../../util/datatypes/mxGeometry";
 
+/**
+ * Class: mxGraphModel
+ *
+ * Extends <mxEventSource> to implement a graph model. The graph model acts as
+ * a wrapper around the cells which are in charge of storing the actual graph
+ * datastructure. The model acts as a transactional wrapper with event
+ * notification for all changes, whereas the cells contain the atomic
+ * operations for updating the actual datastructure.
+ *
+ * Layers:
+ *
+ * The cell hierarchy in the model must have a top-level root cell which
+ * contains the layers (typically one default layer), which in turn contain the
+ * top-level cells of the layers. This means each cell is contained in a layer.
+ * If no layers are required, then all new cells should be added to the default
+ * layer.
+ *
+ * Layers are useful for hiding and showing groups of cells, or for placing
+ * groups of cells on top of other cells in the display. To identify a layer,
+ * the <isLayer> function is used. It returns true if the parent of the given
+ * cell is the root of the model.
+ *
+ * Events:
+ *
+ * See events section for more details. There is a new set of events for
+ * tracking transactional changes as they happen. The events are called
+ * startEdit for the initial beginUpdate, executed for each executed change
+ * and endEdit for the terminal endUpdate. The executed event contains a
+ * property called change which represents the change after execution.
+ *
+ * Encoding the model:
+ *
+ * To encode a graph model, use the following code:
+ *
+ * (code)
+ * let enc = new mxCodec();
+ * let node = enc.encode(graph.getModel());
+ * (end)
+ *
+ * This will create an XML node that contains all the model information.
+ *
+ * Encoding and decoding changes:
+ *
+ * For the encoding of changes, a graph model listener is required that encodes
+ * each change from the given array of changes.
+ *
+ * (code)
+ * model.addListener(mxEvent.CHANGE, (sender, evt)=>
+ * {
+ *   let changes = evt.getProperty('edit').changes;
+ *   let nodes = [];
+ *   let codec = new mxCodec();
+ *
+ *   for (let i = 0; i < changes.length; i += 1)
+ *   {
+ *     nodes.push(codec.encode(changes[i]));
+ *   }
+ *   // do something with the nodes
+ * });
+ * (end)
+ *
+ * For the decoding and execution of changes, the codec needs a lookup function
+ * that allows it to resolve cell IDs as follows:
+ *
+ * (code)
+ * let codec = new mxCodec();
+ * codec.lookup = (id)=>
+ * {
+ *   return model.getCell(id);
+ * }
+ * (end)
+ *
+ * For each encoded change (represented by a node), the following code can be
+ * used to carry out the decoding and create a change object.
+ *
+ * (code)
+ * let changes = [];
+ * let change = codec.decode(node);
+ * change.model = model;
+ * change.execute();
+ * changes.push(change);
+ * (end)
+ *
+ * The changes can then be dispatched using the model as follows.
+ *
+ * (code)
+ * let edit = new mxUndoableEdit(model, false);
+ * edit.changes = changes;
+ *
+ * edit.notify = ()=>
+ * {
+ *   edit.source.fireEvent(new mxEventObject(mxEvent.CHANGE,
+ *     'edit', edit, 'changes', edit.changes));
+ *   edit.source.fireEvent(new mxEventObject(mxEvent.NOTIFY,
+ *     'edit', edit, 'changes', edit.changes));
+ * }
+ *
+ * model.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
+ * model.fireEvent(new mxEventObject(mxEvent.CHANGE,
+ *     'edit', edit, 'changes', changes));
+ * (end)
+ *
+ * Event: mxEvent.CHANGE
+ *
+ * Fires when an undoable edit is dispatched. The <code>edit</code> property
+ * contains the <mxUndoableEdit>. The <code>changes</code> property contains
+ * the array of atomic changes inside the undoable edit. The changes property
+ * is <strong>deprecated</strong>, please use edit.changes instead.
+ *
+ * Example:
+ *
+ * For finding newly inserted cells, the following code can be used:
+ *
+ * (code)
+ * graph.model.addListener(mxEvent.CHANGE, (sender, evt)=>
+ * {
+ *   let changes = evt.getProperty('edit').changes;
+ *
+ *   for (let i = 0; i < changes.length; i += 1)
+ *   {
+ *     let change = changes[i];
+ *
+ *     if (change instanceof mxChildChange &&
+ *       change.change.previous == null)
+ *     {
+ *       graph.startEditingAtCell(change.child);
+ *       break;
+ *     }
+ *   }
+ * });
+ * (end)
+ *
+ *
+ * Event: mxEvent.NOTIFY
+ *
+ * Same as <mxEvent.CHANGE>, this event can be used for classes that need to
+ * implement a sync mechanism between this model and, say, a remote model. In
+ * such a setup, only local changes should trigger a notify event and all
+ * changes should trigger a change event.
+ *
+ * Event: mxEvent.EXECUTE
+ *
+ * Fires between begin- and endUpdate and after an atomic change was executed
+ * in the model. The <code>change</code> property contains the atomic change
+ * that was executed.
+ *
+ * Event: mxEvent.EXECUTED
+ *
+ * Fires between START_EDIT and END_EDIT after an atomic change was executed.
+ * The <code>change</code> property contains the change that was executed.
+ *
+ * Event: mxEvent.BEGIN_UPDATE
+ *
+ * Fires after the <updateLevel> was incremented in <beginUpdate>. This event
+ * contains no properties.
+ *
+ * Event: mxEvent.START_EDIT
+ *
+ * Fires after the <updateLevel> was changed from 0 to 1. This event
+ * contains no properties.
+ *
+ * Event: mxEvent.END_UPDATE
+ *
+ * Fires after the <updateLevel> was decreased in <endUpdate> but before any
+ * notification or change dispatching. The <code>edit</code> property contains
+ * the <currentEdit>.
+ *
+ * Event: mxEvent.END_EDIT
+ *
+ * Fires after the <updateLevel> was changed from 1 to 0. This event
+ * contains no properties.
+ *
+ * Event: mxEvent.BEFORE_UNDO
+ *
+ * Fires before the change is dispatched after the update level has reached 0
+ * in <endUpdate>. The <code>edit</code> property contains the <curreneEdit>.
+ *
+ * Event: mxEvent.UNDO
+ *
+ * Fires after the change was dispatched in <endUpdate>. The <code>edit</code>
+ * property contains the <currentEdit>.
+ *
+ * Constructor: mxGraphModel
+ *
+ * Constructs a new graph model. If no root is specified then a new root
+ * <mxCell> with a default layer is created.
+ *
+ * Parameters:
+ *
+ * root - <mxCell> that represents the root cell.
+ */
 class mxGraphModel extends mxEventSource {
+  constructor(root: mxCell | null=null) {
+    super();
+    this.currentEdit = this.createUndoableEdit();
+
+    if (root != null) {
+      this.setRoot(root);
+    } else {
+      this.clear();
+    }
+  }
+
   /**
    * Variable: root
    *
@@ -111,208 +313,6 @@ class mxGraphModel extends mxEventSource {
    * True if the program flow is currently inside endUpdate.
    */
   endingUpdate: boolean = false;
-
-  /**
-   * Class: mxGraphModel
-   *
-   * Extends <mxEventSource> to implement a graph model. The graph model acts as
-   * a wrapper around the cells which are in charge of storing the actual graph
-   * datastructure. The model acts as a transactional wrapper with event
-   * notification for all changes, whereas the cells contain the atomic
-   * operations for updating the actual datastructure.
-   *
-   * Layers:
-   *
-   * The cell hierarchy in the model must have a top-level root cell which
-   * contains the layers (typically one default layer), which in turn contain the
-   * top-level cells of the layers. This means each cell is contained in a layer.
-   * If no layers are required, then all new cells should be added to the default
-   * layer.
-   *
-   * Layers are useful for hiding and showing groups of cells, or for placing
-   * groups of cells on top of other cells in the display. To identify a layer,
-   * the <isLayer> function is used. It returns true if the parent of the given
-   * cell is the root of the model.
-   *
-   * Events:
-   *
-   * See events section for more details. There is a new set of events for
-   * tracking transactional changes as they happen. The events are called
-   * startEdit for the initial beginUpdate, executed for each executed change
-   * and endEdit for the terminal endUpdate. The executed event contains a
-   * property called change which represents the change after execution.
-   *
-   * Encoding the model:
-   *
-   * To encode a graph model, use the following code:
-   *
-   * (code)
-   * let enc = new mxCodec();
-   * let node = enc.encode(graph.getModel());
-   * (end)
-   *
-   * This will create an XML node that contains all the model information.
-   *
-   * Encoding and decoding changes:
-   *
-   * For the encoding of changes, a graph model listener is required that encodes
-   * each change from the given array of changes.
-   *
-   * (code)
-   * model.addListener(mxEvent.CHANGE, (sender, evt)=>
-   * {
-   *   let changes = evt.getProperty('edit').changes;
-   *   let nodes = [];
-   *   let codec = new mxCodec();
-   *
-   *   for (let i = 0; i < changes.length; i += 1)
-   *   {
-   *     nodes.push(codec.encode(changes[i]));
-   *   }
-   *   // do something with the nodes
-   * });
-   * (end)
-   *
-   * For the decoding and execution of changes, the codec needs a lookup function
-   * that allows it to resolve cell IDs as follows:
-   *
-   * (code)
-   * let codec = new mxCodec();
-   * codec.lookup = (id)=>
-   * {
-   *   return model.getCell(id);
-   * }
-   * (end)
-   *
-   * For each encoded change (represented by a node), the following code can be
-   * used to carry out the decoding and create a change object.
-   *
-   * (code)
-   * let changes = [];
-   * let change = codec.decode(node);
-   * change.model = model;
-   * change.execute();
-   * changes.push(change);
-   * (end)
-   *
-   * The changes can then be dispatched using the model as follows.
-   *
-   * (code)
-   * let edit = new mxUndoableEdit(model, false);
-   * edit.changes = changes;
-   *
-   * edit.notify = ()=>
-   * {
-   *   edit.source.fireEvent(new mxEventObject(mxEvent.CHANGE,
-   *     'edit', edit, 'changes', edit.changes));
-   *   edit.source.fireEvent(new mxEventObject(mxEvent.NOTIFY,
-   *     'edit', edit, 'changes', edit.changes));
-   * }
-   *
-   * model.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
-   * model.fireEvent(new mxEventObject(mxEvent.CHANGE,
-   *     'edit', edit, 'changes', changes));
-   * (end)
-   *
-   * Event: mxEvent.CHANGE
-   *
-   * Fires when an undoable edit is dispatched. The <code>edit</code> property
-   * contains the <mxUndoableEdit>. The <code>changes</code> property contains
-   * the array of atomic changes inside the undoable edit. The changes property
-   * is <strong>deprecated</strong>, please use edit.changes instead.
-   *
-   * Example:
-   *
-   * For finding newly inserted cells, the following code can be used:
-   *
-   * (code)
-   * graph.model.addListener(mxEvent.CHANGE, (sender, evt)=>
-   * {
-   *   let changes = evt.getProperty('edit').changes;
-   *
-   *   for (let i = 0; i < changes.length; i += 1)
-   *   {
-   *     let change = changes[i];
-   *
-   *     if (change instanceof mxChildChange &&
-   *       change.change.previous == null)
-   *     {
-   *       graph.startEditingAtCell(change.child);
-   *       break;
-   *     }
-   *   }
-   * });
-   * (end)
-   *
-   *
-   * Event: mxEvent.NOTIFY
-   *
-   * Same as <mxEvent.CHANGE>, this event can be used for classes that need to
-   * implement a sync mechanism between this model and, say, a remote model. In
-   * such a setup, only local changes should trigger a notify event and all
-   * changes should trigger a change event.
-   *
-   * Event: mxEvent.EXECUTE
-   *
-   * Fires between begin- and endUpdate and after an atomic change was executed
-   * in the model. The <code>change</code> property contains the atomic change
-   * that was executed.
-   *
-   * Event: mxEvent.EXECUTED
-   *
-   * Fires between START_EDIT and END_EDIT after an atomic change was executed.
-   * The <code>change</code> property contains the change that was executed.
-   *
-   * Event: mxEvent.BEGIN_UPDATE
-   *
-   * Fires after the <updateLevel> was incremented in <beginUpdate>. This event
-   * contains no properties.
-   *
-   * Event: mxEvent.START_EDIT
-   *
-   * Fires after the <updateLevel> was changed from 0 to 1. This event
-   * contains no properties.
-   *
-   * Event: mxEvent.END_UPDATE
-   *
-   * Fires after the <updateLevel> was decreased in <endUpdate> but before any
-   * notification or change dispatching. The <code>edit</code> property contains
-   * the <currentEdit>.
-   *
-   * Event: mxEvent.END_EDIT
-   *
-   * Fires after the <updateLevel> was changed from 1 to 0. This event
-   * contains no properties.
-   *
-   * Event: mxEvent.BEFORE_UNDO
-   *
-   * Fires before the change is dispatched after the update level has reached 0
-   * in <endUpdate>. The <code>edit</code> property contains the <curreneEdit>.
-   *
-   * Event: mxEvent.UNDO
-   *
-   * Fires after the change was dispatched in <endUpdate>. The <code>edit</code>
-   * property contains the <currentEdit>.
-   *
-   * Constructor: mxGraphModel
-   *
-   * Constructs a new graph model. If no root is specified then a new root
-   * <mxCell> with a default layer is created.
-   *
-   * Parameters:
-   *
-   * root - <mxCell> that represents the root cell.
-   */
-  constructor(root: mxCell | null=null) {
-    super();
-    this.currentEdit = this.createUndoableEdit();
-
-    if (root != null) {
-      this.setRoot(root);
-    } else {
-      this.clear();
-    }
-  }
 
   /**
    * Function: clear

@@ -12,7 +12,44 @@ import mxGuide from '../mxGuide';
 import mxConstants from '../mxConstants';
 import mxPoint from '../datatypes/mxPoint';
 
+/**
+ * Class: mxDragSource
+ *
+ * Wrapper to create a drag source from a DOM element so that the element can
+ * be dragged over a graph and dropped into the graph as a new cell.
+ *
+ * Problem is that in the dropHandler the current preview location is not
+ * available, so the preview and the dropHandler must match.
+ *
+ * Constructor: mxDragSource
+ *
+ * Constructs a new drag source for the given element.
+ */
 class mxDragSource {
+  constructor(element, dropHandler) {
+    this.element = element;
+    this.dropHandler = dropHandler;
+
+    // Handles a drag gesture on the element
+    mxEvent.addGestureListeners(element, evt => {
+      this.mouseDown(evt);
+    });
+
+    // Prevents native drag and drop
+    mxEvent.addListener(element, 'dragstart', evt => {
+      mxEvent.consume(evt);
+    });
+
+    this.eventConsumer = (sender, evt) => {
+      const evtName = evt.getProperty('eventName');
+      const me = evt.getProperty('event');
+
+      if (evtName !== mxEvent.MOUSE_DOWN) {
+        me.consume();
+      }
+    };
+  }
+
   /**
    * Variable: element
    *
@@ -148,43 +185,6 @@ class mxDragSource {
    * is true.
    */
   checkEventSource = true;
-
-  /**
-   * Class: mxDragSource
-   *
-   * Wrapper to create a drag source from a DOM element so that the element can
-   * be dragged over a graph and dropped into the graph as a new cell.
-   *
-   * Problem is that in the dropHandler the current preview location is not
-   * available, so the preview and the dropHandler must match.
-   *
-   * Constructor: mxDragSource
-   *
-   * Constructs a new drag source for the given element.
-   */
-  constructor(element, dropHandler) {
-    this.element = element;
-    this.dropHandler = dropHandler;
-
-    // Handles a drag gesture on the element
-    mxEvent.addGestureListeners(element, evt => {
-      this.mouseDown(evt);
-    });
-
-    // Prevents native drag and drop
-    mxEvent.addListener(element, 'dragstart', evt => {
-      mxEvent.consume(evt);
-    });
-
-    this.eventConsumer = (sender, evt) => {
-      const evtName = evt.getProperty('eventName');
-      const me = evt.getProperty('event');
-
-      if (evtName !== mxEvent.MOUSE_DOWN) {
-        me.consume();
-      }
-    };
-  }
 
   /**
    * Function: isEnabled

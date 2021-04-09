@@ -7,7 +7,51 @@ import mxPoint from '../datatypes/mxPoint';
 import mxCellStatePreview from '../../view/cell/mxCellStatePreview';
 import mxAnimation from './mxAnimation';
 
+/**
+ *
+ * Class: mxMorphing
+ *
+ * Implements animation for morphing cells. Here is an example of
+ * using this class for animating the result of a layout algorithm:
+ *
+ * (code)
+ * graph.getModel().beginUpdate();
+ * try
+ * {
+ *   let circleLayout = new mxCircleLayout(graph);
+ *   circleLayout.execute(graph.getDefaultParent());
+ * }
+ * finally
+ * {
+ *   let morph = new mxMorphing(graph);
+ *   morph.addListener(mxEvent.DONE, ()=>
+ *   {
+ *     graph.getModel().endUpdate();
+ *   });
+ *
+ *   morph.startAnimation();
+ * }
+ * (end)
+ *
+ * Constructor: mxMorphing
+ *
+ * Constructs an animation.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ * steps - Optional number of steps in the morphing animation. Default is 6.
+ * ease - Optional easing constant for the animation. Default is 1.5.
+ * delay - Optional delay between the animation steps. Passed to <mxAnimation>.
+ */
 class mxMorphing extends mxAnimation {
+  constructor(graph, steps, ease, delay) {
+    super(delay);
+    this.graph = graph;
+    this.steps = steps != null ? steps : 6;
+    this.ease = ease != null ? ease : 1.5;
+  }
+
   /**
    * Variable: graph
    *
@@ -45,50 +89,6 @@ class mxMorphing extends mxAnimation {
    * in the current transaction.
    */
   cells = null;
-
-  /**
-   *
-   * Class: mxMorphing
-   *
-   * Implements animation for morphing cells. Here is an example of
-   * using this class for animating the result of a layout algorithm:
-   *
-   * (code)
-   * graph.getModel().beginUpdate();
-   * try
-   * {
-   *   let circleLayout = new mxCircleLayout(graph);
-   *   circleLayout.execute(graph.getDefaultParent());
-   * }
-   * finally
-   * {
-   *   let morph = new mxMorphing(graph);
-   *   morph.addListener(mxEvent.DONE, ()=>
-   *   {
-   *     graph.getModel().endUpdate();
-   *   });
-   *
-   *   morph.startAnimation();
-   * }
-   * (end)
-   *
-   * Constructor: mxMorphing
-   *
-   * Constructs an animation.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   * steps - Optional number of steps in the morphing animation. Default is 6.
-   * ease - Optional easing constant for the animation. Default is 1.5.
-   * delay - Optional delay between the animation steps. Passed to <mxAnimation>.
-   */
-  constructor(graph, steps, ease, delay) {
-    super(delay);
-    this.graph = graph;
-    this.steps = steps != null ? steps : 6;
-    this.ease = ease != null ? ease : 1.5;
-  }
 
   /**
    * Function: updateAnimation

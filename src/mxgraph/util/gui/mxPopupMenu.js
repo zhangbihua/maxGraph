@@ -10,7 +10,66 @@ import mxClient from '../../mxClient';
 import mxEvent from '../event/mxEvent';
 import '../../serialization/mxDefaultPopupMenuCodec';
 
+/**
+ * Class: mxPopupMenu
+ *
+ * Basic popup menu. To add a vertical scrollbar to a given submenu, the
+ * following code can be used.
+ *
+ * (code)
+ * let mxPopupMenuShowMenu = showMenu;
+ * showMenu = ()=>
+ * {
+ *   mxPopupMenuShowMenu.apply(this, arguments);
+ *
+ *   this.div.style.overflowY = 'auto';
+ *   this.div.style.overflowX = 'hidden';
+ *   this.div.style.maxHeight = '160px';
+ * };
+ * (end)
+ *
+ * Constructor: mxPopupMenu
+ *
+ * Constructs a popupmenu.
+ *
+ * Event: mxEvent.SHOW
+ *
+ * Fires after the menu has been shown in <popup>.
+ */
 class mxPopupMenu extends mxEventSource {
+  constructor(factoryMethod) {
+    super();
+    this.factoryMethod = factoryMethod;
+
+    if (factoryMethod != null) {
+      this.init();
+    }
+  }
+
+  /**
+   * Function: init
+   *
+   * Initializes the shapes required for this vertex handler.
+   */
+  init() {
+    // Adds the inner table
+    this.table = document.createElement('table');
+    this.table.className = 'mxPopupMenu';
+
+    this.tbody = document.createElement('tbody');
+    this.table.appendChild(this.tbody);
+
+    // Adds the outer div
+    this.div = document.createElement('div');
+    this.div.className = 'mxPopupMenu';
+    this.div.style.display = 'inline';
+    this.div.style.zIndex = this.zIndex;
+    this.div.appendChild(this.table);
+
+    // Disables the context menu on the outer div
+    mxEvent.disableContextMenu(this.div);
+  }
+
   /**
    * Variable: submenuImage
    *
@@ -77,65 +136,6 @@ class mxPopupMenu extends mxEventSource {
    * Specifies if any labels should be visible. Default is true.
    */
   labels = true;
-
-  /**
-   * Class: mxPopupMenu
-   *
-   * Basic popup menu. To add a vertical scrollbar to a given submenu, the
-   * following code can be used.
-   *
-   * (code)
-   * let mxPopupMenuShowMenu = showMenu;
-   * showMenu = ()=>
-   * {
-   *   mxPopupMenuShowMenu.apply(this, arguments);
-   *
-   *   this.div.style.overflowY = 'auto';
-   *   this.div.style.overflowX = 'hidden';
-   *   this.div.style.maxHeight = '160px';
-   * };
-   * (end)
-   *
-   * Constructor: mxPopupMenu
-   *
-   * Constructs a popupmenu.
-   *
-   * Event: mxEvent.SHOW
-   *
-   * Fires after the menu has been shown in <popup>.
-   */
-  constructor(factoryMethod) {
-    super();
-    this.factoryMethod = factoryMethod;
-
-    if (factoryMethod != null) {
-      this.init();
-    }
-  }
-
-  /**
-   * Function: init
-   *
-   * Initializes the shapes required for this vertex handler.
-   */
-  init() {
-    // Adds the inner table
-    this.table = document.createElement('table');
-    this.table.className = 'mxPopupMenu';
-
-    this.tbody = document.createElement('tbody');
-    this.table.appendChild(this.tbody);
-
-    // Adds the outer div
-    this.div = document.createElement('div');
-    this.div.className = 'mxPopupMenu';
-    this.div.style.display = 'inline';
-    this.div.style.zIndex = this.zIndex;
-    this.div.appendChild(this.table);
-
-    // Disables the context menu on the outer div
-    mxEvent.disableContextMenu(this.div);
-  }
 
   /**
    * Function: isEnabled

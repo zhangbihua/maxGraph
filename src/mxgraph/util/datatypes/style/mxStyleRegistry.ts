@@ -8,51 +8,52 @@ import mxConstants from '../../mxConstants';
 import mxEdgeStyle from './mxEdgeStyle';
 import mxPerimeter from './mxPerimeter';
 
-const mxStyleRegistry = {
-  /**
-   * Class: mxStyleRegistry
-   *
-   * Singleton class that acts as a global converter from string to object values
-   * in a style. This is currently only used to perimeters and edge styles.
-   *
+/**
+ * Class: mxStyleRegistry
+ *
+ * Singleton class that acts as a global converter from string to object values
+ * in a style. This is currently only used to perimeters and edge styles.
+ */
+class mxStyleRegistry {
+  /*
    * Variable: values
    *
    * Maps from strings to objects.
    */
-  values: <any>{},
+  static values = <any>{};
 
   /**
    * Function: putValue
    *
    * Puts the given object into the registry under the given name.
    */
-  putValue: (name: string, obj: any): void => {
+  static putValue(name: string, obj: any): void {
     mxStyleRegistry.values[name] = obj;
-  },
+  }
 
   /**
    * Function: getValue
    *
    * Returns the value associated with the given name.
    */
-  getValue: (name: string): any => {
+  static getValue(name: string): any {
     return mxStyleRegistry.values[name];
-  },
+  }
 
   /**
    * Function: getName
    *
    * Returns the name for the given value.
    */
-  getName: (value: any): string | null => {
+  static getName(value: any): string | null {
     for (const key in mxStyleRegistry.values) {
       if (mxStyleRegistry.values[key] === value) {
         return key;
       }
     }
     return null;
-  },
-};
+  }
+}
 
 mxStyleRegistry.putValue(
   mxConstants.EDGESTYLE_ELBOW,

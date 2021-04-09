@@ -4,7 +4,17 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+/**
+ *
+ * Class: mxUrlConverter
+ *
+ * Converts relative and absolute URLs to absolute URLs with protocol and domain.
+ */
 class mxUrlConverter {
+  constructor() {
+    // Empty constructor
+  }
+
   /**
    * Variable: enabled
    *
@@ -25,16 +35,6 @@ class mxUrlConverter {
    * Specifies the base domain to be used as a prefix for absolute URLs.
    */
   baseDomain = null;
-
-  /**
-   *
-   * Class: mxUrlConverter
-   *
-   * Converts relative and absolute URLs to absolute URLs with protocol and domain.
-   */
-  constructor() {
-    // Empty constructor
-  }
 
   /**
    * Function: updateBaseUrl

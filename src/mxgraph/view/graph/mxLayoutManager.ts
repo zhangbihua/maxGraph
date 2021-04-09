@@ -19,7 +19,69 @@ import mxGraph from './mxGraph';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxMouseEvent from "../../util/event/mxMouseEvent";
 
+/**
+ * Class: mxLayoutManager
+ *
+ * Implements a layout manager that runs a given layout after any changes to the graph:
+ *
+ * Example:
+ *
+ * (code)
+ * let layoutMgr = new mxLayoutManager(graph);
+ * layoutMgr.getLayout = (cell, eventName)=>
+ * {
+ *   return layout;
+ * };
+ * (end)
+ *
+ * See <getLayout> for a description of the possible eventNames.
+ *
+ * Event: mxEvent.LAYOUT_CELLS
+ *
+ * Fires between begin- and endUpdate after all cells have been layouted in
+ * <layoutCells>. The <code>cells</code> property contains all cells that have
+ * been passed to <layoutCells>.
+ *
+ * Constructor: mxLayoutManager
+ *
+ * Constructs a new automatic layout for the given graph.
+ *
+ * Arguments:
+ *
+ * graph - Reference to the enclosing graph.
+ */
 class mxLayoutManager extends mxEventSource {
+  constructor(graph: mxGraph) {
+    super();
+
+    // Executes the layout before the changes are dispatched
+    this.undoHandler = (sender: any, evt: mxEventObject) => {
+      if (this.isEnabled()) {
+        this.beforeUndo(evt.getProperty('edit'));
+      }
+    };
+
+    // Notifies the layout of a move operation inside a parent
+    this.moveHandler = (sender: any, evt: mxEventObject) => {
+      if (this.isEnabled()) {
+        this.cellsMoved(evt.getProperty('cells'), evt.getProperty('event'));
+      }
+    };
+
+    // Notifies the layout of a move operation inside a parent
+    this.resizeHandler = (sender: any, evt: mxEventObject) => {
+      if (this.isEnabled()) {
+        this.cellsResized(
+            evt.getProperty('cells'),
+            evt.getProperty('bounds'),
+            evt.getProperty('previous')
+        );
+      }
+    };
+
+    this.setGraph(graph);
+  }
+
   /**
    * Variable: graph
    *
@@ -62,68 +124,6 @@ class mxLayoutManager extends mxEventSource {
    * Holds the function that handles the resize event.
    */
   resizeHandler: Function | null = null;
-
-  /**
-   * Class: mxLayoutManager
-   *
-   * Implements a layout manager that runs a given layout after any changes to the graph:
-   *
-   * Example:
-   *
-   * (code)
-   * let layoutMgr = new mxLayoutManager(graph);
-   * layoutMgr.getLayout = (cell, eventName)=>
-   * {
-   *   return layout;
-   * };
-   * (end)
-   *
-   * See <getLayout> for a description of the possible eventNames.
-   *
-   * Event: mxEvent.LAYOUT_CELLS
-   *
-   * Fires between begin- and endUpdate after all cells have been layouted in
-   * <layoutCells>. The <code>cells</code> property contains all cells that have
-   * been passed to <layoutCells>.
-   *
-   * Constructor: mxLayoutManager
-   *
-   * Constructs a new automatic layout for the given graph.
-   *
-   * Arguments:
-   *
-   * graph - Reference to the enclosing graph.
-   */
-  constructor(graph: mxGraph) {
-    super();
-
-    // Executes the layout before the changes are dispatched
-    this.undoHandler = (sender: any, evt: mxEventObject) => {
-      if (this.isEnabled()) {
-        this.beforeUndo(evt.getProperty('edit'));
-      }
-    };
-
-    // Notifies the layout of a move operation inside a parent
-    this.moveHandler = (sender: any, evt: mxEventObject) => {
-      if (this.isEnabled()) {
-        this.cellsMoved(evt.getProperty('cells'), evt.getProperty('event'));
-      }
-    };
-
-    // Notifies the layout of a move operation inside a parent
-    this.resizeHandler = (sender: any, evt: mxEventObject) => {
-      if (this.isEnabled()) {
-        this.cellsResized(
-          evt.getProperty('cells'),
-          evt.getProperty('bounds'),
-          evt.getProperty('previous')
-        );
-      }
-    };
-
-    this.setGraph(graph);
-  }
 
   /**
    * Function: isEnabled

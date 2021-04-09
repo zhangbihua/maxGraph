@@ -14,7 +14,53 @@ import mxEvent from '../../util/event/mxEvent';
 import mxCell from '../cell/mxCell';
 import mxGraph from './mxGraph';
 
+/**
+ * Class: mxGraphSelectionModel
+ *
+ * Implements the selection model for a graph. Here is a listener that handles
+ * all removed selection cells.
+ *
+ * (code)
+ * graph.getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt)=>
+ * {
+ *   let cells = evt.getProperty('added');
+ *
+ *   for (let i = 0; i < cells.length; i += 1)
+ *   {
+ *     // Handle cells[i]...
+ *   }
+ * });
+ * (end)
+ *
+ * Event: mxEvent.UNDO
+ *
+ * Fires after the selection was changed in <changeSelection>. The
+ * <code>edit</code> property contains the <mxUndoableEdit> which contains the
+ * <mxSelectionChange>.
+ *
+ * Event: mxEvent.CHANGE
+ *
+ * Fires after the selection changes by executing an <mxSelectionChange>. The
+ * <code>added</code> and <code>removed</code> properties contain arrays of
+ * cells that have been added to or removed from the selection, respectively.
+ * The names are inverted due to historic reasons. This cannot be changed.
+ *
+ * Constructor: mxGraphSelectionModel
+ *
+ * Constructs a new graph selection model for the given <mxGraph>.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ */
 class mxGraphSelectionModel extends mxEventSource {
+  constructor(graph: mxGraph) {
+    super();
+
+    this.graph = graph;
+    this.cells = [];
+  }
+
   // TODO: Document me!!
   cells: mxCell[];
 
@@ -51,52 +97,6 @@ class mxGraphSelectionModel extends mxEventSource {
    * Default is false.
    */
   singleSelection: boolean = false;
-
-  /**
-   * Class: mxGraphSelectionModel
-   *
-   * Implements the selection model for a graph. Here is a listener that handles
-   * all removed selection cells.
-   *
-   * (code)
-   * graph.getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt)=>
-   * {
-   *   let cells = evt.getProperty('added');
-   *
-   *   for (let i = 0; i < cells.length; i += 1)
-   *   {
-   *     // Handle cells[i]...
-   *   }
-   * });
-   * (end)
-   *
-   * Event: mxEvent.UNDO
-   *
-   * Fires after the selection was changed in <changeSelection>. The
-   * <code>edit</code> property contains the <mxUndoableEdit> which contains the
-   * <mxSelectionChange>.
-   *
-   * Event: mxEvent.CHANGE
-   *
-   * Fires after the selection changes by executing an <mxSelectionChange>. The
-   * <code>added</code> and <code>removed</code> properties contain arrays of
-   * cells that have been added to or removed from the selection, respectively.
-   * The names are inverted due to historic reasons. This cannot be changed.
-   *
-   * Constructor: mxGraphSelectionModel
-   *
-   * Constructs a new graph selection model for the given <mxGraph>.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   */
-  constructor(graph: mxGraph) {
-    super();
-
-    this.graph = graph;
-    this.cells = [];
-  }
 
   /**
    * Function: isSingleSelection

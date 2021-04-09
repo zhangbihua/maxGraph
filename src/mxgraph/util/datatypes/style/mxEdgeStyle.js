@@ -10,77 +10,78 @@ import mxCellState from '../mxCellState';
 import mxConstants from '../../mxConstants';
 import mxRectangle from '../mxRectangle';
 
-const mxEdgeStyle = {
-  /**
-   * Class: mxEdgeStyle
-   *
-   * Provides various edge styles to be used as the values for
-   * <mxConstants.STYLE_EDGE> in a cell style.
-   *
-   * Example:
-   *
-   * (code)
-   * let style = stylesheet.getDefaultEdgeStyle();
-   * style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-   * (end)
-   *
-   * Sets the default edge style to <ElbowConnector>.
-   *
-   * Custom edge style:
-   *
-   * To write a custom edge style, a function must be added to the mxEdgeStyle
-   * object as follows:
-   *
-   * (code)
-   * mxEdgeStyle.MyStyle = (state, source, target, points, result)=>
-   * {
-   *   if (source != null && target != null)
-   *   {
-   *     let pt = new mxPoint(target.getCenterX(), source.getCenterY());
-   *
-   *     if (mxUtils.contains(source, pt.x, pt.y))
-   *     {
-   *       pt.y = source.y + source.height;
-   *     }
-   *
-   *     result.push(pt);
-   *   }
-   * };
-   * (end)
-   *
-   * In the above example, a right angle is created using a point on the
-   * horizontal center of the target vertex and the vertical center of the source
-   * vertex. The code checks if that point intersects the source vertex and makes
-   * the edge straight if it does. The point is then added into the result array,
-   * which acts as the return value of the function.
-   *
-   * The new edge style should then be registered in the <mxStyleRegistry> as follows:
-   * (code)
-   * mxStyleRegistry.putValue('myEdgeStyle', mxEdgeStyle.MyStyle);
-   * (end)
-   *
-   * The custom edge style above can now be used in a specific edge as follows:
-   *
-   * (code)
-   * model.setStyle(edge, 'edgeStyle=myEdgeStyle');
-   * (end)
-   *
-   * Note that the key of the <mxStyleRegistry> entry for the function should
-   * be used in string values, unless <mxGraphView.allowEval> is true, in
-   * which case you can also use mxEdgeStyle.MyStyle for the value in the
-   * cell style above.
-   *
-   * Or it can be used for all edges in the graph as follows:
-   *
-   * (code)
-   * let style = graph.getStylesheet().getDefaultEdgeStyle();
-   * style[mxConstants.STYLE_EDGE] = mxEdgeStyle.MyStyle;
-   * (end)
-   *
-   * Note that the object can be used directly when programmatically setting
-   * the value, but the key in the <mxStyleRegistry> should be used when
-   * setting the value via a key, value pair in a cell style.
-   *
+/**
+ * Class: mxEdgeStyle
+ *
+ * Provides various edge styles to be used as the values for
+ * <mxConstants.STYLE_EDGE> in a cell style.
+ *
+ * Example:
+ *
+ * (code)
+ * let style = stylesheet.getDefaultEdgeStyle();
+ * style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+ * (end)
+ *
+ * Sets the default edge style to <ElbowConnector>.
+ *
+ * Custom edge style:
+ *
+ * To write a custom edge style, a function must be added to the mxEdgeStyle
+ * object as follows:
+ *
+ * (code)
+ * mxEdgeStyle.MyStyle = (state, source, target, points, result)=>
+ * {
+ *   if (source != null && target != null)
+ *   {
+ *     let pt = new mxPoint(target.getCenterX(), source.getCenterY());
+ *
+ *     if (mxUtils.contains(source, pt.x, pt.y))
+ *     {
+ *       pt.y = source.y + source.height;
+ *     }
+ *
+ *     result.push(pt);
+ *   }
+ * };
+ * (end)
+ *
+ * In the above example, a right angle is created using a point on the
+ * horizontal center of the target vertex and the vertical center of the source
+ * vertex. The code checks if that point intersects the source vertex and makes
+ * the edge straight if it does. The point is then added into the result array,
+ * which acts as the return value of the function.
+ *
+ * The new edge style should then be registered in the <mxStyleRegistry> as follows:
+ * (code)
+ * mxStyleRegistry.putValue('myEdgeStyle', mxEdgeStyle.MyStyle);
+ * (end)
+ *
+ * The custom edge style above can now be used in a specific edge as follows:
+ *
+ * (code)
+ * model.setStyle(edge, 'edgeStyle=myEdgeStyle');
+ * (end)
+ *
+ * Note that the key of the <mxStyleRegistry> entry for the function should
+ * be used in string values, unless <mxGraphView.allowEval> is true, in
+ * which case you can also use mxEdgeStyle.MyStyle for the value in the
+ * cell style above.
+ *
+ * Or it can be used for all edges in the graph as follows:
+ *
+ * (code)
+ * let style = graph.getStylesheet().getDefaultEdgeStyle();
+ * style[mxConstants.STYLE_EDGE] = mxEdgeStyle.MyStyle;
+ * (end)
+ *
+ * Note that the object can be used directly when programmatically setting
+ * the value, but the key in the <mxStyleRegistry> should be used when
+ * setting the value via a key, value pair in a cell style.
+ */
+class mxEdgeStyle {
+  /*
    * Function: EntityRelation
    *
    * Implements an entity relation style for edges (as used in database
@@ -102,7 +103,7 @@ const mxEdgeStyle = {
    * result - Array of <mxPoints> that represent the actual points of the
    * edge.
    */
-  EntityRelation: (state, source, target, points, result) => {
+  static EntityRelation(state, source, target, points, result) {
     const { view } = state;
     const { graph } = view;
     const segment =
@@ -223,14 +224,14 @@ const mxEdgeStyle = {
         result.push(arr);
       }
     }
-  },
+  }
 
   /**
    * Function: Loop
    *
    * Implements a self-reference, aka. loop.
    */
-  Loop: (state, source, target, points, result) => {
+  static Loop(state, source, target, points, result) {
     const pts = state.absolutePoints;
 
     const p0 = pts[0];
@@ -312,7 +313,7 @@ const mxEdgeStyle = {
       result.push(new mxPoint(x - dx, y - dy));
       result.push(new mxPoint(x + dx, y + dy));
     }
-  },
+  }
 
   /**
    * Function: ElbowConnector
@@ -322,7 +323,7 @@ const mxEdgeStyle = {
    * unspecified. See <EntityRelation> for a description of the
    * parameters.
    */
-  ElbowConnector: (state, source, target, points, result) => {
+  static ElbowConnector(state, source, target, points, result) {
     let pt = points != null && points.length > 0 ? points[0] : null;
 
     let vertical = false;
@@ -376,7 +377,7 @@ const mxEdgeStyle = {
     } else {
       mxEdgeStyle.SideToSide(state, source, target, points, result);
     }
-  },
+  }
 
   /**
    * Function: SideToSide
@@ -384,7 +385,7 @@ const mxEdgeStyle = {
    * Implements a vertical elbow edge. See <EntityRelation> for a description
    * of the parameters.
    */
-  SideToSide: (state, source, target, points, result) => {
+  static SideToSide(state, source, target, points, result) {
     const { view } = state;
     let pt = points != null && points.length > 0 ? points[0] : null;
     const pts = state.absolutePoints;
@@ -459,7 +460,7 @@ const mxEdgeStyle = {
         }
       }
     }
-  },
+  }
 
   /**
    * Function: TopToBottom
@@ -467,7 +468,7 @@ const mxEdgeStyle = {
    * Implements a horizontal elbow edge. See <EntityRelation> for a
    * description of the parameters.
    */
-  TopToBottom: (state, source, target, points, result) => {
+  static TopToBottom(state, source, target, points, result) {
     const { view } = state;
     let pt = points != null && points.length > 0 ? points[0] : null;
     const pts = state.absolutePoints;
@@ -532,7 +533,7 @@ const mxEdgeStyle = {
         }
       }
     }
-  },
+  }
 
   /**
    * Function: SegmentConnector
@@ -548,13 +549,13 @@ const mxEdgeStyle = {
    * edge.
    *
    */
-  SegmentConnector: (
+  static SegmentConnector(
     state,
     sourceScaled,
     targetScaled,
     controlHints,
     result
-  ) => {
+  ) {
     // Creates array of all way- and terminalpoints
     const pts = mxEdgeStyle.scalePointArray(
       state.absolutePoints,
@@ -844,13 +845,13 @@ const mxEdgeStyle = {
         }
       }
     }
-  },
+  }
 
-  orthBuffer: 10,
+  static orthBuffer = 10
 
-  orthPointsFallback: true,
+  static orthPointsFallback = true
 
-  dirVectors: [
+  static dirVectors = [
     [-1, 0],
     [0, -1],
     [1, 0],
@@ -858,9 +859,9 @@ const mxEdgeStyle = {
     [-1, 0],
     [0, -1],
     [1, 0],
-  ],
+  ]
 
-  wayPoints1: [
+  static wayPoints1 = [
     [0, 0],
     [0, 0],
     [0, 0],
@@ -873,9 +874,9 @@ const mxEdgeStyle = {
     [0, 0],
     [0, 0],
     [0, 0],
-  ],
+  ]
 
-  routePatterns: [
+  static routePatterns = [
     [
       [513, 2308, 2081, 2562],
       [513, 1090, 514, 2184, 2114, 2561],
@@ -900,52 +901,52 @@ const mxEdgeStyle = {
       [1057, 513, 1090, 514, 2184, 2562, 2564],
       [1057, 2561, 1090, 514, 2568, 2308],
     ],
-  ],
+  ]
 
-  inlineRoutePatterns: [
+  static inlineRoutePatterns = [
     [null, [2114, 2568], null, null],
     [null, [514, 2081, 2114, 2568], null, null],
     [null, [2114, 2561], null, null],
     [[2081, 2562], [1057, 2114, 2568], [2184, 2562], null],
-  ],
-  vertexSeperations: [],
+  ]
+  static vertexSeperations = []
 
-  limits: [
+  static limits = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ],
+  ]
 
-  LEFT_MASK: 32,
+  static LEFT_MASK = 32
 
-  TOP_MASK: 64,
+  static TOP_MASK = 64
 
-  RIGHT_MASK: 128,
+  static RIGHT_MASK = 128
 
-  BOTTOM_MASK: 256,
+  static BOTTOM_MASK = 256
 
-  LEFT: 1,
+  static LEFT = 1
 
-  TOP: 2,
+  static TOP = 2
 
-  RIGHT: 4,
+  static RIGHT = 4
 
-  BOTTOM: 8,
+  static BOTTOM = 8
 
   // TODO remove magic numbers
-  SIDE_MASK: 480,
+  static SIDE_MASK = 480
   // mxEdgeStyle.LEFT_MASK | mxEdgeStyle.TOP_MASK | mxEdgeStyle.RIGHT_MASK
   // | mxEdgeStyle.BOTTOM_MASK,
 
-  CENTER_MASK: 512,
+  static CENTER_MASK = 512
 
-  SOURCE_MASK: 1024,
+  static SOURCE_MASK = 1024
 
-  TARGET_MASK: 2048,
+  static TARGET_MASK = 2048
 
-  VERTEX_MASK: 3072,
+  static VERTEX_MASK = 3072
   // mxEdgeStyle.SOURCE_MASK | mxEdgeStyle.TARGET_MASK,
 
-  getJettySize: (state, isSource) => {
+  static getJettySize(state, isSource) {
     let value = mxUtils.getValue(
       state.style,
       isSource
@@ -983,7 +984,7 @@ const mxEdgeStyle = {
     }
 
     return value;
-  },
+  }
 
   /**
    * Function: scalePointArray
@@ -996,7 +997,7 @@ const mxEdgeStyle = {
    * scale - the scaling to divide by
    *
    */
-  scalePointArray: (points, scale) => {
+  static scalePointArray(points, scale) {
     let result = [];
 
     if (points != null) {
@@ -1016,7 +1017,7 @@ const mxEdgeStyle = {
     }
 
     return result;
-  },
+  }
 
   /**
    * Function: scaleCellState
@@ -1029,7 +1030,7 @@ const mxEdgeStyle = {
    * scale - the scaling to divide by
    *
    */
-  scaleCellState: (state, scale) => {
+  static scaleCellState(state, scale) {
     let result = null;
 
     if (state != null) {
@@ -1045,7 +1046,7 @@ const mxEdgeStyle = {
     }
 
     return result;
-  },
+  }
 
   /**
    * Function: OrthConnector
@@ -1063,7 +1064,7 @@ const mxEdgeStyle = {
    * edge.
    *
    */
-  OrthConnector: (state, sourceScaled, targetScaled, controlHints, result) => {
+  static OrthConnector(state, sourceScaled, targetScaled, controlHints, result) {
     const { graph } = state.view;
     const sourceEdge =
       source == null ? false : graph.getModel().isEdge(source.cell);
@@ -1629,9 +1630,9 @@ const mxEdgeStyle = {
         result.splice(index, 1);
       }
     }
-  },
+  }
 
-  getRoutePattern: (dir, quad, dx, dy) => {
+  static getRoutePattern(dir, quad, dx, dy) {
     let sourceIndex = dir[0] === mxConstants.DIRECTION_MASK_EAST ? 3 : dir[0];
     let targetIndex = dir[1] === mxConstants.DIRECTION_MASK_EAST ? 3 : dir[1];
 
@@ -1654,7 +1655,7 @@ const mxEdgeStyle = {
     }
 
     return result;
-  },
-};
+  }
+}
 
 export default mxEdgeStyle;

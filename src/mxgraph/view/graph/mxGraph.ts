@@ -4289,7 +4289,7 @@ class mxGraph extends mxEventSource {
    */
   cloneCells(cells: mxCell[],
              allowInvalidEdges: boolean=true,
-             mapping: any,
+             mapping: any={},
              keepPosition: boolean=false): mxCell[] | null {
 
     allowInvalidEdges = allowInvalidEdges != null ? allowInvalidEdges : true;
@@ -6070,7 +6070,7 @@ class mxGraph extends mxEventSource {
               dx: number,
               dy: number,
               target: mxCell | null=null,
-              evt: mxMouseEvent,
+              evt: mxMouseEvent | null=null,
               mapping: any={}): mxCell[] | null {
     return this.moveCells(cells, dx, dy, true, target, evt, mapping);
   }

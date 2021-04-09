@@ -10,7 +10,75 @@ import mxEventSource from '../../util/event/mxEventSource';
 import mxImage from '../../util/image/mxImage';
 import mxCellState from "../../util/datatypes/mxCellState";
 
+/**
+ * Class: mxCellOverlay
+ *
+ * Extends <mxEventSource> to implement a graph overlay, represented by an icon
+ * and a tooltip. Overlays can handle and fire <click> events and are added to
+ * the graph using <mxGraph.addCellOverlay>, and removed using
+ * <mxGraph.removeCellOverlay>, or <mxGraph.removeCellOverlays> to remove all overlays.
+ * The <mxGraph.getCellOverlays> function returns the array of overlays for a given
+ * cell in a graph. If multiple overlays exist for the same cell, then
+ * <getBounds> should be overridden in at least one of the overlays.
+ *
+ * Overlays appear on top of all cells in a special layer. If this is not
+ * desirable, then the image must be rendered as part of the shape or label of
+ * the cell instead.
+ *
+ * Example:
+ *
+ * The following adds a new overlays for a given vertex and selects the cell
+ * if the overlay is clicked.
+ *
+ * (code)
+ * let overlay = new mxCellOverlay(img, html);
+ * graph.addCellOverlay(vertex, overlay);
+ * overlay.addListener(mxEvent.CLICK, (sender, evt)=>
+ * {
+ *   let cell = evt.getProperty('cell');
+ *   graph.setSelectionCell(cell);
+ * });
+ * (end)
+ *
+ * For cell overlays to be printed use <mxPrintPreview.printOverlays>.
+ *
+ * Event: mxEvent.CLICK
+ *
+ * Fires when the user clicks on the overlay. The <code>event</code> property
+ * contains the corresponding mouse event and the <code>cell</code> property
+ * contains the cell. For touch devices this is fired if the element receives
+ * a touchend event.
+ *
+ * Constructor: mxCellOverlay
+ *
+ * Constructs a new overlay using the given image and tooltip.
+ *
+ * Parameters:
+ *
+ * image - <mxImage> that represents the icon to be displayed.
+ * tooltip - Optional string that specifies the tooltip.
+ * align - Optional horizontal alignment for the overlay. Possible
+ * values are <ALIGN_LEFT>, <ALIGN_CENTER> and <ALIGN_RIGHT>
+ * (default).
+ * verticalAlign - Vertical alignment for the overlay. Possible
+ * values are <ALIGN_TOP>, <ALIGN_MIDDLE> and <ALIGN_BOTTOM>
+ * (default).
+ */
 class mxCellOverlay extends mxEventSource {
+  constructor(image: mxImage,
+              tooltip: string | null=null,
+              align: string='right',
+              verticalAlign: string='bottom',
+              offset: mxPoint=new mxPoint(),
+              cursor: string='help') {
+    super();
+
+    this.image = image;
+    this.tooltip = tooltip;
+    this.offset = offset;
+    this.cursor = cursor;
+  }
+
   /**
    * Variable: image
    *
@@ -65,74 +133,6 @@ class mxCellOverlay extends mxEventSource {
    * from the origin to the point defined by the alignment. Default is 0.5.
    */
   defaultOverlap: number = 0.5;
-
-  /**
-   * Class: mxCellOverlay
-   *
-   * Extends <mxEventSource> to implement a graph overlay, represented by an icon
-   * and a tooltip. Overlays can handle and fire <click> events and are added to
-   * the graph using <mxGraph.addCellOverlay>, and removed using
-   * <mxGraph.removeCellOverlay>, or <mxGraph.removeCellOverlays> to remove all overlays.
-   * The <mxGraph.getCellOverlays> function returns the array of overlays for a given
-   * cell in a graph. If multiple overlays exist for the same cell, then
-   * <getBounds> should be overridden in at least one of the overlays.
-   *
-   * Overlays appear on top of all cells in a special layer. If this is not
-   * desirable, then the image must be rendered as part of the shape or label of
-   * the cell instead.
-   *
-   * Example:
-   *
-   * The following adds a new overlays for a given vertex and selects the cell
-   * if the overlay is clicked.
-   *
-   * (code)
-   * let overlay = new mxCellOverlay(img, html);
-   * graph.addCellOverlay(vertex, overlay);
-   * overlay.addListener(mxEvent.CLICK, (sender, evt)=>
-   * {
-   *   let cell = evt.getProperty('cell');
-   *   graph.setSelectionCell(cell);
-   * });
-   * (end)
-   *
-   * For cell overlays to be printed use <mxPrintPreview.printOverlays>.
-   *
-   * Event: mxEvent.CLICK
-   *
-   * Fires when the user clicks on the overlay. The <code>event</code> property
-   * contains the corresponding mouse event and the <code>cell</code> property
-   * contains the cell. For touch devices this is fired if the element receives
-   * a touchend event.
-   *
-   * Constructor: mxCellOverlay
-   *
-   * Constructs a new overlay using the given image and tooltip.
-   *
-   * Parameters:
-   *
-   * image - <mxImage> that represents the icon to be displayed.
-   * tooltip - Optional string that specifies the tooltip.
-   * align - Optional horizontal alignment for the overlay. Possible
-   * values are <ALIGN_LEFT>, <ALIGN_CENTER> and <ALIGN_RIGHT>
-   * (default).
-   * verticalAlign - Vertical alignment for the overlay. Possible
-   * values are <ALIGN_TOP>, <ALIGN_MIDDLE> and <ALIGN_BOTTOM>
-   * (default).
-   */
-  constructor(image: mxImage,
-              tooltip: string | null=null,
-              align: string='right',
-              verticalAlign: string='bottom',
-              offset: mxPoint=new mxPoint(),
-              cursor: string='help') {
-    super();
-
-    this.image = image;
-    this.tooltip = tooltip;
-    this.offset = offset;
-    this.cursor = cursor;
-  }
 
   /**
    * Function: getBounds

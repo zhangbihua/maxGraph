@@ -6,29 +6,30 @@
 
 import mxUtils from '../mxUtils';
 
-const mxObjectIdentity = {
-  /**
-   * Class: mxObjectIdentity
-   *
-   * Identity for JavaScript objects and functions. This is implemented using
-   * a simple incrementing counter which is stored in each object under
-   * <FIELD_NAME>.
-   *
-   * The identity for an object does not change during its lifecycle.
-   *
+/**
+ * Class: mxObjectIdentity
+ *
+ * Identity for JavaScript objects and functions. This is implemented using
+ * a simple incrementing counter which is stored in each object under
+ * <FIELD_NAME>.
+ *
+ * The identity for an object does not change during its lifecycle.
+ */
+class mxObjectIdentity {
+  /*
    * Variable: FIELD_NAME
    *
    * Name of the field to be used to store the object ID. Default is
    * <code>mxObjectId</code>.
    */
-  FIELD_NAME: 'mxObjectId',
+  static FIELD_NAME = 'mxObjectId';
 
   /**
    * Variable: counter
    *
    * Current counter.
    */
-  counter: 0,
+  static counter = 0;
 
   /**
    * Function: get
@@ -36,7 +37,7 @@ const mxObjectIdentity = {
    * Returns the ID for the given object or function or null if no object
    * is specified.
    */
-  get: obj => {
+  static get(obj) {
     if (obj != null) {
       if (obj[mxObjectIdentity.FIELD_NAME] == null) {
         if (typeof obj === 'object') {
@@ -55,18 +56,18 @@ const mxObjectIdentity = {
     }
 
     return null;
-  },
+  }
 
   /**
    * Function: clear
    *
    * Deletes the ID from the given object or function.
    */
-  clear: obj => {
+  static clear(obj) {
     if (typeof obj === 'object' || typeof obj === 'function') {
       delete obj[mxObjectIdentity.FIELD_NAME];
     }
-  },
-};
+  }
+}
 
 export default mxObjectIdentity;

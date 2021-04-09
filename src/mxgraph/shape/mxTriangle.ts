@@ -11,16 +11,16 @@ import mxConstants from '../util/mxConstants';
 import mxAbstractCanvas2D from '../util/canvas/mxAbstractCanvas2D';
 import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 
+/**
+ * Class: mxTriangle
+ *
+ * Implementation of the triangle shape.
+ *
+ * Constructor: mxTriangle
+ *
+ * Constructs a new triangle shape.
+ */
 class mxTriangle extends mxActor {
-  /**
-   * Class: mxTriangle
-   *
-   * Implementation of the triangle shape.
-   *
-   * Constructor: mxTriangle
-   *
-   * Constructs a new triangle shape.
-   */
   constructor() {
     super();
   }

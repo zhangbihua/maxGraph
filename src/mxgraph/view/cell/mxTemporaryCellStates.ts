@@ -17,36 +17,12 @@ import mxShape from "../../shape/mxShape";
 import mxGraph from "../graph/mxGraph";
 
 class mxTemporaryCellStates {
-  oldValidateCellState: Function | null;
-
-  oldDoRedrawShape: Function | null;
-
-  /**
-   * Variable: view
-   */
-  view: mxGraphView | null = null;
-
-  /**
-   * Variable: oldStates
-   */
-  oldStates: mxDictionary | null = null;
-
-  /**
-   * Variable: oldBounds
-   */
-  oldBounds: mxRectangle | null = null;
-
-  /**
-   * Variable: oldScale
-   */
-  oldScale: number = 0;
-
   constructor(
-    view: mxGraphView,
-    scale: number = 1,
-    cells: mxCell[],
-    isCellVisibleFn: Function | null = null,
-    getLinkForCellState: Function | null = null
+      view: mxGraphView,
+      scale: number = 1,
+      cells: mxCell[],
+      isCellVisibleFn: Function | null = null,
+      getLinkForCellState: Function | null = null
   ) {
     this.view = view;
 
@@ -101,7 +77,7 @@ class mxTemporaryCellStates {
       // the model so that the original cells are not modified
       for (const cell of cells) {
         const bounds = view.getBoundingBox(
-          view.validateCellState(<mxCell>view.validateCell(<mxCell>cell))
+            view.validateCellState(<mxCell>view.validateCell(<mxCell>cell))
         );
         if (bbox == null) {
           bbox = bounds;
@@ -112,6 +88,30 @@ class mxTemporaryCellStates {
       view.setGraphBounds(bbox || new mxRectangle());
     }
   }
+
+  oldValidateCellState: Function | null;
+
+  oldDoRedrawShape: Function | null;
+
+  /**
+   * Variable: view
+   */
+  view: mxGraphView | null = null;
+
+  /**
+   * Variable: oldStates
+   */
+  oldStates: mxDictionary | null = null;
+
+  /**
+   * Variable: oldBounds
+   */
+  oldBounds: mxRectangle | null = null;
+
+  /**
+   * Variable: oldScale
+   */
+  oldScale: number = 0;
 
   /**
    * Function: destroy

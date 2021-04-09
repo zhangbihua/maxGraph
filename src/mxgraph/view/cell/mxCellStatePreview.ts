@@ -12,7 +12,26 @@ import mxCell from './mxCell';
 import mxGraph from '../graph/mxGraph';
 import mxGraphView from "../graph/mxGraphView";
 
+/**
+ *
+ * Class: mxCellStatePreview
+ *
+ * Implements a live preview for moving cells.
+ *
+ * Constructor: mxCellStatePreview
+ *
+ * Constructs a move preview for the given graph.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ */
 class mxCellStatePreview {
+  constructor(graph: mxGraph) {
+    this.deltas = new mxDictionary();
+    this.graph = graph;
+  }
+
   /**
    * Variable: graph
    *
@@ -33,25 +52,6 @@ class mxCellStatePreview {
    * Contains the number of entries in the map.
    */
   count: number = 0;
-
-  /**
-   *
-   * Class: mxCellStatePreview
-   *
-   * Implements a live preview for moving cells.
-   *
-   * Constructor: mxCellStatePreview
-   *
-   * Constructs a move preview for the given graph.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   */
-  constructor(graph: mxGraph) {
-    this.deltas = new mxDictionary();
-    this.graph = graph;
-  }
 
   /**
    * Function: isEmpty

@@ -5,60 +5,61 @@
 import mxClient from '../mxClient';
 import mxConstants from './mxConstants';
 
+/**
+ * Class: mxResources
+ *
+ * Implements internationalization. You can provide any number of
+ * resource files on the server using the following format for the
+ * filename: name[-en].properties. The en stands for any lowercase
+ * 2-character language shortcut (eg. de for german, fr for french).
+ *
+ * If the optional language extension is omitted, then the file is used as a
+ * default resource which is loaded in all cases. If a properties file for a
+ * specific language exists, then it is used to override the settings in the
+ * default resource. All entries in the file are of the form key=value. The
+ * values may then be accessed in code via <get>. Lines without
+ * equal signs in the properties files are ignored.
+ *
+ * Resource files may either be added programmatically using
+ * <add> or via a resource tag in the UI section of the
+ * editor configuration file, eg:
+ *
+ * (code)
+ * <mxEditor>
+ *   <ui>
+ *     <resource basename="examples/resources/mxWorkflow"/>
+ * (end)
+ *
+ * The above element will load examples/resources/mxWorkflow.properties as well
+ * as the language specific file for the current language, if it exists.
+ *
+ * Values may contain placeholders of the form {1}...{n} where each placeholder
+ * is replaced with the value of the corresponding array element in the params
+ * argument passed to <mxResources.get>. The placeholder {1} maps to the first
+ * element in the array (at index 0).
+ *
+ * See <mxClient.language> for more information on specifying the default
+ * language or disabling all loading of resources.
+ *
+ * Lines that start with a # sign will be ignored.
+ *
+ * Special characters
+ *
+ * To use unicode characters, use the standard notation (eg. \u8fd1) or %u as a
+ * prefix (eg. %u20AC will display a Euro sign). For normal hex encoded strings,
+ * use % as a prefix, eg. %F6 will display a "o umlaut" (&ouml;).
+ *
+ * See <resourcesEncoded> to disable this. If you disable this, make sure that
+ * your files are UTF-8 encoded.
+ *
+ * Asynchronous loading
+ *
+ * By default, the core adds two resource files synchronously at load time.
+ * To load these files asynchronously, set <mxLoadResources> to false
+ * before loading mxClient.js and use <mxResources.loadResources> instead.
+ */
 const mxResources = {
-  /**
-   * Class: mxResources
-   *
-   * Implements internationalization. You can provide any number of
-   * resource files on the server using the following format for the
-   * filename: name[-en].properties. The en stands for any lowercase
-   * 2-character language shortcut (eg. de for german, fr for french).
-   *
-   * If the optional language extension is omitted, then the file is used as a
-   * default resource which is loaded in all cases. If a properties file for a
-   * specific language exists, then it is used to override the settings in the
-   * default resource. All entries in the file are of the form key=value. The
-   * values may then be accessed in code via <get>. Lines without
-   * equal signs in the properties files are ignored.
-   *
-   * Resource files may either be added programmatically using
-   * <add> or via a resource tag in the UI section of the
-   * editor configuration file, eg:
-   *
-   * (code)
-   * <mxEditor>
-   *   <ui>
-   *     <resource basename="examples/resources/mxWorkflow"/>
-   * (end)
-   *
-   * The above element will load examples/resources/mxWorkflow.properties as well
-   * as the language specific file for the current language, if it exists.
-   *
-   * Values may contain placeholders of the form {1}...{n} where each placeholder
-   * is replaced with the value of the corresponding array element in the params
-   * argument passed to <mxResources.get>. The placeholder {1} maps to the first
-   * element in the array (at index 0).
-   *
-   * See <mxClient.language> for more information on specifying the default
-   * language or disabling all loading of resources.
-   *
-   * Lines that start with a # sign will be ignored.
-   *
-   * Special characters
-   *
-   * To use unicode characters, use the standard notation (eg. \u8fd1) or %u as a
-   * prefix (eg. %u20AC will display a Euro sign). For normal hex encoded strings,
-   * use % as a prefix, eg. %F6 will display a "o umlaut" (&ouml;).
-   *
-   * See <resourcesEncoded> to disable this. If you disable this, make sure that
-   * your files are UTF-8 encoded.
-   *
-   * Asynchronous loading
-   *
-   * By default, the core adds two resource files synchronously at load time.
-   * To load these files asynchronously, set <mxLoadResources> to false
-   * before loading mxClient.js and use <mxResources.loadResources> instead.
-   *
+  /*
    * Variable: resources
    *
    * Object that maps from keys to values.

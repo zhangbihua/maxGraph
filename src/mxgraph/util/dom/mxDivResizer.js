@@ -3,6 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+
 /**
  * Class: mxDivResizer
  *
@@ -39,27 +40,6 @@
  * window.
  */
 class mxDivResizer {
-  /**
-   * Function: resizeWidth
-   *
-   * Boolean specifying if the width should be updated.
-   */
-  resizeWidth = true;
-
-  /**
-   * Function: resizeHeight
-   *
-   * Boolean specifying if the height should be updated.
-   */
-  resizeHeight = true;
-
-  /**
-   * Function: handlingResize
-   *
-   * Boolean specifying if the width should be updated.
-   */
-  handlingResize = false;
-
   constructor(div, container) {
     if (div.nodeName.toLowerCase() == 'div') {
       if (container == null) {
@@ -85,6 +65,27 @@ class mxDivResizer {
       this.resize();
     }
   }
+
+  /**
+   * Function: resizeWidth
+   *
+   * Boolean specifying if the width should be updated.
+   */
+  resizeWidth = true;
+
+  /**
+   * Function: resizeHeight
+   *
+   * Boolean specifying if the height should be updated.
+   */
+  resizeHeight = true;
+
+  /**
+   * Function: handlingResize
+   *
+   * Boolean specifying if the width should be updated.
+   */
+  handlingResize = false;
 
   /**
    * Function: resize

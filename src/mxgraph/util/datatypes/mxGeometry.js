@@ -8,7 +8,79 @@ import mxPoint from './mxPoint';
 import mxRectangle from './mxRectangle';
 import mxUtils from '../mxUtils';
 
+/**
+ * Class: mxGeometry
+ *
+ * Extends <mxRectangle> to represent the geometry of a cell.
+ *
+ * For vertices, the geometry consists of the x- and y-location, and the width
+ * and height. For edges, the geometry consists of the optional terminal- and
+ * control points. The terminal points are only required if an edge is
+ * unconnected, and are stored in the <sourcePoint> and <targetPoint>
+ * variables, respectively.
+ *
+ * Example:
+ *
+ * If an edge is unconnected, that is, it has no source or target terminal,
+ * then a geometry with terminal points for a new edge can be defined as
+ * follows.
+ *
+ * (code)
+ * geometry.setTerminalPoint(new mxPoint(x1, y1), true);
+ * geometry.points = [new mxPoint(x2, y2)];
+ * geometry.setTerminalPoint(new mxPoint(x3, y3), false);
+ * (end)
+ *
+ * Control points are used regardless of the connected state of an edge and may
+ * be ignored or interpreted differently depending on the edge's <mxEdgeStyle>.
+ *
+ * To disable automatic reset of control points after a cell has been moved or
+ * resized, the the <mxGraph.resizeEdgesOnMove> and
+ * <mxGraph.resetEdgesOnResize> may be used.
+ *
+ * Edge Labels:
+ *
+ * Using the x- and y-coordinates of a cell's geometry, it is possible to
+ * position the label on edges on a specific location on the actual edge shape
+ * as it appears on the screen. The x-coordinate of an edge's geometry is used
+ * to describe the distance from the center of the edge from -1 to 1 with 0
+ * being the center of the edge and the default value. The y-coordinate of an
+ * edge's geometry is used to describe the absolute, orthogonal distance in
+ * pixels from that point. In addition, the <mxGeometry.offset> is used as an
+ * absolute offset vector from the resulting point.
+ *
+ * This coordinate system is applied if <relative> is true, otherwise the
+ * offset defines the absolute vector from the edge's center point to the
+ * label and the values for <x> and <y> are ignored.
+ *
+ * The width and height parameter for edge geometries can be used to set the
+ * label width and height (eg. for word wrapping).
+ *
+ * Ports:
+ *
+ * The term "port" refers to a relatively positioned, connectable child cell,
+ * which is used to specify the connection between the parent and another cell
+ * in the graph. Ports are typically modeled as vertices with relative
+ * geometries.
+ *
+ * Offsets:
+ *
+ * The <offset> field is interpreted in 3 different ways, depending on the cell
+ * and the geometry. For edges, the offset defines the absolute offset for the
+ * edge label. For relative geometries, the offset defines the absolute offset
+ * for the origin (top, left corner) of the vertex, otherwise the offset
+ * defines the absolute offset for the label inside the vertex or group.
+ *
+ * Constructor: mxGeometry
+ *
+ * Constructs a new object to describe the size and location of a vertex or
+ * the control points of an edge.
+ */
 class mxGeometry extends mxRectangle {
+  constructor(x, y, width, height) {
+    super(x, y, width, height);
+  }
+
   /**
    * Variable: TRANSLATE_CONTROL_POINTS
    *
@@ -79,78 +151,6 @@ class mxGeometry extends mxRectangle {
    * Default is false.
    */
   relative = false;
-
-  /**
-   * Class: mxGeometry
-   *
-   * Extends <mxRectangle> to represent the geometry of a cell.
-   *
-   * For vertices, the geometry consists of the x- and y-location, and the width
-   * and height. For edges, the geometry consists of the optional terminal- and
-   * control points. The terminal points are only required if an edge is
-   * unconnected, and are stored in the <sourcePoint> and <targetPoint>
-   * variables, respectively.
-   *
-   * Example:
-   *
-   * If an edge is unconnected, that is, it has no source or target terminal,
-   * then a geometry with terminal points for a new edge can be defined as
-   * follows.
-   *
-   * (code)
-   * geometry.setTerminalPoint(new mxPoint(x1, y1), true);
-   * geometry.points = [new mxPoint(x2, y2)];
-   * geometry.setTerminalPoint(new mxPoint(x3, y3), false);
-   * (end)
-   *
-   * Control points are used regardless of the connected state of an edge and may
-   * be ignored or interpreted differently depending on the edge's <mxEdgeStyle>.
-   *
-   * To disable automatic reset of control points after a cell has been moved or
-   * resized, the the <mxGraph.resizeEdgesOnMove> and
-   * <mxGraph.resetEdgesOnResize> may be used.
-   *
-   * Edge Labels:
-   *
-   * Using the x- and y-coordinates of a cell's geometry, it is possible to
-   * position the label on edges on a specific location on the actual edge shape
-   * as it appears on the screen. The x-coordinate of an edge's geometry is used
-   * to describe the distance from the center of the edge from -1 to 1 with 0
-   * being the center of the edge and the default value. The y-coordinate of an
-   * edge's geometry is used to describe the absolute, orthogonal distance in
-   * pixels from that point. In addition, the <mxGeometry.offset> is used as an
-   * absolute offset vector from the resulting point.
-   *
-   * This coordinate system is applied if <relative> is true, otherwise the
-   * offset defines the absolute vector from the edge's center point to the
-   * label and the values for <x> and <y> are ignored.
-   *
-   * The width and height parameter for edge geometries can be used to set the
-   * label width and height (eg. for word wrapping).
-   *
-   * Ports:
-   *
-   * The term "port" refers to a relatively positioned, connectable child cell,
-   * which is used to specify the connection between the parent and another cell
-   * in the graph. Ports are typically modeled as vertices with relative
-   * geometries.
-   *
-   * Offsets:
-   *
-   * The <offset> field is interpreted in 3 different ways, depending on the cell
-   * and the geometry. For edges, the offset defines the absolute offset for the
-   * edge label. For relative geometries, the offset defines the absolute offset
-   * for the origin (top, left corner) of the vertex, otherwise the offset
-   * defines the absolute offset for the label inside the vertex or group.
-   *
-   * Constructor: mxGeometry
-   *
-   * Constructs a new object to describe the size and location of a vertex or
-   * the control points of an edge.
-   */
-  constructor(x, y, width, height) {
-    super(x, y, width, height);
-  }
 
   /**
    * Function: swap

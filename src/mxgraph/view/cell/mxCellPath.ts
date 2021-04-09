@@ -11,16 +11,16 @@ import mxCell from './mxCell';
  * Implements a mechanism for temporary cell Ids.
  */
 class mxCellPath {
+  constructor() {
+    throw new Error("Static class can't be instantiated!");
+  }
+
   /*
    * Variable: PATH_SEPARATOR
    *
    * Defines the separator between the path components. Default is ".".
    */
   static PATH_SEPARATOR = '.';
-
-  constructor() {
-    throw new Error("Static class can't be instantiated!");
-  }
 
   /**
    * Function: create

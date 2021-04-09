@@ -5,13 +5,14 @@
  */
 import mxConstants from '../../util/mxConstants';
 
+/**
+ * Class: mxMarker
+ *
+ * A static class that implements all markers for SVG using a
+ * registry. NOTE: The signatures in this class will change.
+ */
 class mxMarker {
-  /**
-   * Class: mxMarker
-   *
-   * A static class that implements all markers for SVG using a
-   * registry. NOTE: The signatures in this class will change.
-   *
+  /*
    * Variable: markers
    *
    * Maps from markers names to functions to paint the markers.

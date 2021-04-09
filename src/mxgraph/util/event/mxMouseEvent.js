@@ -6,7 +6,47 @@
 import mxEvent from './mxEvent';
 import mxUtils from '../mxUtils';
 
+/**
+ * Class: mxMouseEvent
+ *
+ * Base class for all mouse events in mxGraph. A listener for this event should
+ * implement the following methods:
+ *
+ * (code)
+ * graph.addMouseListener(
+ * {
+ *   mouseDown: (sender, evt)=>
+ *   {
+ *     mxLog.debug('mouseDown');
+ *   },
+ *   mouseMove: (sender, evt)=>
+ *   {
+ *     mxLog.debug('mouseMove');
+ *   },
+ *   mouseUp: (sender, evt)=>
+ *   {
+ *     mxLog.debug('mouseUp');
+ *   }
+ * });
+ * (end)
+ *
+ * Constructor: mxMouseEvent
+ *
+ * Constructs a new event object for the given arguments.
+ *
+ * Parameters:
+ *
+ * evt - Native mouse event.
+ * state - Optional <mxCellState> under the mouse.
+ *
+ */
 class mxMouseEvent {
+  constructor(evt, state) {
+    this.evt = evt;
+    this.state = state;
+    this.sourceState = state;
+  }
+
   /**
    * Variable: consumed
    *
@@ -51,46 +91,6 @@ class mxMouseEvent {
    * different from <state> depending on the result of <mxGraph.getEventState>.
    */
   sourceState = null;
-
-  /**
-   * Class: mxMouseEvent
-   *
-   * Base class for all mouse events in mxGraph. A listener for this event should
-   * implement the following methods:
-   *
-   * (code)
-   * graph.addMouseListener(
-   * {
-   *   mouseDown: (sender, evt)=>
-   *   {
-   *     mxLog.debug('mouseDown');
-   *   },
-   *   mouseMove: (sender, evt)=>
-   *   {
-   *     mxLog.debug('mouseMove');
-   *   },
-   *   mouseUp: (sender, evt)=>
-   *   {
-   *     mxLog.debug('mouseUp');
-   *   }
-   * });
-   * (end)
-   *
-   * Constructor: mxMouseEvent
-   *
-   * Constructs a new event object for the given arguments.
-   *
-   * Parameters:
-   *
-   * evt - Native mouse event.
-   * state - Optional <mxCellState> under the mouse.
-   *
-   */
-  constructor(evt, state) {
-    this.evt = evt;
-    this.state = state;
-    this.sourceState = state;
-  }
 
   /**
    * Function: getEvent

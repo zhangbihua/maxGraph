@@ -4,9 +4,46 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 import mxEventSource from '../event/mxEventSource';
-import mxUtils from '../mxUtils';
 
+/**
+ * Class: mxAutoSaveManager
+ *
+ * Manager for automatically saving diagrams. The <save> hook must be
+ * implemented.
+ *
+ * Example:
+ *
+ * (code)
+ * let mgr = new mxAutoSaveManager(editor.graph);
+ * mgr.save = ()=>
+ * {
+ *   mxLog.show();
+ *   mxLog.debug('save');
+ * };
+ * (end)
+ *
+ * Constructor: mxAutoSaveManager
+ *
+ * Constructs a new automatic layout for the given graph.
+ *
+ * Arguments:
+ *
+ * graph - Reference to the enclosing graph.
+ */
 class mxAutoSaveManager extends mxEventSource {
+  constructor(graph) {
+    super();
+
+    // Notifies the manager of a change
+    this.changeHandler = (sender, evt) => {
+      if (this.isEnabled()) {
+        this.graphModelChanged(evt.getProperty('edit').changes);
+      }
+    };
+
+    this.setGraph(graph);
+  }
+
   /**
    * Variable: graph
    *
@@ -70,44 +107,6 @@ class mxAutoSaveManager extends mxEventSource {
    * Holds the function that handles graph model changes.
    */
   changeHandler = null;
-
-  /**
-   * Class: mxAutoSaveManager
-   *
-   * Manager for automatically saving diagrams. The <save> hook must be
-   * implemented.
-   *
-   * Example:
-   *
-   * (code)
-   * let mgr = new mxAutoSaveManager(editor.graph);
-   * mgr.save = ()=>
-   * {
-   *   mxLog.show();
-   *   mxLog.debug('save');
-   * };
-   * (end)
-   *
-   * Constructor: mxAutoSaveManager
-   *
-   * Constructs a new automatic layout for the given graph.
-   *
-   * Arguments:
-   *
-   * graph - Reference to the enclosing graph.
-   */
-  constructor(graph) {
-    super();
-
-    // Notifies the manager of a change
-    this.changeHandler = (sender, evt) => {
-      if (this.isEnabled()) {
-        this.graphModelChanged(evt.getProperty('edit').changes);
-      }
-    };
-
-    this.setGraph(graph);
-  }
 
   /**
    * Function: isEnabled

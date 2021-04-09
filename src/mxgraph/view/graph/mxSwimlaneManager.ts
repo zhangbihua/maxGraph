@@ -14,7 +14,50 @@ import mxEventObject from "../../util/event/mxEventObject";
 import mxCell from "../cell/mxCell";
 import mxGeometry from "../../util/datatypes/mxGeometry";
 
+/**
+ * Class: mxSwimlaneManager
+ *
+ * Manager for swimlanes and nested swimlanes that sets the size of newly added
+ * swimlanes to that of their siblings, and propagates changes to the size of a
+ * swimlane to its siblings, if <siblings> is true, and its ancestors, if
+ * <bubbling> is true.
+ *
+ * Constructor: mxSwimlaneManager
+ *
+ * Constructs a new swimlane manager for the given graph.
+ *
+ * Arguments:
+ *
+ * graph - Reference to the enclosing graph.
+ */
 class mxSwimlaneManager extends mxEventSource {
+  constructor(
+      graph: mxGraph,
+      horizontal: boolean = true,
+      addEnabled: boolean = true,
+      resizeEnabled: boolean = true
+  ) {
+    super();
+
+    this.horizontal = horizontal;
+    this.addEnabled = addEnabled;
+    this.resizeEnabled = resizeEnabled;
+
+    this.addHandler = mxUtils.bind(this, (sender: any, evt: mxEventObject) => {
+      if (this.isEnabled() && this.isAddEnabled()) {
+        this.cellsAdded(evt.getProperty('cells'));
+      }
+    });
+
+    this.resizeHandler = mxUtils.bind(this, (sender: any, evt: mxEventObject) => {
+      if (this.isEnabled() && this.isResizeEnabled()) {
+        this.cellsResized(evt.getProperty('cells'));
+      }
+    });
+
+    this.setGraph(graph);
+  }
+
   /**
    * Variable: graph
    *
@@ -64,49 +107,6 @@ class mxSwimlaneManager extends mxEventSource {
    * Holds the function that handles the move event.
    */
   resizeHandler: Function | null = null;
-
-  /**
-   * Class: mxSwimlaneManager
-   *
-   * Manager for swimlanes and nested swimlanes that sets the size of newly added
-   * swimlanes to that of their siblings, and propagates changes to the size of a
-   * swimlane to its siblings, if <siblings> is true, and its ancestors, if
-   * <bubbling> is true.
-   *
-   * Constructor: mxSwimlaneManager
-   *
-   * Constructs a new swimlane manager for the given graph.
-   *
-   * Arguments:
-   *
-   * graph - Reference to the enclosing graph.
-   */
-  constructor(
-    graph: mxGraph,
-    horizontal: boolean = true,
-    addEnabled: boolean = true,
-    resizeEnabled: boolean = true
-  ) {
-    super();
-
-    this.horizontal = horizontal;
-    this.addEnabled = addEnabled;
-    this.resizeEnabled = resizeEnabled;
-
-    this.addHandler = mxUtils.bind(this, (sender: any, evt: mxEventObject) => {
-      if (this.isEnabled() && this.isAddEnabled()) {
-        this.cellsAdded(evt.getProperty('cells'));
-      }
-    });
-
-    this.resizeHandler = mxUtils.bind(this, (sender: any, evt: mxEventObject) => {
-      if (this.isEnabled() && this.isResizeEnabled()) {
-        this.cellsResized(evt.getProperty('cells'));
-      }
-    });
-
-    this.setGraph(graph);
-  }
 
   /**
    * Function: isEnabled

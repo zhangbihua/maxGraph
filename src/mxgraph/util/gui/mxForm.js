@@ -4,7 +4,24 @@
  * Updated to ES9 syntax by David Morrissey 2021
  */
 
+/**
+ * Class: mxForm
+ *
+ * A simple class for creating HTML forms.
+ *
+ * Constructor: mxForm
+ *
+ * Creates a HTML table using the specified classname.
+ */
 class mxForm {
+  constructor(className) {
+    this.table = document.createElement('table');
+    this.table.className = className;
+    this.body = document.createElement('tbody');
+
+    this.table.appendChild(this.body);
+  }
+
   /**
    * Variable: table
    *
@@ -19,23 +36,6 @@ class mxForm {
    * can be added to this object using DOM API.
    */
   body = false;
-
-  /**
-   * Class: mxForm
-   *
-   * A simple class for creating HTML forms.
-   *
-   * Constructor: mxForm
-   *
-   * Creates a HTML table using the specified classname.
-   */
-  constructor(className) {
-    this.table = document.createElement('table');
-    this.table.className = className;
-    this.body = document.createElement('tbody');
-
-    this.table.appendChild(this.body);
-  }
 
   /**
    * Function: getTable

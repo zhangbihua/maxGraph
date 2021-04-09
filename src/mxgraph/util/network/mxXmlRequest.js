@@ -4,7 +4,99 @@
  */
 import mxUtils from '../mxUtils';
 
+/**
+ * Class: mxXmlRequest
+ *
+ * XML HTTP request wrapper. See also: <mxUtils.get>, <mxUtils.post> and
+ * <mxUtils.load>. This class provides a cross-browser abstraction for Ajax
+ * requests.
+ *
+ * Encoding:
+ *
+ * For encoding parameter values, the built-in encodeURIComponent JavaScript
+ * method must be used. For automatic encoding of post data in <mxEditor> the
+ * <mxEditor.escapePostData> switch can be set to true (default). The encoding
+ * will be carried out using the conte type of the page. That is, the page
+ * containting the editor should contain a meta tag in the header, eg.
+ * <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ *
+ * Example:
+ *
+ * (code)
+ * let onload = (req)=>
+ * {
+ *   mxUtils.alert(req.getDocumentElement());
+ * }
+ *
+ * let onerror = (req)=>
+ * {
+ *   mxUtils.alert('Error');
+ * }
+ * new mxXmlRequest(url, 'key=value').send(onload, onerror);
+ * (end)
+ *
+ * Sends an asynchronous POST request to the specified URL.
+ *
+ * Example:
+ *
+ * (code)
+ * let req = new mxXmlRequest(url, 'key=value', 'POST', false);
+ * req.send();
+ * mxUtils.alert(req.getDocumentElement());
+ * (end)
+ *
+ * Sends a synchronous POST request to the specified URL.
+ *
+ * Example:
+ *
+ * (code)
+ * let encoder = new mxCodec();
+ * let result = encoder.encode(graph.getModel());
+ * let xml = encodeURIComponent(mxUtils.getXml(result));
+ * new mxXmlRequest(url, 'xml='+xml).send();
+ * (end)
+ *
+ * Sends an encoded graph model to the specified URL using xml as the
+ * parameter name. The parameter can then be retrieved in C# as follows:
+ *
+ * (code)
+ * string xml = HttpUtility.UrlDecode(context.Request.Params["xml"]);
+ * (end)
+ *
+ * Or in Java as follows:
+ *
+ * (code)
+ * String xml = URLDecoder.decode(request.getParameter("xml"), "UTF-8").replace("\n", "&#xa;");
+ * (end)
+ *
+ * Note that the linefeeds should only be replaced if the XML is
+ * processed in Java, for example when creating an image.
+ *
+ * Constructor: mxXmlRequest
+ *
+ * Constructs an XML HTTP request.
+ *
+ * Parameters:
+ *
+ * url - Target URL of the request.
+ * params - Form encoded parameters to send with a POST request.
+ * method - String that specifies the request method. Possible values are
+ * POST and GET. Default is POST.
+ * async - Boolean specifying if an asynchronous request should be used.
+ * Default is true.
+ * username - String specifying the username to be used for the request.
+ * password - String specifying the password to be used for the request.
+ */
 class mxXmlRequest {
+  constructor(url, params, method, async, username, password) {
+    this.url = url;
+    this.params = params;
+    this.method = method || 'POST';
+    this.async = async != null ? async : true;
+    this.username = username;
+    this.password = password;
+  }
+
   /**
    * Variable: url
    *
@@ -80,98 +172,6 @@ class mxXmlRequest {
    * to avoid another decode on the server this should be set to true.
    */
   decodeSimulateValues = false;
-
-  /**
-   * Class: mxXmlRequest
-   *
-   * XML HTTP request wrapper. See also: <mxUtils.get>, <mxUtils.post> and
-   * <mxUtils.load>. This class provides a cross-browser abstraction for Ajax
-   * requests.
-   *
-   * Encoding:
-   *
-   * For encoding parameter values, the built-in encodeURIComponent JavaScript
-   * method must be used. For automatic encoding of post data in <mxEditor> the
-   * <mxEditor.escapePostData> switch can be set to true (default). The encoding
-   * will be carried out using the conte type of the page. That is, the page
-   * containting the editor should contain a meta tag in the header, eg.
-   * <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-   *
-   * Example:
-   *
-   * (code)
-   * let onload = (req)=>
-   * {
-   *   mxUtils.alert(req.getDocumentElement());
-   * }
-   *
-   * let onerror = (req)=>
-   * {
-   *   mxUtils.alert('Error');
-   * }
-   * new mxXmlRequest(url, 'key=value').send(onload, onerror);
-   * (end)
-   *
-   * Sends an asynchronous POST request to the specified URL.
-   *
-   * Example:
-   *
-   * (code)
-   * let req = new mxXmlRequest(url, 'key=value', 'POST', false);
-   * req.send();
-   * mxUtils.alert(req.getDocumentElement());
-   * (end)
-   *
-   * Sends a synchronous POST request to the specified URL.
-   *
-   * Example:
-   *
-   * (code)
-   * let encoder = new mxCodec();
-   * let result = encoder.encode(graph.getModel());
-   * let xml = encodeURIComponent(mxUtils.getXml(result));
-   * new mxXmlRequest(url, 'xml='+xml).send();
-   * (end)
-   *
-   * Sends an encoded graph model to the specified URL using xml as the
-   * parameter name. The parameter can then be retrieved in C# as follows:
-   *
-   * (code)
-   * string xml = HttpUtility.UrlDecode(context.Request.Params["xml"]);
-   * (end)
-   *
-   * Or in Java as follows:
-   *
-   * (code)
-   * String xml = URLDecoder.decode(request.getParameter("xml"), "UTF-8").replace("\n", "&#xa;");
-   * (end)
-   *
-   * Note that the linefeeds should only be replaced if the XML is
-   * processed in Java, for example when creating an image.
-   *
-   * Constructor: mxXmlRequest
-   *
-   * Constructs an XML HTTP request.
-   *
-   * Parameters:
-   *
-   * url - Target URL of the request.
-   * params - Form encoded parameters to send with a POST request.
-   * method - String that specifies the request method. Possible values are
-   * POST and GET. Default is POST.
-   * async - Boolean specifying if an asynchronous request should be used.
-   * Default is true.
-   * username - String specifying the username to be used for the request.
-   * password - String specifying the password to be used for the request.
-   */
-  constructor(url, params, method, async, username, password) {
-    this.url = url;
-    this.params = params;
-    this.method = method || 'POST';
-    this.async = async != null ? async : true;
-    this.username = username;
-    this.password = password;
-  }
 
   /**
    * Function: isBinary

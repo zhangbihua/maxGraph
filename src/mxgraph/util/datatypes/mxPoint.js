@@ -6,7 +6,22 @@
 
 import mxUtils from '../mxUtils';
 
+/**
+ * Class: mxPoint
+ *
+ * Implements a 2-dimensional vector with double precision coordinates.
+ *
+ * Constructor: mxPoint
+ *
+ * Constructs a new point for the optional x and y coordinates. If no
+ * coordinates are given, then the default values for <x> and <y> are used.
+ */
 class mxPoint {
+  constructor(x, y) {
+    this.x = x != null ? x : 0;
+    this.y = y != null ? y : 0;
+  }
+
   /**
    * Variable: x
    *
@@ -20,21 +35,6 @@ class mxPoint {
    * Holds the y-coordinate of the point. Default is 0.
    */
   y = null;
-
-  /**
-   * Class: mxPoint
-   *
-   * Implements a 2-dimensional vector with double precision coordinates.
-   *
-   * Constructor: mxPoint
-   *
-   * Constructs a new point for the optional x and y coordinates. If no
-   * coordinates are given, then the default values for <x> and <y> are used.
-   */
-  constructor(x, y) {
-    this.x = x != null ? x : 0;
-    this.y = y != null ? y : 0;
-  }
 
   get x() {
     return this._x || 0;

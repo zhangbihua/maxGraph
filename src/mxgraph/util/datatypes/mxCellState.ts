@@ -14,7 +14,43 @@ import mxText from '../../shape/mxText';
 import mxGraph from "../../view/graph/mxGraph";
 import mxDictionary from "./mxDictionary";
 
+/**
+ * Class: mxCellState
+ *
+ * Represents the current state of a cell in a given <mxGraphView>.
+ *
+ * For edges, the edge label position is stored in <absoluteOffset>.
+ *
+ * The size for oversize labels can be retrieved using the boundingBox property
+ * of the <text> field as shown below.
+ *
+ * (code)
+ * let bbox = (state.text != null) ? state.text.boundingBox : null;
+ * (end)
+ *
+ * Constructor: mxCellState
+ *
+ * Constructs a new object that represents the current state of the given
+ * cell in the specified view.
+ *
+ * Parameters:
+ *
+ * view - <mxGraphView> that contains the state.
+ * cell - <mxCell> that this state represents.
+ * style - Array of key, value pairs that constitute the style.
+ */
 class mxCellState extends mxRectangle {
+  constructor(view: mxGraphView, cell: mxCell, style: {}) {
+    super(mxConstants.DO_NOTHING);
+
+    this.view = view;
+    this.cell = cell;
+    this.style = style != null ? style : {};
+
+    this.origin = new mxPoint();
+    this.absoluteOffset = new mxPoint();
+  }
+
   // referenced in mxCellRenderer
   node: any;
 
@@ -156,42 +192,6 @@ class mxCellState extends mxRectangle {
    * Holds the unscaled height of the state.
    */
   unscaledHeight: number | null = null;
-
-  /**
-   * Class: mxCellState
-   *
-   * Represents the current state of a cell in a given <mxGraphView>.
-   *
-   * For edges, the edge label position is stored in <absoluteOffset>.
-   *
-   * The size for oversize labels can be retrieved using the boundingBox property
-   * of the <text> field as shown below.
-   *
-   * (code)
-   * let bbox = (state.text != null) ? state.text.boundingBox : null;
-   * (end)
-   *
-   * Constructor: mxCellState
-   *
-   * Constructs a new object that represents the current state of the given
-   * cell in the specified view.
-   *
-   * Parameters:
-   *
-   * view - <mxGraphView> that contains the state.
-   * cell - <mxCell> that this state represents.
-   * style - Array of key, value pairs that constitute the style.
-   */
-  constructor(view: mxGraphView, cell: mxCell, style: {}) {
-    super(mxConstants.DO_NOTHING);
-
-    this.view = view;
-    this.cell = cell;
-    this.style = style != null ? style : {};
-
-    this.origin = new mxPoint();
-    this.absoluteOffset = new mxPoint();
-  }
 
   /**
    * Function: getPerimeterBounds

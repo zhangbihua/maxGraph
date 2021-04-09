@@ -8,7 +8,27 @@ import mxConstants from '../mxConstants';
 import mxUrlConverter from '../network/mxUrlConverter';
 import mxPoint from '../datatypes/mxPoint';
 
+/**
+ * Class: mxAbstractCanvas2D
+ *
+ * Base class for all canvases. A description of the public API is available in <mxXmlCanvas2D>.
+ * All color values of <mxConstants.NONE> will be converted to null in the state.
+ *
+ * Constructor: D
+ *
+ * Constructs a new abstract canvas.
+ */
 class mxAbstractCanvas2D {
+  constructor() {
+    /**
+     * Variable: converter
+     *
+     * Holds the <mxUrlConverter> to convert image URLs.
+     */
+    this.converter = this.createUrlConverter();
+    this.reset();
+  }
+
   /**
    * Variable: state
    *
@@ -92,26 +112,6 @@ class mxAbstractCanvas2D {
    * Boolean value that specifies if events should be handled. Default is false.
    */
   pointerEvents = false;
-
-  /**
-   * Class: D
-   *
-   * Base class for all canvases. A description of the public API is available in <mxXmlCanvas2D>.
-   * All color values of <mxConstants.NONE> will be converted to null in the state.
-   *
-   * Constructor: D
-   *
-   * Constructs a new abstract canvas.
-   */
-  constructor() {
-    /**
-     * Variable: converter
-     *
-     * Holds the <mxUrlConverter> to convert image URLs.
-     */
-    this.converter = this.createUrlConverter();
-    this.reset();
-  }
 
   /**
    * Function: createUrlConverter
