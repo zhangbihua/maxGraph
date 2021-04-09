@@ -9,7 +9,7 @@ import mxUtils from '../../util/mxUtils';
 import mxShape from '../mxShape';
 import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
 import mxRectangle from '../../util/datatypes/mxRectangle';
-import mxSvgCanvas2D from "../../util/canvas/mxSvgCanvas2D";
+import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 
 /**
  * Class: mxRectangleShape
@@ -33,7 +33,7 @@ import mxSvgCanvas2D from "../../util/canvas/mxSvgCanvas2D";
  */
 class mxRectangleShape extends mxShape {
   constructor(
-    bounds: mxRectangle | null=null,
+    bounds: mxRectangle | null = null,
     fill: string | null = '#FFFFFF',
     stroke: string | null = '#000000',
     strokewidth: number = 1

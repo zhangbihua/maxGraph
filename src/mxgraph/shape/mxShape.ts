@@ -13,6 +13,7 @@ import mxClient from '../mxClient';
 import mxCellState from '../util/datatypes/mxCellState';
 import mxAbstractCanvas2D from '../util/canvas/mxAbstractCanvas2D';
 import mxStencil from './node/mxStencil';
+import mxCellOverlay from "../view/cell/mxCellOverlay";
 
 const toBool = (i: any): boolean => {
   if (i === 0) return false;
@@ -99,7 +100,7 @@ class mxShape {
    *
    * container - DOM node that will contain the shape.
    */
-  init(container: SVGElement | null = null) {
+  init(container: HTMLElement | SVGElement | null = null) {
     if (this.node == null) {
       this.node = this.create(container);
 
@@ -125,13 +126,22 @@ class mxShape {
   }
 
   // TODO: Document me!!
+
+  // Assigned in mxCellRenderer
+  preserveImageAspect: boolean=false;
+  overlay: mxCellOverlay | null=null;
+  indicator: mxShape | null=null;
+  indicatorShape: typeof mxShape | null=null;
+
+  // Assigned in mxCellHighlight
+  opacity: number | null=100;
+  isDashed: boolean=false;
+
   fill: string | null = null;
 
   gradient: string | null = null;
 
   gradientDirection: string | null = null;
-
-  opacity: number | null = null;
 
   fillOpacity: number | null = null;
 
@@ -158,8 +168,6 @@ class mxShape {
   flipV: boolean = false;
 
   isShadow: boolean = false;
-
-  isDashed: boolean = false;
 
   isRounded: boolean = false;
 
@@ -214,7 +222,7 @@ class mxShape {
    *
    * Holds the array of <mxPoints> that specify the points of this shape.
    */
-  points: mxPoint[] | null = null;
+  points: (mxPoint | null)[] | null = null;
 
   /**
    * Variable: node
@@ -349,7 +357,7 @@ class mxShape {
    *
    * container - DOM node that will contain the shape.
    */
-  create(container: SVGElement | null): SVGGElement {
+  create(container: SVGElement | HTMLElement | null): SVGGElement {
     return document.createElementNS("http://www.w3.org/2000/svg", "g");
   }
 
@@ -709,6 +717,7 @@ class mxShape {
 
         for (let i = 0; i < this.points.length; i += 1) {
           if (this.points[i] != null) {
+            // @ts-ignore
             pts.push(new mxPoint(this.points[i].x / s, this.points[i].y / s));
           }
         }

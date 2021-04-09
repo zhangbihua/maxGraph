@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from './Grid';
 import Preview from '../Previews';
 import ExtendCanvas from './ExtendCanvas';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _Backgrounds() {
   return (

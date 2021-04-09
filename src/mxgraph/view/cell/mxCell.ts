@@ -200,9 +200,9 @@ class mxCell {
    * style - Optional formatted string that defines the style.
    */
   constructor(
-      value: any = null,
-      geometry: mxGeometry | null = null,
-      style: string | null = null
+    value: any = null,
+    geometry: mxGeometry | null = null,
+    style: string | null = null
   ) {
     this.value = value;
     this.setGeometry(geometry);
@@ -460,8 +460,7 @@ class mxCell {
    * isSource - Boolean that specifies if the source or target terminal
    * should be set.
    */
-  setTerminal(terminal: mxCell | null,
-              isSource: boolean): mxCell | null {
+  setTerminal(terminal: mxCell | null, isSource: boolean): mxCell | null {
     if (isSource) {
       this.source = terminal;
     } else {
@@ -519,9 +518,7 @@ class mxCell {
    * index - Optional integer that specifies the index at which the child
    * should be inserted into the child array.
    */
-  insert(child: mxCell | null=null,
-         index: number | null=null) {
-    
+  insert(child: mxCell | null = null, index: number | null = null) {
     if (child != null) {
       if (index == null) {
         index = this.getChildCount();
@@ -626,9 +623,7 @@ class mxCell {
    * edge - <mxCell> to be inserted into the edge array.
    * isOutgoing - Boolean that specifies if the edge is outgoing.
    */
-  insertEdge(edge: mxCell | null,
-             isOutgoing: boolean) {
-
+  insertEdge(edge: mxCell | null, isOutgoing: boolean) {
     if (edge != null) {
       edge.removeFromTerminal(isOutgoing);
       edge.setTerminal(this, isOutgoing);
@@ -658,9 +653,7 @@ class mxCell {
    * edge - <mxCell> to be removed from the edge array.
    * isOutgoing - Boolean that specifies if the edge is outgoing.
    */
-  removeEdge(edge: mxCell | null,
-             isOutgoing: boolean=false): mxCell | null {
-
+  removeEdge(edge: mxCell | null, isOutgoing: boolean = false): mxCell | null {
     if (edge != null) {
       if (edge.getTerminal(!isOutgoing) !== this && this.edges != null) {
         const index = this.getEdgeIndex(edge);
@@ -703,11 +696,13 @@ class mxCell {
    */
   hasAttribute(name: string): boolean {
     const userObject = this.getValue();
-    return userObject != null &&
-        (userObject.nodeType === mxConstants.NODETYPE_ELEMENT &&
-          userObject.hasAttribute
-          ? userObject.hasAttribute(name)
-          : userObject.getAttribute(name) != null);
+    return (
+      userObject != null &&
+      (userObject.nodeType === mxConstants.NODETYPE_ELEMENT &&
+      userObject.hasAttribute
+        ? userObject.hasAttribute(name)
+        : userObject.getAttribute(name) != null)
+    );
   }
 
   /**
@@ -722,9 +717,7 @@ class mxCell {
    * defaultValue - Optional default value to use if the attribute has no
    * value.
    */
-  getAttribute(name: string,
-               defaultValue: any): any {
-
+  getAttribute(name: string, defaultValue: any): any {
     const userObject = this.getValue();
     const val =
       userObject != null && userObject.nodeType === mxConstants.NODETYPE_ELEMENT
@@ -743,9 +736,7 @@ class mxCell {
    * name - Name of the attribute whose value should be set.
    * value - New value of the attribute.
    */
-  setAttribute(name: string,
-               value: any): void {
-
+  setAttribute(name: string, value: any): void {
     const userObject = this.getValue();
     if (
       userObject != null &&

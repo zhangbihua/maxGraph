@@ -8,7 +8,7 @@ import mxPoint from '../../util/datatypes/mxPoint';
 import mxUtils from '../../util/mxUtils';
 import mxConstants from '../../util/mxConstants';
 import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
-import mxSvgCanvas2D from "../../util/canvas/mxSvgCanvas2D";
+import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 
 /**
  * Class: mxHexagon
@@ -29,13 +29,7 @@ class mxHexagon extends mxActor {
    *
    * Draws the path for this shape.
    */
-  redrawPath(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {
+  redrawPath(c: mxSvgCanvas2D, x: number, y: number, w: number, h: number) {
     const arcSize =
       mxUtils.getValue(
         this.style,

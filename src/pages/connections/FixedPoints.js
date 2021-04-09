@@ -40,7 +40,7 @@ class FixedPoints extends React.Component {
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     // Snaps to fixed points
@@ -259,7 +259,7 @@ class FixedPoints extends React.Component {
           return result;
       };
       */
-  };
+  }
 }
 
 export default FixedPoints;

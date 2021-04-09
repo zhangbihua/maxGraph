@@ -11,7 +11,7 @@ import OrgChart from './OrgChart';
 import RadialTreeLayout from './RadialTreeLayout';
 import SwimLanes from './SwimLanes';
 import Tree from './Tree';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _Layout() {
   return (

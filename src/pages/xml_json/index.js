@@ -3,7 +3,7 @@ import Preview from '../Previews';
 import JsonData from './JsonData';
 import Resources from './Resources';
 import UserObject from './UserObject';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _XMLJSON() {
   return (

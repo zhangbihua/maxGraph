@@ -9,7 +9,7 @@ import mxShape from '../mxShape';
 import mxConstants from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
-import mxSvgCanvas2D from "../../util/canvas/mxSvgCanvas2D";
+import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 
 /**
  * Class: mxDoubleEllipse
@@ -55,10 +55,12 @@ import mxSvgCanvas2D from "../../util/canvas/mxSvgCanvas2D";
 class mxDoubleEllipse extends mxShape {
   strokewidth: number;
 
-  constructor(bounds: mxRectangle,
-              fill: string,
-              stroke: string,
-              strokewidth: number=1) {
+  constructor(
+    bounds: mxRectangle,
+    fill: string,
+    stroke: string,
+    strokewidth: number = 1
+  ) {
     super();
     this.bounds = bounds;
     this.fill = fill;

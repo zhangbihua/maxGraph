@@ -1,8 +1,8 @@
 import React from 'react';
 import Boundary from './Boundary';
 import Preview from '../Previews';
-import Events from "./Events";
-import PageTabs from "../PageTabs";
+import Events from './Events';
+import PageTabs from '../PageTabs';
 
 export default function _Events() {
   return (

@@ -3,7 +3,7 @@ import Preview from '../Previews';
 import Clipboard from './Clipboard';
 import DragSource from './DragSource';
 import Drop from './Drop';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _DnDCopyPaste() {
   return (

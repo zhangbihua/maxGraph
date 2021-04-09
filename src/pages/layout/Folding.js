@@ -36,7 +36,7 @@ class Folding extends React.Component {
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     // Enables crisp rendering of rectangles in SVG
@@ -151,7 +151,7 @@ class Folding extends React.Component {
       // Updates the display
       graph.getModel().endUpdate();
     }
-  };
+  }
 }
 
 export default Folding;

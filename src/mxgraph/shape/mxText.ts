@@ -72,7 +72,7 @@ class mxText extends mxShape {
     value: string,
     bounds: mxRectangle,
     align: string=mxConstants.ALIGN_CENTER,
-    valign: string=mxConstants.ALIGN_MIDDLE,
+    valign: string | null=mxConstants.ALIGN_MIDDLE,
     color: string='black',
     family: string=mxConstants.DEFAULT_FONTFAMILY,
     size: number=mxConstants.DEFAULT_FONTSIZE,
@@ -89,9 +89,11 @@ class mxText extends mxShape {
     clipped: boolean=false,
     overflow: string='visible',
     labelPadding: number=0,
-    textDirection
+    textDirection: string=mxConstants.DEFAULT_TEXT_DIRECTION
   ) {
     super();
+    valign = valign != null ? valign : mxConstants.ALIGN_MIDDLE;
+
     this.value = value;
     this.bounds = bounds;
     this.color = color;
@@ -118,7 +120,7 @@ class mxText extends mxShape {
   }
 
   // TODO: Document me!
-  value: string;
+  value: string | HTMLElement | SVGGElement | null;
   bounds: mxRectangle;
   align: string=mxConstants.ALIGN_CENTER;
   valign: string=mxConstants.ALIGN_MIDDLE;
@@ -138,8 +140,8 @@ class mxText extends mxShape {
   clipped: boolean=false;
   overflow: string='visible';
   labelPadding: number=0;
-  textDirection;
-  margin: mxRectangle | null=null;
+  textDirection: string=mxConstants.DEFAULT_TEXT_DIRECTION;
+  margin: mxPoint | null=null;
   unrotatedBoundingBox: mxRectangle | null=null;
   flipH: boolean=false;
   flipV: boolean=false;
@@ -213,7 +215,7 @@ class mxText extends mxShape {
    *
    * Contains the last rendered text value. Used for caching.
    */
-  lastValue: string | null = null;
+  lastValue: string | HTMLElement | SVGGElement | null = null;
 
   /**
    * Variable: cacheEnabled
@@ -298,10 +300,10 @@ class mxText extends mxShape {
       // Handles trailing newlines to make sure they are visible in rendering output
       val =
         !mxUtils.isNode(this.value) && this.replaceLinefeeds && fmt === 'html'
-          ? val.replace(/\n/g, '<br/>')
+          ? (<string>val).replace(/\n/g, '<br/>')
           : val;
 
-      let dir = this.textDirection;
+      let dir: string | null = this.textDirection;
 
       if (dir === mxConstants.TEXT_DIRECTION_AUTO && !realHtml) {
         dir = this.getAutoDirection();
@@ -346,6 +348,7 @@ class mxText extends mxShape {
       (mxUtils.isNode(this.value) ||
         this.dialect === mxConstants.DIALECT_STRICTHTML)
     ) {
+      // @ts-ignore
       if (this.node.nodeName === 'DIV') {
         this.redrawHtmlShape();
         this.updateBoundingBox();
@@ -393,8 +396,8 @@ class mxText extends mxShape {
     this.spacingBottom = 2;
     this.spacingLeft = 2;
     this.horizontal = true;
-    delete this.background;
-    delete this.border;
+    this.background = null;
+    this.border = null;
     this.textDirection = mxConstants.DEFAULT_TEXT_DIRECTION;
     this.margin = null;
   }
@@ -502,8 +505,8 @@ class mxText extends mxShape {
       this.updateMargin();
     }
 
-    this.flipV = null;
-    this.flipH = null;
+    this.flipV = false;
+    this.flipH = false;
   }
 
   /**
@@ -517,7 +520,7 @@ class mxText extends mxShape {
   getAutoDirection() {
     // Looks for strong (directional) characters
     const tmp = /[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(
-      this.value
+      <string>this.value
     );
 
     // Returns the direction defined by the character
@@ -537,9 +540,11 @@ class mxText extends mxShape {
     if (result != null) {
       // Rendered with no foreignObject
       if (result.ownerSVGElement == null) {
+        // @ts-ignore
         result = this.node.firstChild.firstChild;
       } else {
         // Innermost DIV that contains the actual content
+        // @ts-ignore
         result = result.firstChild.firstChild.firstChild.firstChild.firstChild;
       }
     }
@@ -591,12 +596,16 @@ class mxText extends mxShape {
         node.firstChild.firstChild.nodeName === 'foreignObject'
       ) {
         // Uses second inner DIV for font metrics
+        // @ts-ignore
         node = node.firstChild.firstChild.firstChild.firstChild;
+        // @ts-ignore
         oh = node.offsetHeight * this.scale;
 
         if (this.overflow === 'width') {
+          // @ts-ignore
           ow = this.boundingBox.width;
         } else {
+          // @ts-ignore
           ow = node.offsetWidth * this.scale;
         }
       } else {
@@ -632,12 +641,14 @@ class mxText extends mxShape {
     }
 
     if (this.boundingBox != null) {
+      const margin = <mxRectangle>this.margin;
+
       if (rot !== 0) {
         // Accounts for pre-rotated x and y
         const bbox = <mxRectangle>mxUtils.getBoundingBox(
           new mxRectangle(
-            this.margin.x * this.boundingBox.width,
-            this.margin.y * this.boundingBox.height,
+            margin.x * this.boundingBox.width,
+            margin.y * this.boundingBox.height,
             this.boundingBox.width,
             this.boundingBox.height
           ),
@@ -647,17 +658,17 @@ class mxText extends mxShape {
 
         this.unrotatedBoundingBox = mxRectangle.fromRectangle(this.boundingBox);
         this.unrotatedBoundingBox.x +=
-          this.margin.x * this.unrotatedBoundingBox.width;
+          margin.x * this.unrotatedBoundingBox.width;
         this.unrotatedBoundingBox.y +=
-          this.margin.y * this.unrotatedBoundingBox.height;
+          margin.y * this.unrotatedBoundingBox.height;
 
         this.boundingBox.x += bbox.x;
         this.boundingBox.y += bbox.y;
         this.boundingBox.width = bbox.width;
         this.boundingBox.height = bbox.height;
       } else {
-        this.boundingBox.x += this.margin.x * this.boundingBox.width;
-        this.boundingBox.y += this.margin.y * this.boundingBox.height;
+        this.boundingBox.x += margin.x * this.boundingBox.width;
+        this.boundingBox.y += margin.y * this.boundingBox.height;
         this.unrotatedBoundingBox = null;
       }
     }
@@ -693,6 +704,7 @@ class mxText extends mxShape {
     return (
       !this.horizontal &&
       this.state != null &&
+      // @ts-ignore
       this.state.view.graph.model.isVertex(this.state.cell)
     );
   }
@@ -702,7 +714,11 @@ class mxText extends mxShape {
    *
    * Sets the state of the canvas for drawing the shape.
    */
-  configureCanvas(c, x, y, w, h) {
+  configureCanvas(c: mxSvgCanvas2D,
+                  x: number,
+                  y: number,
+                  w: number,
+                  h: number) {
     super.configureCanvas(c, x, y, w, h);
 
     c.setFontColor(this.color);
@@ -796,6 +812,8 @@ class mxText extends mxShape {
       `position: absolute; left: ${Math.round(this.bounds.x)}px; ` +
       `top: ${Math.round(this.bounds.y)}px; pointer-events: none; `;
     const block = this.getTextCss();
+    const margin = <mxPoint>this.margin;
+    const node = <SVGGElement>this.node;
 
     mxSvgCanvas2D.createCss(
       w + 2,
@@ -810,13 +828,20 @@ class mxText extends mxShape {
       flex,
       block,
       this.scale,
-      (dx, dy, flex, item, block, ofl) => {
+      (
+          dx: number,
+          dy: number,
+          flex: string,
+          item: string,
+          block: string,
+          ofl: string
+      ) => {
         const r = this.getTextRotation();
         let tr =
           (this.scale !== 1 ? `scale(${this.scale}) ` : '') +
           (r !== 0 ? `rotate(${r}deg) ` : '') +
-          (this.margin.x !== 0 || this.margin.y !== 0
-            ? `translate(${this.margin.x * 100}%,${this.margin.y * 100}%)`
+          (margin.x !== 0 || margin.y !== 0
+            ? `translate(${margin.x * 100}%,${margin.y * 100}%)`
             : '');
 
         if (tr !== '') {
@@ -834,22 +859,25 @@ class mxText extends mxShape {
           }
         }
 
-        if (this.opacity < 100) {
-          block += `opacity: ${this.opacity / 100}; `;
+        if (<number>this.opacity < 100) {
+          block += `opacity: ${<number>this.opacity / 100}; `;
         }
 
-        this.node.setAttribute('style', flex);
+        node.setAttribute('style', flex);
 
         const html = mxUtils.isNode(this.value)
+            // @ts-ignore
           ? this.value.outerHTML
           : this.getHtmlValue();
 
-        if (this.node.firstChild == null) {
-          this.node.innerHTML = `<div><div>${html}</div></div>`;
+        if (node.firstChild == null) {
+          node.innerHTML = `<div><div>${html}</div></div>`;
         }
 
-        this.node.firstChild.firstChild.setAttribute('style', block);
-        this.node.firstChild.setAttribute('style', item);
+        // @ts-ignore
+        node.firstChild.firstChild.setAttribute('style', block);
+        // @ts-ignore
+        node.firstChild.setAttribute('style', item);
       }
     );
   }
@@ -859,8 +887,9 @@ class mxText extends mxShape {
    *
    * Sets the inner HTML of the given element to the <value>.
    */
-  updateInnerHtml(elt) {
+  updateInnerHtml(elt: HTMLElement) {
     if (mxUtils.isNode(this.value)) {
+      // @ts-ignore
       elt.innerHTML = this.value.outerHTML;
     } else {
       let val = this.value;
@@ -885,9 +914,11 @@ class mxText extends mxShape {
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
   updateValue() {
+    const node = <SVGGElement>this.node;
+
     if (mxUtils.isNode(this.value)) {
-      this.node.innerHTML = '';
-      this.node.appendChild(this.value);
+      node.innerHTML = '';
+      node.appendChild(<HTMLElement | SVGGElement>this.value);
     } else {
       let val = this.value;
 
@@ -909,11 +940,11 @@ class mxText extends mxShape {
 
       if (this.overflow === 'fill' || this.overflow === 'width') {
         if (bg != null) {
-          this.node.style.backgroundColor = bg;
+          node.style.backgroundColor = bg;
         }
 
         if (bd != null) {
-          this.node.style.border = `1px solid ${bd}`;
+          node.style.border = `1px solid ${bd}`;
         }
       } else {
         let css = '';
@@ -937,10 +968,10 @@ class mxText extends mxShape {
           `padding-bottom:1px;padding-right:1px;line-height:${lh}">${val}</div>`;
       }
 
-      this.node.innerHTML = val;
+      node.innerHTML = val;
 
       // Sets text direction
-      const divs = this.node.getElementsByTagName('div');
+      const divs = node.getElementsByTagName('div');
 
       if (divs.length > 0) {
         let dir = this.textDirection;
@@ -969,9 +1000,10 @@ class mxText extends mxShape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  updateFont(node) {
+  updateFont(node: HTMLElement | SVGGElement) {
     const { style } = node;
 
+    // @ts-ignore
     style.lineHeight = mxConstants.ABSOLUTE_LINE_HEIGHT
       ? `${this.size * mxConstants.LINE_HEIGHT}px`
       : mxConstants.LINE_HEIGHT;
@@ -1061,6 +1093,7 @@ class mxText extends mxShape {
           sizeDiv.firstChild != null &&
           sizeDiv.firstChild.nodeName === 'DIV'
         ) {
+          // @ts-ignore
           sizeDiv = sizeDiv.firstChild;
 
           if (node.style.wordWrap === 'break-word') {
@@ -1072,7 +1105,7 @@ class mxText extends mxShape {
 
         // Workaround for text measuring in hidden containers
         if (tmp === 0) {
-          const prev = node.parentNode;
+          const prev = <HTMLElement>node.parentNode;
           node.style.visibility = 'hidden';
           document.body.appendChild(node);
           tmp = sizeDiv.offsetWidth;

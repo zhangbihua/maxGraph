@@ -189,7 +189,7 @@ class mxCellEditor {
    *
    * Reference to the event that was used to start editing.
    */
-  trigger: mxMouseEvent | null = null;
+  trigger: mxMouseEvent | MouseEvent | null = null;
 
   /**
    * Variable: modified
@@ -778,7 +778,7 @@ class mxCellEditor {
    * cell - <mxCell> to start editing.
    * trigger - Optional mouse event that triggered the editor.
    */
-  startEditing(cell: mxCell, trigger: mxMouseEvent | null = null): void {
+  startEditing(cell: mxCell, trigger: mxMouseEvent | MouseEvent | null = null): void {
     this.stopEditing(true);
     this.align = null;
 

@@ -19,24 +19,24 @@ class ExtendCanvas extends React.Component {
   render() {
     // A container for the graph
     return (
-        <>
-            <h1>Extend canvas</h1>
-    This example demonstrates implementing an infinite canvas with
-    scrollbars.
-    <div
-      ref={el => {
-      this.el = el;
-    }}
-    style={{
-      position: 'relative',
-          overflow: 'auto',
-          height: '241px',
-          background: "url('editors/images/grid.gif')",
-          cursor: 'default',
-    }}
-    />
-    </>
-  );
+      <>
+        <h1>Extend canvas</h1>
+        This example demonstrates implementing an infinite canvas with
+        scrollbars.
+        <div
+          ref={el => {
+            this.el = el;
+          }}
+          style={{
+            position: 'relative',
+            overflow: 'auto',
+            height: '241px',
+            background: "url('editors/images/grid.gif')",
+            cursor: 'default',
+          }}
+        />
+      </>
+    );
   }
 
   componentDidMount() {
@@ -58,8 +58,8 @@ class ExtendCanvas extends React.Component {
        */
       getPagePadding() {
         return new mxPoint(
-            Math.max(0, Math.round(this.container.offsetWidth - 34)),
-            Math.max(0, Math.round(this.container.offsetHeight - 34))
+          Math.max(0, Math.round(this.container.offsetWidth - 34)),
+          Math.max(0, Math.round(this.container.offsetHeight - 34))
         );
       }
 
@@ -68,13 +68,13 @@ class ExtendCanvas extends React.Component {
        */
       getPageSize() {
         return this.pageVisible
-            ? new mxRectangle(
-                0,
-                0,
-                this.pageFormat.width * this.pageScale,
-                this.pageFormat.height * this.pageScale
+          ? new mxRectangle(
+            0,
+            0,
+            this.pageFormat.width * this.pageScale,
+              this.pageFormat.height * this.pageScale
             )
-            : scrollTileSize;
+          : scrollTileSize;
       }
 
       /**
@@ -84,9 +84,7 @@ class ExtendCanvas extends React.Component {
        * page count.
        */
       getPageLayout() {
-        const size = this.pageVisible
-            ? this.getPageSize()
-            : scrollTileSize;
+        const size = this.pageVisible ? this.getPageSize() : scrollTileSize;
         const bounds = this.getGraphBounds();
 
         if (bounds.width === 0 || bounds.height === 0) {
@@ -112,10 +110,10 @@ class ExtendCanvas extends React.Component {
         const size = this.getPageSize();
 
         return new mxRectangle(
-            0,
-            0,
-            pages.width * size.width,
-            pages.height * size.height
+          0,
+          0,
+          pages.width * size.width,
+          pages.height * size.height
         );
       }
 
@@ -127,10 +125,10 @@ class ExtendCanvas extends React.Component {
 
           // Updates the minimum graph size
           const minw = Math.ceil(
-              (2 * pad.x) / this.view.scale + pages.width * size.width
+            (2 * pad.x) / this.view.scale + pages.width * size.width
           );
           const minh = Math.ceil(
-              (2 * pad.y) / this.view.scale + pages.height * size.height
+            (2 * pad.y) / this.view.scale + pages.height * size.height
           );
 
           const min = this.minimumGraphSize;
@@ -146,8 +144,8 @@ class ExtendCanvas extends React.Component {
           const dy = pad.y / this.view.scale - pages.y * size.height;
 
           if (
-              !this.autoTranslate &&
-              (this.view.translate.x !== dx || this.view.translate.y !== dy)
+            !this.autoTranslate &&
+            (this.view.translate.x !== dx || this.view.translate.y !== dy)
           ) {
             this.autoTranslate = true;
             this.view.x0 = pages.x;
@@ -172,7 +170,7 @@ class ExtendCanvas extends React.Component {
     }
 
     // Creates the graph inside the given container
-    const graph = this.graph = new MyCustomGraph(this.el);
+    const graph = (this.graph = new MyCustomGraph(this.el));
     graph.panningHandler.ignoreCell = true;
     graph.setPanning(true);
 
@@ -182,10 +180,10 @@ class ExtendCanvas extends React.Component {
       const page = this.graph.getPageSize();
 
       return new mxRectangle(
-          this.scale * (this.translate.x + layout.x * page.width),
-          this.scale * (this.translate.y + layout.y * page.height),
-          this.scale * layout.width * page.width,
-          this.scale * layout.height * page.height
+        this.scale * (this.translate.x + layout.x * page.width),
+        this.scale * (this.translate.y + layout.y * page.height),
+        this.scale * layout.width * page.width,
+        this.scale * layout.height * page.height
       );
     };
 
@@ -197,8 +195,8 @@ class ExtendCanvas extends React.Component {
     const graphViewValidate = graph.view.validate;
     graph.view.validate = function() {
       if (
-          this.graph.container != null &&
-          mxUtils.hasScrollbars(this.graph.container)
+        this.graph.container != null &&
+        mxUtils.hasScrollbars(this.graph.container)
       ) {
         const pad = this.graph.getPagePadding();
         const size = this.graph.getPageSize();
@@ -246,24 +244,24 @@ class ExtendCanvas extends React.Component {
     window.setTimeout(() => {
       const bounds = graph.getGraphBounds();
       const width = Math.max(
-          bounds.width,
-          scrollTileSize.width * graph.view.scale
+        bounds.width,
+        scrollTileSize.width * graph.view.scale
       );
       const height = Math.max(
-          bounds.height,
-          scrollTileSize.height * graph.view.scale
+        bounds.height,
+        scrollTileSize.height * graph.view.scale
       );
       graph.container.scrollTop = Math.floor(
-          Math.max(
-              0,
-              bounds.y - Math.max(20, (graph.container.clientHeight - height) / 4)
-          )
+        Math.max(
+          0,
+          bounds.y - Math.max(20, (graph.container.clientHeight - height) / 4)
+        )
       );
       graph.container.scrollLeft = Math.floor(
-          Math.max(
-              0,
-              bounds.x - Math.max(0, (graph.container.clientWidth - width) / 2)
-          )
+        Math.max(
+          0,
+          bounds.x - Math.max(0, (graph.container.clientWidth - width) / 2)
+        )
       );
     }, 0);
   }

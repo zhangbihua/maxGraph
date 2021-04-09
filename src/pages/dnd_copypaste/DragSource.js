@@ -35,7 +35,7 @@ class DragSource extends React.Component {
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     class MyCustomGuide extends mxGuide {
@@ -183,7 +183,7 @@ class DragSource extends React.Component {
 
     // Restores original drag icon while outside of graph
     ds.createDragElement = mxDragSource.prototype.createDragElement;
-  };
+  }
 
   // NOTE: To enable cross-document DnD (eg. between frames),
   // the following methods need to be overridden:

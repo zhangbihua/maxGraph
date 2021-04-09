@@ -5713,7 +5713,7 @@ class mxGraph extends mxEventSource {
   resizeCell(cell: mxCell,
              bounds: mxRectangle,
              recurse: boolean=false): mxCell {
-    
+
     return this.resizeCells([cell], [bounds], recurse)[0];
   }
 
@@ -9094,7 +9094,8 @@ class mxGraph extends mxEventSource {
             // @ts-ignore
             (node === shape.node || node.parentNode === shape.node)
           ) {
-            tip = shape.overlay.toString();
+            // @ts-ignore
+              tip = shape.overlay.toString();
           }
         });
       }
@@ -9423,7 +9424,7 @@ class mxGraph extends mxEventSource {
    *
    * state - <mxCellState> whose indicator shape should be returned.
    */
-  getIndicatorShape(state: mxCellState): mxShape | null {
+  getIndicatorShape(state: mxCellState): string | null {
     return state != null && state.style != null
       ? state.style[mxConstants.STYLE_INDICATOR_SHAPE]
       : null;
@@ -10920,7 +10921,7 @@ class mxGraph extends mxEventSource {
   isValidDropTarget(cell: mxCell,
                     cells: mxCell[],
                     evt: mxMouseEvent): boolean {
-    
+
     return (
       cell != null &&
       ((this.isSplitEnabled() && this.isSplitTarget(cell, cells, evt)) ||
@@ -11090,7 +11091,7 @@ class mxGraph extends mxEventSource {
    *
    * cell - <mxCell> for which the ancestor swimlane should be returned.
    */
-  getSwimlane(cell: mxCell): mxCell | null {
+  getSwimlane(cell: mxCell | null=null): mxCell | null {
     while (cell != null && !this.isSwimlane(cell)) {
       cell = <mxCell>this.getModel().getParent(cell);
     }

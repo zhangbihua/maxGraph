@@ -6,7 +6,7 @@ import FixedPoints from './FixedPoints';
 import HelloPort from './HelloPort';
 import Orthogonal from './Orthogonal';
 import PortRefs from './PortRefs';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _Connections() {
   return (

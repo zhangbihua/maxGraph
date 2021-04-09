@@ -12,8 +12,12 @@ import mxGraphView from '../../view/graph/mxGraphView';
 import mxShape from '../../shape/mxShape';
 import mxText from '../../shape/mxText';
 import mxGraph from "../../view/graph/mxGraph";
+import mxDictionary from "./mxDictionary";
 
 class mxCellState extends mxRectangle {
+  // referenced in mxCellRenderer
+  node: any;
+
   // TODO: Document me!!
   cellBounds: mxRectangle | null = null;
 
@@ -25,7 +29,7 @@ class mxCellState extends mxRectangle {
   control: mxShape | null = null;
 
   // Used by mxCellRenderer's createCellOverlays()
-  overlays: any[] | null = null;
+  overlays: mxDictionary | null = null;
 
   /**
    * Variable: view

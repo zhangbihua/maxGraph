@@ -3,7 +3,7 @@ import Animation from './Animation';
 import Preview from '../Previews';
 import Morph from './Morph';
 import Overlays from './Overlays';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function Effects() {
   return (

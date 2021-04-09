@@ -60,5 +60,4 @@ class mxCellAttributeChange {
 }
 
 export default mxCellAttributeChange;
-import("../serialization/mxGenericChangeCodec");
-
+import('../serialization/mxGenericChangeCodec');

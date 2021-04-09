@@ -3,7 +3,7 @@ import Preview from '../Previews';
 import DynamicStyle from './DynamicStyle';
 import HoverStyle from './HoverStyle';
 import Stylesheet from './Stylesheet';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _Styles() {
   return (

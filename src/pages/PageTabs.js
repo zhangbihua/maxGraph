@@ -13,11 +13,11 @@ const PageTabs = ({ curPageURL, children }) => {
     ['/labels', 'Labels'],
     ['/layout', 'Layout'],
     ['/misc', 'Miscellaneous'],
-    //['/printing', 'Printing'],
+    // ['/printing', 'Printing'],
     ['/shapes_stencils', 'Shapes/stencils'],
     ['/styles', 'Styles'],
     ['/toolbars', 'Toolbars'],
-    //['/windows', 'Windows'],
+    // ['/windows', 'Windows'],
     ['/xml_json', 'XML/JSON'],
     ['/zoom_offpage', 'Zoom/offpage'],
   ];
@@ -41,7 +41,12 @@ const PageTabs = ({ curPageURL, children }) => {
       }}
     >
       <h1>mxGraph Reloaded Examples</h1>
-      <div style={{textAlign: "right"}}>See also the <a href="https://github.com/mcyph/mxgraph" style={{color: "blue"}}>GitHub repo</a></div>
+      <div style={{ textAlign: 'right' }}>
+        See also the{' '}
+        <a href="https://github.com/mcyph/mxgraph" style={{ color: 'blue' }}>
+          GitHub repo
+        </a>
+      </div>
       <ul className="pagetabs">{tabs}</ul>
       {children}
     </div>

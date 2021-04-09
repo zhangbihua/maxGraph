@@ -33,7 +33,7 @@ class Animation extends React.Component {
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     const graph = new mxGraph(this.el);
@@ -88,7 +88,7 @@ class Animation extends React.Component {
     state.shape.node
       .getElementsByTagName('path')[1]
       .setAttribute('class', 'flow');
-  };
+  }
 }
 
 export default Animation;

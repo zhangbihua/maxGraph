@@ -42,7 +42,7 @@ class Control extends React.Component {
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     // Specifies the URL and size of the new control
@@ -197,7 +197,7 @@ class Control extends React.Component {
         graph.zoomOut();
       })
     );
-  };
+  }
 }
 
 export default Control;

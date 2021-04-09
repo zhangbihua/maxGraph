@@ -16,7 +16,7 @@ class mxMarker {
    *
    * Maps from markers names to functions to paint the markers.
    */
-  static markers: [];
+  static markers = [];
 
   /**
    * Function: addMarker

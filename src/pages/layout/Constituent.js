@@ -34,7 +34,7 @@ class Constituent extends React.Component {
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     // Disables the built-in context menu

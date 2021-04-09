@@ -12,8 +12,8 @@ import mxConnectionConstraint from '../../mxgraph/view/connection/mxConnectionCo
 import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
 import mxPolyline from '../../mxgraph/shape/edge/mxPolyline';
 import mxCellState from '../../mxgraph/util/datatypes/mxCellState';
-import mxGeometry from "../../mxgraph/util/datatypes/mxGeometry";
-import mxConnectionHandler from "../../mxgraph/handler/mxConnectionHandler";
+import mxGeometry from '../../mxgraph/util/datatypes/mxGeometry';
+import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
 
 class Anchors extends React.Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class Anchors extends React.Component {
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     // Disables the built-in context menu

@@ -5,7 +5,7 @@ import Perimeter from './Perimeter';
 import SecondLabel from './SecondLabel';
 import Wrapping from './Wrapping';
 import Labels from './Labels';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _Labels() {
   return (

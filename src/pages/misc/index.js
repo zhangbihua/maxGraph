@@ -7,7 +7,7 @@ import Permissions from './Permissions';
 import Thread from './Thread';
 import Validation from './Validation';
 import Visibility from './Visibility';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _Misc() {
   return (

@@ -3,9 +3,9 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
-import mxShape from './mxShape';
-import mxSvgCanvas2D from "../util/canvas/mxSvgCanvas2D";
 import mxRectangle from 'mxgraph/util/datatypes/mxRectangle';
+import mxShape from './mxShape';
+import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 
 /**
  * Class: mxActor
@@ -48,10 +48,12 @@ import mxRectangle from 'mxgraph/util/datatypes/mxRectangle';
  * 1. This is stored in <strokewidth>.
  */
 class mxActor extends mxShape {
-  constructor(bounds: mxRectangle | null=null,
-              fill: string | null=null,
-              stroke: string | null=null,
-              strokewidth: number=1) {
+  constructor(
+    bounds: mxRectangle | null = null,
+    fill: string | null = null,
+    stroke: string | null = null,
+    strokewidth: number = 1
+  ) {
     super();
     this.bounds = bounds;
     this.fill = fill;
@@ -65,11 +67,11 @@ class mxActor extends mxShape {
    * Redirects to redrawPath for subclasses to work.
    */
   paintVertexShape(
-      c: mxSvgCanvas2D,
-      x: number,
-      y: number,
-      w: number,
-      h: number
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
   ): void {
     c.translate(x, y);
     c.begin();
@@ -83,11 +85,11 @@ class mxActor extends mxShape {
    * Draws the path for this shape.
    */
   redrawPath(
-      c: mxSvgCanvas2D,
-      x: number,
-      y: number,
-      w: number,
-      h: number
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
   ): void {
     const width = w / 3;
     c.moveTo(0, h);

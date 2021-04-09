@@ -34,7 +34,7 @@ class HelloWorld extends React.Component {
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     // Create a sample graph in the DOM node with the specified ID.
@@ -69,7 +69,7 @@ class HelloWorld extends React.Component {
         target: vertex2,
       });
     });
-  };
+  }
 }
 
 export default HelloWorld;

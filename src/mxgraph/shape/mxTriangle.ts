@@ -9,7 +9,7 @@ import mxActor from './mxActor';
 import mxUtils from '../util/mxUtils';
 import mxConstants from '../util/mxConstants';
 import mxAbstractCanvas2D from '../util/canvas/mxAbstractCanvas2D';
-import mxSvgCanvas2D from "../util/canvas/mxSvgCanvas2D";
+import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 
 class mxTriangle extends mxActor {
   /**

@@ -602,7 +602,8 @@ class mxOutline {
           : null;
       this.zoom =
         me.isSource(this.sizer) ||
-        (hit != null && mxUtils.intersects(shape.bounds, hit));
+          // @ts-ignore
+        (hit != null && mxUtils.intersects(this.sizer.bounds, hit));
       this.startX = me.getX();
       this.startY = me.getY();
       this.active = true;

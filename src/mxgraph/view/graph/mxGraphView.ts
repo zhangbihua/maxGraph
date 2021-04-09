@@ -31,7 +31,63 @@ import mxGeometry from "../../util/datatypes/mxGeometry";
 import mxConnectionConstraint from "../connection/mxConnectionConstraint";
 import mxPopupMenuHandler from "../../handler/mxPopupMenuHandler";
 
+/**
+ * Class: mxGraphView
+ *
+ * Extends <mxEventSource> to implement a view for a graph. This class is in
+ * charge of computing the absolute coordinates for the relative child
+ * geometries, the points for perimeters and edge styles and keeping them
+ * cached in <mxCellStates> for faster retrieval. The states are updated
+ * whenever the model or the view state (translate, scale) changes. The scale
+ * and translate are honoured in the bounds.
+ *
+ * Event: mxEvent.UNDO
+ *
+ * Fires after the root was changed in <setCurrentRoot>. The <code>edit</code>
+ * property contains the <mxUndoableEdit> which contains the
+ * <mxCurrentRootChange>.
+ *
+ * Event: mxEvent.SCALE_AND_TRANSLATE
+ *
+ * Fires after the scale and translate have been changed in <scaleAndTranslate>.
+ * The <code>scale</code>, <code>previousScale</code>, <code>translate</code>
+ * and <code>previousTranslate</code> properties contain the new and previous
+ * scale and translate, respectively.
+ *
+ * Event: mxEvent.SCALE
+ *
+ * Fires after the scale was changed in <setScale>. The <code>scale</code> and
+ * <code>previousScale</code> properties contain the new and previous scale.
+ *
+ * Event: mxEvent.TRANSLATE
+ *
+ * Fires after the translate was changed in <setTranslate>. The
+ * <code>translate</code> and <code>previousTranslate</code> properties contain
+ * the new and previous value for translate.
+ *
+ * Event: mxEvent.DOWN and mxEvent.UP
+ *
+ * Fire if the current root is changed by executing an <mxCurrentRootChange>.
+ * The event name depends on the location of the root in the cell hierarchy
+ * with respect to the current root. The <code>root</code> and
+ * <code>previous</code> properties contain the new and previous root,
+ * respectively.
+ *
+ * Constructor: mxGraphView
+ *
+ * Constructs a new view for the given <mxGraph>.
+ *
+ * Parameters:
+ *
+ * graph - Reference to the enclosing <mxGraph>.
+ */
 class mxGraphView extends mxEventSource {
+  constructor(graph: mxGraph) {
+    super();
+
+    this.graph = graph;
+  }
+
   // TODO: Document me!
   backgroundImage: mxImageShape | null=null;
 
@@ -138,89 +194,31 @@ class mxGraphView extends mxEventSource {
    *
    * During validation, this contains the last DOM node that was processed.
    */
-  lastNode: HTMLElement | null = null;
+  lastNode: HTMLElement | SVGElement | null = null;
 
   /**
    * Variable: lastHtmlNode
    *
    * During validation, this contains the last HTML DOM node that was processed.
    */
-  lastHtmlNode: HTMLElement | null = null;
+  lastHtmlNode: HTMLElement | SVGElement | null = null;
 
   /**
    * Variable: lastForegroundNode
    *
    * During validation, this contains the last edge's DOM node that was processed.
    */
-  lastForegroundNode: HTMLElement | null = null;
+  lastForegroundNode: HTMLElement | SVGElement | null = null;
 
   /**
    * Variable: lastForegroundHtmlNode
    *
    * During validation, this contains the last edge HTML DOM node that was processed.
    */
-  lastForegroundHtmlNode: HTMLElement | null = null;
+  lastForegroundHtmlNode: HTMLElement | SVGElement | null = null;
 
   /**
-   * Class: mxGraphView
-   *
-   * Extends <mxEventSource> to implement a view for a graph. This class is in
-   * charge of computing the absolute coordinates for the relative child
-   * geometries, the points for perimeters and edge styles and keeping them
-   * cached in <mxCellStates> for faster retrieval. The states are updated
-   * whenever the model or the view state (translate, scale) changes. The scale
-   * and translate are honoured in the bounds.
-   *
-   * Event: mxEvent.UNDO
-   *
-   * Fires after the root was changed in <setCurrentRoot>. The <code>edit</code>
-   * property contains the <mxUndoableEdit> which contains the
-   * <mxCurrentRootChange>.
-   *
-   * Event: mxEvent.SCALE_AND_TRANSLATE
-   *
-   * Fires after the scale and translate have been changed in <scaleAndTranslate>.
-   * The <code>scale</code>, <code>previousScale</code>, <code>translate</code>
-   * and <code>previousTranslate</code> properties contain the new and previous
-   * scale and translate, respectively.
-   *
-   * Event: mxEvent.SCALE
-   *
-   * Fires after the scale was changed in <setScale>. The <code>scale</code> and
-   * <code>previousScale</code> properties contain the new and previous scale.
-   *
-   * Event: mxEvent.TRANSLATE
-   *
-   * Fires after the translate was changed in <setTranslate>. The
-   * <code>translate</code> and <code>previousTranslate</code> properties contain
-   * the new and previous value for translate.
-   *
-   * Event: mxEvent.DOWN and mxEvent.UP
-   *
-   * Fire if the current root is changed by executing an <mxCurrentRootChange>.
-   * The event name depends on the location of the root in the cell hierarchy
-   * with respect to the current root. The <code>root</code> and
-   * <code>previous</code> properties contain the new and previous root,
-   * respectively.
-   *
-   * Constructor: mxGraphView
-   *
-   * Constructs a new view for the given <mxGraph>.
-   *
-   * Parameters:
-   *
-   * graph - Reference to the enclosing <mxGraph>.
-   */
-  constructor(graph: mxGraph) {
-    super();
-
-    this.graph = graph;
-  }
-
-  // Backwards compatibility getters/setters
-
-  /**
-   * Function: get graphBounds
+   * Function: getGraphBounds
    *
    * Returns the <mxRectangle> that caches the scales and translated bounds of the current view.
    */
@@ -238,7 +236,7 @@ class mxGraphView extends mxEventSource {
   }
 
   /**
-   * Function: get scale
+   * Function: getScale
    *
    * Returns the <scale>. Default is 1 (100%).
    */
@@ -663,11 +661,6 @@ class mxGraphView extends mxEventSource {
     mxLog.leave('mxGraphView.validate', t0);
   }
 
-  // TODO: Document me!!
-  get emptyBounds() {
-    return this.getEmptyBounds();
-  }
-
   /**
    * Function: getEmptyBounds
    *
@@ -856,11 +849,6 @@ class mxGraphView extends mxEventSource {
       this.backgroundPageShape.destroy();
       this.backgroundPageShape = null;
     }
-  }
-
-  // TODO: Document me!!
-  get backgroundPageBounds(): mxRectangle {
-    return this.getBackgroundPageBounds();
   }
 
   /**

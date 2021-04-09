@@ -5,7 +5,6 @@
  */
 
 import mxUtils from '../mxUtils';
-import mxConstants from '../mxConstants';
 
 class mxPoint {
   /**
@@ -33,10 +32,8 @@ class mxPoint {
    * coordinates are given, then the default values for <x> and <y> are used.
    */
   constructor(x, y) {
-    if (x !== mxConstants.DO_NOTHING) {
-      this.x = x != null ? x : 0;
-      this.y = y != null ? y : 0;
-    }
+    this.x = x != null ? x : 0;
+    this.y = y != null ? y : 0;
   }
 
   get x() {

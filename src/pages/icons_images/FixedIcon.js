@@ -37,7 +37,7 @@ class FixedIcon extends React.Component {
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     // Overrides the image bounds code to change the position
@@ -95,7 +95,7 @@ class FixedIcon extends React.Component {
       // Updates the display
       graph.getModel().endUpdate();
     }
-  };
+  }
 }
 
 export default FixedIcon;

@@ -3,6 +3,7 @@
  * Copyright (c) 2006-2015, Gaudenz Alder
  * Updated to ES9 syntax by David Morrissey 2021
  */
+import mxRectangle from './datatypes/mxRectangle';
 
 const mxConstants = {
   DO_NOTHING: {},
@@ -670,7 +671,7 @@ const mxConstants = {
    * Defines the rectangle for the A4 portrait page format. The dimensions
    * of this page format are 826x1169 pixels.
    */
-  PAGE_FORMAT_A4_PORTRAIT: [0, 0, 827, 1169],
+  PAGE_FORMAT_A4_PORTRAIT: new mxRectangle(0, 0, 827, 1169),
 
   /**
    * Variable: PAGE_FORMAT_A4_PORTRAIT
@@ -678,7 +679,7 @@ const mxConstants = {
    * Defines the rectangle for the A4 portrait page format. The dimensions
    * of this page format are 826x1169 pixels.
    */
-  PAGE_FORMAT_A4_LANDSCAPE: [0, 0, 1169, 827],
+  PAGE_FORMAT_A4_LANDSCAPE: new mxRectangle(0, 0, 1169, 827),
 
   /**
    * Variable: PAGE_FORMAT_LETTER_PORTRAIT
@@ -686,7 +687,7 @@ const mxConstants = {
    * Defines the rectangle for the Letter portrait page format. The
    * dimensions of this page format are 850x1100 pixels.
    */
-  PAGE_FORMAT_LETTER_PORTRAIT: [0, 0, 850, 1100],
+  PAGE_FORMAT_LETTER_PORTRAIT: new mxRectangle(0, 0, 850, 1100),
 
   /**
    * Variable: PAGE_FORMAT_LETTER_PORTRAIT
@@ -694,7 +695,7 @@ const mxConstants = {
    * Defines the rectangle for the Letter portrait page format. The dimensions
    * of this page format are 850x1100 pixels.
    */
-  PAGE_FORMAT_LETTER_LANDSCAPE: [0, 0, 1100, 850],
+  PAGE_FORMAT_LETTER_LANDSCAPE: new mxRectangle(0, 0, 1100, 850),
 
   /**
    * Variable: NONE

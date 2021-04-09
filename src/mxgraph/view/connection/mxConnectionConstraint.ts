@@ -61,11 +61,13 @@ class mxConnectionConstraint {
    * perimeter - Optional boolean that specifies if the fixed point should be
    * projected onto the perimeter of the terminal. Default is true.
    */
-  constructor(point: mxPoint | null=null,
-              perimeter: boolean=true,
-              name: string | null=null,
-              dx: number | null=null,
-              dy: number | null=null) {
+  constructor(
+    point: mxPoint | null = null,
+    perimeter: boolean = true,
+    name: string | null = null,
+    dx: number | null = null,
+    dy: number | null = null
+  ) {
     this.point = point;
     this.perimeter = perimeter != null ? perimeter : true;
     this.name = name;

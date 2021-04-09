@@ -16,7 +16,6 @@
  */
 
 import mxPoint from './mxPoint';
-import mxConstants from '../mxConstants';
 
 class mxRectangle extends mxPoint {
   /**
@@ -36,11 +35,9 @@ class mxRectangle extends mxPoint {
   constructor(x, y, width, height) {
     super(x, y, width, height);
 
-    if (x !== mxConstants.DO_NOTHING) {
-      // replace super of mxPoint
-      this.width = width != null ? width : 0;
-      this.height = height != null ? height : 0;
-    }
+    // replace super of mxPoint
+    this.width = width != null ? width : 0;
+    this.height = height != null ? height : 0;
   }
 
   /**
@@ -175,20 +172,5 @@ class mxRectangle extends mxPoint {
     );
   }
 }
-
-// HACK: Prevent dependency problems with mxConstants
-//       importing mxRectangle and vice-versa
-mxConstants.PAGE_FORMAT_A4_PORTRAIT = new mxRectangle(
-  ...mxConstants.PAGE_FORMAT_A4_PORTRAIT
-);
-mxConstants.PAGE_FORMAT_A4_LANDSCAPE = new mxRectangle(
-  ...mxConstants.PAGE_FORMAT_A4_LANDSCAPE
-);
-mxConstants.PAGE_FORMAT_LETTER_PORTRAIT = new mxRectangle(
-  ...mxConstants.PAGE_FORMAT_LETTER_PORTRAIT
-);
-mxConstants.PAGE_FORMAT_LETTER_LANDSCAPE = new mxRectangle(
-  ...mxConstants.PAGE_FORMAT_LETTER_LANDSCAPE
-);
 
 export default mxRectangle;

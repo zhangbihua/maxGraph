@@ -36,5 +36,4 @@ class mxTerminalChange {
 }
 
 export default mxTerminalChange;
-import("../serialization/mxTerminalChangeCodec");
-
+import('../serialization/mxTerminalChangeCodec');

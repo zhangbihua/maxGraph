@@ -2,7 +2,7 @@ import React from 'react';
 import Preview from '../Previews';
 import DynamicToolbar from './DynamicToolbar';
 import Toolbar from './Toolbar';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _Toolbars() {
   return (

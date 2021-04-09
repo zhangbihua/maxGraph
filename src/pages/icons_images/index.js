@@ -7,7 +7,7 @@ import HoverIcons from './HoverIcons';
 import Images from './Images';
 import Indicators from './Indicators';
 import Markers from './Markers';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _Backgrounds() {
   return (

@@ -37,7 +37,7 @@ class Boundary extends React.Component {
         />
       </>
     );
-  };
+  }
 
   componentDidMount() {
     // Disables the built-in context menu
@@ -231,7 +231,7 @@ class Boundary extends React.Component {
       v3.geometry.offset = new mxPoint(-10, -10);
       v3.geometry.relative = true;
     });
-  };
+  }
 }
 
 export default Boundary;

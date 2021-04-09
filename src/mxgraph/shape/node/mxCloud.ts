@@ -5,7 +5,7 @@
  */
 import mxActor from '../mxActor';
 import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
-import mxRectangle from "../../util/datatypes/mxRectangle";
+import mxRectangle from '../../util/datatypes/mxRectangle';
 
 /**
  * Class: mxCloud
@@ -29,10 +29,12 @@ import mxRectangle from "../../util/datatypes/mxRectangle";
  * 1. This is stored in <strokewidth>.
  */
 class mxCloud extends mxActor {
-  constructor(bounds: mxRectangle,
-              fill: string,
-              stroke: string,
-              strokewidth: number=1) {
+  constructor(
+    bounds: mxRectangle,
+    fill: string,
+    stroke: string,
+    strokewidth: number = 1
+  ) {
     super();
     this.bounds = bounds;
     this.fill = fill;

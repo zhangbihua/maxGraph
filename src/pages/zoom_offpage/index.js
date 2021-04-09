@@ -2,7 +2,7 @@ import React from 'react';
 import Preview from '../Previews';
 import LOD from './LOD';
 import OffPage from './OffPage';
-import PageTabs from "../PageTabs";
+import PageTabs from '../PageTabs';
 
 export default function _ZoomOffpage() {
   return (

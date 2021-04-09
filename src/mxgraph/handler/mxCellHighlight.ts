@@ -42,6 +42,7 @@ class mxCellHighlight {
       this.repaintHandler = () => {
         // Updates reference to state
         if (this.state != null) {
+          // @ts-ignore
           const tmp = this.graph.view.getState(this.state.cell);
 
           if (tmp == null) {
@@ -71,17 +72,17 @@ class mxCellHighlight {
   }
 
   // TODO: Document me!!
-  highlightColor: string | null;
+  highlightColor: string | null=null;
 
-  strokeWidth: number | null;
+  strokeWidth: number | null=null;
 
-  dashed: boolean | null;
+  dashed: boolean=false;
 
-  opacity: number | null;
+  opacity: number=100;
 
-  repaintHandler: Function | null;
+  repaintHandler: Function | null=null;
 
-  shape: mxShape | null;
+  shape: mxShape | null=null;
 
   /**
    * Variable: keepOnTop
@@ -149,10 +150,14 @@ class mxCellHighlight {
 
     if (
       !this.keepOnTop &&
+        // @ts-ignore
       this.shape.node.parentNode.firstChild !== this.shape.node
     ) {
+      // @ts-ignore
       this.shape.node.parentNode.insertBefore(
-        this.shape.node,
+          // @ts-ignore
+          this.shape.node,
+          // @ts-ignore
         this.shape.node.parentNode.firstChild
       );
     }
@@ -164,21 +169,21 @@ class mxCellHighlight {
    * Creates and returns the highlight shape for the given state.
    */
   createShape(): mxShape {
-    const shape = this.graph.cellRenderer.createShape(this.state);
+    const shape = <mxShape>(<mxGraph>this.graph).cellRenderer.createShape(<mxCellState>this.state);
 
-    shape.svgStrokeTolerance = this.graph.tolerance;
-    shape.points = this.state.absolutePoints;
-    shape.apply(this.state);
+    shape.svgStrokeTolerance = (<mxGraph>this.graph).tolerance;
+    shape.points = (<mxCellState>this.state).absolutePoints;
+    shape.apply(<mxCellState>this.state);
     shape.stroke = this.highlightColor;
     shape.opacity = this.opacity;
     shape.isDashed = this.dashed;
     shape.isShadow = false;
 
     shape.dialect = mxConstants.DIALECT_SVG;
-    shape.init(this.graph.getView().getOverlayPane());
+    shape.init((<mxGraph>this.graph).getView().getOverlayPane());
     mxEvent.redirectMouseEvents(shape.node, this.graph, this.state);
 
-    if (this.graph.dialect !== mxConstants.DIALECT_SVG) {
+    if ((<mxGraph>this.graph).dialect !== mxConstants.DIALECT_SVG) {
       shape.pointerEvents = false;
     } else {
       shape.svgPointerEvents = 'stroke';
@@ -192,7 +197,7 @@ class mxCellHighlight {
    *
    * Returns the stroke width.
    */
-  getStrokeWidth(state: mxCellState | null = null): number {
+  getStrokeWidth(state: mxCellState | null = null): number | null {
     return this.strokeWidth;
   }
 
@@ -205,6 +210,7 @@ class mxCellHighlight {
     if (this.state != null && this.shape != null) {
       this.shape.scale = this.state.view.scale;
 
+      // @ts-ignore
       if (this.graph.model.isEdge(this.state.cell)) {
         this.shape.strokewidth = this.getStrokeWidth();
         this.shape.points = this.state.absolutePoints;
@@ -219,7 +225,7 @@ class mxCellHighlight {
         this.shape.rotation = Number(
           this.state.style[mxConstants.STYLE_ROTATION] || '0'
         );
-        this.shape.strokewidth = this.getStrokeWidth() / this.state.view.scale;
+        this.shape.strokewidth = <number>this.getStrokeWidth() / this.state.view.scale;
         this.shape.outline = true;
       }
 
@@ -246,7 +252,7 @@ class mxCellHighlight {
    *
    * Marks the <markedState> and fires a <mark> event.
    */
-  highlight(state: mxCellState): void {
+  highlight(state: mxCellState | null=null): void {
     if (this.state !== state) {
       if (this.shape != null) {
         this.shape.destroy();
@@ -268,7 +274,7 @@ class mxCellHighlight {
   isHighlightAt(x: number, y: number): boolean {
     let hit = false;
     if (this.shape != null && document.elementFromPoint != null) {
-      let elt: Node & ParentNode = document.elementFromPoint(x, y);
+      let elt: (Node & ParentNode) | null = document.elementFromPoint(x, y);
 
       while (elt != null) {
         if (elt === this.shape.node) {
@@ -287,9 +293,10 @@ class mxCellHighlight {
    * Destroys the handler and all its resources and DOM nodes.
    */
   destroy(): void {
-    this.graph.getView().removeListener(this.resetHandler);
-    this.graph.getView().removeListener(this.repaintHandler);
-    this.graph.getModel().removeListener(this.repaintHandler);
+    const graph = <mxGraph>this.graph;
+    graph.getView().removeListener(this.resetHandler);
+    graph.getView().removeListener(this.repaintHandler);
+    graph.getModel().removeListener(this.repaintHandler);
 
     if (this.shape != null) {
       this.shape.destroy();

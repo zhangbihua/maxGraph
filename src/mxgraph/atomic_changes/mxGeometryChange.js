@@ -34,5 +34,4 @@ class mxGeometryChange {
 }
 
 export default mxGeometryChange;
-import("../serialization/mxGenericChangeCodec");
-
+import('../serialization/mxGenericChangeCodec');
