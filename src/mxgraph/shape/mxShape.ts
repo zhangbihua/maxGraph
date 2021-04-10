@@ -71,7 +71,7 @@ const toBool = (i: any): boolean => {
  */
 class mxShape {
   constructor(stencil: mxStencil | null=null) {
-    if (stencil !== mxConstants.DO_NOTHING) {
+    if (stencil) {
       this.stencil = stencil;
     }
   }

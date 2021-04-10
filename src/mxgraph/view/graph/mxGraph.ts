@@ -3660,6 +3660,8 @@ class mxGraph extends mxEventSource {
    * style - Optional string that defines the cell style.
    * relative - Optional boolean that specifies if the geometry is relative.
    * Default is false.
+   * geometryClass - Optional class reference to a class derived from mxGeometry.
+   *                 This can be useful for defining custom constraints.
    */
   insertVertex = (...args: any[]): mxCell => {
     let parent;
@@ -3671,6 +3673,7 @@ class mxGraph extends mxEventSource {
     let height;
     let style;
     let relative;
+    let geometryClass;
 
     if (args.length === 1) {
       // If only a single parameter, treat as an object
@@ -3687,10 +3690,11 @@ class mxGraph extends mxEventSource {
 
       style = params.style;
       relative = params.relative;
+      geometryClass = params.geometryClass;
 
     } else {
       // Otherwise treat as arguments
-      [parent, id, value, x, y, width, height, style, relative] = args;
+      [parent, id, value, x, y, width, height, style, relative, geometryClass] = args;
     }
 
     const vertex = this.createVertex(
@@ -3702,7 +3706,8 @@ class mxGraph extends mxEventSource {
       width,
       height,
       style,
-      relative
+      relative,
+      geometryClass
     );
     return this.addCell(vertex, parent);
   };
@@ -3720,10 +3725,11 @@ class mxGraph extends mxEventSource {
                width: number,
                height: number,
                style: any,
-               relative: boolean=false) {
+               relative: boolean=false,
+               geometryClass: typeof mxGeometry=mxGeometry) {
 
     // Creates the geometry for the vertex
-    const geometry = new mxGeometry(x, y, width, height);
+    const geometry = new geometryClass(x, y, width, height);
     geometry.relative = relative != null ? relative : false;
 
     // Creates the vertex

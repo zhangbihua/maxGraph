@@ -100,7 +100,7 @@ class Anchors extends React.Component {
     // Edges have no connection points
     mxPolyline.prototype.constraints = null;
 
-    // Creates the graph inside the given this.el
+    // Creates the graph inside the given container
     const graph = new MyCustomGraph(this.el);
     graph.setConnectable(true);
 
