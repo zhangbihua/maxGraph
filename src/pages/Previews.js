@@ -28,7 +28,7 @@ function Preview({ sourceKey, content }) {
           >
             <SourceCodeDisplay
               language="jsx"
-              code={examplesListing[sourceKey] || ''}
+              code={examplesListing[sourceKey] || "(Example code isn't in examplesListing.json - run 'python3 copy_examples_to_json.py' to update" }
             />
           </div>
         </div>
