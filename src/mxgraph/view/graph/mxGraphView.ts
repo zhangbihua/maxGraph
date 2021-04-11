@@ -561,6 +561,8 @@ class mxGraphView extends mxEventSource {
           this.invalidate(model.getEdgeAt(cell, i), recurse, includeEdges);
         }
       }
+
+      cell.invalidating = false;
     }
   }
 
@@ -845,6 +847,7 @@ class mxGraphView extends mxEventSource {
   // validateCell(cell: mxCell, visible?: boolean): void;
   validateCell(cell: mxCell | null=null,
                visible: boolean = true): mxCell | null {
+
     if (cell != null) {
       visible = visible && (<mxGraph>this.graph).isCellVisible(cell);
       const state = this.getState(cell, visible);
@@ -876,6 +879,7 @@ class mxGraphView extends mxEventSource {
    */
   // validateCellState(cell: mxCell, recurse?: boolean): void;
   validateCellState(cell: mxCell, recurse: boolean = true): mxCellState | null {
+
     let state: mxCellState | null = null;
 
     if (cell != null) {
@@ -939,6 +943,7 @@ class mxGraphView extends mxEventSource {
    */
   // updateCellState(state: mxCellState): void;
   updateCellState(state: mxCellState) {
+
     const absoluteOffset = <mxPoint>state.absoluteOffset;
     const origin = <mxPoint>state.origin;
 
