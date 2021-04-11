@@ -53,6 +53,24 @@ class JsonData extends React.Component {
   }
 
   componentDidMount() {
+    // Register a new codec
+    function CustomData(value) {
+      this.value = value;
+    }
+    const codec = new mxObjectCodec(new CustomData());
+    codec.encode = function(enc, obj) {
+      const node = enc.document.createElement('CustomData');
+      mxUtils.setTextContent(node, JSON.stringify(obj));
+      return node;
+    };
+    codec.decode = function(dec, node, into) {
+      const obj = JSON.parse(mxUtils.getTextContent(node));
+      obj.constructor = CustomData;
+
+      return obj;
+    };
+    mxCodecRegistry.register(codec);
+
     // Disables the built-in context menu
     mxEvent.disableContextMenu(this.el);
 
@@ -80,31 +98,12 @@ class JsonData extends React.Component {
     }
 
     this.el2.appendChild(
-      mxUtils.button(function() {
+      mxUtils.button('Show JSON', function() {
         const encoder = new mxCodec();
         const node = encoder.encode(graph.getModel());
         mxUtils.popup(mxUtils.getXml(node), true);
       })
     );
-
-    function CustomData(value) {
-      this.value = value;
-    }
-
-    const codec = new mxObjectCodec(new CustomData());
-    codec.encode = function(enc, obj) {
-      const node = enc.document.createElement('CustomData');
-      mxUtils.setTextContent(node, JSON.stringify(obj));
-
-      return node;
-    };
-    codec.decode = function(dec, node, into) {
-      const obj = JSON.parse(mxUtils.getTextContent(node));
-      obj.constructor = CustomData;
-
-      return obj;
-    };
-    mxCodecRegistry.register(codec);
   }
 }
 

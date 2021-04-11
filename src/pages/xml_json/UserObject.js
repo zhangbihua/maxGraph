@@ -14,6 +14,7 @@ import mxCellAttributeChange from '../../mxgraph/atomic_changes/mxCellAttributeC
 import mxKeyHandler from '../../mxgraph/handler/mxKeyHandler';
 import mxRectangle from '../../mxgraph/util/datatypes/mxRectangle';
 import mxEdgeStyle from '../../mxgraph/util/datatypes/style/mxEdgeStyle';
+import mxCodec from "../../mxgraph/serialization/mxCodec";
 
 class UserObject extends React.Component {
   constructor(props) {
