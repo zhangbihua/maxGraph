@@ -25,7 +25,7 @@ import mxUtils from '../util/mxUtils';
  */
 class mxSwimlane extends mxShape {
   constructor(bounds, fill, stroke, strokewidth) {
-    super(mxConstants.DO_NOTHING);
+    super();
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;

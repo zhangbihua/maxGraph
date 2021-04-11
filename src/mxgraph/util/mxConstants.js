@@ -7,8 +7,6 @@
 import mxRectangle from './datatypes/mxRectangle';
 
 const mxConstants = {
-  DO_NOTHING: {},
-
   /**
    * Class: mxConstants
    *

@@ -695,7 +695,7 @@ class mxCell {
     if (value != null) {
       if (typeof value.clone === 'function') {
         value = value.clone();
-      } else if (!Number.isNaN(value.nodeType)) {
+      } else if (value.nodeType != null) {
         value = value.cloneNode(true);
       }
     }

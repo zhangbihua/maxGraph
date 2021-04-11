@@ -42,7 +42,7 @@ import mxDictionary from "./mxDictionary";
  */
 class mxCellState extends mxRectangle {
   constructor(view: mxGraphView, cell: mxCell, style: {}) {
-    super(mxConstants.DO_NOTHING);
+    super();
 
     this.view = view;
     this.cell = cell;
