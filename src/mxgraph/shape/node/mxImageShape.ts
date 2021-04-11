@@ -9,7 +9,7 @@ import mxUtils from '../../util/mxUtils';
 import mxConstants from '../../util/mxConstants';
 import mxRectangleShape from './mxRectangleShape';
 import mxRectangle from '../../util/datatypes/mxRectangle';
-import mxCellState from '../../util/datatypes/mxCellState';
+import mxCellState from '../../view/cell/mxCellState';
 import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 import mxCellOverlay from '../../view/cell/mxCellOverlay';
 

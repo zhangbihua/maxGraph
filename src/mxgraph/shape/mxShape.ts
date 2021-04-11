@@ -11,7 +11,7 @@ import mxPoint from '../util/datatypes/mxPoint';
 import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 import mxEvent from '../util/event/mxEvent';
 import mxClient from '../mxClient';
-import mxCellState from '../util/datatypes/mxCellState';
+import mxCellState from '../view/cell/mxCellState';
 import mxAbstractCanvas2D from '../util/canvas/mxAbstractCanvas2D';
 import mxStencil from './node/mxStencil';
 import mxCellOverlay from "../view/cell/mxCellOverlay";

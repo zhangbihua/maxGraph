@@ -14,7 +14,7 @@ import mxText from '../../shape/mxText';
 import mxGraph from '../graph/mxGraph';
 import mxCell from './mxCell';
 import mxMouseEvent from '../../util/event/mxMouseEvent';
-import mxCellState from '../../util/datatypes/mxCellState';
+import mxCellState from './mxCellState';
 import mxShape from "../../shape/mxShape";
 import mxEventObject from "../../util/event/mxEventObject";
 

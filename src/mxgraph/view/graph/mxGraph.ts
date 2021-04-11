@@ -48,7 +48,7 @@ import mxStyleChange from '../../atomic_changes/mxStyleChange';
 import mxTerminalChange from '../../atomic_changes/mxTerminalChange';
 import mxValueChange from '../../atomic_changes/mxValueChange';
 import mxPolyline from '../../shape/edge/mxPolyline';
-import mxCellState from '../../util/datatypes/mxCellState';
+import mxCellState from '../cell/mxCellState';
 import mxImageBundle from "../../util/image/mxImageBundle";
 import mxCodecRegistry from "../../serialization/mxCodecRegistry";
 import mxShape from "../../shape/mxShape";

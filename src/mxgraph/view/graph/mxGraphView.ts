@@ -17,7 +17,7 @@ import mxEvent from '../../util/event/mxEvent';
 import mxUtils from '../../util/mxUtils';
 import mxLog from '../../util/gui/mxLog';
 import mxResources from '../../util/mxResources';
-import mxCellState from '../../util/datatypes/mxCellState';
+import mxCellState from '../cell/mxCellState';
 import mxUndoableEdit from '../../util/undo/mxUndoableEdit';
 import mxImageShape from '../../shape/node/mxImageShape';
 import mxMouseEvent from '../../util/event/mxMouseEvent';

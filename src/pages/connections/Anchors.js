@@ -11,7 +11,7 @@ import mxShape from '../../mxgraph/shape/mxShape';
 import mxConnectionConstraint from '../../mxgraph/view/connection/mxConnectionConstraint';
 import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
 import mxPolyline from '../../mxgraph/shape/edge/mxPolyline';
-import mxCellState from '../../mxgraph/util/datatypes/mxCellState';
+import mxCellState from '../../mxgraph/view/cell/mxCellState';
 import mxGeometry from '../../mxgraph/util/datatypes/mxGeometry';
 import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
 

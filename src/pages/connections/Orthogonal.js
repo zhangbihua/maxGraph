@@ -13,7 +13,7 @@ import mxEdgeHandler from '../../mxgraph/handler/mxEdgeHandler';
 import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
 import mxGraphView from '../../mxgraph/view/graph/mxGraphView';
 import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
-import mxCellState from '../../mxgraph/util/datatypes/mxCellState';
+import mxCellState from '../../mxgraph/view/cell/mxCellState';
 
 class Orthogonal extends React.Component {
   constructor(props) {

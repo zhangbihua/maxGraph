@@ -31,7 +31,7 @@ import mxDictionary from '../../util/datatypes/mxDictionary';
 import mxEventObject from '../../util/event/mxEventObject';
 import mxPoint from '../../util/datatypes/mxPoint';
 import mxShape from '../../shape/mxShape';
-import mxCellState from '../../util/datatypes/mxCellState';
+import mxCellState from './mxCellState';
 import mxCell from './mxCell';
 import mxGraphModel from "../graph/mxGraphModel";
 import mxCellOverlay from "./mxCellOverlay";

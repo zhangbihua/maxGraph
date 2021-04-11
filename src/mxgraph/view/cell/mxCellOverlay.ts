@@ -9,7 +9,7 @@ import mxPoint from '../../util/datatypes/mxPoint';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxEventSource from '../../util/event/mxEventSource';
 import mxImage from '../../util/image/mxImage';
-import mxCellState from "../../util/datatypes/mxCellState";
+import mxCellState from "./mxCellState";
 
 /**
  * Class: mxCellOverlay

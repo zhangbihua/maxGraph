@@ -7,7 +7,7 @@
 
 import mxUtils from '../../mxUtils';
 import mxPoint from '../mxPoint';
-import mxCellState from '../mxCellState';
+import mxCellState from '../../../view/cell/mxCellState';
 import mxConstants from '../../mxConstants';
 import mxRectangle from '../mxRectangle';
 

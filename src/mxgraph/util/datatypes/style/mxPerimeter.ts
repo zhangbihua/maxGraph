@@ -9,7 +9,7 @@ import mxUtils from '../../mxUtils';
 import mxPoint from '../mxPoint';
 import mxConstants from '../../mxConstants';
 import mxRectangle from '../mxRectangle';
-import mxCellState from '../mxCellState';
+import mxCellState from '../../../view/cell/mxCellState';
 
 /**
  * @class mxPerimeter

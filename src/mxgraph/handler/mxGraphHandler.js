@@ -128,8 +128,10 @@ class mxGraphHandler {
       }
     };
 
-    mxEvent.addListener(document, 'keydown', this.keyHandler);
-    mxEvent.addListener(document, 'keyup', this.keyHandler);
+    if (typeof document !== 'undefined') {
+      mxEvent.addListener(document, 'keydown', this.keyHandler);
+      mxEvent.addListener(document, 'keyup', this.keyHandler);
+    }
   }
 
   /**

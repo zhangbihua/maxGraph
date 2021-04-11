@@ -12,7 +12,7 @@ import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxDictionary from '../../util/datatypes/mxDictionary';
 import mxGraphView from '../graph/mxGraphView';
 import mxCell from './mxCell';
-import mxCellState from '../../util/datatypes/mxCellState';
+import mxCellState from './mxCellState';
 import mxShape from "../../shape/mxShape";
 import mxGraph from "../graph/mxGraph";
 

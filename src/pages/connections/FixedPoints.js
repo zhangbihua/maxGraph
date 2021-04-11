@@ -12,7 +12,7 @@ import mxConnectionHandler from '../../mxgraph/handler/mxConnectionHandler';
 import mxEdgeHandler from '../../mxgraph/handler/mxEdgeHandler';
 import mxConnectionConstraint from '../../mxgraph/view/connection/mxConnectionConstraint';
 import mxPoint from '../../mxgraph/util/datatypes/mxPoint';
-import mxCellState from '../../mxgraph/util/datatypes/mxCellState';
+import mxCellState from '../../mxgraph/view/cell/mxCellState';
 
 class FixedPoints extends React.Component {
   constructor(props) {

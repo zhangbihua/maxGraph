@@ -5,15 +5,15 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxPoint from './mxPoint';
-import mxRectangle from './mxRectangle';
-import mxConstants from '../mxConstants';
-import mxCell from '../../view/cell/mxCell';
-import mxGraphView from '../../view/graph/mxGraphView';
+import mxPoint from '../../util/datatypes/mxPoint';
+import mxRectangle from '../../util/datatypes/mxRectangle';
+import mxConstants from '../../util/mxConstants';
+import mxCell from './mxCell';
+import mxGraphView from '../graph/mxGraphView';
 import mxShape from '../../shape/mxShape';
 import mxText from '../../shape/mxText';
-import mxGraph from "../../view/graph/mxGraph";
-import mxDictionary from "./mxDictionary";
+import mxGraph from "../graph/mxGraph";
+import mxDictionary from "../../util/datatypes/mxDictionary";
 
 /**
  * Class: mxCellState
