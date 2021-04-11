@@ -12,6 +12,14 @@ Initial objectives:
 
 -- Colin Claverie
 
+Note that the original default branch was `master`, and this has now been renamed `main`. If you had a checkout with the old branch name then follow these instructions to get the new branch name:
+
+```
+git branch -m master main
+git fetch origin
+git branch -u origin/main main
+git remote set-head origin -a
+```
 
 Original Readme below
 ====
