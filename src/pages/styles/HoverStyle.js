@@ -75,7 +75,7 @@ class HoverStyle extends React.Component {
         // Ignores everything but vertices
         if (
           graph.isMouseDown ||
-          (tmp != null && !graph.getModel().isVertex(tmp.cell))
+          (tmp != null && !tmp.cell.isVertex())
         ) {
           tmp = null;
         }

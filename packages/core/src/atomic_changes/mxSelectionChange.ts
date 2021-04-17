@@ -1,9 +1,9 @@
-import mxEventObject from '../../util/event/mxEventObject';
-import mxResources from '../../util/mxResources';
-import mxLog from '../../util/gui/mxLog';
-import mxEvent from '../../util/event/mxEvent';
-import mxGraphSelectionModel from './mxGraphSelectionModel';
-import mxCell from '../cell/mxCell';
+import mxEventObject from '../util/event/mxEventObject';
+import mxResources from '../util/mxResources';
+import mxLog from '../util/gui/mxLog';
+import mxEvent from '../util/event/mxEvent';
+import mxGraphSelectionModel from '../view/graph/mxGraphSelectionModel';
+import mxCell from '../view/cell/mxCell';
 
 /**
  * @class mxSelectionChange

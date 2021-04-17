@@ -277,7 +277,7 @@ class mxVertexHandler {
           this.sizers.push(this.createSizer('se-resize', i++));
         }
 
-        const geo = this.graph.model.getGeometry(this.state.cell);
+        const geo = this.state.cell.getGeometry();
 
         if (
           geo != null &&
@@ -720,7 +720,7 @@ class mxVertexHandler {
     if (this.selectionBorder != null) {
       this.livePreviewActive =
         this.livePreview &&
-        this.graph.model.getChildCount(this.state.cell) === 0;
+        this.state.cell.getChildCount() === 0;
       this.inTolerance = true;
       this.childOffsetX = 0;
       this.childOffsetY = 0;
@@ -733,11 +733,11 @@ class mxVertexHandler {
       } else {
         // Saves reference to parent state
         const { model } = this.state.view.graph;
-        const parent = model.getParent(this.state.cell);
+        const parent = this.state.cell.getParent();
 
         if (
           this.state.view.currentRoot !== parent &&
-          (model.isVertex(parent) || model.isEdge(parent))
+          (parent.isVertex() || parent.isEdge())
         ) {
           this.parentState = this.state.view.graph.view.getState(parent);
         }
@@ -989,7 +989,7 @@ class mxVertexHandler {
    * Returns true if a ghost preview should be used for custom handles.
    */
   isGhostPreview() {
-    return this.state.view.graph.model.getChildCount(this.state.cell) > 0;
+    return this.state.cell.getChildCount() > 0;
   }
 
   /**
@@ -1466,8 +1466,8 @@ class mxVertexHandler {
     if (angle !== 0) {
       const model = this.graph.getModel();
 
-      if (model.isVertex(cell) || model.isEdge(cell)) {
-        if (!model.isEdge(cell)) {
+      if (cell.isVertex() || cell.isEdge()) {
+        if (!cell.isEdge()) {
           const style = this.graph.getCurrentCellStyle(cell);
           const total = (style[mxConstants.STYLE_ROTATION] || 0) + angle;
           this.graph.setCellStyles(mxConstants.STYLE_ROTATION, total, [cell]);
@@ -1478,18 +1478,18 @@ class mxVertexHandler {
         if (geo != null) {
           const pgeo = this.graph.getCellGeometry(parent);
 
-          if (pgeo != null && !model.isEdge(parent)) {
+          if (pgeo != null && !parent.isEdge()) {
             geo = geo.clone();
             geo.rotate(angle, new mxPoint(pgeo.width / 2, pgeo.height / 2));
             model.setGeometry(cell, geo);
           }
 
-          if ((model.isVertex(cell) && !geo.relative) || model.isEdge(cell)) {
+          if ((cell.isVertex() && !geo.relative) || cell.isEdge()) {
             // Recursive rotation
-            const childCount = model.getChildCount(cell);
+            const childCount = cell.getChildCount();
 
             for (let i = 0; i < childCount; i += 1) {
-              this.rotateCell(model.getChildAt(cell, i), angle, cell);
+              this.rotateCell(cell.getChildAt(i), angle, cell);
             }
           }
         }
@@ -1580,7 +1580,7 @@ class mxVertexHandler {
    * in the graph using <mxGraph.resizeCell>.
    */
   resizeCell(cell, dx, dy, index, gridEnabled, constrained, recurse) {
-    let geo = this.graph.model.getGeometry(cell);
+    let geo = cell.getGeometry();
 
     if (geo != null) {
       if (index === mxEvent.LABEL_HANDLE) {
@@ -1637,10 +1637,10 @@ class mxVertexHandler {
   // moveChildren(cell: mxCell, dx: number, dy: number): void;
   moveChildren(cell, dx, dy) {
     const model = this.graph.getModel();
-    const childCount = model.getChildCount(cell);
+    const childCount = cell.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
-      const child = model.getChildAt(cell, i);
+      const child = cell.getChildAt(i);
       let geo = this.graph.getCellGeometry(child);
 
       if (geo != null) {
@@ -2138,7 +2138,7 @@ class mxVertexHandler {
    */
   isParentHighlightVisible() {
     return !this.graph.isCellSelected(
-      this.graph.model.getParent(this.state.cell)
+      this.state.cell.getParent()
     );
   }
 
@@ -2151,11 +2151,11 @@ class mxVertexHandler {
   updateParentHighlight() {
     if (!this.isDestroyed()) {
       const visible = this.isParentHighlightVisible();
-      const parent = this.graph.model.getParent(this.state.cell);
+      const parent = this.state.cell.getParent();
       const pstate = this.graph.view.getState(parent);
 
       if (this.parentHighlight != null) {
-        if (this.graph.model.isVertex(parent) && visible) {
+        if (parent.isVertex() && visible) {
           const b = this.parentHighlight.bounds;
 
           if (
@@ -2181,7 +2181,7 @@ class mxVertexHandler {
         }
       } else if (this.parentHighlightEnabled && visible) {
         if (
-          this.graph.model.isVertex(parent) &&
+          parent.isVertex() &&
           pstate != null &&
           pstate.parentHighlight == null
         ) {
@@ -2267,7 +2267,7 @@ class mxVertexHandler {
     }
 
     if (this.parentHighlight != null) {
-      const parent = this.graph.model.getParent(this.state.cell);
+      const parent = this.state.cell.getParent();
       const pstate = this.graph.view.getState(parent);
 
       if (pstate != null && pstate.parentHighlight === this.parentHighlight) {

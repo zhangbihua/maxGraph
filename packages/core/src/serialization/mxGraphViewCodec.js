@@ -58,10 +58,10 @@ class mxGraphViewCodec extends mxObjectCodec {
   encodeCell(enc, view, cell) {
     const model = view.graph.getModel();
     const state = view.getState(cell);
-    const parent = model.getParent(cell);
+    const parent = cell.getParent();
 
     if (parent == null || state != null) {
-      const childCount = model.getChildCount(cell);
+      const childCount = cell.getChildCount();
       const geo = view.graph.getCellGeometry(cell);
       let name = null;
 
@@ -69,11 +69,11 @@ class mxGraphViewCodec extends mxObjectCodec {
         name = 'layer';
       } else if (parent == null) {
         name = 'graph';
-      } else if (model.isEdge(cell)) {
+      } else if (cell.isEdge()) {
         name = 'edge';
       } else if (childCount > 0 && geo != null) {
         name = 'group';
-      } else if (model.isVertex(cell)) {
+      } else if (cell.isVertex()) {
         name = 'vertex';
       }
 
@@ -158,7 +158,7 @@ class mxGraphViewCodec extends mxObjectCodec {
           const childNode = this.encodeCell(
             enc,
             view,
-            model.getChildAt(cell, i)
+            cell.getChildAt(i)
           );
 
           if (childNode != null) {

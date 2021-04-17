@@ -25,7 +25,7 @@ import mxStyleRegistry from '../../util/datatypes/style/mxStyleRegistry';
 import mxGraph from './mxGraph';
 import mxCell from '../cell/mxCell';
 import mxImage from '../../util/image/mxImage';
-import mxCurrentRootChange from './mxCurrentRootChange';
+import mxCurrentRootChange from '../../atomic_changes/mxCurrentRootChange';
 import mxGraphModel from './mxGraphModel';
 import mxShape from '../../shape/mxShape';
 import mxGeometry from "../../util/datatypes/mxGeometry";
@@ -371,10 +371,8 @@ class mxGraphView extends mxEventSource {
     let result = null;
 
     if (cells != null && cells.length > 0) {
-      const model = (<mxGraph>this.graph).getModel();
-
       for (let i = 0; i < cells.length; i += 1) {
-        if (model.isVertex(cells[i]) || model.isEdge(cells[i])) {
+        if (cells[i].isVertex() || cells[i].isEdge()) {
           const state = this.getState(cells[i]);
 
           if (state != null) {
@@ -497,22 +495,20 @@ class mxGraphView extends mxEventSource {
    * @param force Boolean indicating if the current root should be ignored for
    * recursion.
    */
-  // clear(cell?: mxCell, force?: boolean, recurse?: boolean): void;
+  // clear(cell: mxCell, force?: boolean, recurse?: boolean): void;
   clear(
-    cell: mxCell | null = null,
+    cell: mxCell=<mxCell>(<mxGraph>this.graph).getModel().getRoot(),
     force: boolean = false,
     recurse: boolean = true
   ) {
     const model: mxGraphModel = (<mxGraph>this.graph).getModel();
-    cell = cell || model.getRoot();
-
     this.removeState(<mxCell>cell);
 
     if (recurse && (force || cell != this.currentRoot)) {
-      const childCount: number = model.getChildCount(cell);
+      const childCount: number = cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        this.clear(model.getChildAt(cell, i), force);
+        this.clear(<mxCell>cell.getChildAt(i), force);
       }
     } else {
       this.invalidate(cell);
@@ -547,20 +543,20 @@ class mxGraphView extends mxEventSource {
 
       // Recursively invalidates all descendants
       if (recurse) {
-        const childCount = model.getChildCount(cell);
+        const childCount = cell.getChildCount();
 
         for (let i = 0; i < childCount; i += 1) {
-          const child = model.getChildAt(cell, i);
+          const child = cell.getChildAt(i);
           this.invalidate(child, recurse, includeEdges);
         }
       }
 
       // Propagates invalidation to all connected edges
       if (includeEdges) {
-        const edgeCount = model.getEdgeCount(cell);
+        const edgeCount = cell.getEdgeCount();
 
         for (let i = 0; i < edgeCount; i += 1) {
-          this.invalidate(model.getEdgeAt(cell, i), recurse, includeEdges);
+          this.invalidate(cell.getEdgeAt(i), recurse, includeEdges);
         }
       }
 
@@ -577,7 +573,7 @@ class mxGraphView extends mxEventSource {
    * Default is {@link currentRoot} or the root of the model.
    */
   // validate(cell?: mxCell): void;
-  validate(cell: mxCell | null = null) {
+  validate(cell: mxCell | null=null) {
     const t0 = mxLog.enter('mxGraphView.validate');
     window.status =
       mxResources.get(this.updatingDocumentResource) ||
@@ -588,10 +584,10 @@ class mxGraphView extends mxEventSource {
     const graphBounds = this.getBoundingBox(
       this.validateCellState(
         <mxCell>this.validateCell(
-          cell ||
+          <mxCell>(cell ||
             (this.currentRoot != null
               ? this.currentRoot
-              : (<mxGraph>this.graph).getModel().getRoot())
+              : (<mxGraph>this.graph).getModel().getRoot()))
         )
       )
     );
@@ -646,11 +642,11 @@ class mxGraphView extends mxEventSource {
 
       if (recurse) {
         const model = (<mxGraph>this.graph).getModel();
-        const childCount = model.getChildCount(state.cell);
+        const childCount = state.cell.getChildCount();
 
         for (let i = 0; i < childCount; i += 1) {
           const bounds = this.getBoundingBox(
-            this.getState(model.getChildAt(state.cell, i))
+            this.getState(state.cell.getChildAt(i))
           );
 
           if (bounds != null) {
@@ -847,26 +843,24 @@ class mxGraphView extends mxEventSource {
    * is true.
    */
   // validateCell(cell: mxCell, visible?: boolean): void;
-  validateCell(cell: mxCell | null=null,
+  validateCell(cell: mxCell,
                visible: boolean = true): mxCell | null {
 
-    if (cell != null) {
-      visible = visible && (<mxGraph>this.graph).isCellVisible(cell);
-      const state = this.getState(cell, visible);
+    visible = visible && cell.isVisible();
+    const state = this.getState(cell, visible);
 
-      if (state != null && !visible) {
-        this.removeState(cell);
-      } else {
-        const model = (<mxGraph>this.graph).getModel();
-        const childCount = model.getChildCount(cell);
+    if (state != null && !visible) {
+      this.removeState(cell);
+    } else {
+      const model = (<mxGraph>this.graph).getModel();
+      const childCount = cell.getChildCount();
 
-        for (let i = 0; i < childCount; i += 1) {
-          this.validateCell(
-            <mxCell>model.getChildAt(cell, i),
-            visible &&
-              (!this.isCellCollapsed(cell) || cell === this.currentRoot)
-          );
-        }
+      for (let i = 0; i < childCount; i += 1) {
+        this.validateCell(
+          <mxCell>cell.getChildAt(i),
+          visible &&
+            (!this.isCellCollapsed(cell) || cell === this.currentRoot)
+        );
       }
     }
     return cell;
@@ -899,7 +893,7 @@ class mxGraphView extends mxEventSource {
           }
 
           if (cell !== this.currentRoot) {
-            this.validateCellState(<mxCell>model.getParent(cell), false);
+            this.validateCellState(<mxCell>cell.getParent(), false);
           }
 
           state.setVisibleTerminalState(
@@ -928,9 +922,9 @@ class mxGraphView extends mxEventSource {
             this.stateValidated(state);
           }
 
-          const childCount = model.getChildCount(cell);
+          const childCount = cell.getChildCount();
           for (let i = 0; i < childCount; i += 1) {
-            this.validateCellState(<mxCell>model.getChildAt(cell, i));
+            this.validateCellState(<mxCell>cell.getChildAt(i));
           }
         }
       }
@@ -957,7 +951,7 @@ class mxGraphView extends mxEventSource {
 
     if (state.cell !== this.currentRoot) {
       const model = (<mxGraph>this.graph).getModel();
-      const pState = <mxCellState>this.getState(model.getParent(state.cell));
+      const pState = <mxCellState>this.getState(state.cell.getParent());
 
       if (pState != null && pState.cell !== this.currentRoot) {
         origin.x += (<mxPoint>pState.origin).x;
@@ -974,11 +968,11 @@ class mxGraphView extends mxEventSource {
       const geo = (<mxGraph>this.graph).getCellGeometry(<mxCell>state.cell);
 
       if (geo != null) {
-        if (!model.isEdge(state.cell)) {
+        if (!state.cell.isEdge()) {
           offset = <mxPoint>(geo.offset != null ? geo.offset : this.EMPTY_POINT);
 
           if (geo.relative && pState != null) {
-            if (model.isEdge(pState.cell)) {
+            if (pState.cell.isEdge()) {
               const origin = this.getPoint(pState, geo);
 
               if (origin != null) {
@@ -1006,11 +1000,11 @@ class mxGraphView extends mxEventSource {
         state.height = this.scale * geo.height;
         state.unscaledHeight = geo.height;
 
-        if (model.isVertex(state.cell)) {
+        if (state.cell.isVertex()) {
           this.updateVertexState(state, geo);
         }
 
-        if (model.isEdge(state.cell)) {
+        if (state.cell.isEdge()) {
           this.updateEdgeState(state, geo);
         }
       }
@@ -1021,7 +1015,7 @@ class mxGraphView extends mxEventSource {
 
   /**
    * Returns true if the children of the given cell should not be visible in the
-   * view. This implementation uses {@link mxGraph.isCellVisible} but it can be
+   * view. This implementation uses {@link mxCell.isCellVisible} but it can be
    * overidden to use a separate condition.
    */
   // isCellCollapsed(cell: mxCell): boolean;
@@ -1037,9 +1031,9 @@ class mxGraphView extends mxEventSource {
                     geo: mxGeometry) {
 
     const model = (<mxGraph>this.graph).getModel();
-    const pState = this.getState(model.getParent(state.cell));
+    const pState = this.getState(state.cell.getParent());
 
-    if (geo.relative && pState != null && !model.isEdge(pState.cell)) {
+    if (geo.relative && pState != null && !pState.cell.isEdge()) {
       const alpha = mxUtils.toRadians(
         pState.style[mxConstants.STYLE_ROTATION] || '0'
       );
@@ -1071,10 +1065,10 @@ class mxGraphView extends mxEventSource {
     // as such edges are invalid and produce NPEs in the edge styles.
     // Also removes connected edges that have no visible terminals.
     if (
-      ((<mxGraphModel>(<mxGraph>this.graph).model).getTerminal(state.cell, true) != null &&
+      (state.cell.getTerminal(true) != null &&
         source == null) ||
       (source == null && geo.getTerminalPoint(true) == null) ||
-      ((<mxGraphModel>(<mxGraph>this.graph).model).getTerminal(state.cell, false) != null &&
+      (state.cell.getTerminal(false) != null &&
         target == null) ||
       (target == null && geo.getTerminalPoint(false) == null)
     ) {
@@ -1200,9 +1194,9 @@ class mxGraphView extends mxEventSource {
   stateValidated(state: mxCellState): void {
     const graph = (<mxGraph>this.graph);
     const fg =
-      (graph.getModel().isEdge(state.cell) &&
+      (state.cell.isEdge() &&
         graph.keepEdgesInForeground) ||
-      (graph.getModel().isVertex(<mxCell>state.cell) &&
+      (state.cell.isVertex() &&
         graph.keepEdgesInBackground);
     const htmlNode = fg
       ? this.lastForegroundHtmlNode || this.lastHtmlNode
@@ -1651,7 +1645,7 @@ class mxGraphView extends mxEventSource {
           let flipH = false;
           let flipV = false;
 
-          if ((<mxGraphModel>(<mxGraph>this.graph).model).isVertex(terminal.cell)) {
+          if (terminal.cell.isVertex()) {
             flipH =
               mxUtils.getValue(terminal.style, mxConstants.STYLE_FLIPH, 0) == 1;
             flipV =
@@ -1835,26 +1829,26 @@ class mxGraphView extends mxEventSource {
    * should be returned.
    */
   // getVisibleTerminal(edge: mxCell, source: boolean): mxCell;
-  getVisibleTerminal(edge: mxCell | null,
+  getVisibleTerminal(edge: mxCell,
                      source: boolean) {
 
     const model = (<mxGraph>this.graph).getModel();
-    let result = model.getTerminal(edge, source);
+    let result = edge.getTerminal(source);
     let best = result;
 
     while (result != null && result != this.currentRoot) {
-      if (!(<mxGraph>this.graph).isCellVisible(best) || this.isCellCollapsed(result)) {
+      if ((best && !best.isVisible()) || this.isCellCollapsed(result)) {
         best = result;
       }
 
-      result = model.getParent(result);
+      result = result.getParent();
     }
 
     // Checks if the result is valid for the current view state
     if (
       best != null &&
       (!model.contains(best) ||
-        model.getParent(best) === model.getRoot() ||
+          best.getParent() === model.getRoot() ||
         best === this.currentRoot)
     ) {
       best = null;
@@ -2007,7 +2001,7 @@ class mxGraphView extends mxEventSource {
                    y: number) {
 
     const model = (<mxGraph>this.graph).getModel();
-    const geometry = model.getGeometry(edgeState.cell);
+    const geometry = edgeState.cell.getGeometry();
 
     if (geometry != null) {
       const absolutePoints = (<mxPoint[]>edgeState.absolutePoints);
@@ -2168,7 +2162,7 @@ class mxGraphView extends mxEventSource {
       if (
         create &&
         (state == null || this.updateStyle) &&
-          (<mxGraph>this.graph).isCellVisible(cell)
+          cell.isVisible()
       ) {
         if (state == null) {
           state = this.createState(cell);
@@ -2521,7 +2515,7 @@ class mxGraphView extends mxEventSource {
     }
 
     if (root != null && root.parentNode != null) {
-      this.clear(this.currentRoot, true);
+      this.clear(<mxCell>this.currentRoot, true);
       mxEvent.removeGestureListeners(
         document,
         null,

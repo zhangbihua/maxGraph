@@ -241,7 +241,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     }
 
     if (parent == null) {
-      parent = model.getParent(swimlanes[0]);
+      parent = swimlanes[0].getParent();
     }
 
     //  Maintaining parent location
@@ -250,7 +250,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
     if (
       parent !== this.root &&
-      model.isVertex(parent) != null &&
+      parent.isVertex() != null &&
       this.maintainParentLocation
     ) {
       const geo = this.graph.getCellGeometry(parent);
@@ -428,7 +428,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
         if (
           cell != null &&
-          model.isVertex(cell) &&
+          cell.isVertex() &&
           this.graph.isCellVisible(cell) &&
           model.isAncestor(parent, cell)
         ) {
@@ -491,10 +491,10 @@ class mxSwimlaneLayout extends mxGraphLayout {
     const { model } = this.graph;
     let edges = [];
     const isCollapsed = this.graph.isCellCollapsed(cell);
-    const childCount = model.getChildCount(cell);
+    const childCount = cell.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
-      const child = model.getChildAt(cell, i);
+      const child = cell.getChildAt(i);
 
       if (this.isPort(child)) {
         edges = edges.concat(model.getEdges(child, true, true));
@@ -576,12 +576,10 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
     if (terminal != null) {
       if (this.isPort(terminal)) {
-        terminal = this.graph.model.getParent(terminal);
+        terminal = terminal.getParent();
       }
-
       terminalCache.put(edge, terminal);
     }
-
     return terminal;
   }
 
@@ -712,9 +710,9 @@ class mxSwimlaneLayout extends mxGraphLayout {
     const { model } = this.graph;
 
     if (
-      model.isVertex(cell) &&
+      cell.isVertex() &&
       cell !== this.parent &&
-      model.getParent(cell) !== this.parent &&
+      cell.getParent() !== this.parent &&
       this.graph.isCellVisible(cell)
     ) {
       result[mxObjectIdentity.get(cell)] = cell;
@@ -724,10 +722,10 @@ class mxSwimlaneLayout extends mxGraphLayout {
       this.traverseAncestors ||
       (cell === this.parent && this.graph.isCellVisible(cell))
     ) {
-      const childCount = model.getChildCount(cell);
+      const childCount = cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        const child = model.getChildAt(cell, i);
+        const child = cell.getChildAt(i);
 
         // Ignore ports in the layout vertex list, they are dealt with
         // in the traversal mechanisms

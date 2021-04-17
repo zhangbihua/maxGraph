@@ -50,41 +50,34 @@ class DynamicStyle extends React.Component {
     // not explicitely changed using mxStyleChange
     graph.getView().updateStyle = true;
 
-    // Overrides mxGraphModel.getStyle to return a specific style
+    // Overrides mxCell.getStyle to return a specific style
     // for edges that reflects their target terminal (in this case
     // the strokeColor will be equal to the target's fillColor).
-    const previous = graph.model.getStyle;
 
-    graph.model.getStyle = function(cell) {
-      if (cell != null) {
-        let style = previous.apply(this, arguments);
+    const getStyle = function() {
+      let style = super.getStyle();
 
-        if (this.isEdge(cell)) {
-          const target = this.getTerminal(cell, false);
+      if (this.isEdge()) {
+        const target = this.getTerminal(false);
 
-          if (target != null) {
-            const targetStyle = graph.getCurrentCellStyle(target);
-            const fill = mxUtils.getValue(
-              targetStyle,
-              mxConstants.STYLE_FILLCOLOR
-            );
+        if (target != null) {
+          const targetStyle = graph.getCurrentCellStyle(target);
+          const fill = mxUtils.getValue(
+            targetStyle,
+            mxConstants.STYLE_FILLCOLOR
+          );
 
-            if (fill != null) {
-              style += `;strokeColor=${fill}`;
-            }
-          }
-        } else if (this.isVertex(cell)) {
-          const geometry = this.getGeometry(cell);
-
-          if (geometry != null && geometry.width > 80) {
-            style += ';fillColor=green';
+          if (fill != null) {
+            style += `;strokeColor=${fill}`;
           }
         }
-
-        return style;
+      } else if (this.isVertex()) {
+        const geometry = this.getGeometry();
+        if (geometry != null && geometry.width > 80) {
+          style += ';fillColor=green';
+        }
       }
-
-      return null;
+      return style;
     };
 
     // Gets the default parent for inserting new cells. This
@@ -100,6 +93,8 @@ class DynamicStyle extends React.Component {
         size: [80, 30],
         style: 'fillColor=green',
       });
+      v1.getStyle = getStyle;
+
       const v2 = graph.insertVertex({
         parent,
         value: 'World!',
@@ -107,6 +102,8 @@ class DynamicStyle extends React.Component {
         size: [80, 30],
         style: 'fillColor=blue',
       });
+      v2.getStyle = getStyle;
+
       const v3 = graph.insertVertex({
         parent,
         value: 'World!',
@@ -114,6 +111,8 @@ class DynamicStyle extends React.Component {
         size: [80, 30],
         style: 'fillColor=red',
       });
+      v3.getStyle = getStyle;
+
       const e1 = graph.insertEdge({
         parent,
         value: 'Connect',
@@ -121,6 +120,7 @@ class DynamicStyle extends React.Component {
         target: v2,
         style: 'perimeterSpacing=4;strokeWidth=4;labelBackgroundColor=white;fontStyle=1',
       });
+      e1.getStyle = getStyle;
     });
   };
 }

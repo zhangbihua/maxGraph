@@ -125,9 +125,9 @@ class mxCellStatePreview {
     if (state != null) {
       const model = this.graph.getModel();
 
-      if (model.isVertex(state.cell)) {
+      if (state.cell.isVertex()) {
         (<mxGraphView>state.view).updateCellState(state);
-        const geo = model.getGeometry(state.cell);
+        const geo = state.cell.getGeometry();
 
         // Moves selection cells and non-relative vertices in
         // the first phase so that edge terminal points will
@@ -142,11 +142,11 @@ class mxCellStatePreview {
         }
       }
 
-      const childCount = model.getChildCount(state.cell);
+      const childCount = state.cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
         this.translateState(
-          <mxCellState>(state.view).getState(model.getChildAt(state.cell, i)),
+          <mxCellState>(state.view).getState(state.cell.getChildAt(i)),
           dx,
           dy
         );
@@ -175,21 +175,21 @@ class mxCellStatePreview {
 
       // Updates the edge terminal points and restores the
       // (relative) positions of any (relative) children
-      if (model.isEdge(state.cell)) {
+      if (state.cell.isEdge()) {
         state.view.updateCellState(state);
       }
 
       const geo = this.graph.getCellGeometry(<mxCell>state.cell);
-      const pState = state.view.getState(model.getParent(<mxCell>state.cell));
+      const pState = state.view.getState(<mxCell>state.cell.getParent());
 
       // Moves selection vertices which are relative
       if (
         (dx !== 0 || dy !== 0) &&
         geo != null &&
         geo.relative &&
-        model.isVertex(state.cell) &&
+        state.cell.isVertex() &&
         (pState == null ||
-          model.isVertex(pState.cell) ||
+            pState.cell.isVertex() ||
           this.deltas.get(state.cell) != null)
       ) {
         state.x += dx;
@@ -203,11 +203,11 @@ class mxCellStatePreview {
         visitor(state);
       }
 
-      const childCount = model.getChildCount(state.cell);
+      const childCount = state.cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
         this.revalidateState(
-          this.graph.view.getState(model.getChildAt(state.cell, i)),
+          this.graph.view.getState(state.cell.getChildAt(i)),
           dx,
           dy,
           visitor
@@ -225,10 +225,10 @@ class mxCellStatePreview {
   // addEdges(state: mxCellState): void;
   addEdges(state: mxCellState): void {
     const model = this.graph.getModel();
-    const edgeCount = model.getEdgeCount(<mxCell>state.cell);
+    const edgeCount = state.cell.getEdgeCount();
 
     for (let i = 0; i < edgeCount; i += 1) {
-      const s = state.view.getState(model.getEdgeAt(<mxCell>state.cell, i));
+      const s = state.view.getState(<mxCell>state.cell.getEdgeAt(i));
 
       if (s != null) {
         this.moveState(s, 0, 0);

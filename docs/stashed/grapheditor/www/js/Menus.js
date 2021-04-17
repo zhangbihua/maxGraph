@@ -253,9 +253,9 @@ Menus.prototype.init = function()
 			let tmp = graph.getSelectionCell();
 			let roots = null;
 			
-			if (tmp == null || graph.getModel().getChildCount(tmp) == 0)
+			if (tmp == null || tmp.getChildCount() == 0)
 			{
-				if (graph.getModel().getEdgeCount(tmp) == 0)
+				if (tmp.getEdgeCount() == 0)
 				{
 					roots = graph.findTreeRoots(graph.getDefaultParent());
 				}
@@ -292,9 +292,9 @@ Menus.prototype.init = function()
 			let tmp = graph.getSelectionCell();
 			let roots = null;
 			
-			if (tmp == null || graph.getModel().getChildCount(tmp) == 0)
+			if (tmp == null || tmp.getChildCount() == 0)
 			{
-				if (graph.getModel().getEdgeCount(tmp) == 0)
+				if (tmp.getEdgeCount() == 0)
 				{
 					roots = graph.findTreeRoots(graph.getDefaultParent());
 				}
@@ -331,9 +331,9 @@ Menus.prototype.init = function()
 			let tmp = graph.getSelectionCell();
 			let roots = null;
 			
-			if (tmp == null || graph.getModel().getChildCount(tmp) == 0)
+			if (tmp == null || tmp.getChildCount() == 0)
 			{
-				if (graph.getModel().getEdgeCount(tmp) == 0)
+				if (tmp.getEdgeCount() == 0)
 				{
 					roots = graph.findTreeRoots(graph.getDefaultParent());
 				}
@@ -364,9 +364,9 @@ Menus.prototype.init = function()
 		    			
 		    			if (!graph.isSelectionEmpty())
 		    			{
-			    			tmp = graph.getModel().getParent(tmp);
+			    			tmp = tmp.getParent();
 			    			
-			    			if (graph.getModel().isVertex(tmp))
+			    			if (tmp.isVertex())
 			    			{
 			    				graph.updateGroupBounds([tmp], graph.gridSize * 2, true);
 			    			}
@@ -388,14 +388,14 @@ Menus.prototype.init = function()
 	    		{
 	    			let tmp = graph.getSelectionCell();
 	    			
-	    			if (tmp == null || graph.getModel().getChildCount(tmp) == 0)
+	    			if (tmp == null || tmp.getChildCount() == 0)
 	    			{
 	    				tmp = graph.getDefaultParent();
 	    			}
 	    			
 	    			layout.execute(tmp);
 	    			
-	    			if (graph.getModel().isVertex(tmp))
+	    			if (tmp.isVertex())
 	    			{
 	    				graph.updateGroupBounds([tmp], graph.gridSize * 2, true);
 	    			}
@@ -410,14 +410,14 @@ Menus.prototype.init = function()
     		{
     			let tmp = graph.getSelectionCell();
     			
-    			if (tmp == null || graph.getModel().getChildCount(tmp) == 0)
+    			if (tmp == null || tmp.getChildCount() == 0)
     			{
     				tmp = graph.getDefaultParent();
     			}
     			
     			layout.execute(tmp);
     			
-    			if (graph.getModel().isVertex(tmp))
+    			if (tmp.isVertex())
     			{
     				graph.updateGroupBounds([tmp], graph.gridSize * 2, true);
     			}
@@ -787,7 +787,7 @@ Menus.prototype.edgeStyleChange = function(menu, label, keys, values, sprite, pa
 			{
 				let cell = cells[i];
 				
-				if (graph.getModel().isEdge(cell))
+				if (cell.isEdge())
 				{
 					if (reset)
 					{
@@ -877,7 +877,7 @@ Menus.prototype.createStyleChangeFunction = function(keys, values)
 				{
 					for (let j = 0; j < cells.length; j++)
 					{
-						if (graph.model.getChildCount(cells[j]) == 0)
+						if (cells[j].getChildCount() == 0)
 						{
 							graph.autoSizeCell(cells[j], false);
 						}
@@ -1143,8 +1143,8 @@ Menus.prototype.addPopupMenuArrangeItems = function(menu, cell, evt)
 	{
 		this.addMenuItems(menu, ['-', 'group'], null, evt);
 	}
-	else if (graph.getSelectionCount() == 1 && !graph.getModel().isEdge(cell) &&
-		!graph.isSwimlane(cell) && graph.getModel().getChildCount(cell) > 0)
+	else if (graph.getSelectionCount() == 1 && !cell.isEdge() &&
+		!graph.isSwimlane(cell) && cell.getChildCount() > 0)
 	{
 		this.addMenuItems(menu, ['-', 'ungroup'], null, evt);
 	}
@@ -1164,7 +1164,7 @@ Menus.prototype.addPopupMenuCellItems = function(menu, cell, evt)
 	{
 		let hasWaypoints = false;
 
-		if (graph.getModel().isEdge(cell) && mxUtils.getValue(state.style, mxConstants.STYLE_EDGE, null) != 'entityRelationEdgeStyle' &&
+		if (cell.isEdge() && mxUtils.getValue(state.style, mxConstants.STYLE_EDGE, null) != 'entityRelationEdgeStyle' &&
 			mxUtils.getValue(state.style, mxConstants.STYLE_SHAPE, null) != 'arrow')
 		{
 			let handler = graph.selectionCellsHandler.getHandler(cell);
@@ -1188,12 +1188,12 @@ Menus.prototype.addPopupMenuCellItems = function(menu, cell, evt)
 			this.addMenuItems(menu, [(isWaypoint) ? 'removeWaypoint' : 'addWaypoint'], null, evt);
 			
 			// Adds reset waypoints option if waypoints exist
-			let geo = graph.getModel().getGeometry(cell);
+			let geo = cell.getGeometry();
 			hasWaypoints = geo != null && geo.points != null && geo.points.length > 0;
 		}
 
-		if (graph.getSelectionCount() == 1 && (hasWaypoints || (graph.getModel().isVertex(cell) &&
-			graph.getModel().getEdgeCount(cell) > 0)))
+		if (graph.getSelectionCount() == 1 && (hasWaypoints || (cell.isVertex() &&
+			cell.getEdgeCount() > 0)))
 		{
 			this.addMenuItems(menu, ['-', 'clearWaypoints'], null, evt);
 		}
@@ -1203,7 +1203,7 @@ Menus.prototype.addPopupMenuCellItems = function(menu, cell, evt)
 			this.addMenuItems(menu, ['-', 'editStyle', 'editData', 'editLink'], null, evt);
 	
 			// Shows edit image action if there is an image in the style
-			if (graph.getModel().isVertex(cell) && mxUtils.getValue(state.style, mxConstants.STYLE_IMAGE, null) != null)
+			if (cell.isVertex() && mxUtils.getValue(state.style, mxConstants.STYLE_IMAGE, null) != null)
 			{
 				menu.addSeparator();
 				this.addMenuItem(menu, 'image', null, evt).firstChild.nextSibling.innerHTML = mxResources.get('editImage') + '...';

@@ -212,7 +212,7 @@ class mxGraphHierarchyModel {
         // Looking for outgoing edges only
         if (
           cell !== vertices[i] &&
-          layout.graph.model.isVertex(cell) &&
+          cell.isVertex() &&
           !layout.isVertexIgnored(cell)
         ) {
           // We process all edge between this source and its targets

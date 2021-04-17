@@ -199,7 +199,7 @@ export default Scrollbars;
         // Override folding to allow for tables
         graph.isCellFoldable = function(cell, collapse)
         {
-          return this.getModel().isVertex(cell);
+          return cell.isVertex();
         };
 
         // Overrides connectable state
@@ -229,7 +229,7 @@ export default Scrollbars;
           let graph = state.view.graph;
           let model = graph.model;
 
-          if (model.isVertex(state.cell) && state.text != null)
+          if (state.cell.isVertex() && state.text != null)
           {
             // Scrollbars are on the div
             let s = graph.view.scale;
@@ -244,13 +244,13 @@ export default Scrollbars;
 
                 let updateEdges = mxUtils.bind(this, function()
                 {
-                  let edgeCount = model.getEdgeCount(state.cell);
+                  let edgeCount = state.cell.getEdgeCount();
 
                   // Only updates edges to avoid update in DOM order
                   // for text label which would reset the scrollbar
                   for (let i = 0; i < edgeCount; i++)
                   {
-                    let edge = model.getEdgeAt(state.cell, i);
+                    let edge = state.cell.getEdgeAt(i);
                     graph.view.invalidate(edge, true, false);
                     graph.view.validate(edge);
                   }
@@ -357,7 +357,7 @@ export default Scrollbars;
 
           let edge = this.createEdge(relation);
           let style = this.graph.getCellStyle(edge);
-          let state = new mxCellState(this.graph.view, edge, style);
+          let state = new mxCell(this.graph.view, edge, style);
 
           // Stores the source row in the handler
           this.sourceRowNode = this.currentRowNode;
@@ -369,7 +369,7 @@ export default Scrollbars;
         // short markup for collapsed cells.
         graph.getLabel = function(cell)
         {
-          if (this.getModel().isVertex(cell))
+          if (cell.isVertex())
           {
             if (this.isCellCollapsed(cell))
             {

@@ -37,24 +37,19 @@ class Collapse extends React.Component {
   };
 
   componentDidMount() {
-    class MyCustomModel extends mxGraphModel {
-      getStyle(cell) {
-        // Extends mxGraphModel.getStyle to show an image when collapsed
-        if (cell != null) {
-          let style = super.getStyle(cell);
-          if (this.isCollapsed(cell)) {
-            style =
-              `${style};shape=image;image=http://www.jgraph.com/images/mxgraph.gif;` +
-              `noLabel=1;imageBackground=#C3D9FF;imageBorder=#6482B9`;
-          }
-          return style;
-        }
-        return null;
-      }
-    }
-
-    const graph = new mxGraph(this.el, new MyCustomModel());
+    const graph = new mxGraph(this.el);
     const parent = graph.getDefaultParent();
+
+    const getStyle = function() {
+      // Extends mxGraphModel.getStyle to show an image when collapsed
+      let style = super.getStyle();
+      if (this.isCollapsed()) {
+        style =
+          `${style};shape=image;image=http://www.jgraph.com/images/mxgraph.gif;` +
+          `noLabel=1;imageBackground=#C3D9FF;imageBorder=#6482B9`;
+      }
+      return style;
+    }
 
     graph.batchUpdate(() => {
       const v1 = graph.insertVertex({
@@ -65,6 +60,7 @@ class Collapse extends React.Component {
         style: 'shape=swimlane;startSize=20;',
       });
       v1.geometry.alternateBounds = new mxRectangle(0, 0, 110, 70);
+      v1.getStyle = getStyle;
 
       const v11 = graph.insertVertex({
         parent: v1,
@@ -72,6 +68,7 @@ class Collapse extends React.Component {
         position: [10, 40],
         size: [120, 80],
       });
+      v11.getStyle = getStyle;
     });
   };
 }

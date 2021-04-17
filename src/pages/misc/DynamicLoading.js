@@ -95,7 +95,7 @@ class DynamicLoading extends React.Component {
     // by requesting the respective data in the server-side
     // (implemented for this demo using the server-function)
     function load(graph, cell) {
-      if (graph.getModel().isVertex(cell)) {
+      if (cell.isVertex()) {
         const cx = graph.container.clientWidth / 2;
         const cy = graph.container.clientHeight / 2;
 
@@ -115,7 +115,7 @@ class DynamicLoading extends React.Component {
           for (var key in graph.getModel().cells) {
             const tmp = graph.getModel().getCell(key);
 
-            if (tmp != cell && graph.getModel().isVertex(tmp)) {
+            if (tmp != cell && tmp.isVertex()) {
               graph.removeCells([tmp]);
             }
           }
@@ -124,7 +124,7 @@ class DynamicLoading extends React.Component {
           graph.getModel().mergeChildren(model.getRoot().getChildAt(0), parent);
 
           // Moves the given cell to the center
-          let geo = graph.getModel().getGeometry(cell);
+          let geo = cell.getGeometry();
 
           if (geo != null) {
             geo = geo.clone();
@@ -143,13 +143,13 @@ class DynamicLoading extends React.Component {
           for (var key in graph.getModel().cells) {
             const tmp = graph.getModel().getCell(key);
 
-            if (tmp != cell && model.isVertex(tmp)) {
+            if (tmp != cell && tmp.isVertex()) {
               vertices.push(tmp);
 
               // Changes the initial location "in-place"
               // to get a nice animation effect from the
               // center to the radius of the circle
-              const geo = model.getGeometry(tmp);
+              const geo = tmp.getGeometry();
 
               if (geo != null) {
                 geo.x = cx - geo.width / 2;
@@ -167,7 +167,7 @@ class DynamicLoading extends React.Component {
           );
 
           for (let i = 0; i < cellCount; i++) {
-            let geo = graph.getModel().getGeometry(vertices[i]);
+            let geo = vertices[i].getGeometry();
 
             if (geo != null) {
               geo = geo.clone();

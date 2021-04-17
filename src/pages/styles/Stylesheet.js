@@ -49,7 +49,7 @@ class Stylesheet extends React.Component {
     graph.getLabel = function(cell) {
       const label = mxGraph.prototype.getLabel.apply(this, arguments);
 
-      if (this.getModel().isEdge(cell)) {
+      if (cell.isEdge()) {
         return `Transfer ${label}`;
       }
       return label;
@@ -61,9 +61,9 @@ class Stylesheet extends React.Component {
       const { cell } = state;
       const model = this.getModel();
 
-      if (model.isEdge(cell)) {
-        const source = this.getLabel(model.getTerminal(cell, true));
-        const target = this.getLabel(model.getTerminal(cell, false));
+      if (modcellel.isEdge()) {
+        const source = this.getLabel(cell.getTerminal(true));
+        const target = this.getLabel(cell.getTerminal(false));
 
         return `${source} -> ${target}`;
       }

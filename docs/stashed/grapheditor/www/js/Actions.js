@@ -113,7 +113,7 @@ Actions.prototype.init = function()
 					
 					for (let i = 0; i < cells.length && includeEdges; i++)
 					{
-						includeEdges = includeEdges && graph.model.isEdge(cells[i]);
+						includeEdges = includeEdges && cells[i].isEdge();
 					}
 
 					let t = graph.view.translate;
@@ -154,7 +154,7 @@ Actions.prototype.init = function()
 	{
 		let cell = graph.getSelectionCell();
 		
-		if (graph.isEnabled() && cell != null && graph.getModel().isVertex(cell))
+		if (graph.isEnabled() && cell != null && cell.isVertex())
 		{
 			let geo = graph.getCellGeometry(cell);
 			
@@ -177,7 +177,7 @@ Actions.prototype.init = function()
 				
 				for (let i = 0; i < cells.length; i++)
 				{
-					if (graph.getModel().isVertex(cells[i]))
+					if (cells[i].isVertex())
 					{
 						let geo = graph.getCellGeometry(cells[i]);
 						
@@ -346,8 +346,8 @@ Actions.prototype.init = function()
 			    	{
 						if (graph.model.contains(cells[i]))
 						{
-							if (graph.model.getChildCount(cells[i]) == 0 &&
-								graph.model.isVertex(cells[i]))
+							if (cells[i].getChildCount() == 0 &&
+								cells[i].isVertex())
 							{
 								graph.setCellStyles('container', '0', [cells[i]]);
 							}
@@ -592,7 +592,7 @@ Actions.prototype.init = function()
 				{
 					let cell = cells[i];
 					
-					if (graph.getModel().getChildCount(cell))
+					if (cell.getChildCount())
 					{
 						graph.updateGroupBounds([cell], 20);
 					}
@@ -601,7 +601,7 @@ Actions.prototype.init = function()
 						let state = graph.view.getState(cell);
 						let geo = graph.getCellGeometry(cell);
 
-						if (graph.getModel().isVertex(cell) && state != null && state.text != null &&
+						if (cell.isVertex() && state != null && state.text != null &&
 							geo != null && graph.isWrapping(cell))
 						{
 							geo = geo.clone();
@@ -1046,7 +1046,7 @@ Actions.prototype.init = function()
 					
 					for (let i = 0; i < cells.length; i++)
 					{
-						if (graph.model.getChildCount(cells[i]) == 0)
+						if (cells[i].getChildCount() == 0)
 						{
 							graph.autoSizeCell(cells[i], false);
 						}
@@ -1210,7 +1210,7 @@ Actions.prototype.init = function()
 			let model = graph.getModel();
 			
 	    	let dlg = new TextareaDialog(this.editorUi, mxResources.get('editStyle') + ':',
-	    		model.getStyle(cells[0]) || '', function(newValue)
+				cells[0].getStyle() || '', function(newValue)
 			{
 	    		if (newValue != null)
 				{
@@ -1239,7 +1239,7 @@ Actions.prototype.init = function()
 	{
 		let cell = graph.getSelectionCell();
 		
-		if (cell != null && graph.getModel().isEdge(cell))
+		if (cell != null && cell.isEdge())
 		{
 			let handler = editor.graph.selectionCellsHandler.getHandler(cell);
 			
@@ -1250,15 +1250,15 @@ Actions.prototype.init = function()
 				let dx = t.x;
 				let dy = t.y;
 				
-				let parent = graph.getModel().getParent(cell);
+				let parent = cell.getParent();
 				let pgeo = graph.getCellGeometry(parent);
 				
-				while (graph.getModel().isVertex(parent) && pgeo != null)
+				while (parent.isVertex() && pgeo != null)
 				{
 					dx += pgeo.x;
 					dy += pgeo.y;
 					
-					parent = graph.getModel().getParent(parent);
+					parent = parent.getParent();
 					pgeo = graph.getCellGeometry(parent);
 				}
 				
@@ -1295,7 +1295,7 @@ Actions.prototype.init = function()
 				{
 					let cell = cells[i];
 					
-					if (graph.getModel().isEdge(cell))
+					if (cell.isEdge())
 					{
 						let geo = graph.getCellGeometry(cell);
 			
@@ -1403,7 +1403,7 @@ Actions.prototype.init = function()
 					        	if (w != null && h != null)
 					        	{
 					        		let cell = cells[0];
-					        		let geo = graph.getModel().getGeometry(cell);
+					        		let geo = cell.getGeometry();
 					        		
 					        		if (geo != null)
 					        		{

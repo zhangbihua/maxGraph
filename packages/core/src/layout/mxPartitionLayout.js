@@ -79,17 +79,17 @@ class mxPartitionLayout extends mxGraphLayout {
   // moveCell(cell: mxCell, x: number, y: number): void;
   moveCell(cell, x, y) {
     const model = this.graph.getModel();
-    const parent = model.getParent(cell);
+    const parent = cell.getParent();
 
     if (cell != null && parent != null) {
       let i = 0;
       let last = 0;
-      const childCount = model.getChildCount(parent);
+      const childCount = parent.getChildCount();
 
       // Finds index of the closest swimlane
       // TODO: Take into account the orientation
       for (i = 0; i < childCount; i += 1) {
-        const child = model.getChildAt(parent, i);
+        const child = parent.getChildAt(i);
         const bounds = this.getVertexBounds(child);
 
         if (bounds != null) {
@@ -119,7 +119,7 @@ class mxPartitionLayout extends mxGraphLayout {
   execute(parent) {
     const horizontal = this.isHorizontal();
     const model = this.graph.getModel();
-    let pgeo = model.getGeometry(parent);
+    let pgeo = parent.getGeometry();
 
     // Handles special case where the parent is either a layer with no
     // geometry or the current root of the view in which case the size
@@ -136,10 +136,10 @@ class mxPartitionLayout extends mxGraphLayout {
 
     if (pgeo != null) {
       const children = [];
-      const childCount = model.getChildCount(parent);
+      const childCount = parent.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        const child = model.getChildAt(parent, i);
+        const child = parent.getChildAt(i);
 
         if (!this.isVertexIgnored(child) && this.isVertexMovable(child)) {
           children.push(child);
@@ -174,7 +174,7 @@ class mxPartitionLayout extends mxGraphLayout {
           try {
             for (let i = 0; i < n; i += 1) {
               const child = children[i];
-              let geo = model.getGeometry(child);
+              let geo = child.getGeometry();
 
               if (geo != null) {
                 geo = geo.clone();

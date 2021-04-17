@@ -178,8 +178,8 @@ class mxMultiplicity {
    */
   // checkNeighbors(graph: mxGraph, edge: mxCell, source: mxCell, target: mxCell): boolean;
   checkNeighbors(graph, edge, source, target) {
-    const sourceValue = graph.model.getValue(source);
-    const targetValue = graph.model.getValue(target);
+    const sourceValue = source.getValue();
+    const targetValue = target.getValue();
     let isValid = !this.validNeighborsAllowed;
     const valid = this.validNeighbors;
 
@@ -203,7 +203,7 @@ class mxMultiplicity {
    */
   // checkTerminal(graph: mxGraph, terminal: mxCell, edge: mxCell): boolean;
   checkTerminal(graph, terminal, edge) {
-    const value = graph.model.getValue(terminal);
+    const value = terminal.getValue();
 
     return this.checkType(graph, value, this.type, this.attr, this.value);
   }

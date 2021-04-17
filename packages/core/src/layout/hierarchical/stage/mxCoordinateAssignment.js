@@ -1370,11 +1370,11 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
           y += jetty;
           let x = jettys[parallelEdgeCount * 4 + arrayOffset];
 
-          const modelSource = graph.model.getTerminal(realEdge, true);
+          const modelSource = realEdge.getTerminal(true);
 
           if (
             this.layout.isPort(modelSource) &&
-            graph.model.getParent(modelSource) === realSource
+            modelSource.getParent() === realSource
           ) {
             const state = graph.view.getState(modelSource);
 
@@ -1477,12 +1477,12 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
           const y = rankY - jetty;
           let x = jettys[parallelEdgeCount * 4 + 2 - arrayOffset];
 
-          const modelTarget = graph.model.getTerminal(realEdge, false);
+          const modelTarget = realEdge.getTerminal(false);
           const realTarget = this.layout.getVisibleTerminal(realEdge, false);
 
           if (
             this.layout.isPort(modelTarget) &&
-            graph.model.getParent(modelTarget) === realTarget
+            modelTarget.getParent() === realTarget
           ) {
             const state = graph.view.getState(modelTarget);
 

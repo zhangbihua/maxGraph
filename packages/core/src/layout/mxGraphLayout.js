@@ -150,12 +150,12 @@ class mxGraphLayout {
         const result = func(vertex, edge);
 
         if (result == null || result) {
-          const edgeCount = this.graph.model.getEdgeCount(vertex);
+          const edgeCount = vertex.getEdgeCount();
 
           if (edgeCount > 0) {
             for (let i = 0; i < edgeCount; i += 1) {
-              const e = this.graph.model.getEdgeAt(vertex, i);
-              const isSource = this.graph.model.getTerminal(e, true) === vertex;
+              const e = vertex.getEdgeAt(i);
+              const isSource = e.getTerminal(true) === vertex;
 
               if (!directed || isSource) {
                 const next = this.graph.view.getVisibleTerminal(e, !isSource);
@@ -178,7 +178,7 @@ class mxGraphLayout {
   // isAncestor(parent: mxCell, child: mxCell, traverseAncestors?: boolean): boolean;
   isAncestor(parent, child, traverseAncestors) {
     if (!traverseAncestors) {
-      return this.graph.model.getParent(child) === parent;
+      return child.getParent() === parent;
     }
 
     if (child === parent) {
@@ -186,7 +186,7 @@ class mxGraphLayout {
     }
 
     while (child != null && child !== parent) {
-      child = this.graph.model.getParent(child);
+      child = child.getParent();
     }
 
     return child === parent;
@@ -213,7 +213,7 @@ class mxGraphLayout {
   // isVertexIgnored(vertex: mxCell): boolean;
   isVertexIgnored(vertex) {
     return (
-      !this.graph.getModel().isVertex(vertex) ||
+      !vertex.isVertex() ||
       !this.graph.isCellVisible(vertex)
     );
   }
@@ -229,10 +229,10 @@ class mxGraphLayout {
     const model = this.graph.getModel();
 
     return (
-      !model.isEdge(edge) ||
+      !edge.isEdge() ||
       !this.graph.isCellVisible(edge) ||
-      model.getTerminal(edge, true) == null ||
-      model.getTerminal(edge, false) == null
+      edge.getTerminal(true) == null ||
+      edge.getTerminal(false) == null
     );
   }
 
@@ -268,15 +268,15 @@ class mxGraphLayout {
       const model = this.graph.getModel();
 
       if (model.isAncestor(this.parent, parent)) {
-        let parentGeo = model.getGeometry(parent);
+        let parentGeo = parent.getGeometry();
 
         while (parent !== this.parent) {
           result.x += parentGeo.x;
           result.y += parentGeo.y;
 
-          parent = model.getParent(parent);
+          parent = parent.getParent();
 
-          parentGeo = model.getGeometry(parent);
+          parentGeo = parent.getGeometry();
         }
       }
     }
@@ -292,7 +292,7 @@ class mxGraphLayout {
   setEdgePoints(edge, points) {
     if (edge != null) {
       const { model } = this.graph;
-      let geometry = model.getGeometry(edge);
+      let geometry = edge.getGeometry();
 
       if (geometry == null) {
         geometry = new mxGeometry();
@@ -302,7 +302,7 @@ class mxGraphLayout {
       }
 
       if (this.parent != null && points != null) {
-        const parent = model.getParent(edge);
+        const parent = edge.getParent();
 
         const parentOffset = this.getParentOffset(parent);
 
@@ -331,7 +331,7 @@ class mxGraphLayout {
   // setVertexLocation(cell: mxCell, x: number, y: number): mxRectangle;
   setVertexLocation(cell, x, y) {
     const model = this.graph.getModel();
-    let geometry = model.getGeometry(cell);
+    let geometry = cell.getGeometry();
     let result = null;
 
     if (geometry != null) {
@@ -363,7 +363,7 @@ class mxGraphLayout {
       }
 
       if (this.parent != null) {
-        const parent = model.getParent(cell);
+        const parent = cell.getParent();
 
         if (parent != null && parent !== this.parent) {
           const parentOffset = this.getParentOffset(parent);
@@ -391,7 +391,7 @@ class mxGraphLayout {
    */
   // getVertexBounds(cell: mxCell): mxRectangle;
   getVertexBounds(cell) {
-    let geo = this.graph.getModel().getGeometry(cell);
+    let geo = cell.getGeometry();
 
     // Checks for oversize label bounding box and corrects
     // the return value accordingly
@@ -424,7 +424,7 @@ class mxGraphLayout {
     }
 
     if (this.parent != null) {
-      const parent = this.graph.getModel().getParent(cell);
+      const parent = this.cell.getParent();
       geo = geo.clone();
 
       if (parent != null && parent !== this.parent) {

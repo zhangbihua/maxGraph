@@ -303,7 +303,7 @@ class mxDefaultToolbar {
 
     if (
       target == null ||
-      model.isEdge(target) ||
+      target.isEdge() ||
       !this.connectOnDrop ||
       !graph.isCellConnectable(target)
     ) {
@@ -311,7 +311,7 @@ class mxDefaultToolbar {
         target != null &&
         !graph.isValidDropTarget(target, [vertex], evt)
       ) {
-        target = model.getParent(target);
+        target = target.getParent();
       }
       this.insert(vertex, evt, target);
     } else {
@@ -370,8 +370,8 @@ class mxDefaultToolbar {
 
       model.beginUpdate();
       try {
-        const geo = model.getGeometry(source);
-        const g = model.getGeometry(vertex).clone();
+        const geo = source.getGeometry();
+        const g = vertex.getGeometry().clone();
 
         // Moves the vertex away from the drop target that will
         // be used as the source for the new connection
@@ -391,7 +391,7 @@ class mxDefaultToolbar {
 
         // Fires two add-events with the code below - should be fixed
         // to only fire one add event for both inserts
-        const parent = model.getParent(source);
+        const parent = source.getParent();
         graph.addCell(vertex, parent);
         graph.constrainChild(vertex);
 
@@ -399,7 +399,7 @@ class mxDefaultToolbar {
         // the second function that fires an add event
         edge = this.editor.createEdge(source, vertex);
 
-        if (model.getGeometry(edge) == null) {
+        if (edge.getGeometry() == null) {
           const edgeGeometry = new mxGeometry();
           edgeGeometry.relative = true;
 

@@ -267,14 +267,14 @@ class mxDefaultPopupMenu {
   createConditions(editor, cell, evt) {
     // Creates array with conditions
     const model = editor.graph.getModel();
-    const childCount = model.getChildCount(cell);
+    const childCount = cell.getChildCount();
 
     // Adds some frequently used conditions
     const conditions = [];
     conditions.nocell = cell == null;
     conditions.ncells = editor.graph.getSelectionCount() > 1;
     conditions.notRoot =
-      model.getRoot() !== model.getParent(editor.graph.getDefaultParent());
+      model.getRoot() !== editor.graph.getDefaultParent().getParent();
     conditions.cell = cell != null;
 
     const isCell = cell != null && editor.graph.getSelectionCount() === 1;

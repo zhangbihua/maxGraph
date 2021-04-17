@@ -132,7 +132,7 @@ Format.prototype.updateSelectionStateForCell = function(result, cell, cells)
 {
 	let graph = this.editorUi.editor.graph;
 	
-	if (graph.getModel().isVertex(cell))
+	if (cell.isVertex())
 	{
 		result.resizable = result.resizable && graph.isCellResizable(cell);
 		result.rotatable = result.rotatable && graph.isCellRotatable(cell);
@@ -203,7 +203,7 @@ Format.prototype.updateSelectionStateForCell = function(result, cell, cells)
 			}
 		}
 	}
-	else if (graph.getModel().isEdge(cell))
+	else if (cell.isEdge())
 	{
 		result.edges.push(cell);
 		result.resizable = false;
@@ -252,7 +252,7 @@ Format.prototype.updateSelectionStateForCell = function(result, cell, cells)
 Format.prototype.isFillState = function(state)
 {
 	return !this.isSpecialColor(state.style[mxConstants.STYLE_FILLCOLOR]) &&
-		(state.view.graph.model.isVertex(state.cell) ||
+		(state.cell.isVertex() ||
 		mxUtils.getValue(state.style, mxConstants.STYLE_SHAPE, null) == 'arrow' ||
 		mxUtils.getValue(state.style, mxConstants.STYLE_SHAPE, null) == 'filledEdge' ||
 		mxUtils.getValue(state.style, mxConstants.STYLE_SHAPE, null) == 'flexArrow');
@@ -723,7 +723,7 @@ BaseFormatPanel.prototype.installInputHandler = function(input, key, defaultValu
 				
 				for (let i = 0; i < cells.length; i++)
 				{
-					if (graph.model.getChildCount(cells[i]) == 0)
+					if (cells[i].getChildCount() == 0)
 					{
 						graph.autoSizeCell(cells[i], false);
 					}
@@ -1745,8 +1745,8 @@ ArrangePanel.prototype.addGroupOps = function(div)
 		div.appendChild(btn);
 		count++;
 	}
-	else if (graph.getSelectionCount() == 1 && !graph.getModel().isEdge(cell) && !graph.isSwimlane(cell) &&
-		!graph.isTable(cell) && !ss.row && !ss.cell && graph.getModel().getChildCount(cell) > 0)
+	else if (graph.getSelectionCount() == 1 && !cell.isEdge() && !graph.isSwimlane(cell) &&
+		!graph.isTable(cell) && !ss.row && !ss.cell && cell.getChildCount() > 0)
 	{
 		btn = mxUtils.button(mxResources.get('ungroup'), function(evt)
 		{
@@ -1802,8 +1802,8 @@ ArrangePanel.prototype.addGroupOps = function(div)
 		}
 	}
 	
-	if (graph.getSelectionCount() == 1 && graph.getModel().isVertex(cell) && !ss.row &&
-		!ss.cell && graph.getModel().isVertex(graph.getModel().getParent(cell)))
+	if (graph.getSelectionCount() == 1 && cell.isVertex() && !ss.row &&
+		!ss.cell && cell.getParent().isVertex())
 	{
 		if (count > 0)
 		{
@@ -2257,7 +2257,7 @@ ArrangePanel.prototype.addGeometry = function(container)
 	{
 		if (graph.isTableCell(cell))
 		{
-			cell = graph.model.getParent(cell);
+			cell = cell.getParent();
 		}
 		
 		if (graph.isTableRow(cell))
@@ -2424,7 +2424,7 @@ ArrangePanel.prototype.addGeometryHandler = function(input, fn)
 					
 					for (let i = 0; i < cells.length; i++)
 					{
-						if (graph.getModel().isVertex(cells[i]))
+						if (cells[i].isVertex())
 						{
 							let geo = graph.getCellGeometry(cells[i]);
 							
@@ -2496,7 +2496,7 @@ ArrangePanel.prototype.addEdgeGeometryHandler = function(input, fn)
 
                     for (let i = 0; i < cells.length; i++)
                     {
-                        if (graph.getModel().isEdge(cells[i]))
+                        if (cells[i].isEdge())
                         {
                             let geo = graph.getCellGeometry(cells[i]);
 
@@ -2658,11 +2658,11 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 			div.style.display = 'none';
 		}
 
-		if (graph.getSelectionCount() == 1 && graph.model.isEdge(cell))
+		if (graph.getSelectionCount() == 1 && cell.isEdge())
 		{
-			let geo = graph.model.getGeometry(cell);
-			
-			if (geo.sourcePoint != null && graph.model.getTerminal(cell, true) == null)
+			let geo = cell.getGeometry();
+
+			if (geo.sourcePoint != null && cell.getTerminal(true) == null)
 			{
 				xs.value = geo.sourcePoint.x;
 				ys.value = geo.sourcePoint.y;
@@ -2672,7 +2672,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 				divs.style.display = 'none';
 			}
 			
-			if (geo.targetPoint != null && graph.model.getTerminal(cell, false) == null)
+			if (geo.targetPoint != null && cell.getTerminal(false) == null)
 			{
 				xt.value = geo.targetPoint.x;
 				yt.value = geo.targetPoint.y;
@@ -5614,8 +5614,8 @@ DiagramStylePanel.prototype.addView = function(div)
 						graphStyle.background : null, [cells[i]]);
 				}
 				
-				let edge = model.isEdge(cells[i]);
-				let newStyle = model.getStyle(cells[i]);
+				let edge = cells[i].isEdge();
+				let newStyle = cells[i].getStyle();
 				let current = (edge) ? graph.currentEdgeStyle : graph.currentVertexStyle;
 
 				for (let j = 0; j < styles.length; j++)
@@ -5745,7 +5745,7 @@ DiagramStylePanel.prototype.addView = function(div)
 			let defaultStyle = graph.stylesheet.getDefaultVertexStyle();
 			let appliedStyle = vertexStyle;
 			
-			if (model.isEdge(cell))
+			if (cell.isEdge())
 			{
 				defaultStyle = graph.stylesheet.getDefaultEdgeStyle();
 				appliedStyle = edgeStyle;	
@@ -5883,7 +5883,7 @@ DiagramStylePanel.prototype.addView = function(div)
 					let defaultStyle = graph.stylesheet.getDefaultVertexStyle();
 					let appliedStyle = vertexStyle;
 					
-					if (model.isEdge(cell))
+					if (cell.isEdge())
 					{
 						defaultStyle = graph.stylesheet.getDefaultEdgeStyle();
 						appliedStyle = edgeStyle;	

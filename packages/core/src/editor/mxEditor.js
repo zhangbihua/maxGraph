@@ -1555,7 +1555,7 @@ class mxEditor extends mxEventSource {
       let layout = null;
       const model = self.graph.getModel();
 
-      if (model.getParent(cell) != null) {
+      if (cell.getParent() != null) {
         // Executes the swimlane layout if a child of
         // a swimlane has been changed. The layout is
         // lazy created in createSwimlaneLayout.
@@ -1573,7 +1573,7 @@ class mxEditor extends mxEventSource {
         else if (
           self.layoutDiagram &&
           (graph.isValidRoot(cell) ||
-            model.getParent(model.getParent(cell)) == null)
+            cell.getParent().getParent() == null)
         ) {
           if (self.diagramLayout == null) {
             self.diagramLayout = self.createDiagramLayout();
@@ -1892,14 +1892,14 @@ class mxEditor extends mxEventSource {
 
     while (
       cell != null &&
-      graph.getModel().getParent(graph.getModel().getParent(cell)) != null
+      cell.getParent().getParent() != null
     ) {
       // Append each label of a valid root
       if (graph.isValidRoot(cell)) {
         title = ` > ${graph.convertValueToString(cell)}${title}`;
       }
 
-      cell = graph.getModel().getParent(cell);
+      cell = cell.getParent();
     }
 
     const prefix = this.getRootTitle();
@@ -2249,8 +2249,8 @@ class mxEditor extends mxEventSource {
       let heightField = null;
 
       // Adds fields for the location and size
-      if (model.isVertex(cell)) {
-        geo = model.getGeometry(cell);
+      if (cell.isVertex()) {
+        geo = cell.getGeometry();
 
         if (geo != null) {
           yField = form.addText('top', geo.y);
@@ -2261,7 +2261,7 @@ class mxEditor extends mxEventSource {
       }
 
       // Adds a field for the cell style
-      const tmp = model.getStyle(cell);
+      const tmp = cell.getStyle();
       const style = form.addText('Style', tmp || '');
 
       // Creates textareas for each attribute of the
@@ -2690,8 +2690,8 @@ class mxEditor extends mxEventSource {
     parent = parent != null ? parent : this.graph.getSwimlaneAt(x, y);
     const { scale } = this.graph.getView();
 
-    let geo = model.getGeometry(vertex);
-    const pgeo = model.getGeometry(parent);
+    let geo = vertex.getGeometry();
+    const pgeo = parent.getGeometry();
 
     if (this.graph.isSwimlane(vertex) && !this.graph.swimlaneNesting) {
       parent = null;

@@ -10,7 +10,7 @@ import mxEventSource from '../../util/event/mxEventSource';
 import mxEventObject from '../../util/event/mxEventObject';
 import mxClient from '../../mxClient';
 import mxUtils from '../../util/mxUtils';
-import mxSelectionChange from './mxSelectionChange';
+import mxSelectionChange from '../../atomic_changes/mxSelectionChange';
 import mxEvent from '../../util/event/mxEvent';
 import mxCell from '../cell/mxCell';
 import mxGraph from './mxGraph';

@@ -142,7 +142,7 @@ class mxMorphing extends mxAnimation {
       delta = this.getDelta(state);
 
       if (
-        this.graph.getModel().isVertex(cell) &&
+        cell.isVertex() &&
         (delta.x != 0 || delta.y != 0)
       ) {
         const translate = this.graph.view.getTranslate();
@@ -156,11 +156,11 @@ class mxMorphing extends mxAnimation {
     }
 
     if (recurse && !this.stopRecursion(state, delta)) {
-      const childCount = this.graph.getModel().getChildCount(cell);
+      const childCount = cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
         this.animateCell(
-          this.graph.getModel().getChildAt(cell, i),
+          cell.getChildAt(i),
           move,
           recurse
         );
@@ -205,7 +205,7 @@ class mxMorphing extends mxAnimation {
     let result = null;
 
     if (cell != null) {
-      const parent = this.graph.getModel().getParent(cell);
+      const parent = this.cell.getParent();
       const geo = this.graph.getCellGeometry(cell);
       result = this.getOriginForCell(parent);
 

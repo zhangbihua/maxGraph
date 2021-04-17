@@ -245,17 +245,16 @@ class mxSwimlaneManager extends mxEventSource {
    */
   // swimlaneAdded(swimlane: mxCell): void;
   swimlaneAdded(swimlane: mxCell): void {
-    const model = (<mxGraph>this.getGraph()).getModel();
-    const parent = model.getParent(swimlane);
-    const childCount = model.getChildCount(parent);
+    const parent = <mxCell>swimlane.getParent();
+    const childCount = parent.getChildCount();
     let geo = null;
 
     // Finds the first valid sibling swimlane as reference
     for (let i = 0; i < childCount; i += 1) {
-      const child = <mxCell>model.getChildAt(parent, i);
+      const child = <mxCell>parent.getChildAt(i);
 
       if (child !== swimlane && !this.isSwimlaneIgnored(child)) {
-        geo = model.getGeometry(child);
+        geo = child.getGeometry();
         if (geo != null) {
           break;
         }
@@ -286,7 +285,7 @@ class mxSwimlaneManager extends mxEventSource {
         // Finds the top-level swimlanes and adds offsets
         for (const cell of cells) {
           if (!this.isSwimlaneIgnored(cell)) {
-            const geo = model.getGeometry(cell);
+            const geo = cell.getGeometry();
 
             if (geo != null) {
               const size = new mxRectangle(0, 0, geo.width, geo.height);
@@ -295,7 +294,7 @@ class mxSwimlaneManager extends mxEventSource {
 
               while (current != null) {
                 top = current;
-                current = <mxCell>model.getParent(current);
+                current = <mxCell>current.getParent();
                 const tmp = (<mxGraph>this.graph).isSwimlane(current)
                   ? (<mxGraph>this.graph).getStartSize(current)
                   : new mxRectangle();
@@ -342,7 +341,7 @@ class mxSwimlaneManager extends mxEventSource {
       const horizontal = this.isCellHorizontal(swimlane);
 
       if (!this.isSwimlaneIgnored(swimlane)) {
-        let geo = <mxGeometry>model.getGeometry(swimlane);
+        let geo = <mxGeometry>swimlane.getGeometry();
 
         if (geo != null) {
           if (
@@ -368,10 +367,10 @@ class mxSwimlaneManager extends mxEventSource {
       w -= tmp.width;
       h -= tmp.height;
 
-      const childCount = model.getChildCount(swimlane);
+      const childCount = swimlane.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        const child = <mxCell>model.getChildAt(swimlane, i);
+        const child = <mxCell>swimlane.getChildAt(i);
         this.resizeSwimlane(child, w, h, horizontal);
       }
     } finally {

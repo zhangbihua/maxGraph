@@ -37,10 +37,10 @@ class mxEdgeLabelLayout extends mxGraphLayout {
     // Gets all vertices and edges inside the parent
     const edges = [];
     const vertices = [];
-    const childCount = model.getChildCount(parent);
+    const childCount = parent.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
-      const cell = model.getChildAt(parent, i);
+      const cell = parent.getChildAt(i);
       const state = view.getState(cell);
 
       if (state != null) {
@@ -117,7 +117,7 @@ class mxEdgeLabelLayout extends mxGraphLayout {
         dx = 0;
       }
 
-      let g = model.getGeometry(edge.cell);
+      let g = edge.cell.getGeometry();
 
       if (g != null) {
         g = g.clone();

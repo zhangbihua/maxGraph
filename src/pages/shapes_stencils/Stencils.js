@@ -375,7 +375,7 @@ class Stencils extends React.Component {
         if (cell != null) {
           const style = mxUtils.prompt(
             'Style',
-            graph.getModel().getStyle(cell)
+            cell.getStyle()
           );
 
           if (style != null) {

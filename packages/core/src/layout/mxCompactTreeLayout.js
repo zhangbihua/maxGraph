@@ -254,7 +254,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
       if (
         this.graph.getEdges(
           parent,
-          model.getParent(parent),
+          parent.getParent(),
           this.invert,
           !this.invert,
           false
@@ -303,7 +303,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
 
       if (
         parent !== this.root &&
-        model.isVertex(parent) != null &&
+        parent.isVertex() != null &&
         this.maintainParentLocation
       ) {
         const geo = this.graph.getCellGeometry(parent);
@@ -536,7 +536,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
               : view.getVisibleTerminal(edge, this.invert);
           const tmp = this.dfs(target, parent);
 
-          if (tmp != null && model.getGeometry(target) != null) {
+          if (tmp != null && target.getGeometry() != null) {
             if (prev == null) {
               node.child = tmp;
             } else {
@@ -853,14 +853,14 @@ class mxCompactTreeLayout extends mxGraphLayout {
   apply(node, bounds) {
     const model = this.graph.getModel();
     const { cell } = node;
-    let g = model.getGeometry(cell);
+    let g = cell.getGeometry();
 
     if (cell != null && g != null) {
       if (this.isVertexMovable(cell)) {
         g = this.setVertexLocation(cell, node.x, node.y);
 
         if (this.resizeParent) {
-          const parent = model.getParent(cell);
+          const parent = cell.getParent();
           const id = mxCellPath.create(parent);
 
           // Implements set semantic
