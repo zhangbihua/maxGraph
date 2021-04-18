@@ -502,8 +502,8 @@ class mxGraphModel extends mxEventSource {
    * @param {mxCell} child  that specifies the child.
    */
   // isAncestor(parent: mxCell, child: mxCell): boolean;
-  isAncestor(parent: mxCell,
-             child: mxCell): boolean {
+  isAncestor(parent: mxCell | null,
+             child: mxCell | null): boolean {
 
     while (child != null && child !== parent) {
       child = <mxCell>child.getParent();
@@ -712,10 +712,6 @@ class mxGraphModel extends mxEventSource {
       target = target.getParent();
     }
 
-    if (!source || !target) {
-      throw new Error("Shouldn't get here!");
-    }
-
     if (this.isAncestor(root, source) && this.isAncestor(root, target)) {
       if (source === target) {
         cell = source ? source.getParent() : null;
@@ -779,17 +775,17 @@ class mxGraphModel extends mxEventSource {
    * @param {mxCell} cell2  that specifies the second cell in the tree.
    */
   // getNearestCommonAncestor(cell1: mxCell, cell2: mxCell): mxCell;
-  getNearestCommonAncestor(cell1: mxCell,
-                           cell2: mxCell): mxCell | null {
+  getNearestCommonAncestor(cell1: mxCell | null,
+                           cell2: mxCell | null): mxCell | null {
 
     // Creates the cell path for the second cell
-    let path = mxCellPath.create(cell2);
+    let path = mxCellPath.create(<mxCell>cell2);
 
     if (path != null && path.length > 0) {
       // Bubbles through the ancestors of the first
       // cell to find the nearest common ancestor.
       let cell = cell1;
-      let current: string | null = mxCellPath.create(cell);
+      let current: string | null = mxCellPath.create(<mxCell>cell);
 
       // Inverts arguments
       if (path.length < current.length) {
