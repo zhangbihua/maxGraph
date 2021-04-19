@@ -1618,6 +1618,7 @@ class mxGraphHandler {
           const { target } = this;
 
           if (
+            target &&
             graph.isSplitEnabled() &&
             graph.isSplitTarget(target, this.cells, me.getEvent())
           ) {
