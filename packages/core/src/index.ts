@@ -173,6 +173,8 @@ import mxOutline from './view/graph/mxOutline';
 import mxPrintPreview from './view/graph/mxPrintPreview';
 import mxSwimlaneManager from './view/graph/mxSwimlaneManager';
 
+import '../css/common.css';
+
 export default {
   mxClient,
   mxLog,

@@ -1,7 +1,25 @@
 import mxgraph from '@mxgraph/core';
 
 export default {
-  title: 'Basic/HelloWorld'
+  title: 'Basic/HelloWorld',
+  argTypes: {
+    width: {
+      type: 'number',
+      defaultValue: 800
+    },
+    height: {
+      type: 'number',
+      defaultValue: 600
+    },
+    contextMenu: {
+      type: 'boolean',
+      defaultValue: false
+    },
+    rubberBand: {
+      type: 'boolean',
+      defaultValue: true
+    }
+  }
 };
 
 const Template = ({ label, ...args }) => {
@@ -10,14 +28,17 @@ const Template = ({ label, ...args }) => {
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';
-  container.style.height = '241px';
+  container.style.width = `${args.width}px`;
+  container.style.height = `${args.height}px`;
   container.style.cursor = 'default';
 
-  mxEvent.disableContextMenu(container);
+  if (!args.contextMenu)
+    mxEvent.disableContextMenu(container);
 
   const graph = new mxGraph(container);
 
-  new mxRubberband(graph);
+  if (args.rubberBand)
+    new mxRubberband(graph);
 
   const parent = graph.getDefaultParent();
 
@@ -30,6 +51,7 @@ const Template = ({ label, ...args }) => {
       size: [80, 30],
       relative: false,
     });
+
     const vertex2 = graph.insertVertex({
       parent,
       value: 'World!',
@@ -37,9 +59,9 @@ const Template = ({ label, ...args }) => {
       size: [80, 30],
       relative: false,
     });
+
     const edge = graph.insertEdge({
       parent,
-      // value: 'to the',
       source: vertex1,
       target: vertex2,
     });
