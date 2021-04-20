@@ -1,10 +1,15 @@
 import mxgraph from '@mxgraph/core';
-import HelloWorld from './HelloWorld.stories';
+
+import { defaultArgTypes } from '../.storybook/preview';
 
 export default {
   title: 'Connections/Anchors',
   argTypes: {
-    ...HelloWorld.argTypes
+    ...defaultArgTypes.argTypes,
+    rubberBand: {
+      type: 'boolean',
+      defaultValue: true
+    }
   }
 };
 

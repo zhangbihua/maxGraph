@@ -1,16 +1,11 @@
 import mxgraph from '@mxgraph/core';
 
+import { defaultArgTypes } from '../.storybook/preview';
+
 export default {
   title: 'Connections/EdgeTolerance',
   argTypes: {
-    width: {
-      type: 'number',
-      defaultValue: 800
-    },
-    height: {
-      type: 'number',
-      defaultValue: 600
-    }
+    ...defaultArgTypes.argTypes
   }
 };
 

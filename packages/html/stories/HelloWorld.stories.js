@@ -1,16 +1,11 @@
 import mxgraph from '@mxgraph/core';
 
+import { defaultArgTypes } from '../.storybook/preview';
+
 export default {
   title: 'Basic/HelloWorld',
   argTypes: {
-    width: {
-      type: 'number',
-      defaultValue: 800
-    },
-    height: {
-      type: 'number',
-      defaultValue: 600
-    },
+    ...defaultArgTypes,
     contextMenu: {
       type: 'boolean',
       defaultValue: false
@@ -30,6 +25,7 @@ const Template = ({ label, ...args }) => {
   container.style.overflow = 'hidden';
   container.style.width = `${args.width}px`;
   container.style.height = `${args.height}px`;
+  container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
   if (!args.contextMenu)

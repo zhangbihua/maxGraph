@@ -1,11 +1,19 @@
 import mxgraph from '@mxgraph/core';
 
-import HelloWorld from './HelloWorld.stories';
+import { defaultArgTypes } from '../.storybook/preview';
 
 export default {
   title: 'Backgrounds/ExtendCanvas',
   argTypes: {
-    ...HelloWorld.argTypes
+    ...defaultArgTypes.argTypes,
+    contextMenu: {
+      type: 'boolean',
+      defaultValue: false
+    },
+    rubberBand: {
+      type: 'boolean',
+      defaultValue: true
+    }
   }
 };
 
@@ -15,9 +23,7 @@ const Template = ({ label, ...args }) => {
     mxEvent, 
     mxRubberband, 
     mxRectangle, 
-    mxGraphView,
     mxPoint,
-    mxDomHelpers,
     mxUtils
   } = mxgraph;
 

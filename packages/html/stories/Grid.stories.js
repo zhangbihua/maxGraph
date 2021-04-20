@@ -1,11 +1,19 @@
 import mxgraph from '@mxgraph/core';
 
-import HelloWorld from './HelloWorld.stories';
+import { defaultArgTypes } from '../.storybook/preview';
 
 export default {
   title: 'Backgrounds/Grid',
   argTypes: {
-    ...HelloWorld.argTypes
+    ...defaultArgTypes.argTypes,
+    contextMenu: {
+      type: 'boolean',
+      defaultValue: false
+    },
+    rubberBand: {
+      type: 'boolean',
+      defaultValue: true
+    }
   }
 };
 

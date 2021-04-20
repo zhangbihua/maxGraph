@@ -8,3 +8,14 @@ export const parameters = {
     },
   },
 }
+
+export const defaultArgTypes = {
+  width: {
+    type: 'number',
+    defaultValue: 800
+  },
+  height: {
+    type: 'number',
+    defaultValue: 600
+  }
+};
