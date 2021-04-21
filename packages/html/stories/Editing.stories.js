@@ -1,19 +1,11 @@
 import mxgraph from '@mxgraph/core';
 
-import { defaultArgTypes } from '../.storybook/preview';
+import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Editing/Editing',
   argTypes: {
-    ...defaultArgTypes,
-    contextMenu: {
-      type: 'boolean',
-      defaultValue: false
-    },
-    rubberBand: {
-      type: 'boolean',
-      defaultValue: true
-    }
+    ...globalTypes
   }
 };
 
@@ -30,13 +22,6 @@ const Template = ({ label, ...args }) => {
 
   const div = document.createElement('div');
   div.innerHTML = `
-    <h1>Editing</h1>
-    This example demonstrates using the in-place editor trigger to specify
-    the editing value and write the new value into a specific field of the
-    user object. Wrapping and DOM nodes as labels are also demonstrated
-    here.
-    <br />
-    <br />
     Double-click the upper/lower half of the cell to edit different fields
     of the user object.
   `;

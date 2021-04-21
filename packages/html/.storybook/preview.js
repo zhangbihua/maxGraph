@@ -9,7 +9,7 @@ export const parameters = {
   },
 }
 
-export const defaultArgTypes = {
+export const globalTypes = {
   width: {
     type: 'number',
     defaultValue: 800

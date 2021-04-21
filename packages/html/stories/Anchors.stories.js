@@ -1,11 +1,11 @@
 import mxgraph from '@mxgraph/core';
 
-import { defaultArgTypes } from '../.storybook/preview';
+import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Connections/Anchors',
   argTypes: {
-    ...defaultArgTypes.argTypes,
+    ...globalTypes,
     rubberBand: {
       type: 'boolean',
       defaultValue: true

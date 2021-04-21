@@ -1,11 +1,11 @@
 import mxgraph from '@mxgraph/core';
 
-import { defaultArgTypes } from '../.storybook/preview';
+import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Backgrounds/ExtendCanvas',
   argTypes: {
-    ...defaultArgTypes.argTypes,
+    ...globalTypes,
     contextMenu: {
       type: 'boolean',
       defaultValue: false

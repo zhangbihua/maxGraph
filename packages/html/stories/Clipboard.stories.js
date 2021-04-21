@@ -1,11 +1,11 @@
 import mxgraph from '@mxgraph/core';
 
-import { defaultArgTypes } from '../.storybook/preview';
+import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'DnD_CopyPaste/Clipboard',
   argTypes: {
-    ...defaultArgTypes,
+    ...globalTypes,
     contextMenu: {
       type: 'boolean',
       defaultValue: false
