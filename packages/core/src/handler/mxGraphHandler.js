@@ -458,10 +458,10 @@ class mxGraphHandler {
    * selection state to the parent.
    */
   isPropagateSelectionCell(cell, immediate, me) {
-    const parent = this.graph.model.getParent(cell);
+    const parent = cell.getParent();
 
     if (immediate) {
-      const geo = this.graph.model.isEdge(cell)
+      const geo = cell.isEdge()
         ? null
         : this.graph.getCellGeometry(cell);
 
@@ -497,17 +497,17 @@ class mxGraphHandler {
       !this.graph.isCellSelected(state.cell)
     ) {
       const { model } = this.graph;
-      let next = this.graph.view.getState(model.getParent(state.cell));
+      let next = this.graph.view.getState(state.cell.getParent());
 
       while (
         next != null &&
         !this.graph.isCellSelected(next.cell) &&
-        (model.isVertex(next.cell) || model.isEdge(next.cell)) &&
+        (next.cell.isVertex() || next.cell.isEdge()) &&
         this.isPropagateSelectionCell(state.cell, true, me)
       ) {
         state = next;
         next = this.graph.view.getState(
-          this.graph.getModel().getParent(state.cell)
+          state.cell.getParent()
         );
       }
     }
@@ -531,7 +531,7 @@ class mxGraphHandler {
           return this.graph.cellEditor.getEditingCell() != cell;
         }
 
-        cell = this.graph.model.getParent(cell);
+        cell = cell.getParent();
       }
     }
 
@@ -576,15 +576,15 @@ class mxGraphHandler {
           !isAltDown(me.getEvent())
         ) {
           const model = this.graph.getModel();
-          let parent = model.getParent(cell);
+          let parent = cell.getParent();
 
           while (
             this.graph.view.getState(parent) != null &&
-            (model.isVertex(parent) || model.isEdge(parent)) &&
+            (parent.isVertex() || parent.isEdge()) &&
             this.isPropagateSelectionCell(cell, false, me)
           ) {
             cell = parent;
-            parent = model.getParent(cell);
+            parent = cell.getParent();
           }
         }
 
@@ -645,15 +645,15 @@ class mxGraphHandler {
 
       if (this.isMoveEnabled()) {
         const { model } = this.graph;
-        const geo = model.getGeometry(cell);
+        const geo = cell.getGeometry();
 
         if (
           this.graph.isCellMovable(cell) &&
-          (!model.isEdge(cell) ||
+          (!cell.isEdge() ||
             this.graph.getSelectionCount() > 1 ||
             (geo.points != null && geo.points.length > 0) ||
-            model.getTerminal(cell, true) == null ||
-            model.getTerminal(cell, false) == null ||
+            cell.getTerminal(true) == null ||
+            cell.getTerminal(false) == null ||
             this.graph.allowDanglingEdges ||
             (this.graph.isCloneEvent(me.getEvent()) &&
               this.graph.isCellsCloneable()))
@@ -682,9 +682,9 @@ class mxGraphHandler {
     const filter = mxUtils.bind(this, cell => {
       return (
         this.graph.view.getState(cell) != null &&
-        model.isVertex(cell) &&
-        model.getGeometry(cell) != null &&
-        !model.getGeometry(cell).relative
+        cell.isVertex() &&
+        cell.getGeometry() != null &&
+        !cell.getGeometry().relative
       );
     });
 
@@ -774,14 +774,14 @@ class mxGraphHandler {
       const model = this.graph.getModel();
 
       for (let i = 0; i < cells.length; i += 1) {
-        if (model.isVertex(cells[i]) || model.isEdge(cells[i])) {
+        if (cells[i].isVertex() || cells[i].isEdge()) {
           const state = this.graph.view.getState(cells[i]);
 
           if (state != null) {
             let bbox = state;
 
             if (
-              model.isVertex(cells[i]) &&
+              cells[i].isVertex() &&
               state.shape != null &&
               state.shape.boundingBox != null
             ) {
@@ -859,8 +859,8 @@ class mxGraphHandler {
 
     if (this.guidesEnabled) {
       this.guide = this.createGuide();
-      const parent = this.graph.model.getParent(cell);
-      const ignore = this.graph.model.getChildCount(parent) < 2;
+      const parent = cell.getParent();
+      const ignore = parent.getChildCount() < 2;
 
       // Uses connected states as guides
       const connected = new mxDictionary();
@@ -878,7 +878,7 @@ class mxGraphHandler {
       }
 
       this.guide.isStateIgnored = state => {
-        const p = this.graph.model.getParent(state.cell);
+        const p = state.cell.getParent();
 
         return (
           state.cell != null &&
@@ -887,7 +887,7 @@ class mxGraphHandler {
               !ignore &&
               !connected.get(state) &&
               (this.target == null ||
-                this.graph.model.getChildCount(this.target) >= 2) &&
+                this.target.getChildCount() >= 2) &&
               p !== (this.target || parent)))
         );
       };
@@ -908,10 +908,10 @@ class mxGraphHandler {
       dict.put(cell, state);
       count++;
 
-      const childCount = this.graph.model.getChildCount(cell);
+      const childCount = cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        count += this.addStates(this.graph.model.getChildAt(cell, i), dict);
+        count += this.addStates(cell.getChildAt(i), dict);
       }
     }
 
@@ -1008,7 +1008,7 @@ class mxGraphHandler {
    * Returns true if the given cell is a valid drop target.
    */
   isValidDropTarget(target, me) {
-    return this.graph.model.getParent(this.cell) !== target;
+    return this.cell.getParent() !== target;
   }
 
   /**
@@ -1108,7 +1108,7 @@ class mxGraphHandler {
             this.connectOnDrop &&
             cell != null &&
             this.cells.length === 1 &&
-            graph.getModel().isVertex(cell) &&
+            cell.isVertex() &&
             graph.isCellConnectable(cell)
           ) {
             state = graph.getView().getState(cell);
@@ -1187,7 +1187,7 @@ class mxGraphHandler {
         graph.isEnabled() &&
         graph.isCellMovable(me.getCell())
       ) {
-        if (graph.getModel().isEdge(me.getCell())) {
+        if (me.getCell().isEdge()) {
           cursor = mxConstants.CURSOR_MOVABLE_EDGE;
         } else {
           cursor = mxConstants.CURSOR_MOVABLE_VERTEX;
@@ -1289,7 +1289,7 @@ class mxGraphHandler {
               }
 
               // Temporarily changes position
-              if (this.graph.model.isVertex(state.cell)) {
+              if (state.cell.isVertex()) {
                 state.x += dx;
                 state.y += dy;
 
@@ -1338,7 +1338,7 @@ class mxGraphHandler {
         for (let i = 0; i < states.length; i += 1) {
           const state = states[i][0];
 
-          if (this.graph.model.isEdge(state.cell)) {
+          if (state.cell.isEdge()) {
             const geometry = this.graph.getCellGeometry(state.cell);
             const points = [];
 
@@ -1602,7 +1602,7 @@ class mxGraphHandler {
           this.connectOnDrop &&
           this.target == null &&
           cell != null &&
-          graph.getModel().isVertex(cell) &&
+          cell.isVertex() &&
           graph.isCellConnectable(cell) &&
           graph.isEdgeValid(null, this.cell, cell)
         ) {
@@ -1618,6 +1618,7 @@ class mxGraphHandler {
           const { target } = this;
 
           if (
+            target &&
             graph.isSplitEnabled() &&
             graph.isSplitTarget(target, this.cells, me.getEvent())
           ) {
@@ -1702,7 +1703,7 @@ class mxGraphHandler {
    */
   // shouldRemoveCellsFromParent(parent: mxCell, cells: mxCell[], evt: Event): boolean;
   shouldRemoveCellsFromParent(parent, cells, evt) {
-    if (this.graph.getModel().isVertex(parent)) {
+    if (parent.isVertex()) {
       const pState = this.graph.getView().getState(parent);
 
       if (pState != null) {
@@ -1741,7 +1742,7 @@ class mxGraphHandler {
     }
 
     // Removes cells from parent
-    const parent = this.graph.getModel().getParent(this.cell);
+    const parent = this.cell.getParent();
 
     if (
       target == null &&
@@ -1771,7 +1772,7 @@ class mxGraphHandler {
 
         // LATER: Recurse up the cell hierarchy
         for (let i = 0; i < cells.length; i += 1) {
-          const par = this.graph.model.getParent(cells[i]);
+          const par = cells[i].getParent();
 
           if (par != null && !dict.get(par)) {
             dict.put(par, true);
@@ -1818,10 +1819,10 @@ class mxGraphHandler {
 
     return (
       state != null &&
-      (this.graph.model.isEdge(state.cell) ||
-        this.graph.model.isVertex(state.cell)) &&
+      (state.cell.isEdge() ||
+        state.cell.isVertex()) &&
       this.graph.isCellDeletable(state.cell) &&
-      this.graph.model.getChildCount(state.cell) === 0 &&
+      state.cell.getChildCount() === 0 &&
       this.graph.isTransparentState(state)
     );
   }

@@ -57,7 +57,7 @@ class EdgeTolerance extends React.Component {
           }
 
           const cell = this.getCellAt(me.graphX, me.graphY);
-          if (this.getModel().isEdge(cell)) {
+          if (cell.isEdge()) {
             me.state = this.view.getState(cell);
 
             if (me.state != null && me.state.shape != null) {

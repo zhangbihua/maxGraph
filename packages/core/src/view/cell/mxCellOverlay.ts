@@ -177,7 +177,7 @@ class mxCellOverlay extends mxEventSource {
    */
   // getBounds(state: mxCellState): mxRectangle;
   getBounds(state: mxCellState) {
-    const isEdge = state.view.graph.getModel().isEdge(state.cell);
+    const isEdge = state.cell.isEdge();
     const s = state.view.scale;
     let pt = null;
 

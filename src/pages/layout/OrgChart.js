@@ -203,7 +203,7 @@ class OrgChart extends React.Component {
     graph.cellRenderer.getLabelValue = function(state) {
       let result = state.cell.value;
 
-      if (state.view.graph.getModel().isVertex(state.cell)) {
+      if (state.cell.isVertex()) {
         if (state.view.scale > 1) {
           result += '\nDetails 1';
         }
@@ -278,7 +278,7 @@ class OrgChart extends React.Component {
       const model = graph.getModel();
 
       if (cell != null) {
-        if (model.isVertex(cell)) {
+        if (cell.isVertex()) {
           menu.addItem(
             'Add child',
             'editors/images/overlays/check.png',
@@ -292,7 +292,7 @@ class OrgChart extends React.Component {
           graph.startEditingAtCell(cell);
         });
 
-        if (cell.id != 'treeRoot' && model.isVertex(cell)) {
+        if (cell.id != 'treeRoot' && cell.isVertex()) {
           menu.addItem('Delete', 'editors/images/delete.gif', function() {
             deleteSubtree(graph, cell);
           });
@@ -371,7 +371,7 @@ class OrgChart extends React.Component {
       model.beginUpdate();
       try {
         vertex = graph.insertVertex(parent, null, 'Double click to set name');
-        const geometry = model.getGeometry(vertex);
+        const geometry = vertex.getGeometry();
 
         // Updates the geometry of the vertex with the
         // preferred size computed in the graph

@@ -65,7 +65,7 @@ class mxEffects {
 
             if (
               change.constructor !== mxGeometryChange ||
-              graph.model.isEdge(change.cell)
+              change.cell.isEdge()
             ) {
               mxUtils.setOpacity(state.shape.node, (100 * step) / maxStep);
             } else {
@@ -126,10 +126,10 @@ class mxEffects {
   // static cascadeOpacity(graph: mxGraph, cell: mxCell, opacity: number): void;
   static cascadeOpacity(graph, cell, opacity) {
     // Fades all children
-    const childCount = graph.model.getChildCount(cell);
+    const childCount = cell.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
-      const child = graph.model.getChildAt(cell, i);
+      const child = cell.getChildAt(i);
       const childState = graph.getView().getState(child);
 
       if (childState != null) {

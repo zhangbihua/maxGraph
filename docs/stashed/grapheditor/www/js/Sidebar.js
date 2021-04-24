@@ -2607,7 +2607,7 @@ Sidebar.prototype.updateShapes = function(source, targets)
 	graph.model.beginUpdate();
 	try
 	{
-		let cellStyle = graph.getModel().getStyle(source);
+		let cellStyle = source.getStyle();
 
 		// Lists the styles to carry over from the existing shape
 		let styles = ['shadow', 'dashed', 'dashPattern', 'fontFamily', 'fontSize', 'fontColor', 'align', 'startFill',
@@ -2621,8 +2621,8 @@ Sidebar.prototype.updateShapes = function(source, targets)
 		{
 			let targetCell = targets[i];
 			
-			if ((graph.getModel().isVertex(targetCell) == graph.getModel().isVertex(source)) ||
-				(graph.getModel().isEdge(targetCell) == graph.getModel().isEdge(source)))
+			if ((targetCell.isVertex() == source.isVertex()) ||
+				(targetCell.isEdge() == source.isEdge()))
 			{
 				let style = graph.getCurrentCellStyle(targets[i]);
 				graph.getModel().setStyle(targetCell, cellStyle);
@@ -2630,11 +2630,11 @@ Sidebar.prototype.updateShapes = function(source, targets)
 				// Removes all children of composite cells
 				if (mxUtils.getValue(style, 'composite', '0') == '1')
 				{
-					let childCount = graph.model.getChildCount(targetCell);
+					let childCount = targetCell.getChildCount();
 					
 					for (let j = childCount; j >= 0; j--)
 					{
-						graph.model.remove(graph.model.getChildAt(targetCell, j));
+						graph.model.remove(targetCell.getChildAt(j));
 					}
 				}
 
@@ -2822,7 +2822,7 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 			var geo2 = graph.getCellGeometry(targets[dropCellIndex]);
 
 			// Handles special case where target should be ignored for stack layouts
-			let targetParent = graph.model.getParent(source);
+			let targetParent = source.getParent();
 			let validLayout = true;
 			
 			// Ignores parent if it has a stack layout or if it is a table or row
@@ -2838,7 +2838,7 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 			}
 			
 			// Checks if another container is at the drop location
-			let tmp = (graph.model.isEdge(source)) ? null : graph.view.getState(targetParent);
+			let tmp = (source.isEdge()) ? null : graph.view.getState(targetParent);
 			let dx = 0;
 			let dy = 0;
 			
@@ -2859,7 +2859,7 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 			}
 			
 			let useParent = !graph.isTableRow(source) && !graph.isTableCell(source) &&
-				(graph.model.isEdge(source) || (sourceGeo != null &&
+				(source.isEdge() || (sourceGeo != null &&
 				!sourceGeo.relative && validLayout));
 			
 			let tempTarget = graph.getCellAt((geo.x + dx + graph.view.translate.x) * graph.view.scale,
@@ -2879,7 +2879,7 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 					targetParent = tempTarget;
 					useParent = true;
 					
-					if (!graph.model.isEdge(source))
+					if (!source.isEdge())
 					{
 						geo.x -= offset.x - dx;
 						geo.y -= offset.y - dy;
@@ -2896,7 +2896,7 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 			dy = geo2.y;
 			
 			// Ignores geometry of edges
-			if (graph.model.isEdge(targets[dropCellIndex]))
+			if (targets[dropCellIndex].isEdge())
 			{
 				dx = 0;
 				dy = 0;
@@ -2906,14 +2906,14 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 				(geo.y - (useParent ? dy : 0)), (useParent) ? targetParent : null);
 			tmp = targets;
 			
-			if (graph.model.isEdge(source))
+			if (source.isEdge())
 			{
 				// Adds new terminal to edge
 				// LATER: Push new terminal out radially from edge start point
 				graph.model.setTerminal(source, targets[dropCellIndex],
 					direction == mxConstants.DIRECTION_NORTH);
 			}
-			else if (graph.model.isEdge(targets[dropCellIndex]))
+			else if (targets[dropCellIndex].isEdge())
 			{
 				// Adds new outgoing connection to vertex and clears points
 				graph.model.setTerminal(targets[dropCellIndex], source, true);
@@ -2924,7 +2924,7 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 				{
 					geo3.setTerminalPoint(geo.getTerminalPoint(false), false);
 				}
-				else if (useParent && graph.model.isVertex(targetParent))
+				else if (useParent && targetParent.isVertex())
 				{
 					// Adds parent offset to other nodes
 					let tmpState = graph.view.getState(targetParent);
@@ -2991,7 +2991,7 @@ Sidebar.prototype.getDropAndConnectGeometry = function(source, target, direction
 	{
 		geo2 = geo2.clone();
 
-		if (graph.model.isEdge(source))
+		if (source.isEdge())
 		{
 			let state = graph.view.getState(source);
 			let pts = state.absolutePoints;
@@ -3022,7 +3022,7 @@ Sidebar.prototype.getDropAndConnectGeometry = function(source, target, direction
 			let length = graph.defaultEdgeLength;
 			
 			// Maintains edge length
-			if (graph.model.isEdge(target) && geo2.getTerminalPoint(true) != null &&
+			if (target.isEdge() && geo2.getTerminalPoint(true) != null &&
 				geo2.getTerminalPoint(false) != null)
 			{
 				var p0 = geo2.getTerminalPoint(true);
@@ -3094,7 +3094,7 @@ Sidebar.prototype.getDropAndConnectGeometry = function(source, target, direction
 				}
 				
 				// Adds offset to match cells without connecting edge
-				if (graph.model.isEdge(target) && geo2.getTerminalPoint(true) != null &&
+				if (target.isEdge() && geo2.getTerminalPoint(true) != null &&
 					target.getTerminal(false) != null)
 				{
 					let targetGeo = graph.getCellGeometry(target.getTerminal(false));
@@ -3174,12 +3174,12 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 	
 	for (let i = 0; i < cells.length; i++)
 	{
-		if (firstVertex == null && graph.model.isVertex(cells[i]))
+		if (firstVertex == null && cells[i].isVertex())
 		{
 			firstVertex = i;
 		}
-		else if (freeSourceEdge == null && graph.model.isEdge(cells[i]) &&
-				graph.model.getTerminal(cells[i], true) == null)
+		else if (freeSourceEdge == null && cells[i].isEdge() &&
+			cells[i].getTerminal(true) == null)
 		{
 			freeSourceEdge = i;
 		}
@@ -3202,12 +3202,12 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 		if (cells != null && currentStyleTarget != null && activeArrow == styleTarget)
 		{
 			let tmp = graph.isCellSelected(currentStyleTarget.cell) ? graph.getSelectionCells() : [currentStyleTarget.cell];
-			let updatedCells = this.updateShapes((graph.model.isEdge(currentStyleTarget.cell)) ? cells[0] : cells[firstVertex], tmp);
+			let updatedCells = this.updateShapes((currentStyleTarget.cell.isEdge()) ? cells[0] : cells[firstVertex], tmp);
 			graph.setSelectionCells(updatedCells);
 		}
 		else if (cells != null && activeArrow != null && currentTargetState != null && activeArrow != styleTarget)
 		{
-			let index = (graph.model.isEdge(currentTargetState.cell) || freeSourceEdge == null) ? firstVertex : freeSourceEdge;
+			let index = (currentTargetState.cell.isEdge() || freeSourceEdge == null) ? firstVertex : freeSourceEdge;
 			graph.setSelectionCells(this.dropAndConnect(currentTargetState.cell, cells, direction, index, evt));
 		}
 		else
@@ -3355,7 +3355,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			
 			if (currentStyleTarget != null && activeArrow == styleTarget)
 			{
-				this.previewElement.style.display = (graph.model.isEdge(currentStyleTarget.cell)) ? 'none' : '';
+				this.previewElement.style.display = (currentStyleTarget.cell.isEdge()) ? 'none' : '';
 				
 				this.previewElement.style.left = currentStyleTarget.x + 'px';
 				this.previewElement.style.top = currentStyleTarget.y + 'px';
@@ -3369,15 +3369,15 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 					dragSource.currentHighlight.hide();
 				}
 				
-				let index = (graph.model.isEdge(currentTargetState.cell) || freeSourceEdge == null) ? firstVertex : freeSourceEdge;
+				let index = (currentTargetState.cell.isEdge() || freeSourceEdge == null) ? firstVertex : freeSourceEdge;
 				let geo = sidebar.getDropAndConnectGeometry(currentTargetState.cell, cells[index], direction, cells);
-				var geo2 = (!graph.model.isEdge(currentTargetState.cell)) ? graph.getCellGeometry(currentTargetState.cell) : null;
+				var geo2 = (!currentTargetState.cell.isEdge()) ? graph.getCellGeometry(currentTargetState.cell) : null;
 				var geo3 = graph.getCellGeometry(cells[index]);
-				let parent = graph.model.getParent(currentTargetState.cell);
+				let parent = currentTargetState.cell.getParent();
 				let dx = view.translate.x * view.scale;
 				let dy = view.translate.y * view.scale;
 				
-				if (geo2 != null && !geo2.relative && graph.model.isVertex(parent) && parent != view.currentRoot)
+				if (geo2 != null && !geo2.relative && parent.isVertex() && parent != view.currentRoot)
 				{
 					let pState = view.getState(parent);
 					
@@ -3389,7 +3389,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 				var dy2 = geo3.y;
 
 				// Ignores geometry of edges
-				if (graph.model.isEdge(cells[index]))
+				if (cells[index].isEdge())
 				{
 					dx2 = 0;
 					dy2 = 0;
@@ -3408,7 +3408,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 				this.previewElement.style.display = '';
 			}
 			else if (dragSource.currentHighlight.state != null &&
-				graph.model.isEdge(dragSource.currentHighlight.state.cell))
+				dragSource.currentHighlight.state.cell.isEdge())
 			{
 				// Centers drop cells when splitting edges
 				this.previewElement.style.left = Math.round(parseInt(this.previewElement.style.left) -
@@ -3445,11 +3445,11 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 		
 		// Uses connectable parent vertex if one exists
 		if (cell != null && !this.graph.isCellConnectable(cell) &&
-			!this.graph.model.isEdge(cell))
+			!cell.isEdge())
 		{
-			let parent = this.graph.getModel().getParent(cell);
+			let parent = this.cell.getParent();
 			
-			if (this.graph.getModel().isVertex(parent) &&
+			if (parent.isVertex() &&
 				this.graph.isCellConnectable(parent))
 			{
 				cell = parent;
@@ -3503,12 +3503,12 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			mxUtils.getValue(state.style, mxConstants.STYLE_FILLCOLOR, mxConstants.NONE) != mxConstants.NONE ||
 			mxUtils.getValue(state.style, mxConstants.STYLE_GRADIENTCOLOR, mxConstants.NONE) != mxConstants.NONE)) ||
 			mxUtils.getValue(sourceCellStyle, mxConstants.STYLE_SHAPE) == 'image') ||
-			timeOnTarget > 1500 || graph.model.isEdge(state.cell)) && (timeOnTarget > this.dropTargetDelay) &&
-			!this.isDropStyleTargetIgnored(state) && ((graph.model.isVertex(state.cell) && firstVertex != null) ||
-			(graph.model.isEdge(state.cell) && graph.model.isEdge(cells[0]))))
+			timeOnTarget > 1500 || state.cell.isEdge()) && (timeOnTarget > this.dropTargetDelay) &&
+			!this.isDropStyleTargetIgnored(state) && ((state.cell.isVertex() && firstVertex != null) ||
+			(state.cell.isEdge() && cells[0].isEdge())))
 		{
 			currentStyleTarget = state;
-			let tmp = (graph.model.isEdge(state.cell)) ? graph.view.getPoint(state) :
+			let tmp = (state.cell.isEdge()) ? graph.view.getPoint(state) :
 				new mxPoint(state.getCenterX(), state.getCenterY());
 			tmp = new mxRectangle(tmp.x - this.refreshTarget.width / 2, tmp.y - this.refreshTarget.height / 2,
 				this.refreshTarget.width, this.refreshTarget.height);
@@ -3539,7 +3539,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 		else if (currentStyleTarget != null && styleTargetParent != null)
 		{
 			// Sets active Arrow as side effect
-			let tmp = (graph.model.isEdge(currentStyleTarget.cell)) ? graph.view.getPoint(currentStyleTarget) : new mxPoint(currentStyleTarget.getCenterX(), currentStyleTarget.getCenterY());
+			let tmp = (currentStyleTarget.cell.isEdge()) ? graph.view.getPoint(currentStyleTarget) : new mxPoint(currentStyleTarget.getCenterX(), currentStyleTarget.getCenterY());
 			tmp = new mxRectangle(tmp.x - this.refreshTarget.width / 2, tmp.y - this.refreshTarget.height / 2,
 				this.refreshTarget.width, this.refreshTarget.height);
 			checkArrow(x, y, tmp, styleTarget);
@@ -3551,7 +3551,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			// LATER: Use hit-detection for edges
 			bbox = mxRectangle.fromRectangle(currentTargetState);
 			
-			if (graph.model.isEdge(currentTargetState.cell))
+			if (currentTargetState.cell.isEdge())
 			{
 				let pts = currentTargetState.absolutePoints;
 				
@@ -3642,8 +3642,8 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 		}
 
 		let validTarget = (firstVertex == null || graph.isCellConnectable(cells[firstVertex])) &&
-			((graph.model.isEdge(cell) && firstVertex != null) ||
-			(graph.model.isVertex(cell) && graph.isCellConnectable(cell)));
+			((cell.isEdge() && firstVertex != null) ||
+			(cell.isVertex() && graph.isCellConnectable(cell)));
 		
 		// Drop arrows shown after this.dropTargetDelay, hidden after 5 secs, switches arrows after 500ms
 		if ((currentTargetState != null && timeOnTarget >= 5000) ||
@@ -3653,7 +3653,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 		{
 			activeTarget = false;
 			currentTargetState = ((timeOnTarget < 5000 && timeOnTarget > this.dropTargetDelay) ||
-				graph.model.isEdge(cell)) ? state : null;
+				cell.isEdge()) ? state : null;
 
 			if (currentTargetState != null && validTarget)
 			{
@@ -3667,7 +3667,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 					}
 				}
 				
-				if (graph.model.isEdge(cell))
+				if (cell.isEdge())
 				{
 					let pts = state.absolutePoints;
 					
@@ -3684,12 +3684,12 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 						roundTarget.style.left = Math.floor(pe.x - this.roundDrop.width / 2) + 'px';
 						roundTarget.style.top = Math.floor(pe.y - this.roundDrop.height / 2) + 'px';
 						
-						if (graph.model.getTerminal(cell, true) == null)
+						if (cell.getTerminal(true) == null)
 						{
 							graph.container.appendChild(roundSource);
 						}
 						
-						if (graph.model.getTerminal(cell, false) == null)
+						if (cell.getTerminal(false) == null)
 						{
 							graph.container.appendChild(roundTarget);
 						}
@@ -3793,15 +3793,15 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			{
 				// Selects parent group as drop target
 				while (target != null && !graph.isValidDropTarget(target, cells, evt) &&
-					model.isVertex(model.getParent(target)))
+				target.getParent().isVertex())
 				{
-					target = model.getParent(target);
+					target = target.getParent();
 				}
 				
 				if (target != null && (graph.view.currentRoot == target ||
-					(!graph.isValidRoot(target) && 
-					graph.getModel().getChildCount(target) == 0) ||
-					graph.isCellLocked(target) || model.isEdge(target) ||
+					(!graph.isValidRoot(target) &&
+					target.getChildCount() == 0) ||
+					graph.isCellLocked(target) || target.isEdge() ||
 					!graph.isValidDropTarget(target, cells, evt)))
 				{
 					target = null;
@@ -3851,13 +3851,13 @@ Sidebar.prototype.itemClicked = function(cells, ds, evt, elt)
 	
 	// Alt+Click inserts and connects
 	if (mxEvent.isAltDown(evt) && graph.getSelectionCount() == 1 &&
-		graph.model.isVertex(graph.getSelectionCell()))
+		graph.getSelectionCell().isVertex())
 	{
 		let firstVertex = null;
 		
 		for (let i = 0; i < cells.length && firstVertex == null; i++)
 		{
-			if (graph.model.isVertex(cells[i]))
+			if (cells[i].isVertex())
 			{
 				firstVertex = i;
 			}

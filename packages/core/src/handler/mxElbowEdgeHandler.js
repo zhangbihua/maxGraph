@@ -192,7 +192,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    */
   // redrawInnerBends(p0: mxPoint, pe: mxPoint): void;
   redrawInnerBends(p0, pe) {
-    const g = this.graph.getModel().getGeometry(this.state.cell);
+    const g = this.state.cell.getGeometry();
     const pts = this.state.absolutePoints;
     let pt = null;
 

@@ -1,10 +1,10 @@
-import mxGraphView from './mxGraphView';
-import mxEventObject from '../../util/event/mxEventObject';
-import mxPoint from '../../util/datatypes/mxPoint';
-import mxCell from '../cell/mxCell';
-import mxEvent from '../../util/event/mxEvent';
-import mxGraphModel from './mxGraphModel';
-import mxGraph from "./mxGraph";
+import mxGraphView from '../view/graph/mxGraphView';
+import mxEventObject from '../util/event/mxEventObject';
+import mxPoint from '../util/datatypes/mxPoint';
+import mxCell from '../view/cell/mxCell';
+import mxEvent from '../util/event/mxEvent';
+import mxGraphModel from '../view/graph/mxGraphModel';
+import mxGraph from "../view/graph/mxGraph";
 
 /**
  * Class: mxCurrentRootChange
@@ -27,7 +27,7 @@ class mxCurrentRootChange {
           this.isUp = true;
           break;
         }
-        tmp = model.getParent(tmp);
+        tmp = tmp.getParent();
       }
     }
   }

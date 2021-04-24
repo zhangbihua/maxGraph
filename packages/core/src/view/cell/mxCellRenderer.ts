@@ -245,7 +245,7 @@ class mxCellRenderer {
   getShapeConstructor(state: mxCellState) {
     let ctor = this.getShape(state.style[mxConstants.STYLE_SHAPE]);
     if (ctor == null) {
-      ctor = <typeof mxShape>(state.view.graph.getModel().isEdge(state.cell)
+      ctor = <typeof mxShape>(state.cell.isEdge()
         ? this.defaultEdgeShape
         : this.defaultVertexShape);
     }
@@ -428,7 +428,7 @@ class mxCellRenderer {
   // createLabel(state: mxCellState, value: string): void;
   createLabel(state: mxCellState, value: any) {
     const { graph } = state.view;
-    const isEdge = graph.getModel().isEdge(state.cell);
+    const isEdge = state.cell.isEdge();
 
     if (state.style.fontSize > 0 || state.style.fontSize == null) {
       // Avoids using DOM node for empty labels
@@ -1138,7 +1138,7 @@ class mxCellRenderer {
   getLabelBounds(state: mxCellState): mxRectangle {
     const { graph } = state.view;
     const { scale } = state.view;
-    const isEdge = graph.getModel().isEdge(state.cell);
+    const isEdge = state.cell.isEdge();
     let bounds = new mxRectangle(
       state.absoluteOffset.x,
       state.absoluteOffset.y
@@ -1339,7 +1339,7 @@ class mxCellRenderer {
         // @ts-ignore
         const bounds = shape.overlay.getBounds(state);
 
-        if (!state.view.graph.getModel().isEdge(state.cell)) {
+        if (!state.cell.isEdge()) {
           if (state.shape != null && rot !== 0) {
             let cx = bounds.getCenterX();
             let cy = bounds.getCenterY();
@@ -1423,7 +1423,7 @@ class mxCellRenderer {
       let cx = state.getCenterX();
       let cy = state.getCenterY();
 
-      if (!state.view.graph.getModel().isEdge(state.cell)) {
+      if (!state.cell.isEdge()) {
         cx = state.x + w * s;
         cy = state.y + h * s;
 
@@ -1456,7 +1456,7 @@ class mxCellRenderer {
         }
       }
 
-      return state.view.graph.getModel().isEdge(state.cell)
+      return state.cell.isEdge()
         ? new mxRectangle(
             Math.round(cx - (w / 2) * s),
             Math.round(cy - (h / 2) * s),
@@ -1649,7 +1649,7 @@ class mxCellRenderer {
       state.shape == null &&
       state.view.graph.container != null &&
       state.cell !== state.view.currentRoot &&
-      (model.isVertex(state.cell) || model.isEdge(state.cell))
+      (state.cell.isVertex() || state.cell.isEdge())
     ) {
       state.shape = this.createShape(state);
 

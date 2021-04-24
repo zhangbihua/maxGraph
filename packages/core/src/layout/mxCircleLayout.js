@@ -103,10 +103,10 @@ class mxCircleLayout extends mxGraphLayout {
       let top = null;
       let left = null;
       const vertices = [];
-      const childCount = model.getChildCount(parent);
+      const childCount = parent.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        const cell = model.getChildAt(parent, i);
+        const cell = parent.getChildAt(i);
 
         if (!this.isVertexIgnored(cell)) {
           vertices.push(cell);

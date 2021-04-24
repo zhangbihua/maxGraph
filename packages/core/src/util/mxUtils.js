@@ -1964,7 +1964,7 @@ const mxUtils = {
         for (let i = 0; i < cells.length; i += 1) {
           if (cells[i] != null) {
             const style = mxUtils.setStyle(
-              model.getStyle(cells[i]),
+              cells[i].getStyle(),
               key,
               value
             );
@@ -2067,7 +2067,7 @@ const mxUtils = {
         for (let i = 0; i < cells.length; i += 1) {
           if (cells[i] != null) {
             const style = mxUtils.setStyleFlag(
-              model.getStyle(cells[i]),
+              cells[i].getStyle(),
               key,
               flag,
               value

@@ -57,16 +57,14 @@ class Visibility extends React.Component {
     let showThree = true;
 
     // Overridden to implement dynamic conditions
-    graph.isCellVisible = function(cell) {
-      let result = mxGraph.prototype.isCellVisible.apply(this, arguments);
-
-      if (result && cell.value != null) {
+    const isVisible = function() {
+      let result = super.isVisible();
+      if (result && this.value != null) {
         result =
-          (showOne && cell.value == '1') ||
-          (showTwo && cell.value == '2') ||
-          (showThree && cell.value == '3');
+          (showOne && this.value == '1') ||
+          (showTwo && this.value == '2') ||
+          (showThree && this.value == '3');
       }
-
       return result;
     };
 
@@ -79,18 +77,23 @@ class Visibility extends React.Component {
         position: [20, 20],
         size: [80, 30],
       });
+      v1.isVisible = isVisible;
+
       const v2 = graph.insertVertex({
         parent,
         value: '2',
         position: [200, 150],
         size: [80, 30],
       });
+      v2.isVisible = isVisible;
+
       const e1 = graph.insertEdge({
         parent,
         value: '3',
         source: v1,
         target: v2,
       });
+      e1.isVisible = isVisible;
     });
 
     // Dynamic conditions (requires refresh)
@@ -116,7 +119,7 @@ class Visibility extends React.Component {
     // Explicit show/hide
     this.el2.appendChild(
       mxUtils.button('Toggle cell', function() {
-        graph.toggleCells(!graph.getModel().isVisible(v1), [v1], true);
+        graph.toggleCells(!v1.isVisible(), [v1], true);
       })
     );
 

@@ -119,13 +119,13 @@ class Layers extends React.Component {
 
     this.el2.appendChild(
       mxUtils.button('Layer 0', function() {
-        model.setVisible(layer0, !model.isVisible(layer0));
+        model.setVisible(layer0, !layer0.isVisible());
       })
     );
 
     this.el2.appendChild(
       mxUtils.button('Layer 1', function() {
-        model.setVisible(layer1, !model.isVisible(layer1));
+        model.setVisible(layer1, !layer1.isVisible());
       })
     );
   }

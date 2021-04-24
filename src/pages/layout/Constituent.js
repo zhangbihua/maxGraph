@@ -47,7 +47,7 @@ class Constituent extends React.Component {
       getInitialCellForEvent(me) {
         let cell = super.getInitialCellForEvent(me);
         if (this.graph.isPart(cell)) {
-          cell = this.graph.getModel().getParent(cell);
+          cell = this.cell.getParent();
         }
         return cell;
       }
@@ -66,7 +66,7 @@ class Constituent extends React.Component {
       selectCellForEvent(cell, evt) {
         // Redirects selection to parent
         if (this.isPart(cell)) {
-          cell = this.model.getParent(cell);
+          cell = cell.getParent();
         }
         super.selectCellForEvent(cell, evt);
       }

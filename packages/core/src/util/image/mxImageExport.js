@@ -69,11 +69,11 @@ class mxImageExport {
       visitor(state, canvas);
 
       const { graph } = state.view;
-      const childCount = graph.model.getChildCount(state.cell);
+      const childCount = state.cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
         const childState = graph.view.getState(
-          graph.model.getChildAt(state.cell, i)
+          state.cell.getChildAt(i)
         );
         this.visitStatesRecursive(childState, canvas, visitor);
       }

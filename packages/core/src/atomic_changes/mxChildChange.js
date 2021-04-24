@@ -27,7 +27,7 @@ class mxChildChange {
   // execute(): void;
   execute() {
     if (this.child != null) {
-      let tmp = this.model.getParent(this.child);
+      let tmp = this.child.getParent();
       const tmp2 = tmp != null ? tmp.getIndex(this.child) : 0;
 
       if (this.previous == null) {
@@ -84,10 +84,10 @@ class mxChildChange {
     cell.setTerminal(source, true);
     cell.setTerminal(target, false);
 
-    const childCount = this.model.getChildCount(cell);
+    const childCount = cell.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
-      this.connect(this.model.getChildAt(cell, i), isConnect);
+      this.connect(cell.getChildAt(i), isConnect);
     }
   }
 }

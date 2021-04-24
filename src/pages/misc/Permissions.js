@@ -199,9 +199,9 @@ class Permissions extends React.Component {
     graph.isCellEditable = function(cell) {
       return (
         (oldEditable.apply(this, arguments) &&
-          this.getModel().isVertex(cell) &&
+          cell.isVertex() &&
           currentPermission.editVertices) ||
-        (this.getModel().isEdge(cell) && currentPermission.editEdges)
+        (cell.isEdge() && currentPermission.editEdges)
       );
     };
 
@@ -209,9 +209,9 @@ class Permissions extends React.Component {
     graph.isCellDeletable = function(cell) {
       return (
         (oldDeletable.apply(this, arguments) &&
-          this.getModel().isVertex(cell) &&
+          cell.isVertex() &&
           currentPermission.editVertices) ||
-        (this.getModel().isEdge(cell) && currentPermission.editEdges)
+        (cell.isEdge() && currentPermission.editEdges)
       );
     };
 

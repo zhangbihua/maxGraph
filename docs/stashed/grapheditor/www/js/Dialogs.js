@@ -651,7 +651,7 @@ let EditDiagramDialog = function(editorUi)
 				let codec = new mxCodec(doc);
 				codec.decode(doc.documentElement, model);
 				
-				let children = model.getChildren(model.getChildAt(model.getRoot(), 0));
+				let children = model.getRoot().getChildAt(0).getChildren();
 				editorUi.editor.graph.setSelectionCells(editorUi.editor.graph.importCells(children));
 				
 				// LATER: Why is hideDialog between begin-/endUpdate faster?
@@ -1262,7 +1262,7 @@ let EditDataDialog = function(ui, cell)
 	let div = document.createElement('div');
 	let graph = ui.editor.graph;
 	
-	let value = graph.getModel().getValue(cell);
+	let value = cell.getValue();
 	
 	// Converts the value to an XML node
 	if (!mxUtils.isNode(value))
@@ -1378,7 +1378,7 @@ let EditDataDialog = function(ui, cell)
 	};
 	
 	let temp = [];
-	let isLayer = graph.getModel().getParent(cell) == graph.getModel().getRoot();
+	let isLayer = cell.getParent() == graph.getModel().getRoot();
 
 	for (let i = 0; i < attrs.length; i++)
 	{
@@ -1584,7 +1584,7 @@ let EditDataDialog = function(ui, cell)
 	let buttons = document.createElement('div');
 	buttons.style.cssText = 'position:absolute;left:30px;right:30px;text-align:right;bottom:30px;height:40px;'
 	
-	if (ui.editor.graph.getModel().isVertex(cell) || ui.editor.graph.getModel().isEdge(cell))
+	if (cell.isVertex() || cell.isEdge())
 	{
 		let replace = document.createElement('span');
 		replace.style.marginRight = '10px';
@@ -1660,7 +1660,7 @@ EditDataDialog.getDisplayIdForCell = function(ui, cell)
 {
 	let id = null;
 	
-	if (ui.editor.graph.getModel().getParent(cell) != null)
+	if (ui.editor.cell.getParent() != null)
 	{
 		id = cell.getId();
 	}
@@ -2028,14 +2028,14 @@ let LayersWindow = function(editorUi, x, y, w, h)
 				graph.removeCells([selectionLayer], false);
 				
 				// Creates default layer if no layer exists
-				if (graph.model.getChildCount(graph.model.root) == 0)
+				if (graph.model.root.getChildCount() == 0)
 				{
 					graph.model.add(graph.model.root, new mxCell());
 					graph.setDefaultParent(null);
 				}
-				else if (index > 0 && index <= graph.model.getChildCount(graph.model.root))
+				else if (index > 0 && index <= graph.model.root.getChildCount())
 				{
-					graph.setDefaultParent(graph.model.getChildAt(graph.model.root, index - 1));
+					graph.setDefaultParent(graph.model.root.getChildAt(index - 1));
 				}
 				else
 				{
@@ -2085,7 +2085,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 							menu.addCheckmark(item, Editor.checkmarkImage);
 						}
 						
-					}))(graph.model.getChildAt(graph.model.root, i));
+					}))(graph.model.root.getChildAt(i));
 				}
 			}), offset.x, offset.y + insertLink.offsetHeight, evt);
 		}
@@ -2201,7 +2201,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 	
 	function refresh()
 	{
-		layerCount = graph.model.getChildCount(graph.model.root)
+		layerCount = graph.model.root.getChildCount()
 		listDiv.innerHTML = '';
 
 		function addLayer(index, label, child, defaultParent)
@@ -2319,7 +2319,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 			inp.style.marginTop = '4px';
 			left.appendChild(inp);
 			
-			if (graph.model.isVisible(child))
+			if (child.isVisible())
 			{
 				inp.setAttribute('checked', 'checked');
 				inp.defaultChecked = true;
@@ -2327,7 +2327,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 
 			mxEvent.addListener(inp, 'click', function(evt)
 			{
-				graph.model.setVisible(child, !graph.model.isVisible(child));
+				graph.model.setVisible(child, !child.isVisible());
 				mxEvent.consume(evt);
 			});
 
@@ -2451,7 +2451,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 			{
 				addLayer(i, graph.convertValueToString(child) ||
 					mxResources.get('background'), child, child);
-			}))(graph.model.getChildAt(graph.model.root, i));
+			}))(graph.model.root.getChildAt(i));
 		}
 		
 		let label = graph.convertValueToString(selectionLayer) || mxResources.get('background');

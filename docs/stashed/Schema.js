@@ -158,13 +158,13 @@ export default MYNAMEHERE;
         graph.isHtmlLabel = function(cell)
         {
           return !this.isSwimlane(cell) &&
-            !this.model.isEdge(cell);
+            !cell.isEdge();
         };
 
         // Edges are not editable
         graph.isCellEditable = function(cell)
         {
-          return !this.model.isEdge(cell);
+          return !cell.isEdge();
         };
 
         // Returns the name field of the user object for the label
@@ -185,10 +185,10 @@ export default MYNAMEHERE;
           {
             return 'Type: '+state.cell.value.type;
           }
-          else if (this.model.isEdge(state.cell))
+          else if (state.cell.isEdge())
           {
-            let source = this.model.getTerminal(state.cell, true);
-            let parent = this.model.getParent(source);
+            let source = state.cell.getTerminal(true);
+            let parent = source.getParent();
 
             return parent.value.name+'.'+source.value.name;
           }
@@ -241,10 +241,10 @@ export default MYNAMEHERE;
           {
             let cell = cells[i];
 
-            if (this.model.isEdge(cell))
+            if (cell.isEdge())
             {
-              let terminal = this.model.getTerminal(cell, true);
-              let parent = this.model.getParent(terminal);
+              let terminal = cell.getTerminal(true);
+              let parent = terminal.getParent();
               this.model.remove(terminal);
             }
           }
@@ -296,11 +296,11 @@ export default MYNAMEHERE;
         {
           // Finds the primary key child of the target table
           let primaryKey = null;
-          let childCount = this.model.getChildCount(target);
+          let childCount = target.getChildCount();
 
           for (var i=0; i < childCount; i++)
           {
-            let child = this.model.getChildAt(target, i);
+            let child = target.getChildAt(i);
 
             if (child.value.primaryKey)
             {
@@ -557,17 +557,17 @@ export default MYNAMEHERE;
           pt.x -= pstate.x;
           pt.y -= pstate.y;
 
-          let columnCount = graph.model.getChildCount(parent)+1;
+          let columnCount = parent.getChildCount()+1;
           name = mxUtils.prompt('Enter name for new column', 'COLUMN'+columnCount);
         }
         else
         {
           let tableCount = 0;
-          let childCount = graph.model.getChildCount(parent);
+          let childCount = parent.getChildCount();
 
           for (var i=0; i<childCount; i++)
           {
-            if (!graph.model.isEdge(graph.model.getChildAt(parent, i)))
+            if (!parent.getChildAt(i).isEdge())
             {
               tableCount++;
             }
@@ -634,7 +634,7 @@ export default MYNAMEHERE;
           }
           else
           {
-            let parent = graph.getModel().getParent(cell);
+            let parent = cell.getParent();
 
             if (graph.isSwimlane(parent))
             {
@@ -786,7 +786,7 @@ export default MYNAMEHERE;
       }
       form.addButtons(okFunction, cancelFunction);
 
-      let parent = graph.model.getParent(cell);
+      let parent = cell.getParent();
       let name = parent.value.name + '.' + cell.value.name;
       wnd = showModalWindow(name, form.table, 240, 240);
     };
@@ -795,23 +795,23 @@ export default MYNAMEHERE;
     {
       let sql = [];
       let parent = graph.getDefaultParent();
-      let childCount = graph.model.getChildCount(parent);
+      let childCount = parent.getChildCount();
 
       for (var i=0; i<childCount; i++)
       {
-        let child = graph.model.getChildAt(parent, i);
+        let child = parent.getChildAt(i);
 
-        if (!graph.model.isEdge(child))
+        if (!child.isEdge())
         {
           sql.push('CREATE TABLE IF NOT EXISTS '+child.value.name+' (');
 
-          let columnCount = graph.model.getChildCount(child);
+          let columnCount = child.getChildCount();
 
           if (columnCount > 0)
           {
             for (var j=0; j<columnCount; j++)
             {
-              let column = graph.model.getChildAt(child, j).value;
+              let column = child.getChildAt(j).value;
 
               sql.push('\n    '+column.name+' '+column.type);
 

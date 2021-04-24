@@ -273,7 +273,7 @@ class mxEdgeHandler {
    */
   isParentHighlightVisible() {
     return !this.graph.isCellSelected(
-      this.graph.model.getParent(this.state.cell)
+      this.state.cell.getParent()
     );
   }
 
@@ -285,11 +285,11 @@ class mxEdgeHandler {
   updateParentHighlight() {
     if (!this.isDestroyed()) {
       const visible = this.isParentHighlightVisible();
-      const parent = this.graph.model.getParent(this.state.cell);
+      const parent = this.state.cell.getParent();
       const pstate = this.graph.view.getState(parent);
 
       if (this.parentHighlight != null) {
-        if (this.graph.model.isVertex(parent) && visible) {
+        if (parent.isVertex() && visible) {
           const b = this.parentHighlight.bounds;
 
           if (
@@ -315,7 +315,7 @@ class mxEdgeHandler {
         }
       } else if (this.parentHighlightEnabled && visible) {
         if (
-          this.graph.model.isVertex(parent) &&
+          parent.isVertex() &&
           pstate != null &&
           pstate.parentHighlight == null
         ) {
@@ -602,10 +602,10 @@ class mxEdgeHandler {
 
         // Uses connectable parent vertex if one exists
         if (cell != null && !this.graph.isCellConnectable(cell)) {
-          const parent = this.graph.getModel().getParent(cell);
+          const parent = this.cell.getParent();
 
           if (
-            this.graph.getModel().isVertex(parent) &&
+            parent.isVertex() &&
             this.graph.isCellConnectable(parent)
           ) {
             cell = parent;
@@ -626,7 +626,7 @@ class mxEdgeHandler {
           cell === self.state.cell ||
           (cell != null &&
             !self.graph.connectableEdges &&
-            model.isEdge(cell)) ||
+            cell.isEdge()) ||
           model.isAncestor(self.state.cell, cell)
         ) {
           cell = null;
@@ -644,7 +644,7 @@ class mxEdgeHandler {
         const other = self.graph.view.getTerminalPort(
           state,
           self.graph.view.getState(
-            model.getTerminal(self.state.cell, !self.isSource)
+            self.state.cell.getTerminal(!self.isSource)
           ),
           !self.isSource
         );
@@ -1052,7 +1052,7 @@ class mxEdgeHandler {
 
     if (this.isSource || this.isTarget) {
       const { cell } = this.state;
-      const terminal = this.graph.model.getTerminal(cell, this.isSource);
+      const terminal = cell.getTerminal(this.isSource);
 
       if (
         (terminal == null &&
@@ -1252,7 +1252,7 @@ class mxEdgeHandler {
       const other = this.graph.view.getTerminalPort(
         this.state,
         this.graph.view.getState(
-          model.getTerminal(this.state.cell, !this.isSource)
+          this.state.cell.getTerminal(!this.isSource)
         ),
         !this.isSource
       );
@@ -1784,22 +1784,22 @@ class mxEdgeHandler {
 
           if (terminal != null) {
             const model = this.graph.getModel();
-            const parent = model.getParent(edge);
+            const parent = edge.getParent();
 
             model.beginUpdate();
             try {
               // Clones and adds the cell
               if (clone) {
-                let geo = model.getGeometry(edge);
+                let geo = edge.getGeometry();
                 clone = this.graph.cloneCell(edge);
-                model.add(parent, clone, model.getChildCount(parent));
+                model.add(parent, clone, parent.getChildCount());
 
                 if (geo != null) {
                   geo = geo.clone();
                   model.setGeometry(clone, geo);
                 }
 
-                const other = model.getTerminal(edge, !this.isSource);
+                const other = edge.getTerminal(!this.isSource);
                 this.graph.connectCell(clone, other, !this.isSource);
 
                 edge = clone;
@@ -1822,7 +1822,7 @@ class mxEdgeHandler {
 
             const pstate = this.graph
               .getView()
-              .getState(this.graph.getModel().getParent(edge));
+              .getState(edge.getParent());
 
             if (pstate != null) {
               pt.x -= pstate.origin.x;
@@ -1947,7 +1947,7 @@ class mxEdgeHandler {
 
     const pstate = this.graph
       .getView()
-      .getState(this.graph.getModel().getParent(this.state.cell));
+      .getState(this.state.cell.getParent());
 
     if (pstate != null) {
       point.x -= pstate.origin.x;
@@ -1971,7 +1971,7 @@ class mxEdgeHandler {
   // moveLabel(edgeState: mxCellState, x: number, y: number): void;
   moveLabel(edgeState, x, y) {
     const model = this.graph.getModel();
-    let geometry = model.getGeometry(edgeState.cell);
+    let geometry = edgeState.cell.getGeometry();
 
     if (geometry != null) {
       const { scale } = this.graph.getView();
@@ -2032,7 +2032,7 @@ class mxEdgeHandler {
   // connect(edge: mxCell, terminal: mxCell, isSource: boolean, isClone: boolean, me: mxMouseEvent): mxCell;
   connect(edge, terminal, isSource, isClone, me) {
     const model = this.graph.getModel();
-    const parent = model.getParent(edge);
+    const parent = edge.getParent();
 
     model.beginUpdate();
     try {
@@ -2062,14 +2062,14 @@ class mxEdgeHandler {
     model.beginUpdate();
     try {
       if (clone) {
-        const parent = model.getParent(edge);
-        const terminal = model.getTerminal(edge, !isSource);
+        const parent = edge.getParent();
+        const terminal = edge.getTerminal(!isSource);
         edge = this.graph.cloneCell(edge);
-        model.add(parent, edge, model.getChildCount(parent));
+        model.add(parent, edge, parent.getChildCount());
         model.setTerminal(edge, terminal, !isSource);
       }
 
-      let geo = model.getGeometry(edge);
+      let geo = edge.getGeometry();
 
       if (geo != null) {
         geo = geo.clone();
@@ -2100,16 +2100,16 @@ class mxEdgeHandler {
     model.beginUpdate();
     try {
       if (clone) {
-        const parent = model.getParent(edge);
-        const source = model.getTerminal(edge, true);
-        const target = model.getTerminal(edge, false);
+        const parent = edge.getParent();
+        const source = edge.getTerminal(true);
+        const target = edge.getTerminal(false);
         edge = this.graph.cloneCell(edge);
-        model.add(parent, edge, model.getChildCount(parent));
+        model.add(parent, edge, parent.getChildCount());
         model.setTerminal(edge, source, true);
         model.setTerminal(edge, target, false);
       }
 
-      let geo = model.getGeometry(edge);
+      let geo = edge.getGeometry();
 
       if (geo != null) {
         geo = geo.clone();
@@ -2158,9 +2158,9 @@ class mxEdgeHandler {
       const s = this.graph.view.scale;
       let offset = new mxPoint(t.x * s, t.y * s);
 
-      const parent = this.graph.model.getParent(this.state.cell);
+      const parent = this.state.cell.getParent();
 
-      if (this.graph.model.isVertex(parent)) {
+      if (parent.isVertex()) {
         const pState = this.graph.view.getState(parent);
         offset = new mxPoint(pState.x, pState.y);
       }
@@ -2212,7 +2212,7 @@ class mxEdgeHandler {
   getHandleFillColor(index) {
     const isSource = index === 0;
     const { cell } = this.state;
-    const terminal = this.graph.getModel().getTerminal(cell, isSource);
+    const terminal = cell.getTerminal(isSource);
     let color = mxConstants.HANDLE_FILLCOLOR;
 
     if (
@@ -2240,7 +2240,7 @@ class mxEdgeHandler {
   redraw(ignoreHandles) {
     if (this.state != null) {
       this.abspoints = this.state.absolutePoints.slice();
-      const g = this.graph.getModel().getGeometry(this.state.cell);
+      const g = this.state.cell.getGeometry();
 
       if (g != null) {
         const pts = g.points;
@@ -2636,7 +2636,7 @@ class mxEdgeHandler {
     }
 
     if (this.parentHighlight != null) {
-      const parent = this.graph.model.getParent(this.state.cell);
+      const parent = this.state.cell.getParent();
       const pstate = this.graph.view.getState(parent);
 
       if (pstate != null && pstate.parentHighlight === this.parentHighlight) {

@@ -2576,7 +2576,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 			{
 				return false;
 			}
-			else if (this.graph.getModel().isVertex(cells[i]))
+			else if (cells[i].isVertex())
 			{
 				let geo = this.graph.getCellGeometry(cells[i]);
 				
@@ -2686,14 +2686,14 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 	mxGraphHandler.prototype.isPropagateSelectionCell = function(cell, immediate, me)
 	{
 		let result = false;
-		let parent = this.graph.model.getParent(cell)
+		let parent = cell.getParent()
 		
 		if (immediate)
 		{
-			let geo = (this.graph.model.isEdge(cell)) ? null :
+			let geo = (cell.isEdge()) ? null :
 				this.graph.getCellGeometry(cell);
 			
-			result = !this.graph.model.isEdge(parent) &&
+			result = !parent.isEdge() &&
 				!this.graph.isSiblingSelected(cell) &&
 				((geo != null && geo.relative) ||
 				!this.graph.isContainer(parent) ||
@@ -2709,7 +2709,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 				
 				if (!this.graph.isTable(table))
 				{
-					table = this.graph.model.getParent(table);
+					table = table.getParent();
 				}
 				
 				result = !this.graph.selectionCellsHandler.isHandled(table) ||
@@ -2729,11 +2729,11 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 	{
 		let cell = me.getCell();
 		let model = this.graph.getModel();
-		let parent = model.getParent(cell);
+		let parent = cell.getParent();
 		let state = this.graph.view.getState(parent);
 		let selected = this.graph.isCellSelected(cell);
 		
-		while (state != null && (model.isVertex(parent) || model.isEdge(parent)))
+		while (state != null && (parent.isVertex() || parent.isEdge()))
 		{
 			let temp = this.graph.isCellSelected(parent);
 			selected = selected || temp;
@@ -2744,7 +2744,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 				cell = parent;
 			}
 			
-			parent = model.getParent(parent);
+			parent = parent.getParent();
 		}
 		
 		return cell;

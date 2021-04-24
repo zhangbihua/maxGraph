@@ -66,11 +66,11 @@ class HelloPort extends React.Component {
     // Implements a tooltip that shows the actual
     // source and target of an edge
     graph.getTooltipForCell = function(cell) {
-      if (this.model.isEdge(cell)) {
+      if (cell.isEdge()) {
         return `${this.convertValueToString(
-          this.model.getTerminal(cell, true)
+          cell.getTerminal(true)
         )} => ${this.convertValueToString(
-          this.model.getTerminal(cell, false)
+          cell.getTerminal(false)
         )}`;
       }
 

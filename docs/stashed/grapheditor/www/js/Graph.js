@@ -229,7 +229,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 		    	if (!mxEvent.isAltDown(me.getEvent()) && state != null)
 		    	{
 		    		// Checks if state was removed in call to stopEditing above
-		    		if (this.model.isEdge(state.cell))
+		    		if (state.cell.isEdge())
 		    		{
 		    			start.point = new mxPoint(me.getGraphX(), me.getGraphY());
 		    			start.selected = this.isCellSelected(state.cell);
@@ -265,16 +265,16 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 			    			
 			    			if (this.isTableCell(state.cell) && !this.isCellSelected(state.cell))
 			    			{
-			    				let row = this.model.getParent(state.cell);
-			    				let table = this.model.getParent(row);
+			    				let row = state.cell.getParent();
+			    				let table = row.getParent();
 			    				
 			    				if (!this.isCellSelected(table))
 			    				{
 				    				if ((mxUtils.intersects(box, new mxRectangle(state.x, state.y - 2, state.width, 3)) &&
-				    					this.model.getChildAt(table, 0) != row) || mxUtils.intersects(box, new mxRectangle(
+										table.getChildAt(0) != row) || mxUtils.intersects(box, new mxRectangle(
 				    					state.x, state.y + state.height - 2, state.width, 3)) ||
 					    				(mxUtils.intersects(box, new mxRectangle(state.x - 2, state.y, 2, state.height)) &&
-					    				this.model.getChildAt(row, 0) != state.cell) || mxUtils.intersects(box, new mxRectangle(
+										row.getChildAt(0) != state.cell) || mxUtils.intersects(box, new mxRectangle(
 				    					state.x + state.width - 2, state.y, 2, state.height)))
 			    					{
 				    					let wasSelected = this.selectionCellsHandler.isHandled(table);
@@ -326,7 +326,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 		    						}
 					    		}
 					    		
-					    		current = this.view.getState(this.model.getParent(current.cell));
+					    		current = this.view.getState(current.cell.getParent());
 				    		}
 		    			}
 		    		}
@@ -365,7 +365,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 			    		{
 			    			let handler = this.selectionCellsHandler.getHandler(state.cell);
 			    			
-			    			if (handler == null && this.model.isEdge(state.cell))
+			    			if (handler == null && state.cell.isEdge())
 			    			{
 			    				handler = this.createHandler(state);
 			    			}
@@ -507,7 +507,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 				    		let cursor = null;
 				    		
 				    		// Checks if state was removed in call to stopEditing above
-				    		if (this.model.isEdge(state.cell))
+				    		if (state.cell.isEdge())
 				    		{
 				    			let box = new mxRectangle(me.getGraphX(), me.getGraphY());
 		    					box.grow(mxEdgeHandler.prototype.handleImage.width / 2);
@@ -551,19 +551,19 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 	
 					    		if (this.isTableCell(state.cell))
 					    		{
-				    				let row = this.model.getParent(state.cell);
-			    					let table = this.model.getParent(row);
+				    				let row = state.cell.getParent();
+			    					let table = row.getParent();
 			    					
 			    					if (!this.isCellSelected(table))
 			    					{
 				    					if ((mxUtils.intersects(box, new mxRectangle(state.x - 2, state.y, 2, state.height)) &&
-						    				this.model.getChildAt(row, 0) != state.cell) || mxUtils.intersects(box,
+											row.getChildAt(0) != state.cell) || mxUtils.intersects(box,
 						    				new mxRectangle(state.x + state.width - 2, state.y, 2, state.height)))
 				    					{
 						    				cursor ='col-resize';
 				    					}
 				    					else if ((mxUtils.intersects(box, new mxRectangle(state.x, state.y - 2, state.width, 3)) &&
-					    					this.model.getChildAt(table, 0) != row) || mxUtils.intersects(box,
+											table.getChildAt(0) != row) || mxUtils.intersects(box,
 					    					new mxRectangle(state.x, state.y + state.height - 2, state.width, 3)))
 				    					{
 						    				cursor ='row-resize';
@@ -596,7 +596,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 			    						}
 						    		}
 						    		
-						    		current = this.view.getState(this.model.getParent(current.cell));
+						    		current = this.view.getState(current.cell.getParent());
 					    		}
 				    		}
 				    		
@@ -747,7 +747,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 		    	let cell = (this.graph.isTableCell(initialCell) &&
 		    		this.graph.isTableCell(cells[i]) &&
 		    		this.graph.isCellSelected(cells[i])) ?
-		    		this.graph.model.getParent(cells[i]) :
+					cells[i].getParent() :
 		    		((this.graph.isTableRow(initialCell) &&
 		    		this.graph.isTableRow(cells[i]) &&
 		    		this.graph.isCellSelected(cells[i])) ?
@@ -775,7 +775,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 		    {
 		    	if (!this.graph.isCellSelected(cell))
 		    	{
-		    		cell = this.graph.model.getParent(cell);
+		    		cell = cell.getParent();
 		    	}
 		    	else
 		    	{
@@ -1027,7 +1027,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 					return true;
 				}
 				
-				pState = this.view.getState(this.model.getParent(pState.cell));
+				pState = this.view.getState(pState.cell).getParent();
 			}
 			
 			return false;
@@ -1096,7 +1096,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 			let graph = state.view.graph;
 
 			return source && (graph.isCellSelected(state.cell) || (graph.isTableRow(state.cell) &&
-				graph.selectionCellsHandler.isHandled(graph.model.getParent(state.cell))));
+				graph.selectionCellsHandler.isHandled(state.cell.getParent())));
 		};
 		
 		// Updates constraint handler if the selection changes
@@ -1647,7 +1647,7 @@ Graph.prototype.init = function(container)
 
 /**
  * Implements zoom and offset via CSS transforms. This is currently only used
- * in read-only as there are fewer issues with the mxCellState not being scaled
+ * in read-only as there are fewer issues with the mxCell not being scaled
  * and translated.
  * 
  * KNOWN ISSUES TO FIX:
@@ -1681,7 +1681,7 @@ Graph.prototype.init = function(container)
 		
 		return model.filterDescendants(function(cell)
 		{
-			return (vertices && model.isVertex(cell)) || (edges && model.isEdge(cell));
+			return (vertices && cell.isVertex()) || (edges && cell.isEdge());
 		}, model.getRoot());
 	};
 
@@ -1696,9 +1696,9 @@ Graph.prototype.init = function(container)
 		
 		if (this.isTable(cell) && (!this.isSwimlane(cell) ||
 			size == 0) && this.getLabel(cell) == '' &&
-			this.model.getChildCount(cell) > 0)
+			cell.getChildCount() > 0)
 		{
-			cell = this.model.getChildAt(cell, 0);
+			cell = cell.getChildAt(0);
 			
 			style = this.getCellStyle(cell);
 			size = parseInt(mxUtils.getValue(style, mxConstants.STYLE_STARTSIZE, 0));
@@ -1707,11 +1707,11 @@ Graph.prototype.init = function(container)
 		// Redirect editing for table rows
 		if (this.isTableRow(cell) && (!this.isSwimlane(cell) ||
 			size == 0) && this.getLabel(cell) == '' &&
-			this.model.getChildCount(cell) > 0)
+			cell.getChildCount() > 0)
 		{
-			for (let i = 0; i < this.model.getChildCount(cell); i++)
+			for (let i = 0; i < cell.getChildCount(); i++)
 			{
-				let temp = this.model.getChildAt(cell, i);
+				let temp = cell.getChildAt(i);
 				
 				if (this.isCellEditable(temp))
 				{
@@ -1736,7 +1736,7 @@ Graph.prototype.init = function(container)
 			style = mxUtils.clone(this.getCurrentCellStyle(cell));
 			
 			// Handles special case for value "none"
-			let cellStyle = this.model.getStyle(cell);
+			let cellStyle = cell.getStyle();
 			let tokens = (cellStyle != null) ? cellStyle.split(';') : [];
 			
 			for (let j = 0; j < tokens.length; j++)
@@ -1851,19 +1851,19 @@ Graph.prototype.init = function(container)
 
 		if (parent != null)
 		{
-			let childCount = this.model.getChildCount(parent);
+			let childCount = parent.getChildCount();
 			
 			for (let i = childCount - 1; i >= 0; i--)
 			{
-				let cell = this.model.getChildAt(parent, i);
+				let cell = parent.getChildAt(i);
 				let result = this.getScaledCellAt(x, y, cell, vertices, edges, ignoreFn);
 				
 				if (result != null)
 				{
 					return result;
 				}
-				else if (this.isCellVisible(cell) && (edges && this.model.isEdge(cell) ||
-					vertices && this.model.isVertex(cell)))
+				else if (cell.isVisible() && (edges && cell.isEdge() ||
+					vertices && cell.isVertex()))
 				{
 					let state = this.view.getState(cell);
 
@@ -1884,7 +1884,7 @@ Graph.prototype.init = function(container)
 	 */
 	Graph.prototype.isRecursiveVertexResize = function(state)
 	{
-		return !this.isSwimlane(state.cell) && this.model.getChildCount(state.cell) > 0 &&
+		return !this.isSwimlane(state.cell) && state.cell.getChildCount() > 0 &&
 			!this.isCellCollapsed(state.cell) && mxUtils.getValue(state.style, 'recursiveResize', '1') == '1' &&
 			mxUtils.getValue(state.style, 'childLayout', null) == null;
 	}
@@ -1905,9 +1905,9 @@ Graph.prototype.init = function(container)
 	{
 		while (this.isPart(cell))
 		{
-			let temp = this.model.getParent(cell);
+			let temp = cell.getParent();
 			
-			if (!this.model.isVertex(temp))
+			if (!temp.isVertex())
 			{
 				break;
 			}
@@ -2349,7 +2349,7 @@ Graph.prototype.initLayoutManager = function()
 	
 	this.layoutManager.getLayout = function(cell, eventName)
 	{
-		let parent = this.graph.model.getParent(cell);
+		let parent = cell.getParent();
 		
 		// Executes layouts from top to bottom except for nested layouts where
 		// child layouts are executed before and after the parent layout runs
@@ -2553,7 +2553,7 @@ Graph.prototype.isIgnoreTerminalEvent = function(evt)
  */
 Graph.prototype.isSplitTarget = function(target, cells, evt)
 {
-	return !this.model.isEdge(cells[0]) &&
+	return !cells[0].isEdge() &&
 		!mxEvent.isAltDown(evt) && !mxEvent.isShiftDown(evt) &&
 		mxGraph.prototype.isSplitTarget.apply(this, arguments);
 };
@@ -2581,8 +2581,8 @@ Graph.prototype.isLabelMovable = function(cell)
 	let style = this.getCurrentCellStyle(cell);
 	
 	return !this.isCellLocked(cell) &&
-		((this.model.isEdge(cell) && this.edgeLabelsMovable) ||
-		(this.model.isVertex(cell) && (this.vertexLabelsMovable ||
+		((cell.isEdge() && this.edgeLabelsMovable) ||
+		(cell.isVertex() && (this.vertexLabelsMovable ||
 		mxUtils.getValue(style, 'labelMovable', '0') == '1')));
 };
 
@@ -2624,7 +2624,7 @@ Graph.prototype.getClickableLinkForCell = function(cell)
 			return link;
 		}
 		
-		cell = this.model.getParent(cell);
+		cell = cell.getParent();
 	} while (cell != null);
 	
 	return null;
@@ -2779,7 +2779,7 @@ Graph.prototype.createLayersDialog = function()
 	div.style.position = 'absolute';
 	
 	let model = this.getModel();
-	let childCount = model.getChildCount(model.root);
+	let childCount = model.root.getChildCount();
 	
 	for (let i = 0; i < childCount; i++)
 	{
@@ -2795,7 +2795,7 @@ Graph.prototype.createLayersDialog = function()
 			cb.style.display = 'inline-block';
 			cb.setAttribute('type', 'checkbox');
 			
-			if (model.isVisible(layer))
+			if (layer.isVisible())
 			{
 				cb.setAttribute('checked', 'checked');
 				cb.defaultChecked = true;
@@ -2821,7 +2821,7 @@ Graph.prototype.createLayersDialog = function()
 				
 				model.setVisible(layer, cb.checked);
 			});
-		})(model.getChildAt(model.root, i)));
+		})(model.root.getChildAt(i)));
 	}
 	
 	return div;
@@ -2879,7 +2879,7 @@ Graph.prototype.replacePlaceholders = function(cell, str, vars, translate)
 								}
 							}
 							
-							current = this.model.getParent(current);
+							current = current.getParent();
 						}
 					}
 					
@@ -2938,7 +2938,7 @@ Graph.prototype.restoreSelection = function(cells)
 Graph.prototype.selectCellsForConnectVertex = function(cells, evt, hoverIcons)
 {
 	// Selects only target vertex if one exists
-	if (cells.length == 2 && this.model.isVertex(cells[1]))
+	if (cells.length == 2 && cells[1].isVertex())
 	{
 		this.setSelectionCell(cells[1]);
 		this.scrollCellToVisible(cells[1]);
@@ -2971,7 +2971,7 @@ Graph.prototype.isCloneConnectSource = function(source)
 
 	if (this.layoutManager != null)
 	{
-		layout = this.layoutManager.getLayout(this.model.getParent(source));
+		layout = this.layoutManager.getLayout(source.getParent());
 	}
 	
 	return this.isTableRow(source) || this.isTableCell(source) ||
@@ -2986,13 +2986,13 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 	ignoreCellAt = (ignoreCellAt) ? ignoreCellAt : false;
 	
 	// Ignores relative edge labels
-	if (source.geometry.relative && this.model.isEdge(source.parent))
+	if (source.geometry.relative && source.parent.isEdge())
 	{
 		return [];
 	}
 	
 	// Uses parent for relative child cells
-	while (source.geometry.relative && this.model.isVertex(source.parent))
+	while (source.geometry.relative && source.parent.isVertex())
 	{
 		source = source.parent;
 	}
@@ -3027,20 +3027,20 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 		pt.y += composite.geometry.height / 2;
 	}
 
-	let parentState = this.view.getState(this.model.getParent(source));
+	let parentState = this.view.getState(source.getParent());
 	let s = this.view.scale;
 	let t = this.view.translate;
 	let dx = t.x * s;
 	let dy = t.y * s;
 	
-	if (parentState != null && this.model.isVertex(parentState.cell))
+	if (parentState != null && parentState.cell.isVertex())
 	{
 		dx = parentState.x;
 		dy = parentState.y;
 	}
 
 	// Workaround for relative child cells
-	if (this.model.isVertex(source.parent) && source.geometry.relative)
+	if (source.parent.isVertex() && source.geometry.relative)
 	{
 		pt.x += source.parent.geometry.x;
 		pt.y += source.parent.geometry.y;
@@ -3081,7 +3081,7 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 			break;
 		}
 		
-		temp = this.model.getParent(temp);
+		temp = temp.getParent();
 	}
 	
 	// Checks if source and target intersect
@@ -3122,15 +3122,15 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 	// TODO: Fix using target as parent for swimlane
 	if (target != null && !this.isCellConnectable(target) && !this.isSwimlane(target))
 	{
-		let parent = this.getModel().getParent(target);
+		let parent = target.getParent();
 		
-		if (this.getModel().isVertex(parent) && this.isCellConnectable(parent))
+		if (parent.isVertex() && this.isCellConnectable(parent))
 		{
 			target = parent;
 		}
 	}
 	
-	if (target == source || this.model.isEdge(target) ||
+	if (target == source || target.isEdge() ||
 		!this.isCellConnectable(target) &&
 		!this.isSwimlane(target))
 	{
@@ -3156,7 +3156,7 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 					
 					while (geo != null && geo.relative)
 					{
-						cellToClone = this.getModel().getParent(cellToClone);
+						cellToClone = cellToClone.getParent();
 						geo = this.getCellGeometry(cellToClone);
 					}
 					
@@ -3166,7 +3166,7 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 					
 					if (targetCell != null)
 					{
-						this.addCells([realTarget], this.model.getParent(source), null, null, null, true);
+						this.addCells([realTarget], source.getParent(), null, null, null, true);
 					}
 					
 					let geo = this.getCellGeometry(realTarget);
@@ -3189,7 +3189,7 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 				}
 				
 				let edge = ((mxEvent.isControlDown(evt) && mxEvent.isShiftDown(evt) && duplicate) ||
-					(target == null && cloneSource)) ? null : this.insertEdge(this.model.getParent(source),
+					(target == null && cloneSource)) ? null : this.insertEdge(source.getParent(),
 						null, '', source, realTarget, this.createCurrentEdgeStyle());
 		
 				// Inserts edge before source
@@ -3201,7 +3201,7 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 					while (tmp.parent != null && tmp.geometry != null &&
 						tmp.geometry.relative && tmp.parent != edge.parent)
 					{
-						tmp = this.model.getParent(tmp);
+						tmp = tmp.getParent();
 					}
 				
 					if (tmp != null && tmp.parent != null && tmp.parent == edge.parent)
@@ -3279,7 +3279,7 @@ Graph.prototype.getIndexableText = function()
 	{
 		let cell = this.model.cells[key];
 		
-		if (this.model.isVertex(cell) || this.model.isEdge(cell))
+		if (cell.isVertex() || cell.isEdge())
 		{
 			if (this.isHtmlLabel(cell))
 			{
@@ -3308,7 +3308,7 @@ Graph.prototype.getIndexableText = function()
  */
 Graph.prototype.convertValueToString = function(cell)
 {
-	let value = this.model.getValue(cell);
+	let value = cell.getValue();
 	
 	if (value != null && typeof(value) == 'object')
 	{
@@ -3327,7 +3327,7 @@ Graph.prototype.convertValueToString = function(cell)
 							current.getAttribute(name) : '') : null;
 				}
 				
-				current = this.model.getParent(current);
+				current = current.getParent();
 			}
 		}
 		else
@@ -3396,9 +3396,9 @@ Graph.prototype.getCellStyle = function(cell)
 	
 	if (cell != null && this.layoutManager != null)
 	{
-		let parent = this.model.getParent(cell);
+		let parent = cell.getParent();
 		
-		if (this.model.isVertex(parent) && this.isCellCollapsed(cell))
+		if (parent.isVertex() && this.isCellCollapsed(cell))
 		{
 			let layout = this.layoutManager.getLayout(parent);
 			
@@ -3419,7 +3419,7 @@ Graph.prototype.updateAlternateBounds = function(cell, geo, willCollapse)
 {
 	if (cell != null && geo != null && this.layoutManager != null && geo.alternateBounds != null)
 	{
-		let layout = this.layoutManager.getLayout(this.model.getParent(cell));
+		let layout = this.layoutManager.getLayout(cell.getParent());
 		
 		if (layout != null && layout.constructor == mxStackLayout)
 		{
@@ -3480,7 +3480,7 @@ Graph.prototype.foldCells = function(collapse, recurse, cells, checkFoldable, ev
 						
 						if (dy != 0 || dx != 0)
 						{
-							let parent = this.model.getParent(cells[i]);
+							let parent = cells[i].getParent();
 							let layout = this.layoutManager.getLayout(parent);
 							
 							if (layout == null)
@@ -3582,7 +3582,7 @@ Graph.prototype.resizeParentStacks = function(parent, layout, dx, dy)
 					this.model.setGeometry(parent, pgeo);
 				}
 				
-				parent = this.model.getParent(parent);
+				parent = parent.getParent();
 				layout = this.layoutManager.getLayout(parent);
 			}
 		}
@@ -4111,7 +4111,7 @@ HoverIcons.prototype.init = function()
 		graphClick.apply(this.graph, arguments);
 		
 		if (this.currentState != null && !this.graph.isCellSelected(this.currentState.cell) &&
-			mxEvent.isTouchEvent(me.getEvent()) && !this.graph.model.isVertex(me.getCell()))
+			mxEvent.isTouchEvent(me.getEvent()) && !me.getCell().isVertex())
 		{
 			this.reset();
 		}
@@ -4183,8 +4183,7 @@ HoverIcons.prototype.init = function()
 	    	else if (this.isActive())
 	    	{
 	    		// Selects target vertex after drag and clone if not only new edge was inserted
-	    		if (this.graph.getSelectionCount() != 1 || !this.graph.model.isEdge(
-	    			this.graph.getSelectionCell()))
+	    		if (this.graph.getSelectionCount() != 1 || !this.graph.getSelectionCell().isEdge())
 	    		{
 	    			this.update(this.getState(this.graph.view.getState(
 	    				this.graph.getCellAt(me.getGraphX(), me.getGraphY()))));
@@ -4421,7 +4420,7 @@ HoverIcons.prototype.click = function(state, dir, me)
 	
 	let tmp = this.getStateAt(state, x, y);
 
-	if (tmp != null && this.graph.model.isEdge(tmp.cell) && !this.graph.isCloneEvent(evt) &&
+	if (tmp != null && tmp.cell.isEdge() && !this.graph.isCloneEvent(evt) &&
 		(tmp.getVisibleTerminalState(true) == state || tmp.getVisibleTerminalState(false) == state))
 	{
 		this.graph.setSelectionCell(tmp.cell);
@@ -4480,7 +4479,7 @@ HoverIcons.prototype.repaint = function()
 		
 		// Cell was deleted	
 		if (this.currentState != null &&
-			this.graph.model.isVertex(this.currentState.cell) &&
+			this.currentState.cell.isVertex() &&
 			this.graph.isCellConnectable(this.currentState.cell))
 		{
 			let bds = mxRectangle.fromRectangle(this.currentState);
@@ -4499,7 +4498,7 @@ HoverIcons.prototype.repaint = function()
 			if (this.graph.isTableRow(this.currentState.cell))
 			{
 				handler = this.graph.selectionCellsHandler.getHandler(
-					this.graph.model.getParent(this.currentState.cell));
+					this.currentState.cell.getParent());
 			}
 			
 			let rotationBbox = null;
@@ -4588,7 +4587,7 @@ HoverIcons.prototype.repaint = function()
 				
 				let checkCollision = mxUtils.bind(this, function(cell, arrow)
 				{
-					let geo = this.graph.model.isVertex(cell) && this.graph.getCellGeometry(cell);
+					let geo = cell.isVertex() && this.graph.getCellGeometry(cell);
 					
 					// Ignores collision if vertex is more than 3 times the size of this vertex
 					if (cell != null && !this.graph.model.isAncestor(cell, this.currentState.cell) &&
@@ -4655,7 +4654,7 @@ HoverIcons.prototype.repaint = function()
  */
 HoverIcons.prototype.computeBoundingBox = function()
 {
-	let bbox = (!this.graph.model.isEdge(this.currentState.cell)) ? mxRectangle.fromRectangle(this.currentState) : null;
+	let bbox = (!this.currentState.cell.isEdge()) ? mxRectangle.fromRectangle(this.currentState) : null;
 	
 	this.visitNodes(function(elt)
 	{
@@ -4693,18 +4692,18 @@ HoverIcons.prototype.getState = function(state)
 		else
 		{
 			// Uses connectable parent vertex if child is not connectable
-			if (this.graph.getModel().isVertex(cell) && !this.graph.isCellConnectable(cell))
+			if (cell.isVertex() && !this.graph.isCellConnectable(cell))
 			{
-				let parent = this.graph.getModel().getParent(cell);
+				let parent = this.cell.getParent();
 				
-				if (this.graph.getModel().isVertex(parent) && this.graph.isCellConnectable(parent))
+				if (parent.isVertex() && this.graph.isCellConnectable(parent))
 				{
 					cell = parent;
 				}
 			}
 			
 			// Ignores locked cells and edges
-			if (this.graph.isCellLocked(cell) || this.graph.model.isEdge(cell))
+			if (this.graph.isCellLocked(cell) || cell.isEdge())
 			{
 				cell = null;
 			}
@@ -4734,7 +4733,7 @@ HoverIcons.prototype.update = function(state, x, y)
 	else
 	{
 		if (state != null && state.cell.geometry != null && state.cell.geometry.relative &&
-			this.graph.model.isEdge(state.cell.parent))
+			state.cell.parent.isEdge())
 		{
 			state = null;
 		}
@@ -4945,7 +4944,7 @@ Graph.prototype.createCrossFunctionalSwimlane = function(rowCount, colCount, w, 
  */
 Graph.prototype.isTableCell = function(cell)
 {
-	return this.model.isVertex(cell) && this.isTableRow(this.model.getParent(cell));
+	return cell.isVertex() && this.isTableRow(cell.getParent());
 };
 
 /**
@@ -4953,7 +4952,7 @@ Graph.prototype.isTableCell = function(cell)
  */
 Graph.prototype.isTableRow = function(cell)
 {
-	return this.model.isVertex(cell) && this.isTable(this.model.getParent(cell));
+	return cell.isVertex() && this.isTable(cell.getParent());
 };
 
 /**
@@ -4986,7 +4985,7 @@ Graph.prototype.setTableRowHeight = function(row, dy, extend)
 			rgeo.height += dy;
 			model.setGeometry(row, rgeo);
 			
-			let table = model.getParent(row);
+			let table = row.getParent();
 			let rows = model.getChildCells(table, true);
 			
 			// Shifts and resizes neighbor row
@@ -5049,8 +5048,8 @@ Graph.prototype.setTableColumnWidth = function(col, dx, extend)
 	extend = (extend != null) ? extend : false;
 	
 	let model = this.getModel();
-	let row = model.getParent(col);
-	let table = model.getParent(row);
+	let row = col.getParent();
+	let table = row.getParent();
 	let cells = model.getChildCells(row, true);
 	let index = mxUtils.indexOf(cells, col);
 	let lastColumn = index == cells.length - 1;
@@ -5151,7 +5150,7 @@ TableLayout.prototype.isHorizontal = function()
  */
 TableLayout.prototype.isVertexIgnored = function(vertex)
 {
-	return !this.graph.getModel().isVertex(vertex) ||
+	return !vertex.isVertex() ||
 		!this.graph.isCellVisible(vertex);
 };
 
@@ -5391,7 +5390,7 @@ TableLayout.prototype.execute = function(parent)
 		let state = this.getState(cell);
 		
 		// Forces repaint if jumps change on a valid edge
-		if (state != null && recurse && this.graph.model.isEdge(state.cell) &&
+		if (state != null && recurse && state.cell.isEdge() &&
 			state.style != null && state.style[mxConstants.STYLE_CURVED] != 1 &&
 			!state.invalid && this.updateLineJumps(state))
 		{
@@ -5401,7 +5400,7 @@ TableLayout.prototype.execute = function(parent)
 		state = mxGraphViewValidateCellState.apply(this, arguments);
 		
 		// Adds to the list of edges that may intersect with later edges
-		if (state != null && recurse && this.graph.model.isEdge(state.cell) &&
+		if (state != null && recurse && state.cell.isEdge() &&
 			state.style != null && state.style[mxConstants.STYLE_CURVED] != 1)
 		{
 			// LATER: Reuse jumps for valid edges
@@ -5431,7 +5430,7 @@ TableLayout.prototype.execute = function(parent)
 		mxGraphViewUpdateCellState.apply(this, arguments);
 
 		// Updates jumps on invalid edge before repaint
-		if (this.graph.model.isEdge(state.cell) &&
+		if (state.cell.isEdge() &&
 			state.style[mxConstants.STYLE_CURVED] != 1)
 		{
 			this.updateLineJumps(state);
@@ -6185,7 +6184,7 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			let style = this.graph.createCurrentEdgeStyle();
 			let edge = this.graph.createEdge(null, null, null, null, null, style);
-			let state = new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+			let state = new mxCell(this.graph.view, edge, this.graph.getCellStyle(edge));
 			
 			for (var key in this.graph.currentEdgeStyle)
 			{
@@ -6309,7 +6308,7 @@ if (typeof mxVertexHandler != 'undefined')
 			{
 				for (let i = 0; i < cells.length; i++)
 				{
-					if (this.model.isVertex(cells[i]) || this.model.isEdge(cells[i]))
+					if (cells[i].isVertex() || cells[i].isEdge())
 					{
 						this.setCellStyles(key, null, [cells[i]]);
 						let style = this.getCellStyle(cells[i]);
@@ -6363,11 +6362,11 @@ if (typeof mxVertexHandler != 'undefined')
 			{
 				let cell = cells[i];
 				lookup[mxObjectIdentity.get(cell)] = cell.getId();
-				let childCount = this.model.getChildCount(cell);
+				let childCount = cell.getChildCount();
 				
 				for (let j = 0; j < childCount; j++)
 				{
-					this.createCellLookup([this.model.getChildAt(cell, j)], lookup);
+					this.createCellLookup([cell.getChildAt(j)], lookup);
 				}
 			}
 			
@@ -6414,8 +6413,8 @@ if (typeof mxVertexHandler != 'undefined')
 			// Clones cells to remove invalid edges
 			let cloneMap = {};
 			let cellMapping = {};
-			let layers = tempModel.getChildren(this.cloneCell(tempModel.root,
-				this.isCloneInvalidEdges(), cloneMap));
+			let layers = this.cloneCell(tempModel.root,
+				this.isCloneInvalidEdges(), cloneMap).getChildren();
 			
 			if (layers != null)
 			{
@@ -6431,7 +6430,7 @@ if (typeof mxVertexHandler != 'undefined')
 					// Merges into unlocked current layer if one layer is pasted
 					if (layers.length == 1 && !this.isCellLocked(this.getDefaultParent()))
 					{
-						let children = tempModel.getChildren(layers[0]);
+						let children = layers[0].getChildren();
 						
 						if (children != null)
 						{
@@ -6439,7 +6438,7 @@ if (typeof mxVertexHandler != 'undefined')
 								dx, dy, false, this.getDefaultParent());
 							
 							// Imported default parent maps to local default parent
-							cellMapping[tempModel.getChildAt(tempModel.root, 0).getId()] =
+							cellMapping[tempModel.root.getChildAt(0).getId()] =
 								this.getDefaultParent().getId();
 						}
 					}
@@ -6447,8 +6446,8 @@ if (typeof mxVertexHandler != 'undefined')
 					{
 						for (let i = 0; i < layers.length; i++)
 						{
-							let children = this.model.getChildren(this.moveCells(
-								[layers[i]], dx, dy, false, this.model.getRoot())[0]);
+							let children = this.moveCells(
+								[layers[i]], dx, dy, false, this.model.getRoot())[0].getChildren();
 							
 							if (children != null)
 							{
@@ -6510,7 +6509,7 @@ if (typeof mxVertexHandler != 'undefined')
 			
 			let codec = new mxCodec();
 			let model = new mxGraphModel();
-			let parent = model.getChildAt(model.getRoot(), 0);
+			let parent = model.getRoot().getChildAt(0);
 			
 			for (let i = 0; i < clones.length; i++)
 			{
@@ -6523,8 +6522,8 @@ if (typeof mxVertexHandler != 'undefined')
 				{
 					let geo = this.getCellGeometry(clones[i]);
 					
-					if (geo != null && geo.relative && !this.model.isEdge(cells[i]) &&
-						dict.get(this.model.getParent(cells[i])) == null)
+					if (geo != null && geo.relative && !cells[i].isEdge() &&
+						dict.get(cells[i].getParent()) == null)
 					{
 						geo.offset = null;
 						geo.relative = false;
@@ -6545,8 +6544,8 @@ if (typeof mxVertexHandler != 'undefined')
 		 */
 		Graph.prototype.isSwimlane = function(cell, ignoreState)
 		{
-			if (cell != null && this.model.getParent(cell) != this.model.getRoot() &&
-				!this.model.isEdge(cell))
+			if (cell != null && cell.getParent() != this.model.getRoot() &&
+				!cell.isEdge())
 			{
 				let shape = this.getCurrentCellStyle(cell, ignoreState)
 					[mxConstants.STYLE_SHAPE];
@@ -6563,7 +6562,7 @@ if (typeof mxVertexHandler != 'undefined')
 		let graphIsExtendParent = Graph.prototype.isExtendParent;
 		Graph.prototype.isExtendParent = function(cell)
 		{
-			let parent = this.model.getParent(cell);
+			let parent = cell.getParent();
 			
 			if (parent != null)
 			{
@@ -6587,7 +6586,7 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			if (parent == null)
 			{
-				parent = this.model.getParent(edge);
+				parent = edge.getParent();
 				
 				if (this.isTable(parent) || this.isTableRow(parent))
 				{
@@ -6618,8 +6617,8 @@ if (typeof mxVertexHandler != 'undefined')
 				let flatten = mxUtils.bind(this, function(temp)
 				{
 					if (this.view.getState(temp) != null &&
-						(this.model.isVertex(temp) ||
-						this.model.isEdge(temp)))
+						(temp.isVertex() ||
+						temp.isEdge()))
 					{
 						cells.push(temp);
 						
@@ -6635,9 +6634,9 @@ if (typeof mxVertexHandler != 'undefined')
 						}
 					}
 		
-					for (let i = 0; i < this.model.getChildCount(temp); i++)
+					for (let i = 0; i < temp.getChildCount(); i++)
 					{
-						flatten(this.model.getChildAt(temp, i));
+						flatten(temp.getChildAt(i));
 					}
 				});
 				
@@ -6698,7 +6697,7 @@ if (typeof mxVertexHandler != 'undefined')
 				{
 					if (target != null && this.isTableRow(cells[i]))
 					{
-						let parent = this.model.getParent(cells[i]);
+						let parent = cells[i].getParent();
 						let row = this.getCellGeometry(cells[i]);
 						
 						if (this.isTable(parent))
@@ -6792,7 +6791,7 @@ if (typeof mxVertexHandler != 'undefined')
 				for (let i = 0; i < sourceTables.length; i++)
 				{
 					if (!clone && this.model.contains(sourceTables[i]) &&
-						this.model.getChildCount(sourceTables[i]) == 0)
+						sourceTables[i].getChildCount() == 0)
 					{
 						this.model.remove(sourceTables[i]);	
 					}
@@ -6828,12 +6827,12 @@ if (typeof mxVertexHandler != 'undefined')
 				{
 					if (this.isTableCell(cells[i]))
 					{
-						let row = this.model.getParent(cells[i]);
-						let table = this.model.getParent(row);
+						let row = cells[i].getParent();
+						let table = row.getParent();
 						
 						// Removes table if one cell in one row left
-						if (this.model.getChildCount(row) == 1 &&
-							this.model.getChildCount(table) == 1)
+						if (row.getChildCount() == 1 &&
+							table.getChildCount() == 1)
 						{
 							if (mxUtils.indexOf(cells, table) < 0 &&
 								mxUtils.indexOf(result, table) < 0)
@@ -6851,7 +6850,7 @@ if (typeof mxVertexHandler != 'undefined')
 						// Deletes table if all rows are removed
 						if (this.isTableRow(cells[i]))
 						{
-							let table = this.model.getParent(cells[i]);
+							let table = cells[i].getParent();
 							
 							if (mxUtils.indexOf(cells, table) < 0 &&
 								mxUtils.indexOf(result, table) < 0)
@@ -7000,14 +6999,14 @@ if (typeof mxVertexHandler != 'undefined')
 		Graph.prototype.isValidRoot = function(cell)
 		{
 			// Counts non-relative children
-			let childCount = this.model.getChildCount(cell);
+			let childCount = cell.getChildCount();
 			let realChildCount = 0;
 			
 			for (let i = 0; i < childCount; i++)
 			{
-				let child = this.model.getChildAt(cell, i);
+				let child = cell.getChildAt(i);
 				
-				if (this.model.isVertex(child))
+				if (child.isVertex())
 				{
 					let geometry = this.getCellGeometry(child);
 					
@@ -7063,7 +7062,7 @@ if (typeof mxVertexHandler != 'undefined')
 			
 			if (result && cell != null && this.layoutManager != null)
 			{
-				let parent = this.model.getParent(cell);
+				let parent = cell.getParent();
 				
 				if (parent != null)
 				{
@@ -7117,15 +7116,15 @@ if (typeof mxVertexHandler != 'undefined')
 				{
 					let cell = cells[i];
 					
-					if (model.isEdge(cell))
+					if (cell.isEdge())
 					{
-						let src = model.getTerminal(cell, true);
-						let trg = model.getTerminal(cell, false);
+						let src = cell.getTerminal(true);
+						let trg = cell.getTerminal(false);
 						
 						model.setTerminal(cell, trg, true);
 						model.setTerminal(cell, src, false);
 						
-						let geo = model.getGeometry(cell);
+						let geo = cell.getGeometry();
 						
 						if (geo != null)
 						{
@@ -7160,7 +7159,7 @@ if (typeof mxVertexHandler != 'undefined')
 							select.push(cell);
 						}
 					}
-					else if (model.isVertex(cell))
+					else if (cell.isVertex())
 					{
 						let geo = this.getCellGeometry(cell);
 			
@@ -7245,12 +7244,12 @@ if (typeof mxVertexHandler != 'undefined')
 				
 				if (this.isTableCell(cell))
 				{
-					cell = this.model.getParent(cell);
+					cell = cell.getParent();
 				}
 				
 				if (this.isTableRow(cell))
 				{
-					cell = this.model.getParent(cell);
+					cell = cell.getParent();
 				}
 				
 				// Forces repaint of table with unchanged style and geometry
@@ -7397,7 +7396,7 @@ if (typeof mxVertexHandler != 'undefined')
 								break;
 							}
 							
-							current = this.model.getParent(current);
+							current = current.getParent();
 						}
 					}
 					
@@ -7443,7 +7442,7 @@ if (typeof mxVertexHandler != 'undefined')
 				
 				for (let i = 0; i < cells.length; i++)
 				{
-					let parent = this.model.getParent(cells[i]);
+					let parent = cells[i].getParent();
 
 					if (parent != null && !dict.get(parent))
 					{
@@ -7456,16 +7455,16 @@ if (typeof mxVertexHandler != 'undefined')
 				{
 					let state = this.view.getState(parents[i]);
 					
-					if (state != null && (this.model.isEdge(state.cell) ||
-						this.model.isVertex(state.cell)) &&
+					if (state != null && (state.cell.isEdge() ||
+						state.cell.isVertex()) &&
 						this.isCellDeletable(state.cell) &&
 						this.isTransparentState(state))
 					{
 						let allChildren = true;
 						
-						for (let j = 0; j < this.model.getChildCount(state.cell) && allChildren; j++)
+						for (let j = 0; j < state.cell.getChildCount() && allChildren; j++)
 						{
-							if (!dict.get(this.model.getChildAt(state.cell, j)))
+							if (!dict.get(state.cell.getChildAt(j)))
 							{
 								allChildren = false;
 							}
@@ -7588,7 +7587,7 @@ if (typeof mxVertexHandler != 'undefined')
 			// Disables dragging edge labels out of edges
 			for (let i = 0; i < cells.length; i++)
 			{
-				if (this.model.isEdge(this.model.getParent(cells[i])))
+				if (cells[i].getParent().isEdge())
 				{
 					return null;
 				}
@@ -7608,12 +7607,12 @@ if (typeof mxVertexHandler != 'undefined')
 			{
 				if (this.isTableCell(target))
 				{
-					target = this.model.getParent(target);
+					target = target.getParent();
 				}
 				
 				if (this.isTableRow(target))
 				{
-					target = this.model.getParent(target);
+					target = target.getParent();
 				}
 				
 				if (!this.isTable(target))
@@ -7657,9 +7656,9 @@ if (typeof mxVertexHandler != 'undefined')
 			let pt = mxUtils.convertPoint(this.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
 	
 			// Automatically adds new child cells to edges on double click
-			if (evt != null && !this.model.isVertex(cell))
+			if (evt != null && !cell.isVertex())
 			{
-				let state = (this.model.isEdge(cell)) ? this.view.getState(cell) : null;
+				let state = (cell.isEdge()) ? this.view.getState(cell) : null;
 				let src = mxEvent.getSource(evt);
 				
 				if ((this.firstClickState == state && this.firstClickSource == src) &&
@@ -7768,7 +7767,7 @@ if (typeof mxVertexHandler != 'undefined')
 			label.vertex = true;
 			let style = 'html=1;align=center;verticalAlign=middle;resizable=0;points=[];';
 
-			if (state != null && this.model.isEdge(state.cell))
+			if (state != null && state.cell.isEdge())
 			{
 				label.style = 'edgeLabel;' + style;
 				label.geometry.relative = true;
@@ -8063,7 +8062,7 @@ if (typeof mxVertexHandler != 'undefined')
 			{
 				if (this.isTableCell(cells[i]))
 				{
-					cells[i] = this.model.getParent(cells[i]);
+					cells[i] = cells[i].getParent();
 				}
 			}
 			
@@ -8080,7 +8079,7 @@ if (typeof mxVertexHandler != 'undefined')
 				
 				for (let i = 0; i < cells.length; i++)
 				{
-					let parent = model.getParent(cells[i]);
+					let parent = cells[i].getParent();
 					let child = this.moveCells([clones[i]], s, s, false)[0];
 					select.push(child);
 					
@@ -8266,7 +8265,7 @@ if (typeof mxVertexHandler != 'undefined')
 				
 				for (let i = 0; i < cells.length; i++)
 				{
-					if (this.getModel().isVertex(cells[i]))
+					if (cells[i].isVertex())
 					{
 						let state = this.view.getState(cells[i]);
 						
@@ -8302,7 +8301,7 @@ if (typeof mxVertexHandler != 'undefined')
 						
 						for (let i = 1; i < vertices.length - 1; i++)
 						{
-							let pstate = this.view.getState(this.model.getParent(vertices[i].cell));
+							let pstate = this.view.getState(vertices[i].cell.getParent());
 							let geo = this.getCellGeometry(vertices[i].cell);
 							t0 += dt;
 							
@@ -8559,13 +8558,13 @@ if (typeof mxVertexHandler != 'undefined')
 				{
 					let graph = state.view.graph;
 					let selected = graph.isCellSelected(state.cell);
-					let parent = graph.model.getParent(state.cell);
+					let parent = state.cell.getParent();
 					
 					// Checks if parent cell is selected
 					while (!ignoreSelection && !selected && parent != null)
 					{
 						selected = graph.isCellSelected(parent);
-						parent = graph.model.getParent(parent);
+						parent = parent.getParent();
 					}
 					
 					if (ignoreSelection || selected)
@@ -8815,7 +8814,7 @@ if (typeof mxVertexHandler != 'undefined')
 					// Shrinks tables	
 					for (let i = 0; i < cells.length; i++)
 					{
-						let parent = this.model.getParent(cells[i]);
+						let parent = cells[i].getParent();
 						
 						if (this.isTable(parent))
 						{
@@ -8847,8 +8846,8 @@ if (typeof mxVertexHandler != 'undefined')
 					for (let i = 0; i < parents.length; i++)
 					{
 						if (this.model.contains(parents[i]) &&
-							(this.model.isVertex(parents[i]) ||
-							this.model.isEdge(parents[i])))
+							(parents[i].isVertex() ||
+								parents[i].isEdge()))
 						{
 							select.push(parents[i]);
 						}
@@ -8874,15 +8873,15 @@ if (typeof mxVertexHandler != 'undefined')
 				
 				if (this.isTableCell(cell))
 				{
-					let row = model.getParent(cell);
-					table = model.getParent(row);
+					let row = cell.getParent();
+					table = row.getParent();
 					index = mxUtils.indexOf(model.getChildCells(row, true), cell);
 				}
 				else
 				{
 					if (this.isTableRow(cell))
 					{
-						table = model.getParent(cell);
+						table = cell.getParent();
 					}
 					else
 					{
@@ -8950,12 +8949,12 @@ if (typeof mxVertexHandler != 'undefined')
 				
 				if (this.isTableCell(cell))
 				{
-					row = model.getParent(cell);
-					table = model.getParent(row);
+					row = cell.getParent();
+					table = row.getParent();
 				}
 				else if (this.isTableRow(cell))
 				{
-					table = model.getParent(cell);
+					table = cell.getParent();
 				}
 				else
 				{
@@ -9020,12 +9019,12 @@ if (typeof mxVertexHandler != 'undefined')
 				
 				if (this.isTableCell(cell))
 				{
-					row = model.getParent(cell);
+					row = cell.getParent();
 				}
 				
 				if (this.isTableRow(row))
 				{
-					table = model.getParent(row);
+					table = row.getParent();
 				}
 				
 				let rows = model.getChildCells(table, true);
@@ -9104,13 +9103,13 @@ if (typeof mxVertexHandler != 'undefined')
 				
 				if (this.isTableCell(cell))
 				{
-					row = model.getParent(cell);
+					row = cell.getParent();
 					cell = row;
 				}
 				
 				if (this.isTableRow(cell))
 				{
-					table = model.getParent(row);
+					table = row.getParent();
 				}
 				
 				let rows = model.getChildCells(table, true);
@@ -9617,11 +9616,11 @@ if (typeof mxVertexHandler != 'undefined')
 			this.graph.setSelectionCell(cell);
 
 			// Enables focus outline for edges and edge labels
-			let parent = this.graph.getModel().getParent(cell);
+			let parent = this.cell.getParent();
 			let geo = this.graph.getCellGeometry(cell);
 			
-			if ((this.graph.getModel().isEdge(parent) && geo != null && geo.relative) ||
-				this.graph.getModel().isEdge(cell))
+			if ((parent.isEdge() && geo != null && geo.relative) ||
+				cell.isEdge(cell))
 			{
 				// FF on Windows uses outline default of none
 				if (mxClient.IS_FF && mxClient.IS_WIN)
@@ -10021,7 +10020,7 @@ if (typeof mxVertexHandler != 'undefined')
 				mxCellEditorApplyValue.apply(this, arguments);
 				
 				if (value == '' && this.graph.isCellDeletable(state.cell) &&
-					this.graph.model.getChildCount(state.cell) == 0 &&
+					state.cell.getChildCount() == 0 &&
 					this.graph.isTransparentState(state))
 				{
 					this.graph.removeCells([state.cell], false);
@@ -10160,7 +10159,7 @@ if (typeof mxVertexHandler != 'undefined')
 				
 			if (style['childLayout'] == null)
 			{
-				let parent = this.graph.model.getParent(cell);
+				let parent = cell.getParent();
 				let geo = (parent != null) ? this.graph.getCellGeometry(parent) : null;
 			
 				if (geo != null)
@@ -10215,11 +10214,11 @@ if (typeof mxVertexHandler != 'undefined')
 				
 				if (this.graph.isTableCell(cell))
 				{
-					addCell(model.getParent(model.getParent(cell)));
+					addCell(model.getParent(cell.getParent()));
 				}
 				else if (this.graph.isTableRow(cell))
 				{
-					addCell(model.getParent(cell));
+					addCell(cell.getParent());
 				}
 				
 				addCell(cell);
@@ -10282,7 +10281,7 @@ if (typeof mxVertexHandler != 'undefined')
 		 */
 		mxVertexHandler.prototype.isCenteredEvent = function(state, me)
 		{
-			return (!(!this.graph.isSwimlane(state.cell) && this.graph.model.getChildCount(state.cell) > 0 &&
+			return (!(!this.graph.isSwimlane(state.cell) && state.cell.getChildCount() > 0 &&
 					!this.graph.isCellCollapsed(state.cell) &&
 					mxUtils.getValue(state.style, 'recursiveResize', '1') == '1' &&
 					mxUtils.getValue(state.style, 'childLayout', null) == null) &&
@@ -10309,7 +10308,7 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			if (this.graph.isTableCell(this.state.cell))
 			{
-				return this.graph.view.getState(this.graph.model.getParent(this.graph.model.getParent(this.state.cell)));
+				return this.graph.view.getState(this.state.cell.getParent().getParent());
 			}
 			else
 			{
@@ -10591,11 +10590,11 @@ if (typeof mxVertexHandler != 'undefined')
 			// Creates new handles
 			this.moveHandles = [];
 			
-			for (let i = 0; i < model.getChildCount(this.state.cell); i++)
+			for (let i = 0; i < this.state.cell.getChildCount(); i++)
 			{
 				(mxUtils.bind(this, function(rowState)
 				{
-					if (rowState != null && model.isVertex(rowState.cell))
+					if (rowState != null && rowState.cell.isVertex())
 					{
 						// Adds handle to move row
 						// LATER: Move to overlay pane to hide during zoom but keep padding
@@ -10643,7 +10642,7 @@ if (typeof mxVertexHandler != 'undefined')
 						this.graph.container.appendChild(moveHandle);
 	
 					}
-				}))(this.graph.view.getState(model.getChildAt(this.state.cell, i)));
+				}))(this.graph.view.getState(this.state.cell.getChildAt(i)));
 			}
 		};
 		
@@ -11334,10 +11333,10 @@ if (typeof mxVertexHandler != 'undefined')
 			if (cells != null && cells.length == 1)
 			{
 				let model = this.graph.getModel();
-				let parent = model.getParent(cells[0]);
+				let parent = cells[0].getParent();
 				let geo = this.graph.getCellGeometry(cells[0]);
 				
-				if (model.isEdge(parent) && geo != null && geo.relative)
+				if (parent.isEdge() && geo != null && geo.relative)
 				{
 					let state = this.graph.view.getState(cells[0]);
 					
@@ -11377,10 +11376,10 @@ if (typeof mxVertexHandler != 'undefined')
 		mxVertexHandler.prototype.getSelectionBounds = function(state)
 		{
 			let model = this.graph.getModel();
-			let parent = model.getParent(state.cell);
+			let parent = state.cell.getParent();
 			let geo = this.graph.getCellGeometry(state.cell);
 			
-			if (model.isEdge(parent) && geo != null && geo.relative && state.width < 2 && state.height < 2 && state.text != null && state.text.boundingBox != null)
+			if (parent.isEdge() && geo != null && geo.relative && state.width < 2 && state.height < 2 && state.text != null && state.text.boundingBox != null)
 			{
 				let bbox = state.text.unrotatedBoundingBox || state.text.boundingBox;
 				
@@ -11398,13 +11397,13 @@ if (typeof mxVertexHandler != 'undefined')
 		mxVertexHandler.prototype.mouseDown = function(sender, me)
 		{
 			let model = this.graph.getModel();
-			let parent = model.getParent(this.state.cell);
+			let parent = this.state.cell.getParent();
 			let geo = this.graph.getCellGeometry(this.state.cell);
 			
 			// Lets rotation events through
 			let handle = this.getHandleForEvent(me);
 			
-			if (handle == mxEvent.ROTATION_HANDLE || !model.isEdge(parent) || geo == null || !geo.relative ||
+			if (handle == mxEvent.ROTATION_HANDLE || !parent.isEdge() || geo == null || !geo.relative ||
 				this.state == null || this.state.width >= 2 || this.state.height >= 2)
 			{
 				mxVertexHandlerMouseDown.apply(this, arguments);
@@ -11417,7 +11416,7 @@ if (typeof mxVertexHandler != 'undefined')
 			let stroke = mxUtils.getValue(this.state.style, mxConstants.STYLE_STROKECOLOR, mxConstants.NONE);
 			let fill = mxUtils.getValue(this.state.style, mxConstants.STYLE_FILLCOLOR, mxConstants.NONE);
 			
-			if (this.state.view.graph.model.isVertex(this.state.cell) &&
+			if (this.state.cell.isVertex() &&
 				stroke == mxConstants.NONE && fill == mxConstants.NONE)
 			{
 				let angle = mxUtils.mod(mxUtils.getValue(this.state.style, mxConstants.STYLE_ROTATION, 0) + 90, 360);

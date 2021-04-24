@@ -235,7 +235,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
     if (
       parent !== this.root &&
-      model.isVertex(parent) != null &&
+      parent.isVertex() != null &&
       this.maintainParentLocation
     ) {
       const geo = this.graph.getCellGeometry(parent);
@@ -253,7 +253,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
         const ancestor =
           parent != null ? model.isAncestor(parent, roots[i]) : true;
 
-        if (ancestor && model.isVertex(roots[i])) {
+        if (ancestor && roots[i].isVertex()) {
           rootsCopy.push(roots[i]);
         }
       }
@@ -314,7 +314,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
       for (const i in vertices) {
         const cell = vertices[i];
 
-        if (model.isVertex(cell) && this.graph.isCellVisible(cell)) {
+        if (cell.isVertex() && this.graph.isCellVisible(cell)) {
           const conns = this.getEdges(cell);
           let fanOut = 0;
           let fanIn = 0;
@@ -369,10 +369,10 @@ class mxHierarchicalLayout extends mxGraphLayout {
     const { model } = this.graph;
     let edges = [];
     const isCollapsed = this.graph.isCellCollapsed(cell);
-    const childCount = model.getChildCount(cell);
+    const childCount = cell.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
-      const child = model.getChildAt(cell, i);
+      const child = cell.getChildAt(i);
 
       if (this.isPort(child)) {
         edges = edges.concat(model.getEdges(child, true, true));
@@ -446,12 +446,10 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
     if (terminal != null) {
       if (this.isPort(terminal)) {
-        terminal = this.graph.model.getParent(terminal);
+        terminal = terminal.getParent();
       }
-
       terminalCache.put(edge, terminal);
     }
-
     return terminal;
   }
 
@@ -577,7 +575,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     const { model } = this.graph;
 
     if (
-      model.isVertex(cell) &&
+      cell.isVertex() &&
       cell !== this.parent &&
       this.graph.isCellVisible(cell)
     ) {
@@ -588,10 +586,10 @@ class mxHierarchicalLayout extends mxGraphLayout {
       this.traverseAncestors ||
       (cell === this.parent && this.graph.isCellVisible(cell))
     ) {
-      const childCount = model.getChildCount(cell);
+      const childCount = cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        const child = model.getChildAt(cell, i);
+        const child = cell.getChildAt(i);
 
         // Ignore ports in the layout vertex list, they are dealt with
         // in the traversal mechanisms

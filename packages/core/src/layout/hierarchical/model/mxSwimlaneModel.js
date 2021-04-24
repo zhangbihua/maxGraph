@@ -207,7 +207,7 @@ class mxSwimlaneModel {
       internalVertices[i].swimlaneIndex = -1;
 
       for (let ii = 0; ii < swimlanes.length; ii += 1) {
-        if (graph.model.getParent(vertices[i]) === swimlanes[ii]) {
+        if (vertices[i].getParent() === swimlanes[ii]) {
           internalVertices[i].swimlaneIndex = ii;
           break;
         }
@@ -227,7 +227,7 @@ class mxSwimlaneModel {
         // Looking for outgoing edges only
         if (
           cell !== vertices[i] &&
-          layout.graph.model.isVertex(cell) &&
+          cell.isVertex() &&
           !layout.isVertexIgnored(cell)
         ) {
           // We process all edge between this source and its targets

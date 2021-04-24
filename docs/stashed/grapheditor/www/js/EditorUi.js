@@ -458,7 +458,7 @@ EditorUi = function(editor, container, lightbox)
 					}
 					
 					// Handles special case for value "none"
-					let cellStyle = graph.getModel().getStyle(state.cell);
+					let cellStyle = state.cell ? state.cell.getStyle() : null;
 					let tokens = (cellStyle != null) ? cellStyle.split(';') : [];
 					
 					for (let i = 0; i < tokens.length; i++)
@@ -480,7 +480,7 @@ EditorUi = function(editor, container, lightbox)
 					}
 		
 					// Resets current style
-					if (graph.getModel().isEdge(state.cell))
+					if (state.cell.isEdge())
 					{
 						graph.currentEdgeStyle = {};
 					}
@@ -564,7 +564,7 @@ EditorUi = function(editor, container, lightbox)
 					else
 					{
 						// Removes styles defined in the cell style from the styles to be applied
-						let cellStyle = model.getStyle(cell);
+						let cellStyle = cell.getStyle();
 						let tokens = (cellStyle != null) ? cellStyle.split(';') : [];
 						appliedStyles = styles.slice();
 						
@@ -606,9 +606,9 @@ EditorUi = function(editor, container, lightbox)
 					}
 					
 					// Applies the current style to the cell
-					let edge = model.isEdge(cell);
+					let edge = cell.isEdge();
 					let current = (edge) ? graph.currentEdgeStyle : graph.currentVertexStyle;
-					let newStyle = model.getStyle(cell);
+					let newStyle = cell.getStyle();
 					
 					for (let j = 0; j < appliedStyles.length; j++)
 					{
@@ -669,8 +669,8 @@ EditorUi = function(editor, container, lightbox)
 			{
 				for (let i = 0; i < cells.length; i++)
 				{
-					vertex = graph.getModel().isVertex(cells[i]) || vertex;
-					edge = graph.getModel().isEdge(cells[i]) || edge;
+					vertex = cells[i].isVertex() || vertex;
+					edge = cells[i].isEdge() || edge;
 					
 					if (edge && vertex)
 					{
@@ -868,7 +868,7 @@ EditorUi = function(editor, container, lightbox)
 			let cells = evt.getProperty('cells');
 			let parent = evt.getProperty('parent');
 			
-			if (graph.getModel().isLayer(parent) && !graph.isCellVisible(parent) && cells != null && cells.length > 0)
+			if (graph.getModel().isLayer(parent) && !parent.isVisible() && cells != null && cells.length > 0)
 			{
 				graph.getModel().setVisible(parent, true);
 			}
@@ -1210,7 +1210,7 @@ EditorUi.prototype.installShapePicker = function()
 					while (temp != null && graph.model.isVertex(temp) && geo != null && geo.relative)
 					{
 						cell = temp;
-						temp = graph.model.getParent(cell)
+						temp = cell.getParent()
 						geo = graph.getCellGeometry(temp);
 					}
 					
@@ -1634,7 +1634,7 @@ EditorUi.prototype.initClipboard = function()
 			// to avoid having to carry over the mapping from object
 			// ID to cell ID to the paste operation
 			let model = new mxGraphModel();
-			let parent = model.getChildAt(model.getRoot(), 0);
+			let parent = model.getRoot().getChildAt(0);
 			
 			for (let i = 0; i < clones.length; i++)
 			{
@@ -1647,8 +1647,8 @@ EditorUi.prototype.initClipboard = function()
 				{
 					let geo = graph.getCellGeometry(clones[i]);
 				
-					if (geo != null && geo.relative && !model.isEdge(result[i]) &&
-						lookup[mxObjectIdentity.get(model.getParent(result[i]))] == null)
+					if (geo != null && geo.relative && !result[i].isEdge() &&
+						lookup[mxObjectIdentity.get(result[i].getParent())] == null)
 					{
 						geo.offset = null;
 						geo.relative = false;
@@ -2120,7 +2120,7 @@ EditorUi.prototype.initCanvas = function()
 	
 				model.addListener(mxEvent.CHANGE, function()
 				{
-					 layersButton.style.display = (model.getChildCount(model.root) > 1) ? '' : 'none';
+					 layersButton.style.display = (model.root.getChildCount() > 1) ? '' : 'none';
 				});
 			}
 	
@@ -2798,7 +2798,7 @@ EditorUi.prototype.isDiagramEmpty = function()
 {
 	let model = this.editor.graph.getModel();
 	
-	return model.getChildCount(model.root) == 1 && model.getChildCount(model.getChildAt(model.root, 0)) == 0;
+	return model.getChildCount(model.root) == 1 && model.root.getChildAt(0).getChildCount() == 0;
 };
 
 /**
@@ -3475,16 +3475,16 @@ EditorUi.prototype.updateActionStates = function()
     	{
     		let cell = cells[i];
     		
-    		if (graph.getModel().isEdge(cell))
+    		if (cell.isEdge())
     		{
     			edgeSelected = true;
     		}
     		
-    		if (graph.getModel().isVertex(cell))
+    		if (cell.isVertex())
     		{
     			vertexSelected = true;
     			
-	    		if (graph.getModel().getChildCount(cell) > 0 ||
+	    		if (cell.getChildCount() > 0 ||
 	    			graph.isContainer(cell))
 	    		{
 	    			groupSelected = true;
@@ -3523,13 +3523,13 @@ EditorUi.prototype.updateActionStates = function()
 		(oneVertexSelected && !graph.isContainer(graph.getSelectionCell())));
 	this.actions.get('ungroup').setEnabled(groupSelected);
    	this.actions.get('removeFromGroup').setEnabled(oneVertexSelected &&
-   		graph.getModel().isVertex(graph.getModel().getParent(graph.getSelectionCell())));
+		graph.getSelectionCell().getParent().isVertex());
 
 	// Updates menu states
    	let state = graph.view.getState(graph.getSelectionCell());
     this.menus.get('navigation').setEnabled(selected || graph.view.currentRoot != null);
     this.actions.get('collapsible').setEnabled(vertexSelected &&
-    	(graph.isContainer(graph.getSelectionCell()) || graph.model.getChildCount(graph.getSelectionCell()) > 0));
+    	(graph.isContainer(graph.getSelectionCell()) || graph.getSelectionCell().getChildCount() > 0));
     this.actions.get('home').setEnabled(graph.view.currentRoot != null);
     this.actions.get('exitGroup').setEnabled(graph.view.currentRoot != null);
     this.actions.get('enterGroup').setEnabled(graph.getSelectionCount() == 1 && graph.isValidRoot(graph.getSelectionCell()));
@@ -4106,7 +4106,7 @@ EditorUi.prototype.ctrlEnter = function()
 		    for (let i = 0; i < cells.length; i++)
 		    {
 		    	// Clones table rows instead of cells
-		    	let cell = (graph.isTableCell(cells[i])) ? graph.model.getParent(cells[i]) : cells[i];
+		    	let cell = (graph.isTableCell(cells[i])) ? cells[i].getParent() : cells[i];
 		    	
 		    	if (cell != null && !lookup.get(cell))
 		    	{
@@ -4593,7 +4593,7 @@ EditorUi.prototype.createKeyHandler = function(editor)
 						
 						for (let i = 0; i < cells.length; i++)
 						{
-							if (graph.getModel().isVertex(cells[i]) && graph.isCellResizable(cells[i]))
+							if (cells[i].isVertex() && graph.isCellResizable(cells[i]))
 							{
 								let geo = graph.getCellGeometry(cells[i]);
 								
@@ -4632,7 +4632,7 @@ EditorUi.prototype.createKeyHandler = function(editor)
 				{
 					// Moves vertices up/down in a stack layout
 					let cell = graph.getSelectionCell();
-					let parent = graph.model.getParent(cell);
+					let parent = cell.getParent();
 					let layout = null;
 	
 					if (graph.getSelectionCount() == 1 && graph.model.isVertex(cell) &&
@@ -4651,7 +4651,7 @@ EditorUi.prototype.createKeyHandler = function(editor)
 						}
 						else if (keyCode == 39 ||keyCode == 40)
 						{
-							graph.model.add(parent, cell, Math.min(graph.model.getChildCount(parent), index + 1));
+							graph.model.add(parent, cell, Math.min(parent.getChildCount(), index + 1));
 						}
 					}
 					else
@@ -4666,7 +4666,7 @@ EditorUi.prototype.createKeyHandler = function(editor)
 					    	
 							if (mxUtils.getValue(style, 'part', '0') == '1')
 							{
-						        let parent = graph.model.getParent(cells[i]);
+						        let parent = cells[i].getParent();
 					
 						        if (graph.model.isVertex(parent) && mxUtils.indexOf(cells, parent) < 0)
 						        {
@@ -4790,7 +4790,7 @@ EditorUi.prototype.createKeyHandler = function(editor)
 				// On macOS, Control+Cursor is used by Expose so allow for Alt+Control to resize
 				if (!this.isControlDown(evt) && mxEvent.isShiftDown(evt) && mxEvent.isAltDown(evt))
 				{
-					if (graph.model.isVertex(graph.getSelectionCell()))
+					if (graph.getSelectionCell() && graph.getSelectionCell().isVertex())
 					{
 						return function()
 						{
@@ -4799,9 +4799,9 @@ EditorUi.prototype.createKeyHandler = function(editor)
 			
 							if (cells != null && cells.length > 0)
 							{
-								if (cells.length == 1 && graph.model.isEdge(cells[0]))
+								if (cells.length == 1 && cells[0].isEdge())
 								{
-									graph.setSelectionCell(graph.model.getTerminal(cells[0], false));
+									graph.setSelectionCell(cells[0].getTerminal(false));
 								}
 								else
 								{

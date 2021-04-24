@@ -1075,9 +1075,9 @@ class mxEdgeStyle {
   ) {
     const { graph } = state.view;
     const sourceEdge =
-      source == null ? false : graph.getModel().isEdge(source.cell);
+      source == null ? false : source.cell.isEdge();
     const targetEdge =
-      target == null ? false : graph.getModel().isEdge(target.cell);
+      target == null ? false : target.cell.isEdge();
 
     const pts = mxEdgeStyle.scalePointArray(
       state.absolutePoints,

@@ -597,10 +597,10 @@ class mxConnectionHandler extends mxEventSource {
 
         // Uses connectable parent vertex if one exists
         if (cell != null && !self.graph.isCellConnectable(cell)) {
-          const parent = self.graph.getModel().getParent(cell);
+          const parent = self.cell.getParent();
 
           if (
-            self.graph.getModel().isVertex(parent) &&
+            parent.isVertex() &&
             self.graph.isCellConnectable(parent)
           ) {
             cell = parent;
@@ -2008,12 +2008,12 @@ class mxConnectionHandler extends mxEventSource {
             // FIXME: Should not shift if vertex was aligned (same in Java)
             if (
               dropTarget == null ||
-              !this.graph.getModel().isEdge(dropTarget)
+              !dropTarget.isEdge()
             ) {
               const pstate = this.graph.getView().getState(dropTarget);
 
               if (pstate != null) {
-                const tmp = model.getGeometry(target);
+                const tmp = target.getGeometry();
                 tmp.x -= pstate.origin.x;
                 tmp.y -= pstate.origin.y;
               }
@@ -2030,10 +2030,10 @@ class mxConnectionHandler extends mxEventSource {
         if (
           source != null &&
           target != null &&
-          model.getParent(source) === model.getParent(target) &&
-          model.getParent(model.getParent(source)) !== model.getRoot()
+          source.getParent() === target.getParent() &&
+          source.getParent().getParent() !== model.getRoot()
         ) {
-          parent = model.getParent(source);
+          parent = source.getParent();
 
           if (
             source.geometry != null &&
@@ -2041,7 +2041,7 @@ class mxConnectionHandler extends mxEventSource {
             target.geometry != null &&
             target.geometry.relative
           ) {
-            parent = model.getParent(parent);
+            parent = parent.getParent();
           }
         }
 
@@ -2077,7 +2077,7 @@ class mxConnectionHandler extends mxEventSource {
             model.setGeometry(edge, this.edgeState.cell.geometry);
           }
 
-          parent = model.getParent(source);
+          parent = source.getParent();
 
           // Inserts edge before source
           if (this.isInsertBefore(edge, source, target, evt, dropTarget)) {
@@ -2090,7 +2090,7 @@ class mxConnectionHandler extends mxEventSource {
               tmp.geometry.relative &&
               tmp.parent !== edge.parent
             ) {
-              tmp = this.graph.model.getParent(tmp);
+              tmp = tmp.getParent();
             }
 
             if (
@@ -2103,7 +2103,7 @@ class mxConnectionHandler extends mxEventSource {
           }
 
           // Makes sure the edge has a non-null, relative geometry
-          let geo = model.getGeometry(edge);
+          let geo = edge.getGeometry();
 
           if (geo == null) {
             geo = new mxGeometry();
@@ -2218,12 +2218,12 @@ class mxConnectionHandler extends mxEventSource {
     let geo = this.graph.getCellGeometry(source);
 
     while (geo != null && geo.relative) {
-      source = this.graph.getModel().getParent(source);
+      source = source.getParent();
       geo = this.graph.getCellGeometry(source);
     }
 
     const clone = this.graph.cloneCell(source);
-    geo = this.graph.getModel().getGeometry(clone);
+    geo = clone.getGeometry();
 
     if (geo != null) {
       const t = this.graph.view.translate;

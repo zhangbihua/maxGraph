@@ -206,10 +206,10 @@ class mxConstraintHandler {
 
     // Uses connectable parent vertex if one exists
     if (cell != null && !this.graph.isCellConnectable(cell)) {
-      const parent = this.graph.getModel().getParent(cell);
+      const parent = this.cell.getParent();
 
       if (
-        this.graph.getModel().isVertex(parent) &&
+        parent.isVertex() &&
         this.graph.isCellConnectable(parent)
       ) {
         cell = parent;
@@ -257,7 +257,7 @@ class mxConstraintHandler {
         (this.currentFocusArea == null ||
           this.currentFocus == null ||
           state != null ||
-          !this.graph.getModel().isVertex(this.currentFocus.cell) ||
+          !this.currentFocus.cell.isVertex() ||
           !mxUtils.intersects(this.currentFocusArea, mouse)) &&
         state !== this.currentFocus
       ) {

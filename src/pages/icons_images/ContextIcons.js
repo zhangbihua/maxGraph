@@ -161,7 +161,7 @@ class ContextIcons extends React.Component {
 
     class MyCustomGraph extends mxGraph {
       createHandler(state) {
-        if (state != null && this.model.isVertex(state.cell)) {
+        if (state != null && state.cell.isVertex()) {
           return new mxVertexToolHandler(state);
         }
         return super.createHandler(state);

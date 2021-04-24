@@ -101,7 +101,7 @@ class UserObject extends React.Component {
 
     // Overrides method to disallow edge label editing
     graph.isCellEditable = function(cell) {
-      return !this.getModel().isEdge(cell);
+      return !cell.isEdge();
     };
 
     // Overrides method to provide a cell label in the display
@@ -174,9 +174,9 @@ class UserObject extends React.Component {
     const { getTooltipForCell } = graph;
     graph.getTooltipForCell = function(cell) {
       // Adds some relation details for edges
-      if (graph.getModel().isEdge(cell)) {
-        const src = this.getLabel(this.getModel().getTerminal(cell, true));
-        const trg = this.getLabel(this.getModel().getTerminal(cell, false));
+      if (cell.isEdge()) {
+        const src = this.getLabel(cell.getTerminal(true));
+        const trg = this.getLabel(cell.getTerminal(false));
 
         return `${src} ${cell.value.nodeName} ${trg}`;
       }

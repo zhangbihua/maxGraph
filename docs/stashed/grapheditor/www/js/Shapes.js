@@ -4181,7 +4181,7 @@
 						if (graph.isTableRow(state.cell) || graph.isTableCell(state.cell))
 						{
 							let dir = graph.getSwimlaneDirection(state.style);
-							let parent = graph.model.getParent(state.cell);
+							let parent = state.cell.getParent();
 							let cells = graph.model.getChildCells(parent, true);
 							let temp = []; 
 							

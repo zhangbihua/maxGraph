@@ -243,7 +243,7 @@ class mxLayoutManager extends mxEventSource {
 
       for (let i = 0; i < cells.length; i += 1) {
         const layout = this.getLayout(
-          model.getParent(cells[i]),
+            cells[i].getParent(),
           mxEvent.MOVE_CELLS
         );
 
@@ -271,7 +271,7 @@ class mxLayoutManager extends mxEventSource {
 
       for (let i = 0; i < cells.length; i += 1) {
         const layout = this.getLayout(
-          model.getParent(cells[i]),
+            cells[i].getParent(),
           mxEvent.RESIZE_CELLS
         );
         if (layout != null) {
@@ -349,7 +349,7 @@ class mxLayoutManager extends mxEventSource {
 
       if (this.isBubbling()) {
         const model = (<mxGraph>this.getGraph()).getModel();
-        this.addAncestorsWithLayout(<mxCell>model.getParent(cell), result);
+        this.addAncestorsWithLayout(<mxCell>cell.getParent(), result);
       }
     }
     return result;
@@ -363,8 +363,8 @@ class mxLayoutManager extends mxEventSource {
     if (cell != null && this.hasLayout(cell)) {
       const model = (<mxGraph>this.getGraph()).getModel();
 
-      for (let i = 0; i < model.getChildCount(cell); i += 1) {
-        const child = <mxCell>model.getChildAt(cell, i);
+      for (let i = 0; i < cell.getChildCount(); i += 1) {
+        const child = <mxCell>cell.getChildAt(i);
 
         if (this.hasLayout(child)) {
           result.push(child);

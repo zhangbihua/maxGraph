@@ -71,6 +71,11 @@ class mxCell {
     }
   }
 
+  // TODO: Document me!!!
+  getChildren(): mxCell[] {
+    return this.children || [];
+  }
+
   // TODO: Document me!
   // used by invalidate() of mxGraphView
   invalidating: boolean = false;

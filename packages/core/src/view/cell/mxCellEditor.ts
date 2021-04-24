@@ -548,7 +548,7 @@ class mxCellEditor {
     if (state == null) {
       this.stopEditing(true);
     } else if (this.textarea != null) {
-      const isEdge = this.graph.getModel().isEdge(state.cell);
+      const isEdge = state.cell.isEdge();
       const { scale } = this.graph.getView();
       let m = null;
 
@@ -1106,7 +1106,7 @@ class mxCellEditor {
    */
   // getEditorBounds(state: mxCellState): mxRectangle;
   getEditorBounds(state: mxCellState): mxRectangle | null {
-    const isEdge = this.graph.getModel().isEdge(state.cell);
+    const isEdge = state.cell.isEdge();
     const { scale } = this.graph.getView();
     const minSize = this.getMinimumSize(state);
     const minWidth = minSize.width;
@@ -1196,7 +1196,7 @@ class mxCellEditor {
       }
 
       // Applies the horizontal and vertical label positions
-      if (this.graph.getModel().isVertex(state.cell)) {
+      if (state.cell.isVertex()) {
         const horizontal: string = <string>mxUtils.getStringValue(
           state.style,
           mxConstants.STYLE_LABEL_POSITION,

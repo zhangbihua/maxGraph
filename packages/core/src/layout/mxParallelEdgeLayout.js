@@ -122,10 +122,10 @@ class mxParallelEdgeLayout extends mxGraphLayout {
       }
     } else {
       const model = this.graph.getModel();
-      const childCount = model.getChildCount(parent);
+      const childCount = parent.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        addCell(model.getChildAt(parent, i));
+        addCell(parent.getChildAt(i));
       }
     }
 
@@ -181,8 +181,8 @@ class mxParallelEdgeLayout extends mxGraphLayout {
     const edge = parallels[0];
     const view = this.graph.getView();
     const model = this.graph.getModel();
-    const src = model.getGeometry(view.getVisibleTerminal(edge, true));
-    const trg = model.getGeometry(view.getVisibleTerminal(edge, false));
+    const src = view.getVisibleTerminal(edge, true).getGeometry();
+    const trg = view.getVisibleTerminal(edge, false).getGeometry();
 
     let x0;
     let y0;

@@ -160,13 +160,13 @@ class mxStackLayout extends mxGraphLayout {
   // moveCell(cell: mxCell, x: number, y: number): void;
   moveCell(cell, x, y) {
     const model = this.graph.getModel();
-    const parent = model.getParent(cell);
+    const parent = cell.getParent();
     const horizontal = this.isHorizontal();
 
     if (cell != null && parent != null) {
       let i = 0;
       let last = 0;
-      const childCount = model.getChildCount(parent);
+      const childCount = parent.getChildCount();
       let value = horizontal ? x : y;
       const pstate = this.graph.getView().getState(parent);
 
@@ -177,10 +177,10 @@ class mxStackLayout extends mxGraphLayout {
       value /= this.graph.view.scale;
 
       for (i = 0; i < childCount; i += 1) {
-        const child = model.getChildAt(parent, i);
+        const child = parent.getChildAt(i);
 
         if (child !== cell) {
-          const bounds = model.getGeometry(child);
+          const bounds = child.getGeometry();
 
           if (bounds != null) {
             const tmp = horizontal
@@ -210,7 +210,7 @@ class mxStackLayout extends mxGraphLayout {
   // getParentSize(): void;
   getParentSize(parent) {
     const model = this.graph.getModel();
-    let pgeo = model.getGeometry(parent);
+    let pgeo = parent.getGeometry();
 
     // Handles special case where the parent is either a layer with no
     // geometry or the current root of the view in which case the size
@@ -234,11 +234,11 @@ class mxStackLayout extends mxGraphLayout {
   // getLayoutCells(parent: mxCell): Array<mxCell>;
   getLayoutCells(parent) {
     const model = this.graph.getModel();
-    const childCount = model.getChildCount(parent);
+    const childCount = parent.getChildCount();
     const cells = [];
 
     for (let i = 0; i < childCount; i += 1) {
-      const child = model.getChildAt(parent, i);
+      const child = parent.getChildAt(i);
 
       if (!this.isVertexIgnored(child) && this.isVertexMovable(child)) {
         cells.push(child);
@@ -346,7 +346,7 @@ class mxStackLayout extends mxGraphLayout {
 
         for (let i = 0; i < cells.length; i += 1) {
           const child = cells[i];
-          let geo = model.getGeometry(child);
+          let geo = child.getGeometry();
 
           if (geo != null) {
             geo = geo.clone();

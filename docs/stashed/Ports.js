@@ -201,7 +201,7 @@ export default Ports;
             cell != null &&
             this.isCellEditable(cell))
           {
-            if (this.model.isEdge(cell) ||
+            if (cell.isEdge() ||
               !this.isHtmlLabel(cell))
             {
               this.startEditingAtCell(cell);
