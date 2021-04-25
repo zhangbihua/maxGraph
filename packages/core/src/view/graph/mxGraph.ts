@@ -1330,7 +1330,7 @@ class mxGraph extends mxEventSource {
         let par = cells[i].getParent();
 
         while (par != null && par !== this.getView().currentRoot) {
-          if (this.isCellCollapsed(par) || !par.isVisible()) {
+          if (par.isCollapsed() || !par.isVisible()) {
             removed.push(cells[i]);
             break;
           }
@@ -1374,7 +1374,7 @@ class mxGraph extends mxEventSource {
       const newParent = change.child.getParent();
       this.getView().invalidate(change.child, true, true);
 
-      if (!this.getModel().contains(newParent) || this.isCellCollapsed(newParent)) {
+      if (!this.getModel().contains(newParent) || newParent.isCollapsed()) {
         this.getView().invalidate(change.child, true, true);
         this.removeStateForCell(change.child);
 
@@ -4470,7 +4470,7 @@ class mxGraph extends mxEventSource {
         for (let i = 0; i < cells.length; i += 1) {
           if (
             (!checkFoldable || this.isCellFoldable(cells[i], collapse)) &&
-            collapse !== this.isCellCollapsed(cells[i])
+            collapse !== cells[i].isCollapsed()
           ) {
             this.getModel().setCollapsed(cells[i], collapse);
             this.swapBounds(cells[i], collapse);
@@ -4678,7 +4678,7 @@ class mxGraph extends mxEventSource {
         let geo = cell.getGeometry();
 
         if (size != null && geo != null) {
-          const collapsed = this.isCellCollapsed(cell);
+          const collapsed = cell.isCollapsed();
           geo = <mxGeometry>geo.clone();
 
           if (this.isSwimlane(cell)) {
@@ -5186,7 +5186,7 @@ class mxGraph extends mxEventSource {
       const parent = <mxCell>cell.getParent();
       let p = parent.getGeometry();
 
-      if (parent != null && p != null && !this.isCellCollapsed(parent)) {
+      if (parent != null && p != null && !parent.isCollapsed()) {
         const geo = cell.getGeometry();
 
         if (
@@ -5640,7 +5640,7 @@ class mxGraph extends mxEventSource {
         if (max != null) {
           const cells = [cell];
 
-          if (!this.isCellCollapsed(cell)) {
+          if (!cell.isCollapsed()) {
             const desc = this.getModel().getDescendants(cell);
 
             for (let i = 0; i < desc.length; i += 1) {
@@ -7742,7 +7742,7 @@ class mxGraph extends mxEventSource {
     let warning = '';
 
     // Adds error for invalid children if collapsed (children invisible)
-    if (cell && this.isCellCollapsed(cell) && !isValid) {
+    if (cell && cell.isCollapsed() && !isValid) {
       warning += `${mxResources.get(this.containsValidationErrorsResource) ||
         this.containsValidationErrorsResource}\n`;
     }
@@ -7859,7 +7859,7 @@ class mxGraph extends mxEventSource {
       this.foldingEnabled &&
       !state.cell.isEdge()
     ) {
-      const tmp = this.isCellCollapsed(<mxCell>state.cell);
+      const tmp = (<mxCell>state.cell).isCollapsed();
 
       if (this.isCellFoldable(state.cell, !tmp)) {
         return tmp ? this.collapsedImage : this.expandedImage;
@@ -9313,7 +9313,7 @@ class mxGraph extends mxEventSource {
       (cell == null && this.allowDanglingEdges) ||
       (cell != null &&
         (!cell.isEdge() || this.connectableEdges) &&
-        this.isCellConnectable(cell))
+        cell.isConnectable())
     );
   }
 
@@ -9666,7 +9666,7 @@ class mxGraph extends mxEventSource {
         (!cell.isEdge() &&
           (this.isSwimlane(cell) ||
             (cell.getChildCount() > 0 &&
-              !this.isCellCollapsed(cell)))))
+              !cell.isCollapsed()))))
     );
   }
 
@@ -9687,7 +9687,7 @@ class mxGraph extends mxEventSource {
       target.isEdge() &&
       cells != null &&
       cells.length == 1 &&
-      this.isCellConnectable(cells[0]) &&
+      cells[0].isConnectable() &&
       this.getEdgeValidationError(
         target,
         target.getTerminal(true),
@@ -10142,7 +10142,7 @@ class mxGraph extends mxEventSource {
            recurse: boolean=false): mxCell[] {
 
     let edges: mxCell[] = [];
-    const isCollapsed = this.isCellCollapsed(cell);
+    const isCollapsed = cell.isCollapsed();
     const childCount = cell.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {

@@ -236,7 +236,7 @@ class SwimLanes extends React.Component {
     // Changes swimlane orientation while collapsed
     const getStyle = function() {
       let style = super.getStyle();
-      if (this.isCellCollapsed()) {
+      if (this.isCollapsed()) {
         if (style != null) {
           style += ';';
         } else {

@@ -286,7 +286,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
     try {
       this.run(parent);
 
-      if (this.resizeParent && !this.graph.isCellCollapsed(parent)) {
+      if (this.resizeParent && !parent.isCollapsed()) {
         this.graph.updateGroupBounds(
           [parent],
           this.parentBorder,
@@ -429,7 +429,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
         if (
           cell != null &&
           cell.isVertex() &&
-          this.graph.isCellVisible(cell) &&
+          cell.isVisible() &&
           model.isAncestor(parent, cell)
         ) {
           const conns = this.getEdges(cell);
@@ -490,7 +490,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
     const { model } = this.graph;
     let edges = [];
-    const isCollapsed = this.graph.isCellCollapsed(cell);
+    const isCollapsed = cell.isCollapsed();
     const childCount = cell.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
@@ -498,7 +498,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
       if (this.isPort(child)) {
         edges = edges.concat(model.getEdges(child, true, true));
-      } else if (isCollapsed || !this.graph.isCellVisible(child)) {
+      } else if (isCollapsed || !child.isVisible()) {
         edges = edges.concat(model.getEdges(child, true, true));
       }
     }
@@ -713,14 +713,14 @@ class mxSwimlaneLayout extends mxGraphLayout {
       cell.isVertex() &&
       cell !== this.parent &&
       cell.getParent() !== this.parent &&
-      this.graph.isCellVisible(cell)
+      cell.isVisible()
     ) {
       result[mxObjectIdentity.get(cell)] = cell;
     }
 
     if (
       this.traverseAncestors ||
-      (cell === this.parent && this.graph.isCellVisible(cell))
+      (cell === this.parent && cell.isVisible())
     ) {
       const childCount = cell.getChildCount();
 

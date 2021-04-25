@@ -205,18 +205,22 @@ class mxConstraintHandler {
     }
 
     // Uses connectable parent vertex if one exists
-    if (cell != null && !this.graph.isCellConnectable(cell)) {
+    if (cell != null && !cell.isConnectable()) {
       const parent = this.cell.getParent();
 
       if (
         parent.isVertex() &&
-        this.graph.isCellConnectable(parent)
+        parent.isConnectable()
       ) {
         cell = parent;
       }
     }
 
-    return this.graph.isCellLocked(cell) ? null : cell;
+    if (cell) {
+      return this.graph.isCellLocked(cell) ? null : cell;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -385,7 +389,7 @@ class mxConstraintHandler {
     this.constraints =
       state != null &&
       !this.isStateIgnored(state, source) &&
-      this.graph.isCellConnectable(state.cell)
+      state.cell.isConnectable()
         ? this.isEnabled()
           ? this.graph.getAllConnectionConstraints(state, source) || []
           : []

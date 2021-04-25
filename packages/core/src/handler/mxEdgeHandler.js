@@ -601,12 +601,12 @@ class mxEdgeHandler {
         }
 
         // Uses connectable parent vertex if one exists
-        if (cell != null && !this.graph.isCellConnectable(cell)) {
+        if (cell != null && !cell.isConnectable()) {
           const parent = this.cell.getParent();
 
           if (
             parent.isVertex() &&
-            this.graph.isCellConnectable(parent)
+            parent.isConnectable()
           ) {
             cell = parent;
           }
@@ -632,7 +632,7 @@ class mxEdgeHandler {
           cell = null;
         }
 
-        if (!this.graph.isCellConnectable(cell)) {
+        if (cell && !cell.isConnectable()) {
           cell = null;
         }
         return cell;
@@ -1523,7 +1523,7 @@ class mxEdgeHandler {
         this.marker.highlight.repaint();
       } else if (this.marker.hasValidState()) {
         this.marker.highlight.shape.stroke =
-          this.graph.isCellConnectable(me.getCell()) &&
+          me.getCell().isConnectable() &&
           this.marker.getValidState() !== me.getState()
             ? 'transparent'
             : mxConstants.DEFAULT_VALID_COLOR;
@@ -1661,7 +1661,7 @@ class mxEdgeHandler {
           } else if (
             terminalState != null &&
             terminalState !== me.getState() &&
-            this.graph.isCellConnectable(me.getCell()) &&
+            me.getCell().isConnectable() &&
             this.marker.highlight.shape != null
           ) {
             this.marker.highlight.shape.stroke = 'transparent';

@@ -3444,13 +3444,13 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			}) : null;
 		
 		// Uses connectable parent vertex if one exists
-		if (cell != null && !this.graph.isCellConnectable(cell) &&
+		if (cell != null && !cell.isConnectable() &&
 			!cell.isEdge())
 		{
 			let parent = this.cell.getParent();
 			
 			if (parent.isVertex() &&
-				this.graph.isCellConnectable(parent))
+				parent.isConnectable())
 			{
 				cell = parent;
 			}
@@ -3641,9 +3641,9 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			state = currentStyleTarget;
 		}
 
-		let validTarget = (firstVertex == null || graph.isCellConnectable(cells[firstVertex])) &&
+		let validTarget = (firstVertex == null || cells[firstVertex].isConnectable()) &&
 			((cell.isEdge() && firstVertex != null) ||
-			(cell.isVertex() && graph.isCellConnectable(cell)));
+			(cell.isVertex() && cell.isConnectable()));
 		
 		// Drop arrows shown after this.dropTargetDelay, hidden after 5 secs, switches arrows after 500ms
 		if ((currentTargetState != null && timeOnTarget >= 5000) ||

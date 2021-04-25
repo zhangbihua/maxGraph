@@ -214,7 +214,7 @@ class mxGraphLayout {
   isVertexIgnored(vertex) {
     return (
       !vertex.isVertex() ||
-      !this.graph.isCellVisible(vertex)
+      !vertex.isVisible()
     );
   }
 
@@ -230,7 +230,7 @@ class mxGraphLayout {
 
     return (
       !edge.isEdge() ||
-      !this.graph.isCellVisible(edge) ||
+      !edge.isVisible() ||
       edge.getTerminal(true) == null ||
       edge.getTerminal(false) == null
     );

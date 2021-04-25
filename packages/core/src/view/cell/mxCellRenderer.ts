@@ -717,7 +717,7 @@ class mxCellRenderer {
 
     return (evt: mxEventObject) => {
       if (this.forceControlClickHandler || graph.isEnabled()) {
-        const collapse = !graph.isCellCollapsed(state.cell);
+        const collapse = !state.cell.isCollapsed();
         graph.foldCells(collapse, false, [state.cell], false, evt);
         mxEvent.consume(evt);
       }

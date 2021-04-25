@@ -456,7 +456,7 @@ class mxStackLayout extends mxGraphLayout {
           this.resizeParent &&
           pgeo != null &&
           last != null &&
-          !this.graph.isCellCollapsed(parent)
+          !parent.isCollapsed()
         ) {
           this.updateParentGeometry(parent, pgeo, last);
         } else if (

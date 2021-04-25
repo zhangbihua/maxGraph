@@ -596,12 +596,12 @@ class mxConnectionHandler extends mxEventSource {
         }
 
         // Uses connectable parent vertex if one exists
-        if (cell != null && !self.graph.isCellConnectable(cell)) {
+        if (cell != null && !cell.isConnectable()) {
           const parent = self.cell.getParent();
 
           if (
             parent.isVertex() &&
-            self.graph.isCellConnectable(parent)
+            parent.isConnectable()
           ) {
             cell = parent;
           }
@@ -1206,7 +1206,7 @@ class mxConnectionHandler extends mxEventSource {
             // are not equal (due to grid snapping) and there is no hit on shape or highlight
             // but ignores cases where parent is used for non-connectable child cells
             if (
-              this.graph.isCellConnectable(me.getCell()) &&
+              me.getCell().isConnectable() &&
               this.marker.getValidState() !== me.getState()
             ) {
               this.marker.highlight.shape.stroke = 'transparent';

@@ -188,7 +188,7 @@ class Tree extends React.Component {
           }
 
           // Stops recursion if a collapsed cell is seen
-          return vertex === cell || !this.isCellCollapsed(vertex);
+          return vertex === cell || !vertex.isCollapsed();
         });
 
         this.toggleCells(show, cells, true);

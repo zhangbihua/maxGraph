@@ -1223,7 +1223,7 @@ class mxVertexHandler {
 
     // Shifts the children according to parent offset
     if (
-      !this.graph.isCellCollapsed(this.state.cell) &&
+      !this.state.cell.isCollapsed() &&
       (dx3 !== 0 || dy3 !== 0)
     ) {
       this.childOffsetX = this.state.x - this.bounds.x + dx5;

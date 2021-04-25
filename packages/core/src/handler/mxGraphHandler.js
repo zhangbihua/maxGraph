@@ -1109,7 +1109,7 @@ class mxGraphHandler {
             cell != null &&
             this.cells.length === 1 &&
             cell.isVertex() &&
-            graph.isCellConnectable(cell)
+            cell.isConnectable()
           ) {
             state = graph.getView().getState(cell);
 
@@ -1603,9 +1603,10 @@ class mxGraphHandler {
           this.target == null &&
           cell != null &&
           cell.isVertex() &&
-          graph.isCellConnectable(cell) &&
+          cell.isConnectable() &&
           graph.isEdgeValid(null, this.cell, cell)
         ) {
+          alert("CONNECT")
           graph.connectionHandler.connect(this.cell, cell, me.getEvent());
         } else {
           const clone =
@@ -1615,9 +1616,10 @@ class mxGraphHandler {
           const { scale } = graph.getView();
           const dx = this.roundLength(this.currentDx / scale);
           const dy = this.roundLength(this.currentDy / scale);
-          const { target } = this;
+          const target = this.target;
 
           if (
+            target &&
             graph.isSplitEnabled() &&
             graph.isSplitTarget(target, this.cells, me.getEvent())
           ) {

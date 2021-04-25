@@ -1885,7 +1885,7 @@ Graph.prototype.init = function(container)
 	Graph.prototype.isRecursiveVertexResize = function(state)
 	{
 		return !this.isSwimlane(state.cell) && state.cell.getChildCount() > 0 &&
-			!this.isCellCollapsed(state.cell) && mxUtils.getValue(state.style, 'recursiveResize', '1') == '1' &&
+			!state.cell.isCollapsed() && mxUtils.getValue(state.style, 'recursiveResize', '1') == '1' &&
 			mxUtils.getValue(state.style, 'childLayout', null) == null;
 	}
 		
@@ -3120,18 +3120,18 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 
 	// Uses connectable parent vertex if one exists
 	// TODO: Fix using target as parent for swimlane
-	if (target != null && !this.isCellConnectable(target) && !this.isSwimlane(target))
+	if (target != null && !target.isConnectable() && !this.isSwimlane(target))
 	{
 		let parent = target.getParent();
 		
-		if (parent.isVertex() && this.isCellConnectable(parent))
+		if (parent.isVertex() && parent.isConnectable())
 		{
 			target = parent;
 		}
 	}
 	
 	if (target == source || target.isEdge() ||
-		!this.isCellConnectable(target) &&
+		!target.isConnectable() &&
 		!this.isSwimlane(target))
 	{
 		target = null;
@@ -3398,7 +3398,7 @@ Graph.prototype.getCellStyle = function(cell)
 	{
 		let parent = cell.getParent();
 		
-		if (parent.isVertex() && this.isCellCollapsed(cell))
+		if (parent.isVertex() && cell.isCollapsed())
 		{
 			let layout = this.layoutManager.getLayout(parent);
 			
@@ -4480,7 +4480,7 @@ HoverIcons.prototype.repaint = function()
 		// Cell was deleted	
 		if (this.currentState != null &&
 			this.currentState.cell.isVertex() &&
-			this.graph.isCellConnectable(this.currentState.cell))
+			this.currentState.cell.isConnectable())
 		{
 			let bds = mxRectangle.fromRectangle(this.currentState);
 			
@@ -4692,11 +4692,11 @@ HoverIcons.prototype.getState = function(state)
 		else
 		{
 			// Uses connectable parent vertex if child is not connectable
-			if (cell.isVertex() && !this.graph.isCellConnectable(cell))
+			if (cell.isVertex() && !cell.isConnectable())
 			{
 				let parent = this.cell.getParent();
 				
-				if (parent.isVertex() && this.graph.isCellConnectable(parent))
+				if (parent.isVertex() && parent.isConnectable())
 				{
 					cell = parent;
 				}
@@ -5151,7 +5151,7 @@ TableLayout.prototype.isHorizontal = function()
 TableLayout.prototype.isVertexIgnored = function(vertex)
 {
 	return !vertex.isVertex() ||
-		!this.graph.isCellVisible(vertex);
+		!vertex.isVisible();
 };
 
 /**
@@ -10282,7 +10282,7 @@ if (typeof mxVertexHandler != 'undefined')
 		mxVertexHandler.prototype.isCenteredEvent = function(state, me)
 		{
 			return (!(!this.graph.isSwimlane(state.cell) && state.cell.getChildCount() > 0 &&
-					!this.graph.isCellCollapsed(state.cell) &&
+					!state.cell.isCollapsed() &&
 					mxUtils.getValue(state.style, 'recursiveResize', '1') == '1' &&
 					mxUtils.getValue(state.style, 'childLayout', null) == null) &&
 					mxEvent.isControlDown(me.getEvent())) ||

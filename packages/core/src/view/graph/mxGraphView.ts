@@ -859,7 +859,7 @@ class mxGraphView extends mxEventSource {
         this.validateCell(
           <mxCell>cell.getChildAt(i),
           visible &&
-            (!this.isCellCollapsed(cell) || cell === this.currentRoot)
+            (!cell.isCollapsed() || cell === this.currentRoot)
         );
       }
     }
@@ -1020,7 +1020,8 @@ class mxGraphView extends mxEventSource {
    */
   // isCellCollapsed(cell: mxCell): boolean;
   isCellCollapsed(cell: mxCell): boolean {
-    return (<mxGraph>this.graph).isCellCollapsed(cell);
+    // SLATED FOR DELETION
+    return cell.isCollapsed();
   }
 
   /**
@@ -1837,7 +1838,7 @@ class mxGraphView extends mxEventSource {
     let best = result;
 
     while (result != null && result != this.currentRoot) {
-      if ((best && !best.isVisible()) || this.isCellCollapsed(result)) {
+      if ((best && !best.isVisible()) || result.isCollapsed()) {
         best = result;
       }
 

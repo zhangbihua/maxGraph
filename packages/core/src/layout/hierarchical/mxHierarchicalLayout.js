@@ -265,7 +265,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
     try {
       this.run(parent);
 
-      if (this.resizeParent && !this.graph.isCellCollapsed(parent)) {
+      if (this.resizeParent && !parent.isCollapsed()) {
         this.graph.updateGroupBounds(
           [parent],
           this.parentBorder,
@@ -314,7 +314,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
       for (const i in vertices) {
         const cell = vertices[i];
 
-        if (cell.isVertex() && this.graph.isCellVisible(cell)) {
+        if (cell.isVertex() && cell.isVisible()) {
           const conns = this.getEdges(cell);
           let fanOut = 0;
           let fanIn = 0;
@@ -368,7 +368,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
     const { model } = this.graph;
     let edges = [];
-    const isCollapsed = this.graph.isCellCollapsed(cell);
+    const isCollapsed = cell.isCollapsed();
     const childCount = cell.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
@@ -376,7 +376,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
 
       if (this.isPort(child)) {
         edges = edges.concat(model.getEdges(child, true, true));
-      } else if (isCollapsed || !this.graph.isCellVisible(child)) {
+      } else if (isCollapsed || !child.isVisible()) {
         edges = edges.concat(model.getEdges(child, true, true));
       }
     }
@@ -577,14 +577,14 @@ class mxHierarchicalLayout extends mxGraphLayout {
     if (
       cell.isVertex() &&
       cell !== this.parent &&
-      this.graph.isCellVisible(cell)
+      cell.isVisible()
     ) {
       result[mxObjectIdentity.get(cell)] = cell;
     }
 
     if (
       this.traverseAncestors ||
-      (cell === this.parent && this.graph.isCellVisible(cell))
+      (cell === this.parent && cell.isVisible())
     ) {
       const childCount = cell.getChildCount();
 

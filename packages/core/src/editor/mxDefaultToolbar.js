@@ -305,7 +305,7 @@ class mxDefaultToolbar {
       target == null ||
       target.isEdge() ||
       !this.connectOnDrop ||
-      !graph.isCellConnectable(target)
+      !target.isConnectable()
     ) {
       while (
         target != null &&
@@ -363,7 +363,7 @@ class mxDefaultToolbar {
 
     if (
       source != null &&
-      graph.isCellConnectable(vertex) &&
+      vertex.isCellConnectable() &&
       graph.isEdgeValid(null, source, vertex)
     ) {
       let edge = null;

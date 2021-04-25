@@ -2,7 +2,7 @@ import mxCell from "./mxCell";
 import mxDictionary from "../../util/datatypes/mxDictionary";
 import mxObjectIdentity from "../../util/datatypes/mxObjectIdentity";
 
-class mxCells<mxCell> extends Array<mxCell> {
+class mxCells extends Array<mxCell> {
   constructor(...items: mxCell[]) {
     super(...items);
   }
