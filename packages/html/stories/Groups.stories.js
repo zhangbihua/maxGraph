@@ -52,19 +52,19 @@ const Template = ({ label, ...args }) => {
     mxGraphHandler.prototype.getInitialCellForEvent;
   mxGraphHandler.prototype.getInitialCellForEvent = function(me) {
     const model = this.graph.getModel();
-    const psel = model.getParent(this.graph.getSelectionCell());
+    const psel = this.graph.getSelectionCell().getParent();
     let cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
-    let parent = model.getParent(cell);
+    let parent = cell.getParent();
 
     if (psel == null || (psel != cell && psel != parent)) {
       while (
         !this.graph.isCellSelected(cell) &&
         !this.graph.isCellSelected(parent) &&
-        model.isVertex(parent) &&
+        parent.isVertex() &&
         !this.graph.isValidRoot(parent)
       ) {
         cell = parent;
-        parent = this.graph.getModel().getParent(cell);
+        parent = this.cell.getParent();
       }
     }
 
@@ -77,13 +77,13 @@ const Template = ({ label, ...args }) => {
   mxGraphHandler.prototype.isDelayedSelection = function(cell) {
     let result = graphHandlerIsDelayedSelection.apply(this, arguments);
     const model = this.graph.getModel();
-    const psel = model.getParent(this.graph.getSelectionCell());
-    const parent = model.getParent(cell);
+    const psel = this.graph.getSelectionCell().getParent();
+    const parent = cell.getParent();
 
     if (psel == null || (psel != cell && psel != parent)) {
       if (
         !this.graph.isCellSelected(cell) &&
-        model.isVertex(parent) &&
+        parent.isVertex() &&
         !this.graph.isValidRoot(parent)
       ) {
         result = true;
@@ -102,15 +102,15 @@ const Template = ({ label, ...args }) => {
     }
 
     const model = this.graph.getModel();
-    let parent = model.getParent(cell);
+    let parent = cell.getParent();
 
     while (
       this.graph.isCellSelected(cell) &&
-      model.isVertex(parent) &&
+      parent.isVertex() &&
       !this.graph.isValidRoot(parent)
     ) {
       cell = parent;
-      parent = model.getParent(cell);
+      parent = cell.getParent();
     }
 
     this.graph.selectCellForEvent(cell, me.getEvent());
@@ -120,14 +120,14 @@ const Template = ({ label, ...args }) => {
   mxPopupMenuHandler.prototype.getCellForPopupEvent = function(me) {
     let cell = me.getCell();
     const model = this.graph.getModel();
-    let parent = model.getParent(cell);
+    let parent = cell.getParent();
 
-    while (model.isVertex(parent) && !this.graph.isValidRoot(parent)) {
+    while (parent.isVertex() && !this.graph.isValidRoot(parent)) {
       if (this.graph.isCellSelected(parent)) {
         cell = parent;
       }
 
-      parent = model.getParent(parent);
+      parent = parent.getParent();
     }
 
     return cell;

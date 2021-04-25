@@ -50,10 +50,10 @@ const Template = ({ label, ...args }) => {
 
     // Removes folding icon for relative children
     isCellFoldable(cell, collapse) {
-      const childCount = this.model.getChildCount(cell);
+      const childCount = cell.getChildCount();
 
       for (let i = 0; i < childCount; i++) {
-        const child = this.model.getChildAt(cell, i);
+        const child = cell.getChildAt(i);
         const geo = this.getCellGeometry(child);
 
         if (geo != null && geo.relative) {
@@ -68,12 +68,12 @@ const Template = ({ label, ...args }) => {
     getRelativePosition(state, dx, dy) {
       if (state != null) {
         const model = graph.getModel();
-        const geo = model.getGeometry(state.cell);
+        const geo = state.cell.getGeometry();
 
-        if (geo != null && geo.relative && !model.isEdge(state.cell)) {
-          const parent = model.getParent(state.cell);
+        if (geo != null && geo.relative && !state.cell.isEdge()) {
+          const parent = state.cell.getParent();
 
-          if (model.isVertex(parent)) {
+          if (parent.isVertex()) {
             const pstate = graph.view.getState(parent);
 
             if (pstate != null) {
@@ -115,7 +115,7 @@ const Template = ({ label, ...args }) => {
       );
 
       if (rel != null) {
-        let geo = this.model.getGeometry(cell);
+        let geo = cell.getGeometry();
 
         if (geo != null && geo.relative) {
           geo = geo.clone();
@@ -163,7 +163,7 @@ const Template = ({ label, ...args }) => {
 
       if (rel != null) {
         const pstate = this.graph.view.getState(
-          this.graph.model.getParent(state.cell)
+          state.cell.getParent()
         );
 
         if (pstate != null) {

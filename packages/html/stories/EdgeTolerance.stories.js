@@ -43,7 +43,8 @@ const Template = ({ label, ...args }) => {
         }
 
         const cell = this.getCellAt(me.graphX, me.graphY);
-        if (this.getModel().isEdge(cell)) {
+        
+        if (cell?.isEdge()) {
           me.state = this.view.getState(cell);
 
           if (me.state != null && me.state.shape != null) {
@@ -64,8 +65,8 @@ const Template = ({ label, ...args }) => {
       if (cell == null) {
         const pt = mxUtils.convertPoint(
           el,
-          mxEvent.getClientX(evt),
-          mxEvent.getClientY(evt)
+          mxEventUtils.getClientX(evt),
+          mxEventUtils.getClientY(evt)
         );
         cell = this.getCellAt(pt.x, pt.y);
       }

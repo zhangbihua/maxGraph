@@ -53,7 +53,7 @@ const Template = ({ label, ...args }) => {
   };
 
   graph.isCellResizable = function(cell) {
-    const geo = this.model.getGeometry(cell);
+    const geo = cell.getGeometry();
 
     return geo == null || !geo.relative;
   };
@@ -61,14 +61,14 @@ const Template = ({ label, ...args }) => {
   // Truncates the label to the size of the vertex
   graph.getLabel = function(cell) {
     const label = this.labelsVisible ? this.convertValueToString(cell) : '';
-    const geometry = this.model.getGeometry(cell);
+    const geometry = cell.getGeometry();
 
     if (
-      !this.model.isCollapsed(cell) &&
+      !cell.isCollapsed() &&
       geometry != null &&
       (geometry.offset == null ||
         (geometry.offset.x == 0 && geometry.offset.y == 0)) &&
-      this.model.isVertex(cell) &&
+      cell.isVertex() &&
       geometry.width >= 2
     ) {
       const style = this.getCellStyle(cell);
@@ -86,12 +86,12 @@ const Template = ({ label, ...args }) => {
 
   // Enables wrapping for vertex labels
   graph.isWrapping = function(cell) {
-    return this.model.isCollapsed(cell);
+    return cell.isCollapsed();
   };
 
   // Enables clipping of vertex labels if no offset is defined
   graph.isLabelClipped = function(cell) {
-    const geometry = this.model.getGeometry(cell);
+    const geometry = cell.getGeometry();
 
     return (
       geometry != null &&

@@ -33,7 +33,7 @@ const Template = ({ label, ...args }) => {
 
   // Disables in-place editing for edges
   graph.isCellEditable = function(cell) {
-    return !this.model.isEdge(cell);
+    return !cell.isEdge();
   };
 
   // Gets the default parent for inserting new cells. This

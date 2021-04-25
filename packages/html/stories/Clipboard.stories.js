@@ -50,7 +50,7 @@ const Template = ({ label, ...args }) => {
   mxClipboard.cellsToString = function(cells) {
     const codec = new mxCodec();
     const model = new mxGraphModel();
-    const parent = model.getChildAt(model.getRoot(), 0);
+    const parent = model.getRoot().getChildAt(0);
 
     for (let i = 0; i < cells.length; i++) {
       model.add(parent, cells[i]);
@@ -198,16 +198,14 @@ const Template = ({ label, ...args }) => {
         const codec = new mxCodec(node.ownerDocument);
         codec.decode(node, model);
 
-        const childCount = model.getChildCount(model.getRoot());
-        const targetChildCount = graph.model.getChildCount(
-          graph.model.getRoot()
-        );
+        const childCount = model.getRoot().getChildCount();
+        const targetChildCount = graph.model.getRoot().getChildCount();
 
         // Merges existing layers and adds new layers
         graph.model.beginUpdate();
         try {
           for (let i = 0; i < childCount; i++) {
-            let parent = model.getChildAt(model.getRoot(), i);
+            let parent = model.getRoot().getChildAt(i);
 
             // Adds cells to existing layers if not locked
             if (targetChildCount > i) {
@@ -215,10 +213,10 @@ const Template = ({ label, ...args }) => {
               const target =
                 childCount === 1
                   ? graph.getDefaultParent()
-                  : graph.model.getChildAt(graph.model.getRoot(), i);
+                  : graph.model.getRoot().getChildAt(i);
 
               if (!graph.isCellLocked(target)) {
-                const children = model.getChildren(parent);
+                const children = parent.getChildren();
                 cells = cells.concat(
                   graph.importCells(children, dx, dy, target)
                 );
@@ -231,7 +229,7 @@ const Template = ({ label, ...args }) => {
                 0,
                 graph.model.getRoot()
               )[0];
-              const children = graph.model.getChildren(parent);
+              const children = parent.getChildren();
               graph.moveCells(children, dx, dy);
               cells = cells.concat(children);
             }

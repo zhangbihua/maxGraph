@@ -3,7 +3,7 @@ import mxgraph from '@mxgraph/core';
 import { globalTypes } from '../.storybook/preview';
 
 export default {
-  title: 'Layouts/Layers',
+  title: 'Layouts/OrgChart',
   argTypes: {
     ...globalTypes,
     contextMenu: {
@@ -176,7 +176,7 @@ const Template = ({ label, ...args }) => {
   graph.cellRenderer.getLabelValue = function(state) {
     let result = state.cell.value;
 
-    if (state.view.graph.getModel().isVertex(state.cell)) {
+    if (state.cell.isVertex()) {
       if (state.view.scale > 1) {
         result += '\nDetails 1';
       }
@@ -251,7 +251,7 @@ const Template = ({ label, ...args }) => {
     const model = graph.getModel();
 
     if (cell != null) {
-      if (model.isVertex(cell)) {
+      if (cell.isVertex()) {
         menu.addItem(
           'Add child',
           '/images/overlays/check.png',
@@ -265,7 +265,7 @@ const Template = ({ label, ...args }) => {
         graph.startEditingAtCell(cell);
       });
 
-      if (cell.id != 'treeRoot' && model.isVertex(cell)) {
+      if (cell.id != 'treeRoot' && cell.isVertex()) {
         menu.addItem('Delete', '/images/delete.gif', function() {
           deleteSubtree(graph, cell);
         });
@@ -344,7 +344,7 @@ const Template = ({ label, ...args }) => {
     model.beginUpdate();
     try {
       vertex = graph.insertVertex(parent, null, 'Double click to set name');
-      const geometry = model.getGeometry(vertex);
+      const geometry = vertex.getGeometry();
 
       // Updates the geometry of the vertex with the
       // preferred size computed in the graph

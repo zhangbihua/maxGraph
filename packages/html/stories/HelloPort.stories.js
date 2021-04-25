@@ -20,8 +20,11 @@ const Template = ({ label, ...args }) => {
     mxEdgeStyle,
     mxPoint,
     mxConstants,
-    mxDomHelpers
+    mxDomHelpers,
+    mxClient
   } = mxgraph;
+
+  mxClient.setImageBasePath('/images');
 
   const div = document.createElement('div');
 
@@ -54,11 +57,11 @@ const Template = ({ label, ...args }) => {
   // Implements a tooltip that shows the actual
   // source and target of an edge
   graph.getTooltipForCell = function(cell) {
-    if (this.model.isEdge(cell)) {
+    if (cell.isEdge()) {
       return `${this.convertValueToString(
-        this.model.getTerminal(cell, true)
+        cell.getTerminal(true)
       )} => ${this.convertValueToString(
-        this.model.getTerminal(cell, false)
+        cell.getTerminal(false)
       )}`;
     }
 

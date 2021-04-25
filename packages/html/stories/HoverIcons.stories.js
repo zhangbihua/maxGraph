@@ -3,7 +3,7 @@ import mxgraph from '@mxgraph/core';
 import { globalTypes } from '../.storybook/preview';
 
 export default {
-  title: 'Icon_Images/FixedIcons',
+  title: 'Icon_Images/HoverIcons',
   argTypes: {
     ...globalTypes,
     rubberBand: {
@@ -151,7 +151,7 @@ const Template = ({ label, ...args }) => {
       // Ignore everything but vertices
       if (
         graph.isMouseDown ||
-        (tmp != null && !graph.getModel().isVertex(tmp.cell))
+        (tmp != null && !tmp.cell.isVertex())
       ) {
         tmp = null;
       }

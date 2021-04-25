@@ -50,7 +50,7 @@ const Template = ({ label, ...args }) => {
 
       const { graph } = state.view;
 
-      if (graph.getModel().isVertex(state.cell)) {
+      if (state.cell.isVertex()) {
         if (state.deleteControl == null) {
           const b = new mxRectangle(
             0,
@@ -83,7 +83,7 @@ const Template = ({ label, ...args }) => {
         const h = state.deleteControl.bounds.height / oldScale;
         const s = state.view.scale;
 
-        return state.view.graph.getModel().isEdge(state.cell)
+        return state.cell.isEdge()
           ? new mxRectangle(
               state.x + state.width / 2 - (w / 2) * s,
               state.y + state.height / 2 - (h / 2) * s,

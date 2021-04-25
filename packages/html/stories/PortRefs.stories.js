@@ -20,8 +20,11 @@ const Template = ({ label, ...args }) => {
     mxShape,
     mxTriangle,
     mxConstants,
-    mxConnectionConstraint
+    mxConnectionConstraint,
+    mxClient
   } = mxgraph;
+
+  mxClient.setImageBasePath('/images');
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -123,7 +126,7 @@ const Template = ({ label, ...args }) => {
       if (terminal.shape.stencil != null) {
         return terminal.shape.stencil.constraints;
       }
-    } else if (terminal != null && this.model.isVertex(terminal.cell)) {
+    } else if (terminal != null && terminal.cell.isVertex()) {
       if (terminal.shape != null) {
         const ports = terminal.shape.getPorts();
         const cstrs = new Array();

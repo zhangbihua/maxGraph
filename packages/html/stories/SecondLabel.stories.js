@@ -70,7 +70,7 @@ const Template = ({ label, ...args }) => {
 
   // Hook for returning shape number for a given cell
   graph.getSecondLabel = function(cell) {
-    if (!this.model.isEdge(cell)) {
+    if (!cell.isEdge()) {
       // Possible to return any string here
       return `The ID of this cell is ${cell.id}`;
     }
@@ -81,9 +81,10 @@ const Template = ({ label, ...args }) => {
   let relativeChildVerticesVisible = true;
 
   // Overrides method to hide relative child vertices
-  graph.isCellVisible = function(cell) {
+  // TODO this function is not used
+  const isVisible = function() {
     return (
-      !this.model.isVertex(cell) ||
+      !cell.isVertex() ||
       cell.geometry == null ||
       !cell.geometry.relative ||
       cell.geometry.relative == relativeChildVerticesVisible

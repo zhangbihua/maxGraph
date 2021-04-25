@@ -135,7 +135,7 @@ const Template = ({ label, ...args }) => {
 
     graph.isValidSource = function(cell) {
       if (previousIsValidSource.apply(this, arguments)) {
-        const style = this.getModel().getStyle(cell);
+        const style = cell.getStyle();
 
         return (
           style == null || !(style == 'end' || style.indexOf('end') == 0)
@@ -152,10 +152,10 @@ const Template = ({ label, ...args }) => {
     // the example below, so we use the state
     // style below
     graph.isValidTarget = function(cell) {
-      const style = this.getModel().getStyle(cell);
+      const style = cell.getStyle();
 
       return (
-        !this.getModel().isEdge(cell) &&
+        !cell.isEdge() &&
         !this.isSwimlane(cell) &&
         (style == null || !(style == 'state' || style.indexOf('state') == 0))
       );
@@ -180,7 +180,7 @@ const Template = ({ label, ...args }) => {
 
       // Checks if any lanes or pools are selected
       for (let i = 0; i < cells.length; i++) {
-        const tmp = model.getParent(cells[i]);
+        const tmp = cells[i].getParent();
         lane = lane || this.isPool(tmp);
         pool = pool || this.isPool(cells[i]);
 
@@ -191,33 +191,16 @@ const Template = ({ label, ...args }) => {
         !pool &&
         cell != lane &&
         ((lane && this.isPool(target)) ||
-          (cell && this.isPool(model.getParent(target))))
+        (cell && this.isPool(target.getParent())))
       );
     };
 
     // Adds new method for identifying a pool
     graph.isPool = function(cell) {
       const model = this.getModel();
-      const parent = model.getParent(cell);
+      const parent = cell.getParent();
 
-      return parent != null && model.getParent(parent) == model.getRoot();
-    };
-
-    // Changes swimlane orientation while collapsed
-    graph.model.getStyle = function(cell) {
-      let style = mxGraphModel.prototype.getStyle.apply(this, arguments);
-
-      if (graph.isCellCollapsed(cell)) {
-        if (style != null) {
-          style += ';';
-        } else {
-          style = '';
-        }
-
-        style += 'horizontal=1;align=left;spacingLeft=14;';
-      }
-
-      return style;
+      return parent != null && parent.getParent() == model.getRoot();
     };
 
     // Keeps widths on collapse/expand
@@ -225,7 +208,7 @@ const Template = ({ label, ...args }) => {
       const cells = evt.getProperty('cells');
 
       for (let i = 0; i < cells.length; i++) {
-        const geo = graph.model.getGeometry(cells[i]);
+        const geo = cells[i].getGeometry();
 
         if (geo.alternateBounds != null) {
           geo.width = geo.alternateBounds.width;
@@ -235,6 +218,22 @@ const Template = ({ label, ...args }) => {
 
     graph.addListener(mxEvent.FOLD_CELLS, foldingHandler);
   }
+
+  // Changes swimlane orientation while collapsed
+  const getStyle = function() {
+    // TODO super cannot be used here
+    // let style = super.getStyle();
+    let style;
+    if (this.isCellCollapsed()) {
+      if (style != null) {
+        style += ';';
+      } else {
+        style = '';
+      }
+      style += 'horizontal=1;align=left;spacingLeft=14;';
+    }
+    return style;
+  };
 
   // Applies size changes to siblings and parents
   new mxSwimlaneManager(graph);
@@ -258,9 +257,9 @@ const Template = ({ label, ...args }) => {
 
   layoutMgr.getLayout = function(cell) {
     if (
-      !model.isEdge(cell) &&
-      graph.getModel().getChildCount(cell) > 0 &&
-      (model.getParent(cell) == model.getRoot() || graph.isPool(cell))
+      !cell.isEdge() &&
+      cell.getChildCount() > 0 &&
+      (cell.getParent() == model.getRoot() || graph.isPool(cell))
     ) {
       layout.fill = graph.isPool(cell);
 
@@ -274,229 +273,252 @@ const Template = ({ label, ...args }) => {
   // is normally the first child of the root (ie. layer 0).
   const parent = graph.getDefaultParent();
 
+  const insertVertex = options => {
+    const v = graph.insertVertex(options);
+    v.getStyle = getStyle;
+    return v;
+  };
+
+  const insertEdge = options => {
+    const e = graph.insertEdge(options);
+    e.getStyle = getStyle;
+    return e;
+  };
+
   // Adds cells to the model in a single step
-  model.beginUpdate();
-  try {
-    const pool1 = graph.insertVertex(parent, null, 'Pool 1', 0, 0, 640, 0);
+  model.batchUpdate(() => {
+    const pool1 = insertVertex({
+      parent,
+      value: 'Pool 1',
+      position: [0, 0],
+      size: [640, 0],
+    });
     pool1.setConnectable(false);
 
-    const lane1a = graph.insertVertex(pool1, null, 'Lane A', 0, 0, 640, 110);
+    const lane1a = insertVertex({
+      parent: pool1,
+      value: 'Lane A',
+      position: [0, 0],
+      size: [640, 110],
+    });
     lane1a.setConnectable(false);
 
-    const lane1b = graph.insertVertex(pool1, null, 'Lane B', 0, 0, 640, 110);
+    const lane1b = insertVertex({
+      parent: pool1,
+      value: 'Lane B',
+      position: [0, 0],
+      size: [640, 110],
+    });
     lane1b.setConnectable(false);
 
-    const pool2 = graph.insertVertex(parent, null, 'Pool 2', 0, 0, 640, 0);
+    const pool2 = insertVertex({
+      parent,
+      value: 'Pool 2',
+      position: [0, 0],
+      size: [640, 0],
+    });
     pool2.setConnectable(false);
 
-    const lane2a = graph.insertVertex(pool2, null, 'Lane A', 0, 0, 640, 140);
+    const lane2a = insertVertex({
+      parent: pool2,
+      value: 'Lane A',
+      position: [0, 0],
+      size: [640, 140],
+    });
     lane2a.setConnectable(false);
 
-    const lane2b = graph.insertVertex(pool2, null, 'Lane B', 0, 0, 640, 110);
+    const lane2b = insertVertex({
+      parent: pool2,
+      value: 'Lane B',
+      position: [0, 0],
+      size: [640, 110],
+    });
     lane2b.setConnectable(false);
 
-    const start1 = graph.insertVertex(
-      lane1a,
-      null,
-      null,
-      40,
-      40,
-      30,
-      30,
-      'state'
-    );
-    const end1 = graph.insertVertex(
-      lane1a,
-      null,
-      'A',
-      560,
-      40,
-      30,
-      30,
-      'end'
-    );
+    const start1 = insertVertex({
+      parent: lane1a,
+      position: [40, 40],
+      size: [30, 30],
+      style: 'state',
+    });
+    const end1 = insertVertex({
+      parent: lane1a,
+      value: 'A',
+      position: [560, 40],
+      size: [30, 30],
+      style: 'end',
+    });
 
-    const step1 = graph.insertVertex(
-      lane1a,
-      null,
-      'Contact\nProvider',
-      90,
-      30,
-      80,
-      50,
-      'process'
-    );
-    const step11 = graph.insertVertex(
-      lane1a,
-      null,
-      'Complete\nAppropriate\nRequest',
-      190,
-      30,
-      80,
-      50,
-      'process'
-    );
-    const step111 = graph.insertVertex(
-      lane1a,
-      null,
-      'Receive and\nAcknowledge',
-      385,
-      30,
-      80,
-      50,
-      'process'
-    );
+    const step1 = insertVertex({
+      parent: lane1a,
+      value: 'Contact\nProvider',
+      position: [90, 30],
+      size: [80, 50],
+      style: 'process',
+    });
+    const step11 = insertVertex({
+      parent: lane1a,
+      value: 'Complete\nAppropriate\nRequest',
+      position: [190, 30],
+      size: [80, 50],
+      style: 'process',
+    });
+    const step111 = insertVertex({
+      parent: lane1a,
+      value: 'Receive and\nAcknowledge',
+      position: [385, 30],
+      size: [80, 50],
+      style: 'process',
+    });
 
-    const start2 = graph.insertVertex(
-      lane2b,
-      null,
-      null,
-      40,
-      40,
-      30,
-      30,
-      'state'
-    );
+    const start2 = insertVertex({
+      parent: lane2b,
+      position: [40, 40],
+      size: [30, 30],
+      style: 'state',
+    });
 
-    const step2 = graph.insertVertex(
-      lane2b,
-      null,
-      'Receive\nRequest',
-      90,
-      30,
-      80,
-      50,
-      'process'
-    );
-    const step22 = graph.insertVertex(
-      lane2b,
-      null,
-      'Refer to Tap\nSystems\nCoordinator',
-      190,
-      30,
-      80,
-      50,
-      'process'
-    );
+    const step2 = insertVertex({
+      parent: lane2b,
+      value: 'Receive\nRequest',
+      position: [90, 30],
+      size: [80, 50],
+      style: 'process',
+    });
+    const step22 = insertVertex({
+      parent: lane2b,
+      value: 'Refer to Tap\nSystems\nCoordinator',
+      position: [190, 30],
+      size: [80, 50],
+      style: 'process',
+    });
 
-    const step3 = graph.insertVertex(
-      lane1b,
-      null,
-      'Request 1st-\nGate\nInformation',
-      190,
-      30,
-      80,
-      50,
-      'process'
-    );
-    const step33 = graph.insertVertex(
-      lane1b,
-      null,
-      'Receive 1st-\nGate\nInformation',
-      290,
-      30,
-      80,
-      50,
-      'process'
-    );
+    const step3 = insertVertex({
+      parent: lane1b,
+      value: 'Request 1st-\nGate\nInformation',
+      position: [190, 30],
+      size: [80, 50],
+      style: 'process',
+    });
+    const step33 = insertVertex({
+      parent: lane1b,
+      value: 'Receive 1st-\nGate\nInformation',
+      position: [290, 30],
+      size: [80, 50],
+      style: 'process',
+    });
 
-    const step4 = graph.insertVertex(
-      lane2a,
-      null,
-      'Receive and\nAcknowledge',
-      290,
-      20,
-      80,
-      50,
-      'process'
-    );
-    const step44 = graph.insertVertex(
-      lane2a,
-      null,
-      'Contract\nConstraints?',
-      400,
-      20,
-      50,
-      50,
-      'condition'
-    );
-    const step444 = graph.insertVertex(
-      lane2a,
-      null,
-      'Tap for gas\ndelivery?',
-      480,
-      20,
-      50,
-      50,
-      'condition'
-    );
+    const step4 = insertVertex({
+      parent: lane2a,
+      value: 'Receive and\nAcknowledge',
+      position: [290, 20],
+      size: [80, 50],
+      style: 'process',
+    });
+    const step44 = insertVertex({
+      parent: lane2a,
+      value: 'Contract\nConstraints?',
+      position: [400, 20],
+      size: [50, 50],
+      style: 'condition',
+    });
+    const step444 = insertVertex({
+      parent: lane2a,
+      value: 'Tap for gas\ndelivery?',
+      position: [480, 20],
+      size: [50, 50],
+      style: 'condition',
+    });
 
-    const end2 = graph.insertVertex(
-      lane2a,
-      null,
-      'B',
-      560,
-      30,
-      30,
-      30,
-      'end'
-    );
-    const end3 = graph.insertVertex(
-      lane2a,
-      null,
-      'C',
-      560,
-      84,
-      30,
-      30,
-      'end'
-    );
+    const end2 = insertVertex({
+      parent: lane2a,
+      value: 'B',
+      position: [560, 30],
+      size: [30, 30],
+      style: 'end',
+    });
+    const end3 = insertVertex({
+      parent: lane2a,
+      value: 'C',
+      position: [560, 84],
+      size: [30, 30],
+      style: 'end',
+    });
 
     let e = null;
 
-    graph.insertEdge(lane1a, null, null, start1, step1);
-    graph.insertEdge(lane1a, null, null, step1, step11);
-    graph.insertEdge(lane1a, null, null, step11, step111);
+    insertEdge({
+      parent: lane1a,
+      source: start1,
+      target: step1,
+    });
+    insertEdge({
+      parent: lane1a,
+      source: step1,
+      target: step11,
+    });
+    insertEdge({
+      parent: lane1a,
+      source: step11,
+      target: step111,
+    });
 
-    graph.insertEdge(lane2b, null, null, start2, step2);
-    graph.insertEdge(lane2b, null, null, step2, step22);
-    graph.insertEdge(parent, null, null, step22, step3);
-
-    graph.insertEdge(lane1b, null, null, step3, step33);
-    graph.insertEdge(lane2a, null, null, step4, step44);
-    graph.insertEdge(
-      lane2a,
-      null,
-      'No',
-      step44,
-      step444,
-      'verticalAlign=bottom'
-    );
-    graph.insertEdge(
+    insertEdge({
+      parent: lane2b,
+      source: start2,
+      target: step2,
+    });
+    insertEdge({
+      parent: lane2b,
+      source: step2,
+      target: step22,
+    });
+    insertEdge({
       parent,
-      null,
-      'Yes',
-      step44,
-      step111,
-      'verticalAlign=bottom;horizontal=0;labelBackgroundColor=white;'
-    );
+      source: step22,
+      target: step3,
+    });
 
-    graph.insertEdge(
-      lane2a,
-      null,
-      'Yes',
-      step444,
-      end2,
-      'verticalAlign=bottom'
-    );
-    e = graph.insertEdge(
-      lane2a,
-      null,
-      'No',
-      step444,
-      end3,
-      'verticalAlign=top'
-    );
+    insertEdge({
+      parent: lane1b,
+      source: step3,
+      target: step33,
+    });
+    insertEdge({
+      parent: lane2a,
+      source: step4,
+      target: step44,
+    });
+    insertEdge({
+      parent: lane2a,
+      value: 'No',
+      source: step44,
+      target: step444,
+      style: 'verticalAlign=bottom',
+    });
+    insertEdge({
+      parent,
+      value: 'Yes',
+      source: step44,
+      target: step111,
+      style: 'verticalAlign=bottom;horizontal=0;labelBackgroundColor=white;',
+    });
+
+    insertEdge({
+      parent: lane2a,
+      value: 'Yes',
+      source: step444,
+      target: end2,
+      style: 'verticalAlign=bottom',
+    });
+    e = insertEdge({
+      parent: lane2a,
+      value: 'No',
+      source: step444,
+      target: end3,
+      style: 'verticalAlign=top',
+    });
+
     e.geometry.points = [
       new mxPoint(
         step444.geometry.x + step444.geometry.width / 2,
@@ -504,21 +526,43 @@ const Template = ({ label, ...args }) => {
       ),
     ];
 
-    graph.insertEdge(parent, null, null, step1, step2, 'crossover');
-    graph.insertEdge(parent, null, null, step3, step11, 'crossover');
-    e = graph.insertEdge(lane1a, null, null, step11, step33, 'crossover');
+    insertEdge({
+      parent,
+      source: step1,
+      target: step2,
+      style: 'crossover',
+    });
+    insertEdge({
+      parent,
+      source: step3,
+      target: step11,
+      style: 'crossover',
+    });
+    e = insertEdge({
+      parent: lane1a,
+      source: step11,
+      target: step33,
+      style: 'crossover',
+    });
+
     e.geometry.points = [
       new mxPoint(
         step33.geometry.x + step33.geometry.width / 2 + 20,
         step11.geometry.y + (step11.geometry.height * 4) / 5
       ),
     ];
-    graph.insertEdge(parent, null, null, step33, step4);
-    graph.insertEdge(lane1a, null, null, step111, end1);
-  } finally {
-    // Updates the display
-    model.endUpdate();
-  }
+
+    insertEdge({
+      parent,
+      source: step33,
+      target: step4,
+    });
+    insertEdge({
+      parent: lane1a,
+      source: step111,
+      target: end1,
+    });
+  });
 
   return container;
 }
