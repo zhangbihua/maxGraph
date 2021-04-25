@@ -24,6 +24,7 @@ import mxTerminalChange from '../../atomic_changes/mxTerminalChange';
 import mxValueChange from '../../atomic_changes/mxValueChange';
 import mxVisibleChange from '../../atomic_changes/mxVisibleChange';
 import mxGeometry from "../../util/datatypes/mxGeometry";
+import mxCells from "../cell/mxCells";
 
 /**
  * Extends {@link mxEventSource} to implement a graph model. The graph model acts as
@@ -339,25 +340,9 @@ class mxGraphModel extends mxEventSource {
     return this.cells != null ? this.cells[id] : null;
   }
 
-  /**
-   * Returns the cells from the given array where the given filter function
-   * returns true.
-   */
-  // filterCells(cells: Array<mxCell>, filter: (...args: any) => boolean): Array<mxCell>;
-  filterCells(cells: mxCell[] | null,
+  filterCells(cells: mxCell[],
               filter: Function): mxCell[] | null {
-
-    let result = null;
-    if (cells != null) {
-      result = [];
-
-      for (let i = 0; i < cells.length; i += 1) {
-        if (filter(cells[i])) {
-          result.push(cells[i]);
-        }
-      }
-    }
-    return result;
+    return new mxCells(...cells).filterCells(filter);
   }
 
   /**
@@ -1235,91 +1220,17 @@ class mxGraphModel extends mxEventSource {
     return result;
   }
 
-  /**
-   * Returns all opposite vertices wrt terminal for the given edges, only
-   * returning sources and/or targets as specified. The result is returned
-   * as an array of {@link mxCell}.
-   *
-   * @param edges  Array of {@link mxCell} that contain the edges to be examined.
-   * @param {mxCell} terminal  that specifies the known end of the edges.
-   * @param sources  Boolean that specifies if source terminals should be contained
-   * in the result. Default is true.
-   * @param targets  Boolean that specifies if target terminals should be contained
-   * in the result. Default is true.
-   */
-  // getOpposites(edges: Array<mxCell>, terminal: mxCell, sources?: boolean, targets?: boolean): Array<mxCell>;
   getOpposites(edges: mxCell[],
                terminal: mxCell,
                sources: boolean=true,
                targets: boolean=true): mxCell[] {
-
-    const terminals = [];
-
-    for (let i = 0; i < edges.length; i += 1) {
-      const source = edges[i].getTerminal(true);
-      const target = edges[i].getTerminal(false);
-
-      // Checks if the terminal is the source of
-      // the edge and if the target should be
-      // stored in the result
-      if (
-        source === terminal &&
-        target != null &&
-        target !== terminal &&
-        targets
-      ) {
-        terminals.push(target);
-      }
-
-      // Checks if the terminal is the taget of
-      // the edge and if the source should be
-      // stored in the result
-      else if (
-        target === terminal &&
-        source != null &&
-        source !== terminal &&
-        sources
-      ) {
-        terminals.push(source);
-      }
-    }
-    return terminals;
+    // SLATED FOR DELETION
+    return new mxCells(...edges).getOpposites(terminal, sources, targets);
   }
 
-  /**
-   * Returns the topmost cells of the hierarchy in an array that contains no
-   * descendants for each {@link mxCell} that it contains. Duplicates should be
-   * removed in the cells array to improve performance.
-   *
-   * @param cells  Array of {@link mxCell} whose topmost ancestors should be returned.
-   */
-  // getTopmostCells(cells: Array<mxCell>): Array<mxCell>;
   getTopmostCells(cells: mxCell[]): mxCell[] {
-    const dict = new mxDictionary();
-    const tmp = [];
-
-    for (let i = 0; i < cells.length; i += 1) {
-      dict.put(cells[i], true);
-    }
-
-    for (let i = 0; i < cells.length; i += 1) {
-      const cell = cells[i];
-      let topmost = true;
-      let parent = cell.getParent();
-
-      while (parent != null) {
-        if (dict.get(parent)) {
-          topmost = false;
-          break;
-        }
-        parent = parent.getParent();
-      }
-
-      if (topmost) {
-        tmp.push(cell);
-      }
-    }
-    return tmp;
+    // SLATED FOR DELETION
+    return new mxCells(...cells).getTopmostCells();
   }
 
   /**
@@ -1818,28 +1729,9 @@ class mxGraphModel extends mxEventSource {
     }
   }
 
-  /**
-   * Returns an array that represents the set (no duplicates) of all parents
-   * for the given array of cells.
-   *
-   * @param cells  Array of cells whose parents should be returned.
-   */
-  // getParents(cells: Array<mxCell>): Array<mxCell>;
-  getParents(cells: mxCell[] | null) {
-    const parents = [];
-
-    if (cells != null) {
-      const dict = new mxDictionary();
-
-      for (const cell of cells) {
-        const parent = cell.getParent();
-        if (parent != null && !dict.get(parent)) {
-          dict.put(parent, true);
-          parents.push(parent);
-        }
-      }
-    }
-    return parents;
+  getParents(cells: mxCell[]): mxCell[] {
+    // SLATED FOR DELETION
+    return new mxCells(...cells).getParents();
   }
 
   //
@@ -1861,65 +1753,11 @@ class mxGraphModel extends mxEventSource {
     return null;
   }
 
-  /**
-   * Returns an array of clones for the given array of {@link mxCell}`.
-   * Depending on the value of includeChildren, a deep clone is created for
-   * each cell. Connections are restored based if the corresponding
-   * cell is contained in the passed in array.
-   *
-   * @param cells  Array of {@link mxCell}` to be cloned.
-   * @param includeChildren  Boolean indicating if the cells should be cloned
-   * with all descendants.
-   * @param mapping  Optional mapping for existing clones.
-   */
-  // cloneCells(cells: Array<mxCell>, includeChildren?: boolean, mapping?: any): Array<mxCell>;
   cloneCells(cells: mxCell[],
              includeChildren: boolean=true,
              mapping: any={}): mxCell[] {
-
-    const clones: mxCell[] = [];
-
-    for (let i = 0; i < cells.length; i += 1) {
-      clones.push(this.cloneCellImpl(cells[i], mapping, includeChildren));
-    }
-
-    for (let i = 0; i < clones.length; i += 1) {
-      if (clones[i] != null) {
-        this.restoreClone(<mxCell>clones[i], cells[i], mapping);
-      }
-    }
-    return clones;
-  }
-
-  /**
-   * Inner helper method for cloning cells recursively.
-   */
-  // cloneCellImpl(cell: mxCell, mapping?: any, includeChildren?: boolean): mxCell;
-  cloneCellImpl(cell: mxCell,
-                mapping: any={},
-                includeChildren: boolean): mxCell {
-
-    const ident = mxObjectIdentity.get(cell);
-    let clone = mapping ? mapping[ident] : null;
-
-    if (clone == null) {
-      clone = cell.clone();
-      mapping[ident] = clone;
-
-      if (includeChildren) {
-        const childCount = cell.getChildCount();
-
-        for (let i = 0; i < childCount; i += 1) {
-          const cloneChild = this.cloneCellImpl(
-            <mxCell>cell.getChildAt(i),
-            mapping,
-            true
-          );
-          clone.insert(cloneChild);
-        }
-      }
-    }
-    return clone;
+    // SLATED FOR DELETION
+    return new mxCells(...cells).cloneCells(includeChildren, mapping)
   }
 
   /**
@@ -1930,42 +1768,6 @@ class mxGraphModel extends mxEventSource {
   cellCloned(cell: mxCell): mxCell {
     // SLATED FOR DELETION
     return cell.clone();
-  }
-
-  /**
-   * Inner helper method for restoring the connections in
-   * a network of cloned cells.
-   */
-  // restoreClone(clone: mxCell, cell: mxCell, mapping?: any): void;
-  restoreClone(clone: mxCell,
-               cell: mxCell,
-               mapping: any): void {
-
-    const source = cell.getTerminal(true);
-
-    if (source != null) {
-      const tmp = mapping[mxObjectIdentity.get(source)];
-      if (tmp != null) {
-        tmp.insertEdge(clone, true);
-      }
-    }
-
-    const target = cell.getTerminal(false);
-    if (target != null) {
-      const tmp = mapping[mxObjectIdentity.get(target)];
-      if (tmp != null) {
-        tmp.insertEdge(clone, false);
-      }
-    }
-
-    const childCount = clone.getChildCount();
-    for (let i = 0; i < childCount; i += 1) {
-      this.restoreClone(
-        <mxCell>clone.getChildAt(i),
-        <mxCell>cell.getChildAt(i),
-        mapping
-      );
-    }
   }
 }
 
