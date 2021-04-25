@@ -4694,7 +4694,7 @@ HoverIcons.prototype.getState = function(state)
 			// Uses connectable parent vertex if child is not connectable
 			if (cell.isVertex() && !cell.isConnectable())
 			{
-				let parent = this.cell.getParent();
+				let parent = cell.getParent();
 				
 				if (parent.isVertex() && parent.isConnectable())
 				{
@@ -9616,7 +9616,7 @@ if (typeof mxVertexHandler != 'undefined')
 			this.graph.setSelectionCell(cell);
 
 			// Enables focus outline for edges and edge labels
-			let parent = this.cell.getParent();
+			let parent = cell.getParent();
 			let geo = cell.getGeometry();
 			
 			if ((parent.isEdge() && geo != null && geo.relative) ||

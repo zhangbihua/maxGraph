@@ -908,7 +908,7 @@ class mxCell {
   getOrigin(): mxPoint {
     let result = null;
 
-    if (this != null) {
+    if (this != null && this.getParent()) {
       result = (<mxCell>this.getParent()).getOrigin();
 
       if (!this.isEdge()) {

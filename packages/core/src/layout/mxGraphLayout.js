@@ -424,7 +424,7 @@ class mxGraphLayout {
     }
 
     if (this.parent != null) {
-      const parent = this.cell.getParent();
+      const parent = cell.getParent();
       geo = geo.clone();
 
       if (parent != null && parent !== this.parent) {

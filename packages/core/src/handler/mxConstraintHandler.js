@@ -206,7 +206,7 @@ class mxConstraintHandler {
 
     // Uses connectable parent vertex if one exists
     if (cell != null && !cell.isConnectable()) {
-      const parent = this.cell.getParent();
+      const parent = cell.getParent();
 
       if (
         parent.isVertex() &&

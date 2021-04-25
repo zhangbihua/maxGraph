@@ -205,7 +205,7 @@ class mxMorphing extends mxAnimation {
     let result = null;
 
     if (cell != null) {
-      const parent = this.cell.getParent();
+      const parent = cell.getParent();
       const geo = cell.getGeometry();
       result = this.getOriginForCell(parent);
 

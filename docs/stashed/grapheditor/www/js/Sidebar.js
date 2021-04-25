@@ -3447,7 +3447,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 		if (cell != null && !cell.isConnectable() &&
 			!cell.isEdge())
 		{
-			let parent = this.cell.getParent();
+			let parent = cell.getParent();
 			
 			if (parent.isVertex() &&
 				parent.isConnectable())
