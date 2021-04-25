@@ -137,7 +137,7 @@ class Clipboard extends React.Component {
           const state = graph.view.getState(cells[i]);
 
           if (state != null) {
-            const geo = graph.getCellGeometry(clones[i]);
+            const geo = clones[i].getGeometry();
 
             if (geo != null && geo.relative) {
               geo.relative = false;

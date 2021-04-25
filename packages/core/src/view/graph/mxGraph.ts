@@ -188,9 +188,10 @@ class mxGraph extends mxEventSource {
   // mouseListeners: any[];
   mouseListeners: any[] | null = null;
 
-  /**
+  /*****************************************************************************
    * Group: Variables
-   */
+   *****************************************************************************/
+
   /**
    * Holds the state of the mouse button.
    */
@@ -1453,9 +1454,9 @@ class mxGraph extends mxEventSource {
     this.getView().removeState(cell);
   }
 
-  /**
+  /*****************************************************************************
    * Group: Overlays
-   */
+   *****************************************************************************/
 
   /**
    * Adds an {@link mxCellOverlay} for the specified cell. This method fires an
@@ -1653,9 +1654,9 @@ class mxGraph extends mxEventSource {
     return null;
   }
 
-  /**
+  /*****************************************************************************
    * Group: In-place editing
-   */
+   *****************************************************************************/
 
   /**
    * Calls {@link startEditingAtCell} using the given cell or the first selection
@@ -1804,9 +1805,9 @@ class mxGraph extends mxEventSource {
     }
   }
 
-  /**
+  /*****************************************************************************
    * Group: Event processing
-   */
+   *****************************************************************************/
 
   /**
    * Processes an escape keystroke.
@@ -2559,9 +2560,9 @@ class mxGraph extends mxEventSource {
     drawPageBreaks(this.verticalPageBreaks);
   }
 
-  /**
+  /*****************************************************************************
    * Group: Cell styles
-   */
+   *****************************************************************************/
 
   /**
    * Returns the style for the given cell from the cell state, if one exists,
@@ -2795,9 +2796,9 @@ class mxGraph extends mxEventSource {
     }
   }
 
-  /**
+  /*****************************************************************************
    * Group: Cell alignment and orientation
-   */
+   *****************************************************************************/
 
   /**
    * Aligns the given cells vertically or horizontally according to the given
@@ -2863,7 +2864,7 @@ class mxGraph extends mxEventSource {
             const state = this.getView().getState(cells[i]);
 
             if (state != null) {
-              let geo = this.getCellGeometry(cells[i]);
+              let geo = cells[i].getGeometry();
 
               if (geo != null && !cells[i].isEdge()) {
                 geo = <mxGeometry>geo.clone();
@@ -2992,9 +2993,9 @@ class mxGraph extends mxEventSource {
     return null;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Order
-   */
+   *****************************************************************************/
 
   /**
    * Moves the given cells to the front or back. The change is carried out
@@ -3062,9 +3063,9 @@ class mxGraph extends mxEventSource {
     }
   }
 
-  /**
+  /*****************************************************************************
    * Group: Grouping
-   */
+   *****************************************************************************/
 
   /**
    * Adds the cells into the given group. The change is carried out using
@@ -3105,7 +3106,7 @@ class mxGraph extends mxEventSource {
       try {
         // Checks if the group has a geometry and
         // creates one if one does not exist
-        if (this.getCellGeometry(group) == null) {
+        if (group.getGeometry() == null) {
           this.getModel().setGeometry(group, new mxGeometry());
         }
 
@@ -3259,7 +3260,7 @@ class mxGraph extends mxEventSource {
             // Fix relative child cells
             for (let j = 0; j < children.length; j++) {
               const state = this.getView().getState(children[j]);
-              let geo = this.getCellGeometry(children[j]);
+              let geo = children[j].getGeometry();
 
               if (state != null && geo != null && geo.relative) {
                 geo = <mxGeometry>geo.clone();
@@ -3385,7 +3386,7 @@ class mxGraph extends mxEventSource {
     this.getModel().beginUpdate();
     try {
       for (let i = cells.length - 1; i >= 0; i--) {
-        let geo = this.getCellGeometry(cells[i]);
+        let geo = cells[i].getGeometry();
 
         if (geo != null) {
           const children = <mxCell[]>this.getChildCells(cells[i]);
@@ -3474,9 +3475,9 @@ class mxGraph extends mxEventSource {
     return result;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Cell cloning, insertion and removal
-   */
+   *****************************************************************************/
 
   /**
    * Returns the clone for the given cell. Uses {@link cloneCells}.
@@ -4263,7 +4264,7 @@ class mxGraph extends mxEventSource {
 
         // Removes waypoints before/after new cell
         const state = this.getView().getState(edge);
-        let geo = this.getCellGeometry(newEdge);
+        let geo = newEdge.getGeometry();
 
         if (geo != null && geo.points != null && state != null) {
           const t = this.getView().translate;
@@ -4275,7 +4276,7 @@ class mxGraph extends mxEventSource {
           );
 
           geo.points = geo.points.slice(0, idx);
-          geo = <mxGeometry>this.getCellGeometry(edge);
+          geo = <mxGeometry>edge.getGeometry();
 
           if (geo != null && geo.points != null) {
             geo = <mxGeometry>geo.clone();
@@ -4325,9 +4326,9 @@ class mxGraph extends mxEventSource {
     return newEdge;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Cell visibility
-   */
+   *****************************************************************************/
 
   /**
    * Sets the visible state of the specified cells and all connected edges
@@ -4393,9 +4394,9 @@ class mxGraph extends mxEventSource {
     }
   }
 
-  /**
+  /*****************************************************************************
    * Group: Folding
-   */
+   *****************************************************************************/
 
   /**
    * Sets the collapsed state of the specified cells and all descendants
@@ -4629,9 +4630,9 @@ class mxGraph extends mxEventSource {
     return edges;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Cell sizing
-   */
+   *****************************************************************************/
 
   /**
    * Updates the size of the given cell in the model using {@link cellSizeUpdated}.
@@ -4948,7 +4949,7 @@ class mxGraph extends mxEventSource {
    *     {
    *       if (graph.getModel().getChildCount(cells[i]) > 0)
    *       {
-   *         var geo = graph.getCellGeometry(cells[i]);
+   *         var geo = cells[i].getGeometry();
    *
    *         if (geo != null)
    *         {
@@ -5183,10 +5184,10 @@ class mxGraph extends mxEventSource {
   extendParent(cell: mxCell | null=null): void {
     if (cell != null) {
       const parent = <mxCell>cell.getParent();
-      let p = this.getCellGeometry(parent);
+      let p = parent.getGeometry();
 
       if (parent != null && p != null && !this.isCellCollapsed(parent)) {
-        const geo = this.getCellGeometry(cell);
+        const geo = cell.getGeometry();
 
         if (
           geo != null &&
@@ -5204,9 +5205,9 @@ class mxGraph extends mxEventSource {
     }
   }
 
-  /**
+  /*****************************************************************************
    * Group: Cell moving
-   */
+   *****************************************************************************/
 
   /**
    * Clones and inserts the given cells into the graph using the move
@@ -5298,7 +5299,7 @@ class mxGraph extends mxEventSource {
         const checked = [];
 
         for (let i = 0; i < cells.length; i += 1) {
-          const geo = this.getCellGeometry(cells[i]);
+          const geo = cells[i].getGeometry();
           const parent = cells[i].getParent();
 
           if (
@@ -5351,7 +5352,7 @@ class mxGraph extends mxEventSource {
           // Restores parent edge on cloned edge labels
           if (clone) {
             for (let i = 0; i < cells.length; i += 1) {
-              const geo = this.getCellGeometry(cells[i]);
+              const geo = cells[i].getGeometry();
               const parent = <mxCell>origCells[i].getParent();
 
               if (
@@ -5589,14 +5590,14 @@ class mxGraph extends mxEventSource {
                  sizeFirst: boolean=true): void {
 
     if (cell != null) {
-      let geo = this.getCellGeometry(cell);
+      let geo = cell.getGeometry();
 
       if (
         geo != null &&
         (this.isConstrainRelativeChildren() || !geo.relative)
       ) {
         const parent = cell.getParent();
-        const pgeo = this.getCellGeometry(<mxCell>parent);
+        const pgeo = (<mxCell>parent).getGeometry();
         let max = this.getMaximumGraphBounds();
 
         // Finds parent offset
@@ -5776,9 +5777,9 @@ class mxGraph extends mxEventSource {
     return edge;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Cell connecting and connection constraints
-   */
+   *****************************************************************************/
 
   /**
    * Returns the constraint used to connect to the outline of the given state.
@@ -6369,9 +6370,9 @@ class mxGraph extends mxEventSource {
     }
   }
 
-  /**
+  /*****************************************************************************
    * Group: Drilldown
-   */
+   *****************************************************************************/
 
   /**
    * Returns the current root of the displayed cell hierarchy. This is a
@@ -6429,7 +6430,7 @@ class mxGraph extends mxEventSource {
    * ```javascript
    * graph.isPort = function(cell)
    * {
-   *   var geo = this.getCellGeometry(cell);
+   *   var geo = cell.getGeometry();
    *
    *   return (geo != null) ? geo.relative : false;
    * };
@@ -6555,9 +6556,9 @@ class mxGraph extends mxEventSource {
     return cell != null;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Graph display
-   */
+   *****************************************************************************/
 
   /**
    * Returns the bounds of the visible graph. Shortcut to
@@ -6657,7 +6658,7 @@ class mxGraph extends mxEventSource {
       for (const cell of cells) {
         if (includeEdges || cell.isVertex()) {
           // Computes the bounding box for the points in the geometry
-          const geo = this.getCellGeometry(cell);
+          const geo = cell.getGeometry();
 
           if (geo != null) {
             let bbox = null;
@@ -7390,6 +7391,7 @@ class mxGraph extends mxEventSource {
    */
   // getCellGeometry(cell: mxCell): mxGeometry;
   getCellGeometry(cell: mxCell): mxGeometry | null {
+    // SLATED FOR DELETION
     return cell.getGeometry();
   }
 
@@ -7406,6 +7408,7 @@ class mxGraph extends mxEventSource {
    */
   // isCellVisible(cell: mxCell): boolean;
   isCellVisible(cell: mxCell): boolean {
+    // SLATED FOR DELETION
     return cell.isVisible();
   }
 
@@ -7473,9 +7476,8 @@ class mxGraph extends mxEventSource {
    */
   // isLoop(state: mxCellState): boolean;
   isLoop(state: mxCellState): boolean {
-    const src = state.getVisibleTerminalState(true);
-    const trg = state.getVisibleTerminalState(false);
-    return src != null && src == trg;
+    // SLATED FOR DELETION
+    return state.isLoop();
   }
 
   /**
@@ -7503,7 +7505,7 @@ class mxGraph extends mxEventSource {
    * pressed on any other platform.
    */
   // isToggleEvent(evt: MouseEvent): boolean;
-  isToggleEvent(evt: mxEventObject | mxMouseEvent | mxMouseEvent): boolean {
+  isToggleEvent(evt: mxEventObject | mxMouseEvent): boolean {
     return mxClient.IS_MAC
       ? isMetaDown(evt)
       : isControlDown(evt);
@@ -7534,9 +7536,9 @@ class mxGraph extends mxEventSource {
     return false;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Validation
-   */
+   *****************************************************************************/
 
   /**
    * Displays the given validation error in a dialog. This implementation uses
@@ -7824,9 +7826,9 @@ class mxGraph extends mxEventSource {
     return null;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Graph appearance
-   */
+   *****************************************************************************/
 
   /**
    * Returns the {@link backgroundImage} as an {@link mxImage}.
@@ -7917,7 +7919,7 @@ class mxGraph extends mxEventSource {
    *
    *   if (label != null && this.model.isVertex(cell))
    *   {
-   *     var geo = this.getCellGeometry(cell);
+   *     var geo = cell.getCellGeometry();
    *
    *     if (geo != null)
    *     {
@@ -8452,9 +8454,9 @@ class mxGraph extends mxEventSource {
     return false;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Graph behaviour
-   */
+   *****************************************************************************/
 
   /**
    * Returns {@link resizeContainer}.
@@ -9775,9 +9777,9 @@ class mxGraph extends mxEventSource {
     return !this.getModel().isLayer(<mxCell>cell) && parent == null ? cell : null;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Cell retrieval
-   */
+   *****************************************************************************/
 
   /**
    * Returns {@link defaultParent} or {@link mxGraphView.currentRoot} or the first child
@@ -10485,9 +10487,9 @@ class mxGraph extends mxEventSource {
     return result;
   }
 
-  /**
+  /*****************************************************************************
    * Group: Tree and traversal-related
-   */
+   *****************************************************************************/
 
   /**
    * Returns all children in the given parent which do not have incoming
@@ -10624,9 +10626,9 @@ class mxGraph extends mxEventSource {
     }
   }
 
-  /**
+  /*****************************************************************************
    * Group: Selection
-   */
+   *****************************************************************************/
 
   /**
    * Returns true if the given cell is selected.
@@ -10969,9 +10971,9 @@ class mxGraph extends mxEventSource {
     }
   }
 
-  /**
+  /*****************************************************************************
    * Group: Selection state
-   */
+   *****************************************************************************/
 
   /**
    * Creates a new handler for the given cell state. This implementation
@@ -10988,7 +10990,7 @@ class mxGraph extends mxEventSource {
       if (state.cell.isEdge()) {
         const source = state.getVisibleTerminalState(true);
         const target = state.getVisibleTerminalState(false);
-        const geo = this.getCellGeometry(<mxCell>state.cell);
+        const geo = (<mxCell>state.cell).getGeometry();
 
         const edgeStyle = this.getView().getEdgeStyle(
           state,
@@ -11062,9 +11064,9 @@ class mxGraph extends mxEventSource {
     return new mxElbowEdgeHandler(state);
   }
 
-  /**
+  /*****************************************************************************
    * Group: Graph events
-   */
+   *****************************************************************************/
 
   /**
    * Adds a listener to the graph event dispatch loop. The listener

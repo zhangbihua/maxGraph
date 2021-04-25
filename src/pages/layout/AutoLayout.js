@@ -139,7 +139,7 @@ class AutoLayout extends React.Component {
       // Installs a handler for clicks on the overlay
       overlay.addListener(mxEvent.CLICK, (sender, evt2) => {
         graph.clearSelection();
-        const geo = graph.getCellGeometry(cell);
+        const geo = cell.getGeometry();
 
         let v2;
 

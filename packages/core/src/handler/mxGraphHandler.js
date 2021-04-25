@@ -463,7 +463,7 @@ class mxGraphHandler {
     if (immediate) {
       const geo = cell.isEdge()
         ? null
-        : this.graph.getCellGeometry(cell);
+        : cell.getGeometry();
 
       return (
         !this.graph.isSiblingSelected(cell) &&
@@ -1339,7 +1339,7 @@ class mxGraphHandler {
           const state = states[i][0];
 
           if (state.cell.isEdge()) {
-            const geometry = this.graph.getCellGeometry(state.cell);
+            const geometry = state.cell.getGeometry();
             const points = [];
 
             if (geometry != null && geometry.points != null) {

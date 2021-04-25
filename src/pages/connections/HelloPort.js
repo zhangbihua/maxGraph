@@ -58,7 +58,7 @@ class HelloPort extends React.Component {
     // Ports are not used as terminals for edges, they are
     // only used to compute the graphical connection point
     graph.isPort = function(cell) {
-      const geo = this.getCellGeometry(cell);
+      const geo = cell.getGeometry();
 
       return geo != null ? geo.relative : false;
     };

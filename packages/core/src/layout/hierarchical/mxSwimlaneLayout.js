@@ -253,7 +253,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
       parent.isVertex() != null &&
       this.maintainParentLocation
     ) {
-      const geo = this.graph.getCellGeometry(parent);
+      const geo = parent.getGeometry();
 
       if (geo != null) {
         this.parentX = geo.x;
@@ -296,7 +296,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
       // Maintaining parent location
       if (this.parentX != null && this.parentY != null) {
-        let geo = this.graph.getCellGeometry(parent);
+        let geo = parent.getGeometry();
 
         if (geo != null) {
           geo = geo.clone();
@@ -337,7 +337,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
     for (let i = 0; i < this.swimlanes.length; i += 1) {
       const lane = this.swimlanes[i];
-      const geo = this.graph.getCellGeometry(lane);
+      const geo = lane.getGeometry();
 
       if (geo != null) {
         const children = this.graph.getChildCells(lane);
@@ -371,7 +371,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
 
     for (let i = 0; i < this.swimlanes.length; i += 1) {
       const lane = this.swimlanes[i];
-      const geo = this.graph.getCellGeometry(lane);
+      const geo = lane.getGeometry();
 
       if (geo != null) {
         const children = this.graph.getChildCells(lane);

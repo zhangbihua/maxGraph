@@ -55,7 +55,7 @@ class Boundary extends React.Component {
 
         for (let i = 0; i < childCount; i++) {
           const child = cell.getChildAt(i);
-          const geo = this.getCellGeometry(child);
+          const geo = child.getGeometry();
 
           if (geo != null && geo.relative) {
             return false;

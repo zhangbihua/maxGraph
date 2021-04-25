@@ -300,7 +300,7 @@ class Stencils extends React.Component {
         const cell = graph.getSelectionCell();
 
         if (cell != null) {
-          let geo = graph.getCellGeometry(cell);
+          let geo = cell.getGeometry();
 
           if (geo != null) {
             graph.getModel().beginUpdate();

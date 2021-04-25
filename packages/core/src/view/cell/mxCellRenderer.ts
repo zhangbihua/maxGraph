@@ -1150,7 +1150,7 @@ class mxCellRenderer {
       bounds.x += spacing.x * scale;
       bounds.y += spacing.y * scale;
 
-      const geo = graph.getCellGeometry(state.cell);
+      const geo = state.cell.getGeometry();
 
       if (geo != null) {
         bounds.width = Math.max(0, geo.width * scale);

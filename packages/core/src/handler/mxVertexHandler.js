@@ -1089,7 +1089,7 @@ class mxVertexHandler {
     dx = tx;
     dy = ty;
 
-    const geo = this.graph.getCellGeometry(this.state.cell);
+    const geo = this.state.cell.getGeometry();
     this.unscaledBounds = this.union(
       geo,
       dx / scale,
@@ -1277,7 +1277,7 @@ class mxVertexHandler {
     // Required to store and reset absolute offset for updating label position
     this.state.absoluteOffset.x = 0;
     this.state.absoluteOffset.y = 0;
-    const geo = this.graph.getCellGeometry(this.state.cell);
+    const geo = this.state.cell.getGeometry();
 
     if (geo != null) {
       const offset = geo.offset || this.EMPTY_POINT;
@@ -1473,10 +1473,10 @@ class mxVertexHandler {
           this.graph.setCellStyles(mxConstants.STYLE_ROTATION, total, [cell]);
         }
 
-        let geo = this.graph.getCellGeometry(cell);
+        let geo = cell.getGeometry();
 
         if (geo != null) {
-          const pgeo = this.graph.getCellGeometry(parent);
+          const pgeo = parent.getGeometry();
 
           if (pgeo != null && !parent.isEdge()) {
             geo = geo.clone();
@@ -1641,7 +1641,7 @@ class mxVertexHandler {
 
     for (let i = 0; i < childCount; i += 1) {
       const child = cell.getChildAt(i);
-      let geo = this.graph.getCellGeometry(child);
+      let geo = child.getGeometry();
 
       if (geo != null) {
         geo = geo.clone();
@@ -1773,7 +1773,7 @@ class mxVertexHandler {
     let height = bottom - top;
 
     if (constrained) {
-      const geo = this.graph.getCellGeometry(this.state.cell);
+      const geo = this.state.cell.getGeometry();
 
       if (geo != null) {
         const aspect = geo.width / geo.height;

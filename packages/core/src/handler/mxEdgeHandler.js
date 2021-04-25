@@ -771,7 +771,7 @@ class mxEdgeHandler {
   isHandleVisible(index) {
     const source = this.state.getVisibleTerminalState(true);
     const target = this.state.getVisibleTerminalState(false);
-    const geo = this.graph.getCellGeometry(this.state.cell);
+    const geo = this.state.cell.getGeometry();
     const edgeStyle =
       geo != null
         ? this.graph.view.getEdgeStyle(this.state, geo.points, source, target)
@@ -1309,7 +1309,7 @@ class mxEdgeHandler {
    */
   // getPreviewPoints(pt: mxPoint, me?: mxMouseEvent): mxPoint[];
   getPreviewPoints(pt, me) {
-    const geometry = this.graph.getCellGeometry(this.state.cell);
+    const geometry = this.state.cell.getGeometry();
     let points = geometry.points != null ? geometry.points.slice() : null;
     const point = new mxPoint(pt.x, pt.y);
     let result = null;
@@ -2149,7 +2149,7 @@ class mxEdgeHandler {
    */
   // addPointAt(state: mxCellState, x: number, y: number): void;
   addPointAt(state, x, y) {
-    let geo = this.graph.getCellGeometry(state.cell);
+    let geo = state.cell.getGeometry();
     const pt = new mxPoint(x, y);
 
     if (geo != null) {
@@ -2191,7 +2191,7 @@ class mxEdgeHandler {
   // removePoint(state: mxCellState, index: number): void;
   removePoint(state, index) {
     if (index > 0 && index < this.abspoints.length - 1) {
-      let geo = this.graph.getCellGeometry(this.state.cell);
+      let geo = this.state.cell.getGeometry();
 
       if (geo != null && geo.points != null) {
         geo = geo.clone();

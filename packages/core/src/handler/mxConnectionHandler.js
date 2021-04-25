@@ -2215,11 +2215,11 @@ class mxConnectionHandler extends mxEventSource {
   // createTargetVertex(evt: MouseEvent, source: mxCell): mxCell;
   createTargetVertex(evt, source) {
     // Uses the first non-relative source
-    let geo = this.graph.getCellGeometry(source);
+    let geo = source.getGeometry();
 
     while (geo != null && geo.relative) {
       source = source.getParent();
-      geo = this.graph.getCellGeometry(source);
+      geo = source.getGeometry();
     }
 
     const clone = this.graph.cloneCell(source);

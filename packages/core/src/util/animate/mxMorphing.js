@@ -206,13 +206,13 @@ class mxMorphing extends mxAnimation {
 
     if (cell != null) {
       const parent = this.cell.getParent();
-      const geo = this.graph.getCellGeometry(cell);
+      const geo = cell.getGeometry();
       result = this.getOriginForCell(parent);
 
       // TODO: Handle offsets
       if (geo != null) {
         if (geo.relative) {
-          const pgeo = this.graph.getCellGeometry(parent);
+          const pgeo = parent.getGeometry();
 
           if (pgeo != null) {
             result.x += geo.x * pgeo.width;

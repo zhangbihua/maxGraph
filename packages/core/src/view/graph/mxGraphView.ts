@@ -965,7 +965,7 @@ class mxGraphView extends mxEventSource {
         origin.y += offset.y;
       }
 
-      const geo = (<mxGraph>this.graph).getCellGeometry(<mxCell>state.cell);
+      const geo = (<mxCell>state.cell).getGeometry();
 
       if (geo != null) {
         if (!state.cell.isEdge()) {
@@ -1293,7 +1293,7 @@ class mxGraphView extends mxEventSource {
       const s = this.scale;
       const tr = this.translate;
       const orig = <mxPoint>edge.origin;
-      const geo = <mxGeometry>(<mxGraph>this.graph).getCellGeometry(<mxCell>edge.cell);
+      const geo = <mxGeometry>(<mxCell>edge.cell).getGeometry();
       pt = geo.getTerminalPoint(source);
 
       if (pt != null) {
@@ -2107,7 +2107,7 @@ class mxGraphView extends mxEventSource {
     absoluteOffset.y = state.getCenterY();
 
     if (points != null && points.length > 0 && state.segments != null) {
-      const geometry = <mxGeometry>(<mxGraph>this.graph).getCellGeometry(<mxCell>state.cell);
+      const geometry = <mxGeometry>(<mxCell>state.cell).getGeometry();
 
       if (geometry.relative) {
         const offset = this.getPoint(state, geometry);

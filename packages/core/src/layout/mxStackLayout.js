@@ -247,8 +247,8 @@ class mxStackLayout extends mxGraphLayout {
 
     if (this.allowGaps) {
       cells.sort((c1, c2) => {
-        const geo1 = this.graph.getCellGeometry(c1);
-        const geo2 = this.graph.getCellGeometry(c2);
+        const geo1 = c1.getGeometry();
+        const geo2 = c2.getGeometry();
 
         return this.horizontal
           ? geo1.x === geo2.x
@@ -496,7 +496,7 @@ class mxStackLayout extends mxGraphLayout {
    * geo - The specific geometry of <mxGeometry>.
    */
   setChildGeometry(child, geo) {
-    const geo2 = this.graph.getCellGeometry(child);
+    const geo2 = child.getGeometry();
 
     if (
       geo2 == null ||
