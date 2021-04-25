@@ -112,21 +112,14 @@
 				let parent = graph.getDefaultParent();
 								
 				// Adds cells to the model in a single step
-				graph.getModel().beginUpdate();
-				try
-				{
+				graph.batchUpdate(() => {
 					var v1 = graph.insertVertex(parent, null, 'Doubleclick', 400, 200, 80, 30);
 					var v2 = graph.insertVertex(parent, null, 'Right-/Shiftclick', 600, 450, 120, 30);
 					var v3 = graph.insertVertex(parent, null, 'Connect/Reconnect', 600, 200, 120, 30);
 					var v4 = graph.insertVertex(parent, null, 'Control-Drag', 400, 350, 100, 30);
 					var e1 = graph.insertEdge(parent, null, 'Tooltips', v1, v2);
 					var e2 = graph.insertEdge(parent, null, '', v2, v3);
-				}
-				finally
-				{
-					// Updates the display
-					graph.getModel().endUpdate();
-				}
+				});
 			}
 
 			var map100Zoom = 13;

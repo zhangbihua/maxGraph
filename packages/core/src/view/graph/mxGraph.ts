@@ -1794,15 +1794,12 @@ class mxGraph extends mxEventSource {
                    value: any,
                    autoSize: boolean=false): void {
 
-    this.getModel().beginUpdate();
-    try {
+    this.batchUpdate(() => {
       this.getModel().setValue(cell, value);
       if (autoSize) {
         this.cellSizeUpdated(cell, false);
       }
-    } finally {
-      this.getModel().endUpdate();
-    }
+    });
   }
 
   /*****************************************************************************

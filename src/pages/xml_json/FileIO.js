@@ -107,8 +107,7 @@ class FileIO extends React.Component {
         );
 
         // Load cells and layouts the graph
-        graph.getModel().beginUpdate();
-        try {
+        graph.batchUpdate(() => {
           // Loads the custom file format (TXT file)
           parse(graph, 'fileio.txt');
 
@@ -121,10 +120,7 @@ class FileIO extends React.Component {
 
           // Executes the layout
           layout.execute(parent);
-        } finally {
-          // Updates the display
-          graph.getModel().endUpdate();
-        }
+        });
 
         graph.dblClick = function(evt, cell) {
           const mxe = new mxEventObject(
@@ -167,8 +163,7 @@ class FileIO extends React.Component {
       const vertices = [];
 
       // Parses all lines (vertices must be first in the file)
-      graph.getModel().beginUpdate();
-      try {
+      graph.batchUpdate(() => {
         for (let i = 0; i < lines.length; i++) {
           // Ignores comments (starting with #)
           const colon = lines[i].indexOf(':');
@@ -207,9 +202,7 @@ class FileIO extends React.Component {
             }
           }
         }
-      } finally {
-        graph.getModel().endUpdate();
-      }
+      });
     }
 
     // Parses the mxGraph XML file format

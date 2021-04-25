@@ -101,8 +101,7 @@ class Stylesheet extends React.Component {
     const parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
+    graph.batchUpdate(() => {
       const v1 = graph.insertVertex(
         parent,
         null,
@@ -158,10 +157,7 @@ class Stylesheet extends React.Component {
       e4.getGeometry().points = [{ x: 500, y: 180 }];
       const e5 = graph.insertEdge(parent, null, '5', v3, v5);
       e5.getGeometry().points = [{ x: 380, y: 180 }];
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
-    }
+    });
   }
 }
 

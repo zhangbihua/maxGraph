@@ -184,8 +184,7 @@ class Stencils extends React.Component {
     const parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
+    graph.batchUpdate(() => {
       const v1 = graph.insertVertex(
         parent,
         null,
@@ -273,10 +272,7 @@ class Stencils extends React.Component {
 
       const e7 = graph.insertEdge(parent, null, '', v7, v5);
       e7.geometry.points = [new mxPoint(290, 370)];
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
-    }
+    });
 
     this.el2.appendChild(
       mxUtils.button('FlipH', function() {
@@ -303,8 +299,7 @@ class Stencils extends React.Component {
           let geo = cell.getGeometry();
 
           if (geo != null) {
-            graph.getModel().beginUpdate();
-            try {
+            graph.batchUpdate(() => {
               // Rotates the size and position in the geometry
               geo = geo.clone();
               geo.x += geo.width / 2 - geo.height / 2;
@@ -334,9 +329,7 @@ class Stencils extends React.Component {
 
                 graph.setCellStyles(mxConstants.STYLE_DIRECTION, dir, [cell]);
               }
-            } finally {
-              graph.getModel().endUpdate();
-            }
+            });
           }
         }
       })

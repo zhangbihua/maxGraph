@@ -85,17 +85,13 @@ class JsonData extends React.Component {
     const parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
+    graph.batchUpdate(() => {
       const v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
       v1.data = new CustomData('v1');
       const v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
       v2.data = new CustomData('v2');
       const e1 = graph.insertEdge(parent, null, '', v1, v2);
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
-    }
+    });
 
     this.el2.appendChild(
       mxUtils.button('Show JSON', function() {

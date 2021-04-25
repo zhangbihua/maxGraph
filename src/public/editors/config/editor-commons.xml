@@ -110,16 +110,10 @@
 				
 				if (color != null)
 				{
-					editor.graph.model.beginUpdate();
-					try
-					{
+					editor.graph.batchUpdate(() => {
 						editor.graph.setCellStyles("strokeColor", color);
 						editor.graph.setCellStyles("fillColor", color);
-					}
-					finally
-					{
-						editor.graph.model.endUpdate();
-					}
+					});
 				}
 			}
 		]]></add>

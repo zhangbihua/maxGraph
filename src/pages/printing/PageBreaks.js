@@ -74,8 +74,7 @@ class PageBreaks extends React.Component {
     const parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
+    graph.batchUpdate(() => {
       const v1 = graph.insertVertex(parent, null, 'Hello,', 10, 10, 280, 330);
       const v2 = graph.insertVertex(
         parent,
@@ -87,10 +86,7 @@ class PageBreaks extends React.Component {
         330
       );
       const e1 = graph.insertEdge(parent, null, '', v1, v2);
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
-    }
+    });
 
     this.el2.appendChild(
       mxUtils.button('Toggle Page Breaks', function(evt) {

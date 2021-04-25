@@ -103,8 +103,7 @@ class OffPage extends React.Component {
       };
 
       // Adds cells to the model in a single step
-      graph.getModel().beginUpdate();
-      try {
+      graph.batchUpdate(() => {
         graph.getModel().setRoot(graph.getModel().createRoot());
         const parent = graph.getDefaultParent();
 
@@ -146,10 +145,7 @@ class OffPage extends React.Component {
           v2,
           'strokeColor=#FF1A00'
         );
-      } finally {
-        // Updates the display
-        graph.getModel().endUpdate();
-      }
+      });
     };
 
     second = function() {
@@ -161,8 +157,7 @@ class OffPage extends React.Component {
       };
 
       // Adds cells to the model in a single step
-      graph.getModel().beginUpdate();
-      try {
+      graph.batchUpdate(() => {
         graph.getModel().setRoot(graph.getModel().createRoot());
         const parent = graph.getDefaultParent();
 
@@ -204,10 +199,7 @@ class OffPage extends React.Component {
           v2,
           'strokeColor=#008C00'
         );
-      } finally {
-        // Updates the display
-        graph.getModel().endUpdate();
-      }
+      });
     };
 
     first();

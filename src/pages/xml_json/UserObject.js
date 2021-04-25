@@ -222,15 +222,11 @@ class UserObject extends React.Component {
     const parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
+    graph.batchUpdate(() => {
       const v1 = graph.insertVertex(parent, null, person1, 40, 40, 80, 30);
       const v2 = graph.insertVertex(parent, null, person2, 200, 150, 80, 30);
       const e1 = graph.insertEdge(parent, null, relation, v1, v2);
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
-    }
+    });
 
     // Implements a properties panel that uses
     // mxCellAttributeChange to change properties
@@ -292,9 +288,7 @@ class UserObject extends React.Component {
       const oldValue = cell.getAttribute(attribute.nodeName, '');
 
       if (newValue != oldValue) {
-        graph.getModel().beginUpdate();
-
-        try {
+        graph.batchUpdate(() => {
           const edit = new mxCellAttributeChange(
             cell,
             attribute.nodeName,
@@ -302,9 +296,7 @@ class UserObject extends React.Component {
           );
           graph.getModel().execute(edit);
           graph.updateCellSize(cell);
-        } finally {
-          graph.getModel().endUpdate();
-        }
+        });
       }
     };
 
