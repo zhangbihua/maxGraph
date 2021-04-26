@@ -121,7 +121,7 @@ class mxEdgeStyle {
     let isSourceLeft = false;
 
     if (source != null) {
-      const sourceGeometry = graph.getCellGeometry(source.cell);
+      const sourceGeometry = source.cell.getGeometry();
 
       if (sourceGeometry.relative) {
         isSourceLeft = sourceGeometry.x <= 0.5;
@@ -158,7 +158,7 @@ class mxEdgeStyle {
     let isTargetLeft = true;
 
     if (target != null) {
-      const targetGeometry = graph.getCellGeometry(target.cell);
+      const targetGeometry = target.cell.getGeometry();
 
       if (targetGeometry.relative) {
         isTargetLeft = targetGeometry.x <= 0.5;

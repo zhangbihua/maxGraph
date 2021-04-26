@@ -12,7 +12,19 @@ import mxCell from '../view/cell/mxCell';
 import mxLog from '../util/gui/mxLog';
 import { getFunctionName } from '../util/mxStringUtils';
 import { importNode, isNode } from '../util/mxDomUtils';
-import { createXmlDocument } from '../util/mxXmlUtils';
+
+const createXmlDocument = () => {
+  // Put here from '../util/mxXmlUtils' to eliminate circular dependency
+  let doc = null;
+
+  if (document.implementation && document.implementation.createDocument) {
+    doc = document.implementation.createDocument('', '', null);
+  } else if ('ActiveXObject' in window) {
+    doc = mxUtils.createMsXmlDocument();
+  }
+
+  return doc;
+};
 
 /**
  * XML codec for JavaScript object graphs. See {@link mxObjectCodec} for a

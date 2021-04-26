@@ -15,6 +15,7 @@ import mxConstants from '../mxConstants';
 import { br, write } from '../mxDomUtils';
 import mxResources from '../mxResources';
 import { getClientX, getClientY } from '../mxEventUtils';
+import { htmlEntities } from '../mxStringUtils';
 
 /**
  * Basic window inside a document.

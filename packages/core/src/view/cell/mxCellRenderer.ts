@@ -717,7 +717,7 @@ class mxCellRenderer {
 
     return (evt: mxEventObject) => {
       if (this.forceControlClickHandler || graph.isEnabled()) {
-        const collapse = !graph.isCellCollapsed(state.cell);
+        const collapse = !state.cell.isCollapsed();
         graph.foldCells(collapse, false, [state.cell], false, evt);
         mxEvent.consume(evt);
       }
@@ -1150,7 +1150,7 @@ class mxCellRenderer {
       bounds.x += spacing.x * scale;
       bounds.y += spacing.y * scale;
 
-      const geo = graph.getCellGeometry(state.cell);
+      const geo = state.cell.getGeometry();
 
       if (geo != null) {
         bounds.width = Math.max(0, geo.width * scale);

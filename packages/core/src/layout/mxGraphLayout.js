@@ -214,7 +214,7 @@ class mxGraphLayout {
   isVertexIgnored(vertex) {
     return (
       !vertex.isVertex() ||
-      !this.graph.isCellVisible(vertex)
+      !vertex.isVisible()
     );
   }
 
@@ -230,7 +230,7 @@ class mxGraphLayout {
 
     return (
       !edge.isEdge() ||
-      !this.graph.isCellVisible(edge) ||
+      !edge.isVisible() ||
       edge.getTerminal(true) == null ||
       edge.getTerminal(false) == null
     );
@@ -424,7 +424,7 @@ class mxGraphLayout {
     }
 
     if (this.parent != null) {
-      const parent = this.cell.getParent();
+      const parent = cell.getParent();
       geo = geo.clone();
 
       if (parent != null && parent !== this.parent) {

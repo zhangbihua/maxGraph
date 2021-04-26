@@ -601,12 +601,12 @@ class mxEdgeHandler {
         }
 
         // Uses connectable parent vertex if one exists
-        if (cell != null && !this.graph.isCellConnectable(cell)) {
-          const parent = this.cell.getParent();
+        if (cell != null && !cell.isConnectable()) {
+          const parent = cell.getParent();
 
           if (
             parent.isVertex() &&
-            this.graph.isCellConnectable(parent)
+            parent.isConnectable()
           ) {
             cell = parent;
           }
@@ -632,7 +632,7 @@ class mxEdgeHandler {
           cell = null;
         }
 
-        if (!this.graph.isCellConnectable(cell)) {
+        if (cell && !cell.isConnectable()) {
           cell = null;
         }
         return cell;
@@ -771,7 +771,7 @@ class mxEdgeHandler {
   isHandleVisible(index) {
     const source = this.state.getVisibleTerminalState(true);
     const target = this.state.getVisibleTerminalState(false);
-    const geo = this.graph.getCellGeometry(this.state.cell);
+    const geo = this.state.cell.getGeometry();
     const edgeStyle =
       geo != null
         ? this.graph.view.getEdgeStyle(this.state, geo.points, source, target)
@@ -1309,7 +1309,7 @@ class mxEdgeHandler {
    */
   // getPreviewPoints(pt: mxPoint, me?: mxMouseEvent): mxPoint[];
   getPreviewPoints(pt, me) {
-    const geometry = this.graph.getCellGeometry(this.state.cell);
+    const geometry = this.state.cell.getGeometry();
     let points = geometry.points != null ? geometry.points.slice() : null;
     const point = new mxPoint(pt.x, pt.y);
     let result = null;
@@ -1523,7 +1523,7 @@ class mxEdgeHandler {
         this.marker.highlight.repaint();
       } else if (this.marker.hasValidState()) {
         this.marker.highlight.shape.stroke =
-          this.graph.isCellConnectable(me.getCell()) &&
+          me.getCell().isConnectable() &&
           this.marker.getValidState() !== me.getState()
             ? 'transparent'
             : mxConstants.DEFAULT_VALID_COLOR;
@@ -1661,7 +1661,7 @@ class mxEdgeHandler {
           } else if (
             terminalState != null &&
             terminalState !== me.getState() &&
-            this.graph.isCellConnectable(me.getCell()) &&
+            me.getCell().isConnectable() &&
             this.marker.highlight.shape != null
           ) {
             this.marker.highlight.shape.stroke = 'transparent';
@@ -2149,7 +2149,7 @@ class mxEdgeHandler {
    */
   // addPointAt(state: mxCellState, x: number, y: number): void;
   addPointAt(state, x, y) {
-    let geo = this.graph.getCellGeometry(state.cell);
+    let geo = state.cell.getGeometry();
     const pt = new mxPoint(x, y);
 
     if (geo != null) {
@@ -2191,7 +2191,7 @@ class mxEdgeHandler {
   // removePoint(state: mxCellState, index: number): void;
   removePoint(state, index) {
     if (index > 0 && index < this.abspoints.length - 1) {
-      let geo = this.graph.getCellGeometry(this.state.cell);
+      let geo = this.state.cell.getGeometry();
 
       if (geo != null && geo.points != null) {
         geo = geo.clone();
