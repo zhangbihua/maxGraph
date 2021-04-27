@@ -82,11 +82,11 @@ class mxOutline {
 
     // Do not repaint when suspended
     const outlineGraphModelChanged = this.outline.graphModelChanged;
-    this.outline.graphModelChanged = mxUtils.bind(this, (changes: any) => {
+    this.outline.graphModelChanged = (changes: any) => {
       if (!this.suspended && this.outline != null) {
         outlineGraphModelChanged.apply(this.outline, [changes]);
       }
-    });
+    };
 
     // Enable faster painting in SVG
     //const node = <SVGElement>this.outline.getView().getCanvas().parentNode;

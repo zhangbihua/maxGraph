@@ -741,7 +741,7 @@ class mxEdgeHandler {
 
     if (this.graph.isCellBendable(cell)) {
       for (let i = 1; i < this.abspoints.length; i += 1) {
-        mxUtils.bind(this, bend => {
+        (bend => {
           this.initBend(bend);
           bend.setCursor(mxConstants.CURSOR_VIRTUAL_BEND_HANDLE);
           bends.push(bend);

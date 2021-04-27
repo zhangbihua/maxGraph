@@ -232,9 +232,9 @@ class mxConstraintHandler {
     if (this.isEnabled() && !this.isEventIgnored(me)) {
       // Lazy installation of mouseleave handler
       if (this.mouseleaveHandler == null && this.graph.container != null) {
-        this.mouseleaveHandler = mxUtils.bind(this, () => {
+        this.mouseleaveHandler = () => {
           this.reset();
-        });
+        };
 
         mxEvent.addListener(
           this.graph.container,
@@ -444,9 +444,9 @@ class mxConstraintHandler {
           );
         }
 
-        const getState = mxUtils.bind(this, () => {
+        const getState = () => {
           return this.currentFocus != null ? this.currentFocus : state;
-        });
+        };
 
         icon.redraw();
 

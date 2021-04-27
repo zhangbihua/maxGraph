@@ -1529,9 +1529,9 @@ class mxEditor extends mxEventSource {
   createSwimlaneManager(graph) {
     const swimlaneMgr = new mxSwimlaneManager(graph, false);
 
-    swimlaneMgr.isHorizontal = mxUtils.bind(this, () => {
+    swimlaneMgr.isHorizontal = () => {
       return this.horizontalFlow;
-    });
+    };
 
     swimlaneMgr.isEnabled = () => {
       return this.maintainSwimlanes;
@@ -1621,15 +1621,15 @@ class mxEditor extends mxEventSource {
     // Installs a listener for double click events
     graph.addListener(
       mxEvent.DOUBLE_CLICK,
-      mxUtils.bind(this, (sender, evt) => {
+      (sender, evt) => {
         const cell = evt.getProperty('cell');
 
         if (cell != null && graph.isEnabled() && this.dblClickAction != null) {
           this.execute(this.dblClickAction, cell);
           evt.consume();
         }
-      })
-    );
+      }
+    )
   }
 
   /**
@@ -1662,9 +1662,9 @@ class mxEditor extends mxEventSource {
    */
   // installDrillHandler(graph: any): void;
   installDrillHandler(graph) {
-    const listener = mxUtils.bind(this, sender => {
+    const listener = sender => {
       this.fireEvent(new mxEventObject(mxEvent.ROOT));
-    });
+    };
 
     graph.getView().addListener(mxEvent.DOWN, listener);
     graph.getView().addListener(mxEvent.UP, listener);
@@ -1819,13 +1819,13 @@ class mxEditor extends mxEventSource {
       // when files are saved
       this.addListener(
         mxEvent.SAVE,
-        mxUtils.bind(this, () => {
+        () => {
           const tstamp = new Date().toLocaleString();
           this.setStatus(
             `${mxResources.get(this.lastSavedResource) ||
               this.lastSavedResource}: ${tstamp}`
           );
-        })
+        }
       );
 
       // Updates the statusbar to display the filename
@@ -1859,9 +1859,9 @@ class mxEditor extends mxEventSource {
   setTitleContainer(container) {
     this.addListener(
       mxEvent.ROOT,
-      mxUtils.bind(this, sender => {
+      sender => {
         container.innerHTML = this.getTitle();
-      })
+      }
     );
   }
 
@@ -2286,7 +2286,7 @@ class mxEditor extends mxEventSource {
 
       // Defines the function to be executed when the
       // OK button is pressed in the dialog
-      const okFunction = mxUtils.bind(this, () => {
+      const okFunction = () => {
         // Hides the dialog
         this.hideProperties();
 
@@ -2335,7 +2335,7 @@ class mxEditor extends mxEventSource {
         } finally {
           model.endUpdate();
         }
-      });
+      };
 
       // Defines the function to be executed when the
       // Cancel button is pressed in the dialog
@@ -2404,11 +2404,11 @@ class mxEditor extends mxEventSource {
       // Installs a function to update the contents
       // of the tasks window on every change of the
       // model, selection or root.
-      const funct = mxUtils.bind(this, sender => {
+      const funct = sender => {
         mxEvent.release(div);
         div.innerHTML = '';
         this.createTasks(div);
-      });
+      };
 
       this.graph.getModel().addListener(mxEvent.CHANGE, funct);
       this.graph.getSelectionModel().addListener(mxEvent.CHANGE, funct);

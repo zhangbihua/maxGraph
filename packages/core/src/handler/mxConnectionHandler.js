@@ -528,7 +528,7 @@ class mxConnectionHandler extends mxEventSource {
     this.constraintHandler = new mxConstraintHandler(this.graph);
 
     // Redraws the icons if the graph changes
-    this.changeHandler = mxUtils.bind(this, sender => {
+    this.changeHandler = sender => {
       if (this.iconState != null) {
         this.iconState = this.graph.getView().getState(this.iconState.cell);
       }
@@ -542,7 +542,7 @@ class mxConnectionHandler extends mxEventSource {
       ) {
         this.reset();
       }
-    });
+    };
 
     this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
     this.graph.getView().addListener(mxEvent.SCALE, this.changeHandler);

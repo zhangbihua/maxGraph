@@ -563,13 +563,13 @@ class mxPrintPreview {
             this.pageFormat.height,
             0,
             0,
-            mxUtils.bind(this, div => {
+            div => {
               this.addGraphFragment(-dx, -dy, this.scale, pageNum, div, clip);
 
               if (this.printBackgroundImage) {
                 this.insertBackgroundImage(div, -dx, -dy);
               }
-            }),
+            },
             pageNum
           );
 

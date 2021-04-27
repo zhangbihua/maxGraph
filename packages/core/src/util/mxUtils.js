@@ -164,17 +164,6 @@ const mxUtils = {
   },
 
   /**
-   * Function: bind
-   *
-   * Returns a wrapper function that locks the execution scope of the given
-   * function to the specified scope. Inside funct, the "this" keyword
-   * becomes a reference to that scope.
-   */
-  bind: (scope, funct) => {
-    return funct.bind(scope);
-  },
-
-  /**
    * Function: findNode
    *
    * Returns the first node where attr equals value.

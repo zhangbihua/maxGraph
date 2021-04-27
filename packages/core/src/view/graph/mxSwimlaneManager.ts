@@ -37,17 +37,17 @@ class mxSwimlaneManager extends mxEventSource {
     this.addEnabled = addEnabled;
     this.resizeEnabled = resizeEnabled;
 
-    this.addHandler = mxUtils.bind(this, (sender: any, evt: mxEventObject) => {
+    this.addHandler = (sender: any, evt: mxEventObject) => {
       if (this.isEnabled() && this.isAddEnabled()) {
         this.cellsAdded(evt.getProperty('cells'));
       }
-    });
+    };
 
-    this.resizeHandler = mxUtils.bind(this, (sender: any, evt: mxEventObject) => {
+    this.resizeHandler = (sender: any, evt: mxEventObject) => {
       if (this.isEnabled() && this.isResizeEnabled()) {
         this.cellsResized(evt.getProperty('cells'));
       }
-    });
+    };
 
     this.setGraph(graph);
   }

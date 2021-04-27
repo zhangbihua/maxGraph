@@ -4145,7 +4145,7 @@ class mxGraph extends mxEventSource {
           // Disconnects edges which are not being removed
           const edges = this.getAllEdges([cells[i]]);
 
-          const disconnectTerminal = mxUtils.bind(this, (edge: mxCell, source: boolean) => {
+          const disconnectTerminal = (edge: mxCell, source: boolean) => {
             let geo = edge.getGeometry();
 
             if (geo != null) {
@@ -4200,7 +4200,7 @@ class mxGraph extends mxEventSource {
                 this.getModel().setTerminal(edge, null, source);
               }
             }
-          });
+          };
 
           for (let j = 0; j < edges.length; j++) {
             if (!dict.get(edges[j])) {
@@ -11549,7 +11549,7 @@ class mxGraph extends mxEventSource {
         }
 
         this.tapAndHoldThread = window.setTimeout(
-          mxUtils.bind(this, handler),
+          handler,
           this.tapAndHoldDelay
         );
         this.tapAndHoldValid = true;

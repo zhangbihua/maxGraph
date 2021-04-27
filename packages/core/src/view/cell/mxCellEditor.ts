@@ -933,9 +933,9 @@ class mxCellEditor {
           state.style[mxConstants.STYLE_OVERFLOW] !== 'fill')
       ) {
         window.setTimeout(
-          mxUtils.bind(this, () => {
+          () => {
             this.resize();
-          }),
+          },
           0
         );
       }

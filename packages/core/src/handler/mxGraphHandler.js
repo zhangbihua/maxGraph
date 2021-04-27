@@ -53,9 +53,9 @@ class mxGraphHandler {
     this.graph.addListener(mxEvent.PAN, this.panHandler);
 
     // Handles escape keystrokes
-    this.escapeHandler = mxUtils.bind(this, (sender, evt) => {
+    this.escapeHandler = (sender, evt) => {
       this.reset();
-    });
+    };
 
     this.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
 
@@ -68,7 +68,7 @@ class mxGraphHandler {
 
       // Waits for the states and handlers to be updated
       this.refreshThread = window.setTimeout(
-        mxUtils.bind(this, () => {
+        () => {
           this.refreshThread = null;
 
           if (this.first != null && !this.suspended) {
@@ -101,7 +101,7 @@ class mxGraphHandler {
               }
             }
           }
-        }),
+        },
         0
       );
     };
@@ -679,14 +679,14 @@ class mxGraphHandler {
     const parent = this.graph.getDefaultParent();
     const model = this.graph.getModel();
 
-    const filter = mxUtils.bind(this, cell => {
+    const filter = cell => {
       return (
         this.graph.view.getState(cell) != null &&
         cell.isVertex() &&
         cell.getGeometry() != null &&
         !cell.getGeometry().relative
       );
-    });
+    };
 
     return this.graph.view.getCellStates(
       model.filterDescendants(filter, parent)
@@ -1250,7 +1250,7 @@ class mxGraphHandler {
 
       if (this.allCells != null) {
         this.allCells.visit(
-          mxUtils.bind(this, (key, state) => {
+          (key, state) => {
             const realState = this.graph.view.getState(state.cell);
 
             // Checks if cell was removed or replaced
@@ -1324,7 +1324,7 @@ class mxGraphHandler {
                 }
               }
             }
-          })
+          }
         );
       }
 
