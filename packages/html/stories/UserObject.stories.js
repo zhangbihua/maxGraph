@@ -17,7 +17,6 @@ const Template = ({ label, ...args }) => {
     mxDomHelpers,
     mxKeyHandler,
     mxEvent,
-    mxWindow,
     mxXmlUtils,
     mxCodec,
     mxConstants,

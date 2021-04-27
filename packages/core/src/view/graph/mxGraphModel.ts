@@ -7,14 +7,11 @@
 import mxEventSource from '../../util/event/mxEventSource';
 import mxUndoableEdit from '../../util/undo/mxUndoableEdit';
 import mxCellPath from '../cell/mxCellPath';
-import mxDictionary from '../../util/datatypes/mxDictionary';
-import mxObjectIdentity from '../../util/datatypes/mxObjectIdentity';
 import mxCell from '../cell/mxCell';
 import mxUtils from '../../util/mxUtils';
 import mxEventObject from '../../util/event/mxEventObject';
 import mxEvent from '../../util/event/mxEvent';
 import mxPoint from '../../util/datatypes/mxPoint';
-
 import mxChildChange from '../../atomic_changes/mxChildChange';
 import mxCollapseChange from '../../atomic_changes/mxCollapseChange';
 import mxGeometryChange from '../../atomic_changes/mxGeometryChange';

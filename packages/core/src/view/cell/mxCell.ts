@@ -5,7 +5,6 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxUtils from '../../util/mxUtils';
 import mxConstants from '../../util/mxConstants';
 import mxGeometry from '../../util/datatypes/mxGeometry';
 import mxCellOverlay from './mxCellOverlay';

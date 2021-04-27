@@ -8,7 +8,6 @@
 import mxCell from '../view/cell/mxCell';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxUtils from '../util/mxUtils';
 import mxConstants from '../util/mxConstants';
 import { removeWhitespace } from '../util/mxStringUtils';
 import { importNode } from '../util/mxDomUtils';

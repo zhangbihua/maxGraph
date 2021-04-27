@@ -190,27 +190,6 @@ const mxUtils = {
   },
 
   /**
-   * Function: forEach
-   *
-   * Calls the given function for each element of the given array and returns
-   * the array.
-   *
-   * Parameters:
-   *
-   * array - Array that contains the elements.
-   * fn - Function to be called for each object.
-   */
-  forEach: (array, fn) => {
-    if (array != null && fn != null) {
-      for (let i = 0; i < array.length; i += 1) {
-        fn(array[i]);
-      }
-    }
-
-    return array;
-  },
-
-  /**
    * Function: remove
    *
    * Removes all occurrences of the given object in the given array or

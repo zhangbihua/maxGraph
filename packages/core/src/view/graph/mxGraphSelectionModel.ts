@@ -9,7 +9,6 @@ import mxUndoableEdit from '../../util/undo/mxUndoableEdit';
 import mxEventSource from '../../util/event/mxEventSource';
 import mxEventObject from '../../util/event/mxEventObject';
 import mxClient from '../../mxClient';
-import mxUtils from '../../util/mxUtils';
 import mxSelectionChange from '../../atomic_changes/mxSelectionChange';
 import mxEvent from '../../util/event/mxEvent';
 import mxCell from '../cell/mxCell';

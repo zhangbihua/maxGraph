@@ -18,7 +18,11 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {mxGraph, mxEvent, mxRubberband} = mxgraph;
+  const {
+    mxGraph, 
+    mxEvent, 
+    mxRubberband
+  } = mxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';

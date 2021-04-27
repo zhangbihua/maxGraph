@@ -6,7 +6,6 @@
  */
 import mxAbstractCanvas2D from './mxAbstractCanvas2D';
 import mxConstants from '../mxConstants';
-import mxUtils from '../mxUtils';
 import { getOuterHtml } from '../mxDomUtils';
 
 /**
