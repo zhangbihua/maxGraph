@@ -1045,7 +1045,7 @@ class mxShape {
         if (
           rounded &&
           (dx !== 0 || dy !== 0) &&
-          (exclude == null || mxUtils.indexOf(exclude, i - 1) < 0)
+          (exclude == null || exclude.indexOf(i - 1) < 0)
         ) {
           // Draws a line from the last point to the current
           // point with a spacing of size off the current point

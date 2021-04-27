@@ -190,29 +190,6 @@ const mxUtils = {
   },
 
   /**
-   * Function: indexOf
-   *
-   * Returns the index of obj in array or -1 if the array does not contain
-   * the given object.
-   *
-   * Parameters:
-   *
-   * array - Array to check for the given obj.
-   * obj - Object to find in the given array.
-   */
-  indexOf: (array, obj) => {
-    if (array != null && obj != null) {
-      for (let i = 0; i < array.length; i += 1) {
-        if (array[i] == obj) {
-          return i;
-        }
-      }
-    }
-
-    return -1;
-  },
-
-  /**
    * Function: forEach
    *
    * Calls the given function for each element of the given array and returns
@@ -254,12 +231,12 @@ const mxUtils = {
     let result = null;
 
     if (typeof array === 'object') {
-      let index = mxUtils.indexOf(array, obj);
+      let index = array.indexOf(obj);
 
       while (index >= 0) {
         array.splice(index, 1);
         result = obj;
-        index = mxUtils.indexOf(array, obj);
+        index = array.indexOf(obj);
       }
     }
 

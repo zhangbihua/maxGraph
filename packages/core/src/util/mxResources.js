@@ -109,7 +109,7 @@ const mxResources = {
    */
   isLanguageSupported: lan => {
     if (mxClient.languages != null) {
-      return mxUtils.indexOf(mxClient.languages, lan) >= 0;
+      return mxClient.languages.indexOf(lan) >= 0;
     }
 
     return true;

@@ -8,7 +8,6 @@
 import mxChildChange from '../atomic_changes/mxChildChange';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxUtils from '../util/mxUtils';
 import mxConstants from '../util/mxConstants';
 
 /**
@@ -50,7 +49,7 @@ class mxChildChangeCodec extends mxObjectCodec {
     if (attr === 'child' && (!isWrite || obj.model.contains(obj.previous))) {
       return true;
     }
-    return mxUtils.indexOf(this.idrefs, attr) >= 0;
+    return this.idrefs.indexOf(attr) >= 0;
   }
 
   /**

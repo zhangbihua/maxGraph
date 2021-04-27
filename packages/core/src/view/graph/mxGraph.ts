@@ -1511,7 +1511,7 @@ class mxGraph extends mxEventSource {
     if (overlay == null) {
       this.removeCellOverlays(cell);
     } else {
-      const index = mxUtils.indexOf(cell.overlays, overlay);
+      const index = cell.overlays ? cell.overlays.indexOf(overlay) : -1;
 
       if (index >= 0) {
         (<mxCellOverlay[]>cell.overlays).splice(index, 1);
@@ -6708,7 +6708,7 @@ class mxGraph extends mxEventSource {
                       geo.height
                     );
 
-                    if (mxUtils.indexOf(cells, parent) >= 0) {
+                    if (cells.indexOf(parent) >= 0) {
                       bbox.x += tmp.x;
                       bbox.y += tmp.y;
                     }
@@ -6719,7 +6719,7 @@ class mxGraph extends mxEventSource {
 
                 if (
                   parent.isVertex() &&
-                  mxUtils.indexOf(cells, parent) >= 0
+                  cells.indexOf(parent) >= 0
                 ) {
                   tmp = this.getBoundingBoxFromGeometry([parent], false);
 
@@ -9766,7 +9766,7 @@ class mxGraph extends mxEventSource {
     // Checks if parent is dropped into child if not cloning
     if (!clone) {
       let parent = cell;
-      while (parent != null && mxUtils.indexOf(cells, parent) < 0) {
+      while (parent != null && cells.indexOf(parent) < 0) {
         parent = parent.getParent();
       }
     }

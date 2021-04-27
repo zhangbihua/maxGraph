@@ -316,7 +316,7 @@ class mxCellRenderer {
       ];
 
       for (let i = 0; i < styles.length; i += 1) {
-        if (mxUtils.indexOf(values, state.style[styles[i]]) >= 0) {
+        if (values.indexOf(state.style[styles[i]]) >= 0) {
           return true;
         }
       }

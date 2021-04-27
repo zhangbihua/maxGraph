@@ -438,7 +438,8 @@ class mxCell {
    */
   // getIndex(child: mxCell): number;
   getIndex(child: mxCell | null): number {
-    return mxUtils.indexOf(this.children, child);
+    if (child === null || !this.children) return -1;
+    return this.children.indexOf(child);
   }
 
   /**
@@ -540,7 +541,8 @@ class mxCell {
    */
   // getEdgeIndex(edge: mxCell): number;
   getEdgeIndex(edge: mxCell): number {
-    return mxUtils.indexOf(this.edges, edge);
+    if (!this.edges) return -1;
+    return this.edges.indexOf(edge);
   }
 
   /**
@@ -573,7 +575,7 @@ class mxCell {
       if (
         this.edges == null ||
         edge.getTerminal(!isOutgoing) !== this ||
-        mxUtils.indexOf(this.edges, edge) < 0
+        this.edges.indexOf(edge) < 0
       ) {
         if (this.edges == null) {
           this.edges = [];

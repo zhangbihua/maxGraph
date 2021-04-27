@@ -314,7 +314,7 @@ class mxObjectCodec {
   isExcluded(obj, attr, value, write) {
     return (
       attr == mxObjectIdentity.FIELD_NAME ||
-      mxUtils.indexOf(this.exclude, attr) >= 0
+      this.exclude.indexOf(attr) >= 0
     );
   }
 
@@ -331,7 +331,7 @@ class mxObjectCodec {
    */
   // isReference(obj: any, attr: string, value: any, write?: boolean): boolean;
   isReference(obj, attr, value, write) {
-    return mxUtils.indexOf(this.idrefs, attr) >= 0;
+    return this.idrefs.indexOf(attr) >= 0;
   }
 
   /**

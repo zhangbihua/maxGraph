@@ -282,15 +282,13 @@ const Template = ({ label, ...args }) => {
 
       if (provider != null) {
         data =
-          mxUtils.indexOf(provider.types, 'text/html') >= 0
+          provider.types.indexOf('text/html') >= 0
             ? provider.getData('text/html')
             : null;
 
         if (
-          mxUtils.indexOf(
-            provider.types,
-            'text/plain' && (data == null || data.length === 0)
-          )
+          provider.types.indexOf('text/plain')
+          && (data == null || data.length === 0)
         ) {
           data = provider.getData('text/plain');
         }
