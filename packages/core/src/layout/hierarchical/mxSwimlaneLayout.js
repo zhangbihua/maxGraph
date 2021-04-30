@@ -6,7 +6,7 @@
  */
 
 import mxGraphLayout from '../mxGraphLayout';
-import mxConstants from '../../util/mxConstants';
+import { DIRECTION_NORTH } from '../../util/mxConstants';
 import mxHierarchicalEdgeStyle from './mxHierarchicalEdgeStyle';
 import mxDictionary from '../../util/datatypes/mxDictionary';
 import mxRectangle from '../../util/datatypes/mxRectangle';
@@ -36,8 +36,7 @@ import mxCoordinateAssignment from './stage/mxCoordinateAssignment';
 class mxSwimlaneLayout extends mxGraphLayout {
   constructor(graph, orientation, deterministic) {
     super(graph);
-    this.orientation =
-      orientation != null ? orientation : mxConstants.DIRECTION_NORTH;
+    this.orientation = orientation != null ? orientation : DIRECTION_NORTH;
     this.deterministic = deterministic != null ? deterministic : true;
   }
 
@@ -130,7 +129,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
    * The position of the root node(s) relative to the laid out graph in.
    * Default is <mxConstants.DIRECTION_NORTH>.
    */
-  orientation = mxConstants.DIRECTION_NORTH;
+  orientation = DIRECTION_NORTH;
 
   /**
    * Variable: fineTuning
@@ -718,10 +717,7 @@ class mxSwimlaneLayout extends mxGraphLayout {
       result[mxObjectIdentity.get(cell)] = cell;
     }
 
-    if (
-      this.traverseAncestors ||
-      (cell === this.parent && cell.isVisible())
-    ) {
+    if (this.traverseAncestors || (cell === this.parent && cell.isVisible())) {
       const childCount = cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {

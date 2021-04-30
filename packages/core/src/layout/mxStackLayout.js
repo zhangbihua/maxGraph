@@ -7,7 +7,12 @@
 import mxGraphLayout from './mxGraphLayout';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxUtils from '../util/mxUtils';
-import mxConstants from '../util/mxConstants';
+import {
+  DEFAULT_STARTSIZE,
+  STYLE_HORIZONTAL,
+  STYLE_STARTSIZE,
+  STYLE_STROKEWIDTH,
+} from '../util/mxConstants';
 
 /**
  * Class: mxStackLayout
@@ -311,11 +316,10 @@ class mxStackLayout extends mxGraphLayout {
         const style = this.graph.getCellStyle(parent);
         let start = mxUtils.getNumber(
           style,
-          mxConstants.STYLE_STARTSIZE,
-          mxConstants.DEFAULT_STARTSIZE
+          STYLE_STARTSIZE,
+          DEFAULT_STARTSIZE
         );
-        const horz =
-          mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true) == 1;
+        const horz = mxUtils.getValue(style, STYLE_HORIZONTAL, true) == 1;
 
         if (pgeo != null) {
           if (horz) {
@@ -377,11 +381,7 @@ class mxStackLayout extends mxGraphLayout {
 
             if (!this.borderCollapse) {
               const childStyle = this.graph.getCellStyle(child);
-              sw = mxUtils.getNumber(
-                childStyle,
-                mxConstants.STYLE_STROKEWIDTH,
-                1
-              );
+              sw = mxUtils.getNumber(childStyle, STYLE_STROKEWIDTH, 1);
             }
 
             if (last != null) {

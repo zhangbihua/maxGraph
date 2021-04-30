@@ -14,7 +14,6 @@ const Template = ({ label, ...args }) => {
     mxEditor,
     mxConnectionHandler,
     mxImage,
-    mxUtils,
     mxPerimeter,
     mxPoint,
     mxConstants,
@@ -23,8 +22,7 @@ const Template = ({ label, ...args }) => {
     mxEvent,
     mxSwimlaneManager,
     mxStackLayout,
-    mxLayoutManager,
-    mxGraphModel
+    mxLayoutManager
   } = mxgraph;
 
   const container = document.createElement('div');
