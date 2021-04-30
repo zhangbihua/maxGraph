@@ -6,7 +6,14 @@
  */
 import mxImage from '../util/image/mxImage';
 import mxClient from '../mxClient';
-import mxConstants from '../util/mxConstants';
+import {
+  DEFAULT_VALID_COLOR,
+  DIALECT_MIXEDHTML,
+  DIALECT_SVG,
+  HIGHLIGHT_OPACITY,
+  HIGHLIGHT_SIZE,
+  HIGHLIGHT_STROKEWIDTH,
+} from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 import mxRectangle from '../util/datatypes/mxRectangle';
@@ -63,10 +70,10 @@ class mxConstraintHandler {
   enabled = true;
 
   /**
-   * Specifies the color for the highlight. Default is {@link mxConstants.DEFAULT_VALID_COLOR}.
+   * Specifies the color for the highlight. Default is {@link DEFAULT_VALID_COLOR}.
    */
   // highlightColor: string;
-  highlightColor = mxConstants.DEFAULT_VALID_COLOR;
+  highlightColor = DEFAULT_VALID_COLOR;
 
   /**
    * Returns true if events are handled. This implementation
@@ -208,10 +215,7 @@ class mxConstraintHandler {
     if (cell != null && !cell.isConnectable()) {
       const parent = cell.getParent();
 
-      if (
-        parent.isVertex() &&
-        parent.isConnectable()
-      ) {
+      if (parent.isVertex() && parent.isConnectable()) {
         cell = parent;
       }
     }
@@ -305,13 +309,13 @@ class mxConstraintHandler {
             minDistSq = tmp;
 
             tmp = this.focusIcons[i].bounds.clone();
-            tmp.grow(mxConstants.HIGHLIGHT_SIZE + 1);
+            tmp.grow(HIGHLIGHT_SIZE + 1);
             tmp.width -= 1;
             tmp.height -= 1;
 
             if (this.focusHighlight == null) {
               const hl = this.createHighlightShape();
-              hl.dialect = mxConstants.DIALECT_SVG;
+              hl.dialect = DIALECT_SVG;
               hl.pointerEvents = false;
 
               hl.init(this.graph.getView().getOverlayPane());
@@ -430,9 +434,7 @@ class mxConstraintHandler {
         );
         const icon = new mxImageShape(bounds, src);
         icon.dialect =
-          this.graph.dialect !== mxConstants.DIALECT_SVG
-            ? mxConstants.DIALECT_MIXEDHTML
-            : mxConstants.DIALECT_SVG;
+          this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
         icon.preserveImageAspect = false;
         icon.init(this.graph.getView().getDecoratorPane());
 
@@ -474,9 +476,9 @@ class mxConstraintHandler {
       null,
       this.highlightColor,
       this.highlightColor,
-      mxConstants.HIGHLIGHT_STROKEWIDTH
+      HIGHLIGHT_STROKEWIDTH
     );
-    hl.opacity = mxConstants.HIGHLIGHT_OPACITY;
+    hl.opacity = HIGHLIGHT_OPACITY;
 
     return hl;
   }

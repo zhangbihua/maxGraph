@@ -5,12 +5,12 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxConstants from '../../util/mxConstants';
+import { NODETYPE_ELEMENT } from '../../util/mxConstants';
 import mxGeometry from '../../util/datatypes/mxGeometry';
 import mxCellOverlay from './mxCellOverlay';
 import { clone } from '../../util/mxCloneUtils';
-import mxPoint from "../../util/datatypes/mxPoint";
-import mxCellPath from "./mxCellPath";
+import mxPoint from '../../util/datatypes/mxPoint';
+import mxCellPath from './mxCellPath';
 
 /**
  * Cells are the elements of the graph model. They represent the state
@@ -637,8 +637,7 @@ class mxCell {
     const userObject = this.getValue();
     return (
       userObject != null &&
-      (userObject.nodeType === mxConstants.NODETYPE_ELEMENT &&
-      userObject.hasAttribute
+      (userObject.nodeType === NODETYPE_ELEMENT && userObject.hasAttribute
         ? userObject.hasAttribute(name)
         : userObject.getAttribute(name) != null)
     );
@@ -658,7 +657,7 @@ class mxCell {
   getAttribute(name: string, defaultValue: any): any {
     const userObject = this.getValue();
     const val =
-      userObject != null && userObject.nodeType === mxConstants.NODETYPE_ELEMENT
+      userObject != null && userObject.nodeType === NODETYPE_ELEMENT
         ? userObject.getAttribute(name)
         : null;
     return val != null ? val : defaultValue;
@@ -675,10 +674,7 @@ class mxCell {
   // setAttribute(name: string, value: any): void;
   setAttribute(name: string, value: any): void {
     const userObject = this.getValue();
-    if (
-      userObject != null &&
-      userObject.nodeType === mxConstants.NODETYPE_ELEMENT
-    ) {
+    if (userObject != null && userObject.nodeType === NODETYPE_ELEMENT) {
       userObject.setAttribute(name, value);
     }
   }
@@ -718,7 +714,6 @@ class mxCell {
    */
   // getNearestCommonAncestor(cell1: mxCell, cell2: mxCell): mxCell;
   getNearestCommonAncestor(cell2: mxCell | null): mxCell | null {
-
     // Creates the cell path for the second cell
     let path = mxCellPath.create(<mxCell>cell2);
 
@@ -763,7 +758,6 @@ class mxCell {
    */
   // isAncestor(parent: mxCell, child: mxCell): boolean;
   isAncestor(child: mxCell | null): boolean {
-
     while (child != null && child !== this) {
       child = <mxCell>child.getParent();
     }
@@ -796,9 +790,7 @@ class mxCell {
    * Default is false.
    */
   // getChildCells(parent: mxCell, vertices: boolean, edges: boolean): Array<mxCell>;
-  getChildCells(vertices: boolean=false,
-                edges: boolean=false): mxCell[] {
-
+  getChildCells(vertices: boolean = false, edges: boolean = false): mxCell[] {
     const childCount = this.getChildCount();
     const result = [];
 
@@ -825,8 +817,10 @@ class mxCell {
    * @param {mxCell} ignoredEdge  that represents an edge to be ignored.
    */
   // getDirectedEdgeCount(cell: mxCell, outgoing: boolean, ignoredEdge: boolean): number;
-  getDirectedEdgeCount(outgoing: boolean,
-                       ignoredEdge: mxCell | null=null): number {
+  getDirectedEdgeCount(
+    outgoing: boolean,
+    ignoredEdge: mxCell | null = null
+  ): number {
     let count = 0;
     const edgeCount = this.getEdgeCount();
 
@@ -877,10 +871,11 @@ class mxCell {
    * Default is true.
    */
   // getEdges(cell: mxCell, incoming?: boolean, outgoing?: boolean, includeLoops?: boolean): Array<mxCell>;
-  getEdges(incoming: boolean=true,
-           outgoing: boolean=true,
-           includeLoops: boolean=true) {
-
+  getEdges(
+    incoming: boolean = true,
+    outgoing: boolean = true,
+    includeLoops: boolean = true
+  ) {
     const edgeCount = this.getEdgeCount();
     const result = [];
 
