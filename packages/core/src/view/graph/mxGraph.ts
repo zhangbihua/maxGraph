@@ -8335,7 +8335,7 @@ class mxGraph extends mxEventSource {
   /**
    * Returns the vertical alignment for the given cell state. This
    * implementation returns the value stored under
-   * {@link mxConstants.'verticalAlign'} in the cell style.
+   * {@link 'verticalAlign'} in the cell style.
    *
    * @param state {@link mxCellState} whose vertical alignment should be
    * returned.

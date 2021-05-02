@@ -610,7 +610,7 @@ export const DEFAULT_IMAGESIZE = 24;
  * Variable: ENTITY_SEGMENT
  *
  * Defines the length of the horizontal segment of an Entity Relation.
- * This can be overridden using <mxConstants.'segment'> style.
+ * This can be overridden using <'segment'> style.
  * Default is 30.
  */
 export const ENTITY_SEGMENT = 30;

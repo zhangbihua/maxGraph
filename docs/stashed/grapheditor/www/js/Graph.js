@@ -9820,7 +9820,7 @@ if (typeof mxVertexHandler != 'undefined')
 					
 					let size = mxUtils.getValue(state.style, 'fontSize', mxConstants.DEFAULT_FONTSIZE);
 					let family = mxUtils.getValue(state.style, 'fontFamily', mxConstants.DEFAULT_FONTFAMILY);
-					let align = mxUtils.getValue(state.style, mxConstants.'align', mxConstants.ALIGN_LEFT);
+					let align = mxUtils.getValue(state.style, 'align', mxConstants.ALIGN_LEFT);
 					let bold = (mxUtils.getValue(state.style, 'fontStyle', 0) &
 							mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD;
 					let italic = (mxUtils.getValue(state.style, 'fontStyle', 0) &
@@ -9897,8 +9897,8 @@ if (typeof mxVertexHandler != 'undefined')
 						
 						if (m == null)
 						{
-							m = mxUtils.getAlignmentAsPoint(mxUtils.getValue(state.style, mxConstants.'align', mxConstants.ALIGN_CENTER),
-									mxUtils.getValue(state.style, mxConstants.'verticalAlign', mxConstants.ALIGN_MIDDLE));
+							m = mxUtils.getAlignmentAsPoint(mxUtils.getValue(state.style, 'align', mxConstants.ALIGN_CENTER),
+									mxUtils.getValue(state.style, 'verticalAlign', mxConstants.ALIGN_MIDDLE));
 						}
 						
 						this.bounds.x += m.x * this.bounds.width;

@@ -22,7 +22,7 @@
 				
 				if (this.style != null)
 				{
-					events = mxUtils.getValue(this.style, mxConstants.'pointerEvents', '1') == '1';
+					events = mxUtils.getValue(this.style, 'pointerEvents', '1') == '1';
 				}
 				
 				if (!events)
@@ -1377,7 +1377,7 @@
 			
 			if (this.style != null)
 			{
-				events = mxUtils.getValue(this.style, mxConstants.'pointerEvents', '1') == '1';
+				events = mxUtils.getValue(this.style, 'pointerEvents', '1') == '1';
 			}
 			
 			if (events || (this.fill != null && this.fill != mxConstants.NONE) ||
@@ -1659,7 +1659,7 @@
 		if (this.style.double == 1)
 		{
 			let margin = (Math.max(2, this.strokewidth + 1) * 2 + parseFloat(
-				this.style[mxConstants.'margin'] || 0)) * this.scale;
+				this.style['margin'] || 0)) * this.scale;
 		
 			return new mxRectangle(rect.x + margin, rect.y + margin,
 				rect.width - 2 * margin, rect.height - 2 * margin);
@@ -1674,7 +1674,7 @@
 		if (!this.outline && this.style.double == 1)
 		{
 			let margin = Math.max(2, this.strokewidth + 1) * 2 +
-				parseFloat(this.style[mxConstants.'margin'] || 0);
+				parseFloat(this.style['margin'] || 0);
 			x += margin;
 			y += margin;
 			w -= 2 * margin;
@@ -1706,7 +1706,7 @@
 		if (this.style.double == 1)
 		{
 			let margin = (Math.max(2, this.strokewidth + 1) + parseFloat(
-				this.style[mxConstants.'margin'] || 0)) * this.scale;
+				this.style['margin'] || 0)) * this.scale;
 		
 			return new mxRectangle(rect.x + margin, rect.y + margin,
 				rect.width - 2 * margin, rect.height - 2 * margin);
@@ -1721,7 +1721,7 @@
 		{
 			if (!this.outline && this.style.double == 1)
 			{
-				let margin = Math.max(2, this.strokewidth + 1) + parseFloat(this.style[mxConstants.'margin'] || 0);
+				let margin = Math.max(2, this.strokewidth + 1) + parseFloat(this.style['margin'] || 0);
 				x += margin;
 				y += margin;
 				w -= 2 * margin;
@@ -3236,7 +3236,7 @@
 		if (this.style != null)
 		{
 			let pointerEvents = c.pointerEvents;
-			let events = mxUtils.getValue(this.style, mxConstants.'pointerEvents', '1') == '1';
+			let events = mxUtils.getValue(this.style, 'pointerEvents', '1') == '1';
 			
 			if (!events && (this.fill == null || this.fill == mxConstants.NONE))
 			{
@@ -3999,7 +3999,7 @@
 				let tol = state.view.graph.gridSize / state.view.scale;
 				let handles = [];
 				
-				if (mxUtils.getValue(state.style, mxConstants.'startArrow', mxConstants.NONE) != mxConstants.NONE)
+				if (mxUtils.getValue(state.style, 'startArrow', mxConstants.NONE) != mxConstants.NONE)
 				{
 					handles.push(createEdgeHandle(state, ['width', 'startSize', 'endSize'], true, function(dist, nx, ny, p0, p1)
 					{
@@ -4070,7 +4070,7 @@
 					}));
 				}
 				
-				if (mxUtils.getValue(state.style, mxConstants.'endArrow', mxConstants.NONE) != mxConstants.NONE)
+				if (mxUtils.getValue(state.style, 'endArrow', mxConstants.NONE) != mxConstants.NONE)
 				{
 					handles.push(createEdgeHandle(state, ['width', 'startSize', 'endSize'], false, function(dist, nx, ny, p0, p1)
 					{

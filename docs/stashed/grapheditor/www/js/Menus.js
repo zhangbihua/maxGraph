@@ -863,7 +863,7 @@ Menus.prototype.createStyleChangeFunction = function(keys, values)
 				graph.setCellStyles(keys[i], values[i], cells);
 
 				// Removes CSS alignment to produce consistent output
-				if (keys[i] == mxConstants.'align')
+				if (keys[i] == 'align')
 				{
 					graph.updateLabelElements(cells, function(elt)
 					{

@@ -23,7 +23,7 @@ import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
  *   c.ellipse(x, y, w, h);
  *   c.stroke();
  *
- *   var inset = mxUtils.getValue(this.style, mxConstants.'margin', Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));
+ *   var inset = mxUtils.getValue(this.style, 'margin', Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));
  *   x += inset;
  *   y += inset;
  *   w -= 2 * inset;

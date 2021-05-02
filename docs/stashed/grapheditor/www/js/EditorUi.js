@@ -521,7 +521,7 @@ EditorUi = function(editor, container, lightbox)
 		                 ['strokeColor', 'strokeWidth'],
 		                 ['fillColor', 'gradientColor'],
 		                 valueStyles,
-		                 .opacity,
+		                 ['opacity'],
 		                 ['align'],
 		                 ['html']];
 		
