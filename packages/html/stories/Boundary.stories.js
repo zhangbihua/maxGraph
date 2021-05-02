@@ -23,7 +23,7 @@ const Template = ({ label, ...args }) => {
     mxEvent, 
     mxRubberband, 
     mxPoint,
-    mxConstants,
+    mxGraphHandler,
     mxUtils
   } = mxgraph;
 
@@ -132,13 +132,13 @@ const Template = ({ label, ...args }) => {
 
   // Sets the base style for all vertices
   const style = graph.getStylesheet().getDefaultVertexStyle();
-  style[mxConstants.STYLE_ROUNDED] = true;
-  style[mxConstants.STYLE_FILLCOLOR] = '#ffffff';
-  style[mxConstants.STYLE_STROKECOLOR] = '#000000';
-  style[mxConstants.STYLE_STROKEWIDTH] = '2';
-  style[mxConstants.STYLE_FONTCOLOR] = '#000000';
-  style[mxConstants.STYLE_FONTSIZE] = '12';
-  style[mxConstants.STYLE_FONTSTYLE] = 1;
+  style.rounded = true;
+  style.fillColor = '#ffffff';
+  style.strokeColor = '#000000';
+  style.strokeWidth = '2';
+  style.strokeColor = '#000000';
+  style.fontSize = '12';
+  style.fontStyle = 1;
   graph.getStylesheet().putDefaultVertexStyle(style);
 
   // Replaces move preview for relative children

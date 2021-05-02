@@ -23,23 +23,6 @@ import {
   FONT_UNDERLINE,
   LINE_HEIGHT,
   NONE,
-  STYLE_ALIGN,
-  STYLE_FONTCOLOR,
-  STYLE_FONTFAMILY,
-  STYLE_FONTSIZE,
-  STYLE_HORIZONTAL,
-  STYLE_LABEL_BACKGROUNDCOLOR,
-  STYLE_LABEL_BORDERCOLOR,
-  STYLE_LABEL_POSITION,
-  STYLE_SPACING,
-  STYLE_SPACING_BOTTOM,
-  STYLE_SPACING_LEFT,
-  STYLE_SPACING_RIGHT,
-  STYLE_SPACING_TOP,
-  STYLE_TEXT_DIRECTION,
-  STYLE_TEXT_OPACITY,
-  STYLE_VERTICAL_ALIGN,
-  STYLE_VERTICAL_LABEL_POSITION,
   TEXT_DIRECTION_AUTO,
   TEXT_DIRECTION_LTR,
   TEXT_DIRECTION_RTL,
@@ -434,27 +417,23 @@ class mxText extends mxShape {
 
     if (this.style != null) {
       this.fontStyle = this.style.fontStyle || this.fontStyle;
-      this.family = mxUtils.getValue(this.style, STYLE_FONTFAMILY, this.family);
-      this.size = mxUtils.getValue(this.style, STYLE_FONTSIZE, this.size);
-      this.color = mxUtils.getValue(this.style, STYLE_FONTCOLOR, this.color);
-      this.align = mxUtils.getValue(this.style, STYLE_ALIGN, this.align);
-      this.valign = mxUtils.getValue(
-        this.style,
-        STYLE_VERTICAL_ALIGN,
-        this.valign
-      );
+      this.family = mxUtils.getValue(this.style, 'fontFamily', this.family);
+      this.size = mxUtils.getValue(this.style, 'fontSize', this.size);
+      this.color = mxUtils.getValue(this.style, 'fontColor', this.color);
+      this.align = mxUtils.getValue(this.style, 'align', this.align);
+      this.valign = mxUtils.getValue(this.style, 'verticalAlign', this.valign);
       this.spacing = parseInt(
-        mxUtils.getValue(this.style, STYLE_SPACING, this.spacing)
+        mxUtils.getValue(this.style, 'spacing', this.spacing)
       );
       this.spacingTop =
         parseInt(
-          mxUtils.getValue(this.style, STYLE_SPACING_TOP, this.spacingTop - old)
+          mxUtils.getValue(this.style, 'spacingTop', this.spacingTop - old)
         ) + this.spacing;
       this.spacingRight =
         parseInt(
           mxUtils.getValue(
             this.style,
-            STYLE_SPACING_RIGHT,
+            'spacingRight',
             this.spacingRight - old
           )
         ) + this.spacing;
@@ -462,7 +441,7 @@ class mxText extends mxShape {
         parseInt(
           mxUtils.getValue(
             this.style,
-            STYLE_SPACING_BOTTOM,
+            'spacingBottom',
             this.spacingBottom - old
           )
         ) + this.spacing;
@@ -470,31 +449,31 @@ class mxText extends mxShape {
         parseInt(
           mxUtils.getValue(
             this.style,
-            STYLE_SPACING_LEFT,
+            'spacingLeft',
             this.spacingLeft - old
           )
         ) + this.spacing;
       this.horizontal = mxUtils.getValue(
         this.style,
-        STYLE_HORIZONTAL,
+        'horizontal',
         this.horizontal
       );
       this.background = mxUtils.getValue(
         this.style,
-        STYLE_LABEL_BACKGROUNDCOLOR,
+        'backgroundColor',
         this.background
       );
       this.border = mxUtils.getValue(
         this.style,
-        STYLE_LABEL_BORDERCOLOR,
+        'labelBorderColor',
         this.border
       );
       this.textDirection = mxUtils.getValue(
         this.style,
-        STYLE_TEXT_DIRECTION,
+        'textDirection',
         DEFAULT_TEXT_DIRECTION
       );
-      this.opacity = mxUtils.getValue(this.style, STYLE_TEXT_OPACITY, 100);
+      this.opacity = mxUtils.getValue(this.style, 'textOpacity', 100);
       this.updateMargin();
     }
 
@@ -558,13 +537,13 @@ class mxText extends mxShape {
 
     const h =
       this.style != null
-        ? mxUtils.getValue(this.style, STYLE_LABEL_POSITION, ALIGN_CENTER)
+        ? mxUtils.getValue(this.style, 'labelPosition', ALIGN_CENTER)
         : null;
     const v =
       this.style != null
         ? mxUtils.getValue(
             this.style,
-            STYLE_VERTICAL_LABEL_POSITION,
+            'verticalLabelPosition',
             ALIGN_MIDDLE
           )
         : null;
@@ -698,7 +677,7 @@ class mxText extends mxShape {
       !this.horizontal &&
       this.state != null &&
       // @ts-ignore
-      this.state.view.graph.model.isVertex(this.state.cell)
+      this.state.cell.isVertex()
     );
   }
 

@@ -99,47 +99,47 @@ const Template = ({ label, ...args }) => {
 
   function configureStylesheet(graph) {
     let style = {};
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-    style[mxConstants.STYLE_IMAGE] = 'images/icons48/keys.png';
-    style[mxConstants.STYLE_FONTCOLOR] = '#FFFFFF';
+    style.shape = mxConstants.SHAPE_IMAGE;
+    style.perimiter = mxPerimeter.RectanglePerimeter;
+    style.image = 'images/icons48/keys.png';
+    style.strokeColor = '#FFFFFF';
     graph.getStylesheet().putCellStyle('image', style);
 
     style = mxCloneUtils.clone(style);
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_LABEL;
-    style[mxConstants.STYLE_STROKECOLOR] = '#000000';
-    style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-    style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_CENTER;
-    style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-    style[mxConstants.STYLE_IMAGE] = 'images/icons48/gear.png';
-    style[mxConstants.STYLE_IMAGE_WIDTH] = '48';
-    style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
-    style[mxConstants.STYLE_SPACING_TOP] = '56';
-    style[mxConstants.STYLE_SPACING] = '8';
+    style.shape = mxConstants.SHAPE_LABEL;
+    style.strokeColor = '#000000';
+    style.align = mxConstants.ALIGN_CENTER;
+    style.verticalAlign = mxConstants.ALIGN_TOP;
+    style.imageAlign = mxConstants.ALIGN_CENTER;
+    style.imageVerticalAlign = mxConstants.ALIGN_TOP;
+    style.image = 'images/icons48/gear.png';
+    style.imageWidth = '48';
+    style.imageHeight = '48';
+    style.spacingTop = '56';
+    style.spacing = '8';
     graph.getStylesheet().putCellStyle('bottom', style);
 
     style = mxCloneUtils.clone(style);
-    style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = mxConstants.ALIGN_BOTTOM;
-    style[mxConstants.STYLE_IMAGE] = 'images/icons48/server.png';
-    delete style[mxConstants.STYLE_SPACING_TOP];
+    style.imageVerticalAlign = mxConstants.ALIGN_BOTTOM;
+    style.image = 'images/icons48/server.png';
+    delete style.spacingTop;
     graph.getStylesheet().putCellStyle('top', style);
 
     style = mxCloneUtils.clone(style);
-    style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
-    style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_LEFT;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-    style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-    style[mxConstants.STYLE_IMAGE] = 'images/icons48/earth.png';
-    style[mxConstants.STYLE_SPACING_LEFT] = '55';
-    style[mxConstants.STYLE_SPACING] = '4';
+    style.align = mxConstants.ALIGN_LEFT;
+    style.imageAlign = mxConstants.ALIGN_LEFT;
+    style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+    style.imageVerticalAlign = mxConstants.ALIGN_MIDDLE;
+    style.image = 'images/icons48/earth.png';
+    style.spacingLeft = '55';
+    style.spacing = '4';
     graph.getStylesheet().putCellStyle('right', style);
 
     style = mxCloneUtils.clone(style);
-    style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_RIGHT;
-    style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_RIGHT;
-    delete style[mxConstants.STYLE_SPACING_LEFT];
-    style[mxConstants.STYLE_SPACING_RIGHT] = '55';
+    style.align = mxConstants.ALIGN_RIGHT;
+    style.imageAlign = mxConstants.ALIGN_RIGHT;
+    delete style.spacingLeft;
+    style.spacingRight = '55';
     graph.getStylesheet().putCellStyle('left', style);
   }
 

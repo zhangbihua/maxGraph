@@ -60,8 +60,8 @@ const Template = ({ label, ...args }) => {
   // of the edge. The ElbowConnector edge style switches to TopToBottom
   // if the horizontal style is true.
   const style = graph.getStylesheet().getDefaultEdgeStyle();
-  style[mxConstants.STYLE_ROUNDED] = true;
-  style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+  style.rounded = true;
+  style.edge = mxEdgeStyle.ElbowConnector;
   graph.alternateEdgeStyle = 'elbow=vertical';
 
   // Enables rubberband selection

@@ -22,7 +22,7 @@
 				
 				if (this.style != null)
 				{
-					events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1';
+					events = mxUtils.getValue(this.style, mxConstants.'pointerEvents', '1') == '1';
 				}
 				
 				if (!events)
@@ -866,7 +866,7 @@
 	CardShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(mxUtils.getValue(this.style, 'size', this.size)))));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(s, 0), new mxPoint(w, 0), new mxPoint(w, h), new mxPoint(0, h), new mxPoint(0, s)],
 				this.isRounded, arcSize, true);
 		c.end();
@@ -1093,7 +1093,7 @@
 		let fixed = mxUtils.getValue(this.style, 'fixedSize', '0') != '0';
 
 		let dx = (fixed) ? Math.max(0, Math.min(w, parseFloat(mxUtils.getValue(this.style, 'size', this.fixedSize)))) : w * Math.max(0, Math.min(1, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(0, h), new mxPoint(dx, 0), new mxPoint(w, 0), new mxPoint(w - dx, h)],
 				this.isRounded, arcSize, true);
 		c.end();
@@ -1119,7 +1119,7 @@
 		let fixed = mxUtils.getValue(this.style, 'fixedSize', '0') != '0';
 
 		let dx = (fixed) ? Math.max(0, Math.min(w * 0.5, parseFloat(mxUtils.getValue(this.style, 'size', this.fixedSize)))) : w * Math.max(0, Math.min(0.5, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(0, h), new mxPoint(dx, 0), new mxPoint(w - dx, 0), new mxPoint(w, h)],
 				this.isRounded, arcSize, true);
 	};
@@ -1137,7 +1137,7 @@
 	{
 		c.setFillColor(null);
 		let s = w * Math.max(0, Math.min(1, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(w, 0), new mxPoint(s, 0), new mxPoint(s, h / 2),
 		                   new mxPoint(0, h / 2), new mxPoint(s, h / 2), new mxPoint(s, h),
 		                   new mxPoint(w, h)], this.isRounded, arcSize, false);
@@ -1377,7 +1377,7 @@
 			
 			if (this.style != null)
 			{
-				events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1';		
+				events = mxUtils.getValue(this.style, mxConstants.'pointerEvents', '1') == '1';
 			}
 			
 			if (events || (this.fill != null && this.fill != mxConstants.NONE) ||
@@ -1394,14 +1394,14 @@
 				{
 					let r = 0;
 					
-					if (mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1')
+					if (mxUtils.getValue(this.style, 'absoluteArcSize', 0) == '1')
 					{
 						r = Math.min(w / 2, Math.min(h / 2, mxUtils.getValue(this.style,
-							mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2));
+							'arcSize', mxConstants.LINE_ARCSIZE) / 2));
 					}
 					else
 					{
-						let f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE,
+						let f = mxUtils.getValue(this.style, 'arcSize',
 							mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
 						r = Math.min(w * f, h * f);
 					}
@@ -1463,7 +1463,7 @@
 	};
 	ProcessShape.prototype.getLabelBounds = function(rect)
 	{
-		if (mxUtils.getValue(this.state.style, mxConstants.STYLE_HORIZONTAL, true) ==
+		if (mxUtils.getValue(this.state.style, 'horizontal', true) ==
 			(this.direction == null ||
 			this.direction == mxConstants.DIRECTION_EAST ||
 			this.direction == mxConstants.DIRECTION_WEST))
@@ -1476,7 +1476,7 @@
 	
 			if (this.isRounded)
 			{
-				let f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE,
+				let f = mxUtils.getValue(this.style, 'arcSize',
 					mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
 				inset = Math.max(inset, Math.min(w * f, h * f));
 			}
@@ -1506,7 +1506,7 @@
 
 		if (this.isRounded)
 		{
-			let f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE,
+			let f = mxUtils.getValue(this.style, 'arcSize',
 				mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
 			inset = Math.max(inset, Math.min(w * f, h * f));
 		}
@@ -1563,7 +1563,7 @@
 	};
 	CalloutShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		let s = Math.max(0, Math.min(h, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
 		let dx = w * Math.max(0, Math.min(1, parseFloat(mxUtils.getValue(this.style, 'position', this.position))));
 		var dx2 = w * Math.max(0, Math.min(1, parseFloat(mxUtils.getValue(this.style, 'position2', this.position2))));
@@ -1594,7 +1594,7 @@
 		let fixed = mxUtils.getValue(this.style, 'fixedSize', '0') != '0';
 		let s = (fixed) ? Math.max(0, Math.min(w, parseFloat(mxUtils.getValue(this.style, 'size', this.fixedSize)))) :
 			w * Math.max(0, Math.min(1, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(0, 0), new mxPoint(w - s, 0), new mxPoint(w, h / 2), new mxPoint(w - s, h),
 		                   new mxPoint(0, h), new mxPoint(s, h / 2)], this.isRounded, arcSize, true);
 		c.end();
@@ -1619,7 +1619,7 @@
 		let fixed = mxUtils.getValue(this.style, 'fixedSize', '0') != '0';
 		let s = (fixed) ? Math.max(0, Math.min(w * 0.5, parseFloat(mxUtils.getValue(this.style, 'size', this.fixedSize)))) :
 			w * Math.max(0, Math.min(1, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(s, 0), new mxPoint(w - s, 0), new mxPoint(w, 0.5 * h), new mxPoint(w - s, h),
 		                   new mxPoint(s, h), new mxPoint(0, 0.5 * h)], this.isRounded, arcSize, true);
 	};
@@ -1659,7 +1659,7 @@
 		if (this.style['double'] == 1)
 		{
 			let margin = (Math.max(2, this.strokewidth + 1) * 2 + parseFloat(
-				this.style[mxConstants.STYLE_MARGIN] || 0)) * this.scale;
+				this.style[mxConstants.'margin'] || 0)) * this.scale;
 		
 			return new mxRectangle(rect.x + margin, rect.y + margin,
 				rect.width - 2 * margin, rect.height - 2 * margin);
@@ -1674,7 +1674,7 @@
 		if (!this.outline && this.style['double'] == 1)
 		{
 			let margin = Math.max(2, this.strokewidth + 1) * 2 +
-				parseFloat(this.style[mxConstants.STYLE_MARGIN] || 0);
+				parseFloat(this.style[mxConstants.'margin'] || 0);
 			x += margin;
 			y += margin;
 			w -= 2 * margin;
@@ -1706,7 +1706,7 @@
 		if (this.style['double'] == 1)
 		{
 			let margin = (Math.max(2, this.strokewidth + 1) + parseFloat(
-				this.style[mxConstants.STYLE_MARGIN] || 0)) * this.scale;
+				this.style[mxConstants.'margin'] || 0)) * this.scale;
 		
 			return new mxRectangle(rect.x + margin, rect.y + margin,
 				rect.width - 2 * margin, rect.height - 2 * margin);
@@ -1721,7 +1721,7 @@
 		{
 			if (!this.outline && this.style['double'] == 1)
 			{
-				let margin = Math.max(2, this.strokewidth + 1) + parseFloat(this.style[mxConstants.STYLE_MARGIN] || 0);
+				let margin = Math.max(2, this.strokewidth + 1) + parseFloat(this.style[mxConstants.'margin'] || 0);
 				x += margin;
 				y += margin;
 				w -= 2 * margin;
@@ -2069,7 +2069,7 @@
 		let co = this.corner;
 		var w0 = Math.min(w, Math.max(co, parseFloat(mxUtils.getValue(this.style, 'width', this.width))));
 		var h0 = Math.min(h, Math.max(co * 1.5, parseFloat(mxUtils.getValue(this.style, 'height', this.height))));
-		let bg = mxUtils.getValue(this.style, mxConstants.STYLE_SWIMLANE_FILLCOLOR, mxConstants.NONE);
+		let bg = mxUtils.getValue(this.style, 'swimlaneFillColor', mxConstants.NONE);
 		
 		if (bg != mxConstants.NONE)
 		{
@@ -2117,7 +2117,7 @@
 			size = mxUtils.getValue(vertex.style, 'size', size) * vertex.view.scale;
 		}
 		
-		let sw = (parseFloat(vertex.style[mxConstants.STYLE_STROKEWIDTH] || 1) * vertex.view.scale / 2) - 1;
+		let sw = (parseFloat(vertex.style.strokeWidth || 1) * vertex.view.scale / 2) - 1;
 
 		if (next.x < bounds.getCenterX())
 		{
@@ -2142,15 +2142,15 @@
 
 	mxPerimeter.BackbonePerimeter = (bounds, vertex, next, orthogonal) =>
 	{
-		let sw = (parseFloat(vertex.style[mxConstants.STYLE_STROKEWIDTH] || 1) * vertex.view.scale / 2) - 1;
+		let sw = (parseFloat(vertex.style.strokeWidth || 1) * vertex.view.scale / 2) - 1;
 		
 		if (vertex.style['backboneSize'] != null)
 		{
 			sw += (parseFloat(vertex.style['backboneSize']) * vertex.view.scale / 2) - 1;
 		}
 		
-		if (vertex.style[mxConstants.STYLE_DIRECTION] == 'south' ||
-			vertex.style[mxConstants.STYLE_DIRECTION] == 'north')
+		if (vertex.style.direction == 'south' ||
+			vertex.style.direction == 'north')
 		{
 			if (next.x < bounds.getCenterX())
 			{
@@ -2209,7 +2209,7 @@
 		let h = bounds.height;
 
 		let direction = (vertex != null) ? mxUtils.getValue(
-			vertex.style, mxConstants.STYLE_DIRECTION,
+			vertex.style, 'direction',
 			mxConstants.DIRECTION_EAST) : mxConstants.DIRECTION_EAST;
 		let vertical = direction == mxConstants.DIRECTION_NORTH ||
 			direction == mxConstants.DIRECTION_SOUTH;
@@ -2272,7 +2272,7 @@
 		let h = bounds.height;
 
 		let direction = (vertex != null) ? mxUtils.getValue(
-				vertex.style, mxConstants.STYLE_DIRECTION,
+				vertex.style, 'direction',
 				mxConstants.DIRECTION_EAST) : mxConstants.DIRECTION_EAST;
 		let points = [];
 		
@@ -2348,7 +2348,7 @@
 		let cy = bounds.getCenterY();
 		
 		let direction = (vertex != null) ? mxUtils.getValue(
-				vertex.style, mxConstants.STYLE_DIRECTION,
+				vertex.style, 'direction',
 				mxConstants.DIRECTION_EAST) : mxConstants.DIRECTION_EAST;
 		var points;
 		
@@ -2425,7 +2425,7 @@
 		let cy = bounds.getCenterY();
 		
 		let direction = (vertex != null) ? mxUtils.getValue(
-			vertex.style, mxConstants.STYLE_DIRECTION,
+			vertex.style, 'direction',
 			mxConstants.DIRECTION_EAST) : mxConstants.DIRECTION_EAST;
 		let vertical = direction == mxConstants.DIRECTION_NORTH ||
 			direction == mxConstants.DIRECTION_SOUTH;
@@ -2676,7 +2676,7 @@
 		let hw = w / 2;
 		let hh = h / 2;
 		
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		c.begin();
 		this.addPoints(c, [new mxPoint(x + hw, y), new mxPoint(x + w, y + hh), new mxPoint(x + hw, y + h),
 		     new mxPoint(x, y + hh)], this.isRounded, arcSize, true);
@@ -2793,7 +2793,7 @@
 	ManualInputShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		let s = Math.min(h, parseFloat(mxUtils.getValue(this.style, 'size', this.size)));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(0, h), new mxPoint(0, s), new mxPoint(w, 0), new mxPoint(w, h)],
 				this.isRounded, arcSize, true);
 		c.end();
@@ -2820,7 +2820,7 @@
 		
 		if (this.isRounded)
 		{
-			let f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE,
+			let f = mxUtils.getValue(this.style, 'arcSize',
 				mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
 			inset = Math.max(inset, Math.min(w * f, h * f));
 		}
@@ -2859,7 +2859,7 @@
 		let dy = Math.max(0, Math.min(h, parseFloat(mxUtils.getValue(this.style, 'dy', this.dy))));
 		
 		let s = Math.min(w / 2, Math.min(h, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(0, 0), new mxPoint(w, 0), new mxPoint(w, dy), new mxPoint(dx, dy),
 		                   new mxPoint(dx, h), new mxPoint(0, h)], this.isRounded, arcSize, true);
 		c.end();
@@ -2908,7 +2908,7 @@
 		var w2 = Math.abs(w - dx) / 2;
 		
 		let s = Math.min(w / 2, Math.min(h, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(0, 0), new mxPoint(w, 0), new mxPoint(w, dy), new mxPoint((w + dx) / 2, dy),
 		                   new mxPoint((w + dx) / 2, h), new mxPoint((w - dx) / 2, h), new mxPoint((w - dx) / 2, dy),
 		                   new mxPoint(0, dy)], this.isRounded, arcSize, true);
@@ -2932,7 +2932,7 @@
 		let at = (h - aw) / 2;
 		let ab = at + aw;
 		
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(0, at), new mxPoint(w - as, at), new mxPoint(w - as, 0), new mxPoint(w, h / 2),
 		                   new mxPoint(w - as, h), new mxPoint(w - as, ab), new mxPoint(0, ab)],
 		                   this.isRounded, arcSize, true);
@@ -2954,7 +2954,7 @@
 		let at = (h - aw) / 2;
 		let ab = at + aw;
 		
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(0, h / 2), new mxPoint(as, 0), new mxPoint(as, at), new mxPoint(w - as, at),
 		                   new mxPoint(w - as, 0), new mxPoint(w, h / 2), new mxPoint(w - as, h),
 		                   new mxPoint(w - as, ab), new mxPoint(as, ab), new mxPoint(as, h)],
@@ -3038,7 +3038,7 @@
 	LoopLimitShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		let s = Math.min(w / 2, Math.min(h, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(s, 0), new mxPoint(w - s, 0), new mxPoint(w, s * 0.8), new mxPoint(w, h),
 		                   new mxPoint(0, h), new mxPoint(0, s * 0.8)], this.isRounded, arcSize, true);
 		c.end();
@@ -3060,7 +3060,7 @@
 	OffPageConnectorShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		let s = h * Math.max(0, Math.min(1, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new mxPoint(0, 0), new mxPoint(w, 0), new mxPoint(w, h - s), new mxPoint(w / 2, h),
 		                   new mxPoint(0, h - s)], this.isRounded, arcSize, true);
 		c.end();
@@ -3236,7 +3236,7 @@
 		if (this.style != null)
 		{
 			let pointerEvents = c.pointerEvents;
-			let events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') == '1';
+			let events = mxUtils.getValue(this.style, mxConstants.'pointerEvents', '1') == '1';
 			
 			if (!events && (this.fill == null || this.fill == mxConstants.NONE))
 			{
@@ -3760,36 +3760,36 @@
 		
 		function createArcHandle(state, yOffset)
 		{
-			return createHandle(state, [mxConstants.STYLE_ARCSIZE], function(bounds)
+			return createHandle(state, ['arcSize'], function(bounds)
 			{
 				let tmp = (yOffset != null) ? yOffset : bounds.height / 8;
 				
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1')
+				if (mxUtils.getValue(state.style, 'absoluteArcSize', 0) == '1')
 				{
-					let arcSize = mxUtils.getValue(state.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+					let arcSize = mxUtils.getValue(state.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 					
 					return new mxPoint(bounds.x + bounds.width - Math.min(bounds.width / 2, arcSize), bounds.y + tmp);
 				}
 				else
 				{
 					let arcSize = Math.max(0, parseFloat(mxUtils.getValue(state.style,
-						mxConstants.STYLE_ARCSIZE, mxConstants.RECTANGLE_ROUNDING_FACTOR * 100))) / 100;
+						'arcSize', mxConstants.RECTANGLE_ROUNDING_FACTOR * 100))) / 100;
 					
 					return new mxPoint(bounds.x + bounds.width - Math.min(Math.max(bounds.width / 2, bounds.height / 2),
 						Math.min(bounds.width, bounds.height) * arcSize), bounds.y + tmp);
 				}
 			}, function(bounds, pt, me)
 			{
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1')
+				if (mxUtils.getValue(state.style, 'absoluteArcSize', 0) == '1')
 				{
-					this.state.style[mxConstants.STYLE_ARCSIZE] = Math.round(Math.max(0, Math.min(bounds.width,
+					this.state.style['arcSize'] = Math.round(Math.max(0, Math.min(bounds.width,
 						(bounds.x + bounds.width - pt.x) * 2)));
 				}
 				else
 				{
 					let f = Math.min(50, Math.max(0, (bounds.width - pt.x + bounds.x) * 100 /
 						Math.min(bounds.width, bounds.height)));
-					this.state.style[mxConstants.STYLE_ARCSIZE] = Math.round(f);
+					this.state.style['arcSize'] = Math.round(f);
 				}
 			});
 		}
@@ -3800,7 +3800,7 @@
 			{
 				let handles = [];
 				
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED, false))
+				if (mxUtils.getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -3829,7 +3829,7 @@
 					this.state.style['size'] = size;
 				}, false, true)];
 				
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED, false))
+				if (mxUtils.getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -3858,7 +3858,7 @@
 					this.state.style['size'] = size;
 				}, false, redrawEdges)];
 				
-				if (allowArcHandle && mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED, false))
+				if (allowArcHandle && mxUtils.getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -3883,7 +3883,7 @@
 							Math.min(bounds.height, pt.y - bounds.y))) / factor);
 				}, false)];
 				
-				if (allowArcHandle && mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED, false))
+				if (allowArcHandle && mxUtils.getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -3999,12 +3999,12 @@
 				let tol = state.view.graph.gridSize / state.view.scale;
 				let handles = [];
 				
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_STARTARROW, mxConstants.NONE) != mxConstants.NONE)
+				if (mxUtils.getValue(state.style, mxConstants.'startArrow', mxConstants.NONE) != mxConstants.NONE)
 				{
-					handles.push(createEdgeHandle(state, ['width', mxConstants.STYLE_STARTSIZE, mxConstants.STYLE_ENDSIZE], true, function(dist, nx, ny, p0, p1)
+					handles.push(createEdgeHandle(state, ['width', 'startSize', 'endSize'], true, function(dist, nx, ny, p0, p1)
 					{
 						let w = (state.shape.getEdgeWidth() - state.shape.strokewidth) * state.view.scale;
-						let l = mxUtils.getNumber(state.style, mxConstants.STYLE_STARTSIZE, mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
+						let l = mxUtils.getNumber(state.style, 'startSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
 						
 						return new mxPoint(p0.x + nx * (l + state.shape.strokewidth * state.view.scale) + ny * w / 2,
 							p0.y + ny * (l + state.shape.strokewidth * state.view.scale) - nx * w / 2);
@@ -4013,29 +4013,29 @@
 						let w = Math.sqrt(mxUtils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
 						let l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
-						state.style[mxConstants.STYLE_STARTSIZE] = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
+						state.style.startSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
 						state.style['width'] = Math.round(w * 2) / state.view.scale;
 						
 						// Applies to opposite side
 						if (mxEvent.isControlDown(me.getEvent()))
 						{
-							state.style[mxConstants.STYLE_ENDSIZE] = state.style[mxConstants.STYLE_STARTSIZE];
+							state.style.endSize = state.style.startSize;
 						}
 
 						// Snaps to end geometry
 						if (!mxEvent.isAltDown(me.getEvent()))
 						{
-							if (Math.abs(parseFloat(state.style[mxConstants.STYLE_STARTSIZE]) - parseFloat(state.style[mxConstants.STYLE_ENDSIZE])) < tol / 6)
+							if (Math.abs(parseFloat(state.style.startSize) - parseFloat(state.style.endSize)) < tol / 6)
 							{
-								state.style[mxConstants.STYLE_STARTSIZE] = state.style[mxConstants.STYLE_ENDSIZE];
+								state.style.startSize = state.style.endSize;
 							}
 						}
 					}));
 					
-					handles.push(createEdgeHandle(state, ['startWidth', 'endWidth', mxConstants.STYLE_STARTSIZE, mxConstants.STYLE_ENDSIZE], true, function(dist, nx, ny, p0, p1)
+					handles.push(createEdgeHandle(state, ['startWidth', 'endWidth', 'startSize', 'endSize'], true, function(dist, nx, ny, p0, p1)
 					{
 						let w = (state.shape.getStartArrowWidth() - state.shape.strokewidth) * state.view.scale;
-						let l = mxUtils.getNumber(state.style, mxConstants.STYLE_STARTSIZE, mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
+						let l = mxUtils.getNumber(state.style, 'startSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
 						
 						return new mxPoint(p0.x + nx * (l + state.shape.strokewidth * state.view.scale) + ny * w / 2,
 							p0.y + ny * (l + state.shape.strokewidth * state.view.scale) - nx * w / 2);
@@ -4044,22 +4044,22 @@
 						let w = Math.sqrt(mxUtils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
 						let l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
-						state.style[mxConstants.STYLE_STARTSIZE] = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
+						state.style.startSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
 						state.style['startWidth'] = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale;
 						
 						// Applies to opposite side
 						if (mxEvent.isControlDown(me.getEvent()))
 						{
-							state.style[mxConstants.STYLE_ENDSIZE] = state.style[mxConstants.STYLE_STARTSIZE];
+							state.style.endSize = state.style.startSize;
 							state.style['endWidth'] = state.style['startWidth'];
 						}
 						
 						// Snaps to endWidth
 						if (!mxEvent.isAltDown(me.getEvent()))
 						{
-							if (Math.abs(parseFloat(state.style[mxConstants.STYLE_STARTSIZE]) - parseFloat(state.style[mxConstants.STYLE_ENDSIZE])) < tol / 6)
+							if (Math.abs(parseFloat(state.style.startSize) - parseFloat(state.style.endSize)) < tol / 6)
 							{
-								state.style[mxConstants.STYLE_STARTSIZE] = state.style[mxConstants.STYLE_ENDSIZE];
+								state.style.startSize = state.style.endSize;
 							}
 							
 							if (Math.abs(parseFloat(state.style['startWidth']) - parseFloat(state.style['endWidth'])) < tol)
@@ -4070,12 +4070,12 @@
 					}));
 				}
 				
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_ENDARROW, mxConstants.NONE) != mxConstants.NONE)
+				if (mxUtils.getValue(state.style, mxConstants.'endArrow', mxConstants.NONE) != mxConstants.NONE)
 				{
-					handles.push(createEdgeHandle(state, ['width', mxConstants.STYLE_STARTSIZE, mxConstants.STYLE_ENDSIZE], false, function(dist, nx, ny, p0, p1)
+					handles.push(createEdgeHandle(state, ['width', 'startSize', 'endSize'], false, function(dist, nx, ny, p0, p1)
 					{
 						let w = (state.shape.getEdgeWidth() - state.shape.strokewidth) * state.view.scale;
-						let l = mxUtils.getNumber(state.style, mxConstants.STYLE_ENDSIZE, mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
+						let l = mxUtils.getNumber(state.style, 'endSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
 						
 						return new mxPoint(p0.x + nx * (l + state.shape.strokewidth * state.view.scale) - ny * w / 2,
 							p0.y + ny * (l + state.shape.strokewidth * state.view.scale) + nx * w / 2);
@@ -4084,29 +4084,29 @@
 						let w = Math.sqrt(mxUtils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
 						let l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
-						state.style[mxConstants.STYLE_ENDSIZE] = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
+						state.style.endSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
 						state.style['width'] = Math.round(w * 2) / state.view.scale;
 						
 						// Applies to opposite side
 						if (mxEvent.isControlDown(me.getEvent()))
 						{
-							state.style[mxConstants.STYLE_STARTSIZE] = state.style[mxConstants.STYLE_ENDSIZE];
+							state.style.startSize = state.style.endSize;
 						}
 					
 						// Snaps to start geometry
 						if (!mxEvent.isAltDown(me.getEvent()))
 						{
-							if (Math.abs(parseFloat(state.style[mxConstants.STYLE_ENDSIZE]) - parseFloat(state.style[mxConstants.STYLE_STARTSIZE])) < tol / 6)
+							if (Math.abs(parseFloat(state.style.endSize) - parseFloat(state.style.startSize)) < tol / 6)
 							{
-								state.style[mxConstants.STYLE_ENDSIZE] = state.style[mxConstants.STYLE_STARTSIZE];
+								state.style.endSize = state.style.startSize;
 							}
 						}
 					}));
 					
-					handles.push(createEdgeHandle(state, ['startWidth', 'endWidth', mxConstants.STYLE_STARTSIZE, mxConstants.STYLE_ENDSIZE], false, function(dist, nx, ny, p0, p1)
+					handles.push(createEdgeHandle(state, ['startWidth', 'endWidth', 'startSize', 'endSize'], false, function(dist, nx, ny, p0, p1)
 					{
 						let w = (state.shape.getEndArrowWidth() - state.shape.strokewidth) * state.view.scale;
-						let l = mxUtils.getNumber(state.style, mxConstants.STYLE_ENDSIZE, mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
+						let l = mxUtils.getNumber(state.style, 'endSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
 						
 						return new mxPoint(p0.x + nx * (l + state.shape.strokewidth * state.view.scale) - ny * w / 2,
 							p0.y + ny * (l + state.shape.strokewidth * state.view.scale) + nx * w / 2);
@@ -4115,22 +4115,22 @@
 						let w = Math.sqrt(mxUtils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
 						let l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
-						state.style[mxConstants.STYLE_ENDSIZE] = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
+						state.style.endSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
 						state.style['endWidth'] = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale;
 						
 						// Applies to opposite side
 						if (mxEvent.isControlDown(me.getEvent()))
 						{
-							state.style[mxConstants.STYLE_STARTSIZE] = state.style[mxConstants.STYLE_ENDSIZE];
+							state.style.startSize = state.style.endSize;
 							state.style['startWidth'] = state.style['endWidth'];
 						}
 					
 						// Snaps to start geometry
 						if (!mxEvent.isAltDown(me.getEvent()))
 						{
-							if (Math.abs(parseFloat(state.style[mxConstants.STYLE_ENDSIZE]) - parseFloat(state.style[mxConstants.STYLE_STARTSIZE])) < tol / 6)
+							if (Math.abs(parseFloat(state.style.endSize) - parseFloat(state.style.startSize)) < tol / 6)
 							{
-								state.style[mxConstants.STYLE_ENDSIZE] = state.style[mxConstants.STYLE_STARTSIZE];
+								state.style.endSize = state.style.startSize;
 							}
 							
 							if (Math.abs(parseFloat(state.style['endWidth']) - parseFloat(state.style['startWidth'])) < tol)
@@ -4147,18 +4147,18 @@
 			{
 				let handles = [];
 				
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED))
+				if (mxUtils.getValue(state.style, 'rounded'))
 				{
-					let size = parseFloat(mxUtils.getValue(state.style, mxConstants.STYLE_STARTSIZE, mxConstants.DEFAULT_STARTSIZE));
+					let size = parseFloat(mxUtils.getValue(state.style, 'startSize', mxConstants.DEFAULT_STARTSIZE));
 					handles.push(createArcHandle(state, size / 2));
 				}
 				
 				// Start size handle must be last item in handles for hover to work in tables (see mouse event handler in Graph)
-				handles.push(createHandle(state, [mxConstants.STYLE_STARTSIZE], function(bounds)
+				handles.push(createHandle(state, .startSize, function(bounds)
 				{
-					let size = parseFloat(mxUtils.getValue(state.style, mxConstants.STYLE_STARTSIZE, mxConstants.DEFAULT_STARTSIZE));
+					let size = parseFloat(mxUtils.getValue(state.style, 'startSize', mxConstants.DEFAULT_STARTSIZE));
 					
-					if (mxUtils.getValue(state.style, mxConstants.STYLE_HORIZONTAL, 1) == 1)
+					if (mxUtils.getValue(state.style, 'horizontal', 1) == 1)
 					{
 						return new mxPoint(bounds.getCenterX(), bounds.y + Math.max(0, Math.min(bounds.height, size)));
 					}
@@ -4168,8 +4168,8 @@
 					}
 				}, function(bounds, pt)
 				{	
-					state.style[mxConstants.STYLE_STARTSIZE] =
-						(mxUtils.getValue(this.state.style, mxConstants.STYLE_HORIZONTAL, 1) == 1) ?
+					state.style.startSize =
+						(mxUtils.getValue(this.state.style, 'horizontal', 1) == 1) ?
 							Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y))) :
 							Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x)));
 				}, false, null, function(me)
@@ -4196,8 +4196,8 @@
 								}
 							}
 							
-							graph.setCellStyles(mxConstants.STYLE_STARTSIZE,
-								state.style[mxConstants.STYLE_STARTSIZE], temp);
+							graph.setCellStyles('startSize',
+								state.style.startSize, temp);
 						}
 					}					
 				}));
@@ -4253,7 +4253,7 @@
 					this.state.style['size'] = size;
 				}, false)];
 				
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED, false))
+				if (mxUtils.getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -4315,7 +4315,7 @@
 					this.state.style['size'] = Math.round(Math.max(0, Math.min(bounds.height, (pt.y - bounds.y) * 4 / 3)));
 				}, false)];
 				
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED, false))
+				if (mxUtils.getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -4374,7 +4374,7 @@
 					this.state.style['base'] = Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x - position * bounds.width)));
 				}, false)];
 				
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED, false))
+				if (mxUtils.getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -4395,7 +4395,7 @@
 					this.state.style['dy'] = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
 				}, false)];
 				
-				if (mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED, false))
+				if (mxUtils.getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -4777,7 +4777,7 @@
 	CalloutShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = mxUtils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		let s = Math.max(0, Math.min(h, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
 		let dx = w * Math.max(0, Math.min(1, parseFloat(mxUtils.getValue(this.style, 'position', this.position))));
 		var dx2 = w * Math.max(0, Math.min(1, parseFloat(mxUtils.getValue(this.style, 'position2', this.position2))));

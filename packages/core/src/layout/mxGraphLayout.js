@@ -9,7 +9,6 @@ import mxDictionary from '../util/datatypes/mxDictionary';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxGeometry from '../util/datatypes/mxGeometry';
 import mxPoint from '../util/datatypes/mxPoint';
-import { STYLE_NOEDGESTYLE, STYLE_ORTHOGONAL } from '../util/mxConstants';
 
 /**
  * @class mxGraphLayout
@@ -238,7 +237,7 @@ class mxGraphLayout {
    */
   // setEdgeStyleEnabled(edge: mxCell, value: any): void;
   setEdgeStyleEnabled(edge, value) {
-    this.graph.setCellStyles(STYLE_NOEDGESTYLE, value ? '0' : '1', [edge]);
+    this.graph.setCellStyles('noEdgeStyle', value ? '0' : '1', [edge]);
   }
 
   /**
@@ -246,7 +245,7 @@ class mxGraphLayout {
    */
   // setOrthogonalEdge(edge: mxCell, value: any): void;
   setOrthogonalEdge(edge, value) {
-    this.graph.setCellStyles(STYLE_ORTHOGONAL, value ? '1' : '0', [edge]);
+    this.graph.setCellStyles('orthogonal', value ? '1' : '0', [edge]);
   }
 
   /**

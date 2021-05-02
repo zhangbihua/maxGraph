@@ -16,8 +16,6 @@ import {
   HANDLE_STROKECOLOR,
   LABEL_HANDLE_FILLCOLOR,
   LABEL_HANDLE_SIZE,
-  STYLE_ASPECT,
-  STYLE_ROTATION,
   VERTEX_SELECTION_COLOR,
   VERTEX_SELECTION_DASHED,
   VERTEX_SELECTION_STROKEWIDTH,
@@ -250,7 +248,7 @@ class mxVertexHandler {
     this.selectionBorder.dialect = DIALECT_SVG;
     this.selectionBorder.pointerEvents = false;
     this.selectionBorder.rotation = Number(
-      this.state.style[STYLE_ROTATION] || '0'
+      this.state.style.rotation || '0'
     );
     this.selectionBorder.init(this.graph.getView().getOverlayPane());
     mxEvent.redirectMouseEvents(
@@ -369,7 +367,7 @@ class mxVertexHandler {
   // isConstrainedEvent(me: mxMouseEvent): boolean;
   isConstrainedEvent(me) {
     return (
-      isShiftDown(me.getEvent()) || this.state.style[STYLE_ASPECT] === 'fixed'
+      isShiftDown(me.getEvent()) || this.state.style.aspect === 'fixed'
     );
   }
 
@@ -765,7 +763,7 @@ class mxVertexHandler {
           if (
             !(
               mxClient.IS_SVG &&
-              Number(this.state.style[STYLE_ROTATION] || '0') !== 0
+              Number(this.state.style.rotation || '0') !== 0
             ) &&
             this.state.text != null &&
             this.state.text.node.parentNode === this.graph.container
@@ -1082,7 +1080,7 @@ class mxVertexHandler {
   // resizeVertex(me: mxMouseEvent): void;
   resizeVertex(me) {
     const ct = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
-    const alpha = mxUtils.toRadians(this.state.style[STYLE_ROTATION] || '0');
+    const alpha = mxUtils.toRadians(this.state.style.rotation || '0');
     const point = new mxPoint(me.getGraphX(), me.getGraphY());
     const tr = this.graph.view.translate;
     const { scale } = this.graph.view;
@@ -1389,7 +1387,7 @@ class mxVertexHandler {
         } else if (index === mxEvent.ROTATION_HANDLE) {
           if (this.currentAlpha != null) {
             const delta =
-              this.currentAlpha - (this.state.style[STYLE_ROTATION] || 0);
+              this.currentAlpha - (this.state.style.rotation || 0);
 
             if (delta !== 0) {
               this.rotateCell(this.state.cell, delta);
@@ -1400,7 +1398,7 @@ class mxVertexHandler {
         } else {
           const gridEnabled = this.graph.isGridEnabledEvent(me.getEvent());
           const alpha = mxUtils.toRadians(
-            this.state.style[STYLE_ROTATION] || '0'
+            this.state.style.rotation || '0'
           );
           const cos = Math.cos(-alpha);
           const sin = Math.sin(-alpha);
@@ -1475,8 +1473,8 @@ class mxVertexHandler {
       if (cell.isVertex() || cell.isEdge()) {
         if (!cell.isEdge()) {
           const style = this.graph.getCurrentCellStyle(cell);
-          const total = (style[STYLE_ROTATION] || 0) + angle;
-          this.graph.setCellStyles(STYLE_ROTATION, total, [cell]);
+          const total = (style.rotation || 0) + angle;
+          this.graph.setCellStyles('rotation', total, [cell]);
         }
 
         let geo = cell.getGeometry();
@@ -1591,7 +1589,7 @@ class mxVertexHandler {
     if (geo != null) {
       if (index === mxEvent.LABEL_HANDLE) {
         const alpha = -mxUtils.toRadians(
-          this.state.style[STYLE_ROTATION] || '0'
+          this.state.style.rotation || '0'
         );
         const cos = Math.cos(alpha);
         const sin = Math.sin(alpha);
@@ -1696,13 +1694,13 @@ class mxVertexHandler {
    *   let s = this.state;
    *
    *   if (this.graph.isHtmlLabel(s.cell) && (index == 3 || index == 4) &&
-   *       s.text != null && s.style[mxConstants.STYLE_WHITE_SPACE] == 'wrap')
+   *       s.text != null && s.style.whiteSpace == 'wrap')
    *   {
    *     let label = this.graph.getLabel(s.cell);
-   *     let fontSize = mxUtils.getNumber(s.style, mxConstants.STYLE_FONTSIZE, mxConstants.DEFAULT_FONTSIZE);
+   *     let fontSize = mxUtils.getNumber(s.style, 'fontSize', mxConstants.DEFAULT_FONTSIZE);
    *     let ww = result.width / s.view.scale - s.text.spacingRight - s.text.spacingLeft
    *
-   *     result.height = mxUtils.getSizeForString(label, fontSize, s.style[mxConstants.STYLE_FONTFAMILY], ww).height;
+   *     result.height = mxUtils.getSizeForString(label, fontSize, s.style.fontFamily, ww).height;
    *   }
    *
    *   return result;
@@ -2002,7 +2000,7 @@ class mxVertexHandler {
           ];
 
           const alpha = mxUtils.toRadians(
-            this.state.style[STYLE_ROTATION] || '0'
+            this.state.style.rotation || '0'
           );
           const cos = Math.cos(alpha);
           const sin = Math.sin(alpha);
@@ -2075,7 +2073,7 @@ class mxVertexHandler {
       const alpha = mxUtils.toRadians(
         this.currentAlpha != null
           ? this.currentAlpha
-          : this.state.style[STYLE_ROTATION] || '0'
+          : this.state.style.rotation || '0'
       );
       const cos = Math.cos(alpha);
       const sin = Math.sin(alpha);
@@ -2101,7 +2099,7 @@ class mxVertexHandler {
 
     if (this.selectionBorder != null) {
       this.selectionBorder.rotation = Number(
-        this.state.style[STYLE_ROTATION] || '0'
+        this.state.style.rotation || '0'
       );
     }
 
@@ -2194,7 +2192,7 @@ class mxVertexHandler {
           this.parentHighlight.dialect = DIALECT_SVG;
           this.parentHighlight.pointerEvents = false;
           this.parentHighlight.rotation = Number(
-            pstate.style[STYLE_ROTATION] || '0'
+            pstate.style.rotation || '0'
           );
           this.parentHighlight.init(this.graph.getView().getOverlayPane());
           this.parentHighlight.redraw();
@@ -2224,7 +2222,7 @@ class mxVertexHandler {
         );
       }
 
-      this.preview.rotation = Number(this.state.style[STYLE_ROTATION] || '0');
+      this.preview.rotation = Number(this.state.style.rotation || '0');
       this.preview.redraw();
     }
 

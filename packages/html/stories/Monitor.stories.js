@@ -124,7 +124,7 @@ const Template = ({ label, ...args }) => {
               // Updates the cell color and adds some tooltip information
               if (cell != null) {
                 // Resets the fillcolor and the overlay
-                graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, 'white', [
+                graph.setCellStyles('fillColor', 'white', [
                   cell,
                 ]);
                 graph.removeCellOverlays(cell);
@@ -132,19 +132,19 @@ const Template = ({ label, ...args }) => {
                 // Changes the cell color for the known states
                 if (state == 'Running') {
                   graph.setCellStyles(
-                    mxConstants.STYLE_FILLCOLOR,
+                    'fillColor',
                     '#f8cecc',
                     [cell]
                   );
                 } else if (state == 'Waiting') {
                   graph.setCellStyles(
-                    mxConstants.STYLE_FILLCOLOR,
+                    'fillColor',
                     '#fff2cc',
                     [cell]
                   );
                 } else if (state == 'Completed') {
                   graph.setCellStyles(
-                    mxConstants.STYLE_FILLCOLOR,
+                    'fillColor',
                     '#d4e1f5',
                     [cell]
                   );
@@ -198,66 +198,66 @@ const Template = ({ label, ...args }) => {
 
     // Creates the stylesheet for the process display
     let style = graph.getStylesheet().getDefaultVertexStyle();
-    style[mxConstants.STYLE_FONTSIZE] = 11;
-    style[mxConstants.STYLE_FONTCOLOR] = 'black';
-    style[mxConstants.STYLE_STROKECOLOR] = '#808080';
-    style[mxConstants.STYLE_FILLCOLOR] = 'white';
-    style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-    style[mxConstants.STYLE_GRADIENT_DIRECTION] = mxConstants.DIRECTION_EAST;
-    style[mxConstants.STYLE_ROUNDED] = true;
-    style[mxConstants.STYLE_SHADOW] = true;
-    style[mxConstants.STYLE_FONTSTYLE] = 1;
+    style.fontSize = 11;
+    style.strokeColor = 'black';
+    style.strokeColor = '#808080';
+    style.fillColor = 'white';
+    style.gradientColor = 'white';
+    style.gradientDirection = mxConstants.DIRECTION_EAST;
+    style.rounded = true;
+    style.shadow = true;
+    style.fontStyle = 1;
 
     style = graph.getStylesheet().getDefaultEdgeStyle();
-    style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-    style[mxConstants.STYLE_STROKECOLOR] = '#808080';
-    style[mxConstants.STYLE_ROUNDED] = true;
-    style[mxConstants.STYLE_SHADOW] = true;
+    style.edge = mxEdgeStyle.ElbowConnector;
+    style.strokeColor = '#808080';
+    style.rounded = true;
+    style.shadow = true;
 
     style = [];
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-    style[mxConstants.STYLE_STROKECOLOR] = '#a0a0a0';
-    style[mxConstants.STYLE_FONTCOLOR] = '#606060';
-    style[mxConstants.STYLE_FILLCOLOR] = '#E0E0DF';
-    style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-    style[mxConstants.STYLE_STARTSIZE] = 30;
-    style[mxConstants.STYLE_ROUNDED] = false;
-    style[mxConstants.STYLE_FONTSIZE] = 12;
-    style[mxConstants.STYLE_FONTSTYLE] = 0;
-    style[mxConstants.STYLE_HORIZONTAL] = false;
+    style.shape = mxConstants.SHAPE_SWIMLANE;
+    style.perimiter = mxPerimeter.RectanglePerimeter;
+    style.strokeColor = '#a0a0a0';
+    style.strokeColor = '#606060';
+    style.fillColor = '#E0E0DF';
+    style.gradientColor = 'white';
+    style.startSize = 30;
+    style.rounded = false;
+    style.fontSize = 12;
+    style.fontStyle = 0;
+    style.horizontal = false;
     // To improve text quality for vertical labels in some old IE versions...
-    style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#efefef';
+    style.labelBackgroundColor = '#efefef';
 
     graph.getStylesheet().putCellStyle('swimlane', style);
 
     style = [];
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RHOMBUS;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RhombusPerimeter;
-    style[mxConstants.STYLE_STROKECOLOR] = '#91BCC0';
-    style[mxConstants.STYLE_FONTCOLOR] = 'gray';
-    style[mxConstants.STYLE_FILLCOLOR] = '#91BCC0';
-    style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-    style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-    style[mxConstants.STYLE_FONTSIZE] = 16;
+    style.shape = mxConstants.SHAPE_RHOMBUS;
+    style.perimiter = mxPerimeter.RhombusPerimeter;
+    style.strokeColor = '#91BCC0';
+    style.strokeColor = 'gray';
+    style.fillColor = '#91BCC0';
+    style.gradientColor = 'white';
+    style.align = mxConstants.ALIGN_CENTER;
+    style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+    style.fontSize = 16;
     graph.getStylesheet().putCellStyle('step', style);
 
     style = [];
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-    style[mxConstants.STYLE_FONTCOLOR] = 'gray';
-    style[mxConstants.STYLE_FILLCOLOR] = '#A0C88F';
-    style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-    style[mxConstants.STYLE_STROKECOLOR] = '#A0C88F';
-    style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-    style[mxConstants.STYLE_FONTSIZE] = 16;
+    style.shape = mxConstants.SHAPE_ELLIPSE;
+    style.perimiter = mxPerimeter.EllipsePerimeter;
+    style.strokeColor = 'gray';
+    style.fillColor = '#A0C88F';
+    style.gradientColor = 'white';
+    style.strokeColor = '#A0C88F';
+    style.align = mxConstants.ALIGN_CENTER;
+    style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+    style.fontSize = 16;
     graph.getStylesheet().putCellStyle('start', style);
 
     style = mxCloneUtils.clone(style);
-    style[mxConstants.STYLE_FILLCOLOR] = '#DACCBC';
-    style[mxConstants.STYLE_STROKECOLOR] = '#AF7F73';
+    style.fillColor = '#DACCBC';
+    style.strokeColor = '#AF7F73';
     graph.getStylesheet().putCellStyle('end', style);
 
     return graph;

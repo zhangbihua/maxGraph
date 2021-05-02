@@ -73,7 +73,7 @@ const Template = ({ label, ...args }) => {
     ) {
       const style = this.getCellStyle(cell);
       const fontSize =
-        style[mxConstants.STYLE_FONTSIZE] || mxConstants.DEFAULT_FONTSIZE;
+        style.fontSize || mxConstants.DEFAULT_FONTSIZE;
       const max = geometry.width / (fontSize * 0.625);
 
       if (max < label.length) {

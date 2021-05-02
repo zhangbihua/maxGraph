@@ -134,7 +134,7 @@ const Template = ({ label, ...args }) => {
     }
 
     getAllConnectionConstraints(terminal) {
-      if (terminal != null && this.model.isVertex(terminal.cell)) {
+      if (terminal != null && terminal.cell.isVertex()) {
         return [
           new mxConnectionConstraint(new mxPoint(0, 0), true),
           new mxConnectionConstraint(new mxPoint(0.5, 0), true),

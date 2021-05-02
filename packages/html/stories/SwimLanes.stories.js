@@ -61,60 +61,60 @@ const Template = ({ label, ...args }) => {
 
   // Changes the default vertex style in-place
   let style = graph.getStylesheet().getDefaultVertexStyle();
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-  style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
-  style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'white';
-  style[mxConstants.STYLE_FONTSIZE] = 11;
-  style[mxConstants.STYLE_STARTSIZE] = 22;
-  style[mxConstants.STYLE_HORIZONTAL] = false;
-  style[mxConstants.STYLE_FONTCOLOR] = 'black';
-  style[mxConstants.STYLE_STROKECOLOR] = 'black';
-  delete style[mxConstants.STYLE_FILLCOLOR];
+  style.shape = mxConstants.SHAPE_SWIMLANE;
+  style.verticalAlign = 'middle';
+  style.labelBackgroundColor = 'white';
+  style.fontSize = 11;
+  style.startSize = 22;
+  style.horizontal = false;
+  style.strokeColor = 'black';
+  style.strokeColor = 'black';
+  delete style.fillColor;
 
   style = mxCloneUtils.clone(style);
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-  style[mxConstants.STYLE_FONTSIZE] = 10;
-  style[mxConstants.STYLE_ROUNDED] = true;
-  style[mxConstants.STYLE_HORIZONTAL] = true;
-  style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
-  delete style[mxConstants.STYLE_STARTSIZE];
-  style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'none';
+  style.shape = mxConstants.SHAPE_RECTANGLE;
+  style.fontSize = 10;
+  style.rounded = true;
+  style.horizontal = true;
+  style.verticalAlign = 'middle';
+  delete style.startSize;
+  style.labelBackgroundColor = 'none';
   graph.getStylesheet().putCellStyle('process', style);
 
   style = mxCloneUtils.clone(style);
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
-  style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-  delete style[mxConstants.STYLE_ROUNDED];
+  style.shape = mxConstants.SHAPE_ELLIPSE;
+  style.perimiter = mxPerimeter.EllipsePerimeter;
+  delete style.rounded;
   graph.getStylesheet().putCellStyle('state', style);
 
   style = mxCloneUtils.clone(style);
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RHOMBUS;
-  style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RhombusPerimeter;
-  style[mxConstants.STYLE_VERTICAL_ALIGN] = 'top';
-  style[mxConstants.STYLE_SPACING_TOP] = 40;
-  style[mxConstants.STYLE_SPACING_RIGHT] = 64;
+  style.shape = mxConstants.SHAPE_RHOMBUS;
+  style.perimiter = mxPerimeter.RhombusPerimeter;
+  style.verticalAlign = 'top';
+  style.spacingTop = 40;
+  style.spacingRight = 64;
   graph.getStylesheet().putCellStyle('condition', style);
 
   style = mxCloneUtils.clone(style);
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_DOUBLE_ELLIPSE;
-  style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-  style[mxConstants.STYLE_SPACING_TOP] = 28;
-  style[mxConstants.STYLE_FONTSIZE] = 14;
-  style[mxConstants.STYLE_FONTSTYLE] = 1;
-  delete style[mxConstants.STYLE_SPACING_RIGHT];
+  style.shape = mxConstants.SHAPE_DOUBLE_ELLIPSE;
+  style.perimiter = mxPerimeter.EllipsePerimeter;
+  style.spacingTop = 28;
+  style.fontSize = 14;
+  style.fontStyle = 1;
+  delete style.spacingRight;
   graph.getStylesheet().putCellStyle('end', style);
 
   style = graph.getStylesheet().getDefaultEdgeStyle();
-  style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-  style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_BLOCK;
-  style[mxConstants.STYLE_ROUNDED] = true;
-  style[mxConstants.STYLE_FONTCOLOR] = 'black';
-  style[mxConstants.STYLE_STROKECOLOR] = 'black';
+  style.edge = mxEdgeStyle.ElbowConnector;
+  style.endArrow = mxConstants.ARROW_BLOCK;
+  style.rounded = true;
+  style.strokeColor = 'black';
+  style.strokeColor = 'black';
 
   style = mxCloneUtils.clone(style);
-  style[mxConstants.STYLE_DASHED] = true;
-  style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_OPEN;
-  style[mxConstants.STYLE_STARTARROW] = mxConstants.ARROW_OVAL;
+  style.dashed = true;
+  style.endArrow = mxConstants.ARROW_OPEN;
+  style.startArrow = mxConstants.ARROW_OVAL;
   graph.getStylesheet().putCellStyle('crossover', style);
 
   // Installs double click on middle control point and

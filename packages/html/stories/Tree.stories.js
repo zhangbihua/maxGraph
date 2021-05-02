@@ -195,13 +195,13 @@ const Template = ({ label, ...args }) => {
 
   // Set some stylesheet options for the visual appearance
   let style = graph.getStylesheet().getDefaultVertexStyle();
-  style[mxConstants.STYLE_SHAPE] = 'treenode';
-  style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-  style[mxConstants.STYLE_SHADOW] = true;
+  style.shape = 'treenode';
+  style.gradientColor = 'white';
+  style.shadow = true;
 
   style = graph.getStylesheet().getDefaultEdgeStyle();
-  style[mxConstants.STYLE_EDGE] = mxEdgeStyle.TopToBottom;
-  style[mxConstants.STYLE_ROUNDED] = true;
+  style.edge = mxEdgeStyle.TopToBottom;
+  style.rounded = true;
 
   // Enables automatic sizing for vertices after editing and
   // panning by using the left mouse button.

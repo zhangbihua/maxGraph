@@ -158,8 +158,8 @@ const Template = ({ label, ...args }) => {
   ) {
     if (constraint != null) {
       const key = source
-        ? mxConstants.STYLE_SOURCE_PORT
-        : mxConstants.STYLE_TARGET_PORT;
+        ? 'sourcePort'
+        : 'targetPort';
 
       if (constraint == null || constraint.id == null) {
         this.setCellStyles(key, null, [edge]);
@@ -172,8 +172,8 @@ const Template = ({ label, ...args }) => {
   // Returns the port for the given connection
   graph.getConnectionConstraint = function(edge, terminal, source) {
     const key = source
-      ? mxConstants.STYLE_SOURCE_PORT
-      : mxConstants.STYLE_TARGET_PORT;
+      ? 'sourcePort'
+      : 'targetPort';
     const id = edge.style[key];
 
     if (id != null) {

@@ -818,7 +818,7 @@ EditorUi = function(editor, container, lightbox)
 					let lineStartDiv = this.toolbar.lineStartMenu.getElementsByTagName('div')[0];
 					
 					lineStartDiv.className = this.getCssClassForMarker('start',
-							graph.currentEdgeStyle['shape'], graph.currentEdgeStyle[mxConstants.STYLE_STARTARROW],
+							graph.currentEdgeStyle['shape'], graph.currentEdgeStyle.startArrow,
 							mxUtils.getValue(graph.currentEdgeStyle, 'startFill', '1'));
 				}
 	
@@ -828,7 +828,7 @@ EditorUi = function(editor, container, lightbox)
 					let lineEndDiv = this.toolbar.lineEndMenu.getElementsByTagName('div')[0];
 					
 					lineEndDiv.className = this.getCssClassForMarker('end',
-							graph.currentEdgeStyle['shape'], graph.currentEdgeStyle[mxConstants.STYLE_ENDARROW],
+							graph.currentEdgeStyle['shape'], graph.currentEdgeStyle.endArrow,
 							mxUtils.getValue(graph.currentEdgeStyle, 'endFill', '1'));
 				}
 			}
@@ -845,8 +845,8 @@ EditorUi = function(editor, container, lightbox)
 			    	
 			    	if (state != null)
 			    	{
-			    		ff = state.style[mxConstants.STYLE_FONTFAMILY] || ff;
-			    		fs = state.style[mxConstants.STYLE_FONTSIZE] || fs;
+			    		ff = state.style.fontFamily || ff;
+			    		fs = state.style.fontSize || fs;
 			    		
 			    		if (ff.length > 10)
 			    		{
@@ -1207,7 +1207,7 @@ EditorUi.prototype.installShapePicker = function()
 					let geo = temp.getGeometry();
 					me.consume();
 					
-					while (temp != null && graph.model.isVertex(temp) && geo != null && geo.relative)
+					while (temp != null && temp.isVertex() && geo != null && geo.relative)
 					{
 						cell = temp;
 						temp = cell.getParent()
@@ -4635,7 +4635,7 @@ EditorUi.prototype.createKeyHandler = function(editor)
 					let parent = cell.getParent();
 					let layout = null;
 	
-					if (graph.getSelectionCount() == 1 && graph.model.isVertex(cell) &&
+					if (graph.getSelectionCount() == 1 && cell.isVertex() &&
 						graph.layoutManager != null && !graph.isCellLocked(cell))
 					{
 						layout = graph.layoutManager.getLayout(parent);
@@ -4668,7 +4668,7 @@ EditorUi.prototype.createKeyHandler = function(editor)
 							{
 						        let parent = cells[i].getParent();
 					
-						        if (graph.model.isVertex(parent) && mxUtils.indexOf(cells, parent) < 0)
+						        if (parent.isVertex() && mxUtils.indexOf(cells, parent) < 0)
 						        {
 						            realCells.push(parent);
 						        }

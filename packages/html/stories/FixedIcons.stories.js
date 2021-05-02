@@ -35,12 +35,12 @@ const Template = ({ label, ...args }) => {
   mxLabel.prototype.getImageBounds = function(x, y, w, h) {
     const iw = mxUtils.getValue(
       this.style,
-      mxConstants.STYLE_IMAGE_WIDTH,
+      'imageWidth',
       mxConstants.DEFAULT_IMAGESIZE
     );
     const ih = mxUtils.getValue(
       this.style,
-      mxConstants.STYLE_IMAGE_HEIGHT,
+      'imageHeight',
       mxConstants.DEFAULT_IMAGESIZE
     );
 

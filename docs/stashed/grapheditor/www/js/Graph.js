@@ -204,7 +204,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 	{
 		let style = this.getCurrentCellStyle(cell);
 		
-		return (style != null) ? (style['html'] == '1' || style[mxConstants.STYLE_WHITE_SPACE] == 'wrap') : false;
+		return (style != null) ? (style['html'] == '1' || style.whiteSpace == 'wrap') : false;
 	};
 	
 	// Implements a listener for hover and click handling on edges
@@ -1692,7 +1692,7 @@ Graph.prototype.init = function(container)
 	{
 		// Redirect editing for tables
 		let style = this.getCellStyle(cell);
-		let size = parseInt(mxUtils.getValue(style, mxConstants.STYLE_STARTSIZE, 0));
+		let size = parseInt(mxUtils.getValue(style, 'startSize', 0));
 		
 		if (this.isTable(cell) && (!this.isSwimlane(cell) ||
 			size == 0) && this.getLabel(cell) == '' &&
@@ -1701,7 +1701,7 @@ Graph.prototype.init = function(container)
 			cell = cell.getChildAt(0);
 			
 			style = this.getCellStyle(cell);
-			size = parseInt(mxUtils.getValue(style, mxConstants.STYLE_STARTSIZE, 0));
+			size = parseInt(mxUtils.getValue(style, 'startSize', 0));
 		}
 		
 		// Redirect editing for table rows
@@ -3404,7 +3404,7 @@ Graph.prototype.getCellStyle = function(cell)
 			
 			if (layout != null && layout.constructor == mxStackLayout)
 			{
-				style[mxConstants.STYLE_HORIZONTAL] = !layout.horizontal;
+				style.horizontal = !layout.horizontal;
 			}
 		}
 	}
@@ -4392,7 +4392,7 @@ HoverIcons.prototype.drag = function(evt, x, y)
 		let es = this.graph.connectionHandler.edgeState;
 
 		if (evt != null && mxEvent.isShiftDown(evt) && mxEvent.isControlDown(evt) && es != null &&
-			mxUtils.getValue(es.style, mxConstants.STYLE_EDGE, null) === 'orthogonalEdgeStyle')
+			mxUtils.getValue(es.style, 'edge', null) === 'orthogonalEdgeStyle')
 		{
 			let direction = this.getDirection();
 			es.cell.style = mxUtils.setStyle(es.cell.style, 'sourcePortConstraint', direction);
@@ -4916,7 +4916,7 @@ Graph.prototype.createCrossFunctionalSwimlane = function(rowCount, colCount, w, 
 	
 	let table = this.createVertex(null, null, '', 0, 0,
 		colCount * w, rowCount * h, tableStyle);
-	let t = mxUtils.getValue(this.getCellStyle(table), mxConstants.STYLE_STARTSIZE,
+	let t = mxUtils.getValue(this.getCellStyle(table), 'startSize',
 		mxConstants.DEFAULT_STARTSIZE);
 	table.geometry.width += t;
 	table.geometry.height += t;
@@ -5391,7 +5391,7 @@ TableLayout.prototype.execute = function(parent)
 		
 		// Forces repaint if jumps change on a valid edge
 		if (state != null && recurse && state.cell.isEdge() &&
-			state.style != null && state.style[mxConstants.STYLE_CURVED] != 1 &&
+			state.style != null && state.style.curved != 1 &&
 			!state.invalid && this.updateLineJumps(state))
 		{
 			this.graph.cellRenderer.redraw(state, false, this.isRendering());
@@ -5401,7 +5401,7 @@ TableLayout.prototype.execute = function(parent)
 		
 		// Adds to the list of edges that may intersect with later edges
 		if (state != null && recurse && state.cell.isEdge() &&
-			state.style != null && state.style[mxConstants.STYLE_CURVED] != 1)
+			state.style != null && state.style.curved != 1)
 		{
 			// LATER: Reuse jumps for valid edges
 			this.validEdges.push(state);
@@ -5431,7 +5431,7 @@ TableLayout.prototype.execute = function(parent)
 
 		// Updates jumps on invalid edge before repaint
 		if (state.cell.isEdge() &&
-			state.style[mxConstants.STYLE_CURVED] != 1)
+			state.style.curved != 1)
 		{
 			this.updateLineJumps(state);
 		}
@@ -5592,7 +5592,7 @@ TableLayout.prototype.execute = function(parent)
 		}
 		else
 		{
-			let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE,
+			let arcSize = mxUtils.getValue(this.style, 'arcSize',
 				mxConstants.LINE_ARCSIZE) / 2;
 			let size = (parseInt(mxUtils.getValue(this.style, 'jumpSize',
 				Graph.defaultJumpSize)) - 2) / 2 + this.strokewidth;
@@ -5720,7 +5720,7 @@ TableLayout.prototype.execute = function(parent)
 		    let next = this.getNextPoint(edge, end, source);
 		    
 		    let orth = this.graph.isOrthogonal(edge);
-		    let alpha = mxUtils.toRadians(Number(start.style[mxConstants.STYLE_ROTATION] || '0'));
+		    let alpha = mxUtils.toRadians(Number(start.style.rotation || '0'));
 		    let center = new mxPoint(start.getCenterX(), start.getCenterY());
 		    
 		    if (alpha != 0)
@@ -5730,10 +5730,10 @@ TableLayout.prototype.execute = function(parent)
 		        next = mxUtils.getRotatedPoint(next, cos, sin, center);
 		    }
 		    
-		    let border = parseFloat(edge.style[mxConstants.STYLE_PERIMETER_SPACING] || 0);
+		    let border = parseFloat(edge.style.perimeterSpacing || 0);
 		    border += parseFloat(edge.style[(source) ?
-		        mxConstants.STYLE_SOURCE_PERIMETER_SPACING :
-		        mxConstants.STYLE_TARGET_PERIMETER_SPACING] || 0);
+		        'sourcePerimeterSpacing' :
+		        'targetPerimeterSpacing'] || 0);
 		    let pt = this.getPerimeterPoint(start, next, alpha == 0 && orth, border);
 		
 		    if (alpha != 0)
@@ -5817,7 +5817,7 @@ TableLayout.prototype.execute = function(parent)
 	{
 		if (state.style != null && typeof(pako) !== 'undefined')
 		{
-	    	let shape = mxUtils.getValue(state.style, mxConstants.STYLE_SHAPE, null);
+	    	let shape = mxUtils.getValue(state.style, 'shape', null);
 	
 	    	// Extracts and decodes stencil XML if shape has the form shape=stencil(value)
 	    	if (shape != null && typeof shape === 'string' && shape.substring(0, 8) == 'stencil(')
@@ -6200,7 +6200,7 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			let shape = connectionHandlerCreateShape.apply(this, arguments);
 			
-			shape.isDashed = this.graph.currentEdgeStyle[mxConstants.STYLE_DASHED] == '1';
+			shape.isDashed = this.graph.currentEdgeStyle.dashed == '1';
 			
 			return shape;
 		}
@@ -6548,7 +6548,7 @@ if (typeof mxVertexHandler != 'undefined')
 				!cell.isEdge())
 			{
 				let shape = this.getCurrentCellStyle(cell, ignoreState)
-					[mxConstants.STYLE_SHAPE];
+					.shape;
 				
 				return shape == mxConstants.SHAPE_SWIMLANE || shape == 'table';
 			}
@@ -6985,11 +6985,11 @@ if (typeof mxVertexHandler != 'undefined')
 			if (edge != null)
 			{
 				let style = this.getCurrentCellStyle(edge);
-				let elbow = mxUtils.getValue(style, mxConstants.STYLE_ELBOW,
+				let elbow = mxUtils.getValue(style, 'elbow',
 					mxConstants.ELBOW_HORIZONTAL);
 				let value = (elbow == mxConstants.ELBOW_HORIZONTAL) ?
 					mxConstants.ELBOW_VERTICAL : mxConstants.ELBOW_HORIZONTAL;
-				this.setCellStyles(mxConstants.STYLE_ELBOW, value, [edge]);
+				this.setCellStyles('elbow', value, [edge]);
 			}
 		};
 
@@ -7185,9 +7185,9 @@ if (typeof mxVertexHandler != 'undefined')
 							{
 								let dirs = [mxConstants.DIRECTION_EAST, mxConstants.DIRECTION_SOUTH,
 									mxConstants.DIRECTION_WEST, mxConstants.DIRECTION_NORTH];
-								let dir = mxUtils.getValue(state.style, mxConstants.STYLE_DIRECTION,
+								let dir = mxUtils.getValue(state.style, 'direction',
 									mxConstants.DIRECTION_EAST);
-								this.setCellStyles(mxConstants.STYLE_DIRECTION,
+								this.setCellStyles('direction',
 									dirs[mxUtils.mod(mxUtils.indexOf(dirs, dir) +
 									((backwards) ? -1 : 1), dirs.length)], [cell]);
 							}
@@ -8235,8 +8235,8 @@ if (typeof mxVertexHandler != 'undefined')
 			let style = this.getCurrentCellStyle(cell);
 				
 			return !this.isTableCell(cell) && !this.isTableRow(cell) && (result ||
-				(mxUtils.getValue(style, mxConstants.STYLE_RESIZABLE, '1') != '0' &&
-				style[mxConstants.STYLE_WHITE_SPACE] == 'wrap'));
+				(mxUtils.getValue(style, 'resizable', '1') != '0' &&
+				style.whiteSpace == 'wrap'));
 		};
 		
 		/**
@@ -9818,22 +9818,22 @@ if (typeof mxVertexHandler != 'undefined')
 					content = this.graph.sanitizeHtml((nl2Br) ? content.replace(/\n/g, '<br/>') : content, true)
 					this.textarea.className = 'mxCellEditor geContentEditable';
 					
-					let size = mxUtils.getValue(state.style, mxConstants.STYLE_FONTSIZE, mxConstants.DEFAULT_FONTSIZE);
-					let family = mxUtils.getValue(state.style, mxConstants.STYLE_FONTFAMILY, mxConstants.DEFAULT_FONTFAMILY);
-					let align = mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
-					let bold = (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+					let size = mxUtils.getValue(state.style, 'fontSize', mxConstants.DEFAULT_FONTSIZE);
+					let family = mxUtils.getValue(state.style, 'fontFamily', mxConstants.DEFAULT_FONTFAMILY);
+					let align = mxUtils.getValue(state.style, mxConstants.'align', mxConstants.ALIGN_LEFT);
+					let bold = (mxUtils.getValue(state.style, 'fontStyle', 0) &
 							mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD;
-					let italic = (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+					let italic = (mxUtils.getValue(state.style, 'fontStyle', 0) &
 							mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC;
 					let txtDecor = [];
 					
-					if ((mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+					if ((mxUtils.getValue(state.style, 'fontStyle', 0) &
 							mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
 					{
 						txtDecor.push('underline');
 					}
 					
-					if ((mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+					if ((mxUtils.getValue(state.style, 'fontStyle', 0) &
 							mxConstants.FONT_STRIKETHROUGH) == mxConstants.FONT_STRIKETHROUGH)
 					{
 						txtDecor.push('line-through');
@@ -9897,8 +9897,8 @@ if (typeof mxVertexHandler != 'undefined')
 						
 						if (m == null)
 						{
-							m = mxUtils.getAlignmentAsPoint(mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER),
-									mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE));
+							m = mxUtils.getAlignmentAsPoint(mxUtils.getValue(state.style, mxConstants.'align', mxConstants.ALIGN_CENTER),
+									mxUtils.getValue(state.style, mxConstants.'verticalAlign', mxConstants.ALIGN_MIDDLE));
 						}
 						
 						this.bounds.x += m.x * this.bounds.width;
@@ -10038,14 +10038,14 @@ if (typeof mxVertexHandler != 'undefined')
 		 */
 		mxCellEditor.prototype.getBackgroundColor = function(state)
 		{
-			let color = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, null);
+			let color = mxUtils.getValue(state.style, 'backgroundColor', null);
 
 			if ((color == null || color == mxConstants.NONE) &&
 				(state.cell.geometry != null && state.cell.geometry.width > 0) &&
-				(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION, 0) != 0 ||
-				mxUtils.getValue(state.style, mxConstants.STYLE_HORIZONTAL, 1) == 0))
+				(mxUtils.getValue(state.style, 'rotation', 0) != 0 ||
+				mxUtils.getValue(state.style, 'horizontal', 1) == 0))
 			{
-				color = mxUtils.getValue(state.style, mxConstants.STYLE_FILLCOLOR, null);
+				color = mxUtils.getValue(state.style, 'fillColor', null);
 			}
 
 			if (color == mxConstants.NONE)
@@ -10760,7 +10760,7 @@ if (typeof mxVertexHandler != 'undefined')
 											formatHintText(this.roundLength(this.bounds.height / s), unit);
 				}
 				
-				let rot = (this.currentAlpha != null) ? this.currentAlpha : this.state.style[mxConstants.STYLE_ROTATION] || '0';
+				let rot = (this.currentAlpha != null) ? this.currentAlpha : this.state.style.rotation || '0';
 				let bb = mxUtils.getBoundingBox(this.bounds, rot);
 				
 				if (bb == null)
@@ -11413,14 +11413,14 @@ if (typeof mxVertexHandler != 'undefined')
 		// Invokes turn on single click on rotation handle
 		mxVertexHandler.prototype.rotateClick = function()
 		{
-			let stroke = mxUtils.getValue(this.state.style, mxConstants.STYLE_STROKECOLOR, mxConstants.NONE);
-			let fill = mxUtils.getValue(this.state.style, mxConstants.STYLE_FILLCOLOR, mxConstants.NONE);
+			let stroke = mxUtils.getValue(this.state.style, 'strokeColor', mxConstants.NONE);
+			let fill = mxUtils.getValue(this.state.style, 'fillColor', mxConstants.NONE);
 			
 			if (this.state.cell.isVertex() &&
 				stroke == mxConstants.NONE && fill == mxConstants.NONE)
 			{
-				let angle = mxUtils.mod(mxUtils.getValue(this.state.style, mxConstants.STYLE_ROTATION, 0) + 90, 360);
-				this.state.view.graph.setCellStyles(mxConstants.STYLE_ROTATION, angle, [this.state.cell]);
+				let angle = mxUtils.mod(mxUtils.getValue(this.state.style, 'rotation', 0) + 90, 360);
+				this.state.view.graph.setCellStyles('rotation', angle, [this.state.cell]);
 			}
 			else
 			{
@@ -11755,9 +11755,9 @@ if (typeof mxVertexHandler != 'undefined')
 			{
 				let c = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
 				let tmp = new mxRectangle(this.state.x, this.state.y - 22, this.state.width + 24, this.state.height + 22);
-				let bb = mxUtils.getBoundingBox(tmp, this.state.style[mxConstants.STYLE_ROTATION] || '0', c);
+				let bb = mxUtils.getBoundingBox(tmp, this.state.style.rotation || '0', c);
 				let rs = (bb != null) ? mxUtils.getBoundingBox(this.state,
-					this.state.style[mxConstants.STYLE_ROTATION] || '0') : this.state;
+					this.state.style.rotation || '0') : this.state;
 				let tb = (this.state.text != null) ? this.state.text.boundingBox : null;
 				
 				if (bb == null)

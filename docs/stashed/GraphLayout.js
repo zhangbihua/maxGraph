@@ -61,10 +61,10 @@ export default GraphLayout;
 
         // Changes the default vertex style in-place
         let style = graph.getStylesheet().getDefaultVertexStyle();
-        style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
-        style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-        style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-        style[mxConstants.STYLE_FONTSIZE] = '10';
+        style.shape = mxConstants.SHAPE_ELLIPSE;
+        style.perimiter = mxPerimeter.EllipsePerimeter;
+        style.gradientColor = 'white';
+        style.fontSize = '10';
 
         // Updates the size of the container to match
         // the size of the graph when it changes. If

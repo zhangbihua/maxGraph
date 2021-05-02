@@ -34,16 +34,6 @@ import {
   NODETYPE_TEXT,
   NONE,
   PAGE_FORMAT_A4_PORTRAIT,
-  STYLE_DIRECTION,
-  STYLE_FLIPH,
-  STYLE_FLIPV,
-  STYLE_HORIZONTAL,
-  STYLE_PORT_CONSTRAINT,
-  STYLE_PORT_CONSTRAINT_ROTATION,
-  STYLE_ROTATION,
-  STYLE_SOURCE_PORT_CONSTRAINT,
-  STYLE_STARTSIZE,
-  STYLE_TARGET_PORT_CONSTRAINT,
 } from './mxConstants';
 import mxPoint from './datatypes/mxPoint';
 import mxDictionary from './datatypes/mxDictionary';
@@ -905,10 +895,10 @@ const mxUtils = {
   getPortConstraints: (terminal, edge, source, defaultValue) => {
     const value = mxUtils.getValue(
       terminal.style,
-      STYLE_PORT_CONSTRAINT,
+      'portConstraint',
       mxUtils.getValue(
         edge.style,
-        source ? STYLE_SOURCE_PORT_CONSTRAINT : STYLE_TARGET_PORT_CONSTRAINT,
+        source ? 'sourcePortConstraint' : 'targetPortConstraint',
         null
       )
     );
@@ -920,13 +910,13 @@ const mxUtils = {
     let returnValue = DIRECTION_MASK_NONE;
     const constraintRotationEnabled = mxUtils.getValue(
       terminal.style,
-      STYLE_PORT_CONSTRAINT_ROTATION,
+      'portConstraintRotation',
       0
     );
     let rotation = 0;
 
     if (constraintRotationEnabled == 1) {
-      rotation = mxUtils.getValue(terminal.style, STYLE_ROTATION, 0);
+      rotation = mxUtils.getValue(terminal.style, 'rotation', 0);
     }
 
     let quad = 0;
@@ -1073,9 +1063,9 @@ const mxUtils = {
    * rectangle according to the respective styles in style.
    */
   getDirectedBounds(rect, m, style, flipH, flipV) {
-    const d = mxUtils.getValue(style, STYLE_DIRECTION, DIRECTION_EAST);
-    flipH = flipH != null ? flipH : mxUtils.getValue(style, STYLE_FLIPH, false);
-    flipV = flipV != null ? flipV : mxUtils.getValue(style, STYLE_FLIPV, false);
+    const d = mxUtils.getValue(style, 'direction', DIRECTION_EAST);
+    flipH = flipH != null ? flipH : mxUtils.getValue(style, 'flipH', false);
+    flipV = flipV != null ? flipV : mxUtils.getValue(style, 'flipV', false);
 
     m.x = Math.round(Math.max(0, Math.min(rect.width, m.x)));
     m.y = Math.round(Math.max(0, Math.min(rect.height, m.y)));
@@ -1321,10 +1311,10 @@ const mxUtils = {
       let h = state.height;
 
       const start =
-        mxUtils.getValue(state.style, STYLE_STARTSIZE) * state.view.scale;
+        mxUtils.getValue(state.style, 'startSize') * state.view.scale;
 
       if (start > 0) {
-        if (mxUtils.getValue(state.style, STYLE_HORIZONTAL, true)) {
+        if (mxUtils.getValue(state.style, 'horizontal', true)) {
           cy = state.y + start / 2;
           h = start;
         } else {
@@ -1343,7 +1333,7 @@ const mxUtils = {
 
       const rect = new mxRectangle(cx - w / 2, cy - h / 2, w, h);
       const alpha = mxUtils.toRadians(
-        mxUtils.getValue(state.style, STYLE_ROTATION) || 0
+        mxUtils.getValue(state.style, 'rotation') || 0
       );
 
       if (alpha != 0) {
@@ -2003,7 +1993,7 @@ const mxUtils = {
    * let cells = graph.getSelectionCells();
    * mxUtils.setCellStyleFlags(graph.model,
    *       cells,
-   *       mxConstants.STYLE_FONTSTYLE,
+   *       'fontStyle',
    *       mxConstants.FONT_BOLD);
    * (end)
    *

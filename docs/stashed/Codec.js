@@ -209,7 +209,7 @@ class Codec extends React.Component {
 
             // Changes the default style for edges "in-place"
             const style = graph.getStylesheet().getDefaultEdgeStyle();
-            style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+            style.edge = mxEdgeStyle.ElbowConnector;
 
             // Enables panning with left mouse button
             graph.panningHandler.useLeftButtonForPanning = true;

@@ -16,12 +16,6 @@ import {
   NODETYPE_ELEMENT,
   NONE,
   RECTANGLE_ROUNDING_FACTOR,
-  STYLE_BACKGROUND_OUTLINE,
-  STYLE_DIRECTION,
-  STYLE_FLIPH,
-  STYLE_FLIPV,
-  STYLE_POINTER_EVENTS,
-  STYLE_STROKEWIDTH,
 } from '../../util/mxConstants';
 import mxStencilRegistry from './mxStencilRegistry';
 import { getChildNodes, getTextContent } from '../../util/mxDomUtils';
@@ -248,19 +242,19 @@ class mxStencil extends mxShape {
     // (start, segment, end blocks), pluggable markers, how to implement
     // swimlanes (title area) with this API, add icon, horizontal/vertical
     // label, indicator for all shapes, rotation
-    const direction = mxUtils.getValue(shape.style, STYLE_DIRECTION, null);
+    const direction = mxUtils.getValue(shape.style, 'direction', null);
     const aspect = this.computeAspect(shape.style, x, y, w, h, direction);
     const minScale = Math.min(aspect.width, aspect.height);
     const sw =
       this.strokewidth == 'inherit'
-        ? Number(mxUtils.getNumber(shape.style, STYLE_STROKEWIDTH, 1))
+        ? Number(mxUtils.getNumber(shape.style, 'strokeWidth', 1))
         : Number(this.strokewidth) * minScale;
     canvas.setStrokeWidth(sw);
 
     // Draws a transparent rectangle for catching events
     if (
       shape.style != null &&
-      mxUtils.getValue(shape.style, STYLE_POINTER_EVENTS, '0') == '1'
+      mxUtils.getValue(shape.style, 'pointerEvents', '0') == '1'
     ) {
       canvas.setStrokeColor(NONE);
       canvas.rect(x, y, w, h);
@@ -292,7 +286,7 @@ class mxStencil extends mxShape {
       true,
       !shape.outline ||
         shape.style == null ||
-        mxUtils.getValue(shape.style, STYLE_BACKGROUND_OUTLINE, 0) == 0
+        mxUtils.getValue(shape.style, 'backgroundOutline', 0) == 0
     );
 
     // Restores stack for unequal count of save/restore calls
@@ -562,8 +556,8 @@ class mxStencil extends mxShape {
             const dr = shape.rotation;
 
             // Depends on flipping
-            const flipH = mxUtils.getValue(shape.style, STYLE_FLIPH, 0) == 1;
-            const flipV = mxUtils.getValue(shape.style, STYLE_FLIPV, 0) == 1;
+            const flipH = mxUtils.getValue(shape.style, 'flipH', 0) == 1;
+            const flipV = mxUtils.getValue(shape.style, 'flipV', 0) == 1;
 
             if (flipH && flipV) {
               rotation -= dr;

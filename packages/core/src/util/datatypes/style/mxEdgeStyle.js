@@ -23,17 +23,6 @@ import {
   ELBOW_VERTICAL,
   ENTITY_SEGMENT,
   NONE,
-  STYLE_DIRECTION,
-  STYLE_ELBOW,
-  STYLE_ENDARROW,
-  STYLE_ENDSIZE,
-  STYLE_JETTY_SIZE,
-  STYLE_ROTATION,
-  STYLE_SEGMENT,
-  STYLE_SOURCE_JETTY_SIZE,
-  STYLE_STARTARROW,
-  STYLE_STARTSIZE,
-  STYLE_TARGET_JETTY_SIZE,
 } from '../../mxConstants';
 import mxRectangle from '../mxRectangle';
 
@@ -41,13 +30,13 @@ import mxRectangle from '../mxRectangle';
  * Class: mxEdgeStyle
  *
  * Provides various edge styles to be used as the values for
- * <mxConstants.STYLE_EDGE> in a cell style.
+ * <'edge'> in a cell style.
  *
  * Example:
  *
  * (code)
  * let style = stylesheet.getDefaultEdgeStyle();
- * style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+ * style.edge = mxEdgeStyle.ElbowConnector;
  * (end)
  *
  * Sets the default edge style to <ElbowConnector>.
@@ -100,7 +89,7 @@ import mxRectangle from '../mxRectangle';
  *
  * (code)
  * let style = graph.getStylesheet().getDefaultEdgeStyle();
- * style[mxConstants.STYLE_EDGE] = mxEdgeStyle.MyStyle;
+ * style.edge = mxEdgeStyle.MyStyle;
  * (end)
  *
  * Note that the object can be used directly when programmatically setting
@@ -134,7 +123,7 @@ class mxEdgeStyle {
     const { view } = state;
     const { graph } = view;
     const segment =
-      mxUtils.getValue(state.style, STYLE_SEGMENT, ENTITY_SEGMENT) * view.scale;
+      mxUtils.getValue(state.style, 'segment', ENTITY_SEGMENT) * view.scale;
 
     const pts = state.absolutePoints;
     const p0 = pts[0];
@@ -289,11 +278,11 @@ class mxEdgeStyle {
       let dy = 0;
 
       const seg =
-        mxUtils.getValue(state.style, STYLE_SEGMENT, graph.gridSize) *
+        mxUtils.getValue(state.style, 'segment', graph.gridSize) *
         view.scale;
       const dir = mxUtils.getValue(
         state.style,
-        STYLE_DIRECTION,
+        'direction',
         DIRECTION_WEST
       );
 
@@ -385,7 +374,7 @@ class mxEdgeStyle {
 
     if (
       !horizontal &&
-      (vertical || state.style[STYLE_ELBOW] === ELBOW_VERTICAL)
+      (vertical || state.style['elbow'] === ELBOW_VERTICAL)
     ) {
       mxEdgeStyle.TopToBottom(state, source, target, points, result);
     } else {
@@ -965,22 +954,22 @@ class mxEdgeStyle {
   static getJettySize(state, isSource) {
     let value = mxUtils.getValue(
       state.style,
-      isSource ? STYLE_SOURCE_JETTY_SIZE : STYLE_TARGET_JETTY_SIZE,
-      mxUtils.getValue(state.style, STYLE_JETTY_SIZE, mxEdgeStyle.orthBuffer)
+      isSource ? 'sourceJettySize' : 'targetJettySize',
+      mxUtils.getValue(state.style, 'jettySize', mxEdgeStyle.orthBuffer)
     );
 
     if (value === 'auto') {
       // Computes the automatic jetty size
       const type = mxUtils.getValue(
         state.style,
-        isSource ? STYLE_STARTARROW : STYLE_ENDARROW,
+        isSource ? 'startArrow' : 'endArrow',
         NONE
       );
 
       if (type !== NONE) {
         const size = mxUtils.getNumber(
           state.style,
-          isSource ? STYLE_STARTSIZE : STYLE_ENDSIZE,
+          isSource ? 'startSize' : 'endSize',
           DEFAULT_MARKERSIZE
         );
         value =
@@ -1160,7 +1149,7 @@ class mxEdgeStyle {
         true,
         DIRECTION_MASK_ALL
       );
-      rotation = mxUtils.getValue(source.style, STYLE_ROTATION, 0);
+      rotation = mxUtils.getValue(source.style, 'rotation', 0);
 
       // console.log('source rotation', rotation);
 
@@ -1183,7 +1172,7 @@ class mxEdgeStyle {
         false,
         DIRECTION_MASK_ALL
       );
-      rotation = mxUtils.getValue(target.style, STYLE_ROTATION, 0);
+      rotation = mxUtils.getValue(target.style, 'rotation', 0);
 
       // console.log('target rotation', rotation);
 

@@ -134,7 +134,7 @@ export default MYNAMEHERE;
          let geo = (terminal != null) ? terminal.cell.getGeometry() : null;
 
          if ((geo != null ? !geo.relative : false) &&
-           this.getModel().isVertex(terminal.cell) &&
+           terminal.cell.isVertex() &&
            this.getModel().getChildCount(terminal.cell) == 0)
          {
           return [new mxConnectionConstraint(new mxPoint(0, 0.5), false),
@@ -182,7 +182,7 @@ export default MYNAMEHERE;
 
           let parent = this.getModel().getParent(cell);
 
-          if (this.getModel().isVertex(parent))
+          if (parent.isVertex())
           {
             tip += this.getTooltipForCell(parent) + '.';
           }
@@ -581,8 +581,8 @@ export default MYNAMEHERE;
 
       if (this.sourceConstraint != null && this.previous != null)
       {
-        edge.style = mxConstants.STYLE_EXIT_X+'='+this.sourceConstraint.point.x+';'+
-          mxConstants.STYLE_EXIT_Y+'='+this.sourceConstraint.point.y+';';
+        edge.style = 'exitX'+'='+this.sourceConstraint.point.x+';'+
+          'exitY'+'='+this.sourceConstraint.point.y+';';
       }
       else if (this.graph.model.isEdge(me.getCell()))
       {
@@ -845,7 +845,7 @@ export default MYNAMEHERE;
       horizontal = source.style['portConstraint'] != 'vertical';
 
       // Checks the direction of the shape and rotates
-      let direction = source.style[mxConstants.STYLE_DIRECTION];
+      let direction = source.style.direction;
 
       if (direction == 'north' || direction == 'south')
       {

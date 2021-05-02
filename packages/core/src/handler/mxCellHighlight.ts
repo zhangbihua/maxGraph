@@ -9,7 +9,6 @@ import {
   DIALECT_SVG,
   HIGHLIGHT_OPACITY,
   HIGHLIGHT_STROKEWIDTH,
-  STYLE_ROTATION,
 } from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 import mxRectangle from '../util/datatypes/mxRectangle';
@@ -216,7 +215,7 @@ class mxCellHighlight {
           this.state.width + 2 * this.spacing,
           this.state.height + 2 * this.spacing
         );
-        this.shape.rotation = Number(this.state.style[STYLE_ROTATION] || '0');
+        this.shape.rotation = Number(this.state.style.rotation || '0');
         this.shape.strokewidth =
           <number>this.getStrokeWidth() / this.state.view.scale;
         this.shape.outline = true;

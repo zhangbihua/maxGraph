@@ -85,43 +85,43 @@ const Template = ({ label, ...args }) => {
 
   // Set some stylesheet options for the visual appearance of vertices
   let style = graph.getStylesheet().getDefaultVertexStyle();
-  style[mxConstants.STYLE_SHAPE] = 'label';
+  style.shape = 'label';
 
-  style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-  style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
-  style[mxConstants.STYLE_SPACING_LEFT] = 54;
+  style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+  style.align = mxConstants.ALIGN_LEFT;
+  style.spacingLeft = 54;
 
-  style[mxConstants.STYLE_GRADIENTCOLOR] = '#7d85df';
-  style[mxConstants.STYLE_STROKECOLOR] = '#5d65df';
-  style[mxConstants.STYLE_FILLCOLOR] = '#adc5ff';
+  style.gradientColor = '#7d85df';
+  style.strokeColor = '#5d65df';
+  style.fillColor = '#adc5ff';
 
-  style[mxConstants.STYLE_FONTCOLOR] = '#1d258f';
-  style[mxConstants.STYLE_FONTFAMILY] = 'Verdana';
-  style[mxConstants.STYLE_FONTSIZE] = '12';
-  style[mxConstants.STYLE_FONTSTYLE] = '1';
+  style.strokeColor = '#1d258f';
+  style.fontFamily = 'Verdana';
+  style.fontSize = '12';
+  style.fontStyle = '1';
 
-  style[mxConstants.STYLE_SHADOW] = '1';
-  style[mxConstants.STYLE_ROUNDED] = '1';
-  style[mxConstants.STYLE_GLASS] = '1';
+  style.shadow = '1';
+  style.rounded = '1';
+  style.glass = '1';
 
-  style[mxConstants.STYLE_IMAGE] = '/images/dude3.png';
-  style[mxConstants.STYLE_IMAGE_WIDTH] = '48';
-  style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
-  style[mxConstants.STYLE_SPACING] = 8;
+  style.image = '/images/dude3.png';
+  style.imageWidth = '48';
+  style.imageHeight = '48';
+  style.spacing = 8;
 
   // Sets the default style for edges
   style = graph.getStylesheet().getDefaultEdgeStyle();
-  style[mxConstants.STYLE_ROUNDED] = true;
-  style[mxConstants.STYLE_STROKEWIDTH] = 3;
-  style[mxConstants.STYLE_EXIT_X] = 0.5; // center
-  style[mxConstants.STYLE_EXIT_Y] = 1.0; // bottom
-  style[mxConstants.STYLE_EXIT_PERIMETER] = 0; // disabled
-  style[mxConstants.STYLE_ENTRY_X] = 0.5; // center
-  style[mxConstants.STYLE_ENTRY_Y] = 0; // top
-  style[mxConstants.STYLE_ENTRY_PERIMETER] = 0; // disabled
+  style.rounded = true;
+  style.strokeWidth = 3;
+  style.exitX = 0.5; // center
+  style.exitY = 1.0; // bottom
+  style.exitPerimeter = 0; // disabled
+  style.entryX = 0.5; // center
+  style.entryY = 0; // top
+  style.entryPerimeter = 0; // disabled
 
   // Disable the following for straight lines
-  style[mxConstants.STYLE_EDGE] = mxEdgeStyle.TopToBottom;
+  style.edge = mxEdgeStyle.TopToBottom;
 
   // Stops editing on enter or escape keypress
   const keyHandler = new mxKeyHandler(graph);

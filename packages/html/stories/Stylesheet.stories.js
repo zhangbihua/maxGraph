@@ -59,28 +59,28 @@ const Template = ({ label, ...args }) => {
 
   // Creates the default style for vertices
   let style = [];
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-  style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-  style[mxConstants.STYLE_STROKECOLOR] = 'gray';
-  style[mxConstants.STYLE_ROUNDED] = true;
-  style[mxConstants.STYLE_FILLCOLOR] = '#EEEEEE';
-  style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-  style[mxConstants.STYLE_FONTCOLOR] = '#774400';
-  style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-  style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-  style[mxConstants.STYLE_FONTSIZE] = '12';
-  style[mxConstants.STYLE_FONTSTYLE] = 1;
+  style.shape = mxConstants.SHAPE_RECTANGLE;
+  style.perimiter = mxPerimeter.RectanglePerimeter;
+  style.strokeColor = 'gray';
+  style.rounded = true;
+  style.fillColor = '#EEEEEE';
+  style.gradientColor = 'white';
+  style.strokeColor = '#774400';
+  style.align = mxConstants.ALIGN_CENTER;
+  style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+  style.fontSize = '12';
+  style.fontStyle = 1;
   graph.getStylesheet().putDefaultVertexStyle(style);
 
   // Creates the default style for edges
   style = [];
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
-  style[mxConstants.STYLE_STROKECOLOR] = '#6482B9';
-  style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-  style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-  style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-  style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
-  style[mxConstants.STYLE_FONTSIZE] = '10';
+  style.shape = mxConstants.SHAPE_CONNECTOR;
+  style.strokeColor = '#6482B9';
+  style.align = mxConstants.ALIGN_CENTER;
+  style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+  style.edge = mxEdgeStyle.ElbowConnector;
+  style.endArrow = mxConstants.ARROW_CLASSIC;
+  style.fontSize = '10';
   graph.getStylesheet().putDefaultEdgeStyle(style);
 
   // Gets the default parent for inserting new cells. This

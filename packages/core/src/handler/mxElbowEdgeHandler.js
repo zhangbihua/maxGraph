@@ -11,8 +11,6 @@ import {
   EDGESTYLE_TOPTOBOTTOM,
   ELBOW_VERTICAL,
   HANDLE_SIZE,
-  STYLE_EDGE,
-  STYLE_ELBOW,
 } from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 import mxPoint from '../util/datatypes/mxPoint';
@@ -125,11 +123,11 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    */
   // getCursorForBend(): string;
   getCursorForBend() {
-    return this.state.style[STYLE_EDGE] === mxEdgeStyle.TopToBottom ||
-      this.state.style[STYLE_EDGE] === EDGESTYLE_TOPTOBOTTOM ||
-      ((this.state.style[STYLE_EDGE] === mxEdgeStyle.ElbowConnector ||
-        this.state.style[STYLE_EDGE] === EDGESTYLE_ELBOW) &&
-        this.state.style[STYLE_ELBOW] === ELBOW_VERTICAL)
+    return this.state.style.edge === mxEdgeStyle.TopToBottom ||
+      this.state.style.edge === EDGESTYLE_TOPTOBOTTOM ||
+      ((this.state.style.edge === mxEdgeStyle.ElbowConnector ||
+        this.state.style.edge === EDGESTYLE_ELBOW) &&
+        this.state.style['elbow'] === ELBOW_VERTICAL)
       ? 'row-resize'
       : 'col-resize';
   }

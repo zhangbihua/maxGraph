@@ -141,13 +141,13 @@ export default Map;
 
       // Sets default vertex style
       let style = {};
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
-      style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-      style[mxConstants.STYLE_FILLCOLOR] = '#8CCDF5';
-      style[mxConstants.STYLE_STROKECOLOR] = '#1B78C8';
-      style[mxConstants.STYLE_FONTCOLOR] = '#000000';
-      style[mxConstants.STYLE_OPACITY] = '50';
-      style[mxConstants.STYLE_FONTSIZE] = '16';
+      style.shape = mxConstants.SHAPE_ELLIPSE;
+      style.perimiter = mxPerimeter.EllipsePerimeter;
+      style.fillColor = '#8CCDF5';
+      style.strokeColor = '#1B78C8';
+      style.strokeColor = '#000000';
+      style['opacity'] = '50';
+      style.fontSize = '16';
       graph.getStylesheet().putDefaultVertexStyle(style);
 
       // Gets label from custom user object

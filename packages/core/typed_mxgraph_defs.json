@@ -853,9 +853,9 @@
       " *",
       " * ```javascript",
       " * var vertexStyle = stylesheet.getDefaultVertexStyle();",
-      " * vertexStyle[mxConstants.STYLE_ROUNDED] = true;",
+      " * vertexStyle.rounded = true;",
       " * var edgeStyle = stylesheet.getDefaultEdgeStyle();",
-      " * edgeStyle[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;",
+      " * edgeStyle.edge = mxEdgeStyle.EntityRelation;",
       " * ```",
       " *",
       " * Modifies the built-in default styles.",
@@ -960,9 +960,9 @@
           " *",
           " * ```javascript",
           " * var style = new Object();",
-          " * style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;",
-          " * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;",
-          " * style[mxConstants.STYLE_ROUNDED] = true;",
+          " * style.shape = mxConstants.SHAPE_RECTANGLE;",
+          " * style.perimiter = mxPerimeter.RectanglePerimeter;",
+          " * style.rounded = true;",
           " * graph.getStylesheet().putCellStyle('rounded', style);",
           " * ```",
           " *",
@@ -4629,7 +4629,7 @@
           "/**",
           " * The attribute used to find the color for the indicator if the indicator",
           " * color is set to 'swimlane'.",
-          " * @default {@link mxConstants.STYLE_FILLCOLOR}",
+          " * @default {@link 'fillColor'}",
           " */"
         ]
       ],
@@ -5460,7 +5460,7 @@
           " * Toggles the boolean value for the given key in the style of the given cells",
           " * and returns the new value as 0 or 1. If no cells are specified, then the",
           " * selection cells are used. For example, this can be used to toggle",
-          " * {@link mxConstants.STYLE_ROUNDED} or any other style with a boolean value.",
+          " * {@link 'rounded'} or any other style with a boolean value.",
           " *",
           " * Parameter:",
           " *",
@@ -5541,7 +5541,7 @@
           " * transaction is in progress. Returns the edge that was flipped.",
           " *",
           " * Here is an example that overrides this implementation to invert the",
-          " * value of {@link mxConstants.STYLE_ELBOW} without removing any existing styles.",
+          " * value of {@link 'elbow'} without removing any existing styles.",
           " *",
           " * ```javascript",
           " * graph.flipEdge = function(edge)",
@@ -5549,11 +5549,11 @@
           " *   if (edge != null)",
           " *   {",
           " *     var style = this.getCurrentCellStyle(edge);",
-          " *     var elbow = mxUtils.getValue(style, mxConstants.STYLE_ELBOW,",
+          " *     var elbow = mxUtils.getValue(style, 'elbow',",
           " *         mxConstants.ELBOW_HORIZONTAL);",
           " *     var value = (elbow == mxConstants.ELBOW_HORIZONTAL) ?",
           " *         mxConstants.ELBOW_VERTICAL : mxConstants.ELBOW_HORIZONTAL;",
-          " *     this.setCellStyles(mxConstants.STYLE_ELBOW, value, [edge]);",
+          " *     this.setCellStyles('elbow', value, [edge]);",
           " *   }",
           " * };",
           " * ```",
@@ -7064,7 +7064,7 @@
           " *",
           " * Returns true if no white-space CSS style directive should be used for",
           " * displaying the given cells label. This implementation returns true if",
-          " * {@link mxConstants.STYLE_WHITE_SPACE} in the style of the given cell is 'wrap'.",
+          " * {@link 'whiteSpace'} in the style of the given cell is 'wrap'.",
           " *",
           " * This is used as a workaround for IE ignoring the white-space directive",
           " * of child elements if the directive appears in a parent element. It",
@@ -7232,7 +7232,7 @@
         [
           "/**",
           " * Returns the image URL for the given cell state. This implementation",
-          " * returns the value stored under {@link mxConstants.STYLE_IMAGE} in the cell",
+          " * returns the value stored under {@link 'image'} in the cell",
           " * style.",
           " *",
           " * @param state {@link mxCellState} whose image URL should be returned.",
@@ -7255,7 +7255,7 @@
           "/**",
           " * Returns the vertical alignment for the given cell state. This",
           " * implementation returns the value stored under",
-          " * {@link mxConstants.STYLE_VERTICAL_ALIGN} in the cell style.",
+          " * {@link mxConstants.'verticalAlign'} in the cell style.",
           " *",
           " * @param state {@link mxCellState} whose vertical alignment should be",
           " * returned.",
@@ -7602,7 +7602,7 @@
           "/**",
           " * Returns true if the given cell is moveable. This returns",
           " * {@link cellsDeletable} for all given cells if a cells style does not specify",
-          " * {@link mxConstants.STYLE_DELETABLE} to be 0.",
+          " * {@link 'deletable'} to be 0.",
           " *",
           " * @param cell {@link mxCell} whose deletable state should be returned.",
           " */"
@@ -7643,7 +7643,7 @@
         [
           "/**",
           " * Returns true if the given cell is rotatable. This returns true for the given",
-          " * cell if its style does not specify {@link mxConstants.STYLE_ROTATABLE} to be 0.",
+          " * cell if its style does not specify {@link 'rotatable'} to be 0.",
           " *",
           " * @param cell {@link mxCell} whose rotatable state should be returned.",
           " */"
@@ -7663,7 +7663,7 @@
           "/**",
           " * Returns true if the given cell is moveable. This returns {@link cellsMovable}",
           " * for all given cells if {@link isCellLocked} does not return true for the given",
-          " * cell and its style does not specify {@link mxConstants.STYLE_MOVABLE} to be 0.",
+          " * cell and its style does not specify {@link 'movable'} to be 0.",
           " *",
           " * @param cell {@link mxCell} whose movable state should be returned.",
           " */"
@@ -7989,7 +7989,7 @@
           " * Returns true if the given cell is resizable. This returns",
           " * {@link cellsResizable} for all given cells if {@link isCellLocked} does not return",
           " * true for the given cell and its style does not specify",
-          " * {@link mxConstants.STYLE_RESIZABLE} to be 0.",
+          " * {@link 'resizable'} to be 0.",
           " *",
           " * @param cell {@link mxCell} whose resizable state should be returned.",
           " */"
@@ -8068,7 +8068,7 @@
           "/**",
           " * Returns true if the given cell is editable. This returns {@link cellsEditable} for",
           " * all given cells if {@link isCellLocked} does not return true for the given cell",
-          " * and its style does not specify {@link mxConstants.STYLE_EDITABLE} to be 0.",
+          " * and its style does not specify {@link 'editable'} to be 0.",
           " *",
           " * @param cell {@link mxCell} whose editable state should be returned.",
           " */"
@@ -8223,7 +8223,7 @@
           " * Returns true if the size of the given cell should automatically be",
           " * updated after a change of the label. This implementation returns",
           " * {@link autoSizeCells} or checks if the cell style does specify",
-          " * {@link mxConstants.STYLE_AUTOSIZE} to be 1.",
+          " * {@link 'autoSize'} to be 1.",
           " *",
           " * @param cell {@link mxCell} that should be resized.",
           " */"
@@ -9221,7 +9221,7 @@
       " *",
       " * @example",
       " * ```javascript",
-      " * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;",
+      " * style.perimiter = mxPerimeter.RectanglePerimeter;",
       " * ```",
       " *",
       " * When adding new perimeter functions, it is recommended to use the",
@@ -9261,7 +9261,7 @@
       " * @example",
       " * ```javascript",
       " * var style = graph.getStylesheet().getDefaultVertexStyle();",
-      " * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.CustomPerimeter;",
+      " * style.perimiter = mxPerimeter.CustomPerimeter;",
       " * ```",
       " *",
       " * Note that the object can be used directly when programmatically setting",
@@ -12393,7 +12393,7 @@
       " * @example",
       " * ```javascript",
       " * var style = graph.getStylesheet().getDefaultVertexStyle();",
-      " * style[mxConstants.STYLE_SHAPE] = 'customShape';",
+      " * style.shape = 'customShape';",
       " * ```",
       " */"
     ],
@@ -13213,25 +13213,25 @@
           " * Applies the style of the given <mxCellState> to the shape. This",
           " * implementation assigns the following styles to local fields:",
           " *",
-          " * - <mxConstants.STYLE_FILLCOLOR> => fill",
-          " * - <mxConstants.STYLE_GRADIENTCOLOR> => gradient",
-          " * - <mxConstants.STYLE_GRADIENT_DIRECTION> => gradientDirection",
-          " * - <mxConstants.STYLE_OPACITY> => opacity",
+          " * - <'fillColor'> => fill",
+          " * - <'gradientColor'> => gradient",
+          " * - <'gradientDirection'> => gradientDirection",
+          " * - <'opacity'> => opacity",
           " * - <mxConstants.STYLE_FILL_OPACITY> => fillOpacity",
           " * - <mxConstants.STYLE_STROKE_OPACITY> => strokeOpacity",
-          " * - <mxConstants.STYLE_STROKECOLOR> => stroke",
-          " * - <mxConstants.STYLE_STROKEWIDTH> => strokewidth",
-          " * - <mxConstants.STYLE_SHADOW> => isShadow",
-          " * - <mxConstants.STYLE_DASHED> => isDashed",
-          " * - <mxConstants.STYLE_SPACING> => spacing",
-          " * - <mxConstants.STYLE_STARTSIZE> => startSize",
-          " * - <mxConstants.STYLE_ENDSIZE> => endSize",
-          " * - <mxConstants.STYLE_ROUNDED> => isRounded",
-          " * - <mxConstants.STYLE_STARTARROW> => startArrow",
-          " * - <mxConstants.STYLE_ENDARROW> => endArrow",
-          " * - <mxConstants.STYLE_ROTATION> => rotation",
-          " * - <mxConstants.STYLE_DIRECTION> => direction",
-          " * - <mxConstants.STYLE_GLASS> => glass",
+          " * - <'strokeColor'> => stroke",
+          " * - <mxConstants.'strokeWidth'> => strokewidth",
+          " * - <'shadow'> => isShadow",
+          " * - <'dashed'> => isDashed",
+          " * - <'spacing'> => spacing",
+          " * - <'startSize'> => startSize",
+          " * - <'endSize'> => endSize",
+          " * - <'rounded'> => isRounded",
+          " * - <mxConstants.'startArrow'> => startArrow",
+          " * - <mxConstants.'endArrow'> => endArrow",
+          " * - <'rotation'> => rotation",
+          " * - <'direction'> => direction",
+          " * - <'glass'> => glass",
           " *",
           " * This keeps a reference to the <style>. If you need to keep a reference to",
           " * the cell, you can override this method and store a local reference to",
@@ -13677,11 +13677,11 @@
       " * Extends {@link mxShape} to implement a swimlane shape.",
       " * This shape is registered under {@link mxConstants.SHAPE_SWIMLANE} in {@link mxCellRenderer}.",
       " * Use the {@link mxConstants.STYLE_STYLE_STARTSIZE} to define the size of the title",
-      " * region, {@link mxConstants.STYLE_SWIMLANE_FILLCOLOR} for the content area fill,",
+      " * region, {@link 'swimlaneFillColor'} for the content area fill,",
       " * {@link mxConstants.STYLE_SEPARATORCOLOR} to draw an additional vertical separator and",
       " * {@link mxConstants.STYLE_SWIMLANE_LINE} to hide the line between the title region and",
       " * the content area.",
-      " * The {@link mxConstants.STYLE_HORIZONTAL} affects the orientation of this shape,",
+      " * The {@link 'horizontal'} affects the orientation of this shape,",
       " * not only its label.",
       " *",
       " * @class mxSwimlane",
@@ -14731,14 +14731,14 @@
         [
           "/**",
           " * Overrides {@link mxShape.apply} to replace the fill and stroke colors with the",
-          " * respective values from {@link mxConstants.STYLE_IMAGE_BACKGROUND} and",
-          " * {@link mxConstants.STYLE_IMAGE_BORDER}.",
+          " * respective values from {@link 'imageBackground'} and",
+          " * {@link 'imageBorder'}.",
           " *",
           " * Applies the style of the given {@link mxCellState} to the shape. This",
           " * implementation assigns the following styles to local fields:",
           " *",
-          " * - {@link mxConstants.STYLE_IMAGE_BACKGROUND} => fill",
-          " * - {@link mxConstants.STYLE_IMAGE_BORDER} => stroke",
+          " * - {@link 'imageBackground'} => fill",
+          " * - {@link 'imageBorder'} => stroke",
           " *",
           " * @param {mxCellState} state   {@link mxCellState} of the corresponding cell.",
           " */"
@@ -14848,7 +14848,7 @@
       " *   c.ellipse(x, y, w, h);",
       " *   c.stroke();",
       " *",
-      " *   var inset = mxUtils.getValue(this.style, mxConstants.STYLE_MARGIN, Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));",
+      " *   var inset = mxUtils.getValue(this.style, mxConstants.'margin', Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5)));",
       " *   x += inset;",
       " *   y += inset;",
       " *   w -= 2 * inset;",
@@ -23736,7 +23736,7 @@
         [
           "/**",
           " * Defines the length of the horizontal segment of an Entity Relation.",
-          " * This can be overridden using <mxConstants.STYLE_SEGMENT> style.",
+          " * This can be overridden using <mxConstants.'segment'> style.",
           " * Default is 30.",
           " */"
         ]
@@ -24075,8 +24075,8 @@
           " */"
         ]
       ],
-      "static STYLE_POINTER_EVENTS": [
-        "static STYLE_POINTER_EVENTS: 'pointerEvents';",
+      "static 'pointerEvents'": [
+        "static 'pointerEvents': 'pointerEvents';",
         [
           "/**",
           " * Specifies if pointer events should be fired on transparent backgrounds.",
@@ -24097,8 +24097,8 @@
           " */"
         ]
       ],
-      "static STYLE_MARGIN": [
-        "static STYLE_MARGIN: 'margin';",
+      "static 'margin'": [
+        "static 'margin': 'margin';",
         [
           "/**",
           " * Defines the key for the margin between the ellipses in the double ellipse shape.",
@@ -24133,8 +24133,8 @@
           " */"
         ]
       ],
-      "static STYLE_STROKECOLOR": [
-        "static STYLE_STROKECOLOR: 'strokeColor';",
+      "static 'strokeColor'": [
+        "static 'strokeColor': 'strokeColor';",
         [
           "/**",
           " * Defines the key for the strokeColor style. Possible values are all HTML",
@@ -24154,8 +24154,8 @@
           " */"
         ]
       ],
-      "static STYLE_STROKEWIDTH": [
-        "static STYLE_STROKEWIDTH: 'strokeWidth';",
+      "static 'strokeWidth'": [
+        "static 'strokeWidth': 'strokeWidth';",
         [
           "/**",
           " * Defines the key for the strokeWidth style. The type of the value is",
@@ -24165,8 +24165,8 @@
           " */"
         ]
       ],
-      "static STYLE_ALIGN": [
-        "static STYLE_ALIGN: 'align';",
+      "static 'align'": [
+        "static 'align': 'align';",
         [
           "/**",
           " * Defines the key for the align style. Possible values are <ALIGN_LEFT>;",
@@ -24177,12 +24177,12 @@
           " * are aligned in the center of the label bounds. Note this value doesn't",
           " * affect the positioning of the overall label bounds relative to the",
           " * vertex, to move the label bounds horizontally, use",
-          " * <STYLE_LABEL_POSITION>. Value is \"align\".",
+          " * <'labelPosition'>. Value is \"align\".",
           " */"
         ]
       ],
-      "static STYLE_VERTICAL_ALIGN": [
-        "static STYLE_VERTICAL_ALIGN: 'verticalAlign';",
+      "static 'verticalAlign'": [
+        "static 'verticalAlign': 'verticalAlign';",
         [
           "/**",
           " * Defines the key for the verticalAlign style. Possible values are",
@@ -24195,12 +24195,12 @@
           " * bounds and the bottom-most text label line and the bottom of the label",
           " * bounds. Note this value doesn't affect the positioning of the overall",
           " * label bounds relative to the vertex, to move the label bounds",
-          " * vertically, use <STYLE_VERTICAL_LABEL_POSITION>. Value is \"verticalAlign\".",
+          " * vertically, use <'verticalLabelPosition'>. Value is \"verticalAlign\".",
           " */"
         ]
       ],
-      "static STYLE_LABEL_WIDTH": [
-        "static STYLE_LABEL_WIDTH: 'labelWidth';",
+      "static 'labelWidth'": [
+        "static 'labelWidth': 'labelWidth';",
         [
           "/**",
           " * Defines the key for the width of the label if the label position is not",
@@ -24208,8 +24208,8 @@
           " */"
         ]
       ],
-      "static STYLE_LABEL_POSITION": [
-        "static STYLE_LABEL_POSITION: 'labelPosition';",
+      "static 'labelPosition'": [
+        "static 'labelPosition': 'labelPosition';",
         [
           "/**",
           " * Defines the key for the horizontal label position of vertices. Possible",
@@ -24220,13 +24220,13 @@
           " * adjust to the right and <ALIGN_CENTER> means the label bounds are",
           " * vertically aligned with the bounds of the vertex. Note this value",
           " * doesn't affect the positioning of label within the label bounds, to move",
-          " * the label horizontally within the label bounds, use <STYLE_ALIGN>.",
+          " * the label horizontally within the label bounds, use <'align'>.",
           " * Value is \"labelPosition\".",
           " */"
         ]
       ],
-      "static STYLE_VERTICAL_LABEL_POSITION": [
-        "static STYLE_VERTICAL_LABEL_POSITION: 'verticalLabelPosition';",
+      "static 'verticalLabelPosition'": [
+        "static 'verticalLabelPosition': 'verticalLabelPosition';",
         [
           "/**",
           " * Defines the key for the vertical label position of vertices. Possible",
@@ -24238,7 +24238,7 @@
           " * horizontally aligned with the bounds of the vertex. Note this value",
           " * doesn't affect the positioning of label within the label bounds, to move",
           " * the label vertically within the label bounds, use",
-          " * <STYLE_VERTICAL_ALIGN>. Value is \"verticalLabelPosition\".",
+          " * <'verticalAlign'>. Value is \"verticalLabelPosition\".",
           " */"
         ]
       ],
@@ -24435,8 +24435,8 @@
           " */"
         ]
       ],
-      "static STYLE_INDICATOR_STROKECOLOR": [
-        "static STYLE_INDICATOR_STROKECOLOR: 'indicatorStrokeColor';",
+      "static 'indicatorStrokeColor'": [
+        "static 'indicatorStrokeColor': 'indicatorStrokeColor';",
         [
           "/**",
           " * Defines the key for the indicator stroke color in <mxLabel>.",
@@ -24482,8 +24482,8 @@
           " */"
         ]
       ],
-      "static STYLE_INDICATOR_DIRECTION": [
-        "static STYLE_INDICATOR_DIRECTION: 'indicatorDirection';",
+      "static 'indicatorDirection'": [
+        "static 'indicatorDirection': 'indicatorDirection';",
         [
           "/**",
           " * Defines the key for the indicatorDirection style. The direction style is",
@@ -24502,8 +24502,8 @@
           " */"
         ]
       ],
-      "static STYLE_SEGMENT": [
-        "static STYLE_SEGMENT: 'segment';",
+      "static 'segment'": [
+        "static 'segment': 'segment';",
         [
           "/**",
           " * Defines the key for the segment style. The type of this value is float",
@@ -24512,8 +24512,8 @@
           " */"
         ]
       ],
-      "static STYLE_ENDARROW": [
-        "static STYLE_ENDARROW: 'endArrow';",
+      "static 'endArrow'": [
+        "static 'endArrow': 'endArrow';",
         [
           "/**",
           " * Defines the key for the end arrow marker. Possible values are all",
@@ -24522,18 +24522,18 @@
           " *",
           " * Example:",
           " * (code)",
-          " * style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;",
+          " * style.endArrow = mxConstants.ARROW_CLASSIC;",
           " * (end)",
           " */"
         ]
       ],
-      "static STYLE_STARTARROW": [
-        "static STYLE_STARTARROW: 'startArrow';",
+      "static 'startArrow'": [
+        "static 'startArrow': 'startArrow';",
         [
           "/**",
           " * Defines the key for the start arrow marker. Possible values are all",
           " * constants with an ARROW-prefix. This is only used in <mxConnector>.",
-          " * See <STYLE_ENDARROW>. Value is \"startArrow\".",
+          " * See <'endArrow'>. Value is \"startArrow\".",
           " */"
         ]
       ],
@@ -24645,8 +24645,8 @@
           " */"
         ]
       ],
-      "static STYLE_ARCSIZE": [
-        "static STYLE_ARCSIZE: 'arcSize';",
+      "static 'arcSize'": [
+        "static 'arcSize': 'arcSize';",
         [
           "/**",
           " * Defines the rounding factor for a rounded rectangle in percent (without",
@@ -24759,7 +24759,7 @@
         [
           "/**",
           " * Defines the key for the horizontal style. Possible values are",
-          " * true or false. This value only applies to vertices. If the <STYLE_SHAPE>",
+          " * true or false. This value only applies to vertices. If the <'shape'>",
           " * is \"SHAPE_SWIMLANE\" a value of false indicates that the",
           " * swimlane should be drawn vertically, true indicates to draw it",
           " * horizontally. If the shape style does not indicate that this vertex is a",
@@ -24791,8 +24791,8 @@
           " */"
         ]
       ],
-      "static STYLE_ELBOW": [
-        "static STYLE_ELBOW: 'elbow';",
+      "static 'elbow'": [
+        "static 'elbow': 'elbow';",
         [
           "/**",
           " * Defines the key for the elbow style. Possible values are",
@@ -24803,8 +24803,8 @@
           " */"
         ]
       ],
-      "static STYLE_FONTCOLOR": [
-        "static STYLE_FONTCOLOR: 'fontColor';",
+      "static 'fontColor'": [
+        "static 'fontColor': 'fontColor';",
         [
           "/**",
           " * Defines the key for the fontColor style. Possible values are all HTML",
@@ -24882,8 +24882,8 @@
           " */"
         ]
       ],
-      "static STYLE_BACKGROUND_OUTLINE": [
-        "static STYLE_BACKGROUND_OUTLINE: 'backgroundOutline';",
+      "static 'backgroundOutline'": [
+        "static 'backgroundOutline': 'backgroundOutline';",
         [
           "/**",
           " * Defines the key for the backgroundOutline style. This specifies if a",
@@ -24976,8 +24976,8 @@
           " */"
         ]
       ],
-      "static STYLE_SHAPE": [
-        "static STYLE_SHAPE: 'shape';",
+      "static 'shape'": [
+        "static 'shape': 'shape';",
         [
           "/**",
           " * Defines the key for the shape. Possible values are all constants with",
@@ -24994,8 +24994,8 @@
           " */"
         ]
       ],
-      "static STYLE_JETTY_SIZE": [
-        "static STYLE_JETTY_SIZE: 'jettySize';",
+      "static 'jettySize'": [
+        "static 'jettySize': 'jettySize';",
         [
           "/**",
           " * Defines the key for the jetty size in <mxEdgeStyle.OrthConnector>.",
@@ -25004,23 +25004,23 @@
           " */"
         ]
       ],
-      "static STYLE_SOURCE_JETTY_SIZE": [
-        "static STYLE_SOURCE_JETTY_SIZE: 'sourceJettySize';",
+      "static 'sourceJettySize'": [
+        "static 'sourceJettySize': 'sourceJettySize';",
         [
           "/**",
           " * Defines the key for the jetty size in <mxEdgeStyle.OrthConnector>.",
           " * Default is 10. Possible values are numeric values or \"auto\". This has",
-          " * precedence over <STYLE_JETTY_SIZE>. Value is \"sourceJettySize\".",
+          " * precedence over <'jettySize'>. Value is \"sourceJettySize\".",
           " */"
         ]
       ],
-      "static STYLE_TARGET_JETTY_SIZE": [
-        "static STYLE_TARGET_JETTY_SIZE: 'targetJettySize';",
+      "static 'targetJettySize'": [
+        "static 'targetJettySize': 'targetJettySize';",
         [
           "/**",
           " * Defines the key for the jetty size in <mxEdgeStyle.OrthConnector>.",
           " * Default is 10. Possible values are numeric values or \"auto\". This has",
-          " * precedence over <STYLE_JETTY_SIZE>. Value is \"targetJettySize\".",
+          " * precedence over <'jettySize'>. Value is \"targetJettySize\".",
           " */"
         ]
       ],
@@ -34713,13 +34713,13 @@
           " *   var s = this.state;",
           " *",
           " *   if (this.graph.isHtmlLabel(s.cell) && (index == 3 || index == 4) &&",
-          " *       s.text != null && s.style[mxConstants.STYLE_WHITE_SPACE] == 'wrap')",
+          " *       s.text != null && s.style.whiteSpace == 'wrap')",
           " *   {",
           " *     var label = this.graph.getLabel(s.cell);",
-          " *     var fontSize = mxUtils.getNumber(s.style, mxConstants.STYLE_FONTSIZE, mxConstants.DEFAULT_FONTSIZE);",
+          " *     var fontSize = mxUtils.getNumber(s.style, 'fontSize', mxConstants.DEFAULT_FONTSIZE);",
           " *     var ww = result.width / s.view.scale - s.text.spacingRight - s.text.spacingLeft",
           " *",
-          " *     result.height = mxUtils.getSizeForString(label, fontSize, s.style[mxConstants.STYLE_FONTFAMILY], ww).height;",
+          " *     result.height = mxUtils.getSizeForString(label, fontSize, s.style.fontFamily, ww).height;",
           " *   }",
           " *",
           " *   return result;",

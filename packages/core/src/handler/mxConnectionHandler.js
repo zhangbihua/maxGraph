@@ -16,11 +16,6 @@ import {
   INVALID_COLOR,
   OUTLINE_HIGHLIGHT_COLOR,
   OUTLINE_HIGHLIGHT_STROKEWIDTH,
-  STYLE_ENTRY_X,
-  STYLE_ENTRY_Y,
-  STYLE_EXIT_X,
-  STYLE_EXIT_Y,
-  STYLE_ROTATION,
   TOOLTIP_VERTICAL_OFFSET,
   VALID_COLOR,
 } from '../util/mxConstants';
@@ -927,7 +922,7 @@ class mxConnectionHandler extends mxEventSource {
       cy = size.height !== 0 ? state.y + (size.height * scale) / 2 : cy;
 
       const alpha = mxUtils.toRadians(
-        mxUtils.getValue(state.style, STYLE_ROTATION) || 0
+        mxUtils.getValue(state.style, 'rotation') || 0
       );
 
       if (alpha !== 0) {
@@ -1565,16 +1560,16 @@ class mxConnectionHandler extends mxEventSource {
   updateEdgeState(current, constraint) {
     // TODO: Use generic method for writing constraint to style
     if (this.sourceConstraint != null && this.sourceConstraint.point != null) {
-      this.edgeState.style[STYLE_EXIT_X] = this.sourceConstraint.point.x;
-      this.edgeState.style[STYLE_EXIT_Y] = this.sourceConstraint.point.y;
+      this.edgeState.style.exitX = this.sourceConstraint.point.x;
+      this.edgeState.style.exitY = this.sourceConstraint.point.y;
     }
 
     if (constraint != null && constraint.point != null) {
-      this.edgeState.style[STYLE_ENTRY_X] = constraint.point.x;
-      this.edgeState.style[STYLE_ENTRY_Y] = constraint.point.y;
+      this.edgeState.style.entryX = constraint.point.x;
+      this.edgeState.style.entryY = constraint.point.y;
     } else {
-      delete this.edgeState.style[STYLE_ENTRY_X];
-      delete this.edgeState.style[STYLE_ENTRY_Y];
+      delete this.edgeState.style.entryX;
+      delete this.edgeState.style.entryY;
     }
 
     this.edgeState.absolutePoints = [
@@ -1690,7 +1685,7 @@ class mxConnectionHandler extends mxEventSource {
     const c = new mxPoint(state.getCenterX(), state.getCenterY());
 
     if (sourcePerimeter != null) {
-      const theta = mxUtils.getValue(state.style, STYLE_ROTATION, 0);
+      const theta = mxUtils.getValue(state.style, 'rotation', 0);
       const rad = -theta * (Math.PI / 180);
 
       if (theta !== 0) {

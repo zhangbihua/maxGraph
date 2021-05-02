@@ -175,23 +175,23 @@ const Template = ({ label, ...args }) => {
   // Changes the style for match the markup
   // Creates the default style for vertices
   let style = graph.getStylesheet().getDefaultVertexStyle();
-  style[mxConstants.STYLE_STROKECOLOR] = 'gray';
-  style[mxConstants.STYLE_ROUNDED] = true;
-  style[mxConstants.STYLE_SHADOW] = true;
-  style[mxConstants.STYLE_FILLCOLOR] = '#DFDFDF';
-  style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-  style[mxConstants.STYLE_FONTCOLOR] = 'black';
-  style[mxConstants.STYLE_FONTSIZE] = '12';
-  style[mxConstants.STYLE_SPACING] = 4;
+  style.strokeColor = 'gray';
+  style.rounded = true;
+  style.shadow = true;
+  style.fillColor = '#DFDFDF';
+  style.gradientColor = 'white';
+  style.strokeColor = 'black';
+  style.fontSize = '12';
+  style.spacing = 4;
 
   // Creates the default style for edges
   style = graph.getStylesheet().getDefaultEdgeStyle();
-  style[mxConstants.STYLE_STROKECOLOR] = '#0C0C0C';
-  style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'white';
-  style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-  style[mxConstants.STYLE_ROUNDED] = true;
-  style[mxConstants.STYLE_FONTCOLOR] = 'black';
-  style[mxConstants.STYLE_FONTSIZE] = '10';
+  style.strokeColor = '#0C0C0C';
+  style.labelBackgroundColor = 'white';
+  style.edge = mxEdgeStyle.ElbowConnector;
+  style.rounded = true;
+  style.strokeColor = 'black';
+  style.fontSize = '10';
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

@@ -10,15 +10,7 @@ import {
   ARROW_CLASSIC,
   NONE,
   SHAPE_CONNECTOR,
-  SHAPE_RECTANGLE,
-  STYLE_ALIGN,
-  STYLE_ENDARROW,
-  STYLE_FILLCOLOR,
-  STYLE_FONTCOLOR,
-  STYLE_PERIMETER,
-  STYLE_SHAPE,
-  STYLE_STROKECOLOR,
-  STYLE_VERTICAL_ALIGN,
+  SHAPE_RECTANGLE
 } from '../../mxConstants';
 import mxPerimeter from './mxPerimeter';
 import mxUtils from '../../mxUtils';
@@ -45,9 +37,9 @@ import { clone } from '../../mxCloneUtils';
  *
  * ```javascript
  * var vertexStyle = stylesheet.getDefaultVertexStyle();
- * vertexStyle[mxConstants.STYLE_ROUNDED] = true;
+ * vertexStyle.rounded = true;
  * var edgeStyle = stylesheet.getDefaultEdgeStyle();
- * edgeStyle[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
+ * edgeStyle.edge = mxEdgeStyle.EntityRelation;
  * ```
  *
  * Modifies the built-in default styles.
@@ -94,13 +86,13 @@ class mxStylesheet {
   // createDefaultVertexStyle(): StyleMap;
   createDefaultVertexStyle() {
     const style = {};
-    style[STYLE_SHAPE] = SHAPE_RECTANGLE;
-    style[STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-    style[STYLE_VERTICAL_ALIGN] = ALIGN_MIDDLE;
-    style[STYLE_ALIGN] = ALIGN_CENTER;
-    style[STYLE_FILLCOLOR] = '#C3D9FF';
-    style[STYLE_STROKECOLOR] = '#6482B9';
-    style[STYLE_FONTCOLOR] = '#774400';
+    style.shape = SHAPE_RECTANGLE;
+    style.perimeter = mxPerimeter.RectanglePerimeter;
+    style.verticalAlign = ALIGN_MIDDLE;
+    style.align = ALIGN_CENTER;
+    style.fillColor = '#C3D9FF';
+    style.strokeColor = '#6482B9';
+    style.fontColor = '#774400';
     return style;
   }
 
@@ -110,12 +102,12 @@ class mxStylesheet {
   // createDefaultEdgeStyle(): StyleMap;
   createDefaultEdgeStyle() {
     const style = {};
-    style[STYLE_SHAPE] = SHAPE_CONNECTOR;
-    style[STYLE_ENDARROW] = ARROW_CLASSIC;
-    style[STYLE_VERTICAL_ALIGN] = ALIGN_MIDDLE;
-    style[STYLE_ALIGN] = ALIGN_CENTER;
-    style[STYLE_STROKECOLOR] = '#6482B9';
-    style[STYLE_FONTCOLOR] = '#446299';
+    style.shape = SHAPE_CONNECTOR;
+    style.endArrow = ARROW_CLASSIC;
+    style.verticalAlign = ALIGN_MIDDLE;
+    style.align = ALIGN_CENTER;
+    style.strokeColor = '#6482B9';
+    style.fontColor = '#446299';
     return style;
   }
 
@@ -164,9 +156,9 @@ class mxStylesheet {
    *
    * ```javascript
    * var style = new Object();
-   * style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-   * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-   * style[mxConstants.STYLE_ROUNDED] = true;
+   * style.shape = mxConstants.SHAPE_RECTANGLE;
+   * style.perimiter = mxPerimeter.RectanglePerimeter;
+   * style.rounded = true;
    * graph.getStylesheet().putCellStyle('rounded', style);
    * ```
    *

@@ -53,7 +53,7 @@ Menus.prototype.init = function()
 	{
 		let addItem = mxUtils.bind(this, function(fontname)
 		{
-			let tr = this.styleChange(menu, fontname, [mxConstants.STYLE_FONTFAMILY], [fontname], null, parent, function()
+			let tr = this.styleChange(menu, fontname, .fontFamily, [fontname], null, parent, function()
 			{
 				document.execCommand('fontname', false, fontname);
 			}, function()
@@ -97,7 +97,7 @@ Menus.prototype.init = function()
 			menu.addSeparator(parent);
 		}
 		
-		this.promptChange(menu, mxResources.get('custom') + '...', '', mxConstants.DEFAULT_FONTFAMILY, mxConstants.STYLE_FONTFAMILY, parent, true, mxUtils.bind(this, function(newValue)
+		this.promptChange(menu, mxResources.get('custom') + '...', '', mxConstants.DEFAULT_FONTFAMILY, 'fontFamily', parent, true, mxUtils.bind(this, function(newValue)
 		{
 			if (mxUtils.indexOf(this.customFonts, newValue) < 0)
 			{
@@ -139,7 +139,7 @@ Menus.prototype.init = function()
 		
 		let addItem = mxUtils.bind(this, function(fontsize)
 		{
-			this.styleChange(menu, fontsize, [mxConstants.STYLE_FONTSIZE], [fontsize], null, parent, function()
+			this.styleChange(menu, fontsize, .fontSize, [fontsize], null, parent, function()
 			{
 				if (graph.cellEditor.textarea != null)
 				{
@@ -189,15 +189,15 @@ Menus.prototype.init = function()
 			menu.addSeparator(parent);
 		}
 		
-		this.promptChange(menu, mxResources.get('custom') + '...', '(pt)', '12', mxConstants.STYLE_FONTSIZE, parent, true, mxUtils.bind(this, function(newValue)
+		this.promptChange(menu, mxResources.get('custom') + '...', '(pt)', '12', 'fontSize', parent, true, mxUtils.bind(this, function(newValue)
 		{
 			this.customFontSizes.push(newValue);
 		}));
 	})));
 	this.put('direction', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
-		menu.addItem(mxResources.get('flipH'), null, function() { graph.toggleCellStyles(mxConstants.STYLE_FLIPH, false); }, parent);
-		menu.addItem(mxResources.get('flipV'), null, function() { graph.toggleCellStyles(mxConstants.STYLE_FLIPV, false); }, parent);
+		menu.addItem(mxResources.get('flipH'), null, function() { graph.toggleCellStyles('flipH', false); }, parent);
+		menu.addItem(mxResources.get('flipV'), null, function() { graph.toggleCellStyles('flipV', false); }, parent);
 		this.addMenuItems(menu, ['-', 'rotation'], parent);
 	})));
 	this.put('align', new Menu(mxUtils.bind(this, function(menu, parent)
@@ -863,7 +863,7 @@ Menus.prototype.createStyleChangeFunction = function(keys, values)
 				graph.setCellStyles(keys[i], values[i], cells);
 
 				// Removes CSS alignment to produce consistent output
-				if (keys[i] == mxConstants.STYLE_ALIGN)
+				if (keys[i] == mxConstants.'align')
 				{
 					graph.updateLabelElements(cells, function(elt)
 					{
@@ -873,7 +873,7 @@ Menus.prototype.createStyleChangeFunction = function(keys, values)
 				}
 				
 				// Updates autosize after font changes
-				if (keys[i] == mxConstants.STYLE_FONTFAMILY)
+				if (keys[i] == 'fontFamily')
 				{
 					for (let j = 0; j < cells.length; j++)
 					{
@@ -1164,8 +1164,8 @@ Menus.prototype.addPopupMenuCellItems = function(menu, cell, evt)
 	{
 		let hasWaypoints = false;
 
-		if (cell.isEdge() && mxUtils.getValue(state.style, mxConstants.STYLE_EDGE, null) != 'entityRelationEdgeStyle' &&
-			mxUtils.getValue(state.style, mxConstants.STYLE_SHAPE, null) != 'arrow')
+		if (cell.isEdge() && mxUtils.getValue(state.style, 'edge', null) != 'entityRelationEdgeStyle' &&
+			mxUtils.getValue(state.style, 'shape', null) != 'arrow')
 		{
 			let handler = graph.selectionCellsHandler.getHandler(cell);
 			let isWaypoint = false;
@@ -1203,7 +1203,7 @@ Menus.prototype.addPopupMenuCellItems = function(menu, cell, evt)
 			this.addMenuItems(menu, ['-', 'editStyle', 'editData', 'editLink'], null, evt);
 	
 			// Shows edit image action if there is an image in the style
-			if (cell.isVertex() && mxUtils.getValue(state.style, mxConstants.STYLE_IMAGE, null) != null)
+			if (cell.isVertex() && mxUtils.getValue(state.style, 'image', null) != null)
 			{
 				menu.addSeparator();
 				this.addMenuItem(menu, 'image', null, evt).firstChild.nextSibling.innerHTML = mxResources.get('editImage') + '...';
