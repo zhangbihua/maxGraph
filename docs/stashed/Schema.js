@@ -652,7 +652,7 @@ export default MYNAMEHERE;
       style.perimiter = mxPerimeter.RectanglePerimeter;
       style.align = mxConstants.ALIGN_LEFT;
       style.verticalAlign = mxConstants.ALIGN_MIDDLE;
-      style.strokeColor = '#000000';
+      style.fontColor = '#000000';
       style.fontSize = '11';
       style.fontStyle = 0;
       style.spacingLeft = '4';
@@ -669,7 +669,7 @@ export default MYNAMEHERE;
       style.fillColor = '#8CCDF5';
       style['swimlaneFillColor'] = '#ffffff';
       style.strokeColor = '#1B78C8';
-      style.strokeColor = '#000000';
+      style.fontColor = '#000000';
       style.strokeWidth = '2';
       style.startSize = '28';
       style.verticalAlign = 'middle';
@@ -677,7 +677,7 @@ export default MYNAMEHERE;
       style.fontStyle = 1;
       style.image = 'images/icons48/table.png';
       // Looks better without opacity if shadow is enabled
-      //style['opacity'] = '80';
+      //style.opacity = '80';
       style.shadow = 1;
       graph.getStylesheet().putCellStyle('table', style);
 

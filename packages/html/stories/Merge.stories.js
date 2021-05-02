@@ -41,7 +41,7 @@ const Template = ({ label, ...args }) => {
   let style = graph.stylesheet.getDefaultVertexStyle();
   style.shape = mxConstants.SHAPE_ELLIPSE;
   style.perimiter = mxPerimeter.EllipsePerimeter;
-  style.strokeColor = 'white';
+  style.fontColor = 'white';
   style.gradientColor = 'white';
   style.fontStyle = mxConstants.FONT_BOLD;
   style.fontSize = 14;
@@ -49,9 +49,9 @@ const Template = ({ label, ...args }) => {
 
   // Makes all edge labels gray with a white background
   style = graph.stylesheet.getDefaultEdgeStyle();
-  style.strokeColor = 'gray';
+  style.fontColor = 'gray';
   style.fontStyle = mxConstants.FONT_BOLD;
-  style.strokeColor = 'black';
+  style.fontColor = 'black';
   style.strokeWidth = 2;
 
   // Enables rubberband selection

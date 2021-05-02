@@ -136,7 +136,7 @@ const Template = ({ label, ...args }) => {
   style.fillColor = '#ffffff';
   style.strokeColor = '#000000';
   style.strokeWidth = '2';
-  style.strokeColor = '#000000';
+  style.fontColor = '#000000';
   style.fontSize = '12';
   style.fontStyle = 1;
   graph.getStylesheet().putDefaultVertexStyle(style);

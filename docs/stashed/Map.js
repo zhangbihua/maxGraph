@@ -145,8 +145,8 @@ export default Map;
       style.perimiter = mxPerimeter.EllipsePerimeter;
       style.fillColor = '#8CCDF5';
       style.strokeColor = '#1B78C8';
-      style.strokeColor = '#000000';
-      style['opacity'] = '50';
+      style.fontColor = '#000000';
+      style.opacity = '50';
       style.fontSize = '16';
       graph.getStylesheet().putDefaultVertexStyle(style);
 

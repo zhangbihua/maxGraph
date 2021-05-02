@@ -102,7 +102,7 @@ const Template = ({ label, ...args }) => {
     style.shape = mxConstants.SHAPE_IMAGE;
     style.perimiter = mxPerimeter.RectanglePerimeter;
     style.image = 'images/icons48/keys.png';
-    style.strokeColor = '#FFFFFF';
+    style.fontColor = '#FFFFFF';
     graph.getStylesheet().putCellStyle('image', style);
 
     style = mxCloneUtils.clone(style);

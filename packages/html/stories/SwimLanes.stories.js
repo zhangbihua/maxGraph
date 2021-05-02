@@ -67,7 +67,7 @@ const Template = ({ label, ...args }) => {
   style.fontSize = 11;
   style.startSize = 22;
   style.horizontal = false;
-  style.strokeColor = 'black';
+  style.fontColor = 'black';
   style.strokeColor = 'black';
   delete style.fillColor;
 
@@ -108,7 +108,7 @@ const Template = ({ label, ...args }) => {
   style.edge = mxEdgeStyle.ElbowConnector;
   style.endArrow = mxConstants.ARROW_BLOCK;
   style.rounded = true;
-  style.strokeColor = 'black';
+  style.fontColor = 'black';
   style.strokeColor = 'black';
 
   style = mxCloneUtils.clone(style);

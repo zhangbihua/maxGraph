@@ -95,7 +95,7 @@ const Template = ({ label, ...args }) => {
   style.strokeColor = '#5d65df';
   style.fillColor = '#adc5ff';
 
-  style.strokeColor = '#1d258f';
+  style.fontColor = '#1d258f';
   style.fontFamily = 'Verdana';
   style.fontSize = '12';
   style.fontStyle = '1';

@@ -184,7 +184,7 @@ export default Scrollbars;
         graph.stylesheet.getDefaultEdgeStyle().edge =
           mxEdgeStyle.EntityRelation;
         graph.stylesheet.getDefaultEdgeStyle().strokeColor = 'black';
-        graph.stylesheet.getDefaultEdgeStyle().strokeColor = 'black';
+        graph.stylesheet.getDefaultEdgeStyle().fontColor = 'black';
 
         // Allows new connections to be made but do not allow existing
         // connections to be changed for the sake of simplicity of this

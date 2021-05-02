@@ -180,7 +180,7 @@ const Template = ({ label, ...args }) => {
   style.shadow = true;
   style.fillColor = '#DFDFDF';
   style.gradientColor = 'white';
-  style.strokeColor = 'black';
+  style.fontColor = 'black';
   style.fontSize = '12';
   style.spacing = 4;
 
@@ -190,7 +190,7 @@ const Template = ({ label, ...args }) => {
   style.labelBackgroundColor = 'white';
   style.edge = mxEdgeStyle.ElbowConnector;
   style.rounded = true;
-  style.strokeColor = 'black';
+  style.fontColor = 'black';
   style.fontSize = '10';
 
   // Gets the default parent for inserting new cells. This

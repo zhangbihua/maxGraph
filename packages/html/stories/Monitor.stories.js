@@ -199,7 +199,7 @@ const Template = ({ label, ...args }) => {
     // Creates the stylesheet for the process display
     let style = graph.getStylesheet().getDefaultVertexStyle();
     style.fontSize = 11;
-    style.strokeColor = 'black';
+    style.fontColor = 'black';
     style.strokeColor = '#808080';
     style.fillColor = 'white';
     style.gradientColor = 'white';
@@ -218,7 +218,7 @@ const Template = ({ label, ...args }) => {
     style.shape = mxConstants.SHAPE_SWIMLANE;
     style.perimiter = mxPerimeter.RectanglePerimeter;
     style.strokeColor = '#a0a0a0';
-    style.strokeColor = '#606060';
+    style.fontColor = '#606060';
     style.fillColor = '#E0E0DF';
     style.gradientColor = 'white';
     style.startSize = 30;
@@ -235,7 +235,7 @@ const Template = ({ label, ...args }) => {
     style.shape = mxConstants.SHAPE_RHOMBUS;
     style.perimiter = mxPerimeter.RhombusPerimeter;
     style.strokeColor = '#91BCC0';
-    style.strokeColor = 'gray';
+    style.fontColor = 'gray';
     style.fillColor = '#91BCC0';
     style.gradientColor = 'white';
     style.align = mxConstants.ALIGN_CENTER;
@@ -246,7 +246,7 @@ const Template = ({ label, ...args }) => {
     style = [];
     style.shape = mxConstants.SHAPE_ELLIPSE;
     style.perimiter = mxPerimeter.EllipsePerimeter;
-    style.strokeColor = 'gray';
+    style.fontColor = 'gray';
     style.fillColor = '#A0C88F';
     style.gradientColor = 'white';
     style.strokeColor = '#A0C88F';

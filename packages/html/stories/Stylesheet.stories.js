@@ -65,7 +65,7 @@ const Template = ({ label, ...args }) => {
   style.rounded = true;
   style.fillColor = '#EEEEEE';
   style.gradientColor = 'white';
-  style.strokeColor = '#774400';
+  style.fontColor = '#774400';
   style.align = mxConstants.ALIGN_CENTER;
   style.verticalAlign = mxConstants.ALIGN_MIDDLE;
   style.fontSize = '12';
