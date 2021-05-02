@@ -204,7 +204,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 	{
 		let style = this.getCurrentCellStyle(cell);
 		
-		return (style != null) ? (style['html'] == '1' || style.whiteSpace == 'wrap') : false;
+		return (style != null) ? (style.html == '1' || style.whiteSpace == 'wrap') : false;
 	};
 	
 	// Implements a listener for hover and click handling on edges
@@ -625,7 +625,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 		
 		if (state.view.graph.isHtmlLabel(state.cell))
 		{
-			if (state.style['html'] != 1)
+			if (state.style.html != 1)
 			{
 				result = mxUtils.htmlEntities(result, false);
 			}
@@ -2358,20 +2358,20 @@ Graph.prototype.initLayoutManager = function()
 		{
 			let style = this.graph.getCellStyle(cell);
 	
-			if (style['childLayout'] == 'stackLayout')
+			if (style.childLayout == 'stackLayout')
 			{
 				let stackLayout = new mxStackLayout(this.graph, true);
 				stackLayout.resizeParentMax = mxUtils.getValue(style, 'resizeParentMax', '1') == '1';
 				stackLayout.horizontal = mxUtils.getValue(style, 'horizontalStack', '1') == '1';
 				stackLayout.resizeParent = mxUtils.getValue(style, 'resizeParent', '1') == '1';
 				stackLayout.resizeLast = mxUtils.getValue(style, 'resizeLast', '0') == '1';
-				stackLayout.spacing = style['stackSpacing'] || stackLayout.spacing;
-				stackLayout.border = style['stackBorder'] || stackLayout.border;
-				stackLayout.marginLeft = style['marginLeft'] || 0;
-				stackLayout.marginRight = style['marginRight'] || 0;
-				stackLayout.marginTop = style['marginTop'] || 0;
-				stackLayout.marginBottom = style['marginBottom'] || 0;
-				stackLayout.allowGaps = style['allowGaps'] || 0;
+				stackLayout.spacing = style.stackSpacing || stackLayout.spacing;
+				stackLayout.border = style.stackBorder || stackLayout.border;
+				stackLayout.marginLeft = style.marginLeft || 0;
+				stackLayout.marginRight = style.marginRight || 0;
+				stackLayout.marginTop = style.marginTop || 0;
+				stackLayout.marginBottom = style.marginBottom || 0;
+				stackLayout.allowGaps = style.allowGaps || 0;
 				stackLayout.fill = true;
 				
 				if (stackLayout.allowGaps)
@@ -2381,7 +2381,7 @@ Graph.prototype.initLayoutManager = function()
 				
 				return stackLayout;
 			}
-			else if (style['childLayout'] == 'treeLayout')
+			else if (style.childLayout == 'treeLayout')
 			{
 				let treeLayout = new mxCompactTreeLayout(this.graph);
 				treeLayout.horizontal = mxUtils.getValue(style, 'horizontalTree', '1') == '1';
@@ -2394,7 +2394,7 @@ Graph.prototype.initLayoutManager = function()
 				
 				return treeLayout;
 			}
-			else if (style['childLayout'] == 'flowLayout')
+			else if (style.childLayout == 'flowLayout')
 			{
 				let flowLayout = new mxHierarchicalLayout(this.graph, mxUtils.getValue(style,
 					'flowOrientation', mxConstants.DIRECTION_EAST));
@@ -2414,15 +2414,15 @@ Graph.prototype.initLayoutManager = function()
 				
 				return flowLayout;
 			}
-			else if (style['childLayout'] == 'circleLayout')
+			else if (style.childLayout == 'circleLayout')
 			{
 				return new mxCircleLayout(this.graph);
 			}
-			else if (style['childLayout'] == 'organicLayout')
+			else if (style.childLayout == 'organicLayout')
 			{
 				return new mxFastOrganicLayout(this.graph);
 			}
-			else if (style['childLayout'] == 'tableLayout')
+			else if (style.childLayout == 'tableLayout')
 			{
 				return new TableLayout(this.graph);
 			}
@@ -3602,11 +3602,11 @@ Graph.prototype.isContainer = function(cell)
 	
 	if (this.isSwimlane(cell))
 	{
-		return style['container'] != '0';
+		return style.container != '0';
 	}
 	else
 	{
-		return style['container'] == '1';
+		return style.container == '1';
 	}
 };
 
@@ -3617,7 +3617,7 @@ Graph.prototype.isCellConnectable = function(cell)
 {
 	let style = this.getCurrentCellStyle(cell);
 	
-	return (style['connectable'] != null) ? style['connectable'] != '0' :
+	return (style.connectable != null) ? style.connectable != '0' :
 		mxGraph.prototype.isCellConnectable.apply(this, arguments);
 };
 
@@ -3628,7 +3628,7 @@ Graph.prototype.isLabelMovable = function(cell)
 {
 	let style = this.getCurrentCellStyle(cell);
 	
-	return (style['movableLabel'] != null) ? style['movableLabel'] != '0' :
+	return (style.movableLabel != null) ? style.movableLabel != '0' :
 		mxGraph.prototype.isLabelMovable.apply(this, arguments);
 };
 
@@ -3711,10 +3711,10 @@ Graph.prototype.isCellFoldable = function(cell)
 {
 	let style = this.getCurrentCellStyle(cell);
 	
-	return this.foldingEnabled && (style['treeFolding'] == '1' ||
+	return this.foldingEnabled && (style.treeFolding == '1' ||
 		(!this.isCellLocked(cell) &&
-		((this.isContainer(cell) && style['collapsible'] != '0') ||
-		(!this.isContainer(cell) && style['collapsible'] == '1'))));
+		((this.isContainer(cell) && style.collapsible != '0') ||
+		(!this.isContainer(cell) && style.collapsible == '1'))));
 };
 
 /**
@@ -4396,7 +4396,7 @@ HoverIcons.prototype.drag = function(evt, x, y)
 		{
 			let direction = this.getDirection();
 			es.cell.style = mxUtils.setStyle(es.cell.style, 'sourcePortConstraint', direction);
-			es.style['sourcePortConstraint'] = direction;
+			es.style.sourcePortConstraint = direction;
 		}
 	}
 };
@@ -4809,7 +4809,7 @@ HoverIcons.prototype.update = function(state, x, y)
  */
 HoverIcons.prototype.setCurrentState = function(state)
 {
-	if (state.style['portConstraint'] != 'eastwest')
+	if (state.style.portConstraint != 'eastwest')
 	{
 		this.graph.container.appendChild(this.arrowUp);
 		this.graph.container.appendChild(this.arrowDown);
@@ -4962,7 +4962,7 @@ Graph.prototype.isTable = function(cell)
 {
 	let style = this.getCellStyle(cell);
 	
-	return style != null && style['childLayout'] == 'tableLayout';
+	return style != null && style.childLayout == 'tableLayout';
 };
 
 /**
@@ -5494,7 +5494,7 @@ TableLayout.prototype.execute = function(parent)
 						var state2 = this.validEdges[e];
 						var pts2 = state2.absolutePoints;
 						
-						if (pts2 != null && mxUtils.intersects(state, state2) && state2.style['noJump'] != '1')
+						if (pts2 != null && mxUtils.intersects(state, state2) && state2.style.noJump != '1')
 						{
 							// Compares each segment of the edge with the current segment
 							for (let j = 0; j < pts2.length - 1; j++)
@@ -5713,8 +5713,8 @@ TableLayout.prototype.execute = function(parent)
 	mxGraphView.prototype.updateFloatingTerminalPoint = function(edge, start, end, source)
 	{
 		if (start != null && edge != null &&
-			(start.style['snapToPoint'] == '1' ||
-			edge.style['snapToPoint'] == '1'))
+			(start.style.snapToPoint == '1' ||
+			edge.style.snapToPoint == '1'))
 		{
 		    start = this.getTerminalPort(edge, start, source);
 		    let next = this.getNextPoint(edge, end, source);
@@ -6568,9 +6568,9 @@ if (typeof mxVertexHandler != 'undefined')
 			{
 				let style = this.getCurrentCellStyle(parent);
 				
-				if (style['expand'] != null)
+				if (style.expand != null)
 				{
-					return style['expand'] != '0';
+					return style.expand != '0';
 				}
 			}
 			
@@ -9428,7 +9428,7 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			let state = this.graph.view.getState(this.editingCell);
 			
-			return state != null && state.style['html'] == 1;
+			return state != null && state.style.html == 1;
 		};
 
 		/**
@@ -9597,7 +9597,7 @@ if (typeof mxVertexHandler != 'undefined')
 			// dashed borders for divs and table cells
 			let state = this.graph.view.getState(cell);
 	
-			if (state != null && state.style['html'] == 1)
+			if (state != null && state.style.html == 1)
 			{
 				this.textarea.className = 'mxCellEditor geContentEditable';
 			}
@@ -10157,7 +10157,7 @@ if (typeof mxVertexHandler != 'undefined')
 			stackLayoutResizeCell.apply(this, arguments);
 			let style = this.graph.getCellStyle(cell);
 				
-			if (style['childLayout'] == null)
+			if (style.childLayout == null)
 			{
 				let parent = cell.getParent();
 				let geo = (parent != null) ? parent.getGeometry() : null;
@@ -10166,7 +10166,7 @@ if (typeof mxVertexHandler != 'undefined')
 				{
 					style = this.graph.getCellStyle(parent);
 					
-					if (style['childLayout'] == 'stackLayout')
+					if (style.childLayout == 'stackLayout')
 					{
 						let border = parseFloat(mxUtils.getValue(style, 'stackBorder', mxStackLayout.prototype.border));
 						let horizontal = mxUtils.getValue(style, 'horizontalStack', '1') == '1';
@@ -10675,7 +10675,7 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			let result = new mxPoint(0, 0);
 			let tol = this.tolerance;
-			let name = this.state.style['shape'];
+			let name = this.state.style.shape;
 
 			if (mxCellRenderer.defaultShapes[name] == null &&
 				mxStencilRegistry.getStencil(name) == null)

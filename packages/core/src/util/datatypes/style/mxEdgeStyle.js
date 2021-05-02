@@ -374,7 +374,7 @@ class mxEdgeStyle {
 
     if (
       !horizontal &&
-      (vertical || state.style['elbow'] === ELBOW_VERTICAL)
+      (vertical || state.style.elbow === ELBOW_VERTICAL)
     ) {
       mxEdgeStyle.TopToBottom(state, source, target, points, result);
     } else {

@@ -628,7 +628,7 @@ Actions.prototype.init = function()
     	if (refState != null)
     	{
 	    	graph.stopEditing();
-    		let value = (refState.style['html'] == '1') ? null : '1';
+    		let value = (refState.style.html == '1') ? null : '1';
 			
 			graph.getModel().beginUpdate();
 			try

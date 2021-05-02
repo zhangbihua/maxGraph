@@ -667,7 +667,7 @@ export default MYNAMEHERE;
       style.verticalAlign = mxConstants.ALIGN_TOP;
       style.gradientColor = '#41B9F5';
       style.fillColor = '#8CCDF5';
-      style['swimlaneFillColor'] = '#ffffff';
+      style.swimlaneFillColor = '#ffffff';
       style.strokeColor = '#1B78C8';
       style.fontColor = '#000000';
       style.strokeWidth = '2';

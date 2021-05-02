@@ -3739,7 +3739,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 					arrowLeft.style.left = Math.floor(bds.x - this.triangleLeft.width) + 'px';
 					arrowLeft.style.top = arrowRight.style.top;
 					
-					if (state.style['portConstraint'] != 'eastwest')
+					if (state.style.portConstraint != 'eastwest')
 					{
 						graph.container.appendChild(arrowUp);
 						graph.container.appendChild(arrowDown);

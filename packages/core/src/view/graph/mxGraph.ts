@@ -4814,9 +4814,9 @@ class mxGraph extends mxEventSource {
    *   var result = graphGetPreferredSizeForCell.apply(this, arguments);
    *   var style = this.getCellStyle(cell);
    *
-   *   if (style['minWidth'] > 0)
+   *   if (style.minWidth > 0)
    *   {
-   *     result.width = Math.max(style['minWidth'], result.width);
+   *     result.width = Math.max(style.minWidth, result.width);
    *   }
    *
    *   return result;
@@ -8674,7 +8674,7 @@ class mxGraph extends mxEventSource {
    * {
    *   var style = this.getCurrentCellStyle(cell);
    *
-   *   return this.isCellsSelectable() && !this.isCellLocked(cell) && style['selectable'] != 0;
+   *   return this.isCellsSelectable() && !this.isCellLocked(cell) && style.selectable != 0;
    * };
    * ```
    *

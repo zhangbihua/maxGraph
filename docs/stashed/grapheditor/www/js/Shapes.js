@@ -1656,7 +1656,7 @@
 	let mxRhombusPaintVertexShape = mxRhombus.prototype.paintVertexShape;
 	mxRhombus.prototype.getLabelBounds = function(rect)
 	{
-		if (this.style['double'] == 1)
+		if (this.style.double == 1)
 		{
 			let margin = (Math.max(2, this.strokewidth + 1) * 2 + parseFloat(
 				this.style[mxConstants.'margin'] || 0)) * this.scale;
@@ -1671,7 +1671,7 @@
 	{
 		mxRhombusPaintVertexShape.apply(this, arguments);
 
-		if (!this.outline && this.style['double'] == 1)
+		if (!this.outline && this.style.double == 1)
 		{
 			let margin = Math.max(2, this.strokewidth + 1) * 2 +
 				parseFloat(this.style[mxConstants.'margin'] || 0);
@@ -1703,7 +1703,7 @@
 	};
 	ExtendedShape.prototype.getLabelBounds = function(rect)
 	{
-		if (this.style['double'] == 1)
+		if (this.style.double == 1)
 		{
 			let margin = (Math.max(2, this.strokewidth + 1) + parseFloat(
 				this.style[mxConstants.'margin'] || 0)) * this.scale;
@@ -1719,7 +1719,7 @@
 	{
 		if (this.style != null)
 		{
-			if (!this.outline && this.style['double'] == 1)
+			if (!this.outline && this.style.double == 1)
 			{
 				let margin = Math.max(2, this.strokewidth + 1) + parseFloat(this.style[mxConstants.'margin'] || 0);
 				x += margin;
@@ -2144,9 +2144,9 @@
 	{
 		let sw = (parseFloat(vertex.style.strokeWidth || 1) * vertex.view.scale / 2) - 1;
 		
-		if (vertex.style['backboneSize'] != null)
+		if (vertex.style.backboneSize != null)
 		{
-			sw += (parseFloat(vertex.style['backboneSize']) * vertex.view.scale / 2) - 1;
+			sw += (parseFloat(vertex.style.backboneSize) * vertex.view.scale / 2) - 1;
 		}
 		
 		if (vertex.style.direction == 'south' ||
@@ -3782,14 +3782,14 @@
 			{
 				if (mxUtils.getValue(state.style, 'absoluteArcSize', 0) == '1')
 				{
-					this.state.style['arcSize'] = Math.round(Math.max(0, Math.min(bounds.width,
+					this.state.style.arcSize = Math.round(Math.max(0, Math.min(bounds.width,
 						(bounds.x + bounds.width - pt.x) * 2)));
 				}
 				else
 				{
 					let f = Math.min(50, Math.max(0, (bounds.width - pt.x + bounds.x) * 100 /
 						Math.min(bounds.width, bounds.height)));
-					this.state.style['arcSize'] = Math.round(f);
+					this.state.style.arcSize = Math.round(f);
 				}
 			});
 		}
@@ -3826,7 +3826,7 @@
 					let fixed = (fixedDefaultValue != null) ? mxUtils.getValue(this.state.style, 'fixedSize', '0') != '0' : null;
 					let size = (fixed) ? (pt.x - bounds.x) : Math.max(0, Math.min(max, (pt.x - bounds.x) / bounds.width * 0.75));
 					
-					this.state.style['size'] = size;
+					this.state.style.size = size;
 				}, false, true)];
 				
 				if (mxUtils.getValue(state.style, 'rounded', false))
@@ -3855,7 +3855,7 @@
 					let fixed = (fixedDefaultValue != null) ? mxUtils.getValue(this.state.style, 'fixedSize', '0') != '0' : null;
 					let size = (fixed) ? (pt.x - bounds.x) : Math.max(0, Math.min(max, (pt.x - bounds.x) / bounds.width));
 					
-					this.state.style['size'] = size;
+					this.state.style.size = size;
 				}, false, redrawEdges)];
 				
 				if (allowArcHandle && mxUtils.getValue(state.style, 'rounded', false))
@@ -3879,7 +3879,7 @@
 					return new mxPoint(bounds.x + size, bounds.y + size);
 				}, function(bounds, pt)
 				{
-					this.state.style['size'] = Math.round(Math.max(0, Math.min(Math.min(bounds.width, pt.x - bounds.x),
+					this.state.style.size = Math.round(Math.max(0, Math.min(Math.min(bounds.width, pt.x - bounds.x),
 							Math.min(bounds.height, pt.y - bounds.y))) / factor);
 				}, false)];
 				
@@ -3903,7 +3903,7 @@
 							return new mxPoint(bounds.x, bounds.y + size);
 						}, function(bounds, pt)
 						{
-							this.state.style['size'] = Math.max(0, pt.y - bounds.y);
+							this.state.style.size = Math.max(0, pt.y - bounds.y);
 						}, true)];
 			}
 		};
@@ -3920,8 +3920,8 @@
 					return new mxPoint(bounds.x + (1 - as) * bounds.width, bounds.y + (1 - aw) * bounds.height / 2);
 				}, function(bounds, pt)
 				{
-					this.state.style['arrowWidth'] = Math.max(0, Math.min(1, Math.abs(bounds.y + bounds.height / 2 - pt.y) / bounds.height * 2));
-					this.state.style['arrowSize'] = Math.max(0, Math.min(maxSize, (bounds.x + bounds.width - pt.x) / (bounds.width)));
+					this.state.style.arrowWidth = Math.max(0, Math.min(1, Math.abs(bounds.y + bounds.height / 2 - pt.y) / bounds.height * 2));
+					this.state.style.arrowSize = Math.max(0, Math.min(maxSize, (bounds.x + bounds.width - pt.x) / (bounds.width)));
 				})];
 			};
 		};
@@ -3977,7 +3977,7 @@
 			}, function(dist, nx, ny, p0, p1, pt)
 			{
 				let w = Math.sqrt(mxUtils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));					
-				state.style['width'] = Math.round(w * 2) / state.view.scale - spacing;
+				state.style.width = Math.round(w * 2) / state.view.scale - spacing;
 			});
 		};
 		
@@ -4014,7 +4014,7 @@
 						let l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
 						state.style.startSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
-						state.style['width'] = Math.round(w * 2) / state.view.scale;
+						state.style.width = Math.round(w * 2) / state.view.scale;
 						
 						// Applies to opposite side
 						if (mxEvent.isControlDown(me.getEvent()))
@@ -4045,13 +4045,13 @@
 						let l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
 						state.style.startSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
-						state.style['startWidth'] = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale;
+						state.style.startWidth = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale;
 						
 						// Applies to opposite side
 						if (mxEvent.isControlDown(me.getEvent()))
 						{
 							state.style.endSize = state.style.startSize;
-							state.style['endWidth'] = state.style['startWidth'];
+							state.style.endWidth = state.style.startWidth;
 						}
 						
 						// Snaps to endWidth
@@ -4062,9 +4062,9 @@
 								state.style.startSize = state.style.endSize;
 							}
 							
-							if (Math.abs(parseFloat(state.style['startWidth']) - parseFloat(state.style['endWidth'])) < tol)
+							if (Math.abs(parseFloat(state.style.startWidth) - parseFloat(state.style.endWidth)) < tol)
 							{
-								state.style['startWidth'] = state.style['endWidth'];
+								state.style.startWidth = state.style.endWidth;
 							}
 						}
 					}));
@@ -4085,7 +4085,7 @@
 						let l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
 						state.style.endSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
-						state.style['width'] = Math.round(w * 2) / state.view.scale;
+						state.style.width = Math.round(w * 2) / state.view.scale;
 						
 						// Applies to opposite side
 						if (mxEvent.isControlDown(me.getEvent()))
@@ -4116,13 +4116,13 @@
 						let l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
 						state.style.endSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
-						state.style['endWidth'] = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale;
+						state.style.endWidth = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale;
 						
 						// Applies to opposite side
 						if (mxEvent.isControlDown(me.getEvent()))
 						{
 							state.style.startSize = state.style.endSize;
-							state.style['startWidth'] = state.style['endWidth'];
+							state.style.startWidth = state.style.endWidth;
 						}
 					
 						// Snaps to start geometry
@@ -4133,9 +4133,9 @@
 								state.style.endSize = state.style.startSize;
 							}
 							
-							if (Math.abs(parseFloat(state.style['endWidth']) - parseFloat(state.style['startWidth'])) < tol)
+							if (Math.abs(parseFloat(state.style.endWidth) - parseFloat(state.style.startWidth)) < tol)
 							{
-								state.style['endWidth'] = state.style['startWidth'];
+								state.style.endWidth = state.style.startWidth;
 							}
 						}
 					}));
@@ -4218,7 +4218,7 @@
 					return new mxPoint(bounds.getCenterX(), bounds.y + size);
 				}, function(bounds, pt)
 				{	
-					this.state.style['size'] = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
+					this.state.style.size = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
 				}, false)];
 			},
 			'umlFrame': function(state)
@@ -4231,8 +4231,8 @@
 					return new mxPoint(bounds.x + w0, bounds.y + h0);
 				}, function(bounds, pt)
 				{
-					this.state.style['width'] = Math.round(Math.max(UmlFrame.prototype.corner, Math.min(bounds.width, pt.x - bounds.x)));
-					this.state.style['height'] = Math.round(Math.max(UmlFrame.prototype.corner * 1.5, Math.min(bounds.height, pt.y - bounds.y)));
+					this.state.style.width = Math.round(Math.max(UmlFrame.prototype.corner, Math.min(bounds.width, pt.x - bounds.x)));
+					this.state.style.height = Math.round(Math.max(UmlFrame.prototype.corner * 1.5, Math.min(bounds.height, pt.y - bounds.y)));
 				}, false)];
 				
 				return handles;
@@ -4250,7 +4250,7 @@
 				{
 					let fixed = mxUtils.getValue(this.state.style, 'fixedSize', '0') != '0';
 					let size = (fixed) ? Math.max(0, Math.min(bounds.width * 0.5, (pt.x - bounds.x))) : Math.max(0, Math.min(0.5, (pt.x - bounds.x) / bounds.width));
-					this.state.style['size'] = size;
+					this.state.style.size = size;
 				}, false)];
 				
 				if (mxUtils.getValue(state.style, 'rounded', false))
@@ -4271,7 +4271,7 @@
 				}, function(bounds, pt)
 				{
 					let m = Math.min(bounds.width, bounds.height);
-					this.state.style['size'] = Math.max(0, Math.min(1, Math.min((Math.max(0, bounds.getCenterY() - pt.y) / m) * 2,
+					this.state.style.size = Math.max(0, Math.min(1, Math.min((Math.max(0, bounds.getCenterY() - pt.y) / m) * 2,
 							(Math.max(0, bounds.getCenterX() - pt.x) / m) * 2)));
 				})];
 			},
@@ -4285,7 +4285,7 @@
 					return new mxPoint(bounds.x + bounds.width - size, bounds.y + size);
 				}, function(bounds, pt)
 				{
-					this.state.style['size'] = Math.round(Math.max(0, Math.min(Math.min(bounds.width, bounds.x + bounds.width - pt.x),
+					this.state.style.size = Math.round(Math.max(0, Math.min(Math.min(bounds.width, bounds.x + bounds.width - pt.x),
 							Math.min(bounds.height, pt.y - bounds.y))));
 				})];
 			},
@@ -4299,7 +4299,7 @@
 					return new mxPoint(bounds.x + bounds.width - size, bounds.y + size);
 				}, function(bounds, pt)
 				{
-					this.state.style['size'] = Math.round(Math.max(0, Math.min(Math.min(bounds.width, bounds.x + bounds.width - pt.x),
+					this.state.style.size = Math.round(Math.max(0, Math.min(Math.min(bounds.width, bounds.x + bounds.width - pt.x),
 							Math.min(bounds.height, pt.y - bounds.y))));
 				})];
 			},
@@ -4312,7 +4312,7 @@
 					return new mxPoint(bounds.x + bounds.width / 4, bounds.y + size * 3 / 4);
 				}, function(bounds, pt)
 				{
-					this.state.style['size'] = Math.round(Math.max(0, Math.min(bounds.height, (pt.y - bounds.y) * 4 / 3)));
+					this.state.style.size = Math.round(Math.max(0, Math.min(bounds.height, (pt.y - bounds.y) * 4 / 3)));
 				}, false)];
 				
 				if (mxUtils.getValue(state.style, 'rounded', false))
@@ -4335,7 +4335,7 @@
 					let fixed = mxUtils.getValue(this.state.style, 'fixedSize', '0') != '0';
 					let size = (fixed) ? Math.max(0, Math.min(bounds.width, (bounds.x + bounds.width - pt.x))) : Math.max(0, Math.min(1, (bounds.x + bounds.width - pt.x) / bounds.width));
 					
-					this.state.style['size'] = size;
+					this.state.style.size = size;
 				}, false)];
 			},
 			'callout': function(state)
@@ -4350,8 +4350,8 @@
 				}, function(bounds, pt)
 				{
 					let base = Math.max(0, Math.min(bounds.width, mxUtils.getValue(this.state.style, 'base', CalloutShape.prototype.base)));
-					this.state.style['size'] = Math.round(Math.max(0, Math.min(bounds.height, bounds.y + bounds.height - pt.y)));
-					this.state.style['position'] = Math.round(Math.max(0, Math.min(1, (pt.x - bounds.x) / bounds.width)) * 100) / 100;
+					this.state.style.size = Math.round(Math.max(0, Math.min(bounds.height, bounds.y + bounds.height - pt.y)));
+					this.state.style.position = Math.round(Math.max(0, Math.min(1, (pt.x - bounds.x) / bounds.width)) * 100) / 100;
 				}, false), createHandle(state, ['position2'], function(bounds)
 				{
 					var position2 = Math.max(0, Math.min(1, mxUtils.getValue(this.state.style, 'position2', CalloutShape.prototype.position2)));
@@ -4371,7 +4371,7 @@
 				{
 					let position = Math.max(0, Math.min(1, mxUtils.getValue(this.state.style, 'position', CalloutShape.prototype.position)));
 
-					this.state.style['base'] = Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x - position * bounds.width)));
+					this.state.style.base = Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x - position * bounds.width)));
 				}, false)];
 				
 				if (mxUtils.getValue(state.style, 'rounded', false))
@@ -4391,8 +4391,8 @@
 					return new mxPoint(bounds.x + dx, bounds.y + dy);
 				}, function(bounds, pt)
 				{
-					this.state.style['dx'] = Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x)));
-					this.state.style['dy'] = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
+					this.state.style.dx = Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x)));
+					this.state.style.dy = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
 				}, false)];
 				
 				if (mxUtils.getValue(state.style, 'rounded', false))
@@ -4412,8 +4412,8 @@
 					return new mxPoint(bounds.x + dx / 2, bounds.y + dy * 2);
 				}, function(bounds, pt)
 				{
-					this.state.style['jettyWidth'] = Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x)) * 2);
-					this.state.style['jettyHeight'] = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)) / 2);
+					this.state.style.jettyWidth = Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x)) * 2);
+					this.state.style.jettyHeight = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)) / 2);
 				})];
 				
 				return handles;
@@ -4428,8 +4428,8 @@
 					return new mxPoint(bounds.x + dx, bounds.y + dy);
 				}, function(bounds, pt)
 				{
-					this.state.style['dx'] = Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x)));
-					this.state.style['dy'] = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
+					this.state.style.dx = Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x)));
+					this.state.style.dy = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
 				}, false)];
 			},
 			'tee': function(state)
@@ -4442,8 +4442,8 @@
 					return new mxPoint(bounds.x + (bounds.width + dx) / 2, bounds.y + dy);
 				}, function(bounds, pt)
 				{
-					this.state.style['dx'] = Math.round(Math.max(0, Math.min(bounds.width / 2, (pt.x - bounds.x - bounds.width / 2)) * 2));
-					this.state.style['dy'] = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
+					this.state.style.dx = Math.round(Math.max(0, Math.min(bounds.width / 2, (pt.x - bounds.x - bounds.width / 2)) * 2));
+					this.state.style.dy = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
 				}, false)];
 			},
 			'singleArrow': createArrowHandleFunction(1),
@@ -4470,8 +4470,8 @@
 						tw = bounds.width - tw;
 					}
 					
-					this.state.style['tabWidth'] = Math.round(tw);
-					this.state.style['tabHeight'] = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
+					this.state.style.tabWidth = Math.round(tw);
+					this.state.style.tabHeight = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
 				}, false)];
 			},
 			'document': function(state)
@@ -4483,7 +4483,7 @@
 					return new mxPoint(bounds.x + 3 * bounds.width / 4, bounds.y + (1 - size) * bounds.height);
 				}, function(bounds, pt)
 				{
-					this.state.style['size'] = Math.max(0, Math.min(1, (bounds.y + bounds.height - pt.y) / bounds.height));
+					this.state.style.size = Math.max(0, Math.min(1, (bounds.y + bounds.height - pt.y) / bounds.height));
 				}, false)];
 			},
 			'tape': function(state)
@@ -4495,7 +4495,7 @@
 					return new mxPoint(bounds.getCenterX(), bounds.y + size * bounds.height / 2);
 				}, function(bounds, pt)
 				{
-					this.state.style['size'] = Math.max(0, Math.min(1, ((pt.y - bounds.y) / bounds.height) * 2));
+					this.state.style.size = Math.max(0, Math.min(1, ((pt.y - bounds.y) / bounds.height) * 2));
 				}, false)];
 			},
 			'isoCube2' : function(state)
@@ -4508,7 +4508,7 @@
 					return new mxPoint(bounds.x, bounds.y + isoH);
 				}, function(bounds, pt)
 				{
-					this.state.style['isoAngle'] = Math.max(0, (pt.y - bounds.y) * 50 / bounds.height);
+					this.state.style.isoAngle = Math.max(0, (pt.y - bounds.y) * 50 / bounds.height);
 				}, true)];
 			},
 			'cylinder2' : createCylinderHandleFunction(CylinderShape.prototype.size),
@@ -4522,7 +4522,7 @@
 					return new mxPoint(bounds.getCenterX(), bounds.y + (1 - size) * bounds.height);
 				}, function(bounds, pt)
 				{
-					this.state.style['size'] = Math.max(0, Math.min(1, (bounds.y + bounds.height - pt.y) / bounds.height));
+					this.state.style.size = Math.max(0, Math.min(1, (bounds.y + bounds.height - pt.y) / bounds.height));
 				}, false)];
 			},
 			'step': createDisplayHandleFunction(StepShape.prototype.size, true, null, true, StepShape.prototype.fixedSize),
@@ -4550,7 +4550,7 @@
 			// LATER: Make locked state independent of rotatable flag, fix toggle if default is false
 			//if (this.graph.isCellResizable(this.state.cell) || this.graph.isCellMovable(this.state.cell))
 			{
-				let name = this.state.style['shape'];
+				let name = this.state.style.shape;
 
 				if (mxCellRenderer.defaultShapes[name] == null &&
 					mxStencilRegistry.getStencil(name) == null)
@@ -4592,7 +4592,7 @@
 
 		mxEdgeHandler.prototype.createCustomHandles = function()
 		{
-			let name = this.state.style['shape'];
+			let name = this.state.style.shape;
 			
 			if (mxCellRenderer.defaultShapes[name] == null &&
 				mxStencilRegistry.getStencil(name) == null)

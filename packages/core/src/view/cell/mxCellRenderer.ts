@@ -291,11 +291,11 @@ class mxCellRenderer {
     shape.apply(state);
     shape.image = state.view.graph.getImage(state);
     shape.indicatorColor = state.view.graph.getIndicatorColor(state);
-    shape.indicatorStrokeColor = state.style['indicatorStrokeColor'];
+    shape.indicatorStrokeColor = state.style.indicatorStrokeColor;
     shape.indicatorGradientColor = state.view.graph.getIndicatorGradientColor(
       state
     );
-    shape.indicatorDirection = state.style['indicatorDirection'];
+    shape.indicatorDirection = state.style.indicatorDirection;
     shape.indicatorImage = state.view.graph.getIndicatorImage(state);
     this.postConfigureShape(state);
   }

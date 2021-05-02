@@ -127,7 +127,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
       this.state.style.edge === EDGESTYLE_TOPTOBOTTOM ||
       ((this.state.style.edge === mxEdgeStyle.ElbowConnector ||
         this.state.style.edge === EDGESTYLE_ELBOW) &&
-        this.state.style['elbow'] === ELBOW_VERTICAL)
+        this.state.style.elbow === ELBOW_VERTICAL)
       ? 'row-resize'
       : 'col-resize';
   }

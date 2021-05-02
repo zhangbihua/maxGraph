@@ -5608,7 +5608,7 @@ DiagramStylePanel.prototype.addView = function(div)
 				let style = graph.getCellStyle(cells[i]);
 				
 				// Handles special label background color
-				if (style['labelBackgroundColor'] != null)
+				if (style.labelBackgroundColor != null)
 				{
 					graph.updateCellStyles('labelBackgroundColor', (graphStyle != null) ?
 						graphStyle.background : null, [cells[i]]);
