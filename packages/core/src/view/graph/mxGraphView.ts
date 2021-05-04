@@ -623,6 +623,7 @@ class mxGraphView extends mxEventSource {
         )
       )
     );
+
     this.setGraphBounds(
       graphBounds != null ? graphBounds : this.getEmptyBounds()
     );
@@ -765,41 +766,41 @@ class mxGraphView extends mxEventSource {
         this.backgroundPageShape.init(this.backgroundPane);
         this.backgroundPageShape.redraw();
 
-        // Adds listener for double click handling on background
-        if (graph.nativeDblClickEnabled) {
-          mxEvent.addListener(
-            this.backgroundPageShape.node,
-            'dblclick',
-            (evt: MouseEvent) => {
+        if (this.backgroundPageShape.node) {
+          // Adds listener for double click handling on background
+          if (graph.nativeDblClickEnabled) {
+            mxEvent.addListener(this.backgroundPageShape.node, 'dblclick', ((
+              evt: MouseEvent
+            ) => {
               graph.dblClick(evt);
+            }) as EventListener);
+          }
+
+          // Adds basic listeners for graph event dispatching outside of the
+          // container and finishing the handling of a single gesture
+          mxEvent.addGestureListeners(
+            this.backgroundPageShape.node,
+            (evt: Event) => {
+              graph.fireMouseEvent(mxEvent.MOUSE_DOWN, new mxMouseEvent(evt));
+            },
+            (evt: Event) => {
+              // Hides the tooltip if mouse is outside container
+              if (
+                graph.tooltipHandler != null &&
+                graph.tooltipHandler.isHideOnHover()
+              ) {
+                graph.tooltipHandler.hide();
+              }
+
+              if (graph.isMouseDown && !isConsumed(evt)) {
+                graph.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt));
+              }
+            },
+            (evt: Event) => {
+              graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
             }
           );
         }
-
-        // Adds basic listeners for graph event dispatching outside of the
-        // container and finishing the handling of a single gesture
-        mxEvent.addGestureListeners(
-          this.backgroundPageShape.node,
-          (evt: Event) => {
-            graph.fireMouseEvent(mxEvent.MOUSE_DOWN, new mxMouseEvent(evt));
-          },
-          (evt: Event) => {
-            // Hides the tooltip if mouse is outside container
-            if (
-              graph.tooltipHandler != null &&
-              graph.tooltipHandler.isHideOnHover()
-            ) {
-              graph.tooltipHandler.hide();
-            }
-
-            if (graph.isMouseDown && !isConsumed(evt)) {
-              graph.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt));
-            }
-          },
-          (evt: Event) => {
-            graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
-          }
-        );
       } else {
         this.backgroundPageShape.scale = this.scale;
         this.backgroundPageShape.bounds = bounds;
@@ -2332,20 +2333,20 @@ class mxGraphView extends mxEventSource {
       // Support for touch device gestures (eg. pinch to zoom)
       // Double-tap handling is implemented in mxGraph.fireMouseEvent
       if (mxClient.IS_TOUCH) {
-        mxEvent.addListener(container, 'gesturestart', (evt: MouseEvent) => {
+        mxEvent.addListener(container, 'gesturestart', ((evt: MouseEvent) => {
           graph.fireGestureEvent(evt);
           mxEvent.consume(evt);
-        });
+        }) as EventListener);
 
-        mxEvent.addListener(container, 'gesturechange', (evt: MouseEvent) => {
+        mxEvent.addListener(container, 'gesturechange', ((evt: MouseEvent) => {
           graph.fireGestureEvent(evt);
           mxEvent.consume(evt);
-        });
+        }) as EventListener);
 
-        mxEvent.addListener(container, 'gestureend', (evt: MouseEvent) => {
+        mxEvent.addListener(container, 'gestureend', ((evt: MouseEvent) => {
           graph.fireGestureEvent(evt);
           mxEvent.consume(evt);
-        });
+        }) as EventListener);
       }
 
       // Fires event only for one pointer per gesture
@@ -2354,7 +2355,7 @@ class mxGraphView extends mxEventSource {
       // Adds basic listeners for graph event dispatching
       mxEvent.addGestureListeners(
         container,
-        (evt: MouseEvent) => {
+        ((evt: MouseEvent) => {
           // Condition to avoid scrollbar events starting a rubberband selection
           if (
             this.isContainerEvent(evt) &&
@@ -2364,7 +2365,7 @@ class mxGraphView extends mxEventSource {
             // @ts-ignore
             pointerId = evt.pointerId;
           }
-        },
+        }) as EventListener,
         (evt: Event) => {
           if (
             this.isContainerEvent(evt) &&
@@ -2386,11 +2387,11 @@ class mxGraphView extends mxEventSource {
       // Adds listener for double click handling on background, this does always
       // use native event handler, we assume that the DOM of the background
       // does not change during the double click
-      mxEvent.addListener(container, 'dblclick', (evt: MouseEvent) => {
+      mxEvent.addListener(container, 'dblclick', ((evt: MouseEvent) => {
         if (this.isContainerEvent(evt)) {
           graph.dblClick(evt);
         }
-      });
+      }) as EventListener);
 
       // Workaround for touch events which started on some DOM node
       // on top of the container, in which case the cells under the
@@ -2564,7 +2565,7 @@ class mxGraphView extends mxEventSource {
         this.moveHandler,
         this.endHandler
       );
-      mxEvent.release((<mxGraph>this.graph).container);
+      mxEvent.release(this.graph.container);
       root.parentNode.removeChild(root);
 
       this.moveHandler = null;
@@ -2577,8 +2578,8 @@ class mxGraphView extends mxEventSource {
     }
   }
 
-  endHandler: Function | null = null;
-  moveHandler: Function | null = null;
+  endHandler: EventListener | null = null;
+  moveHandler: EventListener | null = null;
 }
 
 export default mxGraphView;

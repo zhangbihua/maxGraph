@@ -113,7 +113,6 @@ import {
   STYLE_WHITE_SPACE,
 } from '../../util/mxConstants';
 import mxMultiplicity from '../connection/mxMultiplicity';
-
 import mxChildChange from '../../atomic_changes/mxChildChange';
 import mxGeometryChange from '../../atomic_changes/mxGeometryChange';
 import mxRootChange from '../../atomic_changes/mxRootChange';
@@ -227,7 +226,7 @@ class mxGraph extends mxEventSource {
     this.sizeDidChange();
 
     // Hides tooltips and resets tooltip timer if mouse leaves container
-    mxEvent.addListener(container, 'mouseleave', (evt: MouseEvent) => {
+    mxEvent.addListener(container, 'mouseleave', ((evt: MouseEvent) => {
       if (
         this.tooltipHandler != null &&
         this.tooltipHandler.div != null &&
@@ -235,7 +234,7 @@ class mxGraph extends mxEventSource {
       ) {
         this.tooltipHandler.hide();
       }
-    });
+    }) as EventListener);
   }
 
   // TODO: Document me!
@@ -260,8 +259,8 @@ class mxGraph extends mxEventSource {
   lastMouseY: number | null = null;
   isMouseTrigger: boolean | null = null;
   ignoreMouseEvents: boolean | null = null;
-  mouseMoveRedirect: Function | null = null;
-  mouseUpRedirect: Function | null = null;
+  mouseMoveRedirect: EventListener | null = null;
+  mouseUpRedirect: EventListener | null = null;
   lastEvent: any; // FIXME: Check if this can be more specific - DOM events or mxEventObjects!
   horizontalPageBreaks: any[] | null = null;
   verticalPageBreaks: any[] | null = null;
@@ -1731,7 +1730,7 @@ class mxGraph extends mxEventSource {
 
       // Adds a handler for single mouseclicks to select the cell
       if (isSelect) {
-        overlay.addListener(mxEvent.CLICK, (sender: any, evt: mxMouseEvent) => {
+        overlay.addListener(mxEvent.CLICK, (sender: any, evt: MouseEvent) => {
           if (this.isEnabled()) {
             this.setSelectionCell(cell);
           }
@@ -1801,10 +1800,7 @@ class mxGraph extends mxEventSource {
    * @param evt Optional mouse event that triggered the editor.
    */
   // getEditingValue(cell: mxCell, evt: MouseEvent): string;
-  getEditingValue(
-    cell: mxCell,
-    evt: mxEventObject | mxMouseEvent
-  ): string | null {
+  getEditingValue(cell: mxCell, evt: MouseEvent): string | null {
     return this.convertValueToString(cell);
   }
 
@@ -1832,11 +1828,7 @@ class mxGraph extends mxEventSource {
    * @param evt Optional event that triggered the change.
    */
   // labelChanged(cell: mxCell, value: any, evt?: MouseEvent): mxCell;
-  labelChanged(
-    cell: mxCell,
-    value: any,
-    evt: mxMouseEvent | mxEventObject
-  ): mxCell {
+  labelChanged(cell: mxCell, value: any, evt: MouseEvent): mxCell {
     this.getModel().beginUpdate();
     try {
       const old = cell.value;
@@ -1907,7 +1899,7 @@ class mxGraph extends mxEventSource {
    * @param evt Mouseevent that represents the keystroke.
    */
   // escape(evt?: MouseEvent): void;
-  escape(evt: mxMouseEvent): void {
+  escape(evt: MouseEvent): void {
     this.fireEvent(new mxEventObject(mxEvent.ESCAPE, 'event', evt));
   }
 
@@ -5322,7 +5314,7 @@ class mxGraph extends mxEventSource {
     dx: number,
     dy: number,
     target: mxCell | null = null,
-    evt: mxMouseEvent | null = null,
+    evt: MouseEvent,
     mapping: any = {}
   ): mxCell[] | null {
     return this.moveCells(cells, dx, dy, true, target, evt, mapping);
@@ -5359,7 +5351,7 @@ class mxGraph extends mxEventSource {
     dy: number,
     clone: boolean = false,
     target: mxCell | null = null,
-    evt: mxMouseEvent | null = null,
+    evt: MouseEvent | null = null,
     mapping: any = null
   ): mxCell[] | null {
     dx = dx != null ? dx : 0;
@@ -5596,8 +5588,8 @@ class mxGraph extends mxEventSource {
         if (geometry.offset == null) {
           geometry.offset = new mxPoint(dx, dy);
         } else {
-          geometry.offset.x = parseFloat(geometry.offset.x) + dx;
-          geometry.offset.y = parseFloat(geometry.offset.y) + dy;
+          geometry.offset.x += dx;
+          geometry.offset.y += dy;
         }
       }
       this.getModel().setGeometry(cell, geometry);
@@ -6680,7 +6672,7 @@ class mxGraph extends mxEventSource {
         );
 
         if (result != null) {
-          result.add(tmp);
+          if (tmp) result.add(tmp);
         } else {
           result = tmp;
         }
@@ -7551,7 +7543,7 @@ class mxGraph extends mxEventSource {
    * returns true if control is pressed.
    */
   // isCloneEvent(evt: MouseEvent): boolean;
-  isCloneEvent(evt: mxEventObject | mxMouseEvent): boolean {
+  isCloneEvent(evt: MouseEvent): boolean {
     return isControlDown(evt);
   }
 
@@ -7561,7 +7553,7 @@ class mxGraph extends mxEventSource {
    * implementation returns false;
    */
   // isTransparentClickEvent(evt: MouseEvent): boolean;
-  isTransparentClickEvent(evt: mxEventObject | mxMouseEvent): boolean {
+  isTransparentClickEvent(evt: MouseEvent): boolean {
     return false;
   }
 
@@ -7571,7 +7563,7 @@ class mxGraph extends mxEventSource {
    * pressed on any other platform.
    */
   // isToggleEvent(evt: MouseEvent): boolean;
-  isToggleEvent(evt: mxEventObject | mxMouseEvent): boolean {
+  isToggleEvent(evt: MouseEvent): boolean {
     return mxClient.IS_MAC ? isMetaDown(evt) : isControlDown(evt);
   }
 
@@ -7579,7 +7571,7 @@ class mxGraph extends mxEventSource {
    * Returns true if the given mouse event should be aligned to the grid.
    */
   // isGridEnabledEvent(evt: MouseEvent): boolean;
-  isGridEnabledEvent(evt: mxEventObject | mxMouseEvent): boolean {
+  isGridEnabledEvent(evt: MouseEvent): boolean {
     return evt != null && !isAltDown(evt);
   }
 
@@ -7587,7 +7579,7 @@ class mxGraph extends mxEventSource {
    * Returns true if the given mouse event should be aligned to the grid.
    */
   // isConstrainedEvent(evt: MouseEvent): boolean;
-  isConstrainedEvent(evt: mxEventObject | mxMouseEvent): boolean {
+  isConstrainedEvent(evt: MouseEvent): boolean {
     return isShiftDown(evt);
   }
 
@@ -7596,7 +7588,7 @@ class mxGraph extends mxEventSource {
    * made. This implementation returns false.
    */
   // isIgnoreTerminalEvent(evt: MouseEvent): boolean;
-  isIgnoreTerminalEvent(evt: mxEventObject | mxMouseEvent): boolean {
+  isIgnoreTerminalEvent(evt: MouseEvent): boolean {
     return false;
   }
 
@@ -9683,7 +9675,7 @@ class mxGraph extends mxEventSource {
    * @param evt Mouseevent that triggered the invocation.
    */
   // isValidDropTarget(cell: mxCell, cells: mxCell[], evt: Event): boolean;
-  isValidDropTarget(cell: mxCell, cells: mxCell[], evt: mxMouseEvent): boolean {
+  isValidDropTarget(cell: mxCell, cells: mxCell[], evt: MouseEvent): boolean {
     return (
       cell != null &&
       ((this.isSplitEnabled() && this.isSplitTarget(cell, cells, evt)) ||
@@ -9702,7 +9694,7 @@ class mxGraph extends mxEventSource {
    * @param evt Mouseevent that triggered the invocation.
    */
   // isSplitTarget(target: mxCell, cells: mxCell[], evt: Event): boolean;
-  isSplitTarget(target: mxCell, cells: mxCell[], evt: mxMouseEvent): boolean {
+  isSplitTarget(target: mxCell, cells: mxCell[], evt: MouseEvent): boolean {
     if (
       target.isEdge() &&
       cells != null &&
@@ -9739,7 +9731,7 @@ class mxGraph extends mxEventSource {
   // getDropTarget(cells: mxCell[], evt: Event, cell: mxCell, clone?: boolean): mxCell;
   getDropTarget(
     cells: mxCell[],
-    evt: mxMouseEvent,
+    evt: MouseEvent,
     cell: mxCell | null = null,
     clone: boolean = false
   ): mxCell | null {
@@ -10341,7 +10333,7 @@ class mxGraph extends mxEventSource {
    * offset by half of the {@link gridSize}. Default is `true`.
    */
   // getPointForEvent(evt: MouseEvent, addOffset: boolean): mxPoint;
-  getPointForEvent(evt: mxMouseEvent, addOffset: boolean = true) {
+  getPointForEvent(evt: MouseEvent, addOffset: boolean = true) {
     const p = mxUtils.convertPoint(
       this.container,
       getClientX(evt),
@@ -10766,7 +10758,7 @@ class mxGraph extends mxEventSource {
    * @param evt Mouseevent that triggered the selection.
    */
   // selectRegion(rect: mxRectangle, evt: Event): mxCell[];
-  selectRegion(rect: mxRectangle, evt: mxMouseEvent): mxCell[] | null {
+  selectRegion(rect: mxRectangle, evt: MouseEvent): mxCell[] | null {
     const cells = this.getCells(rect.x, rect.y, rect.width, rect.height);
     this.selectCellsForEvent(cells, evt);
     return cells;
@@ -10954,7 +10946,7 @@ class mxGraph extends mxEventSource {
    * @param cell {@link mxCell} to be selected.
    * @param evt Optional mouseevent that triggered the selection.
    */
-  selectCellForEvent(cell: mxCell, evt: mxMouseEvent): void {
+  selectCellForEvent(cell: mxCell, evt: MouseEvent): void {
     const isSelected = this.isCellSelected(cell);
 
     if (this.isToggleEvent(evt)) {
@@ -10977,7 +10969,7 @@ class mxGraph extends mxEventSource {
    * @param evt Optional mouseevent that triggered the selection.
    */
   // selectCellsForEvent(cells: mxCell[], evt?: MouseEvent): void;
-  selectCellsForEvent(cells: mxCell[], evt: mxMouseEvent) {
+  selectCellsForEvent(cells: mxCell[], evt: MouseEvent) {
     if (this.isToggleEvent(evt)) {
       this.addSelectionCells(cells);
     } else {
@@ -11010,7 +11002,7 @@ class mxGraph extends mxEventSource {
 
         const edgeStyle = this.getView().getEdgeStyle(
           state,
-          geo != null ? geo.points : null,
+          geo != null ? geo.points : [],
           <mxCellState>source,
           <mxCellState>target
         );
@@ -11155,7 +11147,7 @@ class mxGraph extends mxEventSource {
    * Returns the state for the given touch event.
    */
   // getStateForTouchEvent(evt: MouseEvent | TouchEvent): mxCellState;
-  getStateForTouchEvent(evt: mxMouseEvent) {
+  getStateForTouchEvent(evt: MouseEvent) {
     const x = getClientX(evt);
     const y = getClientY(evt);
 
@@ -11208,18 +11200,18 @@ class mxGraph extends mxEventSource {
     ) {
       this.eventSource = me.getSource();
 
-      this.mouseMoveRedirect = (evt: mxMouseEvent) => {
+      this.mouseMoveRedirect = ((evt: MouseEvent) => {
         this.fireMouseEvent(
           mxEvent.MOUSE_MOVE,
           new mxMouseEvent(evt, this.getStateForTouchEvent(evt))
         );
-      };
-      this.mouseUpRedirect = (evt: mxMouseEvent) => {
+      }) as EventListener;
+      this.mouseUpRedirect = ((evt: MouseEvent) => {
         this.fireMouseEvent(
           mxEvent.MOUSE_UP,
           new mxMouseEvent(evt, this.getStateForTouchEvent(evt))
         );
-      };
+      }) as EventListener;
 
       mxEvent.addGestureListeners(
         this.eventSource,

@@ -27,17 +27,15 @@ class mxObjectIdentity {
   /**
    * Current counter.
    */
-  // static counter: number;
   static counter = 0;
 
   /**
    * Returns the ID for the given object or function or null if no object
    * is specified.
    */
-  // static get(obj: any): any;
-  static get(obj) {
-    if (obj != null) {
-      if (obj[mxObjectIdentity.FIELD_NAME] == null) {
+  static get(obj: any) {
+    if (obj) {
+      if (!(mxObjectIdentity.FIELD_NAME in obj)) {
         if (typeof obj === 'object') {
           const ctor = getFunctionName(obj.constructor);
           obj[
@@ -59,8 +57,7 @@ class mxObjectIdentity {
   /**
    * Deletes the ID from the given object or function.
    */
-  // static clear(obj: any): void;
-  static clear(obj) {
+  static clear(obj: any) {
     if (typeof obj === 'object' || typeof obj === 'function') {
       delete obj[mxObjectIdentity.FIELD_NAME];
     }
