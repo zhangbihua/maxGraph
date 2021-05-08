@@ -6,6 +6,19 @@
  */
 
 import { getFunctionName } from '../mxStringUtils';
+import { isNullish } from '../mxUtils';
+
+const FIELD_NAME = 'mxObjectId';
+
+type IdentityObject = {
+  [FIELD_NAME]?: string;
+  [k: string]: any;
+};
+
+type IdentityFunction = {
+  (): any;
+  [FIELD_NAME]?: string;
+};
 
 /**
  * @class
@@ -21,8 +34,7 @@ class mxObjectIdentity {
    * Name of the field to be used to store the object ID. Default is
    * <code>mxObjectId</code>.
    */
-  // static FIELD_NAME: string;
-  static FIELD_NAME = 'mxObjectId';
+  static FIELD_NAME = FIELD_NAME;
 
   /**
    * Current counter.
@@ -30,37 +42,26 @@ class mxObjectIdentity {
   static counter = 0;
 
   /**
-   * Returns the ID for the given object or function or null if no object
-   * is specified.
+   * Returns the ID for the given object or function.
    */
-  static get(obj: any) {
-    if (obj) {
-      if (!(mxObjectIdentity.FIELD_NAME in obj)) {
-        if (typeof obj === 'object') {
-          const ctor = getFunctionName(obj.constructor);
-          obj[
-            mxObjectIdentity.FIELD_NAME
-          ] = `${ctor}#${mxObjectIdentity.counter++}`;
-        } else if (typeof obj === 'function') {
-          obj[
-            mxObjectIdentity.FIELD_NAME
-          ] = `Function#${mxObjectIdentity.counter++}`;
-        }
+  static get(obj: IdentityObject | IdentityFunction) {
+    if (isNullish(obj[FIELD_NAME])) {
+      if (typeof obj === 'object') {
+        const ctor = getFunctionName(obj.constructor);
+        obj[FIELD_NAME] = `${ctor}#${mxObjectIdentity.counter++}`;
+      } else if (typeof obj === 'function') {
+        obj[FIELD_NAME] = `Function#${mxObjectIdentity.counter++}`;
       }
-
-      return obj[mxObjectIdentity.FIELD_NAME];
     }
 
-    return null;
+    return obj[FIELD_NAME] as string;
   }
 
   /**
    * Deletes the ID from the given object or function.
    */
-  static clear(obj: any) {
-    if (typeof obj === 'object' || typeof obj === 'function') {
-      delete obj[mxObjectIdentity.FIELD_NAME];
-    }
+  static clear(obj: IdentityObject | IdentityFunction) {
+    delete obj[FIELD_NAME];
   }
 }
 

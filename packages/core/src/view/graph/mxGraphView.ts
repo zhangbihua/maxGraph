@@ -40,7 +40,16 @@ import {
 } from '../../util/mxConstants';
 import mxClient from '../../mxClient';
 import mxEvent from '../../util/event/mxEvent';
-import mxUtils from '../../util/mxUtils';
+import {
+  convertPoint,
+  getCurrentStyle,
+  getOffset,
+  getRotatedPoint,
+  getValue,
+  ptSegDistSq,
+  relativeCcw,
+  toRadians,
+} from '../../util/mxUtils';
 import mxLog from '../../util/gui/mxLog';
 import mxResources from '../../util/mxResources';
 import mxCellState from '../cell/mxCellState';
@@ -120,7 +129,7 @@ class mxGraphView extends mxEventSource {
 
   backgroundPageShape: mxShape | null = null;
 
-  EMPTY_POINT: mxPoint = new mxPoint();
+  EMPTY_POINT = new mxPoint();
 
   canvas: SVGElement | null = null;
 
@@ -137,110 +146,95 @@ class mxGraphView extends mxEventSource {
    * If the resource for this key does not exist then the value is used as
    * the status message. Default is 'done'.
    */
-  // doneResource: 'done' | '';
-  doneResource: string = mxClient.language !== 'none' ? 'done' : '';
+  doneResource = mxClient.language !== 'none' ? 'done' : '';
 
   /**
    * Specifies the resource key for the status message while the document is
    * being updated. If the resource for this key does not exist then the
    * value is used as the status message. Default is 'updatingDocument'.
    */
-  // updatingDocumentResource: 'updatingDocument' | '';
-  updatingDocumentResource: string =
+  updatingDocumentResource =
     mxClient.language !== 'none' ? 'updatingDocument' : '';
 
   /**
    * Specifies if string values in cell styles should be evaluated using
-   * {@link mxUtils.eval}. This will only be used if the string values can't be mapped
+   * {@link eval}. This will only be used if the string values can't be mapped
    * to objects using {@link mxStyleRegistry}. Default is false. NOTE: Enabling this
    * switch carries a possible security risk.
    */
-  // allowEval: boolean;
-  allowEval: boolean = false;
+  allowEval = false;
 
   /**
    * Specifies if a gesture should be captured when it goes outside of the
    * graph container. Default is true.
    */
-  // captureDocumentGesture: boolean;
-  captureDocumentGesture: boolean = true;
+  captureDocumentGesture = true;
 
   /**
    * Specifies if shapes should be created, updated and destroyed using the
    * methods of {@link mxCellRenderer} in {@link graph}. Default is true.
    */
-  // rendering: boolean;
-  rendering: boolean = true;
+  rendering = true;
 
   /**
    * Reference to the enclosing {@link mxGraph}.
    */
-  // graph: mxGraph;
   graph: mxGraph;
 
   /**
    * {@link mxCell} that acts as the root of the displayed cell hierarchy.
    */
-  // currentRoot: mxCell;
   currentRoot: mxCell | null = null;
 
-  graphBounds: mxRectangle = new mxRectangle();
+  graphBounds = new mxRectangle();
 
-  scale: number = 1;
+  scale = 1;
 
   /**
    * {@link mxPoint} that specifies the current translation. Default is a new
    * empty {@link mxPoint}.
    */
-  // translate: mxPoint;
-  translate: mxPoint = new mxPoint();
+  translate = new mxPoint();
 
-  states: mxDictionary = new mxDictionary();
+  states = new mxDictionary<mxCellState>();
 
   /**
    * Specifies if the style should be updated in each validation step. If this
    * is false then the style is only updated if the state is created or if the
    * style of the cell was changed. Default is false.
    */
-  // updateStyle: boolean;
-  updateStyle: boolean = false;
+  updateStyle = false;
 
   /**
    * During validation, this contains the last DOM node that was processed.
    */
-  // lastNode: Element;
   lastNode: HTMLElement | SVGElement | null = null;
 
   /**
    * During validation, this contains the last HTML DOM node that was processed.
    */
-  // lastHtmlNode: HTMLElement;
   lastHtmlNode: HTMLElement | SVGElement | null = null;
 
   /**
    * During validation, this contains the last edge's DOM node that was processed.
    */
-  // lastForegroundNode: Element;
   lastForegroundNode: HTMLElement | SVGElement | null = null;
 
   /**
    * During validation, this contains the last edge HTML DOM node that was processed.
    */
-  // lastForegroundHtmlNode: HTMLElement;
   lastForegroundHtmlNode: HTMLElement | SVGElement | null = null;
 
   /**
    * Returns {@link graphBounds}.
    */
-  // getGraphBounds(): mxRectangle;
-  getGraphBounds(): mxRectangle {
+  getGraphBounds() {
     return this.graphBounds;
   }
 
   /**
    * Sets {@link graphBounds}.
    */
-  // setGraphBounds(value: mxRectangle): void;
   setGraphBounds(value: mxRectangle) {
     this.graphBounds = value;
   }
@@ -248,8 +242,7 @@ class mxGraphView extends mxEventSource {
   /**
    * Returns the {@link scale}.
    */
-  // getScale(): number;
-  getScale(): number {
+  getScale() {
     return this.scale;
   }
 
@@ -259,7 +252,6 @@ class mxGraphView extends mxEventSource {
    *
    * @param value Decimal value that specifies the new scale (1 is 100%).
    */
-  // setScale(value: number): void;
   setScale(value: number) {
     const previousScale: number = this.scale;
     if (previousScale !== value) {
@@ -282,8 +274,7 @@ class mxGraphView extends mxEventSource {
   /**
    * Returns the {@link translate}.
    */
-  // getTranslate(): mxPoint;
-  getTranslate(): mxPoint {
+  getTranslate() {
     return this.translate;
   }
 
@@ -295,7 +286,6 @@ class mxGraphView extends mxEventSource {
    * @param dx X-coordinate of the translation.
    * @param dy Y-coordinate of the translation.
    */
-  // setTranslate(dx: number, dy: number): void;
   setTranslate(dx: number, dy: number) {
     const previousTranslate = new mxPoint(this.translate.x, this.translate.y);
 
@@ -319,7 +309,7 @@ class mxGraphView extends mxEventSource {
     );
   }
 
-  isRendering(): boolean {
+  isRendering() {
     return this.rendering;
   }
 
@@ -327,7 +317,7 @@ class mxGraphView extends mxEventSource {
     this.rendering = value;
   }
 
-  isAllowEval(): boolean {
+  isAllowEval() {
     return this.allowEval;
   }
 
@@ -347,7 +337,7 @@ class mxGraphView extends mxEventSource {
    * Sets {@link states}.
    */
   // setStates(value: mxDictionary<mxCellState>): void;
-  setStates(value: any): void {
+  setStates(value: mxDictionary): void {
     this.states = value;
   }
 
@@ -524,22 +514,23 @@ class mxGraphView extends mxEventSource {
    * recursion.
    */
   // clear(cell: mxCell, force?: boolean, recurse?: boolean): void;
-  clear(
-    cell: mxCell = <mxCell>(<mxGraph>this.graph).getModel().getRoot(),
-    force: boolean = false,
-    recurse: boolean = true
-  ) {
-    const model: mxGraphModel = (<mxGraph>this.graph).getModel();
-    this.removeState(<mxCell>cell);
+  clear(cell?: mxCell | null, force: boolean = false, recurse: boolean = true) {
+    if (!cell) {
+      cell = this.graph.getModel().getRoot();
+    }
 
-    if (recurse && (force || cell != this.currentRoot)) {
-      const childCount: number = cell.getChildCount();
+    if (cell) {
+      this.removeState(cell);
 
-      for (let i = 0; i < childCount; i += 1) {
-        this.clear(<mxCell>cell.getChildAt(i), force);
+      if (recurse && (force || cell !== this.currentRoot)) {
+        const childCount: number = cell.getChildCount();
+
+        for (let i = 0; i < childCount; i += 1) {
+          this.clear(cell.getChildAt(i), force);
+        }
+      } else {
+        this.invalidate(cell);
       }
-    } else {
-      this.invalidate(cell);
     }
   }
 
@@ -1082,14 +1073,14 @@ class mxGraphView extends mxEventSource {
     const pState = this.getState(state.cell.getParent());
 
     if (geo.relative && pState != null && !pState.cell.isEdge()) {
-      const alpha = mxUtils.toRadians(pState.style[STYLE_ROTATION] || '0');
+      const alpha = toRadians(pState.style[STYLE_ROTATION] || '0');
       if (alpha !== 0) {
         const cos = Math.cos(alpha);
         const sin = Math.sin(alpha);
 
         const ct = new mxPoint(state.getCenterX(), state.getCenterY());
         const cx = new mxPoint(pState.getCenterX(), pState.getCenterY());
-        const pt = mxUtils.getRotatedPoint(ct, cos, sin, cx);
+        const pt = getRotatedPoint(ct, cos, sin, cx);
         state.x = pt.x - state.width / 2;
         state.y = pt.y - state.height / 2;
       }
@@ -1147,10 +1138,10 @@ class mxGraphView extends mxEventSource {
    */
   // updateVertexLabelOffset(state: mxCellState): void;
   updateVertexLabelOffset(state: mxCellState) {
-    const h = mxUtils.getValue(state.style, STYLE_LABEL_POSITION, ALIGN_CENTER);
+    const h = getValue(state.style, STYLE_LABEL_POSITION, ALIGN_CENTER);
 
     if (h === ALIGN_LEFT) {
-      let lw = mxUtils.getValue(state.style, STYLE_LABEL_WIDTH, null);
+      let lw = getValue(state.style, STYLE_LABEL_WIDTH, null);
 
       if (lw != null) {
         lw *= this.scale;
@@ -1164,11 +1155,11 @@ class mxGraphView extends mxEventSource {
       // @ts-ignore
       state.absoluteOffset.x += state.width;
     } else if (h === ALIGN_CENTER) {
-      const lw = mxUtils.getValue(state.style, STYLE_LABEL_WIDTH, null);
+      const lw = getValue(state.style, STYLE_LABEL_WIDTH, null);
 
       if (lw != null) {
         // Aligns text block with given width inside the vertex width
-        const align = mxUtils.getValue(state.style, STYLE_ALIGN, ALIGN_CENTER);
+        const align = getValue(state.style, STYLE_ALIGN, ALIGN_CENTER);
         let dx = 0;
 
         if (align === ALIGN_CENTER) {
@@ -1184,7 +1175,7 @@ class mxGraphView extends mxEventSource {
       }
     }
 
-    const v = mxUtils.getValue(
+    const v = getValue(
       state.style,
       STYLE_VERTICAL_LABEL_POSITION,
       ALIGN_MIDDLE
@@ -1482,7 +1473,7 @@ class mxGraphView extends mxEventSource {
 
     if (
       (points == null || points.length < 2) &&
-      (!mxUtils.getValue(edge.style, STYLE_ORTHOGONAL_LOOP, false) ||
+      (!getValue(edge.style, STYLE_ORTHOGONAL_LOOP, false) ||
         ((sc == null || sc.point == null) && (tc == null || tc.point == null)))
     ) {
       return source != null && source === target;
@@ -1501,12 +1492,8 @@ class mxGraphView extends mxEventSource {
     target: mxCellState | null = null
   ): any {
     let edgeStyle: any = this.isLoopStyleEnabled(edge, points, source, target)
-      ? mxUtils.getValue(
-          edge.style,
-          STYLE_LOOP,
-          (<mxGraph>this.graph).defaultLoopStyle
-        )
-      : !mxUtils.getValue(edge.style, STYLE_NOEDGESTYLE, false)
+      ? getValue(edge.style, STYLE_LOOP, (<mxGraph>this.graph).defaultLoopStyle)
+      : !getValue(edge.style, STYLE_NOEDGESTYLE, false)
       ? edge.style[STYLE_EDGE]
       : null;
 
@@ -1594,13 +1581,13 @@ class mxGraphView extends mxEventSource {
     let next = this.getNextPoint(edge, end, source);
 
     const orth = (<mxGraph>this.graph).isOrthogonal(edge);
-    const alpha = mxUtils.toRadians(Number(start.style[STYLE_ROTATION] || '0'));
+    const alpha = toRadians(Number(start.style[STYLE_ROTATION] || '0'));
     const center = new mxPoint(start.getCenterX(), start.getCenterY());
 
     if (alpha !== 0) {
       const cos = Math.cos(-alpha);
       const sin = Math.sin(-alpha);
-      next = mxUtils.getRotatedPoint(next, cos, sin, center);
+      next = getRotatedPoint(next, cos, sin, center);
     }
 
     let border = parseFloat(edge.style[STYLE_PERIMETER_SPACING] || 0);
@@ -1619,7 +1606,7 @@ class mxGraphView extends mxEventSource {
     if (alpha !== 0) {
       const cos = Math.cos(alpha);
       const sin = Math.sin(alpha);
-      pt = mxUtils.getRotatedPoint(pt, cos, sin, center);
+      pt = getRotatedPoint(pt, cos, sin, center);
     }
 
     return pt;
@@ -1640,7 +1627,7 @@ class mxGraphView extends mxEventSource {
     source: boolean = false
   ): mxCellState | null {
     const key = source ? STYLE_SOURCE_PORT : STYLE_TARGET_PORT;
-    const id = mxUtils.getValue(state.style, key);
+    const id = getValue(state.style, key);
 
     if (id != null) {
       const tmp = this.getState(
@@ -1689,17 +1676,13 @@ class mxGraphView extends mxEventSource {
           let flipV = false;
 
           if (terminal.cell.isVertex()) {
-            flipH = mxUtils.getValue(terminal.style, STYLE_FLIPH, 0) == 1;
-            flipV = mxUtils.getValue(terminal.style, STYLE_FLIPV, 0) == 1;
+            flipH = getValue(terminal.style, STYLE_FLIPH, 0) == 1;
+            flipV = getValue(terminal.style, STYLE_FLIPV, 0) == 1;
 
             // Legacy support for stencilFlipH/V
             if (terminal.shape != null && terminal.shape.stencil != null) {
-              flipH =
-                mxUtils.getValue(terminal.style, 'stencilFlipH', 0) == 1 ||
-                flipH;
-              flipV =
-                mxUtils.getValue(terminal.style, 'stencilFlipV', 0) == 1 ||
-                flipV;
+              flipH = getValue(terminal.style, 'stencilFlipH', 0) == 1 || flipH;
+              flipV = getValue(terminal.style, 'stencilFlipV', 0) == 1 || flipV;
             }
 
             if (flipH) {
@@ -2049,7 +2032,7 @@ class mxGraphView extends mxEventSource {
         // Works out which line segment the point of the label is closest to
         let p0 = absolutePoints[0];
         let pe = absolutePoints[1];
-        let minDist = mxUtils.ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
+        let minDist = ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
         let length = 0;
         let index = 0;
         let tmp = 0;
@@ -2057,7 +2040,7 @@ class mxGraphView extends mxEventSource {
         for (let i = 2; i < pointCount; i += 1) {
           p0 = pe;
           pe = absolutePoints[i];
-          const dist = mxUtils.ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
+          const dist = ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
           tmp += segments[i - 2];
 
           if (dist <= minDist) {
@@ -2104,10 +2087,8 @@ class mxGraphView extends mxEventSource {
           projlen = seg;
         }
 
-        let yDistance = Math.sqrt(
-          mxUtils.ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y)
-        );
-        const direction = mxUtils.relativeCcw(p0.x, p0.y, pe.x, pe.y, x, y);
+        let yDistance = Math.sqrt(ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y));
+        const direction = relativeCcw(p0.x, p0.y, pe.x, pe.y, x, y);
 
         if (direction === -1) {
           yDistance = -yDistance;
@@ -2291,7 +2272,7 @@ class mxGraphView extends mxEventSource {
   // isScrollEvent(evt: Event): boolean;
   isScrollEvent(evt: MouseEvent) {
     const graph = <mxGraph>this.graph;
-    const offset = mxUtils.getOffset(graph.container);
+    const offset = getOffset(graph.container);
     const pt = new mxPoint(evt.clientX - offset.x, evt.clientY - offset.y);
     const container = <HTMLElement>graph.container;
 
@@ -2408,7 +2389,7 @@ class mxGraphView extends mxEventSource {
 
           // Dispatches the drop event to the graph which
           // consumes and executes the source function
-          const pt = mxUtils.convertPoint(container, x, y);
+          const pt = convertPoint(container, x, y);
           state = (<mxGraphView>graph.view).getState(
             graph.getCellAt(pt.x, pt.y)
           );
@@ -2533,7 +2514,7 @@ class mxGraphView extends mxEventSource {
   // updateContainerStyle(container: Element): void;
   updateContainerStyle(container: HTMLElement) {
     // Workaround for offset of container
-    const style = mxUtils.getCurrentStyle(container);
+    const style = getCurrentStyle(container);
 
     if (style != null && style.position == 'static') {
       container.style.position = 'relative';

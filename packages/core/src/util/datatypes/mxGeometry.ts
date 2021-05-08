@@ -7,7 +7,7 @@
 
 import mxPoint from './mxPoint';
 import mxRectangle from './mxRectangle';
-import mxUtils from '../mxUtils';
+import mxUtils, { equalPoints, getRotatedPoint, toRadians } from '../mxUtils';
 import { clone } from '../mxCloneUtils';
 
 /**
@@ -201,14 +201,14 @@ class mxGeometry extends mxRectangle {
    * @param {mxPoint} cx   that specifies the center of the rotation.
    */
   rotate(angle: number, cx: mxPoint) {
-    const rad = mxUtils.toRadians(angle);
+    const rad = toRadians(angle);
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
 
     // Rotates the geometry
     if (!this.relative) {
       const ct = new mxPoint(this.getCenterX(), this.getCenterY());
-      const pt = mxUtils.getRotatedPoint(ct, cos, sin, cx);
+      const pt = getRotatedPoint(ct, cos, sin, cx);
 
       this.x = Math.round(pt.x - this.width / 2);
       this.y = Math.round(pt.y - this.height / 2);
@@ -216,14 +216,14 @@ class mxGeometry extends mxRectangle {
 
     // Rotates the source point
     if (this.sourcePoint) {
-      const pt = mxUtils.getRotatedPoint(this.sourcePoint, cos, sin, cx);
+      const pt = getRotatedPoint(this.sourcePoint, cos, sin, cx);
       this.sourcePoint.x = Math.round(pt.x);
       this.sourcePoint.y = Math.round(pt.y);
     }
 
     // Translates the target point
     if (this.targetPoint) {
-      const pt = mxUtils.getRotatedPoint(this.targetPoint, cos, sin, cx);
+      const pt = getRotatedPoint(this.targetPoint, cos, sin, cx);
       this.targetPoint.x = Math.round(pt.x);
       this.targetPoint.y = Math.round(pt.y);
     }
@@ -232,7 +232,7 @@ class mxGeometry extends mxRectangle {
     if (this.points) {
       for (let i = 0; i < this.points.length; i += 1) {
         if (this.points[i]) {
-          const pt = mxUtils.getRotatedPoint(this.points[i], cos, sin, cx);
+          const pt = getRotatedPoint(this.points[i], cos, sin, cx);
           this.points[i].x = Math.round(pt.x);
           this.points[i].y = Math.round(pt.y);
         }
@@ -339,7 +339,7 @@ class mxGeometry extends mxRectangle {
         !!this.sourcePoint?.equals(geom.sourcePoint)) &&
       ((this.targetPoint === null && geom.targetPoint === null) ||
         !!this.targetPoint?.equals(geom.targetPoint)) &&
-      mxUtils.equalPoints(this.points, geom.points) &&
+      equalPoints(this.points, geom.points) &&
       ((this.alternateBounds === null && geom.alternateBounds === null) ||
         !!this.alternateBounds?.equals(geom.alternateBounds)) &&
       ((this.offset === null && geom.offset === null) ||
@@ -348,7 +348,7 @@ class mxGeometry extends mxRectangle {
   }
 
   clone() {
-    return clone(this);
+    return clone(this) as mxGeometry;
   }
 }
 

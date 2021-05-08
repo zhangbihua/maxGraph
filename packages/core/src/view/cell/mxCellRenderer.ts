@@ -138,7 +138,6 @@ class mxCellRenderer {
    *
    * Defines the default shape for edges. Default is <mxConnector>.
    */
-  // defaultEdgeShape: mxConnector;
   defaultEdgeShape: typeof mxShape = mxConnector;
 
   /**
@@ -146,7 +145,6 @@ class mxCellRenderer {
    *
    * Defines the default shape for vertices. Default is <mxRectangleShape>.
    */
-  // defaultVertexShape: mxRectangleShape;
   defaultVertexShape: typeof mxRectangleShape = mxRectangleShape;
 
   /**
@@ -154,7 +152,6 @@ class mxCellRenderer {
    *
    * Defines the default shape for labels. Default is <mxText>.
    */
-  // defaultTextShape: mxText;
   defaultTextShape: typeof mxText = mxText;
 
   /**
@@ -163,8 +160,7 @@ class mxCellRenderer {
    * Specifies if the folding icon should ignore the horizontal
    * orientation of a swimlane. Default is true.
    */
-  // legacyControlPosition: boolean;
-  legacyControlPosition: boolean = true;
+  legacyControlPosition = true;
 
   /**
    * Variable: legacySpacing
@@ -172,24 +168,21 @@ class mxCellRenderer {
    * Specifies if spacing and label position should be ignored if overflow is
    * fill or width. Default is true for backwards compatiblity.
    */
-  // legacySpacing: boolean;
-  legacySpacing: boolean = true;
+  legacySpacing = true;
 
   /**
    * Variable: antiAlias
    *
    * Anti-aliasing option for new shapes. Default is true.
    */
-  // antiAlias: boolean;
-  antiAlias: boolean = true;
+  antiAlias = true;
 
   /**
    * Variable: minSvgStrokeWidth
    *
    * Minimum stroke width for SVG output.
    */
-  // minSvgStrokeWidth: number;
-  minSvgStrokeWidth: number = 1;
+  minSvgStrokeWidth = 1;
 
   /**
    * Variable: forceControlClickHandler
@@ -197,8 +190,7 @@ class mxCellRenderer {
    * Specifies if the enabled state of the graph should be ignored in the control
    * click handler (to allow folding in disabled graphs). Default is false.
    */
-  // forceControlClickHandler: boolean;
-  forceControlClickHandler: boolean = false;
+  forceControlClickHandler = false;
 
   /**
    * Registers the given constructor under the specified key in this instance of the renderer.
@@ -210,7 +202,6 @@ class mxCellRenderer {
    * @param key the shape name.
    * @param shape constructor of the {@link mxShape} subclass.
    */
-  // static registerShape(key: string, shape: new (...args: any) => mxShape): void;
   static registerShape(key: string, shape: typeof mxShape) {
     mxCellRenderer.defaultShapes[key] = shape;
   }
@@ -225,11 +216,12 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the shape should be initialized.
    */
-  // initializeShape(state: mxCellState): void;
   initializeShape(state: mxCellState) {
-    (<mxShape>state.shape).dialect = state.view.graph.dialect;
-    this.configureShape(state);
-    (<mxShape>state.shape).init(state.view.getDrawPane());
+    if (state.shape) {
+      state.shape.dialect = state.view.graph.dialect;
+      this.configureShape(state);
+      state.shape.init(state.view.getDrawPane());
+    }
   }
 
   /**
@@ -241,21 +233,21 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the shape should be created.
    */
-  // createShape(state: mxCellState): mxShape;
   createShape(state: mxCellState): mxShape | null {
     let shape = null;
 
-    if (state.style != null) {
+    if (state.style) {
       // Checks if there is a stencil for the name and creates
       // a shape instance for the stencil if one exists
       const stencil = mxStencilRegistry.getStencil(state.style[STYLE_SHAPE]);
-      if (stencil != null) {
+      if (stencil) {
         shape = new mxShape(stencil);
       } else {
         const ctor = this.getShapeConstructor(state);
         shape = new ctor();
       }
     }
+
     return shape;
   }
 
@@ -268,12 +260,12 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the indicator shape should be created.
    */
-  // createIndicatorShape(state: mxCellState): void;
-  createIndicatorShape(state: mxCellState): void {
-    // @ts-ignore
-    state.shape.indicatorShape = this.getShape(
-      <string>state.view.graph.getIndicatorShape(state)
-    );
+  createIndicatorShape(state: mxCellState) {
+    if (state.shape) {
+      state.shape.indicatorShape = this.getShape(
+        state.view.graph.getIndicatorShape(state)
+      );
+    }
   }
 
   /**
@@ -281,10 +273,8 @@ class mxCellRenderer {
    *
    * Returns the shape for the given name from <defaultShapes>.
    */
-  // getShape(name: string): mxShape;
-  getShape(name: string): typeof mxShape {
-    // @ts-ignore
-    return name != null ? mxCellRenderer.defaultShapes[name] : null;
+  getShape(name: string | null) {
+    return name ? mxCellRenderer.defaultShapes[name] : null;
   }
 
   /**
@@ -292,14 +282,15 @@ class mxCellRenderer {
    *
    * Returns the constructor to be used for creating the shape.
    */
-  // getShapeConstructor(state: mxCellState): any;
   getShapeConstructor(state: mxCellState) {
     let ctor = this.getShape(state.style[STYLE_SHAPE]);
-    if (ctor == null) {
+
+    if (!ctor) {
       ctor = <typeof mxShape>(
         (state.cell.isEdge() ? this.defaultEdgeShape : this.defaultVertexShape)
       );
     }
+
     return ctor;
   }
 
@@ -312,19 +303,21 @@ class mxCellRenderer {
    *
    * state - <mxCellState> for which the shape should be configured.
    */
-  // configureShape(state: mxCellState): void;
   configureShape(state: mxCellState) {
-    const shape = <any>state.shape;
-    shape.apply(state);
-    shape.image = state.view.graph.getImage(state);
-    shape.indicatorColor = state.view.graph.getIndicatorColor(state);
-    shape.indicatorStrokeColor = state.style[STYLE_INDICATOR_STROKECOLOR];
-    shape.indicatorGradientColor = state.view.graph.getIndicatorGradientColor(
-      state
-    );
-    shape.indicatorDirection = state.style[STYLE_INDICATOR_DIRECTION];
-    shape.indicatorImage = state.view.graph.getIndicatorImage(state);
-    this.postConfigureShape(state);
+    const shape = state.shape;
+
+    if (shape) {
+      shape.apply(state);
+      shape.image = state.view.graph.getImage(state);
+      shape.indicatorColor = state.view.graph.getIndicatorColor(state);
+      shape.indicatorStrokeColor = state.style[STYLE_INDICATOR_STROKECOLOR];
+      shape.indicatorGradientColor = state.view.graph.getIndicatorGradientColor(
+        state
+      );
+      shape.indicatorDirection = state.style[STYLE_INDICATOR_DIRECTION];
+      shape.indicatorImage = state.view.graph.getIndicatorImage(state);
+      this.postConfigureShape(state);
+    }
   }
 
   /**

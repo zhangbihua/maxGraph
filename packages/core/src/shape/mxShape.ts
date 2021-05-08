@@ -5,7 +5,12 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxRectangle from '../util/datatypes/mxRectangle';
-import mxUtils from '../util/mxUtils';
+import {
+  getBoundingBox,
+  getDirectedBounds,
+  getValue,
+  mod,
+} from '../util/mxUtils';
 import {
   DIRECTION_EAST,
   DIRECTION_NORTH,
@@ -32,8 +37,9 @@ import mxClient from '../mxClient';
 import mxCellState from '../view/cell/mxCellState';
 import mxStencil from './node/mxStencil';
 import mxCellOverlay from '../view/cell/mxCellOverlay';
+import { CellStateStyles } from '../types';
 
-const toBool = (i: any): boolean => {
+const toBool = (i: any) => {
   if (i === 0) return false;
   if (i === 1) return true;
   if (i === '0') return false;
@@ -104,11 +110,11 @@ class mxShape {
    * container - DOM node that will contain the shape.
    */
   // init(container: Element): void;
-  init(container: HTMLElement | SVGElement | null = null) {
-    if (this.node == null) {
-      this.node = this.create(container);
+  init(container: SVGElement | null = null) {
+    if (!this.node) {
+      this.node = this.create();
 
-      if (container != null) {
+      if (container) {
         container.appendChild(this.node);
       }
     }
@@ -119,8 +125,7 @@ class mxShape {
    *
    * Sets the styles to their default values.
    */
-  // initStyles(container: Element): void;
-  initStyles(container: SVGElement | null = null) {
+  initStyles() {
     this.strokewidth = 1;
     this.rotation = 0;
     this.opacity = 100;
@@ -133,14 +138,14 @@ class mxShape {
   // TODO: Document me!!
 
   // Assigned in mxCellRenderer
-  preserveImageAspect: boolean = false;
+  preserveImageAspect = false;
   overlay: mxCellOverlay | null = null;
   indicator: mxShape | null = null;
   indicatorShape: typeof mxShape | null = null;
 
   // Assigned in mxCellHighlight
-  opacity: number = 100;
-  isDashed: boolean = false;
+  opacity = 100;
+  isDashed = false;
 
   fill: string | null = null;
 
@@ -148,7 +153,7 @@ class mxShape {
 
   gradientDirection: string | null = null;
 
-  fillOpacity: number = 100;
+  fillOpacity = 100;
 
   strokeOpacity: number | null = 100;
 
@@ -168,23 +173,23 @@ class mxShape {
 
   direction: string | null = null;
 
-  flipH: boolean = false;
+  flipH = false;
 
-  flipV: boolean = false;
+  flipV = false;
 
-  isShadow: boolean = false;
+  isShadow = false;
 
-  isRounded: boolean = false;
+  isRounded = false;
 
-  rotation: number = 0;
+  rotation = 0;
 
-  cursor: string = '';
+  cursor = '';
 
   verticalTextRotation: number | null = null;
 
   oldGradients: any[] | null = null;
 
-  glass: boolean = false;
+  glass = false;
 
   /**
    * Variable: dialect
@@ -192,7 +197,6 @@ class mxShape {
    * Holds the dialect in which the shape is to be painted.
    * This can be one of the DIALECT constants in <mxConstants>.
    */
-  // dialect: string;
   dialect: string | null = null;
 
   /**
@@ -200,31 +204,27 @@ class mxShape {
    *
    * Holds the scale in which the shape is being painted.
    */
-  // scale: number;
-  scale: number = 1;
+  scale = 1;
 
   /**
    * Variable: antiAlias
    *
    * Rendering hint for configuring the canvas.
    */
-  // antiAlias: boolean;
-  antiAlias: boolean = true;
+  antiAlias = true;
 
   /**
    * Variable: minSvgStrokeWidth
    *
    * Minimum stroke width for SVG output.
    */
-  // minSvgStrokeWidth: number;
-  minSvgStrokeWidth: number = 1;
+  minSvgStrokeWidth = 1;
 
   /**
    * Variable: bounds
    *
    * Holds the <mxRectangle> that specifies the bounds of this shape.
    */
-  // bounds: mxRectangle;
   bounds: mxRectangle | null = null;
 
   /**
@@ -232,15 +232,13 @@ class mxShape {
    *
    * Holds the array of <mxPoints> that specify the points of this shape.
    */
-  // points: mxPoint[];
-  points: (mxPoint | null)[] | null = null;
+  points: (mxPoint | null)[] = [];
 
   /**
    * Variable: node
    *
    * Holds the outermost DOM node that represents this shape.
    */
-  // node: HTMLElement;
   node: SVGGElement | null = null;
 
   /**
@@ -248,16 +246,14 @@ class mxShape {
    *
    * Optional reference to the corresponding <mxCellState>.
    */
-  // state?: mxCellState;
-  state?: mxCellState | null = null;
+  state: mxCellState | null = null;
 
   /**
    * Variable: style
    *
    * Optional reference to the style of the corresponding <mxCellState>.
    */
-  // style?: { [key: string]: any };
-  style?: any = null;
+  style: CellStateStyles | null = null;
 
   /**
    * Variable: boundingBox
@@ -265,7 +261,6 @@ class mxShape {
    * Contains the bounding box of the shape, that is, the smallest rectangle
    * that includes all pixels of the shape.
    */
-  // boundingBox: mxRectangle;
   boundingBox: mxRectangle | null = null;
 
   /**
@@ -273,7 +268,6 @@ class mxShape {
    *
    * Holds the <mxStencil> that defines the shape.
    */
-  // stencil: mxStencil;
   stencil: mxStencil | null = null;
 
   /**
@@ -282,24 +276,21 @@ class mxShape {
    * Event-tolerance for SVG strokes (in px). Default is 8. This is only passed
    * to the canvas in <createSvgCanvas> if <pointerEvents> is true.
    */
-  // svgStrokeTolerance: number;
-  svgStrokeTolerance: number = 8;
+  svgStrokeTolerance = 8;
 
   /**
    * Variable: pointerEvents
    *
    * Specifies if pointer events should be handled. Default is true.
    */
-  // pointerEvents: boolean;
-  pointerEvents: boolean = true;
+  pointerEvents = true;
 
   /**
    * Variable: svgPointerEvents
    *
    * Specifies if pointer events should be handled. Default is true.
    */
-  // svgPointerEvents: 'all';
-  svgPointerEvents: string = 'all';
+  svgPointerEvents = 'all';
 
   /**
    * Variable: shapePointerEvents
@@ -307,8 +298,7 @@ class mxShape {
    * Specifies if pointer events outside of shape should be handled. Default
    * is false.
    */
-  // shapePointerEvents: boolean;
-  shapePointerEvents: boolean = false;
+  shapePointerEvents = false;
 
   /**
    * Variable: stencilPointerEvents
@@ -316,8 +306,7 @@ class mxShape {
    * Specifies if pointer events outside of stencils should be handled. Default
    * is false. Set this to true for backwards compatibility with the 1.x branch.
    */
-  // stencilPointerEvents: boolean;
-  stencilPointerEvents: boolean = false;
+  stencilPointerEvents = false;
 
   /**
    * Variable: outline
@@ -327,16 +316,14 @@ class mxShape {
    * not be painted for outlines. Default is false. This should be set before
    * calling <apply>.
    */
-  // outline: boolean;
-  outline: boolean = false;
+  outline = false;
 
   /**
    * Variable: visible
    *
    * Specifies if the shape is visible. Default is true.
    */
-  // visible: boolean;
-  visible: boolean = true;
+  visible = true;
 
   /**
    * Variable: useSvgBoundingBox
@@ -344,8 +331,7 @@ class mxShape {
    * Allows to use the SVG bounding box in SVG. Default is false for performance
    * reasons.
    */
-  // useSvgBoundingBox: boolean;
-  useSvgBoundingBox: boolean = true;
+  useSvgBoundingBox = true;
 
   /**
    * Function: isHtmlAllowed
@@ -353,7 +339,6 @@ class mxShape {
    * Returns true if HTML is allowed for this shape. This implementation always
    * returns false.
    */
-  // isHtmlAllowed(): boolean;
   isHtmlAllowed() {
     return false;
   }
@@ -363,16 +348,13 @@ class mxShape {
    *
    * Returns 0, or 0.5 if <strokewidth> % 2 == 1.
    */
-  // getSvgScreenOffset(): number;
-  getSvgScreenOffset(): number {
+  getSvgScreenOffset() {
     const sw =
       this.stencil && this.stencil.strokewidth !== 'inherit'
         ? Number(this.stencil.strokewidth)
         : <number>this.strokewidth;
 
-    return mxUtils.mod(Math.max(1, Math.round(sw * this.scale)), 2) === 1
-      ? 0.5
-      : 0;
+    return mod(Math.max(1, Math.round(sw * this.scale)), 2) === 1 ? 0.5 : 0;
   }
 
   /**
@@ -387,8 +369,7 @@ class mxShape {
    *
    * container - DOM node that will contain the shape.
    */
-  // create(container: Element): Element;
-  create(container: SVGElement | HTMLElement | null): SVGGElement {
+  create() {
     return document.createElementNS('http://www.w3.org/2000/svg', 'g');
   }
 
@@ -398,8 +379,7 @@ class mxShape {
    * Reconfigures this shape. This will update the colors etc in
    * addition to the bounds or points.
    */
-  // reconfigure(): void;
-  reconfigure(): void {
+  reconfigure() {
     this.redraw();
   }
 
@@ -408,8 +388,7 @@ class mxShape {
    *
    * Creates and returns the SVG node(s) to represent this shape.
    */
-  // redraw(): void;
-  redraw(): void {
+  redraw() {
     if (!this.node) return;
     this.updateBoundsFromPoints();
 
@@ -429,10 +408,10 @@ class mxShape {
    *
    * Removes all child nodes and resets all CSS.
    */
-  // clear(): void;
-  clear(): void {
+  clear() {
     if (!this.node) return;
-    while (this.node.lastChild != null) {
+
+    while (this.node.lastChild) {
       this.node.removeChild(this.node.lastChild);
     }
   }
@@ -442,11 +421,10 @@ class mxShape {
    *
    * Updates the bounds based on the points.
    */
-  // updateBoundsFromPoints(): void;
-  updateBoundsFromPoints(): void {
+  updateBoundsFromPoints() {
     const pts = this.points;
 
-    if (pts != null && pts.length > 0 && pts[0] != null) {
+    if (pts.length > 0 && pts[0]) {
       this.bounds = new mxRectangle(
         Math.round(pts[0].x),
         Math.round(pts[0].y),
@@ -455,7 +433,7 @@ class mxShape {
       );
 
       for (const pt of pts) {
-        if (pt != null) {
+        if (pt) {
           this.bounds.add(
             new mxRectangle(Math.round(pt.x), Math.round(pt.y), 1, 1)
           );
@@ -471,53 +449,46 @@ class mxShape {
    * given scaled and translated bounds of the shape. This method should not
    * change the rectangle in-place. This implementation returns the given rect.
    */
-  // getLabelBounds(rect: mxRectangle): mxRectangle;
-  getLabelBounds(rect: mxRectangle): mxRectangle {
-    const d = mxUtils.getValue(this.style, STYLE_DIRECTION, DIRECTION_EAST);
+  getLabelBounds(rect: mxRectangle) {
+    const d = getValue(this.style, STYLE_DIRECTION, DIRECTION_EAST);
     let bounds = rect.clone();
 
     // Normalizes argument for getLabelMargins hook
     if (
       d !== DIRECTION_SOUTH &&
       d !== DIRECTION_NORTH &&
-      this.state != null &&
-      this.state.text != null &&
+      this.state &&
+      this.state.text &&
       this.state.text.isPaintBoundsInverted()
     ) {
       bounds = bounds.clone();
       [bounds.width, bounds.height] = [bounds.height, bounds.width];
     }
 
-    let labelMargins: mxRectangle | null = this.getLabelMargins(bounds);
+    let labelMargins = this.getLabelMargins(bounds);
 
-    if (labelMargins != null) {
-      labelMargins = <mxRectangle>(<mxRectangle>labelMargins).clone();
+    if (labelMargins) {
+      labelMargins = labelMargins.clone();
 
-      let flipH = toBool(mxUtils.getValue(this.style, STYLE_FLIPH, false));
-      let flipV = toBool(mxUtils.getValue(this.style, STYLE_FLIPV, false));
+      let flipH = toBool(getValue(this.style, STYLE_FLIPH, false));
+      let flipV = toBool(getValue(this.style, STYLE_FLIPV, false));
 
       // Handles special case for vertical labels
       if (
-        this.state != null &&
-        this.state.text != null &&
+        this.state &&
+        this.state.text &&
         this.state.text.isPaintBoundsInverted()
       ) {
-        const tmp = <number>labelMargins.x;
-        labelMargins.x = <number>labelMargins.height;
-        labelMargins.height = <number>labelMargins.width;
-        labelMargins.width = <number>labelMargins.y;
+        const tmp = labelMargins.x;
+        labelMargins.x = labelMargins.height;
+        labelMargins.height = labelMargins.width;
+        labelMargins.width = labelMargins.y;
         labelMargins.y = tmp;
 
         [flipH, flipV] = [flipV, flipH];
       }
 
-      return mxUtils.getDirectedBounds(
-        rect,
-        labelMargins,
-        this.style,
-        flipH,
-        flipV
-      );
+      return getDirectedBounds(rect, labelMargins, this.style, flipH, flipV);
     }
     return rect;
   }
@@ -529,8 +500,7 @@ class mxShape {
    * computing the label bounds as an <mxRectangle>, where the bottom and right
    * margin are defined in the width and height of the rectangle, respectively.
    */
-  // getLabelMargins(rect: mxRectangle): mxRectangle | null;
-  getLabelMargins(rect: mxRectangle | null = null): mxRectangle | null {
+  getLabelMargins(rect: mxRectangle | null): mxRectangle | null {
     return null;
   }
 
@@ -539,13 +509,12 @@ class mxShape {
    *
    * Returns true if the bounds are not null and all of its variables are numeric.
    */
-  // checkBounds(): boolean;
-  checkBounds(): boolean {
+  checkBounds() {
     return (
       !Number.isNaN(this.scale) &&
       Number.isFinite(this.scale) &&
       this.scale > 0 &&
-      this.bounds != null &&
+      this.bounds &&
       !Number.isNaN(this.bounds.x) &&
       !Number.isNaN(this.bounds.y) &&
       !Number.isNaN(this.bounds.width) &&
@@ -560,12 +529,12 @@ class mxShape {
    *
    * Updates the SVG or VML shape.
    */
-  // redrawShape(): void;
   redrawShape(): void {
     if (!this.node) return;
+
     const canvas = this.createCanvas();
 
-    if (canvas != null) {
+    if (canvas) {
       // Specifies if events should be handled
       canvas.pointerEvents = this.pointerEvents;
 
@@ -587,15 +556,14 @@ class mxShape {
    *
    * Creates a new canvas for drawing this shape. May return null.
    */
-  // createCanvas(): Element;
-  createCanvas(): mxSvgCanvas2D {
+  createCanvas() {
     const canvas = this.createSvgCanvas();
 
-    if (canvas != null && this.outline) {
+    if (canvas && this.outline) {
       canvas.setStrokeWidth(this.strokewidth);
       canvas.setStrokeColor(this.stroke);
 
-      if (this.isDashed != null) {
+      if (this.isDashed) {
         canvas.setDashed(this.isDashed);
       }
 
@@ -606,6 +574,7 @@ class mxShape {
       canvas.setDashed = () => {};
       canvas.text = () => {};
     }
+
     return canvas;
   }
 
@@ -614,20 +583,18 @@ class mxShape {
    *
    * Creates and returns an <mxSvgCanvas2D> for rendering this shape.
    */
-  // createSvgCanvas(): mxSvgCanvas2D;
-  createSvgCanvas(): mxSvgCanvas2D {
+  createSvgCanvas() {
     const canvas = new mxSvgCanvas2D(this.node, false);
     canvas.strokeTolerance = this.pointerEvents ? this.svgStrokeTolerance : 0;
     canvas.pointerEventsValue = this.svgPointerEvents;
     const off = this.getSvgScreenOffset();
 
-    if (off !== 0) {
-      (<SVGGElement>this.node).setAttribute(
-        'transform',
-        `translate(${off},${off})`
-      );
-    } else {
-      (<SVGGElement>this.node).removeAttribute('transform');
+    if (this.node) {
+      if (off !== 0) {
+        this.node.setAttribute('transform', `translate(${off},${off})`);
+      } else {
+        this.node.removeAttribute('transform');
+      }
     }
 
     canvas.minStrokeWidth = this.minSvgStrokeWidth;
@@ -647,14 +614,14 @@ class mxShape {
    * Destroys the given canvas which was used for drawing. This implementation
    * increments the reference counts on all shared gradients used in the canvas.
    */
-  destroyCanvas(canvas: mxSvgCanvas2D): void {
+  destroyCanvas(canvas: mxSvgCanvas2D) {
     // Manages reference counts
     if (canvas instanceof mxSvgCanvas2D) {
       // Increments ref counts
       for (const key in canvas.gradients) {
         const gradient = canvas.gradients[key];
 
-        if (gradient != null) {
+        if (gradient) {
           gradient.mxRefCount = (gradient.mxRefCount || 0) + 1;
         }
       }
@@ -669,20 +636,19 @@ class mxShape {
    *
    * Invoked before paint is called.
    */
-  beforePaint(c: mxSvgCanvas2D): void {}
+  beforePaint(c: mxSvgCanvas2D) {}
 
   /**
    * Function: afterPaint
    *
    * Invokes after paint was called.
    */
-  afterPaint(c: mxSvgCanvas2D): void {}
+  afterPaint(c: mxSvgCanvas2D) {}
 
   /**
    * Generic rendering code.
    */
-  // paint(c: mxAbstractCanvas2D): void;
-  paint(c: mxSvgCanvas2D): void {
+  paint(c: mxSvgCanvas2D) {
     let strokeDrawn = false;
 
     if (c != null && this.outline) {
@@ -801,7 +767,7 @@ class mxShape {
       c.setDashed(
         this.isDashed,
         this.style != null
-          ? toBool(mxUtils.getValue(this.style, STYLE_FIX_DASH, false))
+          ? toBool(getValue(this.style, STYLE_FIX_DASH, false))
           : false
       );
     }
@@ -893,9 +859,7 @@ class mxShape {
     if (
       !this.outline ||
       this.style == null ||
-      toBool(
-        mxUtils.getValue(this.style, STYLE_BACKGROUND_OUTLINE, 0) === false
-      )
+      toBool(getValue(this.style, STYLE_BACKGROUND_OUTLINE, 0) === false)
     ) {
       c.setShadow(false);
       this.paintForeground(c, x, y, w, h);
@@ -945,22 +909,16 @@ class mxShape {
   getArcSize(w: number, h: number): number {
     let r = 0;
 
-    if (toBool(mxUtils.getValue(this.style, STYLE_ABSOLUTE_ARCSIZE, 0))) {
+    if (toBool(getValue(this.style, STYLE_ABSOLUTE_ARCSIZE, 0))) {
       r = Math.min(
         w / 2,
-        Math.min(
-          h / 2,
-          mxUtils.getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2
-        )
+        Math.min(h / 2, getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2)
       );
     } else {
       const f = parseFloat(
         String(
-          mxUtils.getValue(
-            this.style,
-            STYLE_ARCSIZE,
-            RECTANGLE_ROUNDING_FACTOR * 100
-          ) / 100
+          getValue(this.style, STYLE_ARCSIZE, RECTANGLE_ROUNDING_FACTOR * 100) /
+            100
         )
       );
       r = Math.min(w * f, h * f);
@@ -1046,7 +1004,7 @@ class mxShape {
       }
 
       while (i < (close ? pts.length : pts.length - 1)) {
-        let tmp = pts[mxUtils.mod(i, pts.length)];
+        let tmp = pts[mod(i, pts.length)];
         let dx = pt.x - tmp.x;
         let dy = pt.y - tmp.y;
 
@@ -1069,7 +1027,7 @@ class mxShape {
           // Draws a curve from the last point to the current
           // point with a spacing of size off the current point
           // into direction of the next point
-          let next = pts[mxUtils.mod(i + 1, pts.length)];
+          let next = pts[mod(i + 1, pts.length)];
 
           // Uses next non-overlapping point
           while (
@@ -1077,7 +1035,7 @@ class mxShape {
             Math.round(next.x - tmp.x) === 0 &&
             Math.round(next.y - tmp.y) === 0
           ) {
-            next = pts[mxUtils.mod(i + 2, pts.length)];
+            next = pts[mod(i + 2, pts.length)];
             i++;
           }
 
@@ -1336,7 +1294,7 @@ class mxShape {
         const rot = this.getShapeRotation();
 
         if (rot !== 0) {
-          bbox = mxUtils.getBoundingBox(bbox, rot);
+          bbox = getBoundingBox(bbox, rot);
         }
       }
       this.boundingBox = bbox;
@@ -1408,7 +1366,7 @@ class mxShape {
   // getTextRotation(): number;
   getTextRotation(): number {
     let rot = this.getRotation();
-    if (!toBool(mxUtils.getValue(this.style, STYLE_HORIZONTAL, 1))) {
+    if (!toBool(getValue(this.style, STYLE_HORIZONTAL, 1))) {
       rot += this.verticalTextRotation || -90; // WARNING WARNING!!!! ===============================================================================================
     }
     return rot;

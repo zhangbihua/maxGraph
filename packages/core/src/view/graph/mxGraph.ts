@@ -6480,7 +6480,7 @@ class mxGraph extends mxEventSource {
    * @param cell {@link mxCell} that represents the root.
    */
   // getTranslateForRoot(cell: mxCell): mxPoint;
-  getTranslateForRoot(cell: mxCell): any {
+  getTranslateForRoot(cell: mxCell | null): mxPoint | null {
     return null;
   }
 
@@ -7661,33 +7661,25 @@ class mxGraph extends mxEventSource {
     source: mxCell | null = null,
     target: mxCell | null = null
   ): string | null {
-    if (
-      edge != null &&
-      !this.isAllowDanglingEdges() &&
-      (source == null || target == null)
-    ) {
+    if (edge && !this.isAllowDanglingEdges() && (!source || !target)) {
       return '';
     }
 
-    if (
-      edge != null &&
-      edge.getTerminal(true) == null &&
-      edge.getTerminal(false) == null
-    ) {
+    if (edge && !edge.getTerminal(true) && !edge.getTerminal(false)) {
       return null;
     }
 
     // Checks if we're dealing with a loop
-    if (!this.allowLoops && source === target && source != null) {
+    if (!this.allowLoops && source === target && source) {
       return '';
     }
 
     // Checks if the connection is generally allowed
-    if (!this.isValidConnection(<mxCell>source, <mxCell>target)) {
+    if (!this.isValidConnection(source, target)) {
       return '';
     }
 
-    if (source != null && target != null) {
+    if (source && target) {
       let error = '';
 
       // Checks if the cells are already connected
@@ -7719,7 +7711,7 @@ class mxGraph extends mxEventSource {
       );
 
       // Checks the change against each multiplicity rule
-      if (this.multiplicities != null) {
+      if (this.multiplicities) {
         for (let i = 0; i < this.multiplicities.length; i += 1) {
           const err = this.multiplicities[i].check(
             this,
@@ -7737,7 +7729,7 @@ class mxGraph extends mxEventSource {
       }
 
       // Validates the source and target terminals independently
-      const err = this.validateEdge(<mxCell>edge, source, target);
+      const err = this.validateEdge(edge, source, target);
       if (err != null) {
         error += err;
       }
@@ -7756,7 +7748,11 @@ class mxGraph extends mxEventSource {
    * @param target {@link mxCell} that represents the target terminal.
    */
   // validateEdge(edge: mxCell, source: mxCell, target: mxCell): string | null;
-  validateEdge(edge: mxCell, source: mxCell, target: mxCell): void | null {
+  validateEdge(
+    edge: mxCell | null,
+    source: mxCell | null,
+    target: mxCell | null
+  ): string | null {
     return null;
   }
 
@@ -9332,10 +9328,10 @@ class mxGraph extends mxEventSource {
    * @param cell {@link mxCell} that represents a possible source or null.
    */
   // isValidSource(cell: mxCell): boolean;
-  isValidSource(cell: mxCell): boolean {
+  isValidSource(cell: mxCell | null): boolean {
     return (
-      (cell == null && this.allowDanglingEdges) ||
-      (cell != null &&
+      (!cell && this.allowDanglingEdges) ||
+      (!!cell &&
         (!cell.isEdge() || this.connectableEdges) &&
         cell.isConnectable())
     );
@@ -9348,7 +9344,7 @@ class mxGraph extends mxEventSource {
    * @param cell {@link mxCell} that represents a possible target or null.
    */
   // isValidTarget(cell: mxCell): boolean;
-  isValidTarget(cell: mxCell): boolean {
+  isValidTarget(cell: mxCell | null): boolean {
     return this.isValidSource(cell);
   }
 
@@ -9363,7 +9359,7 @@ class mxGraph extends mxEventSource {
    * @param target {@link mxCell} that represents the target cell.
    */
   // isValidConnection(source: mxCell, target: mxCell): boolean;
-  isValidConnection(source: mxCell, target: mxCell): boolean {
+  isValidConnection(source: mxCell | null, target: mxCell | null): boolean {
     return this.isValidSource(source) && this.isValidTarget(target);
   }
 
