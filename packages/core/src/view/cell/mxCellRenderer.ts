@@ -46,33 +46,6 @@ import {
   SHAPE_RHOMBUS,
   SHAPE_SWIMLANE,
   SHAPE_TRIANGLE,
-  STYLE_ALIGN,
-  STYLE_FILLCOLOR,
-  STYLE_FONTCOLOR,
-  STYLE_FONTFAMILY,
-  STYLE_FONTSIZE,
-  STYLE_FONTSTYLE,
-  STYLE_GRADIENTCOLOR,
-  STYLE_HORIZONTAL,
-  STYLE_INDICATOR_DIRECTION,
-  STYLE_INDICATOR_STROKECOLOR,
-  STYLE_LABEL_BACKGROUNDCOLOR,
-  STYLE_LABEL_BORDERCOLOR,
-  STYLE_LABEL_POSITION,
-  STYLE_LABEL_WIDTH,
-  STYLE_OVERFLOW,
-  STYLE_ROTATION,
-  STYLE_SHAPE,
-  STYLE_SPACING,
-  STYLE_SPACING_BOTTOM,
-  STYLE_SPACING_LEFT,
-  STYLE_SPACING_RIGHT,
-  STYLE_SPACING_TOP,
-  STYLE_STROKECOLOR,
-  STYLE_TEXT_DIRECTION,
-  STYLE_TEXT_OPACITY,
-  STYLE_VERTICAL_ALIGN,
-  STYLE_VERTICAL_LABEL_POSITION,
 } from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 import mxRectangle from '../../util/datatypes/mxRectangle';
@@ -248,7 +221,7 @@ class mxCellRenderer {
     if (state.style != null) {
       // Checks if there is a stencil for the name and creates
       // a shape instance for the stencil if one exists
-      const stencil = mxStencilRegistry.getStencil(state.style[STYLE_SHAPE]);
+      const stencil = mxStencilRegistry.getStencil(state.style.shape);
       if (stencil != null) {
         shape = new mxShape(stencil);
       } else {
@@ -294,7 +267,7 @@ class mxCellRenderer {
    */
   // getShapeConstructor(state: mxCellState): any;
   getShapeConstructor(state: mxCellState) {
-    let ctor = this.getShape(state.style[STYLE_SHAPE]);
+    let ctor = this.getShape(state.style.shape);
     if (ctor == null) {
       ctor = <typeof mxShape>(
         (state.cell.isEdge() ? this.defaultEdgeShape : this.defaultVertexShape)
@@ -318,11 +291,11 @@ class mxCellRenderer {
     shape.apply(state);
     shape.image = state.view.graph.getImage(state);
     shape.indicatorColor = state.view.graph.getIndicatorColor(state);
-    shape.indicatorStrokeColor = state.style[STYLE_INDICATOR_STROKECOLOR];
+    shape.indicatorStrokeColor = state.style.indicatorStrokeColor;
     shape.indicatorGradientColor = state.view.graph.getIndicatorGradientColor(
       state
     );
-    shape.indicatorDirection = state.style[STYLE_INDICATOR_DIRECTION];
+    shape.indicatorDirection = state.style.indicatorDirection;
     shape.indicatorImage = state.view.graph.getIndicatorImage(state);
     this.postConfigureShape(state);
   }
@@ -338,11 +311,11 @@ class mxCellRenderer {
   // postConfigureShape(state: mxCellState): void;
   postConfigureShape(state: mxCellState) {
     if (state.shape != null) {
-      this.resolveColor(state, 'indicatorGradientColor', STYLE_GRADIENTCOLOR);
-      this.resolveColor(state, 'indicatorColor', STYLE_FILLCOLOR);
-      this.resolveColor(state, 'gradient', STYLE_GRADIENTCOLOR);
-      this.resolveColor(state, 'stroke', STYLE_STROKECOLOR);
-      this.resolveColor(state, 'fill', STYLE_FILLCOLOR);
+      this.resolveColor(state, 'indicatorGradientColor', 'gradientColor');
+      this.resolveColor(state, 'indicatorColor', 'fillColor');
+      this.resolveColor(state, 'gradient', 'gradientColor');
+      this.resolveColor(state, 'stroke', 'strokeColor');
+      this.resolveColor(state, 'fill', 'fillColor');
     }
   }
 
@@ -358,10 +331,10 @@ class mxCellRenderer {
     if (state.style != null) {
       const values = ['inherit', 'swimlane', 'indicated'];
       const styles = [
-        STYLE_FILLCOLOR,
-        STYLE_STROKECOLOR,
-        STYLE_GRADIENTCOLOR,
-        STYLE_FONTCOLOR,
+        'fillColor',
+        'strokeColor',
+        'gradientColor',
+        'fontColor',
       ];
 
       for (let i = 0; i < styles.length; i += 1) {
@@ -381,7 +354,7 @@ class mxCellRenderer {
    */
   // resolveColor(state: mxCellState, field: string, key: string): void;
   resolveColor(state: mxCellState, field: string, key: string) {
-    const shape = key === STYLE_FONTCOLOR ? state.text : state.shape;
+    const shape = key === 'fontColor' ? state.text : state.shape;
 
     if (shape != null) {
       const { graph } = state.view;
@@ -391,18 +364,18 @@ class mxCellRenderer {
 
       if (value === 'inherit') {
         // @ts-ignore
-        referenced = graph.model.getParent(state.cell);
+        referenced = state.cell.getParent();
       } else if (value === 'swimlane') {
         // @ts-ignore
         shape[field] =
-          key === STYLE_STROKECOLOR || key === STYLE_FONTCOLOR
+          key === 'strokeColor' || key === 'fontColor'
             ? '#000000'
             : '#ffffff';
 
         // @ts-ignore
-        if (graph.model.getTerminal(state.cell, false) != null) {
+        if (state.cell.getTerminal(false) != null) {
           // @ts-ignore
-          referenced = graph.model.getTerminal(state.cell, false);
+          referenced = state.cell.getTerminal(false);
         } else {
           referenced = state.cell;
         }
@@ -413,19 +386,19 @@ class mxCellRenderer {
         // @ts-ignore
         shape[field] = state.shape.indicatorColor;
       } else if (
-        key !== STYLE_FILLCOLOR &&
-        value === STYLE_FILLCOLOR &&
+        key !== 'fillColor' &&
+        value === 'fillColor' &&
         state.shape != null
       ) {
         // @ts-ignore
-        shape[field] = state.style[STYLE_FILLCOLOR];
+        shape[field] = state.style.fillColor;
       } else if (
-        key !== STYLE_STROKECOLOR &&
-        value === STYLE_STROKECOLOR &&
+        key !== 'strokeColor' &&
+        value === 'strokeColor' &&
         state.shape != null
       ) {
         // @ts-ignore
-        shape[field] = state.style[STYLE_STROKECOLOR];
+        shape[field] = state.style.strokeColor;
       }
 
       if (referenced != null) {
@@ -434,7 +407,7 @@ class mxCellRenderer {
         shape[field] = null;
 
         if (rstate != null) {
-          const rshape = key === STYLE_FONTCOLOR ? rstate.text : rstate.shape;
+          const rshape = key === 'fontColor' ? rstate.text : rstate.shape;
 
           if (rshape != null && field !== 'indicatorColor') {
             // @ts-ignore
@@ -997,7 +970,7 @@ class mxCellRenderer {
       state.view.graph.isHtmlLabel(state.cell) ||
       (value != null && isNode(value));
     const dialect = isForceHtml ? DIALECT_STRICTHTML : state.view.graph.dialect;
-    const overflow = state.style[STYLE_OVERFLOW] || 'visible';
+    const overflow = state.style.overflow || 'visible';
 
     if (
       state.text != null &&
@@ -1043,7 +1016,7 @@ class mxCellRenderer {
 
       const bounds = this.getLabelBounds(state);
       const nextScale = this.getTextScale(state);
-      this.resolveColor(state, 'color', STYLE_FONTCOLOR);
+      this.resolveColor(state, 'color', 'fontColor');
 
       if (
         forced ||
@@ -1110,22 +1083,22 @@ class mxCellRenderer {
     }
 
     return (
-      check('fontStyle', STYLE_FONTSTYLE, DEFAULT_FONTSTYLE) ||
-      check('family', STYLE_FONTFAMILY, DEFAULT_FONTFAMILY) ||
-      check('size', STYLE_FONTSIZE, DEFAULT_FONTSIZE) ||
-      check('color', STYLE_FONTCOLOR, 'black') ||
-      check('align', STYLE_ALIGN, '') ||
-      check('valign', STYLE_VERTICAL_ALIGN, '') ||
-      check('spacing', STYLE_SPACING, 2) ||
-      check('spacingTop', STYLE_SPACING_TOP, 0) ||
-      check('spacingRight', STYLE_SPACING_RIGHT, 0) ||
-      check('spacingBottom', STYLE_SPACING_BOTTOM, 0) ||
-      check('spacingLeft', STYLE_SPACING_LEFT, 0) ||
-      check('horizontal', STYLE_HORIZONTAL, true) ||
-      check('background', STYLE_LABEL_BACKGROUNDCOLOR, null) ||
-      check('border', STYLE_LABEL_BORDERCOLOR, null) ||
-      check('opacity', STYLE_TEXT_OPACITY, 100) ||
-      check('textDirection', STYLE_TEXT_DIRECTION, DEFAULT_TEXT_DIRECTION)
+      check('fontStyle', 'fontStyle', DEFAULT_FONTSTYLE) ||
+      check('family', 'fontFamily', DEFAULT_FONTFAMILY) ||
+      check('size', 'fontSize', DEFAULT_FONTSIZE) ||
+      check('color', 'fontColor', 'black') ||
+      check('align', 'align', '') ||
+      check('valign', 'verticalAlign', '') ||
+      check('spacing', 'spacing', 2) ||
+      check('spacingTop', 'spacingTop', 0) ||
+      check('spacingRight', 'spacingRight', 0) ||
+      check('spacingBottom', 'spacingBottom', 0) ||
+      check('spacingLeft', 'spacingLeft', 0) ||
+      check('horizontal', 'horizontal', true) ||
+      check('background', 'labelBackgroundColor', null) ||
+      check('border', 'labelBorderColor', null) ||
+      check('opacity', 'textOpacity', 100) ||
+      check('textDirection', 'textDirection', DEFAULT_TEXT_DIRECTION)
     );
   }
 
@@ -1220,12 +1193,12 @@ class mxCellRenderer {
     if (state.shape != null) {
       const hpos = mxUtils.getValue(
         state.style,
-        STYLE_LABEL_POSITION,
+        'labelPosition',
         ALIGN_CENTER
       );
       const vpos = mxUtils.getValue(
         state.style,
-        STYLE_VERTICAL_LABEL_POSITION,
+        'verticalLabelPosition',
         ALIGN_MIDDLE
       );
 
@@ -1235,7 +1208,7 @@ class mxCellRenderer {
     }
 
     // Label width style overrides actual label width
-    const lw = mxUtils.getValue(state.style, STYLE_LABEL_WIDTH, null);
+    const lw = mxUtils.getValue(state.style, 'labelWidth', null);
 
     if (lw != null) {
       bounds.width = parseFloat(lw) * scale;
@@ -1267,8 +1240,8 @@ class mxCellRenderer {
 
     if (
       !this.legacySpacing ||
-      (state.style[STYLE_OVERFLOW] !== 'fill' &&
-        state.style[STYLE_OVERFLOW] !== 'width')
+      (state.style.overflow !== 'fill' &&
+        state.style.overflow !== 'width')
     ) {
       const s = state.view.scale;
       // @ts-ignore
@@ -1278,15 +1251,15 @@ class mxCellRenderer {
 
       const hpos = mxUtils.getValue(
         state.style,
-        STYLE_LABEL_POSITION,
+        'labelPosition',
         ALIGN_CENTER
       );
       const vpos = mxUtils.getValue(
         state.style,
-        STYLE_VERTICAL_LABEL_POSITION,
+        'verticalLabelPosition',
         ALIGN_MIDDLE
       );
-      const lw = mxUtils.getValue(state.style, STYLE_LABEL_WIDTH, null);
+      const lw = mxUtils.getValue(state.style, 'labelWidth', null);
 
       bounds.width = Math.max(
         0,
@@ -1314,7 +1287,7 @@ class mxCellRenderer {
       theta !== 0 &&
       state != null &&
       // @ts-ignore
-      state.view.graph.model.isVertex(state.cell)
+      state.cell.isVertex()
     ) {
       const cx = state.getCenterX();
       const cy = state.getCenterY();
@@ -1349,7 +1322,7 @@ class mxCellRenderer {
 
     if (state.overlays != null) {
       const rot = mxUtils.mod(
-        mxUtils.getValue(state.style, STYLE_ROTATION, 0),
+        mxUtils.getValue(state.style, 'rotation', 0),
         90
       );
       const rad = mxUtils.toRadians(rot);
@@ -1410,7 +1383,7 @@ class mxCellRenderer {
       const bounds = this.getControlBounds(state, image.width, image.height);
 
       const r = this.legacyControlPosition
-        ? mxUtils.getValue(state.style, STYLE_ROTATION, 0)
+        ? mxUtils.getValue(state.style, 'rotation', 0)
         : // @ts-ignore
           state.shape.getTextRotation();
       const s = state.view.scale;
@@ -1457,7 +1430,7 @@ class mxCellRenderer {
           let rot = state.shape.getShapeRotation();
 
           if (this.legacyControlPosition) {
-            rot = mxUtils.getValue(state.style, STYLE_ROTATION, 0);
+            rot = mxUtils.getValue(state.style, 'rotation', 0);
           } else if (state.shape.isPaintBoundsInverted()) {
             const t = (state.width - state.height) / 2;
             cx += t;
@@ -1655,8 +1628,6 @@ class mxCellRenderer {
     force: boolean = false,
     rendering: boolean = true
   ): boolean {
-    const model = <mxGraphModel>state.view.graph.model;
-
     let shapeChanged = false;
 
     // Forces creation of new shape if shape style has changed
@@ -1664,7 +1635,7 @@ class mxCellRenderer {
       state.shape != null &&
       state.shape.style != null &&
       state.style != null &&
-      state.shape.style[STYLE_SHAPE] !== state.style[STYLE_SHAPE]
+      state.shape.style.shape !== state.style.shape
     ) {
       state.shape.destroy();
       state.shape = null;

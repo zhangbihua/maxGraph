@@ -13,13 +13,6 @@ import {
   ALIGN_RIGHT,
   ALIGN_TOP,
   DEFAULT_IMAGESIZE,
-  STYLE_IMAGE_ALIGN,
-  STYLE_IMAGE_HEIGHT,
-  STYLE_IMAGE_VERTICAL_ALIGN,
-  STYLE_IMAGE_WIDTH,
-  STYLE_INDICATOR_HEIGHT,
-  STYLE_INDICATOR_WIDTH,
-  STYLE_SPACING,
 } from '../util/mxConstants';
 import mxRectangleShape from './node/mxRectangleShape';
 import mxUtils from '../util/mxUtils';
@@ -172,24 +165,24 @@ class mxLabel extends mxRectangleShape {
    */
   // getImageBounds(x: number, y: number, w: number, h: number): mxRectangle;
   getImageBounds(x, y, w, h) {
-    const align = mxUtils.getValue(this.style, STYLE_IMAGE_ALIGN, ALIGN_LEFT);
+    const align = mxUtils.getValue(this.style, 'imageAlign', ALIGN_LEFT);
     const valign = mxUtils.getValue(
       this.style,
-      STYLE_IMAGE_VERTICAL_ALIGN,
+      'verticalAlign',
       ALIGN_MIDDLE
     );
     const width = mxUtils.getNumber(
       this.style,
-      STYLE_IMAGE_WIDTH,
+      'imageWidth',
       DEFAULT_IMAGESIZE
     );
     const height = mxUtils.getNumber(
       this.style,
-      STYLE_IMAGE_HEIGHT,
+      'imageHeight',
       DEFAULT_IMAGESIZE
     );
     const spacing =
-      mxUtils.getNumber(this.style, STYLE_SPACING, this.spacing) + 5;
+      mxUtils.getNumber(this.style, 'spacing', this.spacing) + 5;
 
     if (align === ALIGN_CENTER) {
       x += (w - width) / 2;
@@ -250,20 +243,20 @@ class mxLabel extends mxRectangleShape {
    */
   // getIndicatorBounds(x: number, y: number, w: number, h: number): mxRectangle;
   getIndicatorBounds(x, y, w, h) {
-    const align = mxUtils.getValue(this.style, STYLE_IMAGE_ALIGN, ALIGN_LEFT);
+    const align = mxUtils.getValue(this.style, 'imageAlign', ALIGN_LEFT);
     const valign = mxUtils.getValue(
       this.style,
-      STYLE_IMAGE_VERTICAL_ALIGN,
+      'verticalAlign',
       ALIGN_MIDDLE
     );
     const width = mxUtils.getNumber(
       this.style,
-      STYLE_INDICATOR_WIDTH,
+      'indicatorWidth',
       this.indicatorSize
     );
     const height = mxUtils.getNumber(
       this.style,
-      STYLE_INDICATOR_HEIGHT,
+      'indicatorHeight',
       this.indicatorSize
     );
     const spacing = this.spacing + 5;

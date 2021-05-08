@@ -55,62 +55,6 @@ import {
   PAGE_FORMAT_A4_PORTRAIT,
   SHAPE_LABEL,
   SHAPE_SWIMLANE,
-  STYLE_ALIGN,
-  STYLE_ANCHOR_POINT_DIRECTION,
-  STYLE_ASPECT,
-  STYLE_AUTOSIZE,
-  STYLE_BENDABLE,
-  STYLE_CLONEABLE,
-  STYLE_DELETABLE,
-  STYLE_DIRECTION,
-  STYLE_EDITABLE,
-  STYLE_ENTRY_DX,
-  STYLE_ENTRY_DY,
-  STYLE_ENTRY_PERIMETER,
-  STYLE_ENTRY_X,
-  STYLE_ENTRY_Y,
-  STYLE_EXIT_DX,
-  STYLE_EXIT_DY,
-  STYLE_EXIT_PERIMETER,
-  STYLE_EXIT_X,
-  STYLE_EXIT_Y,
-  STYLE_FILLCOLOR,
-  STYLE_FLIPH,
-  STYLE_FLIPV,
-  STYLE_FOLDABLE,
-  STYLE_FONTFAMILY,
-  STYLE_FONTSIZE,
-  STYLE_FONTSTYLE,
-  STYLE_HORIZONTAL,
-  STYLE_IMAGE,
-  STYLE_IMAGE_HEIGHT,
-  STYLE_IMAGE_WIDTH,
-  STYLE_INDICATOR_COLOR,
-  STYLE_INDICATOR_GRADIENTCOLOR,
-  STYLE_INDICATOR_IMAGE,
-  STYLE_INDICATOR_SHAPE,
-  STYLE_MOVABLE,
-  STYLE_NOLABEL,
-  STYLE_ORTHOGONAL,
-  STYLE_OVERFLOW,
-  STYLE_POINTER_EVENTS,
-  STYLE_RESIZABLE,
-  STYLE_RESIZE_HEIGHT,
-  STYLE_RESIZE_WIDTH,
-  STYLE_ROTATABLE,
-  STYLE_ROTATION,
-  STYLE_SHAPE,
-  STYLE_SOURCE_PORT,
-  STYLE_SPACING,
-  STYLE_SPACING_BOTTOM,
-  STYLE_SPACING_LEFT,
-  STYLE_SPACING_RIGHT,
-  STYLE_SPACING_TOP,
-  STYLE_STARTSIZE,
-  STYLE_STROKECOLOR,
-  STYLE_TARGET_PORT,
-  STYLE_VERTICAL_ALIGN,
-  STYLE_WHITE_SPACE,
 } from '../../util/mxConstants';
 import mxMultiplicity from '../connection/mxMultiplicity';
 
@@ -1069,10 +1013,10 @@ class mxGraph extends mxEventSource {
   /**
    * The attribute used to find the color for the indicator if the indicator
    * color is set to 'swimlane'.
-   * @default {@link mxConstants.STYLE_FILLCOLOR}
+   * @default {@link 'fillColor'}
    */
   // swimlaneIndicatorColorAttribute: string;
-  swimlaneIndicatorColorAttribute: string = STYLE_FILLCOLOR;
+  swimlaneIndicatorColorAttribute: string = 'fillColor';
 
   /**
    * Holds the list of image bundles.
@@ -2708,11 +2652,11 @@ class mxGraph extends mxEventSource {
   // postProcessCellStyle(style: StyleMap): StyleMap;
   postProcessCellStyle(style: any): any {
     if (style != null) {
-      const key = style[STYLE_IMAGE];
+      const key = style.image;
       let image = this.getImageFromBundles(key);
 
       if (image != null) {
-        style[STYLE_IMAGE] = image;
+        style.image = image;
       } else {
         image = key;
       }
@@ -2737,7 +2681,7 @@ class mxGraph extends mxEventSource {
           }
         }
 
-        style[STYLE_IMAGE] = image;
+        style.image = image;
       }
     }
     return style;
@@ -2791,7 +2735,7 @@ class mxGraph extends mxEventSource {
    * Toggles the boolean value for the given key in the style of the given cells
    * and returns the new value as 0 or 1. If no cells are specified, then the
    * selection cells are used. For example, this can be used to toggle
-   * {@link mxConstants.STYLE_ROUNDED} or any other style with a boolean value.
+   * {@link 'rounded'} or any other style with a boolean value.
    *
    * Parameter:
    *
@@ -2996,7 +2940,7 @@ class mxGraph extends mxEventSource {
    * transaction is in progress. Returns the edge that was flipped.
    *
    * Here is an example that overrides this implementation to invert the
-   * value of {@link mxConstants.STYLE_ELBOW} without removing any existing styles.
+   * value of {@link 'elbow'} without removing any existing styles.
    *
    * ```javascript
    * graph.flipEdge = function(edge)
@@ -3004,11 +2948,11 @@ class mxGraph extends mxEventSource {
    *   if (edge != null)
    *   {
    *     var style = this.getCurrentCellStyle(edge);
-   *     var elbow = mxUtils.getValue(style, mxConstants.STYLE_ELBOW,
+   *     var elbow = mxUtils.getValue(style, 'elbow',
    *         mxConstants.ELBOW_HORIZONTAL);
    *     var value = (elbow == mxConstants.ELBOW_HORIZONTAL) ?
    *         mxConstants.ELBOW_VERTICAL : mxConstants.ELBOW_HORIZONTAL;
-   *     this.setCellStyles(mxConstants.STYLE_ELBOW, value, [edge]);
+   *     this.setCellStyles('elbow', value, [edge]);
    *   }
    * };
    * ```
@@ -4655,7 +4599,7 @@ class mxGraph extends mxEventSource {
           if (tmp != null) {
             bounds = <mxGeometry>tmp;
 
-            const startSize = mxUtils.getValue(style, STYLE_STARTSIZE);
+            const startSize = mxUtils.getValue(style, 'startSize');
 
             if (startSize > 0) {
               bounds.height = Math.max(bounds.height, startSize);
@@ -4675,7 +4619,7 @@ class mxGraph extends mxEventSource {
         geo.alternateBounds.x = geo.x;
         geo.alternateBounds.y = geo.y;
 
-        const alpha = mxUtils.toRadians(style[STYLE_ROTATION] || 0);
+        const alpha = mxUtils.toRadians(style.rotation || 0);
 
         if (alpha !== 0) {
           const dx = geo.alternateBounds.getCenterX() - geo.getCenterX();
@@ -4786,10 +4730,10 @@ class mxGraph extends mxEventSource {
               cellStyle = '';
             }
 
-            if (mxUtils.getValue(style, STYLE_HORIZONTAL, true)) {
+            if (mxUtils.getValue(style, 'horizontal', true)) {
               cellStyle = mxUtils.setStyle(
                 cellStyle,
-                STYLE_STARTSIZE,
+                'startSize',
                 size.height + 8
               );
 
@@ -4801,7 +4745,7 @@ class mxGraph extends mxEventSource {
             } else {
               cellStyle = mxUtils.setStyle(
                 cellStyle,
-                STYLE_STARTSIZE,
+                'startSize',
                 size.width + 8
               );
 
@@ -4815,7 +4759,7 @@ class mxGraph extends mxEventSource {
             this.getModel().setStyle(cell, cellStyle);
           } else {
             const state = this.getView().createState(cell);
-            const align = state.style[STYLE_ALIGN] || ALIGN_CENTER;
+            const align = state.style.align || ALIGN_CENTER;
 
             if (align === ALIGN_RIGHT) {
               geo.x += geo.width - size.width;
@@ -4870,9 +4814,9 @@ class mxGraph extends mxEventSource {
    *   var result = graphGetPreferredSizeForCell.apply(this, arguments);
    *   var style = this.getCellStyle(cell);
    *
-   *   if (style['minWidth'] > 0)
+   *   if (style.minWidth > 0)
    *   {
-   *     result.width = Math.max(style['minWidth'], result.width);
+   *     result.width = Math.max(style.minWidth, result.width);
    *   }
    *
    *   return result;
@@ -4894,34 +4838,34 @@ class mxGraph extends mxEventSource {
       const { style } = state;
 
       if (!cell.isEdge()) {
-        const fontSize = style[STYLE_FONTSIZE] || DEFAULT_FONTSIZE;
+        const fontSize = style.fontSize || DEFAULT_FONTSIZE;
         let dx = 0;
         let dy = 0;
 
         // Adds dimension of image if shape is a label
-        if (this.getImage(state) != null || style[STYLE_IMAGE] != null) {
-          if (style[STYLE_SHAPE] === SHAPE_LABEL) {
-            if (style[STYLE_VERTICAL_ALIGN] === ALIGN_MIDDLE) {
+        if (this.getImage(state) != null || style.image != null) {
+          if (style.shape === SHAPE_LABEL) {
+            if (style.verticalAlign === ALIGN_MIDDLE) {
               dx +=
-                parseFloat(style[STYLE_IMAGE_WIDTH]) || new mxLabel().imageSize;
+                parseFloat(style.imageWidth) || new mxLabel().imageSize;
             }
 
-            if (style[STYLE_ALIGN] !== ALIGN_CENTER) {
+            if (style.align !== ALIGN_CENTER) {
               dy +=
-                parseFloat(style[STYLE_IMAGE_HEIGHT]) ||
+                parseFloat(style.imageHeight) ||
                 new mxLabel().imageSize;
             }
           }
         }
 
         // Adds spacings
-        dx += 2 * (style[STYLE_SPACING] || 0);
-        dx += style[STYLE_SPACING_LEFT] || 0;
-        dx += style[STYLE_SPACING_RIGHT] || 0;
+        dx += 2 * (style.spacing || 0);
+        dx += style.spacingLeft || 0;
+        dx += style.spacingRight || 0;
 
-        dy += 2 * (style[STYLE_SPACING] || 0);
-        dy += style[STYLE_SPACING_TOP] || 0;
-        dy += style[STYLE_SPACING_BOTTOM] || 0;
+        dy += 2 * (style.spacing || 0);
+        dy += style.spacingTop || 0;
+        dy += style.spacingBottom || 0;
 
         // Add spacing for collapse/expand icon
         // LATER: Check alignment and use constants
@@ -4945,14 +4889,14 @@ class mxGraph extends mxEventSource {
           const size = mxUtils.getSizeForString(
             value,
             fontSize,
-            style[STYLE_FONTFAMILY],
+            style.fontFamily,
             textWidth,
-            style[STYLE_FONTSTYLE]
+            style.fontStyle
           );
           let width = size.width + dx;
           let height = size.height + dy;
 
-          if (!mxUtils.getValue(style, STYLE_HORIZONTAL, true)) {
+          if (!mxUtils.getValue(style, 'horizontal', true)) {
             const tmp = height;
             height = width;
             width = tmp;
@@ -5237,17 +5181,17 @@ class mxGraph extends mxEventSource {
       const w = geo.width;
       const h = geo.height;
 
-      geo.scale(dx, dy, style[STYLE_ASPECT] === 'fixed');
+      geo.scale(dx, dy, style.aspect === 'fixed');
 
-      if (style[STYLE_RESIZE_WIDTH] == '1') {
+      if (style.resizeWidth == '1') {
         geo.width = w * dx;
-      } else if (style[STYLE_RESIZE_WIDTH] == '0') {
+      } else if (style.resizeWidth == '0') {
         geo.width = w;
       }
 
-      if (style[STYLE_RESIZE_HEIGHT] == '1') {
+      if (style.resizeHeight == '1') {
         geo.height = h * dy;
-      } else if (style[STYLE_RESIZE_HEIGHT] == '0') {
+      } else if (style.resizeHeight == '0') {
         geo.height = h;
       }
 
@@ -5576,7 +5520,7 @@ class mxGraph extends mxEventSource {
 
         if (parent.isVertex()) {
           const style = this.getCurrentCellStyle(parent);
-          angle = mxUtils.getValue(style, STYLE_ROTATION, 0);
+          angle = mxUtils.getValue(style, 'rotation', 0);
         }
 
         if (angle !== 0) {
@@ -5628,11 +5572,11 @@ class mxGraph extends mxEventSource {
             const style = this.getCurrentCellStyle(parent);
             const dir = mxUtils.getValue(
               style,
-              STYLE_DIRECTION,
+              'direction',
               DIRECTION_EAST
             );
-            const flipH = mxUtils.getValue(style, STYLE_FLIPH, 0) == 1;
-            const flipV = mxUtils.getValue(style, STYLE_FLIPV, 0) == 1;
+            const flipH = mxUtils.getValue(style, 'flipH', 0) == 1;
+            const flipV = mxUtils.getValue(style, 'flipV', 0) == 1;
 
             if (dir === DIRECTION_SOUTH || dir === DIRECTION_NORTH) {
               const tmp = size.width;
@@ -5886,7 +5830,7 @@ class mxGraph extends mxEventSource {
       const bounds = <mxRectangle>(
         this.getView().getPerimeterBounds(terminalState)
       );
-      const direction = terminalState.style[STYLE_DIRECTION];
+      const direction = terminalState.style.direction;
 
       if (direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH) {
         bounds.x += bounds.width / 2 - bounds.height / 2;
@@ -5913,8 +5857,8 @@ class mxGraph extends mxEventSource {
 
       // LATER: Add flipping support for image shapes
       if ((<mxCell>terminalState.cell).isVertex()) {
-        let flipH = terminalState.style[STYLE_FLIPH];
-        let flipV = terminalState.style[STYLE_FLIPV];
+        let flipH = terminalState.style.flipH;
+        let flipV = terminalState.style.flipV;
 
         // Legacy support for stencilFlipH/V
         if (
@@ -6004,11 +5948,11 @@ class mxGraph extends mxEventSource {
   ): mxConnectionConstraint {
     let point = null;
     // @ts-ignore
-    const x = <string>edge.style[source ? STYLE_EXIT_X : STYLE_ENTRY_X];
+    const x = <string>edge.style[source ? 'exitX' : 'entryX'];
 
     if (x != null) {
       // @ts-ignore
-      const y = <string>edge.style[source ? STYLE_EXIT_Y : STYLE_ENTRY_Y];
+      const y = <string>edge.style[source ? 'exitY' : 'entryY'];
 
       if (y != null) {
         point = new mxPoint(parseFloat(x), parseFloat(y));
@@ -6022,18 +5966,18 @@ class mxGraph extends mxEventSource {
     if (point != null) {
       perimeter = mxUtils.getValue(
         edge.style,
-        source ? STYLE_EXIT_PERIMETER : STYLE_ENTRY_PERIMETER,
+        source ? 'exitPerimeter' : 'entryPerimeter',
         true
       );
 
       // Add entry/exit offset
       // @ts-ignore
       dx = parseFloat(
-        <string>edge.style[source ? STYLE_EXIT_DX : STYLE_ENTRY_DX]
+        <string>edge.style[source ? 'exitDx' : 'entryDx']
       );
       // @ts-ignore
       dy = parseFloat(
-        <string>edge.style[source ? STYLE_EXIT_DY : STYLE_ENTRY_DY]
+        <string>edge.style[source ? 'exitDy' : 'entryDy']
       );
 
       dx = Number.isFinite(dx) ? dx : 0;
@@ -6066,41 +6010,41 @@ class mxGraph extends mxEventSource {
 
       try {
         if (constraint == null || constraint.point == null) {
-          this.setCellStyles(source ? STYLE_EXIT_X : STYLE_ENTRY_X, null, [
+          this.setCellStyles(source ? 'exitX' : 'entryX', null, [
             edge,
           ]);
-          this.setCellStyles(source ? STYLE_EXIT_Y : STYLE_ENTRY_Y, null, [
+          this.setCellStyles(source ? 'exitY' : 'entryY', null, [
             edge,
           ]);
-          this.setCellStyles(source ? STYLE_EXIT_DX : STYLE_ENTRY_DX, null, [
+          this.setCellStyles(source ? 'exitDx' : 'entryDx', null, [
             edge,
           ]);
-          this.setCellStyles(source ? STYLE_EXIT_DY : STYLE_ENTRY_DY, null, [
+          this.setCellStyles(source ? 'exitDy' : 'entryDy', null, [
             edge,
           ]);
           this.setCellStyles(
-            source ? STYLE_EXIT_PERIMETER : STYLE_ENTRY_PERIMETER,
+            source ? 'exitPerimeter' : 'entryPerimeter',
             null,
             [edge]
           );
         } else if (constraint.point != null) {
           this.setCellStyles(
-            source ? STYLE_EXIT_X : STYLE_ENTRY_X,
+            source ? 'exitX' : 'entryX',
             constraint.point.x,
             [edge]
           );
           this.setCellStyles(
-            source ? STYLE_EXIT_Y : STYLE_ENTRY_Y,
+            source ? 'exitY' : 'entryY',
             constraint.point.y,
             [edge]
           );
           this.setCellStyles(
-            source ? STYLE_EXIT_DX : STYLE_ENTRY_DX,
+            source ? 'exitDx' : 'entryDx',
             constraint.dx,
             [edge]
           );
           this.setCellStyles(
-            source ? STYLE_EXIT_DY : STYLE_ENTRY_DY,
+            source ? 'exitDy' : 'entryDy',
             constraint.dy,
             [edge]
           );
@@ -6108,13 +6052,13 @@ class mxGraph extends mxEventSource {
           // Only writes 0 since 1 is default
           if (!constraint.perimeter) {
             this.setCellStyles(
-              source ? STYLE_EXIT_PERIMETER : STYLE_ENTRY_PERIMETER,
+              source ? 'exitPerimeter' : 'entryPerimeter',
               '0',
               [edge]
             );
           } else {
             this.setCellStyles(
-              source ? STYLE_EXIT_PERIMETER : STYLE_ENTRY_PERIMETER,
+              source ? 'exitPerimeter' : 'entryPerimeter',
               null,
               [edge]
             );
@@ -6145,13 +6089,13 @@ class mxGraph extends mxEventSource {
     if (vertex != null && constraint.point != null) {
       const bounds = <mxRectangle>this.getView().getPerimeterBounds(vertex);
       const cx = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
-      const direction = vertex.style[STYLE_DIRECTION];
+      const direction = vertex.style.direction;
       let r1 = 0;
 
       // Bounds need to be rotated by 90 degrees for further computation
       if (
         direction != null &&
-        mxUtils.getValue(vertex.style, STYLE_ANCHOR_POINT_DIRECTION, 1) == 1
+        mxUtils.getValue(vertex.style, 'anchorPointDirection', 1) == 1
       ) {
         if (direction === DIRECTION_NORTH) {
           r1 += 270;
@@ -6178,7 +6122,7 @@ class mxGraph extends mxEventSource {
       );
 
       // Rotation for direction before projection on perimeter
-      let r2 = vertex.style[STYLE_ROTATION] || 0;
+      let r2 = vertex.style.rotation || 0;
 
       if (constraint.perimeter) {
         if (r1 !== 0) {
@@ -6202,8 +6146,8 @@ class mxGraph extends mxEventSource {
         r2 += r1;
 
         if ((<mxCell>vertex.cell).isVertex()) {
-          let flipH = vertex.style[STYLE_FLIPH] == 1;
-          let flipV = vertex.style[STYLE_FLIPV] == 1;
+          let flipH = vertex.style.flipH == 1;
+          let flipV = vertex.style.flipV == 1;
 
           // Legacy support for stencilFlipH/V
           if (vertex.shape != null && vertex.shape.stencil != null) {
@@ -6323,7 +6267,7 @@ class mxGraph extends mxEventSource {
           }
 
           // Sets or resets all previous information for connecting to a child port
-          const key = source ? STYLE_SOURCE_PORT : STYLE_TARGET_PORT;
+          const key = source ? 'sourcePort' : 'targetPort';
           this.setCellStyles(key, id, [edge]);
         }
 
@@ -6814,7 +6758,7 @@ class mxGraph extends mxEventSource {
               const style = this.getCurrentCellStyle(cell);
 
               if (bbox != null) {
-                const angle = mxUtils.getValue(style, STYLE_ROTATION, 0);
+                const angle = mxUtils.getValue(style, 'rotation', 0);
 
                 if (angle !== 0) {
                   bbox = mxUtils.getBoundingBox(bbox, angle);
@@ -7517,7 +7461,14 @@ class mxGraph extends mxEventSource {
    */
   // isOrthogonal(edge: mxCellState): boolean;
   isOrthogonal(edge: mxCellState): boolean {
-    const orthogonal = edge.style[STYLE_ORTHOGONAL];
+    /*
+    'orthogonal' defines if the connection points on either end of the edge should
+    be computed so that the edge is vertical or horizontal if possible
+    and if the point is not at a fixed location. Default is false.
+    This also returns true if the edgeStyle of the edge is an elbow or
+    entity.
+     */
+    const orthogonal = edge.style.orthogonal;
 
     if (orthogonal != null) {
       return orthogonal;
@@ -8028,7 +7979,7 @@ class mxGraph extends mxEventSource {
     if (this.labelsVisible && cell != null) {
       const style = this.getCurrentCellStyle(cell);
 
-      if (!mxUtils.getValue(style, STYLE_NOLABEL, false)) {
+      if (!mxUtils.getValue(style, 'noLabel', false)) {
         result = this.convertValueToString(cell);
       }
     }
@@ -8067,7 +8018,7 @@ class mxGraph extends mxEventSource {
    *
    * Returns true if no white-space CSS style directive should be used for
    * displaying the given cells label. This implementation returns true if
-   * {@link mxConstants.STYLE_WHITE_SPACE} in the style of the given cell is 'wrap'.
+   * {@link 'whiteSpace'} in the style of the given cell is 'wrap'.
    *
    * This is used as a workaround for IE ignoring the white-space directive
    * of child elements if the directive appears in a parent element. It
@@ -8105,20 +8056,20 @@ class mxGraph extends mxEventSource {
    */
   // isWrapping(cell: mxCell): boolean;
   isWrapping(cell: mxCell): boolean {
-    return this.getCurrentCellStyle(cell)[STYLE_WHITE_SPACE] === 'wrap';
+    return this.getCurrentCellStyle(cell).whiteSpace === 'wrap';
   }
 
   /**
    * Returns true if the overflow portion of labels should be hidden. If this
    * returns true then vertex labels will be clipped to the size of the vertices.
-   * This implementation returns true if {@link STYLE_OVERFLOW} in the
+   * This implementation returns true if `overflow` in the
    * style of the given cell is 'hidden'.
    *
    * @param state {@link mxCell} whose label should be clipped.
    */
   // isLabelClipped(cell: mxCell): boolean;
   isLabelClipped(cell: mxCell): boolean {
-    return this.getCurrentCellStyle(cell)[STYLE_OVERFLOW] === 'hidden';
+    return this.getCurrentCellStyle(cell).overflow === 'hidden';
   }
 
   /**
@@ -8270,10 +8221,10 @@ class mxGraph extends mxEventSource {
     const result = new mxRectangle();
     const style = this.getCurrentCellStyle(swimlane, ignoreState);
     const size = parseInt(
-      mxUtils.getValue(style, STYLE_STARTSIZE, DEFAULT_STARTSIZE)
+      mxUtils.getValue(style, 'startSize', DEFAULT_STARTSIZE)
     );
 
-    if (mxUtils.getValue(style, STYLE_HORIZONTAL, true)) {
+    if (mxUtils.getValue(style, 'horizontal', true)) {
       result.height = size;
     } else {
       result.width = size;
@@ -8286,10 +8237,10 @@ class mxGraph extends mxEventSource {
    */
   // getSwimlaneDirection(style: string): string;
   getSwimlaneDirection(style: any): string {
-    const dir = mxUtils.getValue(style, STYLE_DIRECTION, DIRECTION_EAST);
-    const flipH = mxUtils.getValue(style, STYLE_FLIPH, 0) == 1;
-    const flipV = mxUtils.getValue(style, STYLE_FLIPV, 0) == 1;
-    const h = mxUtils.getValue(style, STYLE_HORIZONTAL, true);
+    const dir = mxUtils.getValue(style, 'direction', DIRECTION_EAST);
+    const flipH = mxUtils.getValue(style, 'flipH', 0) == 1;
+    const flipV = mxUtils.getValue(style, 'flipV', 0) == 1;
+    const h = mxUtils.getValue(style, 'horizontal', true);
     let n = h ? 0 : 3;
 
     if (dir === DIRECTION_NORTH) {
@@ -8334,7 +8285,7 @@ class mxGraph extends mxEventSource {
     if (this.isSwimlane(swimlane, ignoreState)) {
       const style = this.getCurrentCellStyle(swimlane, ignoreState);
       const size = parseInt(
-        mxUtils.getValue(style, STYLE_STARTSIZE, DEFAULT_STARTSIZE)
+        mxUtils.getValue(style, 'startSize', DEFAULT_STARTSIZE)
       );
       const dir = this.getSwimlaneDirection(style);
 
@@ -8353,7 +8304,7 @@ class mxGraph extends mxEventSource {
 
   /**
    * Returns the image URL for the given cell state. This implementation
-   * returns the value stored under {@link mxConstants.STYLE_IMAGE} in the cell
+   * returns the value stored under {@link 'image'} in the cell
    * style.
    *
    * @param state {@link mxCellState} whose image URL should be returned.
@@ -8361,7 +8312,7 @@ class mxGraph extends mxEventSource {
   // getImage(state: mxCellState): string;
   getImage(state: mxCellState): mxImage | null {
     return state != null && state.style != null
-      ? state.style[STYLE_IMAGE]
+      ? state.style.image
       : null;
   }
 
@@ -8374,8 +8325,8 @@ class mxGraph extends mxEventSource {
   isTransparentState(state: mxCellState): boolean {
     let result = false;
     if (state != null) {
-      const stroke = mxUtils.getValue(state.style, STYLE_STROKECOLOR, NONE);
-      const fill = mxUtils.getValue(state.style, STYLE_FILLCOLOR, NONE);
+      const stroke = mxUtils.getValue(state.style, 'strokeColor', NONE);
+      const fill = mxUtils.getValue(state.style, 'fillColor', NONE);
       result = stroke === NONE && fill === NONE && this.getImage(state) == null;
     }
     return result;
@@ -8384,7 +8335,7 @@ class mxGraph extends mxEventSource {
   /**
    * Returns the vertical alignment for the given cell state. This
    * implementation returns the value stored under
-   * {@link mxConstants.STYLE_VERTICAL_ALIGN} in the cell style.
+   * {@link 'verticalAlign'} in the cell style.
    *
    * @param state {@link mxCellState} whose vertical alignment should be
    * returned.
@@ -8392,7 +8343,7 @@ class mxGraph extends mxEventSource {
   // getVerticalAlign(state: mxCellState): string;
   getVerticalAlign(state: mxCellState): string | null {
     return state != null && state.style != null
-      ? state.style[STYLE_VERTICAL_ALIGN] || ALIGN_MIDDLE
+      ? state.style.verticalAlign || ALIGN_MIDDLE
       : null;
   }
 
@@ -8407,7 +8358,7 @@ class mxGraph extends mxEventSource {
   // getIndicatorColor(state: mxCellState): string;
   getIndicatorColor(state: mxCellState): string | null {
     return state != null && state.style != null
-      ? state.style[STYLE_INDICATOR_COLOR]
+      ? state.style.indicatorColor
       : null;
   }
 
@@ -8422,7 +8373,7 @@ class mxGraph extends mxEventSource {
   // getIndicatorGradientColor(state: mxCellState): string;
   getIndicatorGradientColor(state: mxCellState): string | null {
     return state != null && state.style != null
-      ? state.style[STYLE_INDICATOR_GRADIENTCOLOR]
+      ? state.style.gradientColor
       : null;
   }
 
@@ -8436,7 +8387,7 @@ class mxGraph extends mxEventSource {
   // getIndicatorShape(state: mxCellState): any;
   getIndicatorShape(state: mxCellState): string | null {
     return state != null && state.style != null
-      ? state.style[STYLE_INDICATOR_SHAPE]
+      ? state.style.indicatorShape
       : null;
   }
 
@@ -8450,7 +8401,7 @@ class mxGraph extends mxEventSource {
   // getIndicatorImage(state: mxCellState): any;
   getIndicatorImage(state: mxCellState): mxImage | null {
     return state != null && state.style != null
-      ? state.style[STYLE_INDICATOR_IMAGE]
+      ? state.style.indicatorImage
       : null;
   }
 
@@ -8488,7 +8439,7 @@ class mxGraph extends mxEventSource {
       !cell.isEdge()
     ) {
       return (
-        this.getCurrentCellStyle(cell, ignoreState)[STYLE_SHAPE] ===
+        this.getCurrentCellStyle(cell, ignoreState).shape ===
         SHAPE_SWIMLANE
       );
     }
@@ -8646,7 +8597,7 @@ class mxGraph extends mxEventSource {
   // isCellCloneable(cell: mxCell): boolean;
   isCellCloneable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
-    return this.isCellsCloneable() && style[STYLE_CLONEABLE] !== 0;
+    return this.isCellsCloneable() && style.cloneable !== 0;
   }
 
   /**
@@ -8723,7 +8674,7 @@ class mxGraph extends mxEventSource {
    * {
    *   var style = this.getCurrentCellStyle(cell);
    *
-   *   return this.isCellsSelectable() && !this.isCellLocked(cell) && style['selectable'] != 0;
+   *   return this.isCellsSelectable() && !this.isCellLocked(cell) && style.selectable != 0;
    * };
    * ```
    *
@@ -8769,14 +8720,14 @@ class mxGraph extends mxEventSource {
   /**
    * Returns true if the given cell is moveable. This returns
    * {@link cellsDeletable} for all given cells if a cells style does not specify
-   * {@link mxConstants.STYLE_DELETABLE} to be 0.
+   * {@link 'deletable'} to be 0.
    *
    * @param cell {@link mxCell} whose deletable state should be returned.
    */
   // isCellDeletable(cell: mxCell): boolean;
   isCellDeletable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
-    return this.isCellsDeletable() && style[STYLE_DELETABLE] !== 0;
+    return this.isCellsDeletable() && style.deletable !== 0;
   }
 
   /**
@@ -8815,14 +8766,14 @@ class mxGraph extends mxEventSource {
 
   /**
    * Returns true if the given cell is rotatable. This returns true for the given
-   * cell if its style does not specify {@link mxConstants.STYLE_ROTATABLE} to be 0.
+   * cell if its style does not specify {@link 'rotatable'} to be 0.
    *
    * @param cell {@link mxCell} whose rotatable state should be returned.
    */
   // isCellRotatable(cell: mxCell): boolean;
   isCellRotatable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
-    return style[STYLE_ROTATABLE] !== 0;
+    return style.rotatable !== 0;
   }
 
   /**
@@ -8838,7 +8789,7 @@ class mxGraph extends mxEventSource {
   /**
    * Returns true if the given cell is moveable. This returns {@link cellsMovable}
    * for all given cells if {@link isCellLocked} does not return true for the given
-   * cell and its style does not specify {@link mxConstants.STYLE_MOVABLE} to be 0.
+   * cell and its style does not specify {@link 'movable'} to be 0.
    *
    * @param cell {@link mxCell} whose movable state should be returned.
    */
@@ -8849,7 +8800,7 @@ class mxGraph extends mxEventSource {
     return (
       this.isCellsMovable() &&
       !this.isCellLocked(cell) &&
-      style[STYLE_MOVABLE] !== 0
+      style.movable !== 0
     );
   }
 
@@ -9170,7 +9121,7 @@ class mxGraph extends mxEventSource {
    * Returns true if the given cell is resizable. This returns
    * {@link cellsResizable} for all given cells if {@link isCellLocked} does not return
    * true for the given cell and its style does not specify
-   * {@link mxConstants.STYLE_RESIZABLE} to be 0.
+   * {@link 'resizable'} to be 0.
    *
    * @param cell {@link mxCell} whose resizable state should be returned.
    */
@@ -9181,7 +9132,7 @@ class mxGraph extends mxEventSource {
     const r =
       this.isCellsResizable() &&
       !this.isCellLocked(cell) &&
-      mxUtils.getValue(style, STYLE_RESIZABLE, '1') != '0';
+      mxUtils.getValue(style, 'resizeable', '1') != '0';
     // alert(r);
     return r;
   }
@@ -9235,7 +9186,7 @@ class mxGraph extends mxEventSource {
     return (
       this.isCellsBendable() &&
       !this.isCellLocked(cell) &&
-      style[STYLE_BENDABLE] !== 0
+      style.bendable !== 0
     );
   }
 
@@ -9262,7 +9213,7 @@ class mxGraph extends mxEventSource {
   /**
    * Returns true if the given cell is editable. This returns {@link cellsEditable} for
    * all given cells if {@link isCellLocked} does not return true for the given cell
-   * and its style does not specify {@link mxConstants.STYLE_EDITABLE} to be 0.
+   * and its style does not specify {@link 'editable'} to be 0.
    *
    * @param cell {@link mxCell} whose editable state should be returned.
    */
@@ -9273,7 +9224,7 @@ class mxGraph extends mxEventSource {
     return (
       this.isCellsEditable() &&
       !this.isCellLocked(cell) &&
-      style[STYLE_EDITABLE] != 0
+      style.editable != 0
     );
   }
 
@@ -9436,7 +9387,7 @@ class mxGraph extends mxEventSource {
    * Returns true if the size of the given cell should automatically be
    * updated after a change of the label. This implementation returns
    * {@link autoSizeCells} or checks if the cell style does specify
-   * {@link mxConstants.STYLE_AUTOSIZE} to be 1.
+   * {@link 'autoSize'} to be 1.
    *
    * @param cell {@link mxCell} that should be resized.
    */
@@ -9444,7 +9395,7 @@ class mxGraph extends mxEventSource {
   isAutoSizeCell(cell: mxCell) {
     const style = this.getCurrentCellStyle(cell);
 
-    return this.isAutoSizeCells() || style[STYLE_AUTOSIZE] == 1;
+    return this.isAutoSizeCells() || style.autosize == 1;
   }
 
   /**
@@ -9669,7 +9620,7 @@ class mxGraph extends mxEventSource {
   // isCellFoldable(cell: mxCell, collapse: boolean): boolean;
   isCellFoldable(cell: mxCell, collapse: boolean = false): boolean {
     const style = this.getCurrentCellStyle(cell);
-    return cell.getChildCount() > 0 && style[STYLE_FOLDABLE] != 0;
+    return cell.getChildCount() > 0 && style.foldable != 0;
   }
 
   /**
@@ -9987,7 +9938,7 @@ class mxGraph extends mxEventSource {
         }
       } else {
         const alpha = mxUtils.toRadians(
-          mxUtils.getValue(state.style, STYLE_ROTATION) || 0
+          mxUtils.getValue(state.style, 'rotation') || 0
         );
 
         if (alpha != 0) {
@@ -10408,7 +10359,7 @@ class mxGraph extends mxEventSource {
             cell.isVisible() &&
             (ignoreFn == null || !ignoreFn(state))
           ) {
-            const deg = mxUtils.getValue(state.style, STYLE_ROTATION) || 0;
+            const deg = mxUtils.getValue(state.style, 'rotation') || 0;
 
             let box: mxCellState | mxRectangle = state; // TODO: CHECK ME!!!! ==========================================================
             if (deg != 0) {
@@ -11140,7 +11091,7 @@ class mxGraph extends mxEventSource {
             return (
               state.shape == null ||
               state.shape.paintBackground !== this.paintBackground ||
-              mxUtils.getValue(state.style, STYLE_POINTER_EVENTS, '1') == '1' ||
+              mxUtils.getValue(state.style, 'pointerEvents', '1') == '1' ||
               (state.shape.fill != null && state.shape.fill !== NONE)
             );
           })

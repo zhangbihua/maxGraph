@@ -49,17 +49,17 @@ const Template = ({ label, ...args }) => {
 
       // Changes the default vertex style in-place
       let style = graph.getStylesheet().getDefaultVertexStyle();
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ROUNDED;
-      style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-      style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-      style[mxConstants.STYLE_PERIMETER_SPACING] = 4;
-      style[mxConstants.STYLE_SHADOW] = true;
+      style.shape = mxConstants.SHAPE_ROUNDED;
+      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.gradientColor = 'white';
+      style.perimeterSpacing = 4;
+      style.shadow = true;
 
       style = graph.getStylesheet().getDefaultEdgeStyle();
-      style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'white';
+      style.labelBackgroundColor = 'white';
 
       style = mxUtils.clone(style);
-      style[mxConstants.STYLE_STARTARROW] = mxConstants.ARROW_CLASSIC;
+      style.startArrow = mxConstants.ARROW_CLASSIC;
       graph.getStylesheet().putCellStyle('2way', style);
 
       graph.isHtmlLabel = function(cell) {

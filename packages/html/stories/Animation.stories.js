@@ -33,8 +33,8 @@ const Template = ({ label, ...args }) => {
     'shape=cylinder;strokeWidth=2;fillColor=#ffffff;strokeColor=black;' +
     'gradientColor=#a0a0a0;fontColor=black;fontStyle=1;spacingTop=14;';
 
-  graph.getModel().beginUpdate();
-  try {
+  let e1;
+  graph.batchUpdate(() => {
     const v1 = graph.insertVertex({
       parent,
       value: 'Pump',
@@ -49,7 +49,7 @@ const Template = ({ label, ...args }) => {
       size: [60, 60],
       style: vertexStyle,
     });
-    var e1 = graph.insertEdge({
+    e1 = graph.insertEdge({
       parent,
       source: v1,
       target: v2,
@@ -58,10 +58,7 @@ const Template = ({ label, ...args }) => {
     });
     e1.geometry.points = [new mxPoint(230, 50)];
     graph.orderCells(true, [e1]);
-  } finally {
-    // Updates the display
-    graph.getModel().endUpdate();
-  }
+  });
 
   // Adds animation to edge shape and makes "pipe" visible
   const state = graph.view.getState(e1);

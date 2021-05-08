@@ -283,11 +283,11 @@ Actions.prototype.init = function()
 			try
 			{
 				let defaultValue = graph.isCellMovable(graph.getSelectionCell()) ? 1 : 0;
-				graph.toggleCellStyles(mxConstants.STYLE_MOVABLE, defaultValue);
-				graph.toggleCellStyles(mxConstants.STYLE_RESIZABLE, defaultValue);
-				graph.toggleCellStyles(mxConstants.STYLE_ROTATABLE, defaultValue);
-				graph.toggleCellStyles(mxConstants.STYLE_DELETABLE, defaultValue);
-				graph.toggleCellStyles(mxConstants.STYLE_EDITABLE, defaultValue);
+				graph.toggleCellStyles('movable', defaultValue);
+				graph.toggleCellStyles('resizable', defaultValue);
+				graph.toggleCellStyles('rotatable', defaultValue);
+				graph.toggleCellStyles('deletable', defaultValue);
+				graph.toggleCellStyles('editable', defaultValue);
 				graph.toggleCellStyles('connectable', defaultValue);
 			}
 			finally
@@ -628,7 +628,7 @@ Actions.prototype.init = function()
     	if (refState != null)
     	{
 	    	graph.stopEditing();
-    		let value = (refState.style['html'] == '1') ? null : '1';
+    		let value = (refState.style.html == '1') ? null : '1';
 			
 			graph.getModel().beginUpdate();
 			try
@@ -696,12 +696,12 @@ Actions.prototype.init = function()
     	
 		graph.stopEditing();
     	
-    	if (state != null && state.style[mxConstants.STYLE_WHITE_SPACE] == 'wrap')
+    	if (state != null && state.style.whiteSpace == 'wrap')
     	{
     		value = null;
     	}
 
-       	graph.setCellStyles(mxConstants.STYLE_WHITE_SPACE, value);
+       	graph.setCellStyles('whiteSpace', value);
 	});
 	this.addAction('rotation', function()
 	{
@@ -710,14 +710,14 @@ Actions.prototype.init = function()
     	
     	if (state != null)
     	{
-    		value = state.style[mxConstants.STYLE_ROTATION] || value;
+    		value = state.style.rotation || value;
     	}
 
 		let dlg = new FilenameDialog(ui, value, mxResources.get('apply'), function(newValue)
 		{
 			if (newValue != null && newValue.length > 0)
 			{
-				graph.setCellStyles(mxConstants.STYLE_ROTATION, newValue);
+				graph.setCellStyles('rotation', newValue);
 			}
 		}, mxResources.get('enterValue') + ' (' + mxResources.get('rotation') + ' 0-360)');
 		
@@ -1004,7 +1004,7 @@ Actions.prototype.init = function()
 				try
 				{
 					let cells = graph.getSelectionCells();
-					graph.toggleCellStyleFlags(mxConstants.STYLE_FONTSTYLE, style, cells);
+					graph.toggleCellStyleFlags('fontStyle', style, cells);
 					
 					// Removes bold and italic tags and CSS styles inside labels
 					if ((style & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD)
@@ -1065,24 +1065,24 @@ Actions.prototype.init = function()
 	toggleFontStyle('underline', mxConstants.FONT_UNDERLINE, function() { document.execCommand('underline', false, null); }, Editor.ctrlKey + '+U');
 	
 	// Color actions
-	this.addAction('fontColor...', function() { ui.menus.pickColor(mxConstants.STYLE_FONTCOLOR, 'forecolor', '000000'); });
-	this.addAction('strokeColor...', function() { ui.menus.pickColor(mxConstants.STYLE_STROKECOLOR); });
-	this.addAction('fillColor...', function() { ui.menus.pickColor(mxConstants.STYLE_FILLCOLOR); });
-	this.addAction('gradientColor...', function() { ui.menus.pickColor(mxConstants.STYLE_GRADIENTCOLOR); });
-	this.addAction('backgroundColor...', function() { ui.menus.pickColor(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, 'backcolor'); });
-	this.addAction('borderColor...', function() { ui.menus.pickColor(mxConstants.STYLE_LABEL_BORDERCOLOR); });
+	this.addAction('fontColor...', function() { ui.menus.pickColor('fontColor', 'forecolor', '000000'); });
+	this.addAction('strokeColor...', function() { ui.menus.pickColor('strokeColor'); });
+	this.addAction('fillColor...', function() { ui.menus.pickColor('fillColor'); });
+	this.addAction('gradientColor...', function() { ui.menus.pickColor('gradientColor'); });
+	this.addAction('backgroundColor...', function() { ui.menus.pickColor('backgroundColor', 'backcolor'); });
+	this.addAction('borderColor...', function() { ui.menus.pickColor('labelBorderColor'); });
 	
 	// Format actions
-	this.addAction('vertical', function() { ui.menus.toggleStyle(mxConstants.STYLE_HORIZONTAL, true); });
-	this.addAction('shadow', function() { ui.menus.toggleStyle(mxConstants.STYLE_SHADOW); });
+	this.addAction('vertical', function() { ui.menus.toggleStyle('horizontal', true); });
+	this.addAction('shadow', function() { ui.menus.toggleStyle('shadow'); });
 	this.addAction('solid', function()
 	{
 		graph.getModel().beginUpdate();
 		try
 		{
-			graph.setCellStyles(mxConstants.STYLE_DASHED, null);
-			graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, null);
-			ui.fireEvent(new mxEventObject('styleChanged', 'keys', [mxConstants.STYLE_DASHED, mxConstants.STYLE_DASH_PATTERN],
+			graph.setCellStyles('dashed', null);
+			graph.setCellStyles('dashPattern', null);
+			ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['dashed', 'dashPattern'],
 				'values', [null, null], 'cells', graph.getSelectionCells()));
 		}
 		finally
@@ -1095,9 +1095,9 @@ Actions.prototype.init = function()
 		graph.getModel().beginUpdate();
 		try
 		{
-			graph.setCellStyles(mxConstants.STYLE_DASHED, '1');
-			graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, null);
-			ui.fireEvent(new mxEventObject('styleChanged', 'keys', [mxConstants.STYLE_DASHED, mxConstants.STYLE_DASH_PATTERN],
+			graph.setCellStyles('dashed', '1');
+			graph.setCellStyles('dashPattern', null);
+			ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['dashed', 'dashPattern'],
 				'values', ['1', null], 'cells', graph.getSelectionCells()));
 		}
 		finally
@@ -1110,9 +1110,9 @@ Actions.prototype.init = function()
 		graph.getModel().beginUpdate();
 		try
 		{
-			graph.setCellStyles(mxConstants.STYLE_DASHED, '1');
-			graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, '1 4');
-			ui.fireEvent(new mxEventObject('styleChanged', 'keys', [mxConstants.STYLE_DASHED, mxConstants.STYLE_DASH_PATTERN],
+			graph.setCellStyles('dashed', '1');
+			graph.setCellStyles('dashPattern', '1 4');
+			ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['dashed', 'dashPattern'],
 				'values', ['1', '1 4'], 'cells', graph.getSelectionCells()));
 		}
 		finally
@@ -1125,9 +1125,9 @@ Actions.prototype.init = function()
 		graph.getModel().beginUpdate();
 		try
 		{
-			graph.setCellStyles(mxConstants.STYLE_ROUNDED, '0');
-			graph.setCellStyles(mxConstants.STYLE_CURVED, '0');
-			ui.fireEvent(new mxEventObject('styleChanged', 'keys', [mxConstants.STYLE_ROUNDED, mxConstants.STYLE_CURVED],
+			graph.setCellStyles('rounded', '0');
+			graph.setCellStyles('curved', '0');
+			ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['rounded', 'curved'],
 					'values', ['0', '0'], 'cells', graph.getSelectionCells()));
 		}
 		finally
@@ -1140,9 +1140,9 @@ Actions.prototype.init = function()
 		graph.getModel().beginUpdate();
 		try
 		{
-			graph.setCellStyles(mxConstants.STYLE_ROUNDED, '1');
-			graph.setCellStyles(mxConstants.STYLE_CURVED, '0');
-			ui.fireEvent(new mxEventObject('styleChanged', 'keys', [mxConstants.STYLE_ROUNDED, mxConstants.STYLE_CURVED],
+			graph.setCellStyles('rounded', '1');
+			graph.setCellStyles('curved', '0');
+			ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['rounded', 'curved'],
 					'values', ['1', '0'], 'cells', graph.getSelectionCells()));
 		}
 		finally
@@ -1159,11 +1159,11 @@ Actions.prototype.init = function()
 			{
 				let cells = graph.getSelectionCells();
 	    		let style = graph.getCurrentCellStyle(cells[0]);
-	    		let value = (mxUtils.getValue(style, mxConstants.STYLE_ROUNDED, '0') == '1') ? '0' : '1';
+	    		let value = (mxUtils.getValue(style, 'rounded', '0') == '1') ? '0' : '1';
 	    		
-				graph.setCellStyles(mxConstants.STYLE_ROUNDED, value);
-				graph.setCellStyles(mxConstants.STYLE_CURVED, null);
-				ui.fireEvent(new mxEventObject('styleChanged', 'keys', [mxConstants.STYLE_ROUNDED, mxConstants.STYLE_CURVED],
+				graph.setCellStyles('rounded', value);
+				graph.setCellStyles('curved', null);
+				ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['rounded', 'curved'],
 						'values', [value, '0'], 'cells', graph.getSelectionCells()));
 			}
 			finally
@@ -1177,9 +1177,9 @@ Actions.prototype.init = function()
 		graph.getModel().beginUpdate();
 		try
 		{
-			graph.setCellStyles(mxConstants.STYLE_ROUNDED, '0');
-			graph.setCellStyles(mxConstants.STYLE_CURVED, '1');
-			ui.fireEvent(new mxEventObject('styleChanged', 'keys', [mxConstants.STYLE_ROUNDED, mxConstants.STYLE_CURVED],
+			graph.setCellStyles('rounded', '0');
+			graph.setCellStyles('curved', '1');
+			ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['rounded', 'curved'],
 					'values', ['0', '1'], 'cells', graph.getSelectionCells()));
 		}
 		finally
@@ -1347,7 +1347,7 @@ Actions.prototype.init = function()
 	    	
 	    	if (state != null)
 	    	{
-	    		value = state.style[mxConstants.STYLE_IMAGE] || value;
+	    		value = state.style.image || value;
 	    	}
 	    	
 	    	let selectionState = graph.cellEditor.saveSelection();
@@ -1384,18 +1384,18 @@ Actions.prototype.init = function()
 		            	    	graph.fireEvent(new mxEventObject('cellsInserted', 'cells', select));
 			    			}
 			    			
-			        		graph.setCellStyles(mxConstants.STYLE_IMAGE, (newValue.length > 0) ? newValue : null, cells);
+			        		graph.setCellStyles('image', (newValue.length > 0) ? newValue : null, cells);
 			        		
 			        		// Sets shape only if not already shape with image (label or image)
 			        		let style = graph.getCurrentCellStyle(cells[0]);
 			        		
-			        		if (style[mxConstants.STYLE_SHAPE] != 'image' && style[mxConstants.STYLE_SHAPE] != 'label')
+			        		if (style.shape != 'image' && style.shape != 'label')
 			        		{
-			        			graph.setCellStyles(mxConstants.STYLE_SHAPE, 'image', cells);
+			        			graph.setCellStyles('shape', 'image', cells);
 			        		}
 			        		else if (newValue.length == 0)
 			        		{
-			        			graph.setCellStyles(mxConstants.STYLE_SHAPE, null, cells);
+			        			graph.setCellStyles('shape', null, cells);
 			        		}
 				        	
 				        	if (graph.getSelectionCount() == 1)

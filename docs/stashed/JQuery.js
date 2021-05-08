@@ -169,7 +169,7 @@ export default MYNAMEHERE;
         let graphConvertValueToString = graph.convertValueToString;
         graph.convertValueToString = function(cell)
         {
-          if (this.model.isVertex(cell))
+          if (cell.isVertex())
           {
             let node = document.createElement('canvas');
             node.setAttribute('width', cell.geometry.width);

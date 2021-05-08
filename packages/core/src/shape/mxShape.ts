@@ -16,14 +16,6 @@ import {
   RECTANGLE_ROUNDING_FACTOR,
   SHADOW_OFFSET_X,
   SHADOW_OFFSET_Y,
-  STYLE_ABSOLUTE_ARCSIZE,
-  STYLE_ARCSIZE,
-  STYLE_BACKGROUND_OUTLINE,
-  STYLE_DIRECTION,
-  STYLE_FIX_DASH,
-  STYLE_FLIPH,
-  STYLE_FLIPV,
-  STYLE_HORIZONTAL,
 } from '../util/mxConstants';
 import mxPoint from '../util/datatypes/mxPoint';
 import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
@@ -83,7 +75,7 @@ const toBool = (i: any): boolean => {
  * @example
  * ```javascript
  * var style = graph.getStylesheet().getDefaultVertexStyle();
- * style[mxConstants.STYLE_SHAPE] = 'customShape';
+ * style.shape = 'customShape';
  * ```
  */
 class mxShape {
@@ -473,7 +465,7 @@ class mxShape {
    */
   // getLabelBounds(rect: mxRectangle): mxRectangle;
   getLabelBounds(rect: mxRectangle): mxRectangle {
-    const d = mxUtils.getValue(this.style, STYLE_DIRECTION, DIRECTION_EAST);
+    const d = mxUtils.getValue(this.style, 'direction', DIRECTION_EAST);
     let bounds = rect.clone();
 
     // Normalizes argument for getLabelMargins hook
@@ -493,8 +485,8 @@ class mxShape {
     if (labelMargins != null) {
       labelMargins = <mxRectangle>(<mxRectangle>labelMargins).clone();
 
-      let flipH = toBool(mxUtils.getValue(this.style, STYLE_FLIPH, false));
-      let flipV = toBool(mxUtils.getValue(this.style, STYLE_FLIPV, false));
+      let flipH = toBool(mxUtils.getValue(this.style, 'flipH', false));
+      let flipV = toBool(mxUtils.getValue(this.style, 'flipV', false));
 
       // Handles special case for vertical labels
       if (
@@ -801,7 +793,7 @@ class mxShape {
       c.setDashed(
         this.isDashed,
         this.style != null
-          ? toBool(mxUtils.getValue(this.style, STYLE_FIX_DASH, false))
+          ? toBool(mxUtils.getValue(this.style, 'fixDash', false))
           : false
       );
     }
@@ -894,7 +886,7 @@ class mxShape {
       !this.outline ||
       this.style == null ||
       toBool(
-        mxUtils.getValue(this.style, STYLE_BACKGROUND_OUTLINE, 0) === false
+        mxUtils.getValue(this.style, 'backgroundOutline', 0) === false
       )
     ) {
       c.setShadow(false);
@@ -945,12 +937,12 @@ class mxShape {
   getArcSize(w: number, h: number): number {
     let r = 0;
 
-    if (toBool(mxUtils.getValue(this.style, STYLE_ABSOLUTE_ARCSIZE, 0))) {
+    if (toBool(mxUtils.getValue(this.style, 'absoluteArcSize', 0))) {
       r = Math.min(
         w / 2,
         Math.min(
           h / 2,
-          mxUtils.getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2
+          mxUtils.getValue(this.style, 'arcSize', LINE_ARCSIZE) / 2
         )
       );
     } else {
@@ -958,7 +950,7 @@ class mxShape {
         String(
           mxUtils.getValue(
             this.style,
-            STYLE_ARCSIZE,
+            'arcSize',
             RECTANGLE_ROUNDING_FACTOR * 100
           ) / 100
         )
@@ -1142,25 +1134,25 @@ class mxShape {
    * Applies the style of the given <mxCellState> to the shape. This
    * implementation assigns the following styles to local fields:
    *
-   * - <mxConstants.STYLE_FILLCOLOR> => fill
-   * - <mxConstants.STYLE_GRADIENTCOLOR> => gradient
-   * - <mxConstants.STYLE_GRADIENT_DIRECTION> => gradientDirection
-   * - <mxConstants.STYLE_OPACITY> => opacity
+   * - <'fillColor'> => fill
+   * - <'gradientColor'> => gradient
+   * - <'gradientDirection'> => gradientDirection
+   * - <'opacity'> => opacity
    * - <mxConstants.STYLE_FILL_OPACITY> => fillOpacity
    * - <mxConstants.STYLE_STROKE_OPACITY> => strokeOpacity
-   * - <mxConstants.STYLE_STROKECOLOR> => stroke
-   * - <mxConstants.STYLE_STROKEWIDTH> => strokewidth
-   * - <mxConstants.STYLE_SHADOW> => isShadow
-   * - <mxConstants.STYLE_DASHED> => isDashed
-   * - <mxConstants.STYLE_SPACING> => spacing
-   * - <mxConstants.STYLE_STARTSIZE> => startSize
-   * - <mxConstants.STYLE_ENDSIZE> => endSize
-   * - <mxConstants.STYLE_ROUNDED> => isRounded
-   * - <mxConstants.STYLE_STARTARROW> => startArrow
-   * - <mxConstants.STYLE_ENDARROW> => endArrow
-   * - <mxConstants.STYLE_ROTATION> => rotation
-   * - <mxConstants.STYLE_DIRECTION> => direction
-   * - <mxConstants.STYLE_GLASS> => glass
+   * - <'strokeColor'> => stroke
+   * - <'strokeWidth'> => strokewidth
+   * - <'shadow'> => isShadow
+   * - <'dashed'> => isDashed
+   * - <'spacing'> => spacing
+   * - <'startSize'> => startSize
+   * - <'endSize'> => endSize
+   * - <'rounded'> => isRounded
+   * - <'startArrow'> => startArrow
+   * - <'endArrow'> => endArrow
+   * - <'rotation'> => rotation
+   * - <'direction'> => direction
+   * - <'glass'> => glass
    *
    * This keeps a reference to the <style>. If you need to keep a reference to
    * the cell, you can override this method and store a local reference to
@@ -1408,7 +1400,7 @@ class mxShape {
   // getTextRotation(): number;
   getTextRotation(): number {
     let rot = this.getRotation();
-    if (!toBool(mxUtils.getValue(this.style, STYLE_HORIZONTAL, 1))) {
+    if (!toBool(mxUtils.getValue(this.style, 'horizontal', 1))) {
       rot += this.verticalTextRotation || -90; // WARNING WARNING!!!! ===============================================================================================
     }
     return rot;

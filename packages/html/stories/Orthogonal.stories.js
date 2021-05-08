@@ -19,7 +19,8 @@ const Template = ({ label, ...args }) => {
     mxPoint,
     mxCellState,
     mxEdgeHandler,
-    mxGraphView
+    mxGraphView,
+    mxEvent
   } = mxgraph;
 
   const container = document.createElement('div');

@@ -39,20 +39,20 @@ const Template = ({ label, ...args }) => {
 
   // Makes all cells round with a white, bold label
   let style = graph.stylesheet.getDefaultVertexStyle();
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
-  style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-  style[mxConstants.STYLE_FONTCOLOR] = 'white';
-  style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-  style[mxConstants.STYLE_FONTSTYLE] = mxConstants.FONT_BOLD;
-  style[mxConstants.STYLE_FONTSIZE] = 14;
-  style[mxConstants.STYLE_SHADOW] = true;
+  style.shape = mxConstants.SHAPE_ELLIPSE;
+  style.perimiter = mxPerimeter.EllipsePerimeter;
+  style.fontColor = 'white';
+  style.gradientColor = 'white';
+  style.fontStyle = mxConstants.FONT_BOLD;
+  style.fontSize = 14;
+  style.shadow = true;
 
   // Makes all edge labels gray with a white background
   style = graph.stylesheet.getDefaultEdgeStyle();
-  style[mxConstants.STYLE_FONTCOLOR] = 'gray';
-  style[mxConstants.STYLE_FONTSTYLE] = mxConstants.FONT_BOLD;
-  style[mxConstants.STYLE_FONTCOLOR] = 'black';
-  style[mxConstants.STYLE_STROKEWIDTH] = 2;
+  style.fontColor = 'gray';
+  style.fontStyle = mxConstants.FONT_BOLD;
+  style.fontColor = 'black';
+  style.strokeWidth = 2;
 
   // Enables rubberband selection
   if (args.rubberBand)

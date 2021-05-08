@@ -18,25 +18,6 @@ import {
   ALIGN_MIDDLE,
   ALIGN_RIGHT,
   ALIGN_TOP,
-  STYLE_ALIGN,
-  STYLE_EDGE,
-  STYLE_FLIPH,
-  STYLE_FLIPV,
-  STYLE_LABEL_POSITION,
-  STYLE_LABEL_WIDTH,
-  STYLE_LOOP,
-  STYLE_NOEDGESTYLE,
-  STYLE_ORTHOGONAL_LOOP,
-  STYLE_PERIMETER,
-  STYLE_PERIMETER_SPACING,
-  STYLE_ROTATION,
-  STYLE_ROUTING_CENTER_X,
-  STYLE_ROUTING_CENTER_Y,
-  STYLE_SOURCE_PERIMETER_SPACING,
-  STYLE_SOURCE_PORT,
-  STYLE_TARGET_PERIMETER_SPACING,
-  STYLE_TARGET_PORT,
-  STYLE_VERTICAL_LABEL_POSITION,
 } from '../../util/mxConstants';
 import mxClient from '../../mxClient';
 import mxEvent from '../../util/event/mxEvent';
@@ -1081,7 +1062,7 @@ class mxGraphView extends mxEventSource {
     const pState = this.getState(state.cell.getParent());
 
     if (geo.relative && pState != null && !pState.cell.isEdge()) {
-      const alpha = mxUtils.toRadians(pState.style[STYLE_ROTATION] || '0');
+      const alpha = mxUtils.toRadians(pState.style.rotation || '0');
       if (alpha !== 0) {
         const cos = Math.cos(alpha);
         const sin = Math.sin(alpha);
@@ -1146,10 +1127,10 @@ class mxGraphView extends mxEventSource {
    */
   // updateVertexLabelOffset(state: mxCellState): void;
   updateVertexLabelOffset(state: mxCellState) {
-    const h = mxUtils.getValue(state.style, STYLE_LABEL_POSITION, ALIGN_CENTER);
+    const h = mxUtils.getValue(state.style, 'labelPosition', ALIGN_CENTER);
 
     if (h === ALIGN_LEFT) {
-      let lw = mxUtils.getValue(state.style, STYLE_LABEL_WIDTH, null);
+      let lw = mxUtils.getValue(state.style, 'labelWidth', null);
 
       if (lw != null) {
         lw *= this.scale;
@@ -1163,11 +1144,11 @@ class mxGraphView extends mxEventSource {
       // @ts-ignore
       state.absoluteOffset.x += state.width;
     } else if (h === ALIGN_CENTER) {
-      const lw = mxUtils.getValue(state.style, STYLE_LABEL_WIDTH, null);
+      const lw = mxUtils.getValue(state.style, 'labelWidth', null);
 
       if (lw != null) {
         // Aligns text block with given width inside the vertex width
-        const align = mxUtils.getValue(state.style, STYLE_ALIGN, ALIGN_CENTER);
+        const align = mxUtils.getValue(state.style, 'align', ALIGN_CENTER);
         let dx = 0;
 
         if (align === ALIGN_CENTER) {
@@ -1185,7 +1166,7 @@ class mxGraphView extends mxEventSource {
 
     const v = mxUtils.getValue(
       state.style,
-      STYLE_VERTICAL_LABEL_POSITION,
+      'verticalLabelPosition',
       ALIGN_MIDDLE
     );
 
@@ -1481,7 +1462,7 @@ class mxGraphView extends mxEventSource {
 
     if (
       (points == null || points.length < 2) &&
-      (!mxUtils.getValue(edge.style, STYLE_ORTHOGONAL_LOOP, false) ||
+      (!mxUtils.getValue(edge.style, 'orthogonalLoop', false) ||
         ((sc == null || sc.point == null) && (tc == null || tc.point == null)))
     ) {
       return source != null && source === target;
@@ -1502,11 +1483,11 @@ class mxGraphView extends mxEventSource {
     let edgeStyle: any = this.isLoopStyleEnabled(edge, points, source, target)
       ? mxUtils.getValue(
           edge.style,
-          STYLE_LOOP,
+          'loop',
           (<mxGraph>this.graph).defaultLoopStyle
         )
-      : !mxUtils.getValue(edge.style, STYLE_NOEDGESTYLE, false)
-      ? edge.style[STYLE_EDGE]
+      : !mxUtils.getValue(edge.style, 'noEdgeStyle', false)
+      ? edge.style.edge
       : null;
 
     // Converts string values to objects
@@ -1593,7 +1574,7 @@ class mxGraphView extends mxEventSource {
     let next = this.getNextPoint(edge, end, source);
 
     const orth = (<mxGraph>this.graph).isOrthogonal(edge);
-    const alpha = mxUtils.toRadians(Number(start.style[STYLE_ROTATION] || '0'));
+    const alpha = mxUtils.toRadians(Number(start.style.rotation || '0'));
     const center = new mxPoint(start.getCenterX(), start.getCenterY());
 
     if (alpha !== 0) {
@@ -1602,10 +1583,10 @@ class mxGraphView extends mxEventSource {
       next = mxUtils.getRotatedPoint(next, cos, sin, center);
     }
 
-    let border = parseFloat(edge.style[STYLE_PERIMETER_SPACING] || 0);
+    let border = parseFloat(edge.style.perimeterSpacing || 0);
     border += parseFloat(
       edge.style[
-        source ? STYLE_SOURCE_PERIMETER_SPACING : STYLE_TARGET_PERIMETER_SPACING
+        source ? 'sourcePerimeterSpacing' : 'targetPerimeterSpacing'
       ] || 0
     );
     let pt = this.getPerimeterPoint(
@@ -1638,7 +1619,7 @@ class mxGraphView extends mxEventSource {
     terminal: mxCellState,
     source: boolean = false
   ): mxCellState | null {
-    const key = source ? STYLE_SOURCE_PORT : STYLE_TARGET_PORT;
+    const key = source ? 'sourcePort' : 'targetPort';
     const id = mxUtils.getValue(state.style, key);
 
     if (id != null) {
@@ -1688,8 +1669,8 @@ class mxGraphView extends mxEventSource {
           let flipV = false;
 
           if (terminal.cell.isVertex()) {
-            flipH = mxUtils.getValue(terminal.style, STYLE_FLIPH, 0) == 1;
-            flipV = mxUtils.getValue(terminal.style, STYLE_FLIPV, 0) == 1;
+            flipH = mxUtils.getValue(terminal.style, 'flipH', 0) == 1;
+            flipV = mxUtils.getValue(terminal.style, 'flipV', 0) == 1;
 
             // Legacy support for stencilFlipH/V
             if (terminal.shape != null && terminal.shape.stencil != null) {
@@ -1738,7 +1719,7 @@ class mxGraphView extends mxEventSource {
   getRoutingCenterX(state: mxCellState) {
     const f =
       state.style != null
-        ? parseFloat(state.style[STYLE_ROUTING_CENTER_X]) || 0
+        ? parseFloat(state.style.routingCenterX) || 0
         : 0;
     return state.getCenterX() + f * state.width;
   }
@@ -1750,7 +1731,7 @@ class mxGraphView extends mxEventSource {
   getRoutingCenterY(state: mxCellState) {
     const f =
       state.style != null
-        ? parseFloat(state.style[STYLE_ROUTING_CENTER_Y]) || 0
+        ? parseFloat(state.style.routingCenterY) || 0
         : 0;
     return state.getCenterY() + f * state.height;
   }
@@ -1801,7 +1782,7 @@ class mxGraphView extends mxEventSource {
     border: number = 0
   ): mxRectangle | null {
     if (terminal != null) {
-      border += parseFloat(terminal.style[STYLE_PERIMETER_SPACING] || 0);
+      border += parseFloat(terminal.style.perimeterSpacing || 0);
     }
     return (<mxCellState>terminal).getPerimeterBounds(border * this.scale);
   }
@@ -1811,7 +1792,7 @@ class mxGraphView extends mxEventSource {
    */
   // getPerimeterFunction(state: mxCellState): any;
   getPerimeterFunction(state: mxCellState): Function | null {
-    let perimeter = state.style[STYLE_PERIMETER];
+    let perimeter = state.style.perimeter;
 
     // Converts string values to objects
     if (typeof perimeter === 'string') {

@@ -168,23 +168,23 @@ export default Scrollbars;
         let graph = new mxGraph(container);
 
         // Uses the entity perimeter (below) as default
-        graph.stylesheet.getDefaultVertexStyle()[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-        graph.stylesheet.getDefaultVertexStyle()[mxConstants.STYLE_PERIMETER] =
+        graph.stylesheet.getDefaultVertexStyle().verticalAlign = mxConstants.ALIGN_TOP;
+        graph.stylesheet.getDefaultVertexStyle().perimiter =
           mxPerimeter.EntityPerimeter;
-        graph.stylesheet.getDefaultVertexStyle()[mxConstants.STYLE_SHADOW] = true;
-        graph.stylesheet.getDefaultVertexStyle()[mxConstants.STYLE_FILLCOLOR] = '#DDEAFF';
-        graph.stylesheet.getDefaultVertexStyle()[mxConstants.STYLE_GRADIENTCOLOR] = '#A9C4EB';
-        delete graph.stylesheet.getDefaultVertexStyle()[mxConstants.STYLE_STROKECOLOR];
+        graph.stylesheet.getDefaultVertexStyle().shadow = true;
+        graph.stylesheet.getDefaultVertexStyle().fillColor = '#DDEAFF';
+        graph.stylesheet.getDefaultVertexStyle().gradientColor = '#A9C4EB';
+        delete graph.stylesheet.getDefaultVertexStyle().strokeColor;
 
         // Used for HTML labels that use up the complete vertex space (see
         // graph.cellRenderer.redrawLabel below for syncing the size)
-        graph.stylesheet.getDefaultVertexStyle()[mxConstants.STYLE_OVERFLOW] = 'fill';
+        graph.stylesheet.getDefaultVertexStyle().overflow = 'fill';
 
         // Uses the entity edge style as default
-        graph.stylesheet.getDefaultEdgeStyle()[mxConstants.STYLE_EDGE] =
+        graph.stylesheet.getDefaultEdgeStyle().edge =
           mxEdgeStyle.EntityRelation;
-        graph.stylesheet.getDefaultEdgeStyle()[mxConstants.STYLE_STROKECOLOR] = 'black';
-        graph.stylesheet.getDefaultEdgeStyle()[mxConstants.STYLE_FONTCOLOR] = 'black';
+        graph.stylesheet.getDefaultEdgeStyle().strokeColor = 'black';
+        graph.stylesheet.getDefaultEdgeStyle().fontColor = 'black';
 
         // Allows new connections to be made but do not allow existing
         // connections to be changed for the sake of simplicity of this

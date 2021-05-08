@@ -134,7 +134,7 @@ export default MYNAMEHERE;
          let geo = (terminal != null) ? terminal.cell.getGeometry() : null;
 
          if ((geo != null ? !geo.relative : false) &&
-           this.getModel().isVertex(terminal.cell) &&
+           terminal.cell.isVertex() &&
            this.getModel().getChildCount(terminal.cell) == 0)
          {
           return [new mxConnectionConstraint(new mxPoint(0, 0.5), false),
@@ -182,7 +182,7 @@ export default MYNAMEHERE;
 
           let parent = this.getModel().getParent(cell);
 
-          if (this.getModel().isVertex(parent))
+          if (parent.isVertex())
           {
             tip += this.getTooltipForCell(parent) + '.';
           }
@@ -228,32 +228,32 @@ export default MYNAMEHERE;
       let fillColor = (invert) ? 'none' : '#FFFFFF';
 
       let style = graph.getStylesheet().getDefaultEdgeStyle();
-      delete style['endArrow'];
-      style['strokeColor'] = strokeColor;
-      style['labelBackgroundColor'] = labelBackground;
-      style['edgeStyle'] = 'wireEdgeStyle';
-      style['fontColor'] = fontColor;
-      style['fontSize'] = '9';
-      style['movable'] = '0';
-      style['strokeWidth'] = strokeWidth;
-      //style['rounded'] = '1';
+      delete style.endArrow;
+      style.strokeColor = strokeColor;
+      style.labelBackgroundColor = labelBackground;
+      style.edgeStyle = 'wireEdgeStyle';
+      style.fontColor = fontColor;
+      style.fontSize = '9';
+      style.movable = '0';
+      style.strokeWidth = strokeWidth;
+      //style.rounded = '1';
 
       // Sets join node size
-      style['startSize'] = joinNodeSize;
-      style['endSize'] = joinNodeSize;
+      style.startSize = joinNodeSize;
+      style.endSize = joinNodeSize;
 
       style = graph.getStylesheet().getDefaultVertexStyle();
-      style['gradientDirection'] = 'south';
-      //style['gradientColor'] = '#909090';
-      style['strokeColor'] = strokeColor;
-      //style['fillColor'] = '#e0e0e0';
-      style['fillColor'] = 'none';
-      style['fontColor'] = fontColor;
-      style['fontStyle'] = '1';
-      style['fontSize'] = '12';
-      style['resizable'] = '0';
-      style['rounded'] = '1';
-      style['strokeWidth'] = strokeWidth;
+      style.gradientDirection = 'south';
+      //style.gradientColor = '#909090';
+      style.strokeColor = strokeColor;
+      //style.fillColor = '#e0e0e0';
+      style.fillColor = 'none';
+      style.fontColor = fontColor;
+      style.fontStyle = '1';
+      style.fontSize = '12';
+      style.resizable = '0';
+      style.rounded = '1';
+      style.strokeWidth = strokeWidth;
 
       let parent = graph.getDefaultParent();
 
@@ -581,8 +581,8 @@ export default MYNAMEHERE;
 
       if (this.sourceConstraint != null && this.previous != null)
       {
-        edge.style = mxConstants.STYLE_EXIT_X+'='+this.sourceConstraint.point.x+';'+
-          mxConstants.STYLE_EXIT_Y+'='+this.sourceConstraint.point.y+';';
+        edge.style = 'exitX'+'='+this.sourceConstraint.point.x+';'+
+          'exitY'+'='+this.sourceConstraint.point.y+';';
       }
       else if (this.graph.model.isEdge(me.getCell()))
       {
@@ -724,8 +724,8 @@ export default MYNAMEHERE;
             this.state.style = this.lastStyle;
 
             // Workaround for shape using current stroke width if no strokewidth defined
-            this.state.style['strokeWidth'] = this.state.style['strokeWidth'] || '1';
-            this.state.style['strokeColor'] = this.state.style['strokeColor'] || 'none';
+            this.state.style.strokeWidth = this.state.style.strokeWidth || '1';
+            this.state.style.strokeColor = this.state.style.strokeColor || 'none';
 
             if (this.state.shape != null)
             {
@@ -738,8 +738,8 @@ export default MYNAMEHERE;
           {
             this.lastStyle = state.style;
             state.style = mxUtils.clone(state.style);
-            state.style['strokeColor'] = '#00ff00';
-            state.style['strokeWidth'] = '3';
+            state.style.strokeColor = '#00ff00';
+            state.style.strokeWidth = '3';
 
             if (state.shape != null)
             {
@@ -781,12 +781,12 @@ export default MYNAMEHERE;
 
         if (this.model.isEdge(this.model.getTerminal(cell, true)))
         {
-          style['startArrow'] = 'oval';
+          style.startArrow = 'oval';
         }
 
         if (this.model.isEdge(this.model.getTerminal(cell, false)))
         {
-          style['endArrow'] = 'oval';
+          style.endArrow = 'oval';
         }
       }
 
@@ -838,14 +838,14 @@ export default MYNAMEHERE;
     // Gets the initial connection from the source terminal or edge
     if (source != null && state.view.graph.model.isEdge(source.cell))
     {
-      horizontal = state.style['sourceConstraint'] == 'horizontal';
+      horizontal = state.style.sourceConstraint == 'horizontal';
     }
     else if (source != null)
     {
-      horizontal = source.style['portConstraint'] != 'vertical';
+      horizontal = source.style.portConstraint != 'vertical';
 
       // Checks the direction of the shape and rotates
-      let direction = source.style[mxConstants.STYLE_DIRECTION];
+      let direction = source.style.direction;
 
       if (direction == 'north' || direction == 'south')
       {

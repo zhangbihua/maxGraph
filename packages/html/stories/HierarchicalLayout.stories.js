@@ -49,14 +49,14 @@ const Template = ({ label, ...args }) => {
 
   // Changes the default vertex style in-place
   let style = graph.getStylesheet().getDefaultVertexStyle();
-  style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-  style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-  style[mxConstants.STYLE_PERIMETER_SPACING] = 6;
-  style[mxConstants.STYLE_ROUNDED] = true;
-  style[mxConstants.STYLE_SHADOW] = true;
+  style.perimiter = mxPerimeter.RectanglePerimeter;
+  style.gradientColor = 'white';
+  style.perimeterSpacing = 6;
+  style.rounded = true;
+  style.shadow = true;
 
   style = graph.getStylesheet().getDefaultEdgeStyle();
-  style[mxConstants.STYLE_ROUNDED] = true;
+  style.rounded = true;
 
   // Creates a layout algorithm to be used
   // with the graph

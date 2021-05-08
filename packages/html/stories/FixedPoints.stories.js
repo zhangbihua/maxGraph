@@ -86,10 +86,10 @@ const Template = ({ label, ...args }) => {
         }
 
         // In case the edge style must be changed during the preview:
-        // this.edgeState.style['edgeStyle'] = 'orthogonalEdgeStyle';
+        // this.edgeState.style.edgeStyle = 'orthogonalEdgeStyle';
         // And to use the new edge style in the new edge inserted into the graph,
         // update the cell style as follows:
-        // this.edgeState.cell.style = mxUtils.setStyle(this.edgeState.cell.style, 'edgeStyle', this.edgeState.style['edgeStyle']);
+        // this.edgeState.cell.style = mxUtils.setStyle(this.edgeState.cell.style, 'edgeStyle', this.edgeState.style.edgeStyle);
       }
       return super.updateEdgeState(pt, constraint);
     }
@@ -134,7 +134,7 @@ const Template = ({ label, ...args }) => {
     }
 
     getAllConnectionConstraints(terminal) {
-      if (terminal != null && this.model.isVertex(terminal.cell)) {
+      if (terminal != null && terminal.cell.isVertex()) {
         return [
           new mxConnectionConstraint(new mxPoint(0, 0), true),
           new mxConnectionConstraint(new mxPoint(0.5, 0), true),

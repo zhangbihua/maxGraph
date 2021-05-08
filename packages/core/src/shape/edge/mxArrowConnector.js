@@ -10,11 +10,6 @@ import {
   ARROW_SPACING,
   ARROW_WIDTH,
   NONE,
-  STYLE_ENDARROW,
-  STYLE_ENDSIZE,
-  STYLE_STARTARROW,
-  STYLE_STARTSIZE,
-  STYLE_STROKEWIDTH,
 } from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 
@@ -71,9 +66,9 @@ class mxArrowConnector extends mxShape {
 
     if (this.style != null) {
       this.startSize =
-        mxUtils.getNumber(this.style, STYLE_STARTSIZE, ARROW_SIZE / 5) * 3;
+        mxUtils.getNumber(this.style, 'startSize', ARROW_SIZE / 5) * 3;
       this.endSize =
-        mxUtils.getNumber(this.style, STYLE_ENDSIZE, ARROW_SIZE / 5) * 3;
+        mxUtils.getNumber(this.style, 'endSize', ARROW_SIZE / 5) * 3;
     }
   }
 
@@ -108,7 +103,7 @@ class mxArrowConnector extends mxShape {
     if (this.outline) {
       strokeWidth = Math.max(
         1,
-        mxUtils.getNumber(this.style, STYLE_STROKEWIDTH, this.strokewidth)
+        mxUtils.getNumber(this.style, 'strokeWidth', this.strokewidth)
       );
     }
 
@@ -489,7 +484,7 @@ class mxArrowConnector extends mxShape {
    */
   // isMarkerStart(): boolean;
   isMarkerStart() {
-    return mxUtils.getValue(this.style, STYLE_STARTARROW, NONE) !== NONE;
+    return mxUtils.getValue(this.style, 'startArrow', NONE) !== NONE;
   }
 
   /**
@@ -497,7 +492,7 @@ class mxArrowConnector extends mxShape {
    */
   // isMarkerEnd(): boolean;
   isMarkerEnd() {
-    return mxUtils.getValue(this.style, STYLE_ENDARROW, NONE) !== NONE;
+    return mxUtils.getValue(this.style, 'endArrow', NONE) !== NONE;
   }
 }
 

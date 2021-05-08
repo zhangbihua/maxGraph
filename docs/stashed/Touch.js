@@ -437,7 +437,7 @@ export default Touch;
             pt.y = s.y + s.height / 2;
           }
 
-          let alpha = mxUtils.toRadians(mxUtils.getValue(s.style, mxConstants.STYLE_ROTATION, 0));
+          let alpha = mxUtils.toRadians(mxUtils.getValue(s.style, 'rotation', 0));
 
           if (alpha != 0)
           {

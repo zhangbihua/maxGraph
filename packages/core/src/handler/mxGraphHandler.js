@@ -18,7 +18,6 @@ import {
   DIALECT_SVG,
   DROP_TARGET_COLOR,
   INVALID_CONNECT_TARGET_COLOR,
-  STYLE_ROTATION,
   VALID_COLOR,
 } from '../util/mxConstants';
 import mxDictionary from '../util/datatypes/mxDictionary';
@@ -1709,7 +1708,7 @@ class mxGraphHandler {
           getClientY(evt)
         );
         const alpha = mxUtils.toRadians(
-          mxUtils.getValue(pState.style, STYLE_ROTATION) || 0
+          mxUtils.getValue(pState.style, 'rotation') || 0
         );
 
         if (alpha !== 0) {

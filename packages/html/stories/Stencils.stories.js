@@ -68,7 +68,7 @@ const Template = ({ label, ...args }) => {
 
   // Uses the shape for resize previews
   mxVertexHandler.prototype.createSelectionShape = function(bounds) {
-    const key = this.state.style[mxConstants.STYLE_SHAPE];
+    const key = this.state.style.shape;
     const stencil = mxStencilRegistry.getStencil(key);
     let shape = null;
 
@@ -159,11 +159,11 @@ const Template = ({ label, ...args }) => {
 
   // Changes default styles
   let style = graph.getStylesheet().getDefaultEdgeStyle();
-  style[mxConstants.STYLE_EDGE] = 'orthogonalEdgeStyle';
+  style.edge = 'orthogonalEdgeStyle';
   style = graph.getStylesheet().getDefaultVertexStyle();
-  style[mxConstants.STYLE_FILLCOLOR] = '#adc5ff';
-  style[mxConstants.STYLE_GRADIENTCOLOR] = '#7d85df';
-  style[mxConstants.STYLE_SHADOW] = '1';
+  style.fillColor = '#adc5ff';
+  style.gradientColor = '#7d85df';
+  style.shadow = '1';
 
   // Enables rubberband selection
   if (args.rubberBand)
@@ -273,13 +273,13 @@ const Template = ({ label, ...args }) => {
 
   buttons.appendChild(
     mxDomHelpers.button('FlipH', function() {
-      graph.toggleCellStyles(mxConstants.STYLE_FLIPH);
+      graph.toggleCellStyles('flipH');
     })
   );
 
   buttons.appendChild(
     mxDomHelpers.button('FlipV', function() {
-      graph.toggleCellStyles(mxConstants.STYLE_FLIPV);
+      graph.toggleCellStyles('flipV');
     })
   );
 
@@ -312,7 +312,7 @@ const Template = ({ label, ...args }) => {
 
             if (state != null) {
               let dir =
-                state.style[mxConstants.STYLE_DIRECTION] ||
+                state.style.direction ||
                 'east'; /* default */
 
               if (dir === 'east') {
@@ -325,7 +325,7 @@ const Template = ({ label, ...args }) => {
                 dir = 'east';
               }
 
-              graph.setCellStyles(mxConstants.STYLE_DIRECTION, dir, [cell]);
+              graph.setCellStyles('direction', dir, [cell]);
             }
           } finally {
             graph.getModel().endUpdate();
@@ -342,17 +342,17 @@ const Template = ({ label, ...args }) => {
 
   buttons.appendChild(
     mxDomHelpers.button('And', function() {
-      graph.setCellStyles(mxConstants.STYLE_SHAPE, 'and');
+      graph.setCellStyles('shape', 'and');
     })
   );
   buttons.appendChild(
     mxDomHelpers.button('Or', function() {
-      graph.setCellStyles(mxConstants.STYLE_SHAPE, 'or');
+      graph.setCellStyles('shape', 'or');
     })
   );
   buttons.appendChild(
     mxDomHelpers.button('Xor', function() {
-      graph.setCellStyles(mxConstants.STYLE_SHAPE, 'xor');
+      graph.setCellStyles('shape', 'xor');
     })
   );
 

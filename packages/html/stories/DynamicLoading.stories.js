@@ -52,9 +52,9 @@ const Template = ({ label, ...args }) => {
 
   // Changes the default vertex style in-place
   const style = graph.getStylesheet().getDefaultVertexStyle();
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
-  style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-  style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
+  style.shape = mxConstants.SHAPE_ELLIPSE;
+  style.perimiter = mxPerimeter.EllipsePerimeter;
+  style.gradientColor = 'white';
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

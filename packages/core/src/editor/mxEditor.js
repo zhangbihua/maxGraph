@@ -30,9 +30,6 @@ import {
   FONT_BOLD,
   FONT_ITALIC,
   FONT_UNDERLINE,
-  STYLE_ALIGN,
-  STYLE_FONTSTYLE,
-  STYLE_VERTICAL_ALIGN,
 } from '../util/mxConstants';
 import mxGraph from '../view/graph/mxGraph';
 import mxSwimlaneManager from '../view/graph/mxSwimlaneManager';
@@ -1203,19 +1200,19 @@ class mxEditor extends mxEventSource {
 
     this.addAction('bold', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.toggleCellStyleFlags(STYLE_FONTSTYLE, FONT_BOLD);
+        editor.graph.toggleCellStyleFlags('fontStyle', FONT_BOLD);
       }
     });
 
     this.addAction('italic', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.toggleCellStyleFlags(STYLE_FONTSTYLE, FONT_ITALIC);
+        editor.graph.toggleCellStyleFlags('fontStyle', FONT_ITALIC);
       }
     });
 
     this.addAction('underline', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.toggleCellStyleFlags(STYLE_FONTSTYLE, FONT_UNDERLINE);
+        editor.graph.toggleCellStyleFlags('fontStyle', FONT_UNDERLINE);
       }
     });
 
@@ -1256,36 +1253,36 @@ class mxEditor extends mxEventSource {
     });
 
     this.addAction('alignFontLeft', (editor) => {
-      editor.graph.setCellStyles(STYLE_ALIGN, ALIGN_LEFT);
+      editor.graph.setCellStyles('align', ALIGN_LEFT);
     });
 
     this.addAction('alignFontCenter', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.setCellStyles(STYLE_ALIGN, ALIGN_CENTER);
+        editor.graph.setCellStyles('align', ALIGN_CENTER);
       }
     });
 
     this.addAction('alignFontRight', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.setCellStyles(STYLE_ALIGN, ALIGN_RIGHT);
+        editor.graph.setCellStyles('align', ALIGN_RIGHT);
       }
     });
 
     this.addAction('alignFontTop', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.setCellStyles(STYLE_VERTICAL_ALIGN, ALIGN_TOP);
+        editor.graph.setCellStyles('verticalAlign', ALIGN_TOP);
       }
     });
 
     this.addAction('alignFontMiddle', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.setCellStyles(STYLE_VERTICAL_ALIGN, ALIGN_MIDDLE);
+        editor.graph.setCellStyles('verticalAlign', ALIGN_MIDDLE);
       }
     });
 
     this.addAction('alignFontBottom', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.setCellStyles(STYLE_VERTICAL_ALIGN, ALIGN_BOTTOM);
+        editor.graph.setCellStyles('verticalAlign', ALIGN_BOTTOM);
       }
     });
 

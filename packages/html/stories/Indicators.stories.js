@@ -36,23 +36,23 @@ const Template = ({ label, ...args }) => {
   // Creates a style with an indicator
   let style = graph.getStylesheet().getDefaultVertexStyle();
 
-  style[mxConstants.STYLE_SHAPE] = 'label';
-  style[mxConstants.STYLE_VERTICAL_ALIGN] = 'bottom';
-  style[mxConstants.STYLE_INDICATOR_SHAPE] = 'ellipse';
-  style[mxConstants.STYLE_INDICATOR_WIDTH] = 34;
-  style[mxConstants.STYLE_INDICATOR_HEIGHT] = 34;
-  style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = 'top'; // indicator v-alignment
-  style[mxConstants.STYLE_IMAGE_ALIGN] = 'center';
-  style[mxConstants.STYLE_INDICATOR_COLOR] = 'green';
-  delete style[mxConstants.STYLE_STROKECOLOR]; // transparent
-  delete style[mxConstants.STYLE_FILLCOLOR]; // transparent
+  style.shape = 'label';
+  style.verticalAlign = 'bottom';
+  style.indicatorShape = 'ellipse';
+  style.indicatorWidth = 34;
+  style.indicatorHeight = 34;
+  style.imageVerticalAlign = 'top'; // indicator v-alignment
+  style.imageAlign = 'center';
+  style.indicatorColor = 'green';
+  delete style.strokeColor; // transparent
+  delete style.fillColor; // transparent
 
   // Creates a style with an indicator
   style = graph.getStylesheet().getDefaultEdgeStyle();
 
-  style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-  style[mxConstants.STYLE_ELBOW] = mxConstants.ELBOW_VERTICAL;
-  style[mxConstants.STYLE_ROUNDED] = true;
+  style.edge = mxEdgeStyle.ElbowConnector;
+  style.elbow = mxConstants.ELBOW_VERTICAL;
+  style.rounded = true;
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

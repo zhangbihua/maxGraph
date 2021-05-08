@@ -43,19 +43,19 @@ const Template = ({ label, ...args }) => {
 
   // Sets global styles
   let style = graph.getStylesheet().getDefaultEdgeStyle();
-  style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
-  style[mxConstants.STYLE_ROUNDED] = true;
+  style.edge = mxEdgeStyle.EntityRelation;
+  style.rounded = true;
 
   style = graph.getStylesheet().getDefaultVertexStyle();
-  style[mxConstants.STYLE_FILLCOLOR] = '#ffffff';
-  style[mxConstants.STYLE_SHAPE] = 'swimlane';
-  style[mxConstants.STYLE_STARTSIZE] = 30;
+  style.fillColor = '#ffffff';
+  style.shape = 'swimlane';
+  style.startSize = 30;
 
   style = [];
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-  style[mxConstants.STYLE_STROKECOLOR] = 'none';
-  style[mxConstants.STYLE_FILLCOLOR] = 'none';
-  style[mxConstants.STYLE_FOLDABLE] = false;
+  style.shape = mxConstants.SHAPE_RECTANGLE;
+  style.strokeColor = 'none';
+  style.fillColor = 'none';
+  style.foldable = false;
   graph.getStylesheet().putCellStyle('column', style);
 
   // Installs auto layout for all levels
