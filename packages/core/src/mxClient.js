@@ -73,7 +73,7 @@ const mxClient = {
    *
    * (code)
    * <script type="text/javascript">
-   *     let mxLoadResources = true;
+   *     let mxForceIncludes = false;
    * </script>
    * <script type="text/javascript" src="/path/to/core/directory/js/mxClient.js"></script>
    * (end)
