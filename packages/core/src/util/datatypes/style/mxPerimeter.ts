@@ -12,7 +12,6 @@ import {
   DIRECTION_NORTH,
   DIRECTION_SOUTH,
   DIRECTION_WEST,
-  STYLE_DIRECTION,
 } from '../../mxConstants';
 import mxRectangle from '../mxRectangle';
 import mxCellState from '../../../view/cell/mxCellState';
@@ -35,7 +34,7 @@ import mxCellState from '../../../view/cell/mxCellState';
  *
  * @example
  * ```javascript
- * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+ * style.perimiter = mxPerimeter.RectanglePerimeter;
  * ```
  *
  * When adding new perimeter functions, it is recommended to use the
@@ -75,7 +74,7 @@ import mxCellState from '../../../view/cell/mxCellState';
  * @example
  * ```javascript
  * var style = graph.getStylesheet().getDefaultVertexStyle();
- * style[mxConstants.STYLE_PERIMETER] = mxPerimeter.CustomPerimeter;
+ * style.perimiter = mxPerimeter.CustomPerimeter;
  * ```
  *
  * Note that the object can be used directly when programmatically setting
@@ -314,7 +313,7 @@ class mxPerimeter {
     next: mxPoint,
     orthogonal: boolean = false
   ): mxPoint | null {
-    const direction = vertex != null ? vertex.style[STYLE_DIRECTION] : null;
+    const direction = vertex != null ? vertex.style.direction : null;
     const vertical =
       direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
 
@@ -463,7 +462,7 @@ class mxPerimeter {
 
     const direction =
       vertex != null
-        ? mxUtils.getValue(vertex.style, STYLE_DIRECTION, DIRECTION_EAST)
+        ? mxUtils.getValue(vertex.style, 'direction', DIRECTION_EAST)
         : DIRECTION_EAST;
     const vertical =
       direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;

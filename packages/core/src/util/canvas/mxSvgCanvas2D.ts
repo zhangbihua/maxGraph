@@ -35,11 +35,12 @@ import mxAbstractCanvas2D from './mxAbstractCanvas2D';
 import { parseXml } from '../mxXmlUtils';
 import { importNodeImplementation, isNode, write } from '../mxDomUtils';
 import { htmlEntities, trim } from '../mxStringUtils';
-import { AlignValue, ColorValue, DirectionValue } from '../../types';
-
-type GradientMap = {
-  [k: string]: SVGLinearGradientElement;
-};
+import {
+  AlignValue,
+  ColorValue,
+  DirectionValue,
+  GradientMap,
+} from '../../types';
 
 // Activates workaround for gradient ID resolution if base tag is used.
 const useAbsoluteIds =

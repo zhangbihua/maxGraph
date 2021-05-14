@@ -52,7 +52,7 @@ export default MYNAMEHERE;
 
       if (state != null)
       {
-        let color = mxUtils.getValue(state.style, mxConstants.STYLE_FILLCOLOR, 'white');
+        let color = mxUtils.getValue(state.style, 'fillColor', 'white');
         this.textarea.style.background = color;
       }
     };

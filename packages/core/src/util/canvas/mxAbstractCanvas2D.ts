@@ -18,7 +18,7 @@ import mxUrlConverter from '../network/mxUrlConverter';
 import mxPoint from '../datatypes/mxPoint';
 import { clone } from '../mxCloneUtils';
 
-import type { CanvasState, ColorInputValue, ColorValue } from '../../types';
+import type { CanvasState, ColorValue } from '../../types';
 
 /**
  * Class: mxAbstractCanvas2D
@@ -272,7 +272,8 @@ class mxAbstractCanvas2D {
    */
   scale(value: number) {
     this.state.scale *= value;
-    this.state.strokeWidth *= value;
+
+    if (this.state.strokeWidth !== null) this.state.strokeWidth *= value;
   }
 
   /**
@@ -332,7 +333,7 @@ class mxAbstractCanvas2D {
    *
    * Sets the current fill color.
    */
-  setFillColor(value: ColorInputValue) {
+  setFillColor(value: ColorValue) {
     const v = value === NONE ? null : value;
 
     this.state.fillColor = v;
@@ -368,7 +369,7 @@ class mxAbstractCanvas2D {
    *
    * Sets the current stroke color.
    */
-  setStrokeColor(value: ColorInputValue) {
+  setStrokeColor(value: ColorValue) {
     const v = value === NONE ? null : value;
     this.state.strokeColor = v;
   }
@@ -378,7 +379,7 @@ class mxAbstractCanvas2D {
    *
    * Sets the current stroke width.
    */
-  setStrokeWidth(value: number) {
+  setStrokeWidth(value: number | null) {
     this.state.strokeWidth = value;
   }
 
@@ -387,7 +388,7 @@ class mxAbstractCanvas2D {
    *
    * Enables or disables dashed lines.
    */
-  setDashed(value: boolean, fixDash: boolean) {
+  setDashed(value: boolean, fixDash = false) {
     this.state.dashed = value;
     this.state.fixDash = fixDash;
   }
@@ -433,7 +434,7 @@ class mxAbstractCanvas2D {
    *
    * Sets the current font color.
    */
-  setFontColor(value: ColorInputValue) {
+  setFontColor(value: ColorValue) {
     const v = value === NONE ? null : value;
     this.state.fontColor = v;
   }
@@ -443,7 +444,7 @@ class mxAbstractCanvas2D {
    *
    * Sets the current font background color.
    */
-  setFontBackgroundColor(value: ColorInputValue) {
+  setFontBackgroundColor(value: ColorValue) {
     const v = value === NONE ? null : value;
     this.state.fontBackgroundColor = v;
   }
@@ -453,7 +454,7 @@ class mxAbstractCanvas2D {
    *
    * Sets the current font border color.
    */
-  setFontBorderColor(value: ColorInputValue) {
+  setFontBorderColor(value: ColorValue) {
     const v = value === NONE ? null : value;
     this.state.fontBorderColor = v;
   }
@@ -499,7 +500,7 @@ class mxAbstractCanvas2D {
    *
    * Enables or disables and configures the current shadow.
    */
-  setShadowColor(value: ColorInputValue) {
+  setShadowColor(value: ColorValue) {
     const v = value === NONE ? null : value;
     this.state.shadowColor = v;
   }
@@ -624,12 +625,12 @@ class mxAbstractCanvas2D {
    * Closes the current path.
    */
   close(
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-    x3: number,
-    y3: number
+    x1?: number,
+    y1?: number,
+    x2?: number,
+    y2?: number,
+    x3?: number,
+    y3?: number
   ) {
     this.addOp(this.closeOp);
   }

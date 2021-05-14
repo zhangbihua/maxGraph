@@ -246,11 +246,11 @@ class mxEvent {
   static redirectMouseEvents(
     node: Listenable,
     graph: mxGraph,
-    state: mxCellState | ((evt: Event) => mxCellState),
-    down: EventListener | null,
-    move: EventListener | null,
-    up: EventListener | null,
-    dblClick: EventListener | null
+    state: mxCellState | ((evt: Event) => mxCellState) | null = null,
+    down: EventListener | null = null,
+    move: EventListener | null = null,
+    up: EventListener | null = null,
+    dblClick: EventListener | null = null
   ) {
     const getState = (evt: Event) => {
       return typeof state === 'function' ? state(evt) : state;

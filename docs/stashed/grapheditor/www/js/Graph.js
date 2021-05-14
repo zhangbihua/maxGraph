@@ -204,7 +204,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 	{
 		let style = this.getCurrentCellStyle(cell);
 		
-		return (style != null) ? (style['html'] == '1' || style[mxConstants.STYLE_WHITE_SPACE] == 'wrap') : false;
+		return (style != null) ? (style.html == '1' || style.whiteSpace == 'wrap') : false;
 	};
 	
 	// Implements a listener for hover and click handling on edges
@@ -625,7 +625,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 		
 		if (state.view.graph.isHtmlLabel(state.cell))
 		{
-			if (state.style['html'] != 1)
+			if (state.style.html != 1)
 			{
 				result = mxUtils.htmlEntities(result, false);
 			}
@@ -1692,7 +1692,7 @@ Graph.prototype.init = function(container)
 	{
 		// Redirect editing for tables
 		let style = this.getCellStyle(cell);
-		let size = parseInt(mxUtils.getValue(style, mxConstants.STYLE_STARTSIZE, 0));
+		let size = parseInt(mxUtils.getValue(style, 'startSize', 0));
 		
 		if (this.isTable(cell) && (!this.isSwimlane(cell) ||
 			size == 0) && this.getLabel(cell) == '' &&
@@ -1701,7 +1701,7 @@ Graph.prototype.init = function(container)
 			cell = cell.getChildAt(0);
 			
 			style = this.getCellStyle(cell);
-			size = parseInt(mxUtils.getValue(style, mxConstants.STYLE_STARTSIZE, 0));
+			size = parseInt(mxUtils.getValue(style, 'startSize', 0));
 		}
 		
 		// Redirect editing for table rows
@@ -2358,20 +2358,20 @@ Graph.prototype.initLayoutManager = function()
 		{
 			let style = this.graph.getCellStyle(cell);
 	
-			if (style['childLayout'] == 'stackLayout')
+			if (style.childLayout == 'stackLayout')
 			{
 				let stackLayout = new mxStackLayout(this.graph, true);
 				stackLayout.resizeParentMax = mxUtils.getValue(style, 'resizeParentMax', '1') == '1';
 				stackLayout.horizontal = mxUtils.getValue(style, 'horizontalStack', '1') == '1';
 				stackLayout.resizeParent = mxUtils.getValue(style, 'resizeParent', '1') == '1';
 				stackLayout.resizeLast = mxUtils.getValue(style, 'resizeLast', '0') == '1';
-				stackLayout.spacing = style['stackSpacing'] || stackLayout.spacing;
-				stackLayout.border = style['stackBorder'] || stackLayout.border;
-				stackLayout.marginLeft = style['marginLeft'] || 0;
-				stackLayout.marginRight = style['marginRight'] || 0;
-				stackLayout.marginTop = style['marginTop'] || 0;
-				stackLayout.marginBottom = style['marginBottom'] || 0;
-				stackLayout.allowGaps = style['allowGaps'] || 0;
+				stackLayout.spacing = style.stackSpacing || stackLayout.spacing;
+				stackLayout.border = style.stackBorder || stackLayout.border;
+				stackLayout.marginLeft = style.marginLeft || 0;
+				stackLayout.marginRight = style.marginRight || 0;
+				stackLayout.marginTop = style.marginTop || 0;
+				stackLayout.marginBottom = style.marginBottom || 0;
+				stackLayout.allowGaps = style.allowGaps || 0;
 				stackLayout.fill = true;
 				
 				if (stackLayout.allowGaps)
@@ -2381,7 +2381,7 @@ Graph.prototype.initLayoutManager = function()
 				
 				return stackLayout;
 			}
-			else if (style['childLayout'] == 'treeLayout')
+			else if (style.childLayout == 'treeLayout')
 			{
 				let treeLayout = new mxCompactTreeLayout(this.graph);
 				treeLayout.horizontal = mxUtils.getValue(style, 'horizontalTree', '1') == '1';
@@ -2394,7 +2394,7 @@ Graph.prototype.initLayoutManager = function()
 				
 				return treeLayout;
 			}
-			else if (style['childLayout'] == 'flowLayout')
+			else if (style.childLayout == 'flowLayout')
 			{
 				let flowLayout = new mxHierarchicalLayout(this.graph, mxUtils.getValue(style,
 					'flowOrientation', mxConstants.DIRECTION_EAST));
@@ -2414,15 +2414,15 @@ Graph.prototype.initLayoutManager = function()
 				
 				return flowLayout;
 			}
-			else if (style['childLayout'] == 'circleLayout')
+			else if (style.childLayout == 'circleLayout')
 			{
 				return new mxCircleLayout(this.graph);
 			}
-			else if (style['childLayout'] == 'organicLayout')
+			else if (style.childLayout == 'organicLayout')
 			{
 				return new mxFastOrganicLayout(this.graph);
 			}
-			else if (style['childLayout'] == 'tableLayout')
+			else if (style.childLayout == 'tableLayout')
 			{
 				return new TableLayout(this.graph);
 			}
@@ -3404,7 +3404,7 @@ Graph.prototype.getCellStyle = function(cell)
 			
 			if (layout != null && layout.constructor == mxStackLayout)
 			{
-				style[mxConstants.STYLE_HORIZONTAL] = !layout.horizontal;
+				style.horizontal = !layout.horizontal;
 			}
 		}
 	}
@@ -3602,11 +3602,11 @@ Graph.prototype.isContainer = function(cell)
 	
 	if (this.isSwimlane(cell))
 	{
-		return style['container'] != '0';
+		return style.container != '0';
 	}
 	else
 	{
-		return style['container'] == '1';
+		return style.container == '1';
 	}
 };
 
@@ -3617,7 +3617,7 @@ Graph.prototype.isCellConnectable = function(cell)
 {
 	let style = this.getCurrentCellStyle(cell);
 	
-	return (style['connectable'] != null) ? style['connectable'] != '0' :
+	return (style.connectable != null) ? style.connectable != '0' :
 		mxGraph.prototype.isCellConnectable.apply(this, arguments);
 };
 
@@ -3628,7 +3628,7 @@ Graph.prototype.isLabelMovable = function(cell)
 {
 	let style = this.getCurrentCellStyle(cell);
 	
-	return (style['movableLabel'] != null) ? style['movableLabel'] != '0' :
+	return (style.movableLabel != null) ? style.movableLabel != '0' :
 		mxGraph.prototype.isLabelMovable.apply(this, arguments);
 };
 
@@ -3711,10 +3711,10 @@ Graph.prototype.isCellFoldable = function(cell)
 {
 	let style = this.getCurrentCellStyle(cell);
 	
-	return this.foldingEnabled && (style['treeFolding'] == '1' ||
+	return this.foldingEnabled && (style.treeFolding == '1' ||
 		(!this.isCellLocked(cell) &&
-		((this.isContainer(cell) && style['collapsible'] != '0') ||
-		(!this.isContainer(cell) && style['collapsible'] == '1'))));
+		((this.isContainer(cell) && style.collapsible != '0') ||
+		(!this.isContainer(cell) && style.collapsible == '1'))));
 };
 
 /**
@@ -4392,11 +4392,11 @@ HoverIcons.prototype.drag = function(evt, x, y)
 		let es = this.graph.connectionHandler.edgeState;
 
 		if (evt != null && mxEvent.isShiftDown(evt) && mxEvent.isControlDown(evt) && es != null &&
-			mxUtils.getValue(es.style, mxConstants.STYLE_EDGE, null) === 'orthogonalEdgeStyle')
+			mxUtils.getValue(es.style, 'edge', null) === 'orthogonalEdgeStyle')
 		{
 			let direction = this.getDirection();
 			es.cell.style = mxUtils.setStyle(es.cell.style, 'sourcePortConstraint', direction);
-			es.style['sourcePortConstraint'] = direction;
+			es.style.sourcePortConstraint = direction;
 		}
 	}
 };
@@ -4809,7 +4809,7 @@ HoverIcons.prototype.update = function(state, x, y)
  */
 HoverIcons.prototype.setCurrentState = function(state)
 {
-	if (state.style['portConstraint'] != 'eastwest')
+	if (state.style.portConstraint != 'eastwest')
 	{
 		this.graph.container.appendChild(this.arrowUp);
 		this.graph.container.appendChild(this.arrowDown);
@@ -4916,7 +4916,7 @@ Graph.prototype.createCrossFunctionalSwimlane = function(rowCount, colCount, w, 
 	
 	let table = this.createVertex(null, null, '', 0, 0,
 		colCount * w, rowCount * h, tableStyle);
-	let t = mxUtils.getValue(this.getCellStyle(table), mxConstants.STYLE_STARTSIZE,
+	let t = mxUtils.getValue(this.getCellStyle(table), 'startSize',
 		mxConstants.DEFAULT_STARTSIZE);
 	table.geometry.width += t;
 	table.geometry.height += t;
@@ -4962,7 +4962,7 @@ Graph.prototype.isTable = function(cell)
 {
 	let style = this.getCellStyle(cell);
 	
-	return style != null && style['childLayout'] == 'tableLayout';
+	return style != null && style.childLayout == 'tableLayout';
 };
 
 /**
@@ -5391,7 +5391,7 @@ TableLayout.prototype.execute = function(parent)
 		
 		// Forces repaint if jumps change on a valid edge
 		if (state != null && recurse && state.cell.isEdge() &&
-			state.style != null && state.style[mxConstants.STYLE_CURVED] != 1 &&
+			state.style != null && state.style.curved != 1 &&
 			!state.invalid && this.updateLineJumps(state))
 		{
 			this.graph.cellRenderer.redraw(state, false, this.isRendering());
@@ -5401,7 +5401,7 @@ TableLayout.prototype.execute = function(parent)
 		
 		// Adds to the list of edges that may intersect with later edges
 		if (state != null && recurse && state.cell.isEdge() &&
-			state.style != null && state.style[mxConstants.STYLE_CURVED] != 1)
+			state.style != null && state.style.curved != 1)
 		{
 			// LATER: Reuse jumps for valid edges
 			this.validEdges.push(state);
@@ -5431,7 +5431,7 @@ TableLayout.prototype.execute = function(parent)
 
 		// Updates jumps on invalid edge before repaint
 		if (state.cell.isEdge() &&
-			state.style[mxConstants.STYLE_CURVED] != 1)
+			state.style.curved != 1)
 		{
 			this.updateLineJumps(state);
 		}
@@ -5494,7 +5494,7 @@ TableLayout.prototype.execute = function(parent)
 						var state2 = this.validEdges[e];
 						var pts2 = state2.absolutePoints;
 						
-						if (pts2 != null && mxUtils.intersects(state, state2) && state2.style['noJump'] != '1')
+						if (pts2 != null && mxUtils.intersects(state, state2) && state2.style.noJump != '1')
 						{
 							// Compares each segment of the edge with the current segment
 							for (let j = 0; j < pts2.length - 1; j++)
@@ -5592,7 +5592,7 @@ TableLayout.prototype.execute = function(parent)
 		}
 		else
 		{
-			let arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE,
+			let arcSize = mxUtils.getValue(this.style, 'arcSize',
 				mxConstants.LINE_ARCSIZE) / 2;
 			let size = (parseInt(mxUtils.getValue(this.style, 'jumpSize',
 				Graph.defaultJumpSize)) - 2) / 2 + this.strokewidth;
@@ -5713,14 +5713,14 @@ TableLayout.prototype.execute = function(parent)
 	mxGraphView.prototype.updateFloatingTerminalPoint = function(edge, start, end, source)
 	{
 		if (start != null && edge != null &&
-			(start.style['snapToPoint'] == '1' ||
-			edge.style['snapToPoint'] == '1'))
+			(start.style.snapToPoint == '1' ||
+			edge.style.snapToPoint == '1'))
 		{
 		    start = this.getTerminalPort(edge, start, source);
 		    let next = this.getNextPoint(edge, end, source);
 		    
 		    let orth = this.graph.isOrthogonal(edge);
-		    let alpha = mxUtils.toRadians(Number(start.style[mxConstants.STYLE_ROTATION] || '0'));
+		    let alpha = mxUtils.toRadians(Number(start.style.rotation || '0'));
 		    let center = new mxPoint(start.getCenterX(), start.getCenterY());
 		    
 		    if (alpha != 0)
@@ -5730,10 +5730,10 @@ TableLayout.prototype.execute = function(parent)
 		        next = mxUtils.getRotatedPoint(next, cos, sin, center);
 		    }
 		    
-		    let border = parseFloat(edge.style[mxConstants.STYLE_PERIMETER_SPACING] || 0);
+		    let border = parseFloat(edge.style.perimeterSpacing || 0);
 		    border += parseFloat(edge.style[(source) ?
-		        mxConstants.STYLE_SOURCE_PERIMETER_SPACING :
-		        mxConstants.STYLE_TARGET_PERIMETER_SPACING] || 0);
+		        'sourcePerimeterSpacing' :
+		        'targetPerimeterSpacing'] || 0);
 		    let pt = this.getPerimeterPoint(start, next, alpha == 0 && orth, border);
 		
 		    if (alpha != 0)
@@ -5817,7 +5817,7 @@ TableLayout.prototype.execute = function(parent)
 	{
 		if (state.style != null && typeof(pako) !== 'undefined')
 		{
-	    	let shape = mxUtils.getValue(state.style, mxConstants.STYLE_SHAPE, null);
+	    	let shape = mxUtils.getValue(state.style, 'shape', null);
 	
 	    	// Extracts and decodes stencil XML if shape has the form shape=stencil(value)
 	    	if (shape != null && typeof shape === 'string' && shape.substring(0, 8) == 'stencil(')
@@ -6200,7 +6200,7 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			let shape = connectionHandlerCreateShape.apply(this, arguments);
 			
-			shape.isDashed = this.graph.currentEdgeStyle[mxConstants.STYLE_DASHED] == '1';
+			shape.isDashed = this.graph.currentEdgeStyle.dashed == '1';
 			
 			return shape;
 		}
@@ -6548,7 +6548,7 @@ if (typeof mxVertexHandler != 'undefined')
 				!cell.isEdge())
 			{
 				let shape = this.getCurrentCellStyle(cell, ignoreState)
-					[mxConstants.STYLE_SHAPE];
+					.shape;
 				
 				return shape == mxConstants.SHAPE_SWIMLANE || shape == 'table';
 			}
@@ -6568,9 +6568,9 @@ if (typeof mxVertexHandler != 'undefined')
 			{
 				let style = this.getCurrentCellStyle(parent);
 				
-				if (style['expand'] != null)
+				if (style.expand != null)
 				{
-					return style['expand'] != '0';
+					return style.expand != '0';
 				}
 			}
 			
@@ -6985,11 +6985,11 @@ if (typeof mxVertexHandler != 'undefined')
 			if (edge != null)
 			{
 				let style = this.getCurrentCellStyle(edge);
-				let elbow = mxUtils.getValue(style, mxConstants.STYLE_ELBOW,
+				let elbow = mxUtils.getValue(style, 'elbow',
 					mxConstants.ELBOW_HORIZONTAL);
 				let value = (elbow == mxConstants.ELBOW_HORIZONTAL) ?
 					mxConstants.ELBOW_VERTICAL : mxConstants.ELBOW_HORIZONTAL;
-				this.setCellStyles(mxConstants.STYLE_ELBOW, value, [edge]);
+				this.setCellStyles('elbow', value, [edge]);
 			}
 		};
 
@@ -7185,9 +7185,9 @@ if (typeof mxVertexHandler != 'undefined')
 							{
 								let dirs = [mxConstants.DIRECTION_EAST, mxConstants.DIRECTION_SOUTH,
 									mxConstants.DIRECTION_WEST, mxConstants.DIRECTION_NORTH];
-								let dir = mxUtils.getValue(state.style, mxConstants.STYLE_DIRECTION,
+								let dir = mxUtils.getValue(state.style, 'direction',
 									mxConstants.DIRECTION_EAST);
-								this.setCellStyles(mxConstants.STYLE_DIRECTION,
+								this.setCellStyles('direction',
 									dirs[mxUtils.mod(mxUtils.indexOf(dirs, dir) +
 									((backwards) ? -1 : 1), dirs.length)], [cell]);
 							}
@@ -8235,8 +8235,8 @@ if (typeof mxVertexHandler != 'undefined')
 			let style = this.getCurrentCellStyle(cell);
 				
 			return !this.isTableCell(cell) && !this.isTableRow(cell) && (result ||
-				(mxUtils.getValue(style, mxConstants.STYLE_RESIZABLE, '1') != '0' &&
-				style[mxConstants.STYLE_WHITE_SPACE] == 'wrap'));
+				(mxUtils.getValue(style, 'resizable', '1') != '0' &&
+				style.whiteSpace == 'wrap'));
 		};
 		
 		/**
@@ -9428,7 +9428,7 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			let state = this.graph.view.getState(this.editingCell);
 			
-			return state != null && state.style['html'] == 1;
+			return state != null && state.style.html == 1;
 		};
 
 		/**
@@ -9597,7 +9597,7 @@ if (typeof mxVertexHandler != 'undefined')
 			// dashed borders for divs and table cells
 			let state = this.graph.view.getState(cell);
 	
-			if (state != null && state.style['html'] == 1)
+			if (state != null && state.style.html == 1)
 			{
 				this.textarea.className = 'mxCellEditor geContentEditable';
 			}
@@ -9818,22 +9818,22 @@ if (typeof mxVertexHandler != 'undefined')
 					content = this.graph.sanitizeHtml((nl2Br) ? content.replace(/\n/g, '<br/>') : content, true)
 					this.textarea.className = 'mxCellEditor geContentEditable';
 					
-					let size = mxUtils.getValue(state.style, mxConstants.STYLE_FONTSIZE, mxConstants.DEFAULT_FONTSIZE);
-					let family = mxUtils.getValue(state.style, mxConstants.STYLE_FONTFAMILY, mxConstants.DEFAULT_FONTFAMILY);
-					let align = mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
-					let bold = (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+					let size = mxUtils.getValue(state.style, 'fontSize', mxConstants.DEFAULT_FONTSIZE);
+					let family = mxUtils.getValue(state.style, 'fontFamily', mxConstants.DEFAULT_FONTFAMILY);
+					let align = mxUtils.getValue(state.style, 'align', mxConstants.ALIGN_LEFT);
+					let bold = (mxUtils.getValue(state.style, 'fontStyle', 0) &
 							mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD;
-					let italic = (mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+					let italic = (mxUtils.getValue(state.style, 'fontStyle', 0) &
 							mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC;
 					let txtDecor = [];
 					
-					if ((mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+					if ((mxUtils.getValue(state.style, 'fontStyle', 0) &
 							mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
 					{
 						txtDecor.push('underline');
 					}
 					
-					if ((mxUtils.getValue(state.style, mxConstants.STYLE_FONTSTYLE, 0) &
+					if ((mxUtils.getValue(state.style, 'fontStyle', 0) &
 							mxConstants.FONT_STRIKETHROUGH) == mxConstants.FONT_STRIKETHROUGH)
 					{
 						txtDecor.push('line-through');
@@ -9897,8 +9897,8 @@ if (typeof mxVertexHandler != 'undefined')
 						
 						if (m == null)
 						{
-							m = mxUtils.getAlignmentAsPoint(mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER),
-									mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE));
+							m = mxUtils.getAlignmentAsPoint(mxUtils.getValue(state.style, 'align', mxConstants.ALIGN_CENTER),
+									mxUtils.getValue(state.style, 'verticalAlign', mxConstants.ALIGN_MIDDLE));
 						}
 						
 						this.bounds.x += m.x * this.bounds.width;
@@ -10038,14 +10038,14 @@ if (typeof mxVertexHandler != 'undefined')
 		 */
 		mxCellEditor.prototype.getBackgroundColor = function(state)
 		{
-			let color = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, null);
+			let color = mxUtils.getValue(state.style, 'backgroundColor', null);
 
 			if ((color == null || color == mxConstants.NONE) &&
 				(state.cell.geometry != null && state.cell.geometry.width > 0) &&
-				(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION, 0) != 0 ||
-				mxUtils.getValue(state.style, mxConstants.STYLE_HORIZONTAL, 1) == 0))
+				(mxUtils.getValue(state.style, 'rotation', 0) != 0 ||
+				mxUtils.getValue(state.style, 'horizontal', 1) == 0))
 			{
-				color = mxUtils.getValue(state.style, mxConstants.STYLE_FILLCOLOR, null);
+				color = mxUtils.getValue(state.style, 'fillColor', null);
 			}
 
 			if (color == mxConstants.NONE)
@@ -10157,7 +10157,7 @@ if (typeof mxVertexHandler != 'undefined')
 			stackLayoutResizeCell.apply(this, arguments);
 			let style = this.graph.getCellStyle(cell);
 				
-			if (style['childLayout'] == null)
+			if (style.childLayout == null)
 			{
 				let parent = cell.getParent();
 				let geo = (parent != null) ? parent.getGeometry() : null;
@@ -10166,7 +10166,7 @@ if (typeof mxVertexHandler != 'undefined')
 				{
 					style = this.graph.getCellStyle(parent);
 					
-					if (style['childLayout'] == 'stackLayout')
+					if (style.childLayout == 'stackLayout')
 					{
 						let border = parseFloat(mxUtils.getValue(style, 'stackBorder', mxStackLayout.prototype.border));
 						let horizontal = mxUtils.getValue(style, 'horizontalStack', '1') == '1';
@@ -10675,7 +10675,7 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			let result = new mxPoint(0, 0);
 			let tol = this.tolerance;
-			let name = this.state.style['shape'];
+			let name = this.state.style.shape;
 
 			if (mxCellRenderer.defaultShapes[name] == null &&
 				mxStencilRegistry.getStencil(name) == null)
@@ -10760,7 +10760,7 @@ if (typeof mxVertexHandler != 'undefined')
 											formatHintText(this.roundLength(this.bounds.height / s), unit);
 				}
 				
-				let rot = (this.currentAlpha != null) ? this.currentAlpha : this.state.style[mxConstants.STYLE_ROTATION] || '0';
+				let rot = (this.currentAlpha != null) ? this.currentAlpha : this.state.style.rotation || '0';
 				let bb = mxUtils.getBoundingBox(this.bounds, rot);
 				
 				if (bb == null)
@@ -11413,14 +11413,14 @@ if (typeof mxVertexHandler != 'undefined')
 		// Invokes turn on single click on rotation handle
 		mxVertexHandler.prototype.rotateClick = function()
 		{
-			let stroke = mxUtils.getValue(this.state.style, mxConstants.STYLE_STROKECOLOR, mxConstants.NONE);
-			let fill = mxUtils.getValue(this.state.style, mxConstants.STYLE_FILLCOLOR, mxConstants.NONE);
+			let stroke = mxUtils.getValue(this.state.style, 'strokeColor', mxConstants.NONE);
+			let fill = mxUtils.getValue(this.state.style, 'fillColor', mxConstants.NONE);
 			
 			if (this.state.cell.isVertex() &&
 				stroke == mxConstants.NONE && fill == mxConstants.NONE)
 			{
-				let angle = mxUtils.mod(mxUtils.getValue(this.state.style, mxConstants.STYLE_ROTATION, 0) + 90, 360);
-				this.state.view.graph.setCellStyles(mxConstants.STYLE_ROTATION, angle, [this.state.cell]);
+				let angle = mxUtils.mod(mxUtils.getValue(this.state.style, 'rotation', 0) + 90, 360);
+				this.state.view.graph.setCellStyles('rotation', angle, [this.state.cell]);
 			}
 			else
 			{
@@ -11755,9 +11755,9 @@ if (typeof mxVertexHandler != 'undefined')
 			{
 				let c = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
 				let tmp = new mxRectangle(this.state.x, this.state.y - 22, this.state.width + 24, this.state.height + 22);
-				let bb = mxUtils.getBoundingBox(tmp, this.state.style[mxConstants.STYLE_ROTATION] || '0', c);
+				let bb = mxUtils.getBoundingBox(tmp, this.state.style.rotation || '0', c);
 				let rs = (bb != null) ? mxUtils.getBoundingBox(this.state,
-					this.state.style[mxConstants.STYLE_ROTATION] || '0') : this.state;
+					this.state.style.rotation || '0') : this.state;
 				let tb = (this.state.text != null) ? this.state.text.boundingBox : null;
 				
 				if (bb == null)

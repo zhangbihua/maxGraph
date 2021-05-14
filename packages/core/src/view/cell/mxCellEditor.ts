@@ -23,13 +23,6 @@ import {
   FONT_STRIKETHROUGH,
   FONT_UNDERLINE,
   LINE_HEIGHT,
-  STYLE_ALIGN,
-  STYLE_FONTCOLOR,
-  STYLE_LABEL_POSITION,
-  STYLE_LABEL_WIDTH,
-  STYLE_OVERFLOW,
-  STYLE_VERTICAL_ALIGN,
-  STYLE_VERTICAL_LABEL_POSITION,
   WORD_WRAP,
 } from '../../util/mxConstants';
 import mxText from '../../shape/mxText';
@@ -610,14 +603,14 @@ class mxCellEditor {
           }
         }
       } else {
-        const lw = mxUtils.getValue(state.style, STYLE_LABEL_WIDTH, null);
+        const lw = mxUtils.getValue(state.style, 'labelWidth', null);
         m = state.text != null && this.align == null ? state.text.margin : null;
 
         if (m == null) {
           m = mxUtils.getAlignmentAsPoint(
             this.align ||
-              mxUtils.getValue(state.style, STYLE_ALIGN, ALIGN_CENTER),
-            mxUtils.getValue(state.style, STYLE_VERTICAL_ALIGN, ALIGN_MIDDLE)
+              mxUtils.getValue(state.style, 'align', ALIGN_CENTER),
+            mxUtils.getValue(state.style, 'verticalAlign', ALIGN_MIDDLE)
           );
         }
 
@@ -638,12 +631,12 @@ class mxCellEditor {
           let bounds = mxRectangle.fromRectangle(state);
           let hpos = mxUtils.getValue(
             state.style,
-            STYLE_LABEL_POSITION,
+            'labelPosition',
             ALIGN_CENTER
           );
           let vpos = mxUtils.getValue(
             state.style,
-            STYLE_VERTICAL_LABEL_POSITION,
+            'verticalLabelPosition',
             ALIGN_MIDDLE
           );
 
@@ -658,7 +651,7 @@ class mxCellEditor {
 
           if (
             !state.view.graph.cellRenderer.legacySpacing ||
-            state.style[STYLE_OVERFLOW] !== 'width'
+            state.style.overflow !== 'width'
           ) {
             // @ts-ignore
             const dummy = new mxText(); // FIXME!!!! ===================================================================================================
@@ -840,8 +833,8 @@ class mxCellEditor {
         state.style.fontFamily != null
           ? state.style.fontFamily
           : DEFAULT_FONTFAMILY;
-      const color = mxUtils.getValue(state.style, STYLE_FONTCOLOR, 'black');
-      const align = mxUtils.getValue(state.style, STYLE_ALIGN, ALIGN_LEFT);
+      const color = mxUtils.getValue(state.style, 'fontColor', 'black');
+      const align = mxUtils.getValue(state.style, 'align', ALIGN_LEFT);
       const bold = (state.style.fontStyle || 0) & FONT_BOLD;
       const italic = (state.style.fontStyle || 0) & FONT_ITALIC;
 
@@ -923,7 +916,7 @@ class mxCellEditor {
         this.autoSize &&
         // @ts-ignore
         (this.graph.model.isEdge(state.cell) ||
-          state.style[STYLE_OVERFLOW] !== 'fill')
+          state.style.overflow !== 'fill')
       ) {
         window.setTimeout(() => {
           this.resize();
@@ -1027,7 +1020,7 @@ class mxCellEditor {
           }
 
           if (this.align != null) {
-            this.graph.setCellStyles(STYLE_ALIGN, this.align, [state.cell]);
+            this.graph.setCellStyles('align', this.align, [state.cell]);
           }
         } finally {
           this.graph.getModel().endUpdate();
@@ -1101,7 +1094,7 @@ class mxCellEditor {
     if (
       !isEdge &&
       state.view.graph.cellRenderer.legacySpacing &&
-      state.style[STYLE_OVERFLOW] === 'fill'
+      state.style.overflow === 'fill'
     ) {
       result = (<mxShape>state.shape).getLabelBounds(
         mxRectangle.fromRectangle(state)
@@ -1187,7 +1180,7 @@ class mxCellEditor {
         const horizontal: string = <string>(
           mxUtils.getStringValue(
             state.style,
-            STYLE_LABEL_POSITION,
+            'labelPosition',
             ALIGN_CENTER
           )
         );

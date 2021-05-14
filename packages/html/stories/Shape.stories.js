@@ -96,16 +96,16 @@ const Template = ({ label, ...args }) => {
   // Changes the default style for vertices "in-place"
   // to use the custom shape.
   const style = graph.getStylesheet().getDefaultVertexStyle();
-  style[mxConstants.STYLE_SHAPE] = 'box';
+  style.shape = 'box';
 
   // Adds a spacing for the label that matches the
   // extrusion size
-  style[mxConstants.STYLE_SPACING_TOP] = BoxShape.prototype.extrude;
-  style[mxConstants.STYLE_SPACING_RIGHT] = BoxShape.prototype.extrude;
+  style.spacingTop = BoxShape.prototype.extrude;
+  style.spacingRight = BoxShape.prototype.extrude;
 
   // Adds a gradient and shadow to improve the user experience
-  style[mxConstants.STYLE_GRADIENTCOLOR] = '#FFFFFF';
-  style[mxConstants.STYLE_SHADOW] = true;
+  style.gradientColor = '#FFFFFF';
+  style.shadow = true;
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

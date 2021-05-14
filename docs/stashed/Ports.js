@@ -99,7 +99,7 @@ export default Ports;
         // Uses the port icon while connections are previewed
         graph.connectionHandler.getConnectImage = function(state)
         {
-          return new mxImage(state.style[mxConstants.STYLE_IMAGE], 16, 16);
+          return new mxImage(state.style.image, 16, 16);
         };
 
         // Centers the port icon on the target port
@@ -516,79 +516,79 @@ export default Ports;
     function configureStylesheet(graph)
     {
       let style = {};
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-      style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-      style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-      style[mxConstants.STYLE_GRADIENTCOLOR] = '#41B9F5';
-      style[mxConstants.STYLE_FILLCOLOR] = '#8CCDF5';
-      style[mxConstants.STYLE_STROKECOLOR] = '#1B78C8';
-      style[mxConstants.STYLE_FONTCOLOR] = '#000000';
-      style[mxConstants.STYLE_ROUNDED] = true;
-      style[mxConstants.STYLE_OPACITY] = '80';
-      style[mxConstants.STYLE_FONTSIZE] = '12';
-      style[mxConstants.STYLE_FONTSTYLE] = 0;
-      style[mxConstants.STYLE_IMAGE_WIDTH] = '48';
-      style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
+      style.shape = mxConstants.SHAPE_RECTANGLE;
+      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.align = mxConstants.ALIGN_CENTER;
+      style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+      style.gradientColor = '#41B9F5';
+      style.fillColor = '#8CCDF5';
+      style.strokeColor = '#1B78C8';
+      style.fontColor = '#000000';
+      style.rounded = true;
+      style.opacity = '80';
+      style.fontSize = '12';
+      style.fontStyle = 0;
+      style.imageWidth = '48';
+      style.imageHeight = '48';
       graph.getStylesheet().putDefaultVertexStyle(style);
 
       // NOTE: Alternative vertex style for non-HTML labels should be as
       // follows. This repaces the above style for HTML labels.
       /*let style = {};
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_LABEL;
-      style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-      style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-      style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_CENTER;
-      style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-      style[mxConstants.STYLE_SPACING_TOP] = '56';
-      style[mxConstants.STYLE_GRADIENTCOLOR] = '#7d85df';
-      style[mxConstants.STYLE_STROKECOLOR] = '#5d65df';
-      style[mxConstants.STYLE_FILLCOLOR] = '#adc5ff';
-      style[mxConstants.STYLE_FONTCOLOR] = '#1d258f';
-      style[mxConstants.STYLE_FONTFAMILY] = 'Verdana';
-      style[mxConstants.STYLE_FONTSIZE] = '12';
-      style[mxConstants.STYLE_FONTSTYLE] = '1';
-      style[mxConstants.STYLE_ROUNDED] = '1';
-      style[mxConstants.STYLE_IMAGE_WIDTH] = '48';
-      style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
-      style[mxConstants.STYLE_OPACITY] = '80';
+      style.shape = mxConstants.SHAPE_LABEL;
+      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.verticalAlign = mxConstants.ALIGN_TOP;
+      style.align = mxConstants.ALIGN_CENTER;
+      style.imageAlign = mxConstants.ALIGN_CENTER;
+      style.imageVerticalAlign = mxConstants.ALIGN_TOP;
+      style.spacingTop = '56';
+      style.gradientColor = '#7d85df';
+      style.strokeColor = '#5d65df';
+      style.fillColor = '#adc5ff';
+      style.fontColor = '#1d258f';
+      style.fontFamily = 'Verdana';
+      style.fontSize = '12';
+      style.fontStyle = '1';
+      style.rounded = '1';
+      style.imageWidth = '48';
+      style.imageHeight = '48';
+      style.opacity = '80';
       graph.getStylesheet().putDefaultVertexStyle(style);*/
 
       style = {};
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-      style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-      style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-      style[mxConstants.STYLE_FILLCOLOR] = '#FF9103';
-      style[mxConstants.STYLE_GRADIENTCOLOR] = '#F8C48B';
-      style[mxConstants.STYLE_STROKECOLOR] = '#E86A00';
-      style[mxConstants.STYLE_FONTCOLOR] = '#000000';
-      style[mxConstants.STYLE_ROUNDED] = true;
-      style[mxConstants.STYLE_OPACITY] = '80';
-      style[mxConstants.STYLE_STARTSIZE] = '30';
-      style[mxConstants.STYLE_FONTSIZE] = '16';
-      style[mxConstants.STYLE_FONTSTYLE] = 1;
+      style.shape = mxConstants.SHAPE_SWIMLANE;
+      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.align = mxConstants.ALIGN_CENTER;
+      style.verticalAlign = mxConstants.ALIGN_TOP;
+      style.fillColor = '#FF9103';
+      style.gradientColor = '#F8C48B';
+      style.strokeColor = '#E86A00';
+      style.fontColor = '#000000';
+      style.rounded = true;
+      style.opacity = '80';
+      style.startSize = '30';
+      style.fontSize = '16';
+      style.fontStyle = 1;
       graph.getStylesheet().putCellStyle('group', style);
 
       style = {};
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
-      style[mxConstants.STYLE_FONTCOLOR] = '#774400';
-      style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-      style[mxConstants.STYLE_PERIMETER_SPACING] = '6';
-      style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
-      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-      style[mxConstants.STYLE_FONTSIZE] = '10';
-      style[mxConstants.STYLE_FONTSTYLE] = 2;
-      style[mxConstants.STYLE_IMAGE_WIDTH] = '16';
-      style[mxConstants.STYLE_IMAGE_HEIGHT] = '16';
+      style.shape = mxConstants.SHAPE_IMAGE;
+      style.fontColor = '#774400';
+      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.perimeterSpacing = '6';
+      style.align = mxConstants.ALIGN_LEFT;
+      style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+      style.fontSize = '10';
+      style.fontStyle = 2;
+      style.imageWidth = '16';
+      style.imageHeight = '16';
       graph.getStylesheet().putCellStyle('port', style);
 
       style = graph.getStylesheet().getDefaultEdgeStyle();
-      style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
-      style[mxConstants.STYLE_STROKEWIDTH] = '2';
-      style[mxConstants.STYLE_ROUNDED] = true;
-      style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
+      style.labelBackgroundColor = '#FFFFFF';
+      style.strokeWidth = '2';
+      style.rounded = true;
+      style.edge = mxEdgeStyle.EntityRelation;
     };
   </script>
 </head>

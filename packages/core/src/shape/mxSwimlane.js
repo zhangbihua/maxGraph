@@ -14,16 +14,6 @@ import {
   LINE_ARCSIZE,
   NONE,
   RECTANGLE_ROUNDING_FACTOR,
-  STYLE_ABSOLUTE_ARCSIZE,
-  STYLE_ARCSIZE,
-  STYLE_FLIPH,
-  STYLE_FLIPV,
-  STYLE_HORIZONTAL,
-  STYLE_POINTER_EVENTS,
-  STYLE_SEPARATORCOLOR,
-  STYLE_STARTSIZE,
-  STYLE_SWIMLANE_FILLCOLOR,
-  STYLE_SWIMLANE_LINE,
 } from '../util/mxConstants';
 import mxUtils from '../util/mxUtils';
 
@@ -31,11 +21,11 @@ import mxUtils from '../util/mxUtils';
  * Extends {@link mxShape} to implement a swimlane shape.
  * This shape is registered under {@link mxConstants.SHAPE_SWIMLANE} in {@link mxCellRenderer}.
  * Use the {@link mxConstants.STYLE_STYLE_STARTSIZE} to define the size of the title
- * region, {@link mxConstants.STYLE_SWIMLANE_FILLCOLOR} for the content area fill,
- * {@link mxConstants.STYLE_SEPARATORCOLOR} to draw an additional vertical separator and
+ * region, `'swimLaneFillColor'` for the content area fill,
+ * `'separatorColor'` to draw an additional vertical separator and
  * {@link mxConstants.STYLE_SWIMLANE_LINE} to hide the line between the title region and
  * the content area.
- * The {@link mxConstants.STYLE_HORIZONTAL} affects the orientation of this shape,
+ * The {@link 'horizontal'} affects the orientation of this shape,
  * not only its label.
  *
  * @class mxSwimlane
@@ -81,7 +71,7 @@ class mxSwimlane extends mxShape {
   getTitleSize() {
     return Math.max(
       0,
-      mxUtils.getValue(this.style, STYLE_STARTSIZE, DEFAULT_STARTSIZE)
+      mxUtils.getValue(this.style, 'startSize', DEFAULT_STARTSIZE)
     );
   }
 
@@ -94,8 +84,8 @@ class mxSwimlane extends mxShape {
     const bounds = new mxRectangle(rect.x, rect.y, rect.width, rect.height);
     const horizontal = this.isHorizontal();
 
-    const flipH = mxUtils.getValue(this.style, STYLE_FLIPH, 0) == 1;
-    const flipV = mxUtils.getValue(this.style, STYLE_FLIPV, 0) == 1;
+    const flipH = mxUtils.getValue(this.style, 'flipH', 0) == 1;
+    const flipV = mxUtils.getValue(this.style, 'flipV', 0) == 1;
 
     // East is default
     const shapeVertical =
@@ -156,19 +146,19 @@ class mxSwimlane extends mxShape {
    * Returns the arcsize for the swimlane.
    */
   getSwimlaneArcSize(w, h, start) {
-    if (mxUtils.getValue(this.style, STYLE_ABSOLUTE_ARCSIZE, 0) == '1') {
+    if (mxUtils.getValue(this.style, 'absoluteArcSize', 0) == '1') {
       return Math.min(
         w / 2,
         Math.min(
           h / 2,
-          mxUtils.getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2
+          mxUtils.getValue(this.style, 'arcSize', LINE_ARCSIZE) / 2
         )
       );
     }
     const f =
       mxUtils.getValue(
         this.style,
-        STYLE_ARCSIZE,
+        'arcSize',
         RECTANGLE_ROUNDING_FACTOR * 100
       ) / 100;
 
@@ -180,7 +170,7 @@ class mxSwimlane extends mxShape {
    */
   // isHorizontal(): boolean;
   isHorizontal() {
-    return mxUtils.getValue(this.style, STYLE_HORIZONTAL, 1) == 1;
+    return mxUtils.getValue(this.style, 'horizontal', 1) == 1;
   }
 
   /**
@@ -189,9 +179,9 @@ class mxSwimlane extends mxShape {
   // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintVertexShape(c, x, y, w, h) {
     let start = this.getTitleSize();
-    const fill = mxUtils.getValue(this.style, STYLE_SWIMLANE_FILLCOLOR, NONE);
+    const fill = mxUtils.getValue(this.style, 'swimlaneFillColor', NONE);
     const swimlaneLine =
-      mxUtils.getValue(this.style, STYLE_SWIMLANE_LINE, 1) == 1;
+      mxUtils.getValue(this.style, 'swimlaneLine', 1) == 1;
     let r = 0;
 
     if (this.isHorizontal()) {
@@ -210,7 +200,7 @@ class mxSwimlane extends mxShape {
       this.paintRoundedSwimlane(c, x, y, w, h, start, r, fill, swimlaneLine);
     }
 
-    const sep = mxUtils.getValue(this.style, STYLE_SEPARATORCOLOR, NONE);
+    const sep = mxUtils.getValue(this.style, 'separatorColor', NONE);
     this.paintSeparator(c, x, y, w, h, start, sep);
 
     if (this.image != null) {
@@ -244,7 +234,7 @@ class mxSwimlane extends mxShape {
     let events = true;
 
     if (this.style != null) {
-      events = mxUtils.getValue(this.style, STYLE_POINTER_EVENTS, '1') == '1';
+      events = mxUtils.getValue(this.style, 'pointerEvents', '1') == '1';
     }
 
     if (!events && (this.fill == null || this.fill === NONE)) {
@@ -325,7 +315,7 @@ class mxSwimlane extends mxShape {
     let events = true;
 
     if (this.style != null) {
-      events = mxUtils.getValue(this.style, STYLE_POINTER_EVENTS, '1') == '1';
+      events = mxUtils.getValue(this.style, 'pointerEvents', '1') == '1';
     }
 
     if (!events && (this.fill == null || this.fill === NONE)) {

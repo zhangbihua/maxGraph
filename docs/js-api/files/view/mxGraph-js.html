@@ -655,9 +655,9 @@ graph.getPreferredSizeForCell = function(cell)
   let result = graphGetPreferredSizeForCell.apply(this, arguments);
   let style = this.getCellStyle(cell);
 
-  if (style['minWidth'] &gt; 0)
+  if (style.minWidth &gt; 0)
   {
-    result.width = Math.max(style['minWidth'], result.width);
+    result.width = Math.max(style.minWidth, result.width);
   }
 
   return result;
@@ -1032,7 +1032,7 @@ graph.isWrapping = function(state)
 {
   let style = this.getCurrentCellStyle(cell);
 
-  return this.isCellsSelectable() &amp;&amp; !this.isCellLocked(cell) &amp;&amp; style['selectable'] != 0;
+  return this.isCellsSelectable() &amp;&amp; !this.isCellLocked(cell) &amp;&amp; style.selectable != 0;
 };</pre></blockquote><p>You can then use the new style as shown in this example.</p><blockquote><pre class="prettyprint">graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30, 'selectable=0');</pre></blockquote><h4 class=CHeading>Parameters</h4><table border=0 cellspacing=0 cellpadding=0 class=CDescriptionList><tr><td class=CDLEntry>cell</td><td class=CDLDescription><a href="../model/mxCell-js.html#mxCell" class=LClass id=link1306 onMouseOver="ShowTip(event, 'tt246', 'link1306')" onMouseOut="HideTip('tt246')">mxCell</a> whose selectable state should be returned.</td></tr></table></div></div></div>
 
 <div class="CFunction"><div class=CTopic><h3 class=CTitle><a name="mxGraph.isCellsSelectable"></a>isCellsSelectable</h3><div class=CBody><blockquote><table border=0 cellspacing=0 cellpadding=0 class="Prototype"><tr><td class="prettyprint">mxGraph.prototype.isCellsSelectable = function()</td></tr></table></blockquote><p>Returns <a href="#mxGraph.cellsSelectable" class=LVariable id=link1307 onMouseOver="ShowTip(event, 'tt120', 'link1307')" onMouseOut="HideTip('tt120')">cellsSelectable</a>.</p></div></div></div>

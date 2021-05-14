@@ -648,44 +648,44 @@ export default MYNAMEHERE;
     function configureStylesheet(graph)
     {
       let style = {};
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-      style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-      style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
-      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-      style[mxConstants.STYLE_FONTCOLOR] = '#000000';
-      style[mxConstants.STYLE_FONTSIZE] = '11';
-      style[mxConstants.STYLE_FONTSTYLE] = 0;
-      style[mxConstants.STYLE_SPACING_LEFT] = '4';
-      style[mxConstants.STYLE_IMAGE_WIDTH] = '48';
-      style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
+      style.shape = mxConstants.SHAPE_RECTANGLE;
+      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.align = mxConstants.ALIGN_LEFT;
+      style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+      style.fontColor = '#000000';
+      style.fontSize = '11';
+      style.fontStyle = 0;
+      style.spacingLeft = '4';
+      style.imageWidth = '48';
+      style.imageHeight = '48';
       graph.getStylesheet().putDefaultVertexStyle(style);
 
       style = {};
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-      style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-      style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-      style[mxConstants.STYLE_GRADIENTCOLOR] = '#41B9F5';
-      style[mxConstants.STYLE_FILLCOLOR] = '#8CCDF5';
-      style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-      style[mxConstants.STYLE_STROKECOLOR] = '#1B78C8';
-      style[mxConstants.STYLE_FONTCOLOR] = '#000000';
-      style[mxConstants.STYLE_STROKEWIDTH] = '2';
-      style[mxConstants.STYLE_STARTSIZE] = '28';
-      style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
-      style[mxConstants.STYLE_FONTSIZE] = '12';
-      style[mxConstants.STYLE_FONTSTYLE] = 1;
-      style[mxConstants.STYLE_IMAGE] = 'images/icons48/table.png';
+      style.shape = mxConstants.SHAPE_SWIMLANE;
+      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.align = mxConstants.ALIGN_CENTER;
+      style.verticalAlign = mxConstants.ALIGN_TOP;
+      style.gradientColor = '#41B9F5';
+      style.fillColor = '#8CCDF5';
+      style.swimlaneFillColor = '#ffffff';
+      style.strokeColor = '#1B78C8';
+      style.fontColor = '#000000';
+      style.strokeWidth = '2';
+      style.startSize = '28';
+      style.verticalAlign = 'middle';
+      style.fontSize = '12';
+      style.fontStyle = 1;
+      style.image = 'images/icons48/table.png';
       // Looks better without opacity if shadow is enabled
-      //style[mxConstants.STYLE_OPACITY] = '80';
-      style[mxConstants.STYLE_SHADOW] = 1;
+      //style.opacity = '80';
+      style.shadow = 1;
       graph.getStylesheet().putCellStyle('table', style);
 
       style = graph.stylesheet.getDefaultEdgeStyle();
-      style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
-      style[mxConstants.STYLE_STROKEWIDTH] = '2';
-      style[mxConstants.STYLE_ROUNDED] = true;
-      style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
+      style.labelBackgroundColor = '#FFFFFF';
+      style.strokeWidth = '2';
+      style.rounded = true;
+      style.edge = mxEdgeStyle.EntityRelation;
     };
 
     // Function to create the entries in the popupmenu

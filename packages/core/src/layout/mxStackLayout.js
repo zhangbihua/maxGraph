@@ -9,9 +9,6 @@ import mxRectangle from '../util/datatypes/mxRectangle';
 import mxUtils from '../util/mxUtils';
 import {
   DEFAULT_STARTSIZE,
-  STYLE_HORIZONTAL,
-  STYLE_STARTSIZE,
-  STYLE_STROKEWIDTH,
 } from '../util/mxConstants';
 
 /**
@@ -316,10 +313,10 @@ class mxStackLayout extends mxGraphLayout {
         const style = this.graph.getCellStyle(parent);
         let start = mxUtils.getNumber(
           style,
-          STYLE_STARTSIZE,
+          'startSize',
           DEFAULT_STARTSIZE
         );
-        const horz = mxUtils.getValue(style, STYLE_HORIZONTAL, true) == 1;
+        const horz = mxUtils.getValue(style, 'horizontal', true) == 1;
 
         if (pgeo != null) {
           if (horz) {
@@ -381,7 +378,7 @@ class mxStackLayout extends mxGraphLayout {
 
             if (!this.borderCollapse) {
               const childStyle = this.graph.getCellStyle(child);
-              sw = mxUtils.getNumber(childStyle, STYLE_STROKEWIDTH, 1);
+              sw = mxUtils.getNumber(childStyle, 'strokeWidth', 1);
             }
 
             if (last != null) {

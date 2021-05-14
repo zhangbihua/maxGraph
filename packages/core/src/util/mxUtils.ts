@@ -29,16 +29,6 @@ import {
   NODETYPE_ELEMENT,
   NONE,
   PAGE_FORMAT_A4_PORTRAIT,
-  STYLE_DIRECTION,
-  STYLE_FLIPH,
-  STYLE_FLIPV,
-  STYLE_HORIZONTAL,
-  STYLE_PORT_CONSTRAINT,
-  STYLE_PORT_CONSTRAINT_ROTATION,
-  STYLE_ROTATION,
-  STYLE_SOURCE_PORT_CONSTRAINT,
-  STYLE_STARTSIZE,
-  STYLE_TARGET_PORT_CONSTRAINT,
 } from './mxConstants';
 import mxPoint from './datatypes/mxPoint';
 import mxDictionary from './datatypes/mxDictionary';
@@ -753,10 +743,10 @@ export const getPortConstraints = (
 ) => {
   const value = getValue(
     terminal.style,
-    STYLE_PORT_CONSTRAINT,
+    'portConstraint',
     getValue(
       edge.style,
-      source ? STYLE_SOURCE_PORT_CONSTRAINT : STYLE_TARGET_PORT_CONSTRAINT,
+      source ? 'sourcePortConstraint' : 'targetPortConstraint',
       null
     )
   );
@@ -769,13 +759,13 @@ export const getPortConstraints = (
   let returnValue = DIRECTION_MASK_NONE;
   const constraintRotationEnabled = getValue(
     terminal.style,
-    STYLE_PORT_CONSTRAINT_ROTATION,
+    'portConstraintRotation',
     0
   );
   let rotation = 0;
 
   if (constraintRotationEnabled == 1) {
-    rotation = getValue(terminal.style, STYLE_ROTATION, 0);
+    rotation = getValue(terminal.style, 'rotation', 0);
   }
 
   let quad = 0;
@@ -928,9 +918,9 @@ export const getDirectedBounds = (
   flipH: boolean,
   flipV: boolean
 ) => {
-  const d = getValue(style, STYLE_DIRECTION, DIRECTION_EAST);
-  flipH = flipH != null ? flipH : getValue(style, STYLE_FLIPH, false);
-  flipV = flipV != null ? flipV : getValue(style, STYLE_FLIPV, false);
+  const d = getValue(style, 'direction', DIRECTION_EAST);
+  flipH = flipH != null ? flipH : getValue(style, 'flipH', false);
+  flipV = flipV != null ? flipV : getValue(style, 'flipV', false);
 
   m.x = Math.round(Math.max(0, Math.min(rect.width, m.x)));
   m.y = Math.round(Math.max(0, Math.min(rect.height, m.y)));
@@ -1190,10 +1180,10 @@ export const intersectsHotspot = (
     let w = state.width;
     let h = state.height;
 
-    const start = getValue(state.style, STYLE_STARTSIZE) * state.view.scale;
+    const start = getValue(state.style, 'startSize') * state.view.scale;
 
     if (start > 0) {
-      if (getValue(state.style, STYLE_HORIZONTAL, true)) {
+      if (getValue(state.style, 'horizontal', true)) {
         cy = state.y + start / 2;
         h = start;
       } else {
@@ -1211,7 +1201,7 @@ export const intersectsHotspot = (
     }
 
     const rect = new mxRectangle(cx - w / 2, cy - h / 2, w, h);
-    const alpha = toRadians(getValue(state.style, STYLE_ROTATION) || 0);
+    const alpha = toRadians(getValue(state.style, 'rotation') || 0);
 
     if (alpha != 0) {
       const cos = Math.cos(-alpha);

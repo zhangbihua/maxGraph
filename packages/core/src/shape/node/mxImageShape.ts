@@ -6,11 +6,6 @@
  */
 
 import mxUtils from '../../util/mxUtils';
-import {
-  STYLE_IMAGE_ASPECT,
-  STYLE_IMAGE_BACKGROUND,
-  STYLE_IMAGE_BORDER,
-} from '../../util/mxConstants';
 import mxRectangleShape from './mxRectangleShape';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxCellState from '../../view/cell/mxCellState';
@@ -66,14 +61,14 @@ class mxImageShape extends mxRectangleShape {
 
   /**
    * Overrides {@link mxShape.apply} to replace the fill and stroke colors with the
-   * respective values from {@link mxConstants.STYLE_IMAGE_BACKGROUND} and
-   * {@link mxConstants.STYLE_IMAGE_BORDER}.
+   * respective values from {@link 'imageBackground'} and
+   * {@link 'imageBorder'}.
    *
    * Applies the style of the given {@link mxCellState} to the shape. This
    * implementation assigns the following styles to local fields:
    *
-   * - {@link mxConstants.STYLE_IMAGE_BACKGROUND} => fill
-   * - {@link mxConstants.STYLE_IMAGE_BORDER} => stroke
+   * - {@link 'imageBackground'} => fill
+   * - {@link 'imageBorder'} => stroke
    *
    * @param {mxCellState} state   {@link mxCellState} of the corresponding cell.
    */
@@ -87,7 +82,7 @@ class mxImageShape extends mxRectangleShape {
 
     if (this.style != null) {
       this.preserveImageAspect =
-        mxUtils.getNumber(this.style, STYLE_IMAGE_ASPECT, 1) == 1;
+        mxUtils.getNumber(this.style, 'imageAspect', 1) == 1;
 
       // Legacy support for imageFlipH/V
       this.flipH =
@@ -144,8 +139,8 @@ class mxImageShape extends mxRectangleShape {
     h: number
   ) {
     if (this.image != null) {
-      const fill = mxUtils.getValue(this.style, STYLE_IMAGE_BACKGROUND, null);
-      let stroke = mxUtils.getValue(this.style, STYLE_IMAGE_BORDER, null);
+      const fill = mxUtils.getValue(this.style, 'imageBackground', null);
+      let stroke = mxUtils.getValue(this.style, 'imageBorder', null);
 
       if (fill != null) {
         // Stroke rendering required for shadow
@@ -158,7 +153,7 @@ class mxImageShape extends mxRectangleShape {
       // FlipH/V are implicit via mxShape.updateTransform
       c.image(x, y, w, h, this.image, this.preserveImageAspect, false, false);
 
-      stroke = mxUtils.getValue(this.style, STYLE_IMAGE_BORDER, null);
+      stroke = mxUtils.getValue(this.style, 'imageBorder', null);
 
       if (stroke != null) {
         c.setShadow(false);

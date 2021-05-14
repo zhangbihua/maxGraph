@@ -2639,11 +2639,11 @@ Sidebar.prototype.updateShapes = function(source, targets)
 				}
 
 				// Replaces the participant style in the lifeline shape with the target shape
-				if (style[mxConstants.STYLE_SHAPE] == 'umlLifeline' &&
-					sourceCellStyle[mxConstants.STYLE_SHAPE] != 'umlLifeline')
+				if (style.shape == 'umlLifeline' &&
+					sourceCellStyle.shape != 'umlLifeline')
 				{
-					graph.setCellStyles(mxConstants.STYLE_SHAPE, 'umlLifeline', [targetCell]);
-					graph.setCellStyles('participant', sourceCellStyle[mxConstants.STYLE_SHAPE], [targetCell]);
+					graph.setCellStyles('shape', 'umlLifeline', [targetCell]);
+					graph.setCellStyles('participant', sourceCellStyle.shape, [targetCell]);
 				}
 				
 				for (let j = 0; j < styles.length; j++)
@@ -3143,8 +3143,8 @@ Sidebar.prototype.isDropStyleEnabled = function(cells, firstVertex)
 		
 		if (vstyle != null)
 		{
-			result = mxUtils.getValue(vstyle, mxConstants.STYLE_STROKECOLOR, mxConstants.NONE) != mxConstants.NONE ||
-				mxUtils.getValue(vstyle, mxConstants.STYLE_FILLCOLOR, mxConstants.NONE) != mxConstants.NONE;
+			result = mxUtils.getValue(vstyle, 'strokeColor', mxConstants.NONE) != mxConstants.NONE ||
+				mxUtils.getValue(vstyle, 'fillColor', mxConstants.NONE) != mxConstants.NONE;
 		}
 	}
 	
@@ -3498,11 +3498,11 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 		// Shift means disabled, delayed on cells with children, shows after this.dropTargetDelay, hides after 2500ms
 		if (dropStyleEnabled && (timeOnTarget < 2500) && state != null && !mxEvent.isShiftDown(evt) &&
 			// If shape is equal or target has no stroke, fill and gradient then use longer delay except for images
-			(((mxUtils.getValue(state.style, mxConstants.STYLE_SHAPE) != mxUtils.getValue(sourceCellStyle, mxConstants.STYLE_SHAPE) &&
-			(mxUtils.getValue(state.style, mxConstants.STYLE_STROKECOLOR, mxConstants.NONE) != mxConstants.NONE ||
-			mxUtils.getValue(state.style, mxConstants.STYLE_FILLCOLOR, mxConstants.NONE) != mxConstants.NONE ||
-			mxUtils.getValue(state.style, mxConstants.STYLE_GRADIENTCOLOR, mxConstants.NONE) != mxConstants.NONE)) ||
-			mxUtils.getValue(sourceCellStyle, mxConstants.STYLE_SHAPE) == 'image') ||
+			(((mxUtils.getValue(state.style, 'shape') != mxUtils.getValue(sourceCellStyle, 'shape') &&
+			(mxUtils.getValue(state.style, 'strokeColor', mxConstants.NONE) != mxConstants.NONE ||
+			mxUtils.getValue(state.style, 'fillColor', mxConstants.NONE) != mxConstants.NONE ||
+			mxUtils.getValue(state.style, 'gradientColor', mxConstants.NONE) != mxConstants.NONE)) ||
+			mxUtils.getValue(sourceCellStyle, 'shape') == 'image') ||
 			timeOnTarget > 1500 || state.cell.isEdge()) && (timeOnTarget > this.dropTargetDelay) &&
 			!this.isDropStyleTargetIgnored(state) && ((state.cell.isVertex() && firstVertex != null) ||
 			(state.cell.isEdge() && cells[0].isEdge())))
@@ -3739,7 +3739,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 					arrowLeft.style.left = Math.floor(bds.x - this.triangleLeft.width) + 'px';
 					arrowLeft.style.top = arrowRight.style.top;
 					
-					if (state.style['portConstraint'] != 'eastwest')
+					if (state.style.portConstraint != 'eastwest')
 					{
 						graph.container.appendChild(arrowUp);
 						graph.container.appendChild(arrowDown);

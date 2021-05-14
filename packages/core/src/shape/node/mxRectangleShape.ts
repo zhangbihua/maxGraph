@@ -9,9 +9,6 @@ import {
   LINE_ARCSIZE,
   NONE,
   RECTANGLE_ROUNDING_FACTOR,
-  STYLE_ABSOLUTE_ARCSIZE,
-  STYLE_ARCSIZE,
-  STYLE_POINTER_EVENTS,
 } from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 import mxShape from '../mxShape';
@@ -50,7 +47,7 @@ class mxRectangleShape extends mxShape {
     let events = true;
 
     if (this.style != null) {
-      events = mxUtils.getValue(this.style, STYLE_POINTER_EVENTS, '1') == '1';
+      events = mxUtils.getValue(this.style, 'pointerEvents', '1') == '1';
     }
 
     return (
@@ -75,7 +72,7 @@ class mxRectangleShape extends mxShape {
     let events = true;
 
     if (this.style != null) {
-      events = mxUtils.getValue(this.style, STYLE_POINTER_EVENTS, '1') == '1';
+      events = mxUtils.getValue(this.style, 'pointerEvents', '1') == '1';
     }
 
     if (
@@ -90,19 +87,19 @@ class mxRectangleShape extends mxShape {
       if (this.isRounded) {
         let r = 0;
 
-        if (mxUtils.getValue(this.style, STYLE_ABSOLUTE_ARCSIZE, 0) == '1') {
+        if (mxUtils.getValue(this.style, 'absoluteArcSize', 0) == '1') {
           r = Math.min(
             w / 2,
             Math.min(
               h / 2,
-              mxUtils.getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2
+              mxUtils.getValue(this.style, 'arcSize', LINE_ARCSIZE) / 2
             )
           );
         } else {
           const f =
             mxUtils.getValue(
               this.style,
-              STYLE_ARCSIZE,
+              'arcSize',
               RECTANGLE_ROUNDING_FACTOR * 100
             ) / 100;
           r = Math.min(w * f, h * f);

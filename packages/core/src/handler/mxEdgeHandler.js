@@ -30,14 +30,6 @@ import {
   NONE,
   OUTLINE_HIGHLIGHT_COLOR,
   OUTLINE_HIGHLIGHT_STROKEWIDTH,
-  STYLE_EDGE,
-  STYLE_ENTRY_X,
-  STYLE_ENTRY_Y,
-  STYLE_EXIT_X,
-  STYLE_EXIT_Y,
-  STYLE_NOEDGESTYLE,
-  STYLE_ROTATION,
-  STYLE_SHAPE,
 } from '../util/mxConstants';
 import mxUtils from '../util/mxUtils';
 import mxImageShape from '../shape/node/mxImageShape';
@@ -360,7 +352,7 @@ class mxEdgeHandler {
           this.parentHighlight.dialect = DIALECT_SVG;
           this.parentHighlight.pointerEvents = false;
           this.parentHighlight.rotation = Number(
-            pstate.style[STYLE_ROTATION] || '0'
+            pstate.style.rotation || '0'
           );
           this.parentHighlight.init(this.graph.getView().getOverlayPane());
           this.parentHighlight.redraw();
@@ -474,10 +466,10 @@ class mxEdgeHandler {
   isVirtualBendsEnabled(evt) {
     return (
       this.virtualBendsEnabled &&
-      (this.state.style[STYLE_EDGE] == null ||
-        this.state.style[STYLE_EDGE] === NONE ||
-        this.state.style[STYLE_NOEDGESTYLE] === 1) &&
-      mxUtils.getValue(this.state.style, STYLE_SHAPE, null) != 'arrow'
+      (this.state.style.edge == null ||
+        this.state.style.edge === NONE ||
+        this.state.style.noEdgeStyle == 1) &&
+      mxUtils.getValue(this.state.style, 'shape', null) != 'arrow'
     );
   }
 
@@ -1560,13 +1552,13 @@ class mxEdgeHandler {
 
     if (this.isSource || this.isTarget) {
       if (constraint != null && constraint.point != null) {
-        edge.style[this.isSource ? STYLE_EXIT_X : STYLE_ENTRY_X] =
+        edge.style[this.isSource ? 'exitX' : 'entryX'] =
           constraint.point.x;
-        edge.style[this.isSource ? STYLE_EXIT_Y : STYLE_ENTRY_Y] =
+        edge.style[this.isSource ? 'exitY' : 'entryY'] =
           constraint.point.y;
       } else {
-        delete edge.style[this.isSource ? STYLE_EXIT_X : STYLE_ENTRY_X];
-        delete edge.style[this.isSource ? STYLE_EXIT_Y : STYLE_ENTRY_Y];
+        delete edge.style[this.isSource ? 'exitX' : 'entryX'];
+        delete edge.style[this.isSource ? 'exitY' : 'entryY'];
       }
     }
 

@@ -16,11 +16,6 @@ import {
   INVALID_COLOR,
   OUTLINE_HIGHLIGHT_COLOR,
   OUTLINE_HIGHLIGHT_STROKEWIDTH,
-  STYLE_ENTRY_X,
-  STYLE_ENTRY_Y,
-  STYLE_EXIT_X,
-  STYLE_EXIT_Y,
-  STYLE_ROTATION,
   TOOLTIP_VERTICAL_OFFSET,
   VALID_COLOR,
 } from '../util/mxConstants';
@@ -40,6 +35,11 @@ import {
   isConsumed,
   isShiftDown,
 } from '../util/mxEventUtils';
+import mxGraph from '../view/graph/mxGraph';
+import mxImage from '../util/image/mxImage';
+import mxCellState from '../view/cell/mxCellState';
+
+type FactoryMethod = (source: mxCell, target: mxCell, style?: string) => mxCell;
 
 /**
  * Class: mxConnectionHandler
@@ -198,21 +198,19 @@ import {
  * the <mxCell> that represents the new edge.
  */
 class mxConnectionHandler extends mxEventSource {
-  constructor(graph, factoryMethod) {
+  constructor(graph: mxGraph, factoryMethod: FactoryMethod | null = null) {
     super();
 
-    if (graph != null) {
-      this.graph = graph;
-      this.factoryMethod = factoryMethod;
-      this.init();
+    this.graph = graph;
+    this.factoryMethod = factoryMethod;
+    this.init();
 
-      // Handles escape keystrokes
-      this.escapeHandler = (sender, evt) => {
-        this.reset();
-      };
+    // Handles escape keystrokes
+    this.escapeHandler = () => {
+      this.reset();
+    };
 
-      this.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
-    }
+    this.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
   }
 
   /**
@@ -221,7 +219,7 @@ class mxConnectionHandler extends mxEventSource {
    * Reference to the enclosing <mxGraph>.
    */
   // graph: mxGraph;
-  graph = null;
+  graph: mxGraph;
 
   /**
    * Variable: factoryMethod
@@ -231,7 +229,7 @@ class mxConnectionHandler extends mxEventSource {
    * a new <mxCell> that represents the edge. This is used in <createEdge>.
    */
   // factoryMethod: (source: mxCell, target: mxCell, style?: string) => mxCell;
-  factoryMethod = true;
+  factoryMethod: FactoryMethod | null = null;
 
   /**
    * Variable: moveIconFront
@@ -241,7 +239,6 @@ class mxConnectionHandler extends mxEventSource {
    * the connect icon. This has precendence over <moveIconBack> when set
    * to true. Default is false.
    */
-  // moveIconFront: boolean;
   moveIconFront = false;
 
   /**
@@ -251,7 +248,6 @@ class mxConnectionHandler extends mxEventSource {
    * be set to true if the icons of the connection handler conflict with other
    * handles, such as the vertex label move handle. Default is false.
    */
-  // moveIconBack: boolean;
   moveIconBack = false;
 
   /**
@@ -260,8 +256,8 @@ class mxConnectionHandler extends mxEventSource {
    * <mxImage> that is used to trigger the creation of a new connection. This
    * is used in <createIcons>. Default is null.
    */
-  // connectImage: mxImage;
-  connectImage = null;
+
+  connectImage: mxImage | null = null;
 
   /**
    * Variable: targetConnectImage
@@ -269,7 +265,6 @@ class mxConnectionHandler extends mxEventSource {
    * Specifies if the connect icon should be centered on the target state
    * while connections are being previewed. Default is false.
    */
-  // targetConnectImage: boolean;
   targetConnectImage = false;
 
   /**
@@ -277,7 +272,6 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Specifies if events are handled. Default is true.
    */
-  // enabled: boolean;
   enabled = true;
 
   /**
@@ -285,7 +279,6 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Specifies if new edges should be selected. Default is true.
    */
-  // select: boolean;
   select = true;
 
   /**
@@ -298,7 +291,6 @@ class mxConnectionHandler extends mxEventSource {
    * the source cell and the newly created vertex in <createTargetVertex>, which
    * can be overridden to create a new target. Default is false.
    */
-  // createTarget: boolean;
   createTarget = false;
 
   /**
@@ -306,8 +298,7 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Holds the <mxTerminalMarker> used for finding source and target cells.
    */
-  // marker: any;
-  marker = null;
+  marker: mxCellMarker | null = null;
 
   /**
    * Variable: constraintHandler
@@ -315,8 +306,7 @@ class mxConnectionHandler extends mxEventSource {
    * Holds the <mxConstraintHandler> used for drawing and highlighting
    * constraints.
    */
-  // constraintHandler: mxConstraintHandler;
-  constraintHandler = null;
+  constraintHandler: mxConstraintHandler | null = null;
 
   /**
    * Variable: error
@@ -332,7 +322,6 @@ class mxConnectionHandler extends mxEventSource {
    * Specifies if single clicks should add waypoints on the new edge. Default is
    * false.
    */
-  // waypointsEnabled: boolean;
   waypointsEnabled = false;
 
   /**
@@ -342,7 +331,6 @@ class mxConnectionHandler extends mxEventSource {
    * button when highlighting the source. Default is false, that is, the
    * handler only highlights the source if no button is being pressed.
    */
-  // ignoreMouseDown: boolean;
   ignoreMouseDown = false;
 
   /**
@@ -351,8 +339,7 @@ class mxConnectionHandler extends mxEventSource {
    * Holds the <mxPoint> where the mouseDown took place while the handler is
    * active.
    */
-  // first: mxPoint;
-  first = null;
+  first: mxPoint | null = null;
 
   /**
    * Variable: connectIconOffset
@@ -362,7 +349,6 @@ class mxConnectionHandler extends mxEventSource {
    * Note that placing the icon under the mouse pointer with an
    * offset of (0,0) will affect hit detection.
    */
-  // connectIconOffset: mxPoint;
   connectIconOffset = new mxPoint(0, TOOLTIP_VERTICAL_OFFSET);
 
   /**
@@ -371,8 +357,7 @@ class mxConnectionHandler extends mxEventSource {
    * Optional <mxCellState> that represents the preview edge while the
    * handler is active. This is created in <createEdgeState>.
    */
-  // edgeState: mxCellState;
-  edgeState = null;
+  edgeState: mxCellState | null = null;
 
   /**
    * Variable: changeHandler
@@ -396,7 +381,6 @@ class mxConnectionHandler extends mxEventSource {
    * Counts the number of mouseDown events since the start. The initial mouse
    * down event counts as 1.
    */
-  // mouseDownCounter: number;
   mouseDownCounter = 0;
 
   /**
@@ -406,7 +390,6 @@ class mxConnectionHandler extends mxEventSource {
    * where the preview cannot be made transparent to events and if the built-in hit detection on
    * the HTML elements in the page should be used. Default is the value of <mxClient.IS_VML>.
    */
-  // movePreviewAway: boolean;
   movePreviewAway = false;
 
   /**
@@ -416,7 +399,6 @@ class mxConnectionHandler extends mxEventSource {
    * enabled. This will allow to place the connection point along the outline of
    * the highlighted target. Default is false.
    */
-  // outlineConnect: boolean;
   outlineConnect = false;
 
   /**
@@ -425,7 +407,6 @@ class mxConnectionHandler extends mxEventSource {
    * Specifies if the actual shape of the edge state should be used for the preview.
    * Default is false. (Ignored if no edge state is created in <createEdgeState>.)
    */
-  // livePreview: boolean;
   livePreview = false;
 
   /**
@@ -442,8 +423,9 @@ class mxConnectionHandler extends mxEventSource {
    * Specifies if new edges should be inserted before the source vertex in the
    * cell hierarchy. Default is false for backwards compatibility.
    */
-  // insertBeforeSource: boolean;
   insertBeforeSource = false;
+
+  escapeHandler: () => void;
 
   /**
    * Function: isEnabled
@@ -451,7 +433,6 @@ class mxConnectionHandler extends mxEventSource {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
-  // isEnabled(): boolean;
   isEnabled() {
     return this.enabled;
   }
@@ -466,8 +447,7 @@ class mxConnectionHandler extends mxEventSource {
    *
    * enabled - Boolean that specifies the new enabled state.
    */
-  // setEnabled(enabled: boolean): void;
-  setEnabled(enabled) {
+  setEnabled(enabled: boolean) {
     this.enabled = enabled;
   }
 
@@ -485,8 +465,13 @@ class mxConnectionHandler extends mxEventSource {
    * dropTarget - <mxCell> that represents the cell under the mouse when it was
    * released.
    */
-  // isInsertBefore(edge: mxCell, source: mxCell, target: mxCell, evt: MouseEvent, dropTarget: mxCell): boolean;
-  isInsertBefore(edge, source, target, evt, dropTarget) {
+  isInsertBefore(
+    edge: mxCell,
+    source: mxCell,
+    target: mxCell,
+    evt: MouseEvent,
+    dropTarget: mxCell
+  ) {
     return this.insertBeforeSource && source !== target;
   }
 
@@ -499,8 +484,7 @@ class mxConnectionHandler extends mxEventSource {
    *
    * evt - Current active native pointer event.
    */
-  // isCreateTarget(evt: Event): boolean;
-  isCreateTarget(evt) {
+  isCreateTarget(evt: Event) {
     return this.createTarget;
   }
 
@@ -509,8 +493,7 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Sets <createTarget>.
    */
-  // setCreateTarget(value: boolean): void;
-  setCreateTarget(value) {
+  setCreateTarget(value: boolean) {
     this.createTarget = value;
   }
 
@@ -519,19 +502,21 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Creates the preview shape for new connections.
    */
-  // createShape(): mxShape;
   createShape() {
     // Creates the edge preview
     const shape =
-      this.livePreview && this.edgeState != null
+      this.livePreview && this.edgeState
         ? this.graph.cellRenderer.createShape(this.edgeState)
         : new mxPolyline([], INVALID_COLOR);
-    shape.dialect = DIALECT_SVG;
-    shape.scale = this.graph.view.scale;
-    shape.pointerEvents = false;
-    shape.isDashed = true;
-    shape.init(this.graph.getView().getOverlayPane());
-    mxEvent.redirectMouseEvents(shape.node, this.graph, null);
+
+    if (shape && shape.node) {
+      shape.dialect = DIALECT_SVG;
+      shape.scale = this.graph.view.scale;
+      shape.pointerEvents = false;
+      shape.isDashed = true;
+      shape.init(this.graph.getView().getOverlayPane());
+      mxEvent.redirectMouseEvents(shape.node, this.graph, null);
+    }
 
     return shape;
   }
@@ -589,8 +574,7 @@ class mxConnectionHandler extends mxEventSource {
    * Returns true if the given cell is connectable. This is a hook to
    * disable floating connections. This implementation returns true.
    */
-  // isConnectableCell(cell: mxCell): boolean;
-  isConnectableCell(cell) {
+  isConnectableCell(cell: mxCell) {
     return true;
   }
 
@@ -599,7 +583,6 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Creates and returns the <mxCellMarker> used in <marker>.
    */
-  // createMarker(): mxCellMarker;
   createMarker() {
     const self = this;
 
@@ -927,7 +910,7 @@ class mxConnectionHandler extends mxEventSource {
       cy = size.height !== 0 ? state.y + (size.height * scale) / 2 : cy;
 
       const alpha = mxUtils.toRadians(
-        mxUtils.getValue(state.style, STYLE_ROTATION) || 0
+        mxUtils.getValue(state.style, 'rotation') || 0
       );
 
       if (alpha !== 0) {
@@ -1565,16 +1548,16 @@ class mxConnectionHandler extends mxEventSource {
   updateEdgeState(current, constraint) {
     // TODO: Use generic method for writing constraint to style
     if (this.sourceConstraint != null && this.sourceConstraint.point != null) {
-      this.edgeState.style[STYLE_EXIT_X] = this.sourceConstraint.point.x;
-      this.edgeState.style[STYLE_EXIT_Y] = this.sourceConstraint.point.y;
+      this.edgeState.style.exitX = this.sourceConstraint.point.x;
+      this.edgeState.style.exitY = this.sourceConstraint.point.y;
     }
 
     if (constraint != null && constraint.point != null) {
-      this.edgeState.style[STYLE_ENTRY_X] = constraint.point.x;
-      this.edgeState.style[STYLE_ENTRY_Y] = constraint.point.y;
+      this.edgeState.style.entryX = constraint.point.x;
+      this.edgeState.style.entryY = constraint.point.y;
     } else {
-      delete this.edgeState.style[STYLE_ENTRY_X];
-      delete this.edgeState.style[STYLE_ENTRY_Y];
+      delete this.edgeState.style.entryX;
+      delete this.edgeState.style.entryY;
     }
 
     this.edgeState.absolutePoints = [
@@ -1690,7 +1673,7 @@ class mxConnectionHandler extends mxEventSource {
     const c = new mxPoint(state.getCenterX(), state.getCenterY());
 
     if (sourcePerimeter != null) {
-      const theta = mxUtils.getValue(state.style, STYLE_ROTATION, 0);
+      const theta = mxUtils.getValue(state.style, 'rotation', 0);
       const rad = -theta * (Math.PI / 180);
 
       if (theta !== 0) {

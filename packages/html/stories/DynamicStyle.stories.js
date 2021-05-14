@@ -60,7 +60,7 @@ const Template = ({ label, ...args }) => {
         const targetStyle = graph.getCurrentCellStyle(target);
         const fill = mxUtils.getValue(
           targetStyle,
-          mxConstants.STYLE_FILLCOLOR
+          'fillColor'
         );
 
         if (fill != null) {

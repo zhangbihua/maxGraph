@@ -26,17 +26,16 @@ export type CellStateStyles = {
   [k: string]: string;
 };
 
-export type ColorInputValue = string | 'none';
 export type ColorValue = string | null;
-
-export type DirectionValue = 'north' | 'south' | 'east' | 'west';
+export type DirectionValue = 'north' | 'south' | 'east' | 'west' | null;
 export type AlignValue =
   | 'left'
   | 'center'
   | 'right'
   | 'top'
   | 'middle'
-  | 'bottom';
+  | 'bottom'
+  | null;
 
 export type CanvasState = {
   dx: number;
@@ -51,7 +50,7 @@ export type CanvasState = {
   gradientAlpha: number;
   gradientDirection: string | null;
   strokeColor: ColorValue;
-  strokeWidth: number;
+  strokeWidth: number | null;
   dashed: boolean;
   dashPattern: string;
   fixDash: boolean;
@@ -72,4 +71,13 @@ export type CanvasState = {
   rotation: number;
   rotationCx: number;
   rotationCy: number;
+  transform: string | null;
+};
+
+export interface Gradient extends SVGLinearGradientElement {
+  mxRefCount: number;
+}
+
+export type GradientMap = {
+  [k: string]: Gradient;
 };

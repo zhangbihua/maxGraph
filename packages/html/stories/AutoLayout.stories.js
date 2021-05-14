@@ -104,6 +104,8 @@ const Template = ({ label, ...args }) => {
   const parent = graph.getDefaultParent();
 
   const layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
+
+  let v1;
   const executeLayout = (change, post) => {
     graph.getModel().beginUpdate();
     try {
@@ -187,9 +189,7 @@ const Template = ({ label, ...args }) => {
   };
 
   // Adds cells to the model in a single step
-  graph.getModel().beginUpdate();
-  let v1;
-  try {
+  graph.batchUpdate(() => {
     v1 = graph.insertVertex({
       parent,
       value: 'Hello,',
@@ -197,10 +197,7 @@ const Template = ({ label, ...args }) => {
       size: [80, 30],
     });
     addOverlay(v1);
-  } finally {
-    // Updates the display
-    graph.getModel().endUpdate();
-  }
+  });
 
   graph.resizeCell = function() {
     mxGraph.prototype.resizeCell.apply(this, arguments);

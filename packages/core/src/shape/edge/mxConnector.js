@@ -7,13 +7,6 @@
 import {
   DEFAULT_MARKERSIZE,
   NONE,
-  STYLE_CURVED,
-  STYLE_ENDARROW,
-  STYLE_ENDFILL,
-  STYLE_ENDSIZE,
-  STYLE_STARTARROW,
-  STYLE_STARTFILL,
-  STYLE_STARTSIZE,
 } from '../../util/mxConstants';
 import mxPolyline from './mxPolyline';
 import mxUtils from '../../util/mxUtils';
@@ -39,7 +32,7 @@ class mxConnector extends mxPolyline {
   // updateBoundingBox(): void;
   updateBoundingBox() {
     this.useSvgBoundingBox =
-      this.style != null && this.style[STYLE_CURVED] === 1;
+      this.style != null && this.style.curved === 1;
     super.updateBoundingBox();
   }
 
@@ -79,7 +72,7 @@ class mxConnector extends mxPolyline {
     const n = pts.length;
     const type = mxUtils.getValue(
       this.style,
-      source ? STYLE_STARTARROW : STYLE_ENDARROW
+      source ? 'startArrow' : 'endArrow'
     );
     let p0 = source ? pts[1] : pts[n - 2];
     const pe = source ? pts[0] : pts[n - 1];
@@ -108,13 +101,13 @@ class mxConnector extends mxPolyline {
 
       const size = mxUtils.getNumber(
         this.style,
-        source ? STYLE_STARTSIZE : STYLE_ENDSIZE,
+        source ? 'startSize' : 'endSize',
         DEFAULT_MARKERSIZE
       );
 
       // Allow for stroke width in the end point used and the
       // orthogonal vectors describing the direction of the marker
-      const filled = this.style[source ? STYLE_STARTFILL : STYLE_ENDFILL] !== 0;
+      const filled = this.style[source ? 'startFill' : 'endFill'] !== 0;
 
       result = mxMarker.createMarker(
         c,
@@ -143,16 +136,16 @@ class mxConnector extends mxPolyline {
     // Adds marker sizes
     let size = 0;
 
-    if (mxUtils.getValue(this.style, STYLE_STARTARROW, NONE) !== NONE) {
+    if (mxUtils.getValue(this.style, 'startArrow', NONE) !== NONE) {
       size =
-        mxUtils.getNumber(this.style, STYLE_STARTSIZE, DEFAULT_MARKERSIZE) + 1;
+        mxUtils.getNumber(this.style, 'startSize', DEFAULT_MARKERSIZE) + 1;
     }
 
-    if (mxUtils.getValue(this.style, STYLE_ENDARROW, NONE) !== NONE) {
+    if (mxUtils.getValue(this.style, 'endArrow', NONE) !== NONE) {
       size =
         Math.max(
           size,
-          mxUtils.getNumber(this.style, STYLE_ENDSIZE, DEFAULT_MARKERSIZE)
+          mxUtils.getNumber(this.style, 'endSize', DEFAULT_MARKERSIZE)
         ) + 1;
     }
 
