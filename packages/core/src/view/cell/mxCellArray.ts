@@ -2,18 +2,43 @@ import mxCell from "./mxCell";
 import mxDictionary from "../../util/datatypes/mxDictionary";
 import mxObjectIdentity from "../../util/datatypes/mxObjectIdentity";
 
-class mxCells extends Array<mxCell> {
-  constructor(...items: mxCell[]) {
+class mxCellArray extends Array<mxCell> {
+  // @ts-ignore
+  constructor(...items: mxCell[] | mxCellArray) {
     super(...items);
+  }
+
+  // @ts-ignore
+  concat(items: any): mxCellArray {
+    return new mxCellArray(...super.concat(items));
+  }
+
+  // @ts-ignore
+  splice(arg0: number, ...args: any): mxCellArray {
+    return new mxCellArray(...super.splice(arg0, ...args));
+  }
+
+  // @ts-ignore
+  slice(...args: any): mxCellArray {
+    return new mxCellArray(...super.slice(...args));
+  }
+
+  // @ts-ignore
+  map(arg0: any, ...args: any): mxCellArray {
+    return new mxCellArray(...<mxCell[]>super.map(arg0, ...args));
+  }
+
+  // @ts-ignore
+  filter(arg0: any, ...args: any): mxCellArray {
+    return new mxCellArray(...<mxCell[]>super.filter(arg0, ...args));
   }
 
   /**
    * Returns the cells from the given array where the given filter function
    * returns true.
    */
-  // filterCells(cells: Array<mxCell>, filter: (...args: any) => boolean): Array<mxCell>;
-  filterCells(filter: Function): mxCell[] {
-    let result = [];
+  filterCells(filter: Function): mxCellArray {
+    let result = new mxCellArray();
 
     for (let i = 0; i < this.length; i += 1) {
       if (filter(this[i])) {
@@ -34,12 +59,11 @@ class mxCells extends Array<mxCell> {
    * @param targets  Boolean that specifies if target terminals should be contained
    * in the result. Default is true.
    */
-  // getOpposites(edges: Array<mxCell>, terminal: mxCell, sources?: boolean, targets?: boolean): Array<mxCell>;
   getOpposites(terminal: mxCell,
                sources: boolean=true,
-               targets: boolean=true): mxCell[] {
+               targets: boolean=true): mxCellArray {
 
-    const terminals = [];
+    const terminals = new mxCellArray();
 
     for (let i = 0; i < this.length; i += 1) {
       const source = this[i].getTerminal(true);
@@ -77,10 +101,9 @@ class mxCells extends Array<mxCell> {
    * descendants for each {@link mxCell} that it contains. Duplicates should be
    * removed in the cells array to improve performance.
    */
-  // getTopmostCells(cells: Array<mxCell>): Array<mxCell>;
-  getTopmostCells(): mxCell[] {
+  getTopmostCells(): mxCellArray {
     const dict = new mxDictionary();
-    const tmp = [];
+    const tmp = new mxCellArray();
 
     for (let i = 0; i < this.length; i += 1) {
       dict.put(this[i], true);
@@ -110,8 +133,7 @@ class mxCells extends Array<mxCell> {
    * Returns an array that represents the set (no duplicates) of all parents
    * for the given array of cells.
    */
-  // getParents(cells: Array<mxCell>): Array<mxCell>;
-  getParents() {
+  getParents(): mxCell[] {
     const parents = [];
     const dict = new mxDictionary();
 
@@ -135,11 +157,10 @@ class mxCells extends Array<mxCell> {
    * with all descendants.
    * @param mapping  Optional mapping for existing clones.
    */
-  // cloneCells(cells: Array<mxCell>, includeChildren?: boolean, mapping?: any): Array<mxCell>;
   cloneCells(includeChildren: boolean=true,
-             mapping: any={}): mxCell[] {
+             mapping: any={}): mxCellArray {
 
-    const clones: mxCell[] = [];
+    const clones: mxCellArray = new mxCellArray();
 
     for (const cell of this) {
       clones.push(this.cloneCellImpl(cell, mapping, includeChildren));
@@ -158,12 +179,11 @@ class mxCells extends Array<mxCell> {
    *
    * @private
    */
-  // cloneCellImpl(cell: mxCell, mapping?: any, includeChildren?: boolean): mxCell;
   cloneCellImpl(cell: mxCell,
                 mapping: any={},
                 includeChildren: boolean): mxCell {
 
-    const ident = mxObjectIdentity.get(cell);
+    const ident = <string>mxObjectIdentity.get(cell);
     let clone = mapping ? mapping[ident] : null;
 
     if (clone == null) {
@@ -192,7 +212,6 @@ class mxCells extends Array<mxCell> {
    *
    * @private
    */
-  // restoreClone(clone: mxCell, cell: mxCell, mapping?: any): void;
   restoreClone(clone: mxCell,
                cell: mxCell,
                mapping: any): void {
@@ -225,4 +244,4 @@ class mxCells extends Array<mxCell> {
   }
 }
 
-export default mxCells;
+export default mxCellArray;

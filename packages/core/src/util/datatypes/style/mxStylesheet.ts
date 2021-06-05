@@ -15,6 +15,7 @@ import {
 import mxPerimeter from './mxPerimeter';
 import mxUtils from '../../mxUtils';
 import { clone } from '../../mxCloneUtils';
+import StyleMap from "../../../view/graph/StyleMap";
 
 /**
  * @class mxStylesheet
@@ -67,7 +68,7 @@ import { clone } from '../../mxCloneUtils';
  */
 class mxStylesheet {
   constructor() {
-    this.styles = {};
+    this.styles = new StyleMap();
 
     this.putDefaultVertexStyle(this.createDefaultVertexStyle());
     this.putDefaultEdgeStyle(this.createDefaultEdgeStyle());
@@ -77,15 +78,13 @@ class mxStylesheet {
    * Maps from names to cell styles. Each cell style is a map of key,
    * value pairs.
    */
-  // styles: StyleMap;
-  styles;
+  styles: StyleMap;
 
   /**
    * Creates and returns the default vertex style.
    */
-  // createDefaultVertexStyle(): StyleMap;
-  createDefaultVertexStyle() {
-    const style = {};
+  createDefaultVertexStyle(): StyleMap {
+    const style = new StyleMap();
     style.shape = SHAPE_RECTANGLE;
     style.perimeter = mxPerimeter.RectanglePerimeter;
     style.verticalAlign = ALIGN_MIDDLE;
@@ -99,9 +98,8 @@ class mxStylesheet {
   /**
    * Creates and returns the default edge style.
    */
-  // createDefaultEdgeStyle(): StyleMap;
-  createDefaultEdgeStyle() {
-    const style = {};
+  createDefaultEdgeStyle(): StyleMap {
+    const style = new StyleMap();
     style.shape = SHAPE_CONNECTOR;
     style.endArrow = ARROW_CLASSIC;
     style.verticalAlign = ALIGN_MIDDLE;
@@ -116,33 +114,29 @@ class mxStylesheet {
    * stylename.
    * @param style Key, value pairs that define the style.
    */
-  // putDefaultVertexStyle(style: StyleMap): void;
-  putDefaultVertexStyle(style) {
+  putDefaultVertexStyle(style: StyleMap): void {
     this.putCellStyle('defaultVertex', style);
   }
 
   /**
    * Sets the default style for edges using defaultEdge as the stylename.
    */
-  // putDefaultEdgeStyle(style: StyleMap): void;
-  putDefaultEdgeStyle(style) {
+  putDefaultEdgeStyle(style: StyleMap): void {
     this.putCellStyle('defaultEdge', style);
   }
 
   /**
    * Returns the default style for vertices.
    */
-  // getDefaultVertexStyle(): StyleMap;
-  getDefaultVertexStyle() {
-    return this.styles.defaultVertex;
+  getDefaultVertexStyle(): StyleMap {
+    return <StyleMap>this.styles.defaultVertex;
   }
 
   /**
    * Sets the default style for edges.
    */
-  // getDefaultEdgeStyle(): StyleMap;
-  getDefaultEdgeStyle() {
-    return this.styles.defaultEdge;
+  getDefaultEdgeStyle(): StyleMap {
+    return <StyleMap>this.styles.defaultEdge;
   }
 
   /**
@@ -178,8 +172,7 @@ class mxStylesheet {
    * @param name Name for the style to be stored.
    * @param style Key, value pairs that define the style.
    */
-  // putCellStyle(name: string, style: StyleMap): void;
-  putCellStyle(name, style) {
+  putCellStyle(name: string, style: StyleMap): void {
     this.styles[name] = style;
   }
 
@@ -190,8 +183,9 @@ class mxStylesheet {
    * @param name String of the form [(stylename|key=value);] that represents the style.
    * @param defaultStyle Default style to be returned if no style can be found.
    */
-  // getCellStyle(name: string, defaultStyle?: StyleMap): StyleMap;
-  getCellStyle(name, defaultStyle) {
+  getCellStyle(name: string,
+               defaultStyle: StyleMap=new StyleMap()): StyleMap {
+
     let style = defaultStyle;
 
     if (name != null && name.length > 0) {
@@ -200,12 +194,11 @@ class mxStylesheet {
       if (style != null && name.charAt(0) !== ';') {
         style = clone(style);
       } else {
-        style = {};
+        style = new StyleMap();
       }
 
       // Parses each key, value pair into the existing style
-      for (let i = 0; i < pairs.length; i += 1) {
-        const tmp = pairs[i];
+      for (const tmp of pairs) {
         const pos = tmp.indexOf('=');
 
         if (pos >= 0) {

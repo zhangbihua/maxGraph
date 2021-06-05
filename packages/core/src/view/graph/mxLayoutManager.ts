@@ -20,6 +20,7 @@ import mxGraph from './mxGraph';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxMouseEvent from "../../util/event/mxMouseEvent";
 import { getClientX, getClientY } from '../../util/mxEventUtils';
+import mxCellArray from "../cell/mxCellArray";
 
 /**
  * @class mxLayoutManager
@@ -81,7 +82,6 @@ class mxLayoutManager extends mxEventSource {
   /**
    * Reference to the enclosing {@link mxGraph}.
    */
-  // graph: mxGraph;
   graph: mxGraph | null = null;
 
   /**
@@ -89,40 +89,34 @@ class mxLayoutManager extends mxEventSource {
    * the cell hierarchy.
    * @default true
    */
-  // bubbling: boolean;
   bubbling: boolean = true;
 
   /**
    * Specifies if event handling is enabled.
    * @default true
    */
-  // enabled: boolean;
   enabled: boolean = true;
 
   /**
    * Holds the function that handles the endUpdate event.
    */
-  // undoHandler: Function;
-  undoHandler: Function | null = null;
+  undoHandler: Function;
 
   /**
    * Holds the function that handles the move event.
    */
-  // moveHandler: Function;
-  moveHandler: Function | null = null;
+  moveHandler: Function;
 
   /**
    * Holds the function that handles the resize event.
    */
-  // resizeHandler: Function;
-  resizeHandler: Function | null = null;
+  resizeHandler: Function;
 
   /**
    * Returns true if events are handled. This implementation
    * returns {@link enabled}.
    */
-  // isEnabled(): boolean;
-  isEnabled() {
+  isEnabled(): boolean {
     return this.enabled;
   }
 
@@ -132,8 +126,7 @@ class mxLayoutManager extends mxEventSource {
    *
    * @param enabled Boolean that specifies the new enabled state.
    */
-  // setEnabled(enabled: boolean): void;
-  setEnabled(enabled: boolean) {
+  setEnabled(enabled: boolean): void {
     this.enabled = enabled;
   }
 
@@ -142,7 +135,6 @@ class mxLayoutManager extends mxEventSource {
    * should be executed whenever a cell layout (layout of the children of
    * a cell) has been executed. This implementation returns {@link bubbling}.
    */
-  // isBubbling(): boolean;
   isBubbling(): boolean {
     return this.bubbling;
   }
@@ -150,7 +142,6 @@ class mxLayoutManager extends mxEventSource {
   /**
    * Sets {@link bubbling}.
    */
-  // setBubbling(value: boolean): void;
   setBubbling(value: boolean): void {
     this.bubbling = value;
   }
@@ -158,7 +149,6 @@ class mxLayoutManager extends mxEventSource {
   /**
    * Returns the graph that this layout operates on.
    */
-  // getGraph(): mxGraph;
   getGraph(): mxGraph | null {
     return this.graph;
   }
@@ -218,7 +208,6 @@ class mxLayoutManager extends mxEventSource {
    *
    * TODO: what is undoableEdit type?
    */
-  // beforeUndo(undoableEdit: any): void;
   beforeUndo(undoableEdit: any): void {
     this.executeLayoutForCells(this.getCellsForChanges(undoableEdit.changes));
   }
@@ -230,7 +219,7 @@ class mxLayoutManager extends mxEventSource {
    * @param evt Mouse event that represents the mousedown.
    */
   // cellsMoved(cells: Array<mxCell>, evt: MouseEvent): void;
-  cellsMoved(cells: mxCell[],
+  cellsMoved(cells: mxCellArray,
              evt: mxMouseEvent): void {
 
     if (cells != null && evt != null) {
@@ -262,9 +251,9 @@ class mxLayoutManager extends mxEventSource {
    */
   // cellsResized(cells: Array<mxCell>, bounds: Array<mxRectangle>, prev: Array<any>): void;
   cellsResized(
-    cells: mxCell[] | null = null,
+    cells: mxCellArray | null = null,
     bounds: mxRectangle[] | null = null,
-    prev: mxCell[] | null = null
+    prev: mxCellArray | null = null
   ): void {
     if (cells != null && bounds != null) {
       const model = (<mxGraph>this.getGraph()).getModel();
@@ -284,12 +273,11 @@ class mxLayoutManager extends mxEventSource {
   /**
    * Returns the cells for which a layout should be executed.
    */
-  // getCellsForChanges(changes: Array<any>): Array<mxCell>;
-  getCellsForChanges(changes: any[]): mxCell[] {
-    let result: mxCell[] = [];
+  getCellsForChanges(changes: any[]): mxCellArray {
+    let result: mxCellArray = new mxCellArray();
     for (const change of changes) {
       if (change instanceof mxRootChange) {
-        return [];
+        return new mxCellArray();
       }
       result = result.concat(this.getCellsForChange(change));
     }
@@ -301,8 +289,7 @@ class mxLayoutManager extends mxEventSource {
    * changes.
    * @param change  mxChildChange|mxTerminalChange|mxVisibleChange|...
    */
-  // getCellsForChange(change: any): Array<mxCell>;
-  getCellsForChange(change: any): mxCell[] {
+  getCellsForChange(change: any): mxCellArray {
     if (change instanceof mxChildChange) {
       return this.addCellsWithLayout(
         change.child,
@@ -321,14 +308,14 @@ class mxLayoutManager extends mxEventSource {
       return this.addCellsWithLayout(change.cell);
     }
 
-    return [];
+    return new mxCellArray();
   }
 
   /**
    * Adds all ancestors of the given cell that have a layout.
    */
-  // addCellsWithLayout(cell: mxCell, result: Array<mxCell>): Array<mxCell>;
-  addCellsWithLayout(cell: mxCell, result: mxCell[] = []): mxCell[] {
+  addCellsWithLayout(cell: mxCell,
+                     result: mxCellArray = new mxCellArray()): mxCellArray {
     return this.addDescendantsWithLayout(
       cell,
       this.addAncestorsWithLayout(cell, result)
@@ -338,8 +325,7 @@ class mxLayoutManager extends mxEventSource {
   /**
    * Adds all ancestors of the given cell that have a layout.
    */
-  // addAncestorsWithLayout(cell: mxCell, result: Array<mxCell>): Array<mxCell>;
-  addAncestorsWithLayout(cell: mxCell, result: mxCell[] = []): mxCell[] {
+  addAncestorsWithLayout(cell: mxCell, result: mxCellArray = new mxCellArray()): mxCellArray {
     if (cell != null) {
       const layout = this.hasLayout(cell);
 
@@ -358,8 +344,8 @@ class mxLayoutManager extends mxEventSource {
   /**
    * Adds all descendants of the given cell that have a layout.
    */
-  // addDescendantsWithLayout(cell: mxCell, result: Array<mxCell>): Array<mxCell>;
-  addDescendantsWithLayout(cell: mxCell, result: mxCell[] = []): mxCell[] {
+  addDescendantsWithLayout(cell: mxCell,
+                           result: mxCellArray = new mxCellArray()): mxCellArray {
     if (cell != null && this.hasLayout(cell)) {
       const model = (<mxGraph>this.getGraph()).getModel();
 
@@ -378,8 +364,7 @@ class mxLayoutManager extends mxEventSource {
   /**
    * Executes the given layout on the given parent.
    */
-  // executeLayoutForCells(cells: Array<mxCell>): void;
-  executeLayoutForCells(cells: mxCell[]): void {
+  executeLayoutForCells(cells: mxCellArray): void {
     const sorted = mxUtils.sortCells(cells, false);
     this.layoutCells(sorted, true);
     this.layoutCells(sorted.reverse(), false);
@@ -388,8 +373,9 @@ class mxLayoutManager extends mxEventSource {
   /**
    * Executes all layouts which have been scheduled during the changes.
    */
-  // layoutCells(cells: Array<mxCell>, bubble: string): void;
-  layoutCells(cells: mxCell[], bubble: boolean = false): void {
+  layoutCells(cells: mxCellArray,
+              bubble: boolean = false): void {
+
     if (cells.length > 0) {
       // Invokes the layouts while removing duplicates
       const model = (<mxGraph>this.getGraph()).getModel();
@@ -415,7 +401,6 @@ class mxLayoutManager extends mxEventSource {
   /**
    * Executes the given layout on the given parent.
    */
-  // executeLayout(cell: mxCell, bubble: string): void;
   executeLayout(cell: mxCell,
                 bubble: boolean=false): void {
     const layout = this.getLayout(
@@ -430,7 +415,6 @@ class mxLayoutManager extends mxEventSource {
   /**
    * Removes all handlers from the {@link graph} and deletes the reference to it.
    */
-  // destroy(): void;
   destroy(): void {
     this.setGraph(null);
   }

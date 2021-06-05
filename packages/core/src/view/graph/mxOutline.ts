@@ -22,6 +22,7 @@ import mxUtils from '../../util/mxUtils';
 import mxImage from '../../util/image/mxImage';
 import mxEventObject from '../../util/event/mxEventObject';
 import { getSource, isMouseEvent } from '../../util/mxEventUtils';
+import mxEventSource from "../../util/event/mxEventSource";
 
 /**
  * @class mxOutline
@@ -81,8 +82,7 @@ class mxOutline {
   /**
    * Initializes the outline inside the given container.
    */
-  // init(container: HTMLElement): void;
-  init(container: HTMLElement) {
+  init(container: HTMLElement): void {
     this.outline = this.createGraph(container);
 
     // Do not repaint when suspended
@@ -224,55 +224,47 @@ class mxOutline {
   /**
    * Reference to the source {@link mxGraph}.
    */
-  // source: mxGraph;
   source: mxGraph;
 
   /**
    * Reference to the {@link mxGraph} that renders the outline.
    */
-  // outline: mxGraph;
   outline: mxGraph | null = null;
 
   /**
    * Renderhint to be used for the outline graph.
    * @default faster
    */
-  // graphRenderHint: string;
   graphRenderHint: string = 'exact';
 
   /**
    * Specifies if events are handled.
    * @default true
    */
-  // enabled: boolean;
   enabled: boolean = true;
 
   /**
    * Specifies a viewport rectangle should be shown.
    * @default true
    */
-  // showViewport: boolean;
   showViewport: boolean = true;
 
   /**
    * Border to be added at the bottom and right.
    * @default 10
    */
-  // border: number;
   border: number = 10;
 
   /**
    * Specifies the size of the sizer handler.
    * @default 8
    */
-  // sizerSize: number;
   sizerSize: number = 8;
 
   /**
    * Specifies if labels should be visible in the outline.
    * @default false
    */
-  // labelsVisible: boolean;
   labelsVisible: boolean = false;
 
   /**
@@ -280,21 +272,18 @@ class mxOutline {
    * graph.
    * @default false
    */
-  // updateOnPan: boolean;
   updateOnPan: boolean = false;
 
   /**
    * Optional {@link mxImage} to be used for the sizer.
    * @default null
    */
-  // sizerImage: mxImage;
   sizerImage: mxImage | null = null;
 
   /**
    * Minimum scale to be used.
    * @default 0.0001
    */
-  // minScale: number;
   minScale: number = 0.0001;
 
   /**
@@ -320,7 +309,6 @@ class mxOutline {
   /**
    * Creates the {@link mxGraph} used in the outline.
    */
-  // createGraph(container: HTMLElement): mxGraph;
   createGraph(container: HTMLElement): mxGraph {
     const graph = new mxGraph(
       container,
@@ -337,7 +325,6 @@ class mxOutline {
    * Returns true if events are handled. This implementation
    * returns {@link enabled}.
    */
-  // isEnabled(): boolean;
   isEnabled(): boolean {
     return this.enabled;
   }
@@ -348,7 +335,6 @@ class mxOutline {
    *
    * @param value Boolean that specifies the new enabled state.
    */
-  // setEnabled(value: boolean): void;
   setEnabled(value: boolean): void {
     this.enabled = value;
   }
@@ -359,7 +345,6 @@ class mxOutline {
    *
    * @param value Boolean that specifies the new enabled state.
    */
-  // setZoomEnabled(value: boolean): void;
   setZoomEnabled(value: boolean): void {
     // @ts-ignore
     this.sizer.node.style.visibility = value ? 'visible' : 'hidden';
@@ -368,7 +353,6 @@ class mxOutline {
   /**
    * Invokes {@link update} and revalidate the outline. This method is deprecated.
    */
-  // refresh(): void;
   refresh(): void {
     this.update(true);
   }
@@ -400,8 +384,7 @@ class mxOutline {
   /**
    * Returns the size of the source container.
    */
-  // getSourceContainerSize(): mxRectangle;
-  getSourceContainerSize() {
+  getSourceContainerSize(): mxRectangle {
     return new mxRectangle(
       0,
       0,
@@ -413,8 +396,7 @@ class mxOutline {
   /**
    * Returns the offset for drawing the outline graph.
    */
-  // getOutlineOffset(scale?: number): mxPoint;
-  getOutlineOffset(scale: number): mxPoint | null {
+  getOutlineOffset(scale?: number): mxPoint | null {
     // TODO: Should number -> mxPoint?
     return null;
   }
@@ -422,16 +404,14 @@ class mxOutline {
   /**
    * Returns the offset for drawing the outline graph.
    */
-  // getSourceGraphBounds(): mxRectangle;
-  getSourceGraphBounds() {
+  getSourceGraphBounds(): mxRectangle {
     return this.source.getGraphBounds();
   }
 
   /**
    * Updates the outline.
    */
-  // update(revalidate: boolean): void;
-  update(revalidate: boolean = false) {
+  update(revalidate: boolean = false): void {
     if (
       this.source != null &&
       this.source.container != null &&
@@ -583,8 +563,7 @@ class mxOutline {
   /**
    * Handles the event by starting a translation or zoom.
    */
-  // mouseDown(sender: mxEventSource, me: mxMouseEvent): void;
-  mouseDown(sender: any, me: mxMouseEvent) {
+  mouseDown(sender: mxEventSource, me: mxMouseEvent): void {
     if (this.enabled && this.showViewport) {
       const tol = !isMouseEvent(me.getEvent()) ? this.source.tolerance : 0;
       const hit =
@@ -624,8 +603,7 @@ class mxOutline {
    * Handles the event by previewing the viewrect in {@link graph} and updating the
    * rectangle that represents the viewrect in the outline.
    */
-  // mouseMove(sender: mxEventSource, me: mxMouseEvent): void;
-  mouseMove(sender: any, me: mxMouseEvent) {
+  mouseMove(sender: mxEventSource, me: mxMouseEvent): void {
     if (this.active) {
       const myBounds = <mxRectangle>this.bounds;
       const sizer = <mxRectangleShape>this.sizer;
@@ -713,8 +691,7 @@ class mxOutline {
    * };
    * ```
    */
-  // getTranslateForEvent(me: mxMouseEvent): mxPoint;
-  getTranslateForEvent(me: mxMouseEvent) {
+  getTranslateForEvent(me: mxMouseEvent): mxPoint {
     return new mxPoint(
       me.getX() - <number>this.startX,
       me.getY() - <number>this.startY
@@ -724,8 +701,7 @@ class mxOutline {
   /**
    * Handles the event by applying the translation or zoom to {@link graph}.
    */
-  // mouseUp(sender: mxEventSource, me: mxMouseEvent): void;
-  mouseUp(sender: any, me: mxMouseEvent) {
+  mouseUp(sender: mxEventSource, me: mxMouseEvent): void {
     if (this.active) {
       const delta = this.getTranslateForEvent(me);
       let dx = delta.x;
@@ -771,8 +747,7 @@ class mxOutline {
   /**
    * Destroy this outline and removes all listeners from {@link source}.
    */
-  // destroy(): void;
-  destroy() {
+  destroy(): void {
     if (this.source != null) {
       this.source.removeListener(this.panHandler);
       this.source.removeListener(this.refreshHandler);

@@ -45,6 +45,7 @@ import {
   isConsumed,
 } from '../../util/mxEventUtils';
 import { clone } from '../../util/mxCloneUtils';
+import mxCellArray from "../cell/mxCellArray";
 
 /**
  * @class mxGraphView
@@ -378,8 +379,8 @@ class mxGraphView extends mxEventSource {
    *
    * @param cells Array of {@link mxCell} whose bounds should be returned.
    */
-  // getBounds(cells: mxCell[]): mxRectangle;
-  getBounds(cells: mxCell[]): mxRectangle | null {
+  // getBounds(cells: mxCellArray): mxRectangle;
+  getBounds(cells: mxCellArray): mxRectangle | null {
     let result = null;
 
     if (cells != null && cells.length > 0) {
@@ -1040,17 +1041,6 @@ class mxGraphView extends mxEventSource {
     }
 
     state.updateCachedBounds();
-  }
-
-  /**
-   * Returns true if the children of the given cell should not be visible in the
-   * view. This implementation uses {@link mxCell.isCellVisible} but it can be
-   * overidden to use a separate condition.
-   */
-  // isCellCollapsed(cell: mxCell): boolean;
-  isCellCollapsed(cell: mxCell): boolean {
-    // SLATED FOR DELETION
-    return cell.isCollapsed();
   }
 
   /**
@@ -2189,8 +2179,8 @@ class mxGraphView extends mxEventSource {
    * have less elements than the given array. If no argument is given, then
    * this returns {@link states}.
    */
-  // getCellStates(cells: mxCell[]): mxCellState[];
-  getCellStates(cells: mxCell[] | null): mxCellState[] | mxDictionary | null {
+  // getCellStates(cells: mxCellArray): mxCellState[];
+  getCellStates(cells: mxCellArray | null): mxCellState[] | mxDictionary | null {
     if (cells == null) {
       return this.states;
     }

@@ -5,9 +5,9 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxCell from '../../view/cell/mxCell';
 import mxGraph from '../../view/graph/mxGraph';
 import mxGraphModel from "../../view/graph/mxGraphModel";
+import mxCellArray from "../../view/cell/mxCellArray";
 
 /**
  * @class
@@ -86,42 +86,36 @@ class mxClipboard {
    * Defines the step size to offset the cells after each paste operation.
    * Default is 10.
    */
-  // static STEPSIZE: number;
   static STEPSIZE: number = 10;
 
   /**
    * Counts the number of times the clipboard data has been inserted.
    */
-  // static insertCount: number;
   static insertCount: number = 1;
 
   /**
    * Holds the array of {@link mxCell} currently in the clipboard.
    */
-  // static cells: Array<mxCell>;
-  static cells: mxCell[] | null = null;
+  static cells: mxCellArray | null = null;
 
   /**
    * Sets the cells in the clipboard. Fires a {@link mxEvent.CHANGE} event.
    */
-  // static setCells(cells: Array<mxCell>): void;
-  static setCells(cells: mxCell[] | null) {
+  static setCells(cells: mxCellArray | null): void {
     mxClipboard.cells = cells;
   }
 
   /**
    * Returns  the cells in the clipboard.
    */
-  // static getCells(): Array<mxCell>;
-  static getCells() {
+  static getCells(): mxCellArray | null {
     return mxClipboard.cells;
   }
 
   /**
    * Returns true if the clipboard currently has not data stored.
    */
-  // static isEmpty(): boolean;
-  static isEmpty() {
+  static isEmpty(): boolean {
     return mxClipboard.getCells() == null;
   }
 
@@ -133,8 +127,7 @@ class mxClipboard {
    * @param graph - {@link mxGraph} that contains the cells to be cut.
    * @param cells - Optional array of {@link mxCell} to be cut.
    */
-  // static cut(graph: mxGraph, cells?: Array<mxCell>): Array<mxCell>;
-  static cut(graph: mxGraph, cells: mxCell[] | null) {
+  static cut(graph: mxGraph, cells?: mxCellArray | null): mxCellArray | null {
     cells = mxClipboard.copy(graph, cells);
     mxClipboard.insertCount = 0;
     mxClipboard.removeCells(graph, cells);
@@ -149,8 +142,7 @@ class mxClipboard {
    * @param graph - {@link mxGraph} that contains the cells to be cut.
    * @param cells - Array of {@link mxCell} to be cut.
    */
-  // static removeCells(graph: mxGraph, cells: Array<mxCell>): void;
-  static removeCells(graph: mxGraph, cells: mxCell[] | null) {
+  static removeCells(graph: mxGraph, cells: mxCellArray | null): void {
     graph.removeCells(cells);
   }
 
@@ -162,12 +154,11 @@ class mxClipboard {
    * @param graph - {@link mxGraph} that contains the cells to be copied.
    * @param cells - Optional array of {@link mxCell} to be copied.
    */
-  // static copy(graph: mxGraph, cells?: Array<mxCell>): Array<mxCell>;
-  static copy(graph: mxGraph, cells: mxCell[] | null): mxCell[] | null {
+  static copy(graph: mxGraph, cells?: mxCellArray | null): mxCellArray | null {
     cells = cells || graph.getSelectionCells();
-    const result = graph.getExportableCells((<mxGraphModel>graph.model).getTopmostCells(cells));
+    const result = (<mxCellArray>graph.getExportableCells(cells)).getTopmostCells();
     mxClipboard.insertCount = 1;
-    mxClipboard.setCells(graph.cloneCells(<mxCell[]>result));
+    mxClipboard.setCells(graph.cloneCells(<mxCellArray>result));
 
     return result;
   }
@@ -183,8 +174,7 @@ class mxClipboard {
    *
    * @param graph - {@link mxGraph} to paste the {@link cells} into.
    */
-  // static paste(graph: mxGraph): Array<mxCell>;
-  static paste(graph: mxGraph) {
+  static paste(graph: mxGraph): mxCellArray | null {
     let cells = null;
 
     if (!mxClipboard.isEmpty()) {
@@ -196,7 +186,7 @@ class mxClipboard {
 
       // Increments the counter and selects the inserted cells
       mxClipboard.insertCount++;
-      graph.setSelectionCells(<mxCell[]>cells);
+      graph.setSelectionCells(<mxCellArray>cells);
     }
 
     return cells;

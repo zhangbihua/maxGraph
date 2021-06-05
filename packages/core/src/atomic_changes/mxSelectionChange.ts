@@ -4,6 +4,7 @@ import mxLog from '../util/gui/mxLog';
 import mxEvent from '../util/event/mxEvent';
 import mxGraphSelectionModel from '../view/graph/mxGraphSelectionModel';
 import mxCell from '../view/cell/mxCell';
+import mxCellArray from "../view/cell/mxCellArray";
 
 /**
  * @class mxSelectionChange
@@ -12,8 +13,8 @@ import mxCell from '../view/cell/mxCell';
 class mxSelectionChange {
   constructor(
     selectionModel: mxGraphSelectionModel,
-    added: mxCell[] = [],
-    removed: mxCell[] = []
+    added: mxCellArray = new mxCellArray(),
+    removed: mxCellArray = new mxCellArray()
   ) {
     this.selectionModel = selectionModel;
     this.added = added.slice();
@@ -22,9 +23,9 @@ class mxSelectionChange {
 
   selectionModel: mxGraphSelectionModel;
 
-  added: mxCell[];
+  added: mxCellArray;
 
-  removed: mxCell[];
+  removed: mxCellArray;
 
   /**
    * Changes the current root of the view.

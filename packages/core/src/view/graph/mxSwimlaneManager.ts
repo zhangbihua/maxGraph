@@ -13,6 +13,7 @@ import mxGraph from './mxGraph';
 import mxEventObject from '../../util/event/mxEventObject';
 import mxCell from '../cell/mxCell';
 import mxGeometry from '../../util/datatypes/mxGeometry';
+import mxCellArray from "../cell/mxCellArray";
 
 /**
  * @class mxSwimlaneManager
@@ -54,21 +55,18 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Reference to the enclosing {@link mxGraph}.
    */
-  // graph: mxGraph;
   graph: mxGraph | null = null;
 
   /**
    * Specifies if event handling is enabled.
    * @default true
    */
-  // enabled: boolean;
   enabled: boolean = true;
 
   /**
    * Specifies the orientation of the swimlanes.
    * @default true
    */
-  // horizontal: boolean;
   horizontal: boolean = true;
 
   /**
@@ -76,33 +74,28 @@ class mxSwimlaneManager extends mxEventSource {
    * existing siblings.
    * @default true
    */
-  // addEnabled: boolean;
   addEnabled: boolean = true;
 
   /**
    * Specifies if resizing of swimlanes should be handled.
    * @default true
    */
-  // resizeEnabled: boolean;
   resizeEnabled: boolean = true;
 
   /**
    * Holds the function that handles the move event.
    */
-  // addHandler: Function;
   addHandler: Function | null = null;
 
   /**
    * Holds the function that handles the move event.
    */
-  // resizeHandler: Function;
   resizeHandler: Function | null = null;
 
   /**
    * Returns true if events are handled. This implementation
    * returns {@link enabled}.
    */
-  // isEnabled(): boolean;
   isEnabled(): boolean {
     return this.enabled;
   }
@@ -113,7 +106,6 @@ class mxSwimlaneManager extends mxEventSource {
    *
    * @param enabled Boolean that specifies the new enabled state.
    */
-  // setEnabled(value: boolean): void;
   setEnabled(value: boolean): void {
     this.enabled = value;
   }
@@ -121,7 +113,6 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Returns {@link horizontal}.
    */
-  // isHorizontal(): boolean;
   isHorizontal(): boolean {
     return this.horizontal;
   }
@@ -129,7 +120,6 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Sets {@link horizontal}.
    */
-  // setHorizontal(value: boolean): void;
   setHorizontal(value: boolean): void {
     this.horizontal = value;
   }
@@ -137,7 +127,6 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Returns {@link addEnabled}.
    */
-  // isAddEnabled(): boolean;
   isAddEnabled(): boolean {
     return this.addEnabled;
   }
@@ -145,7 +134,6 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Sets {@link addEnabled}.
    */
-  // setAddEnabled(value: boolean): void;
   setAddEnabled(value: boolean): void {
     this.addEnabled = value;
   }
@@ -153,7 +141,6 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Returns {@link resizeEnabled}.
    */
-  // isResizeEnabled(): boolean;
   isResizeEnabled(): boolean {
     return this.resizeEnabled;
   }
@@ -161,7 +148,6 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Sets {@link resizeEnabled}.
    */
-  // setResizeEnabled(value: boolean): void;
   setResizeEnabled(value: boolean): void {
     this.resizeEnabled = value;
   }
@@ -169,7 +155,6 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Returns the graph that this manager operates on.
    */
-  // getGraph(): mxGraph;
   getGraph(): mxGraph | null {
     return this.graph;
   }
@@ -177,7 +162,6 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Sets the graph that the manager operates on.
    */
-  // setGraph(graph: mxGraph): void;
   setGraph(graph: mxGraph | null): void {
     if (this.graph != null) {
       this.graph.removeListener(this.addHandler);
@@ -195,7 +179,6 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Returns true if the given swimlane should be ignored.
    */
-  // isSwimlaneIgnored(swimlane: mxCell): boolean;
   isSwimlaneIgnored(swimlane: mxCell): boolean {
     return !(<mxGraph>this.getGraph()).isSwimlane(swimlane);
   }
@@ -204,7 +187,6 @@ class mxSwimlaneManager extends mxEventSource {
    * Returns true if the given cell is horizontal. If the given cell is not a
    * swimlane, then the global orientation is returned.
    */
-  // isCellHorizontal(cell: mxCell): boolean;
   isCellHorizontal(cell: mxCell): boolean {
     if ((<mxGraph>this.graph).isSwimlane(cell)) {
       const style = (<mxGraph>this.graph).getCellStyle(cell);
@@ -218,8 +200,7 @@ class mxSwimlaneManager extends mxEventSource {
    *
    * @param cell Array of {@link mxCell} that have been added.
    */
-  // cellsAdded(cells: Array<mxCell>): void;
-  cellsAdded(cells: mxCell[]): void {
+  cellsAdded(cells: mxCellArray): void {
     if (cells != null) {
       const model = (<mxGraph>this.graph).getModel();
 
@@ -274,8 +255,7 @@ class mxSwimlaneManager extends mxEventSource {
    *
    * @param cells Array of {@link mxCell} whose size was changed.
    */
-  // cellsResized(cells: Array<mxCell>): void;
-  cellsResized(cells: mxCell[] | null): void {
+  cellsResized(cells: mxCellArray | null): void {
     if (cells != null) {
       const model = (<mxGraph>this.getGraph()).getModel();
 
@@ -327,7 +307,6 @@ class mxSwimlaneManager extends mxEventSource {
    *
    * @param swimlane {@link mxCell} whose size has changed.
    */
-  // resizeSwimlane(swimlane: mxCell, w: number, h: number, parentHorizontal: boolean): void;
   resizeSwimlane(
     swimlane: mxCell,
     w: number,
@@ -381,7 +360,6 @@ class mxSwimlaneManager extends mxEventSource {
   /**
    * Removes all handlers from the {@link graph} and deletes the reference to it.
    */
-  // destroy(): void;
   destroy(): void {
     this.setGraph(null);
   }

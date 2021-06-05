@@ -21,7 +21,7 @@ import mxTerminalChange from '../../atomic_changes/mxTerminalChange';
 import mxValueChange from '../../atomic_changes/mxValueChange';
 import mxVisibleChange from '../../atomic_changes/mxVisibleChange';
 import mxGeometry from "../../util/datatypes/mxGeometry";
-import mxCells from "../cell/mxCells";
+import mxCellArray from "../cell/mxCellArray";
 
 /**
  * Extends {@link mxEventSource} to implement a graph model. The graph model acts as
@@ -337,24 +337,12 @@ class mxGraphModel extends mxEventSource {
     return this.cells != null ? this.cells[id] : null;
   }
 
-  filterCells(cells: mxCell[],
-              filter: Function): mxCell[] | null {
-    return new mxCells(...cells).filterCells(filter);
-  }
-
-  getDescendants(parent: mxCell): mxCell[] {
-    // SLATED FOR DELETION
-    return parent.getDescendants();
-  }
-
-  filterDescendants(filter: Function | null,
-                    parent: mxCell): mxCell[] {
-    // SLATED FOR DELETION
-    return parent.filterDescendants(filter);
+  filterCells(cells: mxCellArray,
+              filter: Function): mxCellArray | null {
+    return new mxCellArray(...cells).filterCells(filter);
   }
 
   getRoot(cell: mxCell | null = null): mxCell | null {
-    // SLATED FOR DELETION
     return cell ? cell.getRoot() : this.root;
   }
 
@@ -420,12 +408,6 @@ class mxGraphModel extends mxEventSource {
     return this.isRoot(cell.getParent());
   }
 
-  isAncestor(parent: mxCell | null,
-             child: mxCell | null): boolean {
-    // SLATED FOR DELETION
-    return parent?.isAncestor(child) || false;
-  }
-
   /**
    * Returns true if the model contains the given {@link mxCell}.
    *
@@ -433,18 +415,7 @@ class mxGraphModel extends mxEventSource {
    */
   // contains(cell: mxCell): boolean;
   contains(cell: mxCell): boolean {
-    return this.isAncestor(<mxCell>this.root, cell);
-  }
-
-  /**
-   * Returns the parent of the given cell.
-   *
-   * @param {mxCell} cell  whose parent should be returned.
-   */
-  // getParent(cell: mxCell): mxCell;
-  getParent(cell: mxCell): mxCell | null {
-    // SLATED FOR DELETION
-    return cell.getParent();
+    return (<mxCell>this.root).isAncestor(cell);
   }
 
   /**
@@ -585,7 +556,7 @@ class mxGraphModel extends mxEventSource {
       // Updates edge parent if edge and child have
       // a common root node (does not need to be the
       // model root node)
-      if (this.isAncestor(root, edge)) {
+      if (root.isAncestor(edge)) {
         this.updateEdgeParent(edge, root);
       }
     }
@@ -627,23 +598,23 @@ class mxGraphModel extends mxEventSource {
       target = target.getParent();
     }
 
-    if (this.isAncestor(root, source) && this.isAncestor(root, target)) {
+    if (root.isAncestor(source) && root.isAncestor(target)) {
       if (source === target) {
         cell = source ? source.getParent() : null;
       } else if (source) {
-        cell = source.getNearestCommonAncestor(target);
+        cell = source.getNearestCommonAncestor(<mxCell>target);
       }
 
       if (
         cell != null &&
-        (cell.getParent() !== this.root || this.isAncestor(cell, edge)) &&
+        (cell.getParent() !== this.root || cell.isAncestor(edge)) &&
         edge && edge.getParent() !== cell
       ) {
         let geo = edge.getGeometry();
 
         if (geo != null) {
-          const origin1 = this.getOrigin(<mxCell>edge.getParent());
-          const origin2 = this.getOrigin(cell);
+          const origin1 = (<mxCell>edge.getParent()).getOrigin();
+          const origin2 = cell.getOrigin();
 
           const dx = origin2.x - origin1.x;
           const dy = origin2.y - origin1.y;
@@ -656,17 +627,6 @@ class mxGraphModel extends mxEventSource {
         this.add(cell, edge, cell.getChildCount());
       }
     }
-  }
-
-  getOrigin(cell: mxCell): mxPoint {
-    // SLATED FOR DELETION
-    return cell.getOrigin();
-  }
-
-  getNearestCommonAncestor(cell1: mxCell,
-                           cell2: mxCell): mxCell | null {
-    // SLATED FOR DELETION
-    return cell1.getNearestCommonAncestor(cell2);
   }
 
   /**
@@ -747,73 +707,6 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Returns the number of children in the given cell.
-   *
-   * @param {mxCell} cell  whose number of children should be returned.
-   */
-  // getChildCount(cell?: mxCell): number;
-  getChildCount(cell: mxCell) {
-    // SLATED FOR DELETION
-    return cell.getChildCount();
-  }
-
-  /**
-   * Returns the child of the given {@link mxCell} at the given index.
-   *
-   * @param {mxCell} cell  that represents the parent.
-   * @param index  Integer that specifies the index of the child to be returned.
-   */
-  // getChildAt(cell: mxCell, index: number): mxCell;
-  getChildAt(cell: mxCell,
-             index: number): mxCell | null {
-    // SLATED FOR DELETION
-    return cell.getChildAt(index);
-  }
-
-  /**
-   * Returns all children of the given {@link mxCell} as an array of {@link mxCell}. The
-   * return value should be only be read.
-   *
-   * @param {mxCell} cell  the represents the parent.
-   */
-  // getChildren(cell: mxCell): Array<mxCell>;
-  getChildren(cell: mxCell): mxCell[] {
-    // SLATED FOR DELETION
-    return cell.children || [];
-  }
-
-  getChildVertices(parent: mxCell) {
-    // SLATED FOR DELETION
-    return parent.getChildVertices();
-  }
-
-  getChildEdges(parent: mxCell): mxCell[] {
-    // SLATED FOR DELETION
-    return parent.getChildEdges();
-  }
-
-  getChildCells(parent: mxCell,
-                vertices: boolean=false,
-                edges: boolean=false): mxCell[] {
-    // SLATED FOR DELETION
-    return parent.getChildCells(vertices, edges);
-  }
-
-  /**
-   * Returns the source or target {@link mxCell} of the given edge depending on the
-   * value of the boolean parameter.
-   *
-   * @param {mxCell} edge  that specifies the edge.
-   * @param isSource  Boolean indicating which end of the edge should be returned.
-   */
-  // getTerminal(edge: mxCell, isSource: boolean): mxCell;
-  getTerminal(edge: mxCell,
-              isSource: boolean=false): mxCell | null {
-    // SLATED FOR DELETION
-    return edge.getTerminal(isSource);
-  }
-
-  /**
    * Sets the source or target terminal of the given {@link mxCell} using
    * {@link mxTerminalChange} and adds the change to the current transaction.
    * This implementation updates the parent of the edge using {@link updateEdgeParent}
@@ -884,61 +777,6 @@ class mxGraphModel extends mxEventSource {
   }
 
   /**
-   * Returns the number of distinct edges connected to the given cell.
-   *
-   * @param {mxCell} cell  that represents the vertex.
-   */
-  // getEdgeCount(cell: mxCell): number;
-  getEdgeCount(cell: mxCell): number {
-    // SLATED FOR DELETION
-    return cell.getEdgeCount();
-  }
-
-  /**
-   * Returns the edge of cell at the given index.
-   *
-   * @param {mxCell} cell  that specifies the vertex.
-   * @param index  Integer that specifies the index of the edge
-   * to return.
-   */
-  // getEdgeAt(cell: mxCell, index: number): mxCell;
-  getEdgeAt(cell: mxCell,
-            index: number): mxCell | null {
-    // SLATED FOR DELETION
-    return cell.getEdgeAt(index);
-  }
-
-  getDirectedEdgeCount(cell: mxCell,
-                       outgoing: boolean,
-                       ignoredEdge: mxCell | null=null): number {
-    // SLATED FOR DELETION
-    return cell.getDirectedEdgeCount(outgoing, ignoredEdge)
-  }
-
-  getConnections(cell: mxCell) {
-    // SLATED FOR DELETION
-    return cell.getConnections();
-  }
-
-  getIncomingEdges(cell: mxCell): mxCell[] {
-    // SLATED FOR DELETION
-    return cell.getIncomingEdges();
-  }
-
-  getOutgoingEdges(cell: mxCell): mxCell[] {
-    // SLATED FOR DELETION
-    return cell.getOutgoingEdges();
-  }
-
-  getEdges(cell: mxCell,
-           incoming: boolean=true,
-           outgoing: boolean=true,
-           includeLoops: boolean=true) {
-    // SLATED FOR DELETION
-    return cell.getEdges(incoming, outgoing, includeLoops);
-  }
-
-  /**
    * Returns all edges between the given source and target pair. If directed
    * is true, then only edges from the source to the target are returned,
    * otherwise, all edges between the two cells are returned.
@@ -950,10 +788,9 @@ class mxGraphModel extends mxEventSource {
    * @param directed  Optional boolean that specifies if the direction of the
    * edge should be taken into account. Default is false.
    */
-  // getEdgesBetween(source: mxCell, target: mxCell, directed?: boolean): Array<mxCell>;
   getEdgesBetween(source: mxCell,
                   target: mxCell,
-                  directed: boolean=false) {
+                  directed: boolean=false): mxCellArray {
 
     const tmp1 = source.getEdgeCount();
     const tmp2 = target.getEdgeCount();
@@ -969,7 +806,7 @@ class mxGraphModel extends mxEventSource {
       terminal = target;
     }
 
-    const result = [];
+    const result = new mxCellArray();
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match
@@ -987,65 +824,6 @@ class mxGraphModel extends mxEventSource {
     return result;
   }
 
-  getOpposites(edges: mxCell[],
-               terminal: mxCell,
-               sources: boolean=true,
-               targets: boolean=true): mxCell[] {
-    // SLATED FOR DELETION
-    return new mxCells(...edges).getOpposites(terminal, sources, targets);
-  }
-
-  getTopmostCells(cells: mxCell[]): mxCell[] {
-    // SLATED FOR DELETION
-    return new mxCells(...cells).getTopmostCells();
-  }
-
-  /**
-   * Returns true if the given cell is a vertex.
-   *
-   * @param {mxCell} cell  that represents the possible vertex.
-   */
-  // isVertex(cell: mxCell): boolean;
-  isVertex(cell: mxCell): boolean {
-    // SLATED FOR DELETION
-    return cell.isVertex();
-  }
-
-  /**
-   * Returns true if the given cell is an edge.
-   *
-   * @param {mxCell} cell  that represents the possible edge.
-   */
-  // isEdge(cell: mxCell): boolean;
-  isEdge(cell: mxCell): boolean {
-    // SLATED FOR DELETION
-    return cell.isEdge();
-  }
-
-  /**
-   * Returns true if the given {@link mxCell} is connectable. If {@link edgesConnectable}
-   * is false, then this function returns false for all edges else it returns
-   * the return value of <mxCell.isConnectable>.
-   *
-   * @param {mxCell} cell  whose connectable state should be returned.
-   */
-  // isConnectable(cell: mxCell): boolean;
-  isConnectable(cell: mxCell) {
-    // SLATED FOR DELECTION
-    return cell.isConnectable();
-  }
-
-  /**
-   * Returns the user object of the given {@link mxCell} using <mxCell.getValue>.
-   *
-   * @param {mxCell} cell  whose user object should be returned.
-   */
-  // getValue(cell: mxCell): any;
-  getValue(cell: mxCell) {
-    // SLATED FOR DELETION
-    return cell.getValue();
-  }
-
   /**
    * Sets the user object of then given {@link mxCell} using {@link mxValueChange}
    * and adds the change to the current transaction.
@@ -1053,7 +831,6 @@ class mxGraphModel extends mxEventSource {
    * @param {mxCell} cell  whose user object should be changed.
    * @param value  Object that defines the new user object.
    */
-  // setValue(cell: mxCell, value: any): any;
   setValue(cell: mxCell,
            value: any): any {
     this.execute(new mxValueChange(this, cell, value));
@@ -1078,21 +855,9 @@ class mxGraphModel extends mxEventSource {
    * };
    * ```
    */
-  // valueForCellChanged(cell: mxCell, value: any): any;
   valueForCellChanged(cell: mxCell,
                       value: any): any {
     return cell.valueChanged(value);
-  }
-
-  /**
-   * Returns the {@link mxGeometry} of the given {@link mxCell}.
-   *
-   * @param {mxCell} cell  whose geometry should be returned.
-   */
-  // getGeometry(cell: mxCell): mxGeometry;
-  getGeometry(cell: mxCell): mxGeometry | null {
-    // SLATED FOR DELETION
-    return cell.getGeometry();
   }
 
   /**
@@ -1103,7 +868,6 @@ class mxGraphModel extends mxEventSource {
    * @param {mxCell} cell  whose geometry should be changed.
    * @param {mxGeometry} geometry  that defines the new geometry.
    */
-  // setGeometry(cell: mxCell, geometry: mxGeometry): mxGeometry;
   setGeometry(cell: mxCell,
               geometry: mxGeometry): mxGeometry {
 
@@ -1117,24 +881,12 @@ class mxGraphModel extends mxEventSource {
    * Inner callback to update the {@link mxGeometry} of the given {@link mxCell} using
    * <mxCell.setGeometry> and return the previous {@link mxGeometry}.
    */
-  // geometryForCellChanged(cell: mxCell, geometry: mxGeometry): mxGeometry;
   geometryForCellChanged(cell: mxCell,
                          geometry: mxGeometry): mxGeometry | null {
 
     const previous = cell.getGeometry();
     cell.setGeometry(geometry);
     return previous;
-  }
-
-  /**
-   * Returns the style of the given {@link mxCell}.
-   *
-   * @param {mxCell} cell  whose style should be returned.
-   */
-  // getStyle(cell: mxCell): string | null;
-  getStyle(cell: mxCell | null): any {
-    // SLATED FOR DELETION
-    return cell != null ? cell.getStyle() : null;
   }
 
   /**
@@ -1165,22 +917,11 @@ class mxGraphModel extends mxEventSource {
    */
   // styleForCellChanged(cell: mxCell, style: string): string;
   styleForCellChanged(cell: mxCell,
-                      style: any): mxCell | null {
+                      style: string): string | null {
 
     const previous = cell.getStyle();
     cell.setStyle(style);
     return previous;
-  }
-
-  /**
-   * Returns true if the given {@link mxCell} is collapsed.
-   *
-   * @param {mxCell} cell  whose collapsed state should be returned.
-   */
-  // isCollapsed(cell: mxCell): boolean;
-  isCollapsed(cell: mxCell): boolean {
-    // SLATED FOR DELETION
-    return cell.isCollapsed();
   }
 
   /**
@@ -1190,7 +931,6 @@ class mxGraphModel extends mxEventSource {
    * @param {mxCell} cell  whose collapsed state should be changed.
    * @param collapsed  Boolean that specifies the new collpased state.
    */
-  // setCollapsed(cell: mxCell, collapsed: boolean): boolean;
   setCollapsed(cell: mxCell,
                collapsed: boolean): boolean {
 
@@ -1208,24 +948,12 @@ class mxGraphModel extends mxEventSource {
    * @param {mxCell} cell  that specifies the cell to be updated.
    * @param collapsed  Boolean that specifies the new collpased state.
    */
-  // collapsedStateForCellChanged(cell: mxCell, collapsed: boolean): boolean;
   collapsedStateForCellChanged(cell: mxCell,
                                collapsed: boolean): boolean {
 
     const previous = cell.isCollapsed();
     cell.setCollapsed(collapsed);
     return previous;
-  }
-
-  /**
-   * Returns true if the given {@link mxCell} is visible.
-   *
-   * @param {mxCell} cell  whose visible state should be returned.
-   */
-  // isVisible(cell: mxCell): boolean;
-  isVisible(cell: mxCell): boolean {
-    // SLATED FOR DELETION
-    return cell.isVisible();
   }
 
   /**
@@ -1496,11 +1224,6 @@ class mxGraphModel extends mxEventSource {
     }
   }
 
-  getParents(cells: mxCell[]): mxCell[] {
-    // SLATED FOR DELETION
-    return new mxCells(...cells).getParents();
-  }
-
   //
   // Cell Cloning
   //
@@ -1515,26 +1238,9 @@ class mxGraphModel extends mxEventSource {
   cloneCell(cell: mxCell | null,
             includeChildren: boolean): mxCell | null {
     if (cell != null) {
-      return this.cloneCells([cell], includeChildren)[0];
+      return new mxCellArray(cell).cloneCells(includeChildren)[0];
     }
     return null;
-  }
-
-  cloneCells(cells: mxCell[],
-             includeChildren: boolean=true,
-             mapping: any={}): mxCell[] {
-    // SLATED FOR DELETION
-    return new mxCells(...cells).cloneCells(includeChildren, mapping)
-  }
-
-  /**
-   * Hook for cloning the cell. This returns cell.clone() or
-   * any possible exceptions.
-   */
-  // cellCloned(cell: mxCell): mxCell;
-  cellCloned(cell: mxCell): mxCell {
-    // SLATED FOR DELETION
-    return cell.clone();
   }
 }
 
