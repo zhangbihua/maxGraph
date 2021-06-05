@@ -4515,8 +4515,7 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose size should be updated.
    */
-  // updateCellSize(cell: mxCell, ignoreChildren?: boolean): mxCell;
-  updateCellSize(cell: mxCell, ignoreChildren: boolean = false) {
+  updateCellSize(cell: mxCell, ignoreChildren: boolean = false): mxCell {
     this.getModel().beginUpdate();
     try {
       this.cellSizeUpdated(cell, ignoreChildren);
@@ -6199,7 +6198,6 @@ class mxGraph extends mxEventSource {
    * Returns the current root of the displayed cell hierarchy. This is a
    * shortcut to {@link mxGraphView.currentRoot} in {@link view}.
    */
-  // getCurrentRoot(): mxCell;
   getCurrentRoot(): mxCell | null {
     return this.getView().currentRoot;
   }
@@ -8110,7 +8108,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link resizeContainer}.
    */
-  // isResizeContainer(): boolean;
   isResizeContainer(): boolean {
     return this.resizeContainer;
   }
@@ -8120,7 +8117,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if the container should be resized.
    */
-  // setResizeContainer(value: boolean): void;
   setResizeContainer(value: boolean) {
     this.resizeContainer = value;
   }
@@ -8128,7 +8124,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns true if the graph is {@link enabled}.
    */
-  // isEnabled(): boolean;
   isEnabled(): boolean {
     return this.enabled;
   }
@@ -8139,7 +8134,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if the graph should be enabled.
    */
-  // setEnabled(value: boolean): void;
   setEnabled(value: boolean): void {
     this.enabled = value;
   }
@@ -8147,7 +8141,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link escapeEnabled}.
    */
-  // isEscapeEnabled(): boolean;
   isEscapeEnabled(): boolean {
     return this.escapeEnabled;
   }
@@ -8157,7 +8150,6 @@ class mxGraph extends mxEventSource {
    *
    * @param enabled Boolean indicating if escape should be enabled.
    */
-  // setEscapeEnabled(value: boolean): void;
   setEscapeEnabled(value: boolean): void {
     this.escapeEnabled = value;
   }
@@ -8165,7 +8157,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link invokesStopCellEditing}.
    */
-  // isInvokesStopCellEditing(): boolean;
   isInvokesStopCellEditing(): boolean {
     return this.invokesStopCellEditing;
   }
@@ -8173,7 +8164,6 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link invokesStopCellEditing}.
    */
-  // setInvokesStopCellEditing(value: boolean): void;
   setInvokesStopCellEditing(value: boolean): void {
     this.invokesStopCellEditing = value;
   }
@@ -8181,7 +8171,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link enterStopsCellEditing}.
    */
-  // isEnterStopsCellEditing(): boolean;
   isEnterStopsCellEditing(): boolean {
     return this.enterStopsCellEditing;
   }
@@ -8189,7 +8178,6 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link enterStopsCellEditing}.
    */
-  // setEnterStopsCellEditing(value: boolean): void;
   setEnterStopsCellEditing(value: boolean): void {
     this.enterStopsCellEditing = value;
   }
@@ -8201,7 +8189,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose locked state should be returned.
    */
-  // isCellLocked(cell: mxCell): boolean;
   isCellLocked(cell: mxCell): boolean {
     const geometry = cell.getGeometry();
 
@@ -8218,7 +8205,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose locked state should be returned.
    */
-  // isCellsLocked(): boolean;
   isCellsLocked(): boolean {
     return this.cellsLocked;
   }
@@ -8229,7 +8215,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean that defines the new value for {@link cellsLocked}.
    */
-  // setCellsLocked(value: boolean): void;
   setCellsLocked(value: boolean) {
     this.cellsLocked = value;
   }
@@ -8237,7 +8222,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns the cells which may be exported in the given array of cells.
    */
-  // getCloneableCells(cells: mxCellArray): mxCellArray;
   getCloneableCells(cells: mxCellArray): mxCellArray | null {
     return this.getModel().filterCells(cells, (cell: mxCell) => {
       return this.isCellCloneable(cell);
@@ -8251,7 +8235,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell Optional {@link mxCell} whose cloneable state should be returned.
    */
-  // isCellCloneable(cell: mxCell): boolean;
   isCellCloneable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
     return this.isCellsCloneable() && style.cloneable !== 0;
@@ -8261,7 +8244,6 @@ class mxGraph extends mxEventSource {
    * Returns {@link cellsCloneable}, that is, if the graph allows cloning of cells
    * by using control-drag.
    */
-  // isCellsCloneable(): boolean;
   isCellsCloneable(): boolean {
     return this.cellsCloneable;
   }
@@ -8273,7 +8255,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if the graph should be cloneable.
    */
-  // setCellsCloneable(value: boolean): void;
   setCellsCloneable(value: boolean): void {
     this.cellsCloneable = value;
   }
@@ -8281,7 +8262,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns the cells which may be exported in the given array of cells.
    */
-  // getExportableCells(cells: mxCellArray): mxCellArray;
   getExportableCells(cells: mxCellArray): mxCellArray | null {
     return this.getModel().filterCells(cells, (cell: mxCell) => {
       return this.canExportCell(cell);
@@ -8294,7 +8274,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} that represents the cell to be exported.
    */
-  // canExportCell(cell: mxCell): boolean;
   canExportCell(cell: mxCell | null = null): boolean {
     return this.exportEnabled;
   }
@@ -8302,7 +8281,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns the cells which may be imported in the given array of cells.
    */
-  // getImportableCells(cells: mxCellArray): mxCellArray;
   getImportableCells(cells: mxCellArray): mxCellArray | null {
     return this.getModel().filterCells(cells, (cell: mxCell) => {
       return this.canImportCell(cell);
@@ -8315,7 +8293,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} that represents the cell to be imported.
    */
-  // canImportCell(cell: mxCell): boolean;
   canImportCell(cell: mxCell | null = null): boolean {
     return this.importEnabled;
   }
@@ -8343,7 +8320,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose selectable state should be returned.
    */
-  // isCellSelectable(cell: mxCell): boolean;
   isCellSelectable(cell: mxCell): boolean {
     return this.isCellsSelectable();
   }
@@ -8351,7 +8327,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link cellsSelectable}.
    */
-  // isCellsSelectable(): boolean;
   isCellsSelectable(): boolean {
     return this.cellsSelectable;
   }
@@ -8359,7 +8334,6 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link cellsSelectable}.
    */
-  // setCellsSelectable(value: boolean): void;
   setCellsSelectable(value: boolean): void {
     this.cellsSelectable = value;
   }
@@ -8367,7 +8341,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns the cells which may be exported in the given array of cells.
    */
-  // getDeletableCells(cells: mxCellArray): mxCellArray;
   getDeletableCells(cells: mxCellArray): mxCellArray | null {
     return this.getModel().filterCells(cells, (cell: mxCell) => {
       return this.isCellDeletable(cell);
@@ -8381,7 +8354,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose deletable state should be returned.
    */
-  // isCellDeletable(cell: mxCell): boolean;
   isCellDeletable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
     return this.isCellsDeletable() && style.deletable !== 0;
@@ -8390,7 +8362,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link cellsDeletable}.
    */
-  // isCellsDeletable(): boolean;
   isCellsDeletable(): boolean {
     return this.cellsDeletable;
   }
@@ -8400,7 +8371,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if the graph should allow deletion of cells.
    */
-  // setCellsDeletable(value: boolean): void;
   setCellsDeletable(value: boolean): void {
     this.cellsDeletable = value;
   }
@@ -8412,7 +8382,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose label should be moved.
    */
-  // isLabelMovable(cell: mxCell): boolean;
   isLabelMovable(cell: mxCell): boolean {
     return (
       !this.isCellLocked(cell) &&
@@ -8427,7 +8396,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose rotatable state should be returned.
    */
-  // isCellRotatable(cell: mxCell): boolean;
   isCellRotatable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
     return style.rotatable !== 0;
@@ -8436,7 +8404,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns the cells which are movable in the given array of cells.
    */
-  // getMovableCells(cells: mxCellArray): mxCellArray;
   getMovableCells(cells: mxCellArray): mxCellArray | null {
     return this.getModel().filterCells(cells, (cell: mxCell) => {
       return this.isCellMovable(cell);
@@ -8450,7 +8417,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose movable state should be returned.
    */
-  // isCellMovable(cell: mxCell): boolean;
   isCellMovable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
 
@@ -8464,7 +8430,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link cellsMovable}.
    */
-  // isCellsMovable(): boolean;
   isCellsMovable(): boolean {
     return this.cellsMovable;
   }
@@ -8475,7 +8440,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if the graph should allow moving of cells.
    */
-  // setCellsMovable(value: boolean): void;
   setCellsMovable(value: boolean): void {
     this.cellsMovable = value;
   }
@@ -8483,7 +8447,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link gridEnabled} as a boolean.
    */
-  // isGridEnabled(): boolean;
   isGridEnabled(): boolean {
     return this.gridEnabled;
   }
@@ -8493,7 +8456,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if the grid should be enabled.
    */
-  // setGridEnabled(value: boolean): void;
   setGridEnabled(value: boolean): void {
     this.gridEnabled = value;
   }
@@ -8501,7 +8463,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link portsEnabled} as a boolean.
    */
-  // isPortsEnabled(): boolean;
   isPortsEnabled(): boolean {
     return this.portsEnabled;
   }
@@ -8511,7 +8472,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if the ports should be enabled.
    */
-  // setPortsEnabled(value: boolean): void;
   setPortsEnabled(value: boolean): void {
     this.portsEnabled = value;
   }
@@ -8519,7 +8479,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link gridSize}.
    */
-  // getGridSize(): number;
   getGridSize(): number {
     return this.gridSize;
   }
@@ -8527,7 +8486,6 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link gridSize}.
    */
-  // setGridSize(value: number): void;
   setGridSize(value: number): void {
     this.gridSize = value;
   }
@@ -8535,7 +8493,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link tolerance}.
    */
-  // getTolerance(): number;
   getTolerance(): number {
     return this.tolerance;
   }
@@ -8543,7 +8500,6 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link tolerance}.
    */
-  // setTolerance(value: number): void;
   setTolerance(value: number): void {
     this.tolerance = value;
   }
@@ -8551,7 +8507,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link vertexLabelsMovable}.
    */
-  // isVertexLabelsMovable(): boolean;
   isVertexLabelsMovable(): boolean {
     return this.vertexLabelsMovable;
   }
@@ -8559,7 +8514,6 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link vertexLabelsMovable}.
    */
-  // setVertexLabelsMovable(value: boolean): void;
   setVertexLabelsMovable(value: boolean): void {
     this.vertexLabelsMovable = value;
   }
@@ -8567,7 +8521,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link edgeLabelsMovable}.
    */
-  // isEdgeLabelsMovable(): boolean;
   isEdgeLabelsMovable(): boolean {
     return this.edgeLabelsMovable;
   }
@@ -8575,7 +8528,6 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link edgeLabelsMovable}.
    */
-  // setEdgeLabelsMovable(value: boolean): void;
   setEdgeLabelsMovable(value: boolean): void {
     this.edgeLabelsMovable = value;
   }
@@ -8583,7 +8535,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link swimlaneNesting} as a boolean.
    */
-  // isSwimlaneNesting(): boolean;
   isSwimlaneNesting(): boolean {
     return this.swimlaneNesting;
   }
@@ -8594,7 +8545,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if swimlanes can be nested.
    */
-  // setSwimlaneNesting(value: boolean): void;
   setSwimlaneNesting(value: boolean): void {
     this.swimlaneNesting = value;
   }
@@ -8602,7 +8552,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link swimlaneSelectionEnabled} as a boolean.
    */
-  // isSwimlaneSelectionEnabled(): boolean;
   isSwimlaneSelectionEnabled(): boolean {
     return this.swimlaneSelectionEnabled;
   }
@@ -8614,7 +8563,6 @@ class mxGraph extends mxEventSource {
    * @param value Boolean indicating if swimlanes content areas
    * should be selected when the mouse is released over them.
    */
-  // setSwimlaneSelectionEnabled(value: boolean): void;
   setSwimlaneSelectionEnabled(value: boolean): void {
     this.swimlaneSelectionEnabled = value;
   }
@@ -8622,8 +8570,7 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link multigraph} as a boolean.
    */
-  // isMultigraph(): boolean;
-  isMultigraph() {
+  isMultigraph(): boolean {
     return this.multigraph;
   }
 
@@ -8634,7 +8581,6 @@ class mxGraph extends mxEventSource {
    * @param value Boolean indicating if the graph allows multiple connections
    * between the same pair of vertices.
    */
-  // setMultigraph(value: boolean): void;
   setMultigraph(value: boolean): void {
     this.multigraph = value;
   }
@@ -8642,7 +8588,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link allowLoops} as a boolean.
    */
-  // isAllowLoops(): boolean;
   isAllowLoops(): boolean {
     return this.allowLoops;
   }
@@ -8653,7 +8598,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if dangling edges are allowed.
    */
-  // setAllowDanglingEdges(value: boolean): void;
   setAllowDanglingEdges(value: boolean): void {
     this.allowDanglingEdges = value;
   }
@@ -8661,7 +8605,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link allowDanglingEdges} as a boolean.
    */
-  // isAllowDanglingEdges(): boolean;
   isAllowDanglingEdges(): boolean {
     return this.allowDanglingEdges;
   }
@@ -8671,7 +8614,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if edges should be connectable.
    */
-  // setConnectableEdges(value: boolean): void;
   setConnectableEdges(value: boolean): void {
     this.connectableEdges = value;
   }
@@ -8679,7 +8621,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link connectableEdges} as a boolean.
    */
-  // isConnectableEdges(): boolean;
   isConnectableEdges(): boolean {
     return this.connectableEdges;
   }
@@ -8691,7 +8632,6 @@ class mxGraph extends mxEventSource {
    * @param value Boolean indicating if cloned invalid edges should be
    * inserted into the graph or ignored.
    */
-  // setCloneInvalidEdges(value: boolean): void;
   setCloneInvalidEdges(value: boolean): void {
     this.cloneInvalidEdges = value;
   }
@@ -8699,7 +8639,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link cloneInvalidEdges} as a boolean.
    */
-  // isCloneInvalidEdges(): boolean;
   isCloneInvalidEdges(): boolean {
     return this.cloneInvalidEdges;
   }
@@ -8709,15 +8648,13 @@ class mxGraph extends mxEventSource {
    *
    * @param value Boolean indicating if loops are allowed.
    */
-  // setAllowLoops(value: boolean): void;
-  setAllowLoops(value: boolean) {
+  setAllowLoops(value: boolean): void {
     this.allowLoops = value;
   }
 
   /**
    * Returns {@link disconnectOnMove} as a boolean.
    */
-  // isDisconnectOnMove(): boolean;
   isDisconnectOnMove(): boolean {
     return this.disconnectOnMove;
   }
@@ -8729,7 +8666,6 @@ class mxGraph extends mxEventSource {
    * @param value Boolean indicating if edges should be disconnected
    * when moved.
    */
-  // setDisconnectOnMove(value: boolean): void;
   setDisconnectOnMove(value: boolean): void {
     this.disconnectOnMove = value;
   }
@@ -8737,7 +8673,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link dropEnabled} as a boolean.
    */
-  // isDropEnabled(): boolean;
   isDropEnabled(): boolean {
     return this.dropEnabled;
   }
@@ -8749,7 +8684,6 @@ class mxGraph extends mxEventSource {
    * @param dropEnabled Boolean indicating if the graph should allow dropping
    * of cells into other cells.
    */
-  // setDropEnabled(value: boolean): void;
   setDropEnabled(value: boolean): void {
     this.dropEnabled = value;
   }
@@ -8757,7 +8691,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link splitEnabled} as a boolean.
    */
-  // isSplitEnabled(): boolean;
   isSplitEnabled(): boolean {
     return this.splitEnabled;
   }
@@ -8769,7 +8702,6 @@ class mxGraph extends mxEventSource {
    * @param dropEnabled Boolean indicating if the graph should allow dropping
    * of cells into other cells.
    */
-  // setSplitEnabled(value: boolean): void;
   setSplitEnabled(value: boolean): void {
     this.splitEnabled = value;
   }
@@ -8821,7 +8753,6 @@ class mxGraph extends mxEventSource {
    * @param cell {@link mxCell} whose terminal point should be moved.
    * @param source Boolean indicating if the source or target terminal should be moved.
    */
-  // isTerminalPointMovable(cell: mxCell, source?: boolean): boolean;
   isTerminalPointMovable(cell: mxCell, source: boolean): boolean {
     return true;
   }
@@ -8833,7 +8764,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose bendable state should be returned.
    */
-  // isCellBendable(cell: mxCell): boolean;
   isCellBendable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
 
@@ -8847,7 +8777,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link cellsBenadable}.
    */
-  // isCellsBendable(): boolean;
   isCellsBendable(): boolean {
     return this.cellsBendable;
   }
@@ -8859,8 +8788,7 @@ class mxGraph extends mxEventSource {
    * @param value Boolean indicating if the graph should allow bending of
    * edges.
    */
-  // setCellsBendable(value: boolean): void;
-  setCellsBendable(value: boolean) {
+  setCellsBendable(value: boolean): void {
     this.cellsBendable = value;
   }
 
@@ -8871,7 +8799,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose editable state should be returned.
    */
-  // isCellEditable(cell: mxCell): boolean;
   isCellEditable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
 
@@ -8885,7 +8812,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link cellsEditable}.
    */
-  // isCellsEditable(): boolean;
   isCellsEditable(): boolean {
     return this.cellsEditable;
   }
@@ -8897,7 +8823,6 @@ class mxGraph extends mxEventSource {
    * @param value Boolean indicating if the graph should allow in-place
    * editing.
    */
-  // setCellsEditable(value: boolean): void;
   setCellsEditable(value: boolean): void {
     this.cellsEditable = value;
   }
@@ -8912,7 +8837,6 @@ class mxGraph extends mxEventSource {
    * @param source Boolean indicating if the source or target terminal is to be
    * disconnected.
    */
-  // isCellDisconnectable(cell: mxCell, terminal: mxCell, source?: boolean): boolean;
   isCellDisconnectable(
     cell: mxCell,
     terminal: mxCell | null = null,
@@ -8924,7 +8848,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link cellsDisconnectable}.
    */
-  // isCellsDisconnectable(): boolean;
   isCellsDisconnectable(): boolean {
     return this.cellsDisconnectable;
   }
@@ -8932,7 +8855,6 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link cellsDisconnectable}.
    */
-  // setCellsDisconnectable(value: boolean): void;
   setCellsDisconnectable(value: boolean): void {
     this.cellsDisconnectable = value;
   }
@@ -8944,7 +8866,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} that represents a possible source or null.
    */
-  // isValidSource(cell: mxCell): boolean;
   isValidSource(cell: mxCell): boolean {
     return (
       (cell == null && this.allowDanglingEdges) ||
@@ -8960,7 +8881,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} that represents a possible target or null.
    */
-  // isValidTarget(cell: mxCell): boolean;
   isValidTarget(cell: mxCell): boolean {
     return this.isValidSource(cell);
   }
@@ -8975,7 +8895,6 @@ class mxGraph extends mxEventSource {
    * @param source {@link mxCell} that represents the source cell.
    * @param target {@link mxCell} that represents the target cell.
    */
-  // isValidConnection(source: mxCell, target: mxCell): boolean;
   isValidConnection(source: mxCell, target: mxCell): boolean {
     return this.isValidSource(source) && this.isValidTarget(target);
   }
@@ -8986,7 +8905,6 @@ class mxGraph extends mxEventSource {
    *
    * @param connectable Boolean indicating if new connections should be allowed.
    */
-  // setConnectable(connectable: boolean): void;
   setConnectable(connectable: boolean): void {
     (<mxConnectionHandler>this.connectionHandler).setEnabled(connectable);
   }
@@ -8994,7 +8912,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns true if the {@link connectionHandler} is enabled.
    */
-  // isConnectable(): boolean;
   isConnectable(): boolean {
     return (<mxConnectionHandler>this.connectionHandler).isEnabled();
   }
@@ -9005,7 +8922,6 @@ class mxGraph extends mxEventSource {
    *
    * @param enabled Boolean indicating if tooltips should be enabled.
    */
-  // setTooltips(enabled: boolean): void;
   setTooltips(enabled: boolean): void {
     (<mxTooltipHandler>this.tooltipHandler).setEnabled(enabled);
   }
@@ -9016,7 +8932,6 @@ class mxGraph extends mxEventSource {
    *
    * @param enabled Boolean indicating if panning should be enabled.
    */
-  // setPanning(enabled: boolean): void;
   setPanning(enabled: boolean): void {
     (<mxPanningHandler>this.panningHandler).panningEnabled = enabled;
   }
@@ -9028,7 +8943,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} that should be checked.
    */
-  // isEditing(cell?: mxCell): boolean;
   isEditing(cell: mxCell | null = null): boolean {
     if (this.cellEditor != null) {
       const editingCell = this.cellEditor.getEditingCell();
@@ -9045,8 +8959,7 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} that should be resized.
    */
-  // isAutoSizeCell(cell: mxCell): boolean;
-  isAutoSizeCell(cell: mxCell) {
+  isAutoSizeCell(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
 
     return this.isAutoSizeCells() || style.autosize == 1;
@@ -9055,8 +8968,7 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link autoSizeCells}.
    */
-  // isAutoSizeCells(): boolean;
-  isAutoSizeCells() {
+  isAutoSizeCells(): boolean {
     return this.autoSizeCells;
   }
 
@@ -9069,8 +8981,7 @@ class mxGraph extends mxEventSource {
    * @param value Boolean indicating if cells should be resized
    * automatically.
    */
-  // setAutoSizeCells(value: boolean): void;
-  setAutoSizeCells(value: boolean) {
+  setAutoSizeCells(value: boolean): void {
     this.autoSizeCells = value;
   }
 
@@ -9081,7 +8992,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} that has been resized.
    */
-  // isExtendParent(cell: mxCell): boolean;
   isExtendParent(cell: mxCell): boolean {
     return !cell.isEdge() && this.isExtendParents();
   }
@@ -9089,7 +8999,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link extendParents}.
    */
-  // isExtendParents(): boolean;
   isExtendParents(): boolean {
     return this.extendParents;
   }
@@ -9099,15 +9008,13 @@ class mxGraph extends mxEventSource {
    *
    * @param value New boolean value for {@link extendParents}.
    */
-  // setExtendParents(value: boolean): void;
-  setExtendParents(value: boolean) {
+  setExtendParents(value: boolean): void {
     this.extendParents = value;
   }
 
   /**
    * Returns {@link extendParentsOnAdd}.
    */
-  // isExtendParentsOnAdd(cell: mxCell): boolean;
   isExtendParentsOnAdd(cell: mxCell): boolean {
     return this.extendParentsOnAdd;
   }
@@ -9117,15 +9024,13 @@ class mxGraph extends mxEventSource {
    *
    * @param value New boolean value for {@link extendParentsOnAdd}.
    */
-  // setExtendParentsOnAdd(value: boolean): void;
-  setExtendParentsOnAdd(value: boolean) {
+  setExtendParentsOnAdd(value: boolean): void {
     this.extendParentsOnAdd = value;
   }
 
   /**
    * Returns {@link extendParentsOnMove}.
    */
-  // isExtendParentsOnMove(): boolean;
   isExtendParentsOnMove(): boolean {
     return this.extendParentsOnMove;
   }
@@ -9135,8 +9040,7 @@ class mxGraph extends mxEventSource {
    *
    * @param value New boolean value for {@link extendParentsOnAdd}.
    */
-  // setExtendParentsOnMove(value: boolean): void;
-  setExtendParentsOnMove(value: boolean) {
+  setExtendParentsOnMove(value: boolean): void {
     this.extendParentsOnMove = value;
   }
 
@@ -9145,7 +9049,6 @@ class mxGraph extends mxEventSource {
    *
    * @param state {@link mxCellState} that is being resized.
    */
-  // isRecursiveResize(state?: mxCellState): boolean;
   isRecursiveResize(state: mxCellState | null = null): boolean {
     return this.recursiveResize;
   }
@@ -9155,7 +9058,6 @@ class mxGraph extends mxEventSource {
    *
    * @param value New boolean value for {@link recursiveResize}.
    */
-  // setRecursiveResize(value: boolean): void;
   setRecursiveResize(value: boolean): void {
     this.recursiveResize = value;
   }
@@ -9168,7 +9070,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} that should be constrained.
    */
-  // isConstrainChild(cell: mxCell): boolean;
   isConstrainChild(cell: mxCell): boolean {
     return (
       this.isConstrainChildren() &&
@@ -9180,7 +9081,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link constrainChildren}.
    */
-  // isConstrainChildren(): boolean;
   isConstrainChildren(): boolean {
     return this.constrainChildren;
   }
@@ -9188,15 +9088,13 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link constrainChildren}.
    */
-  // setConstrainChildren(value: boolean): void;
-  setConstrainChildren(value: boolean) {
+  setConstrainChildren(value: boolean): void {
     this.constrainChildren = value;
   }
 
   /**
    * Returns {@link constrainRelativeChildren}.
    */
-  // isConstrainRelativeChildren(): boolean;
   isConstrainRelativeChildren(): boolean {
     return this.constrainRelativeChildren;
   }
@@ -9204,15 +9102,13 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link constrainRelativeChildren}.
    */
-  // setConstrainRelativeChildren(value: boolean): void;
-  setConstrainRelativeChildren(value: boolean) {
+  setConstrainRelativeChildren(value: boolean): void {
     this.constrainRelativeChildren = value;
   }
 
   /**
    * Returns {@link allowNegativeCoordinates}.
    */
-  // isAllowNegativeCoordinates(): boolean;
   isAllowNegativeCoordinates(): boolean {
     return this.allowNegativeCoordinates;
   }
@@ -9220,8 +9116,7 @@ class mxGraph extends mxEventSource {
   /**
    * Sets {@link allowNegativeCoordinates}.
    */
-  // setAllowNegativeCoordinates(value: boolean): void;
-  setAllowNegativeCoordinates(value: boolean) {
+  setAllowNegativeCoordinates(value: boolean): void {
     this.allowNegativeCoordinates = value;
   }
 
@@ -9235,7 +9130,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} for which the overlap ratio should be returned.
    */
-  // getOverlap(cell: mxCell): number;
   getOverlap(cell: mxCell): number {
     return this.isAllowOverlapParent(cell) ? this.defaultOverlap : 0;
   }
@@ -9246,7 +9140,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} that represents the child to be checked.
    */
-  // isAllowOverlapParent(cell: mxCell): boolean;
   isAllowOverlapParent(cell: mxCell): boolean {
     return false;
   }
@@ -9254,7 +9147,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns the cells which are movable in the given array of cells.
    */
-  // getFoldableCells(cells: mxCellArray, collapse: boolean): mxCellArray;
   getFoldableCells(
     cells: mxCellArray,
     collapse: boolean = false
@@ -9412,7 +9304,6 @@ class mxGraph extends mxEventSource {
    * this function should be used as the parent for new cells (aka default
    * layer).
    */
-  // getDefaultParent(): mxCell;
   getDefaultParent(): mxCell {
     let parent = this.getCurrentRoot();
 
@@ -9431,7 +9322,6 @@ class mxGraph extends mxEventSource {
    * Sets the {@link defaultParent} to the given cell. Set this to null to return
    * the first child of the root in getDefaultParent.
    */
-  // setDefaultParent(cell: mxCell): void;
   setDefaultParent(cell: mxCell | null): void {
     this.defaultParent = cell;
   }
@@ -10107,7 +9997,6 @@ class mxGraph extends mxEventSource {
    * should be counted for a tree root. If false then outgoing edges will be
    * counted. Default is `false`.
    */
-  // findTreeRoots(parent: mxCell, isolate?: boolean, invert?: boolean): mxCellArray;
   findTreeRoots(
     parent: mxCell,
     isolate: boolean = false,
@@ -10116,14 +10005,10 @@ class mxGraph extends mxEventSource {
     const roots: mxCellArray = new mxCellArray();
 
     if (parent != null) {
-      const model = this.getModel();
-      const childCount = parent.getChildCount();
       let best = null;
       let maxDiff = 0;
 
-      for (let i = 0; i < childCount; i += 1) {
-        const cell = <mxCell>parent.getChildAt(i);
-
+      for (const cell of parent.getChildren()) {
         if (cell.isVertex() && cell.isVisible()) {
           const conns = this.getConnections(cell, isolate ? parent : null);
           let fanOut = 0;
@@ -10275,7 +10160,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns the array of selected {@link mxCell}.
    */
-  // getSelectionCells(): mxCellArray;
   getSelectionCells(): mxCellArray {
     return this.getSelectionModel().cells.slice();
   }
@@ -10330,7 +10214,6 @@ class mxGraph extends mxEventSource {
    *
    * @param cells Array of {@link mxCell} to be removed from the selection.
    */
-  // removeSelectionCells(cells: mxCellArray): void;
   removeSelectionCells(cells: mxCellArray): void {
     this.getSelectionModel().removeCells(cells);
   }
