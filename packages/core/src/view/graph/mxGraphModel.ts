@@ -23,6 +23,8 @@ import mxVisibleChange from '../../atomic_changes/mxVisibleChange';
 import mxGeometry from "../../util/datatypes/mxGeometry";
 import mxCellArray from "../cell/mxCellArray";
 
+import type { CellMap, FilterFunction, UndoableChange } from '../../types';
+
 /**
  * Extends {@link mxEventSource} to implement a graph model. The graph model acts as
  * a wrapper around the cells which are in charge of storing the actual graph
@@ -338,7 +340,7 @@ class mxGraphModel extends mxEventSource {
   }
 
   filterCells(cells: mxCellArray,
-              filter: Function): mxCellArray | null {
+              filter: FilterFunction): mxCellArray | null {
     return new mxCellArray(...cells).filterCells(filter);
   }
 

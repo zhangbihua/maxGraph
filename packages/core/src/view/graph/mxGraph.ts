@@ -205,8 +205,8 @@ class mxGraph extends mxEventSource {
   lastMouseY: number | null = null;
   isMouseTrigger: boolean | null = null;
   ignoreMouseEvents: boolean | null = null;
-  mouseMoveRedirect: Function | null = null;
-  mouseUpRedirect: Function | null = null;
+  mouseMoveRedirect: EventListener | null = null;
+  mouseUpRedirect: EventListener | null = null;
   lastEvent: any; // FIXME: Check if this can be more specific - DOM events or mxEventObjects!
   horizontalPageBreaks: any[] | null = null;
   verticalPageBreaks: any[] | null = null;
