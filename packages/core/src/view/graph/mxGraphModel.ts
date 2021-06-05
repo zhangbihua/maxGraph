@@ -8,7 +8,7 @@ import mxEventSource from '../../util/event/mxEventSource';
 import mxUndoableEdit from '../../util/undo/mxUndoableEdit';
 import mxCellPath from '../cell/mxCellPath';
 import mxCell from '../cell/mxCell';
-import mxUtils from '../../util/mxUtils';
+import mxUtils, {isNumeric} from '../../util/mxUtils';
 import mxEventObject from '../../util/event/mxEventObject';
 import mxEvent from '../../util/event/mxEvent';
 import mxPoint from '../../util/datatypes/mxPoint';
@@ -500,7 +500,7 @@ class mxGraphModel extends mxEventSource {
       }
 
       // Makes sure IDs of deleted cells are not reused
-      if (mxUtils.isNumeric(cell.getId())) {
+      if (isNumeric(String(cell.getId()))) {
         this.nextId = Math.max(this.nextId, parseInt(<string>cell.getId()));
       }
 
@@ -680,10 +680,9 @@ class mxGraphModel extends mxEventSource {
    * @param index  Optional integer that defines the index of the child
    * in the parent's child array.
    */
-  // parentForCellChanged(cell: mxCell, parent: mxCell, index: number): mxCell;
   parentForCellChanged(cell: mxCell,
                        parent: mxCell | null,
-                       index: number) {
+                       index: number): mxCell {
 
     const previous = <mxCell>cell.getParent();
 
@@ -884,7 +883,7 @@ class mxGraphModel extends mxEventSource {
    * <mxCell.setGeometry> and return the previous {@link mxGeometry}.
    */
   geometryForCellChanged(cell: mxCell,
-                         geometry: mxGeometry): mxGeometry | null {
+                         geometry: mxGeometry | null): mxGeometry | null {
 
     const previous = cell.getGeometry();
     cell.setGeometry(geometry);

@@ -25,7 +25,11 @@ import mxCellRenderer from '../cell/mxCellRenderer';
 import mxCellEditor from '../cell/mxCellEditor';
 import mxCellOverlay from '../cell/mxCellOverlay';
 import mxPoint from '../../util/datatypes/mxPoint';
-import mxUtils from '../../util/mxUtils';
+import mxUtils, {contains, convertPoint, findNearestSegment,
+  getBoundingBox,
+  getRotatedPoint,
+  getSizeForString,
+  getValue, hasScrollbars, intersects, ptSegDistSq, removeDuplicates, setStyle, sortCells, toRadians} from '../../util/mxUtils';
 import mxConnectionConstraint from '../connection/mxConnectionConstraint';
 import mxDictionary from '../../util/datatypes/mxDictionary';
 import mxVertexHandler from '../../handler/mxVertexHandler';
@@ -172,11 +176,11 @@ class mxGraph extends mxEventSource {
     this.sizeDidChange();
 
     // Hides tooltips and resets tooltip timer if mouse leaves container
-    mxEvent.addListener(container, 'mouseleave', (evt: MouseEvent) => {
+    mxEvent.addListener(container, 'mouseleave', (evt: Event) => {
       if (
         this.tooltipHandler != null &&
         this.tooltipHandler.div != null &&
-        this.tooltipHandler.div != evt.relatedTarget
+        this.tooltipHandler.div != (<MouseEvent>evt).relatedTarget
       ) {
         this.tooltipHandler.hide();
       }
@@ -184,7 +188,9 @@ class mxGraph extends mxEventSource {
   }
 
   // TODO: Document me!
-  container: HTMLElement | null = null;
+
+  // @ts-ignore
+  container: HTMLElement;
   destroyed: boolean = false;
   tooltipHandler: mxTooltipHandler | null = null;
   selectionCellsHandler: mxSelectionCellsHandler | null = null;
@@ -249,7 +255,8 @@ class mxGraph extends mxEventSource {
    * dec.decode(root, graph.stylesheet);
    * ```
    */
-  stylesheet: mxStylesheet | null = null;
+  // @ts-ignore
+  stylesheet: mxStylesheet;
 
   /**
    * Holds the {@link mxGraphSelectionModel} that models the current selection.
@@ -259,7 +266,8 @@ class mxGraph extends mxEventSource {
   /**
    * Holds the {@link mxCellEditor} that is used as the in-place editing.
    */
-  cellEditor: mxCellEditor | null = null;
+  // @ts-ignore
+  cellEditor: mxCellEditor;
 
   /**
    * Holds the {@link mxCellRenderer} for rendering the cells in the graph.
@@ -1212,8 +1220,8 @@ class mxGraph extends mxEventSource {
    * @param changes Array that contains the individual changes.
    */
   graphModelChanged(changes: any[]) {
-    for (let i = 0; i < changes.length; i += 1) {
-      this.processChange(changes[i]);
+    for (const change of changes) {
+      this.processChange(change);
     }
 
     this.updateSelection();
@@ -1228,15 +1236,15 @@ class mxGraph extends mxEventSource {
     const cells = this.getSelectionCells();
     const removed = new mxCellArray();
 
-    for (let i = 0; i < cells.length; i += 1) {
-      if (!this.getModel().contains(cells[i]) || !cells[i].isVisible()) {
-        removed.push(cells[i]);
+    for (const cell of cells) {
+      if (!this.getModel().contains(cell) || !cell.isVisible()) {
+        removed.push(cell);
       } else {
-        let par = cells[i].getParent();
+        let par = cell.getParent();
 
         while (par != null && par !== this.getView().currentRoot) {
           if (par.isCollapsed() || !par.isVisible()) {
-            removed.push(cells[i]);
+            removed.push(cell);
             break;
           }
 
@@ -1254,7 +1262,6 @@ class mxGraph extends mxEventSource {
    *
    * @param {(mxRootChange|mxChildChange|mxTerminalChange|mxGeometryChange|mxValueChange|mxStyleChange)} change - Object that represents the change on the model.
    */
-  // processChange(change: any): void;
   processChange(change: any): void {
     // Resets the view settings, removes all cells and clears
     // the selection if the root changes.
@@ -1348,12 +1355,9 @@ class mxGraph extends mxEventSource {
    * @param cell {@link mxCell} that was removed from the model.
    */
   removeStateForCell(cell: mxCell): void {
-    const childCount = cell.getChildCount();
-
-    for (let i = 0; i < childCount; i += 1) {
-      this.removeStateForCell(<mxCell>cell.getChildAt(i));
+    for (const child of cell.getChildren()) {
+      this.removeStateForCell(child);
     }
-
     this.getView().invalidate(cell, false, true);
     this.getView().removeState(cell);
   }
@@ -1561,8 +1565,7 @@ class mxGraph extends mxEventSource {
    *
    * @param evt Optional mouse event that triggered the editing.
    */
-  // startEditing(evt?: MouseEvent): void;
-  startEditing(evt: MouseEvent) {
+  startEditing(evt: MouseEvent): void {
     this.startEditingAtCell(null, evt);
   }
 
@@ -1574,7 +1577,6 @@ class mxGraph extends mxEventSource {
    * @param cell {@link mxCell} to start the in-place editor for.
    * @param evt Optional mouse event that triggered the editing.
    */
-  // startEditingAtCell(cell?: mxCell, evt?: MouseEvent): void;
   startEditingAtCell(cell: mxCell | null = null, evt: MouseEvent): void {
     if (evt == null || !isMultiTouchEvent(evt)) {
       if (cell == null) {
@@ -1870,8 +1872,7 @@ class mxGraph extends mxEventSource {
    * @param evt Mouseevent that represents the doubleclick.
    * @param cell Optional {@link mxCell} under the mousepointer.
    */
-  // dblClick(evt: MouseEvent, cell?: mxCell): void;
-  dblClick(evt: MouseEvent, cell: mxCell | null = null): void {
+  dblClick(evt: MouseEvent, cell?: mxCell): void {
     const mxe = new mxEventObject(
       mxEvent.DOUBLE_CLICK,
       'event',
@@ -1901,7 +1902,6 @@ class mxGraph extends mxEventSource {
    * @param me {@link mxMouseEvent} that represents the touch event.
    * @param state Optional {@link mxCellState} that is associated with the event.
    */
-  // tapAndHold(me: mxMouseEvent): void;
   tapAndHold(me: mxMouseEvent): void {
     const evt = me.getEvent();
     const mxe = new mxEventObject(
@@ -1961,7 +1961,7 @@ class mxGraph extends mxEventSource {
   ): void {
     if (
       !this.timerAutoScroll &&
-      (this.ignoreScrollbars || mxUtils.hasScrollbars(this.container))
+      (this.ignoreScrollbars || hasScrollbars(this.container))
     ) {
       const c = <HTMLElement>this.container;
 
@@ -2209,7 +2209,7 @@ class mxGraph extends mxEventSource {
 
         if (enabled) {
           if (!keepOrigin) {
-            if (!mxUtils.hasScrollbars(this.container)) {
+            if (!hasScrollbars(this.container)) {
               const x0 =
                 bounds.x != null
                   ? Math.floor(
@@ -2598,7 +2598,7 @@ class mxGraph extends mxEventSource {
 
     if (cells != null && cells.length > 0) {
       const style = this.getCurrentCellStyle(<mxCell>cells[0]);
-      value = mxUtils.getValue(style, key, defaultValue) ? 0 : 1;
+      value = getValue(style, key, defaultValue) ? 0 : 1;
       this.setCellStyles(key, value, cells);
     }
     return value;
@@ -2883,7 +2883,7 @@ class mxGraph extends mxEventSource {
     cells: mxCellArray = this.getSelectionCells()
   ): mxCellArray {
     if (cells == null) {
-      cells = mxUtils.sortCells(this.getSelectionCells(), true);
+      cells = sortCells(this.getSelectionCells(), true);
     }
 
     this.getModel().beginUpdate();
@@ -2905,31 +2905,28 @@ class mxGraph extends mxEventSource {
    * @param cells Array of {@link mxCell} whose order should be changed.
    * @param back Boolean that specifies if the cells should be moved to back.
    */
-  // cellsOrdered(cells: mxCellArray, back?: boolean): void;
   cellsOrdered(cells: mxCellArray, back: boolean = false) {
-    if (cells != null) {
-      this.getModel().beginUpdate();
-      try {
-        for (let i = 0; i < cells.length; i += 1) {
-          const parent = cells[i].getParent();
+    this.getModel().beginUpdate();
+    try {
+      for (let i = 0; i < cells.length; i += 1) {
+        const parent = cells[i].getParent();
 
-          if (back) {
-            this.getModel().add(parent, cells[i], i);
-          } else {
-            this.getModel().add(
-              parent,
-              cells[i],
-              parent ? parent.getChildCount() - 1 : 0
-            );
-          }
+        if (back) {
+          this.getModel().add(parent, cells[i], i);
+        } else {
+          this.getModel().add(
+            parent,
+            cells[i],
+            parent ? parent.getChildCount() - 1 : 0
+          );
         }
-
-        this.fireEvent(
-          new mxEventObject(mxEvent.CELLS_ORDERED, 'back', back, 'cells', cells)
-        );
-      } finally {
-        this.getModel().endUpdate();
       }
+
+      this.fireEvent(
+        new mxEventObject(mxEvent.CELLS_ORDERED, 'back', back, 'cells', cells)
+      );
+    } finally {
+      this.getModel().endUpdate();
     }
   }
 
@@ -2955,7 +2952,7 @@ class mxGraph extends mxEventSource {
   groupCells(
     group: mxCell,
     border: number = 0,
-    cells: mxCellArray = mxUtils.sortCells(this.getSelectionCells(), true)
+    cells: mxCellArray = sortCells(this.getSelectionCells(), true)
   ) {
     cells = this.getCellsForGroup(cells);
 
@@ -4151,7 +4148,7 @@ class mxGraph extends mxEventSource {
         if (geo != null && geo.points != null && state != null) {
           const t = this.getView().translate;
           const s = this.getView().scale;
-          const idx = mxUtils.findNearestSegment(
+          const idx = findNearestSegment(
             state,
             (dx + t.x) * s,
             (dy + t.y) * s
@@ -4438,7 +4435,7 @@ class mxGraph extends mxEventSource {
           if (tmp != null) {
             bounds = <mxGeometry>tmp;
 
-            const startSize = mxUtils.getValue(style, 'startSize');
+            const startSize = getValue(style, 'startSize');
 
             if (startSize > 0) {
               bounds.height = Math.max(bounds.height, startSize);
@@ -4458,7 +4455,7 @@ class mxGraph extends mxEventSource {
         geo.alternateBounds.x = geo.x;
         geo.alternateBounds.y = geo.y;
 
-        const alpha = mxUtils.toRadians(style.rotation || 0);
+        const alpha = toRadians(style.rotation || 0);
 
         if (alpha !== 0) {
           const dx = geo.alternateBounds.getCenterX() - geo.getCenterX();
@@ -4483,7 +4480,7 @@ class mxGraph extends mxEventSource {
    */
   addAllEdges(cells: mxCellArray): mxCellArray {
     const allCells = cells.slice();
-    return new mxCellArray(...mxUtils.removeDuplicates(allCells.concat(this.getAllEdges(cells))));
+    return new mxCellArray(...removeDuplicates(allCells.concat(this.getAllEdges(cells))));
   }
 
   /**
@@ -4580,7 +4577,7 @@ class mxGraph extends mxEventSource {
 
               geo.width = size.width;
             } else {
-              cellStyle = mxUtils.setStyle(
+              cellStyle = setStyle(
                 cellStyle,
                 'startSize',
                 size.width + 8
@@ -4723,7 +4720,7 @@ class mxGraph extends mxEventSource {
 
           value = value.replace(/\n/g, '<br>');
 
-          const size = mxUtils.getSizeForString(
+          const size = getSizeForString(
             value,
             fontSize,
             style.fontFamily,
@@ -4733,7 +4730,7 @@ class mxGraph extends mxEventSource {
           let width = size.width + dx;
           let height = size.height + dy;
 
-          if (!mxUtils.getValue(style, 'horizontal', true)) {
+          if (!getValue(style, 'horizontal', true)) {
             const tmp = height;
             height = width;
             width = tmp;
@@ -5346,14 +5343,14 @@ class mxGraph extends mxEventSource {
 
         if (parent.isVertex()) {
           const style = this.getCurrentCellStyle(parent);
-          angle = mxUtils.getValue(style, 'rotation', 0);
+          angle = getValue(style, 'rotation', 0);
         }
 
         if (angle !== 0) {
-          const rad = mxUtils.toRadians(-angle);
+          const rad = toRadians(-angle);
           const cos = Math.cos(rad);
           const sin = Math.sin(rad);
-          const pt = mxUtils.getRotatedPoint(
+          const pt = getRotatedPoint(
             new mxPoint(dx, dy),
             cos,
             sin,
@@ -5395,13 +5392,13 @@ class mxGraph extends mxEventSource {
           if (this.isSwimlane(parent)) {
             const size = this.getStartSize(parent);
             const style = this.getCurrentCellStyle(parent);
-            const dir = mxUtils.getValue(
+            const dir = getValue(
               style,
               'direction',
               DIRECTION_EAST
             );
-            const flipH = mxUtils.getValue(style, 'flipH', 0) == 1;
-            const flipV = mxUtils.getValue(style, 'flipV', 0) == 1;
+            const flipH = getValue(style, 'flipH', 0) == 1;
+            const flipV = getValue(style, 'flipV', 0) == 1;
 
             if (dir === DIRECTION_SOUTH || dir === DIRECTION_NORTH) {
               const tmp = size.width;
@@ -5660,14 +5657,14 @@ class mxGraph extends mxEventSource {
         bounds.height = tmp;
       }
 
-      const alpha = mxUtils.toRadians(terminalState.shape.getShapeRotation());
+      const alpha = toRadians(terminalState.shape.getShapeRotation());
 
       if (alpha !== 0) {
         const cos = Math.cos(-alpha);
         const sin = Math.sin(-alpha);
 
         const ct = new mxPoint(bounds.getCenterX(), bounds.getCenterY());
-        point = mxUtils.getRotatedPoint(point, cos, sin, ct);
+        point = getRotatedPoint(point, cos, sin, ct);
       }
 
       let sx = 1;
@@ -5686,10 +5683,10 @@ class mxGraph extends mxEventSource {
           terminalState.shape.stencil != null
         ) {
           flipH =
-            mxUtils.getValue(terminalState.style, 'stencilFlipH', 0) == 1 ||
+            getValue(terminalState.style, 'stencilFlipH', 0) == 1 ||
             flipH;
           flipV =
-            mxUtils.getValue(terminalState.style, 'stencilFlipV', 0) == 1 ||
+            getValue(terminalState.style, 'stencilFlipV', 0) == 1 ||
             flipV;
         }
 
@@ -5782,7 +5779,7 @@ class mxGraph extends mxEventSource {
     let dy = 0;
 
     if (point != null) {
-      perimeter = mxUtils.getValue(
+      perimeter = getValue(
         edge.style,
         source ? 'exitPerimeter' : 'entryPerimeter',
         true
@@ -5903,7 +5900,7 @@ class mxGraph extends mxEventSource {
       // Bounds need to be rotated by 90 degrees for further computation
       if (
         direction != null &&
-        mxUtils.getValue(vertex.style, 'anchorPointDirection', 1) == 1
+        getValue(vertex.style, 'anchorPointDirection', 1) == 1
       ) {
         if (direction === DIRECTION_NORTH) {
           r1 += 270;
@@ -5946,7 +5943,7 @@ class mxGraph extends mxEventSource {
             sin = -1;
           }
 
-          point = mxUtils.getRotatedPoint(point, cos, sin, cx);
+          point = getRotatedPoint(point, cos, sin, cx);
         }
 
         point = this.getView().getPerimeterPoint(vertex, point, false);
@@ -5983,11 +5980,11 @@ class mxGraph extends mxEventSource {
 
       // Generic rotation after projection on perimeter
       if (r2 !== 0 && point != null) {
-        const rad = mxUtils.toRadians(r2);
+        const rad = toRadians(r2);
         const cos = Math.cos(rad);
         const sin = Math.sin(rad);
 
-        point = mxUtils.getRotatedPoint(point, cos, sin, cx);
+        point = getRotatedPoint(point, cos, sin, cx);
       }
     }
 
@@ -6381,7 +6378,6 @@ class mxGraph extends mxEventSource {
    * Returns the bounds of the visible graph. Shortcut to
    * {@link mxGraphView.getGraphBounds}. See also: {@link getBoundingBoxFromGeometry}.
    */
-  // getGraphBounds(): mxRectangle;
   getGraphBounds(): mxRectangle {
     return this.getView().getGraphBounds();
   }
@@ -6412,14 +6408,8 @@ class mxGraph extends mxEventSource {
 
     // Recursively includes the bounds of the children
     if (includeDescendants) {
-      const childCount = cell.getChildCount();
-
-      for (let i = 0; i < childCount; i += 1) {
-        const tmp = this.getCellBounds(
-          <mxCell>cell.getChildAt(i),
-          includeEdges,
-          true
-        );
+      for (const child of cell.getChildren()) {
+        const tmp = this.getCellBounds(child, includeEdges, true);
 
         if (result != null) {
           result.add(tmp);
@@ -6555,10 +6545,10 @@ class mxGraph extends mxEventSource {
               const style = this.getCurrentCellStyle(cell);
 
               if (bbox != null) {
-                const angle = mxUtils.getValue(style, 'rotation', 0);
+                const angle = getValue(style, 'rotation', 0);
 
                 if (angle !== 0) {
-                  bbox = mxUtils.getBoundingBox(bbox, angle);
+                  bbox = getBoundingBox(bbox, angle);
                 }
               }
             }
@@ -6681,7 +6671,7 @@ class mxGraph extends mxEventSource {
   panGraph(dx: number, dy: number): void {
     const container = <HTMLElement>this.container;
 
-    if (this.useScrollbarsForPanning && mxUtils.hasScrollbars(container)) {
+    if (this.useScrollbarsForPanning && hasScrollbars(container)) {
       container.scrollLeft = -dx;
       container.scrollTop = -dy;
     } else {
@@ -6832,7 +6822,7 @@ class mxGraph extends mxEventSource {
   ): void {
 
     const container = <HTMLElement>this.container;
-    const hasScrollbars = mxUtils.hasScrollbars(this.container);
+    const _hasScrollbars = hasScrollbars(this.container);
     const padding = 2 * this.getBorder();
     const cw = container.clientWidth - padding;
     const ch = container.clientHeight - padding;
@@ -6844,7 +6834,7 @@ class mxGraph extends mxEventSource {
     let dx = horizontal ? cw - bounds.width : 0;
     let dy = vertical ? ch - bounds.height : 0;
 
-    if (!hasScrollbars) {
+    if (!_hasScrollbars) {
       this.getView().setTranslate(
         horizontal ? Math.floor(t.x - bounds.x / s + (dx * cx) / s) : t.x,
         vertical ? Math.floor(t.y - bounds.y / s + (dy * cy) / s) : t.y
@@ -6878,7 +6868,6 @@ class mxGraph extends mxEventSource {
    * argument that keeps the graph scrolled to the center. If the center argument
    * is omitted, then {@link centerZoom} will be used as its value.
    */
-  // zoom(factor: number, center: boolean): void;
   zoom(factor: number, center: boolean = this.centerZoom): void {
     const scale = Math.round(this.getView().scale * factor * 100) / 100;
     const state = this.getView().getState(this.getSelectionCell());
@@ -6903,9 +6892,9 @@ class mxGraph extends mxEventSource {
         this.getView().setScale(scale);
       }
     } else {
-      const hasScrollbars = mxUtils.hasScrollbars(this.container);
+      const _hasScrollbars = hasScrollbars(this.container);
 
-      if (center && !hasScrollbars) {
+      if (center && !_hasScrollbars) {
         let dx = container.offsetWidth;
         let dy = container.offsetHeight;
 
@@ -6933,7 +6922,7 @@ class mxGraph extends mxEventSource {
 
         this.getView().setScale(scale);
 
-        if (hasScrollbars) {
+        if (_hasScrollbars) {
           let dx = 0;
           let dy = 0;
 
@@ -6963,7 +6952,6 @@ class mxGraph extends mxEventSource {
    * @param rect The un-scaled and un-translated rectangluar region that should be just visible
    * after the operation
    */
-  // zoomToRect(rect: mxRectangle): void;
   zoomToRect(rect: mxRectangle): void {
     const container = <HTMLElement>this.container;
     const scaleX = container.clientWidth / rect.width;
@@ -7014,7 +7002,7 @@ class mxGraph extends mxEventSource {
     const scale = container.clientWidth / rect.width;
     const newScale = this.getView().scale * scale;
 
-    if (!mxUtils.hasScrollbars(this.container)) {
+    if (!hasScrollbars(this.container)) {
       this.getView().scaleAndTranslate(
         newScale,
         this.getView().translate.x - rect.x / this.getView().scale,
@@ -7100,7 +7088,7 @@ class mxGraph extends mxEventSource {
       const widthLimit = Math.min(w, rect.width);
       const heightLimit = Math.min(h, rect.height);
 
-      if (mxUtils.hasScrollbars(container)) {
+      if (hasScrollbars(container)) {
         rect.x += this.getView().translate.x;
         rect.y += this.getView().translate.y;
         let dx = container.scrollLeft - rect.x;
@@ -7666,14 +7654,13 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose label should be returned.
    */
-  // getLabel(cell: mxCell): string | Node;
-  getLabel(cell: mxCell): string | null {
+  getLabel(cell: mxCell): string | Node | null {
     let result: string | null = '';
 
     if (this.labelsVisible && cell != null) {
       const style = this.getCurrentCellStyle(cell);
 
-      if (!mxUtils.getValue(style, 'noLabel', false)) {
+      if (!getValue(style, 'noLabel', false)) {
         result = this.convertValueToString(cell);
       }
     }
@@ -7905,10 +7892,10 @@ class mxGraph extends mxEventSource {
     const result = new mxRectangle();
     const style = this.getCurrentCellStyle(swimlane, ignoreState);
     const size = parseInt(
-      mxUtils.getValue(style, 'startSize', DEFAULT_STARTSIZE)
+      getValue(style, 'startSize', DEFAULT_STARTSIZE)
     );
 
-    if (mxUtils.getValue(style, 'horizontal', true)) {
+    if (getValue(style, 'horizontal', true)) {
       result.height = size;
     } else {
       result.width = size;
@@ -7920,10 +7907,10 @@ class mxGraph extends mxEventSource {
    * Returns the direction for the given swimlane style.
    */
   getSwimlaneDirection(style: any): string {
-    const dir = mxUtils.getValue(style, 'direction', DIRECTION_EAST);
-    const flipH = mxUtils.getValue(style, 'flipH', 0) == 1;
-    const flipV = mxUtils.getValue(style, 'flipV', 0) == 1;
-    const h = mxUtils.getValue(style, 'horizontal', true);
+    const dir = getValue(style, 'direction', DIRECTION_EAST);
+    const flipH = getValue(style, 'flipH', 0) == 1;
+    const flipV = getValue(style, 'flipV', 0) == 1;
+    const h = getValue(style, 'horizontal', true);
     let n = h ? 0 : 3;
 
     if (dir === DIRECTION_NORTH) {
@@ -7966,9 +7953,7 @@ class mxGraph extends mxEventSource {
 
     if (this.isSwimlane(swimlane, ignoreState)) {
       const style = this.getCurrentCellStyle(swimlane, ignoreState);
-      const size = parseInt(
-        mxUtils.getValue(style, 'startSize', DEFAULT_STARTSIZE)
-      );
+      const size = parseInt(getValue(style, 'startSize', DEFAULT_STARTSIZE));
       const dir = this.getSwimlaneDirection(style);
 
       if (dir === DIRECTION_NORTH) {
@@ -8005,8 +7990,8 @@ class mxGraph extends mxEventSource {
   isTransparentState(state: mxCellState): boolean {
     let result = false;
     if (state != null) {
-      const stroke = mxUtils.getValue(state.style, 'strokeColor', NONE);
-      const fill = mxUtils.getValue(state.style, 'fillColor', NONE);
+      const stroke = getValue(state.style, 'strokeColor', NONE);
+      const fill = getValue(state.style, 'fillColor', NONE);
       result = stroke === NONE && fill === NONE && this.getImage(state) == null;
     }
     return result;
@@ -8797,14 +8782,13 @@ class mxGraph extends mxEventSource {
    *
    * @param cell {@link mxCell} whose resizable state should be returned.
    */
-  // isCellResizable(cell: mxCell): boolean;
   isCellResizable(cell: mxCell): boolean {
     const style = this.getCurrentCellStyle(cell);
 
     const r =
       this.isCellsResizable() &&
       !this.isCellLocked(cell) &&
-      mxUtils.getValue(style, 'resizeable', '1') != '0';
+      getValue(style, 'resizeable', '1') != '0';
     // alert(r);
     return r;
   }
@@ -8812,7 +8796,6 @@ class mxGraph extends mxEventSource {
   /**
    * Returns {@link cellsResizable}.
    */
-  // isCellsResizable(): boolean;
   isCellsResizable(): boolean {
     return this.cellsResizable;
   }
@@ -8824,7 +8807,6 @@ class mxGraph extends mxEventSource {
    * @param value Boolean indicating if the graph should allow resizing of
    * cells.
    */
-  // setCellsResizable(value: boolean): void;
   setCellsResizable(value: boolean): void {
     this.cellsResizable = value;
   }
@@ -9374,7 +9356,7 @@ class mxGraph extends mxEventSource {
       }
     }
 
-    const pt = mxUtils.convertPoint(
+    const pt = convertPoint(
       this.container,
       getClientX(evt),
       getClientY(evt)
@@ -9598,7 +9580,7 @@ class mxGraph extends mxEventSource {
 
         for (let i = 1; i < pts.length; i += 1) {
           const next = pts[i];
-          const dist = mxUtils.ptSegDistSq(pt.x, pt.y, next.x, next.y, x, y);
+          const dist = ptSegDistSq(pt.x, pt.y, next.x, next.y, x, y);
 
           if (dist <= t2) {
             return true;
@@ -9607,20 +9589,20 @@ class mxGraph extends mxEventSource {
           pt = next;
         }
       } else {
-        const alpha = mxUtils.toRadians(
-          mxUtils.getValue(state.style, 'rotation') || 0
+        const alpha = toRadians(
+          getValue(state.style, 'rotation') || 0
         );
 
         if (alpha != 0) {
           const cos = Math.cos(-alpha);
           const sin = Math.sin(-alpha);
           const cx = new mxPoint(state.getCenterX(), state.getCenterY());
-          const pt = mxUtils.getRotatedPoint(new mxPoint(x, y), cos, sin, cx);
+          const pt = getRotatedPoint(new mxPoint(x, y), cos, sin, cx);
           x = pt.x;
           y = pt.y;
         }
 
-        if (mxUtils.contains(state, x, y)) {
+        if (contains(state, x, y)) {
           return true;
         }
       }
@@ -9953,12 +9935,7 @@ class mxGraph extends mxEventSource {
    * offset by half of the {@link gridSize}. Default is `true`.
    */
   getPointForEvent(evt: mxMouseEvent, addOffset: boolean = true): mxPoint {
-    const p = mxUtils.convertPoint(
-      this.container,
-      getClientX(evt),
-      getClientY(evt)
-    );
-
+    const p = convertPoint(this.container, getClientX(evt), getClientY(evt));
     const s = this.getView().scale;
     const tr = this.getView().translate;
     const off = addOffset ? this.gridSize / 2 : 0;
@@ -10018,17 +9995,17 @@ class mxGraph extends mxEventSource {
             cell.isVisible() &&
             (ignoreFn == null || !ignoreFn(state))
           ) {
-            const deg = mxUtils.getValue(state.style, 'rotation') || 0;
+            const deg = getValue(state.style, 'rotation') || 0;
 
             let box: mxCellState | mxRectangle = state; // TODO: CHECK ME!!!! ==========================================================
             if (deg != 0) {
-              box = <mxRectangle>mxUtils.getBoundingBox(box, deg);
+              box = <mxRectangle>getBoundingBox(box, deg);
             }
 
             const hit =
               (intersection != null &&
                 cell.isVertex() &&
-                mxUtils.intersects(intersection, box)) ||
+                intersects(intersection, box)) ||
               (intersection == null &&
                 (cell.isEdge() || cell.isVertex()) &&
                 box.x >= x &&
@@ -10709,7 +10686,7 @@ class mxGraph extends mxEventSource {
   // updateMouseEvent(me: mxMouseEvent, evtName: string): mxMouseEvent;
   updateMouseEvent(me: mxMouseEvent, evtName: string) {
     if (me.graphX == null || me.graphY == null) {
-      const pt = mxUtils.convertPoint(this.container, me.getX(), me.getY());
+      const pt = convertPoint(this.container, me.getX(), me.getY());
 
       me.graphX = pt.x - this.panDx;
       me.graphY = pt.y - this.panDy;
@@ -10725,7 +10702,7 @@ class mxGraph extends mxEventSource {
             return (
               state.shape == null ||
               state.shape.paintBackground !== this.paintBackground ||
-              mxUtils.getValue(state.style, 'pointerEvents', '1') == '1' ||
+              getValue(state.style, 'pointerEvents', '1') == '1' ||
               (state.shape.fill != null && state.shape.fill !== NONE)
             );
           })
@@ -10746,7 +10723,7 @@ class mxGraph extends mxEventSource {
 
     // Dispatches the drop event to the graph which
     // consumes and executes the source function
-    const pt = mxUtils.convertPoint(this.container, x, y);
+    const pt = convertPoint(this.container, x, y);
 
     return this.getView().getState(this.getCellAt(pt.x, pt.y));
   }
@@ -10892,7 +10869,6 @@ class mxGraph extends mxEventSource {
    * @param evtName The name of the event.
    * @param me {@link mxMouseEvent} that should be ignored.
    */
-  // isEventSourceIgnored(evtName: string, me: mxMouseEvent): boolean;
   isEventSourceIgnored(evtName: string, me: mxMouseEvent): boolean {
     const source = me.getSource();
     const name = source.nodeName != null ? source.nodeName.toLowerCase() : '';
@@ -10919,8 +10895,7 @@ class mxGraph extends mxEventSource {
    *
    * {@link mxCellState} - State whose event source should be returned.
    */
-  // getEventState(state: mxCellState): mxCellState;
-  getEventState(state: mxCellState) {
+  getEventState(state: mxCellState): mxCellState {
     return state;
   }
 
@@ -10934,8 +10909,10 @@ class mxGraph extends mxEventSource {
    * @param me {@link mxMouseEvent} to be fired.
    * @param sender Optional sender argument. Default is `this`.
    */
-  // fireMouseEvent(evtName: string, me: mxMouseEvent, sender?: mxEventSource): void;
-  fireMouseEvent(evtName: string, me: mxMouseEvent, sender: any = this): void {
+  fireMouseEvent(evtName: string,
+                 me: mxMouseEvent,
+                 sender: mxEventSource = this): void {
+
     if (this.isEventSourceIgnored(evtName, me)) {
       if (this.tooltipHandler != null) {
         this.tooltipHandler.hide();
@@ -11218,6 +11195,7 @@ class mxGraph extends mxEventSource {
   destroy(): void {
     if (!this.destroyed) {
       this.destroyed = true;
+      // @ts-ignore
       this.container = null;
 
       this.tooltipHandler?.destroy?.();

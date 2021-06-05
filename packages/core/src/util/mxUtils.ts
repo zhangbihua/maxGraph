@@ -47,6 +47,7 @@ import type {
   StyleProperties,
   StyleValue,
 } from '../types';
+import mxCellArray from "../view/cell/mxCellArray";
 
 /**
  * Class: mxUtils
@@ -1624,7 +1625,7 @@ export const createImage = (src: string) => {
  * Sorts the given cells according to the order in the cell hierarchy.
  * Ascending is optional and defaults to true.
  */
-export const sortCells = (cells: mxCell[], ascending = true) => {
+export const sortCells = (cells: mxCellArray, ascending = true): mxCellArray => {
   const lookup = new mxDictionary<mxCell, string[]>();
 
   cells.sort((o1, o2) => {
@@ -2321,7 +2322,7 @@ export const show = (
   div.style.position = 'absolute';
   div.style.left = `${dx}px`;
   div.style.top = `${dy}px`;
-
+    
   if (graph.container && graph.view.drawPane) {
     let node = graph.container.firstChild;
     let svg: SVGElement | null = null;

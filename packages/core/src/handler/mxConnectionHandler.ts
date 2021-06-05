@@ -298,7 +298,7 @@ class mxConnectionHandler extends mxEventSource {
    *
    * Holds the <mxTerminalMarker> used for finding source and target cells.
    */
-  marker: mxCellMarker | null = null;
+  marker: mxCellMarker;
 
   /**
    * Variable: constraintHandler

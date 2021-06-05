@@ -88,7 +88,7 @@ class mxCell {
   onInit: (() => void) | null = null;
 
   // used by addCellOverlay() of mxGraph
-  overlays: mxCellOverlay[] = [];
+  overlays: mxCellOverlay[] | null = [];
 
   /**
    * Holds the Id. Default is null.
@@ -154,12 +154,12 @@ class mxCell {
   /**
    * Holds the child cells.
    */
-  children: mxCellArray | null = null;
+  children: mxCellArray = new mxCellArray();
 
   /**
    * Holds the edges.
    */
-  edges: mxCellArray | null = null;
+  edges: mxCellArray = new mxCellArray();
 
   /**
    * List of members that should not be cloned inside <clone>. This field is
@@ -343,8 +343,8 @@ class mxCell {
   /**
    * Returns the cell's parent.
    */
-  getParent(): mxCell | null {
-    return this.parent;
+  getParent(): mxCell {
+    return <mxCell>this.parent;
   }
 
   /**
@@ -413,7 +413,7 @@ class mxCell {
    *
    * @param indexInteger that specifies the child to be returned.
    */
-  getChildAt(index: number): mxCell | null {
+  getChildAt(index: number): mxCell {
     return this.children[index];
   }
 
@@ -547,13 +547,12 @@ class mxCell {
       if (edge.getTerminal(!isOutgoing) !== this && this.edges != null) {
         const index = this.getEdgeIndex(edge);
 
-      if (index >= 0) {
-        this.edges.splice(index, 1);
+        if (index >= 0) {
+          this.edges.splice(index, 1);
+        }
       }
+      edge.setTerminal(null, isOutgoing);
     }
-
-    edge.setTerminal(null, isOutgoing);
-
     return edge;
   }
 
