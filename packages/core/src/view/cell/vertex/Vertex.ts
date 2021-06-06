@@ -11,6 +11,12 @@ class Vertex {
   vertexLabelsMovable: boolean = false;
 
   /**
+   * Specifies if negative coordinates for vertices are allowed.
+   * @default true
+   */
+  allowNegativeCoordinates: boolean = true;
+
+  /**
    * Function: insertVertex
    *
    * Adds a new vertex into the given parent <mxCell> using value as the user

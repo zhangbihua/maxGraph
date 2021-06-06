@@ -158,16 +158,16 @@ function createPopupMenu(graph, menu, cell, evt) {
   // Function to create the entries in the popupmenu
   if (cell != null) {
     menu.addItem('Cell Item', '/images/image.gif', () => {
-      mxUtils.alert('MenuItem1');
+      utils.alert('MenuItem1');
     });
   } else {
     menu.addItem('No-Cell Item', '/images/image.gif', () => {
-      mxUtils.alert('MenuItem2');
+      utils.alert('MenuItem2');
     });
   }
   menu.addSeparator();
   menu.addItem('MenuItem3', '/images/warning.gif', () => {
-    mxUtils.alert(`MenuItem3: ${graph.getSelectionCount()} selected`);
+    utils.alert(`MenuItem3: ${graph.getSelectionCount()} selected`);
   });
 }
 

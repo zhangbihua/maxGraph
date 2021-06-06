@@ -232,7 +232,7 @@ const Template = ({ label, ...args }) => {
   });
 
   tb.addItem('Print', 'images/print32.png', function(evt) {
-    const preview = new mxPrintPreview(graph, 1);
+    const preview = new PrintPreview(graph, 1);
     preview.open();
   });
 
@@ -241,7 +241,7 @@ const Template = ({ label, ...args }) => {
 
     if (pageCount != null) {
       const scale = mxUtils.getScaleForPageCount(pageCount, graph);
-      const preview = new mxPrintPreview(graph, scale);
+      const preview = new PrintPreview(graph, scale);
       preview.open();
     }
   });
@@ -285,7 +285,7 @@ const Template = ({ label, ...args }) => {
     menu.addSeparator();
 
     menu.addItem('Print', '/images/print.gif', function() {
-      const preview = new mxPrintPreview(graph, 1);
+      const preview = new PrintPreview(graph, 1);
       preview.open();
     });
 
@@ -294,7 +294,7 @@ const Template = ({ label, ...args }) => {
 
       if (pageCount != null) {
         const scale = mxUtils.getScaleForPageCount(pageCount, graph);
-        const preview = new mxPrintPreview(graph, scale);
+        const preview = new PrintPreview(graph, scale);
         preview.open();
       }
     });

@@ -15,6 +15,9 @@ import mxUndoableEdit from "../model/mxUndoableEdit";
 import EventObject from "../event/EventObject";
 import InternalEvent from "../event/InternalEvent";
 import EventSource from "../event/EventSource";
+import mxDictionary from "../../util/mxDictionary";
+import RootChange from "../model/RootChange";
+import ChildChange from "../model/ChildChange";
 
 class Selection extends EventSource {
   constructor(graph: graph) {
@@ -614,88 +617,89 @@ class Selection extends EventSource {
    *****************************************************************************/
 
   /**
-   * Creates a new handler for the given cell state. This implementation
-   * returns a new {@link mxEdgeHandler} of the corresponding cell is an edge,
-   * otherwise it returns an {@link mxVertexHandler}.
+   * Function: getSelectionCellsForChanges
    *
-   * @param state {@link mxCellState} whose handler should be created.
+   * Returns the cells to be selected for the given array of changes.
+   *
+   * Parameters:
+   *
+   * ignoreFn - Optional function that takes a change and returns true if the
+   * change should be ignored.
+   *
    */
-  createHandler(
-    state: CellState | null = null
-  ): mxEdgeHandler | mxVertexHandler | null {
-    let result: mxEdgeHandler | mxVertexHandler | null = null;
+  getSelectionCellsForChanges(
+    changes: any[],
+    ignoreFn: Function | null = null
+  ): CellArray {
+    const dict = new mxDictionary();
+    const cells: CellArray = new CellArray();
 
-    if (state != null) {
-      if (state.cell.isEdge()) {
-        const source = state.getVisibleTerminalState(true);
-        const target = state.getVisibleTerminalState(false);
-        const geo = (<Cell>state.cell).getGeometry();
+    const addCell = (cell: Cell) => {
+      if (!dict.get(cell) && this.getModel().contains(cell)) {
+        if (cell.isEdge() || cell.isVertex()) {
+          dict.put(cell, true);
+          cells.push(cell);
+        } else {
+          const childCount = cell.getChildCount();
 
-        const edgeStyle = this.graph.getView().getEdgeStyle(
-          state,
-          geo != null ? geo.points : null,
-          <CellState>source,
-          <CellState>target
-        );
-        result = this.createEdgeHandler(state, edgeStyle);
-      } else {
-        result = this.createVertexHandler(state);
+          for (let i = 0; i < childCount; i += 1) {
+            addCell(<Cell>cell.getChildAt(i));
+          }
+        }
+      }
+    };
+
+    for (let i = 0; i < changes.length; i += 1) {
+      const change = changes[i];
+
+      if (
+        change.constructor !== RootChange &&
+        (ignoreFn == null || !ignoreFn(change))
+      ) {
+        let cell = null;
+
+        if (change instanceof ChildChange) {
+          cell = change.child;
+        } else if (change.cell != null && change.cell instanceof Cell) {
+          cell = change.cell;
+        }
+
+        if (cell != null) {
+          addCell(cell);
+        }
       }
     }
-    return result;
+    return cells;
   }
 
-  /**
-   * Hooks to create a new {@link mxVertexHandler} for the given {@link CellState}.
-   *
-   * @param state {@link mxCellState} to create the handler for.
-   */
-  createVertexHandler(state: CellState): mxVertexHandler {
-    return new mxVertexHandler(state);
-  }
 
   /**
-   * Hooks to create a new {@link mxEdgeHandler} for the given {@link CellState}.
-   *
-   * @param state {@link mxCellState} to create the handler for.
+   * Removes selection cells that are not in the model from the selection.
    */
-  createEdgeHandler(state: CellState, edgeStyle: any): mxEdgeHandler {
-    let result = null;
-    if (
-      edgeStyle == mxEdgeStyle.Loop ||
-      edgeStyle == mxEdgeStyle.ElbowConnector ||
-      edgeStyle == mxEdgeStyle.SideToSide ||
-      edgeStyle == mxEdgeStyle.TopToBottom
-    ) {
-      result = this.createElbowEdgeHandler(state);
-    } else if (
-      edgeStyle == mxEdgeStyle.SegmentConnector ||
-      edgeStyle == mxEdgeStyle.OrthConnector
-    ) {
-      result = this.createEdgeSegmentHandler(state);
-    } else {
-      result = new mxEdgeHandler(state);
+  updateSelection(): void {
+    const cells = this.getSelectionCells();
+    const removed = new CellArray();
+
+    for (const cell of cells) {
+      if (!this.getModel().contains(cell) || !cell.isVisible()) {
+        removed.push(cell);
+      } else {
+        let par = cell.getParent();
+
+        while (par != null && par !== this.view.currentRoot) {
+          if (par.isCollapsed() || !par.isVisible()) {
+            removed.push(cell);
+            break;
+          }
+
+          par = par.getParent();
+        }
+      }
     }
-    return result;
-  }
-
-  /**
-   * Hooks to create a new {@link mxEdgeSegmentHandler} for the given {@link CellState}.
-   *
-   * @param state {@link mxCellState} to create the handler for.
-   */
-  createEdgeSegmentHandler(state: CellState): mxEdgeSegmentHandler {
-    return new mxEdgeSegmentHandler(state);
-  }
-
-  /**
-   * Hooks to create a new {@link mxElbowEdgeHandler} for the given {@link CellState}.
-   *
-   * @param state {@link mxCellState} to create the handler for.
-   */
-  createElbowEdgeHandler(state: CellState): mxElbowEdgeHandler {
-    return new mxElbowEdgeHandler(state);
+    this.selection.removeSelectionCells(removed);
   }
 }
 
 export default Selection;
+
+

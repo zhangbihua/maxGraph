@@ -14,6 +14,9 @@ import mxText from '../../geometry/shape/mxText';
 import mxDictionary from '../../../util/mxDictionary';
 
 import type { CellStateStyles } from '../../../types';
+import Image from "../../image/Image";
+import {ALIGN_MIDDLE, NONE} from "../../../util/Constants";
+import {getValue} from "../../../util/Utils";
 
 /**
  * Class: mxCellState
@@ -453,6 +456,104 @@ class CellState extends Rectangle {
     const src = this.getVisibleTerminalState(true);
     const trg = this.getVisibleTerminalState(false);
     return src && src === trg;
+  }
+
+  /*****************************************************************************
+   * Group: Graph appearance
+   *****************************************************************************/
+
+  /**
+   * Returns the vertical alignment for the given cell state. This
+   * implementation returns the value stored under
+   * {@link 'verticalAlign'} in the cell style.
+   *
+   * @param state {@link mxCellState} whose vertical alignment should be
+   * returned.
+   */
+  getVerticalAlign(): string | null {
+    return this.style != null
+      ? this.style.verticalAlign || ALIGN_MIDDLE
+      : null;
+  }
+
+  /**
+   * Returns true if the given state has no stroke- or fillcolor and no image.
+   *
+   * @param state {@link mxCellState} to check.
+   */
+  isTransparentState(): boolean {
+    let result = false;
+    const stroke = getValue(this.style, 'strokeColor', NONE);
+    const fill = getValue(this.style, 'fillColor', NONE);
+    result = stroke === NONE && fill === NONE && this.getImage(state) == null;
+    return result;
+  }
+
+  /**
+   * Returns the image URL for the given cell state. This implementation
+   * returns the value stored under {@link 'image'} in the cell
+   * style.
+   *
+   * @param state {@link mxCellState} whose image URL should be returned.
+   */
+  getImage(): Image | null {
+    return this.style != null
+      ? this.style.image
+      : null;
+  }
+
+  /**
+   * Returns the indicator color for the given cell state. This
+   * implementation returns the value stored under
+   * {@link mxConstants.STYLE_INDICATOR_COLOR} in the cell style.
+   *
+   * @param state {@link mxCellState} whose indicator color should be
+   * returned.
+   */
+  getIndicatorColor(): string | null {
+    return this.style != null
+      ? this.style.indicatorColor
+      : null;
+  }
+
+  /**
+   * Returns the indicator gradient color for the given cell state. This
+   * implementation returns the value stored under
+   * {@link mxConstants.STYLE_INDICATOR_GRADIENTCOLOR} in the cell style.
+   *
+   * @param state {@link mxCellState} whose indicator gradient color should be
+   * returned.
+   */
+  getIndicatorGradientColor(): string | null {
+    return this.style != null
+      ? this.style.gradientColor
+      : null;
+  }
+
+  /**
+   * Returns the indicator shape for the given cell state. This
+   * implementation returns the value stored under
+   * {@link mxConstants.STYLE_INDICATOR_SHAPE} in the cell style.
+   *
+   * @param state {@link mxCellState} whose indicator shape should be returned.
+   */
+  getIndicatorShape(): string | null {
+    return this.style != null
+      ? this.style.indicatorShape
+      : null;
+  }
+
+  /**
+   * Returns the indicator image for the given cell state. This
+   * implementation returns the value stored under
+   * {@link mxConstants.STYLE_INDICATOR_IMAGE} in the cell style.
+   *
+   * @param state {@link mxCellState} whose indicator image should be returned.
+   */
+  getIndicatorImage(): Image | null {
+    return this.style != null
+      ? this.style.indicatorImage
+      : null;
   }
 }
 

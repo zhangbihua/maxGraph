@@ -334,6 +334,21 @@ class GraphPanning {
 
     return isChanged;
   }
+
+  /*****************************************************************************
+   * Group: Graph behaviour
+   *****************************************************************************/
+
+  /**
+   * Specifies if panning should be enabled. This implementation updates
+   * {@link PanningHandler.panningEnabled} in {@link panningHandler}.
+   *
+   * @param enabled Boolean indicating if panning should be enabled.
+   */
+  setPanning(enabled: boolean): void {
+    (<PanningHandler>this.panningHandler).panningEnabled = enabled;
+  }
+
 }
 
 export default GraphPanning;

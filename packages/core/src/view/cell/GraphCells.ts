@@ -33,13 +33,75 @@ import InternalMouseEvent from "../event/InternalMouseEvent";
 import Graph from "../Graph";
 import CellState from "./datatypes/CellState";
 
-class Cells {
+class GraphCells {
   constructor(graph: Graph) {
     this.graph = graph;
   }
 
   graph: Graph;
 
+
+  /**
+   * Specifies the return value for {@link isCellsResizable}.
+   * @default true
+   */
+  cellsResizable: boolean = true;
+
+  /**
+   * Specifies the return value for {@link isCellsBendable}.
+   * @default true
+   */
+  cellsBendable: boolean = true;
+
+  /**
+   * Specifies the return value for {@link isCellsSelectable}.
+   * @default true
+   */
+  cellsSelectable: boolean = true;
+
+  /**
+   * Specifies the return value for {@link isCellsDisconnectable}.
+   * @default true
+   */
+  cellsDisconnectable: boolean = true;
+
+  /**
+   * Specifies if the graph should automatically update the cell size after an
+   * edit. This is used in {@link isAutoSizeCell}.
+   * @default false
+   */
+  autoSizeCells: boolean = false;
+
+  /**
+   * Specifies if autoSize style should be applied when cells are added.
+   * @default false
+   */
+  autoSizeCellsOnAdd: boolean = false;
+
+
+  /**
+   * Specifies the return value for {@link isCellLocked}.
+   * @default false
+   */
+  cellsLocked: boolean = false;
+
+  /**
+   * Specifies the return value for {@link isCellCloneable}.
+   * @default true
+   */
+  cellsCloneable: boolean = true;
+
+  /**
+   * Specifies the return value for {@link isCellDeletable}.
+   * @default true
+   */
+  cellsDeletable: boolean = true;
+
+  /**
+   * Specifies the return value for {@link isCellMovable}.
+   * @default true
+   */
+  cellsMovable: boolean = true;
 
   /**
    * Returns the bounding box for the given array of {@link Cell}. The bounding box for
@@ -1235,7 +1297,7 @@ class Cells {
               geo.x += Math.round((geo.width - size.width) / 2);
             }
 
-            const valign = this.getVerticalAlign(state);
+            const valign = state.getVerticalAlign();
 
             if (valign === ALIGN_BOTTOM) {
               geo.y += geo.height - size.height;
@@ -1311,7 +1373,7 @@ class Cells {
         let dy = 0;
 
         // Adds dimension of image if shape is a label
-        if (this.getImage(state) != null || style.image != null) {
+        if (state.getImage() != null || style.image != null) {
           if (style.shape === SHAPE_LABEL) {
             if (style.verticalAlign === ALIGN_MIDDLE) {
               dx +=
@@ -2062,14 +2124,6 @@ class Cells {
   }
 
   /**
-   * Returns the bounds inside which the diagram should be kept as an
-   * {@link Rectangle}.
-   */
-  getMaximumGraphBounds(): Rectangle | null {
-    return this.maximumGraphBounds;
-  }
-
-  /**
    * Keeps the given cell inside the bounds returned by
    * {@link getCellContainmentArea} for its parent, according to the rules defined by
    * {@link getOverlap} and {@link isConstrainChild}. This modifies the cell's geometry
@@ -2198,9 +2252,6 @@ class Cells {
       }
     }
   }
-
-
-
 
   /*****************************************************************************
    * Group: Cell retrieval
@@ -2492,7 +2543,6 @@ class Cells {
     }
     return false;
   }
-
 
   /**
    * Returns whether or not the specified parent is a valid
@@ -2800,6 +2850,191 @@ class Cells {
   setCellsResizable(value: boolean): void {
     this.cellsResizable = value;
   }
+
+  /**
+   * Returns true if the given cell is bendable. This returns {@link cellsBendable}
+   * for all given cells if {@link isLocked} does not return true for the given
+   * cell and its style does not specify {@link mxConstants.STYLE_BENDABLE} to be 0.
+   *
+   * @param cell {@link mxCell} whose bendable state should be returned.
+   */
+  isCellBendable(cell: Cell): boolean {
+    const style = this.getCurrentCellStyle(cell);
+
+    return (
+      this.isCellsBendable() &&
+      !this.isCellLocked(cell) &&
+      style.bendable !== 0
+    );
+  }
+
+  /**
+   * Returns {@link cellsBenadable}.
+   */
+  isCellsBendable(): boolean {
+    return this.cellsBendable;
+  }
+
+  /**
+   * Specifies if the graph should allow bending of edges. This
+   * implementation updates {@link bendable}.
+   *
+   * @param value Boolean indicating if the graph should allow bending of
+   * edges.
+   */
+  setCellsBendable(value: boolean): void {
+    this.cellsBendable = value;
+  }
+
+  /**
+   * Returns true if the size of the given cell should automatically be
+   * updated after a change of the label. This implementation returns
+   * {@link autoSizeCells} or checks if the cell style does specify
+   * {@link 'autoSize'} to be 1.
+   *
+   * @param cell {@link mxCell} that should be resized.
+   */
+  isAutoSizeCell(cell: Cell): boolean {
+    const style = this.getCurrentCellStyle(cell);
+
+    return this.isAutoSizeCells() || style.autosize == 1;
+  }
+
+  /**
+   * Returns {@link autoSizeCells}.
+   */
+  isAutoSizeCells(): boolean {
+    return this.autoSizeCells;
+  }
+
+  /**
+   * Specifies if cell sizes should be automatically updated after a label
+   * change. This implementation sets {@link autoSizeCells} to the given parameter.
+   * To update the size of cells when the cells are added, set
+   * {@link autoSizeCellsOnAdd} to true.
+   *
+   * @param value Boolean indicating if cells should be resized
+   * automatically.
+   */
+  setAutoSizeCells(value: boolean): void {
+    this.autoSizeCells = value;
+  }
+
+  /**
+   * Returns true if the parent of the given cell should be extended if the
+   * child has been resized so that it overlaps the parent. This
+   * implementation returns {@link isExtendParents} if the cell is not an edge.
+   *
+   * @param cell {@link mxCell} that has been resized.
+   */
+  isExtendParent(cell: Cell): boolean {
+    return !cell.isEdge() && this.isExtendParents();
+  }
+
+  /**
+   * Returns {@link extendParents}.
+   */
+  isExtendParents(): boolean {
+    return this.extendParents;
+  }
+
+  /**
+   * Sets {@link extendParents}.
+   *
+   * @param value New boolean value for {@link extendParents}.
+   */
+  setExtendParents(value: boolean): void {
+    this.extendParents = value;
+  }
+
+  /**
+   * Returns {@link extendParentsOnAdd}.
+   */
+  isExtendParentsOnAdd(cell: Cell): boolean {
+    return this.extendParentsOnAdd;
+  }
+
+  /**
+   * Sets {@link extendParentsOnAdd}.
+   *
+   * @param value New boolean value for {@link extendParentsOnAdd}.
+   */
+  setExtendParentsOnAdd(value: boolean): void {
+    this.extendParentsOnAdd = value;
+  }
+
+  /**
+   * Returns {@link extendParentsOnMove}.
+   */
+  isExtendParentsOnMove(): boolean {
+    return this.extendParentsOnMove;
+  }
+
+  /**
+   * Sets {@link extendParentsOnMove}.
+   *
+   * @param value New boolean value for {@link extendParentsOnAdd}.
+   */
+  setExtendParentsOnMove(value: boolean): void {
+    this.extendParentsOnMove = value;
+  }
+
+  /*****************************************************************************
+   * Group: Graph appearance
+   *****************************************************************************/
+
+  /**
+   * Returns the cursor value to be used for the CSS of the shape for the
+   * given cell. This implementation returns null.
+   *
+   * @param cell {@link mxCell} whose cursor should be returned.
+   */
+  getCursorForCell(cell: Cell): string | null {
+    return null;
+  }
+
+  /*****************************************************************************
+   * Group: Graph display
+   *****************************************************************************/
+
+  /**
+   * Returns the scaled, translated bounds for the given cell. See
+   * {@link GraphView.getBounds} for arrays.
+   *
+   * @param cell {@link mxCell} whose bounds should be returned.
+   * @param includeEdges Optional boolean that specifies if the bounds of
+   * the connected edges should be included. Default is `false`.
+   * @param includeDescendants Optional boolean that specifies if the bounds
+   * of all descendants should be included. Default is `false`.
+   */
+  getCellBounds(
+    cell: Cell,
+    includeEdges: boolean = false,
+    includeDescendants: boolean = false
+  ): Rectangle | null {
+    let cells = new CellArray(cell);
+
+    // Includes all connected edges
+    if (includeEdges) {
+      cells = cells.concat(<CellArray>cell.getEdges());
+    }
+
+    let result = this.view.getBounds(cells);
+
+    // Recursively includes the bounds of the children
+    if (includeDescendants) {
+      for (const child of cell.getChildren()) {
+        const tmp = this.getCellBounds(child, includeEdges, true);
+
+        if (result != null) {
+          result.add(tmp);
+        } else {
+          result = tmp;
+        }
+      }
+    }
+    return result;
+  }
 }
 
-export default Cells;
+export default GraphCells;

@@ -13,6 +13,12 @@ class InPlaceEditing {
 
   graph: Graph;
 
+  /**
+   * Specifies the return value for {@link isCellEditable}.
+   * @default true
+   */
+  cellsEditable: boolean = true;
+
   /*****************************************************************************
    * Group: Cell in-place editing
    *****************************************************************************/
@@ -157,6 +163,88 @@ class InPlaceEditing {
         this.cellSizeUpdated(cell, false);
       }
     });
+  }
+
+  /*****************************************************************************
+   * Group: Graph behaviour
+   *****************************************************************************/
+
+  /**
+   * Returns true if the given cell is currently being edited.
+   * If no cell is specified then this returns true if any
+   * cell is currently being edited.
+   *
+   * @param cell {@link mxCell} that should be checked.
+   */
+  isEditing(cell: Cell | null = null): boolean {
+    if (this.cellEditor != null) {
+      const editingCell = this.cellEditor.getEditingCell();
+      return cell == null ? editingCell != null : cell === editingCell;
+    }
+    return false;
+  }
+
+  /**
+   * Returns {@link invokesStopCellEditing}.
+   */
+  isInvokesStopCellEditing(): boolean {
+    return this.invokesStopCellEditing;
+  }
+
+  /**
+   * Sets {@link invokesStopCellEditing}.
+   */
+  setInvokesStopCellEditing(value: boolean): void {
+    this.invokesStopCellEditing = value;
+  }
+
+  /**
+   * Returns {@link enterStopsCellEditing}.
+   */
+  isEnterStopsCellEditing(): boolean {
+    return this.enterStopsCellEditing;
+  }
+
+  /**
+   * Sets {@link enterStopsCellEditing}.
+   */
+  setEnterStopsCellEditing(value: boolean): void {
+    this.enterStopsCellEditing = value;
+  }
+
+  /**
+   * Returns true if the given cell is editable. This returns {@link cellsEditable} for
+   * all given cells if {@link isCellLocked} does not return true for the given cell
+   * and its style does not specify {@link 'editable'} to be 0.
+   *
+   * @param cell {@link mxCell} whose editable state should be returned.
+   */
+  isCellEditable(cell: Cell): boolean {
+    const style = this.getCurrentCellStyle(cell);
+
+    return (
+      this.isCellsEditable() &&
+      !this.isCellLocked(cell) &&
+      style.editable != 0
+    );
+  }
+
+  /**
+   * Returns {@link cellsEditable}.
+   */
+  isCellsEditable(): boolean {
+    return this.cellsEditable;
+  }
+
+  /**
+   * Specifies if the graph should allow in-place editing for cell labels.
+   * This implementation updates {@link cellsEditable}.
+   *
+   * @param value Boolean indicating if the graph should allow in-place
+   * editing.
+   */
+  setCellsEditable(value: boolean): void {
+    this.cellsEditable = value;
   }
 }
 

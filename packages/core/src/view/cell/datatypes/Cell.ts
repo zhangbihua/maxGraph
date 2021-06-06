@@ -600,7 +600,7 @@ class Cell {
    * @param defaultValueOptional  default value to use if the attribute has no
    * value.
    */
-  getAttribute(name: string, defaultValue: any): any {
+  getAttribute(name: string, defaultValue?: any): any {
     const userObject = this.getValue();
     const val =
       isNotNullish(userObject) && userObject.nodeType === NODETYPE_ELEMENT

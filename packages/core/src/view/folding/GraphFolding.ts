@@ -48,6 +48,15 @@ class GraphFolding {
   options: GraphFoldingOptions;
 
   /**
+   * Specifies the resource key for the tooltip on the collapse/expand icon.
+   * If the resource for this key does not exist then the value is used as
+   * the tooltip.
+   * @default 'collapse-expand'
+   */
+  collapseExpandResource: string =
+    mxClient.language != 'none' ? 'collapse-expand' : '';
+
+  /**
    *
    * @default true
    */

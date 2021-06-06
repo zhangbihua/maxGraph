@@ -385,6 +385,64 @@ class GraphGrouping {
     });
     return cells;
   }
+
+  /*****************************************************************************
+   * Group: Drilldown
+   *****************************************************************************/
+
+  /**
+   * Uses the given cell as the root of the displayed cell hierarchy. If no
+   * cell is specified then the selection cell is used. The cell is only used
+   * if {@link isValidRoot} returns true.
+   *
+   * @param cell Optional {@link Cell} to be used as the new root. Default is the
+   * selection cell.
+   */
+  enterGroup(cell: Cell): void {
+    cell = cell || this.getSelectionCell();
+
+    if (cell != null && this.isValidRoot(cell)) {
+      this.view.setCurrentRoot(cell);
+      this.clearSelection();
+    }
+  }
+
+  /**
+   * Changes the current root to the next valid root in the displayed cell
+   * hierarchy.
+   */
+  exitGroup(): void {
+    const root = this.getModel().getRoot();
+    const current = this.getCurrentRoot();
+
+    if (current != null) {
+      let next = <Cell>current.getParent();
+
+      // Finds the next valid root in the hierarchy
+      while (
+        next !== root &&
+        !this.isValidRoot(next) &&
+        next.getParent() !== root
+        ) {
+        next = <Cell>next.getParent();
+      }
+
+      // Clears the current root if the new root is
+      // the model's root or one of the layers.
+      if (next === root || next.getParent() === root) {
+        this.view.setCurrentRoot(null);
+      } else {
+        this.view.setCurrentRoot(next);
+      }
+
+      const state = this.view.getState(current);
+
+      // Selects the previous root in the graph
+      if (state != null) {
+        this.selection.setSelectionCell(current);
+      }
+    }
+  }
 }
 
 export default GraphGrouping;

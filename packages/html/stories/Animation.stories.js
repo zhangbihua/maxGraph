@@ -33,6 +33,17 @@ const Template = ({ label, ...args }) => {
     'shape=cylinder;strokeWidth=2;fillColor=#ffffff;strokeColor=black;' +
     'gradientColor=#a0a0a0;fontColor=black;fontStyle=1;spacingTop=14;';
 
+  /*const vertexStyle = {
+    shape: 'cylinder',
+    strokeWidth: 2,
+    fillColor: '#ffffff',
+    strokeColor: 'black',
+    gradientColor: '#a0a0a0',
+    fontColor: 'black',
+    fontStyle: 1,
+    spacingTop: 14,
+  };*/
+
   let e1;
   graph.batchUpdate(() => {
     const v1 = graph.insertVertex({

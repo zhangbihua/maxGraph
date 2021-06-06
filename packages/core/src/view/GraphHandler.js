@@ -1817,7 +1817,7 @@ class GraphHandler {
       (state.cell.isEdge() || state.cell.isVertex()) &&
       this.graph.isCellDeletable(state.cell) &&
       state.cell.getChildCount() === 0 &&
-      this.graph.isTransparentState(state)
+      state.isTransparentState()
     );
   }
 

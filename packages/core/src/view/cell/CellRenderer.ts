@@ -47,7 +47,7 @@ import {
   SHAPE_SWIMLANE,
   SHAPE_TRIANGLE,
 } from '../../util/Constants';
-import utils, { convertPoint, getValue } from '../../util/Utils';
+import utils, {convertPoint, equalPoints, getRotatedPoint, getValue, mod, toRadians} from '../../util/Utils';
 import Rectangle from '../geometry/Rectangle';
 import StencilRegistry from '../geometry/shape/node/StencilRegistry';
 import InternalEvent from '../event/InternalEvent';
@@ -234,9 +234,7 @@ class CellRenderer {
    */
   createIndicatorShape(state: CellState) {
     if (state.shape) {
-      state.shape.indicatorShape = this.getShape(
-        state.view.graph.getIndicatorShape(state)
-      );
+      state.shape.indicatorShape = this.getShape(state.getIndicatorShape());
     }
   }
 
@@ -280,14 +278,12 @@ class CellRenderer {
 
     if (shape) {
       shape.apply(state);
-      shape.image = state.view.graph.getImage(state);
-      shape.indicatorColor = state.view.graph.getIndicatorColor(state);
+      shape.image = state.getImage();
+      shape.indicatorColor = state.getIndicatorColor();
       shape.indicatorStrokeColor = state.style.indicatorStrokeColor;
-      shape.indicatorGradientColor = state.view.graph.getIndicatorGradientColor(
-        state
-      );
+      shape.indicatorGradientColor = state.getIndicatorGradientColor();
       shape.indicatorDirection = state.style.indicatorDirection;
-      shape.indicatorImage = state.view.graph.getIndicatorImage(state);
+      shape.indicatorImage = state.getIndicatorImage();
       this.postConfigureShape(state);
     }
   }
@@ -300,8 +296,7 @@ class CellRenderer {
    * This implementation resolves these keywords on the fill, stroke
    * and gradient color keys.
    */
-  // postConfigureShape(state: mxCellState): void;
-  postConfigureShape(state: CellState) {
+  postConfigureShape(state: CellState): void {
     if (state.shape != null) {
       this.resolveColor(state, 'indicatorGradientColor', 'gradientColor');
       this.resolveColor(state, 'indicatorColor', 'fillColor');
@@ -317,8 +312,7 @@ class CellRenderer {
    * Resolves special keywords 'inherit', 'indicated' and 'swimlane' and sets
    * the respective color on the shape.
    */
-  // checkPlaceholderStyles(state: mxCellState): boolean;
-  checkPlaceholderStyles(state: CellState) {
+  checkPlaceholderStyles(state: CellState): boolean {
     // LATER: Check if the color has actually changed
     if (state.style != null) {
       const values = ['inherit', 'swimlane', 'indicated'];
@@ -339,8 +333,7 @@ class CellRenderer {
    * Resolves special keywords 'inherit', 'indicated' and 'swimlane' and sets
    * the respective color on the shape.
    */
-  // resolveColor(state: mxCellState, field: string, key: string): void;
-  resolveColor(state: CellState, field: string, key: string) {
+  resolveColor(state: CellState, field: string, key: string): void {
     const shape = key === 'fontColor' ? state.text : state.shape;
 
     if (shape != null) {
@@ -365,7 +358,7 @@ class CellRenderer {
           referenced = state.cell;
         }
 
-        referenced = graph.getSwimlane(<Cell>referenced);
+        referenced = graph.swimlane.getSwimlane(<Cell>referenced);
         key = graph.swimlaneIndicatorColorAttribute;
       } else if (value === 'indicated' && state.shape != null) {
         // @ts-ignore
@@ -443,7 +436,7 @@ class CellRenderer {
         value,
         new Rectangle(),
         state.style.align || ALIGN_CENTER,
-        graph.getVerticalAlign(state),
+        state.getVerticalAlign(),
         state.style.fontColor,
         state.style.fontFamily,
         state.style.fontSize,
@@ -500,7 +493,7 @@ class CellRenderer {
         state.text.node,
         (evt: InternalMouseEvent) => {
           if (this.isLabelEvent(state, evt)) {
-            graph.fireMouseEvent(
+            graph.event.fireMouseEvent(
               InternalEvent.MOUSE_DOWN,
               new InternalMouseEvent(evt, state)
             );
@@ -511,7 +504,7 @@ class CellRenderer {
         },
         (evt: InternalMouseEvent) => {
           if (this.isLabelEvent(state, evt)) {
-            graph.fireMouseEvent(
+            graph.event.fireMouseEvent(
               InternalEvent.MOUSE_MOVE,
               new InternalMouseEvent(evt, getState(evt))
             );
@@ -519,7 +512,7 @@ class CellRenderer {
         },
         (evt: InternalMouseEvent) => {
           if (this.isLabelEvent(state, evt)) {
-            graph.fireMouseEvent(
+            graph.event.fireMouseEvent(
               InternalEvent.MOUSE_UP,
               new InternalMouseEvent(evt, getState(evt))
             );
@@ -529,10 +522,10 @@ class CellRenderer {
       );
 
       // Uses double click timeout in mxGraph for quirks mode
-      if (graph.nativeDblClickEnabled) {
+      if (graph.event.nativeDblClickEnabled) {
         InternalEvent.addListener(state.text.node, 'dblclick', (evt: MouseEvent) => {
           if (this.isLabelEvent(state, evt)) {
-            graph.dblClick(evt, state.cell);
+            graph.event.dblClick(evt, state.cell);
             InternalEvent.consume(evt);
           }
         });
@@ -549,8 +542,7 @@ class CellRenderer {
    *
    * state - <mxCellState> whose label should be initialized.
    */
-  // initializeLabel(state: mxCellState, shape: mxShape): void;
-  initializeLabel(state: CellState, shape: Shape) {
+  initializeLabel(state: CellState, shape: Shape): void {
     if (mxClient.IS_SVG && mxClient.NO_FO && shape.dialect !== DIALECT_SVG) {
       shape.init(state.view.graph.container);
     } else {
@@ -567,8 +559,7 @@ class CellRenderer {
    *
    * state - <mxCellState> for which the overlay should be created.
    */
-  // createCellOverlays(state: mxCellState): void;
-  createCellOverlays(state: CellState) {
+  createCellOverlays(state: CellState): void {
     const { graph } = state.view;
     const overlays = graph.getCellOverlays(state.cell);
     let dict = null;
@@ -623,7 +614,6 @@ class CellRenderer {
    * state - <mxCellState> for which the overlay should be created.
    * overlay - <mxImageShape> that represents the overlay.
    */
-  // initializeOverlay(state: mxCellState, overlay: mxImageShape): void;
   initializeOverlay(state: CellState, overlay: ImageShape): void {
     overlay.init(state.view.getOverlayPane());
   }
@@ -634,12 +624,11 @@ class CellRenderer {
    * Installs the listeners for the given <mxCellState>, <mxCellOverlay> and
    * <mxShape> that represents the overlay.
    */
-  // installCellOverlayListeners(state: mxCellState, overlay: mxCellOverlay, shape: mxShape): void;
   installCellOverlayListeners(
     state: CellState,
     overlay: CellOverlay,
     shape: Shape
-  ) {
+  ): void {
     const { graph } = state.view;
 
     InternalEvent.addListener(shape.node, 'click', (evt: Event) => {
@@ -680,8 +669,7 @@ class CellRenderer {
    *
    * state - <mxCellState> for which the control should be created.
    */
-  // createControl(state: mxCellState): void;
-  createControl(state: CellState) {
+  createControl(state: CellState): void {
     const { graph } = state.view;
     const image = graph.getFoldingImage(state);
 
@@ -714,7 +702,6 @@ class CellRenderer {
    *
    * state - <mxCellState> whose control click handler should be returned.
    */
-  // createControlClickHandler(state: mxCellState): void;
   createControlClickHandler(state: CellState): Function {
     const { graph } = state.view;
 
@@ -784,20 +771,20 @@ class CellRenderer {
         node,
         (evt: Event) => {
           first = new Point(getClientX(evt), getClientY(evt));
-          graph.fireMouseEvent(
+          graph.event.fireMouseEvent(
             InternalEvent.MOUSE_DOWN,
             new InternalMouseEvent(evt, state)
           );
           InternalEvent.consume(evt);
         },
         (evt: Event) => {
-          graph.fireMouseEvent(
+          graph.event.fireMouseEvent(
             InternalEvent.MOUSE_MOVE,
             new InternalMouseEvent(evt, state)
           );
         },
         (evt: Event) => {
-          graph.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt, state));
+          graph.event.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt, state));
           InternalEvent.consume(evt);
         }
       );
@@ -839,8 +826,8 @@ class CellRenderer {
    * state - <mxCellState> whose shape fired the event.
    * evt - Mouse event which was fired.
    */
-  // isShapeEvent(state: mxCellState, evt: MouseEvent): boolean;
-  isShapeEvent(state: CellState, evt: InternalMouseEvent | MouseEvent) {
+  // isShapeEvent(state: mxCellState, evt: MouseEvent);
+  isShapeEvent(state: CellState, evt: InternalMouseEvent | MouseEvent): boolean {
     return true;
   }
 
@@ -856,7 +843,7 @@ class CellRenderer {
    * evt - Mouse event which was fired.
    */
   // isLabelEvent(state: mxCellState, evt: MouseEvent): boolean;
-  isLabelEvent(state: CellState, evt: InternalMouseEvent | MouseEvent) {
+  isLabelEvent(state: CellState, evt: InternalMouseEvent | MouseEvent): boolean {
     return true;
   }
 
@@ -996,7 +983,7 @@ class CellRenderer {
         state.text.apply(state);
 
         // Special case where value is obtained via hook in graph
-        state.text.valign = <string>graph.getVerticalAlign(state);
+        state.text.valign = <string>state.getVerticalAlign();
       }
 
       const bounds = this.getLabelBounds(state);
@@ -1284,8 +1271,7 @@ class CellRenderer {
    *
    * state - <mxCellState> whose overlays should be redrawn.
    */
-  // redrawCellOverlays(state: mxCellState, forced?: boolean): void;
-  redrawCellOverlays(state: CellState, forced: boolean = false) {
+  redrawCellOverlays(state: CellState, forced: boolean = false): void {
     this.createCellOverlays(state);
 
     if (state.overlays != null) {
@@ -1540,7 +1526,6 @@ class CellRenderer {
    *
    * state - <mxCellState> whose shapes should be returned.
    */
-  // getShapesForState(state: mxCellState): mxShape[];
   getShapesForState(
     state: CellState
   ): [Shape | null, mxText | null, Shape | null] {
@@ -1563,7 +1548,6 @@ class CellRenderer {
    * be drawn into the DOM. If this is false then redraw and/or reconfigure
    * will not be called on the shape.
    */
-  // redraw(state: mxCellState, force?: boolean, rendering?: boolean): void;
   redraw(
     state: CellState,
     force: boolean = false,
@@ -1587,7 +1571,6 @@ class CellRenderer {
    *
    * state - <mxCellState> whose label should be redrawn.
    */
-  // redrawShape(state: mxCellState, force?: boolean, rendering?: boolean): void;
   redrawShape(
     state: CellState,
     force: boolean = false,
@@ -1645,7 +1628,7 @@ class CellRenderer {
     if (
       state.shape != null &&
       state.shape.indicatorShape !=
-        this.getShape(<string>state.view.graph.getIndicatorShape(state))
+        this.getShape(state.getIndicatorShape())
     ) {
       if (state.shape.indicator != null) {
         state.shape.indicator.destroy();
@@ -1702,8 +1685,7 @@ class CellRenderer {
    *
    * Invokes redraw on the shape of the given state.
    */
-  // doRedrawShape(state: mxCellState): void;
-  doRedrawShape(state: CellState) {
+  doRedrawShape(state: CellState): void {
     state.shape?.redraw();
   }
 
@@ -1732,8 +1714,7 @@ class CellRenderer {
    *
    * state - <mxCellState> for which the shapes should be destroyed.
    */
-  // destroy(state: mxCellState): void;
-  destroy(state: CellState) {
+  destroy(state: CellState): void {
     if (state.shape != null) {
       if (state.text != null) {
         state.text.destroy();

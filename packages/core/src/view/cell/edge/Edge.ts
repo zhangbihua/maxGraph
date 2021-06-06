@@ -17,6 +17,66 @@ class Edge {
 
   graph: Graph;
 
+  /**
+   * Specifies if edge control points should be reset after the resize of a
+   * connected cell.
+   * @default false
+   */
+  resetEdgesOnResize: boolean = false;
+
+  /**
+   * Specifies if edge control points should be reset after the move of a
+   * connected cell.
+   * @default false
+   */
+  resetEdgesOnMove: boolean = false;
+
+  /**
+   * Specifies if edge control points should be reset after the the edge has been
+   * reconnected.
+   * @default true
+   */
+  resetEdgesOnConnect: boolean = true;
+
+  /**
+   * Specifies if edges are connectable. This overrides the connectable field in edges.
+   * @default false
+   */
+  connectableEdges: boolean = false;
+
+  /**
+   * Specifies if edges with disconnected terminals are allowed in the graph.
+   * @default true
+   */
+  allowDanglingEdges: boolean = true;
+
+  /**
+   * Specifies if edges that are cloned should be validated and only inserted
+   * if they are valid.
+   * @default true
+   */
+  cloneInvalidEdges: boolean = false;
+
+  /**
+   * Specifies if edges should be disconnected from their terminals when they
+   * are moved.
+   * @default true
+   */
+  disconnectOnMove: boolean = true;
+
+  /**
+   * Specifies the alternate edge style to be used if the main control point
+   * on an edge is being double clicked.
+   * @default null
+   */
+  alternateEdgeStyle: string | null = null;
+
+  /**
+   * Specifies the return value for edges in {@link isLabelMovable}.
+   * @default true
+   */
+  edgeLabelsMovable: boolean = true;
+
   /*****************************************************************************
    * Group: Cell alignment and orientation
    *****************************************************************************/

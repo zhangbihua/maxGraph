@@ -128,7 +128,7 @@ const Template = ({ label, ...args }) => {
       const x0 = Math.floor(bounds.x / pf.width) * pf.width;
       const y0 = Math.floor(bounds.y / pf.height) * pf.height;
 
-      const preview = new mxPrintPreview(graph, scale, pf, 0, -x0, -y0);
+      const preview = new PrintPreview(graph, scale, pf, 0, -x0, -y0);
       preview.marginTop = headerSize * scale * graph.pageScale;
       preview.marginBottom = footerSize * scale * graph.pageScale;
       preview.autoOrigin = false;
@@ -153,11 +153,11 @@ const Template = ({ label, ...args }) => {
 
         const footer = header.cloneNode(true);
 
-        mxUtils.write(header, `Page ${pageNumber} - Header`);
+        utils.write(header, `Page ${pageNumber} - Header`);
         header.style.borderBottom = '1px solid gray';
         header.style.top = '0px';
 
-        mxUtils.write(footer, `Page ${pageNumber} - Footer`);
+        utils.write(footer, `Page ${pageNumber} - Footer`);
         footer.style.borderTop = '1px solid gray';
         footer.style.bottom = '0px';
 

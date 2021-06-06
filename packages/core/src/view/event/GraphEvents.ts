@@ -16,7 +16,7 @@ import PanningHandler from "../panning/PanningHandler";
 import mxConnectionHandler from "../connection/mxConnectionHandler";
 import Point from "../geometry/Point";
 import {convertPoint, getValue} from "../../util/Utils";
-import {NONE} from "../../util/Constants";
+import {NONE, SHAPE_SWIMLANE} from "../../util/Constants";
 import mxClient from "../../mxClient";
 import EventSource from "./EventSource";
 import CellEditor from "../editing/CellEditor";
@@ -1090,6 +1090,40 @@ class GraphEvents {
     p.x = this.snap(p.x / s - tr.x - off);
     p.y = this.snap(p.y / s - tr.y - off);
     return p;
+  }
+
+  /*****************************************************************************
+   * Group: Graph behaviour
+   *****************************************************************************/
+
+  /**
+   * Returns {@link escapeEnabled}.
+   */
+  isEscapeEnabled(): boolean {
+    return this.escapeEnabled;
+  }
+
+  /**
+   * Sets {@link escapeEnabled}.
+   *
+   * @param enabled Boolean indicating if escape should be enabled.
+   */
+  setEscapeEnabled(value: boolean): void {
+    this.escapeEnabled = value;
+  }
+
+  /*****************************************************************************
+   * Group: Graph appearance
+   *****************************************************************************/
+
+  /**
+   * Returns the cursor value to be used for the CSS of the shape for the
+   * given event. This implementation calls {@link getCursorForCell}.
+   *
+   * @param me {@link mxMouseEvent} whose cursor should be returned.
+   */
+  getCursorForMouseEvent(me: InternalMouseEvent): string | null {
+    return this.getCursorForCell(me.getCell());
   }
 }
 
