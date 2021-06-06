@@ -1,10 +1,10 @@
-import type mxCell from './view/cell/mxCell';
+import type Cell from './view/cell/datatypes/Cell';
 
 export type CellMap = {
-  [id: string]: mxCell;
+  [id: string]: Cell;
 };
 
-export type FilterFunction = (cell: mxCell) => boolean;
+export type FilterFunction = (cell: Cell) => boolean;
 
 export type UndoableChange = {
   execute: () => void;

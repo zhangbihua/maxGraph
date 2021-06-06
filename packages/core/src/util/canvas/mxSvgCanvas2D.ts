@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import { getAlignmentAsPoint, isNotNullish } from '../mxUtils';
+import { getAlignmentAsPoint, isNotNullish } from '../Utils';
 import mxClient from '../../mxClient';
 import {
   ABSOLUTE_LINE_HEIGHT,
@@ -29,12 +29,12 @@ import {
   NS_SVG,
   NS_XLINK,
   WORD_WRAP,
-} from '../mxConstants';
-import mxRectangle from '../datatypes/mxRectangle';
+} from '../Constants';
+import Rectangle from '../../view/geometry/Rectangle';
 import mxAbstractCanvas2D from './mxAbstractCanvas2D';
-import { parseXml } from '../mxXmlUtils';
-import { importNodeImplementation, isNode, write } from '../mxDomUtils';
-import { htmlEntities, trim } from '../mxStringUtils';
+import { parseXml } from '../XmlUtils';
+import { importNodeImplementation, isNode, write } from '../DomUtils';
+import { htmlEntities, trim } from '../StringUtils';
 import {
   AlignValue,
   ColorValue,
@@ -1769,7 +1769,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
           y -= h;
         }
 
-        bbox = new mxRectangle(
+        bbox = new Rectangle(
           (x + 1) * s.scale,
           y * s.scale,
           (w - 2) * s.scale,
@@ -1779,7 +1779,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         // Uses getBBox only if inside document for correct size
         try {
           bbox = node.getBBox();
-          bbox = new mxRectangle(
+          bbox = new Rectangle(
             bbox.x,
             bbox.y + 1,
             bbox.width,
@@ -1833,7 +1833,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
           y -= h;
         }
 
-        bbox = new mxRectangle(
+        bbox = new Rectangle(
           (x + 1) * s.scale,
           (y + 2) * s.scale,
           w * s.scale,

@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import { arcToCurves, getRotatedPoint } from '../mxUtils';
+import { arcToCurves, getRotatedPoint } from '../Utils';
 import {
   DEFAULT_FONTFAMILY,
   DEFAULT_FONTSIZE,
@@ -13,10 +13,10 @@ import {
   SHADOW_OFFSET_X,
   SHADOW_OFFSET_Y,
   SHADOW_OPACITY,
-} from '../mxConstants';
+} from '../Constants';
 import mxUrlConverter from '../network/mxUrlConverter';
-import mxPoint from '../datatypes/mxPoint';
-import { clone } from '../mxCloneUtils';
+import Point from '../../view/geometry/Point';
+import { clone } from '../CloneUtils';
 
 import type { CanvasState, ColorValue } from '../../types';
 
@@ -228,10 +228,10 @@ class mxAbstractCanvas2D {
     const rad = theta * (Math.PI / 180);
 
     return getRotatedPoint(
-      new mxPoint(x, y),
+      new Point(x, y),
       Math.cos(rad),
       Math.sin(rad),
-      new mxPoint(cx, cy)
+      new Point(cx, cy)
     );
   }
 

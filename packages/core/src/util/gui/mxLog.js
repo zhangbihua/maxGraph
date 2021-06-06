@@ -6,9 +6,9 @@
  */
 
 import mxClient from '../../mxClient';
-import mxEvent from '../event/mxEvent';
-import { getInnerHtml, write } from '../mxDomUtils';
-import mxUtils from '../mxUtils';
+import InternalEvent from '../../view/event/InternalEvent';
+import { getInnerHtml, write } from '../DomUtils';
+import utils from '../Utils';
 import mxWindow, { popup } from './mxWindow';
 
 /**
@@ -92,7 +92,7 @@ class mxLog {
 
       mxLog.addButton('Copy', function (evt) {
         try {
-          mxUtils.copy(mxLog.textarea.value);
+          utils.copy(mxLog.textarea.value);
         } catch (err) {
           alert(err);
         }
@@ -152,9 +152,9 @@ class mxLog {
           )}px`;
         };
 
-        mxLog.window.addListener(mxEvent.RESIZE_END, resizeHandler);
-        mxLog.window.addListener(mxEvent.MAXIMIZE, resizeHandler);
-        mxLog.window.addListener(mxEvent.NORMALIZE, resizeHandler);
+        mxLog.window.addListener(InternalEvent.RESIZE_END, resizeHandler);
+        mxLog.window.addListener(InternalEvent.MAXIMIZE, resizeHandler);
+        mxLog.window.addListener(InternalEvent.NORMALIZE, resizeHandler);
 
         mxLog.textarea.style.height = '92px';
       }
@@ -199,7 +199,7 @@ class mxLog {
    */
   // static info(): void;
   static info() {
-    mxLog.writeln(mxUtils.toString(navigator));
+    mxLog.writeln(utils.toString(navigator));
   }
 
   /**
@@ -209,7 +209,7 @@ class mxLog {
   static addButton(lab, funct) {
     const button = document.createElement('button');
     write(button, lab);
-    mxEvent.addListener(button, 'click', funct);
+    InternalEvent.addListener(button, 'click', funct);
     mxLog.td.appendChild(button);
   }
 

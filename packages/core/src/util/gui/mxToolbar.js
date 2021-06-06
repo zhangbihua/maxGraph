@@ -5,14 +5,14 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxUtils from '../mxUtils';
-import mxEvent from '../event/mxEvent';
-import mxPoint from '../datatypes/mxPoint';
+import utils from '../Utils';
+import InternalEvent from '../../view/event/InternalEvent';
+import Point from '../../view/geometry/Point';
 import mxPopupMenu from './mxPopupMenu';
-import mxEventSource from '../event/mxEventSource';
-import mxEventObject from '../event/mxEventObject';
+import EventSource from '../../view/event/EventSource';
+import EventObject from '../../view/event/EventObject';
 import mxClient from '../../mxClient';
-import { write, writeln } from '../mxDomUtils';
+import { write, writeln } from '../DomUtils';
 
 /**
  * Creates a toolbar inside a given DOM node. The toolbar may contain icons,
@@ -24,9 +24,9 @@ import { write, writeln } from '../mxDomUtils';
  * property contains the function that was selected in <selectMode>.
  *
  * @class mxToolbar
- * @extends {mxEventSource}
+ * @extends {EventSource}
  */
-class mxToolbar extends mxEventSource {
+class mxToolbar extends EventSource {
   constructor(container) {
     super();
     this.container = container;
@@ -102,10 +102,10 @@ class mxToolbar extends mxEventSource {
 
     // Invokes the function on a click on the toolbar item
     if (funct != null) {
-      mxEvent.addListener(img, 'click', funct);
+      InternalEvent.addListener(img, 'click', funct);
 
       if (mxClient.IS_TOUCH) {
-        mxEvent.addListener(img, 'touchend', funct);
+        InternalEvent.addListener(img, 'touchend', funct);
       }
     }
 
@@ -119,7 +119,7 @@ class mxToolbar extends mxEventSource {
 
     // Highlights the toolbar item with a gray background
     // while it is being clicked with the mouse
-    mxEvent.addGestureListeners(
+    InternalEvent.addGestureListeners(
       img,
       evt => {
         if (pressedIcon != null) {
@@ -146,7 +146,7 @@ class mxToolbar extends mxEventSource {
             this.currentImg = img;
             this.menu.factoryMethod = factoryMethod;
 
-            const point = new mxPoint(
+            const point = new Point(
               img.offsetLeft,
               img.offsetTop + img.offsetHeight
             );
@@ -169,7 +169,7 @@ class mxToolbar extends mxEventSource {
       mouseHandler
     );
 
-    mxEvent.addListener(img, 'mouseout', mouseHandler);
+    InternalEvent.addListener(img, 'mouseout', mouseHandler);
 
     return img;
   }
@@ -209,7 +209,7 @@ class mxToolbar extends mxEventSource {
     select.className = style || 'mxToolbarCombo';
     this.addOption(select, title, null);
 
-    mxEvent.addListener(select, 'change', evt => {
+    InternalEvent.addListener(select, 'change', evt => {
       const value = select.options[select.selectedIndex];
       select.selectedIndex = 0;
 
@@ -266,7 +266,7 @@ class mxToolbar extends mxEventSource {
       img.setAttribute('title', title);
     }
 
-    mxEvent.addListener(img, 'click', evt => {
+    InternalEvent.addListener(img, 'click', evt => {
       let tmp = this.selectedMode.altIcon;
 
       if (tmp != null) {
@@ -291,7 +291,7 @@ class mxToolbar extends mxEventSource {
         img.className = `${img.initialClassName}Selected`;
       }
 
-      this.fireEvent(new mxEventObject(mxEvent.SELECT));
+      this.fireEvent(new EventObject(InternalEvent.SELECT));
       funct();
     });
 
@@ -333,12 +333,12 @@ class mxToolbar extends mxEventSource {
     }
 
     if (this.enabled && toggle) {
-      mxEvent.addListener(img, 'click', evt => {
+      InternalEvent.addListener(img, 'click', evt => {
         this.selectMode(img, funct);
         this.noReset = false;
       });
 
-      mxEvent.addListener(img, 'dblclick', evt => {
+      InternalEvent.addListener(img, 'dblclick', evt => {
         this.selectMode(img, funct);
         this.noReset = true;
       });
@@ -384,7 +384,7 @@ class mxToolbar extends mxEventSource {
         this.selectedMode.className = `${this.selectedMode.initialClassName}Selected`;
       }
 
-      this.fireEvent(new mxEventObject(mxEvent.SELECT, 'function', funct));
+      this.fireEvent(new EventObject(InternalEvent.SELECT, 'function', funct));
     }
   }
 
@@ -419,7 +419,7 @@ class mxToolbar extends mxEventSource {
    */
   // addBreak(): void;
   addBreak() {
-    mxUtils.br(this.container);
+    utils.br(this.container);
   }
 
   /**
@@ -440,7 +440,7 @@ class mxToolbar extends mxEventSource {
    */
   // destroy(): void;
   destroy() {
-    mxEvent.release(this.container);
+    InternalEvent.release(this.container);
     this.container = null;
     this.defaultMode = null;
     this.defaultFunction = null;

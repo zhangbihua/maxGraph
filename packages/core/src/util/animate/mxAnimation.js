@@ -4,17 +4,17 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxEventSource from '../event/mxEventSource';
-import mxEventObject from '../event/mxEventObject';
-import mxEvent from '../event/mxEvent';
+import EventSource from '../../view/event/EventSource';
+import EventObject from '../../view/event/EventObject';
+import InternalEvent from '../../view/event/InternalEvent';
 
 /**
  * Implements a basic animation in JavaScript.
  *
  * @class mxAnimation
- * @extends {mxEventSource}
+ * @extends {EventSource}
  */
-class mxAnimation extends mxEventSource {
+class mxAnimation extends EventSource {
   constructor(delay) {
     super();
     this.delay = delay != null ? delay : 20;
@@ -60,7 +60,7 @@ class mxAnimation extends mxEventSource {
    */
   // updateAnimation(): void;
   updateAnimation() {
-    this.fireEvent(new mxEventObject(mxEvent.EXECUTE));
+    this.fireEvent(new EventObject(InternalEvent.EXECUTE));
   }
 
   /**
@@ -71,7 +71,7 @@ class mxAnimation extends mxEventSource {
     if (this.thread != null) {
       window.clearInterval(this.thread);
       this.thread = null;
-      this.fireEvent(new mxEventObject(mxEvent.DONE));
+      this.fireEvent(new EventObject(InternalEvent.DONE));
     }
   }
 }

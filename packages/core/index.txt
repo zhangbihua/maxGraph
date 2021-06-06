@@ -10,7 +10,7 @@ Overview:
   editor. The main class in this package is <mxEditor>.
   
   The *view* and *model* packages implement the graph component, represented
-  by <mxGraph>. It refers to a <mxGraphModel> which contains <mxCell>s and
+  by <mxGraph>. It refers to a <Transactions> which contains <mxCell>s and
   caches the state of the cells in a <mxGraphView>. The cells are painted
   using a <mxCellRenderer> based on the appearance defined in <mxStylesheet>.
   Undo history is implemented in <mxUndoManager>. To display an icon on the

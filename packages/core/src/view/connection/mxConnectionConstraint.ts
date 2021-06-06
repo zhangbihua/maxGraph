@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxPoint from '../../util/datatypes/mxPoint';
+import Point from '../geometry/Point';
 
 /**
  * Defines an object that contains the constraints about how to connect one side of an edge to its terminal.
@@ -13,7 +13,7 @@ import mxPoint from '../../util/datatypes/mxPoint';
  */
 class mxConnectionConstraint {
   constructor(
-    point: mxPoint | null = null,
+    point: Point | null = null,
     perimeter: boolean = true,
     name: string | null = null,
     dx: number | null = null,
@@ -32,7 +32,7 @@ class mxConnectionConstraint {
    * <mxPoint> that specifies the fixed location of the connection point.
    */
   // point: mxPoint;
-  point: mxPoint | null = null;
+  point: Point | null = null;
 
   /**
    * Variable: perimeter

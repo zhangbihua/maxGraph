@@ -7,11 +7,11 @@
 
 import mxClient from '../mxClient';
 import mxToolbar from '../util/gui/mxToolbar';
-import mxGeometry from '../util/datatypes/mxGeometry';
-import mxUtils from '../util/mxUtils';
-import mxEvent from '../util/event/mxEvent';
-import { getClientX, getClientY } from '../util/mxEventUtils';
-import { makeDraggable } from '../util/mxGestureUtils';
+import Geometry from '../view/geometry/Geometry';
+import utils from '../util/Utils';
+import InternalEvent from '../view/event/InternalEvent';
+import { getClientX, getClientY } from '../util/EventUtils';
+import { makeDraggable } from '../util/GestureUtils';
 
 /**
  * Toolbar for the editor. This modifies the state of the graph
@@ -90,7 +90,7 @@ class mxDefaultToolbar {
 
       // Installs the insert function in the editor if an item is
       // selected in the toolbar
-      this.toolbar.addListener(mxEvent.SELECT, (sender, evt) => {
+      this.toolbar.addListener(InternalEvent.SELECT, (sender, evt) => {
         const funct = evt.getProperty('function');
 
         if (funct != null) {
@@ -110,8 +110,8 @@ class mxDefaultToolbar {
         }
       };
 
-      this.editor.graph.addListener(mxEvent.DOUBLE_CLICK, this.resetHandler);
-      this.editor.addListener(mxEvent.ESCAPE, this.resetHandler);
+      this.editor.graph.addListener(InternalEvent.DOUBLE_CLICK, this.resetHandler);
+      this.editor.addListener(InternalEvent.ESCAPE, this.resetHandler);
     }
   }
 
@@ -262,7 +262,7 @@ class mxDefaultToolbar {
       }
 
       this.toolbar.resetMode();
-      mxEvent.consume(evt);
+      InternalEvent.consume(evt);
     };
 
     const img = this.toolbar.addMode(
@@ -334,7 +334,7 @@ class mxDefaultToolbar {
     if (graph.canImportCell(vertex)) {
       const x = getClientX(evt);
       const y = getClientY(evt);
-      const pt = mxUtils.convertPoint(graph.container, x, y);
+      const pt = utils.convertPoint(graph.container, x, y);
 
       // Splits the target edge or inserts into target group
       if (
@@ -400,7 +400,7 @@ class mxDefaultToolbar {
         edge = this.editor.createEdge(source, vertex);
 
         if (edge.getGeometry() == null) {
-          const edgeGeometry = new mxGeometry();
+          const edgeGeometry = new Geometry();
           edgeGeometry.relative = true;
 
           model.setGeometry(edge, edgeGeometry);
@@ -438,7 +438,7 @@ class mxDefaultToolbar {
       sprite.style.height = `${2 * img.offsetHeight}px`;
 
       makeDraggable(img, this.editor.graph, dropHandler, sprite);
-      mxEvent.removeListener(sprite, 'load', loader);
+      InternalEvent.removeListener(sprite, 'load', loader);
     };
   }
 

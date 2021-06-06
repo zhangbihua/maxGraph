@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxPoint from '../datatypes/mxPoint';
-import mxCellStatePreview from '../../view/cell/mxCellStatePreview';
+import Point from '../../view/geometry/Point';
+import CellStatePreview from '../../view/cell/CellStatePreview';
 import mxAnimation from './mxAnimation';
 
 /**
@@ -98,7 +98,7 @@ class mxMorphing extends mxAnimation {
    */
   updateAnimation() {
     super.updateAnimation();
-    const move = new mxCellStatePreview(this.graph);
+    const move = new CellStatePreview(this.graph);
 
     if (this.cells != null) {
       // Animates the given cells individually without recursion
@@ -191,7 +191,7 @@ class mxMorphing extends mxAnimation {
     const x = state.x / scale - translate.x;
     const y = state.y / scale - translate.y;
 
-    return new mxPoint((origin.x - x) * scale, (origin.y - y) * scale);
+    return new Point((origin.x - x) * scale, (origin.y - y) * scale);
   }
 
   /**
@@ -227,7 +227,7 @@ class mxMorphing extends mxAnimation {
 
     if (result == null) {
       const t = this.graph.view.getTranslate();
-      result = new mxPoint(-t.x, -t.y);
+      result = new Point(-t.x, -t.y);
     }
 
     return result;

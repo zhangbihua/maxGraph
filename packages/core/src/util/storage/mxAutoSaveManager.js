@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxEventSource from '../event/mxEventSource';
+import EventSource from '../../view/event/EventSource';
 
 /**
  * Manager for automatically saving diagrams. The <save> hook must be
@@ -21,9 +21,9 @@ import mxEventSource from '../event/mxEventSource';
  * ```
  *
  * @class mxAutoSaveManager
- * @extends mxEventSource
+ * @extends EventSource
  */
-class mxAutoSaveManager extends mxEventSource {
+class mxAutoSaveManager extends EventSource {
   constructor(graph) {
     super();
 

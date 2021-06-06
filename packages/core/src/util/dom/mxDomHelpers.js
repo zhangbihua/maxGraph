@@ -1,5 +1,5 @@
-import mxEvent from "../event/mxEvent";
-import { write } from "../mxDomUtils";
+import InternalEvent from "../../view/event/InternalEvent";
+import { write } from "../DomUtils";
 
 /**
  * Function: linkAction
@@ -78,7 +78,7 @@ export const link = (parent, text, funct, pad) => {
     a.style.paddingLeft = `${pad}px`;
   }
 
-  mxEvent.addListener(a, 'click', funct);
+  InternalEvent.addListener(a, 'click', funct);
   write(a, text);
 
   if (parent != null) {
@@ -114,7 +114,7 @@ export const button = (label, funct, doc) => {
   const button = doc.createElement('button');
   write(button, label);
 
-  mxEvent.addListener(button, 'click', evt => {
+  InternalEvent.addListener(button, 'click', evt => {
     funct(evt);
   });
 

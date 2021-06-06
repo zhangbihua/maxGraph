@@ -4,13 +4,13 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxEventSource from '../event/mxEventSource';
-import mxUtils from '../mxUtils';
-import mxEventObject from '../event/mxEventObject';
+import EventSource from '../../view/event/EventSource';
+import utils from '../Utils';
+import EventObject from '../../view/event/EventObject';
 import mxClient from '../../mxClient';
-import mxEvent from '../event/mxEvent';
-import { write } from '../mxDomUtils';
-import { isLeftMouseButton } from '../mxEventUtils';
+import InternalEvent from '../../view/event/InternalEvent';
+import { write } from '../DomUtils';
+import { isLeftMouseButton } from '../EventUtils';
 
 /**
  * Class: mxPopupMenu
@@ -38,7 +38,7 @@ import { isLeftMouseButton } from '../mxEventUtils';
  *
  * Fires after the menu has been shown in <popup>.
  */
-class mxPopupMenu extends mxEventSource {
+class mxPopupMenu extends EventSource {
   constructor(factoryMethod) {
     super();
     this.factoryMethod = factoryMethod;
@@ -70,7 +70,7 @@ class mxPopupMenu extends mxEventSource {
     this.div.appendChild(this.table);
 
     // Disables the context menu on the outer div
-    mxEvent.disableContextMenu(this.div);
+    InternalEvent.disableContextMenu(this.div);
   }
 
   /**
@@ -271,7 +271,7 @@ class mxPopupMenu extends mxEventSource {
     if (active != false && enabled != false) {
       let currentSelection = null;
 
-      mxEvent.addGestureListeners(
+      InternalEvent.addGestureListeners(
         tr,
         evt => {
           this.eventReceiver = tr;
@@ -290,7 +290,7 @@ class mxPopupMenu extends mxEventSource {
             }
           }
 
-          mxEvent.consume(evt);
+          InternalEvent.consume(evt);
         },
         evt => {
           if (parent.activeRow != tr && parent.activeRow != parent) {
@@ -338,13 +338,13 @@ class mxPopupMenu extends mxEventSource {
           }
 
           this.eventReceiver = null;
-          mxEvent.consume(evt);
+          InternalEvent.consume(evt);
         }
       );
 
       // Resets hover style because TR in IE doesn't have hover
       if (!noHover) {
-        mxEvent.addListener(tr, 'mouseout', evt => {
+        InternalEvent.addListener(tr, 'mouseout', evt => {
           tr.className = 'mxPopupMenuItem';
         });
       }
@@ -418,7 +418,7 @@ class mxPopupMenu extends mxEventSource {
       // Moves the submenu to the left side if there is no space
       const left = parseInt(row.div.offsetLeft);
       const width = parseInt(row.div.offsetWidth);
-      const offset = mxUtils.getDocumentScrollOrigin(document);
+      const offset = utils.getDocumentScrollOrigin(document);
 
       const b = document.body;
       const d = document.documentElement;
@@ -432,7 +432,7 @@ class mxPopupMenu extends mxEventSource {
         )}px`;
       }
 
-      mxUtils.fit(row.div);
+      utils.fit(row.div);
     }
   }
 
@@ -499,7 +499,7 @@ class mxPopupMenu extends mxEventSource {
 
       // Removes all child nodes from the existing menu
       while (this.tbody.firstChild != null) {
-        mxEvent.release(this.tbody.firstChild);
+        InternalEvent.release(this.tbody.firstChild);
         this.tbody.removeChild(this.tbody.firstChild);
       }
 
@@ -508,7 +508,7 @@ class mxPopupMenu extends mxEventSource {
 
       if (this.itemCount > 0) {
         this.showMenu();
-        this.fireEvent(new mxEventObject(mxEvent.SHOW));
+        this.fireEvent(new EventObject(InternalEvent.SHOW));
       }
     }
   }
@@ -532,7 +532,7 @@ class mxPopupMenu extends mxEventSource {
   showMenu() {
     // Fits the div inside the viewport
     document.body.appendChild(this.div);
-    mxUtils.fit(this.div);
+    utils.fit(this.div);
   }
 
   /**
@@ -549,7 +549,7 @@ class mxPopupMenu extends mxEventSource {
 
       this.hideSubmenu(this);
       this.containsItems = false;
-      this.fireEvent(new mxEventObject(mxEvent.HIDE));
+      this.fireEvent(new EventObject(InternalEvent.HIDE));
     }
   }
 
@@ -583,7 +583,7 @@ class mxPopupMenu extends mxEventSource {
   // destroy(): void;
   destroy() {
     if (this.div != null) {
-      mxEvent.release(this.div);
+      InternalEvent.release(this.div);
 
       if (this.div.parentNode != null) {
         this.div.parentNode.removeChild(this.div);
