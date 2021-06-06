@@ -10,7 +10,7 @@ import EventObject from './event/EventObject';
 import EventSource from './event/EventSource';
 import InternalEvent from './event/InternalEvent';
 import Rectangle from './geometry/Rectangle';
-import TooltipHandler from './popups_menus/TooltipHandler';
+import TooltipHandler from './tooltip/TooltipHandler';
 import mxClient from '../mxClient';
 import mxSelectionCellsHandler from './selection/mxSelectionCellsHandler';
 import mxConnectionHandler from './connection/mxConnectionHandler';
@@ -22,29 +22,16 @@ import GraphView from './view/GraphView';
 import CellRenderer from './cell/CellRenderer';
 import CellEditor from './editing/CellEditor';
 import Point from './geometry/Point';
-import utils, {
-  contains, convertPoint,
+import {
   getBoundingBox, getCurrentStyle,
-  getRotatedPoint,
-  getValue, hasScrollbars, intersects, parseCssNumber, ptSegDistSq, toRadians
+  getValue, hasScrollbars, parseCssNumber,
 } from '../util/Utils';
-import mxDictionary from '../util/mxDictionary';
-import InternalMouseEvent from './event/InternalMouseEvent';
-import Resources from '../util/Resources';
 import Cell from './cell/datatypes/Cell';
 import Model from './model/Model';
 import Stylesheet from './style/Stylesheet';
 import {
-  ALIGN_MIDDLE,
-  DEFAULT_STARTSIZE,
   DIALECT_SVG,
-  DIRECTION_EAST,
-  DIRECTION_NORTH,
-  DIRECTION_SOUTH,
-  DIRECTION_WEST,
-  NONE,
   PAGE_FORMAT_A4_PORTRAIT,
-  SHAPE_SWIMLANE,
 } from '../util/Constants';
 
 import ChildChange from './model/ChildChange';
@@ -53,15 +40,7 @@ import RootChange from './model/RootChange';
 import StyleChange from './style/StyleChange';
 import TerminalChange from './cell/edge/TerminalChange';
 import ValueChange from './cell/ValueChange';
-import mxPolyline from './geometry/shape/edge/mxPolyline';
 import CellState from './cell/datatypes/CellState';
-import ImageBundle from './image/ImageBundle';
-import Shape from './geometry/shape/Shape';
-import { htmlEntities } from '../util/StringUtils';
-import {
-  getClientX,
-  getClientY,
-} from '../util/EventUtils';
 import { isNode } from '../util/DomUtils';
 import CellArray from "./cell/datatypes/CellArray";
 import EdgeStyle from "./style/EdgeStyle";
@@ -1663,20 +1642,6 @@ class Graph extends EventSource {
   }
 
   /**
-   * Returns true if the given terminal point is movable. This is independent
-   * from {@link isCellConnectable} and {@link isCellDisconnectable} and controls if terminal
-   * points can be moved in the graph if the edge is not connected. Note that it
-   * is required for this to return true to connect unconnected edges. This
-   * implementation returns true.
-   *
-   * @param cell {@link mxCell} whose terminal point should be moved.
-   * @param source Boolean indicating if the source or target terminal should be moved.
-   */
-  isTerminalPointMovable(cell: Cell, source: boolean): boolean {
-    return true;
-  }
-
-  /**
    * Returns {@link recursiveResize}.
    *
    * @param state {@link mxCellState} that is being resized.
@@ -1762,73 +1727,6 @@ class Graph extends EventSource {
    */
   setDefaultParent(cell: Cell | null): void {
     this.defaultParent = cell;
-  }
-
-  /**
-   * Returns all distinct visible opposite cells for the specified terminal
-   * on the given edges.
-   *
-   * @param edges Array of {@link Cell} that contains the edges whose opposite
-   * terminals should be returned.
-   * @param terminal Terminal that specifies the end whose opposite should be
-   * returned.
-   * @param sources Optional boolean that specifies if source terminals should be
-   * included in the result. Default is `true`.
-   * @param targets Optional boolean that specifies if targer terminals should be
-   * included in the result. Default is `true`.
-   */
-  getOpposites(
-    edges: CellArray,
-    terminal: Cell | null = null,
-    sources: boolean = true,
-    targets: boolean = true
-  ): CellArray {
-    const terminals = new CellArray();
-
-    // Fast lookup to avoid duplicates in terminals array
-    const dict = new mxDictionary();
-
-    for (let i = 0; i < edges.length; i += 1) {
-      const state = this.view.getState(edges[i]);
-
-      const source =
-        state != null
-          ? state.getVisibleTerminal(true)
-          : this.view.getVisibleTerminal(edges[i], true);
-      const target =
-        state != null
-          ? state.getVisibleTerminal(false)
-          : this.view.getVisibleTerminal(edges[i], false);
-
-      // Checks if the terminal is the source of the edge and if the
-      // target should be stored in the result
-      if (
-        source == terminal &&
-        target != null &&
-        target != terminal &&
-        targets
-      ) {
-        if (!dict.get(target)) {
-          dict.put(target, true);
-          terminals.push(target);
-        }
-      }
-
-      // Checks if the terminal is the taget of the edge and if the
-      // source should be stored in the result
-      else if (
-        target == terminal &&
-        source != null &&
-        source != terminal &&
-        sources
-      ) {
-        if (!dict.get(source)) {
-          dict.put(source, true);
-          terminals.push(source);
-        }
-      }
-    }
-    return terminals;
   }
 
   /**

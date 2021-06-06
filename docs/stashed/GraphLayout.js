@@ -62,7 +62,7 @@ export default GraphLayout;
         // Changes the default vertex style in-place
         let style = graph.getStylesheet().getDefaultVertexStyle();
         style.shape = mxConstants.SHAPE_ELLIPSE;
-        style.perimiter = mxPerimeter.EllipsePerimeter;
+        style.perimiter = Perimeter.EllipsePerimeter;
         style.gradientColor = 'white';
         style.fontSize = '10';
 

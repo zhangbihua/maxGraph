@@ -44,14 +44,14 @@ Menus.prototype.defaultFonts = ['Helvetica', 'Verdana', 'Times New Roman', 'Gara
 Menus.prototype.init = function()
 {
 	let graph = this.editorUi.editor.graph;
-	let isGraphEnabled = mxUtils.bind(graph, graph.isEnabled);
+	let isGraphEnabled = utils.bind(graph, graph.isEnabled);
 
 	this.customFonts = [];
 	this.customFontSizes = [];
 
-	this.put('fontFamily', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('fontFamily', new Menu(utils.bind(this, function(menu, parent)
 	{
-		let addItem = mxUtils.bind(this, function(fontname)
+		let addItem = utils.bind(this, function(fontname)
 		{
 			let tr = this.styleChange(menu, fontname, .fontFamily, [fontname], null, parent, function()
 			{
@@ -88,29 +88,29 @@ Menus.prototype.init = function()
 			
 			menu.addSeparator(parent);
 			
-			menu.addItem(mxResources.get('reset'), null, mxUtils.bind(this, function()
+			menu.addItem(Resources.get('reset'), null, utils.bind(this, function()
 			{
 				this.customFonts = [];
-				this.editorUi.fireEvent(new mxEventObject('customFontsChanged'));
+				this.editorUi.fireEvent(new EventObject('customFontsChanged'));
 			}), parent);
 			
 			menu.addSeparator(parent);
 		}
 		
-		this.promptChange(menu, mxResources.get('custom') + '...', '', mxConstants.DEFAULT_FONTFAMILY, 'fontFamily', parent, true, mxUtils.bind(this, function(newValue)
+		this.promptChange(menu, Resources.get('custom') + '...', '', mxConstants.DEFAULT_FONTFAMILY, 'fontFamily', parent, true, utils.bind(this, function(newValue)
 		{
-			if (mxUtils.indexOf(this.customFonts, newValue) < 0)
+			if (utils.indexOf(this.customFonts, newValue) < 0)
 			{
 				this.customFonts.push(newValue);
-				this.editorUi.fireEvent(new mxEventObject('customFontsChanged'));
+				this.editorUi.fireEvent(new EventObject('customFontsChanged'));
 			}
 		}));
 	})));
-	this.put('formatBlock', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('formatBlock', new Menu(utils.bind(this, function(menu, parent)
 	{
 		function addItem(label, tag)
 		{
-			return menu.addItem(label, null, mxUtils.bind(this, function()
+			return menu.addItem(label, null, utils.bind(this, function()
 			{
 				// TODO: Check if visible
 				if (graph.cellEditor.textarea != null)
@@ -121,23 +121,23 @@ Menus.prototype.init = function()
 			}), parent);
 		};
 		
-		addItem(mxResources.get('normal'), 'p');
+		addItem(Resources.get('normal'), 'p');
 		
-		addItem('', 'h1').firstChild.nextSibling.innerHTML = '<h1 style="margin:0px;">' + mxResources.get('heading') + ' 1</h1>';
-		addItem('', 'h2').firstChild.nextSibling.innerHTML = '<h2 style="margin:0px;">' + mxResources.get('heading') + ' 2</h2>';
-		addItem('', 'h3').firstChild.nextSibling.innerHTML = '<h3 style="margin:0px;">' + mxResources.get('heading') + ' 3</h3>';
-		addItem('', 'h4').firstChild.nextSibling.innerHTML = '<h4 style="margin:0px;">' + mxResources.get('heading') + ' 4</h4>';
-		addItem('', 'h5').firstChild.nextSibling.innerHTML = '<h5 style="margin:0px;">' + mxResources.get('heading') + ' 5</h5>';
-		addItem('', 'h6').firstChild.nextSibling.innerHTML = '<h6 style="margin:0px;">' + mxResources.get('heading') + ' 6</h6>';
+		addItem('', 'h1').firstChild.nextSibling.innerHTML = '<h1 style="margin:0px;">' + Resources.get('heading') + ' 1</h1>';
+		addItem('', 'h2').firstChild.nextSibling.innerHTML = '<h2 style="margin:0px;">' + Resources.get('heading') + ' 2</h2>';
+		addItem('', 'h3').firstChild.nextSibling.innerHTML = '<h3 style="margin:0px;">' + Resources.get('heading') + ' 3</h3>';
+		addItem('', 'h4').firstChild.nextSibling.innerHTML = '<h4 style="margin:0px;">' + Resources.get('heading') + ' 4</h4>';
+		addItem('', 'h5').firstChild.nextSibling.innerHTML = '<h5 style="margin:0px;">' + Resources.get('heading') + ' 5</h5>';
+		addItem('', 'h6').firstChild.nextSibling.innerHTML = '<h6 style="margin:0px;">' + Resources.get('heading') + ' 6</h6>';
 		
-		addItem('', 'pre').firstChild.nextSibling.innerHTML = '<pre style="margin:0px;">' + mxResources.get('formatted') + '</pre>';
-		addItem('', 'blockquote').firstChild.nextSibling.innerHTML = '<blockquote style="margin-top:0px;margin-bottom:0px;">' + mxResources.get('blockquote') + '</blockquote>';
+		addItem('', 'pre').firstChild.nextSibling.innerHTML = '<pre style="margin:0px;">' + Resources.get('formatted') + '</pre>';
+		addItem('', 'blockquote').firstChild.nextSibling.innerHTML = '<blockquote style="margin-top:0px;margin-bottom:0px;">' + Resources.get('blockquote') + '</blockquote>';
 	})));
-	this.put('fontSize', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('fontSize', new Menu(utils.bind(this, function(menu, parent)
 	{
 		let sizes = [6, 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 72];
 		
-		let addItem = mxUtils.bind(this, function(fontsize)
+		let addItem = utils.bind(this, function(fontsize)
 		{
 			this.styleChange(menu, fontsize, .fontSize, [fontsize], null, parent, function()
 			{
@@ -181,7 +181,7 @@ Menus.prototype.init = function()
 			
 			menu.addSeparator(parent);
 			
-			menu.addItem(mxResources.get('reset'), null, mxUtils.bind(this, function()
+			menu.addItem(Resources.get('reset'), null, utils.bind(this, function()
 			{
 				this.customFontSizes = [];
 			}), parent);
@@ -189,45 +189,45 @@ Menus.prototype.init = function()
 			menu.addSeparator(parent);
 		}
 		
-		this.promptChange(menu, mxResources.get('custom') + '...', '(pt)', '12', 'fontSize', parent, true, mxUtils.bind(this, function(newValue)
+		this.promptChange(menu, Resources.get('custom') + '...', '(pt)', '12', 'fontSize', parent, true, utils.bind(this, function(newValue)
 		{
 			this.customFontSizes.push(newValue);
 		}));
 	})));
-	this.put('direction', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('direction', new Menu(utils.bind(this, function(menu, parent)
 	{
-		menu.addItem(mxResources.get('flipH'), null, function() { graph.toggleCellStyles('flipH', false); }, parent);
-		menu.addItem(mxResources.get('flipV'), null, function() { graph.toggleCellStyles('flipV', false); }, parent);
+		menu.addItem(Resources.get('flipH'), null, function() { graph.toggleCellStyles('flipH', false); }, parent);
+		menu.addItem(Resources.get('flipV'), null, function() { graph.toggleCellStyles('flipV', false); }, parent);
 		this.addMenuItems(menu, ['-', 'rotation'], parent);
 	})));
-	this.put('align', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('align', new Menu(utils.bind(this, function(menu, parent)
 	{
-		menu.addItem(mxResources.get('leftAlign'), null, function() { graph.alignCells(mxConstants.ALIGN_LEFT); }, parent);
-		menu.addItem(mxResources.get('center'), null, function() { graph.alignCells(mxConstants.ALIGN_CENTER); }, parent);
-		menu.addItem(mxResources.get('rightAlign'), null, function() { graph.alignCells(mxConstants.ALIGN_RIGHT); }, parent);
+		menu.addItem(Resources.get('leftAlign'), null, function() { graph.alignCells(mxConstants.ALIGN_LEFT); }, parent);
+		menu.addItem(Resources.get('center'), null, function() { graph.alignCells(mxConstants.ALIGN_CENTER); }, parent);
+		menu.addItem(Resources.get('rightAlign'), null, function() { graph.alignCells(mxConstants.ALIGN_RIGHT); }, parent);
 		menu.addSeparator(parent);
-		menu.addItem(mxResources.get('topAlign'), null, function() { graph.alignCells(mxConstants.ALIGN_TOP); }, parent);
-		menu.addItem(mxResources.get('middle'), null, function() { graph.alignCells(mxConstants.ALIGN_MIDDLE); }, parent);
-		menu.addItem(mxResources.get('bottomAlign'), null, function() { graph.alignCells(mxConstants.ALIGN_BOTTOM); }, parent);
+		menu.addItem(Resources.get('topAlign'), null, function() { graph.alignCells(mxConstants.ALIGN_TOP); }, parent);
+		menu.addItem(Resources.get('middle'), null, function() { graph.alignCells(mxConstants.ALIGN_MIDDLE); }, parent);
+		menu.addItem(Resources.get('bottomAlign'), null, function() { graph.alignCells(mxConstants.ALIGN_BOTTOM); }, parent);
 	})));
-	this.put('distribute', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('distribute', new Menu(utils.bind(this, function(menu, parent)
 	{
-		menu.addItem(mxResources.get('horizontal'), null, function() { graph.distributeCells(true); }, parent);
-		menu.addItem(mxResources.get('vertical'), null, function() { graph.distributeCells(false); }, parent);
+		menu.addItem(Resources.get('horizontal'), null, function() { graph.distributeCells(true); }, parent);
+		menu.addItem(Resources.get('vertical'), null, function() { graph.distributeCells(false); }, parent);
 	})));
-	this.put('layout', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('layout', new Menu(utils.bind(this, function(menu, parent)
 	{
-		let promptSpacing = mxUtils.bind(this, function(defaultValue, fn)
+		let promptSpacing = utils.bind(this, function(defaultValue, fn)
 		{
-			let dlg = new FilenameDialog(this.editorUi, defaultValue, mxResources.get('apply'), function(newValue)
+			let dlg = new FilenameDialog(this.editorUi, defaultValue, Resources.get('apply'), function(newValue)
 			{
 				fn(parseFloat(newValue));
-			}, mxResources.get('spacing'));
+			}, Resources.get('spacing'));
 			this.editorUi.showDialog(dlg.container, 300, 80, true, true);
 			dlg.init();
 		});
 		
-		menu.addItem(mxResources.get('horizontalFlow'), null, mxUtils.bind(this, function()
+		menu.addItem(Resources.get('horizontalFlow'), null, utils.bind(this, function()
 		{
 			let layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
 			
@@ -237,7 +237,7 @@ Menus.prototype.init = function()
     			layout.execute(graph.getDefaultParent(), selectionCells.length == 0 ? null : selectionCells);
     		}, true);
 		}), parent);
-		menu.addItem(mxResources.get('verticalFlow'), null, mxUtils.bind(this, function()
+		menu.addItem(Resources.get('verticalFlow'), null, utils.bind(this, function()
 		{
 			let layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_NORTH);
 			
@@ -248,7 +248,7 @@ Menus.prototype.init = function()
     		}, true);
 		}), parent);
 		menu.addSeparator(parent);
-		menu.addItem(mxResources.get('horizontalTree'), null, mxUtils.bind(this, function()
+		menu.addItem(Resources.get('horizontalTree'), null, utils.bind(this, function()
 		{
 			let tmp = graph.getSelectionCell();
 			let roots = null;
@@ -276,7 +276,7 @@ Menus.prototype.init = function()
 				layout.edgeRouting = false;
 				layout.levelDistance = 30;
 				
-				promptSpacing(layout.levelDistance, mxUtils.bind(this, function(newValue)
+				promptSpacing(layout.levelDistance, utils.bind(this, function(newValue)
 				{
 					layout.levelDistance = newValue;
 					
@@ -287,7 +287,7 @@ Menus.prototype.init = function()
 				}));
 			}
 		}), parent);
-		menu.addItem(mxResources.get('verticalTree'), null, mxUtils.bind(this, function()
+		menu.addItem(Resources.get('verticalTree'), null, utils.bind(this, function()
 		{
 			let tmp = graph.getSelectionCell();
 			let roots = null;
@@ -315,7 +315,7 @@ Menus.prototype.init = function()
 				layout.edgeRouting = false;
 				layout.levelDistance = 30;
 				
-				promptSpacing(layout.levelDistance, mxUtils.bind(this, function(newValue)
+				promptSpacing(layout.levelDistance, utils.bind(this, function(newValue)
 				{
 					layout.levelDistance = newValue;
 					
@@ -326,7 +326,7 @@ Menus.prototype.init = function()
 				}));
 			}
 		}), parent);
-		menu.addItem(mxResources.get('radialTree'), null, mxUtils.bind(this, function()
+		menu.addItem(Resources.get('radialTree'), null, utils.bind(this, function()
 		{
 			let tmp = graph.getSelectionCell();
 			let roots = null;
@@ -354,7 +354,7 @@ Menus.prototype.init = function()
 				layout.levelDistance = 80;
 				layout.autoRadius = true;
 				
-				promptSpacing(layout.levelDistance, mxUtils.bind(this, function(newValue)
+				promptSpacing(layout.levelDistance, utils.bind(this, function(newValue)
 				{
 					layout.levelDistance = newValue;
 					
@@ -376,11 +376,11 @@ Menus.prototype.init = function()
 			}
 		}), parent);
 		menu.addSeparator(parent);
-		menu.addItem(mxResources.get('organic'), null, mxUtils.bind(this, function()
+		menu.addItem(Resources.get('organic'), null, utils.bind(this, function()
 		{
 			let layout = new mxFastOrganicLayout(graph);
 			
-			promptSpacing(layout.forceConstant, mxUtils.bind(this, function(newValue)
+			promptSpacing(layout.forceConstant, utils.bind(this, function(newValue)
 			{
 				layout.forceConstant = newValue;
 				
@@ -402,7 +402,7 @@ Menus.prototype.init = function()
 	    		}, true);
 			}));
 		}), parent);
-		menu.addItem(mxResources.get('circle'), null, mxUtils.bind(this, function()
+		menu.addItem(Resources.get('circle'), null, utils.bind(this, function()
 		{
 			let layout = new mxCircleLayout(graph);
 			
@@ -424,11 +424,11 @@ Menus.prototype.init = function()
     		}, true);
 		}), parent);
 	})));
-	this.put('navigation', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('navigation', new Menu(utils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['home', '-', 'exitGroup', 'enterGroup', '-', 'expand', 'collapse', '-', 'collapsible'], parent);
 	})));
-	this.put('arrange', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('arrange', new Menu(utils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['toFront', 'toBack', '-'], parent);
 		this.addSubmenu('direction', menu, parent);
@@ -441,11 +441,11 @@ Menus.prototype.init = function()
 		this.addSubmenu('layout', menu, parent);
 		this.addMenuItems(menu, ['-', 'group', 'ungroup', 'removeFromGroup', '-', 'clearWaypoints', 'autosize'], parent);
 	}))).isEnabled = isGraphEnabled;
-	this.put('insert', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('insert', new Menu(utils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['insertLink', 'insertImage'], parent);
 	})));
-	this.put('view', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('view', new Menu(utils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ((this.editorUi.format != null) ? ['formatPanel'] : []).
 			concat(['outline', 'layers', '-', 'pageView', 'pageScale', '-', 'scrollbars', 'tooltips', '-',
@@ -453,7 +453,7 @@ Menus.prototype.init = function()
 			        'resetView', 'zoomIn', 'zoomOut'], parent));
 	})));
 	// Two special dropdowns that are only used in the toolbar
-	this.put('viewPanels', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('viewPanels', new Menu(utils.bind(this, function(menu, parent)
 	{
 		if (this.editorUi.format != null)
 		{
@@ -462,7 +462,7 @@ Menus.prototype.init = function()
 		
 		this.addMenuItems(menu, ['outline', 'layers'], parent);
 	})));
-	this.put('viewZoom', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('viewZoom', new Menu(utils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['resetView', '-'], parent);
 		let scales = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4];
@@ -480,21 +480,21 @@ Menus.prototype.init = function()
 
 		this.addMenuItems(menu, ['-', 'fitWindow', 'fitPageWidth', 'fitPage', 'fitTwoPages', '-', 'customZoom'], parent);
 	})));
-	this.put('file', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('file', new Menu(utils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['new', 'open', '-', 'save', 'saveAs', '-', 'import', 'export', '-', 'pageSetup', 'print'], parent);
 	})));
-	this.put('edit', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('edit', new Menu(utils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'paste', 'delete', '-', 'duplicate', '-',
 			'editData', 'editTooltip', '-', 'editStyle', '-', 'edit', '-', 'editLink', 'openLink', '-',
 			'selectVertices', 'selectEdges', 'selectAll', 'selectNone', '-', 'lockUnlock']);
 	})));
-	this.put('extras', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('extras', new Menu(utils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['copyConnect', 'collapseExpand', '-', 'editDiagram']);
 	})));
-	this.put('help', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('help', new Menu(utils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['help', '-', 'about']);
 	})));
@@ -531,7 +531,7 @@ Menus.prototype.addSubmenu = function(name, menu, parent, label)
 	
 		if (menu.showDisabled || enabled)
 		{
-			let submenu = menu.addItem(label || mxResources.get(name), null, null, parent, null, enabled);
+			let submenu = menu.addItem(label || Resources.get(name), null, null, parent, null, enabled);
 			this.addMenu(name, menu, submenu);
 		}
 	}
@@ -557,7 +557,7 @@ Menus.prototype.addInsertTableCellItem = function(menu, parent)
 {
 	let graph = this.editorUi.editor.graph;
 	
-	this.addInsertTableItem(menu, mxUtils.bind(this, function(evt, rows, cols)
+	this.addInsertTableItem(menu, utils.bind(this, function(evt, rows, cols)
 	{
 		let table = (mxEvent.isControlDown(evt) || mxEvent.isMetaDown(evt)) ?
 			graph.createCrossFunctionalSwimlane(rows, cols) :
@@ -580,7 +580,7 @@ Menus.prototype.addInsertTableCellItem = function(menu, parent)
  */
 Menus.prototype.addInsertTableItem = function(menu, insertFn, parent)
 {
-	insertFn = (insertFn != null) ? insertFn : mxUtils.bind(this, function(evt, rows, cols)
+	insertFn = (insertFn != null) ? insertFn : utils.bind(this, function(evt, rows, cols)
 	{
 		let graph = this.editorUi.editor.graph;
 		let td = graph.getParentByName(mxEvent.getSource(evt), 'TD');
@@ -749,7 +749,7 @@ Menus.prototype.addInsertTableItem = function(menu, insertFn, parent)
 		return selected;
 	};
 	
-	mxEvent.addGestureListeners(picker, null, null, mxUtils.bind(this, function (e)
+	mxEvent.addGestureListeners(picker, null, null, utils.bind(this, function (e)
 	{
 		let selected = mouseover(e);
 		
@@ -758,7 +758,7 @@ Menus.prototype.addInsertTableItem = function(menu, insertFn, parent)
 			insertFn(e, row2.sectionRowIndex + 1, td.cellIndex + 1);
 			
 			// Async required to block event for elements under menu
-			window.setTimeout(mxUtils.bind(this, function()
+			window.setTimeout(utils.bind(this, function()
 			{
 				this.editorUi.hideCurrentMenu();
 			}), 0);
@@ -772,7 +772,7 @@ Menus.prototype.addInsertTableItem = function(menu, insertFn, parent)
  */
 Menus.prototype.edgeStyleChange = function(menu, label, keys, values, sprite, parent, reset)
 {
-	return menu.addItem(label, null, mxUtils.bind(this, function()
+	return menu.addItem(label, null, utils.bind(this, function()
 	{
 		let graph = this.editorUi.editor.graph;
 		graph.stopEditing(false);
@@ -811,7 +811,7 @@ Menus.prototype.edgeStyleChange = function(menu, label, keys, values, sprite, pa
 				}
 			}
 			
-			this.editorUi.fireEvent(new mxEventObject('styleChanged', 'keys', keys,
+			this.editorUi.fireEvent(new EventObject('styleChanged', 'keys', keys,
 				'values', values, 'cells', edges));
 		}
 		finally
@@ -828,7 +828,7 @@ Menus.prototype.styleChange = function(menu, label, keys, values, sprite, parent
 {
 	let apply = this.createStyleChangeFunction(keys, values);
 	
-	return menu.addItem(label, null, mxUtils.bind(this, function()
+	return menu.addItem(label, null, utils.bind(this, function()
 	{
 		let graph = this.editorUi.editor.graph;
 		
@@ -848,7 +848,7 @@ Menus.prototype.styleChange = function(menu, label, keys, values, sprite, parent
  */
 Menus.prototype.createStyleChangeFunction = function(keys, values)
 {
-	return mxUtils.bind(this, function(post)
+	return utils.bind(this, function(post)
 	{
 		let graph = this.editorUi.editor.graph;
 		graph.stopEditing(false);
@@ -890,7 +890,7 @@ Menus.prototype.createStyleChangeFunction = function(keys, values)
 				post();
 			}
 			
-			this.editorUi.fireEvent(new mxEventObject('styleChanged',
+			this.editorUi.fireEvent(new EventObject('styleChanged',
 				'keys', keys, 'values', values, 'cells', cells));
 		}
 		finally
@@ -905,7 +905,7 @@ Menus.prototype.createStyleChangeFunction = function(keys, values)
  */
 Menus.prototype.promptChange = function(menu, label, hint, defaultValue, key, parent, enabled, fn, sprite)
 {
-	return menu.addItem(label, null, mxUtils.bind(this, function()
+	return menu.addItem(label, null, utils.bind(this, function()
 	{
 		let graph = this.editorUi.editor.graph;
 		let value = defaultValue;
@@ -916,7 +916,7 @@ Menus.prototype.promptChange = function(menu, label, hint, defaultValue, key, pa
     		value = state.style[key] || value;
     	}
     	
-		let dlg = new FilenameDialog(this.editorUi, value, mxResources.get('apply'), mxUtils.bind(this, function(newValue)
+		let dlg = new FilenameDialog(this.editorUi, value, Resources.get('apply'), utils.bind(this, function(newValue)
 		{
 			if (newValue != null && newValue.length > 0)
 			{
@@ -936,7 +936,7 @@ Menus.prototype.promptChange = function(menu, label, hint, defaultValue, key, pa
 					fn(newValue);
 				}
 			}
-		}), mxResources.get('enterValue') + ((hint.length > 0) ? (' ' + hint) : ''));
+		}), Resources.get('enterValue') + ((hint.length > 0) ? (' ' + hint) : ''));
 		this.editorUi.showDialog(dlg.container, 300, 80, true, true);
 		dlg.init();
 	}), parent, sprite, enabled);
@@ -956,7 +956,7 @@ Menus.prototype.pickColor = function(key, cmd, defaultValue)
 		// Saves and restores text selection for in-place editor
 		let selState = graph.cellEditor.saveSelection();
 		
-		let dlg = new ColorDialog(this.editorUi, defaultValue || '000000', mxUtils.bind(this, function(color)
+		let dlg = new ColorDialog(this.editorUi, defaultValue || '000000', utils.bind(this, function(color)
 		{
 			graph.cellEditor.restoreSelection(selState);
 			document.execCommand(cmd, false, (color != mxConstants.NONE) ? color : 'transparent');
@@ -1006,7 +1006,7 @@ Menus.prototype.toggleStyle = function(key, defaultValue)
 {
 	let graph = this.editorUi.editor.graph;
 	let value = graph.toggleCellStyles(key, defaultValue);
-	this.editorUi.fireEvent(new mxEventObject('styleChanged', 'keys', [key], 'values', [value],
+	this.editorUi.fireEvent(new EventObject('styleChanged', 'keys', [key], 'values', [value],
 			'cells', graph.getSelectionCells()));
 };
 
@@ -1048,7 +1048,7 @@ Menus.prototype.addShortcut = function(item, action)
 		let td = item.firstChild.nextSibling.nextSibling;
 		let span = document.createElement('span');
 		span.style.color = 'gray';
-		mxUtils.write(span, action.shortcut);
+		utils.write(span, action.shortcut);
 		td.appendChild(span);
 	}
 };
@@ -1164,15 +1164,15 @@ Menus.prototype.addPopupMenuCellItems = function(menu, cell, evt)
 	{
 		let hasWaypoints = false;
 
-		if (cell.isEdge() && mxUtils.getValue(state.style, 'edge', null) != 'entityRelationEdgeStyle' &&
-			mxUtils.getValue(state.style, 'shape', null) != 'arrow')
+		if (cell.isEdge() && utils.getValue(state.style, 'edge', null) != 'entityRelationEdgeStyle' &&
+			utils.getValue(state.style, 'shape', null) != 'arrow')
 		{
 			let handler = graph.selectionCellsHandler.getHandler(cell);
 			let isWaypoint = false;
 			
 			if (handler instanceof mxEdgeHandler && handler.bends != null && handler.bends.length > 2)
 			{
-				let index = handler.getHandleForEvent(graph.updateMouseEvent(new mxMouseEvent(evt)));
+				let index = handler.getHandleForEvent(graph.updateMouseEvent(new InternalMouseEvent(evt)));
 				
 				// Configures removeWaypoint action before execution
 				// Using trigger parameter is cleaner but have to find waypoint here anyway.
@@ -1184,7 +1184,7 @@ Menus.prototype.addPopupMenuCellItems = function(menu, cell, evt)
 			}
 			
 			menu.addSeparator();
-			this.addMenuItem(menu, 'turn', null, evt, null, mxResources.get('reverse'));
+			this.addMenuItem(menu, 'turn', null, evt, null, Resources.get('reverse'));
 			this.addMenuItems(menu, [(isWaypoint) ? 'removeWaypoint' : 'addWaypoint'], null, evt);
 			
 			// Adds reset waypoints option if waypoints exist
@@ -1203,10 +1203,10 @@ Menus.prototype.addPopupMenuCellItems = function(menu, cell, evt)
 			this.addMenuItems(menu, ['-', 'editStyle', 'editData', 'editLink'], null, evt);
 	
 			// Shows edit image action if there is an image in the style
-			if (cell.isVertex() && mxUtils.getValue(state.style, 'image', null) != null)
+			if (cell.isVertex() && utils.getValue(state.style, 'image', null) != null)
 			{
 				menu.addSeparator();
-				this.addMenuItem(menu, 'image', null, evt).firstChild.nextSibling.innerHTML = mxResources.get('editImage') + '...';
+				this.addMenuItem(menu, 'image', null, evt).firstChild.nextSibling.innerHTML = Resources.get('editImage') + '...';
 			}
 		}
 	}
@@ -1233,9 +1233,9 @@ Menus.prototype.createMenubar = function(container)
 	
 	for (let i = 0; i < menus.length; i++)
 	{
-		(mxUtils.bind(this, function(menu)
+		(utils.bind(this, function(menu)
 		{
-			let elt = menubar.addMenu(mxResources.get(menus[i]), mxUtils.bind(this, function()
+			let elt = menubar.addMenu(Resources.get(menus[i]), utils.bind(this, function()
 			{
 				// Allows extensions of menu.funct
 				menu.funct.apply(this, arguments);
@@ -1297,7 +1297,7 @@ Menubar.prototype.addMenu = function(label, funct, before)
 {
 	let elt = document.createElement('a');
 	elt.className = 'geItem';
-	mxUtils.write(elt, label);
+	utils.write(elt, label);
 	this.addMenuHandler(elt, funct);
 	
     if (before != null)
@@ -1321,7 +1321,7 @@ Menubar.prototype.addMenuHandler = function(elt, funct)
 	{
 		let show = true;
 		
-		let clickHandler = mxUtils.bind(this, function(evt)
+		let clickHandler = utils.bind(this, function(evt)
 		{
 			if (show && elt.enabled == null || elt.enabled)
 			{
@@ -1333,14 +1333,14 @@ Menubar.prototype.addMenuHandler = function(elt, funct)
 				menu.autoExpand = true;
 				
 				// Disables autoexpand and destroys menu when hidden
-				menu.hideMenu = mxUtils.bind(this, function()
+				menu.hideMenu = utils.bind(this, function()
 				{
 					mxPopupMenu.prototype.hideMenu.apply(menu, arguments);
 					this.editorUi.resetCurrentMenu();
 					menu.destroy();
 				});
 
-				let offset = mxUtils.getOffset(elt);
+				let offset = utils.getOffset(elt);
 				menu.popup(offset.x, offset.y + elt.offsetHeight, null, evt);
 				this.editorUi.setCurrentMenu(menu, elt);
 			}
@@ -1349,7 +1349,7 @@ Menubar.prototype.addMenuHandler = function(elt, funct)
 		});
 		
 		// Shows menu automatically while in expanded state
-		mxEvent.addListener(elt, 'mousemove', mxUtils.bind(this, function(evt)
+		mxEvent.addListener(elt, 'mousemove', utils.bind(this, function(evt)
 		{
 			if (this.editorUi.currentMenu != null && this.editorUi.currentMenuElt != elt)
 			{
@@ -1360,13 +1360,13 @@ Menubar.prototype.addMenuHandler = function(elt, funct)
 		
 		// Hides menu if already showing and prevents focus
         mxEvent.addListener(elt, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown',
-        	mxUtils.bind(this, function(evt)
+        	utils.bind(this, function(evt)
 		{
 			show = this.currentElt != elt;
 			evt.preventDefault();
 		}));
 
-		mxEvent.addListener(elt, 'click', mxUtils.bind(this, function(evt)
+		mxEvent.addListener(elt, 'click', utils.bind(this, function(evt)
 		{
 			clickHandler(evt);
 			show = true;
@@ -1387,13 +1387,13 @@ Menubar.prototype.destroy = function()
  */
 function Menu(funct, enabled)
 {
-	mxEventSource.call(this);
+	EventSource.call(this);
 	this.funct = funct;
 	this.enabled = (enabled != null) ? enabled : true;
 };
 
 // Menu inherits from mxEventSource
-mxUtils.extend(Menu, mxEventSource);
+utils.extend(Menu, EventSource);
 
 /**
  * Sets the enabled state of the action and fires a stateChanged event.
@@ -1411,7 +1411,7 @@ Menu.prototype.setEnabled = function(value)
 	if (this.enabled != value)
 	{
 		this.enabled = value;
-		this.fireEvent(new mxEventObject('stateChanged'));
+		this.fireEvent(new EventObject('stateChanged'));
 	}
 };
 

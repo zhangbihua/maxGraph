@@ -83,7 +83,7 @@ export default Scrollbars;
       if (!mxClient.isBrowserSupported())
       {
         // Displays an error message if the browser is not supported.
-        mxUtils.error('Browser is not supported!', 200, false);
+        utils.error('Browser is not supported!', 200, false);
       }
       else
       {
@@ -102,14 +102,14 @@ export default Scrollbars;
         mxClient.NO_FO = true;
 
         // Enables move preview in HTML to appear on top
-        mxGraphHandler.prototype.htmlPreview = true;
+        GraphHandler.prototype.htmlPreview = true;
 
         // Enables connect icons to appear on top of HTML
         mxConnectionHandler.prototype.moveIconFront = true;
 
         // Defines an icon for creating new connections in the connection handler.
         // This will automatically disable the highlighting of the source vertex.
-        mxConnectionHandler.prototype.connectImage = new mxImage('images/connector.gif', 16, 16);
+        mxConnectionHandler.prototype.connectImage = new Image('images/connector.gif', 16, 16);
 
         // Disables the context menu
         mxEvent.disableContextMenu(container);
@@ -134,7 +134,7 @@ export default Scrollbars;
             x += state.width;
           }
 
-          return new mxPoint(x, y);
+          return new Point(x, y);
         };
 
         // Overrides source perimeter point for connection previews
@@ -155,7 +155,7 @@ export default Scrollbars;
             x += state.width;
           }
 
-          return new mxPoint(x, y);
+          return new Point(x, y);
         };
 
         // Disables connections to invalid rows
@@ -170,7 +170,7 @@ export default Scrollbars;
         // Uses the entity perimeter (below) as default
         graph.stylesheet.getDefaultVertexStyle().verticalAlign = mxConstants.ALIGN_TOP;
         graph.stylesheet.getDefaultVertexStyle().perimiter =
-          mxPerimeter.EntityPerimeter;
+          Perimeter.EntityPerimeter;
         graph.stylesheet.getDefaultVertexStyle().shadow = true;
         graph.stylesheet.getDefaultVertexStyle().fillColor = '#DDEAFF';
         graph.stylesheet.getDefaultVertexStyle().gradientColor = '#A9C4EB';
@@ -242,7 +242,7 @@ export default Scrollbars;
               {
                 div.scrollHandler = true;
 
-                let updateEdges = mxUtils.bind(this, function()
+                let updateEdges = utils.bind(this, function()
                 {
                   let edgeCount = state.cell.getEdgeCount();
 
@@ -357,7 +357,7 @@ export default Scrollbars;
 
           let edge = this.createEdge(relation);
           let style = this.graph.getCellStyle(edge);
-          let state = new mxCell(this.graph.view, edge, style);
+          let state = new Cell(this.graph.view, edge, style);
 
           // Stores the source row in the handler
           this.sourceRowNode = this.currentRowNode;
@@ -402,7 +402,7 @@ export default Scrollbars;
         };
 
         // User objects (data) for the individual cells
-        let doc = mxUtils.createXmlDocument();
+        let doc = utils.createXmlDocument();
 
         // Same should be used to create the XML node for the table
         // description and the rows (most probably as child nodes)
@@ -427,10 +427,10 @@ export default Scrollbars;
         try
         {
           var v1 = graph.insertVertex(parent, null, '', 20, 20, width, height);
-          v1.geometry.alternateBounds = new mxRectangle(0, 0, width, 26);
+          v1.geometry.alternateBounds = new Rectangle(0, 0, width, 26);
 
           var v2 = graph.insertVertex(parent, null, '', 400, 150, width, height);
-          v2.geometry.alternateBounds = new mxRectangle(0, 0, width, 26);
+          v2.geometry.alternateBounds = new Rectangle(0, 0, width, 26);
 
           graph.insertEdge(parent, null, relation, v1, v2);
         }
@@ -440,14 +440,14 @@ export default Scrollbars;
           graph.getModel().endUpdate();
         }
 
-        var btn1 = mxUtils.button('+', function()
+        var btn1 = utils.button('+', function()
         {
           graph.zoomIn();
         });
         btn1.style.marginLeft = '20px';
 
         document.body.appendChild(btn1);
-        document.body.appendChild(mxUtils.button('-', function()
+        document.body.appendChild(utils.button('-', function()
         {
           graph.zoomOut();
         }));
@@ -473,7 +473,7 @@ export default Scrollbars;
       {
         y = start.getCenterY() - div.scrollTop;
 
-        if (mxUtils.isNode(edge.cell.value) && !start.cell.isCollapsed())
+        if (utils.isNode(edge.cell.value) && !start.cell.isCollapsed())
         {
           let attr = (source) ? 'sourceRow' : 'targetRow';
           let row = parseInt(edge.cell.value.getAttribute(attr));
@@ -503,11 +503,11 @@ export default Scrollbars;
         }
       }
 
-      edge.setAbsoluteTerminalPoint(new mxPoint(x, y), source);
+      edge.setAbsoluteTerminalPoint(new Point(x, y), source);
 
       // Routes multiple incoming edges along common waypoints if
       // the edges have a common target row
-      if (source && mxUtils.isNode(edge.cell.value) && start != null && end != null)
+      if (source && utils.isNode(edge.cell.value) && start != null && end != null)
       {
         let edges = this.graph.getEdgesBetween(start.cell, end.cell, true);
         let tmp = [];
@@ -517,7 +517,7 @@ export default Scrollbars;
 
         for (let i = 0; i < edges.length; i++)
         {
-          if (mxUtils.isNode(edges[i].value) &&
+          if (utils.isNode(edges[i].value) &&
             edges[i].value.getAttribute('targetRow') == row)
           {
             tmp.push(edges[i]);
@@ -546,11 +546,11 @@ export default Scrollbars;
 
             if (states[i].absolutePoints.length < 5)
             {
-              states[i].absolutePoints.splice(2, 0, new mxPoint(x, y));
+              states[i].absolutePoints.splice(2, 0, new Point(x, y));
             }
             else
             {
-              states[i].absolutePoints[2] = new mxPoint(x, y);
+              states[i].absolutePoints[2] = new Point(x, y);
             }
 
             // Must redraw the previous edges with the changed point

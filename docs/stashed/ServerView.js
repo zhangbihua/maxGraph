@@ -43,8 +43,8 @@ export default MYNAMEHERE;
 
 
     // Makes the background of the in-place editor non-transparent
-    let previousStartEditing = mxCellEditor.prototype.startEditing;
-    mxCellEditor.prototype.startEditing = (cell, trigger) =>
+    let previousStartEditing = CellEditor.prototype.startEditing;
+    CellEditor.prototype.startEditing = (cell, trigger) =>
     {
       previousStartEditing.apply(this, arguments);
 
@@ -52,7 +52,7 @@ export default MYNAMEHERE;
 
       if (state != null)
       {
-        let color = mxUtils.getValue(state.style, 'fillColor', 'white');
+        let color = utils.getValue(state.style, 'fillColor', 'white');
         this.textarea.style.background = color;
       }
     };
@@ -64,7 +64,7 @@ export default MYNAMEHERE;
     // FIXME: Since we do not render the label we don't have the label bounds
     // here which means hit detection will only work for the vertex bounds,
     // the edge but not for overlapping labels or most part of the edge labels.
-    mxGraphView.prototype.installListeners = function()
+    GraphView.prototype.installListeners = function()
     {
       let graph = this.graph;
       let container = graph.container;
@@ -72,9 +72,9 @@ export default MYNAMEHERE;
       if (container != null)
       {
         mxEvent.addGestureListeners(container,
-          mxUtils.bind(this, function(evt)
+          utils.bind(this, function(evt)
           {
-            let pt = mxUtils.convertPoint(graph.container,
+            let pt = utils.convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
             let cell = graph.getCellAt(pt.x, pt.y);
             let state = this.getState(cell);
@@ -82,7 +82,7 @@ export default MYNAMEHERE;
             if (state != null)
             {
               graph.fireMouseEvent(mxEvent.MOUSE_DOWN,
-                  new mxMouseEvent(evt, state));
+                  new InternalMouseEvent(evt, state));
             }
             // Condition to avoid scrollbar events starting a rubberband
             // selection
@@ -91,12 +91,12 @@ export default MYNAMEHERE;
               !this.isScrollEvent(evt)))
             {
               graph.fireMouseEvent(mxEvent.MOUSE_DOWN,
-                new mxMouseEvent(evt));
+                new InternalMouseEvent(evt));
             }
           }),
-          mxUtils.bind(this, function(evt)
+          utils.bind(this, function(evt)
           {
-            let pt = mxUtils.convertPoint(graph.container,
+            let pt = utils.convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
             let cell = graph.getCellAt(pt.x, pt.y);
             let state = this.getState(cell);
@@ -104,17 +104,17 @@ export default MYNAMEHERE;
             if (state != null)
             {
               graph.fireMouseEvent(mxEvent.MOUSE_MOVE,
-                  new mxMouseEvent(evt, state));
+                  new InternalMouseEvent(evt, state));
             }
             else if (this.isContainerEvent(evt))
             {
               graph.fireMouseEvent(mxEvent.MOUSE_MOVE,
-                new mxMouseEvent(evt));
+                new InternalMouseEvent(evt));
             }
           }),
-          mxUtils.bind(this, function(evt)
+          utils.bind(this, function(evt)
           {
-            let pt = mxUtils.convertPoint(graph.container,
+            let pt = utils.convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
             let cell = graph.getCellAt(pt.x, pt.y);
             let state = this.getState(cell);
@@ -122,20 +122,20 @@ export default MYNAMEHERE;
             if (state != null)
             {
               graph.fireMouseEvent(mxEvent.MOUSE_UP,
-                  new mxMouseEvent(evt, state));
+                  new InternalMouseEvent(evt, state));
             }
             else if (this.isContainerEvent(evt))
             {
               graph.fireMouseEvent(mxEvent.MOUSE_UP,
-                new mxMouseEvent(evt));
+                new InternalMouseEvent(evt));
             }
           }));
 
         // Adds listener for double click handling on background
         mxEvent.addListener(container, 'dblclick',
-          mxUtils.bind(this, function(evt)
+          utils.bind(this, function(evt)
           {
-            let pt = mxUtils.convertPoint(graph.container,
+            let pt = utils.convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
             let cell = graph.getCellAt(pt.x, pt.y);
 
@@ -146,14 +146,14 @@ export default MYNAMEHERE;
         // Adds basic listeners for graph event dispatching outside of the
         // container and finishing the handling of a single gesture
         mxEvent.addGestureListeners(document,
-          mxUtils.bind(this, function(evt)
+          utils.bind(this, function(evt)
           {
             if (this.isContainerEvent(evt))
             {
               graph.popupMenuHandler.hideMenu();
             }
           }),
-          mxUtils.bind(this, function(evt)
+          utils.bind(this, function(evt)
           {
             // Hides the tooltip if mouse is outside container
             if (graph.tooltipHandler != null &&
@@ -167,15 +167,15 @@ export default MYNAMEHERE;
               !mxEvent.isConsumed(evt))
             {
               graph.fireMouseEvent(mxEvent.MOUSE_MOVE,
-                new mxMouseEvent(evt));
+                new InternalMouseEvent(evt));
             }
           }),
-          mxUtils.bind(this, function(evt)
+          utils.bind(this, function(evt)
           {
             if (this.captureDocumentGesture)
             {
               graph.fireMouseEvent(mxEvent.MOUSE_UP,
-                new mxMouseEvent(evt));
+                new InternalMouseEvent(evt));
             }
           })
         );

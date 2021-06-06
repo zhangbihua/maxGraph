@@ -32,7 +32,7 @@ import PanningHandler from './view/panning/PanningHandler';
 import PopupMenuHandler from './view/popups_menus/PopupMenuHandler';
 import mxRubberband from './view/selection/mxRubberband';
 import mxSelectionCellsHandler from './view/selection/mxSelectionCellsHandler';
-import TooltipHandler from './view/popups_menus/TooltipHandler';
+import TooltipHandler from './view/tooltip/TooltipHandler';
 import mxVertexHandler from './view/cell/vertex/mxVertexHandler';
 
 import mxCircleLayout from './view/layout/layout/mxCircleLayout';

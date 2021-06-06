@@ -46,7 +46,7 @@ export default MYNAMEHERE;
       if (!mxClient.isBrowserSupported())
       {
         // Displays an error message if the browser is not supported.
-        mxUtils.error('Browser is not supported!', 200, false);
+        utils.error('Browser is not supported!', 200, false);
       }
       else
       {
@@ -57,19 +57,19 @@ export default MYNAMEHERE;
         mxConstants.SHADOW_OFFSET_Y = 6;
 
         // Table icon dimensions and position
-        mxSwimlane.prototype.imageSize = 20;
-        mxSwimlane.prototype.imageDx = 16;
-        mxSwimlane.prototype.imageDy = 4;
+        Swimlane.prototype.imageSize = 20;
+        Swimlane.prototype.imageDx = 16;
+        Swimlane.prototype.imageDy = 4;
 
         // Changes swimlane icon bounds
-        mxSwimlane.prototype.getImageBounds = function(x, y, w, h)
+        Swimlane.prototype.getImageBounds = function(x, y, w, h)
         {
-          return new mxRectangle(x + this.imageDx, y + this.imageDy, this.imageSize, this.imageSize);
+          return new Rectangle(x + this.imageDx, y + this.imageDy, this.imageSize, this.imageSize);
         };
 
         // Defines an icon for creating new connections in the connection handler.
         // This will automatically disable the highlighting of the source vertex.
-        mxConnectionHandler.prototype.connectImage = new mxImage('images/connector.gif', 16, 16);
+        mxConnectionHandler.prototype.connectImage = new Image('images/connector.gif', 16, 16);
 
         // Prefetches all images that appear in colums
         // to avoid problems with the auto-layout
@@ -117,7 +117,7 @@ export default MYNAMEHERE;
 
         // Sets the graph container and configures the editor
         editor.setGraphContainer(container);
-        let config = mxUtils.load(
+        let config = utils.load(
           'editors/config/keyhandler-minimal.xml').
             getDocumentElement();
         editor.configure(config);
@@ -144,7 +144,7 @@ export default MYNAMEHERE;
         {
           if (value.name != null)
           {
-            return mxGraphModel.prototype.valueForCellChanged.apply(this, arguments);
+            return Model.prototype.valueForCellChanged.apply(this, arguments);
           }
           else
           {
@@ -225,8 +225,8 @@ export default MYNAMEHERE;
               label += '<img src="images/spacer.gif" width="16" height="1">&nbsp;';
             }
 
-            return label + mxUtils.htmlEntities(cell.value.name, false) + ': ' +
-              mxUtils.htmlEntities(cell.value.type, false);
+            return label + utils.htmlEntities(cell.value.name, false) + ': ' +
+              utils.htmlEntities(cell.value.type, false);
           }
 
           return mxGraph.prototype.getLabel.apply(this, arguments); // "supercall"
@@ -267,14 +267,14 @@ export default MYNAMEHERE;
 
         // Adds sidebar icon for the table object
         let tableObject = new Table('TABLENAME');
-        let table = new mxCell(tableObject, new mxGeometry(0, 0, 200, 28), 'table');
+        let table = new Cell(tableObject, new Geometry(0, 0, 200, 28), 'table');
 
         table.setVertex(true);
         addSidebarIcon(graph, sidebar,   table, 'images/icons48/table.png');
 
         // Adds sidebar icon for the column object
         let columnObject = new Column('COLUMNNAME');
-        let column = new mxCell(columnObject, new mxGeometry(0, 0, 0, 26));
+        let column = new Cell(columnObject, new Geometry(0, 0, 0, 26));
 
         column.setVertex(true);
         column.setConnectable(false);
@@ -311,7 +311,7 @@ export default MYNAMEHERE;
 
           if (primaryKey == null)
           {
-            mxUtils.alert('Target table must have a primary key');
+            utils.alert('Target table must have a primary key');
             return;
           }
 
@@ -351,14 +351,14 @@ export default MYNAMEHERE;
         hints.style.fontSize = '10px';
         hints.style.padding = '4px';
 
-        mxUtils.setOpacity(hints, 50);
+        utils.setOpacity(hints, 50);
 
-        mxUtils.writeln(hints, '- Drag an image from the sidebar to the graph');
-        mxUtils.writeln(hints, '- Doubleclick on a table or column to edit');
-        mxUtils.writeln(hints, '- Shift- or Rightclick and drag for panning');
-        mxUtils.writeln(hints, '- Move the mouse over a cell to see a tooltip');
-        mxUtils.writeln(hints, '- Click and drag a table to move and connect');
-        mxUtils.writeln(hints, '- Shift- or Rightclick to show a popup menu');
+        utils.writeln(hints, '- Drag an image from the sidebar to the graph');
+        utils.writeln(hints, '- Doubleclick on a table or column to edit');
+        utils.writeln(hints, '- Shift- or Rightclick and drag for panning');
+        utils.writeln(hints, '- Move the mouse over a cell to see a tooltip');
+        utils.writeln(hints, '- Click and drag a table to move and connect');
+        utils.writeln(hints, '- Shift- or Rightclick to show a popup menu');
         document.body.appendChild(hints);
 
         // Creates a new DIV that is used as a toolbar and adds
@@ -413,7 +413,7 @@ export default MYNAMEHERE;
           }
           else
           {
-            mxUtils.alert('Schema is empty');
+            utils.alert('Schema is empty');
           }
         });
 
@@ -425,9 +425,9 @@ export default MYNAMEHERE;
           let textarea = document.createElement('textarea');
           textarea.style.width = '400px';
           textarea.style.height = '400px';
-          let enc = new mxCodec(mxUtils.createXmlDocument());
+          let enc = new mxCodec(utils.createXmlDocument());
           let node = enc.encode(editor.graph.getModel());
-          textarea.value = mxUtils.getPrettyXml(node);
+          textarea.value = utils.getPrettyXml(node);
           showModalWindow('XML', textarea, 410, 440);
         });
 
@@ -447,7 +447,7 @@ export default MYNAMEHERE;
 
         // Creates the outline (navigator, overview) for moving
         // around the graph in the top, right corner of the window.
-        let outln = new mxOutline(graph, outline);
+        let outln = new outline(graph, outline);
 
         // Fades-out the splash screen after the UI has been loaded.
         let splash = document.getElementById('splash');
@@ -492,7 +492,7 @@ export default MYNAMEHERE;
       {
         editor.execute(action);
       });
-      mxUtils.write(button, label);
+      utils.write(button, label);
       toolbar.appendChild(button);
     };
 
@@ -505,7 +505,7 @@ export default MYNAMEHERE;
       background.style.right = '0px';
       background.style.bottom = '0px';
       background.style.background = 'black';
-      mxUtils.setOpacity(background, 50);
+      utils.setOpacity(background, 50);
       document.body.appendChild(background);
 
       let x = Math.max(0, document.body.scrollWidth/2-width/2);
@@ -550,7 +550,7 @@ export default MYNAMEHERE;
 
           if (parent == null || pstate == null)
           {
-            mxUtils.alert('Drop target must be a table');
+            utils.alert('Drop target must be a table');
             return;
           }
 
@@ -558,7 +558,7 @@ export default MYNAMEHERE;
           pt.y -= pstate.y;
 
           let columnCount = parent.getChildCount()+1;
-          name = mxUtils.prompt('Enter name for new column', 'COLUMN'+columnCount);
+          name = utils.prompt('Enter name for new column', 'COLUMN'+columnCount);
         }
         else
         {
@@ -573,7 +573,7 @@ export default MYNAMEHERE;
             }
           }
 
-          let name = mxUtils.prompt('Enter name for new table', 'TABLE'+(tableCount+1));
+          let name = utils.prompt('Enter name for new table', 'TABLE'+(tableCount+1));
         }
 
         if (name != null)
@@ -591,7 +591,7 @@ export default MYNAMEHERE;
 
             if (isTable)
             {
-              v1.geometry.alternateBounds = new mxRectangle(0, 0, v1.geometry.width, v1.geometry.height);
+              v1.geometry.alternateBounds = new Rectangle(0, 0, v1.geometry.width, v1.geometry.height);
               v1.children[0].value.name = name + '_ID';
             }
           }
@@ -614,7 +614,7 @@ export default MYNAMEHERE;
 
       // Creates the image which is used as the drag icon (preview)
       let dragImage = img.cloneNode(true);
-      let ds = mxUtils.makeDraggable(img, graph, funct, dragImage);
+      let ds = utils.makeDraggable(img, graph, funct, dragImage);
 
       // Adds highlight of target tables for columns
       ds.highlightDropTargets = true;
@@ -649,7 +649,7 @@ export default MYNAMEHERE;
     {
       let style = {};
       style.shape = mxConstants.SHAPE_RECTANGLE;
-      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.perimiter = Perimeter.RectanglePerimeter;
       style.align = mxConstants.ALIGN_LEFT;
       style.verticalAlign = mxConstants.ALIGN_MIDDLE;
       style.fontColor = '#000000';
@@ -662,7 +662,7 @@ export default MYNAMEHERE;
 
       style = {};
       style.shape = mxConstants.SHAPE_SWIMLANE;
-      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.perimiter = Perimeter.RectanglePerimeter;
       style.align = mxConstants.ALIGN_CENTER;
       style.verticalAlign = mxConstants.ALIGN_TOP;
       style.gradientColor = '#41B9F5';
@@ -685,7 +685,7 @@ export default MYNAMEHERE;
       style.labelBackgroundColor = '#FFFFFF';
       style.strokeWidth = '2';
       style.rounded = true;
-      style.edge = mxEdgeStyle.EntityRelation;
+      style.edge = EdgeStyle.EntityRelation;
     };
 
     // Function to create the entries in the popupmenu
@@ -874,7 +874,7 @@ export default MYNAMEHERE;
 
     Column.prototype.clone = function()
     {
-      return mxUtils.clone(this);
+      return utils.clone(this);
     };
 
     // Defines the table user object
@@ -885,7 +885,7 @@ export default MYNAMEHERE;
 
     Table.prototype.clone = function()
     {
-      return mxUtils.clone(this);
+      return utils.clone(this);
     };
   </script>
 </head>

@@ -84,15 +84,15 @@
 			
 			// Adds required resources (disables loading of fallback properties, this can only
 			// be used if we know that all keys are defined in the language specific file)
-			mxResources.loadDefaultBundle = false;
-			let bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
-				mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
+			Resources.loadDefaultBundle = false;
+			let bundle = Resources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
+				Resources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
 
 			// Fixes possible asynchronous requests
 			mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(xhr)
 			{
 				// Adds bundle text to resources
-				mxResources.parse(xhr[0].getText());
+				Resources.parse(xhr[0].getText());
 				
 				// Configures the default graph theme
 				let themes = {};

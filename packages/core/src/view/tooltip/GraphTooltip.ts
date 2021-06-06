@@ -4,7 +4,7 @@ import Resources from "../../util/Resources";
 import Shape from "../geometry/shape/Shape";
 import mxSelectionCellsHandler from "../selection/mxSelectionCellsHandler";
 import Cell from "../cell/datatypes/Cell";
-import TooltipHandler from "../popups_menus/TooltipHandler";
+import TooltipHandler from "./TooltipHandler";
 
 class GraphTooltip {
   /**
