@@ -129,6 +129,91 @@ class Edge {
     return edge;
   }
 
+  /**
+   * Function: splitEdge
+   *
+   * Splits the given edge by adding the newEdge between the previous source
+   * and the given cell and reconnecting the source of the given edge to the
+   * given cell. This method fires <mxEvent.SPLIT_EDGE> while the transaction
+   * is in progress. Returns the new edge that was inserted.
+   *
+   * Parameters:
+   *
+   * edge - <mxCell> that represents the edge to be splitted.
+   * cells - <mxCells> that represents the cells to insert into the edge.
+   * newEdge - <mxCell> that represents the edge to be inserted.
+   * dx - Optional integer that specifies the vector to move the cells.
+   * dy - Optional integer that specifies the vector to move the cells.
+   * x - Integer that specifies the x-coordinate of the drop location.
+   * y - Integer that specifies the y-coordinate of the drop location.
+   * parent - Optional parent to insert the cell. If null the parent of
+   * the edge is used.
+   */
+  splitEdge(
+    edge: Cell,
+    cells: CellArray,
+    newEdge: Cell,
+    dx: number = 0,
+    dy: number = 0,
+    x: number,
+    y: number,
+    parent: Cell | null = null
+  ) {
+    parent = parent != null ? parent : edge.getParent();
+    const source = edge.getTerminal(true);
+
+    this.graph.batchUpdate(() => {
+      if (newEdge == null) {
+        newEdge = <Cell>this.cloneCell(edge);
+
+        // Removes waypoints before/after new cell
+        const state = this.graph.view.getState(edge);
+        let geo = newEdge.getGeometry();
+
+        if (geo != null && geo.points != null && state != null) {
+          const t = this.graph.view.translate;
+          const s = this.graph.view.scale;
+          const idx = findNearestSegment(state, (dx + t.x) * s, (dy + t.y) * s);
+
+          geo.points = geo.points.slice(0, idx);
+          geo = <Geometry>edge.getGeometry();
+
+          if (geo != null && geo.points != null) {
+            geo = <Geometry>geo.clone();
+            geo.points = geo.points.slice(idx);
+            this.graph.model.setGeometry(edge, geo);
+          }
+        }
+      }
+
+      this.cellsMoved(cells, dx, dy, false, false);
+      this.cellsAdded(
+        cells,
+        parent,
+        parent ? parent.getChildCount() : 0,
+        null,
+        null,
+        true
+      );
+      this.cellsAdded(
+        new CellArray(newEdge),
+        parent,
+        parent ? parent.getChildCount() : 0,
+        source,
+        cells[0],
+        false
+      );
+      this.cellConnected(edge, cells[0], true);
+      this.graph.fireEvent(
+        new EventObject(
+          InternalEvent.SPLIT_EDGE,
+          { edge, cells, newEdge, dx, dy }
+        )
+      );
+    });
+
+    return newEdge;
+  }
 
   /**
    * Adds a new edge into the given parent {@link Cell} using value as the user
@@ -214,112 +299,6 @@ class Edge {
     index: number | null = null
   ): Cell {
     return this.addCell(edge, parent, index, source, target);
-  }
-
-  /*****************************************************************************
-   * Group: Cell cloning, insertion and removal
-   *****************************************************************************/
-
-  /**
-   * Function: splitEdge
-   *
-   * Splits the given edge by adding the newEdge between the previous source
-   * and the given cell and reconnecting the source of the given edge to the
-   * given cell. This method fires <mxEvent.SPLIT_EDGE> while the transaction
-   * is in progress. Returns the new edge that was inserted.
-   *
-   * Parameters:
-   *
-   * edge - <mxCell> that represents the edge to be splitted.
-   * cells - <mxCells> that represents the cells to insert into the edge.
-   * newEdge - <mxCell> that represents the edge to be inserted.
-   * dx - Optional integer that specifies the vector to move the cells.
-   * dy - Optional integer that specifies the vector to move the cells.
-   * x - Integer that specifies the x-coordinate of the drop location.
-   * y - Integer that specifies the y-coordinate of the drop location.
-   * parent - Optional parent to insert the cell. If null the parent of
-   * the edge is used.
-   */
-  splitEdge(
-    edge: Cell,
-    cells: CellArray,
-    newEdge: Cell,
-    dx: number = 0,
-    dy: number = 0,
-    x: number,
-    y: number,
-    parent: Cell | null = null
-  ) {
-    parent = parent != null ? parent : edge.getParent();
-    const source = edge.getTerminal(true);
-
-    this.getModel().beginUpdate();
-    try {
-      if (newEdge == null) {
-        newEdge = <Cell>this.cloneCell(edge);
-
-        // Removes waypoints before/after new cell
-        const state = this.getView().getState(edge);
-        let geo = newEdge.getGeometry();
-
-        if (geo != null && geo.points != null && state != null) {
-          const t = this.getView().translate;
-          const s = this.getView().scale;
-          const idx = findNearestSegment(
-            state,
-            (dx + t.x) * s,
-            (dy + t.y) * s
-          );
-
-          geo.points = geo.points.slice(0, idx);
-          geo = <Geometry>edge.getGeometry();
-
-          if (geo != null && geo.points != null) {
-            geo = <Geometry>geo.clone();
-            geo.points = geo.points.slice(idx);
-            this.getModel().setGeometry(edge, geo);
-          }
-        }
-      }
-
-      this.cellsMoved(cells, dx, dy, false, false);
-      this.cellsAdded(
-        cells,
-        parent,
-        parent ? parent.getChildCount() : 0,
-        null,
-        null,
-        true
-      );
-      this.cellsAdded(
-        new CellArray(newEdge),
-        parent,
-        parent ? parent.getChildCount() : 0,
-        source,
-        cells[0],
-        false
-      );
-      this.cellConnected(edge, cells[0], true);
-      this.fireEvent(
-        new EventObject(
-          InternalEvent.SPLIT_EDGE,
-          'edge',
-          edge,
-          'cells',
-          cells,
-          'newEdge',
-          newEdge,
-          'dx',
-          dx,
-          'dy',
-          dy
-        )
-      );
-    } finally {
-      this.getModel().endUpdate();
-    }
-
-    return newEdge;
   }
 
   /*****************************************************************************

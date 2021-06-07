@@ -155,7 +155,7 @@ class Graph extends EventSource {
   /**
    * Holds the {@link Model} that contains the cells to be displayed.
    */
-  model: Model | null = null;
+  model: Model;
 
   /**
    * Holds the {@link GraphView} that caches the {@link CellState}s for the cells.
@@ -401,27 +401,6 @@ class Graph extends EventSource {
   constrainRelativeChildren: boolean = false;
 
   /**
-   * Specifies if a parent should contain the child bounds after a resize of
-   * the child. This has precedence over {@link constrainChildren}.
-   * @default true
-   */
-  extendParents: boolean = true;
-
-  /**
-   * Specifies if parents should be extended according to the {@link extendParents}
-   * switch if cells are added.
-   * @default true
-   */
-  extendParentsOnAdd: boolean = true;
-
-  /**
-   * Specifies if parents should be extended according to the {@link extendParents}
-   * switch if cells are added.
-   * @default false (for backwards compatibility)
-   */
-  extendParentsOnMove: boolean = false;
-
-  /**
    * Specifies the return value for {@link isRecursiveResize}.
    * @default false (for backwards compatibility)
    */
@@ -556,8 +535,8 @@ class Graph extends EventSource {
   /**
    * Creates and returns a new {@link GraphHandler} to be used in this graph.
    */
-  createGraphHandler(): mxGraphHandler {
-    return new mxGraphHandler(this);
+  createGraphHandler(): GraphHandler {
+    return new GraphHandler(this);
   }
 
   /**
@@ -1234,150 +1213,6 @@ class Graph extends EventSource {
    */
   getMaximumGraphBounds(): Rectangle | null {
     return this.maximumGraphBounds;
-  }
-
-  /**
-   * Returns the bounding box for the geometries of the vertices in the
-   * given array of cells. This can be used to find the graph bounds during
-   * a layout operation (ie. before the last endUpdate) as follows:
-   *
-   * ```javascript
-   * var cells = graph.getChildCells(graph.getDefaultParent(), true, true);
-   * var bounds = graph.getBoundingBoxFromGeometry(cells, true);
-   * ```
-   *
-   * This can then be used to move cells to the origin:
-   *
-   * ```javascript
-   * if (bounds.x < 0 || bounds.y < 0)
-   * {
-   *   graph.moveCells(cells, -Math.min(bounds.x, 0), -Math.min(bounds.y, 0))
-   * }
-   * ```
-   *
-   * Or to translate the graph view:
-   *
-   * ```javascript
-   * if (bounds.x < 0 || bounds.y < 0)
-   * {
-   *   graph.view.setTranslate(-Math.min(bounds.x, 0), -Math.min(bounds.y, 0));
-   * }
-   * ```
-   *
-   * @param cells Array of {@link Cell} whose bounds should be returned.
-   * @param includeEdges Specifies if edge bounds should be included by computing
-   * the bounding box for all points in geometry. Default is `false`.
-   */
-  getBoundingBoxFromGeometry(
-    cells: CellArray,
-    includeEdges: boolean = false
-  ): Rectangle | null {
-    includeEdges = includeEdges != null ? includeEdges : false;
-    let result = null;
-    let tmp: Rectangle | null = null;
-
-    for (const cell of cells) {
-      if (includeEdges || cell.isVertex()) {
-        // Computes the bounding box for the points in the geometry
-        const geo = cell.getGeometry();
-
-        if (geo != null) {
-          let bbox = null;
-
-          if (cell.isEdge()) {
-            const addPoint = (pt: Point | null) => {
-              if (pt != null) {
-                if (tmp == null) {
-                  tmp = new Rectangle(pt.x, pt.y, 0, 0);
-                } else {
-                  tmp.add(new Rectangle(pt.x, pt.y, 0, 0));
-                }
-              }
-            };
-
-            if (cell.getTerminal(true) == null) {
-              addPoint(geo.getTerminalPoint(true));
-            }
-
-            if (cell.getTerminal(false) == null) {
-              addPoint(geo.getTerminalPoint(false));
-            }
-
-            const pts = geo.points;
-
-            if (pts != null && pts.length > 0) {
-              tmp = new Rectangle(pts[0].x, pts[0].y, 0, 0);
-
-              for (let j = 1; j < pts.length; j++) {
-                addPoint(pts[j]);
-              }
-            }
-
-            bbox = tmp;
-          } else {
-            const parent = <Cell>cell.getParent();
-
-            if (geo.relative) {
-              if (
-                parent.isVertex() &&
-                parent !== this.view.currentRoot
-              ) {
-                tmp = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
-
-                if (tmp != null) {
-                  bbox = new Rectangle(
-                    geo.x * tmp.width,
-                    geo.y * tmp.height,
-                    geo.width,
-                    geo.height
-                  );
-
-                  if (cells.indexOf(parent) >= 0) {
-                    bbox.x += tmp.x;
-                    bbox.y += tmp.y;
-                  }
-                }
-              }
-            } else {
-              bbox = Rectangle.fromRectangle(geo);
-
-              if (parent.isVertex() && cells.indexOf(parent) >= 0) {
-                tmp = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
-
-                if (tmp != null) {
-                  bbox.x += tmp.x;
-                  bbox.y += tmp.y;
-                }
-              }
-            }
-
-            if (bbox != null && geo.offset != null) {
-              bbox.x += geo.offset.x;
-              bbox.y += geo.offset.y;
-            }
-
-            const style = this.getCurrentCellStyle(cell);
-
-            if (bbox != null) {
-              const angle = getValue(style, 'rotation', 0);
-
-              if (angle !== 0) {
-                bbox = getBoundingBox(bbox, angle);
-              }
-            }
-          }
-
-          if (bbox != null) {
-            if (result == null) {
-              result = Rectangle.fromRectangle(bbox);
-            } else {
-              result.add(bbox);
-            }
-          }
-        }
-      }
-    }
-    return result;
   }
 
   /**

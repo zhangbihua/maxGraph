@@ -33,9 +33,17 @@ class EventObject {
     this.name = name;
     this.properties = [];
 
-    for (let i = 0; i < args.length; i += 2) {
-      if (args[i + 1] != null) {
-        this.properties[args[i]] = args[i + 1];
+    if (!!args[0] && args[0].constructor === Object) {
+      // A literal object ({})
+      for (const [key, value] of Object.entries(args[0])) {
+        this.properties[key] = value;
+      }
+    } else {
+      // two-values [key, value, key, value, ...]
+      for (let i = 0; i < args.length; i += 2) {
+        if (args[i + 1] != null) {
+          this.properties[args[i]] = args[i + 1];
+        }
       }
     }
   }
@@ -45,7 +53,6 @@ class EventObject {
    *
    * Holds the name.
    */
-  // name: string;
   name: string = '';
 
   /**
@@ -53,7 +60,6 @@ class EventObject {
    *
    * Holds the properties as an associative array.
    */
-  // properties: any[];
   properties: any = null;
 
   /**
@@ -61,7 +67,6 @@ class EventObject {
    *
    * Holds the consumed state. Default is false.
    */
-  // consumed: boolean;
   consumed: boolean = false;
 
   /**
@@ -69,7 +74,6 @@ class EventObject {
    *
    * Returns <name>.
    */
-  // getName(): string;
   getName(): string {
     return this.name;
   }
@@ -79,7 +83,6 @@ class EventObject {
    *
    * Returns <properties>.
    */
-  // getProperties(): any[];
   getProperties(): any {
     return this.properties;
   }
@@ -89,7 +92,6 @@ class EventObject {
    *
    * Returns the property for the given key.
    */
-  // getProperty(key: string): any;
   getProperty(key: string): any {
     return this.properties[key];
   }
@@ -99,7 +101,6 @@ class EventObject {
    *
    * Returns true if the event has been consumed.
    */
-  // isConsumed(): boolean;
   isConsumed(): boolean {
     return this.consumed;
   }
@@ -109,7 +110,6 @@ class EventObject {
    *
    * Consumes the event.
    */
-  // consume(): void;
   consume(): void {
     this.consumed = true;
   }
