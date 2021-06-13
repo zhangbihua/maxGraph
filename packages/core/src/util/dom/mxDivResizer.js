@@ -36,7 +36,7 @@ class mxDivResizer {
       }
 
       this.div = div;
-      const style = mxUtils.getCurrentStyle(div);
+      const style = utils.getCurrentStyle(div);
 
       if (style != null) {
         this.resizeWidth = style.width == 'auto';

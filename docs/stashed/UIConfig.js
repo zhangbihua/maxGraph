@@ -46,7 +46,7 @@ export default MYNAMEHERE;
       if (!mxClient.isBrowserSupported())
       {
         // Displays an error message if the browser is not supported.
-        mxUtils.error('Browser is not supported!', 200, false);
+        utils.error('Browser is not supported!', 200, false);
       }
       else
       {
@@ -69,7 +69,7 @@ export default MYNAMEHERE;
         // and toolbar objects, respectively.
         // Keep in mind that the as-attributes of the add-items in the
         // toolbar and popupmenu sections refer to keys in mxResources.
-        let config = mxUtils.load('uiconfig.xml').getDocumentElement();
+        let config = utils.load('uiconfig.xml').getDocumentElement();
         mxObjectCodec.allowEval = true;
         editor.configure(config);
         mxObjectCodec.allowEval = false;

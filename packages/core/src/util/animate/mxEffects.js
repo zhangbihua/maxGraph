@@ -4,12 +4,12 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxUtils from '../mxUtils';
-import mxGeometryChange from '../../atomic_changes/mxGeometryChange';
-import mxTerminalChange from '../../atomic_changes/mxTerminalChange';
-import mxValueChange from '../../atomic_changes/mxValueChange';
-import mxChildChange from '../../atomic_changes/mxChildChange';
-import mxStyleChange from '../../atomic_changes/mxStyleChange';
+import utils from '../Utils';
+import GeometryChange from '../../view/geometry/GeometryChange';
+import TerminalChange from '../../view/cell/edge/TerminalChange';
+import ValueChange from '../../view/cell/ValueChange';
+import ChildChange from '../../view/model/ChildChange';
+import StyleChange from '../../view/style/StyleChange';
 
 /**
  * Provides animation effects.
@@ -50,11 +50,11 @@ class mxEffects {
         const change = changes[i];
 
         if (
-          change instanceof mxGeometryChange ||
-          change instanceof mxTerminalChange ||
-          change instanceof mxValueChange ||
-          change instanceof mxChildChange ||
-          change instanceof mxStyleChange
+          change instanceof GeometryChange ||
+          change instanceof TerminalChange ||
+          change instanceof ValueChange ||
+          change instanceof ChildChange ||
+          change instanceof StyleChange
         ) {
           const state = graph
             .getView()
@@ -64,10 +64,10 @@ class mxEffects {
             isRequired = true;
 
             if (
-              change.constructor !== mxGeometryChange ||
+              change.constructor !== GeometryChange ||
               change.cell.isEdge()
             ) {
-              mxUtils.setOpacity(state.shape.node, (100 * step) / maxStep);
+              utils.setOpacity(state.shape.node, (100 * step) / maxStep);
             } else {
               const { scale } = graph.getView();
 
@@ -133,7 +133,7 @@ class mxEffects {
       const childState = graph.getView().getState(child);
 
       if (childState != null) {
-        mxUtils.setOpacity(childState.shape.node, opacity);
+        utils.setOpacity(childState.shape.node, opacity);
         mxEffects.cascadeOpacity(graph, child, opacity);
       }
     }
@@ -146,7 +146,7 @@ class mxEffects {
         const edgeState = graph.getView().getState(edges[i]);
 
         if (edgeState != null) {
-          mxUtils.setOpacity(edgeState.shape.node, opacity);
+          utils.setOpacity(edgeState.shape.node, opacity);
         }
       }
     }
@@ -163,12 +163,12 @@ class mxEffects {
 
     let opacity = from || 100;
 
-    mxUtils.setOpacity(node, opacity);
+    utils.setOpacity(node, opacity);
 
     if (isEnabled || isEnabled == null) {
       const f = () => {
         opacity = Math.max(opacity - step, 0);
-        mxUtils.setOpacity(node, opacity);
+        utils.setOpacity(node, opacity);
 
         if (opacity > 0) {
           window.setTimeout(f, delay);

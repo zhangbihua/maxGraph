@@ -27,7 +27,7 @@ const Template = ({ label, ...args }) => {
   const parent = graph.getDefaultParent();
 
   const getStyle = function() {
-    // Extends mxGraphModel.getStyle to show an image when collapsed
+    // Extends Transactions.getStyle to show an image when collapsed
     // TODO cannot use super without a parent class
     // let style = super.getStyle();
     let style = '';

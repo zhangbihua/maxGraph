@@ -2,8 +2,8 @@
  * Copyright (c) 2006-2020, JGraph Ltd
  * Copyright (c) 2006-2020, draw.io AG
  */
-import { write } from '../mxDomUtils';
-import { parseXml } from '../mxXmlUtils';
+import { write } from '../DomUtils';
+import { parseXml } from '../XmlUtils';
 
 /**
  * XML HTTP request wrapper. See also: {@link mxUtils.get}, {@link mxUtils.post} and

@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import { write, writeln } from "../mxDomUtils";
+import { write, writeln } from "../DomUtils";
 
 /**
  * A simple class for creating HTML forms.
@@ -55,7 +55,7 @@ class mxForm {
 
     // Adds the ok button
     let button = document.createElement('button');
-    write(button, mxResources.get('ok') || 'OK');
+    write(button, Resources.get('ok') || 'OK');
     td.appendChild(button);
 
     mxEvent.addListener(button, 'click', () => {
@@ -64,7 +64,7 @@ class mxForm {
 
     // Adds the cancel button
     button = document.createElement('button');
-    write(button, mxResources.get('cancel') || 'Cancel');
+    write(button, Resources.get('cancel') || 'Cancel');
     td.appendChild(button);
 
     mxEvent.addListener(button, 'click', () => {

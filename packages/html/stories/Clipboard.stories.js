@@ -265,7 +265,7 @@ const Template = ({ label, ...args }) => {
       }
 
       // Standard paste via control-v
-      if (xml.substring(0, 14) === '<mxGraphModel>') {
+      if (xml.substring(0, 14) === '<Transactions>') {
         graph.setSelectionCells(importXml(xml, dx, dy));
         graph.scrollCellToVisible(graph.getSelectionCell());
       }

@@ -107,7 +107,7 @@ const Template = ({ label, ...args }) => {
   const button = mxDomHelpers.button('View XML', function() {
     const encoder = new mxCodec();
     const node = encoder.encode(graph.getModel());
-    mxUtils.popup(mxUtils.getPrettyXml(node), true);
+    utils.popup(utils.getPrettyXml(node), true);
   });
 
   controller.appendChild(button);

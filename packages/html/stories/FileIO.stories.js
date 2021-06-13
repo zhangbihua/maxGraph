@@ -34,7 +34,7 @@ const Template = ({ label, ...args }) => {
     if (!mxClient.isBrowserSupported()) {
       // Displays an error message if the browser is
       // not supported.
-      mxUtils.error('Browser is not supported!', 200, false);
+      utils.error('Browser is not supported!', 200, false);
     } else {
       // Creates the graph inside the given container
       const graph = new mxGraph(container);
@@ -50,7 +50,7 @@ const Template = ({ label, ...args }) => {
       // Changes the default vertex style in-place
       let style = graph.getStylesheet().getDefaultVertexStyle();
       style.shape = mxConstants.SHAPE_ROUNDED;
-      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.perimiter = Perimeter.RectanglePerimeter;
       style.gradientColor = 'white';
       style.perimeterSpacing = 4;
       style.shadow = true;
@@ -58,7 +58,7 @@ const Template = ({ label, ...args }) => {
       style = graph.getStylesheet().getDefaultEdgeStyle();
       style.labelBackgroundColor = 'white';
 
-      style = mxUtils.clone(style);
+      style = utils.clone(style);
       style.startArrow = mxConstants.ARROW_CLASSIC;
       graph.getStylesheet().putCellStyle('2way', style);
 
@@ -78,7 +78,7 @@ const Template = ({ label, ...args }) => {
 
       // Adds a button to execute the layout
       this.el2.appendChild(
-        mxUtils.button('Arrange', function(evt) {
+        utils.button('Arrange', function(evt) {
           const parent = graph.getDefaultParent();
           layout.execute(parent);
         })
@@ -105,7 +105,7 @@ const Template = ({ label, ...args }) => {
       }
 
       graph.dblClick = function(evt, cell) {
-        const mxe = new mxEventObject(
+        const mxe = new EventObject(
           mxEvent.DOUBLE_CLICK,
           'event',
           evt,
@@ -120,7 +120,7 @@ const Template = ({ label, ...args }) => {
           !mxe.isConsumed() &&
           cell != null
         ) {
-          mxUtils.alert(
+          utils.alert(
             `Show properties for cell ${cell.customId || cell.getId()}`
           );
         }
@@ -136,7 +136,7 @@ const Template = ({ label, ...args }) => {
     // is normally the first child of the root (ie. layer 0).
     const parent = graph.getDefaultParent();
 
-    const req = mxUtils.load(filename);
+    const req = utils.load(filename);
     const text = req.getText();
 
     const lines = text.split('\n');
@@ -192,7 +192,7 @@ const Template = ({ label, ...args }) => {
 
   // Parses the mxGraph XML file format
   function read(graph, filename) {
-    const req = mxUtils.load(filename);
+    const req = utils.load(filename);
     const root = req.getDocumentElement();
     const dec = new mxCodec(root.ownerDocument);
 

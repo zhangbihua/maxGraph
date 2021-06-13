@@ -61,7 +61,7 @@ export default Ports;
       if (!mxClient.isBrowserSupported())
       {
         // Displays an error message if the browser is not supported.
-        mxUtils.error('Browser is not supported!', 200, false);
+        utils.error('Browser is not supported!', 200, false);
       }
       else
       {
@@ -74,7 +74,7 @@ export default Ports;
         mxConstants.DEFAULT_HOTSPOT = 1;
 
         // Enables guides
-        mxGraphHandler.prototype.guidesEnabled = true;
+        GraphHandler.prototype.guidesEnabled = true;
 
           // Alt disables guides
           mxGuide.prototype.isEnabledForEvent = function(evt)
@@ -99,7 +99,7 @@ export default Ports;
         // Uses the port icon while connections are previewed
         graph.connectionHandler.getConnectImage = function(state)
         {
-          return new mxImage(state.style.image, 16, 16);
+          return new Image(state.style.image, 16, 16);
         };
 
         // Centers the port icon on the target port
@@ -110,7 +110,7 @@ export default Ports;
 
         // Sets the graph container and configures the editor
         editor.setGraphContainer(container);
-        let config = mxUtils.load(
+        let config = utils.load(
           'editors/config/keyhandler-commons.xml').
             getDocumentElement();
         editor.configure(config);
@@ -120,7 +120,7 @@ export default Ports;
         // is supposed to be a cell which is cloned for new cells.
         // The groupBorderSize is used to define the spacing between
         // the children of a group and the group bounds.
-        let group = new mxCell('Group', new mxGeometry(), 'group');
+        let group = new Cell('Group', new Geometry(), 'group');
         group.setVertex(true);
         group.setConnectable(false);
         editor.defaultGroup = group;
@@ -275,13 +275,13 @@ export default Ports;
         hints.style.fontSize = '10px';
         hints.style.padding = '4px';
 
-        mxUtils.setOpacity(hints, 50);
+        utils.setOpacity(hints, 50);
 
-        mxUtils.writeln(hints, '- Drag an image from the sidebar to the graph');
-        mxUtils.writeln(hints, '- Doubleclick on a vertex or edge to edit');
-        mxUtils.writeln(hints, '- Shift- or Rightclick and drag for panning');
-        mxUtils.writeln(hints, '- Move the mouse over a cell to see a tooltip');
-        mxUtils.writeln(hints, '- Click and drag a vertex to move and connect');
+        utils.writeln(hints, '- Drag an image from the sidebar to the graph');
+        utils.writeln(hints, '- Doubleclick on a vertex or edge to edit');
+        utils.writeln(hints, '- Shift- or Rightclick and drag for panning');
+        utils.writeln(hints, '- Move the mouse over a cell to see a tooltip');
+        utils.writeln(hints, '- Click and drag a vertex to move and connect');
         document.body.appendChild(hints);
 
         // Creates a new DIV that is used as a toolbar and adds
@@ -332,9 +332,9 @@ export default Ports;
           let textarea = document.createElement('textarea');
           textarea.style.width = '400px';
           textarea.style.height = '400px';
-          let enc = new mxCodec(mxUtils.createXmlDocument());
+          let enc = new mxCodec(utils.createXmlDocument());
           let node = enc.encode(editor.graph.getModel());
-          textarea.value = mxUtils.getPrettyXml(node);
+          textarea.value = utils.getPrettyXml(node);
           showModalWindow(graph, 'XML', textarea, 410, 440);
         });
 
@@ -361,7 +361,7 @@ export default Ports;
 
         // Creates the outline (navigator, overview) for moving
         // around the graph in the top, right corner of the window.
-        let outln = new mxOutline(graph, outline);
+        let outln = new outline(graph, outline);
 
         // To show the images in the outline, uncomment the following code
         //outln.outline.labelsVisible = true;
@@ -410,7 +410,7 @@ export default Ports;
       {
         editor.execute(action);
       });
-      mxUtils.write(button, label);
+      utils.write(button, label);
       toolbar.appendChild(button);
     };
 
@@ -423,7 +423,7 @@ export default Ports;
       background.style.right = '0px';
       background.style.bottom = '0px';
       background.style.background = 'black';
-      mxUtils.setOpacity(background, 50);
+      utils.setOpacity(background, 50);
       document.body.appendChild(background);
 
       let x = Math.max(0, document.body.scrollWidth/2-width/2);
@@ -468,24 +468,24 @@ export default Ports;
           v1.setConnectable(false);
 
           // Presets the collapsed size
-          v1.geometry.alternateBounds = new mxRectangle(0, 0, 120, 40);
+          v1.geometry.alternateBounds = new Rectangle(0, 0, 120, 40);
 
           // Adds the ports at various relative locations
           let port = graph.insertVertex(v1, null, 'Trigger', 0, 0.25, 16, 16,
               'port;image=editors/images/overlays/flash.png;align=right;imageAlign=right;spacingRight=18', true);
-          port.geometry.offset = new mxPoint(-6, -8);
+          port.geometry.offset = new Point(-6, -8);
 
           let port = graph.insertVertex(v1, null, 'Input', 0, 0.75, 16, 16,
               'port;image=editors/images/overlays/check.png;align=right;imageAlign=right;spacingRight=18', true);
-          port.geometry.offset = new mxPoint(-6, -4);
+          port.geometry.offset = new Point(-6, -4);
 
           let port = graph.insertVertex(v1, null, 'Error', 1, 0.25, 16, 16,
               'port;image=editors/images/overlays/error.png;spacingLeft=18', true);
-          port.geometry.offset = new mxPoint(-8, -8);
+          port.geometry.offset = new Point(-8, -8);
 
           let port = graph.insertVertex(v1, null, 'Result', 1, 0.75, 16, 16,
               'port;image=editors/images/overlays/information.png;spacingLeft=18', true);
-          port.geometry.offset = new mxPoint(-8, -4);
+          port.geometry.offset = new Point(-8, -4);
         }
         finally
         {
@@ -509,7 +509,7 @@ export default Ports;
       dragElt.style.height = '120px';
 
       // Creates the image which is used as the drag icon (preview)
-      let ds = mxUtils.makeDraggable(img, graph, funct, dragElt, 0, 0, true, true);
+      let ds = utils.makeDraggable(img, graph, funct, dragElt, 0, 0, true, true);
       ds.setGuidesEnabled(true);
     };
 
@@ -517,7 +517,7 @@ export default Ports;
     {
       let style = {};
       style.shape = mxConstants.SHAPE_RECTANGLE;
-      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.perimiter = Perimeter.RectanglePerimeter;
       style.align = mxConstants.ALIGN_CENTER;
       style.verticalAlign = mxConstants.ALIGN_MIDDLE;
       style.gradientColor = '#41B9F5';
@@ -557,7 +557,7 @@ export default Ports;
 
       style = {};
       style.shape = mxConstants.SHAPE_SWIMLANE;
-      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.perimiter = Perimeter.RectanglePerimeter;
       style.align = mxConstants.ALIGN_CENTER;
       style.verticalAlign = mxConstants.ALIGN_TOP;
       style.fillColor = '#FF9103';
@@ -574,7 +574,7 @@ export default Ports;
       style = {};
       style.shape = mxConstants.SHAPE_IMAGE;
       style.fontColor = '#774400';
-      style.perimiter = mxPerimeter.RectanglePerimeter;
+      style.perimiter = Perimeter.RectanglePerimeter;
       style.perimeterSpacing = '6';
       style.align = mxConstants.ALIGN_LEFT;
       style.verticalAlign = mxConstants.ALIGN_MIDDLE;

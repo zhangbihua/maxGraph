@@ -40,7 +40,7 @@ const Template = ({ label, ...args }) => {
 
   // Creates a process display using the activity names as IDs to refer to the elements
   const xml =
-    '<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/>' +
+    '<Transactions><root><mxCell id="0"/><mxCell id="1" parent="0"/>' +
     '<mxCell id="2" value="Claim Handling Process" style="swimlane" vertex="1" parent="1"><mxGeometry x="1" width="850" height="400" as="geometry"/></mxCell>' +
     '<mxCell id="3" value="Claim Manager" style="swimlane" vertex="1" parent="2"><mxGeometry x="30" width="820" height="200" as="geometry"/></mxCell>' +
     '<mxCell id="5" value="" style="start" vertex="1" parent="3"><mxGeometry x="40" y="85" width="30" height="30" as="geometry"/></mxCell>' +
@@ -77,7 +77,7 @@ const Template = ({ label, ...args }) => {
     '<mxCell id="29" value="" edge="1" parent="2" source="22" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="469" y="40"/></Array></mxGeometry></mxCell>' +
     '<mxCell id="30" value="" edge="1" parent="2" source="27" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="469" y="40"/></Array></mxGeometry></mxCell>' +
     '<mxCell id="33" value="" edge="1" parent="2" source="6" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="255" y="200"/></Array></mxGeometry></mxCell>' +
-    '</root></mxGraphModel>';
+    '</root></Transactions>';
   const doc = mxXmlUtils.parseXml(xml);
   const codec = new mxCodec(doc);
   codec.decode(doc.documentElement, graph.getModel());
@@ -173,7 +173,7 @@ const Template = ({ label, ...args }) => {
    * which is being displayed on click.
    */
   function createOverlay(image, tooltip) {
-    const overlay = new mxCellOverlay(image, tooltip);
+    const overlay = new CellOverlay(image, tooltip);
 
     // Installs a handler for clicks on the overlay
     overlay.addListener(mxEvent.CLICK, function(sender, evt) {

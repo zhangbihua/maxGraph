@@ -37,7 +37,7 @@ const Template = ({ label, ...args }) => {
     // Snaps to fixed points
     intersects(icon, point, source, existingEdge) {
       return (
-        !source || existingEdge || mxUtils.intersects(icon.bounds, point)
+        !source || existingEdge || utils.intersects(icon.bounds, point)
       );
     }
   }

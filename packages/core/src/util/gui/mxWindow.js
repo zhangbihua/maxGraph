@@ -5,17 +5,17 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxRectangle from '../datatypes/mxRectangle';
-import mxEventObject from '../event/mxEventObject';
-import mxEventSource from '../event/mxEventSource';
-import mxUtils from '../mxUtils';
-import mxEvent from '../event/mxEvent';
+import Rectangle from '../../view/geometry/Rectangle';
+import EventObject from '../../view/event/EventObject';
+import EventSource from '../../view/event/EventSource';
+import utils from '../Utils';
+import InternalEvent from '../../view/event/InternalEvent';
 import mxClient from '../../mxClient';
-import { NODETYPE_TEXT } from '../mxConstants';
-import { br, write } from '../mxDomUtils';
-import mxResources from '../mxResources';
-import { getClientX, getClientY } from '../mxEventUtils';
-import { htmlEntities } from '../mxStringUtils';
+import { NODETYPE_TEXT } from '../Constants';
+import { br, write } from '../DomUtils';
+import Resources from '../Resources';
+import { getClientX, getClientY } from '../EventUtils';
+import { htmlEntities } from '../StringUtils';
 
 /**
  * Basic window inside a document.
@@ -165,9 +165,9 @@ import { htmlEntities } from '../mxStringUtils';
  * Fires before the window is destroyed. This event has no properties.
  *
  * @class mxWindow
- * @extends mxEventSource
+ * @extends EventSource
  */
-class mxWindow extends mxEventSource {
+class mxWindow extends EventSource {
   constructor(
     title,
     content,
@@ -281,8 +281,8 @@ class mxWindow extends mxEventSource {
       this.activate();
     };
 
-    mxEvent.addGestureListeners(this.title, activator);
-    mxEvent.addGestureListeners(this.table, activator);
+    InternalEvent.addGestureListeners(this.title, activator);
+    InternalEvent.addGestureListeners(this.table, activator);
 
     this.hide();
   }
@@ -328,7 +328,7 @@ class mxWindow extends mxEventSource {
    * Default is (50, 40).
    */
   // minimumSize: mxRectangle; // = new mxRectangle(0, 0, 50, 40);
-  minimumSize = new mxRectangle(0, 0, 50, 40);
+  minimumSize = new Rectangle(0, 0, 50, 40);
 
   /**
    * Specifies if the window should be destroyed when it is closed. If this
@@ -396,7 +396,7 @@ class mxWindow extends mxEventSource {
   // activate(): void;
   activate() {
     if (mxWindow.activeWindow !== this) {
-      const style = mxUtils.getCurrentStyle(this.getElement());
+      const style = utils.getCurrentStyle(this.getElement());
       const index = style != null ? style.zIndex : 3;
 
       if (mxWindow.activeWindow) {
@@ -412,7 +412,7 @@ class mxWindow extends mxEventSource {
       mxWindow.activeWindow = this;
 
       this.fireEvent(
-        new mxEventObject(mxEvent.ACTIVATE, 'previousWindow', previousWindow)
+        new EventObject(InternalEvent.ACTIVATE, 'previousWindow', previousWindow)
       );
     }
   }
@@ -430,7 +430,7 @@ class mxWindow extends mxEventSource {
    */
   // fit(): void;
   fit() {
-    mxUtils.fit(this.div);
+    utils.fit(this.div);
   }
 
   /**
@@ -485,9 +485,9 @@ class mxWindow extends mxEventSource {
           width = this.div.offsetWidth;
           height = this.div.offsetHeight;
 
-          mxEvent.addGestureListeners(document, null, dragHandler, dropHandler);
-          this.fireEvent(new mxEventObject(mxEvent.RESIZE_START, 'event', evt));
-          mxEvent.consume(evt);
+          InternalEvent.addGestureListeners(document, null, dragHandler, dropHandler);
+          this.fireEvent(new EventObject(InternalEvent.RESIZE_START, 'event', evt));
+          InternalEvent.consume(evt);
         };
 
         // Adds a temporary pair of listeners to intercept
@@ -499,8 +499,8 @@ class mxWindow extends mxEventSource {
 
             this.setSize(width + dx, height + dy);
 
-            this.fireEvent(new mxEventObject(mxEvent.RESIZE, 'event', evt));
-            mxEvent.consume(evt);
+            this.fireEvent(new EventObject(InternalEvent.RESIZE, 'event', evt));
+            InternalEvent.consume(evt);
           }
         };
 
@@ -508,18 +508,18 @@ class mxWindow extends mxEventSource {
           if (startX != null && startY != null) {
             startX = null;
             startY = null;
-            mxEvent.removeGestureListeners(
+            InternalEvent.removeGestureListeners(
               document,
               null,
               dragHandler,
               dropHandler
             );
-            this.fireEvent(new mxEventObject(mxEvent.RESIZE_END, 'event', evt));
-            mxEvent.consume(evt);
+            this.fireEvent(new EventObject(InternalEvent.RESIZE_END, 'event', evt));
+            InternalEvent.consume(evt);
           }
         };
 
-        mxEvent.addGestureListeners(
+        InternalEvent.addGestureListeners(
           this.resize,
           start,
           dragHandler,
@@ -571,7 +571,7 @@ class mxWindow extends mxEventSource {
    */
   // getMinimumSize(): mxRectangle;
   getMinimumSize() {
-    return new mxRectangle(0, 0, 0, this.title.offsetHeight);
+    return new Rectangle(0, 0, 0, this.title.offsetHeight);
   }
 
   /**
@@ -623,7 +623,7 @@ class mxWindow extends mxEventSource {
           this.resize.style.visibility = 'hidden';
         }
 
-        this.fireEvent(new mxEventObject(mxEvent.MINIMIZE, 'event', evt));
+        this.fireEvent(new EventObject(InternalEvent.MINIMIZE, 'event', evt));
       } else {
         minimized = false;
 
@@ -638,13 +638,13 @@ class mxWindow extends mxEventSource {
           this.resize.style.visibility = '';
         }
 
-        this.fireEvent(new mxEventObject(mxEvent.NORMALIZE, 'event', evt));
+        this.fireEvent(new EventObject(InternalEvent.NORMALIZE, 'event', evt));
       }
 
-      mxEvent.consume(evt);
+      InternalEvent.consume(evt);
     };
 
-    mxEvent.addGestureListeners(this.minimize, funct);
+    InternalEvent.addGestureListeners(this.minimize, funct);
   }
 
   /**
@@ -714,7 +714,7 @@ class mxWindow extends mxEventSource {
             this.resize.style.visibility = 'hidden';
           }
 
-          const style = mxUtils.getCurrentStyle(this.contentWrapper);
+          const style = utils.getCurrentStyle(this.contentWrapper);
 
           if (style.overflow === 'auto' || this.resize != null) {
             this.contentWrapper.style.height = `${
@@ -724,7 +724,7 @@ class mxWindow extends mxEventSource {
             }px`;
           }
 
-          this.fireEvent(new mxEventObject(mxEvent.MAXIMIZE, 'event', evt));
+          this.fireEvent(new EventObject(InternalEvent.MAXIMIZE, 'event', evt));
         } else {
           maximized = false;
 
@@ -740,7 +740,7 @@ class mxWindow extends mxEventSource {
           this.div.style.height = height;
           this.div.style.width = width;
 
-          const style = mxUtils.getCurrentStyle(this.contentWrapper);
+          const style = utils.getCurrentStyle(this.contentWrapper);
 
           if (style.overflow === 'auto' || this.resize != null) {
             this.contentWrapper.style.height = `${
@@ -757,15 +757,15 @@ class mxWindow extends mxEventSource {
             this.resize.style.visibility = '';
           }
 
-          this.fireEvent(new mxEventObject(mxEvent.NORMALIZE, 'event', evt));
+          this.fireEvent(new EventObject(InternalEvent.NORMALIZE, 'event', evt));
         }
 
-        mxEvent.consume(evt);
+        InternalEvent.consume(evt);
       }
     };
 
-    mxEvent.addGestureListeners(this.maximize, funct);
-    mxEvent.addListener(this.title, 'dblclick', funct);
+    InternalEvent.addGestureListeners(this.maximize, funct);
+    InternalEvent.addListener(this.title, 'dblclick', funct);
   }
 
   /**
@@ -775,7 +775,7 @@ class mxWindow extends mxEventSource {
   installMoveHandler() {
     this.title.style.cursor = 'move';
 
-    mxEvent.addGestureListeners(this.title, (evt) => {
+    InternalEvent.addGestureListeners(this.title, (evt) => {
       const startX = getClientX(evt);
       const startY = getClientY(evt);
       const x = this.getX();
@@ -787,24 +787,24 @@ class mxWindow extends mxEventSource {
         const dx = getClientX(evt) - startX;
         const dy = getClientY(evt) - startY;
         this.setLocation(x + dx, y + dy);
-        this.fireEvent(new mxEventObject(mxEvent.MOVE, 'event', evt));
-        mxEvent.consume(evt);
+        this.fireEvent(new EventObject(InternalEvent.MOVE, 'event', evt));
+        InternalEvent.consume(evt);
       };
 
       const dropHandler = (evt) => {
-        mxEvent.removeGestureListeners(
+        InternalEvent.removeGestureListeners(
           document,
           null,
           dragHandler,
           dropHandler
         );
-        this.fireEvent(new mxEventObject(mxEvent.MOVE_END, 'event', evt));
-        mxEvent.consume(evt);
+        this.fireEvent(new EventObject(InternalEvent.MOVE_END, 'event', evt));
+        InternalEvent.consume(evt);
       };
 
-      mxEvent.addGestureListeners(document, null, dragHandler, dropHandler);
-      this.fireEvent(new mxEventObject(mxEvent.MOVE_START, 'event', evt));
-      mxEvent.consume(evt);
+      InternalEvent.addGestureListeners(document, null, dragHandler, dropHandler);
+      this.fireEvent(new EventObject(InternalEvent.MOVE_START, 'event', evt));
+      InternalEvent.consume(evt);
     });
 
     // Disables built-in pan and zoom in IE10 and later
@@ -854,8 +854,8 @@ class mxWindow extends mxEventSource {
 
     this.buttons.appendChild(this.closeImg);
 
-    mxEvent.addGestureListeners(this.closeImg, (evt) => {
-      this.fireEvent(new mxEventObject(mxEvent.CLOSE, 'event', evt));
+    InternalEvent.addGestureListeners(this.closeImg, (evt) => {
+      this.fireEvent(new EventObject(InternalEvent.CLOSE, 'event', evt));
 
       if (this.destroyOnClose) {
         this.destroy();
@@ -863,7 +863,7 @@ class mxWindow extends mxEventSource {
         this.setVisible(false);
       }
 
-      mxEvent.consume(evt);
+      InternalEvent.consume(evt);
     });
   }
 
@@ -933,7 +933,7 @@ class mxWindow extends mxEventSource {
     this.div.style.display = '';
     this.activate();
 
-    const style = mxUtils.getCurrentStyle(this.contentWrapper);
+    const style = utils.getCurrentStyle(this.contentWrapper);
 
     if (
       (style.overflow == 'auto' || this.resize != null) &&
@@ -946,7 +946,7 @@ class mxWindow extends mxEventSource {
       }px`;
     }
 
-    this.fireEvent(new mxEventObject(mxEvent.SHOW));
+    this.fireEvent(new EventObject(InternalEvent.SHOW));
   }
 
   /**
@@ -955,7 +955,7 @@ class mxWindow extends mxEventSource {
   // hide(): void;
   hide() {
     this.div.style.display = 'none';
-    this.fireEvent(new mxEventObject(mxEvent.HIDE));
+    this.fireEvent(new EventObject(InternalEvent.HIDE));
   }
 
   /**
@@ -964,10 +964,10 @@ class mxWindow extends mxEventSource {
    */
   // destroy(): void;
   destroy() {
-    this.fireEvent(new mxEventObject(mxEvent.DESTROY));
+    this.fireEvent(new EventObject(InternalEvent.DESTROY));
 
     if (this.div != null) {
-      mxEvent.release(this.div);
+      InternalEvent.release(this.div);
       this.div.parentNode.removeChild(this.div);
       this.div = null;
     }
@@ -1060,7 +1060,7 @@ export const error = (message, width, close, icon) => {
   div.style.padding = '20px';
 
   const img = document.createElement('img');
-  img.setAttribute('src', icon || mxUtils.errorImage);
+  img.setAttribute('src', icon || utils.errorImage);
   img.setAttribute('valign', 'bottom');
   img.style.verticalAlign = 'middle';
   div.appendChild(img);
@@ -1073,7 +1073,7 @@ export const error = (message, width, close, icon) => {
   const w = document.body.clientWidth;
   const h = document.body.clientHeight || document.documentElement.clientHeight;
   const warn = new mxWindow(
-    mxResources.get(mxUtils.errorResource) || mxUtils.errorResource,
+    Resources.get(utils.errorResource) || utils.errorResource,
     div,
     (w - width) / 2,
     h / 4,
@@ -1091,13 +1091,13 @@ export const error = (message, width, close, icon) => {
 
     button.setAttribute('style', 'float:right');
 
-    mxEvent.addListener(button, 'click', (evt) => {
+    InternalEvent.addListener(button, 'click', (evt) => {
       warn.destroy();
     });
 
     write(
       button,
-      mxResources.get(mxUtils.closeResource) || mxUtils.closeResource
+      Resources.get(utils.closeResource) || utils.closeResource
     );
 
     tmp.appendChild(button);

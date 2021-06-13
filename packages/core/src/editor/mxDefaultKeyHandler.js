@@ -5,9 +5,9 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxEvent from '../util/event/mxEvent';
-import mxEventObject from '../util/event/mxEventObject';
-import mxKeyHandler from '../handler/mxKeyHandler';
+import InternalEvent from '../view/event/InternalEvent';
+import EventObject from '../view/event/EventObject';
+import mxKeyHandler from '../view/event/mxKeyHandler';
 
 /**
  * Binds keycodes to actionnames in an editor.  This aggregates an internal {@link handler} and extends the implementation of {@link mxKeyHandler.escape} to not only cancel the editing, but also hide the properties dialog and fire an <mxEditor.escape> event via {@link editor}.  An instance of this class is created by {@link mxEditor} and stored in {@link mxEditor.keyHandler}.
@@ -24,7 +24,7 @@ import mxKeyHandler from '../handler/mxKeyHandler';
  *
  * @Keycodes
  * See {@link mxKeyHandler}.
- * An {@link mxEvent.ESCAPE} event is fired via the editor if the escape key is pressed.
+ * An {@link InternalEvent.ESCAPE} event is fired via the editor if the escape key is pressed.
  */
 class mxDefaultKeyHandler {
   constructor(editor) {
@@ -40,7 +40,7 @@ class mxDefaultKeyHandler {
       this.handler.escape = evt => {
         old.apply(this, [editor]);
         editor.hideProperties();
-        editor.fireEvent(new mxEventObject(mxEvent.ESCAPE, 'event', evt));
+        editor.fireEvent(new EventObject(InternalEvent.ESCAPE, 'event', evt));
       };
     }
   }

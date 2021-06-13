@@ -78,7 +78,7 @@ export default Touch;
       if (!mxClient.isBrowserSupported())
       {
         // Displays an error message if the browser is not supported.
-        mxUtils.error('Browser is not supported!', 200, false);
+        utils.error('Browser is not supported!', 200, false);
       }
       else
       {
@@ -86,7 +86,7 @@ export default Touch;
         // mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
 
         // Disables built-in text selection and context menu while not editing text
-        let textEditing =  mxUtils.bind(this, function(evt)
+        let textEditing =  utils.bind(this, function(evt)
         {
           return graph.isEditing();
         });
@@ -161,7 +161,7 @@ export default Touch;
               !graph.isEditing() && !mxEvent.isMouseEvent(me.getEvent()) &&
               ((selectionEmpty && me.getCell() == null && graph.isSelectionEmpty()) ||
               (cellSelected && graph.isCellSelected(me.getCell())))));
-          mxPopupMenuHandler.prototype.mouseUp.apply(this, arguments);
+          PopupMenuHandler.prototype.mouseUp.apply(this, arguments);
         };
 
         // Tap and hold on background starts rubberband for multiple selected
@@ -175,7 +175,7 @@ export default Touch;
 
             if (cell == null)
             {
-              let pt = mxUtils.convertPoint(this.container,
+              let pt = utils.convertPoint(this.container,
                   mxEvent.getClientX(me), mxEvent.getClientY(me));
               rubberband.start(pt.x, pt.y);
             }
@@ -265,13 +265,13 @@ export default Touch;
     (function()
     {
       // Enables rotation handle
-      mxVertexHandler.prototype.rotationEnabled = true;
+      VertexHandler.prototype.rotationEnabled = true;
 
       // Enables managing of sizers
-      mxVertexHandler.prototype.manageSizers = true;
+      VertexHandler.prototype.manageSizers = true;
 
       // Enables live preview
-      mxVertexHandler.prototype.livePreview = true;
+      VertexHandler.prototype.livePreview = true;
 
       // Sets constants for touch style
       mxConstants.HANDLE_SIZE = 16;
@@ -280,14 +280,14 @@ export default Touch;
       // Larger tolerance and grid for real touch devices
       if (mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)
       {
-        mxShape.prototype.svgStrokeTolerance = 18;
-        mxVertexHandler.prototype.tolerance = 12;
+        Shape.prototype.svgStrokeTolerance = 18;
+        VertexHandler.prototype.tolerance = 12;
         mxEdgeHandler.prototype.tolerance = 12;
         mxGraph.prototype.tolerance = 12;
       }
 
       // One finger pans (no rubberband selection) must start regardless of mouse button
-      mxPanningHandler.prototype.isPanningTrigger = function(me)
+      PanningHandler.prototype.isPanningTrigger = function(me)
       {
         let evt = me.getEvent();
 
@@ -297,8 +297,8 @@ export default Touch;
       };
 
       // Don't clear selection if multiple cells selected
-      let graphHandlerMouseDown = mxGraphHandler.prototype.mouseDown;
-      mxGraphHandler.prototype.mouseDown = function(sender, me)
+      let graphHandlerMouseDown = GraphHandler.prototype.mouseDown;
+      GraphHandler.prototype.mouseDown = function(sender, me)
       {
         graphHandlerMouseDown.apply(this, arguments);
 
@@ -309,7 +309,7 @@ export default Touch;
       };
 
       // On connect the target is selected and we clone the cell of the preview edge for insert
-      mxConnectionHandler.prototype.selectCells = function(edge, target)
+      ConnectionHandler.prototype.selectCells = function(edge, target)
       {
         if (target != null)
         {
@@ -327,7 +327,7 @@ export default Touch;
       {
         if (cell == null)
         {
-          let pt = mxUtils.convertPoint(this.container,
+          let pt = utils.convertPoint(this.container,
             mxEvent.getClientX(evt), mxEvent.getClientY(evt));
           cell = this.getCellAt(pt.x, pt.y);
         }
@@ -336,10 +336,10 @@ export default Touch;
       };
 
       // Rounded edge and vertex handles
-      let touchHandle = new mxImage('images/handle-main.png', 17, 17);
-      mxVertexHandler.prototype.handleImage = touchHandle;
+      let touchHandle = new Image('images/handle-main.png', 17, 17);
+      VertexHandler.prototype.handleImage = touchHandle;
       mxEdgeHandler.prototype.handleImage = touchHandle;
-      mxOutline.prototype.sizerImage = touchHandle;
+      Outline.prototype.sizerImage = touchHandle;
 
       // Pre-fetches touch handle
       new Image().src = touchHandle.src;
@@ -347,8 +347,8 @@ export default Touch;
       // Adds connect icon to selected vertex
       let connectorSrc = 'images/handle-connect.png';
 
-      let vertexHandlerInit = mxVertexHandler.prototype.init;
-      mxVertexHandler.prototype.init = function()
+      let vertexHandlerInit = VertexHandler.prototype.init;
+      VertexHandler.prototype.init = function()
       {
         // TODO: Use 4 sizers, move outside of shape
         //this.singleSizer = this.state.width < 30 && this.state.height < 30;
@@ -359,7 +359,7 @@ export default Touch;
           this.state.cell.isConnectable() &&
           this.graph.getSelectionCount() == 1)
         {
-          this.connectorImg = mxUtils.createImage(connectorSrc);
+          this.connectorImg = utils.createImage(connectorSrc);
           this.connectorImg.style.cursor = 'pointer';
           this.connectorImg.style.width = '29px';
           this.connectorImg.style.height = '29px';
@@ -367,18 +367,18 @@ export default Touch;
 
           if (!mxClient.IS_TOUCH)
           {
-            this.connectorImg.setAttribute('title', mxResources.get('connect'));
+            this.connectorImg.setAttribute('title', Resources.get('connect'));
             mxEvent.redirectMouseEvents(this.connectorImg, this.graph, this.state);
           }
 
           // Starts connecting on touch/mouse down
           mxEvent.addGestureListeners(this.connectorImg,
-            mxUtils.bind(this, function(evt)
+            utils.bind(this, function(evt)
             {
               this.graph.popupMenuHandler.hideMenu();
               this.graph.stopEditing(false);
 
-              let pt = mxUtils.convertPoint(this.graph.container,
+              let pt = utils.convertPoint(this.graph.container,
                   mxEvent.getClientX(evt), mxEvent.getClientY(evt));
               this.graph.connectionHandler.start(this.state, pt.x, pt.y);
               this.graph.isMouseDown = true;
@@ -393,8 +393,8 @@ export default Touch;
         this.redrawHandles();
       };
 
-      let vertexHandlerHideSizers = mxVertexHandler.prototype.hideSizers;
-      mxVertexHandler.prototype.hideSizers = function()
+      let vertexHandlerHideSizers = VertexHandler.prototype.hideSizers;
+      VertexHandler.prototype.hideSizers = function()
       {
         vertexHandlerHideSizers.apply(this, arguments);
 
@@ -404,8 +404,8 @@ export default Touch;
         }
       };
 
-      let vertexHandlerReset = mxVertexHandler.prototype.reset;
-      mxVertexHandler.prototype.reset = function()
+      let vertexHandlerReset = VertexHandler.prototype.reset;
+      VertexHandler.prototype.reset = function()
       {
         vertexHandlerReset.apply(this, arguments);
 
@@ -415,18 +415,18 @@ export default Touch;
         }
       };
 
-      let vertexHandlerRedrawHandles = mxVertexHandler.prototype.redrawHandles;
-      mxVertexHandler.prototype.redrawHandles = function()
+      let vertexHandlerRedrawHandles = VertexHandler.prototype.redrawHandles;
+      VertexHandler.prototype.redrawHandles = function()
       {
         vertexHandlerRedrawHandles.apply(this);
 
         if (this.state != null && this.connectorImg != null)
         {
-          let pt = new mxPoint();
+          let pt = new Point();
           let s = this.state;
 
           // Top right for single-sizer
-          if (mxVertexHandler.prototype.singleSizer)
+          if (VertexHandler.prototype.singleSizer)
           {
             pt.x = s.x + s.width - this.connectorImg.offsetWidth / 2;
             pt.y = s.y - this.connectorImg.offsetHeight / 2;
@@ -437,15 +437,15 @@ export default Touch;
             pt.y = s.y + s.height / 2;
           }
 
-          let alpha = mxUtils.toRadians(mxUtils.getValue(s.style, 'rotation', 0));
+          let alpha = utils.toRadians(utils.getValue(s.style, 'rotation', 0));
 
           if (alpha != 0)
           {
             let cos = Math.cos(alpha);
             let sin = Math.sin(alpha);
 
-            let ct = new mxPoint(s.getCenterX(), s.getCenterY());
-            pt = mxUtils.getRotatedPoint(pt, cos, sin, ct);
+            let ct = new Point(s.getCenterX(), s.getCenterY());
+            pt = utils.getRotatedPoint(pt, cos, sin, ct);
           }
 
           this.connectorImg.style.left = (pt.x - this.connectorImg.offsetWidth / 2) + 'px';
@@ -453,8 +453,8 @@ export default Touch;
         }
       };
 
-      let vertexHandlerDestroy = mxVertexHandler.prototype.destroy;
-      mxVertexHandler.prototype.destroy = function(sender, me)
+      let vertexHandlerDestroy = VertexHandler.prototype.destroy;
+      VertexHandler.prototype.destroy = function(sender, me)
       {
         vertexHandlerDestroy.apply(this, arguments);
 

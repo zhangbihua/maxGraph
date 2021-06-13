@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import { getTextContent } from '../util/mxDomUtils';
-import mxResources from '../util/mxResources';
+import { getTextContent } from '../util/DomUtils';
+import Resources from '../util/Resources';
 
 /**
  * Creates popupmenus for mouse events.  This object holds an XML node which is a description of the popup menu to be created.  In {@link createMenu}, the configuration is applied to the context and the resulting menu items are added to the menu dynamically.  See {@link createMenu} for a description of the configuration format.
@@ -165,7 +165,7 @@ class mxDefaultPopupMenu {
 
         if (condition == null || conditions[condition]) {
           let as = item.getAttribute('as');
-          as = mxResources.get(as) || as;
+          as = Resources.get(as) || as;
           const funct = eval(getTextContent(item));
           const action = item.getAttribute('action');
           let icon = item.getAttribute('icon');
