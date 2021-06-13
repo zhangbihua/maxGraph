@@ -1,6 +1,13 @@
 import Cell from "../cell/datatypes/Cell";
 
 class GraphPorts {
+  /**
+   * Specifies if ports are enabled. This is used in {@link cellConnected} to update
+   * the respective style.
+   * @default true
+   */
+  portsEnabled: boolean = true;
+
   /*****************************************************************************
    * Group: Drilldown
    *****************************************************************************/
@@ -59,24 +66,6 @@ class GraphPorts {
    */
   setPortsEnabled(value: boolean): void {
     this.portsEnabled = value;
-  }
-
-  /**
-   * Returns {@link splitEnabled} as a boolean.
-   */
-  isSplitEnabled(): boolean {
-    return this.splitEnabled;
-  }
-
-  /**
-   * Specifies if the graph should allow dropping of cells onto or into other
-   * cells.
-   *
-   * @param dropEnabled Boolean indicating if the graph should allow dropping
-   * of cells into other cells.
-   */
-  setSplitEnabled(value: boolean): void {
-    this.splitEnabled = value;
   }
 }
 

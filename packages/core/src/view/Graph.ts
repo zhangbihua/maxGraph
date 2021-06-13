@@ -206,13 +206,6 @@ class Graph extends EventSource {
   dialect: 'svg' | 'mixedHtml' | 'preferHtml' | 'strictHtml' = 'svg';
 
   /**
-   * Specifies if ports are enabled. This is used in {@link cellConnected} to update
-   * the respective style.
-   * @default true
-   */
-  portsEnabled: boolean = true;
-
-  /**
    * Value returned by {@link getOverlap} if {@link isAllowOverlapParent} returns
    * `true` for the given cell. {@link getOverlap} is used in {@link constrainChild} if
    * {@link isConstrainChild} returns `true`. The value specifies the

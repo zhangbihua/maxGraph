@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2016, Gaudenz Alder
  */
 
-import utils, { getOffset, getScrollOrigin } from '../../util/Utils';
+import utils, { getOffset, getScrollOrigin, setOpacity } from '../../util/Utils';
 import InternalEvent from '../event/InternalEvent';
 import Point from '../geometry/Point';
 import InternalMouseEvent from '../event/InternalMouseEvent';
@@ -243,11 +243,11 @@ class RubberBand {
   /**
    * Creates the rubberband selection shape.
    */
-  createShape(): HTMLElement {
+  createShape(): HTMLElement | null {
     if (this.sharedDiv == null) {
       this.sharedDiv = document.createElement('div');
       this.sharedDiv.className = 'mxRubberband';
-      utils.setOpacity(this.sharedDiv, this.defaultOpacity);
+      setOpacity(this.sharedDiv, this.defaultOpacity);
     }
 
     this.graph.container.appendChild(this.sharedDiv);

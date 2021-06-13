@@ -577,7 +577,7 @@ class ConnectionHandler extends EventSource {
    *
    * Creates and returns the <mxCellMarker> used in <marker>.
    */
-  createMarker() {
+  createMarker(): CellMarker {
     const self = this;
 
     class MyCellMarker extends CellMarker {
@@ -670,7 +670,7 @@ class ConnectionHandler extends EventSource {
       };
     }
 
-    return new MyCellMarker(this.graph);
+    return <CellMarker>new MyCellMarker(this.graph);
   }
 
   /**
@@ -678,8 +678,11 @@ class ConnectionHandler extends EventSource {
    *
    * Starts a new connection for the given state and coordinates.
    */
-  // start(state: mxCellState, x: number, y: number, edgeState: mxCellState): void;
-  start(state, x, y, edgeState) {
+  start(state: CellState,
+        x: number,
+        y: number,
+        edgeState: CellState): void {
+
     this.previous = state;
     this.first = new Point(x, y);
     this.edgeState = edgeState != null ? edgeState : this.createEdgeState(null);
@@ -698,8 +701,7 @@ class ConnectionHandler extends EventSource {
    * Returns true if the source terminal has been clicked and a new
    * connection is currently being previewed.
    */
-  // isConnecting(): boolean;
-  isConnecting() {
+  isConnecting(): boolean {
     return this.first != null && this.shape != null;
   }
 
@@ -713,8 +715,8 @@ class ConnectionHandler extends EventSource {
    * cell - <mxCell> that represents the source terminal.
    * me - <mxMouseEvent> that is associated with this call.
    */
-  // isValidSource(cell: mxCell, me: mxMouseEvent): boolean;
-  isValidSource(cell, me) {
+  isValidSource(cell: Cell,
+                me: InternalMouseEvent): boolean {
     return this.graph.isValidSource(cell);
   }
 
@@ -729,8 +731,7 @@ class ConnectionHandler extends EventSource {
    *
    * cell - <mxCell> that represents the target terminal.
    */
-  // isValidTarget(cell: mxCell): boolean;
-  isValidTarget(cell) {
+  isValidTarget(cell: Cell): boolean {
     return true;
   }
 
@@ -746,12 +747,10 @@ class ConnectionHandler extends EventSource {
    * source - <mxCell> that represents the source terminal.
    * target - <mxCell> that represents the target terminal.
    */
-  // validateConnection(source: mxCell, target: mxCell): string;
-  validateConnection(source, target) {
+  validateConnection(source: Cell, target: Cell): string {
     if (!this.isValidTarget(target)) {
       return '';
     }
-
     return this.graph.getEdgeValidationError(null, source, target);
   }
 
@@ -765,8 +764,7 @@ class ConnectionHandler extends EventSource {
    *
    * state - <mxCellState> whose connect image should be returned.
    */
-  // getConnectImage(state: mxCellState): mxImage;
-  getConnectImage(state) {
+  getConnectImage(state: CellState): Image {
     return this.connectImage;
   }
 
@@ -780,15 +778,13 @@ class ConnectionHandler extends EventSource {
    *
    * state - <mxCellState> whose connect icons should be returned.
    */
-  // isMoveIconToFrontForState(state: mxCellState): boolean;
-  isMoveIconToFrontForState(state) {
+  isMoveIconToFrontForState(state: CellState): boolean {
     if (
       state.text != null &&
       state.text.node.parentNode === this.graph.container
     ) {
       return true;
     }
-
     return this.moveIconFront;
   }
 
@@ -872,8 +868,7 @@ class ConnectionHandler extends EventSource {
    *
    * icons - Optional array of <mxImageShapes> to be redrawn.
    */
-  // redrawIcons(icons?: mxImageShape[], state?: mxCellState): void;
-  redrawIcons(icons, state) {
+  redrawIcons(icons?: ImageShape[], state?: CellState): void {
     if (icons != null && icons[0] != null && state != null) {
       const pos = this.getIconPosition(icons[0], state);
       icons[0].bounds.x = pos.x;
@@ -891,8 +886,7 @@ class ConnectionHandler extends EventSource {
    *
    * icons - Optional array of <mxImageShapes> to be redrawn.
    */
-  // getIconPosition(icon?: mxImageShape[], state?: mxCellState): mxPoint;
-  getIconPosition(icon, state) {
+  getIconPosition(icon?: ImageShape[], state?: CellState): Point {
     const { scale } = this.graph.getView();
     let cx = state.getCenterX();
     let cy = state.getCenterY();
@@ -916,7 +910,6 @@ class ConnectionHandler extends EventSource {
         cy = pt.y;
       }
     }
-
     return new Point(cx - icon.bounds.width / 2, cy - icon.bounds.height / 2);
   }
 
@@ -925,8 +918,7 @@ class ConnectionHandler extends EventSource {
    *
    * Destroys the connect icons and resets the respective state.
    */
-  // destroyIcons(): void;
-  destroyIcons() {
+  destroyIcons(): void {
     if (this.icons != null) {
       for (let i = 0; i < this.icons.length; i += 1) {
         this.icons[i].destroy();
@@ -948,8 +940,7 @@ class ConnectionHandler extends EventSource {
    * <constraintHandler> are not null, or <previous> and <error> are not null and
    * <icons> is null or <icons> and <icon> are not null.
    */
-  // isStartEvent(me: mxMouseEvent): boolean;
-  isStartEvent(me) {
+  isStartEvent(me: InternalMouseEvent): boolean {
     return (
       (this.constraintHandler.currentFocus !== null &&
         this.constraintHandler.currentConstraint !== null) ||
@@ -964,8 +955,7 @@ class ConnectionHandler extends EventSource {
    *
    * Handles the event by initiating a new connection.
    */
-  // mouseDown(sender: Event, me: mxMouseEvent): void;
-  mouseDown(sender, me) {
+  mouseDown(sender: any, me: InternalMouseEvent): void {
     this.mouseDownCounter += 1;
 
     if (

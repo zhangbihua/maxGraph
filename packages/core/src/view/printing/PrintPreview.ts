@@ -459,14 +459,8 @@ class PrintPreview {
       bounds.width /= sc;
       bounds.height /= sc;
 
-      const hpages = Math.max(
-        1,
-        Math.ceil((bounds.width + this.x0) / availableWidth)
-      );
-      const vpages = Math.max(
-        1,
-        Math.ceil((bounds.height + this.y0) / availableHeight)
-      );
+      const hpages = Math.max(1, Math.ceil((bounds.width + this.x0) / availableWidth));
+      const vpages = Math.max(1, Math.ceil((bounds.height + this.y0) / availableHeight));
       this.pageCount = hpages * vpages;
 
       const writePageSelector = () => {
@@ -523,10 +517,7 @@ class PrintPreview {
         }
       };
 
-      const cov = this.getCoverPages(
-        this.pageFormat.width,
-        this.pageFormat.height
-      );
+      const cov = this.getCoverPages(this.pageFormat.width, this.pageFormat.height);
 
       if (cov != null) {
         for (let i = 0; i < cov.length; i += 1) {
@@ -534,10 +525,7 @@ class PrintPreview {
         }
       }
 
-      const apx = this.getAppendices(
-        this.pageFormat.width,
-        this.pageFormat.height
-      );
+      const apx = this.getAppendices(this.pageFormat.width, this.pageFormat.height);
 
       // Appends each page to the page output for printing, making
       // sure there will be a page break after each page (ie. div)
@@ -665,9 +653,7 @@ class PrintPreview {
         'font-family: Arial; font-size:10pt; border: solid 1px darkgray;' +
         'background: white; border-collapse:collapse; }'
     );
-    doc.writeln(
-      '  table.mxPageSelector td { border: solid 1px gray; padding:4px; }'
-    );
+    doc.writeln('  table.mxPageSelector td { border: solid 1px gray; padding:4px; }');
     doc.writeln('  body.mxPage { background: gray; }');
     doc.writeln('}');
 
@@ -681,16 +667,14 @@ class PrintPreview {
   /**
    * Called before closing the body of the page. This implementation is empty.
    */
-  // writePostfix(doc: Document): any;
-  writePostfix(doc) {
+  writePostfix(doc: Document): any {
     // empty
   }
 
   /**
    * Creates the page selector table.
    */
-  // createPageSelector(vpages: number, hpages: number): HTMLTableElement;
-  createPageSelector(vpages, hpages) {
+  createPageSelector(vpages: number, hpages: number): HTMLTableElement {
     const doc = this.wnd.document;
     const table = doc.createElement('table');
     table.className = 'mxPageSelector';
