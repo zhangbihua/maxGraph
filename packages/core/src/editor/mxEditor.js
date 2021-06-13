@@ -34,7 +34,7 @@ import {
 import graph from '../view/Graph';
 import SwimlaneManager from '../view/layout/SwimlaneManager';
 import LayoutManager from '../view/layout/LayoutManager';
-import mxRubberband from '../view/selection/mxRubberband';
+import RubberBand from '../view/selection/RubberBand';
 import InternalEvent from '../view/event/InternalEvent';
 import RootChange from '../view/model/RootChange';
 import ValueChange from '../view/cell/ValueChange';
@@ -1584,7 +1584,7 @@ class mxEditor extends EventSource {
 
       // Install rubberband selection as the last
       // action handler in the chain
-      this.rubberband = new mxRubberband(this.graph);
+      this.rubberband = new RubberBand(this.graph);
 
       // Disables the context menu
       if (this.disableContextMenu) {

@@ -3,11 +3,11 @@ import CellArray from "../cell/datatypes/CellArray";
 import Rectangle from "../geometry/Rectangle";
 import InternalMouseEvent from "../event/InternalMouseEvent";
 import CellState from "../cell/datatypes/CellState";
-import mxEdgeHandler from "../cell/edge/mxEdgeHandler";
-import mxVertexHandler from "../cell/vertex/mxVertexHandler";
+import EdgeHandler from "../cell/edge/EdgeHandler";
+import VertexHandler from "../cell/vertex/VertexHandler";
 import EdgeStyle from "../style/EdgeStyle";
-import mxEdgeSegmentHandler from "../cell/edge/mxEdgeSegmentHandler";
-import mxElbowEdgeHandler from "../cell/edge/mxElbowEdgeHandler";
+import EdgeSegmentHandler from "../cell/edge/EdgeSegmentHandler";
+import ElbowEdgeHandler from "../cell/edge/ElbowEdgeHandler";
 import graph from "../Graph";
 import mxClient from "../../mxClient";
 import SelectionChange from "./SelectionChange";
@@ -15,7 +15,7 @@ import mxUndoableEdit from "../model/mxUndoableEdit";
 import EventObject from "../event/EventObject";
 import InternalEvent from "../event/InternalEvent";
 import EventSource from "../event/EventSource";
-import mxDictionary from "../../util/mxDictionary";
+import Dictionary from "../../util/Dictionary";
 import RootChange from "../model/RootChange";
 import ChildChange from "../model/ChildChange";
 
@@ -631,7 +631,7 @@ class Selection extends EventSource {
     changes: any[],
     ignoreFn: Function | null = null
   ): CellArray {
-    const dict = new mxDictionary();
+    const dict = new Dictionary();
     const cells: CellArray = new CellArray();
 
     const addCell = (cell: Cell) => {

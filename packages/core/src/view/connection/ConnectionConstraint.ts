@@ -9,9 +9,9 @@ import Point from '../geometry/Point';
 
 /**
  * Defines an object that contains the constraints about how to connect one side of an edge to its terminal.
- * @class mxConnectionConstraint
+ * @class ConnectionConstraint
  */
-class mxConnectionConstraint {
+class ConnectionConstraint {
   constructor(
     point: Point | null = null,
     perimeter: boolean = true,
@@ -31,7 +31,6 @@ class mxConnectionConstraint {
    *
    * <mxPoint> that specifies the fixed location of the connection point.
    */
-  // point: mxPoint;
   point: Point | null = null;
 
   /**
@@ -40,7 +39,6 @@ class mxConnectionConstraint {
    * Boolean that specifies if the point should be projected onto the perimeter
    * of the terminal.
    */
-  // perimeter: boolean;
   perimeter: boolean = true;
 
   /**
@@ -48,7 +46,6 @@ class mxConnectionConstraint {
    *
    * Optional string that specifies the name of the constraint.
    */
-  // name: string;
   name: string | null = null;
 
   /**
@@ -66,4 +63,4 @@ class mxConnectionConstraint {
   dy: number | null = null;
 }
 
-export default mxConnectionConstraint;
+export default ConnectionConstraint;

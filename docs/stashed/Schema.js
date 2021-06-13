@@ -69,7 +69,7 @@ export default MYNAMEHERE;
 
         // Defines an icon for creating new connections in the connection handler.
         // This will automatically disable the highlighting of the source vertex.
-        mxConnectionHandler.prototype.connectImage = new Image('images/connector.gif', 16, 16);
+        ConnectionHandler.prototype.connectImage = new Image('images/connector.gif', 16, 16);
 
         // Prefetches all images that appear in colums
         // to avoid problems with the auto-layout

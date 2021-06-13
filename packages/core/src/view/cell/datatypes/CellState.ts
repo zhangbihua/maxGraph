@@ -11,7 +11,7 @@ import Cell from './Cell';
 import GraphView from '../../view/GraphView';
 import Shape from '../../geometry/shape/Shape';
 import mxText from '../../geometry/shape/mxText';
-import mxDictionary from '../../../util/mxDictionary';
+import Dictionary from '../../../util/Dictionary';
 
 import type { CellStateStyles } from '../../../types';
 import Image from "../../image/Image";
@@ -69,7 +69,7 @@ class CellState extends Rectangle {
   control: Shape | null = null;
 
   // Used by mxCellRenderer's createCellOverlays()
-  overlays: mxDictionary<Cell, Shape> | null = null;
+  overlays: Dictionary<Cell, Shape> | null = null;
 
   /**
    * Variable: view

@@ -223,46 +223,39 @@ class Model extends EventSource {
    * layers of the diagram as child cells. That is, the actual elements of the
    * diagram are supposed to live in the third generation of cells and below.
    */
-  // root: mxCell;
   root: Cell | null = null;
 
   /**
    * Maps from Ids to cells.
    */
-  // cells: any;
   cells: any = {};
 
   /**
    * Specifies if edges should automatically be moved into the nearest common
    * ancestor of their terminals. Default is true.
    */
-  // maintainEdgeParent: boolean;
   maintainEdgeParent: boolean = true;
 
   /**
    * Specifies if relative edge parents should be ignored for finding the nearest
    * common ancestors of an edge's terminals. Default is true.
    */
-  // ignoreRelativeEdgeParent: boolean;
   ignoreRelativeEdgeParent: boolean = true;
 
   /**
    * Specifies if the model should automatically create Ids for new cells.
    * Default is true.
    */
-  // createIds: boolean;
   createIds: boolean = true;
 
   /**
    * Defines the prefix of new Ids. Default is an empty string.
    */
-  // prefix: string;
   prefix: string = '';
 
   /**
    * Defines the postfix of new Ids. Default is an empty string.
    */
-  // postfix: string;
   postfix: string = '';
 
   /**
@@ -276,7 +269,6 @@ class Model extends EventSource {
    * closed then a new object is created for this variable using
    * {@link createUndoableEdit}.
    */
-  // currentEdit: any;
   currentEdit: any = null;
 
   /**
@@ -285,19 +277,16 @@ class Model extends EventSource {
    * it. When the counter reaches 0, the transaction is closed and the
    * respective events are fired. Initial value is 0.
    */
-  // updateLevel: number;
   updateLevel: number = 0;
 
   /**
    * True if the program flow is currently inside endUpdate.
    */
-  // endingUpdate: boolean;
   endingUpdate: boolean = false;
 
   /**
    * Sets a new root using {@link createRoot}.
    */
-  // clear(): void;
   clear(): void {
     this.setRoot(this.createRoot());
   }
@@ -305,7 +294,6 @@ class Model extends EventSource {
   /**
    * Returns {@link createIds}.
    */
-  // isCreateIds(): boolean;
   isCreateIds(): boolean {
     return this.createIds;
   }
@@ -313,7 +301,6 @@ class Model extends EventSource {
   /**
    * Sets {@link createIds}.
    */
-  // setCreateIds(value: boolean): void;
   setCreateIds(value: boolean): void {
     this.createIds = value;
   }
@@ -321,7 +308,6 @@ class Model extends EventSource {
   /**
    * Creates a new root cell with a default layer (child 0).
    */
-  // createRoot(): mxCell;
   createRoot(): Cell {
     const cell = new Cell();
     cell.insert(new Cell());
@@ -334,7 +320,6 @@ class Model extends EventSource {
    *
    * @param {string} id  A string representing the Id of the cell.
    */
-  // getCell(id: string): mxCell;
   getCell(id: string): Cell | null {
     return this.cells != null ? this.cells[id] : null;
   }
@@ -364,7 +349,6 @@ class Model extends EventSource {
    *
    * @param {Cell} root  that specifies the new root.
    */
-  // setRoot(root: mxCell): mxCell;
   setRoot(root: Cell | null): Cell | null {
     this.execute(new RootChange(this, root));
     return root;
@@ -513,7 +497,6 @@ class Model extends EventSource {
    *
    * @param {Cell} cell  to create the Id for.
    */
-  // createId(cell: mxCell): string;
   createId(cell: Cell): string {
     const id = this.nextId;
     this.nextId++;
@@ -524,7 +507,6 @@ class Model extends EventSource {
    * Updates the parent for all edges that are connected to cell or one of
    * its descendants using {@link updateEdgeParent}.
    */
-  // updateEdgeParents(cell: mxCell, root: mxCell): void;
   updateEdgeParents(cell: Cell,
                     root: Cell=<Cell>this.getRoot(cell)): void {
 
@@ -563,7 +545,6 @@ class Model extends EventSource {
    * @param {Cell} edge  that specifies the edge.
    * @param {Cell} root  that represents the current root of the model.
    */
-  // updateEdgeParent(edge: mxCell, root: mxCell): void;
   updateEdgeParent(edge: Cell,
                    root: Cell): void {
 
@@ -630,8 +611,7 @@ class Model extends EventSource {
    *
    * @param {Cell} cell  that should be removed.
    */
-  // remove(cell: mxCell): mxCell;
-  remove(cell: Cell) {
+  remove(cell: Cell): Cell {
     if (cell === this.root) {
       this.setRoot(null);
     } else if (cell.getParent() != null) {
@@ -645,8 +625,7 @@ class Model extends EventSource {
    *
    * @param {Cell} cell  that specifies the cell that has been removed.
    */
-  // cellRemoved(cell: mxCell): void;
-  cellRemoved(cell: Cell) {
+  cellRemoved(cell: Cell): void {
     if (cell != null && this.cells != null) {
       // Recursively processes child cells
       const childCount = cell.getChildCount();
@@ -890,9 +869,8 @@ class Model extends EventSource {
    * @param style  String of the form [stylename;|key=value;] to specify
    * the new cell style.
    */
-  // setStyle(cell: mxCell, style: string): string;
   setStyle(cell: Cell,
-           style: any): any {
+           style: string): string {
 
     if (style !== cell.getStyle()) {
       this.execute(new StyleChange(this, cell, style));
@@ -908,7 +886,6 @@ class Model extends EventSource {
    * @param style  String of the form [stylename;|key=value;] to specify
    * the new cell style.
    */
-  // styleForCellChanged(cell: mxCell, style: string): string;
   styleForCellChanged(cell: Cell,
                       style: string): string | null {
 
@@ -956,9 +933,8 @@ class Model extends EventSource {
    * @param {Cell} cell  whose visible state should be changed.
    * @param visible  Boolean that specifies the new visible state.
    */
-  // setVisible(cell: mxCell, visible: boolean): boolean;
   setVisible(cell: Cell,
-             visible: boolean) {
+             visible: boolean): boolean {
 
     if (visible !== cell.isVisible()) {
       this.execute(new VisibleChange(this, cell, visible));
@@ -974,7 +950,6 @@ class Model extends EventSource {
    * @param {Cell} cell  that specifies the cell to be updated.
    * @param visible  Boolean that specifies the new visible state.
    */
-  // visibleStateForCellChanged(cell: mxCell, visible: boolean): boolean;
   visibleStateForCellChanged(cell: Cell,
                              visible: boolean): boolean {
     const previous = cell.isVisible();
@@ -993,7 +968,6 @@ class Model extends EventSource {
    *
    * @param change  Object that described the change.
    */
-  // execute(change: any): void;
   execute(change: any): void {
     change.execute();
     this.beginUpdate();
@@ -1041,7 +1015,6 @@ class Model extends EventSource {
    * graph.addCells([v1, v2]).
    * ```
    */
-  // beginUpdate(): void;
   beginUpdate(): void {
     this.updateLevel += 1;
     this.fireEvent(new EventObject(InternalEvent.BEGIN_UPDATE));
@@ -1063,7 +1036,6 @@ class Model extends EventSource {
    * function is invoked, that is, on undo and redo of
    * the edit.
    */
-  // endUpdate(): void;
   endUpdate(): void {
     this.updateLevel -= 1;
 
@@ -1226,7 +1198,6 @@ class Model extends EventSource {
    *
    * @param {Cell} cell  to be cloned.
    */
-  // cloneCell(cell: mxCell): mxCell;
   cloneCell(cell: Cell | null,
             includeChildren: boolean): Cell | null {
     if (cell != null) {

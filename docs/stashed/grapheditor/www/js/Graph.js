@@ -639,7 +639,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 	};
 
 	// All code below not available and not needed in embed mode
-	if (typeof mxVertexHandler !== 'undefined')
+	if (typeof VertexHandler !== 'undefined')
 	{
 		this.setConnectable(true);
 		this.setDropEnabled(true);
@@ -738,7 +738,7 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 		this.graphHandler.getCells = function(initialCell)
 		{
 		    let cells = graphHandlerGetCells.apply(this, arguments);
-		    let lookup = new mxDictionary();
+		    let lookup = new Dictionary();
 		    let newCells = [];
 
 		    for (let i = 0; i < cells.length; i++)
@@ -796,10 +796,10 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 		{
 			source = this.graph.getCompositeParent(source);
 			
-			return mxConnectionHandler.prototype.createTargetVertex.apply(this, arguments);
+			return ConnectionHandler.prototype.createTargetVertex.apply(this, arguments);
 		};
 		
-	    let rubberband = new mxRubberband(this);
+	    let rubberband = new RubberBand(this);
 	    
 	    this.getRubberband = function()
 	    {
@@ -6113,7 +6113,7 @@ StencilRegistry.parseStencilSet = function(root, postStencilLoad, install)
 /**
  * These overrides are only added if mxVertexHandler is defined (ie. not in embedded graph)
  */
-if (typeof mxVertexHandler != 'undefined')
+if (typeof VertexHandler != 'undefined')
 {
 	(function()
 	{
@@ -6142,7 +6142,7 @@ if (typeof mxVertexHandler != 'undefined')
 		GraphHandler.prototype.removeEmptyParents = true;
 	
 		// Enables fading of rubberband
-		mxRubberband.prototype.fadeOut = true;
+		RubberBand.prototype.fadeOut = true;
 		
 		// Alt-move disables guides
 		mxGuide.prototype.isEnabledForEvent = function(evt)
@@ -6160,14 +6160,14 @@ if (typeof mxVertexHandler != 'undefined')
 		
 		// Extends connection handler to enable ctrl+drag for cloning source cell
 		// since copyOnConnect is now disabled by default
-		let mxConnectionHandlerCreateTarget = mxConnectionHandler.prototype.isCreateTarget;
-		mxConnectionHandler.prototype.isCreateTarget = function(evt)
+		let mxConnectionHandlerCreateTarget = ConnectionHandler.prototype.isCreateTarget;
+		ConnectionHandler.prototype.isCreateTarget = function(evt)
 		{
 			return this.graph.isCloneEvent(evt) || mxConnectionHandlerCreateTarget.apply(this, arguments);
 		};
 
 		// Overrides highlight shape for connection points
-		mxConstraintHandler.prototype.createHighlightShape = function()
+		ConstraintHandler.prototype.createHighlightShape = function()
 		{
 			let hl = new Ellipse(null, this.highlightColor, this.highlightColor, 0);
 			hl.opacity = mxConstants.HIGHLIGHT_OPACITY;
@@ -6176,11 +6176,11 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 		
 		// Overrides edge preview to use current edge shape and default style
-		mxConnectionHandler.prototype.livePreview = true;
-		mxConnectionHandler.prototype.cursor = 'crosshair';
+		ConnectionHandler.prototype.livePreview = true;
+		ConnectionHandler.prototype.cursor = 'crosshair';
 		
 		// Uses current edge style for connect preview
-		mxConnectionHandler.prototype.createEdgeState = function(me)
+		ConnectionHandler.prototype.createEdgeState = function(me)
 		{
 			let style = this.graph.createCurrentEdgeStyle();
 			let edge = this.graph.createEdge(null, null, null, null, null, style);
@@ -6195,8 +6195,8 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 
 		// Overrides dashed state with current edge style
-		let connectionHandlerCreateShape = mxConnectionHandler.prototype.createShape;
-		mxConnectionHandler.prototype.createShape = function()
+		let connectionHandlerCreateShape = ConnectionHandler.prototype.createShape;
+		ConnectionHandler.prototype.createShape = function()
 		{
 			let shape = connectionHandlerCreateShape.apply(this, arguments);
 			
@@ -6206,14 +6206,14 @@ if (typeof mxVertexHandler != 'undefined')
 		}
 		
 		// Overrides live preview to keep current style
-		mxConnectionHandler.prototype.updatePreview = function(valid)
+		ConnectionHandler.prototype.updatePreview = function(valid)
 		{
 			// do not change color of preview
 		};
 		
 		// Overrides connection handler to ignore edges instead of not allowing connections
-		let mxConnectionHandlerCreateMarker = mxConnectionHandler.prototype.createMarker;
-		mxConnectionHandler.prototype.createMarker = function()
+		let mxConnectionHandlerCreateMarker = ConnectionHandler.prototype.createMarker;
+		ConnectionHandler.prototype.createMarker = function()
 		{
 			let marker = mxConnectionHandlerCreateMarker.apply(this, arguments);
 		
@@ -6500,7 +6500,7 @@ if (typeof mxVertexHandler != 'undefined')
 			let clones = this.cloneCells(cells, null, cloneMap);
 			
 			// Creates a dictionary for fast lookups
-			let dict = new mxDictionary();
+			let dict = new Dictionary();
 			
 			for (let i = 0; i < cells.length; i++)
 			{
@@ -6931,7 +6931,7 @@ if (typeof mxVertexHandler != 'undefined')
 						for (let i = 0; i < c.length; i++)
 						{
 							let tmp = c[i];
-							result.push(new mxConnectionConstraint(new Point(tmp[0], tmp[1]), (tmp.length > 2) ? tmp[2] != '0' : true,
+							result.push(new ConnectionConstraint(new Point(tmp[0], tmp[1]), (tmp.length > 2) ? tmp[2] != '0' : true,
 									null, (tmp.length > 3) ? tmp[3] : 0, (tmp.length > 4) ? tmp[4] : 0));
 						}
 					}
@@ -7430,7 +7430,7 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			if (cells != null)
 			{
-				let dict = new mxDictionary();
+				let dict = new Dictionary();
 				
 				for (let i = 0; i < cells.length; i++)
 				{
@@ -9556,7 +9556,7 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 	
 		let mxConstraintHandlerUpdate = mxConstraintHandler.prototype.update;
-		mxConstraintHandler.prototype.update = function(me, source)
+		ConstraintHandler.prototype.update = function(me, source)
 		{
 			if (this.isKeepFocusEvent(me) || !mxEvent.isAltDown(me.getEvent()))
 			{
@@ -10195,7 +10195,7 @@ if (typeof mxVertexHandler != 'undefined')
 		mxSelectionCellsHandler.prototype.getHandledSelectionCells = function()
 		{
 			let cells = selectionCellsHandlerGetHandledSelectionCells.apply(this, arguments);
-			let dict = new mxDictionary();
+			let dict = new Dictionary();
 			let model = this.graph.model;
 			let result = [];
 			
@@ -10230,8 +10230,8 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Creates the shape used to draw the selection border.
 		 */
-		let vertexHandlerCreateParentHighlightShape = mxVertexHandler.prototype.createParentHighlightShape;
-		mxVertexHandler.prototype.createParentHighlightShape = function(bounds)
+		let vertexHandlerCreateParentHighlightShape = VertexHandler.prototype.createParentHighlightShape;
+		VertexHandler.prototype.createParentHighlightShape = function(bounds)
 		{
 			let shape = vertexHandlerCreateParentHighlightShape.apply(this, arguments);
 			
@@ -10258,8 +10258,8 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Moves rotation handle to top, right corner.
 		 */
-		mxVertexHandler.prototype.rotationHandleVSpacing = -12;
-		mxVertexHandler.prototype.getRotationHandlePosition = function()
+		VertexHandler.prototype.rotationHandleVSpacing = -12;
+		VertexHandler.prototype.getRotationHandlePosition = function()
 		{
 			let padding = this.getHandlePadding();
 			
@@ -10270,7 +10270,7 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Enables recursive resize for groups.
 		 */
-		mxVertexHandler.prototype.isRecursiveResize = function(state, me)
+		VertexHandler.prototype.isRecursiveResize = function(state, me)
 		{
 			return this.graph.isRecursiveVertexResize(state) &&
 				!mxEvent.isControlDown(me.getEvent());
@@ -10279,7 +10279,7 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Enables centered resize events.
 		 */
-		mxVertexHandler.prototype.isCenteredEvent = function(state, me)
+		VertexHandler.prototype.isCenteredEvent = function(state, me)
 		{
 			return (!(!this.graph.isSwimlane(state.cell) && state.cell.getChildCount() > 0 &&
 					!state.cell.isCollapsed() &&
@@ -10292,8 +10292,8 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Hides rotation handle for table cells and rows.
 		 */
-		let vertexHandlerIsRotationHandleVisible = mxVertexHandler.prototype.isRotationHandleVisible;
-		mxVertexHandler.prototype.isRotationHandleVisible = function()
+		let vertexHandlerIsRotationHandleVisible = VertexHandler.prototype.isRotationHandleVisible;
+		VertexHandler.prototype.isRotationHandleVisible = function()
 		{
 			return vertexHandlerIsRotationHandleVisible.apply(this, arguments)  &&
 				!this.graph.isTableCell(this.state.cell) &&
@@ -10304,7 +10304,7 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Hides rotation handle for table cells and rows.
 		 */
-		mxVertexHandler.prototype.getSizerBounds = function()
+		VertexHandler.prototype.getSizerBounds = function()
 		{
 			if (this.graph.isTableCell(this.state.cell))
 			{
@@ -10319,8 +10319,8 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Hides rotation handle for table cells and rows.
 		 */
-		let vertexHandlerIsParentHighlightVisible = mxVertexHandler.prototype.isParentHighlightVisible;
-		mxVertexHandler.prototype.isParentHighlightVisible = function()
+		let vertexHandlerIsParentHighlightVisible = VertexHandler.prototype.isParentHighlightVisible;
+		VertexHandler.prototype.isParentHighlightVisible = function()
 		{
 			return vertexHandlerIsParentHighlightVisible.apply(this, arguments) &&
 				!this.graph.isTableCell(this.state.cell) &&
@@ -10330,8 +10330,8 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Hides rotation handle for table cells and rows.
 		 */
-		let vertexHandlerIsCustomHandleVisible = mxVertexHandler.prototype.isCustomHandleVisible;
-		mxVertexHandler.prototype.isCustomHandleVisible = function(handle)
+		let vertexHandlerIsCustomHandleVisible = VertexHandler.prototype.isCustomHandleVisible;
+		VertexHandler.prototype.isCustomHandleVisible = function(handle)
 		{
 			return handle.tableHandle ||
 				(vertexHandlerIsCustomHandleVisible.apply(this, arguments) &&
@@ -10342,7 +10342,7 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Adds selection border inset for table cells and rows.
 		 */
-		mxVertexHandler.prototype.getSelectionBorderInset = function()
+		VertexHandler.prototype.getSelectionBorderInset = function()
 		{
 			let result = 0;
 			
@@ -10361,8 +10361,8 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Adds custom handles for table cells.
 		 */
-		let vertexHandlerGetSelectionBorderBounds = mxVertexHandler.prototype.getSelectionBorderBounds;
-		mxVertexHandler.prototype.getSelectionBorderBounds = function()
+		let vertexHandlerGetSelectionBorderBounds = VertexHandler.prototype.getSelectionBorderBounds;
+		VertexHandler.prototype.getSelectionBorderBounds = function()
 		{
 			return vertexHandlerGetSelectionBorderBounds.apply(this, arguments).grow(
 					-this.getSelectionBorderInset());
@@ -10371,8 +10371,8 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Adds custom handles for table cells.
 		 */
-		let vertexHandlerCreateCustomHandles = mxVertexHandler.prototype.createCustomHandles;
-		mxVertexHandler.prototype.createCustomHandles = function()
+		let vertexHandlerCreateCustomHandles = VertexHandler.prototype.createCustomHandles;
+		VertexHandler.prototype.createCustomHandles = function()
 		{
 			let handles = vertexHandlerCreateCustomHandles.apply(this, arguments);
 			
@@ -10410,7 +10410,7 @@ if (typeof mxVertexHandler != 'undefined')
 							// Workaround for event handling on overlapping cells with tolerance
 							shape.svgStrokeTolerance++;
 							
-							let handle = new mxHandle(colState, 'col-resize', null, shape);
+							let handle = new VertexHandle(colState, 'col-resize', null, shape);
 							handle.tableHandle = true;
 							let dx = 0;
 							
@@ -10487,7 +10487,7 @@ if (typeof mxVertexHandler != 'undefined')
 							shape.isDashed = sel.isDashed;
 							shape.svgStrokeTolerance++;
 							
-							let handle = new mxHandle(rowState, 'row-resize', null, shape);
+							let handle = new VertexHandle(rowState, 'row-resize', null, shape);
 							handle.tableHandle = true;
 							let dy = 0;
 	
@@ -10545,9 +10545,9 @@ if (typeof mxVertexHandler != 'undefined')
 			return (handles != null) ? handles.reverse() : null;
 		};
 
-		let vertexHandlerSetHandlesVisible = mxVertexHandler.prototype.setHandlesVisible;
+		let vertexHandlerSetHandlesVisible = VertexHandler.prototype.setHandlesVisible;
 
-		mxVertexHandler.prototype.setHandlesVisible = function(visible)
+		VertexHandler.prototype.setHandlesVisible = function(visible)
 		{
 			vertexHandlerSetHandlesVisible.apply(this, arguments);
 
@@ -10571,7 +10571,7 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Creates or updates special handles for moving rows.
 		 */
-		mxVertexHandler.prototype.refreshMoveHandles = function()
+		VertexHandler.prototype.refreshMoveHandles = function()
 		{
 			let graph = this.graph;
 			let model = graph.model;
@@ -10649,7 +10649,7 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Adds handle padding for editing cells and exceptions.
 		 */
-		mxVertexHandler.prototype.refresh = function()
+		VertexHandler.prototype.refresh = function()
 		{
 			if (this.customHandles != null)
 			{
@@ -10670,8 +10670,8 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Adds handle padding for editing cells and exceptions.
 		 */
-		let vertexHandlerGetHandlePadding = mxVertexHandler.prototype.getHandlePadding;
-		mxVertexHandler.prototype.getHandlePadding = function()
+		let vertexHandlerGetHandlePadding = VertexHandler.prototype.getHandlePadding;
+		VertexHandler.prototype.getHandlePadding = function()
 		{
 			let result = new Point(0, 0);
 			let tol = this.tolerance;
@@ -10738,7 +10738,7 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Updates the hint for the current operation.
 		 */
-		mxVertexHandler.prototype.updateHint = function(me)
+		VertexHandler.prototype.updateHint = function(me)
 		{
 			if (this.index != mxEvent.LABEL_HANDLE)
 			{
@@ -10781,7 +10781,7 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Updates the hint for the current operation.
 		 */
-		mxVertexHandler.prototype.removeHint = function()
+		VertexHandler.prototype.removeHint = function()
 		{
 			mxGraphHandler.prototype.removeHint.apply(this, arguments);
 			
@@ -10868,7 +10868,7 @@ if (typeof mxVertexHandler != 'undefined')
 		/**
 		 * Updates the hint for the current operation.
 		 */
-		mxEdgeHandler.prototype.removeHint = mxVertexHandler.prototype.removeHint;
+		mxEdgeHandler.prototype.removeHint = VertexHandler.prototype.removeHint;
 	
 		/**
 		 * Defines the handles for the UI. Uses data-URIs to speed-up loading time where supported.
@@ -10893,9 +10893,9 @@ if (typeof mxVertexHandler != 'undefined')
 			mxConstraintHandler.prototype.pointImage = Graph.createSvgImage(5, 5, '<path d="m 0 0 L 5 5 M 0 5 L 5 0" stroke="' + HoverIcons.prototype.arrowFill + '"/>');
 		}
 		
-		mxVertexHandler.TABLE_HANDLE_COLOR = '#fca000';
-		mxVertexHandler.prototype.handleImage = HoverIcons.prototype.mainHandle;
-		mxVertexHandler.prototype.secondaryHandleImage = HoverIcons.prototype.secondaryHandle;
+		VertexHandler.TABLE_HANDLE_COLOR = '#fca000';
+		VertexHandler.prototype.handleImage = HoverIcons.prototype.mainHandle;
+		VertexHandler.prototype.secondaryHandleImage = HoverIcons.prototype.secondaryHandle;
 		mxEdgeHandler.prototype.handleImage = HoverIcons.prototype.mainHandle;
 		mxEdgeHandler.prototype.terminalHandleImage = HoverIcons.prototype.terminalHandle;
 		mxEdgeHandler.prototype.fixedHandleImage = HoverIcons.prototype.fixedHandle;
@@ -10930,18 +10930,18 @@ if (typeof mxVertexHandler != 'undefined')
 		}
 		
 		// Adds rotation handle and live preview
-		mxVertexHandler.prototype.rotationEnabled = true;
-		mxVertexHandler.prototype.manageSizers = true;
-		mxVertexHandler.prototype.livePreview = true;
+		VertexHandler.prototype.rotationEnabled = true;
+		VertexHandler.prototype.manageSizers = true;
+		VertexHandler.prototype.livePreview = true;
 		GraphHandler.prototype.maxLivePreview = 16;
 	
 		// Increases default rubberband opacity (default is 20)
-		mxRubberband.prototype.defaultOpacity = 30;
+		RubberBand.prototype.defaultOpacity = 30;
 		
 		// Enables connections along the outline, virtual waypoints, parent highlight etc
-		mxConnectionHandler.prototype.outlineConnect = true;
+		ConnectionHandler.prototype.outlineConnect = true;
 		mxCellHighlight.prototype.keepOnTop = true;
-		mxVertexHandler.prototype.parentHighlightEnabled = true;
+		VertexHandler.prototype.parentHighlightEnabled = true;
 		
 		mxEdgeHandler.prototype.parentHighlightEnabled = true;
 		mxEdgeHandler.prototype.dblClickRemoveEnabled = true;
@@ -10972,11 +10972,11 @@ if (typeof mxVertexHandler != 'undefined')
 			if (mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)
 			{
 				Shape.prototype.svgStrokeTolerance = 18;
-				mxVertexHandler.prototype.tolerance = 12;
+				VertexHandler.prototype.tolerance = 12;
 				mxEdgeHandler.prototype.tolerance = 12;
 				Graph.prototype.tolerance = 12;
 				
-				mxVertexHandler.prototype.rotationHandleVSpacing = -16;
+				VertexHandler.prototype.rotationHandleVSpacing = -16;
 				
 				// Implements a smaller tolerance for mouse events and a larger tolerance for touch
 				// events on touch devices. The default tolerance (4px) is used for mouse events.
@@ -11024,17 +11024,17 @@ if (typeof mxVertexHandler != 'undefined')
 		}
 
 		// Overrides/extends rubberband for space handling with Ctrl+Shift(+Alt) drag ("scissors tool")
-		mxRubberband.prototype.isSpaceEvent = function(me)
+		RubberBand.prototype.isSpaceEvent = function(me)
 		{
 			return this.graph.isEnabled() && !this.graph.isCellLocked(this.graph.getDefaultParent()) &&
 				mxEvent.isControlDown(me.getEvent()) && mxEvent.isShiftDown(me.getEvent());
 		};
 
 		// Cancelled state
-		mxRubberband.prototype.cancelled = false;
+		RubberBand.prototype.cancelled = false;
 
 		// Cancels ongoing rubberband selection but consumed event to avoid reset of selection
-		mxRubberband.prototype.cancel = function()
+		RubberBand.prototype.cancel = function()
 		{
 			if (this.isActive())
 			{
@@ -11044,7 +11044,7 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 
 		// Handles moving of cells in both half panes
-		mxRubberband.prototype.mouseUp = function(sender, me)
+		RubberBand.prototype.mouseUp = function(sender, me)
 		{
 			if (this.cancelled)
 			{
@@ -11138,7 +11138,7 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 		
 		// Handles preview for creating/removing space in diagram
-		mxRubberband.prototype.mouseMove = function(sender, me)
+		RubberBand.prototype.mouseMove = function(sender, me)
 		{
 			if (!me.isConsumed() && this.first != null)
 			{
@@ -11239,8 +11239,8 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 		
 		// Removes preview
-		let mxRubberbandReset = mxRubberband.prototype.reset;
-		mxRubberband.prototype.reset = function()
+		let mxRubberbandReset = RubberBand.prototype.reset;
+		RubberBand.prototype.reset = function()
 		{
 			if (this.secondDiv != null)
 			{
@@ -11290,7 +11290,7 @@ if (typeof mxVertexHandler != 'undefined')
 			let source = index != null && index == 0;
 			let terminalState = this.state.getVisibleTerminalState(source);
 			let c = (index != null && (index == 0 || index >= this.state.absolutePoints.length - 1 ||
-				(this.constructor == mxElbowEdgeHandler && index == 2))) ?
+				(this.constructor == ElbowEdgeHandler && index == 2))) ?
 				this.graph.getConnectionConstraint(this.state, terminalState, source) : null;
 			let pt = (c != null) ? this.graph.getConnectionPoint(this.state.getVisibleTerminalState(source), c) : null;
 			let img = (pt != null) ? this.fixedHandleImage : ((c != null && terminalState != null) ?
@@ -11318,8 +11318,8 @@ if (typeof mxVertexHandler != 'undefined')
 			}
 		};
 	
-		let vertexHandlerCreateSizerShape = mxVertexHandler.prototype.createSizerShape;
-		mxVertexHandler.prototype.createSizerShape = function(bounds, index, fillColor)
+		let vertexHandlerCreateSizerShape = VertexHandler.prototype.createSizerShape;
+		VertexHandler.prototype.createSizerShape = function(bounds, index, fillColor)
 		{
 			this.handleImage = (index == mxEvent.ROTATION_HANDLE) ? HoverIcons.prototype.rotationHandle : (index == mxEvent.LABEL_HANDLE) ? this.secondaryHandleImage : this.handleImage;
 			
@@ -11372,8 +11372,8 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 
 		// Uses text bounding box for edge labels
-		let mxVertexHandlerGetSelectionBounds = mxVertexHandler.prototype.getSelectionBounds;
-		mxVertexHandler.prototype.getSelectionBounds = function(state)
+		let mxVertexHandlerGetSelectionBounds = VertexHandler.prototype.getSelectionBounds;
+		VertexHandler.prototype.getSelectionBounds = function(state)
 		{
 			let model = this.graph.getModel();
 			let parent = state.cell.getParent();
@@ -11393,8 +11393,8 @@ if (typeof mxVertexHandler != 'undefined')
 	
 		// Redirects moving of edge labels to mxGraphHandler by not starting here.
 		// This will use the move preview of mxGraphHandler (see above).
-		let mxVertexHandlerMouseDown = mxVertexHandler.prototype.mouseDown;
-		mxVertexHandler.prototype.mouseDown = function(sender, me)
+		let mxVertexHandlerMouseDown = VertexHandler.prototype.mouseDown;
+		VertexHandler.prototype.mouseDown = function(sender, me)
 		{
 			let model = this.graph.getModel();
 			let parent = this.state.cell.getParent();
@@ -11411,7 +11411,7 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 
 		// Invokes turn on single click on rotation handle
-		mxVertexHandler.prototype.rotateClick = function()
+		VertexHandler.prototype.rotateClick = function()
 		{
 			let stroke = mxUtils.getValue(this.state.style, 'strokeColor', mxConstants.NONE);
 			let fill = mxUtils.getValue(this.state.style, 'fillColor', mxConstants.NONE);
@@ -11428,10 +11428,10 @@ if (typeof mxVertexHandler != 'undefined')
 			}
 		};
 
-		let vertexHandlerMouseMove = mxVertexHandler.prototype.mouseMove;
+		let vertexHandlerMouseMove = VertexHandler.prototype.mouseMove;
 	
 		// Workaround for "isConsumed not defined" in MS Edge is to use arguments
-		mxVertexHandler.prototype.mouseMove = function(sender, me)
+		VertexHandler.prototype.mouseMove = function(sender, me)
 		{
 			vertexHandlerMouseMove.apply(this, arguments);
 			
@@ -11449,9 +11449,9 @@ if (typeof mxVertexHandler != 'undefined')
 			}
 		};
 		
-		let vertexHandlerMouseUp = mxVertexHandler.prototype.mouseUp;
+		let vertexHandlerMouseUp = VertexHandler.prototype.mouseUp;
 		
-		mxVertexHandler.prototype.mouseUp = function(sender, me)
+		VertexHandler.prototype.mouseUp = function(sender, me)
 		{
 			vertexHandlerMouseUp.apply(this, arguments);
 			
@@ -11470,8 +11470,8 @@ if (typeof mxVertexHandler != 'undefined')
 			this.blockDelayedSelection = null;
 		};
 	
-		let vertexHandlerInit = mxVertexHandler.prototype.init;
-		mxVertexHandler.prototype.init = function()
+		let vertexHandlerInit = VertexHandler.prototype.init;
+		VertexHandler.prototype.init = function()
 		{
 			vertexHandlerInit.apply(this, arguments);
 			let redraw = false;
@@ -11548,7 +11548,7 @@ if (typeof mxVertexHandler != 'undefined')
 			}
 		};
 		
-		mxVertexHandler.prototype.updateLinkHint = function(link, links)
+		VertexHandler.prototype.updateLinkHint = function(link, links)
 		{
 			try
 			{
@@ -11637,7 +11637,7 @@ if (typeof mxVertexHandler != 'undefined')
 			}
 		};
 
-		mxEdgeHandler.prototype.updateLinkHint = mxVertexHandler.prototype.updateLinkHint;
+		mxEdgeHandler.prototype.updateLinkHint = VertexHandler.prototype.updateLinkHint;
 		
 		// Creates special handles
 		let edgeHandlerInit = mxEdgeHandler.prototype.init;
@@ -11688,9 +11688,9 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 	
 		// Disables connection points
-		let connectionHandlerInit = mxConnectionHandler.prototype.init;
+		let connectionHandlerInit = ConnectionHandler.prototype.init;
 		
-		mxConnectionHandler.prototype.init = function()
+		ConnectionHandler.prototype.init = function()
 		{
 			connectionHandlerInit.apply(this, arguments);
 			
@@ -11701,8 +11701,8 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 	
 		// Updates special handles
-		let vertexHandlerRedrawHandles = mxVertexHandler.prototype.redrawHandles;
-		mxVertexHandler.prototype.redrawHandles = function()
+		let vertexHandlerRedrawHandles = VertexHandler.prototype.redrawHandles;
+		VertexHandler.prototype.redrawHandles = function()
 		{
 			if (this.moveHandles != null)
 			{
@@ -11778,8 +11778,8 @@ if (typeof mxVertexHandler != 'undefined')
 		};
 		
 		// Destroys special handles
-		let vertexHandlerDestroy = mxVertexHandler.prototype.destroy;
-		mxVertexHandler.prototype.destroy = function()
+		let vertexHandlerDestroy = VertexHandler.prototype.destroy;
+		VertexHandler.prototype.destroy = function()
 		{
 			vertexHandlerDestroy.apply(this, arguments);
 			

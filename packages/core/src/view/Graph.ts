@@ -13,7 +13,7 @@ import Rectangle from './geometry/Rectangle';
 import TooltipHandler from './tooltip/TooltipHandler';
 import mxClient from '../mxClient';
 import mxSelectionCellsHandler from './selection/mxSelectionCellsHandler';
-import mxConnectionHandler from './connection/mxConnectionHandler';
+import ConnectionHandler from './connection/ConnectionHandler';
 import GraphHandler from './GraphHandler';
 import PanningHandler from './panning/PanningHandler';
 import PopupMenuHandler from './popups_menus/PopupMenuHandler';
@@ -44,22 +44,22 @@ import CellState from './cell/datatypes/CellState';
 import { isNode } from '../util/DomUtils';
 import CellArray from "./cell/datatypes/CellArray";
 import EdgeStyle from "./style/EdgeStyle";
-import mxEdgeHandler from "./cell/edge/mxEdgeHandler";
-import mxVertexHandler from "./cell/vertex/mxVertexHandler";
-import mxEdgeSegmentHandler from "./cell/edge/mxEdgeSegmentHandler";
-import mxElbowEdgeHandler from "./cell/edge/mxElbowEdgeHandler";
+import EdgeHandler from "./cell/edge/EdgeHandler";
+import VertexHandler from "./cell/vertex/VertexHandler";
+import EdgeSegmentHandler from "./cell/edge/EdgeSegmentHandler";
+import ElbowEdgeHandler from "./cell/edge/ElbowEdgeHandler";
 
 /**
  * Extends {@link EventSource} to implement a graph component for
  * the browser. This is the main class of the package. To activate
  * panning and connections use {@link setPanning} and {@link setConnectable}.
  * For rubberband selection you must create a new instance of
- * {@link mxRubberband}. The following listeners are added to
+ * {@link rubberband}. The following listeners are added to
  * {@link mouseListeners} by default:
  *
  * - tooltipHandler: {@link TooltipHandler} that displays tooltips
  * - panningHandler: {@link PanningHandler} for panning and popup menus
- * - connectionHandler: {@link mxConnectionHandler} for creating connections
+ * - connectionHandler: {@link ConnectionHandler} for creating connections
  * - graphHandler: {@link GraphHandler} for moving and cloning cells
  *
  * These listeners will be called in the above order if they are enabled.
@@ -143,7 +143,7 @@ class Graph extends EventSource {
   tooltipHandler: TooltipHandler | null = null;
   selectionCellsHandler: mxSelectionCellsHandler | null = null;
   popupMenuHandler: PopupMenuHandler | null = null;
-  connectionHandler: mxConnectionHandler | null = null;
+  connectionHandler: ConnectionHandler | null = null;
   graphHandler: GraphHandler | null = null;
   graphModelChangeListener: Function | null = null;
   paintBackground: Function | null = null;
@@ -526,10 +526,10 @@ class Graph extends EventSource {
   }
 
   /**
-   * Creates and returns a new {@link mxConnectionHandler} to be used in this graph.
+   * Creates and returns a new {@link ConnectionHandler} to be used in this graph.
    */
-  createConnectionHandler(): mxConnectionHandler {
-    return new mxConnectionHandler(this);
+  createConnectionHandler(): ConnectionHandler {
+    return new ConnectionHandler(this);
   }
 
   /**
@@ -1028,15 +1028,15 @@ class Graph extends EventSource {
 
   /**
    * Creates a new handler for the given cell state. This implementation
-   * returns a new {@link mxEdgeHandler} of the corresponding cell is an edge,
-   * otherwise it returns an {@link mxVertexHandler}.
+   * returns a new {@link EdgeHandler} of the corresponding cell is an edge,
+   * otherwise it returns an {@link VertexHandler}.
    *
    * @param state {@link mxCellState} whose handler should be created.
    */
   createHandler(
     state: CellState
-  ): mxEdgeHandler | mxVertexHandler | null {
-    let result: mxEdgeHandler | mxVertexHandler | null = null;
+  ): mxEdgeHandler | VertexHandler | null {
+    let result: mxEdgeHandler | VertexHandler | null = null;
 
     if (state.cell.isEdge()) {
       const source = state.getVisibleTerminalState(true);
@@ -1057,16 +1057,16 @@ class Graph extends EventSource {
   }
 
   /**
-   * Hooks to create a new {@link mxVertexHandler} for the given {@link CellState}.
+   * Hooks to create a new {@link VertexHandler} for the given {@link CellState}.
    *
    * @param state {@link mxCellState} to create the handler for.
    */
-  createVertexHandler(state: CellState): mxVertexHandler {
-    return new mxVertexHandler(state);
+  createVertexHandler(state: CellState): VertexHandler {
+    return new VertexHandler(state);
   }
 
   /**
-   * Hooks to create a new {@link mxEdgeHandler} for the given {@link CellState}.
+   * Hooks to create a new {@link EdgeHandler} for the given {@link CellState}.
    *
    * @param state {@link mxCellState} to create the handler for.
    */
@@ -1091,7 +1091,7 @@ class Graph extends EventSource {
   }
 
   /**
-   * Hooks to create a new {@link mxEdgeSegmentHandler} for the given {@link CellState}.
+   * Hooks to create a new {@link EdgeSegmentHandler} for the given {@link CellState}.
    *
    * @param state {@link mxCellState} to create the handler for.
    */
@@ -1100,12 +1100,12 @@ class Graph extends EventSource {
   }
 
   /**
-   * Hooks to create a new {@link mxElbowEdgeHandler} for the given {@link CellState}.
+   * Hooks to create a new {@link ElbowEdgeHandler} for the given {@link CellState}.
    *
    * @param state {@link mxCellState} to create the handler for.
    */
-  createElbowEdgeHandler(state: CellState): mxElbowEdgeHandler {
-    return new mxElbowEdgeHandler(state);
+  createElbowEdgeHandler(state: CellState): ElbowEdgeHandler {
+    return new ElbowEdgeHandler(state);
   }
 
   /*****************************************************************************

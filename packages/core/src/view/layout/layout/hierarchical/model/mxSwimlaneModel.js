@@ -42,8 +42,8 @@ class mxSwimlaneModel {
 
     // map of cells to internal cell needed for second run through
     // to setup the sink of edges correctly
-    this.vertexMapper = new mxDictionary();
-    this.edgeMapper = new mxDictionary();
+    this.vertexMapper = new Dictionary();
+    this.edgeMapper = new Dictionary();
     this.maxRank = 0;
     const internalVertices = [];
 

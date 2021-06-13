@@ -7,9 +7,9 @@
 
 import mxObjectIdentity from './mxObjectIdentity';
 
-type Dictionary<T, U> = {
-  [key: string]: U;
-};
+//type Dictionary<T, U> = {
+//  [key: string]: U;
+//};
 
 type Visitor<T, U> = (key: string, value: U) => void;
 
@@ -23,7 +23,7 @@ type Visitor<T, U> = (key: string, value: U) => void;
  *
  * Constructs a new dictionary which allows object to be used as keys.
  */
-class mxDictionary<T, U> {
+class Dictionary<T, U> {
   constructor() {
     this.clear();
   }
@@ -131,4 +131,4 @@ class mxDictionary<T, U> {
   }
 }
 
-export default mxDictionary;
+export default Dictionary;

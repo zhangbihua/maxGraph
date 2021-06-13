@@ -1,7 +1,7 @@
 import Point from "../geometry/Point";
 import CellState from "../cell/datatypes/CellState";
 import InternalMouseEvent from "../event/InternalMouseEvent";
-import mxConnectionConstraint from "./mxConnectionConstraint";
+import ConnectionConstraint from "./ConnectionConstraint";
 import Rectangle from "../geometry/Rectangle";
 import {DIRECTION_NORTH, DIRECTION_SOUTH, DIRECTION_WEST} from "../../util/Constants";
 import utils, {getRotatedPoint, getValue, toRadians} from "../../util/Utils";
@@ -9,10 +9,10 @@ import Cell from "../cell/datatypes/Cell";
 import CellArray from "../cell/datatypes/CellArray";
 import EventObject from "../event/EventObject";
 import InternalEvent from "../event/InternalEvent";
-import mxDictionary from "../../util/mxDictionary";
+import Dictionary from "../../util/Dictionary";
 import Geometry from "../geometry/Geometry";
 import Graph from "../Graph";
-import mxConnectionHandler from "./mxConnectionHandler";
+import ConnectionHandler from "./ConnectionHandler";
 
 class GraphConnections {
   constructor(graph: Graph) {
@@ -32,10 +32,10 @@ class GraphConnections {
     point: Point,
     terminalState: CellState,
     me: InternalMouseEvent
-  ): mxConnectionConstraint | null {
+  ): ConnectionConstraint | null {
     if (terminalState.shape != null) {
       const bounds = <Rectangle>(
-        this.getView().getPerimeterBounds(terminalState)
+        this.graph.view.getPerimeterBounds(terminalState)
       );
       const direction = terminalState.style.direction;
 
@@ -111,7 +111,7 @@ class GraphConnections {
           ? 0
           : Math.round(((point.y - bounds.y) * 1000) / bounds.height) / 1000;
 
-      return new mxConnectionConstraint(new point(x, y), false);
+      return new ConnectionConstraint(new point(x, y), false);
     }
     return null;
   }
@@ -127,7 +127,7 @@ class GraphConnections {
   getAllConnectionConstraints(
     terminal: CellState,
     source: boolean
-  ): mxConnectionConstraint[] | null {
+  ): ConnectionConstraint[] | null {
     if (
       terminal != null &&
       terminal.shape != null &&
@@ -139,7 +139,7 @@ class GraphConnections {
   }
 
   /**
-   * Returns an {@link mxConnectionConstraint} that describes the given connection
+   * Returns an {@link ConnectionConstraint} that describes the given connection
    * point. This result can then be passed to {@link getConnectionPoint}.
    *
    * @param edge {@link mxCellState} that represents the edge.
@@ -150,7 +150,7 @@ class GraphConnections {
     edge: CellState,
     terminal: CellState | null = null,
     source: boolean = false
-  ): mxConnectionConstraint {
+  ): ConnectionConstraint {
     let point = null;
     // @ts-ignore
     const x = <string>edge.style[source ? 'exitX' : 'entryX'];
@@ -189,25 +189,25 @@ class GraphConnections {
       dy = Number.isFinite(dy) ? dy : 0;
     }
 
-    return new mxConnectionConstraint(point, perimeter, null, dx, dy);
+    return new ConnectionConstraint(point, perimeter, null, dx, dy);
   }
 
   /**
-   * Sets the {@link mxConnectionConstraint} that describes the given connection point.
+   * Sets the {@link ConnectionConstraint} that describes the given connection point.
    * If no constraint is given then nothing is changed. To remove an existing
    * constraint from the given edge, use an empty constraint instead.
    *
    * @param edge {@link mxCell} that represents the edge.
    * @param terminal {@link mxCell} that represents the terminal.
    * @param source Boolean indicating if the terminal is the source or target.
-   * @param constraint Optional {@link mxConnectionConstraint} to be used for this
+   * @param constraint Optional {@link ConnectionConstraint} to be used for this
    * connection.
    */
   setConnectionConstraint(
     edge: Cell,
     terminal: Cell,
     source: boolean = false,
-    constraint: mxConnectionConstraint | null = null
+    constraint: ConnectionConstraint | null = null
   ): void {
     if (constraint != null) {
       this.getModel().beginUpdate();
@@ -276,13 +276,13 @@ class GraphConnections {
    */
   getConnectionPoint(
     vertex: CellState,
-    constraint: mxConnectionConstraint,
+    constraint: ConnectionConstraint,
     round: boolean = true
   ): Point {
     let point = null;
 
     if (vertex != null && constraint.point != null) {
-      const bounds = <Rectangle>this.getView().getPerimeterBounds(vertex);
+      const bounds = <Rectangle>this.graph.view.getPerimeterBounds(vertex);
       const cx = new point(bounds.getCenterX(), bounds.getCenterY());
       const direction = vertex.style.direction;
       let r1 = 0;
@@ -336,7 +336,7 @@ class GraphConnections {
           point = getRotatedPoint(point, cos, sin, cx);
         }
 
-        point = this.getView().getPerimeterPoint(vertex, point, false);
+        point = this.graph.view.getPerimeterPoint(vertex, point, false);
       } else {
         r2 += r1;
 
@@ -393,14 +393,14 @@ class GraphConnections {
    * @param edge {@link mxCell} whose terminal should be updated.
    * @param terminal {@link mxCell} that represents the new terminal to be used.
    * @param source Boolean indicating if the new terminal is the source or target.
-   * @param constraint Optional {@link mxConnectionConstraint} to be used for this
+   * @param constraint Optional {@link ConnectionConstraint} to be used for this
    * connection.
    */
   connectCell(
     edge: Cell,
     terminal: Cell,
     source: boolean = false,
-    constraint: mxConnectionConstraint | null = null
+    constraint: ConnectionConstraint | null = null
   ): Cell {
     this.getModel().beginUpdate();
     try {
@@ -439,7 +439,7 @@ class GraphConnections {
     edge: Cell,
     terminal: Cell,
     source: boolean = false,
-    constraint: mxConnectionConstraint | null = null
+    constraint: ConnectionConstraint | null = null
   ): void {
     if (edge != null) {
       this.getModel().beginUpdate();
@@ -500,10 +500,10 @@ class GraphConnections {
       this.getModel().beginUpdate();
       try {
         const { scale } = this.view;
-        const tr = this.getView().translate;
+        const tr = this.graph.view.translate;
 
         // Fast lookup for finding cells in array
-        const dict = new mxDictionary();
+        const dict = new Dictionary();
 
         for (let i = 0; i < cells.length; i += 1) {
           dict.put(cells[i], true);
@@ -514,9 +514,9 @@ class GraphConnections {
             let geo = <Geometry>cell.getGeometry();
 
             if (geo != null) {
-              const state = this.getView().getState(cell);
+              const state = this.graph.view.getState(cell);
               const pstate = <CellState>(
-                this.getView().getState(cell.getParent())
+                this.graph.view.getState(cell.getParent())
               );
 
               if (state != null && pstate != null) {
@@ -733,19 +733,19 @@ class GraphConnections {
 
   /**
    * Specifies if the graph should allow new connections. This implementation
-   * updates {@link mxConnectionHandler.enabled} in {@link connectionHandler}.
+   * updates {@link ConnectionHandler.enabled} in {@link connectionHandler}.
    *
    * @param connectable Boolean indicating if new connections should be allowed.
    */
   setConnectable(connectable: boolean): void {
-    (<mxConnectionHandler>this.connectionHandler).setEnabled(connectable);
+    (<ConnectionHandler>this.connectionHandler).setEnabled(connectable);
   }
 
   /**
    * Returns true if the {@link connectionHandler} is enabled.
    */
   isConnectable(): boolean {
-    return (<mxConnectionHandler>this.connectionHandler).isEnabled();
+    return (<ConnectionHandler>this.connectionHandler).isEnabled();
   }
 }
 

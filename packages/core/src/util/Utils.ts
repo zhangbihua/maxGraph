@@ -31,7 +31,7 @@ import {
   PAGE_FORMAT_A4_PORTRAIT,
 } from './Constants';
 import Point from '../view/geometry/Point';
-import mxDictionary from './mxDictionary';
+import Dictionary from './Dictionary';
 import CellPath from '../view/cell/datatypes/CellPath';
 import Rectangle from '../view/geometry/Rectangle';
 import { getFunctionName } from './StringUtils';
@@ -473,7 +473,7 @@ export const equalEntries = (a: Properties | null, b: Properties | null) => {
  * Removes all duplicates from the given array.
  */
 export const removeDuplicates = (arr: any) => {
-  const dict = new mxDictionary();
+  const dict = new Dictionary();
   const result = [];
 
   for (let i = 0; i < arr.length; i += 1) {
@@ -1626,7 +1626,7 @@ export const createImage = (src: string) => {
  * Ascending is optional and defaults to true.
  */
 export const sortCells = (cells: CellArray, ascending = true): CellArray => {
-  const lookup = new mxDictionary<Cell, string[]>();
+  const lookup = new Dictionary<Cell, string[]>();
 
   cells.sort((o1, o2) => {
     let p1 = lookup.get(o1);

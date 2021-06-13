@@ -7,7 +7,7 @@
 import mxGraphLayout from '../mxGraphLayout';
 import { DIRECTION_NORTH } from '../../../../util/Constants';
 import mxHierarchicalEdgeStyle from './mxHierarchicalEdgeStyle';
-import mxDictionary from '../../../../util/mxDictionary';
+import Dictionary from '../../../../util/Dictionary';
 import mxGraphHierarchyModel from './model/mxGraphHierarchyModel';
 import mxObjectIdentity from '../../../../util/mxObjectIdentity';
 import mxMinimumCycleRemover from './stage/mxMinimumCycleRemover';
@@ -208,9 +208,9 @@ class mxHierarchicalLayout extends mxGraphLayout {
   execute(parent, roots) {
     this.parent = parent;
     const { model } = this.graph;
-    this.edgesCache = new mxDictionary();
-    this.edgeSourceTermCache = new mxDictionary();
-    this.edgesTargetTermCache = new mxDictionary();
+    this.edgesCache = new Dictionary();
+    this.edgeSourceTermCache = new Dictionary();
+    this.edgesTargetTermCache = new Dictionary();
 
     if (roots != null && !(roots instanceof Array)) {
       roots = [roots];

@@ -6,11 +6,11 @@
  */
 
 import Point from '../geometry/Point';
-import mxDictionary from '../../util/mxDictionary';
+import Dictionary from '../../util/Dictionary';
 import CellState from './datatypes/CellState';
 import Cell from './datatypes/Cell';
 import graph from '../Graph';
-import GraphView from "../view/GraphView";
+import GraphView from '../view/GraphView';
 
 /**
  *
@@ -20,32 +20,28 @@ import GraphView from "../view/GraphView";
  */
 class CellStatePreview {
   constructor(graph: graph) {
-    this.deltas = new mxDictionary();
+    this.deltas = new Dictionary();
     this.graph = graph;
   }
 
   /**
    * Reference to the enclosing <mxGraph>.
    */
-  // graph: mxGraph;
   graph: graph;
 
   /**
    * Reference to the enclosing <mxGraph>.
    */
-  // deltas: mxDictionary;
-  deltas: mxDictionary;
+  deltas: Dictionary<Cell, {point: Point, state: CellState }>;
 
   /**
    * Contains the number of entries in the map.
    */
-  // count: number;
   count: number = 0;
 
   /**
    * Returns true if this contains no entries.
    */
-  // isEmpty(): boolean;
   isEmpty(): boolean {
     return this.count === 0;
   }
@@ -61,7 +57,6 @@ class CellStatePreview {
    * @return {*}  {mxPoint}
    * @memberof mxCellStatePreview
    */
-  // moveState(state: mxCellState, dx: number, dy: number, add: boolean, includeEdges: boolean): mxPoint;
   moveState(
     state: CellState,
     dx: number,
@@ -96,19 +91,13 @@ class CellStatePreview {
    * @param {Function} visitor
    * @memberof mxCellStatePreview
    */
-  // show(visitor: Function): void;
-  show(visitor: Function | null = null) {
+  show(visitor: Function | null = null): void {
     this.deltas.visit((key: string, delta: any) => {
       this.translateState(delta.state, delta.point.x, delta.point.y);
     });
 
     this.deltas.visit((key: string, delta: any) => {
-      this.revalidateState(
-        delta.state,
-        delta.point.x,
-        delta.point.y,
-        visitor
-      );
+      this.revalidateState(delta.state, delta.point.x, delta.point.y, visitor);
     });
   }
 
@@ -120,13 +109,10 @@ class CellStatePreview {
    * @param {number} dy
    * @memberof mxCellStatePreview
    */
-  // translateState(state: mxCellState, dx: number, dy: number): void;
-  translateState(state: CellState, dx: number, dy: number) {
+  translateState(state: CellState, dx: number, dy: number): void {
     if (state != null) {
-      const model = this.graph.getModel();
-
       if (state.cell.isVertex()) {
-        (<mxGraphView>state.view).updateCellState(state);
+        (<GraphView>state.view).updateCellState(state);
         const geo = state.cell.getGeometry();
 
         // Moves selection cells and non-relative vertices in
@@ -142,14 +128,8 @@ class CellStatePreview {
         }
       }
 
-      const childCount = state.cell.getChildCount();
-
-      for (let i = 0; i < childCount; i += 1) {
-        this.translateState(
-          <CellState>(state.view).getState(state.cell.getChildAt(i)),
-          dx,
-          dy
-        );
+      for (const child of state.cell.getChildren()) {
+        this.translateState(<CellState>state.view.getState(child), dx, dy);
       }
     }
   }
@@ -163,56 +143,42 @@ class CellStatePreview {
    * @param {Function} visitor
    * @memberof mxCellStatePreview
    */
-  // revalidateState(state: mxCellState, dx: number, dy: number, visitor: Function): void;
   revalidateState(
-    state: CellState | null = null,
+    state: CellState,
     dx: number,
     dy: number,
     visitor: Function | null = null
   ): void {
-    if (state != null) {
-      const model = this.graph.getModel();
+    // Updates the edge terminal points and restores the
+    // (relative) positions of any (relative) children
+    if (state.cell.isEdge()) {
+      state.view.updateCellState(state);
+    }
 
-      // Updates the edge terminal points and restores the
-      // (relative) positions of any (relative) children
-      if (state.cell.isEdge()) {
-        state.view.updateCellState(state);
-      }
+    const geo = (<Cell>state.cell).getGeometry();
+    const pState = state.view.getState(<Cell>state.cell.getParent());
 
-      const geo = (<Cell>state.cell).getGeometry();
-      const pState = state.view.getState(<Cell>state.cell.getParent());
+    // Moves selection vertices which are relative
+    if (
+      (dx !== 0 || dy !== 0) &&
+      geo != null &&
+      geo.relative &&
+      state.cell.isVertex() &&
+      (pState == null || pState.cell.isVertex() || this.deltas.get(state.cell) != null)
+    ) {
+      state.x += dx;
+      state.y += dy;
+    }
 
-      // Moves selection vertices which are relative
-      if (
-        (dx !== 0 || dy !== 0) &&
-        geo != null &&
-        geo.relative &&
-        state.cell.isVertex() &&
-        (pState == null ||
-            pState.cell.isVertex() ||
-          this.deltas.get(state.cell) != null)
-      ) {
-        state.x += dx;
-        state.y += dy;
-      }
+    this.graph.cellRenderer.redraw(state);
 
-      this.graph.cellRenderer.redraw(state);
+    // Invokes the visitor on the given state
+    if (visitor != null) {
+      visitor(state);
+    }
 
-      // Invokes the visitor on the given state
-      if (visitor != null) {
-        visitor(state);
-      }
-
-      const childCount = state.cell.getChildCount();
-
-      for (let i = 0; i < childCount; i += 1) {
-        this.revalidateState(
-          this.graph.view.getState(state.cell.getChildAt(i)),
-          dx,
-          dy,
-          visitor
-        );
-      }
+    for (const child of state.cell.getChildren()) {
+      this.revalidateState(<CellState>this.graph.view.getState(child), dx, dy, visitor);
     }
   }
 
@@ -222,9 +188,7 @@ class CellStatePreview {
    * @param {CellState} state
    * @memberof mxCellStatePreview
    */
-  // addEdges(state: mxCellState): void;
   addEdges(state: CellState): void {
-    const model = this.graph.getModel();
     const edgeCount = state.cell.getEdgeCount();
 
     for (let i = 0; i < edgeCount; i += 1) {

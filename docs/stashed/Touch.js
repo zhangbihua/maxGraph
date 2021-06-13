@@ -265,13 +265,13 @@ export default Touch;
     (function()
     {
       // Enables rotation handle
-      mxVertexHandler.prototype.rotationEnabled = true;
+      VertexHandler.prototype.rotationEnabled = true;
 
       // Enables managing of sizers
-      mxVertexHandler.prototype.manageSizers = true;
+      VertexHandler.prototype.manageSizers = true;
 
       // Enables live preview
-      mxVertexHandler.prototype.livePreview = true;
+      VertexHandler.prototype.livePreview = true;
 
       // Sets constants for touch style
       mxConstants.HANDLE_SIZE = 16;
@@ -281,7 +281,7 @@ export default Touch;
       if (mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)
       {
         Shape.prototype.svgStrokeTolerance = 18;
-        mxVertexHandler.prototype.tolerance = 12;
+        VertexHandler.prototype.tolerance = 12;
         mxEdgeHandler.prototype.tolerance = 12;
         mxGraph.prototype.tolerance = 12;
       }
@@ -309,7 +309,7 @@ export default Touch;
       };
 
       // On connect the target is selected and we clone the cell of the preview edge for insert
-      mxConnectionHandler.prototype.selectCells = function(edge, target)
+      ConnectionHandler.prototype.selectCells = function(edge, target)
       {
         if (target != null)
         {
@@ -337,7 +337,7 @@ export default Touch;
 
       // Rounded edge and vertex handles
       let touchHandle = new Image('images/handle-main.png', 17, 17);
-      mxVertexHandler.prototype.handleImage = touchHandle;
+      VertexHandler.prototype.handleImage = touchHandle;
       mxEdgeHandler.prototype.handleImage = touchHandle;
       Outline.prototype.sizerImage = touchHandle;
 
@@ -347,8 +347,8 @@ export default Touch;
       // Adds connect icon to selected vertex
       let connectorSrc = 'images/handle-connect.png';
 
-      let vertexHandlerInit = mxVertexHandler.prototype.init;
-      mxVertexHandler.prototype.init = function()
+      let vertexHandlerInit = VertexHandler.prototype.init;
+      VertexHandler.prototype.init = function()
       {
         // TODO: Use 4 sizers, move outside of shape
         //this.singleSizer = this.state.width < 30 && this.state.height < 30;
@@ -393,8 +393,8 @@ export default Touch;
         this.redrawHandles();
       };
 
-      let vertexHandlerHideSizers = mxVertexHandler.prototype.hideSizers;
-      mxVertexHandler.prototype.hideSizers = function()
+      let vertexHandlerHideSizers = VertexHandler.prototype.hideSizers;
+      VertexHandler.prototype.hideSizers = function()
       {
         vertexHandlerHideSizers.apply(this, arguments);
 
@@ -404,8 +404,8 @@ export default Touch;
         }
       };
 
-      let vertexHandlerReset = mxVertexHandler.prototype.reset;
-      mxVertexHandler.prototype.reset = function()
+      let vertexHandlerReset = VertexHandler.prototype.reset;
+      VertexHandler.prototype.reset = function()
       {
         vertexHandlerReset.apply(this, arguments);
 
@@ -415,8 +415,8 @@ export default Touch;
         }
       };
 
-      let vertexHandlerRedrawHandles = mxVertexHandler.prototype.redrawHandles;
-      mxVertexHandler.prototype.redrawHandles = function()
+      let vertexHandlerRedrawHandles = VertexHandler.prototype.redrawHandles;
+      VertexHandler.prototype.redrawHandles = function()
       {
         vertexHandlerRedrawHandles.apply(this);
 
@@ -426,7 +426,7 @@ export default Touch;
           let s = this.state;
 
           // Top right for single-sizer
-          if (mxVertexHandler.prototype.singleSizer)
+          if (VertexHandler.prototype.singleSizer)
           {
             pt.x = s.x + s.width - this.connectorImg.offsetWidth / 2;
             pt.y = s.y - this.connectorImg.offsetHeight / 2;
@@ -453,8 +453,8 @@ export default Touch;
         }
       };
 
-      let vertexHandlerDestroy = mxVertexHandler.prototype.destroy;
-      mxVertexHandler.prototype.destroy = function(sender, me)
+      let vertexHandlerDestroy = VertexHandler.prototype.destroy;
+      VertexHandler.prototype.destroy = function(sender, me)
       {
         vertexHandlerDestroy.apply(this, arguments);
 

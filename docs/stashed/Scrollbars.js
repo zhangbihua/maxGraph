@@ -96,7 +96,7 @@ export default Scrollbars;
         // not a problem here since the preview moves away from the mouse as soon as it connects
         // to any given table row. This is because the edge connects to the outside of the row and
         // is aligned to the grid during the preview.
-        mxConnectionHandler.prototype.movePreviewAway = false;
+        ConnectionHandler.prototype.movePreviewAway = false;
 
         // Disables foreignObjects
         mxClient.NO_FO = true;
@@ -105,17 +105,17 @@ export default Scrollbars;
         GraphHandler.prototype.htmlPreview = true;
 
         // Enables connect icons to appear on top of HTML
-        mxConnectionHandler.prototype.moveIconFront = true;
+        ConnectionHandler.prototype.moveIconFront = true;
 
         // Defines an icon for creating new connections in the connection handler.
         // This will automatically disable the highlighting of the source vertex.
-        mxConnectionHandler.prototype.connectImage = new Image('images/connector.gif', 16, 16);
+        ConnectionHandler.prototype.connectImage = new Image('images/connector.gif', 16, 16);
 
         // Disables the context menu
         mxEvent.disableContextMenu(container);
 
         // Overrides target perimeter point for connection previews
-        mxConnectionHandler.prototype.getTargetPerimeterPoint = function(state, me)
+        ConnectionHandler.prototype.getTargetPerimeterPoint = function(state, me)
         {
           // Determines the y-coordinate of the target perimeter point
           // by using the currentRowNode assigned in updateRow
@@ -138,7 +138,7 @@ export default Scrollbars;
         };
 
         // Overrides source perimeter point for connection previews
-        mxConnectionHandler.prototype.getSourcePerimeterPoint = function(state, next, me)
+        ConnectionHandler.prototype.getSourcePerimeterPoint = function(state, next, me)
         {
           let y = me.getY();
 
@@ -159,7 +159,7 @@ export default Scrollbars;
         };
 
         // Disables connections to invalid rows
-        mxConnectionHandler.prototype.isValidTarget = function(cell)
+        ConnectionHandler.prototype.isValidTarget = function(cell)
         {
           return this.currentRowNode != null;
         };

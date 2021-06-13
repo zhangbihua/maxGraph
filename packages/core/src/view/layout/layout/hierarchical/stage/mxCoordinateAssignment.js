@@ -13,7 +13,7 @@ import {
 } from '../../../../../util/Constants';
 import mxLog from '../../../../../util/gui/mxLog';
 import WeightedCellSorter from '../../WeightedCellSorter';
-import mxDictionary from '../../../../../util/mxDictionary';
+import Dictionary from '../../../../../util/Dictionary';
 import Point from '../../../../geometry/Point';
 import mxHierarchicalEdgeStyle from '../mxHierarchicalEdgeStyle';
 
@@ -331,7 +331,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     const nodeList = [];
 
     // Need to be able to map from cell to cellWrapper
-    const map = new mxDictionary();
+    const map = new Dictionary();
     const rank = [];
 
     for (let i = 0; i <= model.maxRank; i += 1) {

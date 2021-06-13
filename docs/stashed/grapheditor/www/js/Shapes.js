@@ -3717,11 +3717,11 @@
 	}
 	
 	// Handlers are only added if mxVertexHandler is defined (ie. not in embedded graph)
-	if (typeof mxVertexHandler !== 'undefined')
+	if (typeof VertexHandler !== 'undefined')
 	{
 		function createHandle(state, keys, getPositionFn, setPositionFn, ignoreGrid, redrawEdges, executeFn)
 		{
-			let handle = new mxHandle(state, null, mxVertexHandler.prototype.secondaryHandleImage);
+			let handle = new VertexHandle(state, null, VertexHandler.prototype.secondaryHandleImage);
 			
 			handle.execute = function(me)
 			{
@@ -4540,9 +4540,9 @@
 		Graph.createHandle = createHandle;
 		Graph.handleFactory = handleFactory;
 		
-		let vertexHandlerCreateCustomHandles = mxVertexHandler.prototype.createCustomHandles;
+		let vertexHandlerCreateCustomHandles = VertexHandler.prototype.createCustomHandles;
 
-		mxVertexHandler.prototype.createCustomHandles = function()
+		VertexHandler.prototype.createCustomHandles = function()
 		{
 			let handles = vertexHandlerCreateCustomHandles.apply(this, arguments);
 			
@@ -4725,7 +4725,7 @@
 	 {
 	 	if (edgeStyle == mxEdgeStyle.IsometricConnector)
 	 	{
-	 		let handler = new mxElbowEdgeHandler(state);
+	 		let handler = new ElbowEdgeHandler(state);
 	 		handler.snapToTerminals = false;
 	 		
 	 		return handler;
@@ -4746,12 +4746,12 @@
 		let dx = (w - m) / 2;
 		let dy = (h - m) / 2;
 
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx, dy + 0.25 * m));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx + 0.5 * m, dy + m * tan30Dx));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx + m, dy + 0.25 * m));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx + m, dy + 0.75 * m));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx + 0.5 * m, dy + (1 - tan30Dx) * m));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx, dy + 0.75 * m));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx, dy + 0.25 * m));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx + 0.5 * m, dy + m * tan30Dx));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx + m, dy + 0.25 * m));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx + m, dy + 0.75 * m));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx + 0.5 * m, dy + (1 - tan30Dx) * m));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx, dy + 0.75 * m));
 
 		return (constr);
 	};
@@ -4762,14 +4762,14 @@
 		let isoAngle = Math.max(0.01, Math.min(94, parseFloat(utils.getValue(this.style, 'isoAngle', this.isoAngle)))) * Math.PI / 200 ;
 		let isoH = Math.min(w * Math.tan(isoAngle), h * 0.5);
 		
-		constr.push(new mxConnectionConstraint(new Point(0.5, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, isoH));
-		constr.push(new mxConnectionConstraint(new Point(1, 0.5), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, h - isoH));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, h - isoH));
-		constr.push(new mxConnectionConstraint(new Point(0, 0.5), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, isoH));
+		constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, isoH));
+		constr.push(new ConnectionConstraint(new Point(1, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, h - isoH));
+		constr.push(new ConnectionConstraint(new Point(0.5, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, h - isoH));
+		constr.push(new ConnectionConstraint(new Point(0, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, isoH));
 
 		return (constr);
 	}
@@ -4783,45 +4783,45 @@
 		var dx2 = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'position2', this.position2))));
 		let base = Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'base', this.base))));
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0.25, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0.75, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(1, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, (h - s) * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, h - s));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx2, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, h - s));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, (h - s) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0.25, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0.75, 0), false));
+		constr.push(new ConnectionConstraint(new Point(1, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, (h - s) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, h - s));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx2, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, h - s));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, (h - s) * 0.5));
 		
 		if (w >= s * 2)
 		{
-			constr.push(new mxConnectionConstraint(new Point(0.5, 0), false));
+			constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
 		}
 
 		return (constr);
 	};
 	
-	RectangleShape.prototype.constraints = [new mxConnectionConstraint(new Point(0, 0), true),
-											  new mxConnectionConstraint(new Point(0.25, 0), true),
-	                                          new mxConnectionConstraint(new Point(0.5, 0), true),
-	                                          new mxConnectionConstraint(new Point(0.75, 0), true),
-	                                          new mxConnectionConstraint(new Point(1, 0), true),
-	        	              		 new mxConnectionConstraint(new Point(0, 0.25), true),
-	        	              		 new mxConnectionConstraint(new Point(0, 0.5), true),
-	        	              		 new mxConnectionConstraint(new Point(0, 0.75), true),
-	        	            		 new mxConnectionConstraint(new Point(1, 0.25), true),
-	        	            		 new mxConnectionConstraint(new Point(1, 0.5), true),
-	        	            		 new mxConnectionConstraint(new Point(1, 0.75), true),
-	        	            		 new mxConnectionConstraint(new Point(0, 1), true),
-	        	            		 new mxConnectionConstraint(new Point(0.25, 1), true),
-	        	            		 new mxConnectionConstraint(new Point(0.5, 1), true),
-	        	            		 new mxConnectionConstraint(new Point(0.75, 1), true),
-	        	            		 new mxConnectionConstraint(new Point(1, 1), true)];
-	Ellipse.prototype.constraints = [new mxConnectionConstraint(new Point(0, 0), true), new mxConnectionConstraint(new Point(1, 0), true),
-	                                   new mxConnectionConstraint(new Point(0, 1), true), new mxConnectionConstraint(new Point(1, 1), true),
-	                                   new mxConnectionConstraint(new Point(0.5, 0), true), new mxConnectionConstraint(new Point(0.5, 1), true),
-	          	              		   new mxConnectionConstraint(new Point(0, 0.5), true), new mxConnectionConstraint(new Point(1, 0.5))];
+	RectangleShape.prototype.constraints = [new ConnectionConstraint(new Point(0, 0), true),
+											  new ConnectionConstraint(new Point(0.25, 0), true),
+	                                          new ConnectionConstraint(new Point(0.5, 0), true),
+	                                          new ConnectionConstraint(new Point(0.75, 0), true),
+	                                          new ConnectionConstraint(new Point(1, 0), true),
+	        	              		 new ConnectionConstraint(new Point(0, 0.25), true),
+	        	              		 new ConnectionConstraint(new Point(0, 0.5), true),
+	        	              		 new ConnectionConstraint(new Point(0, 0.75), true),
+	        	            		 new ConnectionConstraint(new Point(1, 0.25), true),
+	        	            		 new ConnectionConstraint(new Point(1, 0.5), true),
+	        	            		 new ConnectionConstraint(new Point(1, 0.75), true),
+	        	            		 new ConnectionConstraint(new Point(0, 1), true),
+	        	            		 new ConnectionConstraint(new Point(0.25, 1), true),
+	        	            		 new ConnectionConstraint(new Point(0.5, 1), true),
+	        	            		 new ConnectionConstraint(new Point(0.75, 1), true),
+	        	            		 new ConnectionConstraint(new Point(1, 1), true)];
+	Ellipse.prototype.constraints = [new ConnectionConstraint(new Point(0, 0), true), new ConnectionConstraint(new Point(1, 0), true),
+	                                   new ConnectionConstraint(new Point(0, 1), true), new ConnectionConstraint(new Point(1, 1), true),
+	                                   new ConnectionConstraint(new Point(0.5, 0), true), new ConnectionConstraint(new Point(0.5, 1), true),
+	          	              		   new ConnectionConstraint(new Point(0, 0.5), true), new ConnectionConstraint(new Point(1, 0.5))];
 	PartialRectangleShape.prototype.constraints = RectangleShape.prototype.constraints;
 	ImageShape.prototype.constraints = RectangleShape.prototype.constraints;
 	Swimlane.prototype.constraints = RectangleShape.prototype.constraints;
@@ -4833,20 +4833,20 @@
 		let constr = [];
 		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size)))));
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w - s) * 0.5, 0));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - s, 0));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - s * 0.5, s * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, s));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, (h + s) * 0.5 ));
-		constr.push(new mxConnectionConstraint(new Point(1, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w - s) * 0.5, 0));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - s, 0));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - s * 0.5, s * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, s));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, (h + s) * 0.5 ));
+		constr.push(new ConnectionConstraint(new Point(1, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0.5, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0.5), false));
 		
 		if (w >= s * 2)
 		{
-			constr.push(new mxConnectionConstraint(new Point(0.5, 0), false));
+			constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
 		}
 
 		return (constr);
@@ -4857,20 +4857,20 @@
 		let constr = [];
 		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size)))));
 		
-		constr.push(new mxConnectionConstraint(new Point(1, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w + s) * 0.5, 0));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, s, 0));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, s * 0.5, s * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, s));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, (h + s) * 0.5 ));
-		constr.push(new mxConnectionConstraint(new Point(0, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(1, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(1, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(1, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w + s) * 0.5, 0));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, s, 0));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, s * 0.5, s * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, s));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, (h + s) * 0.5 ));
+		constr.push(new ConnectionConstraint(new Point(0, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0.5, 1), false));
+		constr.push(new ConnectionConstraint(new Point(1, 1), false));
+		constr.push(new ConnectionConstraint(new Point(1, 0.5), false));
 		
 		if (w >= s * 2)
 		{
-			constr.push(new mxConnectionConstraint(new Point(0.5, 0), false));
+			constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
 		}
 
 		return (constr);
@@ -4881,18 +4881,18 @@
 		let constr = [];
 		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size)))));
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w - s) * 0.5, 0));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - s, 0));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - s * 0.5, s * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, s));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, (h + s) * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(1, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w + s) * 0.5, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, s, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, s * 0.5, h - s * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, h - s));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, (h - s) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w - s) * 0.5, 0));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - s, 0));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - s * 0.5, s * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, s));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, (h + s) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(1, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w + s) * 0.5, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, s, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, s * 0.5, h - s * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, h - s));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, (h - s) * 0.5));
 		
 		return (constr);
 	};
@@ -4902,25 +4902,25 @@
 		let constr = [];
 		let s = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size))));
 		
-		constr.push(new mxConnectionConstraint(new Point(0.5, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0.5), false));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(1, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0.5, 1), false));
+		constr.push(new ConnectionConstraint(new Point(1, 0.5), false));
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, s));
-		constr.push(new mxConnectionConstraint(new Point(1, 0), false, null, 0, s));
-		constr.push(new mxConnectionConstraint(new Point(1, 1), false, null, 0, -s));
-		constr.push(new mxConnectionConstraint(new Point(0, 1), false, null, 0, -s));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, s));
+		constr.push(new ConnectionConstraint(new Point(1, 0), false, null, 0, s));
+		constr.push(new ConnectionConstraint(new Point(1, 1), false, null, 0, -s));
+		constr.push(new ConnectionConstraint(new Point(0, 1), false, null, 0, -s));
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, s + (h * 0.5 - s) * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(1, 0), false, null, 0, s + (h * 0.5 - s) * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(1, 0), false, null, 0, h - s - (h * 0.5 - s) * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, h - s - (h * 0.5 - s) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, s + (h * 0.5 - s) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(1, 0), false, null, 0, s + (h * 0.5 - s) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(1, 0), false, null, 0, h - s - (h * 0.5 - s) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, h - s - (h * 0.5 - s) * 0.5));
 
-		constr.push(new mxConnectionConstraint(new Point(0.145, 0), false, null, 0, s * 0.29));
-		constr.push(new mxConnectionConstraint(new Point(0.855, 0), false, null, 0, s * 0.29));
-		constr.push(new mxConnectionConstraint(new Point(0.855, 1), false, null, 0, -s * 0.29));
-		constr.push(new mxConnectionConstraint(new Point(0.145, 1), false, null, 0, -s * 0.29));
+		constr.push(new ConnectionConstraint(new Point(0.145, 0), false, null, 0, s * 0.29));
+		constr.push(new ConnectionConstraint(new Point(0.855, 0), false, null, 0, s * 0.29));
+		constr.push(new ConnectionConstraint(new Point(0.855, 1), false, null, 0, -s * 0.29));
+		constr.push(new ConnectionConstraint(new Point(0.145, 1), false, null, 0, -s * 0.29));
 		
 		return (constr);
 	};
@@ -4934,34 +4934,34 @@
 
 		if (tp == 'left')
 		{
-			constr.push(new mxConnectionConstraint(new Point(0, 0), false));
-			constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx * 0.5, 0));
-			constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx, 0));
-			constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx, dy));
-			constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w + dx) * 0.5, dy));
+			constr.push(new ConnectionConstraint(new Point(0, 0), false));
+			constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx * 0.5, 0));
+			constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx, 0));
+			constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx, dy));
+			constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w + dx) * 0.5, dy));
 		}
 		else
 		{
-			constr.push(new mxConnectionConstraint(new Point(1, 0), false));
-			constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - dx * 0.5, 0));
-			constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - dx, 0));
-			constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - dx, dy));
-			constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w - dx) * 0.5, dy));
+			constr.push(new ConnectionConstraint(new Point(1, 0), false));
+			constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - dx * 0.5, 0));
+			constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - dx, 0));
+			constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - dx, dy));
+			constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w - dx) * 0.5, dy));
 		}
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, (h - dy) * 0.25 + dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, (h - dy) * 0.5 + dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, (h - dy) * 0.75 + dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, (h - dy) * 0.25 + dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, (h - dy) * 0.5 + dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, (h - dy) * 0.75 + dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, h));
-		constr.push(new mxConnectionConstraint(new Point(0.25, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(0.75, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, (h - dy) * 0.25 + dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, (h - dy) * 0.5 + dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, (h - dy) * 0.75 + dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, (h - dy) * 0.25 + dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, (h - dy) * 0.5 + dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, (h - dy) * 0.75 + dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, h));
+		constr.push(new ConnectionConstraint(new Point(0.25, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0.5, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0.75, 1), false));
 
 		return (constr);
 	}
@@ -4981,14 +4981,14 @@
 		let dx = Math.min(w, h / 2);
 		let s = Math.min(w - dx, Math.max(0, parseFloat(utils.getValue(this.style, 'size', this.size))) * w);
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0.5), false, null));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, s, 0));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (s + w - dx) * 0.5, 0));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - dx, 0));
-		constr.push(new mxConnectionConstraint(new Point(1, 0.5), false, null));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - dx, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (s + w - dx) * 0.5, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, s, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0.5), false, null));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, s, 0));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (s + w - dx) * 0.5, 0));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - dx, 0));
+		constr.push(new ConnectionConstraint(new Point(1, 0.5), false, null));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - dx, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (s + w - dx) * 0.5, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, s, h));
 		
 		return (constr);
 	};
@@ -4997,35 +4997,35 @@
 	{
 		var x0 = parseFloat(utils.getValue(style, 'jettyWidth', ModuleShape.prototype.jettyWidth)) / 2;
 		let dy = parseFloat(utils.getValue(style, 'jettyHeight', ModuleShape.prototype.jettyHeight));
-		let constr = [new mxConnectionConstraint(new Point(0, 0), false, null, x0),
-			new mxConnectionConstraint(new Point(0.25, 0), true),
-			new mxConnectionConstraint(new Point(0.5, 0), true),
-			new mxConnectionConstraint(new Point(0.75, 0), true),
-			new mxConnectionConstraint(new Point(1, 0), true),
-			new mxConnectionConstraint(new Point(1, 0.25), true),
-			new mxConnectionConstraint(new Point(1, 0.5), true),
-			new mxConnectionConstraint(new Point(1, 0.75), true),
-			new mxConnectionConstraint(new Point(0, 1), false, null, x0),
-			new mxConnectionConstraint(new Point(0.25, 1), true),
-			new mxConnectionConstraint(new Point(0.5, 1), true),
-			new mxConnectionConstraint(new Point(0.75, 1), true),
-			new mxConnectionConstraint(new Point(1, 1), true),
-			new mxConnectionConstraint(new Point(0, 0), false, null, 0, Math.min(h - 0.5 * dy, 1.5 * dy)),
-			new mxConnectionConstraint(new Point(0, 0), false, null, 0, Math.min(h - 0.5 * dy, 3.5 * dy))];
+		let constr = [new ConnectionConstraint(new Point(0, 0), false, null, x0),
+			new ConnectionConstraint(new Point(0.25, 0), true),
+			new ConnectionConstraint(new Point(0.5, 0), true),
+			new ConnectionConstraint(new Point(0.75, 0), true),
+			new ConnectionConstraint(new Point(1, 0), true),
+			new ConnectionConstraint(new Point(1, 0.25), true),
+			new ConnectionConstraint(new Point(1, 0.5), true),
+			new ConnectionConstraint(new Point(1, 0.75), true),
+			new ConnectionConstraint(new Point(0, 1), false, null, x0),
+			new ConnectionConstraint(new Point(0.25, 1), true),
+			new ConnectionConstraint(new Point(0.5, 1), true),
+			new ConnectionConstraint(new Point(0.75, 1), true),
+			new ConnectionConstraint(new Point(1, 1), true),
+			new ConnectionConstraint(new Point(0, 0), false, null, 0, Math.min(h - 0.5 * dy, 1.5 * dy)),
+			new ConnectionConstraint(new Point(0, 0), false, null, 0, Math.min(h - 0.5 * dy, 3.5 * dy))];
 		
 		if (h > 5 * dy)
 		{
-			constr.push(new mxConnectionConstraint(new Point(0, 0.75), false, null, x0));
+			constr.push(new ConnectionConstraint(new Point(0, 0.75), false, null, x0));
 		}
 		
 		if (h > 8 * dy)
 		{
-			constr.push(new mxConnectionConstraint(new Point(0, 0.5), false, null, x0));
+			constr.push(new ConnectionConstraint(new Point(0, 0.5), false, null, x0));
 		}
 		
 		if (h > 15 * dy)
 		{
-			constr.push(new mxConnectionConstraint(new Point(0, 0.25), false, null, x0));
+			constr.push(new ConnectionConstraint(new Point(0, 0.25), false, null, x0));
 		}
 		
 		return constr;
@@ -5033,124 +5033,124 @@
 	
 	LoopLimitShape.prototype.constraints = RectangleShape.prototype.constraints;
 	OffPageConnectorShape.prototype.constraints = RectangleShape.prototype.constraints;
-	mxCylinder.prototype.constraints = [new mxConnectionConstraint(new Point(0.15, 0.05), false),
-                                        new mxConnectionConstraint(new Point(0.5, 0), true),
-                                        new mxConnectionConstraint(new Point(0.85, 0.05), false),
-      	              		 new mxConnectionConstraint(new Point(0, 0.3), true),
-      	              		 new mxConnectionConstraint(new Point(0, 0.5), true),
-      	              		 new mxConnectionConstraint(new Point(0, 0.7), true),
-      	            		 new mxConnectionConstraint(new Point(1, 0.3), true),
-      	            		 new mxConnectionConstraint(new Point(1, 0.5), true),
-      	            		 new mxConnectionConstraint(new Point(1, 0.7), true),
-      	            		 new mxConnectionConstraint(new Point(0.15, 0.95), false),
-      	            		 new mxConnectionConstraint(new Point(0.5, 1), true),
-      	            		 new mxConnectionConstraint(new Point(0.85, 0.95), false)];
-	UmlActorShape.prototype.constraints = [new mxConnectionConstraint(new Point(0.25, 0.1), false),
-	                                          new mxConnectionConstraint(new Point(0.5, 0), false),
-	                                          new mxConnectionConstraint(new Point(0.75, 0.1), false),
-	        	              		 new mxConnectionConstraint(new Point(0, 1/3), false),
-	        	              		 new mxConnectionConstraint(new Point(0, 1), false),
-	        	            		 new mxConnectionConstraint(new Point(1, 1/3), false),
-	        	            		 new mxConnectionConstraint(new Point(1, 1), false),
-	        	            		 new mxConnectionConstraint(new Point(0.5, 0.5), false)];
-	ComponentShape.prototype.constraints = [new mxConnectionConstraint(new Point(0.25, 0), true),
-	                                          new mxConnectionConstraint(new Point(0.5, 0), true),
-	                                          new mxConnectionConstraint(new Point(0.75, 0), true),
-	        	              		 new mxConnectionConstraint(new Point(0, 0.3), true),
-	        	              		 new mxConnectionConstraint(new Point(0, 0.7), true),
-	        	            		 new mxConnectionConstraint(new Point(1, 0.25), true),
-	        	            		 new mxConnectionConstraint(new Point(1, 0.5), true),
-	        	            		 new mxConnectionConstraint(new Point(1, 0.75), true),
-	        	            		 new mxConnectionConstraint(new Point(0.25, 1), true),
-	        	            		 new mxConnectionConstraint(new Point(0.5, 1), true),
-	        	            		 new mxConnectionConstraint(new Point(0.75, 1), true)];
-	Actor.prototype.constraints = [new mxConnectionConstraint(new Point(0.5, 0), true),
-   	              		 new mxConnectionConstraint(new Point(0.25, 0.2), false),
-   	              		 new mxConnectionConstraint(new Point(0.1, 0.5), false),
-   	              		 new mxConnectionConstraint(new Point(0, 0.75), true),
-   	            		 new mxConnectionConstraint(new Point(0.75, 0.25), false),
-   	            		 new mxConnectionConstraint(new Point(0.9, 0.5), false),
-   	            		 new mxConnectionConstraint(new Point(1, 0.75), true),
-   	            		 new mxConnectionConstraint(new Point(0.25, 1), true),
-   	            		 new mxConnectionConstraint(new Point(0.5, 1), true),
-   	            		 new mxConnectionConstraint(new Point(0.75, 1), true)];
-	SwitchShape.prototype.constraints = [new mxConnectionConstraint(new Point(0, 0), false),
-                                         new mxConnectionConstraint(new Point(0.5, 0.25), false),
-                                         new mxConnectionConstraint(new Point(1, 0), false),
-			       	              		 new mxConnectionConstraint(new Point(0.25, 0.5), false),
-			       	              		 new mxConnectionConstraint(new Point(0.75, 0.5), false),
-			       	              		 new mxConnectionConstraint(new Point(0, 1), false),
-			       	            		 new mxConnectionConstraint(new Point(0.5, 0.75), false),
-			       	            		 new mxConnectionConstraint(new Point(1, 1), false)];
-	TapeShape.prototype.constraints = [new mxConnectionConstraint(new Point(0, 0.35), false),
-	                                   new mxConnectionConstraint(new Point(0, 0.5), false),
-	                                   new mxConnectionConstraint(new Point(0, 0.65), false),
-	                                   new mxConnectionConstraint(new Point(1, 0.35), false),
-		                                new mxConnectionConstraint(new Point(1, 0.5), false),
-		                                new mxConnectionConstraint(new Point(1, 0.65), false),
-										new mxConnectionConstraint(new Point(0.25, 1), false),
-										new mxConnectionConstraint(new Point(0.75, 0), false)];
-	StepShape.prototype.constraints = [new mxConnectionConstraint(new Point(0.25, 0), true),
-									new mxConnectionConstraint(new Point(0.5, 0), true),
-									new mxConnectionConstraint(new Point(0.75, 0), true),
-									new mxConnectionConstraint(new Point(0.25, 1), true),
-									new mxConnectionConstraint(new Point(0.5, 1), true),
-									new mxConnectionConstraint(new Point(0.75, 1), true),
-									new mxConnectionConstraint(new Point(0, 0.25), true),
-									new mxConnectionConstraint(new Point(0, 0.5), true),
-									new mxConnectionConstraint(new Point(0, 0.75), true),
-									new mxConnectionConstraint(new Point(1, 0.25), true),
-									new mxConnectionConstraint(new Point(1, 0.5), true),
-									new mxConnectionConstraint(new Point(1, 0.75), true)];
-	mxLine.prototype.constraints = [new mxConnectionConstraint(new Point(0, 0.5), false),
-	                                new mxConnectionConstraint(new Point(0.25, 0.5), false),
-	                                new mxConnectionConstraint(new Point(0.75, 0.5), false),
-									new mxConnectionConstraint(new Point(1, 0.5), false)];
-	LollipopShape.prototype.constraints = [new mxConnectionConstraint(new Point(0.5, 0), false),
-										new mxConnectionConstraint(new Point(0.5, 1), false)];
+	mxCylinder.prototype.constraints = [new ConnectionConstraint(new Point(0.15, 0.05), false),
+                                        new ConnectionConstraint(new Point(0.5, 0), true),
+                                        new ConnectionConstraint(new Point(0.85, 0.05), false),
+      	              		 new ConnectionConstraint(new Point(0, 0.3), true),
+      	              		 new ConnectionConstraint(new Point(0, 0.5), true),
+      	              		 new ConnectionConstraint(new Point(0, 0.7), true),
+      	            		 new ConnectionConstraint(new Point(1, 0.3), true),
+      	            		 new ConnectionConstraint(new Point(1, 0.5), true),
+      	            		 new ConnectionConstraint(new Point(1, 0.7), true),
+      	            		 new ConnectionConstraint(new Point(0.15, 0.95), false),
+      	            		 new ConnectionConstraint(new Point(0.5, 1), true),
+      	            		 new ConnectionConstraint(new Point(0.85, 0.95), false)];
+	UmlActorShape.prototype.constraints = [new ConnectionConstraint(new Point(0.25, 0.1), false),
+	                                          new ConnectionConstraint(new Point(0.5, 0), false),
+	                                          new ConnectionConstraint(new Point(0.75, 0.1), false),
+	        	              		 new ConnectionConstraint(new Point(0, 1/3), false),
+	        	              		 new ConnectionConstraint(new Point(0, 1), false),
+	        	            		 new ConnectionConstraint(new Point(1, 1/3), false),
+	        	            		 new ConnectionConstraint(new Point(1, 1), false),
+	        	            		 new ConnectionConstraint(new Point(0.5, 0.5), false)];
+	ComponentShape.prototype.constraints = [new ConnectionConstraint(new Point(0.25, 0), true),
+	                                          new ConnectionConstraint(new Point(0.5, 0), true),
+	                                          new ConnectionConstraint(new Point(0.75, 0), true),
+	        	              		 new ConnectionConstraint(new Point(0, 0.3), true),
+	        	              		 new ConnectionConstraint(new Point(0, 0.7), true),
+	        	            		 new ConnectionConstraint(new Point(1, 0.25), true),
+	        	            		 new ConnectionConstraint(new Point(1, 0.5), true),
+	        	            		 new ConnectionConstraint(new Point(1, 0.75), true),
+	        	            		 new ConnectionConstraint(new Point(0.25, 1), true),
+	        	            		 new ConnectionConstraint(new Point(0.5, 1), true),
+	        	            		 new ConnectionConstraint(new Point(0.75, 1), true)];
+	Actor.prototype.constraints = [new ConnectionConstraint(new Point(0.5, 0), true),
+   	              		 new ConnectionConstraint(new Point(0.25, 0.2), false),
+   	              		 new ConnectionConstraint(new Point(0.1, 0.5), false),
+   	              		 new ConnectionConstraint(new Point(0, 0.75), true),
+   	            		 new ConnectionConstraint(new Point(0.75, 0.25), false),
+   	            		 new ConnectionConstraint(new Point(0.9, 0.5), false),
+   	            		 new ConnectionConstraint(new Point(1, 0.75), true),
+   	            		 new ConnectionConstraint(new Point(0.25, 1), true),
+   	            		 new ConnectionConstraint(new Point(0.5, 1), true),
+   	            		 new ConnectionConstraint(new Point(0.75, 1), true)];
+	SwitchShape.prototype.constraints = [new ConnectionConstraint(new Point(0, 0), false),
+                                         new ConnectionConstraint(new Point(0.5, 0.25), false),
+                                         new ConnectionConstraint(new Point(1, 0), false),
+			       	              		 new ConnectionConstraint(new Point(0.25, 0.5), false),
+			       	              		 new ConnectionConstraint(new Point(0.75, 0.5), false),
+			       	              		 new ConnectionConstraint(new Point(0, 1), false),
+			       	            		 new ConnectionConstraint(new Point(0.5, 0.75), false),
+			       	            		 new ConnectionConstraint(new Point(1, 1), false)];
+	TapeShape.prototype.constraints = [new ConnectionConstraint(new Point(0, 0.35), false),
+	                                   new ConnectionConstraint(new Point(0, 0.5), false),
+	                                   new ConnectionConstraint(new Point(0, 0.65), false),
+	                                   new ConnectionConstraint(new Point(1, 0.35), false),
+		                                new ConnectionConstraint(new Point(1, 0.5), false),
+		                                new ConnectionConstraint(new Point(1, 0.65), false),
+										new ConnectionConstraint(new Point(0.25, 1), false),
+										new ConnectionConstraint(new Point(0.75, 0), false)];
+	StepShape.prototype.constraints = [new ConnectionConstraint(new Point(0.25, 0), true),
+									new ConnectionConstraint(new Point(0.5, 0), true),
+									new ConnectionConstraint(new Point(0.75, 0), true),
+									new ConnectionConstraint(new Point(0.25, 1), true),
+									new ConnectionConstraint(new Point(0.5, 1), true),
+									new ConnectionConstraint(new Point(0.75, 1), true),
+									new ConnectionConstraint(new Point(0, 0.25), true),
+									new ConnectionConstraint(new Point(0, 0.5), true),
+									new ConnectionConstraint(new Point(0, 0.75), true),
+									new ConnectionConstraint(new Point(1, 0.25), true),
+									new ConnectionConstraint(new Point(1, 0.5), true),
+									new ConnectionConstraint(new Point(1, 0.75), true)];
+	mxLine.prototype.constraints = [new ConnectionConstraint(new Point(0, 0.5), false),
+	                                new ConnectionConstraint(new Point(0.25, 0.5), false),
+	                                new ConnectionConstraint(new Point(0.75, 0.5), false),
+									new ConnectionConstraint(new Point(1, 0.5), false)];
+	LollipopShape.prototype.constraints = [new ConnectionConstraint(new Point(0.5, 0), false),
+										new ConnectionConstraint(new Point(0.5, 1), false)];
 	DoubleEllipse.prototype.constraints = Ellipse.prototype.constraints;
 	Rhombus.prototype.constraints = Ellipse.prototype.constraints;
-	Triangle.prototype.constraints = [new mxConnectionConstraint(new Point(0, 0.25), true),
-	                                    new mxConnectionConstraint(new Point(0, 0.5), true),
-	                                   new mxConnectionConstraint(new Point(0, 0.75), true),
-	                                   new mxConnectionConstraint(new Point(0.5, 0), true),
-	                                   new mxConnectionConstraint(new Point(0.5, 1), true),
-	                                   new mxConnectionConstraint(new Point(1, 0.5), true)];
-	Hexagon.prototype.constraints = [new mxConnectionConstraint(new Point(0.375, 0), true),
-	                                    new mxConnectionConstraint(new Point(0.5, 0), true),
-	                                   new mxConnectionConstraint(new Point(0.625, 0), true),
-	                                   new mxConnectionConstraint(new Point(0, 0.25), true),
-	                                   new mxConnectionConstraint(new Point(0, 0.5), true),
-	                                   new mxConnectionConstraint(new Point(0, 0.75), true),
-	                                   new mxConnectionConstraint(new Point(1, 0.25), true),
-	                                   new mxConnectionConstraint(new Point(1, 0.5), true),
-	                                   new mxConnectionConstraint(new Point(1, 0.75), true),
-	                                   new mxConnectionConstraint(new Point(0.375, 1), true),
-	                                    new mxConnectionConstraint(new Point(0.5, 1), true),
-	                                   new mxConnectionConstraint(new Point(0.625, 1), true)];
-	Cloud.prototype.constraints = [new mxConnectionConstraint(new Point(0.25, 0.25), false),
-	                                 new mxConnectionConstraint(new Point(0.4, 0.1), false),
-	                                 new mxConnectionConstraint(new Point(0.16, 0.55), false),
-	                                 new mxConnectionConstraint(new Point(0.07, 0.4), false),
-	                                 new mxConnectionConstraint(new Point(0.31, 0.8), false),
-	                                 new mxConnectionConstraint(new Point(0.13, 0.77), false),
-	                                 new mxConnectionConstraint(new Point(0.8, 0.8), false),
-	                                 new mxConnectionConstraint(new Point(0.55, 0.95), false),
-	                                 new mxConnectionConstraint(new Point(0.875, 0.5), false),
-	                                 new mxConnectionConstraint(new Point(0.96, 0.7), false),
-	                                 new mxConnectionConstraint(new Point(0.625, 0.2), false),
-	                                 new mxConnectionConstraint(new Point(0.88, 0.25), false)];
+	Triangle.prototype.constraints = [new ConnectionConstraint(new Point(0, 0.25), true),
+	                                    new ConnectionConstraint(new Point(0, 0.5), true),
+	                                   new ConnectionConstraint(new Point(0, 0.75), true),
+	                                   new ConnectionConstraint(new Point(0.5, 0), true),
+	                                   new ConnectionConstraint(new Point(0.5, 1), true),
+	                                   new ConnectionConstraint(new Point(1, 0.5), true)];
+	Hexagon.prototype.constraints = [new ConnectionConstraint(new Point(0.375, 0), true),
+	                                    new ConnectionConstraint(new Point(0.5, 0), true),
+	                                   new ConnectionConstraint(new Point(0.625, 0), true),
+	                                   new ConnectionConstraint(new Point(0, 0.25), true),
+	                                   new ConnectionConstraint(new Point(0, 0.5), true),
+	                                   new ConnectionConstraint(new Point(0, 0.75), true),
+	                                   new ConnectionConstraint(new Point(1, 0.25), true),
+	                                   new ConnectionConstraint(new Point(1, 0.5), true),
+	                                   new ConnectionConstraint(new Point(1, 0.75), true),
+	                                   new ConnectionConstraint(new Point(0.375, 1), true),
+	                                    new ConnectionConstraint(new Point(0.5, 1), true),
+	                                   new ConnectionConstraint(new Point(0.625, 1), true)];
+	Cloud.prototype.constraints = [new ConnectionConstraint(new Point(0.25, 0.25), false),
+	                                 new ConnectionConstraint(new Point(0.4, 0.1), false),
+	                                 new ConnectionConstraint(new Point(0.16, 0.55), false),
+	                                 new ConnectionConstraint(new Point(0.07, 0.4), false),
+	                                 new ConnectionConstraint(new Point(0.31, 0.8), false),
+	                                 new ConnectionConstraint(new Point(0.13, 0.77), false),
+	                                 new ConnectionConstraint(new Point(0.8, 0.8), false),
+	                                 new ConnectionConstraint(new Point(0.55, 0.95), false),
+	                                 new ConnectionConstraint(new Point(0.875, 0.5), false),
+	                                 new ConnectionConstraint(new Point(0.96, 0.7), false),
+	                                 new ConnectionConstraint(new Point(0.625, 0.2), false),
+	                                 new ConnectionConstraint(new Point(0.88, 0.25), false)];
 	ParallelogramShape.prototype.constraints = RectangleShape.prototype.constraints;
 	TrapezoidShape.prototype.constraints = RectangleShape.prototype.constraints;
-	DocumentShape.prototype.constraints = [new mxConnectionConstraint(new Point(0.25, 0), true),
-	                                          new mxConnectionConstraint(new Point(0.5, 0), true),
-	                                          new mxConnectionConstraint(new Point(0.75, 0), true),
-	        	              		 new mxConnectionConstraint(new Point(0, 0.25), true),
-	        	              		 new mxConnectionConstraint(new Point(0, 0.5), true),
-	        	              		 new mxConnectionConstraint(new Point(0, 0.75), true),
-	        	            		 new mxConnectionConstraint(new Point(1, 0.25), true),
-	        	            		 new mxConnectionConstraint(new Point(1, 0.5), true),
-	        	            		 new mxConnectionConstraint(new Point(1, 0.75), true)];
+	DocumentShape.prototype.constraints = [new ConnectionConstraint(new Point(0.25, 0), true),
+	                                          new ConnectionConstraint(new Point(0.5, 0), true),
+	                                          new ConnectionConstraint(new Point(0.75, 0), true),
+	        	              		 new ConnectionConstraint(new Point(0, 0.25), true),
+	        	              		 new ConnectionConstraint(new Point(0, 0.5), true),
+	        	              		 new ConnectionConstraint(new Point(0, 0.75), true),
+	        	            		 new ConnectionConstraint(new Point(1, 0.25), true),
+	        	            		 new ConnectionConstraint(new Point(1, 0.5), true),
+	        	            		 new ConnectionConstraint(new Point(1, 0.75), true)];
 	mxArrow.prototype.constraints = null;
 
 	TeeShape.prototype.getConstraints = function(style, w, h)
@@ -5160,22 +5160,22 @@
 		let dy = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'dy', this.dy))));
 		var w2 = Math.abs(w - dx) / 2;
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(1, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, dy * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w * 0.75 + dx * 0.25, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w + dx) * 0.5, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w + dx) * 0.5, (h + dy) * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w + dx) * 0.5, h));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w - dx) * 0.5, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w - dx) * 0.5, (h + dy) * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w - dx) * 0.5, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w * 0.25 - dx * 0.25, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, dy * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
+		constr.push(new ConnectionConstraint(new Point(1, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, dy * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w * 0.75 + dx * 0.25, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w + dx) * 0.5, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w + dx) * 0.5, (h + dy) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w + dx) * 0.5, h));
+		constr.push(new ConnectionConstraint(new Point(0.5, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w - dx) * 0.5, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w - dx) * 0.5, (h + dy) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w - dx) * 0.5, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w * 0.25 - dx * 0.25, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, dy * 0.5));
 		
 		return (constr);
 	};
@@ -5186,31 +5186,31 @@
 		let dx = Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'dx', this.dx))));
 		let dy = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'dy', this.dy))));
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(1, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, dy * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w + dx) * 0.5, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx, dy));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx, (h + dy) * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, dx * 0.5, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0.5), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
+		constr.push(new ConnectionConstraint(new Point(1, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, dy * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w + dx) * 0.5, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx, dy));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx, (h + dy) * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, dx * 0.5, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0, 1), false));
 		
 		return (constr);
 	};
 
-	CrossbarShape.prototype.constraints = [new mxConnectionConstraint(new Point(0, 0), false),
-        new mxConnectionConstraint(new Point(0, 0.5), false),
-        new mxConnectionConstraint(new Point(0, 1), false),
-        new mxConnectionConstraint(new Point(0.25, 0.5), false),
-        new mxConnectionConstraint(new Point(0.5, 0.5), false),
-        new mxConnectionConstraint(new Point(0.75, 0.5), false),
-        new mxConnectionConstraint(new Point(1, 0), false),
-        new mxConnectionConstraint(new Point(1, 0.5), false),
-        new mxConnectionConstraint(new Point(1, 1), false)];
+	CrossbarShape.prototype.constraints = [new ConnectionConstraint(new Point(0, 0), false),
+        new ConnectionConstraint(new Point(0, 0.5), false),
+        new ConnectionConstraint(new Point(0, 1), false),
+        new ConnectionConstraint(new Point(0.25, 0.5), false),
+        new ConnectionConstraint(new Point(0.5, 0.5), false),
+        new ConnectionConstraint(new Point(0.75, 0.5), false),
+        new ConnectionConstraint(new Point(1, 0), false),
+        new ConnectionConstraint(new Point(1, 0.5), false),
+        new ConnectionConstraint(new Point(1, 1), false)];
 
 	SingleArrowShape.prototype.getConstraints = function(style, w, h)
 	{
@@ -5220,14 +5220,14 @@
 		let at = (h - aw) / 2;
 		let ab = at + aw;
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0.5), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, at));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w - as) * 0.5, at));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - as, 0));
-		constr.push(new mxConnectionConstraint(new Point(1, 0.5), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - as, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w - as) * 0.5, h - at));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, h - at));
+		constr.push(new ConnectionConstraint(new Point(0, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, at));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w - as) * 0.5, at));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - as, 0));
+		constr.push(new ConnectionConstraint(new Point(1, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - as, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w - as) * 0.5, h - at));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, h - at));
 		
 		return (constr);
 	};
@@ -5240,14 +5240,14 @@
 		let at = (h - aw) / 2;
 		let ab = at + aw;
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0.5), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, as, 0));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w * 0.5, at));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - as, 0));
-		constr.push(new mxConnectionConstraint(new Point(1, 0.5), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w - as, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w * 0.5, h - at));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, as, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, as, 0));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w * 0.5, at));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - as, 0));
+		constr.push(new ConnectionConstraint(new Point(1, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w - as, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w * 0.5, h - at));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, as, h));
 		
 		return (constr);
 	};
@@ -5262,49 +5262,49 @@
 		let l = (w - size) / 2;
 		let r = l + size;
 		
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, l, t * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, l, 0));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 0), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, r, 0));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, r, t * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, r, t));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, l, h - t * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, l, h));
-		constr.push(new mxConnectionConstraint(new Point(0.5, 1), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, r, h));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, r, h - t * 0.5));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, r, b));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w + r) * 0.5, t));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, t));
-		constr.push(new mxConnectionConstraint(new Point(1, 0.5), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, w, b));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, (w + r) * 0.5, b));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, l, b));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, l * 0.5, t));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, t));
-		constr.push(new mxConnectionConstraint(new Point(0, 0.5), false));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, 0, b));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, l * 0.5, b));
-		constr.push(new mxConnectionConstraint(new Point(0, 0), false, null, l, t));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, l, t * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, l, 0));
+		constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, r, 0));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, r, t * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, r, t));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, l, h - t * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, l, h));
+		constr.push(new ConnectionConstraint(new Point(0.5, 1), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, r, h));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, r, h - t * 0.5));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, r, b));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w + r) * 0.5, t));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, t));
+		constr.push(new ConnectionConstraint(new Point(1, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, w, b));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w + r) * 0.5, b));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, l, b));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, l * 0.5, t));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, t));
+		constr.push(new ConnectionConstraint(new Point(0, 0.5), false));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, 0, b));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, l * 0.5, b));
+		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, l, t));
 
 		return (constr);
 	};
 	
 	UmlLifeline.prototype.constraints = null;
-	OrShape.prototype.constraints = [new mxConnectionConstraint(new Point(0, 0.25), false),
-	  	                             new mxConnectionConstraint(new Point(0, 0.5), false),
-	  	                             new mxConnectionConstraint(new Point(0, 0.75), false),
-	  	                             new mxConnectionConstraint(new Point(1, 0.5), false),
-	  	                             new mxConnectionConstraint(new Point(0.7, 0.1), false),
-	  	                             new mxConnectionConstraint(new Point(0.7, 0.9), false)];
-	XorShape.prototype.constraints = [new mxConnectionConstraint(new Point(0.175, 0.25), false),
-	  	                             new mxConnectionConstraint(new Point(0.25, 0.5), false),
-	  	                             new mxConnectionConstraint(new Point(0.175, 0.75), false),
-	  	                             new mxConnectionConstraint(new Point(1, 0.5), false),
-	  	                             new mxConnectionConstraint(new Point(0.7, 0.1), false),
-	  	                             new mxConnectionConstraint(new Point(0.7, 0.9), false)];
-	RequiredInterfaceShape.prototype.constraints = [new mxConnectionConstraint(new Point(0, 0.5), false),
-          new mxConnectionConstraint(new Point(1, 0.5), false)];
-	ProvidedRequiredInterfaceShape.prototype.constraints = [new mxConnectionConstraint(new Point(0, 0.5), false),
-        new mxConnectionConstraint(new Point(1, 0.5), false)];
+	OrShape.prototype.constraints = [new ConnectionConstraint(new Point(0, 0.25), false),
+	  	                             new ConnectionConstraint(new Point(0, 0.5), false),
+	  	                             new ConnectionConstraint(new Point(0, 0.75), false),
+	  	                             new ConnectionConstraint(new Point(1, 0.5), false),
+	  	                             new ConnectionConstraint(new Point(0.7, 0.1), false),
+	  	                             new ConnectionConstraint(new Point(0.7, 0.9), false)];
+	XorShape.prototype.constraints = [new ConnectionConstraint(new Point(0.175, 0.25), false),
+	  	                             new ConnectionConstraint(new Point(0.25, 0.5), false),
+	  	                             new ConnectionConstraint(new Point(0.175, 0.75), false),
+	  	                             new ConnectionConstraint(new Point(1, 0.5), false),
+	  	                             new ConnectionConstraint(new Point(0.7, 0.1), false),
+	  	                             new ConnectionConstraint(new Point(0.7, 0.9), false)];
+	RequiredInterfaceShape.prototype.constraints = [new ConnectionConstraint(new Point(0, 0.5), false),
+          new ConnectionConstraint(new Point(1, 0.5), false)];
+	ProvidedRequiredInterfaceShape.prototype.constraints = [new ConnectionConstraint(new Point(0, 0.5), false),
+        new ConnectionConstraint(new Point(1, 0.5), false)];
 })();

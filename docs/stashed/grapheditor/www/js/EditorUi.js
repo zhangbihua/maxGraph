@@ -34,9 +34,9 @@ EditorUi = function(editor, container, lightbox)
 	}
 
 	// Pre-fetches connect image
-	if (!mxClient.IS_SVG && mxConnectionHandler.prototype.connectImage != null)
+	if (!mxClient.IS_SVG && ConnectionHandler.prototype.connectImage != null)
 	{
-		new Image().src = mxConnectionHandler.prototype.connectImage.src;
+		new Image().src = ConnectionHandler.prototype.connectImage.src;
 	}
 	
 	// Disables graph and forced panning in chromeless mode
@@ -4100,7 +4100,7 @@ EditorUi.prototype.ctrlEnter = function()
 		try
 		{
 			let cells = graph.getSelectionCells();
-		    let lookup = new mxDictionary();
+		    let lookup = new Dictionary();
 		    let newCells = [];
 
 		    for (let i = 0; i < cells.length; i++)

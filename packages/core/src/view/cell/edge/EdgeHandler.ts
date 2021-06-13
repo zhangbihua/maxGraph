@@ -34,9 +34,9 @@ import {
 import utils from '../../../util/Utils';
 import ImageShape from '../../geometry/shape/node/ImageShape';
 import RectangleShape from '../../geometry/shape/node/RectangleShape';
-import mxConnectionConstraint from '../../connection/mxConnectionConstraint';
+import ConnectionConstraint from '../../connection/ConnectionConstraint';
 import InternalEvent from '../../event/InternalEvent';
-import mxConstraintHandler from '../../connection/mxConstraintHandler';
+import ConstraintHandler from '../../connection/ConstraintHandler';
 import Rectangle from '../../geometry/Rectangle';
 import mxClient from '../../../mxClient';
 import EdgeStyle from '../../style/EdgeStyle';
@@ -47,6 +47,9 @@ import {
   isMouseEvent,
   isShiftDown,
 } from '../../../util/EventUtils';
+import Graph from '../../Graph';
+import CellState from '../datatypes/CellState';
+import Shape from '../../geometry/shape/Shape';
 
 /**
  * Graph event handler that reconnects edges and modifies control points and the edge
@@ -60,9 +63,9 @@ import {
  * mxEdgeHandler.prototype.removeEnabled = true;
  * ```
  * Note: This experimental feature is not recommended for production use.
- * @class mxEdgeHandler
+ * @class EdgeHandler
  */
-class mxEdgeHandler {
+class EdgeHandler {
   constructor(state) {
     if (state != null && state.shape != null) {
       this.state = state;
@@ -91,16 +94,14 @@ class mxEdgeHandler {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  // graph: mxGraph;
-  graph = null;
+  graph: Graph;
 
   /**
    * Variable: state
    *
    * Reference to the <mxCellState> being modified.
    */
-  // state: mxCellState;
-  state = null;
+  state: CellState = null;
 
   /**
    * Variable: marker
@@ -116,24 +117,21 @@ class mxEdgeHandler {
    * Holds the <mxConstraintHandler> used for drawing and highlighting
    * constraints.
    */
-  // constraintHandler: mxConstraintHandler;
-  constraintHandler = null;
+  constraintHandler: ConstraintHandler = null;
 
   /**
    * Variable: error
    *
    * Holds the current validation error while a connection is being changed.
    */
-  // error: string;
-  error = null;
+  error: string = null;
 
   /**
    * Variable: shape
    *
    * Holds the <mxShape> that represents the preview edge.
    */
-  // shape: mxShape;
-  shape = null;
+  shape: Shape = null;
 
   /**
    * Variable: bends
@@ -373,7 +371,7 @@ class mxEdgeHandler {
   init() {
     this.graph = this.state.view.graph;
     this.marker = this.createMarker();
-    this.constraintHandler = new mxConstraintHandler(this.graph);
+    this.constraintHandler = new ConstraintHandler(this.graph);
 
     // Clones the original points from the cell
     // and makes sure at least one point exists
@@ -1512,7 +1510,7 @@ class mxEdgeHandler {
         this.constraintHandler.currentConstraint = constraint;
         this.constraintHandler.currentPoint = point;
       } else {
-        constraint = new mxConnectionConstraint();
+        constraint = new ConnectionConstraint();
       }
     }
 
@@ -2040,7 +2038,7 @@ class mxEdgeHandler {
       let constraint = this.constraintHandler.currentConstraint;
 
       if (constraint == null) {
-        constraint = new mxConnectionConstraint();
+        constraint = new ConnectionConstraint();
       }
 
       this.graph.connectCell(edge, terminal, isSource, constraint);
@@ -2080,7 +2078,7 @@ class mxEdgeHandler {
           edge,
           null,
           isSource,
-          new mxConnectionConstraint()
+          new ConnectionConstraint()
         );
       }
     } finally {
@@ -2671,4 +2669,4 @@ class mxEdgeHandler {
   }
 }
 
-export default mxEdgeHandler;
+export default EdgeHandler;

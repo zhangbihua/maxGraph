@@ -28,6 +28,10 @@ import Point from '../../geometry/Point';
 import utils from '../../../util/Utils';
 import mxClient from '../../../mxClient';
 import { isMouseEvent, isShiftDown } from '../../../util/EventUtils';
+import Graph from '../../Graph';
+import CellState from '../datatypes/CellState';
+import Image from '../../image/Image';
+import Cell from '../datatypes/Cell';
 
 /**
  * Class: mxVertexHandler
@@ -44,46 +48,49 @@ import { isMouseEvent, isShiftDown } from '../../../util/EventUtils';
  *
  * state - <mxCellState> of the cell to be resized.
  */
-class mxVertexHandler {
-  constructor(state) {
-    if (state != null) {
-      this.state = state;
-      this.init();
+class VertexHandler {
+  dependencies = ['selection', 'cells'];
 
-      // Handles escape keystrokes
-      this.escapeHandler = (sender, evt) => {
-        if (this.livePreview && this.index != null) {
-          // Redraws the live preview
-          this.state.view.graph.cellRenderer.redraw(this.state, true);
+  constructor(state: CellState) {
+    this.state = state;
+    this.init();
 
-          // Redraws connected edges
-          this.state.view.invalidate(this.state.cell);
-          this.state.invalid = false;
-          this.state.view.validate();
-        }
+    // Handles escape keystrokes
+    this.escapeHandler = (sender, evt) => {
+      if (this.livePreview && this.index != null) {
+        // Redraws the live preview
+        this.state.view.graph.cellRenderer.redraw(this.state, true);
 
-        this.reset();
-      };
+        // Redraws connected edges
+        this.state.view.invalidate(this.state.cell);
+        this.state.invalid = false;
+        this.state.view.validate();
+      }
 
-      this.state.view.graph.addListener(InternalEvent.ESCAPE, this.escapeHandler);
-    }
+      this.reset();
+    };
+
+    this.state.view.graph.addListener(InternalEvent.ESCAPE, this.escapeHandler);
   }
+
+  escapeHandler: Function;
+  selectionBounds?: Rectangle;
+  bounds?: Rectangle;
+  selectionBorder?: RectangleShape;
 
   /**
    * Variable: graph
    *
    * Reference to the enclosing <mxGraph>.
    */
-  // graph: mxGraph;
-  graph = null;
+  graph?: Graph;
 
   /**
    * Variable: state
    *
    * Reference to the <mxCellState> being modified.
    */
-  // state: mxCellState;
-  state = null;
+  state: CellState;
 
   /**
    * Variable: singleSizer
@@ -91,16 +98,14 @@ class mxVertexHandler {
    * Specifies if only one sizer handle at the bottom, right corner should be
    * used. Default is false.
    */
-  // singleSizer: boolean;
-  singleSizer = false;
+  singleSizer: boolean = false;
 
   /**
    * Variable: index
    *
    * Holds the index of the current handle.
    */
-  // index: number;
-  index = null;
+  index: number | null = null;
 
   /**
    * Variable: allowHandleBoundsCheck
@@ -108,16 +113,14 @@ class mxVertexHandler {
    * Specifies if the bounds of handles should be used for hit-detection in IE or
    * if <tolerance> > 0. Default is true.
    */
-  // allowHandleBoundsCheck: boolean;
-  allowHandleBoundsCheck = true;
+  allowHandleBoundsCheck: boolean = true;
 
   /**
    * Variable: handleImage
    *
    * Optional <mxImage> to be used as handles. Default is null.
    */
-  // handleImage: mxImage;
-  handleImage = null;
+  handleImage: Image | null = null;
 
   /**
    * Variable: handlesVisible
@@ -131,16 +134,14 @@ class mxVertexHandler {
    *
    * Optional tolerance for hit-detection in <getHandleForEvent>. Default is 0.
    */
-  // tolerance: number;
-  tolerance = 0;
+  tolerance: number = 0;
 
   /**
    * Variable: rotationEnabled
    *
    * Specifies if a rotation handle should be visible. Default is false.
    */
-  // rotationEnabled: boolean;
-  rotationEnabled = false;
+  rotationEnabled: boolean = false;
 
   /**
    * Variable: parentHighlightEnabled
@@ -148,8 +149,7 @@ class mxVertexHandler {
    * Specifies if the parent should be highlighted if a child cell is selected.
    * Default is false.
    */
-  // parentHighlightEnabled: boolean;
-  parentHighlightEnabled = false;
+  parentHighlightEnabled: boolean = false;
 
   /**
    * Variable: rotationRaster
@@ -157,16 +157,14 @@ class mxVertexHandler {
    * Specifies if rotation steps should be "rasterized" depening on the distance
    * to the handle. Default is true.
    */
-  // rotationRaster: boolean;
-  rotationRaster = true;
+  rotationRaster: boolean = true;
 
   /**
    * Variable: rotationCursor
    *
    * Specifies the cursor for the rotation handle. Default is 'crosshair'.
    */
-  // rotationCursor: string;
-  rotationCursor = 'crosshair';
+  rotationCursor: string = 'crosshair';
 
   /**
    * Variable: livePreview
@@ -174,15 +172,14 @@ class mxVertexHandler {
    * Specifies if resize should change the cell in-place. This is an experimental
    * feature for non-touch devices. Default is false.
    */
-  // livePreview: boolean;
-  livePreview = false;
+  livePreview: boolean = false;
 
   /**
    * Variable: movePreviewToFront
    *
    * Specifies if the live preview should be moved to the front.
    */
-  movePreviewToFront = false;
+  movePreviewToFront: boolean = false;
 
   /**
    * Variable: manageSizers
@@ -190,8 +187,7 @@ class mxVertexHandler {
    * Specifies if sizers should be hidden and spaced if the vertex is small.
    * Default is false.
    */
-  // manageSizers: boolean;
-  manageSizers = false;
+  manageSizers: boolean = false;
 
   /**
    * Variable: constrainGroupByChildren
@@ -199,16 +195,14 @@ class mxVertexHandler {
    * Specifies if the size of groups should be constrained by the children.
    * Default is false.
    */
-  // constrainGroupByChildren: boolean;
-  constrainGroupByChildren = false;
+  constrainGroupByChildren: boolean = false;
 
   /**
    * Variable: rotationHandleVSpacing
    *
    * Vertical spacing for rotation icon. Default is -16.
    */
-  // rotationHandleVSpacing: number;
-  rotationHandleVSpacing = -16;
+  rotationHandleVSpacing: number = -16;
 
   /**
    * Variable: horizontalOffset
@@ -216,8 +210,7 @@ class mxVertexHandler {
    * The horizontal offset for the handles. This is updated in <redrawHandles>
    * if <manageSizers> is true and the sizers are offset horizontally.
    */
-  // horizontalOffset: number;
-  horizontalOffset = 0;
+  horizontalOffset: number = 0;
 
   /**
    * Variable: verticalOffset
@@ -225,16 +218,14 @@ class mxVertexHandler {
    * The horizontal offset for the handles. This is updated in <redrawHandles>
    * if <manageSizers> is true and the sizers are offset vertically.
    */
-  // verticalOffset: number;
-  verticalOffset = 0;
+  verticalOffset: number = 0;
 
   /**
    * Function: init
    *
    * Initializes the shapes required for this vertex handler.
    */
-  // init(): void;
-  init() {
+  init(): void {
     this.graph = this.state.view.graph;
     this.selectionBounds = this.getSelectionBounds(this.state);
     this.bounds = new Rectangle(
@@ -264,7 +255,7 @@ class mxVertexHandler {
     // Adds the sizer handles
     if (
       this.graph.graphHandler.maxCells <= 0 ||
-      this.graph.getSelectionCount() < this.graph.graphHandler.maxCells
+      this.graph.selection.getSelectionCount() < this.graph.graphHandler.maxCells
     ) {
       const resizable = this.graph.isCellResizable(this.state.cell);
       this.sizers = [];
@@ -2309,4 +2300,4 @@ class mxVertexHandler {
   }
 }
 
-export default mxVertexHandler;
+export default VertexHandler;

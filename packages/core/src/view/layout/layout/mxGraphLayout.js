@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxDictionary from '../../../util/mxDictionary';
+import Dictionary from '../../../util/Dictionary';
 import Rectangle from '../../geometry/Rectangle';
 import Geometry from '../../geometry/Geometry';
 import Point from '../../geometry/Point';
@@ -136,13 +136,13 @@ class mxGraphLayout {
    * edge as arguments. The traversal stops if the function returns false.
    * @param edge Optional {@link mxCell} that represents the incoming edge. This is
    * null for the first step of the traversal.
-   * @param visited Optional {@link mxDictionary} of cell paths for the visited cells.
+   * @param visited Optional {@link Dictionary} of cell paths for the visited cells.
    */
   // traverse(vertex: mxCell, directed?: boolean, func?: Function, edge?: mxCell, visited?: mxDictionary): void;
   traverse(vertex, directed, func, edge, visited) {
     if (func != null && vertex != null) {
       directed = directed != null ? directed : true;
-      visited = visited || new mxDictionary();
+      visited = visited || new Dictionary();
 
       if (!visited.get(vertex)) {
         visited.put(vertex, true);

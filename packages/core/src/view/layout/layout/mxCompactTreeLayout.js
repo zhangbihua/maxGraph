@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxDictionary from '../../../util/mxDictionary';
+import Dictionary from '../../../util/Dictionary';
 import Point from '../../geometry/Point';
 import mxGraphLayout from './mxGraphLayout';
 import CellPath from '../../cell/datatypes/CellPath';
@@ -414,7 +414,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
    */
   // sortOutgoingEdges(source: mxCell, edges: Array<mxCell>): void;
   sortOutgoingEdges(source, edges) {
-    const lookup = new mxDictionary();
+    const lookup = new Dictionary();
 
     edges.sort((e1, e2) => {
       const end1 = e1.getTerminal(e1.getTerminal(false) == source);

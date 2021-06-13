@@ -20,7 +20,7 @@ import {
   INVALID_CONNECT_TARGET_COLOR,
   VALID_COLOR,
 } from '../util/Constants';
-import mxDictionary from '../util/mxDictionary';
+import Dictionary from '../util/Dictionary';
 import mxCellHighlight from './selection/mxCellHighlight';
 import Rectangle from './geometry/Rectangle';
 import {
@@ -848,7 +848,7 @@ class GraphHandler {
     this.cells = cells != null ? cells : this.getCells(this.cell);
     this.bounds = this.graph.getView().getBounds(this.cells);
     this.pBounds = this.getPreviewBounds(this.cells);
-    this.allCells = new mxDictionary();
+    this.allCells = new Dictionary();
     this.cloning = false;
     this.cellCount = 0;
 
@@ -862,7 +862,7 @@ class GraphHandler {
       const ignore = parent.getChildCount() < 2;
 
       // Uses connected states as guides
-      const connected = new mxDictionary();
+      const connected = new Dictionary();
       const opps = this.graph.getOpposites(
         this.graph.getEdges(this.cell),
         this.cell
@@ -1759,7 +1759,7 @@ class GraphHandler {
       // Removes parent if all child cells are removed
       if (!clone && target != null && this.removeEmptyParents) {
         // Collects all non-selected parents
-        const dict = new mxDictionary();
+        const dict = new Dictionary();
 
         for (let i = 0; i < cells.length; i += 1) {
           dict.put(cells[i], true);

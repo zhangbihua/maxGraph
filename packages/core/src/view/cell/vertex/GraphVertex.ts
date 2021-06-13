@@ -2,7 +2,7 @@ import Cell from "../datatypes/Cell";
 import Geometry from "../../geometry/Geometry";
 import CellArray from "../datatypes/CellArray";
 
-class Vertex {
+class GraphVertex {
 
   /**
    * Specifies the return value for vertices in {@link isLabelMovable}.
@@ -175,3 +175,5 @@ class Vertex {
     this.vertexLabelsMovable = value;
   }
 }
+
+export default GraphVertex;

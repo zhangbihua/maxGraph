@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxConnectionConstraint from '../../../connection/mxConnectionConstraint';
+import ConnectionConstraint from '../../../connection/ConnectionConstraint';
 import Rectangle from '../../Rectangle';
 import Shape from '../Shape';
 import Resources from '../../../../util/Resources';
@@ -64,7 +64,7 @@ class Stencil extends Shape {
    *
    * Holds an array of <mxConnectionConstraints> as defined in the shape.
    */
-  constraints: mxConnectionConstraint[] = [];
+  constraints: ConnectionConstraint[] = [];
 
   /**
    * Variable: aspect
@@ -168,7 +168,7 @@ class Stencil extends Shape {
     const perimeter = node.getAttribute('perimeter') == '1';
     const name = node.getAttribute('name');
 
-    return new mxConnectionConstraint(new Point(x, y), perimeter, name);
+    return new ConnectionConstraint(new Point(x, y), perimeter, name);
   }
 
   /**

@@ -13,7 +13,7 @@ import {
 import CellState from "../cell/datatypes/CellState";
 import Cell from "../cell/datatypes/Cell";
 import PanningHandler from "../panning/PanningHandler";
-import mxConnectionHandler from "../connection/mxConnectionHandler";
+import ConnectionHandler from "../connection/ConnectionHandler";
 import Point from "../geometry/Point";
 import {convertPoint, getValue} from "../../util/Utils";
 import {NONE, SHAPE_SWIMLANE} from "../../util/Constants";
@@ -360,7 +360,7 @@ class GraphEvents {
       me.getCell()
     );
     const panningHandler = <PanningHandler>this.panningHandler;
-    const connectionHandler = <mxConnectionHandler>this.connectionHandler;
+    const connectionHandler = <ConnectionHandler>this.connectionHandler;
 
     // LATER: Check if event should be consumed if me is consumed
     this.graph.fireEvent(mxe);
@@ -1083,8 +1083,8 @@ class GraphEvents {
    */
   getPointForEvent(evt: InternalMouseEvent, addOffset: boolean = true): Point {
     const p = convertPoint(this.container, getClientX(evt), getClientY(evt));
-    const s = this.getView().scale;
-    const tr = this.getView().translate;
+    const s = this.graph.view.scale;
+    const tr = this.graph.view.translate;
     const off = addOffset ? this.gridSize / 2 : 0;
 
     p.x = this.snap(p.x / s - tr.x - off);

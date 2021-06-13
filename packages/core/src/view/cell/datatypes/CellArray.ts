@@ -1,5 +1,5 @@
 import Cell from "./Cell";
-import mxDictionary from "../../../util/mxDictionary";
+import Dictionary from "../../../util/Dictionary";
 import mxObjectIdentity from "../../../util/mxObjectIdentity";
 
 class CellArray extends Array<Cell> {
@@ -102,7 +102,7 @@ class CellArray extends Array<Cell> {
    * removed in the cells array to improve performance.
    */
   getTopmostCells(): CellArray {
-    const dict = new mxDictionary();
+    const dict = new Dictionary();
     const tmp = new CellArray();
 
     for (let i = 0; i < this.length; i += 1) {
@@ -135,7 +135,7 @@ class CellArray extends Array<Cell> {
    */
   getParents(): Cell[] {
     const parents = [];
-    const dict = new mxDictionary();
+    const dict = new Dictionary();
 
     for (const cell of this) {
       const parent = cell.getParent();

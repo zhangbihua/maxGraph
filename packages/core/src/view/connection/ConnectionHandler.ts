@@ -23,7 +23,7 @@ import utils from '../../util/Utils';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import ImageShape from '../geometry/shape/node/ImageShape';
 import CellMarker from '../cell/CellMarker';
-import mxConstraintHandler from './mxConstraintHandler';
+import ConstraintHandler from './ConstraintHandler';
 import mxPolyline from '../geometry/shape/edge/mxPolyline';
 import EventSource from '../event/EventSource';
 import Rectangle from '../geometry/Rectangle';
@@ -38,6 +38,7 @@ import {
 import graph from '../Graph';
 import Image from '../image/Image';
 import CellState from '../cell/datatypes/CellState';
+import Graph from '../Graph';
 
 type FactoryMethod = (source: Cell, target: Cell, style?: string) => Cell;
 
@@ -197,8 +198,8 @@ type FactoryMethod = (source: Cell, target: Cell, style?: string) => Cell;
  * optional cell style from the preview as the third argument. It returns
  * the <mxCell> that represents the new edge.
  */
-class mxConnectionHandler extends EventSource {
-  constructor(graph: graph, factoryMethod: FactoryMethod | null = null) {
+class ConnectionHandler extends EventSource {
+  constructor(graph: Graph, factoryMethod: FactoryMethod | null = null) {
     super();
 
     this.graph = graph;
@@ -218,8 +219,7 @@ class mxConnectionHandler extends EventSource {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  // graph: mxGraph;
-  graph: graph;
+  graph: Graph;
 
   /**
    * Variable: factoryMethod
@@ -228,7 +228,6 @@ class mxConnectionHandler extends EventSource {
    * source and target <mxCell> as the first and second argument and returns
    * a new <mxCell> that represents the edge. This is used in <createEdge>.
    */
-  // factoryMethod: (source: mxCell, target: mxCell, style?: string) => mxCell;
   factoryMethod: FactoryMethod | null = null;
 
   /**
@@ -298,7 +297,7 @@ class mxConnectionHandler extends EventSource {
    *
    * Holds the <mxTerminalMarker> used for finding source and target cells.
    */
-  marker: CellMarker;
+  marker?: CellMarker;
 
   /**
    * Variable: constraintHandler
@@ -306,15 +305,14 @@ class mxConnectionHandler extends EventSource {
    * Holds the <mxConstraintHandler> used for drawing and highlighting
    * constraints.
    */
-  constraintHandler: mxConstraintHandler | null = null;
+  constraintHandler: ConstraintHandler | null = null;
 
   /**
    * Variable: error
    *
    * Holds the current validation error while connections are being created.
    */
-  // error: any;
-  error = null;
+  error: any = null;
 
   /**
    * Variable: waypointsEnabled
@@ -364,16 +362,14 @@ class mxConnectionHandler extends EventSource {
    *
    * Holds the change event listener for later removal.
    */
-  // changeHandler: any;
-  changeHandler = null;
+  changeHandler: any = null;
 
   /**
    * Variable: drillHandler
    *
    * Holds the drill event listener for later removal.
    */
-  // drillHandler: any;
-  drillHandler = null;
+  drillHandler: any = null;
 
   /**
    * Variable: mouseDownCounter
@@ -414,8 +410,7 @@ class mxConnectionHandler extends EventSource {
    *
    * Specifies the cursor to be used while the handler is active. Default is null.
    */
-  // cursor: string;
-  cursor = null;
+  cursor: string = null;
 
   /**
    * Variable: insertBeforeSource
@@ -528,11 +523,10 @@ class mxConnectionHandler extends EventSource {
    * be invoked if <mxGraph.container> is assigned after the connection
    * handler has been created.
    */
-  // init(): void;
-  init() {
-    this.graph.addMouseListener(this);
-    this.marker = this.createMarker();
-    this.constraintHandler = new mxConstraintHandler(this.graph);
+  init(): void {
+    this.graph.event.addMouseListener(this);
+    this.marker = <CellMarker>this.createMarker();
+    this.constraintHandler = new ConstraintHandler(this.graph);
 
     // Redraws the icons if the graph changes
     this.changeHandler = (sender) => {
@@ -2342,4 +2336,4 @@ class mxConnectionHandler extends EventSource {
   }
 }
 
-export default mxConnectionHandler;
+export default ConnectionHandler;

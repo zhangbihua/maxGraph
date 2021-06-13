@@ -6,7 +6,7 @@ import CellEditor from "./CellEditor";
 import InternalMouseEvent from "../event/InternalMouseEvent";
 import Graph from "../Graph";
 
-class InPlaceEditing {
+class GraphEditing {
   constructor(graph: Graph) {
     this.graph = graph;
   }
@@ -248,4 +248,4 @@ class InPlaceEditing {
   }
 }
 
-export default InPlaceEditing;
+export default GraphEditing;

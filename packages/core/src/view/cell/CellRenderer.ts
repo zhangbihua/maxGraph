@@ -53,7 +53,7 @@ import StencilRegistry from '../geometry/shape/node/StencilRegistry';
 import InternalEvent from '../event/InternalEvent';
 import mxClient from '../../mxClient';
 import InternalMouseEvent from '../event/InternalMouseEvent';
-import mxDictionary from '../../util/mxDictionary';
+import Dictionary from '../../util/Dictionary';
 import EventObject from '../event/EventObject';
 import Point from '../geometry/Point';
 import Shape from '../geometry/shape/Shape';
@@ -565,7 +565,7 @@ class CellRenderer {
     let dict = null;
 
     if (overlays != null) {
-      dict = new mxDictionary();
+      dict = new Dictionary();
 
       for (let i = 0; i < overlays.length; i += 1) {
         const shape =
@@ -637,7 +637,7 @@ class CellRenderer {
       }
 
       overlay.fireEvent(
-        new EventObject(InternalEvent.CLICK, 'event', evt, 'cell', state.cell)
+        new EventObject(InternalEvent.CLICK, {event: evt, cell: state.cell})
       );
     });
 
@@ -654,7 +654,7 @@ class CellRenderer {
     if (mxClient.IS_TOUCH) {
       InternalEvent.addListener(shape.node, 'touchend', (evt: Event) => {
         overlay.fireEvent(
-          new EventObject(InternalEvent.CLICK, 'event', evt, 'cell', state.cell)
+          new EventObject(InternalEvent.CLICK, {event: evt, cell: state.cell})
         );
       });
     }

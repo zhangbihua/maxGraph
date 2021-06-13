@@ -7,22 +7,25 @@
 import Point from '../../geometry/Point';
 import { CURSOR_TERMINAL_HANDLE } from '../../../util/Constants';
 import Rectangle from '../../geometry/Rectangle';
-import utils from '../../../util/Utils';
-import mxElbowEdgeHandler from './mxElbowEdgeHandler';
+import utils, { contains, setOpacity } from '../../../util/Utils';
+import ElbowEdgeHandler from './ElbowEdgeHandler';
+import CellState from '../datatypes/CellState';
+import Cell from '../datatypes/Cell';
 
-class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
-  constructor(state) {
+class EdgeSegmentHandler extends ElbowEdgeHandler {
+  constructor(state: CellState) {
     // WARNING: should be super of mxEdgeHandler!
     super(state);
   }
+
+  points: Point[] | null = null;
 
   /**
    * Function: getCurrentPoints
    *
    * Returns the current absolute points.
    */
-  // getCurrentPoints(): mxPoint[];
-  getCurrentPoints() {
+  getCurrentPoints(): Point[] {
     let pts = this.state.absolutePoints;
 
     if (pts != null) {
@@ -57,8 +60,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Updates the given preview state taking into account the state of the constraint handler.
    */
-  // getPreviewPoints(point: mxPoint): mxPoint[];
-  getPreviewPoints(point) {
+  getPreviewPoints(point: Point): Point[] {
     if (this.isSource || this.isTarget) {
       return super.getPreviewPoints(point);
     }
@@ -100,8 +102,8 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
       const y = result[0].y * scale + tr.y;
 
       if (
-        (source != null && utils.contains(source, x, y)) ||
-        (target != null && utils.contains(target, x, y))
+        (source != null && contains(source, x, y)) ||
+        (target != null && contains(target, x, y))
       ) {
         result = [point, point];
       }
@@ -115,8 +117,11 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Overridden to perform optimization of the edge style result.
    */
-  // updatePreviewState(edge: mxCell, point: mxPoint, terminalState: mxCellState, me: mxMouseEvent): void;
-  updatePreviewState(edge, point, terminalState, me) {
+  updatePreviewState(edge: Cell,
+                     point: Point,
+                     terminalState: CellState,
+                     me: MouseEvent): void {
+
     super.updatePreviewState(edge, point, terminalState, me);
 
     // Checks and corrects preview by running edge style again
@@ -186,10 +191,10 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
         let ye = view.getRoutingCenterY(target) / scale - tr.y;
 
         // Use fixed connection point y-coordinate if one exists
-        const tc = this.graph.getConnectionConstraint(edge, target, false);
+        const tc = this.graph.connection.getConnectionConstraint(edge, target, false);
 
         if (tc) {
-          const pt = this.graph.getConnectionPoint(target, tc);
+          const pt = this.graph.connection.getConnectionPoint(target, tc);
 
           if (pt != null) {
             this.convertPoint(pt, false);
@@ -197,7 +202,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
           }
         }
 
-        result = [new point(point.x, y0), new point(point.x, ye)];
+        result = [new Point(point.x, y0), new Point(point.x, ye)];
       }
 
       this.points = result;
@@ -212,8 +217,12 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
   /**
    * Overriden to merge edge segments.
    */
-  // connect(edge: mxCell, terminal: mxCell, isSource: boolean, isClone: boolean, me: mxMouseEvent): mxCell;
-  connect(edge, terminal, isSource, isClone, me) {
+  connect(edge: Cell,
+          terminal: Cell,
+          isSource: boolean,
+          isClone: boolean,
+          me: MouseEvent): Cell {
+
     const model = this.graph.getModel();
     let geo = edge.getGeometry();
     let result = null;
@@ -242,8 +251,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
       }
     }
 
-    model.beginUpdate();
-    try {
+    this.graph.batchUpdate(() => {
       if (result != null) {
         geo = edge.getGeometry();
 
@@ -254,11 +262,8 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
           model.setGeometry(edge, geo);
         }
       }
-
       edge = super.connect(edge, terminal, isSource, isClone, me);
-    } finally {
-      model.endUpdate();
-    }
+    });
 
     return edge;
   }
@@ -268,8 +273,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Returns no tooltips.
    */
-  // getTooltipForNode(node: any): string;
-  getTooltipForNode(node) {
+  getTooltipForNode(node: any): string {
     return null;
   }
 
@@ -279,7 +283,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    * Adds custom bends for the center of each segment.
    */
   // start(x: number, y: number, index: number): void;
-  start(x, y, index) {
+  start(x: number, y: number, index: number): void {
     super.start(x, y, index);
 
     if (
@@ -288,7 +292,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
       !this.isSource &&
       !this.isTarget
     ) {
-      utils.setOpacity(this.bends[index].node, 100);
+      setOpacity(this.bends[index].node, 100);
     }
   }
 
@@ -343,8 +347,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Overridden to invoke <refresh> before the redraw.
    */
-  // redraw(): void;
-  redraw() {
+  redraw(): void {
     this.refresh();
     super.redraw();
   }
@@ -354,8 +357,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
    *
    * Updates the position of the custom bends.
    */
-  // redrawInnerBends(p0: mxPoint, pe: mxPoint): void;
-  redrawInnerBends(p0, pe) {
+  redrawInnerBends(p0: Point, pe: Point): void {
     if (this.graph.isCellBendable(this.state.cell)) {
       const pts = this.getCurrentPoints();
 
@@ -405,12 +407,12 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
         }
 
         if (straight) {
-          utils.setOpacity(this.bends[1].node, this.virtualBendOpacity);
-          utils.setOpacity(this.bends[3].node, this.virtualBendOpacity);
+          setOpacity(this.bends[1].node, this.virtualBendOpacity);
+          setOpacity(this.bends[3].node, this.virtualBendOpacity);
         }
       }
     }
   }
 }
 
-export default mxEdgeSegmentHandler;
+export default EdgeSegmentHandler;

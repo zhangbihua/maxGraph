@@ -7,10 +7,10 @@ import {
 import Geometry from "../../geometry/Geometry";
 import EventObject from "../../event/EventObject";
 import InternalEvent from "../../event/InternalEvent";
-import mxDictionary from "../../../util/mxDictionary";
+import Dictionary from "../../../util/Dictionary";
 import Graph from "../../Graph";
 
-class Edge {
+class GraphEdge {
   constructor(graph: Graph) {
     this.graph = graph;
   }
@@ -78,6 +78,75 @@ class Edge {
   edgeLabelsMovable: boolean = true;
 
   /*****************************************************************************
+   * Group: Graph Behaviour
+   *****************************************************************************/
+
+  /**
+   * Returns {@link edgeLabelsMovable}.
+   */
+  isEdgeLabelsMovable(): boolean {
+    return this.edgeLabelsMovable;
+  }
+
+  /**
+   * Sets {@link edgeLabelsMovable}.
+   */
+  setEdgeLabelsMovable(value: boolean): void {
+    this.edgeLabelsMovable = value;
+  }
+
+  /**
+   * Specifies if dangling edges are allowed, that is, if edges are allowed
+   * that do not have a source and/or target terminal defined.
+   *
+   * @param value Boolean indicating if dangling edges are allowed.
+   */
+  setAllowDanglingEdges(value: boolean): void {
+    this.allowDanglingEdges = value;
+  }
+
+  /**
+   * Returns {@link allowDanglingEdges} as a boolean.
+   */
+  isAllowDanglingEdges(): boolean {
+    return this.allowDanglingEdges;
+  }
+
+  /**
+   * Specifies if edges should be connectable.
+   *
+   * @param value Boolean indicating if edges should be connectable.
+   */
+  setConnectableEdges(value: boolean): void {
+    this.connectableEdges = value;
+  }
+
+  /**
+   * Returns {@link connectableEdges} as a boolean.
+   */
+  isConnectableEdges(): boolean {
+    return this.connectableEdges;
+  }
+
+  /**
+   * Specifies if edges should be inserted when cloned but not valid wrt.
+   * {@link getEdgeValidationError}. If false such edges will be silently ignored.
+   *
+   * @param value Boolean indicating if cloned invalid edges should be
+   * inserted into the graph or ignored.
+   */
+  setCloneInvalidEdges(value: boolean): void {
+    this.cloneInvalidEdges = value;
+  }
+
+  /**
+   * Returns {@link cloneInvalidEdges} as a boolean.
+   */
+  isCloneInvalidEdges(): boolean {
+    return this.cloneInvalidEdges;
+  }
+
+  /*****************************************************************************
    * Group: Cell alignment and orientation
    *****************************************************************************/
 
@@ -109,22 +178,19 @@ class Edge {
   // flipEdge(edge: mxCell): mxCell;
   flipEdge(edge: Cell): Cell {
     if (this.alternateEdgeStyle != null) {
-      this.getModel().beginUpdate();
-      try {
+      this.graph.batchUpdate(() => {
         const style = edge.getStyle();
 
         if (style == null || style.length === 0) {
-          this.getModel().setStyle(edge, this.alternateEdgeStyle);
+          this.graph.model.setStyle(edge, this.alternateEdgeStyle);
         } else {
-          this.getModel().setStyle(edge, null);
+          this.graph.model.setStyle(edge, null);
         }
 
         // Removes all existing control points
         this.resetEdge(edge);
-        this.fireEvent(new EventObject(InternalEvent.FLIP_EDGE, 'edge', edge));
-      } finally {
-        this.getModel().endUpdate();
-      }
+        this.graph.fireEvent(new EventObject(InternalEvent.FLIP_EDGE, 'edge', edge));
+      });
     }
     return edge;
   }
@@ -507,7 +573,7 @@ class Edge {
   resetEdges(cells: CellArray): void {
     if (cells != null) {
       // Prepares faster cells lookup
-      const dict = new mxDictionary();
+      const dict = new Dictionary();
 
       for (let i = 0; i < cells.length; i += 1) {
         dict.put(cells[i], true);
@@ -562,75 +628,6 @@ class Edge {
     }
     return edge;
   }
-
-  /*****************************************************************************
-   * Group: Graph Behaviour
-   *****************************************************************************/
-
-  /**
-   * Returns {@link edgeLabelsMovable}.
-   */
-  isEdgeLabelsMovable(): boolean {
-    return this.edgeLabelsMovable;
-  }
-
-  /**
-   * Sets {@link edgeLabelsMovable}.
-   */
-  setEdgeLabelsMovable(value: boolean): void {
-    this.edgeLabelsMovable = value;
-  }
-
-  /**
-   * Specifies if dangling edges are allowed, that is, if edges are allowed
-   * that do not have a source and/or target terminal defined.
-   *
-   * @param value Boolean indicating if dangling edges are allowed.
-   */
-  setAllowDanglingEdges(value: boolean): void {
-    this.allowDanglingEdges = value;
-  }
-
-  /**
-   * Returns {@link allowDanglingEdges} as a boolean.
-   */
-  isAllowDanglingEdges(): boolean {
-    return this.allowDanglingEdges;
-  }
-
-  /**
-   * Specifies if edges should be connectable.
-   *
-   * @param value Boolean indicating if edges should be connectable.
-   */
-  setConnectableEdges(value: boolean): void {
-    this.connectableEdges = value;
-  }
-
-  /**
-   * Returns {@link connectableEdges} as a boolean.
-   */
-  isConnectableEdges(): boolean {
-    return this.connectableEdges;
-  }
-
-  /**
-   * Specifies if edges should be inserted when cloned but not valid wrt.
-   * {@link getEdgeValidationError}. If false such edges will be silently ignored.
-   *
-   * @param value Boolean indicating if cloned invalid edges should be
-   * inserted into the graph or ignored.
-   */
-  setCloneInvalidEdges(value: boolean): void {
-    this.cloneInvalidEdges = value;
-  }
-
-  /**
-   * Returns {@link cloneInvalidEdges} as a boolean.
-   */
-  isCloneInvalidEdges(): boolean {
-    return this.cloneInvalidEdges;
-  }
 }
 
-export default Edge;
+export default GraphEdge;

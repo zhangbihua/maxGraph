@@ -7,7 +7,7 @@
 
 import Point from '../geometry/Point';
 import Rectangle from '../geometry/Rectangle';
-import mxDictionary from '../../util/mxDictionary';
+import Dictionary from '../../util/Dictionary';
 import EventSource from '../event/EventSource';
 import EventObject from '../event/EventObject';
 import RectangleShape from '../geometry/shape/node/RectangleShape';
@@ -45,7 +45,7 @@ import CurrentRootChange from './CurrentRootChange';
 import Model from '../model/Model';
 import Shape from '../geometry/shape/Shape';
 import Geometry from '../geometry/Geometry';
-import mxConnectionConstraint from '../connection/mxConnectionConstraint';
+import ConnectionConstraint from '../connection/ConnectionConstraint';
 import PopupMenuHandler from '../popups_menus/PopupMenuHandler';
 import {
   getClientX,
@@ -178,7 +178,7 @@ class GraphView extends EventSource {
    */
   translate = new Point();
 
-  states = new mxDictionary<CellState>();
+  states = new Dictionary<CellState>();
 
   /**
    * Specifies if the style should be updated in each validation step. If this
@@ -319,7 +319,7 @@ class GraphView extends EventSource {
    * Sets {@link states}.
    */
   // setStates(value: mxDictionary<mxCellState>): void;
-  setStates(value: mxDictionary): void {
+  setStates(value: Dictionary): void {
     this.states = value;
   }
 
@@ -1240,7 +1240,7 @@ class GraphView extends EventSource {
     edge: CellState,
     terminal: CellState,
     source: boolean,
-    constraint: mxConnectionConstraint
+    constraint: ConnectionConstraint
   ) {
     edge.setAbsoluteTerminalPoint(
       <Point>this.getFixedTerminalPoint(edge, terminal, source, constraint),
@@ -1264,7 +1264,7 @@ class GraphView extends EventSource {
     edge: CellState,
     terminal: CellState,
     source: boolean,
-    constraint: mxConnectionConstraint
+    constraint: ConnectionConstraint
   ): Point | null {
     let pt = null;
 
@@ -2155,7 +2155,7 @@ class GraphView extends EventSource {
    * this returns {@link states}.
    */
   // getCellStates(cells: mxCellArray): mxCellState[];
-  getCellStates(cells: CellArray | null): CellState[] | mxDictionary | null {
+  getCellStates(cells: CellArray | null): CellState[] | Dictionary | null {
     if (cells == null) {
       return this.states;
     }

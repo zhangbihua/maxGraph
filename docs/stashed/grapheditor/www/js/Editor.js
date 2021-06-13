@@ -2591,8 +2591,8 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 	};
 
 	// Overrides to ignore hotspot only for target terminal
-	let mxConnectionHandlerCreateMarker = mxConnectionHandler.prototype.createMarker;
-	mxConnectionHandler.prototype.createMarker = function()
+	let mxConnectionHandlerCreateMarker = ConnectionHandler.prototype.createMarker;
+	ConnectionHandler.prototype.createMarker = function()
 	{
 		let marker = mxConnectionHandlerCreateMarker.apply(this, arguments);
 		

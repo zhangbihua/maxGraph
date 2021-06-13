@@ -8,7 +8,7 @@
 import mxGraphLayout from '../mxGraphLayout';
 import { DIRECTION_NORTH } from '../../../../util/Constants';
 import mxHierarchicalEdgeStyle from './mxHierarchicalEdgeStyle';
-import mxDictionary from '../../../../util/mxDictionary';
+import Dictionary from '../../../../util/Dictionary';
 import Rectangle from '../../../geometry/Rectangle';
 import mxSwimlaneModel from './model/mxSwimlaneModel';
 import mxObjectIdentity from '../../../../util/mxObjectIdentity';
@@ -223,9 +223,9 @@ class mxSwimlaneLayout extends mxGraphLayout {
   execute(parent, swimlanes) {
     this.parent = parent;
     const { model } = this.graph;
-    this.edgesCache = new mxDictionary();
-    this.edgeSourceTermCache = new mxDictionary();
-    this.edgesTargetTermCache = new mxDictionary();
+    this.edgesCache = new Dictionary();
+    this.edgeSourceTermCache = new Dictionary();
+    this.edgesTargetTermCache = new Dictionary();
 
     // If the roots are set and the parent is set, only
     // use the roots that are some dependent of the that

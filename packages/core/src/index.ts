@@ -20,20 +20,20 @@ import mxEditor from './editor/mxEditor';
 import mxCellHighlight from './view/selection/mxCellHighlight';
 import CellMarker from './view/cell/CellMarker';
 import mxCellTracker from './view/event/mxCellTracker';
-import mxConnectionHandler from './view/connection/mxConnectionHandler';
-import mxConstraintHandler from './view/connection/mxConstraintHandler';
-import mxEdgeHandler from './view/cell/edge/mxEdgeHandler';
-import mxEdgeSegmentHandler from './view/cell/edge/mxEdgeSegmentHandler';
-import mxElbowEdgeHandler from './view/cell/edge/mxElbowEdgeHandler';
+import ConnectionHandler from './view/connection/ConnectionHandler';
+import ConstraintHandler from './view/connection/ConstraintHandler';
+import EdgeHandler from './view/cell/edge/EdgeHandler';
+import EdgeSegmentHandler from './view/cell/edge/EdgeSegmentHandler';
+import ElbowEdgeHandler from './view/cell/edge/ElbowEdgeHandler';
 import GraphHandler from './view/GraphHandler';
-import mxHandle from './view/cell/edge/mxHandle';
+import VertexHandle from './view/cell/vertex/VertexHandle';
 import mxKeyHandler from './view/event/mxKeyHandler';
 import PanningHandler from './view/panning/PanningHandler';
 import PopupMenuHandler from './view/popups_menus/PopupMenuHandler';
-import mxRubberband from './view/selection/mxRubberband';
+import RubberBand from './view/selection/RubberBand';
 import mxSelectionCellsHandler from './view/selection/mxSelectionCellsHandler';
 import TooltipHandler from './view/tooltip/TooltipHandler';
-import mxVertexHandler from './view/cell/vertex/mxVertexHandler';
+import VertexHandler from './view/cell/vertex/VertexHandler';
 
 import mxCircleLayout from './view/layout/layout/mxCircleLayout';
 import mxCompactTreeLayout from './view/layout/layout/mxCompactTreeLayout';
@@ -123,7 +123,7 @@ import mxAbstractCanvas2D from './util/canvas/mxAbstractCanvas2D';
 import mxSvgCanvas2D from './util/canvas/mxSvgCanvas2D';
 import mxXmlCanvas2D from './util/canvas/mxXmlCanvas2D';
 
-import mxDictionary from './util/mxDictionary';
+import Dictionary from './util/Dictionary';
 import Geometry from './view/geometry/Geometry';
 import mxObjectIdentity from './util/mxObjectIdentity';
 import Point from './view/geometry/Point';
@@ -173,7 +173,7 @@ import CellState from './view/cell/datatypes/CellState';
 import CellStatePreview from './view/cell/CellStatePreview';
 import TemporaryCellStates from './view/cell/TemporaryCellStates';
 
-import mxConnectionConstraint from './view/connection/mxConnectionConstraint';
+import ConnectionConstraint from './view/connection/ConnectionConstraint';
 import Multiplicity from './view/validation/Multiplicity';
 
 import graph from './view/Graph';
@@ -191,7 +191,7 @@ export default {
   mxClient,
   mxLog,
   mxObjectIdentity,
-  mxDictionary,
+  mxDictionary: Dictionary,
   mxResources: Resources,
   mxPoint: Point,
   mxRectangle: Rectangle,
@@ -290,20 +290,20 @@ export default {
   mxSwimlaneManager: SwimlaneManager,
   mxTemporaryCellStates: TemporaryCellStates,
   mxCellStatePreview: CellStatePreview,
-  mxConnectionConstraint,
+  mxConnectionConstraint: ConnectionConstraint,
   mxGraphHandler: GraphHandler,
   mxPanningHandler: PanningHandler,
   mxPopupMenuHandler: PopupMenuHandler,
   mxCellMarker: CellMarker,
   mxSelectionCellsHandler,
-  mxConnectionHandler,
-  mxConstraintHandler,
-  mxRubberband,
-  mxHandle,
-  mxVertexHandler,
-  mxEdgeHandler,
-  mxElbowEdgeHandler,
-  mxEdgeSegmentHandler,
+  mxConnectionHandler: ConnectionHandler,
+  mxConstraintHandler: ConstraintHandler,
+  mxRubberband: RubberBand,
+  mxHandle: VertexHandle,
+  mxVertexHandler: VertexHandler,
+  mxEdgeHandler: EdgeHandler,
+  mxElbowEdgeHandler: ElbowEdgeHandler,
+  mxEdgeSegmentHandler: EdgeSegmentHandler,
   mxKeyHandler,
   mxTooltipHandler: TooltipHandler,
   mxCellTracker,

@@ -26,9 +26,9 @@ import { isShiftDown } from '../../util/EventUtils';
  * showing fixed points when the mouse is over a vertex and handles constraints
  * to establish new connections.
  *
- * @class mxConstraintHandler
+ * @class ConstraintHandler
  */
-class mxConstraintHandler {
+class ConstraintHandler {
   constructor(graph) {
     this.graph = graph;
 

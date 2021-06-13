@@ -1,6 +1,6 @@
 import CellArray from "../cell/datatypes/CellArray";
 import Cell from "../cell/datatypes/Cell";
-import mxDictionary from "../../util/mxDictionary";
+import Dictionary from "../../util/Dictionary";
 
 class GraphTerminal {
   /*****************************************************************************
@@ -47,7 +47,7 @@ class GraphTerminal {
     const terminals = new CellArray();
 
     // Fast lookup to avoid duplicates in terminals array
-    const dict = new mxDictionary();
+    const dict = new Dictionary();
 
     for (let i = 0; i < edges.length; i += 1) {
       const state = this.view.getState(edges[i]);

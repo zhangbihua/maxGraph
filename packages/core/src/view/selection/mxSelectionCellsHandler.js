@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import EventSource from '../event/EventSource';
-import mxDictionary from '../../util/mxDictionary';
+import Dictionary from '../../util/Dictionary';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import utils from '../../util/Utils';
@@ -37,7 +37,7 @@ class mxSelectionCellsHandler extends EventSource {
     super();
 
     this.graph = graph;
-    this.handlers = new mxDictionary();
+    this.handlers = new Dictionary();
     this.graph.addMouseListener(this);
 
     this.refreshHandler = (sender, evt) => {
@@ -46,9 +46,7 @@ class mxSelectionCellsHandler extends EventSource {
       }
     };
 
-    this.graph
-      .getSelectionModel()
-      .addListener(InternalEvent.CHANGE, this.refreshHandler);
+    this.graph.getSelectionModel().addListener(InternalEvent.CHANGE, this.refreshHandler);
     this.graph.getModel().addListener(InternalEvent.CHANGE, this.refreshHandler);
     this.graph.getView().addListener(InternalEvent.SCALE, this.refreshHandler);
     this.graph.getView().addListener(InternalEvent.TRANSLATE, this.refreshHandler);
@@ -168,7 +166,7 @@ class mxSelectionCellsHandler extends EventSource {
   refresh() {
     // Removes all existing handlers
     const oldHandlers = this.handlers;
-    this.handlers = new mxDictionary();
+    this.handlers = new Dictionary();
 
     // Creates handles for all selection cells
     const tmp = utils.sortCells(this.getHandledSelectionCells(), false);
@@ -200,14 +198,10 @@ class mxSelectionCellsHandler extends EventSource {
     }
 
     // Destroys unused handlers
-    oldHandlers.visit(
-      (key, handler) => {
-        this.fireEvent(
-          new EventObject(InternalEvent.REMOVE, 'state', handler.state)
-        );
-        handler.destroy();
-      }
-    );
+    oldHandlers.visit((key, handler) => {
+      this.fireEvent(new EventObject(InternalEvent.REMOVE, 'state', handler.state));
+      handler.destroy();
+    });
 
     // Creates new handlers and updates parent highlight on existing handlers
     for (let i = 0; i < tmp.length; i += 1) {

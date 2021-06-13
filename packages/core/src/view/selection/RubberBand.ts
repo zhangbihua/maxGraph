@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2016, Gaudenz Alder
  */
 
-import utils from '../../util/Utils';
+import utils, { getOffset, getScrollOrigin } from '../../util/Utils';
 import InternalEvent from '../event/InternalEvent';
 import Point from '../geometry/Point';
 import InternalMouseEvent from '../event/InternalMouseEvent';
@@ -11,61 +11,65 @@ import mxClient from '../../mxClient';
 import Rectangle from '../geometry/Rectangle';
 import { isAltDown, isMultiTouchEvent } from '../../util/EventUtils';
 import { clearSelection } from '../../util/DomUtils';
+import Graph from '../Graph';
 
 /**
  * Event handler that selects rectangular regions.
  * This is not built-into [mxGraph].
  * To enable rubberband selection in a graph, use the following code.
  */
-class mxRubberband {
-  constructor(graph) {
-    if (graph != null) {
-      this.graph = graph;
-      this.graph.addMouseListener(this);
+class RubberBand {
+  forceRubberbandHandler: Function;
+  panHandler: Function;
+  gestureHandler: Function;
+  graph: Graph;
+  first: Point | null = null;
+  destroyed: boolean = false;
+  dragHandler?: Function;
+  dropHandler?: Function;
 
-      // Handles force rubberband event
-      this.forceRubberbandHandler = (sender, evt) => {
-        const evtName = evt.getProperty('eventName');
-        const me = evt.getProperty('event');
+  constructor(graph: Graph) {
+    this.graph = graph;
+    this.graph.addMouseListener(this);
 
-        if (evtName === InternalEvent.MOUSE_DOWN && this.isForceRubberbandEvent(me)) {
-          const offset = utils.getOffset(this.graph.container);
-          const origin = utils.getScrollOrigin(this.graph.container);
-          origin.x -= offset.x;
-          origin.y -= offset.y;
-          this.start(me.getX() + origin.x, me.getY() + origin.y);
-          me.consume(false);
-        }
-      };
+    // Handles force rubberband event
+    this.forceRubberbandHandler = (sender, evt) => {
+      const evtName = evt.getProperty('eventName');
+      const me = evt.getProperty('event');
 
-      this.graph.addListener(
-        InternalEvent.FIRE_MOUSE_EVENT,
-        this.forceRubberbandHandler
-      );
+      if (evtName === InternalEvent.MOUSE_DOWN && this.isForceRubberbandEvent(me)) {
+        const offset = getOffset(this.graph.container);
+        const origin = getScrollOrigin(this.graph.container);
+        origin.x -= offset.x;
+        origin.y -= offset.y;
+        this.start(me.getX() + origin.x, me.getY() + origin.y);
+        me.consume(false);
+      }
+    };
 
-      // Repaints the marquee after autoscroll
-      this.panHandler = () => {
-        this.repaint();
-      };
+    this.graph.addListener(InternalEvent.FIRE_MOUSE_EVENT, this.forceRubberbandHandler);
 
-      this.graph.addListener(InternalEvent.PAN, this.panHandler);
+    // Repaints the marquee after autoscroll
+    this.panHandler = () => {
+      this.repaint();
+    };
 
-      // Does not show menu if any touch gestures take place after the trigger
-      this.gestureHandler = (sender, eo) => {
-        if (this.first != null) {
-          this.reset();
-        }
-      };
+    this.graph.addListener(InternalEvent.PAN, this.panHandler);
 
-      this.graph.addListener(InternalEvent.GESTURE, this.gestureHandler);
-    }
+    // Does not show menu if any touch gestures take place after the trigger
+    this.gestureHandler = (sender, eo) => {
+      if (this.first != null) {
+        this.reset();
+      }
+    };
+
+    this.graph.addListener(InternalEvent.GESTURE, this.gestureHandler);
   }
 
   /**
    * Specifies the default opacity to be used for the rubberband div.  Default is 20.
    */
-  // defaultOpacity: number;
-  defaultOpacity = 20;
+  defaultOpacity: number = 20;
 
   /**
    * Variable: enabled
@@ -105,14 +109,12 @@ class mxRubberband {
   /**
    * Optional fade out effect.  Default is false.
    */
-  // fadeOut: boolean;
-  fadeOut = false;
+  fadeOut: boolean = false;
 
   /**
    * Creates the rubberband selection shape.
    */
-  // isEnabled(): boolean;
-  isEnabled() {
+  isEnabled(): boolean {
     return this.enabled;
   }
 
@@ -122,7 +124,7 @@ class mxRubberband {
    * Enables or disables event handling. This implementation updates
    * <enabled>.
    */
-  setEnabled(enabled) {
+  setEnabled(enabled: boolean) {
     this.enabled = enabled;
   }
 
@@ -132,7 +134,7 @@ class mxRubberband {
    * Returns true if the given <mxMouseEvent> should start rubberband selection.
    * This implementation returns true if the alt key is pressed.
    */
-  isForceRubberbandEvent(me) {
+  isForceRubberbandEvent(me: InternalMouseEvent) {
     return isAltDown(me.getEvent());
   }
 
@@ -143,7 +145,8 @@ class mxRubberband {
    * event all subsequent events of the gesture are redirected to this
    * handler.
    */
-  mouseDown(sender, me) {
+  mouseDown(sender: any,
+            me: InternalMouseEvent): void {
     if (
       !me.isConsumed() &&
       this.isEnabled() &&
@@ -169,8 +172,7 @@ class mxRubberband {
   /**
    * Creates the rubberband selection shape.
    */
-  // start(x: number, y: number): void;
-  start(x, y) {
+  start(x: number, y: number): void {
     this.first = new Point(x, y);
 
     const { container } = this.graph;
@@ -185,11 +187,11 @@ class mxRubberband {
       return me;
     }
 
-    this.dragHandler = evt => {
+    this.dragHandler = (evt) => {
       this.mouseMove(this.graph, createMouseEvent(evt));
     };
 
-    this.dropHandler = evt => {
+    this.dropHandler = (evt) => {
       this.mouseUp(this.graph, createMouseEvent(evt));
     };
 
@@ -209,10 +211,12 @@ class mxRubberband {
    *
    * Handles the event by updating therubberband selection.
    */
-  mouseMove(sender, me) {
+  mouseMove(sender: any,
+            me: InternalMouseEvent): void {
+
     if (!me.isConsumed() && this.first != null) {
-      const origin = utils.getScrollOrigin(this.graph.container);
-      const offset = utils.getOffset(this.graph.container);
+      const origin = getScrollOrigin(this.graph.container);
+      const offset = getOffset(this.graph.container);
       origin.x -= offset.x;
       origin.y -= offset.y;
       const x = me.getX() + origin.x;
@@ -239,8 +243,7 @@ class mxRubberband {
   /**
    * Creates the rubberband selection shape.
    */
-  // createShape(): HTMLElement;
-  createShape() {
+  createShape(): HTMLElement {
     if (this.sharedDiv == null) {
       this.sharedDiv = document.createElement('div');
       this.sharedDiv.className = 'mxRubberband';
@@ -262,7 +265,8 @@ class mxRubberband {
    *
    * Returns true if this handler is active.
    */
-  isActive(sender, me) {
+  isActive(sender: any,
+           me: InternalMouseEvent): boolean {
     return this.div != null && this.div.style.display !== 'none';
   }
 
@@ -272,7 +276,9 @@ class mxRubberband {
    * Handles the event by selecting the region of the rubberband using
    * <mxGraph.selectRegion>.
    */
-  mouseUp(sender, me) {
+  mouseUp(sender: any,
+          me: InternalMouseEvent): void {
+
     const active = this.isActive();
     this.reset();
 
@@ -388,4 +394,4 @@ class mxRubberband {
   }
 }
 
-export default mxRubberband;
+export default RubberBand;

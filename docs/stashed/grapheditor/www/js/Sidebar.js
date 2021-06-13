@@ -582,7 +582,7 @@ Sidebar.prototype.searchEntries = function(searchTerms, count, page, success, er
 	if (this.taglist != null && searchTerms != null)
 	{
 		let tmp = searchTerms.toLowerCase().split(' ');
-		let dict = new mxDictionary();
+		let dict = new Dictionary();
 		let max = (page + 1) * count;
 		let results = [];
 		let index = 0;
@@ -592,7 +592,7 @@ Sidebar.prototype.searchEntries = function(searchTerms, count, page, success, er
 			if (tmp[i].length > 0)
 			{
 				let entry = this.taglist[tmp[i]];
-				let tmpDict = new mxDictionary();
+				let tmpDict = new Dictionary();
 				
 				if (entry != null)
 				{

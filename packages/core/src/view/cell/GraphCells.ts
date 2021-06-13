@@ -35,7 +35,7 @@ import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import ImageBundle from '../image/ImageBundle';
 import Rectangle from '../geometry/Rectangle';
-import mxDictionary from '../../util/mxDictionary';
+import Dictionary from '../../util/Dictionary';
 import Point from '../geometry/Point';
 import Label from '../geometry/shape/Label';
 import { htmlEntities } from '../../util/StringUtils';
@@ -541,7 +541,7 @@ class GraphCells {
     let clones;
 
     // Creates a dictionary for fast lookups
-    const dict = new mxDictionary();
+    const dict = new Dictionary();
     const tmp = [];
 
     for (const cell of cells) {
@@ -733,7 +733,7 @@ class GraphCells {
       const o1 = parentState != null ? parentState.origin : null;
       const zero = new Point(0, 0);
 
-      for (const cell of cells) {
+      cells.forEach((cell, i) => {
         if (cell == null) {
           index--;
         } else {
@@ -803,7 +803,7 @@ class GraphCells {
             this.cellConnected(cell, target, false);
           }
         }
-      }
+      });
 
       this.graph.fireEvent(
         new EventObject(InternalEvent.CELLS_ADDED, {
@@ -869,7 +869,7 @@ class GraphCells {
       // Removes edges that are currently not
       // visible as those cannot be updated
       const edges = <CellArray>this.getDeletableCells(this.graph.edge.getAllEdges(cells));
-      const dict = new mxDictionary();
+      const dict = new Dictionary();
 
       for (const cell of cells) {
         dict.put(cell, true);
@@ -906,7 +906,7 @@ class GraphCells {
 
       this.graph.batchUpdate(() => {
         // Creates hashtable for faster lookup
-        const dict = new mxDictionary();
+        const dict = new Dictionary();
 
         for (const cell of cells) {
           dict.put(cell, true);
@@ -1601,7 +1601,7 @@ class GraphCells {
       this.graph.batchUpdate(() => {
         // Faster cell lookups to remove relative edge labels with selected
         // terminals to avoid explicit and implicit move at same time
-        const dict = new mxDictionary();
+        const dict = new Dictionary();
 
         for (const cell of cells) {
           dict.put(cell, true);

@@ -9,7 +9,7 @@
  */
 
 import Rectangle from '../geometry/Rectangle';
-import mxDictionary from '../../util/mxDictionary';
+import Dictionary from '../../util/Dictionary';
 import GraphView from '../view/GraphView';
 import Cell from './datatypes/Cell';
 import CellState from './datatypes/CellState';
@@ -98,14 +98,14 @@ class TemporaryCellStates {
    * @default 0
    */
   // view: number;
-  view: mxGraphView | null = null;
+  view: GraphView | null = null;
 
   /**
    * Holds the height of the rectangle.
    * @default 0
    */
   // oldStates: number;
-  oldStates: mxDictionary | null = null;
+  oldStates: Dictionary | null = null;
 
   /**
    * Holds the height of the rectangle.
@@ -118,7 +118,6 @@ class TemporaryCellStates {
    * Holds the height of the rectangle.
    * @default 0
    */
-  // oldScale: number;
   oldScale: number = 0;
 
   /**
@@ -127,7 +126,7 @@ class TemporaryCellStates {
    */
   // destroy(): void;
   destroy(): void {
-    const view = <mxGraphView>this.view;
+    const view = <GraphView>this.view;
     view.setScale(this.oldScale);
     view.setStates(this.oldStates);
     view.setGraphBounds(<Rectangle>this.oldBounds);

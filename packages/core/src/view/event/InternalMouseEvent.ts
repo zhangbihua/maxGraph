@@ -6,6 +6,9 @@
  */
 import {getClientX, getClientY, getSource, isMouseEvent, isPopupTrigger} from '../../util/EventUtils';
 import { isAncestorNode } from '../../util/DomUtils';
+import CellState from '../cell/datatypes/CellState';
+import Shape from '../geometry/shape/Shape';
+import Cell from '../cell/datatypes/Cell';
 
 /**
  * Class: mxMouseEvent
@@ -42,7 +45,7 @@ import { isAncestorNode } from '../../util/DomUtils';
  *
  */
 class InternalMouseEvent {
-  constructor(evt, state) {
+  constructor(evt: MouseEvent, state?: CellState) {
     this.evt = evt;
     this.state = state;
     this.sourceState = state;
@@ -53,16 +56,14 @@ class InternalMouseEvent {
    *
    * Holds the consumed state of this event.
    */
-  // consumed: boolean;
-  consumed = false;
+  consumed: boolean = false;
 
   /**
    * Variable: evt
    *
    * Holds the inner event object.
    */
-  // evt: Event;
-  evt = null;
+  evt: MouseEvent;
 
   /**
    * Variable: graphX
@@ -70,8 +71,7 @@ class InternalMouseEvent {
    * Holds the x-coordinate of the event in the graph. This value is set in
    * <mxGraph.fireMouseEvent>.
    */
-  // graphX: number;
-  graphX = null;
+  graphX?: number;
 
   /**
    * Variable: graphY
@@ -79,16 +79,14 @@ class InternalMouseEvent {
    * Holds the y-coordinate of the event in the graph. This value is set in
    * <mxGraph.fireMouseEvent>.
    */
-  // graphY: number;
-  graphY = null;
+  graphY?: number;
 
   /**
    * Variable: state
    *
    * Holds the optional <mxCellState> associated with this event.
    */
-  // state: mxCellState;
-  state = null;
+  state?: CellState;
 
   /**
    * Variable: sourceState
@@ -96,16 +94,14 @@ class InternalMouseEvent {
    * Holds the <mxCellState> that was passed to the constructor. This can be
    * different from <state> depending on the result of <mxGraph.getEventState>.
    */
-  // sourceState: mxCellState;
-  sourceState = null;
+  sourceState?: CellState;
 
   /**
    * Function: getEvent
    *
    * Returns <evt>.
    */
-  // getEvent(): MouseEvent;
-  getEvent() {
+  getEvent(): MouseEvent {
     return this.evt;
   }
 
@@ -114,8 +110,7 @@ class InternalMouseEvent {
    *
    * Returns the target DOM element using <mxEvent.getSource> for <evt>.
    */
-  // getSource(): Element;
-  getSource() {
+  getSource(): Element {
     return getSource(this.evt);
   }
 
@@ -124,12 +119,10 @@ class InternalMouseEvent {
    *
    * Returns true if the given <mxShape> is the source of <evt>.
    */
-  // isSource(shape: mxShape): boolean;
-  isSource(shape) {
+  isSource(shape: Shape): boolean {
     if (shape != null) {
       return isAncestorNode(shape.node, this.getSource());
     }
-
     return false;
   }
 
@@ -138,8 +131,7 @@ class InternalMouseEvent {
    *
    * Returns <evt.clientX>.
    */
-  // getX(): number;
-  getX() {
+  getX(): number {
     return getClientX(this.getEvent());
   }
 
@@ -148,8 +140,7 @@ class InternalMouseEvent {
    *
    * Returns <evt.clientY>.
    */
-  // getY(): number;
-  getY() {
+  getY(): number {
     return getClientY(this.getEvent());
   }
 
@@ -158,8 +149,7 @@ class InternalMouseEvent {
    *
    * Returns <graphX>.
    */
-  // getGraphX(): number;
-  getGraphX() {
+  getGraphX(): number | undefined {
     return this.graphX;
   }
 
@@ -168,8 +158,7 @@ class InternalMouseEvent {
    *
    * Returns <graphY>.
    */
-  // getGraphY(): number;
-  getGraphY() {
+  getGraphY(): number | undefined {
     return this.graphY;
   }
 
@@ -178,8 +167,7 @@ class InternalMouseEvent {
    *
    * Returns <state>.
    */
-  // getState(): mxCellState;
-  getState() {
+  getState(): CellState | undefined {
     return this.state;
   }
 
@@ -188,14 +176,11 @@ class InternalMouseEvent {
    *
    * Returns the <mxCell> in <state> is not null.
    */
-  // getCell(): mxCell;
-  getCell() {
+  getCell(): Cell | null {
     const state = this.getState();
-
     if (state != null) {
       return state.cell;
     }
-
     return null;
   }
 
@@ -204,8 +189,7 @@ class InternalMouseEvent {
    *
    * Returns true if the event is a popup trigger.
    */
-  // isPopupTrigger(): boolean;
-  isPopupTrigger() {
+  isPopupTrigger(): boolean {
     return isPopupTrigger(this.getEvent());
   }
 
@@ -214,8 +198,7 @@ class InternalMouseEvent {
    *
    * Returns <consumed>.
    */
-  // isConsumed(): boolean;
-  isConsumed() {
+  isConsumed(): boolean {
     return this.consumed;
   }
 
@@ -232,8 +215,7 @@ class InternalMouseEvent {
    * preventDefault - Specifies if the native event should be canceled. Default
    * is true.
    */
-  // consume(preventDefault?: boolean): void;
-  consume(preventDefault) {
+  consume(preventDefault?: boolean): void {
     preventDefault =
       preventDefault != null
         ? preventDefault

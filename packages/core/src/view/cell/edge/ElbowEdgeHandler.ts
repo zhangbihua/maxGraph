@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxEdgeHandler from './mxEdgeHandler';
+import EdgeHandler from './EdgeHandler';
 import {
   CURSOR_TERMINAL_HANDLE,
   EDGESTYLE_ELBOW,
@@ -37,7 +37,7 @@ import { isConsumed } from '../../../util/EventUtils';
  *
  * state - <mxCellState> of the cell to be modified.
  */
-class mxElbowEdgeHandler extends mxEdgeHandler {
+class ElbowEdgeHandler extends EdgeHandler {
   constructor(state) {
     super(state);
   }
@@ -254,4 +254,4 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
   }
 }
 
-export default mxElbowEdgeHandler;
+export default ElbowEdgeHandler;

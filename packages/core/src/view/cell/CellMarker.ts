@@ -331,8 +331,7 @@ class CellMarker extends EventSource {
    *
    * Hides the marker and fires a <mark> event.
    */
-  // unmark(): void;
-  unmark() {
+  unmark(): void {
     this.mark();
   }
 
@@ -387,8 +386,7 @@ class CellMarker extends EventSource {
    * Returns the <mxCellState> to be marked for the given <mxCellState> under
    * the mouse. This returns the given state.
    */
-  // getStateToMark(state: mxCellState): mxCellState;
-  getStateToMark(state) {
+  getStateToMark(state: CellState): CellState {
     return state;
   }
 
@@ -418,8 +416,7 @@ class CellMarker extends EventSource {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  // destroy(): void;
-  destroy() {
+  destroy(): void {
     this.graph.getView().removeListener(this.resetHandler);
     this.graph.getModel().removeListener(this.resetHandler);
     this.highlight.destroy();

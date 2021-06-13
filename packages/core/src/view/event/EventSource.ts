@@ -30,8 +30,8 @@ import EventObject from './EventObject';
  * Constructs a new event source.
  */
 class EventSource {
-  constructor(eventSource) {
-    this.setEventSource(eventSource);
+  constructor(eventSource: EventSource) {
+    this.eventSource = eventSource;
   }
 
   /**
@@ -41,32 +41,28 @@ class EventSource {
    * contains the event name followed by the respective listener for each
    * registered listener.
    */
-  // eventListeners: any[];
-  eventListeners = null;
+  eventListeners: ({funct: Function, name: string})[] = [];
 
   /**
    * Variable: eventsEnabled
    *
    * Specifies if events can be fired. Default is true.
    */
-  // eventsEnabled: boolean;
-  eventsEnabled = true;
+  eventsEnabled: boolean = true;
 
   /**
    * Variable: eventSource
    *
    * Optional source for events. Default is null.
    */
-  // eventSource: any;
-  eventSource = null;
+  eventSource: EventSource;
 
   /**
    * Function: isEventsEnabled
    *
    * Returns <eventsEnabled>.
    */
-  // isEventsEnabled(): boolean;
-  isEventsEnabled() {
+  isEventsEnabled(): boolean {
     return this.eventsEnabled;
   }
 
@@ -75,8 +71,7 @@ class EventSource {
    *
    * Sets <eventsEnabled>.
    */
-  // setEventsEnabled(value: boolean): void;
-  setEventsEnabled(value) {
+  setEventsEnabled(value: boolean): void {
     this.eventsEnabled = value;
   }
 
@@ -85,8 +80,7 @@ class EventSource {
    *
    * Returns <eventSource>.
    */
-  // getEventSource(): any;
-  getEventSource() {
+  getEventSource(): EventSource {
     return this.eventSource;
   }
 
@@ -95,8 +89,7 @@ class EventSource {
    *
    * Sets <eventSource>.
    */
-  // setEventSource(value: any): void;
-  setEventSource(value) {
+  setEventSource(value: EventSource): void {
     this.eventSource = value;
   }
 
@@ -108,14 +101,13 @@ class EventSource {
    *
    * The parameters of the listener are the sender and an <mxEventObject>.
    */
-  // addListener(name: string, funct: (...args: any[]) => any): void;
-  addListener(name, funct) {
+  addListener(name: string,
+              funct: (...args: any[]) => any): void {
+
     if (this.eventListeners == null) {
       this.eventListeners = [];
     }
-
-    this.eventListeners.push(name);
-    this.eventListeners.push(funct);
+    this.eventListeners.push({name, funct});
   }
 
   /**
@@ -123,16 +115,15 @@ class EventSource {
    *
    * Removes all occurrences of the given listener from <eventListeners>.
    */
-  // removeListener(funct: (...args: any[]) => any): void;
-  removeListener(funct) {
+  removeListener(funct: (...args: any[]) => any): void {
     if (this.eventListeners != null) {
       let i = 0;
 
       while (i < this.eventListeners.length) {
-        if (this.eventListeners[i + 1] === funct) {
-          this.eventListeners.splice(i, 2);
+        if (this.eventListeners[i].funct === funct) {
+          this.eventListeners.splice(i, 1);
         } else {
-          i += 2;
+          i += 1;
         }
       }
     }
@@ -157,8 +148,7 @@ class EventSource {
    * sender - Optional sender to be passed to the listener. Default value is
    * the return value of <getEventSource>.
    */
-  // fireEvent(evt: mxEventObject, sender: any): void;
-  fireEvent(evt, sender) {
+  fireEvent(evt: EventObject, sender: any = null): void {
     if (this.eventListeners != null && this.isEventsEnabled()) {
       if (evt == null) {
         evt = new EventObject();
@@ -167,18 +157,13 @@ class EventSource {
       if (sender == null) {
         sender = this.getEventSource();
       }
-
       if (sender == null) {
         sender = this;
       }
 
-      const args = [sender, evt];
-
-      for (let i = 0; i < this.eventListeners.length; i += 2) {
-        const listen = this.eventListeners[i];
-
-        if (listen == null || listen === evt.getName()) {
-          this.eventListeners[i + 1].apply(this, args);
+      for (const eventListener of this.eventListeners) {
+        if (eventListener.name == null || eventListener.name === evt.getName()) {
+          eventListener.funct.apply(this, [sender, evt]);
         }
       }
     }

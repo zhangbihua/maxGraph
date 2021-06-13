@@ -1,9 +1,11 @@
 import Cell from "./datatypes/Cell";
 import CellArray from "./datatypes/CellArray";
-import mxDictionary from "../../util/mxDictionary";
+import Dictionary from "../../util/Dictionary";
 import Graph from "../Graph";
 
 class TreeTraversal {
+  dependencies = ['connections'];
+
   constructor(graph: Graph) {
     this.graph = graph;
   }
@@ -40,12 +42,12 @@ class TreeTraversal {
 
       for (const cell of parent.getChildren()) {
         if (cell.isVertex() && cell.isVisible()) {
-          const conns = this.getConnections(cell, isolate ? parent : null);
+          const conns = this.graph.connection.getConnections(cell, isolate ? parent : null);
           let fanOut = 0;
           let fanIn = 0;
 
           for (let j = 0; j < conns.length; j++) {
-            const src = this.getView().getVisibleTerminal(conns[j], true);
+            const src = this.graph.view.getVisibleTerminal(conns[j], true);
 
             if (src == cell) {
               fanOut++;
@@ -115,13 +117,13 @@ class TreeTraversal {
     directed: boolean = true,
     func: Function | null = null,
     edge: Cell | null = null,
-    visited: mxDictionary | null = null,
+    visited: Dictionary | null = null,
     inverse: boolean = false
   ): void {
     if (func != null && vertex != null) {
       directed = directed != null ? directed : true;
       inverse = inverse != null ? inverse : false;
-      visited = visited || new mxDictionary();
+      visited = visited || new Dictionary();
 
       if (!visited.get(vertex)) {
         visited.put(vertex, true);
