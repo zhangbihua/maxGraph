@@ -54,8 +54,7 @@ class CellAttributeChange implements UndoableChange {
    * Changes the attribute of the cell's user object by
    * using <mxCell.setAttribute>.
    */
-  // execute(): void;
-  execute() {
+  execute(): void {
     const tmp = this.cell.getAttribute(this.attribute);
 
     if (isNullish(this.previous)) {

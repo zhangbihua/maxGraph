@@ -8,6 +8,9 @@ import mxPopupMenu from '../../util/gui/mxPopupMenu';
 import InternalEvent from '../event/InternalEvent';
 import utils from '../../util/Utils';
 import { getMainEvent, isMultiTouchEvent } from '../../util/EventUtils';
+import Graph from '../Graph';
+import InternalMouseEvent from '../event/InternalMouseEvent';
+import Cell from '../cell/datatypes/Cell';
 
 /**
  * Class: mxPopupMenuHandler
@@ -19,7 +22,7 @@ import { getMainEvent, isMultiTouchEvent } from '../../util/EventUtils';
  * Constructs an event handler that creates a <mxPopupMenu>.
  */
 class PopupMenuHandler extends mxPopupMenu {
-  constructor(graph, factoryMethod) {
+  constructor(graph: Graph, factoryMethod: any) {
     super();
 
     if (graph != null) {
@@ -43,8 +46,8 @@ class PopupMenuHandler extends mxPopupMenu {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  // graph: mxGraph;
-  graph = null;
+  // @ts-ignore
+  graph: Graph;
 
   /**
    * Variable: selectOnPopup
@@ -52,8 +55,7 @@ class PopupMenuHandler extends mxPopupMenu {
    * Specifies if cells should be selected if a popupmenu is displayed for
    * them. Default is true.
    */
-  // selectOnPopup: boolean;
-  selectOnPopup = true;
+  selectOnPopup: boolean = true;
 
   /**
    * Variable: clearSelectionOnBackground
@@ -61,48 +63,42 @@ class PopupMenuHandler extends mxPopupMenu {
    * Specifies if cells should be deselected if a popupmenu is displayed for
    * the diagram background. Default is true.
    */
-  // clearSelectionOnBackground: boolean;
-  clearSelectionOnBackground = true;
+  clearSelectionOnBackground: boolean = true;
 
   /**
    * Variable: triggerX
    *
    * X-coordinate of the mouse down event.
    */
-  // triggerX: number;
-  triggerX = null;
+  triggerX: number | null = null;
 
   /**
    * Variable: triggerY
    *
    * Y-coordinate of the mouse down event.
    */
-  // triggerY: number;
-  triggerY = null;
+  triggerY: number | null = null;
 
   /**
    * Variable: screenX
    *
    * Screen X-coordinate of the mouse down event.
    */
-  // screenX: number;
-  screenX = null;
+  screenX: number | null = null;
 
   /**
    * Variable: screenY
    *
    * Screen Y-coordinate of the mouse down event.
    */
-  // screenY: number;
-  screenY = null;
+  screenY: number | null = null;
 
   /**
    * Function: init
    *
    * Initializes the shapes required for this vertex handler.
    */
-  // init(): void;
-  init() {
+  init(): void {
     // Supercall
     super.init();
 
@@ -122,8 +118,7 @@ class PopupMenuHandler extends mxPopupMenu {
    * Hook for returning if a cell should be selected for a given <mxMouseEvent>.
    * This implementation returns <selectOnPopup>.
    */
-  // isSelectOnPopup(me: mxMouseEvent): boolean;
-  isSelectOnPopup(me) {
+  isSelectOnPopup(me: InternalMouseEvent): boolean {
     return this.selectOnPopup;
   }
 
@@ -133,8 +128,9 @@ class PopupMenuHandler extends mxPopupMenu {
    * Handles the event by initiating the panning. By consuming the event all
    * subsequent events of the gesture are redirected to this handler.
    */
-  // mouseDown(sender: any, me: mxMouseEvent): void;
-  mouseDown(sender, me) {
+  mouseDown(sender: any,
+            me: InternalMouseEvent): void {
+
     if (this.isEnabled() && !isMultiTouchEvent(me.getEvent())) {
       // Hides the popupmenu if is is being displayed
       this.hideMenu();
@@ -152,8 +148,9 @@ class PopupMenuHandler extends mxPopupMenu {
    *
    * Handles the event by updating the panning on the graph.
    */
-  // mouseMove(sender: any, me: mxMouseEvent): void;
-  mouseMove(sender, me) {
+  mouseMove(sender: any,
+            me: InternalMouseEvent): void {
+
     // Popup trigger may change on mouseUp so ignore it
     if (this.inTolerance && this.screenX != null && this.screenY != null) {
       if (
@@ -173,8 +170,8 @@ class PopupMenuHandler extends mxPopupMenu {
    * Handles the event by setting the translation on the view or showing the
    * popupmenu.
    */
-  // mouseUp(sender: any, me: mxMouseEvent): void;
-  mouseUp(sender, me) {
+  mouseUp(sender: any,
+          me: InternalMouseEvent): void {
     if (
       this.popupTrigger &&
       this.inTolerance &&
@@ -219,8 +216,7 @@ class PopupMenuHandler extends mxPopupMenu {
    *
    * Hook to return the cell for the mouse up popup trigger handling.
    */
-  // getCellForPopupEvent(me: mxMouseEvent): mxCell;
-  getCellForPopupEvent(me) {
+  getCellForPopupEvent(me: InternalMouseEvent): Cell {
     return me.getCell();
   }
 
@@ -229,8 +225,7 @@ class PopupMenuHandler extends mxPopupMenu {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  // destroy(): void;
-  destroy() {
+  destroy(): void {
     this.graph.removeMouseListener(this);
     this.graph.removeListener(this.gestureHandler);
 

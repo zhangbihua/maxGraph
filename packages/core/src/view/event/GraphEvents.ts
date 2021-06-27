@@ -221,14 +221,14 @@ class GraphEvents {
         if (this.isTransparentClickEvent(evt)) {
           let active = false;
 
-          const tmp = this.getCellAt(
+          const tmp = this.graph.cell.getCellAt(
             me.graphX,
             me.graphY,
             null,
             false,
             false,
             (state: CellState): boolean => {
-              const selected = this.isCellSelected(<Cell>state.cell);
+              const selected = this.graph.cell.isCellSelected(<Cell>state.cell);
               active = active || selected;
 
               return (
@@ -244,8 +244,8 @@ class GraphEvents {
             cell = tmp;
           }
         }
-      } else if (this.isSwimlaneSelectionEnabled()) {
-        cell = this.getSwimlaneAt(me.getGraphX(), me.getGraphY());
+      } else if (this.graph.swimlane.isSwimlaneSelectionEnabled()) {
+        cell = this.graph.swimlane.getSwimlaneAt(me.getGraphX(), me.getGraphY());
 
         if (cell != null && (!this.isToggleEvent(evt) || !isAltDown(evt))) {
           let temp = cell;
@@ -255,7 +255,7 @@ class GraphEvents {
             temp = temp.getParent();
             const state = this.graph.view.getState(temp);
 
-            if (this.isSwimlane(temp) && state != null) {
+            if (this.graph.swimlane.isSwimlane(temp) && state != null) {
               swimlanes.push(temp);
             }
           }
@@ -267,7 +267,7 @@ class GraphEvents {
             swimlanes.push(cell);
 
             for (let i = 0; i < swimlanes.length - 1; i += 1) {
-              if (this.isCellSelected(swimlanes[i])) {
+              if (this.graph.cell.isCellSelected(swimlanes[i])) {
                 cell = swimlanes[this.isToggleEvent(evt) ? i : i + 1];
               }
             }
@@ -278,7 +278,7 @@ class GraphEvents {
       if (cell != null) {
         this.selectCellForEvent(cell, evt);
       } else if (!this.isToggleEvent(evt)) {
-        this.clearSelection();
+        this.graph.selection.clearSelection();
       }
     }
     return false;
@@ -320,26 +320,21 @@ class GraphEvents {
    * @param evt Mouseevent that represents the doubleclick.
    * @param cell Optional {@link Cell} under the mousepointer.
    */
-  dblClick(evt: MouseEvent, cell?: Cell): void {
-    const mxe = new EventObject(
-      InternalEvent.DOUBLE_CLICK,
-      'event',
-      evt,
-      'cell',
-      cell
-    );
+  dblClick(evt: MouseEvent,
+           cell?: Cell): void {
+    const mxe = new EventObject(InternalEvent.DOUBLE_CLICK, {event: evt, cell: cell});
     this.graph.fireEvent(mxe);
 
     // Handles the event if it has not been consumed
     if (
-      this.isEnabled() &&
+      this.graph.isEnabled() &&
       !isConsumed(evt) &&
       !mxe.isConsumed() &&
       cell != null &&
-      this.isCellEditable(cell) &&
-      !this.isEditing(cell)
+      this.graph.cell.isCellEditable(cell) &&
+      !this.graph.editing.isEditing(cell)
     ) {
-      this.startEditingAtCell(cell, evt);
+      this.graph.editing.startEditingAtCell(cell, evt);
       InternalEvent.consume(evt);
     }
   }
@@ -359,8 +354,8 @@ class GraphEvents {
       'cell',
       me.getCell()
     );
-    const panningHandler = <PanningHandler>this.panningHandler;
-    const connectionHandler = <ConnectionHandler>this.connectionHandler;
+    const panningHandler = <PanningHandler>this.graph.panning.panningHandler;
+    const connectionHandler = <ConnectionHandler>this.graph.connectionHandler;
 
     // LATER: Check if event should be consumed if me is consumed
     this.graph.fireEvent(mxe);
@@ -440,13 +435,14 @@ class GraphEvents {
    * @param me {@link mxMouseEvent} to be updated.
    * @param evtName Name of the mouse event.
    */
-  // updateMouseEvent(me: mxMouseEvent, evtName: string): mxMouseEvent;
-  updateMouseEvent(me: InternalMouseEvent, evtName: string) {
-    if (me.graphX == null || me.graphY == null) {
-      const pt = convertPoint(this.container, me.getX(), me.getY());
+  updateMouseEvent(me: InternalMouseEvent,
+                   evtName: string): InternalMouseEvent {
 
-      me.graphX = pt.x - this.panDx;
-      me.graphY = pt.y - this.panDy;
+    if (me.graphX == null || me.graphY == null) {
+      const pt = convertPoint(this.graph.container, me.getX(), me.getY());
+
+      me.graphX = pt.x - this.graph.panning.panDx;
+      me.graphY = pt.y - this.graph.panning.panDy;
 
       // Searches for rectangles using method if native hit detection is disabled on shape
       if (
@@ -480,9 +476,9 @@ class GraphEvents {
 
     // Dispatches the drop event to the graph which
     // consumes and executes the source function
-    const pt = convertPoint(this.container, x, y);
+    const pt = convertPoint(this.graph.container, x, y);
 
-    return this.graph.view.getState(this.getCellAt(pt.x, pt.y));
+    return this.graph.view.getState(this.graph.cell.getCellAt(pt.x, pt.y));
   }
 
   /**
@@ -897,8 +893,9 @@ class GraphEvents {
   /**
    * Consumes the given {@link InternalMouseEvent} if it's a touchStart event.
    */
-  // consumeMouseEvent(evtName: string, me: mxMouseEvent, sender: mxEventSource): void;
-  consumeMouseEvent(evtName: string, me: InternalMouseEvent, sender: any = this) {
+  consumeMouseEvent(evtName: string,
+                    me: InternalMouseEvent,
+                    sender: any = this): void {
     // Workaround for duplicate click in Windows 8 with Chrome/FF/Opera with touch
     if (evtName === InternalEvent.MOUSE_DOWN && isTouchEvent(me.getEvent())) {
       me.consume(false);
@@ -936,8 +933,8 @@ class GraphEvents {
    * @param evt Gestureend event that represents the gesture.
    * @param cell Optional {@link Cell} associated with the gesture.
    */
-  // fireGestureEvent(evt: any, cell?: mxCell): void;
-  fireGestureEvent(evt: MouseEvent, cell: Cell | null = null): void {
+  fireGestureEvent(evt: MouseEvent,
+                   cell: Cell | null = null): void {
     // Resets double tap event handling when gestures take place
     this.lastTouchTime = 0;
     this.graph.fireEvent(
@@ -951,7 +948,7 @@ class GraphEvents {
    * SVG-bases browsers.
    */
   sizeDidChange(): void {
-    const bounds = this.getGraphBounds();
+    const bounds = this.graph.getGraphBounds();
 
     if (this.graph.container != null) {
       const border = this.graph.getBorder();
@@ -1005,7 +1002,7 @@ class GraphEvents {
         root.style.height = '100%';
       }
 
-      this.graph.updatePageBreaks(this.graph.pageBreaksVisible, width, height);
+      this.graph.pageBreaks.updatePageBreaks(this.graph.pageBreaksVisible, width, height);
     }
     this.graph.fireEvent(new EventObject(InternalEvent.SIZE, 'bounds', bounds));
   }
@@ -1018,8 +1015,7 @@ class GraphEvents {
    * Returns true if the given event is a clone event. This implementation
    * returns true if control is pressed.
    */
-  // isCloneEvent(evt: MouseEvent): boolean;
-  isCloneEvent(evt: EventObject | InternalMouseEvent): boolean {
+  isCloneEvent(evt: MouseEvent): boolean {
     return isControlDown(evt);
   }
 
@@ -1028,8 +1024,7 @@ class GraphEvents {
    * returns true the cell behind the selected cell will be selected. This
    * implementation returns false;
    */
-  // isTransparentClickEvent(evt: MouseEvent): boolean;
-  isTransparentClickEvent(evt: EventObject | InternalMouseEvent): boolean {
+  isTransparentClickEvent(evt: MouseEvent): boolean {
     return false;
   }
 
@@ -1038,24 +1033,21 @@ class GraphEvents {
    * returns true if the meta key (Cmd) is pressed on Macs or if control is
    * pressed on any other platform.
    */
-  // isToggleEvent(evt: MouseEvent): boolean;
-  isToggleEvent(evt: EventObject | InternalMouseEvent): boolean {
+  isToggleEvent(evt: MouseEvent): boolean {
     return mxClient.IS_MAC ? isMetaDown(evt) : isControlDown(evt);
   }
 
   /**
    * Returns true if the given mouse event should be aligned to the grid.
    */
-  // isGridEnabledEvent(evt: MouseEvent): boolean;
-  isGridEnabledEvent(evt: EventObject | InternalMouseEvent): boolean {
+  isGridEnabledEvent(evt: MouseEvent): boolean {
     return evt != null && !isAltDown(evt);
   }
 
   /**
    * Returns true if the given mouse event should be aligned to the grid.
    */
-  // isConstrainedEvent(evt: MouseEvent): boolean;
-  isConstrainedEvent(evt: EventObject | InternalMouseEvent): boolean {
+  isConstrainedEvent(evt: MouseEvent): boolean {
     return isShiftDown(evt);
   }
 
@@ -1063,15 +1055,9 @@ class GraphEvents {
    * Returns true if the given mouse event should not allow any connections to be
    * made. This implementation returns false.
    */
-  // isIgnoreTerminalEvent(evt: MouseEvent): boolean;
-  isIgnoreTerminalEvent(evt: EventObject | InternalMouseEvent): boolean {
+  isIgnoreTerminalEvent(evt: MouseEvent): boolean {
     return false;
   }
-
-
-
-
-
 
   /**
    * Returns an {@link Point} representing the given event in the unscaled,
@@ -1082,13 +1068,13 @@ class GraphEvents {
    * offset by half of the {@link gridSize}. Default is `true`.
    */
   getPointForEvent(evt: InternalMouseEvent, addOffset: boolean = true): Point {
-    const p = convertPoint(this.container, getClientX(evt), getClientY(evt));
+    const p = convertPoint(this.graph.container, getClientX(evt), getClientY(evt));
     const s = this.graph.view.scale;
     const tr = this.graph.view.translate;
-    const off = addOffset ? this.gridSize / 2 : 0;
+    const off = addOffset ? this.graph.snap.gridSize / 2 : 0;
 
-    p.x = this.snap(p.x / s - tr.x - off);
-    p.y = this.snap(p.y / s - tr.y - off);
+    p.x = this.graph.snap.snap(p.x / s - tr.x - off);
+    p.y = this.graph.snap.snap(p.y / s - tr.y - off);
     return p;
   }
 
@@ -1112,6 +1098,34 @@ class GraphEvents {
     this.escapeEnabled = value;
   }
 
+  /**
+   * Returns {@link invokesStopCellEditing}.
+   */
+  isInvokesStopCellEditing(): boolean {
+    return this.invokesStopCellEditing;
+  }
+
+  /**
+   * Sets {@link invokesStopCellEditing}.
+   */
+  setInvokesStopCellEditing(value: boolean): void {
+    this.invokesStopCellEditing = value;
+  }
+
+  /**
+   * Returns {@link enterStopsCellEditing}.
+   */
+  isEnterStopsCellEditing(): boolean {
+    return this.enterStopsCellEditing;
+  }
+
+  /**
+   * Sets {@link enterStopsCellEditing}.
+   */
+  setEnterStopsCellEditing(value: boolean): void {
+    this.enterStopsCellEditing = value;
+  }
+
   /*****************************************************************************
    * Group: Graph appearance
    *****************************************************************************/
@@ -1123,7 +1137,7 @@ class GraphEvents {
    * @param me {@link mxMouseEvent} whose cursor should be returned.
    */
   getCursorForMouseEvent(me: InternalMouseEvent): string | null {
-    return this.getCursorForCell(me.getCell());
+    return this.graph.cell.getCursorForCell(me.getCell());
   }
 }
 

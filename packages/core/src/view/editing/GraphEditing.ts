@@ -44,18 +44,18 @@ class GraphEditing {
   startEditingAtCell(cell: Cell | null = null, evt: MouseEvent): void {
     if (evt == null || !isMultiTouchEvent(evt)) {
       if (cell == null) {
-        cell = this.getSelectionCell();
+        cell = this.graph.selection.getSelectionCell();
         if (cell != null && !this.isCellEditable(cell)) {
           cell = null;
         }
       }
 
       if (cell != null) {
-        this.fireEvent(
+        this.graph.event.fireEvent(
           new EventObject(InternalEvent.START_EDITING, 'cell', cell, 'event', evt)
         );
-        (<CellEditor>this.cellEditor).startEditing(cell, evt);
-        this.fireEvent(
+        (<CellEditor>this.graph.editing.cellEditor).startEditing(cell, evt);
+        this.graph.event.fireEvent(
           new EventObject(InternalEvent.EDITING_STARTED, 'cell', cell, 'event', evt)
         );
       }
@@ -85,8 +85,8 @@ class GraphEditing {
    * should be stored.
    */
   stopEditing(cancel: boolean = false): void {
-    (<CellEditor>this.cellEditor).stopEditing(cancel);
-    this.fireEvent(
+    (<CellEditor>this.graph.editing.cellEditor).stopEditing(cancel);
+    this.graph.event.fireEvent(
       new EventObject(InternalEvent.EDITING_STOPPED, 'cancel', cancel)
     );
   }
@@ -106,26 +106,19 @@ class GraphEditing {
     value: any,
     evt: InternalMouseEvent | EventObject
   ): Cell {
-    this.getModel().beginUpdate();
-    try {
+    this.graph.batchUpdate(() => {
       const old = cell.value;
-      this.cellLabelChanged(cell, value, this.isAutoSizeCell(cell));
-      this.fireEvent(
-        new EventObject(
-          InternalEvent.LABEL_CHANGED,
-          'cell',
-          cell,
-          'value',
-          value,
-          'old',
-          old,
-          'event',
-          evt
-        )
-      );
-    } finally {
-      this.getModel().endUpdate();
-    }
+      this.cellLabelChanged(cell, value, this.graph.cell.isAutoSizeCell(cell));
+      this.graph.event.fireEvent(new EventObject(
+        InternalEvent.LABEL_CHANGED,
+        {
+          cell: cell,
+          value: value,
+          old: old,
+          event: evt,
+        }
+      ));
+    });
     return cell;
   }
 
@@ -156,9 +149,12 @@ class GraphEditing {
    * @param value New label to be assigned.
    * @param autoSize Boolean that specifies if {@link cellSizeUpdated} should be called.
    */
-  cellLabelChanged(cell: Cell, value: any, autoSize: boolean = false): void {
-    this.batchUpdate(() => {
-      this.getModel().setValue(cell, value);
+  cellLabelChanged(cell: Cell,
+                   value: any,
+                   autoSize: boolean = false): void {
+
+    this.graph.batchUpdate(() => {
+      this.graph.model.setValue(cell, value);
       if (autoSize) {
         this.cellSizeUpdated(cell, false);
       }
@@ -185,34 +181,6 @@ class GraphEditing {
   }
 
   /**
-   * Returns {@link invokesStopCellEditing}.
-   */
-  isInvokesStopCellEditing(): boolean {
-    return this.invokesStopCellEditing;
-  }
-
-  /**
-   * Sets {@link invokesStopCellEditing}.
-   */
-  setInvokesStopCellEditing(value: boolean): void {
-    this.invokesStopCellEditing = value;
-  }
-
-  /**
-   * Returns {@link enterStopsCellEditing}.
-   */
-  isEnterStopsCellEditing(): boolean {
-    return this.enterStopsCellEditing;
-  }
-
-  /**
-   * Sets {@link enterStopsCellEditing}.
-   */
-  setEnterStopsCellEditing(value: boolean): void {
-    this.enterStopsCellEditing = value;
-  }
-
-  /**
    * Returns true if the given cell is editable. This returns {@link cellsEditable} for
    * all given cells if {@link isCellLocked} does not return true for the given cell
    * and its style does not specify {@link 'editable'} to be 0.
@@ -220,11 +188,11 @@ class GraphEditing {
    * @param cell {@link mxCell} whose editable state should be returned.
    */
   isCellEditable(cell: Cell): boolean {
-    const style = this.getCurrentCellStyle(cell);
+    const style = this.graph.cell.getCurrentCellStyle(cell);
 
     return (
       this.isCellsEditable() &&
-      !this.isCellLocked(cell) &&
+      !this.graph.cell.isCellLocked(cell) &&
       style.editable != 0
     );
   }

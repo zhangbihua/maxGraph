@@ -139,9 +139,9 @@ class InternalEvent {
    */
   static addGestureListeners(
     node: Listenable,
-    startListener: EventListener | null,
-    moveListener: EventListener | null,
-    endListener: EventListener | null
+    startListener: EventListener | null = null,
+    moveListener: EventListener | null = null,
+    endListener: EventListener | null = null
   ) {
     if (startListener) {
       InternalEvent.addListener(

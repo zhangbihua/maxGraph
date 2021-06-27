@@ -305,7 +305,8 @@ class CellMarker extends EventSource {
    *
    * Marks the given cell using the given color, or <validColor> if no color is specified.
    */
-  markCell(cell: Cell, color: ColorValue) {
+  markCell(cell: Cell,
+           color: ColorValue) {
     const state = this.graph.getView().getState(cell);
 
     if (state) {
@@ -352,7 +353,9 @@ class CellMarker extends EventSource {
    * Returns the valid- or invalidColor depending on the value of isValid.
    * The given <mxCellState> is ignored by this implementation.
    */
-  getMarkerColor(evt: Event, state: CellState, isValid: boolean): string {
+  getMarkerColor(evt: Event,
+                 state: CellState,
+                 isValid: boolean): string {
     return isValid ? this.validColor : this.invalidColor;
   }
 
@@ -362,7 +365,7 @@ class CellMarker extends EventSource {
    * Uses <getCell>, <getStateToMark> and <intersects> to return the
    * <mxCellState> for the given <mxMouseEvent>.
    */
-  getState(me: InternalMouseEvent): CellState {
+  getState(me: InternalMouseEvent): CellState | null {
     const view = this.graph.getView();
     const cell = this.getCell(me);
     const state = this.getStateToMark(view.getState(cell));
