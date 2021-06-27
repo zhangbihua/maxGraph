@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import utils from '../../util/Utils';
+import utils, { intersection } from '../../util/Utils';
 import Point from '../geometry/Point';
 import {
   DIRECTION_EAST,
@@ -15,6 +15,7 @@ import {
 } from '../../util/Constants';
 import Rectangle from '../geometry/Rectangle';
 import CellState from '../cell/datatypes/CellState';
+import { CellStateStyles } from '../../types';
 
 /**
  * @class Perimeter
@@ -292,14 +293,14 @@ class Perimeter {
     // set the slope and offset of the border line accordingly
     if (px < cx) {
       if (py < cy) {
-        return utils.intersection(px, py, tx, ty, cx, y, x, cy);
+        return intersection(px, py, tx, ty, cx, y, x, cy);
       }
-      return utils.intersection(px, py, tx, ty, cx, y + h, x, cy);
+      return intersection(px, py, tx, ty, cx, y + h, x, cy);
     }
     if (py < cy) {
-      return utils.intersection(px, py, tx, ty, cx, y, x + w, cy);
+      return intersection(px, py, tx, ty, cx, y, x + w, cy);
     }
-    return utils.intersection(px, py, tx, ty, cx, y + h, x + w, cy);
+    return intersection(px, py, tx, ty, cx, y + h, x + w, cy);
   }
 
   /**
@@ -402,7 +403,7 @@ class Perimeter {
         (vertical && next.x <= x + w / 2) ||
         (!vertical && next.y <= y + h / 2)
       ) {
-        result = utils.intersection(
+        result = intersection(
           next.x,
           next.y,
           cx,
@@ -413,7 +414,7 @@ class Perimeter {
           corner.y
         );
       } else {
-        result = utils.intersection(
+        result = intersection(
           next.x,
           next.y,
           cx,
@@ -462,7 +463,7 @@ class Perimeter {
 
     const direction =
       vertex != null
-        ? utils.getValue(vertex.style, 'direction', DIRECTION_EAST)
+        ? Perimeter.getValue(vertex.style, 'direction', DIRECTION_EAST)
         : DIRECTION_EAST;
     const vertical =
       direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
@@ -639,7 +640,7 @@ class Perimeter {
         }
       }
 
-      result = utils.intersection(tx, ty, next.x, next.y, a.x, a.y, b.x, b.y);
+      result = intersection(tx, ty, next.x, next.y, a.x, a.y, b.x, b.y);
     } else {
       if (vertical) {
         const beta = Math.atan2(h / 4, w / 2);
@@ -730,13 +731,17 @@ class Perimeter {
         }
       }
 
-      result = utils.intersection(cx, cy, next.x, next.y, a.x, a.y, b.x, b.y);
+      result = intersection(cx, cy, next.x, next.y, a.x, a.y, b.x, b.y);
     }
 
     if (result == null) {
       return new Point(cx, cy);
     }
     return result;
+  }
+
+  private static getValue(style: CellStateStyles, direction: string, DIRECTION_EAST: string) {
+    return '';
   }
 }
 

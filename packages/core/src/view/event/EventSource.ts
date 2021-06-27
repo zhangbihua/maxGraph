@@ -151,7 +151,7 @@ class EventSource {
   fireEvent(evt: EventObject, sender: any = null): void {
     if (this.eventListeners != null && this.isEventsEnabled()) {
       if (evt == null) {
-        evt = new EventObject();
+        evt = new EventObject('');
       }
 
       if (sender == null) {

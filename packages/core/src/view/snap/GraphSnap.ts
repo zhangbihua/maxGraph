@@ -1,7 +1,16 @@
 import Point from "../geometry/Point";
 import Rectangle from "../geometry/Rectangle";
+import Graph from '../Graph';
 
 class GraphSnap {
+  constructor(graph: Graph) {
+    this.graph = graph;
+  }
+
+  // TODO: Document me!
+  tolerance: number | null = null;
+  graph: Graph;
+
   /**
    * Specifies the grid size.
    * @default 10
@@ -42,8 +51,8 @@ class GraphSnap {
     ignoreHorizontal: boolean = false,
     ignoreVertical: boolean = false
   ): Point {
-    const t = this.view.translate;
-    const s = this.view.scale;
+    const t = this.graph.view.translate;
+    const s = this.graph.view.scale;
 
     if (!ignoreGrid && this.gridEnabled) {
       const tol = this.gridSize * s * 0.5;
@@ -131,7 +140,7 @@ class GraphSnap {
   /**
    * Returns {@link tolerance}.
    */
-  getTolerance(): number {
+  getTolerance(): number | null {
     return this.tolerance;
   }
 

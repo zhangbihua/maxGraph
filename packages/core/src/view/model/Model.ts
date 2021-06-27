@@ -887,7 +887,7 @@ class Model extends EventSource {
    * the new cell style.
    */
   styleForCellChanged(cell: Cell,
-                      style: string): string | null {
+                      style: string | null): string | null {
 
     const previous = cell.getStyle();
     cell.setStyle(style);
