@@ -86,7 +86,7 @@ export default GraphLayout;
 
         // Creates a layout algorithm to be used
         // with the graph
-        let layout = new mxFastOrganicLayout(graph);
+        let layout = new MxFastOrganicLayout(graph);
 
         // Moves stuff wider apart than usual
         layout.forceConstant = 80;

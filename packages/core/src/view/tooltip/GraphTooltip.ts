@@ -2,11 +2,18 @@ import CellState from "../cell/datatypes/CellState";
 import {htmlEntities} from "../../util/StringUtils";
 import Resources from "../../util/Resources";
 import Shape from "../geometry/shape/Shape";
-import mxSelectionCellsHandler from "../selection/mxSelectionCellsHandler";
+import SelectionCellsHandler from "../selection/SelectionCellsHandler";
 import Cell from "../cell/datatypes/Cell";
 import TooltipHandler from "./TooltipHandler";
+import Graph from '../Graph';
 
 class GraphTooltip {
+  constructor(graph: Graph) {
+    this.graph = graph;
+  }
+
+  graph: Graph;
+
   /**
    * Returns the string or DOM node that represents the tooltip for the given
    * state, node and coordinate pair. This implementation checks if the given
@@ -22,7 +29,6 @@ class GraphTooltip {
    * @param x X-coordinate of the mouse.
    * @param y Y-coordinate of the mouse.
    */
-  // getTooltip(state: mxCellState, node: Node, x: number, y: number): string;
   getTooltip(
     state: CellState,
     node: HTMLElement,
@@ -38,7 +44,7 @@ class GraphTooltip {
         // @ts-ignore
         (node === state.control.node || node.parentNode === state.control.node)
       ) {
-        tip = this.collapseExpandResource;
+        tip = this.graph.collapseExpandResource;
         tip = htmlEntities(Resources.get(tip) || tip, true).replace(
           /\\n/g,
           '<br>'
@@ -60,8 +66,8 @@ class GraphTooltip {
       }
 
       if (tip == null) {
-        const handler = (<mxSelectionCellsHandler>(
-          this.selectionCellsHandler
+        const handler = (<SelectionCellsHandler>(
+          this.graph.selectionCellsHandler
         )).getHandler(<Cell>state.cell);
         if (
           handler != null &&
@@ -103,7 +109,7 @@ class GraphTooltip {
       // @ts-ignore
       tip = cell.getTooltip();
     } else {
-      tip = this.convertValueToString(cell);
+      tip = this.graph.convertValueToString(cell);
     }
     return tip;
   }
@@ -119,7 +125,7 @@ class GraphTooltip {
    * @param enabled Boolean indicating if tooltips should be enabled.
    */
   setTooltips(enabled: boolean): void {
-    (<TooltipHandler>this.tooltipHandler).setEnabled(enabled);
+    (<TooltipHandler>this.graph.tooltipHandler).setEnabled(enabled);
   }
 
 }

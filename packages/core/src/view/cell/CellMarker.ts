@@ -12,7 +12,7 @@ import {
   MAX_HOTSPOT_SIZE,
   MIN_HOTSPOT_SIZE,
 } from '../../util/Constants';
-import mxCellHighlight from '../selection/mxCellHighlight';
+import CellHighlight from '../selection/CellHighlight';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import utils, { intersectsHotspot } from '../../util/Utils';
@@ -75,7 +75,7 @@ class CellMarker extends EventSource {
     this.validColor = validColor;
     this.invalidColor = invalidColor;
     this.hotspot = hotspot;
-    this.highlight = new mxCellHighlight(graph);
+    this.highlight = new CellHighlight(graph);
   }
 
   /**
@@ -144,7 +144,7 @@ class CellMarker extends EventSource {
    */
   markedState: CellState | null = null;
 
-  highlight: mxCellHighlight;
+  highlight: CellHighlight;
 
   /**
    * Function: setEnabled
@@ -305,7 +305,8 @@ class CellMarker extends EventSource {
    *
    * Marks the given cell using the given color, or <validColor> if no color is specified.
    */
-  markCell(cell: Cell, color: ColorValue) {
+  markCell(cell: Cell,
+           color: ColorValue) {
     const state = this.graph.getView().getState(cell);
 
     if (state) {
@@ -352,7 +353,9 @@ class CellMarker extends EventSource {
    * Returns the valid- or invalidColor depending on the value of isValid.
    * The given <mxCellState> is ignored by this implementation.
    */
-  getMarkerColor(evt: Event, state: CellState, isValid: boolean): string {
+  getMarkerColor(evt: Event,
+                 state: CellState,
+                 isValid: boolean): string {
     return isValid ? this.validColor : this.invalidColor;
   }
 
@@ -362,7 +365,7 @@ class CellMarker extends EventSource {
    * Uses <getCell>, <getStateToMark> and <intersects> to return the
    * <mxCellState> for the given <mxMouseEvent>.
    */
-  getState(me: InternalMouseEvent): CellState {
+  getState(me: InternalMouseEvent): CellState | null {
     const view = this.graph.getView();
     const cell = this.getCell(me);
     const state = this.getStateToMark(view.getState(cell));

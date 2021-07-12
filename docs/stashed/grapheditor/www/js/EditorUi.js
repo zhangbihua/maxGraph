@@ -4641,7 +4641,7 @@ EditorUi.prototype.createKeyHandler = function(editor)
 						layout = graph.layoutManager.getLayout(parent);
 					}
 					
-					if (layout != null && layout.constructor == mxStackLayout)
+					if (layout != null && layout.constructor == StackLayout)
 					{
 						let index = parent.getIndex(cell);
 						

@@ -45,7 +45,7 @@ const Template = ({ label, ...args }) => {
       graph.panningHandler.useLeftButtonForPanning = true;
 
       // Adds a highlight on the cell under the mousepointer
-      new mxCellTracker(graph);
+      new CellTracker(graph);
 
       // Changes the default vertex style in-place
       let style = graph.getStylesheet().getDefaultVertexStyle();
@@ -71,7 +71,7 @@ const Template = ({ label, ...args }) => {
 
       // Creates a layout algorithm to be used
       // with the graph
-      const layout = new mxFastOrganicLayout(graph);
+      const layout = new MxFastOrganicLayout(graph);
 
       // Moves stuff wider apart than usual
       layout.forceConstant = 140;

@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
+import MxHierarchicalLayoutStage from './HierarchicalLayoutStage';
 import utils from '../../../../../util/Utils';
 import CellPath from '../../../../cell/datatypes/CellPath';
 
@@ -18,7 +18,7 @@ import CellPath from '../../../../cell/datatypes/CellPath';
  *
  * Creates a cycle remover for the given internal model.
  */
-class mxSwimlaneOrdering extends mxHierarchicalLayoutStage {
+class mxSwimlaneOrdering extends MxHierarchicalLayoutStage {
   constructor(layout) {
     super();
 

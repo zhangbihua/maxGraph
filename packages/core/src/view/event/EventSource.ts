@@ -30,7 +30,7 @@ import EventObject from './EventObject';
  * Constructs a new event source.
  */
 class EventSource {
-  constructor(eventSource: EventSource) {
+  constructor(eventSource: EventSource | null=null) {
     this.eventSource = eventSource;
   }
 
@@ -55,7 +55,7 @@ class EventSource {
    *
    * Optional source for events. Default is null.
    */
-  eventSource: EventSource;
+  eventSource: EventSource | null;
 
   /**
    * Function: isEventsEnabled
@@ -80,7 +80,7 @@ class EventSource {
    *
    * Returns <eventSource>.
    */
-  getEventSource(): EventSource {
+  getEventSource(): EventSource | null {
     return this.eventSource;
   }
 
@@ -151,7 +151,7 @@ class EventSource {
   fireEvent(evt: EventObject, sender: any = null): void {
     if (this.eventListeners != null && this.isEventsEnabled()) {
       if (evt == null) {
-        evt = new EventObject();
+        evt = new EventObject('');
       }
 
       if (sender == null) {

@@ -29,7 +29,7 @@ import Perimeter from './Perimeter';
  * in a style. This is currently only used to perimeters and edge styles.
  */
 class StyleRegistry {
-  /*
+  /**
    * Variable: values
    *
    * Maps from strings to objects.

@@ -37,7 +37,7 @@ import ImageBundle from '../image/ImageBundle';
 import Rectangle from '../geometry/Rectangle';
 import Dictionary from '../../util/Dictionary';
 import Point from '../geometry/Point';
-import Label from '../geometry/shape/Label';
+import Label from '../geometry/shape/node/LabelShape';
 import { htmlEntities } from '../../util/StringUtils';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import Graph from '../Graph';

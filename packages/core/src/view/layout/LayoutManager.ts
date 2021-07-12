@@ -7,7 +7,7 @@
 
 import EventSource from '../event/EventSource';
 import InternalEvent from '../event/InternalEvent';
-import utils from '../../util/Utils';
+import utils, { convertPoint, sortCells } from '../../util/Utils';
 import RootChange from '../model/RootChange';
 import ChildChange from '../model/ChildChange';
 import TerminalChange from '../cell/edge/TerminalChange';
@@ -101,17 +101,17 @@ class LayoutManager extends EventSource {
   /**
    * Holds the function that handles the endUpdate event.
    */
-  undoHandler: Function;
+  undoHandler: (...args: any[]) => any;
 
   /**
    * Holds the function that handles the move event.
    */
-  moveHandler: Function;
+  moveHandler: (...args: any[]) => any;
 
   /**
    * Holds the function that handles the resize event.
    */
-  resizeHandler: Function;
+  resizeHandler: (...args: any[]) => any;
 
   /**
    * Returns true if events are handled. This implementation
@@ -219,12 +219,11 @@ class LayoutManager extends EventSource {
    * @param cell Array of {@link Cell} that have been moved.
    * @param evt Mouse event that represents the mousedown.
    */
-  // cellsMoved(cells: Array<mxCell>, evt: MouseEvent): void;
   cellsMoved(cells: CellArray,
              evt: InternalMouseEvent): void {
 
     if (cells != null && evt != null) {
-      const point = utils.convertPoint(
+      const point = convertPoint(
         (<graph>this.getGraph()).container,
         getClientX(evt),
         getClientY(evt)
@@ -250,7 +249,6 @@ class LayoutManager extends EventSource {
    * @param cell Array of {@link Cell} that have been resized.
    * @param bounds {@link mxRectangle} taht represents the new bounds.
    */
-  // cellsResized(cells: Array<mxCell>, bounds: Array<mxRectangle>, prev: Array<any>): void;
   cellsResized(
     cells: CellArray | null = null,
     bounds: Rectangle[] | null = null,
@@ -366,7 +364,7 @@ class LayoutManager extends EventSource {
    * Executes the given layout on the given parent.
    */
   executeLayoutForCells(cells: CellArray): void {
-    const sorted = utils.sortCells(cells, false);
+    const sorted = sortCells(cells, false);
     this.layoutCells(sorted, true);
     this.layoutCells(sorted.reverse(), false);
   }

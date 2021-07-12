@@ -2542,7 +2542,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 					}
 					else
 					{
-						let pageBreak = new mxPolyline(pts, this.pageBreakColor);
+						let pageBreak = new Polyline(pts, this.pageBreakColor);
 						pageBreak.dialect = this.dialect;
 						pageBreak.isDashed = this.pageBreakDashed;
 						pageBreak.pointerEvents = false;

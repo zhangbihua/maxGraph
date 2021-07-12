@@ -1,6 +1,6 @@
 import Rectangle from "../geometry/Rectangle";
 import Point from "../geometry/Point";
-import mxPolyline from "../geometry/shape/edge/mxPolyline";
+import Polyline from "../geometry/shape/edge/Polyline";
 
 class GraphPageBreaks {
   horizontalPageBreaks: any[] | null = null;
@@ -91,7 +91,7 @@ class GraphPageBreaks {
             breaks[i].points = pts;
             breaks[i].redraw();
           } else {
-            const pageBreak = new mxPolyline(pts, this.pageBreakColor);
+            const pageBreak = new Polyline(pts, this.pageBreakColor);
             pageBreak.dialect = this.dialect;
             pageBreak.pointerEvents = false;
             pageBreak.isDashed = this.pageBreakDashed;

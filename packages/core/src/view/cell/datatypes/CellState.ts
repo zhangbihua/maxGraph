@@ -10,7 +10,7 @@ import Rectangle from '../../geometry/Rectangle';
 import Cell from './Cell';
 import GraphView from '../../view/GraphView';
 import Shape from '../../geometry/shape/Shape';
-import mxText from '../../geometry/shape/mxText';
+import TextShape from '../../geometry/shape/node/TextShape';
 import Dictionary from '../../../util/Dictionary';
 
 import type { CellStateStyles } from '../../../types';
@@ -181,7 +181,7 @@ class CellState extends Rectangle {
    * Holds the <mxText> that represents the label of the cell. Thi smay be
    * null if the cell has no label.
    */
-  text: mxText | null = null;
+  text: TextShape | null = null;
 
   /**
    * Variable: unscaledWidth

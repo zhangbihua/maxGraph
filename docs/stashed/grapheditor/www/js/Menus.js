@@ -272,7 +272,7 @@ Menus.prototype.init = function()
 			
 			if (tmp != null)
 			{
-				let layout = new mxCompactTreeLayout(graph, true);
+				let layout = new CompactTreeLayout(graph, true);
 				layout.edgeRouting = false;
 				layout.levelDistance = 30;
 				
@@ -311,7 +311,7 @@ Menus.prototype.init = function()
 			
 			if (tmp != null)
 			{
-				let layout = new mxCompactTreeLayout(graph, false);
+				let layout = new CompactTreeLayout(graph, false);
 				layout.edgeRouting = false;
 				layout.levelDistance = 30;
 				
@@ -350,7 +350,7 @@ Menus.prototype.init = function()
 			
 			if (tmp != null)
 			{
-				let layout = new mxRadialTreeLayout(graph, false);
+				let layout = new RadialTreeLayout(graph, false);
 				layout.levelDistance = 80;
 				layout.autoRadius = true;
 				
@@ -378,7 +378,7 @@ Menus.prototype.init = function()
 		menu.addSeparator(parent);
 		menu.addItem(Resources.get('organic'), null, utils.bind(this, function()
 		{
-			let layout = new mxFastOrganicLayout(graph);
+			let layout = new MxFastOrganicLayout(graph);
 			
 			promptSpacing(layout.forceConstant, utils.bind(this, function(newValue)
 			{
@@ -404,7 +404,7 @@ Menus.prototype.init = function()
 		}), parent);
 		menu.addItem(Resources.get('circle'), null, utils.bind(this, function()
 		{
-			let layout = new mxCircleLayout(graph);
+			let layout = new CircleLayout(graph);
 			
     		this.editorUi.executeLayout(function()
     		{

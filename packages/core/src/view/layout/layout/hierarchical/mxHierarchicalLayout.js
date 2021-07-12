@@ -4,15 +4,15 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxGraphLayout from '../mxGraphLayout';
+import GraphLayout from '../GraphLayout';
 import { DIRECTION_NORTH } from '../../../../util/Constants';
-import mxHierarchicalEdgeStyle from './mxHierarchicalEdgeStyle';
+import HierarchicalEdgeStyle from './HierarchicalEdgeStyle';
 import Dictionary from '../../../../util/Dictionary';
-import mxGraphHierarchyModel from './model/mxGraphHierarchyModel';
+import GraphHierarchyModel from './model/GraphHierarchyModel';
 import mxObjectIdentity from '../../../../util/mxObjectIdentity';
-import mxMinimumCycleRemover from './stage/mxMinimumCycleRemover';
-import mxMedianHybridCrossingReduction from './stage/mxMedianHybridCrossingReduction';
-import mxCoordinateAssignment from './stage/mxCoordinateAssignment';
+import MinimumCycleRemover from './stage/MinimumCycleRemover';
+import MedianHybridCrossingReduction from './stage/MedianHybridCrossingReduction';
+import CoordinateAssignment from './stage/CoordinateAssignment';
 
 /**
  * Class: mxHierarchicalLayout
@@ -31,7 +31,7 @@ import mxCoordinateAssignment from './stage/mxCoordinateAssignment';
  * deterministic - Optional boolean that specifies if this layout should be
  * deterministic. Default is true.
  */
-class mxHierarchicalLayout extends mxGraphLayout {
+class mxHierarchicalLayout extends GraphLayout {
   constructor(graph, orientation, deterministic) {
     super(graph);
     this.orientation = orientation != null ? orientation : DIRECTION_NORTH;
@@ -184,7 +184,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * The style to apply between cell layers to edge segments.
    * Default is <mxHierarchicalEdgeStyle.POLYLINE>.
    */
-  edgeStyle = mxHierarchicalEdgeStyle.POLYLINE;
+  edgeStyle = HierarchicalEdgeStyle.POLYLINE;
 
   /**
    * Function: getModel
@@ -549,7 +549,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
         tmp.push(vertexSet[key]);
       }
 
-      this.model = new mxGraphHierarchyModel(
+      this.model = new GraphHierarchyModel(
         this,
         tmp,
         this.roots,
@@ -765,7 +765,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * Executes the cycle stage using mxMinimumCycleRemover.
    */
   cycleStage(parent) {
-    const cycleStage = new mxMinimumCycleRemover(this);
+    const cycleStage = new MinimumCycleRemover(this);
     cycleStage.execute(parent);
   }
 
@@ -785,7 +785,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * Executes the crossing stage using mxMedianHybridCrossingReduction.
    */
   crossingStage(parent) {
-    const crossingStage = new mxMedianHybridCrossingReduction(this);
+    const crossingStage = new MedianHybridCrossingReduction(this);
     crossingStage.execute(parent);
   }
 
@@ -795,7 +795,7 @@ class mxHierarchicalLayout extends mxGraphLayout {
    * Executes the placement stage using mxCoordinateAssignment.
    */
   placementStage(initialX, parent) {
-    const placementStage = new mxCoordinateAssignment(
+    const placementStage = new CoordinateAssignment(
       this,
       this.intraCellSpacing,
       this.interRankCellSpacing,

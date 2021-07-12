@@ -17,9 +17,9 @@ import mxDefaultPopupMenu from './editor/mxDefaultPopupMenu';
 import mxDefaultToolbar from './editor/mxDefaultToolbar';
 import mxEditor from './editor/mxEditor';
 
-import mxCellHighlight from './view/selection/mxCellHighlight';
+import CellHighlight from './view/selection/CellHighlight';
 import CellMarker from './view/cell/CellMarker';
-import mxCellTracker from './view/event/mxCellTracker';
+import CellTracker from './view/event/CellTracker';
 import ConnectionHandler from './view/connection/ConnectionHandler';
 import ConstraintHandler from './view/connection/ConstraintHandler';
 import EdgeHandler from './view/cell/edge/EdgeHandler';
@@ -31,35 +31,35 @@ import mxKeyHandler from './view/event/mxKeyHandler';
 import PanningHandler from './view/panning/PanningHandler';
 import PopupMenuHandler from './view/popups_menus/PopupMenuHandler';
 import RubberBand from './view/selection/RubberBand';
-import mxSelectionCellsHandler from './view/selection/mxSelectionCellsHandler';
+import SelectionCellsHandler from './view/selection/SelectionCellsHandler';
 import TooltipHandler from './view/tooltip/TooltipHandler';
 import VertexHandler from './view/cell/vertex/VertexHandler';
 
-import mxCircleLayout from './view/layout/layout/mxCircleLayout';
-import mxCompactTreeLayout from './view/layout/layout/mxCompactTreeLayout';
-import mxCompositeLayout from './view/layout/layout/mxCompositeLayout';
-import mxEdgeLabelLayout from './view/layout/layout/mxEdgeLabelLayout';
-import mxFastOrganicLayout from './view/layout/layout/mxFastOrganicLayout';
-import mxGraphLayout from './view/layout/layout/mxGraphLayout';
-import mxParallelEdgeLayout from './view/layout/layout/mxParallelEdgeLayout';
-import mxPartitionLayout from './view/layout/layout/mxPartitionLayout';
-import mxRadialTreeLayout from './view/layout/layout/mxRadialTreeLayout';
-import mxStackLayout from './view/layout/layout/mxStackLayout';
+import CircleLayout from './view/layout/layout/CircleLayout';
+import CompactTreeLayout from './view/layout/layout/CompactTreeLayout';
+import CompositeLayout from './view/layout/layout/CompositeLayout';
+import EdgeLabelLayout from './view/layout/layout/EdgeLabelLayout';
+import MxFastOrganicLayout from './view/layout/layout/FastOrganicLayout';
+import GraphLayout from './view/layout/layout/GraphLayout';
+import ParallelEdgeLayout from './view/layout/layout/ParallelEdgeLayout';
+import PartitionLayout from './view/layout/layout/PartitionLayout';
+import RadialTreeLayout from './view/layout/layout/RadialTreeLayout';
+import StackLayout from './view/layout/layout/StackLayout';
 
-import mxHierarchicalEdgeStyle from './view/layout/layout/hierarchical/mxHierarchicalEdgeStyle';
+import HierarchicalEdgeStyle from './view/layout/layout/hierarchical/HierarchicalEdgeStyle';
 import mxHierarchicalLayout from './view/layout/layout/hierarchical/mxHierarchicalLayout';
-import mxSwimlaneLayout from './view/layout/layout/hierarchical/mxSwimlaneLayout';
+import SwimlaneLayout from './view/layout/layout/hierarchical/SwimlaneLayout';
 
-import mxGraphAbstractHierarchyCell from './view/layout/layout/hierarchical/model/mxGraphAbstractHierarchyCell';
-import mxGraphHierarchyEdge from './view/layout/layout/hierarchical/model/mxGraphHierarchyEdge';
-import mxGraphHierarchyModel from './view/layout/layout/hierarchical/model/mxGraphHierarchyModel';
-import mxGraphHierarchyNode from './view/layout/layout/hierarchical/model/mxGraphHierarchyNode';
-import mxSwimlaneModel from './view/layout/layout/hierarchical/model/mxSwimlaneModel';
+import MxGraphAbstractHierarchyCell from './view/layout/layout/hierarchical/model/GraphAbstractHierarchyCell';
+import GraphHierarchyEdge from './view/layout/layout/hierarchical/model/GraphHierarchyEdge';
+import GraphHierarchyModel from './view/layout/layout/hierarchical/model/GraphHierarchyModel';
+import GraphHierarchyNode from './view/layout/layout/hierarchical/model/GraphHierarchyNode';
+import SwimlaneModel from './view/layout/layout/hierarchical/model/SwimlaneModel';
 
-import mxCoordinateAssignment from './view/layout/layout/hierarchical/stage/mxCoordinateAssignment';
-import mxHierarchicalLayoutStage from './view/layout/layout/hierarchical/stage/mxHierarchicalLayoutStage';
-import mxMedianHybridCrossingReduction from './view/layout/layout/hierarchical/stage/mxMedianHybridCrossingReduction';
-import mxMinimumCycleRemover from './view/layout/layout/hierarchical/stage/mxMinimumCycleRemover';
+import CoordinateAssignment from './view/layout/layout/hierarchical/stage/CoordinateAssignment';
+import MxHierarchicalLayoutStage from './view/layout/layout/hierarchical/stage/HierarchicalLayoutStage';
+import MedianHybridCrossingReduction from './view/layout/layout/hierarchical/stage/MedianHybridCrossingReduction';
+import MinimumCycleRemover from './view/layout/layout/hierarchical/stage/MinimumCycleRemover';
 import mxSwimlaneOrdering from './view/layout/layout/hierarchical/stage/mxSwimlaneOrdering';
 
 import mxCellCodec from './util/serialization/mxCellCodec';
@@ -80,29 +80,29 @@ import mxStylesheetCodec from './util/serialization/mxStylesheetCodec';
 import mxTerminalChangeCodec from './util/serialization/mxTerminalChangeCodec';
 
 import Actor from './view/geometry/shape/Actor';
-import Label from './view/geometry/shape/Label';
+import Label from './view/geometry/shape/node/LabelShape';
 import Shape from './view/geometry/shape/Shape';
-import Swimlane from './view/geometry/shape/Swimlane';
-import mxText from './view/geometry/shape/mxText';
-import Triangle from './view/geometry/shape/Triangle';
+import SwimlaneShape from './view/geometry/shape/node/SwimlaneShape';
+import TextShape from './view/geometry/shape/node/TextShape';
+import TriangleShape from './view/geometry/shape/node/TriangleShape';
 
-import mxArrow from './view/geometry/shape/edge/mxArrow';
-import mxArrowConnector from './view/geometry/shape/edge/mxArrowConnector';
-import mxConnector from './view/geometry/shape/edge/mxConnector';
-import mxLine from './view/geometry/shape/edge/mxLine';
-import mxMarker from './view/geometry/shape/edge/mxMarker';
-import mxPolyline from './view/geometry/shape/edge/mxPolyline';
+import Arrow from './view/geometry/shape/edge/Arrow';
+import ArrowConnector from './view/geometry/shape/edge/ArrowConnector';
+import Connector from './view/geometry/shape/edge/Connector';
+import Line from './view/geometry/shape/edge/Line';
+import Marker from './view/geometry/shape/edge/Marker';
+import Polyline from './view/geometry/shape/edge/Polyline';
 
-import Cloud from './view/geometry/shape/node/Cloud';
-import Cylinder from './view/geometry/shape/node/Cylinder';
-import DoubleEllipse from './view/geometry/shape/node/DoubleEllipse';
-import Ellipse from './view/geometry/shape/node/Ellipse';
-import Hexagon from './view/geometry/shape/node/Hexagon';
+import CloudShape from './view/geometry/shape/node/CloudShape';
+import CylinderShape from './view/geometry/shape/node/CylinderShape';
+import DoubleEllipseShape from './view/geometry/shape/node/DoubleEllipseShape';
+import EllipseShape from './view/geometry/shape/node/EllipseShape';
+import HexagonShape from './view/geometry/shape/node/HexagonShape';
 import ImageShape from './view/geometry/shape/node/ImageShape';
 import RectangleShape from './view/geometry/shape/node/RectangleShape';
-import Rhombus from './view/geometry/shape/node/Rhombus';
-import Stencil from './view/geometry/shape/node/Stencil';
-import StencilRegistry from './view/geometry/shape/node/StencilRegistry';
+import RhombusShape from './view/geometry/shape/node/RhombusShape';
+import StencilShape from './view/geometry/shape/node/StencilShape';
+import StencilShapeRegistry from './view/geometry/shape/node/StencilShapeRegistry';
 
 import * as mxConstants from './util/Constants';
 import mxGuide from './util/Guide';
@@ -161,7 +161,7 @@ import mxXmlRequest from './util/network/mxXmlRequest';
 import mxAutoSaveManager from './util/storage/mxAutoSaveManager';
 import mxClipboard from './util/storage/mxClipboard';
 
-import mxUndoableEdit from './view/model/mxUndoableEdit';
+import UndoableEdit from './view/model/UndoableEdit';
 import mxUndoManager from './util/mxUndoManager';
 
 import Cell from './view/cell/datatypes/Cell';
@@ -210,7 +210,7 @@ export default {
   mxDivResizer,
   mxDragSource: DragSource,
   mxToolbar,
-  mxUndoableEdit,
+  mxUndoableEdit: UndoableEdit,
   mxUndoManager,
   mxUrlConverter,
   mxPanningManager: PanningManager,
@@ -225,49 +225,49 @@ export default {
   mxSvgCanvas2D,
   mxGuide,
   mxShape: Shape,
-  mxStencil: Stencil,
-  mxStencilRegistry: StencilRegistry,
-  mxMarker,
+  mxStencil: StencilShape,
+  mxStencilRegistry: StencilShapeRegistry,
+  mxMarker: Marker,
   mxActor: Actor,
-  mxCloud: Cloud,
+  mxCloud: CloudShape,
   mxRectangleShape: RectangleShape,
-  mxEllipse: Ellipse,
-  mxDoubleEllipse: DoubleEllipse,
-  mxRhombus: Rhombus,
-  mxPolyline,
-  mxArrow,
-  mxArrowConnector,
-  mxText,
-  mxTriangle: Triangle,
-  mxHexagon: Hexagon,
-  mxLine,
+  mxEllipse: EllipseShape,
+  mxDoubleEllipse: DoubleEllipseShape,
+  mxRhombus: RhombusShape,
+  mxPolyline: Polyline,
+  mxArrow: Arrow,
+  mxArrowConnector: ArrowConnector,
+  mxText: TextShape,
+  mxTriangle: TriangleShape,
+  mxHexagon: HexagonShape,
+  mxLine: Line,
   mxImageShape: ImageShape,
   mxLabel: Label,
-  mxCylinder: Cylinder,
-  mxConnector,
-  mxSwimlane: Swimlane,
-  mxGraphLayout,
-  mxStackLayout,
-  mxPartitionLayout,
-  mxCompactTreeLayout,
-  mxRadialTreeLayout,
-  mxFastOrganicLayout,
-  mxCircleLayout,
-  mxParallelEdgeLayout,
-  mxCompositeLayout,
-  mxEdgeLabelLayout,
-  mxGraphAbstractHierarchyCell,
-  mxGraphHierarchyNode,
-  mxGraphHierarchyEdge,
-  mxGraphHierarchyModel,
-  mxSwimlaneModel,
-  mxHierarchicalLayoutStage,
-  mxMedianHybridCrossingReduction,
-  mxMinimumCycleRemover,
-  mxCoordinateAssignment,
+  mxCylinder: CylinderShape,
+  mxConnector: Connector,
+  mxSwimlane: SwimlaneShape,
+  mxGraphLayout: GraphLayout,
+  mxStackLayout: StackLayout,
+  mxPartitionLayout: PartitionLayout,
+  mxCompactTreeLayout: CompactTreeLayout,
+  mxRadialTreeLayout: RadialTreeLayout,
+  mxFastOrganicLayout: MxFastOrganicLayout,
+  mxCircleLayout: CircleLayout,
+  mxParallelEdgeLayout: ParallelEdgeLayout,
+  mxCompositeLayout: CompositeLayout,
+  mxEdgeLabelLayout: EdgeLabelLayout,
+  mxGraphAbstractHierarchyCell: MxGraphAbstractHierarchyCell,
+  mxGraphHierarchyNode: GraphHierarchyNode,
+  mxGraphHierarchyEdge: GraphHierarchyEdge,
+  mxGraphHierarchyModel: GraphHierarchyModel,
+  mxSwimlaneModel: SwimlaneModel,
+  mxHierarchicalLayoutStage: MxHierarchicalLayoutStage,
+  mxMedianHybridCrossingReduction: MedianHybridCrossingReduction,
+  mxMinimumCycleRemover: MinimumCycleRemover,
+  mxCoordinateAssignment: CoordinateAssignment,
   mxSwimlaneOrdering,
   mxHierarchicalLayout,
-  mxSwimlaneLayout,
+  mxSwimlaneLayout: SwimlaneLayout,
   mxGraphModel: Model,
   mxCell: Cell,
   mxGeometry: Geometry,
@@ -295,7 +295,7 @@ export default {
   mxPanningHandler: PanningHandler,
   mxPopupMenuHandler: PopupMenuHandler,
   mxCellMarker: CellMarker,
-  mxSelectionCellsHandler,
+  mxSelectionCellsHandler: SelectionCellsHandler,
   mxConnectionHandler: ConnectionHandler,
   mxConstraintHandler: ConstraintHandler,
   mxRubberband: RubberBand,
@@ -306,8 +306,8 @@ export default {
   mxEdgeSegmentHandler: EdgeSegmentHandler,
   mxKeyHandler,
   mxTooltipHandler: TooltipHandler,
-  mxCellTracker,
-  mxCellHighlight,
+  mxCellTracker: CellTracker,
+  mxCellHighlight: CellHighlight,
   mxDefaultKeyHandler,
   mxDefaultPopupMenu,
   mxDefaultToolbar,

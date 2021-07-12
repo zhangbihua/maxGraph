@@ -3,7 +3,13 @@
  * Copyright (c) 2006-2016, Gaudenz Alder
  */
 
-import utils, { getOffset, getScrollOrigin, setOpacity } from '../../util/Utils';
+import {
+  convertPoint,
+  getOffset,
+  getScrollOrigin,
+  setOpacity,
+  setPrefixedStyle,
+} from '../../util/Utils';
 import InternalEvent from '../event/InternalEvent';
 import Point from '../geometry/Point';
 import InternalMouseEvent from '../event/InternalMouseEvent';
@@ -145,8 +151,7 @@ class RubberBand {
    * event all subsequent events of the gesture are redirected to this
    * handler.
    */
-  mouseDown(sender: any,
-            me: InternalMouseEvent): void {
+  mouseDown(sender: any, me: InternalMouseEvent): void {
     if (
       !me.isConsumed() &&
       this.isEnabled() &&
@@ -154,8 +159,8 @@ class RubberBand {
       me.getState() == null &&
       !isMultiTouchEvent(me.getEvent())
     ) {
-      const offset = utils.getOffset(this.graph.container);
-      const origin = utils.getScrollOrigin(this.graph.container);
+      const offset = getOffset(this.graph.container);
+      const origin = getScrollOrigin(this.graph.container);
       origin.x -= offset.x;
       origin.y -= offset.y;
       this.start(me.getX() + origin.x, me.getY() + origin.y);
@@ -179,7 +184,7 @@ class RubberBand {
 
     function createMouseEvent(evt) {
       const me = new InternalMouseEvent(evt);
-      const pt = utils.convertPoint(container, me.getX(), me.getY());
+      const pt = convertPoint(container, me.getX(), me.getY());
 
       me.graphX = pt.x;
       me.graphY = pt.y;
@@ -211,9 +216,7 @@ class RubberBand {
    *
    * Handles the event by updating therubberband selection.
    */
-  mouseMove(sender: any,
-            me: InternalMouseEvent): void {
-
+  mouseMove(sender: any, me: InternalMouseEvent): void {
     if (!me.isConsumed() && this.first != null) {
       const origin = getScrollOrigin(this.graph.container);
       const offset = getOffset(this.graph.container);
@@ -265,8 +268,7 @@ class RubberBand {
    *
    * Returns true if this handler is active.
    */
-  isActive(sender: any,
-           me: InternalMouseEvent): boolean {
+  isActive(sender: any, me: InternalMouseEvent): boolean {
     return this.div != null && this.div.style.display !== 'none';
   }
 
@@ -276,9 +278,7 @@ class RubberBand {
    * Handles the event by selecting the region of the rubberband using
    * <mxGraph.selectRegion>.
    */
-  mouseUp(sender: any,
-          me: InternalMouseEvent): void {
-
+  mouseUp(sender: any, me: InternalMouseEvent): void {
     const active = this.isActive();
     this.reset();
 
@@ -308,7 +308,7 @@ class RubberBand {
     if (this.div != null) {
       if (mxClient.IS_SVG && this.fadeOut) {
         const temp = this.div;
-        utils.setPrefixedStyle(temp.style, 'transition', 'all 0.2s linear');
+        setPrefixedStyle(temp.style, 'transition', 'all 0.2s linear');
         temp.style.pointerEvents = 'none';
         temp.style.opacity = 0;
 

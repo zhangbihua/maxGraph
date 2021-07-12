@@ -1,8 +1,14 @@
 import Cell from "../datatypes/Cell";
 import Geometry from "../../geometry/Geometry";
 import CellArray from "../datatypes/CellArray";
+import Graph from '../../Graph';
 
 class GraphVertex {
+  constructor(graph: Graph) {
+    this.graph = graph;
+  }
+
+  graph: Graph;
 
   /**
    * Specifies the return value for vertices in {@link isLabelMovable}.
@@ -115,7 +121,7 @@ class GraphVertex {
       relative,
       geometryClass
     );
-    return this.addCell(vertex, parent);
+    return this.graph.cell.addCell(vertex, parent);
   };
 
   /**
@@ -154,7 +160,7 @@ class GraphVertex {
    * @param parent {@link mxCell} whose children should be returned.
    */
   getChildVertices(parent: Cell): CellArray {
-    return this.getChildCells(parent, true, false);
+    return this.graph.cell.getChildCells(parent, true, false);
   }
 
   /*****************************************************************************
