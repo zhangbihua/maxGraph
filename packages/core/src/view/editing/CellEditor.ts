@@ -25,7 +25,7 @@ import {
   LINE_HEIGHT,
   WORD_WRAP,
 } from '../../util/Constants';
-import mxText from '../geometry/shape/mxText';
+import TextShape from '../geometry/shape/node/TextShape';
 import graph from '../Graph';
 import Cell from '../cell/datatypes/Cell';
 import InternalMouseEvent from '../event/InternalMouseEvent';
@@ -652,7 +652,7 @@ class CellEditor {
             state.style.overflow !== 'width'
           ) {
             // @ts-ignore
-            const dummy = new mxText(); // FIXME!!!! ===================================================================================================
+            const dummy = new TextShape(); // FIXME!!!! ===================================================================================================
             const spacing = parseInt(state.style.spacing || 2) * scale;
             const spacingTop =
               (parseInt(state.style.spacingTop || 0) + dummy.baseSpacingTop) *
@@ -1099,7 +1099,7 @@ class CellEditor {
       );
     } else {
       // @ts-ignore
-      const dummy = new mxText(); // FIXME!!!! ===================================================================================================
+      const dummy = new TextShape(); // FIXME!!!! ===================================================================================================
       const spacing: number = parseInt(state.style.spacing || 0) * scale;
       const spacingTop: number =
         (parseInt(state.style.spacingTop || 0) + dummy.baseSpacingTop) * scale +

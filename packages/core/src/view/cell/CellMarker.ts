@@ -12,7 +12,7 @@ import {
   MAX_HOTSPOT_SIZE,
   MIN_HOTSPOT_SIZE,
 } from '../../util/Constants';
-import mxCellHighlight from '../selection/mxCellHighlight';
+import CellHighlight from '../selection/CellHighlight';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import utils, { intersectsHotspot } from '../../util/Utils';
@@ -75,7 +75,7 @@ class CellMarker extends EventSource {
     this.validColor = validColor;
     this.invalidColor = invalidColor;
     this.hotspot = hotspot;
-    this.highlight = new mxCellHighlight(graph);
+    this.highlight = new CellHighlight(graph);
   }
 
   /**
@@ -144,7 +144,7 @@ class CellMarker extends EventSource {
    */
   markedState: CellState | null = null;
 
-  highlight: mxCellHighlight;
+  highlight: CellHighlight;
 
   /**
    * Function: setEnabled

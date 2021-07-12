@@ -12,7 +12,7 @@ import InternalEvent from './event/InternalEvent';
 import Rectangle from './geometry/Rectangle';
 import TooltipHandler from './tooltip/TooltipHandler';
 import mxClient from '../mxClient';
-import mxSelectionCellsHandler from './selection/mxSelectionCellsHandler';
+import SelectionCellsHandler from './selection/SelectionCellsHandler';
 import ConnectionHandler from './connection/ConnectionHandler';
 import GraphHandler from './GraphHandler';
 import PanningHandler from './panning/PanningHandler';
@@ -141,7 +141,7 @@ class Graph extends EventSource {
   container: HTMLElement;
   destroyed: boolean = false;
   tooltipHandler: TooltipHandler | null = null;
-  selectionCellsHandler: mxSelectionCellsHandler | null = null;
+  selectionCellsHandler: SelectionCellsHandler | null = null;
   popupMenuHandler: PopupMenuHandler | null = null;
   connectionHandler: ConnectionHandler | null = null;
   graphHandler: GraphHandler | null = null;
@@ -514,8 +514,8 @@ class Graph extends EventSource {
   /**
    * Creates and returns a new {@link TooltipHandler} to be used in this graph.
    */
-  createSelectionCellsHandler(): mxSelectionCellsHandler {
-    return new mxSelectionCellsHandler(this);
+  createSelectionCellsHandler(): SelectionCellsHandler {
+    return new SelectionCellsHandler(this);
   }
 
   /**

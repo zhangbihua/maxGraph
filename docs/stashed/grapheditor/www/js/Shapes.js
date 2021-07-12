@@ -110,10 +110,10 @@
 	// Table Shape
 	function TableShape()
 	{
-		Swimlane.call(this);
+		SwimlaneShape.call(this);
 	};
 	
-	utils.extend(TableShape, Swimlane);
+	utils.extend(TableShape, SwimlaneShape);
 
 	TableShape.prototype.getLabelBounds = function(rect)
 	{
@@ -125,7 +125,7 @@
 		}
 		else
 		{
-			return Swimlane.prototype.getLabelBounds.apply(this, arguments);
+			return SwimlaneShape.prototype.getLabelBounds.apply(this, arguments);
 		}
 	};
 	
@@ -142,7 +142,7 @@
 		}
 		else
 		{
-			Swimlane.prototype.paintVertexShape.apply(this, arguments);
+			SwimlaneShape.prototype.paintVertexShape.apply(this, arguments);
 			c.translate(-x, -y);
 		}
 		
@@ -1353,7 +1353,7 @@
 	};
 	
 	// Sets default jiggle for diamond
-	Rhombus.prototype.defaultJiggle = 2;
+	RhombusShape.prototype.defaultJiggle = 2;
 
 	// Overrides to avoid call to rect
 	var mxRectangleShapeIsHtmlAllowed0 = RectangleShape.prototype.isHtmlAllowed;
@@ -1547,7 +1547,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(CalloutShape, Hexagon);
+	utils.extend(CalloutShape, HexagonShape);
 	CalloutShape.prototype.size = 30;
 	CalloutShape.prototype.position = 0.5;
 	CalloutShape.prototype.position2 = 0.5;
@@ -1607,7 +1607,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(HexagonShape, Hexagon);
+	utils.extend(HexagonShape, HexagonShape);
 	HexagonShape.prototype.size = 0.25;
 	HexagonShape.prototype.fixedSize = 20;
 	HexagonShape.prototype.isRoundable = function()
@@ -1653,8 +1653,8 @@
 	mxCellRenderer.registerShape('plus', PlusShape);
 	
 	// Overrides painting of rhombus shape to allow for double style
-	let mxRhombusPaintVertexShape = Rhombus.prototype.paintVertexShape;
-	Rhombus.prototype.getLabelBounds = function(rect)
+	let mxRhombusPaintVertexShape = RhombusShape.prototype.paintVertexShape;
+	RhombusShape.prototype.getLabelBounds = function(rect)
 	{
 		if (this.style.double == 1)
 		{
@@ -1667,7 +1667,7 @@
 		
 		return rect;
 	};
-	Rhombus.prototype.paintVertexShape = function(c, x, y, w, h)
+	RhombusShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		mxRhombusPaintVertexShape.apply(this, arguments);
 
@@ -1915,12 +1915,12 @@
 	// UML Entity Shape
 	function UmlEntityShape()
 	{
-		Ellipse.call(this);
+		EllipseShape.call(this);
 	};
-	utils.extend(UmlEntityShape, Ellipse);
+	utils.extend(UmlEntityShape, EllipseShape);
 	UmlEntityShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		Ellipse.prototype.paintVertexShape.apply(this, arguments);
+		EllipseShape.prototype.paintVertexShape.apply(this, arguments);
 		
 		c.begin();
 		c.moveTo(x + w / 8, y + h);
@@ -2690,9 +2690,9 @@
 	// State Shapes derives from double ellipse
 	function StateShape()
 	{
-		DoubleEllipse.call(this);
+		DoubleEllipseShape.call(this);
 	};
-	utils.extend(StateShape, DoubleEllipse);
+	utils.extend(StateShape, DoubleEllipseShape);
 	StateShape.prototype.outerStroke = true;
 	StateShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
@@ -2727,10 +2727,10 @@
 	// Link shape
 	function LinkShape()
 	{
-		mxArrowConnector.call(this);
+		ArrowConnector.call(this);
 		this.spacing = 0;
 	};
-	utils.extend(LinkShape, mxArrowConnector);
+	utils.extend(LinkShape, ArrowConnector);
 	LinkShape.prototype.defaultWidth = 4;
 	
 	LinkShape.prototype.isOpenEnded = function()
@@ -2754,10 +2754,10 @@
 	// Generic arrow
 	function FlexArrowShape()
 	{
-		mxArrowConnector.call(this);
+		ArrowConnector.call(this);
 		this.spacing = 0;
 	};
-	utils.extend(FlexArrowShape, mxArrowConnector);
+	utils.extend(FlexArrowShape, ArrowConnector);
 	FlexArrowShape.prototype.defaultWidth = 10;
 	FlexArrowShape.prototype.defaultArrowWidth = 20;
 
@@ -3071,12 +3071,12 @@
 	// Internal storage
 	function TapeDataShape()
 	{
-		Ellipse.call(this);
+		EllipseShape.call(this);
 	};
-	utils.extend(TapeDataShape, Ellipse);
+	utils.extend(TapeDataShape, EllipseShape);
 	TapeDataShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		Ellipse.prototype.paintVertexShape.apply(this, arguments);
+		EllipseShape.prototype.paintVertexShape.apply(this, arguments);
 		
 		c.begin();
 		c.moveTo(x + w / 2, y + h);
@@ -3090,12 +3090,12 @@
 	// OrEllipseShape
 	function OrEllipseShape()
 	{
-		Ellipse.call(this);
+		EllipseShape.call(this);
 	};
-	utils.extend(OrEllipseShape, Ellipse);
+	utils.extend(OrEllipseShape, EllipseShape);
 	OrEllipseShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		Ellipse.prototype.paintVertexShape.apply(this, arguments);
+		EllipseShape.prototype.paintVertexShape.apply(this, arguments);
 		
 		c.setShadow(false);
 		c.begin();
@@ -3116,12 +3116,12 @@
 	// SumEllipseShape
 	function SumEllipseShape()
 	{
-		Ellipse.call(this);
+		EllipseShape.call(this);
 	};
-	utils.extend(SumEllipseShape, Ellipse);
+	utils.extend(SumEllipseShape, EllipseShape);
 	SumEllipseShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		Ellipse.prototype.paintVertexShape.apply(this, arguments);
+		EllipseShape.prototype.paintVertexShape.apply(this, arguments);
 		var s2 = 0.145;
 		
 		c.setShadow(false);
@@ -3143,12 +3143,12 @@
 	// SortShape
 	function SortShape()
 	{
-		Rhombus.call(this);
+		RhombusShape.call(this);
 	};
-	utils.extend(SortShape, Rhombus);
+	utils.extend(SortShape, RhombusShape);
 	SortShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		Rhombus.prototype.paintVertexShape.apply(this, arguments);
+		RhombusShape.prototype.paintVertexShape.apply(this, arguments);
 		
 		c.setShadow(false);
 		c.begin();
@@ -3163,9 +3163,9 @@
 	// CollateShape
 	function CollateShape()
 	{
-		Ellipse.call(this);
+		EllipseShape.call(this);
 	};
-	utils.extend(CollateShape, Ellipse);
+	utils.extend(CollateShape, EllipseShape);
 	CollateShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		c.begin();
@@ -3188,9 +3188,9 @@
 	// DimensionShape
 	function DimensionShape()
 	{
-		Ellipse.call(this);
+		EllipseShape.call(this);
 	};
-	utils.extend(DimensionShape, Ellipse);
+	utils.extend(DimensionShape, EllipseShape);
 	DimensionShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		// Arrow size
@@ -3223,9 +3223,9 @@
 	// PartialRectangleShape
 	function PartialRectangleShape()
 	{
-		Ellipse.call(this);
+		EllipseShape.call(this);
 	};
-	utils.extend(PartialRectangleShape, Ellipse);
+	utils.extend(PartialRectangleShape, EllipseShape);
 	PartialRectangleShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		if (!this.outline)
@@ -3293,12 +3293,12 @@
 	// LineEllipseShape
 	function LineEllipseShape()
 	{
-		Ellipse.call(this);
+		EllipseShape.call(this);
 	};
-	utils.extend(LineEllipseShape, Ellipse);
+	utils.extend(LineEllipseShape, EllipseShape);
 	LineEllipseShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		Ellipse.prototype.paintVertexShape.apply(this, arguments);
+		EllipseShape.prototype.paintVertexShape.apply(this, arguments);
 		
 		c.setShadow(false);
 		c.begin();
@@ -3401,9 +3401,9 @@
 	// FilledEdge shape
 	function FilledEdge()
 	{
-		mxConnector.call(this);
+		Connector.call(this);
 	};
-	utils.extend(FilledEdge, mxConnector);
+	utils.extend(FilledEdge, Connector);
 	
 	FilledEdge.prototype.origPaintEdgeShape = FilledEdge.prototype.paintEdgeShape;
 	FilledEdge.prototype.paintEdgeShape = function(c, pts, rounded)
@@ -3462,7 +3462,7 @@
 	}
 	
 	// Registers and defines the custom marker
-	mxMarker.addMarker('dash', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
+	Marker.addMarker('dash', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
 	{
 		let nx = unitX * (size + sw + 1);
 		let ny = unitY * (size + sw + 1);
@@ -3477,7 +3477,7 @@
 	});
 
 	// Registers and defines the custom marker
-	mxMarker.addMarker('box', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
+	Marker.addMarker('box', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
 	{
 		let nx = unitX * (size + sw + 1);
 		let ny = unitY * (size + sw + 1);
@@ -3508,7 +3508,7 @@
 	});
 	
 	// Registers and defines the custom marker
-	mxMarker.addMarker('cross', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
+	Marker.addMarker('cross', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
 	{
 		let nx = unitX * (size + sw + 1);
 		let ny = unitY * (size + sw + 1);
@@ -3552,8 +3552,8 @@
 		};
 	};
 	
-	mxMarker.addMarker('circle', circleMarker);
-	mxMarker.addMarker('circlePlus', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
+	Marker.addMarker('circle', circleMarker);
+	Marker.addMarker('circlePlus', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
 	{
 		let pt = pe.clone();
 		let fn = circleMarker.apply(this, arguments);
@@ -3574,7 +3574,7 @@
 	});
 	
 	// Registers and defines the custom marker
-	mxMarker.addMarker('halfCircle', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
+	Marker.addMarker('halfCircle', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
 	{
 		let nx = unitX * (size + sw + 1);
 		let ny = unitY * (size + sw + 1);
@@ -3593,7 +3593,7 @@
 		};
 	});
 
-	mxMarker.addMarker('async', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
+	Marker.addMarker('async', function(c, shape, type, pe, unitX, unitY, size, source, sw, filled)
 	{
 		// The angle of the forward facing arrow sides against the x axis is
 		// 26.565 degrees, 1/sin(26.565) = 2.236 / 2 = 1.118 ( / 2 allows for
@@ -3670,7 +3670,7 @@
 		}
 	};
 	
-	mxMarker.addMarker('openAsync', createOpenAsyncArrow(2));
+	Marker.addMarker('openAsync', createOpenAsyncArrow(2));
 	
 	function arrow(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
 	{
@@ -4553,7 +4553,7 @@
 				let name = this.state.style.shape;
 
 				if (mxCellRenderer.defaultShapes[name] == null &&
-					StencilRegistry.getStencil(name) == null)
+					StencilShapeRegistry.getStencil(name) == null)
 				{
 					name = mxConstants.SHAPE_RECTANGLE;
 				}
@@ -4595,7 +4595,7 @@
 			let name = this.state.style.shape;
 			
 			if (mxCellRenderer.defaultShapes[name] == null &&
-				StencilRegistry.getStencil(name) == null)
+				StencilShapeRegistry.getStencil(name) == null)
 			{
 				name = mxConstants.SHAPE_CONNECTOR;
 			}
@@ -4818,13 +4818,13 @@
 	        	            		 new ConnectionConstraint(new Point(0.5, 1), true),
 	        	            		 new ConnectionConstraint(new Point(0.75, 1), true),
 	        	            		 new ConnectionConstraint(new Point(1, 1), true)];
-	Ellipse.prototype.constraints = [new ConnectionConstraint(new Point(0, 0), true), new ConnectionConstraint(new Point(1, 0), true),
+	EllipseShape.prototype.constraints = [new ConnectionConstraint(new Point(0, 0), true), new ConnectionConstraint(new Point(1, 0), true),
 	                                   new ConnectionConstraint(new Point(0, 1), true), new ConnectionConstraint(new Point(1, 1), true),
 	                                   new ConnectionConstraint(new Point(0.5, 0), true), new ConnectionConstraint(new Point(0.5, 1), true),
 	          	              		   new ConnectionConstraint(new Point(0, 0.5), true), new ConnectionConstraint(new Point(1, 0.5))];
 	PartialRectangleShape.prototype.constraints = RectangleShape.prototype.constraints;
 	ImageShape.prototype.constraints = RectangleShape.prototype.constraints;
-	Swimlane.prototype.constraints = RectangleShape.prototype.constraints;
+	SwimlaneShape.prototype.constraints = RectangleShape.prototype.constraints;
 	PlusShape.prototype.constraints = RectangleShape.prototype.constraints;
 	Label.prototype.constraints = RectangleShape.prototype.constraints;
 	
@@ -4968,10 +4968,10 @@
 
 	InternalStorageShape.prototype.constraints = RectangleShape.prototype.constraints;
 	DataStorageShape.prototype.constraints = RectangleShape.prototype.constraints;
-	TapeDataShape.prototype.constraints = Ellipse.prototype.constraints;
-	OrEllipseShape.prototype.constraints = Ellipse.prototype.constraints;
-	SumEllipseShape.prototype.constraints = Ellipse.prototype.constraints;
-	LineEllipseShape.prototype.constraints = Ellipse.prototype.constraints;
+	TapeDataShape.prototype.constraints = EllipseShape.prototype.constraints;
+	OrEllipseShape.prototype.constraints = EllipseShape.prototype.constraints;
+	SumEllipseShape.prototype.constraints = EllipseShape.prototype.constraints;
+	LineEllipseShape.prototype.constraints = EllipseShape.prototype.constraints;
 	ManualInputShape.prototype.constraints = RectangleShape.prototype.constraints;
 	DelayShape.prototype.constraints = RectangleShape.prototype.constraints;
 
@@ -5102,21 +5102,21 @@
 									new ConnectionConstraint(new Point(1, 0.25), true),
 									new ConnectionConstraint(new Point(1, 0.5), true),
 									new ConnectionConstraint(new Point(1, 0.75), true)];
-	mxLine.prototype.constraints = [new ConnectionConstraint(new Point(0, 0.5), false),
+	Line.prototype.constraints = [new ConnectionConstraint(new Point(0, 0.5), false),
 	                                new ConnectionConstraint(new Point(0.25, 0.5), false),
 	                                new ConnectionConstraint(new Point(0.75, 0.5), false),
 									new ConnectionConstraint(new Point(1, 0.5), false)];
 	LollipopShape.prototype.constraints = [new ConnectionConstraint(new Point(0.5, 0), false),
 										new ConnectionConstraint(new Point(0.5, 1), false)];
-	DoubleEllipse.prototype.constraints = Ellipse.prototype.constraints;
-	Rhombus.prototype.constraints = Ellipse.prototype.constraints;
-	Triangle.prototype.constraints = [new ConnectionConstraint(new Point(0, 0.25), true),
+	DoubleEllipseShape.prototype.constraints = EllipseShape.prototype.constraints;
+	RhombusShape.prototype.constraints = EllipseShape.prototype.constraints;
+	TriangleShape.prototype.constraints = [new ConnectionConstraint(new Point(0, 0.25), true),
 	                                    new ConnectionConstraint(new Point(0, 0.5), true),
 	                                   new ConnectionConstraint(new Point(0, 0.75), true),
 	                                   new ConnectionConstraint(new Point(0.5, 0), true),
 	                                   new ConnectionConstraint(new Point(0.5, 1), true),
 	                                   new ConnectionConstraint(new Point(1, 0.5), true)];
-	Hexagon.prototype.constraints = [new ConnectionConstraint(new Point(0.375, 0), true),
+	HexagonShape.prototype.constraints = [new ConnectionConstraint(new Point(0.375, 0), true),
 	                                    new ConnectionConstraint(new Point(0.5, 0), true),
 	                                   new ConnectionConstraint(new Point(0.625, 0), true),
 	                                   new ConnectionConstraint(new Point(0, 0.25), true),
@@ -5128,7 +5128,7 @@
 	                                   new ConnectionConstraint(new Point(0.375, 1), true),
 	                                    new ConnectionConstraint(new Point(0.5, 1), true),
 	                                   new ConnectionConstraint(new Point(0.625, 1), true)];
-	Cloud.prototype.constraints = [new ConnectionConstraint(new Point(0.25, 0.25), false),
+	CloudShape.prototype.constraints = [new ConnectionConstraint(new Point(0.25, 0.25), false),
 	                                 new ConnectionConstraint(new Point(0.4, 0.1), false),
 	                                 new ConnectionConstraint(new Point(0.16, 0.55), false),
 	                                 new ConnectionConstraint(new Point(0.07, 0.4), false),
@@ -5151,7 +5151,7 @@
 	        	            		 new ConnectionConstraint(new Point(1, 0.25), true),
 	        	            		 new ConnectionConstraint(new Point(1, 0.5), true),
 	        	            		 new ConnectionConstraint(new Point(1, 0.75), true)];
-	mxArrow.prototype.constraints = null;
+	Arrow.prototype.constraints = null;
 
 	TeeShape.prototype.getConstraints = function(style, w, h)
 	{

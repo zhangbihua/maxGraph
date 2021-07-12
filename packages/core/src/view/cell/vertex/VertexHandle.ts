@@ -94,8 +94,8 @@ class VertexHandle {
     const { scale } = this.graph.view;
     const tr = this.graph.view.translate;
     let pt = new Point(
-      me.getGraphX() / scale - tr.x,
-      me.getGraphY() / scale - tr.y
+      <number>me.getGraphX() / scale - tr.x,
+      <number>me.getGraphY() / scale - tr.y
     );
 
     // Center shape on mouse cursor
@@ -301,7 +301,7 @@ class VertexHandle {
    */
   reset(): void {
     this.setVisible(true);
-    this.state.style = this.graph.cells.getCellStyle(this.state.cell);
+    this.state.style = this.graph.cell.getCellStyle(this.state.cell);
     this.positionChanged();
   }
 

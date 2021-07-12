@@ -9,9 +9,9 @@ import mxDefaultKeyHandler from './mxDefaultKeyHandler';
 import EventSource from '../view/event/EventSource';
 import Resources from '../util/Resources';
 import mxClient from '../mxClient';
-import mxCompactTreeLayout from '../view/layout/layout/mxCompactTreeLayout';
+import CompactTreeLayout from '../view/layout/layout/CompactTreeLayout';
 import mxDefaultToolbar from './mxDefaultToolbar';
-import mxStackLayout from '../view/layout/layout/mxStackLayout';
+import StackLayout from '../view/layout/layout/StackLayout';
 import EventObject from '../view/event/EventObject';
 import utils from '../util/Utils';
 import mxCodec from '../util/serialization/mxCodec';
@@ -1733,12 +1733,12 @@ class mxEditor extends EventSource {
   /**
    * Creates the layout instance used to layout the
    * swimlanes in the diagram.
-   * @returns mxStackLayout instance
+   * @returns StackLayout instance
    */
   // createDiagramLayout(): mxStackLayout;
   createDiagramLayout() {
     const gs = this.graph.gridSize;
-    const layout = new mxStackLayout(
+    const layout = new StackLayout(
       this.graph,
       !this.horizontalFlow,
       this.swimlaneSpacing,
@@ -1757,11 +1757,11 @@ class mxEditor extends EventSource {
   /**
    * Creates the layout instance used to layout the
    * children of each swimlane.
-   * @returns mxCompactTreeLayout instance
+   * @returns CompactTreeLayout instance
    */
   // createSwimlaneLayout(): mxCompactTreeLayout;
   createSwimlaneLayout() {
-    return new mxCompactTreeLayout(this.graph, this.horizontalFlow);
+    return new CompactTreeLayout(this.graph, this.horizontalFlow);
   }
 
   /**
@@ -1852,7 +1852,7 @@ class mxEditor extends EventSource {
   // treeLayout(cell: mxCell, horizontal: boolean): void;
   treeLayout(cell, horizontal) {
     if (cell != null) {
-      const layout = new mxCompactTreeLayout(this.graph, horizontal);
+      const layout = new CompactTreeLayout(this.graph, horizontal);
       layout.execute(cell);
     }
   }

@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import EventSource from '../event/EventSource';
-import mxUndoableEdit from './mxUndoableEdit';
+import UndoableEdit from './UndoableEdit';
 import CellPath from '../cell/datatypes/CellPath';
 import Cell from '../cell/datatypes/Cell';
 import utils, {isNumeric} from '../../util/Utils';
@@ -128,7 +128,7 @@ import type { CellMap, FilterFunction, UndoableChange } from '../../types';
  * Event: mxEvent.CHANGE
  *
  * Fires when an undoable edit is dispatched. The `edit` property
- * contains the {@link mxUndoableEdit}. The `changes` property contains
+ * contains the {@link UndoableEdit}. The `changes` property contains
  * the array of atomic changes inside the undoable edit. The changes property
  * is **deprecated**, please use edit.changes instead.
  *
@@ -1066,15 +1066,15 @@ class Model extends EventSource {
   }
 
   /**
-   * Creates a new {@link mxUndoableEdit} that implements the
+   * Creates a new {@link UndoableEdit} that implements the
    * notify function to fire a {@link change} and {@link notify} event
-   * through the {@link mxUndoableEdit}'s source.
+   * through the {@link UndoableEdit}'s source.
    *
    * @param significant  Optional boolean that specifies if the edit to be created is
    * significant. Default is true.
    */
-  createUndoableEdit(significant: boolean=true): mxUndoableEdit {
-    const edit = new mxUndoableEdit(this, significant);
+  createUndoableEdit(significant: boolean=true): UndoableEdit {
+    const edit = new UndoableEdit(this, significant);
 
     edit.notify = () => {
       // LATER: Remove changes property (deprecated)

@@ -1,8 +1,15 @@
 import CellArray from "../cell/datatypes/CellArray";
 import Cell from "../cell/datatypes/Cell";
 import Dictionary from "../../util/Dictionary";
+import Graph from '../Graph';
 
 class GraphTerminal {
+  constructor(graph: Graph) {
+    this.graph = graph;
+  }
+
+  graph: Graph;
+
   /*****************************************************************************
    * Group: Graph behaviour
    *****************************************************************************/
@@ -50,16 +57,16 @@ class GraphTerminal {
     const dict = new Dictionary();
 
     for (let i = 0; i < edges.length; i += 1) {
-      const state = this.view.getState(edges[i]);
+      const state = this.graph.view.getState(edges[i]);
 
       const source =
         state != null
           ? state.getVisibleTerminal(true)
-          : this.view.getVisibleTerminal(edges[i], true);
+          : this.graph.view.getVisibleTerminal(edges[i], true);
       const target =
         state != null
           ? state.getVisibleTerminal(false)
-          : this.view.getVisibleTerminal(edges[i], false);
+          : this.graph.view.getVisibleTerminal(edges[i], false);
 
       // Checks if the terminal is the source of the edge and if the
       // target should be stored in the result

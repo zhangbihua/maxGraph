@@ -11,6 +11,7 @@ import mxClient from '../../mxClient';
 import utils from '../../util/Utils';
 import { DIALECT_SVG } from '../../util/Constants';
 import { write } from '../../util/DomUtils';
+import Graph from '../Graph';
 
 /**
  * @class PrintPreview
@@ -194,14 +195,12 @@ class PrintPreview {
   /**
    * Reference to the {@link graph} that should be previewed.
    */
-  // graph: mxGraph;
-  graph = null;
+  graph: Graph;
 
   /**
    * Holds the {@link Rectangle} that defines the page format.
    */
-  // pageFormat: mxRectangle;
-  pageFormat = null;
+  pageFormat: Rectangle;
 
   /**
    * Holds the scale of the print preview.

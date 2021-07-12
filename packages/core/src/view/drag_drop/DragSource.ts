@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import Rectangle from '../geometry/Rectangle';
-import mxCellHighlight from '../selection/mxCellHighlight';
+import CellHighlight from '../selection/CellHighlight';
 import utils from '../../util/Utils';
 import InternalEvent from '../event/InternalEvent';
 import mxClient from '../../mxClient';
@@ -546,7 +546,7 @@ class DragSource {
     }
 
     if (this.highlightDropTargets) {
-      this.currentHighlight = new mxCellHighlight(graph, DROP_TARGET_COLOR);
+      this.currentHighlight = new CellHighlight(graph, DROP_TARGET_COLOR);
     }
 
     // Consumes all events in the current graph before they are fired

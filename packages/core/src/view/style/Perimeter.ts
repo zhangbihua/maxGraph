@@ -98,7 +98,6 @@ class Perimeter {
    * of the perimeter and the line between the next and the center point is
    * returned.
    */
-  // static RectanglePerimeter(bounds: mxRectangle, vertex: mxCellState, next: mxPoint, orthogonal?: boolean): mxPoint;
   static RectanglePerimeter(
     bounds: Rectangle,
     vertex: CellState,
@@ -159,7 +158,6 @@ class Perimeter {
    * Describes an elliptic perimeter. See {@link RectanglePerimeter}
    * for a description of the parameters.
    */
-  // static EllipsePerimeter(bounds: mxRectangle, vertex: mxCellState, next: mxPoint, orthogonal?: boolean): mxPoint;
   static EllipsePerimeter(
     bounds: Rectangle,
     vertex: CellState,
@@ -246,7 +244,6 @@ class Perimeter {
    * Describes a rhombus (aka diamond) perimeter. See {@link RectanglePerimeter}
    * for a description of the parameters.
    */
-  // static RhombusPerimeter(bounds: mxRectangle, vertex: mxCellState, next: mxPoint, orthogonal?: boolean): mxPoint;
   static RhombusPerimeter(
     bounds: Rectangle,
     vertex: CellState,
@@ -307,7 +304,6 @@ class Perimeter {
    * Describes a triangle perimeter. See {@link RectanglePerimeter}
    * for a description of the parameters.
    */
-  // static TrianglePerimeter(bounds: mxRectangle, vertex: mxCellState, next: mxPoint, orthogonal?: boolean): mxPoint;
   static TrianglePerimeter(
     bounds: Rectangle,
     vertex: CellState,
@@ -437,7 +433,6 @@ class Perimeter {
    * Describes a hexagon perimeter. See {@link RectanglePerimeter}
    * for a description of the parameters.
    */
-  // static HexagonPerimeter(bounds: mxRectangle, vertex: mxCellState, next: mxPoint, orthogonal?: boolean): mxPoint;
   static HexagonPerimeter(
     bounds: Rectangle,
     vertex: CellState,

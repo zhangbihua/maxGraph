@@ -2831,7 +2831,7 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 				let layout = graph.layoutManager.getLayout(targetParent);
 			
 				// LATER: Use parent of parent if valid layout
-				if (layout != null && layout.constructor == mxStackLayout)
+				if (layout != null && layout.constructor == StackLayout)
 				{
 					validLayout = false;
 				}
@@ -4250,7 +4250,7 @@ Sidebar.prototype.addStencilPalette = function(id, title, stencilFile, style, ig
 			}
 		}
 
-		StencilRegistry.loadStencilSet(stencilFile, utils.bind(this, function(packageName, stencilName, displayName, w, h)
+		StencilShapeRegistry.loadStencilSet(stencilFile, utils.bind(this, function(packageName, stencilName, displayName, w, h)
 		{
 			if (ignore == null || utils.indexOf(ignore, stencilName) < 0)
 			{
@@ -4292,7 +4292,7 @@ Sidebar.prototype.addStencilPalette = function(id, title, stencilFile, style, ig
 				}
 			}
 
-			StencilRegistry.loadStencilSet(stencilFile, utils.bind(this, function(packageName, stencilName, displayName, w, h)
+			StencilShapeRegistry.loadStencilSet(stencilFile, utils.bind(this, function(packageName, stencilName, displayName, w, h)
 			{
 				if (ignore == null || utils.indexOf(ignore, stencilName) < 0)
 				{

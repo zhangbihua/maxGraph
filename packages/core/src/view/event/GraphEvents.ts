@@ -276,7 +276,7 @@ class GraphEvents {
       }
 
       if (cell != null) {
-        this.selectCellForEvent(cell, evt);
+        this.graph.selection.selectCellForEvent(cell, evt);
       } else if (!this.isToggleEvent(evt)) {
         this.graph.selection.clearSelection();
       }
@@ -961,8 +961,8 @@ class GraphEvents {
         height = Math.max(height, this.graph.minimumContainerSize.height);
       }
 
-      if (this.resizeContainer) {
-        this.doResizeContainer(width, height);
+      if (this.graph.resizeContainer) {
+        this.graph.doResizeContainer(width, height);
       }
 
       if (this.preferPageSize || this.pageVisible) {

@@ -48,7 +48,6 @@ class Actor extends Shape {
   /**
    * Redirects to redrawPath for subclasses to work.
    */
-  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintVertexShape(
     c: mxSvgCanvas2D,
     x: number,
@@ -65,7 +64,6 @@ class Actor extends Shape {
   /**
    * Draws the path for this shape.
    */
-  // redrawPath(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   redrawPath(
     c: mxSvgCanvas2D,
     x: number,

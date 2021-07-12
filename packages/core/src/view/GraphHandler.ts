@@ -21,7 +21,7 @@ import {
   VALID_COLOR,
 } from '../util/Constants';
 import Dictionary from '../util/Dictionary';
-import mxCellHighlight from './selection/mxCellHighlight';
+import CellHighlight from './selection/CellHighlight';
 import Rectangle from './geometry/Rectangle';
 import {
   getClientX,
@@ -1067,7 +1067,7 @@ class GraphHandler {
       ) {
         // Highlight is used for highlighting drop targets
         if (this.highlight == null) {
-          this.highlight = new mxCellHighlight(
+          this.highlight = new CellHighlight(
             this.graph,
             DROP_TARGET_COLOR,
             3

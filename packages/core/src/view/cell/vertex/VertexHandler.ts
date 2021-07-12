@@ -23,7 +23,7 @@ import {
 import InternalEvent from '../../event/InternalEvent';
 import RectangleShape from '../../geometry/shape/node/RectangleShape';
 import ImageShape from '../../geometry/shape/node/ImageShape';
-import Ellipse from '../../geometry/shape/node/Ellipse';
+import EllipseShape from '../../geometry/shape/node/EllipseShape';
 import Point from '../../geometry/Point';
 import utils from '../../../util/Utils';
 import mxClient from '../../../mxClient';
@@ -262,7 +262,7 @@ class VertexHandler {
 
       if (
         resizable ||
-        (this.graph.isLabelMovable(this.state.cell) &&
+        (this.graph.label.isLabelMovable(this.state.cell) &&
           this.state.width >= 2 &&
           this.state.height >= 2)
       ) {
@@ -560,7 +560,7 @@ class VertexHandler {
       return shape;
     }
     if (index === InternalEvent.ROTATION_HANDLE) {
-      return new Ellipse(
+      return new EllipseShape(
         bounds,
         fillColor || HANDLE_FILLCOLOR,
         HANDLE_STROKECOLOR

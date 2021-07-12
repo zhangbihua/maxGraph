@@ -57,12 +57,12 @@ export default MYNAMEHERE;
         mxConstants.SHADOW_OFFSET_Y = 6;
 
         // Table icon dimensions and position
-        Swimlane.prototype.imageSize = 20;
-        Swimlane.prototype.imageDx = 16;
-        Swimlane.prototype.imageDy = 4;
+        SwimlaneShape.prototype.imageSize = 20;
+        SwimlaneShape.prototype.imageDx = 16;
+        SwimlaneShape.prototype.imageDy = 4;
 
         // Changes swimlane icon bounds
-        Swimlane.prototype.getImageBounds = function(x, y, w, h)
+        SwimlaneShape.prototype.getImageBounds = function(x, y, w, h)
         {
           return new Rectangle(x + this.imageDx, y + this.imageDy, this.imageSize, this.imageSize);
         };
@@ -126,7 +126,7 @@ export default MYNAMEHERE;
         editor.layoutSwimlanes = true;
         editor.createSwimlaneLayout = () =>
         {
-          let layout = new mxStackLayout(this.graph, false);
+          let layout = new StackLayout(this.graph, false);
           layout.fill = true;
           layout.resizeParent = true;
 

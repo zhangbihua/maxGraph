@@ -28,7 +28,7 @@ import mxSvgCanvas2D from '../../../util/canvas/mxSvgCanvas2D';
 import InternalEvent from '../../event/InternalEvent';
 import mxClient from '../../../mxClient';
 import CellState from '../../cell/datatypes/CellState';
-import Stencil from './node/Stencil';
+import StencilShape from './node/StencilShape';
 import CellOverlay from '../../cell/CellOverlay';
 
 import type {
@@ -93,7 +93,7 @@ const toBool = (i: any) => {
  * ```
  */
 class Shape {
-  constructor(stencil: Stencil | null = null) {
+  constructor(stencil: StencilShape | null = null) {
     if (stencil) {
       this.stencil = stencil;
     }
@@ -267,7 +267,7 @@ class Shape {
    *
    * Holds the <mxStencil> that defines the shape.
    */
-  stencil: Stencil | null = null;
+  stencil: StencilShape | null = null;
 
   /**
    * Variable: svgStrokeTolerance

@@ -6,7 +6,7 @@
  */
 import mxPopupMenu from '../../util/gui/mxPopupMenu';
 import InternalEvent from '../event/InternalEvent';
-import utils from '../../util/Utils';
+import utils, { getScrollOrigin } from '../../util/Utils';
 import { getMainEvent, isMultiTouchEvent } from '../../util/EventUtils';
 import Graph from '../Graph';
 import InternalMouseEvent from '../event/InternalMouseEvent';
@@ -28,7 +28,7 @@ class PopupMenuHandler extends mxPopupMenu {
     if (graph != null) {
       this.graph = graph;
       this.factoryMethod = factoryMethod;
-      this.graph.addMouseListener(this);
+      this.graph.event.addMouseListener(this);
 
       // Does not show menu if any touch gestures take place after the trigger
       this.gestureHandler = (sender, eo) => {
@@ -40,6 +40,13 @@ class PopupMenuHandler extends mxPopupMenu {
       this.init();
     }
   }
+
+  // @ts-ignore
+  gestureHandler: (...args: any[]) => any;
+  // @ts-ignore
+  inTolerance: boolean;
+  // @ts-ignore
+  popupTrigger: boolean;
 
   /**
    * Variable: graph
@@ -104,12 +111,9 @@ class PopupMenuHandler extends mxPopupMenu {
 
     // Hides the tooltip if the mouse is over
     // the context menu
-    InternalEvent.addGestureListeners(
-      this.div,
-       evt => {
-        this.graph.tooltipHandler.hide();
-      }
-    );
+    InternalEvent.addGestureListeners(this.div, (evt) => {
+      this.graph.tooltipHandler.hide();
+    });
   }
 
   /**
@@ -128,9 +132,7 @@ class PopupMenuHandler extends mxPopupMenu {
    * Handles the event by initiating the panning. By consuming the event all
    * subsequent events of the gesture are redirected to this handler.
    */
-  mouseDown(sender: any,
-            me: InternalMouseEvent): void {
-
+  mouseDown(sender: any, me: InternalMouseEvent): void {
     if (this.isEnabled() && !isMultiTouchEvent(me.getEvent())) {
       // Hides the popupmenu if is is being displayed
       this.hideMenu();
@@ -148,9 +150,7 @@ class PopupMenuHandler extends mxPopupMenu {
    *
    * Handles the event by updating the panning on the graph.
    */
-  mouseMove(sender: any,
-            me: InternalMouseEvent): void {
-
+  mouseMove(sender: any, me: InternalMouseEvent): void {
     // Popup trigger may change on mouseUp so ignore it
     if (this.inTolerance && this.screenX != null && this.screenY != null) {
       if (
@@ -170,8 +170,7 @@ class PopupMenuHandler extends mxPopupMenu {
    * Handles the event by setting the translation on the view or showing the
    * popupmenu.
    */
-  mouseUp(sender: any,
-          me: InternalMouseEvent): void {
+  mouseUp(sender: any, me: InternalMouseEvent): void {
     if (
       this.popupTrigger &&
       this.inTolerance &&
@@ -185,11 +184,11 @@ class PopupMenuHandler extends mxPopupMenu {
         this.graph.isEnabled() &&
         this.isSelectOnPopup(me) &&
         cell != null &&
-        !this.graph.isCellSelected(cell)
+        !this.graph.selection.isCellSelected(cell)
       ) {
-        this.graph.setSelectionCell(cell);
+        this.graph.selection.setSelectionCell(cell);
       } else if (this.clearSelectionOnBackground && cell == null) {
-        this.graph.clearSelection();
+        this.graph.selection.clearSelection();
       }
 
       // Hides the tooltip if there is one
@@ -197,13 +196,8 @@ class PopupMenuHandler extends mxPopupMenu {
 
       // Menu is shifted by 1 pixel so that the mouse up event
       // is routed via the underlying shape instead of the DIV
-      const origin = utils.getScrollOrigin();
-      this.popup(
-        me.getX() + origin.x + 1,
-        me.getY() + origin.y + 1,
-        cell,
-        me.getEvent()
-      );
+      const origin = getScrollOrigin();
+      this.popup(me.getX() + origin.x + 1, me.getY() + origin.y + 1, cell, me.getEvent());
       me.consume();
     }
 
@@ -226,8 +220,8 @@ class PopupMenuHandler extends mxPopupMenu {
    * Destroys the handler and all its resources and DOM nodes.
    */
   destroy(): void {
-    this.graph.removeMouseListener(this);
-    this.graph.removeListener(this.gestureHandler);
+    this.graph.event.removeMouseListener(this);
+    this.graph.event.removeListener(this.gestureHandler);
 
     // Supercall
     super.destroy();

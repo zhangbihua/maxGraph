@@ -303,7 +303,6 @@ class Outline {
    * }
    * ```
    */
-  // suspended: boolean;
   suspended: boolean = false;
 
   /**

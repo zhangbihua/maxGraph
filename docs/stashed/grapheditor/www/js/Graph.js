@@ -117,8 +117,8 @@ graph.prototype.pageScale = 1;
 })();
 
 // Matches label positions of mxGraph 1.x
-mxText.prototype.baseSpacingTop = 5;
-mxText.prototype.baseSpacingBottom = 1;
+TextShape.prototype.baseSpacingTop = 5;
+TextShape.prototype.baseSpacingBottom = 1;
 
 // Keeps edges between relative child cells inside parent
 Model.prototype.ignoreRelativeEdgeParent = false;
@@ -1923,7 +1923,7 @@ Graph.prototype.init = function(container)
 	 * 
 	 * Updates the highlight after a change of the model or view.
 	 */
-	mxCellHighlight.prototype.getStrokeWidth = function(state)
+	CellHighlight.prototype.getStrokeWidth = function(state)
 	{
 		let s = this.strokeWidth;
 		
@@ -2360,7 +2360,7 @@ Graph.prototype.initLayoutManager = function()
 	
 			if (style.childLayout == 'stackLayout')
 			{
-				let stackLayout = new mxStackLayout(this.graph, true);
+				let stackLayout = new StackLayout(this.graph, true);
 				stackLayout.resizeParentMax = mxUtils.getValue(style, 'resizeParentMax', '1') == '1';
 				stackLayout.horizontal = mxUtils.getValue(style, 'horizontalStack', '1') == '1';
 				stackLayout.resizeParent = mxUtils.getValue(style, 'resizeParent', '1') == '1';
@@ -2383,7 +2383,7 @@ Graph.prototype.initLayoutManager = function()
 			}
 			else if (style.childLayout == 'treeLayout')
 			{
-				let treeLayout = new mxCompactTreeLayout(this.graph);
+				let treeLayout = new CompactTreeLayout(this.graph);
 				treeLayout.horizontal = mxUtils.getValue(style, 'horizontalTree', '1') == '1';
 				treeLayout.resizeParent = mxUtils.getValue(style, 'resizeParent', '1') == '1';
 				treeLayout.groupPadding = mxUtils.getValue(style, 'parentPadding', 20);
@@ -2416,11 +2416,11 @@ Graph.prototype.initLayoutManager = function()
 			}
 			else if (style.childLayout == 'circleLayout')
 			{
-				return new mxCircleLayout(this.graph);
+				return new CircleLayout(this.graph);
 			}
 			else if (style.childLayout == 'organicLayout')
 			{
-				return new mxFastOrganicLayout(this.graph);
+				return new MxFastOrganicLayout(this.graph);
 			}
 			else if (style.childLayout == 'tableLayout')
 			{
@@ -2975,7 +2975,7 @@ Graph.prototype.isCloneConnectSource = function(source)
 	}
 	
 	return this.isTableRow(source) || this.isTableCell(source) ||
-		(layout != null && layout.constructor == mxStackLayout);
+		(layout != null && layout.constructor == StackLayout);
 };
 
 /**
@@ -3402,7 +3402,7 @@ Graph.prototype.getCellStyle = function(cell)
 		{
 			let layout = this.layoutManager.getLayout(parent);
 			
-			if (layout != null && layout.constructor == mxStackLayout)
+			if (layout != null && layout.constructor == StackLayout)
 			{
 				style.horizontal = !layout.horizontal;
 			}
@@ -3421,7 +3421,7 @@ Graph.prototype.updateAlternateBounds = function(cell, geo, willCollapse)
 	{
 		let layout = this.layoutManager.getLayout(cell.getParent());
 		
-		if (layout != null && layout.constructor == mxStackLayout)
+		if (layout != null && layout.constructor == StackLayout)
 		{
 			if (layout.horizontal)
 			{
@@ -3492,7 +3492,7 @@ Graph.prototype.foldCells = function(collapse, recurse, cells, checkFoldable, ev
 								} 
 							}
 							else if ((evt == null || !mxEvent.isAltDown(evt)) &&
-								layout.constructor == mxStackLayout && !layout.resizeLast)
+								layout.constructor == StackLayout && !layout.resizeLast)
 							{
 								this.resizeParentStacks(parent, layout, dx, dy);
 							}
@@ -3552,7 +3552,7 @@ Graph.prototype.moveSiblings = function(state, parent, dx, dy)
  */
 Graph.prototype.resizeParentStacks = function(parent, layout, dx, dy)
 {
-	if (this.layoutManager != null && layout != null && layout.constructor == mxStackLayout && !layout.resizeLast)
+	if (this.layoutManager != null && layout != null && layout.constructor == StackLayout && !layout.resizeLast)
 	{
 		this.model.beginUpdate();
 		try
@@ -3560,7 +3560,7 @@ Graph.prototype.resizeParentStacks = function(parent, layout, dx, dy)
 			let dir = layout.horizontal;
 			
 			// Bubble resize up for all parent stack layouts with same orientation
-			while (parent != null && layout != null && layout.constructor == mxStackLayout &&
+			while (parent != null && layout != null && layout.constructor == StackLayout &&
 				layout.horizontal == dir && !layout.resizeLast)
 			{
 				let pgeo = parent.getGeometry();
@@ -5124,13 +5124,13 @@ Graph.prototype.setTableColumnWidth = function(col, dx, extend)
  */
 function TableLayout(graph)
 {
-	mxGraphLayout.call(this, graph);
+	GraphLayout.call(this, graph);
 };
 
 /**
  * Extends mxGraphLayout.
  */
-TableLayout.prototype = new mxStackLayout();
+TableLayout.prototype = new StackLayout();
 TableLayout.prototype.constructor = TableLayout;
 
 /**
@@ -5578,9 +5578,9 @@ TableLayout.prototype.execute = function(parent)
 	/**
 	 * Overrides painting the actual shape for taking into account jump style.
 	 */
-	let mxConnectorPaintLine = mxConnector.prototype.paintLine;
+	let mxConnectorPaintLine = Connector.prototype.paintLine;
 
-	mxConnector.prototype.paintLine = (c, absPts, rounded) =>
+	Connector.prototype.paintLine = (c, absPts, rounded) =>
 	{
 		// Required for checking dirty state
 		this.routedPoints = (this.state != null) ? this.state.routedPoints : null;
@@ -5790,9 +5790,9 @@ TableLayout.prototype.execute = function(parent)
 	/**
 	 * Adds support for placeholders in text elements of shapes.
 	 */
-	let mxStencilEvaluateTextAttribute = Stencil.prototype.evaluateTextAttribute;
+	let mxStencilEvaluateTextAttribute = StencilShape.prototype.evaluateTextAttribute;
 	
-	Stencil.prototype.evaluateTextAttribute = function(node, attribute, shape)
+	StencilShape.prototype.evaluateTextAttribute = function(node, attribute, shape)
 	{
 		let result = mxStencilEvaluateTextAttribute.apply(this, arguments);
 		let placeholders = node.getAttribute('placeholders');
@@ -5827,7 +5827,7 @@ TableLayout.prototype.execute = function(parent)
 	    			let stencil = shape.substring(8, shape.length - 1);
 	    			let doc = mxUtils.parseXml(Graph.decompress(stencil));
 	    			
-	    			return new Shape(new Stencil(doc.documentElement));
+	    			return new Shape(new StencilShape(doc.documentElement));
 	    		}
 	    		catch (e)
 	    		{
@@ -5853,41 +5853,41 @@ TableLayout.prototype.execute = function(parent)
  * IMPORTANT: For embedded diagrams to work entries must also
  * be added in EmbedServlet.java.
  */
-StencilRegistry.libraries = {};
+StencilShapeRegistry.libraries = {};
 
 /**
  * Global switch to disable dynamic loading.
  */
-StencilRegistry.dynamicLoading = true;
+StencilShapeRegistry.dynamicLoading = true;
 
 /**
  * Global switch to disable eval for JS (preload all JS instead).
  */
-StencilRegistry.allowEval = true;
+StencilShapeRegistry.allowEval = true;
 
 /**
  * Stores all package names that have been dynamically loaded.
  * Each package is only loaded once.
  */
-StencilRegistry.packages = [];
+StencilShapeRegistry.packages = [];
 
 // Extends the default stencil registry to add dynamic loading
-StencilRegistry.getStencil = function(name)
+StencilShapeRegistry.getStencil = function(name)
 {
-	let result = StencilRegistry.stencils[name];
+	let result = StencilShapeRegistry.stencils[name];
 	
-	if (result == null && mxCellRenderer.defaultShapes[name] == null && StencilRegistry.dynamicLoading)
+	if (result == null && mxCellRenderer.defaultShapes[name] == null && StencilShapeRegistry.dynamicLoading)
 	{
-		let basename = StencilRegistry.getBasenameForStencil(name);
+		let basename = StencilShapeRegistry.getBasenameForStencil(name);
 		
 		// Loads stencil files and tries again
 		if (basename != null)
 		{
-			let libs = StencilRegistry.libraries[basename];
+			let libs = StencilShapeRegistry.libraries[basename];
 
 			if (libs != null)
 			{
-				if (StencilRegistry.packages[basename] == null)
+				if (StencilShapeRegistry.packages[basename] == null)
 				{
 					for (let i = 0; i < libs.length; i++)
 					{
@@ -5895,13 +5895,13 @@ StencilRegistry.getStencil = function(name)
 						
 						if (fname.toLowerCase().substring(fname.length - 4, fname.length) == '.xml')
 						{
-							StencilRegistry.loadStencilSet(fname, null);
+							StencilShapeRegistry.loadStencilSet(fname, null);
 						}
 						else if (fname.toLowerCase().substring(fname.length - 3, fname.length) == '.js')
 						{
 							try
 							{
-								if (StencilRegistry.allowEval)
+								if (StencilShapeRegistry.allowEval)
 								{
 									let req = mxUtils.load(fname);
 									
@@ -5928,17 +5928,17 @@ StencilRegistry.getStencil = function(name)
 						}
 					}
 
-					StencilRegistry.packages[basename] = 1;
+					StencilShapeRegistry.packages[basename] = 1;
 				}
 			}
 			else
 			{
 				// Replaces '_-_' with '_'
 				basename = basename.replace('_-_', '_');
-				StencilRegistry.loadStencilSet(STENCIL_PATH + '/' + basename + '.xml', null);
+				StencilShapeRegistry.loadStencilSet(STENCIL_PATH + '/' + basename + '.xml', null);
 			}
 			
-			result = StencilRegistry.stencils[name];
+			result = StencilShapeRegistry.stencils[name];
 		}
 	}
 	
@@ -5947,7 +5947,7 @@ StencilRegistry.getStencil = function(name)
 
 // Returns the basename for the given stencil or null if no file must be
 // loaded to render the given stencil.
-StencilRegistry.getBasenameForStencil = function(name)
+StencilShapeRegistry.getBasenameForStencil = function(name)
 {
 	let tmp = null;
 	
@@ -5970,12 +5970,12 @@ StencilRegistry.getBasenameForStencil = function(name)
 };
 
 // Loads the given stencil set
-StencilRegistry.loadStencilSet = function(stencilFile, postStencilLoad, force, async)
+StencilShapeRegistry.loadStencilSet = function(stencilFile, postStencilLoad, force, async)
 {
 	force = (force != null) ? force : false;
 	
 	// Uses additional cache for detecting previous load attempts
-	let xmlDoc = StencilRegistry.packages[stencilFile];
+	let xmlDoc = StencilShapeRegistry.packages[stencilFile];
 	
 	if (force || xmlDoc == null)
 	{
@@ -5987,13 +5987,13 @@ StencilRegistry.loadStencilSet = function(stencilFile, postStencilLoad, force, a
 			{
 				if (async)
 				{
-					StencilRegistry.loadStencil(stencilFile, mxUtils.bind(this, function(xmlDoc2)
+					StencilShapeRegistry.loadStencil(stencilFile, mxUtils.bind(this, function(xmlDoc2)
 					{
 						if (xmlDoc2 != null && xmlDoc2.documentElement != null)
 						{
-							StencilRegistry.packages[stencilFile] = xmlDoc2;
+							StencilShapeRegistry.packages[stencilFile] = xmlDoc2;
 							install = true;
-							StencilRegistry.parseStencilSet(xmlDoc2.documentElement, postStencilLoad, install);
+							StencilShapeRegistry.parseStencilSet(xmlDoc2.documentElement, postStencilLoad, install);
 						}
 					}));
 				
@@ -6001,8 +6001,8 @@ StencilRegistry.loadStencilSet = function(stencilFile, postStencilLoad, force, a
 				}
 				else
 				{
-					xmlDoc = StencilRegistry.loadStencil(stencilFile);
-					StencilRegistry.packages[stencilFile] = xmlDoc;
+					xmlDoc = StencilShapeRegistry.loadStencil(stencilFile);
+					StencilShapeRegistry.packages[stencilFile] = xmlDoc;
 					install = true;
 				}
 			}
@@ -6017,13 +6017,13 @@ StencilRegistry.loadStencilSet = function(stencilFile, postStencilLoad, force, a
 	
 		if (xmlDoc != null && xmlDoc.documentElement != null)
 		{
-			StencilRegistry.parseStencilSet(xmlDoc.documentElement, postStencilLoad, install);
+			StencilShapeRegistry.parseStencilSet(xmlDoc.documentElement, postStencilLoad, install);
 		}
 	}
 };
 
 // Loads the given stencil XML file.
-StencilRegistry.loadStencil = function(filename, fn)
+StencilShapeRegistry.loadStencil = function(filename, fn)
 {
 	if (fn != null)
 	{
@@ -6039,16 +6039,16 @@ StencilRegistry.loadStencil = function(filename, fn)
 };
 
 // Takes array of strings
-StencilRegistry.parseStencilSets = function(stencils)
+StencilShapeRegistry.parseStencilSets = function(stencils)
 {
 	for (let i = 0; i < stencils.length; i++)
 	{
-		StencilRegistry.parseStencilSet(mxUtils.parseXml(stencils[i]).documentElement);
+		StencilShapeRegistry.parseStencilSet(mxUtils.parseXml(stencils[i]).documentElement);
 	}
 };
 
 // Parses the given stencil set
-StencilRegistry.parseStencilSet = function(root, postStencilLoad, install)
+StencilShapeRegistry.parseStencilSet = function(root, postStencilLoad, install)
 {
 	if (root.nodeName == 'stencils')
 	{
@@ -6058,7 +6058,7 @@ StencilRegistry.parseStencilSet = function(root, postStencilLoad, install)
 		{
 			if (shapes.nodeName == 'shapes')
 			{
-				StencilRegistry.parseStencilSet(shapes, postStencilLoad, install);
+				StencilShapeRegistry.parseStencilSet(shapes, postStencilLoad, install);
 			}
 			
 			shapes = shapes.nextSibling;
@@ -6089,7 +6089,7 @@ StencilRegistry.parseStencilSet = function(root, postStencilLoad, install)
 						
 					if (install)
 					{
-						StencilRegistry.addStencil(packageName + stencilName.toLowerCase(), new Stencil(shape));
+						StencilShapeRegistry.addStencil(packageName + stencilName.toLowerCase(), new StencilShape(shape));
 					}
 	
 					if (postStencilLoad != null)
@@ -6151,8 +6151,8 @@ if (typeof VertexHandler != 'undefined')
 		};
 		
 		// Ignores all table cells in layouts
-		let graphLayoutIsVertexIgnored = mxGraphLayout.prototype.isVertexIgnored;
-		mxGraphLayout.prototype.isVertexIgnored = function(vertex)
+		let graphLayoutIsVertexIgnored = GraphLayout.prototype.isVertexIgnored;
+		GraphLayout.prototype.isVertexIgnored = function(vertex)
 		{
 			return graphLayoutIsVertexIgnored.apply(this, arguments) ||
 				this.graph.isTableRow(vertex) || this.graph.isTableCell(vertex);
@@ -6169,7 +6169,7 @@ if (typeof VertexHandler != 'undefined')
 		// Overrides highlight shape for connection points
 		ConstraintHandler.prototype.createHighlightShape = function()
 		{
-			let hl = new Ellipse(null, this.highlightColor, this.highlightColor, 0);
+			let hl = new EllipseShape(null, this.highlightColor, this.highlightColor, 0);
 			hl.opacity = mxConstants.HIGHLIGHT_OPACITY;
 			
 			return hl;
@@ -7068,7 +7068,7 @@ if (typeof VertexHandler != 'undefined')
 				{
 					let layout = this.layoutManager.getLayout(parent);
 					
-					if (layout != null && layout.constructor == mxStackLayout)
+					if (layout != null && layout.constructor == StackLayout)
 					{
 						result = false;
 					}
@@ -7857,7 +7857,7 @@ if (typeof VertexHandler != 'undefined')
 			    currentState: null,
 			    currentLink: null,
 			    highlight: (highlight != null && highlight != '' && highlight != mxConstants.NONE) ?
-			    	new mxCellHighlight(graph, highlight, 4) : null,
+			    	new CellHighlight(graph, highlight, 4) : null,
 			    startX: 0,
 			    startY: 0,
 			    scrollLeft: 0,
@@ -9573,7 +9573,7 @@ if (typeof VertexHandler != 'undefined')
 		 */
 		mxGuide.prototype.createGuideShape = function(horizontal)
 		{
-			let guide = new mxPolyline([], mxConstants.GUIDE_COLOR, mxConstants.GUIDE_STROKEWIDTH);
+			let guide = new Polyline([], mxConstants.GUIDE_COLOR, mxConstants.GUIDE_STROKEWIDTH);
 			
 			return guide;
 		};
@@ -10151,8 +10151,8 @@ if (typeof VertexHandler != 'undefined')
 		/**
 		 * Overridden to allow for shrinking pools when lanes are resized.
 		 */
-		let stackLayoutResizeCell = mxStackLayout.prototype.resizeCell;
-		mxStackLayout.prototype.resizeCell = function(cell, bounds)
+		let stackLayoutResizeCell = StackLayout.prototype.resizeCell;
+		StackLayout.prototype.resizeCell = function(cell, bounds)
 		{
 			stackLayoutResizeCell.apply(this, arguments);
 			let style = this.graph.getCellStyle(cell);
@@ -10168,7 +10168,7 @@ if (typeof VertexHandler != 'undefined')
 					
 					if (style.childLayout == 'stackLayout')
 					{
-						let border = parseFloat(mxUtils.getValue(style, 'stackBorder', mxStackLayout.prototype.border));
+						let border = parseFloat(mxUtils.getValue(style, 'stackBorder', StackLayout.prototype.border));
 						let horizontal = mxUtils.getValue(style, 'horizontalStack', '1') == '1';
 						let start = this.graph.getActualStartSize(parent);
 						geo = geo.clone();
@@ -10191,8 +10191,8 @@ if (typeof VertexHandler != 'undefined')
 		/**
 		 * Shows handle for table instead of rows and cells.
 		 */
-		let selectionCellsHandlerGetHandledSelectionCells = mxSelectionCellsHandler.prototype.getHandledSelectionCells;
-		mxSelectionCellsHandler.prototype.getHandledSelectionCells = function()
+		let selectionCellsHandlerGetHandledSelectionCells = SelectionCellsHandler.prototype.getHandledSelectionCells;
+		SelectionCellsHandler.prototype.getHandledSelectionCells = function()
 		{
 			let cells = selectionCellsHandlerGetHandledSelectionCells.apply(this, arguments);
 			let dict = new Dictionary();
@@ -10404,7 +10404,7 @@ if (typeof VertexHandler != 'undefined')
 							let colState = cols[index];
 							let nextCol = (index < cols.length - 1) ? cols[index + 1] : null;
 							
-							let shape = new mxLine(new Rectangle(), mxConstants.NONE, 1, true);
+							let shape = new Line(new Rectangle(), mxConstants.NONE, 1, true);
 							shape.isDashed = sel.isDashed;
 							
 							// Workaround for event handling on overlapping cells with tolerance
@@ -10483,7 +10483,7 @@ if (typeof VertexHandler != 'undefined')
 						{
 							let rowState = rows[index];
 	
-							let shape = new mxLine(new Rectangle(), mxConstants.NONE, 1);
+							let shape = new Line(new Rectangle(), mxConstants.NONE, 1);
 							shape.isDashed = sel.isDashed;
 							shape.svgStrokeTolerance++;
 							
@@ -10678,7 +10678,7 @@ if (typeof VertexHandler != 'undefined')
 			let name = this.state.style.shape;
 
 			if (mxCellRenderer.defaultShapes[name] == null &&
-				StencilRegistry.getStencil(name) == null)
+				StencilShapeRegistry.getStencil(name) == null)
 			{
 				name = mxConstants.SHAPE_RECTANGLE;
 			}
@@ -10940,7 +10940,7 @@ if (typeof VertexHandler != 'undefined')
 		
 		// Enables connections along the outline, virtual waypoints, parent highlight etc
 		ConnectionHandler.prototype.outlineConnect = true;
-		mxCellHighlight.prototype.keepOnTop = true;
+		CellHighlight.prototype.keepOnTop = true;
 		VertexHandler.prototype.parentHighlightEnabled = true;
 		
 		mxEdgeHandler.prototype.parentHighlightEnabled = true;
