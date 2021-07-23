@@ -6,11 +6,12 @@
  */
 import { DEFAULT_MARKERSIZE, NONE } from '../../../../util/Constants';
 import Polyline from './Polyline';
-import utils, { getNumber, getValue } from '../../../../util/Utils';
+import { getNumber } from '../../../../util/Utils';
 import Marker from './Marker';
 import Point from '../../Point';
-import mxAbstractCanvas2D from '../../../../util/canvas/mxAbstractCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
+import { ColorValue } from 'packages/core/src/types';
 
 /**
  * Extends {@link mxShape} to implement a connector shape.
@@ -21,7 +22,7 @@ import Rectangle from '../../Rectangle';
  * @extends {Polyline}
  */
 class Connector extends Polyline {
-  constructor(points: Point[], stroke: string, strokewidth: number) {
+  constructor(points: Point[], stroke: ColorValue, strokewidth: number) {
     super(points, stroke, strokewidth);
   }
 
@@ -29,15 +30,15 @@ class Connector extends Polyline {
    * Updates the <boundingBox> for this shape using <createBoundingBox>
    * and augmentBoundingBox and stores the result in <boundingBox>.
    */
-  updateBoundingBox(): void {
-    this.useSvgBoundingBox = this.style != null && this.style.curved === 1;
+  updateBoundingBox() {
+    this.useSvgBoundingBox = !!this.style?.curved;
     super.updateBoundingBox();
   }
 
   /**
    * Paints the line shape.
    */
-  paintEdgeShape(c: mxAbstractCanvas2D, pts: Point[]): void {
+  paintEdgeShape(c: AbstractCanvas2D, pts: Point[]): void {
     // The indirection via functions for markers is needed in
     // order to apply the offsets before painting the line and
     // paint the markers after painting the line.
@@ -51,11 +52,11 @@ class Connector extends Polyline {
     c.setShadow(false);
     c.setDashed(false);
 
-    if (sourceMarker != null) {
+    if (sourceMarker) {
       sourceMarker();
     }
 
-    if (targetMarker != null) {
+    if (targetMarker) {
       targetMarker();
     }
   }
@@ -63,14 +64,17 @@ class Connector extends Polyline {
   /**
    * Prepares the marker by adding offsets in pts and returning a function to paint the marker.
    */
-  createMarker(c: mxAbstractCanvas2D, pts: Point[], source: boolean): Marker {
+  createMarker(c: AbstractCanvas2D, pts: Point[], source: boolean) {
+    if (!this.style) return null;
+
     let result = null;
     const n = pts.length;
-    const type = getValue(this.style, source ? 'startArrow' : 'endArrow');
+    const type = source ? this.style.startArrow : this.style.endArrow;
+
     let p0 = source ? pts[1] : pts[n - 2];
     const pe = source ? pts[0] : pts[n - 1];
 
-    if (type != null && p0 != null && pe != null) {
+    if (type !== NONE && p0 !== null && pe !== null) {
       let count = 1;
 
       // Uses next non-overlapping point
@@ -92,15 +96,11 @@ class Connector extends Polyline {
       const unitX = dx / dist;
       const unitY = dy / dist;
 
-      const size = getNumber(
-        this.style,
-        source ? 'startSize' : 'endSize',
-        DEFAULT_MARKERSIZE
-      );
+      const size = source ? this.style.startSize : this.style.endSize;
 
       // Allow for stroke width in the end point used and the
       // orthogonal vectors describing the direction of the marker
-      const filled = this.style[source ? 'startFill' : 'endFill'] !== 0;
+      const filled = source ? this.style.startFill : this.style.endFill;
 
       result = Marker.createMarker(
         c,
@@ -111,7 +111,7 @@ class Connector extends Polyline {
         unitY,
         size,
         source,
-        this.strokewidth,
+        this.strokeWidth,
         filled
       );
     }
@@ -122,17 +122,19 @@ class Connector extends Polyline {
   /**
    * Augments the bounding box with the strokewidth and shadow offsets.
    */
-  augmentBoundingBox(bbox: Rectangle): void {
+  augmentBoundingBox(bbox: Rectangle) {
     super.augmentBoundingBox(bbox);
+
+    if (!this.style) return;
 
     // Adds marker sizes
     let size = 0;
 
-    if (getValue(this.style, 'startArrow', NONE) !== NONE) {
+    if (this.style.startArrow !== NONE) {
       size = getNumber(this.style, 'startSize', DEFAULT_MARKERSIZE) + 1;
     }
 
-    if (getValue(this.style, 'endArrow', NONE) !== NONE) {
+    if (this.style.endArrow !== NONE) {
       size = Math.max(size, getNumber(this.style, 'endSize', DEFAULT_MARKERSIZE)) + 1;
     }
 

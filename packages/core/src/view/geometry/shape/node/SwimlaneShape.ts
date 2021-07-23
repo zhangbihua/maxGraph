@@ -15,7 +15,8 @@ import {
   NONE,
   RECTANGLE_ROUNDING_FACTOR,
 } from '../../../../util/Constants';
-import utils from '../../../../util/Utils';
+import { ColorValue } from 'packages/core/src/types';
+import AbstractCanvas2D from 'packages/core/src/util/canvas/AbstractCanvas2D';
 
 /**
  * Extends {@link Shape} to implement a swimlane shape.
@@ -32,12 +33,12 @@ import utils from '../../../../util/Utils';
  * @extends {Shape}
  */
 class SwimlaneShape extends Shape {
-  constructor(bounds, fill, stroke, strokewidth) {
+  constructor(bounds: Rectangle, fill: ColorValue, stroke: ColorValue, strokeWidth = 1) {
     super();
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth != null ? strokewidth : 1;
+    this.strokeWidth = strokeWidth;
   }
 
   /**
@@ -47,8 +48,9 @@ class SwimlaneShape extends Shape {
    * @type {number}
    * @default 16
    */
-  // imageSize: number;
   imageSize = 16;
+
+  imageSrc: string | null = null;
 
   /**
    * Adds roundable support.
@@ -59,33 +61,27 @@ class SwimlaneShape extends Shape {
    * @param {number} h
    * @returns {boolean}
    */
-  // isRoundable(c?: mxAbstractCanvas2D, x?: number, y?: number, w?: number, h?: number): boolean;
-  isRoundable(c, x, y, w, h) {
+  isRoundable(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     return true;
   }
 
   /**
    * Returns the bounding box for the gradient box for this shape.
    */
-  // getTitleSize(): number;
   getTitleSize() {
-    return Math.max(
-      0,
-      utils.getValue(this.style, 'startSize', DEFAULT_STARTSIZE)
-    );
+    return Math.max(0, this.style?.startSize ?? DEFAULT_STARTSIZE);
   }
 
   /**
    * Returns the bounding box for the gradient box for this shape.
    */
-  // getLabelBounds(rect: mxRectangle): mxRectangle;
-  getLabelBounds(rect) {
+  getLabelBounds(rect: Rectangle) {
     const start = this.getTitleSize();
     const bounds = new Rectangle(rect.x, rect.y, rect.width, rect.height);
     const horizontal = this.isHorizontal();
 
-    const flipH = utils.getValue(this.style, 'flipH', 0) == 1;
-    const flipV = utils.getValue(this.style, 'flipV', 0) == 1;
+    const flipH = this.style?.flipH ?? false;
+    const flipV = this.style?.flipV ?? false;
 
     // East is default
     const shapeVertical =
@@ -94,14 +90,10 @@ class SwimlaneShape extends Shape {
 
     const realFlipH =
       !realHorizontal &&
-      flipH !=
-        (this.direction === DIRECTION_SOUTH ||
-          this.direction === DIRECTION_WEST);
+      flipH !== (this.direction === DIRECTION_SOUTH || this.direction === DIRECTION_WEST);
     const realFlipV =
       realHorizontal &&
-      flipV !=
-        (this.direction === DIRECTION_SOUTH ||
-          this.direction === DIRECTION_WEST);
+      flipV !== (this.direction === DIRECTION_SOUTH || this.direction === DIRECTION_WEST);
 
     // Shape is horizontal
     if (!shapeVertical) {
@@ -128,8 +120,7 @@ class SwimlaneShape extends Shape {
   /**
    * Returns the bounding box for the gradient box for this shape.
    */
-  // getGradientBounds(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): mxRectangle;
-  getGradientBounds(c, x, y, w, h) {
+  getGradientBounds(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     let start = this.getTitleSize();
 
     if (this.isHorizontal()) {
@@ -145,22 +136,11 @@ class SwimlaneShape extends Shape {
    *
    * Returns the arcsize for the swimlane.
    */
-  getSwimlaneArcSize(w, h, start) {
-    if (utils.getValue(this.style, 'absoluteArcSize', 0) == '1') {
-      return Math.min(
-        w / 2,
-        Math.min(
-          h / 2,
-          utils.getValue(this.style, 'arcSize', LINE_ARCSIZE) / 2
-        )
-      );
+  getSwimlaneArcSize(w: number, h: number, start: number) {
+    if (this.style?.absoluteArcSize ?? false) {
+      return Math.min(w / 2, Math.min(h / 2, this.style?.arcSize ?? LINE_ARCSIZE / 2));
     }
-    const f =
-      utils.getValue(
-        this.style,
-        'arcSize',
-        RECTANGLE_ROUNDING_FACTOR * 100
-      ) / 100;
+    const f = (this.style?.arcSize ?? RECTANGLE_ROUNDING_FACTOR * 100) / 100;
 
     return start * f * 3;
   }
@@ -168,20 +148,17 @@ class SwimlaneShape extends Shape {
   /**
    * Paints the swimlane vertex shape.
    */
-  // isHorizontal(): boolean;
   isHorizontal() {
-    return utils.getValue(this.style, 'horizontal', 1) == 1;
+    return this.style?.horizontal ?? true;
   }
 
   /**
    * Paints the swimlane vertex shape.
    */
-  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintVertexShape(c, x, y, w, h) {
+  paintVertexShape(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     let start = this.getTitleSize();
-    const fill = utils.getValue(this.style, 'swimlaneFillColor', NONE);
-    const swimlaneLine =
-      utils.getValue(this.style, 'swimlaneLine', 1) == 1;
+    const fill = this.style?.swimlaneFillColor ?? NONE;
+    const swimlaneLine = this.style?.swimlaneLine ?? true;
     let r = 0;
 
     if (this.isHorizontal()) {
@@ -200,17 +177,17 @@ class SwimlaneShape extends Shape {
       this.paintRoundedSwimlane(c, x, y, w, h, start, r, fill, swimlaneLine);
     }
 
-    const sep = utils.getValue(this.style, 'separatorColor', NONE);
+    const sep = this.style?.separatorColor ?? NONE;
     this.paintSeparator(c, x, y, w, h, start, sep);
 
-    if (this.image != null) {
+    if (this.imageSrc) {
       const bounds = this.getImageBounds(x, y, w, h);
       c.image(
         bounds.x - x,
         bounds.y - y,
         bounds.width,
         bounds.height,
-        this.image,
+        this.imageSrc,
         false,
         false,
         false
@@ -228,16 +205,25 @@ class SwimlaneShape extends Shape {
    *
    * Paints the swimlane vertex shape.
    */
-  paintSwimlane(c, x, y, w, h, start, fill, swimlaneLine) {
+  paintSwimlane(
+    c: AbstractCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    start: number,
+    fill: ColorValue,
+    swimlaneLine: boolean
+  ) {
     c.begin();
 
     let events = true;
 
-    if (this.style != null) {
-      events = utils.getValue(this.style, 'pointerEvents', '1') == '1';
+    if (this.style) {
+      events = this.style.pointerEvents;
     }
 
-    if (!events && (this.fill == null || this.fill === NONE)) {
+    if (!events && this.fill === NONE) {
       c.pointerEvents = false;
     }
 
@@ -309,16 +295,26 @@ class SwimlaneShape extends Shape {
    *
    * Paints the swimlane vertex shape.
    */
-  paintRoundedSwimlane(c, x, y, w, h, start, r, fill, swimlaneLine) {
+  paintRoundedSwimlane(
+    c: AbstractCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    start: number,
+    r: number,
+    fill: ColorValue,
+    swimlaneLine: boolean
+  ) {
     c.begin();
 
     let events = true;
 
-    if (this.style != null) {
-      events = utils.getValue(this.style, 'pointerEvents', '1') == '1';
+    if (this.style) {
+      events = this.style.pointerEvents;
     }
 
-    if (!events && (this.fill == null || this.fill === NONE)) {
+    if (!events && this.fill === NONE) {
       c.pointerEvents = false;
     }
 
@@ -398,7 +394,15 @@ class SwimlaneShape extends Shape {
    *
    * Paints the divider between swimlane title and content area.
    */
-  paintDivider(c, x, y, w, h, start, shadow) {
+  paintDivider(
+    c: AbstractCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    start: number,
+    shadow: boolean
+  ) {
     if (!shadow) {
       c.setShadow(false);
     }
@@ -421,7 +425,15 @@ class SwimlaneShape extends Shape {
    *
    * Paints the vertical or horizontal separator line between swimlanes.
    */
-  paintSeparator(c, x, y, w, h, start, color) {
+  paintSeparator(
+    c: AbstractCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    start: number,
+    color: ColorValue
+  ) {
     if (color !== NONE) {
       c.setStrokeColor(color);
       c.setDashed(true);
@@ -443,15 +455,9 @@ class SwimlaneShape extends Shape {
   /**
    * Paints the swimlane vertex shape.
    */
-  // getImageBounds(x: number, y: number, w: number, h: number): mxRectangle;
-  getImageBounds(x, y, w, h) {
+  getImageBounds(x: number, y: number, w: number, h: number) {
     if (this.isHorizontal()) {
-      return new Rectangle(
-        x + w - this.imageSize,
-        y,
-        this.imageSize,
-        this.imageSize
-      );
+      return new Rectangle(x + w - this.imageSize, y, this.imageSize, this.imageSize);
     }
     return new Rectangle(x, y, this.imageSize, this.imageSize);
   }

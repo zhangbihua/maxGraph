@@ -29,7 +29,7 @@ type IdentityFunction = {
  *
  * The identity for an object does not change during its lifecycle.
  */
-class mxObjectIdentity {
+class ObjectIdentity {
   /**
    * Name of the field to be used to store the object ID. Default is
    * <code>mxObjectId</code>.
@@ -48,9 +48,9 @@ class mxObjectIdentity {
     if (isNullish(obj[FIELD_NAME])) {
       if (typeof obj === 'object') {
         const ctor = getFunctionName(obj.constructor);
-        obj[FIELD_NAME] = `${ctor}#${mxObjectIdentity.counter++}`;
+        obj[FIELD_NAME] = `${ctor}#${ObjectIdentity.counter++}`;
       } else if (typeof obj === 'function') {
-        obj[FIELD_NAME] = `Function#${mxObjectIdentity.counter++}`;
+        obj[FIELD_NAME] = `Function#${ObjectIdentity.counter++}`;
       }
     }
 
@@ -65,4 +65,4 @@ class mxObjectIdentity {
   }
 }
 
-export default mxObjectIdentity;
+export default ObjectIdentity;

@@ -14,10 +14,8 @@
  *
  * Constructs a new image.
  */
-class Image {
-  constructor(src: string,
-              width: number,
-              height: number) {
+class ImageBox {
+  constructor(src: string, width: number, height: number) {
     this.src = src;
     this.width = width;
     this.height = height;
@@ -28,21 +26,21 @@ class Image {
    *
    * String that specifies the URL of the image.
    */
-  src: string | null = null;
+  src: string;
 
   /**
    * Variable: width
    *
    * Integer that specifies the width of the image.
    */
-  width: number | null = null;
+  width: number;
 
   /**
    * Variable: height
    *
    * Integer that specifies the height of the image.
    */
-  height: number | null = null;
+  height: number;
 }
 
-export default Image;
+export default ImageBox;

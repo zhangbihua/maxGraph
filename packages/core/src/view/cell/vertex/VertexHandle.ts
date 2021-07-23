@@ -21,7 +21,7 @@ import {
 import InternalEvent from '../../event/InternalEvent';
 import Shape from '../../geometry/shape/Shape';
 import InternalMouseEvent from '../../event/InternalMouseEvent';
-import Image from '../../image/Image';
+import Image from '../../image/ImageBox';
 import Graph from '../../Graph';
 import CellState from '../datatypes/CellState';
 
@@ -33,11 +33,12 @@ import CellState from '../datatypes/CellState';
 class VertexHandle {
   dependencies = ['snap', 'cells'];
 
-  constructor(state: CellState,
-              cursor: string | null = 'default',
-              image: Image | null = null,
-              shape: Shape | null = null) {
-
+  constructor(
+    state: CellState,
+    cursor: string | null = 'default',
+    image: Image | null = null,
+    shape: Shape | null = null
+  ) {
     this.graph = state.view.graph;
     this.state = state;
     this.cursor = cursor != null ? cursor : this.cursor;
@@ -221,12 +222,8 @@ class VertexHandle {
         const tr = this.graph.view.translate;
         const shapeBounds = <Rectangle>this.shape.bounds;
 
-        shapeBounds.x = Math.floor(
-          (pt.x + tr.x) * scale - shapeBounds.width / 2
-        );
-        shapeBounds.y = Math.floor(
-          (pt.y + tr.y) * scale - shapeBounds.height / 2
-        );
+        shapeBounds.x = Math.floor((pt.x + tr.x) * scale - shapeBounds.width / 2);
+        shapeBounds.y = Math.floor((pt.y + tr.y) * scale - shapeBounds.height / 2);
 
         // Needed to force update of text bounds
         this.shape.redraw();
@@ -240,8 +237,7 @@ class VertexHandle {
    */
   isHtmlRequired(): boolean {
     return (
-      this.state.text != null &&
-      this.state.text.node.parentNode === this.graph.container
+      this.state.text != null && this.state.text.node.parentNode === this.graph.container
     );
   }
 

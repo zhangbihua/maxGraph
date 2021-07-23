@@ -12,11 +12,9 @@ import GraphView from '../../view/GraphView';
 import Shape from '../../geometry/shape/Shape';
 import TextShape from '../../geometry/shape/node/TextShape';
 import Dictionary from '../../../util/Dictionary';
+import { ALIGN_MIDDLE, NONE } from '../../../util/Constants';
 
 import type { CellStateStyles } from '../../../types';
-import Image from "../../image/Image";
-import {ALIGN_MIDDLE, NONE} from "../../../util/Constants";
-import {getValue} from "../../../util/Utils";
 
 /**
  * Class: mxCellState
@@ -210,20 +208,11 @@ class CellState extends Rectangle {
    */
   getPerimeterBounds(
     border: number = 0,
-    bounds: Rectangle = new Rectangle(
-      this.x,
-      this.y,
-      this.width,
-      this.height
-    )
+    bounds: Rectangle = new Rectangle(this.x, this.y, this.width, this.height)
   ) {
-    if (
-      this.shape &&
-      this.shape.stencil &&
-      this.shape.stencil.aspect === 'fixed'
-    ) {
+    if (this.shape?.stencil?.aspect === 'fixed') {
       const aspect = this.shape.stencil.computeAspect(
-        this.style,
+        this.shape,
         bounds.x,
         bounds.y,
         bounds.width,
@@ -455,6 +444,7 @@ class CellState extends Rectangle {
   isLoop(state: CellState) {
     const src = this.getVisibleTerminalState(true);
     const trg = this.getVisibleTerminalState(false);
+
     return src && src === trg;
   }
 
@@ -470,10 +460,8 @@ class CellState extends Rectangle {
    * @param state {@link mxCellState} whose vertical alignment should be
    * returned.
    */
-  getVerticalAlign(): string | null {
-    return this.style != null
-      ? this.style.verticalAlign || ALIGN_MIDDLE
-      : null;
+  getVerticalAlign() {
+    return this.style.verticalAlign ?? ALIGN_MIDDLE;
   }
 
   /**
@@ -481,11 +469,14 @@ class CellState extends Rectangle {
    *
    * @param state {@link mxCellState} to check.
    */
-  isTransparentState(): boolean {
+  isTransparentState() {
     let result = false;
-    const stroke = getValue(this.style, 'strokeColor', NONE);
-    const fill = getValue(this.style, 'fillColor', NONE);
-    result = stroke === NONE && fill === NONE && this.getImage(state) == null;
+
+    const stroke = this.style.strokeColor ?? NONE;
+    const fill = this.style.fillColor ?? NONE;
+
+    result = stroke === NONE && fill === NONE && !this.getImageSrc();
+
     return result;
   }
 
@@ -496,10 +487,8 @@ class CellState extends Rectangle {
    *
    * @param state {@link mxCellState} whose image URL should be returned.
    */
-  getImage(): Image | null {
-    return this.style != null
-      ? this.style.image
-      : null;
+  getImageSrc() {
+    return this.style.image ?? null;
   }
 
   /**
@@ -510,10 +499,8 @@ class CellState extends Rectangle {
    * @param state {@link mxCellState} whose indicator color should be
    * returned.
    */
-  getIndicatorColor(): string | null {
-    return this.style != null
-      ? this.style.indicatorColor
-      : null;
+  getIndicatorColor() {
+    return this.style.indicatorColor ?? null;
   }
 
   /**
@@ -524,10 +511,8 @@ class CellState extends Rectangle {
    * @param state {@link mxCellState} whose indicator gradient color should be
    * returned.
    */
-  getIndicatorGradientColor(): string | null {
-    return this.style != null
-      ? this.style.gradientColor
-      : null;
+  getIndicatorGradientColor() {
+    return this.style.gradientColor ?? null;
   }
 
   /**
@@ -537,10 +522,8 @@ class CellState extends Rectangle {
    *
    * @param state {@link mxCellState} whose indicator shape should be returned.
    */
-  getIndicatorShape(): string | null {
-    return this.style != null
-      ? this.style.indicatorShape
-      : null;
+  getIndicatorShape() {
+    return this.style.indicatorShape ?? null;
   }
 
   /**
@@ -550,10 +533,8 @@ class CellState extends Rectangle {
    *
    * @param state {@link mxCellState} whose indicator image should be returned.
    */
-  getIndicatorImage(): Image | null {
-    return this.style != null
-      ? this.style.indicatorImage
-      : null;
+  getIndicatorImageSrc() {
+    return this.style.indicatorImage ?? null;
   }
 }
 

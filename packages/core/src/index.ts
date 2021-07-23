@@ -119,8 +119,8 @@ import mxAnimation from './util/animate/mxAnimation';
 import mxEffects from './util/animate/mxEffects';
 import mxMorphing from './util/animate/mxMorphing';
 
-import mxAbstractCanvas2D from './util/canvas/mxAbstractCanvas2D';
-import mxSvgCanvas2D from './util/canvas/mxSvgCanvas2D';
+import mxAbstractCanvas2D from './util/canvas/AbstractCanvas2D';
+import mxSvgCanvas2D from './util/canvas/SvgCanvas2D';
 import mxXmlCanvas2D from './util/canvas/mxXmlCanvas2D';
 
 import Dictionary from './util/Dictionary';
@@ -151,7 +151,7 @@ import mxPopupMenu from './util/gui/mxPopupMenu';
 import mxToolbar from './util/gui/mxToolbar';
 import mxWindow from './util/gui/mxWindow';
 
-import Image from './view/image/Image';
+import Image from './view/image/ImageBox';
 import ImageBundle from './view/image/ImageBundle';
 import ImageExport from './view/image/ImageExport';
 

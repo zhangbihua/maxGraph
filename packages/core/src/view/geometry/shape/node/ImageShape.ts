@@ -5,12 +5,12 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import utils from '../../../../util/Utils';
 import RectangleShape from './RectangleShape';
 import Rectangle from '../../Rectangle';
 import CellState from '../../../cell/datatypes/CellState';
-import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/SvgCanvas2D';
 import CellOverlay from '../../../cell/CellOverlay';
+import { NONE } from 'packages/core/src/util/Constants';
 
 /**
  * Extends {@link mxShape} to implement an image shape.
@@ -22,24 +22,21 @@ import CellOverlay from '../../../cell/CellOverlay';
 class ImageShape extends RectangleShape {
   constructor(
     bounds: Rectangle,
-    image: string,
+    imageSrc: string,
     fill: string = '#FFFFFF',
     stroke: string = '#000000',
-    strokewidth: number = 1
+    strokeWidth: number = 1
   ) {
-    super();
-    this.bounds = bounds;
-    this.image = image;
-    this.fill = fill;
-    this.stroke = stroke;
-    this.strokewidth = strokewidth;
+    super(bounds, fill, stroke, strokeWidth);
+
+    this.imageSrc = imageSrc;
     this.shadow = false;
   }
 
   // TODO: Document me!!
   shadow: boolean;
 
-  image: string;
+  imageSrc: string;
 
   // Used in mxCellRenderer
   overlay: CellOverlay | null = null;
@@ -54,8 +51,7 @@ class ImageShape extends RectangleShape {
   /**
    * Disables offset in IE9 for crisper image output.
    */
-  // getSvgScreenOffset(): number;
-  getSvgScreenOffset(): number {
+  getSvgScreenOffset() {
     return 0;
   }
 
@@ -76,19 +72,12 @@ class ImageShape extends RectangleShape {
   apply(state: CellState) {
     super.apply(state);
 
-    this.fill = null;
-    this.stroke = null;
-    this.gradient = null;
+    this.fill = NONE;
+    this.stroke = NONE;
+    this.gradient = NONE;
 
-    if (this.style != null) {
-      this.preserveImageAspect =
-        utils.getNumber(this.style, 'imageAspect', 1) == 1;
-
-      // Legacy support for imageFlipH/V
-      this.flipH =
-        this.flipH || utils.getValue(this.style, 'imageFlipH', 0) == 1;
-      this.flipV =
-        this.flipV || utils.getValue(this.style, 'imageFlipV', 0) == 1;
+    if (this.style) {
+      this.preserveImageAspect = this.style.imageAspect;
     }
   }
 
@@ -96,8 +85,7 @@ class ImageShape extends RectangleShape {
    * Returns true if HTML is allowed for this shape. This implementation always
    * returns false.
    */
-  // isHtmlAllowed(): boolean;
-  isHtmlAllowed(): boolean {
+  isHtmlAllowed() {
     return !this.preserveImageAspect;
   }
 
@@ -106,8 +94,7 @@ class ImageShape extends RectangleShape {
    * this shape. This implementation falls back to <createVml>
    * so that the HTML creation is optional.
    */
-  // createHtml(): HTMLElement;
-  createHtml(): HTMLElement {
+  createHtml() {
     const node = document.createElement('div');
     node.style.position = 'absolute';
     return node;
@@ -116,33 +103,19 @@ class ImageShape extends RectangleShape {
   /**
    * Disables inherited roundable support.
    */
-  // isRoundable(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): boolean;
-  isRoundable(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ): boolean {
+  isRoundable(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     return false;
   }
 
   /**
    * Generic background painting implementation.
    */
-  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintVertexShape(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {
-    if (this.image != null) {
-      const fill = utils.getValue(this.style, 'imageBackground', null);
-      let stroke = utils.getValue(this.style, 'imageBorder', null);
+  paintVertexShape(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
+    if (this.imageSrc && this.style) {
+      const fill = this.style.imageBackground;
+      const stroke = this.style.imageBorder;
 
-      if (fill != null) {
+      if (fill !== NONE) {
         // Stroke rendering required for shadow
         c.setFillColor(fill);
         c.setStrokeColor(stroke);
@@ -151,9 +124,7 @@ class ImageShape extends RectangleShape {
       }
 
       // FlipH/V are implicit via mxShape.updateTransform
-      c.image(x, y, w, h, this.image, this.preserveImageAspect, false, false);
-
-      stroke = utils.getValue(this.style, 'imageBorder', null);
+      c.image(x, y, w, h, this.imageSrc, this.preserveImageAspect, false, false);
 
       if (stroke != null) {
         c.setShadow(false);

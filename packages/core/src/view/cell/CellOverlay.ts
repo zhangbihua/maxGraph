@@ -8,8 +8,8 @@
 import Point from '../geometry/Point';
 import Rectangle from '../geometry/Rectangle';
 import EventSource from '../event/EventSource';
-import Image from '../image/Image';
-import CellState from "./datatypes/CellState";
+import ImageBox from '../image/ImageBox';
+import CellState from './datatypes/CellState';
 
 /**
  * Class: mxCellOverlay
@@ -66,12 +66,14 @@ import CellState from "./datatypes/CellState";
  * (default).
  */
 class CellOverlay extends EventSource {
-  constructor(image: Image,
-              tooltip: string | null=null,
-              align: string='right',
-              verticalAlign: string='bottom',
-              offset: Point=new Point(),
-              cursor: string='help') {
+  constructor(
+    image: ImageBox,
+    tooltip: string | null = null,
+    align: string = 'right',
+    verticalAlign: string = 'bottom',
+    offset: Point = new Point(),
+    cursor: string = 'help'
+  ) {
     super();
 
     this.image = image;
@@ -85,14 +87,14 @@ class CellOverlay extends EventSource {
    *
    * Holds the <mxImage> to be used as the icon.
    */
-  image: Image | null = null;
+  image: ImageBox;
 
   /**
    * Variable: tooltip
    *
    * Holds the optional string to be used as the tooltip.
    */
-  tooltip?: string | null = null;
+  tooltip?: string | null;
 
   /**
    * Variable: align
@@ -118,14 +120,14 @@ class CellOverlay extends EventSource {
    * Holds the offset as an <mxPoint>. The offset will be scaled according to the
    * current scale.
    */
-  offset: Point = new Point();
+  offset = new Point();
 
   /**
    * Variable: cursor
    *
    * Holds the cursor for the overlay. Default is 'help'.
    */
-  cursor: string = 'help';
+  cursor = 'help';
 
   /**
    * Variable: defaultOverlap
@@ -133,7 +135,7 @@ class CellOverlay extends EventSource {
    * Defines the overlapping for the overlay, that is, the proportional distance
    * from the origin to the point defined by the alignment. Default is 0.5.
    */
-  defaultOverlap: number = 0.5;
+  defaultOverlap = 0.5;
 
   /**
    * Function: getBounds
@@ -173,7 +175,7 @@ class CellOverlay extends EventSource {
     const s = state.view.scale;
     let pt = null;
 
-    const image = <Image>this.image;
+    const image = this.image;
     const w = image.width;
     const h = image.height;
 

@@ -72,7 +72,7 @@ class CellHighlight {
   }
 
   // TODO: Document me!!
-  highlightColor: ColorValue = null;
+  highlightColor: ColorValue | null = null;
 
   strokeWidth: number = 0;
 
@@ -119,7 +119,7 @@ class CellHighlight {
    *
    * @param {string} color - String that represents the new highlight color.
    */
-  setHighlightColor(color: ColorValue) {
+  setHighlightColor(color: ColorValue | null) {
     this.highlightColor = color;
 
     if (this.shape) {
@@ -134,15 +134,10 @@ class CellHighlight {
     this.shape = this.createShape();
     this.repaint();
 
-    const node = this.shape?.node;
-    if (
-      !this.keepOnTop &&
-      this.shape.node?.parentNode?.firstChild !== this.shape.node
-    ) {
-      this.shape.node.parentNode.insertBefore(
-        this.shape.node,
-        this.shape.node.parentNode.firstChild
-      );
+    const node = this.shape.node;
+
+    if (!this.keepOnTop && node?.parentNode?.firstChild !== node) {
+      node.parentNode.insertBefore(node, node.parentNode.firstChild);
     }
   }
 
@@ -150,20 +145,20 @@ class CellHighlight {
    * Creates and returns the highlight shape for the given state.
    */
   createShape() {
-    const shape = <Shape>(
-      this.graph.cellRenderer.createShape(<CellState>this.state)
-    );
+    if (!this.state) return;
 
-    shape.svgStrokeTolerance = (<graph>this.graph).tolerance;
-    shape.points = (<CellState>this.state).absolutePoints;
-    shape.apply(<CellState>this.state);
+    const shape = this.graph.cellRenderer.createShape(this.state);
+
+    shape.svgStrokeTolerance = this.graph.tolerance;
+    shape.points = this.state.absolutePoints;
+    shape.apply(this.state);
     shape.stroke = this.highlightColor;
     shape.opacity = this.opacity;
     shape.isDashed = this.dashed;
     shape.isShadow = false;
 
     shape.dialect = DIALECT_SVG;
-    shape.init((<graph>this.graph).getView().getOverlayPane());
+    shape.init(this.graph.getView().getOverlayPane());
     InternalEvent.redirectMouseEvents(shape.node, this.graph, this.state);
 
     if ((<graph>this.graph).dialect !== DIALECT_SVG) {
@@ -191,7 +186,7 @@ class CellHighlight {
 
       // @ts-ignore
       if (this.graph.model.isEdge(this.state.cell)) {
-        this.shape.strokewidth = this.getStrokeWidth();
+        this.shape.strokeWidth = this.getStrokeWidth();
         this.shape.points = this.state.absolutePoints;
         this.shape.outline = false;
       } else {
@@ -202,8 +197,7 @@ class CellHighlight {
           this.state.height + 2 * this.spacing
         );
         this.shape.rotation = Number(this.state.style.rotation || '0');
-        this.shape.strokewidth =
-          <number>this.getStrokeWidth() / this.state.view.scale;
+        this.shape.strokeWidth = <number>this.getStrokeWidth() / this.state.view.scale;
         this.shape.outline = true;
       }
 

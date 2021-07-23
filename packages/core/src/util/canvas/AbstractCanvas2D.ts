@@ -8,6 +8,7 @@ import { arcToCurves, getRotatedPoint } from '../Utils';
 import {
   DEFAULT_FONTFAMILY,
   DEFAULT_FONTSIZE,
+  DIRECTION_EAST,
   NONE,
   SHADOWCOLOR,
   SHADOW_OFFSET_X,
@@ -18,7 +19,15 @@ import mxUrlConverter from '../network/mxUrlConverter';
 import Point from '../../view/geometry/Point';
 import { clone } from '../CloneUtils';
 
-import type { CanvasState, ColorValue } from '../../types';
+import type {
+  AlignValue,
+  CanvasState,
+  ColorValue,
+  DirectionValue,
+  OverflowValue,
+  TextDirectionValue,
+  VAlignValue,
+} from '../../types';
 
 /**
  * Class: mxAbstractCanvas2D
@@ -30,7 +39,7 @@ import type { CanvasState, ColorValue } from '../../types';
  *
  * Constructs a new abstract canvas.
  */
-class mxAbstractCanvas2D {
+class AbstractCanvas2D {
   constructor() {
     /**
      * Variable: converter
@@ -127,6 +136,9 @@ class mxAbstractCanvas2D {
    */
   pointerEvents = false;
 
+  // from Polyline (maybe from other shapes also)
+  pointerEventsValue: string | null = null;
+
   /**
    * Function: createUrlConverter
    *
@@ -159,12 +171,12 @@ class mxAbstractCanvas2D {
       alpha: 1,
       fillAlpha: 1,
       strokeAlpha: 1,
-      fillColor: null,
+      fillColor: NONE,
       gradientFillAlpha: 1,
-      gradientColor: null,
+      gradientColor: NONE,
       gradientAlpha: 1,
-      gradientDirection: null,
-      strokeColor: null,
+      gradientDirection: DIRECTION_EAST,
+      strokeColor: NONE,
       strokeWidth: 1,
       dashed: false,
       dashPattern: '3 3',
@@ -173,8 +185,8 @@ class mxAbstractCanvas2D {
       lineJoin: 'miter',
       miterLimit: 10,
       fontColor: '#000000',
-      fontBackgroundColor: null,
-      fontBorderColor: null,
+      fontBackgroundColor: NONE,
+      fontBorderColor: NONE,
       fontSize: DEFAULT_FONTSIZE,
       fontFamily: DEFAULT_FONTFAMILY,
       fontStyle: 0,
@@ -291,13 +303,7 @@ class mxAbstractCanvas2D {
    *
    * Rotates the current state.
    */
-  rotate(
-    theta: number,
-    flipH: boolean,
-    flipV: boolean,
-    cx: number,
-    cy: number
-  ) {
+  rotate(theta: number, flipH: boolean, flipV: boolean, cx: number, cy: number) {
     // nop
   }
 
@@ -334,10 +340,8 @@ class mxAbstractCanvas2D {
    * Sets the current fill color.
    */
   setFillColor(value: ColorValue) {
-    const v = value === NONE ? null : value;
-
-    this.state.fillColor = v;
-    this.state.gradientColor = null;
+    this.state.fillColor = value;
+    this.state.gradientColor = NONE;
   }
 
   /**
@@ -352,7 +356,7 @@ class mxAbstractCanvas2D {
     y: number,
     w: number,
     h: number,
-    direction: string | null,
+    direction: DirectionValue,
     alpha1 = 1,
     alpha2: number = 1
   ) {
@@ -370,8 +374,7 @@ class mxAbstractCanvas2D {
    * Sets the current stroke color.
    */
   setStrokeColor(value: ColorValue) {
-    const v = value === NONE ? null : value;
-    this.state.strokeColor = v;
+    this.state.strokeColor = value;
   }
 
   /**
@@ -379,7 +382,7 @@ class mxAbstractCanvas2D {
    *
    * Sets the current stroke width.
    */
-  setStrokeWidth(value: number | null) {
+  setStrokeWidth(value: number) {
     this.state.strokeWidth = value;
   }
 
@@ -435,8 +438,7 @@ class mxAbstractCanvas2D {
    * Sets the current font color.
    */
   setFontColor(value: ColorValue) {
-    const v = value === NONE ? null : value;
-    this.state.fontColor = v;
+    this.state.fontColor = value;
   }
 
   /**
@@ -445,8 +447,7 @@ class mxAbstractCanvas2D {
    * Sets the current font background color.
    */
   setFontBackgroundColor(value: ColorValue) {
-    const v = value === NONE ? null : value;
-    this.state.fontBackgroundColor = v;
+    this.state.fontBackgroundColor = value;
   }
 
   /**
@@ -455,8 +456,7 @@ class mxAbstractCanvas2D {
    * Sets the current font border color.
    */
   setFontBorderColor(value: ColorValue) {
-    const v = value === NONE ? null : value;
-    this.state.fontBorderColor = v;
+    this.state.fontBorderColor = value;
   }
 
   /**
@@ -501,8 +501,7 @@ class mxAbstractCanvas2D {
    * Enables or disables and configures the current shadow.
    */
   setShadowColor(value: ColorValue) {
-    const v = value === NONE ? null : value;
-    this.state.shadowColor = v;
+    this.state.shadowColor = value;
   }
 
   /**
@@ -567,14 +566,7 @@ class mxAbstractCanvas2D {
    *
    * Adds a bezier curve to the current path.
    */
-  curveTo(
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-    x3: number,
-    y3: number
-  ) {
+  curveTo(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
     this.addOp(this.curveOp, x1, y1, x2, y2, x3, y3);
   }
 
@@ -624,14 +616,7 @@ class mxAbstractCanvas2D {
    *
    * Closes the current path.
    */
-  close(
-    x1?: number,
-    y1?: number,
-    x2?: number,
-    y2?: number,
-    x3?: number,
-    y3?: number
-  ) {
+  close(x1?: number, y1?: number, x2?: number, y2?: number, x3?: number, y3?: number) {
     this.addOp(this.closeOp);
   }
 
@@ -641,6 +626,45 @@ class mxAbstractCanvas2D {
    * Empty implementation for backwards compatibility. This will be removed.
    */
   end() {}
+
+  stroke() {}
+
+  fill() {}
+
+  fillAndStroke() {}
+
+  rect(x: number, y: number, w: number, h: number) {}
+
+  roundrect(x: number, y: number, w: number, h: number, r1: number, r2: number) {}
+
+  ellipse(x: number, y: number, w: number, h: number) {}
+
+  image(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    src: string,
+    aspect = true,
+    flipH = false,
+    flipV = false
+  ) {}
+
+  text(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    str: string,
+    align: AlignValue,
+    valign: VAlignValue,
+    wrap: boolean,
+    format: string,
+    overflow: OverflowValue,
+    clip: boolean,
+    rotation = 0,
+    dir: TextDirectionValue
+  ) {}
 }
 
-export default mxAbstractCanvas2D;
+export default AbstractCanvas2D;

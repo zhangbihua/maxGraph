@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import Image from '../image/Image';
+import Image from '../image/ImageBox';
 import mxClient from '../../mxClient';
 import {
   DEFAULT_VALID_COLOR,
@@ -240,11 +240,7 @@ class ConstraintHandler {
           this.reset();
         };
 
-        InternalEvent.addListener(
-          this.graph.container,
-          'mouseleave',
-          this.resetHandler
-        );
+        InternalEvent.addListener(this.graph.container, 'mouseleave', this.resetHandler);
       }
 
       const tol = this.getTolerance(me);
@@ -296,12 +292,7 @@ class ConstraintHandler {
           if (
             (this.intersects(this.focusIcons[i], mouse, source, existingEdge) ||
               (point != null &&
-                this.intersects(
-                  this.focusIcons[i],
-                  grid,
-                  source,
-                  existingEdge
-                ))) &&
+                this.intersects(this.focusIcons[i], grid, source, existingEdge))) &&
             (minDistSq == null || tmp < minDistSq)
           ) {
             this.currentConstraint = this.constraints[i];
@@ -358,12 +349,7 @@ class ConstraintHandler {
     ) {
       const state = this.graph.view.getState(this.currentFocus.cell);
       this.currentFocus = state;
-      this.currentFocusArea = new Rectangle(
-        state.x,
-        state.y,
-        state.width,
-        state.height
-      );
+      this.currentFocusArea = new Rectangle(state.x, state.y, state.width, state.height);
 
       for (let i = 0; i < this.constraints.length; i += 1) {
         const cp = this.graph.getConnectionPoint(state, this.constraints[i]);
@@ -391,9 +377,7 @@ class ConstraintHandler {
   // setFocus(me: mxMouseEvent, state: mxCellState, source: mxCell): void;
   setFocus(me, state, source) {
     this.constraints =
-      state != null &&
-      !this.isStateIgnored(state, source) &&
-      state.cell.isConnectable()
+      state != null && !this.isStateIgnored(state, source) && state.cell.isConnectable()
         ? this.isEnabled()
           ? this.graph.getAllConnectionConstraints(state, source) || []
           : []
@@ -402,12 +386,7 @@ class ConstraintHandler {
     // Only uses cells which have constraints
     if (this.constraints != null) {
       this.currentFocus = state;
-      this.currentFocusArea = new Rectangle(
-        state.x,
-        state.y,
-        state.width,
-        state.height
-      );
+      this.currentFocusArea = new Rectangle(state.x, state.y, state.width, state.height);
 
       if (this.focusIcons != null) {
         for (let i = 0; i < this.focusIcons.length; i += 1) {
@@ -440,10 +419,7 @@ class ConstraintHandler {
 
         // Move the icon behind all other overlays
         if (icon.node.previousSibling != null) {
-          icon.node.parentNode.insertBefore(
-            icon.node,
-            icon.node.parentNode.firstChild
-          );
+          icon.node.parentNode.insertBefore(icon.node, icon.node.parentNode.firstChild);
         }
 
         const getState = () => {

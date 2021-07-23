@@ -6,9 +6,9 @@
  */
 import Shape from '../Shape';
 import { LINE_ARCSIZE } from '../../../../util/Constants';
-import utils, { getValue } from '../../../../util/Utils';
 import Point from '../../Point';
-import mxAbstractCanvas2D from '../../../../util/canvas/mxAbstractCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
+import { ColorValue } from 'packages/core/src/types';
 
 /**
  * Class: mxPolyline
@@ -31,42 +31,42 @@ import mxAbstractCanvas2D from '../../../../util/canvas/mxAbstractCanvas2D';
  * 1. This is stored in <strokewidth>.
  */
 class Polyline extends Shape {
-  constructor(points: Point[], stroke: string, strokewidth: number) {
+  constructor(points: Point[], stroke: ColorValue, strokeWidth = 1) {
     super();
     this.points = points;
     this.stroke = stroke;
-    this.strokewidth = strokewidth != null ? strokewidth : 1;
+    this.strokeWidth = strokeWidth;
   }
 
   /**
    * Returns 0.
    */
-  getRotation(): number {
+  getRotation() {
     return 0;
   }
 
   /**
    * Returns 0.
    */
-  getShapeRotation(): number {
+  getShapeRotation() {
     return 0;
   }
 
   /**
    * Returns false.
    */
-  isPaintBoundsInverted(): boolean {
+  isPaintBoundsInverted() {
     return false;
   }
 
   /**
    * Paints the line shape.
    */
-  paintEdgeShape(c: mxAbstractCanvas2D, pts: Point[]): void {
+  paintEdgeShape(c: AbstractCanvas2D, pts: Point[]) {
     const prev = c.pointerEventsValue;
     c.pointerEventsValue = 'stroke';
 
-    if (this.style == null || this.style.curved != 1) {
+    if (!this.style || !this.style.curved) {
       this.paintLine(c, pts, this.isRounded);
     } else {
       this.paintCurvedLine(c, pts);
@@ -77,8 +77,9 @@ class Polyline extends Shape {
   /**
    * Paints the line shape.
    */
-  paintLine(c: mxAbstractCanvas2D, pts: Point[], rounded?: boolean): void {
-    const arcSize = getValue(this.style, 'arcSize', LINE_ARCSIZE) / 2;
+  paintLine(c: AbstractCanvas2D, pts: Point[], rounded?: boolean) {
+    const arcSize = this.style?.arcSize ?? LINE_ARCSIZE;
+
     c.begin();
     this.addPoints(c, pts, rounded, arcSize, false);
     c.stroke();
@@ -87,7 +88,7 @@ class Polyline extends Shape {
   /**
    * Paints the line shape.
    */
-  paintCurvedLine(c: mxAbstractCanvas2D, pts: Point[]): void {
+  paintCurvedLine(c: AbstractCanvas2D, pts: Point[]) {
     c.begin();
 
     const pt = pts[0];

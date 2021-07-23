@@ -10,11 +10,10 @@ import {
   NONE,
   RECTANGLE_ROUNDING_FACTOR,
 } from '../../../../util/Constants';
-import utils from '../../../../util/Utils';
 import Shape from '../Shape';
-import mxAbstractCanvas2D from '../../../../util/canvas/mxAbstractCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
-import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
+import { ColorValue } from 'packages/core/src/types';
 
 /**
  * Extends {@link Shape} to implement a rectangle shape.
@@ -24,84 +23,58 @@ import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
  */
 class RectangleShape extends Shape {
   constructor(
-    bounds: Rectangle | null = null,
-    fill: string | null = '#FFFFFF',
-    stroke: string | null = '#000000',
-    strokewidth: number = 1
+    bounds: Rectangle,
+    fill: ColorValue,
+    stroke: ColorValue,
+    strokeWidth: number = 1
   ) {
     super();
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth;
+    this.strokeWidth = strokeWidth;
   }
-
-  // TODO: Document me!
-  strokewidth: number;
 
   /**
    * Returns true for non-rounded, non-rotated shapes with no glass gradient.
    */
-  // isHtmlAllowed(): boolean;
-  isHtmlAllowed(): boolean {
+  isHtmlAllowed() {
     let events = true;
 
-    if (this.style != null) {
-      events = utils.getValue(this.style, 'pointerEvents', '1') == '1';
+    if (this.style) {
+      events = this.style.pointerEvents;
     }
 
     return (
       !this.isRounded &&
       !this.glass &&
       this.rotation === 0 &&
-      (events || (this.fill != null && this.fill !== NONE))
+      (events || this.fill !== NONE)
     );
   }
 
   /**
    * Generic background painting implementation.
    */
-  // paintBackground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintBackground(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ): void {
+  paintBackground(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     let events = true;
 
-    if (this.style != null) {
-      events = utils.getValue(this.style, 'pointerEvents', '1') == '1';
+    if (this.style) {
+      events = this.style.pointerEvents;
     }
 
-    if (
-      events ||
-      (this.fill != null && this.fill !== NONE) ||
-      (this.stroke != null && this.stroke !== NONE)
-    ) {
-      if (!events && (this.fill == null || this.fill === NONE)) {
+    if (events || this.fill !== NONE || this.stroke !== NONE) {
+      if (!events && this.fill === NONE) {
         c.pointerEvents = false;
       }
 
       if (this.isRounded) {
         let r = 0;
 
-        if (utils.getValue(this.style, 'absoluteArcSize', 0) == '1') {
-          r = Math.min(
-            w / 2,
-            Math.min(
-              h / 2,
-              utils.getValue(this.style, 'arcSize', LINE_ARCSIZE) / 2
-            )
-          );
+        if (this.style?.absoluteArcSize ?? false) {
+          r = Math.min(w / 2, Math.min(h / 2, (this.style?.arcSize ?? LINE_ARCSIZE) / 2));
         } else {
-          const f =
-            utils.getValue(
-              this.style,
-              'arcSize',
-              RECTANGLE_ROUNDING_FACTOR * 100
-            ) / 100;
+          const f = (this.style?.arcSize ?? RECTANGLE_ROUNDING_FACTOR * 100) / 100;
           r = Math.min(w * f, h * f);
         }
 
@@ -117,41 +90,22 @@ class RectangleShape extends Shape {
   /**
    * Adds roundable support.
    */
-  // isRoundable(c?: mxAbstractCanvas2D, x?: number, y?: number, w?: number, h?: number): boolean;
-  isRoundable(
-    c: mxAbstractCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ): boolean {
+  isRoundable(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     return true;
   }
 
   /**
    * Generic background painting implementation.
    */
-  // paintForeground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintForeground(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ): void {
-    if (
-      this.glass &&
-      !this.outline &&
-      this.fill != null &&
-      this.fill !== NONE
-    ) {
+  paintForeground(c: AbstractCanvas2D, x: number, y: number, w: number, h: number): void {
+    if (this.glass && !this.outline && this.fill !== NONE) {
       this.paintGlassEffect(
         c,
         x,
         y,
         w,
         h,
-        this.getArcSize(w + this.strokewidth, h + this.strokewidth)
+        this.getArcSize(w + this.strokeWidth, h + this.strokeWidth)
       );
     }
   }

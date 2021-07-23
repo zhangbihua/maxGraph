@@ -7,8 +7,7 @@
 
 import Rectangle from '../../Rectangle';
 import Shape from '../Shape';
-import utils from '../../../../util/Utils';
-import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 
 /**
  * Extends {@link Shape} to implement a double ellipse shape.
@@ -39,32 +38,18 @@ import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
  * ```
  */
 class DoubleEllipseShape extends Shape {
-  strokewidth: number;
-
-  constructor(
-    bounds: Rectangle,
-    fill: string,
-    stroke: string,
-    strokewidth: number = 1
-  ) {
+  constructor(bounds: Rectangle, fill: string, stroke: string, strokeWidth = 1) {
     super();
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth;
+    this.strokeWidth = strokeWidth;
   }
 
   /**
    * Paints the background.
    */
-  // paintBackground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintBackground(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {
+  paintBackground(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     c.ellipse(x, y, w, h);
     c.fillAndStroke();
   }
@@ -72,20 +57,11 @@ class DoubleEllipseShape extends Shape {
   /**
    * Paints the foreground.
    */
-  // paintForeground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintForeground(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {
+  paintForeground(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     if (!this.outline) {
-      const margin = utils.getValue(
-        this.style,
-        'margin',
-        Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5))
-      );
+      const margin =
+        this.style?.margin ?? Math.min(3 + this.strokeWidth, Math.min(w / 5, h / 5));
+
       x += margin;
       y += margin;
       w -= 2 * margin;
@@ -103,16 +79,12 @@ class DoubleEllipseShape extends Shape {
   /**
    * @returns the bounds for the label.
    */
-  // getLabelBounds(rect: mxRectangle): mxRectangle;
   getLabelBounds(rect: Rectangle) {
     const margin =
-      utils.getValue(
-        this.style,
-        'margin',
-        Math.min(
-          3 + this.strokewidth,
-          Math.min(rect.width / 5 / this.scale, rect.height / 5 / this.scale)
-        )
+      this.style?.margin ??
+      Math.min(
+        3 + this.strokeWidth,
+        Math.min(rect.width / 5 / this.scale, rect.height / 5 / this.scale)
       ) * this.scale;
 
     return new Rectangle(

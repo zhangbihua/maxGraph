@@ -9,18 +9,22 @@ import ConnectionConstraint from '../../../connection/ConnectionConstraint';
 import Rectangle from '../../Rectangle';
 import Shape from '../Shape';
 import Resources from '../../../../util/Resources';
-import utils, { getNumber, getValue, isNotNullish } from '../../../../util/Utils';
+import { getNumber, getValue, isNotNullish } from '../../../../util/Utils';
 import {
+  ALIGN_LEFT,
+  ALIGN_TOP,
   DIRECTION_NORTH,
   DIRECTION_SOUTH,
   NODETYPE_ELEMENT,
   NONE,
   RECTANGLE_ROUNDING_FACTOR,
+  TEXT_DIRECTION_AUTO,
 } from '../../../../util/Constants';
 import StencilShapeRegistry from './StencilShapeRegistry';
 import { getChildNodes, getTextContent } from '../../../../util/DomUtils';
 import Point from '../../Point';
-import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
+import { AlignValue, ColorValue, VAlignValue } from 'packages/core/src/types';
 
 /**
  * Implements a generic shape which is based on a XML node as a description.
@@ -107,7 +111,7 @@ class StencilShape extends Shape {
    *
    * Holds the strokewidth direction from the description.
    */
-  strokeWidth: string | null = null;
+  strokeWidthValue: string | null = null;
 
   /**
    * Function: parseDescription
@@ -132,7 +136,7 @@ class StencilShape extends Shape {
     // user-defined stroke-width). Note that the strokewidth is scaled
     // by the minimum scaling that is used to draw the shape (sx, sy).
     const sw = this.desc.getAttribute('strokewidth');
-    this.strokeWidth = isNotNullish(sw) ? sw : '1';
+    this.strokeWidthValue = isNotNullish(sw) ? sw : '1';
   }
 
   /**
@@ -144,10 +148,10 @@ class StencilShape extends Shape {
   parseConstraints() {
     const conns = this.desc.getElementsByTagName('connections')[0];
 
-    if (conns != null) {
+    if (conns) {
       const tmp = getChildNodes(conns);
 
-      if (tmp != null && tmp.length > 0) {
+      if (tmp.length > 0) {
         this.constraints = [];
 
         for (let i = 0; i < tmp.length; i += 1) {
@@ -165,7 +169,7 @@ class StencilShape extends Shape {
   parseConstraint(node: Element) {
     const x = Number(node.getAttribute('x'));
     const y = Number(node.getAttribute('y'));
-    const perimeter = node.getAttribute('perimeter') == '1';
+    const perimeter = node.getAttribute('perimeter') === '1';
     const name = node.getAttribute('name');
 
     return new ConnectionConstraint(new Point(x, y), perimeter, name);
@@ -182,7 +186,7 @@ class StencilShape extends Shape {
     let result = this.evaluateAttribute(node, attribute, shape);
     const loc = node.getAttribute('localized');
 
-    if ((StencilShape.defaultLocalized && loc == null) || loc == '1') {
+    if ((StencilShape.defaultLocalized && !loc) || loc === '1') {
       result = Resources.get(result);
     }
 
@@ -200,10 +204,10 @@ class StencilShape extends Shape {
   evaluateAttribute(node: Element, attribute: string, shape: Shape) {
     let result = node.getAttribute(attribute);
 
-    if (result == null) {
+    if (!result) {
       const text = getTextContent(node);
 
-      if (text != null && StencilShape.allowEval) {
+      if (text && StencilShape.allowEval) {
         const funct = eval(text);
 
         if (typeof funct === 'function') {
@@ -221,7 +225,7 @@ class StencilShape extends Shape {
    * Draws this stencil inside the given bounds.
    */
   drawShape(
-    canvas: mxSvgCanvas2D,
+    canvas: AbstractCanvas2D,
     shape: Shape,
     x: number,
     y: number,
@@ -240,34 +244,20 @@ class StencilShape extends Shape {
     const aspect = this.computeAspect(shape, x, y, w, h, direction);
     const minScale = Math.min(aspect.width, aspect.height);
     const sw =
-      this.strokeWidth == 'inherit'
+      this.strokeWidthValue === 'inherit'
         ? Number(getNumber(shape.style, 'strokeWidth', 1))
-        : Number(this.strokeWidth) * minScale;
+        : Number(this.strokeWidthValue) * minScale;
     canvas.setStrokeWidth(sw);
 
     // Draws a transparent rectangle for catching events
-    if (
-      shape.style != null &&
-      getValue(shape.style, 'pointerEvents', '0') == '1'
-    ) {
+    if (shape.style?.pointerEvents ?? false) {
       canvas.setStrokeColor(NONE);
       canvas.rect(x, y, w, h);
       canvas.stroke();
       canvas.setStrokeColor(shape.stroke);
     }
 
-    this.drawChildren(
-      canvas,
-      shape,
-      x,
-      y,
-      w,
-      h,
-      this.bgNode,
-      aspect,
-      false,
-      true
-    );
+    this.drawChildren(canvas, shape, x, y, w, h, this.bgNode, aspect, false, true);
     this.drawChildren(
       canvas,
       shape,
@@ -295,26 +285,26 @@ class StencilShape extends Shape {
    * Draws this stencil inside the given bounds.
    */
   drawChildren(
-    canvas: mxSvgCanvas2D,
+    canvas: AbstractCanvas2D,
     shape: Shape,
     x: number,
     y: number,
     w: number,
     h: number,
     node: Element | null,
-    aspect: string,
+    aspect: Rectangle,
     disableShadow: boolean,
     paint: boolean
   ) {
-    if (node != null && w > 0 && h > 0) {
-      let tmp = node.firstChild;
+    if (node && w > 0 && h > 0) {
+      let tmp = node.firstChild as Element;
 
-      while (tmp != null) {
+      while (tmp) {
         if (tmp.nodeType === NODETYPE_ELEMENT) {
           this.drawNode(canvas, shape, tmp, aspect, disableShadow, paint);
         }
 
-        tmp = tmp.nextSibling;
+        tmp = tmp.nextSibling as Element;
       }
     }
   }
@@ -345,8 +335,7 @@ class StencilShape extends Shape {
     let sx = w / this.w0;
     let sy = h / this.h0;
 
-    const inverse =
-      direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
+    const inverse = direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
 
     if (inverse) {
       sy = w / this.h0;
@@ -381,7 +370,7 @@ class StencilShape extends Shape {
    * Draws this stencil inside the given bounds.
    */
   drawNode(
-    canvas: mxSvgCanvas2D,
+    canvas: AbstractCanvas2D,
     shape: Shape,
     node: Element,
     aspect: Rectangle,
@@ -410,10 +399,10 @@ class StencilShape extends Shape {
 
           const arcSize = Number(node.getAttribute('arcSize'));
           let pointCount = 0;
-          const segs = [];
+          const segs: Point[][] = [];
 
           // Renders the elements inside the given path
-          let childNode = node.firstChild;
+          let childNode = node.firstChild as Element;
 
           while (childNode != null) {
             if (childNode.nodeType === NODETYPE_ELEMENT) {
@@ -438,7 +427,7 @@ class StencilShape extends Shape {
               }
             }
 
-            childNode = childNode.nextSibling;
+            childNode = childNode.nextSibling as Element;
           }
 
           if (!parseRegularly && pointCount > 0) {
@@ -461,21 +450,14 @@ class StencilShape extends Shape {
 
         if (parseRegularly) {
           // Renders the elements inside the given path
-          let childNode = node.firstChild;
+          let childNode = node.firstChild as Element;
 
-          while (childNode != null) {
+          while (childNode) {
             if (childNode.nodeType === NODETYPE_ELEMENT) {
-              this.drawNode(
-                canvas,
-                shape,
-                childNode,
-                aspect,
-                disableShadow,
-                paint
-              );
+              this.drawNode(canvas, shape, childNode, aspect, disableShadow, paint);
             }
 
-            childNode = childNode.nextSibling;
+            childNode = childNode.nextSibling as Element;
           }
         }
       } else if (name === 'close') {
@@ -512,7 +494,7 @@ class StencilShape extends Shape {
           Number(node.getAttribute('ry')) * sy,
           Number(node.getAttribute('x-axis-rotation')),
           Boolean(node.getAttribute('large-arc-flag')),
-          Number(node.getAttribute('sweep-flag')),
+          Boolean(node.getAttribute('sweep-flag')),
           x0 + Number(node.getAttribute('x')) * sx,
           y0 + Number(node.getAttribute('y')) * sy
         );
@@ -552,7 +534,7 @@ class StencilShape extends Shape {
         );
       } else if (name === 'image') {
         if (!shape.outline) {
-          const src = this.evaluateAttribute(node, 'src', shape);
+          const src = this.evaluateAttribute(node, 'src', shape) as string;
 
           canvas.image(
             x0 + Number(node.getAttribute('x')) * sx,
@@ -567,10 +549,10 @@ class StencilShape extends Shape {
         }
       } else if (name === 'text') {
         if (!shape.outline) {
-          const str = this.evaluateTextAttribute(node, 'str', shape);
+          const str = this.evaluateTextAttribute(node, 'str', shape) as string;
           let rotation = node.getAttribute('vertical') == '1' ? -90 : 0;
 
-          if (node.getAttribute('align-shape') == '0') {
+          if (node.getAttribute('align-shape') === '0') {
             const dr = shape.rotation;
 
             // Depends on flipping
@@ -586,7 +568,7 @@ class StencilShape extends Shape {
             }
           }
 
-          rotation -= node.getAttribute('rotation');
+          rotation -= Number(node.getAttribute('rotation'));
 
           canvas.text(
             x0 + Number(node.getAttribute('x')) * sx,
@@ -594,19 +576,22 @@ class StencilShape extends Shape {
             0,
             0,
             str,
-            node.getAttribute('align') || 'left',
-            node.getAttribute('valign') || 'top',
+            (node.getAttribute('align') as AlignValue) || ALIGN_LEFT,
+            (node.getAttribute('valign') as VAlignValue) || ALIGN_TOP,
             false,
             '',
-            null,
+            'auto',
             false,
-            rotation
+            rotation,
+            TEXT_DIRECTION_AUTO
           );
         }
       } else if (name === 'include-shape') {
-        const stencil = StencilShapeRegistry.getStencil(node.getAttribute('name'));
+        const stencil = StencilShapeRegistry.getStencil(
+          node.getAttribute('name') as string
+        );
 
-        if (stencil != null) {
+        if (stencil) {
           const x = x0 + Number(node.getAttribute('x')) * sx;
           const y = y0 + Number(node.getAttribute('y')) * sy;
           const w = Number(node.getAttribute('w')) * sx;
@@ -642,27 +627,27 @@ class StencilShape extends Shape {
           canvas.setDashPattern(value);
         }
       } else if (name === 'strokecolor') {
-        canvas.setStrokeColor(node.getAttribute('color'));
+        canvas.setStrokeColor(node.getAttribute('color') as ColorValue);
       } else if (name === 'linecap') {
-        canvas.setLineCap(node.getAttribute('cap'));
+        canvas.setLineCap(node.getAttribute('cap') as string);
       } else if (name === 'linejoin') {
-        canvas.setLineJoin(node.getAttribute('join'));
+        canvas.setLineJoin(node.getAttribute('join') as string);
       } else if (name === 'miterlimit') {
         canvas.setMiterLimit(Number(node.getAttribute('limit')));
       } else if (name === 'fillcolor') {
-        canvas.setFillColor(node.getAttribute('color'));
+        canvas.setFillColor(node.getAttribute('color') as ColorValue);
       } else if (name === 'alpha') {
-        canvas.setAlpha(node.getAttribute('alpha'));
+        canvas.setAlpha(Number(node.getAttribute('alpha')));
       } else if (name === 'fillalpha') {
-        canvas.setAlpha(node.getAttribute('alpha'));
+        canvas.setAlpha(Number(node.getAttribute('alpha')));
       } else if (name === 'strokealpha') {
-        canvas.setAlpha(node.getAttribute('alpha'));
+        canvas.setAlpha(Number(node.getAttribute('alpha')));
       } else if (name === 'fontcolor') {
-        canvas.setFontColor(node.getAttribute('color'));
+        canvas.setFontColor(node.getAttribute('color') as ColorValue);
       } else if (name === 'fontstyle') {
-        canvas.setFontStyle(node.getAttribute('style'));
+        canvas.setFontStyle(Number(node.getAttribute('style')));
       } else if (name === 'fontfamily') {
-        canvas.setFontFamily(node.getAttribute('family'));
+        canvas.setFontFamily(node.getAttribute('family') as string);
       } else if (name === 'fontsize') {
         canvas.setFontSize(Number(node.getAttribute('size')) * minScale);
       }

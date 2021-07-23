@@ -1,6 +1,6 @@
-import Cell from "./Cell";
-import Dictionary from "../../../util/Dictionary";
-import mxObjectIdentity from "../../../util/mxObjectIdentity";
+import Cell from './Cell';
+import Dictionary from '../../../util/Dictionary';
+import ObjectIdentity from '../../../util/ObjectIdentity';
 
 class CellArray extends Array<Cell> {
   // @ts-ignore
@@ -25,12 +25,12 @@ class CellArray extends Array<Cell> {
 
   // @ts-ignore
   map(arg0: any, ...args: any): CellArray {
-    return new CellArray(...<Cell[]>super.map(arg0, ...args));
+    return new CellArray(...(<Cell[]>super.map(arg0, ...args)));
   }
 
   // @ts-ignore
   filter(arg0: any, ...args: any): CellArray {
-    return new CellArray(...<Cell[]>super.filter(arg0, ...args));
+    return new CellArray(...(<Cell[]>super.filter(arg0, ...args)));
   }
 
   /**
@@ -59,10 +59,11 @@ class CellArray extends Array<Cell> {
    * @param targets  Boolean that specifies if target terminals should be contained
    * in the result. Default is true.
    */
-  getOpposites(terminal: Cell,
-               sources: boolean=true,
-               targets: boolean=true): CellArray {
-
+  getOpposites(
+    terminal: Cell,
+    sources: boolean = true,
+    targets: boolean = true
+  ): CellArray {
     const terminals = new CellArray();
 
     for (let i = 0; i < this.length; i += 1) {
@@ -72,24 +73,14 @@ class CellArray extends Array<Cell> {
       // Checks if the terminal is the source of
       // the edge and if the target should be
       // stored in the result
-      if (
-        source === terminal &&
-        target != null &&
-        target !== terminal &&
-        targets
-      ) {
+      if (source === terminal && target != null && target !== terminal && targets) {
         terminals.push(target);
       }
 
-        // Checks if the terminal is the taget of
-        // the edge and if the source should be
+      // Checks if the terminal is the taget of
+      // the edge and if the source should be
       // stored in the result
-      else if (
-        target === terminal &&
-        source != null &&
-        source !== terminal &&
-        sources
-      ) {
+      else if (target === terminal && source != null && source !== terminal && sources) {
         terminals.push(source);
       }
     }
@@ -157,9 +148,7 @@ class CellArray extends Array<Cell> {
    * with all descendants.
    * @param mapping  Optional mapping for existing clones.
    */
-  cloneCells(includeChildren: boolean=true,
-             mapping: any={}): CellArray {
-
+  cloneCells(includeChildren: boolean = true, mapping: any = {}): CellArray {
     const clones: CellArray = new CellArray();
 
     for (const cell of this) {
@@ -179,11 +168,8 @@ class CellArray extends Array<Cell> {
    *
    * @private
    */
-  cloneCellImpl(cell: Cell,
-                mapping: any={},
-                includeChildren: boolean): Cell {
-
-    const ident = <string>mxObjectIdentity.get(cell);
+  cloneCellImpl(cell: Cell, mapping: any = {}, includeChildren: boolean): Cell {
+    const ident = ObjectIdentity.get(cell);
     let clone = mapping ? mapping[ident] : null;
 
     if (clone == null) {
@@ -194,11 +180,7 @@ class CellArray extends Array<Cell> {
         const childCount = cell.getChildCount();
 
         for (let i = 0; i < childCount; i += 1) {
-          const cloneChild = this.cloneCellImpl(
-            <Cell>cell.getChildAt(i),
-            mapping,
-            true
-          );
+          const cloneChild = this.cloneCellImpl(<Cell>cell.getChildAt(i), mapping, true);
           clone.insert(cloneChild);
         }
       }
@@ -212,14 +194,11 @@ class CellArray extends Array<Cell> {
    *
    * @private
    */
-  restoreClone(clone: Cell,
-               cell: Cell,
-               mapping: any): void {
-
+  restoreClone(clone: Cell, cell: Cell, mapping: any): void {
     const source = cell.getTerminal(true);
 
     if (source != null) {
-      const tmp = mapping[mxObjectIdentity.get(source)];
+      const tmp = mapping[ObjectIdentity.get(source)];
       if (tmp != null) {
         tmp.insertEdge(clone, true);
       }
@@ -227,7 +206,7 @@ class CellArray extends Array<Cell> {
 
     const target = cell.getTerminal(false);
     if (target != null) {
-      const tmp = mapping[mxObjectIdentity.get(target)];
+      const tmp = mapping[ObjectIdentity.get(target)];
       if (tmp != null) {
         tmp.insertEdge(clone, false);
       }
@@ -235,11 +214,7 @@ class CellArray extends Array<Cell> {
 
     const childCount = clone.getChildCount();
     for (let i = 0; i < childCount; i += 1) {
-      this.restoreClone(
-        <Cell>clone.getChildAt(i),
-        <Cell>cell.getChildAt(i),
-        mapping
-      );
+      this.restoreClone(<Cell>clone.getChildAt(i), <Cell>cell.getChildAt(i), mapping);
     }
   }
 }

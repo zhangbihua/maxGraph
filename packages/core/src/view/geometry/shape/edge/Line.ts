@@ -5,8 +5,9 @@
  * Type definitions from the typed-mxgraph project
  */
 import Shape from '../Shape';
-import mxAbstractCanvas2D from '../../../../util/canvas/mxAbstractCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
+import { ColorValue } from 'packages/core/src/types';
 
 /**
  * Extends {@link Shape} to implement a horizontal line shape.
@@ -15,12 +16,12 @@ import Rectangle from '../../Rectangle';
  * @extends {Shape}
  */
 class Line extends Shape {
-  constructor(bounds: Rectangle, stroke: string, strokewidth: number, vertical: boolean) {
+  constructor(bounds: Rectangle, stroke: ColorValue, strokeWidth = 1, vertical = false) {
     super();
     this.bounds = bounds;
     this.stroke = stroke;
-    this.strokewidth = strokewidth != null ? strokewidth : 1;
-    this.vertical = vertical != null ? vertical : this.vertical;
+    this.strokeWidth = strokeWidth;
+    this.vertical = vertical;
   }
 
   /**
@@ -28,23 +29,17 @@ class Line extends Shape {
    *
    * Whether to paint a vertical line.
    */
-  vertical = false;
+  vertical: boolean;
 
   /**
    * Redirects to redrawPath for subclasses to work.
-   * @param {mxAbstractCanvas2D} c
+   * @param {AbstractCanvas2D} c
    * @param {number} x
    * @param {number} y
    * @param {number} w
    * @param {number} h
    */
-  paintVertexShape(
-    c: mxAbstractCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ): void {
+  paintVertexShape(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     c.begin();
 
     if (this.vertical) {

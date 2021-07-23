@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxAbstractCanvas2D from './mxAbstractCanvas2D';
+import mxAbstractCanvas2D from './AbstractCanvas2D';
 import {
   DEFAULT_FONTFAMILY,
   DEFAULT_FONTSIZE,
@@ -916,21 +916,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    * rotation - Number that specifies the angle of the rotation around the anchor point of the text.
    * dir - Optional string that specifies the text direction. Possible values are rtl and lrt.
    */
-  text(
-    x,
-    y,
-    w,
-    h,
-    str,
-    align,
-    valign,
-    wrap,
-    format,
-    overflow,
-    clip,
-    rotation,
-    dir
-  ) {
+  text(x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir) {
     if (this.textEnabled && str != null) {
       if (isNode(str)) {
         str = getOuterHtml(str);

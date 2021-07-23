@@ -1,10 +1,10 @@
-import Cell from "../cell/datatypes/Cell";
-import CellOverlay from "../cell/CellOverlay";
-import EventObject from "../event/EventObject";
-import InternalEvent from "../event/InternalEvent";
-import Image from "../image/Image";
-import InternalMouseEvent from "../event/InternalMouseEvent";
-import Graph from "../Graph";
+import Cell from '../cell/datatypes/Cell';
+import CellOverlay from '../cell/CellOverlay';
+import EventObject from '../event/EventObject';
+import InternalEvent from '../event/InternalEvent';
+import Image from '../image/ImageBox';
+import InternalMouseEvent from '../event/InternalMouseEvent';
+import Graph from '../Graph';
 
 class Overlays {
   constructor(graph: Graph) {
@@ -82,13 +82,7 @@ class Overlays {
         }
 
         this.fireEvent(
-          new EventObject(
-            InternalEvent.REMOVE_OVERLAY,
-            'cell',
-            cell,
-            'overlay',
-            overlay
-          )
+          new EventObject(InternalEvent.REMOVE_OVERLAY, 'cell', cell, 'overlay', overlay)
         );
       } else {
         overlay = null;
@@ -184,18 +178,18 @@ class Overlays {
       img = img != null ? img : this.warningImage;
 
       // Creates the overlay with the image and warning
-      const overlay = new CellOverlay(
-        img,
-        `<font color=red>${warning}</font>`
-      );
+      const overlay = new CellOverlay(img, `<font color=red>${warning}</font>`);
 
       // Adds a handler for single mouseclicks to select the cell
       if (isSelect) {
-        overlay.addListener(InternalEvent.CLICK, (sender: any, evt: InternalMouseEvent) => {
-          if (this.isEnabled()) {
-            this.setSelectionCell(cell);
+        overlay.addListener(
+          InternalEvent.CLICK,
+          (sender: any, evt: InternalMouseEvent) => {
+            if (this.isEnabled()) {
+              this.setSelectionCell(cell);
+            }
           }
-        });
+        );
       }
 
       // Sets and returns the overlay in the graph

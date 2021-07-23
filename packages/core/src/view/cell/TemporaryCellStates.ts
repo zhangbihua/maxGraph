@@ -13,16 +13,17 @@ import Dictionary from '../../util/Dictionary';
 import GraphView from '../view/GraphView';
 import Cell from './datatypes/Cell';
 import CellState from './datatypes/CellState';
-import Shape from "../geometry/shape/Shape";
-import graph from "../Graph";
+import Shape from '../geometry/shape/Shape';
+import graph from '../Graph';
+import CellArray from './datatypes/CellArray';
 
 class TemporaryCellStates {
   constructor(
-      view: GraphView,
-      scale: number = 1,
-      cells: Cell[],
-      isCellVisibleFn: Function | null = null,
-      getLinkForCellState: Function | null = null
+    view: GraphView,
+    scale: number = 1,
+    cells: CellArray,
+    isCellVisibleFn: Function | null = null,
+    getLinkForCellState: Function | null = null
   ) {
     this.view = view;
 
@@ -31,17 +32,17 @@ class TemporaryCellStates {
     this.oldBounds = view.getGraphBounds();
     this.oldStates = view.getStates();
     this.oldScale = view.getScale();
-    this.oldDoRedrawShape = (<graph>view.graph).cellRenderer.doRedrawShape;
+    this.oldDoRedrawShape = view.graph.cellRenderer.doRedrawShape;
 
     const self = this;
 
     // Overrides doRedrawShape and paint shape to add links on shapes
     if (getLinkForCellState != null) {
-      (<graph>view.graph).cellRenderer.doRedrawShape = (state: CellState) => {
+      view.graph.cellRenderer.doRedrawShape = (state: CellState) => {
         const shape = <Shape>state?.shape;
         const oldPaint = shape.paint;
 
-        shape.paint = c => {
+        shape.paint = (c) => {
           const link = getLinkForCellState(state);
           if (link != null) {
             c.setLink(link);
@@ -52,7 +53,7 @@ class TemporaryCellStates {
           }
         };
 
-        (<Function>self.oldDoRedrawShape).apply((<graph>view.graph).cellRenderer, [state]);
+        (<Function>self.oldDoRedrawShape).apply(view.graph.cellRenderer, [state]);
         shape.paint = oldPaint;
       };
     }
@@ -66,70 +67,53 @@ class TemporaryCellStates {
     };
 
     // Creates space for new states
-    view.setStates(new mxDictionary());
+    view.setStates(new Dictionary());
     view.setScale(scale);
 
-    if (cells != null) {
-      view.resetValidationState();
-      let bbox = null;
+    view.resetValidationState();
+    let bbox = null;
 
-      // Validates the vertices and edges without adding them to
-      // the model so that the original cells are not modified
-      for (const cell of cells) {
-        const bounds = view.getBoundingBox(
-            view.validateCellState(<Cell>view.validateCell(<Cell>cell))
-        );
-        if (bbox == null) {
-          bbox = bounds;
-        } else {
-          bbox.add(bounds);
-        }
+    // Validates the vertices and edges without adding them to
+    // the model so that the original cells are not modified
+    for (const cell of cells) {
+      const bounds = view.getBoundingBox(
+        view.validateCellState(<Cell>view.validateCell(<Cell>cell))
+      );
+      if (bbox == null) {
+        bbox = bounds;
+      } else {
+        bbox.add(<Rectangle>bounds);
       }
-      view.setGraphBounds(bbox || new Rectangle());
     }
+    view.setGraphBounds(bbox || new Rectangle());
   }
 
   oldValidateCellState: Function | null;
 
   oldDoRedrawShape: Function | null;
 
-  /**
-   * Holds the width of the rectangle.
-   * @default 0
-   */
-  // view: number;
-  view: GraphView | null = null;
+  view: GraphView;
 
   /**
-   * Holds the height of the rectangle.
-   * @default 0
+   * Holds the states of the rectangle.
    */
-  // oldStates: number;
-  oldStates: Dictionary | null = null;
+  oldStates: Dictionary<string, CellState>;
 
   /**
-   * Holds the height of the rectangle.
-   * @default 0
+   * Holds the bounds of the rectangle.
    */
-  // oldBounds: number;
-  oldBounds: Rectangle | null = null;
+  oldBounds: Rectangle;
 
   /**
-   * Holds the height of the rectangle.
-   * @default 0
+   * Holds the scale of the rectangle.
    */
-  oldScale: number = 0;
+  oldScale: number;
 
-  /**
-   * Holds the height of the rectangle.
-   * @default 0
-   */
-  // destroy(): void;
   destroy(): void {
-    const view = <GraphView>this.view;
+    const view = this.view;
     view.setScale(this.oldScale);
     view.setStates(this.oldStates);
-    view.setGraphBounds(<Rectangle>this.oldBounds);
+    view.setGraphBounds(this.oldBounds);
     // @ts-ignore
     view.validateCellState = <Function>this.oldValidateCellState;
     // @ts-ignore

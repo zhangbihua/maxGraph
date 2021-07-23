@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
+import mxAbstractCanvas2D from '../../util/canvas/AbstractCanvas2D';
 import CellState from '../cell/datatypes/CellState';
 import Shape from '../geometry/shape/Shape';
 
