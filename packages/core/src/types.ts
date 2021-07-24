@@ -1,4 +1,5 @@
 import type Cell from './view/cell/datatypes/Cell';
+import Shape from './view/geometry/shape/Shape';
 
 export type CellMap = {
   [id: string]: Cell;
@@ -48,14 +49,18 @@ export type CellStateStyles = {
   gradientColor: ColorValue;
   gradientDirection: DirectionValue;
   horizontal: boolean;
+  image: string;
   imageAlign: AlignValue;
   imageAspect: boolean;
   imageBackground: ColorValue;
   imageBorder: ColorValue;
   imageHeight: number;
   imageWidth: number;
-  indicatorWidth: number;
+  indicatorColor: ColorValue;
   indicatorHeight: number;
+  indicatorImage: string;
+  indicatorShape: Shape;
+  indicatorWidth: number;
   labelBorderColor: ColorValue;
   labelPosition: AlignValue;
   margin: number;

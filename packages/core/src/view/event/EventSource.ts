@@ -7,6 +7,11 @@
 
 import EventObject from './EventObject';
 
+type EventListener = {
+  funct: Function;
+  name: string;
+};
+
 /**
  * Class: mxEventSource
  *
@@ -30,7 +35,7 @@ import EventObject from './EventObject';
  * Constructs a new event source.
  */
 class EventSource {
-  constructor(eventSource: EventSource | null=null) {
+  constructor(eventSource: EventSource | null = null) {
     this.eventSource = eventSource;
   }
 
@@ -41,14 +46,14 @@ class EventSource {
    * contains the event name followed by the respective listener for each
    * registered listener.
    */
-  eventListeners: ({funct: Function, name: string})[] = [];
+  eventListeners: EventListener[] = [];
 
   /**
    * Variable: eventsEnabled
    *
    * Specifies if events can be fired. Default is true.
    */
-  eventsEnabled: boolean = true;
+  eventsEnabled = true;
 
   /**
    * Variable: eventSource
@@ -62,7 +67,7 @@ class EventSource {
    *
    * Returns <eventsEnabled>.
    */
-  isEventsEnabled(): boolean {
+  isEventsEnabled() {
     return this.eventsEnabled;
   }
 
@@ -71,7 +76,7 @@ class EventSource {
    *
    * Sets <eventsEnabled>.
    */
-  setEventsEnabled(value: boolean): void {
+  setEventsEnabled(value: boolean) {
     this.eventsEnabled = value;
   }
 
@@ -80,7 +85,7 @@ class EventSource {
    *
    * Returns <eventSource>.
    */
-  getEventSource(): EventSource | null {
+  getEventSource() {
     return this.eventSource;
   }
 
@@ -89,7 +94,7 @@ class EventSource {
    *
    * Sets <eventSource>.
    */
-  setEventSource(value: EventSource): void {
+  setEventSource(value: EventSource) {
     this.eventSource = value;
   }
 
@@ -101,13 +106,8 @@ class EventSource {
    *
    * The parameters of the listener are the sender and an <mxEventObject>.
    */
-  addListener(name: string,
-              funct: (...args: any[]) => any): void {
-
-    if (this.eventListeners == null) {
-      this.eventListeners = [];
-    }
-    this.eventListeners.push({name, funct});
+  addListener(name: string, funct: (...args: any[]) => any) {
+    this.eventListeners.push({ name, funct });
   }
 
   /**
@@ -115,16 +115,14 @@ class EventSource {
    *
    * Removes all occurrences of the given listener from <eventListeners>.
    */
-  removeListener(funct: (...args: any[]) => any): void {
-    if (this.eventListeners != null) {
-      let i = 0;
+  removeListener(funct: (...args: any[]) => any) {
+    let i = 0;
 
-      while (i < this.eventListeners.length) {
-        if (this.eventListeners[i].funct === funct) {
-          this.eventListeners.splice(i, 1);
-        } else {
-          i += 1;
-        }
+    while (i < this.eventListeners.length) {
+      if (this.eventListeners[i].funct === funct) {
+        this.eventListeners.splice(i, 1);
+      } else {
+        i += 1;
       }
     }
   }
@@ -148,21 +146,21 @@ class EventSource {
    * sender - Optional sender to be passed to the listener. Default value is
    * the return value of <getEventSource>.
    */
-  fireEvent(evt: EventObject, sender: any = null): void {
-    if (this.eventListeners != null && this.isEventsEnabled()) {
-      if (evt == null) {
+  fireEvent(evt: EventObject, sender: any = null) {
+    if (this.isEventsEnabled()) {
+      if (!evt) {
         evt = new EventObject('');
       }
 
-      if (sender == null) {
+      if (!sender) {
         sender = this.getEventSource();
       }
-      if (sender == null) {
+      if (!sender) {
         sender = this;
       }
 
       for (const eventListener of this.eventListeners) {
-        if (eventListener.name == null || eventListener.name === evt.getName()) {
+        if (eventListener.name === null || eventListener.name === evt.getName()) {
           eventListener.funct.apply(this, [sender, evt]);
         }
       }

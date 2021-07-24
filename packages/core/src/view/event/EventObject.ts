@@ -5,6 +5,8 @@
  * Type definitions from the typed-mxgraph project
  */
 
+type EventProperties = Record<string, any>;
+
 /**
  * Class: mxEventObject
  *
@@ -29,9 +31,9 @@
  * (end)
  */
 class EventObject {
-  constructor(name: string, ...args: any[]) {
+  constructor(name = '', ...args: any[]) {
     this.name = name;
-    this.properties = [];
+    this.properties = {};
 
     if (!!args[0] && args[0].constructor === Object) {
       // A literal object ({})
@@ -41,7 +43,7 @@ class EventObject {
     } else {
       // two-values [key, value, key, value, ...]
       for (let i = 0; i < args.length; i += 2) {
-        if (args[i + 1] != null) {
+        if (args[i + 1] !== null) {
           this.properties[args[i]] = args[i + 1];
         }
       }
@@ -53,14 +55,14 @@ class EventObject {
    *
    * Holds the name.
    */
-  name: string = '';
+  name: string;
 
   /**
    * Variable: properties
    *
    * Holds the properties as an associative array.
    */
-  properties: any = null;
+  properties: EventProperties;
 
   /**
    * Variable: consumed
@@ -74,7 +76,7 @@ class EventObject {
    *
    * Returns <name>.
    */
-  getName(): string {
+  getName() {
     return this.name;
   }
 
@@ -83,7 +85,7 @@ class EventObject {
    *
    * Returns <properties>.
    */
-  getProperties(): any {
+  getProperties() {
     return this.properties;
   }
 
@@ -92,7 +94,7 @@ class EventObject {
    *
    * Returns the property for the given key.
    */
-  getProperty(key: string): any {
+  getProperty(key: string) {
     return this.properties[key];
   }
 
@@ -101,7 +103,7 @@ class EventObject {
    *
    * Returns true if the event has been consumed.
    */
-  isConsumed(): boolean {
+  isConsumed() {
     return this.consumed;
   }
 
@@ -110,7 +112,7 @@ class EventObject {
    *
    * Consumes the event.
    */
-  consume(): void {
+  consume() {
     this.consumed = true;
   }
 }

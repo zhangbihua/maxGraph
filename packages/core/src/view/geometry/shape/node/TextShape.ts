@@ -31,7 +31,7 @@ import {
 } from '../../../../util/Constants';
 import { getAlignmentAsPoint, getBoundingBox } from '../../../../util/Utils';
 import Point from '../../Point';
-import AbstractCanvas2D from '../../../../util/canvas/SvgCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Shape from '../Shape';
 import Rectangle from '../../Rectangle';
 import CellState from '../../../cell/datatypes/CellState';
@@ -48,6 +48,7 @@ import {
   TextDirectionValue,
   VAlignValue,
 } from 'packages/core/src/types';
+import SvgCanvas2D from 'packages/core/src/util/canvas/SvgCanvas2D';
 
 /**
  * Extends mxShape to implement a text shape.
@@ -688,7 +689,7 @@ class TextShape extends Shape {
     const margin = <Point>this.margin;
     const node = this.node;
 
-    AbstractCanvas2D.createCss(
+    SvgCanvas2D.createCss(
       w + 2,
       h,
       this.align,

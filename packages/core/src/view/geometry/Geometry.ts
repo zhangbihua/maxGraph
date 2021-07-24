@@ -7,7 +7,7 @@
 
 import Point from './Point';
 import Rectangle from './Rectangle';
-import utils, { equalPoints, getRotatedPoint, toRadians } from '../../util/Utils';
+import { equalPoints, getRotatedPoint, toRadians } from '../../util/Utils';
 import { clone } from '../../util/CloneUtils';
 
 /**
@@ -74,12 +74,7 @@ import { clone } from '../../util/CloneUtils';
  * defines the absolute offset for the label inside the vertex or group.
  */
 class Geometry extends Rectangle {
-  constructor(
-    x: number = 0,
-    y: number = 0,
-    width: number = 0,
-    height: number = 0
-  ) {
+  constructor(x = 0, y = 0, width = 0, height = 0) {
     super(x, y, width, height);
   }
 

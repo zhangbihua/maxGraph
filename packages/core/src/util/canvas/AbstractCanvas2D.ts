@@ -665,6 +665,20 @@ class AbstractCanvas2D {
     rotation = 0,
     dir: TextDirectionValue
   ) {}
+
+  updateText(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    align: AlignValue,
+    valign: VAlignValue,
+    wrap: boolean,
+    overflow: OverflowValue,
+    clip: boolean,
+    rotation = 0,
+    node: SVGElement
+  ) {}
 }
 
 export default AbstractCanvas2D;

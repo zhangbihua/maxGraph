@@ -5,6 +5,13 @@
  * Type definitions from the typed-mxgraph project
  */
 
+type ImageMap = {
+  [key: string]: {
+    value: string;
+    fallback: Function;
+  };
+};
+
 /**
  * Class: mxImageBundle
  *
@@ -51,9 +58,9 @@
  * all data URIs should be limited to 32 KB.
  */
 class ImageBundle {
-  constructor(alt) {
-    this.images = [];
-    this.alt = alt != null ? alt : false;
+  constructor(alt = false) {
+    this.images = {};
+    this.alt = alt;
   }
 
   /**
@@ -61,14 +68,14 @@ class ImageBundle {
    *
    * Maps from keys to images.
    */
-  images: { [key: string]: { value: string; fallback: Function } } | null = null;
+  images: ImageMap;
 
   /**
    * Variable: alt
    *
    * Specifies if the fallback representation should be returned.
    */
-  alt: boolean = null;
+  alt: boolean;
 
   /**
    * Function: putImage
@@ -87,13 +94,13 @@ class ImageBundle {
    * or fallback, depending on <alt>. The fallback is returned if
    * <alt> is true, the value is returned otherwise.
    */
-  getImage(key: string): string {
+  getImage(key: string) {
     let result = null;
 
-    if (key != null) {
+    if (key) {
       const img = this.images[key];
 
-      if (img != null) {
+      if (img) {
         result = this.alt ? img.fallback : img.value;
       }
     }

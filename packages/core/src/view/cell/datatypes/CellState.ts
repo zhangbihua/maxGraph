@@ -12,7 +12,7 @@ import GraphView from '../../view/GraphView';
 import Shape from '../../geometry/shape/Shape';
 import TextShape from '../../geometry/shape/node/TextShape';
 import Dictionary from '../../../util/Dictionary';
-import { ALIGN_MIDDLE, NONE } from '../../../util/Constants';
+import { NONE } from '../../../util/Constants';
 
 import type { CellStateStyles } from '../../../types';
 
@@ -461,7 +461,7 @@ class CellState extends Rectangle {
    * returned.
    */
   getVerticalAlign() {
-    return this.style.verticalAlign ?? ALIGN_MIDDLE;
+    return this.style.verticalAlign;
   }
 
   /**
@@ -472,8 +472,8 @@ class CellState extends Rectangle {
   isTransparentState() {
     let result = false;
 
-    const stroke = this.style.strokeColor ?? NONE;
-    const fill = this.style.fillColor ?? NONE;
+    const stroke = this.style.strokeColor;
+    const fill = this.style.fillColor;
 
     result = stroke === NONE && fill === NONE && !this.getImageSrc();
 
@@ -488,7 +488,7 @@ class CellState extends Rectangle {
    * @param state {@link mxCellState} whose image URL should be returned.
    */
   getImageSrc() {
-    return this.style.image ?? null;
+    return this.style.image;
   }
 
   /**
@@ -500,7 +500,7 @@ class CellState extends Rectangle {
    * returned.
    */
   getIndicatorColor() {
-    return this.style.indicatorColor ?? null;
+    return this.style.indicatorColor;
   }
 
   /**
@@ -512,7 +512,7 @@ class CellState extends Rectangle {
    * returned.
    */
   getIndicatorGradientColor() {
-    return this.style.gradientColor ?? null;
+    return this.style.gradientColor;
   }
 
   /**
@@ -523,7 +523,7 @@ class CellState extends Rectangle {
    * @param state {@link mxCellState} whose indicator shape should be returned.
    */
   getIndicatorShape() {
-    return this.style.indicatorShape ?? null;
+    return this.style.indicatorShape;
   }
 
   /**
@@ -534,7 +534,7 @@ class CellState extends Rectangle {
    * @param state {@link mxCellState} whose indicator image should be returned.
    */
   getIndicatorImageSrc() {
-    return this.style.indicatorImage ?? null;
+    return this.style.indicatorImage;
   }
 }
 

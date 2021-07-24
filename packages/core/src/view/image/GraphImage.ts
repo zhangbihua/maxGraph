@@ -1,6 +1,5 @@
-import Graph from "../Graph";
-import ImageBundle from "../../util/image/ImageBundle";
-import ImageBundle from "./ImageBundle";
+import Graph from '../Graph';
+import ImageBundle from './ImageBundle';
 
 class GraphImage {
   constructor(graph: Graph) {
@@ -19,14 +18,14 @@ class GraphImage {
   /**
    * Adds the specified {@link ImageBundle}.
    */
-  addImageBundle(bundle: ImageBundle): void {
+  addImageBundle(bundle: ImageBundle) {
     this.imageBundles.push(bundle);
   }
 
   /**
    * Removes the specified {@link ImageBundle}.
    */
-  removeImageBundle(bundle: ImageBundle): void {
+  removeImageBundle(bundle: ImageBundle) {
     const tmp = [];
     for (let i = 0; i < this.imageBundles.length; i += 1) {
       if (this.imageBundles[i] !== bundle) {
@@ -40,11 +39,11 @@ class GraphImage {
    * Searches all {@link imageBundles} for the specified key and returns the value
    * for the first match or null if the key is not found.
    */
-  getImageFromBundles(key: string): string {
-    if (key != null) {
+  getImageFromBundles(key: string) {
+    if (key) {
       for (let i = 0; i < this.imageBundles.length; i += 1) {
         const image = this.imageBundles[i].getImage(key);
-        if (image != null) {
+        if (image) {
           return image;
         }
       }
