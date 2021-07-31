@@ -10,8 +10,9 @@ import mxLog from '../gui/mxLog';
 import Geometry from '../../view/geometry/Geometry';
 import Point from '../../view/geometry/Point';
 import { NODETYPE_ELEMENT } from '../Constants';
-import utils from '../Utils';
+import utils, { isInteger, isNumeric } from '../Utils';
 import { getTextContent } from '../DomUtils';
+import { load } from '../network/mxXmlRequest';
 
 /**
  * Generic codec for JavaScript objects that implements a mapping between
@@ -398,7 +399,7 @@ class mxObjectCodec {
       const value = obj[name];
 
       if (value != null && !this.isExcluded(obj, name, value, true)) {
-        if (utils.isInteger(name)) {
+        if (isInteger(name)) {
           name = null;
         }
 
@@ -577,7 +578,7 @@ class mxObjectCodec {
           attr.name === 'height')) ||
       (obj.constructor === Point &&
         (attr.name === 'x' || attr.name === 'y')) ||
-      utils.isNumeric(attr.value);
+      isNumeric(attr.value);
 
     return result;
   }
@@ -637,7 +638,7 @@ class mxObjectCodec {
    * - If the object is an array and the variable name is empty then the
    * value or child object is appended to the array.
    * - If an add child has no value or the object is not an array then
-   * the child text content is evaluated using {@link utils.eval}.
+   * the child text content is evaluated using {@link eval}.
    *
    * For add nodes where the object is not an array and the variable name
    * is defined, the default mechanism is used, allowing to override/add
@@ -880,7 +881,7 @@ class mxObjectCodec {
       const name = node.getAttribute('name');
       if (name != null) {
         try {
-          const xml = utils.load(name).getDocumentElement();
+          const xml = load(name).getDocumentElement();
           if (xml != null) {
             dec.decode(xml, into);
           }

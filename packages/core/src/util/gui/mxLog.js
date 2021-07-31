@@ -199,7 +199,7 @@ class mxLog {
    */
   // static info(): void;
   static info() {
-    mxLog.writeln(utils.toString(navigator));
+    mxLog.writeln(toString(navigator));
   }
 
   /**

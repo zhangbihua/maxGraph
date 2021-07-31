@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import EventSource from '../../view/event/EventSource';
-import utils from '../Utils';
+import utils, { fit, getDocumentScrollOrigin } from '../Utils';
 import EventObject from '../../view/event/EventObject';
 import mxClient from '../../mxClient';
 import InternalEvent from '../../view/event/InternalEvent';
@@ -418,7 +418,7 @@ class mxPopupMenu extends EventSource {
       // Moves the submenu to the left side if there is no space
       const left = parseInt(row.div.offsetLeft);
       const width = parseInt(row.div.offsetWidth);
-      const offset = utils.getDocumentScrollOrigin(document);
+      const offset = getDocumentScrollOrigin(document);
 
       const b = document.body;
       const d = document.documentElement;
@@ -432,7 +432,7 @@ class mxPopupMenu extends EventSource {
         )}px`;
       }
 
-      utils.fit(row.div);
+      fit(row.div);
     }
   }
 
@@ -532,7 +532,7 @@ class mxPopupMenu extends EventSource {
   showMenu() {
     // Fits the div inside the viewport
     document.body.appendChild(this.div);
-    utils.fit(this.div);
+    fit(this.div);
   }
 
   /**

@@ -31,7 +31,15 @@ import {
   OUTLINE_HIGHLIGHT_COLOR,
   OUTLINE_HIGHLIGHT_STROKEWIDTH,
 } from '../../../util/Constants';
-import utils from '../../../util/Utils';
+import utils, {
+  contains,
+  convertPoint,
+  findNearestSegment,
+  getValue,
+  intersects,
+  ptSegDistSq,
+  setOpacity,
+} from '../../../util/Utils';
 import ImageShape from '../../geometry/shape/node/ImageShape';
 import RectangleShape from '../../geometry/shape/node/RectangleShape';
 import ConnectionConstraint from '../../connection/ConnectionConstraint';
@@ -66,7 +74,7 @@ import Shape from '../../geometry/shape/Shape';
  * @class EdgeHandler
  */
 class EdgeHandler {
-  constructor(state) {
+  constructor(state: CellState | null = null) {
     if (state != null && state.shape != null) {
       this.state = state;
       this.init();
@@ -97,7 +105,7 @@ class EdgeHandler {
    *
    * Reference to the <mxCellState> being modified.
    */
-  state: CellState = null;
+  state: CellState;
 
   /**
    * Variable: marker
@@ -354,8 +362,7 @@ class EdgeHandler {
    *
    * Initializes the shapes required for this edge handler.
    */
-  // init(): void;
-  init() {
+  init(): void {
     this.graph = this.state.view.graph;
     this.marker = this.createMarker();
     this.constraintHandler = new ConstraintHandler(this.graph);
@@ -431,8 +438,7 @@ class EdgeHandler {
    *
    * Returns an array of custom handles. This implementation returns null.
    */
-  // createCustomHandles(): any[];
-  createCustomHandles() {
+  createCustomHandles(): any[] | null {
     return null;
   }
 
@@ -443,14 +449,13 @@ class EdgeHandler {
    * <virtualBendsEnabled> is true and the current style allows and
    * renders custom waypoints.
    */
-  // isVirtualBendsEnabled(evt: Event): boolean;
-  isVirtualBendsEnabled(evt) {
+  isVirtualBendsEnabled(evt: Event): boolean {
     return (
       this.virtualBendsEnabled &&
       (this.state.style.edge == null ||
         this.state.style.edge === NONE ||
         this.state.style.noEdgeStyle == 1) &&
-      utils.getValue(this.state.style, 'shape', null) != 'arrow'
+      getValue(this.state.style, 'shape', null) != 'arrow'
     );
   }
 
@@ -895,7 +900,7 @@ class EdgeHandler {
           shape.node != null &&
           shape.node.style.display !== 'none' &&
           shape.node.style.visibility !== 'hidden' &&
-          (me.isSource(shape) || (hit != null && utils.intersects(shape.bounds, hit)))
+          (me.isSource(shape) || (hit != null && intersects(shape.bounds, hit)))
         ) {
           const dx = me.getGraphX() - shape.bounds.getCenterX();
           const dy = me.getGraphY() - shape.bounds.getCenterY();
@@ -996,7 +1001,7 @@ class EdgeHandler {
         this.graph.isLabelMovable(me.getCell())
       ) {
         if (handle <= InternalEvent.VIRTUAL_HANDLE) {
-          utils.setOpacity(
+          setOpacity(
             this.virtualBends[InternalEvent.VIRTUAL_HANDLE - handle].node,
             100
           );
@@ -1287,7 +1292,7 @@ class EdgeHandler {
             if (i !== this.index) {
               const bend = this.bends[i];
 
-              if (bend != null && utils.contains(bend.bounds, pt.x, pt.y)) {
+              if (bend != null && contains(bend.bounds, pt.x, pt.y)) {
                 if (this.index <= InternalEvent.VIRTUAL_HANDLE) {
                   points.splice(InternalEvent.VIRTUAL_HANDLE - this.index, 1);
                 } else {
@@ -1342,7 +1347,7 @@ class EdgeHandler {
               if (
                 idx > 0 &&
                 idx < abs.length - 1 &&
-                utils.ptSegDistSq(
+                ptSegDistSq(
                   abs[idx - 1].x,
                   abs[idx - 1].y,
                   abs[idx + 1].x,
@@ -1381,7 +1386,7 @@ class EdgeHandler {
    */
   // isOutlineConnectEvent(me: mxMouseEvent): boolean;
   isOutlineConnectEvent(me) {
-    const offset = utils.getOffset(this.graph.container);
+    const offset = getOffset(this.graph.container);
     const evt = me.getEvent();
 
     const clientX = getClientX(evt);
@@ -2027,7 +2032,7 @@ class EdgeHandler {
    */
   // addPoint(state: mxCellState, evt: Event): void;
   addPoint(state, evt) {
-    const pt = utils.convertPoint(this.graph.container, getClientX(evt), getClientY(evt));
+    const pt = convertPoint(this.graph.container, getClientX(evt), getClientY(evt));
     const gridEnabled = this.graph.isGridEnabledEvent(evt);
     this.convertPoint(pt, gridEnabled);
     this.addPointAt(state, pt.x, pt.y);
@@ -2057,7 +2062,7 @@ class EdgeHandler {
         offset = new Point(pState.x, pState.y);
       }
 
-      const index = utils.findNearestSegment(
+      const index = findNearestSegment(
         state,
         pt.x * s + offset.x,
         pt.y * s + offset.y
@@ -2246,7 +2251,7 @@ class EdgeHandler {
             b.bounds.height
           );
           b.redraw();
-          utils.setOpacity(b.node, this.virtualBendOpacity);
+          setOpacity(b.node, this.virtualBendOpacity);
           last = pt;
 
           if (this.manageLabelHandle) {
@@ -2347,7 +2352,7 @@ class EdgeHandler {
           } else if (
             this.handleImage == null &&
             this.labelShape.visible &&
-            utils.intersects(this.bends[i].bounds, this.labelShape.bounds)
+            intersects(this.bends[i].bounds, this.labelShape.bounds)
           ) {
             const w = HANDLE_SIZE + 3;
             const h = HANDLE_SIZE + 3;
@@ -2379,7 +2384,7 @@ class EdgeHandler {
     if (this.labelShape != null) {
       const b2 = this.labelShape.bounds;
 
-      if (utils.intersects(b, b2)) {
+      if (intersects(b, b2)) {
         if (b.getCenterY() < b2.getCenterY()) {
           b2.y = b.y + b.height;
         } else {
@@ -2412,7 +2417,7 @@ class EdgeHandler {
         }
       }
 
-      if (this.shape != null && !utils.equalPoints(this.shape.points, this.abspoints)) {
+      if (this.shape != null && !equalPoints(this.shape.points, this.abspoints)) {
         this.shape.apply(this.state);
         this.shape.points = this.abspoints.slice();
         this.shape.scale = this.state.view.scale;

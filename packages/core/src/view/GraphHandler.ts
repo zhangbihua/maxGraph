@@ -7,7 +7,7 @@
 
 import mxClient from '../mxClient';
 import InternalEvent from './event/InternalEvent';
-import utils from '../util/Utils';
+import utils, { contains, convertPoint, getRotatedPoint, getValue, toRadians } from '../util/Utils';
 import RectangleShape from './geometry/shape/node/RectangleShape';
 import mxGuide from '../util/Guide';
 import Point from './geometry/Point';
@@ -844,7 +844,7 @@ class GraphHandler {
   // start(cell: mxCell, x: number, y: number): void;
   start(cell, x, y, cells) {
     this.cell = cell;
-    this.first = utils.convertPoint(this.graph.container, x, y);
+    this.first = convertPoint(this.graph.container, x, y);
     this.cells = cells != null ? cells : this.getCells(this.cell);
     this.bounds = this.graph.getView().getBounds(this.cells);
     this.pBounds = this.getPreviewBounds(this.cells);
@@ -962,7 +962,7 @@ class GraphHandler {
    */
   // getDelta(me: mxMouseEvent): mxPoint;
   getDelta(me) {
-    const point = utils.convertPoint(
+    const point = convertPoint(
       this.graph.container,
       me.getX(),
       me.getY()
@@ -1702,23 +1702,23 @@ class GraphHandler {
       const pState = this.graph.getView().getState(parent);
 
       if (pState != null) {
-        let pt = utils.convertPoint(
+        let pt = convertPoint(
           this.graph.container,
           getClientX(evt),
           getClientY(evt)
         );
-        const alpha = utils.toRadians(
-          utils.getValue(pState.style, 'rotation') || 0
+        const alpha = toRadians(
+          getValue(pState.style, 'rotation') || 0
         );
 
         if (alpha !== 0) {
           const cos = Math.cos(-alpha);
           const sin = Math.sin(-alpha);
           const cx = new Point(pState.getCenterX(), pState.getCenterY());
-          pt = utils.getRotatedPoint(pt, cos, sin, cx);
+          pt = getRotatedPoint(pt, cos, sin, cx);
         }
 
-        return !utils.contains(pState, pt.x, pt.y);
+        return !contains(pState, pt.x, pt.y);
       }
     }
 

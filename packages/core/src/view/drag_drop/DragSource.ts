@@ -6,7 +6,7 @@
  */
 import Rectangle from '../geometry/Rectangle';
 import CellHighlight from '../selection/CellHighlight';
-import utils from '../../util/Utils';
+import utils, { getDocumentScrollOrigin, getOffset, getScrollOrigin, setOpacity } from '../../util/Utils';
 import InternalEvent from '../event/InternalEvent';
 import mxClient from '../../mxClient';
 import mxGuide from '../../util/Guide';
@@ -336,7 +336,7 @@ class DragSource {
     this.dragElement = this.createDragElement(evt);
     this.dragElement.style.position = 'absolute';
     this.dragElement.style.zIndex = this.dragElementZIndex;
-    utils.setOpacity(this.dragElement, this.dragElementOpacity);
+    setOpacity(this.dragElement, this.dragElementOpacity);
 
     if (this.checkEventSource && mxClient.IS_SVG) {
       this.dragElement.style.pointerEvents = 'none';
@@ -385,8 +385,8 @@ class DragSource {
   graphContainsEvent(graph, evt) {
     const x = getClientX(evt);
     const y = getClientY(evt);
-    const offset = utils.getOffset(graph.container);
-    const origin = utils.getScrollOrigin();
+    const offset = getOffset(graph.container);
+    const origin = getScrollOrigin();
     let elt = this.getElementForEvent(evt);
 
     if (this.checkEventSource) {
@@ -454,7 +454,7 @@ class DragSource {
         y += this.dragOffset.y;
       }
 
-      const offset = utils.getDocumentScrollOrigin(document);
+      const offset = getDocumentScrollOrigin(document);
 
       this.dragElement.style.left = `${x + offset.x}px`;
       this.dragElement.style.top = `${y + offset.y}px`;
@@ -590,8 +590,8 @@ class DragSource {
    */
   // dragOver(graph: mxGraph, evt: Event): void;
   dragOver(graph, evt) {
-    const offset = utils.getOffset(graph.container);
-    const origin = utils.getScrollOrigin(graph.container);
+    const offset = getOffset(graph.container);
+    const origin = getScrollOrigin(graph.container);
     let x = getClientX(evt) - offset.x + origin.x - graph.panDx;
     let y = getClientY(evt) - offset.y + origin.y - graph.panDy;
 

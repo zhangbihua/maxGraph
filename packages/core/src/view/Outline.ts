@@ -570,7 +570,7 @@ class Outline {
       this.zoom =
         me.isSource(this.sizer) ||
         // @ts-ignore
-        (hit != null && utils.intersects(this.sizer.bounds, hit));
+        (hit != null && intersects(this.sizer.bounds, hit));
       this.startX = me.getX();
       this.startY = me.getY();
       this.active = true;
@@ -578,7 +578,7 @@ class Outline {
 
       if (
         this.source.useScrollbarsForPanning &&
-        utils.hasScrollbars(this.source.container)
+        hasScrollbars(this.source.container)
       ) {
         this.dx0 = sourceContainer.scrollLeft;
         this.dy0 = sourceContainer.scrollTop;
@@ -703,7 +703,7 @@ class Outline {
         if (!this.zoom) {
           // Applies the new translation if the source
           // has no scrollbars
-          if (!source.useScrollbarsForPanning || !utils.hasScrollbars(source.container)) {
+          if (!source.useScrollbarsForPanning || !hasScrollbars(source.container)) {
             source.panGraph(0, 0);
             dx /= outline.getView().scale;
             dy /= outline.getView().scale;

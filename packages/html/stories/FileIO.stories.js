@@ -1,6 +1,10 @@
 import mxgraph from '@mxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
+import { error } from '@mxgraph/core/src/util/mxDomUtils';
+import { clone } from '@mxgraph/core/src/util/CloneUtils';
+import { button } from '@mxgraph/core/src/util/dom/mxDomHelpers';
+import { load } from '@mxgraph/core/src/util/network/mxXmlRequest';
 
 export default {
   title: 'Xml_Json/FileIO',
@@ -34,7 +38,7 @@ const Template = ({ label, ...args }) => {
     if (!mxClient.isBrowserSupported()) {
       // Displays an error message if the browser is
       // not supported.
-      utils.error('Browser is not supported!', 200, false);
+      error('Browser is not supported!', 200, false);
     } else {
       // Creates the graph inside the given container
       const graph = new mxGraph(container);
@@ -58,7 +62,7 @@ const Template = ({ label, ...args }) => {
       style = graph.getStylesheet().getDefaultEdgeStyle();
       style.labelBackgroundColor = 'white';
 
-      style = utils.clone(style);
+      style = clone(style);
       style.startArrow = mxConstants.ARROW_CLASSIC;
       graph.getStylesheet().putCellStyle('2way', style);
 
@@ -78,7 +82,7 @@ const Template = ({ label, ...args }) => {
 
       // Adds a button to execute the layout
       this.el2.appendChild(
-        utils.button('Arrange', function(evt) {
+        button('Arrange', function(evt) {
           const parent = graph.getDefaultParent();
           layout.execute(parent);
         })
@@ -120,7 +124,7 @@ const Template = ({ label, ...args }) => {
           !mxe.isConsumed() &&
           cell != null
         ) {
-          utils.alert(
+          alert(
             `Show properties for cell ${cell.customId || cell.getId()}`
           );
         }
@@ -136,7 +140,7 @@ const Template = ({ label, ...args }) => {
     // is normally the first child of the root (ie. layer 0).
     const parent = graph.getDefaultParent();
 
-    const req = utils.load(filename);
+    const req = load(filename);
     const text = req.getText();
 
     const lines = text.split('\n');
@@ -192,7 +196,7 @@ const Template = ({ label, ...args }) => {
 
   // Parses the mxGraph XML file format
   function read(graph, filename) {
-    const req = utils.load(filename);
+    const req = load(filename);
     const root = req.getDocumentElement();
     const dec = new mxCodec(root.ownerDocument);
 

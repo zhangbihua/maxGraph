@@ -4,6 +4,7 @@
  */
 import mxClient from '../mxClient';
 import { NONE } from './Constants';
+import { get, load } from './network/mxXmlRequest';
 
 /**
  * Class: mxResources
@@ -215,7 +216,7 @@ const Resources = {
       const loadSpecialBundle = () => {
         if (specialBundle != null) {
           if (callback) {
-            utils.get(
+            get(
               specialBundle,
               (req) => {
                 Resources.parse(req.getText());
@@ -227,7 +228,7 @@ const Resources = {
             );
           } else {
             try {
-              const req = utils.load(specialBundle);
+              const req = load(specialBundle);
 
               if (req.isReady()) {
                 Resources.parse(req.getText());
@@ -243,7 +244,7 @@ const Resources = {
 
       if (defaultBundle != null) {
         if (callback) {
-          utils.get(
+          get(
             defaultBundle,
             (req) => {
               Resources.parse(req.getText());
@@ -255,7 +256,7 @@ const Resources = {
           );
         } else {
           try {
-            const req = utils.load(defaultBundle);
+            const req = load(defaultBundle);
 
             if (req.isReady()) {
               Resources.parse(req.getText());

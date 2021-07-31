@@ -12,7 +12,7 @@ import mxPopupMenu from './mxPopupMenu';
 import EventSource from '../../view/event/EventSource';
 import EventObject from '../../view/event/EventObject';
 import mxClient from '../../mxClient';
-import { write, writeln } from '../DomUtils';
+import { br, write, writeln } from '../DomUtils';
 
 /**
  * Creates a toolbar inside a given DOM node. The toolbar may contain icons,
@@ -419,7 +419,7 @@ class mxToolbar extends EventSource {
    */
   // addBreak(): void;
   addBreak() {
-    utils.br(this.container);
+    br(this.container);
   }
 
   /**

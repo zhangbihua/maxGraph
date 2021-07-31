@@ -153,11 +153,11 @@ const Template = ({ label, ...args }) => {
 
         const footer = header.cloneNode(true);
 
-        utils.write(header, `Page ${pageNumber} - Header`);
+        write(header, `Page ${pageNumber} - Header`);
         header.style.borderBottom = '1px solid gray';
         header.style.top = '0px';
 
-        utils.write(footer, `Page ${pageNumber} - Footer`);
+        write(footer, `Page ${pageNumber} - Footer`);
         footer.style.borderTop = '1px solid gray';
         footer.style.bottom = '0px';
 

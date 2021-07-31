@@ -8,7 +8,7 @@
 import Rectangle from '../../view/geometry/Rectangle';
 import EventObject from '../../view/event/EventObject';
 import EventSource from '../../view/event/EventSource';
-import utils from '../Utils';
+import utils, { fit, getCurrentStyle } from '../Utils';
 import InternalEvent from '../../view/event/InternalEvent';
 import mxClient from '../../mxClient';
 import { NODETYPE_TEXT } from '../Constants';
@@ -396,7 +396,7 @@ class mxWindow extends EventSource {
   // activate(): void;
   activate() {
     if (mxWindow.activeWindow !== this) {
-      const style = utils.getCurrentStyle(this.getElement());
+      const style = getCurrentStyle(this.getElement());
       const index = style != null ? style.zIndex : 3;
 
       if (mxWindow.activeWindow) {
@@ -430,7 +430,7 @@ class mxWindow extends EventSource {
    */
   // fit(): void;
   fit() {
-    utils.fit(this.div);
+    fit(this.div);
   }
 
   /**
@@ -714,7 +714,7 @@ class mxWindow extends EventSource {
             this.resize.style.visibility = 'hidden';
           }
 
-          const style = utils.getCurrentStyle(this.contentWrapper);
+          const style = getCurrentStyle(this.contentWrapper);
 
           if (style.overflow === 'auto' || this.resize != null) {
             this.contentWrapper.style.height = `${
@@ -740,7 +740,7 @@ class mxWindow extends EventSource {
           this.div.style.height = height;
           this.div.style.width = width;
 
-          const style = utils.getCurrentStyle(this.contentWrapper);
+          const style = getCurrentStyle(this.contentWrapper);
 
           if (style.overflow === 'auto' || this.resize != null) {
             this.contentWrapper.style.height = `${
@@ -933,7 +933,7 @@ class mxWindow extends EventSource {
     this.div.style.display = '';
     this.activate();
 
-    const style = utils.getCurrentStyle(this.contentWrapper);
+    const style = getCurrentStyle(this.contentWrapper);
 
     if (
       (style.overflow == 'auto' || this.resize != null) &&

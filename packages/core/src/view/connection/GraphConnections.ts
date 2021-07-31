@@ -347,9 +347,9 @@ class GraphConnections {
           // Legacy support for stencilFlipH/V
           if (vertex.shape != null && vertex.shape.stencil != null) {
             flipH =
-              utils.getValue(vertex.style, 'stencilFlipH', 0) == 1 || flipH;
+              getValue(vertex.style, 'stencilFlipH', 0) == 1 || flipH;
             flipV =
-              utils.getValue(vertex.style, 'stencilFlipV', 0) == 1 || flipV;
+              getValue(vertex.style, 'stencilFlipV', 0) == 1 || flipV;
           }
 
           if (direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH) {

@@ -5,8 +5,9 @@
  * Type definitions from the typed-mxgraph project
  */
 import MxHierarchicalLayoutStage from './HierarchicalLayoutStage';
-import utils from '../../../../../util/Utils';
+import utils, { remove } from '../../../../../util/Utils';
 import CellPath from '../../../../cell/datatypes/CellPath';
+import { clone } from '../../../../../util/CloneUtils';
 
 /**
  * Class: mxSwimlaneOrdering
@@ -42,7 +43,7 @@ class mxSwimlaneOrdering extends MxHierarchicalLayoutStage {
   execute(parent) {
     const model = this.layout.getModel();
     const seenNodes = {};
-    const unseenNodes = utils.clone(model.vertexMapper, null, true);
+    const unseenNodes = clone(model.vertexMapper, null, true);
 
     // Perform a dfs through the internal model. If a cycle is found,
     // reverse it.
@@ -78,16 +79,16 @@ class mxSwimlaneOrdering extends MxHierarchicalLayoutStage {
 
         if (isAncestor) {
           connectingEdge.invert();
-          utils.remove(connectingEdge, parent.connectsAsSource);
+          remove(connectingEdge, parent.connectsAsSource);
           node.connectsAsSource.push(connectingEdge);
           parent.connectsAsTarget.push(connectingEdge);
-          utils.remove(connectingEdge, node.connectsAsTarget);
+          remove(connectingEdge, node.connectsAsTarget);
         } else if (reversedOverSwimlane) {
           connectingEdge.invert();
-          utils.remove(connectingEdge, parent.connectsAsTarget);
+          remove(connectingEdge, parent.connectsAsTarget);
           node.connectsAsTarget.push(connectingEdge);
           parent.connectsAsSource.push(connectingEdge);
-          utils.remove(connectingEdge, node.connectsAsSource);
+          remove(connectingEdge, node.connectsAsSource);
         }
 
         const cellId = CellPath.create(node.cell);

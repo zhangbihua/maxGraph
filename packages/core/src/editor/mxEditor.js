@@ -13,7 +13,7 @@ import CompactTreeLayout from '../view/layout/layout/CompactTreeLayout';
 import mxDefaultToolbar from './mxDefaultToolbar';
 import StackLayout from '../view/layout/layout/StackLayout';
 import EventObject from '../view/event/EventObject';
-import utils from '../util/Utils';
+import utils, { getOffset } from '../util/Utils';
 import mxCodec from '../util/serialization/mxCodec';
 import mxWindow, { error } from '../util/gui/mxWindow';
 import mxForm from '../util/gui/mxForm';
@@ -43,6 +43,8 @@ import PrintPreview from '../view/printing/PrintPreview';
 import mxClipboard from '../util/storage/mxClipboard';
 import mxLog from '../util/gui/mxLog';
 import { isNode } from '../util/DomUtils';
+import { getViewXml, getXml } from '../util/XmlUtils';
+import { load, post, submit } from '../util/network/mxXmlRequest';
 
 /**
  * Installs the required language resources at class
@@ -995,7 +997,7 @@ class mxEditor extends EventSource {
     });
 
     this.addAction('show', (editor) => {
-      utils.show(editor.graph, null, 10, 10);
+      show(editor.graph, null, 10, 10);
     });
 
     this.addAction('exportImage', (editor) => {
@@ -1004,10 +1006,10 @@ class mxEditor extends EventSource {
       if (url == null || mxClient.IS_LOCAL) {
         editor.execute('show');
       } else {
-        const node = utils.getViewXml(editor.graph, 1);
-        const xml = utils.getXml(node, '\n');
+        const node = getViewXml(editor.graph, 1);
+        const xml = getXml(node, '\n');
 
-        utils.submit(
+        submit(
           url,
           `${editor.postParameterName}=${encodeURIComponent(xml)}`,
           document,
@@ -1952,7 +1954,7 @@ class mxEditor extends EventSource {
   // open(filename: string): void;
   open(filename) {
     if (filename != null) {
-      const xml = utils.load(filename).getXml();
+      const xml = load(filename).getXml();
       this.readGraphModel(xml.documentElement);
       this.filename = filename;
 
@@ -1976,7 +1978,7 @@ class mxEditor extends EventSource {
    * Posts the string returned by {@link writeGraphModel} to the given URL or the
    * URL returned by {@link getUrlPost}. The actual posting is carried out by
    * {@link postDiagram}. If the URL is null then the resulting XML will be
-   * displayed using {@link utils.popup}. Exceptions should be handled as
+   * displayed using {@link popup}. Exceptions should be handled as
    * follows:
    *
    * @example
@@ -2041,7 +2043,7 @@ class mxEditor extends EventSource {
       data = encodeURIComponent(data);
     }
 
-    utils.post(url, `${this.postParameterName}=${data}`, (req) => {
+    post(url, `${this.postParameterName}=${data}`, (req) => {
       this.fireEvent(
         new EventObject(
           InternalEvent.POST,
@@ -2076,7 +2078,7 @@ class mxEditor extends EventSource {
     const enc = new mxCodec();
     const node = enc.encode(this.graph.getModel());
 
-    return utils.getXml(node, linefeed);
+    return getXml(node, linefeed);
   }
 
   /**
@@ -2144,7 +2146,7 @@ class mxEditor extends EventSource {
       // graph and computes the location of the dialog
       this.graph.stopEditing(true);
 
-      const offset = utils.getOffset(this.graph.container);
+      const offset = getOffset(this.graph.container);
       let x = offset.x + 10;
       let { y } = offset;
 

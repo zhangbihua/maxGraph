@@ -8,6 +8,10 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import { error } from '../../packages/core/src/util/gui/mxWindow';
+import { createXmlDocument } from '../../packages/core/src/util/XmlUtils';
+import { button } from '../../packages/core/src/util/dom/mxDomHelpers';
+import { isNode } from '../../packages/core/src/util/DomUtils';
 
 class Scrollbars extends React.Component {
   constructor(props) {
@@ -83,7 +87,7 @@ export default Scrollbars;
       if (!mxClient.isBrowserSupported())
       {
         // Displays an error message if the browser is not supported.
-        utils.error('Browser is not supported!', 200, false);
+        error('Browser is not supported!', 200, false);
       }
       else
       {
@@ -242,7 +246,7 @@ export default Scrollbars;
               {
                 div.scrollHandler = true;
 
-                let updateEdges = utils.bind(this, function()
+                let updateEdges = () =>
                 {
                   let edgeCount = state.cell.getEdgeCount();
 
@@ -254,7 +258,7 @@ export default Scrollbars;
                     graph.view.invalidate(edge, true, false);
                     graph.view.validate(edge);
                   }
-                });
+                };
 
                 mxEvent.addListener(div, 'scroll', updateEdges);
                 mxEvent.addListener(div, 'mouseup', updateEdges);
@@ -402,7 +406,7 @@ export default Scrollbars;
         };
 
         // User objects (data) for the individual cells
-        let doc = utils.createXmlDocument();
+        let doc = createXmlDocument();
 
         // Same should be used to create the XML node for the table
         // description and the rows (most probably as child nodes)
@@ -440,14 +444,14 @@ export default Scrollbars;
           graph.getModel().endUpdate();
         }
 
-        var btn1 = utils.button('+', function()
+        var btn1 = button('+', function()
         {
           graph.zoomIn();
         });
         btn1.style.marginLeft = '20px';
 
         document.body.appendChild(btn1);
-        document.body.appendChild(utils.button('-', function()
+        document.body.appendChild(button('-', function()
         {
           graph.zoomOut();
         }));
@@ -473,7 +477,7 @@ export default Scrollbars;
       {
         y = start.getCenterY() - div.scrollTop;
 
-        if (utils.isNode(edge.cell.value) && !start.cell.isCollapsed())
+        if (isNode(edge.cell.value) && !start.cell.isCollapsed())
         {
           let attr = (source) ? 'sourceRow' : 'targetRow';
           let row = parseInt(edge.cell.value.getAttribute(attr));
@@ -507,7 +511,7 @@ export default Scrollbars;
 
       // Routes multiple incoming edges along common waypoints if
       // the edges have a common target row
-      if (source && utils.isNode(edge.cell.value) && start != null && end != null)
+      if (source && isNode(edge.cell.value) && start != null && end != null)
       {
         let edges = this.graph.getEdgesBetween(start.cell, end.cell, true);
         let tmp = [];
@@ -517,7 +521,7 @@ export default Scrollbars;
 
         for (let i = 0; i < edges.length; i++)
         {
-          if (utils.isNode(edges[i].value) &&
+          if (isNode(edges[i].value) &&
             edges[i].value.getAttribute('targetRow') == row)
           {
             tmp.push(edges[i]);

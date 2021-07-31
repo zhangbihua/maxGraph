@@ -6,6 +6,12 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import { error } from '../../packages/core/src/util/gui/mxWindow';
+import { load } from '../../packages/core/src/util/network/mxXmlRequest';
+import { setOpacity } from '../../packages/core/src/util/Utils';
+import { write, writeln } from '../../packages/core/src/util/DomUtils';
+import { createXmlDocument, getPrettyXml } from '../../packages/core/src/util/XmlUtils';
+import { makeDraggable } from '../../packages/core/src/util/GestureUtils';
 
 class Ports extends React.Component {
   constructor(props) {
@@ -61,7 +67,7 @@ export default Ports;
       if (!mxClient.isBrowserSupported())
       {
         // Displays an error message if the browser is not supported.
-        utils.error('Browser is not supported!', 200, false);
+        error('Browser is not supported!', 200, false);
       }
       else
       {
@@ -110,7 +116,7 @@ export default Ports;
 
         // Sets the graph container and configures the editor
         editor.setGraphContainer(container);
-        let config = utils.load(
+        let config = load(
           'editors/config/keyhandler-commons.xml').
             getDocumentElement();
         editor.configure(config);
@@ -275,13 +281,13 @@ export default Ports;
         hints.style.fontSize = '10px';
         hints.style.padding = '4px';
 
-        utils.setOpacity(hints, 50);
+        setOpacity(hints, 50);
 
-        utils.writeln(hints, '- Drag an image from the sidebar to the graph');
-        utils.writeln(hints, '- Doubleclick on a vertex or edge to edit');
-        utils.writeln(hints, '- Shift- or Rightclick and drag for panning');
-        utils.writeln(hints, '- Move the mouse over a cell to see a tooltip');
-        utils.writeln(hints, '- Click and drag a vertex to move and connect');
+        writeln(hints, '- Drag an image from the sidebar to the graph');
+        writeln(hints, '- Doubleclick on a vertex or edge to edit');
+        writeln(hints, '- Shift- or Rightclick and drag for panning');
+        writeln(hints, '- Move the mouse over a cell to see a tooltip');
+        writeln(hints, '- Click and drag a vertex to move and connect');
         document.body.appendChild(hints);
 
         // Creates a new DIV that is used as a toolbar and adds
@@ -332,9 +338,9 @@ export default Ports;
           let textarea = document.createElement('textarea');
           textarea.style.width = '400px';
           textarea.style.height = '400px';
-          let enc = new mxCodec(utils.createXmlDocument());
+          let enc = new mxCodec(createXmlDocument());
           let node = enc.encode(editor.graph.getModel());
-          textarea.value = utils.getPrettyXml(node);
+          textarea.value = getPrettyXml(node);
           showModalWindow(graph, 'XML', textarea, 410, 440);
         });
 
@@ -410,7 +416,7 @@ export default Ports;
       {
         editor.execute(action);
       });
-      utils.write(button, label);
+      write(button, label);
       toolbar.appendChild(button);
     };
 
@@ -423,7 +429,7 @@ export default Ports;
       background.style.right = '0px';
       background.style.bottom = '0px';
       background.style.background = 'black';
-      utils.setOpacity(background, 50);
+      setOpacity(background, 50);
       document.body.appendChild(background);
 
       let x = Math.max(0, document.body.scrollWidth/2-width/2);
@@ -509,7 +515,7 @@ export default Ports;
       dragElt.style.height = '120px';
 
       // Creates the image which is used as the drag icon (preview)
-      let ds = utils.makeDraggable(img, graph, funct, dragElt, 0, 0, true, true);
+      let ds = makeDraggable(img, graph, funct, dragElt, 0, 0, true, true);
       ds.setGuidesEnabled(true);
     };
 
