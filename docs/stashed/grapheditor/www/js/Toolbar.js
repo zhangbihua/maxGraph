@@ -1,6 +1,10 @@
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
  */
+const { getOffset } = require('../../../../../packages/core/src/util/Utils');
+const { write } = require('../../../../../packages/core/src/util/DomUtils');
+const { htmlEntities } = require('../../../../../packages/core/src/util/StringUtils');
+
 /**
  * Construcs a new toolbar for the given editor.
  */
@@ -12,7 +16,7 @@ function Toolbar(editorUi, container)
 	this.init();
 
 	// Global handler to hide the current menu
-	this.gestureHandler = utils.bind(this, function(evt)
+	this.gestureHandler = this.bind(function(evt)
 	{
 		if (this.editorUi.currentMenu != null && mxEvent.getSource(evt) != this.editorUi.currentMenu.div)
 		{
@@ -90,7 +94,7 @@ Toolbar.prototype.init = function()
 	}
 	
 	// Updates the label if the scale changes
-	this.updateZoom = utils.bind(this, function()
+	this.updateZoom = this.bind(function()
 	{
 		viewMenu.innerHTML = Math.round(this.editorUi.editor.graph.view.scale * 100) + '%' +
 			this.dropdownImageHtml;
@@ -141,7 +145,7 @@ Toolbar.prototype.init = function()
 		
 		if (sw >= 440)
 		{
-			this.edgeShapeMenu = this.addMenuFunction('', Resources.get('connection'), false, utils.bind(this, function(menu)
+			this.edgeShapeMenu = this.addMenuFunction('', Resources.get('connection'), false, this.bind(function(menu)
 			{
 				this.editorUi.menus.edgeStyleChange(menu, '', ['shape', 'width'], [null, null], 'geIcon geSprite geSprite-connection', null, true).setAttribute('title', Resources.get('line'));
 				this.editorUi.menus.edgeStyleChange(menu, '', ['shape', 'width'], ['link', null], 'geIcon geSprite geSprite-linkedge', null, true).setAttribute('title', Resources.get('link'));
@@ -152,7 +156,7 @@ Toolbar.prototype.init = function()
 			this.addDropDownArrow(this.edgeShapeMenu, 'geSprite-connection', 44, 50, 0, 0, 22, -4);
 		}
 	
-		this.edgeStyleMenu = this.addMenuFunction('geSprite-orthogonal', Resources.get('waypoints'), false, utils.bind(this, function(menu)
+		this.edgeStyleMenu = this.addMenuFunction('geSprite-orthogonal', Resources.get('waypoints'), false, this.bind(function(menu)
 		{
 			this.editorUi.menus.edgeStyleChange(menu, '', ['edge', 'curved', 'noEdgeStyle'], [null, null, null], 'geIcon geSprite geSprite-straight', null, true).setAttribute('title', Resources.get('straight'));
 			this.editorUi.menus.edgeStyleChange(menu, '', ['edge', 'curved', 'noEdgeStyle'], ['orthogonalEdgeStyle', null, null], 'geIcon geSprite geSprite-orthogonal', null, true).setAttribute('title', Resources.get('orthogonal'));
@@ -183,7 +187,7 @@ Toolbar.prototype.addTableDropDown = function()
 	// KNOWN: All table stuff does not work with undo/redo
 	// KNOWN: Lost focus after click on submenu with text (not icon) in quirks and IE8. This is because the TD seems
 	// to catch the focus on click in these browsers. NOTE: Workaround in mxPopupMenu for icon items (without text).
-	let menuElt = this.addMenuFunction('geIcon geSprite geSprite-table', Resources.get('table'), false, utils.bind(this, function(menu)
+	let menuElt = this.addMenuFunction('geIcon geSprite geSprite-table', Resources.get('table'), false, this.bind(function(menu)
 	{
 		let graph = this.editorUi.editor.graph;
 		let cell = graph.getSelectionCell();
@@ -194,7 +198,7 @@ Toolbar.prototype.addTableDropDown = function()
     	}
 		else
     	{
-			let elt = menu.addItem('', null, utils.bind(this, function()
+			let elt = menu.addItem('', null, this.bind(function()
 			{
 				try
 				{
@@ -207,7 +211,7 @@ Toolbar.prototype.addTableDropDown = function()
 			}), null, 'geIcon geSprite geSprite-insertcolumnbefore');
 			elt.setAttribute('title', Resources.get('insertColumnBefore'));
 			
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{	
 				try
 				{
@@ -220,7 +224,7 @@ Toolbar.prototype.addTableDropDown = function()
 			}), null, 'geIcon geSprite geSprite-insertcolumnafter');
 			elt.setAttribute('title', Resources.get('insertColumnAfter'));
 
-			elt = menu.addItem('Delete column', null, utils.bind(this, function()
+			elt = menu.addItem('Delete column', null, this.bind(function()
 			{
 				if (cell != null)
 				{
@@ -236,7 +240,7 @@ Toolbar.prototype.addTableDropDown = function()
 			}), null, 'geIcon geSprite geSprite-deletecolumn');
 			elt.setAttribute('title', Resources.get('deleteColumn'));
 			
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				try
 				{
@@ -249,7 +253,7 @@ Toolbar.prototype.addTableDropDown = function()
 			}), null, 'geIcon geSprite geSprite-insertrowbefore');
 			elt.setAttribute('title', Resources.get('insertRowBefore'));
 
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				try
 				{
@@ -262,7 +266,7 @@ Toolbar.prototype.addTableDropDown = function()
 			}), null, 'geIcon geSprite geSprite-insertrowafter');
 			elt.setAttribute('title', Resources.get('insertRowAfter'));
 
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				try
 				{
@@ -338,7 +342,7 @@ Toolbar.prototype.setFontName = function(value)
 	if (this.fontMenu != null)
 	{
 		this.fontMenu.innerHTML = '<div style="width:60px;overflow:hidden;display:inline-block;">' +
-			utils.htmlEntities(value) + '</div>' + this.dropdownImageHtml;
+			htmlEntities(value) + '</div>' + this.dropdownImageHtml;
 	}
 };
 
@@ -350,7 +354,7 @@ Toolbar.prototype.setFontSize = function(value)
 	if (this.sizeMenu != null)
 	{
 		this.sizeMenu.innerHTML = '<div style="width:24px;overflow:hidden;display:inline-block;">' +
-			utils.htmlEntities(value) + '</div>' + this.dropdownImageHtml;
+			htmlEntities(value) + '</div>' + this.dropdownImageHtml;
 	}
 };
 
@@ -417,51 +421,51 @@ Toolbar.prototype.createTextToolbar = function()
 
 	// KNOWN: Lost focus after click on submenu with text (not icon) in quirks and IE8. This is because the TD seems
 	// to catch the focus on click in these browsers. NOTE: Workaround in mxPopupMenu for icon items (without text).
-	let alignMenu = this.addMenuFunction('', Resources.get('align'), false, utils.bind(this, function(menu)
+	let alignMenu = this.addMenuFunction('', Resources.get('align'), false, this.bind(function(menu)
 	{
-		elt = menu.addItem('', null, utils.bind(this, function(evt)
+		elt = menu.addItem('', null, this.bind(function(evt)
 		{
 			graph.cellEditor.alignText(mxConstants.ALIGN_LEFT, evt);
 		}), null, 'geIcon geSprite geSprite-left');
 		elt.setAttribute('title', Resources.get('left'));
 
-		elt = menu.addItem('', null, utils.bind(this, function(evt)
+		elt = menu.addItem('', null, this.bind(function(evt)
 		{
 			graph.cellEditor.alignText(mxConstants.ALIGN_CENTER, evt);
 		}), null, 'geIcon geSprite geSprite-center');
 		elt.setAttribute('title', Resources.get('center'));
 
-		elt = menu.addItem('', null, utils.bind(this, function(evt)
+		elt = menu.addItem('', null, this.bind(function(evt)
 		{
 			graph.cellEditor.alignText(mxConstants.ALIGN_RIGHT, evt);
 		}), null, 'geIcon geSprite geSprite-right');
 		elt.setAttribute('title', Resources.get('right'));
 
-		elt = menu.addItem('', null, utils.bind(this, function()
+		elt = menu.addItem('', null, this.bind(function()
 		{
 			document.execCommand('justifyfull', false, null);
 		}), null, 'geIcon geSprite geSprite-justifyfull');
 		elt.setAttribute('title', Resources.get('justifyfull'));
 		
-		elt = menu.addItem('', null, utils.bind(this, function()
+		elt = menu.addItem('', null, this.bind(function()
 		{
 			document.execCommand('insertorderedlist', false, null);
 		}), null, 'geIcon geSprite geSprite-orderedlist');
 		elt.setAttribute('title', Resources.get('numberedList'));
 		
-		elt = menu.addItem('', null, utils.bind(this, function()
+		elt = menu.addItem('', null, this.bind(function()
 		{
 			document.execCommand('insertunorderedlist', false, null);
 		}), null, 'geIcon geSprite geSprite-unorderedlist');
 		elt.setAttribute('title', Resources.get('bulletedList'));
 		
-		elt = menu.addItem('', null, utils.bind(this, function()
+		elt = menu.addItem('', null, this.bind(function()
 		{
 			document.execCommand('outdent', false, null);
 		}), null, 'geIcon geSprite geSprite-outdent');
 		elt.setAttribute('title', Resources.get('decreaseIndent'));
 		
-		elt = menu.addItem('', null, utils.bind(this, function()
+		elt = menu.addItem('', null, this.bind(function()
 		{
 			document.execCommand('indent', false, null);
 		}), null, 'geIcon geSprite geSprite-indent');
@@ -480,7 +484,7 @@ Toolbar.prototype.createTextToolbar = function()
 		alignMenu.getElementsByTagName('img')[0].style.top = '5px';
 	}
 	
-	let formatMenu = this.addMenuFunction('', Resources.get('format'), false, utils.bind(this, function(menu)
+	let formatMenu = this.addMenuFunction('', Resources.get('format'), false, this.bind(function(menu)
 	{
 		elt = menu.addItem('', null, this.editorUi.actions.get('subscript').funct,
 			null, 'geIcon geSprite geSprite-subscript');
@@ -499,7 +503,7 @@ Toolbar.prototype.createTextToolbar = function()
 			null, 'geIcon geSprite geSprite-fontbackground');
 		elt.setAttribute('title', Resources.get('backgroundColor'));
 		
-		elt = menu.addItem('', null, utils.bind(this, function()
+		elt = menu.addItem('', null, this.bind(function()
 		{
 			document.execCommand('removeformat', false, null);
 		}), null, 'geIcon geSprite geSprite-removeformat');
@@ -536,19 +540,19 @@ Toolbar.prototype.createTextToolbar = function()
 	
 	this.addSeparator();
 	
-	let insertMenu = this.addMenuFunction('', Resources.get('insert'), true, utils.bind(this, function(menu)
+	let insertMenu = this.addMenuFunction('', Resources.get('insert'), true, this.bind(function(menu)
 	{
-		menu.addItem(Resources.get('insertLink'), null, utils.bind(this, function()
+		menu.addItem(Resources.get('insertLink'), null, this.bind(function()
 		{
 			this.editorUi.actions.get('link').funct();
 		}));
 		
-		menu.addItem(Resources.get('insertImage'), null, utils.bind(this, function()
+		menu.addItem(Resources.get('insertImage'), null, this.bind(function()
 		{
 			this.editorUi.actions.get('image').funct();
 		}));
 		
-		menu.addItem(Resources.get('insertHorizontalRule'), null, utils.bind(this, function()
+		menu.addItem(Resources.get('insertHorizontalRule'), null, this.bind(function()
 		{
 			document.execCommand('inserthorizontalrule', false, null);
 		}));
@@ -574,7 +578,7 @@ Toolbar.prototype.createTextToolbar = function()
 	// KNOWN: All table stuff does not work with undo/redo
 	// KNOWN: Lost focus after click on submenu with text (not icon) in quirks and IE8. This is because the TD seems
 	// to catch the focus on click in these browsers. NOTE: Workaround in mxPopupMenu for icon items (without text).
-	let elt = this.addMenuFunction('geIcon geSprite geSprite-table', Resources.get('table'), false, utils.bind(this, function(menu)
+	let elt = this.addMenuFunction('geIcon geSprite geSprite-table', Resources.get('table'), false, this.bind(function(menu)
 	{
 		let elt = graph.getSelectedElement();
 		let cell = graph.getParentByNames(elt, ['TD', 'TH'], graph.cellEditor.text2);
@@ -609,7 +613,7 @@ Toolbar.prototype.createTextToolbar = function()
     	{
 			let table = graph.getParentByName(row, 'TABLE', graph.cellEditor.text2);
 
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				try
 				{
@@ -622,7 +626,7 @@ Toolbar.prototype.createTextToolbar = function()
 			}), null, 'geIcon geSprite geSprite-insertcolumnbefore');
 			elt.setAttribute('title', Resources.get('insertColumnBefore'));
 			
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{	
 				try
 				{
@@ -635,7 +639,7 @@ Toolbar.prototype.createTextToolbar = function()
 			}), null, 'geIcon geSprite geSprite-insertcolumnafter');
 			elt.setAttribute('title', Resources.get('insertColumnAfter'));
 
-			elt = menu.addItem('Delete column', null, utils.bind(this, function()
+			elt = menu.addItem('Delete column', null, this.bind(function()
 			{
 				if (cell != null)
 				{
@@ -651,7 +655,7 @@ Toolbar.prototype.createTextToolbar = function()
 			}), null, 'geIcon geSprite geSprite-deletecolumn');
 			elt.setAttribute('title', Resources.get('deleteColumn'));
 			
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				try
 				{
@@ -664,7 +668,7 @@ Toolbar.prototype.createTextToolbar = function()
 			}), null, 'geIcon geSprite geSprite-insertrowbefore');
 			elt.setAttribute('title', Resources.get('insertRowBefore'));
 
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				try
 				{
@@ -677,7 +681,7 @@ Toolbar.prototype.createTextToolbar = function()
 			}), null, 'geIcon geSprite geSprite-insertrowafter');
 			elt.setAttribute('title', Resources.get('insertRowAfter'));
 
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				try
 				{
@@ -690,7 +694,7 @@ Toolbar.prototype.createTextToolbar = function()
 			}), null, 'geIcon geSprite geSprite-deleterow');
 			elt.setAttribute('title', Resources.get('deleteRow'));
 			
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				// Converts rgb(r,g,b) values
 				let color = table.style.borderColor.replace(
@@ -716,7 +720,7 @@ Toolbar.prototype.createTextToolbar = function()
 			}), null, 'geIcon geSprite geSprite-strokecolor');
 			elt.setAttribute('title', Resources.get('borderColor'));
 			
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				// Converts rgb(r,g,b) values
 				let color = table.style.backgroundColor.replace(
@@ -738,11 +742,11 @@ Toolbar.prototype.createTextToolbar = function()
 			}), null, 'geIcon geSprite geSprite-fillcolor');
 			elt.setAttribute('title', Resources.get('backgroundColor'));
 			
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				let value = table.getAttribute('cellPadding') || 0;
 				
-				let dlg = new FilenameDialog(this.editorUi, value, Resources.get('apply'), utils.bind(this, function(newValue)
+				let dlg = new FilenameDialog(this.editorUi, value, Resources.get('apply'), this.bind(function(newValue)
 				{
 					if (newValue != null && newValue.length > 0)
 					{
@@ -758,19 +762,19 @@ Toolbar.prototype.createTextToolbar = function()
 			}), null, 'geIcon geSprite geSprite-fit');
 			elt.setAttribute('title', Resources.get('spacing'));
 			
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				table.setAttribute('align', 'left');
 			}), null, 'geIcon geSprite geSprite-left');
 			elt.setAttribute('title', Resources.get('left'));
 
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				table.setAttribute('align', 'center');
 			}), null, 'geIcon geSprite geSprite-center');
 			elt.setAttribute('title', Resources.get('center'));
 				
-			elt = menu.addItem('', null, utils.bind(this, function()
+			elt = menu.addItem('', null, this.bind(function()
 			{
 				table.setAttribute('align', 'right');
 			}), null, 'geIcon geSprite geSprite-right');
@@ -989,7 +993,7 @@ Toolbar.prototype.addClickHandler = function(elt, funct)
 		
 		// Prevents focus
 	    mxEvent.addListener(elt, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown',
-        	utils.bind(this, function(evt)
+        	this.bind(function(evt)
     	{
 			evt.preventDefault();
 		}));
@@ -1023,7 +1027,7 @@ Toolbar.prototype.createLabel = function(label, tooltip)
 {
 	let elt = document.createElement('a');
 	elt.className = 'geLabel';
-	utils.write(elt, label);
+	write(elt, label);
 	
 	return elt;
 };
@@ -1039,7 +1043,7 @@ Toolbar.prototype.addMenuHandler = function(elt, showLabels, funct, showAll)
 		let menu = null;
 		let show = true;
 
-		mxEvent.addListener(elt, 'click', utils.bind(this, function(evt)
+		mxEvent.addListener(elt, 'click', this.bind(function(evt)
 		{
 			if (show && (elt.enabled == null || elt.enabled))
 			{
@@ -1050,7 +1054,7 @@ Toolbar.prototype.addMenuHandler = function(elt, showLabels, funct, showAll)
 				menu.labels = showLabels;
 				menu.autoExpand = true;
 				
-				let offset = utils.getOffset(elt);
+				let offset = getOffset(elt);
 				menu.popup(offset.x, offset.y + elt.offsetHeight, null, evt);
 				this.editorUi.setCurrentMenu(menu, elt);
 				
@@ -1060,7 +1064,7 @@ Toolbar.prototype.addMenuHandler = function(elt, showLabels, funct, showAll)
 					menu.div.style.width = '40px';
 				}
 				
-				menu.hideMenu = utils.bind(this, function()
+				menu.hideMenu = this.bind(function()
 				{
 					mxPopupMenu.prototype.hideMenu.apply(menu, arguments);
 					this.editorUi.resetCurrentMenu();
@@ -1068,7 +1072,7 @@ Toolbar.prototype.addMenuHandler = function(elt, showLabels, funct, showAll)
 				});
 				
 				// Extends destroy to reset global state
-				menu.addListener(mxEvent.EVENT_HIDE, utils.bind(this, function()
+				menu.addListener(mxEvent.EVENT_HIDE, this.bind(function()
 				{
 					this.currentElt = null;
 				}));
@@ -1080,7 +1084,7 @@ Toolbar.prototype.addMenuHandler = function(elt, showLabels, funct, showAll)
 
 		// Hides menu if already showing and prevents focus
         mxEvent.addListener(elt, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown',
-        	utils.bind(this, function(evt)
+        	this.bind(function(evt)
 		{
 			show = this.currentElt != elt;
 			evt.preventDefault();

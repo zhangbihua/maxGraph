@@ -1,3 +1,5 @@
+import { error } from '../../packages/core/src/util/gui/mxWindow';
+
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
 /**
  * Copyright (c) 2006-2013, JGraph Ltd
@@ -7,6 +9,7 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import { convertPoint, createImage, getRotatedPoint, getValue, toRadians } from '../../packages/core/src/util/Utils';
 
 class Touch extends React.Component {
   constructor(props) {
@@ -78,7 +81,7 @@ export default Touch;
       if (!mxClient.isBrowserSupported())
       {
         // Displays an error message if the browser is not supported.
-        utils.error('Browser is not supported!', 200, false);
+        error('Browser is not supported!', 200, false);
       }
       else
       {
@@ -86,7 +89,7 @@ export default Touch;
         // mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
 
         // Disables built-in text selection and context menu while not editing text
-        let textEditing =  utils.bind(this, function(evt)
+        let textEditing =  this.bind(function(evt)
         {
           return graph.isEditing();
         });
@@ -175,7 +178,7 @@ export default Touch;
 
             if (cell == null)
             {
-              let pt = utils.convertPoint(this.container,
+              let pt = convertPoint(this.container,
                   mxEvent.getClientX(me), mxEvent.getClientY(me));
               rubberband.start(pt.x, pt.y);
             }
@@ -327,7 +330,7 @@ export default Touch;
       {
         if (cell == null)
         {
-          let pt = utils.convertPoint(this.container,
+          let pt = convertPoint(this.container,
             mxEvent.getClientX(evt), mxEvent.getClientY(evt));
           cell = this.getCellAt(pt.x, pt.y);
         }
@@ -359,7 +362,7 @@ export default Touch;
           this.state.cell.isConnectable() &&
           this.graph.getSelectionCount() == 1)
         {
-          this.connectorImg = utils.createImage(connectorSrc);
+          this.connectorImg = createImage(connectorSrc);
           this.connectorImg.style.cursor = 'pointer';
           this.connectorImg.style.width = '29px';
           this.connectorImg.style.height = '29px';
@@ -373,12 +376,12 @@ export default Touch;
 
           // Starts connecting on touch/mouse down
           mxEvent.addGestureListeners(this.connectorImg,
-            utils.bind(this, function(evt)
+            this.bind(function(evt)
             {
               this.graph.popupMenuHandler.hideMenu();
               this.graph.stopEditing(false);
 
-              let pt = utils.convertPoint(this.graph.container,
+              let pt = convertPoint(this.graph.container,
                   mxEvent.getClientX(evt), mxEvent.getClientY(evt));
               this.graph.connectionHandler.start(this.state, pt.x, pt.y);
               this.graph.isMouseDown = true;
@@ -437,7 +440,7 @@ export default Touch;
             pt.y = s.y + s.height / 2;
           }
 
-          let alpha = utils.toRadians(utils.getValue(s.style, 'rotation', 0));
+          let alpha = toRadians(getValue(s.style, 'rotation', 0));
 
           if (alpha != 0)
           {
@@ -445,7 +448,7 @@ export default Touch;
             let sin = Math.sin(alpha);
 
             let ct = new Point(s.getCenterX(), s.getCenterY());
-            pt = utils.getRotatedPoint(pt, cos, sin, ct);
+            pt = getRotatedPoint(pt, cos, sin, ct);
           }
 
           this.connectorImg.style.left = (pt.x - this.connectorImg.offsetWidth / 2) + 'px';

@@ -6,6 +6,8 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import { error } from '../../packages/core/src/util/gui/mxWindow';
+import { load } from '../../packages/core/src/util/network/mxXmlRequest';
 
 class MYNAMEHERE extends React.Component {
   constructor(props) {
@@ -46,7 +48,7 @@ export default MYNAMEHERE;
       if (!mxClient.isBrowserSupported())
       {
         // Displays an error message if the browser is not supported.
-        utils.error('Browser is not supported!', 200, false);
+        error('Browser is not supported!', 200, false);
       }
       else
       {
@@ -69,7 +71,7 @@ export default MYNAMEHERE;
         // and toolbar objects, respectively.
         // Keep in mind that the as-attributes of the add-items in the
         // toolbar and popupmenu sections refer to keys in mxResources.
-        let config = utils.load('uiconfig.xml').getDocumentElement();
+        let config = load('uiconfig.xml').getDocumentElement();
         mxObjectCodec.allowEval = true;
         editor.configure(config);
         mxObjectCodec.allowEval = false;

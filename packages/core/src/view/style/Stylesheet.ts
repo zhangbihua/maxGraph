@@ -13,7 +13,7 @@ import {
   SHAPE_RECTANGLE
 } from '../../util/Constants';
 import Perimeter from './Perimeter';
-import utils from '../../util/Utils';
+import utils, { isNumeric } from '../../util/Utils';
 import { clone } from '../../util/CloneUtils';
 import StyleMap from "./StyleMap";
 
@@ -23,8 +23,8 @@ import StyleMap from "./StyleMap";
  * Defines the appearance of the cells in a graph. See {@link putCellStyle} for an
  * example of creating a new cell style. It is recommended to use objects, not
  * arrays for holding cell styles. Existing styles can be cloned using
- * {@link utils.clone} and turned into a string for debugging using
- * {@link utils.toString}.
+ * {@link clone} and turned into a string for debugging using
+ * {@link toString}.
  *
  * ### Default Styles
  *
@@ -58,9 +58,9 @@ import StyleMap from "./StyleMap";
  * special value none can be used, eg. highlight;fillColor=none
  *
  * See also the helper methods in mxUtils to modify strings of this format,
- * namely {@link utils.setStyle}, {@link utils.indexOfStylename},
- * {@link utils.addStylename}, {@link utils.removeStylename},
- * {@link utils.removeAllStylenames} and {@link utils.setStyleFlag}.
+ * namely {@link setStyle}, {@link indexOfStylename},
+ * {@link addStylename}, {@link removeStylename},
+ * {@link removeAllStylenames} and {@link setStyleFlag}.
  *
  * Constructor: mxStylesheet
  *
@@ -207,7 +207,7 @@ class Stylesheet {
 
           if (value === NONE) {
             delete style[key];
-          } else if (utils.isNumeric(value)) {
+          } else if (isNumeric(value)) {
             style[key] = parseFloat(value);
           } else {
             style[key] = value;

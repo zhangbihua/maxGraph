@@ -17,7 +17,7 @@ import Point from '../../geometry/Point';
 import EdgeStyle from '../../style/EdgeStyle';
 import Resources from '../../../util/Resources';
 import Rectangle from '../../geometry/Rectangle';
-import utils from '../../../util/Utils';
+import utils, { intersects } from '../../../util/Utils';
 import mxClient from '../../../mxClient';
 import { isConsumed } from '../../../util/EventUtils';
 
@@ -233,7 +233,7 @@ class ElbowEdgeHandler extends EdgeHandler {
     } else if (
       this.handleImage == null &&
       this.labelShape.visible &&
-      utils.intersects(bounds, this.labelShape.bounds)
+      intersects(bounds, this.labelShape.bounds)
     ) {
       w = HANDLE_SIZE + 3;
       h = HANDLE_SIZE + 3;

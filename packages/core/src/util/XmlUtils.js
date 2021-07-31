@@ -2,6 +2,7 @@ import Point from '../view/geometry/Point';
 import TemporaryCellStates from '../view/cell/TemporaryCellStates';
 import mxCodec from './serialization/mxCodec';
 import { DIALECT_SVG, NS_SVG } from './Constants';
+import { htmlEntities } from './StringUtils';
 
 /**
  * Function: createXmlDocument
@@ -14,7 +15,7 @@ export const createXmlDocument = () => {
   if (document.implementation && document.implementation.createDocument) {
     doc = document.implementation.createDocument('', '', null);
   } else if ('ActiveXObject' in window) {
-    doc = utils.createMsXmlDocument();
+    doc = createMsXmlDocument();
   }
 
   return doc;
@@ -195,14 +196,14 @@ export const getPrettyXml = (node, tab, indent, newline, ns) => {
 
     if (node.nodeType === NODETYPE_DOCUMENT) {
       result.push(
-        utils.getPrettyXml(node.documentElement, tab, indent, newline, ns)
+        getPrettyXml(node.documentElement, tab, indent, newline, ns)
       );
     } else if (node.nodeType === NODETYPE_DOCUMENT_FRAGMENT) {
       let tmp = node.firstChild;
 
       if (tmp != null) {
         while (tmp != null) {
-          result.push(utils.getPrettyXml(tmp, tab, indent, newline, ns));
+          result.push(getPrettyXml(tmp, tab, indent, newline, ns));
           tmp = tmp.nextSibling;
         }
       }
@@ -247,7 +248,7 @@ export const getPrettyXml = (node, tab, indent, newline, ns) => {
 
         while (tmp != null) {
           result.push(
-            utils.getPrettyXml(tmp, tab, indent + tab, newline, ns)
+            getPrettyXml(tmp, tab, indent + tab, newline, ns)
           );
           tmp = tmp.nextSibling;
         }

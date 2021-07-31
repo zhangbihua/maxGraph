@@ -1,6 +1,19 @@
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
  */
+import { getCurrentStyle, setStyle } from '../../../../../packages/core/src/util/Utils';
+import { getTextContent, setTextContent } from '../../../../../packages/core/src/util/DomUtils';
+import { getXml, parseXml } from '../../../../../packages/core/src/util/XmlUtils';
+import { clone } from '../../../../../packages/core/src/util/CloneUtils';
+
+const { br } = require('../../../../../packages/core/src/util/DomUtils');
+const { setOpacity } = require('../../../../../packages/core/src/util/Utils');
+const { button } = require('../../../../../packages/core/src/util/dom/mxDomHelpers');
+const { htmlEntities } = require('../../../../../packages/core/src/util/StringUtils');
+const { setPrefixedStyle } = require('../../../../../packages/core/src/util/Utils');
+const { mod } = require('../../../../../packages/core/src/util/Utils');
+const { write } = require('../../../../../packages/core/src/util/DomUtils');
+const { getValue } = require('../../../../../packages/core/src/util/Utils');
 Format = function(editorUi, container)
 {
 	this.editorUi = editorUi;
@@ -49,7 +62,7 @@ Format.prototype.init = function()
 	let editor = ui.editor;
 	let graph = editor.graph;
 	
-	this.update = utils.bind(this, function(sender, evt)
+	this.update = this.bind(function(sender, evt)
 	{
 		this.clearSelectionState();
 		this.refresh();
@@ -59,17 +72,17 @@ Format.prototype.init = function()
 	graph.addListener(mxEvent.EDITING_STARTED, this.update);
 	graph.addListener(mxEvent.EDITING_STOPPED, this.update);
 	graph.getModel().addListener(mxEvent.CHANGE, this.update);
-	graph.addListener(mxEvent.ROOT, utils.bind(this, function()
+	graph.addListener(mxEvent.ROOT, this.bind(function()
 	{
 		this.refresh();
 	}));
 	
-	ui.addListener('styleChanged', utils.bind(this, function(sender, evt)
+	ui.addListener('styleChanged', this.bind(function(sender, evt)
 	{
 		this.refresh();
 	}));
 	
-	editor.addListener('autosaveChanged', utils.bind(this, function()
+	editor.addListener('autosaveChanged', this.bind(function()
 	{
 		this.refresh();
 	}));
@@ -224,7 +237,7 @@ Format.prototype.updateSelectionStateForCell = function(result, cell, cells)
 		result.fill = result.fill && this.isFillState(state);
 		result.stroke = result.stroke && this.isStrokeState(state);
 		
-		let shape = utils.getValue(state.style, 'shape', null);
+		let shape = getValue(state.style, 'shape', null);
 		result.containsImage = result.containsImage || shape == 'image';
 		
 		for (var key in state.style)
@@ -253,9 +266,9 @@ Format.prototype.isFillState = function(state)
 {
 	return !this.isSpecialColor(state.style.fillColor) &&
 		(state.cell.isVertex() ||
-		utils.getValue(state.style, 'shape', null) == 'arrow' ||
-		utils.getValue(state.style, 'shape', null) == 'filledEdge' ||
-		utils.getValue(state.style, 'shape', null) == 'flexArrow');
+		getValue(state.style, 'shape', null) == 'arrow' ||
+		getValue(state.style, 'shape', null) == 'filledEdge' ||
+		getValue(state.style, 'shape', null) == 'flexArrow');
 };
 
 /**
@@ -271,7 +284,7 @@ Format.prototype.isStrokeState = function(state)
  */
 Format.prototype.isSpecialColor = function(color)
 {
-	return utils.indexOf(['strokeColor',
+	return indexOf(['strokeColor',
 		'fillColor', 'inherit', 'swimlane',
 		'indicated'], color) >= 0;
 };
@@ -281,7 +294,7 @@ Format.prototype.isSpecialColor = function(color)
  */
 Format.prototype.isGlassState = function(state)
 {
-	let shape = utils.getValue(state.style, 'shape', null);
+	let shape = getValue(state.style, 'shape', null);
 	
 	return (shape == 'label' || shape == 'rectangle' || shape == 'internalStorage' ||
 			shape == 'ext' || shape == 'umlLifeline' || shape == 'swimlane' ||
@@ -294,7 +307,7 @@ Format.prototype.isGlassState = function(state)
 Format.prototype.isRoundedState = function(state)
 {
 	return (state.shape != null) ? state.shape.isRoundable() :
-		utils.indexOf(this.roundableShapes, utils.getValue(state.style,
+		indexOf(this.roundableShapes, getValue(state.style,
 		'shape', null)) >= 0;
 };
 
@@ -303,8 +316,8 @@ Format.prototype.isRoundedState = function(state)
  */
 Format.prototype.isLineJumpState = function(state)
 {
-	let shape = utils.getValue(state.style, 'shape', null);
-	let curved = utils.getValue(state.style, 'curved', false);
+	let shape = getValue(state.style, 'shape', null);
+	let curved = getValue(state.style, 'curved', false);
 	
 	return !curved && (shape == 'connector' || shape == 'filledEdge');
 };
@@ -314,7 +327,7 @@ Format.prototype.isLineJumpState = function(state)
  */
 Format.prototype.isAutoSizeState = function(state)
 {
-	return utils.getValue(state.style, 'autoSize', null) == '1';
+	return getValue(state.style, 'autoSize', null) == '1';
 };
 
 /**
@@ -322,7 +335,7 @@ Format.prototype.isAutoSizeState = function(state)
  */
 Format.prototype.isImageState = function(state)
 {
-	let shape = utils.getValue(state.style, 'shape', null);
+	let shape = getValue(state.style, 'shape', null);
 	
 	return (shape == 'label' || shape == 'image');
 };
@@ -332,7 +345,7 @@ Format.prototype.isImageState = function(state)
  */
 Format.prototype.isShadowState = function(state)
 {
-	let shape = utils.getValue(state.style, 'shape', null);
+	let shape = getValue(state.style, 'shape', null);
 	
 	return (shape != 'image');
 };
@@ -393,7 +406,7 @@ Format.prototype.refresh = function()
 	
 	// Prevents text selection
     mxEvent.addListener(label, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown',
-        utils.bind(this, function(evt)
+        this.bind(function(evt)
 	{
 		evt.preventDefault();
 	}));
@@ -402,9 +415,9 @@ Format.prototype.refresh = function()
 	let currentLabel = null;
 	let currentPanel = null;
 	
-	let addClickHandler = utils.bind(this, function(elt, panel, index)
+	let addClickHandler = this.bind(function(elt, panel, index)
 	{
-		let clickHandler = utils.bind(this, function(evt)
+		let clickHandler = this.bind(function(evt)
 		{
 			if (currentLabel != elt)
 			{
@@ -448,7 +461,7 @@ Format.prototype.refresh = function()
 		
 		// Prevents text selection
 	    mxEvent.addListener(elt, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown',
-        	utils.bind(this, function(evt)
+        	this.bind(function(evt)
     	{
 			evt.preventDefault();
 		}));
@@ -465,7 +478,7 @@ Format.prototype.refresh = function()
 
 	if (graph.isSelectionEmpty())
 	{
-		utils.write(label, Resources.get('diagram'));
+		write(label, Resources.get('diagram'));
 		label.style.borderLeftWidth = '0px';
 
 		div.appendChild(label);
@@ -489,7 +502,7 @@ Format.prototype.refresh = function()
 			
 			let stylePanel = div.cloneNode(false);
 			stylePanel.style.display = 'none';
-			utils.write(label2, Resources.get('style'));
+			write(label2, Resources.get('style'));
 			div.appendChild(label2);
 			this.panels.push(new DiagramStylePanel(this, ui, stylePanel));
 			this.container.appendChild(stylePanel);
@@ -538,7 +551,7 @@ Format.prototype.refresh = function()
 	}
 	else if (graph.isEditing())
 	{
-		utils.write(label, Resources.get('text'));
+		write(label, Resources.get('text'));
 		div.appendChild(label);
 		this.panels.push(new TextFormatPanel(this, ui, div));
 	}
@@ -563,7 +576,7 @@ Format.prototype.refresh = function()
 		else
 		{
 			label.style.borderLeftWidth = '0px';
-			utils.write(label, Resources.get('style'));
+			write(label, Resources.get('style'));
 			div.appendChild(label);
 			
 			let stylePanel = div.cloneNode(false);
@@ -575,7 +588,7 @@ Format.prototype.refresh = function()
 		}
 		
 		// Text
-		utils.write(label2, Resources.get('text'));
+		write(label2, Resources.get('text'));
 		div.appendChild(label2);
 
 		let textPanel = div.cloneNode(false);
@@ -584,7 +597,7 @@ Format.prototype.refresh = function()
 		this.container.appendChild(textPanel);
 		
 		// Arrange
-		utils.write(label3, Resources.get('arrange'));
+		write(label3, Resources.get('arrange'));
 		div.appendChild(label3);
 
 		let arrangePanel = div.cloneNode(false);
@@ -628,7 +641,7 @@ BaseFormatPanel.prototype.getSelectionState = function()
 		
 		if (state != null)
 		{
-			let tmp = utils.getValue(state.style, 'shape', null);
+			let tmp = getValue(state.style, 'shape', null);
 			
 			if (tmp != null)
 			{
@@ -665,7 +678,7 @@ BaseFormatPanel.prototype.installInputHandler = function(input, key, defaultValu
 	let selState = null;
 	let updating = false;
 	
-	let update = utils.bind(this, function(evt)
+	let update = this.bind(function(evt)
 	{
 		let value = (isFloat) ? parseFloat(input.value) : parseInt(input.value);
 
@@ -674,7 +687,7 @@ BaseFormatPanel.prototype.installInputHandler = function(input, key, defaultValu
 		{
 			// Workaround for decimal rounding errors in floats is to
 			// use integer and round all numbers to two decimal point
-			value = utils.mod(Math.round(value * 100), 36000) / 100;
+			value = mod(Math.round(value * 100), 36000) / 100;
 		}
 		
 		value = Math.min(max, Math.max(min, (isNaN(value)) ? defaultValue : value));
@@ -698,7 +711,7 @@ BaseFormatPanel.prototype.installInputHandler = function(input, key, defaultValu
 				updating = false;
 			}
 		}
-		else if (value != utils.getValue(this.format.getSelectionState().style, key, defaultValue))
+		else if (value != getValue(this.format.getSelectionState().style, key, defaultValue))
 		{
 			if (graph.isEditing())
 			{
@@ -792,7 +805,7 @@ BaseFormatPanel.prototype.createTitle = function(title)
 	div.style.overflow = 'hidden';
 	div.style.width = '200px';
 	div.style.fontWeight = 'bold';
-	utils.write(div, title);
+	write(div, title);
 	
 	return div;
 };
@@ -811,7 +824,7 @@ BaseFormatPanel.prototype.createStepper = function(input, update, step, height, 
 	} 
 	
 	let stepper = document.createElement('div');
-	utils.setPrefixedStyle(stepper.style, 'borderRadius', '3px');
+	setPrefixedStyle(stepper.style, 'borderRadius', '3px');
 	stepper.style.border = '1px solid rgb(192, 192, 192)';
 	stepper.style.position = 'absolute';
 	
@@ -928,7 +941,7 @@ BaseFormatPanel.prototype.createOption = function(label, isCheckedFn, setChecked
 	div.appendChild(cb);
 
 	let span = document.createElement('span');
-	utils.write(span, label);
+	write(span, label);
 	div.appendChild(span);
 
 	let applying = false;
@@ -1019,7 +1032,7 @@ BaseFormatPanel.prototype.createCellOption = function(label, key, defaultValue, 
 		
 		if (state != null)
 		{
-			return utils.getValue(state.style, key, defaultValue) != disabledValue;
+			return getValue(state.style, key, defaultValue) != disabledValue;
 		}
 		
 		return null;
@@ -1066,7 +1079,7 @@ BaseFormatPanel.prototype.createCellOption = function(label, key, defaultValue, 
 				
 				if (state != null)
 				{
-					apply(utils.getValue(state.style, key, defaultValue) != disabledValue);
+					apply(getValue(state.style, key, defaultValue) != disabledValue);
 				}
 			};
 			
@@ -1101,7 +1114,7 @@ BaseFormatPanel.prototype.createColorOption = function(label, getColorFn, setCol
 	}
 
 	let span = document.createElement('span');
-	utils.write(span, label);
+	write(span, label);
 	div.appendChild(span);
 	
 	let value = getColorFn();
@@ -1116,7 +1129,7 @@ BaseFormatPanel.prototype.createColorOption = function(label, getColorFn, setCol
 			color = (/(^#?[a-zA-Z0-9]*$)/.test(color)) ? color : defaultColor;
 			btn.innerHTML = '<div style="width:36' +
 				'px;height:12px;margin:3px;border:1px solid black;background-color:' +
-				utils.htmlEntities((color != null && color != mxConstants.NONE) ?
+				htmlEntities((color != null && color != mxConstants.NONE) ?
 				color : defaultColor) + ';"></div>';
 
 			if (color != null && color != mxConstants.NONE)
@@ -1154,7 +1167,7 @@ BaseFormatPanel.prototype.createColorOption = function(label, getColorFn, setCol
 		}
 	};
 
-	btn = utils.button('', utils.bind(this, function(evt)
+	btn = button('', this.bind(function(evt)
 	{
 		this.editorUi.pickColor(value, function(color)
 		{
@@ -1222,7 +1235,7 @@ BaseFormatPanel.prototype.createCellColorOption = function(label, colorKey, defa
 		
 		if (state != null)
 		{
-			return utils.getValue(state.style, colorKey, null);
+			return getValue(state.style, colorKey, null);
 		}
 		
 		return null;
@@ -1256,7 +1269,7 @@ BaseFormatPanel.prototype.createCellColorOption = function(label, colorKey, defa
 				
 				if (state != null)
 				{
-					apply(utils.getValue(state.style, colorKey, null));
+					apply(getValue(state.style, colorKey, null));
 				}
 			};
 			
@@ -1300,7 +1313,7 @@ BaseFormatPanel.prototype.addArrow = function(elt, height)
 	arrow.style.borderLeft = '1px solid #a0a0a0';
 	arrow.innerHTML = '<img border="0" src="' + ((mxClient.IS_SVG) ? 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHBJREFUeNpidHB2ZyAGsACxDRBPIKCuA6TwCBB/h2rABu4A8SYmKCcXiP/iUFgAxL9gCi8A8SwsirZCMQMTkmANEH9E4v+CmsaArvAdyNFI/FlQ92EoBIE+qCRIUz168DBgsU4OqhinQpgHMABAgAEALY4XLIsJ20oAAAAASUVORK5CYII=' :
 		IMAGE_PATH + '/dropdown.png') + '" style="margin-bottom:4px;">';
-	utils.setOpacity(arrow, 70);
+	setOpacity(arrow, 70);
 	
 	let symbol = elt.getElementsByTagName('div')[0];
 	
@@ -1310,16 +1323,16 @@ BaseFormatPanel.prototype.addArrow = function(elt, height)
 		symbol.style.marginLeft = '4px';
 		symbol.style.marginTop = '-1px';
 		symbol.style.display = 'inline-block';
-		utils.setOpacity(symbol, 60);
+		setOpacity(symbol, 60);
 	}
 
-	utils.setOpacity(elt, 100);
+	setOpacity(elt, 100);
 	elt.style.border = '1px solid #a0a0a0';
 	elt.style.backgroundColor = this.buttonBackgroundColor;
 	elt.style.backgroundImage = 'none';
 	elt.style.width = 'auto';
 	elt.className += ' geColorBtn';
-	utils.setPrefixedStyle(elt.style, 'borderRadius', '3px');
+	setPrefixedStyle(elt.style, 'borderRadius', '3px');
 	
 	elt.appendChild(arrow);
 	
@@ -1360,10 +1373,10 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 	let div = this.createPanel();
 	div.style.paddingTop = '10px';
 	div.style.paddingBottom = '10px';
-	utils.write(div, label);
+	write(div, label);
 	div.style.fontWeight = 'bold';
 	
-	let update = utils.bind(this, function(evt)
+	let update = this.bind(function(evt)
 	{
 		if (handler != null)
 		{
@@ -1375,7 +1388,7 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 			value = Math.min(100, Math.max(0, (isNaN(value)) ? 100 : value));
 			let state = graph.view.getState(graph.getSelectionCell());
 			
-			if (state != null && value != utils.getValue(state.style, key, 100))
+			if (state != null && value != getValue(state.style, key, 100))
 			{
 				// Removes entry in style (assumes 100 is default for relative values)
 				if (value == 100)
@@ -1398,12 +1411,12 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 
 	if (key != null)
 	{
-		let listener = utils.bind(this, function(sender, evt, force)
+		let listener = this.bind(function(sender, evt, force)
 		{
 			if (force || input != document.activeElement)
 			{
 				let ss = this.format.getSelectionState();
-				let tmp = parseInt(utils.getValue(ss.style, key, 100));
+				let tmp = parseInt(getValue(ss.style, key, 100));
 				input.value = (isNaN(tmp)) ? '' : tmp + ' %';
 			}
 		});
@@ -1447,7 +1460,7 @@ BaseFormatPanel.prototype.addLabel = function(div, title, right, width)
 	width = (width != null) ? width : 61;
 	
 	let label = document.createElement('div');
-	utils.write(label, title);
+	write(label, title);
 	label.style.position = 'absolute';
 	label.style.right = right + 'px';
 	label.style.width = width + 'px';
@@ -1461,7 +1474,7 @@ BaseFormatPanel.prototype.addLabel = function(div, title, right, width)
  */
 BaseFormatPanel.prototype.addKeyHandler = function(input, listener)
 {
-	mxEvent.addListener(input, 'keydown', utils.bind(this, function(e)
+	mxEvent.addListener(input, 'keydown', this.bind(function(e)
 	{
 		if (e.keyCode == 13)
 		{
@@ -1488,8 +1501,8 @@ BaseFormatPanel.prototype.styleButtons = function(elts)
 {
 	for (let i = 0; i < elts.length; i++)
 	{
-		utils.setPrefixedStyle(elts[i].style, 'borderRadius', '3px');
-		utils.setOpacity(elts[i], 100);
+		setPrefixedStyle(elts[i].style, 'borderRadius', '3px');
+		setOpacity(elts[i], 100);
 		elts[i].style.border = '1px solid #a0a0a0';
 		elts[i].style.padding = '4px';
 		elts[i].style.paddingTop = '3px';
@@ -1526,7 +1539,7 @@ ArrangePanel = function(format, editorUi, container)
 	this.init();
 };
 
-utils.extend(ArrangePanel, BaseFormatPanel);
+extend(ArrangePanel, BaseFormatPanel);
 
 /**
  * Adds the label menu items to the given menu and parent.
@@ -1576,7 +1589,7 @@ ArrangePanel.prototype.init = function()
 		span.style.marginTop = '0px';
 		span.style.fontWeight = 'bold';
 		span.style.padding = '10px 0 0 18px';
-		utils.write(span, Resources.get('style'));
+		write(span, Resources.get('style'));
 		this.container.appendChild(span);
 			
 		new StyleFormatPanel(this.format, this.editorUi, this.container);
@@ -1599,7 +1612,7 @@ ArrangePanel.prototype.addTable = function(div)
 	span.style.marginTop = '2px';
 	span.style.marginBottom = '8px';
 	span.style.fontWeight = 'bold';
-	utils.write(span, Resources.get('table'));
+	write(span, Resources.get('table'));
 	div.appendChild(span);
 	
 	let panel = document.createElement('div');
@@ -1610,7 +1623,7 @@ ArrangePanel.prototype.addTable = function(div)
 
 	let btns = [
         ui.toolbar.addButton('geSprite-insertcolumnbefore', Resources.get('insertColumnBefore'),
- 		utils.bind(this, function()
+ 		this.bind(function()
 		{
 			try
 			{
@@ -1622,7 +1635,7 @@ ArrangePanel.prototype.addTable = function(div)
 			}
 		}), panel),
 		ui.toolbar.addButton('geSprite-insertcolumnafter', Resources.get('insertColumnAfter'),
-		utils.bind(this, function()
+		this.bind(function()
 		{
 			try
 			{
@@ -1634,7 +1647,7 @@ ArrangePanel.prototype.addTable = function(div)
 			}
 		}), panel),
 		ui.toolbar.addButton('geSprite-deletecolumn', Resources.get('deleteColumn'),
-		utils.bind(this, function()
+		this.bind(function()
 		{
 			try
 			{
@@ -1646,7 +1659,7 @@ ArrangePanel.prototype.addTable = function(div)
 			}
 		}), panel),
 		ui.toolbar.addButton('geSprite-insertrowbefore', Resources.get('insertRowBefore'),
-		utils.bind(this, function()
+		this.bind(function()
 		{
 			try
 			{
@@ -1658,7 +1671,7 @@ ArrangePanel.prototype.addTable = function(div)
 			}
 		}), panel),
 		ui.toolbar.addButton('geSprite-insertrowafter', Resources.get('insertRowAfter'),
-		utils.bind(this, function()
+		this.bind(function()
 		{
 			try
 			{
@@ -1670,7 +1683,7 @@ ArrangePanel.prototype.addTable = function(div)
 			}
 		}), panel),
 		ui.toolbar.addButton('geSprite-deleterow', Resources.get('deleteRow'),
-		utils.bind(this, function()
+		this.bind(function()
 		{
 			try
 			{
@@ -1695,7 +1708,7 @@ ArrangePanel.prototype.addLayerOps = function(div)
 {
 	let ui = this.editorUi;
 	
-	let btn = utils.button(Resources.get('toFront'), function(evt)
+	let btn = button(Resources.get('toFront'), function(evt)
 	{
 		ui.actions.get('toFront').funct();
 	})
@@ -1705,7 +1718,7 @@ ArrangePanel.prototype.addLayerOps = function(div)
 	btn.style.marginRight = '2px';
 	div.appendChild(btn);
 	
-	let btn = utils.button(Resources.get('toBack'), function(evt)
+	let btn = button(Resources.get('toBack'), function(evt)
 	{
 		ui.actions.get('toBack').funct();
 	})
@@ -1734,7 +1747,7 @@ ArrangePanel.prototype.addGroupOps = function(div)
 
 	if (graph.getSelectionCount() > 1)
 	{
-		btn = utils.button(Resources.get('group'), function(evt)
+		btn = button(Resources.get('group'), function(evt)
 		{
 			ui.actions.get('group').funct();
 		})
@@ -1748,7 +1761,7 @@ ArrangePanel.prototype.addGroupOps = function(div)
 	else if (graph.getSelectionCount() == 1 && !cell.isEdge() && !graph.isSwimlane(cell) &&
 		!graph.isTable(cell) && !ss.row && !ss.cell && cell.getChildCount() > 0)
 	{
-		btn = utils.button(Resources.get('ungroup'), function(evt)
+		btn = button(Resources.get('ungroup'), function(evt)
 		{
 			ui.actions.get('ungroup').funct();
 		})
@@ -1765,11 +1778,11 @@ ArrangePanel.prototype.addGroupOps = function(div)
 	{
 		if (count > 0)
 		{
-			utils.br(div);
+			br(div);
 			count = 0;
 		}
 		
-		let btn = utils.button(Resources.get('copySize'), function(evt)
+		let btn = button(Resources.get('copySize'), function(evt)
 		{
 			ui.actions.get('copySize').funct();
 		});
@@ -1784,7 +1797,7 @@ ArrangePanel.prototype.addGroupOps = function(div)
 		
 		if (ui.copiedSize != null)
 		{
-			var btn2 = utils.button(Resources.get('pasteSize'), function(evt)
+			var btn2 = button(Resources.get('pasteSize'), function(evt)
 			{
 				ui.actions.get('pasteSize').funct();
 			});
@@ -1807,10 +1820,10 @@ ArrangePanel.prototype.addGroupOps = function(div)
 	{
 		if (count > 0)
 		{
-			utils.br(div);
+			br(div);
 		}
 		
-		btn = utils.button(Resources.get('removeFromGroup'), function(evt)
+		btn = button(Resources.get('removeFromGroup'), function(evt)
 		{
 			ui.actions.get('removeFromGroup').funct();
 		})
@@ -1825,10 +1838,10 @@ ArrangePanel.prototype.addGroupOps = function(div)
 	{
 		if (count > 0)
 		{
-			utils.br(div);
+			br(div);
 		}
 		
-		btn = utils.button(Resources.get('clearWaypoints'), utils.bind(this, function(evt)
+		btn = button(Resources.get('clearWaypoints'), this.bind(function(evt)
 		{
 			this.editorUi.actions.get('clearWaypoints').funct();
 		}));
@@ -1845,10 +1858,10 @@ ArrangePanel.prototype.addGroupOps = function(div)
 	{
 		if (count > 0)
 		{
-			utils.br(div);
+			br(div);
 		}
 		
-		btn = utils.button(Resources.get('editData'), utils.bind(this, function(evt)
+		btn = button(Resources.get('editData'), this.bind(function(evt)
 		{
 			this.editorUi.actions.get('editData').funct();
 		}));
@@ -1859,7 +1872,7 @@ ArrangePanel.prototype.addGroupOps = function(div)
 		div.appendChild(btn);
 		count++;
 
-		btn = utils.button(Resources.get('editLink'), utils.bind(this, function(evt)
+		btn = button(Resources.get('editLink'), this.bind(function(evt)
 		{
 			this.editorUi.actions.get('editLink').funct();
 		}));
@@ -1932,10 +1945,10 @@ ArrangePanel.prototype.addFlip = function(div)
 	span.style.marginTop = '2px';
 	span.style.marginBottom = '8px';
 	span.style.fontWeight = 'bold';
-	utils.write(span, Resources.get('flip'));
+	write(span, Resources.get('flip'));
 	div.appendChild(span);
 	
-	let btn = utils.button(Resources.get('horizontal'), function(evt)
+	let btn = button(Resources.get('horizontal'), function(evt)
 	{
 		graph.toggleCellStyles('flipH', false);
 	})
@@ -1945,7 +1958,7 @@ ArrangePanel.prototype.addFlip = function(div)
 	btn.style.marginRight = '2px';
 	div.appendChild(btn);
 	
-	let btn = utils.button(Resources.get('vertical'), function(evt)
+	let btn = button(Resources.get('vertical'), function(evt)
 	{
 		graph.toggleCellStyles('flipV', false);
 	})
@@ -1970,7 +1983,7 @@ ArrangePanel.prototype.addDistribute = function(div)
 	
 	div.appendChild(this.createTitle(Resources.get('distribute')));
 
-	let btn = utils.button(Resources.get('horizontal'), function(evt)
+	let btn = button(Resources.get('horizontal'), function(evt)
 	{
 		graph.distributeCells(true);
 	})
@@ -1980,7 +1993,7 @@ ArrangePanel.prototype.addDistribute = function(div)
 	btn.style.marginRight = '2px';
 	div.appendChild(btn);
 	
-	let btn = utils.button(Resources.get('vertical'), function(evt)
+	let btn = button(Resources.get('vertical'), function(evt)
 	{
 		graph.distributeCells(false);
 	})
@@ -2016,7 +2029,7 @@ ArrangePanel.prototype.addAngle = function(div)
 	
 	if (ss.rotatable && !ss.table && !ss.row && !ss.cell)
 	{
-		utils.write(span, Resources.get('angle'));
+		write(span, Resources.get('angle'));
 		div.appendChild(span);
 		
 		input = this.addUnitInput(div, '°', 20, 44, function()
@@ -2024,7 +2037,7 @@ ArrangePanel.prototype.addAngle = function(div)
 			update.apply(this, arguments);
 		});
 		
-		utils.br(div);
+		br(div);
 		div.style.paddingTop = '10px';
 	}
 	else
@@ -2045,7 +2058,7 @@ ArrangePanel.prototype.addAngle = function(div)
 			label = Resources.get('turn');
 		}
 
-		btn = utils.button(label, function(evt)
+		btn = button(label, function(evt)
 		{
 			ui.actions.get('turn').funct(evt);
 		})
@@ -2062,12 +2075,12 @@ ArrangePanel.prototype.addAngle = function(div)
 	
 	if (input != null)
 	{
-		let listener = utils.bind(this, function(sender, evt, force)
+		let listener = this.bind(function(sender, evt, force)
 		{
 			if (force || document.activeElement != input)
 			{
 				ss = this.format.getSelectionState();
-				let tmp = parseFloat(utils.getValue(ss.style, 'rotation', 0));
+				let tmp = parseFloat(getValue(ss.style, 'rotation', 0));
 				input.value = (isNaN(tmp)) ? '' : tmp  + '°';
 			}
 		});
@@ -2156,7 +2169,7 @@ ArrangePanel.prototype.addGeometry = function(container)
 	span.style.width = '50px';
 	span.style.marginTop = '0px';
 	span.style.fontWeight = 'bold';
-	utils.write(span, Resources.get('size'));
+	write(span, Resources.get('size'));
 	div.appendChild(span);
 
 	var widthUpdate, heightUpdate, leftUpdate, topUpdate;
@@ -2177,16 +2190,16 @@ ArrangePanel.prototype.addGeometry = function(container)
 	autosizeBtn.style.marginTop = '-3px';
 	autosizeBtn.style.border = '0px';
 	autosizeBtn.style.left = '42px';
-	utils.setOpacity(autosizeBtn, 50);
+	setOpacity(autosizeBtn, 50);
 	
 	mxEvent.addListener(autosizeBtn, 'mouseenter', function()
 	{
-		utils.setOpacity(autosizeBtn, 100);
+		setOpacity(autosizeBtn, 100);
 	});
 	
 	mxEvent.addListener(autosizeBtn, 'mouseleave', function()
 	{
-		utils.setOpacity(autosizeBtn, 50);
+		setOpacity(autosizeBtn, 50);
 	});
 
 	mxEvent.addListener(autosizeBtn, 'click', function()
@@ -2207,7 +2220,7 @@ ArrangePanel.prototype.addGeometry = function(container)
 	}
 	
 	this.addLabel(div, Resources.get('height'), 20);
-	utils.br(div);
+	br(div);
 
 	let wrapper = document.createElement('div');
 	wrapper.style.paddingTop = '8px';
@@ -2293,7 +2306,7 @@ ArrangePanel.prototype.addGeometry = function(container)
 	span.style.width = '70px';
 	span.style.marginTop = '0px';
 	span.style.fontWeight = 'bold';
-	utils.write(span, Resources.get('position'));
+	write(span, Resources.get('position'));
 	div2.appendChild(span);
 	
 	let left = this.addUnitInput(div2, this.getUnit(), 84, 44, function()
@@ -2305,12 +2318,12 @@ ArrangePanel.prototype.addGeometry = function(container)
 		topUpdate.apply(this, arguments);
 	}, this.getUnitStep(), null, null, this.isFloatUnit());
 
-	utils.br(div2);
+	br(div2);
 
 	this.addLabel(div2, Resources.get('left'), 84);
 	this.addLabel(div2, Resources.get('top'), 20);
 	
-	let listener = utils.bind(this, function(sender, evt, force)
+	let listener = this.bind(function(sender, evt, force)
 	{
 		rect = this.format.getSelectionState();
 
@@ -2549,7 +2562,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 	span.style.width = '70px';
 	span.style.marginTop = '0px';
 	span.style.fontWeight = 'bold';
-	utils.write(span, Resources.get('width'));
+	write(span, Resources.get('width'));
 	div.appendChild(span);
 
 	var widthUpdate, xtUpdate, ytUpdate, xsUpdate, ysUpdate;
@@ -2558,7 +2571,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 		widthUpdate.apply(this, arguments);
 	});
 
-	utils.br(div);
+	br(div);
 	this.addKeyHandler(width, listener);
 	
 	function widthUpdate(evt)
@@ -2567,7 +2580,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 		let value = parseInt(width.value);
 		value = Math.min(999, Math.max(1, (isNaN(value)) ? 1 : value));
 		
-		if (value != utils.getValue(rect.style, 'width', mxCellRenderer.defaultShapes['flexArrow'].prototype.defaultWidth))
+		if (value != getValue(rect.style, 'width', mxCellRenderer.defaultShapes['flexArrow'].prototype.defaultWidth))
 		{
 			graph.setCellStyles('width', value, graph.getSelectionCells());
 			ui.fireEvent(new EventObject('styleChanged', 'keys', ['width'],
@@ -2591,7 +2604,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 	span.style.width = '70px';
 	span.style.marginTop = '0px';
 	span.style.fontWeight = 'bold';
-	utils.write(span, 'Start');
+	write(span, 'Start');
 	divs.appendChild(span);
 
 	let xs = this.addUnitInput(divs, 'pt', 84, 44, function()
@@ -2603,7 +2616,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 		ysUpdate.apply(this, arguments);
 	});
 
-	utils.br(divs);
+	br(divs);
 	this.addLabel(divs, Resources.get('left'), 84);
 	this.addLabel(divs, Resources.get('top'), 20);
 	container.appendChild(divs);
@@ -2618,7 +2631,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 	span.style.width = '70px';
 	span.style.marginTop = '0px';
 	span.style.fontWeight = 'bold';
-	utils.write(span, 'End');
+	write(span, 'End');
 	divt.appendChild(span);
 
 	let xt = this.addUnitInput(divt, 'pt', 84, 44, function()
@@ -2630,14 +2643,14 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 		ytUpdate.apply(this, arguments);
 	});
 
-	utils.br(divt);
+	br(divt);
 	this.addLabel(divt, Resources.get('left'), 84);
 	this.addLabel(divt, Resources.get('top'), 20);
 	container.appendChild(divt);
 	this.addKeyHandler(xt, listener);
 	this.addKeyHandler(yt, listener);
 
-	let listener = utils.bind(this, function(sender, evt, force)
+	let listener = this.bind(function(sender, evt, force)
 	{
 		rect = this.format.getSelectionState();
 		let cell = graph.getSelectionCell();
@@ -2648,7 +2661,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 			
 			if (force || document.activeElement != width)
 			{
-				let value = utils.getValue(rect.style, 'width',
+				let value = getValue(rect.style, 'width',
 					mxCellRenderer.defaultShapes['flexArrow'].prototype.defaultWidth);
 				width.value = value + ' pt';
 			}
@@ -2723,7 +2736,7 @@ TextFormatPanel = function(format, editorUi, container)
 	this.init();
 };
 
-utils.extend(TextFormatPanel, BaseFormatPanel);
+extend(TextFormatPanel, BaseFormatPanel);
 
 /**
  * Adds the label menu items to the given menu and parent.
@@ -2959,7 +2972,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	stylePanel4.style.paddingBottom = '4px';
 	stylePanel4.style.fontWeight = 'normal';
 	
-	utils.write(stylePanel4, Resources.get('position'));
+	write(stylePanel4, Resources.get('position'));
 	
 	// Adds label position options
 	let positionSelect = document.createElement('select');
@@ -2983,7 +2996,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	{
 		let positionOption = document.createElement('option');
 		positionOption.setAttribute('value', directions[i]);
-		utils.write(positionOption, Resources.get(directions[i]));
+		write(positionOption, Resources.get(directions[i]));
 		positionSelect.appendChild(positionOption);
 	}
 
@@ -2996,7 +3009,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	stylePanel5.style.paddingBottom = '4px';
 	stylePanel5.style.fontWeight = 'normal';
 
-	utils.write(stylePanel5, Resources.get('writingDirection'));
+	write(stylePanel5, Resources.get('writingDirection'));
 	
 	// Adds writing direction options
 	// LATER: Handle reselect of same option in all selects (change event
@@ -3019,7 +3032,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	{
 		let dirOption = document.createElement('option');
 		dirOption.setAttribute('value', dirs[i]);
-		utils.write(dirOption, Resources.get(dirs[i]));
+		write(dirOption, Resources.get(dirs[i]));
 		dirSelect.appendChild(dirOption);
 	}
 
@@ -3101,11 +3114,11 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 					else
 					{
-						let css = utils.getCurrentStyle(elt);
+						let css = getCurrentStyle(elt);
 						
 						if (css.fontSize != fontSize + 'px')
 						{
-							if (utils.getCurrentStyle(elt.parentNode).fontSize != fontSize + 'px')
+							if (getCurrentStyle(elt.parentNode).fontSize != fontSize + 'px')
 							{
 								elt.style.fontSize = fontSize + 'px';
 							}
@@ -3389,7 +3402,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	span.style.width = '70px';
 	span.style.marginTop = '0px';
 	span.style.fontWeight = 'bold';
-	utils.write(span, Resources.get('spacing'));
+	write(span, Resources.get('spacing'));
 	spacingPanel.appendChild(span);
 
 	var topUpdate, globalUpdate, leftUpdate, bottomUpdate, rightUpdate;
@@ -3402,11 +3415,11 @@ TextFormatPanel.prototype.addFont = function(container)
 		globalUpdate.apply(this, arguments);
 	});
 
-	utils.br(spacingPanel);
+	br(spacingPanel);
 	this.addLabel(spacingPanel, Resources.get('top'), 91);
 	this.addLabel(spacingPanel, Resources.get('global'), 20);
-	utils.br(spacingPanel);
-	utils.br(spacingPanel);
+	br(spacingPanel);
+	br(spacingPanel);
 
 	let leftSpacing = this.addUnitInput(spacingPanel, 'pt', 162, 44, function()
 	{
@@ -3421,7 +3434,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		rightUpdate.apply(this, arguments);
 	});
 
-	utils.br(spacingPanel);
+	br(spacingPanel);
 	this.addLabel(spacingPanel, Resources.get('left'), 162);
 	this.addLabel(spacingPanel, Resources.get('bottom'), 91);
 	this.addLabel(spacingPanel, Resources.get('right'), 20);
@@ -3509,7 +3522,7 @@ TextFormatPanel.prototype.addFont = function(container)
 				{
 					document.execCommand('inserthorizontalrule', false);
 				}, insertPanel),				
-				this.editorUi.toolbar.addMenuFunctionInContainer(insertPanel, 'geSprite-table', Resources.get('table'), false, utils.bind(this, function(menu)
+				this.editorUi.toolbar.addMenuFunctionInContainer(insertPanel, 'geSprite-table', Resources.get('table'), false, this.bind(function(menu)
 				{
 					this.editorUi.menus.addInsertTableItem(menu);
 				}))];
@@ -3528,7 +3541,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		
 		let btns = [
 		        this.editorUi.toolbar.addButton('geSprite-insertcolumnbefore', Resources.get('insertColumnBefore'),
-	     		utils.bind(this, function()
+	     		this.bind(function()
 				{
 					try
 					{
@@ -3543,7 +3556,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel),
 				this.editorUi.toolbar.addButton('geSprite-insertcolumnafter', Resources.get('insertColumnAfter'),
-				utils.bind(this, function()
+				this.bind(function()
 				{
 					try
 					{
@@ -3558,7 +3571,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel),
 				this.editorUi.toolbar.addButton('geSprite-deletecolumn', Resources.get('deleteColumn'),
-				utils.bind(this, function()
+				this.bind(function()
 				{
 					try
 					{
@@ -3573,7 +3586,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel),
 				this.editorUi.toolbar.addButton('geSprite-insertrowbefore', Resources.get('insertRowBefore'),
-				utils.bind(this, function()
+				this.bind(function()
 				{
 					try
 					{
@@ -3588,7 +3601,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel),
 				this.editorUi.toolbar.addButton('geSprite-insertrowafter', Resources.get('insertRowAfter'),
-				utils.bind(this, function()
+				this.bind(function()
 				{
 					try
 					{
@@ -3603,7 +3616,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel),
 				this.editorUi.toolbar.addButton('geSprite-deleterow', Resources.get('deleteRow'),
-				utils.bind(this, function()
+				this.bind(function()
 				{
 					try
 					{
@@ -3631,7 +3644,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		
 		let btns = [
 		        this.editorUi.toolbar.addButton('geSprite-strokecolor', Resources.get('borderColor'),
-				utils.bind(this, function(evt)
+				this.bind(function(evt)
 				{
 					if (currentTable != null)
 					{
@@ -3666,7 +3679,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel2),
 				this.editorUi.toolbar.addButton('geSprite-fillcolor', Resources.get('backgroundColor'),
-				utils.bind(this, function(evt)
+				this.bind(function(evt)
 				{
 					// Converts rgb(r,g,b) values
 					if (currentTable != null)
@@ -3703,7 +3716,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					{
 						let value = currentTable.getAttribute('cellPadding') || 0;
 						
-						let dlg = new FilenameDialog(ui, value, Resources.get('apply'), utils.bind(this, function(newValue)
+						let dlg = new FilenameDialog(ui, value, Resources.get('apply'), this.bind(function(newValue)
 						{
 							if (newValue != null && newValue.length > 0)
 							{
@@ -3756,35 +3769,35 @@ TextFormatPanel.prototype.addFont = function(container)
 		elt.style.backgroundImage = (selected) ? 'linear-gradient(#c5ecff 0px,#87d4fb 100%)' : '';
 	};
 	
-	let listener = utils.bind(this, function(sender, evt, force)
+	let listener = this.bind(function(sender, evt, force)
 	{
 		ss = this.format.getSelectionState();
-		let fontStyle = utils.getValue(ss.style, 'fontStyle', 0);
+		let fontStyle = getValue(ss.style, 'fontStyle', 0);
 		setSelected(fontStyleItems[0], (fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD);
 		setSelected(fontStyleItems[1], (fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC);
 		setSelected(fontStyleItems[2], (fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE);
-		fontMenu.firstChild.nodeValue = utils.getValue(ss.style, 'fontFamily', Menus.prototype.defaultFont);
+		fontMenu.firstChild.nodeValue = getValue(ss.style, 'fontFamily', Menus.prototype.defaultFont);
 
-		setSelected(verticalItem, utils.getValue(ss.style, 'horizontal', '1') == '0');
+		setSelected(verticalItem, getValue(ss.style, 'horizontal', '1') == '0');
 		
 		if (force || document.activeElement != input)
 		{
-			let tmp = parseFloat(utils.getValue(ss.style, 'fontSize', Menus.prototype.defaultFontSize));
+			let tmp = parseFloat(getValue(ss.style, 'fontSize', Menus.prototype.defaultFontSize));
 			input.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 		
-		let align = utils.getValue(ss.style, 'align', mxConstants.ALIGN_CENTER);
+		let align = getValue(ss.style, 'align', mxConstants.ALIGN_CENTER);
 		setSelected(left, align == mxConstants.ALIGN_LEFT);
 		setSelected(center, align == mxConstants.ALIGN_CENTER);
 		setSelected(right, align == mxConstants.ALIGN_RIGHT);
 		
-		let valign = utils.getValue(ss.style, 'verticalAlign', mxConstants.ALIGN_MIDDLE);
+		let valign = getValue(ss.style, 'verticalAlign', mxConstants.ALIGN_MIDDLE);
 		setSelected(top, valign == mxConstants.ALIGN_TOP);
 		setSelected(middle, valign == mxConstants.ALIGN_MIDDLE);
 		setSelected(bottom, valign == mxConstants.ALIGN_BOTTOM);
 		
-		let pos = utils.getValue(ss.style, 'labelPosition', mxConstants.ALIGN_CENTER);
-		let vpos = utils.getValue(ss.style, 'verticalLabelPosition', mxConstants.ALIGN_MIDDLE);
+		let pos = getValue(ss.style, 'labelPosition', mxConstants.ALIGN_CENTER);
+		let vpos = getValue(ss.style, 'verticalLabelPosition', mxConstants.ALIGN_MIDDLE);
 		
 		if (pos == mxConstants.ALIGN_LEFT && vpos == mxConstants.ALIGN_TOP)
 		{
@@ -3823,7 +3836,7 @@ TextFormatPanel.prototype.addFont = function(container)
 			positionSelect.value = 'center';
 		}
 		
-		let dir = utils.getValue(ss.style, 'textDirection', mxConstants.DEFAULT_TEXT_DIRECTION);
+		let dir = getValue(ss.style, 'textDirection', mxConstants.DEFAULT_TEXT_DIRECTION);
 		
 		if (dir == mxConstants.TEXT_DIRECTION_RTL)
 		{
@@ -3840,31 +3853,31 @@ TextFormatPanel.prototype.addFont = function(container)
 		
 		if (force || document.activeElement != globalSpacing)
 		{
-			let tmp = parseFloat(utils.getValue(ss.style, 'spacing', 2));
+			let tmp = parseFloat(getValue(ss.style, 'spacing', 2));
 			globalSpacing.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 
 		if (force || document.activeElement != topSpacing)
 		{
-			let tmp = parseFloat(utils.getValue(ss.style, 'spacingTop', 0));
+			let tmp = parseFloat(getValue(ss.style, 'spacingTop', 0));
 			topSpacing.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 		
 		if (force || document.activeElement != rightSpacing)
 		{
-			let tmp = parseFloat(utils.getValue(ss.style, 'spacingRight', 0));
+			let tmp = parseFloat(getValue(ss.style, 'spacingRight', 0));
 			rightSpacing.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 		
 		if (force || document.activeElement != bottomSpacing)
 		{
-			let tmp = parseFloat(utils.getValue(ss.style, 'spacingBottom', 0));
+			let tmp = parseFloat(getValue(ss.style, 'spacingBottom', 0));
 			bottomSpacing.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 		
 		if (force || document.activeElement != leftSpacing)
 		{
-			let tmp = parseFloat(utils.getValue(ss.style, 'spacingLeft', 0));
+			let tmp = parseFloat(getValue(ss.style, 'spacingLeft', 0));
 			leftSpacing.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 	});
@@ -3938,7 +3951,7 @@ TextFormatPanel.prototype.addFont = function(container)
 							}
 						};
 						
-						let css = utils.getCurrentStyle(node);
+						let css = getCurrentStyle(node);
 						let fontSize = getAbsoluteFontSize(css);
 						let lineHeight = getRelativeLineHeight(fontSize, css, node);
 
@@ -3954,7 +3967,7 @@ TextFormatPanel.prototype.addFont = function(container)
 							{
 								if (selection.containsNode(elts[i], true))
 								{
-									temp = utils.getCurrentStyle(elts[i]);
+									temp = getCurrentStyle(elts[i]);
 									fontSize = Math.max(getAbsoluteFontSize(temp), fontSize);
 									let lh = getRelativeLineHeight(fontSize, temp, elts[i]);
 									
@@ -4020,7 +4033,7 @@ TextFormatPanel.prototype.addFont = function(container)
 							
 							if (!graph.cellEditor.isTableSelected())
 							{
-								let align = graph.cellEditor.align || utils.getValue(ss.style, 'align', mxConstants.ALIGN_CENTER);
+								let align = graph.cellEditor.align || getValue(ss.style, 'align', mxConstants.ALIGN_CENTER);
 
 								if (isEqualOrPrefixed(css.textAlign, 'justify'))
 								{
@@ -4159,7 +4172,7 @@ StyleFormatPanel = function(format, editorUi, container)
 	this.init();
 };
 
-utils.extend(StyleFormatPanel, BaseFormatPanel);
+extend(StyleFormatPanel, BaseFormatPanel);
 
 /**
  * 
@@ -4202,7 +4215,7 @@ StyleFormatPanel.prototype.init = function()
 	
 	if (opsPanel.firstChild != null)
 	{
-		utils.br(opsPanel);
+		br(opsPanel);
 	}
 	
 	this.container.appendChild(this.addStyleOps(opsPanel));
@@ -4216,7 +4229,7 @@ StyleFormatPanel.prototype.getCssRules = function(css)
 	let doc = document.implementation.createHTMLDocument('');
 	let styleElement = document.createElement('style');
 	
-	utils.setTextContent(styleElement, css);
+	setTextContent(styleElement, css);
 	doc.body.appendChild(styleElement);
 	
 	return styleElement.sheet.cssRules;
@@ -4245,7 +4258,7 @@ StyleFormatPanel.prototype.addSvgStyles = function(container)
 			
 			let data = ss.style.image.substring(ss.style.image.indexOf(',') + 1);
 			let xml = (window.atob) ? atob(data) : Base64.decode(data, true);
-			let svg = utils.parseXml(xml);
+			let svg = parseXml(xml);
 			
 			if (svg != null)
 			{
@@ -4253,7 +4266,7 @@ StyleFormatPanel.prototype.addSvgStyles = function(container)
 				
 				for (let i = 0; i < styles.length; i++)
 				{
-					let rules = this.getCssRules(utils.getTextContent(styles[i]));
+					let rules = this.getCssRules(getTextContent(styles[i]));
 					
 					for (let j = 0; j < rules.length; j++)
 					{
@@ -4291,9 +4304,9 @@ StyleFormatPanel.prototype.addSvgRule = function(container, rule, svg, styleElem
 			  ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
 		};
 		
-		let addStyleRule = utils.bind(this, function(rule, key, label)
+		let addStyleRule = this.bind(function(rule, key, label)
 		{
-			let value = utils.trim(rule.style[key]);
+			let value = trim(rule.style[key]);
 			
 			if (value != '' && value.substring(0, 4) != 'url(')
 			{
@@ -4311,7 +4324,7 @@ StyleFormatPanel.prototype.addSvgRule = function(container, rule, svg, styleElem
 					}
 					
 					styleElem.textContent = cssTxt;
-					let xml = utils.getXml(svg.documentElement);
+					let xml = getXml(svg.documentElement);
 					
 					graph.setCellStyles('image', 'data:image/svg+xml,' +
 						((window.btoa) ? btoa(xml) : Base64.encode(xml, true)),
@@ -4351,7 +4364,7 @@ StyleFormatPanel.prototype.addEditOps = function(div)
 	
 	if (this.editorUi.editor.graph.getSelectionCount() == 1)
 	{
-		btn = utils.button(Resources.get('editStyle'), utils.bind(this, function(evt)
+		btn = button(Resources.get('editStyle'), this.bind(function(evt)
 		{
 			this.editorUi.actions.get('editStyle').funct();
 		}));
@@ -4365,7 +4378,7 @@ StyleFormatPanel.prototype.addEditOps = function(div)
 	
 	if (ss.image)
 	{
-		var btn2 = utils.button(Resources.get('editImage'), utils.bind(this, function(evt)
+		var btn2 = button(Resources.get('editImage'), this.bind(function(evt)
 		{
 			this.editorUi.actions.get('image').funct();
 		}));
@@ -4441,13 +4454,13 @@ StyleFormatPanel.prototype.addFill = function(container)
 	let label = (ss.style.shape == 'image') ? Resources.get('background') : Resources.get('fill');
 	
 	let defs = (ss.vertices.length >= 1) ? graph.stylesheet.getDefaultVertexStyle() : graph.stylesheet.getDefaultEdgeStyle();
-	let fillPanel = this.createCellColorOption(label, fillKey, (defs[fillKey] != null) ? defs[fillKey] : '#ffffff', null, utils.bind(this, function(color)
+	let fillPanel = this.createCellColorOption(label, fillKey, (defs[fillKey] != null) ? defs[fillKey] : '#ffffff', null, this.bind(function(color)
 	{
 		graph.updateCellStyles(fillKey, color, graph.getSelectionCells());
 	}));
 	fillPanel.style.fontWeight = 'bold';
 
-	let tmpColor = utils.getValue(ss.style, fillKey, null);
+	let tmpColor = getValue(ss.style, fillKey, null);
 	gradientPanel.style.display = (tmpColor != null && tmpColor != mxConstants.NONE &&
 		ss.fill && ss.style.shape != 'image') ? '' : 'none';
 
@@ -4458,7 +4471,7 @@ StyleFormatPanel.prototype.addFill = function(container)
 	{
 		let gradientOption = document.createElement('option');
 		gradientOption.setAttribute('value', directions[i]);
-		utils.write(gradientOption, Resources.get(directions[i]));
+		write(gradientOption, Resources.get(directions[i]));
 		gradientSelect.appendChild(gradientOption);
 	}
 	
@@ -4468,17 +4481,17 @@ StyleFormatPanel.prototype.addFill = function(container)
 	{
 		let fillStyleOption = document.createElement('option');
 		fillStyleOption.setAttribute('value', Editor.roughFillStyles[i].val);
-		utils.write(fillStyleOption, Editor.roughFillStyles[i].dispName);
+		write(fillStyleOption, Editor.roughFillStyles[i].dispName);
 		fillStyleSelect.appendChild(fillStyleOption);
 	}
 	
 	fillPanel.appendChild(fillStyleSelect);
 
-	let listener = utils.bind(this, function()
+	let listener = this.bind(function()
 	{
 		ss = this.format.getSelectionState();
-		let value = utils.getValue(ss.style, 'gradientDirection', mxConstants.DIRECTION_SOUTH);
-		let fillStyle = utils.getValue(ss.style, 'fillStyle', 'auto');
+		let value = getValue(ss.style, 'gradientDirection', mxConstants.DIRECTION_SOUTH);
+		let fillStyle = getValue(ss.style, 'fillStyle', 'auto');
 		
 		// Handles empty string which is not allowed as a value
 		if (value == '')
@@ -4490,7 +4503,7 @@ StyleFormatPanel.prototype.addFill = function(container)
 		fillStyleSelect.value = fillStyle;
 		container.style.display = (ss.fill) ? '' : 'none';
 		
-		let fillColor = utils.getValue(ss.style, 'fillColor', null);
+		let fillColor = getValue(ss.style, 'fillColor', null);
 			
 		if (!ss.fill || ss.containsImage || fillColor == null || fillColor == mxConstants.NONE || ss.style.shape == 'filledEdge')
 		{
@@ -4584,7 +4597,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	{
 		let styleOption = document.createElement('option');
 		styleOption.setAttribute('value', styles[i]);
-		utils.write(styleOption, Resources.get(styles[i]));
+		write(styleOption, Resources.get(styles[i]));
 		styleSelect.appendChild(styleOption);
 	}
 	
@@ -4632,7 +4645,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	let label = (ss.style.shape == 'image') ? Resources.get('border') : Resources.get('line');
 	
 	let defs = (ss.vertices.length >= 1) ? graph.stylesheet.getDefaultVertexStyle() : graph.stylesheet.getDefaultEdgeStyle();
-	let lineColor = this.createCellColorOption(label, strokeKey, (defs[strokeKey] != null) ? defs[strokeKey] : '#000000', null, utils.bind(this, function(color)
+	let lineColor = this.createCellColorOption(label, strokeKey, (defs[strokeKey] != null) ? defs[strokeKey] : '#000000', null, this.bind(function(color)
 	{
 		graph.updateCellStyles(strokeKey, color, graph.getSelectionCells());
 	}));
@@ -4650,7 +4663,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	stylePanel.style.marginTop = '2px';
 	stylePanel.className = 'geToolbarContainer';
 
-	let addItem = utils.bind(this, function(menu, width, cssName, keys, values)
+	let addItem = this.bind(function(menu, width, cssName, keys, values)
 	{
 		let item = this.editorUi.menus.styleChange(menu, '', keys, values, 'geIcon', null);
 	
@@ -4667,7 +4680,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		return item;
 	});
 
-	let pattern = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel, 'geSprite-orthogonal', Resources.get('pattern'), false, utils.bind(this, function(menu)
+	let pattern = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel, 'geSprite-orthogonal', Resources.get('pattern'), false, this.bind(function(menu)
 	{
 		addItem(menu, 75, 'solid', ['dashed', 'dashPattern'], [null, null]).setAttribute('title', Resources.get('solid'));
 		addItem(menu, 75, 'dashed', ['dashed', 'dashPattern'], ['1', null]).setAttribute('title', Resources.get('dashed'));
@@ -4679,7 +4692,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	// Used for mixed selection (vertices and edges)
 	let altStylePanel = stylePanel.cloneNode(false);
 	
-	let edgeShape = this.editorUi.toolbar.addMenuFunctionInContainer(altStylePanel, 'geSprite-connection', Resources.get('connection'), false, utils.bind(this, function(menu)
+	let edgeShape = this.editorUi.toolbar.addMenuFunctionInContainer(altStylePanel, 'geSprite-connection', Resources.get('connection'), false, this.bind(function(menu)
 	{
 		this.editorUi.menus.styleChange(menu, '', ['shape', 'startSize', 'endSize', 'width'], [null, null, null, null], 'geIcon geSprite geSprite-connection', null, true).setAttribute('title', Resources.get('line'));
 		this.editorUi.menus.styleChange(menu, '', ['shape', 'startSize', 'endSize', 'width'], ['link', null, null, null], 'geIcon geSprite geSprite-linkedge', null, true).setAttribute('title', Resources.get('link'));
@@ -4687,7 +4700,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		this.editorUi.menus.styleChange(menu, '', ['shape', 'startSize', 'endSize', 'width'], ['arrow', null, null, null], 'geIcon geSprite geSprite-simplearrow', null, true).setAttribute('title', Resources.get('simpleArrow'));
 	}));
 
-	let altPattern = this.editorUi.toolbar.addMenuFunctionInContainer(altStylePanel, 'geSprite-orthogonal', Resources.get('pattern'), false, utils.bind(this, function(menu)
+	let altPattern = this.editorUi.toolbar.addMenuFunctionInContainer(altStylePanel, 'geSprite-orthogonal', Resources.get('pattern'), false, this.bind(function(menu)
 	{
 		addItem(menu, 33, 'solid', ['dashed', 'dashPattern'], [null, null]).setAttribute('title', Resources.get('solid'));
 		addItem(menu, 33, 'dashed', ['dashed', 'dashPattern'], ['1', null]).setAttribute('title', Resources.get('dashed'));
@@ -4716,7 +4729,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		let value = parseInt(input.value);
 		value = Math.min(999, Math.max(1, (isNaN(value)) ? 1 : value));
 		
-		if (value != utils.getValue(ss.style, 'strokeWidth', 1))
+		if (value != getValue(ss.style, 'strokeWidth', 1))
 		{
 			graph.setCellStyles('strokeWidth', value, graph.getSelectionCells());
 			ui.fireEvent(new EventObject('styleChanged', 'keys', .strokeWidth,
@@ -4733,7 +4746,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		let value = parseInt(altInput.value);
 		value = Math.min(999, Math.max(1, (isNaN(value)) ? 1 : value));
 		
-		if (value != utils.getValue(ss.style, 'strokeWidth', 1))
+		if (value != getValue(ss.style, 'strokeWidth', 1))
 		{
 			graph.setCellStyles('strokeWidth', value, graph.getSelectionCells());
 			ui.fireEvent(new EventObject('styleChanged', 'keys', .strokeWidth,
@@ -4770,7 +4783,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	mxEvent.addListener(altInput, 'blur', altUpdate);
 	mxEvent.addListener(altInput, 'change', altUpdate);
 
-	let edgeStyle = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-orthogonal', Resources.get('waypoints'), false, utils.bind(this, function(menu)
+	let edgeStyle = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-orthogonal', Resources.get('waypoints'), false, this.bind(function(menu)
 	{
 		if (ss.style.shape != 'arrow')
 		{
@@ -4790,13 +4803,13 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		}
 	}));
 
-	let lineStart = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-startclassic', Resources.get('linestart'), false, utils.bind(this, function(menu)
+	let lineStart = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-startclassic', Resources.get('linestart'), false, this.bind(function(menu)
 	{
 		if (ss.style.shape == 'connector' || ss.style.shape == 'flexArrow' || ss.style.shape == 'filledEdge')
 		{
 			let item = this.editorUi.menus.edgeStyleChange(menu, '', ['startArrow', 'startFill'], [mxConstants.NONE, 0], 'geIcon', null, false);
 			item.setAttribute('title', Resources.get('none'));
-			item.firstChild.firstChild.innerHTML = '<font style="font-size:10px;">' + utils.htmlEntities(Resources.get('none')) + '</font>';
+			item.firstChild.firstChild.innerHTML = '<font style="font-size:10px;">' + htmlEntities(Resources.get('none')) + '</font>';
 
 			if (ss.style.shape == 'connector' || ss.style.shape == 'filledEdge')
 			{
@@ -4839,13 +4852,13 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		}
 	}));
 
-	let lineEnd = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-endclassic', Resources.get('lineend'), false, utils.bind(this, function(menu)
+	let lineEnd = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-endclassic', Resources.get('lineend'), false, this.bind(function(menu)
 	{
 		if (ss.style.shape == 'connector' || ss.style.shape == 'flexArrow' || ss.style.shape == 'filledEdge')
 		{
 			let item = this.editorUi.menus.edgeStyleChange(menu, '', ['endArrow', 'endFill'], [mxConstants.NONE, 0], 'geIcon', null, false);
 			item.setAttribute('title', Resources.get('none'));
-			item.firstChild.firstChild.innerHTML = '<font style="font-size:10px;">' + utils.htmlEntities(Resources.get('none')) + '</font>';
+			item.firstChild.firstChild.innerHTML = '<font style="font-size:10px;">' + htmlEntities(Resources.get('none')) + '</font>';
 			
 			if (ss.style.shape == 'connector' || ss.style.shape == 'filledEdge')
 			{
@@ -4941,7 +4954,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	span.style.fontWeight = 'normal';
 	span.style.width = '76px';
 	
-	utils.write(span, Resources.get('lineend'));
+	write(span, Resources.get('lineend'));
 	arrowPanel.appendChild(span);
 	
 	var endSpacingUpdate, endSizeUpdate;
@@ -4954,14 +4967,14 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		endSizeUpdate.apply(this, arguments);
 	});
 
-	utils.br(arrowPanel);
+	br(arrowPanel);
 	
 	let spacer = document.createElement('div');
 	spacer.style.height = '8px';
 	arrowPanel.appendChild(spacer);
 	
 	span = span.cloneNode(false);
-	utils.write(span, Resources.get('linestart'));
+	write(span, Resources.get('linestart'));
 	arrowPanel.appendChild(span);
 	
 	var startSpacingUpdate, startSizeUpdate;
@@ -4974,10 +4987,10 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		startSizeUpdate.apply(this, arguments);
 	});
 
-	utils.br(arrowPanel);
+	br(arrowPanel);
 	this.addLabel(arrowPanel, Resources.get('spacing'), 74, 50);
 	this.addLabel(arrowPanel, Resources.get('size'), 20, 50);
-	utils.br(arrowPanel);
+	br(arrowPanel);
 	
 	let perimeterPanel = colorPanel.cloneNode(false);
 	perimeterPanel.style.fontWeight = 'normal';
@@ -4995,7 +5008,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	span.style.marginTop = '1px';
 	span.style.fontWeight = 'normal';
 	span.style.width = '120px';
-	utils.write(span, Resources.get('perimeter'));
+	write(span, Resources.get('perimeter'));
 	perimeterPanel.appendChild(span);
 	
 	var perimeterUpdate;
@@ -5014,37 +5027,37 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		container.appendChild(perimeterPanel);
 	}
 	
-	let listener = utils.bind(this, function(sender, evt, force)
+	let listener = this.bind(function(sender, evt, force)
 	{
 		ss = this.format.getSelectionState();
-		let color = utils.getValue(ss.style, strokeKey, null);
+		let color = getValue(ss.style, strokeKey, null);
 
 		if (force || document.activeElement != input)
 		{
-			let tmp = parseInt(utils.getValue(ss.style, 'strokeWidth', 1));
+			let tmp = parseInt(getValue(ss.style, 'strokeWidth', 1));
 			input.value = (isNaN(tmp)) ? '' : tmp + ' pt';
 		}
 		
 		if (force || document.activeElement != altInput)
 		{
-			let tmp = parseInt(utils.getValue(ss.style, 'strokeWidth', 1));
+			let tmp = parseInt(getValue(ss.style, 'strokeWidth', 1));
 			altInput.value = (isNaN(tmp)) ? '' : tmp + ' pt';
 		}
 		
 		styleSelect.style.visibility = (ss.style.shape == 'connector' || ss.style.shape == 'filledEdge') ? '' : 'hidden';
 		
-		if (utils.getValue(ss.style, 'curved', null) == '1')
+		if (getValue(ss.style, 'curved', null) == '1')
 		{
 			styleSelect.value = 'curved';
 		}
-		else if (utils.getValue(ss.style, 'rounded', null) == '1')
+		else if (getValue(ss.style, 'rounded', null) == '1')
 		{
 			styleSelect.value = 'rounded';
 		}
 		
-		if (utils.getValue(ss.style, 'dashed', null) == '1')
+		if (getValue(ss.style, 'dashed', null) == '1')
 		{
-			if (utils.getValue(ss.style, 'dashPattern', null) == null)
+			if (getValue(ss.style, 'dashPattern', null) == null)
 			{
 				solid.style.borderBottom = '1px dashed ' + this.defaultStrokeColor;
 			}
@@ -5065,14 +5078,14 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		
 		if (edgeStyleDiv != null)
 		{
-			let es = utils.getValue(ss.style, 'edge', null);
+			let es = getValue(ss.style, 'edge', null);
 			
-			if (utils.getValue(ss.style, 'noEdgeStyle', null) == '1')
+			if (getValue(ss.style, 'noEdgeStyle', null) == '1')
 			{
 				es = null;
 			}
 			
-			if (es == 'orthogonalEdgeStyle' && utils.getValue(ss.style, 'curved', null) == '1')
+			if (es == 'orthogonalEdgeStyle' && getValue(ss.style, 'curved', null) == '1')
 			{
 				edgeStyleDiv.className = 'geSprite geSprite-curved';
 			}
@@ -5086,13 +5099,13 @@ StyleFormatPanel.prototype.addStroke = function(container)
 			}
 			else if (es == 'elbowEdgeStyle')
 			{
-				edgeStyleDiv.className = 'geSprite ' + ((utils.getValue(ss.style,
+				edgeStyleDiv.className = 'geSprite ' + ((getValue(ss.style,
 					'elbow', null) == 'vertical') ?
 					'geSprite-verticalelbow' : 'geSprite-horizontalelbow');
 			}
 			else if (es == 'isometricEdgeStyle')
 			{
-				edgeStyleDiv.className = 'geSprite ' + ((utils.getValue(ss.style,
+				edgeStyleDiv.className = 'geSprite ' + ((getValue(ss.style,
 					'elbow', null) == 'vertical') ?
 					'geSprite-verticalisometric' : 'geSprite-horizontalisometric');
 			}
@@ -5146,7 +5159,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 				
 				if (markerDiv.className == 'geSprite geSprite-noarrow')
 				{
-					markerDiv.innerHTML = utils.htmlEntities(Resources.get('none'));
+					markerDiv.innerHTML = htmlEntities(Resources.get('none'));
 					markerDiv.style.backgroundImage = 'none';
 					markerDiv.style.verticalAlign = 'top';
 					markerDiv.style.marginTop = '5px';
@@ -5160,10 +5173,10 @@ StyleFormatPanel.prototype.addStroke = function(container)
 			return markerDiv;
 		};
 		
-		let sourceDiv = updateArrow(utils.getValue(ss.style, 'startArrow', null),
-				utils.getValue(ss.style, 'startFill', '1'), lineStart, 'start');
-		let targetDiv = updateArrow(utils.getValue(ss.style, 'endArrow', null),
-				utils.getValue(ss.style, 'endFill', '1'), lineEnd, 'end');
+		let sourceDiv = updateArrow(getValue(ss.style, 'startArrow', null),
+				getValue(ss.style, 'startFill', '1'), lineStart, 'start');
+		let targetDiv = updateArrow(getValue(ss.style, 'endArrow', null),
+				getValue(ss.style, 'endFill', '1'), lineEnd, 'end');
 
 		// Special cases for markers
 		if (sourceDiv != null && targetDiv != null)
@@ -5180,46 +5193,46 @@ StyleFormatPanel.prototype.addStroke = function(container)
 			}
 		}
 
-		utils.setOpacity(edgeStyle, (ss.style.shape == 'arrow') ? 30 : 100);
+		setOpacity(edgeStyle, (ss.style.shape == 'arrow') ? 30 : 100);
 		
 		if (ss.style.shape != 'connector' && ss.style.shape != 'flexArrow' && ss.style.shape != 'filledEdge')
 		{
-			utils.setOpacity(lineStart, 30);
-			utils.setOpacity(lineEnd, 30);
+			setOpacity(lineStart, 30);
+			setOpacity(lineEnd, 30);
 		}
 		else
 		{
-			utils.setOpacity(lineStart, 100);
-			utils.setOpacity(lineEnd, 100);
+			setOpacity(lineStart, 100);
+			setOpacity(lineEnd, 100);
 		}
 
 		if (force || document.activeElement != startSize)
 		{
-			let tmp = parseInt(utils.getValue(ss.style, 'startSize', mxConstants.DEFAULT_MARKERSIZE));
+			let tmp = parseInt(getValue(ss.style, 'startSize', mxConstants.DEFAULT_MARKERSIZE));
 			startSize.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 		
 		if (force || document.activeElement != startSpacing)
 		{
-			let tmp = parseInt(utils.getValue(ss.style, 'sourcePerimeterSpacing', 0));
+			let tmp = parseInt(getValue(ss.style, 'sourcePerimeterSpacing', 0));
 			startSpacing.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 
 		if (force || document.activeElement != endSize)
 		{
-			let tmp = parseInt(utils.getValue(ss.style, 'endSize', mxConstants.DEFAULT_MARKERSIZE));
+			let tmp = parseInt(getValue(ss.style, 'endSize', mxConstants.DEFAULT_MARKERSIZE));
 			endSize.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 		
 		if (force || document.activeElement != startSpacing)
 		{
-			let tmp = parseInt(utils.getValue(ss.style, 'targetPerimeterSpacing', 0));
+			let tmp = parseInt(getValue(ss.style, 'targetPerimeterSpacing', 0));
 			endSpacing.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 		
 		if (force || document.activeElement != perimeterSpacing)
 		{
-			let tmp = parseInt(utils.getValue(ss.style, 'perimeterSpacing', 0));
+			let tmp = parseInt(getValue(ss.style, 'perimeterSpacing', 0));
 			perimeterSpacing.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
 	});
@@ -5265,7 +5278,7 @@ StyleFormatPanel.prototype.addLineJumps = function(container)
 		span.style.fontWeight = 'bold';
 		span.style.width = '80px';
 		
-		utils.write(span, Resources.get('lineJumps'));
+		write(span, Resources.get('lineJumps'));
 		container.appendChild(span);
 		
 		let styleSelect = document.createElement('select');
@@ -5280,7 +5293,7 @@ StyleFormatPanel.prototype.addLineJumps = function(container)
 		{
 			let styleOption = document.createElement('option');
 			styleOption.setAttribute('value', styles[i]);
-			utils.write(styleOption, Resources.get(styles[i]));
+			write(styleOption, Resources.get(styles[i]));
 			styleSelect.appendChild(styleOption);
 		}
 		
@@ -5319,14 +5332,14 @@ StyleFormatPanel.prototype.addLineJumps = function(container)
 		jumpSizeUpdate = this.installInputHandler(jumpSize, 'jumpSize',
 			Graph.defaultJumpSize, 0, 999, ' pt');
 		
-		let listener = utils.bind(this, function(sender, evt, force)
+		let listener = this.bind(function(sender, evt, force)
 		{
 			ss = this.format.getSelectionState();
-			styleSelect.value = utils.getValue(ss.style, 'jumpStyle', 'none');
+			styleSelect.value = getValue(ss.style, 'jumpStyle', 'none');
 
 			if (force || document.activeElement != jumpSize)
 			{
-				let tmp = parseInt(utils.getValue(ss.style, 'jumpSize', Graph.defaultJumpSize));
+				let tmp = parseInt(getValue(ss.style, 'jumpSize', Graph.defaultJumpSize));
 				jumpSize.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 			}
 		});
@@ -5382,7 +5395,7 @@ StyleFormatPanel.prototype.addEffects = function(div)
 	let current = left;
 	let count = 0;
 	
-	let addOption = utils.bind(this, function(label, key, defaultValue)
+	let addOption = this.bind(function(label, key, defaultValue)
 	{
 		let opt = this.createCellOption(label, key, defaultValue);
 		opt.style.width = '100%';
@@ -5391,7 +5404,7 @@ StyleFormatPanel.prototype.addEffects = function(div)
 		count++;
 	});
 
-	let listener = utils.bind(this, function(sender, evt, force)
+	let listener = this.bind(function(sender, evt, force)
 	{
 		ss = this.format.getSelectionState();
 		
@@ -5437,7 +5450,7 @@ StyleFormatPanel.prototype.addStyleOps = function(div)
 	div.style.paddingTop = '10px';
 	div.style.paddingBottom = '10px';
 	
-	let btn = utils.button(Resources.get('setAsDefaultStyle'), utils.bind(this, function(evt)
+	let btn = button(Resources.get('setAsDefaultStyle'), this.bind(function(evt)
 	{
 		this.editorUi.actions.get('setAsDefaultStyle').funct();
 	}));
@@ -5458,7 +5471,7 @@ DiagramStylePanel = function(format, editorUi, container)
 	this.init();
 };
 
-utils.extend(DiagramStylePanel, BaseFormatPanel);
+extend(DiagramStylePanel, BaseFormatPanel);
 
 /**
  * Adds the label menu items to the given menu and parent.
@@ -5596,7 +5609,7 @@ DiagramStylePanel.prototype.addView = function(div)
 
 	let defaultStyles = ['fillColor', 'strokeColor', 'fontColor', 'gradientColor'];
 	
-	let updateCells = utils.bind(this, function(styles, graphStyle)
+	let updateCells = this.bind(function(styles, graphStyle)
 	{
 		let cells = graph.getVerticesAndEdges();
 		
@@ -5624,7 +5637,7 @@ DiagramStylePanel.prototype.addView = function(div)
 						(styles[j] != 'fillColor' &&
 						styles[j] != 'strokeColor'))
 					{
-						newStyle = utils.setStyle(newStyle, styles[j], current[styles[j]]);
+						newStyle = setStyle(newStyle, styles[j], current[styles[j]]);
 					}
 				}
 				
@@ -5637,7 +5650,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		}
 	});
 			
-	let removeStyles = utils.bind(this, function(style, styles, defaultStyle)
+	let removeStyles = this.bind(function(style, styles, defaultStyle)
 	{
 		if (style != null)
 		{
@@ -5654,7 +5667,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		}
 	});
 
-	let applyStyle = utils.bind(this, function(style, result, cell, graphStyle, theGraph)
+	let applyStyle = this.bind(function(style, result, cell, graphStyle, theGraph)
 	{
 		if (style != null)
 		{
@@ -5693,7 +5706,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		}
 	});
 	
-	let btn = utils.button(Resources.get('reset'), utils.bind(this, function(evt)
+	let btn = button(Resources.get('reset'), this.bind(function(evt)
 	{
 		let all = graph.getVerticesAndEdges(true, true);
 		
@@ -5712,8 +5725,8 @@ DiagramStylePanel.prototype.addView = function(div)
 			}
 		}
 		
-		graph.defaultVertexStyle = utils.clone(ui.initialDefaultVertexStyle);
-		graph.defaultEdgeStyle = utils.clone(ui.initialDefaultEdgeStyle);
+		graph.defaultVertexStyle = clone(ui.initialDefaultVertexStyle);
+		graph.defaultEdgeStyle = clone(ui.initialDefaultEdgeStyle);
 		ui.clearDefaultStyle();
 	}));
 	
@@ -5722,7 +5735,7 @@ DiagramStylePanel.prototype.addView = function(div)
 	btn.style.maxWidth = '90px';
 	right.appendChild(btn);
 	
-	let createPreview = utils.bind(this, function(commonStyle, vertexStyle, edgeStyle, graphStyle, container)
+	let createPreview = this.bind(function(commonStyle, vertexStyle, edgeStyle, graphStyle, container)
 	{
 		// Wrapper needed to catch events
 		let div = document.createElement('div');
@@ -5741,7 +5754,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		
 		graph2.getCellStyle = function(cell)
 		{
-			let result = utils.clone(Graph.prototype.getCellStyle.apply(this, arguments));
+			let result = clone(Graph.prototype.getCellStyle.apply(this, arguments));
 			let defaultStyle = graph.stylesheet.getDefaultVertexStyle();
 			let appliedStyle = vertexStyle;
 			
@@ -5785,7 +5798,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		this.format.cachedStyleEntries = [];
 	}
 
-	let addEntry = utils.bind(this, function(commonStyle, vertexStyle, edgeStyle, graphStyle, index)
+	let addEntry = this.bind(function(commonStyle, vertexStyle, edgeStyle, graphStyle, index)
 	{
 		let panel = this.format.cachedStyleEntries[index];
 		
@@ -5802,14 +5815,14 @@ DiagramStylePanel.prototype.addView = function(div)
 			
 			createPreview(commonStyle, vertexStyle, edgeStyle, graphStyle, panel); 
 	
-			mxEvent.addGestureListeners(panel, utils.bind(this, function(evt)
+			mxEvent.addGestureListeners(panel, this.bind(function(evt)
 			{
 				panel.style.opacity = 0.5;
-			}), null, utils.bind(this, function(evt)
+			}), null, this.bind(function(evt)
 			{
 				panel.style.opacity = 1;
-				graph.defaultVertexStyle = utils.clone(ui.initialDefaultVertexStyle);
-				graph.defaultEdgeStyle = utils.clone(ui.initialDefaultEdgeStyle);
+				graph.defaultVertexStyle = clone(ui.initialDefaultVertexStyle);
+				graph.defaultEdgeStyle = clone(ui.initialDefaultEdgeStyle);
 				
 				applyStyle(commonStyle, graph.defaultVertexStyle);
 				applyStyle(commonStyle, graph.defaultEdgeStyle);
@@ -5866,7 +5879,7 @@ DiagramStylePanel.prototype.addView = function(div)
 				}
 			}));
 			
-			mxEvent.addListener(panel, 'mouseenter', utils.bind(this, function(evt)
+			mxEvent.addListener(panel, 'mouseenter', this.bind(function(evt)
 			{
 				let prev = graph.getCellStyle;
 				let prevBg = graph.background;
@@ -5878,7 +5891,7 @@ DiagramStylePanel.prototype.addView = function(div)
 				
 				graph.getCellStyle = function(cell)
 				{
-					let result = utils.clone(prev.apply(this, arguments));
+					let result = clone(prev.apply(this, arguments));
 					
 					let defaultStyle = graph.stylesheet.getDefaultVertexStyle();
 					let appliedStyle = vertexStyle;
@@ -5902,7 +5915,7 @@ DiagramStylePanel.prototype.addView = function(div)
 				graph.view.gridColor = prevGrid;
 			}));
 			
-			mxEvent.addListener(panel, 'mouseleave', utils.bind(this, function(evt)
+			mxEvent.addListener(panel, 'mouseleave', this.bind(function(evt)
 			{
 				graph.refresh();
 			}));
@@ -5919,7 +5932,7 @@ DiagramStylePanel.prototype.addView = function(div)
 	this.format.currentStylePage = (this.format.currentStylePage != null) ? this.format.currentStylePage : 0;
 	let dots = [];
 	
-	let addEntries = utils.bind(this, function()
+	let addEntries = this.bind(function()
 	{
 		if (dots.length > 0)
 		{
@@ -5935,7 +5948,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		}
 	});
 	
-	let selectPage = utils.bind(this, function(index)
+	let selectPage = this.bind(function(index)
 	{
 		if (index >= 0 && index < pageCount)
 		{
@@ -5971,9 +5984,9 @@ DiagramStylePanel.prototype.addView = function(div)
 			dot.style.background = 'transparent';
 			dot.style.border = '1px solid #b5b6b7';
 			
-			(utils.bind(this, function(index, elt)
+			(this.bind(function(index, elt)
 			{
-				mxEvent.addListener(dot, 'click', utils.bind(this, function()
+				mxEvent.addListener(dot, 'click', this.bind(function()
 				{
 					selectPage(index);
 				}));
@@ -5992,9 +6005,9 @@ DiagramStylePanel.prototype.addView = function(div)
 			left.style.cssText = 'position:absolute;left:0px;top:4px;bottom:0px;width:20px;margin:0px;opacity:0.5;' +
 				'background-repeat:no-repeat;background-position:center center;background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAIVBMVEUAAAB2dnZ4eHh3d3d1dXVxcXF2dnZ2dnZ2dnZxcXF2dnYmb3w1AAAACnRSTlMAfCTkhhvb7cQSPH2JPgAAADRJREFUCNdjwACMAmBKaiGYs2oJmLPKAZ3DabU8AMRTXpUKopislqFyVzCAuUZgikkBZjoAcMYLnp53P/UAAAAASUVORK5CYII=);';
 			
-			mxEvent.addListener(left, 'click', utils.bind(this, function()
+			mxEvent.addListener(left, 'click', this.bind(function()
 			{
-				selectPage(utils.mod(this.format.currentStylePage - 1, pageCount));
+				selectPage(mod(this.format.currentStylePage - 1, pageCount));
 			}));
 			
 			let right = document.createElement('div');
@@ -6003,9 +6016,9 @@ DiagramStylePanel.prototype.addView = function(div)
 			switcher.appendChild(left);
 			switcher.appendChild(right);
 			
-			mxEvent.addListener(right, 'click', utils.bind(this, function()
+			mxEvent.addListener(right, 'click', this.bind(function()
 			{
-				selectPage(utils.mod(this.format.currentStylePage + 1, pageCount));
+				selectPage(mod(this.format.currentStylePage + 1, pageCount));
 			}));
 					
 			// Hover state
@@ -6042,7 +6055,7 @@ DiagramFormatPanel = function(format, editorUi, container)
 	this.init();
 };
 
-utils.extend(DiagramFormatPanel, BaseFormatPanel);
+extend(DiagramFormatPanel, BaseFormatPanel);
 
 /**
  * Switch to disable page view.
@@ -6145,7 +6158,7 @@ DiagramFormatPanel.prototype.addView = function(div)
 		
 		if (this.showBackgroundImageOption)
 		{
-			let btn = utils.button(Resources.get('image'), function(evt)
+			let btn = button(Resources.get('image'), function(evt)
 			{
 				ui.showBackgroundImageDialog(null, ui.editor.graph.backgroundImage);
 				mxEvent.consume(evt);
@@ -6484,7 +6497,7 @@ DiagramFormatPanel.prototype.addPaperSize = function(div)
  */
 DiagramFormatPanel.prototype.addStyleOps = function(div)
 {
-	let btn = utils.button(Resources.get('editData'), utils.bind(this, function(evt)
+	let btn = button(Resources.get('editData'), this.bind(function(evt)
 	{
 		this.editorUi.actions.get('editData').funct();
 	}));
@@ -6494,9 +6507,9 @@ DiagramFormatPanel.prototype.addStyleOps = function(div)
 	btn.style.marginBottom = '2px';
 	div.appendChild(btn);
 
-	utils.br(div);
+	br(div);
 	
-	btn = utils.button(Resources.get('clearDefaultStyle'), utils.bind(this, function(evt)
+	btn = button(Resources.get('clearDefaultStyle'), this.bind(function(evt)
 	{
 		this.editorUi.actions.get('clearDefaultStyle').funct();
 	}));

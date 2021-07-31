@@ -8,7 +8,7 @@
 import mxClient from '../mxClient';
 import mxToolbar from '../util/gui/mxToolbar';
 import Geometry from '../view/geometry/Geometry';
-import utils from '../util/Utils';
+import utils, { convertPoint } from '../util/Utils';
 import InternalEvent from '../view/event/InternalEvent';
 import { getClientX, getClientY } from '../util/EventUtils';
 import { makeDraggable } from '../util/GestureUtils';
@@ -334,7 +334,7 @@ class mxDefaultToolbar {
     if (graph.canImportCell(vertex)) {
       const x = getClientX(evt);
       const y = getClientY(evt);
-      const pt = utils.convertPoint(graph.container, x, y);
+      const pt = convertPoint(graph.container, x, y);
 
       // Splits the target edge or inserts into target group
       if (

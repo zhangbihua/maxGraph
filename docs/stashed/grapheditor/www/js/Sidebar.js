@@ -19,14 +19,14 @@ function Sidebar(editorUi, container)
 
 	document.body.appendChild(this.graph.container);
 	
-	this.pointerUpHandler = utils.bind(this, function()
+	this.pointerUpHandler = this.bind(function()
 	{
 		this.showTooltips = true;
 	});
 
 	mxEvent.addListener(document, (mxClient.IS_POINTER) ? 'pointerup' : 'mouseup', this.pointerUpHandler);
 
-	this.pointerDownHandler = utils.bind(this, function()
+	this.pointerDownHandler = this.bind(function()
 	{
 		this.showTooltips = false;
 		this.hideTooltip();
@@ -34,7 +34,7 @@ function Sidebar(editorUi, container)
 	
 	mxEvent.addListener(document, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown', this.pointerDownHandler);
 	
-	this.pointerMoveHandler = utils.bind(this, function(evt)
+	this.pointerMoveHandler = this.bind(function(evt)
 	{
 		let src = mxEvent.getSource(evt);
 		
@@ -54,7 +54,7 @@ function Sidebar(editorUi, container)
 	mxEvent.addListener(document, (mxClient.IS_POINTER) ? 'pointermove' : 'mousemove', this.pointerMoveHandler);
 
 	// Handles mouse leaving the window
-	this.pointerOutHandler = utils.bind(this, function(evt)
+	this.pointerOutHandler = this.bind(function(evt)
 	{
 		if (evt.toElement == null && evt.relatedTarget == null)
 		{
@@ -65,7 +65,7 @@ function Sidebar(editorUi, container)
 	mxEvent.addListener(document, (mxClient.IS_POINTER) ? 'pointerout' : 'mouseout', this.pointerOutHandler);
 
 	// Enables tooltips after scroll
-	mxEvent.addListener(container, 'scroll', utils.bind(this, function()
+	mxEvent.addListener(container, 'scroll', this.bind(function()
 	{
 		this.showTooltips = true;
 		this.hideTooltip();
@@ -265,7 +265,7 @@ Sidebar.prototype.showTooltip = function(elt, cells, w, h, title, showLabel)
 				this.thread = null;
 			}
 			
-			let show = utils.bind(this, function()
+			let show = this.bind(function()
 			{
 				// Lazy creation of the DOM nodes and graph instance
 				if (this.tooltip == null)
@@ -344,7 +344,7 @@ Sidebar.prototype.showTooltip = function(elt, cells, w, h, title, showLabel)
 					}
 					
 					this.tooltipTitle.style.display = '';
-					utils.write(this.tooltipTitle, title);
+					write(this.tooltipTitle, title);
 					
 					// Allows for wider labels
 					w2 = Math.min(this.maxTooltipWidth, Math.max(width, this.tooltipTitle.scrollWidth + 4));
@@ -446,7 +446,7 @@ Sidebar.prototype.hideTooltip = function()
  */
 Sidebar.prototype.addDataEntry = function(tags, width, height, title, data)
 {
-	return this.addEntry(tags, utils.bind(this, function()
+	return this.addEntry(tags, this.bind(function()
 	{
 	   	return this.createVertexTemplateFromData(data, width, height, title);
 	}));
@@ -459,7 +459,7 @@ Sidebar.prototype.addEntries = function(images)
 {
 	for (let i = 0; i < images.length; i++)
 	{
-		(utils.bind(this, function(img)
+		(this.bind(function(img)
 		{
 			let data = img.data;
 			let tags = (img.title != null) ? img.title : '';
@@ -471,7 +471,7 @@ Sidebar.prototype.addEntries = function(images)
 
 			if (data != null && tags.length > 0)
 			{
-				this.addEntry(tags, utils.bind(this, function()
+				this.addEntry(tags, this.bind(function()
 				{
 					data = this.editorUi.convertDataUri(data);
 					let s = 'shape=image;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=0;';
@@ -487,7 +487,7 @@ Sidebar.prototype.addEntries = function(images)
 			}
 			else if (img.xml != null && tags.length > 0)
 			{
-				this.addEntry(tags, utils.bind(this, function()
+				this.addEntry(tags, this.bind(function()
 				{
 					let cells = this.editorUi.stringToCells(Graph.decompress(img.xml));
 
@@ -747,7 +747,7 @@ Sidebar.prototype.addSearchPalette = function(expand)
 	div.appendChild(inner);
 
 	let center = document.createElement('center');
-	let button = utils.button(Resources.get('moreResults'), function()
+	let button = button(Resources.get('moreResults'), function()
 	{
 		find();
 	});
@@ -774,7 +774,7 @@ Sidebar.prototype.addSearchPalette = function(expand)
 	// Count is dynamically updated below
 	let count = 12;
 	
-	let clearDiv = utils.bind(this, function()
+	let clearDiv = this.bind(function()
 	{
 		active = false;
 		this.currentSearch = null;
@@ -808,7 +808,7 @@ Sidebar.prototype.addSearchPalette = function(expand)
 		input.focus();
 	});
 
-	find = utils.bind(this, function()
+	find = this.bind(function()
 	{
 		// Shows 4 rows (minimum 4 results)
 		count = 4 * Math.max(1, Math.floor(this.container.clientWidth / (this.thumbWidth + 10)));
@@ -839,7 +839,7 @@ Sidebar.prototype.addSearchPalette = function(expand)
 					let current = {};
 					this.currentSearch = current;
 					
-					this.searchEntries(searchTerm, count, page, utils.bind(this, function(results, len, more, terms)
+					this.searchEntries(searchTerm, count, page, this.bind(function(results, len, more, terms)
 					{
 						if (this.currentSearch == current)
 						{
@@ -861,7 +861,7 @@ Sidebar.prototype.addSearchPalette = function(expand)
 							
 							for (let i = 0; i < results.length; i++)
 							{
-								(utils.bind(this, function(result)
+								(this.bind(function(result)
 								{
 									try
 									{
@@ -878,7 +878,7 @@ Sidebar.prototype.addSearchPalette = function(expand)
 											hash[elt.innerHTML] = hash[elt.innerHTML].concat(result.parentLibraries);
 										}
 
-										mxEvent.addGestureListeners(elt, null, null, utils.bind(this, function(evt)
+										mxEvent.addGestureListeners(elt, null, null, this.bind(function(evt)
 										{
 											let libs = hash[elt.innerHTML];
 	
@@ -913,7 +913,7 @@ Sidebar.prototype.addSearchPalette = function(expand)
 							button.style.cursor = '';
 							div.appendChild(center);
 						}
-					}), utils.bind(this, function()
+					}), this.bind(function()
 					{
 						// TODO: Error handling
 						button.style.cursor = '';
@@ -933,7 +933,7 @@ Sidebar.prototype.addSearchPalette = function(expand)
 		}
 	});
 	
-	mxEvent.addListener(input, 'keydown', utils.bind(this, function(evt)
+	mxEvent.addListener(input, 'keydown', this.bind(function(evt)
 	{
 		if (evt.keyCode == 13 /* Enter */)
 		{
@@ -942,7 +942,7 @@ Sidebar.prototype.addSearchPalette = function(expand)
 		}
 	}));
 	
-	mxEvent.addListener(input, 'keyup', utils.bind(this, function(evt)
+	mxEvent.addListener(input, 'keyup', this.bind(function(evt)
 	{
 		if (input.value == '')
 		{
@@ -1021,7 +1021,7 @@ Sidebar.prototype.insertSearchHint = function(div, searchTerm, count, page, resu
 			'color:gray;padding:6px 0px 0px 0px !important;margin:4px 8px 4px 8px;' +
 			'text-align:center;cursor:default !important';
 		
-		utils.write(err, Resources.get('noResultsFor', [searchTerm]));
+		write(err, Resources.get('noResultsFor', [searchTerm]));
 		div.appendChild(err);
 	}
 };
@@ -1066,7 +1066,7 @@ Sidebar.prototype.addGeneralPalette = function(expand)
 	 	this.createVertexTemplateEntry('shape=xor;whiteSpace=wrap;html=1;', 60, 80, '', 'Or', null, null, 'logic or'),
 	 	this.createVertexTemplateEntry('shape=or;whiteSpace=wrap;html=1;', 60, 80, '', 'And', null, null, 'logic and'),
 	 	this.createVertexTemplateEntry('shape=dataStorage;whiteSpace=wrap;html=1;fixedSize=1;', 100, 80, '', 'Data Storage'),    
-	 	this.addEntry('curve', utils.bind(this, function()
+	 	this.addEntry('curve', this.bind(function()
 	 	{
 			let cell = new Cell('', new Geometry(0, 0, 50, 50), 'curved=1;endArrow=classic;html=1;');
 			cell.geometry.setTerminalPoint(new Point(0, 50), true);
@@ -1085,7 +1085,7 @@ Sidebar.prototype.addGeneralPalette = function(expand)
 	 	this.createEdgeTemplateEntry('endArrow=classic;startArrow=classic;html=1;', 50, 50, '', 'Bidirectional Connector', null, lineTags + 'bidirectional'),
 	 	this.createEdgeTemplateEntry('endArrow=classic;html=1;', 50, 50, '', 'Directional Connector', null, lineTags + 'directional directed'),
 	 	this.createEdgeTemplateEntry('shape=link;html=1;', 100, 0, '', 'Link', null, lineTags + 'link'),
-	 	this.addEntry(lineTags + 'edge title', utils.bind(this, function()
+	 	this.addEntry(lineTags + 'edge title', this.bind(function()
 		{
 			let edge = new Cell('', new Geometry(0, 0, 0, 0), 'endArrow=classic;html=1;');
 			edge.geometry.setTerminalPoint(new Point(0, 0), true);
@@ -1101,7 +1101,7 @@ Sidebar.prototype.addGeneralPalette = function(expand)
 			
 			return this.createEdgeTemplateFromCells([edge], 100, 0, 'Connector with Label');
 		})),
-		this.addEntry(lineTags + 'edge title multiplicity', utils.bind(this, function()
+		this.addEntry(lineTags + 'edge title multiplicity', this.bind(function()
 		{
 			let edge = new Cell('', new Geometry(0, 0, 0, 0), 'endArrow=classic;html=1;');
 			edge.geometry.setTerminalPoint(new Point(0, 0), true);
@@ -1123,7 +1123,7 @@ Sidebar.prototype.addGeneralPalette = function(expand)
 			
 			return this.createEdgeTemplateFromCells([edge], 160, 0, 'Connector with 2 Labels');
 		})),
-		this.addEntry(lineTags + 'edge title multiplicity', utils.bind(this, function()
+		this.addEntry(lineTags + 'edge title multiplicity', this.bind(function()
 		{
 			let edge = new Cell('Label', new Geometry(0, 0, 0, 0), 'endArrow=classic;html=1;');
 			edge.geometry.setTerminalPoint(new Point(0, 0), true);
@@ -1151,7 +1151,7 @@ Sidebar.prototype.addGeneralPalette = function(expand)
 	    	
 			return this.createEdgeTemplateFromCells([edge], 160, 0, 'Connector with 3 Labels');
 		})),
-	 	this.addEntry(lineTags + 'edge shape symbol message mail email', utils.bind(this, function()
+	 	this.addEntry(lineTags + 'edge shape symbol message mail email', this.bind(function()
 		{
 			let edge = new Cell('', new Geometry(0, 0, 0, 0), 'endArrow=classic;html=1;');
 			edge.geometry.setTerminalPoint(new Point(0, 0), true);
@@ -1215,7 +1215,7 @@ Sidebar.prototype.addMiscPalette = function(expand)
  			'<tr><th align="center"><b>Title</b></th></tr>' +
  			'<tr><td align="center">Section 1.1\nSection 1.2\nSection 1.3</td></tr>' +
  			'<tr><td align="center">Section 2.1\nSection 2.2\nSection 2.3</td></tr></table>', 'HTML Table 4'),
-	 	this.addEntry('link hyperlink', utils.bind(this, function()
+	 	this.addEntry('link hyperlink', this.bind(function()
 	 	{
 	 		let cell = new Cell('Link', new Geometry(0, 0, 60, 40), 'text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;align=center;verticalAlign=middle;fontColor=#0000EE;fontStyle=4;');
 	 		cell.vertex = true;
@@ -1223,7 +1223,7 @@ Sidebar.prototype.addMiscPalette = function(expand)
 
 	 		return this.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Link');
 	 	})),
-	 	this.addEntry('timestamp date time text label', utils.bind(this, function()
+	 	this.addEntry('timestamp date time text label', this.bind(function()
 	 	{
 	 		let cell = new Cell('%date{ddd mmm dd yyyy HH:MM:ss}%', new Geometry(0, 0, 160, 20), 'text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;');
 	 		cell.vertex = true;
@@ -1231,7 +1231,7 @@ Sidebar.prototype.addMiscPalette = function(expand)
 
 	 		return this.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Timestamp');
 	 	})),
-	 	this.addEntry('variable placeholder metadata hello world text label', utils.bind(this, function()
+	 	this.addEntry('variable placeholder metadata hello world text label', this.bind(function()
 	 	{
 	 		let cell = new Cell('%name% Text', new Geometry(0, 0, 80, 20), 'text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;');
 	 		cell.vertex = true;
@@ -2469,7 +2469,7 @@ Sidebar.prototype.createTitle = function(label)
 	let elt = document.createElement('a');
 	elt.setAttribute('title', Resources.get('sidebarTooltip'));
 	elt.className = 'geTitle';
-	utils.write(elt, label);
+	write(elt, label);
 
 	return elt;
 };
@@ -2532,7 +2532,7 @@ Sidebar.prototype.createThumb = function(cells, width, height, parent, title, sh
 		div.style.whiteSpace = 'nowrap';
 
 		div.style.paddingTop = '4px';
-		utils.write(div, title);
+		write(div, title);
 		parent.appendChild(div);
 	}
 
@@ -2568,7 +2568,7 @@ Sidebar.prototype.createItem = function(cells, title, showLabel, showTitle, widt
 		this.addClickHandler(elt, ds, cells);
 	
 		// Uses guides for vertices only if enabled in graph
-		ds.isGuidesEnabled = utils.bind(this, function()
+		ds.isGuidesEnabled = this.bind(function()
 		{
 			return this.editorUi.editor.graph.graphHandler.guidesEnabled;
 		});
@@ -2583,7 +2583,7 @@ Sidebar.prototype.createItem = function(cells, title, showLabel, showTitle, widt
 	// Shows a tooltip with the rendered cell
 	if (!mxClient.IS_IOS)
 	{
-		mxEvent.addGestureListeners(elt, null, utils.bind(this, function(evt)
+		mxEvent.addGestureListeners(elt, null, this.bind(function(evt)
 		{
 			if (mxEvent.isMouseEvent(evt))
 			{
@@ -2628,7 +2628,7 @@ Sidebar.prototype.updateShapes = function(source, targets)
 				graph.getModel().setStyle(targetCell, cellStyle);
 				
 				// Removes all children of composite cells
-				if (utils.getValue(style, 'composite', '0') == '1')
+				if (getValue(style, 'composite', '0') == '1')
 				{
 					let childCount = targetCell.getChildCount();
 					
@@ -2675,7 +2675,7 @@ Sidebar.prototype.createDropHandler = function(cells, allowSplit, allowCellsInse
 {
 	allowCellsInserted = (allowCellsInserted != null) ? allowCellsInserted : true;
 	
-	return utils.bind(this, function(graph, evt, target, x, y, force)
+	return this.bind(function(graph, evt, target, x, y, force)
 	{
 		let elt = (force) ? null : ((mxEvent.isTouchEvent(evt) || mxEvent.isPenEvent(evt)) ?
 			document.elementFromPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt)) :
@@ -3143,8 +3143,8 @@ Sidebar.prototype.isDropStyleEnabled = function(cells, firstVertex)
 		
 		if (vstyle != null)
 		{
-			result = utils.getValue(vstyle, 'strokeColor', mxConstants.NONE) != mxConstants.NONE ||
-				utils.getValue(vstyle, 'fillColor', mxConstants.NONE) != mxConstants.NONE;
+			result = getValue(vstyle, 'strokeColor', mxConstants.NONE) != mxConstants.NONE ||
+				getValue(vstyle, 'fillColor', mxConstants.NONE) != mxConstants.NONE;
 		}
 	}
 	
@@ -3192,7 +3192,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 	
 	let dropStyleEnabled = this.isDropStyleEnabled(cells, firstVertex);
 	
-	let dragSource = utils.makeDraggable(elt, graph, utils.bind(this, function(graph, evt, target, x, y)
+	let dragSource = makeDraggable(elt, graph, this.bind(function(graph, evt, target, x, y)
 	{
 		if (this.updateThread != null)
 		{
@@ -3246,7 +3246,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 	function createArrow(img, tooltip)
 	{
 		let arrow = null;
-		arrow = utils.createImage(img.src);
+		arrow = createImage(img.src);
 		arrow.style.width = img.width + 'px';
 		arrow.style.height = img.height + 'px';
 
@@ -3255,7 +3255,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			arrow.setAttribute('title', tooltip);
 		}
 		
-		utils.setOpacity(arrow, (img == this.refreshTarget) ? 30 : 20);
+		setOpacity(arrow, (img == this.refreshTarget) ? 30 : 20);
 		arrow.style.position = 'absolute';
 		arrow.style.cursor = 'crosshair';
 		
@@ -3283,14 +3283,14 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 	{
 		if (arrow.parentNode != null)
 		{
-			if (utils.contains(bounds, x, y))
+			if (contains(bounds, x, y))
 			{
-				utils.setOpacity(arrow, 100);
+				setOpacity(arrow, 100);
 				activeArrow = arrow;
 			}
 			else
 			{
-				utils.setOpacity(arrow, (arrow == styleTarget) ? 30 : 20);
+				setOpacity(arrow, (arrow == styleTarget) ? 30 : 20);
 			}
 		}
 		
@@ -3433,7 +3433,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 	let sourceCellStyle = this.editorUi.editor.graph.getCellStyle(cells[0]);
 	
 	// Allows drop into cell only if target is a valid root
-	dragSource.getDropTarget = utils.bind(this, function(graph, x, y, evt)
+	dragSource.getDropTarget = this.bind(function(graph, x, y, evt)
 	{
 		// Alt means no targets at all
 		// LATER: Show preview where result will go
@@ -3498,11 +3498,11 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 		// Shift means disabled, delayed on cells with children, shows after this.dropTargetDelay, hides after 2500ms
 		if (dropStyleEnabled && (timeOnTarget < 2500) && state != null && !mxEvent.isShiftDown(evt) &&
 			// If shape is equal or target has no stroke, fill and gradient then use longer delay except for images
-			(((utils.getValue(state.style, 'shape') != utils.getValue(sourceCellStyle, 'shape') &&
-			(utils.getValue(state.style, 'strokeColor', mxConstants.NONE) != mxConstants.NONE ||
-			utils.getValue(state.style, 'fillColor', mxConstants.NONE) != mxConstants.NONE ||
-			utils.getValue(state.style, 'gradientColor', mxConstants.NONE) != mxConstants.NONE)) ||
-			utils.getValue(sourceCellStyle, 'shape') == 'image') ||
+			(((getValue(state.style, 'shape') != getValue(sourceCellStyle, 'shape') &&
+			(getValue(state.style, 'strokeColor', mxConstants.NONE) != mxConstants.NONE ||
+			getValue(state.style, 'fillColor', mxConstants.NONE) != mxConstants.NONE ||
+			getValue(state.style, 'gradientColor', mxConstants.NONE) != mxConstants.NONE)) ||
+			getValue(sourceCellStyle, 'shape') == 'image') ||
 			timeOnTarget > 1500 || state.cell.isEdge()) && (timeOnTarget > this.dropTargetDelay) &&
 			!this.isDropStyleTargetIgnored(state) && ((state.cell.isVertex() && firstVertex != null) ||
 			(state.cell.isEdge() && cells[0].isEdge())))
@@ -3525,7 +3525,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			checkArrow(x, y, tmp, styleTarget);
 		}
 		// Does not reset on ignored edges
-		else if (currentStyleTarget == null || !utils.contains(currentStyleTarget, x, y) ||
+		else if (currentStyleTarget == null || !contains(currentStyleTarget, x, y) ||
 			(timeOnTarget > 1500 && !mxEvent.isShiftDown(evt)))
 		{
 			currentStyleTarget = null;
@@ -3648,7 +3648,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 		// Drop arrows shown after this.dropTargetDelay, hidden after 5 secs, switches arrows after 500ms
 		if ((currentTargetState != null && timeOnTarget >= 5000) ||
 			(currentTargetState != state &&
-			(bbox == null || !utils.contains(bbox, x, y) ||
+			(bbox == null || !contains(bbox, x, y) ||
 			(timeOnTarget > 500 && activeArrow == null && validTarget))))
 		{
 			activeTarget = false;
@@ -3908,7 +3908,7 @@ Sidebar.prototype.addClickHandler = function(elt, ds, cells)
 		if (this.dragElement != null)
 		{
 			this.dragElement.style.display = 'none';
-			utils.setOpacity(elt, 50);
+			setOpacity(elt, 50);
 		}
 	};
 	
@@ -3919,7 +3919,7 @@ Sidebar.prototype.addClickHandler = function(elt, ds, cells)
 			Math.abs(first.y - mxEvent.getClientY(evt)) > tol))
 		{
 			this.dragElement.style.display = '';
-			utils.setOpacity(elt, 100);
+			setOpacity(elt, 100);
 		}
 		
 		oldMouseMove.apply(this, arguments);
@@ -3936,7 +3936,7 @@ Sidebar.prototype.addClickHandler = function(elt, ds, cells)
 			}
 	
 			oldMouseUp.apply(ds, arguments);
-			utils.setOpacity(elt, 100);
+			setOpacity(elt, 100);
 			first = null;
 			
 			// Blocks tooltips on this element after single click
@@ -3957,7 +3957,7 @@ Sidebar.prototype.createVertexTemplateEntry = function(style, width, height, val
 {
 	tags = (tags != null && tags.length > 0) ? tags : ((title != null) ? title.toLowerCase() : '');
 	
-	return this.addEntry(tags, utils.bind(this, function()
+	return this.addEntry(tags, this.bind(function()
  	{
  		return this.createVertexTemplate(style, width, height, value, title, showLabel, showTitle);
  	}));
@@ -3979,7 +3979,7 @@ Sidebar.prototype.createVertexTemplate = function(style, width, height, value, t
  */
 Sidebar.prototype.createVertexTemplateFromData = function(data, width, height, title, showLabel, showTitle, allowCellsInserted)
 {
-	let doc = utils.parseXml(Graph.decompress(data));
+	let doc = parseXml(Graph.decompress(data));
 	let codec = new mxCodec(doc);
 
 	let model = new Model();
@@ -4007,7 +4007,7 @@ Sidebar.prototype.createEdgeTemplateEntry = function(style, width, height, value
 {
 	tags = (tags != null && tags.length > 0) ? tags : title.toLowerCase();
 	
- 	return this.addEntry(tags, utils.bind(this, function()
+ 	return this.addEntry(tags, this.bind(function()
  	{
  		return this.createEdgeTemplate(style, width, height, value, title, showLabel, allowCellsInserted);
  	}));
@@ -4040,7 +4040,7 @@ Sidebar.prototype.createEdgeTemplateFromCells = function(cells, width, height, t
  */
 Sidebar.prototype.addPaletteFunctions = function(id, title, expanded, fns)
 {
-	this.addPalette(id, title, expanded, utils.bind(this, function(content)
+	this.addPalette(id, title, expanded, this.bind(function(content)
 	{
 		for (let i = 0; i < fns.length; i++)
 		{
@@ -4103,7 +4103,7 @@ Sidebar.prototype.addFoldingHandler = function(title, content, funct)
 	title.style.backgroundRepeat = 'no-repeat';
 	title.style.backgroundPosition = '0% 50%';
 
-	mxEvent.addListener(title, 'click', utils.bind(this, function(evt)
+	mxEvent.addListener(title, 'click', this.bind(function(evt)
 	{
 		if (content.style.display == 'none')
 		{
@@ -4153,7 +4153,7 @@ Sidebar.prototype.addFoldingHandler = function(title, content, funct)
 	
 	// Prevents focus
 	mxEvent.addListener(title, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown',
-		utils.bind(this, function(evt)
+		bind(this, function(evt)
 	{
 		evt.preventDefault();
 	}));
@@ -4191,7 +4191,7 @@ Sidebar.prototype.addImagePalette = function(id, title, prefix, postfix, items, 
 	
 	for (let i = 0; i < items.length; i++)
 	{
-		(utils.bind(this, function(item, title, tmpTags)
+		(this.bind(function(item, title, tmpTags)
 		{
 			if (tmpTags == null)
 			{
@@ -4250,9 +4250,9 @@ Sidebar.prototype.addStencilPalette = function(id, title, stencilFile, style, ig
 			}
 		}
 
-		StencilShapeRegistry.loadStencilSet(stencilFile, utils.bind(this, function(packageName, stencilName, displayName, w, h)
+		StencilShapeRegistry.loadStencilSet(stencilFile, this.bind(function(packageName, stencilName, displayName, w, h)
 		{
-			if (ignore == null || utils.indexOf(ignore, stencilName) < 0)
+			if (ignore == null || indexOf(ignore, stencilName) < 0)
 			{
 				let tmp = this.getTagsForStencil(packageName, stencilName);
 				let tmpTags = (tags != null) ? tags[stencilName] : null;
@@ -4272,7 +4272,7 @@ Sidebar.prototype.addStencilPalette = function(id, title, stencilFile, style, ig
 	}
 	else
 	{
-		this.addPalette(id, title, false, utils.bind(this, function(content)
+		this.addPalette(id, title, false, this.bind(function(content)
 	    {
 			if (style == null)
 			{
@@ -4292,9 +4292,9 @@ Sidebar.prototype.addStencilPalette = function(id, title, stencilFile, style, ig
 				}
 			}
 
-			StencilShapeRegistry.loadStencilSet(stencilFile, utils.bind(this, function(packageName, stencilName, displayName, w, h)
+			StencilShapeRegistry.loadStencilSet(stencilFile, this.bind(function(packageName, stencilName, displayName, w, h)
 			{
-				if (ignore == null || utils.indexOf(ignore, stencilName) < 0)
+				if (ignore == null || indexOf(ignore, stencilName) < 0)
 				{
 					content.appendChild(this.createVertexTemplate('shape=' + packageName + stencilName.toLowerCase() + style,
 						Math.round(w * scale), Math.round(h * scale), '', stencilName.replace(/_/g, ' '), true));

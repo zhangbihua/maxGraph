@@ -5,6 +5,8 @@
  * Type definitions from the typed-mxgraph project
  */
 
+import { getCurrentStyle } from '../Utils';
+
 /**
  * Maintains the size of a div element in Internet Explorer. This is a
  * workaround for the right and bottom style being ignored in IE.
@@ -36,7 +38,7 @@ class mxDivResizer {
       }
 
       this.div = div;
-      const style = utils.getCurrentStyle(div);
+      const style = getCurrentStyle(div);
 
       if (style != null) {
         this.resizeWidth = style.width == 'auto';

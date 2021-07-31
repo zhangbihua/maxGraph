@@ -1,6 +1,7 @@
 import mxgraph from '@mxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
+import { getXml, parseXml } from '@mxgraph/core/src/util/XmlUtils';
 
 export default {
   title: 'DnD_CopyPaste/Drop',
@@ -112,7 +113,7 @@ function handleDrop(graph, file, x, y) {
       if (file.type.substring(0, 9) === 'image/svg') {
         const comma = data.indexOf(',');
         const svgText = atob(data.substring(comma + 1));
-        const root = utils.parseXml(svgText);
+        const root = parseXml(svgText);
 
         // Parses SVG to find width and height
         if (root != null) {
@@ -144,7 +145,7 @@ function handleDrop(graph, file, x, y) {
             h = Math.max(1, Math.round(h));
 
             data = `data:image/svg+xml,${btoa(
-              utils.getXml(svgs[0], '\n')
+              getXml(svgs[0], '\n')
             )}`;
             graph.insertVertex({
               position: [x, y],

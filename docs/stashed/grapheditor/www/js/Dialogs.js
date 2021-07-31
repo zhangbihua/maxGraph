@@ -1,6 +1,19 @@
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
  */
+import { getValue } from '../../../../../packages/core/src/util/Utils';
+
+const { setOpacity } = require('../../../../../packages/core/src/util/Utils');
+const { createImage } = require('../../../../../packages/core/src/util/Utils');
+const { createXmlDocument } = require('../../../../../packages/core/src/util/XmlUtils');
+const { isNode } = require('../../../../../packages/core/src/util/DomUtils');
+const { popup } = require('../../../../../packages/core/src/util/gui/mxWindow');
+const { parseXml } = require('../../../../../packages/core/src/util/XmlUtils');
+const { getPrettyXml } = require('../../../../../packages/core/src/util/XmlUtils');
+const { write } = require('../../../../../packages/core/src/util/DomUtils');
+const { remove } = require('../../../../../packages/core/src/util/Utils');
+const { button } = require('../../../../../packages/core/src/util/dom/mxDomHelpers');
+const { br } = require('../../../../../packages/core/src/util/DomUtils');
 /**
  * Constructs a new open dialog.
  */
@@ -185,7 +198,7 @@ let ColorDialog = function(editorUi, color, apply, cancelFn)
 	};
 
 	div.appendChild(input);
-	utils.br(div);
+	br(div);
 	
 	// Adds recent colors
 	createRecentColorTable();
@@ -202,7 +215,7 @@ let ColorDialog = function(editorUi, color, apply, cancelFn)
 	buttons.style.textAlign = 'right';
 	buttons.style.whiteSpace = 'nowrap';
 	
-	let cancelBtn = utils.button(Resources.get('cancel'), function()
+	let cancelBtn = button(Resources.get('cancel'), function()
 	{
 		editorUi.hideDialog();
 		
@@ -218,7 +231,7 @@ let ColorDialog = function(editorUi, color, apply, cancelFn)
 		buttons.appendChild(cancelBtn);
 	}
 	
-	let applyBtn = utils.button(Resources.get('apply'), doApply);
+	let applyBtn = button(Resources.get('apply'), doApply);
 	applyBtn.className = 'geBtn gePrimaryBtn';
 	buttons.appendChild(applyBtn);
 	
@@ -283,7 +296,7 @@ ColorDialog.prototype.defaultColors = ['none', 'FFFFFF', 'E6E6E6', 'CCCCCC', 'B3
  */
 ColorDialog.prototype.createApplyFunction = function()
 {
-	return utils.bind(this, function(color)
+	return this.bind(function(color)
 	{
 		let graph = this.editorUi.editor.graph;
 		
@@ -313,7 +326,7 @@ ColorDialog.addRecentColor = function(color, max)
 {
 	if (color != null)
 	{
-		utils.remove(color, ColorDialog.recentColors);
+		remove(color, ColorDialog.recentColors);
 		ColorDialog.recentColors.splice(0, 0, color);
 		
 		if (ColorDialog.recentColors.length >= max)
@@ -339,7 +352,7 @@ let AboutDialog = function(editorUi)
 	let div = document.createElement('div');
 	div.setAttribute('align', 'center');
 	var h3 = document.createElement('h3');
-	utils.write(h3, Resources.get('about') + ' GraphEditor');
+	write(h3, Resources.get('about') + ' GraphEditor');
 	div.appendChild(h3);
 	let img = document.createElement('img');
 	img.style.border = '0px';
@@ -347,17 +360,17 @@ let AboutDialog = function(editorUi)
 	img.setAttribute('width', '151');
 	img.setAttribute('src', IMAGE_PATH + '/logo.png');
 	div.appendChild(img);
-	utils.br(div);
-	utils.write(div, 'Powered by mxGraph ' + mxClient.VERSION);
-	utils.br(div);
+	br(div);
+	write(div, 'Powered by mxGraph ' + mxClient.VERSION);
+	br(div);
 	let link = document.createElement('a');
 	link.setAttribute('href', 'http://www.jgraph.com/');
 	link.setAttribute('target', '_blank');
-	utils.write(link, 'www.jgraph.com');
+	write(link, 'www.jgraph.com');
 	div.appendChild(link);
-	utils.br(div);
-	utils.br(div);
-	let closeBtn = utils.button(Resources.get('close'), function()
+	br(div);
+	br(div);
+	let closeBtn = button(Resources.get('close'), function()
 	{
 		editorUi.hideDialog();
 	});
@@ -386,7 +399,7 @@ let TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 	td = document.createElement('td');
 	td.style.fontSize = '10pt';
 	td.style.width = '100px';
-	utils.write(td, title);
+	write(td, title);
 	
 	row.appendChild(td);
 	tbody.appendChild(row);
@@ -406,7 +419,7 @@ let TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 	nameInput.setAttribute('autocomplete', 'off');
 	nameInput.setAttribute('autocapitalize', 'off');
 	
-	utils.write(nameInput, url || '');
+	write(nameInput, url || '');
 	nameInput.style.resize = 'none';
 	nameInput.style.width = w + 'px';
 	nameInput.style.height = h + 'px';
@@ -432,7 +445,7 @@ let TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 	
 	if (helpLink != null)
 	{
-		let helpBtn = utils.button(Resources.get('help'), function()
+		let helpBtn = button(Resources.get('help'), function()
 		{
 			editorUi.editor.graph.openLink(helpLink);
 		});
@@ -447,7 +460,7 @@ let TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 		{
 			(function(label, fn)
 			{
-				let customBtn = utils.button(label, function(e)
+				let customBtn = button(label, function(e)
 				{
 					fn(e, nameInput);
 				});
@@ -458,7 +471,7 @@ let TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 		}
 	}
 	
-	let cancelBtn = utils.button(cancelTitle || Resources.get('cancel'), function()
+	let cancelBtn = button(cancelTitle || Resources.get('cancel'), function()
 	{
 		editorUi.hideDialog();
 		
@@ -481,7 +494,7 @@ let TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 	
 	if (fn != null)
 	{
-		let genericBtn = utils.button(applyTitle || Resources.get('apply'), function()
+		let genericBtn = button(applyTitle || Resources.get('apply'), function()
 		{
 			if (!noHide)
 			{
@@ -525,7 +538,7 @@ let EditDiagramDialog = function(editorUi)
 	textarea.style.height = '360px';
 	textarea.style.marginBottom = '16px';
 	
-	textarea.value = utils.getPrettyXml(editorUi.editor.getGraphXml());
+	textarea.value = getPrettyXml(editorUi.editor.getGraphXml());
 	div.appendChild(textarea);
 	
 	this.init = function()
@@ -570,7 +583,7 @@ let EditDiagramDialog = function(editorUi)
 		textarea.addEventListener('drop', handleDrop, false);
 	}
 	
-	let cancelBtn = utils.button(Resources.get('cancel'), function()
+	let cancelBtn = button(Resources.get('cancel'), function()
 	{
 		editorUi.hideDialog();
 	});
@@ -589,13 +602,13 @@ let EditDiagramDialog = function(editorUi)
 	{
 		let replaceOption = document.createElement('option');
 		replaceOption.setAttribute('value', 'replace');
-		utils.write(replaceOption, Resources.get('replaceExistingDrawing'));
+		write(replaceOption, Resources.get('replaceExistingDrawing'));
 		select.appendChild(replaceOption);
 	}
 
 	let newOption = document.createElement('option');
 	newOption.setAttribute('value', 'new');
-	utils.write(newOption, Resources.get('openInNewWindow'));
+	write(newOption, Resources.get('openInNewWindow'));
 	
 	if (EditDiagramDialog.showNewWindowOption)
 	{
@@ -606,16 +619,16 @@ let EditDiagramDialog = function(editorUi)
 	{
 		let importOption = document.createElement('option');
 		importOption.setAttribute('value', 'import');
-		utils.write(importOption, Resources.get('addToExistingDrawing'));
+		write(importOption, Resources.get('addToExistingDrawing'));
 		select.appendChild(importOption);
 	}
 
 	div.appendChild(select);
 
-	let okBtn = utils.button(Resources.get('ok'), function()
+	let okBtn = button(Resources.get('ok'), function()
 	{
 		// Removes all illegal control characters before parsing
-		let data = Graph.zapGremlins(utils.trim(textarea.value));
+		let data = Graph.zapGremlins(trim(textarea.value));
 		let error = null;
 		
 		if (select.value == 'new')
@@ -628,7 +641,7 @@ let EditDiagramDialog = function(editorUi)
 			editorUi.editor.graph.model.beginUpdate();
 			try
 			{
-				editorUi.editor.setGraphXml(utils.parseXml(data).documentElement);
+				editorUi.editor.setGraphXml(parseXml(data).documentElement);
 				// LATER: Why is hideDialog between begin-/endUpdate faster?
 				editorUi.hideDialog();
 			}
@@ -646,7 +659,7 @@ let EditDiagramDialog = function(editorUi)
 			editorUi.editor.graph.model.beginUpdate();
 			try
 			{
-				let doc = utils.parseXml(data);
+				let doc = parseXml(data);
 				let model = new Model();
 				let codec = new mxCodec(doc);
 				codec.decode(doc.documentElement, model);
@@ -669,7 +682,7 @@ let EditDiagramDialog = function(editorUi)
 			
 		if (error != null)
 		{
-			utils.alert(error.message);
+			alert(error.message);
 		}
 	});
 	okBtn.className = 'geBtn gePrimaryBtn';
@@ -711,7 +724,7 @@ let ExportDialog = function(editorUi)
 	td = document.createElement('td');
 	td.style.fontSize = '10pt';
 	td.style.width = '100px';
-	utils.write(td, Resources.get('filename') + ':');
+	write(td, Resources.get('filename') + ':');
 	
 	row.appendChild(td);
 	
@@ -729,7 +742,7 @@ let ExportDialog = function(editorUi)
 	
 	td = document.createElement('td');
 	td.style.fontSize = '10pt';
-	utils.write(td, Resources.get('format') + ':');
+	write(td, Resources.get('format') + ':');
 	
 	row.appendChild(td);
 	
@@ -738,7 +751,7 @@ let ExportDialog = function(editorUi)
 
 	let pngOption = document.createElement('option');
 	pngOption.setAttribute('value', 'png');
-	utils.write(pngOption, Resources.get('formatPng'));
+	write(pngOption, Resources.get('formatPng'));
 	imageFormatSelect.appendChild(pngOption);
 
 	let gifOption = document.createElement('option');
@@ -746,30 +759,30 @@ let ExportDialog = function(editorUi)
 	if (ExportDialog.showGifOption)
 	{
 		gifOption.setAttribute('value', 'gif');
-		utils.write(gifOption, Resources.get('formatGif'));
+		write(gifOption, Resources.get('formatGif'));
 		imageFormatSelect.appendChild(gifOption);
 	}
 	
 	let jpgOption = document.createElement('option');
 	jpgOption.setAttribute('value', 'jpg');
-	utils.write(jpgOption, Resources.get('formatJpg'));
+	write(jpgOption, Resources.get('formatJpg'));
 	imageFormatSelect.appendChild(jpgOption);
 
 	let pdfOption = document.createElement('option');
 	pdfOption.setAttribute('value', 'pdf');
-	utils.write(pdfOption, Resources.get('formatPdf'));
+	write(pdfOption, Resources.get('formatPdf'));
 	imageFormatSelect.appendChild(pdfOption);
 	
 	let svgOption = document.createElement('option');
 	svgOption.setAttribute('value', 'svg');
-	utils.write(svgOption, Resources.get('formatSvg'));
+	write(svgOption, Resources.get('formatSvg'));
 	imageFormatSelect.appendChild(svgOption);
 	
 	if (ExportDialog.showXmlOption)
 	{
 		let xmlOption = document.createElement('option');
 		xmlOption.setAttribute('value', 'xml');
-		utils.write(xmlOption, Resources.get('formatXml'));
+		write(xmlOption, Resources.get('formatXml'));
 		imageFormatSelect.appendChild(xmlOption);
 	}
 
@@ -783,7 +796,7 @@ let ExportDialog = function(editorUi)
 
 	td = document.createElement('td');
 	td.style.fontSize = '10pt';
-	utils.write(td, Resources.get('zoom') + ' (%):');
+	write(td, Resources.get('zoom') + ' (%):');
 	
 	row.appendChild(td);
 	
@@ -802,7 +815,7 @@ let ExportDialog = function(editorUi)
 
 	td = document.createElement('td');
 	td.style.fontSize = '10pt';
-	utils.write(td, Resources.get('width') + ':');
+	write(td, Resources.get('width') + ':');
 	
 	row.appendChild(td);
 	
@@ -820,7 +833,7 @@ let ExportDialog = function(editorUi)
 	
 	td = document.createElement('td');
 	td.style.fontSize = '10pt';
-	utils.write(td, Resources.get('height') + ':');
+	write(td, Resources.get('height') + ':');
 	
 	row.appendChild(td);
 	
@@ -838,7 +851,7 @@ let ExportDialog = function(editorUi)
 	
 	td = document.createElement('td');
 	td.style.fontSize = '10pt';
-	utils.write(td, Resources.get('dpi') + ':');
+	write(td, Resources.get('dpi') + ':');
 	
 	row.appendChild(td);
 	
@@ -847,27 +860,27 @@ let ExportDialog = function(editorUi)
 
 	var dpi100Option = document.createElement('option');
 	dpi100Option.setAttribute('value', '100');
-	utils.write(dpi100Option, '100dpi');
+	write(dpi100Option, '100dpi');
 	dpiSelect.appendChild(dpi100Option);
 
 	var dpi200Option = document.createElement('option');
 	dpi200Option.setAttribute('value', '200');
-	utils.write(dpi200Option, '200dpi');
+	write(dpi200Option, '200dpi');
 	dpiSelect.appendChild(dpi200Option);
 	
 	var dpi300Option = document.createElement('option');
 	dpi300Option.setAttribute('value', '300');
-	utils.write(dpi300Option, '300dpi');
+	write(dpi300Option, '300dpi');
 	dpiSelect.appendChild(dpi300Option);
 	
 	var dpi400Option = document.createElement('option');
 	dpi400Option.setAttribute('value', '400');
-	utils.write(dpi400Option, '400dpi');
+	write(dpi400Option, '400dpi');
 	dpiSelect.appendChild(dpi400Option);
 	
 	let dpiCustOption = document.createElement('option');
 	dpiCustOption.setAttribute('value', 'custom');
-	utils.write(dpiCustOption, Resources.get('custom'));
+	write(dpiCustOption, Resources.get('custom'));
 	dpiSelect.appendChild(dpiCustOption);
 
 	let customDpi = document.createElement('input');
@@ -929,7 +942,7 @@ let ExportDialog = function(editorUi)
 	
 	td = document.createElement('td');
 	td.style.fontSize = '10pt';
-	utils.write(td, Resources.get('background') + ':');
+	write(td, Resources.get('background') + ':');
 	
 	row.appendChild(td);
 	
@@ -939,7 +952,7 @@ let ExportDialog = function(editorUi)
 
 	td = document.createElement('td');
 	td.appendChild(transparentCheckbox);
-	utils.write(td, Resources.get('transparent'));
+	write(td, Resources.get('transparent'));
 	
 	row.appendChild(td);
 	
@@ -949,7 +962,7 @@ let ExportDialog = function(editorUi)
 
 	td = document.createElement('td');
 	td.style.fontSize = '10pt';
-	utils.write(td, Resources.get('borderWidth') + ':');
+	write(td, Resources.get('borderWidth') + ':');
 	
 	row.appendChild(td);
 	
@@ -1105,11 +1118,11 @@ let ExportDialog = function(editorUi)
 	td.style.paddingTop = '22px';
 	td.colSpan = 2;
 	
-	let saveBtn = utils.button(Resources.get('export'), utils.bind(this, function()
+	let saveBtn = button(Resources.get('export'), this.bind(function()
 	{
 		if (parseInt(zoomInput.value) <= 0)
 		{
-			utils.alert(Resources.get('drawingEmpty'));
+			alert(Resources.get('drawingEmpty'));
 		}
 		else
 		{
@@ -1135,7 +1148,7 @@ let ExportDialog = function(editorUi)
 	}));
 	saveBtn.className = 'geBtn gePrimaryBtn';
 	
-	let cancelBtn = utils.button(Resources.get('cancel'), function()
+	let cancelBtn = button(Resources.get('cancel'), function()
 	{
 		editorUi.hideDialog();
 	});
@@ -1185,18 +1198,18 @@ ExportDialog.exportFile = function(editorUi, name, format, bg, s, b, dpi)
 	
 	if (format == 'xml')
 	{
-    	ExportDialog.saveLocalFile(editorUi, utils.getXml(editorUi.editor.getGraphXml()), name, format);
+    	ExportDialog.saveLocalFile(editorUi, getXml(editorUi.editor.getGraphXml()), name, format);
 	}
     else if (format == 'svg')
 	{
-		ExportDialog.saveLocalFile(editorUi, utils.getXml(graph.getSvg(bg, s, b)), name, format);
+		ExportDialog.saveLocalFile(editorUi, getXml(graph.getSvg(bg, s, b)), name, format);
 	}
     else
     {
     	let bounds = graph.getGraphBounds();
     	
 		// New image export
-		let xmlDoc = utils.createXmlDocument();
+		let xmlDoc = createXmlDocument();
 		let root = xmlDoc.createElement('output');
 		xmlDoc.appendChild(root);
 		
@@ -1210,7 +1223,7 @@ ExportDialog.exportFile = function(editorUi, name, format, bg, s, b, dpi)
 	    imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
 	    
 		// Puts request data together
-		let param = 'xml=' + encodeURIComponent(utils.getXml(root));
+		let param = 'xml=' + encodeURIComponent(getXml(root));
 		let w = Math.ceil(bounds.width * s / graph.view.scale + 2 * b);
 		let h = Math.ceil(bounds.height * s / graph.view.scale + 2 * b);
 		
@@ -1227,7 +1240,7 @@ ExportDialog.exportFile = function(editorUi, name, format, bg, s, b, dpi)
 		}
 		else
 		{
-			utils.alert(Resources.get('drawingTooLarge'));
+			alert(Resources.get('drawingTooLarge'));
 		}
 	}
 };
@@ -1249,8 +1262,8 @@ ExportDialog.saveLocalFile = function(editorUi, data, filename, format)
 	}
 	else
 	{
-		utils.alert(Resources.get('drawingTooLarge'));
-		utils.popup(xml);
+		alert(Resources.get('drawingTooLarge'));
+		popup(xml);
 	}
 };
 
@@ -1265,9 +1278,9 @@ let EditDataDialog = function(ui, cell)
 	let value = cell.getValue();
 	
 	// Converts the value to an XML node
-	if (!utils.isNode(value))
+	if (!isNode(value))
 	{
-		let doc = utils.createXmlDocument();
+		let doc = createXmlDocument();
 		let obj = doc.createElement('object');
 		obj.setAttribute('label', value || '');
 		value = obj;
@@ -1277,7 +1290,7 @@ let EditDataDialog = function(ui, cell)
 	
 	try
 	{
-		let temp = utils.getValue(ui.editor.graph.getCurrentCellStyle(cell), 'metaData', null);
+		let temp = getValue(ui.editor.graph.getCurrentCellStyle(cell), 'metaData', null);
 		
 		if (temp != null)
 		{
@@ -1310,7 +1323,7 @@ let EditDataDialog = function(ui, cell)
 		wrapper.style.width = '100%';
 		
 		let removeAttr = document.createElement('a');
-		let img = utils.createImage(Dialog.prototype.closeImage);
+		let img = createImage(Dialog.prototype.closeImage);
 		img.style.height = '9px';
 		img.style.fontSize = '9px';
 		img.style.marginBottom = '5px';
@@ -1411,7 +1424,7 @@ let EditDataDialog = function(ui, cell)
 		text.style.width = '100%';
 		text.style.fontSize = '11px';
 		text.style.textAlign = 'center';
-		utils.write(text, id);
+		write(text, id);
 		
 		form.addField(Resources.get('id') + ':', text);
 	}
@@ -1445,7 +1458,7 @@ let EditDataDialog = function(ui, cell)
 	top.appendChild(newProp);
 	div.appendChild(top);
 	
-	let addBtn = utils.button(Resources.get('addProperty'), function()
+	let addBtn = button(Resources.get('addProperty'), function()
 	{
 		let name = nameInput.value;
 
@@ -1454,7 +1467,7 @@ let EditDataDialog = function(ui, cell)
 		{
 			try
 			{
-				let idx = utils.indexOf(names, name);
+				let idx = names.indexOf(name);
 				
 				if (idx >= 0 && texts[idx] != null)
 				{
@@ -1486,12 +1499,12 @@ let EditDataDialog = function(ui, cell)
 			}
 			catch (e)
 			{
-				utils.alert(e);
+				alert(e);
 			}
 		}
 		else
 		{
-			utils.alert(Resources.get('invalidName'));
+			alert(Resources.get('invalidName'));
 		}
 	});
 	
@@ -1517,14 +1530,14 @@ let EditDataDialog = function(ui, cell)
 	addBtn.className = 'geBtn';
 	newProp.appendChild(addBtn);
 
-	let cancelBtn = utils.button(Resources.get('cancel'), function()
+	let cancelBtn = button(Resources.get('cancel'), function()
 	{
 		ui.hideDialog.apply(ui, arguments);
 	});
 	
 	cancelBtn.className = 'geBtn';
 	
-	let applyBtn = utils.button(Resources.get('apply'), function()
+	let applyBtn = button(Resources.get('apply'), function()
 	{
 		try
 		{
@@ -1559,7 +1572,7 @@ let EditDataDialog = function(ui, cell)
 		}
 		catch (e)
 		{
-			utils.alert(e);
+			alert(e);
 		}
 	});
 	applyBtn.className = 'geBtn gePrimaryBtn';
@@ -1611,7 +1624,7 @@ let EditDataDialog = function(ui, cell)
 		});
 		
 		replace.appendChild(input);
-		utils.write(replace, Resources.get('placeholders'));
+		write(replace, Resources.get('placeholders'));
 		
 		if (EditDataDialog.placeholderHelpLink != null)
 		{
@@ -1623,7 +1636,7 @@ let EditDataDialog = function(ui, cell)
 			link.style.cursor = 'help';
 			
 			let icon = document.createElement('img');
-			utils.setOpacity(icon, 50);
+			setOpacity(icon, 50);
 			icon.style.height = '16px';
 			icon.style.width = '16px';
 			icon.setAttribute('border', '0');
@@ -1679,7 +1692,7 @@ EditDataDialog.placeholderHelpLink = null;
 let LinkDialog = function(editorUi, initialValue, btnLabel, fn)
 {
 	let div = document.createElement('div');
-	utils.write(div, Resources.get('editLink') + ':');
+	write(div, Resources.get('editLink') + ':');
 	
 	let inner = document.createElement('div');
 	inner.className = 'geTitle';
@@ -1751,7 +1764,7 @@ let LinkDialog = function(editorUi, initialValue, btnLabel, fn)
 		}
 	});
 
-	let cancelBtn = utils.button(Resources.get('cancel'), function()
+	let cancelBtn = button(Resources.get('cancel'), function()
 	{
 		editorUi.hideDialog();
 	});
@@ -1762,7 +1775,7 @@ let LinkDialog = function(editorUi, initialValue, btnLabel, fn)
 		btns.appendChild(cancelBtn);
 	}
 	
-	let mainBtn = utils.button(btnLabel, function()
+	let mainBtn = button(btnLabel, function()
 	{
 		editorUi.hideDialog();
 		fn(linkInput.value);
@@ -1816,7 +1829,7 @@ let OutlineWindow = function(editorUi, x, y, w, h)
 		}
 	};
 	
-	let resizeListener = utils.bind(this, function()
+	let resizeListener = this.bind(function()
 	{
 		let x = this.window.getX();
 		let y = this.window.getY();
@@ -1835,13 +1848,13 @@ let OutlineWindow = function(editorUi, x, y, w, h)
 		outline.destroy();
 	}
 
-	this.window.addListener(mxEvent.RESIZE, utils.bind(this, function()
+	this.window.addListener(mxEvent.RESIZE, this.bind(function()
    	{
 		outline.update(false);
 		outline.outline.sizeDidChange();
    	}));
 	
-	this.window.addListener(mxEvent.SHOW, utils.bind(this, function()
+	this.window.addListener(mxEvent.SHOW, this.bind(function()
 	{
 		this.window.fit();
 		outline.suspended = false;
@@ -1849,18 +1862,18 @@ let OutlineWindow = function(editorUi, x, y, w, h)
 		outline.update();
 	}));
 	
-	this.window.addListener(mxEvent.HIDE, utils.bind(this, function()
+	this.window.addListener(mxEvent.HIDE, this.bind(function()
 	{
 		outline.suspended = true;
 	}));
 	
-	this.window.addListener(mxEvent.NORMALIZE, utils.bind(this, function()
+	this.window.addListener(mxEvent.NORMALIZE, this.bind(function()
 	{
 		outline.suspended = false;
 		outline.update();
 	}));
 			
-	this.window.addListener(mxEvent.MINIMIZE, utils.bind(this, function()
+	this.window.addListener(mxEvent.MINIMIZE, this.bind(function()
 	{
 		outline.suspended = true;
 	}));
@@ -1875,7 +1888,7 @@ let OutlineWindow = function(editorUi, x, y, w, h)
 		g.background = (graph.background == null || graph.background == mxConstants.NONE) ? graph.defaultPageBackgroundColor : graph.background;
 		g.pageVisible = graph.pageVisible;
 
-		let current = utils.getCurrentStyle(graph.container);
+		let current = getCurrentStyle(graph.container);
 		div.style.backgroundColor = current.backgroundColor;
 		
 		return g;
@@ -1888,7 +1901,7 @@ let OutlineWindow = function(editorUi, x, y, w, h)
 		outline.outline.pageVisible = graph.pageVisible;
 		outline.outline.background = (graph.background == null || graph.background == mxConstants.NONE) ? graph.defaultPageBackgroundColor : graph.background;;
 		
-		let current = utils.getCurrentStyle(graph.container);
+		let current = getCurrentStyle(graph.container);
 		div.style.backgroundColor = current.backgroundColor;
 
 		if (graph.view.backgroundPageShape != null && outline.outline.view.backgroundPageShape != null)
@@ -2059,23 +2072,23 @@ let LayersWindow = function(editorUi, x, y, w, h)
 	ldiv.appendChild(removeLink);
 
 	let insertLink = link.cloneNode();
-	insertLink.setAttribute('title', utils.trim(Resources.get('moveSelectionTo', ['...'])));
+	insertLink.setAttribute('title', trim(Resources.get('moveSelectionTo', ['...'])));
 	insertLink.innerHTML = '<div class="geSprite geSprite-insert" style="display:inline-block;"></div>';
 	
 	mxEvent.addListener(insertLink, 'click', function(evt)
 	{
 		if (graph.isEnabled() && !graph.isSelectionEmpty())
 		{
-			let offset = utils.getOffset(insertLink);
+			let offset = getOffset(insertLink);
 			
-			editorUi.showPopupMenu(utils.bind(this, function(menu, parent)
+			editorUi.showPopupMenu(this.bind(function(menu, parent)
 			{
 				for (let i = layerCount - 1; i >= 0; i--)
 				{
-					(utils.bind(this, function(child)
+					(this.bind(function(child)
 					{
 						let item = menu.addItem(graph.convertValueToString(child) ||
-								Resources.get('background'), null, utils.bind(this, function()
+								Resources.get('background'), null, this.bind(function()
 						{
 							graph.moveCells(graph.getSelectionCells(), 0, 0, false, child);
 						}), parent);
@@ -2119,7 +2132,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 		if (graph.isEnabled() && layer != null)
 		{
 			let label = graph.convertValueToString(layer);
-			let dlg = new FilenameDialog(editorUi, label || Resources.get('background'), Resources.get('rename'), utils.bind(this, function(newValue)
+			let dlg = new FilenameDialog(editorUi, label || Resources.get('background'), Resources.get('rename'), this.bind(function(newValue)
 			{
 				if (newValue != null)
 				{
@@ -2269,7 +2282,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 
 			let style = graph.getCurrentCellStyle(child);
 
-			if (utils.getValue(style, 'locked', '0') == '1')
+			if (getValue(style, 'locked', '0') == '1')
 			{
 				btn.setAttribute('src', Dialog.prototype.lockedImage);
 			}
@@ -2292,7 +2305,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 					graph.getModel().beginUpdate();
 					try
 					{
-			    		value = (utils.getValue(style, 'locked', '0') == '1') ? null : '1';
+			    		value = (getValue(style, 'locked', '0') == '1') ? null : '1';
 			    		graph.setCellStyles('locked', value, [child]);
 					}
 					finally
@@ -2331,7 +2344,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 				mxEvent.consume(evt);
 			});
 
-			utils.write(left, label);
+			write(left, label);
 			ldiv.appendChild(left);
 			
 			if (graph.isEnabled())
@@ -2447,7 +2460,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 		// Cannot be moved or deleted
 		for (let i = layerCount - 1; i >= 0; i--)
 		{
-			(utils.bind(this, function(child)
+			(this.bind(function(child)
 			{
 				addLayer(i, graph.convertValueToString(child) ||
 					Resources.get('background'), child, child);
@@ -2494,7 +2507,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 		listDiv.scrollTop = listDiv.scrollHeight - listDiv.clientHeight;	
 	};
 
-	this.window.addListener(mxEvent.SHOW, utils.bind(this, function()
+	this.window.addListener(mxEvent.SHOW, this.bind(function()
 	{
 		this.window.fit();
 	}));
@@ -2516,7 +2529,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 		}
 	};
 	
-	let resizeListener = utils.bind(this, function()
+	let resizeListener = this.bind(function()
 	{
 		let x = this.window.getX();
 		let y = this.window.getY();

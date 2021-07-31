@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import utils, {getAlignmentAsPoint, getValue } from '../../util/Utils';
+import { getAlignmentAsPoint, getStringValue, getValue, setPrefixedStyle } from '../../util/Utils';
 import Rectangle from '../geometry/Rectangle';
 import InternalEvent from '../event/InternalEvent';
 import mxClient from '../../mxClient';
@@ -627,12 +627,12 @@ class CellEditor {
           }
         } else {
           let bounds = Rectangle.fromRectangle(state);
-          let hpos = utils.getValue(
+          let hpos = getValue(
             state.style,
             'labelPosition',
             ALIGN_CENTER
           );
-          let vpos = utils.getValue(
+          let vpos = getValue(
             state.style,
             'verticalLabelPosition',
             ALIGN_MIDDLE
@@ -757,12 +757,12 @@ class CellEditor {
         )}px`;
       }
 
-      utils.setPrefixedStyle(
+      setPrefixedStyle(
         this.textarea.style,
         'transformOrigin',
         '0px 0px'
       );
-      utils.setPrefixedStyle(
+      setPrefixedStyle(
         this.textarea.style,
         'transform',
         `scale(${scale},${scale})${
@@ -831,8 +831,8 @@ class CellEditor {
         state.style.fontFamily != null
           ? state.style.fontFamily
           : DEFAULT_FONTFAMILY;
-      const color = utils.getValue(state.style, 'fontColor', 'black');
-      const align = utils.getValue(state.style, 'align', ALIGN_LEFT);
+      const color = getValue(state.style, 'fontColor', 'black');
+      const align = getValue(state.style, 'align', ALIGN_LEFT);
       const bold = (state.style.fontStyle || 0) & FONT_BOLD;
       const italic = (state.style.fontStyle || 0) & FONT_ITALIC;
 
@@ -1176,7 +1176,7 @@ class CellEditor {
       // Applies the horizontal and vertical label positions
       if (state.cell.isVertex()) {
         const horizontal: string = <string>(
-          utils.getStringValue(
+          getStringValue(
             state.style,
             'labelPosition',
             ALIGN_CENTER

@@ -5,7 +5,14 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import utils from '../../util/Utils';
+import utils, {
+  contains,
+  getBoundingBox,
+  getNumber,
+  getPortConstraints,
+  getValue,
+  reversePortConstraints,
+} from '../../util/Utils';
 import Point from '../geometry/Point';
 import CellState from '../cell/datatypes/CellState';
 import {
@@ -123,7 +130,7 @@ class EdgeStyle {
     const { view } = state;
     const { graph } = view;
     const segment =
-      utils.getValue(state.style, 'segment', ENTITY_SEGMENT) * view.scale;
+      getValue(state.style, 'segment', ENTITY_SEGMENT) * view.scale;
 
     const pts = state.absolutePoints;
     const p0 = pts[0];
@@ -148,7 +155,7 @@ class EdgeStyle {
       source.x = p0.x;
       source.y = p0.y;
     } else if (source != null) {
-      const constraint = utils.getPortConstraints(
+      const constraint = getPortConstraints(
         source,
         state,
         true,
@@ -184,7 +191,7 @@ class EdgeStyle {
       target.x = pe.x;
       target.y = pe.y;
     } else if (target != null) {
-      const constraint = utils.getPortConstraints(
+      const constraint = getPortConstraints(
         target,
         state,
         false,
@@ -267,7 +274,7 @@ class EdgeStyle {
       if (pt != null) {
         pt = view.transformControlPoint(state, pt);
 
-        if (utils.contains(source, pt.x, pt.y)) {
+        if (contains(source, pt.x, pt.y)) {
           pt = null;
         }
       }
@@ -278,9 +285,9 @@ class EdgeStyle {
       let dy = 0;
 
       const seg =
-        utils.getValue(state.style, 'segment', graph.gridSize) *
+        getValue(state.style, 'segment', graph.gridSize) *
         view.scale;
-      const dir = utils.getValue(
+      const dir = getValue(
         state.style,
         'direction',
         DIRECTION_WEST
@@ -431,15 +438,15 @@ class EdgeStyle {
       }
 
       if (
-        !utils.contains(target, x, y1) &&
-        !utils.contains(source, x, y1)
+        !contains(target, x, y1) &&
+        !contains(source, x, y1)
       ) {
         result.push(new Point(x, y1));
       }
 
       if (
-        !utils.contains(target, x, y2) &&
-        !utils.contains(source, x, y2)
+        !contains(target, x, y2) &&
+        !contains(source, x, y2)
       ) {
         result.push(new Point(x, y2));
       }
@@ -447,8 +454,8 @@ class EdgeStyle {
       if (result.length === 1) {
         if (pt != null) {
           if (
-            !utils.contains(target, x, pt.y) &&
-            !utils.contains(source, x, pt.y)
+            !contains(target, x, pt.y) &&
+            !contains(source, x, pt.y)
           ) {
             result.push(new Point(x, pt.y));
           }
@@ -506,7 +513,7 @@ class EdgeStyle {
 
       const y = pt != null ? pt.y : Math.round(b + (t - b) / 2);
 
-      if (!utils.contains(target, x, y) && !utils.contains(source, x, y)) {
+      if (!contains(target, x, y) && !contains(source, x, y)) {
         result.push(new Point(x, y));
       }
 
@@ -516,15 +523,15 @@ class EdgeStyle {
         x = view.getRoutingCenterX(target);
       }
 
-      if (!utils.contains(target, x, y) && !utils.contains(source, x, y)) {
+      if (!contains(target, x, y) && !contains(source, x, y)) {
         result.push(new Point(x, y));
       }
 
       if (result.length === 1) {
         if (pt != null && result.length === 1) {
           if (
-            !utils.contains(target, pt.x, y) &&
-            !utils.contains(source, pt.x, y)
+            !contains(target, pt.x, y) &&
+            !contains(source, pt.x, y)
           ) {
             result.push(new Point(pt.x, y));
           }
@@ -808,7 +815,7 @@ class EdgeStyle {
       while (
         result.length > 1 &&
         result[1] != null &&
-        utils.contains(source, result[1].x, result[1].y)
+        contains(source, result[1].x, result[1].y)
       ) {
         result.splice(1, 1);
       }
@@ -819,7 +826,7 @@ class EdgeStyle {
       while (
         result.length > 1 &&
         result[result.length - 1] != null &&
-        utils.contains(
+        contains(
           target,
           result[result.length - 1].x,
           result[result.length - 1].y
@@ -952,22 +959,22 @@ class EdgeStyle {
   // mxEdgeStyle.SOURCE_MASK | mxEdgeStyle.TARGET_MASK,
 
   static getJettySize(state, isSource) {
-    let value = utils.getValue(
+    let value = getValue(
       state.style,
       isSource ? 'sourceJettySize' : 'targetJettySize',
-      utils.getValue(state.style, 'jettySize', EdgeStyle.orthBuffer)
+      getValue(state.style, 'jettySize', EdgeStyle.orthBuffer)
     );
 
     if (value === 'auto') {
       // Computes the automatic jetty size
-      const type = utils.getValue(
+      const type = getValue(
         state.style,
         isSource ? 'startArrow' : 'endArrow',
         NONE
       );
 
       if (type !== NONE) {
-        const size = utils.getNumber(
+        const size = getNumber(
           state.style,
           isSource ? 'startSize' : 'endSize',
           DEFAULT_MARKERSIZE
@@ -1143,18 +1150,18 @@ class EdgeStyle {
     let rotation = 0;
 
     if (source != null) {
-      portConstraint[0] = utils.getPortConstraints(
+      portConstraint[0] = getPortConstraints(
         source,
         state,
         true,
         DIRECTION_MASK_ALL
       );
-      rotation = utils.getValue(source.style, 'rotation', 0);
+      rotation = getValue(source.style, 'rotation', 0);
 
       // console.log('source rotation', rotation);
 
       if (rotation !== 0) {
-        const newRect = utils.getBoundingBox(
+        const newRect = getBoundingBox(
           new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
           rotation
         );
@@ -1166,18 +1173,18 @@ class EdgeStyle {
     }
 
     if (target != null) {
-      portConstraint[1] = utils.getPortConstraints(
+      portConstraint[1] = getPortConstraints(
         target,
         state,
         false,
         DIRECTION_MASK_ALL
       );
-      rotation = utils.getValue(target.style, 'rotation', 0);
+      rotation = getValue(target.style, 'rotation', 0);
 
       // console.log('target rotation', rotation);
 
       if (rotation !== 0) {
-        const newRect = utils.getBoundingBox(
+        const newRect = getBoundingBox(
           new Rectangle(targetX, targetY, targetWidth, targetHeight),
           rotation
         );
@@ -1318,8 +1325,8 @@ class EdgeStyle {
         ? DIRECTION_MASK_NORTH
         : DIRECTION_MASK_SOUTH;
 
-    horPref[1] = utils.reversePortConstraints(horPref[0]);
-    vertPref[1] = utils.reversePortConstraints(vertPref[0]);
+    horPref[1] = reversePortConstraints(horPref[0]);
+    vertPref[1] = reversePortConstraints(vertPref[0]);
 
     const preferredHorizDist =
       sourceLeftDist >= sourceRightDist ? sourceLeftDist : sourceRightDist;
@@ -1339,11 +1346,11 @@ class EdgeStyle {
       }
 
       if ((horPref[i] & portConstraint[i]) === 0) {
-        horPref[i] = utils.reversePortConstraints(horPref[i]);
+        horPref[i] = reversePortConstraints(horPref[i]);
       }
 
       if ((vertPref[i] & portConstraint[i]) === 0) {
-        vertPref[i] = utils.reversePortConstraints(vertPref[i]);
+        vertPref[i] = reversePortConstraints(vertPref[i]);
       }
 
       prefOrdering[i][0] = vertPref[i];

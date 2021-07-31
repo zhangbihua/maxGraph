@@ -1,6 +1,8 @@
 import mxgraph from '@mxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
+import { popup } from '@mxgraph/core/src/util/gui/mxWindow';
+import { getPrettyXml } from '@mxgraph/core/src/util/XmlUtils';
 
 export default {
   title: 'Connections/HelloPort',
@@ -107,7 +109,7 @@ const Template = ({ label, ...args }) => {
   const button = mxDomHelpers.button('View XML', function() {
     const encoder = new mxCodec();
     const node = encoder.encode(graph.getModel());
-    utils.popup(utils.getPrettyXml(node), true);
+    popup(getPrettyXml(node), true);
   });
 
   controller.appendChild(button);
