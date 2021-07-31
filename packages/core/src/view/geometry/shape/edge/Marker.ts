@@ -4,11 +4,15 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
+import { ArrowType } from 'packages/core/src/types';
+import AbstractCanvas2D from 'packages/core/src/util/canvas/AbstractCanvas2D';
 import {
   ARROW_CLASSIC,
   ARROW_CLASSIC_THIN,
   ARROW_DIAMOND,
 } from '../../../../util/Constants';
+import Point from '../../Point';
+import Shape from '../Shape';
 
 /**
  * A static class that implements all markers for VML and SVG using a registry.
@@ -21,15 +25,13 @@ class Marker {
    *
    * Mapping: the attribute name on the object is the marker type, the associated value is the function to paint the marker
    */
-  // static markers: object;
-  static markers = [];
+  static markers: Record<string, Function> = {};
 
   /**
    * Adds a factory method that updates a given endpoint and returns a
    * function to paint the marker onto the given canvas.
    */
-  // static addMarker(type: string, funct: Function): void;
-  static addMarker(type, funct) {
+  static addMarker(type: string, funct: Function) {
     Marker.markers[type] = funct;
   }
 
@@ -38,9 +40,20 @@ class Marker {
    *
    * Returns a function to paint the given marker.
    */
-  static createMarker(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) {
+  static createMarker(
+    canvas: AbstractCanvas2D,
+    shape: Shape,
+    type: ArrowType,
+    pe: Point,
+    unitX: number,
+    unitY: number,
+    size: number,
+    source: boolean,
+    sw: number,
+    filled: boolean
+  ) {
     const funct = Marker.markers[type];
-    return funct != null
+    return funct
       ? funct(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
       : null;
   }
@@ -50,10 +63,19 @@ class Marker {
  * Adds the classic and block marker factory method.
  */
 (() => {
-  function createArrow(widthFactor) {
-    widthFactor = widthFactor != null ? widthFactor : 2;
-
-    return (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) => {
+  function createArrow(widthFactor = 2) {
+    return (
+      canvas: AbstractCanvas2D,
+      shape: Shape,
+      type: ArrowType,
+      pe: Point,
+      unitX: number,
+      unitY: number,
+      size: number,
+      source: boolean,
+      sw: number,
+      filled: boolean
+    ) => {
       // The angle of the forward facing arrow sides against the x axis is
       // 26.565 degrees, 1/sin(26.565) = 2.236 / 2 = 1.118 ( / 2 allows for
       // only half the strokewidth is processed ).
@@ -103,10 +125,19 @@ class Marker {
   Marker.addMarker('block', createArrow(2));
   Marker.addMarker('blockThin', createArrow(3));
 
-  function createOpenArrow(widthFactor) {
-    widthFactor = widthFactor != null ? widthFactor : 2;
-
-    return (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) => {
+  function createOpenArrow(widthFactor = 2) {
+    return (
+      canvas: AbstractCanvas2D,
+      shape: Shape,
+      type: ArrowType,
+      pe: Point,
+      unitX: number,
+      unitY: number,
+      size: number,
+      source: boolean,
+      sw: number,
+      filled: boolean
+    ) => {
       // The angle of the forward facing arrow sides against the x axis is
       // 26.565 degrees, 1/sin(26.565) = 2.236 / 2 = 1.118 ( / 2 allows for
       // only half the strokewidth is processed ).
@@ -144,7 +175,18 @@ class Marker {
 
   Marker.addMarker(
     'oval',
-    (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) => {
+    (
+      canvas: AbstractCanvas2D,
+      shape: Shape,
+      type: ArrowType,
+      pe: Point,
+      unitX: number,
+      unitY: number,
+      size: number,
+      source: boolean,
+      sw: number,
+      filled: boolean
+    ) => {
       const a = size / 2;
 
       const pt = pe.clone();
@@ -163,7 +205,18 @@ class Marker {
     }
   );
 
-  function diamond(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) {
+  function diamond(
+    canvas: AbstractCanvas2D,
+    shape: Shape,
+    type: ArrowType,
+    pe: Point,
+    unitX: number,
+    unitY: number,
+    size: number,
+    source: boolean,
+    sw: number,
+    filled: boolean
+  ) {
     // The angle of the forward facing arrow sides against the x axis is
     // 45 degrees, 1/sin(45) = 1.4142 / 2 = 0.7071 ( / 2 allows for
     // only half the strokewidth is processed ). Or 0.9862 for thin diamond.

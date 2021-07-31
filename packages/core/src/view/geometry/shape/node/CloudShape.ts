@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import Actor from '../Actor';
-import mxAbstractCanvas2D from '../../../../util/canvas/mxAbstractCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
 
 /**
@@ -14,30 +14,18 @@ import Rectangle from '../../Rectangle';
  * This shape is registered under {@link mxConstants.SHAPE_CLOUD} in {@link cellRenderer}.
  */
 class CloudShape extends Actor {
-  constructor(
-    bounds: Rectangle,
-    fill: string,
-    stroke: string,
-    strokewidth: number = 1
-  ) {
+  constructor(bounds: Rectangle, fill: string, stroke: string, strokeWidth = 1) {
     super();
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth;
+    this.strokeWidth = strokeWidth;
   }
 
   /**
    * Draws the path for this shape.
    */
-  // redrawPath(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  redrawPath(
-    c: mxAbstractCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {
+  redrawPath(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     c.moveTo(0.25 * w, 0.25 * h);
     c.curveTo(0.05 * w, 0.25 * h, 0, 0.5 * h, 0.16 * w, 0.55 * h);
     c.curveTo(0, 0.66 * h, 0.18 * w, 0.9 * h, 0.31 * w, 0.8 * h);

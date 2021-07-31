@@ -5,10 +5,9 @@
  * Type definitions from the typed-mxgraph project
  */
 import Shape from '../Shape';
-import utils from '../../../../util/Utils';
-import mxAbstractCanvas2D from '../../../../util/canvas/mxAbstractCanvas2D';
-import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
+import { NONE } from 'packages/core/src/util/Constants';
 
 /**
  * Extends {@link Shape} to implement an cylinder shape. If a custom shape with one filled area and an overlay path is
@@ -17,52 +16,34 @@ import Rectangle from '../../Rectangle';
  * This shape is registered under {@link mxConstants.SHAPE_CYLINDER} in {@link cellRenderer}.
  */
 class CylinderShape extends Shape {
-  constructor(
-    bounds: Rectangle,
-    fill: string,
-    stroke: string,
-    strokewidth: number = 1
-  ) {
+  constructor(bounds: Rectangle, fill: string, stroke: string, strokeWidth = 1) {
     super();
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth;
+    this.strokeWidth = strokeWidth;
   }
 
   /**
    * Defines the maximum height of the top and bottom part of the cylinder shape.
    */
-  // maxHeight: number;
   maxHeight = 40;
 
   /**
    * Sets stroke tolerance to 0 for SVG.
    */
-  // svgStrokeTolerance: number;
   svgStrokeTolerance = 0;
 
   /**
    * Redirects to redrawPath for subclasses to work.
    */
-  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintVertexShape(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ): void {
+  paintVertexShape(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     c.translate(x, y);
     c.begin();
     this.redrawPath(c, x, y, w, h, false);
     c.fillAndStroke();
 
-    if (
-      !this.outline ||
-      this.style == null ||
-      utils.getValue(this.style, 'backgroundOutline', 0) == 0
-    ) {
+    if (!this.outline || !this.style || this.style.backgroundOutline === 0) {
       c.setShadow(false);
       c.begin();
       this.redrawPath(c, x, y, w, h, true);
@@ -73,17 +54,15 @@ class CylinderShape extends Shape {
   /**
    * Redirects to redrawPath for subclasses to work.
    */
-  // getCylinderSize(x: number, y: number, w: number, h: number): number;
-  getCylinderSize(x: number, y: number, w: number, h: number): number {
+  getCylinderSize(x: number, y: number, w: number, h: number) {
     return Math.min(this.maxHeight, Math.round(h / 5));
   }
 
   /**
    * Draws the path for this shape.
    */
-  // redrawPath(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number, isForeground: boolean): void;
   redrawPath(
-    c: mxSvgCanvas2D,
+    c: AbstractCanvas2D,
     x: number,
     y: number,
     w: number,
@@ -92,10 +71,7 @@ class CylinderShape extends Shape {
   ): void {
     const dy = this.getCylinderSize(x, y, w, h);
 
-    if (
-      (isForeground && this.fill != null) ||
-      (!isForeground && this.fill == null)
-    ) {
+    if ((isForeground && this.fill !== NONE) || (!isForeground && this.fill === NONE)) {
       c.moveTo(0, dy);
       c.curveTo(0, 2 * dy, w, 2 * dy, w, dy);
 

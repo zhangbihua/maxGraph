@@ -41,13 +41,8 @@ import Cell from '../view/cell/datatypes/Cell';
 import Model from '../view/model/Model';
 import graph from '../view/Graph';
 
-import type {
-  CellStateStyles,
-  Properties,
-  StyleProperties,
-  StyleValue,
-} from '../types';
-import CellArray from "../view/cell/datatypes/CellArray";
+import type { CellStateStyles, Properties, StyleProperties, StyleValue } from '../types';
+import CellArray from '../view/cell/datatypes/CellArray';
 
 /**
  * Class: mxUtils
@@ -164,11 +159,7 @@ export const parseCssNumber = (value: string) => {
  * mxUtils.setPrefixedStyle(node.style, 'transformOrigin', '0% 0%');
  * (end)
  */
-export const setPrefixedStyle = (
-  style: StyleProperties,
-  name: string,
-  value: string
-) => {
+export const setPrefixedStyle = (style: StyleProperties, name: string, value: string) => {
   let prefix = null;
 
   if (mxClient.IS_SF || mxClient.IS_GC) {
@@ -343,11 +334,7 @@ export const getValue = (array: any, key: string, defaultValue?: any) => {
   return value;
 };
 
-export const getStringValue = (
-  array: any,
-  key: string,
-  defaultValue: string
-) => {
+export const getStringValue = (array: any, key: string, defaultValue: string) => {
   let value = array != null ? array[key] : null;
   if (value == null) {
     value = defaultValue;
@@ -455,10 +442,7 @@ export const equalEntries = (a: Properties | null, b: Properties | null) => {
     for (var key in a) {
       count--;
 
-      if (
-        (!Number.isNaN(a[key]) || !Number.isNaN(b[key])) &&
-        a[key] !== b[key]
-      ) {
+      if ((!Number.isNaN(a[key]) || !Number.isNaN(b[key])) && a[key] !== b[key]) {
         return false;
       }
     }
@@ -588,10 +572,7 @@ export const arcToCurves = (
     }
 
     sds =
-      seif *
-      Math.sqrt(
-        (r1x * r2y - r1x * rydd - r2y * rxdd) / (r1x * rydd + r2y * rxdd)
-      );
+      seif * Math.sqrt((r1x * r2y - r1x * rydd - r2y * rxdd) / (r1x * rydd + r2y * rxdd));
   }
 
   const txd = (sds * r1 * ryd) / r2;
@@ -614,8 +595,7 @@ export const arcToCurves = (
   const sse = (dr * 2) / Math.PI;
   const seg = Math.ceil(sse < 0 ? -1 * sse : sse);
   const segr = dr / seg;
-  const t =
-    ((8 / 3) * Math.sin(segr / 4) * Math.sin(segr / 4)) / Math.sin(segr / 2);
+  const t = ((8 / 3) * Math.sin(segr / 4) * Math.sin(segr / 4)) / Math.sin(segr / 2);
   const cpsir1 = cpsi * r1;
   const cpsir2 = cpsi * r2;
   const spsir1 = spsi * r1;
@@ -679,10 +659,7 @@ export const getBoundingBox = (
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
 
-    cx =
-      cx != null
-        ? cx
-        : new Point(rect.x + rect.width / 2, rect.y + rect.height / 2);
+    cx = cx != null ? cx : new Point(rect.x + rect.width / 2, rect.y + rect.height / 2);
 
     let p1 = new Point(rect.x, rect.y);
     let p2 = new Point(rect.x + rect.width, rect.y);
@@ -708,12 +685,7 @@ export const getBoundingBox = (
  *
  * Rotates the given point by the given cos and sin.
  */
-export const getRotatedPoint = (
-  pt: Point,
-  cos: number,
-  sin: number,
-  c = new Point()
-) => {
+export const getRotatedPoint = (pt: Point, cos: number, sin: number, c = new Point()) => {
   const x = pt.x - c.x;
   const y = pt.y - c.y;
 
@@ -745,11 +717,7 @@ export const getPortConstraints = (
   const value = getValue(
     terminal.style,
     'portConstraint',
-    getValue(
-      edge.style,
-      source ? 'sourcePortConstraint' : 'targetPortConstraint',
-      null
-    )
+    getValue(edge.style, source ? 'sourcePortConstraint' : 'targetPortConstraint', null)
   );
 
   if (isNullish(value)) {
@@ -758,11 +726,7 @@ export const getPortConstraints = (
 
   const directions = value.toString();
   let returnValue = DIRECTION_MASK_NONE;
-  const constraintRotationEnabled = getValue(
-    terminal.style,
-    'portConstraintRotation',
-    0
-  );
+  const constraintRotationEnabled = getValue(terminal.style, 'portConstraintRotation', 0);
   let rotation = 0;
 
   if (constraintRotationEnabled == 1) {
@@ -876,11 +840,7 @@ export const reversePortConstraints = (constraint: number) => {
  * Finds the index of the nearest segment on the given cell state for
  * the specified coordinate pair.
  */
-export const findNearestSegment = (
-  state: CellState,
-  x: number,
-  y: number
-) => {
+export const findNearestSegment = (state: CellState, x: number, y: number) => {
   let index = -1;
 
   if (state.absolutePoints.length > 0) {
@@ -979,11 +939,7 @@ export const getDirectedBounds = (
  * Returns the intersection between the polygon defined by the array of
  * points and the line between center and point.
  */
-export const getPerimeterPoint = (
-  pts: Point[],
-  center: Point,
-  point: Point
-) => {
+export const getPerimeterPoint = (pts: Point[], center: Point, point: Point) => {
   let min = null;
 
   for (let i = 0; i < pts.length - 1; i += 1) {
@@ -1023,11 +979,7 @@ export const getPerimeterPoint = (
  * p1 - <mxPoint> that represents the first point of the segment.
  * p2 - <mxPoint> that represents the second point of the segment.
  */
-export const rectangleIntersectsSegment = (
-  bounds: Rectangle,
-  p1: Point,
-  p2: Point
-) => {
+export const rectangleIntersectsSegment = (bounds: Rectangle, p1: Point, p2: Point) => {
   const top = bounds.y;
   const left = bounds.x;
   const bottom = top + bounds.height;
@@ -1286,8 +1238,7 @@ export const getDocumentScrollOrigin = (doc: Document) => {
   const y =
     wnd != null && window.pageYOffset !== undefined
       ? window.pageYOffset
-      : (document.documentElement || document.body.parentNode || document.body)
-          .scrollTop;
+      : (document.documentElement || document.body.parentNode || document.body).scrollTop;
 
   return new Point(x, y);
 };
@@ -1378,7 +1329,7 @@ export const convertPoint = (container: HTMLElement, x: number, y: number) => {
  *
  * n - String representing the possibly numeric value.
  */
-export const isNumeric = (n: string) => {
+export const isNumeric = (n: any) => {
   return (
     !Number.isNaN(parseFloat(n)) &&
     isFinite(+n) &&
@@ -1792,12 +1743,7 @@ export const removeAllStylenames = (style: string) => {
  * key - Key of the style to be changed.
  * value - New value for the given key.
  */
-export const setCellStyles = (
-  model: Model,
-  cells: Cell[],
-  key: string,
-  value: any
-) => {
+export const setCellStyles = (model: Model, cells: Cell[], key: string, value: any) => {
   if (cells.length > 0) {
     model.beginUpdate();
     try {
@@ -1842,8 +1788,7 @@ export const setStyle = (style: string | null, key: string, value: any) => {
     if (isValue) {
       style = `${key}=${value}${next < 0 ? ';' : style.substring(next)}`;
     } else {
-      style =
-        next < 0 || next == style.length - 1 ? '' : style.substring(next + 1);
+      style = next < 0 || next == style.length - 1 ? '' : style.substring(next + 1);
     }
   } else {
     const index = style.indexOf(`;${key}=`);
@@ -1861,8 +1806,7 @@ export const setStyle = (style: string | null, key: string, value: any) => {
           next < 0 ? ';' : style.substring(next)
         }`;
       } else {
-        style =
-          style.substring(0, index) + (next < 0 ? ';' : style.substring(next));
+        style = style.substring(0, index) + (next < 0 ? ';' : style.substring(next));
       }
     }
   }
@@ -2128,9 +2072,7 @@ export const getScaleForPageCount = (
   }
 
   pageFormat =
-    pageFormat != null
-      ? pageFormat
-      : new Rectangle(...PAGE_FORMAT_A4_PORTRAIT);
+    pageFormat != null ? pageFormat : new Rectangle(...PAGE_FORMAT_A4_PORTRAIT);
 
   const availablePageWidth = pageFormat.width - border * 2;
   const availablePageHeight = pageFormat.height - border * 2;
@@ -2202,8 +2144,7 @@ export const getScaleForPageCount = (
       roundRowDownProportion = Math.floor(numRowPages - 1) / numRowPages;
     }
     if (roundColumnDownProportion == 1) {
-      roundColumnDownProportion =
-        Math.floor(numColumnPages - 1) / numColumnPages;
+      roundColumnDownProportion = Math.floor(numColumnPages - 1) / numColumnPages;
     }
 
     // Check which rounding down is smaller, but in the case of very small roundings
@@ -2279,13 +2220,11 @@ export const show = (
   const dy = Math.ceil(y0 - bounds.y);
 
   if (w == null) {
-    w =
-      Math.ceil(bounds.width + x0) + Math.ceil(Math.ceil(bounds.x) - bounds.x);
+    w = Math.ceil(bounds.width + x0) + Math.ceil(Math.ceil(bounds.x) - bounds.x);
   }
 
   if (h == null) {
-    h =
-      Math.ceil(bounds.height + y0) + Math.ceil(Math.ceil(bounds.y) - bounds.y);
+    h = Math.ceil(bounds.height + y0) + Math.ceil(Math.ceil(bounds.y) - bounds.y);
   }
 
   doc.writeln('<html><head>');
@@ -2322,7 +2261,7 @@ export const show = (
   div.style.position = 'absolute';
   div.style.left = `${dx}px`;
   div.style.top = `${dy}px`;
-    
+
   if (graph.container && graph.view.drawPane) {
     let node = graph.container.firstChild;
     let svg: SVGElement | null = null;

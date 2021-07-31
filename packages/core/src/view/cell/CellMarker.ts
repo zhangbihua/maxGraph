@@ -15,7 +15,7 @@ import {
 import CellHighlight from '../selection/CellHighlight';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
-import utils, { intersectsHotspot } from '../../util/Utils';
+import utils, { intersectsHotspot, isNumeric } from '../../util/Utils';
 import graph from '../Graph';
 import { ColorValue } from '../../types';
 import CellState from './datatypes/CellState';
@@ -274,9 +274,9 @@ class CellMarker extends EventSource {
    * Sets and marks the current valid state.
    */
   setCurrentState(
-    state: CellState,
+    state: CellState | null,
     me: InternalMouseEvent,
-    color: ColorValue = null
+    color: ColorValue | null = null
   ) {
     const isValid = state ? this.isValidState(state) : false;
     color = color ?? this.getMarkerColor(me.getEvent(), state, isValid);
@@ -305,8 +305,7 @@ class CellMarker extends EventSource {
    *
    * Marks the given cell using the given color, or <validColor> if no color is specified.
    */
-  markCell(cell: Cell,
-           color: ColorValue) {
+  markCell(cell: Cell, color: ColorValue) {
     const state = this.graph.getView().getState(cell);
 
     if (state) {
@@ -353,9 +352,7 @@ class CellMarker extends EventSource {
    * Returns the valid- or invalidColor depending on the value of isValid.
    * The given <mxCellState> is ignored by this implementation.
    */
-  getMarkerColor(evt: Event,
-                 state: CellState,
-                 isValid: boolean): string {
+  getMarkerColor(evt: Event, state: CellState | null, isValid: boolean) {
     return isValid ? this.validColor : this.invalidColor;
   }
 
@@ -379,7 +376,7 @@ class CellMarker extends EventSource {
    * Returns the <mxCell> for the given event and cell. This returns the
    * given cell.
    */
-  getCell(me: InternalMouseEvent): Cell {
+  getCell(me: InternalMouseEvent) {
     return me.getCell();
   }
 
@@ -400,17 +397,21 @@ class CellMarker extends EventSource {
    * This returns true if the <hotspot> is 0 or the coordinates are inside
    * the hotspot for the given cell state.
    */
-  intersects(state: CellState, me: InternalMouseEvent): boolean {
-    if (this.hotspotEnabled) {
+  intersects(state: CellState, me: InternalMouseEvent) {
+    const x = me.getGraphX();
+    const y = me.getGraphY();
+
+    if (this.hotspotEnabled && isNumeric(x) && isNumeric(y)) {
       return intersectsHotspot(
         state,
-        me.getGraphX(),
-        me.getGraphY(),
+        x as number,
+        y as number,
         this.hotspot,
         MIN_HOTSPOT_SIZE,
         MAX_HOTSPOT_SIZE
       );
     }
+
     return true;
   }
 
@@ -419,9 +420,7 @@ class CellMarker extends EventSource {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy(): void {
-    this.graph.getView().removeListener(this.resetHandler);
-    this.graph.getModel().removeListener(this.resetHandler);
+  destroy() {
     this.highlight.destroy();
   }
 }

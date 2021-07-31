@@ -8,7 +8,6 @@ import Rectangle from '../Rectangle';
 import {
   getBoundingBox,
   getDirectedBounds,
-  getValue,
   isNotNullish,
   mod,
 } from '../../../util/Utils';
@@ -24,30 +23,22 @@ import {
   SHADOW_OFFSET_Y,
 } from '../../../util/Constants';
 import Point from '../Point';
-import mxSvgCanvas2D from '../../../util/canvas/mxSvgCanvas2D';
+import AbstractCanvas2D from 'packages/core/src/util/canvas/AbstractCanvas2D';
+import SvgCanvas2D from '../../../util/canvas/SvgCanvas2D';
 import InternalEvent from '../../event/InternalEvent';
 import mxClient from '../../../mxClient';
 import CellState from '../../cell/datatypes/CellState';
 import StencilShape from './node/StencilShape';
 import CellOverlay from '../../cell/CellOverlay';
+import ImageBox from '../../image/ImageBox';
 
 import type {
+  ArrowType,
   CellStateStyles,
   ColorValue,
   DirectionValue,
   GradientMap,
 } from '../../../types';
-import Image from '../../image/Image';
-
-const toBool = (i: any) => {
-  if (i === 0) return false;
-  if (i === 1) return true;
-  if (i === '0') return false;
-  if (i === '1') return true;
-  if (String(i).toLowerCase() === 'true') return true;
-  if (String(i).toLowerCase() === 'false') return false;
-  return !!i;
-};
 
 /**
  * Base class for all shapes.
@@ -94,9 +85,14 @@ const toBool = (i: any) => {
  */
 class Shape {
   constructor(stencil: StencilShape | null = null) {
+    // `stencil` is not null when instantiated directly,
+    // but can be null when instantiated through a child class.
     if (stencil) {
       this.stencil = stencil;
     }
+
+    // moved from init()
+    this.node = this.create();
   }
 
   /**
@@ -109,13 +105,9 @@ class Shape {
    *
    * container - DOM node that will contain the shape.
    */
-  init(container: SVGElement | null = null) {
-    if (!this.node) {
-      this.node = this.create();
-
-      if (container) {
-        container.appendChild(this.node);
-      }
+  init(container: SVGElement) {
+    if (!this.node.parentNode) {
+      container.appendChild(this.node);
     }
   }
 
@@ -125,7 +117,7 @@ class Shape {
    * Sets the styles to their default values.
    */
   initStyles() {
-    this.strokewidth = 1;
+    this.strokeWidth = 1;
     this.rotation = 0;
     this.opacity = 100;
     this.fillOpacity = 100;
@@ -146,31 +138,31 @@ class Shape {
   opacity = 100;
   isDashed = false;
 
-  fill: string | null = null;
+  fill: ColorValue = NONE;
 
-  gradient: string | null = null;
+  gradient: ColorValue = NONE;
 
-  gradientDirection: string | null = null;
+  gradientDirection: DirectionValue = DIRECTION_EAST;
 
   fillOpacity = 100;
 
-  strokeOpacity: number | null = 100;
+  strokeOpacity = 100;
 
-  stroke: string | null = null;
+  stroke: ColorValue = NONE;
 
-  strokewidth: number | null = 1;
+  strokeWidth = 1;
 
-  spacing: number | null = null;
+  spacing = 0;
 
-  startSize: number | null = null;
+  startSize = 1;
 
-  endSize: number | null = null;
+  endSize = 1;
 
-  startArrow: string | null = null;
+  startArrow: ArrowType = NONE;
 
-  endArrow: string | null = null;
+  endArrow: ArrowType = NONE;
 
-  direction: DirectionValue | null = null;
+  direction: DirectionValue = DIRECTION_EAST;
 
   flipH = false;
 
@@ -184,7 +176,7 @@ class Shape {
 
   cursor = '';
 
-  verticalTextRotation: number | null = null;
+  verticalTextRotation = 0;
 
   oldGradients: GradientMap = {};
 
@@ -238,7 +230,7 @@ class Shape {
    *
    * Holds the outermost DOM node that represents this shape.
    */
-  node: SVGGElement | null = null;
+  node: SVGGElement;
 
   /**
    * Variable: state
@@ -332,15 +324,15 @@ class Shape {
    */
   useSvgBoundingBox = true;
 
-  image: Image | null = null;
+  image: ImageBox | null = null;
 
-  indicatorColor: ColorValue = null;
+  indicatorColor: ColorValue = NONE;
 
-  indicatorStrokeColor: ColorValue = null;
+  indicatorStrokeColor: ColorValue = NONE;
 
-  indicatorGradientColor: ColorValue = null;
+  indicatorGradientColor: ColorValue = NONE;
 
-  indicatorDirection: DirectionValue = null;
+  indicatorDirection: DirectionValue = DIRECTION_EAST;
 
   /**
    * Function: isHtmlAllowed
@@ -357,11 +349,11 @@ class Shape {
    *
    * Returns 0, or 0.5 if <strokewidth> % 2 == 1.
    */
-  getSvgScreenOffset() {
+  getSvgScreenOffset(): number {
     const sw =
-      this.stencil && this.stencil.strokewidth !== 'inherit'
-        ? Number(this.stencil.strokewidth)
-        : this.strokewidth ?? 0;
+      this.stencil && this.stencil.strokeWidthValue !== 'inherit'
+        ? Number(this.stencil.strokeWidthValue)
+        : this.strokeWidth ?? 0;
 
     return mod(Math.max(1, Math.round(sw * this.scale)), 2) === 1 ? 0.5 : 0;
   }
@@ -398,8 +390,6 @@ class Shape {
    * Creates and returns the SVG node(s) to represent this shape.
    */
   redraw() {
-    if (!this.node) return;
-
     this.updateBoundsFromPoints();
 
     if (this.visible && this.checkBounds()) {
@@ -419,8 +409,6 @@ class Shape {
    * Removes all child nodes and resets all CSS.
    */
   clear() {
-    if (!this.node) return;
-
     while (this.node.lastChild) {
       this.node.removeChild(this.node.lastChild);
     }
@@ -435,18 +423,11 @@ class Shape {
     const pts = this.points;
 
     if (pts.length > 0 && pts[0]) {
-      this.bounds = new Rectangle(
-        Math.round(pts[0].x),
-        Math.round(pts[0].y),
-        1,
-        1
-      );
+      this.bounds = new Rectangle(Math.round(pts[0].x), Math.round(pts[0].y), 1, 1);
 
       for (const pt of pts) {
         if (pt) {
-          this.bounds.add(
-            new Rectangle(Math.round(pt.x), Math.round(pt.y), 1, 1)
-          );
+          this.bounds.add(new Rectangle(Math.round(pt.x), Math.round(pt.y), 1, 1));
         }
       }
     }
@@ -460,7 +441,7 @@ class Shape {
    * change the rectangle in-place. This implementation returns the given rect.
    */
   getLabelBounds(rect: Rectangle) {
-    const d = getValue(this.style, 'direction', DIRECTION_EAST);
+    const d = this.style?.direction ?? DIRECTION_EAST;
     let bounds = rect.clone();
 
     // Normalizes argument for getLabelMargins hook
@@ -480,15 +461,11 @@ class Shape {
     if (labelMargins) {
       labelMargins = labelMargins.clone();
 
-      let flipH = toBool(getValue(this.style, 'flipH', false));
-      let flipV = toBool(getValue(this.style, 'flipV', false));
+      let flipH = this.style?.flipH ?? false;
+      let flipV = this.style?.flipV ?? false;
 
       // Handles special case for vertical labels
-      if (
-        this.state &&
-        this.state.text &&
-        this.state.text.isPaintBoundsInverted()
-      ) {
+      if (this.state && this.state.text && this.state.text.isPaintBoundsInverted()) {
         const tmp = labelMargins.x;
         labelMargins.x = labelMargins.height;
         labelMargins.height = labelMargins.width;
@@ -540,8 +517,6 @@ class Shape {
    * Updates the SVG or VML shape.
    */
   redrawShape() {
-    if (!this.node) return;
-
     const canvas = this.createCanvas();
 
     if (canvas) {
@@ -552,7 +527,7 @@ class Shape {
       this.paint(canvas);
       this.afterPaint(canvas);
 
-      if (this.node !== canvas.root) {
+      if (this.node !== canvas.root && canvas.root) {
         // Forces parsing in IE8 standards mode - slow! avoid
         this.node.insertAdjacentHTML('beforeend', canvas.root.outerHTML);
       }
@@ -570,7 +545,7 @@ class Shape {
     const canvas = this.createSvgCanvas();
 
     if (canvas && this.outline) {
-      canvas.setStrokeWidth(this.strokewidth);
+      canvas.setStrokeWidth(this.strokeWidth);
       canvas.setStrokeColor(this.stroke);
 
       if (this.isDashed) {
@@ -596,7 +571,7 @@ class Shape {
   createSvgCanvas() {
     if (!this.node) return null;
 
-    const canvas = new mxSvgCanvas2D(this.node, false);
+    const canvas = new SvgCanvas2D(this.node, false);
     canvas.strokeTolerance = this.pointerEvents ? this.svgStrokeTolerance : 0;
     canvas.pointerEventsValue = this.svgPointerEvents;
 
@@ -626,9 +601,9 @@ class Shape {
    * Destroys the given canvas which was used for drawing. This implementation
    * increments the reference counts on all shared gradients used in the canvas.
    */
-  destroyCanvas(canvas: mxSvgCanvas2D) {
+  destroyCanvas(canvas: AbstractCanvas2D) {
     // Manages reference counts
-    if (canvas instanceof mxSvgCanvas2D) {
+    if (canvas instanceof SvgCanvas2D) {
       // Increments ref counts
       for (const key in canvas.gradients) {
         const gradient = canvas.gradients[key];
@@ -648,19 +623,19 @@ class Shape {
    *
    * Invoked before paint is called.
    */
-  beforePaint(c: mxSvgCanvas2D) {}
+  beforePaint(c: AbstractCanvas2D) {}
 
   /**
    * Function: afterPaint
    *
    * Invokes after paint was called.
    */
-  afterPaint(c: mxSvgCanvas2D) {}
+  afterPaint(c: AbstractCanvas2D) {}
 
   /**
    * Generic rendering code.
    */
-  paint(c: mxSvgCanvas2D) {
+  paint(c: AbstractCanvas2D) {
     let strokeDrawn = false;
 
     if (c && this.outline) {
@@ -705,20 +680,13 @@ class Shape {
       let bg = null;
 
       if (
-        (!this.stencil &&
-          this.points.length === 0 &&
-          this.shapePointerEvents) ||
+        (!this.stencil && this.points.length === 0 && this.shapePointerEvents) ||
         (this.stencil && this.stencilPointerEvents)
       ) {
         const bb = this.createBoundingBox();
 
         if (bb && this.node) {
-          bg = this.createTransparentSvgRectangle(
-            bb.x,
-            bb.y,
-            bb.width,
-            bb.height
-          );
+          bg = this.createTransparentSvgRectangle(bb.x, bb.y, bb.width, bb.height);
           this.node.appendChild(bg);
         }
       }
@@ -727,7 +695,7 @@ class Shape {
         this.stencil.drawShape(c, this, x, y, w, h);
       } else {
         // Stencils have separate strokewidth
-        c.setStrokeWidth(this.strokewidth);
+        c.setStrokeWidth(this.strokeWidth);
 
         if (this.points.length > 0) {
           // Paints edge shape
@@ -763,49 +731,30 @@ class Shape {
   /**
    * Sets the state of the canvas for drawing the shape.
    */
-  // configureCanvas(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  configureCanvas(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {
-    let dash = null;
+  configureCanvas(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
+    let dash = NONE;
 
-    if (this.style != null) {
+    if (this.style) {
       dash = this.style.dashPattern;
     }
 
-    c.setAlpha(<number>this.opacity / 100);
-    c.setFillAlpha(<number>this.fillOpacity / 100);
-    c.setStrokeAlpha(<number>this.strokeOpacity / 100);
+    c.setAlpha(this.opacity / 100);
+    c.setFillAlpha(this.fillOpacity / 100);
+    c.setStrokeAlpha(this.strokeOpacity / 100);
 
     // Sets alpha, colors and gradients
-    if (this.isShadow != null) {
+    if (this.isShadow) {
       c.setShadow(this.isShadow);
     }
 
     // Dash pattern
-    if (this.isDashed != null) {
-      c.setDashed(
-        this.isDashed,
-        this.style != null
-          ? toBool(getValue(this.style, 'fixDash', false))
-          : false
-      );
+    if (this.isDashed) {
+      c.setDashed(this.isDashed, this.style?.fixDash ?? false);
     }
 
-    if (dash != null) {
-      c.setDashPattern(dash);
-    }
+    c.setDashPattern(dash);
 
-    if (
-      this.fill != null &&
-      this.fill !== NONE &&
-      this.gradient &&
-      this.gradient !== NONE
-    ) {
+    if (this.fill !== NONE && this.gradient !== NONE) {
       const b = this.getGradientBounds(c, x, y, w, h);
       c.setGradient(
         this.fill,
@@ -828,14 +777,7 @@ class Shape {
    *
    * Returns the bounding box for the gradient box for this shape.
    */
-  // getGradientBounds(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): mxRectangle;
-  getGradientBounds(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {
+  getGradientBounds(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     return new Rectangle(x, y, w, h);
   }
 
@@ -844,25 +786,12 @@ class Shape {
    *
    * Sets the scale and rotation on the given canvas.
    */
-  // updateTransform(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  updateTransform(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {
+  updateTransform(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     // NOTE: Currently, scale is implemented in state and canvas. This will
     // move to canvas in a later version, so that the states are unscaled
     // and untranslated and do not need an update after zooming or panning.
     c.scale(this.scale);
-    c.rotate(
-      this.getShapeRotation(),
-      this.flipH,
-      this.flipV,
-      x + w / 2,
-      y + h / 2
-    );
+    c.rotate(this.getShapeRotation(), this.flipH, this.flipV, x + w / 2, y + h / 2);
   }
 
   /**
@@ -870,21 +799,10 @@ class Shape {
    *
    * Paints the vertex shape.
    */
-  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintVertexShape(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {
+  paintVertexShape(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     this.paintBackground(c, x, y, w, h);
 
-    if (
-      !this.outline ||
-      this.style == null ||
-      toBool(getValue(this.style, 'backgroundOutline', 0) === false)
-    ) {
+    if (!this.outline || !this.style || this.style.backgroundOutline === 0) {
       c.setShadow(false);
       this.paintForeground(c, x, y, w, h);
     }
@@ -895,55 +813,32 @@ class Shape {
    *
    * Hook for subclassers. This implementation is empty.
    */
-  // paintBackground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintBackground(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {}
+  paintBackground(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {}
 
   /**
    * Hook for subclassers. This implementation is empty.
    */
-  // paintForeground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintForeground(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {}
+  paintForeground(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {}
 
   /**
    * Function: paintEdgeShape
    *
    * Hook for subclassers. This implementation is empty.
    */
-  // paintEdgeShape(c: mxAbstractCanvas2D, pts: mxPoint[]): void;
-  paintEdgeShape(c: mxSvgCanvas2D, pts: Point[]): void {}
+  paintEdgeShape(c: AbstractCanvas2D, pts: Point[]) {}
 
   /**
    * Function: getArcSize
    *
    * Returns the arc size for the given dimension.
    */
-  // getArcSize(w: number, h: number): number;
-  getArcSize(w: number, h: number): number {
+  getArcSize(w: number, h: number) {
     let r = 0;
 
-    if (toBool(getValue(this.style, 'absoluteArcSize', 0))) {
-      r = Math.min(
-        w / 2,
-        Math.min(h / 2, getValue(this.style, 'arcSize', LINE_ARCSIZE) / 2)
-      );
+    if (this.style?.absoluteArcSize === 0) {
+      r = Math.min(w / 2, Math.min(h / 2, (this.style?.arcSize ?? LINE_ARCSIZE) / 2));
     } else {
-      const f = parseFloat(
-        String(
-          getValue(this.style, 'arcSize', RECTANGLE_ROUNDING_FACTOR * 100) / 100
-        )
-      );
+      const f = (this.style?.arcSize ?? RECTANGLE_ROUNDING_FACTOR * 100) / 100;
       r = Math.min(w * f, h * f);
     }
     return r;
@@ -954,16 +849,15 @@ class Shape {
    *
    * Paints the glass gradient effect.
    */
-  // paintGlassEffect(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number, arc: number): void;
   paintGlassEffect(
-    c: mxSvgCanvas2D,
+    c: AbstractCanvas2D,
     x: number,
     y: number,
     w: number,
     h: number,
     arc: number
   ) {
-    const sw = Math.ceil((this.strokewidth ?? 0) / 2);
+    const sw = Math.ceil((this.strokeWidth ?? 0) / 2);
     const size = 0.4;
 
     c.setGradient('#ffffff', '#ffffff', x, y, w, h * 0.6, 'south', 0.9, 0.1);
@@ -994,7 +888,7 @@ class Shape {
    * Paints the given points with rounded corners.
    */
   addPoints(
-    c: mxSvgCanvas2D,
+    c: AbstractCanvas2D,
     pts: Point[],
     rounded: boolean = false,
     arcSize: number,
@@ -1009,10 +903,7 @@ class Shape {
       if (close && rounded) {
         pts = pts.slice();
         const p0 = pts[0];
-        const wp = new Point(
-          pe.x + (p0.x - pe.x) / 2,
-          pe.y + (p0.y - pe.y) / 2
-        );
+        const wp = new Point(pe.x + (p0.x - pe.x) / 2, pe.y + (p0.y - pe.y) / 2);
         pts.splice(0, 0, wp);
       }
 
@@ -1096,15 +987,15 @@ class Shape {
 
     this.spacing = 0;
 
-    this.fill = null;
-    this.gradient = null;
-    this.gradientDirection = null;
-    this.stroke = null;
-    this.startSize = null;
-    this.endSize = null;
-    this.startArrow = null;
-    this.endArrow = null;
-    this.direction = null;
+    this.fill = NONE;
+    this.gradient = NONE;
+    this.gradientDirection = DIRECTION_EAST;
+    this.stroke = NONE;
+    this.startSize = 1;
+    this.endSize = 1;
+    this.startArrow = NONE;
+    this.endArrow = NONE;
+    this.direction = DIRECTION_EAST;
 
     this.isShadow = false;
     this.isDashed = false;
@@ -1151,81 +1042,35 @@ class Shape {
     this.state = state;
     this.style = state.style;
 
-    const ifNotNullElse = (value: any, defaultValue: any) => {
-      if (isNotNullish(value)) {
-        return value;
-      }
-
-      return defaultValue;
-    };
-
     if (this.style) {
-      this.fill = ifNotNullElse(this.style.fillColor, this.fill);
-      this.gradient = ifNotNullElse(this.style.gradientColor, this.gradient);
-      this.gradientDirection = ifNotNullElse(
-        this.style.gradientDirection,
-        this.gradientDirection
-      );
-      this.opacity = ifNotNullElse(this.style.opacity, this.opacity);
-      this.fillOpacity = ifNotNullElse(
-        this.style.fillOpacity,
-        this.fillOpacity
-      );
-      this.strokeOpacity = ifNotNullElse(
-        this.style.strokeOpacity,
-        this.strokeOpacity
-      );
-      this.stroke = ifNotNullElse(this.style.strokeColor, this.stroke);
-      this.strokewidth = ifNotNullElse(
-        this.style.strokeWidth,
-        this.strokewidth
-      );
-      this.spacing = ifNotNullElse(this.style.spacing, this.spacing);
-      this.startSize = ifNotNullElse(this.style.startSize, this.startSize);
-      this.endSize = ifNotNullElse(this.style.endSize, this.endSize);
-      this.startArrow = ifNotNullElse(this.style.startArrow, this.startArrow);
-      this.endArrow = ifNotNullElse(this.style.endArrow, this.endArrow);
-      this.rotation = ifNotNullElse(this.style.rotation, this.rotation);
-      this.direction = ifNotNullElse(this.style.direction, this.direction);
+      this.fill = this.style.fillColor;
+      this.gradient = this.style.gradientColor;
+      this.gradientDirection = this.style.gradientDirection;
+      this.opacity = this.style.opacity;
+      this.fillOpacity = this.style.fillOpacity;
+      this.strokeOpacity = this.style.strokeOpacity;
+      this.stroke = this.style.strokeColor;
+      this.strokeWidth = this.style.strokeWidth;
+      this.spacing = this.style.spacing;
+      this.startSize = this.style.startSize;
+      this.endSize = this.style.endSize;
+      this.startArrow = this.style.startArrow;
+      this.endArrow = this.style.endArrow;
+      this.rotation = this.style.rotation;
+      this.direction = this.style.direction;
+      this.flipH = this.style.flipH;
+      this.flipV = this.style.flipV;
 
-      this.flipH = toBool(ifNotNullElse(this.style.flipH, 0));
-      this.flipV = toBool(ifNotNullElse(this.style.flipV, 0));
-
-      // Legacy support for stencilFlipH/V
-      if (this.stencil) {
-        this.flipH = toBool(
-          ifNotNullElse(this.style.stencilFlipH, this.flipH || 0)
-        );
-        this.flipV = toBool(
-          ifNotNullElse(this.style.stencilFlipV, this.flipV || 0)
-        );
-      }
-
-      if (
-        this.direction === DIRECTION_NORTH ||
-        this.direction === DIRECTION_SOUTH
-      ) {
+      if (this.direction === DIRECTION_NORTH || this.direction === DIRECTION_SOUTH) {
         const tmp = this.flipH;
         this.flipH = this.flipV;
         this.flipV = tmp;
       }
 
-      this.isShadow = toBool(ifNotNullElse(this.style.shadow, this.isShadow));
-      this.isDashed = toBool(ifNotNullElse(this.style.dashed, this.isDashed));
-      this.isRounded = toBool(
-        ifNotNullElse(this.style.rounded, this.isRounded)
-      );
-      this.glass = toBool(ifNotNullElse(this.style.glass, this.glass));
-
-      if (this.fill === NONE) {
-        this.fill = null;
-      }
-      if (this.gradient === NONE) {
-        this.gradient = null;
-      }
-      if (this.stroke === NONE) {
-        this.stroke = null;
-      }
+      this.isShadow = this.style.shadow;
+      this.isDashed = this.style.dashed;
+      this.isRounded = this.style.rounded;
+      this.glass = this.style.glass;
     }
   }
 
@@ -1240,10 +1085,7 @@ class Shape {
    */
   setCursor(cursor: string) {
     this.cursor = cursor;
-
-    if (this.node) {
-      this.node.style.cursor = cursor;
-    }
+    this.node.style.cursor = cursor;
   }
 
   /**
@@ -1258,7 +1100,7 @@ class Shape {
   /**
    * Hook for subclassers.
    */
-  isRoundable(c: mxSvgCanvas2D, x: number, y: number, w: number, h: number) {
+  isRoundable(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     return false;
   }
 
@@ -1271,7 +1113,7 @@ class Shape {
   updateBoundingBox() {
     // Tries to get bounding box from SVG subsystem
     // LATER: Use getBoundingClientRect for fallback in VML
-    if (this.useSvgBoundingBox && this.node && this.node.ownerSVGElement) {
+    if (this.useSvgBoundingBox && this.node.ownerSVGElement) {
       try {
         const b = this.node.getBBox();
 
@@ -1279,7 +1121,7 @@ class Shape {
           this.boundingBox = new Rectangle(b.x, b.y, b.width, b.height);
 
           // Adds strokeWidth
-          this.boundingBox.grow(((this.strokewidth ?? 0) * this.scale) / 2);
+          this.boundingBox.grow(((this.strokeWidth ?? 0) * this.scale) / 2);
 
           return;
         }
@@ -1316,8 +1158,7 @@ class Shape {
     const bb = this.bounds.clone();
     if (
       (this.stencil &&
-        (this.direction === DIRECTION_NORTH ||
-          this.direction === DIRECTION_SOUTH)) ||
+        (this.direction === DIRECTION_NORTH || this.direction === DIRECTION_SOUTH)) ||
       this.isPaintBoundsInverted()
     ) {
       bb.rotate90();
@@ -1334,8 +1175,9 @@ class Shape {
       bbox.width += Math.ceil(SHADOW_OFFSET_X * this.scale);
       bbox.height += Math.ceil(SHADOW_OFFSET_Y * this.scale);
     }
+
     // Adds strokeWidth
-    bbox.grow(((this.strokewidth ?? 0) * this.scale) / 2);
+    bbox.grow(((this.strokeWidth ?? 0) * this.scale) / 2);
   }
 
   /**
@@ -1368,7 +1210,7 @@ class Shape {
   getTextRotation() {
     let rot = this.getRotation();
 
-    if (!toBool(getValue(this.style, 'horizontal', 1))) {
+    if (!(this.style?.horizontal ?? true)) {
       rot += this.verticalTextRotation || -90; // WARNING WARNING!!!! ===============================================================================================
     }
 
@@ -1383,14 +1225,12 @@ class Shape {
   getShapeRotation() {
     let rot = this.getRotation();
 
-    if (this.direction) {
-      if (this.direction === DIRECTION_NORTH) {
-        rot += 270;
-      } else if (this.direction === DIRECTION_WEST) {
-        rot += 180;
-      } else if (this.direction === DIRECTION_SOUTH) {
-        rot += 90;
-      }
+    if (this.direction === DIRECTION_NORTH) {
+      rot += 270;
+    } else if (this.direction === DIRECTION_WEST) {
+      rot += 180;
+    } else if (this.direction === DIRECTION_SOUTH) {
+      rot += 90;
     }
 
     return rot;
@@ -1412,6 +1252,8 @@ class Shape {
     rect.setAttribute('pointer-events', 'all');
     return rect;
   }
+
+  redrawHtmlShape() {}
 
   /**
    * Function: setTransparentBackgroundImage
@@ -1450,15 +1292,13 @@ class Shape {
    * node associated with the shape using <mxEvent.release>.
    */
   destroy() {
-    if (this.node) {
-      InternalEvent.release(this.node);
+    InternalEvent.release(this.node);
 
-      if (this.node.parentNode) {
-        this.node.parentNode.removeChild(this.node);
-      }
-
-      this.node = null;
+    if (this.node.parentNode) {
+      this.node.parentNode.removeChild(this.node);
     }
+
+    this.node.innerHTML = '';
 
     // Decrements refCount and removes unused
     this.releaseSvgGradients(this.oldGradients);

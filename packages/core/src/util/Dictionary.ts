@@ -5,13 +5,15 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxObjectIdentity from './mxObjectIdentity';
+import ObjectIdentity from './ObjectIdentity';
 
 //type Dictionary<T, U> = {
 //  [key: string]: U;
 //};
 
-type Visitor<T, U> = (key: string, value: U) => void;
+type MapKey = string;
+
+type Visitor<MapKey, U> = (key: MapKey, value: U) => void;
 
 /**
  * Class: mxDictionary
@@ -33,7 +35,7 @@ class Dictionary<T, U> {
    *
    * Stores the (key, value) pairs in this dictionary.
    */
-  map: Dictionary<T, U> = {};
+  map: Record<MapKey, U> = {};
 
   /**
    * Function: clear
@@ -50,7 +52,7 @@ class Dictionary<T, U> {
    * Returns the value for the given key.
    */
   get(key: T) {
-    const id = mxObjectIdentity.get(key);
+    const id = ObjectIdentity.get(key);
 
     return this.map[id];
   }
@@ -62,7 +64,7 @@ class Dictionary<T, U> {
    * value for that key.
    */
   put(key: T, value: U) {
-    const id = mxObjectIdentity.get(key);
+    const id = ObjectIdentity.get(key);
     const previous = this.map[id];
     this.map[id] = value;
 
@@ -76,7 +78,7 @@ class Dictionary<T, U> {
    * has been removed.
    */
   remove(key: T) {
-    const id = mxObjectIdentity.get(key);
+    const id = ObjectIdentity.get(key);
     const previous = this.map[id];
     delete this.map[id];
 
@@ -124,7 +126,7 @@ class Dictionary<T, U> {
    *
    * visitor - A function that takes the key and value as arguments.
    */
-  visit(visitor: Visitor<string, U>) {
+  visit(visitor: Visitor<MapKey, U>) {
     for (const key in this.map) {
       visitor(key, this.map[key]);
     }

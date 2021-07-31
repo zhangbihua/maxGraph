@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import Image from './image/Image';
+import Image from './image/ImageBox';
 import EventObject from './event/EventObject';
 import EventSource from './event/EventSource';
 import InternalEvent from './event/InternalEvent';
@@ -23,16 +23,16 @@ import CellRenderer from './cell/CellRenderer';
 import CellEditor from './editing/CellEditor';
 import Point from './geometry/Point';
 import {
-  getBoundingBox, getCurrentStyle,
-  getValue, hasScrollbars, parseCssNumber,
+  getBoundingBox,
+  getCurrentStyle,
+  getValue,
+  hasScrollbars,
+  parseCssNumber,
 } from '../util/Utils';
 import Cell from './cell/datatypes/Cell';
 import Model from './model/Model';
 import Stylesheet from './style/Stylesheet';
-import {
-  DIALECT_SVG,
-  PAGE_FORMAT_A4_PORTRAIT,
-} from '../util/Constants';
+import { DIALECT_SVG, PAGE_FORMAT_A4_PORTRAIT } from '../util/Constants';
 
 import ChildChange from './model/ChildChange';
 import GeometryChange from './geometry/GeometryChange';
@@ -42,12 +42,12 @@ import TerminalChange from './cell/edge/TerminalChange';
 import ValueChange from './cell/ValueChange';
 import CellState from './cell/datatypes/CellState';
 import { isNode } from '../util/DomUtils';
-import CellArray from "./cell/datatypes/CellArray";
-import EdgeStyle from "./style/EdgeStyle";
-import EdgeHandler from "./cell/edge/EdgeHandler";
-import VertexHandler from "./cell/vertex/VertexHandler";
-import EdgeSegmentHandler from "./cell/edge/EdgeSegmentHandler";
-import ElbowEdgeHandler from "./cell/edge/ElbowEdgeHandler";
+import CellArray from './cell/datatypes/CellArray';
+import EdgeStyle from './style/EdgeStyle';
+import EdgeHandler from './cell/edge/EdgeHandler';
+import VertexHandler from './cell/vertex/VertexHandler';
+import EdgeSegmentHandler from './cell/edge/EdgeSegmentHandler';
+import ElbowEdgeHandler from './cell/edge/ElbowEdgeHandler';
 
 /**
  * Extends {@link EventSource} to implement a graph component for
@@ -83,9 +83,7 @@ class Graph extends EventSource {
     this.model = model != null ? model : new Model();
     this.cellRenderer = this.createCellRenderer();
     this.setSelectionModel(this.createSelectionModel());
-    this.setStylesheet(
-      stylesheet != null ? stylesheet : this.createStylesheet()
-    );
+    this.setStylesheet(stylesheet != null ? stylesheet : this.createStylesheet());
     this.view = this.createGraphView();
 
     // Adds a graph model listener to update the view
@@ -673,10 +671,7 @@ class Graph extends EventSource {
 
     // Handles two special cases where the shape does not need to be
     // recreated from scratch, it only needs to be invalidated.
-    else if (
-      change instanceof TerminalChange ||
-      change instanceof GeometryChange
-    ) {
+    else if (change instanceof TerminalChange || change instanceof GeometryChange) {
       // Checks if the geometry has changed to avoid unnessecary revalidation
       if (
         change instanceof TerminalChange ||
@@ -807,21 +802,13 @@ class Graph extends EventSource {
 
     return new Rectangle(
       parseCssNumber(css.paddingLeft) +
-        (css.borderLeftStyle != 'none'
-          ? parseCssNumber(css.borderLeftWidth)
-          : 0),
+        (css.borderLeftStyle != 'none' ? parseCssNumber(css.borderLeftWidth) : 0),
       parseCssNumber(css.paddingTop) +
-        (css.borderTopStyle != 'none'
-          ? parseCssNumber(css.borderTopWidth)
-          : 0),
+        (css.borderTopStyle != 'none' ? parseCssNumber(css.borderTopWidth) : 0),
       parseCssNumber(css.paddingRight) +
-        (css.borderRightStyle != 'none'
-          ? parseCssNumber(css.borderRightWidth)
-          : 0),
+        (css.borderRightStyle != 'none' ? parseCssNumber(css.borderRightWidth) : 0),
       parseCssNumber(css.paddingBottom) +
-        (css.borderBottomStyle != 'none'
-          ? parseCssNumber(css.borderBottomWidth)
-          : 0)
+        (css.borderBottomStyle != 'none' ? parseCssNumber(css.borderBottomWidth) : 0)
     );
   }
 
@@ -909,8 +896,7 @@ class Graph extends EventSource {
     if (this.container != null) {
       // Adds spacing and border from css
       const cssBorder = this.getBorderSizes();
-      let w1: number =
-        this.container.offsetWidth - cssBorder.x - cssBorder.width - 1;
+      let w1: number = this.container.offsetWidth - cssBorder.x - cssBorder.width - 1;
       let h1: number =
         maxHeight != null
           ? maxHeight
@@ -962,19 +948,13 @@ class Graph extends EventSource {
               const x0 =
                 bounds.x != null
                   ? Math.floor(
-                      this.view.translate.x -
-                        bounds.x / s +
-                        border / s2 +
-                        margin / 2
+                      this.view.translate.x - bounds.x / s + border / s2 + margin / 2
                     )
                   : border;
               const y0 =
                 bounds.y != null
                   ? Math.floor(
-                      this.view.translate.y -
-                        bounds.y / s +
-                        border / s2 +
-                        margin / 2
+                      this.view.translate.y - bounds.y / s + border / s2 + margin / 2
                     )
                   : border;
 
@@ -1026,9 +1006,7 @@ class Graph extends EventSource {
    *
    * @param state {@link mxCellState} whose handler should be created.
    */
-  createHandler(
-    state: CellState
-  ): mxEdgeHandler | VertexHandler | null {
+  createHandler(state: CellState): mxEdgeHandler | VertexHandler | null {
     let result: mxEdgeHandler | VertexHandler | null = null;
 
     if (state.cell.isEdge()) {
@@ -1242,7 +1220,6 @@ class Graph extends EventSource {
     cx: number = 0.5,
     cy: number = 0.5
   ): void {
-
     const container = <HTMLElement>this.container;
     const _hasScrollbars = hasScrollbars(this.container);
     const padding = 2 * this.getBorder();

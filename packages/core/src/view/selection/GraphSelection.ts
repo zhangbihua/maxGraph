@@ -1,17 +1,17 @@
-import Cell from "../cell/datatypes/Cell";
-import CellArray from "../cell/datatypes/CellArray";
-import Rectangle from "../geometry/Rectangle";
-import InternalMouseEvent from "../event/InternalMouseEvent";
-import graph from "../Graph";
-import mxClient from "../../mxClient";
-import SelectionChange from "./SelectionChange";
-import UndoableEdit from "../model/UndoableEdit";
-import EventObject from "../event/EventObject";
-import InternalEvent from "../event/InternalEvent";
-import EventSource from "../event/EventSource";
-import Dictionary from "../../util/Dictionary";
-import RootChange from "../model/RootChange";
-import ChildChange from "../model/ChildChange";
+import Cell from '../cell/datatypes/Cell';
+import CellArray from '../cell/datatypes/CellArray';
+import Rectangle from '../geometry/Rectangle';
+import InternalMouseEvent from '../event/InternalMouseEvent';
+import graph from '../Graph';
+import mxClient from '../../mxClient';
+import SelectionChange from './SelectionChange';
+import UndoableEdit from '../model/UndoableEdit';
+import EventObject from '../event/EventObject';
+import InternalEvent from '../event/InternalEvent';
+import EventSource from '../event/EventSource';
+import Dictionary from '../../util/Dictionary';
+import RootChange from '../model/RootChange';
+import ChildChange from '../model/ChildChange';
 
 class GraphSelection extends EventSource {
   constructor(graph: graph) {
@@ -50,25 +50,27 @@ class GraphSelection extends EventSource {
    */
   singleSelection: boolean = false;
 
+  // TODO: Document me!!
+  selectionModel: GraphSelection | null = null;
 
   /**
    * Returns the {@link mxGraphSelectionModel} that contains the selection.
    */
-  getSelectionModel(): mxGraphSelectionModel {
-    return <mxGraphSelectionModel>this.selectionModel;
+  getSelectionModel() {
+    return this.selectionModel;
   }
 
   /**
    * Sets the {@link mxSelectionModel} that contains the selection.
    */
-  setSelectionModel(selectionModel: mxGraphSelectionModel): void {
+  setSelectionModel(selectionModel: GraphSelection) {
     this.selectionModel = selectionModel;
   }
 
   /**
    * Returns {@link singleSelection} as a boolean.
    */
-  isSingleSelection(): boolean {
+  isSingleSelection() {
     return this.singleSelection;
   }
 
@@ -78,7 +80,7 @@ class GraphSelection extends EventSource {
    * @param {boolean} singleSelection Boolean that specifies the new value for
    * {@link singleSelection}.
    */
-  setSingleSelection(singleSelection: boolean): void {
+  setSingleSelection(singleSelection: boolean) {
     this.singleSelection = singleSelection;
   }
 
@@ -228,13 +230,19 @@ class GraphSelection extends EventSource {
    * @param added Array of {@link Cell} to add to the selection.
    * @param remove Array of {@link Cell} to remove from the selection.
    */
-  changeSelection(added: CellArray | null=null,
-                  removed: CellArray | null=null): void {
+  changeSelection(
+    added: CellArray | null = null,
+    removed: CellArray | null = null
+  ): void {
     if (
       (added != null && added.length > 0 && added[0] != null) ||
       (removed != null && removed.length > 0 && removed[0] != null)
     ) {
-      const change = new SelectionChange(this, added || new CellArray(), removed || new CellArray());
+      const change = new SelectionChange(
+        this,
+        added || new CellArray(),
+        removed || new CellArray()
+      );
       change.execute();
       const edit = new UndoableEdit(this, false);
       edit.add(change);
@@ -491,8 +499,8 @@ class GraphSelection extends EventSource {
   ): void {
     const cells = descendants
       ? parent.filterDescendants((cell: Cell) => {
-        return cell != parent && this.graph.getView().getState(cell) != null;
-      })
+          return cell != parent && this.graph.getView().getState(cell) != null;
+        })
       : parent.getChildren();
 
     if (cells != null) {
@@ -589,7 +597,6 @@ class GraphSelection extends EventSource {
     }
   }
 
-
   /**
    * Returns true if any sibling of the given cell is selected.
    */
@@ -646,10 +653,7 @@ class GraphSelection extends EventSource {
     for (let i = 0; i < changes.length; i += 1) {
       const change = changes[i];
 
-      if (
-        change.constructor !== RootChange &&
-        (ignoreFn == null || !ignoreFn(change))
-      ) {
+      if (change.constructor !== RootChange && (ignoreFn == null || !ignoreFn(change))) {
         let cell = null;
 
         if (change instanceof ChildChange) {
@@ -665,7 +669,6 @@ class GraphSelection extends EventSource {
     }
     return cells;
   }
-
 
   /**
    * Removes selection cells that are not in the model from the selection.
@@ -695,5 +698,3 @@ class GraphSelection extends EventSource {
 }
 
 export default GraphSelection;
-
-

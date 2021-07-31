@@ -6,11 +6,12 @@
  */
 import Shape from '../Shape';
 import { ARROW_SIZE, ARROW_SPACING, ARROW_WIDTH, NONE } from '../../../../util/Constants';
-import utils, { getNumber, getValue, relativeCcw } from '../../../../util/Utils';
-import mxAbstractCanvas2D from '../../../../util/canvas/mxAbstractCanvas2D';
+import { relativeCcw } from '../../../../util/Utils';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Point from '../../Point';
 import Rectangle from '../../Rectangle';
 import CellState from '../../../cell/datatypes/CellState';
+import { ColorValue } from 'packages/core/src/types';
 
 /**
  * Extends {@link Shape} to implement an new rounded arrow shape with support for waypoints and double arrows. The
@@ -19,37 +20,48 @@ import CellState from '../../../cell/datatypes/CellState';
  * This shape is registered under {@link mxConstants.SHAPE_ARROW_CONNECTOR} in {@link mxCellRenderer}.
  */
 class ArrowConnector extends Shape {
-  constructor(points, fill, stroke, strokewidth, arrowWidth, spacing, endSize) {
+  constructor(
+    points: Point[],
+    fill: ColorValue,
+    stroke: ColorValue,
+    strokeWidth = 1,
+    arrowWidth = ARROW_WIDTH,
+    spacing = ARROW_SPACING,
+    endSize = ARROW_SIZE / 5
+  ) {
     super();
     this.points = points;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth != null ? strokewidth : 1;
-    this.arrowWidth = arrowWidth != null ? arrowWidth : ARROW_WIDTH;
-    this.arrowSpacing = spacing != null ? spacing : ARROW_SPACING;
+    this.strokeWidth = strokeWidth;
+    this.arrowWidth = arrowWidth;
+    this.arrowSpacing = spacing;
     this.startSize = ARROW_SIZE / 5;
-    this.endSize = endSize != null ? endSize : ARROW_SIZE / 5;
+    this.endSize = endSize;
   }
+
+  arrowWidth: number;
+  arrowSpacing: number;
 
   /**
    * Allows to use the SVG bounding box in SVG.
    * @defaultValue `false` for performance reasons.
    */
-  useSvgBoundingBox: boolean = true;
+  useSvgBoundingBox = true;
 
   /**
    * Function: isRoundable
    *
    * Hook for subclassers.
    */
-  isRoundable(): boolean {
+  isRoundable() {
     return true;
   }
 
   /**
    * Overrides mxShape to reset spacing.
    */
-  resetStyles(): void {
+  resetStyles() {
     super.resetStyles();
     this.arrowSpacing = ARROW_SPACING;
   }
@@ -60,9 +72,9 @@ class ArrowConnector extends Shape {
   apply(state: CellState): void {
     super.apply(state);
 
-    if (this.style != null) {
-      this.startSize = getNumber(this.style, 'startSize', ARROW_SIZE / 5) * 3;
-      this.endSize = getNumber(this.style, 'endSize', ARROW_SIZE / 5) * 3;
+    if (this.style) {
+      this.startSize = this.style.startSize * 3;
+      this.endSize = this.style.endSize * 3;
     }
   }
 
@@ -82,21 +94,18 @@ class ArrowConnector extends Shape {
       w = Math.max(w, this.getEndArrowWidth());
     }
 
-    bbox.grow((w / 2 + this.strokewidth) * this.scale);
+    bbox.grow((w / 2 + this.strokeWidth) * this.scale);
   }
 
   /**
    * Paints the line shape.
    */
-  paintEdgeShape(c: mxAbstractCanvas2D, pts: Point[]): void {
+  paintEdgeShape(c: AbstractCanvas2D, pts: Point[]): void {
     // Geometry of arrow
-    let strokeWidth = this.strokewidth;
+    let strokeWidth = this.strokeWidth;
 
     if (this.outline) {
-      strokeWidth = Math.max(
-        1,
-        utils.getNumber(this.style, 'strokeWidth', this.strokewidth)
-      );
+      strokeWidth = Math.max(1, this.style?.strokeWidth ?? 0);
     }
 
     const startWidth = this.getStartArrowWidth() + strokeWidth;
@@ -226,7 +235,7 @@ class ArrowConnector extends Shape {
           // Higher strokewidths require a larger minimum bend, 0.35 covers all but the most extreme cases
           const strokeWidthFactor = Math.max(
             tmp,
-            Math.min(this.strokewidth / 200 + 0.04, 0.35)
+            Math.min(this.strokeWidth / 200 + 0.04, 0.35)
           );
           const angleFactor =
             pos !== 0 && isRounded
@@ -387,7 +396,18 @@ class ArrowConnector extends Shape {
    *
    * Paints the marker.
    */
-  paintMarker(c, ptX, ptY, nx, ny, size, arrowWidth, edgeWidth, spacing, initialMove) {
+  paintMarker(
+    c: AbstractCanvas2D,
+    ptX: number,
+    ptY: number,
+    nx: number,
+    ny: number,
+    size: number,
+    arrowWidth: number,
+    edgeWidth: number,
+    spacing: number,
+    initialMove: boolean
+  ) {
     const widthArrowRatio = edgeWidth / arrowWidth;
     const orthx = (edgeWidth * ny) / 2;
     const orthy = (-edgeWidth * nx) / 2;
@@ -416,50 +436,50 @@ class ArrowConnector extends Shape {
   /**
    * @returns whether the arrow is rounded
    */
-  isArrowRounded(): boolean {
+  isArrowRounded() {
     return this.isRounded;
   }
 
   /**
    * @returns the width of the start arrow
    */
-  getStartArrowWidth(): number {
+  getStartArrowWidth() {
     return ARROW_WIDTH;
   }
 
   /**
    * @returns the width of the end arrow
    */
-  getEndArrowWidth(): number {
+  getEndArrowWidth() {
     return ARROW_WIDTH;
   }
 
   /**
    * @returns the width of the body of the edge
    */
-  getEdgeWidth(): number {
+  getEdgeWidth() {
     return ARROW_WIDTH / 3;
   }
 
   /**
    * @returns whether the ends of the shape are drawn
    */
-  isOpenEnded(): boolean {
+  isOpenEnded() {
     return false;
   }
 
   /**
    * @returns whether the start marker is drawn
    */
-  isMarkerStart(): boolean {
-    return getValue(this.style, 'startArrow', NONE) !== NONE;
+  isMarkerStart() {
+    return (this.style?.startArrow ?? NONE) !== NONE;
   }
 
   /**
    * @returns whether the end marker is drawn
    */
-  isMarkerEnd(): boolean {
-    return getValue(this.style, 'endArrow', NONE) !== NONE;
+  isMarkerEnd() {
+    return (this.style?.endArrow ?? NONE) !== NONE;
   }
 }
 

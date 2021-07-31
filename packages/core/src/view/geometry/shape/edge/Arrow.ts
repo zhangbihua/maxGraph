@@ -7,8 +7,9 @@
 import Shape from '../Shape';
 import { ARROW_SIZE, ARROW_SPACING, ARROW_WIDTH } from '../../../../util/Constants';
 import Rectangle from '../../Rectangle';
-import mxAbstractCanvas2D from '../../../../util/canvas/mxAbstractCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Point from '../../Point';
+import { ColorValue } from 'packages/core/src/types';
 
 /**
  * Extends {@link Shape} to implement an arrow shape. The shape is used to represent edges, not vertices.
@@ -16,31 +17,41 @@ import Point from '../../Point';
  * This shape is registered under {@link mxConstants.SHAPE_ARROW} in {@link mxCellRenderer}.
  */
 class Arrow extends Shape {
-  constructor(points, fill, stroke, strokewidth, arrowWidth, spacing, endSize) {
+  constructor(
+    points: Point[],
+    fill: ColorValue,
+    stroke: ColorValue,
+    strokeWidth = 1,
+    arrowWidth = ARROW_WIDTH,
+    spacing = ARROW_SPACING,
+    endSize = ARROW_SIZE
+  ) {
     super();
     this.points = points;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth != null ? strokewidth : 1;
-    this.arrowWidth = arrowWidth != null ? arrowWidth : ARROW_WIDTH;
-    this.spacing = spacing != null ? spacing : ARROW_SPACING;
-    this.endSize = endSize != null ? endSize : ARROW_SIZE;
+    this.strokeWidth = strokeWidth;
+    this.arrowWidth = arrowWidth;
+    this.spacing = spacing;
+    this.endSize = endSize;
   }
+
+  arrowWidth: number;
 
   /**
    * Augments the bounding box with the edge width and markers.
    */
-  augmentBoundingBox(bbox: Rectangle): void {
+  augmentBoundingBox(bbox: Rectangle) {
     super.augmentBoundingBox(bbox);
 
     const w = Math.max(this.arrowWidth, this.endSize);
-    bbox.grow((w / 2 + this.strokewidth) * this.scale);
+    bbox.grow((w / 2 + this.strokeWidth) * this.scale);
   }
 
   /**
    * Paints the line shape.
    */
-  paintEdgeShape(c: mxAbstractCanvas2D, pts: Point[]): void {
+  paintEdgeShape(c: AbstractCanvas2D, pts: Point[]) {
     // Geometry of arrow
     const spacing = ARROW_SPACING;
     const width = ARROW_WIDTH;

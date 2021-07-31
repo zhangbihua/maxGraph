@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import Shape from '../Shape';
-import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
 
 /**
@@ -13,29 +13,18 @@ import Rectangle from '../../Rectangle';
  * This shape is registered under mxConstants.SHAPE_ELLIPSE in mxCellRenderer.
  */
 class EllipseShape extends Shape {
-  constructor(
-    bounds: Rectangle,
-    fill: string,
-    stroke: string,
-    strokewidth: number = 1
-  ) {
+  constructor(bounds: Rectangle, fill: string, stroke: string, strokeWidth = 1) {
     super();
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth;
+    this.strokeWidth = strokeWidth;
   }
 
   /**
    * Paints the ellipse shape.
    */
-  paintVertexShape(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ): void {
+  paintVertexShape(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     c.ellipse(x, y, w, h);
     c.fillAndStroke();
   }

@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
+import AbstractCanvas2D from '../../util/canvas/AbstractCanvas2D';
 import CellState from '../cell/datatypes/CellState';
 import Shape from '../geometry/shape/Shape';
 
@@ -41,13 +41,13 @@ class ImageExport {
   /**
    * Specifies if overlays should be included in the export. Default is false.
    */
-  includeOverlays: boolean = false;
+  includeOverlays = false;
 
   /**
    * Draws the given state and all its descendants to the given canvas.
    */
-  drawState(state: CellState, canvas: mxAbstractCanvas2D): void {
-    if (state != null) {
+  drawState(state: CellState, canvas: AbstractCanvas2D): void {
+    if (state) {
       this.visitStatesRecursive(state, canvas, () => {
         this.drawCellState(state, canvas);
       });
@@ -66,8 +66,8 @@ class ImageExport {
    *
    * Visits the given state and all its descendants to the given canvas recursively.
    */
-  visitStatesRecursive(state: CellState, canvas: mxAbstractCanvas2D, visitor: Function) {
-    if (state != null) {
+  visitStatesRecursive(state: CellState, canvas: AbstractCanvas2D, visitor: Function) {
+    if (state) {
       visitor(state, canvas);
 
       const { graph } = state.view;
@@ -83,18 +83,18 @@ class ImageExport {
   /**
    * Returns the link for the given cell state and canvas. This returns null.
    */
-  getLinkForCellState(state: CellState, canvas: mxAbstractCanvas2D): any {
+  getLinkForCellState(state: CellState, canvas: AbstractCanvas2D): any {
     return null;
   }
 
   /**
    * Draws the given state to the given canvas.
    */
-  drawCellState(state: CellState, canvas: mxAbstractCanvas2D): void {
+  drawCellState(state: CellState, canvas: AbstractCanvas2D): void {
     // Experimental feature
     const link = this.getLinkForCellState(state, canvas);
 
-    if (link != null) {
+    if (link) {
       canvas.setLink(link);
     }
 
@@ -102,7 +102,7 @@ class ImageExport {
     this.drawShape(state, canvas);
     this.drawText(state, canvas);
 
-    if (link != null) {
+    if (link) {
       canvas.setLink(null);
     }
   }
@@ -112,7 +112,7 @@ class ImageExport {
    *
    * Draws the shape of the given state.
    */
-  drawShape(state: CellState, canvas: mxAbstractCanvas2D): void {
+  drawShape(state: CellState, canvas: AbstractCanvas2D): void {
     if (state.shape instanceof Shape && state.shape.checkBounds()) {
       canvas.save();
 
@@ -127,8 +127,8 @@ class ImageExport {
   /**
    * Draws the text of the given state.
    */
-  drawText(state: CellState, canvas: mxAbstractCanvas2D): void {
-    if (state.text != null && state.text.checkBounds()) {
+  drawText(state: CellState, canvas: AbstractCanvas2D): void {
+    if (state.text && state.text.checkBounds()) {
       canvas.save();
 
       state.text.beforePaint(canvas);
@@ -145,7 +145,7 @@ class ImageExport {
    * Draws the overlays for the given state. This is called if <includeOverlays>
    * is true.
    */
-  drawOverlays(state: CellState, canvas: mxAbstractCanvas2D): void {
+  drawOverlays(state: CellState, canvas: AbstractCanvas2D): void {
     if (state.overlays != null) {
       state.overlays.visit((id, shape) => {
         if (shape instanceof Shape) {

@@ -1,4 +1,5 @@
 import type Cell from './view/cell/datatypes/Cell';
+import Shape from './view/geometry/shape/Shape';
 
 export type CellMap = {
   [id: string]: Cell;
@@ -23,19 +24,88 @@ export type Properties = {
 };
 
 export type CellStateStyles = {
-  [k: string]: string;
+  absoluteArcSize: number;
+  align: AlignValue;
+  arcSize: number;
+  backgroundColor: ColorValue;
+  backgroundOutline: number;
+  curved: boolean;
+  dashed: boolean;
+  dashPattern: string;
+  direction: DirectionValue;
+  endArrow: ArrowType;
+  endFill: boolean;
+  endSize: number;
+  fillColor: ColorValue;
+  fillOpacity: number;
+  fixDash: boolean;
+  flipH: boolean;
+  flipV: boolean;
+  fontColor: ColorValue;
+  fontFamily: string;
+  fontSize: number;
+  fontStyle: number;
+  glass: boolean;
+  gradientColor: ColorValue;
+  gradientDirection: DirectionValue;
+  horizontal: boolean;
+  image: string;
+  imageAlign: AlignValue;
+  imageAspect: boolean;
+  imageBackground: ColorValue;
+  imageBorder: ColorValue;
+  imageHeight: number;
+  imageWidth: number;
+  indicatorColor: ColorValue;
+  indicatorHeight: number;
+  indicatorImage: string;
+  indicatorShape: Shape;
+  indicatorWidth: number;
+  labelBorderColor: ColorValue;
+  labelPosition: AlignValue;
+  margin: number;
+  opacity: number;
+  pointerEvents: boolean;
+  rotation: number;
+  rounded: boolean;
+  separatorColor: ColorValue;
+  shadow: boolean;
+  spacing: number;
+  spacingBottom: number;
+  spacingLeft: number;
+  spacingRight: number;
+  spacingTop: number;
+  startArrow: ArrowType;
+  startFill: boolean;
+  startSize: number;
+  strokeColor: ColorValue;
+  strokeOpacity: number;
+  strokeWidth: number;
+  swimlaneFillColor: ColorValue;
+  swimlaneLine: boolean;
+  textDirection: TextDirectionValue;
+  textOpacity: number;
+  verticalAlign: VAlignValue;
+  verticalLabelPosition: VAlignValue;
 };
 
-export type ColorValue = string | null;
-export type DirectionValue = 'north' | 'south' | 'east' | 'west' | null;
-export type AlignValue =
-  | 'left'
-  | 'center'
-  | 'right'
-  | 'top'
-  | 'middle'
-  | 'bottom'
-  | null;
+export type ColorValue = string;
+export type DirectionValue = 'north' | 'south' | 'east' | 'west';
+export type TextDirectionValue = '' | 'ltr' | 'rtl' | 'auto';
+export type AlignValue = 'left' | 'center' | 'right';
+export type VAlignValue = 'top' | 'middle' | 'bottom';
+export type OverflowValue = 'fill' | 'width' | 'auto' | 'hidden' | 'scroll' | 'visible';
+export type ArrowType =
+  | 'none'
+  | 'classic'
+  | 'classicThin'
+  | 'block'
+  | 'blockThin'
+  | 'open'
+  | 'openThin'
+  | 'oval'
+  | 'diamond'
+  | 'diamondThin';
 
 export type CanvasState = {
   dx: number;
@@ -48,9 +118,9 @@ export type CanvasState = {
   gradientFillAlpha: number;
   gradientColor: ColorValue;
   gradientAlpha: number;
-  gradientDirection: string | null;
+  gradientDirection: DirectionValue;
   strokeColor: ColorValue;
-  strokeWidth: number | null;
+  strokeWidth: number;
   dashed: boolean;
   dashPattern: string;
   fixDash: boolean;

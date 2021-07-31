@@ -19,10 +19,10 @@ import graph from './Graph';
 import ImageShape from './geometry/shape/node/ImageShape';
 import InternalEvent from './event/InternalEvent';
 import utils from '../util/Utils';
-import Image from './image/Image';
+import Image from './image/ImageBox';
 import EventObject from './event/EventObject';
 import { getSource, isMouseEvent } from '../util/EventUtils';
-import EventSource from "./event/EventSource";
+import EventSource from './event/EventSource';
 
 /**
  * @class Outline
@@ -510,10 +510,8 @@ class Outline {
         );
 
         // Adds the scrollbar offset to the finder
-        this.bounds.x +=
-          (this.source.container.scrollLeft * navView.scale) / scale;
-        this.bounds.y +=
-          (this.source.container.scrollTop * navView.scale) / scale;
+        this.bounds.x += (this.source.container.scrollLeft * navView.scale) / scale;
+        this.bounds.y += (this.source.container.scrollTop * navView.scale) / scale;
 
         const selectionBorder = <RectangleShape>this.selectionBorder;
         let b = <Rectangle>selectionBorder.bounds;
@@ -567,12 +565,7 @@ class Outline {
       const tol = !isMouseEvent(me.getEvent()) ? this.source.tolerance : 0;
       const hit =
         tol > 0
-          ? new Rectangle(
-              me.getGraphX() - tol,
-              me.getGraphY() - tol,
-              2 * tol,
-              2 * tol
-            )
+          ? new Rectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol)
           : null;
       this.zoom =
         me.isSource(this.sizer) ||
@@ -691,10 +684,7 @@ class Outline {
    * ```
    */
   getTranslateForEvent(me: InternalMouseEvent): Point {
-    return new Point(
-      me.getX() - <number>this.startX,
-      me.getY() - <number>this.startY
-    );
+    return new Point(me.getX() - <number>this.startX, me.getY() - <number>this.startY);
   }
 
   /**
@@ -713,10 +703,7 @@ class Outline {
         if (!this.zoom) {
           // Applies the new translation if the source
           // has no scrollbars
-          if (
-            !source.useScrollbarsForPanning ||
-            !utils.hasScrollbars(source.container)
-          ) {
+          if (!source.useScrollbarsForPanning || !utils.hasScrollbars(source.container)) {
             source.panGraph(0, 0);
             dx /= outline.getView().scale;
             dy /= outline.getView().scale;
@@ -727,10 +714,7 @@ class Outline {
           // Applies the new zoom
           const w = (<Rectangle>selectionBorder.bounds).width;
           const { scale } = source.getView();
-          source.zoomTo(
-            Math.max(this.minScale, scale - (dx * scale) / w),
-            false
-          );
+          source.zoomTo(Math.max(this.minScale, scale - (dx * scale) / w), false);
         }
 
         this.update();
@@ -752,11 +736,7 @@ class Outline {
       this.source.removeListener(this.refreshHandler);
       this.source.getModel().removeListener(this.updateHandler);
       this.source.getView().removeListener(this.updateHandler);
-      InternalEvent.removeListener(
-        this.source.container,
-        'scroll',
-        this.updateHandler
-      );
+      InternalEvent.removeListener(this.source.container, 'scroll', this.updateHandler);
       // @ts-ignore
       this.source = null;
     }

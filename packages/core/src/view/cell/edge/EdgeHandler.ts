@@ -77,11 +77,7 @@ class EdgeHandler {
         this.reset();
 
         if (dirty) {
-          this.graph.cellRenderer.redraw(
-            this.state,
-            false,
-            state.view.isRendering()
-          );
+          this.graph.cellRenderer.redraw(this.state, false, state.view.isRendering());
         }
       };
 
@@ -329,10 +325,7 @@ class EdgeHandler {
             this.parentHighlight.redraw();
           }
         } else {
-          if (
-            pstate != null &&
-            pstate.parentHighlight === this.parentHighlight
-          ) {
+          if (pstate != null && pstate.parentHighlight === this.parentHighlight) {
             pstate.parentHighlight = null;
           }
 
@@ -340,18 +333,12 @@ class EdgeHandler {
           this.parentHighlight = null;
         }
       } else if (this.parentHighlightEnabled && visible) {
-        if (
-          parent.isVertex() &&
-          pstate != null &&
-          pstate.parentHighlight == null
-        ) {
+        if (parent.isVertex() && pstate != null && pstate.parentHighlight == null) {
           this.parentHighlight = this.createParentHighlightShape(pstate);
           // VML dialect required here for event transparency in IE
           this.parentHighlight.dialect = DIALECT_SVG;
           this.parentHighlight.pointerEvents = false;
-          this.parentHighlight.rotation = Number(
-            pstate.style.rotation || '0'
-          );
+          this.parentHighlight.rotation = Number(pstate.style.rotation || '0');
           this.parentHighlight.init(this.graph.getView().getOverlayPane());
           this.parentHighlight.redraw();
 
@@ -390,8 +377,7 @@ class EdgeHandler {
 
     // Updates preferHtml
     this.preferHtml =
-      this.state.text != null &&
-      this.state.text.node.parentNode === this.graph.container;
+      this.state.text != null && this.state.text.node.parentNode === this.graph.container;
 
     if (!this.preferHtml) {
       // Checks source terminal
@@ -429,10 +415,7 @@ class EdgeHandler {
     }
 
     // Adds a rectangular handle for the label position
-    this.label = new Point(
-      this.state.absoluteOffset.x,
-      this.state.absoluteOffset.y
-    );
+    this.label = new Point(this.state.absoluteOffset.x, this.state.absoluteOffset.y);
     this.labelShape = this.createLabelHandleShape();
     this.initBend(this.labelShape);
     this.labelShape.setCursor(CURSOR_LABEL_HANDLE);
@@ -525,7 +508,7 @@ class EdgeHandler {
       null,
       this.getSelectionColor()
     );
-    shape.strokewidth = this.getSelectionStrokeWidth();
+    shape.strokeWidth = this.getSelectionStrokeWidth();
     shape.isDashed = this.isSelectionDashed();
 
     return shape;
@@ -616,10 +599,7 @@ class EdgeHandler {
         let cell = super.getCell(me);
 
         // Checks for cell at preview point (with grid)
-        if (
-          (cell === self.state.cell || cell == null) &&
-          self.currentPoint != null
-        ) {
+        if ((cell === self.state.cell || cell == null) && self.currentPoint != null) {
           cell = self.graph.getCellAt(self.currentPoint.x, self.currentPoint.y);
         }
 
@@ -722,9 +702,7 @@ class EdgeHandler {
             });
 
             if (this.isHandleEnabled(i)) {
-              bend.setCursor(
-                terminal ? CURSOR_TERMINAL_HANDLE : CURSOR_BEND_HANDLE
-              );
+              bend.setCursor(terminal ? CURSOR_TERMINAL_HANDLE : CURSOR_BEND_HANDLE);
             }
 
             bends.push(bend);
@@ -842,12 +820,7 @@ class EdgeHandler {
   createLabelHandleShape() {
     if (this.labelHandleImage != null) {
       const shape = new ImageShape(
-        new Rectangle(
-          0,
-          0,
-          this.labelHandleImage.width,
-          this.labelHandleImage.height
-        ),
+        new Rectangle(0, 0, this.labelHandleImage.width, this.labelHandleImage.height),
         this.labelHandleImage.src
       );
 
@@ -879,8 +852,7 @@ class EdgeHandler {
       bend.dialect = DIALECT_STRICTHTML;
       bend.init(this.graph.container);
     } else {
-      bend.dialect =
-        this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
+      bend.dialect = this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
       bend.init(this.graph.getView().getOverlayPane());
     }
 
@@ -913,12 +885,7 @@ class EdgeHandler {
       const tol = !isMouseEvent(me.getEvent()) ? this.tolerance : 1;
       const hit =
         this.allowHandleBoundsCheck && tol > 0
-          ? new Rectangle(
-              me.getGraphX() - tol,
-              me.getGraphY() - tol,
-              2 * tol,
-              2 * tol
-            )
+          ? new Rectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol)
           : null;
       let minDistSq = null;
 
@@ -928,8 +895,7 @@ class EdgeHandler {
           shape.node != null &&
           shape.node.style.display !== 'none' &&
           shape.node.style.visibility !== 'hidden' &&
-          (me.isSource(shape) ||
-            (hit != null && utils.intersects(shape.bounds, hit)))
+          (me.isSource(shape) || (hit != null && utils.intersects(shape.bounds, hit)))
         ) {
           const dx = me.getGraphX() - shape.bounds.getCenterX();
           const dy = me.getGraphY() - shape.bounds.getCenterY();
@@ -1019,11 +985,7 @@ class EdgeHandler {
       this.snapPoint = new Point(b.getCenterX(), b.getCenterY());
     }
 
-    if (
-      this.addEnabled &&
-      handle == null &&
-      this.isAddPointEvent(me.getEvent())
-    ) {
+    if (this.addEnabled && handle == null && this.isAddPointEvent(me.getEvent())) {
       this.addPoint(this.state, me.getEvent());
       me.consume();
     } else if (handle != null && !me.isConsumed() && this.graph.isEnabled()) {
@@ -1058,8 +1020,7 @@ class EdgeHandler {
     this.startY = y;
 
     this.isSource = this.bends == null ? false : index === 0;
-    this.isTarget =
-      this.bends == null ? false : index === this.bends.length - 1;
+    this.isTarget = this.bends == null ? false : index === this.bends.length - 1;
     this.isLabel = index === InternalEvent.LABEL_HANDLE;
 
     if (this.isSource || this.isTarget) {
@@ -1067,8 +1028,7 @@ class EdgeHandler {
       const terminal = cell.getTerminal(this.isSource);
 
       if (
-        (terminal == null &&
-          this.graph.isTerminalPointMovable(cell, this.isSource)) ||
+        (terminal == null && this.graph.isTerminalPointMovable(cell, this.isSource)) ||
         (terminal != null &&
           this.graph.isCellDisconnectable(cell, terminal, this.isSource))
       ) {
@@ -1189,10 +1149,7 @@ class EdgeHandler {
       const snapToTerminal = (terminal) => {
         if (terminal != null) {
           snapToPoint(
-            new point(
-              view.getRoutingCenterX(terminal),
-              view.getRoutingCenterY(terminal)
-            )
+            new point(view.getRoutingCenterX(terminal), view.getRoutingCenterY(terminal))
           );
         }
       };
@@ -1245,8 +1202,7 @@ class EdgeHandler {
       if (
         this.marker.highlight != null &&
         this.marker.highlight.state != null &&
-        this.marker.highlight.state.cell ===
-          this.constraintHandler.currentFocus.cell
+        this.marker.highlight.state.cell === this.constraintHandler.currentFocus.cell
       ) {
         // Direct repaint needed if cell already highlighted
         if (this.marker.highlight.shape.stroke !== 'transparent') {
@@ -1254,10 +1210,7 @@ class EdgeHandler {
           this.marker.highlight.repaint();
         }
       } else {
-        this.marker.markCell(
-          this.constraintHandler.currentFocus.cell,
-          'transparent'
-        );
+        this.marker.markCell(this.constraintHandler.currentFocus.cell, 'transparent');
       }
 
       const model = this.graph.getModel();
@@ -1267,12 +1220,8 @@ class EdgeHandler {
         !this.isSource
       );
       const otherCell = other != null ? other.cell : null;
-      const source = this.isSource
-        ? this.constraintHandler.currentFocus.cell
-        : otherCell;
-      const target = this.isSource
-        ? otherCell
-        : this.constraintHandler.currentFocus.cell;
+      const source = this.isSource ? this.constraintHandler.currentFocus.cell : otherCell;
+      const target = this.isSource ? otherCell : this.constraintHandler.currentFocus.cell;
 
       // Updates the error message of the handler
       this.error = this.validateConnection(source, target);
@@ -1282,10 +1231,7 @@ class EdgeHandler {
         result = this.constraintHandler.currentFocus;
       }
 
-      if (
-        this.error != null ||
-        (result != null && !this.isCellEnabled(result.cell))
-      ) {
+      if (this.error != null || (result != null && !this.isCellEnabled(result.cell))) {
         this.constraintHandler.reset();
       }
 
@@ -1367,11 +1313,7 @@ class EdgeHandler {
             const src = this.state.getVisibleTerminalState(true);
 
             if (src != null) {
-              const c = this.graph.getConnectionConstraint(
-                this.state,
-                src,
-                true
-              );
+              const c = this.graph.getConnectionConstraint(this.state, src, true);
 
               // Checks if point is not fixed
               if (c == null || this.graph.getConnectionPoint(src, c) == null) {
@@ -1385,11 +1327,7 @@ class EdgeHandler {
             const trg = this.state.getVisibleTerminalState(false);
 
             if (trg != null) {
-              const c = this.graph.getConnectionConstraint(
-                this.state,
-                trg,
-                false
-              );
+              const c = this.graph.getConnectionConstraint(this.state, trg, false);
 
               // Checks if point is not fixed
               if (c == null || this.graph.getConnectionPoint(trg, c) == null) {
@@ -1453,10 +1391,8 @@ class EdgeHandler {
     const left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
     const top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
 
-    const gridX =
-      this.currentPoint.x - this.graph.container.scrollLeft + offset.x - left;
-    const gridY =
-      this.currentPoint.y - this.graph.container.scrollTop + offset.y - top;
+    const gridX = this.currentPoint.x - this.graph.container.scrollLeft + offset.x - left;
+    const gridY = this.currentPoint.y - this.graph.container.scrollTop + offset.y - top;
 
     return (
       this.outlineConnect &&
@@ -1484,16 +1420,8 @@ class EdgeHandler {
       ? terminalState
       : this.state.getVisibleTerminalState(false);
 
-    let sourceConstraint = this.graph.getConnectionConstraint(
-      edge,
-      sourceState,
-      true
-    );
-    let targetConstraint = this.graph.getConnectionConstraint(
-      edge,
-      targetState,
-      false
-    );
+    let sourceConstraint = this.graph.getConnectionConstraint(edge, sourceState, true);
+    let targetConstraint = this.graph.getConnectionConstraint(edge, targetState, false);
 
     let constraint = this.constraintHandler.currentConstraint;
 
@@ -1528,13 +1456,11 @@ class EdgeHandler {
         this.marker.highlight.shape.stroke = outline
           ? OUTLINE_HIGHLIGHT_COLOR
           : 'transparent';
-        this.marker.highlight.shape.strokewidth =
-          OUTLINE_HIGHLIGHT_STROKEWIDTH / s / s;
+        this.marker.highlight.shape.strokewidth = OUTLINE_HIGHLIGHT_STROKEWIDTH / s / s;
         this.marker.highlight.repaint();
       } else if (this.marker.hasValidState()) {
         this.marker.highlight.shape.stroke =
-          me.getCell().isConnectable() &&
-          this.marker.getValidState() !== me.getState()
+          me.getCell().isConnectable() && this.marker.getValidState() !== me.getState()
             ? 'transparent'
             : DEFAULT_VALID_COLOR;
         this.marker.highlight.shape.strokewidth = HIGHLIGHT_STROKEWIDTH / s / s;
@@ -1550,10 +1476,8 @@ class EdgeHandler {
 
     if (this.isSource || this.isTarget) {
       if (constraint != null && constraint.point != null) {
-        edge.style[this.isSource ? 'exitX' : 'entryX'] =
-          constraint.point.x;
-        edge.style[this.isSource ? 'exitY' : 'entryY'] =
-          constraint.point.y;
+        edge.style[this.isSource ? 'exitX' : 'entryX'] = constraint.point.x;
+        edge.style[this.isSource ? 'exitY' : 'entryY'] = constraint.point.y;
       } else {
         delete edge.style[this.isSource ? 'exitX' : 'entryX'];
         delete edge.style[this.isSource ? 'exitY' : 'entryY'];
@@ -1564,21 +1488,11 @@ class EdgeHandler {
     edge.setVisibleTerminalState(targetState, false);
 
     if (!this.isSource || sourceState != null) {
-      edge.view.updateFixedTerminalPoint(
-        edge,
-        sourceState,
-        true,
-        sourceConstraint
-      );
+      edge.view.updateFixedTerminalPoint(edge, sourceState, true, sourceConstraint);
     }
 
     if (!this.isTarget || targetState != null) {
-      edge.view.updateFixedTerminalPoint(
-        edge,
-        targetState,
-        false,
-        targetConstraint
-      );
+      edge.view.updateFixedTerminalPoint(edge, targetState, false, targetConstraint);
     }
 
     if ((this.isSource || this.isTarget) && terminalState == null) {
@@ -1625,12 +1539,8 @@ class EdgeHandler {
         this.index > InternalEvent.VIRTUAL_HANDLE
       ) {
         if (this.customHandles != null) {
-          this.customHandles[InternalEvent.CUSTOM_HANDLE - this.index].processEvent(
-            me
-          );
-          this.customHandles[
-            InternalEvent.CUSTOM_HANDLE - this.index
-          ].positionChanged();
+          this.customHandles[InternalEvent.CUSTOM_HANDLE - this.index].processEvent(me);
+          this.customHandles[InternalEvent.CUSTOM_HANDLE - this.index].positionChanged();
 
           if (this.shape != null && this.shape.node != null) {
             this.shape.node.style.display = 'none';
@@ -1642,9 +1552,7 @@ class EdgeHandler {
       } else {
         this.points = this.getPreviewPoints(this.currentPoint, me);
         let terminalState =
-          this.isSource || this.isTarget
-            ? this.getPreviewTerminalState(me)
-            : null;
+          this.isSource || this.isTarget ? this.getPreviewTerminalState(me) : null;
 
         if (
           this.constraintHandler.currentConstraint != null &&
@@ -1655,9 +1563,7 @@ class EdgeHandler {
         } else if (this.outlineConnect) {
           // Need to check outline before cloning terminal state
           const outline =
-            this.isSource || this.isTarget
-              ? this.isOutlineConnectEvent(me)
-              : false;
+            this.isSource || this.isTarget ? this.isOutlineConnectEvent(me) : false;
 
           if (outline) {
             terminalState = this.marker.highlight.state;
@@ -1693,9 +1599,7 @@ class EdgeHandler {
         // Sets the color of the preview to valid or invalid, updates the
         // points of the preview and redraws
         const color =
-          this.error == null
-            ? this.marker.validColor
-            : this.marker.invalidColor;
+          this.error == null ? this.marker.validColor : this.marker.invalidColor;
         this.setPreviewColor(color);
         this.abspoints = clone.absolutePoints;
         this.active = true;
@@ -1813,9 +1717,7 @@ class EdgeHandler {
               model.endUpdate();
             }
           } else if (this.graph.isAllowDanglingEdges()) {
-            const pt = this.abspoints[
-              this.isSource ? 0 : this.abspoints.length - 1
-            ];
+            const pt = this.abspoints[this.isSource ? 0 : this.abspoints.length - 1];
             pt.x = this.roundLength(
               pt.x / this.graph.view.scale - this.graph.view.translate.x
             );
@@ -2074,12 +1976,7 @@ class EdgeHandler {
         geo = geo.clone();
         geo.setTerminalPoint(point, isSource);
         model.setGeometry(edge, geo);
-        this.graph.connectCell(
-          edge,
-          null,
-          isSource,
-          new ConnectionConstraint()
-        );
+        this.graph.connectCell(edge, null, isSource, new ConnectionConstraint());
       }
     } finally {
       model.endUpdate();
@@ -2130,11 +2027,7 @@ class EdgeHandler {
    */
   // addPoint(state: mxCellState, evt: Event): void;
   addPoint(state, evt) {
-    const pt = utils.convertPoint(
-      this.graph.container,
-      getClientX(evt),
-      getClientY(evt)
-    );
+    const pt = utils.convertPoint(this.graph.container, getClientX(evt), getClientY(evt));
     const gridEnabled = this.graph.isGridEnabledEvent(evt);
     this.convertPoint(pt, gridEnabled);
     this.addPointAt(state, pt.x, pt.y);
@@ -2215,8 +2108,7 @@ class EdgeHandler {
     let color = HANDLE_FILLCOLOR;
 
     if (
-      (terminal != null &&
-        !this.graph.isCellDisconnectable(cell, terminal, isSource)) ||
+      (terminal != null && !this.graph.isCellDisconnectable(cell, terminal, isSource)) ||
       (terminal == null && !this.graph.isTerminalPointMovable(cell, isSource))
     ) {
       color = LOCKED_HANDLE_FILLCOLOR;
@@ -2278,10 +2170,7 @@ class EdgeHandler {
 
     // Updates the handle for the label position
     let b = this.labelShape.bounds;
-    this.label = new Point(
-      this.state.absoluteOffset.x,
-      this.state.absoluteOffset.y
-    );
+    this.label = new Point(this.state.absoluteOffset.x, this.state.absoluteOffset.y);
     this.labelShape.bounds = new Rectangle(
       Math.round(this.label.x - b.width / 2),
       Math.round(this.label.y - b.height / 2),
@@ -2378,9 +2267,7 @@ class EdgeHandler {
         this.customHandles[i].shape.node.style.display = temp;
 
         // Hides custom handles during text editing
-        this.customHandles[
-          i
-        ].shape.node.style.visibility = this.isCustomHandleVisible(
+        this.customHandles[i].shape.node.style.visibility = this.isCustomHandleVisible(
           this.customHandles[i]
         )
           ? ''
@@ -2395,9 +2282,7 @@ class EdgeHandler {
    * Returns true if the given custom handle is visible.
    */
   isCustomHandleVisible(handle) {
-    return (
-      !this.graph.isEditing() && this.state.view.graph.getSelectionCount() === 1
-    );
+    return !this.graph.isEditing() && this.state.view.graph.getSelectionCount() === 1;
   }
 
   /**
@@ -2527,16 +2412,13 @@ class EdgeHandler {
         }
       }
 
-      if (
-        this.shape != null &&
-        !utils.equalPoints(this.shape.points, this.abspoints)
-      ) {
+      if (this.shape != null && !utils.equalPoints(this.shape.points, this.abspoints)) {
         this.shape.apply(this.state);
         this.shape.points = this.abspoints.slice();
         this.shape.scale = this.state.view.scale;
         this.shape.isDashed = this.isSelectionDashed();
         this.shape.stroke = this.getSelectionColor();
-        this.shape.strokewidth =
+        this.shape.strokeWidth =
           this.getSelectionStrokeWidth() / this.shape.scale / this.shape.scale;
         this.shape.isShadow = false;
         this.shape.redraw();

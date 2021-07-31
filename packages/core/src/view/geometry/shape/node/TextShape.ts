@@ -24,22 +24,31 @@ import {
   LINE_HEIGHT,
   NONE,
   TEXT_DIRECTION_AUTO,
+  TEXT_DIRECTION_DEFAULT,
   TEXT_DIRECTION_LTR,
   TEXT_DIRECTION_RTL,
   WORD_WRAP,
 } from '../../../../util/Constants';
-import utils, {
-  getAlignmentAsPoint,
-  getBoundingBox,
-  getValue,
-} from '../../../../util/Utils';
+import { getAlignmentAsPoint, getBoundingBox } from '../../../../util/Utils';
 import Point from '../../Point';
-import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Shape from '../Shape';
 import Rectangle from '../../Rectangle';
 import CellState from '../../../cell/datatypes/CellState';
-import { htmlEntities, replaceTrailingNewlines, trim } from '../../../../util/StringUtils';
+import {
+  htmlEntities,
+  replaceTrailingNewlines,
+  trim,
+} from '../../../../util/StringUtils';
 import { isNode } from '../../../../util/DomUtils';
+import {
+  AlignValue,
+  ColorValue,
+  OverflowValue,
+  TextDirectionValue,
+  VAlignValue,
+} from 'packages/core/src/types';
+import SvgCanvas2D from 'packages/core/src/util/canvas/SvgCanvas2D';
 
 /**
  * Extends mxShape to implement a text shape.
@@ -56,28 +65,27 @@ class TextShape extends Shape {
   constructor(
     value: string,
     bounds: Rectangle,
-    align: string = ALIGN_CENTER,
-    valign: string | null = ALIGN_MIDDLE,
-    color: string = 'black',
-    family: string = DEFAULT_FONTFAMILY,
-    size: number = DEFAULT_FONTSIZE,
-    fontStyle: number = DEFAULT_FONTSTYLE,
-    spacing: number = 2,
-    spacingTop: number = 0,
-    spacingRight: number = 0,
-    spacingBottom: number = 0,
-    spacingLeft: number = 0,
-    horizontal: boolean = true,
-    background: string | null = null,
-    border: string | null = null,
-    wrap: boolean = false,
-    clipped: boolean = false,
-    overflow: string = 'visible',
-    labelPadding: number = 0,
-    textDirection: string = DEFAULT_TEXT_DIRECTION
+    align: AlignValue = ALIGN_CENTER,
+    valign: VAlignValue = ALIGN_MIDDLE,
+    color = 'black',
+    family = DEFAULT_FONTFAMILY,
+    size = DEFAULT_FONTSIZE,
+    fontStyle = DEFAULT_FONTSTYLE,
+    spacing = 2,
+    spacingTop = 0,
+    spacingRight = 0,
+    spacingBottom = 0,
+    spacingLeft = 0,
+    horizontal = true,
+    background = NONE,
+    border = NONE,
+    wrap = false,
+    clipped = false,
+    overflow: OverflowValue = 'visible',
+    labelPadding = 0,
+    textDirection: TextDirectionValue = DEFAULT_TEXT_DIRECTION
   ) {
     super();
-    valign = valign != null ? valign : ALIGN_MIDDLE;
 
     this.value = value;
     this.bounds = bounds;
@@ -87,14 +95,11 @@ class TextShape extends Shape {
     this.family = family;
     this.size = size;
     this.fontStyle = fontStyle;
-    this.spacing = parseInt(String(spacing || 2));
-    this.spacingTop = parseInt(String(spacing || 2)) + parseInt(String(spacingTop || 0));
-    this.spacingRight =
-      parseInt(String(spacing || 2)) + parseInt(String(spacingRight || 0));
-    this.spacingBottom =
-      parseInt(String(spacing || 2)) + parseInt(String(spacingBottom || 0));
-    this.spacingLeft =
-      parseInt(String(spacing || 2)) + parseInt(String(spacingLeft || 0));
+    this.spacing = spacing;
+    this.spacingTop = spacing + spacingTop;
+    this.spacingRight = spacing + spacingRight;
+    this.spacingBottom = spacing + spacingBottom;
+    this.spacingLeft = spacing + spacingLeft;
     this.horizontal = horizontal;
     this.background = background;
     this.border = border;
@@ -110,29 +115,29 @@ class TextShape extends Shape {
   // TODO: Document me!
   value: string | HTMLElement | SVGGElement | null;
   bounds: Rectangle;
-  align: string = ALIGN_CENTER;
-  valign: string = ALIGN_MIDDLE;
-  color: string = 'black';
-  family: string = DEFAULT_FONTFAMILY;
-  size: number = DEFAULT_FONTSIZE;
-  fontStyle: number = DEFAULT_FONTSTYLE;
-  spacing: number = 2;
-  spacingTop: number = 0;
-  spacingRight: number = 0;
-  spacingBottom: number = 0;
-  spacingLeft: number = 0;
-  horizontal: boolean = true;
-  background: string | null = null;
-  border: string | null = null;
-  wrap: boolean = false;
-  clipped: boolean = false;
-  overflow: string = 'visible';
-  labelPadding: number = 0;
-  textDirection: string = DEFAULT_TEXT_DIRECTION;
+  align: AlignValue;
+  valign: VAlignValue;
+  color: ColorValue;
+  family: string;
+  size: number;
+  fontStyle: number;
+  spacing: number;
+  spacingTop: number;
+  spacingRight: number;
+  spacingBottom: number;
+  spacingLeft: number;
+  horizontal: boolean;
+  background: ColorValue;
+  border: ColorValue;
+  wrap: boolean;
+  clipped: boolean;
+  overflow: OverflowValue;
+  labelPadding: number;
+  textDirection: TextDirectionValue;
   margin: Point | null = null;
   unrotatedBoundingBox: Rectangle | null = null;
-  flipH: boolean = false;
-  flipV: boolean = false;
+  flipH = false;
+  flipV = false;
 
   /**
    * Variable: baseSpacingTop
@@ -140,7 +145,7 @@ class TextShape extends Shape {
    * Specifies the spacing to be added to the top spacing. Default is 0. Use the
    * value 5 here to get the same label positions as in mxGraph 1.x.
    */
-  baseSpacingTop: number = 0;
+  baseSpacingTop = 0;
 
   /**
    * Variable: baseSpacingBottom
@@ -148,21 +153,21 @@ class TextShape extends Shape {
    * Specifies the spacing to be added to the bottom spacing. Default is 0. Use the
    * value 1 here to get the same label positions as in mxGraph 1.x.
    */
-  baseSpacingBottom: number = 0;
+  baseSpacingBottom = 0;
 
   /**
    * Variable: baseSpacingLeft
    *
    * Specifies the spacing to be added to the left spacing. Default is 0.
    */
-  baseSpacingLeft: number = 0;
+  baseSpacingLeft = 0;
 
   /**
    * Variable: baseSpacingRight
    *
    * Specifies the spacing to be added to the right spacing. Default is 0.
    */
-  baseSpacingRight: number = 0;
+  baseSpacingRight = 0;
 
   /**
    * Variable: replaceLinefeeds
@@ -170,14 +175,14 @@ class TextShape extends Shape {
    * Specifies if linefeeds in HTML labels should be replaced with BR tags.
    * Default is true.
    */
-  replaceLinefeeds: boolean = true;
+  replaceLinefeeds = true;
 
   /**
    * Variable: verticalTextRotation
    *
    * Rotation for vertical text. Default is -90 (bottom to top).
    */
-  verticalTextRotation: number = -90;
+  verticalTextRotation = -90;
 
   /**
    * Variable: ignoreClippedStringSize
@@ -187,7 +192,7 @@ class TextShape extends Shape {
    * true, then the bounding box will be set to <bounds>. Default is true.
    * <ignoreStringSize> has precedence over this switch.
    */
-  ignoreClippedStringSize: boolean = true;
+  ignoreClippedStringSize = true;
 
   /**
    * Variable: ignoreStringSize
@@ -196,7 +201,7 @@ class TextShape extends Shape {
    * boundingBox will not ignore the actual size of the string, otherwise
    * <bounds> will be used instead. Default is false.
    */
-  ignoreStringSize: boolean = false;
+  ignoreStringSize = false;
 
   /**
    * Variable: lastValue
@@ -210,14 +215,14 @@ class TextShape extends Shape {
    *
    * Specifies if caching for HTML labels should be enabled. Default is true.
    */
-  cacheEnabled: boolean = true;
+  cacheEnabled = true;
 
   /**
    * Function: getSvgScreenOffset
    *
    * Disables offset in IE9 for crisper image output.
    */
-  getSvgScreenOffset(): number {
+  getSvgScreenOffset() {
     return 0;
   }
 
@@ -226,12 +231,12 @@ class TextShape extends Shape {
    *
    * Returns true if the bounds are not null and all of its variables are numeric.
    */
-  checkBounds(): boolean {
+  checkBounds() {
     return (
       !isNaN(this.scale) &&
       isFinite(this.scale) &&
       this.scale > 0 &&
-      this.bounds != null &&
+      this.bounds &&
       !isNaN(this.bounds.x) &&
       !isNaN(this.bounds.y) &&
       !isNaN(this.bounds.width) &&
@@ -244,7 +249,7 @@ class TextShape extends Shape {
    *
    * Generic rendering code.
    */
-  paint(c: mxSvgCanvas2D, update: boolean = false): void {
+  paint(c: AbstractCanvas2D, update = false): void {
     // Scale is passed-through to canvas
     const s = this.scale;
     const x = this.bounds.x / s;
@@ -292,14 +297,14 @@ class TextShape extends Shape {
           ? (<string>val).replace(/\n/g, '<br/>')
           : val;
 
-      let dir: string | null = this.textDirection;
+      let dir: TextDirectionValue = this.textDirection;
 
       if (dir === TEXT_DIRECTION_AUTO && !realHtml) {
         dir = this.getAutoDirection();
       }
 
       if (dir !== TEXT_DIRECTION_LTR && dir !== TEXT_DIRECTION_RTL) {
-        dir = null;
+        dir = TEXT_DIRECTION_DEFAULT;
       }
 
       c.text(
@@ -333,19 +338,20 @@ class TextShape extends Shape {
       this.lastValue === this.value &&
       (isNode(this.value) || this.dialect === DIALECT_STRICTHTML)
     ) {
-      // @ts-ignore
       if (this.node.nodeName === 'DIV') {
         this.redrawHtmlShape();
         this.updateBoundingBox();
       } else {
         const canvas = this.createCanvas();
 
-        // Specifies if events should be handled
-        canvas.pointerEvents = this.pointerEvents;
+        if (canvas) {
+          // Specifies if events should be handled
+          canvas.pointerEvents = this.pointerEvents;
 
-        this.paint(canvas, true);
-        this.destroyCanvas(canvas);
-        this.updateBoundingBox();
+          this.paint(canvas, true);
+          this.destroyCanvas(canvas);
+          this.updateBoundingBox();
+        }
       }
     } else {
       super.redraw();
@@ -378,8 +384,8 @@ class TextShape extends Shape {
     this.spacingBottom = 2;
     this.spacingLeft = 2;
     this.horizontal = true;
-    this.background = null;
-    this.border = null;
+    this.background = NONE;
+    this.border = NONE;
     this.textDirection = DEFAULT_TEXT_DIRECTION;
     this.margin = null;
   }
@@ -397,31 +403,24 @@ class TextShape extends Shape {
     const old = this.spacing;
     super.apply(state);
 
-    if (this.style != null) {
-      this.fontStyle = this.style.fontStyle || this.fontStyle;
-      this.family = getValue(this.style, 'fontFamily', this.family);
-      this.size = getValue(this.style, 'fontSize', this.size);
-      this.color = getValue(this.style, 'fontColor', this.color);
-      this.align = getValue(this.style, 'align', this.align);
-      this.valign = getValue(this.style, 'verticalAlign', this.valign);
-      this.spacing = parseInt(getValue(this.style, 'spacing', this.spacing));
-      this.spacingTop =
-        parseInt(getValue(this.style, 'spacingTop', this.spacingTop - old)) +
-        this.spacing;
-      this.spacingRight =
-        parseInt(getValue(this.style, 'spacingRight', this.spacingRight - old)) +
-        this.spacing;
-      this.spacingBottom =
-        parseInt(getValue(this.style, 'spacingBottom', this.spacingBottom - old)) +
-        this.spacing;
-      this.spacingLeft =
-        parseInt(getValue(this.style, 'spacingLeft', this.spacingLeft - old)) +
-        this.spacing;
-      this.horizontal = getValue(this.style, 'horizontal', this.horizontal);
-      this.background = getValue(this.style, 'backgroundColor', this.background);
-      this.border = getValue(this.style, 'labelBorderColor', this.border);
-      this.textDirection = getValue(this.style, 'textDirection', DEFAULT_TEXT_DIRECTION);
-      this.opacity = getValue(this.style, 'textOpacity', 100);
+    if (this.style) {
+      this.fontStyle = this.style.fontStyle;
+      this.family = this.style.fontFamily;
+      this.size = this.style.fontSize;
+      this.color = this.style.fontColor;
+      this.align = this.style.align;
+      this.valign = this.style.verticalAlign;
+      this.spacing = this.style.spacing;
+      this.spacingTop = this.style.spacingTop;
+      this.spacingRight = this.style.spacingRight;
+      this.spacingBottom = this.style.spacingBottom;
+      this.spacingLeft = this.style.spacingLeft;
+      this.horizontal = this.style.horizontal;
+      this.background = this.style.backgroundColor;
+      this.border = this.style.labelBorderColor;
+      this.textDirection = this.style.textDirection;
+      this.opacity = this.style.textOpacity;
+
       this.updateMargin();
     }
 
@@ -437,14 +436,14 @@ class TextShape extends Shape {
    * depending on the contents of <value>. This is not invoked for HTML, wrapped
    * content or if <value> is a DOM node.
    */
-  getAutoDirection(): string {
+  getAutoDirection() {
     // Looks for strong (directional) characters
     const tmp = /[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(
-      <string>this.value
+      String(this.value)
     );
 
     // Returns the direction defined by the character
-    return tmp != null && tmp.length > 0 && tmp[0] > 'z'
+    return tmp && tmp.length > 0 && tmp[0] > 'z'
       ? TEXT_DIRECTION_RTL
       : TEXT_DIRECTION_LTR;
   }
@@ -457,9 +456,9 @@ class TextShape extends Shape {
   getContentNode() {
     let result = this.node;
 
-    if (result != null) {
+    if (result) {
       // Rendered with no foreignObject
-      if (result.ownerSVGElement == null) {
+      if (!result.ownerSVGElement) {
         // @ts-ignore
         result = this.node.firstChild.firstChild;
       } else {
@@ -468,6 +467,7 @@ class TextShape extends Shape {
         result = result.firstChild.firstChild.firstChild.firstChild.firstChild;
       }
     }
+
     return result;
   }
 
@@ -476,21 +476,17 @@ class TextShape extends Shape {
    *
    * Updates the <boundingBox> for this shape using the given node and position.
    */
-  updateBoundingBox(): void {
+  updateBoundingBox() {
     let { node } = this;
     this.boundingBox = this.bounds.clone();
     const rot = this.getTextRotation();
 
-    const h =
-      this.style != null ? getValue(this.style, 'labelPosition', ALIGN_CENTER) : null;
-    const v =
-      this.style != null
-        ? getValue(this.style, 'verticalLabelPosition', ALIGN_MIDDLE)
-        : null;
+    const h = this.style?.labelPosition ?? ALIGN_CENTER;
+    const v = this.style?.verticalLabelPosition ?? ALIGN_MIDDLE;
 
     if (
       !this.ignoreStringSize &&
-      node != null &&
+      node &&
       this.overflow !== 'fill' &&
       (!this.clipped ||
         !this.ignoreClippedStringSize ||
@@ -501,8 +497,8 @@ class TextShape extends Shape {
       let oh = null;
 
       if (
-        node.firstChild != null &&
-        node.firstChild.firstChild != null &&
+        node.firstChild &&
+        node.firstChild.firstChild &&
         node.firstChild.firstChild.nodeName === 'foreignObject'
       ) {
         // Uses second inner DIV for font metrics
@@ -512,7 +508,6 @@ class TextShape extends Shape {
         oh = node.offsetHeight * this.scale;
 
         if (this.overflow === 'width') {
-          // @ts-ignore
           ow = this.boundingBox.width;
         } else {
           // @ts-ignore
@@ -523,7 +518,7 @@ class TextShape extends Shape {
           const b = node.getBBox();
 
           // Workaround for bounding box of empty string
-          if (typeof this.value === 'string' && trim(this.value)?.length == 0) {
+          if (typeof this.value === 'string' && trim(this.value)?.length === 0) {
             this.boundingBox = null;
           } else if (b.width === 0 && b.height === 0) {
             this.boundingBox = null;
@@ -537,12 +532,12 @@ class TextShape extends Shape {
         }
       }
 
-      if (ow != null && oh != null) {
+      if (ow && oh) {
         this.boundingBox = new Rectangle(this.bounds.x, this.bounds.y, ow, oh);
       }
     }
 
-    if (this.boundingBox != null) {
+    if (this.boundingBox) {
       const margin = <Rectangle>this.margin;
 
       if (rot !== 0) {
@@ -581,7 +576,7 @@ class TextShape extends Shape {
    *
    * Returns 0 to avoid using rotation in the canvas via updateTransform.
    */
-  getShapeRotation(): number {
+  getShapeRotation() {
     return 0;
   }
 
@@ -590,10 +585,8 @@ class TextShape extends Shape {
    *
    * Returns the rotation for the text label of the corresponding shape.
    */
-  getTextRotation(): number {
-    return this.state != null && this.state.shape != null
-      ? this.state.shape.getTextRotation()
-      : 0;
+  getTextRotation() {
+    return this.state && this.state.shape ? this.state.shape.getTextRotation() : 0;
   }
 
   /**
@@ -602,13 +595,8 @@ class TextShape extends Shape {
    * Inverts the bounds if <mxShape.isBoundsInverted> returns true or if the
    * horizontal style is false.
    */
-  isPaintBoundsInverted(): boolean {
-    return (
-      !this.horizontal &&
-      this.state != null &&
-      // @ts-ignore
-      this.state.cell.isVertex()
-    );
+  isPaintBoundsInverted() {
+    return !this.horizontal && !!this.state && this.state.cell.isVertex();
   }
 
   /**
@@ -616,7 +604,7 @@ class TextShape extends Shape {
    *
    * Sets the state of the canvas for drawing the shape.
    */
-  configureCanvas(c: mxSvgCanvas2D, x: number, y: number, w: number, h: number): void {
+  configureCanvas(c: AbstractCanvas2D, x: number, y: number, w: number, h: number): void {
     super.configureCanvas(c, x, y, w, h);
 
     c.setFontColor(this.color);
@@ -691,7 +679,7 @@ class TextShape extends Shape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  redrawHtmlShape(): void {
+  redrawHtmlShape() {
     const w = Math.max(0, Math.round(this.bounds.width / this.scale));
     const h = Math.max(0, Math.round(this.bounds.height / this.scale));
     const flex =
@@ -699,9 +687,9 @@ class TextShape extends Shape {
       `top: ${Math.round(this.bounds.y)}px; pointer-events: none; `;
     const block = this.getTextCss();
     const margin = <Point>this.margin;
-    const node = <SVGGElement>this.node;
+    const node = this.node;
 
-    mxSvgCanvas2D.createCss(
+    SvgCanvas2D.createCss(
       w + 2,
       h,
       this.align,
@@ -709,8 +697,8 @@ class TextShape extends Shape {
       this.wrap,
       this.overflow,
       this.clipped,
-      this.background != null ? htmlEntities(this.background, true) : null,
-      this.border != null ? htmlEntities(this.border, true) : null,
+      this.background !== NONE ? htmlEntities(this.background, true) : null,
+      this.border !== NONE ? htmlEntities(this.border, true) : null,
       flex,
       block,
       this.scale,
@@ -745,7 +733,7 @@ class TextShape extends Shape {
           }
         }
 
-        if (<number>this.opacity < 100) {
+        if (this.opacity < 100) {
           block += `opacity: ${<number>this.opacity / 100}; `;
         }
 
@@ -756,7 +744,7 @@ class TextShape extends Shape {
             this.value.outerHTML
           : this.getHtmlValue();
 
-        if (node.firstChild == null) {
+        if (!node.firstChild) {
           node.innerHTML = `<div><div>${html}</div></div>`;
         }
 
@@ -773,7 +761,7 @@ class TextShape extends Shape {
    *
    * Sets the inner HTML of the given element to the <value>.
    */
-  updateInnerHtml(elt: HTMLElement): void {
+  updateInnerHtml(elt: HTMLElement) {
     if (isNode(this.value)) {
       // @ts-ignore
       elt.innerHTML = this.value.outerHTML;
@@ -782,7 +770,7 @@ class TextShape extends Shape {
 
       if (this.dialect !== DIALECT_STRICTHTML) {
         // LATER: Can be cached in updateValue
-        val = htmlEntities(<string>val, false);
+        val = htmlEntities(val, false);
       }
 
       // Handles trailing newlines to make sure they are visible in rendering output
@@ -799,8 +787,8 @@ class TextShape extends Shape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  updateValue(): void {
-    const node = <SVGGElement>this.node;
+  updateValue() {
+    const node = this.node;
 
     if (isNode(this.value)) {
       node.innerHTML = '';
@@ -809,32 +797,31 @@ class TextShape extends Shape {
       let val = this.value as string;
 
       if (this.dialect !== DIALECT_STRICTHTML) {
-        val = htmlEntities(<string>val, false);
+        val = htmlEntities(val, false);
       }
 
       // Handles trailing newlines to make sure they are visible in rendering output
       val = replaceTrailingNewlines(val, '<div><br></div>');
       val = this.replaceLinefeeds ? val.replace(/\n/g, '<br/>') : val;
-      const bg =
-        this.background != null && this.background !== NONE ? this.background : null;
-      const bd = this.border != null && this.border !== NONE ? this.border : null;
+      const bg = this.background !== NONE ? this.background : null;
+      const bd = this.border !== NONE ? this.border : null;
 
       if (this.overflow === 'fill' || this.overflow === 'width') {
-        if (bg != null) {
+        if (bg) {
           node.style.backgroundColor = bg;
         }
 
-        if (bd != null) {
+        if (bd) {
           node.style.border = `1px solid ${bd}`;
         }
       } else {
         let css = '';
 
-        if (bg != null) {
+        if (bg) {
           css += `background-color:${htmlEntities(bg, true)};`;
         }
 
-        if (bd != null) {
+        if (bd) {
           css += `border:1px solid ${htmlEntities(bd, true)};`;
         }
 
@@ -873,7 +860,7 @@ class TextShape extends Shape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  updateFont(node: HTMLElement | SVGGElement): void {
+  updateFont(node: HTMLElement | SVGGElement) {
     const { style } = node;
 
     // @ts-ignore
@@ -923,7 +910,7 @@ class TextShape extends Shape {
    *
    * Updates the HTML node(s) to reflect the latest bounds and scale.
    */
-  updateSize(node: HTMLElement, enableWrap: boolean = false): void {
+  updateSize(node: HTMLElement, enableWrap = false) {
     const w = Math.max(0, Math.round(this.bounds.width / this.scale));
     const h = Math.max(0, Math.round(this.bounds.height / this.scale));
     const { style } = node;
@@ -992,7 +979,7 @@ class TextShape extends Shape {
    *
    * Returns the spacing as an <mxPoint>.
    */
-  updateMargin(): void {
+  updateMargin() {
     this.margin = getAlignmentAsPoint(this.align, this.valign);
   }
 
@@ -1001,7 +988,7 @@ class TextShape extends Shape {
    *
    * Returns the spacing as an <mxPoint>.
    */
-  getSpacing(): Point {
+  getSpacing() {
     let dx = 0;
     let dy = 0;
 

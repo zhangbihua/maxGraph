@@ -6,10 +6,9 @@
  */
 import Shape from '../Shape';
 import Point from '../../Point';
-import utils from '../../../../util/Utils';
 import { LINE_ARCSIZE } from '../../../../util/Constants';
 import Rectangle from '../../Rectangle';
-import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 
 /**
  * Extends {@link Shape} to implement a rhombus (aka diamond) shape.
@@ -18,17 +17,12 @@ import mxSvgCanvas2D from '../../../../util/canvas/mxSvgCanvas2D';
  * @extends {Shape}
  */
 class RhombusShape extends Shape {
-  constructor(
-    bounds: Rectangle,
-    fill: string,
-    stroke: string,
-    strokewidth: number = 1
-  ) {
+  constructor(bounds: Rectangle, fill: string, stroke: string, strokewidth: number = 1) {
     super();
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth;
+    this.strokeWidth = strokewidth;
   }
 
   /**
@@ -47,19 +41,12 @@ class RhombusShape extends Shape {
    * @param {number} w
    * @param {number} h
    */
-  // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintVertexShape(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ) {
+  paintVertexShape(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     const hw = w / 2;
     const hh = h / 2;
 
-    const arcSize =
-      utils.getValue(this.style, 'arcSize', LINE_ARCSIZE) / 2;
+    const arcSize = (this.style?.arcSize ?? LINE_ARCSIZE) / 2;
+
     c.begin();
     this.addPoints(
       c,

@@ -13,9 +13,11 @@ import {
   ALIGN_RIGHT,
   ALIGN_TOP,
   DEFAULT_IMAGESIZE,
+  NONE,
 } from '../../../../util/Constants';
 import RectangleShape from './RectangleShape';
-import utils from '../../../../util/Utils';
+import { ColorValue } from 'packages/core/src/types';
+import AbstractCanvas2D from 'packages/core/src/util/canvas/AbstractCanvas2D';
 
 /**
  * Class: mxLabel
@@ -37,24 +39,29 @@ import utils from '../../../../util/Utils';
  * strokewidth - Optional integer that defines the stroke width. Default is
  * 1. This is stored in <strokewidth>.
  */
-class Label extends RectangleShape {
-  constructor(bounds, fill, stroke, strokewidth) {
-    super(bounds, fill, stroke, strokewidth);
+class LabelShape extends RectangleShape {
+  constructor(
+    bounds: Rectangle,
+    fill: ColorValue,
+    stroke: ColorValue,
+    strokeWidth: number
+  ) {
+    super(bounds, fill, stroke, strokeWidth);
   }
 
   /**
    * Default width and height for the image.
    * @default mxConstants.DEFAULT_IMAGESIZE
    */
-  // imageSize: number;
   imageSize = DEFAULT_IMAGESIZE;
+
+  imageSrc: string | null = null;
 
   /**
    * Default value for image spacing
    * @type {number}
    * @default 2
    */
-  // spacing: number;
   spacing = 2;
 
   /**
@@ -62,7 +69,6 @@ class Label extends RectangleShape {
    * @type {number}
    * @default 10
    */
-  // indicatorSize: number;
   indicatorSize = 10;
 
   /**
@@ -70,17 +76,17 @@ class Label extends RectangleShape {
    * @default 2
    * @type {number}
    */
-  // indicatorSpacing: number;
   indicatorSpacing = 2;
+
+  indicatorImageSrc: string | null = null;
 
   /**
    * Initializes the shape and the <indicator>.
    */
-  // init(container: HTMLElement): void;
-  init(container) {
+  init(container: SVGElement) {
     super.init(container);
 
-    if (this.indicatorShape != null) {
+    if (this.indicatorShape) {
       this.indicator = new this.indicatorShape();
       this.indicator.dialect = this.dialect;
       this.indicator.init(this.node);
@@ -91,9 +97,8 @@ class Label extends RectangleShape {
    * Reconfigures this shape. This will update the colors of the indicator
    * and reconfigure it if required.
    */
-  // redraw(): void;
   redraw() {
-    if (this.indicator != null) {
+    if (this.indicator) {
       this.indicator.fill = this.indicatorColor;
       this.indicator.stroke = this.indicatorStrokeColor;
       this.indicator.gradient = this.indicatorGradientColor;
@@ -107,13 +112,8 @@ class Label extends RectangleShape {
    * Returns true for non-rounded, non-rotated shapes with no glass gradient and
    * no indicator shape.
    */
-  // isHtmlAllowed(): boolean;
   isHtmlAllowed() {
-    return (
-      super.isHtmlAllowed() &&
-      this.indicatorColor == null &&
-      this.indicatorShape == null
-    );
+    return super.isHtmlAllowed() && this.indicatorColor === NONE && !!this.indicatorShape;
   }
 
   /**
@@ -124,8 +124,7 @@ class Label extends RectangleShape {
    * @param {number} w
    * @param {number} h
    */
-  // paintForeground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintForeground(c, x, y, w, h) {
+  paintForeground(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     this.paintImage(c, x, y, w, h);
     this.paintIndicator(c, x, y, w, h);
     super.paintForeground(c, x, y, w, h);
@@ -139,16 +138,15 @@ class Label extends RectangleShape {
    * @param {number} w
    * @param {number} h
    */
-  // paintImage(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintImage(c, x, y, w, h) {
-    if (this.image != null) {
+  paintImage(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
+    if (this.imageSrc) {
       const bounds = this.getImageBounds(x, y, w, h);
       c.image(
         bounds.x,
         bounds.y,
         bounds.width,
         bounds.height,
-        this.image,
+        this.imageSrc,
         false,
         false,
         false
@@ -163,26 +161,12 @@ class Label extends RectangleShape {
    * @param {number} w
    * @param {number} h
    */
-  // getImageBounds(x: number, y: number, w: number, h: number): mxRectangle;
-  getImageBounds(x, y, w, h) {
-    const align = utils.getValue(this.style, 'imageAlign', ALIGN_LEFT);
-    const valign = utils.getValue(
-      this.style,
-      'verticalAlign',
-      ALIGN_MIDDLE
-    );
-    const width = utils.getNumber(
-      this.style,
-      'imageWidth',
-      DEFAULT_IMAGESIZE
-    );
-    const height = utils.getNumber(
-      this.style,
-      'imageHeight',
-      DEFAULT_IMAGESIZE
-    );
-    const spacing =
-      utils.getNumber(this.style, 'spacing', this.spacing) + 5;
+  getImageBounds(x: number, y: number, w: number, h: number) {
+    const align = this.style?.imageAlign ?? ALIGN_LEFT;
+    const valign = this.style?.verticalAlign ?? ALIGN_MIDDLE;
+    const width = this.style?.imageWidth ?? DEFAULT_IMAGESIZE;
+    const height = this.style?.imageHeight ?? DEFAULT_IMAGESIZE;
+    const spacing = this.style?.spacing ?? this.spacing + 5;
 
     if (align === ALIGN_CENTER) {
       x += (w - width) / 2;
@@ -213,19 +197,18 @@ class Label extends RectangleShape {
    * @param {number} w
    * @param {number} h
    */
-  // paintIndicator(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintIndicator(c, x, y, w, h) {
-    if (this.indicator != null) {
+  paintIndicator(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
+    if (this.indicator) {
       this.indicator.bounds = this.getIndicatorBounds(x, y, w, h);
       this.indicator.paint(c);
-    } else if (this.indicatorImage != null) {
+    } else if (this.indicatorImageSrc) {
       const bounds = this.getIndicatorBounds(x, y, w, h);
       c.image(
         bounds.x,
         bounds.y,
         bounds.width,
         bounds.height,
-        this.indicatorImage,
+        this.indicatorImageSrc,
         false,
         false,
         false
@@ -241,24 +224,11 @@ class Label extends RectangleShape {
    * @param {number} h
    * @returns {Rectangle}
    */
-  // getIndicatorBounds(x: number, y: number, w: number, h: number): mxRectangle;
-  getIndicatorBounds(x, y, w, h) {
-    const align = utils.getValue(this.style, 'imageAlign', ALIGN_LEFT);
-    const valign = utils.getValue(
-      this.style,
-      'verticalAlign',
-      ALIGN_MIDDLE
-    );
-    const width = utils.getNumber(
-      this.style,
-      'indicatorWidth',
-      this.indicatorSize
-    );
-    const height = utils.getNumber(
-      this.style,
-      'indicatorHeight',
-      this.indicatorSize
-    );
+  getIndicatorBounds(x: number, y: number, w: number, h: number) {
+    const align = this.style?.imageAlign ?? ALIGN_LEFT;
+    const valign = this.style?.verticalAlign ?? ALIGN_MIDDLE;
+    const width = this.style?.indicatorWidth ?? this.indicatorSize;
+    const height = this.style?.indicatorHeight ?? this.indicatorSize;
     const spacing = this.spacing + 5;
 
     if (align === ALIGN_RIGHT) {
@@ -285,16 +255,15 @@ class Label extends RectangleShape {
   /**
    * Generic background painting implementation.
    */
-  // redrawHtmlShape(): void;
   redrawHtmlShape() {
     super.redrawHtmlShape();
 
     // Removes all children
     while (this.node.hasChildNodes()) {
-      this.node.removeChild(this.node.lastChild);
+      this.node.removeChild(this.node.lastChild as ChildNode);
     }
 
-    if (this.image != null) {
+    if (this.imageSrc && this.bounds) {
       const node = document.createElement('img');
       node.style.position = 'relative';
       node.setAttribute('border', '0');
@@ -313,11 +282,11 @@ class Label extends RectangleShape {
       node.style.width = `${Math.round(bounds.width)}px`;
       node.style.height = `${Math.round(bounds.height)}px`;
 
-      node.src = this.image;
+      node.src = this.imageSrc;
 
       this.node.appendChild(node);
     }
   }
 }
 
-export default Label;
+export default LabelShape;

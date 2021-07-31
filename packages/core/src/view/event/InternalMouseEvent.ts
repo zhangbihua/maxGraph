@@ -4,7 +4,13 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import {getClientX, getClientY, getSource, isMouseEvent, isPopupTrigger} from '../../util/EventUtils';
+import {
+  getClientX,
+  getClientY,
+  getSource,
+  isMouseEvent,
+  isPopupTrigger,
+} from '../../util/EventUtils';
 import { isAncestorNode } from '../../util/DomUtils';
 import CellState from '../cell/datatypes/CellState';
 import Shape from '../geometry/shape/Shape';
@@ -119,11 +125,8 @@ class InternalMouseEvent {
    *
    * Returns true if the given <mxShape> is the source of <evt>.
    */
-  isSource(shape: Shape): boolean {
-    if (shape != null) {
-      return isAncestorNode(shape.node, this.getSource());
-    }
-    return false;
+  isSource(shape: Shape) {
+    return shape ? isAncestorNode(shape.node, this.getSource()) : false;
   }
 
   /**
@@ -131,7 +134,7 @@ class InternalMouseEvent {
    *
    * Returns <evt.clientX>.
    */
-  getX(): number {
+  getX() {
     return getClientX(this.getEvent());
   }
 
@@ -140,7 +143,7 @@ class InternalMouseEvent {
    *
    * Returns <evt.clientY>.
    */
-  getY(): number {
+  getY() {
     return getClientY(this.getEvent());
   }
 

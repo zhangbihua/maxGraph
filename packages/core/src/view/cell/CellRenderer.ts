@@ -286,7 +286,7 @@ class CellRenderer {
 
     if (shape) {
       shape.apply(state);
-      shape.image = state.getImage();
+      shape.imageSrc = state.getImage();
       shape.indicatorColor = state.getIndicatorColor();
       shape.indicatorStrokeColor = state.style.indicatorStrokeColor;
       shape.indicatorGradientColor = state.getIndicatorGradientColor();
@@ -371,11 +371,7 @@ class CellRenderer {
       } else if (value === 'indicated' && state.shape != null) {
         // @ts-ignore
         shape[field] = state.shape.indicatorColor;
-      } else if (
-        key !== 'fillColor' &&
-        value === 'fillColor' &&
-        state.shape != null
-      ) {
+      } else if (key !== 'fillColor' && value === 'fillColor' && state.shape != null) {
         // @ts-ignore
         shape[field] = state.style.fillColor;
       } else if (
@@ -465,9 +461,7 @@ class CellRenderer {
       );
       state.text.opacity =
         state.style.textOpacity == null ? 100 : state.style.textOpacity;
-      state.text.dialect = isForceHtml
-        ? DIALECT_STRICTHTML
-        : state.view.graph.dialect;
+      state.text.dialect = isForceHtml ? DIALECT_STRICTHTML : state.view.graph.dialect;
       state.text.style = state.style;
       state.text.state = state;
       this.initializeLabel(state, state.text);
@@ -489,9 +483,7 @@ class CellRenderer {
           // Dispatches the drop event to the graph which
           // consumes and executes the source function
           const pt = convertPoint(graph.container, x, y);
-          result = <CellState>(
-            graph.view.getState(graph.getCellAt(pt.x, pt.y))
-          );
+          result = <CellState>graph.view.getState(graph.getCellAt(pt.x, pt.y));
         }
         return result;
       };
@@ -506,8 +498,7 @@ class CellRenderer {
               new InternalMouseEvent(evt, state)
             );
             forceGetCell =
-              graph.dialect !== DIALECT_SVG &&
-              getSource(evt).nodeName === 'IMG';
+              graph.dialect !== DIALECT_SVG && getSource(evt).nodeName === 'IMG';
           }
         },
         (evt: MouseEvent) => {
@@ -576,8 +567,7 @@ class CellRenderer {
       dict = new Dictionary();
 
       for (let i = 0; i < overlays.length; i += 1) {
-        const shape =
-          state.overlays != null ? state.overlays.remove(overlays[i]) : null;
+        const shape = state.overlays != null ? state.overlays.remove(overlays[i]) : null;
 
         if (shape == null) {
           const tmp = new ImageShape(
@@ -645,7 +635,7 @@ class CellRenderer {
       }
 
       overlay.fireEvent(
-        new EventObject(InternalEvent.CLICK, {event: evt, cell: state.cell})
+        new EventObject(InternalEvent.CLICK, { event: evt, cell: state.cell })
       );
     });
 
@@ -655,14 +645,17 @@ class CellRenderer {
         InternalEvent.consume(evt);
       },
       (evt: Event) => {
-        graph.event.fireMouseEvent(InternalEvent.MOUSE_MOVE, new InternalMouseEvent(evt, state));
+        graph.event.fireMouseEvent(
+          InternalEvent.MOUSE_MOVE,
+          new InternalMouseEvent(evt, state)
+        );
       }
     );
 
     if (mxClient.IS_TOUCH) {
       InternalEvent.addListener(shape.node, 'touchend', (evt: Event) => {
         overlay.fireEvent(
-          new EventObject(InternalEvent.CLICK, {event: evt, cell: state.cell})
+          new EventObject(InternalEvent.CLICK, { event: evt, cell: state.cell })
         );
       });
     }
@@ -746,9 +739,7 @@ class CellRenderer {
     // should go into the graph container directly in order to be clickable. Otherwise
     // it is obscured by the HTML label that overlaps the cell.
     const isForceHtml =
-      graph.isHtmlLabel(state.cell) &&
-      mxClient.NO_FO &&
-      graph.dialect === DIALECT_SVG;
+      graph.isHtmlLabel(state.cell) && mxClient.NO_FO && graph.dialect === DIALECT_SVG;
 
     if (isForceHtml) {
       control.dialect = DIALECT_PREFERHTML;
@@ -791,7 +782,10 @@ class CellRenderer {
           );
         },
         (evt: Event) => {
-          graph.event.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt, state));
+          graph.event.fireMouseEvent(
+            InternalEvent.MOUSE_UP,
+            new InternalMouseEvent(evt, state)
+          );
           InternalEvent.consume(evt);
         }
       );
@@ -833,8 +827,7 @@ class CellRenderer {
    * state - <mxCellState> whose shape fired the event.
    * evt - Mouse event which was fired.
    */
-  isShapeEvent(state: CellState,
-               evt: InternalMouseEvent | MouseEvent): boolean {
+  isShapeEvent(state: CellState, evt: InternalMouseEvent | MouseEvent): boolean {
     return true;
   }
 
@@ -849,8 +842,7 @@ class CellRenderer {
    * state - <mxCellState> whose label fired the event.
    * evt - Mouse event which was fired.
    */
-  isLabelEvent(state: CellState,
-               evt: InternalMouseEvent | MouseEvent): boolean {
+  isLabelEvent(state: CellState, evt: InternalMouseEvent | MouseEvent): boolean {
     return true;
   }
 
@@ -938,15 +930,13 @@ class CellRenderer {
    *
    * state - <mxCellState> whose label should be redrawn.
    */
-  redrawLabel(state: CellState,
-              forced: boolean): void {
+  redrawLabel(state: CellState, forced: boolean): void {
     const { graph } = state.view;
     const value = this.getLabelValue(state);
     const wrapping = graph.isWrapping(state.cell);
     const clipping = graph.isLabelClipped(state.cell);
     const isForceHtml =
-      state.view.graph.isHtmlLabel(state.cell) ||
-      (value != null && isNode(value));
+      state.view.graph.isHtmlLabel(state.cell) || (value != null && isNode(value));
     const dialect = isForceHtml ? DIALECT_STRICTHTML : state.view.graph.dialect;
     const overflow = state.style.overflow || 'visible';
 
@@ -961,11 +951,7 @@ class CellRenderer {
       state.text = null;
     }
 
-    if (
-      state.text == null &&
-      value != null &&
-      (isNode(value) || value.length > 0)
-    ) {
+    if (state.text == null && value != null && (isNode(value) || value.length > 0)) {
       this.createLabel(state, value);
     } else if (state.text != null && (value == null || value.length == 0)) {
       state.text.destroy();
@@ -977,10 +963,7 @@ class CellRenderer {
       // result in getLabelBounds we apply the new style to the shape
       if (forced) {
         // Checks if a full repaint is needed
-        if (
-          state.text.lastValue != null &&
-          this.isTextShapeInvalid(state, state.text)
-        ) {
+        if (state.text.lastValue != null && this.isTextShapeInvalid(state, state.text)) {
           // Forces a full repaint
           state.text.lastValue = null;
         }
@@ -1035,8 +1018,7 @@ class CellRenderer {
    * state - <mxCellState> whose label should be checked.
    * shape - <mxText> shape to be checked.
    */
-  isTextShapeInvalid(state: CellState,
-                     shape: TextShape): boolean {
+  isTextShapeInvalid(state: CellState, shape: TextShape): boolean {
     function check(property: string, stylename: string, defaultValue: any) {
       let result = false;
 
@@ -1049,8 +1031,7 @@ class CellRenderer {
       ) {
         result =
           // @ts-ignore
-          parseFloat(String(shape[property])) -
-            parseFloat(String(shape.spacing)) !==
+          parseFloat(String(shape[property])) - parseFloat(String(shape.spacing)) !==
           (state.style[stylename] || defaultValue);
       } else {
         // @ts-ignore
@@ -1119,10 +1100,7 @@ class CellRenderer {
     const { graph } = state.view;
     const { scale } = state.view;
     const isEdge = state.cell.isEdge();
-    let bounds = new Rectangle(
-      state.absoluteOffset.x,
-      state.absoluteOffset.y
-    );
+    let bounds = new Rectangle(state.absoluteOffset.x, state.absoluteOffset.y);
 
     if (isEdge) {
       // @ts-ignore
@@ -1273,8 +1251,7 @@ class CellRenderer {
    *
    * state - <mxCellState> whose overlays should be redrawn.
    */
-  redrawCellOverlays(state: CellState,
-                     forced: boolean = false): void {
+  redrawCellOverlays(state: CellState, forced: boolean = false): void {
     this.createCellOverlays(state);
 
     if (state.overlays != null) {
@@ -1329,8 +1306,7 @@ class CellRenderer {
    *
    * state - <mxCellState> whose control should be redrawn.
    */
-  redrawControl(state: CellState,
-                forced: boolean = false): void {
+  redrawControl(state: CellState, forced: boolean = false): void {
     const image = state.view.graph.getFoldingImage(state);
 
     if (state.control != null && image != null) {
@@ -1364,11 +1340,7 @@ class CellRenderer {
    * Returns the bounds to be used to draw the control (folding icon) of the
    * given state.
    */
-  getControlBounds(
-    state: CellState,
-    w: number,
-    h: number
-  ): Rectangle | null {
+  getControlBounds(state: CellState, w: number, h: number): Rectangle | null {
     if (state.control != null) {
       const s = state.view.scale;
       let cx = state.getCenterX();
@@ -1471,10 +1443,7 @@ class CellRenderer {
           if (shapeNode.parentNode === state.view.graph.container) {
             let { canvas } = state.view;
 
-            while (
-              canvas != null &&
-              canvas.parentNode !== state.view.graph.container
-            ) {
+            while (canvas != null && canvas.parentNode !== state.view.graph.container) {
               // @ts-ignore
               canvas = canvas.parentNode;
             }
@@ -1482,10 +1451,7 @@ class CellRenderer {
             if (canvas != null && canvas.nextSibling != null) {
               if (canvas.nextSibling !== shapeNode) {
                 // @ts-ignore
-                shapeNode.parentNode.insertBefore(
-                  shapeNode,
-                  canvas.nextSibling
-                );
+                shapeNode.parentNode.insertBefore(shapeNode, canvas.nextSibling);
               }
             } else {
               // @ts-ignore
@@ -1497,10 +1463,7 @@ class CellRenderer {
             shapeNode.parentNode.firstChild != shapeNode
           ) {
             // Inserts the node as the first child of the parent to implement the order
-            shapeNode.parentNode.insertBefore(
-              shapeNode,
-              shapeNode.parentNode.firstChild
-            );
+            shapeNode.parentNode.insertBefore(shapeNode, shapeNode.parentNode.firstChild);
           }
         }
 
@@ -1527,9 +1490,7 @@ class CellRenderer {
    *
    * state - <mxCellState> whose shapes should be returned.
    */
-  getShapesForState(
-    state: CellState
-  ): [Shape | null, TextShape | null, Shape | null] {
+  getShapesForState(state: CellState): [Shape | null, TextShape | null, Shape | null] {
     return [state.shape, state.text, state.control];
   }
 
@@ -1549,11 +1510,7 @@ class CellRenderer {
    * be drawn into the DOM. If this is false then redraw and/or reconfigure
    * will not be called on the shape.
    */
-  redraw(
-    state: CellState,
-    force: boolean = false,
-    rendering: boolean = true
-  ): void {
+  redraw(state: CellState, force: boolean = false, rendering: boolean = true): void {
     const shapeChanged = this.redrawShape(state, force, rendering);
 
     if (state.shape != null && rendering) {
@@ -1628,8 +1585,7 @@ class CellRenderer {
     // Updates indicator shape
     if (
       state.shape != null &&
-      state.shape.indicatorShape !=
-        this.getShape(state.getIndicatorShape())
+      state.shape.indicatorShape != this.getShape(state.getIndicatorShape())
     ) {
       if (state.shape.indicator != null) {
         state.shape.indicator.destroy();
@@ -1658,12 +1614,7 @@ class CellRenderer {
           state.shape.bounds = null;
         } else {
           state.shape.points = null;
-          state.shape.bounds = new Rectangle(
-            state.x,
-            state.y,
-            state.width,
-            state.height
-          );
+          state.shape.bounds = new Rectangle(state.x, state.y, state.width, state.height);
         }
 
         state.shape.scale = state.view.scale;
@@ -1700,8 +1651,7 @@ class CellRenderer {
       shape.bounds == null ||
       shape.scale !== state.view.scale ||
       (state.absolutePoints == null && !shape.bounds.equals(state)) ||
-      (state.absolutePoints != null &&
-        !equalPoints(shape.points, state.absolutePoints))
+      (state.absolutePoints != null && !equalPoints(shape.points, state.absolutePoints))
     );
   }
 

@@ -1,14 +1,14 @@
-import Image from "../image/Image";
-import mxClient from "../../mxClient";
-import Graph from "../Graph";
-import CellState from "../cell/datatypes/CellState";
-import Cell from "../cell/datatypes/Cell";
-import CellArray from "../cell/datatypes/CellArray";
-import EventObject from "../event/EventObject";
-import InternalEvent from "../event/InternalEvent";
-import Geometry from "../geometry/Geometry";
-import {getValue, toRadians} from "../../util/Utils";
-import Rectangle from "../geometry/Rectangle";
+import Image from '../image/ImageBox';
+import mxClient from '../../mxClient';
+import Graph from '../Graph';
+import CellState from '../cell/datatypes/CellState';
+import Cell from '../cell/datatypes/Cell';
+import CellArray from '../cell/datatypes/CellArray';
+import EventObject from '../event/EventObject';
+import InternalEvent from '../event/InternalEvent';
+import Geometry from '../geometry/Geometry';
+import { getValue, toRadians } from '../../util/Utils';
+import Rectangle from '../geometry/Rectangle';
 
 /**
  * GraphFoldingOptions
@@ -25,21 +25,22 @@ import Rectangle from "../geometry/Rectangle";
  *                     a cell is first collapsed.
  */
 type GraphFoldingOptions = {
-  foldingEnabled: boolean,
-  collapsedImage: Image,
-  expandedImage: Image,
-  collapseToPreferredSize: boolean,
+  foldingEnabled: boolean;
+  collapsedImage: Image;
+  expandedImage: Image;
+  collapseToPreferredSize: boolean;
 };
 
 class GraphFolding {
-  constructor(graph: Graph,
-              options: GraphFoldingOptions = {
-                foldingEnabled: true,
-                collapsedImage: new Image(`${mxClient.imageBasePath}/collapsed.gif`, 9, 9),
-                expandedImage: new Image(`${mxClient.imageBasePath}/expanded.gif`, 9, 9),
-                collapseToPreferredSize: true,
-              }) {
-
+  constructor(
+    graph: Graph,
+    options: GraphFoldingOptions = {
+      foldingEnabled: true,
+      collapsedImage: new Image(`${mxClient.imageBasePath}/collapsed.gif`, 9, 9),
+      expandedImage: new Image(`${mxClient.imageBasePath}/expanded.gif`, 9, 9),
+      collapseToPreferredSize: true,
+    }
+  ) {
     this.graph = graph;
     this.options = options;
   }
@@ -53,8 +54,7 @@ class GraphFolding {
    * the tooltip.
    * @default 'collapse-expand'
    */
-  collapseExpandResource: string =
-    mxClient.language != 'none' ? 'collapse-expand' : '';
+  collapseExpandResource: string = mxClient.language != 'none' ? 'collapse-expand' : '';
 
   /**
    *
@@ -64,10 +64,7 @@ class GraphFolding {
   /**
    * Returns the cells which are movable in the given array of cells.
    */
-  getFoldableCells(
-    cells: CellArray,
-    collapse: boolean = false
-  ): CellArray | null {
+  getFoldableCells(cells: CellArray, collapse: boolean = false): CellArray | null {
     return this.graph.model.filterCells(cells, (cell: Cell) => {
       return this.isCellFoldable(cell, collapse);
     });
@@ -272,12 +269,7 @@ class GraphFolding {
           }
         }
 
-        geo.alternateBounds = new Rectangle(
-          0,
-          0,
-          bounds.width,
-          bounds.height
-        );
+        geo.alternateBounds = new Rectangle(0, 0, bounds.width, bounds.height);
       }
 
       if (geo.alternateBounds != null) {

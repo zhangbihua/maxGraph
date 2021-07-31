@@ -6,7 +6,9 @@
  */
 import Rectangle from '../Rectangle';
 import Shape from './Shape';
-import mxSvgCanvas2D from '../../../util/canvas/mxSvgCanvas2D';
+import SvgCanvas2D from '../../../util/canvas/SvgCanvas2D';
+import { ColorValue } from 'packages/core/src/types';
+import { NONE } from 'packages/core/src/util/Constants';
 
 /**
  * Extends {@link Shape} to implement an actor shape. If a custom shape with one
@@ -34,27 +36,21 @@ import mxSvgCanvas2D from '../../../util/canvas/mxSvgCanvas2D';
 class Actor extends Shape {
   constructor(
     bounds: Rectangle | null = null,
-    fill: string | null = null,
-    stroke: string | null = null,
-    strokewidth: number = 1
+    fill: ColorValue = NONE,
+    stroke: ColorValue = NONE,
+    strokeWidth: number = 1
   ) {
     super();
     this.bounds = bounds;
     this.fill = fill;
     this.stroke = stroke;
-    this.strokewidth = strokewidth;
+    this.strokeWidth = strokeWidth;
   }
 
   /**
    * Redirects to redrawPath for subclasses to work.
    */
-  paintVertexShape(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ): void {
+  paintVertexShape(c: SvgCanvas2D, x: number, y: number, w: number, h: number) {
     c.translate(x, y);
     c.begin();
     this.redrawPath(c, x, y, w, h);
@@ -64,13 +60,7 @@ class Actor extends Shape {
   /**
    * Draws the path for this shape.
    */
-  redrawPath(
-    c: mxSvgCanvas2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number
-  ): void {
+  redrawPath(c: SvgCanvas2D, x: number, y: number, w: number, h: number) {
     const width = w / 3;
     c.moveTo(0, h);
     c.curveTo(0, (3 * h) / 5, 0, (2 * h) / 5, w / 2, (2 * h) / 5);
