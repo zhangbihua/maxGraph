@@ -246,7 +246,7 @@ export default Scrollbars;
               {
                 div.scrollHandler = true;
 
-                let updateEdges = this.bind(function()
+                let updateEdges = () =>
                 {
                   let edgeCount = state.cell.getEdgeCount();
 
@@ -258,7 +258,7 @@ export default Scrollbars;
                     graph.view.invalidate(edge, true, false);
                     graph.view.validate(edge);
                   }
-                });
+                };
 
                 mxEvent.addListener(div, 'scroll', updateEdges);
                 mxEvent.addListener(div, 'mouseup', updateEdges);

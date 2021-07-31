@@ -44,7 +44,7 @@ Actions.prototype.init = function()
 		window.openKey = 'import';
 		
 		// Closes dialog after open
-		window.openFile = new OpenFile(this.bind(function()
+		window.openFile = new OpenFile((() =>
 		{
 			ui.hideDialog();
 		}));
@@ -529,7 +529,7 @@ Actions.prototype.init = function()
 			});
 		}
 	})).isEnabled = isGraphEnabled;
-	this.addAction('link...', this.bind(function()
+	this.addAction('link...', (() =>
 	{
 		if (graph.isEnabled())
 		{
@@ -564,7 +564,7 @@ Actions.prototype.init = function()
 				
 				let selState = graph.cellEditor.saveSelection();
 				
-				ui.showLinkDialog(oldValue, Resources.get('apply'), this.bind(function(value)
+				ui.showLinkDialog(oldValue, Resources.get('apply'), ((value) =>
 				{
 		    		graph.cellEditor.restoreSelection(selState);
 
@@ -784,7 +784,7 @@ Actions.prototype.init = function()
 			graph.fitWindow(bounds);
 		}
 	}, null, null, Editor.ctrlKey + '+Shift+H');
-	this.addAction('fitPage', this.bind(function()
+	this.addAction('fitPage', (() =>
 	{
 		if (!graph.pageVisible)
 		{
@@ -805,7 +805,7 @@ Actions.prototype.init = function()
 			graph.container.scrollLeft = Math.min(pad.x * graph.view.scale, (graph.container.scrollWidth - graph.container.clientWidth) / 2) - 1;
 		}
 	}), null, null, Editor.ctrlKey + '+J');
-	this.addAction('fitTwoPages', this.bind(function()
+	this.addAction('fitTwoPages', (() =>
 	{
 		if (!graph.pageVisible)
 		{
@@ -827,7 +827,7 @@ Actions.prototype.init = function()
 			graph.container.scrollLeft = Math.min(pad.x, (graph.container.scrollWidth - graph.container.clientWidth) / 2);
 		}
 	}), null, null, Editor.ctrlKey + '+Shift+J');
-	this.addAction('fitPageWidth', this.bind(function()
+	this.addAction('fitPageWidth', (() =>
 	{
 		if (!graph.pageVisible)
 		{
@@ -848,9 +848,9 @@ Actions.prototype.init = function()
 				(graph.container.scrollWidth - graph.container.clientWidth) / 2);
 		}
 	}));
-	this.put('customZoom', new Action(Resources.get('custom') + '...', this.bind(function()
+	this.put('customZoom', new Action(Resources.get('custom') + '...', (() =>
 	{
-		let dlg = new FilenameDialog(this.editorUi, parseInt(graph.getView().getScale() * 100), Resources.get('apply'), this.bind(function(newValue)
+		let dlg = new FilenameDialog(this.editorUi, parseInt(graph.getView().getScale() * 100), Resources.get('apply'), ((newValue) =>
 		{
 			let val = parseInt(newValue);
 			
@@ -862,9 +862,9 @@ Actions.prototype.init = function()
 		this.editorUi.showDialog(dlg.container, 300, 80, true, true);
 		dlg.init();
 	}), null, null, Editor.ctrlKey + '+0'));
-	this.addAction('pageScale...', this.bind(function()
+	this.addAction('pageScale...', (() =>
 	{
-		let dlg = new FilenameDialog(this.editorUi, parseInt(graph.pageScale * 100), Resources.get('apply'), this.bind(function(newValue)
+		let dlg = new FilenameDialog(this.editorUi, parseInt(graph.pageScale * 100), Resources.get('apply'), ((newValue) =>
 		{
 			let val = parseInt(newValue);
 			
@@ -927,7 +927,7 @@ Actions.prototype.init = function()
 	});
 	action.setToggleAction(true);
 	action.setSelectedCallback(function() { return graph.scrollbars; });
-	action = this.addAction('pageView', this.bind(function()
+	action = this.addAction('pageView', (() =>
 	{
 		ui.setPageVisible(!graph.pageVisible);
 	}));
@@ -993,7 +993,7 @@ Actions.prototype.init = function()
 	}));
 	
 	// Font style actions
-	let toggleFontStyle = this.bind(function(key, style, fn, shortcut)
+	let toggleFontStyle = ((key, style, fn, shortcut) =>
 	{
 		return this.addAction(key, function()
 		{
@@ -1206,7 +1206,7 @@ Actions.prototype.init = function()
 		ui.fireEvent(new EventObject('styleChanged', 'keys', ['collapsible'],
 				'values', [value], 'cells', graph.getSelectionCells()));
 	});
-	this.addAction('editStyle...', this.bind(function()
+	this.addAction('editStyle...', (() =>
 	{
 		let cells = graph.getSelectionCells();
 		
@@ -1319,21 +1319,21 @@ Actions.prototype.init = function()
 			}
 		}
 	}, null, null, 'Alt+Shift+C');
-	action = this.addAction('subscript', this.bind(function()
+	action = this.addAction('subscript', (() =>
 	{
 	    if (graph.cellEditor.isContentEditing())
 	    {
 			document.execCommand('subscript', false, null);
 		}
 	}), null, null, Editor.ctrlKey + '+,');
-	action = this.addAction('superscript', this.bind(function()
+	action = this.addAction('superscript', (() =>
 	{
 	    if (graph.cellEditor.isContentEditing())
 	    {
 			document.execCommand('superscript', false, null);
 		}
 	}), null, null, Editor.ctrlKey + '+.');
-	action = this.addAction('indent', this.bind(function()
+	action = this.addAction('indent', (() =>
 	{
 		// NOTE: Alt+Tab for outdent implemented via special code in
 		// keyHandler.getFunction in EditorUi.js. Ctrl+Tab is reserved.
@@ -1435,7 +1435,7 @@ Actions.prototype.init = function()
 			}, graph.cellEditor.isContentEditing(), !graph.cellEditor.isContentEditing());
 		}
 	}).isEnabled = isGraphEnabled;
-	action = this.addAction('layers', this.bind(function()
+	action = this.addAction('layers', (() =>
 	{
 		if (this.layersWindow == null)
 		{
@@ -1460,14 +1460,14 @@ Actions.prototype.init = function()
 		}
 	}), null, null, Editor.ctrlKey + '+Shift+L');
 	action.setToggleAction(true);
-	action.setSelectedCallback(this.bind(function() { return this.layersWindow != null && this.layersWindow.window.isVisible(); }));
-	action = this.addAction('formatPanel', this.bind(function()
+	action.setSelectedCallback((() => { return this.layersWindow != null && this.layersWindow.window.isVisible(); }));
+	action = this.addAction('formatPanel', (() =>
 	{
 		ui.toggleFormatPanel();
 	}), null, null, Editor.ctrlKey + '+Shift+P');
 	action.setToggleAction(true);
-	action.setSelectedCallback(this.bind(function() { return ui.formatWidth > 0; }));
-	action = this.addAction('outline', this.bind(function()
+	action.setSelectedCallback((() => { return ui.formatWidth > 0; }));
+	action = this.addAction('outline', (() =>
 	{
 		if (this.outlineWindow == null)
 		{
@@ -1491,7 +1491,7 @@ Actions.prototype.init = function()
 	}), null, null, Editor.ctrlKey + '+Shift+O');
 	
 	action.setToggleAction(true);
-	action.setSelectedCallback(this.bind(function() { return this.outlineWindow != null && this.outlineWindow.window.isVisible(); }));
+	action.setSelectedCallback((() => { return this.outlineWindow != null && this.outlineWindow.window.isVisible(); }));
 };
 
 /**

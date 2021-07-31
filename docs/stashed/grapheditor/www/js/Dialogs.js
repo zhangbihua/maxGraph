@@ -296,7 +296,7 @@ ColorDialog.prototype.defaultColors = ['none', 'FFFFFF', 'E6E6E6', 'CCCCCC', 'B3
  */
 ColorDialog.prototype.createApplyFunction = function()
 {
-	return this.bind(function(color)
+	return ((color) =>
 	{
 		let graph = this.editorUi.editor.graph;
 		
@@ -1118,7 +1118,7 @@ let ExportDialog = function(editorUi)
 	td.style.paddingTop = '22px';
 	td.colSpan = 2;
 	
-	let saveBtn = button(Resources.get('export'), this.bind(function()
+	let saveBtn = button(Resources.get('export'), (() =>
 	{
 		if (parseInt(zoomInput.value) <= 0)
 		{
@@ -1829,7 +1829,7 @@ let OutlineWindow = function(editorUi, x, y, w, h)
 		}
 	};
 	
-	let resizeListener = this.bind(function()
+	let resizeListener = (() =>
 	{
 		let x = this.window.getX();
 		let y = this.window.getY();
@@ -1848,13 +1848,13 @@ let OutlineWindow = function(editorUi, x, y, w, h)
 		outline.destroy();
 	}
 
-	this.window.addListener(mxEvent.RESIZE, this.bind(function()
+	this.window.addListener(mxEvent.RESIZE, (() =>
    	{
 		outline.update(false);
 		outline.outline.sizeDidChange();
    	}));
 	
-	this.window.addListener(mxEvent.SHOW, this.bind(function()
+	this.window.addListener(mxEvent.SHOW, (() =>
 	{
 		this.window.fit();
 		outline.suspended = false;
@@ -1862,18 +1862,18 @@ let OutlineWindow = function(editorUi, x, y, w, h)
 		outline.update();
 	}));
 	
-	this.window.addListener(mxEvent.HIDE, this.bind(function()
+	this.window.addListener(mxEvent.HIDE, (() =>
 	{
 		outline.suspended = true;
 	}));
 	
-	this.window.addListener(mxEvent.NORMALIZE, this.bind(function()
+	this.window.addListener(mxEvent.NORMALIZE, (() =>
 	{
 		outline.suspended = false;
 		outline.update();
 	}));
 			
-	this.window.addListener(mxEvent.MINIMIZE, this.bind(function()
+	this.window.addListener(mxEvent.MINIMIZE, (() =>
 	{
 		outline.suspended = true;
 	}));
@@ -2081,14 +2081,14 @@ let LayersWindow = function(editorUi, x, y, w, h)
 		{
 			let offset = getOffset(insertLink);
 			
-			editorUi.showPopupMenu(this.bind(function(menu, parent)
+			editorUi.showPopupMenu(((menu, parent) =>
 			{
 				for (let i = layerCount - 1; i >= 0; i--)
 				{
-					(this.bind(function(child)
+					(((child) =>
 					{
 						let item = menu.addItem(graph.convertValueToString(child) ||
-								Resources.get('background'), null, this.bind(function()
+								Resources.get('background'), null, (() =>
 						{
 							graph.moveCells(graph.getSelectionCells(), 0, 0, false, child);
 						}), parent);
@@ -2132,7 +2132,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 		if (graph.isEnabled() && layer != null)
 		{
 			let label = graph.convertValueToString(layer);
-			let dlg = new FilenameDialog(editorUi, label || Resources.get('background'), Resources.get('rename'), this.bind(function(newValue)
+			let dlg = new FilenameDialog(editorUi, label || Resources.get('background'), Resources.get('rename'), ((newValue) =>
 			{
 				if (newValue != null)
 				{
@@ -2460,7 +2460,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 		// Cannot be moved or deleted
 		for (let i = layerCount - 1; i >= 0; i--)
 		{
-			(this.bind(function(child)
+			(((child) =>
 			{
 				addLayer(i, graph.convertValueToString(child) ||
 					Resources.get('background'), child, child);
@@ -2507,7 +2507,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 		listDiv.scrollTop = listDiv.scrollHeight - listDiv.clientHeight;	
 	};
 
-	this.window.addListener(mxEvent.SHOW, this.bind(function()
+	this.window.addListener(mxEvent.SHOW, (() =>
 	{
 		this.window.fit();
 	}));
@@ -2529,7 +2529,7 @@ let LayersWindow = function(editorUi, x, y, w, h)
 		}
 	};
 	
-	let resizeListener = this.bind(function()
+	let resizeListener = (() =>
 	{
 		let x = this.window.getX();
 		let y = this.window.getY();

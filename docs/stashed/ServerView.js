@@ -73,7 +73,7 @@ export default MYNAMEHERE;
       if (container != null)
       {
         mxEvent.addGestureListeners(container,
-          this.bind(function(evt)
+          (evt) =>
           {
             let pt = convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
@@ -95,7 +95,7 @@ export default MYNAMEHERE;
                 new InternalMouseEvent(evt));
             }
           }),
-          this.bind(function(evt)
+          ((evt) =>
           {
             let pt = convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
@@ -113,7 +113,7 @@ export default MYNAMEHERE;
                 new InternalMouseEvent(evt));
             }
           }),
-          this.bind(function(evt)
+          ((evt) =>
           {
             let pt = convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
@@ -134,7 +134,7 @@ export default MYNAMEHERE;
 
         // Adds listener for double click handling on background
         mxEvent.addListener(container, 'dblclick',
-          this.bind(function(evt)
+          ((evt) =>
           {
             let pt = convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
@@ -147,14 +147,14 @@ export default MYNAMEHERE;
         // Adds basic listeners for graph event dispatching outside of the
         // container and finishing the handling of a single gesture
         mxEvent.addGestureListeners(document,
-          this.bind(function(evt)
+          ((evt) =>
           {
             if (this.isContainerEvent(evt))
             {
               graph.popupMenuHandler.hideMenu();
             }
           }),
-          this.bind(function(evt)
+          ((evt) =>
           {
             // Hides the tooltip if mouse is outside container
             if (graph.tooltipHandler != null &&
@@ -171,7 +171,7 @@ export default MYNAMEHERE;
                 new InternalMouseEvent(evt));
             }
           }),
-          this.bind(function(evt)
+          ((evt) =>
           {
             if (this.captureDocumentGesture)
             {

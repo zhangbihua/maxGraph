@@ -89,7 +89,7 @@ export default Touch;
         // mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
 
         // Disables built-in text selection and context menu while not editing text
-        let textEditing =  this.bind(function(evt)
+        let textEditing =  ((evt) =>
         {
           return graph.isEditing();
         });
@@ -376,7 +376,7 @@ export default Touch;
 
           // Starts connecting on touch/mouse down
           mxEvent.addGestureListeners(this.connectorImg,
-            this.bind(function(evt)
+            ((evt) =>
             {
               this.graph.popupMenuHandler.hideMenu();
               this.graph.stopEditing(false);

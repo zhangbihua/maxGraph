@@ -62,7 +62,7 @@ Format.prototype.init = function()
 	let editor = ui.editor;
 	let graph = editor.graph;
 	
-	this.update = this.bind(function(sender, evt)
+	this.update = ((sender, evt) =>
 	{
 		this.clearSelectionState();
 		this.refresh();
@@ -72,17 +72,17 @@ Format.prototype.init = function()
 	graph.addListener(mxEvent.EDITING_STARTED, this.update);
 	graph.addListener(mxEvent.EDITING_STOPPED, this.update);
 	graph.getModel().addListener(mxEvent.CHANGE, this.update);
-	graph.addListener(mxEvent.ROOT, this.bind(function()
+	graph.addListener(mxEvent.ROOT, (() =>
 	{
 		this.refresh();
 	}));
 	
-	ui.addListener('styleChanged', this.bind(function(sender, evt)
+	ui.addListener('styleChanged', ((sender, evt) =>
 	{
 		this.refresh();
 	}));
 	
-	editor.addListener('autosaveChanged', this.bind(function()
+	editor.addListener('autosaveChanged', (() =>
 	{
 		this.refresh();
 	}));
@@ -406,7 +406,7 @@ Format.prototype.refresh = function()
 	
 	// Prevents text selection
     mxEvent.addListener(label, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown',
-        this.bind(function(evt)
+        ((evt) =>
 	{
 		evt.preventDefault();
 	}));
@@ -415,9 +415,9 @@ Format.prototype.refresh = function()
 	let currentLabel = null;
 	let currentPanel = null;
 	
-	let addClickHandler = this.bind(function(elt, panel, index)
+	let addClickHandler = ((elt, panel, index) =>
 	{
-		let clickHandler = this.bind(function(evt)
+		let clickHandler = ((evt) =>
 		{
 			if (currentLabel != elt)
 			{
@@ -461,7 +461,7 @@ Format.prototype.refresh = function()
 		
 		// Prevents text selection
 	    mxEvent.addListener(elt, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown',
-        	this.bind(function(evt)
+        	((evt) =>
     	{
 			evt.preventDefault();
 		}));
@@ -678,7 +678,7 @@ BaseFormatPanel.prototype.installInputHandler = function(input, key, defaultValu
 	let selState = null;
 	let updating = false;
 	
-	let update = this.bind(function(evt)
+	let update = ((evt) =>
 	{
 		let value = (isFloat) ? parseFloat(input.value) : parseInt(input.value);
 
@@ -1167,7 +1167,7 @@ BaseFormatPanel.prototype.createColorOption = function(label, getColorFn, setCol
 		}
 	};
 
-	btn = button('', this.bind(function(evt)
+	btn = button('', ((evt) =>
 	{
 		this.editorUi.pickColor(value, function(color)
 		{
@@ -1376,7 +1376,7 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 	write(div, label);
 	div.style.fontWeight = 'bold';
 	
-	let update = this.bind(function(evt)
+	let update = ((evt) =>
 	{
 		if (handler != null)
 		{
@@ -1411,7 +1411,7 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 
 	if (key != null)
 	{
-		let listener = this.bind(function(sender, evt, force)
+		let listener = ((sender, evt, force) =>
 		{
 			if (force || input != document.activeElement)
 			{
@@ -1474,7 +1474,7 @@ BaseFormatPanel.prototype.addLabel = function(div, title, right, width)
  */
 BaseFormatPanel.prototype.addKeyHandler = function(input, listener)
 {
-	mxEvent.addListener(input, 'keydown', this.bind(function(e)
+	mxEvent.addListener(input, 'keydown', ((e) =>
 	{
 		if (e.keyCode == 13)
 		{
@@ -1623,7 +1623,7 @@ ArrangePanel.prototype.addTable = function(div)
 
 	let btns = [
         ui.toolbar.addButton('geSprite-insertcolumnbefore', Resources.get('insertColumnBefore'),
- 		this.bind(function()
+ 		(() =>
 		{
 			try
 			{
@@ -1635,7 +1635,7 @@ ArrangePanel.prototype.addTable = function(div)
 			}
 		}), panel),
 		ui.toolbar.addButton('geSprite-insertcolumnafter', Resources.get('insertColumnAfter'),
-		this.bind(function()
+		(() =>
 		{
 			try
 			{
@@ -1647,7 +1647,7 @@ ArrangePanel.prototype.addTable = function(div)
 			}
 		}), panel),
 		ui.toolbar.addButton('geSprite-deletecolumn', Resources.get('deleteColumn'),
-		this.bind(function()
+		(() =>
 		{
 			try
 			{
@@ -1659,7 +1659,7 @@ ArrangePanel.prototype.addTable = function(div)
 			}
 		}), panel),
 		ui.toolbar.addButton('geSprite-insertrowbefore', Resources.get('insertRowBefore'),
-		this.bind(function()
+		(() =>
 		{
 			try
 			{
@@ -1671,7 +1671,7 @@ ArrangePanel.prototype.addTable = function(div)
 			}
 		}), panel),
 		ui.toolbar.addButton('geSprite-insertrowafter', Resources.get('insertRowAfter'),
-		this.bind(function()
+		(() =>
 		{
 			try
 			{
@@ -1683,7 +1683,7 @@ ArrangePanel.prototype.addTable = function(div)
 			}
 		}), panel),
 		ui.toolbar.addButton('geSprite-deleterow', Resources.get('deleteRow'),
-		this.bind(function()
+		(() =>
 		{
 			try
 			{
@@ -1841,7 +1841,7 @@ ArrangePanel.prototype.addGroupOps = function(div)
 			br(div);
 		}
 		
-		btn = button(Resources.get('clearWaypoints'), this.bind(function(evt)
+		btn = button(Resources.get('clearWaypoints'), ((evt) =>
 		{
 			this.editorUi.actions.get('clearWaypoints').funct();
 		}));
@@ -1861,7 +1861,7 @@ ArrangePanel.prototype.addGroupOps = function(div)
 			br(div);
 		}
 		
-		btn = button(Resources.get('editData'), this.bind(function(evt)
+		btn = button(Resources.get('editData'), ((evt) =>
 		{
 			this.editorUi.actions.get('editData').funct();
 		}));
@@ -1872,7 +1872,7 @@ ArrangePanel.prototype.addGroupOps = function(div)
 		div.appendChild(btn);
 		count++;
 
-		btn = button(Resources.get('editLink'), this.bind(function(evt)
+		btn = button(Resources.get('editLink'), ((evt) =>
 		{
 			this.editorUi.actions.get('editLink').funct();
 		}));
@@ -2075,7 +2075,7 @@ ArrangePanel.prototype.addAngle = function(div)
 	
 	if (input != null)
 	{
-		let listener = this.bind(function(sender, evt, force)
+		let listener = ((sender, evt, force) =>
 		{
 			if (force || document.activeElement != input)
 			{
@@ -2323,7 +2323,7 @@ ArrangePanel.prototype.addGeometry = function(container)
 	this.addLabel(div2, Resources.get('left'), 84);
 	this.addLabel(div2, Resources.get('top'), 20);
 	
-	let listener = this.bind(function(sender, evt, force)
+	let listener = ((sender, evt, force) =>
 	{
 		rect = this.format.getSelectionState();
 
@@ -2650,7 +2650,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 	this.addKeyHandler(xt, listener);
 	this.addKeyHandler(yt, listener);
 
-	let listener = this.bind(function(sender, evt, force)
+	let listener = ((sender, evt, force) =>
 	{
 		rect = this.format.getSelectionState();
 		let cell = graph.getSelectionCell();
@@ -3522,7 +3522,7 @@ TextFormatPanel.prototype.addFont = function(container)
 				{
 					document.execCommand('inserthorizontalrule', false);
 				}, insertPanel),				
-				this.editorUi.toolbar.addMenuFunctionInContainer(insertPanel, 'geSprite-table', Resources.get('table'), false, this.bind(function(menu)
+				this.editorUi.toolbar.addMenuFunctionInContainer(insertPanel, 'geSprite-table', Resources.get('table'), false, ((menu) =>
 				{
 					this.editorUi.menus.addInsertTableItem(menu);
 				}))];
@@ -3541,7 +3541,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		
 		let btns = [
 		        this.editorUi.toolbar.addButton('geSprite-insertcolumnbefore', Resources.get('insertColumnBefore'),
-	     		this.bind(function()
+	     		(() =>
 				{
 					try
 					{
@@ -3556,7 +3556,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel),
 				this.editorUi.toolbar.addButton('geSprite-insertcolumnafter', Resources.get('insertColumnAfter'),
-				this.bind(function()
+				(() =>
 				{
 					try
 					{
@@ -3571,7 +3571,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel),
 				this.editorUi.toolbar.addButton('geSprite-deletecolumn', Resources.get('deleteColumn'),
-				this.bind(function()
+				(() =>
 				{
 					try
 					{
@@ -3586,7 +3586,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel),
 				this.editorUi.toolbar.addButton('geSprite-insertrowbefore', Resources.get('insertRowBefore'),
-				this.bind(function()
+				(() =>
 				{
 					try
 					{
@@ -3601,7 +3601,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel),
 				this.editorUi.toolbar.addButton('geSprite-insertrowafter', Resources.get('insertRowAfter'),
-				this.bind(function()
+				(() =>
 				{
 					try
 					{
@@ -3616,7 +3616,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel),
 				this.editorUi.toolbar.addButton('geSprite-deleterow', Resources.get('deleteRow'),
-				this.bind(function()
+				(() =>
 				{
 					try
 					{
@@ -3644,7 +3644,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		
 		let btns = [
 		        this.editorUi.toolbar.addButton('geSprite-strokecolor', Resources.get('borderColor'),
-				this.bind(function(evt)
+				((evt) =>
 				{
 					if (currentTable != null)
 					{
@@ -3679,7 +3679,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					}
 				}), tablePanel2),
 				this.editorUi.toolbar.addButton('geSprite-fillcolor', Resources.get('backgroundColor'),
-				this.bind(function(evt)
+				((evt) =>
 				{
 					// Converts rgb(r,g,b) values
 					if (currentTable != null)
@@ -3716,7 +3716,7 @@ TextFormatPanel.prototype.addFont = function(container)
 					{
 						let value = currentTable.getAttribute('cellPadding') || 0;
 						
-						let dlg = new FilenameDialog(ui, value, Resources.get('apply'), this.bind(function(newValue)
+						let dlg = new FilenameDialog(ui, value, Resources.get('apply'), ((newValue) =>
 						{
 							if (newValue != null && newValue.length > 0)
 							{
@@ -3769,7 +3769,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		elt.style.backgroundImage = (selected) ? 'linear-gradient(#c5ecff 0px,#87d4fb 100%)' : '';
 	};
 	
-	let listener = this.bind(function(sender, evt, force)
+	let listener = ((sender, evt, force) =>
 	{
 		ss = this.format.getSelectionState();
 		let fontStyle = getValue(ss.style, 'fontStyle', 0);
@@ -4304,7 +4304,7 @@ StyleFormatPanel.prototype.addSvgRule = function(container, rule, svg, styleElem
 			  ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
 		};
 		
-		let addStyleRule = this.bind(function(rule, key, label)
+		let addStyleRule = ((rule, key, label) =>
 		{
 			let value = trim(rule.style[key]);
 			
@@ -4364,7 +4364,7 @@ StyleFormatPanel.prototype.addEditOps = function(div)
 	
 	if (this.editorUi.editor.graph.getSelectionCount() == 1)
 	{
-		btn = button(Resources.get('editStyle'), this.bind(function(evt)
+		btn = button(Resources.get('editStyle'), ((evt) =>
 		{
 			this.editorUi.actions.get('editStyle').funct();
 		}));
@@ -4378,7 +4378,7 @@ StyleFormatPanel.prototype.addEditOps = function(div)
 	
 	if (ss.image)
 	{
-		var btn2 = button(Resources.get('editImage'), this.bind(function(evt)
+		var btn2 = button(Resources.get('editImage'), ((evt) =>
 		{
 			this.editorUi.actions.get('image').funct();
 		}));
@@ -4454,7 +4454,7 @@ StyleFormatPanel.prototype.addFill = function(container)
 	let label = (ss.style.shape == 'image') ? Resources.get('background') : Resources.get('fill');
 	
 	let defs = (ss.vertices.length >= 1) ? graph.stylesheet.getDefaultVertexStyle() : graph.stylesheet.getDefaultEdgeStyle();
-	let fillPanel = this.createCellColorOption(label, fillKey, (defs[fillKey] != null) ? defs[fillKey] : '#ffffff', null, this.bind(function(color)
+	let fillPanel = this.createCellColorOption(label, fillKey, (defs[fillKey] != null) ? defs[fillKey] : '#ffffff', null, ((color) =>
 	{
 		graph.updateCellStyles(fillKey, color, graph.getSelectionCells());
 	}));
@@ -4487,7 +4487,7 @@ StyleFormatPanel.prototype.addFill = function(container)
 	
 	fillPanel.appendChild(fillStyleSelect);
 
-	let listener = this.bind(function()
+	let listener = (() =>
 	{
 		ss = this.format.getSelectionState();
 		let value = getValue(ss.style, 'gradientDirection', mxConstants.DIRECTION_SOUTH);
@@ -4645,7 +4645,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	let label = (ss.style.shape == 'image') ? Resources.get('border') : Resources.get('line');
 	
 	let defs = (ss.vertices.length >= 1) ? graph.stylesheet.getDefaultVertexStyle() : graph.stylesheet.getDefaultEdgeStyle();
-	let lineColor = this.createCellColorOption(label, strokeKey, (defs[strokeKey] != null) ? defs[strokeKey] : '#000000', null, this.bind(function(color)
+	let lineColor = this.createCellColorOption(label, strokeKey, (defs[strokeKey] != null) ? defs[strokeKey] : '#000000', null, ((color) =>
 	{
 		graph.updateCellStyles(strokeKey, color, graph.getSelectionCells());
 	}));
@@ -4663,7 +4663,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	stylePanel.style.marginTop = '2px';
 	stylePanel.className = 'geToolbarContainer';
 
-	let addItem = this.bind(function(menu, width, cssName, keys, values)
+	let addItem = ((menu, width, cssName, keys, values) =>
 	{
 		let item = this.editorUi.menus.styleChange(menu, '', keys, values, 'geIcon', null);
 	
@@ -4680,7 +4680,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		return item;
 	});
 
-	let pattern = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel, 'geSprite-orthogonal', Resources.get('pattern'), false, this.bind(function(menu)
+	let pattern = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel, 'geSprite-orthogonal', Resources.get('pattern'), false, ((menu) =>
 	{
 		addItem(menu, 75, 'solid', ['dashed', 'dashPattern'], [null, null]).setAttribute('title', Resources.get('solid'));
 		addItem(menu, 75, 'dashed', ['dashed', 'dashPattern'], ['1', null]).setAttribute('title', Resources.get('dashed'));
@@ -4692,7 +4692,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	// Used for mixed selection (vertices and edges)
 	let altStylePanel = stylePanel.cloneNode(false);
 	
-	let edgeShape = this.editorUi.toolbar.addMenuFunctionInContainer(altStylePanel, 'geSprite-connection', Resources.get('connection'), false, this.bind(function(menu)
+	let edgeShape = this.editorUi.toolbar.addMenuFunctionInContainer(altStylePanel, 'geSprite-connection', Resources.get('connection'), false, ((menu) =>
 	{
 		this.editorUi.menus.styleChange(menu, '', ['shape', 'startSize', 'endSize', 'width'], [null, null, null, null], 'geIcon geSprite geSprite-connection', null, true).setAttribute('title', Resources.get('line'));
 		this.editorUi.menus.styleChange(menu, '', ['shape', 'startSize', 'endSize', 'width'], ['link', null, null, null], 'geIcon geSprite geSprite-linkedge', null, true).setAttribute('title', Resources.get('link'));
@@ -4700,7 +4700,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		this.editorUi.menus.styleChange(menu, '', ['shape', 'startSize', 'endSize', 'width'], ['arrow', null, null, null], 'geIcon geSprite geSprite-simplearrow', null, true).setAttribute('title', Resources.get('simpleArrow'));
 	}));
 
-	let altPattern = this.editorUi.toolbar.addMenuFunctionInContainer(altStylePanel, 'geSprite-orthogonal', Resources.get('pattern'), false, this.bind(function(menu)
+	let altPattern = this.editorUi.toolbar.addMenuFunctionInContainer(altStylePanel, 'geSprite-orthogonal', Resources.get('pattern'), false, ((menu) =>
 	{
 		addItem(menu, 33, 'solid', ['dashed', 'dashPattern'], [null, null]).setAttribute('title', Resources.get('solid'));
 		addItem(menu, 33, 'dashed', ['dashed', 'dashPattern'], ['1', null]).setAttribute('title', Resources.get('dashed'));
@@ -4783,7 +4783,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	mxEvent.addListener(altInput, 'blur', altUpdate);
 	mxEvent.addListener(altInput, 'change', altUpdate);
 
-	let edgeStyle = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-orthogonal', Resources.get('waypoints'), false, this.bind(function(menu)
+	let edgeStyle = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-orthogonal', Resources.get('waypoints'), false, ((menu) =>
 	{
 		if (ss.style.shape != 'arrow')
 		{
@@ -4803,7 +4803,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		}
 	}));
 
-	let lineStart = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-startclassic', Resources.get('linestart'), false, this.bind(function(menu)
+	let lineStart = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-startclassic', Resources.get('linestart'), false, ((menu) =>
 	{
 		if (ss.style.shape == 'connector' || ss.style.shape == 'flexArrow' || ss.style.shape == 'filledEdge')
 		{
@@ -4852,7 +4852,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		}
 	}));
 
-	let lineEnd = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-endclassic', Resources.get('lineend'), false, this.bind(function(menu)
+	let lineEnd = this.editorUi.toolbar.addMenuFunctionInContainer(stylePanel2, 'geSprite-endclassic', Resources.get('lineend'), false, ((menu) =>
 	{
 		if (ss.style.shape == 'connector' || ss.style.shape == 'flexArrow' || ss.style.shape == 'filledEdge')
 		{
@@ -5027,7 +5027,7 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		container.appendChild(perimeterPanel);
 	}
 	
-	let listener = this.bind(function(sender, evt, force)
+	let listener = ((sender, evt, force) =>
 	{
 		ss = this.format.getSelectionState();
 		let color = getValue(ss.style, strokeKey, null);
@@ -5332,7 +5332,7 @@ StyleFormatPanel.prototype.addLineJumps = function(container)
 		jumpSizeUpdate = this.installInputHandler(jumpSize, 'jumpSize',
 			Graph.defaultJumpSize, 0, 999, ' pt');
 		
-		let listener = this.bind(function(sender, evt, force)
+		let listener = ((sender, evt, force) =>
 		{
 			ss = this.format.getSelectionState();
 			styleSelect.value = getValue(ss.style, 'jumpStyle', 'none');
@@ -5395,7 +5395,7 @@ StyleFormatPanel.prototype.addEffects = function(div)
 	let current = left;
 	let count = 0;
 	
-	let addOption = this.bind(function(label, key, defaultValue)
+	let addOption = ((label, key, defaultValue) =>
 	{
 		let opt = this.createCellOption(label, key, defaultValue);
 		opt.style.width = '100%';
@@ -5404,7 +5404,7 @@ StyleFormatPanel.prototype.addEffects = function(div)
 		count++;
 	});
 
-	let listener = this.bind(function(sender, evt, force)
+	let listener = ((sender, evt, force) =>
 	{
 		ss = this.format.getSelectionState();
 		
@@ -5450,7 +5450,7 @@ StyleFormatPanel.prototype.addStyleOps = function(div)
 	div.style.paddingTop = '10px';
 	div.style.paddingBottom = '10px';
 	
-	let btn = button(Resources.get('setAsDefaultStyle'), this.bind(function(evt)
+	let btn = button(Resources.get('setAsDefaultStyle'), ((evt) =>
 	{
 		this.editorUi.actions.get('setAsDefaultStyle').funct();
 	}));
@@ -5609,7 +5609,7 @@ DiagramStylePanel.prototype.addView = function(div)
 
 	let defaultStyles = ['fillColor', 'strokeColor', 'fontColor', 'gradientColor'];
 	
-	let updateCells = this.bind(function(styles, graphStyle)
+	let updateCells = ((styles, graphStyle) =>
 	{
 		let cells = graph.getVerticesAndEdges();
 		
@@ -5650,7 +5650,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		}
 	});
 			
-	let removeStyles = this.bind(function(style, styles, defaultStyle)
+	let removeStyles = ((style, styles, defaultStyle) =>
 	{
 		if (style != null)
 		{
@@ -5667,7 +5667,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		}
 	});
 
-	let applyStyle = this.bind(function(style, result, cell, graphStyle, theGraph)
+	let applyStyle = ((style, result, cell, graphStyle, theGraph) =>
 	{
 		if (style != null)
 		{
@@ -5706,7 +5706,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		}
 	});
 	
-	let btn = button(Resources.get('reset'), this.bind(function(evt)
+	let btn = button(Resources.get('reset'), ((evt) =>
 	{
 		let all = graph.getVerticesAndEdges(true, true);
 		
@@ -5735,7 +5735,7 @@ DiagramStylePanel.prototype.addView = function(div)
 	btn.style.maxWidth = '90px';
 	right.appendChild(btn);
 	
-	let createPreview = this.bind(function(commonStyle, vertexStyle, edgeStyle, graphStyle, container)
+	let createPreview = ((commonStyle, vertexStyle, edgeStyle, graphStyle, container) =>
 	{
 		// Wrapper needed to catch events
 		let div = document.createElement('div');
@@ -5798,7 +5798,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		this.format.cachedStyleEntries = [];
 	}
 
-	let addEntry = this.bind(function(commonStyle, vertexStyle, edgeStyle, graphStyle, index)
+	let addEntry = ((commonStyle, vertexStyle, edgeStyle, graphStyle, index) =>
 	{
 		let panel = this.format.cachedStyleEntries[index];
 		
@@ -5815,10 +5815,10 @@ DiagramStylePanel.prototype.addView = function(div)
 			
 			createPreview(commonStyle, vertexStyle, edgeStyle, graphStyle, panel); 
 	
-			mxEvent.addGestureListeners(panel, this.bind(function(evt)
+			mxEvent.addGestureListeners(panel, ((evt) =>
 			{
 				panel.style.opacity = 0.5;
-			}), null, this.bind(function(evt)
+			}), null, ((evt) =>
 			{
 				panel.style.opacity = 1;
 				graph.defaultVertexStyle = clone(ui.initialDefaultVertexStyle);
@@ -5879,7 +5879,7 @@ DiagramStylePanel.prototype.addView = function(div)
 				}
 			}));
 			
-			mxEvent.addListener(panel, 'mouseenter', this.bind(function(evt)
+			mxEvent.addListener(panel, 'mouseenter', ((evt) =>
 			{
 				let prev = graph.getCellStyle;
 				let prevBg = graph.background;
@@ -5915,7 +5915,7 @@ DiagramStylePanel.prototype.addView = function(div)
 				graph.view.gridColor = prevGrid;
 			}));
 			
-			mxEvent.addListener(panel, 'mouseleave', this.bind(function(evt)
+			mxEvent.addListener(panel, 'mouseleave', ((evt) =>
 			{
 				graph.refresh();
 			}));
@@ -5932,7 +5932,7 @@ DiagramStylePanel.prototype.addView = function(div)
 	this.format.currentStylePage = (this.format.currentStylePage != null) ? this.format.currentStylePage : 0;
 	let dots = [];
 	
-	let addEntries = this.bind(function()
+	let addEntries = (() =>
 	{
 		if (dots.length > 0)
 		{
@@ -5948,7 +5948,7 @@ DiagramStylePanel.prototype.addView = function(div)
 		}
 	});
 	
-	let selectPage = this.bind(function(index)
+	let selectPage = ((index) =>
 	{
 		if (index >= 0 && index < pageCount)
 		{
@@ -5984,9 +5984,9 @@ DiagramStylePanel.prototype.addView = function(div)
 			dot.style.background = 'transparent';
 			dot.style.border = '1px solid #b5b6b7';
 			
-			(this.bind(function(index, elt)
+			(((index, elt) =>
 			{
-				mxEvent.addListener(dot, 'click', this.bind(function()
+				mxEvent.addListener(dot, 'click', (() =>
 				{
 					selectPage(index);
 				}));
@@ -6005,7 +6005,7 @@ DiagramStylePanel.prototype.addView = function(div)
 			left.style.cssText = 'position:absolute;left:0px;top:4px;bottom:0px;width:20px;margin:0px;opacity:0.5;' +
 				'background-repeat:no-repeat;background-position:center center;background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAIVBMVEUAAAB2dnZ4eHh3d3d1dXVxcXF2dnZ2dnZ2dnZxcXF2dnYmb3w1AAAACnRSTlMAfCTkhhvb7cQSPH2JPgAAADRJREFUCNdjwACMAmBKaiGYs2oJmLPKAZ3DabU8AMRTXpUKopislqFyVzCAuUZgikkBZjoAcMYLnp53P/UAAAAASUVORK5CYII=);';
 			
-			mxEvent.addListener(left, 'click', this.bind(function()
+			mxEvent.addListener(left, 'click', (() =>
 			{
 				selectPage(mod(this.format.currentStylePage - 1, pageCount));
 			}));
@@ -6016,7 +6016,7 @@ DiagramStylePanel.prototype.addView = function(div)
 			switcher.appendChild(left);
 			switcher.appendChild(right);
 			
-			mxEvent.addListener(right, 'click', this.bind(function()
+			mxEvent.addListener(right, 'click', (() =>
 			{
 				selectPage(mod(this.format.currentStylePage + 1, pageCount));
 			}));
@@ -6497,7 +6497,7 @@ DiagramFormatPanel.prototype.addPaperSize = function(div)
  */
 DiagramFormatPanel.prototype.addStyleOps = function(div)
 {
-	let btn = button(Resources.get('editData'), this.bind(function(evt)
+	let btn = button(Resources.get('editData'), ((evt) =>
 	{
 		this.editorUi.actions.get('editData').funct();
 	}));
@@ -6509,7 +6509,7 @@ DiagramFormatPanel.prototype.addStyleOps = function(div)
 
 	br(div);
 	
-	btn = button(Resources.get('clearDefaultStyle'), this.bind(function(evt)
+	btn = button(Resources.get('clearDefaultStyle'), ((evt) =>
 	{
 		this.editorUi.actions.get('clearDefaultStyle').funct();
 	}));

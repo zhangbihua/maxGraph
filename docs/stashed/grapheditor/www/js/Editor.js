@@ -57,7 +57,7 @@ Editor = function(chromeless, themes, model, graph, editable)
 		}
 	};
 	
-	this.graph.getModel().addListener(mxEvent.CHANGE, this.bind(function()
+	this.graph.getModel().addListener(mxEvent.CHANGE, (() =>
 	{
 		this.graphChangeListener.apply(this, arguments);
 	}));
@@ -379,7 +379,7 @@ Editor.prototype.editAsNew = function(xml, title)
 	{
 		let wnd = null;
 		
-		let l = this.bind(function(evt)
+		let l = ((evt) =>
 		{
 			if (evt.data == 'ready' && evt.source == wnd)
 			{
@@ -659,7 +659,7 @@ Editor.prototype.createUndoManager = function()
 	};
 	
     // Installs the command history
-	let listener = this.bind(function(sender, evt)
+	let listener = ((sender, evt) =>
 	{
 		this.undoListener.apply(this, arguments);
 	});
@@ -867,7 +867,7 @@ function Dialog(editorUi, elt, w, h, modal, closable, onClose, noScroll, transpa
 		img.style.left = (left + w + 38 - dx) + 'px';
 		img.style.zIndex = this.zIndex;
 		
-		mxEvent.addListener(img, 'click', this.bind(function()
+		mxEvent.addListener(img, 'click', (() =>
 		{
 			editorUi.hideDialog(true);
 		}));
@@ -879,10 +879,10 @@ function Dialog(editorUi, elt, w, h, modal, closable, onClose, noScroll, transpa
 		{
 			let mouseDownSeen = false;
 			
-			mxEvent.addGestureListeners(this.bg, this.bind(function(evt)
+			mxEvent.addGestureListeners(this.bg, ((evt) =>
 			{
 				mouseDownSeen = true;
-			}), null, this.bind(function(evt)
+			}), null, ((evt) =>
 			{
 				if (mouseDownSeen)
 				{
@@ -893,7 +893,7 @@ function Dialog(editorUi, elt, w, h, modal, closable, onClose, noScroll, transpa
 		}
 	}
 	
-	this.resizeListener = this.bind(function()
+	this.resizeListener = (() =>
 	{
 		if (onResize != null)
 		{
@@ -2025,7 +2025,7 @@ let FilenameDialog = function(editorUi, filename, buttonText, fn, label, validat
 					evt.preventDefault();
 				});
 				
-				mxEvent.addListener(dlg, 'dragover', this.bind(function(evt)
+				mxEvent.addListener(dlg, 'dragover', ((evt) =>
 				{
 					if (dropElt == null)
 					{
@@ -2037,7 +2037,7 @@ let FilenameDialog = function(editorUi, filename, buttonText, fn, label, validat
 					evt.preventDefault();
 				}));
 						
-				mxEvent.addListener(dlg, 'drop', this.bind(function(evt)
+				mxEvent.addListener(dlg, 'drop', ((evt) =>
 				{
 				    if (dropElt != null)
 				    {
@@ -2325,7 +2325,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 						
 						// Adds listener for double click handling on background
 						mxEvent.addListener(this.backgroundPageShape.node, 'dblclick',
-							this.bind(function(evt)
+							((evt) =>
 							{
 								graph.dblClick(evt);
 							})
@@ -2334,11 +2334,11 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 						// Adds basic listeners for graph event dispatching outside of the
 						// container and finishing the handling of a single gesture
 						mxEvent.addGestureListeners(this.backgroundPageShape.node,
-							this.bind(function(evt)
+							((evt) =>
 							{
 								graph.fireMouseEvent(mxEvent.MOUSE_DOWN, new InternalMouseEvent(evt));
 							}),
-							this.bind(function(evt)
+							((evt) =>
 							{
 								// Hides the tooltip if mouse is outside container
 								if (graph.tooltipHandler != null && graph.tooltipHandler.isHideOnHover())
@@ -2351,7 +2351,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 									graph.fireMouseEvent(mxEvent.MOUSE_MOVE, new InternalMouseEvent(evt));
 								}
 							}),
-							this.bind(function(evt)
+							((evt) =>
 							{
 								graph.fireMouseEvent(mxEvent.MOUSE_UP, new InternalMouseEvent(evt));
 							})
@@ -2530,7 +2530,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 			this.verticalPageBreaks = [];
 		}
 			
-		let drawPageBreaks = this.bind(function(breaks)
+		let drawPageBreaks = ((breaks) =>
 		{
 			if (breaks != null)
 			{
@@ -2605,7 +2605,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 	{
 		let marker = mxConnectionHandlerCreateMarker.apply(this, arguments);
 		
-		marker.intersects = this.bind(function(state, evt)
+		marker.intersects = ((state, evt) =>
 		{
 			if (this.isConnecting())
 			{
