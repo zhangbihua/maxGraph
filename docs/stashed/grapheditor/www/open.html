@@ -64,7 +64,7 @@
 			}
 			else
 			{
-				window.parent.utils.alert(window.parent.Resources.get('invalidOrMissingFile'));
+				window.parent.alert(window.parent.Resources.get('invalidOrMissingFile'));
 				
 				return false;
 			}
@@ -102,7 +102,7 @@
 			
 			if (localStorage.length == 0)
 			{
-				window.parent.utils.write(div, window.parent.Resources.get('noFiles'));
+				window.parent.write(div, window.parent.Resources.get('noFiles'));
 			}
 			else
 			{
@@ -125,7 +125,7 @@
 					link.style.fontDecoration = 'none';
 					link.style.fontSize = '14pt';
 					let key = keys[i];
-					window.parent.utils.write(link, key);
+					window.parent.write(link, key);
 					link.style.cursor = 'pointer';
 					div.appendChild(link);
 					
@@ -136,13 +136,13 @@
 					img.style.display = 'inline-block';
 					div.appendChild(img);
 					
-					window.parent.utils.br(div);
+					window.parent.br(div);
 					
 					window.parent.mxEvent.addListener(img, 'click', (function(k)
 					{
 						return function()
 						{
-							if (window.parent.utils.confirm(window.parent.Resources.get('delete') + ' "' + k + '"?'))
+							if (window.parent.confirm(window.parent.Resources.get('delete') + ' "' + k + '"?'))
 							{
 								localStorage.removeItem(k);
 								window.location.reload();
@@ -161,17 +161,17 @@
 							}
 							catch (e)
 							{
-								window.parent.utils.alert(e.message);
+								window.parent.alert(e.message);
 							}
 						};
 					})(key));
 				}
 			}
 
-			window.parent.utils.br(div);
-			window.parent.utils.br(div);
+			window.parent.br(div);
+			window.parent.br(div);
 			
-			let cancelBtn = window.parent.utils.button(window.parent.Resources.get('cancel'), function()
+			let cancelBtn = window.parent.button(window.parent.Resources.get('cancel'), function()
 			{
 				hideWindow(true);
 			});

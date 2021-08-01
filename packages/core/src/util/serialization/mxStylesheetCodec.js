@@ -6,13 +6,14 @@
  */
 
 import Stylesheet from '../../view/style/Stylesheet';
-import utils from '../Utils';
+import utils, { isNumeric } from '../Utils';
 import mxCodecRegistry from './mxCodecRegistry';
 import { NODETYPE_ELEMENT } from '../Constants';
 import mxLog from '../gui/mxLog';
 import StyleRegistry from '../../view/style/StyleRegistry';
 import mxObjectCodec from './mxObjectCodec';
 import { getTextContent } from '../DomUtils';
+import { clone } from '../CloneUtils';
 
 /**
  * Class: mxStylesheetCodec
@@ -145,7 +146,7 @@ class mxStylesheetCodec extends mxObjectCodec {
 
         if (as != null) {
           const extend = node.getAttribute('extend');
-          let style = extend != null ? utils.clone(obj.styles[extend]) : null;
+          let style = extend != null ? clone(obj.styles[extend]) : null;
 
           if (style == null) {
             if (extend != null) {
@@ -176,7 +177,7 @@ class mxStylesheetCodec extends mxObjectCodec {
                 } else {
                   value = entry.getAttribute('value');
 
-                  if (utils.isNumeric(value)) {
+                  if (isNumeric(value)) {
                     value = parseFloat(value);
                   }
                 }

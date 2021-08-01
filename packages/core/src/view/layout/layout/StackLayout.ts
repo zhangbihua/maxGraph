@@ -6,7 +6,7 @@
  */
 import GraphLayout from './GraphLayout';
 import Rectangle from '../../geometry/Rectangle';
-import utils, { getNumber } from '../../../util/Utils';
+import utils, { getNumber, getValue } from '../../../util/Utils';
 import {
   DEFAULT_STARTSIZE,
 } from '../../../util/Constants';
@@ -299,12 +299,12 @@ class StackLayout extends GraphLayout {
       if (this.graph.isSwimlane(parent)) {
         // Uses computed style to get latest
         const style = this.graph.getCellStyle(parent);
-        let start = utils.getNumber(
+        let start = getNumber(
           style,
           'startSize',
           DEFAULT_STARTSIZE
         );
-        const horz = utils.getValue(style, 'horizontal', true) == 1;
+        const horz = getValue(style, 'horizontal', true) == 1;
 
         if (pgeo != null) {
           if (horz) {

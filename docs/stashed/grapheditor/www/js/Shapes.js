@@ -2,6 +2,16 @@
  * Copyright (c) 2006-2015, JGraph Ltd
  */
 
+import {
+	getNumber,
+	getPerimeterPoint, getRotatedPoint,
+	getValue,
+	mod, ptLineDist,
+	ptSegDistSq,
+	toRadians,
+} from '../../../../../packages/core/src/util/Utils';
+import { clone } from '../../../../../packages/core/src/util/CloneUtils';
+
 /**
  * Registers shapes.
  */
@@ -22,7 +32,7 @@
 				
 				if (this.style != null)
 				{
-					events = utils.getValue(this.style, 'pointerEvents', '1') == '1';
+					events = getValue(this.style, 'pointerEvents', '1') == '1';
 				}
 				
 				if (!events)
@@ -30,20 +40,20 @@
 					c.pointerEvents = false;
 				}
 				
-				let evenRowColor = utils.getValue(state.style,
+				let evenRowColor = getValue(state.style,
 					'evenRowColor', mxConstants.NONE);
-				let oddRowColor = utils.getValue(state.style,
+				let oddRowColor = getValue(state.style,
 					'oddRowColor', mxConstants.NONE);
-				let evenColColor = utils.getValue(state.style,
+				let evenColColor = getValue(state.style,
 					'evenColumnColor', mxConstants.NONE);
-				let oddColColor = utils.getValue(state.style,
+				let oddColColor = getValue(state.style,
 					'oddColumnColor', mxConstants.NONE);
 				let cols = graph.model.getChildCells(rows[0], true);
 				
 				// Paints column backgrounds
 				for (let i = 0; i < cols.length; i++)
 				{
-					let clr = (utils.mod(i, 2) == 1) ? evenColColor : oddColColor;
+					let clr = (mod(i, 2) == 1) ? evenColColor : oddColColor;
 					let geo = cols[i].getGeometry();
 					
 					if (geo != null && clr != mxConstants.NONE)
@@ -74,7 +84,7 @@
 				// Paints row backgrounds
 				for (let i = 0; i < rows.length; i++)
 				{
-					let clr = (utils.mod(i, 2) == 1) ? evenRowColor : oddRowColor;
+					let clr = (mod(i, 2) == 1) ? evenRowColor : oddRowColor;
 					let geo = rows[i].getGeometry();
 	
 					if (geo != null && clr != mxConstants.NONE)
@@ -113,7 +123,7 @@
 		SwimlaneShape.call(this);
 	};
 	
-	utils.extend(TableShape, SwimlaneShape);
+	extend(TableShape, SwimlaneShape);
 
 	TableShape.prototype.getLabelBounds = function(rect)
 	{
@@ -183,9 +193,9 @@
 		
 		if (rows.length > 0)
 		{
-			let rowLines = utils.getValue(this.state.style,
+			let rowLines = getValue(this.state.style,
 				'rowLines', '1') != '0';
-			let columnLines = utils.getValue(this.state.style,
+			let columnLines = getValue(this.state.style,
 				'columnLines', '1') != '0';
 			
 			// Paints row lines
@@ -235,16 +245,16 @@
 	{
 		mxCylinder.call(this);
 	};
-	utils.extend(CubeShape, mxCylinder);
+	extend(CubeShape, mxCylinder);
 	CubeShape.prototype.size = 20;
 	CubeShape.prototype.darkOpacity = 0;
 	CubeShape.prototype.darkOpacity2 = 0;
 	
 	CubeShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size)))));
-		let op = Math.max(-1, Math.min(1, parseFloat(utils.getValue(this.style, 'darkOpacity', this.darkOpacity))));
-		var op2 = Math.max(-1, Math.min(1, parseFloat(utils.getValue(this.style, 'darkOpacity2', this.darkOpacity2))));
+		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(getValue(this.style, 'size', this.size)))));
+		let op = Math.max(-1, Math.min(1, parseFloat(getValue(this.style, 'darkOpacity', this.darkOpacity))));
+		var op2 = Math.max(-1, Math.min(1, parseFloat(getValue(this.style, 'darkOpacity2', this.darkOpacity2))));
 		c.translate(x, y);
 		
 		c.begin();
@@ -301,9 +311,9 @@
 	};
 	CubeShape.prototype.getLabelMargins = function(rect)
 	{
-		if (utils.getValue(this.style, 'boundedLbl', false))
+		if (getValue(this.style, 'boundedLbl', false))
 		{
-			let s = parseFloat(utils.getValue(this.style, 'size', this.size)) * this.scale;
+			let s = parseFloat(getValue(this.style, 'size', this.size)) * this.scale;
 			
 			return new Rectangle(s, s, 0, 0);
 		}
@@ -313,7 +323,7 @@
 	
 	mxCellRenderer.registerShape('cube', CubeShape);
 	
-	var tan30 = Math.tan(utils.toRadians(30));
+	var tan30 = Math.tan(toRadians(30));
 	var tan30Dx = (0.5 - tan30) / 2;
 	
 	// Cube Shape, supports size style
@@ -321,7 +331,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(IsoRectangleShape, Actor);
+	extend(IsoRectangleShape, Actor);
 	IsoRectangleShape.prototype.size = 20;
 	IsoRectangleShape.prototype.redrawPath = function(path, x, y, w, h)
 	{
@@ -344,7 +354,7 @@
 	{
 		mxCylinder.call(this);
 	};
-	utils.extend(IsoCubeShape, mxCylinder);
+	extend(IsoCubeShape, mxCylinder);
 	IsoCubeShape.prototype.size = 20;
 	IsoCubeShape.prototype.redrawPath = function(path, x, y, w, h, isForeground)
 	{
@@ -381,7 +391,7 @@
 	{
 		mxCylinder.call(this);
 	};
-	utils.extend(DataStoreShape, mxCylinder);
+	extend(DataStoreShape, mxCylinder);
 
 	DataStoreShape.prototype.redrawPath = function(c, x, y, w, h, isForeground)
 	{
@@ -446,14 +456,14 @@
 	{
 		mxCylinder.call(this);
 	};
-	utils.extend(NoteShape, mxCylinder);
+	extend(NoteShape, mxCylinder);
 	NoteShape.prototype.size = 30;
 	NoteShape.prototype.darkOpacity = 0;
 	
 	NoteShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size)))));
-		let op = Math.max(-1, Math.min(1, parseFloat(utils.getValue(this.style, 'darkOpacity', this.darkOpacity))));
+		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(getValue(this.style, 'size', this.size)))));
+		let op = Math.max(-1, Math.min(1, parseFloat(getValue(this.style, 'darkOpacity', this.darkOpacity))));
 		c.translate(x, y);
 		
 		c.begin();
@@ -499,7 +509,7 @@
 	{
 		NoteShape.call(this);
 	};
-	utils.extend(NoteShape2, NoteShape);
+	extend(NoteShape2, NoteShape);
 	
 	mxCellRenderer.registerShape('note2', NoteShape2);
 
@@ -508,12 +518,12 @@
 	{
 		Shape.call(this);
 	};
-	utils.extend(IsoCubeShape2, Shape);
+	extend(IsoCubeShape2, Shape);
 	IsoCubeShape2.prototype.isoAngle = 15;
 	
 	IsoCubeShape2.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		let isoAngle = Math.max(0.01, Math.min(94, parseFloat(utils.getValue(this.style, 'isoAngle', this.isoAngle)))) * Math.PI / 200 ;
+		let isoAngle = Math.max(0.01, Math.min(94, parseFloat(getValue(this.style, 'isoAngle', this.isoAngle)))) * Math.PI / 200 ;
 		let isoH = Math.min(w * Math.tan(isoAngle), h * 0.5);
 
 		c.translate(x,y);
@@ -547,13 +557,13 @@
 		Shape.call(this);
 	};
 	
-	utils.extend(CylinderShape, Shape);
+	extend(CylinderShape, Shape);
 	
 	CylinderShape.prototype.size = 15;
 	
 	CylinderShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		let size = Math.max(0, Math.min(h * 0.5, parseFloat(utils.getValue(this.style, 'size', this.size))));
+		let size = Math.max(0, Math.min(h * 0.5, parseFloat(getValue(this.style, 'size', this.size))));
 
 		c.translate(x,y);
 
@@ -596,14 +606,14 @@
 		this.strokewidth = (strokewidth != null) ? strokewidth : 1;
 	};
 	
-	utils.extend(CylinderShape3, mxCylinder);
+	extend(CylinderShape3, mxCylinder);
 
 	CylinderShape3.prototype.size = 15;
 	
 	CylinderShape3.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
-		let size = Math.max(0, Math.min(h * 0.5, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let lid = utils.getValue(this.style, 'lid', true);
+		let size = Math.max(0, Math.min(h * 0.5, parseFloat(getValue(this.style, 'size', this.size))));
+		let lid = getValue(this.style, 'lid', true);
 
 		c.translate(x,y);
 
@@ -655,7 +665,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(SwitchShape, Actor);
+	extend(SwitchShape, Actor);
 	SwitchShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		let curve = 0.5;
@@ -674,7 +684,7 @@
 	{
 		mxCylinder.call(this);
 	};
-	utils.extend(FolderShape, mxCylinder);
+	extend(FolderShape, mxCylinder);
 	FolderShape.prototype.tabWidth = 60;
 	FolderShape.prototype.tabHeight = 20;
 	FolderShape.prototype.tabPosition = 'right';
@@ -684,12 +694,12 @@
 	{
 		c.translate(x, y);
 		
-		let dx = Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'tabWidth', this.tabWidth))));
-		let dy = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'tabHeight', this.tabHeight))));
-		let tp = utils.getValue(this.style, 'tabPosition', this.tabPosition);
-		let rounded = utils.getValue(this.style, 'rounded', false);
-		let absArcSize = utils.getValue(this.style, 'absoluteArcSize', false);
-		let arcSize = parseFloat(utils.getValue(this.style, 'arcSize', this.arcSize));
+		let dx = Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'tabWidth', this.tabWidth))));
+		let dy = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'tabHeight', this.tabHeight))));
+		let tp = getValue(this.style, 'tabPosition', this.tabPosition);
+		let rounded = getValue(this.style, 'rounded', false);
+		let absArcSize = getValue(this.style, 'absoluteArcSize', false);
+		let arcSize = parseFloat(getValue(this.style, 'arcSize', this.arcSize));
 		
 		if (!absArcSize)
 		{
@@ -748,7 +758,7 @@
 		
 		c.setShadow(false);
 
-		let sym = utils.getValue(this.style, 'folderSymbol', null);
+		let sym = getValue(this.style, 'folderSymbol', null);
 		
 		if (sym == 'triangle')
 		{
@@ -768,7 +778,7 @@
 	{
 		mxCylinder.call(this);
 	};
-	utils.extend(UMLStateShape, mxCylinder);
+	extend(UMLStateShape, mxCylinder);
 	UMLStateShape.prototype.arcSize = 0.1;
 	
 	UMLStateShape.prototype.paintVertexShape = function(c, x, y, w, h)
@@ -778,10 +788,10 @@
 //		let dx = Math.max(0, Math.min(w, parseFloat(mxUtils.getValue(this.style, 'tabWidth', this.tabWidth))));
 //		let dy = Math.max(0, Math.min(h, parseFloat(mxUtils.getValue(this.style, 'tabHeight', this.tabHeight))));
 //		let tp = mxUtils.getValue(this.style, 'tabPosition', this.tabPosition);
-		let rounded = utils.getValue(this.style, 'rounded', false);
-		let absArcSize = utils.getValue(this.style, 'absoluteArcSize', false);
-		let arcSize = parseFloat(utils.getValue(this.style, 'arcSize', this.arcSize));
-		let connPoint = utils.getValue(this.style, 'umlStateConnection', null);
+		let rounded = getValue(this.style, 'rounded', false);
+		let absArcSize = getValue(this.style, 'absoluteArcSize', false);
+		let arcSize = parseFloat(getValue(this.style, 'arcSize', this.arcSize));
+		let connPoint = getValue(this.style, 'umlStateConnection', null);
 		
 		
 		if (!absArcSize)
@@ -817,7 +827,7 @@
 		
 		c.setShadow(false);
 
-		let sym = utils.getValue(this.style, 'umlStateSymbol', null);
+		let sym = getValue(this.style, 'umlStateSymbol', null);
 		
 		if (sym == 'collapseState')
 		{
@@ -857,7 +867,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(CardShape, Actor);
+	extend(CardShape, Actor);
 	CardShape.prototype.size = 30;
 	CardShape.prototype.isRoundable = function()
 	{
@@ -865,8 +875,8 @@
 	};
 	CardShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size)))));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(getValue(this.style, 'size', this.size)))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(s, 0), new Point(w, 0), new Point(w, h), new Point(0, h), new Point(0, s)],
 				this.isRounded, arcSize, true);
 		c.end();
@@ -879,11 +889,11 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(TapeShape, Actor);
+	extend(TapeShape, Actor);
 	TapeShape.prototype.size = 0.4;
 	TapeShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let dy = h * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'size', this.size))));
+		let dy = h * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'size', this.size))));
 		let fy = 1.4;
 		
 		c.moveTo(0, dy / 2);
@@ -899,9 +909,9 @@
 	
 	TapeShape.prototype.getLabelBounds = function(rect)
 	{
-		if (utils.getValue(this.style, 'boundedLbl', false))
+		if (getValue(this.style, 'boundedLbl', false))
 		{
-			let size = utils.getValue(this.style, 'size', this.size);
+			let size = getValue(this.style, 'size', this.size);
 			let w = rect.width;
 			let h = rect.height;
 			
@@ -931,13 +941,13 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(DocumentShape, Actor);
+	extend(DocumentShape, Actor);
 	DocumentShape.prototype.size = 0.3;
 	DocumentShape.prototype.getLabelMargins = function(rect)
 	{
-		if (utils.getValue(this.style, 'boundedLbl', false))
+		if (getValue(this.style, 'boundedLbl', false))
 		{
-			return new Rectangle(0, 0, 0, parseFloat(utils.getValue(
+			return new Rectangle(0, 0, 0, parseFloat(getValue(
 				this.style, 'size', this.size)) * rect.height);
 		}
 		
@@ -945,7 +955,7 @@
 	};
 	DocumentShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let dy = h * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'size', this.size))));
+		let dy = h * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'size', this.size))));
 		let fy = 1.4;
 		
 		c.moveTo(0, 0);
@@ -964,7 +974,7 @@
 	
 	mxCylinder.prototype.getCylinderSize = function(x, y, w, h)
 	{
-		let size = utils.getValue(this.style, 'size');
+		let size = getValue(this.style, 'size');
 		
 		if (size != null)
 		{
@@ -978,9 +988,9 @@
 	
 	mxCylinder.prototype.getLabelMargins = function(rect)
 	{
-		if (utils.getValue(this.style, 'boundedLbl', false))
+		if (getValue(this.style, 'boundedLbl', false))
 		{
-			let size = utils.getValue(this.style, 'size', 0.15) * 2;
+			let size = getValue(this.style, 'size', 0.15) * 2;
 			
 			return new Rectangle(0, Math.min(this.maxHeight * this.scale, rect.height * size), 0, 0);
 		}
@@ -990,11 +1000,11 @@
 
 	CylinderShape3.prototype.getLabelMargins = function(rect)
 	{
-		if (utils.getValue(this.style, 'boundedLbl', false))
+		if (getValue(this.style, 'boundedLbl', false))
 		{
-			let size = utils.getValue(this.style, 'size', 15);
+			let size = getValue(this.style, 'size', 15);
 			
-			if (!utils.getValue(this.style, 'lid', true))
+			if (!getValue(this.style, 'lid', true))
 			{
 				size /= 2;
 			}
@@ -1007,17 +1017,17 @@
 
 	FolderShape.prototype.getLabelMargins = function(rect)
 	{
-		if (utils.getValue(this.style, 'boundedLbl', false))
+		if (getValue(this.style, 'boundedLbl', false))
 		{
-			let sizeY = utils.getValue(this.style, 'tabHeight', 15) * this.scale;
+			let sizeY = getValue(this.style, 'tabHeight', 15) * this.scale;
 
-			if (utils.getValue(this.style, 'labelInHeader', false))
+			if (getValue(this.style, 'labelInHeader', false))
 			{
-				let sizeX = utils.getValue(this.style, 'tabWidth', 15) * this.scale;
-				let sizeY = utils.getValue(this.style, 'tabHeight', 15) * this.scale;
-				let rounded = utils.getValue(this.style, 'rounded', false);
-				let absArcSize = utils.getValue(this.style, 'absoluteArcSize', false);
-				let arcSize = parseFloat(utils.getValue(this.style, 'arcSize', this.arcSize));
+				let sizeX = getValue(this.style, 'tabWidth', 15) * this.scale;
+				let sizeY = getValue(this.style, 'tabHeight', 15) * this.scale;
+				let rounded = getValue(this.style, 'rounded', false);
+				let absArcSize = getValue(this.style, 'absoluteArcSize', false);
+				let arcSize = parseFloat(getValue(this.style, 'arcSize', this.arcSize));
 				
 				if (!absArcSize)
 				{
@@ -1031,7 +1041,7 @@
 					arcSize = 0;
 				}
 	
-				if (utils.getValue(this.style, 'tabPosition', this.tabPosition) == 'left')
+				if (getValue(this.style, 'tabPosition', this.tabPosition) == 'left')
 				{
 					return new Rectangle(arcSize, 0, Math.min(rect.width, rect.width - sizeX), Math.min(rect.height, rect.height - sizeY));
 				}
@@ -1051,9 +1061,9 @@
 
 	UMLStateShape.prototype.getLabelMargins = function(rect)
 	{
-		if (utils.getValue(this.style, 'boundedLbl', false))
+		if (getValue(this.style, 'boundedLbl', false))
 		{
-			let connPoint = utils.getValue(this.style, 'umlStateConnection', null);
+			let connPoint = getValue(this.style, 'umlStateConnection', null);
 			
 			if (connPoint != null)
 			{
@@ -1066,9 +1076,9 @@
 
 	NoteShape2.prototype.getLabelMargins = function(rect)
 	{
-		if (utils.getValue(this.style, 'boundedLbl', false))
+		if (getValue(this.style, 'boundedLbl', false))
 		{
-			let size = utils.getValue(this.style, 'size', 15);
+			let size = getValue(this.style, 'size', 15);
 			
 			return new Rectangle(0, Math.min(rect.height * this.scale, size * this.scale), 0, Math.max(0, size * this.scale));
 		}
@@ -1081,7 +1091,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(ParallelogramShape, Actor);
+	extend(ParallelogramShape, Actor);
 	ParallelogramShape.prototype.size = 0.2;
 	ParallelogramShape.prototype.fixedSize = 20;
 	ParallelogramShape.prototype.isRoundable = function()
@@ -1090,10 +1100,10 @@
 	};
 	ParallelogramShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let fixed = utils.getValue(this.style, 'fixedSize', '0') != '0';
+		let fixed = getValue(this.style, 'fixedSize', '0') != '0';
 
-		let dx = (fixed) ? Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'size', this.fixedSize)))) : w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let dx = (fixed) ? Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'size', this.fixedSize)))) : w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'size', this.size))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(0, h), new Point(dx, 0), new Point(w, 0), new Point(w - dx, h)],
 				this.isRounded, arcSize, true);
 		c.end();
@@ -1106,7 +1116,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(TrapezoidShape, Actor);
+	extend(TrapezoidShape, Actor);
 	TrapezoidShape.prototype.size = 0.2;
 	TrapezoidShape.prototype.fixedSize = 20;
 	TrapezoidShape.prototype.isRoundable = function()
@@ -1116,10 +1126,10 @@
 	TrapezoidShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		
-		let fixed = utils.getValue(this.style, 'fixedSize', '0') != '0';
+		let fixed = getValue(this.style, 'fixedSize', '0') != '0';
 
-		let dx = (fixed) ? Math.max(0, Math.min(w * 0.5, parseFloat(utils.getValue(this.style, 'size', this.fixedSize)))) : w * Math.max(0, Math.min(0.5, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let dx = (fixed) ? Math.max(0, Math.min(w * 0.5, parseFloat(getValue(this.style, 'size', this.fixedSize)))) : w * Math.max(0, Math.min(0.5, parseFloat(getValue(this.style, 'size', this.size))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(0, h), new Point(dx, 0), new Point(w - dx, 0), new Point(w, h)],
 				this.isRounded, arcSize, true);
 	};
@@ -1131,13 +1141,13 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(CurlyBracketShape, Actor);
+	extend(CurlyBracketShape, Actor);
 	CurlyBracketShape.prototype.size = 0.5;
 	CurlyBracketShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		c.setFillColor(null);
-		let s = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let s = w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'size', this.size))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(w, 0), new Point(s, 0), new Point(s, h / 2),
 		                   new Point(0, h / 2), new Point(s, h / 2), new Point(s, h),
 		                   new Point(w, h)], this.isRounded, arcSize, false);
@@ -1151,7 +1161,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(ParallelMarkerShape, Actor);
+	extend(ParallelMarkerShape, Actor);
 	ParallelMarkerShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		c.setStrokeWidth(1);
@@ -1181,22 +1191,22 @@
 		this.defaultVariation = defaultVariation;
 		
 		this.originalLineTo = this.canvas.lineTo;
-		this.canvas.lineTo = utils.bind(this, HandJiggle.prototype.lineTo);
+		this.canvas.lineTo = this.bind(HandJiggle.prototype.lineTo);
 		
 		this.originalMoveTo = this.canvas.moveTo;
-		this.canvas.moveTo = utils.bind(this, HandJiggle.prototype.moveTo);
+		this.canvas.moveTo = this.bind(HandJiggle.prototype.moveTo);
 		
 		this.originalClose = this.canvas.close;
-		this.canvas.close = utils.bind(this, HandJiggle.prototype.close);
+		this.canvas.close = this.bind(HandJiggle.prototype.close);
 		
 		this.originalQuadTo = this.canvas.quadTo;
-		this.canvas.quadTo = utils.bind(this, HandJiggle.prototype.quadTo);
+		this.canvas.quadTo = this.bind(HandJiggle.prototype.quadTo);
 		
 		this.originalCurveTo = this.canvas.curveTo;
-		this.canvas.curveTo = utils.bind(this, HandJiggle.prototype.curveTo);
+		this.canvas.curveTo = this.bind(HandJiggle.prototype.curveTo);
 		
 		this.originalArcTo = this.canvas.arcTo;
-		this.canvas.arcTo = utils.bind(this, HandJiggle.prototype.arcTo);
+		this.canvas.arcTo = this.bind(HandJiggle.prototype.arcTo);
 	};
 	
 	HandJiggle.prototype.moveTo = function(endX, endY)
@@ -1338,13 +1348,13 @@
 	// Returns a new HandJiggle canvas
 	Shape.prototype.createComicCanvas = function(c)
 	{
-		return new HandJiggle(c, utils.getValue(this.style, 'jiggle', this.defaultJiggle));
+		return new HandJiggle(c, getValue(this.style, 'jiggle', this.defaultJiggle));
 	};
 	
 	// Overrides to avoid call to rect
 	Shape.prototype.createHandJiggle = function(c)
 	{
-		if (!this.outline && this.style != null && utils.getValue(this.style, 'comic', '0') != '0')
+		if (!this.outline && this.style != null && getValue(this.style, 'comic', '0') != '0')
 		{
 			return this.createComicCanvas(c);
 		}
@@ -1359,8 +1369,8 @@
 	var mxRectangleShapeIsHtmlAllowed0 = RectangleShape.prototype.isHtmlAllowed;
 	RectangleShape.prototype.isHtmlAllowed = function()
 	{
-		return !this.outline && (this.style == null || (utils.getValue(this.style, 'comic', '0') == '0' &&
-			utils.getValue(this.style, 'sketch', (urlParams['rough'] == '1') ? '1' : '0') == '0')) &&
+		return !this.outline && (this.style == null || (getValue(this.style, 'comic', '0') == '0' &&
+			getValue(this.style, 'sketch', (urlParams['rough'] == '1') ? '1' : '0') == '0')) &&
 			mxRectangleShapeIsHtmlAllowed0.apply(this, arguments);
 	};
 	
@@ -1377,7 +1387,7 @@
 			
 			if (this.style != null)
 			{
-				events = utils.getValue(this.style, 'pointerEvents', '1') == '1';
+				events = getValue(this.style, 'pointerEvents', '1') == '1';
 			}
 			
 			if (events || (this.fill != null && this.fill != mxConstants.NONE) ||
@@ -1394,14 +1404,14 @@
 				{
 					let r = 0;
 					
-					if (utils.getValue(this.style, 'absoluteArcSize', 0) == '1')
+					if (getValue(this.style, 'absoluteArcSize', 0) == '1')
 					{
-						r = Math.min(w / 2, Math.min(h / 2, utils.getValue(this.style,
+						r = Math.min(w / 2, Math.min(h / 2, getValue(this.style,
 							'arcSize', mxConstants.LINE_ARCSIZE) / 2));
 					}
 					else
 					{
-						let f = utils.getValue(this.style, 'arcSize',
+						let f = getValue(this.style, 'arcSize',
 							mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
 						r = Math.min(w * f, h * f);
 					}
@@ -1453,7 +1463,7 @@
 	{
 		RectangleShape.call(this);
 	};
-	utils.extend(ProcessShape, RectangleShape);
+	extend(ProcessShape, RectangleShape);
 	ProcessShape.prototype.size = 0.1;
 	ProcessShape.prototype.fixedSize = false;
 	
@@ -1463,7 +1473,7 @@
 	};
 	ProcessShape.prototype.getLabelBounds = function(rect)
 	{
-		if (utils.getValue(this.state.style, 'horizontal', true) ==
+		if (getValue(this.state.style, 'horizontal', true) ==
 			(this.direction == null ||
 			this.direction == mxConstants.DIRECTION_EAST ||
 			this.direction == mxConstants.DIRECTION_WEST))
@@ -1472,11 +1482,11 @@
 			let h = rect.height;
 			let r = new Rectangle(rect.x, rect.y, w, h);
 	
-			let inset = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'size', this.size))));
+			let inset = w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'size', this.size))));
 	
 			if (this.isRounded)
 			{
-				let f = utils.getValue(this.style, 'arcSize',
+				let f = getValue(this.style, 'arcSize',
 					mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
 				inset = Math.max(inset, Math.min(w * f, h * f));
 			}
@@ -1491,8 +1501,8 @@
 	};
 	ProcessShape.prototype.paintForeground = function(c, x, y, w, h)
 	{
-		let isFixedSize = utils.getValue(this.style, 'fixedSize', this.fixedSize);
-		let inset = parseFloat(utils.getValue(this.style, 'size', this.size));
+		let isFixedSize = getValue(this.style, 'fixedSize', this.fixedSize);
+		let inset = parseFloat(getValue(this.style, 'size', this.size));
 		
 		if (isFixedSize)
 		{
@@ -1506,7 +1516,7 @@
 
 		if (this.isRounded)
 		{
-			let f = utils.getValue(this.style, 'arcSize',
+			let f = getValue(this.style, 'arcSize',
 				mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
 			inset = Math.max(inset, Math.min(w * f, h * f));
 		}
@@ -1531,7 +1541,7 @@
 	{
 		RectangleShape.call(this);
 	};
-	utils.extend(TransparentShape, RectangleShape);
+	extend(TransparentShape, RectangleShape);
 	TransparentShape.prototype.paintBackground = function(c, x, y, w, h)
 	{
 		c.setFillColor(mxConstants.NONE);
@@ -1547,14 +1557,14 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(CalloutShape, HexagonShape);
+	extend(CalloutShape, HexagonShape);
 	CalloutShape.prototype.size = 30;
 	CalloutShape.prototype.position = 0.5;
 	CalloutShape.prototype.position2 = 0.5;
 	CalloutShape.prototype.base = 20;
 	CalloutShape.prototype.getLabelMargins = function()
 	{
-		return new Rectangle(0, 0, 0, parseFloat(utils.getValue(
+		return new Rectangle(0, 0, 0, parseFloat(getValue(
 			this.style, 'size', this.size)) * this.scale);
 	};
 	CalloutShape.prototype.isRoundable = function()
@@ -1563,11 +1573,11 @@
 	};
 	CalloutShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
-		let s = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let dx = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'position', this.position))));
-		var dx2 = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'position2', this.position2))));
-		let base = Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'base', this.base))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let s = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'size', this.size))));
+		let dx = w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'position', this.position))));
+		var dx2 = w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'position2', this.position2))));
+		let base = Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'base', this.base))));
 		
 		this.addPoints(c, [new Point(0, 0), new Point(w, 0), new Point(w, h - s),
 			new Point(Math.min(w, dx + base), h - s), new Point(dx2, h),
@@ -1582,7 +1592,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(StepShape, Actor);
+	extend(StepShape, Actor);
 	StepShape.prototype.size = 0.2;
 	StepShape.prototype.fixedSize = 20;
 	StepShape.prototype.isRoundable = function()
@@ -1591,10 +1601,10 @@
 	};
 	StepShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let fixed = utils.getValue(this.style, 'fixedSize', '0') != '0';
-		let s = (fixed) ? Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'size', this.fixedSize)))) :
-			w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let fixed = getValue(this.style, 'fixedSize', '0') != '0';
+		let s = (fixed) ? Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'size', this.fixedSize)))) :
+			w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'size', this.size))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(0, 0), new Point(w - s, 0), new Point(w, h / 2), new Point(w - s, h),
 		                   new Point(0, h), new Point(s, h / 2)], this.isRounded, arcSize, true);
 		c.end();
@@ -1607,7 +1617,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(HexagonShape, HexagonShape);
+	extend(HexagonShape, HexagonShape);
 	HexagonShape.prototype.size = 0.25;
 	HexagonShape.prototype.fixedSize = 20;
 	HexagonShape.prototype.isRoundable = function()
@@ -1616,10 +1626,10 @@
 	};
 	HexagonShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let fixed = utils.getValue(this.style, 'fixedSize', '0') != '0';
-		let s = (fixed) ? Math.max(0, Math.min(w * 0.5, parseFloat(utils.getValue(this.style, 'size', this.fixedSize)))) :
-			w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let fixed = getValue(this.style, 'fixedSize', '0') != '0';
+		let s = (fixed) ? Math.max(0, Math.min(w * 0.5, parseFloat(getValue(this.style, 'size', this.fixedSize)))) :
+			w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'size', this.size))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(s, 0), new Point(w - s, 0), new Point(w, 0.5 * h), new Point(w - s, h),
 		                   new Point(s, h), new Point(0, 0.5 * h)], this.isRounded, arcSize, true);
 	};
@@ -1631,7 +1641,7 @@
 	{
 		RectangleShape.call(this);
 	};
-	utils.extend(PlusShape, RectangleShape);
+	extend(PlusShape, RectangleShape);
 	PlusShape.prototype.isHtmlAllowed = function()
 	{
 		return false;
@@ -1696,7 +1706,7 @@
 	{
 		RectangleShape.call(this);
 	};
-	utils.extend(ExtendedShape, RectangleShape);
+	extend(ExtendedShape, RectangleShape);
 	ExtendedShape.prototype.isHtmlAllowed = function()
 	{
 		return false;
@@ -1817,7 +1827,7 @@
 	{
 		mxCylinder.call(this);
 	};
-	utils.extend(MessageShape, mxCylinder);
+	extend(MessageShape, mxCylinder);
 	MessageShape.prototype.redrawPath = function(path, x, y, w, h, isForeground)
 	{
 		if (isForeground)
@@ -1844,7 +1854,7 @@
 	{
 		Shape.call(this);
 	};
-	utils.extend(UmlActorShape, Shape);
+	extend(UmlActorShape, Shape);
 	UmlActorShape.prototype.paintBackground = function(c, x, y, w, h)
 	{
 		c.translate(x, y);
@@ -1881,7 +1891,7 @@
 	{
 		Shape.call(this);
 	};
-	utils.extend(UmlBoundaryShape, Shape);
+	extend(UmlBoundaryShape, Shape);
 	UmlBoundaryShape.prototype.getLabelMargins = function(rect)
 	{
 		return new Rectangle(rect.width / 6, 0, 0, 0);
@@ -1917,7 +1927,7 @@
 	{
 		EllipseShape.call(this);
 	};
-	utils.extend(UmlEntityShape, EllipseShape);
+	extend(UmlEntityShape, EllipseShape);
 	UmlEntityShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		EllipseShape.prototype.paintVertexShape.apply(this, arguments);
@@ -1936,7 +1946,7 @@
 	{
 		Shape.call(this);
 	};
-	utils.extend(UmlDestroyShape, Shape);
+	extend(UmlDestroyShape, Shape);
 	UmlDestroyShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		c.translate(x, y);
@@ -1957,7 +1967,7 @@
 	{
 		Shape.call(this);
 	};
-	utils.extend(UmlControlShape, Shape);
+	extend(UmlControlShape, Shape);
 	UmlControlShape.prototype.getLabelBounds = function(rect)
 	{
 		return new Rectangle(rect.x, rect.y + rect.height / 8, rect.width, rect.height * 7 / 8);
@@ -1995,7 +2005,7 @@
 	{
 		RectangleShape.call(this);
 	};
-	utils.extend(UmlLifeline, RectangleShape);
+	extend(UmlLifeline, RectangleShape);
 	UmlLifeline.prototype.size = 40;
 	UmlLifeline.prototype.isHtmlAllowed = function()
 	{
@@ -2004,14 +2014,14 @@
 	UmlLifeline.prototype.getLabelBounds = function(rect)
 	{
 		let size = Math.max(0, Math.min(rect.height, parseFloat(
-			utils.getValue(this.style, 'size', this.size)) * this.scale));
+			getValue(this.style, 'size', this.size)) * this.scale));
 		
 		return new Rectangle(rect.x, rect.y, rect.width, size);
 	};
 	UmlLifeline.prototype.paintBackground = function(c, x, y, w, h)
 	{
-		let size = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let participant = utils.getValue(this.style, 'participant');
+		let size = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'size', this.size))));
+		let participant = getValue(this.style, 'participant');
 		
 		if (participant == null || this.state == null)
 		{
@@ -2043,7 +2053,7 @@
 	};
 	UmlLifeline.prototype.paintForeground = function(c, x, y, w, h)
 	{
-		let size = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size))));
+		let size = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'size', this.size))));
 		RectangleShape.prototype.paintForeground.call(this, c, x, y, w, Math.min(h, size));
 	};
 
@@ -2054,22 +2064,22 @@
 	{
 		Shape.call(this);
 	};
-	utils.extend(UmlFrame, Shape);
+	extend(UmlFrame, Shape);
 	UmlFrame.prototype.width = 60;
 	UmlFrame.prototype.height = 30;
 	UmlFrame.prototype.corner = 10;
 	UmlFrame.prototype.getLabelMargins = function(rect)
 	{
 		return new Rectangle(0, 0,
-			rect.width - (parseFloat(utils.getValue(this.style, 'width', this.width) * this.scale)),
-			rect.height - (parseFloat(utils.getValue(this.style, 'height', this.height) * this.scale)));
+			rect.width - (parseFloat(getValue(this.style, 'width', this.width) * this.scale)),
+			rect.height - (parseFloat(getValue(this.style, 'height', this.height) * this.scale)));
 	};
 	UmlFrame.prototype.paintBackground = function(c, x, y, w, h)
 	{
 		let co = this.corner;
-		var w0 = Math.min(w, Math.max(co, parseFloat(utils.getValue(this.style, 'width', this.width))));
-		var h0 = Math.min(h, Math.max(co * 1.5, parseFloat(utils.getValue(this.style, 'height', this.height))));
-		let bg = utils.getValue(this.style, 'swimlaneFillColor', mxConstants.NONE);
+		var w0 = Math.min(w, Math.max(co, parseFloat(getValue(this.style, 'width', this.width))));
+		var h0 = Math.min(h, Math.max(co * 1.5, parseFloat(getValue(this.style, 'height', this.height))));
+		let bg = getValue(this.style, 'swimlaneFillColor', mxConstants.NONE);
 		
 		if (bg != mxConstants.NONE)
 		{
@@ -2114,7 +2124,7 @@
 		
 		if (vertex != null)
 		{
-			size = utils.getValue(vertex.style, 'size', size) * vertex.view.scale;
+			size = getValue(vertex.style, 'size', size) * vertex.view.scale;
 		}
 		
 		let sw = (parseFloat(vertex.style.strokeWidth || 1) * vertex.view.scale / 2) - 1;
@@ -2179,8 +2189,8 @@
 	// Callout Perimeter
 	Perimeter.CalloutPerimeter = (bounds, vertex, next, orthogonal) =>
 	{
-		return Perimeter.RectanglePerimeter(utils.getDirectedBounds(bounds, new Rectangle(0, 0, 0,
-			Math.max(0, Math.min(bounds.height, parseFloat(utils.getValue(vertex.style, 'size',
+		return Perimeter.RectanglePerimeter(getDirectedBounds(bounds, new Rectangle(0, 0, 0,
+			Math.max(0, Math.min(bounds.height, parseFloat(getValue(vertex.style, 'size',
 			CalloutShape.prototype.size)) * vertex.view.scale))),
 			vertex.style), vertex, next, orthogonal);
 	};
@@ -2190,12 +2200,12 @@
 	// Parallelogram Perimeter
 	Perimeter.ParallelogramPerimeter = (bounds, vertex, next, orthogonal) =>
 	{
-		let fixed = utils.getValue(vertex.style, 'fixedSize', '0') != '0';
+		let fixed = getValue(vertex.style, 'fixedSize', '0') != '0';
 		let size = (fixed) ? ParallelogramShape.prototype.fixedSize : ParallelogramShape.prototype.size;
 		
 		if (vertex != null)
 		{
-			size = utils.getValue(vertex.style, 'size', size);
+			size = getValue(vertex.style, 'size', size);
 		}
 		
 		if (fixed)
@@ -2208,7 +2218,7 @@
 		let w = bounds.width;
 		let h = bounds.height;
 
-		let direction = (vertex != null) ? utils.getValue(
+		let direction = (vertex != null) ? getValue(
 			vertex.style, 'direction',
 			mxConstants.DIRECTION_EAST) : mxConstants.DIRECTION_EAST;
 		let vertical = direction == mxConstants.DIRECTION_NORTH ||
@@ -2245,7 +2255,7 @@
 			}
 		}
 		
-		return utils.getPerimeterPoint(points, p1, next);
+		return getPerimeterPoint(points, p1, next);
 	};
 	
 	StyleRegistry.putValue('parallelogramPerimeter', Perimeter.ParallelogramPerimeter);
@@ -2253,12 +2263,12 @@
 	// Trapezoid Perimeter
 	Perimeter.TrapezoidPerimeter = (bounds, vertex, next, orthogonal) =>
 	{
-		let fixed = utils.getValue(vertex.style, 'fixedSize', '0') != '0';
+		let fixed = getValue(vertex.style, 'fixedSize', '0') != '0';
 		let size = (fixed) ? TrapezoidShape.prototype.fixedSize : TrapezoidShape.prototype.size;
 		
 		if (vertex != null)
 		{
-			size = utils.getValue(vertex.style, 'size', size);
+			size = getValue(vertex.style, 'size', size);
 		}
 		
 		if (fixed)
@@ -2271,7 +2281,7 @@
 		let w = bounds.width;
 		let h = bounds.height;
 
-		let direction = (vertex != null) ? utils.getValue(
+		let direction = (vertex != null) ? getValue(
 				vertex.style, 'direction',
 				mxConstants.DIRECTION_EAST) : mxConstants.DIRECTION_EAST;
 		let points = [];
@@ -2318,7 +2328,7 @@
 			}
 		}
 
-		return utils.getPerimeterPoint(points, p1, next);
+		return getPerimeterPoint(points, p1, next);
 	};
 	
 	StyleRegistry.putValue('trapezoidPerimeter', Perimeter.TrapezoidPerimeter);
@@ -2326,12 +2336,12 @@
 	// Step Perimeter
 	Perimeter.StepPerimeter = (bounds, vertex, next, orthogonal) =>
 	{
-		let fixed = utils.getValue(vertex.style, 'fixedSize', '0') != '0';
+		let fixed = getValue(vertex.style, 'fixedSize', '0') != '0';
 		let size = (fixed) ? StepShape.prototype.fixedSize : StepShape.prototype.size;
 		
 		if (vertex != null)
 		{
-			size = utils.getValue(vertex.style, 'size', size);
+			size = getValue(vertex.style, 'size', size);
 		}
 		
 		if (fixed)
@@ -2347,7 +2357,7 @@
 		let cx = bounds.getCenterX();
 		let cy = bounds.getCenterY();
 		
-		let direction = (vertex != null) ? utils.getValue(
+		let direction = (vertex != null) ? getValue(
 				vertex.style, 'direction',
 				mxConstants.DIRECTION_EAST) : mxConstants.DIRECTION_EAST;
 		var points;
@@ -2395,7 +2405,7 @@
 			}
 		}
 		
-		return utils.getPerimeterPoint(points, p1, next);
+		return getPerimeterPoint(points, p1, next);
 	};
 	
 	StyleRegistry.putValue('stepPerimeter', Perimeter.StepPerimeter);
@@ -2403,12 +2413,12 @@
 	// Hexagon Perimeter 2 (keep existing one)
 	Perimeter.HexagonPerimeter2 = (bounds, vertex, next, orthogonal) =>
 	{
-		let fixed = utils.getValue(vertex.style, 'fixedSize', '0') != '0';
+		let fixed = getValue(vertex.style, 'fixedSize', '0') != '0';
 		let size = (fixed) ? HexagonShape.prototype.fixedSize : HexagonShape.prototype.size;
 		
 		if (vertex != null)
 		{
-			size = utils.getValue(vertex.style, 'size', size);
+			size = getValue(vertex.style, 'size', size);
 		}
 		
 		if (fixed)
@@ -2424,7 +2434,7 @@
 		let cx = bounds.getCenterX();
 		let cy = bounds.getCenterY();
 		
-		let direction = (vertex != null) ? utils.getValue(
+		let direction = (vertex != null) ? getValue(
 			vertex.style, 'direction',
 			mxConstants.DIRECTION_EAST) : mxConstants.DIRECTION_EAST;
 		let vertical = direction == mxConstants.DIRECTION_NORTH ||
@@ -2460,7 +2470,7 @@
 			}
 		}
 		
-		return utils.getPerimeterPoint(points, p1, next);
+		return getPerimeterPoint(points, p1, next);
 	};
 	
 	StyleRegistry.putValue('hexagonPerimeter2', Perimeter.HexagonPerimeter2);
@@ -2470,11 +2480,11 @@
 	{
 		Shape.call(this);
 	};
-	utils.extend(LollipopShape, Shape);
+	extend(LollipopShape, Shape);
 	LollipopShape.prototype.size = 10;
 	LollipopShape.prototype.paintBackground = function(c, x, y, w, h)
 	{
-		let sz = parseFloat(utils.getValue(this.style, 'size', this.size));
+		let sz = parseFloat(getValue(this.style, 'size', this.size));
 		c.translate(x, y);
 		
 		c.ellipse((w - sz) / 2, 0, sz, sz);
@@ -2494,13 +2504,13 @@
 	{
 		Shape.call(this);
 	};
-	utils.extend(RequiresShape, Shape);
+	extend(RequiresShape, Shape);
 	RequiresShape.prototype.size = 10;
 	RequiresShape.prototype.inset = 2;
 	RequiresShape.prototype.paintBackground = function(c, x, y, w, h)
 	{
-		let sz = parseFloat(utils.getValue(this.style, 'size', this.size));
-		let inset = parseFloat(utils.getValue(this.style, 'inset', this.inset)) + this.strokewidth;
+		let sz = parseFloat(getValue(this.style, 'size', this.size));
+		let inset = parseFloat(getValue(this.style, 'inset', this.inset)) + this.strokewidth;
 		c.translate(x, y);
 
 		c.begin();
@@ -2524,7 +2534,7 @@
 	{
 		Shape.call(this);
 	};
-	utils.extend(RequiredInterfaceShape, Shape);
+	extend(RequiredInterfaceShape, Shape);
 	
 	RequiredInterfaceShape.prototype.paintBackground = function(c, x, y, w, h)
 	{
@@ -2545,11 +2555,11 @@
 	{
 		Shape.call(this);
 	};
-	utils.extend(ProvidedRequiredInterfaceShape, Shape);
+	extend(ProvidedRequiredInterfaceShape, Shape);
 	ProvidedRequiredInterfaceShape.prototype.inset = 2;
 	ProvidedRequiredInterfaceShape.prototype.paintBackground = function(c, x, y, w, h)
 	{
-		let inset = parseFloat(utils.getValue(this.style, 'inset', this.inset)) + this.strokewidth;
+		let inset = parseFloat(getValue(this.style, 'inset', this.inset)) + this.strokewidth;
 		c.translate(x, y);
 
 		c.ellipse(0, inset, w - 2 * inset, h - 2 * inset);
@@ -2570,13 +2580,13 @@
 	{
 		mxCylinder.call(this);
 	};
-	utils.extend(ModuleShape, mxCylinder);
+	extend(ModuleShape, mxCylinder);
 	ModuleShape.prototype.jettyWidth = 20;
 	ModuleShape.prototype.jettyHeight = 10;
 	ModuleShape.prototype.redrawPath = function(path, x, y, w, h, isForeground)
 	{
-		let dx = parseFloat(utils.getValue(this.style, 'jettyWidth', this.jettyWidth));
-		let dy = parseFloat(utils.getValue(this.style, 'jettyHeight', this.jettyHeight));
+		let dx = parseFloat(getValue(this.style, 'jettyWidth', this.jettyWidth));
+		let dy = parseFloat(getValue(this.style, 'jettyHeight', this.jettyHeight));
 		var x0 = dx / 2;
 		var x1 = x0 + dx / 2;
 		var y0 = Math.min(dy, h - dy);
@@ -2620,13 +2630,13 @@
 	{
 		mxCylinder.call(this);
 	};
-	utils.extend(ComponentShape, mxCylinder);
+	extend(ComponentShape, mxCylinder);
 	ComponentShape.prototype.jettyWidth = 32;
 	ComponentShape.prototype.jettyHeight = 12;
 	ComponentShape.prototype.redrawPath = function(path, x, y, w, h, isForeground)
 	{
-		let dx = parseFloat(utils.getValue(this.style, 'jettyWidth', this.jettyWidth));
-		let dy = parseFloat(utils.getValue(this.style, 'jettyHeight', this.jettyHeight));
+		let dx = parseFloat(getValue(this.style, 'jettyWidth', this.jettyWidth));
+		let dy = parseFloat(getValue(this.style, 'jettyHeight', this.jettyHeight));
 		var x0 = dx / 2;
 		var x1 = x0 + dx / 2;
 		var y0 = 0.3 * h - dy / 2;
@@ -2670,13 +2680,13 @@
 	{
 		RectangleShape.call(this);
 	};
-	utils.extend(AssociativeEntity, RectangleShape);
+	extend(AssociativeEntity, RectangleShape);
 	AssociativeEntity.prototype.paintForeground = function(c, x, y, w, h)
 	{
 		let hw = w / 2;
 		let hh = h / 2;
 		
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		c.begin();
 		this.addPoints(c, [new Point(x + hw, y), new Point(x + w, y + hh), new Point(x + hw, y + h),
 		     new Point(x, y + hh)], this.isRounded, arcSize, true);
@@ -2692,7 +2702,7 @@
 	{
 		DoubleEllipseShape.call(this);
 	};
-	utils.extend(StateShape, DoubleEllipseShape);
+	extend(StateShape, DoubleEllipseShape);
 	StateShape.prototype.outerStroke = true;
 	StateShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
@@ -2719,7 +2729,7 @@
 	{
 		StateShape.call(this);
 	};
-	utils.extend(StartStateShape, StateShape);
+	extend(StartStateShape, StateShape);
 	StartStateShape.prototype.outerStroke = false;
 	
 	mxCellRenderer.registerShape('startState', StartStateShape);
@@ -2730,7 +2740,7 @@
 		ArrowConnector.call(this);
 		this.spacing = 0;
 	};
-	utils.extend(LinkShape, ArrowConnector);
+	extend(LinkShape, ArrowConnector);
 	LinkShape.prototype.defaultWidth = 4;
 	
 	LinkShape.prototype.isOpenEnded = function()
@@ -2740,7 +2750,7 @@
 
 	LinkShape.prototype.getEdgeWidth = function()
 	{
-		return utils.getNumber(this.style, 'width', this.defaultWidth) + Math.max(0, this.strokewidth - 1);
+		return getNumber(this.style, 'width', this.defaultWidth) + Math.max(0, this.strokewidth - 1);
 	};
 	
 	LinkShape.prototype.isArrowRounded = function()
@@ -2757,23 +2767,23 @@
 		ArrowConnector.call(this);
 		this.spacing = 0;
 	};
-	utils.extend(FlexArrowShape, ArrowConnector);
+	extend(FlexArrowShape, ArrowConnector);
 	FlexArrowShape.prototype.defaultWidth = 10;
 	FlexArrowShape.prototype.defaultArrowWidth = 20;
 
 	FlexArrowShape.prototype.getStartArrowWidth = function()
 	{
-		return this.getEdgeWidth() + utils.getNumber(this.style, 'startWidth', this.defaultArrowWidth);
+		return this.getEdgeWidth() + getNumber(this.style, 'startWidth', this.defaultArrowWidth);
 	};
 
 	FlexArrowShape.prototype.getEndArrowWidth = function()
 	{
-		return this.getEdgeWidth() + utils.getNumber(this.style, 'endWidth', this.defaultArrowWidth);;
+		return this.getEdgeWidth() + getNumber(this.style, 'endWidth', this.defaultArrowWidth);;
 	};
 
 	FlexArrowShape.prototype.getEdgeWidth = function()
 	{
-		return utils.getNumber(this.style, 'width', this.defaultWidth) + Math.max(0, this.strokewidth - 1);
+		return getNumber(this.style, 'width', this.defaultWidth) + Math.max(0, this.strokewidth - 1);
 	};
 	
 	// Registers the link shape
@@ -2784,7 +2794,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(ManualInputShape, Actor);
+	extend(ManualInputShape, Actor);
 	ManualInputShape.prototype.size = 30;
 	ManualInputShape.prototype.isRoundable = function()
 	{
@@ -2792,8 +2802,8 @@
 	};
 	ManualInputShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let s = Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size)));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let s = Math.min(h, parseFloat(getValue(this.style, 'size', this.size)));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(0, h), new Point(0, s), new Point(w, 0), new Point(w, h)],
 				this.isRounded, arcSize, true);
 		c.end();
@@ -2806,7 +2816,7 @@
 	{
 		RectangleShape.call(this);
 	};
-	utils.extend(InternalStorageShape, RectangleShape);
+	extend(InternalStorageShape, RectangleShape);
 	InternalStorageShape.prototype.dx = 20;
 	InternalStorageShape.prototype.dy = 20;
 	InternalStorageShape.prototype.isHtmlAllowed = function()
@@ -2820,13 +2830,13 @@
 		
 		if (this.isRounded)
 		{
-			let f = utils.getValue(this.style, 'arcSize',
+			let f = getValue(this.style, 'arcSize',
 				mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
 			inset = Math.max(inset, Math.min(w * f, h * f));
 		}
 		
-		let dx = Math.max(inset, Math.min(w, parseFloat(utils.getValue(this.style, 'dx', this.dx))));
-		let dy = Math.max(inset, Math.min(h, parseFloat(utils.getValue(this.style, 'dy', this.dy))));
+		let dx = Math.max(inset, Math.min(w, parseFloat(getValue(this.style, 'dx', this.dx))));
+		let dy = Math.max(inset, Math.min(h, parseFloat(getValue(this.style, 'dy', this.dy))));
 		
 		c.begin();
 		c.moveTo(x, y + dy);
@@ -2848,18 +2858,18 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(CornerShape, Actor);
+	extend(CornerShape, Actor);
 	CornerShape.prototype.dx = 20;
 	CornerShape.prototype.dy = 20;
 	
 	// Corner
 	CornerShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let dx = Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'dx', this.dx))));
-		let dy = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'dy', this.dy))));
+		let dx = Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'dx', this.dx))));
+		let dy = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'dy', this.dy))));
 		
-		let s = Math.min(w / 2, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let s = Math.min(w / 2, Math.min(h, parseFloat(getValue(this.style, 'size', this.size))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(0, 0), new Point(w, 0), new Point(w, dy), new Point(dx, dy),
 		                   new Point(dx, h), new Point(0, h)], this.isRounded, arcSize, true);
 		c.end();
@@ -2872,7 +2882,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(CrossbarShape, Actor);
+	extend(CrossbarShape, Actor);
 	
 	CrossbarShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
@@ -2896,19 +2906,19 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(TeeShape, Actor);
+	extend(TeeShape, Actor);
 	TeeShape.prototype.dx = 20;
 	TeeShape.prototype.dy = 20;
 	
 	// Corner
 	TeeShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let dx = Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'dx', this.dx))));
-		let dy = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'dy', this.dy))));
+		let dx = Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'dx', this.dx))));
+		let dy = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'dy', this.dy))));
 		var w2 = Math.abs(w - dx) / 2;
 		
-		let s = Math.min(w / 2, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let s = Math.min(w / 2, Math.min(h, parseFloat(getValue(this.style, 'size', this.size))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(0, 0), new Point(w, 0), new Point(w, dy), new Point((w + dx) / 2, dy),
 		                   new Point((w + dx) / 2, h), new Point((w - dx) / 2, h), new Point((w - dx) / 2, dy),
 		                   new Point(0, dy)], this.isRounded, arcSize, true);
@@ -2922,17 +2932,17 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(SingleArrowShape, Actor);
+	extend(SingleArrowShape, Actor);
 	SingleArrowShape.prototype.arrowWidth = 0.3;
 	SingleArrowShape.prototype.arrowSize = 0.2;
 	SingleArrowShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let aw = h * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'arrowWidth', this.arrowWidth))));
-		let as = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'arrowSize', this.arrowSize))));
+		let aw = h * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'arrowWidth', this.arrowWidth))));
+		let as = w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'arrowSize', this.arrowSize))));
 		let at = (h - aw) / 2;
 		let ab = at + aw;
 		
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(0, at), new Point(w - as, at), new Point(w - as, 0), new Point(w, h / 2),
 		                   new Point(w - as, h), new Point(w - as, ab), new Point(0, ab)],
 		                   this.isRounded, arcSize, true);
@@ -2946,15 +2956,15 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(DoubleArrowShape, Actor);
+	extend(DoubleArrowShape, Actor);
 	DoubleArrowShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let aw = h * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'arrowWidth', SingleArrowShape.prototype.arrowWidth))));
-		let as = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'arrowSize', SingleArrowShape.prototype.arrowSize))));
+		let aw = h * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'arrowWidth', SingleArrowShape.prototype.arrowWidth))));
+		let as = w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'arrowSize', SingleArrowShape.prototype.arrowSize))));
 		let at = (h - aw) / 2;
 		let ab = at + aw;
 		
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(0, h / 2), new Point(as, 0), new Point(as, at), new Point(w - as, at),
 		                   new Point(w - as, 0), new Point(w, h / 2), new Point(w - as, h),
 		                   new Point(w - as, ab), new Point(as, ab), new Point(as, h)],
@@ -2969,14 +2979,14 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(DataStorageShape, Actor);
+	extend(DataStorageShape, Actor);
 	DataStorageShape.prototype.size = 0.1;
 	DataStorageShape.prototype.fixedSize = 20;
 	DataStorageShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let fixed = utils.getValue(this.style, 'fixedSize', '0') != '0';
-		let s = (fixed) ? Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'size', this.fixedSize)))) :
-			w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'size', this.size))));
+		let fixed = getValue(this.style, 'fixedSize', '0') != '0';
+		let s = (fixed) ? Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'size', this.fixedSize)))) :
+			w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'size', this.size))));
 		
 		c.moveTo(s, 0);
 		c.lineTo(w, 0);
@@ -2994,7 +3004,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(OrShape, Actor);
+	extend(OrShape, Actor);
 	OrShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		c.moveTo(0, 0);
@@ -3011,7 +3021,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(XorShape, Actor);
+	extend(XorShape, Actor);
 	XorShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		c.moveTo(0, 0);
@@ -3029,7 +3039,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(LoopLimitShape, Actor);
+	extend(LoopLimitShape, Actor);
 	LoopLimitShape.prototype.size = 20;
 	LoopLimitShape.prototype.isRoundable = function()
 	{
@@ -3037,8 +3047,8 @@
 	};
 	LoopLimitShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let s = Math.min(w / 2, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let s = Math.min(w / 2, Math.min(h, parseFloat(getValue(this.style, 'size', this.size))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(s, 0), new Point(w - s, 0), new Point(w, s * 0.8), new Point(w, h),
 		                   new Point(0, h), new Point(0, s * 0.8)], this.isRounded, arcSize, true);
 		c.end();
@@ -3051,7 +3061,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(OffPageConnectorShape, Actor);
+	extend(OffPageConnectorShape, Actor);
 	OffPageConnectorShape.prototype.size = 3 / 8;
 	OffPageConnectorShape.prototype.isRoundable = function()
 	{
@@ -3059,8 +3069,8 @@
 	};
 	OffPageConnectorShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
-		let s = h * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let s = h * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'size', this.size))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 		this.addPoints(c, [new Point(0, 0), new Point(w, 0), new Point(w, h - s), new Point(w / 2, h),
 		                   new Point(0, h - s)], this.isRounded, arcSize, true);
 		c.end();
@@ -3073,7 +3083,7 @@
 	{
 		EllipseShape.call(this);
 	};
-	utils.extend(TapeDataShape, EllipseShape);
+	extend(TapeDataShape, EllipseShape);
 	TapeDataShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		EllipseShape.prototype.paintVertexShape.apply(this, arguments);
@@ -3092,7 +3102,7 @@
 	{
 		EllipseShape.call(this);
 	};
-	utils.extend(OrEllipseShape, EllipseShape);
+	extend(OrEllipseShape, EllipseShape);
 	OrEllipseShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		EllipseShape.prototype.paintVertexShape.apply(this, arguments);
@@ -3118,7 +3128,7 @@
 	{
 		EllipseShape.call(this);
 	};
-	utils.extend(SumEllipseShape, EllipseShape);
+	extend(SumEllipseShape, EllipseShape);
 	SumEllipseShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		EllipseShape.prototype.paintVertexShape.apply(this, arguments);
@@ -3145,7 +3155,7 @@
 	{
 		RhombusShape.call(this);
 	};
-	utils.extend(SortShape, RhombusShape);
+	extend(SortShape, RhombusShape);
 	SortShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		RhombusShape.prototype.paintVertexShape.apply(this, arguments);
@@ -3165,7 +3175,7 @@
 	{
 		EllipseShape.call(this);
 	};
-	utils.extend(CollateShape, EllipseShape);
+	extend(CollateShape, EllipseShape);
 	CollateShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		c.begin();
@@ -3190,7 +3200,7 @@
 	{
 		EllipseShape.call(this);
 	};
-	utils.extend(DimensionShape, EllipseShape);
+	extend(DimensionShape, EllipseShape);
 	DimensionShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		// Arrow size
@@ -3225,7 +3235,7 @@
 	{
 		EllipseShape.call(this);
 	};
-	utils.extend(PartialRectangleShape, EllipseShape);
+	extend(PartialRectangleShape, EllipseShape);
 	PartialRectangleShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		if (!this.outline)
@@ -3236,7 +3246,7 @@
 		if (this.style != null)
 		{
 			let pointerEvents = c.pointerEvents;
-			let events = utils.getValue(this.style, 'pointerEvents', '1') == '1';
+			let events = getValue(this.style, 'pointerEvents', '1') == '1';
 			
 			if (!events && (this.fill == null || this.fill == mxConstants.NONE))
 			{
@@ -3251,7 +3261,7 @@
 			c.begin();
 			c.moveTo(x, y);
 			
-			if (this.outline || utils.getValue(this.style, 'top', '1') == '1')
+			if (this.outline || getValue(this.style, 'top', '1') == '1')
 			{
 				c.lineTo(x + w, y);
 			}
@@ -3260,7 +3270,7 @@
 				c.moveTo(x + w, y);
 			}
 			
-			if (this.outline || utils.getValue(this.style, 'right', '1') == '1')
+			if (this.outline || getValue(this.style, 'right', '1') == '1')
 			{
 				c.lineTo(x + w, y + h);
 			}
@@ -3269,7 +3279,7 @@
 				c.moveTo(x + w, y + h);
 			}
 			
-			if (this.outline || utils.getValue(this.style, 'bottom', '1') == '1')
+			if (this.outline || getValue(this.style, 'bottom', '1') == '1')
 			{
 				c.lineTo(x, y + h);
 			}
@@ -3278,7 +3288,7 @@
 				c.moveTo(x, y + h);
 			}
 			
-			if (this.outline || utils.getValue(this.style, 'left', '1') == '1')
+			if (this.outline || getValue(this.style, 'left', '1') == '1')
 			{
 				c.lineTo(x, y);
 			}
@@ -3295,7 +3305,7 @@
 	{
 		EllipseShape.call(this);
 	};
-	utils.extend(LineEllipseShape, EllipseShape);
+	extend(LineEllipseShape, EllipseShape);
 	LineEllipseShape.prototype.paintVertexShape = function(c, x, y, w, h)
 	{
 		EllipseShape.prototype.paintVertexShape.apply(this, arguments);
@@ -3303,7 +3313,7 @@
 		c.setShadow(false);
 		c.begin();
 		
-		if (utils.getValue(this.style, 'line') == 'vertical')
+		if (getValue(this.style, 'line') == 'vertical')
 		{
 			c.moveTo(x + w / 2, y);
 			c.lineTo(x + w / 2, y + h);
@@ -3325,7 +3335,7 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(DelayShape, Actor);
+	extend(DelayShape, Actor);
 	DelayShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		let dx = Math.min(w, h / 2);
@@ -3345,12 +3355,12 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(CrossShape, Actor);
+	extend(CrossShape, Actor);
 	CrossShape.prototype.size = 0.2;
 	CrossShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		let m = Math.min(h, w);
-		let size = Math.max(0, Math.min(m, m * parseFloat(utils.getValue(this.style, 'size', this.size))));
+		let size = Math.max(0, Math.min(m, m * parseFloat(getValue(this.style, 'size', this.size))));
 		let t = (h - size) / 2;
 		let b = t + size;
 		let l = (w - size) / 2;
@@ -3379,12 +3389,12 @@
 	{
 		Actor.call(this);
 	};
-	utils.extend(DisplayShape, Actor);
+	extend(DisplayShape, Actor);
 	DisplayShape.prototype.size = 0.25;
 	DisplayShape.prototype.redrawPath = function(c, x, y, w, h)
 	{
 		let dx = Math.min(w, h / 2);
-		let s = Math.min(w - dx, Math.max(0, parseFloat(utils.getValue(this.style, 'size', this.size))) * w);
+		let s = Math.min(w - dx, Math.max(0, parseFloat(getValue(this.style, 'size', this.size))) * w);
 		
 		c.moveTo(0, h / 2);
 		c.lineTo(s, 0);
@@ -3403,7 +3413,7 @@
 	{
 		Connector.call(this);
 	};
-	utils.extend(FilledEdge, Connector);
+	extend(FilledEdge, Connector);
 	
 	FilledEdge.prototype.origPaintEdgeShape = FilledEdge.prototype.paintEdgeShape;
 	FilledEdge.prototype.paintEdgeShape = function(c, pts, rounded)
@@ -3413,7 +3423,7 @@
 		
 		for (let i = 0; i < pts.length; i++)
 		{
-			temp.push(utils.clone(pts[i]));
+			temp.push(clone(pts[i]));
 		}
 		
 		// paintEdgeShape resets dashed to false
@@ -3423,7 +3433,7 @@
 
 		if (c.state.strokeWidth >= 3)
 		{
-			let fillClr = utils.getValue(this.style, 'fillColor', null);
+			let fillClr = getValue(this.style, 'fillColor', null);
 			
 			if (fillClr != null)
 			{
@@ -3764,15 +3774,15 @@
 			{
 				let tmp = (yOffset != null) ? yOffset : bounds.height / 8;
 				
-				if (utils.getValue(state.style, 'absoluteArcSize', 0) == '1')
+				if (getValue(state.style, 'absoluteArcSize', 0) == '1')
 				{
-					let arcSize = utils.getValue(state.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+					let arcSize = getValue(state.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
 					
 					return new Point(bounds.x + bounds.width - Math.min(bounds.width / 2, arcSize), bounds.y + tmp);
 				}
 				else
 				{
-					let arcSize = Math.max(0, parseFloat(utils.getValue(state.style,
+					let arcSize = Math.max(0, parseFloat(getValue(state.style,
 						'arcSize', mxConstants.RECTANGLE_ROUNDING_FACTOR * 100))) / 100;
 					
 					return new Point(bounds.x + bounds.width - Math.min(Math.max(bounds.width / 2, bounds.height / 2),
@@ -3780,7 +3790,7 @@
 				}
 			}, function(bounds, pt, me)
 			{
-				if (utils.getValue(state.style, 'absoluteArcSize', 0) == '1')
+				if (getValue(state.style, 'absoluteArcSize', 0) == '1')
 				{
 					this.state.style.arcSize = Math.round(Math.max(0, Math.min(bounds.width,
 						(bounds.x + bounds.width - pt.x) * 2)));
@@ -3800,7 +3810,7 @@
 			{
 				let handles = [];
 				
-				if (utils.getValue(state.style, 'rounded', false))
+				if (getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -3817,19 +3827,19 @@
 			{
 				let handles = [createHandle(state, ['size'], function(bounds)
 				{
-					let fixed = (fixedDefaultValue != null) ? utils.getValue(this.state.style, 'fixedSize', '0') != '0' : null;
-					let size = Math.max(0, parseFloat(utils.getValue(this.state.style, 'size', (fixed) ? fixedDefaultValue : defaultValue)));
+					let fixed = (fixedDefaultValue != null) ? getValue(this.state.style, 'fixedSize', '0') != '0' : null;
+					let size = Math.max(0, parseFloat(getValue(this.state.style, 'size', (fixed) ? fixedDefaultValue : defaultValue)));
 					
 					return new Point(bounds.x + Math.min(bounds.width * 0.75 * max, size * ((fixed) ? 0.75 : bounds.width * 0.75)), bounds.y + bounds.height / 4);
 				}, function(bounds, pt)
 				{
-					let fixed = (fixedDefaultValue != null) ? utils.getValue(this.state.style, 'fixedSize', '0') != '0' : null;
+					let fixed = (fixedDefaultValue != null) ? getValue(this.state.style, 'fixedSize', '0') != '0' : null;
 					let size = (fixed) ? (pt.x - bounds.x) : Math.max(0, Math.min(max, (pt.x - bounds.x) / bounds.width * 0.75));
 					
 					this.state.style.size = size;
 				}, false, true)];
 				
-				if (utils.getValue(state.style, 'rounded', false))
+				if (getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -3846,19 +3856,19 @@
 			{
 				let handles = [createHandle(state, ['size'], function(bounds)
 				{
-					let fixed = (fixedDefaultValue != null) ? utils.getValue(this.state.style, 'fixedSize', '0') != '0' : null;
-					let size = parseFloat(utils.getValue(this.state.style, 'size', (fixed) ? fixedDefaultValue : defaultValue));
+					let fixed = (fixedDefaultValue != null) ? getValue(this.state.style, 'fixedSize', '0') != '0' : null;
+					let size = parseFloat(getValue(this.state.style, 'size', (fixed) ? fixedDefaultValue : defaultValue));
 	
 					return new Point(bounds.x + Math.max(0, Math.min(bounds.width * 0.5, size * ((fixed) ? 1 : bounds.width))), bounds.getCenterY());
 				}, function(bounds, pt, me)
 				{
-					let fixed = (fixedDefaultValue != null) ? utils.getValue(this.state.style, 'fixedSize', '0') != '0' : null;
+					let fixed = (fixedDefaultValue != null) ? getValue(this.state.style, 'fixedSize', '0') != '0' : null;
 					let size = (fixed) ? (pt.x - bounds.x) : Math.max(0, Math.min(max, (pt.x - bounds.x) / bounds.width));
 					
 					this.state.style.size = size;
 				}, false, redrawEdges)];
 				
-				if (allowArcHandle && utils.getValue(state.style, 'rounded', false))
+				if (allowArcHandle && getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -3874,7 +3884,7 @@
 				let handles = [createHandle(state, ['size'], function(bounds)
 				{
 					let size = Math.max(0, Math.min(bounds.width, Math.min(bounds.height, parseFloat(
-						utils.getValue(this.state.style, 'size', defaultValue))))) * factor;
+						getValue(this.state.style, 'size', defaultValue))))) * factor;
 					
 					return new Point(bounds.x + size, bounds.y + size);
 				}, function(bounds, pt)
@@ -3883,7 +3893,7 @@
 							Math.min(bounds.height, pt.y - bounds.y))) / factor);
 				}, false)];
 				
-				if (allowArcHandle && utils.getValue(state.style, 'rounded', false))
+				if (allowArcHandle && getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -3898,7 +3908,7 @@
 			{
 				return [createHandle(state, ['size'], function(bounds)
 						{
-							let size = Math.max(0, Math.min(bounds.height * 0.5, parseFloat(utils.getValue(this.state.style, 'size', defaultValue))));
+							let size = Math.max(0, Math.min(bounds.height * 0.5, parseFloat(getValue(this.state.style, 'size', defaultValue))));
 	
 							return new Point(bounds.x, bounds.y + size);
 						}, function(bounds, pt)
@@ -3914,8 +3924,8 @@
 			{
 				return [createHandle(state, ['arrowWidth', 'arrowSize'], function(bounds)
 				{
-					let aw = Math.max(0, Math.min(1, utils.getValue(this.state.style, 'arrowWidth', SingleArrowShape.prototype.arrowWidth)));
-					let as = Math.max(0, Math.min(maxSize, utils.getValue(this.state.style, 'arrowSize', SingleArrowShape.prototype.arrowSize)));
+					let aw = Math.max(0, Math.min(1, getValue(this.state.style, 'arrowWidth', SingleArrowShape.prototype.arrowWidth)));
+					let as = Math.max(0, Math.min(maxSize, getValue(this.state.style, 'arrowSize', SingleArrowShape.prototype.arrowSize)));
 					
 					return new Point(bounds.x + (1 - as) * bounds.width, bounds.y + (1 - aw) * bounds.height / 2);
 				}, function(bounds, pt)
@@ -3976,7 +3986,7 @@
 				return new Point(p0.x + nx * dist / 4 + ny * w / 2, p0.y + ny * dist / 4 - nx * w / 2);
 			}, function(dist, nx, ny, p0, p1, pt)
 			{
-				let w = Math.sqrt(utils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
+				let w = Math.sqrt(ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
 				state.style.width = Math.round(w * 2) / state.view.scale - spacing;
 			});
 		};
@@ -3999,19 +4009,19 @@
 				let tol = state.view.graph.gridSize / state.view.scale;
 				let handles = [];
 				
-				if (utils.getValue(state.style, 'startArrow', mxConstants.NONE) != mxConstants.NONE)
+				if (getValue(state.style, 'startArrow', mxConstants.NONE) != mxConstants.NONE)
 				{
 					handles.push(createEdgeHandle(state, ['width', 'startSize', 'endSize'], true, function(dist, nx, ny, p0, p1)
 					{
 						let w = (state.shape.getEdgeWidth() - state.shape.strokewidth) * state.view.scale;
-						let l = utils.getNumber(state.style, 'startSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
+						let l = getNumber(state.style, 'startSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
 						
 						return new Point(p0.x + nx * (l + state.shape.strokewidth * state.view.scale) + ny * w / 2,
 							p0.y + ny * (l + state.shape.strokewidth * state.view.scale) - nx * w / 2);
 					}, function(dist, nx, ny, p0, p1, pt, me)
 					{
-						let w = Math.sqrt(utils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
-						let l = utils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
+						let w = Math.sqrt(ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
+						let l = ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
 						state.style.startSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
 						state.style.width = Math.round(w * 2) / state.view.scale;
@@ -4035,14 +4045,14 @@
 					handles.push(createEdgeHandle(state, ['startWidth', 'endWidth', 'startSize', 'endSize'], true, function(dist, nx, ny, p0, p1)
 					{
 						let w = (state.shape.getStartArrowWidth() - state.shape.strokewidth) * state.view.scale;
-						let l = utils.getNumber(state.style, 'startSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
+						let l = getNumber(state.style, 'startSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
 						
 						return new Point(p0.x + nx * (l + state.shape.strokewidth * state.view.scale) + ny * w / 2,
 							p0.y + ny * (l + state.shape.strokewidth * state.view.scale) - nx * w / 2);
 					}, function(dist, nx, ny, p0, p1, pt, me)
 					{
-						let w = Math.sqrt(utils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
-						let l = utils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
+						let w = Math.sqrt(ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
+						let l = ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
 						state.style.startSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
 						state.style.startWidth = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale;
@@ -4070,19 +4080,19 @@
 					}));
 				}
 				
-				if (utils.getValue(state.style, 'endArrow', mxConstants.NONE) != mxConstants.NONE)
+				if (getValue(state.style, 'endArrow', mxConstants.NONE) != mxConstants.NONE)
 				{
 					handles.push(createEdgeHandle(state, ['width', 'startSize', 'endSize'], false, function(dist, nx, ny, p0, p1)
 					{
 						let w = (state.shape.getEdgeWidth() - state.shape.strokewidth) * state.view.scale;
-						let l = utils.getNumber(state.style, 'endSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
+						let l = getNumber(state.style, 'endSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
 						
 						return new Point(p0.x + nx * (l + state.shape.strokewidth * state.view.scale) - ny * w / 2,
 							p0.y + ny * (l + state.shape.strokewidth * state.view.scale) + nx * w / 2);
 					}, function(dist, nx, ny, p0, p1, pt, me)
 					{
-						let w = Math.sqrt(utils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
-						let l = utils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
+						let w = Math.sqrt(ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
+						let l = ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
 						state.style.endSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
 						state.style.width = Math.round(w * 2) / state.view.scale;
@@ -4106,14 +4116,14 @@
 					handles.push(createEdgeHandle(state, ['startWidth', 'endWidth', 'startSize', 'endSize'], false, function(dist, nx, ny, p0, p1)
 					{
 						let w = (state.shape.getEndArrowWidth() - state.shape.strokewidth) * state.view.scale;
-						let l = utils.getNumber(state.style, 'endSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
+						let l = getNumber(state.style, 'endSize', mxConstants.ARROW_SIZE / 5) * 3 * state.view.scale;
 						
 						return new Point(p0.x + nx * (l + state.shape.strokewidth * state.view.scale) - ny * w / 2,
 							p0.y + ny * (l + state.shape.strokewidth * state.view.scale) + nx * w / 2);
 					}, function(dist, nx, ny, p0, p1, pt, me)
 					{
-						let w = Math.sqrt(utils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
-						let l = utils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
+						let w = Math.sqrt(ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
+						let l = ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
 						
 						state.style.endSize = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
 						state.style.endWidth = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale;
@@ -4147,18 +4157,18 @@
 			{
 				let handles = [];
 				
-				if (utils.getValue(state.style, 'rounded'))
+				if (getValue(state.style, 'rounded'))
 				{
-					let size = parseFloat(utils.getValue(state.style, 'startSize', mxConstants.DEFAULT_STARTSIZE));
+					let size = parseFloat(getValue(state.style, 'startSize', mxConstants.DEFAULT_STARTSIZE));
 					handles.push(createArcHandle(state, size / 2));
 				}
 				
 				// Start size handle must be last item in handles for hover to work in tables (see mouse event handler in Graph)
 				handles.push(createHandle(state, .startSize, function(bounds)
 				{
-					let size = parseFloat(utils.getValue(state.style, 'startSize', mxConstants.DEFAULT_STARTSIZE));
+					let size = parseFloat(getValue(state.style, 'startSize', mxConstants.DEFAULT_STARTSIZE));
 					
-					if (utils.getValue(state.style, 'horizontal', 1) == 1)
+					if (getValue(state.style, 'horizontal', 1) == 1)
 					{
 						return new Point(bounds.getCenterX(), bounds.y + Math.max(0, Math.min(bounds.height, size)));
 					}
@@ -4169,7 +4179,7 @@
 				}, function(bounds, pt)
 				{	
 					state.style.startSize =
-						(utils.getValue(this.state.style, 'horizontal', 1) == 1) ?
+						(getValue(this.state.style, 'horizontal', 1) == 1) ?
 							Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y))) :
 							Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x)));
 				}, false, null, function(me)
@@ -4213,7 +4223,7 @@
 			{
 				return [createHandle(state, ['size'], function(bounds)
 				{
-					let size = Math.max(0, Math.min(bounds.height, parseFloat(utils.getValue(this.state.style, 'size', UmlLifeline.prototype.size))));
+					let size = Math.max(0, Math.min(bounds.height, parseFloat(getValue(this.state.style, 'size', UmlLifeline.prototype.size))));
 					
 					return new Point(bounds.getCenterX(), bounds.y + size);
 				}, function(bounds, pt)
@@ -4225,8 +4235,8 @@
 			{
 				let handles = [createHandle(state, ['width', 'height'], function(bounds)
 				{
-					var w0 = Math.max(UmlFrame.prototype.corner, Math.min(bounds.width, utils.getValue(this.state.style, 'width', UmlFrame.prototype.width)));
-					var h0 = Math.max(UmlFrame.prototype.corner * 1.5, Math.min(bounds.height, utils.getValue(this.state.style, 'height', UmlFrame.prototype.height)));
+					var w0 = Math.max(UmlFrame.prototype.corner, Math.min(bounds.width, getValue(this.state.style, 'width', UmlFrame.prototype.width)));
+					var h0 = Math.max(UmlFrame.prototype.corner * 1.5, Math.min(bounds.height, getValue(this.state.style, 'height', UmlFrame.prototype.height)));
 
 					return new Point(bounds.x + w0, bounds.y + h0);
 				}, function(bounds, pt)
@@ -4242,18 +4252,18 @@
 				let handles = [createHandle(state, ['size'], function(bounds)
 				{
 					
-					let fixed = utils.getValue(this.state.style, 'fixedSize', '0') != '0';
-					let size = parseFloat(utils.getValue(this.state.style, 'size', ProcessShape.prototype.size));
+					let fixed = getValue(this.state.style, 'fixedSize', '0') != '0';
+					let size = parseFloat(getValue(this.state.style, 'size', ProcessShape.prototype.size));
 					
 					return (fixed) ? new Point(bounds.x + size, bounds.y + bounds.height / 4) : new Point(bounds.x + bounds.width * size, bounds.y + bounds.height / 4);
 				}, function(bounds, pt)
 				{
-					let fixed = utils.getValue(this.state.style, 'fixedSize', '0') != '0';
+					let fixed = getValue(this.state.style, 'fixedSize', '0') != '0';
 					let size = (fixed) ? Math.max(0, Math.min(bounds.width * 0.5, (pt.x - bounds.x))) : Math.max(0, Math.min(0.5, (pt.x - bounds.x) / bounds.width));
 					this.state.style.size = size;
 				}, false)];
 				
-				if (utils.getValue(state.style, 'rounded', false))
+				if (getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -4265,7 +4275,7 @@
 				return [createHandle(state, ['size'], function(bounds)
 				{
 					let m = Math.min(bounds.width, bounds.height);
-					let size = Math.max(0, Math.min(1, utils.getValue(this.state.style, 'size', CrossShape.prototype.size))) * m / 2;
+					let size = Math.max(0, Math.min(1, getValue(this.state.style, 'size', CrossShape.prototype.size))) * m / 2;
 
 					return new Point(bounds.getCenterX() - size, bounds.getCenterY() - size);
 				}, function(bounds, pt)
@@ -4280,7 +4290,7 @@
 				return [createHandle(state, ['size'], function(bounds)
 				{
 					let size = Math.max(0, Math.min(bounds.width, Math.min(bounds.height, parseFloat(
-						utils.getValue(this.state.style, 'size', NoteShape.prototype.size)))));
+						getValue(this.state.style, 'size', NoteShape.prototype.size)))));
 					
 					return new Point(bounds.x + bounds.width - size, bounds.y + size);
 				}, function(bounds, pt)
@@ -4294,7 +4304,7 @@
 				return [createHandle(state, ['size'], function(bounds)
 				{
 					let size = Math.max(0, Math.min(bounds.width, Math.min(bounds.height, parseFloat(
-						utils.getValue(this.state.style, 'size', NoteShape2.prototype.size)))));
+						getValue(this.state.style, 'size', NoteShape2.prototype.size)))));
 					
 					return new Point(bounds.x + bounds.width - size, bounds.y + size);
 				}, function(bounds, pt)
@@ -4307,7 +4317,7 @@
 			{
 				let handles = [createHandle(state, ['size'], function(bounds)
 				{
-					let size = Math.max(0, Math.min(bounds.height, utils.getValue(this.state.style, 'size', ManualInputShape.prototype.size)));
+					let size = Math.max(0, Math.min(bounds.height, getValue(this.state.style, 'size', ManualInputShape.prototype.size)));
 					
 					return new Point(bounds.x + bounds.width / 4, bounds.y + size * 3 / 4);
 				}, function(bounds, pt)
@@ -4315,7 +4325,7 @@
 					this.state.style.size = Math.round(Math.max(0, Math.min(bounds.height, (pt.y - bounds.y) * 4 / 3)));
 				}, false)];
 				
-				if (utils.getValue(state.style, 'rounded', false))
+				if (getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -4326,13 +4336,13 @@
 			{
 				return [createHandle(state, ['size'], function(bounds)
 				{
-					let fixed = utils.getValue(this.state.style, 'fixedSize', '0') != '0';
-					let size = parseFloat(utils.getValue(this.state.style, 'size', (fixed) ? DataStorageShape.prototype.fixedSize : DataStorageShape.prototype.size));
+					let fixed = getValue(this.state.style, 'fixedSize', '0') != '0';
+					let size = parseFloat(getValue(this.state.style, 'size', (fixed) ? DataStorageShape.prototype.fixedSize : DataStorageShape.prototype.size));
 
 					return new Point(bounds.x + bounds.width - size * ((fixed) ? 1 : bounds.width), bounds.getCenterY());
 				}, function(bounds, pt)
 				{
-					let fixed = utils.getValue(this.state.style, 'fixedSize', '0') != '0';
+					let fixed = getValue(this.state.style, 'fixedSize', '0') != '0';
 					let size = (fixed) ? Math.max(0, Math.min(bounds.width, (bounds.x + bounds.width - pt.x))) : Math.max(0, Math.min(1, (bounds.x + bounds.width - pt.x) / bounds.width));
 					
 					this.state.style.size = size;
@@ -4342,19 +4352,19 @@
 			{
 				let handles = [createHandle(state, ['size', 'position'], function(bounds)
 				{
-					let size = Math.max(0, Math.min(bounds.height, utils.getValue(this.state.style, 'size', CalloutShape.prototype.size)));
-					let position = Math.max(0, Math.min(1, utils.getValue(this.state.style, 'position', CalloutShape.prototype.position)));
-					let base = Math.max(0, Math.min(bounds.width, utils.getValue(this.state.style, 'base', CalloutShape.prototype.base)));
+					let size = Math.max(0, Math.min(bounds.height, getValue(this.state.style, 'size', CalloutShape.prototype.size)));
+					let position = Math.max(0, Math.min(1, getValue(this.state.style, 'position', CalloutShape.prototype.position)));
+					let base = Math.max(0, Math.min(bounds.width, getValue(this.state.style, 'base', CalloutShape.prototype.base)));
 					
 					return new Point(bounds.x + position * bounds.width, bounds.y + bounds.height - size);
 				}, function(bounds, pt)
 				{
-					let base = Math.max(0, Math.min(bounds.width, utils.getValue(this.state.style, 'base', CalloutShape.prototype.base)));
+					let base = Math.max(0, Math.min(bounds.width, getValue(this.state.style, 'base', CalloutShape.prototype.base)));
 					this.state.style.size = Math.round(Math.max(0, Math.min(bounds.height, bounds.y + bounds.height - pt.y)));
 					this.state.style.position = Math.round(Math.max(0, Math.min(1, (pt.x - bounds.x) / bounds.width)) * 100) / 100;
 				}, false), createHandle(state, ['position2'], function(bounds)
 				{
-					var position2 = Math.max(0, Math.min(1, utils.getValue(this.state.style, 'position2', CalloutShape.prototype.position2)));
+					var position2 = Math.max(0, Math.min(1, getValue(this.state.style, 'position2', CalloutShape.prototype.position2)));
 
 					return new Point(bounds.x + position2 * bounds.width, bounds.y + bounds.height);
 				}, function(bounds, pt)
@@ -4362,19 +4372,19 @@
 					this.state.style['position2'] = Math.round(Math.max(0, Math.min(1, (pt.x - bounds.x) / bounds.width)) * 100) / 100;
 				}, false), createHandle(state, ['base'], function(bounds)
 				{
-					let size = Math.max(0, Math.min(bounds.height, utils.getValue(this.state.style, 'size', CalloutShape.prototype.size)));
-					let position = Math.max(0, Math.min(1, utils.getValue(this.state.style, 'position', CalloutShape.prototype.position)));
-					let base = Math.max(0, Math.min(bounds.width, utils.getValue(this.state.style, 'base', CalloutShape.prototype.base)));
+					let size = Math.max(0, Math.min(bounds.height, getValue(this.state.style, 'size', CalloutShape.prototype.size)));
+					let position = Math.max(0, Math.min(1, getValue(this.state.style, 'position', CalloutShape.prototype.position)));
+					let base = Math.max(0, Math.min(bounds.width, getValue(this.state.style, 'base', CalloutShape.prototype.base)));
 					
 					return new Point(bounds.x + Math.min(bounds.width, position * bounds.width + base), bounds.y + bounds.height - size);
 				}, function(bounds, pt)
 				{
-					let position = Math.max(0, Math.min(1, utils.getValue(this.state.style, 'position', CalloutShape.prototype.position)));
+					let position = Math.max(0, Math.min(1, getValue(this.state.style, 'position', CalloutShape.prototype.position)));
 
 					this.state.style.base = Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x - position * bounds.width)));
 				}, false)];
 				
-				if (utils.getValue(state.style, 'rounded', false))
+				if (getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -4385,8 +4395,8 @@
 			{
 				let handles = [createHandle(state, ['dx', 'dy'], function(bounds)
 				{
-					let dx = Math.max(0, Math.min(bounds.width, utils.getValue(this.state.style, 'dx', InternalStorageShape.prototype.dx)));
-					let dy = Math.max(0, Math.min(bounds.height, utils.getValue(this.state.style, 'dy', InternalStorageShape.prototype.dy)));
+					let dx = Math.max(0, Math.min(bounds.width, getValue(this.state.style, 'dx', InternalStorageShape.prototype.dx)));
+					let dy = Math.max(0, Math.min(bounds.height, getValue(this.state.style, 'dy', InternalStorageShape.prototype.dy)));
 
 					return new Point(bounds.x + dx, bounds.y + dy);
 				}, function(bounds, pt)
@@ -4395,7 +4405,7 @@
 					this.state.style.dy = Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)));
 				}, false)];
 				
-				if (utils.getValue(state.style, 'rounded', false))
+				if (getValue(state.style, 'rounded', false))
 				{
 					handles.push(createArcHandle(state));
 				}
@@ -4406,8 +4416,8 @@
 			{
 				let handles = [createHandle(state, ['jettyWidth', 'jettyHeight'], function(bounds)
 				{
-					let dx = Math.max(0, Math.min(bounds.width, utils.getValue(this.state.style, 'jettyWidth', ModuleShape.prototype.jettyWidth)));
-					let dy = Math.max(0, Math.min(bounds.height, utils.getValue(this.state.style, 'jettyHeight', ModuleShape.prototype.jettyHeight)));
+					let dx = Math.max(0, Math.min(bounds.width, getValue(this.state.style, 'jettyWidth', ModuleShape.prototype.jettyWidth)));
+					let dy = Math.max(0, Math.min(bounds.height, getValue(this.state.style, 'jettyHeight', ModuleShape.prototype.jettyHeight)));
 
 					return new Point(bounds.x + dx / 2, bounds.y + dy * 2);
 				}, function(bounds, pt)
@@ -4422,8 +4432,8 @@
 			{
 				return [createHandle(state, ['dx', 'dy'], function(bounds)
 				{
-					let dx = Math.max(0, Math.min(bounds.width, utils.getValue(this.state.style, 'dx', CornerShape.prototype.dx)));
-					let dy = Math.max(0, Math.min(bounds.height, utils.getValue(this.state.style, 'dy', CornerShape.prototype.dy)));
+					let dx = Math.max(0, Math.min(bounds.width, getValue(this.state.style, 'dx', CornerShape.prototype.dx)));
+					let dy = Math.max(0, Math.min(bounds.height, getValue(this.state.style, 'dy', CornerShape.prototype.dy)));
 
 					return new Point(bounds.x + dx, bounds.y + dy);
 				}, function(bounds, pt)
@@ -4436,8 +4446,8 @@
 			{
 				return [createHandle(state, ['dx', 'dy'], function(bounds)
 				{
-					let dx = Math.max(0, Math.min(bounds.width, utils.getValue(this.state.style, 'dx', TeeShape.prototype.dx)));
-					let dy = Math.max(0, Math.min(bounds.height, utils.getValue(this.state.style, 'dy', TeeShape.prototype.dy)));
+					let dx = Math.max(0, Math.min(bounds.width, getValue(this.state.style, 'dx', TeeShape.prototype.dx)));
+					let dy = Math.max(0, Math.min(bounds.height, getValue(this.state.style, 'dy', TeeShape.prototype.dy)));
 
 					return new Point(bounds.x + (bounds.width + dx) / 2, bounds.y + dy);
 				}, function(bounds, pt)
@@ -4452,10 +4462,10 @@
 			{
 				return [createHandle(state, ['tabWidth', 'tabHeight'], function(bounds)
 				{
-					let tw = Math.max(0, Math.min(bounds.width, utils.getValue(this.state.style, 'tabWidth', FolderShape.prototype.tabWidth)));
-					let th = Math.max(0, Math.min(bounds.height, utils.getValue(this.state.style, 'tabHeight', FolderShape.prototype.tabHeight)));
+					let tw = Math.max(0, Math.min(bounds.width, getValue(this.state.style, 'tabWidth', FolderShape.prototype.tabWidth)));
+					let th = Math.max(0, Math.min(bounds.height, getValue(this.state.style, 'tabHeight', FolderShape.prototype.tabHeight)));
 					
-					if (utils.getValue(this.state.style, 'tabPosition', FolderShape.prototype.tabPosition) == mxConstants.ALIGN_RIGHT)
+					if (getValue(this.state.style, 'tabPosition', FolderShape.prototype.tabPosition) == mxConstants.ALIGN_RIGHT)
 					{
 						tw = bounds.width - tw;
 					}
@@ -4465,7 +4475,7 @@
 				{
 					let tw = Math.max(0, Math.min(bounds.width, pt.x - bounds.x));
 					
-					if (utils.getValue(this.state.style, 'tabPosition', FolderShape.prototype.tabPosition) == mxConstants.ALIGN_RIGHT)
+					if (getValue(this.state.style, 'tabPosition', FolderShape.prototype.tabPosition) == mxConstants.ALIGN_RIGHT)
 					{
 						tw = bounds.width - tw;
 					}
@@ -4478,7 +4488,7 @@
 			{
 				return [createHandle(state, ['size'], function(bounds)
 				{
-					let size = Math.max(0, Math.min(1, parseFloat(utils.getValue(this.state.style, 'size', DocumentShape.prototype.size))));
+					let size = Math.max(0, Math.min(1, parseFloat(getValue(this.state.style, 'size', DocumentShape.prototype.size))));
 
 					return new Point(bounds.x + 3 * bounds.width / 4, bounds.y + (1 - size) * bounds.height);
 				}, function(bounds, pt)
@@ -4490,7 +4500,7 @@
 			{
 				return [createHandle(state, ['size'], function(bounds)
 				{
-					let size = Math.max(0, Math.min(1, parseFloat(utils.getValue(this.state.style, 'size', TapeShape.prototype.size))));
+					let size = Math.max(0, Math.min(1, parseFloat(getValue(this.state.style, 'size', TapeShape.prototype.size))));
 
 					return new Point(bounds.getCenterX(), bounds.y + size * bounds.height / 2);
 				}, function(bounds, pt)
@@ -4502,7 +4512,7 @@
 			{
 				return [createHandle(state, ['isoAngle'], function(bounds)
 				{
-					let isoAngle = Math.max(0.01, Math.min(94, parseFloat(utils.getValue(this.state.style, 'isoAngle', IsoCubeShape2.isoAngle)))) * Math.PI / 200 ;
+					let isoAngle = Math.max(0.01, Math.min(94, parseFloat(getValue(this.state.style, 'isoAngle', IsoCubeShape2.isoAngle)))) * Math.PI / 200 ;
 					let isoH = Math.min(bounds.width * Math.tan(isoAngle), bounds.height * 0.5);
 
 					return new Point(bounds.x, bounds.y + isoH);
@@ -4517,7 +4527,7 @@
 			{
 				return [createHandle(state, ['size'], function(bounds)
 				{
-					let size = Math.max(0, Math.min(1, parseFloat(utils.getValue(this.state.style, 'size', OffPageConnectorShape.prototype.size))));
+					let size = Math.max(0, Math.min(1, parseFloat(getValue(this.state.style, 'size', OffPageConnectorShape.prototype.size))));
 
 					return new Point(bounds.getCenterX(), bounds.y + (1 - size) * bounds.height);
 				}, function(bounds, pt)
@@ -4620,19 +4630,19 @@
 	 let isoHVector = new Point(1, 0);
 	 let isoVVector = new Point(1, 0);
 		
-	 var alpha1 = utils.toRadians(-30);
+	 var alpha1 = toRadians(-30);
 		
 	 var cos1 = Math.cos(alpha1);
 	 var sin1 = Math.sin(alpha1);
 
-	 isoHVector = utils.getRotatedPoint(isoHVector, cos1, sin1);
+	 isoHVector = getRotatedPoint(isoHVector, cos1, sin1);
 
-	 var alpha2 = utils.toRadians(-150);
+	 var alpha2 = toRadians(-150);
 	 
 	 var cos2 = Math.cos(alpha2);
 	 var sin2 = Math.sin(alpha2);
 
-	 isoVVector = utils.getRotatedPoint(isoVVector, cos2, sin2);
+	 isoVVector = getRotatedPoint(isoVVector, cos2, sin2);
 	
 	 mxEdgeStyle.IsometricConnector = (state, source, target, points, result) =>
 	 {
@@ -4669,7 +4679,7 @@
 		var b1 = isoVVector.x;
 		var b2 = isoVVector.y;
 		
-		let elbow = utils.getValue(state.style, 'elbow', 'horizontal') == 'horizontal';
+		let elbow = getValue(state.style, 'elbow', 'horizontal') == 'horizontal';
 		
 		if (pe != null && p0 != null)
 		{
@@ -4740,7 +4750,7 @@
 	IsoCubeShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		var tan30 = Math.tan(utils.toRadians(30));
+		var tan30 = Math.tan(toRadians(30));
 		var tan30Dx = (0.5 - tan30) / 2;
 		let m = Math.min(w, h / (0.5 + tan30));
 		let dx = (w - m) / 2;
@@ -4759,7 +4769,7 @@
 	IsoCubeShape2.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let isoAngle = Math.max(0.01, Math.min(94, parseFloat(utils.getValue(this.style, 'isoAngle', this.isoAngle)))) * Math.PI / 200 ;
+		let isoAngle = Math.max(0.01, Math.min(94, parseFloat(getValue(this.style, 'isoAngle', this.isoAngle)))) * Math.PI / 200 ;
 		let isoH = Math.min(w * Math.tan(isoAngle), h * 0.5);
 		
 		constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
@@ -4777,11 +4787,11 @@
 	CalloutShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let arcSize = utils.getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
-		let s = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size))));
-		let dx = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'position', this.position))));
-		var dx2 = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'position2', this.position2))));
-		let base = Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'base', this.base))));
+		let arcSize = getValue(this.style, 'arcSize', mxConstants.LINE_ARCSIZE) / 2;
+		let s = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'size', this.size))));
+		let dx = w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'position', this.position))));
+		var dx2 = w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'position2', this.position2))));
+		let base = Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'base', this.base))));
 		
 		constr.push(new ConnectionConstraint(new Point(0, 0), false));
 		constr.push(new ConnectionConstraint(new Point(0.25, 0), false));
@@ -4831,7 +4841,7 @@
 	NoteShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size)))));
+		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(getValue(this.style, 'size', this.size)))));
 		
 		constr.push(new ConnectionConstraint(new Point(0, 0), false));
 		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w - s) * 0.5, 0));
@@ -4855,7 +4865,7 @@
 	CardShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size)))));
+		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(getValue(this.style, 'size', this.size)))));
 		
 		constr.push(new ConnectionConstraint(new Point(1, 0), false));
 		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w + s) * 0.5, 0));
@@ -4879,7 +4889,7 @@
 	CubeShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size)))));
+		let s = Math.max(0, Math.min(w, Math.min(h, parseFloat(getValue(this.style, 'size', this.size)))));
 		
 		constr.push(new ConnectionConstraint(new Point(0, 0), false));
 		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, (w - s) * 0.5, 0));
@@ -4900,7 +4910,7 @@
 	CylinderShape3.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let s = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'size', this.size))));
+		let s = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'size', this.size))));
 		
 		constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
 		constr.push(new ConnectionConstraint(new Point(0, 0.5), false));
@@ -4928,9 +4938,9 @@
 	FolderShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let dx = Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'tabWidth', this.tabWidth))));
-		let dy = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'tabHeight', this.tabHeight))));
-		let tp = utils.getValue(this.style, 'tabPosition', this.tabPosition);
+		let dx = Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'tabWidth', this.tabWidth))));
+		let dy = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'tabHeight', this.tabHeight))));
+		let tp = getValue(this.style, 'tabPosition', this.tabPosition);
 
 		if (tp == 'left')
 		{
@@ -4979,7 +4989,7 @@
 	{
 		let constr = [];
 		let dx = Math.min(w, h / 2);
-		let s = Math.min(w - dx, Math.max(0, parseFloat(utils.getValue(this.style, 'size', this.size))) * w);
+		let s = Math.min(w - dx, Math.max(0, parseFloat(getValue(this.style, 'size', this.size))) * w);
 		
 		constr.push(new ConnectionConstraint(new Point(0, 0.5), false, null));
 		constr.push(new ConnectionConstraint(new Point(0, 0), false, null, s, 0));
@@ -4995,8 +5005,8 @@
 	
 	ModuleShape.prototype.getConstraints = function(style, w, h)
 	{
-		var x0 = parseFloat(utils.getValue(style, 'jettyWidth', ModuleShape.prototype.jettyWidth)) / 2;
-		let dy = parseFloat(utils.getValue(style, 'jettyHeight', ModuleShape.prototype.jettyHeight));
+		var x0 = parseFloat(getValue(style, 'jettyWidth', ModuleShape.prototype.jettyWidth)) / 2;
+		let dy = parseFloat(getValue(style, 'jettyHeight', ModuleShape.prototype.jettyHeight));
 		let constr = [new ConnectionConstraint(new Point(0, 0), false, null, x0),
 			new ConnectionConstraint(new Point(0.25, 0), true),
 			new ConnectionConstraint(new Point(0.5, 0), true),
@@ -5156,8 +5166,8 @@
 	TeeShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let dx = Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'dx', this.dx))));
-		let dy = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'dy', this.dy))));
+		let dx = Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'dx', this.dx))));
+		let dy = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'dy', this.dy))));
 		var w2 = Math.abs(w - dx) / 2;
 		
 		constr.push(new ConnectionConstraint(new Point(0, 0), false));
@@ -5183,8 +5193,8 @@
 	CornerShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let dx = Math.max(0, Math.min(w, parseFloat(utils.getValue(this.style, 'dx', this.dx))));
-		let dy = Math.max(0, Math.min(h, parseFloat(utils.getValue(this.style, 'dy', this.dy))));
+		let dx = Math.max(0, Math.min(w, parseFloat(getValue(this.style, 'dx', this.dx))));
+		let dy = Math.max(0, Math.min(h, parseFloat(getValue(this.style, 'dy', this.dy))));
 		
 		constr.push(new ConnectionConstraint(new Point(0, 0), false));
 		constr.push(new ConnectionConstraint(new Point(0.5, 0), false));
@@ -5215,8 +5225,8 @@
 	SingleArrowShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let aw = h * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'arrowWidth', this.arrowWidth))));
-		let as = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'arrowSize', this.arrowSize))));
+		let aw = h * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'arrowWidth', this.arrowWidth))));
+		let as = w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'arrowSize', this.arrowSize))));
 		let at = (h - aw) / 2;
 		let ab = at + aw;
 		
@@ -5235,8 +5245,8 @@
 	DoubleArrowShape.prototype.getConstraints = function(style, w, h)
 	{
 		let constr = [];
-		let aw = h * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'arrowWidth', SingleArrowShape.prototype.arrowWidth))));
-		let as = w * Math.max(0, Math.min(1, parseFloat(utils.getValue(this.style, 'arrowSize', SingleArrowShape.prototype.arrowSize))));
+		let aw = h * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'arrowWidth', SingleArrowShape.prototype.arrowWidth))));
+		let as = w * Math.max(0, Math.min(1, parseFloat(getValue(this.style, 'arrowSize', SingleArrowShape.prototype.arrowSize))));
 		let at = (h - aw) / 2;
 		let ab = at + aw;
 		
@@ -5256,7 +5266,7 @@
 	{
 		let constr = [];
 		let m = Math.min(h, w);
-		let size = Math.max(0, Math.min(m, m * parseFloat(utils.getValue(this.style, 'size', this.size))));
+		let size = Math.max(0, Math.min(m, m * parseFloat(getValue(this.style, 'size', this.size))));
 		let t = (h - size) / 2;
 		let b = t + size;
 		let l = (w - size) / 2;

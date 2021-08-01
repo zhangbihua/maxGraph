@@ -6,6 +6,7 @@ import React from 'react';
 import mxEvent from '../mxgraph/util/mxEvent';
 import mxGraph from '../mxgraph/view/mxGraph';
 import mxRubberband from '../mxgraph/handler/mxRubberband';
+import { convertPoint, getValue } from '../../packages/core/src/util/Utils';
 
 class MYNAMEHERE extends React.Component {
   constructor(props) {
@@ -52,7 +53,7 @@ export default MYNAMEHERE;
 
       if (state != null)
       {
-        let color = utils.getValue(state.style, 'fillColor', 'white');
+        let color = getValue(state.style, 'fillColor', 'white');
         this.textarea.style.background = color;
       }
     };
@@ -72,9 +73,9 @@ export default MYNAMEHERE;
       if (container != null)
       {
         mxEvent.addGestureListeners(container,
-          utils.bind(this, function(evt)
+          (evt) =>
           {
-            let pt = utils.convertPoint(graph.container,
+            let pt = convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
             let cell = graph.getCellAt(pt.x, pt.y);
             let state = this.getState(cell);
@@ -94,9 +95,9 @@ export default MYNAMEHERE;
                 new InternalMouseEvent(evt));
             }
           }),
-          utils.bind(this, function(evt)
+          ((evt) =>
           {
-            let pt = utils.convertPoint(graph.container,
+            let pt = convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
             let cell = graph.getCellAt(pt.x, pt.y);
             let state = this.getState(cell);
@@ -112,9 +113,9 @@ export default MYNAMEHERE;
                 new InternalMouseEvent(evt));
             }
           }),
-          utils.bind(this, function(evt)
+          ((evt) =>
           {
-            let pt = utils.convertPoint(graph.container,
+            let pt = convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
             let cell = graph.getCellAt(pt.x, pt.y);
             let state = this.getState(cell);
@@ -133,9 +134,9 @@ export default MYNAMEHERE;
 
         // Adds listener for double click handling on background
         mxEvent.addListener(container, 'dblclick',
-          utils.bind(this, function(evt)
+          ((evt) =>
           {
-            let pt = utils.convertPoint(graph.container,
+            let pt = convertPoint(graph.container,
               mxEvent.getClientX(evt), mxEvent.getClientY(evt));
             let cell = graph.getCellAt(pt.x, pt.y);
 
@@ -146,14 +147,14 @@ export default MYNAMEHERE;
         // Adds basic listeners for graph event dispatching outside of the
         // container and finishing the handling of a single gesture
         mxEvent.addGestureListeners(document,
-          utils.bind(this, function(evt)
+          ((evt) =>
           {
             if (this.isContainerEvent(evt))
             {
               graph.popupMenuHandler.hideMenu();
             }
           }),
-          utils.bind(this, function(evt)
+          ((evt) =>
           {
             // Hides the tooltip if mouse is outside container
             if (graph.tooltipHandler != null &&
@@ -170,7 +171,7 @@ export default MYNAMEHERE;
                 new InternalMouseEvent(evt));
             }
           }),
-          utils.bind(this, function(evt)
+          ((evt) =>
           {
             if (this.captureDocumentGesture)
             {

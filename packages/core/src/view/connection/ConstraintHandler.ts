@@ -15,7 +15,7 @@ import {
   HIGHLIGHT_STROKEWIDTH,
 } from '../../util/Constants';
 import InternalEvent from '../event/InternalEvent';
-import utils from '../../util/Utils';
+import utils, { intersects } from '../../util/Utils';
 import Rectangle from '../geometry/Rectangle';
 import ImageShape from '../geometry/shape/node/ImageShape';
 import RectangleShape from '../geometry/shape/node/RectangleShape';
@@ -262,7 +262,7 @@ class ConstraintHandler {
           this.currentFocus == null ||
           state != null ||
           !this.currentFocus.cell.isVertex() ||
-          !utils.intersects(this.currentFocusArea, mouse)) &&
+          !intersects(this.currentFocusArea, mouse)) &&
         state !== this.currentFocus
       ) {
         this.currentFocusArea = null;
@@ -464,7 +464,7 @@ class ConstraintHandler {
    */
   // intersects(icon: mxShape, mouse: mxRectangle, source: mxCell, existingEdge: mxCell): boolean;
   intersects(icon, mouse, source, existingEdge) {
-    return utils.intersects(icon.bounds, mouse);
+    return intersects(icon.bounds, mouse);
   }
 
   /**

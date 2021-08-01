@@ -12,6 +12,7 @@ import GraphLayout from '../../GraphLayout';
 import Dictionary from '../../../../../util/Dictionary';
 import CellArray from '../../../../cell/datatypes/CellArray';
 import Cell from '../../../../cell/datatypes/Cell';
+import { clone } from '../../../../../util/CloneUtils';
 
 /**
  * Class: mxSwimlaneModel
@@ -490,7 +491,7 @@ class SwimlaneModel {
               root,
               targetNode,
               internalEdge,
-              utils.clone(seen, null, true),
+              clone(seen, null, true),
               0
             );
           } else if (root.swimlaneIndex === targetNode.swimlaneIndex) {
@@ -498,7 +499,7 @@ class SwimlaneModel {
               root,
               targetNode,
               internalEdge,
-              utils.clone(seen, null, true),
+              clone(seen, null, true),
               chainCount + 1
             );
           }

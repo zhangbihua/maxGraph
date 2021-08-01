@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import utils from '../Utils';
+import utils, { setOpacity } from '../Utils';
 import GeometryChange from '../../view/geometry/GeometryChange';
 import TerminalChange from '../../view/cell/edge/TerminalChange';
 import ValueChange from '../../view/cell/ValueChange';
@@ -67,7 +67,7 @@ class mxEffects {
               change.constructor !== GeometryChange ||
               change.cell.isEdge()
             ) {
-              utils.setOpacity(state.shape.node, (100 * step) / maxStep);
+              setOpacity(state.shape.node, (100 * step) / maxStep);
             } else {
               const { scale } = graph.getView();
 
@@ -133,7 +133,7 @@ class mxEffects {
       const childState = graph.getView().getState(child);
 
       if (childState != null) {
-        utils.setOpacity(childState.shape.node, opacity);
+        setOpacity(childState.shape.node, opacity);
         mxEffects.cascadeOpacity(graph, child, opacity);
       }
     }
@@ -146,7 +146,7 @@ class mxEffects {
         const edgeState = graph.getView().getState(edges[i]);
 
         if (edgeState != null) {
-          utils.setOpacity(edgeState.shape.node, opacity);
+          setOpacity(edgeState.shape.node, opacity);
         }
       }
     }
@@ -163,12 +163,12 @@ class mxEffects {
 
     let opacity = from || 100;
 
-    utils.setOpacity(node, opacity);
+    setOpacity(node, opacity);
 
     if (isEnabled || isEnabled == null) {
       const f = () => {
         opacity = Math.max(opacity - step, 0);
-        utils.setOpacity(node, opacity);
+        setOpacity(node, opacity);
 
         if (opacity > 0) {
           window.setTimeout(f, delay);

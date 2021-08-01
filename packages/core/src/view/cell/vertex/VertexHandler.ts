@@ -25,7 +25,7 @@ import RectangleShape from '../../geometry/shape/node/RectangleShape';
 import ImageShape from '../../geometry/shape/node/ImageShape';
 import EllipseShape from '../../geometry/shape/node/EllipseShape';
 import Point from '../../geometry/Point';
-import utils from '../../../util/Utils';
+import utils, { getRotatedPoint, intersects, mod, toRadians } from '../../../util/Utils';
 import mxClient from '../../../mxClient';
 import { isMouseEvent, isShiftDown } from '../../../util/EventUtils';
 import Graph from '../../Graph';
@@ -610,7 +610,7 @@ class VertexHandler {
         shape != null &&
         (me.isSource(shape) ||
           (real != null &&
-            utils.intersects(shape.bounds, real) &&
+            intersects(shape.bounds, real) &&
             shape.node.style.display !== 'none' &&
             shape.node.style.visibility !== 'hidden'))
       );
@@ -1032,7 +1032,7 @@ class VertexHandler {
   // resizeVertex(me: mxMouseEvent): void;
   resizeVertex(me) {
     const ct = new point(this.state.getCenterX(), this.state.getCenterY());
-    const alpha = utils.toRadians(this.state.style.rotation || '0');
+    const alpha = toRadians(this.state.style.rotation || '0');
     const point = new Point(me.getGraphX(), me.getGraphY());
     const tr = this.graph.view.translate;
     const { scale } = this.graph.view;
@@ -1330,7 +1330,7 @@ class VertexHandler {
           }
         } else {
           const gridEnabled = this.graph.isGridEnabledEvent(me.getEvent());
-          const alpha = utils.toRadians(this.state.style.rotation || '0');
+          const alpha = toRadians(this.state.style.rotation || '0');
           const cos = Math.cos(-alpha);
           const sin = Math.sin(-alpha);
 
@@ -1519,11 +1519,11 @@ class VertexHandler {
 
     if (geo != null) {
       if (index === InternalEvent.LABEL_HANDLE) {
-        const alpha = -utils.toRadians(this.state.style.rotation || '0');
+        const alpha = -toRadians(this.state.style.rotation || '0');
         const cos = Math.cos(alpha);
         const sin = Math.sin(alpha);
         const { scale } = this.graph.view;
-        const pt = utils.getRotatedPoint(
+        const pt = getRotatedPoint(
           new Point(
             Math.round((this.labelShape.bounds.getCenterX() - this.startX) / scale),
             Math.round((this.labelShape.bounds.getCenterY() - this.startY) / scale)
@@ -1914,61 +1914,61 @@ class VertexHandler {
             'w-resize',
           ];
 
-          const alpha = utils.toRadians(this.state.style.rotation || '0');
+          const alpha = toRadians(this.state.style.rotation || '0');
           const cos = Math.cos(alpha);
           const sin = Math.sin(alpha);
           const da = Math.round((alpha * 4) / Math.PI);
 
           const ct = new Point(s.getCenterX(), s.getCenterY());
-          let pt = utils.getRotatedPoint(new Point(s.x, s.y), cos, sin, ct);
+          let pt = getRotatedPoint(new Point(s.x, s.y), cos, sin, ct);
           this.moveSizerTo(this.sizers[0], pt.x, pt.y);
-          this.sizers[0].setCursor(crs[utils.mod(0 + da, crs.length)]);
+          this.sizers[0].setCursor(crs[mod(0 + da, crs.length)]);
 
           pt.x = cx;
           pt.y = s.y;
-          pt = utils.getRotatedPoint(pt, cos, sin, ct);
+          pt = getRotatedPoint(pt, cos, sin, ct);
           this.moveSizerTo(this.sizers[1], pt.x, pt.y);
-          this.sizers[1].setCursor(crs[utils.mod(1 + da, crs.length)]);
+          this.sizers[1].setCursor(crs[mod(1 + da, crs.length)]);
 
           pt.x = r;
           pt.y = s.y;
-          pt = utils.getRotatedPoint(pt, cos, sin, ct);
+          pt = getRotatedPoint(pt, cos, sin, ct);
           this.moveSizerTo(this.sizers[2], pt.x, pt.y);
-          this.sizers[2].setCursor(crs[utils.mod(2 + da, crs.length)]);
+          this.sizers[2].setCursor(crs[mod(2 + da, crs.length)]);
 
           pt.x = s.x;
           pt.y = cy;
-          pt = utils.getRotatedPoint(pt, cos, sin, ct);
+          pt = getRotatedPoint(pt, cos, sin, ct);
           this.moveSizerTo(this.sizers[3], pt.x, pt.y);
-          this.sizers[3].setCursor(crs[utils.mod(7 + da, crs.length)]);
+          this.sizers[3].setCursor(crs[mod(7 + da, crs.length)]);
 
           pt.x = r;
           pt.y = cy;
-          pt = utils.getRotatedPoint(pt, cos, sin, ct);
+          pt = getRotatedPoint(pt, cos, sin, ct);
           this.moveSizerTo(this.sizers[4], pt.x, pt.y);
-          this.sizers[4].setCursor(crs[utils.mod(3 + da, crs.length)]);
+          this.sizers[4].setCursor(crs[mod(3 + da, crs.length)]);
 
           pt.x = s.x;
           pt.y = b;
-          pt = utils.getRotatedPoint(pt, cos, sin, ct);
+          pt = getRotatedPoint(pt, cos, sin, ct);
           this.moveSizerTo(this.sizers[5], pt.x, pt.y);
-          this.sizers[5].setCursor(crs[utils.mod(6 + da, crs.length)]);
+          this.sizers[5].setCursor(crs[mod(6 + da, crs.length)]);
 
           pt.x = cx;
           pt.y = b;
-          pt = utils.getRotatedPoint(pt, cos, sin, ct);
+          pt = getRotatedPoint(pt, cos, sin, ct);
           this.moveSizerTo(this.sizers[6], pt.x, pt.y);
-          this.sizers[6].setCursor(crs[utils.mod(5 + da, crs.length)]);
+          this.sizers[6].setCursor(crs[mod(5 + da, crs.length)]);
 
           pt.x = r;
           pt.y = b;
-          pt = utils.getRotatedPoint(pt, cos, sin, ct);
+          pt = getRotatedPoint(pt, cos, sin, ct);
           this.moveSizerTo(this.sizers[7], pt.x, pt.y);
-          this.sizers[7].setCursor(crs[utils.mod(4 + da, crs.length)]);
+          this.sizers[7].setCursor(crs[mod(4 + da, crs.length)]);
 
           pt.x = cx + this.state.absoluteOffset.x;
           pt.y = cy + this.state.absoluteOffset.y;
-          pt = utils.getRotatedPoint(pt, cos, sin, ct);
+          pt = getRotatedPoint(pt, cos, sin, ct);
           this.moveSizerTo(this.sizers[8], pt.x, pt.y);
         } else if (this.state.width >= 2 && this.state.height >= 2) {
           this.moveSizerTo(
@@ -1983,14 +1983,14 @@ class VertexHandler {
     }
 
     if (this.rotationShape != null) {
-      const alpha = utils.toRadians(
+      const alpha = toRadians(
         this.currentAlpha != null ? this.currentAlpha : this.state.style.rotation || '0'
       );
       const cos = Math.cos(alpha);
       const sin = Math.sin(alpha);
 
       const ct = new Point(this.state.getCenterX(), this.state.getCenterY());
-      const pt = utils.getRotatedPoint(this.getRotationHandlePosition(), cos, sin, ct);
+      const pt = getRotatedPoint(this.getRotationHandlePosition(), cos, sin, ct);
 
       if (this.rotationShape.node != null) {
         this.moveSizerTo(this.rotationShape, pt.x, pt.y);

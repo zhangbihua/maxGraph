@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import EventSource from '../event/EventSource';
-import utils from '../../util/Utils';
+import utils, { hasScrollbars } from '../../util/Utils';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import { isConsumed, isControlDown, isLeftMouseButton, isMultiTouchEvent, isPopupTrigger, isShiftDown } from '../../util/EventUtils';
@@ -425,7 +425,7 @@ class PanningHandler extends EventSource {
         // Ignores if scrollbars have been used for panning
         if (
           !this.graph.useScrollbarsForPanning ||
-          !utils.hasScrollbars(this.graph.container)
+          !hasScrollbars(this.graph.container)
         ) {
           const { scale } = this.graph.getView();
           const t = this.graph.getView().translate;

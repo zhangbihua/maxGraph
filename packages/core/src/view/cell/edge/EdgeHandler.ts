@@ -2242,7 +2242,7 @@ class EdgeHandler {
             b.bounds.height
           );
           b.redraw();
-          utils.setOpacity(b.node, this.virtualBendOpacity);
+          setOpacity(b.node, this.virtualBendOpacity);
           last = pt;
 
           if (this.manageLabelHandle) {
@@ -2341,7 +2341,7 @@ class EdgeHandler {
           } else if (
             this.handleImage == null &&
             this.labelShape.visible &&
-            utils.intersects(this.bends[i].bounds, this.labelShape.bounds)
+            intersects(this.bends[i].bounds, this.labelShape.bounds)
           ) {
             const w = HANDLE_SIZE + 3;
             const h = HANDLE_SIZE + 3;
@@ -2372,7 +2372,7 @@ class EdgeHandler {
     if (this.labelShape != null) {
       const b2 = this.labelShape.bounds;
 
-      if (utils.intersects(b, b2)) {
+      if (intersects(b, b2)) {
         if (b.getCenterY() < b2.getCenterY()) {
           b2.y = b.y + b.height;
         } else {
@@ -2404,7 +2404,7 @@ class EdgeHandler {
         }
       }
 
-      if (this.shape != null && !utils.equalPoints(this.shape.points, this.abspoints)) {
+      if (this.shape != null && !equalPoints(this.shape.points, this.abspoints)) {
         this.shape.apply(this.state);
         this.shape.points = this.abspoints.slice();
         this.shape.scale = this.state.view.scale;

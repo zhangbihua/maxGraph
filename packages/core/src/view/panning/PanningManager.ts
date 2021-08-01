@@ -5,6 +5,9 @@
  * Type definitions from the typed-mxgraph project
  */
 
+import { hasScrollbars } from '../../util/Utils';
+import EventObject from '../event/EventObject';
+
 /**
  * Class: mxPanningManager
  *
@@ -46,7 +49,7 @@ class PanningManager {
     mxEvent.addListener(document, 'mouseup', this.mouseUpListener);
 
     const createThread = () => {
-      this.scrollbars = utils.hasScrollbars(graph.container);
+      this.scrollbars = hasScrollbars(graph.container);
       this.scrollLeft = graph.container.scrollLeft;
       this.scrollTop = graph.container.scrollTop;
 
@@ -69,7 +72,7 @@ class PanningManager {
     };
 
     this.isActive = () => {
-      return active;
+      return this.active;
     };
 
     this.getDx = () => {

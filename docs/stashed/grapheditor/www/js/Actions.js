@@ -4,6 +4,11 @@
  *
  * Constructs the actions object for the given UI.
  */
+const { hasScrollbars } = require('../../../../../packages/core/src/util/Utils');
+const { htmlEntities } = require('../../../../../packages/core/src/util/StringUtils');
+const { extractTextWithWhitespace } = require('../../../../../packages/core/src/util/DomUtils');
+const { getValue } = require('../../../../../packages/core/src/util/Utils');
+
 function Actions(editorUi)
 {
 	this.editorUi = editorUi;
@@ -39,21 +44,21 @@ Actions.prototype.init = function()
 		window.openKey = 'import';
 		
 		// Closes dialog after open
-		window.openFile = new OpenFile(utils.bind(this, function()
+		window.openFile = new OpenFile((() =>
 		{
 			ui.hideDialog();
 		}));
 		
-		window.openFile.setConsumer(utils.bind(this, function(xml, filename)
+		window.openFile.setConsumer(this.bind(this, function(xml, filename)
 		{
 			try
 			{
-				let doc = utils.parseXml(xml);
+				let doc = parseXml(xml);
 				editor.graph.setSelectionCells(editor.graph.importGraphModel(doc.documentElement));
 			}
 			catch (e)
 			{
-				utils.alert(Resources.get('invalidOrMissingFile') + ': ' + e.message);
+				alert(Resources.get('invalidOrMissingFile') + ': ' + e.message);
 			}
 		}));
 
@@ -74,7 +79,7 @@ Actions.prototype.init = function()
 	});
 	this.addAction('pageSetup...', function() { ui.showDialog(new PageSetupDialog(ui).container, 320, 220, true, true); }).isEnabled = isGraphEnabled;
 	this.addAction('print...', function() { ui.showDialog(new PrintDialog(ui).container, 300, 180, true, true); }, null, 'sprite-print', Editor.ctrlKey + '+P');
-	this.addAction('preview', function() { utils.show(graph, null, 10, 10); });
+	this.addAction('preview', function() { show(graph, null, 10, 10); });
 
 	// Edit actions
 	this.addAction('undo', function() { ui.undo(); }, null, 'sprite-undo', Editor.ctrlKey + '+Z');
@@ -311,7 +316,7 @@ Actions.prototype.init = function()
 	{
 		if (graph.isEnabled())
 		{
-			let cells = utils.sortCells(graph.getSelectionCells(), true);
+			let cells = sortCells(graph.getSelectionCells(), true);
 
 			if (cells.length == 1 && !graph.isTable(cells[0]) && !graph.isTableRow(cells[0]))
 			{
@@ -409,7 +414,7 @@ Actions.prototype.init = function()
 			let cell = graph.getSelectionCell();
 			let tooltip = '';
 			
-			if (utils.isNode(cell.value))
+			if (isNode(cell.value))
 			{
 				let tmp = null;
 				
@@ -456,7 +461,7 @@ Actions.prototype.init = function()
 			
 			ui.showLinkDialog(value, Resources.get('apply'), function(link)
 			{
-				link = utils.trim(link);
+				link = trim(link);
     			graph.setLinkForCell(cell, (link.length > 0) ? link : null);
 			});
 		}
@@ -475,7 +480,7 @@ Actions.prototype.init = function()
 		{
 			ui.showLinkDialog('', Resources.get('insert'), function(link, docs)
 			{
-				link = utils.trim(link);
+				link = trim(link);
 				
 				if (link.length > 0)
 				{
@@ -524,7 +529,7 @@ Actions.prototype.init = function()
 			});
 		}
 	})).isEnabled = isGraphEnabled;
-	this.addAction('link...', utils.bind(this, function()
+	this.addAction('link...', (() =>
 	{
 		if (graph.isEnabled())
 		{
@@ -559,7 +564,7 @@ Actions.prototype.init = function()
 				
 				let selState = graph.cellEditor.saveSelection();
 				
-				ui.showLinkDialog(oldValue, Resources.get('apply'), utils.bind(this, function(value)
+				ui.showLinkDialog(oldValue, Resources.get('apply'), ((value) =>
 				{
 		    		graph.cellEditor.restoreSelection(selState);
 
@@ -641,13 +646,13 @@ Actions.prototype.init = function()
 					
 					if (state != null)
 					{
-						let html = utils.getValue(state.style, 'html', '0');
+						let html = getValue(state.style, 'html', '0');
 						
 						if (html == '1' && value == null)
 				    	{
 				    		let label = graph.convertValueToString(state.cell);
 				    		
-				    		if (utils.getValue(state.style, 'nl2Br', '1') != '0')
+				    		if (getValue(state.style, 'nl2Br', '1') != '0')
 							{
 								// Removes newlines from HTML and converts breaks to newlines
 								// to match the HTML output in plain text
@@ -657,7 +662,7 @@ Actions.prototype.init = function()
 				    		// Removes HTML tags
 			    			let temp = document.createElement('div');
 			    			temp.innerHTML = graph.sanitizeHtml(label);
-			    			label = utils.extractTextWithWhitespace(temp.childNodes);
+			    			label = extractTextWithWhitespace(temp.childNodes);
 			    			
 							graph.cellLabelChanged(state.cell, label);
 							graph.setCellStyles('html', value, [cells[i]]);
@@ -665,9 +670,9 @@ Actions.prototype.init = function()
 						else if (html == '0' && value == '1')
 				    	{
 				    		// Converts HTML tags to text
-				    		let label = utils.htmlEntities(graph.convertValueToString(state.cell), false);
+				    		let label = htmlEntities(graph.convertValueToString(state.cell), false);
 				    		
-				    		if (utils.getValue(state.style, 'nl2Br', '1') != '0')
+				    		if (getValue(state.style, 'nl2Br', '1') != '0')
 							{
 								// Converts newlines in plain text to breaks in HTML
 								// to match the plain text output
@@ -779,7 +784,7 @@ Actions.prototype.init = function()
 			graph.fitWindow(bounds);
 		}
 	}, null, null, Editor.ctrlKey + '+Shift+H');
-	this.addAction('fitPage', utils.bind(this, function()
+	this.addAction('fitPage', (() =>
 	{
 		if (!graph.pageVisible)
 		{
@@ -793,14 +798,14 @@ Actions.prototype.init = function()
 		let scale = Math.floor(20 * Math.min(cw / fmt.width / ps, ch / fmt.height / ps)) / 20;
 		graph.zoomTo(scale);
 		
-		if (utils.hasScrollbars(graph.container))
+		if (hasScrollbars(graph.container))
 		{
 			let pad = graph.getPagePadding();
 			graph.container.scrollTop = pad.y * graph.view.scale - 1;
 			graph.container.scrollLeft = Math.min(pad.x * graph.view.scale, (graph.container.scrollWidth - graph.container.clientWidth) / 2) - 1;
 		}
 	}), null, null, Editor.ctrlKey + '+J');
-	this.addAction('fitTwoPages', utils.bind(this, function()
+	this.addAction('fitTwoPages', (() =>
 	{
 		if (!graph.pageVisible)
 		{
@@ -815,14 +820,14 @@ Actions.prototype.init = function()
 		let scale = Math.floor(20 * Math.min(cw / (2 * fmt.width) / ps, ch / fmt.height / ps)) / 20;
 		graph.zoomTo(scale);
 		
-		if (utils.hasScrollbars(graph.container))
+		if (hasScrollbars(graph.container))
 		{
 			let pad = graph.getPagePadding();
 			graph.container.scrollTop = Math.min(pad.y, (graph.container.scrollHeight - graph.container.clientHeight) / 2);
 			graph.container.scrollLeft = Math.min(pad.x, (graph.container.scrollWidth - graph.container.clientWidth) / 2);
 		}
 	}), null, null, Editor.ctrlKey + '+Shift+J');
-	this.addAction('fitPageWidth', utils.bind(this, function()
+	this.addAction('fitPageWidth', (() =>
 	{
 		if (!graph.pageVisible)
 		{
@@ -836,16 +841,16 @@ Actions.prototype.init = function()
 		let scale = Math.floor(20 * cw / fmt.width / ps) / 20;
 		graph.zoomTo(scale);
 		
-		if (utils.hasScrollbars(graph.container))
+		if (hasScrollbars(graph.container))
 		{
 			let pad = graph.getPagePadding();
 			graph.container.scrollLeft = Math.min(pad.x * graph.view.scale,
 				(graph.container.scrollWidth - graph.container.clientWidth) / 2);
 		}
 	}));
-	this.put('customZoom', new Action(Resources.get('custom') + '...', utils.bind(this, function()
+	this.put('customZoom', new Action(Resources.get('custom') + '...', (() =>
 	{
-		let dlg = new FilenameDialog(this.editorUi, parseInt(graph.getView().getScale() * 100), Resources.get('apply'), utils.bind(this, function(newValue)
+		let dlg = new FilenameDialog(this.editorUi, parseInt(graph.getView().getScale() * 100), Resources.get('apply'), ((newValue) =>
 		{
 			let val = parseInt(newValue);
 			
@@ -857,9 +862,9 @@ Actions.prototype.init = function()
 		this.editorUi.showDialog(dlg.container, 300, 80, true, true);
 		dlg.init();
 	}), null, null, Editor.ctrlKey + '+0'));
-	this.addAction('pageScale...', utils.bind(this, function()
+	this.addAction('pageScale...', (() =>
 	{
-		let dlg = new FilenameDialog(this.editorUi, parseInt(graph.pageScale * 100), Resources.get('apply'), utils.bind(this, function(newValue)
+		let dlg = new FilenameDialog(this.editorUi, parseInt(graph.pageScale * 100), Resources.get('apply'), ((newValue) =>
 		{
 			let val = parseInt(newValue);
 			
@@ -922,7 +927,7 @@ Actions.prototype.init = function()
 	});
 	action.setToggleAction(true);
 	action.setSelectedCallback(function() { return graph.scrollbars; });
-	action = this.addAction('pageView', utils.bind(this, function()
+	action = this.addAction('pageView', (() =>
 	{
 		ui.setPageVisible(!graph.pageVisible);
 	}));
@@ -988,7 +993,7 @@ Actions.prototype.init = function()
 	}));
 	
 	// Font style actions
-	let toggleFontStyle = utils.bind(this, function(key, style, fn, shortcut)
+	let toggleFontStyle = ((key, style, fn, shortcut) =>
 	{
 		return this.addAction(key, function()
 		{
@@ -1159,7 +1164,7 @@ Actions.prototype.init = function()
 			{
 				let cells = graph.getSelectionCells();
 	    		let style = graph.getCurrentCellStyle(cells[0]);
-	    		let value = (utils.getValue(style, 'rounded', '0') == '1') ? '0' : '1';
+	    		let value = (getValue(style, 'rounded', '0') == '1') ? '0' : '1';
 	    		
 				graph.setCellStyles('rounded', value);
 				graph.setCellStyles('curved', null);
@@ -1201,7 +1206,7 @@ Actions.prototype.init = function()
 		ui.fireEvent(new EventObject('styleChanged', 'keys', ['collapsible'],
 				'values', [value], 'cells', graph.getSelectionCells()));
 	});
-	this.addAction('editStyle...', utils.bind(this, function()
+	this.addAction('editStyle...', (() =>
 	{
 		let cells = graph.getSelectionCells();
 		
@@ -1214,7 +1219,7 @@ Actions.prototype.init = function()
 			{
 	    		if (newValue != null)
 				{
-					graph.setCellStyle(utils.trim(newValue), cells);
+					graph.setCellStyle(trim(newValue), cells);
 				}
 			}, null, null, 400, 220);
 			this.editorUi.showDialog(dlg.container, 420, 300, true, true);
@@ -1314,21 +1319,21 @@ Actions.prototype.init = function()
 			}
 		}
 	}, null, null, 'Alt+Shift+C');
-	action = this.addAction('subscript', utils.bind(this, function()
+	action = this.addAction('subscript', (() =>
 	{
 	    if (graph.cellEditor.isContentEditing())
 	    {
 			document.execCommand('subscript', false, null);
 		}
 	}), null, null, Editor.ctrlKey + '+,');
-	action = this.addAction('superscript', utils.bind(this, function()
+	action = this.addAction('superscript', (() =>
 	{
 	    if (graph.cellEditor.isContentEditing())
 	    {
 			document.execCommand('superscript', false, null);
 		}
 	}), null, null, Editor.ctrlKey + '+.');
-	action = this.addAction('indent', utils.bind(this, function()
+	action = this.addAction('indent', (() =>
 	{
 		// NOTE: Alt+Tab for outdent implemented via special code in
 		// keyHandler.getFunction in EditorUi.js. Ctrl+Tab is reserved.
@@ -1430,7 +1435,7 @@ Actions.prototype.init = function()
 			}, graph.cellEditor.isContentEditing(), !graph.cellEditor.isContentEditing());
 		}
 	}).isEnabled = isGraphEnabled;
-	action = this.addAction('layers', utils.bind(this, function()
+	action = this.addAction('layers', (() =>
 	{
 		if (this.layersWindow == null)
 		{
@@ -1455,14 +1460,14 @@ Actions.prototype.init = function()
 		}
 	}), null, null, Editor.ctrlKey + '+Shift+L');
 	action.setToggleAction(true);
-	action.setSelectedCallback(utils.bind(this, function() { return this.layersWindow != null && this.layersWindow.window.isVisible(); }));
-	action = this.addAction('formatPanel', utils.bind(this, function()
+	action.setSelectedCallback((() => { return this.layersWindow != null && this.layersWindow.window.isVisible(); }));
+	action = this.addAction('formatPanel', (() =>
 	{
 		ui.toggleFormatPanel();
 	}), null, null, Editor.ctrlKey + '+Shift+P');
 	action.setToggleAction(true);
-	action.setSelectedCallback(utils.bind(this, function() { return ui.formatWidth > 0; }));
-	action = this.addAction('outline', utils.bind(this, function()
+	action.setSelectedCallback((() => { return ui.formatWidth > 0; }));
+	action = this.addAction('outline', (() =>
 	{
 		if (this.outlineWindow == null)
 		{
@@ -1486,7 +1491,7 @@ Actions.prototype.init = function()
 	}), null, null, Editor.ctrlKey + '+Shift+O');
 	
 	action.setToggleAction(true);
-	action.setSelectedCallback(utils.bind(this, function() { return this.outlineWindow != null && this.outlineWindow.window.isVisible(); }));
+	action.setSelectedCallback((() => { return this.outlineWindow != null && this.outlineWindow.window.isVisible(); }));
 };
 
 /**
@@ -1542,7 +1547,7 @@ function Action(label, funct, enabled, iconCls, shortcut)
 };
 
 // Action inherits from mxEventSource
-utils.extend(Action, EventSource);
+extend(Action, EventSource);
 
 /**
  * Sets the enabled state of the action and fires a stateChanged event.

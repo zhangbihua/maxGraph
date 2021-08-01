@@ -24,8 +24,8 @@ import type { CellStateStyles } from '../../types';
  * Defines the appearance of the cells in a graph. See {@link putCellStyle} for an
  * example of creating a new cell style. It is recommended to use objects, not
  * arrays for holding cell styles. Existing styles can be cloned using
- * {@link utils.clone} and turned into a string for debugging using
- * {@link utils.toString}.
+ * {@link clone} and turned into a string for debugging using
+ * {@link toString}.
  *
  * ### Default Styles
  *
@@ -59,9 +59,9 @@ import type { CellStateStyles } from '../../types';
  * special value none can be used, eg. highlight;fillColor=none
  *
  * See also the helper methods in mxUtils to modify strings of this format,
- * namely {@link utils.setStyle}, {@link utils.indexOfStylename},
- * {@link utils.addStylename}, {@link utils.removeStylename},
- * {@link utils.removeAllStylenames} and {@link utils.setStyleFlag}.
+ * namely {@link setStyle}, {@link indexOfStylename},
+ * {@link addStylename}, {@link removeStylename},
+ * {@link removeAllStylenames} and {@link setStyleFlag}.
  *
  * Constructor: mxStylesheet
  *

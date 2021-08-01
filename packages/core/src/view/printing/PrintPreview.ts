@@ -8,7 +8,7 @@ import Rectangle from '../geometry/Rectangle';
 import TemporaryCellStates from '../cell/TemporaryCellStates';
 import InternalEvent from '../event/InternalEvent';
 import mxClient from '../../mxClient';
-import utils from '../../util/Utils';
+import utils, { intersects } from '../../util/Utils';
 import { DIALECT_SVG } from '../../util/Constants';
 import { write } from '../../util/DomUtils';
 import Graph from '../Graph';
@@ -25,7 +25,7 @@ import Graph from '../Graph';
  * preview.open();
  * ```
  *
- * Use {@link utils.getScaleForPageCount} as follows in order to print the graph
+ * Use {@link getScaleForPageCount} as follows in order to print the graph
  * across a given number of pages:
  *
  * @example
@@ -134,7 +134,7 @@ import Graph from '../Graph';
  * ### Page Format
  *
  * For landscape printing, use {@link mxConstants.PAGE_FORMAT_A4_LANDSCAPE} as
- * the pageFormat in {@link utils.getScaleForPageCount} and {@link PrintPreview}.
+ * the pageFormat in {@link getScaleForPageCount} and {@link PrintPreview}.
  * Keep in mind that one can not set the defaults for the print dialog
  * of the operating system from JavaScript so the user must manually choose
  * a page format that matches this setting.
@@ -899,7 +899,7 @@ class PrintPreview {
               bbox != null &&
               bbox.width > 0 &&
               bbox.height > 0 &&
-              !utils.intersects(tempClip, bbox)
+              !intersects(tempClip, bbox)
             ) {
               return;
             }

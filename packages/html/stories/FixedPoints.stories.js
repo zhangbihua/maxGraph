@@ -1,6 +1,7 @@
 import mxgraph from '@mxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
+import { intersects } from '@mxgraph/core/src/util/Utils';
 
 export default {
   title: 'Connections/FixedPoints',
@@ -37,7 +38,7 @@ const Template = ({ label, ...args }) => {
     // Snaps to fixed points
     intersects(icon, point, source, existingEdge) {
       return (
-        !source || existingEdge || utils.intersects(icon.bounds, point)
+        !source || existingEdge || intersects(icon.bounds, point)
       );
     }
   }

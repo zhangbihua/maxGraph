@@ -11,6 +11,7 @@ import mxCodecRegistry from './mxCodecRegistry';
 import { getChildNodes, getTextContent } from '../DomUtils';
 import { getClientX, getClientY } from '../EventUtils';
 import { NODETYPE_ELEMENT } from '../Constants';
+import { convertPoint } from '../Utils';
 
 /**
  * Class: mxDefaultToolbarCodec
@@ -242,7 +243,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
                     // is made in the corresponding combobox.
                     mxEvent.addListener(select, 'change', () => {
                       into.toolbar.selectMode(img, (evt) => {
-                        const pt = utils.convertPoint(
+                        const pt = convertPoint(
                           editor.graph.container,
                           getClientX(evt),
                           getClientY(evt)
