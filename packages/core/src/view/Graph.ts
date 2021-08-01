@@ -17,12 +17,13 @@ import ConnectionHandler from './connection/ConnectionHandler';
 import GraphHandler from './GraphHandler';
 import PanningHandler from './panning/PanningHandler';
 import PopupMenuHandler from './popups_menus/PopupMenuHandler';
-import mxGraphSelectionModel from './selection/mxGraphSelectionModel';
 import GraphView from './view/GraphView';
 import CellRenderer from './cell/CellRenderer';
 import CellEditor from './editing/CellEditor';
 import Point from './geometry/Point';
 import {
+  applyMixins,
+  autoImplement,
   getBoundingBox,
   getCurrentStyle,
   getValue,
@@ -48,6 +49,90 @@ import EdgeHandler from './cell/edge/EdgeHandler';
 import VertexHandler from './cell/vertex/VertexHandler';
 import EdgeSegmentHandler from './cell/edge/EdgeSegmentHandler';
 import ElbowEdgeHandler from './cell/edge/ElbowEdgeHandler';
+import GraphEvents from './event/GraphEvents';
+import GraphImage from './image/GraphImage';
+import GraphCells from './cell/GraphCells';
+import GraphSelection from './selection/GraphSelection';
+import GraphConnections from './connection/GraphConnections';
+import GraphEdge from './cell/edge/GraphEdge';
+import GraphVertex from './cell/vertex/GraphVertex';
+import GraphOverlays from './layout/GraphOverlays';
+import GraphEditing from './editing/GraphEditing';
+import GraphFolding from './folding/GraphFolding';
+import GraphLabel from './label/GraphLabel';
+import GraphValidation from './validation/GraphValidation';
+import GraphSnap from './snap/GraphSnap';
+
+import type { GraphPlugin } from '../types';
+import GraphTooltip from './tooltip/GraphTooltip';
+import GraphTerminal from './terminal/GraphTerminal';
+
+type PartialEvents = Pick<
+  GraphEvents,
+  | 'sizeDidChange'
+  | 'isNativeDblClickEnabled'
+  | 'dblClick'
+  | 'fireMouseEvent'
+  | 'isMouseDown'
+  | 'fireGestureEvent'
+  | 'addMouseListener'
+  | 'removeMouseListener'
+  | 'isGridEnabledEvent'
+  | 'isIgnoreTerminalEvent'
+  | 'isCloneEvent'
+  | 'isToggleEvent'
+  | 'getClickTolerance'
+>;
+type PartialSelection = Pick<
+  GraphSelection,
+  | 'clearSelection'
+  | 'isCellSelected'
+  | 'getSelectionCount'
+  | 'selectCellForEvent'
+  | 'setSelectionCell'
+>;
+type PartialCells = Pick<
+  GraphCells,
+  | 'removeStateForCell'
+  | 'getCellStyle'
+  | 'getCellAt'
+  | 'isCellBendable'
+  | 'isCellsCloneable'
+  | 'cloneCell'
+  | 'setCellStyles'
+>;
+type PartialConnections = Pick<
+  GraphConnections,
+  | 'getConnectionConstraint'
+  | 'getConnectionPoint'
+  | 'isCellDisconnectable'
+  | 'getOutlineConstraint'
+  | 'connectCell'
+>;
+type PartialEditing = Pick<GraphEditing, 'isEditing'>;
+type PartialTooltip = Pick<GraphTooltip, 'getTooltip'>;
+type PartialValidation = Pick<
+  GraphValidation,
+  'getEdgeValidationError' | 'validationAlert'
+>;
+type PartialLabel = Pick<GraphLabel, 'isLabelMovable'>;
+type PartialTerminal = Pick<GraphTerminal, 'isTerminalPointMovable'>;
+type PartialSnap = Pick<GraphSnap, 'snap' | 'getGridSize'>;
+type PartialEdge = Pick<GraphEdge, 'isAllowDanglingEdges' | 'isResetEdgesOnConnect'>;
+type PartialClass = PartialEvents &
+  PartialSelection &
+  PartialCells &
+  PartialConnections &
+  PartialEditing &
+  PartialTooltip &
+  PartialValidation &
+  PartialLabel &
+  PartialTerminal &
+  PartialSnap &
+  PartialEdge &
+  EventSource;
+
+export type MaxGraph = Graph & PartialClass;
 
 /**
  * Extends {@link EventSource} to implement a graph component for
@@ -66,21 +151,19 @@ import ElbowEdgeHandler from './cell/edge/ElbowEdgeHandler';
  * @class graph
  * @extends {EventSource}
  */
-class Graph extends EventSource {
+// @ts-ignore
+class Graph extends autoImplement<PartialClass>() {
   constructor(
     container: HTMLElement,
     model: Model,
-    renderHint: string = DIALECT_SVG,
+    plugins: GraphPlugin[] = [],
     stylesheet: Stylesheet | null = null
   ) {
     super();
 
-    // Converts the renderHint into a dialect
-    this.renderHint = renderHint;
-    this.dialect = 'svg';
-
-    // Initializes the main members that do not require a container
-    this.model = model != null ? model : new Model();
+    this.container = container;
+    this.model = model;
+    this.plugins = plugins;
     this.cellRenderer = this.createCellRenderer();
     this.setSelectionModel(this.createSelectionModel());
     this.setStylesheet(stylesheet != null ? stylesheet : this.createStylesheet());
@@ -97,9 +180,7 @@ class Graph extends EventSource {
     this.createHandlers();
 
     // Initializes the display if a container was specified
-    if (container != null) {
-      this.init(container);
-    }
+    this.init();
 
     this.view.revalidate();
   }
@@ -109,9 +190,7 @@ class Graph extends EventSource {
    *
    * @param container DOM node that will contain the graph display.
    */
-  init(container: HTMLElement): void {
-    this.container = container;
-
+  init() {
     // Initializes the in-place editor
     this.cellEditor = this.createCellEditor();
 
@@ -122,27 +201,45 @@ class Graph extends EventSource {
     this.sizeDidChange();
 
     // Hides tooltips and resets tooltip timer if mouse leaves container
-    InternalEvent.addListener(container, 'mouseleave', (evt: Event) => {
+    InternalEvent.addListener(this.container, 'mouseleave', (evt: Event) => {
       if (
-        this.tooltipHandler != null &&
-        this.tooltipHandler.div != null &&
-        this.tooltipHandler.div != (<MouseEvent>evt).relatedTarget
+        this.tooltipHandler.div &&
+        this.tooltipHandler.div !== (<MouseEvent>evt).relatedTarget
       ) {
         this.tooltipHandler.hide();
       }
     });
+
+    // Initiailzes plugins
+    this.plugins.forEach((p) => p.onInit(this));
   }
 
   // TODO: Document me!
 
-  // @ts-ignore
   container: HTMLElement;
+
+  getContainer = () => this.container;
+
   destroyed: boolean = false;
-  tooltipHandler: TooltipHandler | null = null;
-  selectionCellsHandler: SelectionCellsHandler | null = null;
-  popupMenuHandler: PopupMenuHandler | null = null;
-  connectionHandler: ConnectionHandler | null = null;
-  graphHandler: GraphHandler | null = null;
+
+  // Handlers
+  // @ts-ignore Cannot be null.
+  tooltipHandler: TooltipHandler;
+  // @ts-ignore Cannot be null.
+  selectionCellsHandler: SelectionCellsHandler;
+  // @ts-ignore Cannot be null.
+  popupMenuHandler: PopupMenuHandler;
+  // @ts-ignore Cannot be null.
+  connectionHandler: ConnectionHandler;
+  // @ts-ignore Cannot be null.
+  graphHandler: GraphHandler;
+
+  getTooltipHandler = () => this.tooltipHandler;
+  getSelectionCellsHandler = () => this.selectionCellsHandler;
+  getPopupMenuHandler = () => this.popupMenuHandler;
+  getConnectionHandler = () => this.connectionHandler;
+  getGraphHandler = () => this.graphHandler;
+
   graphModelChangeListener: Function | null = null;
   paintBackground: Function | null = null;
 
@@ -154,6 +251,8 @@ class Graph extends EventSource {
    * Holds the {@link Model} that contains the cells to be displayed.
    */
   model: Model;
+
+  plugins: GraphPlugin[];
 
   /**
    * Holds the {@link GraphView} that caches the {@link CellState}s for the cells.
@@ -191,6 +290,10 @@ class Graph extends EventSource {
    * Holds the {@link CellRenderer} for rendering the cells in the graph.
    */
   cellRenderer: CellRenderer;
+
+  getCellRenderer() {
+    return this.cellRenderer;
+  }
 
   /**
    * RenderHint as it was passed to the constructor.
@@ -298,11 +401,15 @@ class Graph extends EventSource {
    */
   exportEnabled: boolean = true;
 
+  isExportEnabled = () => this.exportEnabled;
+
   /**
    * Specifies the return value for {@link canImportCell}.
    * @default true
    */
   importEnabled: boolean = true;
+
+  isImportEnabled = () => this.importEnabled;
 
   /**
    * Specifies if the graph should automatically scroll regardless of the
@@ -425,18 +532,6 @@ class Graph extends EventSource {
   multigraph: boolean = true;
 
   /**
-   * Specifies if labels should be visible. This is used in {@link getLabel}. Default
-   * is true.
-   */
-  labelsVisible: boolean = true;
-
-  /**
-   * Specifies the return value for {@link isHtmlLabel}.
-   * @default false
-   */
-  htmlLabels: boolean = false;
-
-  /**
    * Specifies the minimum scale to be applied in {@link fit}. Set this to `null` to allow any value.
    * @default 0.1
    */
@@ -460,6 +555,10 @@ class Graph extends EventSource {
     16
   );
 
+  getWarningImage() {
+    return this.warningImage;
+  }
+
   /**
    * Specifies the resource key for the error message to be displayed in
    * non-multigraphs when two vertices are already connected. If the resource
@@ -469,6 +568,8 @@ class Graph extends EventSource {
   alreadyConnectedResource: string =
     mxClient.language != 'none' ? 'alreadyConnected' : '';
 
+  getAlreadyConnectedResource = () => this.alreadyConnectedResource;
+
   /**
    * Specifies the resource key for the warning message to be displayed when
    * a collapsed cell contains validation errors. If the resource for this
@@ -477,6 +578,8 @@ class Graph extends EventSource {
    */
   containsValidationErrorsResource: string =
     mxClient.language != 'none' ? 'containsValidationErrors' : '';
+
+  getContainsValidationErrorsResource = () => this.containsValidationErrorsResource;
 
   // TODO: Document me!!
   batchUpdate(fn: Function): void {
@@ -505,7 +608,7 @@ class Graph extends EventSource {
   /**
    * Creates and returns a new {@link TooltipHandler} to be used in this graph.
    */
-  createTooltipHandler(): TooltipHandler {
+  createTooltipHandler() {
     return new TooltipHandler(this);
   }
 
@@ -554,7 +657,7 @@ class Graph extends EventSource {
   /**
    * Creates a new {@link GraphView} to be used in this graph.
    */
-  createGraphView(): GraphView {
+  createGraphView() {
     return new GraphView(this);
   }
 
@@ -575,28 +678,28 @@ class Graph extends EventSource {
   /**
    * Returns the {@link Model} that contains the cells.
    */
-  getModel(): Model {
-    return <Model>this.model;
+  getModel() {
+    return this.model;
   }
 
   /**
    * Returns the {@link GraphView} that contains the {@link mxCellStates}.
    */
-  getView(): GraphView {
-    return <GraphView>this.view;
+  getView() {
+    return this.view;
   }
 
   /**
    * Returns the {@link Stylesheet} that defines the style.
    */
-  getStylesheet(): Stylesheet | null {
+  getStylesheet() {
     return this.stylesheet;
   }
 
   /**
    * Sets the {@link Stylesheet} that defines the style.
    */
-  setStylesheet(stylesheet: Stylesheet | null): void {
+  setStylesheet(stylesheet: Stylesheet) {
     this.stylesheet = stylesheet;
   }
 
@@ -627,7 +730,7 @@ class Graph extends EventSource {
     // Resets the view settings, removes all cells and clears
     // the selection if the root changes.
     if (change instanceof RootChange) {
-      this.selection.clearSelection();
+      this.clearSelection();
       this.setDefaultParent(null);
       this.cells.removeStateForCell(change.previous);
 
@@ -1006,8 +1109,8 @@ class Graph extends EventSource {
    *
    * @param state {@link mxCellState} whose handler should be created.
    */
-  createHandler(state: CellState): mxEdgeHandler | VertexHandler | null {
-    let result: mxEdgeHandler | VertexHandler | null = null;
+  createHandler(state: CellState): EdgeHandler | VertexHandler | null {
+    let result: EdgeHandler | VertexHandler | null = null;
 
     if (state.cell.isEdge()) {
       const source = state.getVisibleTerminalState(true);
@@ -1041,7 +1144,7 @@ class Graph extends EventSource {
    *
    * @param state {@link mxCellState} to create the handler for.
    */
-  createEdgeHandler(state: CellState, edgeStyle: any): mxEdgeHandler {
+  createEdgeHandler(state: CellState, edgeStyle: any): EdgeHandler {
     let result = null;
     if (
       edgeStyle == EdgeStyle.Loop ||
@@ -1056,7 +1159,7 @@ class Graph extends EventSource {
     ) {
       result = this.createEdgeSegmentHandler(state);
     } else {
-      result = new mxEdgeHandler(state);
+      result = new EdgeHandler(state);
     }
     return result;
   }
@@ -1120,7 +1223,7 @@ class Graph extends EventSource {
    *
    * @param cell {@link mxCell} that represents the root.
    */
-  getTranslateForRoot(cell: Cell): Point | null {
+  getTranslateForRoot(cell: Cell | null): Point | null {
     return null;
   }
 
@@ -1534,6 +1637,10 @@ class Graph extends EventSource {
     this.defaultParent = cell;
   }
 
+  getCellEditor() {
+    return this.cellEditor;
+  }
+
   /**
    * Destroys the graph and all its resources.
    */
@@ -1560,5 +1667,20 @@ class Graph extends EventSource {
   }
 }
 
+applyMixins(Graph, [
+  GraphEvents,
+  GraphImage,
+  GraphCells,
+  GraphSelection,
+  GraphConnections,
+  GraphEdge,
+  GraphVertex,
+  GraphOverlays,
+  GraphEditing,
+  GraphFolding,
+  GraphLabel,
+  GraphValidation,
+  GraphSnap,
+]);
+
 export default Graph;
-// import("../../serialization/mxGraphCodec");

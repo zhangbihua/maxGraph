@@ -1,15 +1,14 @@
-import CellArray from "../cell/datatypes/CellArray";
-import Cell from "../cell/datatypes/Cell";
-import Dictionary from "../../util/Dictionary";
-import Graph from '../Graph';
+import CellArray from '../cell/datatypes/CellArray';
+import Cell from '../cell/datatypes/Cell';
+import Dictionary from '../../util/Dictionary';
+import { autoImplement } from '../../util/Utils';
 
-class GraphTerminal {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+import type Graph from '../Graph';
 
-  graph: Graph;
+type PartialGraph = Pick<Graph, 'getView'>;
+type PartialClass = PartialGraph;
 
+class GraphTerminal extends autoImplement<PartialClass>() {
   /*****************************************************************************
    * Group: Graph behaviour
    *****************************************************************************/
@@ -24,7 +23,7 @@ class GraphTerminal {
    * @param cell {@link mxCell} whose terminal point should be moved.
    * @param source Boolean indicating if the source or target terminal should be moved.
    */
-  isTerminalPointMovable(cell: Cell, source: boolean): boolean {
+  isTerminalPointMovable(cell: Cell, source: boolean) {
     return true;
   }
 
@@ -48,48 +47,36 @@ class GraphTerminal {
   getOpposites(
     edges: CellArray,
     terminal: Cell | null = null,
-    sources: boolean = true,
-    targets: boolean = true
+    sources = true,
+    targets = true
   ): CellArray {
     const terminals = new CellArray();
 
     // Fast lookup to avoid duplicates in terminals array
-    const dict = new Dictionary();
+    const dict = new Dictionary<Cell, boolean>();
 
     for (let i = 0; i < edges.length; i += 1) {
-      const state = this.graph.view.getState(edges[i]);
+      const state = this.getView().getState(edges[i]);
 
-      const source =
-        state != null
-          ? state.getVisibleTerminal(true)
-          : this.graph.view.getVisibleTerminal(edges[i], true);
-      const target =
-        state != null
-          ? state.getVisibleTerminal(false)
-          : this.graph.view.getVisibleTerminal(edges[i], false);
+      const source = state
+        ? state.getVisibleTerminal(true)
+        : this.getView().getVisibleTerminal(edges[i], true);
+      const target = state
+        ? state.getVisibleTerminal(false)
+        : this.getView().getVisibleTerminal(edges[i], false);
 
       // Checks if the terminal is the source of the edge and if the
       // target should be stored in the result
-      if (
-        source == terminal &&
-        target != null &&
-        target != terminal &&
-        targets
-      ) {
+      if (source === terminal && target && target !== terminal && targets) {
         if (!dict.get(target)) {
           dict.put(target, true);
           terminals.push(target);
         }
       }
 
-        // Checks if the terminal is the taget of the edge and if the
+      // Checks if the terminal is the taget of the edge and if the
       // source should be stored in the result
-      else if (
-        target == terminal &&
-        source != null &&
-        source != terminal &&
-        sources
-      ) {
+      else if (target === terminal && source && source !== terminal && sources) {
         if (!dict.get(source)) {
           dict.put(source, true);
           terminals.push(source);

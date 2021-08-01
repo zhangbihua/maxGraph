@@ -8,7 +8,7 @@
 type ImageMap = {
   [key: string]: {
     value: string;
-    fallback: Function;
+    fallback: string;
   };
 };
 
@@ -83,7 +83,7 @@ class ImageBundle {
    * Adds the specified entry to the map. The entry is an object with a value and
    * fallback property as specified in the arguments.
    */
-  putImage(key: string, value: string, fallback: Function): void {
+  putImage(key: string, value: string, fallback: string) {
     this.images[key] = { value, fallback };
   }
 

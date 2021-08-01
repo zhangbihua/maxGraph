@@ -1,15 +1,14 @@
-import Cell from "../datatypes/Cell";
-import Geometry from "../../geometry/Geometry";
-import CellArray from "../datatypes/CellArray";
-import Graph from '../../Graph';
+import Cell from '../datatypes/Cell';
+import Geometry from '../../geometry/Geometry';
+import CellArray from '../datatypes/CellArray';
+import { autoImplement } from 'packages/core/src/util/Utils';
 
-class GraphVertex {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+import type GraphCells from '../GraphCells';
 
-  graph: Graph;
+type PartialCells = Pick<GraphCells, 'addCell' | 'getChildCells'>;
+type PartialClass = PartialCells;
 
+class GraphVertex extends autoImplement<PartialClass>() {
   /**
    * Specifies the return value for vertices in {@link isLabelMovable}.
    * @default false
@@ -95,18 +94,7 @@ class GraphVertex {
       geometryClass = params.geometryClass;
     } else {
       // Otherwise treat as arguments
-      [
-        parent,
-        id,
-        value,
-        x,
-        y,
-        width,
-        height,
-        style,
-        relative,
-        geometryClass,
-      ] = args;
+      [parent, id, value, x, y, width, height, style, relative, geometryClass] = args;
     }
 
     const vertex = this.createVertex(
@@ -121,7 +109,7 @@ class GraphVertex {
       relative,
       geometryClass
     );
-    return this.graph.cell.addCell(vertex, parent);
+    return this.addCell(vertex, parent);
   };
 
   /**
@@ -160,7 +148,7 @@ class GraphVertex {
    * @param parent {@link mxCell} whose children should be returned.
    */
   getChildVertices(parent: Cell): CellArray {
-    return this.graph.cell.getChildCells(parent, true, false);
+    return this.getChildCells(parent, true, false);
   }
 
   /*****************************************************************************

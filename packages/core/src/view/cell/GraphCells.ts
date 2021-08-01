@@ -1,20 +1,17 @@
 import Cell from './datatypes/Cell';
 import StyleMap from '../style/StyleMap';
-import Stylesheet from '../style/Stylesheet';
 import CellArray from './datatypes/CellArray';
-import utils, {
+import {
+  autoImplement,
   contains,
-  findNearestSegment,
   getBoundingBox,
   getRotatedPoint,
   getSizeForString,
   getValue,
   intersects,
   ptSegDistSq,
-  removeDuplicates,
   setCellStyleFlags,
   setCellStyles,
-  setStyle,
   toRadians,
 } from '../../util/Utils';
 import {
@@ -24,113 +21,169 @@ import {
   ALIGN_RIGHT,
   ALIGN_TOP,
   DEFAULT_FONTSIZE,
-  DIRECTION_EAST,
-  DIRECTION_NORTH,
-  DIRECTION_SOUTH,
-  DIRECTION_WEST,
+  DEFAULT_IMAGESIZE,
   SHAPE_LABEL,
 } from '../../util/Constants';
 import Geometry from '../geometry/Geometry';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
-import ImageBundle from '../image/ImageBundle';
 import Rectangle from '../geometry/Rectangle';
 import Dictionary from '../../util/Dictionary';
 import Point from '../geometry/Point';
-import Label from '../geometry/shape/node/LabelShape';
 import { htmlEntities } from '../../util/StringUtils';
 import InternalMouseEvent from '../event/InternalMouseEvent';
-import Graph from '../Graph';
 import CellState from './datatypes/CellState';
 
-class GraphCells {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+import type Graph from '../Graph';
+import type GraphImage from '../image/GraphImage';
+import type GraphSelection from '../selection/GraphSelection';
+import type GraphEdge from './edge/GraphEdge';
+import type GraphConnections from '../connection/GraphConnections';
+import type GraphValidation from '../validation/GraphValidation';
+import type GraphFolding from '../folding/GraphFolding';
+import type GraphLabel from '../label/GraphLabel';
+import type GraphSnap from '../snap/GraphSnap';
 
-  graph: Graph;
+import type { CellStateStyles } from '../../types';
 
+type PartialGraph = Pick<
+  Graph,
+  | 'getView'
+  | 'getStylesheet'
+  | 'batchUpdate'
+  | 'getModel'
+  | 'fireEvent'
+  | 'getDefaultParent'
+  | 'getCurrentRoot'
+  | 'isAllowNegativeCoordinates'
+  | 'setAllowNegativeCoordinates'
+  | 'getOverlap'
+  | 'isRecursiveResize'
+  | 'getCellRenderer'
+  | 'getMaximumGraphBounds'
+  | 'isExportEnabled'
+  | 'isImportEnabled'
+>;
+type PartialImage = Pick<GraphImage, 'getImageFromBundles'>;
+type PartialSelection = Pick<GraphSelection, 'getSelectionCells' | 'getSelectionCell'>;
+type PartialEdge = Pick<
+  GraphEdge,
+  | 'addAllEdges'
+  | 'getAllEdges'
+  | 'isCloneInvalidEdges'
+  | 'isAllowDanglingEdges'
+  | 'resetEdges'
+  | 'isResetEdgesOnResize'
+  | 'isResetEdgesOnMove'
+>;
+type PartialConnections = Pick<
+  GraphConnections,
+  | 'isConstrainChild'
+  | 'cellConnected'
+  | 'isDisconnectOnMove'
+  | 'isConstrainRelativeChildren'
+  | 'disconnectGraph'
+>;
+type PartialValidation = Pick<GraphValidation, 'getEdgeValidationError'>;
+type PartialFolding = Pick<GraphFolding, 'getFoldingImage'>;
+type PartialLabel = Pick<GraphLabel, 'isHtmlLabel'>;
+type PartialSnap = Pick<
+  GraphSnap,
+  'isGridEnabled' | 'snap' | 'getGridSize' | 'getTolerance'
+>;
+type PartialClass = PartialGraph &
+  PartialImage &
+  PartialSelection &
+  PartialEdge &
+  PartialConnections &
+  PartialValidation &
+  PartialFolding &
+  PartialLabel &
+  PartialSnap;
+
+// @ts-ignore recursive reference error
+class GraphCells extends autoImplement<PartialClass>() {
   /**
    * Specifies the return value for {@link isCellsResizable}.
    * @default true
    */
-  cellsResizable: boolean = true;
+  cellsResizable = true;
 
   /**
    * Specifies the return value for {@link isCellsBendable}.
    * @default true
    */
-  cellsBendable: boolean = true;
+  cellsBendable = true;
 
   /**
    * Specifies the return value for {@link isCellsSelectable}.
    * @default true
    */
-  cellsSelectable: boolean = true;
+  cellsSelectable = true;
 
   /**
    * Specifies the return value for {@link isCellsDisconnectable}.
    * @default true
    */
-  cellsDisconnectable: boolean = true;
+  cellsDisconnectable = true;
 
   /**
    * Specifies if the graph should automatically update the cell size after an
    * edit. This is used in {@link isAutoSizeCell}.
    * @default false
    */
-  autoSizeCells: boolean = false;
+  autoSizeCells = false;
 
   /**
    * Specifies if autoSize style should be applied when cells are added.
    * @default false
    */
-  autoSizeCellsOnAdd: boolean = false;
+  autoSizeCellsOnAdd = false;
 
   /**
    * Specifies the return value for {@link isCellLocked}.
    * @default false
    */
-  cellsLocked: boolean = false;
+  cellsLocked = false;
 
   /**
    * Specifies the return value for {@link isCellCloneable}.
    * @default true
    */
-  cellsCloneable: boolean = true;
+  cellsCloneable = true;
 
   /**
    * Specifies the return value for {@link isCellDeletable}.
    * @default true
    */
-  cellsDeletable: boolean = true;
+  cellsDeletable = true;
 
   /**
    * Specifies the return value for {@link isCellMovable}.
    * @default true
    */
-  cellsMovable: boolean = true;
+  cellsMovable = true;
 
   /**
    * Specifies if a parent should contain the child bounds after a resize of
    * the child. This has precedence over {@link constrainChildren}.
    * @default true
    */
-  extendParents: boolean = true;
+  extendParents = true;
 
   /**
    * Specifies if parents should be extended according to the {@link extendParents}
    * switch if cells are added.
    * @default true
    */
-  extendParentsOnAdd: boolean = true;
+  extendParentsOnAdd = true;
 
   /**
    * Specifies if parents should be extended according to the {@link extendParents}
    * switch if cells are added.
    * @default false (for backwards compatibility)
    */
-  extendParentsOnMove: boolean = false;
+  extendParentsOnMove = false;
 
   /**
    * Returns the bounding box for the given array of {@link Cell}. The bounding box for
@@ -138,19 +191,16 @@ class GraphCells {
    *
    * @param cells Array of {@link Cell} whose bounding box should be returned.
    */
-  getBoundingBox(cells: CellArray): Rectangle {
+  getBoundingBox(cells: CellArray) {
     let result = null;
 
     if (cells.length > 0) {
       for (const cell of cells) {
         if (cell.isVertex() || cell.isEdge()) {
-          const bbox = this.graph.view.getBoundingBox(
-            this.graph.view.getState(cell),
-            true
-          );
+          const bbox = this.getView().getBoundingBox(this.getView().getState(cell), true);
 
-          if (bbox != null) {
-            if (result == null) {
+          if (bbox) {
+            if (!result) {
               result = Rectangle.fromRectangle(bbox);
             } else {
               result.add(bbox);
@@ -170,12 +220,13 @@ class GraphCells {
    *
    * @param cell {@link mxCell} that was removed from the model.
    */
-  removeStateForCell(cell: Cell): void {
+  removeStateForCell(cell: Cell) {
     for (const child of cell.getChildren()) {
       this.removeStateForCell(child);
     }
-    this.graph.view.invalidate(cell, false, true);
-    this.graph.view.removeState(cell);
+
+    this.getView().invalidate(cell, false, true);
+    this.getView().removeState(cell);
   }
 
   /*****************************************************************************
@@ -189,9 +240,9 @@ class GraphCells {
    * @param cell {@link mxCell} whose style should be returned as an array.
    * @param ignoreState Optional boolean that specifies if the cell state should be ignored.
    */
-  getCurrentCellStyle(cell: Cell, ignoreState: boolean = false): StyleMap {
-    const state = ignoreState ? null : this.graph.view.getState(cell);
-    return state != null ? state.style : this.getCellStyle(cell);
+  getCurrentCellStyle(cell: Cell, ignoreState = false) {
+    const state = ignoreState ? null : this.getView().getState(cell);
+    return state ? state.style : this.getCellStyle(cell);
   }
 
   /**
@@ -204,10 +255,10 @@ class GraphCells {
    *
    * @param cell {@link mxCell} whose style should be returned as an array.
    */
-  getCellStyle(cell: Cell): StyleMap {
+  getCellStyle(cell: Cell) {
     const stylename = cell.getStyle();
     let style;
-    const stylesheet = <Stylesheet>this.graph.stylesheet;
+    const stylesheet = this.getStylesheet();
 
     // Gets the default style for the cell
     if (cell.isEdge()) {
@@ -217,13 +268,13 @@ class GraphCells {
     }
 
     // Resolves the stylename using the above as the default
-    if (stylename != null) {
+    if (stylename) {
       style = this.postProcessCellStyle(stylesheet.getCellStyle(stylename, style));
     }
 
     // Returns a non-null value if no style can be found
-    if (style == null) {
-      style = new StyleMap();
+    if (!style) {
+      style = {} as CellStateStyles;
     }
     return style;
   }
@@ -233,18 +284,18 @@ class GraphCells {
    * turns short data URIs as defined in mxImageBundle to data URIs as
    * defined in RFC 2397 of the IETF.
    */
-  postProcessCellStyle(style: StyleMap): StyleMap {
+  postProcessCellStyle(style: CellStateStyles) {
     const key = style.image;
-    let image = this.graph.image.getImageFromBundles(key);
+    let image = this.getImageFromBundles(key);
 
-    if (image != null) {
+    if (image) {
       style.image = image;
     } else {
       image = key;
     }
 
     // Converts short data uris to normal data uris
-    if (image != null && image.substring(0, 11) === 'data:image/') {
+    if (image && image.substring(0, 11) === 'data:image/') {
       if (image.substring(0, 20) === 'data:image/svg+xml,<') {
         // Required for FF and IE11
         image = image.substring(0, 19) + encodeURIComponent(image.substring(19));
@@ -270,10 +321,13 @@ class GraphCells {
    * @param cells Optional array of {@link Cell} to set the style for. Default is the
    * selection cells.
    */
-  setCellStyle(style: any, cells: CellArray = this.graph.selection.getSelectionCells()) {
-    this.graph.batchUpdate(() => {
+  setCellStyle(
+    style: keyof CellStateStyles,
+    cells: CellArray = this.getSelectionCells()
+  ) {
+    this.batchUpdate(() => {
       for (const cell of cells) {
-        this.graph.model.setStyle(cell, style);
+        this.getModel().setStyle(cell, style);
       }
     });
   }
@@ -292,9 +346,9 @@ class GraphCells {
    * the selection cell.
    */
   toggleCellStyle(
-    key: string,
-    defaultValue: boolean = false,
-    cell: Cell = this.graph.selection.getSelectionCell()
+    key: keyof CellStateStyles,
+    defaultValue = false,
+    cell: Cell = this.getSelectionCell()
   ) {
     return this.toggleCellStyles(key, defaultValue, new CellArray(cell));
   }
@@ -314,17 +368,18 @@ class GraphCells {
    * Default is the selection cells.
    */
   toggleCellStyles(
-    key: string,
-    defaultValue: boolean = false,
-    cells: CellArray = this.graph.selection.getSelectionCells()
+    key: keyof CellStateStyles,
+    defaultValue = false,
+    cells: CellArray = this.getSelectionCells()
   ) {
     let value = null;
 
-    if (cells != null && cells.length > 0) {
-      const style = this.getCurrentCellStyle(<Cell>cells[0]);
+    if (cells.length > 0) {
+      const style = this.getCurrentCellStyle(cells[0]);
       value = getValue(style, key, defaultValue) ? 0 : 1;
       this.setCellStyles(key, value, cells);
     }
+
     return value;
   }
 
@@ -341,11 +396,11 @@ class GraphCells {
    * the selection cells.
    */
   setCellStyles(
-    key: string,
-    value: string | number | null = null,
-    cells: CellArray = this.graph.selection.getSelectionCells()
-  ): void {
-    setCellStyles(this.graph.model, cells, key, value);
+    key: keyof CellStateStyles,
+    value: CellStateStyles[keyof CellStateStyles],
+    cells: CellArray = this.getSelectionCells()
+  ) {
+    setCellStyles(this.getModel(), cells, key, value);
   }
 
   /**
@@ -357,11 +412,10 @@ class GraphCells {
    * @param cells Optional array of {@link Cell} to change the style for. Default is
    * the selection cells.
    */
-  // toggleCellStyleFlags(key: string, flag: number, cells?: mxCellArray): void;
   toggleCellStyleFlags(
-    key: string,
+    key: keyof CellStateStyles,
     flag: number,
-    cells: CellArray = this.graph.selection.getSelectionCells()
+    cells: CellArray = this.getSelectionCells()
   ) {
     this.setCellStyleFlags(key, flag, null, cells);
   }
@@ -376,21 +430,20 @@ class GraphCells {
    * @param cells Optional array of {@link Cell} to change the style for. Default is
    * the selection cells.
    */
-  // setCellStyleFlags(key: string, flag: number, value: boolean, cells?: mxCellArray): void;
   setCellStyleFlags(
-    key: string,
+    key: keyof CellStateStyles,
     flag: number,
     value: boolean | null = null,
-    cells: CellArray = this.graph.selection.getSelectionCells()
+    cells: CellArray = this.getSelectionCells()
   ) {
-    if (cells != null && cells.length > 0) {
-      if (value == null) {
+    if (cells.length > 0) {
+      if (value === null) {
         const style = this.getCurrentCellStyle(cells[0]);
-        // @ts-ignore
-        const current = parseInt(style[key] || 0);
+
+        const current = (style[key] as number) || 0;
         value = !((current & flag) === flag);
       }
-      setCellStyleFlags(this.graph.model, cells, key, flag, value);
+      setCellStyleFlags(this.getModel(), cells, key, flag, value);
     }
   }
 
@@ -407,19 +460,19 @@ class GraphCells {
    * @param cells Array of {@link Cell} to be aligned.
    * @param param Optional coordinate for the alignment.
    */
-  alignCells(align: string, cells: CellArray, param: number | null = null): CellArray {
-    if (cells == null) {
-      cells = this.graph.selection.getSelectionCells();
-    }
-
-    if (cells != null && cells.length > 1) {
+  alignCells(
+    align: string,
+    cells: CellArray = this.getSelectionCells(),
+    param: number | null = null
+  ) {
+    if (cells.length > 1) {
       // Finds the required coordinate for the alignment
-      if (param == null) {
+      if (param === null) {
         for (const cell of cells) {
-          const state = this.graph.view.getState(cell);
+          const state = this.getView().getState(cell);
 
-          if (state != null && !cell.isEdge()) {
-            if (param == null) {
+          if (state && !cell.isEdge()) {
+            if (param === null) {
               if (align === ALIGN_CENTER) {
                 param = state.x + state.width / 2;
                 break;
@@ -449,12 +502,14 @@ class GraphCells {
       }
 
       // Aligns the cells to the coordinate
-      if (param != null) {
-        const s = this.graph.view.scale;
+      if (param !== null) {
+        const s = this.getView().scale;
 
-        this.graph.batchUpdate(() => {
+        this.batchUpdate(() => {
+          const p = param as number;
+
           for (const cell of cells) {
-            const state = this.graph.view.getState(cell);
+            const state = this.getView().getState(cell);
 
             if (state != null) {
               let geo = cell.getGeometry();
@@ -463,17 +518,17 @@ class GraphCells {
                 geo = <Geometry>geo.clone();
 
                 if (align === ALIGN_CENTER) {
-                  geo.x += (param - state.x - state.width / 2) / s;
+                  geo.x += (p - state.x - state.width / 2) / s;
                 } else if (align === ALIGN_RIGHT) {
-                  geo.x += (param - state.x - state.width) / s;
+                  geo.x += (p - state.x - state.width) / s;
                 } else if (align === ALIGN_TOP) {
-                  geo.y += (param - state.y) / s;
+                  geo.y += (p - state.y) / s;
                 } else if (align === ALIGN_MIDDLE) {
-                  geo.y += (param - state.y - state.height / 2) / s;
+                  geo.y += (p - state.y - state.height / 2) / s;
                 } else if (align === ALIGN_BOTTOM) {
-                  geo.y += (param - state.y - state.height) / s;
+                  geo.y += (p - state.y - state.height) / s;
                 } else {
-                  geo.x += (param - state.x) / s;
+                  geo.x += (p - state.x) / s;
                 }
 
                 this.resizeCell(cell, geo);
@@ -481,9 +536,7 @@ class GraphCells {
             }
           }
 
-          this.graph.fireEvent(
-            new EventObject(InternalEvent.ALIGN_CELLS, { align, cells })
-          );
+          this.fireEvent(new EventObject(InternalEvent.ALIGN_CELLS, { align, cells }));
         });
       }
     }
@@ -508,9 +561,9 @@ class GraphCells {
   // cloneCell(cell: mxCell, allowInvalidEdges?: boolean, mapping?: any, keepPosition?: boolean): mxCellArray;
   cloneCell(
     cell: Cell,
-    allowInvalidEdges: boolean = false,
+    allowInvalidEdges = false,
     mapping: any = null,
-    keepPosition: boolean = false
+    keepPosition = false
   ): Cell {
     return (<CellArray>(
       this.cloneCells(new CellArray(cell), allowInvalidEdges, mapping, keepPosition)
@@ -533,15 +586,14 @@ class GraphCells {
   // cloneCells(cells: mxCellArray, allowInvalidEdges?: boolean, mapping?: any, keepPosition?: boolean): mxCellArray;
   cloneCells(
     cells: CellArray,
-    allowInvalidEdges: boolean = true,
+    allowInvalidEdges = true,
     mapping: any = {},
-    keepPosition: boolean = false
-  ): CellArray | null {
-    allowInvalidEdges = allowInvalidEdges != null ? allowInvalidEdges : true;
+    keepPosition = false
+  ) {
     let clones;
 
     // Creates a dictionary for fast lookups
-    const dict = new Dictionary();
+    const dict = new Dictionary<Cell, boolean>();
     const tmp = [];
 
     for (const cell of cells) {
@@ -550,8 +602,8 @@ class GraphCells {
     }
 
     if (tmp.length > 0) {
-      const { scale } = this.graph.view;
-      const trans = this.graph.view.translate;
+      const { scale } = this.getView();
+      const trans = this.getView().translate;
       const out: CellArray = new CellArray();
       clones = cells.cloneCells(true, mapping);
 
@@ -566,61 +618,60 @@ class GraphCells {
             clone,
             clone.getTerminal(true),
             clone.getTerminal(false)
-          ) != null
+          ) !== null
         ) {
           //clones[i] = null;
         } else {
           out.push(clone);
           const g = clone.getGeometry();
 
-          if (g != null) {
-            const state = this.graph.view.getState(cell);
-            const pstate = this.graph.view.getState(cell.getParent());
+          if (g) {
+            const state = this.getView().getState(cell);
+            const pstate = this.getView().getState(cell.getParent());
 
-            if (state != null && pstate != null) {
+            if (state && pstate) {
               const dx = keepPosition ? 0 : (<Point>pstate.origin).x;
               const dy = keepPosition ? 0 : (<Point>pstate.origin).y;
 
               if (clone.isEdge()) {
-                const pts = <Point[]>state.absolutePoints;
+                const pts = state.absolutePoints;
 
-                if (pts != null) {
-                  // Checks if the source is cloned or sets the terminal point
-                  let src = cell.getTerminal(true);
+                // Checks if the source is cloned or sets the terminal point
+                let src = cell.getTerminal(true);
 
-                  while (src != null && !dict.get(src)) {
-                    src = src.getParent();
-                  }
+                while (src && !dict.get(src)) {
+                  src = src.getParent();
+                }
 
-                  if (src == null && pts[0] != null) {
-                    g.setTerminalPoint(
-                      new Point(pts[0].x / scale - trans.x, pts[0].y / scale - trans.y),
-                      true
-                    );
-                  }
+                if (!src && pts[0]) {
+                  g.setTerminalPoint(
+                    new Point(pts[0].x / scale - trans.x, pts[0].y / scale - trans.y),
+                    true
+                  );
+                }
 
-                  // Checks if the target is cloned or sets the terminal point
-                  let trg = cell.getTerminal(false);
-                  while (trg != null && !dict.get(trg)) {
-                    trg = trg.getParent();
-                  }
+                // Checks if the target is cloned or sets the terminal point
+                let trg = cell.getTerminal(false);
+                while (trg && !dict.get(trg)) {
+                  trg = trg.getParent();
+                }
 
-                  const n = pts.length - 1;
+                const n = pts.length - 1;
+                const p = pts[n];
 
-                  if (trg == null && pts[n] != null) {
-                    g.setTerminalPoint(
-                      new Point(pts[n].x / scale - trans.x, pts[n].y / scale - trans.y),
-                      false
-                    );
-                  }
+                if (!trg && p) {
+                  g.setTerminalPoint(
+                    new Point(p.x / scale - trans.x, p.y / scale - trans.y),
+                    false
+                  );
+                }
 
-                  // Translates the control points
-                  const { points } = g;
-                  if (points != null) {
-                    for (const point of points) {
-                      point.x += dx;
-                      point.y += dy;
-                    }
+                // Translates the control points
+                const { points } = g;
+                if (points) {
+                  for (const point of points) {
+                    point.x += dx;
+                    point.y += dy;
                   }
                 }
               } else {
@@ -655,7 +706,7 @@ class GraphCells {
     index: number | null = null,
     source: Cell | null = null,
     target: Cell | null = null
-  ): Cell {
+  ) {
     return this.addCells(new CellArray(cell), parent, index, source, target)[0];
   }
 
@@ -684,28 +735,15 @@ class GraphCells {
     index: number | null = null,
     source: Cell | null = null,
     target: Cell | null = null,
-    absolute: boolean = false
+    absolute = false
   ) {
-    if (parent == null) {
-      parent = this.getDefaultParent();
-    }
+    const p = parent ?? this.getDefaultParent();
+    const i = index ?? p.getChildCount();
 
-    if (index == null) {
-      index = parent.getChildCount();
-    }
-
-    this.graph.batchUpdate(() => {
-      this.cellsAdded(
-        cells,
-        parent,
-        index,
-        source,
-        target,
-        absolute != null ? absolute : false,
-        true
-      );
-      this.graph.fireEvent(
-        new EventObject(InternalEvent.ADD_CELLS, { cells, parent, index, source, target })
+    this.batchUpdate(() => {
+      this.cellsAdded(cells, p, i, source, target, absolute, true);
+      this.fireEvent(
+        new EventObject(InternalEvent.ADD_CELLS, { cells, p, i, source, target })
       );
     });
 
@@ -724,88 +762,86 @@ class GraphCells {
     index: number,
     source: Cell | null = null,
     target: Cell | null = null,
-    absolute: boolean = false,
-    constrain: boolean = false,
-    extend: boolean = true
-  ): void {
-    this.graph.batchUpdate(() => {
-      const parentState = absolute ? this.graph.view.getState(parent) : null;
-      const o1 = parentState != null ? parentState.origin : null;
+    absolute = false,
+    constrain = false,
+    extend = true
+  ) {
+    this.batchUpdate(() => {
+      const parentState = absolute ? this.getView().getState(parent) : null;
+      const o1 = parentState ? parentState.origin : null;
       const zero = new Point(0, 0);
 
       cells.forEach((cell, i) => {
+        /* Can cells include null values?
         if (cell == null) {
           index--;
         } else {
-          const previous = cell.getParent();
+        */
+        const previous = cell.getParent();
 
-          // Keeps the cell at its absolute location
-          if (o1 != null && cell !== parent && parent !== previous) {
-            const oldState = this.graph.view.getState(previous);
-            const o2 = <Point>(oldState != null ? oldState.origin : zero);
-            let geo = cell.getGeometry();
+        // Keeps the cell at its absolute location
+        if (o1 && cell !== parent && parent !== previous) {
+          const oldState = this.getView().getState(previous);
+          const o2 = oldState ? oldState.origin : zero;
+          let geo = cell.getGeometry();
 
-            if (geo != null) {
-              const dx = o2.x - o1.x;
-              const dy = o2.y - o1.y;
+          if (geo) {
+            const dx = o2.x - o1.x;
+            const dy = o2.y - o1.y;
 
-              // FIXME: Cells should always be inserted first before any other edit
-              // to avoid forward references in sessions.
-              geo = <Geometry>geo.clone();
-              geo.translate(dx, dy);
+            // FIXME: Cells should always be inserted first before any other edit
+            // to avoid forward references in sessions.
+            geo = geo.clone();
+            geo.translate(dx, dy);
 
-              if (
-                !geo.relative &&
-                cell.isVertex() &&
-                !this.isAllowNegativeCoordinates()
-              ) {
-                geo.x = Math.max(0, geo.x);
-                geo.y = Math.max(0, geo.y);
-              }
-
-              this.graph.model.setGeometry(cell, geo);
+            if (!geo.relative && cell.isVertex() && !this.isAllowNegativeCoordinates()) {
+              geo.x = Math.max(0, geo.x);
+              geo.y = Math.max(0, geo.y);
             }
-          }
 
-          // Decrements all following indices
-          // if cell is already in parent
-          if (parent === previous && index + i > parent.getChildCount()) {
-            index--;
-          }
-
-          this.graph.model.add(parent, cell, index + i);
-
-          if (this.autoSizeCellsOnAdd) {
-            this.autoSizeCell(cell, true);
-          }
-
-          // Extends the parent or constrains the child
-          if (
-            (extend == null || extend) &&
-            this.isExtendParentsOnAdd(cell) &&
-            this.isExtendParent(cell)
-          ) {
-            this.extendParent(cell);
-          }
-
-          // Additionally constrains the child after extending the parent
-          if (constrain == null || constrain) {
-            this.constrainChild(cell);
-          }
-
-          // Sets the source terminal
-          if (source != null) {
-            this.cellConnected(cell, source, true);
-          }
-
-          // Sets the target terminal
-          if (target != null) {
-            this.cellConnected(cell, target, false);
+            this.getModel().setGeometry(cell, geo);
           }
         }
+
+        // Decrements all following indices
+        // if cell is already in parent
+        if (parent === previous && index + i > parent.getChildCount()) {
+          index--;
+        }
+
+        this.getModel().add(parent, cell, index + i);
+
+        if (this.autoSizeCellsOnAdd) {
+          this.autoSizeCell(cell, true);
+        }
+
+        // Extends the parent or constrains the child
+        if (
+          (!extend || extend) &&
+          this.isExtendParentsOnAdd(cell) &&
+          this.isExtendParent(cell)
+        ) {
+          this.extendParent(cell);
+        }
+
+        // Additionally constrains the child after extending the parent
+        if (!constrain || constrain) {
+          this.constrainChild(cell);
+        }
+
+        // Sets the source terminal
+        if (source) {
+          this.cellConnected(cell, source, true);
+        }
+
+        // Sets the target terminal
+        if (target) {
+          this.cellConnected(cell, target, false);
+        }
+        /*}*/
       });
 
-      this.graph.fireEvent(
+      this.fireEvent(
         new EventObject(InternalEvent.CELLS_ADDED, {
           cells,
           parent,
@@ -825,7 +861,7 @@ class GraphCells {
    * @param recurse Optional boolean which specifies if all descendants should be
    * autosized. Default is `true`.
    */
-  autoSizeCell(cell: Cell, recurse: boolean = true) {
+  autoSizeCell(cell: Cell, recurse = true) {
     if (recurse) {
       for (const child of cell.getChildren()) {
         this.autoSizeCell(child);
@@ -848,14 +884,9 @@ class GraphCells {
    * @param includeEdges Optional boolean which specifies if all connected edges
    * should be removed as well. Default is `true`.
    */
-  removeCells(
-    cells: CellArray | null = null,
-    includeEdges: boolean = true
-  ): CellArray | null {
-    includeEdges = includeEdges != null ? includeEdges : true;
-
-    if (cells == null) {
-      cells = <CellArray>this.getDeletableCells(this.graph.selection.getSelectionCells());
+  removeCells(cells: CellArray | null = null, includeEdges = true) {
+    if (!cells) {
+      cells = this.getDeletableCells(this.getSelectionCells());
     }
 
     // Adds all edges to the cells
@@ -868,24 +899,24 @@ class GraphCells {
 
       // Removes edges that are currently not
       // visible as those cannot be updated
-      const edges = <CellArray>this.getDeletableCells(this.graph.edge.getAllEdges(cells));
-      const dict = new Dictionary();
+      const edges = this.getDeletableCells(this.getAllEdges(cells));
+      const dict = new Dictionary<Cell, boolean>();
 
       for (const cell of cells) {
         dict.put(cell, true);
       }
 
       for (const edge of edges) {
-        if (this.graph.view.getState(edge) == null && !dict.get(edge)) {
+        if (!this.getView().getState(edge) && !dict.get(edge)) {
           dict.put(edge, true);
           cells.push(edge);
         }
       }
     }
 
-    this.graph.batchUpdate(() => {
+    this.batchUpdate(() => {
       this.cellsRemoved(<CellArray>cells);
-      this.graph.fireEvent(
+      this.fireEvent(
         new EventObject(InternalEvent.REMOVE_CELLS, { cells, includeEdges })
       );
     });
@@ -899,14 +930,14 @@ class GraphCells {
    *
    * @param cells Array of {@link Cell} to remove.
    */
-  cellsRemoved(cells: CellArray): void {
+  cellsRemoved(cells: CellArray) {
     if (cells.length > 0) {
-      const { scale } = this.graph.view;
-      const tr = this.graph.view.translate;
+      const { scale } = this.getView();
+      const tr = this.getView().translate;
 
-      this.graph.batchUpdate(() => {
+      this.batchUpdate(() => {
         // Creates hashtable for faster lookup
-        const dict = new Dictionary();
+        const dict = new Dictionary<Cell, boolean>();
 
         for (const cell of cells) {
           dict.put(cell, true);
@@ -919,13 +950,13 @@ class GraphCells {
           const disconnectTerminal = (edge: Cell, source: boolean) => {
             let geo = edge.getGeometry();
 
-            if (geo != null) {
+            if (geo) {
               // Checks if terminal is being removed
               const terminal = edge.getTerminal(source);
               let connected = false;
               let tmp = terminal;
 
-              while (tmp != null) {
+              while (tmp) {
                 if (cell === tmp) {
                   connected = true;
                   break;
@@ -934,29 +965,30 @@ class GraphCells {
               }
 
               if (connected) {
-                geo = <Geometry>geo.clone();
-                const state = this.graph.view.getState(edge);
+                geo = geo.clone();
+                const state = this.getView().getState(edge);
 
-                if (state != null && state.absolutePoints != null) {
-                  const pts = <Point[]>state.absolutePoints;
+                if (state) {
+                  const pts = state.absolutePoints;
                   const n = source ? 0 : pts.length - 1;
+                  const p = pts[n] as Point;
 
                   geo.setTerminalPoint(
                     new Point(
-                      pts[n].x / scale - tr.x - (<Point>state.origin).x,
-                      pts[n].y / scale - tr.y - (<Point>state.origin).y
+                      p.x / scale - tr.x - state.origin.x,
+                      p.y / scale - tr.y - state.origin.y
                     ),
                     source
                   );
-                } else {
+                } else if (terminal) {
                   // Fallback to center of terminal if routing
                   // points are not available to add new point
                   // KNOWN: Should recurse to find parent offset
                   // of edge for nested groups but invisible edges
                   // should be removed in removeCells step
-                  const tstate = this.graph.view.getState(terminal);
+                  const tstate = this.getView().getState(terminal);
 
-                  if (tstate != null) {
+                  if (tstate) {
                     geo.setTerminalPoint(
                       new Point(
                         tstate.getCenterX() / scale - tr.x,
@@ -967,8 +999,8 @@ class GraphCells {
                   }
                 }
 
-                this.graph.model.setGeometry(edge, geo);
-                this.graph.model.setTerminal(edge, null, source);
+                this.getModel().setGeometry(edge, geo);
+                this.getModel().setTerminal(edge, null, source);
               }
             }
           };
@@ -981,10 +1013,10 @@ class GraphCells {
             }
           }
 
-          this.graph.model.remove(cell);
+          this.getModel().remove(cell);
         }
 
-        this.graph.fireEvent(new EventObject(InternalEvent.CELLS_REMOVED, { cells }));
+        this.fireEvent(new EventObject(InternalEvent.CELLS_REMOVED, { cells }));
       });
     }
   }
@@ -1006,18 +1038,18 @@ class GraphCells {
    * connected edges should be changed as well. Default is `true`.
    */
   toggleCells(
-    show: boolean = false,
+    show = false,
     cells: CellArray = this.getSelectionCells(),
-    includeEdges: boolean = true
-  ): CellArray | null {
+    includeEdges = true
+  ) {
     // Adds all connected edges recursively
     if (includeEdges) {
       cells = this.addAllEdges(cells);
     }
 
-    this.graph.batchUpdate(() => {
+    this.batchUpdate(() => {
       this.cellsToggled(cells, show);
-      this.graph.fireEvent(
+      this.fireEvent(
         new EventObject(InternalEvent.TOGGLE_CELLS, { show, cells, includeEdges })
       );
     });
@@ -1030,11 +1062,11 @@ class GraphCells {
    * @param cells Array of {@link Cell} whose visible state should be changed.
    * @param show Boolean that specifies the visible state to be assigned.
    */
-  cellsToggled(cells: CellArray, show: boolean = false): void {
+  cellsToggled(cells: CellArray, show = false) {
     if (cells.length > 0) {
-      this.graph.batchUpdate(() => {
+      this.batchUpdate(() => {
         for (const cell of cells) {
-          this.graph.model.setVisible(cell, show);
+          this.getModel().setVisible(cell, show);
         }
       });
     }
@@ -1051,10 +1083,10 @@ class GraphCells {
    *
    * @param cell {@link mxCell} whose size should be updated.
    */
-  updateCellSize(cell: Cell, ignoreChildren: boolean = false): Cell {
-    this.graph.batchUpdate(() => {
+  updateCellSize(cell: Cell, ignoreChildren = false) {
+    this.batchUpdate(() => {
       this.cellSizeUpdated(cell, ignoreChildren);
-      this.graph.fireEvent(
+      this.fireEvent(
         new EventObject(InternalEvent.UPDATE_CELL_SIZE, { cell, ignoreChildren })
       );
     });
@@ -1067,15 +1099,16 @@ class GraphCells {
    *
    * @param cell {@link mxCell} for which the size should be changed.
    */
-  cellSizeUpdated(cell: Cell, ignoreChildren: boolean = false): void {
-    this.graph.batchUpdate(() => {
+  cellSizeUpdated(cell: Cell, ignoreChildren = false) {
+    this.batchUpdate(() => {
       const size = this.getPreferredSizeForCell(cell);
       let geo = cell.getGeometry();
 
-      if (size != null && geo != null) {
+      if (size && geo) {
         const collapsed = cell.isCollapsed();
-        geo = <Geometry>geo.clone();
+        geo = geo.clone();
 
+        /* disable swimlane for now
         if (this.graph.swimlane.isSwimlane(cell)) {
           const style = this.getCellStyle(cell);
           let cellStyle = cell.getStyle();
@@ -1102,35 +1135,35 @@ class GraphCells {
             geo.height = size.height;
           }
 
-          this.graph.model.setStyle(cell, cellStyle);
-        } else {
-          const state = this.graph.view.createState(cell);
-          const align = state.style.align || ALIGN_CENTER;
+          this.getModel().setStyle(cell, cellStyle);
+        } else {*/
+        const state = this.getView().createState(cell);
+        const align = state.style.align || ALIGN_CENTER;
 
-          if (align === ALIGN_RIGHT) {
-            geo.x += geo.width - size.width;
-          } else if (align === ALIGN_CENTER) {
-            geo.x += Math.round((geo.width - size.width) / 2);
-          }
-
-          const valign = state.getVerticalAlign();
-
-          if (valign === ALIGN_BOTTOM) {
-            geo.y += geo.height - size.height;
-          } else if (valign === ALIGN_MIDDLE) {
-            geo.y += Math.round((geo.height - size.height) / 2);
-          }
-
-          geo.width = size.width;
-          geo.height = size.height;
+        if (align === ALIGN_RIGHT) {
+          geo.x += geo.width - size.width;
+        } else if (align === ALIGN_CENTER) {
+          geo.x += Math.round((geo.width - size.width) / 2);
         }
 
+        const valign = state.getVerticalAlign();
+
+        if (valign === ALIGN_BOTTOM) {
+          geo.y += geo.height - size.height;
+        } else if (valign === ALIGN_MIDDLE) {
+          geo.y += Math.round((geo.height - size.height) / 2);
+        }
+
+        geo.width = size.width;
+        geo.height = size.height;
+        /*}*/
+
         if (!ignoreChildren && !collapsed) {
-          const bounds = this.graph.view.getBounds(cell.getChildren());
+          const bounds = this.getView().getBounds(cell.getChildren());
 
           if (bounds != null) {
-            const tr = this.graph.view.translate;
-            const { scale } = this.view;
+            const tr = this.getView().translate;
+            const { scale } = this.getView();
 
             const width = (bounds.x + bounds.width) / scale - geo.x - tr.x;
             const height = (bounds.y + bounds.height) / scale - geo.y - tr.y;
@@ -1169,10 +1202,10 @@ class GraphCells {
    * @param cell {@link mxCell} for which the preferred size should be returned.
    * @param textWidth Optional maximum text width for word wrapping.
    */
-  getPreferredSizeForCell(cell: Cell, textWidth: number | null = null): Rectangle | null {
+  getPreferredSizeForCell(cell: Cell, textWidth: number | null = null) {
     let result = null;
 
-    const state = this.graph.view.createState(cell);
+    const state = this.getView().createState(cell);
     const { style } = state;
 
     if (!cell.isEdge()) {
@@ -1181,14 +1214,14 @@ class GraphCells {
       let dy = 0;
 
       // Adds dimension of image if shape is a label
-      if (state.getImage() != null || style.image != null) {
+      if (state.getImageSrc() || style.image) {
         if (style.shape === SHAPE_LABEL) {
           if (style.verticalAlign === ALIGN_MIDDLE) {
-            dx += parseFloat(style.imageWidth) || new Label().imageSize;
+            dx += style.imageWidth || DEFAULT_IMAGESIZE;
           }
 
           if (style.align !== ALIGN_CENTER) {
-            dy += parseFloat(style.imageHeight) || new Label().imageSize;
+            dy += style.imageHeight || DEFAULT_IMAGESIZE;
           }
         }
       }
@@ -1207,15 +1240,15 @@ class GraphCells {
       // for image spacing
       const image = this.getFoldingImage(state);
 
-      if (image != null) {
+      if (image) {
         dx += image.width + 8;
       }
 
       // Adds space for label
-      let value = <string>this.cellRenderer.getLabelValue(state);
+      let value = <string>this.getCellRenderer().getLabelValue(state);
 
-      if (value != null && value.length > 0) {
-        if (!this.isHtmlLabel(<Cell>state.cell)) {
+      if (value && value.length > 0) {
+        if (!this.isHtmlLabel(state.cell)) {
           value = htmlEntities(value, false);
         }
 
@@ -1237,14 +1270,14 @@ class GraphCells {
           width = tmp;
         }
 
-        if (this.gridEnabled) {
-          width = this.snap(width + this.gridSize / 2);
-          height = this.snap(height + this.gridSize / 2);
+        if (this.isGridEnabled()) {
+          width = this.snap(width + this.getGridSize() / 2);
+          height = this.snap(height + this.getGridSize() / 2);
         }
 
         result = new Rectangle(0, 0, width, height);
       } else {
-        const gs2 = 4 * this.gridSize;
+        const gs2 = 4 * this.getGridSize();
         result = new Rectangle(0, 0, gs2, gs2);
       }
     }
@@ -1259,7 +1292,7 @@ class GraphCells {
    * @param cell {@link mxCell} whose bounds should be changed.
    * @param bounds {@link mxRectangle} that represents the new bounds.
    */
-  resizeCell(cell: Cell, bounds: Rectangle, recurse: boolean = false): Cell {
+  resizeCell(cell: Cell, bounds: Rectangle, recurse = false) {
     return this.resizeCells(new CellArray(cell), [bounds], recurse)[0];
   }
 
@@ -1274,11 +1307,11 @@ class GraphCells {
   resizeCells(
     cells: CellArray,
     bounds: Rectangle[],
-    recurse: boolean = this.isRecursiveResize()
+    recurse = this.isRecursiveResize()
   ): CellArray {
-    this.graph.batchUpdate(() => {
+    this.batchUpdate(() => {
       const prev = this.cellsResized(cells, bounds, recurse);
-      this.graph.fireEvent(
+      this.fireEvent(
         new EventObject(InternalEvent.RESIZE_CELLS, { cells, bounds, prev })
       );
     });
@@ -1327,15 +1360,11 @@ class GraphCells {
    * @param bounds Array of {@link mxRectangles} that represent the new bounds.
    * @param recurse Optional boolean that specifies if the children should be resized.
    */
-  cellsResized(
-    cells: CellArray,
-    bounds: Rectangle[],
-    recurse: boolean = false
-  ): (Geometry | null)[] {
-    const prev = [];
+  cellsResized(cells: CellArray, bounds: Rectangle[], recurse = false) {
+    const prev: (Geometry | null)[] = [];
 
     if (cells.length === bounds.length) {
-      this.graph.batchUpdate(() => {
+      this.batchUpdate(() => {
         cells.forEach((cell, i) => {
           prev.push(this.cellResized(cell, bounds[i], false, recurse));
 
@@ -1346,11 +1375,11 @@ class GraphCells {
           this.constrainChild(cell);
         });
 
-        if (this.resetEdgesOnResize) {
+        if (this.isResetEdgesOnResize()) {
           this.resetEdges(cells);
         }
 
-        this.graph.fireEvent(
+        this.fireEvent(
           new EventObject(InternalEvent.CELLS_RESIZED, { cells, bounds, prev })
         );
       });
@@ -1367,16 +1396,11 @@ class GraphCells {
    * @param ignoreRelative Boolean that indicates if relative cells should be ignored.
    * @param recurse Optional boolean that specifies if the children should be resized.
    */
-  cellResized(
-    cell: Cell,
-    bounds: Rectangle,
-    ignoreRelative: boolean = false,
-    recurse: boolean = false
-  ): Geometry | null {
+  cellResized(cell: Cell, bounds: Rectangle, ignoreRelative = false, recurse = false) {
     const prev = cell.getGeometry();
 
     if (
-      prev != null &&
+      prev &&
       (prev.x !== bounds.x ||
         prev.y !== bounds.y ||
         prev.width !== bounds.width ||
@@ -1387,7 +1411,7 @@ class GraphCells {
       if (!ignoreRelative && geo.relative) {
         const { offset } = geo;
 
-        if (offset != null) {
+        if (offset) {
           offset.x += bounds.x - geo.x;
           offset.y += bounds.y - geo.y;
         }
@@ -1404,15 +1428,16 @@ class GraphCells {
         geo.y = Math.max(0, geo.y);
       }
 
-      this.graph.batchUpdate(() => {
+      this.batchUpdate(() => {
         if (recurse) {
           this.resizeChildCells(cell, geo);
         }
 
-        this.graph.model.setGeometry(cell, geo);
+        this.getModel().setGeometry(cell, geo);
         this.constrainChildCells(cell);
       });
     }
+
     return prev;
   }
 
@@ -1423,13 +1448,16 @@ class GraphCells {
    * @param cell {@link mxCell} that has been resized.
    * @param newGeo {@link mxGeometry} that represents the new bounds.
    */
-  resizeChildCells(cell: Cell, newGeo: Geometry): void {
-    const geo = <Geometry>cell.getGeometry();
-    const dx = geo.width !== 0 ? newGeo.width / geo.width : 1;
-    const dy = geo.height !== 0 ? newGeo.height / geo.height : 1;
+  resizeChildCells(cell: Cell, newGeo: Geometry) {
+    const geo = cell.getGeometry();
 
-    for (const child of cell.getChildren()) {
-      this.scaleCell(child, dx, dy, true);
+    if (geo) {
+      const dx = geo.width !== 0 ? newGeo.width / geo.width : 1;
+      const dy = geo.height !== 0 ? newGeo.height / geo.height : 1;
+
+      for (const child of cell.getChildren()) {
+        this.scaleCell(child, dx, dy, true);
+      }
     }
   }
 
@@ -1438,7 +1466,7 @@ class GraphCells {
    *
    * @param cell {@link mxCell} that has been resized.
    */
-  constrainChildCells(cell: Cell): void {
+  constrainChildCells(cell: Cell) {
     for (const child of cell.getChildren()) {
       this.constrainChild(child);
     }
@@ -1453,12 +1481,12 @@ class GraphCells {
    * @param dy Vertical scaling factor.
    * @param recurse Boolean indicating if the child cells should be scaled.
    */
-  scaleCell(cell: Cell, dx: number, dy: number, recurse: boolean = false): void {
+  scaleCell(cell: Cell, dx: number, dy: number, recurse = false) {
     let geo = cell.getGeometry();
 
-    if (geo != null) {
+    if (geo) {
       const style = this.getCurrentCellStyle(cell);
-      geo = <Geometry>geo.clone();
+      geo = geo.clone();
 
       // Stores values for restoring based on style
       const { x } = geo;
@@ -1468,15 +1496,15 @@ class GraphCells {
 
       geo.scale(dx, dy, style.aspect === 'fixed');
 
-      if (style.resizeWidth == '1') {
+      if (style.resizeWidth) {
         geo.width = w * dx;
-      } else if (style.resizeWidth == '0') {
+      } else if (!style.resizeWidth) {
         geo.width = w;
       }
 
-      if (style.resizeHeight == '1') {
+      if (style.resizeHeight) {
         geo.height = h * dy;
-      } else if (style.resizeHeight == '0') {
+      } else if (!style.resizeHeight) {
         geo.height = h;
       }
 
@@ -1493,7 +1521,7 @@ class GraphCells {
       if (cell.isVertex()) {
         this.cellResized(cell, geo, true, recurse);
       } else {
-        this.graph.model.setGeometry(cell, geo);
+        this.getModel().setGeometry(cell, geo);
       }
     }
   }
@@ -1504,19 +1532,19 @@ class GraphCells {
    *
    * @param cell {@link mxCell} that has been resized.
    */
-  extendParent(cell: Cell): void {
-    const parent = <Cell>cell.getParent();
+  extendParent(cell: Cell) {
+    const parent = cell.getParent();
     let p = parent.getGeometry();
 
-    if (parent != null && p != null && !parent.isCollapsed()) {
+    if (parent && p && !parent.isCollapsed()) {
       const geo = cell.getGeometry();
 
       if (
-        geo != null &&
+        geo &&
         !geo.relative &&
         (p.width < geo.x + geo.width || p.height < geo.y + geo.height)
       ) {
-        p = <Geometry>p.clone();
+        p = p.clone();
 
         p.width = Math.max(p.width, geo.x + geo.width);
         p.height = Math.max(p.height, geo.y + geo.height);
@@ -1549,7 +1577,7 @@ class GraphCells {
     target: Cell | null = null,
     evt: InternalMouseEvent | null = null,
     mapping: any = {}
-  ): CellArray | null {
+  ) {
     return this.moveCells(cells, dx, dy, true, target, evt, mapping);
   }
 
@@ -1580,39 +1608,33 @@ class GraphCells {
    */
   moveCells(
     cells: CellArray,
-    dx: number,
-    dy: number,
-    clone: boolean = false,
+    dx: number = 0,
+    dy: number = 0,
+    clone = false,
     target: Cell | null = null,
     evt: InternalMouseEvent | null = null,
     mapping: any = null
-  ): CellArray | null {
-    dx = dx != null ? dx : 0;
-    dy = dy != null ? dy : 0;
-    clone = clone != null ? clone : false;
-
-    // alert(`moveCells: ${cells} ${dx} ${dy} ${clone} ${target}`)
-
-    if (dx !== 0 || dy !== 0 || clone || target != null) {
+  ) {
+    if (dx !== 0 || dy !== 0 || clone || target) {
       // Removes descendants with ancestors in cells to avoid multiple moving
       cells = cells.getTopmostCells();
       const origCells = cells;
 
-      this.graph.batchUpdate(() => {
+      this.batchUpdate(() => {
         // Faster cell lookups to remove relative edge labels with selected
         // terminals to avoid explicit and implicit move at same time
-        const dict = new Dictionary();
+        const dict = new Dictionary<Cell, boolean>();
 
         for (const cell of cells) {
           dict.put(cell, true);
         }
 
         const isSelected = (cell: Cell | null) => {
-          while (cell != null) {
+          while (cell) {
             if (dict.get(cell)) {
               return true;
             }
-            cell = <Cell>cell.getParent();
+            cell = cell.getParent();
           }
           return false;
         };
@@ -1625,7 +1647,7 @@ class GraphCells {
           const parent = cell.getParent();
 
           if (
-            geo == null ||
+            !geo ||
             !geo.relative ||
             (parent && !parent.isEdge()) ||
             (parent &&
@@ -1639,9 +1661,9 @@ class GraphCells {
         cells = checked;
 
         if (clone) {
-          cells = <CellArray>this.cloneCells(cells, this.isCloneInvalidEdges(), mapping);
+          cells = this.cloneCells(cells, this.isCloneInvalidEdges(), mapping);
 
-          if (target == null) {
+          if (!target) {
             target = this.getDefaultParent();
           }
         }
@@ -1652,7 +1674,7 @@ class GraphCells {
         // allow for temporary negative numbers until cellsAdded is called.
         const previous = this.isAllowNegativeCoordinates();
 
-        if (target != null) {
+        if (target) {
           this.setAllowNegativeCoordinates(true);
         }
 
@@ -1661,13 +1683,13 @@ class GraphCells {
           dx,
           dy,
           !clone && this.isDisconnectOnMove() && this.isAllowDanglingEdges(),
-          target == null,
-          this.isExtendParentsOnMove() && target == null
+          !target,
+          this.isExtendParentsOnMove() && !target
         );
 
         this.setAllowNegativeCoordinates(previous);
 
-        if (target != null) {
+        if (target) {
           const index = target.getChildCount();
           this.cellsAdded(cells, target, index, null, null, true);
 
@@ -1675,22 +1697,22 @@ class GraphCells {
           if (clone) {
             cells.forEach((cell, i) => {
               const geo = cell.getGeometry();
-              const parent = <Cell>origCells[i].getParent();
+              const parent = origCells[i].getParent();
 
               if (
-                geo != null &&
+                geo &&
                 geo.relative &&
                 parent.isEdge() &&
-                this.graph.model.contains(parent)
+                this.getModel().contains(parent)
               ) {
-                this.graph.model.add(parent, cell);
+                this.getModel().add(parent, cell);
               }
             });
           }
         }
 
         // Dispatches a move event
-        this.graph.fireEvent(
+        this.fireEvent(
           new EventObject(InternalEvent.MOVE_CELLS, {
             cells,
             dx,
@@ -1716,12 +1738,12 @@ class GraphCells {
     cells: CellArray,
     dx: number,
     dy: number,
-    disconnect: boolean = false,
-    constrain: boolean = false,
-    extend: boolean = false
-  ): void {
+    disconnect = false,
+    constrain = false,
+    extend = false
+  ) {
     if (dx !== 0 || dy !== 0) {
-      this.graph.batchUpdate(() => {
+      this.batchUpdate(() => {
         if (disconnect) {
           this.disconnectGraph(cells);
         }
@@ -1736,11 +1758,11 @@ class GraphCells {
           }
         }
 
-        if (this.resetEdgesOnMove) {
+        if (this.isResetEdgesOnMove()) {
           this.resetEdges(cells);
         }
 
-        this.graph.fireEvent(
+        this.fireEvent(
           new EventObject(InternalEvent.CELLS_MOVED, { cells, dx, dy, disconnect })
         );
       });
@@ -1751,13 +1773,11 @@ class GraphCells {
    * Translates the geometry of the given cell and stores the new,
    * translated geometry in the model as an atomic change.
    */
-  translateCell(cell: Cell, dx: number, dy: number): void {
+  translateCell(cell: Cell, dx: number, dy: number) {
     let geometry = cell.getGeometry();
 
-    if (geometry != null) {
-      dx = parseFloat(String(dx));
-      dy = parseFloat(String(dy));
-      geometry = <Geometry>geometry.clone();
+    if (geometry) {
+      geometry = geometry.clone();
       geometry.translate(dx, dy);
 
       if (!geometry.relative && cell.isVertex() && !this.isAllowNegativeCoordinates()) {
@@ -1783,14 +1803,14 @@ class GraphCells {
           dy = pt.y;
         }
 
-        if (geometry.offset == null) {
+        if (!geometry.offset) {
           geometry.offset = new Point(dx, dy);
         } else {
-          geometry.offset.x = parseFloat(geometry.offset.x) + dx;
-          geometry.offset.y = parseFloat(geometry.offset.y) + dy;
+          geometry.offset.x = geometry.offset.x + dx;
+          geometry.offset.y = geometry.offset.y + dy;
         }
       }
-      this.graph.model.setGeometry(cell, geometry);
+      this.getModel().setGeometry(cell, geometry);
     }
   }
 
@@ -1799,19 +1819,20 @@ class GraphCells {
    *
    * @param cell {@link mxCell} for which the area should be returned.
    */
-  getCellContainmentArea(cell: Cell): Rectangle | null {
+  getCellContainmentArea(cell: Cell) {
     if (!cell.isEdge()) {
       const parent = cell.getParent();
 
-      if (parent != null && parent !== this.getDefaultParent()) {
+      if (parent && parent !== this.getDefaultParent()) {
         const g = parent.getGeometry();
 
-        if (g != null) {
+        if (g) {
           let x = 0;
           let y = 0;
           let w = g.width;
           let h = g.height;
 
+          /* disable swimlane for now
           if (this.isSwimlane(parent)) {
             const size = this.getStartSize(parent);
             const style = this.getCurrentCellStyle(parent);
@@ -1838,6 +1859,7 @@ class GraphCells {
             w -= size.width;
             h -= size.height;
           }
+          */
 
           return new Rectangle(x, y, w, h);
         }
@@ -1855,19 +1877,19 @@ class GraphCells {
    * @param cell {@link mxCell} which should be constrained.
    * @param sizeFirst Specifies if the size should be changed first. Default is `true`.
    */
-  constrainChild(cell: Cell, sizeFirst: boolean = true): void {
+  constrainChild(cell: Cell, sizeFirst = true) {
     let geo = cell.getGeometry();
 
-    if (geo != null && (this.isConstrainRelativeChildren() || !geo.relative)) {
+    if (geo && (this.isConstrainRelativeChildren() || !geo.relative)) {
       const parent = cell.getParent();
-      const pgeo = (<Cell>parent).getGeometry();
+      const pgeo = parent.getGeometry();
       let max = this.getMaximumGraphBounds();
 
       // Finds parent offset
-      if (max != null) {
-        const off = this.getBoundingBoxFromGeometry(new CellArray(<Cell>parent), false);
+      if (max) {
+        const off = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
 
-        if (off != null) {
+        if (off) {
           max = Rectangle.fromRectangle(max);
 
           max.x -= off.x;
@@ -1878,7 +1900,7 @@ class GraphCells {
       if (this.isConstrainChild(cell)) {
         let tmp = this.getCellContainmentArea(cell);
 
-        if (tmp != null) {
+        if (tmp) {
           const overlap = this.getOverlap(cell);
 
           if (overlap > 0) {
@@ -1891,7 +1913,7 @@ class GraphCells {
           }
 
           // Find the intersection between max and tmp
-          if (max == null) {
+          if (!max) {
             max = tmp;
           } else {
             max = Rectangle.fromRectangle(max);
@@ -1900,7 +1922,7 @@ class GraphCells {
         }
       }
 
-      if (max != null) {
+      if (max) {
         const cells = new CellArray(cell);
 
         if (!cell.isCollapsed()) {
@@ -1915,7 +1937,7 @@ class GraphCells {
 
         const bbox = this.getBoundingBoxFromGeometry(cells, false);
 
-        if (bbox != null) {
+        if (bbox) {
           geo = <Geometry>geo.clone();
 
           // Cumulative horizontal movement
@@ -1953,7 +1975,7 @@ class GraphCells {
           if (dx !== 0 || dy !== 0) {
             if (geo.relative) {
               // Relative geometries are moved via absolute offset
-              if (geo.offset == null) {
+              if (!geo.offset) {
                 geo.offset = new Point();
               }
 
@@ -1965,7 +1987,7 @@ class GraphCells {
             }
           }
 
-          this.graph.model.setGeometry(cell, geo);
+          this.getModel().setGeometry(cell, geo);
         }
       }
     }
@@ -1985,11 +2007,7 @@ class GraphCells {
    * @param edges Optional boolean that specifies if child edges should
    * be returned. Default is `false`.
    */
-  getChildCells(
-    parent: Cell = this.getDefaultParent(),
-    vertices: boolean = false,
-    edges: boolean = false
-  ): CellArray {
+  getChildCells(parent: Cell = this.getDefaultParent(), vertices = false, edges = false) {
     const cells = parent.getChildCells(vertices, edges);
     const result = new CellArray();
 
@@ -2024,38 +2042,38 @@ class GraphCells {
   getCellAt(
     x: number,
     y: number,
-    parent: Cell,
-    vertices: boolean = true,
-    edges: boolean = true,
+    parent: Cell | null = null,
+    vertices = true,
+    edges = true,
     ignoreFn: Function | null = null
   ): Cell | null {
-    if (parent == null) {
-      parent = <Cell>this.getCurrentRoot();
+    if (!parent) {
+      parent = this.getCurrentRoot();
 
-      if (parent == null) {
-        parent = <Cell>this.graph.model.getRoot();
+      if (!parent) {
+        parent = this.getModel().getRoot();
       }
     }
 
-    if (parent != null) {
+    if (parent) {
       const childCount = parent.getChildCount();
 
       for (let i = childCount - 1; i >= 0; i--) {
-        const cell = <Cell>parent.getChildAt(i);
+        const cell = parent.getChildAt(i);
         const result = this.getCellAt(x, y, cell, vertices, edges, ignoreFn);
 
-        if (result != null) {
+        if (result) {
           return result;
         }
         if (
           cell.isVisible() &&
           ((edges && cell.isEdge()) || (vertices && cell.isVertex()))
         ) {
-          const state = this.graph.view.getState(cell);
+          const state = this.getView().getState(cell);
 
           if (
-            state != null &&
-            (ignoreFn == null || !ignoreFn(state, x, y)) &&
+            state &&
+            (!ignoreFn || !ignoreFn(state, x, y)) &&
             this.intersects(state, x, y)
           ) {
             return cell;
@@ -2089,44 +2107,36 @@ class GraphCells {
     result: CellArray = new CellArray(),
     intersection: Rectangle | null = null,
     ignoreFn: Function | null = null,
-    includeDescendants: boolean = false
-  ): CellArray {
-    if (width > 0 || height > 0 || intersection != null) {
-      const model = this.graph.model;
+    includeDescendants = false
+  ) {
+    if (width > 0 || height > 0 || intersection) {
+      const model = this.getModel();
       const right = x + width;
       const bottom = y + height;
 
-      if (parent == null) {
+      if (!parent) {
         parent = this.getCurrentRoot();
 
-        if (parent == null) {
+        if (!parent) {
           parent = model.getRoot();
         }
       }
 
-      if (parent != null) {
-        const childCount = parent.getChildCount();
-
+      if (parent) {
         for (const cell of parent.getChildren()) {
-          const state: CellState = <CellState>this.graph.view.getState(cell);
+          const state = this.getView().getState(cell);
 
-          if (
-            state != null &&
-            cell.isVisible() &&
-            (ignoreFn == null || !ignoreFn(state))
-          ) {
-            const deg = getValue(state.style, 'rotation') || 0;
+          if (state && cell.isVisible() && (!ignoreFn || !ignoreFn(state))) {
+            const deg = state.style.rotation;
 
             let box: CellState | Rectangle = state; // TODO: CHECK ME!!!! ==========================================================
-            if (deg != 0) {
+            if (deg !== 0) {
               box = <Rectangle>getBoundingBox(box, deg);
             }
 
             const hit =
-              (intersection != null &&
-                cell.isVertex() &&
-                intersects(intersection, box)) ||
-              (intersection == null &&
+              (intersection && cell.isVertex() && intersects(intersection, box)) ||
+              (!intersection &&
                 (cell.isEdge() || cell.isVertex()) &&
                 box.x >= x &&
                 box.y + box.height <= bottom &&
@@ -2179,20 +2189,20 @@ class GraphCells {
     x0: number,
     y0: number,
     parent: Cell | null = null,
-    rightHalfpane: boolean = false,
-    bottomHalfpane: boolean = false
+    rightHalfpane = false,
+    bottomHalfpane = false
   ) {
     const result = [];
 
     if (rightHalfpane || bottomHalfpane) {
-      if (parent == null) {
-        parent = <Cell>this.graph.getDefaultParent();
+      if (!parent) {
+        parent = this.getDefaultParent();
       }
 
-      if (parent != null) {
+      if (parent) {
         for (const child of parent.getChildren()) {
-          const state = this.graph.view.getState(child);
-          if (child.isVisible() && state != null) {
+          const state = this.getView().getState(child);
+          if (child.isVisible() && state) {
             if ((!rightHalfpane || state.x >= x0) && (!bottomHalfpane || state.y >= y0)) {
               result.push(child);
             }
@@ -2212,26 +2222,29 @@ class GraphCells {
    * @param y Y-coordinate of the location to be checked.
    */
   intersects(state: CellState, x: number, y: number): boolean {
-    const pts = <Point[]>state.absolutePoints;
+    const pts = state.absolutePoints;
 
-    if (pts != null) {
-      const t2 = this.tolerance * this.tolerance;
+    if (pts.length > 0) {
+      const t2 = this.getTolerance() * this.getTolerance();
       let pt = pts[0];
 
       for (let i = 1; i < pts.length; i += 1) {
         const next = pts[i];
-        const dist = ptSegDistSq(pt.x, pt.y, next.x, next.y, x, y);
 
-        if (dist <= t2) {
-          return true;
+        if (pt && next) {
+          const dist = ptSegDistSq(pt.x, pt.y, next.x, next.y, x, y);
+
+          if (dist <= t2) {
+            return true;
+          }
         }
 
         pt = next;
       }
     } else {
-      const alpha = toRadians(getValue(state.style, 'rotation') || 0);
+      const alpha = toRadians(state.style.rotation);
 
-      if (alpha != 0) {
+      if (alpha !== 0) {
         const cos = Math.cos(-alpha);
         const sin = Math.sin(-alpha);
         const cx = new Point(state.getCenterX(), state.getCenterY());
@@ -2256,8 +2269,8 @@ class GraphCells {
    * @param parent {@link mxCell} the possible parent cell
    * @param recurse boolean whether or not to recurse the child ancestors
    */
-  isValidAncestor(cell: Cell, parent: Cell, recurse: boolean = false): boolean {
-    return recurse ? parent.isAncestor(cell) : cell.getParent() == parent;
+  isValidAncestor(cell: Cell, parent: Cell, recurse: boolean = false) {
+    return recurse ? parent.isAncestor(cell) : cell.getParent() === parent;
   }
 
   /*****************************************************************************
@@ -2271,12 +2284,10 @@ class GraphCells {
    *
    * @param cell {@link mxCell} whose locked state should be returned.
    */
-  isCellLocked(cell: Cell): boolean {
+  isCellLocked(cell: Cell) {
     const geometry = cell.getGeometry();
 
-    return (
-      this.isCellsLocked() || (geometry != null && cell.isVertex() && geometry.relative)
-    );
+    return this.isCellsLocked() || (geometry && cell.isVertex() && geometry.relative);
   }
 
   /**
@@ -2286,7 +2297,7 @@ class GraphCells {
    *
    * @param cell {@link mxCell} whose locked state should be returned.
    */
-  isCellsLocked(): boolean {
+  isCellsLocked() {
     return this.cellsLocked;
   }
 
@@ -2303,8 +2314,8 @@ class GraphCells {
   /**
    * Returns the cells which may be exported in the given array of cells.
    */
-  getCloneableCells(cells: CellArray): CellArray | null {
-    return this.graph.model.filterCells(cells, (cell: Cell) => {
+  getCloneableCells(cells: CellArray) {
+    return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.isCellCloneable(cell);
     });
   }
@@ -2316,16 +2327,16 @@ class GraphCells {
    *
    * @param cell Optional {@link Cell} whose cloneable state should be returned.
    */
-  isCellCloneable(cell: Cell): boolean {
+  isCellCloneable(cell: Cell) {
     const style = this.getCurrentCellStyle(cell);
-    return this.isCellsCloneable() && style.cloneable !== 0;
+    return this.isCellsCloneable() && style.cloneable;
   }
 
   /**
    * Returns {@link cellsCloneable}, that is, if the graph allows cloning of cells
    * by using control-drag.
    */
-  isCellsCloneable(): boolean {
+  isCellsCloneable() {
     return this.cellsCloneable;
   }
 
@@ -2336,15 +2347,15 @@ class GraphCells {
    *
    * @param value Boolean indicating if the graph should be cloneable.
    */
-  setCellsCloneable(value: boolean): void {
+  setCellsCloneable(value: boolean) {
     this.cellsCloneable = value;
   }
 
   /**
    * Returns the cells which may be exported in the given array of cells.
    */
-  getExportableCells(cells: CellArray): CellArray | null {
-    return this.graph.model.filterCells(cells, (cell: Cell) => {
+  getExportableCells(cells: CellArray) {
+    return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.canExportCell(cell);
     });
   }
@@ -2355,15 +2366,15 @@ class GraphCells {
    *
    * @param cell {@link mxCell} that represents the cell to be exported.
    */
-  canExportCell(cell: Cell | null = null): boolean {
-    return this.exportEnabled;
+  canExportCell(cell: Cell | null = null) {
+    return this.isExportEnabled();
   }
 
   /**
    * Returns the cells which may be imported in the given array of cells.
    */
-  getImportableCells(cells: CellArray): CellArray | null {
-    return this.graph.model.filterCells(cells, (cell: Cell) => {
+  getImportableCells(cells: CellArray) {
+    return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.canImportCell(cell);
     });
   }
@@ -2374,8 +2385,8 @@ class GraphCells {
    *
    * @param cell {@link mxCell} that represents the cell to be imported.
    */
-  canImportCell(cell: Cell | null = null): boolean {
-    return this.importEnabled;
+  canImportCell(cell: Cell | null = null) {
+    return this.isImportEnabled();
   }
 
   /**
@@ -2401,29 +2412,29 @@ class GraphCells {
    *
    * @param cell {@link mxCell} whose selectable state should be returned.
    */
-  isCellSelectable(cell: Cell): boolean {
+  isCellSelectable(cell: Cell) {
     return this.isCellsSelectable();
   }
 
   /**
    * Returns {@link cellsSelectable}.
    */
-  isCellsSelectable(): boolean {
+  isCellsSelectable() {
     return this.cellsSelectable;
   }
 
   /**
    * Sets {@link cellsSelectable}.
    */
-  setCellsSelectable(value: boolean): void {
+  setCellsSelectable(value: boolean) {
     this.cellsSelectable = value;
   }
 
   /**
    * Returns the cells which may be exported in the given array of cells.
    */
-  getDeletableCells(cells: CellArray): CellArray | null {
-    return this.graph.model.filterCells(cells, (cell: Cell) => {
+  getDeletableCells(cells: CellArray) {
+    return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.isCellDeletable(cell);
     });
   }
@@ -2435,15 +2446,15 @@ class GraphCells {
    *
    * @param cell {@link mxCell} whose deletable state should be returned.
    */
-  isCellDeletable(cell: Cell): boolean {
+  isCellDeletable(cell: Cell) {
     const style = this.getCurrentCellStyle(cell);
-    return this.isCellsDeletable() && style.deletable !== 0;
+    return this.isCellsDeletable() && style.deletable;
   }
 
   /**
    * Returns {@link cellsDeletable}.
    */
-  isCellsDeletable(): boolean {
+  isCellsDeletable() {
     return this.cellsDeletable;
   }
 
@@ -2452,7 +2463,7 @@ class GraphCells {
    *
    * @param value Boolean indicating if the graph should allow deletion of cells.
    */
-  setCellsDeletable(value: boolean): void {
+  setCellsDeletable(value: boolean) {
     this.cellsDeletable = value;
   }
 
@@ -2462,16 +2473,16 @@ class GraphCells {
    *
    * @param cell {@link mxCell} whose rotatable state should be returned.
    */
-  isCellRotatable(cell: Cell): boolean {
+  isCellRotatable(cell: Cell) {
     const style = this.getCurrentCellStyle(cell);
-    return style.rotatable !== 0;
+    return style.rotatable;
   }
 
   /**
    * Returns the cells which are movable in the given array of cells.
    */
-  getMovableCells(cells: CellArray): CellArray | null {
-    return this.graph.model.filterCells(cells, (cell: Cell) => {
+  getMovableCells(cells: CellArray) {
+    return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.isCellMovable(cell);
     });
   }
@@ -2483,16 +2494,16 @@ class GraphCells {
    *
    * @param cell {@link mxCell} whose movable state should be returned.
    */
-  isCellMovable(cell: Cell): boolean {
+  isCellMovable(cell: Cell) {
     const style = this.getCurrentCellStyle(cell);
 
-    return this.isCellsMovable() && !this.isCellLocked(cell) && style.movable !== 0;
+    return this.isCellsMovable() && !this.isCellLocked(cell) && style.movable;
   }
 
   /**
    * Returns {@link cellsMovable}.
    */
-  isCellsMovable(): boolean {
+  isCellsMovable() {
     return this.cellsMovable;
   }
 
@@ -2502,7 +2513,7 @@ class GraphCells {
    *
    * @param value Boolean indicating if the graph should allow moving of cells.
    */
-  setCellsMovable(value: boolean): void {
+  setCellsMovable(value: boolean) {
     this.cellsMovable = value;
   }
 
@@ -2514,21 +2525,18 @@ class GraphCells {
    *
    * @param cell {@link mxCell} whose resizable state should be returned.
    */
-  isCellResizable(cell: Cell): boolean {
+  isCellResizable(cell: Cell) {
     const style = this.getCurrentCellStyle(cell);
 
-    const r =
-      this.isCellsResizable() &&
-      !this.isCellLocked(cell) &&
-      getValue(style, 'resizeable', '1') != '0';
-    // alert(r);
+    const r = this.isCellsResizable() && !this.isCellLocked(cell) && style.resizeable;
+
     return r;
   }
 
   /**
    * Returns {@link cellsResizable}.
    */
-  isCellsResizable(): boolean {
+  isCellsResizable() {
     return this.cellsResizable;
   }
 
@@ -2539,7 +2547,7 @@ class GraphCells {
    * @param value Boolean indicating if the graph should allow resizing of
    * cells.
    */
-  setCellsResizable(value: boolean): void {
+  setCellsResizable(value: boolean) {
     this.cellsResizable = value;
   }
 
@@ -2550,16 +2558,16 @@ class GraphCells {
    *
    * @param cell {@link mxCell} whose bendable state should be returned.
    */
-  isCellBendable(cell: Cell): boolean {
+  isCellBendable(cell: Cell) {
     const style = this.getCurrentCellStyle(cell);
 
-    return this.isCellsBendable() && !this.isCellLocked(cell) && style.bendable !== 0;
+    return this.isCellsBendable() && !this.isCellLocked(cell) && style.bendable;
   }
 
   /**
    * Returns {@link cellsBenadable}.
    */
-  isCellsBendable(): boolean {
+  isCellsBendable() {
     return this.cellsBendable;
   }
 
@@ -2570,7 +2578,7 @@ class GraphCells {
    * @param value Boolean indicating if the graph should allow bending of
    * edges.
    */
-  setCellsBendable(value: boolean): void {
+  setCellsBendable(value: boolean) {
     this.cellsBendable = value;
   }
 
@@ -2582,16 +2590,16 @@ class GraphCells {
    *
    * @param cell {@link mxCell} that should be resized.
    */
-  isAutoSizeCell(cell: Cell): boolean {
+  isAutoSizeCell(cell: Cell) {
     const style = this.getCurrentCellStyle(cell);
 
-    return this.isAutoSizeCells() || style.autosize == 1;
+    return this.isAutoSizeCells() || style.autosize;
   }
 
   /**
    * Returns {@link autoSizeCells}.
    */
-  isAutoSizeCells(): boolean {
+  isAutoSizeCells() {
     return this.autoSizeCells;
   }
 
@@ -2604,7 +2612,7 @@ class GraphCells {
    * @param value Boolean indicating if cells should be resized
    * automatically.
    */
-  setAutoSizeCells(value: boolean): void {
+  setAutoSizeCells(value: boolean) {
     this.autoSizeCells = value;
   }
 
@@ -2615,14 +2623,14 @@ class GraphCells {
    *
    * @param cell {@link mxCell} that has been resized.
    */
-  isExtendParent(cell: Cell): boolean {
+  isExtendParent(cell: Cell) {
     return !cell.isEdge() && this.isExtendParents();
   }
 
   /**
    * Returns {@link extendParents}.
    */
-  isExtendParents(): boolean {
+  isExtendParents() {
     return this.extendParents;
   }
 
@@ -2631,14 +2639,14 @@ class GraphCells {
    *
    * @param value New boolean value for {@link extendParents}.
    */
-  setExtendParents(value: boolean): void {
+  setExtendParents(value: boolean) {
     this.extendParents = value;
   }
 
   /**
    * Returns {@link extendParentsOnAdd}.
    */
-  isExtendParentsOnAdd(cell: Cell): boolean {
+  isExtendParentsOnAdd(cell: Cell) {
     return this.extendParentsOnAdd;
   }
 
@@ -2647,14 +2655,14 @@ class GraphCells {
    *
    * @param value New boolean value for {@link extendParentsOnAdd}.
    */
-  setExtendParentsOnAdd(value: boolean): void {
+  setExtendParentsOnAdd(value: boolean) {
     this.extendParentsOnAdd = value;
   }
 
   /**
    * Returns {@link extendParentsOnMove}.
    */
-  isExtendParentsOnMove(): boolean {
+  isExtendParentsOnMove() {
     return this.extendParentsOnMove;
   }
 
@@ -2663,7 +2671,7 @@ class GraphCells {
    *
    * @param value New boolean value for {@link extendParentsOnAdd}.
    */
-  setExtendParentsOnMove(value: boolean): void {
+  setExtendParentsOnMove(value: boolean) {
     this.extendParentsOnMove = value;
   }
 
@@ -2695,26 +2703,22 @@ class GraphCells {
    * @param includeDescendants Optional boolean that specifies if the bounds
    * of all descendants should be included. Default is `false`.
    */
-  getCellBounds(
-    cell: Cell,
-    includeEdges: boolean = false,
-    includeDescendants: boolean = false
-  ): Rectangle | null {
+  getCellBounds(cell: Cell, includeEdges = false, includeDescendants = false) {
     let cells = new CellArray(cell);
 
     // Includes all connected edges
     if (includeEdges) {
-      cells = cells.concat(<CellArray>cell.getEdges());
+      cells = cells.concat(cell.getEdges());
     }
 
-    let result = this.view.getBounds(cells);
+    let result = this.getView().getBounds(cells);
 
     // Recursively includes the bounds of the children
     if (includeDescendants) {
       for (const child of cell.getChildren()) {
         const tmp = this.getCellBounds(child, includeEdges, true);
 
-        if (result != null) {
+        if (result && tmp) {
           result.add(tmp);
         } else {
           result = tmp;
@@ -2748,7 +2752,7 @@ class GraphCells {
    * ```javascript
    * if (bounds.x < 0 || bounds.y < 0)
    * {
-   *   graph.view.setTranslate(-Math.min(bounds.x, 0), -Math.min(bounds.y, 0));
+   *   getView().setTranslate(-Math.min(bounds.x, 0), -Math.min(bounds.y, 0));
    * }
    * ```
    *
@@ -2756,11 +2760,7 @@ class GraphCells {
    * @param includeEdges Specifies if edge bounds should be included by computing
    * the bounding box for all points in geometry. Default is `false`.
    */
-  getBoundingBoxFromGeometry(
-    cells: CellArray,
-    includeEdges: boolean = false
-  ): Rectangle | null {
-    includeEdges = includeEdges != null ? includeEdges : false;
+  getBoundingBoxFromGeometry(cells: CellArray, includeEdges = false) {
     let result = null;
     let tmp: Rectangle | null = null;
 
@@ -2769,13 +2769,13 @@ class GraphCells {
         // Computes the bounding box for the points in the geometry
         const geo = cell.getGeometry();
 
-        if (geo != null) {
+        if (geo) {
           let bbox = null;
 
           if (cell.isEdge()) {
             const addPoint = (pt: Point | null) => {
-              if (pt != null) {
-                if (tmp == null) {
+              if (pt) {
+                if (!tmp) {
                   tmp = new Rectangle(pt.x, pt.y, 0, 0);
                 } else {
                   tmp.add(new Rectangle(pt.x, pt.y, 0, 0));
@@ -2783,17 +2783,17 @@ class GraphCells {
               }
             };
 
-            if (cell.getTerminal(true) == null) {
+            if (!cell.getTerminal(true)) {
               addPoint(geo.getTerminalPoint(true));
             }
 
-            if (cell.getTerminal(false) == null) {
+            if (!cell.getTerminal(false)) {
               addPoint(geo.getTerminalPoint(false));
             }
 
             const pts = geo.points;
 
-            if (pts != null && pts.length > 0) {
+            if (pts && pts.length > 0) {
               tmp = new Rectangle(pts[0].x, pts[0].y, 0, 0);
 
               for (let j = 1; j < pts.length; j++) {
@@ -2803,16 +2803,13 @@ class GraphCells {
 
             bbox = tmp;
           } else {
-            const parent = <Cell>cell.getParent();
+            const parent = cell.getParent();
 
             if (geo.relative) {
-              if (
-                parent.isVertex() &&
-                parent !== this.view.currentRoot
-              ) {
+              if (parent.isVertex() && parent !== this.getView().currentRoot) {
                 tmp = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
 
-                if (tmp != null) {
+                if (tmp) {
                   bbox = new Rectangle(
                     geo.x * tmp.width,
                     geo.y * tmp.height,
@@ -2832,22 +2829,22 @@ class GraphCells {
               if (parent.isVertex() && cells.indexOf(parent) >= 0) {
                 tmp = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
 
-                if (tmp != null) {
+                if (tmp) {
                   bbox.x += tmp.x;
                   bbox.y += tmp.y;
                 }
               }
             }
 
-            if (bbox != null && geo.offset != null) {
+            if (bbox && geo.offset) {
               bbox.x += geo.offset.x;
               bbox.y += geo.offset.y;
             }
 
             const style = this.getCurrentCellStyle(cell);
 
-            if (bbox != null) {
-              const angle = getValue(style, 'rotation', 0);
+            if (bbox) {
+              const angle = style.rotation;
 
               if (angle !== 0) {
                 bbox = getBoundingBox(bbox, angle);
@@ -2855,8 +2852,8 @@ class GraphCells {
             }
           }
 
-          if (bbox != null) {
-            if (result == null) {
+          if (bbox) {
+            if (!result) {
               result = Rectangle.fromRectangle(bbox);
             } else {
               result.add(bbox);

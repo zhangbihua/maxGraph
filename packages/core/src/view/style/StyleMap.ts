@@ -1,6 +1,4 @@
-import {Style} from "util";
-
-class StyleMap {
+class StyleMap implements Record<string, any> {
   defaultVertex?: StyleMap;
   defaultEdge?: StyleMap;
 
@@ -159,7 +157,6 @@ class StyleMap {
    * of an edge with its source terminal. Value is "exitY".
    */
   exitY: any;
-
 
   /**
    * Variable: STYLE_EXIT_DX

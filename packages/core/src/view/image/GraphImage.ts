@@ -1,11 +1,6 @@
-import Graph from '../Graph';
 import ImageBundle from './ImageBundle';
 
 class GraphImage {
-  constructor(graph: Graph) {
-    this.imageBundles = [];
-  }
-
   /**
    * Holds the list of image bundles.
    */

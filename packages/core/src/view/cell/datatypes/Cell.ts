@@ -11,7 +11,7 @@ import CellOverlay from '../CellOverlay';
 import { clone } from '../../../util/CloneUtils';
 import Point from '../../geometry/Point';
 import CellPath from './CellPath';
-import CellArray from "./CellArray";
+import CellArray from './CellArray';
 import { isNotNullish } from '../../../util/Utils';
 
 import type { FilterFunction } from '../../../types';
@@ -88,7 +88,7 @@ class Cell {
   onInit: (() => void) | null = null;
 
   // used by addCellOverlay() of mxGraph
-  overlays: CellOverlay[] | null = [];
+  overlays: CellOverlay[] = [];
 
   /**
    * Holds the Id. Default is null.
@@ -755,9 +755,7 @@ class Cell {
    * incoming edges should be returned.
    * @param {Cell} ignoredEdge  that represents an edge to be ignored.
    */
-  getDirectedEdgeCount(
-    outgoing: boolean,
-    ignoredEdge: Cell | null = null) {
+  getDirectedEdgeCount(outgoing: boolean, ignoredEdge: Cell | null = null) {
     let count = 0;
     const edgeCount = this.getEdgeCount();
 

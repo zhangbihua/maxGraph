@@ -14,7 +14,6 @@ import {
 import { isAncestorNode } from '../../util/DomUtils';
 import CellState from '../cell/datatypes/CellState';
 import Shape from '../geometry/shape/Shape';
-import Cell from '../cell/datatypes/Cell';
 
 /**
  * Class: mxMouseEvent
@@ -51,10 +50,15 @@ import Cell from '../cell/datatypes/Cell';
  *
  */
 class InternalMouseEvent {
-  constructor(evt: MouseEvent, state?: CellState) {
+  constructor(evt: MouseEvent, state: CellState | null = null) {
     this.evt = evt;
     this.state = state;
     this.sourceState = state;
+
+    // graphX and graphY are updated right after this constructor is executed,
+    // so let them default to 0 and make them not nullable.
+    this.graphX = 0;
+    this.graphY = 0;
   }
 
   /**
@@ -62,7 +66,7 @@ class InternalMouseEvent {
    *
    * Holds the consumed state of this event.
    */
-  consumed: boolean = false;
+  consumed = false;
 
   /**
    * Variable: evt
@@ -77,7 +81,7 @@ class InternalMouseEvent {
    * Holds the x-coordinate of the event in the graph. This value is set in
    * <mxGraph.fireMouseEvent>.
    */
-  graphX?: number;
+  graphX: number;
 
   /**
    * Variable: graphY
@@ -85,14 +89,14 @@ class InternalMouseEvent {
    * Holds the y-coordinate of the event in the graph. This value is set in
    * <mxGraph.fireMouseEvent>.
    */
-  graphY?: number;
+  graphY: number;
 
   /**
    * Variable: state
    *
    * Holds the optional <mxCellState> associated with this event.
    */
-  state?: CellState;
+  state: CellState | null;
 
   /**
    * Variable: sourceState
@@ -100,14 +104,14 @@ class InternalMouseEvent {
    * Holds the <mxCellState> that was passed to the constructor. This can be
    * different from <state> depending on the result of <mxGraph.getEventState>.
    */
-  sourceState?: CellState;
+  sourceState: CellState | null;
 
   /**
    * Function: getEvent
    *
    * Returns <evt>.
    */
-  getEvent(): MouseEvent {
+  getEvent() {
     return this.evt;
   }
 
@@ -116,7 +120,7 @@ class InternalMouseEvent {
    *
    * Returns the target DOM element using <mxEvent.getSource> for <evt>.
    */
-  getSource(): Element {
+  getSource() {
     return getSource(this.evt);
   }
 
@@ -125,7 +129,7 @@ class InternalMouseEvent {
    *
    * Returns true if the given <mxShape> is the source of <evt>.
    */
-  isSource(shape: Shape) {
+  isSource(shape: Shape | null) {
     return shape ? isAncestorNode(shape.node, this.getSource()) : false;
   }
 
@@ -152,7 +156,7 @@ class InternalMouseEvent {
    *
    * Returns <graphX>.
    */
-  getGraphX(): number | undefined {
+  getGraphX() {
     return this.graphX;
   }
 
@@ -161,7 +165,7 @@ class InternalMouseEvent {
    *
    * Returns <graphY>.
    */
-  getGraphY(): number | undefined {
+  getGraphY() {
     return this.graphY;
   }
 
@@ -170,7 +174,7 @@ class InternalMouseEvent {
    *
    * Returns <state>.
    */
-  getState(): CellState | undefined {
+  getState() {
     return this.state;
   }
 
@@ -179,12 +183,9 @@ class InternalMouseEvent {
    *
    * Returns the <mxCell> in <state> is not null.
    */
-  getCell(): Cell | null {
+  getCell() {
     const state = this.getState();
-    if (state != null) {
-      return state.cell;
-    }
-    return null;
+    return state ? state.cell : null;
   }
 
   /**
@@ -192,7 +193,7 @@ class InternalMouseEvent {
    *
    * Returns true if the event is a popup trigger.
    */
-  isPopupTrigger(): boolean {
+  isPopupTrigger() {
     return isPopupTrigger(this.getEvent());
   }
 
@@ -201,7 +202,7 @@ class InternalMouseEvent {
    *
    * Returns <consumed>.
    */
-  isConsumed(): boolean {
+  isConsumed() {
     return this.consumed;
   }
 
@@ -218,11 +219,10 @@ class InternalMouseEvent {
    * preventDefault - Specifies if the native event should be canceled. Default
    * is true.
    */
-  consume(preventDefault?: boolean): void {
-    preventDefault =
-      preventDefault != null
-        ? preventDefault
-        : this.evt.touches != null || isMouseEvent(this.evt);
+  consume(preventDefault?: boolean) {
+    preventDefault = preventDefault
+      ? preventDefault
+      : this.evt instanceof TouchEvent || isMouseEvent(this.evt);
 
     if (preventDefault && this.evt.preventDefault) {
       this.evt.preventDefault();

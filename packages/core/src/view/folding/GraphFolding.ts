@@ -1,14 +1,18 @@
 import Image from '../image/ImageBox';
 import mxClient from '../../mxClient';
-import Graph from '../Graph';
 import CellState from '../cell/datatypes/CellState';
 import Cell from '../cell/datatypes/Cell';
 import CellArray from '../cell/datatypes/CellArray';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import Geometry from '../geometry/Geometry';
-import { getValue, toRadians } from '../../util/Utils';
+import { autoImplement, getValue, toRadians } from '../../util/Utils';
 import Rectangle from '../geometry/Rectangle';
+
+import type Graph from '../Graph';
+import type GraphCells from '../cell/GraphCells';
+import type GraphSelection from '../selection/GraphSelection';
+import type GraphEditing from '../editing/GraphEditing';
 
 /**
  * GraphFoldingOptions
@@ -31,22 +35,26 @@ type GraphFoldingOptions = {
   collapseToPreferredSize: boolean;
 };
 
-class GraphFolding {
-  constructor(
-    graph: Graph,
-    options: GraphFoldingOptions = {
-      foldingEnabled: true,
-      collapsedImage: new Image(`${mxClient.imageBasePath}/collapsed.gif`, 9, 9),
-      expandedImage: new Image(`${mxClient.imageBasePath}/expanded.gif`, 9, 9),
-      collapseToPreferredSize: true,
-    }
-  ) {
-    this.graph = graph;
-    this.options = options;
-  }
+type PartialGraph = Pick<Graph, 'getModel' | 'fireEvent'>;
+type PartialCells = Pick<
+  GraphCells,
+  | 'getCurrentCellStyle'
+  | 'isExtendParent'
+  | 'extendParent'
+  | 'constrainChild'
+  | 'getPreferredSizeForCell'
+>;
+type PartialSelection = Pick<GraphSelection, 'getSelectionCells'>;
+type PartialEditing = Pick<GraphEditing, 'stopEditing'>;
+type PartialClass = PartialGraph & PartialCells & PartialSelection & PartialEditing;
 
-  graph: Graph;
-  options: GraphFoldingOptions;
+class GraphFolding extends autoImplement<PartialClass>() {
+  options: GraphFoldingOptions = {
+    foldingEnabled: true,
+    collapsedImage: new Image(`${mxClient.imageBasePath}/collapsed.gif`, 9, 9),
+    expandedImage: new Image(`${mxClient.imageBasePath}/expanded.gif`, 9, 9),
+    collapseToPreferredSize: true,
+  };
 
   /**
    * Specifies the resource key for the tooltip on the collapse/expand icon.
@@ -55,6 +63,8 @@ class GraphFolding {
    * @default 'collapse-expand'
    */
   collapseExpandResource: string = mxClient.language != 'none' ? 'collapse-expand' : '';
+
+  getCollapseExpandResource = () => this.collapseExpandResource;
 
   /**
    *
@@ -65,7 +75,7 @@ class GraphFolding {
    * Returns the cells which are movable in the given array of cells.
    */
   getFoldableCells(cells: CellArray, collapse: boolean = false): CellArray | null {
-    return this.graph.model.filterCells(cells, (cell: Cell) => {
+    return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.isCellFoldable(cell, collapse);
     });
   }
@@ -80,7 +90,7 @@ class GraphFolding {
   // isCellFoldable(cell: mxCell, collapse: boolean): boolean;
   isCellFoldable(cell: Cell, collapse: boolean = false): boolean {
     const style = this.getCurrentCellStyle(cell);
-    return cell.getChildCount() > 0 && style.foldable != 0;
+    return cell.getChildCount() > 0 && style.foldable;
   }
 
   /**
@@ -131,7 +141,7 @@ class GraphFolding {
 
     this.stopEditing(false);
 
-    this.graph.model.beginUpdate();
+    this.getModel().beginUpdate();
     try {
       this.cellsFolded(cells, collapse, recurse, checkFoldable);
       this.fireEvent(
@@ -146,7 +156,7 @@ class GraphFolding {
         )
       );
     } finally {
-      this.graph.model.endUpdate();
+      this.getModel().endUpdate();
     }
     return cells;
   }
@@ -171,14 +181,14 @@ class GraphFolding {
     checkFoldable: boolean = false
   ): void {
     if (cells != null && cells.length > 0) {
-      this.graph.model.beginUpdate();
+      this.getModel().beginUpdate();
       try {
         for (let i = 0; i < cells.length; i += 1) {
           if (
             (!checkFoldable || this.isCellFoldable(cells[i], collapse)) &&
             collapse !== cells[i].isCollapsed()
           ) {
-            this.graph.model.setCollapsed(cells[i], collapse);
+            this.getModel().setCollapsed(cells[i], collapse);
             this.swapBounds(cells[i], collapse);
 
             if (this.isExtendParent(cells[i])) {
@@ -194,7 +204,7 @@ class GraphFolding {
           }
         }
 
-        this.graph.fireEvent(
+        this.fireEvent(
           new EventObject(
             InternalEvent.CELLS_FOLDED,
             'cells',
@@ -206,7 +216,7 @@ class GraphFolding {
           )
         );
       } finally {
-        this.graph.model.endUpdate();
+        this.getModel().endUpdate();
       }
     }
   }
@@ -227,7 +237,7 @@ class GraphFolding {
       this.updateAlternateBounds(cell, geo, willCollapse);
       geo.swap();
 
-      this.graph.model.setGeometry(cell, geo);
+      this.getModel().setGeometry(cell, geo);
     }
   }
 

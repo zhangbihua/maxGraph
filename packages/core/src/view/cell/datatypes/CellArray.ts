@@ -3,8 +3,7 @@ import Dictionary from '../../../util/Dictionary';
 import ObjectIdentity from '../../../util/ObjectIdentity';
 
 class CellArray extends Array<Cell> {
-  // @ts-ignore
-  constructor(...items: Cell[] | CellArray) {
+  constructor(...items: Cell[]) {
     super(...items);
   }
 

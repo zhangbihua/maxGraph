@@ -10,12 +10,13 @@ import {
   ARROW_CLASSIC,
   NONE,
   SHAPE_CONNECTOR,
-  SHAPE_RECTANGLE
+  SHAPE_RECTANGLE,
 } from '../../util/Constants';
 import Perimeter from './Perimeter';
-import utils from '../../util/Utils';
+import { isNumeric } from '../../util/Utils';
 import { clone } from '../../util/CloneUtils';
-import StyleMap from "./StyleMap";
+
+import type { CellStateStyles } from '../../types';
 
 /**
  * @class Stylesheet
@@ -68,7 +69,7 @@ import StyleMap from "./StyleMap";
  */
 class Stylesheet {
   constructor() {
-    this.styles = new StyleMap();
+    this.styles = {} as CellStateStyles;
 
     this.putDefaultVertexStyle(this.createDefaultVertexStyle());
     this.putDefaultEdgeStyle(this.createDefaultEdgeStyle());
@@ -78,13 +79,13 @@ class Stylesheet {
    * Maps from names to cell styles. Each cell style is a map of key,
    * value pairs.
    */
-  styles: StyleMap;
+  styles: CellStateStyles;
 
   /**
    * Creates and returns the default vertex style.
    */
-  createDefaultVertexStyle(): StyleMap {
-    const style = new StyleMap();
+  createDefaultVertexStyle() {
+    const style = {} as CellStateStyles;
     style.shape = SHAPE_RECTANGLE;
     style.perimeter = Perimeter.RectanglePerimeter;
     style.verticalAlign = ALIGN_MIDDLE;
@@ -98,8 +99,8 @@ class Stylesheet {
   /**
    * Creates and returns the default edge style.
    */
-  createDefaultEdgeStyle(): StyleMap {
-    const style = new StyleMap();
+  createDefaultEdgeStyle() {
+    const style = {} as CellStateStyles;
     style.shape = SHAPE_CONNECTOR;
     style.endArrow = ARROW_CLASSIC;
     style.verticalAlign = ALIGN_MIDDLE;
@@ -114,29 +115,29 @@ class Stylesheet {
    * stylename.
    * @param style Key, value pairs that define the style.
    */
-  putDefaultVertexStyle(style: StyleMap): void {
+  putDefaultVertexStyle(style: CellStateStyles) {
     this.putCellStyle('defaultVertex', style);
   }
 
   /**
    * Sets the default style for edges using defaultEdge as the stylename.
    */
-  putDefaultEdgeStyle(style: StyleMap): void {
+  putDefaultEdgeStyle(style: CellStateStyles) {
     this.putCellStyle('defaultEdge', style);
   }
 
   /**
    * Returns the default style for vertices.
    */
-  getDefaultVertexStyle(): StyleMap {
-    return <StyleMap>this.styles.defaultVertex;
+  getDefaultVertexStyle() {
+    return this.styles.defaultVertex;
   }
 
   /**
    * Sets the default style for edges.
    */
-  getDefaultEdgeStyle(): StyleMap {
-    return <StyleMap>this.styles.defaultEdge;
+  getDefaultEdgeStyle() {
+    return this.styles.defaultEdge;
   }
 
   /**
@@ -172,8 +173,11 @@ class Stylesheet {
    * @param name Name for the style to be stored.
    * @param style Key, value pairs that define the style.
    */
-  putCellStyle(name: string, style: StyleMap): void {
-    this.styles[name] = style;
+  putCellStyle(
+    name: keyof CellStateStyles,
+    style: CellStateStyles[keyof CellStateStyles]
+  ) {
+    (this.styles[name] as any) = style;
   }
 
   /**
@@ -183,18 +187,16 @@ class Stylesheet {
    * @param name String of the form [(stylename|key=value);] that represents the style.
    * @param defaultStyle Default style to be returned if no style can be found.
    */
-  getCellStyle(name: string,
-               defaultStyle: StyleMap=new StyleMap()): StyleMap {
-
+  getCellStyle(name: string, defaultStyle: CellStateStyles) {
     let style = defaultStyle;
 
-    if (name != null && name.length > 0) {
+    if (name.length > 0) {
       const pairs = name.split(';');
 
-      if (style != null && name.charAt(0) !== ';') {
+      if (style && name.charAt(0) !== ';') {
         style = clone(style);
       } else {
-        style = new StyleMap();
+        style = {} as CellStateStyles;
       }
 
       // Parses each key, value pair into the existing style
@@ -202,23 +204,24 @@ class Stylesheet {
         const pos = tmp.indexOf('=');
 
         if (pos >= 0) {
-          const key = tmp.substring(0, pos);
+          const key = tmp.substring(0, pos) as keyof CellStateStyles;
           const value = tmp.substring(pos + 1);
 
           if (value === NONE) {
             delete style[key];
-          } else if (utils.isNumeric(value)) {
-            style[key] = parseFloat(value);
+          } else if (isNumeric(value)) {
+            (style[key] as any) = parseFloat(value);
           } else {
-            style[key] = value;
+            (style[key] as any) = value;
           }
         } else {
           // Merges the entries from a named style
-          const tmpStyle = this.styles[tmp];
+          const tmpStyle = this.styles[tmp as keyof CellStateStyles] as CellStateStyles;
 
-          if (tmpStyle != null) {
+          if (tmpStyle && typeof tmpStyle === 'object') {
             for (const key in tmpStyle) {
-              style[key] = tmpStyle[key];
+              const k = key as keyof CellStateStyles;
+              (style[k] as any) = tmpStyle[k];
             }
           }
         }
@@ -229,4 +232,3 @@ class Stylesheet {
 }
 
 export default Stylesheet;
-// import('../../../serialization/mxStylesheetCodec');

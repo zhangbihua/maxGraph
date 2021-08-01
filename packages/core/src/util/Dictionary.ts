@@ -54,7 +54,7 @@ class Dictionary<T, U> {
   get(key: T) {
     const id = ObjectIdentity.get(key);
 
-    return this.map[id];
+    return this.map[id] ?? null;
   }
 
   /**
@@ -68,7 +68,7 @@ class Dictionary<T, U> {
     const previous = this.map[id];
     this.map[id] = value;
 
-    return previous;
+    return previous ?? null;
   }
 
   /**
@@ -82,7 +82,7 @@ class Dictionary<T, U> {
     const previous = this.map[id];
     delete this.map[id];
 
-    return previous;
+    return previous ?? null;
   }
 
   /**

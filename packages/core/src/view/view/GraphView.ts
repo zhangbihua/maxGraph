@@ -37,8 +37,6 @@ import CellState from '../cell/datatypes/CellState';
 import UndoableEdit from '../model/UndoableEdit';
 import ImageShape from '../geometry/shape/node/ImageShape';
 import InternalMouseEvent from '../event/InternalMouseEvent';
-import StyleRegistry from '../style/StyleRegistry';
-import graph from '../Graph';
 import Cell from '../cell/datatypes/Cell';
 import Image from '../image/ImageBox';
 import CurrentRootChange from './CurrentRootChange';
@@ -50,6 +48,9 @@ import PopupMenuHandler from '../popups_menus/PopupMenuHandler';
 import { getClientX, getClientY, getSource, isConsumed } from '../../util/EventUtils';
 import { clone } from '../../util/CloneUtils';
 import CellArray from '../cell/datatypes/CellArray';
+
+import type { MaxGraph } from '../Graph';
+import StyleRegistry from '../style/StyleRegistry';
 
 /**
  * @class GraphView
@@ -95,7 +96,7 @@ import CellArray from '../cell/datatypes/CellArray';
  * respectively.
  */
 class GraphView extends EventSource {
-  constructor(graph: graph) {
+  constructor(graph: MaxGraph) {
     super();
 
     this.graph = graph;
@@ -108,15 +109,16 @@ class GraphView extends EventSource {
 
   EMPTY_POINT = new Point();
 
-  canvas: SVGElement | null = null;
-
-  backgroundPane: SVGElement | null = null;
-
-  drawPane: SVGElement | null = null;
-
-  overlayPane: SVGElement | null = null;
-
-  decoratorPane: SVGElement | null = null;
+  // @ts-ignore Cannot be null
+  canvas: SVGElement;
+  // @ts-ignore Cannot be null
+  backgroundPane: SVGElement;
+  // @ts-ignore Cannot be null
+  drawPane: SVGElement;
+  // @ts-ignore Cannot be null
+  overlayPane: SVGElement;
+  // @ts-ignore Cannot be null
+  decoratorPane: SVGElement;
 
   /**
    * Specifies the resource key for the status message after a long operation.
@@ -155,7 +157,7 @@ class GraphView extends EventSource {
   /**
    * Reference to the enclosing {@link graph}.
    */
-  graph: graph;
+  graph: MaxGraph;
 
   /**
    * {@link Cell} that acts as the root of the displayed cell hierarchy.
@@ -172,7 +174,7 @@ class GraphView extends EventSource {
    */
   translate = new Point();
 
-  states = new Dictionary<string, CellState>();
+  states = new Dictionary<Cell, CellState>();
 
   /**
    * Specifies if the style should be updated in each validation step. If this
@@ -295,14 +297,14 @@ class GraphView extends EventSource {
   /**
    * Returns {@link states}.
    */
-  getStates(): Dictionary<string, CellState> {
+  getStates() {
     return this.states;
   }
 
   /**
    * Sets {@link states}.
    */
-  setStates(value: Dictionary<string, CellState>): void {
+  setStates(value: Dictionary<Cell, CellState>) {
     this.states = value;
   }
 
@@ -310,35 +312,35 @@ class GraphView extends EventSource {
    * Returns the DOM node that contains the background-, draw- and
    * overlay- and decoratorpanes.
    */
-  getCanvas(): SVGElement | null {
+  getCanvas() {
     return this.canvas;
   }
 
   /**
    * Returns the DOM node that represents the background layer.
    */
-  getBackgroundPane(): SVGElement | null {
+  getBackgroundPane() {
     return this.backgroundPane;
   }
 
   /**
    * Returns the DOM node that represents the main drawing layer.
    */
-  getDrawPane(): SVGElement | null {
+  getDrawPane() {
     return this.drawPane;
   }
 
   /**
    * Returns the DOM node that represents the layer above the drawing layer.
    */
-  getOverlayPane(): SVGElement | null {
+  getOverlayPane() {
     return this.overlayPane;
   }
 
   /**
    * Returns the DOM node that represents the topmost drawing layer.
    */
-  getDecoratorPane(): SVGElement | null {
+  getDecoratorPane() {
     return this.decoratorPane;
   }
 
@@ -347,16 +349,16 @@ class GraphView extends EventSource {
    *
    * @param cells Array of {@link Cell} whose bounds should be returned.
    */
-  getBounds(cells: CellArray): Rectangle | null {
-    let result = null;
+  getBounds(cells: CellArray) {
+    let result: Rectangle | null = null;
 
-    if (cells != null && cells.length > 0) {
+    if (cells.length > 0) {
       for (let i = 0; i < cells.length; i += 1) {
         if (cells[i].isVertex() || cells[i].isEdge()) {
           const state = this.getState(cells[i]);
 
-          if (state != null) {
-            if (result == null) {
+          if (state) {
+            if (!result) {
               result = Rectangle.fromRectangle(state);
             } else {
               result.add(state);
@@ -365,6 +367,7 @@ class GraphView extends EventSource {
         }
       }
     }
+
     return result;
   }
 
@@ -374,16 +377,16 @@ class GraphView extends EventSource {
    *
    * @param root {@link mxCell} that specifies the root of the displayed cell hierarchy.
    */
-  setCurrentRoot(root: Cell | null): Cell | null {
-    if (this.currentRoot != root) {
-      const change = new CurrentRootChange(this, <Cell>root);
+  setCurrentRoot(root: Cell | null) {
+    if (this.currentRoot !== root) {
+      const change = new CurrentRootChange(this, root);
       change.execute();
 
       const edit = new UndoableEdit(this, true);
       edit.add(change);
 
       this.fireEvent(new EventObject(InternalEvent.UNDO, 'edit', edit));
-      (<graph>this.graph).sizeDidChange();
+      this.graph.sizeDidChange();
 
       this.currentRoot = root;
     }
@@ -398,11 +401,11 @@ class GraphView extends EventSource {
    * @param dx X-coordinate of the translation.
    * @param dy Y-coordinate of the translation.
    */
-  scaleAndTranslate(scale: number, dx: number, dy: number): void {
+  scaleAndTranslate(scale: number, dx: number, dy: number) {
     const previousScale = this.scale;
     const previousTranslate = new Point(this.translate.x, this.translate.y);
 
-    if (this.scale != scale || this.translate.x != dx || this.translate.y != dy) {
+    if (this.scale !== scale || this.translate.x !== dx || this.translate.y !== dy) {
       this.scale = scale;
 
       this.translate.x = dx;
@@ -426,16 +429,16 @@ class GraphView extends EventSource {
   /**
    * Invoked after {@link scale} and/or {@link translate} has changed.
    */
-  viewStateChanged(): void {
+  viewStateChanged() {
     this.revalidate();
-    (<graph>this.graph).sizeDidChange();
+    this.graph.sizeDidChange();
   }
 
   /**
    * Clears the view if {@link currentRoot} is not null and revalidates.
    */
-  refresh(): void {
-    if (this.currentRoot != null) {
+  refresh() {
+    if (this.currentRoot) {
       this.clear();
     }
     this.revalidate();
@@ -444,7 +447,7 @@ class GraphView extends EventSource {
   /**
    * Revalidates the complete view with all cell states.
    */
-  revalidate(): void {
+  revalidate() {
     this.invalidate();
     this.validate();
   }
@@ -458,7 +461,7 @@ class GraphView extends EventSource {
    * @param force Boolean indicating if the current root should be ignored for
    * recursion.
    */
-  clear(cell?: Cell | null, force: boolean = false, recurse: boolean = true): void {
+  clear(cell?: Cell | null, force = false, recurse = true) {
     if (!cell) {
       cell = this.graph.getModel().getRoot();
     }
@@ -485,44 +488,42 @@ class GraphView extends EventSource {
    * @param cell Optional {@link Cell} to be invalidated. Default is the root of the
    * model.
    */
-  invalidate(
-    cell: Cell | null = null,
-    recurse: boolean = true,
-    includeEdges: boolean = true
-  ): void {
-    const model: Model = (<graph>this.graph).getModel();
-    const state: CellState = <CellState>this.getState(cell);
+  invalidate(cell: Cell | null = null, recurse = true, includeEdges = true) {
+    const model = this.graph.getModel();
+    cell = cell ?? model.getRoot();
 
-    cell = <Cell>(cell || model.getRoot());
+    if (cell) {
+      const state = this.getState(cell);
 
-    if (state != null) {
-      state.invalid = true;
-    }
-
-    // Avoids infinite loops for invalid graphs
-    if (!cell.invalidating) {
-      cell.invalidating = true;
-
-      // Recursively invalidates all descendants
-      if (recurse) {
-        const childCount = cell.getChildCount();
-
-        for (let i = 0; i < childCount; i += 1) {
-          const child = cell.getChildAt(i);
-          this.invalidate(child, recurse, includeEdges);
-        }
+      if (state) {
+        state.invalid = true;
       }
 
-      // Propagates invalidation to all connected edges
-      if (includeEdges) {
-        const edgeCount = cell.getEdgeCount();
+      // Avoids infinite loops for invalid graphs
+      if (!cell.invalidating) {
+        cell.invalidating = true;
 
-        for (let i = 0; i < edgeCount; i += 1) {
-          this.invalidate(cell.getEdgeAt(i), recurse, includeEdges);
+        // Recursively invalidates all descendants
+        if (recurse) {
+          const childCount = cell.getChildCount();
+
+          for (let i = 0; i < childCount; i += 1) {
+            const child = cell.getChildAt(i);
+            this.invalidate(child, recurse, includeEdges);
+          }
         }
-      }
 
-      cell.invalidating = false;
+        // Propagates invalidation to all connected edges
+        if (includeEdges) {
+          const edgeCount = cell.getEdgeCount();
+
+          for (let i = 0; i < edgeCount; i += 1) {
+            this.invalidate(cell.getEdgeAt(i), recurse, includeEdges);
+          }
+        }
+
+        cell.invalidating = false;
+      }
     }
   }
 
@@ -534,32 +535,25 @@ class GraphView extends EventSource {
    * @param cell Optional {@link Cell} to be used as the root of the validation.
    * Default is {@link currentRoot} or the root of the model.
    */
-  validate(cell: Cell | null = null): void {
+  validate(cell: Cell | null = null) {
     const t0 = mxLog.enter('mxGraphView.validate');
     window.status =
       Resources.get(this.updatingDocumentResource) || this.updatingDocumentResource;
 
     this.resetValidationState();
 
-    const graphBounds = this.getBoundingBox(
-      this.validateCellState(
-        <Cell>(
-          this.validateCell(
-            <Cell>(
-              (cell ||
-                (this.currentRoot != null
-                  ? this.currentRoot
-                  : (<graph>this.graph).getModel().getRoot()))
-            )
-          )
-        )
-      )
-    );
+    const c = cell || (this.currentRoot ?? this.graph.getModel().getRoot());
 
-    this.setGraphBounds(graphBounds != null ? graphBounds : this.getEmptyBounds());
-    this.validateBackground();
+    if (c) {
+      const graphBounds = this.getBoundingBox(
+        this.validateCellState(c ? this.validateCell(c) : null)
+      );
 
-    this.resetValidationState();
+      this.setGraphBounds(graphBounds ?? this.getEmptyBounds());
+      this.validateBackground();
+
+      this.resetValidationState();
+    }
 
     window.status = Resources.get(this.doneResource) || this.doneResource;
     mxLog.leave('mxGraphView.validate', t0);
@@ -569,7 +563,7 @@ class GraphView extends EventSource {
    * Returns the bounds for an empty graph. This returns a rectangle at
    * {@link translate} with the size of 0 x 0.
    */
-  getEmptyBounds(): Rectangle {
+  getEmptyBounds() {
     return new Rectangle(this.translate.x * this.scale, this.translate.y * this.scale);
   }
 
@@ -581,20 +575,17 @@ class GraphView extends EventSource {
    * @param recurse Optional boolean indicating if the children should be included.
    * Default is true.
    */
-  getBoundingBox(
-    state: CellState | null = null,
-    recurse: boolean = true
-  ): Rectangle | null {
+  getBoundingBox(state: CellState | null = null, recurse = true): Rectangle | null {
     let bbox = null;
 
-    if (state != null) {
-      if (state.shape != null && state.shape.boundingBox != null) {
+    if (state) {
+      if (state.shape && state.shape.boundingBox) {
         bbox = state.shape.boundingBox.clone();
       }
 
       // Adds label bounding box to graph bounds
-      if (state.text != null && state.text.boundingBox != null) {
-        if (bbox != null) {
+      if (state.text && state.text.boundingBox) {
+        if (bbox) {
           bbox.add(state.text.boundingBox);
         } else {
           bbox = state.text.boundingBox.clone();
@@ -602,14 +593,13 @@ class GraphView extends EventSource {
       }
 
       if (recurse) {
-        const model = (<graph>this.graph).getModel();
         const childCount = state.cell.getChildCount();
 
         for (let i = 0; i < childCount; i += 1) {
           const bounds = this.getBoundingBox(this.getState(state.cell.getChildAt(i)));
 
-          if (bounds != null) {
-            if (bbox == null) {
+          if (bounds) {
+            if (!bbox) {
               bbox = bounds;
             } else {
               bbox.add(bounds);
@@ -618,6 +608,7 @@ class GraphView extends EventSource {
         }
       }
     }
+
     return bbox;
   }
 
@@ -626,14 +617,14 @@ class GraphView extends EventSource {
    *
    * @param bounds {@link mxRectangle} that represents the bounds of the shape.
    */
-  createBackgroundPageShape(bounds: Rectangle): RectangleShape {
+  createBackgroundPageShape(bounds: Rectangle) {
     return new RectangleShape(bounds, 'white', 'black');
   }
 
   /**
    * Calls {@link validateBackgroundImage} and {@link validateBackgroundPage}.
    */
-  validateBackground(): void {
+  validateBackground() {
     this.validateBackgroundImage();
     this.validateBackgroundPage();
   }
@@ -641,25 +632,25 @@ class GraphView extends EventSource {
   /**
    * Validates the background image.
    */
-  validateBackgroundImage(): void {
-    const bg = (<graph>this.graph).getBackgroundImage();
+  validateBackgroundImage() {
+    const bg = this.graph.getBackgroundImage();
 
-    if (bg != null) {
-      if (this.backgroundImage == null || this.backgroundImage.imageSrc !== bg.src) {
-        if (this.backgroundImage != null) {
+    if (bg) {
+      if (!this.backgroundImage || this.backgroundImage.imageSrc !== bg.src) {
+        if (this.backgroundImage) {
           this.backgroundImage.destroy();
         }
 
         const bounds = new Rectangle(0, 0, 1, 1);
 
         this.backgroundImage = new ImageShape(bounds, bg.src);
-        this.backgroundImage.dialect = (<graph>this.graph).dialect;
+        this.backgroundImage.dialect = this.graph.dialect;
         this.backgroundImage.init(this.backgroundPane);
         this.backgroundImage.redraw();
       }
 
       this.redrawBackgroundImage(this.backgroundImage, bg);
-    } else if (this.backgroundImage != null) {
+    } else if (this.backgroundImage) {
       this.backgroundImage.destroy();
       this.backgroundImage = null;
     }
@@ -668,8 +659,8 @@ class GraphView extends EventSource {
   /**
    * Validates the background page.
    */
-  validateBackgroundPage(): void {
-    const graph = <graph>this.graph;
+  validateBackgroundPage() {
+    const graph = this.graph;
 
     if (graph.pageVisible) {
       const bounds = this.getBackgroundPageBounds();
@@ -678,13 +669,13 @@ class GraphView extends EventSource {
         this.backgroundPageShape = this.createBackgroundPageShape(bounds);
         this.backgroundPageShape.scale = this.scale;
         this.backgroundPageShape.isShadow = true;
-        this.backgroundPageShape.dialect = (<graph>this.graph).dialect;
+        this.backgroundPageShape.dialect = this.graph.dialect;
         this.backgroundPageShape.init(this.backgroundPane);
         this.backgroundPageShape.redraw();
 
         if (this.backgroundPageShape.node) {
           // Adds listener for double click handling on background
-          if (graph.nativeDblClickEnabled) {
+          if (graph.isNativeDblClickEnabled()) {
             InternalEvent.addListener(this.backgroundPageShape.node, 'dblclick', ((
               evt: MouseEvent
             ) => {
@@ -697,7 +688,10 @@ class GraphView extends EventSource {
           InternalEvent.addGestureListeners(
             this.backgroundPageShape.node,
             (evt: Event) => {
-              graph.fireMouseEvent(InternalEvent.MOUSE_DOWN, new InternalMouseEvent(evt));
+              graph.fireMouseEvent(
+                InternalEvent.MOUSE_DOWN,
+                new InternalMouseEvent(evt as MouseEvent)
+              );
             },
             (evt: Event) => {
               // Hides the tooltip if mouse is outside container
@@ -708,12 +702,15 @@ class GraphView extends EventSource {
               if (graph.isMouseDown && !isConsumed(evt)) {
                 graph.fireMouseEvent(
                   InternalEvent.MOUSE_MOVE,
-                  new InternalMouseEvent(evt)
+                  new InternalMouseEvent(evt as MouseEvent)
                 );
               }
             },
             (evt: Event) => {
-              graph.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt));
+              graph.fireMouseEvent(
+                InternalEvent.MOUSE_UP,
+                new InternalMouseEvent(evt as MouseEvent)
+              );
             }
           );
         }
@@ -722,7 +719,7 @@ class GraphView extends EventSource {
         this.backgroundPageShape.bounds = bounds;
         this.backgroundPageShape.redraw();
       }
-    } else if (this.backgroundPageShape != null) {
+    } else if (this.backgroundPageShape) {
       this.backgroundPageShape.destroy();
       this.backgroundPageShape = null;
     }
@@ -731,9 +728,9 @@ class GraphView extends EventSource {
   /**
    * Returns the bounds for the background page.
    */
-  getBackgroundPageBounds(): Rectangle {
-    const fmt = (<graph>this.graph).pageFormat;
-    const ps = this.scale * (<graph>this.graph).pageScale;
+  getBackgroundPageBounds() {
+    const fmt = this.graph.pageFormat;
+    const ps = this.scale * this.graph.pageScale;
 
     return new Rectangle(
       this.scale * this.translate.x,
@@ -767,13 +764,17 @@ class GraphView extends EventSource {
    * @param backgroundImage {@link mxImageShape} that represents the background image.
    * @param bg {@link mxImage} that specifies the image and its dimensions.
    */
-  redrawBackgroundImage(backgroundImage: ImageShape, bg: Image): void {
+  redrawBackgroundImage(backgroundImage: ImageShape, bg: Image) {
     backgroundImage.scale = this.scale;
-    const bounds = <Rectangle>backgroundImage.bounds;
-    bounds.x = this.scale * this.translate.x;
-    bounds.y = this.scale * this.translate.y;
-    bounds.width = this.scale * bg.width;
-    bounds.height = this.scale * bg.height;
+
+    if (backgroundImage.bounds) {
+      const bounds = backgroundImage.bounds;
+      bounds.x = this.scale * this.translate.x;
+      bounds.y = this.scale * this.translate.y;
+      bounds.width = this.scale * bg.width;
+      bounds.height = this.scale * bg.height;
+    }
+
     backgroundImage.redraw();
   }
 
@@ -786,23 +787,23 @@ class GraphView extends EventSource {
    * @param visible Optional boolean indicating if the cell should be visible. Default
    * is true.
    */
-  validateCell(cell: Cell, visible: boolean = true): Cell | null {
+  validateCell(cell: Cell, visible = true) {
     visible = visible && cell.isVisible();
     const state = this.getState(cell, visible);
 
-    if (state != null && !visible) {
+    if (state && !visible) {
       this.removeState(cell);
     } else {
-      const model = (<graph>this.graph).getModel();
       const childCount = cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
         this.validateCell(
-          <Cell>cell.getChildAt(i),
+          cell.getChildAt(i),
           visible && (!cell.isCollapsed() || cell === this.currentRoot)
         );
       }
     }
+
     return cell;
   }
 
@@ -813,37 +814,31 @@ class GraphView extends EventSource {
    * @param recurse Optional boolean indicating if the children of the cell should be
    * validated. Default is true.
    */
-  validateCellState(cell: Cell, recurse: boolean = true): CellState | null {
+  validateCellState(cell: Cell | null, recurse = true) {
     let state: CellState | null = null;
 
-    if (cell != null) {
+    if (cell) {
       state = this.getState(cell);
 
-      if (state != null) {
-        const model = (<graph>this.graph).getModel();
-
+      if (state) {
         if (state.invalid) {
           state.invalid = false;
 
-          if (state.style == null || state.invalidStyle) {
-            state.style = (<graph>this.graph).getCellStyle(<Cell>state.cell);
+          if (!state.style || state.invalidStyle) {
+            state.style = this.graph.getCellStyle(state.cell);
             state.invalidStyle = false;
           }
 
           if (cell !== this.currentRoot) {
-            this.validateCellState(<Cell>cell.getParent(), false);
+            this.validateCellState(cell.getParent(), false);
           }
 
           state.setVisibleTerminalState(
-            <CellState>(
-              this.validateCellState(<Cell>this.getVisibleTerminal(cell, true), false)
-            ),
+            this.validateCellState(this.getVisibleTerminal(cell, true), false),
             true
           );
           state.setVisibleTerminalState(
-            <CellState>(
-              this.validateCellState(<Cell>this.getVisibleTerminal(cell, false), false)
-            ),
+            this.validateCellState(this.getVisibleTerminal(cell, false), false),
             false
           );
 
@@ -851,7 +846,7 @@ class GraphView extends EventSource {
 
           // Repaint happens immediately after the cell is validated
           if (cell !== this.currentRoot && !state.invalid) {
-            (<graph>this.graph).cellRenderer.redraw(state, false, this.isRendering());
+            this.graph.cellRenderer.redraw(state, false, this.isRendering());
 
             // Handles changes to invertex paintbounds after update of rendering shape
             state.updateCachedBounds();
@@ -860,13 +855,13 @@ class GraphView extends EventSource {
 
         if (recurse && !state.invalid) {
           // Updates order in DOM if recursively traversing
-          if (state.shape != null) {
+          if (state.shape) {
             this.stateValidated(state);
           }
 
           const childCount = cell.getChildCount();
           for (let i = 0; i < childCount; i += 1) {
-            this.validateCellState(<Cell>cell.getChildAt(i));
+            this.validateCellState(cell.getChildAt(i));
           }
         }
       }
@@ -879,9 +874,9 @@ class GraphView extends EventSource {
    *
    * @param state {@link mxCellState} to be updated.
    */
-  updateCellState(state: CellState): void {
-    const absoluteOffset = <Point>state.absoluteOffset;
-    const origin = <Point>state.origin;
+  updateCellState(state: CellState) {
+    const absoluteOffset = state.absoluteOffset;
+    const origin = state.origin;
 
     absoluteOffset.x = 0;
     absoluteOffset.y = 0;
@@ -890,40 +885,37 @@ class GraphView extends EventSource {
     state.length = 0;
 
     if (state.cell !== this.currentRoot) {
-      const model = (<graph>this.graph).getModel();
-      const pState = <CellState>this.getState(state.cell.getParent());
+      const pState = this.getState(state.cell.getParent());
 
-      if (pState != null && pState.cell !== this.currentRoot) {
-        origin.x += (<Point>pState.origin).x;
-        origin.y += (<Point>pState.origin).y;
+      if (pState && pState.cell !== this.currentRoot) {
+        origin.x += pState.origin.x;
+        origin.y += pState.origin.y;
       }
 
-      let offset = (<graph>this.graph).getChildOffsetForCell(<Cell>state.cell);
+      let offset = this.graph.getChildOffsetForCell(state.cell);
 
-      if (offset != null) {
+      if (offset) {
         origin.x += offset.x;
         origin.y += offset.y;
       }
 
-      const geo = (<Cell>state.cell).getGeometry();
+      const geo = state.cell.getGeometry();
 
-      if (geo != null) {
+      if (geo) {
         if (!state.cell.isEdge()) {
-          offset = <Point>(geo.offset != null ? geo.offset : this.EMPTY_POINT);
+          offset = geo.offset ? geo.offset : this.EMPTY_POINT;
 
-          if (geo.relative && pState != null) {
+          if (geo.relative && pState) {
             if (pState.cell.isEdge()) {
               const origin = this.getPoint(pState, geo);
 
-              if (origin != null) {
-                origin.x +=
-                  origin.x / this.scale - (<Point>pState.origin).x - this.translate.x;
-                origin.y +=
-                  origin.y / this.scale - (<Point>pState.origin).y - this.translate.y;
+              if (origin) {
+                origin.x += origin.x / this.scale - pState.origin.x - this.translate.x;
+                origin.y += origin.y / this.scale - pState.origin.y - this.translate.y;
               }
             } else {
-              origin.x += geo.x * <number>pState.unscaledWidth + offset.x;
-              origin.y += geo.y * <number>pState.unscaledHeight + offset.y;
+              origin.x += geo.x * pState.unscaledWidth + offset.x;
+              origin.y += geo.y * pState.unscaledHeight + offset.y;
             }
           } else {
             absoluteOffset.x = this.scale * offset.x;
@@ -956,12 +948,11 @@ class GraphView extends EventSource {
   /**
    * Validates the given cell state.
    */
-  updateVertexState(state: CellState, geo: Geometry): void {
-    const model = (<graph>this.graph).getModel();
+  updateVertexState(state: CellState, geo: Geometry) {
     const pState = this.getState(state.cell.getParent());
 
-    if (geo.relative && pState != null && !pState.cell.isEdge()) {
-      const alpha = toRadians(pState.style.rotation || '0');
+    if (geo.relative && pState && !pState.cell.isEdge()) {
+      const alpha = toRadians(pState.style.rotation);
 
       if (alpha !== 0) {
         const cos = Math.cos(alpha);
@@ -980,18 +971,18 @@ class GraphView extends EventSource {
   /**
    * Validates the given cell state.
    */
-  updateEdgeState(state: CellState, geo: Geometry): void {
-    const source = <CellState>state.getVisibleTerminalState(true);
-    const target = <CellState>state.getVisibleTerminalState(false);
+  updateEdgeState(state: CellState, geo: Geometry) {
+    const source = state.getVisibleTerminalState(true);
+    const target = state.getVisibleTerminalState(false);
 
     // This will remove edges with no terminals and no terminal points
     // as such edges are invalid and produce NPEs in the edge styles.
     // Also removes connected edges that have no visible terminals.
     if (
-      (state.cell.getTerminal(true) != null && source == null) ||
-      (source == null && geo.getTerminalPoint(true) == null) ||
-      (state.cell.getTerminal(false) != null && target == null) ||
-      (target == null && geo.getTerminalPoint(false) == null)
+      (state.cell.getTerminal(true) && !source) ||
+      (!source && !geo.getTerminalPoint(true)) ||
+      (state.cell.getTerminal(false) && !target) ||
+      (!target && !geo.getTerminalPoint(false))
     ) {
       this.clear(state.cell, true);
     } else {
@@ -1087,7 +1078,7 @@ class GraphView extends EventSource {
    * @param state {@link mxCellState} that represents the cell state.
    */
   stateValidated(state: CellState): void {
-    const graph = <graph>this.graph;
+    const graph = this.graph;
     const fg =
       (state.cell.isEdge() && graph.keepEdgesInForeground) ||
       (state.cell.isVertex() && graph.keepEdgesInBackground);
@@ -1114,18 +1105,22 @@ class GraphView extends EventSource {
    * @param source {@link mxCellState} which represents the source terminal.
    * @param target {@link mxCellState} which represents the target terminal.
    */
-  updateFixedTerminalPoints(edge: CellState, source: CellState, target: CellState): void {
+  updateFixedTerminalPoints(
+    edge: CellState,
+    source: CellState | null,
+    target: CellState | null
+  ) {
     this.updateFixedTerminalPoint(
       edge,
       source,
       true,
-      (<graph>this.graph).getConnectionConstraint(edge, source, true)
+      this.graph.getConnectionConstraint(edge, source, true)
     );
     this.updateFixedTerminalPoint(
       edge,
       target,
       false,
-      (<graph>this.graph).getConnectionConstraint(edge, target, false)
+      this.graph.getConnectionConstraint(edge, target, false)
     );
   }
 
@@ -1143,7 +1138,7 @@ class GraphView extends EventSource {
    */
   updateFixedTerminalPoint(
     edge: CellState,
-    terminal: CellState,
+    terminal: CellState | null,
     source: boolean,
     constraint: ConnectionConstraint
   ) {
@@ -1167,24 +1162,24 @@ class GraphView extends EventSource {
    */
   getFixedTerminalPoint(
     edge: CellState,
-    terminal: CellState,
+    terminal: CellState | null,
     source: boolean,
-    constraint: ConnectionConstraint
+    constraint: ConnectionConstraint | null
   ): Point | null {
     let pt = null;
 
-    if (constraint != null) {
-      pt = (<graph>this.graph).getConnectionPoint(terminal, constraint, false); // FIXME Rounding introduced bugs when calculating label positions -> , this.graph.isOrthogonal(edge));
+    if (constraint && terminal) {
+      pt = this.graph.getConnectionPoint(terminal, constraint, false); // FIXME Rounding introduced bugs when calculating label positions -> , this.graph.isOrthogonal(edge));
     }
 
-    if (pt == null && terminal == null) {
+    if (!pt && !terminal) {
       const s = this.scale;
       const tr = this.translate;
-      const orig = <Point>edge.origin;
-      const geo = <Geometry>(<Cell>edge.cell).getGeometry();
+      const orig = edge.origin;
+      const geo = <Geometry>edge.cell.getGeometry();
       pt = geo.getTerminalPoint(source);
 
-      if (pt != null) {
+      if (pt) {
         pt = new Point(s * (tr.x + pt.x + orig.x), s * (tr.y + pt.y + orig.y));
       }
     }
@@ -1199,18 +1194,18 @@ class GraphView extends EventSource {
    *
    * @param edge {@link mxCellState} whose bounds should be updated.
    */
-  updateBoundsFromStencil(state: CellState): Rectangle {
+  updateBoundsFromStencil(state: CellState | null) {
     let previous = null;
 
     if (
-      state != null &&
-      state.shape != null &&
-      state.shape.stencil != null &&
+      state &&
+      state.shape &&
+      state.shape.stencil &&
       state.shape.stencil.aspect === 'fixed'
     ) {
       previous = Rectangle.fromRectangle(state);
       const asp = state.shape.stencil.computeAspect(
-        state.style,
+        null, // this argument is not used
         state.x,
         state.y,
         state.width,
@@ -1238,46 +1233,44 @@ class GraphView extends EventSource {
   updatePoints(
     edge: CellState,
     points: Point[],
-    source: CellState,
-    target: CellState
-  ): void {
-    if (edge != null) {
-      const pts = [];
-      pts.push((<Point[]>edge.absolutePoints)[0]);
-      const edgeStyle = this.getEdgeStyle(edge, points, source, target);
+    source: CellState | null,
+    target: CellState | null
+  ) {
+    const pts = [];
+    pts.push((<Point[]>edge.absolutePoints)[0]);
+    const edgeStyle = this.getEdgeStyle(edge, points, source, target);
 
-      if (edgeStyle != null) {
-        const src = <CellState>this.getTerminalPort(edge, source, true);
-        const trg = <CellState>this.getTerminalPort(edge, target, false);
+    if (edgeStyle && source && target) {
+      const src = this.getTerminalPort(edge, source, true);
+      const trg = this.getTerminalPort(edge, target, false);
 
-        // Uses the stencil bounds for routing and restores after routing
-        const srcBounds = this.updateBoundsFromStencil(src);
-        const trgBounds = this.updateBoundsFromStencil(trg);
+      // Uses the stencil bounds for routing and restores after routing
+      const srcBounds = this.updateBoundsFromStencil(src);
+      const trgBounds = this.updateBoundsFromStencil(trg);
 
-        edgeStyle(edge, src, trg, points, pts);
+      edgeStyle(edge, src, trg, points, pts);
 
-        // Restores previous bounds
-        if (srcBounds != null) {
-          src.setRect(srcBounds.x, srcBounds.y, srcBounds.width, srcBounds.height);
-        }
-
-        if (trgBounds != null) {
-          trg.setRect(trgBounds.x, trgBounds.y, trgBounds.width, trgBounds.height);
-        }
-      } else if (points != null) {
-        for (let i = 0; i < points.length; i += 1) {
-          if (points[i] != null) {
-            const pt = clone(points[i]);
-            pts.push(this.transformControlPoint(edge, pt));
-          }
-        }
+      // Restores previous bounds
+      if (srcBounds) {
+        src.setRect(srcBounds.x, srcBounds.y, srcBounds.width, srcBounds.height);
       }
 
-      const tmp = <Point[]>edge.absolutePoints;
-      pts.push(tmp[tmp.length - 1]);
-
-      edge.absolutePoints = pts;
+      if (trgBounds) {
+        trg.setRect(trgBounds.x, trgBounds.y, trgBounds.width, trgBounds.height);
+      }
+    } else if (points) {
+      for (let i = 0; i < points.length; i += 1) {
+        if (points[i]) {
+          const pt = clone(points[i]);
+          pts.push(this.transformControlPoint(edge, pt));
+        }
+      }
     }
+
+    const tmp = <Point[]>edge.absolutePoints;
+    pts.push(tmp[tmp.length - 1]);
+
+    edge.absolutePoints = pts;
   }
 
   /**
@@ -1288,7 +1281,7 @@ class GraphView extends EventSource {
     pt: Point,
     ignoreScale: boolean = false
   ): Point | null {
-    if (state != null && pt != null) {
+    if (state && pt) {
       const orig = <Point>state.origin;
       const scale = ignoreScale ? 1 : this.scale;
 
@@ -1311,8 +1304,8 @@ class GraphView extends EventSource {
     source: CellState | null = null,
     target: CellState | null = null
   ): boolean {
-    const sc = (<graph>this.graph).getConnectionConstraint(edge, source, true);
-    const tc = (<graph>this.graph).getConnectionConstraint(edge, target, false);
+    const sc = this.graph.getConnectionConstraint(edge, source, true);
+    const tc = this.graph.getConnectionConstraint(edge, target, false);
 
     if (
       (points == null || points.length < 2) &&
@@ -1332,17 +1325,17 @@ class GraphView extends EventSource {
     points: Point[] = [],
     source: CellState | null = null,
     target: CellState | null = null
-  ): any {
-    let edgeStyle: any = this.isLoopStyleEnabled(edge, points, source, target)
-      ? getValue(edge.style, 'loop', (<graph>this.graph).defaultLoopStyle)
-      : !getValue(edge.style, 'noEdgeStyle', false)
+  ) {
+    let edgeStyle = this.isLoopStyleEnabled(edge, points, source, target)
+      ? edge.style.loop ?? this.graph.defaultLoopStyle
+      : !edge.style.noEdgeStyle ?? false
       ? edge.style.edge
       : null;
 
     // Converts string values to objects
     if (typeof edgeStyle === 'string') {
-      let tmp = mxStyleRegistry.getValue(edgeStyle);
-      if (tmp == null && this.isAllowEval()) {
+      let tmp = StyleRegistry.getValue(edgeStyle);
+      if (!tmp && this.isAllowEval()) {
         tmp = eval(edgeStyle);
       }
       edgeStyle = tmp;
@@ -1351,6 +1344,7 @@ class GraphView extends EventSource {
     if (typeof edgeStyle === 'function') {
       return edgeStyle;
     }
+
     return null;
   }
 
@@ -1364,18 +1358,18 @@ class GraphView extends EventSource {
    */
   updateFloatingTerminalPoints(
     state: CellState,
-    source: CellState,
-    target: CellState
+    source: CellState | null,
+    target: CellState | null
   ): void {
-    const pts = <Point[]>state.absolutePoints;
+    const pts = state.absolutePoints;
     const p0 = pts[0];
     const pe = pts[pts.length - 1];
 
-    if (pe == null && target != null) {
+    if (!pe && target) {
       this.updateFloatingTerminalPoint(state, target, source, false);
     }
 
-    if (p0 == null && source != null) {
+    if (!p0 && source) {
       this.updateFloatingTerminalPoint(state, source, target, true);
     }
   }
@@ -1392,11 +1386,11 @@ class GraphView extends EventSource {
   updateFloatingTerminalPoint(
     edge: CellState,
     start: CellState,
-    end: CellState,
+    end: CellState | null,
     source: boolean
   ): void {
     edge.setAbsoluteTerminalPoint(
-      <Point>this.getFloatingTerminalPoint(edge, start, end, source),
+      this.getFloatingTerminalPoint(edge, start, end, source),
       source
     );
   }
@@ -1413,14 +1407,14 @@ class GraphView extends EventSource {
   getFloatingTerminalPoint(
     edge: CellState,
     start: CellState,
-    end: CellState,
+    end: CellState | null,
     source: boolean
-  ): Point | null {
-    start = <CellState>this.getTerminalPort(edge, start, source);
+  ) {
+    start = this.getTerminalPort(edge, start, source);
     let next = this.getNextPoint(edge, end, source);
 
-    const orth = (<graph>this.graph).isOrthogonal(edge);
-    const alpha = toRadians(Number(start.style.rotation || '0'));
+    const orth = this.graph.isOrthogonal(edge);
+    const alpha = toRadians(start.style.rotation);
     const center = new Point(start.getCenterX(), start.getCenterY());
 
     if (alpha !== 0) {
@@ -1429,10 +1423,9 @@ class GraphView extends EventSource {
       next = getRotatedPoint(next, cos, sin, center);
     }
 
-    let border = parseFloat(edge.style.perimeterSpacing || 0);
-    border += parseFloat(
-      edge.style[source ? 'sourcePerimeterSpacing' : 'targetPerimeterSpacing'] || 0
-    );
+    let border = edge.style.perimeterSpacing;
+    border +=
+      edge.style[source ? 'sourcePerimeterSpacing' : 'targetPerimeterSpacing'] || 0;
     let pt = this.getPerimeterPoint(start, <Point>next, alpha === 0 && orth, border);
 
     if (alpha !== 0) {
@@ -1452,22 +1445,23 @@ class GraphView extends EventSource {
    * @param terminal {@link mxCellState} that represents the terminal.
    * @param source Boolean indicating if the given terminal is the source terminal.
    */
-  getTerminalPort(
-    state: CellState,
-    terminal: CellState,
-    source: boolean = false
-  ): CellState | null {
+  getTerminalPort(state: CellState, terminal: CellState, source: boolean = false) {
     const key = source ? 'sourcePort' : 'targetPort';
-    const id = getValue(state.style, key);
+    const id = state.style[key];
 
-    if (id != null) {
-      const tmp = this.getState((<graph>this.graph).getModel().getCell(id), false);
+    if (id) {
+      const cell = this.graph.getModel().getCell(id);
 
-      // Only uses ports where a cell state exists
-      if (tmp != null) {
-        terminal = tmp;
+      if (cell) {
+        const tmp = this.getState(cell, false);
+
+        // Only uses ports where a cell state exists
+        if (tmp) {
+          terminal = tmp;
+        }
       }
     }
+
     return terminal;
   }
 
@@ -1487,7 +1481,7 @@ class GraphView extends EventSource {
     terminal: CellState,
     next: Point,
     orthogonal: boolean,
-    border: number = 0
+    border = 0
   ): Point {
     let point = null;
 
@@ -1498,7 +1492,7 @@ class GraphView extends EventSource {
         const bounds = <Rectangle>this.getPerimeterBounds(terminal, border);
 
         if (bounds.width > 0 || bounds.height > 0) {
-          point = new point(next.x, next.y);
+          point = new Point(next.x, next.y);
           let flipH = false;
           let flipV = false;
 
@@ -1546,7 +1540,7 @@ class GraphView extends EventSource {
    * Returns the x-coordinate of the center point for automatic routing.
    */
   getRoutingCenterX(state: CellState): number {
-    const f = state.style != null ? parseFloat(state.style.routingCenterX) || 0 : 0;
+    const f = state.style ? state.style.routingCenterX : 0;
     return state.getCenterX() + f * state.width;
   }
 
@@ -1554,7 +1548,7 @@ class GraphView extends EventSource {
    * Returns the y-coordinate of the center point for automatic routing.
    */
   getRoutingCenterY(state: CellState): number {
-    const f = state.style != null ? parseFloat(state.style.routingCenterY) || 0 : 0;
+    const f = state.style ? state.style.routingCenterY : 0;
     return state.getCenterY() + f * state.height;
   }
 
@@ -1602,8 +1596,8 @@ class GraphView extends EventSource {
     terminal: CellState | null = null,
     border: number = 0
   ): Rectangle | null {
-    if (terminal != null) {
-      border += parseFloat(terminal.style.perimeterSpacing || 0);
+    if (terminal) {
+      border += terminal.style.perimeterSpacing;
     }
     return (<CellState>terminal).getPerimeterBounds(border * this.scale);
   }
@@ -1611,12 +1605,12 @@ class GraphView extends EventSource {
   /**
    * Returns the perimeter function for the given state.
    */
-  getPerimeterFunction(state: CellState): Function | null {
+  getPerimeterFunction(state: CellState) {
     let perimeter = state.style.perimeter;
 
     // Converts string values to objects
     if (typeof perimeter === 'string') {
-      let tmp = mxStyleRegistry.getValue(perimeter);
+      let tmp = StyleRegistry.getValue(perimeter);
       if (tmp == null && this.isAllowEval()) {
         tmp = eval(perimeter);
       }
@@ -1626,6 +1620,7 @@ class GraphView extends EventSource {
     if (typeof perimeter === 'function') {
       return perimeter;
     }
+
     return null;
   }
 
@@ -1638,24 +1633,20 @@ class GraphView extends EventSource {
    * @param source Boolean indicating if the next point for the source or target
    * should be returned.
    */
-  getNextPoint(
-    edge: CellState,
-    opposite: CellState | null,
-    source: boolean = false
-  ): Point | null {
+  getNextPoint(edge: CellState, opposite: CellState | null, source = false) {
     const pts = edge.absolutePoints;
     let point = null;
 
-    if (pts != null && pts.length >= 2) {
+    if (pts.length >= 2) {
       const count = pts.length;
       point = pts[source ? Math.min(1, count - 1) : Math.max(0, count - 2)];
     }
 
-    if (point == null && opposite != null) {
-      point = new point(opposite.getCenterX(), opposite.getCenterY());
+    if (!point && opposite) {
+      point = new Point(opposite.getCenterX(), opposite.getCenterY());
     }
 
-    return point;
+    return point as Point; // shouldn't return null, but really?
   }
 
   /**
@@ -1667,12 +1658,12 @@ class GraphView extends EventSource {
    * @param source Boolean that specifies if the source or target terminal
    * should be returned.
    */
-  getVisibleTerminal(edge: Cell, source: boolean): Cell | null {
-    const model = (<graph>this.graph).getModel();
+  getVisibleTerminal(edge: Cell, source: boolean) {
+    const model = this.graph.getModel();
     let result = edge.getTerminal(source);
     let best = result;
 
-    while (result != null && result != this.currentRoot) {
+    while (result && result !== this.currentRoot) {
       if ((best && !best.isVisible()) || result.isCollapsed()) {
         best = result;
       }
@@ -1682,7 +1673,7 @@ class GraphView extends EventSource {
 
     // Checks if the result is valid for the current view state
     if (
-      best != null &&
+      best &&
       (!model.contains(best) ||
         best.getParent() === model.getRoot() ||
         best === this.currentRoot)
@@ -1701,12 +1692,12 @@ class GraphView extends EventSource {
    *
    * @param state {@link mxCellState} whose bounds should be updated.
    */
-  updateEdgeBounds(state: CellState): void {
-    const points = <Point[]>state.absolutePoints;
+  updateEdgeBounds(state: CellState) {
+    const points = <(Point | null)[]>state.absolutePoints;
     const p0 = points[0];
     const pe = points[points.length - 1];
 
-    if (p0.x !== pe.x || p0.y !== pe.y) {
+    if (p0 && pe && (p0.x !== pe.x || p0.y !== pe.y)) {
       const dx = pe.x - p0.x;
       const dy = pe.y - p0.y;
       state.terminalDistance = Math.sqrt(dx * dx + dy * dy);
@@ -1718,7 +1709,7 @@ class GraphView extends EventSource {
     const segments = [];
     let pt = p0;
 
-    if (pt != null) {
+    if (pt) {
       let minX = pt.x;
       let minY = pt.y;
       let maxX = minX;
@@ -1727,7 +1718,7 @@ class GraphView extends EventSource {
       for (let i = 1; i < points.length; i += 1) {
         const tmp = points[i];
 
-        if (tmp != null) {
+        if (tmp) {
           const dx = pt.x - tmp.x;
           const dy = pt.y - tmp.y;
 
@@ -1828,22 +1819,21 @@ class GraphView extends EventSource {
    * @param x Specifies the x-coordinate of the absolute label location.
    * @param y Specifies the y-coordinate of the absolute label location.
    */
-  getRelativePoint(edgeState: CellState, x: number, y: number): Point {
-    const model = (<graph>this.graph).getModel();
+  getRelativePoint(edgeState: CellState, x: number, y: number) {
     const geometry = edgeState.cell.getGeometry();
 
-    if (geometry != null) {
-      const absolutePoints = <Point[]>edgeState.absolutePoints;
+    if (geometry) {
+      const absolutePoints = edgeState.absolutePoints;
       const pointCount = absolutePoints.length;
 
       if (geometry.relative && pointCount > 1) {
         const totalLength = edgeState.length;
         let { segments } = edgeState;
-        segments = <number[]>segments;
 
         // Works out which line segment the point of the label is closest to
-        let p0 = absolutePoints[0];
-        let pe = absolutePoints[1];
+        let p0 = absolutePoints[0] as Point;
+        let pe = absolutePoints[1] as Point;
+
         let minDist = ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
         let length = 0;
         let index = 0;
@@ -1851,7 +1841,7 @@ class GraphView extends EventSource {
 
         for (let i = 2; i < pointCount; i += 1) {
           p0 = pe;
-          pe = absolutePoints[i];
+          pe = absolutePoints[i] as Point;
           const dist = ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
           tmp += segments[i - 2];
 
@@ -1863,8 +1853,8 @@ class GraphView extends EventSource {
         }
 
         const seg = segments[index];
-        p0 = absolutePoints[index];
-        pe = absolutePoints[index + 1];
+        p0 = absolutePoints[index] as Point;
+        pe = absolutePoints[index + 1] as Point;
 
         const x2 = p0.x;
         const y2 = p0.y;
@@ -1912,6 +1902,7 @@ class GraphView extends EventSource {
         );
       }
     }
+
     return new Point();
   }
 
@@ -1925,43 +1916,42 @@ class GraphView extends EventSource {
    *
    * @param state {@link mxCellState} whose absolute offset should be updated.
    */
-  updateEdgeLabelOffset(state: CellState): void {
+  updateEdgeLabelOffset(state: CellState) {
     const points = state.absolutePoints;
-    const absoluteOffset = <Point>state.absoluteOffset;
+    const absoluteOffset = state.absoluteOffset;
     absoluteOffset.x = state.getCenterX();
     absoluteOffset.y = state.getCenterY();
 
-    if (points != null && points.length > 0 && state.segments != null) {
-      const geometry = <Geometry>(<Cell>state.cell).getGeometry();
+    if (points.length > 0 && state.segments) {
+      const geometry = state.cell.getGeometry();
 
-      if (geometry.relative) {
-        const offset = this.getPoint(state, geometry);
-
-        if (offset != null) {
+      if (geometry) {
+        if (geometry.relative) {
+          const offset = this.getPoint(state, geometry);
           state.absoluteOffset = offset;
-        }
-      } else {
-        const p0 = points[0];
-        const pe = points[points.length - 1];
+        } else {
+          const p0 = points[0];
+          const pe = points[points.length - 1];
 
-        if (p0 != null && pe != null) {
-          const dx = pe.x - p0.x;
-          const dy = pe.y - p0.y;
-          let x0 = 0;
-          let y0 = 0;
+          if (p0 && pe) {
+            const dx = pe.x - p0.x;
+            const dy = pe.y - p0.y;
+            let x0 = 0;
+            let y0 = 0;
 
-          const off = geometry.offset;
+            const off = geometry.offset;
 
-          if (off != null) {
-            x0 = off.x;
-            y0 = off.y;
+            if (off) {
+              x0 = off.x;
+              y0 = off.y;
+            }
+
+            const x = p0.x + dx / 2 + x0 * this.scale;
+            const y = p0.y + dy / 2 + y0 * this.scale;
+
+            absoluteOffset.x = x;
+            absoluteOffset.y = y;
           }
-
-          const x = p0.x + dx / 2 + x0 * this.scale;
-          const y = p0.y + dy / 2 + y0 * this.scale;
-
-          absoluteOffset.x = x;
-          absoluteOffset.y = y;
         }
       }
     }
@@ -1975,21 +1965,18 @@ class GraphView extends EventSource {
    * @param create Optional boolean indicating if a new state should be created
    * if it does not yet exist. Default is false.
    */
-  getState(cell: Cell | null = null, create: boolean = false): CellState {
-    let state: CellState | null = null;
+  getState(cell: Cell, create = false) {
+    let state: CellState | null = this.states.get(cell);
 
-    if (cell != null) {
-      state = this.states.get(cell);
-
-      if (create && (state == null || this.updateStyle) && cell.isVisible()) {
-        if (state == null) {
-          state = this.createState(cell);
-          this.states.put(cell, state);
-        } else {
-          state.style = (<graph>this.graph).getCellStyle(cell);
-        }
+    if (create && (!state || this.updateStyle) && cell.isVisible()) {
+      if (!state) {
+        state = this.createState(cell);
+        this.states.put(cell, state);
+      } else {
+        state.style = this.graph.getCellStyle(cell);
       }
     }
+
     return state;
   }
 
@@ -1999,18 +1986,20 @@ class GraphView extends EventSource {
    * have less elements than the given array. If no argument is given, then
    * this returns {@link states}.
    */
-  getCellStates(cells: CellArray | null): CellState[] | Dictionary | null {
-    if (cells == null) {
-      return this.states;
+  getCellStates(cells: CellArray | null = null) {
+    if (!cells) {
+      return this.states.getValues();
     }
 
     const result: CellState[] = [];
+
     for (const cell of cells) {
       const state = this.getState(cell);
-      if (state != null) {
+      if (state) {
         result.push(state);
       }
     }
+
     return result;
   }
 
@@ -2019,18 +2008,15 @@ class GraphView extends EventSource {
    *
    * @param cell {@link mxCell} for which the {@link CellState} should be removed.
    */
-  removeState(cell: Cell): CellState | null {
-    let state: CellState | null = null;
+  removeState(cell: Cell) {
+    let state: CellState | null = this.states.remove(cell);
 
-    if (cell != null) {
-      state = this.states.remove(cell);
-
-      if (state != null) {
-        (<graph>this.graph).cellRenderer.destroy(state);
-        state.invalid = true;
-        state.destroy();
-      }
+    if (state) {
+      this.graph.cellRenderer.destroy(state);
+      state.invalid = true;
+      state.destroy();
     }
+
     return state;
   }
 
@@ -2040,23 +2026,21 @@ class GraphView extends EventSource {
    *
    * @param cell {@link mxCell} for which a new {@link CellState} should be created.
    */
-  createState(cell: Cell): CellState {
-    return new CellState(this, cell, (<graph>this.graph).getCellStyle(cell));
+  createState(cell: Cell) {
+    return new CellState(this, cell, this.graph.getCellStyle(cell));
   }
 
   /**
    * Returns true if the event origin is one of the drawing panes or
    * containers of the view.
    */
-  isContainerEvent(evt: Event | MouseEvent): boolean {
+  isContainerEvent(evt: Event | MouseEvent) {
     const source = getSource(evt);
 
     return (
-      source === (<graph>this.graph).container ||
+      source === this.graph.container ||
       source.parentNode === this.backgroundPane ||
-      (source.parentNode != null &&
-        source.parentNode.parentNode === this.backgroundPane) ||
-      // @ts-ignore
+      (source.parentNode && source.parentNode.parentNode === this.backgroundPane) ||
       source === this.canvas.parentNode ||
       source === this.canvas ||
       source === this.backgroundPane ||
@@ -2070,11 +2054,11 @@ class GraphView extends EventSource {
    * Returns true if the event origin is one of the scrollbars of the
    * container in IE. Such events are ignored.
    */
-  isScrollEvent(evt: MouseEvent): boolean {
-    const graph = <graph>this.graph;
+  isScrollEvent(evt: MouseEvent) {
+    const graph = this.graph;
     const offset = getOffset(graph.container);
     const pt = new Point(evt.clientX - offset.x, evt.clientY - offset.y);
-    const container = <HTMLElement>graph.container;
+    const container = graph.container;
 
     const outWidth = container.offsetWidth;
     const inWidth = container.clientWidth;
@@ -2093,168 +2077,169 @@ class GraphView extends EventSource {
    * Initializes the graph event dispatch loop for the specified container
    * and invokes {@link create} to create the required DOM nodes for the display.
    */
-  init(): void {
+  init() {
     this.installListeners();
-
-    // Creates the DOM nodes for the respective display dialect
-    const { graph } = this;
     this.createSvg();
   }
 
   /**
    * Installs the required listeners in the container.
    */
-  installListeners(): void {
-    const graph = <graph>this.graph;
+  installListeners() {
+    const graph = this.graph;
     const { container } = graph;
 
-    if (container != null) {
-      // Support for touch device gestures (eg. pinch to zoom)
-      // Double-tap handling is implemented in mxGraph.fireMouseEvent
-      if (mxClient.IS_TOUCH) {
-        InternalEvent.addListener(container, 'gesturestart', ((evt: MouseEvent) => {
-          graph.fireGestureEvent(evt);
-          InternalEvent.consume(evt);
-        }) as EventListener);
-
-        InternalEvent.addListener(container, 'gesturechange', ((evt: MouseEvent) => {
-          graph.fireGestureEvent(evt);
-          InternalEvent.consume(evt);
-        }) as EventListener);
-
-        InternalEvent.addListener(container, 'gestureend', ((evt: MouseEvent) => {
-          graph.fireGestureEvent(evt);
-          InternalEvent.consume(evt);
-        }) as EventListener);
-      }
-
-      // Fires event only for one pointer per gesture
-      let pointerId: number | null = null;
-
-      // Adds basic listeners for graph event dispatching
-      InternalEvent.addGestureListeners(
-        container,
-        ((evt: MouseEvent) => {
-          // Condition to avoid scrollbar events starting a rubberband selection
-          if (
-            this.isContainerEvent(evt) &&
-            ((!mxClient.IS_GC && !mxClient.IS_SF) || !this.isScrollEvent(evt))
-          ) {
-            graph.fireMouseEvent(InternalEvent.MOUSE_DOWN, new InternalMouseEvent(evt));
-            // @ts-ignore
-            pointerId = evt.pointerId;
-          }
-        }) as EventListener,
-        (evt: Event) => {
-          if (
-            this.isContainerEvent(evt) &&
-            // @ts-ignore
-            (pointerId == null || evt.pointerId === pointerId)
-          ) {
-            graph.fireMouseEvent(InternalEvent.MOUSE_MOVE, new InternalMouseEvent(evt));
-          }
-        },
-        (evt: Event) => {
-          if (this.isContainerEvent(evt)) {
-            graph.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt));
-          }
-
-          pointerId = null;
-        }
-      );
-
-      // Adds listener for double click handling on background, this does always
-      // use native event handler, we assume that the DOM of the background
-      // does not change during the double click
-      InternalEvent.addListener(container, 'dblclick', ((evt: MouseEvent) => {
-        if (this.isContainerEvent(evt)) {
-          graph.dblClick(evt);
-        }
+    // Support for touch device gestures (eg. pinch to zoom)
+    // Double-tap handling is implemented in mxGraph.fireMouseEvent
+    if (mxClient.IS_TOUCH) {
+      InternalEvent.addListener(container, 'gesturestart', ((evt: MouseEvent) => {
+        graph.fireGestureEvent(evt);
+        InternalEvent.consume(evt);
       }) as EventListener);
+
+      InternalEvent.addListener(container, 'gesturechange', ((evt: MouseEvent) => {
+        graph.fireGestureEvent(evt);
+        InternalEvent.consume(evt);
+      }) as EventListener);
+
+      InternalEvent.addListener(container, 'gestureend', ((evt: MouseEvent) => {
+        graph.fireGestureEvent(evt);
+        InternalEvent.consume(evt);
+      }) as EventListener);
+    }
+
+    // Fires event only for one pointer per gesture
+    let pointerId: number | null = null;
+
+    // Adds basic listeners for graph event dispatching
+    InternalEvent.addGestureListeners(
+      container,
+      ((evt: MouseEvent) => {
+        // Condition to avoid scrollbar events starting a rubberband selection
+        if (
+          this.isContainerEvent(evt) &&
+          ((!mxClient.IS_GC && !mxClient.IS_SF) || !this.isScrollEvent(evt))
+        ) {
+          graph.fireMouseEvent(InternalEvent.MOUSE_DOWN, new InternalMouseEvent(evt));
+          // @ts-ignore
+          pointerId = evt.pointerId;
+        }
+      }) as EventListener,
+      (evt: Event) => {
+        if (
+          this.isContainerEvent(evt) &&
+          // @ts-ignore
+          (pointerId === null || evt.pointerId === pointerId)
+        ) {
+          graph.fireMouseEvent(
+            InternalEvent.MOUSE_MOVE,
+            new InternalMouseEvent(evt as MouseEvent)
+          );
+        }
+      },
+      (evt: Event) => {
+        if (this.isContainerEvent(evt)) {
+          graph.fireMouseEvent(
+            InternalEvent.MOUSE_UP,
+            new InternalMouseEvent(evt as MouseEvent)
+          );
+        }
+
+        pointerId = null;
+      }
+    );
+
+    // Adds listener for double click handling on background, this does always
+    // use native event handler, we assume that the DOM of the background
+    // does not change during the double click
+    InternalEvent.addListener(container, 'dblclick', ((evt: MouseEvent) => {
+      if (this.isContainerEvent(evt)) {
+        graph.dblClick(evt);
+      }
+    }) as EventListener);
+
+    // Workaround for touch events which started on some DOM node
+    // on top of the container, in which case the cells under the
+    // mouse for the move and up events are not detected.
+    const getState = (evt: Event) => {
+      let state = null;
 
       // Workaround for touch events which started on some DOM node
       // on top of the container, in which case the cells under the
       // mouse for the move and up events are not detected.
-      const getState = (evt: Event) => {
-        let state = null;
+      if (mxClient.IS_TOUCH) {
+        const x = getClientX(evt);
+        const y = getClientY(evt);
 
-        // Workaround for touch events which started on some DOM node
-        // on top of the container, in which case the cells under the
-        // mouse for the move and up events are not detected.
-        if (mxClient.IS_TOUCH) {
-          const x = getClientX(evt);
-          const y = getClientY(evt);
+        // Dispatches the drop event to the graph which
+        // consumes and executes the source function
+        const pt = convertPoint(container, x, y);
+        const cell = graph.getCellAt(pt.x, pt.y);
 
-          // Dispatches the drop event to the graph which
-          // consumes and executes the source function
-          const pt = convertPoint(container, x, y);
-          state = (<GraphView>graph.view).getState(graph.getCellAt(pt.x, pt.y));
-        }
+        if (cell) state = graph.view.getState(cell);
+      }
 
-        return state;
-      };
+      return state;
+    };
 
-      // Adds basic listeners for graph event dispatching outside of the
-      // container and finishing the handling of a single gesture
-      // Implemented via graph event dispatch loop to avoid duplicate events
-      // in Firefox and Chrome
-      graph.addMouseListener({
-        mouseDown: (sender: any, me: InternalMouseEvent) => {
-          (<PopupMenuHandler>graph.popupMenuHandler).hideMenu();
-        },
-        mouseMove: () => {},
-        mouseUp: () => {},
-      });
+    // Adds basic listeners for graph event dispatching outside of the
+    // container and finishing the handling of a single gesture
+    // Implemented via graph event dispatch loop to avoid duplicate events
+    // in Firefox and Chrome
+    graph.addMouseListener({
+      mouseDown: (sender: any, me: InternalMouseEvent) => {
+        (<PopupMenuHandler>graph.popupMenuHandler).hideMenu();
+      },
+      mouseMove: () => {},
+      mouseUp: () => {},
+    });
 
-      this.moveHandler = (evt: Event) => {
-        // Hides the tooltip if mouse is outside container
-        if (graph.tooltipHandler != null && graph.tooltipHandler.isHideOnHover()) {
-          graph.tooltipHandler.hide();
-        }
+    this.moveHandler = (evt: Event) => {
+      // Hides the tooltip if mouse is outside container
+      if (graph.tooltipHandler != null && graph.tooltipHandler.isHideOnHover()) {
+        graph.tooltipHandler.hide();
+      }
 
-        if (
-          this.captureDocumentGesture &&
-          graph.isMouseDown &&
-          graph.container != null &&
-          !this.isContainerEvent(evt) &&
-          graph.container.style.display !== 'none' &&
-          graph.container.style.visibility !== 'hidden' &&
-          !isConsumed(evt)
-        ) {
-          graph.fireMouseEvent(
-            InternalEvent.MOUSE_MOVE,
-            new InternalMouseEvent(evt, getState(evt))
-          );
-        }
-      };
+      if (
+        this.captureDocumentGesture &&
+        graph.isMouseDown &&
+        graph.container != null &&
+        !this.isContainerEvent(evt) &&
+        graph.container.style.display !== 'none' &&
+        graph.container.style.visibility !== 'hidden' &&
+        !isConsumed(evt)
+      ) {
+        graph.fireMouseEvent(
+          InternalEvent.MOUSE_MOVE,
+          new InternalMouseEvent(evt as MouseEvent, getState(evt))
+        );
+      }
+    };
 
-      this.endHandler = (evt: Event) => {
-        if (
-          this.captureDocumentGesture &&
-          graph.isMouseDown &&
-          graph.container != null &&
-          !this.isContainerEvent(evt) &&
-          graph.container.style.display !== 'none' &&
-          graph.container.style.visibility !== 'hidden'
-        ) {
-          graph.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt));
-        }
-      };
+    this.endHandler = (evt: Event) => {
+      if (
+        this.captureDocumentGesture &&
+        graph.isMouseDown &&
+        graph.container != null &&
+        !this.isContainerEvent(evt) &&
+        graph.container.style.display !== 'none' &&
+        graph.container.style.visibility !== 'hidden'
+      ) {
+        graph.fireMouseEvent(
+          InternalEvent.MOUSE_UP,
+          new InternalMouseEvent(evt as MouseEvent)
+        );
+      }
+    };
 
-      InternalEvent.addGestureListeners(
-        document,
-        null,
-        this.moveHandler,
-        this.endHandler
-      );
-    }
+    InternalEvent.addGestureListeners(document, null, this.moveHandler, this.endHandler);
   }
 
   /**
    * Creates and returns the DOM nodes for the SVG display.
    */
   createSvg(): void {
-    const { container } = <graph>this.graph;
+    const { container } = this.graph;
     const canvas = (this.canvas = document.createElementNS(
       'http://www.w3.org/2000/svg',
       'g'
@@ -2311,7 +2296,7 @@ class GraphView extends EventSource {
   /**
    * Destroys the view and all its resources.
    */
-  destroy(): void {
+  destroy() {
     let root: SVGElement | null =
       this.canvas != null ? this.canvas.ownerSVGElement : null;
 
@@ -2332,11 +2317,6 @@ class GraphView extends EventSource {
 
       this.moveHandler = null;
       this.endHandler = null;
-      this.canvas = null;
-      this.backgroundPane = null;
-      this.drawPane = null;
-      this.overlayPane = null;
-      this.decoratorPane = null;
     }
   }
 
@@ -2345,4 +2325,3 @@ class GraphView extends EventSource {
 }
 
 export default GraphView;
-// import('../../serialization/mxGraphViewCodec');

@@ -323,7 +323,7 @@ class StencilShape extends Shape {
    * direction - Optional direction of the shape to be darwn.
    */
   computeAspect(
-    shape: Shape,
+    shape: Shape | null = null,
     x: number,
     y: number,
     w: number,

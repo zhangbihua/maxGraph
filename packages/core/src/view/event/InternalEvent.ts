@@ -9,25 +9,7 @@ import mxClient from '../../mxClient';
 import { isConsumed, isMouseEvent } from '../../util/EventUtils';
 import graph from '../Graph';
 import CellState from '../cell/datatypes/CellState';
-
-type Listener = {
-  name: string;
-  f: EventListener;
-};
-
-type ListenerTarget = {
-  mxListenerList?: Listener[];
-};
-
-type Listenable = (Node | Window) & ListenerTarget;
-
-type GestureEvent = Event &
-  MouseEvent & {
-    scale?: number;
-    pointerId?: number;
-  };
-
-type EventCache = GestureEvent[];
+import { EventCache, GestureEvent, Listenable } from '../../types';
 
 // Checks if passive event listeners are supported
 // see https://github.com/Modernizr/Modernizr/issues/1894
@@ -69,11 +51,7 @@ class InternalEvent {
    * to a given execution scope.
    */
   // static addListener(element: Node | Window, eventName: string, funct: Function): void;
-  static addListener(
-    element: Listenable,
-    eventName: string,
-    funct: EventListener
-  ) {
+  static addListener(element: Listenable, eventName: string, funct: EventListener) {
     element.addEventListener(
       eventName,
       funct,
@@ -92,11 +70,7 @@ class InternalEvent {
    * Removes the specified listener from the given element.
    */
   // static removeListener(element: Node | Window, eventName: string, funct: Function): void;
-  static removeListener(
-    element: Listenable,
-    eventName: string,
-    funct: EventListener
-  ) {
+  static removeListener(element: Listenable, eventName: string, funct: EventListener) {
     element.removeEventListener(eventName, funct, false);
 
     if (element.mxListenerList) {
@@ -264,7 +238,7 @@ class InternalEvent {
         } else if (!isConsumed(evt)) {
           graph.fireMouseEvent(
             InternalEvent.MOUSE_DOWN,
-            new InternalMouseEvent(evt, getState(evt))
+            new InternalMouseEvent(evt as MouseEvent, getState(evt))
           );
         }
       },
@@ -274,7 +248,7 @@ class InternalEvent {
         } else if (!isConsumed(evt)) {
           graph.fireMouseEvent(
             InternalEvent.MOUSE_MOVE,
-            new InternalMouseEvent(evt, getState(evt))
+            new InternalMouseEvent(evt as MouseEvent, getState(evt))
           );
         }
       },
@@ -284,7 +258,7 @@ class InternalEvent {
         } else if (!isConsumed(evt)) {
           graph.fireMouseEvent(
             InternalEvent.MOUSE_UP,
-            new InternalMouseEvent(evt, getState(evt))
+            new InternalMouseEvent(evt as MouseEvent, getState(evt))
           );
         }
       }
@@ -348,13 +322,7 @@ class InternalEvent {
    * https://www.chromestatus.com/features/6662647093133312.
    */
   static addMouseWheelListener(
-    funct: (
-      event: Event,
-      up: boolean,
-      force?: boolean,
-      cx?: number,
-      cy?: number
-    ) => void,
+    funct: (event: Event, up: boolean, force?: boolean, cx?: number, cy?: number) => void,
     target: Listenable
   ) {
     if (funct != null) {
@@ -430,11 +398,9 @@ class InternalEvent {
                 ty > InternalEvent.PINCH_THRESHOLD
               ) {
                 const cx =
-                  evtCache[0].clientX +
-                  (evtCache[1].clientX - evtCache[0].clientX) / 2;
+                  evtCache[0].clientX + (evtCache[1].clientX - evtCache[0].clientX) / 2;
                 const cy =
-                  evtCache[0].clientY +
-                  (evtCache[1].clientY - evtCache[0].clientY) / 2;
+                  evtCache[0].clientY + (evtCache[1].clientY - evtCache[0].clientY) / 2;
 
                 funct(evtCache[0], tx > ty ? dx > dx0 : dy > dy0, true, cx, cy);
 

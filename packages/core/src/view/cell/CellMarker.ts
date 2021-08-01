@@ -16,7 +16,7 @@ import CellHighlight from '../selection/CellHighlight';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import utils, { intersectsHotspot, isNumeric } from '../../util/Utils';
-import graph from '../Graph';
+import { MaxGraph } from '../Graph';
 import { ColorValue } from '../../types';
 import CellState from './datatypes/CellState';
 import InternalMouseEvent from '../event/InternalMouseEvent';
@@ -64,7 +64,7 @@ import Cell from './datatypes/Cell';
  */
 class CellMarker extends EventSource {
   constructor(
-    graph: graph,
+    graph: MaxGraph,
     validColor: ColorValue = DEFAULT_VALID_COLOR,
     invalidColor: ColorValue = DEFAULT_INVALID_COLOR,
     hotspot: number = DEFAULT_HOTSPOT
@@ -83,7 +83,7 @@ class CellMarker extends EventSource {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: graph;
+  graph: MaxGraph;
 
   /**
    * Variable: enabled
@@ -362,12 +362,15 @@ class CellMarker extends EventSource {
    * Uses <getCell>, <getStateToMark> and <intersects> to return the
    * <mxCellState> for the given <mxMouseEvent>.
    */
-  getState(me: InternalMouseEvent): CellState | null {
+  getState(me: InternalMouseEvent) {
     const view = this.graph.getView();
     const cell = this.getCell(me);
-    const state = this.getStateToMark(view.getState(cell));
 
-    return state != null && this.intersects(state, me) ? state : null;
+    if (!cell) return null;
+
+    const state = this.getStateToMark(view.getState(cell) as CellState);
+
+    return this.intersects(state, me) ? state : null;
   }
 
   /**
@@ -386,7 +389,7 @@ class CellMarker extends EventSource {
    * Returns the <mxCellState> to be marked for the given <mxCellState> under
    * the mouse. This returns the given state.
    */
-  getStateToMark(state: CellState): CellState {
+  getStateToMark(state: CellState) {
     return state;
   }
 

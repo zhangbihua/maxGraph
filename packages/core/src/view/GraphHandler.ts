@@ -23,12 +23,8 @@ import {
 import Dictionary from '../util/Dictionary';
 import CellHighlight from './selection/CellHighlight';
 import Rectangle from './geometry/Rectangle';
-import {
-  getClientX,
-  getClientY,
-  isAltDown,
-  isMultiTouchEvent,
-} from '../util/EventUtils';
+import { getClientX, getClientY, isAltDown, isMultiTouchEvent } from '../util/EventUtils';
+import { MaxGraph } from './Graph';
 
 /**
  * Class: mxGraphHandler
@@ -51,7 +47,7 @@ import {
  * graph - Reference to the enclosing <mxGraph>.
  */
 class GraphHandler {
-  constructor(graph) {
+  constructor(graph: MaxGraph) {
     this.graph = graph;
     this.graph.addMouseListener(this);
 
@@ -150,8 +146,7 @@ class GraphHandler {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  // graph: mxGraph;
-  graph = null;
+  graph: MaxGraph;
 
   /**
    * Variable: maxCells
@@ -484,8 +479,7 @@ class GraphHandler {
           !this.graph.isCellSelected(cell) &&
           !this.graph.isSwimlane(parent)) ||
         this.graph.isCellSelected(parent)) &&
-      (this.graph.isToggleEvent(me.getEvent()) ||
-        !this.graph.isCellSelected(parent))
+      (this.graph.isToggleEvent(me.getEvent()) || !this.graph.isCellSelected(parent))
     );
   }
 
@@ -570,10 +564,7 @@ class GraphHandler {
       if (me.isSource(state.control)) {
         this.graph.selectCellForEvent(cell, me.getEvent());
       } else {
-        if (
-          !this.graph.isToggleEvent(me.getEvent()) ||
-          !isAltDown(me.getEvent())
-        ) {
+        if (!this.graph.isToggleEvent(me.getEvent()) || !isAltDown(me.getEvent())) {
           const model = this.graph.getModel();
           let parent = cell.getParent();
 
@@ -654,8 +645,7 @@ class GraphHandler {
             cell.getTerminal(true) == null ||
             cell.getTerminal(false) == null ||
             this.graph.allowDanglingEdges ||
-            (this.graph.isCloneEvent(me.getEvent()) &&
-              this.graph.isCellsCloneable()))
+            (this.graph.isCloneEvent(me.getEvent()) && this.graph.isCellsCloneable()))
         ) {
           this.start(cell, me.getX(), me.getY());
         } else if (this.delayedSelection) {
@@ -687,9 +677,7 @@ class GraphHandler {
       );
     };
 
-    return this.graph.view.getCellStates(
-      model.filterDescendants(filter, parent)
-    );
+    return this.graph.view.getCellStates(model.filterDescendants(filter, parent));
   }
 
   /**
@@ -863,10 +851,7 @@ class GraphHandler {
 
       // Uses connected states as guides
       const connected = new Dictionary();
-      const opps = this.graph.getOpposites(
-        this.graph.getEdges(this.cell),
-        this.cell
-      );
+      const opps = this.graph.getOpposites(this.graph.getEdges(this.cell), this.cell);
 
       for (let i = 0; i < opps.length; i += 1) {
         const state = this.graph.view.getState(opps[i]);
@@ -962,11 +947,7 @@ class GraphHandler {
    */
   // getDelta(me: mxMouseEvent): mxPoint;
   getDelta(me) {
-    const point = utils.convertPoint(
-      this.graph.container,
-      me.getX(),
-      me.getY()
-    );
+    const point = utils.convertPoint(this.graph.container, me.getX(), me.getY());
 
     return new point(
       point.x - this.first.x - this.graph.panDx,
@@ -1067,11 +1048,7 @@ class GraphHandler {
       ) {
         // Highlight is used for highlighting drop targets
         if (this.highlight == null) {
-          this.highlight = new CellHighlight(
-            this.graph,
-            DROP_TARGET_COLOR,
-            3
-          );
+          this.highlight = new CellHighlight(this.graph, DROP_TARGET_COLOR, 3);
         }
 
         const clone =
@@ -1113,8 +1090,7 @@ class GraphHandler {
 
             if (state != null) {
               const error = graph.getEdgeValidationError(null, this.cell, cell);
-              const color =
-                error == null ? VALID_COLOR : INVALID_CONNECT_TARGET_COLOR;
+              const color = error == null ? VALID_COLOR : INVALID_CONNECT_TARGET_COLOR;
               this.setHighlightColor(color);
               highlight = true;
             }
@@ -1131,13 +1107,7 @@ class GraphHandler {
           delta = this.guide.move(this.bounds, delta, gridEnabled, clone);
           hideGuide = false;
         } else {
-          delta = this.graph.snapDelta(
-            delta,
-            this.bounds,
-            !gridEnabled,
-            false,
-            false
-          );
+          delta = this.graph.snapDelta(delta, this.bounds, !gridEnabled, false, false);
         }
 
         if (this.guide != null && hideGuide) {
@@ -1178,11 +1148,7 @@ class GraphHandler {
     ) {
       let cursor = graph.getCursorForMouseEvent(me);
 
-      if (
-        cursor == null &&
-        graph.isEnabled() &&
-        graph.isCellMovable(me.getCell())
-      ) {
+      if (cursor == null && graph.isEnabled() && graph.isCellMovable(me.getCell())) {
         if (me.getCell().isEdge()) {
           cursor = CURSOR_MOVABLE_EDGE;
         } else {
@@ -1355,10 +1321,7 @@ class GraphHandler {
 
             if (source == null || !this.isCellMoving(source.cell)) {
               const pt0 = pts[0];
-              state.setAbsoluteTerminalPoint(
-                new Point(pt0.x + dx, pt0.y + dy),
-                true
-              );
+              state.setAbsoluteTerminalPoint(new Point(pt0.x + dx, pt0.y + dy), true);
               source = null;
             } else {
               state.view.updateFixedTerminalPoint(
@@ -1371,10 +1334,7 @@ class GraphHandler {
 
             if (target == null || !this.isCellMoving(target.cell)) {
               const ptn = pts[pts.length - 1];
-              state.setAbsoluteTerminalPoint(
-                new Point(ptn.x + dx, ptn.y + dy),
-                false
-              );
+              state.setAbsoluteTerminalPoint(new Point(ptn.x + dx, ptn.y + dy), false);
               target = null;
             } else {
               state.view.updateFixedTerminalPoint(
@@ -1411,9 +1371,7 @@ class GraphHandler {
    */
   redrawHandles(states) {
     for (let i = 0; i < states.length; i += 1) {
-      const handler = this.graph.selectionCellsHandler.getHandler(
-        states[i][0].cell
-      );
+      const handler = this.graph.selectionCellsHandler.getHandler(states[i][0].cell);
 
       if (handler != null) {
         handler.redraw(true);
@@ -1627,21 +1585,10 @@ class GraphHandler {
               me.getGraphY()
             );
           } else {
-            this.moveCells(
-              this.cells,
-              dx,
-              dy,
-              clone,
-              this.target,
-              me.getEvent()
-            );
+            this.moveCells(this.cells, dx, dy, clone, this.target, me.getEvent());
           }
         }
-      } else if (
-        this.isSelectEnabled() &&
-        this.delayedSelection &&
-        this.cell != null
-      ) {
+      } else if (this.isSelectEnabled() && this.delayedSelection && this.cell != null) {
         this.selectDelayed(me);
       }
     }
@@ -1707,9 +1654,7 @@ class GraphHandler {
           getClientX(evt),
           getClientY(evt)
         );
-        const alpha = utils.toRadians(
-          utils.getValue(pState.style, 'rotation') || 0
-        );
+        const alpha = utils.toRadians(utils.getValue(pState.style, 'rotation') || 0);
 
         if (alpha !== 0) {
           const cos = Math.cos(-alpha);
@@ -1748,9 +1693,7 @@ class GraphHandler {
     }
 
     // Cloning into locked cells is not allowed
-    clone =
-      clone &&
-      !this.graph.isCellLocked(target || this.graph.getDefaultParent());
+    clone = clone && !this.graph.isCellLocked(target || this.graph.getDefaultParent());
 
     this.graph.getModel().beginUpdate();
     try {

@@ -1,7 +1,18 @@
-import Cell from "../cell/datatypes/Cell";
-import {getValue} from "../../util/Utils";
+import Cell from '../cell/datatypes/Cell';
+import { autoImplement, getValue } from '../../util/Utils';
 
-class GraphLabel {
+import type Graph from '../Graph';
+import type GraphCells from '../cell/GraphCells';
+import type GraphEdge from '../cell/edge/GraphEdge';
+import type GraphVertex from '../cell/vertex/GraphVertex';
+
+type PartialGraph = Pick<Graph, 'convertValueToString'>;
+type PartialCells = Pick<GraphCells, 'getCurrentCellStyle' | 'isCellLocked'>;
+type PartialEdge = Pick<GraphEdge, 'isEdgeLabelsMovable'>;
+type PartialVertex = Pick<GraphVertex, 'isVertexLabelsMovable'>;
+type PartialClass = PartialGraph & PartialCells & PartialEdge & PartialVertex;
+
+class GraphLabel extends autoImplement<PartialClass>() {
   /**
    * Returns a string or DOM node that represents the label for the given
    * cell. This implementation uses {@link convertValueToString} if {@link labelsVisible}
@@ -53,7 +64,7 @@ class GraphLabel {
   getLabel(cell: Cell): string | Node | null {
     let result: string | null = '';
 
-    if (this.labelsVisible && cell != null) {
+    if (this.isLabelsVisible() && cell != null) {
       const style = this.getCurrentCellStyle(cell);
 
       if (!getValue(style, 'noLabel', false)) {
@@ -72,6 +83,20 @@ class GraphLabel {
   isHtmlLabel(cell: Cell): boolean {
     return this.isHtmlLabels();
   }
+
+  /**
+   * Specifies if labels should be visible. This is used in {@link getLabel}. Default
+   * is true.
+   */
+  labelsVisible: boolean = true;
+
+  isLabelsVisible = () => this.labelsVisible;
+
+  /**
+   * Specifies the return value for {@link isHtmlLabel}.
+   * @default false
+   */
+  htmlLabels: boolean = false;
 
   /**
    * Returns {@link htmlLabels}.
@@ -154,8 +179,8 @@ class GraphLabel {
   isLabelMovable(cell: Cell): boolean {
     return (
       !this.isCellLocked(cell) &&
-      ((cell.isEdge() && this.edgeLabelsMovable) ||
-        (cell.isVertex() && this.vertexLabelsMovable))
+      ((cell.isEdge() && this.isEdgeLabelsMovable()) ||
+        (cell.isVertex() && this.isVertexLabelsMovable()))
     );
   }
 }

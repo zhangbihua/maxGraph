@@ -1,23 +1,33 @@
-import Cell from "../cell/datatypes/Cell";
-import {isMultiTouchEvent} from "../../util/EventUtils";
-import EventObject from "../event/EventObject";
-import InternalEvent from "../event/InternalEvent";
-import CellEditor from "./CellEditor";
-import InternalMouseEvent from "../event/InternalMouseEvent";
-import Graph from "../Graph";
+import Cell from '../cell/datatypes/Cell';
+import { isMultiTouchEvent } from '../../util/EventUtils';
+import EventObject from '../event/EventObject';
+import InternalEvent from '../event/InternalEvent';
+import InternalMouseEvent from '../event/InternalMouseEvent';
+import { autoImplement } from '../../util/Utils';
 
-class GraphEditing {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+import type GraphSelection from '../selection/GraphSelection';
+import type GraphEvents from '../event/GraphEvents';
+import type Graph from '../Graph';
+import type GraphCells from '../cell/GraphCells';
 
-  graph: Graph;
+type PartialGraph = Pick<
+  Graph,
+  'getCellEditor' | 'convertValueToString' | 'batchUpdate' | 'getModel'
+>;
+type PartialSelection = Pick<GraphSelection, 'getSelectionCell'>;
+type PartialEvents = Pick<GraphEvents, 'fireEvent'>;
+type PartialCells = Pick<
+  GraphCells,
+  'isAutoSizeCell' | 'cellSizeUpdated' | 'getCurrentCellStyle' | 'isCellLocked'
+>;
+type PartialClass = PartialGraph & PartialSelection & PartialEvents & PartialCells;
 
+class GraphEditing extends autoImplement<PartialClass>() {
   /**
    * Specifies the return value for {@link isCellEditable}.
    * @default true
    */
-  cellsEditable: boolean = true;
+  cellsEditable = true;
 
   /*****************************************************************************
    * Group: Cell in-place editing
@@ -29,7 +39,7 @@ class GraphEditing {
    *
    * @param evt Optional mouse event that triggered the editing.
    */
-  startEditing(evt: MouseEvent): void {
+  startEditing(evt: MouseEvent) {
     this.startEditingAtCell(null, evt);
   }
 
@@ -41,21 +51,20 @@ class GraphEditing {
    * @param cell {@link mxCell} to start the in-place editor for.
    * @param evt Optional mouse event that triggered the editing.
    */
-  startEditingAtCell(cell: Cell | null = null, evt: MouseEvent): void {
-    if (evt == null || !isMultiTouchEvent(evt)) {
-      if (cell == null) {
-        cell = this.graph.selection.getSelectionCell();
-        if (cell != null && !this.isCellEditable(cell)) {
+  startEditingAtCell(cell: Cell | null = null, evt: MouseEvent) {
+    if (!evt || !isMultiTouchEvent(evt)) {
+      if (!cell) {
+        cell = this.getSelectionCell();
+
+        if (cell && !this.isCellEditable(cell)) {
           cell = null;
         }
-      }
-
-      if (cell != null) {
-        this.graph.event.fireEvent(
+      } else {
+        this.fireEvent(
           new EventObject(InternalEvent.START_EDITING, 'cell', cell, 'event', evt)
         );
-        (<CellEditor>this.graph.editing.cellEditor).startEditing(cell, evt);
-        this.graph.event.fireEvent(
+        this.getCellEditor().startEditing(cell, evt);
+        this.fireEvent(
           new EventObject(InternalEvent.EDITING_STARTED, 'cell', cell, 'event', evt)
         );
       }
@@ -71,10 +80,7 @@ class GraphEditing {
    * @param cell {@link mxCell} for which the initial editing value should be returned.
    * @param evt Optional mouse event that triggered the editor.
    */
-  getEditingValue(
-    cell: Cell,
-    evt: EventObject | InternalMouseEvent
-  ): string | null {
+  getEditingValue(cell: Cell, evt: EventObject) {
     return this.convertValueToString(cell);
   }
 
@@ -84,11 +90,9 @@ class GraphEditing {
    * @param cancel Boolean that specifies if the current editing value
    * should be stored.
    */
-  stopEditing(cancel: boolean = false): void {
-    (<CellEditor>this.graph.editing.cellEditor).stopEditing(cancel);
-    this.graph.event.fireEvent(
-      new EventObject(InternalEvent.EDITING_STOPPED, 'cancel', cancel)
-    );
+  stopEditing(cancel: boolean = false) {
+    this.getCellEditor().stopEditing(cancel);
+    this.fireEvent(new EventObject(InternalEvent.EDITING_STOPPED, 'cancel', cancel));
   }
 
   /**
@@ -100,24 +104,18 @@ class GraphEditing {
    * @param value New label to be assigned.
    * @param evt Optional event that triggered the change.
    */
-  // labelChanged(cell: mxCell, value: any, evt?: MouseEvent): mxCell;
-  labelChanged(
-    cell: Cell,
-    value: any,
-    evt: InternalMouseEvent | EventObject
-  ): Cell {
-    this.graph.batchUpdate(() => {
+  labelChanged(cell: Cell, value: any, evt: InternalMouseEvent | EventObject) {
+    this.batchUpdate(() => {
       const old = cell.value;
-      this.cellLabelChanged(cell, value, this.graph.cell.isAutoSizeCell(cell));
-      this.graph.event.fireEvent(new EventObject(
-        InternalEvent.LABEL_CHANGED,
-        {
+      this.cellLabelChanged(cell, value, this.isAutoSizeCell(cell));
+      this.fireEvent(
+        new EventObject(InternalEvent.LABEL_CHANGED, {
           cell: cell,
           value: value,
           old: old,
           event: evt,
-        }
-      ));
+        })
+      );
     });
     return cell;
   }
@@ -149,12 +147,10 @@ class GraphEditing {
    * @param value New label to be assigned.
    * @param autoSize Boolean that specifies if {@link cellSizeUpdated} should be called.
    */
-  cellLabelChanged(cell: Cell,
-                   value: any,
-                   autoSize: boolean = false): void {
+  cellLabelChanged(cell: Cell, value: any, autoSize: boolean = false) {
+    this.batchUpdate(() => {
+      this.getModel().setValue(cell, value);
 
-    this.graph.batchUpdate(() => {
-      this.graph.model.setValue(cell, value);
       if (autoSize) {
         this.cellSizeUpdated(cell, false);
       }
@@ -172,12 +168,9 @@ class GraphEditing {
    *
    * @param cell {@link mxCell} that should be checked.
    */
-  isEditing(cell: Cell | null = null): boolean {
-    if (this.cellEditor != null) {
-      const editingCell = this.cellEditor.getEditingCell();
-      return cell == null ? editingCell != null : cell === editingCell;
-    }
-    return false;
+  isEditing(cell: Cell | null = null) {
+    const editingCell = this.getCellEditor().getEditingCell();
+    return !cell ? !!editingCell : cell === editingCell;
   }
 
   /**
@@ -187,20 +180,16 @@ class GraphEditing {
    *
    * @param cell {@link mxCell} whose editable state should be returned.
    */
-  isCellEditable(cell: Cell): boolean {
-    const style = this.graph.cell.getCurrentCellStyle(cell);
+  isCellEditable(cell: Cell) {
+    const style = this.getCurrentCellStyle(cell);
 
-    return (
-      this.isCellsEditable() &&
-      !this.graph.cell.isCellLocked(cell) &&
-      style.editable != 0
-    );
+    return this.isCellsEditable() && !this.isCellLocked(cell) && style.editable;
   }
 
   /**
    * Returns {@link cellsEditable}.
    */
-  isCellsEditable(): boolean {
+  isCellsEditable() {
     return this.cellsEditable;
   }
 
@@ -211,7 +200,7 @@ class GraphEditing {
    * @param value Boolean indicating if the graph should allow in-place
    * editing.
    */
-  setCellsEditable(value: boolean): void {
+  setCellsEditable(value: boolean) {
     this.cellsEditable = value;
   }
 }

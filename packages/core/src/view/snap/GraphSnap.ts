@@ -1,27 +1,27 @@
-import Point from "../geometry/Point";
-import Rectangle from "../geometry/Rectangle";
-import Graph from '../Graph';
+import { autoImplement } from '../../util/Utils';
+import Point from '../geometry/Point';
+import Rectangle from '../geometry/Rectangle';
 
-class GraphSnap {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+import type Graph from '../Graph';
 
+type PartialGraph = Pick<Graph, 'getView'>;
+type PartialClass = PartialGraph;
+
+class GraphSnap extends autoImplement<PartialClass>() {
   // TODO: Document me!
-  tolerance: number | null = null;
-  graph: Graph;
+  tolerance: number = 0;
 
   /**
    * Specifies the grid size.
    * @default 10
    */
-  gridSize: number = 10;
+  gridSize = 10;
 
   /**
    * Specifies if the grid is enabled. This is used in {@link snap}.
    * @default true
    */
-  gridEnabled: boolean = true;
+  gridEnabled = true;
 
   /*****************************************************************************
    * Group: Graph display
@@ -32,7 +32,7 @@ class GraphSnap {
    *
    * @param value Numeric value to be snapped to the grid.
    */
-  snap(value: number): number {
+  snap(value: number) {
     if (this.gridEnabled) {
       value = Math.round(value / this.gridSize) * this.gridSize;
     }
@@ -47,12 +47,12 @@ class GraphSnap {
   snapDelta(
     delta: Point,
     bounds: Rectangle,
-    ignoreGrid: boolean = false,
-    ignoreHorizontal: boolean = false,
-    ignoreVertical: boolean = false
-  ): Point {
-    const t = this.graph.view.translate;
-    const s = this.graph.view.scale;
+    ignoreGrid = false,
+    ignoreHorizontal = false,
+    ignoreVertical = false
+  ) {
+    const t = this.getView().translate;
+    const s = this.getView().scale;
 
     if (!ignoreGrid && this.gridEnabled) {
       const tol = this.gridSize * s * 0.5;
@@ -109,7 +109,7 @@ class GraphSnap {
   /**
    * Returns {@link gridEnabled} as a boolean.
    */
-  isGridEnabled(): boolean {
+  isGridEnabled() {
     return this.gridEnabled;
   }
 
@@ -118,36 +118,35 @@ class GraphSnap {
    *
    * @param value Boolean indicating if the grid should be enabled.
    */
-  setGridEnabled(value: boolean): void {
+  setGridEnabled(value: boolean) {
     this.gridEnabled = value;
   }
-
 
   /**
    * Returns {@link gridSize}.
    */
-  getGridSize(): number {
+  getGridSize() {
     return this.gridSize;
   }
 
   /**
    * Sets {@link gridSize}.
    */
-  setGridSize(value: number): void {
+  setGridSize(value: number) {
     this.gridSize = value;
   }
 
   /**
    * Returns {@link tolerance}.
    */
-  getTolerance(): number | null {
+  getTolerance() {
     return this.tolerance;
   }
 
   /**
    * Sets {@link tolerance}.
    */
-  setTolerance(value: number): void {
+  setTolerance(value: number) {
     this.tolerance = value;
   }
 }

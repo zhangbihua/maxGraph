@@ -1413,7 +1413,7 @@ class CellRenderer {
     state: CellState,
     node: HTMLElement | SVGElement | null,
     htmlNode: HTMLElement | SVGElement | null
-  ): void {
+  ) {
     const shapes = this.getShapesForState(state);
 
     for (let i = 0; i < shapes.length; i += 1) {

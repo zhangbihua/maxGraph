@@ -4,15 +4,24 @@ import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import Image from '../image/ImageBox';
 import InternalMouseEvent from '../event/InternalMouseEvent';
-import Graph from '../Graph';
+import { autoImplement } from '../../util/Utils';
 
-class Overlays {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+import type Graph from '../Graph';
+import type GraphSelection from '../selection/GraphSelection';
 
-  graph: Graph;
+type PartialGraph = Pick<
+  Graph,
+  | 'getView'
+  | 'fireEvent'
+  | 'getModel'
+  | 'isEnabled'
+  | 'getWarningImage'
+  | 'getCellRenderer'
+>;
+type PartialSelection = Pick<GraphSelection, 'setSelectionCell'>;
+type PartialClass = PartialGraph & PartialSelection;
 
+class GraphOverlays extends autoImplement<PartialClass>() {
   /*****************************************************************************
    * Group: Overlays
    *****************************************************************************/
@@ -25,15 +34,13 @@ class Overlays {
    * @param overlay {@link mxCellOverlay} to be added for the cell.
    */
   addCellOverlay(cell: Cell, overlay: CellOverlay): CellOverlay {
-    if (cell.overlays == null) {
-      cell.overlays = [];
-    }
     cell.overlays.push(overlay);
 
     // Immediately update the cell display if the state exists
     const state = this.getView().getState(cell);
-    if (state != null) {
-      this.cellRenderer.redraw(state);
+
+    if (state) {
+      this.getCellRenderer().redraw(state);
     }
 
     this.fireEvent(
@@ -48,7 +55,7 @@ class Overlays {
    *
    * @param cell {@link mxCell} whose overlays should be returned.
    */
-  getCellOverlays(cell: Cell): CellOverlay[] | null {
+  getCellOverlays(cell: Cell) {
     return cell.overlays;
   }
 
@@ -61,24 +68,20 @@ class Overlays {
    * @param overlay Optional {@link CellOverlay} to be removed.
    */
   // removeCellOverlay(cell: mxCell, overlay: mxCellOverlay): mxCellOverlay;
-  removeCellOverlay(cell: Cell, overlay: CellOverlay | null = null): any {
-    if (overlay == null) {
+  removeCellOverlay(cell: Cell, overlay: CellOverlay | null = null) {
+    if (!overlay) {
       this.removeCellOverlays(cell);
     } else {
-      const index = cell.overlays ? cell.overlays.indexOf(overlay) : -1;
+      const index = cell.overlays.indexOf(overlay);
 
       if (index >= 0) {
-        (<CellOverlay[]>cell.overlays).splice(index, 1);
-
-        if ((<CellOverlay[]>cell.overlays).length === 0) {
-          cell.overlays = null;
-        }
+        cell.overlays.splice(index, 1);
 
         // Immediately updates the cell display if the state exists
         const state = this.getView().getState(cell);
 
-        if (state != null) {
-          this.cellRenderer.redraw(state);
+        if (state) {
+          this.getCellRenderer().redraw(state);
         }
 
         this.fireEvent(
@@ -99,33 +102,31 @@ class Overlays {
    *
    * @param cell {@link mxCell} whose overlays should be removed
    */
-  removeCellOverlays(cell: Cell): CellOverlay[] {
+  removeCellOverlays(cell: Cell) {
     const { overlays } = cell;
 
-    if (overlays != null) {
-      cell.overlays = null;
+    cell.overlays = [];
 
-      // Immediately updates the cell display if the state exists
-      const state = this.getView().getState(cell);
+    // Immediately updates the cell display if the state exists
+    const state = this.getView().getState(cell);
 
-      if (state != null) {
-        this.cellRenderer.redraw(state);
-      }
-
-      for (let i = 0; i < overlays.length; i += 1) {
-        this.fireEvent(
-          new EventObject(
-            InternalEvent.REMOVE_OVERLAY,
-            'cell',
-            cell,
-            'overlay',
-            overlays[i]
-          )
-        );
-      }
+    if (state) {
+      this.getCellRenderer().redraw(state);
     }
 
-    return <CellOverlay[]>overlays;
+    for (let i = 0; i < overlays.length; i += 1) {
+      this.fireEvent(
+        new EventObject(
+          InternalEvent.REMOVE_OVERLAY,
+          'cell',
+          cell,
+          'overlay',
+          overlays[i]
+        )
+      );
+    }
+
+    return overlays;
   }
 
   /**
@@ -137,15 +138,19 @@ class Overlays {
    * @param cell Optional {@link Cell} that represents the root of the subtree to
    * remove the overlays from. Default is the root in the model.
    */
-  clearCellOverlays(cell: Cell = <Cell>this.getModel().getRoot()): void {
-    this.removeCellOverlays(<Cell>cell);
+  clearCellOverlays(cell: Cell | null = null) {
+    cell = cell ?? this.getModel().getRoot();
+
+    if (!cell) return;
+
+    this.removeCellOverlays(cell);
 
     // Recursively removes all overlays from the children
     const childCount = cell.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
       const child = cell.getChildAt(i);
-      this.clearCellOverlays(<Cell>child); // recurse
+      this.clearCellOverlays(child); // recurse
     }
   }
 
@@ -171,12 +176,10 @@ class Overlays {
   setCellWarning(
     cell: Cell,
     warning: string | null = null,
-    img: Image | null = null,
-    isSelect: boolean = false
-  ): CellOverlay | null {
-    if (warning != null && warning.length > 0) {
-      img = img != null ? img : this.warningImage;
-
+    img: Image = this.getWarningImage(),
+    isSelect = false
+  ) {
+    if (warning && warning.length > 0) {
       // Creates the overlay with the image and warning
       const overlay = new CellOverlay(img, `<font color=red>${warning}</font>`);
 
@@ -201,4 +204,4 @@ class Overlays {
   }
 }
 
-export default Overlays;
+export default GraphOverlays;

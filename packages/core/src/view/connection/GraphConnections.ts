@@ -1,18 +1,18 @@
-import Point from "../geometry/Point";
-import CellState from "../cell/datatypes/CellState";
-import InternalMouseEvent from "../event/InternalMouseEvent";
-import ConnectionConstraint from "./ConnectionConstraint";
-import Rectangle from "../geometry/Rectangle";
-import {DIRECTION_NORTH, DIRECTION_SOUTH, DIRECTION_WEST} from "../../util/Constants";
-import utils, {getRotatedPoint, getValue, toRadians} from "../../util/Utils";
-import Cell from "../cell/datatypes/Cell";
-import CellArray from "../cell/datatypes/CellArray";
-import EventObject from "../event/EventObject";
-import InternalEvent from "../event/InternalEvent";
-import Dictionary from "../../util/Dictionary";
-import Geometry from "../geometry/Geometry";
-import Graph from "../Graph";
-import ConnectionHandler from "./ConnectionHandler";
+import Point from '../geometry/Point';
+import CellState from '../cell/datatypes/CellState';
+import InternalMouseEvent from '../event/InternalMouseEvent';
+import ConnectionConstraint from './ConnectionConstraint';
+import Rectangle from '../geometry/Rectangle';
+import { DIRECTION_NORTH, DIRECTION_SOUTH, DIRECTION_WEST } from '../../util/Constants';
+import utils, { getRotatedPoint, getValue, toRadians } from '../../util/Utils';
+import Cell from '../cell/datatypes/Cell';
+import CellArray from '../cell/datatypes/CellArray';
+import EventObject from '../event/EventObject';
+import InternalEvent from '../event/InternalEvent';
+import Dictionary from '../../util/Dictionary';
+import Geometry from '../geometry/Geometry';
+import Graph from '../Graph';
+import ConnectionHandler from './ConnectionHandler';
 
 class GraphConnections {
   constructor(graph: Graph) {
@@ -34,9 +34,7 @@ class GraphConnections {
     me: InternalMouseEvent
   ): ConnectionConstraint | null {
     if (terminalState.shape != null) {
-      const bounds = <Rectangle>(
-        this.graph.view.getPerimeterBounds(terminalState)
-      );
+      const bounds = <Rectangle>this.graph.view.getPerimeterBounds(terminalState);
       const direction = terminalState.style.direction;
 
       if (direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH) {
@@ -68,16 +66,9 @@ class GraphConnections {
         let flipV = terminalState.style.flipV;
 
         // Legacy support for stencilFlipH/V
-        if (
-          terminalState.shape != null &&
-          terminalState.shape.stencil != null
-        ) {
-          flipH =
-            getValue(terminalState.style, 'stencilFlipH', 0) == 1 ||
-            flipH;
-          flipV =
-            getValue(terminalState.style, 'stencilFlipV', 0) == 1 ||
-            flipV;
+        if (terminalState.shape != null && terminalState.shape.stencil != null) {
+          flipH = getValue(terminalState.style, 'stencilFlipH', 0) == 1 || flipH;
+          flipV = getValue(terminalState.style, 'stencilFlipV', 0) == 1 || flipV;
         }
 
         if (direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH) {
@@ -128,11 +119,7 @@ class GraphConnections {
     terminal: CellState,
     source: boolean
   ): ConnectionConstraint[] | null {
-    if (
-      terminal != null &&
-      terminal.shape != null &&
-      terminal.shape.stencil != null
-    ) {
+    if (terminal != null && terminal.shape != null && terminal.shape.stencil != null) {
       return terminal.shape.stencil.constraints;
     }
     return null;
@@ -169,21 +156,13 @@ class GraphConnections {
     let dy = 0;
 
     if (point != null) {
-      perimeter = getValue(
-        edge.style,
-        source ? 'exitPerimeter' : 'entryPerimeter',
-        true
-      );
+      perimeter = getValue(edge.style, source ? 'exitPerimeter' : 'entryPerimeter', true);
 
       // Add entry/exit offset
       // @ts-ignore
-      dx = parseFloat(
-        <string>edge.style[source ? 'exitDx' : 'entryDx']
-      );
+      dx = parseFloat(<string>edge.style[source ? 'exitDx' : 'entryDx']);
       // @ts-ignore
-      dy = parseFloat(
-        <string>edge.style[source ? 'exitDy' : 'entryDy']
-      );
+      dy = parseFloat(<string>edge.style[source ? 'exitDy' : 'entryDy']);
 
       dx = Number.isFinite(dx) ? dx : 0;
       dy = Number.isFinite(dy) ? dy : 0;
@@ -288,10 +267,7 @@ class GraphConnections {
       let r1 = 0;
 
       // Bounds need to be rotated by 90 degrees for further computation
-      if (
-        direction != null &&
-        getValue(vertex.style, 'anchorPointDirection', 1) == 1
-      ) {
+      if (direction != null && getValue(vertex.style, 'anchorPointDirection', 1) == 1) {
         if (direction === DIRECTION_NORTH) {
           r1 += 270;
         } else if (direction === DIRECTION_WEST) {
@@ -308,12 +284,8 @@ class GraphConnections {
 
       const { scale } = this.view;
       point = new point(
-        bounds.x +
-        constraint.point.x * bounds.width +
-        <number>constraint.dx * scale,
-        bounds.y +
-        constraint.point.y * bounds.height +
-        <number>constraint.dy * scale
+        bounds.x + constraint.point.x * bounds.width + <number>constraint.dx * scale,
+        bounds.y + constraint.point.y * bounds.height + <number>constraint.dy * scale
       );
 
       // Rotation for direction before projection on perimeter
@@ -346,10 +318,8 @@ class GraphConnections {
 
           // Legacy support for stencilFlipH/V
           if (vertex.shape != null && vertex.shape.stencil != null) {
-            flipH =
-              utils.getValue(vertex.style, 'stencilFlipH', 0) == 1 || flipH;
-            flipV =
-              utils.getValue(vertex.style, 'stencilFlipV', 0) == 1 || flipV;
+            flipH = utils.getValue(vertex.style, 'stencilFlipH', 0) == 1 || flipH;
+            flipV = utils.getValue(vertex.style, 'stencilFlipV', 0) == 1 || flipV;
           }
 
           if (direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH) {
@@ -515,9 +485,7 @@ class GraphConnections {
 
             if (geo != null) {
               const state = this.graph.view.getState(cell);
-              const pstate = <CellState>(
-                this.graph.view.getState(cell.getParent())
-              );
+              const pstate = <CellState>this.graph.view.getState(cell.getParent());
 
               if (state != null && pstate != null) {
                 geo = geo.clone();
@@ -549,10 +517,7 @@ class GraphConnections {
 
                 let trg = cell.getTerminal(false);
 
-                if (
-                  trg != null &&
-                  this.isCellDisconnectable(cell, trg, false)
-                ) {
+                if (trg != null && this.isCellDisconnectable(cell, trg, false)) {
                   while (trg != null && !dict.get(trg)) {
                     trg = trg.getParent();
                   }
@@ -588,8 +553,7 @@ class GraphConnections {
    * @param parent Optional parent of the opposite end for a connection to be
    * returned.
    */
-  getConnections(cell: Cell,
-                 parent: Cell | null = null): CellArray {
+  getConnections(cell: Cell, parent: Cell | null = null): CellArray {
     return this.getEdges(cell, parent, true, true, false);
   }
 
@@ -698,12 +662,10 @@ class GraphConnections {
    *
    * @param cell {@link mxCell} that represents a possible source or null.
    */
-  isValidSource(cell: Cell): boolean {
+  isValidSource(cell: Cell | null): boolean {
     return (
       (cell == null && this.allowDanglingEdges) ||
-      (cell != null &&
-        (!cell.isEdge() || this.connectableEdges) &&
-        cell.isConnectable())
+      (cell != null && (!cell.isEdge() || this.connectableEdges) && cell.isConnectable())
     );
   }
 
@@ -713,7 +675,7 @@ class GraphConnections {
    *
    * @param cell {@link mxCell} that represents a possible target or null.
    */
-  isValidTarget(cell: Cell): boolean {
+  isValidTarget(cell: Cell | null): boolean {
     return this.isValidSource(cell);
   }
 
@@ -727,7 +689,7 @@ class GraphConnections {
    * @param source {@link mxCell} that represents the source cell.
    * @param target {@link mxCell} that represents the target cell.
    */
-  isValidConnection(source: Cell, target: Cell): boolean {
+  isValidConnection(source: Cell | null, target: Cell | null): boolean {
     return this.isValidSource(source) && this.isValidTarget(target);
   }
 

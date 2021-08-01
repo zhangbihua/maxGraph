@@ -1,5 +1,9 @@
 import type Cell from './view/cell/datatypes/Cell';
-import Shape from './view/geometry/shape/Shape';
+import CellState from './view/cell/datatypes/CellState';
+import RectangleShape from './view/geometry/shape/node/RectangleShape';
+import type Shape from './view/geometry/shape/Shape';
+import type Graph from './view/Graph';
+import ImageBox from './view/image/ImageBox';
 
 export type CellMap = {
   [id: string]: Cell;
@@ -27,20 +31,34 @@ export type CellStateStyles = {
   absoluteArcSize: number;
   align: AlignValue;
   arcSize: number;
+  aspect: string;
+  autosize: boolean;
   backgroundColor: ColorValue;
   backgroundOutline: number;
+  bendable: boolean;
+  cloneable: boolean;
   curved: boolean;
   dashed: boolean;
   dashPattern: string;
+  defaultEdge: CellStateStyles;
+  defaultVertex: CellStateStyles;
+  deletable: boolean;
   direction: DirectionValue;
+  edge: string;
+  editable: boolean;
   endArrow: ArrowType;
   endFill: boolean;
   endSize: number;
+  entryX: number;
+  entryY: number;
+  exitX: number;
+  exitY: number;
   fillColor: ColorValue;
   fillOpacity: number;
   fixDash: boolean;
   flipH: boolean;
   flipV: boolean;
+  foldable: boolean;
   fontColor: ColorValue;
   fontFamily: string;
   fontSize: number;
@@ -63,13 +81,28 @@ export type CellStateStyles = {
   indicatorWidth: number;
   labelBorderColor: ColorValue;
   labelPosition: AlignValue;
+  loop: Function;
   margin: number;
+  movable: boolean;
+  noEdgeStyle: boolean;
   opacity: number;
+  overflow: OverflowValue;
+  perimeter: Function | string | null;
+  perimeterSpacing: number;
   pointerEvents: boolean;
+  resizeable: boolean;
+  resizeHeight: boolean;
+  resizeWidth: boolean;
+  rotatable: boolean;
   rotation: number;
   rounded: boolean;
+  routingCenterX: number;
+  routingCenterY: number;
   separatorColor: ColorValue;
   shadow: boolean;
+  shape: ShapeValue;
+  sourcePerimeterSpacing: number;
+  sourcePort: string;
   spacing: number;
   spacingBottom: number;
   spacingLeft: number;
@@ -83,10 +116,13 @@ export type CellStateStyles = {
   strokeWidth: number;
   swimlaneFillColor: ColorValue;
   swimlaneLine: boolean;
+  targetPerimeterSpacing: number;
+  targetPort: string;
   textDirection: TextDirectionValue;
   textOpacity: number;
   verticalAlign: VAlignValue;
   verticalLabelPosition: VAlignValue;
+  whiteSpace: WhiteSpaceValue;
 };
 
 export type ColorValue = string;
@@ -95,6 +131,7 @@ export type TextDirectionValue = '' | 'ltr' | 'rtl' | 'auto';
 export type AlignValue = 'left' | 'center' | 'right';
 export type VAlignValue = 'top' | 'middle' | 'bottom';
 export type OverflowValue = 'fill' | 'width' | 'auto' | 'hidden' | 'scroll' | 'visible';
+export type WhiteSpaceValue = 'normal' | 'wrap' | 'nowrap' | 'pre';
 export type ArrowType =
   | 'none'
   | 'classic'
@@ -106,6 +143,23 @@ export type ArrowType =
   | 'oval'
   | 'diamond'
   | 'diamondThin';
+export type ShapeValue =
+  | 'rectangle'
+  | 'ellipse'
+  | 'doubleEllipse'
+  | 'rhombus'
+  | 'line'
+  | 'image'
+  | 'arrow'
+  | 'arrowConnector'
+  | 'label'
+  | 'cylinder'
+  | 'swimlane'
+  | 'connector'
+  | 'actor'
+  | 'cloud'
+  | 'triangle'
+  | 'hexagon';
 
 export type CanvasState = {
   dx: number;
@@ -151,3 +205,37 @@ export interface Gradient extends SVGLinearGradientElement {
 export type GradientMap = {
   [k: string]: Gradient;
 };
+
+export interface GraphPlugin {
+  onInit: (graph: Graph) => void;
+  onDestroy: () => void;
+}
+
+// Events
+
+export type Listener = {
+  name: string;
+  f: EventListener;
+};
+
+export type ListenerTarget = {
+  mxListenerList?: Listener[];
+};
+
+export type Listenable = (Node | Window) & ListenerTarget;
+
+export type GestureEvent = Event &
+  MouseEvent & {
+    scale?: number;
+    pointerId?: number;
+  };
+
+export type EventCache = GestureEvent[];
+
+export interface CellHandle {
+  state: CellState;
+  cursor: string;
+  image: ImageBox | null;
+  shape: Shape | null;
+  setVisible: (v: boolean) => void;
+}

@@ -12,12 +12,12 @@ import type { UndoableChange } from '../../types';
  * Action to change the current root in a view.
  */
 class CurrentRootChange implements UndoableChange {
-  view: mxGraphView;
+  view: GraphView;
   root: Cell | null;
   previous: Cell | null;
   isUp: boolean;
 
-  constructor(view: mxGraphView, root: Cell | null) {
+  constructor(view: GraphView, root: Cell | null) {
     this.view = view;
     this.root = root;
     this.previous = root;
@@ -44,9 +44,7 @@ class CurrentRootChange implements UndoableChange {
     this.view.currentRoot = this.previous;
     this.previous = tmp;
 
-    const translate = this.view.graph.getTranslateForRoot(
-      this.view.currentRoot
-    );
+    const translate = this.view.graph.getTranslateForRoot(this.view.currentRoot);
 
     if (translate) {
       this.view.translate = new Point(-translate.x, -translate.y);
@@ -62,13 +60,7 @@ class CurrentRootChange implements UndoableChange {
     const name = this.isUp ? InternalEvent.UP : InternalEvent.DOWN;
 
     this.view.fireEvent(
-      new EventObject(
-        name,
-        'root',
-        this.view.currentRoot,
-        'previous',
-        this.previous
-      )
+      new EventObject(name, 'root', this.view.currentRoot, 'previous', this.previous)
     );
 
     this.isUp = !this.isUp;

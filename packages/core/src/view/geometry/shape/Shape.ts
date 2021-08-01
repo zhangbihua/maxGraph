@@ -105,7 +105,7 @@ class Shape {
    *
    * container - DOM node that will contain the shape.
    */
-  init(container: SVGElement) {
+  init(container: HTMLElement | SVGElement) {
     if (!this.node.parentNode) {
       container.appendChild(this.node);
     }

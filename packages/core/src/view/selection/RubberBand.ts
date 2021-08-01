@@ -18,28 +18,32 @@ import Rectangle from '../geometry/Rectangle';
 import { isAltDown, isMultiTouchEvent } from '../../util/EventUtils';
 import { clearSelection } from '../../util/DomUtils';
 import Graph from '../Graph';
+import { GraphPlugin } from '../../types';
+import EventObject from '../event/EventObject';
 
 /**
  * Event handler that selects rectangular regions.
  * This is not built-into [mxGraph].
  * To enable rubberband selection in a graph, use the following code.
  */
-class RubberBand {
-  forceRubberbandHandler: Function;
-  panHandler: Function;
-  gestureHandler: Function;
-  graph: Graph;
+class RubberBand implements GraphPlugin {
+  forceRubberbandHandler?: Function;
+  panHandler?: Function;
+  gestureHandler?: Function;
+  graph?: Graph;
   first: Point | null = null;
   destroyed: boolean = false;
   dragHandler?: Function;
   dropHandler?: Function;
 
-  constructor(graph: Graph) {
+  constructor() {}
+
+  onInit(graph: Graph) {
     this.graph = graph;
     this.graph.addMouseListener(this);
 
     // Handles force rubberband event
-    this.forceRubberbandHandler = (sender, evt) => {
+    this.forceRubberbandHandler = (sender: any, evt: EventObject) => {
       const evtName = evt.getProperty('eventName');
       const me = evt.getProperty('event');
 
@@ -379,7 +383,7 @@ class RubberBand {
    * normally not need to be called, it is called automatically when the
    * window unloads.
    */
-  destroy() {
+  onDestroy() {
     if (!this.destroyed) {
       this.destroyed = true;
       this.graph.removeMouseListener(this);

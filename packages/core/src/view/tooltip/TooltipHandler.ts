@@ -9,9 +9,10 @@ import { fit, getScrollOrigin } from '../../util/Utils';
 import { TOOLTIP_VERTICAL_OFFSET } from '../../util/Constants';
 import { getSource, isMouseEvent } from '../../util/EventUtils';
 import { isNode } from '../../util/DomUtils';
-import Graph from '../Graph';
+import Graph, { MaxGraph } from '../Graph';
 import CellState from '../cell/datatypes/CellState';
 import InternalMouseEvent from '../event/InternalMouseEvent';
+import { Listenable } from '../../types';
 
 /**
  * Class: mxTooltipHandler
@@ -38,41 +39,42 @@ import InternalMouseEvent from '../event/InternalMouseEvent';
  * delay - Optional delay in milliseconds.
  */
 class TooltipHandler {
-  constructor(graph: Graph | null, delay: number) {
-    if (graph != null) {
-      this.graph = graph;
-      this.delay = delay || 500;
-      this.graph.addMouseListener(this);
-    }
+  constructor(graph: MaxGraph, delay: number = 500) {
+    this.graph = graph;
+    this.delay = delay;
+    this.graph.addMouseListener(this);
   }
+
+  // @ts-ignore Cannot be null.
+  div: HTMLElement;
 
   /**
    * Variable: zIndex
    *
    * Specifies the zIndex for the tooltip and its shadow. Default is 10005.
    */
-  zIndex: number = 10005;
+  zIndex = 10005;
 
   /**
    * Variable: graph
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: Graph = null;
+  graph: Graph;
 
   /**
    * Variable: delay
    *
    * Delay to show the tooltip in milliseconds. Default is 500.
    */
-  delay: number = null;
+  delay: number;
 
   /**
    * Variable: ignoreTouchEvents
    *
    * Specifies if touch and pen events should be ignored. Default is true.
    */
-  ignoreTouchEvents: boolean = true;
+  ignoreTouchEvents = true;
 
   /**
    * Variable: hideOnHover
@@ -80,21 +82,28 @@ class TooltipHandler {
    * Specifies if the tooltip should be hidden if the mouse is moved over the
    * current cell. Default is false.
    */
-  hideOnHover: boolean = false;
+  hideOnHover = false;
 
   /**
    * Variable: destroyed
    *
    * True if this handler was destroyed using <destroy>.
    */
-  destroyed: boolean = false;
+  destroyed = false;
+
+  lastX: number = 0;
+  lastY: number = 0;
+  state: CellState | null = null;
+  stateSource: boolean = false;
+  node: any;
+  thread: number | null = null;
 
   /**
    * Variable: enabled
    *
    * Specifies if events are handled. Default is true.
    */
-  enabled: boolean = true;
+  enabled = true;
 
   /**
    * Function: isEnabled
@@ -102,7 +111,7 @@ class TooltipHandler {
    * Returns true if events are handled. This implementation
    * returns <enabled>.
    */
-  isEnabled(): boolean {
+  isEnabled() {
     return this.enabled;
   }
 
@@ -112,7 +121,7 @@ class TooltipHandler {
    * Enables or disables event handling. This implementation
    * updates <enabled>.
    */
-  setEnabled(enabled: boolean): void {
+  setEnabled(enabled: boolean) {
     this.enabled = enabled;
   }
 
@@ -121,7 +130,7 @@ class TooltipHandler {
    *
    * Returns <hideOnHover>.
    */
-  isHideOnHover(): boolean {
+  isHideOnHover() {
     return this.hideOnHover;
   }
 
@@ -130,7 +139,7 @@ class TooltipHandler {
    *
    * Sets <hideOnHover>.
    */
-  setHideOnHover(value: boolean): void {
+  setHideOnHover(value: boolean) {
     this.hideOnHover = value;
   }
 
@@ -139,22 +148,20 @@ class TooltipHandler {
    *
    * Initializes the DOM nodes required for this tooltip handler.
    */
-  init(): void {
-    if (document.body != null) {
-      this.div = document.createElement('div');
-      this.div.className = 'mxTooltip';
-      this.div.style.visibility = 'hidden';
+  init() {
+    this.div = document.createElement('div');
+    this.div.className = 'mxTooltip';
+    this.div.style.visibility = 'hidden';
 
-      document.body.appendChild(this.div);
+    document.body.appendChild(this.div);
 
-      InternalEvent.addGestureListeners(this.div, (evt) => {
-        const source = getSource(evt);
+    InternalEvent.addGestureListeners(this.div, (evt) => {
+      const source = getSource(evt);
 
-        if (source.nodeName !== 'A') {
-          this.hideTooltip();
-        }
-      });
-    }
+      if (source.nodeName !== 'A') {
+        this.hideTooltip();
+      }
+    });
   }
 
   /**
@@ -162,7 +169,7 @@ class TooltipHandler {
    *
    * Returns the <mxCellState> to be used for showing a tooltip for this event.
    */
-  getStateForEvent(me: MouseEvent): CellState {
+  getStateForEvent(me: InternalMouseEvent) {
     return me.getState();
   }
 
@@ -173,7 +180,7 @@ class TooltipHandler {
    * event all subsequent events of the gesture are redirected to this
    * handler.
    */
-  mouseDown(sender: any, me: InternalMouseEvent): void {
+  mouseDown(sender: any, me: InternalMouseEvent) {
     this.reset(me, false);
     this.hideTooltip();
   }
@@ -183,7 +190,7 @@ class TooltipHandler {
    *
    * Handles the event by updating the rubberband selection.
    */
-  mouseMove(sender: any, me: InternalMouseEvent): void {
+  mouseMove(sender: Listenable, me: InternalMouseEvent) {
     if (me.getX() !== this.lastX || me.getY() !== this.lastY) {
       this.reset(me, true);
       const state = this.getStateForEvent(me);
@@ -222,7 +229,7 @@ class TooltipHandler {
    * Resets the timer.
    */
   resetTimer(): void {
-    if (this.thread != null) {
+    if (this.thread !== null) {
       window.clearTimeout(this.thread);
       this.thread = null;
     }
@@ -233,16 +240,16 @@ class TooltipHandler {
    *
    * Resets and/or restarts the timer to trigger the display of the tooltip.
    */
-  reset(me: InternalMouseEvent, restart: boolean, state: CellState): void {
+  reset(me: InternalMouseEvent, restart: boolean, state: CellState | null = null) {
     if (!this.ignoreTouchEvents || isMouseEvent(me.getEvent())) {
       this.resetTimer();
-      state = state != null ? state : this.getStateForEvent(me);
+      state = state ?? this.getStateForEvent(me);
 
       if (
         restart &&
         this.isEnabled() &&
-        state != null &&
-        (this.div == null || this.div.style.visibility === 'hidden')
+        state &&
+        this.div.style.visibility === 'hidden'
       ) {
         const node = me.getSource();
         const x = me.getX();
@@ -251,6 +258,7 @@ class TooltipHandler {
 
         this.thread = window.setTimeout(() => {
           if (
+            state &&
             !this.graph.isEditing() &&
             !this.graph.popupMenuHandler.isMenuShowing() &&
             !this.graph.isMouseDown
@@ -274,7 +282,7 @@ class TooltipHandler {
    *
    * Hides the tooltip and resets the timer.
    */
-  hide(): void {
+  hide() {
     this.resetTimer();
     this.hideTooltip();
   }
@@ -284,11 +292,9 @@ class TooltipHandler {
    *
    * Hides the tooltip.
    */
-  hideTooltip(): void {
-    if (this.div != null) {
-      this.div.style.visibility = 'hidden';
-      this.div.innerHTML = '';
-    }
+  hideTooltip() {
+    this.div.style.visibility = 'hidden';
+    this.div.innerHTML = '';
   }
 
   /**
@@ -297,24 +303,19 @@ class TooltipHandler {
    * Shows the tooltip for the specified cell and optional index at the
    * specified location (with a vertical offset of 10 pixels).
    */
-  show(tip: string, x: number, y: number): void {
-    if (!this.destroyed && tip != null && tip.length > 0) {
-      // Initializes the DOM nodes if required
-      if (this.div == null) {
-        this.init();
-      }
-
+  show(tip: HTMLElement | string | null, x: number, y: number) {
+    if (!this.destroyed && tip && tip !== '') {
       const origin = getScrollOrigin();
 
-      this.div.style.zIndex = this.zIndex;
+      this.div.style.zIndex = String(this.zIndex);
       this.div.style.left = `${x + origin.x}px`;
       this.div.style.top = `${y + TOOLTIP_VERTICAL_OFFSET + origin.y}px`;
 
       if (!isNode(tip)) {
-        this.div.innerHTML = tip.replace(/\n/g, '<br>');
+        this.div.innerHTML = (tip as string).replace(/\n/g, '<br>');
       } else {
         this.div.innerHTML = '';
-        this.div.appendChild(tip);
+        this.div.appendChild(tip as HTMLElement);
       }
 
       this.div.style.visibility = '';
@@ -327,17 +328,16 @@ class TooltipHandler {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy(): void {
+  destroy() {
     if (!this.destroyed) {
       this.graph.removeMouseListener(this);
       InternalEvent.release(this.div);
 
-      if (this.div != null && this.div.parentNode != null) {
+      if (this.div.parentNode != null) {
         this.div.parentNode.removeChild(this.div);
       }
 
       this.destroyed = true;
-      this.div = null;
     }
   }
 }

@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import utils, { getRotatedPoint, toRadians } from '../../../util/Utils';
+import { getRotatedPoint, toRadians } from '../../../util/Utils';
 import Point from '../../geometry/Point';
 import ImageShape from '../../geometry/shape/node/ImageShape';
 import Rectangle from '../../geometry/Rectangle';
@@ -21,60 +21,65 @@ import {
 import InternalEvent from '../../event/InternalEvent';
 import Shape from '../../geometry/shape/Shape';
 import InternalMouseEvent from '../../event/InternalMouseEvent';
-import Image from '../../image/ImageBox';
-import Graph from '../../Graph';
+import ImageBox from '../../image/ImageBox';
 import CellState from '../datatypes/CellState';
+import CellArray from '../datatypes/CellArray';
+
+import type { MaxGraph } from '../../Graph';
+import type { CellHandle, CellStateStyles } from 'packages/core/src/types';
 
 /**
  * Implements a single custom handle for vertices.
  *
  * @class VertexHandle
  */
-class VertexHandle {
+class VertexHandle implements CellHandle {
   dependencies = ['snap', 'cells'];
 
   constructor(
     state: CellState,
-    cursor: string | null = 'default',
-    image: Image | null = null,
+    cursor: string = 'default',
+    image: ImageBox | null = null,
     shape: Shape | null = null
   ) {
     this.graph = state.view.graph;
     this.state = state;
-    this.cursor = cursor != null ? cursor : this.cursor;
-    this.image = image != null ? image : this.image;
+    this.cursor = cursor;
+    this.image = image;
     this.shape = shape;
     this.init();
   }
 
-  graph: Graph;
+  graph: MaxGraph;
   state: CellState;
   shape: Shape | ImageShape | null;
 
   /**
    * Specifies the cursor to be used for this handle. Default is 'default'.
    */
-  cursor: string = 'default';
+  cursor = 'default';
 
   /**
    * Specifies the <mxImage> to be used to render the handle. Default is null.
    */
-  image: Image | null = null;
+  image: ImageBox | null = null;
 
   /**
    * Default is false.
    */
-  ignoreGrid: boolean = false;
+  ignoreGrid = false;
 
   /**
    * Hook for subclassers to return the current position of the handle.
    */
-  getPosition(bounds: Rectangle) {}
+  getPosition(bounds: Rectangle | null): Point {
+    return new Point();
+  }
 
   /**
    * Hooks for subclassers to update the style in the <state>.
    */
-  setPosition(bounds: Rectangle, pt: Point, me: InternalMouseEvent) {}
+  setPosition(bounds: Rectangle | null, pt: Point, me: InternalMouseEvent) {}
 
   /**
    * Hook for subclassers to execute the handle.
@@ -84,8 +89,8 @@ class VertexHandle {
   /**
    * Sets the cell style with the given name to the corresponding value in <state>.
    */
-  copyStyle(key: string): void {
-    this.graph.setCellStyles(key, this.state.style[key], [this.state.cell]);
+  copyStyle(key: keyof CellStateStyles) {
+    this.graph.setCellStyles(key, this.state.style[key], new CellArray(this.state.cell));
   }
 
   /**
@@ -94,10 +99,7 @@ class VertexHandle {
   processEvent(me: InternalMouseEvent): void {
     const { scale } = this.graph.view;
     const tr = this.graph.view.translate;
-    let pt = new Point(
-      <number>me.getGraphX() / scale - tr.x,
-      <number>me.getGraphY() / scale - tr.y
-    );
+    let pt = new Point(me.getGraphX() / scale - tr.x, me.getGraphY() / scale - tr.y);
 
     // Center shape on mouse cursor
     if (this.shape != null && this.shape.bounds != null) {
@@ -112,7 +114,7 @@ class VertexHandle {
       this.rotatePoint(
         this.snapPoint(
           this.rotatePoint(pt, alpha1),
-          this.ignoreGrid || !this.graph.snap.isGridEnabledEvent(me.getEvent())
+          this.ignoreGrid || !this.graph.isGridEnabledEvent(me.getEvent())
         ),
         alpha2
       )
@@ -161,16 +163,16 @@ class VertexHandle {
   /**
    * Creates and initializes the shapes required for this handle.
    */
-  init(): void {
+  init() {
     const html = this.isHtmlRequired();
 
-    if (this.image != null) {
+    if (this.image) {
       this.shape = new ImageShape(
         new Rectangle(0, 0, this.image.width, this.image.height),
         this.image.src
       );
       this.shape.preserveImageAspect = false;
-    } else if (this.shape == null) {
+    } else if (!this.shape) {
       this.shape = this.createShape(html);
     }
 
@@ -180,7 +182,7 @@ class VertexHandle {
   /**
    * Creates and returns the shape for this handle.
    */
-  createShape(html: any): Shape {
+  createShape(html: boolean): Shape {
     const bounds = new Rectangle(0, 0, HANDLE_SIZE, HANDLE_SIZE);
     return new RectangleShape(bounds, HANDLE_FILLCOLOR, HANDLE_STROKECOLOR);
   }
@@ -188,8 +190,8 @@ class VertexHandle {
   /**
    * Initializes <shape> and sets its cursor.
    */
-  initShape(html: any): void {
-    const shape = <Shape>this.shape;
+  initShape(html: boolean) {
+    const shape = this.shape as Shape; // `this.shape` cannot be null.
 
     if (html && shape.isHtmlAllowed()) {
       shape.dialect = DIALECT_STRICTHTML;
@@ -198,7 +200,7 @@ class VertexHandle {
       shape.dialect =
         this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
 
-      if (this.cursor != null) {
+      if (this.cursor) {
         shape.init(this.graph.getView().getOverlayPane());
       }
     }
@@ -210,11 +212,11 @@ class VertexHandle {
   /**
    * Renders the shape for this handle.
    */
-  redraw(): void {
-    if (this.shape != null && this.state.shape != null) {
+  redraw() {
+    if (this.shape && this.state.shape) {
       let pt = this.getPosition(this.state.getPaintBounds());
 
-      if (pt != null) {
+      if (pt) {
         const alpha = toRadians(this.getTotalRotation());
         pt = this.rotatePoint(this.flipPoint(pt), alpha);
 
@@ -235,16 +237,14 @@ class VertexHandle {
    * Returns true if this handle should be rendered in HTML. This returns true if
    * the text node is in the graph container.
    */
-  isHtmlRequired(): boolean {
-    return (
-      this.state.text != null && this.state.text.node.parentNode === this.graph.container
-    );
+  isHtmlRequired() {
+    return !!this.state.text && this.state.text.node.parentNode === this.graph.container;
   }
 
   /**
    * Rotates the point by the given angle.
    */
-  rotatePoint(pt: Point, alpha: number): Point {
+  rotatePoint(pt: Point, alpha: number) {
     const bounds = <Rectangle>this.state.getCellBounds();
     const cx = new Point(bounds.getCenterX(), bounds.getCenterY());
     const cos = Math.cos(alpha);
@@ -256,8 +256,8 @@ class VertexHandle {
   /**
    * Flips the given point vertically and/or horizontally.
    */
-  flipPoint(pt: Point): Point {
-    if (this.state.shape != null) {
+  flipPoint(pt: Point) {
+    if (this.state.shape) {
       const bounds = <Rectangle>this.state.getCellBounds();
 
       if (this.state.shape.flipH) {
@@ -275,10 +275,10 @@ class VertexHandle {
    * Snaps the given point to the grid if ignore is false. This modifies
    * the given point in-place and also returns it.
    */
-  snapPoint(pt: Point, ignore: boolean): Point {
+  snapPoint(pt: Point, ignore: boolean) {
     if (!ignore) {
-      pt.x = this.graph.snap.snap(pt.x);
-      pt.y = this.graph.snap.snap(pt.y);
+      pt.x = this.graph.snap(pt.x);
+      pt.y = this.graph.snap(pt.y);
     }
     return pt;
   }
@@ -286,8 +286,8 @@ class VertexHandle {
   /**
    * Shows or hides this handle.
    */
-  setVisible(visible: boolean): void {
-    if (this.shape != null && this.shape.node != null) {
+  setVisible(visible: boolean) {
+    if (this.shape && this.shape.node) {
       this.shape.node.style.display = visible ? '' : 'none';
     }
   }
@@ -295,9 +295,9 @@ class VertexHandle {
   /**
    * Resets the state of this handle by setting its visibility to true.
    */
-  reset(): void {
+  reset() {
     this.setVisible(true);
-    this.state.style = this.graph.cell.getCellStyle(this.state.cell);
+    this.state.style = this.graph.getCellStyle(this.state.cell);
     this.positionChanged();
   }
 
@@ -305,7 +305,7 @@ class VertexHandle {
    * Destroys this handle.
    */
   destroy(): void {
-    if (this.shape != null) {
+    if (this.shape) {
       this.shape.destroy();
       this.shape = null;
     }

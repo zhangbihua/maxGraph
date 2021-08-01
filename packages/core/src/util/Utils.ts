@@ -1257,7 +1257,7 @@ export const getDocumentScrollOrigin = (doc: Document) => {
  * included. Default is true.
  */
 export const getScrollOrigin = (
-  node: HTMLElement | null,
+  node: HTMLElement | null = null,
   includeAncestors = false,
   includeDocument = true
 ) => {
@@ -1548,7 +1548,7 @@ export const relativeCcw = (
  * node - DOM node to set the opacity for.
  * value - Opacity in %. Possible values are between 0 and 100.
  */
-export const setOpacity = (node: HTMLElement, value: number) => {
+export const setOpacity = (node: HTMLElement | SVGElement, value: number) => {
   node.style.opacity = String(value / 100);
 };
 
@@ -1743,7 +1743,12 @@ export const removeAllStylenames = (style: string) => {
  * key - Key of the style to be changed.
  * value - New value for the given key.
  */
-export const setCellStyles = (model: Model, cells: Cell[], key: string, value: any) => {
+export const setCellStyles = (
+  model: Model,
+  cells: CellArray,
+  key: string,
+  value: any
+) => {
   if (cells.length > 0) {
     model.beginUpdate();
     try {
@@ -1842,7 +1847,7 @@ export const setStyle = (style: string | null, key: string, value: any) => {
  */
 export const setCellStyleFlags = (
   model: Model,
-  cells: Cell[],
+  cells: CellArray,
   key: string,
   flag: number,
   value: boolean
@@ -1985,8 +1990,8 @@ export const getSizeForString = (
   text: string,
   fontSize = DEFAULT_FONTSIZE,
   fontFamily = DEFAULT_FONTFAMILY,
-  textWidth: number,
-  fontStyle: number
+  textWidth: number | null = null,
+  fontStyle: number | null = null
 ) => {
   const div = document.createElement('div');
 
@@ -1996,7 +2001,7 @@ export const getSizeForString = (
   div.style.lineHeight = `${Math.round(fontSize * LINE_HEIGHT)}px`;
 
   // Sets the font style
-  if (fontStyle != null) {
+  if (fontStyle !== null) {
     if ((fontStyle & FONT_BOLD) === FONT_BOLD) {
       div.style.fontWeight = 'bold';
     }
@@ -2025,7 +2030,7 @@ export const getSizeForString = (
   div.style.visibility = 'hidden';
   div.style.display = 'inline-block';
 
-  if (textWidth != null) {
+  if (textWidth !== null) {
     div.style.width = `${textWidth}px`;
     div.style.whiteSpace = 'normal';
   } else {
@@ -2341,5 +2346,20 @@ export const isNullish = (v: string | object | null | undefined | number) =>
   v === null || v === undefined;
 export const isNotNullish = (v: string | object | null | undefined | number) =>
   !isNullish(v);
+
+// Mixins support
+export const applyMixins = (derivedCtor: any, constructors: any[]) => {
+  constructors.forEach((baseCtor) => {
+    Object.getOwnPropertyNames(baseCtor.prototype).forEach((name) => {
+      Object.defineProperty(
+        derivedCtor.prototype,
+        name,
+        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) || Object.create(null)
+      );
+    });
+  });
+};
+
+export const autoImplement = <T>(): new () => T => class {} as any;
 
 export default utils;

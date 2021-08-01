@@ -1,68 +1,82 @@
-import Cell from "../datatypes/Cell";
-import CellArray from "../datatypes/CellArray";
-import {
-  findNearestSegment,
-  removeDuplicates,
-} from "../../../util/Utils";
-import Geometry from "../../geometry/Geometry";
-import EventObject from "../../event/EventObject";
-import InternalEvent from "../../event/InternalEvent";
-import Dictionary from "../../../util/Dictionary";
-import Graph from "../../Graph";
+import Cell from '../datatypes/Cell';
+import CellArray from '../datatypes/CellArray';
+import { autoImplement, findNearestSegment, removeDuplicates } from '../../../util/Utils';
+import Geometry from '../../geometry/Geometry';
+import EventObject from '../../event/EventObject';
+import InternalEvent from '../../event/InternalEvent';
+import Dictionary from '../../../util/Dictionary';
 
-class GraphEdge {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+import type Graph from '../../Graph';
+import type GraphCells from '../GraphCells';
+import type GraphConnections from '../../connection/GraphConnections';
 
-  graph: Graph;
+type PartialGraph = Pick<Graph, 'batchUpdate' | 'fireEvent' | 'getModel' | 'getView'>;
+type PartialCells = Pick<
+  GraphCells,
+  | 'cloneCell'
+  | 'cellsMoved'
+  | 'cellsAdded'
+  | 'addCell'
+  | 'isValidAncestor'
+  | 'getChildCells'
+>;
+type PartialConnections = Pick<GraphConnections, 'cellConnected'>;
+type PartialClass = PartialGraph & PartialCells & PartialConnections;
 
+// @ts-ignore recursive reference error
+class GraphEdge extends autoImplement<PartialClass>() {
   /**
    * Specifies if edge control points should be reset after the resize of a
    * connected cell.
    * @default false
    */
-  resetEdgesOnResize: boolean = false;
+  resetEdgesOnResize = false;
+
+  isResetEdgesOnResize = () => this.resetEdgesOnResize;
 
   /**
    * Specifies if edge control points should be reset after the move of a
    * connected cell.
    * @default false
    */
-  resetEdgesOnMove: boolean = false;
+  resetEdgesOnMove = false;
+
+  isResetEdgesOnMove = () => this.resetEdgesOnMove;
 
   /**
    * Specifies if edge control points should be reset after the the edge has been
    * reconnected.
    * @default true
    */
-  resetEdgesOnConnect: boolean = true;
+  resetEdgesOnConnect = true;
+
+  isResetEdgesOnConnect = () => this.resetEdgesOnConnect;
 
   /**
    * Specifies if edges are connectable. This overrides the connectable field in edges.
    * @default false
    */
-  connectableEdges: boolean = false;
+  connectableEdges = false;
 
   /**
    * Specifies if edges with disconnected terminals are allowed in the graph.
    * @default true
    */
-  allowDanglingEdges: boolean = true;
+  allowDanglingEdges = true;
 
   /**
    * Specifies if edges that are cloned should be validated and only inserted
    * if they are valid.
    * @default true
    */
-  cloneInvalidEdges: boolean = false;
+  cloneInvalidEdges = false;
 
   /**
    * Specifies if edges should be disconnected from their terminals when they
    * are moved.
    * @default true
    */
-  disconnectOnMove: boolean = true;
+  disconnectOnMove = true;
 
   /**
    * Specifies the alternate edge style to be used if the main control point
@@ -75,7 +89,7 @@ class GraphEdge {
    * Specifies the return value for edges in {@link isLabelMovable}.
    * @default true
    */
-  edgeLabelsMovable: boolean = true;
+  edgeLabelsMovable = true;
 
   /*****************************************************************************
    * Group: Graph Behaviour
@@ -84,14 +98,14 @@ class GraphEdge {
   /**
    * Returns {@link edgeLabelsMovable}.
    */
-  isEdgeLabelsMovable(): boolean {
+  isEdgeLabelsMovable() {
     return this.edgeLabelsMovable;
   }
 
   /**
    * Sets {@link edgeLabelsMovable}.
    */
-  setEdgeLabelsMovable(value: boolean): void {
+  setEdgeLabelsMovable(value: boolean) {
     this.edgeLabelsMovable = value;
   }
 
@@ -101,14 +115,14 @@ class GraphEdge {
    *
    * @param value Boolean indicating if dangling edges are allowed.
    */
-  setAllowDanglingEdges(value: boolean): void {
+  setAllowDanglingEdges(value: boolean) {
     this.allowDanglingEdges = value;
   }
 
   /**
    * Returns {@link allowDanglingEdges} as a boolean.
    */
-  isAllowDanglingEdges(): boolean {
+  isAllowDanglingEdges() {
     return this.allowDanglingEdges;
   }
 
@@ -117,14 +131,14 @@ class GraphEdge {
    *
    * @param value Boolean indicating if edges should be connectable.
    */
-  setConnectableEdges(value: boolean): void {
+  setConnectableEdges(value: boolean) {
     this.connectableEdges = value;
   }
 
   /**
    * Returns {@link connectableEdges} as a boolean.
    */
-  isConnectableEdges(): boolean {
+  isConnectableEdges() {
     return this.connectableEdges;
   }
 
@@ -135,14 +149,14 @@ class GraphEdge {
    * @param value Boolean indicating if cloned invalid edges should be
    * inserted into the graph or ignored.
    */
-  setCloneInvalidEdges(value: boolean): void {
+  setCloneInvalidEdges(value: boolean) {
     this.cloneInvalidEdges = value;
   }
 
   /**
    * Returns {@link cloneInvalidEdges} as a boolean.
    */
-  isCloneInvalidEdges(): boolean {
+  isCloneInvalidEdges() {
     return this.cloneInvalidEdges;
   }
 
@@ -176,20 +190,20 @@ class GraphEdge {
    * @param edge {@link mxCell} whose style should be changed.
    */
   // flipEdge(edge: mxCell): mxCell;
-  flipEdge(edge: Cell): Cell {
-    if (this.alternateEdgeStyle != null) {
-      this.graph.batchUpdate(() => {
+  flipEdge(edge: Cell) {
+    if (this.alternateEdgeStyle) {
+      this.batchUpdate(() => {
         const style = edge.getStyle();
 
-        if (style == null || style.length === 0) {
-          this.graph.model.setStyle(edge, this.alternateEdgeStyle);
+        if (!style || style.length === 0) {
+          this.getModel().setStyle(edge, this.alternateEdgeStyle);
         } else {
-          this.graph.model.setStyle(edge, null);
+          this.getModel().setStyle(edge, null);
         }
 
         // Removes all existing control points
         this.resetEdge(edge);
-        this.graph.fireEvent(new EventObject(InternalEvent.FLIP_EDGE, 'edge', edge));
+        this.fireEvent(new EventObject(InternalEvent.FLIP_EDGE, 'edge', edge));
       });
     }
     return edge;
@@ -219,35 +233,35 @@ class GraphEdge {
     edge: Cell,
     cells: CellArray,
     newEdge: Cell,
-    dx: number = 0,
-    dy: number = 0,
+    dx = 0,
+    dy = 0,
     x: number,
     y: number,
     parent: Cell | null = null
   ) {
-    parent = parent != null ? parent : edge.getParent();
+    parent = parent ?? edge.getParent();
     const source = edge.getTerminal(true);
 
-    this.graph.batchUpdate(() => {
-      if (newEdge == null) {
-        newEdge = <Cell>this.cloneCell(edge);
+    this.batchUpdate(() => {
+      if (!newEdge) {
+        newEdge = this.cloneCell(edge);
 
         // Removes waypoints before/after new cell
-        const state = this.graph.view.getState(edge);
-        let geo = newEdge.getGeometry();
+        const state = this.getView().getState(edge);
+        let geo: Geometry | null = newEdge.getGeometry();
 
-        if (geo != null && geo.points != null && state != null) {
-          const t = this.graph.view.translate;
-          const s = this.graph.view.scale;
+        if (geo && state) {
+          const t = this.getView().translate;
+          const s = this.getView().scale;
           const idx = findNearestSegment(state, (dx + t.x) * s, (dy + t.y) * s);
 
           geo.points = geo.points.slice(0, idx);
-          geo = <Geometry>edge.getGeometry();
+          geo = edge.getGeometry();
 
-          if (geo != null && geo.points != null) {
-            geo = <Geometry>geo.clone();
+          if (geo) {
+            geo = geo.clone();
             geo.points = geo.points.slice(idx);
-            this.graph.model.setGeometry(edge, geo);
+            this.getModel().setGeometry(edge, geo);
           }
         }
       }
@@ -255,7 +269,7 @@ class GraphEdge {
       this.cellsMoved(cells, dx, dy, false, false);
       this.cellsAdded(
         cells,
-        parent,
+        parent as Cell,
         parent ? parent.getChildCount() : 0,
         null,
         null,
@@ -263,18 +277,15 @@ class GraphEdge {
       );
       this.cellsAdded(
         new CellArray(newEdge),
-        parent,
+        parent as Cell,
         parent ? parent.getChildCount() : 0,
         source,
         cells[0],
         false
       );
       this.cellConnected(edge, cells[0], true);
-      this.graph.fireEvent(
-        new EventObject(
-          InternalEvent.SPLIT_EDGE,
-          { edge, cells, newEdge, dx, dy }
-        )
+      this.fireEvent(
+        new EventObject(InternalEvent.SPLIT_EDGE, { edge, cells, newEdge, dx, dy })
       );
     });
 
@@ -294,8 +305,7 @@ class GraphEdge {
    * @param target {@link mxCell} that defines the target of the edge.
    * @param style Optional string that defines the cell style.
    */
-  // insertEdge(parent: mxCell, id: string | null, value: any, source: mxCell, target: mxCell, style?: string): mxCell;
-  insertEdge(...args: any[]): Cell {
+  insertEdge(...args: any[]) {
     let parent: Cell;
     let id: string = '';
     let value: any; // note me - can be a string or a class instance!!!
@@ -328,7 +338,6 @@ class GraphEdge {
    * are set when the edge is added to the model.
    *
    */
-  // createEdge(parent: mxCell, id: string | null, value: any, source: mxCell, target: mxCell, style?: string): mxCell;
   createEdge(
     parent: Cell | null = null,
     id: string,
@@ -363,7 +372,7 @@ class GraphEdge {
     source: Cell | null = null,
     target: Cell | null = null,
     index: number | null = null
-  ): Cell {
+  ) {
     return this.addCell(edge, parent, index, source, target);
   }
 
@@ -375,7 +384,7 @@ class GraphEdge {
    * Returns an array with the given cells and all edges that are connected
    * to a cell or one of its descendants.
    */
-  addAllEdges(cells: CellArray): CellArray {
+  addAllEdges(cells: CellArray) {
     const allCells = cells.slice();
     return new CellArray(...removeDuplicates(allCells.concat(this.getAllEdges(cells))));
   }
@@ -383,19 +392,20 @@ class GraphEdge {
   /**
    * Returns all edges connected to the given cells or its descendants.
    */
-  getAllEdges(cells: CellArray | null): CellArray {
+  getAllEdges(cells: CellArray | null) {
     let edges: CellArray = new CellArray();
-    if (cells != null) {
+
+    if (cells) {
       for (let i = 0; i < cells.length; i += 1) {
         const edgeCount = cells[i].getEdgeCount();
 
         for (let j = 0; j < edgeCount; j++) {
-          edges.push(<Cell>cells[i].getEdgeAt(j));
+          edges.push(cells[i].getEdgeAt(j));
         }
 
         // Recurses
         const children = cells[i].getChildren();
-        edges = edges.concat(this.getAllEdges(<CellArray>children));
+        edges = edges.concat(this.getAllEdges(children));
       }
     }
     return edges;
@@ -410,8 +420,7 @@ class GraphEdge {
    * @param parent Optional parent of the opposite end for an edge to be
    * returned.
    */
-  getIncomingEdges(cell: Cell,
-                   parent: Cell | null = null): CellArray {
+  getIncomingEdges(cell: Cell, parent: Cell | null = null) {
     return this.getEdges(cell, parent, true, false, false);
   }
 
@@ -424,8 +433,7 @@ class GraphEdge {
    * @param parent Optional parent of the opposite end for an edge to be
    * returned.
    */
-  getOutgoingEdges(cell: Cell,
-                   parent: Cell | null = null): CellArray {
+  getOutgoingEdges(cell: Cell, parent: Cell | null = null) {
     return this.getEdges(cell, parent, false, true, false);
   }
 
@@ -456,11 +464,11 @@ class GraphEdge {
   getEdges(
     cell: Cell,
     parent: Cell | null = null,
-    incoming: boolean = true,
-    outgoing: boolean = true,
-    includeLoops: boolean = true,
-    recurse: boolean = false
-  ): CellArray {
+    incoming = true,
+    outgoing = true,
+    includeLoops = true,
+    recurse = false
+  ) {
     let edges: CellArray = new CellArray();
     const isCollapsed = cell.isCollapsed();
     const childCount = cell.getChildCount();
@@ -468,39 +476,33 @@ class GraphEdge {
     for (let i = 0; i < childCount; i += 1) {
       const child = cell.getChildAt(i);
 
-      if (isCollapsed || !(<Cell>child).isVisible()) {
-        edges = edges.concat((<Cell>child).getEdges(incoming, outgoing));
+      if (isCollapsed || !child.isVisible()) {
+        edges = edges.concat(child.getEdges(incoming, outgoing));
       }
     }
 
-    edges = edges.concat(
-      <CellArray>cell.getEdges(incoming, outgoing)
-    );
+    edges = edges.concat(cell.getEdges(incoming, outgoing));
     const result = new CellArray();
 
     for (let i = 0; i < edges.length; i += 1) {
       const state = this.getView().getState(edges[i]);
 
-      const source =
-        state != null
-          ? state.getVisibleTerminal(true)
-          : this.getView().getVisibleTerminal(edges[i], true);
-      const target =
-        state != null
-          ? state.getVisibleTerminal(false)
-          : this.getView().getVisibleTerminal(edges[i], false);
+      const source = state
+        ? state.getVisibleTerminal(true)
+        : this.getView().getVisibleTerminal(edges[i], true);
+      const target = state
+        ? state.getVisibleTerminal(false)
+        : this.getView().getVisibleTerminal(edges[i], false);
 
       if (
-        (includeLoops && source == target) ||
-        (source != target &&
+        (includeLoops && source === target) ||
+        (source !== target &&
           ((incoming &&
-            target == cell &&
-            (parent == null ||
-              this.isValidAncestor(<Cell>source, parent, recurse))) ||
+            target === cell &&
+            (!parent || this.isValidAncestor(<Cell>source, parent, recurse))) ||
             (outgoing &&
-              source == cell &&
-              (parent == null ||
-                this.isValidAncestor(<Cell>target, parent, recurse)))))
+              source === cell &&
+              (!parent || this.isValidAncestor(<Cell>target, parent, recurse)))))
       ) {
         result.push(edges[i]);
       }
@@ -517,10 +519,9 @@ class GraphEdge {
    *
    * @param parent {@link mxCell} whose child vertices should be returned.
    */
-  getChildEdges(parent: Cell): CellArray {
+  getChildEdges(parent: Cell) {
     return this.getChildCells(parent, false, true);
   }
-
 
   /**
    * Returns the edges between the given source and target. This takes into
@@ -531,7 +532,7 @@ class GraphEdge {
    * target -
    * directed -
    */
-  getEdgesBetween(source: Cell, target: Cell, directed: boolean = false): CellArray {
+  getEdgesBetween(source: Cell, target: Cell, directed = false) {
     const edges = this.getEdges(source);
     const result = new CellArray();
 
@@ -540,18 +541,16 @@ class GraphEdge {
     for (let i = 0; i < edges.length; i += 1) {
       const state = this.getView().getState(edges[i]);
 
-      const src =
-        state != null
-          ? state.getVisibleTerminal(true)
-          : this.getView().getVisibleTerminal(edges[i], true);
-      const trg =
-        state != null
-          ? state.getVisibleTerminal(false)
-          : this.getView().getVisibleTerminal(edges[i], false);
+      const src = state
+        ? state.getVisibleTerminal(true)
+        : this.getView().getVisibleTerminal(edges[i], true);
+      const trg = state
+        ? state.getVisibleTerminal(false)
+        : this.getView().getVisibleTerminal(edges[i], false);
 
       if (
-        (src == source && trg == target) ||
-        (!directed && src == target && trg == source)
+        (src === source && trg === target) ||
+        (!directed && src === target && trg === source)
       ) {
         result.push(edges[i]);
       }
@@ -570,45 +569,39 @@ class GraphEdge {
    * @param cells Array of {@link Cell} for which the connected edges should be
    * reset.
    */
-  resetEdges(cells: CellArray): void {
-    if (cells != null) {
-      // Prepares faster cells lookup
-      const dict = new Dictionary();
+  resetEdges(cells: CellArray) {
+    // Prepares faster cells lookup
+    const dict = new Dictionary();
 
+    for (let i = 0; i < cells.length; i += 1) {
+      dict.put(cells[i], true);
+    }
+
+    this.getModel().beginUpdate();
+    try {
       for (let i = 0; i < cells.length; i += 1) {
-        dict.put(cells[i], true);
-      }
+        const edges = cells[i].getEdges();
 
-      this.getModel().beginUpdate();
-      try {
-        for (let i = 0; i < cells.length; i += 1) {
-          const edges = cells[i].getEdges();
+        for (let j = 0; j < edges.length; j++) {
+          const state = this.getView().getState(edges[j]);
 
-          if (edges != null) {
-            for (let j = 0; j < edges.length; j++) {
-              const state = this.getView().getState(edges[j]);
+          const source = state
+            ? state.getVisibleTerminal(true)
+            : this.getView().getVisibleTerminal(edges[j], true);
+          const target = state
+            ? state.getVisibleTerminal(false)
+            : this.getView().getVisibleTerminal(edges[j], false);
 
-              const source =
-                state != null
-                  ? state.getVisibleTerminal(true)
-                  : this.getView().getVisibleTerminal(edges[j], true);
-              const target =
-                state != null
-                  ? state.getVisibleTerminal(false)
-                  : this.getView().getVisibleTerminal(edges[j], false);
-
-              // Checks if one of the terminals is not in the given array
-              if (!dict.get(source) || !dict.get(target)) {
-                this.resetEdge(<Cell>edges[j]);
-              }
-            }
+          // Checks if one of the terminals is not in the given array
+          if (!dict.get(source) || !dict.get(target)) {
+            this.resetEdge(edges[j]);
           }
-
-          this.resetEdges(cells[i].getChildren());
         }
-      } finally {
-        this.getModel().endUpdate();
+
+        this.resetEdges(cells[i].getChildren());
       }
+    } finally {
+      this.getModel().endUpdate();
     }
   }
 
@@ -617,15 +610,16 @@ class GraphEdge {
    *
    * @param edge {@link mxCell} whose points should be reset.
    */
-  resetEdge(edge: Cell): Cell | null {
+  resetEdge(edge: Cell) {
     let geo = edge.getGeometry();
 
     // Resets the control points
-    if (geo != null && geo.points != null && geo.points.length > 0) {
-      geo = <Geometry>geo.clone();
+    if (geo && geo.points.length > 0) {
+      geo = geo.clone();
       geo.points = [];
       this.getModel().setGeometry(edge, geo);
     }
+
     return edge;
   }
 }

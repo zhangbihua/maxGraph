@@ -1,19 +1,21 @@
-import CellState from "../cell/datatypes/CellState";
-import {htmlEntities} from "../../util/StringUtils";
-import Resources from "../../util/Resources";
-import Shape from "../geometry/shape/Shape";
-import SelectionCellsHandler from "../selection/SelectionCellsHandler";
-import Cell from "../cell/datatypes/Cell";
-import TooltipHandler from "./TooltipHandler";
-import Graph from '../Graph';
+import CellState from '../cell/datatypes/CellState';
+import { htmlEntities } from '../../util/StringUtils';
+import Resources from '../../util/Resources';
+import Shape from '../geometry/shape/Shape';
+import Cell from '../cell/datatypes/Cell';
+import { autoImplement } from '../../util/Utils';
 
-class GraphTooltip {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+import type Graph from '../Graph';
+import type GraphFolding from '../folding/GraphFolding';
 
-  graph: Graph;
+type PartialGraph = Pick<
+  Graph,
+  'getSelectionCellsHandler' | 'convertValueToString' | 'getTooltipHandler'
+>;
+type PartialFolding = Pick<GraphFolding, 'getCollapseExpandResource'>;
+type PartialClass = PartialGraph & PartialFolding;
 
+class GraphTooltip extends autoImplement<PartialClass>() {
   /**
    * Returns the string or DOM node that represents the tooltip for the given
    * state, node and coordinate pair. This implementation checks if the given
@@ -29,58 +31,38 @@ class GraphTooltip {
    * @param x X-coordinate of the mouse.
    * @param y Y-coordinate of the mouse.
    */
-  getTooltip(
-    state: CellState,
-    node: HTMLElement,
-    x: number,
-    y: number
-  ): string | null {
-    let tip: string | null = null;
+  getTooltip(state: CellState, node: HTMLElement | SVGElement, x: number, y: number) {
+    let tip: HTMLElement | string | null = null;
 
-    if (state != null) {
-      // Checks if the mouse is over the folding icon
-      if (
-        state.control != null &&
-        // @ts-ignore
-        (node === state.control.node || node.parentNode === state.control.node)
-      ) {
-        tip = this.graph.collapseExpandResource;
-        tip = htmlEntities(Resources.get(tip) || tip, true).replace(
-          /\\n/g,
-          '<br>'
-        );
-      }
+    // Checks if the mouse is over the folding icon
+    if (
+      state.control &&
+      (node === state.control.node || node.parentNode === state.control.node)
+    ) {
+      tip = this.getCollapseExpandResource();
+      tip = htmlEntities(Resources.get(tip) || tip, true).replace(/\\n/g, '<br>');
+    }
 
-      if (tip == null && state.overlays != null) {
-        state.overlays.visit((id: string, shape: Shape) => {
-          // LATER: Exit loop if tip is not null
-          if (
-            tip == null &&
-            // @ts-ignore
-            (node === shape.node || node.parentNode === shape.node)
-          ) {
-            // @ts-ignore
-            tip = shape.overlay.toString();
-          }
-        });
-      }
-
-      if (tip == null) {
-        const handler = (<SelectionCellsHandler>(
-          this.graph.selectionCellsHandler
-        )).getHandler(<Cell>state.cell);
-        if (
-          handler != null &&
-          typeof handler.getTooltipForNode === 'function'
-        ) {
-          tip = handler.getTooltipForNode(node);
+    if (!tip && state.overlays) {
+      state.overlays.visit((id: string, shape: Shape) => {
+        // LATER: Exit loop if tip is not null
+        if (!tip && (node === shape.node || node.parentNode === shape.node)) {
+          tip = shape.overlay ? shape.overlay.toString() ?? null : null;
         }
-      }
+      });
+    }
 
-      if (tip == null) {
-        tip = this.getTooltipForCell(<Cell>state.cell);
+    if (!tip) {
+      const handler = this.getSelectionCellsHandler().getHandler(state.cell);
+      if (handler && typeof handler.getTooltipForNode === 'function') {
+        tip = handler.getTooltipForNode(node);
       }
     }
+
+    if (!tip) {
+      tip = this.getTooltipForCell(state.cell);
+    }
+
     return tip;
   }
 
@@ -102,15 +84,16 @@ class GraphTooltip {
    *
    * @param cell {@link mxCell} whose tooltip should be returned.
    */
-  getTooltipForCell(cell: Cell): string | null {
+  getTooltipForCell(cell: Cell) {
     let tip = null;
 
-    if (cell != null && 'getTooltip' in cell) {
-      // @ts-ignore
+    if (cell && 'getTooltip' in cell) {
+      // @ts-ignore getTooltip() must exists.
       tip = cell.getTooltip();
     } else {
-      tip = this.graph.convertValueToString(cell);
+      tip = this.convertValueToString(cell);
     }
+
     return tip;
   }
 
@@ -124,10 +107,9 @@ class GraphTooltip {
    *
    * @param enabled Boolean indicating if tooltips should be enabled.
    */
-  setTooltips(enabled: boolean): void {
-    (<TooltipHandler>this.graph.tooltipHandler).setEnabled(enabled);
+  setTooltips(enabled: boolean) {
+    this.getTooltipHandler().setEnabled(enabled);
   }
-
 }
 
 export default GraphTooltip;

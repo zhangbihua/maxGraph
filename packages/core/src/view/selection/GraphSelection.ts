@@ -1,28 +1,33 @@
 import Cell from '../cell/datatypes/Cell';
 import CellArray from '../cell/datatypes/CellArray';
 import Rectangle from '../geometry/Rectangle';
-import InternalMouseEvent from '../event/InternalMouseEvent';
-import graph from '../Graph';
 import mxClient from '../../mxClient';
 import SelectionChange from './SelectionChange';
 import UndoableEdit from '../model/UndoableEdit';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
-import EventSource from '../event/EventSource';
 import Dictionary from '../../util/Dictionary';
 import RootChange from '../model/RootChange';
 import ChildChange from '../model/ChildChange';
+import { autoImplement } from '../../util/Utils';
 
-class GraphSelection extends EventSource {
-  constructor(graph: graph) {
-    super();
+import type GraphCells from '../cell/GraphCells';
+import type Graph from '../Graph';
+import type GraphEvents from '../event/GraphEvents';
+import type EventSource from '../event/EventSource';
 
-    this.graph = graph;
-    this.cells = new CellArray();
-  }
+type PartialGraph = Pick<
+  Graph,
+  'fireEvent' | 'getDefaultParent' | 'getView' | 'getCurrentRoot' | 'getModel'
+>;
+type PartialCells = Pick<GraphCells, 'isCellSelectable' | 'getCells'>;
+type PartialEvents = Pick<GraphEvents, 'isToggleEvent'>;
+type PartialClass = PartialGraph & PartialCells & PartialEvents & EventSource;
 
+// @ts-ignore recursive reference error
+class GraphSelection extends autoImplement<PartialClass>() {
   // TODO: Document me!!
-  cells: CellArray;
+  cells: CellArray = new CellArray();
 
   /**
    * Specifies the resource key for the status message after a long operation.
@@ -38,11 +43,6 @@ class GraphSelection extends EventSource {
    */
   updatingSelectionResource: string =
     mxClient.language !== 'none' ? 'updatingSelection' : '';
-
-  /**
-   * Reference to the enclosing {@link graph}.
-   */
-  graph: graph;
 
   /**
    * Specifies if only one selected item at a time is allowed.
@@ -87,17 +87,14 @@ class GraphSelection extends EventSource {
   /**
    * Returns true if the given {@link Cell} is selected.
    */
-  isSelected(cell: Cell): boolean {
-    if (cell != null) {
-      return this.cells.indexOf(cell) >= 0;
-    }
-    return false;
+  isSelected(cell: Cell) {
+    return this.cells.indexOf(cell) >= 0;
   }
 
   /**
    * Returns true if no cells are currently selected.
    */
-  isEmpty(): boolean {
+  isEmpty() {
     return this.cells.length === 0;
   }
 
@@ -105,7 +102,7 @@ class GraphSelection extends EventSource {
    * Clears the selection and fires a {@link change} event if the selection was not
    * empty.
    */
-  clear(): void {
+  clear() {
     this.changeSelection(null, this.cells);
   }
 
@@ -114,10 +111,8 @@ class GraphSelection extends EventSource {
    *
    * @param cell {@link mxCell} to be selected.
    */
-  setCell(cell: Cell | null): void {
-    if (cell != null) {
-      this.setCells(new CellArray(cell));
-    }
+  setCell(cell: Cell) {
+    this.setCells(new CellArray(cell));
   }
 
   /**
@@ -126,32 +121,29 @@ class GraphSelection extends EventSource {
    * @param cells Array of {@link Cell} to be selected.
    */
   setCells(cells: CellArray): void {
-    if (cells != null) {
-      if (this.singleSelection) {
-        cells = new CellArray(<Cell>this.getFirstSelectableCell(cells));
-      }
-
-      const tmp = new CellArray();
-      for (let i = 0; i < cells.length; i += 1) {
-        if ((<graph>this.graph).isCellSelectable(cells[i])) {
-          tmp.push(cells[i]);
-        }
-      }
-      this.changeSelection(tmp, this.cells);
+    if (this.singleSelection) {
+      cells = new CellArray(<Cell>this.getFirstSelectableCell(cells));
     }
+
+    const tmp = new CellArray();
+    for (let i = 0; i < cells.length; i += 1) {
+      if (this.isCellSelectable(cells[i])) {
+        tmp.push(cells[i]);
+      }
+    }
+    this.changeSelection(tmp, this.cells);
   }
 
   /**
    * Returns the first selectable cell in the given array of cells.
    */
-  getFirstSelectableCell(cells: CellArray): Cell | null {
-    if (cells != null) {
-      for (let i = 0; i < cells.length; i += 1) {
-        if ((<graph>this.graph).isCellSelectable(cells[i])) {
-          return cells[i];
-        }
+  getFirstSelectableCell(cells: CellArray) {
+    for (let i = 0; i < cells.length; i += 1) {
+      if (this.isCellSelectable(cells[i])) {
+        return cells[i];
       }
     }
+
     return null;
   }
 
@@ -160,10 +152,8 @@ class GraphSelection extends EventSource {
    *
    * @param cell {@link mxCell} to add to the selection.
    */
-  addCell(cell: Cell | null = null): void {
-    if (cell != null) {
-      this.addCells(new CellArray(cell));
-    }
+  addCell(cell: Cell) {
+    this.addCells(new CellArray(cell));
   }
 
   /**
@@ -172,26 +162,24 @@ class GraphSelection extends EventSource {
    *
    * @param cells Array of {@link Cell} to add to the selection.
    */
-  addCells(cells: CellArray): void {
-    if (cells != null) {
-      let remove = null;
-      if (this.singleSelection) {
-        remove = this.cells;
-        cells = new CellArray(<Cell>this.getFirstSelectableCell(cells));
-      }
+  addCells(cells: CellArray) {
+    let remove = null;
+    if (this.singleSelection) {
+      remove = this.cells;
 
-      const tmp = new CellArray();
-      for (let i = 0; i < cells.length; i += 1) {
-        if (
-          !this.isSelected(cells[i]) &&
-          (<graph>this.graph).isCellSelectable(cells[i])
-        ) {
-          tmp.push(cells[i]);
-        }
-      }
+      const selectableCell = this.getFirstSelectableCell(cells);
 
-      this.changeSelection(tmp, remove);
+      cells = selectableCell ? new CellArray(selectableCell) : new CellArray();
     }
+
+    const tmp = new CellArray();
+    for (let i = 0; i < cells.length; i += 1) {
+      if (!this.isSelected(cells[i]) && this.isCellSelectable(cells[i])) {
+        tmp.push(cells[i]);
+      }
+    }
+
+    this.changeSelection(tmp, remove);
   }
 
   /**
@@ -200,10 +188,8 @@ class GraphSelection extends EventSource {
    *
    * @param cell {@link mxCell} to remove from the selection.
    */
-  removeCell(cell: Cell | null = null): void {
-    if (cell != null) {
-      this.removeCells(new CellArray(cell));
-    }
+  removeCell(cell: Cell) {
+    this.removeCells(new CellArray(cell));
   }
 
   /**
@@ -212,16 +198,16 @@ class GraphSelection extends EventSource {
    *
    * @param cells {@link mxCell}s to remove from the selection.
    */
-  removeCells(cells: CellArray | null = null): void {
-    if (cells != null) {
-      const tmp = new CellArray();
-      for (let i = 0; i < cells.length; i += 1) {
-        if (this.isSelected(cells[i])) {
-          tmp.push(cells[i]);
-        }
+  removeCells(cells: CellArray) {
+    const tmp = new CellArray();
+
+    for (let i = 0; i < cells.length; i += 1) {
+      if (this.isSelected(cells[i])) {
+        tmp.push(cells[i]);
       }
-      this.changeSelection(null, tmp);
     }
+
+    this.changeSelection(null, tmp);
   }
 
   /**
@@ -230,13 +216,10 @@ class GraphSelection extends EventSource {
    * @param added Array of {@link Cell} to add to the selection.
    * @param remove Array of {@link Cell} to remove from the selection.
    */
-  changeSelection(
-    added: CellArray | null = null,
-    removed: CellArray | null = null
-  ): void {
+  changeSelection(added: CellArray | null = null, removed: CellArray | null = null) {
     if (
-      (added != null && added.length > 0 && added[0] != null) ||
-      (removed != null && removed.length > 0 && removed[0] != null)
+      (added && added.length > 0 && added[0]) ||
+      (removed && removed.length > 0 && removed[0])
     ) {
       const change = new SelectionChange(
         this,
@@ -258,8 +241,8 @@ class GraphSelection extends EventSource {
    *
    * @param cell {@link mxCell} to add to the selection.
    */
-  cellAdded(cell: Cell): void {
-    if (cell != null && !this.isSelected(cell)) {
+  cellAdded(cell: Cell) {
+    if (!this.isSelected(cell)) {
       this.cells.push(cell);
     }
   }
@@ -270,12 +253,10 @@ class GraphSelection extends EventSource {
    *
    * @param cell {@link mxCell} to remove from the selection.
    */
-  cellRemoved(cell: Cell): void {
-    if (cell != null) {
-      const index = this.cells.indexOf(cell);
-      if (index >= 0) {
-        this.cells.splice(index, 1);
-      }
+  cellRemoved(cell: Cell) {
+    const index = this.cells.indexOf(cell);
+    if (index >= 0) {
+      this.cells.splice(index, 1);
     }
   }
 
@@ -288,42 +269,42 @@ class GraphSelection extends EventSource {
    *
    * @param cell {@link mxCell} for which the selection state should be returned.
    */
-  isCellSelected(cell: Cell): boolean {
+  isCellSelected(cell: Cell) {
     return this.isSelected(cell);
   }
 
   /**
    * Returns true if the selection is empty.
    */
-  isSelectionEmpty(): boolean {
+  isSelectionEmpty() {
     return this.isEmpty();
   }
 
   /**
    * Clears the selection using {@link mxGraphSelectionModel.clear}.
    */
-  clearSelection(): void {
-    return this.clear();
+  clearSelection() {
+    this.clear();
   }
 
   /**
    * Returns the number of selected cells.
    */
-  getSelectionCount(): number {
+  getSelectionCount() {
     return this.cells.length;
   }
 
   /**
    * Returns the first cell from the array of selected {@link Cell}.
    */
-  getSelectionCell(): Cell {
+  getSelectionCell() {
     return this.cells[0];
   }
 
   /**
    * Returns the array of selected {@link Cell}.
    */
-  getSelectionCells(): CellArray {
+  getSelectionCells() {
     return this.cells.slice();
   }
 
@@ -332,7 +313,7 @@ class GraphSelection extends EventSource {
    *
    * @param cell {@link mxCell} to be selected.
    */
-  setSelectionCell(cell: Cell | null): void {
+  setSelectionCell(cell: Cell) {
     this.setCell(cell);
   }
 
@@ -341,7 +322,7 @@ class GraphSelection extends EventSource {
    *
    * @param cells Array of {@link Cell} to be selected.
    */
-  setSelectionCells(cells: CellArray): void {
+  setSelectionCells(cells: CellArray) {
     this.setCells(cells);
   }
 
@@ -350,7 +331,7 @@ class GraphSelection extends EventSource {
    *
    * @param cell {@link mxCell} to be add to the selection.
    */
-  addSelectionCell(cell: Cell): void {
+  addSelectionCell(cell: Cell) {
     this.addCell(cell);
   }
 
@@ -359,7 +340,7 @@ class GraphSelection extends EventSource {
    *
    * @param cells Array of {@link Cell} to be added to the selection.
    */
-  addSelectionCells(cells: CellArray): void {
+  addSelectionCells(cells: CellArray) {
     this.addCells(cells);
   }
 
@@ -368,7 +349,7 @@ class GraphSelection extends EventSource {
    *
    * @param cell {@link mxCell} to be removed from the selection.
    */
-  removeSelectionCell(cell: Cell): void {
+  removeSelectionCell(cell: Cell) {
     this.removeCell(cell);
   }
 
@@ -377,7 +358,7 @@ class GraphSelection extends EventSource {
    *
    * @param cells Array of {@link Cell} to be removed from the selection.
    */
-  removeSelectionCells(cells: CellArray): void {
+  removeSelectionCells(cells: CellArray) {
     this.removeCells(cells);
   }
 
@@ -389,8 +370,8 @@ class GraphSelection extends EventSource {
    * @param evt Mouseevent that triggered the selection.
    */
   // selectRegion(rect: mxRectangle, evt: Event): mxCellArray;
-  selectRegion(rect: Rectangle, evt: InternalMouseEvent): CellArray | null {
-    const cells = this.graph.getCells(rect.x, rect.y, rect.width, rect.height);
+  selectRegion(rect: Rectangle, evt: MouseEvent) {
+    const cells = this.getCells(rect.x, rect.y, rect.width, rect.height);
     this.selectCellsForEvent(cells, evt);
     return cells;
   }
@@ -398,28 +379,28 @@ class GraphSelection extends EventSource {
   /**
    * Selects the next cell.
    */
-  selectNextCell(): void {
+  selectNextCell() {
     this.selectCell(true);
   }
 
   /**
    * Selects the previous cell.
    */
-  selectPreviousCell(): void {
+  selectPreviousCell() {
     this.selectCell();
   }
 
   /**
    * Selects the parent cell.
    */
-  selectParentCell(): void {
+  selectParentCell() {
     this.selectCell(false, true);
   }
 
   /**
    * Selects the first child cell.
    */
-  selectChildCell(): void {
+  selectChildCell() {
     this.selectCell(false, false, true);
   }
 
@@ -431,36 +412,29 @@ class GraphSelection extends EventSource {
    * @param isParent Boolean indicating if the parent cell should be selected.
    * @param isChild Boolean indicating if the first child cell should be selected.
    */
-  selectCell(
-    isNext: boolean = false,
-    isParent: boolean = false,
-    isChild: boolean = false
-  ): void {
+  selectCell(isNext = false, isParent = false, isChild = false) {
     const cell = this.cells.length > 0 ? this.cells[0] : null;
 
     if (this.cells.length > 1) {
       this.clear();
     }
 
-    const parent = <Cell>(
-      (cell != null ? cell.getParent() : this.graph.getDefaultParent())
-    );
-
+    const parent = cell ? cell.getParent() : this.getDefaultParent();
     const childCount = parent.getChildCount();
 
-    if (cell == null && childCount > 0) {
+    if (!cell && childCount > 0) {
       const child = parent.getChildAt(0);
       this.setSelectionCell(child);
     } else if (
       parent &&
-      (cell == null || isParent) &&
-      this.graph.getView().getState(parent) != null &&
-      parent.getGeometry() != null
+      (!cell || isParent) &&
+      this.getView().getState(parent) &&
+      parent.getGeometry()
     ) {
-      if (this.graph.getCurrentRoot() != parent) {
+      if (this.getCurrentRoot() !== parent) {
         this.setSelectionCell(parent);
       }
-    } else if (cell != null && isChild) {
+    } else if (cell && isChild) {
       const tmp = cell.getChildCount();
 
       if (tmp > 0) {
@@ -468,7 +442,7 @@ class GraphSelection extends EventSource {
         this.setSelectionCell(child);
       }
     } else if (childCount > 0) {
-      let i = (<Cell>parent).getIndex(cell);
+      let i = parent.getIndex(cell);
 
       if (isNext) {
         i++;
@@ -493,32 +467,27 @@ class GraphSelection extends EventSource {
    * @param descendants Optional boolean specifying whether all descendants should be
    * selected. Default is `false`.
    */
-  selectAll(
-    parent: Cell = this.graph.getDefaultParent(),
-    descendants: boolean = false
-  ): void {
+  selectAll(parent: Cell = this.getDefaultParent(), descendants: boolean = false) {
     const cells = descendants
       ? parent.filterDescendants((cell: Cell) => {
-          return cell != parent && this.graph.getView().getState(cell) != null;
+          return cell !== parent && !!this.getView().getState(cell);
         })
       : parent.getChildren();
 
-    if (cells != null) {
-      this.setSelectionCells(cells);
-    }
+    this.setSelectionCells(cells);
   }
 
   /**
    * Select all vertices inside the given parent or the default parent.
    */
-  selectVertices(parent: Cell, selectGroups: boolean = false): void {
+  selectVertices(parent: Cell, selectGroups = false) {
     this.selectCells(true, false, parent, selectGroups);
   }
 
   /**
    * Select all vertices inside the given parent or the default parent.
    */
-  selectEdges(parent: Cell): void {
+  selectEdges(parent: Cell) {
     this.selectCells(false, true, parent);
   }
 
@@ -536,27 +505,25 @@ class GraphSelection extends EventSource {
    * selected. Default is `false`.
    */
   selectCells(
-    vertices: boolean = false,
-    edges: boolean = false,
-    parent: Cell = this.graph.getDefaultParent(),
-    selectGroups: boolean = false
-  ): void {
+    vertices = false,
+    edges = false,
+    parent: Cell = this.getDefaultParent(),
+    selectGroups = false
+  ) {
     const filter = (cell: Cell) => {
       return (
-        this.graph.getView().getState(cell) != null &&
-        (((selectGroups || cell.getChildCount() == 0) &&
+        this.getView().getState(cell) &&
+        (((selectGroups || cell.getChildCount() === 0) &&
           cell.isVertex() &&
           vertices &&
           cell.getParent() &&
-          !(<Cell>cell.getParent()).isEdge()) ||
+          !cell.getParent().isEdge()) ||
           (cell.isEdge() && edges))
       );
     };
 
     const cells = parent.filterDescendants(filter);
-    if (cells != null) {
-      this.setSelectionCells(cells);
-    }
+    this.setSelectionCells(cells);
   }
 
   /**
@@ -567,16 +534,16 @@ class GraphSelection extends EventSource {
    * @param cell {@link mxCell} to be selected.
    * @param evt Optional mouseevent that triggered the selection.
    */
-  selectCellForEvent(cell: Cell, evt: InternalMouseEvent): void {
+  selectCellForEvent(cell: Cell, evt: MouseEvent) {
     const isSelected = this.isCellSelected(cell);
 
-    if (this.graph.isToggleEvent(evt)) {
+    if (this.isToggleEvent(evt)) {
       if (isSelected) {
         this.removeSelectionCell(cell);
       } else {
         this.addSelectionCell(cell);
       }
-    } else if (!isSelected || this.getSelectionCount() != 1) {
+    } else if (!isSelected || this.getSelectionCount() !== 1) {
       this.setSelectionCell(cell);
     }
   }
@@ -589,8 +556,8 @@ class GraphSelection extends EventSource {
    * @param cells Array of {@link Cell} to be selected.
    * @param evt Optional mouseevent that triggered the selection.
    */
-  selectCellsForEvent(cells: CellArray, evt: InternalMouseEvent): void {
-    if (this.graph.isToggleEvent(evt)) {
+  selectCellsForEvent(cells: CellArray, evt: MouseEvent) {
+    if (this.isToggleEvent(evt)) {
       this.addSelectionCells(cells);
     } else {
       this.setSelectionCells(cells);
@@ -600,16 +567,17 @@ class GraphSelection extends EventSource {
   /**
    * Returns true if any sibling of the given cell is selected.
    */
-  isSiblingSelected(cell: Cell): boolean {
-    const parent = <Cell>cell.getParent();
+  isSiblingSelected(cell: Cell) {
+    const parent = cell.getParent();
     const childCount = parent.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
-      const child = <Cell>parent.getChildAt(i);
+      const child = parent.getChildAt(i);
       if (cell !== child && this.isCellSelected(child)) {
         return true;
       }
     }
+
     return false;
   }
 
@@ -628,10 +596,7 @@ class GraphSelection extends EventSource {
    * change should be ignored.
    *
    */
-  getSelectionCellsForChanges(
-    changes: any[],
-    ignoreFn: Function | null = null
-  ): CellArray {
+  getSelectionCellsForChanges(changes: any[], ignoreFn: Function | null = null) {
     const dict = new Dictionary();
     const cells: CellArray = new CellArray();
 
@@ -644,7 +609,7 @@ class GraphSelection extends EventSource {
           const childCount = cell.getChildCount();
 
           for (let i = 0; i < childCount; i += 1) {
-            addCell(<Cell>cell.getChildAt(i));
+            addCell(cell.getChildAt(i));
           }
         }
       }
@@ -653,16 +618,16 @@ class GraphSelection extends EventSource {
     for (let i = 0; i < changes.length; i += 1) {
       const change = changes[i];
 
-      if (change.constructor !== RootChange && (ignoreFn == null || !ignoreFn(change))) {
+      if (change.constructor !== RootChange && (!ignoreFn || !ignoreFn(change))) {
         let cell = null;
 
         if (change instanceof ChildChange) {
           cell = change.child;
-        } else if (change.cell != null && change.cell instanceof Cell) {
+        } else if (change.cell && change.cell instanceof Cell) {
           cell = change.cell;
         }
 
-        if (cell != null) {
+        if (cell) {
           addCell(cell);
         }
       }
@@ -673,7 +638,7 @@ class GraphSelection extends EventSource {
   /**
    * Removes selection cells that are not in the model from the selection.
    */
-  updateSelection(): void {
+  updateSelection() {
     const cells = this.getSelectionCells();
     const removed = new CellArray();
 
@@ -683,7 +648,7 @@ class GraphSelection extends EventSource {
       } else {
         let par = cell.getParent();
 
-        while (par != null && par !== this.view.currentRoot) {
+        while (par && par !== this.getView().currentRoot) {
           if (par.isCollapsed() || !par.isVisible()) {
             removed.push(cell);
             break;
@@ -693,7 +658,7 @@ class GraphSelection extends EventSource {
         }
       }
     }
-    this.selection.removeSelectionCells(removed);
+    this.removeSelectionCells(removed);
   }
 }
 

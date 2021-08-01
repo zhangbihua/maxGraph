@@ -13,8 +13,8 @@ import Shape from '../../geometry/shape/Shape';
 import TextShape from '../../geometry/shape/node/TextShape';
 import Dictionary from '../../../util/Dictionary';
 import { NONE } from '../../../util/Constants';
-
-import type { CellStateStyles } from '../../../types';
+import { CellStateStyles } from 'packages/core/src/types';
+import RectangleShape from '../../geometry/shape/node/RectangleShape';
 
 /**
  * Class: mxCellState
@@ -89,7 +89,7 @@ class CellState extends Rectangle {
    * Contains an array of key, value pairs that represent the style of the
    * cell.
    */
-  style: CellStateStyles; // TODO: Important - make the style type more strictly typed to allow for typescript checking of individual properties!!!
+  style: CellStateStyles;
 
   /**
    * Variable: invalidStyle
@@ -186,14 +186,16 @@ class CellState extends Rectangle {
    *
    * Holds the unscaled width of the state.
    */
-  unscaledWidth: number | null = null;
+  unscaledWidth = 0;
 
   /**
    * Variable: unscaledHeight
    *
    * Holds the unscaled height of the state.
    */
-  unscaledHeight: number | null = null;
+  unscaledHeight = 0;
+
+  parentHighlight: RectangleShape | null = null;
 
   /**
    * Function: getPerimeterBounds
@@ -313,7 +315,7 @@ class CellState extends Rectangle {
    * terminalState - <mxCellState> that represents the terminal.
    * source - Boolean that specifies if the source or target state should be set.
    */
-  setVisibleTerminalState(terminalState: CellState, source = false) {
+  setVisibleTerminalState(terminalState: CellState | null, source = false) {
     if (source) {
       this.visibleSourceState = terminalState;
     } else {

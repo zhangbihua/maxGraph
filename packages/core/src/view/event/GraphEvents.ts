@@ -1,45 +1,77 @@
-import InternalMouseEvent from "./InternalMouseEvent";
-import EventObject from "./EventObject";
-import InternalEvent from "./InternalEvent";
+import InternalMouseEvent from './InternalMouseEvent';
+import EventObject from './EventObject';
+import InternalEvent from './InternalEvent';
 import {
   getClientX,
   getClientY,
   isAltDown,
-  isConsumed, isControlDown, isLeftMouseButton, isMetaDown,
-  isMouseEvent, isMultiTouchEvent,
+  isConsumed,
+  isControlDown,
+  isLeftMouseButton,
+  isMetaDown,
+  isMouseEvent,
+  isMultiTouchEvent,
   isPenEvent,
-  isPopupTrigger, isShiftDown, isTouchEvent
-} from "../../util/EventUtils";
-import CellState from "../cell/datatypes/CellState";
-import Cell from "../cell/datatypes/Cell";
-import PanningHandler from "../panning/PanningHandler";
-import ConnectionHandler from "../connection/ConnectionHandler";
-import Point from "../geometry/Point";
-import {convertPoint, getValue} from "../../util/Utils";
-import {NONE, SHAPE_SWIMLANE} from "../../util/Constants";
-import mxClient from "../../mxClient";
-import EventSource from "./EventSource";
-import CellEditor from "../editing/CellEditor";
-import Graph from "../Graph";
+  isPopupTrigger,
+  isShiftDown,
+  isTouchEvent,
+} from '../../util/EventUtils';
+import CellState from '../cell/datatypes/CellState';
+import Cell from '../cell/datatypes/Cell';
+import PanningHandler from '../panning/PanningHandler';
+import ConnectionHandler from '../connection/ConnectionHandler';
+import Point from '../geometry/Point';
+import { convertPoint, getValue, autoImplement } from '../../util/Utils';
+import { NONE, SHAPE_SWIMLANE } from '../../util/Constants';
+import mxClient from '../../mxClient';
+import EventSource from './EventSource';
+import CellEditor from '../editing/CellEditor';
 
-class GraphEvents {
-  constructor(graph: Graph) {
-    this.graph = graph;
+import type Graph from '../Graph';
+import type GraphCells from '../cell/GraphCells';
+import type GraphSelection from '../selection/GraphSelection';
+import GraphEditing from '../editing/GraphEditing';
+import GraphSnap from '../snap/GraphSnap';
 
-    // Initializes the variable in case the prototype has been
-    // modified to hold some listeners (which is possible because
-    // the createHandlers call is executed regardless of the
-    // arguments passed into the ctor).
-    this.mouseListeners = null;
-  }
+type PartialGraph = Pick<
+  Graph,
+  | 'fireEvent'
+  | 'isEnabled'
+  | 'getView'
+  | 'getGraphBounds'
+  | 'getContainer'
+  | 'paintBackground'
+>;
+type PartialCells = Pick<GraphCells, 'getCellAt' | 'getCursorForCell'>;
+type PartialSelection = Pick<
+  GraphSelection,
+  'isCellSelected' | 'selectCellForEvent' | 'clearSelection'
+>;
+type PartialEditing = Pick<
+  GraphEditing,
+  'isCellEditable' | 'isEditing' | 'startEditingAtCell' | 'stopEditing'
+>;
+type PartialSnap = Pick<GraphSnap, 'getGridSize' | 'snap'>;
+type PartialClass = PartialGraph &
+  PartialCells &
+  PartialSelection &
+  PartialEditing &
+  PartialSnap &
+  EventSource;
 
-  graph: Graph;
+type MouseListener = {
+  mouseDown: Function;
+  mouseMove: Function;
+  mouseUp: Function;
+};
 
+// @ts-ignore recursive reference error
+class GraphEvents extends autoImplement<PartialClass>() {
   /**
    * Holds the mouse event listeners. See {@link fireMouseEvent}.
    */
-  mouseListeners: any[] | null = null;
-  
+  mouseListeners: MouseListener[] = [];
+
   // TODO: Document me!
   lastTouchEvent: InternalMouseEvent | null = null;
   doubleClickCounter: number = 0;
@@ -83,12 +115,13 @@ class GraphEvents {
    */
   isMouseDown: boolean = false;
 
-
   /**
    * Specifies if native double click events should be detected.
    * @default true
    */
   nativeDblClickEnabled: boolean = true;
+
+  isNativeDblClickEnabled = () => this.nativeDblClickEnabled;
 
   /**
    * Specifies if double taps on touch-based devices should be handled as a
@@ -166,6 +199,8 @@ class GraphEvents {
    */
   tolerance: number = 4;
 
+  getClickTolerance = () => this.tolerance;
+
   /*****************************************************************************
    * Group: Event processing
    *****************************************************************************/
@@ -176,7 +211,7 @@ class GraphEvents {
    * @param evt Mouseevent that represents the keystroke.
    */
   escape(evt: InternalMouseEvent): void {
-    this.graph.fireEvent(new EventObject(InternalEvent.ESCAPE, 'event', evt));
+    this.fireEvent(new EventObject(InternalEvent.ESCAPE, 'event', evt));
   }
 
   /**
@@ -205,7 +240,7 @@ class GraphEvents {
    *
    * @param me {@link mxMouseEvent} that represents the single click.
    */
-  click(me: InternalMouseEvent): boolean {
+  click(me: InternalMouseEvent) {
     const evt = me.getEvent();
     let cell = me.getCell();
     const mxe = new EventObject(InternalEvent.CLICK, 'event', evt, 'cell', cell);
@@ -214,38 +249,38 @@ class GraphEvents {
       mxe.consume();
     }
 
-    this.graph.fireEvent(mxe);
+    this.fireEvent(mxe);
 
-    if (this.graph.isEnabled() && !isConsumed(evt) && !mxe.isConsumed()) {
-      if (cell != null) {
+    if (this.isEnabled() && !isConsumed(evt) && !mxe.isConsumed()) {
+      if (cell) {
         if (this.isTransparentClickEvent(evt)) {
           let active = false;
 
-          const tmp = this.graph.cell.getCellAt(
+          const tmp = this.getCellAt(
             me.graphX,
             me.graphY,
             null,
             false,
             false,
-            (state: CellState): boolean => {
-              const selected = this.graph.cell.isCellSelected(<Cell>state.cell);
+            (state: CellState) => {
+              const selected = this.isCellSelected(state.cell);
               active = active || selected;
 
               return (
                 !active ||
                 selected ||
-                (state.cell !== cell &&
-                  state.cell.isAncestor(cell))
+                (state.cell !== cell && state.cell.isAncestor(cell))
               );
             }
           );
 
-          if (tmp != null) {
+          if (tmp) {
             cell = tmp;
           }
         }
-      } else if (this.graph.swimlane.isSwimlaneSelectionEnabled()) {
-        cell = this.graph.swimlane.getSwimlaneAt(me.getGraphX(), me.getGraphY());
+        /* comment out swimlane for now... perhaps make it a plugin?
+      } else if (this.swimlane.isSwimlaneSelectionEnabled()) {
+        cell = this.swimlane.getSwimlaneAt(me.getGraphX(), me.getGraphY());
 
         if (cell != null && (!this.isToggleEvent(evt) || !isAltDown(evt))) {
           let temp = cell;
@@ -253,9 +288,9 @@ class GraphEvents {
 
           while (temp != null) {
             temp = temp.getParent();
-            const state = this.graph.view.getState(temp);
+            const state = this.getView().getState(temp);
 
-            if (this.graph.swimlane.isSwimlane(temp) && state != null) {
+            if (this.swimlane.isSwimlane(temp) && state != null) {
               swimlanes.push(temp);
             }
           }
@@ -267,18 +302,18 @@ class GraphEvents {
             swimlanes.push(cell);
 
             for (let i = 0; i < swimlanes.length - 1; i += 1) {
-              if (this.graph.cell.isCellSelected(swimlanes[i])) {
+              if (this.isCellSelected(swimlanes[i])) {
                 cell = swimlanes[this.isToggleEvent(evt) ? i : i + 1];
               }
             }
           }
-        }
+        }*/
       }
 
-      if (cell != null) {
-        this.graph.selection.selectCellForEvent(cell, evt);
+      if (cell) {
+        this.selectCellForEvent(cell, evt);
       } else if (!this.isToggleEvent(evt)) {
-        this.graph.selection.clearSelection();
+        this.clearSelection();
       }
     }
     return false;
@@ -296,7 +331,7 @@ class GraphEvents {
    * graph.dblClick = function(evt, cell)
    * {
    *   var mxe = new mxEventObject(mxEvent.DOUBLE_CLICK, 'event', evt, 'cell', cell);
-   *   this.graph.fireEvent(mxe);
+   *   this.fireEvent(mxe);
    *
    *   if (this.isEnabled() && !mxEvent.isConsumed(evt) && !mxe.isConsumed())
    *   {
@@ -320,21 +355,20 @@ class GraphEvents {
    * @param evt Mouseevent that represents the doubleclick.
    * @param cell Optional {@link Cell} under the mousepointer.
    */
-  dblClick(evt: MouseEvent,
-           cell?: Cell): void {
-    const mxe = new EventObject(InternalEvent.DOUBLE_CLICK, {event: evt, cell: cell});
-    this.graph.fireEvent(mxe);
+  dblClick(evt: MouseEvent, cell?: Cell): void {
+    const mxe = new EventObject(InternalEvent.DOUBLE_CLICK, { event: evt, cell: cell });
+    this.fireEvent(mxe);
 
     // Handles the event if it has not been consumed
     if (
-      this.graph.isEnabled() &&
+      this.isEnabled() &&
       !isConsumed(evt) &&
       !mxe.isConsumed() &&
       cell != null &&
-      this.graph.cell.isCellEditable(cell) &&
-      !this.graph.editing.isEditing(cell)
+      this.isCellEditable(cell) &&
+      !this.isEditing(cell)
     ) {
-      this.graph.editing.startEditingAtCell(cell, evt);
+      this.startEditingAtCell(cell, evt);
       InternalEvent.consume(evt);
     }
   }
@@ -354,11 +388,11 @@ class GraphEvents {
       'cell',
       me.getCell()
     );
-    const panningHandler = <PanningHandler>this.graph.panning.panningHandler;
-    const connectionHandler = <ConnectionHandler>this.graph.connectionHandler;
+    const panningHandler = <PanningHandler>this.panning.panningHandler;
+    const connectionHandler = <ConnectionHandler>this.connectionHandler;
 
     // LATER: Check if event should be consumed if me is consumed
-    this.graph.fireEvent(mxe);
+    this.fireEvent(mxe);
 
     if (mxe.isConsumed()) {
       // Resets the state of the panning handler
@@ -367,18 +401,15 @@ class GraphEvents {
 
     // Handles the event if it has not been consumed
     if (
-      this.graph.isEnabled() &&
+      this.isEnabled() &&
       !isConsumed(evt) &&
       !mxe.isConsumed() &&
       connectionHandler.isEnabled()
     ) {
-      const state = this.graph.view.getState(
-        connectionHandler.marker.getCell(me)
-      );
+      const state = this.getView().getState(connectionHandler.marker.getCell(me));
 
       if (state != null) {
-        connectionHandler.marker.currentColor =
-          connectionHandler.marker.validColor;
+        connectionHandler.marker.currentColor = connectionHandler.marker.validColor;
         connectionHandler.marker.markedState = state;
         connectionHandler.marker.mark();
 
@@ -404,10 +435,7 @@ class GraphEvents {
    * @param listener Listener to be added to the graph event listeners.
    */
   // addMouseListener(listener: { [key: string]: (sender: mxEventSource, me: mxMouseEvent) => void }): void;
-  addMouseListener(listener: any): void {
-    if (this.mouseListeners == null) {
-      this.mouseListeners = [];
-    }
+  addMouseListener(listener: MouseListener): void {
     this.mouseListeners.push(listener);
   }
 
@@ -417,13 +445,11 @@ class GraphEvents {
    * @param listener Listener to be removed from the graph event listeners.
    */
   // removeMouseListener(listener: { [key: string]: (sender: mxEventSource, me: mxMouseEvent) => void }): void;
-  removeMouseListener(listener: any) {
-    if (this.mouseListeners != null) {
-      for (let i = 0; i < this.mouseListeners.length; i += 1) {
-        if (this.mouseListeners[i] === listener) {
-          this.mouseListeners.splice(i, 1);
-          break;
-        }
+  removeMouseListener(listener: MouseListener) {
+    for (let i = 0; i < this.mouseListeners.length; i += 1) {
+      if (this.mouseListeners[i] === listener) {
+        this.mouseListeners.splice(i, 1);
+        break;
       }
     }
   }
@@ -435,14 +461,12 @@ class GraphEvents {
    * @param me {@link mxMouseEvent} to be updated.
    * @param evtName Name of the mouse event.
    */
-  updateMouseEvent(me: InternalMouseEvent,
-                   evtName: string): InternalMouseEvent {
-
+  updateMouseEvent(me: InternalMouseEvent, evtName: string): InternalMouseEvent {
     if (me.graphX == null || me.graphY == null) {
-      const pt = convertPoint(this.graph.container, me.getX(), me.getY());
+      const pt = convertPoint(this.getContainer(), me.getX(), me.getY());
 
-      me.graphX = pt.x - this.graph.panning.panDx;
-      me.graphY = pt.y - this.graph.panning.panDy;
+      me.graphX = pt.x - this.panning.panDx;
+      me.graphY = pt.y - this.panning.panDy;
 
       // Searches for rectangles using method if native hit detection is disabled on shape
       if (
@@ -450,7 +474,7 @@ class GraphEvents {
         this.isMouseDown &&
         evtName === InternalEvent.MOUSE_MOVE
       ) {
-        me.state = this.graph.view.getState(
+        me.state = this.getView().getState(
           this.getCellAt(pt.x, pt.y, null, true, true, (state: CellState) => {
             return (
               state.shape == null ||
@@ -476,9 +500,9 @@ class GraphEvents {
 
     // Dispatches the drop event to the graph which
     // consumes and executes the source function
-    const pt = convertPoint(this.graph.container, x, y);
+    const pt = convertPoint(this.getContainer(), x, y);
 
-    return this.graph.view.getState(this.graph.cell.getCellAt(pt.x, pt.y));
+    return this.getView().getState(this.getCellAt(pt.x, pt.y));
   }
 
   /**
@@ -499,21 +523,19 @@ class GraphEvents {
     // Installs event listeners to capture the complete gesture from the event source
     // for non-MS touch events as a workaround for all events for the same geture being
     // fired from the event source even if that was removed from the DOM.
-    if (this.eventSource != null && evtName !== InternalEvent.MOUSE_MOVE) {
+    const eventSource = this.getEventSource();
+
+    if (eventSource && evtName !== InternalEvent.MOUSE_MOVE) {
       InternalEvent.removeGestureListeners(
-        this.eventSource,
+        eventSource,
         null,
         this.mouseMoveRedirect,
         this.mouseUpRedirect
       );
       this.mouseMoveRedirect = null;
       this.mouseUpRedirect = null;
-      this.eventSource = null;
-    } else if (
-      !mxClient.IS_GC &&
-      this.eventSource != null &&
-      me.getSource() !== this.eventSource
-    ) {
+      this.setEventSource(null);
+    } else if (!mxClient.IS_GC && eventSource && me.getSource() !== eventSource) {
       result = true;
     } else if (
       mxClient.IS_TOUCH &&
@@ -521,7 +543,7 @@ class GraphEvents {
       !mouseEvent &&
       !isPenEvent(me.getEvent())
     ) {
-      this.eventSource = me.getSource();
+      this.setEventSource(me.getSource());
 
       this.mouseMoveRedirect = (evt: InternalMouseEvent) => {
         this.fireMouseEvent(
@@ -537,7 +559,7 @@ class GraphEvents {
       };
 
       InternalEvent.addGestureListeners(
-        this.eventSource,
+        eventSource,
         null,
         this.mouseMoveRedirect,
         this.mouseUpRedirect
@@ -566,7 +588,7 @@ class GraphEvents {
       this.isMouseDown = true;
       this.isMouseTrigger = mouseEvent;
     }
-      // Drops mouse events that are fired during touch gestures as a workaround for Webkit
+    // Drops mouse events that are fired during touch gestures as a workaround for Webkit
     // and mouse events that are not in sync with the current internal button state
     else if (
       !result &&
@@ -591,20 +613,12 @@ class GraphEvents {
    * Hook for ignoring synthetic mouse events after touchend in Firefox.
    */
   // isSyntheticEventIgnored(evtName: string, me: mxMouseEvent, sender: mxEventSource): boolean;
-  isSyntheticEventIgnored(
-    evtName: string,
-    me: InternalMouseEvent,
-    sender: any
-  ): boolean {
+  isSyntheticEventIgnored(evtName: string, me: InternalMouseEvent, sender: any): boolean {
     let result = false;
     const mouseEvent = isMouseEvent(me.getEvent());
 
     // LATER: This does not cover all possible cases that can go wrong in FF
-    if (
-      this.ignoreMouseEvents &&
-      mouseEvent &&
-      evtName !== InternalEvent.MOUSE_MOVE
-    ) {
+    if (this.ignoreMouseEvents && mouseEvent && evtName !== InternalEvent.MOUSE_MOVE) {
       this.ignoreMouseEvents = evtName !== InternalEvent.MOUSE_UP;
       result = true;
     } else if (mxClient.IS_FF && !mouseEvent && evtName === InternalEvent.MOUSE_UP) {
@@ -625,8 +639,7 @@ class GraphEvents {
   isEventSourceIgnored(evtName: string, me: InternalMouseEvent): boolean {
     const source = me.getSource();
     const name = source.nodeName != null ? source.nodeName.toLowerCase() : '';
-    const candidate =
-      !isMouseEvent(me.getEvent()) || isLeftMouseButton(me.getEvent());
+    const candidate = !isMouseEvent(me.getEvent()) || isLeftMouseButton(me.getEvent());
 
     return (
       evtName === InternalEvent.MOUSE_DOWN &&
@@ -662,19 +675,20 @@ class GraphEvents {
    * @param me {@link mxMouseEvent} to be fired.
    * @param sender Optional sender argument. Default is `this`.
    */
-  fireMouseEvent(evtName: string,
-                 me: InternalMouseEvent,
-                 sender: EventSource = this): void {
-
+  fireMouseEvent(
+    evtName: string,
+    me: InternalMouseEvent,
+    sender: EventSource = this
+  ): void {
     if (this.isEventSourceIgnored(evtName, me)) {
-      if (this.graph.tooltipHandler != null) {
-        this.graph.tooltipHandler.hide();
+      if (this.tooltipHandler != null) {
+        this.tooltipHandler.hide();
       }
       return;
     }
 
     if (sender == null) {
-      sender = this.graph;
+      sender = this;
     }
 
     // Updates the graph coordinates in the event
@@ -706,10 +720,7 @@ class GraphEvents {
           let doubleClickFired = false;
 
           if (evtName === InternalEvent.MOUSE_UP) {
-            if (
-              me.getCell() === this.lastTouchCell &&
-              this.lastTouchCell !== null
-            ) {
+            if (me.getCell() === this.lastTouchCell && this.lastTouchCell !== null) {
               this.lastTouchTime = 0;
               const cell = this.lastTouchCell;
               this.lastTouchCell = null;
@@ -726,10 +737,7 @@ class GraphEvents {
             InternalEvent.consume(me.getEvent());
             return;
           }
-        } else if (
-          this.lastTouchEvent == null ||
-          this.lastTouchEvent !== me.getEvent()
-        ) {
+        } else if (this.lastTouchEvent == null || this.lastTouchEvent !== me.getEvent()) {
           this.lastTouchCell = me.getCell();
           this.lastTouchX = me.getX();
           this.lastTouchY = me.getY();
@@ -769,21 +777,11 @@ class GraphEvents {
     if (!this.isEventIgnored(evtName, me, sender)) {
       // Updates the event state via getEventState
       me.state = this.getEventState(me.getState());
-      this.graph.fireEvent(
-        new EventObject(
-          InternalEvent.FIRE_MOUSE_EVENT,
-          'eventName',
-          evtName,
-          'event',
-          me
-        )
+      this.fireEvent(
+        new EventObject(InternalEvent.FIRE_MOUSE_EVENT, 'eventName', evtName, 'event', me)
       );
 
-      if (
-        mxClient.IS_SF ||
-        mxClient.IS_GC ||
-        me.getEvent().target !== this.container
-      ) {
+      if (mxClient.IS_SF || mxClient.IS_GC || me.getEvent().target !== this.container) {
         const container = <HTMLElement>this.container;
 
         if (
@@ -792,20 +790,16 @@ class GraphEvents {
           this.autoScroll &&
           !isMultiTouchEvent(me.getEvent)
         ) {
-          this.scrollPointToVisible(
-            me.getGraphX(),
-            me.getGraphY(),
-            this.autoExtend
-          );
+          this.scrollPointToVisible(me.getGraphX(), me.getGraphY(), this.autoExtend);
         } else if (
           evtName === InternalEvent.MOUSE_UP &&
           this.ignoreScrollbars &&
           this.translateToScrollPosition &&
           (container.scrollLeft !== 0 || container.scrollTop !== 0)
         ) {
-          const s = this.graph.view.scale;
-          const tr = this.graph.view.translate;
-          this.graph.view.setTranslate(
+          const s = this.getView().scale;
+          const tr = this.getView().translate;
+          this.getView().setTranslate(
             tr.x - container.scrollLeft / s,
             tr.y - container.scrollTop / s
           );
@@ -813,23 +807,21 @@ class GraphEvents {
           container.scrollTop = 0;
         }
 
-        if (this.mouseListeners != null) {
-          const args = [sender, me];
-          const mouseListeners = this.mouseListeners;
+        const args = [sender, me];
+        const mouseListeners = this.mouseListeners;
 
-          // Does not change returnValue in Opera
-          if (!me.getEvent().preventDefault) {
-            me.getEvent().returnValue = true;
-          }
+        // Does not change returnValue in Opera
+        if (!me.getEvent().preventDefault) {
+          me.getEvent().returnValue = true;
+        }
 
-          for (const l of mouseListeners) {
-            if (evtName === InternalEvent.MOUSE_DOWN) {
-              l.mouseDown.apply(l, args);
-            } else if (evtName === InternalEvent.MOUSE_MOVE) {
-              l.mouseMove.apply(l, args);
-            } else if (evtName === InternalEvent.MOUSE_UP) {
-              l.mouseUp.apply(l, args);
-            }
+        for (const l of mouseListeners) {
+          if (evtName === InternalEvent.MOUSE_DOWN) {
+            l.mouseDown.apply(l, args);
+          } else if (evtName === InternalEvent.MOUSE_MOVE) {
+            l.mouseMove.apply(l, args);
+          } else if (evtName === InternalEvent.MOUSE_UP) {
+            l.mouseUp.apply(l, args);
           }
         }
 
@@ -863,10 +855,7 @@ class GraphEvents {
           window.clearTimeout(this.tapAndHoldThread);
         }
 
-        this.tapAndHoldThread = window.setTimeout(
-          handler,
-          this.tapAndHoldDelay
-        );
+        this.tapAndHoldThread = window.setTimeout(handler, this.tapAndHoldDelay);
         this.tapAndHoldValid = true;
       } else if (evtName === InternalEvent.MOUSE_UP) {
         this.tapAndHoldInProgress = false;
@@ -893,9 +882,7 @@ class GraphEvents {
   /**
    * Consumes the given {@link InternalMouseEvent} if it's a touchStart event.
    */
-  consumeMouseEvent(evtName: string,
-                    me: InternalMouseEvent,
-                    sender: any = this): void {
+  consumeMouseEvent(evtName: string, me: InternalMouseEvent, sender: any = this): void {
     // Workaround for duplicate click in Windows 8 with Chrome/FF/Opera with touch
     if (evtName === InternalEvent.MOUSE_DOWN && isTouchEvent(me.getEvent())) {
       me.consume(false);
@@ -933,13 +920,10 @@ class GraphEvents {
    * @param evt Gestureend event that represents the gesture.
    * @param cell Optional {@link Cell} associated with the gesture.
    */
-  fireGestureEvent(evt: MouseEvent,
-                   cell: Cell | null = null): void {
+  fireGestureEvent(evt: MouseEvent, cell: Cell | null = null): void {
     // Resets double tap event handling when gestures take place
     this.lastTouchTime = 0;
-    this.graph.fireEvent(
-      new EventObject(InternalEvent.GESTURE, 'event', evt, 'cell', cell)
-    );
+    this.fireEvent(new EventObject(InternalEvent.GESTURE, 'event', evt, 'cell', cell));
   }
 
   /**
@@ -948,63 +932,56 @@ class GraphEvents {
    * SVG-bases browsers.
    */
   sizeDidChange(): void {
-    const bounds = this.graph.getGraphBounds();
+    const bounds = this.getGraphBounds();
 
-    if (this.graph.container != null) {
-      const border = this.graph.getBorder();
+    const border = this.getBorder();
 
-      let width = Math.max(0, bounds.x) + bounds.width + 2 * border;
-      let height = Math.max(0, bounds.y) + bounds.height + 2 * border;
+    let width = Math.max(0, bounds.x) + bounds.width + 2 * border;
+    let height = Math.max(0, bounds.y) + bounds.height + 2 * border;
 
-      if (this.graph.minimumContainerSize != null) {
-        width = Math.max(width, this.graph.minimumContainerSize.width);
-        height = Math.max(height, this.graph.minimumContainerSize.height);
-      }
-
-      if (this.graph.resizeContainer) {
-        this.graph.doResizeContainer(width, height);
-      }
-
-      if (this.preferPageSize || this.pageVisible) {
-        const size = this.getPreferredPageSize(
-          bounds,
-          Math.max(1, width),
-          Math.max(1, height)
-        );
-
-        if (size != null) {
-          width = size.width * this.graph.view.scale;
-          height = size.height * this.graph.view.scale;
-        }
-      }
-
-      if (this.graph.minimumGraphSize != null) {
-        width = Math.max(
-          width,
-          this.graph.minimumGraphSize.width * this.graph.view.scale
-        );
-        height = Math.max(
-          height,
-          this.graph.minimumGraphSize.height * this.graph.view.scale
-        );
-      }
-
-      width = Math.ceil(width);
-      height = Math.ceil(height);
-
-      // @ts-ignore
-      const root = this.graph.view.getDrawPane().ownerSVGElement;
-
-      if (root != null) {
-        root.style.minWidth = `${Math.max(1, width)}px`;
-        root.style.minHeight = `${Math.max(1, height)}px`;
-        root.style.width = '100%';
-        root.style.height = '100%';
-      }
-
-      this.graph.pageBreaks.updatePageBreaks(this.graph.pageBreaksVisible, width, height);
+    if (this.minimumContainerSize != null) {
+      width = Math.max(width, this.minimumContainerSize.width);
+      height = Math.max(height, this.minimumContainerSize.height);
     }
-    this.graph.fireEvent(new EventObject(InternalEvent.SIZE, 'bounds', bounds));
+
+    if (this.resizeContainer) {
+      this.doResizeContainer(width, height);
+    }
+
+    if (this.preferPageSize || this.pageVisible) {
+      const size = this.getPreferredPageSize(
+        bounds,
+        Math.max(1, width),
+        Math.max(1, height)
+      );
+
+      if (size != null) {
+        width = size.width * this.getView().scale;
+        height = size.height * this.getView().scale;
+      }
+    }
+
+    if (this.minimumGraphSize != null) {
+      width = Math.max(width, this.minimumGraphSize.width * this.getView().scale);
+      height = Math.max(height, this.minimumGraphSize.height * this.getView().scale);
+    }
+
+    width = Math.ceil(width);
+    height = Math.ceil(height);
+
+    // @ts-ignore
+    const root = this.getView().getDrawPane().ownerSVGElement;
+
+    if (root != null) {
+      root.style.minWidth = `${Math.max(1, width)}px`;
+      root.style.minHeight = `${Math.max(1, height)}px`;
+      root.style.width = '100%';
+      root.style.height = '100%';
+    }
+
+    this.pageBreaks.updatePageBreaks(this.pageBreaksVisible, width, height);
+
+    this.fireEvent(new EventObject(InternalEvent.SIZE, 'bounds', bounds));
   }
 
   /*****************************************************************************
@@ -1068,13 +1045,13 @@ class GraphEvents {
    * offset by half of the {@link gridSize}. Default is `true`.
    */
   getPointForEvent(evt: InternalMouseEvent, addOffset: boolean = true): Point {
-    const p = convertPoint(this.graph.container, getClientX(evt), getClientY(evt));
-    const s = this.graph.view.scale;
-    const tr = this.graph.view.translate;
-    const off = addOffset ? this.graph.snap.gridSize / 2 : 0;
+    const p = convertPoint(this.getContainer(), getClientX(evt), getClientY(evt));
+    const s = this.getView().scale;
+    const tr = this.getView().translate;
+    const off = addOffset ? this.getGridSize() / 2 : 0;
 
-    p.x = this.graph.snap.snap(p.x / s - tr.x - off);
-    p.y = this.graph.snap.snap(p.y / s - tr.y - off);
+    p.x = this.snap(p.x / s - tr.x - off);
+    p.y = this.snap(p.y / s - tr.y - off);
     return p;
   }
 
@@ -1137,7 +1114,7 @@ class GraphEvents {
    * @param me {@link mxMouseEvent} whose cursor should be returned.
    */
   getCursorForMouseEvent(me: InternalMouseEvent): string | null {
-    return this.graph.cell.getCursorForCell(me.getCell());
+    return this.getCursorForCell(me.getCell());
   }
 }
 

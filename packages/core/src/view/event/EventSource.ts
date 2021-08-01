@@ -94,7 +94,7 @@ class EventSource {
    *
    * Sets <eventSource>.
    */
-  setEventSource(value: EventSource) {
+  setEventSource(value: EventSource | null) {
     this.eventSource = value;
   }
 

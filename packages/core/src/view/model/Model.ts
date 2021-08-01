@@ -8,7 +8,7 @@ import EventSource from '../event/EventSource';
 import UndoableEdit from './UndoableEdit';
 import CellPath from '../cell/datatypes/CellPath';
 import Cell from '../cell/datatypes/Cell';
-import utils, {isNumeric} from '../../util/Utils';
+import utils, { isNumeric } from '../../util/Utils';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import Point from '../geometry/Point';
@@ -20,8 +20,8 @@ import StyleChange from '../style/StyleChange';
 import TerminalChange from '../cell/edge/TerminalChange';
 import ValueChange from '../cell/ValueChange';
 import VisibleChange from '../style/VisibleChange';
-import Geometry from "../geometry/Geometry";
-import CellArray from "../cell/datatypes/CellArray";
+import Geometry from '../geometry/Geometry';
+import CellArray from '../cell/datatypes/CellArray';
 
 import type { CellMap, FilterFunction, UndoableChange } from '../../types';
 
@@ -207,7 +207,7 @@ import type { CellMap, FilterFunction, UndoableChange } from '../../types';
  * @class Model
  */
 class Model extends EventSource {
-  constructor(root: Cell | null=null) {
+  constructor(root: Cell | null = null) {
     super();
     this.currentEdit = this.createUndoableEdit();
 
@@ -320,16 +320,15 @@ class Model extends EventSource {
    *
    * @param {string} id  A string representing the Id of the cell.
    */
-  getCell(id: string): Cell | null {
-    return this.cells != null ? this.cells[id] : null;
+  getCell(id: string) {
+    return this.cells ? this.cells[id] : null;
   }
 
-  filterCells(cells: CellArray,
-              filter: FilterFunction): CellArray | null {
+  filterCells(cells: CellArray, filter: FilterFunction) {
     return new CellArray(...cells).filterCells(filter);
   }
 
-  getRoot(cell: Cell | null = null): Cell | null {
+  getRoot(cell: Cell | null = null) {
     return cell ? cell.getRoot() : this.root;
   }
 
@@ -349,7 +348,7 @@ class Model extends EventSource {
    *
    * @param {Cell} root  that specifies the new root.
    */
-  setRoot(root: Cell | null): Cell | null {
+  setRoot(root: Cell | null) {
     this.execute(new RootChange(this, root));
     return root;
   }
@@ -360,7 +359,7 @@ class Model extends EventSource {
    *
    * @param {Cell} root  that specifies the new root.
    */
-  rootChanged(root: Cell | null): Cell | null {
+  rootChanged(root: Cell | null) {
     const oldRoot = this.root;
     this.root = root;
 
@@ -378,7 +377,7 @@ class Model extends EventSource {
    *
    * @param {Cell} cell  that represents the possible root.
    */
-  isRoot(cell: Cell | null=null): boolean {
+  isRoot(cell: Cell | null = null) {
     return cell != null && this.root === cell;
   }
 
@@ -387,7 +386,7 @@ class Model extends EventSource {
    *
    * @param {Cell} cell  that represents the possible layer.
    */
-  isLayer(cell: Cell): boolean {
+  isLayer(cell: Cell) {
     return this.isRoot(cell.getParent());
   }
 
@@ -396,7 +395,7 @@ class Model extends EventSource {
    *
    * @param {Cell} cell  that specifies the cell.
    */
-  contains(cell: Cell): boolean {
+  contains(cell: Cell) {
     return (<Cell>this.root).isAncestor(cell);
   }
 
@@ -410,10 +409,7 @@ class Model extends EventSource {
    * @param {Cell} child  that specifies the child to be inserted.
    * @param index  Optional integer that specifies the index of the child.
    */
-  add(parent: Cell | null,
-      child: Cell | null,
-      index: number | null=null): Cell | null {
-
+  add(parent: Cell | null, child: Cell | null, index: number | null = null) {
     if (child !== parent && parent != null && child != null) {
       // Appends the child if no index was specified
       if (index == null) {
@@ -450,7 +446,7 @@ class Model extends EventSource {
    *
    * @param {Cell} cell  that specifies the cell that has been added.
    */
-  cellAdded(cell: Cell | null): void {
+  cellAdded(cell: Cell | null) {
     if (cell != null) {
       // Creates an Id for the cell if not Id exists
       if (cell.getId() == null && this.createIds) {
@@ -497,7 +493,7 @@ class Model extends EventSource {
    *
    * @param {Cell} cell  to create the Id for.
    */
-  createId(cell: Cell): string {
+  createId(cell: Cell) {
     const id = this.nextId;
     this.nextId++;
     return this.prefix + id + this.postfix;
@@ -507,9 +503,7 @@ class Model extends EventSource {
    * Updates the parent for all edges that are connected to cell or one of
    * its descendants using {@link updateEdgeParent}.
    */
-  updateEdgeParents(cell: Cell,
-                    root: Cell=<Cell>this.getRoot(cell)): void {
-
+  updateEdgeParents(cell: Cell, root: Cell = <Cell>this.getRoot(cell)) {
     // Updates edges on children first
     const childCount = cell.getChildCount();
 
@@ -545,9 +539,7 @@ class Model extends EventSource {
    * @param {Cell} edge  that specifies the edge.
    * @param {Cell} root  that represents the current root of the model.
    */
-  updateEdgeParent(edge: Cell,
-                   root: Cell): void {
-
+  updateEdgeParent(edge: Cell, root: Cell): void {
     let source = edge.getTerminal(true);
     let target = edge.getTerminal(false);
     let cell = null;
@@ -583,7 +575,8 @@ class Model extends EventSource {
       if (
         cell != null &&
         (cell.getParent() !== this.root || cell.isAncestor(edge)) &&
-        edge && edge.getParent() !== cell
+        edge &&
+        edge.getParent() !== cell
       ) {
         let geo = edge.getGeometry();
 
@@ -651,10 +644,7 @@ class Model extends EventSource {
    * @param index  Optional integer that defines the index of the child
    * in the parent's child array.
    */
-  parentForCellChanged(cell: Cell,
-                       parent: Cell | null,
-                       index: number): Cell {
-
+  parentForCellChanged(cell: Cell, parent: Cell | null, index: number): Cell {
     const previous = <Cell>cell.getParent();
 
     if (parent != null) {
@@ -690,10 +680,7 @@ class Model extends EventSource {
    * target terminal of the edge.
    */
   // setTerminal(edge: mxCell, terminal: mxCell, isSource: boolean): mxCell;
-  setTerminal(edge: Cell,
-              terminal: Cell | null,
-              isSource: boolean): Cell | null {
-
+  setTerminal(edge: Cell, terminal: Cell | null, isSource: boolean): Cell | null {
     const terminalChanged = terminal !== edge.getTerminal(isSource);
     this.execute(new TerminalChange(this, edge, terminal, isSource));
 
@@ -712,10 +699,7 @@ class Model extends EventSource {
    * @param {Cell} target  that specifies the new target terminal.
    */
   // setTerminals(edge: mxCell, source: mxCell, target: mxCell): void;
-  setTerminals(edge: Cell,
-               source: Cell | null,
-               target: Cell | null): void {
-
+  setTerminals(edge: Cell, source: Cell | null, target: Cell | null): void {
     this.beginUpdate();
     try {
       this.setTerminal(edge, source, true);
@@ -735,10 +719,11 @@ class Model extends EventSource {
    * target terminal of the edge.
    */
   // terminalForCellChanged(edge: mxCell, terminal: mxCell, isSource: boolean): mxCell;
-  terminalForCellChanged(edge: Cell,
-                         terminal: Cell | null,
-                         isSource: boolean=false): Cell | null {
-
+  terminalForCellChanged(
+    edge: Cell,
+    terminal: Cell | null,
+    isSource: boolean = false
+  ): Cell | null {
     const previous = edge.getTerminal(isSource);
     if (terminal != null) {
       terminal.insertEdge(edge, isSource);
@@ -760,10 +745,7 @@ class Model extends EventSource {
    * @param directed  Optional boolean that specifies if the direction of the
    * edge should be taken into account. Default is false.
    */
-  getEdgesBetween(source: Cell,
-                  target: Cell,
-                  directed: boolean=false): CellArray {
-
+  getEdgesBetween(source: Cell, target: Cell, directed: boolean = false): CellArray {
     const tmp1 = source.getEdgeCount();
     const tmp2 = target.getEdgeCount();
 
@@ -803,8 +785,7 @@ class Model extends EventSource {
    * @param {Cell} cell  whose user object should be changed.
    * @param value  Object that defines the new user object.
    */
-  setValue(cell: Cell,
-           value: any): any {
+  setValue(cell: Cell, value: any): any {
     this.execute(new ValueChange(this, cell, value));
     return value;
   }
@@ -827,8 +808,7 @@ class Model extends EventSource {
    * };
    * ```
    */
-  valueForCellChanged(cell: Cell,
-                      value: any): any {
+  valueForCellChanged(cell: Cell, value: any): any {
     return cell.valueChanged(value);
   }
 
@@ -840,9 +820,7 @@ class Model extends EventSource {
    * @param {Cell} cell  whose geometry should be changed.
    * @param {Geometry} geometry  that defines the new geometry.
    */
-  setGeometry(cell: Cell,
-              geometry: Geometry): Geometry {
-
+  setGeometry(cell: Cell, geometry: Geometry): Geometry {
     if (geometry !== cell.getGeometry()) {
       this.execute(new GeometryChange(this, cell, geometry));
     }
@@ -853,9 +831,7 @@ class Model extends EventSource {
    * Inner callback to update the {@link Geometry} of the given {@link Cell} using
    * <mxCell.setGeometry> and return the previous {@link Geometry}.
    */
-  geometryForCellChanged(cell: Cell,
-                         geometry: Geometry | null): Geometry | null {
-
+  geometryForCellChanged(cell: Cell, geometry: Geometry | null): Geometry | null {
     const previous = cell.getGeometry();
     cell.setGeometry(geometry);
     return previous;
@@ -869,13 +845,10 @@ class Model extends EventSource {
    * @param style  String of the form [stylename;|key=value;] to specify
    * the new cell style.
    */
-  setStyle(cell: Cell,
-           style: string): string {
-
+  setStyle(cell: Cell, style: string | null) {
     if (style !== cell.getStyle()) {
       this.execute(new StyleChange(this, cell, style));
     }
-    return style;
   }
 
   /**
@@ -886,9 +859,7 @@ class Model extends EventSource {
    * @param style  String of the form [stylename;|key=value;] to specify
    * the new cell style.
    */
-  styleForCellChanged(cell: Cell,
-                      style: string | null): string | null {
-
+  styleForCellChanged(cell: Cell, style: string | null) {
     const previous = cell.getStyle();
     cell.setStyle(style);
     return previous;
@@ -901,9 +872,7 @@ class Model extends EventSource {
    * @param {Cell} cell  whose collapsed state should be changed.
    * @param collapsed  Boolean that specifies the new collpased state.
    */
-  setCollapsed(cell: Cell,
-               collapsed: boolean): boolean {
-
+  setCollapsed(cell: Cell, collapsed: boolean): boolean {
     if (collapsed !== cell.isCollapsed()) {
       this.execute(new CollapseChange(this, cell, collapsed));
     }
@@ -918,9 +887,7 @@ class Model extends EventSource {
    * @param {Cell} cell  that specifies the cell to be updated.
    * @param collapsed  Boolean that specifies the new collpased state.
    */
-  collapsedStateForCellChanged(cell: Cell,
-                               collapsed: boolean): boolean {
-
+  collapsedStateForCellChanged(cell: Cell, collapsed: boolean): boolean {
     const previous = cell.isCollapsed();
     cell.setCollapsed(collapsed);
     return previous;
@@ -933,9 +900,7 @@ class Model extends EventSource {
    * @param {Cell} cell  whose visible state should be changed.
    * @param visible  Boolean that specifies the new visible state.
    */
-  setVisible(cell: Cell,
-             visible: boolean): boolean {
-
+  setVisible(cell: Cell, visible: boolean): boolean {
     if (visible !== cell.isVisible()) {
       this.execute(new VisibleChange(this, cell, visible));
     }
@@ -950,8 +915,7 @@ class Model extends EventSource {
    * @param {Cell} cell  that specifies the cell to be updated.
    * @param visible  Boolean that specifies the new visible state.
    */
-  visibleStateForCellChanged(cell: Cell,
-                             visible: boolean): boolean {
+  visibleStateForCellChanged(cell: Cell, visible: boolean): boolean {
     const previous = cell.isVisible();
     cell.setVisible(visible);
     return previous;
@@ -1045,9 +1009,7 @@ class Model extends EventSource {
 
     if (!this.endingUpdate) {
       this.endingUpdate = this.updateLevel === 0;
-      this.fireEvent(
-        new EventObject(InternalEvent.END_UPDATE, 'edit', this.currentEdit)
-      );
+      this.fireEvent(new EventObject(InternalEvent.END_UPDATE, 'edit', this.currentEdit));
 
       try {
         if (this.endingUpdate && !this.currentEdit.isEmpty()) {
@@ -1073,7 +1035,7 @@ class Model extends EventSource {
    * @param significant  Optional boolean that specifies if the edit to be created is
    * significant. Default is true.
    */
-  createUndoableEdit(significant: boolean=true): UndoableEdit {
+  createUndoableEdit(significant: boolean = true): UndoableEdit {
     const edit = new UndoableEdit(this, significant);
 
     edit.notify = () => {
@@ -1100,10 +1062,7 @@ class Model extends EventSource {
    * source edges.
    */
   // mergeChildren(from: Transactions, to: Transactions, cloneAllEdges?: boolean): void;
-  mergeChildren(from: Cell,
-                to: Cell,
-                cloneAllEdges: boolean=true): void {
-
+  mergeChildren(from: Cell, to: Cell, cloneAllEdges: boolean = true): void {
     this.beginUpdate();
     try {
       const mapping: any = {};
@@ -1140,11 +1099,7 @@ class Model extends EventSource {
    * that was inserted into this model.
    */
   // mergeChildrenImpl(from: Transactions, to: Transactions, cloneAllEdges: boolean, mapping: any): void;
-  mergeChildrenImpl(from: Cell,
-                    to: Cell,
-                    cloneAllEdges: boolean,
-                    mapping: any={}) {
-
+  mergeChildrenImpl(from: Cell, to: Cell, cloneAllEdges: boolean, mapping: any = {}) {
     this.beginUpdate();
     try {
       const childCount = from.getChildCount();
@@ -1155,9 +1110,7 @@ class Model extends EventSource {
         if (typeof cell.getId === 'function') {
           const id: string = <string>cell.getId();
           let target =
-            id != null && (!cell.isEdge() || !cloneAllEdges)
-              ? this.getCell(id)
-              : null;
+            id != null && (!cell.isEdge() || !cloneAllEdges) ? this.getCell(id) : null;
 
           // Clones and adds the child if no cell exists for the id
           if (target == null) {
@@ -1198,8 +1151,7 @@ class Model extends EventSource {
    *
    * @param {Cell} cell  to be cloned.
    */
-  cloneCell(cell: Cell | null,
-            includeChildren: boolean): Cell | null {
+  cloneCell(cell: Cell | null, includeChildren: boolean): Cell | null {
     if (cell != null) {
       return new CellArray(cell).cloneCells(includeChildren)[0];
     }

@@ -31,7 +31,15 @@ import {
   OUTLINE_HIGHLIGHT_COLOR,
   OUTLINE_HIGHLIGHT_STROKEWIDTH,
 } from '../../../util/Constants';
-import utils from '../../../util/Utils';
+import utils, {
+  contains,
+  convertPoint,
+  findNearestSegment,
+  getOffset,
+  intersects,
+  ptSegDistSq,
+  setOpacity,
+} from '../../../util/Utils';
 import ImageShape from '../../geometry/shape/node/ImageShape';
 import RectangleShape from '../../geometry/shape/node/RectangleShape';
 import ConnectionConstraint from '../../connection/ConnectionConstraint';
@@ -47,9 +55,14 @@ import {
   isMouseEvent,
   isShiftDown,
 } from '../../../util/EventUtils';
-import Graph from '../../Graph';
+import Graph, { MaxGraph } from '../../Graph';
 import CellState from '../datatypes/CellState';
 import Shape from '../../geometry/shape/Shape';
+import { CellHandle, ColorValue, Listenable } from 'packages/core/src/types';
+import InternalMouseEvent from '../../event/InternalMouseEvent';
+import Cell from '../datatypes/Cell';
+import ImageBox from '../../image/ImageBox';
+import Marker from '../../geometry/shape/edge/Marker';
 
 /**
  * Graph event handler that reconnects edges and modifies control points and the edge
@@ -66,296 +79,10 @@ import Shape from '../../geometry/shape/Shape';
  * @class EdgeHandler
  */
 class EdgeHandler {
-  constructor(state) {
-    if (state != null && state.shape != null) {
-      this.state = state;
-      this.init();
+  constructor(state: CellState) {
+    // `state.shape` must exists.
+    this.state = state;
 
-      // Handles escape keystrokes
-      this.escapeHandler = (sender, evt) => {
-        const dirty = this.index != null;
-        this.reset();
-
-        if (dirty) {
-          this.graph.cellRenderer.redraw(this.state, false, state.view.isRendering());
-        }
-      };
-
-      this.state.view.graph.addListener(InternalEvent.ESCAPE, this.escapeHandler);
-    }
-  }
-
-  /**
-   * Variable: graph
-   *
-   * Reference to the enclosing <mxGraph>.
-   */
-  graph: Graph;
-
-  /**
-   * Variable: state
-   *
-   * Reference to the <mxCellState> being modified.
-   */
-  state: CellState = null;
-
-  /**
-   * Variable: marker
-   *
-   * Holds the <mxTerminalMarker> which is used for highlighting terminals.
-   */
-  // marker: any;
-  marker = null;
-
-  /**
-   * Variable: constraintHandler
-   *
-   * Holds the <mxConstraintHandler> used for drawing and highlighting
-   * constraints.
-   */
-  constraintHandler: ConstraintHandler = null;
-
-  /**
-   * Variable: error
-   *
-   * Holds the current validation error while a connection is being changed.
-   */
-  error: string = null;
-
-  /**
-   * Variable: shape
-   *
-   * Holds the <mxShape> that represents the preview edge.
-   */
-  shape: Shape = null;
-
-  /**
-   * Variable: bends
-   *
-   * Holds the <mxShapes> that represent the points.
-   */
-  // bends: mxShape[];
-  bends = null;
-
-  /**
-   * Variable: labelShape
-   *
-   * Holds the <mxShape> that represents the label position.
-   */
-  // labelShape: mxShape;
-  labelShape = null;
-
-  /**
-   * Variable: cloneEnabled
-   *
-   * Specifies if cloning by control-drag is enabled. Default is true.
-   */
-  // cloneEnabled: boolean;
-  cloneEnabled = true;
-
-  /**
-   * Variable: addEnabled
-   *
-   * Specifies if adding bends by shift-click is enabled. Default is false.
-   * Note: This experimental feature is not recommended for production use.
-   */
-  // addEnabled: boolean;
-  addEnabled = false;
-
-  /**
-   * Variable: removeEnabled
-   *
-   * Specifies if removing bends by shift-click is enabled. Default is false.
-   * Note: This experimental feature is not recommended for production use.
-   */
-  // removeEnabled: boolean;
-  removeEnabled = false;
-
-  /**
-   * Variable: dblClickRemoveEnabled
-   *
-   * Specifies if removing bends by double click is enabled. Default is false.
-   */
-  // dblClickRemoveEnabled: boolean;
-  dblClickRemoveEnabled = false;
-
-  /**
-   * Variable: mergeRemoveEnabled
-   *
-   * Specifies if removing bends by dropping them on other bends is enabled.
-   * Default is false.
-   */
-  // mergeRemoveEnabled: boolean;
-  mergeRemoveEnabled = false;
-
-  /**
-   * Variable: straightRemoveEnabled
-   *
-   * Specifies if removing bends by creating straight segments should be enabled.
-   * If enabled, this can be overridden by holding down the alt key while moving.
-   * Default is false.
-   */
-  // straightRemoveEnabled: boolean;
-  straightRemoveEnabled = false;
-
-  /**
-   * Variable: virtualBendsEnabled
-   *
-   * Specifies if virtual bends should be added in the center of each
-   * segments. These bends can then be used to add new waypoints.
-   * Default is false.
-   */
-  // virtualBendsEnabled: boolean;
-  virtualBendsEnabled = false;
-
-  /**
-   * Variable: virtualBendOpacity
-   *
-   * Opacity to be used for virtual bends (see <virtualBendsEnabled>).
-   * Default is 20.
-   */
-  // virtualBendOpacity: number;
-  virtualBendOpacity = 20;
-
-  /**
-   * Variable: parentHighlightEnabled
-   *
-   * Specifies if the parent should be highlighted if a child cell is selected.
-   * Default is false.
-   */
-  // parentHighlightEnabled: boolean;
-  parentHighlightEnabled = false;
-
-  /**
-   * Variable: preferHtml
-   *
-   * Specifies if bends should be added to the graph container. This is updated
-   * in <init> based on whether the edge or one of its terminals has an HTML
-   * label in the container.
-   */
-  // preferHtml: boolean;
-  preferHtml = false;
-
-  /**
-   * Variable: allowHandleBoundsCheck
-   *
-   * Specifies if the bounds of handles should be used for hit-detection in IE
-   * Default is true.
-   */
-  // allowHandleBoundsCheck: boolean;
-  allowHandleBoundsCheck = true;
-
-  /**
-   * Variable: snapToTerminals
-   *
-   * Specifies if waypoints should snap to the routing centers of terminals.
-   * Default is false.
-   */
-  // snapToTerminals: boolean;
-  snapToTerminals = false;
-
-  /**
-   * Variable: handleImage
-   *
-   * Optional <mxImage> to be used as handles. Default is null.
-   */
-  // handleImage: mxImage;
-  handleImage = null;
-
-  /**
-   * Variable: tolerance
-   *
-   * Optional tolerance for hit-detection in <getHandleForEvent>. Default is 0.
-   */
-  // tolerance: number;
-  tolerance = 0;
-
-  /**
-   * Variable: outlineConnect
-   *
-   * Specifies if connections to the outline of a highlighted target should be
-   * enabled. This will allow to place the connection point along the outline of
-   * the highlighted target. Default is false.
-   */
-  // outlineConnect: boolean;
-  outlineConnect = false;
-
-  /**
-   * Variable: manageLabelHandle
-   *
-   * Specifies if the label handle should be moved if it intersects with another
-   * handle. Uses <checkLabelHandle> for checking and moving. Default is false.
-   */
-  // manageLabelHandle: boolean;
-  manageLabelHandle = false;
-
-  /**
-   * Function: isParentHighlightVisible
-   *
-   * Returns true if the parent highlight should be visible. This implementation
-   * always returns true.
-   */
-  isParentHighlightVisible() {
-    return !this.graph.isCellSelected(this.state.cell.getParent());
-  }
-
-  /**
-   * Function: updateParentHighlight
-   *
-   * Updates the highlight of the parent if <parentHighlightEnabled> is true.
-   */
-  updateParentHighlight() {
-    if (!this.isDestroyed()) {
-      const visible = this.isParentHighlightVisible();
-      const parent = this.state.cell.getParent();
-      const pstate = this.graph.view.getState(parent);
-
-      if (this.parentHighlight != null) {
-        if (parent.isVertex() && visible) {
-          const b = this.parentHighlight.bounds;
-
-          if (
-            pstate != null &&
-            (b.x !== pstate.x ||
-              b.y !== pstate.y ||
-              b.width !== pstate.width ||
-              b.height !== pstate.height)
-          ) {
-            this.parentHighlight.bounds = Rectangle.fromRectangle(pstate);
-            this.parentHighlight.redraw();
-          }
-        } else {
-          if (pstate != null && pstate.parentHighlight === this.parentHighlight) {
-            pstate.parentHighlight = null;
-          }
-
-          this.parentHighlight.destroy();
-          this.parentHighlight = null;
-        }
-      } else if (this.parentHighlightEnabled && visible) {
-        if (parent.isVertex() && pstate != null && pstate.parentHighlight == null) {
-          this.parentHighlight = this.createParentHighlightShape(pstate);
-          // VML dialect required here for event transparency in IE
-          this.parentHighlight.dialect = DIALECT_SVG;
-          this.parentHighlight.pointerEvents = false;
-          this.parentHighlight.rotation = Number(pstate.style.rotation || '0');
-          this.parentHighlight.init(this.graph.getView().getOverlayPane());
-          this.parentHighlight.redraw();
-
-          // Shows highlight once per parent
-          pstate.parentHighlight = this.parentHighlight;
-        }
-      }
-    }
-  }
-
-  /**
-   * Function: init
-   *
-   * Initializes the shapes required for this edge handler.
-   */
-  // init(): void;
-  init() {
     this.graph = this.state.view.graph;
     this.marker = this.createMarker();
     this.constraintHandler = new ConstraintHandler(this.graph);
@@ -424,16 +151,307 @@ class EdgeHandler {
 
     this.updateParentHighlight();
     this.redraw();
+
+    // Handles escape keystrokes
+    this.escapeHandler = (sender: Listenable, evt: Event) => {
+      const dirty = this.index != null;
+      this.reset();
+
+      if (dirty) {
+        this.graph.cellRenderer.redraw(this.state, false, state.view.isRendering());
+      }
+    };
+
+    this.state.view.graph.addListener(InternalEvent.ESCAPE, this.escapeHandler);
+  }
+
+  /**
+   * Variable: graph
+   *
+   * Reference to the enclosing <mxGraph>.
+   */
+  graph: MaxGraph;
+
+  /**
+   * Variable: state
+   *
+   * Reference to the <mxCellState> being modified.
+   */
+  state: CellState;
+
+  /**
+   * Variable: marker
+   *
+   * Holds the <mxTerminalMarker> which is used for highlighting terminals.
+   */
+  marker: CellMarker;
+
+  /**
+   * Variable: constraintHandler
+   *
+   * Holds the <mxConstraintHandler> used for drawing and highlighting
+   * constraints.
+   */
+  constraintHandler: ConstraintHandler = null;
+
+  /**
+   * Variable: error
+   *
+   * Holds the current validation error while a connection is being changed.
+   */
+  error: string | null = null;
+
+  /**
+   * Variable: shape
+   *
+   * Holds the <mxShape> that represents the preview edge.
+   */
+  shape: Shape | null = null;
+
+  /**
+   * Variable: bends
+   *
+   * Holds the <mxShapes> that represent the points.
+   */
+  bends: Shape[] = [];
+
+  virtualBends: Shape[] = [];
+
+  /**
+   * Variable: labelShape
+   *
+   * Holds the <mxShape> that represents the label position.
+   */
+  labelShape: Shape | null = null;
+
+  /**
+   * Variable: cloneEnabled
+   *
+   * Specifies if cloning by control-drag is enabled. Default is true.
+   */
+  cloneEnabled = true;
+
+  /**
+   * Variable: addEnabled
+   *
+   * Specifies if adding bends by shift-click is enabled. Default is false.
+   * Note: This experimental feature is not recommended for production use.
+   */
+  addEnabled = false;
+
+  /**
+   * Variable: removeEnabled
+   *
+   * Specifies if removing bends by shift-click is enabled. Default is false.
+   * Note: This experimental feature is not recommended for production use.
+   */
+  removeEnabled = false;
+
+  /**
+   * Variable: dblClickRemoveEnabled
+   *
+   * Specifies if removing bends by double click is enabled. Default is false.
+   */
+  dblClickRemoveEnabled = false;
+
+  /**
+   * Variable: mergeRemoveEnabled
+   *
+   * Specifies if removing bends by dropping them on other bends is enabled.
+   * Default is false.
+   */
+  mergeRemoveEnabled = false;
+
+  /**
+   * Variable: straightRemoveEnabled
+   *
+   * Specifies if removing bends by creating straight segments should be enabled.
+   * If enabled, this can be overridden by holding down the alt key while moving.
+   * Default is false.
+   */
+  straightRemoveEnabled = false;
+
+  /**
+   * Variable: virtualBendsEnabled
+   *
+   * Specifies if virtual bends should be added in the center of each
+   * segments. These bends can then be used to add new waypoints.
+   * Default is false.
+   */
+  virtualBendsEnabled = false;
+
+  /**
+   * Variable: virtualBendOpacity
+   *
+   * Opacity to be used for virtual bends (see <virtualBendsEnabled>).
+   * Default is 20.
+   */
+  virtualBendOpacity = 20;
+
+  /**
+   * Variable: parentHighlightEnabled
+   *
+   * Specifies if the parent should be highlighted if a child cell is selected.
+   * Default is false.
+   */
+  parentHighlightEnabled = false;
+
+  /**
+   * Variable: preferHtml
+   *
+   * Specifies if bends should be added to the graph container. This is updated
+   * in <init> based on whether the edge or one of its terminals has an HTML
+   * label in the container.
+   */
+  preferHtml = false;
+
+  /**
+   * Variable: allowHandleBoundsCheck
+   *
+   * Specifies if the bounds of handles should be used for hit-detection in IE
+   * Default is true.
+   */
+  allowHandleBoundsCheck = true;
+
+  /**
+   * Variable: snapToTerminals
+   *
+   * Specifies if waypoints should snap to the routing centers of terminals.
+   * Default is false.
+   */
+  snapToTerminals = false;
+
+  /**
+   * Variable: handleImage
+   *
+   * Optional <mxImage> to be used as handles. Default is null.
+   */
+  handleImage: ImageBox | null = null;
+
+  labelHandleImage: ImageBox | null = null;
+
+  /**
+   * Variable: tolerance
+   *
+   * Optional tolerance for hit-detection in <getHandleForEvent>. Default is 0.
+   */
+  // tolerance: number;
+  tolerance = 0;
+
+  /**
+   * Variable: outlineConnect
+   *
+   * Specifies if connections to the outline of a highlighted target should be
+   * enabled. This will allow to place the connection point along the outline of
+   * the highlighted target. Default is false.
+   */
+  // outlineConnect: boolean;
+  outlineConnect = false;
+
+  /**
+   * Variable: manageLabelHandle
+   *
+   * Specifies if the label handle should be moved if it intersects with another
+   * handle. Uses <checkLabelHandle> for checking and moving. Default is false.
+   */
+  // manageLabelHandle: boolean;
+  manageLabelHandle = false;
+
+  escapeHandler: (sender: Listenable, evt: Event) => void;
+
+  currentPoint: Point | null = null;
+
+  parentHighlight: RectangleShape | null = null;
+
+  index: number | null = null;
+
+  isSource: boolean = false;
+
+  isTarget: boolean = false;
+
+  label: Point | null = null;
+
+  isLabel = false;
+
+  points: Point[] = [];
+
+  snapPoint: Point | null = null;
+
+  abspoints: (Point | null)[] = [];
+
+  customHandles: CellHandle[] = [];
+
+  startX: number = 0;
+  startY: number = 0;
+
+  /**
+   * Function: isParentHighlightVisible
+   *
+   * Returns true if the parent highlight should be visible. This implementation
+   * always returns true.
+   */
+  isParentHighlightVisible() {
+    return !this.graph.isCellSelected(this.state.cell.getParent());
+  }
+
+  /**
+   * Function: updateParentHighlight
+   *
+   * Updates the highlight of the parent if <parentHighlightEnabled> is true.
+   */
+  updateParentHighlight() {
+    if (!this.isDestroyed()) {
+      const visible = this.isParentHighlightVisible();
+      const parent = this.state.cell.getParent();
+      const pstate = this.graph.view.getState(parent);
+
+      if (this.parentHighlight) {
+        if (parent.isVertex() && visible) {
+          const b = this.parentHighlight.bounds;
+
+          if (
+            pstate &&
+            b &&
+            (b.x !== pstate.x ||
+              b.y !== pstate.y ||
+              b.width !== pstate.width ||
+              b.height !== pstate.height)
+          ) {
+            this.parentHighlight.bounds = Rectangle.fromRectangle(pstate);
+            this.parentHighlight.redraw();
+          }
+        } else {
+          if (pstate && pstate.parentHighlight === this.parentHighlight) {
+            pstate.parentHighlight = null;
+          }
+
+          this.parentHighlight.destroy();
+          this.parentHighlight = null;
+        }
+      } else if (this.parentHighlightEnabled && visible) {
+        if (parent.isVertex() && pstate && !pstate.parentHighlight) {
+          this.parentHighlight = this.createParentHighlightShape(pstate);
+          // VML dialect required here for event transparency in IE
+          this.parentHighlight.dialect = DIALECT_SVG;
+          this.parentHighlight.pointerEvents = false;
+          this.parentHighlight.rotation = pstate.style.rotation;
+          this.parentHighlight.init(this.graph.getView().getOverlayPane());
+          this.parentHighlight.redraw();
+
+          // Shows highlight once per parent
+          pstate.parentHighlight = this.parentHighlight;
+        }
+      }
+    }
   }
 
   /**
    * Function: createCustomHandles
    *
-   * Returns an array of custom handles. This implementation returns null.
+   * Returns an array of custom handles. This implementation returns an empty array.
    */
-  // createCustomHandles(): any[];
-  createCustomHandles() {
-    return null;
+  createCustomHandles(): CellHandle[] {
+    return [];
   }
 
   /**
@@ -443,14 +461,13 @@ class EdgeHandler {
    * <virtualBendsEnabled> is true and the current style allows and
    * renders custom waypoints.
    */
-  // isVirtualBendsEnabled(evt: Event): boolean;
-  isVirtualBendsEnabled(evt) {
+  isVirtualBendsEnabled(evt: Event) {
     return (
       this.virtualBendsEnabled &&
       (this.state.style.edge == null ||
         this.state.style.edge === NONE ||
-        this.state.style.noEdgeStyle == 1) &&
-      utils.getValue(this.state.style, 'shape', null) != 'arrow'
+        this.state.style.noEdgeStyle) &&
+      this.state.style.shape !== 'arrow'
     );
   }
 
@@ -460,18 +477,17 @@ class EdgeHandler {
    * Returns true if the given cell allows new connections to be created. This implementation
    * always returns true.
    */
-  isCellEnabled(cell) {
+  isCellEnabled(cell: Cell) {
     return true;
   }
 
   /**
    * Function: isAddPointEvent
    *
-   * Returns true if the given event is a trigger to add a new point. This
+   * Returns true if the given event is a trigger to add a new Point. This
    * implementation returns true if shift is pressed.
    */
-  // isAddPointEvent(evt: Event): boolean;
-  isAddPointEvent(evt) {
+  isAddPointEvent(evt: Event) {
     return isShiftDown(evt);
   }
 
@@ -481,8 +497,7 @@ class EdgeHandler {
    * Returns true if the given event is a trigger to remove a point. This
    * implementation returns true if shift is pressed.
    */
-  // isRemovePointEvent(evt: Event): boolean;
-  isRemovePointEvent(evt) {
+  isRemovePointEvent(evt: Event) {
     return isShiftDown(evt);
   }
 
@@ -491,8 +506,7 @@ class EdgeHandler {
    *
    * Returns the list of points that defines the selection stroke.
    */
-  // getSelectionPoints(state: mxCellState): mxPoint[];
-  getSelectionPoints(state) {
+  getSelectionPoints(state: CellState) {
     return state.absolutePoints;
   }
 
@@ -501,11 +515,10 @@ class EdgeHandler {
    *
    * Creates the shape used to draw the selection border.
    */
-  // createParentHighlightShape(bounds: mxRectangle): mxRectangleShape;
-  createParentHighlightShape(bounds) {
+  createParentHighlightShape(bounds: Rectangle) {
     const shape = new RectangleShape(
       Rectangle.fromRectangle(bounds),
-      null,
+      NONE,
       this.getSelectionColor()
     );
     shape.strokeWidth = this.getSelectionStrokeWidth();
@@ -519,9 +532,10 @@ class EdgeHandler {
    *
    * Creates the shape used to draw the selection border.
    */
-  // createSelectionShape(points: mxPoint[]): mxShape;
-  createSelectionShape(points) {
-    const shape = new this.state.shape.constructor();
+  createSelectionShape(points: (Point | null)[]) {
+    const c = this.state.shape!.constructor as new () => Shape;
+
+    const shape = new c();
     shape.outline = true;
     shape.apply(this.state);
 
@@ -537,7 +551,6 @@ class EdgeHandler {
    *
    * Returns <mxConstants.EDGE_SELECTION_COLOR>.
    */
-  // getSelectionColor(): string;
   getSelectionColor() {
     return EDGE_SELECTION_COLOR;
   }
@@ -547,7 +560,6 @@ class EdgeHandler {
    *
    * Returns <mxConstants.EDGE_SELECTION_STROKEWIDTH>.
    */
-  // getSelectionStrokeWidth(): number;
   getSelectionStrokeWidth() {
     return EDGE_SELECTION_STROKEWIDTH;
   }
@@ -557,7 +569,6 @@ class EdgeHandler {
    *
    * Returns <mxConstants.EDGE_SELECTION_DASHED>.
    */
-  // isSelectionDashed(): boolean;
   isSelectionDashed() {
     return EDGE_SELECTION_DASHED;
   }
@@ -568,8 +579,7 @@ class EdgeHandler {
    * Returns true if the given cell is connectable. This is a hook to
    * disable floating connections. This implementation returns true.
    */
-  // isConnectableCell(cell: mxCell): boolean;
-  isConnectableCell(cell) {
+  isConnectableCell(cell: Cell) {
     return true;
   }
 
@@ -578,8 +588,7 @@ class EdgeHandler {
    *
    * Creates and returns the <mxCellMarker> used in <marker>.
    */
-  // getCellAt(x: number, y: number): mxCell;
-  getCellAt(x, y) {
+  getCellAt(x: number, y: number) {
     return !this.outlineConnect ? this.graph.getCellAt(x, y) : null;
   }
 
@@ -588,23 +597,22 @@ class EdgeHandler {
    *
    * Creates and returns the <mxCellMarker> used in <marker>.
    */
-  // createMarker(): mxCellMarker;
   createMarker() {
     const self = this; // closure
 
     class MyMarker extends CellMarker {
       // Only returns edges if they are connectable and never returns
       // the edge that is currently being modified
-      getCell = (me) => {
+      getCell = (me: InternalMouseEvent) => {
         let cell = super.getCell(me);
 
         // Checks for cell at preview point (with grid)
-        if ((cell === self.state.cell || cell == null) && self.currentPoint != null) {
+        if ((cell === self.state.cell || !cell) && self.currentPoint) {
           cell = self.graph.getCellAt(self.currentPoint.x, self.currentPoint.y);
         }
 
         // Uses connectable parent vertex if one exists
-        if (cell != null && !cell.isConnectable()) {
+        if (cell && !cell.isConnectable()) {
           const parent = cell.getParent();
 
           if (parent.isVertex() && parent.isConnectable()) {
@@ -612,6 +620,7 @@ class EdgeHandler {
           }
         }
 
+        /* disable swimlane for now
         const model = self.graph.getModel();
 
         if (
@@ -629,6 +638,7 @@ class EdgeHandler {
         ) {
           cell = null;
         }
+        */
 
         if (cell && !cell.isConnectable()) {
           cell = null;
@@ -637,21 +647,18 @@ class EdgeHandler {
       };
 
       // Sets the highlight color according to validateConnection
-      isValidState = (state) => {
-        const model = self.graph.getModel();
-        const other = self.graph.view.getTerminalPort(
-          state,
-          self.graph.view.getState(self.state.cell.getTerminal(!self.isSource)),
-          !self.isSource
-        );
-        const otherCell = other != null ? other.cell : null;
+      isValidState = (state: CellState) => {
+        const cell = self.state.cell.getTerminal(!self.isSource) as Cell;
+        const cellState = self.graph.view.getState(cell) as CellState;
+        const other = self.graph.view.getTerminalPort(state, cellState, !self.isSource);
+        const otherCell = other ? other.cell : null;
         const source = self.isSource ? state.cell : otherCell;
         const target = self.isSource ? otherCell : state.cell;
 
         // Updates the error message of the handler
         self.error = self.validateConnection(source, target);
 
-        return self.error == null;
+        return !self.error;
       };
     }
 
@@ -670,8 +677,7 @@ class EdgeHandler {
    * source - <mxCell> that represents the source terminal.
    * target - <mxCell> that represents the target terminal.
    */
-  // validateConnection(source: mxCell, target: mxCell): string;
-  validateConnection(source, target) {
+  validateConnection(source: Cell | null, target: Cell | null) {
     return this.graph.getEdgeValidationError(this.state.cell, source, target);
   }
 
@@ -681,7 +687,6 @@ class EdgeHandler {
    * Creates and returns the bends used for modifying the edge. This is
    * typically an array of <mxRectangleShapes>.
    */
-  // createBends(): mxRectangleShape[];
   createBends() {
     const { cell } = this.state;
     const bends = [];
@@ -749,8 +754,7 @@ class EdgeHandler {
    *
    * Creates the shape used to display the given bend.
    */
-  // isHandleEnabled(index: number): boolean;
-  isHandleEnabled(index) {
+  isHandleEnabled(index: number) {
     return true;
   }
 
@@ -759,18 +763,16 @@ class EdgeHandler {
    *
    * Returns true if the handle at the given index is visible.
    */
-  // isHandleVisible(index: number): boolean;
-  isHandleVisible(index) {
+  isHandleVisible(index: number) {
     const source = this.state.getVisibleTerminalState(true);
     const target = this.state.getVisibleTerminalState(false);
     const geo = this.state.cell.getGeometry();
-    const edgeStyle =
-      geo != null
-        ? this.graph.view.getEdgeStyle(this.state, geo.points, source, target)
-        : null;
+    const edgeStyle = geo
+      ? this.graph.view.getEdgeStyle(this.state, geo.points, source, target)
+      : null;
 
     return (
-      edgeStyle !== mxEdgeStyle.EntityRelation ||
+      edgeStyle !== EdgeStyle.EntityRelation ||
       index === 0 ||
       index === this.abspoints.length - 1
     );
@@ -785,9 +787,8 @@ class EdgeHandler {
    * returned if support for HTML labels with not foreign objects is required.
    * Index if null for virtual handles.
    */
-  // createHandleShape(index: number): mxRectangleShape;
-  createHandleShape(index) {
-    if (this.handleImage != null) {
+  createHandleShape(index?: number) {
+    if (this.handleImage) {
       const shape = new ImageShape(
         new Rectangle(0, 0, this.handleImage.width, this.handleImage.height),
         this.handleImage.src
@@ -816,9 +817,8 @@ class EdgeHandler {
    *
    * Creates the shape used to display the the label handle.
    */
-  // createLabelHandleShape(): mxRectangleShape;
   createLabelHandleShape() {
-    if (this.labelHandleImage != null) {
+    if (this.labelHandleImage) {
       const shape = new ImageShape(
         new Rectangle(0, 0, this.labelHandleImage.width, this.labelHandleImage.height),
         this.labelHandleImage.src
@@ -846,8 +846,7 @@ class EdgeHandler {
    *
    * bend - <mxShape> that represents the bend to be initialized.
    */
-  // initBend(bend: mxShape, dblClick: (evt: Event) => void): boolean;
-  initBend(bend, dblClick) {
+  initBend(bend: Shape, dblClick?: EventListener) {
     if (this.preferHtml) {
       bend.dialect = DIALECT_STRICTHTML;
       bend.init(this.graph.container);
@@ -876,68 +875,64 @@ class EdgeHandler {
    *
    * Returns the index of the handle for the given event.
    */
-  // getHandleForEvent(me: mxMouseEvent): number | boolean;
-  getHandleForEvent(me) {
+  getHandleForEvent(me: InternalMouseEvent) {
     let result = null;
 
-    if (this.state != null) {
-      // Connection highlight may consume events before they reach sizer handle
-      const tol = !isMouseEvent(me.getEvent()) ? this.tolerance : 1;
-      const hit =
-        this.allowHandleBoundsCheck && tol > 0
-          ? new Rectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol)
-          : null;
-      let minDistSq = null;
+    // Connection highlight may consume events before they reach sizer handle
+    const tol = !isMouseEvent(me.getEvent()) ? this.tolerance : 1;
+    const hit =
+      this.allowHandleBoundsCheck && tol > 0
+        ? new Rectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol)
+        : null;
+    let minDistSq = Number.POSITIVE_INFINITY;
 
-      function checkShape(shape) {
-        if (
-          shape != null &&
-          shape.node != null &&
-          shape.node.style.display !== 'none' &&
-          shape.node.style.visibility !== 'hidden' &&
-          (me.isSource(shape) || (hit != null && utils.intersects(shape.bounds, hit)))
-        ) {
-          const dx = me.getGraphX() - shape.bounds.getCenterX();
-          const dy = me.getGraphY() - shape.bounds.getCenterY();
-          const tmp = dx * dx + dy * dy;
+    function checkShape(shape: Shape | null) {
+      if (
+        shape &&
+        shape.bounds &&
+        shape.node &&
+        shape.node.style.display !== 'none' &&
+        shape.node.style.visibility !== 'hidden' &&
+        (me.isSource(shape) || (hit && intersects(shape.bounds, hit)))
+      ) {
+        const dx = me.getGraphX() - shape.bounds.getCenterX();
+        const dy = me.getGraphY() - shape.bounds.getCenterY();
+        const tmp = dx * dx + dy * dy;
 
-          if (minDistSq == null || tmp <= minDistSq) {
-            minDistSq = tmp;
+        if (tmp <= minDistSq) {
+          minDistSq = tmp;
 
-            return true;
-          }
-        }
-
-        return false;
-      }
-
-      if (this.customHandles != null && this.isCustomHandleEvent(me)) {
-        // Inverse loop order to match display order
-        for (let i = this.customHandles.length - 1; i >= 0; i--) {
-          if (checkShape(this.customHandles[i].shape)) {
-            // LATER: Return reference to active shape
-            return InternalEvent.CUSTOM_HANDLE - i;
-          }
+          return true;
         }
       }
 
-      if (me.isSource(this.state.text) || checkShape(this.labelShape)) {
-        result = InternalEvent.LABEL_HANDLE;
-      }
+      return false;
+    }
 
-      if (this.bends != null) {
-        for (let i = 0; i < this.bends.length; i += 1) {
-          if (checkShape(this.bends[i])) {
-            result = i;
-          }
+    if (this.isCustomHandleEvent(me)) {
+      // Inverse loop order to match display order
+      for (let i = this.customHandles.length - 1; i >= 0; i--) {
+        if (checkShape(this.customHandles[i].shape)) {
+          // LATER: Return reference to active shape
+          return InternalEvent.CUSTOM_HANDLE - i;
         }
       }
+    }
 
-      if (this.virtualBends != null && this.isAddVirtualBendEvent(me)) {
-        for (let i = 0; i < this.virtualBends.length; i += 1) {
-          if (checkShape(this.virtualBends[i])) {
-            result = InternalEvent.VIRTUAL_HANDLE - i;
-          }
+    if (me.isSource(this.state.text) || checkShape(this.labelShape)) {
+      result = InternalEvent.LABEL_HANDLE;
+    }
+
+    for (let i = 0; i < this.bends.length; i += 1) {
+      if (checkShape(this.bends[i])) {
+        result = i;
+      }
+    }
+
+    if (this.isAddVirtualBendEvent(me)) {
+      for (let i = 0; i < this.virtualBends.length; i += 1) {
+        if (checkShape(this.virtualBends[i])) {
+          result = InternalEvent.VIRTUAL_HANDLE - i;
         }
       }
     }
@@ -951,8 +946,8 @@ class EdgeHandler {
    * Returns true if the given event allows virtual bends to be added. This
    * implementation returns true.
    */
-  // isAddVirtualBendEvent(me: mxMouseEvent): boolean;
-  isAddVirtualBendEvent(me) {
+
+  isAddVirtualBendEvent(me: InternalMouseEvent) {
     return true;
   }
 
@@ -962,8 +957,7 @@ class EdgeHandler {
    * Returns true if the given event allows custom handles to be changed. This
    * implementation returns true.
    */
-  // isCustomHandleEvent(me: mxMouseEvent): boolean;
-  isCustomHandleEvent(me) {
+  isCustomHandleEvent(me: InternalMouseEvent) {
     return true;
   }
 
@@ -976,30 +970,29 @@ class EdgeHandler {
    * control point. The source and target points are used for reconnecting
    * the edge.
    */
-  // mouseDown(sender: any, me: mxMouseEvent): void;
-  mouseDown(sender, me) {
+  mouseDown(sender: Listenable, me: InternalMouseEvent) {
     const handle = this.getHandleForEvent(me);
 
-    if (this.bends != null && this.bends[handle] != null) {
+    if (handle !== null && this.bends[handle]) {
       const b = this.bends[handle].bounds;
-      this.snapPoint = new Point(b.getCenterX(), b.getCenterY());
+
+      if (b) this.snapPoint = new Point(b.getCenterX(), b.getCenterY());
     }
 
-    if (this.addEnabled && handle == null && this.isAddPointEvent(me.getEvent())) {
+    if (this.addEnabled && handle === null && this.isAddPointEvent(me.getEvent())) {
       this.addPoint(this.state, me.getEvent());
       me.consume();
-    } else if (handle != null && !me.isConsumed() && this.graph.isEnabled()) {
+    } else if (handle !== null && !me.isConsumed() && this.graph.isEnabled()) {
+      const cell = me.getCell();
+
       if (this.removeEnabled && this.isRemovePointEvent(me.getEvent())) {
         this.removePoint(this.state, handle);
       } else if (
         handle !== InternalEvent.LABEL_HANDLE ||
-        this.graph.isLabelMovable(me.getCell())
+        (cell && this.graph.isLabelMovable(cell))
       ) {
         if (handle <= InternalEvent.VIRTUAL_HANDLE) {
-          utils.setOpacity(
-            this.virtualBends[InternalEvent.VIRTUAL_HANDLE - handle].node,
-            100
-          );
+          setOpacity(this.virtualBends[InternalEvent.VIRTUAL_HANDLE - handle].node, 100);
         }
 
         this.start(me.getX(), me.getY(), handle);
@@ -1014,13 +1007,12 @@ class EdgeHandler {
    *
    * Starts the handling of the mouse gesture.
    */
-  // start(x: number, y: number, index: number): void;
-  start(x, y, index) {
+  start(x: number, y: number, index: number) {
     this.startX = x;
     this.startY = y;
 
-    this.isSource = this.bends == null ? false : index === 0;
-    this.isTarget = this.bends == null ? false : index === this.bends.length - 1;
+    this.isSource = this.bends.length === 0 ? false : index === 0;
+    this.isTarget = this.bends.length === 0 ? false : index === this.bends.length - 1;
     this.isLabel = index === InternalEvent.LABEL_HANDLE;
 
     if (this.isSource || this.isTarget) {
@@ -1040,6 +1032,7 @@ class EdgeHandler {
 
     // Hides other custom handles
     if (
+      this.index !== null &&
       this.index <= InternalEvent.CUSTOM_HANDLE &&
       this.index > InternalEvent.VIRTUAL_HANDLE
     ) {
@@ -1058,8 +1051,7 @@ class EdgeHandler {
    *
    * Returns a clone of the current preview state for the given point and terminal.
    */
-  // clonePreviewState(point: mxPoint, terminal: mxCell): mxCellState;
-  clonePreviewState(point, terminal) {
+  clonePreviewState(point: Point, terminal: Cell) {
     return this.state.clone();
   }
 
@@ -1069,9 +1061,8 @@ class EdgeHandler {
    * Returns the tolerance for the guides. Default value is
    * gridSize * scale / 2.
    */
-  // getSnapToTerminalTolerance(): number;
   getSnapToTerminalTolerance() {
-    return (this.graph.gridSize * this.graph.view.scale) / 2;
+    return (this.graph.getGridSize() * this.graph.getView().scale) / 2;
   }
 
   /**
@@ -1079,15 +1070,14 @@ class EdgeHandler {
    *
    * Hook for subclassers do show details while the handler is active.
    */
-  // updateHint(me: mxMouseEvent, point: mxPoint): void;
-  updateHint(me, point) {}
+
+  updateHint(me: InternalMouseEvent, point: Point) {}
 
   /**
    * Function: removeHint
    *
    * Hooks for subclassers to hide details when the handler gets inactive.
    */
-  // removeHint(): void;
   removeHint() {}
 
   /**
@@ -1095,8 +1085,7 @@ class EdgeHandler {
    *
    * Hook for rounding the unscaled width or height. This uses Math.round.
    */
-  // roundLength(length: number): number;
-  roundLength(length) {
+  roundLength(length: number) {
     return Math.round(length);
   }
 
@@ -1105,8 +1094,7 @@ class EdgeHandler {
    *
    * Returns true if <snapToTerminals> is true and if alt is not pressed.
    */
-  // isSnapToTerminalsEvent(me: mxMouseEvent): boolean;
-  isSnapToTerminalsEvent(me) {
+  isSnapToTerminalsEvent(me: InternalMouseEvent) {
     return this.snapToTerminals && !isAltDown(me.getEvent());
   }
 
@@ -1116,7 +1104,7 @@ class EdgeHandler {
    * Returns the point for the given event.
    */
   // getPointForEvent(me: mxMouseEvent): mxPoint;
-  getPointForEvent(me) {
+  getPointForEvent(me: InternalMouseEvent) {
     const view = this.graph.getView();
     const { scale } = view;
     const point = new Point(
@@ -1129,8 +1117,8 @@ class EdgeHandler {
     let overrideY = false;
 
     if (tt > 0 && this.isSnapToTerminalsEvent(me)) {
-      const snapToPoint = (pt) => {
-        if (pt != null) {
+      const snapToPoint = (pt: Point | null) => {
+        if (pt) {
           const { x } = pt;
           if (Math.abs(point.x - x) < tt) {
             point.x = x;
@@ -1146,10 +1134,10 @@ class EdgeHandler {
       };
 
       // Temporary function
-      const snapToTerminal = (terminal) => {
-        if (terminal != null) {
+      const snapToTerminal = (terminal: CellState | null) => {
+        if (terminal) {
           snapToPoint(
-            new point(view.getRoutingCenterX(terminal), view.getRoutingCenterY(terminal))
+            new Point(view.getRoutingCenterX(terminal), view.getRoutingCenterY(terminal))
           );
         }
       };
@@ -1157,10 +1145,8 @@ class EdgeHandler {
       snapToTerminal(this.state.getVisibleTerminalState(true));
       snapToTerminal(this.state.getVisibleTerminalState(false));
 
-      if (this.state.absolutePoints != null) {
-        for (let i = 0; i < this.state.absolutePoints.length; i += 1) {
-          snapToPoint(this.state.absolutePoints[i]);
-        }
+      for (let i = 0; i < this.state.absolutePoints.length; i += 1) {
+        snapToPoint(this.state.absolutePoints[i]);
       }
     }
 
@@ -1184,8 +1170,7 @@ class EdgeHandler {
    *
    * Updates the given preview state taking into account the state of the constraint handler.
    */
-  // getPreviewTerminalState(me: mxMouseEvent): mxCellState;
-  getPreviewTerminalState(me) {
+  getPreviewTerminalState(me: InternalMouseEvent) {
     this.constraintHandler.update(
       me,
       this.isSource,
@@ -1193,15 +1178,13 @@ class EdgeHandler {
       me.isSource(this.marker.highlight.shape) ? null : this.currentPoint
     );
 
-    if (
-      this.constraintHandler.currentFocus != null &&
-      this.constraintHandler.currentConstraint != null
-    ) {
+    if (this.constraintHandler.currentFocus && this.constraintHandler.currentConstraint) {
       // Handles special case where grid is large and connection point is at actual point in which
       // case the outline is not followed as long as we're < gridSize / 2 away from that point
       if (
-        this.marker.highlight != null &&
-        this.marker.highlight.state != null &&
+        this.marker.highlight &&
+        this.marker.highlight.shape &&
+        this.marker.highlight.state &&
         this.marker.highlight.state.cell === this.constraintHandler.currentFocus.cell
       ) {
         // Direct repaint needed if cell already highlighted
@@ -1213,13 +1196,14 @@ class EdgeHandler {
         this.marker.markCell(this.constraintHandler.currentFocus.cell, 'transparent');
       }
 
-      const model = this.graph.getModel();
       const other = this.graph.view.getTerminalPort(
         this.state,
-        this.graph.view.getState(this.state.cell.getTerminal(!this.isSource)),
+        this.graph.view.getState(
+          this.state.cell.getTerminal(!this.isSource) as Cell
+        ) as CellState,
         !this.isSource
       );
-      const otherCell = other != null ? other.cell : null;
+      const otherCell = other ? other.cell : null;
       const source = this.isSource ? this.constraintHandler.currentFocus.cell : otherCell;
       const target = this.isSource ? otherCell : this.constraintHandler.currentFocus.cell;
 
@@ -1227,11 +1211,11 @@ class EdgeHandler {
       this.error = this.validateConnection(source, target);
       let result = null;
 
-      if (this.error == null) {
+      if (this.error === null) {
         result = this.constraintHandler.currentFocus;
       }
 
-      if (this.error != null || (result != null && !this.isCellEnabled(result.cell))) {
+      if (this.error !== null || (result && !this.isCellEnabled(result.cell))) {
         this.constraintHandler.reset();
       }
 
@@ -1241,7 +1225,7 @@ class EdgeHandler {
       this.marker.process(me);
       const state = this.marker.getValidState();
 
-      if (state != null && !this.isCellEnabled(state.cell)) {
+      if (state && !this.isCellEnabled(state.cell)) {
         this.constraintHandler.reset();
         this.marker.reset();
       }
@@ -1263,111 +1247,105 @@ class EdgeHandler {
    * pt - <mxPoint> that contains the current pointer position.
    * me - Optional <mxMouseEvent> that contains the current event.
    */
-  // getPreviewPoints(pt: mxPoint, me?: mxMouseEvent): mxPoint[];
-  getPreviewPoints(pt, me) {
+  getPreviewPoints(pt: Point, me: InternalMouseEvent) {
     const geometry = this.state.cell.getGeometry();
-    let points = geometry.points != null ? geometry.points.slice() : null;
-    const point = new Point(pt.x, pt.y);
-    let result = null;
 
-    if (!this.isSource && !this.isTarget) {
+    if (!geometry) return null;
+
+    let points = geometry.points.slice();
+    const point = new Point(pt.x, pt.y);
+    let result: Point[] | null = null;
+
+    if (!this.isSource && !this.isTarget && this.index !== null) {
       this.convertPoint(point, false);
 
-      if (points == null) {
-        points = [point];
-      } else {
-        // Adds point from virtual bend
-        if (this.index <= InternalEvent.VIRTUAL_HANDLE) {
-          points.splice(InternalEvent.VIRTUAL_HANDLE - this.index, 0, point);
-        }
+      // Adds point from virtual bend
+      if (this.index <= InternalEvent.VIRTUAL_HANDLE) {
+        points.splice(InternalEvent.VIRTUAL_HANDLE - this.index, 0, point);
+      }
 
-        // Removes point if dragged on terminal point
-        if (!this.isSource && !this.isTarget) {
-          for (let i = 0; i < this.bends.length; i += 1) {
-            if (i !== this.index) {
-              const bend = this.bends[i];
+      // Removes point if dragged on terminal point
+      if (!this.isSource && !this.isTarget) {
+        for (let i = 0; i < this.bends.length; i += 1) {
+          if (i !== this.index) {
+            const bend = this.bends[i];
 
-              if (bend != null && utils.contains(bend.bounds, pt.x, pt.y)) {
-                if (this.index <= InternalEvent.VIRTUAL_HANDLE) {
-                  points.splice(InternalEvent.VIRTUAL_HANDLE - this.index, 1);
-                } else {
-                  points.splice(this.index - 1, 1);
-                }
-
-                result = points;
+            if (bend && contains(bend.bounds as Rectangle, pt.x, pt.y)) {
+              if (this.index <= InternalEvent.VIRTUAL_HANDLE) {
+                points.splice(InternalEvent.VIRTUAL_HANDLE - this.index, 1);
+              } else {
+                points.splice(this.index - 1, 1);
               }
+
+              result = points;
             }
-          }
-
-          // Removes point if user tries to straighten a segment
-          if (
-            result == null &&
-            this.straightRemoveEnabled &&
-            (me == null || !isAltDown(me.getEvent()))
-          ) {
-            const tol = this.graph.tolerance * this.graph.tolerance;
-            const abs = this.state.absolutePoints.slice();
-            abs[this.index] = pt;
-
-            // Handes special case where removing waypoint affects tolerance (flickering)
-            const src = this.state.getVisibleTerminalState(true);
-
-            if (src != null) {
-              const c = this.graph.getConnectionConstraint(this.state, src, true);
-
-              // Checks if point is not fixed
-              if (c == null || this.graph.getConnectionPoint(src, c) == null) {
-                abs[0] = new point(
-                  src.view.getRoutingCenterX(src),
-                  src.view.getRoutingCenterY(src)
-                );
-              }
-            }
-
-            const trg = this.state.getVisibleTerminalState(false);
-
-            if (trg != null) {
-              const c = this.graph.getConnectionConstraint(this.state, trg, false);
-
-              // Checks if point is not fixed
-              if (c == null || this.graph.getConnectionPoint(trg, c) == null) {
-                abs[abs.length - 1] = new point(
-                  trg.view.getRoutingCenterX(trg),
-                  trg.view.getRoutingCenterY(trg)
-                );
-              }
-            }
-
-            const checkRemove = (idx, tmp) => {
-              if (
-                idx > 0 &&
-                idx < abs.length - 1 &&
-                utils.ptSegDistSq(
-                  abs[idx - 1].x,
-                  abs[idx - 1].y,
-                  abs[idx + 1].x,
-                  abs[idx + 1].y,
-                  tmp.x,
-                  tmp.y
-                ) < tol
-              ) {
-                points.splice(idx - 1, 1);
-                result = points;
-              }
-            };
-
-            // LATER: Check if other points can be removed if a segment is made straight
-            checkRemove(this.index, pt);
           }
         }
 
-        // Updates existing point
-        if (result == null && this.index > InternalEvent.VIRTUAL_HANDLE) {
-          points[this.index - 1] = point;
+        // Removes point if user tries to straighten a segment
+        if (!result && this.straightRemoveEnabled && (!me || !isAltDown(me.getEvent()))) {
+          const tol = this.graph.getClickTolerance() * this.graph.getClickTolerance();
+          const abs = this.state.absolutePoints.slice();
+          abs[this.index] = pt;
+
+          // Handes special case where removing waypoint affects tolerance (flickering)
+          const src = this.state.getVisibleTerminalState(true);
+
+          if (src != null) {
+            const c = this.graph.getConnectionConstraint(this.state, src, true);
+
+            // Checks if point is not fixed
+            if (c == null || this.graph.getConnectionPoint(src, c) == null) {
+              abs[0] = new Point(
+                src.view.getRoutingCenterX(src),
+                src.view.getRoutingCenterY(src)
+              );
+            }
+          }
+
+          const trg = this.state.getVisibleTerminalState(false);
+
+          if (trg != null) {
+            const c = this.graph.getConnectionConstraint(this.state, trg, false);
+
+            // Checks if point is not fixed
+            if (c == null || this.graph.getConnectionPoint(trg, c) == null) {
+              abs[abs.length - 1] = new Point(
+                trg.view.getRoutingCenterX(trg),
+                trg.view.getRoutingCenterY(trg)
+              );
+            }
+          }
+
+          const checkRemove = (idx: number, tmp: Point) => {
+            if (
+              idx > 0 &&
+              idx < abs.length - 1 &&
+              ptSegDistSq(
+                abs[idx - 1]!.x,
+                abs[idx - 1]!.y,
+                abs[idx + 1]!.x,
+                abs[idx + 1]!.y,
+                tmp.x,
+                tmp.y
+              ) < tol
+            ) {
+              points.splice(idx - 1, 1);
+              result = points;
+            }
+          };
+
+          // LATER: Check if other points can be removed if a segment is made straight
+          checkRemove(this.index, pt);
         }
       }
-    } else if (this.graph.resetEdgesOnConnect) {
-      points = null;
+
+      // Updates existing point
+      if (result == null && this.index > InternalEvent.VIRTUAL_HANDLE) {
+        points[this.index - 1] = point;
+      }
+    } else if (this.graph.isResetEdgesOnConnect()) {
+      points = [];
     }
 
     return result != null ? result : points;
@@ -1379,9 +1357,10 @@ class EdgeHandler {
    * Returns true if <outlineConnect> is true and the source of the event is the outline shape
    * or shift is pressed.
    */
-  // isOutlineConnectEvent(me: mxMouseEvent): boolean;
-  isOutlineConnectEvent(me) {
-    const offset = utils.getOffset(this.graph.container);
+  isOutlineConnectEvent(me: InternalMouseEvent) {
+    if (!this.currentPoint) return false;
+
+    const offset = getOffset(this.graph.container);
     const evt = me.getEvent();
 
     const clientX = getClientX(evt);
@@ -1411,7 +1390,13 @@ class EdgeHandler {
    *
    * Updates the given preview state taking into account the state of the constraint handler.
    */
-  updatePreviewState(edge, point, terminalState, me, outline) {
+  updatePreviewState(
+    edgeState: CellState,
+    point: Point,
+    terminalState: CellState,
+    me: InternalMouseEvent,
+    outline: boolean
+  ) {
     // Computes the points for the edge style and terminals
     const sourceState = this.isSource
       ? terminalState
@@ -1420,8 +1405,16 @@ class EdgeHandler {
       ? terminalState
       : this.state.getVisibleTerminalState(false);
 
-    let sourceConstraint = this.graph.getConnectionConstraint(edge, sourceState, true);
-    let targetConstraint = this.graph.getConnectionConstraint(edge, targetState, false);
+    let sourceConstraint = this.graph.getConnectionConstraint(
+      edgeState,
+      sourceState,
+      true
+    );
+    let targetConstraint = this.graph.getConnectionConstraint(
+      edgeState,
+      targetState,
+      false
+    );
 
     let constraint = this.constraintHandler.currentConstraint;
 
@@ -1430,7 +1423,7 @@ class EdgeHandler {
         // Handles special case where mouse is on outline away from actual end point
         // in which case the grid is ignored and mouse point is used instead
         if (me.isSource(this.marker.highlight.shape)) {
-          point = new point(me.getGraphX(), me.getGraphY());
+          point = new Point(me.getGraphX(), me.getGraphY());
         }
 
         constraint = this.graph.getOutlineConstraint(point, terminalState, me);
@@ -1456,14 +1449,16 @@ class EdgeHandler {
         this.marker.highlight.shape.stroke = outline
           ? OUTLINE_HIGHLIGHT_COLOR
           : 'transparent';
-        this.marker.highlight.shape.strokewidth = OUTLINE_HIGHLIGHT_STROKEWIDTH / s / s;
+        this.marker.highlight.shape.strokeWidth = OUTLINE_HIGHLIGHT_STROKEWIDTH / s / s;
         this.marker.highlight.repaint();
       } else if (this.marker.hasValidState()) {
+        const cell = me.getCell();
+
         this.marker.highlight.shape.stroke =
-          me.getCell().isConnectable() && this.marker.getValidState() !== me.getState()
+          cell && cell.isConnectable() && this.marker.getValidState() !== me.getState()
             ? 'transparent'
             : DEFAULT_VALID_COLOR;
-        this.marker.highlight.shape.strokewidth = HIGHLIGHT_STROKEWIDTH / s / s;
+        this.marker.highlight.shape.strokeWidth = HIGHLIGHT_STROKEWIDTH / s / s;
         this.marker.highlight.repaint();
       }
     }
@@ -1476,35 +1471,45 @@ class EdgeHandler {
 
     if (this.isSource || this.isTarget) {
       if (constraint != null && constraint.point != null) {
-        edge.style[this.isSource ? 'exitX' : 'entryX'] = constraint.point.x;
-        edge.style[this.isSource ? 'exitY' : 'entryY'] = constraint.point.y;
+        edgeState.style[this.isSource ? 'exitX' : 'entryX'] = constraint.point.x;
+        edgeState.style[this.isSource ? 'exitY' : 'entryY'] = constraint.point.y;
       } else {
-        delete edge.style[this.isSource ? 'exitX' : 'entryX'];
-        delete edge.style[this.isSource ? 'exitY' : 'entryY'];
+        delete edgeState.style[this.isSource ? 'exitX' : 'entryX'];
+        delete edgeState.style[this.isSource ? 'exitY' : 'entryY'];
       }
     }
 
-    edge.setVisibleTerminalState(sourceState, true);
-    edge.setVisibleTerminalState(targetState, false);
+    edgeState.setVisibleTerminalState(sourceState, true);
+    edgeState.setVisibleTerminalState(targetState, false);
 
     if (!this.isSource || sourceState != null) {
-      edge.view.updateFixedTerminalPoint(edge, sourceState, true, sourceConstraint);
+      edgeState.view.updateFixedTerminalPoint(
+        edgeState,
+        sourceState,
+        true,
+        sourceConstraint
+      );
     }
 
     if (!this.isTarget || targetState != null) {
-      edge.view.updateFixedTerminalPoint(edge, targetState, false, targetConstraint);
+      edgeState.view.updateFixedTerminalPoint(
+        edgeState,
+        targetState,
+        false,
+        targetConstraint
+      );
     }
 
     if ((this.isSource || this.isTarget) && terminalState == null) {
-      edge.setAbsoluteTerminalPoint(point, this.isSource);
+      edgeState.setAbsoluteTerminalPoint(point, this.isSource);
 
       if (this.marker.getMarkedState() == null) {
-        this.error = this.graph.allowDanglingEdges ? null : '';
+        this.error = this.graph.isAllowDanglingEdges() ? null : '';
       }
     }
 
-    edge.view.updatePoints(edge, this.points, sourceState, targetState);
-    edge.view.updateFloatingTerminalPoints(edge, sourceState, targetState);
+    edgeState.view.updatePoints(edgeState, this.points, sourceState, targetState);
+    edgeState.view.updateFloatingTerminalPoints(edgeState, sourceState, targetState);
   }
 
   /**
@@ -1513,7 +1518,7 @@ class EdgeHandler {
    * Handles the event by updating the preview.
    */
   // mouseMove(sender: any, me: mxMouseEvent): void;
-  mouseMove(sender, me) {
+  mouseMove(sender: Listenable, me: InternalMouseEvent) {
     if (this.index != null && this.marker != null) {
       this.currentPoint = this.getPointForEvent(me);
       this.error = null;
@@ -1546,11 +1551,11 @@ class EdgeHandler {
             this.shape.node.style.display = 'none';
           }
         }
-      } else if (this.isLabel) {
+      } else if (this.isLabel && this.label) {
         this.label.x = this.currentPoint.x;
         this.label.y = this.currentPoint.y;
       } else {
-        this.points = this.getPreviewPoints(this.currentPoint, me);
+        this.points = this.getPreviewPoints(this.currentPoint, me) as Point[];
         let terminalState =
           this.isSource || this.isTarget ? this.getPreviewTerminalState(me) : null;
 
@@ -1570,7 +1575,7 @@ class EdgeHandler {
           } else if (
             terminalState != null &&
             terminalState !== me.getState() &&
-            me.getCell().isConnectable() &&
+            me.getCell()?.isConnectable() &&
             this.marker.highlight.shape != null
           ) {
             this.marker.highlight.shape.stroke = 'transparent';
@@ -1584,26 +1589,28 @@ class EdgeHandler {
           this.marker.reset();
         }
 
-        const clone = this.clonePreviewState(
-          this.currentPoint,
-          terminalState != null ? terminalState.cell : null
-        );
-        this.updatePreviewState(
-          clone,
-          this.currentPoint,
-          terminalState,
-          me,
-          this.outline
-        );
+        if (this.currentPoint) {
+          const clone = this.clonePreviewState(
+            this.currentPoint,
+            terminalState != null ? terminalState.cell : null
+          );
+          this.updatePreviewState(
+            clone,
+            this.currentPoint,
+            terminalState,
+            me,
+            this.outline
+          );
 
-        // Sets the color of the preview to valid or invalid, updates the
-        // points of the preview and redraws
-        const color =
-          this.error == null ? this.marker.validColor : this.marker.invalidColor;
-        this.setPreviewColor(color);
-        this.abspoints = clone.absolutePoints;
-        this.active = true;
-        this.updateHint(me, this.currentPoint);
+          // Sets the color of the preview to valid or invalid, updates the
+          // points of the preview and redraws
+          const color =
+            this.error == null ? this.marker.validColor : this.marker.invalidColor;
+          this.setPreviewColor(color);
+          this.abspoints = clone.absolutePoints;
+          this.active = true;
+          this.updateHint(me, this.currentPoint);
+        }
       }
 
       // This should go before calling isOutlineConnectEvent above. As a workaround
@@ -1621,8 +1628,7 @@ class EdgeHandler {
    * Handles the event to applying the previewed changes on the edge by
    * using <moveLabel>, <connect> or <changePoints>.
    */
-  // mouseUp(sender: any, me: mxMouseEvent): void;
-  mouseUp(sender, me) {
+  mouseUp(sender: Listenable, me: InternalMouseEvent) {
     // Workaround for wrong event source in Webkit
     if (this.index != null && this.marker != null) {
       if (this.shape != null && this.shape.node != null) {
@@ -1666,7 +1672,7 @@ class EdgeHandler {
               model.endUpdate();
             }
           }
-        } else if (this.isLabel) {
+        } else if (this.isLabel && this.label) {
           this.moveLabel(this.state, this.label.x, this.label.y);
         } else if (this.isSource || this.isTarget) {
           let terminal = null;
@@ -1717,7 +1723,9 @@ class EdgeHandler {
               model.endUpdate();
             }
           } else if (this.graph.isAllowDanglingEdges()) {
-            const pt = this.abspoints[this.isSource ? 0 : this.abspoints.length - 1];
+            const pt = this.abspoints[
+              this.isSource ? 0 : this.abspoints.length - 1
+            ] as Point;
             pt.x = this.roundLength(
               pt.x / this.graph.view.scale - this.graph.view.translate.x
             );
@@ -1816,8 +1824,7 @@ class EdgeHandler {
    *
    * Sets the color of the preview to the given value.
    */
-  // setPreviewColor(color: string): void;
-  setPreviewColor(color) {
+  setPreviewColor(color: ColorValue) {
     if (this.shape != null) {
       this.shape.stroke = color;
     }
@@ -1835,8 +1842,7 @@ class EdgeHandler {
    * point - <mxPoint> to be converted.
    * gridEnabled - Boolean that specifies if the grid should be applied.
    */
-  // convertPoint(point: mxPoint, gridEnabled: boolean): void;
-  convertPoint(point, gridEnabled) {
+  convertPoint(point: Point, gridEnabled: boolean) {
     const scale = this.graph.getView().getScale();
     const tr = this.graph.getView().getTranslate();
 
@@ -1869,8 +1875,7 @@ class EdgeHandler {
    * x - Integer that specifies the x-coordinate of the new location.
    * y - Integer that specifies the y-coordinate of the new location.
    */
-  // moveLabel(edgeState: mxCellState, x: number, y: number): void;
-  moveLabel(edgeState, x, y) {
+  moveLabel(edgeState: CellState, x: number, y: number) {
     const model = this.graph.getModel();
     let geometry = edgeState.cell.getGeometry();
 
@@ -1930,8 +1935,13 @@ class EdgeHandler {
    * the old edge.
    * me - <mxMouseEvent> that contains the mouse up event.
    */
-  // connect(edge: mxCell, terminal: mxCell, isSource: boolean, isClone: boolean, me: mxMouseEvent): mxCell;
-  connect(edge, terminal, isSource, isClone, me) {
+  connect(
+    edge: Cell,
+    terminal: Cell,
+    isSource: boolean,
+    isClone: boolean,
+    me: InternalMouseEvent
+  ) {
     const model = this.graph.getModel();
     const parent = edge.getParent();
 
@@ -1956,8 +1966,7 @@ class EdgeHandler {
    *
    * Changes the terminal point of the given edge.
    */
-  // changeTerminalPoint(edge: mxCell, point: mxPoint, isSource: boolean, clone: boolean): mxCell;
-  changeTerminalPoint(edge, point, isSource, clone) {
+  changeTerminalPoint(edge: Cell, point: Point, isSource: boolean, clone: boolean) {
     const model = this.graph.getModel();
 
     model.beginUpdate();
@@ -1990,8 +1999,7 @@ class EdgeHandler {
    *
    * Changes the control points of the given edge in the graph model.
    */
-  // changePoints(edge: mxCell, points: mxPoint[], clone: boolean): mxCell;
-  changePoints(edge, points, clone) {
+  changePoints(edge: Cell, points: Point[], clone: boolean) {
     const model = this.graph.getModel();
     model.beginUpdate();
     try {
@@ -2025,9 +2033,8 @@ class EdgeHandler {
    *
    * Adds a control point for the given state and event.
    */
-  // addPoint(state: mxCellState, evt: Event): void;
-  addPoint(state, evt) {
-    const pt = utils.convertPoint(this.graph.container, getClientX(evt), getClientY(evt));
+  addPoint(state: CellState, evt: MouseEvent) {
+    const pt = convertPoint(this.graph.container, getClientX(evt), getClientY(evt));
     const gridEnabled = this.graph.isGridEnabledEvent(evt);
     this.convertPoint(pt, gridEnabled);
     this.addPointAt(state, pt.x, pt.y);
@@ -2039,8 +2046,7 @@ class EdgeHandler {
    *
    * Adds a control point at the given point.
    */
-  // addPointAt(state: mxCellState, x: number, y: number): void;
-  addPointAt(state, x, y) {
+  addPointAt(state: CellState, x: number, y: number) {
     let geo = state.cell.getGeometry();
     const pt = new Point(x, y);
 
@@ -2057,11 +2063,7 @@ class EdgeHandler {
         offset = new Point(pState.x, pState.y);
       }
 
-      const index = utils.findNearestSegment(
-        state,
-        pt.x * s + offset.x,
-        pt.y * s + offset.y
-      );
+      const index = findNearestSegment(state, pt.x * s + offset.x, pt.y * s + offset.y);
 
       if (geo.points == null) {
         geo.points = [pt];
@@ -2080,8 +2082,7 @@ class EdgeHandler {
    *
    * Removes the control point at the given index from the given state.
    */
-  // removePoint(state: mxCellState, index: number): void;
-  removePoint(state, index) {
+  removePoint(state: CellState, index: number) {
     if (index > 0 && index < this.abspoints.length - 1) {
       let geo = this.state.cell.getGeometry();
 
@@ -2100,8 +2101,7 @@ class EdgeHandler {
    *
    * Returns the fillcolor for the handle at the given index.
    */
-  // getHandleFillColor(index: number): string;
-  getHandleFillColor(index) {
+  getHandleFillColor(index: number) {
     const isSource = index === 0;
     const { cell } = this.state;
     const terminal = cell.getTerminal(isSource);
@@ -2127,35 +2127,32 @@ class EdgeHandler {
    *
    * Redraws the preview, and the bends- and label control points.
    */
-  // redraw(): void;
-  redraw(ignoreHandles) {
-    if (this.state != null) {
-      this.abspoints = this.state.absolutePoints.slice();
-      const g = this.state.cell.getGeometry();
+  redraw(ignoreHandles: boolean) {
+    this.abspoints = this.state.absolutePoints.slice();
+    const g = this.state.cell.getGeometry();
 
-      if (g != null) {
-        const pts = g.points;
+    if (g) {
+      const pts = g.points;
 
-        if (this.bends != null && this.bends.length > 0) {
-          if (pts != null) {
-            if (this.points == null) {
-              this.points = [];
-            }
+      if (this.bends != null && this.bends.length > 0) {
+        if (pts != null) {
+          if (this.points == null) {
+            this.points = [];
+          }
 
-            for (let i = 1; i < this.bends.length - 1; i += 1) {
-              if (this.bends[i] != null && this.abspoints[i] != null) {
-                this.points[i - 1] = pts[i - 1];
-              }
+          for (let i = 1; i < this.bends.length - 1; i += 1) {
+            if (this.bends[i] != null && this.abspoints[i] != null) {
+              this.points[i - 1] = pts[i - 1];
             }
           }
         }
       }
+    }
 
-      this.drawPreview();
+    this.drawPreview();
 
-      if (!ignoreHandles) {
-        this.redrawHandles();
-      }
+    if (!ignoreHandles) {
+      this.redrawHandles();
     }
   }
 
@@ -2164,7 +2161,6 @@ class EdgeHandler {
    *
    * Redraws the handles.
    */
-  // redrawHandles(): void;
   redrawHandles() {
     const { cell } = this.state;
 
@@ -2281,7 +2277,7 @@ class EdgeHandler {
    *
    * Returns true if the given custom handle is visible.
    */
-  isCustomHandleVisible(handle) {
+  isCustomHandleVisible(handle: CellHandle) {
     return !this.graph.isEditing() && this.state.view.graph.getSelectionCount() === 1;
   }
 
@@ -2290,8 +2286,7 @@ class EdgeHandler {
    *
    * Shortcut to <hideSizers>.
    */
-  // setHandlesVisible(visible: boolean): void;
-  setHandlesVisible(visible) {
+  setHandlesVisible(visible: boolean) {
     if (this.bends != null) {
       for (let i = 0; i < this.bends.length; i += 1) {
         this.bends[i].node.style.display = visible ? '' : 'none';
@@ -2325,8 +2320,7 @@ class EdgeHandler {
    * p0 - <mxPoint> that represents the location of the first point.
    * pe - <mxPoint> that represents the location of the last point.
    */
-  // redrawInnerBends(p0: mxPoint, pe: mxPoint): void;
-  redrawInnerBends(p0, pe) {
+  redrawInnerBends(p0: Point, pe: Point) {
     for (let i = 1; i < this.bends.length - 1; i += 1) {
       if (this.bends[i] != null) {
         if (this.abspoints[i] != null) {
@@ -2374,8 +2368,7 @@ class EdgeHandler {
    * Checks if the label handle intersects the given bounds and moves it if it
    * intersects.
    */
-  // checkLabelHandle(b: mxRectangle): void;
-  checkLabelHandle(b) {
+  checkLabelHandle(b: Rectangle) {
     if (this.labelShape != null) {
       const b2 = this.labelShape.bounds;
 
@@ -2394,7 +2387,6 @@ class EdgeHandler {
    *
    * Redraws the preview.
    */
-  // drawPreview(): void;
   drawPreview() {
     try {
       if (this.isLabel) {
@@ -2435,7 +2427,6 @@ class EdgeHandler {
    *
    * Refreshes the bends of this handler.
    */
-  // refresh(): void;
   refresh() {
     if (this.state != null) {
       this.abspoints = this.getSelectionPoints(this.state);
@@ -2481,8 +2472,7 @@ class EdgeHandler {
    *
    * Destroys all elements in <bends>.
    */
-  // destroyBends(bends: mxShape[]): void;
-  destroyBends(bends) {
+  destroyBends(bends: Shape[]) {
     if (bends != null) {
       for (let i = 0; i < bends.length; i += 1) {
         if (bends[i] != null) {
@@ -2545,7 +2535,7 @@ class EdgeHandler {
     this.customHandles = null;
 
     this.destroyBends(this.bends);
-    this.bends = null;
+    this.bends = [];
 
     this.removeHint();
   }

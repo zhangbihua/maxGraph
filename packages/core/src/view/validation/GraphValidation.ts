@@ -1,24 +1,36 @@
-import Cell from "../cell/datatypes/Cell";
-import Resources from "../../util/Resources";
-import {isNode} from "../../util/DomUtils";
-import CellState from "../cell/datatypes/CellState";
-import Multiplicity from "./Multiplicity";
-import Graph from "../Graph";
+import Cell from '../cell/datatypes/Cell';
+import Resources from '../../util/Resources';
+import { isNode } from '../../util/DomUtils';
+import CellState from '../cell/datatypes/CellState';
+import Multiplicity from './Multiplicity';
+import { autoImplement } from '../../util/Utils';
 
-class GraphValidation {
-  constructor(graph: Graph) {
-    this.graph = graph;
+import type Graph from '../Graph';
+import type GraphEdge from '../cell/edge/GraphEdge';
+import type GraphConnections from '../connection/GraphConnections';
+import type GraphOverlays from '../layout/GraphOverlays';
 
-    this.multiplicities = [];
-  }
+type PartialGraph = Pick<
+  Graph,
+  | 'getModel'
+  | 'isAllowLoops'
+  | 'isMultigraph'
+  | 'getView'
+  | 'isValidRoot'
+  | 'getContainsValidationErrorsResource'
+  | 'getAlreadyConnectedResource'
+>;
+type PartialEdge = Pick<GraphEdge, 'isAllowDanglingEdges'>;
+type PartialConnections = Pick<GraphConnections, 'isValidConnection'>;
+type PartialOverlays = Pick<GraphOverlays, 'setCellWarning'>;
+type PartialClass = PartialGraph & PartialEdge & PartialConnections & PartialOverlays;
 
-  graph: Graph;
-
+class GraphValidation extends autoImplement<PartialClass>() {
   /**
    * An array of {@link Multiplicity} describing the allowed
    * connections in a graph.
    */
-  multiplicities: Multiplicity[] | null = null;
+  multiplicities: Multiplicity[] = [];
 
   /*****************************************************************************
    * Group: Validation
@@ -28,7 +40,7 @@ class GraphValidation {
    * Displays the given validation error in a dialog. This implementation uses
    * mxUtils.alert.
    */
-  validationAlert(message: any): void {
+  validationAlert(message: string) {
     alert(message);
   }
 
@@ -40,8 +52,8 @@ class GraphValidation {
    * @param source {@link mxCell} that represents the source terminal.
    * @param target {@link mxCell} that represents the target terminal.
    */
-  isEdgeValid(edge: Cell, source: Cell, target: Cell): boolean {
-    return this.getEdgeValidationError(edge, source, target) == null;
+  isEdgeValid(edge: Cell, source: Cell, target: Cell) {
+    return !this.getEdgeValidationError(edge, source, target);
   }
 
   /**
@@ -86,45 +98,37 @@ class GraphValidation {
     source: Cell | null = null,
     target: Cell | null = null
   ): string | null {
-    if (
-      edge != null &&
-      !this.isAllowDanglingEdges() &&
-      (source == null || target == null)
-    ) {
+    if (edge && !this.isAllowDanglingEdges() && (!source || !target)) {
       return '';
     }
 
-    if (
-      edge != null &&
-      edge.getTerminal(true) == null &&
-      edge.getTerminal(false) == null
-    ) {
+    if (edge && !edge.getTerminal(true) && !edge.getTerminal(false)) {
       return null;
     }
 
     // Checks if we're dealing with a loop
-    if (!this.allowLoops && source === target && source != null) {
+    if (!this.isAllowLoops() && source === target && source) {
       return '';
     }
 
     // Checks if the connection is generally allowed
-    if (!this.isValidConnection(<Cell>source, <Cell>target)) {
+    if (!this.isValidConnection(source, target)) {
       return '';
     }
 
-    if (source != null && target != null) {
+    if (source && target) {
       let error = '';
 
       // Checks if the cells are already connected
       // and adds an error message if required
-      if (!this.multigraph) {
+      if (!this.isMultigraph()) {
         const tmp = this.getModel().getEdgesBetween(source, target, true);
 
         // Checks if the source and target are not connected by another edge
         if (tmp.length > 1 || (tmp.length === 1 && tmp[0] !== edge)) {
           error += `${
-            Resources.get(this.alreadyConnectedResource) ||
-            this.alreadyConnectedResource
+            Resources.get(this.getAlreadyConnectedResource()) ||
+            this.getAlreadyConnectedResource()
           }\n`;
         }
       }
@@ -136,20 +140,18 @@ class GraphValidation {
       const targetIn = target.getDirectedEdgeCount(false, edge);
 
       // Checks the change against each multiplicity rule
-      if (this.multiplicities != null) {
-        for (const multiplicity of this.multiplicities) {
-          const err = multiplicity.check(
-            this,
-            <Cell>edge,
-            source,
-            target,
-            sourceOut,
-            targetIn
-          );
+      for (const multiplicity of this.multiplicities) {
+        const err = multiplicity.check(
+          <Graph>(<unknown>this), // needs to cast to Graph
+          <Cell>edge,
+          source,
+          target,
+          sourceOut,
+          targetIn
+        );
 
-          if (err != null) {
-            error += err;
-          }
+        if (err != null) {
+          error += err;
         }
       }
 
@@ -161,7 +163,7 @@ class GraphValidation {
       return error.length > 0 ? error : null;
     }
 
-    return this.allowDanglingEdges ? null : '';
+    return this.isAllowDanglingEdges() ? null : '';
   }
 
   /**
@@ -191,17 +193,20 @@ class GraphValidation {
    * the graph root.
    * @param context Object that represents the global validation state.
    */
-  validateGraph(
-    cell: Cell = <Cell>this.graph.model.getRoot(),
-    context: any
-  ): string | null {
-    context = context != null ? context : {};
+  validateGraph(cell: Cell | null, context: any): string | null {
+    cell = cell ?? this.getModel().getRoot();
+
+    if (!cell) {
+      return 'The root does not exist!';
+    }
+
+    context = context ?? {};
 
     let isValid = true;
     const childCount = cell.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {
-      const tmp = <Cell>cell.getChildAt(i);
+      const tmp = cell.getChildAt(i);
       let ctx = context;
 
       if (this.isValidRoot(tmp)) {
@@ -210,7 +215,7 @@ class GraphValidation {
 
       const warn = this.validateGraph(tmp, ctx);
 
-      if (warn != null) {
+      if (warn) {
         this.setCellWarning(tmp, warn.replace(/\n/g, '<br>'));
       } else {
         this.setCellWarning(tmp, null);
@@ -224,8 +229,8 @@ class GraphValidation {
     // Adds error for invalid children if collapsed (children invisible)
     if (cell && cell.isCollapsed() && !isValid) {
       warning += `${
-        Resources.get(this.containsValidationErrorsResource) ||
-        this.containsValidationErrorsResource
+        Resources.get(this.getContainsValidationErrorsResource()) ||
+        this.getContainsValidationErrorsResource()
       }\n`;
     }
 
@@ -265,31 +270,30 @@ class GraphValidation {
    *
    * @param cell {@link mxCell} for which the multiplicities should be checked.
    */
-  getCellValidationError(cell: Cell): string | null {
+  getCellValidationError(cell: Cell) {
     const outCount = cell.getDirectedEdgeCount(true);
     const inCount = cell.getDirectedEdgeCount(false);
     const value = cell.getValue();
     let error = '';
 
-    if (this.multiplicities != null) {
-      for (let i = 0; i < this.multiplicities.length; i += 1) {
-        const rule = this.multiplicities[i];
+    for (let i = 0; i < this.multiplicities.length; i += 1) {
+      const rule = this.multiplicities[i];
 
-        if (
-          rule.source &&
-          isNode(value, rule.type, rule.attr, rule.value) &&
-          (outCount > rule.max || outCount < rule.min)
-        ) {
-          error += `${rule.countError}\n`;
-        } else if (
-          !rule.source &&
-          isNode(value, rule.type, rule.attr, rule.value) &&
-          (inCount > rule.max || inCount < rule.min)
-        ) {
-          error += `${rule.countError}\n`;
-        }
+      if (
+        rule.source &&
+        isNode(value, rule.type, rule.attr, rule.value) &&
+        (outCount > rule.max || outCount < rule.min)
+      ) {
+        error += `${rule.countError}\n`;
+      } else if (
+        !rule.source &&
+        isNode(value, rule.type, rule.attr, rule.value) &&
+        (inCount > rule.max || inCount < rule.min)
+      ) {
+        error += `${rule.countError}\n`;
       }
     }
+
     return error.length > 0 ? error : null;
   }
 
@@ -301,8 +305,7 @@ class GraphValidation {
    * @param cell {@link mxCell} that represents the cell to validate.
    * @param context Object that represents the global validation state.
    */
-  // validateCell(cell: mxCell, context: any): string | null;
-  validateCell(cell: Cell, context: CellState): void | null {
+  validateCell(cell: Cell, context: CellState): string | null {
     return null;
   }
 }
