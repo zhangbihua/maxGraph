@@ -97,7 +97,7 @@ class TemporaryCellStates {
   /**
    * Holds the states of the rectangle.
    */
-  oldStates: Dictionary<string, CellState>;
+  oldStates: Dictionary<Cell, CellState>;
 
   /**
    * Holds the bounds of the rectangle.

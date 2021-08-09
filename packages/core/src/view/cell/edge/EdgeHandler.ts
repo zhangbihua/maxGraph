@@ -63,6 +63,7 @@ import InternalMouseEvent from '../../event/InternalMouseEvent';
 import Cell from '../datatypes/Cell';
 import ImageBox from '../../image/ImageBox';
 import Marker from '../../geometry/shape/edge/Marker';
+import EventSource from '../../event/EventSource';
 
 /**
  * Graph event handler that reconnects edges and modifies control points and the edge
@@ -381,8 +382,12 @@ class EdgeHandler {
 
   customHandles: CellHandle[] = [];
 
-  startX: number = 0;
-  startY: number = 0;
+  startX = 0;
+  startY = 0;
+
+  outline = true;
+
+  active = true;
 
   /**
    * Function: isParentHighlightVisible
@@ -461,7 +466,7 @@ class EdgeHandler {
    * <virtualBendsEnabled> is true and the current style allows and
    * renders custom waypoints.
    */
-  isVirtualBendsEnabled(evt: Event) {
+  isVirtualBendsEnabled(evt?: Event) {
     return (
       this.virtualBendsEnabled &&
       (this.state.style.edge == null ||
@@ -970,7 +975,7 @@ class EdgeHandler {
    * control point. The source and target points are used for reconnecting
    * the edge.
    */
-  mouseDown(sender: Listenable, me: InternalMouseEvent) {
+  mouseDown(sender: EventSource, me: InternalMouseEvent) {
     const handle = this.getHandleForEvent(me);
 
     if (handle !== null && this.bends[handle]) {
@@ -1284,7 +1289,7 @@ class EdgeHandler {
 
         // Removes point if user tries to straighten a segment
         if (!result && this.straightRemoveEnabled && (!me || !isAltDown(me.getEvent()))) {
-          const tol = this.graph.getClickTolerance() * this.graph.getClickTolerance();
+          const tol = this.graph.getEventTolerance() * this.graph.getEventTolerance();
           const abs = this.state.absolutePoints.slice();
           abs[this.index] = pt;
 
@@ -1517,8 +1522,7 @@ class EdgeHandler {
    *
    * Handles the event by updating the preview.
    */
-  // mouseMove(sender: any, me: mxMouseEvent): void;
-  mouseMove(sender: Listenable, me: InternalMouseEvent) {
+  mouseMove(sender: EventSource, me: InternalMouseEvent) {
     if (this.index != null && this.marker != null) {
       this.currentPoint = this.getPointForEvent(me);
       this.error = null;
@@ -1628,7 +1632,7 @@ class EdgeHandler {
    * Handles the event to applying the previewed changes on the edge by
    * using <moveLabel>, <connect> or <changePoints>.
    */
-  mouseUp(sender: Listenable, me: InternalMouseEvent) {
+  mouseUp(sender: EventSource, me: InternalMouseEvent) {
     // Workaround for wrong event source in Webkit
     if (this.index != null && this.marker != null) {
       if (this.shape != null && this.shape.node != null) {
@@ -1675,7 +1679,7 @@ class EdgeHandler {
         } else if (this.isLabel && this.label) {
           this.moveLabel(this.state, this.label.x, this.label.y);
         } else if (this.isSource || this.isTarget) {
-          let terminal = null;
+          let terminal: Cell | null = null;
 
           if (
             this.constraintHandler.currentConstraint != null &&
@@ -1685,17 +1689,17 @@ class EdgeHandler {
           }
 
           if (
-            terminal == null &&
+            !terminal &&
             this.marker.hasValidState() &&
             this.marker.highlight != null &&
             this.marker.highlight.shape != null &&
             this.marker.highlight.shape.stroke !== 'transparent' &&
             this.marker.highlight.shape.stroke !== 'white'
           ) {
-            terminal = this.marker.validState.cell;
+            terminal = this.marker.validState!.cell;
           }
 
-          if (terminal != null) {
+          if (terminal) {
             const model = this.graph.getModel();
             const parent = edge.getParent();
 
@@ -1704,18 +1708,18 @@ class EdgeHandler {
               // Clones and adds the cell
               if (clone) {
                 let geo = edge.getGeometry();
-                clone = this.graph.cloneCell(edge);
-                model.add(parent, clone, parent.getChildCount());
+                const cloned = this.graph.cloneCell(edge);
+                model.add(parent, cloned, parent.getChildCount());
 
                 if (geo != null) {
                   geo = geo.clone();
-                  model.setGeometry(clone, geo);
+                  model.setGeometry(cloned, geo);
                 }
 
                 const other = edge.getTerminal(!this.isSource);
-                this.graph.connectCell(clone, other, !this.isSource);
+                this.graph.connectCell(cloned, other, !this.isSource);
 
-                edge = clone;
+                edge = cloned;
               }
 
               edge = this.connect(edge, terminal, this.isSource, clone, me);
@@ -2127,7 +2131,7 @@ class EdgeHandler {
    *
    * Redraws the preview, and the bends- and label control points.
    */
-  redraw(ignoreHandles: boolean) {
+  redraw(ignoreHandles?: boolean) {
     this.abspoints = this.state.absolutePoints.slice();
     const g = this.state.cell.getGeometry();
 

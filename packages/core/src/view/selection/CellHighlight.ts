@@ -72,7 +72,7 @@ class CellHighlight {
   }
 
   // TODO: Document me!!
-  highlightColor: ColorValue | null = null;
+  highlightColor: ColorValue;
 
   strokeWidth: number = 0;
 
@@ -80,7 +80,7 @@ class CellHighlight {
 
   opacity = 100;
 
-  repaintHandler: Function | null = null;
+  repaintHandler: Function;
 
   shape: Shape | null = null;
 
@@ -112,14 +112,14 @@ class CellHighlight {
    * Holds the handler that automatically invokes reset if the highlight should be hidden.
    * @default null
    */
-  resetHandler: Function | null = null;
+  resetHandler: Function;
 
   /**
    * Sets the color of the rectangle used to highlight drop targets.
    *
    * @param {string} color - String that represents the new highlight color.
    */
-  setHighlightColor(color: ColorValue | null) {
+  setHighlightColor(color: ColorValue) {
     this.highlightColor = color;
 
     if (this.shape) {
@@ -134,10 +134,12 @@ class CellHighlight {
     this.shape = this.createShape();
     this.repaint();
 
-    const node = this.shape.node;
+    if (this.shape) {
+      const node = this.shape.node;
 
-    if (!this.keepOnTop && node?.parentNode?.firstChild !== node) {
-      node.parentNode.insertBefore(node, node.parentNode.firstChild);
+      if (!this.keepOnTop && node?.parentNode?.firstChild !== node && node.parentNode) {
+        node.parentNode.insertBefore(node, node.parentNode.firstChild);
+      }
     }
   }
 
@@ -145,11 +147,11 @@ class CellHighlight {
    * Creates and returns the highlight shape for the given state.
    */
   createShape() {
-    if (!this.state) return;
+    if (!this.state) return null;
 
     const shape = this.graph.cellRenderer.createShape(this.state);
 
-    shape.svgStrokeTolerance = this.graph.tolerance;
+    shape.svgStrokeTolerance = this.graph.getEventTolerance();
     shape.points = this.state.absolutePoints;
     shape.apply(this.state);
     shape.stroke = this.highlightColor;
@@ -173,7 +175,7 @@ class CellHighlight {
   /**
    * Updates the highlight after a change of the model or view.
    */
-  getStrokeWidth(state: CellState | null = null): number | null {
+  getStrokeWidth(state: CellState | null = null) {
     return this.strokeWidth;
   }
 
@@ -256,13 +258,13 @@ class CellHighlight {
   /**
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy(): void {
-    const graph = <graph>this.graph;
+  destroy() {
+    const graph = this.graph;
     graph.getView().removeListener(this.resetHandler);
     graph.getView().removeListener(this.repaintHandler);
     graph.getModel().removeListener(this.repaintHandler);
 
-    if (this.shape != null) {
+    if (this.shape) {
       this.shape.destroy();
       this.shape = null;
     }

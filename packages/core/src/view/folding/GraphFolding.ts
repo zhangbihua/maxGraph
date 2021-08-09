@@ -66,6 +66,8 @@ class GraphFolding extends autoImplement<PartialClass>() {
 
   getCollapseExpandResource = () => this.collapseExpandResource;
 
+  isFoldingEnabled = () => this.options.foldingEnabled;
+
   /**
    *
    * @default true
@@ -133,7 +135,7 @@ class GraphFolding extends autoImplement<PartialClass>() {
     recurse: boolean = false,
     cells: CellArray | null = null,
     checkFoldable: boolean = false,
-    evt: EventObject | null = null
+    evt: Event | null = null
   ): CellArray | null {
     if (cells == null) {
       cells = this.getFoldableCells(this.getSelectionCells(), collapse);

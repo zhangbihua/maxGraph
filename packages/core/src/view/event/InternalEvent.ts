@@ -9,7 +9,7 @@ import mxClient from '../../mxClient';
 import { isConsumed, isMouseEvent } from '../../util/EventUtils';
 import graph from '../Graph';
 import CellState from '../cell/datatypes/CellState';
-import { EventCache, GestureEvent, Listenable } from '../../types';
+import { EventCache, GestureEvent, Listenable, MouseEventListener } from '../../types';
 
 // Checks if passive event listeners are supported
 // see https://github.com/Modernizr/Modernizr/issues/1894
@@ -50,11 +50,10 @@ class InternalEvent {
    * {@link mxUtils.bind} in order to bind the "this" keyword inside the function
    * to a given execution scope.
    */
-  // static addListener(element: Node | Window, eventName: string, funct: Function): void;
-  static addListener(element: Listenable, eventName: string, funct: EventListener) {
+  static addListener(element: Listenable, eventName: string, funct: MouseEventListener) {
     element.addEventListener(
       eventName,
-      funct,
+      funct as EventListener,
       supportsPassive ? { passive: false } : false
     );
 
@@ -69,9 +68,12 @@ class InternalEvent {
   /**
    * Removes the specified listener from the given element.
    */
-  // static removeListener(element: Node | Window, eventName: string, funct: Function): void;
-  static removeListener(element: Listenable, eventName: string, funct: EventListener) {
-    element.removeEventListener(eventName, funct, false);
+  static removeListener(
+    element: Listenable,
+    eventName: string,
+    funct: MouseEventListener
+  ) {
+    element.removeEventListener(eventName, funct as EventListener, false);
 
     if (element.mxListenerList) {
       const listenerCount = element.mxListenerList.length;
@@ -90,7 +92,6 @@ class InternalEvent {
   /**
    * Removes all listeners from the given element.
    */
-  // static removeAllListeners(element: Node | Window): void;
   static removeAllListeners(element: Listenable) {
     const list = element.mxListenerList;
 
@@ -112,10 +113,10 @@ class InternalEvent {
    * will be registered as well as the mouse events.
    */
   static addGestureListeners(
-    node: Listenable,
-    startListener: EventListener | null = null,
-    moveListener: EventListener | null = null,
-    endListener: EventListener | null = null
+    node: EventSource | EventTarget,
+    startListener: MouseEventListener | null = null,
+    moveListener: MouseEventListener | null = null,
+    endListener: MouseEventListener | null = null
   ) {
     if (startListener) {
       InternalEvent.addListener(
@@ -164,9 +165,9 @@ class InternalEvent {
    */
   static removeGestureListeners(
     node: Listenable,
-    startListener: EventListener | null,
-    moveListener: EventListener | null,
-    endListener: EventListener | null
+    startListener: MouseEventListener | null,
+    moveListener: MouseEventListener | null,
+    endListener: MouseEventListener | null
   ) {
     if (startListener) {
       InternalEvent.removeListener(
@@ -221,10 +222,10 @@ class InternalEvent {
     node: Listenable,
     graph: graph,
     state: CellState | ((evt: Event) => CellState) | null = null,
-    down: EventListener | null = null,
-    move: EventListener | null = null,
-    up: EventListener | null = null,
-    dblClick: EventListener | null = null
+    down: MouseEventListener | null = null,
+    move: MouseEventListener | null = null,
+    up: MouseEventListener | null = null,
+    dblClick: MouseEventListener | null = null
   ) {
     const getState = (evt: Event) => {
       return typeof state === 'function' ? state(evt) : state;
@@ -238,7 +239,7 @@ class InternalEvent {
         } else if (!isConsumed(evt)) {
           graph.fireMouseEvent(
             InternalEvent.MOUSE_DOWN,
-            new InternalMouseEvent(evt as MouseEvent, getState(evt))
+            new InternalMouseEvent(evt, getState(evt))
           );
         }
       },
@@ -248,7 +249,7 @@ class InternalEvent {
         } else if (!isConsumed(evt)) {
           graph.fireMouseEvent(
             InternalEvent.MOUSE_MOVE,
-            new InternalMouseEvent(evt as MouseEvent, getState(evt))
+            new InternalMouseEvent(evt, getState(evt))
           );
         }
       },
@@ -258,7 +259,7 @@ class InternalEvent {
         } else if (!isConsumed(evt)) {
           graph.fireMouseEvent(
             InternalEvent.MOUSE_UP,
-            new InternalMouseEvent(evt as MouseEvent, getState(evt))
+            new InternalMouseEvent(evt, getState(evt))
           );
         }
       }
@@ -269,7 +270,7 @@ class InternalEvent {
         dblClick(evt);
       } else if (!isConsumed(evt)) {
         const tmp = getState(evt);
-        graph.dblClick(evt as MouseEvent, tmp?.cell);
+        graph.dblClick(evt, tmp?.cell);
       }
     });
   }
@@ -279,17 +280,17 @@ class InternalEvent {
    *
    * @param element DOM node to remove the listeners from.
    */
-  static release(element: Listenable | null) {
+  static release(element: Listenable) {
     try {
-      if (element) {
-        InternalEvent.removeAllListeners(element);
+      InternalEvent.removeAllListeners(element);
 
-        if ('childNodes' in element) {
-          const children = element.childNodes;
-          const childCount = children.length;
-          for (let i = 0; i < childCount; i += 1) {
-            InternalEvent.release(children[i]);
-          }
+      // @ts-ignore
+      const children = element.childNodes;
+
+      if (children !== undefined) {
+        const childCount = children.length;
+        for (let i = 0; i < childCount; i += 1) {
+          InternalEvent.release(children[i]);
         }
       }
     } catch (e) {

@@ -61,7 +61,7 @@ class GraphLabel extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose label should be returned.
    */
-  getLabel(cell: Cell): string | Node | null {
+  getLabel(cell: Cell) {
     let result: string | null = '';
 
     if (this.isLabelsVisible() && cell != null) {
@@ -71,6 +71,7 @@ class GraphLabel extends autoImplement<PartialClass>() {
         result = this.convertValueToString(cell);
       }
     }
+
     return result;
   }
 

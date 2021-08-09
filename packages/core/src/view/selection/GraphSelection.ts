@@ -15,6 +15,7 @@ import type GraphCells from '../cell/GraphCells';
 import type Graph from '../Graph';
 import type GraphEvents from '../event/GraphEvents';
 import type EventSource from '../event/EventSource';
+import { MaxGraph } from '../Graph';
 
 type PartialGraph = Pick<
   Graph,
@@ -36,6 +37,8 @@ class GraphSelection extends autoImplement<PartialClass>() {
    */
   doneResource: string = mxClient.language !== 'none' ? 'done' : '';
 
+  getDoneResource = () => this.doneResource;
+
   /**
    * Specifies the resource key for the status message while the selection is
    * being updated. If the resource for this key does not exist then the
@@ -43,6 +46,8 @@ class GraphSelection extends autoImplement<PartialClass>() {
    */
   updatingSelectionResource: string =
     mxClient.language !== 'none' ? 'updatingSelection' : '';
+
+  getUpdatingSelectionResource = () => this.updatingSelectionResource;
 
   /**
    * Specifies if only one selected item at a time is allowed.
@@ -222,7 +227,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
       (removed && removed.length > 0 && removed[0])
     ) {
       const change = new SelectionChange(
-        this,
+        this as MaxGraph,
         added || new CellArray(),
         removed || new CellArray()
       );
@@ -512,7 +517,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
   ) {
     const filter = (cell: Cell) => {
       return (
-        this.getView().getState(cell) &&
+        !!this.getView().getState(cell) &&
         (((selectGroups || cell.getChildCount() === 0) &&
           cell.isVertex() &&
           vertices &&

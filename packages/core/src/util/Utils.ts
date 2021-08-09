@@ -41,7 +41,7 @@ import Cell from '../view/cell/datatypes/Cell';
 import Model from '../view/model/Model';
 import graph from '../view/Graph';
 
-import type { CellStateStyles, Properties, StyleProperties, StyleValue } from '../types';
+import type { CellStateStyles, Properties, StyleValue } from '../types';
 import CellArray from '../view/cell/datatypes/CellArray';
 
 /**
@@ -159,7 +159,11 @@ export const parseCssNumber = (value: string) => {
  * mxUtils.setPrefixedStyle(node.style, 'transformOrigin', '0% 0%');
  * (end)
  */
-export const setPrefixedStyle = (style: StyleProperties, name: string, value: string) => {
+export const setPrefixedStyle = (
+  style: CSSStyleDeclaration,
+  name: string,
+  value: string
+) => {
   let prefix = null;
 
   if (mxClient.IS_SF || mxClient.IS_GC) {
@@ -189,7 +193,7 @@ export const setPrefixedStyle = (style: StyleProperties, name: string, value: st
 export const hasScrollbars = (node: HTMLElement) => {
   const style = getCurrentStyle(node);
 
-  return style && (style.overflow === 'scroll' || style.overflow === 'auto');
+  return !!style && (style.overflow === 'scroll' || style.overflow === 'auto');
 };
 
 /**
@@ -402,14 +406,16 @@ export const getColor = (array: any, key: string, defaultValue: any) => {
  * a - Array of <mxPoints> to be compared.
  * b - Array of <mxPoints> to be compared.
  */
-export const equalPoints = (a: Point[] | null, b: Point[] | null) => {
+export const equalPoints = (a: (Point | null)[] | null, b: (Point | null)[] | null) => {
   if ((!a && b) || (a && !b) || (a && b && a.length != b.length)) {
     return false;
   }
 
   if (a && b) {
     for (let i = 0; i < a.length; i += 1) {
-      if (!a[i] || !a[i].equals(b[i])) return false;
+      const p = a[i];
+
+      if (!p || (p && !p.equals(b[i]))) return false;
     }
   }
 

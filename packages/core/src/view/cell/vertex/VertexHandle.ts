@@ -69,6 +69,8 @@ class VertexHandle implements CellHandle {
    */
   ignoreGrid = false;
 
+  active = true;
+
   /**
    * Hook for subclassers to return the current position of the handle.
    */

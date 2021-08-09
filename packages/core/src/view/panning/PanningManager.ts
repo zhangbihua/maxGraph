@@ -5,8 +5,11 @@
  * Type definitions from the typed-mxgraph project
  */
 
+import { MouseEventListener, MouseListenerSet } from '../../types';
 import { hasScrollbars } from '../../util/Utils';
 import EventObject from '../event/EventObject';
+import InternalEvent from '../event/InternalEvent';
+import { MaxGraph } from '../Graph';
 
 /**
  * Class: mxPanningManager
@@ -14,7 +17,7 @@ import EventObject from '../event/EventObject';
  * Implements a handler for panning.
  */
 class PanningManager {
-  constructor(graph) {
+  constructor(graph: MaxGraph) {
     this.thread = null;
     this.active = false;
     this.tdx = 0;
@@ -46,7 +49,7 @@ class PanningManager {
     };
 
     // Stops scrolling on every mouseup anywhere in the document
-    mxEvent.addListener(document, 'mouseup', this.mouseUpListener);
+    InternalEvent.addListener(document, 'mouseup', this.mouseUpListener);
 
     const createThread = () => {
       this.scrollbars = hasScrollbars(graph.container);
@@ -61,9 +64,9 @@ class PanningManager {
           const left = -graph.container.scrollLeft - Math.ceil(this.dx);
           const top = -graph.container.scrollTop - Math.ceil(this.dy);
           graph.panGraph(left, top);
-          graph.panDx = this.scrollLeft - graph.container.scrollLeft;
-          graph.panDy = this.scrollTop - graph.container.scrollTop;
-          graph.fireEvent(new EventObject(mxEvent.PAN));
+          graph.setPanDx(this.scrollLeft - graph.container.scrollLeft);
+          graph.setPanDy(this.scrollTop - graph.container.scrollTop);
+          graph.fireEvent(new EventObject(InternalEvent.PAN));
           // TODO: Implement graph.autoExtend
         } else {
           graph.panGraph(this.getDx(), this.getDy());
@@ -171,8 +174,8 @@ class PanningManager {
         this.tdy = 0;
 
         if (!this.scrollbars) {
-          const px = graph.panDx;
-          const py = graph.panDy;
+          const px = graph.getPanDx();
+          const py = graph.getPanDy();
 
           if (px != 0 || py != 0) {
             graph.panGraph(0, 0);
@@ -182,16 +185,16 @@ class PanningManager {
             );
           }
         } else {
-          graph.panDx = 0;
-          graph.panDy = 0;
-          graph.fireEvent(new EventObject(mxEvent.PAN));
+          graph.setPanDx(0);
+          graph.setPanDy(0);
+          graph.fireEvent(new EventObject(InternalEvent.PAN));
         }
       }
     };
 
     this.destroy = () => {
       graph.removeMouseListener(this.mouseListener);
-      mxEvent.removeListener(document, 'mouseup', this.mouseUpListener);
+      InternalEvent.removeListener(document, 'mouseup', this.mouseUpListener);
     };
   }
 
@@ -200,7 +203,6 @@ class PanningManager {
    *
    * Damper value for the panning. Default is 1/6.
    */
-  // damper: number;
   damper = 1 / 6;
 
   /**
@@ -208,7 +210,6 @@ class PanningManager {
    *
    * Delay in milliseconds for the panning. Default is 10.
    */
-  // delay: number;
   delay = 10;
 
   /**
@@ -216,7 +217,6 @@ class PanningManager {
    *
    * Specifies if mouse events outside of the component should be handled. Default is true.
    */
-  // handleMouseOut: boolean;
   handleMouseOut = true;
 
   /**
@@ -224,8 +224,33 @@ class PanningManager {
    *
    * Border to handle automatic panning inside the component. Default is 0 (disabled).
    */
-  // border: number;
   border = 0;
+
+  thread: number | null = null;
+
+  active = false;
+
+  tdx = 0;
+  tdy = 0;
+  t0x = 0;
+  t0y = 0;
+  dx = 0;
+  dy = 0;
+  scrollbars = false;
+  scrollLeft = 0;
+  scrollTop = 0;
+
+  mouseListener: MouseListenerSet;
+
+  mouseUpListener: MouseEventListener;
+
+  stop: () => void;
+  isActive: () => boolean;
+  getDx: () => number;
+  getDy: () => number;
+  start: () => void;
+  panTo: (x: number, y: number, w: number, h: number) => void;
+  destroy: () => void;
 }
 
 export default PanningManager;

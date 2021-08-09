@@ -11,6 +11,8 @@ class GraphSnap extends autoImplement<PartialClass>() {
   // TODO: Document me!
   tolerance: number = 0;
 
+  getSnapTolerance = () => this.tolerance;
+
   /**
    * Specifies the grid size.
    * @default 10

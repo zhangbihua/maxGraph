@@ -11,6 +11,7 @@ import { getMainEvent, isMultiTouchEvent } from '../../util/EventUtils';
 import Graph from '../Graph';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import Cell from '../cell/datatypes/Cell';
+import { GraphPlugin } from '../../types';
 
 /**
  * Class: mxPopupMenuHandler
@@ -21,7 +22,7 @@ import Cell from '../cell/datatypes/Cell';
  *
  * Constructs an event handler that creates a <mxPopupMenu>.
  */
-class PopupMenuHandler extends mxPopupMenu {
+class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
   constructor(graph: Graph, factoryMethod: any) {
     super();
 

@@ -8,11 +8,14 @@ import EventSource from '../event/EventSource';
 import Dictionary from '../../util/Dictionary';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
-import utils, { sortCells } from '../../util/Utils';
-import Graph from '../Graph';
+import { sortCells } from '../../util/Utils';
+import { MaxGraph } from '../Graph';
 import Cell from '../cell/datatypes/Cell';
-import CellArray from '../cell/datatypes/CellArray';
 import CellState from '../cell/datatypes/CellState';
+import { GraphPlugin } from '../../types';
+import EdgeHandler from '../cell/edge/EdgeHandler';
+import VertexHandler from '../cell/vertex/VertexHandler';
+import InternalMouseEvent from '../event/InternalMouseEvent';
 
 /**
  * Class: mxSelectionCellsHandler
@@ -36,21 +39,23 @@ import CellState from '../cell/datatypes/CellState';
  *
  * graph - Reference to the enclosing <mxGraph>.
  */
-class SelectionCellsHandler extends EventSource {
-  constructor(graph: Graph) {
+class SelectionCellsHandler extends EventSource implements GraphPlugin {
+  static pluginId = 'SelectionCellsHandler';
+
+  constructor(graph: MaxGraph) {
     super();
 
     this.graph = graph;
     this.handlers = new Dictionary();
     this.graph.addMouseListener(this);
 
-    this.refreshHandler = (sender, evt) => {
+    this.refreshHandler = (sender: EventSource, evt: EventObject) => {
       if (this.isEnabled()) {
         this.refresh();
       }
     };
 
-    this.graph.getSelectionModel().addListener(InternalEvent.CHANGE, this.refreshHandler);
+    this.graph.addListener(InternalEvent.CHANGE, this.refreshHandler);
     this.graph.getModel().addListener(InternalEvent.CHANGE, this.refreshHandler);
     this.graph.getView().addListener(InternalEvent.SCALE, this.refreshHandler);
     this.graph.getView().addListener(InternalEvent.TRANSLATE, this.refreshHandler);
@@ -66,42 +71,42 @@ class SelectionCellsHandler extends EventSource {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: Graph;
+  graph: MaxGraph;
 
   /**
    * Variable: enabled
    *
    * Specifies if events are handled. Default is true.
    */
-  enabled: boolean = true;
+  enabled = true;
 
   /**
    * Variable: refreshHandler
    *
    * Keeps a reference to an event listener for later removal.
    */
-  refreshHandler: any = null;
+  refreshHandler: (sender: EventSource, evt: EventObject) => void;
 
   /**
    * Variable: maxHandlers
    *
    * Defines the maximum number of handlers to paint individually. Default is 100.
    */
-  maxHandlers: number = 100;
+  maxHandlers = 100;
 
   /**
    * Variable: handlers
    *
    * <mxDictionary> that maps from cells to handlers.
    */
-  handlers: Dictionary<string, any>;
+  handlers: Dictionary<Cell, EdgeHandler | VertexHandler>;
 
   /**
    * Function: isEnabled
    *
    * Returns <enabled>.
    */
-  isEnabled(): boolean {
+  isEnabled() {
     return this.enabled;
   }
 
@@ -110,7 +115,7 @@ class SelectionCellsHandler extends EventSource {
    *
    * Sets <enabled>.
    */
-  setEnabled(value: boolean): void {
+  setEnabled(value: boolean) {
     this.enabled = value;
   }
 
@@ -119,7 +124,7 @@ class SelectionCellsHandler extends EventSource {
    *
    * Returns the handler for the given cell.
    */
-  getHandler(cell: Cell): any {
+  getHandler(cell: Cell) {
     return this.handlers.get(cell);
   }
 
@@ -128,8 +133,8 @@ class SelectionCellsHandler extends EventSource {
    *
    * Returns true if the given cell has a handler.
    */
-  isHandled(cell: Cell): boolean {
-    return this.getHandler(cell) != null;
+  isHandled(cell: Cell) {
+    return !!this.getHandler(cell);
   }
 
   /**
@@ -137,7 +142,7 @@ class SelectionCellsHandler extends EventSource {
    *
    * Resets all handlers.
    */
-  reset(): void {
+  reset() {
     this.handlers.visit((key, handler) => {
       handler.reset.apply(handler);
     });
@@ -148,8 +153,8 @@ class SelectionCellsHandler extends EventSource {
    *
    * Reloads or updates all handlers.
    */
-  getHandledSelectionCells(): CellArray {
-    return this.graph.selection.getSelectionCells();
+  getHandledSelectionCells() {
+    return this.graph.getSelectionCells();
   }
 
   /**
@@ -157,7 +162,7 @@ class SelectionCellsHandler extends EventSource {
    *
    * Reloads or updates all handlers.
    */
-  refresh(): void {
+  refresh() {
     // Removes all existing handlers
     const oldHandlers = this.handlers;
     this.handlers = new Dictionary();
@@ -169,23 +174,22 @@ class SelectionCellsHandler extends EventSource {
     for (let i = 0; i < tmp.length; i += 1) {
       const state = this.graph.view.getState(tmp[i]);
 
-      if (state != null) {
+      if (state) {
         let handler = oldHandlers.remove(tmp[i]);
 
-        if (handler != null) {
+        if (handler) {
           if (handler.state !== state) {
             handler.destroy();
             handler = null;
           } else if (!this.isHandlerActive(handler)) {
-            if (handler.refresh != null) {
-              handler.refresh();
-            }
+            // @ts-ignore refresh may exist
+            if (handler.refresh) handler.refresh();
 
             handler.redraw();
           }
         }
 
-        if (handler != null) {
+        if (handler) {
           this.handlers.put(tmp[i], handler);
         }
       }
@@ -201,10 +205,10 @@ class SelectionCellsHandler extends EventSource {
     for (let i = 0; i < tmp.length; i += 1) {
       const state = this.graph.view.getState(tmp[i]);
 
-      if (state != null) {
+      if (state) {
         let handler = this.handlers.get(tmp[i]);
 
-        if (handler == null) {
+        if (!handler) {
           handler = this.graph.createHandler(state);
           this.fireEvent(new EventObject(InternalEvent.ADD, 'state', state));
           this.handlers.put(tmp[i], handler);
@@ -220,8 +224,8 @@ class SelectionCellsHandler extends EventSource {
    *
    * Returns true if the given handler is active and should not be redrawn.
    */
-  isHandlerActive(handler: any): boolean {
-    return handler.index != null;
+  isHandlerActive(handler: EdgeHandler | VertexHandler) {
+    return handler.index !== null;
   }
 
   /**
@@ -229,10 +233,10 @@ class SelectionCellsHandler extends EventSource {
    *
    * Updates the handler for the given shape if one exists.
    */
-  updateHandler(state: CellState): void {
+  updateHandler(state: CellState) {
     let handler = this.handlers.remove(state.cell);
 
-    if (handler != null) {
+    if (handler) {
       // Transfers the current state to the new handler
       const { index } = handler;
       const x = handler.startX;
@@ -241,10 +245,10 @@ class SelectionCellsHandler extends EventSource {
       handler.destroy();
       handler = this.graph.createHandler(state);
 
-      if (handler != null) {
+      if (handler) {
         this.handlers.put(state.cell, handler);
 
-        if (index != null && x != null && y != null) {
+        if (index !== null) {
           handler.start(x, y, index);
         }
       }
@@ -256,12 +260,10 @@ class SelectionCellsHandler extends EventSource {
    *
    * Redirects the given event to the handlers.
    */
-  mouseDown(sender: Event, me: Event): void {
+  mouseDown(sender: EventSource, me: InternalMouseEvent) {
     if (this.graph.isEnabled() && this.isEnabled()) {
-      const args = [sender, me];
-
       this.handlers.visit((key, handler) => {
-        handler.mouseDown.apply(handler, args);
+        handler.mouseDown(sender, me);
       });
     }
   }
@@ -271,12 +273,10 @@ class SelectionCellsHandler extends EventSource {
    *
    * Redirects the given event to the handlers.
    */
-  mouseMove(sender: Event, me: Event): void {
+  mouseMove(sender: EventSource, me: InternalMouseEvent) {
     if (this.graph.isEnabled() && this.isEnabled()) {
-      const args = [sender, me];
-
       this.handlers.visit((key, handler) => {
-        handler.mouseMove.apply(handler, args);
+        handler.mouseMove(sender, me);
       });
     }
   }
@@ -286,12 +286,10 @@ class SelectionCellsHandler extends EventSource {
    *
    * Redirects the given event to the handlers.
    */
-  mouseUp(sender: Event, me: Event): void {
+  mouseUp(sender: EventSource, me: InternalMouseEvent) {
     if (this.graph.isEnabled() && this.isEnabled()) {
-      const args = [sender, me];
-
       this.handlers.visit((key, handler) => {
-        handler.mouseUp.apply(handler, args);
+        handler.mouseUp(sender, me);
       });
     }
   }
@@ -301,15 +299,11 @@ class SelectionCellsHandler extends EventSource {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy(): void {
+  onDestroy() {
     this.graph.removeMouseListener(this);
-
-    if (this.refreshHandler != null) {
-      this.graph.selection.getSelectionModel().removeListener(this.refreshHandler);
-      this.graph.getModel().removeListener(this.refreshHandler);
-      this.graph.getView().removeListener(this.refreshHandler);
-      this.refreshHandler = null;
-    }
+    this.graph.removeListener(this.refreshHandler);
+    this.graph.getModel().removeListener(this.refreshHandler);
+    this.graph.getView().removeListener(this.refreshHandler);
   }
 }
 

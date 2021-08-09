@@ -1,23 +1,19 @@
-import {hasScrollbars} from "../../util/Utils";
-import EventObject from "../event/EventObject";
-import InternalEvent from "../event/InternalEvent";
-import PanningManager from './PanningManager';
-import PanningHandler from "./PanningHandler";
-import Graph from "../Graph";
-import Cell from "../cell/datatypes/Cell";
-import Rectangle from "../geometry/Rectangle";
-import Point from "../geometry/Point";
+import { autoImplement, hasScrollbars } from '../../util/Utils';
+import EventObject from '../event/EventObject';
+import InternalEvent from '../event/InternalEvent';
+import PanningHandler from './PanningHandler';
+import Graph from '../Graph';
+import Cell from '../cell/datatypes/Cell';
+import Rectangle from '../geometry/Rectangle';
+import Point from '../geometry/Point';
+import GraphEvents from '../event/GraphEvents';
+import SelectionCellsHandler from '../selection/SelectionCellsHandler';
 
-class GraphPanning {
-  constructor(graph: Graph) {
-    this.graph = graph;
-    this.createHandlers()
-  }
+type PartialGraph = Pick<Graph, 'getContainer' | 'getView' | 'getPlugin'>;
+type PartialEvents = Pick<GraphEvents, 'fireEvent'>;
+type PartialClass = PartialGraph & PartialEvents;
 
-  graph: Graph;
-
-  panningHandler: PanningHandler | null = null;
-  panningManager: PanningManager | null = null;
+class GraphPanning extends autoImplement<PartialClass>() {
   shiftPreview1: HTMLElement | null = null;
   shiftPreview2: HTMLElement | null = null;
 
@@ -28,7 +24,9 @@ class GraphPanning {
    * then no panning occurs if this is `true`.
    * @default true
    */
-  useScrollbarsForPanning: boolean = true;
+  useScrollbarsForPanning = true;
+
+  isUseScrollbarsForPanning = () => this.useScrollbarsForPanning;
 
   /**
    * Specifies if autoscrolling should be carried out via mxPanningManager even
@@ -38,7 +36,7 @@ class GraphPanning {
    * are visible and scrollable in all directions.
    * @default false
    */
-  timerAutoScroll: boolean = false;
+  timerAutoScroll = false;
 
   /**
    * Specifies if panning via {@link panGraph} should be allowed to implement autoscroll
@@ -47,38 +45,25 @@ class GraphPanning {
    * positive value.
    * @default false
    */
-  allowAutoPanning: boolean = false;
+  allowAutoPanning = false;
 
   /**
    * Current horizontal panning value.
    * @default 0
    */
-  panDx: number = 0;
+  panDx = 0;
+
+  getPanDx = () => this.panDx;
+  setPanDx = (dx: number) => (this.panDx = dx);
 
   /**
    * Current vertical panning value.
    * @default 0
    */
-  panDy: number = 0;
+  panDy = 0;
 
-  createHandlers() {
-    this.panningHandler = this.createPanningHandler();
-    this.panningHandler.panningEnabled = false;
-  }
-
-  /**
-   * Creates and returns a new {@link PanningHandler} to be used in this graph.
-   */
-  createPanningHandler(): PanningHandler {
-    return new PanningHandler(this);
-  }
-
-  /**
-   * Creates and returns an {@link PanningManager}.
-   */
-  createPanningManager(): PanningManager {
-    return new PanningManager(this);
-  }
+  getPanDy = () => this.panDy;
+  setPanDy = (dy: number) => (this.panDy = dy);
 
   /**
    * Shifts the graph display by the given amount. This is used to preview
@@ -88,30 +73,30 @@ class GraphPanning {
    * @param dx Amount to shift the graph along the x-axis.
    * @param dy Amount to shift the graph along the y-axis.
    */
-  panGraph(dx: number, dy: number): void {
-    const container = <HTMLElement>this.graph.container;
+  panGraph(dx: number, dy: number) {
+    const container = this.getContainer();
 
     if (this.useScrollbarsForPanning && hasScrollbars(container)) {
       container.scrollLeft = -dx;
       container.scrollTop = -dy;
     } else {
-      const canvas = <SVGElement>this.graph.view.getCanvas();
+      const canvas = this.getView().getCanvas();
 
       // Puts everything inside the container in a DIV so that it
       // can be moved without changing the state of the container
       if (dx === 0 && dy === 0) {
         canvas.removeAttribute('transform');
 
-        if (this.shiftPreview1 != null) {
+        if (this.shiftPreview1) {
           let child = this.shiftPreview1.firstChild;
 
-          while (child != null) {
+          while (child) {
             const next = child.nextSibling;
             container.appendChild(child);
             child = next;
           }
 
-          if (this.shiftPreview1.parentNode != null) {
+          if (this.shiftPreview1.parentNode) {
             this.shiftPreview1.parentNode.removeChild(this.shiftPreview1);
           }
 
@@ -121,13 +106,13 @@ class GraphPanning {
           const shiftPreview2 = <HTMLElement>this.shiftPreview2;
           child = shiftPreview2.firstChild;
 
-          while (child != null) {
+          while (child) {
             const next = child.nextSibling;
             container.appendChild(child);
             child = next;
           }
 
-          if (shiftPreview2.parentNode != null) {
+          if (shiftPreview2.parentNode) {
             shiftPreview2.parentNode.removeChild(shiftPreview2);
           }
           this.shiftPreview2 = null;
@@ -135,7 +120,7 @@ class GraphPanning {
       } else {
         canvas.setAttribute('transform', `translate(${dx},${dy})`);
 
-        if (this.shiftPreview1 == null) {
+        if (!this.shiftPreview1) {
           // Needs two divs for stuff before and after the SVG element
           this.shiftPreview1 = document.createElement('div');
           this.shiftPreview1.style.position = 'absolute';
@@ -148,7 +133,7 @@ class GraphPanning {
           let current = this.shiftPreview1;
           let child = container.firstChild;
 
-          while (child != null) {
+          while (child) {
             const next = child.nextSibling;
 
             // SVG element is moved via transform attribute
@@ -163,11 +148,11 @@ class GraphPanning {
           }
 
           // Inserts elements only if not empty
-          if (this.shiftPreview1.firstChild != null) {
+          if (this.shiftPreview1.firstChild) {
             container.insertBefore(this.shiftPreview1, canvas.parentNode);
           }
 
-          if (this.shiftPreview2.firstChild != null) {
+          if (this.shiftPreview2.firstChild) {
             container.appendChild(this.shiftPreview2);
           }
         }
@@ -184,7 +169,7 @@ class GraphPanning {
       this.panDx = dx;
       this.panDy = dy;
 
-      this.graph.fireEvent(new EventObject(InternalEvent.PAN));
+      this.fireEvent(new EventObject(InternalEvent.PAN));
     }
   }
 
@@ -203,23 +188,18 @@ class GraphPanning {
    * @param cell {@link mxCell} to be made visible.
    * @param center Optional boolean flag. Default is `false`.
    */
-  scrollCellToVisible(cell: Cell, center: boolean = false): void {
-    const x = -this.graph.view.translate.x;
-    const y = -this.graph.view.translate.y;
+  scrollCellToVisible(cell: Cell, center = false) {
+    const x = -this.getView().translate.x;
+    const y = -this.getView().translate.y;
 
-    const state = this.graph.view.getState(cell);
+    const state = this.getView().getState(cell);
 
-    if (state != null) {
-      const bounds = new Rectangle(
-        x + state.x,
-        y + state.y,
-        state.width,
-        state.height
-      );
+    if (state) {
+      const bounds = new Rectangle(x + state.x, y + state.y, state.width, state.height);
 
-      if (center && this.graph.container != null) {
-        const w = this.graph.container.clientWidth;
-        const h = this.graph.container.clientHeight;
+      if (center && this.getContainer()) {
+        const w = this.getContainer().clientWidth;
+        const h = this.getContainer().clientHeight;
 
         bounds.x = bounds.getCenterX() - w / 2;
         bounds.width = w;
@@ -227,20 +207,14 @@ class GraphPanning {
         bounds.height = h;
       }
 
-      const tr = new Point(
-        this.graph.view.translate.x,
-        this.graph.view.translate.y
-      );
+      const tr = new Point(this.getView().translate.x, this.getView().translate.y);
 
       if (this.scrollRectToVisible(bounds)) {
         // Triggers an update via the view's event source
-        const tr2 = new Point(
-          this.graph.view.translate.x,
-          this.graph.view.translate.y
-        );
-        this.graph.view.translate.x = tr.x;
-        this.graph.view.translate.y = tr.y;
-        this.graph.view.setTranslate(tr2.x, tr2.y);
+        const tr2 = new Point(this.getView().translate.x, this.getView().translate.y);
+        this.getView().translate.x = tr.x;
+        this.getView().translate.y = tr.y;
+        this.getView().setTranslate(tr2.x, tr2.y);
       }
     }
   }
@@ -250,84 +224,84 @@ class GraphPanning {
    *
    * @param rect {@link mxRectangle} to be made visible.
    */
-  scrollRectToVisible(rect: Rectangle): boolean {
+  scrollRectToVisible(rect: Rectangle) {
     let isChanged = false;
 
-    if (rect != null) {
-      const container = <HTMLElement>this.graph.container;
-      const w = container.offsetWidth;
-      const h = container.offsetHeight;
+    const container = <HTMLElement>this.getContainer();
+    const w = container.offsetWidth;
+    const h = container.offsetHeight;
 
-      const widthLimit = Math.min(w, rect.width);
-      const heightLimit = Math.min(h, rect.height);
+    const widthLimit = Math.min(w, rect.width);
+    const heightLimit = Math.min(h, rect.height);
 
-      if (hasScrollbars(container)) {
-        rect.x += this.graph.view.translate.x;
-        rect.y += this.graph.view.translate.y;
-        let dx = container.scrollLeft - rect.x;
-        const ddx = Math.max(dx - container.scrollLeft, 0);
+    if (hasScrollbars(container)) {
+      rect.x += this.getView().translate.x;
+      rect.y += this.getView().translate.y;
+      let dx = container.scrollLeft - rect.x;
+      const ddx = Math.max(dx - container.scrollLeft, 0);
+
+      if (dx > 0) {
+        container.scrollLeft -= dx + 2;
+      } else {
+        dx = rect.x + widthLimit - container.scrollLeft - container.clientWidth;
 
         if (dx > 0) {
-          container.scrollLeft -= dx + 2;
-        } else {
-          dx =
-            rect.x + widthLimit - container.scrollLeft - container.clientWidth;
-
-          if (dx > 0) {
-            container.scrollLeft += dx + 2;
-          }
+          container.scrollLeft += dx + 2;
         }
+      }
 
-        let dy = container.scrollTop - rect.y;
-        const ddy = Math.max(0, dy - container.scrollTop);
+      let dy = container.scrollTop - rect.y;
+      const ddy = Math.max(0, dy - container.scrollTop);
+
+      if (dy > 0) {
+        container.scrollTop -= dy + 2;
+      } else {
+        dy = rect.y + heightLimit - container.scrollTop - container.clientHeight;
 
         if (dy > 0) {
-          container.scrollTop -= dy + 2;
-        } else {
-          dy =
-            rect.y + heightLimit - container.scrollTop - container.clientHeight;
-
-          if (dy > 0) {
-            container.scrollTop += dy + 2;
-          }
+          container.scrollTop += dy + 2;
         }
+      }
 
-        if (!this.useScrollbarsForPanning && (ddx != 0 || ddy != 0)) {
-          this.graph.view.setTranslate(ddx, ddy);
-        }
-      } else {
-        const x = -this.graph.view.translate.x;
-        const y = -this.graph.view.translate.y;
+      if (!this.useScrollbarsForPanning && (ddx != 0 || ddy != 0)) {
+        this.getView().setTranslate(ddx, ddy);
+      }
+    } else {
+      const x = -this.getView().translate.x;
+      const y = -this.getView().translate.y;
 
-        const s = this.graph.view.scale;
+      const s = this.getView().scale;
 
-        if (rect.x + widthLimit > x + w) {
-          this.graph.view.translate.x -= (rect.x + widthLimit - w - x) / s;
-          isChanged = true;
-        }
+      if (rect.x + widthLimit > x + w) {
+        this.getView().translate.x -= (rect.x + widthLimit - w - x) / s;
+        isChanged = true;
+      }
 
-        if (rect.y + heightLimit > y + h) {
-          this.graph.view.translate.y -= (rect.y + heightLimit - h - y) / s;
-          isChanged = true;
-        }
+      if (rect.y + heightLimit > y + h) {
+        this.getView().translate.y -= (rect.y + heightLimit - h - y) / s;
+        isChanged = true;
+      }
 
-        if (rect.x < x) {
-          this.graph.view.translate.x += (x - rect.x) / s;
-          isChanged = true;
-        }
+      if (rect.x < x) {
+        this.getView().translate.x += (x - rect.x) / s;
+        isChanged = true;
+      }
 
-        if (rect.y < y) {
-          this.graph.view.translate.y += (y - rect.y) / s;
-          isChanged = true;
-        }
+      if (rect.y < y) {
+        this.getView().translate.y += (y - rect.y) / s;
+        isChanged = true;
+      }
 
-        if (isChanged) {
-          this.graph.view.refresh();
+      if (isChanged) {
+        this.getView().refresh();
 
-          // Repaints selection marker (ticket 18)
-          if (this.selectionCellsHandler != null) {
-            this.selectionCellsHandler.refresh();
-          }
+        const selectionCellsHandler = this.getPlugin(
+          'SelectionCellsHandler'
+        ) as SelectionCellsHandler;
+
+        // Repaints selection marker (ticket 18)
+        if (selectionCellsHandler) {
+          selectionCellsHandler.refresh();
         }
       }
     }
@@ -345,10 +319,11 @@ class GraphPanning {
    *
    * @param enabled Boolean indicating if panning should be enabled.
    */
-  setPanning(enabled: boolean): void {
-    (<PanningHandler>this.panningHandler).panningEnabled = enabled;
-  }
+  setPanning(enabled: boolean) {
+    const panningHandler = this.getPlugin('PanningHandler') as PanningHandler;
 
+    if (panningHandler) panningHandler.panningEnabled = enabled;
+  }
 }
 
 export default GraphPanning;

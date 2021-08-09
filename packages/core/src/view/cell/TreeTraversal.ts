@@ -1,7 +1,7 @@
-import Cell from "./datatypes/Cell";
-import CellArray from "./datatypes/CellArray";
-import Dictionary from "../../util/Dictionary";
-import Graph from "../Graph";
+import Cell from './datatypes/Cell';
+import CellArray from './datatypes/CellArray';
+import Dictionary from '../../util/Dictionary';
+import Graph from '../Graph';
 
 class TreeTraversal {
   dependencies = ['connections'];
@@ -42,7 +42,7 @@ class TreeTraversal {
 
       for (const cell of parent.getChildren()) {
         if (cell.isVertex() && cell.isVisible()) {
-          const conns = this.graph.connection.getConnections(cell, isolate ? parent : null);
+          const conns = this.graph.getConnections(cell, isolate ? parent : null);
           let fanOut = 0;
           let fanIn = 0;
 
@@ -117,13 +117,13 @@ class TreeTraversal {
     directed: boolean = true,
     func: Function | null = null,
     edge: Cell | null = null,
-    visited: Dictionary | null = null,
+    visited: Dictionary<Cell, boolean> | null = null,
     inverse: boolean = false
   ): void {
     if (func != null && vertex != null) {
       directed = directed != null ? directed : true;
       inverse = inverse != null ? inverse : false;
-      visited = visited || new Dictionary();
+      visited = visited || new Dictionary<Cell, boolean>();
 
       if (!visited.get(vertex)) {
         visited.put(vertex, true);

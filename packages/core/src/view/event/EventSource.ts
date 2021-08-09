@@ -7,7 +7,7 @@
 
 import EventObject from './EventObject';
 
-type EventListener = {
+type EventListenerObject = {
   funct: Function;
   name: string;
 };
@@ -46,7 +46,7 @@ class EventSource {
    * contains the event name followed by the respective listener for each
    * registered listener.
    */
-  eventListeners: EventListener[] = [];
+  eventListeners: EventListenerObject[] = [];
 
   /**
    * Variable: eventsEnabled
@@ -60,7 +60,7 @@ class EventSource {
    *
    * Optional source for events. Default is null.
    */
-  eventSource: EventSource | null;
+  eventSource: EventSource | EventTarget | null;
 
   /**
    * Function: isEventsEnabled
@@ -94,7 +94,7 @@ class EventSource {
    *
    * Sets <eventSource>.
    */
-  setEventSource(value: EventSource | null) {
+  setEventSource(value: EventSource | EventTarget | null) {
     this.eventSource = value;
   }
 
@@ -106,7 +106,7 @@ class EventSource {
    *
    * The parameters of the listener are the sender and an <mxEventObject>.
    */
-  addListener(name: string, funct: (...args: any[]) => any) {
+  addListener(name: string, funct: Function) {
     this.eventListeners.push({ name, funct });
   }
 
@@ -115,7 +115,7 @@ class EventSource {
    *
    * Removes all occurrences of the given listener from <eventListeners>.
    */
-  removeListener(funct: (...args: any[]) => any) {
+  removeListener(funct: Function) {
     let i = 0;
 
     while (i < this.eventListeners.length) {
@@ -146,7 +146,7 @@ class EventSource {
    * sender - Optional sender to be passed to the listener. Default value is
    * the return value of <getEventSource>.
    */
-  fireEvent(evt: EventObject, sender: any = null) {
+  fireEvent(evt: EventObject, sender: EventSource | EventTarget | null = null) {
     if (this.isEventsEnabled()) {
       if (!evt) {
         evt = new EventObject('');

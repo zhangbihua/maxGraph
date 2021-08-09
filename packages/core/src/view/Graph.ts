@@ -24,16 +24,14 @@ import Point from './geometry/Point';
 import {
   applyMixins,
   autoImplement,
-  getBoundingBox,
   getCurrentStyle,
-  getValue,
   hasScrollbars,
   parseCssNumber,
 } from '../util/Utils';
 import Cell from './cell/datatypes/Cell';
 import Model from './model/Model';
 import Stylesheet from './style/Stylesheet';
-import { DIALECT_SVG, PAGE_FORMAT_A4_PORTRAIT } from '../util/Constants';
+import { PAGE_FORMAT_A4_PORTRAIT } from '../util/Constants';
 
 import ChildChange from './model/ChildChange';
 import GeometryChange from './geometry/GeometryChange';
@@ -49,23 +47,27 @@ import EdgeHandler from './cell/edge/EdgeHandler';
 import VertexHandler from './cell/vertex/VertexHandler';
 import EdgeSegmentHandler from './cell/edge/EdgeSegmentHandler';
 import ElbowEdgeHandler from './cell/edge/ElbowEdgeHandler';
-import GraphEvents from './event/GraphEvents';
-import GraphImage from './image/GraphImage';
-import GraphCells from './cell/GraphCells';
-import GraphSelection from './selection/GraphSelection';
-import GraphConnections from './connection/GraphConnections';
-import GraphEdge from './cell/edge/GraphEdge';
-import GraphVertex from './cell/vertex/GraphVertex';
-import GraphOverlays from './layout/GraphOverlays';
-import GraphEditing from './editing/GraphEditing';
-import GraphFolding from './folding/GraphFolding';
-import GraphLabel from './label/GraphLabel';
-import GraphValidation from './validation/GraphValidation';
-import GraphSnap from './snap/GraphSnap';
 
-import type { GraphPlugin } from '../types';
-import GraphTooltip from './tooltip/GraphTooltip';
-import GraphTerminal from './terminal/GraphTerminal';
+import type { GraphPlugin, GraphPluginConstructor } from '../types';
+import type GraphPorts from './ports/GraphPorts';
+import type Dictionary from '../util/Dictionary';
+import type GraphPanning from './panning/GraphPanning';
+import type GraphZoom from './zoom/GraphZoom';
+import type GraphEvents from './event/GraphEvents';
+import type GraphImage from './image/GraphImage';
+import type GraphCells from './cell/GraphCells';
+import type GraphSelection from './selection/GraphSelection';
+import type GraphConnections from './connection/GraphConnections';
+import type GraphEdge from './cell/edge/GraphEdge';
+import type GraphVertex from './cell/vertex/GraphVertex';
+import type GraphOverlays from './layout/GraphOverlays';
+import type GraphEditing from './editing/GraphEditing';
+import type GraphFolding from './folding/GraphFolding';
+import type GraphLabel from './label/GraphLabel';
+import type GraphValidation from './validation/GraphValidation';
+import type GraphSnap from './snap/GraphSnap';
+import type GraphTooltip from './tooltip/GraphTooltip';
+import type GraphTerminal from './terminal/GraphTerminal';
 
 type PartialEvents = Pick<
   GraphEvents,
@@ -81,7 +83,9 @@ type PartialEvents = Pick<
   | 'isIgnoreTerminalEvent'
   | 'isCloneEvent'
   | 'isToggleEvent'
-  | 'getClickTolerance'
+  | 'getEventTolerance'
+  | 'isInvokesStopCellEditing'
+  | 'getPointForEvent'
 >;
 type PartialSelection = Pick<
   GraphSelection,
@@ -90,6 +94,13 @@ type PartialSelection = Pick<
   | 'getSelectionCount'
   | 'selectCellForEvent'
   | 'setSelectionCell'
+  | 'getSelectionCells'
+  | 'updateSelection'
+  | 'selectRegion'
+  | 'cellAdded'
+  | 'cellRemoved'
+  | 'getUpdatingSelectionResource'
+  | 'getDoneResource'
 >;
 type PartialCells = Pick<
   GraphCells,
@@ -100,6 +111,14 @@ type PartialCells = Pick<
   | 'isCellsCloneable'
   | 'cloneCell'
   | 'setCellStyles'
+  | 'isCellMovable'
+  | 'isCellResizable'
+  | 'getChildCells'
+  | 'isCellRotatable'
+  | 'getCellContainmentArea'
+  | 'getCurrentCellStyle'
+  | 'resizeCell'
+  | 'removeStateForCell'
 >;
 type PartialConnections = Pick<
   GraphConnections,
@@ -108,17 +127,44 @@ type PartialConnections = Pick<
   | 'isCellDisconnectable'
   | 'getOutlineConstraint'
   | 'connectCell'
+  | 'getConnections'
+  | 'isConstrainChild'
+  | 'isValidSource'
 >;
-type PartialEditing = Pick<GraphEditing, 'isEditing'>;
+type PartialEditing = Pick<GraphEditing, 'isEditing' | 'stopEditing'>;
 type PartialTooltip = Pick<GraphTooltip, 'getTooltip'>;
 type PartialValidation = Pick<
   GraphValidation,
   'getEdgeValidationError' | 'validationAlert'
 >;
-type PartialLabel = Pick<GraphLabel, 'isLabelMovable'>;
+type PartialLabel = Pick<
+  GraphLabel,
+  'isLabelMovable' | 'isHtmlLabel' | 'isWrapping' | 'isLabelClipped' | 'getLabel'
+>;
 type PartialTerminal = Pick<GraphTerminal, 'isTerminalPointMovable'>;
-type PartialSnap = Pick<GraphSnap, 'snap' | 'getGridSize'>;
-type PartialEdge = Pick<GraphEdge, 'isAllowDanglingEdges' | 'isResetEdgesOnConnect'>;
+type PartialSnap = Pick<
+  GraphSnap,
+  'snap' | 'getGridSize' | 'isGridEnabled' | 'getSnapTolerance'
+>;
+type PartialEdge = Pick<
+  GraphEdge,
+  'isAllowDanglingEdges' | 'isResetEdgesOnConnect' | 'getEdges' | 'insertEdge' | 'addEdge'
+>;
+type PartialOverlays = Pick<GraphOverlays, 'getCellOverlays'>;
+type PartialFolding = Pick<
+  GraphFolding,
+  'getFoldingImage' | 'isFoldingEnabled' | 'foldCells'
+>;
+type PartialPanning = Pick<
+  GraphPanning,
+  | 'panGraph'
+  | 'isUseScrollbarsForPanning'
+  | 'getPanDx'
+  | 'setPanDx'
+  | 'getPanDy'
+  | 'setPanDy'
+>;
+type PartialZoom = Pick<GraphZoom, 'zoomTo'>;
 type PartialClass = PartialEvents &
   PartialSelection &
   PartialCells &
@@ -130,9 +176,21 @@ type PartialClass = PartialEvents &
   PartialTerminal &
   PartialSnap &
   PartialEdge &
+  PartialOverlays &
+  PartialFolding &
+  PartialPanning &
+  PartialZoom &
   EventSource;
 
 export type MaxGraph = Graph & PartialClass;
+
+const defaultPlugins: GraphPluginConstructor[] = [
+  TooltipHandler,
+  SelectionCellsHandler,
+  PopupMenuHandler,
+  ConnectionHandler,
+  GraphHandler,
+];
 
 /**
  * Extends {@link EventSource} to implement a graph component for
@@ -151,12 +209,12 @@ export type MaxGraph = Graph & PartialClass;
  * @class graph
  * @extends {EventSource}
  */
-// @ts-ignore
+// @ts-ignore recursive reference error
 class Graph extends autoImplement<PartialClass>() {
   constructor(
     container: HTMLElement,
     model: Model,
-    plugins: GraphPlugin[] = [],
+    plugins: GraphPluginConstructor[] = defaultPlugins,
     stylesheet: Stylesheet | null = null
   ) {
     super();
@@ -165,7 +223,6 @@ class Graph extends autoImplement<PartialClass>() {
     this.model = model;
     this.plugins = plugins;
     this.cellRenderer = this.createCellRenderer();
-    this.setSelectionModel(this.createSelectionModel());
     this.setStylesheet(stylesheet != null ? stylesheet : this.createStylesheet());
     this.view = this.createGraphView();
 
@@ -176,21 +233,6 @@ class Graph extends autoImplement<PartialClass>() {
 
     this.getModel().addListener(InternalEvent.CHANGE, this.graphModelChangeListener);
 
-    // Installs basic event handlers with disabled default settings.
-    this.createHandlers();
-
-    // Initializes the display if a container was specified
-    this.init();
-
-    this.view.revalidate();
-  }
-
-  /**
-   * Initializes the {@link container} and creates the respective datastructures.
-   *
-   * @param container DOM node that will contain the graph display.
-   */
-  init() {
     // Initializes the in-place editor
     this.cellEditor = this.createCellEditor();
 
@@ -200,21 +242,13 @@ class Graph extends autoImplement<PartialClass>() {
     // Updates the size of the container for the current graph
     this.sizeDidChange();
 
-    // Hides tooltips and resets tooltip timer if mouse leaves container
-    InternalEvent.addListener(this.container, 'mouseleave', (evt: Event) => {
-      if (
-        this.tooltipHandler.div &&
-        this.tooltipHandler.div !== (<MouseEvent>evt).relatedTarget
-      ) {
-        this.tooltipHandler.hide();
-      }
+    // Initiailzes plugins
+    this.plugins.forEach((p: GraphPluginConstructor) => {
+      this.pluginsMap.put(p.pluginId, new p(this));
     });
 
-    // Initiailzes plugins
-    this.plugins.forEach((p) => p.onInit(this));
+    this.view.revalidate();
   }
-
-  // TODO: Document me!
 
   container: HTMLElement;
 
@@ -224,21 +258,23 @@ class Graph extends autoImplement<PartialClass>() {
 
   // Handlers
   // @ts-ignore Cannot be null.
-  tooltipHandler: TooltipHandler;
+  // tooltipHandler: TooltipHandler;
   // @ts-ignore Cannot be null.
-  selectionCellsHandler: SelectionCellsHandler;
+  // selectionCellsHandler: SelectionCellsHandler;
   // @ts-ignore Cannot be null.
-  popupMenuHandler: PopupMenuHandler;
+  // popupMenuHandler: PopupMenuHandler;
   // @ts-ignore Cannot be null.
-  connectionHandler: ConnectionHandler;
+  // connectionHandler: ConnectionHandler;
   // @ts-ignore Cannot be null.
-  graphHandler: GraphHandler;
+  // graphHandler: GraphHandler;
 
-  getTooltipHandler = () => this.tooltipHandler;
-  getSelectionCellsHandler = () => this.selectionCellsHandler;
-  getPopupMenuHandler = () => this.popupMenuHandler;
-  getConnectionHandler = () => this.connectionHandler;
-  getGraphHandler = () => this.graphHandler;
+  getPlugin = (id: string) => this.pluginsMap.get(id) as unknown;
+
+  // getTooltipHandler = () => this.pluginsMap.get('TooltipHandler');
+  // getSelectionCellsHandler = () => this.selectionCellsHandler;
+  // getPopupMenuHandler = () => this.popupMenuHandler;
+  // getConnectionHandler = () => this.connectionHandler;
+  // getGraphHandler = () => this.graphHandler;
 
   graphModelChangeListener: Function | null = null;
   paintBackground: Function | null = null;
@@ -252,7 +288,8 @@ class Graph extends autoImplement<PartialClass>() {
    */
   model: Model;
 
-  plugins: GraphPlugin[];
+  plugins: GraphPluginConstructor[];
+  pluginsMap: Dictionary<string, GraphPlugin> = new Dictionary();
 
   /**
    * Holds the {@link GraphView} that caches the {@link CellState}s for the cells.
@@ -274,11 +311,6 @@ class Graph extends autoImplement<PartialClass>() {
    */
   // @ts-ignore
   stylesheet: Stylesheet;
-
-  /**
-   * Holds the {@link mxGraphSelectionModel} that models the current selection.
-   */
-  selectionModel: mxGraphSelectionModel | null = null;
 
   /**
    * Holds the {@link CellEditor} that is used as the in-place editing.
@@ -592,62 +624,6 @@ class Graph extends autoImplement<PartialClass>() {
   }
 
   /**
-   * Creates the tooltip-, panning-, connection- and graph-handler (in this
-   * order). This is called in the constructor before {@link init} is called.
-   */
-  createHandlers(): void {
-    this.tooltipHandler = this.createTooltipHandler();
-    this.tooltipHandler.setEnabled(false);
-    this.selectionCellsHandler = this.createSelectionCellsHandler();
-    this.connectionHandler = this.createConnectionHandler();
-    this.connectionHandler.setEnabled(false);
-    this.graphHandler = this.createGraphHandler();
-    this.popupMenuHandler = this.createPopupMenuHandler();
-  }
-
-  /**
-   * Creates and returns a new {@link TooltipHandler} to be used in this graph.
-   */
-  createTooltipHandler() {
-    return new TooltipHandler(this);
-  }
-
-  /**
-   * Creates and returns a new {@link TooltipHandler} to be used in this graph.
-   */
-  createSelectionCellsHandler(): SelectionCellsHandler {
-    return new SelectionCellsHandler(this);
-  }
-
-  /**
-   * Creates and returns a new {@link ConnectionHandler} to be used in this graph.
-   */
-  createConnectionHandler(): ConnectionHandler {
-    return new ConnectionHandler(this);
-  }
-
-  /**
-   * Creates and returns a new {@link GraphHandler} to be used in this graph.
-   */
-  createGraphHandler(): GraphHandler {
-    return new GraphHandler(this);
-  }
-
-  /**
-   * Creates and returns a new {@link PopupMenuHandler} to be used in this graph.
-   */
-  createPopupMenuHandler(): PopupMenuHandler {
-    return new PopupMenuHandler(this);
-  }
-
-  /**
-   * Creates a new {@link mxGraphSelectionModel} to be used in this graph.
-   */
-  createSelectionModel(): mxGraphSelectionModel {
-    return new mxGraphSelectionModel(this);
-  }
-
-  /**
    * Creates a new {@link mxGraphSelectionModel} to be used in this graph.
    */
   createStylesheet(): Stylesheet {
@@ -732,7 +708,7 @@ class Graph extends autoImplement<PartialClass>() {
     if (change instanceof RootChange) {
       this.clearSelection();
       this.setDefaultParent(null);
-      this.cells.removeStateForCell(change.previous);
+      this.removeStateForCell(change.previous);
 
       if (this.resetViewOnRootChange) {
         this.view.scale = 1;
@@ -752,7 +728,7 @@ class Graph extends autoImplement<PartialClass>() {
 
       if (!this.getModel().contains(newParent) || newParent.isCollapsed()) {
         this.view.invalidate(change.child, true, true);
-        this.cells.removeStateForCell(change.child);
+        this.removeStateForCell(change.child);
 
         // Handles special case of current root of view being removed
         if (this.view.currentRoot == change.child) {
@@ -803,7 +779,7 @@ class Graph extends autoImplement<PartialClass>() {
 
     // Removes the state from the cache by default
     else if (change.cell != null && change.cell instanceof Cell) {
-      this.cells.removeStateForCell(change.cell);
+      this.removeStateForCell(change.cell);
     }
   }
 
@@ -1109,7 +1085,7 @@ class Graph extends autoImplement<PartialClass>() {
    *
    * @param state {@link mxCellState} whose handler should be created.
    */
-  createHandler(state: CellState): EdgeHandler | VertexHandler | null {
+  createHandler(state: CellState) {
     let result: EdgeHandler | VertexHandler | null = null;
 
     if (state.cell.isEdge()) {

@@ -9,10 +9,12 @@ import { fit, getScrollOrigin } from '../../util/Utils';
 import { TOOLTIP_VERTICAL_OFFSET } from '../../util/Constants';
 import { getSource, isMouseEvent } from '../../util/EventUtils';
 import { isNode } from '../../util/DomUtils';
-import Graph, { MaxGraph } from '../Graph';
+import { MaxGraph } from '../Graph';
 import CellState from '../cell/datatypes/CellState';
 import InternalMouseEvent from '../event/InternalMouseEvent';
-import { Listenable } from '../../types';
+import PopupMenuHandler from '../popups_menus/PopupMenuHandler';
+
+import type { GraphPlugin } from '../../types';
 
 /**
  * Class: mxTooltipHandler
@@ -38,14 +40,41 @@ import { Listenable } from '../../types';
  * graph - Reference to the enclosing <mxGraph>.
  * delay - Optional delay in milliseconds.
  */
-class TooltipHandler {
-  constructor(graph: MaxGraph, delay: number = 500) {
+class TooltipHandler implements GraphPlugin {
+  static pluginId = 'TooltipHandler';
+
+  constructor(graph: MaxGraph) {
     this.graph = graph;
-    this.delay = delay;
+    this.delay = 500;
     this.graph.addMouseListener(this);
+
+    this.div = document.createElement('div');
+    this.div.className = 'mxTooltip';
+    this.div.style.visibility = 'hidden';
+
+    document.body.appendChild(this.div);
+
+    InternalEvent.addGestureListeners(this.div, (evt) => {
+      const source = getSource(evt);
+
+      // @ts-ignore nodeName may exist
+      if (source && source.nodeName !== 'A') {
+        this.hideTooltip();
+      }
+    });
+
+    // Hides tooltips and resets tooltip timer if mouse leaves container
+    InternalEvent.addListener(
+      this.graph.getContainer(),
+      'mouseleave',
+      (evt: MouseEvent) => {
+        if (this.div !== evt.relatedTarget) {
+          this.hide();
+        }
+      }
+    );
   }
 
-  // @ts-ignore Cannot be null.
   div: HTMLElement;
 
   /**
@@ -60,7 +89,7 @@ class TooltipHandler {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: Graph;
+  graph: MaxGraph;
 
   /**
    * Variable: delay
@@ -91,10 +120,10 @@ class TooltipHandler {
    */
   destroyed = false;
 
-  lastX: number = 0;
-  lastY: number = 0;
+  lastX = 0;
+  lastY = 0;
   state: CellState | null = null;
-  stateSource: boolean = false;
+  stateSource = false;
   node: any;
   thread: number | null = null;
 
@@ -144,27 +173,6 @@ class TooltipHandler {
   }
 
   /**
-   * Function: init
-   *
-   * Initializes the DOM nodes required for this tooltip handler.
-   */
-  init() {
-    this.div = document.createElement('div');
-    this.div.className = 'mxTooltip';
-    this.div.style.visibility = 'hidden';
-
-    document.body.appendChild(this.div);
-
-    InternalEvent.addGestureListeners(this.div, (evt) => {
-      const source = getSource(evt);
-
-      if (source.nodeName !== 'A') {
-        this.hideTooltip();
-      }
-    });
-  }
-
-  /**
    * Function: getStateForEvent
    *
    * Returns the <mxCellState> to be used for showing a tooltip for this event.
@@ -180,7 +188,7 @@ class TooltipHandler {
    * event all subsequent events of the gesture are redirected to this
    * handler.
    */
-  mouseDown(sender: any, me: InternalMouseEvent) {
+  mouseDown(sender: EventSource, me: InternalMouseEvent) {
     this.reset(me, false);
     this.hideTooltip();
   }
@@ -190,7 +198,7 @@ class TooltipHandler {
    *
    * Handles the event by updating the rubberband selection.
    */
-  mouseMove(sender: Listenable, me: InternalMouseEvent) {
+  mouseMove(sender: EventSource, me: InternalMouseEvent) {
     if (me.getX() !== this.lastX || me.getY() !== this.lastY) {
       this.reset(me, true);
       const state = this.getStateForEvent(me);
@@ -218,7 +226,7 @@ class TooltipHandler {
    * Handles the event by resetting the tooltip timer or hiding the existing
    * tooltip.
    */
-  mouseUp(sender: any, me: InternalMouseEvent): void {
+  mouseUp(sender: EventSource, me: InternalMouseEvent) {
     this.reset(me, true);
     this.hideTooltip();
   }
@@ -228,8 +236,8 @@ class TooltipHandler {
    *
    * Resets the timer.
    */
-  resetTimer(): void {
-    if (this.thread !== null) {
+  resetTimer() {
+    if (this.thread) {
       window.clearTimeout(this.thread);
       this.thread = null;
     }
@@ -255,18 +263,28 @@ class TooltipHandler {
         const x = me.getX();
         const y = me.getY();
         const stateSource = me.isSource(state.shape) || me.isSource(state.text);
+        const popupMenuHandler = this.graph.getPlugin(
+          'PopupMenuHandler'
+        ) as PopupMenuHandler;
 
         this.thread = window.setTimeout(() => {
           if (
             state &&
+            node &&
             !this.graph.isEditing() &&
-            !this.graph.popupMenuHandler.isMenuShowing() &&
+            popupMenuHandler &&
+            !popupMenuHandler.isMenuShowing() &&
             !this.graph.isMouseDown
           ) {
             // Uses information from inside event cause using the event at
             // this (delayed) point in time is not possible in IE as it no
             // longer contains the required information (member not found)
-            const tip = this.graph.getTooltip(state, node, x, y);
+            const tip = this.graph.getTooltip(
+              state,
+              node as HTMLElement | SVGElement,
+              x,
+              y
+            );
             this.show(tip, x, y);
             this.state = state;
             this.node = node;
@@ -328,12 +346,12 @@ class TooltipHandler {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy() {
+  onDestroy() {
     if (!this.destroyed) {
       this.graph.removeMouseListener(this);
       InternalEvent.release(this.div);
 
-      if (this.div.parentNode != null) {
+      if (this.div.parentNode) {
         this.div.parentNode.removeChild(this.div);
       }
 

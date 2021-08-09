@@ -4,7 +4,12 @@ import InternalMouseEvent from '../event/InternalMouseEvent';
 import ConnectionConstraint from './ConnectionConstraint';
 import Rectangle from '../geometry/Rectangle';
 import { DIRECTION_NORTH, DIRECTION_SOUTH, DIRECTION_WEST } from '../../util/Constants';
-import utils, { getRotatedPoint, getValue, toRadians } from '../../util/Utils';
+import utils, {
+  autoImplement,
+  getRotatedPoint,
+  getValue,
+  toRadians,
+} from '../../util/Utils';
 import Cell from '../cell/datatypes/Cell';
 import CellArray from '../cell/datatypes/CellArray';
 import EventObject from '../event/EventObject';
@@ -13,28 +18,53 @@ import Dictionary from '../../util/Dictionary';
 import Geometry from '../geometry/Geometry';
 import Graph from '../Graph';
 import ConnectionHandler from './ConnectionHandler';
+import GraphCells from '../cell/GraphCells';
+import GraphPorts from '../ports/GraphPorts';
+import GraphEdge from '../cell/edge/GraphEdge';
 
-class GraphConnections {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+type PartialGraph = Pick<Graph, 'getView' | 'getModel' | 'fireEvent'>;
+type PartialCells = Pick<GraphCells, 'setCellStyles' | 'isCellLocked'>;
+type PartialPorts = Pick<GraphPorts, 'isPortsEnabled' | 'isPort' | 'getTerminalForPort'>;
+type PartialEdge = Pick<
+  GraphEdge,
+  | 'isResetEdgesOnConnect'
+  | 'resetEdge'
+  | 'getEdges'
+  | 'isAllowDanglingEdges'
+  | 'isConnectableEdges'
+>;
+type PartialClass = PartialGraph & PartialCells & PartialPorts & PartialEdge;
 
-  graph: Graph;
-
+// @ts-ignore recursive reference error
+class GraphConnections extends autoImplement<PartialClass>() {
   /*****************************************************************************
    * Group: Cell connecting and connection constraints
    *****************************************************************************/
 
+  connectionHandler: ConnectionHandler | null = null;
+
+  getConnectionHandler() {
+    return this.connectionHandler;
+  }
+
+  setConnectionHandler(connectionHandler: ConnectionHandler) {
+    this.connectionHandler = connectionHandler;
+  }
+
+  constrainChildren = false;
+
+  constrainRelativeChildren = false;
+
+  disconnectOnMove = false;
+
+  cellsDisconnectable = true;
+
   /**
    * Returns the constraint used to connect to the outline of the given state.
    */
-  getOutlineConstraint(
-    point: Point,
-    terminalState: CellState,
-    me: InternalMouseEvent
-  ): ConnectionConstraint | null {
-    if (terminalState.shape != null) {
-      const bounds = <Rectangle>this.graph.view.getPerimeterBounds(terminalState);
+  getOutlineConstraint(point: Point, terminalState: CellState, me: InternalMouseEvent) {
+    if (terminalState.shape) {
+      const bounds = <Rectangle>this.getView().getPerimeterBounds(terminalState);
       const direction = terminalState.style.direction;
 
       if (direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH) {
@@ -51,7 +81,7 @@ class GraphConnections {
         const cos = Math.cos(-alpha);
         const sin = Math.sin(-alpha);
 
-        const ct = new point(bounds.getCenterX(), bounds.getCenterY());
+        const ct = new Point(bounds.getCenterX(), bounds.getCenterY());
         point = getRotatedPoint(point, cos, sin, ct);
       }
 
@@ -61,15 +91,9 @@ class GraphConnections {
       let dy = 0;
 
       // LATER: Add flipping support for image shapes
-      if ((<Cell>terminalState.cell).isVertex()) {
+      if (terminalState.cell.isVertex()) {
         let flipH = terminalState.style.flipH;
         let flipV = terminalState.style.flipV;
-
-        // Legacy support for stencilFlipH/V
-        if (terminalState.shape != null && terminalState.shape.stencil != null) {
-          flipH = getValue(terminalState.style, 'stencilFlipH', 0) == 1 || flipH;
-          flipV = getValue(terminalState.style, 'stencilFlipV', 0) == 1 || flipV;
-        }
 
         if (direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH) {
           const tmp = flipH;
@@ -88,7 +112,7 @@ class GraphConnections {
         }
       }
 
-      point = new point(
+      point = new Point(
         (point.x - bounds.x) * sx - dx + bounds.x,
         (point.y - bounds.y) * sy - dy + bounds.y
       );
@@ -102,7 +126,7 @@ class GraphConnections {
           ? 0
           : Math.round(((point.y - bounds.y) * 1000) / bounds.height) / 1000;
 
-      return new ConnectionConstraint(new point(x, y), false);
+      return new ConnectionConstraint(new Point(x, y), false);
     }
     return null;
   }
@@ -115,11 +139,8 @@ class GraphConnections {
    * @param terminal {@link mxCellState} that represents the terminal.
    * @param source Boolean that specifies if the terminal is the source or target.
    */
-  getAllConnectionConstraints(
-    terminal: CellState,
-    source: boolean
-  ): ConnectionConstraint[] | null {
-    if (terminal != null && terminal.shape != null && terminal.shape.stencil != null) {
+  getAllConnectionConstraints(terminal: CellState | null, source: boolean) {
+    if (terminal && terminal.shape && terminal.shape.stencil) {
       return terminal.shape.stencil.constraints;
     }
     return null;
@@ -135,19 +156,18 @@ class GraphConnections {
    */
   getConnectionConstraint(
     edge: CellState,
-    terminal: CellState | null = null,
+    terminal: CellState | null,
     source: boolean = false
-  ): ConnectionConstraint {
-    let point = null;
-    // @ts-ignore
-    const x = <string>edge.style[source ? 'exitX' : 'entryX'];
+  ) {
+    let point: Point | null = null;
 
-    if (x != null) {
-      // @ts-ignore
-      const y = <string>edge.style[source ? 'exitY' : 'entryY'];
+    const x = edge.style[source ? 'exitX' : 'entryX'];
 
-      if (y != null) {
-        point = new point(parseFloat(x), parseFloat(y));
+    if (x !== undefined) {
+      const y = edge.style[source ? 'exitY' : 'entryY'];
+
+      if (y !== undefined) {
+        point = new Point(x, y);
       }
     }
 
@@ -155,14 +175,12 @@ class GraphConnections {
     let dx = 0;
     let dy = 0;
 
-    if (point != null) {
-      perimeter = getValue(edge.style, source ? 'exitPerimeter' : 'entryPerimeter', true);
+    if (point) {
+      perimeter = edge.style[source ? 'exitPerimeter' : 'entryPerimeter'];
 
       // Add entry/exit offset
-      // @ts-ignore
-      dx = parseFloat(<string>edge.style[source ? 'exitDx' : 'entryDx']);
-      // @ts-ignore
-      dy = parseFloat(<string>edge.style[source ? 'exitDy' : 'entryDy']);
+      dx = edge.style[source ? 'exitDx' : 'entryDx'];
+      dy = edge.style[source ? 'exitDy' : 'entryDy'];
 
       dx = Number.isFinite(dx) ? dx : 0;
       dy = Number.isFinite(dy) ? dy : 0;
@@ -187,12 +205,12 @@ class GraphConnections {
     terminal: Cell,
     source: boolean = false,
     constraint: ConnectionConstraint | null = null
-  ): void {
-    if (constraint != null) {
+  ) {
+    if (constraint) {
       this.getModel().beginUpdate();
 
       try {
-        if (constraint == null || constraint.point == null) {
+        if (!constraint || !constraint.point) {
           this.setCellStyles(source ? 'exitX' : 'entryX', null, new CellArray(edge));
           this.setCellStyles(source ? 'exitY' : 'entryY', null, new CellArray(edge));
           this.setCellStyles(source ? 'exitDx' : 'entryDx', null, new CellArray(edge));
@@ -202,7 +220,7 @@ class GraphConnections {
             null,
             new CellArray(edge)
           );
-        } else if (constraint.point != null) {
+        } else if (constraint.point) {
           this.setCellStyles(
             source ? 'exitX' : 'entryX',
             constraint.point.x,
@@ -257,17 +275,17 @@ class GraphConnections {
     vertex: CellState,
     constraint: ConnectionConstraint,
     round: boolean = true
-  ): Point {
-    let point = null;
+  ) {
+    let point: Point | null = null;
 
-    if (vertex != null && constraint.point != null) {
-      const bounds = <Rectangle>this.graph.view.getPerimeterBounds(vertex);
-      const cx = new point(bounds.getCenterX(), bounds.getCenterY());
+    if (constraint.point) {
+      const bounds = <Rectangle>this.getView().getPerimeterBounds(vertex);
+      const cx = new Point(bounds.getCenterX(), bounds.getCenterY());
       const direction = vertex.style.direction;
       let r1 = 0;
 
       // Bounds need to be rotated by 90 degrees for further computation
-      if (direction != null && getValue(vertex.style, 'anchorPointDirection', 1) == 1) {
+      if (vertex.style.anchorPointDirection) {
         if (direction === DIRECTION_NORTH) {
           r1 += 270;
         } else if (direction === DIRECTION_WEST) {
@@ -282,8 +300,8 @@ class GraphConnections {
         }
       }
 
-      const { scale } = this.view;
-      point = new point(
+      const { scale } = this.getView();
+      point = new Point(
         bounds.x + constraint.point.x * bounds.width + <number>constraint.dx * scale,
         bounds.y + constraint.point.y * bounds.height + <number>constraint.dy * scale
       );
@@ -308,19 +326,13 @@ class GraphConnections {
           point = getRotatedPoint(point, cos, sin, cx);
         }
 
-        point = this.graph.view.getPerimeterPoint(vertex, point, false);
+        point = this.getView().getPerimeterPoint(vertex, point, false);
       } else {
         r2 += r1;
 
-        if ((<Cell>vertex.cell).isVertex()) {
-          let flipH = vertex.style.flipH == 1;
-          let flipV = vertex.style.flipV == 1;
-
-          // Legacy support for stencilFlipH/V
-          if (vertex.shape != null && vertex.shape.stencil != null) {
-            flipH = getValue(vertex.style, 'stencilFlipH', 0) == 1 || flipH;
-            flipV = getValue(vertex.style, 'stencilFlipV', 0) == 1 || flipV;
-          }
+        if (vertex.cell.isVertex()) {
+          let flipH = vertex.style.flipH;
+          let flipV = vertex.style.flipV;
 
           if (direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH) {
             const temp = flipH;
@@ -339,7 +351,7 @@ class GraphConnections {
       }
 
       // Generic rotation after projection on perimeter
-      if (r2 !== 0 && point != null) {
+      if (r2 !== 0 && point) {
         const rad = toRadians(r2);
         const cos = Math.cos(rad);
         const sin = Math.sin(rad);
@@ -348,7 +360,7 @@ class GraphConnections {
       }
     }
 
-    if (round && point != null) {
+    if (round && point) {
       point.x = Math.round(point.x);
       point.y = Math.round(point.y);
     }
@@ -371,7 +383,7 @@ class GraphConnections {
     terminal: Cell,
     source: boolean = false,
     constraint: ConnectionConstraint | null = null
-  ): Cell {
+  ) {
     this.getModel().beginUpdate();
     try {
       const previous = edge.getTerminal(source);
@@ -410,52 +422,50 @@ class GraphConnections {
     terminal: Cell,
     source: boolean = false,
     constraint: ConnectionConstraint | null = null
-  ): void {
-    if (edge != null) {
-      this.getModel().beginUpdate();
-      try {
-        const previous = edge.getTerminal(source);
+  ) {
+    this.getModel().beginUpdate();
+    try {
+      const previous = edge.getTerminal(source);
 
-        // Updates the constraint
-        this.setConnectionConstraint(edge, terminal, source, constraint);
+      // Updates the constraint
+      this.setConnectionConstraint(edge, terminal, source, constraint);
 
-        // Checks if the new terminal is a port, uses the ID of the port in the
-        // style and the parent of the port as the actual terminal of the edge.
-        if (this.isPortsEnabled()) {
-          let id = null;
+      // Checks if the new terminal is a port, uses the ID of the port in the
+      // style and the parent of the port as the actual terminal of the edge.
+      if (this.isPortsEnabled()) {
+        let id = null;
 
-          if (this.isPort(terminal)) {
-            id = terminal.getId();
-            terminal = <Cell>this.getTerminalForPort(terminal, source);
-          }
-
-          // Sets or resets all previous information for connecting to a child port
-          const key = source ? 'sourcePort' : 'targetPort';
-          this.setCellStyles(key, id, new CellArray(edge));
+        if (this.isPort(terminal)) {
+          id = terminal.getId();
+          terminal = <Cell>this.getTerminalForPort(terminal, source);
         }
 
-        this.getModel().setTerminal(edge, terminal, source);
-
-        if (this.resetEdgesOnConnect) {
-          this.resetEdge(edge);
-        }
-
-        this.fireEvent(
-          new EventObject(
-            InternalEvent.CELL_CONNECTED,
-            'edge',
-            edge,
-            'terminal',
-            terminal,
-            'source',
-            source,
-            'previous',
-            previous
-          )
-        );
-      } finally {
-        this.getModel().endUpdate();
+        // Sets or resets all previous information for connecting to a child port
+        const key = source ? 'sourcePort' : 'targetPort';
+        this.setCellStyles(key, id, new CellArray(edge));
       }
+
+      this.getModel().setTerminal(edge, terminal, source);
+
+      if (this.isResetEdgesOnConnect()) {
+        this.resetEdge(edge);
+      }
+
+      this.fireEvent(
+        new EventObject(
+          InternalEvent.CELL_CONNECTED,
+          'edge',
+          edge,
+          'terminal',
+          terminal,
+          'source',
+          source,
+          'previous',
+          previous
+        )
+      );
+    } finally {
+      this.getModel().endUpdate();
     }
   }
 
@@ -465,84 +475,77 @@ class GraphConnections {
    *
    * @param cells Array of {@link Cell} to be disconnected.
    */
-  disconnectGraph(cells: CellArray | null) {
-    if (cells != null) {
-      this.getModel().beginUpdate();
-      try {
-        const { scale } = this.view;
-        const tr = this.graph.view.translate;
+  disconnectGraph(cells: CellArray) {
+    this.getModel().beginUpdate();
+    try {
+      const { scale, translate: tr } = this.getView();
 
-        // Fast lookup for finding cells in array
-        const dict = new Dictionary();
+      // Fast lookup for finding cells in array
+      const dict = new Dictionary<Cell, boolean>();
 
-        for (let i = 0; i < cells.length; i += 1) {
-          dict.put(cells[i], true);
-        }
+      for (let i = 0; i < cells.length; i += 1) {
+        dict.put(cells[i], true);
+      }
 
-        for (const cell of cells) {
-          if (cell.isEdge()) {
-            let geo = <Geometry>cell.getGeometry();
+      for (const cell of cells) {
+        if (cell.isEdge()) {
+          let geo = cell.getGeometry();
 
-            if (geo != null) {
-              const state = this.graph.view.getState(cell);
-              const pstate = <CellState>this.graph.view.getState(cell.getParent());
+          if (geo) {
+            const state = this.getView().getState(cell);
+            const pstate = <CellState>this.getView().getState(cell.getParent());
 
-              if (state != null && pstate != null) {
-                geo = geo.clone();
+            if (state && pstate) {
+              geo = geo.clone();
 
-                // @ts-ignore
-                const dx = -pstate.origin.x;
-                // @ts-ignore
-                const dy = -pstate.origin.y;
-                const pts = <Point[]>state.absolutePoints;
+              const dx = -pstate.origin.x;
+              const dy = -pstate.origin.y;
+              const pts = state.absolutePoints;
 
-                let src = cell.getTerminal(true);
+              let src = cell.getTerminal(true);
 
-                if (src != null && this.isCellDisconnectable(cell, src, true)) {
-                  while (src != null && !dict.get(src)) {
-                    src = src.getParent();
-                  }
-
-                  if (src == null) {
-                    geo.setTerminalPoint(
-                      new Point(
-                        pts[0].x / scale - tr.x + dx,
-                        pts[0].y / scale - tr.y + dy
-                      ),
-                      true
-                    );
-                    this.getModel().setTerminal(cell, null, true);
-                  }
+              if (src && this.isCellDisconnectable(cell, src, true)) {
+                while (src && !dict.get(src)) {
+                  src = src.getParent();
                 }
 
-                let trg = cell.getTerminal(false);
+                if (!src && pts[0]) {
+                  geo.setTerminalPoint(
+                    new Point(pts[0].x / scale - tr.x + dx, pts[0].y / scale - tr.y + dy),
+                    true
+                  );
+                  this.getModel().setTerminal(cell, null, true);
+                }
+              }
 
-                if (trg != null && this.isCellDisconnectable(cell, trg, false)) {
-                  while (trg != null && !dict.get(trg)) {
-                    trg = trg.getParent();
-                  }
+              let trg = cell.getTerminal(false);
 
-                  if (trg == null) {
-                    const n = pts.length - 1;
+              if (trg && this.isCellDisconnectable(cell, trg, false)) {
+                while (trg && !dict.get(trg)) {
+                  trg = trg.getParent();
+                }
+
+                if (!trg) {
+                  const n = pts.length - 1;
+                  const p = pts[n];
+
+                  if (p) {
                     geo.setTerminalPoint(
-                      new Point(
-                        <number>(<Point>pts[n]).x / scale - tr.x + dx,
-                        <number>(<Point>pts[n]).y / scale - tr.y + dy
-                      ),
+                      new Point(p.x / scale - tr.x + dx, p.y / scale - tr.y + dy),
                       false
                     );
                     this.getModel().setTerminal(cell, null, false);
                   }
                 }
-
-                this.getModel().setGeometry(cell, geo);
               }
+
+              this.getModel().setGeometry(cell, geo);
             }
           }
         }
-      } finally {
-        this.getModel().endUpdate();
       }
+    } finally {
+      this.getModel().endUpdate();
     }
   }
 
@@ -553,7 +556,7 @@ class GraphConnections {
    * @param parent Optional parent of the opposite end for a connection to be
    * returned.
    */
-  getConnections(cell: Cell, parent: Cell | null = null): CellArray {
+  getConnections(cell: Cell, parent: Cell | null = null) {
     return this.getEdges(cell, parent, true, true, false);
   }
 
@@ -565,7 +568,7 @@ class GraphConnections {
    *
    * @param cell {@link mxCell} that should be constrained.
    */
-  isConstrainChild(cell: Cell): boolean {
+  isConstrainChild(cell: Cell) {
     return (
       this.isConstrainChildren() &&
       !!cell.getParent() &&
@@ -576,28 +579,28 @@ class GraphConnections {
   /**
    * Returns {@link constrainChildren}.
    */
-  isConstrainChildren(): boolean {
+  isConstrainChildren() {
     return this.constrainChildren;
   }
 
   /**
    * Sets {@link constrainChildren}.
    */
-  setConstrainChildren(value: boolean): void {
+  setConstrainChildren(value: boolean) {
     this.constrainChildren = value;
   }
 
   /**
    * Returns {@link constrainRelativeChildren}.
    */
-  isConstrainRelativeChildren(): boolean {
+  isConstrainRelativeChildren() {
     return this.constrainRelativeChildren;
   }
 
   /**
    * Sets {@link constrainRelativeChildren}.
    */
-  setConstrainRelativeChildren(value: boolean): void {
+  setConstrainRelativeChildren(value: boolean) {
     this.constrainRelativeChildren = value;
   }
 
@@ -608,7 +611,7 @@ class GraphConnections {
   /**
    * Returns {@link disconnectOnMove} as a boolean.
    */
-  isDisconnectOnMove(): boolean {
+  isDisconnectOnMove() {
     return this.disconnectOnMove;
   }
 
@@ -619,7 +622,7 @@ class GraphConnections {
    * @param value Boolean indicating if edges should be disconnected
    * when moved.
    */
-  setDisconnectOnMove(value: boolean): void {
+  setDisconnectOnMove(value: boolean) {
     this.disconnectOnMove = value;
   }
 
@@ -637,21 +640,21 @@ class GraphConnections {
     cell: Cell,
     terminal: Cell | null = null,
     source: boolean = false
-  ): boolean {
+  ) {
     return this.isCellsDisconnectable() && !this.isCellLocked(cell);
   }
 
   /**
    * Returns {@link cellsDisconnectable}.
    */
-  isCellsDisconnectable(): boolean {
+  isCellsDisconnectable() {
     return this.cellsDisconnectable;
   }
 
   /**
    * Sets {@link cellsDisconnectable}.
    */
-  setCellsDisconnectable(value: boolean): void {
+  setCellsDisconnectable(value: boolean) {
     this.cellsDisconnectable = value;
   }
 
@@ -662,10 +665,12 @@ class GraphConnections {
    *
    * @param cell {@link mxCell} that represents a possible source or null.
    */
-  isValidSource(cell: Cell | null): boolean {
+  isValidSource(cell: Cell | null) {
     return (
-      (cell == null && this.allowDanglingEdges) ||
-      (cell != null && (!cell.isEdge() || this.connectableEdges) && cell.isConnectable())
+      (cell == null && this.isAllowDanglingEdges()) ||
+      (cell != null &&
+        (!cell.isEdge() || this.isConnectableEdges()) &&
+        cell.isConnectable())
     );
   }
 
@@ -699,14 +704,14 @@ class GraphConnections {
    *
    * @param connectable Boolean indicating if new connections should be allowed.
    */
-  setConnectable(connectable: boolean): void {
+  setConnectable(connectable: boolean) {
     (<ConnectionHandler>this.connectionHandler).setEnabled(connectable);
   }
 
   /**
    * Returns true if the {@link connectionHandler} is enabled.
    */
-  isConnectable(): boolean {
+  isConnectable() {
     return (<ConnectionHandler>this.connectionHandler).isEnabled();
   }
 }

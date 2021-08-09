@@ -326,6 +326,8 @@ class Shape {
 
   image: ImageBox | null = null;
 
+  imageSrc: string | null = null;
+
   indicatorColor: ColorValue = NONE;
 
   indicatorStrokeColor: ColorValue = NONE;
@@ -333,6 +335,8 @@ class Shape {
   indicatorGradientColor: ColorValue = NONE;
 
   indicatorDirection: DirectionValue = DIRECTION_EAST;
+
+  indicatorImageSrc: string | null = null;
 
   /**
    * Function: isHtmlAllowed

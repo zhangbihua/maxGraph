@@ -22,6 +22,7 @@ type PartialCells = Pick<
 >;
 type PartialClass = PartialGraph & PartialSelection & PartialEvents & PartialCells;
 
+// @ts-ignore recursive reference error
 class GraphEditing extends autoImplement<PartialClass>() {
   /**
    * Specifies the return value for {@link isCellEditable}.

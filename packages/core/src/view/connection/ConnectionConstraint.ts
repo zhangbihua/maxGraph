@@ -13,17 +13,17 @@ import Point from '../geometry/Point';
  */
 class ConnectionConstraint {
   constructor(
-    point: Point | null = null,
-    perimeter: boolean = true,
+    point: Point | null,
+    perimeter = true,
     name: string | null = null,
-    dx: number | null = null,
-    dy: number | null = null
+    dx = 0,
+    dy = 0
   ) {
     this.point = point;
-    this.perimeter = perimeter != null ? perimeter : true;
+    this.perimeter = perimeter;
     this.name = name;
-    this.dx = dx || 0;
-    this.dy = dy || 0;
+    this.dx = dx;
+    this.dy = dy;
   }
 
   /**
@@ -31,7 +31,7 @@ class ConnectionConstraint {
    *
    * <mxPoint> that specifies the fixed location of the connection point.
    */
-  point: Point | null = null;
+  point: Point | null;
 
   /**
    * Variable: perimeter
@@ -39,7 +39,7 @@ class ConnectionConstraint {
    * Boolean that specifies if the point should be projected onto the perimeter
    * of the terminal.
    */
-  perimeter: boolean = true;
+  perimeter = true;
 
   /**
    * Variable: name
@@ -53,14 +53,14 @@ class ConnectionConstraint {
    *
    * Optional float that specifies the horizontal offset of the constraint.
    */
-  dx: number | null = null;
+  dx = 0;
 
   /**
    * Variable: dy
    *
    * Optional float that specifies the vertical offset of the constraint.
    */
-  dy: number | null = null;
+  dy = 0;
 }
 
 export default ConnectionConstraint;

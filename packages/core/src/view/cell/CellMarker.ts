@@ -11,6 +11,7 @@ import {
   DEFAULT_VALID_COLOR,
   MAX_HOTSPOT_SIZE,
   MIN_HOTSPOT_SIZE,
+  NONE,
 } from '../../util/Constants';
 import CellHighlight from '../selection/CellHighlight';
 import EventObject from '../event/EventObject';
@@ -273,11 +274,7 @@ class CellMarker extends EventSource {
    *
    * Sets and marks the current valid state.
    */
-  setCurrentState(
-    state: CellState | null,
-    me: InternalMouseEvent,
-    color: ColorValue | null = null
-  ) {
+  setCurrentState(state: CellState | null, me: InternalMouseEvent, color?: ColorValue) {
     const isValid = state ? this.isValidState(state) : false;
     color = color ?? this.getMarkerColor(me.getEvent(), state, isValid);
 

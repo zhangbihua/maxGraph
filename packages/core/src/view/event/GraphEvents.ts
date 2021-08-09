@@ -32,6 +32,7 @@ import type GraphCells from '../cell/GraphCells';
 import type GraphSelection from '../selection/GraphSelection';
 import GraphEditing from '../editing/GraphEditing';
 import GraphSnap from '../snap/GraphSnap';
+import { MouseEventListener } from '../../types';
 
 type PartialGraph = Pick<
   Graph,
@@ -59,21 +60,15 @@ type PartialClass = PartialGraph &
   PartialSnap &
   EventSource;
 
-type MouseListener = {
-  mouseDown: Function;
-  mouseMove: Function;
-  mouseUp: Function;
-};
-
 // @ts-ignore recursive reference error
 class GraphEvents extends autoImplement<PartialClass>() {
   /**
    * Holds the mouse event listeners. See {@link fireMouseEvent}.
    */
-  mouseListeners: MouseListener[] = [];
+  mouseListeners: MouseListenerSet[] = [];
 
   // TODO: Document me!
-  lastTouchEvent: InternalMouseEvent | null = null;
+  lastTouchEvent: MouseEvent | null = null;
   doubleClickCounter: number = 0;
   lastTouchCell: Cell | null = null;
   fireDoubleClick: boolean | null = null;
@@ -82,8 +77,8 @@ class GraphEvents extends autoImplement<PartialClass>() {
   lastMouseY: number | null = null;
   isMouseTrigger: boolean | null = null;
   ignoreMouseEvents: boolean | null = null;
-  mouseMoveRedirect: EventListener | null = null;
-  mouseUpRedirect: EventListener | null = null;
+  mouseMoveRedirect: MouseEventListener | null = null;
+  mouseUpRedirect: MouseEventListener | null = null;
   lastEvent: any; // FIXME: Check if this can be more specific - DOM events or mxEventObjects!
 
   /**
@@ -199,7 +194,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
    */
   tolerance: number = 4;
 
-  getClickTolerance = () => this.tolerance;
+  getEventTolerance = () => this.tolerance;
 
   /*****************************************************************************
    * Group: Event processing
@@ -210,7 +205,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
    *
    * @param evt Mouseevent that represents the keystroke.
    */
-  escape(evt: InternalMouseEvent): void {
+  escape(evt: Event) {
     this.fireEvent(new EventObject(InternalEvent.ESCAPE, 'event', evt));
   }
 
@@ -355,7 +350,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
    * @param evt Mouseevent that represents the doubleclick.
    * @param cell Optional {@link Cell} under the mousepointer.
    */
-  dblClick(evt: MouseEvent, cell?: Cell): void {
+  dblClick(evt: MouseEvent, cell?: Cell) {
     const mxe = new EventObject(InternalEvent.DOUBLE_CLICK, { event: evt, cell: cell });
     this.fireEvent(mxe);
 
@@ -364,7 +359,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
       this.isEnabled() &&
       !isConsumed(evt) &&
       !mxe.isConsumed() &&
-      cell != null &&
+      cell &&
       this.isCellEditable(cell) &&
       !this.isEditing(cell)
     ) {
@@ -379,7 +374,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
    * @param me {@link mxMouseEvent} that represents the touch event.
    * @param state Optional {@link CellState} that is associated with the event.
    */
-  tapAndHold(me: InternalMouseEvent): void {
+  tapAndHold(me: InternalMouseEvent) {
     const evt = me.getEvent();
     const mxe = new EventObject(
       InternalEvent.TAP_AND_HOLD,
@@ -434,8 +429,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
    *
    * @param listener Listener to be added to the graph event listeners.
    */
-  // addMouseListener(listener: { [key: string]: (sender: mxEventSource, me: mxMouseEvent) => void }): void;
-  addMouseListener(listener: MouseListener): void {
+  addMouseListener(listener: MouseListenerSet) {
     this.mouseListeners.push(listener);
   }
 
@@ -444,8 +438,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
    *
    * @param listener Listener to be removed from the graph event listeners.
    */
-  // removeMouseListener(listener: { [key: string]: (sender: mxEventSource, me: mxMouseEvent) => void }): void;
-  removeMouseListener(listener: MouseListener) {
+  removeMouseListener(listener: MouseListenerSet) {
     for (let i = 0; i < this.mouseListeners.length; i += 1) {
       if (this.mouseListeners[i] === listener) {
         this.mouseListeners.splice(i, 1);
@@ -461,30 +454,28 @@ class GraphEvents extends autoImplement<PartialClass>() {
    * @param me {@link mxMouseEvent} to be updated.
    * @param evtName Name of the mouse event.
    */
-  updateMouseEvent(me: InternalMouseEvent, evtName: string): InternalMouseEvent {
-    if (me.graphX == null || me.graphY == null) {
-      const pt = convertPoint(this.getContainer(), me.getX(), me.getY());
+  updateMouseEvent(me: InternalMouseEvent, evtName: string) {
+    const pt = convertPoint(this.getContainer(), me.getX(), me.getY());
 
-      me.graphX = pt.x - this.panning.panDx;
-      me.graphY = pt.y - this.panning.panDy;
+    me.graphX = pt.x - this.panning.panDx;
+    me.graphY = pt.y - this.panning.panDy;
 
-      // Searches for rectangles using method if native hit detection is disabled on shape
-      if (
-        me.getCell() == null &&
-        this.isMouseDown &&
-        evtName === InternalEvent.MOUSE_MOVE
-      ) {
-        me.state = this.getView().getState(
-          this.getCellAt(pt.x, pt.y, null, true, true, (state: CellState) => {
-            return (
-              state.shape == null ||
-              state.shape.paintBackground !== this.paintBackground ||
-              getValue(state.style, 'pointerEvents', '1') == '1' ||
-              (state.shape.fill != null && state.shape.fill !== NONE)
-            );
-          })
-        );
-      }
+    // Searches for rectangles using method if native hit detection is disabled on shape
+    if (
+      me.getCell() == null &&
+      this.isMouseDown &&
+      evtName === InternalEvent.MOUSE_MOVE
+    ) {
+      me.state = this.getView().getState(
+        this.getCellAt(pt.x, pt.y, null, true, true, (state: CellState) => {
+          return (
+            state.shape == null ||
+            state.shape.paintBackground !== this.paintBackground ||
+            getValue(state.style, 'pointerEvents', '1') == '1' ||
+            (state.shape.fill != null && state.shape.fill !== NONE)
+          );
+        })
+      );
     }
 
     return me;
@@ -493,8 +484,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
   /**
    * Returns the state for the given touch event.
    */
-  // getStateForTouchEvent(evt: MouseEvent | TouchEvent): mxCellState;
-  getStateForTouchEvent(evt: InternalMouseEvent) {
+  getStateForTouchEvent(evt: MouseEvent) {
     const x = getClientX(evt);
     const y = getClientY(evt);
 
@@ -508,8 +498,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
   /**
    * Returns true if the event should be ignored in {@link fireMouseEvent}.
    */
-  // isEventIgnored(evtName: string, me: mxMouseEvent, sender: mxEventSource): boolean;
-  isEventIgnored(evtName: string, me: InternalMouseEvent, sender: any): boolean {
+  isEventIgnored(evtName: string, me: InternalMouseEvent, sender: EventSource) {
     const mouseEvent = isMouseEvent(me.getEvent());
     let result = false;
 
@@ -545,13 +534,13 @@ class GraphEvents extends autoImplement<PartialClass>() {
     ) {
       this.setEventSource(me.getSource());
 
-      this.mouseMoveRedirect = (evt: InternalMouseEvent) => {
+      this.mouseMoveRedirect = (evt: MouseEvent) => {
         this.fireMouseEvent(
           InternalEvent.MOUSE_MOVE,
           new InternalMouseEvent(evt, this.getStateForTouchEvent(evt))
         );
       };
-      this.mouseUpRedirect = (evt: InternalMouseEvent) => {
+      this.mouseUpRedirect = (evt: MouseEvent) => {
         this.fireMouseEvent(
           InternalEvent.MOUSE_UP,
           new InternalMouseEvent(evt, this.getStateForTouchEvent(evt))
@@ -675,20 +664,12 @@ class GraphEvents extends autoImplement<PartialClass>() {
    * @param me {@link mxMouseEvent} to be fired.
    * @param sender Optional sender argument. Default is `this`.
    */
-  fireMouseEvent(
-    evtName: string,
-    me: InternalMouseEvent,
-    sender: EventSource = this
-  ): void {
+  fireMouseEvent(evtName: string, me: InternalMouseEvent, sender: EventSource = this) {
     if (this.isEventSourceIgnored(evtName, me)) {
       if (this.tooltipHandler != null) {
         this.tooltipHandler.hide();
       }
       return;
-    }
-
-    if (sender == null) {
-      sender = this;
     }
 
     // Updates the graph coordinates in the event
@@ -992,7 +973,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
    * Returns true if the given event is a clone event. This implementation
    * returns true if control is pressed.
    */
-  isCloneEvent(evt: MouseEvent): boolean {
+  isCloneEvent(evt: MouseEvent) {
     return isControlDown(evt);
   }
 
@@ -1001,7 +982,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
    * returns true the cell behind the selected cell will be selected. This
    * implementation returns false;
    */
-  isTransparentClickEvent(evt: MouseEvent): boolean {
+  isTransparentClickEvent(evt: MouseEvent) {
     return false;
   }
 
@@ -1010,21 +991,21 @@ class GraphEvents extends autoImplement<PartialClass>() {
    * returns true if the meta key (Cmd) is pressed on Macs or if control is
    * pressed on any other platform.
    */
-  isToggleEvent(evt: MouseEvent): boolean {
+  isToggleEvent(evt: MouseEvent) {
     return mxClient.IS_MAC ? isMetaDown(evt) : isControlDown(evt);
   }
 
   /**
    * Returns true if the given mouse event should be aligned to the grid.
    */
-  isGridEnabledEvent(evt: MouseEvent): boolean {
-    return evt != null && !isAltDown(evt);
+  isGridEnabledEvent(evt: MouseEvent) {
+    return !isAltDown(evt);
   }
 
   /**
    * Returns true if the given mouse event should be aligned to the grid.
    */
-  isConstrainedEvent(evt: MouseEvent): boolean {
+  isConstrainedEvent(evt: MouseEvent) {
     return isShiftDown(evt);
   }
 
@@ -1032,7 +1013,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
    * Returns true if the given mouse event should not allow any connections to be
    * made. This implementation returns false.
    */
-  isIgnoreTerminalEvent(evt: MouseEvent): boolean {
+  isIgnoreTerminalEvent(evt: MouseEvent) {
     return false;
   }
 
@@ -1044,7 +1025,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
    * @param addOffset Optional boolean that specifies if the position should be
    * offset by half of the {@link gridSize}. Default is `true`.
    */
-  getPointForEvent(evt: InternalMouseEvent, addOffset: boolean = true): Point {
+  getPointForEvent(evt: MouseEvent, addOffset: boolean = true) {
     const p = convertPoint(this.getContainer(), getClientX(evt), getClientY(evt));
     const s = this.getView().scale;
     const tr = this.getView().translate;
@@ -1052,6 +1033,7 @@ class GraphEvents extends autoImplement<PartialClass>() {
 
     p.x = this.snap(p.x / s - tr.x - off);
     p.y = this.snap(p.y / s - tr.y - off);
+
     return p;
   }
 

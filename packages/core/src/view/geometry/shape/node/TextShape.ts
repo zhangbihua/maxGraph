@@ -63,7 +63,7 @@ import SvgCanvas2D from 'packages/core/src/util/canvas/SvgCanvas2D';
  */
 class TextShape extends Shape {
   constructor(
-    value: string,
+    value: string | HTMLElement | SVGGElement,
     bounds: Rectangle,
     align: AlignValue = ALIGN_CENTER,
     valign: VAlignValue = ALIGN_MIDDLE,
@@ -112,8 +112,7 @@ class TextShape extends Shape {
     this.updateMargin();
   }
 
-  // TODO: Document me!
-  value: string | HTMLElement | SVGGElement | null;
+  value: string | HTMLElement | SVGGElement;
   bounds: Rectangle;
   align: AlignValue;
   valign: VAlignValue;

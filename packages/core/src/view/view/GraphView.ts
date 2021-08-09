@@ -51,6 +51,8 @@ import CellArray from '../cell/datatypes/CellArray';
 
 import type { MaxGraph } from '../Graph';
 import StyleRegistry from '../style/StyleRegistry';
+import TooltipHandler from '../tooltip/TooltipHandler';
+import { MouseEventListener } from '../../types';
 
 /**
  * @class GraphView
@@ -687,30 +689,26 @@ class GraphView extends EventSource {
           // container and finishing the handling of a single gesture
           InternalEvent.addGestureListeners(
             this.backgroundPageShape.node,
-            (evt: Event) => {
-              graph.fireMouseEvent(
-                InternalEvent.MOUSE_DOWN,
-                new InternalMouseEvent(evt as MouseEvent)
-              );
+            (evt: MouseEvent) => {
+              graph.fireMouseEvent(InternalEvent.MOUSE_DOWN, new InternalMouseEvent(evt));
             },
-            (evt: Event) => {
+            (evt: MouseEvent) => {
+              const tooltipHandler = graph.getPlugin('TooltipHandler') as TooltipHandler;
+
               // Hides the tooltip if mouse is outside container
-              if (graph.tooltipHandler != null && graph.tooltipHandler.isHideOnHover()) {
-                graph.tooltipHandler.hide();
+              if (tooltipHandler && tooltipHandler.isHideOnHover()) {
+                tooltipHandler.hide();
               }
 
               if (graph.isMouseDown && !isConsumed(evt)) {
                 graph.fireMouseEvent(
                   InternalEvent.MOUSE_MOVE,
-                  new InternalMouseEvent(evt as MouseEvent)
+                  new InternalMouseEvent(evt)
                 );
               }
             },
-            (evt: Event) => {
-              graph.fireMouseEvent(
-                InternalEvent.MOUSE_UP,
-                new InternalMouseEvent(evt as MouseEvent)
-              );
+            (evt: MouseEvent) => {
+              graph.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt));
             }
           );
         }
@@ -2034,19 +2032,22 @@ class GraphView extends EventSource {
    * Returns true if the event origin is one of the drawing panes or
    * containers of the view.
    */
-  isContainerEvent(evt: Event | MouseEvent) {
+  isContainerEvent(evt: MouseEvent) {
     const source = getSource(evt);
 
     return (
-      source === this.graph.container ||
-      source.parentNode === this.backgroundPane ||
-      (source.parentNode && source.parentNode.parentNode === this.backgroundPane) ||
-      source === this.canvas.parentNode ||
-      source === this.canvas ||
-      source === this.backgroundPane ||
-      source === this.drawPane ||
-      source === this.overlayPane ||
-      source === this.decoratorPane
+      source &&
+      (source === this.graph.container ||
+        // @ts-ignore parentNode may exist
+        source.parentNode === this.backgroundPane ||
+        // @ts-ignore parentNode may exist
+        (source.parentNode && source.parentNode.parentNode === this.backgroundPane) ||
+        source === this.canvas.parentNode ||
+        source === this.canvas ||
+        source === this.backgroundPane ||
+        source === this.drawPane ||
+        source === this.overlayPane ||
+        source === this.decoratorPane)
     );
   }
 
@@ -2125,24 +2126,18 @@ class GraphView extends EventSource {
           pointerId = evt.pointerId;
         }
       }) as EventListener,
-      (evt: Event) => {
+      (evt: MouseEvent) => {
         if (
           this.isContainerEvent(evt) &&
           // @ts-ignore
           (pointerId === null || evt.pointerId === pointerId)
         ) {
-          graph.fireMouseEvent(
-            InternalEvent.MOUSE_MOVE,
-            new InternalMouseEvent(evt as MouseEvent)
-          );
+          graph.fireMouseEvent(InternalEvent.MOUSE_MOVE, new InternalMouseEvent(evt));
         }
       },
-      (evt: Event) => {
+      (evt: MouseEvent) => {
         if (this.isContainerEvent(evt)) {
-          graph.fireMouseEvent(
-            InternalEvent.MOUSE_UP,
-            new InternalMouseEvent(evt as MouseEvent)
-          );
+          graph.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt));
         }
 
         pointerId = null;
@@ -2161,7 +2156,7 @@ class GraphView extends EventSource {
     // Workaround for touch events which started on some DOM node
     // on top of the container, in which case the cells under the
     // mouse for the move and up events are not detected.
-    const getState = (evt: Event) => {
+    const getState = (evt: MouseEvent) => {
       let state = null;
 
       // Workaround for touch events which started on some DOM node
@@ -2188,16 +2183,20 @@ class GraphView extends EventSource {
     // in Firefox and Chrome
     graph.addMouseListener({
       mouseDown: (sender: any, me: InternalMouseEvent) => {
-        (<PopupMenuHandler>graph.popupMenuHandler).hideMenu();
+        const popupMenuHandler = graph.getPlugin('PopupMenuHandler') as PopupMenuHandler;
+
+        if (popupMenuHandler) popupMenuHandler.hideMenu();
       },
       mouseMove: () => {},
       mouseUp: () => {},
     });
 
-    this.moveHandler = (evt: Event) => {
+    this.moveHandler = (evt: MouseEvent) => {
+      const tooltipHandler = graph.getPlugin('TooltipHandler') as TooltipHandler;
+
       // Hides the tooltip if mouse is outside container
-      if (graph.tooltipHandler != null && graph.tooltipHandler.isHideOnHover()) {
-        graph.tooltipHandler.hide();
+      if (tooltipHandler && tooltipHandler.isHideOnHover()) {
+        tooltipHandler.hide();
       }
 
       if (
@@ -2211,12 +2210,12 @@ class GraphView extends EventSource {
       ) {
         graph.fireMouseEvent(
           InternalEvent.MOUSE_MOVE,
-          new InternalMouseEvent(evt as MouseEvent, getState(evt))
+          new InternalMouseEvent(evt, getState(evt))
         );
       }
     };
 
-    this.endHandler = (evt: Event) => {
+    this.endHandler = (evt: MouseEvent) => {
       if (
         this.captureDocumentGesture &&
         graph.isMouseDown &&
@@ -2225,10 +2224,7 @@ class GraphView extends EventSource {
         graph.container.style.display !== 'none' &&
         graph.container.style.visibility !== 'hidden'
       ) {
-        graph.fireMouseEvent(
-          InternalEvent.MOUSE_UP,
-          new InternalMouseEvent(evt as MouseEvent)
-        );
+        graph.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt));
       }
     };
 
@@ -2320,8 +2316,8 @@ class GraphView extends EventSource {
     }
   }
 
-  endHandler: EventListener | null = null;
-  moveHandler: EventListener | null = null;
+  endHandler: MouseEventListener | null = null;
+  moveHandler: MouseEventListener | null = null;
 }
 
 export default GraphView;

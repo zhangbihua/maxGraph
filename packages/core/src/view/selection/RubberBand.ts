@@ -17,9 +17,10 @@ import mxClient from '../../mxClient';
 import Rectangle from '../geometry/Rectangle';
 import { isAltDown, isMultiTouchEvent } from '../../util/EventUtils';
 import { clearSelection } from '../../util/DomUtils';
-import Graph from '../Graph';
+import { MaxGraph } from '../Graph';
 import { GraphPlugin } from '../../types';
 import EventObject from '../event/EventObject';
+import EventSource from '../event/EventSource';
 
 /**
  * Event handler that selects rectangular regions.
@@ -27,23 +28,14 @@ import EventObject from '../event/EventObject';
  * To enable rubberband selection in a graph, use the following code.
  */
 class RubberBand implements GraphPlugin {
-  forceRubberbandHandler?: Function;
-  panHandler?: Function;
-  gestureHandler?: Function;
-  graph?: Graph;
-  first: Point | null = null;
-  destroyed: boolean = false;
-  dragHandler?: Function;
-  dropHandler?: Function;
+  static pluginId = 'RubberBand';
 
-  constructor() {}
-
-  onInit(graph: Graph) {
+  constructor(graph: MaxGraph) {
     this.graph = graph;
     this.graph.addMouseListener(this);
 
     // Handles force rubberband event
-    this.forceRubberbandHandler = (sender: any, evt: EventObject) => {
+    this.forceRubberbandHandler = (sender: EventSource, evt: EventObject) => {
       const evtName = evt.getProperty('eventName');
       const me = evt.getProperty('event');
 
@@ -67,14 +59,28 @@ class RubberBand implements GraphPlugin {
     this.graph.addListener(InternalEvent.PAN, this.panHandler);
 
     // Does not show menu if any touch gestures take place after the trigger
-    this.gestureHandler = (sender, eo) => {
-      if (this.first != null) {
+    this.gestureHandler = (sender: EventSource, eo: EventObject) => {
+      if (this.first) {
         this.reset();
       }
     };
 
     this.graph.addListener(InternalEvent.GESTURE, this.gestureHandler);
   }
+
+  forceRubberbandHandler: Function;
+  panHandler: Function;
+  gestureHandler: Function;
+  graph: MaxGraph;
+  first: Point | null = null;
+  destroyed: boolean = false;
+  dragHandler: ((evt: MouseEvent) => void) | null = null;
+  dropHandler: ((evt: MouseEvent) => void) | null = null;
+
+  x = 0;
+  y = 0;
+  width = 0;
+  height = 0;
 
   /**
    * Specifies the default opacity to be used for the rubberband div.  Default is 20.
@@ -93,14 +99,14 @@ class RubberBand implements GraphPlugin {
    *
    * Holds the DIV element which is currently visible.
    */
-  div = null;
+  div: HTMLElement | null = null;
 
   /**
    * Variable: sharedDiv
    *
    * Holds the DIV element which is used to display the rubberband.
    */
-  sharedDiv = null;
+  sharedDiv: HTMLElement | null = null;
 
   /**
    * Variable: currentX
@@ -119,12 +125,12 @@ class RubberBand implements GraphPlugin {
   /**
    * Optional fade out effect.  Default is false.
    */
-  fadeOut: boolean = false;
+  fadeOut = false;
 
   /**
    * Creates the rubberband selection shape.
    */
-  isEnabled(): boolean {
+  isEnabled() {
     return this.enabled;
   }
 
@@ -155,12 +161,12 @@ class RubberBand implements GraphPlugin {
    * event all subsequent events of the gesture are redirected to this
    * handler.
    */
-  mouseDown(sender: any, me: InternalMouseEvent): void {
+  mouseDown(sender: EventSource, me: InternalMouseEvent) {
     if (
       !me.isConsumed() &&
       this.isEnabled() &&
       this.graph.isEnabled() &&
-      me.getState() == null &&
+      !me.getState() &&
       !isMultiTouchEvent(me.getEvent())
     ) {
       const offset = getOffset(this.graph.container);
@@ -181,12 +187,12 @@ class RubberBand implements GraphPlugin {
   /**
    * Creates the rubberband selection shape.
    */
-  start(x: number, y: number): void {
+  start(x: number, y: number) {
     this.first = new Point(x, y);
 
     const { container } = this.graph;
 
-    function createMouseEvent(evt) {
+    function createMouseEvent(evt: MouseEvent) {
       const me = new InternalMouseEvent(evt);
       const pt = convertPoint(container, me.getX(), me.getY());
 
@@ -196,11 +202,11 @@ class RubberBand implements GraphPlugin {
       return me;
     }
 
-    this.dragHandler = (evt) => {
+    this.dragHandler = (evt: MouseEvent) => {
       this.mouseMove(this.graph, createMouseEvent(evt));
     };
 
-    this.dropHandler = (evt) => {
+    this.dropHandler = (evt: MouseEvent) => {
       this.mouseUp(this.graph, createMouseEvent(evt));
     };
 
@@ -220,8 +226,8 @@ class RubberBand implements GraphPlugin {
    *
    * Handles the event by updating therubberband selection.
    */
-  mouseMove(sender: any, me: InternalMouseEvent): void {
-    if (!me.isConsumed() && this.first != null) {
+  mouseMove(sender: EventSource, me: InternalMouseEvent) {
+    if (!me.isConsumed() && this.first) {
       const origin = getScrollOrigin(this.graph.container);
       const offset = getOffset(this.graph.container);
       origin.x -= offset.x;
@@ -230,10 +236,10 @@ class RubberBand implements GraphPlugin {
       const y = me.getY() + origin.y;
       const dx = this.first.x - x;
       const dy = this.first.y - y;
-      const tol = this.graph.tolerance;
+      const tol = this.graph.getEventTolerance();
 
-      if (this.div != null || Math.abs(dx) > tol || Math.abs(dy) > tol) {
-        if (this.div == null) {
+      if (this.div || Math.abs(dx) > tol || Math.abs(dy) > tol) {
+        if (!this.div) {
           this.div = this.createShape();
         }
 
@@ -250,8 +256,8 @@ class RubberBand implements GraphPlugin {
   /**
    * Creates the rubberband selection shape.
    */
-  createShape(): HTMLElement | null {
-    if (this.sharedDiv == null) {
+  createShape() {
+    if (!this.sharedDiv) {
       this.sharedDiv = document.createElement('div');
       this.sharedDiv.className = 'mxRubberband';
       setOpacity(this.sharedDiv, this.defaultOpacity);
@@ -272,8 +278,8 @@ class RubberBand implements GraphPlugin {
    *
    * Returns true if this handler is active.
    */
-  isActive(sender: any, me: InternalMouseEvent): boolean {
-    return this.div != null && this.div.style.display !== 'none';
+  isActive(sender?: EventSource, me?: InternalMouseEvent) {
+    return this.div && this.div.style.display !== 'none';
   }
 
   /**
@@ -282,7 +288,7 @@ class RubberBand implements GraphPlugin {
    * Handles the event by selecting the region of the rubberband using
    * <mxGraph.selectRegion>.
    */
-  mouseUp(sender: any, me: InternalMouseEvent): void {
+  mouseUp(sender: EventSource, me: InternalMouseEvent) {
     const active = this.isActive();
     this.reset();
 
@@ -298,7 +304,7 @@ class RubberBand implements GraphPlugin {
    * Resets the state of this handler and selects the current region
    * for the given event.
    */
-  execute(evt) {
+  execute(evt: MouseEvent) {
     const rect = new Rectangle(this.x, this.y, this.width, this.height);
     this.graph.selectRegion(rect, evt);
   }
@@ -309,18 +315,18 @@ class RubberBand implements GraphPlugin {
    * Resets the state of the rubberband selection.
    */
   reset() {
-    if (this.div != null) {
+    if (this.div) {
       if (mxClient.IS_SVG && this.fadeOut) {
         const temp = this.div;
         setPrefixedStyle(temp.style, 'transition', 'all 0.2s linear');
         temp.style.pointerEvents = 'none';
-        temp.style.opacity = 0;
+        temp.style.opacity = String(0);
 
         window.setTimeout(() => {
-          temp.parentNode.removeChild(temp);
+          if (temp.parentNode) temp.parentNode.removeChild(temp);
         }, 200);
       } else {
-        this.div.parentNode.removeChild(this.div);
+        if (this.div.parentNode) this.div.parentNode.removeChild(this.div);
       }
     }
 
@@ -344,7 +350,7 @@ class RubberBand implements GraphPlugin {
    *
    * Sets <currentX> and <currentY> and calls <repaint>.
    */
-  update(x, y) {
+  update(x: number, y: number) {
     this.currentX = x;
     this.currentY = y;
 
@@ -357,9 +363,9 @@ class RubberBand implements GraphPlugin {
    * Computes the bounding box and updates the style of the <div>.
    */
   repaint() {
-    if (this.div != null) {
-      const x = this.currentX - this.graph.panDx;
-      const y = this.currentY - this.graph.panDy;
+    if (this.div && this.first) {
+      const x = this.currentX - this.graph.getPanDx();
+      const y = this.currentY - this.graph.getPanDy();
 
       this.x = Math.min(this.first.x, x);
       this.y = Math.min(this.first.y, y);
@@ -391,7 +397,7 @@ class RubberBand implements GraphPlugin {
       this.graph.removeListener(this.panHandler);
       this.reset();
 
-      if (this.sharedDiv != null) {
+      if (this.sharedDiv) {
         this.sharedDiv = null;
       }
     }

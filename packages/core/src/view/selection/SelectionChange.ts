@@ -1,12 +1,10 @@
 import EventObject from '../event/EventObject';
 import Resources from '../../util/Resources';
-import mxLog from '../../util/gui/mxLog';
 import InternalEvent from '../event/InternalEvent';
-import mxGraphSelectionModel from '../view/selection/mxGraphSelectionModel';
-import Cell from '../cell/datatypes/Cell';
-import CellArray from "../cell/datatypes/CellArray";
+import CellArray from '../cell/datatypes/CellArray';
 
 import type { UndoableChange } from '../../types';
+import type { MaxGraph } from '../Graph';
 
 /**
  * @class SelectionChange
@@ -14,16 +12,16 @@ import type { UndoableChange } from '../../types';
  */
 class SelectionChange implements UndoableChange {
   constructor(
-    selectionModel: mxGraphSelectionModel,
+    graph: MaxGraph,
     added: CellArray = new CellArray(),
     removed: CellArray = new CellArray()
   ) {
-    this.selectionModel = selectionModel;
+    this.graph = graph;
     this.added = added.slice();
     this.removed = removed.slice();
   }
 
-  selectionModel: mxGraphSelectionModel;
+  graph: MaxGraph;
 
   added: CellArray;
 
@@ -33,35 +31,25 @@ class SelectionChange implements UndoableChange {
    * Changes the current root of the view.
    */
   execute() {
-    const t0: any = mxLog.enter('mxSelectionChange.execute');
-
     window.status =
-      Resources.get(this.selectionModel.updatingSelectionResource) ||
-      this.selectionModel.updatingSelectionResource;
+      Resources.get(this.graph.getUpdatingSelectionResource()) ||
+      this.graph.getUpdatingSelectionResource();
 
     for (const removed of this.removed) {
-      this.selectionModel.cellRemoved(removed);
+      this.graph.cellRemoved(removed);
     }
 
     for (const added of this.added) {
-      this.selectionModel.cellAdded(added);
+      this.graph.cellAdded(added);
     }
 
     [this.added, this.removed] = [this.removed, this.added];
 
     window.status =
-      Resources.get(this.selectionModel.doneResource) ||
-      this.selectionModel.doneResource;
-    mxLog.leave('mxSelectionChange.execute', t0);
+      Resources.get(this.graph.getDoneResource()) || this.graph.getDoneResource();
 
-    this.selectionModel.fireEvent(
-      new EventObject(
-        InternalEvent.CHANGE,
-        'added',
-        this.added,
-        'removed',
-        this.removed
-      )
+    this.graph.fireEvent(
+      new EventObject(InternalEvent.CHANGE, 'added', this.added, 'removed', this.removed)
     );
   }
 }

@@ -31,6 +31,7 @@ import CellHighlight from './selection/CellHighlight';
 import Rectangle from './geometry/Rectangle';
 import { getClientX, getClientY, isAltDown, isMultiTouchEvent } from '../util/EventUtils';
 import { MaxGraph } from './Graph';
+import { GraphPlugin, GraphPluginConstructor } from '../types';
 
 /**
  * Class: mxGraphHandler
@@ -52,7 +53,9 @@ import { MaxGraph } from './Graph';
  *
  * graph - Reference to the enclosing <mxGraph>.
  */
-class GraphHandler {
+class GraphHandler implements GraphPlugin {
+  static pluginId = 'GraphHandler';
+
   constructor(graph: MaxGraph) {
     this.graph = graph;
     this.graph.addMouseListener(this);
@@ -1798,7 +1801,7 @@ class GraphHandler {
    * Destroys the handler and all its resources and DOM nodes.
    */
   // destroy(): void;
-  destroy() {
+  onDestroy() {
     this.graph.removeMouseListener(this);
     this.graph.removeListener(this.panHandler);
 

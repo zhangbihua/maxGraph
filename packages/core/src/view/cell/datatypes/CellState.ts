@@ -15,6 +15,7 @@ import Dictionary from '../../../util/Dictionary';
 import { NONE } from '../../../util/Constants';
 import { CellStateStyles } from 'packages/core/src/types';
 import RectangleShape from '../../geometry/shape/node/RectangleShape';
+import CellOverlay from '../CellOverlay';
 
 /**
  * Class: mxCellState
@@ -67,7 +68,7 @@ class CellState extends Rectangle {
   control: Shape | null = null;
 
   // Used by mxCellRenderer's createCellOverlays()
-  overlays: Dictionary<Cell, Shape> | null = null;
+  overlays: Dictionary<CellOverlay, Shape> = new Dictionary();
 
   /**
    * Variable: view
@@ -196,6 +197,8 @@ class CellState extends Rectangle {
   unscaledHeight = 0;
 
   parentHighlight: RectangleShape | null = null;
+
+  point: Point | null = null;
 
   /**
    * Function: getPerimeterBounds
