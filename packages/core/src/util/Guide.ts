@@ -11,9 +11,10 @@ import Polyline from '../view/geometry/shape/edge/Polyline';
 import CellState from '../view/cell/datatypes/CellState';
 import Shape from '../view/geometry/shape/Shape';
 import Rectangle from '../view/geometry/Rectangle';
-import graph from '../view/Graph';
+import { MaxGraph } from '../view/Graph';
 import EventObject from '../view/event/EventObject';
 import GraphView from '../view/view/GraphView';
+import { ColorValue } from '../types';
 
 /**
  * Class: mxGuide
@@ -25,7 +26,7 @@ import GraphView from '../view/view/GraphView';
  * Constructs a new guide object.
  */
 class Guide {
-  constructor(graph: graph, states: CellState[]) {
+  constructor(graph: MaxGraph, states: CellState[]) {
     this.graph = graph;
     this.setStates(states);
   }
@@ -35,39 +36,34 @@ class Guide {
    *
    * Reference to the enclosing <mxGraph> instance.
    */
-  // graph: mxGraph;
-  graph: graph;
+  graph: MaxGraph;
 
   /**
    * Variable: states
    *
    * Contains the <mxCellStates> that are used for alignment.
    */
-  // states: mxCellState[];
-  states: CellState[] | null = null;
+  states: CellState[] = [];
 
   /**
    * Variable: horizontal
    *
    * Specifies if horizontal guides are enabled. Default is true.
    */
-  // horizontal: boolean;
-  horizontal: boolean = true;
+  horizontal = true;
 
   /**
    * Variable: vertical
    *
    * Specifies if vertical guides are enabled. Default is true.
    */
-  // vertical: boolean;
-  vertical: boolean = true;
+  vertical = true;
 
   /**
    * Variable: vertical
    *
    * Holds the <mxShape> for the horizontal guide.
    */
-  // guideX: mxShape;
   guideX: Shape | null = null;
 
   /**
@@ -75,7 +71,6 @@ class Guide {
    *
    * Holds the <mxShape> for the vertical guide.
    */
-  // guideY: mxShape;
   guideY: Shape | null = null;
 
   /**
@@ -83,22 +78,21 @@ class Guide {
    *
    * Specifies if rounded coordinates should be used. Default is false.
    */
-  rounded: boolean = false;
+  rounded = false;
 
   /**
    * Variable: tolerance
    *
    * Default tolerance in px if grid is disabled. Default is 2.
    */
-  tolerance: number = 2;
+  tolerance = 2;
 
   /**
    * Function: setStates
    *
    * Sets the <mxCellStates> that should be used for alignment.
    */
-  // setStates(states: mxCellState[]): void;
-  setStates(states: CellState[]): void {
+  setStates(states: CellState[]) {
     this.states = states;
   }
 
@@ -108,8 +102,7 @@ class Guide {
    * Returns true if the guide should be enabled for the given native event. This
    * implementation always returns true.
    */
-  // isEnabledForEvent(evt: Event): boolean;
-  isEnabledForEvent(evt: EventObject | null = null): boolean {
+  isEnabledForEvent(evt: MouseEvent) {
     return true;
   }
 
@@ -118,9 +111,9 @@ class Guide {
    *
    * Returns the tolerance for the guides. Default value is gridSize / 2.
    */
-  getGuideTolerance(gridEnabled: boolean = false): number {
-    return gridEnabled && this.graph.gridEnabled
-      ? this.graph.gridSize / 2
+  getGuideTolerance(gridEnabled = false) {
+    return gridEnabled && this.graph.isGridEnabled()
+      ? this.graph.getGridSize() / 2
       : this.tolerance;
   }
 
@@ -135,7 +128,7 @@ class Guide {
    *
    * horizontal - Boolean that specifies which guide should be created.
    */
-  createGuideShape(horizontal: boolean = false): Polyline {
+  createGuideShape(horizontal = false) {
     // TODO: Should vertical guides be supported here?? ============================
     const guide = new Polyline([], GUIDE_COLOR, GUIDE_STROKEWIDTH);
     guide.isDashed = true;
@@ -146,7 +139,7 @@ class Guide {
    * Returns true if the given state should be ignored.
    * @param state
    */
-  isStateIgnored(state: CellState | null = null): boolean {
+  isStateIgnored(state: CellState) {
     return false;
   }
 
@@ -158,15 +151,10 @@ class Guide {
   move(
     bounds: Rectangle | null = null,
     delta: Point,
-    gridEnabled: boolean = false,
-    clone: boolean = false
-  ): Point {
-    if (
-      this.states != null &&
-      (this.horizontal || this.vertical) &&
-      bounds != null &&
-      delta != null
-    ) {
+    gridEnabled = false,
+    clone = false
+  ) {
+    if ((this.horizontal || this.vertical) && bounds) {
       const { scale } = this.graph.getView();
       const tt = this.getGuideTolerance(gridEnabled) * scale;
       const b = bounds.clone();
@@ -174,10 +162,10 @@ class Guide {
       b.y += delta.y;
       let overrideX = false;
       let stateX: CellState | null = null;
-      let valueX = null;
+      let valueX: number | null = null;
       let overrideY = false;
       let stateY: CellState | null = null;
-      let valueY = null;
+      let valueY: number | null = null;
       let ttX = tt;
       let ttY = tt;
       const left = b.x;
@@ -211,7 +199,7 @@ class Guide {
           stateX = state;
           valueX = x;
 
-          if (this.guideX == null) {
+          if (!this.guideX) {
             this.guideX = this.createGuideShape(true);
 
             // Makes sure to use SVG shapes in order to implement
@@ -250,7 +238,7 @@ class Guide {
           stateY = state;
           valueY = y;
 
-          if (this.guideY == null) {
+          if (!this.guideY) {
             this.guideY = this.createGuideShape(false);
 
             // Makes sure to use SVG shapes in order to implement
@@ -268,7 +256,7 @@ class Guide {
       for (let i = 0; i < this.states.length; i += 1) {
         const state = this.states[i];
 
-        if (state != null && !this.isStateIgnored(state)) {
+        if (state && !this.isStateIgnored(state)) {
           // Align x
           if (this.horizontal) {
             snapX(state.getCenterX(), state, true);
@@ -276,7 +264,7 @@ class Guide {
             snapX(state.x + state.width, state, false);
 
             // Aligns left and right of shape to center of page
-            if (state.cell == null) {
+            if (!state.cell) {
               snapX(state.getCenterX(), state, false);
             }
           }
@@ -288,7 +276,7 @@ class Guide {
             snapY(state.y + state.height, state, false);
 
             // Aligns left and right of shape to center of page
-            if (state.cell == null) {
+            if (!state.cell) {
               snapY(state.getCenterY(), state, false);
             }
           }
@@ -300,69 +288,63 @@ class Guide {
       delta = this.getDelta(bounds, stateX, delta.x, stateY, delta.y);
 
       // Redraws the guides
-      const c = <HTMLElement>this.graph.container;
+      const c = this.graph.container;
 
-      if (!overrideX && this.guideX != null) {
-        (<SVGElement>this.guideX.node).style.visibility = 'hidden';
-      } else if (this.guideX != null) {
-        let minY = null;
-        let maxY = null;
+      if (!overrideX && this.guideX) {
+        this.guideX.node.style.visibility = 'hidden';
+      } else if (this.guideX) {
+        let minY: number | null = null;
+        let maxY: number | null = null;
 
-        if (stateX != null) {
-          minY = Math.min(bounds.y + delta.y - this.graph.panDy, stateX.y);
+        if (stateX) {
+          minY = Math.min(bounds.y + delta.y - this.graph.getPanDy(), stateX!.y);
           maxY = Math.max(
-            bounds.y + bounds.height + delta.y - this.graph.panDy,
-            // @ts-ignore
-            stateX.y + stateX.height
+            bounds.y + bounds.height + delta.y - this.graph.getPanDy(),
+            // @ts-ignore stateX! doesn't work for some reason...
+            stateX!.y + stateX!.height
           );
         }
 
-        if (minY != null && maxY != null) {
-          this.guideX.points = [
-            new Point(valueX, minY),
-            new Point(valueX, maxY),
-          ];
+        if (minY !== null && maxY !== null) {
+          this.guideX.points = [new Point(valueX!, minY), new Point(valueX!, maxY)];
         } else {
           this.guideX.points = [
-            new Point(valueX, -this.graph.panDy),
-            new Point(valueX, c.scrollHeight - 3 - this.graph.panDy),
+            new Point(valueX!, -this.graph.getPanDy()),
+            new Point(valueX!, c.scrollHeight - 3 - this.graph.getPanDy()),
           ];
         }
 
-        this.guideX.stroke = this.getGuideColor(stateX, true);
-        (<SVGElement>this.guideX.node).style.visibility = 'visible';
+        this.guideX.stroke = this.getGuideColor(stateX!, true);
+        this.guideX.node.style.visibility = 'visible';
         this.guideX.redraw();
       }
 
       if (!overrideY && this.guideY != null) {
-        (<SVGElement>this.guideY.node).style.visibility = 'hidden';
+        this.guideY.node.style.visibility = 'hidden';
       } else if (this.guideY != null) {
         let minX = null;
         let maxX = null;
 
         if (stateY != null && bounds != null) {
-          minX = Math.min(bounds.x + delta.x - this.graph.panDx, stateY.x);
+          minX = Math.min(bounds.x + delta.x - this.graph.getPanDx(), stateY!.x);
           maxX = Math.max(
-            bounds.x + bounds.width + delta.x - this.graph.panDx,
+            bounds.x + bounds.width + delta.x - this.graph.getPanDx(),
             // @ts-ignore
             stateY.x + stateY.width
           );
         }
 
-        if (minX != null && maxX != null) {
+        if (minX != null && maxX != null && valueY !== null) {
+          this.guideY.points = [new Point(minX, valueY), new Point(maxX, valueY)];
+        } else if (valueY !== null) {
           this.guideY.points = [
-            new Point(minX, valueY),
-            new Point(maxX, valueY),
-          ];
-        } else {
-          this.guideY.points = [
-            new Point(-this.graph.panDx, valueY),
-            new Point(c.scrollWidth - 3 - this.graph.panDx, valueY),
+            new Point(-this.graph.getPanDx(), valueY),
+            new Point(c.scrollWidth - 3 - this.graph.getPanDx(), valueY),
           ];
         }
 
-        this.guideY.stroke = this.getGuideColor(stateY, false);
-        (<SVGElement>this.guideY.node).style.visibility = 'visible';
+        this.guideY.stroke = this.getGuideColor(stateY!, false);
+        this.guideY.node.style.visibility = 'visible';
         this.guideY.redraw();
       }
     }
@@ -382,7 +364,7 @@ class Guide {
     stateY: CellState | null = null,
     dy: number
   ): Point {
-    const s = (<GraphView>this.graph.view).scale;
+    const s = this.graph.view.scale;
     if (this.rounded || (stateX != null && stateX.cell == null)) {
       dx = Math.round((bounds.x + dx) / s) * s - bounds.x;
     }
@@ -397,9 +379,7 @@ class Guide {
    *
    * Hides all current guides.
    */
-  // getGuideColor(state: mxCellState, horizontal: any): string;
-  getGuideColor(state: CellState | null,
-                horizontal: boolean | null): string {
+  getGuideColor(state: CellState, horizontal: boolean) {
     return GUIDE_COLOR;
   }
 
@@ -408,7 +388,7 @@ class Guide {
    *
    * Hides all current guides.
    */
-  hide(): void {
+  hide() {
     this.setVisible(false);
   }
 
@@ -417,16 +397,12 @@ class Guide {
    *
    * Shows or hides the current guides.
    */
-  setVisible(visible: boolean): void {
-    if (this.guideX != null) {
-      (<SVGElement>this.guideX.node).style.visibility = visible
-        ? 'visible'
-        : 'hidden';
+  setVisible(visible: boolean) {
+    if (this.guideX) {
+      this.guideX.node.style.visibility = visible ? 'visible' : 'hidden';
     }
-    if (this.guideY != null) {
-      (<SVGElement>this.guideY.node).style.visibility = visible
-        ? 'visible'
-        : 'hidden';
+    if (this.guideY) {
+      this.guideY.node.style.visibility = visible ? 'visible' : 'hidden';
     }
   }
 
@@ -435,12 +411,12 @@ class Guide {
    *
    * Destroys all resources that this object uses.
    */
-  destroy(): void {
-    if (this.guideX != null) {
+  destroy() {
+    if (this.guideX) {
       this.guideX.destroy();
       this.guideX = null;
     }
-    if (this.guideY != null) {
+    if (this.guideY) {
       this.guideY.destroy();
       this.guideY = null;
     }

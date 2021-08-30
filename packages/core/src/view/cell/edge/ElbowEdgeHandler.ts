@@ -20,6 +20,8 @@ import Rectangle from '../../geometry/Rectangle';
 import utils, { intersects } from '../../../util/Utils';
 import mxClient from '../../../mxClient';
 import { isConsumed } from '../../../util/EventUtils';
+import CellState from '../datatypes/CellState';
+import InternalMouseEvent from '../../event/InternalMouseEvent';
 
 /**
  * Class: mxElbowEdgeHandler
@@ -38,7 +40,7 @@ import { isConsumed } from '../../../util/EventUtils';
  * state - <mxCellState> of the cell to be modified.
  */
 class ElbowEdgeHandler extends EdgeHandler {
-  constructor(state) {
+  constructor(state: CellState) {
     super(state);
   }
 
@@ -46,7 +48,6 @@ class ElbowEdgeHandler extends EdgeHandler {
    * Specifies if a double click on the middle handle should call
    * <mxGraph.flipEdge>. Default is true.
    */
-  // flipEnabled: boolean;
   flipEnabled = true;
 
   /**
@@ -77,9 +78,9 @@ class ElbowEdgeHandler extends EdgeHandler {
 
     // Virtual
     bends.push(
-      this.createVirtualBend((evt) => {
+      this.createVirtualBend((evt: MouseEvent) => {
         if (!isConsumed(evt) && this.flipEnabled) {
-          this.graph.flipEdge(this.state.cell, evt);
+          this.graph.flipEdge(this.state.cell);
           InternalEvent.consume(evt);
         }
       })
@@ -102,8 +103,7 @@ class ElbowEdgeHandler extends EdgeHandler {
    * Creates a virtual bend that supports double clicking and calls
    * <mxGraph.flipEdge>.
    */
-  // createVirtualBend(dblClickHandler: (evt: Event) => void): mxRectangleShape;
-  createVirtualBend(dblClickHandler) {
+  createVirtualBend(dblClickHandler?: (evt: MouseEvent) => void) {
     const bend = this.createHandleShape();
     this.initBend(bend, dblClickHandler);
 
@@ -121,12 +121,9 @@ class ElbowEdgeHandler extends EdgeHandler {
    *
    * Returns the cursor to be used for the bend.
    */
-  // getCursorForBend(): string;
   getCursorForBend() {
-    return this.state.style.edge === mxEdgeStyle.TopToBottom ||
-      this.state.style.edge === EDGESTYLE_TOPTOBOTTOM ||
-      ((this.state.style.edge === mxEdgeStyle.ElbowConnector ||
-        this.state.style.edge === EDGESTYLE_ELBOW) &&
+    return this.state.style.edge === EDGESTYLE_TOPTOBOTTOM ||
+      (this.state.style.edge === EDGESTYLE_ELBOW &&
         this.state.style.elbow === ELBOW_VERTICAL)
       ? 'row-resize'
       : 'col-resize';
@@ -137,8 +134,7 @@ class ElbowEdgeHandler extends EdgeHandler {
    *
    * Returns the tooltip for the given node.
    */
-  // getTooltipForNode(node: Element): string;
-  getTooltipForNode(node) {
+  getTooltipForNode(node: Element) {
     let tip = null;
 
     if (
@@ -164,8 +160,7 @@ class ElbowEdgeHandler extends EdgeHandler {
    * point - <mxPoint> to be converted.
    * gridEnabled - Boolean that specifies if the grid should be applied.
    */
-  // convertPoint(point: mxPoint, gridEnabled: boolean): mxPoint;
-  convertPoint(point, gridEnabled) {
+  convertPoint(point: Point, gridEnabled: boolean) {
     const scale = this.graph.getView().getScale();
     const tr = this.graph.getView().getTranslate();
     const { origin } = this.state;
@@ -191,17 +186,16 @@ class ElbowEdgeHandler extends EdgeHandler {
    * p0 - <mxPoint> that represents the location of the first point.
    * pe - <mxPoint> that represents the location of the last point.
    */
-  // redrawInnerBends(p0: mxPoint, pe: mxPoint): void;
-  redrawInnerBends(p0, pe) {
+  redrawInnerBends(p0: Point, pe: Point) {
     const g = this.state.cell.getGeometry();
     const pts = this.state.absolutePoints;
     let pt = null;
 
     // Keeps the virtual bend on the edge shape
     if (pts.length > 1) {
-      p0 = pts[1];
-      pe = pts[pts.length - 2];
-    } else if (g.points != null && g.points.length > 0) {
+      p0 = pts[1] as Point;
+      pe = pts[pts.length - 2] as Point;
+    } else if (g!.points != null && g!.points.length > 0) {
       pt = pts[0];
     }
 
@@ -219,30 +213,21 @@ class ElbowEdgeHandler extends EdgeHandler {
     // Makes handle slightly bigger if the yellow  label handle
     // exists and intersects this green handle
     const b = this.bends[1].bounds;
-    let w = b.width;
-    let h = b.height;
-    let bounds = new Rectangle(
-      Math.round(pt.x - w / 2),
-      Math.round(pt.y - h / 2),
-      w,
-      h
-    );
+    let w = b!.width;
+    let h = b!.height;
+    let bounds = new Rectangle(Math.round(pt.x - w / 2), Math.round(pt.y - h / 2), w, h);
 
     if (this.manageLabelHandle) {
       this.checkLabelHandle(bounds);
     } else if (
       this.handleImage == null &&
       this.labelShape.visible &&
+      this.labelShape.bounds &&
       intersects(bounds, this.labelShape.bounds)
     ) {
       w = HANDLE_SIZE + 3;
       h = HANDLE_SIZE + 3;
-      bounds = new Rectangle(
-        Math.floor(pt.x - w / 2),
-        Math.floor(pt.y - h / 2),
-        w,
-        h
-      );
+      bounds = new Rectangle(Math.floor(pt.x - w / 2), Math.floor(pt.y - h / 2), w, h);
     }
 
     this.bends[1].bounds = bounds;

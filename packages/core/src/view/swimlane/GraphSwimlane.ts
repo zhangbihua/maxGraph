@@ -1,6 +1,6 @@
 import Cell from '../cell/datatypes/Cell';
 import Rectangle from '../geometry/Rectangle';
-import utils, { convertPoint, getValue, mod } from '../../util/Utils';
+import utils, { autoImplement, convertPoint, getValue, mod } from '../../util/Utils';
 import {
   DEFAULT_STARTSIZE,
   DIRECTION_EAST,
@@ -12,34 +12,42 @@ import {
 import CellArray from '../cell/datatypes/CellArray';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import { getClientX, getClientY } from '../../util/EventUtils';
-import Graph from '../Graph';
 
-class GraphSwimlane {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+import type Graph from '../Graph';
+import GraphCells from '../cell/GraphCells';
+import { CellStateStyles } from '../../types';
+import GraphDragDrop from '../drag_drop/GraphDragDrop';
+import GraphPanning from '../panning/GraphPanning';
 
-  graph: Graph;
+type PartialGraph = Pick<
+  Graph,
+  'getDefaultParent' | 'getCurrentRoot' | 'getModel' | 'getView' | 'getContainer'
+>;
+type PartialCells = Pick<GraphCells, 'getCurrentCellStyle' | 'intersects'>;
+type PartialDragDrop = Pick<GraphDragDrop, 'isSplitEnabled' | 'isSplitTarget'>;
+type PartialPanning = Pick<GraphPanning, 'getPanDx' | 'getPanDy'>;
+type PartialClass = PartialGraph & PartialCells & PartialDragDrop & PartialPanning;
 
+class GraphSwimlane extends autoImplement<PartialClass>() {
   /**
    * Specifies if swimlanes should be selectable via the content if the
    * mouse is released.
    * @default true
    */
-  swimlaneSelectionEnabled: boolean = true;
+  swimlaneSelectionEnabled = true;
 
   /**
    * Specifies if nesting of swimlanes is allowed.
    * @default true
    */
-  swimlaneNesting: boolean = true;
+  swimlaneNesting = true;
 
   /**
    * The attribute used to find the color for the indicator if the indicator
    * color is set to 'swimlane'.
    * @default {@link 'fillColor'}
    */
-  swimlaneIndicatorColorAttribute: string = 'fillColor';
+  swimlaneIndicatorColorAttribute = 'fillColor';
 
   /**
    * Returns the nearest ancestor of the given cell which is a swimlane, or
@@ -47,10 +55,9 @@ class GraphSwimlane {
    *
    * @param cell {@link mxCell} for which the ancestor swimlane should be returned.
    */
-  // getSwimlane(cell: mxCell): mxCell;
-  getSwimlane(cell: Cell | null = null): Cell | null {
-    while (cell != null && !this.isSwimlane(cell)) {
-      cell = <Cell>cell.getParent();
+  getSwimlane(cell: Cell | null = null) {
+    while (cell && !this.isSwimlane(cell)) {
+      cell = cell.getParent();
     }
     return cell;
   }
@@ -64,26 +71,22 @@ class GraphSwimlane {
    * @param parent {@link mxCell} that should be used as the root of the recursion.
    * Default is {@link defaultParent}.
    */
-  getSwimlaneAt(
-    x: number,
-    y: number,
-    parent: Cell = this.getDefaultParent()
-  ): Cell | null {
-    if (parent == null) {
-      parent = <Cell>this.getCurrentRoot();
+  getSwimlaneAt(x: number, y: number, parent?: Cell | null): Cell | null {
+    if (!parent) {
+      parent = this.getCurrentRoot();
 
-      if (parent == null) {
-        parent = <Cell>this.getModel().getRoot();
+      if (!parent) {
+        parent = this.getModel().getRoot();
       }
     }
 
-    if (parent != null) {
+    if (parent) {
       const childCount = parent.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
         const child = parent.getChildAt(i);
 
-        if (child != null) {
+        if (child) {
           const result = this.getSwimlaneAt(x, y, child);
 
           if (result != null) {
@@ -92,7 +95,7 @@ class GraphSwimlane {
           if (child.isVisible() && this.isSwimlane(child)) {
             const state = this.getView().getState(child);
 
-            if (this.intersects(state, x, y)) {
+            if (state && this.intersects(state, x, y)) {
               return child;
             }
           }
@@ -110,12 +113,12 @@ class GraphSwimlane {
    * @param x X-coordinate of the mouse event.
    * @param y Y-coordinate of the mouse event.
    */
-  hitsSwimlaneContent(swimlane: Cell, x: number, y: number): boolean {
-    const state = this.graph.view.getState(swimlane);
+  hitsSwimlaneContent(swimlane: Cell, x: number, y: number) {
+    const state = this.getView().getState(swimlane);
     const size = this.getStartSize(swimlane);
 
-    if (state != null) {
-      const scale = this.graph.view.getScale();
+    if (state) {
+      const scale = this.getView().getScale();
       x -= state.x;
       y -= state.y;
 
@@ -142,12 +145,12 @@ class GraphSwimlane {
    * @param swimlane {@link mxCell} whose start size should be returned.
    * @param ignoreState Optional boolean that specifies if cell state should be ignored.
    */
-  getStartSize(swimlane: Cell, ignoreState: boolean = false): Rectangle {
+  getStartSize(swimlane: Cell, ignoreState = false) {
     const result = new Rectangle();
-    const style = this.graph.cell.getCurrentCellStyle(swimlane, ignoreState);
+    const style = this.getCurrentCellStyle(swimlane, ignoreState);
     const size = parseInt(getValue(style, 'startSize', DEFAULT_STARTSIZE));
 
-    if (getValue(style, 'horizontal', true)) {
+    if (style.horizontal === true) {
       result.height = size;
     } else {
       result.width = size;
@@ -158,11 +161,11 @@ class GraphSwimlane {
   /**
    * Returns the direction for the given swimlane style.
    */
-  getSwimlaneDirection(style: any): string {
-    const dir = getValue(style, 'direction', DIRECTION_EAST);
-    const flipH = getValue(style, 'flipH', 0) == 1;
-    const flipV = getValue(style, 'flipV', 0) == 1;
-    const h = getValue(style, 'horizontal', true);
+  getSwimlaneDirection(style: CellStateStyles) {
+    const dir = style.direction ?? DIRECTION_EAST;
+    const flipH = style.flipH;
+    const flipV = style.flipV;
+    const h = style.horizontal;
     let n = h ? 0 : 3;
 
     if (dir === DIRECTION_NORTH) {
@@ -195,11 +198,11 @@ class GraphSwimlane {
    * @param swimlane {@link mxCell} whose start size should be returned.
    * @param ignoreState Optional boolean that specifies if cell state should be ignored.
    */
-  getActualStartSize(swimlane: Cell, ignoreState: boolean = false): Rectangle {
+  getActualStartSize(swimlane: Cell, ignoreState = false) {
     const result = new Rectangle();
 
     if (this.isSwimlane(swimlane, ignoreState)) {
-      const style = this.graph.cell.getCurrentCellStyle(swimlane, ignoreState);
+      const style = this.getCurrentCellStyle(swimlane, ignoreState);
       const size = parseInt(getValue(style, 'startSize', DEFAULT_STARTSIZE));
       const dir = this.getSwimlaneDirection(style);
 
@@ -224,13 +227,9 @@ class GraphSwimlane {
    * @param cell {@link mxCell} to be checked.
    * @param ignoreState Optional boolean that specifies if the cell state should be ignored.
    */
-  isSwimlane(cell: Cell, ignoreState: boolean = false): boolean {
-    if (
-      cell != null &&
-      cell.getParent() !== this.graph.model.getRoot() &&
-      !cell.isEdge()
-    ) {
-      return this.graph.cell.getCurrentCellStyle(cell, ignoreState).shape === SHAPE_SWIMLANE;
+  isSwimlane(cell: Cell, ignoreState = false) {
+    if (cell && cell.getParent() !== this.getModel().getRoot() && !cell.isEdge()) {
+      return this.getCurrentCellStyle(cell, ignoreState).shape === SHAPE_SWIMLANE;
     }
     return false;
   }
@@ -249,10 +248,10 @@ class GraphSwimlane {
    * @param cells {@link mxCell} that should be dropped into the target.
    * @param evt Mouseevent that triggered the invocation.
    */
-  isValidDropTarget(cell: Cell, cells: CellArray, evt: InternalMouseEvent): boolean {
+  isValidDropTarget(cell: Cell, cells: CellArray, evt: MouseEvent) {
     return (
-      cell != null &&
-      ((this.graph.isSplitEnabled() && this.graph.isSplitTarget(cell, cells, evt)) ||
+      cell &&
+      ((this.isSplitEnabled() && this.isSplitTarget(cell, cells, evt)) ||
         (!cell.isEdge() &&
           (this.isSwimlane(cell) || (cell.getChildCount() > 0 && !cell.isCollapsed()))))
     );
@@ -274,10 +273,10 @@ class GraphSwimlane {
    */
   getDropTarget(
     cells: CellArray,
-    evt: InternalMouseEvent,
+    evt: MouseEvent,
     cell: Cell | null = null,
-    clone: boolean = false
-  ): Cell | null {
+    clone = false
+  ) {
     if (!this.isSwimlaneNesting()) {
       for (let i = 0; i < cells.length; i += 1) {
         if (this.isSwimlane(cells[i])) {
@@ -286,31 +285,31 @@ class GraphSwimlane {
       }
     }
 
-    const pt = convertPoint(this.graph.container, getClientX(evt), getClientY(evt));
-    pt.x -= this.graph.panning.panDx;
-    pt.y -= this.graph.panning.panDy;
+    const pt = convertPoint(this.getContainer(), getClientX(evt), getClientY(evt));
+    pt.x -= this.getPanDx();
+    pt.y -= this.getPanDy();
     const swimlane = this.getSwimlaneAt(pt.x, pt.y);
 
-    if (cell == null) {
+    if (!cell) {
       cell = swimlane;
-    } else if (swimlane != null) {
+    } else if (swimlane) {
       // Checks if the cell is an ancestor of the swimlane
       // under the mouse and uses the swimlane in that case
       let tmp = swimlane.getParent();
 
-      while (tmp != null && this.isSwimlane(tmp) && tmp != cell) {
+      while (tmp && this.isSwimlane(tmp) && tmp !== cell) {
         tmp = tmp.getParent();
       }
 
-      if (tmp == cell) {
+      if (tmp === cell) {
         cell = swimlane;
       }
     }
 
     while (
-      cell != null &&
+      cell &&
       !this.isValidDropTarget(cell, cells, evt) &&
-      !this.graph.model.isLayer(cell)
+      !this.getModel().isLayer(cell)
     ) {
       cell = cell.getParent();
     }
@@ -318,18 +317,18 @@ class GraphSwimlane {
     // Checks if parent is dropped into child if not cloning
     if (!clone) {
       let parent = cell;
-      while (parent != null && cells.indexOf(parent) < 0) {
+      while (parent && cells.indexOf(parent) < 0) {
         parent = parent.getParent();
       }
     }
 
-    return !this.graph.model.isLayer(<Cell>cell) && parent == null ? cell : null;
+    return !this.getModel().isLayer(<Cell>cell) && !parent ? cell : null;
   }
 
   /**
    * Returns {@link swimlaneNesting} as a boolean.
    */
-  isSwimlaneNesting(): boolean {
+  isSwimlaneNesting() {
     return this.swimlaneNesting;
   }
 
@@ -339,14 +338,14 @@ class GraphSwimlane {
    *
    * @param value Boolean indicating if swimlanes can be nested.
    */
-  setSwimlaneNesting(value: boolean): void {
+  setSwimlaneNesting(value: boolean) {
     this.swimlaneNesting = value;
   }
 
   /**
    * Returns {@link swimlaneSelectionEnabled} as a boolean.
    */
-  isSwimlaneSelectionEnabled(): boolean {
+  isSwimlaneSelectionEnabled() {
     return this.swimlaneSelectionEnabled;
   }
 
@@ -357,7 +356,7 @@ class GraphSwimlane {
    * @param value Boolean indicating if swimlanes content areas
    * should be selected when the mouse is released over them.
    */
-  setSwimlaneSelectionEnabled(value: boolean): void {
+  setSwimlaneSelectionEnabled(value: boolean) {
     this.swimlaneSelectionEnabled = value;
   }
 }

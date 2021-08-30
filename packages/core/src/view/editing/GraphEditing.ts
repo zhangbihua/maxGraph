@@ -81,7 +81,7 @@ class GraphEditing extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} for which the initial editing value should be returned.
    * @param evt Optional mouse event that triggered the editor.
    */
-  getEditingValue(cell: Cell, evt: EventObject) {
+  getEditingValue(cell: Cell, evt: MouseEvent | null) {
     return this.convertValueToString(cell);
   }
 

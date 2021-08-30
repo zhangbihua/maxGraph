@@ -1,5 +1,6 @@
 import type Cell from './view/cell/datatypes/Cell';
 import type CellState from './view/cell/datatypes/CellState';
+import EventSource from './view/event/EventSource';
 import type InternalMouseEvent from './view/event/InternalMouseEvent';
 import type Shape from './view/geometry/shape/Shape';
 import type { MaxGraph } from './view/Graph';
@@ -43,6 +44,7 @@ export type CellStateStyles = {
   direction: DirectionValue;
   edge: string;
   editable: boolean;
+  elbow: string;
   endArrow: ArrowType;
   endFill: boolean;
   endSize: number;
@@ -93,6 +95,7 @@ export type CellStateStyles = {
   movable: boolean;
   noEdgeStyle: boolean;
   opacity: number;
+  orthogonal: boolean | null;
   overflow: OverflowValue;
   perimeter: Function | string | null;
   perimeterSpacing: number;
@@ -226,7 +229,7 @@ export interface GraphPlugin {
 
 export type Listener = {
   name: string;
-  f: MouseEventListener;
+  f: MouseEventListener | KeyboardEventListener;
 };
 
 export type ListenerTarget = {
@@ -236,6 +239,7 @@ export type ListenerTarget = {
 export type Listenable = (EventSource | EventTarget) & ListenerTarget;
 
 export type MouseEventListener = (me: MouseEvent) => void;
+export type KeyboardEventListener = (ke: KeyboardEvent) => void;
 
 export type GestureEvent = Event &
   MouseEvent & {
@@ -264,4 +268,14 @@ export interface CellHandle {
   reset: () => void;
   redraw: () => void;
   destroy: () => void;
+}
+
+export interface PopupMenuItem extends HTMLElement {
+  table: HTMLElement;
+  tbody: HTMLElement;
+  div: HTMLElement;
+  willAddSeparator: boolean;
+  containsItems: boolean;
+  activeRow: PopupMenuItem | null;
+  eventReceiver: HTMLElement | null;
 }

@@ -232,7 +232,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
   splitEdge(
     edge: Cell,
     cells: CellArray,
-    newEdge: Cell,
+    newEdge: Cell | null,
     dx = 0,
     dy = 0,
     x: number,
@@ -311,7 +311,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
     let value: any; // note me - can be a string or a class instance!!!
     let source: Cell;
     let target: Cell;
-    let style: string; // TODO: Also allow for an object or class instance??
+    let style: string = ''; // TODO: Also allow for an object or class instance??
 
     if (args.length === 1) {
       // If only a single parameter, treat as an object

@@ -8,7 +8,9 @@
 import { MouseEventListener, MouseListenerSet } from '../../types';
 import { hasScrollbars } from '../../util/Utils';
 import EventObject from '../event/EventObject';
+import EventSource from '../event/EventSource';
 import InternalEvent from '../event/InternalEvent';
+import InternalMouseEvent from '../event/InternalMouseEvent';
 import { MaxGraph } from '../Graph';
 
 /**
@@ -31,9 +33,9 @@ class PanningManager {
     this.scrollTop = 0;
 
     this.mouseListener = {
-      mouseDown: (sender, me) => {},
-      mouseMove: (sender, me) => {},
-      mouseUp: (sender, me) => {
+      mouseDown: (sender: EventSource, me: InternalMouseEvent) => {},
+      mouseMove: (sender: EventSource, me: InternalMouseEvent) => {},
+      mouseUp: (sender: EventSource, me: InternalMouseEvent) => {
         if (this.active) {
           this.stop();
         }
@@ -92,16 +94,13 @@ class PanningManager {
       this.active = true;
     };
 
-    this.panTo = (x, y, w, h) => {
+    this.panTo = (x, y, w = 0, h = 0) => {
       if (!this.active) {
         this.start();
       }
 
       this.scrollLeft = graph.container.scrollLeft;
       this.scrollTop = graph.container.scrollTop;
-
-      w = w != null ? w : 0;
-      h = h != null ? h : 0;
 
       const c = graph.container;
       this.dx = x + w - c.scrollLeft - c.clientWidth;
@@ -249,7 +248,7 @@ class PanningManager {
   getDx: () => number;
   getDy: () => number;
   start: () => void;
-  panTo: (x: number, y: number, w: number, h: number) => void;
+  panTo: (x: number, y: number, w?: number, h?: number) => void;
   destroy: () => void;
 }
 

@@ -1,8 +1,24 @@
-import Rectangle from "../geometry/Rectangle";
-import Point from "../geometry/Point";
-import Polyline from "../geometry/shape/edge/Polyline";
+import Rectangle from '../geometry/Rectangle';
+import Point from '../geometry/Point';
+import Polyline from '../geometry/shape/edge/Polyline';
+import { autoImplement } from '../../util/Utils';
 
-class GraphPageBreaks {
+import type Graph from '../Graph';
+
+type PartialGraph = Pick<
+  Graph,
+  | 'getView'
+  | 'getGraphBounds'
+  | 'getPageFormat'
+  | 'getPageScale'
+  | 'getMinPageBreakDist'
+  | 'getPageBreakColor'
+  | 'getDialect'
+  | 'isPageBreakDashed'
+>;
+type PartialClass = PartialGraph;
+
+class GraphPageBreaks extends autoImplement<PartialClass>() {
   horizontalPageBreaks: any[] | null = null;
   verticalPageBreaks: any[] | null = null;
 
@@ -14,10 +30,9 @@ class GraphPageBreaks {
    * @param height Specifies the height of the container in pixels.
    */
   updatePageBreaks(visible: boolean, width: number, height: number): void {
-    const { scale } = this.view;
-    const tr = this.getView().translate;
-    const fmt = this.pageFormat;
-    const ps = scale * this.pageScale;
+    const { scale, translate: tr } = this.getView();
+    const fmt = this.getPageFormat();
+    const ps = scale * this.getPageScale();
     const bounds = new Rectangle(0, 0, fmt.width * ps, fmt.height * ps);
 
     const gb = Rectangle.fromRectangle(this.getGraphBounds());
@@ -25,25 +40,19 @@ class GraphPageBreaks {
     gb.height = Math.max(1, gb.height);
 
     bounds.x =
-      Math.floor((gb.x - tr.x * scale) / bounds.width) * bounds.width +
-      tr.x * scale;
+      Math.floor((gb.x - tr.x * scale) / bounds.width) * bounds.width + tr.x * scale;
     bounds.y =
-      Math.floor((gb.y - tr.y * scale) / bounds.height) * bounds.height +
-      tr.y * scale;
+      Math.floor((gb.y - tr.y * scale) / bounds.height) * bounds.height + tr.y * scale;
 
-    gb.width =
-      Math.ceil((gb.width + (gb.x - bounds.x)) / bounds.width) * bounds.width;
+    gb.width = Math.ceil((gb.width + (gb.x - bounds.x)) / bounds.width) * bounds.width;
     gb.height =
-      Math.ceil((gb.height + (gb.y - bounds.y)) / bounds.height) *
-      bounds.height;
+      Math.ceil((gb.height + (gb.y - bounds.y)) / bounds.height) * bounds.height;
 
     // Does not show page breaks if the scale is too small
     visible =
-      visible && Math.min(bounds.width, bounds.height) > this.minPageBreakDist;
+      visible && Math.min(bounds.width, bounds.height) > this.getMinPageBreakDist();
 
-    const horizontalCount = visible
-      ? Math.ceil(gb.height / bounds.height) + 1
-      : 0;
+    const horizontalCount = visible ? Math.ceil(gb.height / bounds.height) + 1 : 0;
     const verticalCount = visible ? Math.ceil(gb.width / bounds.width) + 1 : 0;
     const right = (verticalCount - 1) * bounds.width;
     const bottom = (horizontalCount - 1) * bounds.height;
@@ -59,42 +68,40 @@ class GraphPageBreaks {
     const drawPageBreaks = (breaks: any) => {
       if (breaks != null) {
         const count =
-          breaks === this.horizontalPageBreaks
-            ? horizontalCount
-            : verticalCount;
+          breaks === this.horizontalPageBreaks ? horizontalCount : verticalCount;
 
         for (let i = 0; i <= count; i += 1) {
           const pts =
             breaks === this.horizontalPageBreaks
               ? [
-                new Point(
-                  Math.round(bounds.x),
-                  Math.round(bounds.y + i * bounds.height)
-                ),
-                new Point(
-                  Math.round(bounds.x + right),
-                  Math.round(bounds.y + i * bounds.height)
-                ),
-              ]
+                  new Point(
+                    Math.round(bounds.x),
+                    Math.round(bounds.y + i * bounds.height)
+                  ),
+                  new Point(
+                    Math.round(bounds.x + right),
+                    Math.round(bounds.y + i * bounds.height)
+                  ),
+                ]
               : [
-                new Point(
-                  Math.round(bounds.x + i * bounds.width),
-                  Math.round(bounds.y)
-                ),
-                new Point(
-                  Math.round(bounds.x + i * bounds.width),
-                  Math.round(bounds.y + bottom)
-                ),
-              ];
+                  new Point(
+                    Math.round(bounds.x + i * bounds.width),
+                    Math.round(bounds.y)
+                  ),
+                  new Point(
+                    Math.round(bounds.x + i * bounds.width),
+                    Math.round(bounds.y + bottom)
+                  ),
+                ];
 
           if (breaks[i] != null) {
             breaks[i].points = pts;
             breaks[i].redraw();
           } else {
-            const pageBreak = new Polyline(pts, this.pageBreakColor);
-            pageBreak.dialect = this.dialect;
+            const pageBreak = new Polyline(pts, this.getPageBreakColor());
+            pageBreak.dialect = this.getDialect();
             pageBreak.pointerEvents = false;
-            pageBreak.isDashed = this.pageBreakDashed;
+            pageBreak.isDashed = this.isPageBreakDashed();
             pageBreak.init(this.getView().backgroundPane);
             pageBreak.redraw();
 
@@ -116,4 +123,3 @@ class GraphPageBreaks {
 }
 
 export default GraphPageBreaks;
-

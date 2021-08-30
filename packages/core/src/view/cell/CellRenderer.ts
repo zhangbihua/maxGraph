@@ -471,7 +471,7 @@ class CellRenderer {
       // getCellAt for the subsequent mouseMoves and the final mouseUp.
       let forceGetCell = false;
 
-      const getState = (evt: Event | InternalMouseEvent) => {
+      const getState = (evt: MouseEvent) => {
         let result: CellState | null = state;
 
         if (mxClient.IS_TOUCH || forceGetCell) {
@@ -489,29 +489,33 @@ class CellRenderer {
       // TODO: Add handling for special touch device gestures
       InternalEvent.addGestureListeners(
         state.text.node,
-        (evt: Event) => {
-          if (this.isLabelEvent(state, evt as MouseEvent)) {
+        (evt: MouseEvent) => {
+          if (this.isLabelEvent(state, evt)) {
             graph.fireMouseEvent(
               InternalEvent.MOUSE_DOWN,
-              new InternalMouseEvent(evt as MouseEvent, state)
+              new InternalMouseEvent(evt, state)
             );
+
+            const source = getSource(evt);
+
             forceGetCell =
-              graph.dialect !== DIALECT_SVG && getSource(evt).nodeName === 'IMG';
+              // @ts-ignore nodeName should exist.
+              graph.dialect !== DIALECT_SVG && source.nodeName === 'IMG';
           }
         },
-        (evt: Event) => {
-          if (this.isLabelEvent(state, evt as MouseEvent)) {
+        (evt: MouseEvent) => {
+          if (this.isLabelEvent(state, evt)) {
             graph.fireMouseEvent(
               InternalEvent.MOUSE_MOVE,
-              new InternalMouseEvent(evt as MouseEvent, getState(evt))
+              new InternalMouseEvent(evt, getState(evt))
             );
           }
         },
-        (evt: Event) => {
-          if (this.isLabelEvent(state, evt as MouseEvent)) {
+        (evt: MouseEvent) => {
+          if (this.isLabelEvent(state, evt)) {
             graph.fireMouseEvent(
               InternalEvent.MOUSE_UP,
-              new InternalMouseEvent(evt as MouseEvent, getState(evt))
+              new InternalMouseEvent(evt, getState(evt))
             );
             forceGetCell = false;
           }
@@ -520,9 +524,9 @@ class CellRenderer {
 
       // Uses double click timeout in mxGraph for quirks mode
       if (graph.isNativeDblClickEnabled()) {
-        InternalEvent.addListener(state.text.node, 'dblclick', (evt: Event) => {
-          if (this.isLabelEvent(state, evt as MouseEvent)) {
-            graph.dblClick(evt as MouseEvent, state.cell);
+        InternalEvent.addListener(state.text.node, 'dblclick', (evt: MouseEvent) => {
+          if (this.isLabelEvent(state, evt)) {
+            graph.dblClick(evt, state.cell);
             InternalEvent.consume(evt);
           }
         });
@@ -749,24 +753,24 @@ class CellRenderer {
 
       InternalEvent.addGestureListeners(
         node,
-        (evt: Event) => {
+        (evt: MouseEvent) => {
           first = new Point(getClientX(evt), getClientY(evt));
           graph.fireMouseEvent(
             InternalEvent.MOUSE_DOWN,
-            new InternalMouseEvent(evt as MouseEvent, state)
+            new InternalMouseEvent(evt, state)
           );
           InternalEvent.consume(evt);
         },
-        (evt: Event) => {
+        (evt: MouseEvent) => {
           graph.fireMouseEvent(
             InternalEvent.MOUSE_MOVE,
-            new InternalMouseEvent(evt as MouseEvent, state)
+            new InternalMouseEvent(evt, state)
           );
         },
-        (evt: Event) => {
+        (evt: MouseEvent) => {
           graph.fireMouseEvent(
             InternalEvent.MOUSE_UP,
-            new InternalMouseEvent(evt as MouseEvent, state)
+            new InternalMouseEvent(evt, state)
           );
           InternalEvent.consume(evt);
         }
@@ -776,13 +780,13 @@ class CellRenderer {
       if (clickHandler && mxClient.IS_IOS) {
         node.addEventListener(
           'touchend',
-          (evt) => {
+          (evt: Event) => {
             if (first) {
               const tol = graph.getEventTolerance();
 
               if (
-                Math.abs(first.x - getClientX(evt)) < tol &&
-                Math.abs(first.y - getClientY(evt)) < tol
+                Math.abs(first.x - getClientX(evt as MouseEvent)) < tol &&
+                Math.abs(first.y - getClientY(evt as MouseEvent)) < tol
               ) {
                 clickHandler.call(clickHandler, evt);
                 InternalEvent.consume(evt);
@@ -808,7 +812,7 @@ class CellRenderer {
    * state - <mxCellState> whose shape fired the event.
    * evt - Mouse event which was fired.
    */
-  isShapeEvent(state: CellState, evt: InternalMouseEvent | MouseEvent) {
+  isShapeEvent(state: CellState, evt: MouseEvent) {
     return true;
   }
 
@@ -823,7 +827,7 @@ class CellRenderer {
    * state - <mxCellState> whose label fired the event.
    * evt - Mouse event which was fired.
    */
-  isLabelEvent(state: CellState, evt: InternalMouseEvent | MouseEvent) {
+  isLabelEvent(state: CellState, evt: MouseEvent) {
     return true;
   }
 
@@ -842,11 +846,15 @@ class CellRenderer {
     // Workaround for touch devices routing all events for a mouse
     // gesture (down, move, up) via the initial DOM node. Same for
     // HTML images in all IE versions (VML images are working).
-    const getState = (evt: Event) => {
+    const getState = (evt: MouseEvent) => {
       let result: CellState | null = state;
+      const source = getSource(evt);
 
       if (
-        (graph.dialect !== DIALECT_SVG && getSource(evt).nodeName === 'IMG') ||
+        (source &&
+          graph.dialect !== DIALECT_SVG &&
+          // @ts-ignore nodeName should exist
+          source.nodeName === 'IMG') ||
         mxClient.IS_TOUCH
       ) {
         const x = getClientX(evt);
@@ -855,50 +863,52 @@ class CellRenderer {
         // Dispatches the drop event to the graph which
         // consumes and executes the source function
         const pt = convertPoint(graph.container, x, y);
-        result = graph.view.getState(graph.getCellAt(pt.x, pt.y) as Cell);
+        const cell = graph.getCellAt(pt.x, pt.y);
+
+        result = cell ? graph.view.getState(cell) : null;
       }
 
       return result;
     };
 
-    InternalEvent.addGestureListeners(
-      // @ts-ignore
-      state.shape.node,
-      (evt: Event) => {
-        if (this.isShapeEvent(state, evt as MouseEvent)) {
-          graph.fireMouseEvent(
-            InternalEvent.MOUSE_DOWN,
-            new InternalMouseEvent(evt as MouseEvent, state)
-          );
+    if (state.shape) {
+      InternalEvent.addGestureListeners(
+        state.shape.node,
+        (evt: MouseEvent) => {
+          if (this.isShapeEvent(state, evt)) {
+            graph.fireMouseEvent(
+              InternalEvent.MOUSE_DOWN,
+              new InternalMouseEvent(evt, state)
+            );
+          }
+        },
+        (evt: MouseEvent) => {
+          if (this.isShapeEvent(state, evt)) {
+            graph.fireMouseEvent(
+              InternalEvent.MOUSE_MOVE,
+              new InternalMouseEvent(evt, getState(evt))
+            );
+          }
+        },
+        (evt: MouseEvent) => {
+          if (this.isShapeEvent(state, evt)) {
+            graph.fireMouseEvent(
+              InternalEvent.MOUSE_UP,
+              new InternalMouseEvent(evt, getState(evt))
+            );
+          }
         }
-      },
-      (evt: Event) => {
-        if (this.isShapeEvent(state, evt as MouseEvent)) {
-          graph.fireMouseEvent(
-            InternalEvent.MOUSE_MOVE,
-            new InternalMouseEvent(evt as MouseEvent, getState(evt))
-          );
-        }
-      },
-      (evt: Event) => {
-        if (this.isShapeEvent(state, evt as MouseEvent)) {
-          graph.fireMouseEvent(
-            InternalEvent.MOUSE_UP,
-            new InternalMouseEvent(evt as MouseEvent, getState(evt))
-          );
-        }
-      }
-    );
+      );
 
-    // Uses double click timeout in mxGraph for quirks mode
-    if (graph.isNativeDblClickEnabled()) {
-      // @ts-ignore
-      InternalEvent.addListener(state.shape.node, 'dblclick', (evt) => {
-        if (this.isShapeEvent(state, evt as MouseEvent)) {
-          graph.dblClick(evt as MouseEvent, state.cell);
-          InternalEvent.consume(evt);
-        }
-      });
+      // Uses double click timeout in mxGraph for quirks mode
+      if (graph.isNativeDblClickEnabled()) {
+        InternalEvent.addListener(state.shape.node, 'dblclick', (evt: MouseEvent) => {
+          if (this.isShapeEvent(state, evt)) {
+            graph.dblClick(evt, state.cell);
+            InternalEvent.consume(evt);
+          }
+        });
+      }
     }
   }
 

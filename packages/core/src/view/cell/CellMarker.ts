@@ -129,7 +129,7 @@ class CellMarker extends EventSource {
    *
    * Holds the current marker color.
    */
-  currentColor: ColorValue | null = null;
+  currentColor: ColorValue = NONE;
 
   /**
    * Variable: validState

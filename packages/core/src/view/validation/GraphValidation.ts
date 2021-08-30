@@ -52,7 +52,7 @@ class GraphValidation extends autoImplement<PartialClass>() {
    * @param source {@link mxCell} that represents the source terminal.
    * @param target {@link mxCell} that represents the target terminal.
    */
-  isEdgeValid(edge: Cell, source: Cell, target: Cell) {
+  isEdgeValid(edge: Cell | null, source: Cell, target: Cell) {
     return !this.getEdgeValidationError(edge, source, target);
   }
 
@@ -97,7 +97,7 @@ class GraphValidation extends autoImplement<PartialClass>() {
     edge: Cell | null = null,
     source: Cell | null = null,
     target: Cell | null = null
-  ): string | null {
+  ) {
     if (edge && !this.isAllowDanglingEdges() && (!source || !target)) {
       return '';
     }

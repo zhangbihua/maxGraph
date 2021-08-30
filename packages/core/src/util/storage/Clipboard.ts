@@ -5,9 +5,8 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import graph from '../../view/Graph';
-import Model from "../../view/model/Model";
-import CellArray from "../../view/cell/datatypes/CellArray";
+import { MaxGraph } from '../../view/Graph';
+import CellArray from '../../view/cell/datatypes/CellArray';
 
 /**
  * @class
@@ -18,8 +17,8 @@ import CellArray from "../../view/cell/datatypes/CellArray";
  *
  * @example
  * ```javascript
- * mxClipboard.copy(graph);
- * mxClipboard.paste(graph2);
+ * Clipboard.copy(graph);
+ * Clipboard.paste(graph2);
  * ```
  *
  * This copies the selection cells from the graph to the clipboard and
@@ -33,30 +32,30 @@ import CellArray from "../../view/cell/datatypes/CellArray";
  *
  * @example
  * ```javascript
- * mxClipboard.copy = function(graph, cells)
+ * Clipboard.copy = function(graph, cells)
  * {
  *   cells = cells || graph.getSelectionCells();
  *   var result = graph.getExportableCells(cells);
  *
- *   mxClipboard.parents = new Object();
+ *   Clipboard.parents = new Object();
  *
  *   for (var i = 0; i < result.length; i++)
  *   {
- *     mxClipboard.parents[i] = graph.model.getParent(cells[i]);
+ *     Clipboard.parents[i] = graph.model.getParent(cells[i]);
  *   }
  *
- *   mxClipboard.insertCount = 1;
- *   mxClipboard.setCells(graph.cloneCells(result));
+ *   Clipboard.insertCount = 1;
+ *   Clipboard.setCells(graph.cloneCells(result));
  *
  *   return result;
  * };
  *
- * mxClipboard.paste = function(graph)
+ * Clipboard.paste = function(graph)
  * {
- *   if (!mxClipboard.isEmpty())
+ *   if (!Clipboard.isEmpty())
  *   {
- *     var cells = graph.getImportableCells(mxClipboard.getCells());
- *     var delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
+ *     var cells = graph.getImportableCells(Clipboard.getCells());
+ *     var delta = Clipboard.insertCount * Clipboard.STEPSIZE;
  *     var parent = graph.getDefaultParent();
  *
  *     graph.model.beginUpdate();
@@ -64,8 +63,8 @@ import CellArray from "../../view/cell/datatypes/CellArray";
  *     {
  *       for (var i = 0; i < cells.length; i++)
  *       {
- *         var tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
- *              mxClipboard.parents[i] : parent;
+ *         var tmp = (Clipboard.parents != null && graph.model.contains(Clipboard.parents[i])) ?
+ *              Clipboard.parents[i] : parent;
  *         cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
  *       }
  *     }
@@ -75,48 +74,48 @@ import CellArray from "../../view/cell/datatypes/CellArray";
  *     }
  *
  *     // Increments the counter and selects the inserted cells
- *     mxClipboard.insertCount++;
+ *     Clipboard.insertCount++;
  *     graph.setSelectionCells(cells);
  *   }
  * };
  * ```
  */
-class mxClipboard {
+class Clipboard {
   /**
    * Defines the step size to offset the cells after each paste operation.
    * Default is 10.
    */
-  static STEPSIZE: number = 10;
+  static STEPSIZE = 10;
 
   /**
    * Counts the number of times the clipboard data has been inserted.
    */
-  static insertCount: number = 1;
+  static insertCount = 1;
 
   /**
    * Holds the array of {@link mxCell} currently in the clipboard.
    */
-  static cells: CellArray | null = null;
+  static cells: CellArray;
 
   /**
    * Sets the cells in the clipboard. Fires a {@link mxEvent.CHANGE} event.
    */
-  static setCells(cells: CellArray | null): void {
-    mxClipboard.cells = cells;
+  static setCells(cells: CellArray) {
+    Clipboard.cells = cells;
   }
 
   /**
    * Returns  the cells in the clipboard.
    */
-  static getCells(): CellArray | null {
-    return mxClipboard.cells;
+  static getCells() {
+    return Clipboard.cells;
   }
 
   /**
    * Returns true if the clipboard currently has not data stored.
    */
-  static isEmpty(): boolean {
-    return mxClipboard.getCells() == null;
+  static isEmpty() {
+    return !Clipboard.getCells();
   }
 
   /**
@@ -127,10 +126,10 @@ class mxClipboard {
    * @param graph - {@link graph} that contains the cells to be cut.
    * @param cells - Optional array of {@link mxCell} to be cut.
    */
-  static cut(graph: graph, cells?: CellArray | null): CellArray | null {
-    cells = mxClipboard.copy(graph, cells);
-    mxClipboard.insertCount = 0;
-    mxClipboard.removeCells(graph, cells);
+  static cut(graph: MaxGraph, cells?: CellArray) {
+    cells = Clipboard.copy(graph, cells);
+    Clipboard.insertCount = 0;
+    Clipboard.removeCells(graph, cells);
 
     return cells;
   }
@@ -142,7 +141,7 @@ class mxClipboard {
    * @param graph - {@link graph} that contains the cells to be cut.
    * @param cells - Array of {@link mxCell} to be cut.
    */
-  static removeCells(graph: graph, cells: CellArray | null): void {
+  static removeCells(graph: MaxGraph, cells: CellArray) {
     graph.removeCells(cells);
   }
 
@@ -154,11 +153,11 @@ class mxClipboard {
    * @param graph - {@link graph} that contains the cells to be copied.
    * @param cells - Optional array of {@link mxCell} to be copied.
    */
-  static copy(graph: graph, cells?: CellArray | null): CellArray | null {
+  static copy(graph: MaxGraph, cells?: CellArray) {
     cells = cells || graph.getSelectionCells();
-    const result = (<CellArray>graph.getExportableCells(cells)).getTopmostCells();
-    mxClipboard.insertCount = 1;
-    mxClipboard.setCells(graph.cloneCells(<CellArray>result));
+    const result = graph.getExportableCells(cells).getTopmostCells();
+    Clipboard.insertCount = 1;
+    Clipboard.setCells(graph.cloneCells(result));
 
     return result;
   }
@@ -174,18 +173,17 @@ class mxClipboard {
    *
    * @param graph - {@link graph} to paste the {@link cells} into.
    */
-  static paste(graph: graph): CellArray | null {
+  static paste(graph: MaxGraph) {
     let cells = null;
 
-    if (!mxClipboard.isEmpty()) {
-      // @ts-ignore
-      cells = graph.getImportableCells(mxClipboard.getCells());
-      const delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
+    if (!Clipboard.isEmpty() && Clipboard.getCells()) {
+      cells = graph.getImportableCells(Clipboard.getCells());
+      const delta = Clipboard.insertCount * Clipboard.STEPSIZE;
       const parent = graph.getDefaultParent();
       cells = graph.importCells(cells, delta, delta, parent);
 
       // Increments the counter and selects the inserted cells
-      mxClipboard.insertCount++;
+      Clipboard.insertCount++;
       graph.setSelectionCells(<CellArray>cells);
     }
 
@@ -193,4 +191,4 @@ class mxClipboard {
   }
 }
 
-export default mxClipboard;
+export default Clipboard;

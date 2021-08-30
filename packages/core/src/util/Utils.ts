@@ -172,11 +172,11 @@ export const setPrefixedStyle = (
     prefix = 'Moz';
   }
 
-  style[name] = value;
+  style.setProperty(name, value);
 
   if (prefix !== null && name.length > 0) {
     name = prefix + name.substring(0, 1).toUpperCase() + name.substring(1);
-    style[name] = value;
+    style.setProperty(name, value);
   }
 };
 

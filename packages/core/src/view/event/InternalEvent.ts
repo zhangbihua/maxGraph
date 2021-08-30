@@ -9,7 +9,13 @@ import mxClient from '../../mxClient';
 import { isConsumed, isMouseEvent } from '../../util/EventUtils';
 import graph from '../Graph';
 import CellState from '../cell/datatypes/CellState';
-import { EventCache, GestureEvent, Listenable, MouseEventListener } from '../../types';
+import {
+  EventCache,
+  GestureEvent,
+  KeyboardEventListener,
+  Listenable,
+  MouseEventListener,
+} from '../../types';
 
 // Checks if passive event listeners are supported
 // see https://github.com/Modernizr/Modernizr/issues/1894
@@ -50,7 +56,11 @@ class InternalEvent {
    * {@link mxUtils.bind} in order to bind the "this" keyword inside the function
    * to a given execution scope.
    */
-  static addListener(element: Listenable, eventName: string, funct: MouseEventListener) {
+  static addListener(
+    element: Listenable,
+    eventName: string,
+    funct: MouseEventListener | KeyboardEventListener
+  ) {
     element.addEventListener(
       eventName,
       funct as EventListener,
@@ -71,7 +81,7 @@ class InternalEvent {
   static removeListener(
     element: Listenable,
     eventName: string,
-    funct: MouseEventListener
+    funct: MouseEventListener | KeyboardEventListener
   ) {
     element.removeEventListener(eventName, funct as EventListener, false);
 
@@ -221,7 +231,7 @@ class InternalEvent {
   static redirectMouseEvents(
     node: Listenable,
     graph: graph,
-    state: CellState | ((evt: Event) => CellState) | null = null,
+    state: CellState | ((evt: Event) => CellState | null) | null = null,
     down: MouseEventListener | null = null,
     move: MouseEventListener | null = null,
     up: MouseEventListener | null = null,
@@ -265,7 +275,7 @@ class InternalEvent {
       }
     );
 
-    InternalEvent.addListener(node, 'dblclick', (evt) => {
+    InternalEvent.addListener(node, 'dblclick', (evt: MouseEvent) => {
       if (dblClick) {
         dblClick(evt);
       } else if (!isConsumed(evt)) {
@@ -344,7 +354,7 @@ class InternalEvent {
       if (mxClient.IS_SF && !mxClient.IS_TOUCH) {
         let scale = 1;
 
-        InternalEvent.addListener(target, 'gesturestart', (evt) => {
+        InternalEvent.addListener(target, 'gesturestart', (evt: GestureEvent) => {
           InternalEvent.consume(evt);
           scale = 1;
         });
@@ -362,7 +372,7 @@ class InternalEvent {
           }
         }) as EventListener);
 
-        InternalEvent.addListener(target, 'gestureend', (evt) => {
+        InternalEvent.addListener(target, 'gestureend', (evt: GestureEvent) => {
           InternalEvent.consume(evt);
         });
       } else {
@@ -427,7 +437,7 @@ class InternalEvent {
    * Disables the context menu for the given element.
    */
   static disableContextMenu(element: Listenable) {
-    InternalEvent.addListener(element, 'contextmenu', (evt) => {
+    InternalEvent.addListener(element, 'contextmenu', (evt: MouseEvent) => {
       if (evt.preventDefault) {
         evt.preventDefault();
       }

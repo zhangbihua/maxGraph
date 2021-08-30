@@ -1,4 +1,4 @@
-import Cell from "../cell/datatypes/Cell";
+import Cell from '../cell/datatypes/Cell';
 import Graph from '../Graph';
 
 class GraphPorts {
@@ -40,7 +40,7 @@ class GraphPorts {
    *
    * @param cell {@link mxCell} that represents the port.
    */
-  isPort(cell: Cell): boolean {
+  isPort(cell: Cell | null) {
     return false;
   }
 

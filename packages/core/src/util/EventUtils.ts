@@ -43,7 +43,7 @@ export const getSource = (evt: MouseEvent) => {
 /**
  * Returns true if the event has been consumed using {@link consume}.
  */
-export const isConsumed = (evt: MouseEvent) => {
+export const isConsumed = (evt: MouseEvent | KeyboardEvent) => {
   const t = evt as any;
   return t.isConsumed !== undefined && t.isConsumed;
 };

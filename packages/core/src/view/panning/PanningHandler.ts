@@ -121,6 +121,8 @@ class PanningHandler extends EventSource implements GraphPlugin {
 
   panningManager: PanningManager;
 
+  getPanningManager = () => this.panningManager;
+
   /**
    * Variable: useLeftButtonForPanning
    *

@@ -45,6 +45,7 @@ import type GraphLabel from '../label/GraphLabel';
 import type GraphSnap from '../snap/GraphSnap';
 
 import type { CellStateStyles } from '../../types';
+import GraphVertex from './vertex/GraphVertex';
 
 type PartialGraph = Pick<
   Graph,
@@ -55,8 +56,6 @@ type PartialGraph = Pick<
   | 'fireEvent'
   | 'getDefaultParent'
   | 'getCurrentRoot'
-  | 'isAllowNegativeCoordinates'
-  | 'setAllowNegativeCoordinates'
   | 'getOverlap'
   | 'isRecursiveResize'
   | 'getCellRenderer'
@@ -91,6 +90,10 @@ type PartialSnap = Pick<
   GraphSnap,
   'isGridEnabled' | 'snap' | 'getGridSize' | 'getTolerance'
 >;
+type PartialVertex = Pick<
+  GraphVertex,
+  'isAllowNegativeCoordinates' | 'setAllowNegativeCoordinates'
+>;
 type PartialClass = PartialGraph &
   PartialImage &
   PartialSelection &
@@ -99,7 +102,8 @@ type PartialClass = PartialGraph &
   PartialValidation &
   PartialFolding &
   PartialLabel &
-  PartialSnap;
+  PartialSnap &
+  PartialVertex;
 
 // @ts-ignore recursive reference error
 class GraphCells extends autoImplement<PartialClass>() {
@@ -1575,7 +1579,7 @@ class GraphCells extends autoImplement<PartialClass>() {
     dx: number,
     dy: number,
     target: Cell | null = null,
-    evt: InternalMouseEvent | null = null,
+    evt: MouseEvent | null = null,
     mapping: any = {}
   ) {
     return this.moveCells(cells, dx, dy, true, target, evt, mapping);
@@ -1612,7 +1616,7 @@ class GraphCells extends autoImplement<PartialClass>() {
     dy: number = 0,
     clone = false,
     target: Cell | null = null,
-    evt: InternalMouseEvent | null = null,
+    evt: MouseEvent | null = null,
     mapping: any = null
   ) {
     if (dx !== 0 || dy !== 0 || clone || target) {

@@ -4,14 +4,16 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxPopupMenu from '../../util/gui/mxPopupMenu';
+import PopupMenu from '../../util/gui/PopupMenu';
 import InternalEvent from '../event/InternalEvent';
-import utils, { getScrollOrigin } from '../../util/Utils';
+import { getScrollOrigin } from '../../util/Utils';
 import { getMainEvent, isMultiTouchEvent } from '../../util/EventUtils';
-import Graph from '../Graph';
+import { MaxGraph } from '../Graph';
 import InternalMouseEvent from '../event/InternalMouseEvent';
-import Cell from '../cell/datatypes/Cell';
-import { GraphPlugin } from '../../types';
+import { GraphPlugin, PopupMenuItem } from '../../types';
+import TooltipHandler from '../tooltip/TooltipHandler';
+import EventSource from '../event/EventSource';
+import EventObject from '../event/EventObject';
 
 /**
  * Class: mxPopupMenuHandler
@@ -22,40 +24,36 @@ import { GraphPlugin } from '../../types';
  *
  * Constructs an event handler that creates a <mxPopupMenu>.
  */
-class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
-  constructor(graph: Graph, factoryMethod: any) {
+class PopupMenuHandler extends PopupMenu implements GraphPlugin {
+  static pluginId = 'PopupMenuHandler';
+
+  constructor(graph: MaxGraph) {
     super();
 
-    if (graph != null) {
-      this.graph = graph;
-      this.factoryMethod = factoryMethod;
-      this.graph.event.addMouseListener(this);
+    this.graph = graph;
+    this.graph.addMouseListener(this);
 
-      // Does not show menu if any touch gestures take place after the trigger
-      this.gestureHandler = (sender, eo) => {
-        this.inTolerance = false;
-      };
+    // Does not show menu if any touch gestures take place after the trigger
+    this.gestureHandler = (sender: EventSource, eo: EventObject) => {
+      this.inTolerance = false;
+    };
 
-      this.graph.addListener(InternalEvent.GESTURE, this.gestureHandler);
+    this.graph.addListener(InternalEvent.GESTURE, this.gestureHandler);
 
-      this.init();
-    }
+    this.init();
   }
 
-  // @ts-ignore
-  gestureHandler: (...args: any[]) => any;
-  // @ts-ignore
-  inTolerance: boolean;
-  // @ts-ignore
-  popupTrigger: boolean;
+  gestureHandler: (sender: EventSource, eo: EventObject) => void;
+
+  inTolerance = false;
+  popupTrigger = false;
 
   /**
    * Variable: graph
    *
    * Reference to the enclosing <mxGraph>.
    */
-  // @ts-ignore
-  graph: Graph;
+  graph: MaxGraph;
 
   /**
    * Variable: selectOnPopup
@@ -63,7 +61,7 @@ class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
    * Specifies if cells should be selected if a popupmenu is displayed for
    * them. Default is true.
    */
-  selectOnPopup: boolean = true;
+  selectOnPopup = true;
 
   /**
    * Variable: clearSelectionOnBackground
@@ -71,7 +69,7 @@ class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
    * Specifies if cells should be deselected if a popupmenu is displayed for
    * the diagram background. Default is true.
    */
-  clearSelectionOnBackground: boolean = true;
+  clearSelectionOnBackground = true;
 
   /**
    * Variable: triggerX
@@ -106,14 +104,12 @@ class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
    *
    * Initializes the shapes required for this vertex handler.
    */
-  init(): void {
-    // Supercall
-    super.init();
-
+  init() {
     // Hides the tooltip if the mouse is over
     // the context menu
     InternalEvent.addGestureListeners(this.div, (evt) => {
-      this.graph.tooltipHandler.hide();
+      const tooltipHandler = this.graph.getPlugin('TooltipHandler') as TooltipHandler;
+      tooltipHandler.hide();
     });
   }
 
@@ -133,7 +129,7 @@ class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
    * Handles the event by initiating the panning. By consuming the event all
    * subsequent events of the gesture are redirected to this handler.
    */
-  mouseDown(sender: any, me: InternalMouseEvent): void {
+  mouseDown(sender: EventSource, me: InternalMouseEvent) {
     if (this.isEnabled() && !isMultiTouchEvent(me.getEvent())) {
       // Hides the popupmenu if is is being displayed
       this.hideMenu();
@@ -151,14 +147,14 @@ class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
    *
    * Handles the event by updating the panning on the graph.
    */
-  mouseMove(sender: any, me: InternalMouseEvent): void {
+  mouseMove(sender: EventSource, me: InternalMouseEvent) {
     // Popup trigger may change on mouseUp so ignore it
     if (this.inTolerance && this.screenX != null && this.screenY != null) {
       if (
         Math.abs(getMainEvent(me.getEvent()).screenX - this.screenX) >
-          this.graph.tolerance ||
+          this.graph.getEventTolerance() ||
         Math.abs(getMainEvent(me.getEvent()).screenY - this.screenY) >
-          this.graph.tolerance
+          this.graph.getEventTolerance()
       ) {
         this.inTolerance = false;
       }
@@ -171,7 +167,7 @@ class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
    * Handles the event by setting the translation on the view or showing the
    * popupmenu.
    */
-  mouseUp(sender: any, me: InternalMouseEvent): void {
+  mouseUp(sender: EventSource, me: InternalMouseEvent) {
     if (
       this.popupTrigger &&
       this.inTolerance &&
@@ -185,15 +181,16 @@ class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
         this.graph.isEnabled() &&
         this.isSelectOnPopup(me) &&
         cell != null &&
-        !this.graph.selection.isCellSelected(cell)
+        !this.graph.isCellSelected(cell)
       ) {
-        this.graph.selection.setSelectionCell(cell);
+        this.graph.setSelectionCell(cell);
       } else if (this.clearSelectionOnBackground && cell == null) {
-        this.graph.selection.clearSelection();
+        this.graph.clearSelection();
       }
 
       // Hides the tooltip if there is one
-      this.graph.tooltipHandler.hide();
+      const tooltipHandler = this.graph.getPlugin('TooltipHandler') as TooltipHandler;
+      tooltipHandler.hide();
 
       // Menu is shifted by 1 pixel so that the mouse up event
       // is routed via the underlying shape instead of the DIV
@@ -211,7 +208,7 @@ class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
    *
    * Hook to return the cell for the mouse up popup trigger handling.
    */
-  getCellForPopupEvent(me: InternalMouseEvent): Cell {
+  getCellForPopupEvent(me: InternalMouseEvent) {
     return me.getCell();
   }
 
@@ -220,9 +217,9 @@ class PopupMenuHandler extends mxPopupMenu implements GraphPlugin {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  destroy(): void {
-    this.graph.event.removeMouseListener(this);
-    this.graph.event.removeListener(this.gestureHandler);
+  onDestroy() {
+    this.graph.removeMouseListener(this);
+    this.graph.removeListener(this.gestureHandler);
 
     // Supercall
     super.destroy();

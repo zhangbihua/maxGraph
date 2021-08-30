@@ -47,27 +47,29 @@ import EdgeHandler from './cell/edge/EdgeHandler';
 import VertexHandler from './cell/vertex/VertexHandler';
 import EdgeSegmentHandler from './cell/edge/EdgeSegmentHandler';
 import ElbowEdgeHandler from './cell/edge/ElbowEdgeHandler';
+import Dictionary from '../util/Dictionary';
 
 import type { GraphPlugin, GraphPluginConstructor } from '../types';
-import type GraphPorts from './ports/GraphPorts';
-import type Dictionary from '../util/Dictionary';
-import type GraphPanning from './panning/GraphPanning';
-import type GraphZoom from './zoom/GraphZoom';
-import type GraphEvents from './event/GraphEvents';
-import type GraphImage from './image/GraphImage';
-import type GraphCells from './cell/GraphCells';
-import type GraphSelection from './selection/GraphSelection';
-import type GraphConnections from './connection/GraphConnections';
-import type GraphEdge from './cell/edge/GraphEdge';
-import type GraphVertex from './cell/vertex/GraphVertex';
-import type GraphOverlays from './layout/GraphOverlays';
-import type GraphEditing from './editing/GraphEditing';
-import type GraphFolding from './folding/GraphFolding';
-import type GraphLabel from './label/GraphLabel';
-import type GraphValidation from './validation/GraphValidation';
-import type GraphSnap from './snap/GraphSnap';
-import type GraphTooltip from './tooltip/GraphTooltip';
-import type GraphTerminal from './terminal/GraphTerminal';
+import GraphPorts from './ports/GraphPorts';
+import GraphPanning from './panning/GraphPanning';
+import GraphZoom from './zoom/GraphZoom';
+import GraphEvents from './event/GraphEvents';
+import GraphImage from './image/GraphImage';
+import GraphCells from './cell/GraphCells';
+import GraphSelection from './selection/GraphSelection';
+import GraphConnections from './connection/GraphConnections';
+import GraphEdge from './cell/edge/GraphEdge';
+import GraphVertex from './cell/vertex/GraphVertex';
+import GraphOverlays from './layout/GraphOverlays';
+import GraphEditing from './editing/GraphEditing';
+import GraphFolding from './folding/GraphFolding';
+import GraphLabel from './label/GraphLabel';
+import GraphValidation from './validation/GraphValidation';
+import GraphSnap from './snap/GraphSnap';
+import GraphTooltip from './tooltip/GraphTooltip';
+import GraphTerminal from './terminal/GraphTerminal';
+import GraphDragDrop from './drag_drop/GraphDragDrop';
+import GraphSwimlane from './swimlane/GraphSwimlane';
 
 type PartialEvents = Pick<
   GraphEvents,
@@ -86,6 +88,10 @@ type PartialEvents = Pick<
   | 'getEventTolerance'
   | 'isInvokesStopCellEditing'
   | 'getPointForEvent'
+  | 'isConstrainedEvent'
+  | 'isMouseTrigger'
+  | 'isEnterStopsCellEditing'
+  | 'getCursorForMouseEvent'
 >;
 type PartialSelection = Pick<
   GraphSelection,
@@ -101,6 +107,8 @@ type PartialSelection = Pick<
   | 'cellRemoved'
   | 'getUpdatingSelectionResource'
   | 'getDoneResource'
+  | 'isSiblingSelected'
+  | 'setSelectionCells'
 >;
 type PartialCells = Pick<
   GraphCells,
@@ -119,10 +127,22 @@ type PartialCells = Pick<
   | 'getCurrentCellStyle'
   | 'resizeCell'
   | 'removeStateForCell'
+  | 'getMovableCells'
+  | 'getCloneableCells'
+  | 'isCellLocked'
+  | 'moveCells'
+  | 'removeCells'
+  | 'isCellDeletable'
+  | 'addCell'
+  | 'getExportableCells'
+  | 'cloneCells'
+  | 'importCells'
+  | 'getImportableCells'
 >;
 type PartialConnections = Pick<
   GraphConnections,
   | 'getConnectionConstraint'
+  | 'setConnectionConstraint'
   | 'getConnectionPoint'
   | 'isCellDisconnectable'
   | 'getOutlineConstraint'
@@ -130,25 +150,35 @@ type PartialConnections = Pick<
   | 'getConnections'
   | 'isConstrainChild'
   | 'isValidSource'
+  | 'getAllConnectionConstraints'
 >;
-type PartialEditing = Pick<GraphEditing, 'isEditing' | 'stopEditing'>;
+type PartialEditing = Pick<
+  GraphEditing,
+  'isEditing' | 'stopEditing' | 'labelChanged' | 'getEditingValue'
+>;
 type PartialTooltip = Pick<GraphTooltip, 'getTooltip'>;
 type PartialValidation = Pick<
   GraphValidation,
-  'getEdgeValidationError' | 'validationAlert'
+  'getEdgeValidationError' | 'validationAlert' | 'isEdgeValid'
 >;
 type PartialLabel = Pick<
   GraphLabel,
   'isLabelMovable' | 'isHtmlLabel' | 'isWrapping' | 'isLabelClipped' | 'getLabel'
 >;
-type PartialTerminal = Pick<GraphTerminal, 'isTerminalPointMovable'>;
+type PartialTerminal = Pick<GraphTerminal, 'isTerminalPointMovable' | 'getOpposites'>;
 type PartialSnap = Pick<
   GraphSnap,
-  'snap' | 'getGridSize' | 'isGridEnabled' | 'getSnapTolerance'
+  'snap' | 'getGridSize' | 'isGridEnabled' | 'getSnapTolerance' | 'snapDelta'
 >;
 type PartialEdge = Pick<
   GraphEdge,
-  'isAllowDanglingEdges' | 'isResetEdgesOnConnect' | 'getEdges' | 'insertEdge' | 'addEdge'
+  | 'isAllowDanglingEdges'
+  | 'isResetEdgesOnConnect'
+  | 'getEdges'
+  | 'insertEdge'
+  | 'addEdge'
+  | 'splitEdge'
+  | 'flipEdge'
 >;
 type PartialOverlays = Pick<GraphOverlays, 'getCellOverlays'>;
 type PartialFolding = Pick<
@@ -163,8 +193,16 @@ type PartialPanning = Pick<
   | 'setPanDx'
   | 'getPanDy'
   | 'setPanDy'
+  | 'isTimerAutoScroll'
+  | 'isAllowAutoPanning'
+  | 'scrollCellToVisible'
 >;
 type PartialZoom = Pick<GraphZoom, 'zoomTo'>;
+type PartialDragDrop = Pick<
+  GraphDragDrop,
+  'isDropEnabled' | 'isAutoScroll' | 'isAutoExtend' | 'isSplitEnabled' | 'isSplitTarget'
+>;
+type PartialSwimlane = Pick<GraphSwimlane, 'getDropTarget'>;
 type PartialClass = PartialEvents &
   PartialSelection &
   PartialCells &
@@ -180,16 +218,20 @@ type PartialClass = PartialEvents &
   PartialFolding &
   PartialPanning &
   PartialZoom &
+  PartialDragDrop &
+  PartialSwimlane &
   EventSource;
 
 export type MaxGraph = Graph & PartialClass;
 
 const defaultPlugins: GraphPluginConstructor[] = [
+  CellEditor,
   TooltipHandler,
   SelectionCellsHandler,
   PopupMenuHandler,
   ConnectionHandler,
   GraphHandler,
+  PanningHandler,
 ];
 
 /**
@@ -233,9 +275,6 @@ class Graph extends autoImplement<PartialClass>() {
 
     this.getModel().addListener(InternalEvent.CHANGE, this.graphModelChangeListener);
 
-    // Initializes the in-place editor
-    this.cellEditor = this.createCellEditor();
-
     // Initializes the container using the view
     this.view.init();
 
@@ -256,25 +295,7 @@ class Graph extends autoImplement<PartialClass>() {
 
   destroyed: boolean = false;
 
-  // Handlers
-  // @ts-ignore Cannot be null.
-  // tooltipHandler: TooltipHandler;
-  // @ts-ignore Cannot be null.
-  // selectionCellsHandler: SelectionCellsHandler;
-  // @ts-ignore Cannot be null.
-  // popupMenuHandler: PopupMenuHandler;
-  // @ts-ignore Cannot be null.
-  // connectionHandler: ConnectionHandler;
-  // @ts-ignore Cannot be null.
-  // graphHandler: GraphHandler;
-
   getPlugin = (id: string) => this.pluginsMap.get(id) as unknown;
-
-  // getTooltipHandler = () => this.pluginsMap.get('TooltipHandler');
-  // getSelectionCellsHandler = () => this.selectionCellsHandler;
-  // getPopupMenuHandler = () => this.popupMenuHandler;
-  // getConnectionHandler = () => this.connectionHandler;
-  // getGraphHandler = () => this.graphHandler;
 
   graphModelChangeListener: Function | null = null;
   paintBackground: Function | null = null;
@@ -338,6 +359,8 @@ class Graph extends autoImplement<PartialClass>() {
    */
   dialect: 'svg' | 'mixedHtml' | 'preferHtml' | 'strictHtml' = 'svg';
 
+  getDialect = () => this.dialect;
+
   /**
    * Value returned by {@link getOverlap} if {@link isAllowOverlapParent} returns
    * `true` for the given cell. {@link getOverlap} is used in {@link constrainChild} if
@@ -371,7 +394,9 @@ class Graph extends autoImplement<PartialClass>() {
    * Not yet implemented.
    * @default false
    */
-  pageVisible: boolean = false;
+  pageVisible = false;
+
+  isPageVisible = () => this.pageVisible;
 
   /**
    * Specifies if a dashed line should be drawn between multiple pages.
@@ -379,32 +404,42 @@ class Graph extends autoImplement<PartialClass>() {
    * should call {@link sizeDidChange} to force an update of the display.
    * @default false
    */
-  pageBreaksVisible: boolean = false;
+  pageBreaksVisible = false;
+
+  isPageBreaksVisible = () => this.pageBreaksVisible;
 
   /**
    * Specifies the color for page breaks.
    * @default gray
    */
-  pageBreakColor: string = 'gray';
+  pageBreakColor = 'gray';
+
+  getPageBreakColor = () => this.pageBreakColor;
 
   /**
    * Specifies the page breaks should be dashed.
    * @default true
    */
-  pageBreakDashed: boolean = true;
+  pageBreakDashed = true;
+
+  isPageBreakDashed = () => this.pageBreakDashed;
 
   /**
    * Specifies the minimum distance in pixels for page breaks to be visible.
    * @default 20
    */
-  minPageBreakDist: number = 20;
+  minPageBreakDist = 20;
+
+  getMinPageBreakDist = () => this.minPageBreakDist;
 
   /**
    * Specifies if the graph size should be rounded to the next page number in
    * {@link sizeDidChange}. This is only used if the graph container has scrollbars.
    * @default false
    */
-  preferPageSize: boolean = false;
+  preferPageSize = false;
+
+  isPreferPageSize = () => this.preferPageSize;
 
   /**
    * Specifies the page format for the background page.
@@ -412,26 +447,30 @@ class Graph extends autoImplement<PartialClass>() {
    * if {@link pageVisible} is `true` and the page breaks if {@link pageBreaksVisible} is `true`.
    * @default {@link mxConstants.PAGE_FORMAT_A4_PORTRAIT}
    */
-  pageFormat: Rectangle = new Rectangle(...PAGE_FORMAT_A4_PORTRAIT);
+  pageFormat = new Rectangle(...PAGE_FORMAT_A4_PORTRAIT);
+
+  getPageFormat = () => this.pageFormat;
 
   /**
    * Specifies the scale of the background page.
    * Not yet implemented.
    * @default 1.5
    */
-  pageScale: number = 1.5;
+  pageScale = 1.5;
+
+  getPageScale = () => this.pageScale;
 
   /**
    * Specifies the return value for {@link isEnabled}.
    * @default true
    */
-  enabled: boolean = true;
+  enabled = true;
 
   /**
    * Specifies the return value for {@link canExportCell}.
    * @default true
    */
-  exportEnabled: boolean = true;
+  exportEnabled = true;
 
   isExportEnabled = () => this.exportEnabled;
 
@@ -439,7 +478,7 @@ class Graph extends autoImplement<PartialClass>() {
    * Specifies the return value for {@link canImportCell}.
    * @default true
    */
-  importEnabled: boolean = true;
+  importEnabled = true;
 
   isImportEnabled = () => this.importEnabled;
 
@@ -449,7 +488,9 @@ class Graph extends autoImplement<PartialClass>() {
    * scroll positions (ie usually only rightwards and downwards). To avoid
    * possible conflicts with panning, set {@link translateToScrollPosition} to `true`.
    */
-  ignoreScrollbars: boolean = false;
+  ignoreScrollbars = false;
+
+  isIgnoreScrollbars = () => this.ignoreScrollbars;
 
   /**
    * Specifies if the graph should automatically convert the current scroll
@@ -457,7 +498,9 @@ class Graph extends autoImplement<PartialClass>() {
    * This can be used to avoid conflicts when using {@link autoScroll} and
    * {@link ignoreScrollbars} with no scrollbars in the container.
    */
-  translateToScrollPosition: boolean = false;
+  translateToScrollPosition = false;
+
+  isTranslateToScrollPosition = () => this.translateToScrollPosition;
 
   /**
    * {@link Rectangle} that specifies the area in which all cells in the diagram
@@ -473,11 +516,18 @@ class Graph extends autoImplement<PartialClass>() {
    */
   minimumGraphSize: Rectangle | null = null;
 
+  getMinimumGraphSize = () => this.minimumGraphSize;
+  setMinimumGraphSize = (size: Rectangle | null) => (this.minimumGraphSize = size);
+
   /**
    * {@link Rectangle} that specifies the minimum size of the {@link container} if
    * {@link resizeContainer} is `true`.
    */
   minimumContainerSize: Rectangle | null = null;
+
+  getMinimumContainerSize = () => this.minimumContainerSize;
+  setMinimumContainerSize = (size: Rectangle | null) =>
+    (this.minimumContainerSize = size);
 
   /**
    * {@link Rectangle} that specifies the maximum size of the container if
@@ -490,7 +540,7 @@ class Graph extends autoImplement<PartialClass>() {
    * the graph size has changed.
    * @default false
    */
-  resizeContainer: boolean = false;
+  resizeContainer = false;
 
   /**
    * Border to be added to the bottom and right side when the container is
@@ -645,13 +695,6 @@ class Graph extends autoImplement<PartialClass>() {
   }
 
   /**
-   * Creates a new {@link CellEditor} to be used in this graph.
-   */
-  createCellEditor(): CellEditor {
-    return new CellEditor(this);
-  }
-
-  /**
    * Returns the {@link Model} that contains the cells.
    */
   getModel() {
@@ -708,7 +751,8 @@ class Graph extends autoImplement<PartialClass>() {
     if (change instanceof RootChange) {
       this.clearSelection();
       this.setDefaultParent(null);
-      this.removeStateForCell(change.previous);
+
+      if (change.previous) this.removeStateForCell(change.previous);
 
       if (this.resetViewOnRootChange) {
         this.view.scale = 1;
@@ -792,9 +836,11 @@ class Graph extends autoImplement<PartialClass>() {
     y: number,
     extend: boolean = false,
     border: number = 20
-  ): void {
+  ) {
+    const panningHandler = this.getPlugin('PanningHandler') as PanningHandler;
+
     if (
-      !this.timerAutoScroll &&
+      !this.isTimerAutoScroll() &&
       (this.ignoreScrollbars || hasScrollbars(this.container))
     ) {
       const c = <HTMLElement>this.container;
@@ -860,14 +906,8 @@ class Graph extends autoImplement<PartialClass>() {
           }
         }
       }
-    } else if (
-      this.allowAutoPanning &&
-      !(<PanningHandler>this.panningHandler).isActive()
-    ) {
-      if (this.panningManager == null) {
-        this.panningManager = this.createPanningManager();
-      }
-      this.panningManager.panTo(x + this.panDx, y + this.panDy);
+    } else if (this.isAllowAutoPanning() && !panningHandler.isActive()) {
+      panningHandler.getPanningManager().panTo(x + this.getPanDx(), y + this.getPanDy());
     }
   }
 
@@ -894,8 +934,7 @@ class Graph extends autoImplement<PartialClass>() {
   /**
    * Returns the preferred size of the background page if {@link preferPageSize} is true.
    */
-  getPreferredPageSize(bounds: Rectangle, width: number, height: number): Rectangle {
-    const { scale } = this.view;
+  getPreferredPageSize(bounds: Rectangle, width: number, height: number) {
     const tr = this.view.translate;
     const fmt = this.pageFormat;
     const ps = this.pageScale;
@@ -1091,13 +1130,13 @@ class Graph extends autoImplement<PartialClass>() {
     if (state.cell.isEdge()) {
       const source = state.getVisibleTerminalState(true);
       const target = state.getVisibleTerminalState(false);
-      const geo = (<Cell>state.cell).getGeometry();
+      const geo = state.cell.getGeometry();
 
       const edgeStyle = this.getView().getEdgeStyle(
         state,
-        geo != null ? geo.points : null,
-        <CellState>source,
-        <CellState>target
+        geo ? geo.points : undefined,
+        source,
+        target
       );
       result = this.createEdgeHandler(state, edgeStyle);
     } else {
@@ -1120,7 +1159,7 @@ class Graph extends autoImplement<PartialClass>() {
    *
    * @param state {@link mxCellState} to create the handler for.
    */
-  createEdgeHandler(state: CellState, edgeStyle: any): EdgeHandler {
+  createEdgeHandler(state: CellState, edgeStyle: any) {
     let result = null;
     if (
       edgeStyle == EdgeStyle.Loop ||
@@ -1137,7 +1176,8 @@ class Graph extends autoImplement<PartialClass>() {
     } else {
       result = new EdgeHandler(state);
     }
-    return result;
+
+    return result as EdgeHandler;
   }
 
   /**
@@ -1145,8 +1185,8 @@ class Graph extends autoImplement<PartialClass>() {
    *
    * @param state {@link mxCellState} to create the handler for.
    */
-  createEdgeSegmentHandler(state: CellState): mxEdgeSegmentHandler {
-    return new mxEdgeSegmentHandler(state);
+  createEdgeSegmentHandler(state: CellState) {
+    return new EdgeSegmentHandler(state);
   }
 
   /**
@@ -1154,7 +1194,7 @@ class Graph extends autoImplement<PartialClass>() {
    *
    * @param state {@link mxCellState} to create the handler for.
    */
-  createElbowEdgeHandler(state: CellState): ElbowEdgeHandler {
+  createElbowEdgeHandler(state: CellState) {
     return new ElbowEdgeHandler(state);
   }
 
@@ -1166,7 +1206,7 @@ class Graph extends autoImplement<PartialClass>() {
    * Returns the current root of the displayed cell hierarchy. This is a
    * shortcut to {@link GraphView.currentRoot} in {@link GraphView}.
    */
-  getCurrentRoot(): Cell | null {
+  getCurrentRoot() {
     return this.view.currentRoot;
   }
 
@@ -1213,7 +1253,6 @@ class Graph extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose offset should be returned.
    */
-  // getChildOffsetForCell(cell: mxCell): number;
   getChildOffsetForCell(cell: Cell): Point | null {
     return null;
   }
@@ -1230,7 +1269,7 @@ class Graph extends autoImplement<PartialClass>() {
       const state = this.view.getState(current);
 
       if (state != null) {
-        this.selection.setSelectionCell(current);
+        this.setSelectionCell(current);
       }
     }
   }
@@ -1242,7 +1281,7 @@ class Graph extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} which should be checked as a possible root.
    */
   isValidRoot(cell: Cell) {
-    return cell != null;
+    return !!cell;
   }
 
   /*****************************************************************************
@@ -1357,7 +1396,7 @@ class Graph extends autoImplement<PartialClass>() {
      */
     const orthogonal = edge.style.orthogonal;
 
-    if (orthogonal != null) {
+    if (orthogonal !== null) {
       return orthogonal;
     }
 
@@ -1461,7 +1500,7 @@ class Graph extends autoImplement<PartialClass>() {
   /**
    * Returns {@link resizeContainer}.
    */
-  isResizeContainer(): boolean {
+  isResizeContainer() {
     return this.resizeContainer;
   }
 
@@ -1477,7 +1516,7 @@ class Graph extends autoImplement<PartialClass>() {
   /**
    * Returns true if the graph is {@link enabled}.
    */
-  isEnabled(): boolean {
+  isEnabled() {
     return this.enabled;
   }
 
@@ -1487,14 +1526,14 @@ class Graph extends autoImplement<PartialClass>() {
    *
    * @param value Boolean indicating if the graph should be enabled.
    */
-  setEnabled(value: boolean): void {
+  setEnabled(value: boolean) {
     this.enabled = value;
   }
 
   /**
    * Returns {@link multigraph} as a boolean.
    */
-  isMultigraph(): boolean {
+  isMultigraph() {
     return this.multigraph;
   }
 
@@ -1505,14 +1544,14 @@ class Graph extends autoImplement<PartialClass>() {
    * @param value Boolean indicating if the graph allows multiple connections
    * between the same pair of vertices.
    */
-  setMultigraph(value: boolean): void {
+  setMultigraph(value: boolean) {
     this.multigraph = value;
   }
 
   /**
    * Returns {@link allowLoops} as a boolean.
    */
-  isAllowLoops(): boolean {
+  isAllowLoops() {
     return this.allowLoops;
   }
 
@@ -1521,7 +1560,7 @@ class Graph extends autoImplement<PartialClass>() {
    *
    * @param value Boolean indicating if loops are allowed.
    */
-  setAllowLoops(value: boolean): void {
+  setAllowLoops(value: boolean) {
     this.allowLoops = value;
   }
 
@@ -1530,7 +1569,7 @@ class Graph extends autoImplement<PartialClass>() {
    *
    * @param state {@link mxCellState} that is being resized.
    */
-  isRecursiveResize(state: CellState | null = null): boolean {
+  isRecursiveResize(state: CellState | null = null) {
     return this.recursiveResize;
   }
 
@@ -1539,22 +1578,8 @@ class Graph extends autoImplement<PartialClass>() {
    *
    * @param value New boolean value for {@link recursiveResize}.
    */
-  setRecursiveResize(value: boolean): void {
+  setRecursiveResize(value: boolean) {
     this.recursiveResize = value;
-  }
-
-  /**
-   * Returns {@link allowNegativeCoordinates}.
-   */
-  isAllowNegativeCoordinates(): boolean {
-    return this.allowNegativeCoordinates;
-  }
-
-  /**
-   * Sets {@link allowNegativeCoordinates}.
-   */
-  setAllowNegativeCoordinates(value: boolean): void {
-    this.allowNegativeCoordinates = value;
   }
 
   /**
@@ -1623,17 +1648,10 @@ class Graph extends autoImplement<PartialClass>() {
   destroy(): void {
     if (!this.destroyed) {
       this.destroyed = true;
-      // @ts-ignore
-      this.container = null;
 
-      this.tooltipHandler?.destroy?.();
-      this.selectionCellsHandler?.destroy?.();
-      this.panningHandler?.destroy?.();
-      this.popupMenuHandler?.destroy?.();
-      this.connectionHandler?.destroy?.();
-      this.graphHandler?.destroy?.();
-      this.cellEditor?.destroy?.();
-      this.view?.destroy?.();
+      Object.values(this.pluginsMap).forEach((p) => p.onDestroy());
+
+      this.view.destroy();
 
       if (this.model != null && this.graphModelChangeListener != null) {
         this.getModel().removeListener(this.graphModelChangeListener);
@@ -1644,19 +1662,20 @@ class Graph extends autoImplement<PartialClass>() {
 }
 
 applyMixins(Graph, [
-  GraphEvents,
-  GraphImage,
   GraphCells,
-  GraphSelection,
   GraphConnections,
   GraphEdge,
-  GraphVertex,
-  GraphOverlays,
   GraphEditing,
+  GraphEvents,
   GraphFolding,
+  GraphImage,
   GraphLabel,
-  GraphValidation,
+  GraphOverlays,
+  GraphSelection,
   GraphSnap,
+  GraphSwimlane,
+  GraphValidation,
+  GraphVertex,
 ]);
 
 export default Graph;

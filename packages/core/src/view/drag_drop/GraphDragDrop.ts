@@ -1,13 +1,19 @@
+import { autoImplement } from '../../util/Utils';
 import Cell from '../cell/datatypes/Cell';
 import CellArray from '../cell/datatypes/CellArray';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 
-class GraphDragDrop {
+import type GraphValidation from '../validation/GraphValidation';
+
+type PartialValidation = Pick<GraphValidation, 'getEdgeValidationError'>;
+type PartialClass = PartialValidation;
+
+class GraphDragDrop extends autoImplement<PartialClass>() {
   /**
    * Specifies the return value for {@link isDropEnabled}.
    * @default false
    */
-  dropEnabled: boolean = false;
+  dropEnabled = false;
 
   /**
    * Specifies if dropping onto edges should be enabled. This is ignored if
@@ -15,7 +21,7 @@ class GraphDragDrop {
    * out the drop operation.
    * @default true
    */
-  splitEnabled: boolean = true;
+  splitEnabled = true;
 
   /**
    * Specifies if the graph should automatically scroll if the mouse goes near
@@ -27,7 +33,9 @@ class GraphDragDrop {
    * no scrollbars, the use of {@link allowAutoPanning} is recommended.
    * @default true
    */
-  autoScroll: boolean = true;
+  autoScroll = true;
+
+  isAutoScroll = () => this.autoScroll;
 
   /**
    * Specifies if the size of the graph should be automatically extended if the
@@ -35,8 +43,9 @@ class GraphDragDrop {
    * account if the container has scrollbars. See {@link autoScroll}.
    * @default true
    */
-  autoExtend: boolean = true;
+  autoExtend = true;
 
+  isAutoExtend = () => this.autoExtend;
 
   /*****************************************************************************
    * Group: Graph behaviour
@@ -45,7 +54,7 @@ class GraphDragDrop {
   /**
    * Returns {@link dropEnabled} as a boolean.
    */
-  isDropEnabled(): boolean {
+  isDropEnabled() {
     return this.dropEnabled;
   }
 
@@ -56,7 +65,7 @@ class GraphDragDrop {
    * @param dropEnabled Boolean indicating if the graph should allow dropping
    * of cells into other cells.
    */
-  setDropEnabled(value: boolean): void {
+  setDropEnabled(value: boolean) {
     this.dropEnabled = value;
   }
 
@@ -67,7 +76,7 @@ class GraphDragDrop {
   /**
    * Returns {@link splitEnabled} as a boolean.
    */
-  isSplitEnabled(): boolean {
+  isSplitEnabled() {
     return this.splitEnabled;
   }
 
@@ -78,7 +87,7 @@ class GraphDragDrop {
    * @param dropEnabled Boolean indicating if the graph should allow dropping
    * of cells into other cells.
    */
-  setSplitEnabled(value: boolean): void {
+  setSplitEnabled(value: boolean) {
     this.splitEnabled = value;
   }
 
@@ -90,23 +99,17 @@ class GraphDragDrop {
    * @param cells {@link mxCell} that should split the edge.
    * @param evt Mouseevent that triggered the invocation.
    */
-  // isSplitTarget(target: mxCell, cells: mxCellArray, evt: Event): boolean;
-  isSplitTarget(target: Cell, cells: CellArray, evt: InternalMouseEvent): boolean {
+  isSplitTarget(target: Cell, cells: CellArray, evt: MouseEvent) {
     if (
       target.isEdge() &&
-      cells != null &&
-      cells.length == 1 &&
+      cells.length === 1 &&
       cells[0].isConnectable() &&
-      this.getEdgeValidationError(target, target.getTerminal(true), cells[0]) ==
-      null
+      !this.getEdgeValidationError(target, target.getTerminal(true), cells[0])
     ) {
-      const src = <Cell>target.getTerminal(true);
-      const trg = <Cell>target.getTerminal(false);
+      const src = target.getTerminal(true);
+      const trg = target.getTerminal(false);
 
-      return (
-        !cells[0].isAncestor(src) &&
-        !cells[0].isAncestor(trg)
-      );
+      return !cells[0].isAncestor(src) && !cells[0].isAncestor(trg);
     }
     return false;
   }

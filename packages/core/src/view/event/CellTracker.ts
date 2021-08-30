@@ -6,8 +6,9 @@
  */
 import CellMarker from '../cell/CellMarker';
 import InternalMouseEvent from './InternalMouseEvent';
-import Graph from '../Graph';
+import Graph, { MaxGraph } from '../Graph';
 import Cell from '../cell/datatypes/Cell';
+import EventSource from './EventSource';
 
 /**
  * Event handler that highlights cells
@@ -66,31 +67,31 @@ import Cell from '../cell/datatypes/Cell';
  */
 class CellTracker extends CellMarker {
   constructor(
-    graph: Graph,
+    graph: MaxGraph,
     color: string,
-    funct: null | ((me: InternalMouseEvent) => Cell)=null
+    funct: ((me: InternalMouseEvent) => Cell) | null = null
   ) {
     super(graph, color);
 
-    this.graph.event.addMouseListener(this);
+    this.graph.addMouseListener(this);
 
-    if (funct != null) {
+    if (funct) {
       this.getCell = funct;
     }
   }
 
-  destroyed: boolean = false;
+  destroyed = false;
 
   /**
    * Ignores the event. The event is not consumed.
    */
-  mouseDown(sender: any, me: InternalMouseEvent): void {}
+  mouseDown(sender: EventSource, me: InternalMouseEvent) {}
 
   /**
    * Handles the event by highlighting the cell under the mousepointer if it
    * is over the hotspot region of the cell.
    */
-  mouseMove(sender: any, me: InternalMouseEvent): void {
+  mouseMove(sender: EventSource, me: InternalMouseEvent) {
     if (this.isEnabled()) {
       this.process(me);
     }
@@ -99,7 +100,7 @@ class CellTracker extends CellMarker {
   /**
    * Handles the event by resetting the highlight.
    */
-  mouseUp(sender: any, me: InternalMouseEvent): void {}
+  mouseUp(sender: EventSource, me: InternalMouseEvent) {}
 
   /**
    * Function: destroy
@@ -108,11 +109,11 @@ class CellTracker extends CellMarker {
    * normally need to be called. It is called automatically when the window
    * unloads.
    */
-  destroy(): void {
+  destroy() {
     if (!this.destroyed) {
       this.destroyed = true;
 
-      this.graph.event.removeMouseListener(this);
+      this.graph.removeMouseListener(this);
       super.destroy();
     }
   }

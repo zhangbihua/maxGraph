@@ -248,7 +248,7 @@ class CellState extends Rectangle {
    * isSource - Boolean that specifies if the first or last point should
    * be assigned.
    */
-  setAbsoluteTerminalPoint(point: Point, isSource = false) {
+  setAbsoluteTerminalPoint(point: Point | null, isSource = false) {
     if (isSource) {
       if (this.absolutePoints.length === 0) {
         this.absolutePoints.push(point);

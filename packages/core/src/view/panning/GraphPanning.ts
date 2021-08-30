@@ -38,6 +38,8 @@ class GraphPanning extends autoImplement<PartialClass>() {
    */
   timerAutoScroll = false;
 
+  isTimerAutoScroll = () => this.timerAutoScroll;
+
   /**
    * Specifies if panning via {@link panGraph} should be allowed to implement autoscroll
    * if no scrollbars are available in {@link scrollPointToVisible}. To enable panning
@@ -46,6 +48,8 @@ class GraphPanning extends autoImplement<PartialClass>() {
    * @default false
    */
   allowAutoPanning = false;
+
+  isAllowAutoPanning = () => this.allowAutoPanning;
 
   /**
    * Current horizontal panning value.

@@ -276,6 +276,8 @@ class Shape {
    */
   pointerEvents = true;
 
+  originalPointerEvents: boolean | null = null;
+
   /**
    * Variable: svgPointerEvents
    *

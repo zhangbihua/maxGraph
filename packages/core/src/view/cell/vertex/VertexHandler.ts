@@ -41,6 +41,8 @@ import CellArray from '../datatypes/CellArray';
 import EdgeHandler from '../edge/EdgeHandler';
 import CellHighlight from '../../selection/CellHighlight';
 import EventSource from '../../event/EventSource';
+import GraphHandler from '../../GraphHandler';
+import SelectionCellsHandler from '../../selection/SelectionCellsHandler';
 
 /**
  * Class: mxVertexHandler
@@ -82,10 +84,12 @@ class VertexHandler {
       this.selectionBorder.setCursor(CURSOR_MOVABLE_VERTEX);
     }
 
+    const graphHandler = this.graph.getPlugin('GraphHandler') as GraphHandler;
+
     // Adds the sizer handles
     if (
-      this.graph.graphHandler.maxCells <= 0 ||
-      this.graph.getSelectionCount() < this.graph.graphHandler.maxCells
+      graphHandler.maxCells <= 0 ||
+      this.graph.getSelectionCount() < graphHandler.maxCells
     ) {
       const resizable = this.graph.isCellResizable(this.state.cell);
       this.sizers = [];
@@ -374,12 +378,14 @@ class VertexHandler {
    * Returns true if the rotation handle should be showing.
    */
   isRotationHandleVisible() {
+    const graphHandler = this.graph.getPlugin('GraphHandler') as GraphHandler;
+
     return (
       this.graph.isEnabled() &&
       this.rotationEnabled &&
       this.graph.isCellRotatable(this.state.cell) &&
-      (this.graph.graphHandler.maxCells <= 0 ||
-        this.graph.getSelectionCount() < this.graph.graphHandler.maxCells)
+      (graphHandler.maxCells <= 0 ||
+        this.graph.getSelectionCount() < graphHandler.maxCells)
     );
   }
 
@@ -790,11 +796,15 @@ class VertexHandler {
         const edges = this.graph.getEdges(this.state.cell);
         this.edgeHandlers = [];
 
-        for (let i = 0; i < edges.length; i += 1) {
-          const handler = this.graph.selectionCellsHandler.getHandler(edges[i]);
+        const selectionCellsHandler = this.graph.getPlugin(
+          'SelectionCellsHandler'
+        ) as SelectionCellsHandler;
 
-          if (handler != null) {
-            this.edgeHandlers.push(handler);
+        for (let i = 0; i < edges.length; i += 1) {
+          const handler = selectionCellsHandler.getHandler(edges[i]);
+
+          if (handler) {
+            this.edgeHandlers.push(handler as EdgeHandler);
           }
         }
       }

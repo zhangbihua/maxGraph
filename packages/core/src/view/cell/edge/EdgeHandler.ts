@@ -34,6 +34,7 @@ import {
 import utils, {
   contains,
   convertPoint,
+  equalPoints,
   findNearestSegment,
   getOffset,
   intersects,
@@ -64,6 +65,7 @@ import Cell from '../datatypes/Cell';
 import ImageBox from '../../image/ImageBox';
 import Marker from '../../geometry/shape/edge/Marker';
 import EventSource from '../../event/EventSource';
+import GraphHandler from '../../GraphHandler';
 
 /**
  * Graph event handler that reconnects edges and modifies control points and the edge
@@ -129,11 +131,13 @@ class EdgeHandler {
       }
     }
 
+    const graphHandler = this.graph.getPlugin('GraphHandler') as GraphHandler;
+
     // Creates bends for the non-routed absolute points
     // or bends that don't correspond to points
     if (
-      this.graph.getSelectionCount() < this.graph.graphHandler.maxCells ||
-      this.graph.graphHandler.maxCells <= 0
+      this.graph.getSelectionCount() < graphHandler.maxCells ||
+      graphHandler.maxCells <= 0
     ) {
       this.bends = this.createBends();
 
@@ -193,7 +197,7 @@ class EdgeHandler {
    * Holds the <mxConstraintHandler> used for drawing and highlighting
    * constraints.
    */
-  constraintHandler: ConstraintHandler = null;
+  constraintHandler: ConstraintHandler;
 
   /**
    * Variable: error
@@ -207,7 +211,7 @@ class EdgeHandler {
    *
    * Holds the <mxShape> that represents the preview edge.
    */
-  shape: Shape | null = null;
+  shape: Shape;
 
   /**
    * Variable: bends
@@ -223,7 +227,7 @@ class EdgeHandler {
    *
    * Holds the <mxShape> that represents the label position.
    */
-  labelShape: Shape | null = null;
+  labelShape: Shape;
 
   /**
    * Variable: cloneEnabled
@@ -370,7 +374,7 @@ class EdgeHandler {
 
   isTarget: boolean = false;
 
-  label: Point | null = null;
+  label: Point;
 
   isLabel = false;
 
@@ -492,7 +496,7 @@ class EdgeHandler {
    * Returns true if the given event is a trigger to add a new Point. This
    * implementation returns true if shift is pressed.
    */
-  isAddPointEvent(evt: Event) {
+  isAddPointEvent(evt: MouseEvent) {
     return isShiftDown(evt);
   }
 
@@ -502,7 +506,7 @@ class EdgeHandler {
    * Returns true if the given event is a trigger to remove a point. This
    * implementation returns true if shift is pressed.
    */
-  isRemovePointEvent(evt: Event) {
+  isRemovePointEvent(evt: MouseEvent) {
     return isShiftDown(evt);
   }
 
@@ -851,7 +855,7 @@ class EdgeHandler {
    *
    * bend - <mxShape> that represents the bend to be initialized.
    */
-  initBend(bend: Shape, dblClick?: EventListener) {
+  initBend(bend: Shape, dblClick?: (evt: MouseEvent) => void) {
     if (this.preferHtml) {
       bend.dialect = DIALECT_STRICTHTML;
       bend.init(this.graph.container);
@@ -1252,7 +1256,7 @@ class EdgeHandler {
    * pt - <mxPoint> that contains the current pointer position.
    * me - Optional <mxMouseEvent> that contains the current event.
    */
-  getPreviewPoints(pt: Point, me: InternalMouseEvent) {
+  getPreviewPoints(pt: Point, me?: InternalMouseEvent) {
     const geometry = this.state.cell.getGeometry();
 
     if (!geometry) return null;
@@ -1400,7 +1404,7 @@ class EdgeHandler {
     point: Point,
     terminalState: CellState,
     me: InternalMouseEvent,
-    outline: boolean
+    outline = false
   ) {
     // Computes the points for the edge style and terminals
     const sourceState = this.isSource
@@ -1436,7 +1440,7 @@ class EdgeHandler {
         this.constraintHandler.currentConstraint = constraint;
         this.constraintHandler.currentPoint = point;
       } else {
-        constraint = new ConnectionConstraint();
+        constraint = new ConnectionConstraint(null);
       }
     }
 
@@ -1716,7 +1720,7 @@ class EdgeHandler {
                   model.setGeometry(cloned, geo);
                 }
 
-                const other = edge.getTerminal(!this.isSource);
+                const other = edge.getTerminal(!this.isSource) as Cell;
                 this.graph.connectCell(cloned, other, !this.isSource);
 
                 edge = cloned;
@@ -1744,8 +1748,8 @@ class EdgeHandler {
               pt.y -= pstate.origin.y;
             }
 
-            pt.x -= this.graph.panDx / this.graph.view.scale;
-            pt.y -= this.graph.panDy / this.graph.view.scale;
+            pt.x -= this.graph.getPanDx() / this.graph.view.scale;
+            pt.y -= this.graph.getPanDy() / this.graph.view.scale;
 
             // Destroys and recreates this handler
             edge = this.changeTerminalPoint(edge, pt, this.isSource, clone);
@@ -1780,7 +1784,6 @@ class EdgeHandler {
    *
    * Resets the state of this handler.
    */
-  // reset(): void;
   reset() {
     if (this.active) {
       this.refresh();
@@ -1788,34 +1791,21 @@ class EdgeHandler {
 
     this.error = null;
     this.index = null;
-    this.label = null;
-    this.points = null;
+    this.points = [];
     this.snapPoint = null;
     this.isLabel = false;
     this.isSource = false;
     this.isTarget = false;
     this.active = false;
 
-    if (this.livePreview && this.sizers != null) {
-      for (let i = 0; i < this.sizers.length; i += 1) {
-        if (this.sizers[i] != null) {
-          this.sizers[i].node.style.display = '';
-        }
-      }
-    }
-
-    if (this.marker != null) {
+    if (this.marker) {
       this.marker.reset();
     }
 
-    if (this.constraintHandler != null) {
-      this.constraintHandler.reset();
-    }
+    this.constraintHandler.reset();
 
-    if (this.customHandles != null) {
-      for (let i = 0; i < this.customHandles.length; i += 1) {
-        this.customHandles[i].reset();
-      }
+    for (let i = 0; i < this.customHandles.length; i += 1) {
+      this.customHandles[i].reset();
     }
 
     this.setPreviewColor(EDGE_SELECTION_COLOR);
@@ -1829,9 +1819,7 @@ class EdgeHandler {
    * Sets the color of the preview to the given value.
    */
   setPreviewColor(color: ColorValue) {
-    if (this.shape != null) {
-      this.shape.stroke = color;
-    }
+    this.shape.stroke = color;
   }
 
   /**
@@ -1860,7 +1848,7 @@ class EdgeHandler {
 
     const pstate = this.graph.getView().getState(this.state.cell.getParent());
 
-    if (pstate != null) {
+    if (pstate) {
       point.x -= pstate.origin.x;
       point.y -= pstate.origin.y;
     }
@@ -1954,7 +1942,7 @@ class EdgeHandler {
       let constraint = this.constraintHandler.currentConstraint;
 
       if (constraint == null) {
-        constraint = new ConnectionConstraint();
+        constraint = new ConnectionConstraint(null);
       }
 
       this.graph.connectCell(edge, terminal, isSource, constraint);
@@ -1989,7 +1977,7 @@ class EdgeHandler {
         geo = geo.clone();
         geo.setTerminalPoint(point, isSource);
         model.setGeometry(edge, geo);
-        this.graph.connectCell(edge, null, isSource, new ConnectionConstraint());
+        this.graph.connectCell(edge, null, isSource, new ConnectionConstraint(null));
       }
     } finally {
       model.endUpdate();
@@ -2064,7 +2052,8 @@ class EdgeHandler {
 
       if (parent.isVertex()) {
         const pState = this.graph.view.getState(parent);
-        offset = new Point(pState.x, pState.y);
+
+        if (pState) offset = new Point(pState.x, pState.y);
       }
 
       const index = findNearestSegment(state, pt.x * s + offset.x, pt.y * s + offset.y);
@@ -2169,7 +2158,8 @@ class EdgeHandler {
     const { cell } = this.state;
 
     // Updates the handle for the label position
-    let b = this.labelShape.bounds;
+    let b = this.labelShape.bounds as Rectangle;
+
     this.label = new Point(this.state.absoluteOffset.x, this.state.absoluteOffset.y);
     this.labelShape.bounds = new Rectangle(
       Math.round(this.label.x - b.width / 2),
@@ -2186,11 +2176,12 @@ class EdgeHandler {
     if (this.bends != null && this.bends.length > 0) {
       const n = this.abspoints.length - 1;
 
-      const p0 = this.abspoints[0];
+      const p0 = this.abspoints[0] as Point;
       const x0 = p0.x;
       const y0 = p0.y;
 
-      b = this.bends[0].bounds;
+      b = this.bends[0].bounds as Rectangle;
+
       this.bends[0].bounds = new Rectangle(
         Math.floor(x0 - b.width / 2),
         Math.floor(y0 - b.height / 2),
@@ -2204,12 +2195,12 @@ class EdgeHandler {
         this.checkLabelHandle(this.bends[0].bounds);
       }
 
-      const pe = this.abspoints[n];
+      const pe = this.abspoints[n] as Point;
       const xn = pe.x;
       const yn = pe.y;
 
       const bn = this.bends.length - 1;
-      b = this.bends[bn].bounds;
+      b = this.bends[bn].bounds as Rectangle;
       this.bends[bn].bounds = new Rectangle(
         Math.floor(xn - b.width / 2),
         Math.floor(yn - b.height / 2),
@@ -2220,56 +2211,54 @@ class EdgeHandler {
       this.bends[bn].redraw();
 
       if (this.manageLabelHandle) {
-        this.checkLabelHandle(this.bends[bn].bounds);
+        this.checkLabelHandle(this.bends[bn].bounds as Rectangle);
       }
 
       this.redrawInnerBends(p0, pe);
     }
 
-    if (
-      this.abspoints != null &&
-      this.virtualBends != null &&
-      this.virtualBends.length > 0
-    ) {
-      let last = this.abspoints[0];
+    if (this.virtualBends.length > 0) {
+      let last = this.abspoints[0] as Point;
 
       for (let i = 0; i < this.virtualBends.length; i += 1) {
         if (this.virtualBends[i] != null && this.abspoints[i + 1] != null) {
-          const pt = this.abspoints[i + 1];
-          b = this.virtualBends[i];
+          const pt = this.abspoints[i + 1] as Point;
+          const b = this.virtualBends[i];
           const x = last.x + (pt.x - last.x) / 2;
           const y = last.y + (pt.y - last.y) / 2;
-          b.bounds = new Rectangle(
-            Math.floor(x - b.bounds.width / 2),
-            Math.floor(y - b.bounds.height / 2),
-            b.bounds.width,
-            b.bounds.height
-          );
-          b.redraw();
+
+          if (b.bounds) {
+            b.bounds = new Rectangle(
+              Math.floor(x - b.bounds.width / 2),
+              Math.floor(y - b.bounds.height / 2),
+              b.bounds.width,
+              b.bounds.height
+            );
+            b.redraw();
+          }
+
           setOpacity(b.node, this.virtualBendOpacity);
           last = pt;
 
           if (this.manageLabelHandle) {
-            this.checkLabelHandle(b.bounds);
+            this.checkLabelHandle(b.bounds as Rectangle);
           }
         }
       }
     }
 
-    if (this.labelShape != null) {
-      this.labelShape.redraw();
-    }
+    this.labelShape.redraw();
 
-    if (this.customHandles != null) {
-      for (let i = 0; i < this.customHandles.length; i += 1) {
-        const temp = this.customHandles[i].shape.node.style.display;
+    for (let i = 0; i < this.customHandles.length; i += 1) {
+      const shape = this.customHandles[i].shape;
+
+      if (shape) {
+        const temp = shape.node.style.display;
         this.customHandles[i].redraw();
-        this.customHandles[i].shape.node.style.display = temp;
+        shape.node.style.display = temp;
 
         // Hides custom handles during text editing
-        this.customHandles[i].shape.node.style.visibility = this.isCustomHandleVisible(
-          this.customHandles[i]
-        )
+        shape.node.style.visibility = this.isCustomHandleVisible(this.customHandles[i])
           ? ''
           : 'hidden';
       }
@@ -2291,26 +2280,18 @@ class EdgeHandler {
    * Shortcut to <hideSizers>.
    */
   setHandlesVisible(visible: boolean) {
-    if (this.bends != null) {
-      for (let i = 0; i < this.bends.length; i += 1) {
-        this.bends[i].node.style.display = visible ? '' : 'none';
-      }
+    for (let i = 0; i < this.bends.length; i += 1) {
+      this.bends[i].node.style.display = visible ? '' : 'none';
     }
 
-    if (this.virtualBends != null) {
-      for (let i = 0; i < this.virtualBends.length; i += 1) {
-        this.virtualBends[i].node.style.display = visible ? '' : 'none';
-      }
+    for (let i = 0; i < this.virtualBends.length; i += 1) {
+      this.virtualBends[i].node.style.display = visible ? '' : 'none';
     }
 
-    if (this.labelShape != null) {
-      this.labelShape.node.style.display = visible ? '' : 'none';
-    }
+    this.labelShape.node.style.display = visible ? '' : 'none';
 
-    if (this.customHandles != null) {
-      for (let i = 0; i < this.customHandles.length; i += 1) {
-        this.customHandles[i].setVisible(visible);
-      }
+    for (let i = 0; i < this.customHandles.length; i += 1) {
+      this.customHandles[i].setVisible(visible);
     }
   }
 
@@ -2328,10 +2309,10 @@ class EdgeHandler {
     for (let i = 1; i < this.bends.length - 1; i += 1) {
       if (this.bends[i] != null) {
         if (this.abspoints[i] != null) {
-          const { x } = this.abspoints[i];
-          const { y } = this.abspoints[i];
+          const { x } = this.abspoints[i] as Point;
+          const { y } = this.abspoints[i] as Point;
 
-          const b = this.bends[i].bounds;
+          const b = this.bends[i].bounds as Rectangle;
           this.bends[i].node.style.visibility = 'visible';
           this.bends[i].bounds = new Rectangle(
             Math.round(x - b.width / 2),
@@ -2341,11 +2322,14 @@ class EdgeHandler {
           );
 
           if (this.manageLabelHandle) {
-            this.checkLabelHandle(this.bends[i].bounds);
+            this.checkLabelHandle(this.bends[i].bounds as Rectangle);
           } else if (
             this.handleImage == null &&
             this.labelShape.visible &&
-            intersects(this.bends[i].bounds, this.labelShape.bounds)
+            intersects(
+              this.bends[i].bounds as Rectangle,
+              this.labelShape.bounds as Rectangle
+            )
           ) {
             const w = HANDLE_SIZE + 3;
             const h = HANDLE_SIZE + 3;
@@ -2360,7 +2344,6 @@ class EdgeHandler {
           this.bends[i].redraw();
         } else {
           this.bends[i].destroy();
-          this.bends[i] = null;
         }
       }
     }
@@ -2373,15 +2356,13 @@ class EdgeHandler {
    * intersects.
    */
   checkLabelHandle(b: Rectangle) {
-    if (this.labelShape != null) {
-      const b2 = this.labelShape.bounds;
+    const b2 = this.labelShape.bounds as Rectangle;
 
-      if (intersects(b, b2)) {
-        if (b.getCenterY() < b2.getCenterY()) {
-          b2.y = b.y + b.height;
-        } else {
-          b2.y = b.y - b2.height;
-        }
+    if (intersects(b, b2)) {
+      if (b.getCenterY() < b2.getCenterY()) {
+        b2.y = b.y + b.height;
+      } else {
+        b2.y = b.y - b2.height;
       }
     }
   }
@@ -2394,7 +2375,7 @@ class EdgeHandler {
   drawPreview() {
     try {
       if (this.isLabel) {
-        const b = this.labelShape.bounds;
+        const b = this.labelShape.bounds as Rectangle;
         const bounds = new Rectangle(
           Math.round(this.label.x - b.width / 2),
           Math.round(this.label.y - b.height / 2),
@@ -2402,7 +2383,7 @@ class EdgeHandler {
           b.height
         );
 
-        if (!this.labelShape.bounds.equals(bounds)) {
+        if (!b.equals(bounds)) {
           this.labelShape.bounds = bounds;
           this.labelShape.redraw();
         }
@@ -2436,20 +2417,14 @@ class EdgeHandler {
       this.abspoints = this.getSelectionPoints(this.state);
       this.points = [];
 
-      if (this.bends != null) {
-        this.destroyBends(this.bends);
-        this.bends = this.createBends();
-      }
+      this.destroyBends(this.bends);
+      this.bends = this.createBends();
 
-      if (this.virtualBends != null) {
-        this.destroyBends(this.virtualBends);
-        this.virtualBends = this.createVirtualBends();
-      }
+      this.destroyBends(this.virtualBends);
+      this.virtualBends = this.createVirtualBends();
 
-      if (this.customHandles != null) {
-        this.destroyBends(this.customHandles);
-        this.customHandles = this.createCustomHandles();
-      }
+      this.destroyBends(this.customHandles);
+      this.customHandles = this.createCustomHandles();
 
       // Puts label node on top of bends
       if (
@@ -2476,7 +2451,7 @@ class EdgeHandler {
    *
    * Destroys all elements in <bends>.
    */
-  destroyBends(bends: Shape[]) {
+  destroyBends(bends: Shape[] | CellHandle[]) {
     if (bends != null) {
       for (let i = 0; i < bends.length; i += 1) {
         if (bends[i] != null) {
@@ -2495,26 +2470,17 @@ class EdgeHandler {
    */
   // destroy(): void;
   destroy() {
-    if (this.escapeHandler != null) {
-      this.state.view.graph.removeListener(this.escapeHandler);
-      this.escapeHandler = null;
-    }
+    this.state.view.graph.removeListener(this.escapeHandler);
 
-    if (this.marker != null) {
-      this.marker.destroy();
-      this.marker = null;
-    }
+    this.marker.destroy();
 
-    if (this.shape != null) {
-      this.shape.destroy();
-      this.shape = null;
-    }
+    this.shape.destroy();
 
-    if (this.parentHighlight != null) {
+    if (this.parentHighlight) {
       const parent = this.state.cell.getParent();
       const pstate = this.graph.view.getState(parent);
 
-      if (pstate != null && pstate.parentHighlight === this.parentHighlight) {
+      if (pstate && pstate.parentHighlight === this.parentHighlight) {
         pstate.parentHighlight = null;
       }
 
@@ -2522,21 +2488,15 @@ class EdgeHandler {
       this.parentHighlight = null;
     }
 
-    if (this.labelShape != null) {
-      this.labelShape.destroy();
-      this.labelShape = null;
-    }
+    this.labelShape.destroy();
 
-    if (this.constraintHandler != null) {
-      this.constraintHandler.destroy();
-      this.constraintHandler = null;
-    }
+    this.constraintHandler.destroy();
 
     this.destroyBends(this.virtualBends);
-    this.virtualBends = null;
+    this.virtualBends = [];
 
     this.destroyBends(this.customHandles);
-    this.customHandles = null;
+    this.customHandles = [];
 
     this.destroyBends(this.bends);
     this.bends = [];

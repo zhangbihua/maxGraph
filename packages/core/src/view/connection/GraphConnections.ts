@@ -202,7 +202,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
    */
   setConnectionConstraint(
     edge: Cell,
-    terminal: Cell,
+    terminal: Cell | null,
     source: boolean = false,
     constraint: ConnectionConstraint | null = null
   ) {
@@ -380,7 +380,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
    */
   connectCell(
     edge: Cell,
-    terminal: Cell,
+    terminal: Cell | null = null,
     source: boolean = false,
     constraint: ConnectionConstraint | null = null
   ) {
@@ -419,7 +419,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
    */
   cellConnected(
     edge: Cell,
-    terminal: Cell,
+    terminal: Cell | null,
     source: boolean = false,
     constraint: ConnectionConstraint | null = null
   ) {
@@ -435,9 +435,9 @@ class GraphConnections extends autoImplement<PartialClass>() {
       if (this.isPortsEnabled()) {
         let id = null;
 
-        if (this.isPort(terminal)) {
+        if (terminal && this.isPort(terminal)) {
           id = terminal.getId();
-          terminal = <Cell>this.getTerminalForPort(terminal, source);
+          terminal = this.getTerminalForPort(terminal, source);
         }
 
         // Sets or resets all previous information for connecting to a child port

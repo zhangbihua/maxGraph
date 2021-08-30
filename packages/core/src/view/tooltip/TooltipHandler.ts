@@ -15,6 +15,7 @@ import InternalMouseEvent from '../event/InternalMouseEvent';
 import PopupMenuHandler from '../popups_menus/PopupMenuHandler';
 
 import type { GraphPlugin } from '../../types';
+import EventSource from '../event/EventSource';
 
 /**
  * Class: mxTooltipHandler

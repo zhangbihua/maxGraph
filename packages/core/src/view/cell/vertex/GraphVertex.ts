@@ -13,13 +13,27 @@ class GraphVertex extends autoImplement<PartialClass>() {
    * Specifies the return value for vertices in {@link isLabelMovable}.
    * @default false
    */
-  vertexLabelsMovable: boolean = false;
+  vertexLabelsMovable = false;
 
   /**
    * Specifies if negative coordinates for vertices are allowed.
    * @default true
    */
-  allowNegativeCoordinates: boolean = true;
+  allowNegativeCoordinates = true;
+
+  /**
+   * Returns {@link allowNegativeCoordinates}.
+   */
+  isAllowNegativeCoordinates() {
+    return this.allowNegativeCoordinates;
+  }
+
+  /**
+   * Sets {@link allowNegativeCoordinates}.
+   */
+  setAllowNegativeCoordinates(value: boolean) {
+    this.allowNegativeCoordinates = value;
+  }
 
   /**
    * Function: insertVertex
@@ -64,7 +78,7 @@ class GraphVertex extends autoImplement<PartialClass>() {
    * geometryClass - Optional class reference to a class derived from mxGeometry.
    *                 This can be useful for defining custom constraints.
    */
-  insertVertex = (...args: any[]): Cell => {
+  insertVertex = (...args: any[]) => {
     let parent;
     let id;
     let value;
@@ -147,7 +161,7 @@ class GraphVertex extends autoImplement<PartialClass>() {
    *
    * @param parent {@link mxCell} whose children should be returned.
    */
-  getChildVertices(parent: Cell): CellArray {
+  getChildVertices(parent: Cell) {
     return this.getChildCells(parent, true, false);
   }
 
@@ -158,14 +172,14 @@ class GraphVertex extends autoImplement<PartialClass>() {
   /**
    * Returns {@link vertexLabelsMovable}.
    */
-  isVertexLabelsMovable(): boolean {
+  isVertexLabelsMovable() {
     return this.vertexLabelsMovable;
   }
 
   /**
    * Sets {@link vertexLabelsMovable}.
    */
-  setVertexLabelsMovable(value: boolean): void {
+  setVertexLabelsMovable(value: boolean) {
     this.vertexLabelsMovable = value;
   }
 }

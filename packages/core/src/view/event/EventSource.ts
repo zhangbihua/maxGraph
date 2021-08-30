@@ -34,8 +34,9 @@ type EventListenerObject = {
  *
  * Constructs a new event source.
  */
-class EventSource {
+class EventSource extends EventTarget {
   constructor(eventSource: EventSource | null = null) {
+    super();
     this.eventSource = eventSource;
   }
 

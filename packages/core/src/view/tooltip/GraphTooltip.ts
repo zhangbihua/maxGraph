@@ -7,11 +7,10 @@ import { autoImplement } from '../../util/Utils';
 
 import type Graph from '../Graph';
 import type GraphFolding from '../folding/GraphFolding';
+import SelectionCellsHandler from '../selection/SelectionCellsHandler';
+import TooltipHandler from './TooltipHandler';
 
-type PartialGraph = Pick<
-  Graph,
-  'getSelectionCellsHandler' | 'convertValueToString' | 'getTooltipHandler'
->;
+type PartialGraph = Pick<Graph, 'convertValueToString' | 'getPlugin'>;
 type PartialFolding = Pick<GraphFolding, 'getCollapseExpandResource'>;
 type PartialClass = PartialGraph & PartialFolding;
 
@@ -53,8 +52,15 @@ class GraphTooltip extends autoImplement<PartialClass>() {
     }
 
     if (!tip) {
-      const handler = this.getSelectionCellsHandler().getHandler(state.cell);
+      const selectionCellsHandler = this.getPlugin(
+        'SelectionCellsHandler'
+      ) as SelectionCellsHandler;
+
+      const handler = selectionCellsHandler.getHandler(state.cell);
+
+      // @ts-ignore Guarded against undefined error already.
       if (handler && typeof handler.getTooltipForNode === 'function') {
+        // @ts-ignore Guarded against undefined error already.
         tip = handler.getTooltipForNode(node);
       }
     }
@@ -108,7 +114,9 @@ class GraphTooltip extends autoImplement<PartialClass>() {
    * @param enabled Boolean indicating if tooltips should be enabled.
    */
   setTooltips(enabled: boolean) {
-    this.getTooltipHandler().setEnabled(enabled);
+    const tooltipHandler = this.getPlugin('TooltipHandler') as TooltipHandler;
+
+    tooltipHandler.setEnabled(enabled);
   }
 }
 

@@ -7,13 +7,7 @@
 
 import mxClient from '../mxClient';
 import InternalEvent from './event/InternalEvent';
-import utils, {
-  contains,
-  convertPoint,
-  getRotatedPoint,
-  getValue,
-  toRadians,
-} from '../util/Utils';
+import { contains, convertPoint, getRotatedPoint, toRadians } from '../util/Utils';
 import RectangleShape from './geometry/shape/node/RectangleShape';
 import mxGuide from '../util/Guide';
 import Point from './geometry/Point';
@@ -24,6 +18,7 @@ import {
   DIALECT_SVG,
   DROP_TARGET_COLOR,
   INVALID_CONNECT_TARGET_COLOR,
+  NONE,
   VALID_COLOR,
 } from '../util/Constants';
 import Dictionary from '../util/Dictionary';
@@ -31,7 +26,19 @@ import CellHighlight from './selection/CellHighlight';
 import Rectangle from './geometry/Rectangle';
 import { getClientX, getClientY, isAltDown, isMultiTouchEvent } from '../util/EventUtils';
 import { MaxGraph } from './Graph';
-import { GraphPlugin, GraphPluginConstructor } from '../types';
+import Guide from '../util/Guide';
+import Shape from './geometry/shape/Shape';
+import InternalMouseEvent from './event/InternalMouseEvent';
+import SelectionCellsHandler from './selection/SelectionCellsHandler';
+import Cell from './cell/datatypes/Cell';
+import PopupMenuHandler from './popups_menus/PopupMenuHandler';
+import EventSource from './event/EventSource';
+import CellArray from './cell/datatypes/CellArray';
+import CellState from './cell/datatypes/CellState';
+import EventObject from './event/EventObject';
+
+import type { ColorValue, GraphPlugin } from '../types';
+import ConnectionHandler from './connection/ConnectionHandler';
 
 /**
  * Class: mxGraphHandler
@@ -88,7 +95,7 @@ class GraphHandler implements GraphPlugin {
       this.refreshThread = window.setTimeout(() => {
         this.refreshThread = null;
 
-        if (this.first != null && !this.suspended) {
+        if (this.first && !this.suspended && this.cells) {
           // Updates preview with no translate to compute bounding box
           const dx = this.currentDx;
           const dy = this.currentDy;
@@ -108,9 +115,13 @@ class GraphHandler implements GraphPlugin {
             this.updateHint();
 
             if (this.livePreviewUsed) {
+              const selectionCellsHandler = this.graph.getPlugin(
+                'SelectionCellsHandler'
+              ) as SelectionCellsHandler;
+
               // Forces update to ignore last visible state
               this.setHandlesVisibleForCells(
-                this.graph.selectionCellsHandler.getHandledSelectionCells(),
+                selectionCellsHandler.getHandledSelectionCells(),
                 false,
                 true
               );
@@ -124,7 +135,7 @@ class GraphHandler implements GraphPlugin {
     this.graph.getModel().addListener(InternalEvent.CHANGE, this.refreshHandler);
     this.graph.addListener(InternalEvent.REFRESH, this.refreshHandler);
 
-    this.keyHandler = (e) => {
+    this.keyHandler = (e: KeyboardEvent) => {
       if (
         this.graph.container != null &&
         this.graph.container.style.visibility !== 'hidden' &&
@@ -132,7 +143,7 @@ class GraphHandler implements GraphPlugin {
         !this.suspended
       ) {
         const clone =
-          this.graph.isCloneEvent(e) &&
+          this.graph.isCloneEvent(<MouseEvent>(<unknown>e)) &&
           this.graph.isCellsCloneable() &&
           this.isCloneEnabled();
 
@@ -157,6 +168,12 @@ class GraphHandler implements GraphPlugin {
    */
   graph: MaxGraph;
 
+  panHandler: () => void;
+  escapeHandler: (sender: EventSource, evt: EventObject) => void;
+  refreshHandler: (sender: EventSource, evt: EventObject) => void;
+  keyHandler: (e: KeyboardEvent) => void;
+  refreshThread: number | null = null;
+
   /**
    * Variable: maxCells
    *
@@ -167,7 +184,6 @@ class GraphHandler implements GraphPlugin {
    * cells in the graph is limited to a small number, eg.
    * 500.
    */
-  // maxCells: number;
   maxCells = 50;
 
   /**
@@ -175,7 +191,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Specifies if events are handled. Default is true.
    */
-  // enabled: boolean;
   enabled = true;
 
   /**
@@ -184,7 +199,6 @@ class GraphHandler implements GraphPlugin {
    * Specifies if drop targets under the mouse should be enabled. Default is
    * true.
    */
-  // highlightEnabled: boolean;
   highlightEnabled = true;
 
   /**
@@ -192,7 +206,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Specifies if cloning by control-drag is enabled. Default is true.
    */
-  // cloneEnabled: boolean;
   cloneEnabled = true;
 
   /**
@@ -200,7 +213,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Specifies if moving is enabled. Default is true.
    */
-  // moveEnabled: boolean;
   moveEnabled = true;
 
   /**
@@ -209,7 +221,6 @@ class GraphHandler implements GraphPlugin {
    * Specifies if other cells should be used for snapping the right, center or
    * left side of the current selection. Default is false.
    */
-  // guidesEnabled: boolean;
   guidesEnabled = false;
 
   /**
@@ -224,24 +235,21 @@ class GraphHandler implements GraphPlugin {
    *
    * Holds the <mxGuide> instance that is used for alignment.
    */
-  // guide: mxGuide;
-  guide = null;
+  guide: Guide | null = null;
 
   /**
    * Variable: currentDx
    *
    * Stores the x-coordinate of the current mouse move.
    */
-  // currentDx: number;
-  currentDx = null;
+  currentDx = 0;
 
   /**
    * Variable: currentDy
    *
    * Stores the y-coordinate of the current mouse move.
    */
-  // currentDy: number;
-  currentDy = null;
+  currentDy = 0;
 
   /**
    * Variable: updateCursor
@@ -249,7 +257,6 @@ class GraphHandler implements GraphPlugin {
    * Specifies if a move cursor should be shown if the mouse is over a movable
    * cell. Default is true.
    */
-  // updateCursor: boolean;
   updateCursor = true;
 
   /**
@@ -257,7 +264,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Specifies if selecting is enabled. Default is true.
    */
-  // selectEnabled: boolean;
   selectEnabled = true;
 
   /**
@@ -265,7 +271,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Specifies if cells may be moved out of their parents. Default is true.
    */
-  // removeCellsFromParent: boolean;
   removeCellsFromParent = true;
 
   /**
@@ -282,7 +287,6 @@ class GraphHandler implements GraphPlugin {
    * Specifies if drop events are interpreted as new connections if no other
    * drop action is defined. Default is false.
    */
-  // connectOnDrop: boolean;
   connectOnDrop = false;
 
   /**
@@ -291,7 +295,6 @@ class GraphHandler implements GraphPlugin {
    * Specifies if the view should be scrolled so that a moved cell is
    * visible. Default is true.
    */
-  // scrollOnMove: boolean;
   scrollOnMove = true;
 
   /**
@@ -300,7 +303,6 @@ class GraphHandler implements GraphPlugin {
    * Specifies the minimum number of pixels for the width and height of a
    * selection border. Default is 6.
    */
-  // minimumSize: number;
   minimumSize = 6;
 
   /**
@@ -308,8 +310,7 @@ class GraphHandler implements GraphPlugin {
    *
    * Specifies the color of the preview shape. Default is black.
    */
-  // previewColor: string;
-  previewColor = 'black';
+  previewColor: ColorValue = 'black';
 
   /**
    * Variable: htmlPreview
@@ -318,7 +319,6 @@ class GraphHandler implements GraphPlugin {
    * then drop target detection relies entirely on <mxGraph.getCellAt> because
    * the HTML preview does not "let events through". Default is false.
    */
-  // htmlPreview: boolean;
   htmlPreview = false;
 
   /**
@@ -326,15 +326,13 @@ class GraphHandler implements GraphPlugin {
    *
    * Reference to the <mxShape> that represents the preview.
    */
-  // shape: mxShape;
-  shape = null;
+  shape: Shape | null = null;
 
   /**
    * Variable: scaleGrid
    *
    * Specifies if the grid should be scaled. Default is false.
    */
-  // scaleGrid: boolean;
   scaleGrid = false;
 
   /**
@@ -342,7 +340,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Specifies if the bounding box should allow for rotation. Default is true.
    */
-  // rotationEnabled: boolean;
   rotationEnabled = true;
 
   /**
@@ -350,7 +347,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Maximum number of cells for which live preview should be used.  Default is 0 which means no live preview.
    */
-  // maxLivePreview: number;
   maxLivePreview = 0;
 
   /**
@@ -358,15 +354,35 @@ class GraphHandler implements GraphPlugin {
    *
    * If live preview is allowed on this system.  Default is true for systems with SVG support.
    */
-  // allowLivePreview: boolean;
   allowLivePreview = mxClient.IS_SVG;
+
+  cell: Cell | null = null;
+
+  delayedSelection = false;
+
+  first: Point | null = null;
+  cells: CellArray | null = null;
+  bounds: Rectangle | null = null;
+  pBounds: Rectangle | null = null;
+  allCells: Dictionary<Cell, CellState> = new Dictionary();
+
+  cellWasClicked = false;
+  cloning = false;
+  cellCount = 0;
+
+  target: Cell | null = null;
+
+  suspended = false;
+  livePreviewActive = false;
+  livePreviewUsed = false;
+
+  highlight: CellHighlight | null = null;
 
   /**
    * Function: isEnabled
    *
    * Returns <enabled>.
    */
-  // isEnabled(): boolean;
   isEnabled() {
     return this.enabled;
   }
@@ -376,8 +392,7 @@ class GraphHandler implements GraphPlugin {
    *
    * Sets <enabled>.
    */
-  // setEnabled(value: boolean): void;
-  setEnabled(value) {
+  setEnabled(value: boolean) {
     this.enabled = value;
   }
 
@@ -386,7 +401,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Returns <cloneEnabled>.
    */
-  // isCloneEnabled(): boolean;
   isCloneEnabled() {
     return this.cloneEnabled;
   }
@@ -400,8 +414,7 @@ class GraphHandler implements GraphPlugin {
    *
    * value - Boolean that specifies the new clone enabled state.
    */
-  // setCloneEnabled(value: boolean): void;
-  setCloneEnabled(value) {
+  setCloneEnabled(value: boolean) {
     this.cloneEnabled = value;
   }
 
@@ -410,7 +423,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Returns <moveEnabled>.
    */
-  // isMoveEnabled(): boolean;
   isMoveEnabled() {
     return this.moveEnabled;
   }
@@ -420,8 +432,7 @@ class GraphHandler implements GraphPlugin {
    *
    * Sets <moveEnabled>.
    */
-  // setMoveEnabled(value: boolean): void;
-  setMoveEnabled(value) {
+  setMoveEnabled(value: boolean) {
     this.moveEnabled = value;
   }
 
@@ -430,7 +441,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Returns <selectEnabled>.
    */
-  // isSelectEnabled(): boolean;
   isSelectEnabled() {
     return this.selectEnabled;
   }
@@ -440,8 +450,7 @@ class GraphHandler implements GraphPlugin {
    *
    * Sets <selectEnabled>.
    */
-  // setSelectEnabled(value: boolean): void;
-  setSelectEnabled(value) {
+  setSelectEnabled(value: boolean) {
     this.selectEnabled = value;
   }
 
@@ -450,7 +459,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Returns <removeCellsFromParent>.
    */
-  // isRemoveCellsFromParent(): boolean;
   isRemoveCellsFromParent() {
     return this.removeCellsFromParent;
   }
@@ -460,8 +468,7 @@ class GraphHandler implements GraphPlugin {
    *
    * Sets <removeCellsFromParent>.
    */
-  // setRemoveCellsFromParent(value: boolean): void;
-  setRemoveCellsFromParent(value) {
+  setRemoveCellsFromParent(value: boolean) {
     this.removeCellsFromParent = value;
   }
 
@@ -471,7 +478,7 @@ class GraphHandler implements GraphPlugin {
    * Returns true if the given cell and parent should propagate
    * selection state to the parent.
    */
-  isPropagateSelectionCell(cell, immediate, me) {
+  isPropagateSelectionCell(cell: Cell, immediate: boolean, me: InternalMouseEvent) {
     const parent = cell.getParent();
 
     if (immediate) {
@@ -479,14 +486,14 @@ class GraphHandler implements GraphPlugin {
 
       return (
         !this.graph.isSiblingSelected(cell) &&
-        ((geo != null && geo.relative) || !this.graph.isSwimlane(parent))
+        geo &&
+        geo.relative /* disable swimlane for now || !this.graph.isSwimlane(parent) */
       );
     }
     return (
       (!this.graph.isToggleEvent(me.getEvent()) ||
-        (!this.graph.isSiblingSelected(cell) &&
-          !this.graph.isCellSelected(cell) &&
-          !this.graph.isSwimlane(parent)) ||
+        (!this.graph.isSiblingSelected(cell) && !this.graph.isCellSelected(cell)) ||
+        /* disable swimlane for now !this.graph.isSwimlane(parent)*/
         this.graph.isCellSelected(parent)) &&
       (this.graph.isToggleEvent(me.getEvent()) || !this.graph.isCellSelected(parent))
     );
@@ -497,20 +504,18 @@ class GraphHandler implements GraphPlugin {
    *
    * Hook to return initial cell for the given event.
    */
-  // getInitialCellForEvent(me: mxMouseEvent): mxCell;
-  getInitialCellForEvent(me) {
+  getInitialCellForEvent(me: InternalMouseEvent) {
     let state = me.getState();
 
     if (
       (!this.graph.isToggleEvent(me.getEvent()) || !isAltDown(me.getEvent())) &&
-      state != null &&
+      state &&
       !this.graph.isCellSelected(state.cell)
     ) {
-      const { model } = this.graph;
       let next = this.graph.view.getState(state.cell.getParent());
 
       while (
-        next != null &&
+        next &&
         !this.graph.isCellSelected(next.cell) &&
         (next.cell.isVertex() || next.cell.isEdge()) &&
         this.isPropagateSelectionCell(state.cell, true, me)
@@ -520,7 +525,7 @@ class GraphHandler implements GraphPlugin {
       }
     }
 
-    return state != null ? state.cell : null;
+    return state ? state.cell : null;
   }
 
   /**
@@ -528,12 +533,15 @@ class GraphHandler implements GraphPlugin {
    *
    * Hook to return true for delayed selections.
    */
-  // isDelayedSelection(cell: mxCell, me: mxMouseEvent): boolean;
-  isDelayedSelection(cell, me) {
+  isDelayedSelection(cell: Cell, me: InternalMouseEvent) {
+    const selectionCellsHandler = this.graph.getPlugin(
+      'SelectionCellsHandler'
+    ) as SelectionCellsHandler;
+
     if (!this.graph.isToggleEvent(me.getEvent()) || !isAltDown(me.getEvent())) {
-      while (cell != null) {
-        if (this.graph.selectionCellsHandler.isHandled(cell)) {
-          return this.graph.cellEditor.getEditingCell() != cell;
+      while (cell) {
+        if (selectionCellsHandler.isHandled(cell)) {
+          return this.graph.cellEditor.getEditingCell() !== cell;
         }
 
         cell = cell.getParent();
@@ -548,16 +556,17 @@ class GraphHandler implements GraphPlugin {
    *
    * Implements the delayed selection for the given mouse event.
    */
-  // selectDelayed(me: mxMouseEvent): void;
-  selectDelayed(me) {
-    if (!this.graph.popupMenuHandler.isPopupTrigger(me)) {
+  selectDelayed(me: InternalMouseEvent) {
+    const popupMenuHandler = this.graph.getPlugin('PopupMenuHandler') as PopupMenuHandler;
+
+    if (!popupMenuHandler.isPopupTrigger(me)) {
       let cell = me.getCell();
 
-      if (cell == null) {
+      if (cell === null) {
         cell = this.cell;
       }
 
-      this.selectCellForEvent(cell, me);
+      if (cell) this.selectCellForEvent(cell, me);
     }
   }
 
@@ -566,19 +575,18 @@ class GraphHandler implements GraphPlugin {
    *
    * Selects the given cell for the given <mxMouseEvent>.
    */
-  selectCellForEvent(cell, me) {
+  selectCellForEvent(cell: Cell, me: InternalMouseEvent) {
     const state = this.graph.view.getState(cell);
 
-    if (state != null) {
+    if (state) {
       if (me.isSource(state.control)) {
         this.graph.selectCellForEvent(cell, me.getEvent());
       } else {
         if (!this.graph.isToggleEvent(me.getEvent()) || !isAltDown(me.getEvent())) {
-          const model = this.graph.getModel();
           let parent = cell.getParent();
 
           while (
-            this.graph.view.getState(parent) != null &&
+            this.graph.view.getState(parent) &&
             (parent.isVertex() || parent.isEdge()) &&
             this.isPropagateSelectionCell(cell, false, me)
           ) {
@@ -613,8 +621,7 @@ class GraphHandler implements GraphPlugin {
    * }
    * </code>
    */
-  // consumeMouseEvent(evtName: string, me: mxMouseEvent): void;
-  consumeMouseEvent(evtName, me) {
+  consumeMouseEvent(evtName: string, me: InternalMouseEvent) {
     me.consume();
   }
 
@@ -625,44 +632,46 @@ class GraphHandler implements GraphPlugin {
    * it. By consuming the event all subsequent events of the gesture are
    * redirected to this handler.
    */
-  // mouseDown(sender: any, me: mxMouseEvent): void;
-  mouseDown(sender, me) {
+  mouseDown(sender: EventSource, me: InternalMouseEvent) {
     if (
       !me.isConsumed() &&
       this.isEnabled() &&
       this.graph.isEnabled() &&
-      me.getState() != null &&
+      me.getState() &&
       !isMultiTouchEvent(me.getEvent())
     ) {
       const cell = this.getInitialCellForEvent(me);
-      this.delayedSelection = this.isDelayedSelection(cell, me);
-      this.cell = null;
 
-      if (this.isSelectEnabled() && !this.delayedSelection) {
-        this.graph.selectCellForEvent(cell, me.getEvent());
-      }
+      if (cell) {
+        this.delayedSelection = this.isDelayedSelection(cell, me);
+        this.cell = null;
 
-      if (this.isMoveEnabled()) {
-        const { model } = this.graph;
-        const geo = cell.getGeometry();
-
-        if (
-          this.graph.isCellMovable(cell) &&
-          (!cell.isEdge() ||
-            this.graph.getSelectionCount() > 1 ||
-            (geo.points != null && geo.points.length > 0) ||
-            cell.getTerminal(true) == null ||
-            cell.getTerminal(false) == null ||
-            this.graph.allowDanglingEdges ||
-            (this.graph.isCloneEvent(me.getEvent()) && this.graph.isCellsCloneable()))
-        ) {
-          this.start(cell, me.getX(), me.getY());
-        } else if (this.delayedSelection) {
-          this.cell = cell;
+        if (this.isSelectEnabled() && !this.delayedSelection) {
+          this.graph.selectCellForEvent(cell, me.getEvent());
         }
 
-        this.cellWasClicked = true;
-        this.consumeMouseEvent(InternalEvent.MOUSE_DOWN, me);
+        if (this.isMoveEnabled()) {
+          const geo = cell.getGeometry();
+
+          if (
+            geo &&
+            this.graph.isCellMovable(cell) &&
+            (!cell.isEdge() ||
+              this.graph.getSelectionCount() > 1 ||
+              (geo.points != null && geo.points.length > 0) ||
+              cell.getTerminal(true) == null ||
+              cell.getTerminal(false) == null ||
+              this.graph.isAllowDanglingEdges() ||
+              (this.graph.isCloneEvent(me.getEvent()) && this.graph.isCellsCloneable()))
+          ) {
+            this.start(cell, me.getX(), me.getY());
+          } else if (this.delayedSelection) {
+            this.cell = cell;
+          }
+
+          this.cellWasClicked = true;
+          this.consumeMouseEvent(InternalEvent.MOUSE_DOWN, me);
+        }
       }
     }
   }
@@ -672,21 +681,18 @@ class GraphHandler implements GraphPlugin {
    *
    * Creates an array of cell states which should be used as guides.
    */
-  // getGuideStates(): Array<mxCellState | mxPoint>;
   getGuideStates() {
     const parent = this.graph.getDefaultParent();
-    const model = this.graph.getModel();
 
-    const filter = (cell) => {
+    const filter = (cell: Cell) => {
+      const geo = cell.getGeometry();
+
       return (
-        this.graph.view.getState(cell) != null &&
-        cell.isVertex() &&
-        cell.getGeometry() != null &&
-        !cell.getGeometry().relative
+        !!this.graph.view.getState(cell) && cell.isVertex() && !!geo && !geo.relative
       );
     };
 
-    return this.graph.view.getCellStates(model.filterDescendants(filter, parent));
+    return this.graph.view.getCellStates(parent.filterDescendants(filter));
   }
 
   /**
@@ -701,10 +707,9 @@ class GraphHandler implements GraphPlugin {
    *
    * initialCell - <mxCell> that triggered this handler.
    */
-  // getCells(initialCell: mxCell): mxCell[];
-  getCells(initialCell) {
+  getCells(initialCell: Cell) {
     if (!this.delayedSelection && this.graph.isCellMovable(initialCell)) {
-      return [initialCell];
+      return new CellArray(initialCell);
     }
     return this.graph.getMovableCells(this.graph.getSelectionCells());
   }
@@ -715,11 +720,10 @@ class GraphHandler implements GraphPlugin {
    * Returns the <mxRectangle> used as the preview bounds for
    * moving the given cells.
    */
-  // getPreviewBounds(cells: mxCell[]): mxRectangle;
-  getPreviewBounds(cells) {
+  getPreviewBounds(cells: CellArray) {
     const bounds = this.getBoundingBox(cells);
 
-    if (bounds != null) {
+    if (bounds) {
       // Corrects width and height
       bounds.width = Math.max(0, bounds.width - 1);
       bounds.height = Math.max(0, bounds.height - 1);
@@ -732,9 +736,6 @@ class GraphHandler implements GraphPlugin {
         bounds.x = Math.round(bounds.x);
         bounds.width = Math.ceil(bounds.width);
       }
-
-      const tr = this.graph.view.translate;
-      const s = this.graph.view.scale;
 
       if (bounds.height < this.minimumSize) {
         const dy = this.minimumSize - bounds.height;
@@ -762,32 +763,27 @@ class GraphHandler implements GraphPlugin {
    *
    * cells - Array of <mxCells> whose bounding box should be returned.
    */
-  // getBoundingBox(cells: mxCell[]): mxRectangle;
-  getBoundingBox(cells) {
+  getBoundingBox(cells: CellArray) {
     let result = null;
 
-    if (cells != null && cells.length > 0) {
-      const model = this.graph.getModel();
-
+    if (cells.length > 0) {
       for (let i = 0; i < cells.length; i += 1) {
         if (cells[i].isVertex() || cells[i].isEdge()) {
           const state = this.graph.view.getState(cells[i]);
 
-          if (state != null) {
-            let bbox = state;
+          if (state) {
+            let bbox = null;
 
-            if (
-              cells[i].isVertex() &&
-              state.shape != null &&
-              state.shape.boundingBox != null
-            ) {
+            if (cells[i].isVertex() && state.shape && state.shape.boundingBox) {
               bbox = state.shape.boundingBox;
             }
 
-            if (result == null) {
-              result = Rectangle.fromRectangle(bbox);
-            } else {
-              result.add(bbox);
+            if (bbox) {
+              if (!result) {
+                result = Rectangle.fromRectangle(bbox);
+              } else {
+                result.add(bbox);
+              }
             }
           }
         }
@@ -802,9 +798,8 @@ class GraphHandler implements GraphPlugin {
    *
    * Creates the shape used to draw the preview for the given bounds.
    */
-  // createPreviewShape(bounds: mxRectangle): mxRectangleShape;
-  createPreviewShape(bounds) {
-    const shape = new RectangleShape(bounds, null, this.previewColor);
+  createPreviewShape(bounds: Rectangle) {
+    const shape = new RectangleShape(bounds, NONE, this.previewColor);
     shape.isDashed = true;
 
     if (this.htmlPreview) {
@@ -838,14 +833,12 @@ class GraphHandler implements GraphPlugin {
    *
    * Starts the handling of the mouse gesture.
    */
-  // start(cell: mxCell, x: number, y: number): void;
-  start(cell, x, y, cells) {
+  start(cell: Cell, x: number, y: number, cells?: CellArray) {
     this.cell = cell;
     this.first = convertPoint(this.graph.container, x, y);
-    this.cells = cells != null ? cells : this.getCells(this.cell);
+    this.cells = cells ? cells : this.getCells(this.cell);
     this.bounds = this.graph.getView().getBounds(this.cells);
     this.pBounds = this.getPreviewBounds(this.cells);
-    this.allCells = new Dictionary();
     this.cloning = false;
     this.cellCount = 0;
 
@@ -865,21 +858,21 @@ class GraphHandler implements GraphPlugin {
       for (let i = 0; i < opps.length; i += 1) {
         const state = this.graph.view.getState(opps[i]);
 
-        if (state != null && !connected.get(state)) {
+        if (state && !connected.get(state)) {
           connected.put(state, true);
         }
       }
 
-      this.guide.isStateIgnored = (state) => {
+      this.guide.isStateIgnored = (state: CellState) => {
         const p = state.cell.getParent();
 
         return (
-          state.cell != null &&
-          ((!this.cloning && this.isCellMoving(state.cell)) ||
+          !!state.cell &&
+          ((!this.cloning && !!this.isCellMoving(state.cell)) ||
             (state.cell !== (this.target || parent) &&
               !ignore &&
               !connected.get(state) &&
-              (this.target == null || this.target.getChildCount() >= 2) &&
+              (!this.target || this.target.getChildCount() >= 2) &&
               p !== (this.target || parent)))
         );
       };
@@ -891,12 +884,11 @@ class GraphHandler implements GraphPlugin {
    * @param cell
    * @param dict
    */
-  // addStates(cell: mxCell, dict: any): number;
-  addStates(cell, dict) {
+  addStates(cell: Cell, dict: Dictionary<Cell, CellState>) {
     const state = this.graph.view.getState(cell);
     let count = 0;
 
-    if (state != null && dict.get(cell) == null) {
+    if (state && !dict.get(cell)) {
       dict.put(cell, state);
       count++;
 
@@ -915,8 +907,8 @@ class GraphHandler implements GraphPlugin {
    *
    * Returns true if the given cell is currently being moved.
    */
-  isCellMoving(cell) {
-    return this.allCells.get(cell) != null;
+  isCellMoving(cell: Cell) {
+    return this.allCells.get(cell);
   }
 
   /**
@@ -925,9 +917,8 @@ class GraphHandler implements GraphPlugin {
    * Returns true if the guides should be used for the given <mxMouseEvent>.
    * This implementation returns <mxGuide.isEnabledForEvent>.
    */
-  // useGuidesForEvent(me: mxMouseEvent): boolean;
-  useGuidesForEvent(me) {
-    return this.guide != null
+  useGuidesForEvent(me: InternalMouseEvent) {
+    return this.guide
       ? this.guide.isEnabledForEvent(me.getEvent()) &&
           !this.graph.isConstrainedEvent(me.getEvent())
       : true;
@@ -938,8 +929,7 @@ class GraphHandler implements GraphPlugin {
    *
    * Snaps the given vector to the grid and returns the given mxPoint instance.
    */
-  // snap(vector: mxPoint): mxPoint;
-  snap(vector) {
+  snap(vector: Point) {
     const scale = this.scaleGrid ? this.graph.view.scale : 1;
 
     vector.x = this.graph.snap(vector.x / scale) * scale;
@@ -954,13 +944,14 @@ class GraphHandler implements GraphPlugin {
    * Returns an <mxPoint> that represents the vector for moving the cells
    * for the given <mxMouseEvent>.
    */
-  // getDelta(me: mxMouseEvent): mxPoint;
-  getDelta(me) {
+  getDelta(me: InternalMouseEvent) {
     const point = convertPoint(this.graph.container, me.getX(), me.getY());
 
-    return new point(
-      point.x - this.first.x - this.graph.panDx,
-      point.y - this.first.y - this.graph.panDy
+    if (!this.first) return new Point();
+
+    return new Point(
+      point.x - this.first.x - this.graph.getPanDx(),
+      point.y - this.first.y - this.graph.getPanDy()
     );
   }
 
@@ -969,15 +960,13 @@ class GraphHandler implements GraphPlugin {
    *
    * Hook for subclassers do show details while the handler is active.
    */
-  // updateHint(me: mxMouseEvent): void;
-  updateHint(me) {}
+  updateHint(me?: InternalMouseEvent) {}
 
   /**
    * Function: removeHint
    *
    * Hooks for subclassers to hide details when the handler gets inactive.
    */
-  // removeHint(): void;
   removeHint() {}
 
   /**
@@ -985,8 +974,7 @@ class GraphHandler implements GraphPlugin {
    *
    * Hook for rounding the unscaled vector. This uses Math.round.
    */
-  // roundLength(length: number): number;
-  roundLength(length) {
+  roundLength(length: number) {
     return Math.round(length * 100) / 100;
   }
 
@@ -995,8 +983,8 @@ class GraphHandler implements GraphPlugin {
    *
    * Returns true if the given cell is a valid drop target.
    */
-  isValidDropTarget(target, me) {
-    return this.cell.getParent() !== target;
+  isValidDropTarget(target: Cell, me: InternalMouseEvent) {
+    return this.cell ? this.cell.getParent() !== target : false;
   }
 
   /**
@@ -1017,7 +1005,7 @@ class GraphHandler implements GraphPlugin {
         this.livePreviewActive = true;
         this.livePreviewUsed = true;
       }
-    } else if (!this.livePreviewUsed && this.shape == null) {
+    } else if (!this.livePreviewUsed && !this.shape && this.bounds) {
       this.shape = this.createPreviewShape(this.bounds);
     }
   }
@@ -1028,16 +1016,15 @@ class GraphHandler implements GraphPlugin {
    * Handles the event by highlighting possible drop targets and updating the
    * preview.
    */
-  // mouseMove(sender: any, me: mxMouseEvent): void;
-  mouseMove(sender, me) {
+  mouseMove(sender: EventSource, me: InternalMouseEvent) {
     const { graph } = this;
 
     if (
       !me.isConsumed() &&
       graph.isMouseDown &&
-      this.cell != null &&
-      this.first != null &&
-      this.bounds != null &&
+      this.cell &&
+      this.first &&
+      this.bounds &&
       !this.suspended
     ) {
       // Stops moving if a multi touch event is received
@@ -1047,16 +1034,16 @@ class GraphHandler implements GraphPlugin {
       }
 
       let delta = this.getDelta(me);
-      const tol = graph.tolerance;
+      const tol = graph.getEventTolerance();
 
       if (
-        this.shape != null ||
+        this.shape ||
         this.livePreviewActive ||
         Math.abs(delta.x) > tol ||
         Math.abs(delta.y) > tol
       ) {
         // Highlight is used for highlighting drop targets
-        if (this.highlight == null) {
+        if (!this.highlight) {
           this.highlight = new CellHighlight(this.graph, DROP_TARGET_COLOR, 3);
         }
 
@@ -1067,18 +1054,18 @@ class GraphHandler implements GraphPlugin {
         const gridEnabled = graph.isGridEnabledEvent(me.getEvent());
         const cell = me.getCell();
         let hideGuide = true;
-        let target = null;
+        let target: Cell | null = null;
         this.cloning = clone;
 
-        if (graph.isDropEnabled() && this.highlightEnabled) {
+        if (graph.isDropEnabled() && this.highlightEnabled && this.cells) {
           // Contains a call to getCellAt to find the cell under the mouse
           target = graph.getDropTarget(this.cells, me.getEvent(), cell, clone);
         }
 
-        let state = graph.getView().getState(target);
+        let state = target ? graph.getView().getState(target) : null;
         let highlight = false;
 
-        if (state != null && (clone || this.isValidDropTarget(target, me))) {
+        if (state && (clone || (target && this.isValidDropTarget(target, me)))) {
           if (this.target !== target) {
             this.target = target;
             this.setHighlightColor(DROP_TARGET_COLOR);
@@ -1090,14 +1077,15 @@ class GraphHandler implements GraphPlugin {
 
           if (
             this.connectOnDrop &&
-            cell != null &&
+            cell &&
+            this.cells &&
             this.cells.length === 1 &&
             cell.isVertex() &&
             cell.isConnectable()
           ) {
             state = graph.getView().getState(cell);
 
-            if (state != null) {
+            if (state) {
               const error = graph.getEdgeValidationError(null, this.cell, cell);
               const color = error == null ? VALID_COLOR : INVALID_CONNECT_TARGET_COLOR;
               this.setHighlightColor(color);
@@ -1156,9 +1144,10 @@ class GraphHandler implements GraphPlugin {
       !graph.isMouseDown
     ) {
       let cursor = graph.getCursorForMouseEvent(me);
+      const cell = me.getCell();
 
-      if (cursor == null && graph.isEnabled() && graph.isCellMovable(me.getCell())) {
-        if (me.getCell().isEdge()) {
+      if (!cursor && cell && graph.isEnabled() && graph.isCellMovable(cell)) {
+        if (cell.isEdge()) {
           cursor = CURSOR_MOVABLE_EDGE;
         } else {
           cursor = CURSOR_MOVABLE_VERTEX;
@@ -1167,7 +1156,7 @@ class GraphHandler implements GraphPlugin {
 
       // Sets the cursor on the original source state under the mouse
       // instead of the event source state which can be the parent
-      if (cursor != null && me.sourceState != null) {
+      if (cursor && me.sourceState) {
         me.sourceState.setCursor(cursor);
       }
     }
@@ -1178,11 +1167,15 @@ class GraphHandler implements GraphPlugin {
    *
    * Updates the bounds of the preview shape.
    */
-  updatePreview(remote) {
+  updatePreview(remote = false) {
     if (this.livePreviewUsed && !remote) {
-      if (this.cells != null) {
+      if (this.cells) {
+        const selectionCellsHandler = this.graph.getPlugin(
+          'SelectionCellsHandler'
+        ) as SelectionCellsHandler;
+
         this.setHandlesVisibleForCells(
-          this.graph.selectionCellsHandler.getHandledSelectionCells(),
+          selectionCellsHandler.getHandledSelectionCells(),
           false
         );
         this.updateLivePreview(this.currentDx, this.currentDy);
@@ -1197,9 +1190,8 @@ class GraphHandler implements GraphPlugin {
    *
    * Updates the bounds of the preview shape.
    */
-  // updatePreviewShape(): void;
   updatePreviewShape() {
-    if (this.shape != null && this.pBounds != null) {
+    if (this.shape && this.pBounds) {
       this.shape.bounds = new Rectangle(
         Math.round(this.pBounds.x + this.currentDx),
         Math.round(this.pBounds.y + this.currentDy),
@@ -1215,19 +1207,19 @@ class GraphHandler implements GraphPlugin {
    *
    * Updates the bounds of the preview shape.
    */
-  updateLivePreview(dx, dy) {
+  updateLivePreview(dx: number, dy: number) {
     if (!this.suspended) {
-      const states = [];
+      const states: CellState[][] = [];
 
       if (this.allCells != null) {
-        this.allCells.visit((key, state) => {
-          const realState = this.graph.view.getState(state.cell);
+        this.allCells.visit((key, state: CellState | null) => {
+          const realState = state ? this.graph.view.getState(state.cell) : null;
 
           // Checks if cell was removed or replaced
-          if (realState !== state) {
+          if (realState !== state && state) {
             state.destroy();
 
-            if (realState != null) {
+            if (realState) {
               this.allCells.put(state.cell, realState);
             } else {
               this.allCells.remove(state.cell);
@@ -1236,21 +1228,21 @@ class GraphHandler implements GraphPlugin {
             state = realState;
           }
 
-          if (state != null) {
+          if (state) {
             // Saves current state
             const tempState = state.clone();
             states.push([state, tempState]);
 
             // Makes transparent for events to detect drop targets
-            if (state.shape != null) {
-              if (state.shape.originalPointerEvents == null) {
+            if (state.shape) {
+              if (state.shape.originalPointerEvents === null) {
                 state.shape.originalPointerEvents = state.shape.pointerEvents;
               }
 
               state.shape.pointerEvents = false;
 
-              if (state.text != null) {
-                if (state.text.originalPointerEvents == null) {
+              if (state.text) {
+                if (state.text.originalPointerEvents === null) {
                   state.text.originalPointerEvents = state.text.pointerEvents;
                 }
 
@@ -1311,9 +1303,9 @@ class GraphHandler implements GraphPlugin {
             const geometry = state.cell.getGeometry();
             const points = [];
 
-            if (geometry != null && geometry.points != null) {
+            if (geometry && geometry.points) {
               for (let j = 0; j < geometry.points.length; j++) {
-                if (geometry.points[j] != null) {
+                if (geometry.points[j]) {
                   points.push(
                     new Point(
                       geometry.points[j].x + dx / s,
@@ -1330,8 +1322,11 @@ class GraphHandler implements GraphPlugin {
 
             if (source == null || !this.isCellMoving(source.cell)) {
               const pt0 = pts[0];
-              state.setAbsoluteTerminalPoint(new Point(pt0.x + dx, pt0.y + dy), true);
-              source = null;
+
+              if (pt0) {
+                state.setAbsoluteTerminalPoint(new Point(pt0.x + dx, pt0.y + dy), true);
+                source = null;
+              }
             } else {
               state.view.updateFixedTerminalPoint(
                 state,
@@ -1343,8 +1338,11 @@ class GraphHandler implements GraphPlugin {
 
             if (target == null || !this.isCellMoving(target.cell)) {
               const ptn = pts[pts.length - 1];
-              state.setAbsoluteTerminalPoint(new Point(ptn.x + dx, ptn.y + dy), false);
-              target = null;
+
+              if (ptn) {
+                state.setAbsoluteTerminalPoint(new Point(ptn.x + dx, ptn.y + dy), false);
+                target = null;
+              }
             } else {
               state.view.updateFixedTerminalPoint(
                 state,
@@ -1378,9 +1376,13 @@ class GraphHandler implements GraphPlugin {
    *
    * Redraws the preview shape for the given states array.
    */
-  redrawHandles(states) {
+  redrawHandles(states: CellState[][]) {
+    const selectionCellsHandler = this.graph.getPlugin(
+      'SelectionCellsHandler'
+    ) as SelectionCellsHandler;
+
     for (let i = 0; i < states.length; i += 1) {
-      const handler = this.graph.selectionCellsHandler.getHandler(states[i][0].cell);
+      const handler = selectionCellsHandler.getHandler(states[i][0].cell);
 
       if (handler != null) {
         handler.redraw(true);
@@ -1393,7 +1395,7 @@ class GraphHandler implements GraphPlugin {
    *
    * Resets the given preview states array.
    */
-  resetPreviewStates(states) {
+  resetPreviewStates(states: CellState[][]) {
     for (let i = 0; i < states.length; i += 1) {
       states[i][0].setState(states[i][1]);
     }
@@ -1410,11 +1412,11 @@ class GraphHandler implements GraphPlugin {
         this.updateLivePreview(0, 0);
       }
 
-      if (this.shape != null) {
+      if (this.shape) {
         this.shape.node.style.visibility = 'hidden';
       }
 
-      if (this.guide != null) {
+      if (this.guide) {
         this.guide.setVisible(false);
       }
 
@@ -1429,17 +1431,17 @@ class GraphHandler implements GraphPlugin {
    */
   resume() {
     if (this.suspended) {
-      this.suspended = null;
+      this.suspended = false;
 
       if (this.livePreviewUsed) {
         this.livePreviewActive = true;
       }
 
-      if (this.shape != null) {
+      if (this.shape) {
         this.shape.node.style.visibility = 'visible';
       }
 
-      if (this.guide != null) {
+      if (this.guide) {
         this.guide.setVisible(true);
       }
     }
@@ -1451,45 +1453,43 @@ class GraphHandler implements GraphPlugin {
    * Resets the livew preview.
    */
   resetLivePreview() {
-    if (this.allCells != null) {
-      this.allCells.visit((key, state) => {
-        // Restores event handling
-        if (state.shape != null && state.shape.originalPointerEvents != null) {
-          state.shape.pointerEvents = state.shape.originalPointerEvents;
-          state.shape.originalPointerEvents = null;
+    this.allCells.visit((key, state) => {
+      // Restores event handling
+      if (state.shape && state.shape.originalPointerEvents !== null) {
+        state.shape.pointerEvents = state.shape.originalPointerEvents;
+        state.shape.originalPointerEvents = null;
 
-          // Forces repaint even if not moved to update pointer events
-          state.shape.bounds = null;
+        // Forces repaint even if not moved to update pointer events
+        state.shape.bounds = null;
 
-          if (state.text != null) {
-            state.text.pointerEvents = state.text.originalPointerEvents;
-            state.text.originalPointerEvents = null;
-          }
+        if (state.text && state.text.originalPointerEvents !== null) {
+          state.text.pointerEvents = state.text.originalPointerEvents;
+          state.text.originalPointerEvents = null;
         }
+      }
 
-        // Shows folding icon
-        if (
-          state.control != null &&
-          state.control.node != null &&
-          state.control.node.style.visibility === 'hidden'
-        ) {
-          state.control.node.style.visibility = '';
+      // Shows folding icon
+      if (
+        state.control != null &&
+        state.control.node != null &&
+        state.control.node.style.visibility === 'hidden'
+      ) {
+        state.control.node.style.visibility = '';
+      }
+
+      // Fixes preview box for edge labels
+      if (!this.cloning) {
+        if (state.text !== null) {
+          state.text.updateBoundingBox();
         }
+      }
 
-        // Fixes preview box for edge labels
-        if (!this.cloning) {
-          if (state.text != null) {
-            state.text.updateBoundingBox();
-          }
-        }
+      // Forces repaint of connected edges
+      state.view.invalidate(state.cell);
+    });
 
-        // Forces repaint of connected edges
-        state.view.invalidate(state.cell);
-      });
-
-      // Repaints all invalid states
-      this.graph.view.validate();
-    }
+    // Repaints all invalid states
+    this.graph.view.validate();
   }
 
   /**
@@ -1503,12 +1503,16 @@ class GraphHandler implements GraphPlugin {
    * visible - Boolean that specifies if the handles should be visible.
    * force - Forces an update of the handler regardless of the last used value.
    */
-  setHandlesVisibleForCells(cells, visible, force) {
+  setHandlesVisibleForCells(cells: CellArray, visible: boolean, force = false) {
     if (force || this.handlesVisible !== visible) {
       this.handlesVisible = visible;
 
+      const selectionCellsHandler = this.graph.getPlugin(
+        'SelectionCellsHandler'
+      ) as SelectionCellsHandler;
+
       for (let i = 0; i < cells.length; i += 1) {
-        const handler = this.graph.selectionCellsHandler.getHandler(cells[i]);
+        const handler = selectionCellsHandler.getHandler(cells[i]);
 
         if (handler != null) {
           handler.setHandlesVisible(visible);
@@ -1530,9 +1534,8 @@ class GraphHandler implements GraphPlugin {
    *
    * color - String that represents the new highlight color.
    */
-  // setHighlightColor(color: string): void;
-  setHighlightColor(color) {
-    if (this.highlight != null) {
+  setHighlightColor(color: ColorValue) {
+    if (this.highlight) {
       this.highlight.setHighlightColor(color);
     }
   }
@@ -1542,33 +1545,35 @@ class GraphHandler implements GraphPlugin {
    *
    * Handles the event by applying the changes to the selection cells.
    */
-  // mouseUp(sender: any, me: mxMouseEvent): void;
-  mouseUp(sender, me) {
+  mouseUp(sender: EventSource, me: InternalMouseEvent) {
     if (!me.isConsumed()) {
       if (this.livePreviewUsed) {
         this.resetLivePreview();
       }
 
       if (
-        this.cell != null &&
-        this.first != null &&
-        (this.shape != null || this.livePreviewUsed) &&
-        this.currentDx != null &&
-        this.currentDy != null
+        this.cell &&
+        this.first &&
+        (this.shape || this.livePreviewUsed) &&
+        this.currentDx &&
+        this.currentDy
       ) {
         const { graph } = this;
         const cell = me.getCell();
 
         if (
           this.connectOnDrop &&
-          this.target == null &&
-          cell != null &&
+          !this.target &&
+          cell &&
           cell.isVertex() &&
           cell.isConnectable() &&
           graph.isEdgeValid(null, this.cell, cell)
         ) {
-          alert('CONNECT');
-          graph.connectionHandler.connect(this.cell, cell, me.getEvent());
+          const connectionHandler = graph.getPlugin(
+            'ConnectionHandler'
+          ) as ConnectionHandler;
+
+          connectionHandler.connect(this.cell, cell, me.getEvent());
         } else {
           const clone =
             graph.isCloneEvent(me.getEvent()) &&
@@ -1582,6 +1587,7 @@ class GraphHandler implements GraphPlugin {
           if (
             target &&
             graph.isSplitEnabled() &&
+            this.cells &&
             graph.isSplitTarget(target, this.cells, me.getEvent())
           ) {
             graph.splitEdge(
@@ -1593,7 +1599,7 @@ class GraphHandler implements GraphPlugin {
               me.getGraphX(),
               me.getGraphY()
             );
-          } else {
+          } else if (this.cells) {
             this.moveCells(this.cells, dx, dy, clone, this.target, me.getEvent());
           }
         }
@@ -1619,8 +1625,13 @@ class GraphHandler implements GraphPlugin {
   reset() {
     if (this.livePreviewUsed) {
       this.resetLivePreview();
+
+      const selectionCellsHandler = this.graph.getPlugin(
+        'SelectionCellsHandler'
+      ) as SelectionCellsHandler;
+
       this.setHandlesVisibleForCells(
-        this.graph.selectionCellsHandler.getHandledSelectionCells(),
+        selectionCellsHandler.getHandledSelectionCells(),
         true
       );
     }
@@ -1629,17 +1640,16 @@ class GraphHandler implements GraphPlugin {
     this.removeHint();
 
     this.delayedSelection = false;
-    this.livePreviewActive = null;
-    this.livePreviewUsed = null;
+    this.livePreviewActive = false;
+    this.livePreviewUsed = false;
     this.cellWasClicked = false;
-    this.suspended = null;
-    this.currentDx = null;
-    this.currentDy = null;
-    this.cellCount = null;
+    this.suspended = false;
+    this.currentDx = 0;
+    this.currentDy = 0;
+    this.cellCount = 0;
     this.cloning = false;
-    this.allCells = null;
+    this.allCells.clear();
     this.pBounds = null;
-    this.guides = null;
     this.target = null;
     this.first = null;
     this.cells = null;
@@ -1652,15 +1662,14 @@ class GraphHandler implements GraphPlugin {
    * Returns true if the given cells should be removed from the parent for the specified
    * mousereleased event.
    */
-  // shouldRemoveCellsFromParent(parent: mxCell, cells: mxCell[], evt: Event): boolean;
-  shouldRemoveCellsFromParent(parent, cells, evt) {
+  shouldRemoveCellsFromParent(parent: Cell, cells: CellArray, evt: MouseEvent) {
     if (parent.isVertex()) {
       const pState = this.graph.getView().getState(parent);
 
-      if (pState != null) {
+      if (pState) {
         let pt = convertPoint(this.graph.container, getClientX(evt), getClientY(evt));
 
-        const alpha = toRadians(getValue(pState.style, 'rotation') || 0);
+        const alpha = toRadians(pState.style.rotation ?? 0);
 
         if (alpha !== 0) {
           const cos = Math.cos(-alpha);
@@ -1681,8 +1690,16 @@ class GraphHandler implements GraphPlugin {
    *
    * Moves the given cells by the specified amount.
    */
-  // moveCells(cells: mxCell[], dx: number, dy: number, clone: boolean, target: mxCell, evt: Event): void;
-  moveCells(cells, dx, dy, clone, target, evt) {
+  moveCells(
+    cells: CellArray,
+    dx: number,
+    dy: number,
+    clone: boolean,
+    target: Cell | null,
+    evt: MouseEvent
+  ) {
+    if (!this.cell) return;
+
     if (clone) {
       cells = this.graph.getCloneableCells(cells);
     }
@@ -1706,7 +1723,7 @@ class GraphHandler implements GraphPlugin {
       const parents = [];
 
       // Removes parent if all child cells are removed
-      if (!clone && target != null && this.removeEmptyParents) {
+      if (!clone && target && this.removeEmptyParents) {
         // Collects all non-selected parents
         const dict = new Dictionary();
 
@@ -1718,7 +1735,7 @@ class GraphHandler implements GraphPlugin {
         for (let i = 0; i < cells.length; i += 1) {
           const par = cells[i].getParent();
 
-          if (par != null && !dict.get(par)) {
+          if (par && !dict.get(par)) {
             dict.put(par, true);
             parents.push(par);
           }
@@ -1738,7 +1755,7 @@ class GraphHandler implements GraphPlugin {
         }
       }
 
-      this.graph.removeCells(temp, false);
+      this.graph.removeCells(new CellArray(...temp), false);
     } finally {
       this.graph.getModel().endUpdate();
     }
@@ -1758,7 +1775,7 @@ class GraphHandler implements GraphPlugin {
    *
    * Returns true if the given parent should be removed after removal of child cells.
    */
-  shouldRemoveParent(parent) {
+  shouldRemoveParent(parent: Cell) {
     const state = this.graph.view.getState(parent);
 
     return (
@@ -1778,12 +1795,12 @@ class GraphHandler implements GraphPlugin {
   // destroyShapes(): void;
   destroyShapes() {
     // Destroys the preview dashed rectangle
-    if (this.shape != null) {
+    if (this.shape) {
       this.shape.destroy();
       this.shape = null;
     }
 
-    if (this.guide != null) {
+    if (this.guide) {
       this.guide.destroy();
       this.guide = null;
     }
@@ -1804,17 +1821,10 @@ class GraphHandler implements GraphPlugin {
   onDestroy() {
     this.graph.removeMouseListener(this);
     this.graph.removeListener(this.panHandler);
+    this.graph.removeListener(this.escapeHandler);
 
-    if (this.escapeHandler != null) {
-      this.graph.removeListener(this.escapeHandler);
-      this.escapeHandler = null;
-    }
-
-    if (this.refreshHandler != null) {
-      this.graph.getModel().removeListener(this.refreshHandler);
-      this.graph.removeListener(this.refreshHandler);
-      this.refreshHandler = null;
-    }
+    this.graph.getModel().removeListener(this.refreshHandler);
+    this.graph.removeListener(this.refreshHandler);
 
     InternalEvent.removeListener(document, 'keydown', this.keyHandler);
     InternalEvent.removeListener(document, 'keyup', this.keyHandler);

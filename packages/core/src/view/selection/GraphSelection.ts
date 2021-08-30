@@ -116,8 +116,8 @@ class GraphSelection extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} to be selected.
    */
-  setCell(cell: Cell) {
-    this.setCells(new CellArray(cell));
+  setCell(cell: Cell | null) {
+    this.setCells(cell ? new CellArray(cell) : new CellArray());
   }
 
   /**
@@ -318,7 +318,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} to be selected.
    */
-  setSelectionCell(cell: Cell) {
+  setSelectionCell(cell: Cell | null) {
     this.setCell(cell);
   }
 
