@@ -1,16 +1,15 @@
-import CellArray from "../cell/datatypes/CellArray";
-import {sortCells} from "../../util/Utils";
-import EventObject from "../event/EventObject";
-import InternalEvent from "../event/InternalEvent";
-import Graph from "../Graph";
+import CellArray from '../cell/datatypes/CellArray';
+import { autoImplement, sortCells } from '../../util/Utils';
+import EventObject from '../event/EventObject';
+import InternalEvent from '../event/InternalEvent';
+import Graph from '../Graph';
+import GraphSelection from '../selection/GraphSelection';
 
-class GraphOrder {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+type PartialGraph = Pick<Graph, 'fireEvent' | 'batchUpdate' | 'getModel'>;
+type PartialSelection = Pick<GraphSelection, 'getSelectionCells'>;
+type PartialClass = PartialGraph & PartialSelection;
 
-  graph: Graph;
-
+class GraphOrder extends autoImplement<PartialClass>() {
   /*****************************************************************************
    * Group: Order
    *****************************************************************************/
@@ -26,17 +25,22 @@ class GraphOrder {
    */
   orderCells(
     back: boolean = false,
-    cells: CellArray = this.graph.selection.getSelectionCells()
+    cells: CellArray = this.getSelectionCells()
   ): CellArray {
-
     if (cells == null) {
-      cells = sortCells(this.graph.selection.getSelectionCells(), true);
+      cells = sortCells(this.getSelectionCells(), true);
     }
 
-    this.graph.batchUpdate(() => {
+    this.batchUpdate(() => {
       this.cellsOrdered(cells, back);
-      const event = new EventObject(InternalEvent.ORDER_CELLS, 'back', back, 'cells', cells);
-      this.graph.events.fireEvent(event);
+      const event = new EventObject(
+        InternalEvent.ORDER_CELLS,
+        'back',
+        back,
+        'cells',
+        cells
+      );
+      this.fireEvent(event);
     });
 
     return cells;
@@ -49,25 +53,19 @@ class GraphOrder {
    * @param cells Array of {@link mxCell} whose order should be changed.
    * @param back Boolean that specifies if the cells should be moved to back.
    */
-  cellsOrdered(cells: CellArray,
-               back: boolean = false) {
-
-    this.graph.batchUpdate(() => {
+  cellsOrdered(cells: CellArray, back: boolean = false) {
+    this.batchUpdate(() => {
       for (let i = 0; i < cells.length; i += 1) {
         const parent = cells[i].getParent();
 
         if (back) {
-          this.graph.model.add(parent, cells[i], i);
+          this.getModel().add(parent, cells[i], i);
         } else {
-          this.graph.model.add(
-            parent,
-            cells[i],
-            parent ? parent.getChildCount() - 1 : 0
-          );
+          this.getModel().add(parent, cells[i], parent ? parent.getChildCount() - 1 : 0);
         }
       }
 
-      this.graph.events.fireEvent(
+      this.fireEvent(
         new EventObject(InternalEvent.CELLS_ORDERED, 'back', back, 'cells', cells)
       );
     });

@@ -1,23 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Icon_Images/Images',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph, 
-    mxCloneUtils, 
-    mxImage,
-    mxRectangle,
-    mxConstants,
-    mxPerimeter
-  } = mxgraph;
+  const { Graph, CloneUtils, ImageBox, Rectangle, Constants, Perimeter } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -28,16 +21,14 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Sets a background image and restricts child movement to its bounds
-  graph.setBackgroundImage(
-    new mxImage('images/gradient_background.jpg', 360, 200)
-  );
-  graph.maximumGraphBounds = new mxRectangle(0, 0, 360, 200);
+  graph.setBackgroundImage(new ImageBox('images/gradient_background.jpg', 360, 200));
+  graph.maximumGraphBounds = new Rectangle(0, 0, 360, 200);
 
   // Resizes the container but never make it bigger than the background
-  graph.minimumContainerSize = new mxRectangle(0, 0, 360, 200);
+  graph.minimumContainerSize = new Rectangle(0, 0, 360, 200);
   graph.setResizeContainer(true);
 
   // Disables basic selection and cell handling
@@ -99,19 +90,19 @@ const Template = ({ label, ...args }) => {
 
   function configureStylesheet(graph) {
     let style = {};
-    style.shape = mxConstants.SHAPE_IMAGE;
-    style.perimiter = mxPerimeter.RectanglePerimeter;
+    style.shape = Constants.SHAPE_IMAGE;
+    style.perimiter = Perimeter.RectanglePerimeter;
     style.image = 'images/icons48/keys.png';
     style.fontColor = '#FFFFFF';
     graph.getStylesheet().putCellStyle('image', style);
 
-    style = mxCloneUtils.clone(style);
-    style.shape = mxConstants.SHAPE_LABEL;
+    style = CloneUtils.clone(style);
+    style.shape = Constants.SHAPE_LABEL;
     style.strokeColor = '#000000';
-    style.align = mxConstants.ALIGN_CENTER;
-    style.verticalAlign = mxConstants.ALIGN_TOP;
-    style.imageAlign = mxConstants.ALIGN_CENTER;
-    style.imageVerticalAlign = mxConstants.ALIGN_TOP;
+    style.align = Constants.ALIGN_CENTER;
+    style.verticalAlign = Constants.ALIGN_TOP;
+    style.imageAlign = Constants.ALIGN_CENTER;
+    style.imageVerticalAlign = Constants.ALIGN_TOP;
     style.image = 'images/icons48/gear.png';
     style.imageWidth = '48';
     style.imageHeight = '48';
@@ -119,31 +110,31 @@ const Template = ({ label, ...args }) => {
     style.spacing = '8';
     graph.getStylesheet().putCellStyle('bottom', style);
 
-    style = mxCloneUtils.clone(style);
-    style.imageVerticalAlign = mxConstants.ALIGN_BOTTOM;
+    style = CloneUtils.clone(style);
+    style.imageVerticalAlign = Constants.ALIGN_BOTTOM;
     style.image = 'images/icons48/server.png';
     delete style.spacingTop;
     graph.getStylesheet().putCellStyle('top', style);
 
-    style = mxCloneUtils.clone(style);
-    style.align = mxConstants.ALIGN_LEFT;
-    style.imageAlign = mxConstants.ALIGN_LEFT;
-    style.verticalAlign = mxConstants.ALIGN_MIDDLE;
-    style.imageVerticalAlign = mxConstants.ALIGN_MIDDLE;
+    style = CloneUtils.clone(style);
+    style.align = Constants.ALIGN_LEFT;
+    style.imageAlign = Constants.ALIGN_LEFT;
+    style.verticalAlign = Constants.ALIGN_MIDDLE;
+    style.imageVerticalAlign = Constants.ALIGN_MIDDLE;
     style.image = 'images/icons48/earth.png';
     style.spacingLeft = '55';
     style.spacing = '4';
     graph.getStylesheet().putCellStyle('right', style);
 
-    style = mxCloneUtils.clone(style);
-    style.align = mxConstants.ALIGN_RIGHT;
-    style.imageAlign = mxConstants.ALIGN_RIGHT;
+    style = CloneUtils.clone(style);
+    style.align = Constants.ALIGN_RIGHT;
+    style.imageAlign = Constants.ALIGN_RIGHT;
     delete style.spacingLeft;
     style.spacingRight = '55';
     graph.getStylesheet().putCellStyle('left', style);
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

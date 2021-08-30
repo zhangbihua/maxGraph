@@ -1,21 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Icon_Images/Indicators',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxEdgeStyle,
-    mxConstants,
-    mxKeyHandler
-  } = mxgraph;
+  const { Graph, EdgeStyle, Constants, mxKeyHandler } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -26,7 +21,7 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.setConnectable(true);
   new mxKeyHandler(graph);
 
@@ -50,8 +45,8 @@ const Template = ({ label, ...args }) => {
   // Creates a style with an indicator
   style = graph.getStylesheet().getDefaultEdgeStyle();
 
-  style.edge = mxEdgeStyle.ElbowConnector;
-  style.elbow = mxConstants.ELBOW_VERTICAL;
+  style.edge = EdgeStyle.ElbowConnector;
+  style.elbow = Constants.ELBOW_VERTICAL;
   style.rounded = true;
 
   // Gets the default parent for inserting new cells. This
@@ -88,6 +83,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

@@ -11,7 +11,7 @@ import Marker from './Marker';
 import Point from '../../Point';
 import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
-import { ColorValue } from 'packages/core/src/types';
+import { ColorValue } from 'core/types';
 
 /**
  * Extends {@link mxShape} to implement a connector shape.

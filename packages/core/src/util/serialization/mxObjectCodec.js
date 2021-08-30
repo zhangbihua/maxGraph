@@ -5,12 +5,12 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxObjectIdentity from '../mxObjectIdentity';
+import ObjectIdentity from '../ObjectIdentity';
 import mxLog from '../gui/mxLog';
 import Geometry from '../../view/geometry/Geometry';
 import Point from '../../view/geometry/Point';
 import { NODETYPE_ELEMENT } from '../Constants';
-import utils, { isInteger, isNumeric } from '../Utils';
+import { isInteger, isNumeric } from '../Utils';
 import { getTextContent } from '../DomUtils';
 import { load } from '../network/mxXmlRequest';
 
@@ -303,7 +303,7 @@ class mxObjectCodec {
   /**
    * Returns true if the given attribute is to be ignored by the codec. This
    * implementation returns true if the given fieldname is in {@link exclude} or
-   * if the fieldname equals {@link mxObjectIdentity.FIELD_NAME}.
+   * if the fieldname equals {@link ObjectIdentity.FIELD_NAME}.
    *
    * @param obj Object instance that contains the field.
    * @param attr Fieldname of the field.
@@ -313,9 +313,7 @@ class mxObjectCodec {
    */
   // isExcluded(obj: any, attr: string, value: any, write?: boolean): boolean;
   isExcluded(obj, attr, value, write) {
-    return (
-      attr == mxObjectIdentity.FIELD_NAME || this.exclude.indexOf(attr) >= 0
-    );
+    return attr == ObjectIdentity.FIELD_NAME || this.exclude.indexOf(attr) >= 0;
   }
 
   /**
@@ -495,9 +493,7 @@ class mxObjectCodec {
 
       node.appendChild(child);
     } else {
-      mxLog.warn(
-        `mxObjectCodec.encode: No node for ${this.getName()}.${name}: ${value}`
-      );
+      mxLog.warn(`mxObjectCodec.encode: No node for ${this.getName()}.${name}: ${value}`);
     }
   }
 
@@ -532,9 +528,7 @@ class mxObjectCodec {
    */
   // isBooleanAttribute(enc: mxCodec, obj: any, name: string, value: any): boolean;
   isBooleanAttribute(enc, obj, name, value) {
-    return (
-      typeof value.length === 'undefined' && (value == true || value == false)
-    );
+    return typeof value.length === 'undefined' && (value == true || value == false);
   }
 
   /**
@@ -576,8 +570,7 @@ class mxObjectCodec {
           attr.name === 'y' ||
           attr.name === 'width' ||
           attr.name === 'height')) ||
-      (obj.constructor === Point &&
-        (attr.name === 'x' || attr.name === 'y')) ||
+      (obj.constructor === Point && (attr.name === 'x' || attr.name === 'y')) ||
       isNumeric(attr.value);
 
     return result;
@@ -782,10 +775,7 @@ class mxObjectCodec {
     while (child != null) {
       const tmp = child.nextSibling;
 
-      if (
-        child.nodeType === NODETYPE_ELEMENT &&
-        !this.processInclude(dec, child, obj)
-      ) {
+      if (child.nodeType === NODETYPE_ELEMENT && !this.processInclude(dec, child, obj)) {
         this.decodeChild(dec, child, obj);
       }
 

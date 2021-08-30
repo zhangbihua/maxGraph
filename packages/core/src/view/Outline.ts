@@ -15,7 +15,7 @@ import {
 import Point from './geometry/Point';
 import Rectangle from './geometry/Rectangle';
 import RectangleShape from './geometry/shape/node/RectangleShape';
-import graph from './Graph';
+import graph, { MaxGraph } from './Graph';
 import ImageShape from './geometry/shape/node/ImageShape';
 import InternalEvent from './event/InternalEvent';
 import utils from '../util/Utils';
@@ -71,7 +71,7 @@ import EventSource from './event/EventSource';
  * ```
  */
 class Outline {
-  constructor(source: graph, container: HTMLElement | null = null) {
+  constructor(source: MaxGraph, container: HTMLElement | null = null) {
     this.source = source;
 
     if (container != null) {
@@ -224,7 +224,7 @@ class Outline {
   /**
    * Reference to the source {@link graph}.
    */
-  source: graph;
+  source: MaxGraph;
 
   /**
    * Reference to the {@link graph} that renders the outline.
@@ -576,10 +576,7 @@ class Outline {
       this.active = true;
       const sourceContainer = <HTMLElement>this.source.container;
 
-      if (
-        this.source.useScrollbarsForPanning &&
-        hasScrollbars(this.source.container)
-      ) {
+      if (this.source.useScrollbarsForPanning && hasScrollbars(this.source.container)) {
         this.dx0 = sourceContainer.scrollLeft;
         this.dy0 = sourceContainer.scrollTop;
       } else {

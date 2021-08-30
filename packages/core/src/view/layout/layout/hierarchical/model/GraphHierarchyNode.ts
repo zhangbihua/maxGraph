@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import MxGraphAbstractHierarchyCell from './GraphAbstractHierarchyCell';
-import mxObjectIdentity from '../../../../../util/mxObjectIdentity';
+import ObjectIdentity from '../../../../../util/ObjectIdentity';
 import CellArray from '../../../../cell/datatypes/CellArray';
 import Cell from '../../../../cell/datatypes/Cell';
 
@@ -26,9 +26,9 @@ class GraphHierarchyNode extends MxGraphAbstractHierarchyCell {
   constructor(cell) {
     super(cell);
     this.cell = cell;
-    this.id = mxObjectIdentity.get(cell);
-    this.connectsAsTarget: CellArray = [];
-    this.connectsAsSource: CellArray = [];
+    this.id = ObjectIdentity.get(cell);
+    this.connectsAsTarget = [];
+    this.connectsAsSource = [];
   }
 
   /**

@@ -1,19 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Connections/EdgeTolerance',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph, 
-    mxUtils
-  } = mxgraph;
+  const { Graph, utils } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -23,7 +20,7 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     fireMouseEvent(evtName, me, sender) {
       // Overrides the mouse event dispatching mechanism to update the
       // cell which is associated with the event in case the native hit
@@ -35,14 +32,14 @@ const Template = ({ label, ...args }) => {
         // them here. Storing them in the event means the overridden
         // method doesn't have to do this again.
         if (me.graphX == null || me.graphY == null) {
-          const pt = mxUtils.convertPoint(container, me.getX(), me.getY());
+          const pt = utils.convertPoint(container, me.getX(), me.getY());
 
           me.graphX = pt.x;
           me.graphY = pt.y;
         }
 
         const cell = this.getCellAt(me.graphX, me.graphY);
-        
+
         if (cell?.isEdge()) {
           me.state = this.view.getState(cell);
 
@@ -62,10 +59,10 @@ const Template = ({ label, ...args }) => {
     dblClick(evt, cell) {
       // Overrides double click handling to use the tolerance
       if (cell == null) {
-        const pt = mxUtils.convertPoint(
+        const pt = utils.convertPoint(
           el,
-          mxEventUtils.getClientX(evt),
-          mxEventUtils.getClientY(evt)
+          EventUtils.getClientX(evt),
+          EventUtils.getClientY(evt)
         );
         cell = this.getCellAt(pt.x, pt.y);
       }
@@ -110,6 +107,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

@@ -5,10 +5,9 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import utils from '../Utils';
 import InternalEvent from '../../view/event/InternalEvent';
 import Point from '../../view/geometry/Point';
-import mxPopupMenu from './mxPopupMenu';
+import PopupMenu from './PopupMenu';
 import EventSource from '../../view/event/EventSource';
 import EventObject from '../../view/event/EventObject';
 import mxClient from '../../mxClient';
@@ -109,7 +108,7 @@ class mxToolbar extends EventSource {
       }
     }
 
-    const mouseHandler = evt => {
+    const mouseHandler = (evt) => {
       if (pressedIcon != null) {
         img.setAttribute('src', icon);
       } else {
@@ -121,7 +120,7 @@ class mxToolbar extends EventSource {
     // while it is being clicked with the mouse
     InternalEvent.addGestureListeners(
       img,
-      evt => {
+      (evt) => {
         if (pressedIcon != null) {
           img.setAttribute('src', pressedIcon);
         } else {
@@ -131,7 +130,7 @@ class mxToolbar extends EventSource {
         // Popup Menu
         if (factoryMethod != null) {
           if (this.menu == null) {
-            this.menu = new mxPopupMenu();
+            this.menu = new PopupMenu();
             this.menu.init();
           }
 
@@ -146,10 +145,7 @@ class mxToolbar extends EventSource {
             this.currentImg = img;
             this.menu.factoryMethod = factoryMethod;
 
-            const point = new Point(
-              img.offsetLeft,
-              img.offsetTop + img.offsetHeight
-            );
+            const point = new Point(img.offsetLeft, img.offsetTop + img.offsetHeight);
             this.menu.popup(point.x, point.y, null, evt);
 
             // Sets and overrides to restore classname
@@ -209,7 +205,7 @@ class mxToolbar extends EventSource {
     select.className = style || 'mxToolbarCombo';
     this.addOption(select, title, null);
 
-    InternalEvent.addListener(select, 'change', evt => {
+    InternalEvent.addListener(select, 'change', (evt) => {
       const value = select.options[select.selectedIndex];
       select.selectedIndex = 0;
 
@@ -266,7 +262,7 @@ class mxToolbar extends EventSource {
       img.setAttribute('title', title);
     }
 
-    InternalEvent.addListener(img, 'click', evt => {
+    InternalEvent.addListener(img, 'click', (evt) => {
       let tmp = this.selectedMode.altIcon;
 
       if (tmp != null) {
@@ -333,12 +329,12 @@ class mxToolbar extends EventSource {
     }
 
     if (this.enabled && toggle) {
-      InternalEvent.addListener(img, 'click', evt => {
+      InternalEvent.addListener(img, 'click', (evt) => {
         this.selectMode(img, funct);
         this.noReset = false;
       });
 
-      InternalEvent.addListener(img, 'dblclick', evt => {
+      InternalEvent.addListener(img, 'dblclick', (evt) => {
         this.selectMode(img, funct);
         this.noReset = true;
       });

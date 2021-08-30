@@ -1,7 +1,7 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
-import { intersects } from '@mxgraph/core/src/util/Utils';
+import { intersects } from '@maxgraph/core/util/Utils';
 
 export default {
   title: 'Connections/FixedPoints',
@@ -9,22 +9,22 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph, 
-    mxRubberband, 
-    mxConnectionHandler, 
-    mxConnectionConstraint,
-    mxConstraintHandler,
-    mxPoint,
-    mxCellState,
-    mxEdgeHandler
-  } = mxgraph;
+    Graph,
+    Rubberband,
+    ConnectionHandler,
+    ConnectionConstraint,
+    ConstraintHandler,
+    Point,
+    CellState,
+    EdgeHandler,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -34,17 +34,15 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  class MyCustomConstraintHandler extends mxConstraintHandler {
+  class MyCustomConstraintHandler extends ConstraintHandler {
     // Snaps to fixed points
     intersects(icon, point, source, existingEdge) {
-      return (
-        !source || existingEdge || intersects(icon.bounds, point)
-      );
+      return !source || existingEdge || intersects(icon.bounds, point);
     }
   }
 
-  class MyCustomConnectionHandler extends mxConnectionHandler {
-    // connectImage = new mxImage('images/connector.gif', 16, 16);
+  class MyCustomConnectionHandler extends ConnectionHandler {
+    // connectImage = new ImageBox('images/connector.gif', 16, 16);
 
     isConnectableCell(cell) {
       return false;
@@ -59,21 +57,15 @@ const Template = ({ label, ...args }) => {
      */
     updateEdgeState(pt, constraint) {
       if (pt != null && this.previous != null) {
-        const constraints = this.graph.getAllConnectionConstraints(
-          this.previous
-        );
+        const constraints = this.graph.getAllConnectionConstraints(this.previous);
         let nearestConstraint = null;
         let dist = null;
 
         for (let i = 0; i < constraints.length; i++) {
-          const cp = this.graph.getConnectionPoint(
-            this.previous,
-            constraints[i]
-          );
+          const cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
 
           if (cp != null) {
-            const tmp =
-              (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
+            const tmp = (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
 
             if (dist == null || tmp < dist) {
               nearestConstraint = constraints[i];
@@ -90,7 +82,7 @@ const Template = ({ label, ...args }) => {
         // this.edgeState.style.edgeStyle = 'orthogonalEdgeStyle';
         // And to use the new edge style in the new edge inserted into the graph,
         // update the cell style as follows:
-        // this.edgeState.cell.style = mxUtils.setStyle(this.edgeState.cell.style, 'edgeStyle', this.edgeState.style.edgeStyle);
+        // this.edgeState.cell.style = utils.setStyle(this.edgeState.cell.style, 'edgeStyle', this.edgeState.style.edgeStyle);
       }
       return super.updateEdgeState(pt, constraint);
     }
@@ -106,22 +98,18 @@ const Template = ({ label, ...args }) => {
         'edgeStyle=orthogonalEdgeStyle'
       );
 
-      return new mxCellState(
-        this.graph.view,
-        edge,
-        this.graph.getCellStyle(edge)
-      );
+      return new CellState(this.graph.view, edge, this.graph.getCellStyle(edge));
     }
   }
 
-  class MyCustomEdgeHandler extends mxEdgeHandler {
+  class MyCustomEdgeHandler extends EdgeHandler {
     // Disables floating connections (only use with no connect image)
     isConnectableCell(cell) {
       return graph.connectionHandler.isConnectableCell(cell);
     }
   }
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     createConnectionHandler() {
       const r = new MyCustomConnectionHandler();
       r.constraintHandler = new MyCustomConstraintHandler(this);
@@ -137,14 +125,14 @@ const Template = ({ label, ...args }) => {
     getAllConnectionConstraints(terminal) {
       if (terminal != null && terminal.cell.isVertex()) {
         return [
-          new mxConnectionConstraint(new mxPoint(0, 0), true),
-          new mxConnectionConstraint(new mxPoint(0.5, 0), true),
-          new mxConnectionConstraint(new mxPoint(1, 0), true),
-          new mxConnectionConstraint(new mxPoint(0, 0.5), true),
-          new mxConnectionConstraint(new mxPoint(1, 0.5), true),
-          new mxConnectionConstraint(new mxPoint(0, 1), true),
-          new mxConnectionConstraint(new mxPoint(0.5, 1), true),
-          new mxConnectionConstraint(new mxPoint(1, 1), true),
+          new ConnectionConstraint(new Point(0, 0), true),
+          new ConnectionConstraint(new Point(0.5, 0), true),
+          new ConnectionConstraint(new Point(1, 0), true),
+          new ConnectionConstraint(new Point(0, 0.5), true),
+          new ConnectionConstraint(new Point(1, 0.5), true),
+          new ConnectionConstraint(new Point(0, 1), true),
+          new ConnectionConstraint(new Point(0.5, 1), true),
+          new ConnectionConstraint(new Point(1, 1), true),
         ];
       }
       return null;
@@ -156,8 +144,7 @@ const Template = ({ label, ...args }) => {
   graph.setConnectable(true);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -208,16 +195,16 @@ const Template = ({ label, ...args }) => {
   // Use this code to snap the source point for new connections without a connect preview,
   // ie. without an overridden graph.connectionHandler.createEdgeState
   /*
-    let mxConnectionHandlerMouseMove = mxConnectionHandler.prototype.mouseMove;
-    mxConnectionHandler.prototype.mouseMove = function(sender, me)
+    let mxConnectionHandlerMouseMove = ConnectionHandler.prototype.mouseMove;
+    ConnectionHandler.prototype.mouseMove = function(sender, me)
     {
         this.sourceConstraint = null;
 
         mxConnectionHandlerMouseMove.apply(this, arguments);
     };
 
-    let mxConnectionHandlerGetSourcePerimeterPoint = mxConnectionHandler.prototype.getSourcePerimeterPoint;
-    mxConnectionHandler.prototype.getSourcePerimeterPoint = function(state, pt, me)
+    let mxConnectionHandlerGetSourcePerimeterPoint = ConnectionHandler.prototype.getSourcePerimeterPoint;
+    ConnectionHandler.prototype.getSourcePerimeterPoint = function(state, pt, me)
     {
         let result = null;
 
@@ -262,6 +249,6 @@ const Template = ({ label, ...args }) => {
     */
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

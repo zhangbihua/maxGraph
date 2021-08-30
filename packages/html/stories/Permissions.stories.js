@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,20 +8,20 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxConnectionHandler,
-    mxImage,
-    mxRubberband,
+    Graph,
+    ConnectionHandler,
+    ImageBox,
+    Rubberband,
     mxKeyHandler,
-    mxDomHelpers
-  } = mxgraph;
+    mxDomHelpers,
+  } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -36,27 +36,22 @@ const Template = ({ label, ...args }) => {
 
   // Defines an icon for creating new connections in the connection handler.
   // This will automatically disable the highlighting of the source vertex.
-  mxConnectionHandler.prototype.connectImage = new mxImage(
-    'images/connector.gif',
-    16,
-    16
-  );
+  ConnectionHandler.prototype.connectImage = new ImageBox('images/connector.gif', 16, 16);
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Enable tooltips, disables mutligraphs, enable loops
   graph.setMultigraph(false);
   graph.setAllowLoops(true);
 
   // Enables rubberband selection and key handling
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   const keyHandler = new mxKeyHandler(graph);
 
   // Assigns the delete key
-  keyHandler.bindKey(46, function(evt) {
+  keyHandler.bindKey(46, function (evt) {
     if (graph.isEnabled()) {
       graph.removeCells();
     }
@@ -66,7 +61,7 @@ const Template = ({ label, ...args }) => {
   // aka "private" variable
   let currentPermission = null;
 
-  const apply = function(permission) {
+  const apply = function (permission) {
     graph.clearSelection();
     permission.apply(graph);
     graph.setEnabled(true);
@@ -83,37 +78,37 @@ const Template = ({ label, ...args }) => {
   const buttons = document.createElement('div');
   div.appendChild(buttons);
 
-  let button = mxDomHelpers.button('Allow All', function(evt) {
+  let button = mxDomHelpers.button('Allow All', function (evt) {
     apply(new Permission());
   });
   buttons.appendChild(button);
 
-  button = mxDomHelpers.button('Connect Only', function(evt) {
+  button = mxDomHelpers.button('Connect Only', function (evt) {
     apply(new Permission(false, true, false, false, true));
   });
   buttons.appendChild(button);
 
-  button = mxDomHelpers.button('Edges Only', function(evt) {
+  button = mxDomHelpers.button('Edges Only', function (evt) {
     apply(new Permission(false, false, true, false, false));
   });
   buttons.appendChild(button);
 
-  button = mxDomHelpers.button('Vertices Only', function(evt) {
+  button = mxDomHelpers.button('Vertices Only', function (evt) {
     apply(new Permission(false, false, false, true, false));
   });
   buttons.appendChild(button);
 
-  button = mxDomHelpers.button('Select Only', function(evt) {
+  button = mxDomHelpers.button('Select Only', function (evt) {
     apply(new Permission(false, false, false, false, false));
   });
   buttons.appendChild(button);
 
-  button = mxDomHelpers.button('Locked', function(evt) {
+  button = mxDomHelpers.button('Locked', function (evt) {
     apply(new Permission(true, false));
   });
   buttons.appendChild(button);
 
-  button = mxDomHelpers.button('Disabled', function(evt) {
+  button = mxDomHelpers.button('Disabled', function (evt) {
     graph.clearSelection();
     graph.setEnabled(false);
     graph.setTooltips(false);
@@ -128,48 +123,37 @@ const Template = ({ label, ...args }) => {
   // specification for more functions to extend (eg.
   // isSelectable).
   const oldDisconnectable = graph.isCellDisconnectable;
-  graph.isCellDisconnectable = function(cell, terminal, source) {
-    return (
-      oldDisconnectable.apply(this, arguments) && currentPermission.editEdges
-    );
+  graph.isCellDisconnectable = function (cell, terminal, source) {
+    return oldDisconnectable.apply(this, arguments) && currentPermission.editEdges;
   };
 
   const oldTerminalPointMovable = graph.isTerminalPointMovable;
-  graph.isTerminalPointMovable = function(cell) {
-    return (
-      oldTerminalPointMovable.apply(this, arguments) &&
-      currentPermission.editEdges
-    );
+  graph.isTerminalPointMovable = function (cell) {
+    return oldTerminalPointMovable.apply(this, arguments) && currentPermission.editEdges;
   };
 
   const oldBendable = graph.isCellBendable;
-  graph.isCellBendable = function(cell) {
+  graph.isCellBendable = function (cell) {
     return oldBendable.apply(this, arguments) && currentPermission.editEdges;
   };
 
   const oldLabelMovable = graph.isLabelMovable;
-  graph.isLabelMovable = function(cell) {
-    return (
-      oldLabelMovable.apply(this, arguments) && currentPermission.editEdges
-    );
+  graph.isLabelMovable = function (cell) {
+    return oldLabelMovable.apply(this, arguments) && currentPermission.editEdges;
   };
 
   const oldMovable = graph.isCellMovable;
-  graph.isCellMovable = function(cell) {
-    return (
-      oldMovable.apply(this, arguments) && currentPermission.editVertices
-    );
+  graph.isCellMovable = function (cell) {
+    return oldMovable.apply(this, arguments) && currentPermission.editVertices;
   };
 
   const oldResizable = graph.isCellResizable;
-  graph.isCellResizable = function(cell) {
-    return (
-      oldResizable.apply(this, arguments) && currentPermission.editVertices
-    );
+  graph.isCellResizable = function (cell) {
+    return oldResizable.apply(this, arguments) && currentPermission.editVertices;
   };
 
   const oldEditable = graph.isCellEditable;
-  graph.isCellEditable = function(cell) {
+  graph.isCellEditable = function (cell) {
     return (
       (oldEditable.apply(this, arguments) &&
         cell.isVertex() &&
@@ -179,7 +163,7 @@ const Template = ({ label, ...args }) => {
   };
 
   const oldDeletable = graph.isCellDeletable;
-  graph.isCellDeletable = function(cell) {
+  graph.isCellDeletable = function (cell) {
     return (
       (oldDeletable.apply(this, arguments) &&
         cell.isVertex() &&
@@ -189,10 +173,8 @@ const Template = ({ label, ...args }) => {
   };
 
   const oldCloneable = graph.isCellCloneable;
-  graph.isCellCloneable = function(cell) {
-    return (
-      oldCloneable.apply(this, arguments) && currentPermission.cloneCells
-    );
+  graph.isCellCloneable = function (cell) {
+    return oldCloneable.apply(this, arguments) && currentPermission.cloneCells;
   };
 
   // Gets the default parent for inserting new cells. This
@@ -212,7 +194,7 @@ const Template = ({ label, ...args }) => {
   }
 
   return div;
-}
+};
 
 class Permission {
   constructor(locked, createEdges, editEdges, editVertices, cloneCells) {

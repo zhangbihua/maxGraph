@@ -1,21 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Zoom_OffPage/OffPage',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxCellTracker,
-    mxConstants,
-    mxEvent
-  } = mxgraph;
+  const { Graph, CellTracker, Constants, InternalEvent } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -26,21 +21,17 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Use complete cell as highlight region
-  mxConstants.ACTIVE_REGION = 1;
+  Constants.ACTIVE_REGION = 1;
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.setEnabled(false);
 
   // Highlights offpage connectors
-  const highlight = new mxCellTracker(graph, null, function(me) {
+  const highlight = new CellTracker(graph, null, function (me) {
     const cell = me.getCell();
 
-    if (
-      cell != null &&
-      cell.value != null &&
-      typeof cell.value.create === 'function'
-    ) {
+    if (cell != null && cell.value != null && typeof cell.value.create === 'function') {
       return cell;
     }
 
@@ -49,26 +40,18 @@ const Template = ({ label, ...args }) => {
 
   // Handles clicks on offpage connectors and
   // executes function in user object
-  graph.addListener(mxEvent.CLICK, function(source, evt) {
+  graph.addListener(InternalEvent.CLICK, function (source, evt) {
     const cell = evt.getProperty('cell');
 
-    if (
-      cell != null &&
-      cell.value != null &&
-      typeof cell.value.create === 'function'
-    ) {
+    if (cell != null && cell.value != null && typeof cell.value.create === 'function') {
       cell.value.create();
     }
   });
 
   // Handles clicks on offpage connectors and
   // executes function in user object
-  graph.getCursorForCell = function(cell) {
-    if (
-      cell != null &&
-      cell.value != null &&
-      typeof cell.value.create === 'function'
-    ) {
+  graph.getCursorForCell = function (cell) {
+    if (cell != null && cell.value != null && typeof cell.value.create === 'function') {
       return 'pointer';
     }
   };
@@ -78,7 +61,7 @@ const Template = ({ label, ...args }) => {
   let first = null;
   let second = null;
 
-  first = function() {
+  first = function () {
     const value = {
       toString() {
         return 'Next';
@@ -122,21 +105,14 @@ const Template = ({ label, ...args }) => {
         40,
         'shape=triangle;align=left;fillColor=#C3D9FF;strokeColor=#4096EE'
       );
-      const e1 = graph.insertEdge(
-        parent,
-        null,
-        null,
-        v1,
-        v2,
-        'strokeColor=#FF1A00'
-      );
+      const e1 = graph.insertEdge(parent, null, null, v1, v2, 'strokeColor=#FF1A00');
     } finally {
       // Updates the display
       graph.getModel().endUpdate();
     }
   };
 
-  second = function() {
+  second = function () {
     const value = {
       toString() {
         return 'Prev';
@@ -180,14 +156,7 @@ const Template = ({ label, ...args }) => {
         40,
         'shape=triangle;align=right;fillColor=#C3D9FF;strokeColor=#4096EE;direction=west'
       );
-      const e1 = graph.insertEdge(
-        parent,
-        null,
-        null,
-        v1,
-        v2,
-        'strokeColor=#008C00'
-      );
+      const e1 = graph.insertEdge(parent, null, null, v1, v2, 'strokeColor=#008C00');
     } finally {
       // Updates the display
       graph.getModel().endUpdate();
@@ -197,6 +166,6 @@ const Template = ({ label, ...args }) => {
   first();
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

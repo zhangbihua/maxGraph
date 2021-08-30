@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,18 +8,13 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxRubberband,
-    mxGraphView,
-    mxUtils
-  } = mxgraph;
+  const { Graph, Rubberband, GraphView, utils } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -31,14 +26,8 @@ const Template = ({ label, ...args }) => {
 
   // Redirects the perimeter to the label bounds if intersection
   // between edge and label is found
-  const mxGraphViewGetPerimeterPoint =
-    mxGraphView.prototype.getPerimeterPoint;
-  mxGraphView.prototype.getPerimeterPoint = function(
-    terminal,
-    next,
-    orthogonal,
-    border
-  ) {
+  const mxGraphViewGetPerimeterPoint = GraphView.prototype.getPerimeterPoint;
+  GraphView.prototype.getPerimeterPoint = function (terminal, next, orthogonal, border) {
     let point = mxGraphViewGetPerimeterPoint.apply(this, arguments);
 
     if (point != null) {
@@ -49,7 +38,7 @@ const Template = ({ label, ...args }) => {
         const b = terminal.text.boundingBox.clone();
         b.grow(3);
 
-        if (mxUtils.rectangleIntersectsSegment(b, point, next)) {
+        if (utils.rectangleIntersectsSegment(b, point, next)) {
           point = perimeter(b, terminal, next, orthogonal);
         }
       }
@@ -59,7 +48,7 @@ const Template = ({ label, ...args }) => {
   };
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.setVertexLabelsMovable(true);
   graph.setConnectable(true);
 
@@ -68,8 +57,7 @@ const Template = ({ label, ...args }) => {
   // graph.setResizeContainer(true);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -116,6 +104,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

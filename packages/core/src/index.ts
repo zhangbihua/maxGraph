@@ -104,28 +104,28 @@ import RhombusShape from './view/geometry/shape/node/RhombusShape';
 import StencilShape from './view/geometry/shape/node/StencilShape';
 import StencilShapeRegistry from './view/geometry/shape/node/StencilShapeRegistry';
 
-import * as mxConstants from './util/Constants';
-import mxGuide from './util/Guide';
+import * as Constants from './util/Constants';
+import Guide from './util/Guide';
 import Resources from './util/Resources';
 import utils from './util/Utils';
-import * as mxCloneUtils from './util/CloneUtils';
-import * as mxDomUtils from './util/DomUtils';
-import * as mxEventUtils from './util/EventUtils';
-import * as mxGestureUtils from './util/GestureUtils';
-import * as mxStringUtils from './util/StringUtils';
-import * as mxXmlUtils from './util/XmlUtils';
+import * as CloneUtils from './util/CloneUtils';
+import * as DomUtils from './util/DomUtils';
+import * as EventUtils from './util/EventUtils';
+import * as GestureUtils from './util/GestureUtils';
+import * as StringUtils from './util/StringUtils';
+import * as XmlUtils from './util/XmlUtils';
 
 import mxAnimation from './util/animate/mxAnimation';
 import mxEffects from './util/animate/mxEffects';
 import mxMorphing from './util/animate/mxMorphing';
 
-import mxAbstractCanvas2D from './util/canvas/AbstractCanvas2D';
-import mxSvgCanvas2D from './util/canvas/SvgCanvas2D';
+import AbstractCanvas2D from './util/canvas/AbstractCanvas2D';
+import SvgCanvas2D from './util/canvas/SvgCanvas2D';
 import mxXmlCanvas2D from './util/canvas/mxXmlCanvas2D';
 
 import Dictionary from './util/Dictionary';
 import Geometry from './view/geometry/Geometry';
-import mxObjectIdentity from './util/mxObjectIdentity';
+import ObjectIdentity from './util/ObjectIdentity';
 import Point from './view/geometry/Point';
 import Rectangle from './view/geometry/Rectangle';
 
@@ -147,11 +147,11 @@ import InternalMouseEvent from './view/event/InternalMouseEvent';
 
 import mxForm from './util/gui/mxForm';
 import mxLog from './util/gui/mxLog';
-import mxPopupMenu from './util/gui/mxPopupMenu';
+import PopupMenu from './util/gui/PopupMenu';
 import mxToolbar from './util/gui/mxToolbar';
 import mxWindow from './util/gui/mxWindow';
 
-import Image from './view/image/ImageBox';
+import ImageBox from './view/image/ImageBox';
 import ImageBundle from './view/image/ImageBundle';
 import ImageExport from './view/image/ImageExport';
 
@@ -159,7 +159,7 @@ import mxUrlConverter from './util/network/mxUrlConverter';
 import mxXmlRequest from './util/network/mxXmlRequest';
 
 import mxAutoSaveManager from './util/storage/mxAutoSaveManager';
-import mxClipboard from './util/storage/mxClipboard';
+import Clipboard from './util/storage/Clipboard';
 
 import UndoableEdit from './view/model/UndoableEdit';
 import mxUndoManager from './util/mxUndoManager';
@@ -176,9 +176,8 @@ import TemporaryCellStates from './view/cell/TemporaryCellStates';
 import ConnectionConstraint from './view/connection/ConnectionConstraint';
 import Multiplicity from './view/validation/Multiplicity';
 
-import graph from './view/Graph';
+import Graph from './view/Graph';
 import Model from './view/model/Model';
-import mxGraphSelectionModel from './view/selection/mxGraphSelectionModel';
 import GraphView from './view/view/GraphView';
 import LayoutManager from './view/layout/LayoutManager';
 import Outline from './view/Outline';
@@ -190,124 +189,124 @@ import '../css/common.css';
 export default {
   mxClient,
   mxLog,
-  mxObjectIdentity,
-  mxDictionary: Dictionary,
-  mxResources: Resources,
-  mxPoint: Point,
-  mxRectangle: Rectangle,
+  ObjectIdentity,
+  Dictionary,
+  Resources,
+  Point,
+  Rectangle,
   mxEffects,
-  mxUtils: utils,
-  mxConstants,
-  mxEventObject: EventObject,
-  mxMouseEvent: InternalMouseEvent,
-  mxEventSource: EventSource,
-  mxEvent: InternalEvent,
+  utils,
+  Constants,
+  EventObject,
+  InternalMouseEvent,
+  EventSource,
+  InternalEvent,
   mxXmlRequest,
-  mxClipboard,
+  Clipboard,
   mxWindow,
   mxForm,
-  mxImage: Image,
+  Image,
   mxDivResizer,
-  mxDragSource: DragSource,
+  DragSource,
   mxToolbar,
-  mxUndoableEdit: UndoableEdit,
+  UndoableEdit,
   mxUndoManager,
   mxUrlConverter,
-  mxPanningManager: PanningManager,
-  mxPopupMenu,
+  PanningManager,
+  PopupMenu,
   mxAutoSaveManager,
   mxAnimation,
   mxMorphing,
-  mxImageBundle: ImageBundle,
-  mxImageExport: ImageExport,
-  mxAbstractCanvas2D,
+  ImageBox,
+  ImageBundle,
+  ImageExport,
+  AbstractCanvas2D,
   mxXmlCanvas2D,
-  mxSvgCanvas2D,
-  mxGuide,
-  mxShape: Shape,
-  mxStencil: StencilShape,
-  mxStencilRegistry: StencilShapeRegistry,
-  mxMarker: Marker,
-  mxActor: Actor,
-  mxCloud: CloudShape,
-  mxRectangleShape: RectangleShape,
-  mxEllipse: EllipseShape,
-  mxDoubleEllipse: DoubleEllipseShape,
-  mxRhombus: RhombusShape,
-  mxPolyline: Polyline,
-  mxArrow: Arrow,
-  mxArrowConnector: ArrowConnector,
-  mxText: TextShape,
-  mxTriangle: TriangleShape,
-  mxHexagon: HexagonShape,
-  mxLine: Line,
-  mxImageShape: ImageShape,
-  mxLabel: Label,
-  mxCylinder: CylinderShape,
-  mxConnector: Connector,
-  mxSwimlane: SwimlaneShape,
-  mxGraphLayout: GraphLayout,
-  mxStackLayout: StackLayout,
-  mxPartitionLayout: PartitionLayout,
-  mxCompactTreeLayout: CompactTreeLayout,
-  mxRadialTreeLayout: RadialTreeLayout,
-  mxFastOrganicLayout: MxFastOrganicLayout,
-  mxCircleLayout: CircleLayout,
-  mxParallelEdgeLayout: ParallelEdgeLayout,
-  mxCompositeLayout: CompositeLayout,
-  mxEdgeLabelLayout: EdgeLabelLayout,
-  mxGraphAbstractHierarchyCell: MxGraphAbstractHierarchyCell,
-  mxGraphHierarchyNode: GraphHierarchyNode,
-  mxGraphHierarchyEdge: GraphHierarchyEdge,
-  mxGraphHierarchyModel: GraphHierarchyModel,
-  mxSwimlaneModel: SwimlaneModel,
-  mxHierarchicalLayoutStage: MxHierarchicalLayoutStage,
-  mxMedianHybridCrossingReduction: MedianHybridCrossingReduction,
-  mxMinimumCycleRemover: MinimumCycleRemover,
-  mxCoordinateAssignment: CoordinateAssignment,
+  SvgCanvas2D,
+  Guide,
+  Shape,
+  StencilShape,
+  StencilShapeRegistry,
+  Marker,
+  Actor,
+  CloudShape,
+  RectangleShape,
+  EllipseShape,
+  DoubleEllipseShape,
+  RhombusShape,
+  Polyline,
+  Arrow,
+  ArrowConnector,
+  TextShape,
+  TriangleShape,
+  HexagonShape,
+  Line,
+  ImageShape,
+  Label,
+  CylinderShape,
+  Connector,
+  SwimlaneShape,
+  GraphLayout,
+  StackLayout,
+  PartitionLayout,
+  CompactTreeLayout,
+  RadialTreeLayout,
+  MxFastOrganicLayout,
+  CircleLayout,
+  ParallelEdgeLayout,
+  CompositeLayout,
+  EdgeLabelLayout,
+  MxGraphAbstractHierarchyCell,
+  GraphHierarchyNode,
+  GraphHierarchyEdge,
+  GraphHierarchyModel,
+  SwimlaneModel,
+  MxHierarchicalLayoutStage,
+  MedianHybridCrossingReduction,
+  MinimumCycleRemover,
+  CoordinateAssignment,
   mxSwimlaneOrdering,
   mxHierarchicalLayout,
-  mxSwimlaneLayout: SwimlaneLayout,
-  mxGraphModel: Model,
-  mxCell: Cell,
-  mxGeometry: Geometry,
-  mxCellPath: CellPath,
-  mxPerimeter: Perimeter,
-  mxPrintPreview: PrintPreview,
-  mxStylesheet: Stylesheet,
-  mxCellState: CellState,
-  mxGraphSelectionModel,
-  mxCellEditor: CellEditor,
-  mxCellRenderer: CellRenderer,
-  mxEdgeStyle: EdgeStyle,
-  mxStyleRegistry: StyleRegistry,
-  mxGraphView: GraphView,
-  mxGraph: graph,
-  mxCellOverlay: CellOverlay,
-  mxOutline: Outline,
-  mxMultiplicity: Multiplicity,
-  mxLayoutManager: LayoutManager,
-  mxSwimlaneManager: SwimlaneManager,
-  mxTemporaryCellStates: TemporaryCellStates,
-  mxCellStatePreview: CellStatePreview,
-  mxConnectionConstraint: ConnectionConstraint,
-  mxGraphHandler: GraphHandler,
-  mxPanningHandler: PanningHandler,
-  mxPopupMenuHandler: PopupMenuHandler,
-  mxCellMarker: CellMarker,
-  mxSelectionCellsHandler: SelectionCellsHandler,
-  mxConnectionHandler: ConnectionHandler,
-  mxConstraintHandler: ConstraintHandler,
-  mxRubberband: RubberBand,
-  mxHandle: VertexHandle,
-  mxVertexHandler: VertexHandler,
-  mxEdgeHandler: EdgeHandler,
-  mxElbowEdgeHandler: ElbowEdgeHandler,
-  mxEdgeSegmentHandler: EdgeSegmentHandler,
+  SwimlaneLayout,
+  Model,
+  Cell,
+  Geometry,
+  CellPath,
+  Perimeter,
+  PrintPreview,
+  Stylesheet,
+  CellState,
+  CellEditor,
+  CellRenderer,
+  EdgeStyle,
+  StyleRegistry,
+  GraphView,
+  Graph,
+  CellOverlay,
+  Outline,
+  Multiplicity,
+  LayoutManager,
+  SwimlaneManager,
+  TemporaryCellStates,
+  CellStatePreview,
+  ConnectionConstraint,
+  GraphHandler,
+  PanningHandler,
+  PopupMenuHandler,
+  CellMarker,
+  SelectionCellsHandler,
+  ConnectionHandler,
+  ConstraintHandler,
+  RubberBand,
+  VertexHandle,
+  VertexHandler,
+  EdgeHandler,
+  ElbowEdgeHandler,
+  EdgeSegmentHandler,
   mxKeyHandler,
-  mxTooltipHandler: TooltipHandler,
-  mxCellTracker: CellTracker,
-  mxCellHighlight: CellHighlight,
+  TooltipHandler,
+  CellTracker,
+  CellHighlight,
   mxDefaultKeyHandler,
   mxDefaultPopupMenu,
   mxDefaultToolbar,
@@ -328,22 +327,22 @@ export default {
   // mxDefaultToolbarCodec,
   // mxDefaultPopupMenuCodec,
   // mxEditorCodec,
-  mxCloneUtils,
-  mxDomUtils,
-  mxEventUtils,
-  mxGestureUtils,
-  mxStringUtils,
-  mxXmlUtils,
+  CloneUtils,
+  DomUtils,
+  EventUtils,
+  GestureUtils,
+  StringUtils,
+  XmlUtils,
   mxDomHelpers,
-  mxCellAttributeChange: CellAttributeChange,
-  mxChildChange: ChildChange,
-  mxCollapseChange: CollapseChange,
-  mxCurrentRootChange: CurrentRootChange,
-  mxGeometryChange: GeometryChange,
-  mxRootChange: RootChange,
-  mxSelectionChange: SelectionChange,
-  mxStyleChange: StyleChange,
-  mxTerminalChange: TerminalChange,
-  mxValueChange: ValueChange,
-  mxVisibleChange: VisibleChange,
+  CellAttributeChange,
+  ChildChange,
+  CollapseChange,
+  CurrentRootChange,
+  GeometryChange,
+  RootChange,
+  SelectionChange,
+  StyleChange,
+  TerminalChange,
+  ValueChange,
+  VisibleChange,
 };

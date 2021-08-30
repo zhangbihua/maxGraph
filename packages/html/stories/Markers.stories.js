@@ -1,25 +1,25 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Icon_Images/Markers',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxEdgeHandler,
-    mxGraphHandler,
-    mxCellRenderer,
-    mxMarker,
-    mxCylinder,
-    mxArrow,
-    mxPoint
-  } = mxgraph;
+    Graph,
+    EdgeHandler,
+    GraphHandler,
+    CellRenderer,
+    Marker,
+    CylinderShape,
+    Arrow,
+    Point,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -30,38 +30,27 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Enables guides
-  mxGraphHandler.prototype.guidesEnabled = true;
-  mxEdgeHandler.prototype.snapToTerminals = true;
+  GraphHandler.prototype.guidesEnabled = true;
+  EdgeHandler.prototype.snapToTerminals = true;
 
   // Registers and defines the custom marker
-  mxMarker.addMarker('dash', function(
-    canvas,
-    shape,
-    type,
-    pe,
-    unitX,
-    unitY,
-    size,
-    source,
-    sw,
-    filled
-  ) {
-    const nx = unitX * (size + sw + 1);
-    const ny = unitY * (size + sw + 1);
+  Marker.addMarker(
+    'dash',
+    function (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) {
+      const nx = unitX * (size + sw + 1);
+      const ny = unitY * (size + sw + 1);
 
-    return function() {
-      canvas.begin();
-      canvas.moveTo(pe.x - nx / 2 - ny / 2, pe.y - ny / 2 + nx / 2);
-      canvas.lineTo(
-        pe.x + ny / 2 - (3 * nx) / 2,
-        pe.y - (3 * ny) / 2 - nx / 2
-      );
-      canvas.stroke();
-    };
-  });
+      return function () {
+        canvas.begin();
+        canvas.moveTo(pe.x - nx / 2 - ny / 2, pe.y - ny / 2 + nx / 2);
+        canvas.lineTo(pe.x + ny / 2 - (3 * nx) / 2, pe.y - (3 * ny) / 2 - nx / 2);
+        canvas.stroke();
+      };
+    }
+  );
 
   // Defines custom message shape
-  class MessageShape extends mxCylinder {
+  class MessageShape extends CylinderShape {
     redrawPath(path, x, y, w, h, isForeground) {
       if (isForeground) {
         path.moveTo(0, 0);
@@ -76,10 +65,10 @@ const Template = ({ label, ...args }) => {
       }
     }
   }
-  mxCellRenderer.registerShape('message', MessageShape);
+  CellRenderer.registerShape('message', MessageShape);
 
   // Defines custom edge shape
-  class LinkShape extends mxArrow {
+  class LinkShape extends Arrow {
     paintEdgeShape(c, pts) {
       const width = 10;
 
@@ -121,10 +110,10 @@ const Template = ({ label, ...args }) => {
       c.stroke();
     }
   }
-  mxCellRenderer.registerShape('link', LinkShape);
+  CellRenderer.registerShape('link', LinkShape);
 
   // Creates the graph
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Sets default styles
   let style = graph.getStylesheet().getDefaultVertexStyle();
@@ -167,7 +156,7 @@ const Template = ({ label, ...args }) => {
       14,
       'shape=message;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;'
     );
-    e11.geometry.offset = new mxPoint(-10, -7);
+    e11.geometry.offset = new Point(-10, -7);
     e11.geometry.relative = true;
     e11.connectable = false;
 
@@ -215,6 +204,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

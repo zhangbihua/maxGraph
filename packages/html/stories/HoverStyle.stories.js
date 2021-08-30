@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,18 +8,13 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxConstants,
-    mxRubberband,
-    mxCloneUtils
-  } = mxgraph;
+  const { Graph, Constants, Rubberband, CloneUtils } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -30,7 +25,7 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   function updateStyle(state, hover) {
     if (hover) {
@@ -42,9 +37,7 @@ const Template = ({ label, ...args }) => {
     // once it is set, whereas the above overrides the default value
     state.style.rounded = hover ? '1' : '0';
     state.style.strokeWidth = hover ? '4' : '1';
-    state.style.fontStyle = hover
-      ? mxConstants.FONT_BOLD
-      : '0';
+    state.style.fontStyle = hover ? Constants.FONT_BOLD : '0';
   }
 
   // Changes fill color to red on mouseover
@@ -65,10 +58,7 @@ const Template = ({ label, ...args }) => {
       let tmp = graph.view.getState(me.getCell());
 
       // Ignores everything but vertices
-      if (
-        graph.isMouseDown ||
-        (tmp != null && !tmp.cell.isVertex())
-      ) {
+      if (graph.isMouseDown || (tmp != null && !tmp.cell.isVertex())) {
         tmp = null;
       }
 
@@ -88,7 +78,7 @@ const Template = ({ label, ...args }) => {
     dragEnter(evt, state) {
       if (state != null) {
         this.previousStyle = state.style;
-        state.style = mxCloneUtils.clone(state.style);
+        state.style = CloneUtils.clone(state.style);
         updateStyle(state, true);
         state.shape.apply(state);
         state.shape.redraw();
@@ -115,8 +105,7 @@ const Template = ({ label, ...args }) => {
   });
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -134,6 +123,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

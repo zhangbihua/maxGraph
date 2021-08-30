@@ -1,19 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Misc/Thread',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxClient
-  } = mxgraph;
+  const { Graph, mxClient } = maxgraph;
 
   mxClient.setImageBasePath('/images');
 
@@ -26,7 +23,7 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Disables basic selection and cell handling
   graph.setEnabled(false);
@@ -66,6 +63,6 @@ const Template = ({ label, ...args }) => {
   f();
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

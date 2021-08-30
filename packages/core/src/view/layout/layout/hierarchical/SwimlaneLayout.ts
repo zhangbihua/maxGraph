@@ -11,7 +11,7 @@ import HierarchicalEdgeStyle from './HierarchicalEdgeStyle';
 import Dictionary from '../../../../util/Dictionary';
 import Rectangle from '../../../geometry/Rectangle';
 import SwimlaneModel from './model/SwimlaneModel';
-import mxObjectIdentity from '../../../../util/mxObjectIdentity';
+import ObjectIdentity from '../../../../util/ObjectIdentity';
 import mxSwimlaneOrdering from './stage/mxSwimlaneOrdering';
 import MedianHybridCrossingReduction from './stage/MedianHybridCrossingReduction';
 import CoordinateAssignment from './stage/CoordinateAssignment';
@@ -694,7 +694,7 @@ class SwimlaneLayout extends GraphLayout {
       cell.getParent() !== this.parent &&
       cell.isVisible()
     ) {
-      result[mxObjectIdentity.get(cell)] = cell;
+      result[ObjectIdentity.get(cell)] = cell;
     }
 
     if (this.traverseAncestors || (cell === this.parent && cell.isVisible())) {
@@ -792,7 +792,7 @@ class SwimlaneLayout extends GraphLayout {
       // Has this vertex been seen before in any traversal
       // And if the filled vertex set is populated, only
       // process vertices in that it contains
-      const vertexID = mxObjectIdentity.get(vertex);
+      const vertexID = ObjectIdentity.get(vertex);
 
       if (
         allVertices[vertexID] == null &&

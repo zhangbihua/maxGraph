@@ -13,7 +13,7 @@ import CompactTreeLayout from '../view/layout/layout/CompactTreeLayout';
 import mxDefaultToolbar from './mxDefaultToolbar';
 import StackLayout from '../view/layout/layout/StackLayout';
 import EventObject from '../view/event/EventObject';
-import utils, { getOffset } from '../util/Utils';
+import { getOffset } from '../util/Utils';
 import mxCodec from '../util/serialization/mxCodec';
 import mxWindow, { error } from '../util/gui/mxWindow';
 import mxForm from '../util/gui/mxForm';
@@ -40,7 +40,7 @@ import RootChange from '../view/model/RootChange';
 import ValueChange from '../view/cell/ValueChange';
 import CellAttributeChange from '../view/cell/CellAttributeChange';
 import PrintPreview from '../view/printing/PrintPreview';
-import mxClipboard from '../util/storage/mxClipboard';
+import mxClipboard from '../util/storage/Clipboard';
 import mxLog from '../util/gui/mxLog';
 import { isNode } from '../util/DomUtils';
 import { getViewXml, getXml } from '../util/XmlUtils';
@@ -1292,10 +1292,7 @@ class mxEditor extends EventSource {
       const current = editor.graph.getView().scale * 100;
       const scale =
         parseFloat(
-          prompt(
-            Resources.get(editor.askZoomResource) || editor.askZoomResource,
-            current
-          )
+          prompt(Resources.get(editor.askZoomResource) || editor.askZoomResource, current)
         ) / 100;
 
       if (!isNaN(scale)) {
@@ -1362,8 +1359,7 @@ class mxEditor extends EventSource {
    */
   // resetFirstTime(): void;
   resetFirstTime() {
-    document.cookie =
-      'mxgraph=seen; expires=Fri, 27 Jul 2001 02:47:11 UTC; path=/';
+    document.cookie = 'mxgraph=seen; expires=Fri, 27 Jul 2001 02:47:11 UTC; path=/';
   }
 
   /**
@@ -1677,10 +1673,8 @@ class mxEditor extends EventSource {
 
         if (
           change instanceof RootChange ||
-          (change instanceof ValueChange &&
-            change.cell === this.graph.model.root) ||
-          (change instanceof CellAttributeChange &&
-            change.cell === this.graph.model.root)
+          (change instanceof ValueChange && change.cell === this.graph.model.root) ||
+          (change instanceof CellAttributeChange && change.cell === this.graph.model.root)
         ) {
           this.fireEvent(new EventObject(InternalEvent.ROOT));
           break;
@@ -1801,9 +1795,7 @@ class mxEditor extends EventSource {
       this.addListener(InternalEvent.SAVE, () => {
         const tstamp = new Date().toLocaleString();
         this.setStatus(
-          `${
-            Resources.get(this.lastSavedResource) || this.lastSavedResource
-          }: ${tstamp}`
+          `${Resources.get(this.lastSavedResource) || this.lastSavedResource}: ${tstamp}`
         );
       });
 
@@ -1811,10 +1803,9 @@ class mxEditor extends EventSource {
       // when new files are opened
       this.addListener(InternalEvent.OPEN, () => {
         this.setStatus(
-          `${
-            Resources.get(this.currentFileResource) ||
-            this.currentFileResource
-          }: ${this.filename}`
+          `${Resources.get(this.currentFileResource) || this.currentFileResource}: ${
+            this.filename
+          }`
         );
       });
     }
@@ -2045,15 +2036,7 @@ class mxEditor extends EventSource {
 
     post(url, `${this.postParameterName}=${data}`, (req) => {
       this.fireEvent(
-        new EventObject(
-          InternalEvent.POST,
-          'request',
-          req,
-          'url',
-          url,
-          'data',
-          data
-        )
+        new EventObject(InternalEvent.POST, 'request', req, 'url', url, 'data', data)
       );
     });
   }
@@ -2292,11 +2275,7 @@ class mxEditor extends EventSource {
           // model, which will also make the change
           // part of the current transaction
           for (let i = 0; i < attrs.length; i += 1) {
-            const edit = new CellAttributeChange(
-              cell,
-              attrs[i].nodeName,
-              texts[i].value
-            );
+            const edit = new CellAttributeChange(cell, attrs[i].nodeName, texts[i].value);
             model.execute(edit);
           }
 
@@ -2446,8 +2425,7 @@ class mxEditor extends EventSource {
       frame.style.backgroundColor = 'white';
 
       const w = document.body.clientWidth;
-      const h =
-        document.body.clientHeight || document.documentElement.clientHeight;
+      const h = document.body.clientHeight || document.documentElement.clientHeight;
 
       const wnd = new mxWindow(
         Resources.get(this.helpResource) || this.helpResource,
@@ -2716,13 +2694,7 @@ class mxEditor extends EventSource {
 
     this.cycleAttribute(vertex);
     this.fireEvent(
-      new EventObject(
-        InternalEvent.BEFORE_ADD_VERTEX,
-        'vertex',
-        vertex,
-        'parent',
-        parent
-      )
+      new EventObject(InternalEvent.BEFORE_ADD_VERTEX, 'vertex', vertex, 'parent', parent)
     );
 
     model.beginUpdate();
@@ -2741,9 +2713,7 @@ class mxEditor extends EventSource {
     if (vertex != null) {
       this.graph.setSelectionCell(vertex);
       this.graph.scrollCellToVisible(vertex);
-      this.fireEvent(
-        new EventObject(InternalEvent.AFTER_ADD_VERTEX, 'vertex', vertex)
-      );
+      this.fireEvent(new EventObject(InternalEvent.AFTER_ADD_VERTEX, 'vertex', vertex));
     }
 
     return vertex;

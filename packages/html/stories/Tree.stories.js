@@ -1,30 +1,30 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Layouts/Tree',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxConstants,
-    mxCylinder,
-    mxCellRenderer,
-    mxGraphView,
-    mxImage,
+    Graph,
+    Constants,
+    CylinderShape,
+    CellRenderer,
+    GraphView,
+    ImageBox,
     mxClient,
-    mxEdgeStyle,
+    EdgeStyle,
     mxKeyHandler,
-    mxCompactTreeLayout,
-    mxLayoutManager,
-    mxRectangle,
-    mxPoint
-  } = mxgraph;
+    CompactTreeLayout,
+    LayoutManager,
+    Rectangle,
+    Point,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -40,7 +40,7 @@ const Template = ({ label, ...args }) => {
     Defines a custom shape for the tree node that includes the
     upper half of the outgoing edge(s).
   */
-  class TreeNodeShape extends mxCylinder {
+  class TreeNodeShape extends CylinderShape {
     // Defines the length of the upper edge segment.
     static segment = 20;
 
@@ -56,8 +56,7 @@ const Template = ({ label, ...args }) => {
 
     redrawPath(path, x, y, w, h, isForeground) {
       const { graph } = this.state.view;
-      const hasChildren =
-        graph.model.getOutgoingEdges(this.state.cell).length > 0;
+      const hasChildren = graph.model.getOutgoingEdges(this.state.cell).length > 0;
 
       if (isForeground) {
         if (hasChildren) {
@@ -75,27 +74,27 @@ const Template = ({ label, ...args }) => {
       }
     }
   }
-  mxCellRenderer.registerShape('treenode', TreeNodeShape);
+  CellRenderer.registerShape('treenode', TreeNodeShape);
 
-  class MyCustomGraphView extends mxGraphView {
+  class MyCustomGraphView extends GraphView {
     updateFloatingTerminalPoint(edge, start, end, source) {
       // Defines a custom perimeter for the nodes in the tree
       let pt = null;
 
       if (source) {
-        pt = new mxPoint(
+        pt = new Point(
           start.x + start.width / 2,
           start.y + start.height + TreeNodeShape.segment
         );
       } else {
-        pt = new mxPoint(start.x + start.width / 2, start.y);
+        pt = new Point(start.x + start.width / 2, start.y);
       }
 
       edge.setAbsoluteTerminalPoint(pt, source);
     }
   }
 
-  class MyCustomCellRenderer extends mxCellRenderer {
+  class MyCustomCellRenderer extends CellRenderer {
     getControlBounds(state) {
       // Defines the position of the folding icon
       if (state.control != null) {
@@ -104,12 +103,9 @@ const Template = ({ label, ...args }) => {
         const h = state.control.bounds.height / oldScale;
         const s = state.view.scale;
 
-        return new mxRectangle(
+        return new Rectangle(
           state.x + state.width / 2 - (w / 2) * s,
-          state.y +
-            state.height +
-            TreeNodeShape.segment * s -
-            (h / 2) * s,
+          state.y + state.height + TreeNodeShape.segment * s - (h / 2) * s,
           w * s,
           h * s
         );
@@ -121,20 +117,12 @@ const Template = ({ label, ...args }) => {
   // Make the layout instance accessible by MyCustomGraph
   let layout;
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     // Sets the collapse and expand icons. The values below are the default
     // values, but this is how to replace them if you need to.
-    collapsedImage = new mxImage(
-      `${mxClient.imageBasePath}/collapsed.gif`,
-      9,
-      9
-    );
+    collapsedImage = new ImageBox(`${mxClient.imageBasePath}/collapsed.gif`, 9, 9);
 
-    expandedImage = new mxImage(
-      `${mxClient.imageBasePath}/expanded.gif`,
-      9,
-      9
-    );
+    expandedImage = new ImageBox(`${mxClient.imageBasePath}/expanded.gif`, 9, 9);
 
     isCellFoldable(cell) {
       // Defines the condition for showing the folding icon
@@ -171,7 +159,7 @@ const Template = ({ label, ...args }) => {
       show = show != null ? show : true;
       const cells = [];
 
-      this.traverse(cell, true, function(vertex) {
+      this.traverse(cell, true, function (vertex) {
         if (vertex !== cell) {
           cells.push(vertex);
         }
@@ -200,7 +188,7 @@ const Template = ({ label, ...args }) => {
   style.shadow = true;
 
   style = graph.getStylesheet().getDefaultEdgeStyle();
-  style.edge = mxEdgeStyle.TopToBottom;
+  style.edge = EdgeStyle.TopToBottom;
   style.rounded = true;
 
   // Enables automatic sizing for vertices after editing and
@@ -215,15 +203,15 @@ const Template = ({ label, ...args }) => {
   // Enables automatic layout on the graph and installs
   // a tree layout for all groups who's children are
   // being changed, added or removed.
-  layout = new mxCompactTreeLayout(graph, false);
+  layout = new CompactTreeLayout(graph, false);
   layout.useBoundingBox = false;
   layout.edgeRouting = false;
   layout.levelDistance = 30;
   layout.nodeDistance = 10;
 
-  const layoutMgr = new mxLayoutManager(graph);
+  const layoutMgr = new LayoutManager(graph);
 
-  layoutMgr.getLayout = function(cell) {
+  layoutMgr.getLayout = function (cell) {
     if (cell.getChildCount() > 0) {
       return layout;
     }
@@ -237,15 +225,7 @@ const Template = ({ label, ...args }) => {
   graph.getModel().beginUpdate();
   try {
     const w = graph.container.offsetWidth;
-    const root = graph.insertVertex(
-      parent,
-      'treeRoot',
-      'Root',
-      w / 2 - 30,
-      20,
-      60,
-      40
-    );
+    const root = graph.insertVertex(parent, 'treeRoot', 'Root', w / 2 - 30, 20, 60, 40);
 
     const v1 = graph.insertVertex(parent, 'v1', 'Child 1', 0, 0, 60, 40);
     graph.insertEdge(parent, null, '', root, v1);
@@ -268,26 +248,10 @@ const Template = ({ label, ...args }) => {
     const v22 = graph.insertVertex(parent, 'v22', 'Child 2.2', 0, 0, 60, 40);
     graph.insertEdge(parent, null, '', v2, v22);
 
-    const v221 = graph.insertVertex(
-      parent,
-      'v221',
-      'Child 2.2.1',
-      0,
-      0,
-      60,
-      40
-    );
+    const v221 = graph.insertVertex(parent, 'v221', 'Child 2.2.1', 0, 0, 60, 40);
     graph.insertEdge(parent, null, '', v22, v221);
 
-    const v222 = graph.insertVertex(
-      parent,
-      'v222',
-      'Child 2.2.2',
-      0,
-      0,
-      60,
-      40
-    );
+    const v222 = graph.insertVertex(parent, 'v222', 'Child 2.2.2', 0, 0, 60, 40);
     graph.insertEdge(parent, null, '', v22, v222);
 
     const v31 = graph.insertVertex(parent, 'v31', 'Child 3.1', 0, 0, 60, 40);
@@ -298,6 +262,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

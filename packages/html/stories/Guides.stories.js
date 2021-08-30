@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,21 +8,21 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxGraphHandler,
-    mxEvent,
-    mxConstants,
-    mxEdgeHandler,
-    mxEdgeStyle,
-    mxRubberband
-  } = mxgraph;
+    Graph,
+    GraphHandler,
+    InternalEvent,
+    Constants,
+    EdgeHandler,
+    EdgeStyle,
+    Rubberband,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -33,40 +33,39 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Enables guides
-  mxGraphHandler.prototype.guidesEnabled = true;
+  GraphHandler.prototype.guidesEnabled = true;
 
   // Alt disables guides
-  mxGraphHandler.prototype.useGuidesForEvent = function(me) {
-    return !mxEvent.isAltDown(me.getEvent());
+  GraphHandler.prototype.useGuidesForEvent = function (me) {
+    return !InternalEvent.isAltDown(me.getEvent());
   };
 
   // Defines the guides to be red (default)
-  mxConstants.GUIDE_COLOR = '#FF0000';
+  Constants.GUIDE_COLOR = '#FF0000';
 
   // Defines the guides to be 1 pixel (default)
-  mxConstants.GUIDE_STROKEWIDTH = 1;
+  Constants.GUIDE_STROKEWIDTH = 1;
 
   // Enables snapping waypoints to terminals
-  mxEdgeHandler.prototype.snapToTerminals = true;
+  EdgeHandler.prototype.snapToTerminals = true;
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.setConnectable(true);
   graph.gridSize = 30;
 
   // Changes the default style for edges "in-place" and assigns
-  // an alternate edge style which is applied in mxGraph.flip
+  // an alternate edge style which is applied in Graph.flip
   // when the user double clicks on the adjustment control point
   // of the edge. The ElbowConnector edge style switches to TopToBottom
   // if the horizontal style is true.
   const style = graph.getStylesheet().getDefaultEdgeStyle();
   style.rounded = true;
-  style.edge = mxEdgeStyle.ElbowConnector;
+  style.edge = EdgeStyle.ElbowConnector;
   graph.alternateEdgeStyle = 'elbow=vertical';
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -85,7 +84,7 @@ const Template = ({ label, ...args }) => {
   }
 
   // Handles cursor keys
-  const nudge = function(keyCode) {
+  const nudge = function (keyCode) {
     if (!graph.isSelectionEmpty()) {
       let dx = 0;
       let dy = 0;
@@ -111,26 +110,26 @@ const Template = ({ label, ...args }) => {
 
     // Ignores enter keystroke. Remove this line if you want the
     // enter keystroke to stop editing
-    keyHandler.enter = function() {};
+    keyHandler.enter = function () {};
 
-    keyHandler.bindKey(37, function() {
+    keyHandler.bindKey(37, function () {
       nudge(37);
     });
 
-    keyHandler.bindKey(38, function() {
+    keyHandler.bindKey(38, function () {
       nudge(38);
     });
 
-    keyHandler.bindKey(39, function() {
+    keyHandler.bindKey(39, function () {
       nudge(39);
     });
 
-    keyHandler.bindKey(40, function() {
+    keyHandler.bindKey(40, function () {
       nudge(40);
     });
   };
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

@@ -1,23 +1,20 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
-import { error } from '@mxgraph/core/src/util/mxDomUtils';
-import { clone } from '@mxgraph/core/src/util/CloneUtils';
-import { button } from '@mxgraph/core/src/util/dom/mxDomHelpers';
-import { load } from '@mxgraph/core/src/util/network/mxXmlRequest';
+import { error } from '@maxgraph/core/util/DomUtils';
+import { clone } from '@maxgraph/core/util/CloneUtils';
+import { button } from '@maxgraph/core/util/dom/mxDomHelpers';
+import { load } from '@maxgraph/core/util/network/mxXmlRequest';
 
 export default {
   title: 'Xml_Json/FileIO',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxConstants
-  } = mxgraph;
+  const { Graph, Constants } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -41,7 +38,7 @@ const Template = ({ label, ...args }) => {
       error('Browser is not supported!', 200, false);
     } else {
       // Creates the graph inside the given container
-      const graph = new mxGraph(container);
+      const graph = new Graph(container);
 
       graph.setEnabled(false);
       graph.setPanning(true);
@@ -53,7 +50,7 @@ const Template = ({ label, ...args }) => {
 
       // Changes the default vertex style in-place
       let style = graph.getStylesheet().getDefaultVertexStyle();
-      style.shape = mxConstants.SHAPE_ROUNDED;
+      style.shape = Constants.SHAPE_ROUNDED;
       style.perimiter = Perimeter.RectanglePerimeter;
       style.gradientColor = 'white';
       style.perimeterSpacing = 4;
@@ -63,10 +60,10 @@ const Template = ({ label, ...args }) => {
       style.labelBackgroundColor = 'white';
 
       style = clone(style);
-      style.startArrow = mxConstants.ARROW_CLASSIC;
+      style.startArrow = Constants.ARROW_CLASSIC;
       graph.getStylesheet().putCellStyle('2way', style);
 
-      graph.isHtmlLabel = function(cell) {
+      graph.isHtmlLabel = function (cell) {
         return true;
       };
 
@@ -82,7 +79,7 @@ const Template = ({ label, ...args }) => {
 
       // Adds a button to execute the layout
       this.el2.appendChild(
-        button('Arrange', function(evt) {
+        button('Arrange', function (evt) {
           const parent = graph.getDefaultParent();
           layout.execute(parent);
         })
@@ -94,7 +91,7 @@ const Template = ({ label, ...args }) => {
         // Loads the custom file format (TXT file)
         parse(graph, 'fileio.txt');
 
-        // Loads the mxGraph file format (XML file)
+        // Loads the Graph file format (XML file)
         // read(graph, 'fileio.xml');
 
         // Gets the default parent for inserting new cells. This
@@ -108,9 +105,9 @@ const Template = ({ label, ...args }) => {
         graph.getModel().endUpdate();
       }
 
-      graph.dblClick = function(evt, cell) {
+      graph.dblClick = function (evt, cell) {
         const mxe = new EventObject(
-          mxEvent.DOUBLE_CLICK,
+          InternalEvent.DOUBLE_CLICK,
           'event',
           evt,
           'cell',
@@ -120,13 +117,11 @@ const Template = ({ label, ...args }) => {
 
         if (
           this.isEnabled() &&
-          !mxEvent.isConsumed(evt) &&
+          !InternalEvent.isConsumed(evt) &&
           !mxe.isConsumed() &&
           cell != null
         ) {
-          alert(
-            `Show properties for cell ${cell.customId || cell.getId()}`
-          );
+          alert(`Show properties for cell ${cell.customId || cell.getId()}`);
         }
       };
     }
@@ -163,15 +158,7 @@ const Template = ({ label, ...args }) => {
             const key = lines[i].substring(0, colon);
 
             if (key.length > 0) {
-              vertices[key] = graph.insertVertex(
-                parent,
-                null,
-                value,
-                0,
-                0,
-                80,
-                70
-              );
+              vertices[key] = graph.insertVertex(parent, null, value, 0, 0, 80, 70);
             }
           } else if (comma < colon) {
             // Looks up the vertices in the lookup table
@@ -194,7 +181,7 @@ const Template = ({ label, ...args }) => {
     }
   }
 
-  // Parses the mxGraph XML file format
+  // Parses the Graph XML file format
   function read(graph, filename) {
     const req = load(filename);
     const root = req.getDocumentElement();
@@ -204,6 +191,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

@@ -23,7 +23,7 @@ import {
   SHADOW_OFFSET_Y,
 } from '../../../util/Constants';
 import Point from '../Point';
-import AbstractCanvas2D from 'packages/core/src/util/canvas/AbstractCanvas2D';
+import AbstractCanvas2D from 'core/util/canvas/AbstractCanvas2D';
 import SvgCanvas2D from '../../../util/canvas/SvgCanvas2D';
 import InternalEvent from '../../event/InternalEvent';
 import mxClient from '../../../mxClient';

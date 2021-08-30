@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,20 +8,13 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph, 
-    mxRubberband, 
-    mxRectangle,
-    mxConstants,
-    mxUtils,
-    mxLabel
-  } = mxgraph;
+  const { Graph, Rubberband, Rectangle, Constants, utils, mxLabel } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -32,38 +25,29 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Overrides the image bounds code to change the position
-  mxLabel.prototype.getImageBounds = function(x, y, w, h) {
-    const iw = mxUtils.getValue(
-      this.style,
-      'imageWidth',
-      mxConstants.DEFAULT_IMAGESIZE
-    );
-    const ih = mxUtils.getValue(
-      this.style,
-      'imageHeight',
-      mxConstants.DEFAULT_IMAGESIZE
-    );
+  mxLabel.prototype.getImageBounds = function (x, y, w, h) {
+    const iw = utils.getValue(this.style, 'imageWidth', Constants.DEFAULT_IMAGESIZE);
+    const ih = utils.getValue(this.style, 'imageHeight', Constants.DEFAULT_IMAGESIZE);
 
     // Places the icon
     const ix = (w - iw) / 2;
     const iy = h - ih;
 
-    return new mxRectangle(x + ix, y + iy, iw, ih);
+    return new Rectangle(x + ix, y + iy, iw, ih);
   };
 
   // Makes the shadow brighter
-  mxConstants.SHADOWCOLOR = '#C0C0C0';
+  Constants.SHADOWCOLOR = '#C0C0C0';
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Uncomment the following if you want the container
   // to fit the size of the graph
   // graph.setResizeContainer(true);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -89,6 +73,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

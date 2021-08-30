@@ -1,28 +1,28 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Connections/PortRefs',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph, 
-    mxRubberband, 
-    mxPoint,
-    mxEdgeHandler,
-    mxConstraintHandler,
-    mxImage,
-    mxShape,
-    mxTriangle,
-    mxConstants,
-    mxConnectionConstraint,
-    mxClient
-  } = mxgraph;
+    Graph,
+    Rubberband,
+    Point,
+    EdgeHandler,
+    ConstraintHandler,
+    ImageBox,
+    Shape,
+    TriangleShape,
+    Constants,
+    ConnectionConstraint,
+    mxClient,
+  } = maxgraph;
 
   mxClient.setImageBasePath('/images');
 
@@ -35,22 +35,18 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Replaces the port image
-  mxConstraintHandler.prototype.pointImage = new mxImage(
-    '/images/dot.gif',
-    10,
-    10
-  );
+  ConstraintHandler.prototype.pointImage = new ImageBox('/images/dot.gif', 10, 10);
 
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.setConnectable(true);
 
   // Disables automatic handling of ports. This disables the reset of the
-  // respective style in mxGraph.cellConnected. Note that this feature may
+  // respective style in Graph.cellConnected. Note that this feature may
   // be useful if floating and fixed connections are combined.
   graph.setPortsEnabled(false);
 
   // Enables rubberband selection
-  new mxRubberband(graph);
+  new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -94,34 +90,30 @@ const Template = ({ label, ...args }) => {
   };
 
   // Extends shapes classes to return their ports
-  mxShape.prototype.getPorts = function() {
+  Shape.prototype.getPorts = function () {
     return ports;
   };
 
-  mxTriangle.prototype.getPorts = function() {
+  TriangleShape.prototype.getPorts = function () {
     return ports2;
   };
 
   // Disables floating connections (only connections via ports allowed)
-  graph.connectionHandler.isConnectableCell = function(cell) {
+  graph.connectionHandler.isConnectableCell = function (cell) {
     return false;
   };
-  mxEdgeHandler.prototype.isConnectableCell = function(cell) {
+  EdgeHandler.prototype.isConnectableCell = function (cell) {
     return graph.connectionHandler.isConnectableCell(cell);
   };
 
   // Disables existing port functionality
-  graph.view.getTerminalPort = function(state, terminal, source) {
+  graph.view.getTerminalPort = function (state, terminal, source) {
     return terminal;
   };
 
   // Returns all possible ports for a given terminal
-  graph.getAllConnectionConstraints = function(terminal, source) {
-    if (
-      terminal != null &&
-      terminal.shape != null &&
-      terminal.shape.stencil != null
-    ) {
+  graph.getAllConnectionConstraints = function (terminal, source) {
+    if (terminal != null && terminal.shape != null && terminal.shape.stencil != null) {
       // for stencils with existing constraints...
       if (terminal.shape.stencil != null) {
         return terminal.shape.stencil.constraints;
@@ -134,8 +126,8 @@ const Template = ({ label, ...args }) => {
         for (const id in ports) {
           const port = ports[id];
 
-          const cstr = new mxConnectionConstraint(
-            new mxPoint(port.x, port.y),
+          const cstr = new ConnectionConstraint(
+            new Point(port.x, port.y),
             port.perimeter
           );
           cstr.id = id;
@@ -150,16 +142,9 @@ const Template = ({ label, ...args }) => {
   };
 
   // Sets the port for the given connection
-  graph.setConnectionConstraint = function(
-    edge,
-    terminal,
-    source,
-    constraint
-  ) {
+  graph.setConnectionConstraint = function (edge, terminal, source, constraint) {
     if (constraint != null) {
-      const key = source
-        ? 'sourcePort'
-        : 'targetPort';
+      const key = source ? 'sourcePort' : 'targetPort';
 
       if (constraint == null || constraint.id == null) {
         this.setCellStyles(key, null, [edge]);
@@ -170,14 +155,12 @@ const Template = ({ label, ...args }) => {
   };
 
   // Returns the port for the given connection
-  graph.getConnectionConstraint = function(edge, terminal, source) {
-    const key = source
-      ? 'sourcePort'
-      : 'targetPort';
+  graph.getConnectionConstraint = function (edge, terminal, source) {
+    const key = source ? 'sourcePort' : 'targetPort';
     const id = edge.style[key];
 
     if (id != null) {
-      const c = new mxConnectionConstraint(null, null);
+      const c = new ConnectionConstraint(null, null);
       c.id = id;
 
       return c;
@@ -188,15 +171,12 @@ const Template = ({ label, ...args }) => {
 
   // Returns the actual point for a port by redirecting the constraint to the port
   const graphGetConnectionPoint = graph.getConnectionPoint;
-  graph.getConnectionPoint = function(vertex, constraint) {
+  graph.getConnectionPoint = function (vertex, constraint) {
     if (constraint.id != null && vertex != null && vertex.shape != null) {
       const port = vertex.shape.getPorts()[constraint.id];
 
       if (port != null) {
-        constraint = new mxConnectionConstraint(
-          new mxPoint(port.x, port.y),
-          port.perimeter
-        );
+        constraint = new ConnectionConstraint(new Point(port.x, port.y), port.perimeter);
       }
     }
 
@@ -227,22 +207,8 @@ const Template = ({ label, ...args }) => {
       60,
       'shape=triangle;perimeter=trianglePerimeter;direction=south'
     );
-    const e1 = graph.insertEdge(
-      parent,
-      null,
-      '',
-      v1,
-      v2,
-      'sourcePort=s;targetPort=nw'
-    );
-    const e2 = graph.insertEdge(
-      parent,
-      null,
-      '',
-      v1,
-      v3,
-      'sourcePort=e;targetPort=out3'
-    );
+    const e1 = graph.insertEdge(parent, null, '', v1, v2, 'sourcePort=s;targetPort=nw');
+    const e2 = graph.insertEdge(parent, null, '', v1, v3, 'sourcePort=e;targetPort=out3');
   } finally {
     // Updates the display
     graph.getModel().endUpdate();
@@ -251,10 +217,10 @@ const Template = ({ label, ...args }) => {
   // Comming soon... Integration with orthogonal edge style
   // Sets default edge style to use port constraints (needs to be moved up when uncommented)
   // graph.getStylesheet().getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
-  /* let mxUtilsGetPortConstraints = mxUtils.getPortConstraints;
-    mxUtils.getPortConstraints = function(terminal, edge, source, defaultValue)
+  /* let mxUtilsGetPortConstraints = utils.getPortConstraints;
+    utils.getPortConstraints = function(terminal, edge, source, defaultValue)
     {
-      let key = (source) ? mxConstants.STYLE_SOURCE_PORT : mxConstants.STYLE_TARGET_PORT;
+      let key = (source) ? Constants.STYLE_SOURCE_PORT : Constants.STYLE_TARGET_PORT;
       let id = edge.style[key];
 
       let port = terminal.shape.getPorts()[id];
@@ -272,11 +238,11 @@ const Template = ({ label, ...args }) => {
     {
       let edge = graph.createEdge(null, null, null, null, null);
 
-      return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+      return new CellState(this.graph.view, edge, this.graph.getCellStyle(edge));
     };
     */
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

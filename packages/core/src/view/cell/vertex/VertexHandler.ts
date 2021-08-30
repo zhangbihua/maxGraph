@@ -33,7 +33,7 @@ import Graph, { MaxGraph } from '../../Graph';
 import CellState from '../datatypes/CellState';
 import Image from '../../image/ImageBox';
 import Cell from '../datatypes/Cell';
-import { CellHandle, Listenable } from 'packages/core/src/types';
+import { CellHandle, Listenable } from 'core/types';
 import Shape from '../../geometry/shape/Shape';
 import InternalMouseEvent from '../../event/InternalMouseEvent';
 import VertexHandle from './VertexHandle';

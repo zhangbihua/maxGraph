@@ -9,7 +9,7 @@ import { ARROW_SIZE, ARROW_SPACING, ARROW_WIDTH } from '../../../../util/Constan
 import Rectangle from '../../Rectangle';
 import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Point from '../../Point';
-import { ColorValue } from 'packages/core/src/types';
+import { ColorValue } from 'core/types';
 
 /**
  * Extends {@link Shape} to implement an arrow shape. The shape is used to represent edges, not vertices.

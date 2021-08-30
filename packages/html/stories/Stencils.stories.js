@@ -1,5 +1,5 @@
-import mxgraph from '@mxgraph/core';
-import { load } from "@mxgraph/core/src/util/network/mxXmlRequest";
+import maxgraph from '@maxgraph/core';
+import { load } from '@mxgraph/core/src/util/network/mxXmlRequest';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -9,33 +9,33 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxConnectionHandler,
+    Graph,
+    ConnectionHandler,
     mxDomHelpers,
-    mxEdgeHandler,
-    mxEvent,
-    mxPoint,
-    mxCellHighlight,
-    mxConstants,
-    mxVertexHandler,
-    mxRubberband,
-    mxShape,
-    mxStencil,
-    mxStencilRegistry,
-    mxCellRenderer,
-    mxUtils
-  } = mxgraph;
+    EdgeHandler,
+    InternalEvent,
+    Point,
+    CellHighlight,
+    Constants,
+    VertexHandler,
+    Rubberband,
+    Shape,
+    StencilShape,
+    StencilRegistry,
+    CellRenderer,
+    utils,
+  } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -49,31 +49,31 @@ const Template = ({ label, ...args }) => {
   div.appendChild(container);
 
   // Sets the global shadow color
-  mxConstants.SHADOWCOLOR = '#C0C0C0';
-  mxConstants.SHADOW_OPACITY = 0.5;
-  mxConstants.SHADOW_OFFSET_X = 4;
-  mxConstants.SHADOW_OFFSET_Y = 4;
-  mxConstants.HANDLE_FILLCOLOR = '#99ccff';
-  mxConstants.HANDLE_STROKECOLOR = '#0088cf';
-  mxConstants.VERTEX_SELECTION_COLOR = '#00a8ff';
+  Constants.SHADOWCOLOR = '#C0C0C0';
+  Constants.SHADOW_OPACITY = 0.5;
+  Constants.SHADOW_OFFSET_X = 4;
+  Constants.SHADOW_OFFSET_Y = 4;
+  Constants.HANDLE_FILLCOLOR = '#99ccff';
+  Constants.HANDLE_STROKECOLOR = '#0088cf';
+  Constants.VERTEX_SELECTION_COLOR = '#00a8ff';
 
   // Enables connections along the outline
-  mxConnectionHandler.prototype.outlineConnect = true;
-  mxEdgeHandler.prototype.manageLabelHandle = true;
-  mxEdgeHandler.prototype.outlineConnect = true;
-  mxCellHighlight.prototype.keepOnTop = true;
+  ConnectionHandler.prototype.outlineConnect = true;
+  EdgeHandler.prototype.manageLabelHandle = true;
+  EdgeHandler.prototype.outlineConnect = true;
+  CellHighlight.prototype.keepOnTop = true;
 
   // Enable rotation handle
-  mxVertexHandler.prototype.rotationEnabled = true;
+  VertexHandler.prototype.rotationEnabled = true;
 
   // Uses the shape for resize previews
-  mxVertexHandler.prototype.createSelectionShape = function(bounds) {
+  VertexHandler.prototype.createSelectionShape = function (bounds) {
     const key = this.state.style.shape;
-    const stencil = mxStencilRegistry.getStencil(key);
+    const stencil = StencilRegistry.getStencil(key);
     let shape = null;
 
     if (stencil != null) {
-      shape = new mxShape(stencil);
+      shape = new Shape(stencil);
       shape.apply(this.state);
     } else {
       shape = new this.state.shape.constructor();
@@ -81,7 +81,7 @@ const Template = ({ label, ...args }) => {
 
     shape.outline = true;
     shape.bounds = bounds;
-    shape.stroke = mxConstants.HANDLE_STROKECOLOR;
+    shape.stroke = Constants.HANDLE_STROKECOLOR;
     shape.strokewidth = this.getSelectionStrokeWidth();
     shape.isDashed = this.isSelectionDashed();
     shape.isShadow = false;
@@ -92,7 +92,7 @@ const Template = ({ label, ...args }) => {
   // Defines a custom stencil via the canvas API as defined here:
   // http://jgraph.github.io/mxgraph/docs/js-api/files/util/mxXmlCanvas2D-js.html
 
-  class CustomShape extends mxShape {
+  class CustomShape extends Shape {
     paintBackground(c, x, y, w, h) {
       c.translate(x, y);
 
@@ -122,7 +122,7 @@ const Template = ({ label, ...args }) => {
   }
 
   // Replaces existing actor shape
-  mxCellRenderer.registerShape('customShape', CustomShape);
+  CellRenderer.registerShape('customShape', CustomShape);
 
   // Loads the stencils into the registry
   const req = load('stencils.xml');
@@ -130,26 +130,22 @@ const Template = ({ label, ...args }) => {
   let shape = root.firstChild;
 
   while (shape != null) {
-    if (shape.nodeType === mxConstants.NODETYPE_ELEMENT) {
-      mxStencilRegistry.addStencil(
-        shape.getAttribute('name'),
-        new mxStencil(shape)
-      );
+    if (shape.nodeType === Constants.NODETYPE_ELEMENT) {
+      StencilRegistry.addStencil(shape.getAttribute('name'), new StencilShape(shape));
     }
 
     shape = shape.nextSibling;
   }
 
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.setConnectable(true);
   graph.setTooltips(true);
   graph.setPanning(true);
 
-  graph.getTooltipForCell = function(cell) {
+  graph.getTooltipForCell = function (cell) {
     if (cell != null) {
       return cell.style;
     }
@@ -166,8 +162,7 @@ const Template = ({ label, ...args }) => {
   style.shadow = '1';
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -176,40 +171,13 @@ const Template = ({ label, ...args }) => {
   // Adds cells to the model in a single step
   graph.getModel().beginUpdate();
   try {
-    const v1 = graph.insertVertex(
-      parent,
-      null,
-      'A1',
-      20,
-      20,
-      40,
-      80,
-      'shape=and'
-    );
-    const v2 = graph.insertVertex(
-      parent,
-      null,
-      'A2',
-      20,
-      220,
-      40,
-      80,
-      'shape=and'
-    );
-    const v3 = graph.insertVertex(
-      parent,
-      null,
-      'X1',
-      160,
-      110,
-      80,
-      80,
-      'shape=xor'
-    );
+    const v1 = graph.insertVertex(parent, null, 'A1', 20, 20, 40, 80, 'shape=and');
+    const v2 = graph.insertVertex(parent, null, 'A2', 20, 220, 40, 80, 'shape=and');
+    const v3 = graph.insertVertex(parent, null, 'X1', 160, 110, 80, 80, 'shape=xor');
     const e1 = graph.insertEdge(parent, null, '', v1, v3);
-    e1.geometry.points = [new mxPoint(90, 60), new mxPoint(90, 130)];
+    e1.geometry.points = [new Point(90, 60), new Point(90, 130)];
     const e2 = graph.insertEdge(parent, null, '', v2, v3);
-    e2.geometry.points = [new mxPoint(90, 260), new mxPoint(90, 170)];
+    e2.geometry.points = [new Point(90, 260), new Point(90, 170)];
 
     const v4 = graph.insertVertex(
       parent,
@@ -242,9 +210,9 @@ const Template = ({ label, ...args }) => {
       'shape=xor;flipH=1'
     );
     const e3 = graph.insertEdge(parent, null, '', v4, v6);
-    e3.geometry.points = [new mxPoint(490, 60), new mxPoint(130, 130)];
+    e3.geometry.points = [new Point(490, 60), new Point(130, 130)];
     const e4 = graph.insertEdge(parent, null, '', v5, v6);
-    e4.geometry.points = [new mxPoint(490, 260), new mxPoint(130, 170)];
+    e4.geometry.points = [new Point(490, 260), new Point(130, 170)];
 
     const v7 = graph.insertVertex(
       parent,
@@ -257,12 +225,12 @@ const Template = ({ label, ...args }) => {
       'shape=or;direction=south'
     );
     const e5 = graph.insertEdge(parent, null, '', v6, v7);
-    e5.geometry.points = [new mxPoint(310, 150)];
+    e5.geometry.points = [new Point(310, 150)];
     const e6 = graph.insertEdge(parent, null, '', v3, v7);
-    e6.geometry.points = [new mxPoint(270, 150)];
+    e6.geometry.points = [new Point(270, 150)];
 
     const e7 = graph.insertEdge(parent, null, '', v7, v5);
-    e7.geometry.points = [new mxPoint(290, 370)];
+    e7.geometry.points = [new Point(290, 370)];
   } finally {
     // Updates the display
     graph.getModel().endUpdate();
@@ -272,13 +240,13 @@ const Template = ({ label, ...args }) => {
   div.appendChild(buttons);
 
   buttons.appendChild(
-    mxDomHelpers.button('FlipH', function() {
+    mxDomHelpers.button('FlipH', function () {
       graph.toggleCellStyles('flipH');
     })
   );
 
   buttons.appendChild(
-    mxDomHelpers.button('FlipV', function() {
+    mxDomHelpers.button('FlipV', function () {
       graph.toggleCellStyles('flipV');
     })
   );
@@ -289,7 +257,7 @@ const Template = ({ label, ...args }) => {
   buttons.appendChild(document.createTextNode('\u00a0'));
 
   buttons.appendChild(
-    mxDomHelpers.button('Rotate', function() {
+    mxDomHelpers.button('Rotate', function () {
       const cell = graph.getSelectionCell();
 
       if (cell != null) {
@@ -311,9 +279,7 @@ const Template = ({ label, ...args }) => {
             const state = graph.view.getState(cell);
 
             if (state != null) {
-              let dir =
-                state.style.direction ||
-                'east'; /* default */
+              let dir = state.style.direction || 'east'; /* default */
 
               if (dir === 'east') {
                 dir = 'south';
@@ -341,17 +307,17 @@ const Template = ({ label, ...args }) => {
   buttons.appendChild(document.createTextNode('\u00a0'));
 
   buttons.appendChild(
-    mxDomHelpers.button('And', function() {
+    mxDomHelpers.button('And', function () {
       graph.setCellStyles('shape', 'and');
     })
   );
   buttons.appendChild(
-    mxDomHelpers.button('Or', function() {
+    mxDomHelpers.button('Or', function () {
       graph.setCellStyles('shape', 'or');
     })
   );
   buttons.appendChild(
-    mxDomHelpers.button('Xor', function() {
+    mxDomHelpers.button('Xor', function () {
       graph.setCellStyles('shape', 'xor');
     })
   );
@@ -362,14 +328,11 @@ const Template = ({ label, ...args }) => {
   buttons.appendChild(document.createTextNode('\u00a0'));
 
   buttons.appendChild(
-    mxDomHelpers.button('Style', function() {
+    mxDomHelpers.button('Style', function () {
       const cell = graph.getSelectionCell();
 
       if (cell != null) {
-        const style = mxUtils.prompt(
-          'Style',
-          cell.getStyle()
-        );
+        const style = utils.prompt('Style', cell.getStyle());
 
         if (style != null) {
           graph.getModel().setStyle(cell, style);
@@ -379,17 +342,17 @@ const Template = ({ label, ...args }) => {
   );
 
   buttons.appendChild(
-    mxDomHelpers.button('+', function() {
+    mxDomHelpers.button('+', function () {
       graph.zoomIn();
     })
   );
   buttons.appendChild(
-    mxDomHelpers.button('-', function() {
+    mxDomHelpers.button('-', function () {
       graph.zoomOut();
     })
   );
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

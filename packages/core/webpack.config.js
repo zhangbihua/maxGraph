@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const {merge} = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const base = require('../../webpack.config');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 
@@ -8,20 +8,20 @@ module.exports = merge(base, {
   entry: './src/index.ts',
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src')
-    }
+      '@': path.resolve(__dirname, 'src'),
+    },
   },
   output: {
     filename: 'mxgraph.js',
     path: path.resolve(__dirname, 'dist'),
     library: 'mxgraph',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
   },
   module: {
     rules: [
       {
         test: /\.(sa|sc|c)ss$/,
-        use: ['style-loader', 'css-loader']
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
@@ -30,8 +30,8 @@ module.exports = merge(base, {
           name: 'images/[hash].[ext]',
           limit: 10000,
         },
-      }
-    ]
+      },
+    ],
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
@@ -49,6 +49,6 @@ module.exports = merge(base, {
       allowAsyncCycles: false,
       // set the current working directory for displaying module paths
       cwd: process.cwd(),
-    })
-  ]
+    }),
+  ],
 });

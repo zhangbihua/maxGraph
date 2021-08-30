@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,28 +8,28 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
-    }
-  }
+      defaultValue: false,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxConstants,
-    mxEvent,
+    Graph,
+    Constants,
+    InternalEvent,
     mxClient,
-    mxPoint,
-    mxOutline,
-    mxEdgeStyle,
+    Point,
+    Outline,
+    EdgeStyle,
     mxKeyHandler,
-    mxCompactTreeLayout,
-    mxLayoutManager,
-    mxCellOverlay,
-    mxImage,
-    mxUtils,
-    mxToolbar
-  } = mxgraph;
+    CompactTreeLayout,
+    LayoutManager,
+    CellOverlay,
+    ImageBox,
+    utils,
+    mxToolbar,
+  } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -43,24 +43,22 @@ const Template = ({ label, ...args }) => {
   div.appendChild(container);
 
   // Makes the shadow brighter
-  mxConstants.SHADOWCOLOR = '#C0C0C0';
+  Constants.SHADOWCOLOR = '#C0C0C0';
 
   const outline = document.getElementById('outlineContainer');
 
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
   // Sets a gradient background
   if (mxClient.IS_GC || mxClient.IS_SF) {
     container.style.background =
       '-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#E7E7E7))';
   } else if (mxClient.IS_NS) {
-    container.style.background =
-      '-moz-linear-gradient(top, #FFFFFF, #E7E7E7)';
+    container.style.background = '-moz-linear-gradient(top, #FFFFFF, #E7E7E7)';
   }
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Enables automatic sizing for vertices after editing and
   // panning by using the left mouse button.
@@ -78,7 +76,7 @@ const Template = ({ label, ...args }) => {
 
   // Creates the outline (navigator, overview) for moving
   // around the graph in the top, right corner of the window.
-  const outln = new mxOutline(graph, outline);
+  const outln = new Outline(graph, outline);
 
   // Disables tooltips on touch devices
   graph.setTooltips(!mxClient.IS_TOUCH);
@@ -87,8 +85,8 @@ const Template = ({ label, ...args }) => {
   let style = graph.getStylesheet().getDefaultVertexStyle();
   style.shape = 'label';
 
-  style.verticalAlign = mxConstants.ALIGN_MIDDLE;
-  style.align = mxConstants.ALIGN_LEFT;
+  style.verticalAlign = Constants.ALIGN_MIDDLE;
+  style.align = Constants.ALIGN_LEFT;
   style.spacingLeft = 54;
 
   style.gradientColor = '#7d85df';
@@ -121,7 +119,7 @@ const Template = ({ label, ...args }) => {
   style.entryPerimeter = 0; // disabled
 
   // Disable the following for straight lines
-  style.edge = mxEdgeStyle.TopToBottom;
+  style.edge = EdgeStyle.TopToBottom;
 
   // Stops editing on enter or escape keypress
   const keyHandler = new mxKeyHandler(graph);
@@ -129,7 +127,7 @@ const Template = ({ label, ...args }) => {
   // Enables automatic layout on the graph and installs
   // a tree layout for all groups who's children are
   // being changed, added or removed.
-  const layout = new mxCompactTreeLayout(graph, false);
+  const layout = new CompactTreeLayout(graph, false);
   layout.useBoundingBox = false;
   layout.edgeRouting = false;
   layout.levelDistance = 60;
@@ -137,26 +135,26 @@ const Template = ({ label, ...args }) => {
 
   // Allows the layout to move cells even though cells
   // aren't movable in the graph
-  layout.isVertexMovable = function(cell) {
+  layout.isVertexMovable = function (cell) {
     return true;
   };
 
-  const layoutMgr = new mxLayoutManager(graph);
+  const layoutMgr = new LayoutManager(graph);
 
-  layoutMgr.getLayout = function(cell) {
+  layoutMgr.getLayout = function (cell) {
     if (cell.getChildCount() > 0) {
       return layout;
     }
   };
 
   // Installs a popupmenu handler using local function (see below).
-  graph.popupMenuHandler.factoryMethod = function(menu, cell, evt) {
+  graph.popupMenuHandler.factoryMethod = function (menu, cell, evt) {
     return createPopupMenu(graph, menu, cell, evt);
   };
 
   // Fix for wrong preferred size
   const oldGetPreferredSizeForCell = graph.getPreferredSizeForCell;
-  graph.getPreferredSizeForCell = function(cell) {
+  graph.getPreferredSizeForCell = function (cell) {
     const result = oldGetPreferredSizeForCell.apply(this, arguments);
 
     if (result != null) {
@@ -167,13 +165,13 @@ const Template = ({ label, ...args }) => {
   };
 
   // Sets the maximum text scale to 1
-  graph.cellRenderer.getTextScale = function(state) {
+  graph.cellRenderer.getTextScale = function (state) {
     return Math.min(1, state.view.scale);
   };
 
   // Dynamically adds text to the label as we zoom in
   // (without affecting the preferred size for new cells)
-  graph.cellRenderer.getLabelValue = function(state) {
+  graph.cellRenderer.getLabelValue = function (state) {
     let result = state.cell.value;
 
     if (state.cell.isVertex()) {
@@ -219,28 +217,28 @@ const Template = ({ label, ...args }) => {
   div.appendChild(content);
   const tb = new mxToolbar(content);
 
-  tb.addItem('Zoom In', 'images/zoom_in32.png', function(evt) {
+  tb.addItem('Zoom In', 'images/zoom_in32.png', function (evt) {
     graph.zoomIn();
   });
 
-  tb.addItem('Zoom Out', 'images/zoom_out32.png', function(evt) {
+  tb.addItem('Zoom Out', 'images/zoom_out32.png', function (evt) {
     graph.zoomOut();
   });
 
-  tb.addItem('Actual Size', 'images/view_1_132.png', function(evt) {
+  tb.addItem('Actual Size', 'images/view_1_132.png', function (evt) {
     graph.zoomActual();
   });
 
-  tb.addItem('Print', 'images/print32.png', function(evt) {
+  tb.addItem('Print', 'images/print32.png', function (evt) {
     const preview = new PrintPreview(graph, 1);
     preview.open();
   });
 
-  tb.addItem('Poster Print', 'images/press32.png', function(evt) {
-    const pageCount = mxUtils.prompt('Enter maximum page count', '1');
+  tb.addItem('Poster Print', 'images/press32.png', function (evt) {
+    const pageCount = utils.prompt('Enter maximum page count', '1');
 
     if (pageCount != null) {
-      const scale = mxUtils.getScaleForPageCount(pageCount, graph);
+      const scale = utils.getScaleForPageCount(pageCount, graph);
       const preview = new PrintPreview(graph, scale);
       preview.open();
     }
@@ -252,21 +250,17 @@ const Template = ({ label, ...args }) => {
 
     if (cell != null) {
       if (cell.isVertex()) {
-        menu.addItem(
-          'Add child',
-          '/images/overlays/check.png',
-          function() {
-            addChild(graph, cell);
-          }
-        );
+        menu.addItem('Add child', '/images/overlays/check.png', function () {
+          addChild(graph, cell);
+        });
       }
 
-      menu.addItem('Edit label', '/images/text.gif', function() {
+      menu.addItem('Edit label', '/images/text.gif', function () {
         graph.startEditingAtCell(cell);
       });
 
       if (cell.id != 'treeRoot' && cell.isVertex()) {
-        menu.addItem('Delete', '/images/delete.gif', function() {
+        menu.addItem('Delete', '/images/delete.gif', function () {
           deleteSubtree(graph, cell);
         });
       }
@@ -274,26 +268,26 @@ const Template = ({ label, ...args }) => {
       menu.addSeparator();
     }
 
-    menu.addItem('Fit', '/images/zoom.gif', function() {
+    menu.addItem('Fit', '/images/zoom.gif', function () {
       graph.fit();
     });
 
-    menu.addItem('Actual', '/images/zoomactual.gif', function() {
+    menu.addItem('Actual', '/images/zoomactual.gif', function () {
       graph.zoomActual();
     });
 
     menu.addSeparator();
 
-    menu.addItem('Print', '/images/print.gif', function() {
+    menu.addItem('Print', '/images/print.gif', function () {
       const preview = new PrintPreview(graph, 1);
       preview.open();
     });
 
-    menu.addItem('Poster Print', '/images/print.gif', function() {
-      const pageCount = mxUtils.prompt('Enter maximum page count', '1');
+    menu.addItem('Poster Print', '/images/print.gif', function () {
+      const pageCount = utils.prompt('Enter maximum page count', '1');
 
       if (pageCount != null) {
-        const scale = mxUtils.getScaleForPageCount(pageCount, graph);
+        const scale = utils.getScaleForPageCount(pageCount, graph);
         const preview = new PrintPreview(graph, scale);
         preview.open();
       }
@@ -301,36 +295,24 @@ const Template = ({ label, ...args }) => {
   }
 
   function addOverlays(graph, cell, addDeleteIcon) {
-    let overlay = new mxCellOverlay(
-      new mxImage('images/add.png', 24, 24),
-      'Add child'
-    );
+    let overlay = new CellOverlay(new ImageBox('images/add.png', 24, 24), 'Add child');
     overlay.cursor = 'hand';
-    overlay.align = mxConstants.ALIGN_CENTER;
-    overlay.addListener(
-      mxEvent.CLICK,
-      (sender, evt) => {
-        addChild(graph, cell);
-      }
-    );
+    overlay.align = Constants.ALIGN_CENTER;
+    overlay.addListener(InternalEvent.CLICK, (sender, evt) => {
+      addChild(graph, cell);
+    });
 
     graph.addCellOverlay(cell, overlay);
 
     if (addDeleteIcon) {
-      overlay = new mxCellOverlay(
-        new mxImage('images/close.png', 30, 30),
-        'Delete'
-      );
+      overlay = new CellOverlay(new ImageBox('images/close.png', 30, 30), 'Delete');
       overlay.cursor = 'hand';
-      overlay.offset = new mxPoint(-4, 8);
-      overlay.align = mxConstants.ALIGN_RIGHT;
-      overlay.verticalAlign = mxConstants.ALIGN_TOP;
-      overlay.addListener(
-        mxEvent.CLICK,
-        (sender, evt) => {
-          deleteSubtree(graph, cell);
-        }
-      );
+      overlay.offset = new Point(-4, 8);
+      overlay.align = Constants.ALIGN_RIGHT;
+      overlay.verticalAlign = Constants.ALIGN_TOP;
+      overlay.addListener(InternalEvent.CLICK, (sender, evt) => {
+        deleteSubtree(graph, cell);
+      });
 
       graph.addCellOverlay(cell, overlay);
     }
@@ -362,7 +344,7 @@ const Template = ({ label, ...args }) => {
       // of 20 pixels in negative, vertical direction.
       edge.geometry.x = 1;
       edge.geometry.y = 0;
-      edge.geometry.offset = new mxPoint(0, -20);
+      edge.geometry.offset = new Point(0, -20);
 
       addOverlays(graph, vertex, true);
     } finally {
@@ -375,7 +357,7 @@ const Template = ({ label, ...args }) => {
   function deleteSubtree(graph, cell) {
     // Gets the subtree from cell downwards
     const cells = [];
-    graph.traverse(cell, true, function(vertex) {
+    graph.traverse(cell, true, function (vertex) {
       cells.push(vertex);
 
       return true;
@@ -385,6 +367,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

@@ -1,20 +1,53 @@
-import Cell from "../cell/datatypes/Cell";
-import CellArray from "../cell/datatypes/CellArray";
-import {sortCells} from "../../util/Utils";
-import Geometry from "../geometry/Geometry";
-import EventObject from "../event/EventObject";
-import InternalEvent from "../event/InternalEvent";
-import Rectangle from "../geometry/Rectangle";
-import Point from "../geometry/Point";
-import Graph from "../Graph";
+import Cell from '../cell/datatypes/Cell';
+import CellArray from '../cell/datatypes/CellArray';
+import { autoImplement, sortCells } from '../../util/Utils';
+import Geometry from '../geometry/Geometry';
+import EventObject from '../event/EventObject';
+import InternalEvent from '../event/InternalEvent';
+import Rectangle from '../geometry/Rectangle';
+import Point from '../geometry/Point';
+import Graph from '../Graph';
+import GraphSelection from '../selection/GraphSelection';
+import GraphCells from '../cell/GraphCells';
+import GraphSwimlane from '../swimlane/GraphSwimlane';
+import GraphEdge from '../cell/edge/GraphEdge';
 
-class GraphGrouping {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+type PartialGraph = Pick<
+  Graph,
+  | 'getModel'
+  | 'fireEvent'
+  | 'getView'
+  | 'getDefaultParent'
+  | 'batchUpdate'
+  | 'isValidRoot'
+  | 'getCurrentRoot'
+>;
+type PartialCells = Pick<
+  GraphCells,
+  | 'cellsAdded'
+  | 'cellsMoved'
+  | 'cellsResized'
+  | 'getBoundingBoxFromGeometry'
+  | 'cellsRemoved'
+  | 'getChildCells'
+  | 'moveCells'
+>;
+type PartialEdge = Pick<GraphEdge, 'addAllEdges'>;
+type PartialSelection = Pick<
+  GraphSelection,
+  'getSelectionCells' | 'getSelectionCell' | 'clearSelection' | 'setSelectionCell'
+>;
+type PartialSwimlane = Pick<
+  GraphSwimlane,
+  'isSwimlane' | 'getStartSize' | 'getActualStartSize'
+>;
+type PartialClass = PartialGraph &
+  PartialCells &
+  PartialEdge &
+  PartialSelection &
+  PartialSwimlane;
 
-  graph: Graph;
-
+class GraphGrouping extends autoImplement<PartialClass>() {
   /*****************************************************************************
    * Group: Grouping
    *****************************************************************************/
@@ -55,12 +88,12 @@ class GraphGrouping {
         parent = <Cell>cells[0].getParent();
       }
 
-      this.graph.model.beginUpdate();
+      this.getModel().beginUpdate();
       try {
         // Checks if the group has a geometry and
         // creates one if one does not exist
         if (group.getGeometry() == null) {
-          this.graph.model.setGeometry(group, new Geometry());
+          this.getModel().setGeometry(group, new Geometry());
         }
 
         // Adds the group into the parent
@@ -84,7 +117,7 @@ class GraphGrouping {
         // Resizes the group
         this.cellsResized(new CellArray(group), [bounds], false);
 
-        this.graph.fireEvent(
+        this.fireEvent(
           new EventObject(
             InternalEvent.GROUP_CELLS,
             'group',
@@ -96,7 +129,7 @@ class GraphGrouping {
           )
         );
       } finally {
-        this.graph.model.endUpdate();
+        this.getModel().endUpdate();
       }
     }
     return group;
@@ -125,10 +158,11 @@ class GraphGrouping {
   /**
    * Returns the bounds to be used for the given group and children.
    */
-  getBoundsForGroup(group: Cell,
-                    children: CellArray,
-                    border: number | null): Rectangle | null {
-
+  getBoundsForGroup(
+    group: Cell,
+    children: CellArray,
+    border: number | null
+  ): Rectangle | null {
     const result = this.getBoundingBoxFromGeometry(children, true);
     if (result != null) {
       if (this.isSwimlane(group)) {
@@ -193,7 +227,7 @@ class GraphGrouping {
     }
 
     if (cells != null && cells.length > 0) {
-      this.graph.model.beginUpdate();
+      this.getModel().beginUpdate();
       try {
         for (let i = 0; i < cells.length; i += 1) {
           let children = cells[i].getChildren();
@@ -208,7 +242,7 @@ class GraphGrouping {
 
             // Fix relative child cells
             for (const child of children) {
-              const state = this.graph.view.getState(child);
+              const state = this.getView().getState(child);
               let geo = child.getGeometry();
 
               if (state != null && geo != null && geo.relative) {
@@ -217,18 +251,16 @@ class GraphGrouping {
                 geo.y = (<Point>state.origin).y;
                 geo.relative = false;
 
-                this.graph.model.setGeometry(child, geo);
+                this.getModel().setGeometry(child, geo);
               }
             }
           }
         }
 
         this.removeCellsAfterUngroup(cells);
-        this.graph.fireEvent(
-          new EventObject(InternalEvent.UNGROUP_CELLS, 'cells', cells)
-        );
+        this.fireEvent(new EventObject(InternalEvent.UNGROUP_CELLS, 'cells', cells));
       } finally {
-        this.graph.model.endUpdate();
+        this.getModel().endUpdate();
       }
     }
     return result;
@@ -272,7 +304,7 @@ class GraphGrouping {
     if (cells == null) {
       cells = this.getSelectionCells();
     }
-    this.graph.model.beginUpdate();
+    this.getModel().beginUpdate();
     try {
       const parent = this.getDefaultParent();
       const index = parent.getChildCount();
@@ -282,7 +314,7 @@ class GraphGrouping {
         new EventObject(InternalEvent.REMOVE_CELLS_FROM_PARENT, 'cells', cells)
       );
     } finally {
-      this.graph.model.endUpdate();
+      this.getModel().endUpdate();
     }
     return cells;
   }
@@ -317,7 +349,7 @@ class GraphGrouping {
     leftBorder: number = 0
   ): CellArray {
     if (cells == null) {
-      cells = this.graph.selection.getSelectionCells();
+      cells = this.getSelectionCells();
     }
 
     border = border != null ? border : 0;
@@ -327,7 +359,7 @@ class GraphGrouping {
     bottomBorder = bottomBorder != null ? bottomBorder : 0;
     leftBorder = leftBorder != null ? leftBorder : 0;
 
-    this.graph.batchUpdate(() => {
+    this.batchUpdate(() => {
       for (let i = cells.length - 1; i >= 0; i--) {
         let geo = cells[i].getGeometry();
         if (geo == null) {
@@ -348,32 +380,18 @@ class GraphGrouping {
             geo = <Geometry>geo.clone();
 
             if (moveGroup) {
-              geo.x = Math.round(
-                geo.x + bounds.x - border - size.x - leftBorder
-              );
-              geo.y = Math.round(
-                geo.y + bounds.y - border - size.y - topBorder
-              );
+              geo.x = Math.round(geo.x + bounds.x - border - size.x - leftBorder);
+              geo.y = Math.round(geo.y + bounds.y - border - size.y - topBorder);
             }
 
             geo.width = Math.round(
-              bounds.width +
-              2 * border +
-              size.x +
-              leftBorder +
-              rightBorder +
-              size.width
+              bounds.width + 2 * border + size.x + leftBorder + rightBorder + size.width
             );
             geo.height = Math.round(
-              bounds.height +
-              2 * border +
-              size.y +
-              topBorder +
-              bottomBorder +
-              size.height
+              bounds.height + 2 * border + size.y + topBorder + bottomBorder + size.height
             );
 
-            this.graph.model.setGeometry(cells[i], geo);
+            this.getModel().setGeometry(cells[i], geo);
             this.moveCells(
               children,
               border + size.x - bounds.x + leftBorder,
@@ -402,7 +420,7 @@ class GraphGrouping {
     cell = cell || this.getSelectionCell();
 
     if (cell != null && this.isValidRoot(cell)) {
-      this.view.setCurrentRoot(cell);
+      this.getView().setCurrentRoot(cell);
       this.clearSelection();
     }
   }
@@ -416,30 +434,26 @@ class GraphGrouping {
     const current = this.getCurrentRoot();
 
     if (current != null) {
-      let next = <Cell>current.getParent();
+      let next = current.getParent();
 
       // Finds the next valid root in the hierarchy
-      while (
-        next !== root &&
-        !this.isValidRoot(next) &&
-        next.getParent() !== root
-        ) {
+      while (next !== root && !this.isValidRoot(next) && next.getParent() !== root) {
         next = <Cell>next.getParent();
       }
 
       // Clears the current root if the new root is
       // the model's root or one of the layers.
       if (next === root || next.getParent() === root) {
-        this.view.setCurrentRoot(null);
+        this.getView().setCurrentRoot(null);
       } else {
-        this.view.setCurrentRoot(next);
+        this.getView().setCurrentRoot(next);
       }
 
-      const state = this.view.getState(current);
+      const state = this.getView().getState(current);
 
       // Selects the previous root in the graph
       if (state != null) {
-        this.selection.setSelectionCell(current);
+        this.setSelectionCell(current);
       }
     }
   }

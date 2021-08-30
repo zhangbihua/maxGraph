@@ -1,7 +1,7 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
-import { getXml, parseXml } from '@mxgraph/core/src/util/XmlUtils';
+import { getXml, parseXml } from '@maxgraph/core/util/XmlUtils';
 
 export default {
   title: 'DnD_CopyPaste/Drop',
@@ -9,24 +9,17 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph, 
-    mxRubberband,
-    mxUtils,
-    mxEventUtils,
-    mxEvent,
-    mxClient
-  } = mxgraph;
+  const { Graph, Rubberband, utils, EventUtils, InternalEvent, mxClient } = maxgraph;
 
   const div = document.createElement('div');
   div.innerHTML = 'Drag & drop your images below:<br>';
@@ -42,42 +35,38 @@ const Template = ({ label, ...args }) => {
 
   // Checks if the browser is supported
   const fileSupport =
-    window.File != null &&
-    window.FileReader != null &&
-    window.FileList != null;
+    window.File != null && window.FileReader != null && window.FileList != null;
 
   if (!fileSupport || !mxClient.isBrowserSupported()) {
     // Displays an error message if the browser is not supported.
-    mxUtils.error('Browser is not supported!', 200, false);
+    utils.error('Browser is not supported!', 200, false);
   } else {
     // Disables the built-in context menu
-    if (!args.contextMenu)
-      mxEvent.disableContextMenu(container);
+    if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
     // Creates the graph inside the given this.el
-    const graph = new mxGraph(container);
+    const graph = new Graph(container);
 
     // Enables rubberband selection
-    if (args.rubberBand)
-      new mxRubberband(graph);
+    if (args.rubberBand) new Rubberband(graph);
 
-    mxEvent.addListener(container, 'dragover', function(evt) {
+    InternalEvent.addListener(container, 'dragover', function (evt) {
       if (graph.isEnabled()) {
         evt.stopPropagation();
         evt.preventDefault();
       }
     });
 
-    mxEvent.addListener(container, 'drop', evt => {
+    InternalEvent.addListener(container, 'drop', (evt) => {
       if (graph.isEnabled()) {
         evt.stopPropagation();
         evt.preventDefault();
 
         // Gets drop location point for vertex
-        const pt = mxUtils.convertPoint(
+        const pt = utils.convertPoint(
           graph.container,
-          mxEventUtils.getClientX(evt),
-          mxEventUtils.getClientY(evt)
+          EventUtils.getClientX(evt),
+          EventUtils.getClientY(evt)
         );
         const tr = graph.view.translate;
         const { scale } = graph.view;
@@ -95,7 +84,7 @@ const Template = ({ label, ...args }) => {
   }
 
   return div;
-}
+};
 
 function handleDrop(graph, file, x, y) {
   // Handles each file as a separate insert for simplicity.
@@ -104,7 +93,7 @@ function handleDrop(graph, file, x, y) {
   if (file.type.substring(0, 5) === 'image') {
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       // Gets size of image for vertex
       let data = e.target.result;
 
@@ -144,9 +133,7 @@ function handleDrop(graph, file, x, y) {
             w = Math.max(1, Math.round(w));
             h = Math.max(1, Math.round(h));
 
-            data = `data:image/svg+xml,${btoa(
-              getXml(svgs[0], '\n')
-            )}`;
+            data = `data:image/svg+xml,${btoa(getXml(svgs[0], '\n'))}`;
             graph.insertVertex({
               position: [x, y],
               size: [w, h],
@@ -165,9 +152,7 @@ function handleDrop(graph, file, x, y) {
           const semi = data.indexOf(';');
 
           if (semi > 0) {
-            data =
-              data.substring(0, semi) +
-              data.substring(data.indexOf(',', semi + 1));
+            data = data.substring(0, semi) + data.substring(data.indexOf(',', semi + 1));
           }
 
           graph.insertVertex({

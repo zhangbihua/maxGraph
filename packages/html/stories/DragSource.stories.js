@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,26 +8,26 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph, 
-    mxDomUtils, 
-    mxRubberband,
-    mxDragSource,
-    mxUtils,
-    mxGestureUtils,
-    mxEdgeHandler,
-    mxGraphHandler,
-    mxGuide,
-    mxEventUtils,
-    mxCell,
-    mxGeometry
-  } = mxgraph;
+    Graph,
+    mxDomUtils,
+    Rubberband,
+    DragSource,
+    utils,
+    GestureUtils,
+    EdgeHandler,
+    GraphHandler,
+    Guide,
+    EventUtils,
+    Cell,
+    Geometry,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -36,14 +36,14 @@ const Template = ({ label, ...args }) => {
   container.style.height = `${args.height}px`;
   container.style.cursor = 'default';
 
-  class MyCustomGuide extends mxGuide {
+  class MyCustomGuide extends Guide {
     isEnabledForEvent(evt) {
       // Alt disables guides
-      return !mxEventUtils.isAltDown(evt);
+      return !EventUtils.isAltDown(evt);
     }
   }
 
-  class MyCustomGraphHandler extends mxGraphHandler {
+  class MyCustomGraphHandler extends GraphHandler {
     // Enables guides
     guidesEnabled = true;
 
@@ -52,12 +52,12 @@ const Template = ({ label, ...args }) => {
     }
   }
 
-  class MyCustomEdgeHandler extends mxEdgeHandler {
+  class MyCustomEdgeHandler extends EdgeHandler {
     // Enables snapping waypoints to terminals
     snapToTerminals = true;
   }
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     createGraphHandler() {
       return new MyCustomGraphHandler(this);
     }
@@ -89,8 +89,7 @@ const Template = ({ label, ...args }) => {
     // graph.setResizeContainer(true);
 
     // Enables rubberband selection
-    if (args.rubberBand)
-      new mxRubberband(graph);
+    if (args.rubberBand) new Rubberband(graph);
 
     // Gets the default parent for inserting new cells. This
     // is normally the first child of the root (ie. layer 0).
@@ -121,9 +120,9 @@ const Template = ({ label, ...args }) => {
   }
 
   // Returns the graph under the mouse
-  const graphF = evt => {
-    const x = mxEventUtils.getClientX(evt);
-    const y = mxEventUtils.getClientY(evt);
+  const graphF = (evt) => {
+    const x = EventUtils.getClientX(evt);
+    const y = EventUtils.getClientY(evt);
     const elt = document.elementFromPoint(x, y);
 
     for (const graph of graphs) {
@@ -137,7 +136,7 @@ const Template = ({ label, ...args }) => {
 
   // Inserts a cell at the given location
   const funct = (graph, evt, target, x, y) => {
-    const cell = new mxCell('Test', new mxGeometry(0, 0, 120, 40));
+    const cell = new Cell('Test', new Geometry(0, 0, 120, 40));
     cell.vertex = true;
     const cells = graph.importCells([cell], x, y, target);
 
@@ -148,7 +147,7 @@ const Template = ({ label, ...args }) => {
   };
 
   // Creates a DOM node that acts as the drag source
-  const img = mxUtils.createImage('images/icons48/gear.png');
+  const img = utils.createImage('images/icons48/gear.png');
   img.style.width = '48px';
   img.style.height = '48px';
   container.appendChild(img);
@@ -163,7 +162,7 @@ const Template = ({ label, ...args }) => {
   // if scalePreview (last) argument is true. Dx and dy are null to force
   // the use of the defaults. Note that dx and dy are only used for the
   // drag icon but not for the preview.
-  const ds = mxGestureUtils.makeDraggable(
+  const ds = GestureUtils.makeDraggable(
     img,
     graphF,
     funct,
@@ -181,9 +180,9 @@ const Template = ({ label, ...args }) => {
   };
 
   // Restores original drag icon while outside of graph
-  ds.createDragElement = mxDragSource.prototype.createDragElement;
+  ds.createDragElement = DragSource.prototype.createDragElement;
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

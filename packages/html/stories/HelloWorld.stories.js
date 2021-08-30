@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -18,8 +18,8 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { mxGraph, mxEvent, mxRubberband } = mxgraph;
-
+  const { Graph, InternalEvent, Rubberband } = maxgraph;
+  console.log(maxgraph, Graph);
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';
@@ -28,11 +28,11 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  if (!args.contextMenu) mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
-  if (args.rubberBand) new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   const parent = graph.getDefaultParent();
 

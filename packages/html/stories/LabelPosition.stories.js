@@ -1,18 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Labels/LabelPosition',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph
-  } = mxgraph;
+  const { Graph } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -23,7 +21,7 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -36,7 +34,7 @@ const Template = ({ label, ...args }) => {
   // label positions using the label position styles. Vertical
   // and horizontal label position styles can be combined.
   // Note: Alternatively, vertex labels can be set be overriding
-  // mxCellRenderer.getLabelBounds.
+  // CellRenderer.getLabelBounds.
   graph.getModel().beginUpdate();
   try {
     graph.insertVertex(
@@ -85,6 +83,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

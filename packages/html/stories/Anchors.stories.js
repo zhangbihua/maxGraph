@@ -8,22 +8,22 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph, 
-    mxEvent, 
-    mxRubberband, 
-    mxConnectionHandler, 
-    mxConnectionConstraint,
-    mxGeometry,
-    mxPolyline,
-    mxPoint,
-    mxCellState
+    Graph,
+    InternalEvent,
+    Rubberband,
+    ConnectionHandler,
+    ConnectionConstraint,
+    Geometry,
+    Polyline,
+    Point,
+    CellState,
   } = mxgraph;
 
   const container = document.createElement('div');
@@ -34,22 +34,17 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
-  class MyCustomConnectionHandler extends mxConnectionHandler {
+  class MyCustomConnectionHandler extends ConnectionHandler {
     // Enables connect preview for the default edge style
     createEdgeState(me) {
       const edge = graph.createEdge(null, null, null, null, null);
-      return new mxCellState(
-        this.graph.view,
-        edge,
-        this.graph.getCellStyle(edge)
-      );
+      return new CellState(this.graph.view, edge, this.graph.getCellStyle(edge));
     }
   }
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     getAllConnectionConstraints(terminal, source) {
       // Overridden to define per-shape connection points
       if (terminal != null && terminal.shape != null) {
@@ -69,38 +64,36 @@ const Template = ({ label, ...args }) => {
     }
   }
 
-  class MyCustomGeometryClass extends mxGeometry {
+  class MyCustomGeometryClass extends Geometry {
     // Defines the default constraints for the vertices
     constraints = [
-      new mxConnectionConstraint(new mxPoint(0.25, 0), true),
-      new mxConnectionConstraint(new mxPoint(0.5, 0), true),
-      new mxConnectionConstraint(new mxPoint(0.75, 0), true),
-      new mxConnectionConstraint(new mxPoint(0, 0.25), true),
-      new mxConnectionConstraint(new mxPoint(0, 0.5), true),
-      new mxConnectionConstraint(new mxPoint(0, 0.75), true),
-      new mxConnectionConstraint(new mxPoint(1, 0.25), true),
-      new mxConnectionConstraint(new mxPoint(1, 0.5), true),
-      new mxConnectionConstraint(new mxPoint(1, 0.75), true),
-      new mxConnectionConstraint(new mxPoint(0.25, 1), true),
-      new mxConnectionConstraint(new mxPoint(0.5, 1), true),
-      new mxConnectionConstraint(new mxPoint(0.75, 1), true),
+      new ConnectionConstraint(new Point(0.25, 0), true),
+      new ConnectionConstraint(new Point(0.5, 0), true),
+      new ConnectionConstraint(new Point(0.75, 0), true),
+      new ConnectionConstraint(new Point(0, 0.25), true),
+      new ConnectionConstraint(new Point(0, 0.5), true),
+      new ConnectionConstraint(new Point(0, 0.75), true),
+      new ConnectionConstraint(new Point(1, 0.25), true),
+      new ConnectionConstraint(new Point(1, 0.5), true),
+      new ConnectionConstraint(new Point(1, 0.75), true),
+      new ConnectionConstraint(new Point(0.25, 1), true),
+      new ConnectionConstraint(new Point(0.5, 1), true),
+      new ConnectionConstraint(new Point(0.75, 1), true),
     ];
   }
 
   // Edges have no connection points
-  mxPolyline.prototype.constraints = null;
+  Polyline.prototype.constraints = null;
 
   // Creates the graph inside the given container
   const graph = new MyCustomGraph(container);
   graph.setConnectable(true);
 
   // Specifies the default edge style
-  graph.getStylesheet().getDefaultEdgeStyle().edgeStyle =
-    'orthogonalEdgeStyle';
+  graph.getStylesheet().getDefaultEdgeStyle().edgeStyle = 'orthogonalEdgeStyle';
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -131,6 +124,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

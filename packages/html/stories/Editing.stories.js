@@ -1,23 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Editing/Editing',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph, 
-    mxKeyHandler,
-    mxUtils,
-    mxDomUtils,
-    mxCloneUtils,
-    mxEventUtils
-  } = mxgraph;
+  const { Graph, mxKeyHandler, utils, mxDomUtils, CloneUtils, EventUtils } = maxgraph;
 
   const div = document.createElement('div');
   div.innerHTML = `
@@ -34,7 +27,7 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
   div.appendChild(container);
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     getLabel(cell) {
       // Returns a HTML representation of the cell where the
       // upper half is the first value, lower half is second
@@ -79,10 +72,10 @@ const Template = ({ label, ...args }) => {
       // a mouse event
       if (evt != null) {
         // Finds the relative coordinates inside the cell
-        const point = mxUtils.convertPoint(
+        const point = utils.convertPoint(
           this.container,
-          mxEventUtils.getClientX(evt),
-          mxEventUtils.getClientY(evt)
+          EventUtils.getClientX(evt),
+          EventUtils.getClientY(evt)
         );
         const state = this.getView().getState(cell);
 
@@ -106,7 +99,7 @@ const Template = ({ label, ...args }) => {
       if (name != null) {
         // Clones the user object for correct undo and puts
         // the new value in the correct field.
-        const value = mxCloneUtils.clone(cell.value);
+        const value = CloneUtils.clone(cell.value);
         value[name] = newValue;
         newValue = value;
 
@@ -143,6 +136,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

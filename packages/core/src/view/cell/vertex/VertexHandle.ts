@@ -26,7 +26,7 @@ import CellState from '../datatypes/CellState';
 import CellArray from '../datatypes/CellArray';
 
 import type { MaxGraph } from '../../Graph';
-import type { CellHandle, CellStateStyles } from 'packages/core/src/types';
+import type { CellHandle, CellStateStyles } from 'core/types';
 
 /**
  * Implements a single custom handle for vertices.

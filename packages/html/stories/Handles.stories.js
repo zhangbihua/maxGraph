@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,29 +8,29 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxCylinder,
+    Graph,
+    CylinderShape,
     mxDomHelpers,
-    mxCellRenderer,
-    mxPoint,
-    mxRectangle,
-    mxVertexHandler,
-    mxEvent,
-    mxRubberband,
-    mxUtils,
-    mxHandle
-  } = mxgraph;
+    CellRenderer,
+    Point,
+    Rectangle,
+    VertexHandler,
+    InternalEvent,
+    Rubberband,
+    utils,
+    VertexHandle,
+  } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -43,17 +43,15 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
   div.appendChild(container);
 
-  class MyShape extends mxCylinder {
+  class MyShape extends CylinderShape {
     defaultPos1 = 20;
 
     defaultPos2 = 60;
 
     getLabelBounds(rect) {
-      const pos1 =
-        mxUtils.getValue(this.style, 'pos1', this.defaultPos1) * this.scale;
-      const pos2 =
-        mxUtils.getValue(this.style, 'pos2', this.defaultPos2) * this.scale;
-      return new mxRectangle(
+      const pos1 = utils.getValue(this.style, 'pos1', this.defaultPos1) * this.scale;
+      const pos2 = utils.getValue(this.style, 'pos2', this.defaultPos2) * this.scale;
+      return new Rectangle(
         rect.x,
         rect.y + pos1,
         rect.width,
@@ -62,8 +60,8 @@ const Template = ({ label, ...args }) => {
     }
 
     redrawPath(path, x, y, w, h, isForeground) {
-      const pos1 = mxUtils.getValue(this.style, 'pos1', this.defaultPos1);
-      const pos2 = mxUtils.getValue(this.style, 'pos2', this.defaultPos2);
+      const pos1 = utils.getValue(this.style, 'pos1', this.defaultPos1);
+      const pos2 = utils.getValue(this.style, 'pos2', this.defaultPos2);
 
       if (isForeground) {
         if (pos1 < h) {
@@ -80,9 +78,9 @@ const Template = ({ label, ...args }) => {
       }
     }
   }
-  mxCellRenderer.registerShape('myShape', MyShape);
+  CellRenderer.registerShape('myShape', MyShape);
 
-  class MyCustomVertexHandler extends mxVertexHandler {
+  class MyCustomVertexHandler extends VertexHandler {
     livePreview = true;
 
     rotationEnabled = true;
@@ -90,19 +88,15 @@ const Template = ({ label, ...args }) => {
     createCustomHandles() {
       if (this.state.style.shape === 'myShape') {
         // Implements the handle for the first divider
-        const firstHandle = new mxHandle(this.state);
+        const firstHandle = new VertexHandle(this.state);
 
-        firstHandle.getPosition = function(bounds) {
+        firstHandle.getPosition = function (bounds) {
           const pos2 = Math.max(
             0,
             Math.min(
               bounds.height,
               parseFloat(
-                mxUtils.getValue(
-                  this.state.style,
-                  'pos2',
-                  MyShape.prototype.defaultPos2
-                )
+                utils.getValue(this.state.style, 'pos2', MyShape.prototype.defaultPos2)
               )
             )
           );
@@ -111,29 +105,21 @@ const Template = ({ label, ...args }) => {
             Math.min(
               pos2,
               parseFloat(
-                mxUtils.getValue(
-                  this.state.style,
-                  'pos1',
-                  MyShape.prototype.defaultPos1
-                )
+                utils.getValue(this.state.style, 'pos1', MyShape.prototype.defaultPos1)
               )
             )
           );
 
-          return new mxPoint(bounds.getCenterX(), bounds.y + pos1);
+          return new Point(bounds.getCenterX(), bounds.y + pos1);
         };
 
-        firstHandle.setPosition = function(bounds, pt) {
+        firstHandle.setPosition = function (bounds, pt) {
           const pos2 = Math.max(
             0,
             Math.min(
               bounds.height,
               parseFloat(
-                mxUtils.getValue(
-                  this.state.style,
-                  'pos2',
-                  MyShape.prototype.defaultPos2
-                )
+                utils.getValue(this.state.style, 'pos2', MyShape.prototype.defaultPos2)
               )
             )
           );
@@ -143,26 +129,22 @@ const Template = ({ label, ...args }) => {
           );
         };
 
-        firstHandle.execute = function() {
+        firstHandle.execute = function () {
           this.copyStyle('pos1');
         };
 
         firstHandle.ignoreGrid = true;
 
         // Implements the handle for the second divider
-        const secondHandle = new mxHandle(this.state);
+        const secondHandle = new VertexHandle(this.state);
 
-        secondHandle.getPosition = function(bounds) {
+        secondHandle.getPosition = function (bounds) {
           const pos1 = Math.max(
             0,
             Math.min(
               bounds.height,
               parseFloat(
-                mxUtils.getValue(
-                  this.state.style,
-                  'pos1',
-                  MyShape.prototype.defaultPos1
-                )
+                utils.getValue(this.state.style, 'pos1', MyShape.prototype.defaultPos1)
               )
             )
           );
@@ -171,29 +153,21 @@ const Template = ({ label, ...args }) => {
             Math.min(
               bounds.height,
               parseFloat(
-                mxUtils.getValue(
-                  this.state.style,
-                  'pos2',
-                  MyShape.prototype.defaultPos2
-                )
+                utils.getValue(this.state.style, 'pos2', MyShape.prototype.defaultPos2)
               )
             )
           );
 
-          return new mxPoint(bounds.getCenterX(), bounds.y + pos2);
+          return new Point(bounds.getCenterX(), bounds.y + pos2);
         };
 
-        secondHandle.setPosition = function(bounds, pt) {
+        secondHandle.setPosition = function (bounds, pt) {
           const pos1 = Math.max(
             0,
             Math.min(
               bounds.height,
               parseFloat(
-                mxUtils.getValue(
-                  this.state.style,
-                  'pos1',
-                  MyShape.prototype.defaultPos1
-                )
+                utils.getValue(this.state.style, 'pos1', MyShape.prototype.defaultPos1)
               )
             )
           );
@@ -203,7 +177,7 @@ const Template = ({ label, ...args }) => {
           );
         };
 
-        secondHandle.execute = function() {
+        secondHandle.execute = function () {
           this.copyStyle('pos2');
         };
 
@@ -216,15 +190,14 @@ const Template = ({ label, ...args }) => {
     }
   }
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     createVertexHandler(state) {
       return new MyCustomVertexHandler(state);
     }
   }
 
   // Disables the built-in context menu
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
   // Creates the graph inside the given container
   const graph = new MyCustomGraph(container);
@@ -234,8 +207,7 @@ const Template = ({ label, ...args }) => {
   graph.centerZoom = false;
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -263,17 +235,17 @@ const Template = ({ label, ...args }) => {
   div.appendChild(buttons);
 
   buttons.appendChild(
-    mxDomHelpers.button('+', function() {
+    mxDomHelpers.button('+', function () {
       graph.zoomIn();
     })
   );
   buttons.appendChild(
-    mxDomHelpers.button('-', function() {
+    mxDomHelpers.button('-', function () {
       graph.zoomOut();
     })
   );
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

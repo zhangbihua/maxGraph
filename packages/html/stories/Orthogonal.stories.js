@@ -1,27 +1,27 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Connections/Orthogonal',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph, 
-    mxRubberband, 
-    mxConnectionHandler, 
-    mxGraphHandler,
-    mxGuide,
-    mxPoint,
-    mxCellState,
-    mxEdgeHandler,
-    mxGraphView,
-    mxEvent
-  } = mxgraph;
+    Graph,
+    Rubberband,
+    ConnectionHandler,
+    GraphHandler,
+    Guide,
+    Point,
+    CellState,
+    EdgeHandler,
+    GraphView,
+    InternalEvent,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -32,21 +32,21 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Enables guides
-  mxGraphHandler.prototype.guidesEnabled = true;
+  GraphHandler.prototype.guidesEnabled = true;
 
   // Alt disables guides
-  mxGuide.prototype.isEnabledForEvent = function(evt) {
-    return !mxEvent.isAltDown(evt);
+  Guide.prototype.isEnabledForEvent = function (evt) {
+    return !InternalEvent.isAltDown(evt);
   };
 
   // Enables snapping waypoints to terminals
-  mxEdgeHandler.prototype.snapToTerminals = true;
+  EdgeHandler.prototype.snapToTerminals = true;
 
   // Enables orthogonal connect preview in IE
-  mxConnectionHandler.prototype.movePreviewAway = false;
+  ConnectionHandler.prototype.movePreviewAway = false;
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.disconnectOnMove = false;
   graph.foldingEnabled = false;
   graph.cellsResizable = false;
@@ -54,46 +54,29 @@ const Template = ({ label, ...args }) => {
   graph.setConnectable(true);
 
   // Implements perimeter-less connection points as fixed points (computed before the edge style).
-  graph.view.updateFixedTerminalPoint = function(
-    edge,
-    terminal,
-    source,
-    constraint
-  ) {
-    mxGraphView.prototype.updateFixedTerminalPoint.apply(this, arguments);
+  graph.view.updateFixedTerminalPoint = function (edge, terminal, source, constraint) {
+    GraphView.prototype.updateFixedTerminalPoint.apply(this, arguments);
 
     const pts = edge.absolutePoints;
     const pt = pts[source ? 0 : pts.length - 1];
 
-    if (
-      terminal != null &&
-      pt == null &&
-      this.getPerimeterFunction(terminal) == null
-    ) {
+    if (terminal != null && pt == null && this.getPerimeterFunction(terminal) == null) {
       edge.setAbsoluteTerminalPoint(
-        new mxPoint(
-          this.getRoutingCenterX(terminal),
-          this.getRoutingCenterY(terminal)
-        ),
+        new Point(this.getRoutingCenterX(terminal), this.getRoutingCenterY(terminal)),
         source
       );
     }
   };
 
   // Changes the default edge style
-  graph.getStylesheet().getDefaultEdgeStyle().edgeStyle =
-    'orthogonalEdgeStyle';
+  graph.getStylesheet().getDefaultEdgeStyle().edgeStyle = 'orthogonalEdgeStyle';
   delete graph.getStylesheet().getDefaultEdgeStyle().endArrow;
 
   // Implements the connect preview
-  graph.connectionHandler.createEdgeState = function(me) {
+  graph.connectionHandler.createEdgeState = function (me) {
     const edge = graph.createEdge(null, null, null, null, null);
 
-    return new mxCellState(
-      this.graph.view,
-      edge,
-      this.graph.getCellStyle(edge)
-    );
+    return new CellState(this.graph.view, edge, this.graph.getCellStyle(edge));
   };
 
   // Uncomment the following if you want the container
@@ -101,8 +84,7 @@ const Template = ({ label, ...args }) => {
   // graph.setResizeContainer(true);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -124,7 +106,7 @@ const Template = ({ label, ...args }) => {
       'portConstraint=northsouth;',
       true
     );
-    v11.geometry.offset = new mxPoint(-5, -5);
+    v11.geometry.offset = new Point(-5, -5);
     const v12 = graph.insertVertex(
       v1,
       null,
@@ -137,7 +119,7 @@ const Template = ({ label, ...args }) => {
         'routingCenterX=-0.5;routingCenterY=0;',
       true
     );
-    v12.geometry.offset = new mxPoint(-10, -5);
+    v12.geometry.offset = new Point(-10, -5);
     const v13 = graph.insertVertex(
       v1,
       null,
@@ -150,7 +132,7 @@ const Template = ({ label, ...args }) => {
         'routingCenterX=0.5;routingCenterY=0;',
       true
     );
-    v13.geometry.offset = new mxPoint(0, -5);
+    v13.geometry.offset = new Point(0, -5);
 
     const v2 = graph.addCell(graph.getModel().cloneCell(v1));
     v2.geometry.x = 200;
@@ -173,6 +155,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

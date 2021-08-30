@@ -47,8 +47,8 @@ import {
   OverflowValue,
   TextDirectionValue,
   VAlignValue,
-} from 'packages/core/src/types';
-import SvgCanvas2D from 'packages/core/src/util/canvas/SvgCanvas2D';
+} from 'core/types';
+import SvgCanvas2D from 'core/util/canvas/SvgCanvas2D';
 
 /**
  * Extends mxShape to implement a text shape.

@@ -59,7 +59,7 @@ import {
 import Graph, { MaxGraph } from '../../Graph';
 import CellState from '../datatypes/CellState';
 import Shape from '../../geometry/shape/Shape';
-import { CellHandle, ColorValue, Listenable } from 'packages/core/src/types';
+import { CellHandle, ColorValue, Listenable } from 'core/types';
 import InternalMouseEvent from '../../event/InternalMouseEvent';
 import Cell from '../datatypes/Cell';
 import ImageBox from '../../image/ImageBox';

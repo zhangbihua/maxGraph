@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,23 +8,17 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxRectangle,
-    mxRubberband,
-    mxDomHelpers,
-    mxEvent
-  } = mxgraph;
+  const { Graph, Rectangle, Rubberband, mxDomHelpers, InternalEvent } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -37,11 +31,10 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
   div.appendChild(container);
 
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.view.setScale(0.15);
   graph.pageBreaksVisible = true;
   graph.pageBreakDashed = true;
@@ -60,8 +53,7 @@ const Template = ({ label, ...args }) => {
   graph.graphHandler.scaleGrid = true;
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -90,38 +82,38 @@ const Template = ({ label, ...args }) => {
   div.appendChild(buttons);
 
   buttons.appendChild(
-    mxDomHelpers.button('Toggle Page Breaks', function(evt) {
+    mxDomHelpers.button('Toggle Page Breaks', function (evt) {
       graph.pageBreaksVisible = !graph.pageBreaksVisible;
       graph.sizeDidChange();
     })
   );
 
   buttons.appendChild(
-    mxDomHelpers.button('Zoom In', function(evt) {
+    mxDomHelpers.button('Zoom In', function (evt) {
       graph.zoomIn();
     })
   );
 
   buttons.appendChild(
-    mxDomHelpers.button('Zoom Out', function(evt) {
+    mxDomHelpers.button('Zoom Out', function (evt) {
       graph.zoomOut();
     })
   );
 
   buttons.appendChild(
-    mxDomHelpers.button('Print', function(evt) {
+    mxDomHelpers.button('Print', function (evt) {
       // Matches actual printer paper size and avoids blank pages
       const scale = 0.5;
 
       // Applies scale to page
-      const pf = mxRectangle.fromRectangle(
-        graph.pageFormat || mxConstants.PAGE_FORMAT_A4_PORTRAIT
+      const pf = Rectangle.fromRectangle(
+        graph.pageFormat || Constants.PAGE_FORMAT_A4_PORTRAIT
       );
       pf.width = Math.round(pf.width * scale * graph.pageScale);
       pf.height = Math.round(pf.height * scale * graph.pageScale);
 
       // Finds top left corner of top left page
-      const bounds = mxRectangle.fromRectangle(graph.getGraphBounds());
+      const bounds = Rectangle.fromRectangle(graph.getGraphBounds());
       bounds.x -= graph.view.translate.x * graph.view.scale;
       bounds.y -= graph.view.translate.y * graph.view.scale;
 
@@ -134,7 +126,7 @@ const Template = ({ label, ...args }) => {
       preview.autoOrigin = false;
 
       const oldRenderPage = preview.renderPage;
-      preview.renderPage = function(w, h, x, y, content, pageNumber) {
+      preview.renderPage = function (w, h, x, y, content, pageNumber) {
         const div = oldRenderPage.apply(this, arguments);
 
         const header = document.createElement('div');
@@ -172,12 +164,12 @@ const Template = ({ label, ...args }) => {
   );
 
   buttons.appendChild(
-    mxDomHelpers.button('Reset View', function(evt) {
+    mxDomHelpers.button('Reset View', function (evt) {
       graph.view.scaleAndTranslate(0.15, 0, 0);
     })
   );
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

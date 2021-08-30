@@ -1,26 +1,26 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Misc/Monitor',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxEdgeStyle,
+    Graph,
+    EdgeStyle,
     mxDomHelpers,
     mxXmlUtils,
-    mxPerimeter,
-    mxUtils,
-    mxConstants,
-    mxCloneUtils,
-    mxCodec
-  } = mxgraph;
+    Perimeter,
+    utils,
+    Constants,
+    CloneUtils,
+    mxCodec,
+  } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -33,50 +33,50 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
   div.appendChild(container);
 
-  mxConstants.SHADOWCOLOR = '#e0e0e0';
+  Constants.SHADOWCOLOR = '#e0e0e0';
 
   // Creates the graph inside the given container
   const graph = createGraph(container);
 
   // Creates a process display using the activity names as IDs to refer to the elements
   const xml =
-    '<Transactions><root><mxCell id="0"/><mxCell id="1" parent="0"/>' +
-    '<mxCell id="2" value="Claim Handling Process" style="swimlane" vertex="1" parent="1"><mxGeometry x="1" width="850" height="400" as="geometry"/></mxCell>' +
-    '<mxCell id="3" value="Claim Manager" style="swimlane" vertex="1" parent="2"><mxGeometry x="30" width="820" height="200" as="geometry"/></mxCell>' +
-    '<mxCell id="5" value="" style="start" vertex="1" parent="3"><mxGeometry x="40" y="85" width="30" height="30" as="geometry"/></mxCell>' +
-    '<mxCell id="AuthorizeClaim" value="Authorize&#xa;Claim" vertex="1" parent="3"><mxGeometry x="90" y="80" width="100" height="40" as="geometry"/></mxCell>' +
-    '<mxCell id="6" value="X" style="step" vertex="1" parent="3"><mxGeometry x="210" y="85" width="30" height="30" as="geometry"/></mxCell>' +
-    '<mxCell id="ApproveClaim" value="Approve&#xa;Claim" vertex="1" parent="3"><mxGeometry x="260" y="80" width="100" height="40" as="geometry"/></mxCell>' +
-    '<mxCell id="7" value="X" style="step" vertex="1" parent="3"><mxGeometry x="380" y="85" width="30" height="30" as="geometry"/></mxCell>' +
-    '<mxCell id="8" value="" edge="1" parent="3" source="5" target="AuthorizeClaim"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="9" value="" edge="1" parent="3" source="AuthorizeClaim" target="6"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="10" value="" edge="1" parent="3" source="6" target="ApproveClaim"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="11" value="" edge="1" parent="3" source="ApproveClaim" target="7"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="12" value="" edge="1" parent="3" source="7" target="AuthorizeClaim"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="140" y="40"/></Array></mxGeometry></mxCell>' +
-    '<mxCell id="ReviewClaim" value="Review&#xa;Claim" vertex="1" parent="3"><mxGeometry x="480" y="80" width="100" height="40" as="geometry"/></mxCell>' +
-    '<mxCell id="22" value="X" style="step" vertex="1" parent="3"><mxGeometry x="600" y="85" width="30" height="30" as="geometry"/></mxCell>' +
-    '<mxCell id="23" value="" edge="1" parent="3" source="ReviewClaim" target="22"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="ApproveReviewedClaim" value="Approve Rev.&#xa;Claim" vertex="1" parent="3"><mxGeometry x="650" y="80" width="100" height="40" as="geometry"/></mxCell>' +
-    '<mxCell id="26" value="" edge="1" parent="3" source="22" target="ApproveReviewedClaim"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="27" value="X" style="step" vertex="1" parent="3"><mxGeometry x="770" y="85" width="30" height="30" as="geometry"/></mxCell>' +
-    '<mxCell id="28" value="" edge="1" target="27" parent="3" source="ApproveReviewedClaim"><mxGeometry relative="1" as="geometry"><mxPoint x="740" y="100" as="sourcePoint"/><mxPoint x="760" y="100" as="targetPoint"/></mxGeometry></mxCell>' +
-    '<mxCell id="32" value="" edge="1" parent="3" source="27" target="ReviewClaim"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="665" y="160"/></Array></mxGeometry></mxCell>' +
-    '<mxCell id="4" value="Accountant" style="swimlane" vertex="1" parent="2"><mxGeometry x="30" y="200" width="820" height="200" as="geometry"/></mxCell>' +
-    '<mxCell id="EnterAccountingData" value="Enter&#xa;Data" vertex="1" parent="4"><mxGeometry x="430" y="80" width="100" height="40" as="geometry"/></mxCell>' +
-    '<mxCell id="14" value="X" style="step" vertex="1" parent="4"><mxGeometry x="550" y="85" width="30" height="30" as="geometry"/></mxCell>' +
-    '<mxCell id="15" value="" edge="1" parent="4" source="EnterAccountingData" target="14"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="CheckAccountingData" value="Check&#xa;Data" vertex="1" parent="4"><mxGeometry x="600" y="80" width="100" height="40" as="geometry"/></mxCell>' +
-    '<mxCell id="16" value="" edge="1" parent="4" source="14" target="CheckAccountingData"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="17" value="X" style="step" vertex="1" parent="4"><mxGeometry x="720" y="85" width="30" height="30" as="geometry"/></mxCell>' +
-    '<mxCell id="18" value="" edge="1" parent="4" source="CheckAccountingData" target="17"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="19" value="" style="end" vertex="1" parent="4"><mxGeometry x="770" y="85" width="30" height="30" as="geometry"/></mxCell>' +
-    '<mxCell id="20" value="" edge="1" parent="4" source="17" target="19"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="31" value="" edge="1" parent="4" source="17" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="625" y="160"/></Array></mxGeometry></mxCell>' +
-    '<mxCell id="13" value="" edge="1" parent="2" source="7" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"/></mxCell>' +
-    '<mxCell id="24" value="" edge="1" parent="2" source="14" target="ReviewClaim" style="edgeStyle=none"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="595" y="180"/><mxPoint x="480" y="180"/><mxPoint x="480" y="100"/></Array></mxGeometry></mxCell>' +
-    '<mxCell id="29" value="" edge="1" parent="2" source="22" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="469" y="40"/></Array></mxGeometry></mxCell>' +
-    '<mxCell id="30" value="" edge="1" parent="2" source="27" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="469" y="40"/></Array></mxGeometry></mxCell>' +
-    '<mxCell id="33" value="" edge="1" parent="2" source="6" target="EnterAccountingData"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="255" y="200"/></Array></mxGeometry></mxCell>' +
+    '<Transactions><root><Cell id="0"/><Cell id="1" parent="0"/>' +
+    '<Cell id="2" value="Claim Handling Process" style="swimlane" vertex="1" parent="1"><Geometry x="1" width="850" height="400" as="geometry"/></Cell>' +
+    '<Cell id="3" value="Claim Manager" style="swimlane" vertex="1" parent="2"><Geometry x="30" width="820" height="200" as="geometry"/></Cell>' +
+    '<Cell id="5" value="" style="start" vertex="1" parent="3"><Geometry x="40" y="85" width="30" height="30" as="geometry"/></Cell>' +
+    '<Cell id="AuthorizeClaim" value="Authorize&#xa;Claim" vertex="1" parent="3"><Geometry x="90" y="80" width="100" height="40" as="geometry"/></Cell>' +
+    '<Cell id="6" value="X" style="step" vertex="1" parent="3"><Geometry x="210" y="85" width="30" height="30" as="geometry"/></Cell>' +
+    '<Cell id="ApproveClaim" value="Approve&#xa;Claim" vertex="1" parent="3"><Geometry x="260" y="80" width="100" height="40" as="geometry"/></Cell>' +
+    '<Cell id="7" value="X" style="step" vertex="1" parent="3"><Geometry x="380" y="85" width="30" height="30" as="geometry"/></Cell>' +
+    '<Cell id="8" value="" edge="1" parent="3" source="5" target="AuthorizeClaim"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="9" value="" edge="1" parent="3" source="AuthorizeClaim" target="6"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="10" value="" edge="1" parent="3" source="6" target="ApproveClaim"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="11" value="" edge="1" parent="3" source="ApproveClaim" target="7"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="12" value="" edge="1" parent="3" source="7" target="AuthorizeClaim"><Geometry relative="1" as="geometry"><Array as="points"><Point x="140" y="40"/></Array></Geometry></Cell>' +
+    '<Cell id="ReviewClaim" value="Review&#xa;Claim" vertex="1" parent="3"><Geometry x="480" y="80" width="100" height="40" as="geometry"/></Cell>' +
+    '<Cell id="22" value="X" style="step" vertex="1" parent="3"><Geometry x="600" y="85" width="30" height="30" as="geometry"/></Cell>' +
+    '<Cell id="23" value="" edge="1" parent="3" source="ReviewClaim" target="22"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="ApproveReviewedClaim" value="Approve Rev.&#xa;Claim" vertex="1" parent="3"><Geometry x="650" y="80" width="100" height="40" as="geometry"/></Cell>' +
+    '<Cell id="26" value="" edge="1" parent="3" source="22" target="ApproveReviewedClaim"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="27" value="X" style="step" vertex="1" parent="3"><Geometry x="770" y="85" width="30" height="30" as="geometry"/></Cell>' +
+    '<Cell id="28" value="" edge="1" target="27" parent="3" source="ApproveReviewedClaim"><Geometry relative="1" as="geometry"><Point x="740" y="100" as="sourcePoint"/><Point x="760" y="100" as="targetPoint"/></Geometry></Cell>' +
+    '<Cell id="32" value="" edge="1" parent="3" source="27" target="ReviewClaim"><Geometry relative="1" as="geometry"><Array as="points"><Point x="665" y="160"/></Array></Geometry></Cell>' +
+    '<Cell id="4" value="Accountant" style="swimlane" vertex="1" parent="2"><Geometry x="30" y="200" width="820" height="200" as="geometry"/></Cell>' +
+    '<Cell id="EnterAccountingData" value="Enter&#xa;Data" vertex="1" parent="4"><Geometry x="430" y="80" width="100" height="40" as="geometry"/></Cell>' +
+    '<Cell id="14" value="X" style="step" vertex="1" parent="4"><Geometry x="550" y="85" width="30" height="30" as="geometry"/></Cell>' +
+    '<Cell id="15" value="" edge="1" parent="4" source="EnterAccountingData" target="14"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="CheckAccountingData" value="Check&#xa;Data" vertex="1" parent="4"><Geometry x="600" y="80" width="100" height="40" as="geometry"/></Cell>' +
+    '<Cell id="16" value="" edge="1" parent="4" source="14" target="CheckAccountingData"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="17" value="X" style="step" vertex="1" parent="4"><Geometry x="720" y="85" width="30" height="30" as="geometry"/></Cell>' +
+    '<Cell id="18" value="" edge="1" parent="4" source="CheckAccountingData" target="17"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="19" value="" style="end" vertex="1" parent="4"><Geometry x="770" y="85" width="30" height="30" as="geometry"/></Cell>' +
+    '<Cell id="20" value="" edge="1" parent="4" source="17" target="19"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="31" value="" edge="1" parent="4" source="17" target="EnterAccountingData"><Geometry relative="1" as="geometry"><Array as="points"><Point x="625" y="160"/></Array></Geometry></Cell>' +
+    '<Cell id="13" value="" edge="1" parent="2" source="7" target="EnterAccountingData"><Geometry relative="1" as="geometry"/></Cell>' +
+    '<Cell id="24" value="" edge="1" parent="2" source="14" target="ReviewClaim" style="edgeStyle=none"><Geometry relative="1" as="geometry"><Array as="points"><Point x="595" y="180"/><Point x="480" y="180"/><Point x="480" y="100"/></Array></Geometry></Cell>' +
+    '<Cell id="29" value="" edge="1" parent="2" source="22" target="EnterAccountingData"><Geometry relative="1" as="geometry"><Array as="points"><Point x="469" y="40"/></Array></Geometry></Cell>' +
+    '<Cell id="30" value="" edge="1" parent="2" source="27" target="EnterAccountingData"><Geometry relative="1" as="geometry"><Array as="points"><Point x="469" y="40"/></Array></Geometry></Cell>' +
+    '<Cell id="33" value="" edge="1" parent="2" source="6" target="EnterAccountingData"><Geometry relative="1" as="geometry"><Array as="points"><Point x="255" y="200"/></Array></Geometry></Cell>' +
     '</root></Transactions>';
   const doc = mxXmlUtils.parseXml(xml);
   const codec = new mxCodec(doc);
@@ -87,8 +87,8 @@ const Template = ({ label, ...args }) => {
 
   // Creates a button to invoke the refresh function
   buttons.appendChild(
-    mxDomHelpers.button('Update', function(evt) {
-      // XML is normally fetched from URL at server using mxUtils.get - this is a client-side
+    mxDomHelpers.button('Update', function (evt) {
+      // XML is normally fetched from URL at server using utils.get - this is a client-side
       // string with randomized states to demonstrate the idea of the workflow monitor
       const xml =
         `<process><update id="ApproveClaim" state="${getState()}"/><update id="AuthorizeClaim" state="${getState()}"/>` +
@@ -124,30 +124,16 @@ const Template = ({ label, ...args }) => {
               // Updates the cell color and adds some tooltip information
               if (cell != null) {
                 // Resets the fillcolor and the overlay
-                graph.setCellStyles('fillColor', 'white', [
-                  cell,
-                ]);
+                graph.setCellStyles('fillColor', 'white', [cell]);
                 graph.removeCellOverlays(cell);
 
                 // Changes the cell color for the known states
                 if (state == 'Running') {
-                  graph.setCellStyles(
-                    'fillColor',
-                    '#f8cecc',
-                    [cell]
-                  );
+                  graph.setCellStyles('fillColor', '#f8cecc', [cell]);
                 } else if (state == 'Waiting') {
-                  graph.setCellStyles(
-                    'fillColor',
-                    '#fff2cc',
-                    [cell]
-                  );
+                  graph.setCellStyles('fillColor', '#fff2cc', [cell]);
                 } else if (state == 'Completed') {
-                  graph.setCellStyles(
-                    'fillColor',
-                    '#d4e1f5',
-                    [cell]
-                  );
+                  graph.setCellStyles('fillColor', '#d4e1f5', [cell]);
                 }
 
                 // Adds tooltip information using an overlay icon
@@ -176,8 +162,8 @@ const Template = ({ label, ...args }) => {
     const overlay = new CellOverlay(image, tooltip);
 
     // Installs a handler for clicks on the overlay
-    overlay.addListener(mxEvent.CLICK, function(sender, evt) {
-      mxUtils.alert(`${tooltip}\nLast update: ${new Date()}`);
+    overlay.addListener(InternalEvent.CLICK, function (sender, evt) {
+      utils.alert(`${tooltip}\nLast update: ${new Date()}`);
     });
 
     return overlay;
@@ -187,12 +173,12 @@ const Template = ({ label, ...args }) => {
    * Creates and returns an empty graph inside the given container.
    */
   function createGraph(container) {
-    const graph = new mxGraph(container);
+    const graph = new Graph(container);
     graph.setTooltips(true);
     graph.setEnabled(false);
 
     // Disables folding
-    graph.isCellFoldable = function(cell, collapse) {
+    graph.isCellFoldable = function (cell, collapse) {
       return false;
     };
 
@@ -203,20 +189,20 @@ const Template = ({ label, ...args }) => {
     style.strokeColor = '#808080';
     style.fillColor = 'white';
     style.gradientColor = 'white';
-    style.gradientDirection = mxConstants.DIRECTION_EAST;
+    style.gradientDirection = Constants.DIRECTION_EAST;
     style.rounded = true;
     style.shadow = true;
     style.fontStyle = 1;
 
     style = graph.getStylesheet().getDefaultEdgeStyle();
-    style.edge = mxEdgeStyle.ElbowConnector;
+    style.edge = EdgeStyle.ElbowConnector;
     style.strokeColor = '#808080';
     style.rounded = true;
     style.shadow = true;
 
     style = [];
-    style.shape = mxConstants.SHAPE_SWIMLANE;
-    style.perimiter = mxPerimeter.RectanglePerimeter;
+    style.shape = Constants.SHAPE_SWIMLANE;
+    style.perimiter = Perimeter.RectanglePerimeter;
     style.strokeColor = '#a0a0a0';
     style.fontColor = '#606060';
     style.fillColor = '#E0E0DF';
@@ -232,30 +218,30 @@ const Template = ({ label, ...args }) => {
     graph.getStylesheet().putCellStyle('swimlane', style);
 
     style = [];
-    style.shape = mxConstants.SHAPE_RHOMBUS;
-    style.perimiter = mxPerimeter.RhombusPerimeter;
+    style.shape = Constants.SHAPE_RHOMBUS;
+    style.perimiter = Perimeter.RhombusPerimeter;
     style.strokeColor = '#91BCC0';
     style.fontColor = 'gray';
     style.fillColor = '#91BCC0';
     style.gradientColor = 'white';
-    style.align = mxConstants.ALIGN_CENTER;
-    style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+    style.align = Constants.ALIGN_CENTER;
+    style.verticalAlign = Constants.ALIGN_MIDDLE;
     style.fontSize = 16;
     graph.getStylesheet().putCellStyle('step', style);
 
     style = [];
-    style.shape = mxConstants.SHAPE_ELLIPSE;
-    style.perimiter = mxPerimeter.EllipsePerimeter;
+    style.shape = Constants.SHAPE_ELLIPSE;
+    style.perimiter = Perimeter.EllipsePerimeter;
     style.fontColor = 'gray';
     style.fillColor = '#A0C88F';
     style.gradientColor = 'white';
     style.strokeColor = '#A0C88F';
-    style.align = mxConstants.ALIGN_CENTER;
-    style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+    style.align = Constants.ALIGN_CENTER;
+    style.verticalAlign = Constants.ALIGN_MIDDLE;
     style.fontSize = 16;
     graph.getStylesheet().putCellStyle('start', style);
 
-    style = mxCloneUtils.clone(style);
+    style = CloneUtils.clone(style);
     style.fillColor = '#DACCBC';
     style.strokeColor = '#AF7F73';
     graph.getStylesheet().putCellStyle('end', style);
@@ -282,6 +268,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

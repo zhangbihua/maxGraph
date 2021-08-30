@@ -1,4 +1,4 @@
-import mxObjectIdentity from "./mxObjectIdentity";
+import ObjectIdentity from './ObjectIdentity';
 
 /**
  * Function: clone
@@ -26,7 +26,7 @@ export const clone = function _clone(obj, transients, shallow) {
 
     for (const i in obj) {
       if (
-        i != mxObjectIdentity.FIELD_NAME &&
+        i != ObjectIdentity.FIELD_NAME &&
         (transients == null || transients.indexOf(i) < 0)
       ) {
         if (!shallow && typeof obj[i] === 'object') {

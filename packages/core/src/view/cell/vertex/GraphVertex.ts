@@ -1,7 +1,6 @@
 import Cell from '../datatypes/Cell';
 import Geometry from '../../geometry/Geometry';
-import CellArray from '../datatypes/CellArray';
-import { autoImplement } from 'packages/core/src/util/Utils';
+import { autoImplement } from 'core/util/Utils';
 
 import type GraphCells from '../GraphCells';
 

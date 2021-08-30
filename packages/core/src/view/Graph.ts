@@ -203,6 +203,10 @@ type PartialDragDrop = Pick<
   'isDropEnabled' | 'isAutoScroll' | 'isAutoExtend' | 'isSplitEnabled' | 'isSplitTarget'
 >;
 type PartialSwimlane = Pick<GraphSwimlane, 'getDropTarget'>;
+type PartialPorts = Pick<
+  GraphPorts,
+  'isPort' | 'getTerminalForPort' | 'isPortsEnabled' | 'setPortsEnabled'
+>;
 type PartialClass = PartialEvents &
   PartialSelection &
   PartialCells &
@@ -220,6 +224,7 @@ type PartialClass = PartialEvents &
   PartialZoom &
   PartialDragDrop &
   PartialSwimlane &
+  PartialPorts &
   EventSource;
 
 export type MaxGraph = Graph & PartialClass;

@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import GraphAbstractHierarchyCell from './GraphAbstractHierarchyCell';
-import mxObjectIdentity from '../../../../../util/mxObjectIdentity';
+import ObjectIdentity from '../../../../../util/ObjectIdentity';
 import CellArray from '../../../../cell/datatypes/CellArray';
 import Cell from '../../../../cell/datatypes/Cell';
 
@@ -23,7 +23,7 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    *
    * The object identities of the wrapped cells
    */
-  ids = null;
+  ids: string[];
 
   /**
    * Variable: source
@@ -61,12 +61,12 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    * edges - a list of real graph edges this abstraction represents
    */
   constructor(edges: CellArray) {
-    super(edges);
+    super();
     this.edges = edges;
     this.ids = [];
 
     for (let i = 0; i < edges.length; i += 1) {
-      this.ids.push(mxObjectIdentity.get(edges[i]));
+      this.ids.push(ObjectIdentity.get(edges[i]));
     }
   }
 
@@ -75,7 +75,7 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    *
    * Inverts the direction of this internal edge(s)
    */
-  invert(layer) {
+  invert() {
     const temp = this.source;
     this.source = this.target;
     this.target = temp;
@@ -87,15 +87,15 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    *
    * Returns the cells this cell connects to on the next layer up
    */
-  getNextLayerConnectedCells(layer: Cell): CellArray {
+  getNextLayerConnectedCells(layer: number) {
     if (this.nextLayerConnectedCells == null) {
       this.nextLayerConnectedCells = [];
 
       for (let i = 0; i < this.temp.length; i += 1) {
-        this.nextLayerConnectedCells[i] = [];
+        this.nextLayerConnectedCells[i] = new CellArray();
 
         if (i === this.temp.length - 1) {
-          this.nextLayerConnectedCells[i].push(this.source);
+          this.nextLayerConnectedCells[i].push(this.source as Cell);
         } else {
           this.nextLayerConnectedCells[i].push(this);
         }
@@ -109,15 +109,15 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    *
    * Returns the cells this cell connects to on the next layer down
    */
-  getPreviousLayerConnectedCells(layer: Cell): CellArray {
+  getPreviousLayerConnectedCells(layer: number) {
     if (this.previousLayerConnectedCells == null) {
       this.previousLayerConnectedCells = [];
 
       for (let i = 0; i < this.temp.length; i += 1) {
-        this.previousLayerConnectedCells[i] = [];
+        this.previousLayerConnectedCells[i] = new CellArray();
 
         if (i === 0) {
-          this.previousLayerConnectedCells[i].push(this.target);
+          this.previousLayerConnectedCells[i].push(this.target as Cell);
         } else {
           this.previousLayerConnectedCells[i].push(this);
         }
@@ -131,7 +131,7 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    *
    * Returns true.
    */
-  isEdge(): boolean {
+  isEdge() {
     return true;
   }
 
@@ -140,7 +140,7 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    *
    * Gets the value of temp for the specified layer
    */
-  getGeneralPurposeVariable(layer: number): any {
+  getGeneralPurposeVariable(layer: number) {
     return this.temp[layer - this.minRank - 1];
   }
 
@@ -149,7 +149,7 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    *
    * Set the value of temp for the specified layer
    */
-  setGeneralPurposeVariable(layer: number, value: any): void {
+  setGeneralPurposeVariable(layer: number, value: number) {
     this.temp[layer - this.minRank - 1] = value;
   }
 
@@ -158,8 +158,8 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    *
    * Gets the first core edge associated with this wrapper
    */
-  getCoreCell(): Cell | null {
-    if (this.edges != null && this.edges.length > 0) {
+  getCoreCell() {
+    if (this.edges.length > 0) {
       return this.edges[0];
     }
     return null;

@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,22 +8,22 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph, 
-    mxEvent, 
-    mxRubberband, 
-    mxDomHelpers, 
-    mxImageShape,
-    mxRectangle,
-    mxCellRenderer,
-    mxImage
-  } = mxgraph;
+    Graph,
+    InternalEvent,
+    Rubberband,
+    mxDomHelpers,
+    ImageShape,
+    Rectangle,
+    CellRenderer,
+    ImageBox,
+  } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -37,13 +37,9 @@ const Template = ({ label, ...args }) => {
   div.appendChild(container);
 
   // Specifies the URL and size of the new control
-  const deleteImage = new mxImage(
-    '/images/forbidden.png',
-    16,
-    16
-  );
+  const deleteImage = new ImageBox('/images/forbidden.png', 16, 16);
 
-  class MyCustomCellRenderer extends mxCellRenderer {
+  class MyCustomCellRenderer extends CellRenderer {
     createControl(state) {
       super.createControl(state);
 
@@ -51,20 +47,15 @@ const Template = ({ label, ...args }) => {
 
       if (state.cell.isVertex()) {
         if (state.deleteControl == null) {
-          const b = new mxRectangle(
-            0,
-            0,
-            deleteImage.width,
-            deleteImage.height
-          );
-          state.deleteControl = new mxImageShape(b, deleteImage.src);
+          const b = new Rectangle(0, 0, deleteImage.width, deleteImage.height);
+          state.deleteControl = new ImageShape(b, deleteImage.src);
           state.deleteControl.dialect = graph.dialect;
           state.deleteControl.preserveImageAspect = false;
 
-          this.initControl(state, state.deleteControl, false, function(evt) {
+          this.initControl(state, state.deleteControl, false, function (evt) {
             if (graph.isEnabled()) {
               graph.removeCells([state.cell]);
-              mxEvent.consume(evt);
+              InternalEvent.consume(evt);
             }
           });
         }
@@ -83,18 +74,13 @@ const Template = ({ label, ...args }) => {
         const s = state.view.scale;
 
         return state.cell.isEdge()
-          ? new mxRectangle(
+          ? new Rectangle(
               state.x + state.width / 2 - (w / 2) * s,
               state.y + state.height / 2 - (h / 2) * s,
               w * s,
               h * s
             )
-          : new mxRectangle(
-              state.x + state.width - w * s,
-              state.y,
-              w * s,
-              h * s
-            );
+          : new Rectangle(state.x + state.width - w * s, state.y, w * s, h * s);
       }
       return null;
     }
@@ -129,7 +115,7 @@ const Template = ({ label, ...args }) => {
     }
   }
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     createCellRenderer() {
       return new MyCustomCellRenderer();
     }
@@ -144,8 +130,7 @@ const Template = ({ label, ...args }) => {
   // graph.setResizeContainer(true);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -194,6 +179,6 @@ const Template = ({ label, ...args }) => {
   );
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

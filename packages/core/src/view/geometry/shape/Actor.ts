@@ -7,8 +7,8 @@
 import Rectangle from '../Rectangle';
 import Shape from './Shape';
 import SvgCanvas2D from '../../../util/canvas/SvgCanvas2D';
-import { ColorValue } from 'packages/core/src/types';
-import { NONE } from 'packages/core/src/util/Constants';
+import { ColorValue } from 'core/types';
+import { NONE } from 'core/util/Constants';
 
 /**
  * Extends {@link Shape} to implement an actor shape. If a custom shape with one

@@ -1,29 +1,29 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Layouts/SwimLanes',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
     mxEditor,
-    mxConnectionHandler,
-    mxImage,
-    mxPerimeter,
-    mxPoint,
-    mxConstants,
-    mxCloneUtils,
-    mxEdgeStyle,
-    mxEvent,
-    mxSwimlaneManager,
-    mxStackLayout,
-    mxLayoutManager
-  } = mxgraph;
+    ConnectionHandler,
+    ImageBox,
+    Perimeter,
+    Point,
+    Constants,
+    CloneUtils,
+    EdgeStyle,
+    InternalEvent,
+    SwimlaneManager,
+    StackLayout,
+    LayoutManager,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -35,16 +35,12 @@ const Template = ({ label, ...args }) => {
 
   // Defines an icon for creating new connections in the connection handler.
   // This will automatically disable the highlighting of the source vertex.
-  mxConnectionHandler.prototype.connectImage = new mxImage(
-    'images/connector.gif',
-    16,
-    16
-  );
+  ConnectionHandler.prototype.connectImage = new ImageBox('images/connector.gif', 16, 16);
 
   // Creates a wrapper editor around a new graph inside
   // the given container using an XML config for the
   // keyboard bindings
-  // const config = mxUtils
+  // const config = utils
   //   .load('editors/config/keyhandler-commons.xml')
   //   .getDocumentElement();
   // const editor = new mxEditor(config);
@@ -55,13 +51,13 @@ const Template = ({ label, ...args }) => {
 
   // Auto-resizes the container
   graph.border = 80;
-  graph.getView().translate = new mxPoint(graph.border / 2, graph.border / 2);
+  graph.getView().translate = new Point(graph.border / 2, graph.border / 2);
   graph.setResizeContainer(true);
   graph.graphHandler.setRemoveCellsFromParent(false);
 
   // Changes the default vertex style in-place
   let style = graph.getStylesheet().getDefaultVertexStyle();
-  style.shape = mxConstants.SHAPE_SWIMLANE;
+  style.shape = Constants.SHAPE_SWIMLANE;
   style.verticalAlign = 'middle';
   style.labelBackgroundColor = 'white';
   style.fontSize = 11;
@@ -71,8 +67,8 @@ const Template = ({ label, ...args }) => {
   style.strokeColor = 'black';
   delete style.fillColor;
 
-  style = mxCloneUtils.clone(style);
-  style.shape = mxConstants.SHAPE_RECTANGLE;
+  style = CloneUtils.clone(style);
+  style.shape = Constants.SHAPE_RECTANGLE;
   style.fontSize = 10;
   style.rounded = true;
   style.horizontal = true;
@@ -81,23 +77,23 @@ const Template = ({ label, ...args }) => {
   style.labelBackgroundColor = 'none';
   graph.getStylesheet().putCellStyle('process', style);
 
-  style = mxCloneUtils.clone(style);
-  style.shape = mxConstants.SHAPE_ELLIPSE;
-  style.perimiter = mxPerimeter.EllipsePerimeter;
+  style = CloneUtils.clone(style);
+  style.shape = Constants.SHAPE_ELLIPSE;
+  style.perimiter = Perimeter.EllipsePerimeter;
   delete style.rounded;
   graph.getStylesheet().putCellStyle('state', style);
 
-  style = mxCloneUtils.clone(style);
-  style.shape = mxConstants.SHAPE_RHOMBUS;
-  style.perimiter = mxPerimeter.RhombusPerimeter;
+  style = CloneUtils.clone(style);
+  style.shape = Constants.SHAPE_RHOMBUS;
+  style.perimiter = Perimeter.RhombusPerimeter;
   style.verticalAlign = 'top';
   style.spacingTop = 40;
   style.spacingRight = 64;
   graph.getStylesheet().putCellStyle('condition', style);
 
-  style = mxCloneUtils.clone(style);
-  style.shape = mxConstants.SHAPE_DOUBLE_ELLIPSE;
-  style.perimiter = mxPerimeter.EllipsePerimeter;
+  style = CloneUtils.clone(style);
+  style.shape = Constants.SHAPE_DOUBLE_ELLIPSE;
+  style.perimiter = Perimeter.EllipsePerimeter;
   style.spacingTop = 28;
   style.fontSize = 14;
   style.fontStyle = 1;
@@ -105,16 +101,16 @@ const Template = ({ label, ...args }) => {
   graph.getStylesheet().putCellStyle('end', style);
 
   style = graph.getStylesheet().getDefaultEdgeStyle();
-  style.edge = mxEdgeStyle.ElbowConnector;
-  style.endArrow = mxConstants.ARROW_BLOCK;
+  style.edge = EdgeStyle.ElbowConnector;
+  style.endArrow = Constants.ARROW_BLOCK;
   style.rounded = true;
   style.fontColor = 'black';
   style.strokeColor = 'black';
 
-  style = mxCloneUtils.clone(style);
+  style = CloneUtils.clone(style);
   style.dashed = true;
-  style.endArrow = mxConstants.ARROW_OPEN;
-  style.startArrow = mxConstants.ARROW_OVAL;
+  style.endArrow = Constants.ARROW_OPEN;
+  style.startArrow = Constants.ARROW_OVAL;
   graph.getStylesheet().putCellStyle('crossover', style);
 
   // Installs double click on middle control point and
@@ -131,13 +127,11 @@ const Template = ({ label, ...args }) => {
     // End-states are no valid sources
     const previousIsValidSource = graph.isValidSource;
 
-    graph.isValidSource = function(cell) {
+    graph.isValidSource = function (cell) {
       if (previousIsValidSource.apply(this, arguments)) {
         const style = cell.getStyle();
 
-        return (
-          style == null || !(style == 'end' || style.indexOf('end') == 0)
-        );
+        return style == null || !(style == 'end' || style.indexOf('end') == 0);
       }
 
       return false;
@@ -149,7 +143,7 @@ const Template = ({ label, ...args }) => {
     // Note: All states are start states in
     // the example below, so we use the state
     // style below
-    graph.isValidTarget = function(cell) {
+    graph.isValidTarget = function (cell) {
       const style = cell.getStyle();
 
       return (
@@ -166,7 +160,7 @@ const Template = ({ label, ...args }) => {
     graph.setSplitEnabled(false);
 
     // Returns true for valid drop operations
-    graph.isValidDropTarget = function(target, cells, evt) {
+    graph.isValidDropTarget = function (target, cells, evt) {
       if (this.isSplitEnabled() && this.isSplitTarget(target, cells, evt)) {
         return true;
       }
@@ -188,13 +182,12 @@ const Template = ({ label, ...args }) => {
       return (
         !pool &&
         cell != lane &&
-        ((lane && this.isPool(target)) ||
-        (cell && this.isPool(target.getParent())))
+        ((lane && this.isPool(target)) || (cell && this.isPool(target.getParent())))
       );
     };
 
     // Adds new method for identifying a pool
-    graph.isPool = function(cell) {
+    graph.isPool = function (cell) {
       const model = this.getModel();
       const parent = cell.getParent();
 
@@ -202,7 +195,7 @@ const Template = ({ label, ...args }) => {
     };
 
     // Keeps widths on collapse/expand
-    const foldingHandler = function(sender, evt) {
+    const foldingHandler = function (sender, evt) {
       const cells = evt.getProperty('cells');
 
       for (let i = 0; i < cells.length; i++) {
@@ -214,11 +207,11 @@ const Template = ({ label, ...args }) => {
       }
     };
 
-    graph.addListener(mxEvent.FOLD_CELLS, foldingHandler);
+    graph.addListener(InternalEvent.FOLD_CELLS, foldingHandler);
   }
 
   // Changes swimlane orientation while collapsed
-  const getStyle = function() {
+  const getStyle = function () {
     // TODO super cannot be used here
     // let style = super.getStyle();
     let style;
@@ -234,10 +227,10 @@ const Template = ({ label, ...args }) => {
   };
 
   // Applies size changes to siblings and parents
-  new mxSwimlaneManager(graph);
+  new SwimlaneManager(graph);
 
   // Creates a stack depending on the orientation of the swimlane
-  const layout = new mxStackLayout(graph, false);
+  const layout = new StackLayout(graph, false);
 
   // Makes sure all children fit into the parent swimlane
   layout.resizeParent = true;
@@ -246,14 +239,14 @@ const Template = ({ label, ...args }) => {
   layout.fill = true;
 
   // Only update the size of swimlanes
-  layout.isVertexIgnored = function(vertex) {
+  layout.isVertexIgnored = function (vertex) {
     return !graph.isSwimlane(vertex);
   };
 
   // Keeps the lanes and pools stacked
-  const layoutMgr = new mxLayoutManager(graph);
+  const layoutMgr = new LayoutManager(graph);
 
-  layoutMgr.getLayout = function(cell) {
+  layoutMgr.getLayout = function (cell) {
     if (
       !cell.isEdge() &&
       cell.getChildCount() > 0 &&
@@ -271,13 +264,13 @@ const Template = ({ label, ...args }) => {
   // is normally the first child of the root (ie. layer 0).
   const parent = graph.getDefaultParent();
 
-  const insertVertex = options => {
+  const insertVertex = (options) => {
     const v = graph.insertVertex(options);
     v.getStyle = getStyle;
     return v;
   };
 
-  const insertEdge = options => {
+  const insertEdge = (options) => {
     const e = graph.insertEdge(options);
     e.getStyle = getStyle;
     return e;
@@ -518,7 +511,7 @@ const Template = ({ label, ...args }) => {
     });
 
     e.geometry.points = [
-      new mxPoint(
+      new Point(
         step444.geometry.x + step444.geometry.width / 2,
         end3.geometry.y + end3.geometry.height / 2
       ),
@@ -544,7 +537,7 @@ const Template = ({ label, ...args }) => {
     });
 
     e.geometry.points = [
-      new mxPoint(
+      new Point(
         step33.geometry.x + step33.geometry.width / 2 + 20,
         step11.geometry.y + (step11.geometry.height * 4) / 5
       ),
@@ -563,6 +556,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

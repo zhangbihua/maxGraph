@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,26 +8,26 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
+    Graph,
     mxWindow,
     mxKeyHandler,
-    mxRubberband,
-    mxEvent,
+    Rubberband,
+    InternalEvent,
     mxLog,
     mxDomUtils,
-    mxClient
-  } = mxgraph;
+    mxClient,
+  } = maxgraph;
 
   mxClient.setImageBasePath('/images');
 
@@ -53,19 +53,17 @@ const Template = ({ label, ...args }) => {
   );
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Adds rubberband selection and keystrokes
   graph.setTooltips(true);
   graph.setPanning(true);
 
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   new mxKeyHandler(graph);
 
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -127,6 +125,6 @@ const Template = ({ label, ...args }) => {
   mxLog.show();
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

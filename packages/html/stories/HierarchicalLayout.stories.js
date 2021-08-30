@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,26 +8,26 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
+    Graph,
     mxDomUtils,
     mxFastOrganicLayout,
     mxHierarchicalLayout,
-    mxPerimeter,
-    mxEvent,
-    mxRubberband,
-    mxConstants
-  } = mxgraph;
+    Perimeter,
+    InternalEvent,
+    Rubberband,
+    Constants,
+  } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -41,15 +41,14 @@ const Template = ({ label, ...args }) => {
   div.appendChild(container);
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Adds rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Changes the default vertex style in-place
   let style = graph.getStylesheet().getDefaultVertexStyle();
-  style.perimiter = mxPerimeter.RectanglePerimeter;
+  style.perimiter = Perimeter.RectanglePerimeter;
   style.gradientColor = 'white';
   style.perimeterSpacing = 6;
   style.rounded = true;
@@ -72,7 +71,7 @@ const Template = ({ label, ...args }) => {
   // Adds a button to execute the layout
   let button = document.createElement('button');
   mxDomUtils.write(button, 'Hierarchical');
-  mxEvent.addListener(button, 'click', function(evt) {
+  InternalEvent.addListener(button, 'click', function (evt) {
     layout.execute(parent);
   });
   buttons.appendChild(button);
@@ -81,7 +80,7 @@ const Template = ({ label, ...args }) => {
   button = document.createElement('button');
   mxDomUtils.write(button, 'Organic');
 
-  mxEvent.addListener(button, 'click', function(evt) {
+  InternalEvent.addListener(button, 'click', function (evt) {
     organic.execute(parent);
   });
 
@@ -122,6 +121,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,20 +8,13 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph, 
-    mxEvent, 
-    mxRubberband, 
-    mxEventUtils,
-    mxUtils,
-    mxVertexHandler
-  } = mxgraph;
+  const { Graph, InternalEvent, Rubberband, EventUtils, utils, VertexHandler } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -31,8 +24,8 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  class mxVertexToolHandler extends mxVertexHandler {
-    // Defines a subclass for mxVertexHandler that adds a set of clickable
+  class mxVertexToolHandler extends VertexHandler {
+    // Defines a subclass for VertexHandler that adds a set of clickable
     // icons to every selected vertex.
 
     domNode = null;
@@ -49,8 +42,8 @@ const Template = ({ label, ...args }) => {
       this.domNode.style.whiteSpace = 'nowrap';
 
       // Workaround for event redirection via image tag in quirks and IE8
-      const createImage = src => {
-        return mxUtils.createImage(src);
+      const createImage = (src) => {
+        return utils.createImage(src);
       };
 
       // Delete
@@ -59,13 +52,13 @@ const Template = ({ label, ...args }) => {
       img.style.cursor = 'pointer';
       img.style.width = '16px';
       img.style.height = '16px';
-      mxEvent.addGestureListeners(img, evt => {
+      InternalEvent.addGestureListeners(img, (evt) => {
         // Disables dragging the image
-        mxEvent.consume(evt);
+        InternalEvent.consume(evt);
       });
-      mxEvent.addListener(img, 'click', evt => {
+      InternalEvent.addListener(img, 'click', (evt) => {
         this.graph.removeCells([this.state.cell]);
-        mxEvent.consume(evt);
+        InternalEvent.consume(evt);
       });
       this.domNode.appendChild(img);
 
@@ -76,11 +69,11 @@ const Template = ({ label, ...args }) => {
       img.style.width = '16px';
       img.style.height = '16px';
 
-      mxEvent.addGestureListeners(img, evt => {
-        this.start(mxEventUtils.getClientX(evt), mxEventUtils.getClientY(evt), 7);
+      InternalEvent.addGestureListeners(img, (evt) => {
+        this.start(EventUtils.getClientX(evt), EventUtils.getClientY(evt), 7);
         this.graph.isMouseDown = true;
-        this.graph.isMouseTrigger = mxEventUtils.isMouseEvent(evt);
-        mxEvent.consume(evt);
+        this.graph.isMouseTrigger = EventUtils.isMouseEvent(evt);
+        InternalEvent.consume(evt);
       });
       this.domNode.appendChild(img);
 
@@ -91,16 +84,16 @@ const Template = ({ label, ...args }) => {
       img.style.width = '16px';
       img.style.height = '16px';
 
-      mxEvent.addGestureListeners(img, evt => {
+      InternalEvent.addGestureListeners(img, (evt) => {
         this.graph.graphHandler.start(
           this.state.cell,
-          mxEventUtils.getClientX(evt),
-          mxEventUtils.getClientY(evt)
+          EventUtils.getClientX(evt),
+          EventUtils.getClientY(evt)
         );
         this.graph.graphHandler.cellWasClicked = true;
         this.graph.isMouseDown = true;
-        this.graph.isMouseTrigger = mxEventUtils.isMouseEvent(evt);
-        mxEvent.consume(evt);
+        this.graph.isMouseTrigger = EventUtils.isMouseEvent(evt);
+        InternalEvent.consume(evt);
       });
       this.domNode.appendChild(img);
 
@@ -111,16 +104,16 @@ const Template = ({ label, ...args }) => {
       img.style.width = '16px';
       img.style.height = '16px';
 
-      mxEvent.addGestureListeners(img, evt => {
-        const pt = mxUtils.convertPoint(
+      InternalEvent.addGestureListeners(img, (evt) => {
+        const pt = utils.convertPoint(
           this.graph.container,
-          mxEventUtils.getClientX(evt),
-          mxEventUtils.getClientY(evt)
+          EventUtils.getClientX(evt),
+          EventUtils.getClientY(evt)
         );
         this.graph.connectionHandler.start(this.state, pt.x, pt.y);
         this.graph.isMouseDown = true;
-        this.graph.isMouseTrigger = mxEventUtils.isMouseEvent(evt);
-        mxEvent.consume(evt);
+        this.graph.isMouseTrigger = EventUtils.isMouseEvent(evt);
+        InternalEvent.consume(evt);
       });
       this.domNode.appendChild(img);
 
@@ -151,7 +144,7 @@ const Template = ({ label, ...args }) => {
     }
   }
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     createHandler(state) {
       if (state != null && state.cell.isVertex()) {
         return new mxVertexToolHandler(state);
@@ -170,8 +163,7 @@ const Template = ({ label, ...args }) => {
   // graph.setResizeContainer(true);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -199,6 +191,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

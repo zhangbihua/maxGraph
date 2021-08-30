@@ -1,26 +1,26 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Misc/DynamicLoading',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxText,
+    Graph,
+    Text,
     mxEffects,
-    mxEvent,
-    mxConstants,
-    mxPerimeter,
+    InternalEvent,
+    Constants,
+    Perimeter,
     mxCodec,
-    mxUtils,
-    mxXmlUtils
-  } = mxgraph;
+    utils,
+    mxXmlUtils,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -33,16 +33,16 @@ const Template = ({ label, ...args }) => {
   let requestId = 0;
 
   // Speedup the animation
-  mxText.prototype.enableBoundingBox = false;
+  Text.prototype.enableBoundingBox = false;
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Disables all built-in interactions
   graph.setEnabled(false);
 
   // Handles clicks on cells
-  graph.addListener(mxEvent.CLICK, function(sender, evt) {
+  graph.addListener(InternalEvent.CLICK, function (sender, evt) {
     const cell = evt.getProperty('cell');
 
     if (cell != null) {
@@ -52,8 +52,8 @@ const Template = ({ label, ...args }) => {
 
   // Changes the default vertex style in-place
   const style = graph.getStylesheet().getDefaultVertexStyle();
-  style.shape = mxConstants.SHAPE_ELLIPSE;
-  style.perimiter = mxPerimeter.EllipsePerimeter;
+  style.shape = Constants.SHAPE_ELLIPSE;
+  style.perimiter = Perimeter.EllipsePerimeter;
   style.gradientColor = 'white';
 
   // Gets the default parent for inserting new cells. This
@@ -63,18 +63,10 @@ const Template = ({ label, ...args }) => {
   const cx = graph.container.clientWidth / 2;
   const cy = graph.container.clientHeight / 2;
 
-  const cell = graph.insertVertex(
-    parent,
-    '0-0',
-    '0-0',
-    cx - 20,
-    cy - 15,
-    60,
-    40
-  );
+  const cell = graph.insertVertex(parent, '0-0', '0-0', cx - 20, cy - 15, 60, 40);
 
   // Animates the changes in the graph model
-  graph.getModel().addListener(mxEvent.CHANGE, function(sender, evt) {
+  graph.getModel().addListener(InternalEvent.CHANGE, function (sender, evt) {
     const { changes } = evt.getProperty('edit');
     mxEffects.animateChanges(graph, changes);
   });
@@ -180,7 +172,7 @@ const Template = ({ label, ...args }) => {
     requestId++;
 
     // Creates a local graph with no display
-    const graph = new mxGraph();
+    const graph = new Graph();
 
     // Gets the default parent for inserting new cells. This
     // is normally the first child of the root (ie. layer 0).
@@ -206,12 +198,12 @@ const Template = ({ label, ...args }) => {
     const enc = new mxCodec();
     const node = enc.encode(graph.getModel());
 
-    return mxUtils.getXml(node);
+    return utils.getXml(node);
   }
 
   load(graph, cell);
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

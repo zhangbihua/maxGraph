@@ -4,65 +4,65 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
+import CellArray from 'core/view/cell/datatypes/CellArray';
 import Cell from '../../../../cell/datatypes/Cell';
-import CellArray from '../../../../cell/datatypes/CellArray';
 
-class MxGraphAbstractHierarchyCell {
+class GraphAbstractHierarchyCell extends Cell {
   /**
    * Variable: maxRank
    *
    * The maximum rank this cell occupies. Default is -1.
    */
-  maxRank: number = -1;
+  maxRank = -1;
 
   /**
    * Variable: minRank
    *
    * The minimum rank this cell occupies. Default is -1.
    */
-  minRank: number = -1;
+  minRank = -1;
 
   /**
    * Variable: x
    *
    * The x position of this cell for each layer it occupies
    */
-  x: number = null;
+  x: number[];
 
   /**
    * Variable: y
    *
    * The y position of this cell for each layer it occupies
    */
-  y: number = null;
+  y: number[];
 
   /**
    * Variable: width
    *
    * The width of this cell. Default is 0.
    */
-  width: number = 0;
+  width = 0;
 
   /**
    * Variable: height
    *
    * The height of this cell. Default is 0.
    */
-  height: number = 0;
+  height = 0;
 
   /**
    * Variable: nextLayerConnectedCells
    *
    * A cached version of the cells this cell connects to on the next layer up
    */
-  nextLayerConnectedCells: CellArray | null = null;
+  nextLayerConnectedCells: CellArray[] | null = null;
 
   /**
    * Variable: previousLayerConnectedCells
    *
    * A cached version of the cells this cell connects to on the next layer down
    */
-  previousLayerConnectedCells: CellArray | null = null;
+  previousLayerConnectedCells: CellArray[] | null = null;
 
   /**
    * Variable: temp
@@ -74,7 +74,7 @@ class MxGraphAbstractHierarchyCell {
    * be used for hashing the nodes in the model dfs and so hashCode
    * was created
    */
-  temp: any = null;
+  temp: number[];
 
   /**
    * Class: mxGraphAbstractHierarchyCell
@@ -86,6 +86,8 @@ class MxGraphAbstractHierarchyCell {
    * Constructs a new hierarchical layout algorithm.
    */
   constructor() {
+    super();
+
     this.x = [];
     this.y = [];
     this.temp = [];
@@ -96,7 +98,7 @@ class MxGraphAbstractHierarchyCell {
    *
    * Returns the cells this cell connects to on the next layer up
    */
-  getNextLayerConnectedCells(layer: number): Cell | null {
+  getNextLayerConnectedCells(layer: number): CellArray | null {
     return null;
   }
 
@@ -105,7 +107,7 @@ class MxGraphAbstractHierarchyCell {
    *
    * Returns the cells this cell connects to on the next layer down
    */
-  getPreviousLayerConnectedCells(layer: number): Cell | null {
+  getPreviousLayerConnectedCells(layer: number): CellArray | null {
     return null;
   }
 
@@ -114,7 +116,7 @@ class MxGraphAbstractHierarchyCell {
    *
    * Returns whether or not this cell is an edge
    */
-  isEdge(): boolean {
+  isEdge() {
     return false;
   }
 
@@ -123,7 +125,7 @@ class MxGraphAbstractHierarchyCell {
    *
    * Returns whether or not this cell is a node
    */
-  isVertex(): boolean {
+  isVertex() {
     return false;
   }
 
@@ -132,7 +134,7 @@ class MxGraphAbstractHierarchyCell {
    *
    * Gets the value of temp for the specified layer
    */
-  getGeneralPurposeVariable(layer: number): null | number {
+  getGeneralPurposeVariable(layer: number): number | null {
     return null;
   }
 
@@ -141,16 +143,14 @@ class MxGraphAbstractHierarchyCell {
    *
    * Set the value of temp for the specified layer
    */
-  setGeneralPurposeVariable(layer: number, value: number): null | void {
-    return null;
-  }
+  setGeneralPurposeVariable(layer: number, value: number) {}
 
   /**
    * Function: setX
    *
    * Set the value of x for the specified layer
    */
-  setX(layer: number, value: number): void {
+  setX(layer: number, value: number) {
     if (this.isVertex()) {
       this.x[0] = value;
     } else if (this.isEdge()) {
@@ -163,7 +163,7 @@ class MxGraphAbstractHierarchyCell {
    *
    * Gets the value of x on the specified layer
    */
-  getX(layer: number): number {
+  getX(layer: number) {
     if (this.isVertex()) {
       return this.x[0];
     }
@@ -178,7 +178,7 @@ class MxGraphAbstractHierarchyCell {
    *
    * Set the value of y for the specified layer
    */
-  setY(layer: number, value: number): void {
+  setY(layer: number, value: number) {
     if (this.isVertex()) {
       this.y[0] = value;
     } else if (this.isEdge()) {
@@ -187,4 +187,4 @@ class MxGraphAbstractHierarchyCell {
   }
 }
 
-export default MxGraphAbstractHierarchyCell;
+export default GraphAbstractHierarchyCell;

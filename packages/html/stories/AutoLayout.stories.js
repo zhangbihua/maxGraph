@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,32 +8,32 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxRubberband,
-    mxEvent,
-    mxUtils,
-    mxCellRenderer,
-    mxEdgeHandler,
+    Graph,
+    Rubberband,
+    InternalEvent,
+    utils,
+    CellRenderer,
+    EdgeHandler,
     mxHierarchicalLayout,
-    mxConstants,
-    mxCellOverlay,
-    mxImage,
+    Constants,
+    CellOverlay,
+    ImageBox,
     mxClient,
     mxMorphing,
-    mxEventObject,
-    mxEventUtils
-  } = mxgraph;
+    EventObject,
+    EventUtils,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -43,41 +43,36 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
-  class MyCustomCellRenderer extends mxCellRenderer {
+  class MyCustomCellRenderer extends CellRenderer {
     installCellOverlayListeners(state, overlay, shape) {
       super.installCellOverlayListeners(state, overlay, shape);
 
-      mxEvent.addListener(
+      InternalEvent.addListener(
         shape.node,
         mxClient.IS_POINTER ? 'pointerdown' : 'mousedown',
-        evt => {
-          overlay.fireEvent(
-            new mxEventObject('pointerdown', 'event', evt, 'state', state)
-          );
+        (evt) => {
+          overlay.fireEvent(new EventObject('pointerdown', 'event', evt, 'state', state));
         }
       );
 
       if (!mxClient.IS_POINTER && mxClient.IS_TOUCH) {
-        mxEvent.addListener(shape.node, 'touchstart', evt => {
-          overlay.fireEvent(
-            new mxEventObject('pointerdown', 'event', evt, 'state', state)
-          );
+        InternalEvent.addListener(shape.node, 'touchstart', (evt) => {
+          overlay.fireEvent(new EventObject('pointerdown', 'event', evt, 'state', state));
         });
       }
     }
   }
 
-  class MyCustomEdgeHandler extends mxEdgeHandler {
+  class MyCustomEdgeHandler extends EdgeHandler {
     connect(edge, terminal, isSource, isClone, me) {
       super.connect(edge, terminal, isSource, isClone, me);
       executeLayout();
     }
   }
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     createEdgeHandler(state, edgeStyle) {
       return new MyCustomEdgeHandler(state, edgeStyle);
     }
@@ -96,14 +91,13 @@ const Template = ({ label, ...args }) => {
   graph.view.setTranslate(20, 20);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
   const parent = graph.getDefaultParent();
 
-  const layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
+  const layout = new mxHierarchicalLayout(graph, Constants.DIRECTION_WEST);
 
   let v1;
   const executeLayout = (change, post) => {
@@ -118,7 +112,7 @@ const Template = ({ label, ...args }) => {
     } finally {
       // New API for animating graph layout results asynchronously
       const morph = new mxMorphing(graph);
-      morph.addListener(mxEvent.DONE, () => {
+      morph.addListener(InternalEvent.DONE, () => {
         graph.getModel().endUpdate();
         if (post != null) {
           post();
@@ -128,16 +122,16 @@ const Template = ({ label, ...args }) => {
     }
   };
 
-  const addOverlay = cell => {
+  const addOverlay = (cell) => {
     // Creates a new overlay with an image and a tooltip
-    const overlay = new mxCellOverlay(
-      new mxImage('images/add.png', 24, 24),
+    const overlay = new CellOverlay(
+      new ImageBox('images/add.png', 24, 24),
       'Add outgoing'
     );
     overlay.cursor = 'hand';
 
     // Installs a handler for clicks on the overlay
-    overlay.addListener(mxEvent.CLICK, (sender, evt2) => {
+    overlay.addListener(InternalEvent.CLICK, (sender, evt2) => {
       graph.clearSelection();
       const geo = graph.getCellGeometry(cell);
 
@@ -173,15 +167,15 @@ const Template = ({ label, ...args }) => {
       graph.popupMenuHandler.hideMenu();
       graph.stopEditing(false);
 
-      const pt = mxUtils.convertPoint(
+      const pt = utils.convertPoint(
         graph.container,
-        mxEventUtils.getClientX(evt2),
-        mxEventUtils.getClientY(evt2)
+        EventUtils.getClientX(evt2),
+        EventUtils.getClientY(evt2)
       );
       graph.connectionHandler.start(state, pt.x, pt.y);
       graph.isMouseDown = true;
-      graph.isMouseTrigger = mxEventUtils.isMouseEvent(evt2);
-      mxEvent.consume(evt2);
+      graph.isMouseTrigger = EventUtils.isMouseEvent(evt2);
+      InternalEvent.consume(evt2);
     });
 
     // Sets the overlay for the cell in the graph
@@ -199,16 +193,16 @@ const Template = ({ label, ...args }) => {
     addOverlay(v1);
   });
 
-  graph.resizeCell = function() {
-    mxGraph.prototype.resizeCell.apply(this, arguments);
+  graph.resizeCell = function () {
+    Graph.prototype.resizeCell.apply(this, arguments);
     executeLayout();
   };
 
-  graph.connectionHandler.addListener(mxEvent.CONNECT, function() {
+  graph.connectionHandler.addListener(InternalEvent.CONNECT, function () {
     executeLayout();
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

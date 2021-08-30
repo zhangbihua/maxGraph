@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,23 +8,17 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph, 
-    mxDomHelpers,
-    mxMorphing,
-    mxEvent,
-    mxRubberband
-  } = mxgraph;
+  const { Graph, mxDomHelpers, mxMorphing, InternalEvent, Rubberband } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -38,15 +32,13 @@ const Template = ({ label, ...args }) => {
   div.appendChild(container);
 
   // Disables the built-in context menu
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -71,7 +63,7 @@ const Template = ({ label, ...args }) => {
   div.appendChild(buttons);
 
   buttons.appendChild(
-    mxDomHelpers.button('Morph', function() {
+    mxDomHelpers.button('Morph', function () {
       graph.clearSelection();
 
       graph.getModel().beginUpdate();
@@ -88,7 +80,7 @@ const Template = ({ label, ...args }) => {
       } finally {
         // Arguments are number of steps, ease and delay
         const morph = new mxMorphing(graph, 20, 1.2, 20);
-        morph.addListener(mxEvent.DONE, function() {
+        morph.addListener(InternalEvent.DONE, function () {
           graph.getModel().endUpdate();
         });
         morph.startAnimation();
@@ -99,6 +91,6 @@ const Template = ({ label, ...args }) => {
   );
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

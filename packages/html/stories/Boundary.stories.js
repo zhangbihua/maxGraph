@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,24 +8,17 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph, 
-    mxEvent, 
-    mxRubberband, 
-    mxPoint,
-    mxGraphHandler,
-    mxUtils
-  } = mxgraph;
+  const { Graph, InternalEvent, Rubberband, Point, GraphHandler, utils } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -36,10 +29,9 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Disables the built-in context menu
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     // Enables moving of relative children
     isCellLocked(cell) {
       return false;
@@ -94,7 +86,7 @@ const Template = ({ label, ...args }) => {
                 y = y > 0.5 ? 1 : 0;
               }
 
-              return new mxPoint(x, y);
+              return new Point(x, y);
             }
           }
         }
@@ -122,7 +114,7 @@ const Template = ({ label, ...args }) => {
           this.model.setGeometry(cell, geo);
         }
       } else {
-        mxGraph.prototype.translateCell.apply(this, arguments);
+        Graph.prototype.translateCell.apply(this, arguments);
       }
     }
   }
@@ -142,29 +134,19 @@ const Template = ({ label, ...args }) => {
   graph.getStylesheet().putDefaultVertexStyle(style);
 
   // Replaces move preview for relative children
-  graph.graphHandler.getDelta = function(me) {
-    const point = mxUtils.convertPoint(
-      this.graph.container,
-      me.getX(),
-      me.getY()
-    );
-    let delta = new mxPoint(point.x - this.first.x, point.y - this.first.y);
+  graph.graphHandler.getDelta = function (me) {
+    const point = utils.convertPoint(this.graph.container, me.getX(), me.getY());
+    let delta = new Point(point.x - this.first.x, point.y - this.first.y);
 
-    if (
-      this.cells != null &&
-      this.cells.length > 0 &&
-      this.cells[0] != null
-    ) {
+    if (this.cells != null && this.cells.length > 0 && this.cells[0] != null) {
       const state = this.graph.view.getState(this.cells[0]);
       const rel = graph.getRelativePosition(state, delta.x, delta.y);
 
       if (rel != null) {
-        const pstate = this.graph.view.getState(
-          state.cell.getParent()
-        );
+        const pstate = this.graph.view.getState(state.cell.getParent());
 
         if (pstate != null) {
-          delta = new mxPoint(
+          delta = new Point(
             pstate.x + pstate.width * rel.x - state.getCenterX(),
             pstate.y + pstate.height * rel.y - state.getCenterY()
           );
@@ -176,24 +158,16 @@ const Template = ({ label, ...args }) => {
   };
 
   // Relative children cannot be removed from parent
-  graph.graphHandler.shouldRemoveCellsFromParent = function(
-    parent,
-    cells,
-    evt
-  ) {
+  graph.graphHandler.shouldRemoveCellsFromParent = function (parent, cells, evt) {
     return (
       cells.length === 0 &&
       !cells[0].geometry.relative &&
-      mxGraphHandler.prototype.shouldRemoveCellsFromParent.apply(
-        this,
-        arguments
-      )
+      GraphHandler.prototype.shouldRemoveCellsFromParent.apply(this, arguments)
     );
   };
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -215,7 +189,7 @@ const Template = ({ label, ...args }) => {
       size: [20, 20],
       style: 'fontSize=9;shape=ellipse;resizable=0;',
     });
-    v2.geometry.offset = new mxPoint(-10, -10);
+    v2.geometry.offset = new Point(-10, -10);
     v2.geometry.relative = true;
 
     const v3 = graph.insertVertex({
@@ -225,11 +199,11 @@ const Template = ({ label, ...args }) => {
       size: [20, 20],
       style: 'fontSize=9;shape=ellipse;resizable=0;',
     });
-    v3.geometry.offset = new mxPoint(-10, -10);
+    v3.geometry.offset = new Point(-10, -10);
     v3.geometry.relative = true;
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

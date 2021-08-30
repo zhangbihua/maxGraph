@@ -7,7 +7,7 @@
 import Shape from '../Shape';
 import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
-import { ColorValue } from 'packages/core/src/types';
+import { ColorValue } from 'core/types';
 
 /**
  * Extends {@link Shape} to implement a horizontal line shape.

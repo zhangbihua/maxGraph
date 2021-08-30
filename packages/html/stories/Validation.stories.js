@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,20 +8,20 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxRubberband,
+    Graph,
+    Rubberband,
     mxXmlUtils,
-    mxMultiplicity,
+    Multiplicity,
     mxKeyHandler,
-    mxEvent
-  } = mxgraph;
+    InternalEvent,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -37,7 +37,7 @@ const Template = ({ label, ...args }) => {
   const subtargetNode = xmlDocument.createElement('Subtarget');
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.setConnectable(true);
   graph.setTooltips(true);
   graph.setAllowDanglingEdges(false);
@@ -45,7 +45,7 @@ const Template = ({ label, ...args }) => {
 
   // Source nodes needs 1..2 connected Targets
   graph.multiplicities.push(
-    new mxMultiplicity(
+    new Multiplicity(
       true,
       'Source',
       null,
@@ -60,7 +60,7 @@ const Template = ({ label, ...args }) => {
 
   // Source node does not want any incoming connections
   graph.multiplicities.push(
-    new mxMultiplicity(
+    new Multiplicity(
       false,
       'Source',
       null,
@@ -75,7 +75,7 @@ const Template = ({ label, ...args }) => {
 
   // Target needs exactly one incoming connection from Source
   graph.multiplicities.push(
-    new mxMultiplicity(
+    new Multiplicity(
       false,
       'Target',
       null,
@@ -89,11 +89,11 @@ const Template = ({ label, ...args }) => {
   );
 
   // Enables rubberband selection
-  new mxRubberband(graph);
+  new Rubberband(graph);
 
   // Removes cells when [DELETE] is pressed
   const keyHandler = new mxKeyHandler(graph);
-  keyHandler.bindKey(46, function(evt) {
+  keyHandler.bindKey(46, function (evt) {
     if (graph.isEnabled()) {
       graph.removeCells();
     }
@@ -101,11 +101,11 @@ const Template = ({ label, ...args }) => {
 
   // Installs automatic validation (use editor.validation = true
   // if you are using an mxEditor instance)
-  const listener = function(sender, evt) {
+  const listener = function (sender, evt) {
     graph.validateGraph();
   };
 
-  graph.getModel().addListener(mxEvent.CHANGE, listener);
+  graph.getModel().addListener(InternalEvent.CHANGE, listener);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -131,15 +131,7 @@ const Template = ({ label, ...args }) => {
       80,
       30
     );
-    const v5 = graph.insertVertex(
-      parent,
-      null,
-      subtargetNode,
-      200,
-      200,
-      80,
-      30
-    );
+    const v5 = graph.insertVertex(parent, null, subtargetNode, 200, 200, 80, 30);
     const v6 = graph.insertVertex(
       parent,
       null,
@@ -159,6 +151,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

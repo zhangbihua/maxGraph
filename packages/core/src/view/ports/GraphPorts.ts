@@ -1,13 +1,6 @@
 import Cell from '../cell/datatypes/Cell';
-import Graph from '../Graph';
 
 class GraphPorts {
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
-
-  graph: Graph;
-
   /**
    * Specifies if ports are enabled. This is used in {@link cellConnected} to update
    * the respective style.

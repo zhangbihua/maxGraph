@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,22 +8,17 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxEvent,
-    mxGraphHandler,
-    mxRubberband
-  } = mxgraph;
+  const { Graph, InternalEvent, GraphHandler, Rubberband } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -34,9 +29,9 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Disables the built-in context menu
-  mxEvent.disableContextMenu(container);
+  InternalEvent.disableContextMenu(container);
 
-  class MyCustomGraphHandler extends mxGraphHandler {
+  class MyCustomGraphHandler extends GraphHandler {
     /**
      * Redirects start drag to parent.
      */
@@ -49,7 +44,7 @@ const Template = ({ label, ...args }) => {
     }
   }
 
-  class MyCustomGraph extends mxGraph {
+  class MyCustomGraph extends Graph {
     foldingEnabled = false;
 
     recursiveResize = true;
@@ -76,7 +71,7 @@ const Template = ({ label, ...args }) => {
   const graph = new MyCustomGraph(container);
 
   // Enables rubberband selection
-  new mxRubberband(graph);
+  new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -99,6 +94,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

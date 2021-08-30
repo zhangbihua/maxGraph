@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,28 +8,28 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph, 
-    mxEvent, 
-    mxRubberband,
+    Graph,
+    InternalEvent,
+    Rubberband,
     mxClipboard,
-    mxUtils,
-    mxEventUtils,
+    utils,
+    EventUtils,
     mxClient,
     mxCodec,
-    mxGraphModel,
-    mxStringUtils
-  } = mxgraph;
+    GraphModel,
+    mxStringUtils,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -40,28 +40,27 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Disables the built-in context menu
-  if (!args.contextMenu)
-  mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
   // Creates the graph inside the given this.el
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Public helper method for shared clipboard.
-  mxClipboard.cellsToString = function(cells) {
+  mxClipboard.cellsToString = function (cells) {
     const codec = new mxCodec();
-    const model = new mxGraphModel();
+    const model = new GraphModel();
     const parent = model.getRoot().getChildAt(0);
 
     for (let i = 0; i < cells.length; i++) {
       model.add(parent, cells[i]);
     }
 
-    return mxUtils.getXml(codec.encode(model));
+    return utils.getXml(codec.encode(model));
   };
 
   // Focused but invisible textarea during control or meta key events
   const textInput = document.createElement('textarea');
-  mxUtils.setOpacity(textInput, 0);
+  utils.setOpacity(textInput, 0);
   textInput.style.width = '1px';
   textInput.style.height = '1px';
   let restoreFocus = false;
@@ -74,9 +73,9 @@ const Template = ({ label, ...args }) => {
   textInput.value = ' ';
 
   // Shows a textare when control/cmd is pressed to handle native clipboard actions
-  mxEvent.addListener(document, 'keydown', function(evt) {
+  InternalEvent.addListener(document, 'keydown', function (evt) {
     // No dialog visible
-    const source = mxEventUtils.getSource(evt);
+    const source = EventUtils.getSource(evt);
 
     if (
       graph.isEnabled() &&
@@ -107,11 +106,11 @@ const Template = ({ label, ...args }) => {
   });
 
   // Restores focus on graph this.el and removes text input from DOM
-  mxEvent.addListener(document, 'keyup', function(evt) {
+  InternalEvent.addListener(document, 'keyup', function (evt) {
     if (
       restoreFocus &&
       (evt.keyCode === 224 /* FF */ ||
-      evt.keyCode === 17 /* Control */ ||
+        evt.keyCode === 17 /* Control */ ||
         evt.keyCode === 91 ||
         evt.keyCode === 93) /* Meta */
     ) {
@@ -126,7 +125,7 @@ const Template = ({ label, ...args }) => {
   });
 
   // Inserts the XML for the given cells into the text input for copy
-  const copyCells = function(graph, cells) {
+  const copyCells = function (graph, cells) {
     if (cells.length > 0) {
       const clones = graph.cloneCells(cells);
 
@@ -153,48 +152,38 @@ const Template = ({ label, ...args }) => {
   };
 
   // Handles copy event by putting XML for current selection into text input
-  mxEvent.addListener(
-    textInput,
-    'copy',
-    (evt) => {
-      if (graph.isEnabled() && !graph.isSelectionEmpty()) {
-        copyCells(
-          graph,
-          mxUtils.sortCells(
-            graph.model.getTopmostCells(graph.getSelectionCells())
-          )
-        );
-        dx = 0;
-        dy = 0;
-      }
+  InternalEvent.addListener(textInput, 'copy', (evt) => {
+    if (graph.isEnabled() && !graph.isSelectionEmpty()) {
+      copyCells(
+        graph,
+        utils.sortCells(graph.model.getTopmostCells(graph.getSelectionCells()))
+      );
+      dx = 0;
+      dy = 0;
     }
-  );
+  });
 
   // Handles cut event by removing cells putting XML into text input
-  mxEvent.addListener(
-    textInput,
-    'cut',
-    (evt) => {
-      if (graph.isEnabled() && !graph.isSelectionEmpty()) {
-        copyCells(graph, graph.removeCells());
-        dx = -gs;
-        dy = -gs;
-      }
+  InternalEvent.addListener(textInput, 'cut', (evt) => {
+    if (graph.isEnabled() && !graph.isSelectionEmpty()) {
+      copyCells(graph, graph.removeCells());
+      dx = -gs;
+      dy = -gs;
     }
-  );
+  });
 
   // Merges XML into existing graph and layers
-  const importXml = function(xml, dx, dy) {
+  const importXml = function (xml, dx, dy) {
     dx = dx != null ? dx : 0;
     dy = dy != null ? dy : 0;
     let cells = [];
 
     try {
-      const doc = mxUtils.parseXml(xml);
+      const doc = utils.parseXml(xml);
       const node = doc.documentElement;
 
       if (node != null) {
-        const model = new mxGraphModel();
+        const model = new GraphModel();
         const codec = new mxCodec(node.ownerDocument);
         codec.decode(node, model);
 
@@ -217,18 +206,11 @@ const Template = ({ label, ...args }) => {
 
               if (!graph.isCellLocked(target)) {
                 const children = parent.getChildren();
-                cells = cells.concat(
-                  graph.importCells(children, dx, dy, target)
-                );
+                cells = cells.concat(graph.importCells(children, dx, dy, target));
               }
             } else {
               // Delta is non cascading, needs separate move for layers
-              parent = graph.importCells(
-                [parent],
-                0,
-                0,
-                graph.model.getRoot()
-              )[0];
+              parent = graph.importCells([parent], 0, 0, graph.model.getRoot())[0];
               const children = parent.getChildren();
               graph.moveCells(children, dx, dy);
               cells = cells.concat(children);
@@ -247,12 +229,10 @@ const Template = ({ label, ...args }) => {
   };
 
   // Parses and inserts XML into graph
-  const pasteText = function(text) {
+  const pasteText = function (text) {
     const xml = mxStringUtils.trim(text);
-    const x =
-      graph.container.scrollLeft / graph.view.scale - graph.view.translate.x;
-    const y =
-      graph.container.scrollTop / graph.view.scale - graph.view.translate.y;
+    const x = graph.container.scrollLeft / graph.view.scale - graph.view.translate.x;
+    const y = graph.container.scrollTop / graph.view.scale - graph.view.translate.y;
 
     if (xml.length > 0) {
       if (lastPaste !== xml) {
@@ -273,23 +253,17 @@ const Template = ({ label, ...args }) => {
   };
 
   // Function to fetch text from paste events
-  const extractGraphModelFromEvent = function(evt) {
+  const extractGraphModelFromEvent = function (evt) {
     let data = null;
 
     if (evt != null) {
-      const provider =
-        evt.dataTransfer != null ? evt.dataTransfer : evt.clipboardData;
+      const provider = evt.dataTransfer != null ? evt.dataTransfer : evt.clipboardData;
 
       if (provider != null) {
         data =
-          provider.types.indexOf('text/html') >= 0
-            ? provider.getData('text/html')
-            : null;
+          provider.types.indexOf('text/html') >= 0 ? provider.getData('text/html') : null;
 
-        if (
-          provider.types.indexOf('text/plain')
-          && (data == null || data.length === 0)
-        ) {
+        if (provider.types.indexOf('text/plain') && (data == null || data.length === 0)) {
           data = provider.getData('text/plain');
         }
       }
@@ -299,7 +273,7 @@ const Template = ({ label, ...args }) => {
   };
 
   // Handles paste event by parsing and inserting XML
-  mxEvent.addListener(textInput, 'paste', function(evt) {
+  InternalEvent.addListener(textInput, 'paste', function (evt) {
     // Clears existing contents before paste - should not be needed
     // because all text is selected, but doesn't hurt since the
     // actual pasting of the new text is delayed in all cases.
@@ -312,12 +286,9 @@ const Template = ({ label, ...args }) => {
         pasteText(xml);
       } else {
         // Timeout for new value to appear
-        window.setTimeout(
-          () => {
-            pasteText(textInput.value);
-          },
-          0
-        );
+        window.setTimeout(() => {
+          pasteText(textInput.value);
+        }, 0);
       }
     }
 
@@ -325,8 +296,7 @@ const Template = ({ label, ...args }) => {
   });
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -350,6 +320,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

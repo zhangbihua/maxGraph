@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,26 +8,26 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxRubberband,
-    mxConnectionHandler,
-    mxImage,
+    Graph,
+    Rubberband,
+    ConnectionHandler,
+    ImageBox,
     mxToolbar,
-    mxGraphModel,
+    GraphModel,
     mxKeyHandler,
-    mxCell,
-    mxGeometry,
-    mxDragSource,
+    Cell,
+    Geometry,
+    DragSource,
     mxDomHelpers,
-    mxGestureUtils
-  } = mxgraph;
+    GestureUtils,
+  } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -42,7 +42,7 @@ const Template = ({ label, ...args }) => {
 
   // Defines an icon for creating new connections in the connection handler.
   // This will automatically disable the highlighting of the source vertex.
-  mxConnectionHandler.prototype.connectImage = new mxImage(
+  ConnectionHandler.prototype.connectImage = new ImageBox(
     '/images/connector.gif',
     16,
     16
@@ -66,12 +66,12 @@ const Template = ({ label, ...args }) => {
 
   // Creates the model and the graph inside the container
   // using the fastest rendering available on the browser
-  const model = new mxGraphModel();
-  const graph = new mxGraph(container, model);
+  const model = new GraphModel();
+  const graph = new Graph(container, model);
   graph.dropEnabled = true;
 
   // Matches DnD inside the graph
-  mxDragSource.prototype.getDropTarget = function(graph, x, y) {
+  DragSource.prototype.getDropTarget = function (graph, x, y) {
     let cell = graph.getCellAt(x, y);
     if (!graph.isValidDropTarget(cell)) {
       cell = null;
@@ -86,22 +86,16 @@ const Template = ({ label, ...args }) => {
   // Stops editing on enter or escape keypress
   const keyHandler = new mxKeyHandler(graph);
 
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   const addVertex = (icon, w, h, style) => {
-    const vertex = new mxCell(null, new mxGeometry(0, 0, w, h), style);
+    const vertex = new Cell(null, new Geometry(0, 0, w, h), style);
     vertex.setVertex(true);
 
     addToolbarItem(graph, toolbar, vertex, icon);
   };
 
-  addVertex(
-    '/images/swimlane.gif',
-    120,
-    160,
-    'shape=swimlane;startSize=20;'
-  );
+  addVertex('/images/swimlane.gif', 120, 160, 'shape=swimlane;startSize=20;');
   addVertex('/images/rectangle.gif', 100, 40, '');
   addVertex('/images/rounded.gif', 100, 40, 'shape=rounded');
   addVertex('/images/ellipse.gif', 40, 40, 'shape=ellipse');
@@ -111,37 +105,30 @@ const Template = ({ label, ...args }) => {
   addVertex('/images/actor.gif', 30, 40, 'shape=actor');
   toolbar.addLine();
 
-  const button = mxDomHelpers.button(
-    'Create toolbar entry from selection',
-    evt => {
-      if (!graph.isSelectionEmpty()) {
-        // Creates a copy of the selection array to preserve its state
-        const cells = graph.getSelectionCells();
-        const bounds = graph.getView().getBounds(cells);
+  const button = mxDomHelpers.button('Create toolbar entry from selection', (evt) => {
+    if (!graph.isSelectionEmpty()) {
+      // Creates a copy of the selection array to preserve its state
+      const cells = graph.getSelectionCells();
+      const bounds = graph.getView().getBounds(cells);
 
-        // Function that is executed when the image is dropped on
-        // the graph. The cell argument points to the cell under
-        // the mousepointer if there is one.
-        const funct = (graph, evt, cell) => {
-          graph.stopEditing(false);
+      // Function that is executed when the image is dropped on
+      // the graph. The cell argument points to the cell under
+      // the mousepointer if there is one.
+      const funct = (graph, evt, cell) => {
+        graph.stopEditing(false);
 
-          const pt = graph.getPointForEvent(evt);
-          const dx = pt.x - bounds.x;
-          const dy = pt.y - bounds.y;
+        const pt = graph.getPointForEvent(evt);
+        const dx = pt.x - bounds.x;
+        const dy = pt.y - bounds.y;
 
-          graph.setSelectionCells(graph.importCells(cells, dx, dy, cell));
-        };
+        graph.setSelectionCells(graph.importCells(cells, dx, dy, cell));
+      };
 
-        // Creates the image which is used as the drag icon (preview)
-        const img = toolbar.addMode(
-          null,
-          '/images/outline.gif',
-          funct
-        );
-        mxGestureUtils.makeDraggable(img, graph, funct);
-      }
+      // Creates the image which is used as the drag icon (preview)
+      const img = toolbar.addMode(null, '/images/outline.gif', funct);
+      GestureUtils.makeDraggable(img, graph, funct);
     }
-  );
+  });
 
   tbContainer.appendChild(button);
 
@@ -162,10 +149,10 @@ const Template = ({ label, ...args }) => {
 
     // Creates the image which is used as the drag icon (preview)
     const img = toolbar.addMode(null, image, funct);
-    mxGestureUtils.makeDraggable(img, graph, funct);
+    GestureUtils.makeDraggable(img, graph, funct);
   }
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

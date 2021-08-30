@@ -9,7 +9,7 @@ import { DIRECTION_NORTH } from '../../../../util/Constants';
 import HierarchicalEdgeStyle from './HierarchicalEdgeStyle';
 import Dictionary from '../../../../util/Dictionary';
 import GraphHierarchyModel from './model/GraphHierarchyModel';
-import mxObjectIdentity from '../../../../util/mxObjectIdentity';
+import ObjectIdentity from '../../../../util/ObjectIdentity';
 import MinimumCycleRemover from './stage/MinimumCycleRemover';
 import MedianHybridCrossingReduction from './stage/MedianHybridCrossingReduction';
 import CoordinateAssignment from './stage/CoordinateAssignment';
@@ -249,8 +249,7 @@ class mxHierarchicalLayout extends GraphLayout {
       const rootsCopy = [];
 
       for (let i = 0; i < roots.length; i += 1) {
-        const ancestor =
-          parent != null ? model.isAncestor(parent, roots[i]) : true;
+        const ancestor = parent != null ? model.isAncestor(parent, roots[i]) : true;
 
         if (ancestor && roots[i].isVertex()) {
           rootsCopy.push(roots[i]);
@@ -265,11 +264,7 @@ class mxHierarchicalLayout extends GraphLayout {
       this.run(parent);
 
       if (this.resizeParent && !parent.isCollapsed()) {
-        this.graph.updateGroupBounds(
-          [parent],
-          this.parentBorder,
-          this.moveParent
-        );
+        this.graph.updateGroupBounds([parent], this.parentBorder, this.moveParent);
       }
 
       // Maintaining parent location
@@ -574,7 +569,7 @@ class mxHierarchicalLayout extends GraphLayout {
     const { model } = this.graph;
 
     if (cell.isVertex() && cell !== this.parent && cell.isVisible()) {
-      result[mxObjectIdentity.get(cell)] = cell;
+      result[ObjectIdentity.get(cell)] = cell;
     }
 
     if (this.traverseAncestors || (cell === this.parent && cell.isVisible())) {
@@ -672,7 +667,7 @@ class mxHierarchicalLayout extends GraphLayout {
       // Has this vertex been seen before in any traversal
       // And if the filled vertex set is populated, only
       // process vertices in that it contains
-      const vertexID = mxObjectIdentity.get(vertex);
+      const vertexID = ObjectIdentity.get(vertex);
 
       if (
         allVertices[vertexID] == null &&

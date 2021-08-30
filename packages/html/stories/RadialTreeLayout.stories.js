@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,19 +8,13 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxRubberband,
-    mxConstants,
-    mxRadialTreeLayout,
-    mxPerimeter
-  } = mxgraph;
+  const { Graph, Rubberband, Constants, mxRadialTreeLayout, Perimeter } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -31,15 +25,14 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Adds rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Changes the default vertex style in-place
   let style = graph.getStylesheet().getDefaultVertexStyle();
-  style.perimiter = mxPerimeter.RectanglePerimeter;
+  style.perimiter = Perimeter.RectanglePerimeter;
   style.gradientColor = 'white';
   style.perimeterSpacing = 6;
   style.rounded = true;
@@ -100,6 +93,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

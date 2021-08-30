@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,17 +8,13 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxRubberband,
-    mxDomHelpers
-  } = mxgraph;
+  const { Graph, Rubberband, mxDomHelpers } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -32,11 +28,10 @@ const Template = ({ label, ...args }) => {
   div.appendChild(container);
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -47,7 +42,7 @@ const Template = ({ label, ...args }) => {
   let showThree = true;
 
   // Overridden to implement dynamic conditions
-  const isVisible = function() {
+  const isVisible = function () {
     // TODO super cannot be used here
     // let result = super.isVisible();
     let result;
@@ -93,19 +88,19 @@ const Template = ({ label, ...args }) => {
 
   // Dynamic conditions (requires refresh)
   buttons.appendChild(
-    mxDomHelpers.button('Cond 1', function() {
+    mxDomHelpers.button('Cond 1', function () {
       showOne = !showOne;
       graph.refresh();
     })
   );
   buttons.appendChild(
-    mxDomHelpers.button('Cond 2', function() {
+    mxDomHelpers.button('Cond 2', function () {
       showTwo = !showTwo;
       graph.refresh();
     })
   );
   buttons.appendChild(
-    mxDomHelpers.button('Cond 3', function() {
+    mxDomHelpers.button('Cond 3', function () {
       showThree = !showThree;
       graph.refresh();
     })
@@ -113,7 +108,7 @@ const Template = ({ label, ...args }) => {
 
   // Explicit show/hide
   buttons.appendChild(
-    mxDomHelpers.button('Toggle cell', function() {
+    mxDomHelpers.button('Toggle cell', function () {
       graph.toggleCells(!v1.isVisible(), [v1], true);
     })
   );
@@ -122,7 +117,7 @@ const Template = ({ label, ...args }) => {
   let removed = null;
 
   buttons.appendChild(
-    mxDomHelpers.button('Add/remove cell', function() {
+    mxDomHelpers.button('Add/remove cell', function () {
       if (removed != null) {
         graph.addCells(removed);
         removed = null;
@@ -133,6 +128,6 @@ const Template = ({ label, ...args }) => {
   );
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

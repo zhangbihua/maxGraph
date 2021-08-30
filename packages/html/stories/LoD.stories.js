@@ -1,19 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Zoom_OffPage/LoD',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxDomHelpers
-  } = mxgraph;
+  const { Graph, mxDomHelpers } = maxgraph;
 
   const div = document.createElement('div');
 
@@ -27,11 +24,11 @@ const Template = ({ label, ...args }) => {
   div.appendChild(container);
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.centerZoom = false;
 
   // Links level of detail to zoom level but can be independent of zoom
-  const isVisible = function() {
+  const isVisible = function () {
     return this.lod == null || this.lod / 2 < graph.view.scale;
   };
 
@@ -74,18 +71,18 @@ const Template = ({ label, ...args }) => {
   div.appendChild(buttons);
 
   buttons.appendChild(
-    mxDomHelpers.button('+', function() {
+    mxDomHelpers.button('+', function () {
       graph.zoomIn();
     })
   );
 
   buttons.appendChild(
-    mxDomHelpers.button('-', function() {
+    mxDomHelpers.button('-', function () {
       graph.zoomOut();
     })
   );
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

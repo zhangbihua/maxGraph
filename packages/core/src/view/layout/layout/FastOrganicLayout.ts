@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxObjectIdentity from '../../../util/mxObjectIdentity';
+import ObjectIdentity from '../../../util/ObjectIdentity';
 import GraphLayout from './GraphLayout';
 import Graph from '../../Graph';
 import Cell from '../../cell/datatypes/Cell';
@@ -186,8 +186,7 @@ class MxFastOrganicLayout extends GraphLayout {
    */
   isVertexIgnored(vertex: Cell) {
     return (
-      super.isVertexIgnored(vertex) ||
-      this.graph.getConnections(vertex).length === 0
+      super.isVertexIgnored(vertex) || this.graph.getConnections(vertex).length === 0
     );
   }
 
@@ -237,7 +236,7 @@ class MxFastOrganicLayout extends GraphLayout {
       this.cellLocation[i] = [];
 
       // Set up the mapping from array indices to cells
-      const id = mxObjectIdentity.get(vertex);
+      const id = ObjectIdentity.get(vertex);
       this.indices[id] = i;
       const bounds = this.getVertexBounds(vertex);
 
@@ -283,7 +282,7 @@ class MxFastOrganicLayout extends GraphLayout {
           }
 
           // Looks the cell up in the indices dictionary
-          const id = mxObjectIdentity.get(cells[j]);
+          const id = ObjectIdentity.get(cells[j]);
           const index = this.indices[id];
 
           // Check the connected cell in part of the vertex list to be
@@ -309,11 +308,7 @@ class MxFastOrganicLayout extends GraphLayout {
       }
 
       // Main iteration loop
-      for (
-        this.iteration = 0;
-        this.iteration < this.maxIterations;
-        this.iteration += 1
-      ) {
+      for (this.iteration = 0; this.iteration < this.maxIterations; this.iteration += 1) {
         if (!this.allowedToRun) {
           return;
         }
@@ -391,8 +386,7 @@ class MxFastOrganicLayout extends GraphLayout {
         // Get the distance of displacement for this node for this
         // iteration
         let deltaLength = Math.sqrt(
-          this.dispX[index] * this.dispX[index] +
-            this.dispY[index] * this.dispY[index]
+          this.dispX[index] * this.dispX[index] + this.dispY[index] * this.dispY[index]
         );
 
         if (deltaLength < 0.001) {
@@ -402,12 +396,10 @@ class MxFastOrganicLayout extends GraphLayout {
         // Scale down by the current temperature if less than the
         // displacement distance
         const newXDisp =
-          (this.dispX[index] / deltaLength) *
-          Math.min(deltaLength, this.temperature);
+          (this.dispX[index] / deltaLength) * Math.min(deltaLength, this.temperature);
 
         const newYDisp =
-          (this.dispY[index] / deltaLength) *
-          Math.min(deltaLength, this.temperature);
+          (this.dispY[index] / deltaLength) * Math.min(deltaLength, this.temperature);
 
         // reset displacements
         this.dispX[index] = 0;
@@ -495,8 +487,7 @@ class MxFastOrganicLayout extends GraphLayout {
 
           // Distance between nodes
           const deltaLength = Math.sqrt(xDelta * xDelta + yDelta * yDelta);
-          let deltaLengthWithRadius =
-            deltaLength - this.radius[i] - this.radius[j];
+          let deltaLengthWithRadius = deltaLength - this.radius[i] - this.radius[j];
 
           if (deltaLengthWithRadius > this.maxDistanceLimit) {
             // Ignore vertices too far apart
@@ -529,8 +520,7 @@ class MxFastOrganicLayout extends GraphLayout {
    * fashion to zero.
    */
   reduceTemperature() {
-    this.temperature =
-      this.initialTemp * (1.0 - this.iteration / this.maxIterations);
+    this.temperature = this.initialTemp * (1.0 - this.iteration / this.maxIterations);
   }
 }
 

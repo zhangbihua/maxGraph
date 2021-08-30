@@ -1,18 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Labels/Wrapping',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph
-  } = mxgraph;
+  const { Graph } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -23,13 +21,13 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Enables HTML labels as wrapping is only available for those
   graph.setHtmlLabels(true);
 
   // Disables in-place editing for edges
-  graph.isCellEditable = function(cell) {
+  graph.isCellEditable = function (cell) {
     return !cell.isEdge();
   };
 
@@ -64,6 +62,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

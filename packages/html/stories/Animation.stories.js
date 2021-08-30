@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -7,15 +7,12 @@ import './css/animation.css';
 export default {
   title: 'Effects/Animation',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph, 
-    mxPoint
-  } = mxgraph;
+  const { Graph, Point } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -25,7 +22,7 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.setEnabled(false);
   const parent = graph.getDefaultParent();
 
@@ -67,26 +64,18 @@ const Template = ({ label, ...args }) => {
       style:
         'strokeWidth=3;endArrow=block;endSize=2;endFill=1;strokeColor=black;rounded=1;',
     });
-    e1.geometry.points = [new mxPoint(230, 50)];
+    e1.geometry.points = [new Point(230, 50)];
     graph.orderCells(true, [e1]);
   });
 
   // Adds animation to edge shape and makes "pipe" visible
   const state = graph.view.getState(e1);
-  state.shape.node
-    .getElementsByTagName('path')[0]
-    .removeAttribute('visibility');
-  state.shape.node
-    .getElementsByTagName('path')[0]
-    .setAttribute('stroke-width', '6');
-  state.shape.node
-    .getElementsByTagName('path')[0]
-    .setAttribute('stroke', 'lightGray');
-  state.shape.node
-    .getElementsByTagName('path')[1]
-    .setAttribute('class', 'flow');
+  state.shape.node.getElementsByTagName('path')[0].removeAttribute('visibility');
+  state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke-width', '6');
+  state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke', 'lightGray');
+  state.shape.node.getElementsByTagName('path')[1].setAttribute('class', 'flow');
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

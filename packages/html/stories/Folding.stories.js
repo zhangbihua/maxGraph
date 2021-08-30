@@ -1,22 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Layouts/Folding',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxConstants,
-    mxEdgeStyle,
-    mxStackLayout,
-    mxLayoutManager
-  } = mxgraph;
+  const { Graph, Constants, EdgeStyle, StackLayout, LayoutManager } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -27,10 +21,10 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Enables crisp rendering of rectangles in SVG
-  mxConstants.ENTITY_SEGMENT = 20;
+  Constants.ENTITY_SEGMENT = 20;
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.setDropEnabled(true);
 
   // Disables global features
@@ -43,7 +37,7 @@ const Template = ({ label, ...args }) => {
 
   // Sets global styles
   let style = graph.getStylesheet().getDefaultEdgeStyle();
-  style.edge = mxEdgeStyle.EntityRelation;
+  style.edge = EdgeStyle.EntityRelation;
   style.rounded = true;
 
   style = graph.getStylesheet().getDefaultVertexStyle();
@@ -52,17 +46,17 @@ const Template = ({ label, ...args }) => {
   style.startSize = 30;
 
   style = [];
-  style.shape = mxConstants.SHAPE_RECTANGLE;
+  style.shape = Constants.SHAPE_RECTANGLE;
   style.strokeColor = 'none';
   style.fillColor = 'none';
   style.foldable = false;
   graph.getStylesheet().putCellStyle('column', style);
 
   // Installs auto layout for all levels
-  const layout = new mxStackLayout(graph, true);
+  const layout = new StackLayout(graph, true);
   layout.border = graph.border;
-  const layoutMgr = new mxLayoutManager(graph);
-  layoutMgr.getLayout = function(cell) {
+  const layoutMgr = new LayoutManager(graph);
+  layoutMgr.getLayout = function (cell) {
     if (!cell.collapsed) {
       if (cell.parent !== graph.model.root) {
         layout.resizeParent = true;
@@ -140,6 +134,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

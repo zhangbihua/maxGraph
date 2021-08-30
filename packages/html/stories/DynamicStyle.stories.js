@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,18 +8,13 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxUtils,
-    mxConstants,
-    mxRubberband
-  } = mxgraph;
+  const { Graph, utils, Constants, Rubberband } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -30,25 +25,24 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Disables moving of edge labels in this examples
   graph.edgeLabelsMovable = false;
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Needs to set a flag to check for dynamic style changes,
   // that is, changes to styles on cells where the style was
   // not explicitely changed using mxStyleChange
   graph.getView().updateStyle = true;
 
-  // Overrides mxCell.getStyle to return a specific style
+  // Overrides Cell.getStyle to return a specific style
   // for edges that reflects their target terminal (in this case
   // the strokeColor will be equal to the target's fillColor).
 
-  const getStyle = function() {
+  const getStyle = function () {
     // TODO super cannot be used here
     // let style = super.getStyle();
     let style;
@@ -58,10 +52,7 @@ const Template = ({ label, ...args }) => {
 
       if (target != null) {
         const targetStyle = graph.getCurrentCellStyle(target);
-        const fill = mxUtils.getValue(
-          targetStyle,
-          'fillColor'
-        );
+        const fill = utils.getValue(targetStyle, 'fillColor');
 
         if (fill != null) {
           style += `;strokeColor=${fill}`;
@@ -120,6 +111,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

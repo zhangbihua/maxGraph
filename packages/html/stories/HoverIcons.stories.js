@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,21 +8,21 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph, 
-    mxEvent, 
-    mxRubberband, 
-    mxImage,
-    mxRectangle,
-    mxUtils,
-    mxConnectionHandler
-  } = mxgraph;
+    Graph,
+    InternalEvent,
+    Rubberband,
+    ImageBox,
+    Rectangle,
+    utils,
+    ConnectionHandler,
+  } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -34,11 +34,7 @@ const Template = ({ label, ...args }) => {
 
   // Defines an icon for creating new connections in the connection handler.
   // This will automatically disable the highlighting of the source vertex.
-  mxConnectionHandler.prototype.connectImage = new mxImage(
-    'images/connector.gif',
-    16,
-    16
-  );
+  ConnectionHandler.prototype.connectImage = new ImageBox('images/connector.gif', 16, 16);
 
   // Defines a new class for all icons
   class mxIconSet {
@@ -47,7 +43,7 @@ const Template = ({ label, ...args }) => {
       const { graph } = state.view;
 
       // Icon1
-      let img = mxUtils.createImage('images/copy.png');
+      let img = utils.createImage('images/copy.png');
       img.setAttribute('title', 'Duplicate');
       Object.assign(img.style, {
         cursor: 'pointer',
@@ -58,10 +54,10 @@ const Template = ({ label, ...args }) => {
         top: `${state.y + state.height}px`,
       });
 
-      mxEvent.addGestureListeners(img, evt => {
+      InternalEvent.addGestureListeners(img, (evt) => {
         const s = graph.gridSize;
         graph.setSelectionCells(graph.moveCells([state.cell], s, s, true));
-        mxEvent.consume(evt);
+        InternalEvent.consume(evt);
         this.destroy();
       });
 
@@ -69,7 +65,7 @@ const Template = ({ label, ...args }) => {
       this.images.push(img);
 
       // Delete
-      img = mxUtils.createImage('images/delete2.png');
+      img = utils.createImage('images/delete2.png');
       img.setAttribute('title', 'Delete');
       Object.assign(img.style, {
         cursor: 'pointer',
@@ -80,14 +76,14 @@ const Template = ({ label, ...args }) => {
         top: `${state.y - 16}px`,
       });
 
-      mxEvent.addGestureListeners(img, evt => {
+      InternalEvent.addGestureListeners(img, (evt) => {
         // Disables dragging the image
-        mxEvent.consume(evt);
+        InternalEvent.consume(evt);
       });
 
-      mxEvent.addListener(img, 'click', evt => {
+      InternalEvent.addListener(img, 'click', (evt) => {
         graph.removeCells([state.cell]);
-        mxEvent.consume(evt);
+        InternalEvent.consume(evt);
         this.destroy();
       });
 
@@ -106,12 +102,11 @@ const Template = ({ label, ...args }) => {
   }
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.setConnectable(true);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Defines the tolerance before removing the icons
   const ICON_TOLERANCE = 20;
@@ -135,13 +130,13 @@ const Template = ({ label, ...args }) => {
         (me.getState() === this.currentState || me.getState() == null)
       ) {
         const tol = ICON_TOLERANCE;
-        const tmp = new mxRectangle(
+        const tmp = new Rectangle(
           me.getGraphX() - tol,
           me.getGraphY() - tol,
           2 * tol,
           2 * tol
         );
-        if (mxUtils.intersects(tmp, this.currentState)) {
+        if (utils.intersects(tmp, this.currentState)) {
           return;
         }
       }
@@ -149,10 +144,7 @@ const Template = ({ label, ...args }) => {
       let tmp = graph.view.getState(me.getCell());
 
       // Ignore everything but vertices
-      if (
-        graph.isMouseDown ||
-        (tmp != null && !tmp.cell.isVertex())
-      ) {
+      if (graph.isMouseDown || (tmp != null && !tmp.cell.isVertex())) {
         tmp = null;
       }
 
@@ -210,6 +202,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

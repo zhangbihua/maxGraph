@@ -7,7 +7,7 @@
 
 import Point from '../../geometry/Point';
 import GraphLayout from './GraphLayout';
-import mxObjectIdentity from '../../../util/mxObjectIdentity';
+import ObjectIdentity from '../../../util/ObjectIdentity';
 import Graph from '../../Graph';
 import CellArray from '../../cell/datatypes/CellArray';
 import Cell from '../../cell/datatypes/Cell';
@@ -105,7 +105,7 @@ class ParallelEdgeLayout extends GraphLayout {
   findParallels(parent: Cell, cells: CellArray) {
     const lookup = [];
 
-    const addCell = cell => {
+    const addCell = (cell) => {
       if (!this.isEdgeIgnored(cell)) {
         const id = this.getEdgeId(cell);
 
@@ -151,8 +151,8 @@ class ParallelEdgeLayout extends GraphLayout {
     let pts = '';
 
     if (src != null && trg != null) {
-      src = mxObjectIdentity.get(src);
-      trg = mxObjectIdentity.get(trg);
+      src = ObjectIdentity.get(src);
+      trg = ObjectIdentity.get(trg);
 
       if (this.checkOverlap) {
         const state = this.graph.view.getState(edge);

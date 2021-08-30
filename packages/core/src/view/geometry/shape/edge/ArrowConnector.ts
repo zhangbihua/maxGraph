@@ -11,7 +11,7 @@ import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Point from '../../Point';
 import Rectangle from '../../Rectangle';
 import CellState from '../../../cell/datatypes/CellState';
-import { ColorValue } from 'packages/core/src/types';
+import { ColorValue } from 'core/types';
 
 /**
  * Extends {@link Shape} to implement an new rounded arrow shape with support for waypoints and double arrows. The

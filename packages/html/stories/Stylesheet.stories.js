@@ -1,21 +1,16 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Styles/Stylesheet',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxPerimeter,
-    mxConstants,
-    mxEdgeStyle
-  } = mxgraph;
+  const { Graph, Perimeter, Constants, EdgeStyle } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -26,15 +21,15 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Creates the graph inside the DOM node.
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Disables basic selection and cell handling
   graph.setEnabled(false);
 
   // Returns a special label for edges. Note: This does
   // a supercall to use the default implementation.
-  graph.getLabel = function(cell) {
-    const label = mxGraph.prototype.getLabel.apply(this, arguments);
+  graph.getLabel = function (cell) {
+    const label = Graph.prototype.getLabel.apply(this, arguments);
 
     if (cell.isEdge()) {
       return `Transfer ${label}`;
@@ -44,7 +39,7 @@ const Template = ({ label, ...args }) => {
 
   // Installs a custom global tooltip
   graph.setTooltips(true);
-  graph.getTooltip = function(state) {
+  graph.getTooltip = function (state) {
     const { cell } = state;
     const model = this.getModel();
 
@@ -59,27 +54,27 @@ const Template = ({ label, ...args }) => {
 
   // Creates the default style for vertices
   let style = [];
-  style.shape = mxConstants.SHAPE_RECTANGLE;
-  style.perimiter = mxPerimeter.RectanglePerimeter;
+  style.shape = Constants.SHAPE_RECTANGLE;
+  style.perimiter = Perimeter.RectanglePerimeter;
   style.strokeColor = 'gray';
   style.rounded = true;
   style.fillColor = '#EEEEEE';
   style.gradientColor = 'white';
   style.fontColor = '#774400';
-  style.align = mxConstants.ALIGN_CENTER;
-  style.verticalAlign = mxConstants.ALIGN_MIDDLE;
+  style.align = Constants.ALIGN_CENTER;
+  style.verticalAlign = Constants.ALIGN_MIDDLE;
   style.fontSize = '12';
   style.fontStyle = 1;
   graph.getStylesheet().putDefaultVertexStyle(style);
 
   // Creates the default style for edges
   style = [];
-  style.shape = mxConstants.SHAPE_CONNECTOR;
+  style.shape = Constants.SHAPE_CONNECTOR;
   style.strokeColor = '#6482B9';
-  style.align = mxConstants.ALIGN_CENTER;
-  style.verticalAlign = mxConstants.ALIGN_MIDDLE;
-  style.edge = mxEdgeStyle.ElbowConnector;
-  style.endArrow = mxConstants.ARROW_CLASSIC;
+  style.align = Constants.ALIGN_CENTER;
+  style.verticalAlign = Constants.ALIGN_MIDDLE;
+  style.edge = EdgeStyle.ElbowConnector;
+  style.endArrow = Constants.ARROW_CLASSIC;
   style.fontSize = '10';
   graph.getStylesheet().putDefaultEdgeStyle(style);
 
@@ -90,51 +85,11 @@ const Template = ({ label, ...args }) => {
   // Adds cells to the model in a single step
   graph.getModel().beginUpdate();
   try {
-    const v1 = graph.insertVertex(
-      parent,
-      null,
-      'Interval 1',
-      20,
-      20,
-      180,
-      30
-    );
-    const v2 = graph.insertVertex(
-      parent,
-      null,
-      'Interval 2',
-      140,
-      80,
-      280,
-      30
-    );
-    const v3 = graph.insertVertex(
-      parent,
-      null,
-      'Interval 3',
-      200,
-      140,
-      360,
-      30
-    );
-    const v4 = graph.insertVertex(
-      parent,
-      null,
-      'Interval 4',
-      480,
-      200,
-      120,
-      30
-    );
-    const v5 = graph.insertVertex(
-      parent,
-      null,
-      'Interval 5',
-      60,
-      260,
-      400,
-      30
-    );
+    const v1 = graph.insertVertex(parent, null, 'Interval 1', 20, 20, 180, 30);
+    const v2 = graph.insertVertex(parent, null, 'Interval 2', 140, 80, 280, 30);
+    const v3 = graph.insertVertex(parent, null, 'Interval 3', 200, 140, 360, 30);
+    const v4 = graph.insertVertex(parent, null, 'Interval 4', 480, 200, 120, 30);
+    const v5 = graph.insertVertex(parent, null, 'Interval 5', 60, 260, 400, 30);
     const e1 = graph.insertEdge(parent, null, '1', v1, v2);
     e1.getGeometry().points = [{ x: 160, y: 60 }];
     const e2 = graph.insertEdge(parent, null, '2', v1, v5);
@@ -151,6 +106,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

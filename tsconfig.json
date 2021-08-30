@@ -7,17 +7,17 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
     "target": "es2020",
     "resolveJsonModule": true, // Required for JSON files
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "core/*": ["./packages/core/src/*"]
+    }
   },
   "exclude": [
     "node_modules",
@@ -25,9 +25,5 @@
     "**/*.json", // Don't try and check JSON files
     "**/*.spec.ts"
   ],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

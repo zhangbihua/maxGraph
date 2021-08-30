@@ -75,7 +75,8 @@ class ImageExport {
 
       for (let i = 0; i < childCount; i += 1) {
         const childState = graph.view.getState(state.cell.getChildAt(i));
-        this.visitStatesRecursive(childState, canvas, visitor);
+
+        if (childState) this.visitStatesRecursive(childState, canvas, visitor);
       }
     }
   }

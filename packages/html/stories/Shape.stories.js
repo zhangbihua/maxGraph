@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -6,16 +6,11 @@ export default {
   title: 'Shapes/Shape',
   argTypes: {
     ...globalTypes,
-  }
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxCylinder,
-    mxConstants,
-    mxCellRenderer
-  } = mxgraph;
+  const { Graph, CylinderShape, Constants, CellRenderer } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -36,17 +31,17 @@ const Template = ({ label, ...args }) => {
     The code below defines the shape. The BoxShape function
     it the constructor which creates a new object instance.
     
-    The next lines use an mxCylinder instance to augment the
+    The next lines use an CylinderShape instance to augment the
     prototype of the shape ("inheritance") and reset the
     constructor to the topmost function of the c'tor chain.
   */
 
-  class BoxShape extends mxCylinder {
+  class BoxShape extends CylinderShape {
     // Defines the extrusion of the box as a "static class variable"
     extrude = 10;
 
     /*
-          Next, the mxCylinder's redrawPath method is "overridden".
+          Next, the CylinderShape's redrawPath method is "overridden".
           This method has a isForeground argument to separate two
           paths, one for the background (which must be closed and
           might be filled) and one for the foreground, which is
@@ -85,10 +80,10 @@ const Template = ({ label, ...args }) => {
       }
     }
   }
-  mxCellRenderer.registerShape('box', BoxShape);
+  CellRenderer.registerShape('box', BoxShape);
 
   // Creates the graph inside the DOM node.
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Disables basic selection and cell handling
   graph.setEnabled(false);
@@ -123,6 +118,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

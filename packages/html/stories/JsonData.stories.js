@@ -1,27 +1,27 @@
-import mxgraph from '@mxgraph/core';
-import { popup } from '@mxgraph/core/src/util/gui/mxWindow';
+import maxgraph from '@maxgraph/core';
+import { popup } from '@maxgraph/core/util/gui/mxWindow';
 
 import { globalTypes } from '../.storybook/preview';
 
 export default {
   title: 'Xml_Json/JsonData',
   argTypes: {
-    ...globalTypes
-  }
+    ...globalTypes,
+  },
 };
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
+    Graph,
     mxObjectCodec,
     mxDomHelpers,
     mxCodecRegistry,
-    mxEvent,
+    InternalEvent,
     mxClient,
     mxCodec,
     mxDomUtils,
-    mxUtils
-  } = mxgraph;
+    utils,
+  } = maxgraph;
 
   mxClient.setImageBasePath('/images');
 
@@ -41,12 +41,12 @@ const Template = ({ label, ...args }) => {
     this.value = value;
   }
   const codec = new mxObjectCodec(new CustomData());
-  codec.encode = function(enc, obj) {
+  codec.encode = function (enc, obj) {
     const node = enc.document.createElement('CustomData');
     mxDomUtils.setTextContent(node, JSON.stringify(obj));
     return node;
   };
-  codec.decode = function(dec, node, into) {
+  codec.decode = function (dec, node, into) {
     const obj = JSON.parse(mxDomUtils.getTextContent(node));
     obj.constructor = CustomData;
 
@@ -55,15 +55,13 @@ const Template = ({ label, ...args }) => {
   mxCodecRegistry.register(codec);
 
   // Disables the built-in context menu
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new RubberBand(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -86,14 +84,14 @@ const Template = ({ label, ...args }) => {
   div.appendChild(buttons);
 
   buttons.appendChild(
-    mxDomHelpers.button('Show JSON', function() {
+    mxDomHelpers.button('Show JSON', function () {
       const encoder = new mxCodec();
       const node = encoder.encode(graph.getModel());
-      popup(mxUtils.getXml(node), true);
+      popup(utils.getXml(node), true);
     })
   );
 
   return div;
-}
+};
 
 export const Default = Template.bind({});

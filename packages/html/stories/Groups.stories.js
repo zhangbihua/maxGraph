@@ -1,4 +1,4 @@
-import mxgraph from '@mxgraph/core';
+import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -8,18 +8,13 @@ export default {
     ...globalTypes,
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    mxGraph,
-    mxRubberband,
-    mxGraphHandler,
-    mxPopupMenuHandler
-  } = mxgraph;
+  const { Graph, Rubberband, GraphHandler, mxPopupMenuHandler } = maxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -30,27 +25,24 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Overrides check for valid roots
-  mxGraph.prototype.isValidRoot = function() {
+  Graph.prototype.isValidRoot = function () {
     return false;
   };
 
   // Don't clear selection if multiple cells selected
-  const graphHandlerMouseDown = mxGraphHandler.prototype.mouseDown;
-  mxGraphHandler.prototype.mouseDown = function(sender, me) {
+  const graphHandlerMouseDown = GraphHandler.prototype.mouseDown;
+  GraphHandler.prototype.mouseDown = function (sender, me) {
     graphHandlerMouseDown.apply(this, arguments);
 
-    if (
-      this.graph.isCellSelected(me.getCell()) &&
-      this.graph.getSelectionCount() > 1
-    ) {
+    if (this.graph.isCellSelected(me.getCell()) && this.graph.getSelectionCount() > 1) {
       this.delayedSelection = false;
     }
   };
 
   // Selects descendants before children selection mode
   const graphHandlerGetInitialCellForEvent =
-    mxGraphHandler.prototype.getInitialCellForEvent;
-  mxGraphHandler.prototype.getInitialCellForEvent = function(me) {
+    GraphHandler.prototype.getInitialCellForEvent;
+  GraphHandler.prototype.getInitialCellForEvent = function (me) {
     const model = this.graph.getModel();
     const psel = this.graph.getSelectionCell().getParent();
     let cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
@@ -72,9 +64,8 @@ const Template = ({ label, ...args }) => {
   };
 
   // Selection is delayed to mouseup if child selected
-  const graphHandlerIsDelayedSelection =
-    mxGraphHandler.prototype.isDelayedSelection;
-  mxGraphHandler.prototype.isDelayedSelection = function(cell) {
+  const graphHandlerIsDelayedSelection = GraphHandler.prototype.isDelayedSelection;
+  GraphHandler.prototype.isDelayedSelection = function (cell) {
     let result = graphHandlerIsDelayedSelection.apply(this, arguments);
     const model = this.graph.getModel();
     const psel = this.graph.getSelectionCell().getParent();
@@ -94,7 +85,7 @@ const Template = ({ label, ...args }) => {
   };
 
   // Delayed selection of parent group
-  mxGraphHandler.prototype.selectDelayed = function(me) {
+  GraphHandler.prototype.selectDelayed = function (me) {
     let cell = me.getCell();
 
     if (cell == null) {
@@ -117,7 +108,7 @@ const Template = ({ label, ...args }) => {
   };
 
   // Returns last selected ancestor
-  mxPopupMenuHandler.prototype.getCellForPopupEvent = function(me) {
+  mxPopupMenuHandler.prototype.getCellForPopupEvent = function (me) {
     let cell = me.getCell();
     const model = this.graph.getModel();
     let parent = cell.getParent();
@@ -134,7 +125,7 @@ const Template = ({ label, ...args }) => {
   };
 
   // Creates the graph inside the given container
-  const graph = new mxGraph(container);
+  const graph = new Graph(container);
   graph.constrainChildren = false;
   graph.extendParents = false;
   graph.extendParentsOnAdd = false;
@@ -144,8 +135,7 @@ const Template = ({ label, ...args }) => {
   // graph.setResizeContainer(true);
 
   // Enables rubberband selection
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new Rubberband(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
@@ -162,6 +152,6 @@ const Template = ({ label, ...args }) => {
   }
 
   return container;
-}
+};
 
 export const Default = Template.bind({});
