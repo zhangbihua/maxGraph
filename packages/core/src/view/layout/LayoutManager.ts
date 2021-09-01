@@ -18,9 +18,9 @@ import EventObject from '../event/EventObject';
 import Cell from '../cell/datatypes/Cell';
 import graph from '../Graph';
 import Rectangle from '../geometry/Rectangle';
-import InternalMouseEvent from "../event/InternalMouseEvent";
+import InternalMouseEvent from '../event/InternalMouseEvent';
 import { getClientX, getClientY } from '../../util/EventUtils';
-import CellArray from "../cell/datatypes/CellArray";
+import CellArray from '../cell/datatypes/CellArray';
 import Graph from '../Graph';
 
 /**
@@ -70,9 +70,9 @@ class LayoutManager extends EventSource {
     this.resizeHandler = (sender: any, evt: EventObject) => {
       if (this.isEnabled()) {
         this.cellsResized(
-            evt.getProperty('cells'),
-            evt.getProperty('bounds'),
-            evt.getProperty('previous')
+          evt.getProperty('cells'),
+          evt.getProperty('bounds'),
+          evt.getProperty('previous')
         );
       }
     };
@@ -219,9 +219,7 @@ class LayoutManager extends EventSource {
    * @param cell Array of {@link Cell} that have been moved.
    * @param evt Mouse event that represents the mousedown.
    */
-  cellsMoved(cells: CellArray,
-             evt: InternalMouseEvent): void {
-
+  cellsMoved(cells: CellArray, evt: InternalMouseEvent): void {
     if (cells != null && evt != null) {
       const point = convertPoint(
         (<graph>this.getGraph()).container,
@@ -231,10 +229,7 @@ class LayoutManager extends EventSource {
       const model = (<graph>this.getGraph()).getModel();
 
       for (let i = 0; i < cells.length; i += 1) {
-        const layout = this.getLayout(
-            cells[i].getParent(),
-          InternalEvent.MOVE_CELLS
-        );
+        const layout = this.getLayout(cells[i].getParent(), InternalEvent.MOVE_CELLS);
 
         if (layout != null) {
           layout.moveCell(cells[i], point.x, point.y);
@@ -258,10 +253,7 @@ class LayoutManager extends EventSource {
       const model = (<graph>this.getGraph()).getModel();
 
       for (let i = 0; i < cells.length; i += 1) {
-        const layout = this.getLayout(
-            cells[i].getParent(),
-          InternalEvent.RESIZE_CELLS
-        );
+        const layout = this.getLayout(cells[i].getParent(), InternalEvent.RESIZE_CELLS);
         if (layout != null) {
           layout.resizeCell(cells[i], bounds[i], prev?.[i]);
         }
@@ -296,10 +288,7 @@ class LayoutManager extends EventSource {
       );
     }
 
-    if (
-      change instanceof TerminalChange ||
-      change instanceof GeometryChange
-    ) {
+    if (change instanceof TerminalChange || change instanceof GeometryChange) {
       return this.addCellsWithLayout(change.cell);
     }
 
@@ -313,12 +302,8 @@ class LayoutManager extends EventSource {
   /**
    * Adds all ancestors of the given cell that have a layout.
    */
-  addCellsWithLayout(cell: Cell,
-                     result: CellArray = new CellArray()): CellArray {
-    return this.addDescendantsWithLayout(
-      cell,
-      this.addAncestorsWithLayout(cell, result)
-    );
+  addCellsWithLayout(cell: Cell, result: CellArray = new CellArray()): CellArray {
+    return this.addDescendantsWithLayout(cell, this.addAncestorsWithLayout(cell, result));
   }
 
   /**
@@ -343,8 +328,7 @@ class LayoutManager extends EventSource {
   /**
    * Adds all descendants of the given cell that have a layout.
    */
-  addDescendantsWithLayout(cell: Cell,
-                           result: CellArray = new CellArray()): CellArray {
+  addDescendantsWithLayout(cell: Cell, result: CellArray = new CellArray()): CellArray {
     if (cell != null && this.hasLayout(cell)) {
       const model = (<graph>this.getGraph()).getModel();
 
@@ -372,9 +356,7 @@ class LayoutManager extends EventSource {
   /**
    * Executes all layouts which have been scheduled during the changes.
    */
-  layoutCells(cells: CellArray,
-              bubble: boolean = false): void {
-
+  layoutCells(cells: CellArray, bubble: boolean = false): void {
     if (cells.length > 0) {
       // Invokes the layouts while removing duplicates
       const model = (<graph>this.getGraph()).getModel();
@@ -400,8 +382,7 @@ class LayoutManager extends EventSource {
   /**
    * Executes the given layout on the given parent.
    */
-  executeLayout(cell: Cell,
-                bubble: boolean=false): void {
+  executeLayout(cell: Cell, bubble: boolean = false): void {
     const layout = this.getLayout(
       cell,
       bubble ? InternalEvent.BEGIN_UPDATE : InternalEvent.END_UPDATE

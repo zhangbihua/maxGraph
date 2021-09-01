@@ -6,15 +6,10 @@ const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = merge(base, {
   entry: './src/index.ts',
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
-  },
   output: {
-    filename: 'mxgraph.js',
+    filename: 'maxgraph.js',
     path: path.resolve(__dirname, 'dist'),
-    library: 'mxgraph',
+    library: 'maxgraph',
     libraryTarget: 'umd',
   },
   module: {

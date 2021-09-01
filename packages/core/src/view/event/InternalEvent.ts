@@ -123,7 +123,7 @@ class InternalEvent {
    * will be registered as well as the mouse events.
    */
   static addGestureListeners(
-    node: EventSource | EventTarget,
+    node: Listenable,
     startListener: MouseEventListener | null = null,
     moveListener: MouseEventListener | null = null,
     endListener: MouseEventListener | null = null

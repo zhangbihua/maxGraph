@@ -147,8 +147,7 @@ class mxAutoSaveManager extends EventSource {
 
     if (
       dt > this.autoSaveDelay ||
-      (this.ignoredChanges >= this.autoSaveThreshold &&
-        dt > this.autoSaveThrottle)
+      (this.ignoredChanges >= this.autoSaveThreshold && dt > this.autoSaveThrottle)
     ) {
       this.save();
       this.reset();

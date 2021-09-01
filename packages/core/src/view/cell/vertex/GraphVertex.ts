@@ -1,6 +1,6 @@
 import Cell from '../datatypes/Cell';
 import Geometry from '../../geometry/Geometry';
-import { autoImplement } from 'core/util/Utils';
+import { autoImplement } from '../../../util/Utils';
 
 import type GraphCells from '../GraphCells';
 
@@ -122,6 +122,7 @@ class GraphVertex extends autoImplement<PartialClass>() {
       relative,
       geometryClass
     );
+
     return this.addCell(vertex, parent);
   };
 

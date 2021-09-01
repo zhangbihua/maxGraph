@@ -631,7 +631,8 @@ class GraphCells extends autoImplement<PartialClass>() {
 
           if (g) {
             const state = this.getView().getState(cell);
-            const pstate = this.getView().getState(cell.getParent());
+            const parent = cell.getParent();
+            const pstate = parent ? this.getView().getState(parent) : null;
 
             if (state && pstate) {
               const dx = keepPosition ? 0 : (<Point>pstate.origin).x;
@@ -785,7 +786,7 @@ class GraphCells extends autoImplement<PartialClass>() {
 
         // Keeps the cell at its absolute location
         if (o1 && cell !== parent && parent !== previous) {
-          const oldState = this.getView().getState(previous);
+          const oldState = previous ? this.getView().getState(previous) : null;
           const o2 = oldState ? oldState.origin : zero;
           let geo = cell.getGeometry();
 
@@ -1538,7 +1539,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    */
   extendParent(cell: Cell) {
     const parent = cell.getParent();
-    let p = parent.getGeometry();
+    let p = parent ? parent.getGeometry() : null;
 
     if (parent && p && !parent.isCollapsed()) {
       const geo = cell.getGeometry();
@@ -1706,6 +1707,7 @@ class GraphCells extends autoImplement<PartialClass>() {
               if (
                 geo &&
                 geo.relative &&
+                parent &&
                 parent.isEdge() &&
                 this.getModel().contains(parent)
               ) {
@@ -1886,11 +1888,10 @@ class GraphCells extends autoImplement<PartialClass>() {
 
     if (geo && (this.isConstrainRelativeChildren() || !geo.relative)) {
       const parent = cell.getParent();
-      const pgeo = parent.getGeometry();
       let max = this.getMaximumGraphBounds();
 
       // Finds parent offset
-      if (max) {
+      if (max && parent) {
         const off = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
 
         if (off) {
@@ -2809,7 +2810,7 @@ class GraphCells extends autoImplement<PartialClass>() {
           } else {
             const parent = cell.getParent();
 
-            if (geo.relative) {
+            if (geo.relative && parent) {
               if (parent.isVertex() && parent !== this.getView().currentRoot) {
                 tmp = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
 
@@ -2830,7 +2831,7 @@ class GraphCells extends autoImplement<PartialClass>() {
             } else {
               bbox = Rectangle.fromRectangle(geo);
 
-              if (parent.isVertex() && cells.indexOf(parent) >= 0) {
+              if (parent && parent.isVertex() && cells.indexOf(parent) >= 0) {
                 tmp = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
 
                 if (tmp) {

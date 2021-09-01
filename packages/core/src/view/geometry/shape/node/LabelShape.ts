@@ -16,8 +16,8 @@ import {
   NONE,
 } from '../../../../util/Constants';
 import RectangleShape from './RectangleShape';
-import { ColorValue } from 'core/types';
-import AbstractCanvas2D from 'core/util/canvas/AbstractCanvas2D';
+import { ColorValue } from '../../../../types';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 
 /**
  * Class: mxLabel

@@ -56,10 +56,10 @@ import {
   isMouseEvent,
   isShiftDown,
 } from '../../../util/EventUtils';
-import Graph, { MaxGraph } from '../../Graph';
+import { MaxGraph } from '../../Graph';
 import CellState from '../datatypes/CellState';
 import Shape from '../../geometry/shape/Shape';
-import { CellHandle, ColorValue, Listenable } from 'core/types';
+import { CellHandle, ColorValue, Listenable } from '../../../types';
 import InternalMouseEvent from '../../event/InternalMouseEvent';
 import Cell from '../datatypes/Cell';
 import ImageBox from '../../image/ImageBox';
@@ -400,7 +400,8 @@ class EdgeHandler {
    * always returns true.
    */
   isParentHighlightVisible() {
-    return !this.graph.isCellSelected(this.state.cell.getParent());
+    const parent = this.state.cell.getParent();
+    return parent ? !this.graph.isCellSelected(parent) : null;
   }
 
   /**
@@ -412,10 +413,10 @@ class EdgeHandler {
     if (!this.isDestroyed()) {
       const visible = this.isParentHighlightVisible();
       const parent = this.state.cell.getParent();
-      const pstate = this.graph.view.getState(parent);
+      const pstate = parent ? this.graph.view.getState(parent) : null;
 
       if (this.parentHighlight) {
-        if (parent.isVertex() && visible) {
+        if (parent && parent.isVertex() && visible) {
           const b = this.parentHighlight.bounds;
 
           if (
@@ -438,7 +439,7 @@ class EdgeHandler {
           this.parentHighlight = null;
         }
       } else if (this.parentHighlightEnabled && visible) {
-        if (parent.isVertex() && pstate && !pstate.parentHighlight) {
+        if (parent && parent.isVertex() && pstate && !pstate.parentHighlight) {
           this.parentHighlight = this.createParentHighlightShape(pstate);
           // VML dialect required here for event transparency in IE
           this.parentHighlight.dialect = DIALECT_SVG;
@@ -624,7 +625,7 @@ class EdgeHandler {
         if (cell && !cell.isConnectable()) {
           const parent = cell.getParent();
 
-          if (parent.isVertex() && parent.isConnectable()) {
+          if (parent && parent.isVertex() && parent.isConnectable()) {
             cell = parent;
           }
         }
@@ -1060,7 +1061,7 @@ class EdgeHandler {
    *
    * Returns a clone of the current preview state for the given point and terminal.
    */
-  clonePreviewState(point: Point, terminal: Cell) {
+  clonePreviewState(point: Point, terminal: Cell | null) {
     return this.state.clone();
   }
 
@@ -1402,7 +1403,7 @@ class EdgeHandler {
   updatePreviewState(
     edgeState: CellState,
     point: Point,
-    terminalState: CellState,
+    terminalState: CellState | null,
     me: InternalMouseEvent,
     outline = false
   ) {
@@ -1473,9 +1474,9 @@ class EdgeHandler {
     }
 
     if (this.isSource) {
-      sourceConstraint = constraint;
+      sourceConstraint = constraint!;
     } else if (this.isTarget) {
-      targetConstraint = constraint;
+      targetConstraint = constraint!;
     }
 
     if (this.isSource || this.isTarget) {
@@ -1713,7 +1714,7 @@ class EdgeHandler {
               if (clone) {
                 let geo = edge.getGeometry();
                 const cloned = this.graph.cloneCell(edge);
-                model.add(parent, cloned, parent.getChildCount());
+                model.add(parent, cloned, parent!.getChildCount());
 
                 if (geo != null) {
                   geo = geo.clone();
@@ -1741,7 +1742,8 @@ class EdgeHandler {
               pt.y / this.graph.view.scale - this.graph.view.translate.y
             );
 
-            const pstate = this.graph.getView().getState(edge.getParent());
+            const parent = edge.getParent();
+            const pstate = parent ? this.graph.getView().getState(parent) : null;
 
             if (pstate != null) {
               pt.x -= pstate.origin.x;
@@ -1846,7 +1848,8 @@ class EdgeHandler {
     point.x = Math.round(point.x / scale - tr.x);
     point.y = Math.round(point.y / scale - tr.y);
 
-    const pstate = this.graph.getView().getState(this.state.cell.getParent());
+    const parent = this.state.cell.getParent();
+    const pstate = parent ? this.graph.getView().getState(parent) : parent;
 
     if (pstate) {
       point.x -= pstate.origin.x;
@@ -1967,7 +1970,7 @@ class EdgeHandler {
         const parent = edge.getParent();
         const terminal = edge.getTerminal(!isSource);
         edge = this.graph.cloneCell(edge);
-        model.add(parent, edge, parent.getChildCount());
+        model.add(parent, edge, parent!.getChildCount());
         model.setTerminal(edge, terminal, !isSource);
       }
 
@@ -2000,7 +2003,7 @@ class EdgeHandler {
         const source = edge.getTerminal(true);
         const target = edge.getTerminal(false);
         edge = this.graph.cloneCell(edge);
-        model.add(parent, edge, parent.getChildCount());
+        model.add(parent, edge, parent!.getChildCount());
         model.setTerminal(edge, source, true);
         model.setTerminal(edge, target, false);
       }
@@ -2050,7 +2053,7 @@ class EdgeHandler {
 
       const parent = this.state.cell.getParent();
 
-      if (parent.isVertex()) {
+      if (parent && parent.isVertex()) {
         const pState = this.graph.view.getState(parent);
 
         if (pState) offset = new Point(pState.x, pState.y);
@@ -2478,7 +2481,7 @@ class EdgeHandler {
 
     if (this.parentHighlight) {
       const parent = this.state.cell.getParent();
-      const pstate = this.graph.view.getState(parent);
+      const pstate = parent ? this.graph.view.getState(parent) : null;
 
       if (pstate && pstate.parentHighlight === this.parentHighlight) {
         pstate.parentHighlight = null;

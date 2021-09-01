@@ -157,8 +157,8 @@ class GraphSelection extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} to add to the selection.
    */
-  addCell(cell: Cell) {
-    this.addCells(new CellArray(cell));
+  addCellToSelection(cell: Cell) {
+    this.addCellsToSelection(new CellArray(cell));
   }
 
   /**
@@ -167,7 +167,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
    *
    * @param cells Array of {@link Cell} to add to the selection.
    */
-  addCells(cells: CellArray) {
+  addCellsToSelection(cells: CellArray) {
     let remove = null;
     if (this.singleSelection) {
       remove = this.cells;
@@ -193,8 +193,8 @@ class GraphSelection extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} to remove from the selection.
    */
-  removeCell(cell: Cell) {
-    this.removeCells(new CellArray(cell));
+  removeCellFromSelection(cell: Cell) {
+    this.removeCellsFromSelection(new CellArray(cell));
   }
 
   /**
@@ -203,7 +203,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
    *
    * @param cells {@link mxCell}s to remove from the selection.
    */
-  removeCells(cells: CellArray) {
+  removeCellsFromSelection(cells: CellArray) {
     const tmp = new CellArray();
 
     for (let i = 0; i < cells.length; i += 1) {
@@ -337,7 +337,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} to be add to the selection.
    */
   addSelectionCell(cell: Cell) {
-    this.addCell(cell);
+    this.addCellToSelection(cell);
   }
 
   /**
@@ -346,7 +346,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
    * @param cells Array of {@link Cell} to be added to the selection.
    */
   addSelectionCells(cells: CellArray) {
-    this.addCells(cells);
+    this.addCellsToSelection(cells);
   }
 
   /**
@@ -355,7 +355,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} to be removed from the selection.
    */
   removeSelectionCell(cell: Cell) {
-    this.removeCell(cell);
+    this.removeCellFromSelection(cell);
   }
 
   /**
@@ -364,7 +364,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
    * @param cells Array of {@link Cell} to be removed from the selection.
    */
   removeSelectionCells(cells: CellArray) {
-    this.removeCells(cells);
+    this.removeCellsFromSelection(cells);
   }
 
   /**
@@ -424,7 +424,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
       this.clear();
     }
 
-    const parent = cell ? cell.getParent() : this.getDefaultParent();
+    const parent = cell ? (cell.getParent() as Cell) : this.getDefaultParent();
     const childCount = parent.getChildCount();
 
     if (!cell && childCount > 0) {
@@ -516,13 +516,15 @@ class GraphSelection extends autoImplement<PartialClass>() {
     selectGroups = false
   ) {
     const filter = (cell: Cell) => {
+      const p = cell.getParent();
+
       return (
         !!this.getView().getState(cell) &&
         (((selectGroups || cell.getChildCount() === 0) &&
           cell.isVertex() &&
           vertices &&
-          cell.getParent() &&
-          !cell.getParent().isEdge()) ||
+          p &&
+          !p.isEdge()) ||
           (cell.isEdge() && edges))
       );
     };
@@ -573,7 +575,7 @@ class GraphSelection extends autoImplement<PartialClass>() {
    * Returns true if any sibling of the given cell is selected.
    */
   isSiblingSelected(cell: Cell) {
-    const parent = cell.getParent();
+    const parent = cell.getParent() as Cell;
     const childCount = parent.getChildCount();
 
     for (let i = 0; i < childCount; i += 1) {

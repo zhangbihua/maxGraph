@@ -72,13 +72,6 @@ class GraphEdge extends autoImplement<PartialClass>() {
   cloneInvalidEdges = false;
 
   /**
-   * Specifies if edges should be disconnected from their terminals when they
-   * are moved.
-   * @default true
-   */
-  disconnectOnMove = true;
-
-  /**
    * Specifies the alternate edge style to be used if the main control point
    * on an edge is being double clicked.
    * @default null

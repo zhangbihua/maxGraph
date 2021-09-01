@@ -15,8 +15,8 @@ import {
   NONE,
   RECTANGLE_ROUNDING_FACTOR,
 } from '../../../../util/Constants';
-import { ColorValue } from 'core/types';
-import AbstractCanvas2D from 'core/util/canvas/AbstractCanvas2D';
+import { ColorValue } from '../../../../types';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 
 /**
  * Extends {@link Shape} to implement a swimlane shape.

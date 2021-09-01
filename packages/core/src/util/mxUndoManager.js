@@ -76,6 +76,7 @@ import EventSource from '../view/event/EventSource';
 class mxUndoManager extends EventSource {
   constructor(size) {
     super();
+
     this.size = size != null ? size : 100;
     this.clear();
   }

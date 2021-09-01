@@ -236,7 +236,7 @@ export type ListenerTarget = {
   mxListenerList?: Listener[];
 };
 
-export type Listenable = (EventSource | EventTarget) & ListenerTarget;
+export type Listenable = (EventTarget | (Window & typeof globalThis)) & ListenerTarget;
 
 export type MouseEventListener = (me: MouseEvent) => void;
 export type KeyboardEventListener = (ke: KeyboardEvent) => void;

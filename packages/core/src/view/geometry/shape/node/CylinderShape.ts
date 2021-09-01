@@ -7,7 +7,7 @@
 import Shape from '../Shape';
 import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
-import { NONE } from 'core/util/Constants';
+import { NONE } from '../../../../util/Constants';
 
 /**
  * Extends {@link Shape} to implement an cylinder shape. If a custom shape with one filled area and an overlay path is

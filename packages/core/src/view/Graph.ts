@@ -24,6 +24,8 @@ import Point from './geometry/Point';
 import {
   applyMixins,
   autoImplement,
+  copyMethodsToPrototype,
+  copyPropertiesToPrototype,
   getCurrentStyle,
   hasScrollbars,
   parseCssNumber,
@@ -70,6 +72,7 @@ import GraphTooltip from './tooltip/GraphTooltip';
 import GraphTerminal from './terminal/GraphTerminal';
 import GraphDragDrop from './drag_drop/GraphDragDrop';
 import GraphSwimlane from './swimlane/GraphSwimlane';
+import GraphPageBreaks from './page_breaks/GraphPageBreaks';
 
 type PartialEvents = Pick<
   GraphEvents,
@@ -260,14 +263,14 @@ const defaultPlugins: GraphPluginConstructor[] = [
 class Graph extends autoImplement<PartialClass>() {
   constructor(
     container: HTMLElement,
-    model: Model,
+    model?: Model,
     plugins: GraphPluginConstructor[] = defaultPlugins,
     stylesheet: Stylesheet | null = null
   ) {
     super();
 
     this.container = container;
-    this.model = model;
+    this.model = model ?? new Model();
     this.plugins = plugins;
     this.cellRenderer = this.createCellRenderer();
     this.setStylesheet(stylesheet != null ? stylesheet : this.createStylesheet());
@@ -571,21 +574,6 @@ class Graph extends autoImplement<PartialClass>() {
   keepEdgesInBackground: boolean = false;
 
   /**
-   * Specifies if a child should be constrained inside the parent bounds after a
-   * move or resize of the child.
-   * @default true
-   */
-  constrainChildren: boolean = true;
-
-  /**
-   * Specifies if child cells with relative geometries should be constrained
-   * inside the parent bounds, if {@link constrainChildren} is `true`, and/or the
-   * {@link maximumGraphBounds}.
-   * @default false
-   */
-  constrainRelativeChildren: boolean = false;
-
-  /**
    * Specifies the return value for {@link isRecursiveResize}.
    * @default false (for backwards compatibility)
    */
@@ -669,12 +657,13 @@ class Graph extends autoImplement<PartialClass>() {
   getContainsValidationErrorsResource = () => this.containsValidationErrorsResource;
 
   // TODO: Document me!!
-  batchUpdate(fn: Function): void {
-    (<Model>this.getModel()).beginUpdate();
+  batchUpdate(fn: Function) {
+    console.log(this.getModel, this.getModel());
+    this.getModel().beginUpdate();
     try {
       fn();
     } finally {
-      (<Model>this.getModel()).endUpdate();
+      this.getModel().endUpdate();
     }
   }
 
@@ -775,7 +764,10 @@ class Graph extends autoImplement<PartialClass>() {
       const newParent = change.child.getParent();
       this.view.invalidate(change.child, true, true);
 
-      if (!this.getModel().contains(newParent) || newParent.isCollapsed()) {
+      if (
+        newParent &&
+        (!this.getModel().contains(newParent) || newParent.isCollapsed())
+      ) {
         this.view.invalidate(change.child, true, true);
         this.removeStateForCell(change.child);
 
@@ -1669,6 +1661,7 @@ class Graph extends autoImplement<PartialClass>() {
 applyMixins(Graph, [
   GraphCells,
   GraphConnections,
+  GraphDragDrop,
   GraphEdge,
   GraphEditing,
   GraphEvents,
@@ -1676,11 +1669,20 @@ applyMixins(Graph, [
   GraphImage,
   GraphLabel,
   GraphOverlays,
+  GraphPageBreaks,
+  GraphPanning,
+  GraphPorts,
   GraphSelection,
   GraphSnap,
   GraphSwimlane,
+  GraphTerminal,
+  GraphTooltip,
   GraphValidation,
   GraphVertex,
+  GraphZoom,
 ]);
+
+copyPropertiesToPrototype(EventSource.prototype, new EventSource(), Graph.prototype);
+copyMethodsToPrototype(EventSource.prototype, Graph.prototype);
 
 export default Graph;

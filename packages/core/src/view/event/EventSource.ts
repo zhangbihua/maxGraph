@@ -34,9 +34,8 @@ type EventListenerObject = {
  *
  * Constructs a new event source.
  */
-class EventSource extends EventTarget {
-  constructor(eventSource: EventSource | null = null) {
-    super();
+class EventSource {
+  constructor(eventSource: EventTarget | null = null) {
     this.eventSource = eventSource;
   }
 
@@ -61,7 +60,7 @@ class EventSource extends EventTarget {
    *
    * Optional source for events. Default is null.
    */
-  eventSource: EventSource | EventTarget | null;
+  eventSource: EventTarget | null = null;
 
   /**
    * Function: isEventsEnabled
@@ -95,7 +94,7 @@ class EventSource extends EventTarget {
    *
    * Sets <eventSource>.
    */
-  setEventSource(value: EventSource | EventTarget | null) {
+  setEventSource(value: EventTarget | null) {
     this.eventSource = value;
   }
 
@@ -147,7 +146,7 @@ class EventSource extends EventTarget {
    * sender - Optional sender to be passed to the listener. Default value is
    * the return value of <getEventSource>.
    */
-  fireEvent(evt: EventObject, sender: EventSource | EventTarget | null = null) {
+  fireEvent(evt: EventObject, sender: EventTarget | null = null) {
     if (this.isEventsEnabled()) {
       if (!evt) {
         evt = new EventObject('');
@@ -157,7 +156,7 @@ class EventSource extends EventTarget {
         sender = this.getEventSource();
       }
       if (!sender) {
-        sender = this;
+        sender = <EventTarget>(<unknown>this);
       }
 
       for (const eventListener of this.eventListeners) {

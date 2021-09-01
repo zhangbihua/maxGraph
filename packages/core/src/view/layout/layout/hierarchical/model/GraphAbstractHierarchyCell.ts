@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import CellArray from 'core/view/cell/datatypes/CellArray';
+import CellArray from '../../../../../view/cell/datatypes/CellArray';
 import Cell from '../../../../cell/datatypes/Cell';
 
 class GraphAbstractHierarchyCell extends Cell {

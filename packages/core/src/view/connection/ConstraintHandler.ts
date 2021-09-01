@@ -233,7 +233,7 @@ class ConstraintHandler {
     if (cell != null && !cell.isConnectable()) {
       const parent = cell.getParent();
 
-      if (parent.isVertex() && parent.isConnectable()) {
+      if (parent && parent.isVertex() && parent.isConnectable()) {
         cell = parent;
       }
     }

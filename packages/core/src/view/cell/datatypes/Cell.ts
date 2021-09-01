@@ -343,8 +343,8 @@ class Cell {
   /**
    * Returns the cell's parent.
    */
-  getParent(): Cell {
-    return <Cell>this.parent;
+  getParent() {
+    return this.parent;
   }
 
   /**
@@ -901,9 +901,9 @@ class Cell {
   /**
    * Returns the root of the model or the topmost parent of the given cell.
    */
-  getRoot(): Cell {
+  getRoot() {
     let root: Cell = this;
-    let cell: Cell = this;
+    let cell: Cell | null = this;
 
     while (cell) {
       root = cell;

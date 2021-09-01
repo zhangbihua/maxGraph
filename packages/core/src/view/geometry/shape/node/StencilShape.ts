@@ -24,7 +24,7 @@ import StencilShapeRegistry from './StencilShapeRegistry';
 import { getChildNodes, getTextContent } from '../../../../util/DomUtils';
 import Point from '../../Point';
 import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
-import { AlignValue, ColorValue, VAlignValue } from 'core/types';
+import { AlignValue, ColorValue, VAlignValue } from '../../../../types';
 
 /**
  * Implements a generic shape which is based on a XML node as a description.

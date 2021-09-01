@@ -883,7 +883,8 @@ class GraphView extends EventSource {
     state.length = 0;
 
     if (state.cell !== this.currentRoot) {
-      const pState = this.getState(state.cell.getParent());
+      const parent = state.cell.getParent();
+      const pState = parent ? this.getState(parent) : null;
 
       if (pState && pState.cell !== this.currentRoot) {
         origin.x += pState.origin.x;
@@ -947,7 +948,8 @@ class GraphView extends EventSource {
    * Validates the given cell state.
    */
   updateVertexState(state: CellState, geo: Geometry) {
-    const pState = this.getState(state.cell.getParent());
+    const parent = state.cell.getParent();
+    const pState = parent ? this.getState(parent) : null;
 
     if (geo.relative && pState && !pState.cell.isEdge()) {
       const alpha = toRadians(pState.style.rotation);

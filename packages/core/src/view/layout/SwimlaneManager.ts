@@ -13,7 +13,7 @@ import graph from '../Graph';
 import EventObject from '../event/EventObject';
 import Cell from '../cell/datatypes/Cell';
 import Geometry from '../geometry/Geometry';
-import CellArray from "../cell/datatypes/CellArray";
+import CellArray from '../cell/datatypes/CellArray';
 
 /**
  * @class SwimlaneManager
@@ -282,15 +282,8 @@ class SwimlaneManager extends EventSource {
               }
 
               const parentHorizontal =
-                current != null
-                  ? this.isCellHorizontal(current)
-                  : this.horizontal;
-              this.resizeSwimlane(
-                top,
-                size.width,
-                size.height,
-                parentHorizontal
-              );
+                current != null ? this.isCellHorizontal(current) : this.horizontal;
+              this.resizeSwimlane(top, size.width, size.height, parentHorizontal);
             }
           }
         }
@@ -307,12 +300,7 @@ class SwimlaneManager extends EventSource {
    *
    * @param swimlane {@link mxCell} whose size has changed.
    */
-  resizeSwimlane(
-    swimlane: Cell,
-    w: number,
-    h: number,
-    parentHorizontal: boolean
-  ): void {
+  resizeSwimlane(swimlane: Cell, w: number, h: number, parentHorizontal: boolean): void {
     const model = (<graph>this.graph).getModel();
 
     model.beginUpdate();

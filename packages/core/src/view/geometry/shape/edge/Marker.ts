@@ -4,8 +4,8 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import { ArrowType } from 'core/types';
-import AbstractCanvas2D from 'core/util/canvas/AbstractCanvas2D';
+import { ArrowType } from '../../../../types';
+import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import {
   ARROW_CLASSIC,
   ARROW_CLASSIC_THIN,

@@ -8,10 +8,9 @@ import EventSource from '../event/EventSource';
 import UndoableEdit from './UndoableEdit';
 import CellPath from '../cell/datatypes/CellPath';
 import Cell from '../cell/datatypes/Cell';
-import utils, { isNumeric } from '../../util/Utils';
+import { isNumeric } from '../../util/Utils';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
-import Point from '../geometry/Point';
 import ChildChange from './ChildChange';
 import CollapseChange from '../folding/CollapseChange';
 import GeometryChange from '../geometry/GeometryChange';
@@ -23,7 +22,7 @@ import VisibleChange from '../style/VisibleChange';
 import Geometry from '../geometry/Geometry';
 import CellArray from '../cell/datatypes/CellArray';
 
-import type { CellMap, FilterFunction, UndoableChange } from '../../types';
+import type { FilterFunction } from '../../types';
 
 /**
  * Extends {@link EventSource} to implement a graph model. The graph model acts as
@@ -209,6 +208,7 @@ import type { CellMap, FilterFunction, UndoableChange } from '../../types';
 class Model extends EventSource {
   constructor(root: Cell | null = null) {
     super();
+
     this.currentEdit = this.createUndoableEdit();
 
     if (root != null) {
@@ -1159,8 +1159,5 @@ class Model extends EventSource {
   }
 }
 
-//
-// Atomic changes
-//
 export default Model;
 // import('../../serialization/mxModelCodec');

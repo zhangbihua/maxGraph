@@ -1,4 +1,5 @@
-import maxgraph from '@maxgraph/core';
+import Graph from '@maxgraph/core/view/Graph';
+import InternalEvent from '@maxgraph/core/view/event/InternalEvent';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -18,8 +19,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, InternalEvent, Rubberband } = maxgraph;
-  console.log(maxgraph, Graph);
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';
@@ -29,10 +28,10 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   if (!args.contextMenu) InternalEvent.disableContextMenu(container);
-
+  console.log(Graph, Graph.prototype);
   const graph = new Graph(container);
 
-  if (args.rubberBand) new Rubberband(graph);
+  // if (args.rubberBand) new Rubberband(graph);
 
   const parent = graph.getDefaultParent();
 

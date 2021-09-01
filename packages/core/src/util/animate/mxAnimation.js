@@ -17,6 +17,7 @@ import InternalEvent from '../../view/event/InternalEvent';
 class mxAnimation extends EventSource {
   constructor(delay) {
     super();
+
     this.delay = delay != null ? delay : 20;
   }
 
@@ -46,10 +47,7 @@ class mxAnimation extends EventSource {
   // startAnimation(): void;
   startAnimation() {
     if (this.thread == null) {
-      this.thread = window.setInterval(
-        this.updateAnimation.bind(this),
-        this.delay
-      );
+      this.thread = window.setInterval(this.updateAnimation.bind(this), this.delay);
     }
   }
 

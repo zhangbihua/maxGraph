@@ -378,10 +378,7 @@ class mxWindow extends EventSource {
   // setScrollable(scrollable: boolean): void;
   setScrollable(scrollable) {
     // Workaround for hang in Presto 2.5.22 (Opera 10.5)
-    if (
-      navigator.userAgent == null ||
-      navigator.userAgent.indexOf('Presto/2.5') < 0
-    ) {
+    if (navigator.userAgent == null || navigator.userAgent.indexOf('Presto/2.5') < 0) {
       if (scrollable) {
         this.contentWrapper.style.overflow = 'auto';
       } else {
@@ -519,12 +516,7 @@ class mxWindow extends EventSource {
           }
         };
 
-        InternalEvent.addGestureListeners(
-          this.resize,
-          start,
-          dragHandler,
-          dropHandler
-        );
+        InternalEvent.addGestureListeners(this.resize, start, dragHandler, dropHandler);
         this.div.appendChild(this.resize);
       } else {
         this.resize.style.display = 'inline';
@@ -550,9 +542,7 @@ class mxWindow extends EventSource {
     this.table.style.height = `${height}px`;
 
     this.contentWrapper.style.height = `${
-      this.div.offsetHeight -
-      this.title.offsetHeight -
-      this.contentHeightCorrection
+      this.div.offsetHeight - this.title.offsetHeight - this.contentHeightCorrection
     }px`;
   }
 
@@ -792,12 +782,7 @@ class mxWindow extends EventSource {
       };
 
       const dropHandler = (evt) => {
-        InternalEvent.removeGestureListeners(
-          document,
-          null,
-          dragHandler,
-          dropHandler
-        );
+        InternalEvent.removeGestureListeners(document, null, dragHandler, dropHandler);
         this.fireEvent(new EventObject(InternalEvent.MOVE_END, 'event', evt));
         InternalEvent.consume(evt);
       };
@@ -940,9 +925,7 @@ class mxWindow extends EventSource {
       this.contentWrapper.style.display != 'none'
     ) {
       this.contentWrapper.style.height = `${
-        this.div.offsetHeight -
-        this.title.offsetHeight -
-        this.contentHeightCorrection
+        this.div.offsetHeight - this.title.offsetHeight - this.contentHeightCorrection
       }px`;
     }
 
@@ -1095,10 +1078,7 @@ export const error = (message, width, close, icon) => {
       warn.destroy();
     });
 
-    write(
-      button,
-      Resources.get(utils.closeResource) || utils.closeResource
-    );
+    write(button, Resources.get(utils.closeResource) || utils.closeResource);
 
     tmp.appendChild(button);
     div.appendChild(tmp);

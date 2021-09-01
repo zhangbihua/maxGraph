@@ -13,7 +13,7 @@ import Shape from '../../geometry/shape/Shape';
 import TextShape from '../../geometry/shape/node/TextShape';
 import Dictionary from '../../../util/Dictionary';
 import { NONE } from '../../../util/Constants';
-import { CellStateStyles } from 'core/types';
+import { CellStateStyles } from '../../../types';
 import RectangleShape from '../../geometry/shape/node/RectangleShape';
 import CellOverlay from '../CellOverlay';
 

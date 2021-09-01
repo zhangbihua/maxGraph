@@ -9,9 +9,9 @@ type PartialClass = PartialGraph;
 
 class GraphSnap extends autoImplement<PartialClass>() {
   // TODO: Document me!
-  tolerance: number = 0;
+  snapTolerance: number = 0;
 
-  getSnapTolerance = () => this.tolerance;
+  getSnapTolerance = () => this.snapTolerance;
 
   /**
    * Specifies the grid size.
@@ -142,14 +142,14 @@ class GraphSnap extends autoImplement<PartialClass>() {
    * Returns {@link tolerance}.
    */
   getTolerance() {
-    return this.tolerance;
+    return this.snapTolerance;
   }
 
   /**
    * Sets {@link tolerance}.
    */
   setTolerance(value: number) {
-    this.tolerance = value;
+    this.snapTolerance = value;
   }
 }
 

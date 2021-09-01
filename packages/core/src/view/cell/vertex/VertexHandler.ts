@@ -26,20 +26,18 @@ import RectangleShape from '../../geometry/shape/node/RectangleShape';
 import ImageShape from '../../geometry/shape/node/ImageShape';
 import EllipseShape from '../../geometry/shape/node/EllipseShape';
 import Point from '../../geometry/Point';
-import utils, { getRotatedPoint, intersects, mod, toRadians } from '../../../util/Utils';
+import { getRotatedPoint, intersects, mod, toRadians } from '../../../util/Utils';
 import mxClient from '../../../mxClient';
 import { isMouseEvent, isShiftDown } from '../../../util/EventUtils';
-import Graph, { MaxGraph } from '../../Graph';
+import { MaxGraph } from '../../Graph';
 import CellState from '../datatypes/CellState';
 import Image from '../../image/ImageBox';
 import Cell from '../datatypes/Cell';
-import { CellHandle, Listenable } from 'core/types';
+import { CellHandle, Listenable } from '../../../types';
 import Shape from '../../geometry/shape/Shape';
 import InternalMouseEvent from '../../event/InternalMouseEvent';
-import VertexHandle from './VertexHandle';
 import CellArray from '../datatypes/CellArray';
 import EdgeHandler from '../edge/EdgeHandler';
-import CellHighlight from '../../selection/CellHighlight';
 import EventSource from '../../event/EventSource';
 import GraphHandler from '../../GraphHandler';
 import SelectionCellsHandler from '../../selection/SelectionCellsHandler';
@@ -741,6 +739,7 @@ class VertexHandler {
 
       if (
         this.state.view.currentRoot !== parent &&
+        parent &&
         (parent.isVertex() || parent.isEdge())
       ) {
         this.parentState = this.state.view.graph.view.getState(parent);
@@ -2048,7 +2047,8 @@ class VertexHandler {
    * always returns true.
    */
   isParentHighlightVisible() {
-    return !this.graph.isCellSelected(this.state.cell.getParent());
+    const parent = this.state.cell.getParent();
+    return parent ? !this.graph.isCellSelected(parent) : false;
   }
 
   /**
@@ -2060,10 +2060,10 @@ class VertexHandler {
     if (!this.isDestroyed()) {
       const visible = this.isParentHighlightVisible();
       const parent = this.state.cell.getParent();
-      const pstate = this.graph.view.getState(parent);
+      const pstate = parent ? this.graph.view.getState(parent) : null;
 
       if (this.parentHighlight) {
-        if (parent.isVertex() && visible) {
+        if (parent && parent.isVertex() && visible) {
           const b = this.parentHighlight.bounds;
 
           if (
@@ -2086,7 +2086,12 @@ class VertexHandler {
           this.parentHighlight = null;
         }
       } else if (this.parentHighlightEnabled && visible) {
-        if (parent.isVertex() && pstate != null && pstate.parentHighlight == null) {
+        if (
+          parent &&
+          parent.isVertex() &&
+          pstate != null &&
+          pstate.parentHighlight == null
+        ) {
           this.parentHighlight = this.createParentHighlightShape(pstate);
           // VML dialect required here for event transparency in IE
           this.parentHighlight.dialect = DIALECT_SVG;
@@ -2161,7 +2166,7 @@ class VertexHandler {
 
     if (this.parentHighlight) {
       const parent = this.state.cell.getParent();
-      const pstate = this.graph.view.getState(parent);
+      const pstate = parent ? this.graph.view.getState(parent) : null;
 
       if (pstate && pstate.parentHighlight === this.parentHighlight) {
         pstate.parentHighlight = null;

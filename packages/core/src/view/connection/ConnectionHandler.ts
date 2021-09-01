@@ -612,7 +612,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
         if (cell && !cell.isConnectable() && self.cell) {
           const parent = self.cell.getParent();
 
-          if (parent.isVertex() && parent.isConnectable()) {
+          if (parent && parent.isVertex() && parent.isConnectable()) {
             cell = parent;
           }
         }
@@ -1938,13 +1938,13 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
           }
         }
 
-        let parent = this.graph.getDefaultParent();
+        let parent: Cell | null = this.graph.getDefaultParent();
 
         if (
           source &&
           target &&
           source.getParent() === target.getParent() &&
-          source.getParent().getParent() !== model.getRoot()
+          source.getParent()?.getParent() !== model.getRoot()
         ) {
           parent = source.getParent();
 
@@ -1954,7 +1954,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
             target.geometry &&
             target.geometry.relative
           ) {
-            parent = parent.getParent();
+            parent = parent!.getParent();
           }
         }
 
@@ -1968,7 +1968,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
           style = this.edgeState.cell.style ?? '';
         }
 
-        edge = this.insertEdge(parent, '', value, source, target, style);
+        edge = this.insertEdge(parent as Cell, '', value, source, target, style);
 
         if (edge && source) {
           // Updates the connection constraints
@@ -1990,9 +1990,10 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
           // Inserts edge before source
           if (this.isInsertBefore(edge, source, target, evt, dropTarget)) {
             const index = null;
-            let tmp = source;
+            let tmp: Cell | null = source;
 
             while (
+              tmp &&
               tmp.parent != null &&
               tmp.geometry != null &&
               tmp.geometry.relative &&
@@ -2123,7 +2124,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
     let geo = source.getGeometry();
 
     while (geo && geo.relative) {
-      source = source.getParent();
+      source = source.getParent() as Cell;
       geo = source.getGeometry();
     }
 

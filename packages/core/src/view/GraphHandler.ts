@@ -479,7 +479,7 @@ class GraphHandler implements GraphPlugin {
    * selection state to the parent.
    */
   isPropagateSelectionCell(cell: Cell, immediate: boolean, me: InternalMouseEvent) {
-    const parent = cell.getParent();
+    const parent = cell.getParent() as Cell;
 
     if (immediate) {
       const geo = cell.isEdge() ? null : cell.getGeometry();
@@ -512,7 +512,8 @@ class GraphHandler implements GraphPlugin {
       state &&
       !this.graph.isCellSelected(state.cell)
     ) {
-      let next = this.graph.view.getState(state.cell.getParent());
+      let parent = state.cell.getParent();
+      let next = parent ? this.graph.view.getState(parent) : null;
 
       while (
         next &&
@@ -521,7 +522,8 @@ class GraphHandler implements GraphPlugin {
         this.isPropagateSelectionCell(state.cell, true, me)
       ) {
         state = next;
-        next = this.graph.view.getState(state.cell.getParent());
+        parent = state.cell.getParent();
+        next = parent ? this.graph.view.getState(parent) : null;
       }
     }
 
@@ -534,17 +536,19 @@ class GraphHandler implements GraphPlugin {
    * Hook to return true for delayed selections.
    */
   isDelayedSelection(cell: Cell, me: InternalMouseEvent) {
+    let c: Cell | null = cell;
+
     const selectionCellsHandler = this.graph.getPlugin(
       'SelectionCellsHandler'
     ) as SelectionCellsHandler;
 
     if (!this.graph.isToggleEvent(me.getEvent()) || !isAltDown(me.getEvent())) {
-      while (cell) {
-        if (selectionCellsHandler.isHandled(cell)) {
-          return this.graph.cellEditor.getEditingCell() !== cell;
+      while (c) {
+        if (selectionCellsHandler.isHandled(c)) {
+          return this.graph.cellEditor.getEditingCell() !== c;
         }
 
-        cell = cell.getParent();
+        c = c.getParent();
       }
     }
 
@@ -586,6 +590,7 @@ class GraphHandler implements GraphPlugin {
           let parent = cell.getParent();
 
           while (
+            parent &&
             this.graph.view.getState(parent) &&
             (parent.isVertex() || parent.isEdge()) &&
             this.isPropagateSelectionCell(cell, false, me)
@@ -848,7 +853,7 @@ class GraphHandler implements GraphPlugin {
 
     if (this.guidesEnabled) {
       this.guide = this.createGuide();
-      const parent = cell.getParent();
+      const parent = cell.getParent() as Cell;
       const ignore = parent.getChildCount() < 2;
 
       // Uses connected states as guides
@@ -1709,6 +1714,7 @@ class GraphHandler implements GraphPlugin {
 
     if (
       target == null &&
+      parent &&
       this.isRemoveCellsFromParent() &&
       this.shouldRemoveCellsFromParent(parent, cells, evt)
     ) {

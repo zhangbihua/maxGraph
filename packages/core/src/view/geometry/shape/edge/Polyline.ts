@@ -8,7 +8,7 @@ import Shape from '../Shape';
 import { LINE_ARCSIZE } from '../../../../util/Constants';
 import Point from '../../Point';
 import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
-import { ColorValue } from 'core/types';
+import { ColorValue } from '../../../../types';
 
 /**
  * Class: mxPolyline

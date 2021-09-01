@@ -1,7 +1,6 @@
 import maxgraph from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
-import { error } from '@maxgraph/core/util/DomUtils';
 import { clone } from '@maxgraph/core/util/CloneUtils';
 import { button } from '@maxgraph/core/util/dom/mxDomHelpers';
 import { load } from '@maxgraph/core/util/network/mxXmlRequest';
@@ -35,7 +34,7 @@ const Template = ({ label, ...args }) => {
     if (!mxClient.isBrowserSupported()) {
       // Displays an error message if the browser is
       // not supported.
-      error('Browser is not supported!', 200, false);
+      alert('Browser is not supported!', 200, false);
     } else {
       // Creates the graph inside the given container
       const graph = new Graph(container);

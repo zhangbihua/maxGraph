@@ -51,11 +51,27 @@ class GraphConnections extends autoImplement<PartialClass>() {
     this.connectionHandler = connectionHandler;
   }
 
-  constrainChildren = false;
+  /**
+   * Specifies if a child should be constrained inside the parent bounds after a
+   * move or resize of the child.
+   * @default true
+   */
+  constrainChildren = true;
 
+  /**
+   * Specifies if child cells with relative geometries should be constrained
+   * inside the parent bounds, if {@link constrainChildren} is `true`, and/or the
+   * {@link maximumGraphBounds}.
+   * @default false
+   */
   constrainRelativeChildren = false;
 
-  disconnectOnMove = false;
+  /**
+   * Specifies if edges should be disconnected from their terminals when they
+   * are moved.
+   * @default true
+   */
+  disconnectOnMove = true;
 
   cellsDisconnectable = true;
 
@@ -493,7 +509,8 @@ class GraphConnections extends autoImplement<PartialClass>() {
 
           if (geo) {
             const state = this.getView().getState(cell);
-            const pstate = <CellState>this.getView().getState(cell.getParent());
+            const parent = cell.getParent();
+            const pstate = parent ? this.getView().getState(parent) : null;
 
             if (state && pstate) {
               geo = geo.clone();

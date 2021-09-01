@@ -1,5 +1,3 @@
-const path = require('path');
-
 module.exports = {
   devtool: 'eval-source-map',
   module: {
@@ -17,9 +15,6 @@ module.exports = {
     ],
   },
   resolve: {
-    alias: {
-      core: path.resolve(__dirname, 'packages/core/src'),
-    },
     extensions: ['.ts', '.js', '.css'],
   },
 };

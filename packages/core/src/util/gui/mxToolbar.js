@@ -28,6 +28,7 @@ import { br, write, writeln } from '../DomUtils';
 class mxToolbar extends EventSource {
   constructor(container) {
     super();
+
     this.container = container;
   }
 

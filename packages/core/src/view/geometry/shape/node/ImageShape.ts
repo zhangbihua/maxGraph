@@ -10,7 +10,7 @@ import Rectangle from '../../Rectangle';
 import CellState from '../../../cell/datatypes/CellState';
 import AbstractCanvas2D from '../../../../util/canvas/SvgCanvas2D';
 import CellOverlay from '../../../cell/CellOverlay';
-import { NONE } from 'core/util/Constants';
+import { NONE } from '../../../../util/Constants';
 
 /**
  * Extends {@link mxShape} to implement an image shape.
