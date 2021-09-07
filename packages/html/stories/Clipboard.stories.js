@@ -1,14 +1,14 @@
 import {
   Graph,
   InternalEvent,
-  Rubberband,
-  mxClipboard,
+  RubberBand,
+  Clipboard,
   utils,
   EventUtils,
   mxClient,
   mxCodec,
   Model,
-  mxStringUtils,
+  StringUtils,
 } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
@@ -44,7 +44,7 @@ const Template = ({ label, ...args }) => {
   const graph = new Graph(container);
 
   // Public helper method for shared clipboard.
-  mxClipboard.cellsToString = function (cells) {
+  Clipboard.cellsToString = function (cells) {
     const codec = new mxCodec();
     const model = new Model();
     const parent = model.getRoot().getChildAt(0);
@@ -142,7 +142,7 @@ const Template = ({ label, ...args }) => {
         }
       }
 
-      textInput.value = mxClipboard.cellsToString(clones);
+      textInput.value = Clipboard.cellsToString(clones);
     }
 
     textInput.select();
@@ -228,7 +228,7 @@ const Template = ({ label, ...args }) => {
 
   // Parses and inserts XML into graph
   const pasteText = function (text) {
-    const xml = mxStringUtils.trim(text);
+    const xml = StringUtils.trim(text);
     const x = graph.container.scrollLeft / graph.view.scale - graph.view.translate.x;
     const y = graph.container.scrollTop / graph.view.scale - graph.view.translate.y;
 
@@ -294,7 +294,7 @@ const Template = ({ label, ...args }) => {
   });
 
   // Enables rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

@@ -1,4 +1,4 @@
-import { Graph, Rubberband, GraphView, utils } from '@maxgraph/core';
+import { Graph, RubberBand, GraphView, utils } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -55,7 +55,7 @@ const Template = ({ label, ...args }) => {
   // graph.setResizeContainer(true);
 
   // Enables rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

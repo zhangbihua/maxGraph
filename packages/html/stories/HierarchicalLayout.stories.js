@@ -1,11 +1,11 @@
 import {
   Graph,
-  mxDomUtils,
-  mxFastOrganicLayout,
+  DomUtils,
+  FastOrganicLayout,
   mxHierarchicalLayout,
   Perimeter,
   InternalEvent,
-  Rubberband,
+  RubberBand,
   Constants,
 } from '@maxgraph/core';
 
@@ -42,7 +42,7 @@ const Template = ({ label, ...args }) => {
   const graph = new Graph(container);
 
   // Adds rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Changes the default vertex style in-place
   let style = graph.getStylesheet().getDefaultVertexStyle();
@@ -58,7 +58,7 @@ const Template = ({ label, ...args }) => {
   // Creates a layout algorithm to be used
   // with the graph
   const layout = new mxHierarchicalLayout(graph);
-  const organic = new mxFastOrganicLayout(graph);
+  const organic = new FastOrganicLayout(graph);
   organic.forceConstant = 120;
 
   const parent = graph.getDefaultParent();
@@ -68,7 +68,7 @@ const Template = ({ label, ...args }) => {
 
   // Adds a button to execute the layout
   let button = document.createElement('button');
-  mxDomUtils.write(button, 'Hierarchical');
+  DomUtils.write(button, 'Hierarchical');
   InternalEvent.addListener(button, 'click', function (evt) {
     layout.execute(parent);
   });
@@ -76,7 +76,7 @@ const Template = ({ label, ...args }) => {
 
   // Adds a button to execute the layout
   button = document.createElement('button');
-  mxDomUtils.write(button, 'Organic');
+  DomUtils.write(button, 'Organic');
 
   InternalEvent.addListener(button, 'click', function (evt) {
     organic.execute(parent);

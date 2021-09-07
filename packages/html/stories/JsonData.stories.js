@@ -6,9 +6,9 @@ import {
   InternalEvent,
   mxClient,
   mxCodec,
-  mxDomUtils,
+  DomUtils,
   utils,
-  popup,
+  mxWindow,
 } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
@@ -41,11 +41,11 @@ const Template = ({ label, ...args }) => {
   const codec = new mxObjectCodec(new CustomData());
   codec.encode = function (enc, obj) {
     const node = enc.document.createElement('CustomData');
-    mxDomUtils.setTextContent(node, JSON.stringify(obj));
+    DomUtils.setTextContent(node, JSON.stringify(obj));
     return node;
   };
   codec.decode = function (dec, node, into) {
-    const obj = JSON.parse(mxDomUtils.getTextContent(node));
+    const obj = JSON.parse(DomUtils.getTextContent(node));
     obj.constructor = CustomData;
 
     return obj;
@@ -85,7 +85,7 @@ const Template = ({ label, ...args }) => {
     mxDomHelpers.button('Show JSON', function () {
       const encoder = new mxCodec();
       const node = encoder.encode(graph.getModel());
-      popup(utils.getXml(node), true);
+      mxWindow.popup(utils.getXml(node), true);
     })
   );
 

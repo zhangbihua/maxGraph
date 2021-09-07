@@ -2,7 +2,7 @@ import {
   Graph,
   RectangleShape,
   mxDomHelpers,
-  Text,
+  TextShape,
   Point,
   Rectangle,
   Constants,
@@ -98,7 +98,7 @@ const Template = ({ label, ...args }) => {
       const secondLabel = graph.getSecondLabel(state.cell);
 
       if (secondLabel != null && state.shape != null && state.secondLabel == null) {
-        state.secondLabel = new Text(
+        state.secondLabel = new TextShape(
           secondLabel,
           new Rectangle(),
           Constants.ALIGN_LEFT,

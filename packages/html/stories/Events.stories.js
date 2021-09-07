@@ -1,10 +1,10 @@
 import {
   Graph,
   InternalEvent,
-  Rubberband,
+  RubberBand,
   ConnectionHandler,
   LayoutManager,
-  mxParallelEdgeLayout,
+  ParallelEdgeLayout,
   ImageBox,
   mxKeyHandler,
   Constants,
@@ -62,7 +62,7 @@ const Template = ({ label, ...args }) => {
   // Optionally you can enable panning, tooltips and connections
   // using graph.setPanning(), setTooltips() & setConnectable().
   // To enable rubberband selection and basic keyboard events,
-  // use new Rubberband(graph) and new mxKeyHandler(graph).
+  // use new RubberBand(graph) and new mxKeyHandler(graph).
   const graph = new MyCustomGraph(container);
 
   // Enables tooltips, new connections and panning
@@ -71,7 +71,7 @@ const Template = ({ label, ...args }) => {
   graph.setConnectable(true);
 
   // Automatically handle parallel edges
-  const layout = new mxParallelEdgeLayout(graph);
+  const layout = new ParallelEdgeLayout(graph);
   const layoutMgr = new LayoutManager(graph);
 
   layoutMgr.getLayout = function (cell) {
@@ -82,7 +82,7 @@ const Template = ({ label, ...args }) => {
 
   // Enables rubberband (marquee) selection and a handler
   // for basic keystrokes (eg. return, escape during editing).
-  const rubberband = new Rubberband(graph);
+  const rubberband = new RubberBand(graph);
   const keyHandler = new mxKeyHandler(graph);
 
   // Changes the default style for edges "in-place" and assigns

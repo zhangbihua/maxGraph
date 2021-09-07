@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import graph from '../../view/Graph';
+import { Graph } from '../../view/Graph';
 import mxCodecRegistry from './mxCodecRegistry';
 import mxObjectCodec from './mxObjectCodec';
 
@@ -28,7 +28,7 @@ import mxObjectCodec from './mxObjectCodec';
  */
 class mxGraphCodec extends mxObjectCodec {
   constructor() {
-    super(new graph(), [
+    super(new Graph(), [
       'graphListeners',
       'eventListeners',
       'view',

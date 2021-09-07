@@ -1,7 +1,7 @@
 import {
   Graph,
   InternalEvent,
-  Rubberband,
+  RubberBand,
   ImageBox,
   Rectangle,
   utils,
@@ -104,7 +104,7 @@ const Template = ({ label, ...args }) => {
   graph.setConnectable(true);
 
   // Enables rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Defines the tolerance before removing the icons
   const ICON_TOLERANCE = 20;

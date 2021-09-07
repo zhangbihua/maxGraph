@@ -1,7 +1,7 @@
 import {
   Graph,
-  mxDomUtils,
-  Rubberband,
+  DomUtils,
+  RubberBand,
   DragSource,
   utils,
   GestureUtils,
@@ -87,7 +87,7 @@ const Template = ({ label, ...args }) => {
     // graph.setResizeContainer(true);
 
     // Enables rubberband selection
-    if (args.rubberBand) new Rubberband(graph);
+    if (args.rubberBand) new RubberBand(graph);
 
     // Gets the default parent for inserting new cells. This
     // is normally the first child of the root (ie. layer 0).
@@ -124,7 +124,7 @@ const Template = ({ label, ...args }) => {
     const elt = document.elementFromPoint(x, y);
 
     for (const graph of graphs) {
-      if (mxDomUtils.isAncestorNode(graph.container, elt)) {
+      if (DomUtils.isAncestorNode(graph.container, elt)) {
         return graph;
       }
     }

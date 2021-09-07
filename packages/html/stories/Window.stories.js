@@ -2,10 +2,10 @@ import {
   Graph,
   mxWindow,
   mxKeyHandler,
-  Rubberband,
+  RubberBand,
   InternalEvent,
   mxLog,
-  mxDomUtils,
+  DomUtils,
   mxClient,
 } from '@maxgraph/core';
 
@@ -57,7 +57,7 @@ const Template = ({ label, ...args }) => {
   graph.setTooltips(true);
   graph.setPanning(true);
 
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   new mxKeyHandler(graph);
 
@@ -85,7 +85,7 @@ const Template = ({ label, ...args }) => {
   const lorem =
     'Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ';
   let content = document.createElement('div');
-  mxDomUtils.write(content, lorem + lorem + lorem);
+  DomUtils.write(content, lorem + lorem + lorem);
 
   wnd = new mxWindow(
     'Scrollable, resizable, auto height',

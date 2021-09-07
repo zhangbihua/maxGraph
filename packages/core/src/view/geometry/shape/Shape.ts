@@ -1205,7 +1205,7 @@ class Shape {
    * Returns the rotation from the style.
    */
   getRotation() {
-    return this.rotation;
+    return this.rotation ?? 0;
   }
 
   /**
@@ -1230,7 +1230,7 @@ class Shape {
    */
   getShapeRotation() {
     let rot = this.getRotation();
-    console.log('rot', rot, this, this.rotation);
+
     if (this.direction === DIRECTION_NORTH) {
       rot += 270;
     } else if (this.direction === DIRECTION_WEST) {

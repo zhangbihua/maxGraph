@@ -2,7 +2,7 @@ import {
   Graph,
   EdgeStyle,
   mxDomHelpers,
-  mxXmlUtils,
+  XmlUtils,
   Perimeter,
   utils,
   Constants,
@@ -76,7 +76,7 @@ const Template = ({ label, ...args }) => {
     '<Cell id="30" value="" edge="1" parent="2" source="27" target="EnterAccountingData"><Geometry relative="1" as="geometry"><Array as="points"><Point x="469" y="40"/></Array></Geometry></Cell>' +
     '<Cell id="33" value="" edge="1" parent="2" source="6" target="EnterAccountingData"><Geometry relative="1" as="geometry"><Array as="points"><Point x="255" y="200"/></Array></Geometry></Cell>' +
     '</root></Transactions>';
-  const doc = mxXmlUtils.parseXml(xml);
+  const doc = XmlUtils.parseXml(xml);
   const codec = new mxCodec(doc);
   codec.decode(doc.documentElement, graph.getModel());
 
@@ -101,7 +101,7 @@ const Template = ({ label, ...args }) => {
    */
   function update(graph, xml) {
     if (xml != null && xml.length > 0) {
-      const doc = mxXmlUtils.parseXml(xml);
+      const doc = XmlUtils.parseXml(xml);
 
       if (doc != null && doc.documentElement != null) {
         const model = graph.getModel();

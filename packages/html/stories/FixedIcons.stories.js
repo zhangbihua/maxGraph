@@ -1,4 +1,11 @@
-import { Graph, Rubberband, Rectangle, Constants, utils, mxLabel } from '@maxgraph/core';
+import {
+  Graph,
+  RubberBand,
+  Rectangle,
+  Constants,
+  utils,
+  LabelShape,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -23,7 +30,7 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   // Overrides the image bounds code to change the position
-  mxLabel.prototype.getImageBounds = function (x, y, w, h) {
+  LabelShape.prototype.getImageBounds = function (x, y, w, h) {
     const iw = utils.getValue(this.style, 'imageWidth', Constants.DEFAULT_IMAGESIZE);
     const ih = utils.getValue(this.style, 'imageHeight', Constants.DEFAULT_IMAGESIZE);
 
@@ -45,7 +52,7 @@ const Template = ({ label, ...args }) => {
   // graph.setResizeContainer(true);
 
   // Enables rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

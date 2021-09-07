@@ -2,7 +2,7 @@ import {
   Graph,
   mxKeyHandler,
   utils,
-  mxDomUtils,
+  DomUtils,
   CloneUtils,
   EventUtils,
 } from '@maxgraph/core';
@@ -48,14 +48,14 @@ const Template = ({ label, ...args }) => {
       td1.style.textAlign = 'center';
       td1.style.fontSize = '12px';
       td1.style.color = '#774400';
-      mxDomUtils.write(td1, cell.value.first);
+      DomUtils.write(td1, cell.value.first);
 
       const tr2 = document.createElement('tr');
       const td2 = document.createElement('td');
       td2.style.textAlign = 'center';
       td2.style.fontSize = '12px';
       td2.style.color = '#774400';
-      mxDomUtils.write(td2, cell.value.second);
+      DomUtils.write(td2, cell.value.second);
 
       tr1.appendChild(td1);
       tr2.appendChild(td2);

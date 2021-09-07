@@ -1,8 +1,8 @@
 import {
   Graph,
-  Rubberband,
+  RubberBand,
   Constants,
-  mxRadialTreeLayout,
+  RadialTreeLayout,
   Perimeter,
 } from '@maxgraph/core';
 
@@ -32,7 +32,7 @@ const Template = ({ label, ...args }) => {
   const graph = new Graph(container);
 
   // Adds rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Changes the default vertex style in-place
   let style = graph.getStylesheet().getDefaultVertexStyle();
@@ -47,7 +47,7 @@ const Template = ({ label, ...args }) => {
 
   // Creates a layout algorithm to be used
   // with the graph
-  const layout = new mxRadialTreeLayout(graph);
+  const layout = new RadialTreeLayout(graph);
 
   const parent = graph.getDefaultParent();
 

@@ -72,7 +72,7 @@ export { default as CircleLayout } from './view/layout/layout/CircleLayout';
 export { default as CompactTreeLayout } from './view/layout/layout/CompactTreeLayout';
 export { default as CompositeLayout } from './view/layout/layout/CompositeLayout';
 export { default as EdgeLabelLayout } from './view/layout/layout/EdgeLabelLayout';
-export { default as MxFastOrganicLayout } from './view/layout/layout/FastOrganicLayout';
+export { default as FastOrganicLayout } from './view/layout/layout/FastOrganicLayout';
 export { default as GraphLayout } from './view/layout/layout/GraphLayout';
 export { default as ParallelEdgeLayout } from './view/layout/layout/ParallelEdgeLayout';
 export { default as PartitionLayout } from './view/layout/layout/PartitionLayout';
@@ -113,7 +113,7 @@ export { default as mxStylesheetCodec } from './util/serialization/mxStylesheetC
 export { default as mxTerminalChangeCodec } from './util/serialization/mxTerminalChangeCodec';
 
 export { default as Actor } from './view/geometry/shape/Actor';
-export { default as Label } from './view/geometry/shape/node/LabelShape';
+export { default as LabelShape } from './view/geometry/shape/node/LabelShape';
 export { default as Shape } from './view/geometry/shape/Shape';
 export { default as SwimlaneShape } from './view/geometry/shape/node/SwimlaneShape';
 export { default as TextShape } from './view/geometry/shape/node/TextShape';

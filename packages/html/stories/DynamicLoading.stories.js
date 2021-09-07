@@ -1,13 +1,13 @@
 import {
   Graph,
-  Text,
+  TextShape,
   mxEffects,
   InternalEvent,
   Constants,
   Perimeter,
   mxCodec,
   utils,
-  mxXmlUtils,
+  XmlUtils,
 } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
@@ -31,7 +31,7 @@ const Template = ({ label, ...args }) => {
   let requestId = 0;
 
   // Speedup the animation
-  Text.prototype.enableBoundingBox = false;
+  TextShape.prototype.enableBoundingBox = false;
 
   // Creates the graph inside the given container
   const graph = new Graph(container);
@@ -85,7 +85,7 @@ const Template = ({ label, ...args }) => {
       graph.getModel().beginUpdate();
       try {
         const xml = server(cell.id);
-        const doc = mxXmlUtils.parseXml(xml);
+        const doc = XmlUtils.parseXml(xml);
         const dec = new mxCodec(doc);
         const model = dec.decode(doc.documentElement);
 

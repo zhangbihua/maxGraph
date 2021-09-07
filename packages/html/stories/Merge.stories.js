@@ -1,4 +1,4 @@
-import { Graph, Perimeter, Constants, Rubberband } from '@maxgraph/core';
+import { Graph, Perimeter, Constants, RubberBand } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -48,7 +48,7 @@ const Template = ({ label, ...args }) => {
   style.strokeWidth = 2;
 
   // Enables rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

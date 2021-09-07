@@ -1,7 +1,7 @@
 import {
   Graph,
-  Rubberband,
-  mxXmlUtils,
+  RubberBand,
+  XmlUtils,
   Multiplicity,
   mxKeyHandler,
   InternalEvent,
@@ -29,7 +29,7 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  const xmlDocument = mxXmlUtils.createXmlDocument();
+  const xmlDocument = XmlUtils.createXmlDocument();
   const sourceNode = xmlDocument.createElement('Source');
   const targetNode = xmlDocument.createElement('Target');
   const subtargetNode = xmlDocument.createElement('Subtarget');
@@ -87,7 +87,7 @@ const Template = ({ label, ...args }) => {
   );
 
   // Enables rubberband selection
-  new Rubberband(graph);
+  new RubberBand(graph);
 
   // Removes cells when [DELETE] is pressed
   const keyHandler = new mxKeyHandler(graph);

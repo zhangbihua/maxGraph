@@ -1,7 +1,7 @@
 import {
   Graph,
   InternalEvent,
-  Rubberband,
+  RubberBand,
   mxLog,
   GraphView,
   Point,
@@ -45,7 +45,7 @@ const Template = ({ label, ...args }) => {
   graph.setPanning(true);
 
   // Enables rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   let repaintGrid;
 

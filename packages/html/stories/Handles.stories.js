@@ -7,7 +7,7 @@ import {
   Rectangle,
   VertexHandler,
   InternalEvent,
-  Rubberband,
+  RubberBand,
   utils,
   VertexHandle,
 } from '@maxgraph/core';
@@ -205,7 +205,7 @@ const Template = ({ label, ...args }) => {
   graph.centerZoom = false;
 
   // Enables rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

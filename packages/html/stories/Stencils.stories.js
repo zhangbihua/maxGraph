@@ -8,10 +8,10 @@ import {
   CellHighlight,
   Constants,
   VertexHandler,
-  Rubberband,
+  RubberBand,
   Shape,
   StencilShape,
-  StencilRegistry,
+  StencilShapeRegistry,
   CellRenderer,
   utils,
 } from '@maxgraph/core';
@@ -66,7 +66,7 @@ const Template = ({ label, ...args }) => {
   // Uses the shape for resize previews
   VertexHandler.prototype.createSelectionShape = function (bounds) {
     const key = this.state.style.shape;
-    const stencil = StencilRegistry.getStencil(key);
+    const stencil = StencilShapeRegistry.getStencil(key);
     let shape = null;
 
     if (stencil != null) {
@@ -128,7 +128,10 @@ const Template = ({ label, ...args }) => {
 
   while (shape != null) {
     if (shape.nodeType === Constants.NODETYPE_ELEMENT) {
-      StencilRegistry.addStencil(shape.getAttribute('name'), new StencilShape(shape));
+      StencilShapeRegistry.addStencil(
+        shape.getAttribute('name'),
+        new StencilShape(shape)
+      );
     }
 
     shape = shape.nextSibling;
@@ -159,7 +162,7 @@ const Template = ({ label, ...args }) => {
   style.shadow = '1';
 
   // Enables rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

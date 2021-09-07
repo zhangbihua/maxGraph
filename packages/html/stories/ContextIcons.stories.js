@@ -1,7 +1,7 @@
 import {
   Graph,
   InternalEvent,
-  Rubberband,
+  RubberBand,
   EventUtils,
   utils,
   VertexHandler,
@@ -168,7 +168,7 @@ const Template = ({ label, ...args }) => {
   // graph.setResizeContainer(true);
 
   // Enables rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

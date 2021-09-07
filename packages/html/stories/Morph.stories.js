@@ -3,7 +3,7 @@ import {
   mxDomHelpers,
   mxMorphing,
   InternalEvent,
-  Rubberband,
+  RubberBand,
 } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
@@ -42,7 +42,7 @@ const Template = ({ label, ...args }) => {
   const graph = new Graph(container);
 
   // Enables rubberband selection
-  if (args.rubberBand) new Rubberband(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).
